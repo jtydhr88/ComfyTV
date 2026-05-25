@@ -1,0 +1,32 @@
+{
+  "_comment": "Shipped preset for LTX-Video 2.3 22B image+audio-to-video (from ComfyUI's bundled video_ltx2_3_ia2v template). Outer graph: LoadImage #269 (first frame) + LoadAudio #276 (driving audio) -> subgraph #340 -> SaveVideo #341. Inner prompt node is PrimitiveStringMultiline #319; composite key '340:319'. Audio-driven video — the generation timing follows the wired audio's tempo, so VideoStage's `audio` socket is required. Reuses the same LTX 2.3 model files as t2v / i2v / flf2v — no new downloads.",
+
+  "label":       "Local LTX 2.3 IA2V",
+  "order":       23,
+  "description": "LTX-Video 2.3 22B image+audio-to-video. Wire a source frame into the stage's image slot AND an audio track into the audio socket (e.g. from AudioStage / ACE-Step); the generated video follows the audio's timing. Talking-head / music-video / SFX-aligned scene use cases. Requires the LTX 2.3 model files (already used by t2v/i2v/flf2v) — see workflows/video/README.md.",
+
+  "result": { "type": "ui_save_url", "node": "341" },
+
+  "inputs": {
+    "269": {
+      "image": {
+        "from": "upstream_image:annotated[0]",
+        "required": true,
+        "error": "LTX 2.3 IA2V needs an upstream image — wire one into the stage's images slot."
+      }
+    },
+    "276": {
+      "audio": {
+        "from": "upstream_audio:annotated[0]",
+        "required": true,
+        "error": "LTX 2.3 IA2V needs an audio track — wire one into the stage's audio socket (try an AudioStage)."
+      }
+    },
+    "340:319": {
+      "value": {
+        "from": "main_prompt",
+        "default": "Cinematic motion of the subject in sync with the audio."
+      }
+    }
+  }
+}

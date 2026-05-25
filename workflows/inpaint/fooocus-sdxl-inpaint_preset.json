@@ -1,0 +1,56 @@
+{
+  "_comment": "Shipped preset for Fooocus-SDXL Inpaint via Acly's comfyui-inpaint-nodes plugin. Adapted from the plugin's inpaint-refine.json template — added LoadImageMask (#101) + InvertMask (#102) so our painter's option:mask_data drives the inpaint with correct polarity (the original template uses LoadImage's alpha-derived MASK which ComfyUI inverts via 1-α). Requires the plugin installed + Fooocus inpaint head/patch files in models/inpaint/. See workflows/inpaint/README.md for setup.",
+
+  "label":       "Fooocus SDXL Inpaint",
+  "order":       20,
+  "description": "Inpaint via Fooocus' SDXL inpaint head + patch (faster than Flux Fill on SDXL-class hardware). main_prompt drives the inpaint content. The painter's mask flows through InvertMask before the inpaint conditioning. Requires Acly/comfyui-inpaint-nodes plugin + Fooocus inpaint model files; see README.",
+
+  "result": {
+    "type": "ui_save_url",
+    "node": "59"
+  },
+
+  "inputs": {
+    "33": {
+      "image": {
+        "from": "upstream_image:annotated[0]",
+        "required": true,
+        "error": "Inpaint needs an upstream image — wire one into the stage's image input."
+      }
+    },
+    "101": {
+      "image": {
+        "from": "option:mask_data",
+        "required": true,
+        "error": "Inpaint needs a mask — paint the area you want to change before running."
+      },
+      "channel": { "from": "literal:alpha" }
+    },
+    "19": {
+      "ckpt_name": { "from": "literal:animagine-xl-3.1.safetensors" }
+    },
+    "35": {
+      "head":  { "from": "literal:fooocus_inpaint_head.pth" },
+      "patch": { "from": "literal:inpaint_v26.fooocus.patch" }
+    },
+    "9": {
+      "text": {
+        "from": "main_prompt",
+        "default": "high-quality, sharp focus, natural lighting"
+      }
+    },
+    "10": {
+      "text": {
+        "from": "option:negative",
+        "default": "text, watermark, low quality, blurry"
+      }
+    },
+    "40": {
+      "seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "_comment": "Shipped preset for Fooocus-SDXL Outpaint via Acly's comfyui-inpaint-nodes plugin. Adapted from the plugin's outpaint.json template — no mask painter needed (ImagePadForOutpaint generates the mask covering the new padded area). Requires the plugin installed + Fooocus inpaint head/patch files in models/inpaint/. See workflows/outpaint/README.md for setup.",
+
+  "label":       "Fooocus SDXL Outpaint",
+  "order":       20,
+  "description": "Outpaint via Fooocus' SDXL inpaint head + patch (faster than Flux Fill on SDXL-class hardware). Drag handles on the stage's UI extend the canvas; the workflow fills the new area per main_prompt. Requires Acly/comfyui-inpaint-nodes plugin + Fooocus inpaint model files; see README.",
+
+  "result": {
+    "type": "ui_save_url",
+    "node": "59"
+  },
+
+  "inputs": {
+    "33": {
+      "image": {
+        "from": "upstream_image:annotated[0]",
+        "required": true,
+        "error": "Outpaint needs an upstream image — wire one into the stage's image input."
+      }
+    },
+    "67": {
+      "left":       { "from": "option:pad_left",   "default": "0",  "cast": "int" },
+      "top":        { "from": "option:pad_top",    "default": "0",  "cast": "int" },
+      "right":      { "from": "option:pad_right",  "default": "0",  "cast": "int" },
+      "bottom":     { "from": "option:pad_bottom", "default": "0",  "cast": "int" },
+      "feathering": { "from": "option:feathering", "default": "40", "cast": "int" }
+    },
+    "19": {
+      "ckpt_name": { "from": "literal:animagine-xl-3.1.safetensors" }
+    },
+    "35": {
+      "head":  { "from": "literal:fooocus_inpaint_head.pth" },
+      "patch": { "from": "literal:inpaint_v26.fooocus.patch" }
+    },
+    "9": {
+      "text": {
+        "from": "main_prompt",
+        "default": "natural continuation of the scene, seamless"
+      }
+    },
+    "10": {
+      "text": {
+        "from": "option:negative",
+        "default": "text, watermark, low quality, blurry"
+      }
+    },
+    "40": {
+      "seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    }
+  }
+}

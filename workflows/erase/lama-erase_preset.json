@@ -1,0 +1,36 @@
+{
+  "_comment": "Shipped preset for LaMa Erase. Uses Acly's comfyui-inpaint-nodes plugin (https://github.com/Acly/comfyui-inpaint-nodes) — `INPAINT_LoadInpaintModel` + `INPAINT_InpaintWithModel`. Single forward pass over (image, mask), no diffusion, no text. Sub-second latency on a 24GB+ GPU. The InvertMask (#3) between LoadImageMask and the InpaintWithModel mask input is the same trick as in Flux Fill Inpaint — ComfyUI's LoadImage outputs `1 - alpha` for the mask, so we flip it back so the painted region ends up at mask=1.",
+
+  "label":       "LaMa Erase",
+  "order":       10,
+  "description": "Erase via LaMa (big-lama.pt). Promptless — paint over what you want removed, the model fills from boundary texture statistics. ~0.5-1 s per click on a 24GB+ GPU. Requires the Acly/comfyui-inpaint-nodes plugin + big-lama.pt in models/inpaint/.",
+
+  "result": {
+    "type": "ui_save_url",
+    "node": "6"
+  },
+
+  "inputs": {
+    "1": {
+      "image": {
+        "from": "upstream_image:annotated[0]",
+        "required": true,
+        "error": "Erase needs an upstream image — wire one into the stage's image input."
+      }
+    },
+    "2": {
+      "image": {
+        "from": "option:mask_data",
+        "required": true,
+        "error": "Erase needs a mask — paint over the area you want to remove before running."
+      },
+      "channel": { "from": "literal:alpha" }
+    },
+    "4": {
+      "model_name": { "from": "literal:big-lama.pt" }
+    },
+    "5": {
+      "seed": { "from": "option:seed", "default": "random_int31", "cast": "int" }
+    }
+  }
+}

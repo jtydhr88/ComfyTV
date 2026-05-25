@@ -1,0 +1,33 @@
+{
+  "_comment": "Shipped preset for Flux Schnell as Shot Images Stage's backend. Same template / same bindings as workflows/image/flux-schnell_preset.json — Shot Images is image generation iterated per shot. ShotImagesStage builds the per-shot prompt and dispatches this workflow once per shot. Result is auto-detected from SaveImage node #9 as ui_save_batch (shot-images is a batch-output kind, see runners/local_comfy.py:_BATCH_OUTPUT_KINDS).",
+
+  "label":       "Flux Schnell (per-shot)",
+  "order":       20,
+  "description": "Flux Schnell (fp8) 4-step distilled t2i, one image per Storyboard shot. ShotImagesStage iterates the upstream Storyboard, dispatches this workflow per shot with the shot's prompt as main_prompt, and merges the per-shot images into one COMFYTV_IMAGES batch.",
+
+  "inputs": {
+    "30": {
+      "ckpt_name": { "from": "literal:flux1-schnell-fp8.safetensors" }
+    },
+    "6": {
+      "text": {
+        "from": "main_prompt",
+        "default": "a photograph"
+      }
+    },
+    "27": {
+      "width":      { "from": "computed:width" },
+      "height":     { "from": "computed:height" },
+      "batch_size": { "from": "literal:1", "cast": "int" }
+    },
+    "31": {
+      "seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    }
+  },
+
+  "sizing": { "type": "image", "base": 1024, "snap": 8 }
+}

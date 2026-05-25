@@ -1,0 +1,59 @@
+{
+  "_comment": "Shipped preset for Qwen Relight with a light-reference image. Variant of qwen-edit-2509-relight.json — adds a 2nd top-level LoadImage (#16) bound to upstream_image:annotated[1] which feeds the Qwen-Edit subgraph's `image2` input. RelightStage's autogrow `images` group should have BOTH the subject (image0) AND a light reference (image1) wired in for this variant to produce a meaningful result. Stage's `_relight_prompt()` auto-switches to 'transfer the lighting from the reference image' phrasing when 2 upstream images are present.",
+
+  "label":       "Qwen Edit 2509 Relight (with reference)",
+  "order":       20,
+  "description": "Relight via Qwen-Image-Edit 2509 + Relight LoRA, with a 2nd image as the LIGHTING REFERENCE. Wire your subject into images[0] and a reference photo whose lighting you want to transfer into images[1]. Stage's brightness/color/rim_light widgets still tune the description; the reference image gives the model concrete lighting to copy from.",
+
+  "result": {
+    "type": "ui_save_url",
+    "node": "12"
+  },
+
+  "inputs": {
+    "11": {
+      "image": {
+        "from": "upstream_image:annotated[0]",
+        "required": true,
+        "error": "Relight needs a subject image — wire one into the stage's image input."
+      }
+    },
+    "16": {
+      "image": {
+        "from": "upstream_image:annotated[1]",
+        "required": true,
+        "error": "This variant requires a 2nd image as light reference — wire one into the stage's autogrow image slot, or pick the standard 'Qwen Edit 2509 Relight' workflow instead."
+      }
+    },
+    "15": {
+      "value": {
+        "from": "main_prompt",
+        "default": "transfer the lighting from the reference image onto the subject, preserving identity, geometry, and details; only change lighting and shadows"
+      }
+    },
+    "10:37": {
+      "unet_name":    { "from": "literal:qwen_image_edit_2509_fp8_e4m3fn.safetensors" }
+    },
+    "10:38": {
+      "clip_name":    { "from": "literal:qwen_2.5_vl_7b_fp8_scaled.safetensors" }
+    },
+    "10:39": {
+      "vae_name":     { "from": "literal:qwen_image_vae.safetensors" }
+    },
+    "10:89": {
+      "lora_name":      { "from": "literal:Qwen-Image-Edit-2509-Lightning-4steps-V1.0-bf16.safetensors" },
+      "strength_model": { "from": "literal:1.0", "cast": "float" }
+    },
+    "10:118": {
+      "lora_name":      { "from": "literal:Qwen-Image-Edit-2509-Relight.safetensors" },
+      "strength_model": { "from": "literal:1.0", "cast": "float" }
+    },
+    "10:3": {
+      "seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    }
+  }
+}

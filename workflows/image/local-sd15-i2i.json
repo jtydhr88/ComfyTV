@@ -1,0 +1,190 @@
+{
+  "id": "8b2d-i2i-sd15",
+  "revision": 0,
+  "last_node_id": 11,
+  "last_link_id": 12,
+  "nodes": [
+    {
+      "id": 4,
+      "type": "CheckpointLoaderSimple",
+      "pos": [-650, 0],
+      "size": [400, 100],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {"name": "MODEL", "type": "MODEL", "links": [1]},
+        {"name": "CLIP",  "type": "CLIP",  "links": [2, 3]},
+        {"name": "VAE",   "type": "VAE",   "links": [4, 5]}
+      ],
+      "properties": {"cnr_id": "comfy-core"},
+      "widgets_values": ["v1-5-pruned-emaonly-fp16.safetensors"]
+    },
+    {
+      "id": 10,
+      "type": "LoadImage",
+      "pos": [-650, 150],
+      "size": [400, 320],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {"name": "IMAGE", "type": "IMAGE", "links": [6]},
+        {"name": "MASK",  "type": "MASK",  "links": null}
+      ],
+      "properties": {"cnr_id": "comfy-core"},
+      "widgets_values": ["example.png", "image"]
+    },
+    {
+      "id": 11,
+      "type": "VAEEncode",
+      "pos": [-200, 240],
+      "size": [220, 50],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {"name": "pixels", "type": "IMAGE", "link": 6},
+        {"name": "vae",    "type": "VAE",   "link": 5}
+      ],
+      "outputs": [
+        {"name": "LATENT", "type": "LATENT", "links": [7]}
+      ],
+      "properties": {"cnr_id": "comfy-core"},
+      "widgets_values": []
+    },
+    {
+      "id": 6,
+      "type": "CLIPTextEncode",
+      "pos": [-200, 0],
+      "size": [400, 130],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {"name": "clip", "type": "CLIP", "link": 2}
+      ],
+      "outputs": [
+        {"name": "CONDITIONING", "type": "CONDITIONING", "links": [8]}
+      ],
+      "properties": {"cnr_id": "comfy-core"},
+      "widgets_values": ["a stylised version of the input image, vibrant colors, high detail"]
+    },
+    {
+      "id": 7,
+      "type": "CLIPTextEncode",
+      "pos": [-200, 140],
+      "size": [400, 90],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {"name": "clip", "type": "CLIP", "link": 3}
+      ],
+      "outputs": [
+        {"name": "CONDITIONING", "type": "CONDITIONING", "links": [9]}
+      ],
+      "properties": {"cnr_id": "comfy-core"},
+      "widgets_values": ["text, watermark, low quality"]
+    },
+    {
+      "id": 3,
+      "type": "KSampler",
+      "pos": [280, 0],
+      "size": [320, 280],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {"name": "model",        "type": "MODEL",        "link": 1},
+        {"name": "positive",     "type": "CONDITIONING", "link": 8},
+        {"name": "negative",     "type": "CONDITIONING", "link": 9},
+        {"name": "latent_image", "type": "LATENT",       "link": 7}
+      ],
+      "outputs": [
+        {"name": "LATENT", "type": "LATENT", "links": [10]}
+      ],
+      "properties": {"cnr_id": "comfy-core"},
+      "widgets_values": [
+        685468484323813,
+        "randomize",
+        20,
+        8,
+        "euler",
+        "normal",
+        0.75
+      ]
+    },
+    {
+      "id": 8,
+      "type": "VAEDecode",
+      "pos": [640, 0],
+      "size": [220, 50],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {"name": "samples", "type": "LATENT", "link": 10},
+        {"name": "vae",     "type": "VAE",    "link": 4}
+      ],
+      "outputs": [
+        {"name": "IMAGE", "type": "IMAGE", "links": [11]}
+      ],
+      "properties": {"cnr_id": "comfy-core"},
+      "widgets_values": []
+    },
+    {
+      "id": 9,
+      "type": "SaveImage",
+      "pos": [900, 0],
+      "size": [400, 460],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {"name": "images", "type": "IMAGE", "link": 11}
+      ],
+      "outputs": [],
+      "properties": {"cnr_id": "comfy-core"},
+      "widgets_values": ["ComfyTV/sd15-i2i"]
+    }
+  ],
+  "links": [
+    [1,  4,  0, 3, 0, "MODEL"],
+    [2,  4,  1, 6, 0, "CLIP"],
+    [3,  4,  1, 7, 0, "CLIP"],
+    [4,  4,  2, 8, 1, "VAE"],
+    [5,  4,  2, 11, 1, "VAE"],
+    [6,  10, 0, 11, 0, "IMAGE"],
+    [7,  11, 0, 3, 3, "LATENT"],
+    [8,  6,  0, 3, 1, "CONDITIONING"],
+    [9,  7,  0, 3, 2, "CONDITIONING"],
+    [10, 3,  0, 8, 0, "LATENT"],
+    [11, 8,  0, 9, 0, "IMAGE"]
+  ],
+  "groups": [
+    {
+      "title": "i2i source",
+      "bounding": [-680, -60, 460, 560],
+      "color": "#3f789e",
+      "font_size": 18
+    },
+    {
+      "title": "Prompts",
+      "bounding": [-220, -60, 440, 280],
+      "color": "#3f789e",
+      "font_size": 18
+    },
+    {
+      "title": "Sample + decode",
+      "bounding": [260, -60, 380, 360],
+      "color": "#3f789e",
+      "font_size": 18
+    }
+  ],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}

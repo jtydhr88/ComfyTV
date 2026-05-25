@@ -1,0 +1,40 @@
+{
+  "ComfyTV.ProjectStage":                { "display_name": "项目" },
+
+  "ComfyTV.TextStage":                   { "display_name": "文本阶段" },
+  "ComfyTV.ImageStage":                  { "display_name": "图像阶段" },
+  "ComfyTV.VideoStage":                  { "display_name": "视频阶段" },
+  "ComfyTV.AudioStage":                  { "display_name": "音频阶段" },
+
+  "ComfyTV.StoryboardStage":             { "display_name": "故事板" },
+  "ComfyTV.ShotImagesStage":             { "display_name": "分镜图集" },
+  "ComfyTV.ImagePickerStage":            { "display_name": "图片选择器" },
+
+  "ComfyTV.PanoramaStage":               { "display_name": "全景图" },
+  "ComfyTV.PanoramaCurrentViewStage":    { "display_name": "全景 · 当前视角" },
+  "ComfyTV.PanoramaMultiViewStage":      { "display_name": "全景 · 多视角" },
+
+  "ComfyTV.MultiangleStage":             { "display_name": "多角度" },
+  "ComfyTV.RelightStage":                { "display_name": "打光" },
+  "ComfyTV.ImageVariationsStage":        { "display_name": "图像变体" },
+
+  "ComfyTV.UpscaleStage":                { "display_name": "高清" },
+  "ComfyTV.OutpaintStage":               { "display_name": "扩图" },
+  "ComfyTV.InpaintStage":                { "display_name": "重绘" },
+  "ComfyTV.EraseStage":                  { "display_name": "擦除" },
+  "ComfyTV.CutoutStage":                 { "display_name": "抠图" },
+  "ComfyTV.CropStage":                   { "display_name": "裁剪" },
+
+  "ComfyTV.VideoClipStage":              { "display_name": "视频剪辑" },
+  "ComfyTV.VideoUpscaleStage":           { "display_name": "视频高清" },
+  "ComfyTV.VideoSubtitleSmartEraseStage":{ "display_name": "智能去字幕" },
+  "ComfyTV.VideoSubtitleSelectEraseStage":{ "display_name": "扣选去字幕" },
+
+  "ComfyTV.AudioExtractVocalStage":      { "display_name": "音频 · 仅人声" },
+  "ComfyTV.AudioExtractBgStage":         { "display_name": "音频 · 仅背景声" },
+  "ComfyTV.AudioVideoDemuxAudioStage":   { "display_name": "分离 · 音轨" },
+  "ComfyTV.AudioVideoDemuxVideoStage":   { "display_name": "分离 · 静默视频" },
+
+  "ComfyTV.ImageLoaderStage":            { "display_name": "加载图片" },
+  "ComfyTV.VideoLoaderStage":            { "display_name": "加载视频" }
+}

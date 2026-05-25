@@ -1,0 +1,25 @@
+{
+  "_comment": "Shipped preset for vanilla SD1.5 text-to-image. Outer graph: CheckpointLoader #4 → CLIPTextEncode (#6 pos, #7 neg) → KSampler #3 → VAEDecode #8 → SaveImage #9. Bindings hook ImageStage's main_prompt to the positive prompt node, sizing widgets to EmptyLatentImage #5, and KSampler's seed to a fresh random_int31 each Run. Negative prompt stays at the workflow's default ('text, watermark').",
+
+  "label":       "Local SD1.5",
+  "order":       10,
+  "description": "Vanilla Stable Diffusion 1.5 text-to-image. The prompt drives the positive CLIPTextEncode; resolution / aspect_ratio drive width/height on EmptyLatentImage; seed is randomized per Run.",
+
+  "result": { "type": "ui_save_batch", "node": "9" },
+
+  "sizing": { "type": "image", "base": 512, "snap": 8 },
+
+  "inputs": {
+    "6": {
+      "text": { "from": "main_prompt", "default": "a photograph" }
+    },
+    "5": {
+      "width":      { "from": "computed:width",  "cast": "int" },
+      "height":     { "from": "computed:height", "cast": "int" },
+      "batch_size": { "from": "option:batch_size", "default": "1", "cast": "int" }
+    },
+    "3": {
+      "seed": { "from": "option:seed", "default": "random_int31", "cast": "int" }
+    }
+  }
+}

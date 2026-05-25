@@ -1,0 +1,53 @@
+{
+  "_comment": "Shipped preset for Flux Fill Inpaint. Template ships as a subgraph; after browser-side graphToPrompt expansion, inner nodes get IDs of the form '<subgraph_instance_id>:<inner_id>' — see executionUtil.ts:110. So the inner KSampler (#3) becomes '47:3' in api_json, etc.\n\nWe also added a top-level LoadImageMask (#100) so our painter-driven mask_data flow works: original template uses LoadImage's alpha channel as the mask, but ComfyTV's InpaintStage sends mask data separately as option:mask_data.",
+
+  "label":       "Flux Fill Inpaint",
+  "order":       10,
+  "description": "Inpaint via Flux Fill Dev (fp8). Upstream image → LoadImage; painter mask → LoadImageMask; main_prompt → inner CLIPTextEncode. Both image and mask are required. Output is a single image (COMFYTV_IMAGE).",
+
+  "result": {
+    "type": "ui_save_url",
+    "node": "9"
+  },
+
+  "inputs": {
+    "17": {
+      "image": {
+        "from": "upstream_image:annotated[0]",
+        "required": true,
+        "error": "Inpaint needs an upstream image — wire one into the stage's image input."
+      }
+    },
+    "100": {
+      "image": {
+        "from": "option:mask_data",
+        "required": true,
+        "error": "Inpaint needs a mask — paint the area you want to change before running."
+      },
+      "channel": { "from": "literal:alpha" }
+    },
+    "47:31": {
+      "unet_name": { "from": "literal:flux1-fill-dev_fp8.safetensors" }
+    },
+    "47:34": {
+      "clip_name1": { "from": "literal:clip_l.safetensors" },
+      "clip_name2": { "from": "literal:t5xxl_fp8_e4m3fn_scaled.safetensors" }
+    },
+    "47:32": {
+      "vae_name":   { "from": "literal:ae.safetensors" }
+    },
+    "47:23": {
+      "text": {
+        "from": "main_prompt",
+        "default": "high-quality photograph, natural lighting, sharp focus, detailed"
+      }
+    },
+    "47:3": {
+      "seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    }
+  }
+}

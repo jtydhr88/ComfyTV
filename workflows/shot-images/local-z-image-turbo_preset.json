@@ -1,0 +1,30 @@
+{
+  "_comment": "Shipped preset for Z-Image Turbo as Shot Images Stage's backend (from ComfyUI's bundled image_z_image_turbo template). Subgraph instance #57; the inner CLIPTextEncode (#27) holds the prompt — composite key '57:27'. ShotImagesStage iterates the storyboard and runs this workflow per shot. Result is auto-detected from SaveImage node #9 as ui_save_batch.",
+
+  "label":       "Z-Image Turbo (per-shot)",
+  "order":       10,
+  "description": "Z-Image Turbo (bf16) 8-step text-to-image, one image per Storyboard shot. Fast (~2s/image on a 24GB GPU). Requires z_image_turbo_bf16.safetensors + qwen_3_4b.safetensors + ae.safetensors — see workflows/shot-images/README.md.",
+
+  "inputs": {
+    "57:27": {
+      "text": {
+        "from": "main_prompt",
+        "default": "a photograph"
+      }
+    },
+    "57:13": {
+      "width":      { "from": "computed:width" },
+      "height":     { "from": "computed:height" },
+      "batch_size": { "from": "literal:1", "cast": "int" }
+    },
+    "57:3": {
+      "seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    }
+  },
+
+  "sizing": { "type": "image", "base": 1024, "snap": 8 }
+}

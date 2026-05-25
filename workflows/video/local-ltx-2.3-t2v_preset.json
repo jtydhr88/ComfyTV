@@ -1,0 +1,18 @@
+{
+  "_comment": "Shipped preset for LTX-Video 2.3 22B text-to-video (from ComfyUI's bundled video_ltx2_3_t2v template). Outer graph is just SaveVideo + the subgraph instance #267; nearly everything lives inside the subgraph. After graphToPrompt expands the subgraph, the inner prompt node gets the composite id '267:266'. Sizing (1280x720x25fps x5s) is left at the template defaults — adjust via the sidebar later.",
+
+  "label":       "Local LTX 2.3 T2V",
+  "order":       20,
+  "description": "LTX-Video 2.3 22B text-to-video. Outputs a 5s 720p clip by default. Requires ltx-2.3-22b-dev-fp8.safetensors (+ distilled lora + Gemma3 text encoder + LTX 2.3 spatial upscaler) — see workflows/video/README.md.",
+
+  "result": { "type": "ui_save_url", "node": "75" },
+
+  "inputs": {
+    "267:266": {
+      "value": {
+        "from": "main_prompt",
+        "default": "A cinematic shot, golden hour lighting, slow camera dolly forward."
+      }
+    }
+  }
+}

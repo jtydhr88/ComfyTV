@@ -1,0 +1,54 @@
+[project]
+name = "ComfyTV"
+description = "LibTV-style Canvas pipeline for ComfyUI"
+version = "0.1.0"
+license = {text = "MIT"}
+dependencies = []
+
+[project.urls]
+Repository = "https://github.com/jtydhr88/ComfyTV"
+
+[tool.comfy]
+PublisherId = "comfytv"
+DisplayName = "ComfyTV"
+Icon = ""
+includes = ["js"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+asyncio_mode = "auto"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["."]
+omit = [
+    "legacy/*",
+    "tests/*",
+    "temp/*",
+    "workflows_backup/*",
+    "infinite-canvas/*",
+    "CuMesh/*",
+    "__init__.py",
+    "src/*",
+    "js/*",
+    "docs/*",
+    "locales/*",
+    "nodes/bridges.py",
+    "runners/local_multishot.py",
+    "runners/fake_multishot.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "\\.\\.\\.",
+]
+show_missing = true
+skip_covered = false

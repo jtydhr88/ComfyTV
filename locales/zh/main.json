@@ -1,0 +1,420 @@
+{
+  "stage": {
+    "run": "运行",
+    "rerun": "重新运行",
+    "running": "运行中…",
+    "cancel": "取消",
+    "preparingWorkflow": "准备工作流中…",
+    "section": {
+      "context": "上游输入",
+      "output": "输出 ({type})",
+      "actions": "动作"
+    },
+    "empty": {
+      "no_output": "暂无输出",
+      "generating": "生成中…",
+      "pending_upstream": "上游待运行",
+      "unsupported_type": "不支持的类型 {type}"
+    },
+    "source": {
+      "upstream": "← 上游",
+      "pending": "… 等待中"
+    },
+    "disconnect": "断开此连接",
+    "starting": "启动中…",
+    "runByKind": {
+      "text": "生成文本",
+      "image": "生成图片",
+      "image-batch": "生成图片",
+      "video": "生成视频",
+      "audio": "生成音频",
+      "panorama": "生成全景图",
+      "storyboard": "生成分镜"
+    },
+    "action": {
+      "viewFull": "查看大图",
+      "download": "下载",
+      "close": "关闭"
+    }
+  },
+  "error": {
+    "dismiss": "清除",
+    "cancelled": "已取消"
+  },
+  "configSidebar": {
+    "title": "工作流配置",
+    "empty": "在画布上选中某个 Stage 节点以编辑它的工作流配置。",
+    "noWorkflowPicked": "该 Stage 还没选工作流 —— 先在下拉里挑一个。",
+    "loading": "加载中…",
+    "noExposedWidgets": "这个工作流没有可编辑的 widget，或者还没准备过 —— 先在画布上任一 Stage 选中它，浏览器侧 graphToPrompt 跑一遍后才有 widget 元数据。",
+    "pickWorkflowFirst": "先在画布上任一 Stage 上选中这个工作流 —— 浏览器侧 graphToPrompt 跑过一遍才有 widget 元数据。",
+    "bindTo": "绑定到：",
+    "exportPreset": "导出 preset.json",
+    "exportPresetTooltip": "把当前绑定导出为 *_preset.json 文件，丢进 workflows/<kind>/ 和工作流 JSON 同目录，其他用户首次启动时会自动应用这套默认。",
+    "exportPresetFailed": "导出失败: {detail}",
+    "resetToPreset": "↻ 重置为内置 preset",
+    "resetToPresetTooltip": "清空该工作流的所有绑定和元数据，重新读取磁盘上的 _preset.json 文件。你自己改过的内容会丢失。",
+    "resetToPresetConfirm": "把这个工作流的所有绑定重置成内置 preset？你自己改过的会丢失。",
+    "resetToPresetFailed": "重置失败: {detail}",
+    "section": {
+      "widgets": "Widget 列表",
+      "notes": "工作流笔记",
+      "description": "说明"
+    }
+  },
+  "project": {
+    "label": "当前项目",
+    "shared_suffix": "(共享)",
+    "id_prefix": "id:",
+    "refresh": "刷新项目列表",
+    "create": "新建项目",
+    "delete": "删除该项目（不会删磁盘文件）",
+    "delete_confirm": "确定删除该项目？数据库会清空，磁盘上的生成文件保留。",
+    "create_prompt": "新项目名称：",
+    "create_default": "项目 {n}",
+    "status": {
+      "refreshing": "刷新中…",
+      "refresh_failed": "刷新失败",
+      "create_failed": "创建失败",
+      "deleted": "已删除",
+      "delete_failed": "删除失败",
+      "load_failed": "加载项目列表失败"
+    }
+  },
+  "execution": {
+    "running": "运行中：节点 #{nodeId}",
+    "queued": "排队中"
+  },
+  "actions": {
+    "image": {
+      "edit": {
+        "label": "修改图片",
+        "tooltip": "改变尺寸或需要交互 UI 的图像编辑（高清 / 扩图 / 重绘 / 擦除 / 抠图 / 裁剪）"
+      },
+      "panorama": {
+        "label": "全景图",
+        "tooltip": "把当前图变为全景，进入视角操作"
+      },
+      "multiangle": {
+        "label": "多角度",
+        "tooltip": "从不同相机角度重新渲染该图"
+      },
+      "relight": {
+        "label": "打光",
+        "tooltip": "调亮度 / 颜色 / 轮廓光，或参考另一张图的灯光"
+      },
+      "preset": {
+        "label": "预设",
+        "tooltip": "保持尺寸、无需复杂 UI 的预设变换（多视图 / 宫格 / 画面推演 ...）"
+      }
+    },
+    "video": {
+      "extend": {
+        "label": "延伸",
+        "tooltip": "抽出本段末帧,派生新 VideoStage 用作 I2V 起始帧 —— 写个 prompt 描述接下来要发生什么"
+      },
+      "change": {
+        "label": "修改视频",
+        "tooltip": "对已上传/已生成的视频做修改：剪辑 / 高清 / 去字幕 / 音频分离"
+      }
+    },
+    "text": {
+      "refine": {
+        "label": "改写",
+        "tooltip": "在新 TextStage 中继续改写"
+      }
+    },
+    "panorama": {
+      "view-current": {
+        "label": "当前视角截图",
+        "tooltip": "提取当前视角为单张图"
+      },
+      "view-four": {
+        "label": "四大视角截图",
+        "tooltip": "提取 4 个视角组成图集"
+      },
+      "view-twelve": {
+        "label": "12 视角截图",
+        "tooltip": "提取 12 个视角组成图集"
+      }
+    },
+    "storyboard": {
+      "gen-shots": {
+        "label": "生成分镜图",
+        "tooltip": "派生一个 Shot Images 节点接到这个分镜板上 —— 按镜头列表逐个出图"
+      }
+    }
+  },
+  "presets": {
+    "imageVariant": {
+      "multi-cam-9": {
+        "label": "多机位九宫格",
+        "tooltip": "9 个相机角度排列"
+      },
+      "story-4": {
+        "label": "剧情推演四宫格",
+        "tooltip": "4 连贯剧情画面"
+      },
+      "face-3view": {
+        "label": "角色脸部三视图",
+        "tooltip": "人脸正/侧/45° 视图"
+      },
+      "product-3view": {
+        "label": "产品三视图",
+        "tooltip": "产品正/侧/背"
+      },
+      "character-3view": {
+        "label": "角色三视图",
+        "tooltip": "全身角色正/侧/背"
+      },
+      "storyboard-25": {
+        "label": "25 宫格连贯分镜",
+        "tooltip": "25 张连贯分镜"
+      },
+      "cinematic-light": {
+        "label": "电影级光影校正",
+        "tooltip": "应用电影级打光与色彩"
+      },
+      "frame-3s": {
+        "label": "画面推演 +3s",
+        "tooltip": "推演 3 秒后的画面"
+      },
+      "frame-5s": {
+        "label": "画面推演 +5s",
+        "tooltip": "推演 5 秒后的画面"
+      }
+    },
+    "imageEdit": {
+      "hd": {
+        "label": "高清",
+        "tooltip": "提升分辨率 (Upscale) — 输出尺寸大于输入"
+      },
+      "outpaint": {
+        "label": "扩图",
+        "tooltip": "向外延伸画面 (Outpaint) — 输出比输入大"
+      },
+      "inpaint": {
+        "label": "重绘",
+        "tooltip": "局部重新生成 (Inpaint) — 需要蒙版"
+      },
+      "erase": {
+        "label": "擦除",
+        "tooltip": "抹除指定区域 (Erase) — 需要蒙版"
+      },
+      "cutout": {
+        "label": "抠图",
+        "tooltip": "抠出主体，背景透明 (Cutout / matting)"
+      },
+      "crop": {
+        "label": "裁剪",
+        "tooltip": "按框裁切 (Crop) — 需要 bbox 拖拽"
+      },
+      "rotate": {
+        "label": "旋转",
+        "tooltip": "按角度旋转（浏览器端，不占 GPU）"
+      },
+      "mirror": {
+        "label": "镜像",
+        "tooltip": "水平 / 垂直翻转（浏览器端）"
+      },
+      "grid": {
+        "label": "宫格切分",
+        "tooltip": "按 R×C 切成多张（浏览器端）→ 图片批次"
+      }
+    },
+    "videoChange": {
+      "clip": {
+        "label": "剪辑",
+        "tooltip": "裁剪片段 — 输入起始结束时间"
+      },
+      "crop": {
+        "label": "裁剪",
+        "tooltip": "空间裁剪 — 每帧保留 (x, y, w, h) 矩形"
+      },
+      "resize": {
+        "label": "缩放",
+        "tooltip": "缩放视频到目标 宽×高(其中一个填 -1 按比例自动算另一个)"
+      },
+      "extract-frame": {
+        "label": "抽帧",
+        "tooltip": "从视频抽一张图(首/末/中/任意秒数)"
+      },
+      "hd": {
+        "label": "高清",
+        "tooltip": "提升分辨率"
+      },
+      "subtitle-smart": {
+        "label": "智能去字幕",
+        "tooltip": "自动检测并擦除字幕"
+      },
+      "subtitle-select": {
+        "label": "扣选去字幕",
+        "tooltip": "手动框选区域擦除（需要 region selector UI）"
+      },
+      "audio-vocal": {
+        "label": "仅保留人声",
+        "tooltip": "人声分离 — 仅保留人声"
+      },
+      "audio-bg": {
+        "label": "仅保留背景声",
+        "tooltip": "人声分离 — 仅保留背景声"
+      },
+      "demux": {
+        "label": "音视频分离",
+        "tooltip": "同时产出音频轨和静默视频（双节点）"
+      }
+    }
+  },
+  "shotCell": {
+    "pick": "选择 {tag}",
+    "refine": "微调 {tag}"
+  },
+  "imageCrop": {
+    "noInputImage": "无输入图像 — 请上游连接一张图",
+    "cropPreviewAlt": "裁剪预览",
+    "loading": "加载中…",
+    "ratio": "比例",
+    "custom": "自定义",
+    "lockRatio": "锁定纵横比",
+    "unlockRatio": "解锁纵横比",
+    "applying": "应用裁剪中…",
+    "applied": "裁剪已应用 — 下游可直接使用",
+    "adjustToApply": "拖动矩形或选择比例以应用"
+  },
+  "panorama": {
+    "empty": "暂无全景图 — 上传 HDRI / 等距柱状投影图，或接入上游图后点 Run",
+    "uploading": "上传中…",
+    "upload": "上传全景图",
+    "clearUpload": "清除上传",
+    "clearUploadTooltip": "丢弃手动来源 — 之后 Run 会重新从上游派生",
+    "manualSourceBadge": "手动",
+    "loadError": "加载全景图失败"
+  },
+  "imageCompare": {
+    "before": "之前",
+    "after": "之后",
+    "noImages": "连接两张图进行对比（A / B）"
+  },
+  "storyboard": {
+    "shots": "分镜",
+    "addShot": "添加分镜",
+    "empty": "暂无分镜 — 点 Run 从剧本生成，或手动添加",
+    "moveUp": "上移",
+    "moveDown": "下移",
+    "remove": "删除分镜",
+    "regenerate": "用 LLM 重新生成此镜头(其他镜头保持)",
+    "noRef": "无参考图",
+    "uploadRef": "上传参考图",
+    "clearRef": "清除参考图",
+    "promptPlaceholder": "描述这个镜头…",
+    "cols": {
+      "scene_purpose": "画面描述",
+      "character": "角色",
+      "character_desc": "角色描述",
+      "shot_size": "景别",
+      "action": "角色动作",
+      "emotion": "情绪",
+      "scene_tags": "场景标签",
+      "lighting": "光影氛围",
+      "sfx": "音效",
+      "dialogue": "对白",
+      "image_prompt": "分镜提示词",
+      "motion_prompt": "视频运动提示词"
+    }
+  },
+  "timeline": {
+    "keyframes": "关键帧",
+    "connectImages": "上游连接图片作为分镜素材",
+    "addSegment": "添加为分镜",
+    "clickKeyframe": "点击上方关键帧添加分镜",
+    "addAudio": "添加音频轨",
+    "noAudio": "上游连接音频以添加音轨",
+    "segmentPrompt": "分镜提示词",
+    "promptPlaceholder": "这个镜头里发生什么…",
+    "length": "时长",
+    "fps": "帧率",
+    "shots": "镜头"
+  },
+  "gridSplit": {
+    "connectImage": "请连接一张图以切分",
+    "pickGrid": "选择宫格预设或设置行 × 列",
+    "splitting": "切分为 {n} 块中…",
+    "done": "已切分为 {n} 块 — 下游可直接使用",
+    "rows": "行",
+    "cols": "列"
+  },
+  "panoramaView": {
+    "connectPanorama": "请在上游接入全景图",
+    "orbitToCapture": "拖动环视 — 松开后自动截取当前视角",
+    "capturing": "截取视角中…",
+    "captured": "视角已截取 — 下游可直接使用",
+    "aspect": "比例",
+    "resolution": "分辨率",
+    "viewCount": "视角数",
+    "adjustCountToCapture": "拖动滑块以批量截取",
+    "capturingCount": "截取中 {i}/{n}…",
+    "capturedN": "已截取 {n} 张 — 下游可直接使用"
+  },
+  "rotate": {
+    "angle": "角度",
+    "applying": "旋转应用中…",
+    "applied": "旋转已应用 — 下游可直接使用",
+    "adjustToApply": "拖动滑块或点击快速角度以应用"
+  },
+  "mirror": {
+    "horizontal": "水平翻转",
+    "vertical": "垂直翻转",
+    "applying": "镜像应用中…",
+    "applied": "镜像已应用 — 下游可直接使用",
+    "adjustToApply": "切换翻转开关以应用"
+  },
+  "painter": {
+    "tool": "工具",
+    "brush": "画笔",
+    "eraser": "橡皮",
+    "rect": "矩形",
+    "ellipse": "椭圆",
+    "label": "编号标记",
+    "size": "大小",
+    "color": "颜色",
+    "opacity": "不透明度",
+    "hardness": "硬度",
+    "clear": "清除"
+  },
+  "camera": {
+    "horizontal": "水平",
+    "vertical": "垂直",
+    "zoom": "距离",
+    "resetToDefaults": "重置为默认值",
+    "azimuth": {
+      "frontView": "正面视角",
+      "frontRightQuarterView": "右前方视角",
+      "rightSideView": "右侧视角",
+      "backRightQuarterView": "右后方视角",
+      "backView": "背面视角",
+      "backLeftQuarterView": "左后方视角",
+      "leftSideView": "左侧视角",
+      "frontLeftQuarterView": "左前方视角"
+    },
+    "elevation": {
+      "lowAngleShot": "仰拍",
+      "eyeLevelShot": "平视",
+      "elevatedShot": "高角度",
+      "highAngleShot": "俯拍"
+    },
+    "distance": {
+      "wideShot": "远景",
+      "mediumShot": "中景",
+      "closeUp": "特写"
+    }
+  },
+  "outpaint": {
+    "left": "左",
+    "top": "上",
+    "right": "右",
+    "bottom": "下",
+    "reset": "重置",
+    "output": "输出",
+    "noInputImage": "先把一张图片连进来"
+  }
+}

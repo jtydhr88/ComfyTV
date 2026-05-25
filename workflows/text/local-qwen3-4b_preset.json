@@ -1,0 +1,15 @@
+{
+  "_comment": "Shipped preset for the Qwen3 4B local LLM. Sourced from ComfyUI's bundled llm_qwen3_text_gen template (GUI graph). Drives Text Stage; reused by Storyboard Stage with its own preset that flips use_default_template off. Read ONCE on first DB row creation.",
+
+  "label":       "Local Qwen3 4B",
+  "order":       10,
+  "description": "Qwen3 4B native LLM (ComfyUI built-in TextGenerate). Outputs a single string. Requires qwen_3_4b.safetensors in models/text_encoders/ — see workflows/text/README.md.",
+
+  "result": { "type": "graph_output_first", "node": "7" },
+
+  "inputs": {
+    "7": {
+      "prompt": { "from": "main_prompt", "default": "Hello." }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "_comment": "Shipped preset for Qwen-Image 2512 + 360 LoRA panorama generator (from ComfyUI's bundled template_qwen_Image_2512_360_lora). Outer graph: PrimitiveStringMultiline #266 (trigger prefix) + #269 (user prompt) -> StringConcatenate #267 -> subgraph instance #238 (Qwen-Image 2512 core with 4-step Lightning LoRA + 360 LoRA) -> SaveImage #60. PanoramaStage already prepends 'equirectangular 360 degree panorama, ' to main_prompt (see nodes/stages/panorama.py:_combine prompt logic), so we override #266 to empty to avoid double-prefixing — main_prompt goes into #269 carrying the stage's prefix.",
+
+  "label":       "Qwen-Image 2512 + 360 LoRA",
+  "order":       10,
+  "description": "Text-to-equirectangular panorama via Qwen-Image 2512 (fp8) + 4-step Lightning LoRA + 360 LoRA. Outputs 2048x1024 by default. Requires qwen_image_2512_fp8_e4m3fn.safetensors + qwen_2.5_vl_7b_fp8_scaled.safetensors + Qwen-Image-2512-Lightning-4steps-V1.0-fp32.safetensors + qwen-360-diffusion-2512-int8-bf16-v2.safetensors + qwen_image_vae.safetensors — see workflows/panorama/README.md.",
+
+  "result": { "type": "ui_save_url", "node": "60" },
+
+  "inputs": {
+    "269": {
+      "value": {
+        "from": "main_prompt",
+        "default": "equirectangular 360 degree panorama, a peaceful landscape"
+      }
+    },
+    "266": {
+      "value": { "from": "literal:" }
+    }
+  }
+}

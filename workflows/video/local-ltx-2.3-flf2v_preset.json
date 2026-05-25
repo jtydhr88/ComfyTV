@@ -1,0 +1,32 @@
+{
+  "_comment": "Shipped preset for LTX-Video 2.3 first-last-frame to video (from ComfyUI's bundled video_ltx2_3_flf2v template). Outer graph: LoadImage #31 (first frame) + LoadImage #39 (last frame) -> subgraph #129 -> SaveVideo #68. The subgraph's inner positive CLIPTextEncode is #128 (composite id `129:128`); we wire main_prompt into its `text` widget so the user's prompt guides the in-between motion. Empty prompt falls back to a generic default that doesn't tie to any specific keyframe content.",
+
+  "label":       "Local LTX 2.3 FLF2V",
+  "order":       22,
+  "description": "LTX-Video 2.3 first-last-frame to video. Wire TWO images into the stage (first frame, last frame); the model fills in the motion between them. The text prompt guides the in-between motion (camera move, mood, music). Requires the LTX 2.3 model files — see workflows/video/README.md.",
+
+  "result": { "type": "ui_save_url", "node": "68" },
+
+  "inputs": {
+    "31": {
+      "image": {
+        "from": "upstream_image:annotated[0]",
+        "required": true,
+        "error": "FLF2V needs a FIRST-frame image — wire one into the stage's images.image0 slot."
+      }
+    },
+    "39": {
+      "image": {
+        "from": "upstream_image:annotated[1]",
+        "required": true,
+        "error": "FLF2V needs a LAST-frame image — wire a second image into the stage's images.image1 slot."
+      }
+    },
+    "129:128": {
+      "text": {
+        "from": "main_prompt",
+        "default": "Smooth natural motion between the two keyframes, cinematic camera move."
+      }
+    }
+  }
+}

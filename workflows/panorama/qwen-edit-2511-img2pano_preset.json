@@ -1,0 +1,29 @@
+{
+  "_comment": "Shipped preset for image-to-panorama via Qwen-Image-Edit 2511. Sourced from ComfyUI's bundled image_qwen_image_edit_2511 template (Qwen-Image-Edit 2511 + Lightning 4-step LoRA) with the 2nd LoadImage node removed (img2pano only needs one source view; second slot in the template was a reference texture). Outer graph: LoadImage #41 (source view) -> subgraph #170 -> SaveImage #9. The inner positive prompt is on TextEncodeQwenImageEditPlus #151; composite key 170:151.prompt. PanoramaStage prepends its own 'equirectangular 360 degree panorama, ' prefix to main_prompt before invoking, so the preset's prefix here adds the i2p-specific instruction on top.",
+
+  "label":       "Qwen-Image-Edit 2511 Image-to-Panorama",
+  "order":       20,
+  "description": "Image-to-panorama via Qwen-Image-Edit 2511 + Lightning 4-step LoRA. Takes a regular photo as the central front view and extrapolates the full 360° around it (~2048x1024 equirectangular). Geometry consistency is best on wide landscapes / interiors — close-up subjects tend to warp. Reuses the same Qwen-Image-Edit 2511 weights used by Image Edit / Multiangle / Relight; no new model downloads.",
+
+  "result": { "type": "ui_save_url", "node": "9" },
+
+  "inputs": {
+    "41": {
+      "image": {
+        "from": "upstream_image:annotated[0]",
+        "required": true,
+        "error": "Image-to-Panorama needs an upstream image — wire a regular wide-angle photo into the stage's image input."
+      }
+    },
+    "170:151": {
+      "prompt": {
+        "from": "main_prompt",
+        "default": "a wide outdoor scene",
+        "prefix": "Extrapolate this view into a full 360 degree equirectangular panorama wrapping around the camera. Keep the original subject as the central front view, generate plausible scene continuation in all directions (left, right, behind, sky, ground). Maintain the original lighting and style. "
+      }
+    },
+    "170:161": {
+      "unet_name": { "from": "literal:qwen_image_edit_2511_fp8mixed.safetensors" }
+    }
+  }
+}

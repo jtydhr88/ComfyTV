@@ -1,0 +1,32 @@
+{
+  "_comment": "Shipped preset for ACE-Step v1 text-to-audio (song generation). Read ONCE on first DB row creation; subsequent seeds preserve user edits.",
+
+  "label":       "ACE-Step v1 Song",
+  "order":       10,
+  "description": "Text-to-audio song generation via ACE-Step v1 (3.5B). main_prompt → tags (genre / mood / instruments), stage lyrics → song lyrics, stage duration → seconds of audio. Output is a single mp3 (COMFYTV_AUDIO).",
+
+  "result": {
+    "type": "ui_save_url",
+    "node": "59"
+  },
+
+  "inputs": {
+    "40": {
+      "ckpt_name": { "from": "literal:ace_step_v1_3.5b.safetensors" }
+    },
+    "14": {
+      "tags":   { "from": "main_prompt", "default": "soft female vocals, kawaii pop, j-pop, piano, guitar, synthesizer, cheerful" },
+      "lyrics": { "from": "option:lyrics", "default": "" }
+    },
+    "17": {
+      "seconds": { "from": "option:duration_s", "default": "120", "cast": "float" }
+    },
+    "52": {
+      "seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    }
+  }
+}

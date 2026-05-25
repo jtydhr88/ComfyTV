@@ -1,0 +1,25 @@
+{
+  "_comment": "Shipped preset for 4x-UltraSharp GAN upscaler. Pure ESRGAN-style — no diffusion pass, no prompt. Always outputs 4x the input size (model is fixed-scale). The UpscaleStage's `scale` widget is ignored by this workflow; future variants may add an ImageScaleBy to honor it. Read ONCE on first DB row creation.",
+
+  "label":       "Ultrasharp 4x",
+  "order":       10,
+  "description": "GAN-based 4x upscale via 4x-UltraSharp. No prompt, no diffusion — fast (~1-3s per 1024px image on a 24GB+ GPU). Output is always 4x the input dimensions; the `scale` widget on this stage is currently a UI hint only.",
+
+  "result": {
+    "type": "ui_save_url",
+    "node": "4"
+  },
+
+  "inputs": {
+    "1": {
+      "image": {
+        "from": "upstream_image:annotated[0]",
+        "required": true,
+        "error": "Upscale needs an upstream image — wire one into this stage's image input."
+      }
+    },
+    "2": {
+      "model_name": { "from": "literal:4x-UltraSharp.pth" }
+    }
+  }
+}

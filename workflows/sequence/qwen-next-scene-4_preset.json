@@ -1,0 +1,100 @@
+{
+  "_comment": "Ported from V1 backup api-format workflow. Per-branch positive encoders use `from: main_prompt` + `prefix:` to bake the angle keyword in front of the user's subject description. The shared UNet/CLIP/VAE/LoRAs are pinned with literal: bindings to the V1-era filenames; edit via the sidebar if you have different versions installed.",
+  "label": "Story 4",
+  "order": 10,
+  "description": "Qwen-Image-Edit 2509 + Next-Scene LoRA (@0.75) + Lightning 4-step. One workflow, 4 frames produced sequentially - each frame N+1 is generated from frame N as the reference image. The user's main_prompt is prefixed with the LoRA's canonical 'Next Scene:' trigger. Requires the 2509 base UNet + Next-Scene LoRA in models/loras/.",
+  "result": {
+    "type": "ui_save_batch",
+    "node": "20"
+  },
+  "inputs": {
+    "1": {
+      "image": {
+        "from": "upstream_image:annotated",
+        "required": true,
+        "error": "Story 4 needs an upstream image."
+      }
+    },
+    "2": {
+      "unet_name": {
+        "from": "literal:qwen_image_edit_2509_bf16.safetensors"
+      }
+    },
+    "7": {
+      "lora_name": {
+        "from": "literal:next-scene_lora-v2-3000.safetensors"
+      }
+    },
+    "8": {
+      "lora_name": {
+        "from": "literal:Qwen-Image-Edit-2509-Lightning-4steps-V1.0-bf16.safetensors"
+      }
+    },
+    "3": {
+      "clip_name": {
+        "from": "literal:qwen_2.5_vl_7b_fp8_scaled.safetensors"
+      }
+    },
+    "4": {
+      "vae_name": {
+        "from": "literal:qwen_image_vae.safetensors"
+      }
+    },
+    "11": {
+      "prompt": {
+        "from": "main_prompt",
+        "prefix": "Next Scene: ",
+        "default": "continue the action naturally, preserve identity and environment"
+      }
+    },
+    "16": {
+      "seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    },
+    "22": {
+      "prompt": {
+        "from": "main_prompt",
+        "prefix": "Next Scene: ",
+        "default": "continue the action naturally, preserve identity and environment"
+      }
+    },
+    "24": {
+      "seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    },
+    "30": {
+      "prompt": {
+        "from": "main_prompt",
+        "prefix": "Next Scene: ",
+        "default": "continue the action naturally, preserve identity and environment"
+      }
+    },
+    "32": {
+      "seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    },
+    "38": {
+      "prompt": {
+        "from": "main_prompt",
+        "prefix": "Next Scene: ",
+        "default": "continue the action naturally, preserve identity and environment"
+      }
+    },
+    "40": {
+      "seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    }
+  }
+}

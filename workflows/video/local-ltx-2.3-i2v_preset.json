@@ -1,0 +1,25 @@
+{
+  "_comment": "Shipped preset for LTX-Video 2.3 22B image-to-video (from ComfyUI's bundled video_ltx2_3_i2v template). Outer graph: LoadImage #269 -> subgraph instance #320 -> SaveVideo #75. After graphToPrompt the inner prompt node becomes composite '320:319'. We override the outer LoadImage (the first/source frame) with the wired upstream image; the prompt drives the subgraph's text branch.",
+
+  "label":       "Local LTX 2.3 I2V",
+  "order":       21,
+  "description": "LTX-Video 2.3 22B image-to-video. Takes a source frame + prompt, outputs a 5s 720p clip by default. Requires ltx-2.3-22b-dev-fp8.safetensors (+ distilled lora + Gemma3 text encoder + LTX 2.3 spatial upscaler) — see workflows/video/README.md.",
+
+  "result": { "type": "ui_save_url", "node": "75" },
+
+  "inputs": {
+    "320:319": {
+      "value": {
+        "from": "main_prompt",
+        "default": "Cinematic motion of the subject, natural movement."
+      }
+    },
+    "269": {
+      "image": {
+        "from": "upstream_image:annotated[0]",
+        "required": true,
+        "error": "LTX 2.3 I2V needs an upstream image — wire one into the stage's images slot, or pick Local LTX 2.3 T2V for pure text-to-video."
+      }
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "_comment": "Shipped preset for Flux Fill Outpaint. Read ONCE when this workflow's row is first created in DB (see workflow_db._apply_preset_to_new_row) — subsequent seeds skip the preset, so user edits via the sidebar are preserved.",
+
+  "label":       "Flux Fill Outpaint",
+  "order":       10,
+  "description": "Outpaint with Flux Fill Dev (fp8). Upstream image lands on LoadImage; main prompt feeds positive CLIPTextEncode. ImagePadForOutpaint widgets (left/top/right/bottom + feathering) are exposed for per-shot tuning. Output is a single image (COMFYTV_IMAGE).",
+
+  "result": {
+    "type": "ui_save_url",
+    "node": "9"
+  },
+
+  "inputs": {
+    "17": {
+      "image": {
+        "from": "upstream_image:annotated[0]",
+        "required": true,
+        "error": "Outpaint needs an upstream image — wire one into the stage's image input."
+      }
+    },
+    "23": {
+      "text": {
+        "from": "main_prompt",
+        "default": "beautiful scenery"
+      }
+    },
+    "3": {
+      "seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    },
+    "31": {
+      "unet_name": { "from": "literal:flux1-fill-dev_fp8.safetensors" }
+    },
+    "34": {
+      "clip_name1": { "from": "literal:clip_l.safetensors" },
+      "clip_name2": { "from": "literal:t5xxl_fp8_e4m3fn_scaled.safetensors" }
+    },
+    "32": {
+      "vae_name":   { "from": "literal:ae.safetensors" }
+    },
+    "44": {
+      "left":       { "from": "option:pad_left",   "default": "0", "cast": "int" },
+      "top":        { "from": "option:pad_top",    "default": "0", "cast": "int" },
+      "right":      { "from": "option:pad_right",  "default": "0", "cast": "int" },
+      "bottom":     { "from": "option:pad_bottom", "default": "0", "cast": "int" },
+      "feathering": { "from": "option:feathering", "default": "40", "cast": "int" }
+    }
+  }
+}

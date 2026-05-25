@@ -1,0 +1,17 @@
+{
+  "_comment": "Shipped preset for the Qwen3 4B local LLM as Storyboard Stage's backend. Same template as text/local-qwen3-4b but tuned for the 16-field-per-shot shotlist: use_default_template=false (StoryboardStage already wraps the user premise in a ChatML system+user prompt so the LLM shouldn't re-template), max_length bumped to 6144 (15+ shots can easily blow past 2048 tokens). Read ONCE on first DB row creation.",
+
+  "label":       "Local Qwen3 4B Storyboard",
+  "order":       10,
+  "description": "Qwen3 4B as a structured-shotlist LLM. StoryboardStage builds the 16-field ChatML prompt and parses the line-by-line response back into a COMFYTV_STORYBOARD JSON. Requires qwen_3_4b.safetensors in models/text_encoders/.",
+
+  "result": { "type": "graph_output_first", "node": "7" },
+
+  "inputs": {
+    "7": {
+      "prompt":               { "from": "main_prompt", "default": "Hello." },
+      "max_length":           { "from": "option:max_length", "default": "6144", "cast": "int" },
+      "use_default_template": { "from": "literal:false", "cast": "bool" }
+    }
+  }
+}

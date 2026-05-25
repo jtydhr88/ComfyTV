@@ -1,0 +1,25 @@
+{
+  "_comment": "Shipped preset for SD1.5 image-to-image. Outer graph: LoadImage #10 → VAEEncode #11 → KSampler #3 (denoise=0.75 baked in) → VAEDecode #8 → SaveImage #9. Bindings hook ImageStage's first upstream image into LoadImage, main_prompt into the positive CLIPTextEncode, seed → KSampler. Sizing follows the input image (VAEEncode is shape-preserving), so no `computed:width/height` here.",
+
+  "label":       "Local SD1.5 I2I",
+  "order":       11,
+  "description": "Stable Diffusion 1.5 image-to-image. Wire a reference image into the stage's images input; write the prompt describing what you want changed. Denoise strength is fixed at 0.75 in the workflow; tweak by editing the KSampler widget directly if needed.",
+
+  "result": { "type": "ui_save_batch", "node": "9" },
+
+  "inputs": {
+    "10": {
+      "image": {
+        "from": "upstream_image:annotated[0]",
+        "required": true,
+        "error": "Image-to-image needs an upstream image — wire one into the stage's images input."
+      }
+    },
+    "6": {
+      "text": { "from": "main_prompt", "default": "a stylised version of the input image" }
+    },
+    "3": {
+      "seed": { "from": "option:seed", "default": "random_int31", "cast": "int" }
+    }
+  }
+}

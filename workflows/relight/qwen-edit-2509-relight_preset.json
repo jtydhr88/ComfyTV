@@ -1,0 +1,52 @@
+{
+  "_comment": "Shipped preset for Relight via Qwen-Image-Edit 2509 + dedicated Relight LoRA. Adapted from ComfyUI's image_qwen_image_edit_2509_relight template. RelightStage builds the natural-language prompt from its brightness/color/rim_light widgets via _relight_prompt() and passes it as main_prompt; we bind that to the inner PrimitiveStringMultiline (#15). The StringConcatenate (#14) is left baked — it prepends '重新照明,' (Chinese for 'relight,') which Qwen-Edit handles fine. Models referenced: Qwen-Image-Edit 2509 fp8 + 2509 Relight LoRA + 2509 Lightning 4-step LoRA. See workflows/relight/README.md for download URLs.",
+
+  "label":       "Qwen Edit 2509 Relight",
+  "order":       10,
+  "description": "Relight an image via Qwen-Image-Edit 2509 + the dedicated Relight LoRA. 4-step Lightning sampling (~3-5 sec on a 24GB+ GPU). RelightStage's brightness / color / rim_light widgets feed into main_prompt via _relight_prompt(); the workflow drops that into Qwen-Edit's text encoder.",
+
+  "result": {
+    "type": "ui_save_url",
+    "node": "12"
+  },
+
+  "inputs": {
+    "11": {
+      "image": {
+        "from": "upstream_image:annotated[0]",
+        "required": true,
+        "error": "Relight needs an upstream image — wire one into this stage's image input."
+      }
+    },
+    "15": {
+      "value": {
+        "from": "main_prompt",
+        "default": "relight the image with natural daylight, preserving subject identity"
+      }
+    },
+    "10:37": {
+      "unet_name":    { "from": "literal:qwen_image_edit_2509_fp8_e4m3fn.safetensors" }
+    },
+    "10:38": {
+      "clip_name":    { "from": "literal:qwen_2.5_vl_7b_fp8_scaled.safetensors" }
+    },
+    "10:39": {
+      "vae_name":     { "from": "literal:qwen_image_vae.safetensors" }
+    },
+    "10:89": {
+      "lora_name":      { "from": "literal:Qwen-Image-Edit-2509-Lightning-4steps-V1.0-bf16.safetensors" },
+      "strength_model": { "from": "literal:1.0", "cast": "float" }
+    },
+    "10:118": {
+      "lora_name":      { "from": "literal:Qwen-Image-Edit-2509-Relight.safetensors" },
+      "strength_model": { "from": "literal:1.0", "cast": "float" }
+    },
+    "10:3": {
+      "seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    }
+  }
+}

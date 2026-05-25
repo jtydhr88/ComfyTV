@@ -1,0 +1,45 @@
+{
+  "_comment": "Shipped preset for Flux Canny ControlNet image edit. Reuses the upstream image as a Canny edge map: source image's structure (edges) is preserved while the main_prompt repaints the content. Read ONCE on first DB row creation.",
+
+  "label":       "Flux Canny Edit",
+  "order":       10,
+  "description": "Image edit guided by the upstream image's Canny edges. The Canny node extracts edges → InstructPixToPixConditioning uses them + the prompt to repaint a structurally-similar image. Tweak Canny low/high thresholds (0.15/0.30 default) on the Canny node widget if edge detection is too noisy / too sparse.",
+
+  "result": {
+    "type": "ui_save_url",
+    "node": "9"
+  },
+
+  "inputs": {
+    "31": {
+      "unet_name":  { "from": "literal:flux1-canny-dev_fp8.safetensors" }
+    },
+    "34": {
+      "clip_name1": { "from": "literal:clip_l.safetensors" },
+      "clip_name2": { "from": "literal:t5xxl_fp8_e4m3fn_scaled.safetensors" }
+    },
+    "32": {
+      "vae_name":   { "from": "literal:ae.safetensors" }
+    },
+    "17": {
+      "image": {
+        "from": "upstream_image:annotated[0]",
+        "required": true,
+        "error": "Flux Canny needs an upstream image — wire one into the stage's image input."
+      }
+    },
+    "23": {
+      "text": {
+        "from": "main_prompt",
+        "default": "A vibrant red ladybug rests on a blooming deep purple rose with lush, velvety petals."
+      }
+    },
+    "3": {
+      "seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    }
+  }
+}

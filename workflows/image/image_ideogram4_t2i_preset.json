@@ -1,0 +1,26 @@
+{
+  "_comment": "Shipped preset for Ideogram 4.0 text-to-image. Outer graph is a single subgraph instance #98 → SaveImage #158. After graphToPrompt expands the subgraph, inner nodes use composite ids '98:<inner>'. We bind: '98:24' CLIPTextEncode.text ← main_prompt, '98:27'/'98:28' PrimitiveInt.value ← computed:width/height, '98:18' RandomNoise.noise_seed ← option:seed (random_int31).",
+
+  "label":       "Image Ideogram4 T2I",
+  "order":       12,
+  "description": "Ideogram 4.0 text-to-image (fp8 quantized). Highly stylised typography-aware model. Prompt the scene + style; the workflow handles its own ckpt / clip / vae file selection.",
+
+  "result": { "type": "ui_save_batch", "node": "158" },
+
+  "sizing": { "type": "image", "base": 1024, "snap": 8 },
+
+  "inputs": {
+    "98:24": {
+      "text": { "from": "main_prompt", "default": "a photograph" }
+    },
+    "98:27": {
+      "value": { "from": "computed:width",  "cast": "int" }
+    },
+    "98:28": {
+      "value": { "from": "computed:height", "cast": "int" }
+    },
+    "98:18": {
+      "noise_seed": { "from": "option:seed", "default": "random_int31", "cast": "int" }
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "ComfyTV.ProjectStage":                { "display_name": "Project" },
+
+  "ComfyTV.TextStage":                   { "display_name": "Text Stage" },
+  "ComfyTV.ImageStage":                  { "display_name": "Image Stage" },
+  "ComfyTV.VideoStage":                  { "display_name": "Video Stage" },
+  "ComfyTV.AudioStage":                  { "display_name": "Audio Stage" },
+
+  "ComfyTV.StoryboardStage":             { "display_name": "Storyboard" },
+  "ComfyTV.ShotImagesStage":             { "display_name": "Shot Images" },
+  "ComfyTV.ImagePickerStage":            { "display_name": "Image Picker" },
+
+  "ComfyTV.PanoramaStage":               { "display_name": "Panorama" },
+  "ComfyTV.PanoramaCurrentViewStage":    { "display_name": "Panorama · Current View" },
+  "ComfyTV.PanoramaMultiViewStage":      { "display_name": "Panorama · Multi-View" },
+
+  "ComfyTV.MultiangleStage":             { "display_name": "Multiangle" },
+  "ComfyTV.RelightStage":                { "display_name": "Relight" },
+  "ComfyTV.ImageVariationsStage":        { "display_name": "Image Variations" },
+
+  "ComfyTV.UpscaleStage":                { "display_name": "Upscale" },
+  "ComfyTV.OutpaintStage":               { "display_name": "Outpaint" },
+  "ComfyTV.InpaintStage":                { "display_name": "Inpaint" },
+  "ComfyTV.EraseStage":                  { "display_name": "Erase" },
+  "ComfyTV.CutoutStage":                 { "display_name": "Cutout" },
+  "ComfyTV.CropStage":                   { "display_name": "Crop" },
+
+  "ComfyTV.VideoClipStage":              { "display_name": "Video Clip" },
+  "ComfyTV.VideoUpscaleStage":           { "display_name": "Video Upscale" },
+  "ComfyTV.VideoSubtitleSmartEraseStage":{ "display_name": "Subtitle Erase (Smart)" },
+  "ComfyTV.VideoSubtitleSelectEraseStage":{ "display_name": "Subtitle Erase (Region)" },
+
+  "ComfyTV.AudioExtractVocalStage":      { "display_name": "Audio · Vocals Only" },
+  "ComfyTV.AudioExtractBgStage":         { "display_name": "Audio · Background Only" },
+  "ComfyTV.AudioVideoDemuxAudioStage":   { "display_name": "Demux · Audio Track" },
+  "ComfyTV.AudioVideoDemuxVideoStage":   { "display_name": "Demux · Silent Video" },
+
+  "ComfyTV.ImageLoaderStage":            { "display_name": "Load Image" },
+  "ComfyTV.VideoLoaderStage":            { "display_name": "Load Video" }
+}

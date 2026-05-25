@@ -1,0 +1,25 @@
+{
+  "_comment": "Shipped preset for BiRefNet background removal. Adapted from ComfyUI's utility_birefnet_remove_background template — kept the subgraph structure intact, swapped PreviewImage for SaveImage (so output lives in output/ instead of temp/), and dropped the MaskPreview + MarkdownNote nodes since we surface only the cutout image. The subgraph 'Remove Background (BiRefNet)' wraps the RemoveBackground / LoadBackgroundRemovalModel / InvertMask / JoinImageWithAlpha chain — output is a transparent-bg PNG composited via JoinImageWithAlpha.",
+
+  "label":       "BiRefNet Cutout",
+  "order":       10,
+  "description": "Background removal via BiRefNet. Promptless — feeds the upstream image into a subgraph that segments the subject and composites it over an alpha channel. Output is a single transparent-bg PNG (COMFYTV_IMAGE).",
+
+  "result": {
+    "type": "ui_save_url",
+    "node": "18"
+  },
+
+  "inputs": {
+    "17": {
+      "image": {
+        "from": "upstream_image:annotated[0]",
+        "required": true,
+        "error": "Cutout needs an upstream image — wire one into this stage's image input."
+      }
+    },
+    "19:14": {
+      "bg_removal_name": { "from": "literal:birefnet.safetensors" }
+    }
+  }
+}

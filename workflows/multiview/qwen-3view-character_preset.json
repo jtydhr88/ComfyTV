@@ -1,0 +1,86 @@
+{
+  "_comment": "Ported from V1 backup api-format workflow. Per-branch positive encoders use `from: main_prompt` + `prefix:` to bake the angle keyword in front of the user's subject description. The shared UNet/CLIP/VAE/LoRAs are pinned with literal: bindings to the V1-era filenames; edit via the sidebar if you have different versions installed.",
+  "label": "Character 3-View",
+  "order": 30,
+  "description": "Qwen-Image-Edit 2511 + Multiple-Angles LoRA. Front / side / back full-body character turnaround in one workflow run — for character design / animation / game reference sheets. Wide-shot framing keeps the whole figure in view.",
+  "result": {
+    "type": "ui_save_batch",
+    "node": "29"
+  },
+  "inputs": {
+    "1": {
+      "image": {
+        "from": "upstream_image:annotated",
+        "required": true,
+        "error": "Character 3-View needs an upstream image."
+      }
+    },
+    "2": {
+      "unet_name": {
+        "from": "literal:qwen_image_edit_2511_fp8mixed.safetensors"
+      }
+    },
+    "7": {
+      "lora_name": {
+        "from": "literal:qwen-image-edit-2511-multiple-angles-lora.safetensors"
+      }
+    },
+    "8": {
+      "lora_name": {
+        "from": "literal:Qwen-Image-Edit-2511-Lightning-4steps-V1.0-bf16.safetensors"
+      }
+    },
+    "3": {
+      "clip_name": {
+        "from": "literal:qwen_2.5_vl_7b_fp8_scaled.safetensors"
+      }
+    },
+    "4": {
+      "vae_name": {
+        "from": "literal:qwen_image_vae.safetensors"
+      }
+    },
+    "11": {
+      "prompt": {
+        "from": "main_prompt",
+        "prefix": "<sks> front view eye-level shot wide shot, full body, character reference sheet, ",
+        "default": "a character"
+      }
+    },
+    "12": {
+      "prompt": {
+        "from": "main_prompt",
+        "prefix": "<sks> right side view eye-level shot wide shot, full body, character reference sheet, ",
+        "default": "a character"
+      }
+    },
+    "13": {
+      "prompt": {
+        "from": "main_prompt",
+        "prefix": "<sks> back view eye-level shot wide shot, full body, character reference sheet, ",
+        "default": "a character"
+      }
+    },
+    "20": {
+      "seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    },
+    "21": {
+      "seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    },
+    "22": {
+      "seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    }
+  }
+}

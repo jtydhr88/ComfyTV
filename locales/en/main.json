@@ -1,0 +1,420 @@
+{
+  "stage": {
+    "run": "Run",
+    "rerun": "Re-run",
+    "running": "Running…",
+    "cancel": "Cancel",
+    "preparingWorkflow": "Preparing workflow…",
+    "section": {
+      "context": "Context",
+      "output": "Output ({type})",
+      "actions": "Actions"
+    },
+    "empty": {
+      "no_output": "no output yet",
+      "generating": "generating…",
+      "pending_upstream": "upstream pending",
+      "unsupported_type": "unsupported type {type}"
+    },
+    "source": {
+      "upstream": "← upstream",
+      "pending": "… waiting"
+    },
+    "disconnect": "Disconnect",
+    "starting": "starting…",
+    "runByKind": {
+      "text": "Generate Text",
+      "image": "Generate Image",
+      "image-batch": "Generate Images",
+      "video": "Generate Video",
+      "audio": "Generate Audio",
+      "panorama": "Generate Panorama",
+      "storyboard": "Generate Storyboard"
+    },
+    "action": {
+      "viewFull": "View full size",
+      "download": "Download",
+      "close": "Close"
+    }
+  },
+  "error": {
+    "dismiss": "Dismiss",
+    "cancelled": "Cancelled"
+  },
+  "configSidebar": {
+    "title": "Workflow Config",
+    "empty": "Select a stage node on the canvas to edit its workflow config.",
+    "noWorkflowPicked": "This stage's workflow combo is empty — pick one first.",
+    "loading": "Loading…",
+    "noExposedWidgets": "This workflow has no editable widgets, or hasn't been prepared yet — pick it on any stage first so the browser can analyze it.",
+    "pickWorkflowFirst": "Pick this workflow on any stage first to populate widget metadata (the browser-side graphToPrompt has to run).",
+    "bindTo": "Bind to:",
+    "exportPreset": "Export preset.json",
+    "exportPresetTooltip": "Download the current bindings as a *_preset.json file. Drop it next to the workflow JSON in workflows/<kind>/ to ship these defaults to other users.",
+    "exportPresetFailed": "Export failed: {detail}",
+    "resetToPreset": "↻ Reset to shipped preset",
+    "resetToPresetTooltip": "Wipe all bindings + meta for this workflow and re-apply its shipped _preset.json from disk. Your own edits will be lost.",
+    "resetToPresetConfirm": "Reset all bindings for this workflow to the shipped preset? Your edits will be lost.",
+    "resetToPresetFailed": "Reset failed: {detail}",
+    "section": {
+      "widgets": "Widgets",
+      "notes": "Workflow notes",
+      "description": "Description"
+    }
+  },
+  "project": {
+    "label": "Current Project",
+    "shared_suffix": "(shared)",
+    "id_prefix": "id:",
+    "refresh": "Refresh project list",
+    "create": "New project",
+    "delete": "Delete this project (files on disk stay)",
+    "delete_confirm": "Delete this project? DB rows will be cleared; files on disk stay.",
+    "create_prompt": "New project name:",
+    "create_default": "Project {n}",
+    "status": {
+      "refreshing": "refreshing…",
+      "refresh_failed": "refresh failed",
+      "create_failed": "create failed",
+      "deleted": "deleted",
+      "delete_failed": "delete failed",
+      "load_failed": "Failed to load project list"
+    }
+  },
+  "execution": {
+    "running": "running: node #{nodeId}",
+    "queued": "queued"
+  },
+  "actions": {
+    "image": {
+      "edit": {
+        "label": "Edit Image",
+        "tooltip": "Edits that change size or need rich UI (HD / outpaint / inpaint / erase / cutout / crop)"
+      },
+      "panorama": {
+        "label": "Panorama",
+        "tooltip": "Turn this image into a panorama and explore viewpoints"
+      },
+      "multiangle": {
+        "label": "Multi-angle",
+        "tooltip": "Re-render this image from a different camera angle"
+      },
+      "relight": {
+        "label": "Relight",
+        "tooltip": "Brightness / color / rim-light, or reference another image's lighting"
+      },
+      "preset": {
+        "label": "Presets",
+        "tooltip": "Size-preserving, no-rich-UI preset transforms (multi-view / grid / scene progression)"
+      }
+    },
+    "video": {
+      "extend": {
+        "label": "Extend",
+        "tooltip": "Extract this clip's last frame and spawn a new VideoStage using it as the I2V start frame — write a prompt for the continuation"
+      },
+      "change": {
+        "label": "Edit Video",
+        "tooltip": "Modify an existing video: clip / HD / subtitle erase / audio separation"
+      }
+    },
+    "text": {
+      "refine": {
+        "label": "Refine",
+        "tooltip": "Continue rewriting in a new TextStage"
+      }
+    },
+    "panorama": {
+      "view-current": {
+        "label": "Current View",
+        "tooltip": "Extract the current viewport as a single image"
+      },
+      "view-four": {
+        "label": "4 Views",
+        "tooltip": "Extract 4 viewpoints as an image batch"
+      },
+      "view-twelve": {
+        "label": "12 Views",
+        "tooltip": "Extract 12 viewpoints as an image batch"
+      }
+    },
+    "storyboard": {
+      "gen-shots": {
+        "label": "Generate Shot Images",
+        "tooltip": "Spawn a Shot Images stage wired to this storyboard — iterates the shot list and renders one image per shot"
+      }
+    }
+  },
+  "presets": {
+    "imageVariant": {
+      "multi-cam-9": {
+        "label": "Multi-cam 9-grid",
+        "tooltip": "9 camera angles arranged in a grid"
+      },
+      "story-4": {
+        "label": "Story Progression (4)",
+        "tooltip": "4 consecutive narrative shots"
+      },
+      "face-3view": {
+        "label": "Face 3-view",
+        "tooltip": "Face: front / side / 45°"
+      },
+      "product-3view": {
+        "label": "Product 3-view",
+        "tooltip": "Product: front / side / back"
+      },
+      "character-3view": {
+        "label": "Character 3-view",
+        "tooltip": "Full-body character: front / side / back"
+      },
+      "storyboard-25": {
+        "label": "25-grid Storyboard",
+        "tooltip": "25 consecutive storyboard shots"
+      },
+      "cinematic-light": {
+        "label": "Cinematic Lighting",
+        "tooltip": "Apply cinematic lighting and color grade"
+      },
+      "frame-3s": {
+        "label": "Project +3s",
+        "tooltip": "Project the scene 3 seconds later"
+      },
+      "frame-5s": {
+        "label": "Project +5s",
+        "tooltip": "Project the scene 5 seconds later"
+      }
+    },
+    "imageEdit": {
+      "hd": {
+        "label": "HD",
+        "tooltip": "Upscale to a higher resolution (output is larger)"
+      },
+      "outpaint": {
+        "label": "Outpaint",
+        "tooltip": "Extend the canvas outward (output is larger)"
+      },
+      "inpaint": {
+        "label": "Inpaint",
+        "tooltip": "Regenerate a masked region"
+      },
+      "erase": {
+        "label": "Erase",
+        "tooltip": "Remove a masked region"
+      },
+      "cutout": {
+        "label": "Cutout",
+        "tooltip": "Extract the subject with a transparent background"
+      },
+      "crop": {
+        "label": "Crop",
+        "tooltip": "Crop to a bounding box"
+      },
+      "rotate": {
+        "label": "Rotate",
+        "tooltip": "Rotate by an angle (browser-side, no GPU)"
+      },
+      "mirror": {
+        "label": "Mirror",
+        "tooltip": "Flip horizontally / vertically (browser-side)"
+      },
+      "grid": {
+        "label": "Grid Split",
+        "tooltip": "Slice into an R×C grid of tiles (browser-side) → image batch"
+      }
+    },
+    "videoChange": {
+      "clip": {
+        "label": "Clip",
+        "tooltip": "Clip / trim — pick start and end times"
+      },
+      "crop": {
+        "label": "Crop",
+        "tooltip": "Spatial crop — keep a rectangle (x, y, w, h) of every frame"
+      },
+      "resize": {
+        "label": "Resize",
+        "tooltip": "Scale video to a target width × height (use -1 to auto-derive from aspect)"
+      },
+      "extract-frame": {
+        "label": "Extract Frame",
+        "tooltip": "Pull a single frame out as an image (first / last / middle / custom seconds)"
+      },
+      "hd": {
+        "label": "HD",
+        "tooltip": "Upscale"
+      },
+      "subtitle-smart": {
+        "label": "Auto Subtitle Erase",
+        "tooltip": "Auto-detect and remove subtitles"
+      },
+      "subtitle-select": {
+        "label": "Region Subtitle Erase",
+        "tooltip": "Manually box a region to erase (needs region-selector UI)"
+      },
+      "audio-vocal": {
+        "label": "Vocals Only",
+        "tooltip": "Voice separation — vocals only"
+      },
+      "audio-bg": {
+        "label": "Background Only",
+        "tooltip": "Voice separation — instrumental / ambient"
+      },
+      "demux": {
+        "label": "Demux A/V",
+        "tooltip": "Split into audio track + silent video (two nodes spawned)"
+      }
+    }
+  },
+  "shotCell": {
+    "pick": "Pick {tag}",
+    "refine": "Refine {tag}"
+  },
+  "imageCrop": {
+    "noInputImage": "No input image — connect an image upstream",
+    "cropPreviewAlt": "Crop preview",
+    "loading": "Loading…",
+    "ratio": "Ratio",
+    "custom": "Custom",
+    "lockRatio": "Lock aspect ratio",
+    "unlockRatio": "Unlock aspect ratio",
+    "applying": "Applying crop…",
+    "applied": "Crop applied — ready for downstream",
+    "adjustToApply": "Drag the rectangle or pick a ratio to apply"
+  },
+  "panorama": {
+    "empty": "No panorama yet — upload an HDRI / equirect image or click Run with an upstream image",
+    "uploading": "Uploading…",
+    "upload": "Upload panorama",
+    "clearUpload": "Clear upload",
+    "clearUploadTooltip": "Drop the manual source — Run will then derive from upstream again",
+    "manualSourceBadge": "manual",
+    "loadError": "Failed to load panorama"
+  },
+  "imageCompare": {
+    "before": "Before",
+    "after": "After",
+    "noImages": "Connect two images to compare (A / B)"
+  },
+  "storyboard": {
+    "shots": "Shots",
+    "addShot": "Add shot",
+    "empty": "No shots yet — Run to generate from the premise, or add shots manually",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "remove": "Remove shot",
+    "regenerate": "Regenerate this shot via the LLM (keeps the rest)",
+    "noRef": "no reference",
+    "uploadRef": "Upload reference image",
+    "clearRef": "Clear reference",
+    "promptPlaceholder": "Describe this shot…",
+    "cols": {
+      "scene_purpose": "Purpose",
+      "character": "Character",
+      "character_desc": "Character notes",
+      "shot_size": "Shot size",
+      "action": "Action",
+      "emotion": "Emotion",
+      "scene_tags": "Scene",
+      "lighting": "Lighting",
+      "sfx": "SFX",
+      "dialogue": "Dialogue",
+      "image_prompt": "Image prompt",
+      "motion_prompt": "Motion prompt"
+    }
+  },
+  "timeline": {
+    "keyframes": "Keyframes",
+    "connectImages": "Connect images upstream to use as shots",
+    "addSegment": "Add as a shot",
+    "clickKeyframe": "Click a keyframe above to add a shot",
+    "addAudio": "Add audio track",
+    "noAudio": "Connect audio upstream to add a track",
+    "segmentPrompt": "Shot prompt",
+    "promptPlaceholder": "What happens in this shot…",
+    "length": "Length",
+    "fps": "FPS",
+    "shots": "shots"
+  },
+  "gridSplit": {
+    "connectImage": "Connect an image to split",
+    "pickGrid": "Pick a grid preset or set rows × cols",
+    "splitting": "Slicing into {n} tiles…",
+    "done": "Split into {n} tiles — ready for downstream",
+    "rows": "Rows",
+    "cols": "Cols"
+  },
+  "panoramaView": {
+    "connectPanorama": "Connect a panorama upstream",
+    "orbitToCapture": "Drag to look around — releasing captures the view",
+    "capturing": "Capturing viewport…",
+    "captured": "Viewport captured — ready for downstream",
+    "aspect": "Aspect",
+    "resolution": "Resolution",
+    "viewCount": "View count",
+    "adjustCountToCapture": "Move the slider to capture views",
+    "capturingCount": "Capturing {i}/{n}…",
+    "capturedN": "Captured {n} views — ready for downstream"
+  },
+  "rotate": {
+    "angle": "Angle",
+    "applying": "Applying rotation…",
+    "applied": "Rotation applied — ready for downstream",
+    "adjustToApply": "Slide or click a quick angle to apply"
+  },
+  "mirror": {
+    "horizontal": "Horizontal flip",
+    "vertical": "Vertical flip",
+    "applying": "Applying mirror…",
+    "applied": "Mirror applied — ready for downstream",
+    "adjustToApply": "Toggle flips to apply"
+  },
+  "painter": {
+    "tool": "Tool",
+    "brush": "Brush",
+    "eraser": "Eraser",
+    "rect": "Rectangle",
+    "ellipse": "Ellipse",
+    "label": "Numbered label",
+    "size": "Size",
+    "color": "Color",
+    "opacity": "Opacity",
+    "hardness": "Hardness",
+    "clear": "Clear"
+  },
+  "camera": {
+    "horizontal": "H",
+    "vertical": "V",
+    "zoom": "Z",
+    "resetToDefaults": "Reset to defaults",
+    "azimuth": {
+      "frontView": "front view",
+      "frontRightQuarterView": "front-right quarter view",
+      "rightSideView": "right side view",
+      "backRightQuarterView": "back-right quarter view",
+      "backView": "back view",
+      "backLeftQuarterView": "back-left quarter view",
+      "leftSideView": "left side view",
+      "frontLeftQuarterView": "front-left quarter view"
+    },
+    "elevation": {
+      "lowAngleShot": "low-angle shot",
+      "eyeLevelShot": "eye-level shot",
+      "elevatedShot": "elevated shot",
+      "highAngleShot": "high-angle shot"
+    },
+    "distance": {
+      "wideShot": "wide shot",
+      "mediumShot": "medium shot",
+      "closeUp": "close-up"
+    }
+  },
+  "outpaint": {
+    "left": "Left",
+    "top": "Top",
+    "right": "Right",
+    "bottom": "Bottom",
+    "reset": "Reset",
+    "output": "Output",
+    "noInputImage": "Wire an image to begin"
+  }
+}

@@ -1,0 +1,170 @@
+{
+  "_comment": "Ported from V1 backup api-format workflow. Per-branch positive encoders use `from: main_prompt` + `prefix:` to bake the angle keyword in front of the user's subject description. The shared UNet/CLIP/VAE/LoRAs are pinned with literal: bindings to the V1-era filenames; edit via the sidebar if you have different versions installed.",
+  "label": "Multi-cam 9",
+  "order": 40,
+  "description": "Qwen-Image-Edit 2511 + Multiple-Angles LoRA. Nine camera angles around the subject in one workflow — 8 azimuths at eye-level (every 45°) + one elevated front shot. Shared model + base latent across 9 parallel sampler branches. Output is a 9-image batch.",
+  "result": {
+    "type": "ui_save_batch",
+    "node": "59"
+  },
+  "inputs": {
+    "1": {
+      "image": {
+        "from": "upstream_image:annotated",
+        "required": true,
+        "error": "Multi-cam 9 needs an upstream image."
+      }
+    },
+    "2": {
+      "unet_name": {
+        "from": "literal:qwen_image_edit_2511_fp8mixed.safetensors"
+      }
+    },
+    "7": {
+      "lora_name": {
+        "from": "literal:qwen-image-edit-2511-multiple-angles-lora.safetensors"
+      }
+    },
+    "8": {
+      "lora_name": {
+        "from": "literal:Qwen-Image-Edit-2511-Lightning-4steps-V1.0-bf16.safetensors"
+      }
+    },
+    "3": {
+      "clip_name": {
+        "from": "literal:qwen_2.5_vl_7b_fp8_scaled.safetensors"
+      }
+    },
+    "4": {
+      "vae_name": {
+        "from": "literal:qwen_image_vae.safetensors"
+      }
+    },
+    "11": {
+      "prompt": {
+        "from": "main_prompt",
+        "prefix": "<sks> front view eye-level shot medium shot, ",
+        "default": "a high-quality photograph"
+      }
+    },
+    "12": {
+      "prompt": {
+        "from": "main_prompt",
+        "prefix": "<sks> front-right quarter view eye-level shot medium shot, ",
+        "default": "a high-quality photograph"
+      }
+    },
+    "13": {
+      "prompt": {
+        "from": "main_prompt",
+        "prefix": "<sks> right side view eye-level shot medium shot, ",
+        "default": "a high-quality photograph"
+      }
+    },
+    "14": {
+      "prompt": {
+        "from": "main_prompt",
+        "prefix": "<sks> back-right quarter view eye-level shot medium shot, ",
+        "default": "a high-quality photograph"
+      }
+    },
+    "15": {
+      "prompt": {
+        "from": "main_prompt",
+        "prefix": "<sks> back view eye-level shot medium shot, ",
+        "default": "a high-quality photograph"
+      }
+    },
+    "16": {
+      "prompt": {
+        "from": "main_prompt",
+        "prefix": "<sks> back-left quarter view eye-level shot medium shot, ",
+        "default": "a high-quality photograph"
+      }
+    },
+    "17": {
+      "prompt": {
+        "from": "main_prompt",
+        "prefix": "<sks> left side view eye-level shot medium shot, ",
+        "default": "a high-quality photograph"
+      }
+    },
+    "18": {
+      "prompt": {
+        "from": "main_prompt",
+        "prefix": "<sks> front-left quarter view eye-level shot medium shot, ",
+        "default": "a high-quality photograph"
+      }
+    },
+    "19": {
+      "prompt": {
+        "from": "main_prompt",
+        "prefix": "<sks> front view elevated shot medium shot, ",
+        "default": "a high-quality photograph"
+      }
+    },
+    "32": {
+      "seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    },
+    "33": {
+      "seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    },
+    "34": {
+      "seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    },
+    "35": {
+      "seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    },
+    "36": {
+      "seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    },
+    "37": {
+      "seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    },
+    "38": {
+      "seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    },
+    "39": {
+      "seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    },
+    "40": {
+      "seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    }
+  }
+}
