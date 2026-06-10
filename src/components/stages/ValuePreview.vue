@@ -24,13 +24,12 @@
           :title="$t('stage.action.viewFull')"
           @click.stop="openViewer(String(content))"
         >⤢</button>
-        <a
+        <button
+          type="button"
           class="vp-img-action"
-          :href="String(content)"
-          :download="downloadFilename(String(content))"
           :title="$t('stage.action.download')"
-          @click.stop
-        >⬇</a>
+          @click.stop="onDownload(String(content))"
+        >⬇</button>
       </div>
     </div>
     <img
@@ -145,13 +144,12 @@
               :title="$t('stage.action.viewFull')"
               @click.stop="openViewer(img.image_url)"
             >⤢</button>
-            <a
+            <button
+              type="button"
               class="vp-img-action"
-              :href="img.image_url"
-              :download="downloadFilename(img.image_url)"
               :title="$t('stage.action.download')"
-              @click.stop
-            >⬇</a>
+              @click.stop="onDownload(img.image_url)"
+            >⬇</button>
           </div>
         </component>
       </div>
@@ -182,6 +180,7 @@
 import { computed, ref, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useImagePanZoom } from '@/composables/widgets/useImagePanZoom'
+import { downloadFile } from '@/utils/download'
 
 const { t } = useI18n()
 
@@ -194,16 +193,13 @@ function openViewer(url: string) {
   if (url) lightboxUrl.value = url
 }
 
-function downloadFilename(url: string): string {
-  if (!url) return 'image'
+async function onDownload(url: string) {
+  if (!url) return
   try {
-    const u = new URL(url, location.origin)
-    const fn = u.searchParams.get('filename')
-    if (fn) return fn
-    const last = u.pathname.split('/').pop()
-    if (last) return last
-  } catch { /* fall through */ }
-  return url.split('/').pop()?.split('?')[0] || 'image'
+    await downloadFile(url)
+  } catch (err) {
+    console.error('[ComfyTV/download] failed', err)
+  }
 }
 
 import { onBeforeUnmount, onMounted } from 'vue'
