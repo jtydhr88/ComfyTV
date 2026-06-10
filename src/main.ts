@@ -201,13 +201,6 @@ app.registerExtension({
     },
   ],
 
-  keybindings: [
-    {
-      combo: { key: 'e', ctrl: true, shift: true },
-      commandId: 'ComfyTV.openEntryManager',
-    },
-  ],
-
   setup() {
     const selection = useSelectionStore()
     const a = app as any
