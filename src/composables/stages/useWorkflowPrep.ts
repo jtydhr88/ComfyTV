@@ -143,7 +143,7 @@ async function _convertGuiToApi(guiJson: any): Promise<any> {
   guiJson = stripLayoutFields(guiJson)
 
   const rootGraph = a.rootGraph ?? a.graph
-  detached.events.addEventListener('subgraph-created', (e: any) => {
+  detached.events?.addEventListener?.('subgraph-created', (e: any) => {
     try {
       rootGraph?.events?.dispatch('subgraph-created', e.detail)
     } catch (err) {

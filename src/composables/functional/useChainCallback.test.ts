@@ -14,7 +14,7 @@ describe('useChainCallback', () => {
 
   it('skips original when undefined', () => {
     const called: number[] = []
-    const wrapped = useChainCallback<any, any>(undefined, function (this: any, x: number) { called.push(x) })
+    const wrapped = useChainCallback<any, (x: number) => void>(undefined, function (this: any, x: number) { called.push(x) })
     wrapped.call({} as any, 7)
     expect(called).toEqual([7])
   })

@@ -129,7 +129,7 @@ const editor = useEditor({
     Mention.configure({
       HTMLAttributes: { class: 'mention-chip' },
       renderText: ({ node }) => `@${node.attrs.label}`,
-      renderHTML: ({ node, HTMLAttributes }) => [
+      renderHTML: ({ node, HTMLAttributes }: any) => [
         'span',
         {
           ...HTMLAttributes,

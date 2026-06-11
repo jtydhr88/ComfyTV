@@ -163,7 +163,7 @@ interface StageAction {
 
 const props = defineProps<{
   state: StageState
-  node: any
+  node?: any
   onRunRequest: () => void | Promise<void>
   onCancelRequest: () => void | Promise<void>
   onDisconnect: (slotName: string) => void
