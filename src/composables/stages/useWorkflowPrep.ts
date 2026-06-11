@@ -156,6 +156,28 @@ async function _convertGuiToApi(guiJson: any): Promise<any> {
     await configured
   }
 
-  const result = await a.graphToPrompt(detached, { sortNodes: false })
+  function shadow(prop: string, value: any): () => void {
+    const owned = Object.getOwnPropertyDescriptor(a, prop)
+    Object.defineProperty(a, prop, {
+      value, configurable: true, writable: true, enumerable: true,
+    })
+    return () => {
+      if (owned) Object.defineProperty(a, prop, owned)
+      else       delete a[prop]
+    }
+  }
+
+  let result: any
+  let restoreRoot: () => void = () => {}
+  let restoreGraph: () => void = () => {}
+  try {
+    restoreRoot  = shadow('rootGraph', detached)
+    restoreGraph = shadow('graph',     detached)
+    result = await a.graphToPrompt()
+  } finally {
+    restoreGraph()
+    restoreRoot()
+  }
+
   return result?.output ?? result
 }

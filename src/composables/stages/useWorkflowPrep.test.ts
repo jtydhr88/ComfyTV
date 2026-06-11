@@ -209,3 +209,127 @@ describe('getPrepState', () => {
     })
   })
 })
+
+
+async function loadWithApp(app: any) {
+  vi.resetModules()
+  vi.doMock('@/lib/comfyApp', () => ({ app }))
+  return await import('./useWorkflowPrep')
+}
+
+function happyFetchApi(opts: { mtime?: number; nodes?: any[] } = {}) {
+  const { mtime = 1, nodes = [{ id: 42 }] } = opts
+  return vi.fn(async (path: string) => {
+    if (path.startsWith('/comfytv/workflows/state')) {
+      return jsonResp({
+        has_api: false, file_path: '/x.json', file_mtime: mtime, file_exists: true,
+      })
+    }
+    if (path.startsWith('/comfytv/workflows/file')) {
+      return textResp(JSON.stringify({ nodes }),
+        200, { 'X-Workflow-Mtime': String(mtime) })
+    }
+    if (path === '/comfytv/workflows/api_json') return jsonResp({ ok: true })
+    throw new Error(`unexpected ${path}`)
+  })
+}
+
+describe('_convertGuiToApi shadow', () => {
+  beforeEach(() => vi.resetModules())
+
+  it('routes detached graph through this.rootGraph even when graphToPrompt drops args (Manager-style wrapper)', async () => {
+    let seenRootGraph: any = null
+    let seenDetachedNodes: any[] | null = null
+    const graphToPrompt = vi.fn(async function (this: any) {
+      seenRootGraph = this.rootGraph
+      seenDetachedNodes = this.rootGraph?._nodes
+        ?? this.rootGraph?.nodes
+        ?? null
+      return { output: {}, workflow: {} }
+    })
+
+    class FakeGraph {
+      _nodes: any[] = []
+      configure(json: any) {
+        this._nodes = (json?.nodes ?? []).map((n: any) => ({ id: n.id }))
+      }
+    }
+    const hostGraph = new FakeGraph()
+    const app: any = {
+      api: { fetchApi: happyFetchApi({ nodes: [{ id: 1 }, { id: 2 }, { id: 3 }] }) },
+      graphToPrompt,
+      graph: hostGraph,
+    }
+
+    const { prepareWorkflow } = await loadWithApp(app)
+    await prepareWorkflow('image', 'X')
+
+    expect(seenRootGraph).not.toBe(hostGraph)
+    expect(seenRootGraph).toBeInstanceOf(FakeGraph)
+    expect(seenDetachedNodes).toEqual([{ id: 1 }, { id: 2 }, { id: 3 }])
+  })
+
+  it('restores rootGraph / graph after a successful call', async () => {
+    class FakeGraph { configure() {} }
+    const hostGraph = new FakeGraph()
+    const app: any = {
+      api: { fetchApi: happyFetchApi() },
+      graphToPrompt: vi.fn(async () => ({ output: {}, workflow: {} })),
+      graph: hostGraph,
+      rootGraph: hostGraph,
+    }
+
+    const { prepareWorkflow } = await loadWithApp(app)
+    await prepareWorkflow('image', 'X')
+
+    expect(app.graph).toBe(hostGraph)
+    expect(app.rootGraph).toBe(hostGraph)
+  })
+
+  it('restores rootGraph / graph even when graphToPrompt throws', async () => {
+    class FakeGraph { configure() {} }
+    const hostGraph = new FakeGraph()
+    const app: any = {
+      api: { fetchApi: happyFetchApi() },
+      graphToPrompt: vi.fn(async () => { throw new Error('boom') }),
+      graph: hostGraph,
+      rootGraph: hostGraph,
+    }
+
+    const { prepareWorkflow } = await loadWithApp(app)
+    await expect(prepareWorkflow('image', 'X')).rejects.toThrow(/boom/)
+
+    expect(app.graph).toBe(hostGraph)
+    expect(app.rootGraph).toBe(hostGraph)
+  })
+
+  it('shadows a readonly getter (the case in ComfyUI frontend v1.44.19+)', async () => {
+    class FakeGraph {
+      _nodes: any[] = []
+      configure(json: any) {
+        this._nodes = (json?.nodes ?? []).map((n: any) => ({ id: n.id }))
+      }
+    }
+    const hostGraph = new FakeGraph()
+    let seenRootGraph: any = null
+    const app: any = {
+      api: { fetchApi: happyFetchApi({ nodes: [{ id: 7 }] }) },
+      graphToPrompt: vi.fn(async function (this: any) {
+        seenRootGraph = this.rootGraph
+        return { output: {}, workflow: {} }
+      }),
+    }
+
+    Object.defineProperty(app, 'rootGraph', { get: () => hostGraph, configurable: true })
+    Object.defineProperty(app, 'graph',     { get: () => hostGraph, configurable: true })
+
+    const { prepareWorkflow } = await loadWithApp(app)
+    await prepareWorkflow('image', 'X')
+
+    expect(seenRootGraph).toBeInstanceOf(FakeGraph)
+    expect(seenRootGraph).not.toBe(hostGraph)
+
+    expect(app.rootGraph).toBe(hostGraph)
+    expect(app.graph).toBe(hostGraph)
+  })
+})

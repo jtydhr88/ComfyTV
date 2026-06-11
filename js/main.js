@@ -82947,7 +82947,32 @@ async function _convertGuiToApi(guiJson) {
   if (configured && typeof configured.then === "function") {
     await configured;
   }
-  const result = await a2.graphToPrompt(detached, { sortNodes: false });
+  function shadow(prop, value) {
+    const owned = Object.getOwnPropertyDescriptor(a2, prop);
+    Object.defineProperty(a2, prop, {
+      value,
+      configurable: true,
+      writable: true,
+      enumerable: true
+    });
+    return () => {
+      if (owned) Object.defineProperty(a2, prop, owned);
+      else delete a2[prop];
+    };
+  }
+  let result;
+  let restoreRoot = () => {
+  };
+  let restoreGraph = () => {
+  };
+  try {
+    restoreRoot = shadow("rootGraph", detached);
+    restoreGraph = shadow("graph", detached);
+    result = await a2.graphToPrompt();
+  } finally {
+    restoreGraph();
+    restoreRoot();
+  }
   return (result == null ? void 0 : result.output) ?? result;
 }
 const STAGE_CLASS_BY_KIND = {
