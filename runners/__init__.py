@@ -23,10 +23,19 @@ WORKFLOW_KINDS: tuple[str, ...] = (
 
 
 def _build_workflow_runners() -> list[LocalComfyUIRunner]:
+    try:
+        workflow_db.seed_workflows_from_disk(WORKFLOW_KINDS)
+    except Exception as e:
+        _log.exception("[ComfyTV] workflow seed failed; continuing without seeded runners: %s", e)
 
-    workflow_db.seed_workflows_from_disk(WORKFLOW_KINDS)
     runners = []
-    for entry in workflow_db.list_workflows():
+    try:
+        entries = workflow_db.list_workflows()
+    except Exception as e:
+        _log.exception("[ComfyTV] workflow_db.list_workflows failed: %s", e)
+        return runners
+
+    for entry in entries:
         kind  = entry["kind"]
         label = entry["label"]
         rid   = f"{kind}/{label}"

@@ -454,6 +454,57 @@ class TestSeedAndCRUD:
         monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(tmp_path / "missing"))
         wdb.seed_workflows_from_disk(("image",))  # should not raise
 
+    def test_seed_reclaims_label_from_orphan(self, reset_db, tmp_path, monkeypatch):
+        """Stale row whose file is gone must yield its label to a new file."""
+        from pathlib import Path
+        from ComfyTV import db
+
+        stale_path = str(tmp_path / "ghost" / "old.json")
+        with db.get_session() as s:
+            stale = db.Workflow(kind="image", label="Shared",
+                                file_path=stale_path, order_=100)
+            s.add(stale)
+            s.flush()
+            s.add(db.WorkflowInputBinding(
+                workflow_id=stale.id, node_id="3", input_name="seed",
+                from_="option:seed",
+            ))
+            s.commit()
+            stale_id = stale.id
+
+        wdir = tmp_path / "workflows"
+        self._make_workflow(wdir, "new", "image", preset={"label": "Shared"})
+        monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
+        wdb.seed_workflows_from_disk(("image",))
+
+        rows = [r for r in wdb.list_workflows() if r["kind"] == "image"]
+        labels = [r["label"] for r in rows]
+        assert labels.count("Shared") == 1
+        with db.get_session() as s:
+            from sqlalchemy import select
+            assert s.get(db.Workflow, stale_id) is None
+            bindings = s.execute(
+                select(db.WorkflowInputBinding).where(
+                    db.WorkflowInputBinding.workflow_id == stale_id
+                )
+            ).scalars().all()
+            assert bindings == []
+
+    def test_seed_keeps_default_label_when_live_row_owns_preset_label(
+            self, reset_db, tmp_path, monkeypatch):
+        from pathlib import Path
+        wdir = tmp_path / "workflows"
+        self._make_workflow(wdir, "first",  "image", preset={"label": "Shared"})
+        self._make_workflow(wdir, "second", "image", preset={"label": "Shared"})
+        monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
+        wdb.seed_workflows_from_disk(("image",))  # must not raise
+
+        rows = [r for r in wdb.list_workflows() if r["kind"] == "image"]
+        labels = sorted(r["label"] for r in rows)
+        assert "Shared" in labels
+        assert "Second" in labels
+        assert labels.count("Shared") == 1
+
     def test_get_workflow_for_invoke_returns_none_when_missing(self, reset_db):
         assert wdb.get_workflow_for_invoke("image", "Nope") is None
 

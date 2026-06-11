@@ -40,9 +40,46 @@ def _read_preset(file_path: Path) -> dict:
     return data if isinstance(data, dict) else {}
 
 
+def _claim_label_or_skip(s, row: db.Workflow, new_label: str) -> bool:
+    existing = s.execute(
+        select(db.Workflow).where(
+            (db.Workflow.kind == row.kind)
+            & (db.Workflow.label == new_label)
+            & (db.Workflow.id != row.id)
+        )
+    ).scalar_one_or_none()
+    if existing is None:
+        row.label = new_label
+        return True
+
+    other_path = Path(existing.file_path) if existing.file_path else None
+    if other_path is None or not other_path.exists():
+        s.execute(
+            db.WorkflowInputBinding.__table__.delete().where(
+                db.WorkflowInputBinding.workflow_id == existing.id
+            )
+        )
+        s.delete(existing)
+        s.flush()
+        row.label = new_label
+        _log.info(
+            "[ComfyTV/workflow_db] reclaimed label %r from orphan row id=%s "
+            "(stale file_path=%s) for %s",
+            new_label, existing.id, existing.file_path, row.file_path,
+        )
+        return True
+
+    _log.warning(
+        "[ComfyTV/workflow_db] preset label %r for %s already owned by %s "
+        "(row id=%s); keeping default label %r",
+        new_label, row.file_path, existing.file_path, existing.id, row.label,
+    )
+    return False
+
+
 def _apply_preset_to_new_row(s, row: db.Workflow, preset: dict) -> None:
     if preset.get("label"):
-        row.label = str(preset["label"])
+        _claim_label_or_skip(s, row, str(preset["label"]))
     if isinstance(preset.get("order"), (int, float)):
         row.order_ = int(preset["order"])
     if preset.get("description") is not None:
