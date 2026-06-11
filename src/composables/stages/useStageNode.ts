@@ -874,7 +874,7 @@ export function useStageNode(
       }
       if (kind === 'image-batch' && restored) {
         const widget = node.widgets?.find((wi: any) => wi.name === 'selected_index')
-        const fromDb = Number(latest.picked_index)
+        const fromDb = Number((latest as any).picked_index)
         const fromWidget = Number(widget?.value)
         const idx = Number.isFinite(fromDb) && fromDb >= 1 ? Math.floor(fromDb)
                   : Number.isFinite(fromWidget) && fromWidget >= 1 ? Math.floor(fromWidget)

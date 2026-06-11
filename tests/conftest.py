@@ -66,6 +66,7 @@ def _ensure_comfyui_stubs():
             get_input_directory=lambda: os.path.join(base, "input"),
             get_output_directory=lambda: os.path.join(base, "output"),
             get_temp_directory=lambda: os.path.join(base, "temp"),
+            get_directory_by_type=lambda t: os.path.join(base, t),
         )
 
     # server.PromptServer — needs a singleton with `.instance.routes` (an

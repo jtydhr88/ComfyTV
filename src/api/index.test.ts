@@ -67,22 +67,22 @@ describe('apiSend', () => {
   beforeEach(() => vi.resetModules())
 
   it('serializes body as JSON', async () => {
-    const fetchApi = vi.fn(async () => json({ ok: true }))
+    const fetchApi = vi.fn(async (_url: string, _init?: any) => json({ ok: true }))
     const { apiSend } = await loadWithFetch(fetchApi)
     const Schema = z.object({ ok: z.literal(true) })
     await apiSend('/x', 'POST', Schema, { foo: 'bar' })
-    const [, init] = fetchApi.mock.calls[0]
+    const [, init] = fetchApi.mock.calls[0]!
     expect(init.method).toBe('POST')
     expect(init.headers).toEqual({ 'Content-Type': 'application/json' })
     expect(JSON.parse(init.body)).toEqual({ foo: 'bar' })
   })
 
   it('omits body and Content-Type when undefined', async () => {
-    const fetchApi = vi.fn(async () => json({ ok: true }))
+    const fetchApi = vi.fn(async (_url: string, _init?: any) => json({ ok: true }))
     const { apiSend } = await loadWithFetch(fetchApi)
     const Schema = z.object({ ok: z.literal(true) })
     await apiSend('/x', 'DELETE', Schema)
-    const [, init] = fetchApi.mock.calls[0]
+    const [, init] = fetchApi.mock.calls[0]!
     expect(init.body).toBeUndefined()
     expect(init.headers).toBeUndefined()
   })
