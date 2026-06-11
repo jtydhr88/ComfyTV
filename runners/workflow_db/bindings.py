@@ -11,6 +11,33 @@ from ... import db
 _log = logging.getLogger(__name__)
 
 
+def _api_json_matches_gui_workflow(file_path: str, api_json: Any) -> bool:
+    if not isinstance(api_json, dict) or not api_json:
+        return False
+    if not file_path or not Path(file_path).exists():
+        return True
+    try:
+        with open(file_path, encoding="utf-8") as f:
+            doc = json.load(f)
+    except (OSError, json.JSONDecodeError):
+        return True
+    if not isinstance(doc, dict):
+        return True
+    nodes = doc.get("nodes")
+    if not isinstance(nodes, list) or not nodes:
+        return True
+    gui_top_ids = {
+        str(n.get("id")) for n in nodes
+        if isinstance(n, dict) and n.get("id") is not None
+    }
+    if not gui_top_ids:
+        return True
+    for key in api_json.keys():
+        if str(key).split(":", 1)[0] in gui_top_ids:
+            return True
+    return False
+
+
 def upsert_input_binding(
     workflow_id: int,
     node_id: str,
@@ -143,6 +170,23 @@ def get_workflow_state(kind: str, label: str) -> Optional[dict]:
             row.api_json = None
             row.file_mtime = cur_mtime
             s.commit()
+
+        if row.api_json:
+            try:
+                api = json.loads(row.api_json)
+            except (json.JSONDecodeError, TypeError):
+                api = None
+            if not _api_json_matches_gui_workflow(row.file_path, api):
+                _log.warning(
+                    "[ComfyTV/workflow_db] api_json for %s/%s does not match "
+                    "the workflow file (keys=%s); wiping so prepareWorkflow "
+                    "regenerates it.",
+                    row.kind, row.label,
+                    list(api.keys())[:6] if isinstance(api, dict) else None,
+                )
+                row.api_json = None
+                s.commit()
+
         return {
             "has_api":    bool(row.api_json),
             "file_path":  row.file_path,

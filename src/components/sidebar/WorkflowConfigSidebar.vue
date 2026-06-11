@@ -140,6 +140,7 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useSelectionStore } from '@/stores/selectionStore'
 import { invalidateWorkflowInfo } from '@/composables/stages/useWorkflowValidator'
+import { prepareWorkflow } from '@/composables/stages/useWorkflowPrep'
 import { app } from '@/lib/comfyApp'
 
 import ComfyTVWidget from '@/components/widgets/ComfyTVWidget.vue'
@@ -318,6 +319,7 @@ async function loadConfig(kind: string, label: string) {
   loadError.value = null
   config.value = null
   try {
+    try { await prepareWorkflow(kind, label) } catch {}
     config.value = await fetchJson(
       `/comfytv/workflows/config?kind=${encodeURIComponent(kind)}&label=${encodeURIComponent(label)}`
     )

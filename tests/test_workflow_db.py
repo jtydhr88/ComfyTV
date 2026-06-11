@@ -657,6 +657,53 @@ class TestSeedAndCRUD:
     def test_get_workflow_state_unknown(self, reset_db):
         assert wdb.get_workflow_state("image", "Nope") is None
 
+    def test_get_workflow_state_wipes_stale_api_json(
+            self, reset_db, tmp_path, monkeypatch):
+        from pathlib import Path
+        wdir = tmp_path / "workflows"
+        kind_dir = wdir / "image"
+        kind_dir.mkdir(parents=True)
+        (kind_dir / "sd15.json").write_text(json.dumps({
+            "nodes": [{"id": 158, "type": "SaveImage"},
+                      {"id": 98,  "type": "Subgraph"}],
+        }))
+        monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
+        wdb.seed_workflows_from_disk(("image",))
+
+        stale_api = {str(i): {"class_type": "X", "inputs": {}} for i in range(24, 30)}
+        mtime = (kind_dir / "sd15.json").stat().st_mtime
+        wdb.set_api_json("image", "Sd15", stale_api, mtime)
+
+        state = wdb.get_workflow_state("image", "Sd15")
+        assert state is not None
+        assert state["has_api"] is False
+
+        again = wdb.get_workflow_state("image", "Sd15")
+        assert again["has_api"] is False
+
+    def test_get_workflow_state_keeps_matching_api_json(
+            self, reset_db, tmp_path, monkeypatch):
+        from pathlib import Path
+        wdir = tmp_path / "workflows"
+        kind_dir = wdir / "image"
+        kind_dir.mkdir(parents=True)
+        (kind_dir / "sd15.json").write_text(json.dumps({
+            "nodes": [{"id": 158, "type": "SaveImage"},
+                      {"id": 98,  "type": "Subgraph"}],
+        }))
+        monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
+        wdb.seed_workflows_from_disk(("image",))
+
+        good_api = {
+            "158": {"class_type": "SaveImage", "inputs": {}},
+            "98:9": {"class_type": "VAELoader", "inputs": {}},
+        }
+        mtime = (kind_dir / "sd15.json").stat().st_mtime
+        wdb.set_api_json("image", "Sd15", good_api, mtime)
+
+        state = wdb.get_workflow_state("image", "Sd15")
+        assert state["has_api"] is True
+
     def test_read_workflow_file_happy(self, reset_db, tmp_path, monkeypatch):
         from pathlib import Path
         wdir = tmp_path / "workflows"
