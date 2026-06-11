@@ -1,6 +1,6 @@
 {
   "name": "comfytv",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "dependencies": {
     "@tiptap/core": "^3.26.0",

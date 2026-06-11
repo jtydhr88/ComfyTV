@@ -1,7 +1,7 @@
 [project]
 name = "ComfyTV"
 description = "LibTV-style Canvas pipeline for ComfyUI"
-version = "1.0.1"
+version = "1.0.2"
 license = {text = "MIT"}
 dependencies = []
 
