@@ -8,6 +8,7 @@
 
     <StageCard
       :state="state"
+      :node="node"
       :on-run-request="onRunWithMaskCommit"
       :on-cancel-request="onCancelRequest"
       :on-disconnect="onDisconnect"

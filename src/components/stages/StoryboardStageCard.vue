@@ -129,6 +129,7 @@
 
     <StageCard
       :state="state"
+      :node="node"
       :on-run-request="onRunRequest"
       :on-cancel-request="onCancelRequest"
       :on-disconnect="onDisconnect"
