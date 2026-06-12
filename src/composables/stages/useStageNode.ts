@@ -17,6 +17,7 @@ import {
 } from '@/stores/stageStore'
 import { useProjectStore } from '@/stores/projectStore'
 import { useEntryStore } from '@/stores/entryStore'
+import { useExecutionStore } from '@/stores/executionStore'
 import {
   validateNode as validateWorkflowInputs,
   applySlotWarnings,
@@ -28,6 +29,13 @@ import {
 } from '@/composables/stages/useWorkflowPrep'
 import { getStageMeta } from '@/composables/stages/stageMeta'
 import { useSelectionStore } from '@/stores/selectionStore'
+import {
+  collectReachableNodeIds,
+  buildScopedPrompt,
+} from '@/utils/graphSerialize'
+import { extractRunError } from '@/utils/runError'
+import { postPickedIndex } from '@/composables/stages/stageApi'
+import { app } from '@/lib/comfyApp'
 
 const STAGE_CLASS_BY_KIND: Record<StageKind, string> = {
   text:           'ComfyTV.TextStage',
@@ -75,109 +83,6 @@ function outputHasLinks(node: any, idx: number): boolean {
   return !!(out?.links && out.links.length > 0)
 }
 
-const LG_MODE_NEVER = 2
-const LG_MODE_BYPASS = 4
-
-function collectReachableNodeIds(app: any, target: any): Set<number> {
-  const reachable = new Set<number>()
-  reachable.add(target.id)
-
-  const isBridgeIn = typeof target?.comfyClass === 'string'
-                     && target.comfyClass.startsWith('ComfyTV.BridgeTo')
-  if (!isBridgeIn) return reachable
-
-  const linksMap: any = app?.graph?.links
-  const getLink = (linkId: number) =>
-    (linksMap && typeof linksMap.get === 'function')
-      ? linksMap.get(linkId)
-      : (linksMap?.[linkId] ?? app?.graph?.getLink?.(linkId))
-
-  const queue: any[] = [target]
-  while (queue.length) {
-    const node = queue.shift()
-    if (!node) continue
-    for (const inp of node.inputs ?? []) {
-      if (inp.link == null) continue
-      const link = getLink(inp.link)
-      const srcId = link?.origin_id
-      if (srcId == null) continue
-      const srcNode = app?.graph?.getNodeById?.(srcId)
-      if (srcNode && !reachable.has(srcNode.id)) {
-        reachable.add(srcNode.id)
-        queue.push(srcNode)
-      }
-    }
-  }
-  return reachable
-}
-
-async function serializeNodeEntry(node: any): Promise<{
-  inputs: Record<string, unknown>
-  class_type: string
-  _meta: { title?: string }
-}> {
-  const inputs: Record<string, unknown> = {}
-
-  if (node.widgets) {
-    for (let i = 0; i < node.widgets.length; i++) {
-      const w = node.widgets[i]
-      if (!w?.name) continue
-      if (w.options?.serialize === false) continue
-      let value = typeof w.serializeValue === 'function'
-        ? await w.serializeValue(node, i)
-        : w.value
-      const numericType = w.type === 'number' || w.type === 'INT' || w.type === 'FLOAT'
-                       || w.type === 'int'   || w.type === 'float'
-      if (numericType && (value === '' || value == null || Number.isNaN(Number(value)))) {
-        const def = w.options?.default
-        value = (def !== undefined && def !== '' && !Number.isNaN(Number(def)))
-          ? Number(def)
-          : 0
-      }
-      if (Array.isArray(value)) {
-        inputs[w.name] = w.type === 'curve'
-          ? { __type__: 'CURVE', __value__: value }
-          : { __value__: value }
-      } else {
-        inputs[w.name] = value
-      }
-    }
-  }
-
-  const graph = node.graph
-  const getLink = (id: number) =>
-    (graph?.links && typeof graph.links.get === 'function')
-      ? graph.links.get(id)
-      : (graph?.links?.[id] ?? graph?.getLink?.(id))
-
-  for (const slot of node.inputs ?? []) {
-    if (slot.link == null) continue
-    const link = getLink(slot.link)
-    if (!link) continue
-    inputs[slot.name] = [String(link.origin_id), Number(link.origin_slot)]
-  }
-
-  return {
-    inputs,
-    class_type: String(node.comfyClass ?? node.type ?? ''),
-    _meta: { title: node.title },
-  }
-}
-
-async function buildScopedPrompt(
-  app: any,
-  reachable: Set<number>,
-): Promise<{ output: Record<string, any>; workflow: any }> {
-  const output: Record<string, any> = {}
-  for (const n of app?.graph?._nodes ?? []) {
-    if (!reachable.has(n.id)) continue
-    if (n.mode === LG_MODE_NEVER || n.mode === LG_MODE_BYPASS) continue
-    if (n.isVirtualNode) continue
-    output[String(n.id)] = await serializeNodeEntry(n)
-  }
-  return { output, workflow: { nodes: [], links: [], version: 0.4 } }
-}
-
 function createNodeAt(targetClass: string, pos: [number, number]): any | null {
   const win = window as any
   if (!win.LiteGraph?.createNode) {
@@ -189,7 +94,7 @@ function createNodeAt(targetClass: string, pos: [number, number]): any | null {
     console.error('[ComfyTV/action] createNode returned null for', targetClass)
     return null
   }
-  win.app?.graph?.add(node)
+  ;(app as any)?.graph?.add(node)
   node.pos = pos
   return node
 }
@@ -393,78 +298,6 @@ export interface UseStageNodeResult {
   onAction: (actionId: string, context?: ImagePickContext) => void
 }
 
-function extractRunError(e: unknown, nodeId: number | string): {
-  message: string
-  type?: string
-  traceback?: string
-} {
-  const resp = (e as any)?.response
-  const top = resp?.error
-  const nodeErrors = resp?.node_errors
-  const idKey = String(nodeId)
-  const myErrors = nodeErrors && (nodeErrors[idKey] ?? nodeErrors[Number(idKey)])
-
-  if (myErrors && Array.isArray(myErrors.errors) && myErrors.errors.length > 0) {
-    const parts = myErrors.errors.map((er: any) => {
-      const msg = er?.message ? String(er.message) : 'invalid input'
-      const det = er?.details ? String(er.details) : ''
-      return det ? `${msg}: ${det}` : msg
-    })
-    return {
-      message: parts.join('; '),
-      type: String(top?.type || 'ValidationError'),
-    }
-  }
-
-  if (nodeErrors && typeof nodeErrors === 'object') {
-    const lines: string[] = []
-    for (const [nid, ne] of Object.entries<any>(nodeErrors)) {
-      if (!ne?.errors?.length) continue
-      const klass = ne.class_type ? `${ne.class_type} (#${nid})` : `#${nid}`
-      for (const er of ne.errors) {
-        lines.push(`${klass}: ${er?.message || 'invalid'}${er?.details ? ` — ${er.details}` : ''}`)
-      }
-    }
-    if (lines.length > 0) {
-      return {
-        message: lines.join('\n'),
-        type: String(top?.type || 'ValidationError'),
-      }
-    }
-  }
-
-  if (top && typeof top === 'object') {
-    const msg = String(top.message || 'prompt failed')
-    const det = top.details ? String(top.details) : ''
-    return {
-      message: det ? `${msg}: ${det}` : msg,
-      type: String(top.type || 'PromptError'),
-    }
-  }
-
-  const msg = e instanceof Error
-    ? (e.message || e.toString())
-    : (typeof e === 'string' ? e : 'queuePrompt failed')
-  const stack = e instanceof Error ? e.stack : undefined
-  return { message: msg, traceback: stack }
-}
-
-async function postPickedIndex(outputId: number, pickedIndex: number): Promise<void> {
-  try {
-    const win = window as any
-    const res = await win.app?.api?.fetchApi?.(`/comfytv/outputs/${outputId}/picked_index`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ picked_index: pickedIndex }),
-    })
-    if (res && !res.ok && res.status !== 404) {
-      console.warn('[ComfyTV/pick] persist picked_index failed', res.status)
-    }
-  } catch (e) {
-    console.warn('[ComfyTV/pick] persist picked_index threw', e)
-  }
-}
-
 function inputFileUrl(value: string): string {
   if (!value) return ''
   const slash = value.lastIndexOf('/')
@@ -481,6 +314,7 @@ export function useStageNode(
   variant: StageVariant = 'generator',
 ): UseStageNodeResult {
   const store = useStageStore()
+  const executionStore = useExecutionStore()
   const state = store.registerStage(node, kind, variant)
 
   if (variant === 'generator') {
@@ -521,13 +355,13 @@ export function useStageNode(
     }
   }
 
-  const refresh = () => store.refreshStageInputs(node, state, (window as any).app)
+  const refresh = () => store.refreshStageInputs(node, state, app as any)
 
   const reValidate = () => {
     validateWorkflowInputs(node, kind).then((map: SlotWarningMap) => {
       node._comfytvSlotWarnings = map
       applySlotWarnings(node)
-      ;(window as any).app?.graph?.setDirtyCanvas?.(true, true)
+      ;(app as any)?.graph?.setDirtyCanvas?.(true, true)
     })
   }
 
@@ -607,7 +441,7 @@ export function useStageNode(
     if (state.running) return
     if (variant === 'loader') return
     if (state.preparingWorkflow) {
-      ;(window as any).app?.extensionManager?.toast?.add?.({
+      ;(app as any)?.extensionManager?.toast?.add?.({
         severity: 'warn',
         summary: 'Workflow preparing',
         detail: 'Hang on — converting workflow to api JSON. Try Run again in a moment.',
@@ -630,10 +464,9 @@ export function useStageNode(
 
     state.running = true
     try {
-      const win = window as any
-      const app = win.app
-      const reachable = collectReachableNodeIds(app, node)
-      const pm = await buildScopedPrompt(app, reachable)
+      const a = app as any
+      const reachable = collectReachableNodeIds(a, node)
+      const pm = await buildScopedPrompt(a, reachable)
 
       const targetId = String(node.id)
       const myInputs = pm?.output?.[targetId]?.inputs
@@ -646,8 +479,8 @@ export function useStageNode(
           if (!Array.isArray(val) || val.length !== 2) continue
           const upstreamId = val[0]
           const upstreamSlot = Number(val[1]) || 0
-          const upstreamNode = app.graph?.getNodeById?.(Number(upstreamId))
-                            ?? app.graph?.getNodeById?.(String(upstreamId))
+          const upstreamNode = a.graph?.getNodeById?.(Number(upstreamId))
+                            ?? a.graph?.getNodeById?.(String(upstreamId))
           if (!upstreamNode) continue
           const upstreamState = store.getStage(upstreamNode)
           let snapshot: string | null | undefined
@@ -676,7 +509,7 @@ export function useStageNode(
           `Upstream not ready: ${list}. ` +
           `Run those stage(s) first so they produce a snapshot, then Run this stage again.`
         console.warn(`[ComfyTV/stage] ${msg}`)
-        ;(window as any).app?.extensionManager?.toast?.add?.({
+        ;(app as any)?.extensionManager?.toast?.add?.({
           severity: 'warn',
           summary: 'Upstream not ready',
           detail: msg,
@@ -696,7 +529,7 @@ export function useStageNode(
           obj.main_prompt = entries.expand(pid, mp)
         }
       }
-      const queueResp = await app.api.queuePrompt(0, pm, { partialExecutionTargets: [targetId] })
+      const queueResp = await a.api.queuePrompt(0, pm, { partialExecutionTargets: [targetId] })
       runningPromptId = queueResp?.prompt_id ? String(queueResp.prompt_id) : null
     } catch (e) {
       console.error('[ComfyTV/stage] queuePrompt failed', e)
@@ -709,11 +542,11 @@ export function useStageNode(
   const onCancelRequest = async () => {
     if (!state.running) return
     try {
-      const win = window as any
-      if (typeof win.app.api.interrupt === 'function') {
-        await win.app.api.interrupt()
+      const a = app as any
+      if (typeof a.api.interrupt === 'function') {
+        await a.api.interrupt()
       } else {
-        await win.app.api.fetchApi('/interrupt', { method: 'POST' })
+        await a.api.fetchApi('/interrupt', { method: 'POST' })
       }
     } catch (e) {
       console.error('[ComfyTV/stage] interrupt failed', e)
@@ -743,17 +576,13 @@ export function useStageNode(
     spawnFollowUpStage(node, kind, actionId, context)
   }
 
-  const win = window as any
-  const apiEvents = win.app?.api
-
   let runningPromptId: string | null = null
   let watchdogTimer: ReturnType<typeof setTimeout> | null = null
   const clearWatchdog = () => {
     if (watchdogTimer) { clearTimeout(watchdogTimer); watchdogTimer = null }
   }
 
-  const onProgress = (event: any) => {
-    const d = event?.detail
+  const onProgress = (d: any) => {
     if (!d) return
     if (String(d.node) !== String(node.id)) return
     const prev = state.progress
@@ -763,20 +592,15 @@ export function useStageNode(
       text: prev?.text,
     }
   }
-  const onProgressText = (event: any) => {
-    const d = event?.detail
+  const onProgressText = (d: any) => {
     if (!d) return
     if (String(d.nodeId ?? d.node) !== String(node.id)) return
     const prev = state.progress ?? { value: 0, max: 1 }
     state.progress = { ...prev, text: String(d.text || '') }
   }
-  apiEvents?.addEventListener?.('progress', onProgress)
-  apiEvents?.addEventListener?.('progress_text', onProgressText)
 
-  const onExecError = (event: any) => {
-    const d = event?.detail
+  const onExecError = (d: any) => {
     if (!d) return
-    if (String(d.node_id) !== String(node.id)) return
     const rawType = d.exception_type ? String(d.exception_type) : undefined
     const rawMsg = String(d.exception_message || d.message || 'execution failed')
     const err = {
@@ -789,10 +613,8 @@ export function useStageNode(
     clearWatchdog()
     console.warn(`[ComfyTV/stage] execution_error on node ${node.id}:`, err)
   }
-  const onExecInterrupted = (event: any) => {
-    const d = event?.detail
+  const onExecInterrupted = (d: any) => {
     if (!d) return
-    if (String(d.node_id) !== String(node.id)) return
     store.applyExecutionError(state, {
       message: '已取消 / cancelled',
       type: 'Cancelled',
@@ -802,8 +624,7 @@ export function useStageNode(
     console.warn(`[ComfyTV/stage] execution_interrupted on node ${node.id}`)
   }
 
-  const onExecSuccess = (event: any) => {
-    const d = event?.detail
+  const onExecSuccess = (d: any) => {
     if (!d) return
     if (!runningPromptId || String(d.prompt_id) !== runningPromptId) return
     runningPromptId = null
@@ -811,8 +632,7 @@ export function useStageNode(
     if (state.running) state.running = false
   }
 
-  const onStatus = (event: any) => {
-    const d = event?.detail
+  const onStatus = (d: any) => {
     const remaining = Number(d?.status?.exec_info?.queue_remaining ?? d?.exec_info?.queue_remaining)
     if (!Number.isFinite(remaining) || remaining !== 0) return
     if (!runningPromptId || !state.running) return
@@ -830,10 +650,16 @@ export function useStageNode(
     }, 3000)
   }
 
-  apiEvents?.addEventListener?.('execution_error', onExecError)
-  apiEvents?.addEventListener?.('execution_interrupted', onExecInterrupted)
-  apiEvents?.addEventListener?.('execution_success', onExecSuccess)
-  apiEvents?.addEventListener?.('status', onStatus)
+  const nodeRunHandlers = {
+    getNodeId: () => String(node.id),
+    onProgress,
+    onProgressText,
+    onError: onExecError,
+    onInterrupted: onExecInterrupted,
+    onSuccess: onExecSuccess,
+    onStatus,
+  }
+  executionStore.registerNodeHandlers(nodeRunHandlers)
 
   const projectStore = useProjectStore()
   const projectIdWidget = node.widgets?.find((w: any) => w.name === 'project_id')
@@ -906,12 +732,7 @@ export function useStageNode(
     stopPickerWatch?.()
     stopProjectWatch()
     stopBindingsWatch()
-    apiEvents?.removeEventListener?.('progress', onProgress)
-    apiEvents?.removeEventListener?.('progress_text', onProgressText)
-    apiEvents?.removeEventListener?.('execution_error', onExecError)
-    apiEvents?.removeEventListener?.('execution_interrupted', onExecInterrupted)
-    apiEvents?.removeEventListener?.('execution_success', onExecSuccess)
-    apiEvents?.removeEventListener?.('status', onStatus)
+    executionStore.unregisterNodeHandlers(nodeRunHandlers)
     clearWatchdog()
     _prepUnsub?.()
     store.unregisterStage(node)

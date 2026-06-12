@@ -1,7 +1,9 @@
 import { ref, watch } from 'vue'
 
-import { app } from '@/lib/comfyApp'
+import { app, type LGraphNode } from '@/lib/comfyApp'
 import { useStageStore, type StageState } from '@/stores/stageStore'
+import { uploadBlob } from '@/utils/uploadCanvas'
+import { readWidgetStr, writeWidget } from '@/utils/widget'
 
 export interface Shot {
   id: string
@@ -37,7 +39,7 @@ function blankShot(no: number): Shot {
   }
 }
 
-export function useStoryboardShots(node: any, state: StageState) {
+export function useStoryboardShots(node: LGraphNode, state: StageState) {
   const store = useStageStore()
 
   const shots = ref<Shot[]>([])
@@ -46,10 +48,6 @@ export function useStoryboardShots(node: any, state: StageState) {
   const fileInputEl = ref<HTMLInputElement | null>(null)
   let pendingUploadShotId: string | null = null
   let lastWritten = ''
-
-  function getWidget(name: string): any | null {
-    return node?.widgets?.find((w: any) => w.name === name) ?? null
-  }
 
   function serialize(): string {
     return JSON.stringify({
@@ -77,8 +75,7 @@ export function useStoryboardShots(node: any, state: StageState) {
   function commit() {
     const json = serialize()
     lastWritten = json
-    const w = getWidget('storyboard_data')
-    if (w && w.value !== json) { w.value = json; w.callback?.(json) }
+    writeWidget(node, 'storyboard_data', json)
     store.applyExecutedPayload(state, { output: [json] })
   }
 
@@ -117,7 +114,7 @@ export function useStoryboardShots(node: any, state: StageState) {
   }
 
   function restore() {
-    const raw = String(getWidget('storyboard_data')?.value ?? '')
+    const raw = readWidgetStr(node, 'storyboard_data', '')
     if (loadFromJson(raw)) { lastWritten = raw; return }
     if (state.output && loadFromJson(String(state.output))) {
       lastWritten = String(state.output)
@@ -162,9 +159,9 @@ export function useStoryboardShots(node: any, state: StageState) {
     if (idx < 0) return
     regeneratingId.value = shotId
     try {
-      const workflow   = String(getWidget('workflow')?.value ?? '')
-      const premise    = String(getWidget('main_prompt')?.value ?? '')
-      const characters = String(getWidget('characters')?.value ?? '')
+      const workflow   = readWidgetStr(node, 'workflow', '')
+      const premise    = readWidgetStr(node, 'main_prompt', '')
+      const characters = readWidgetStr(node, 'characters', '')
       const body = {
         workflow,
         premise,
@@ -224,15 +221,7 @@ export function useStoryboardShots(node: any, state: StageState) {
 
     uploadingId.value = shotId
     try {
-      const body = new FormData()
-      body.append('image', file, file.name)
-      body.append('subfolder', 'storyboard')
-      body.append('type', 'input')
-      const resp = await (app as any).api.fetchApi('/upload/image', { method: 'POST', body })
-      if (resp.status !== 200) throw new Error(`upload ${resp.status}`)
-      const data = await resp.json() as { name?: string }
-      if (!data?.name) throw new Error('no name')
-      const url = `/view?filename=${encodeURIComponent(data.name)}&subfolder=storyboard&type=input`
+      const url = await uploadBlob(file, { subfolder: 'storyboard', filename: file.name })
       setImage(shotId, url)
     } catch (err) {
       console.error('[ComfyTV/storyboard] ref upload failed', err)
@@ -254,8 +243,7 @@ export function useStoryboardShots(node: any, state: StageState) {
     if (!out || out === lastWritten) return
     if (loadFromJson(String(out))) {
       lastWritten = String(out)
-      const w = getWidget('storyboard_data')
-      if (w && w.value !== out) { w.value = out; w.callback?.(out) }
+      writeWidget(node, 'storyboard_data', out)
     }
   })
 

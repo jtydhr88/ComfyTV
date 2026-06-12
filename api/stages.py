@@ -3,6 +3,7 @@ import re
 from aiohttp import web
 
 from ..nodes.stages import STAGE_META
+from ..nodes.stages.common.caps import caps_payload
 from ..runners import RUNNER_REGISTRY, WORKFLOW_KINDS
 from ._common import routes
 
@@ -19,6 +20,11 @@ async def list_stages(_request: web.Request) -> web.Response:
         for cls_name, meta in STAGE_META.items()
     ]
     return web.json_response({"stages": stages})
+
+
+@routes.get("/comfytv/caps")
+async def list_caps(_request: web.Request) -> web.Response:
+    return web.json_response(caps_payload())
 
 
 _UPSTREAM_PAT = re.compile(

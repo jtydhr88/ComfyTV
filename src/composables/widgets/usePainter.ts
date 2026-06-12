@@ -10,14 +10,16 @@ import {
   type Point,
 } from '@/widgets/painter/types'
 
-import { app } from '@/lib/comfyApp'
+import { type LGraphNode } from '@/lib/comfyApp'
+import { uploadBlobNamed } from '@/utils/uploadCanvas'
+import { getWidget } from '@/utils/widget'
 
 
 export interface UsePainterOptions {
   canvasEl: Ref<HTMLCanvasElement | null>
   cursorEl: Ref<HTMLElement | null>
   sourceImageUrl: Ref<string | null>
-  node: any
+  node?: LGraphNode
   maskWidgetName?: string
 }
 
@@ -529,7 +531,7 @@ export function usePainter(options: UsePainterOptions) {
   }
 
   function writeMaskWidget(annotatedPath: string) {
-    const w = node?.widgets?.find((x: any) => x.name === maskWidgetName)
+    const w = getWidget(node, maskWidgetName)
     if (w) {
       w.value = annotatedPath
       w.callback?.(annotatedPath)
@@ -540,7 +542,7 @@ export function usePainter(options: UsePainterOptions) {
     const el = canvasEl.value
     if (!el) return ''
     if (!isDirty.value) {
-      const existing = node?.widgets?.find((x: any) => x.name === maskWidgetName)?.value
+      const existing = getWidget(node, maskWidgetName)?.value
       if (typeof existing === 'string' && existing) return existing
     }
 
@@ -560,26 +562,16 @@ export function usePainter(options: UsePainterOptions) {
 
     const nodeId = String(node?.id ?? 'unknown')
     const filename = `comfytv-painter-${nodeId}-${Date.now()}.png`
-    const body = new FormData()
-    body.append('image', blob, filename)
-    body.append('subfolder', 'painter')
-    body.append('type', 'input')
 
-    let resp: Response
+    let uploaded
     try {
-      resp = await (app as any).api.fetchApi('/upload/image', { method: 'POST', body })
+      uploaded = await uploadBlobNamed(blob, { subfolder: 'painter', filename })
     } catch (e) {
       console.error('[ComfyTV/painter] mask upload failed', e)
       return ''
     }
-    if (resp.status !== 200) {
-      console.error('[ComfyTV/painter] mask upload bad status', resp.status, resp.statusText)
-      return ''
-    }
-    const data = await resp.json() as { name?: string }
-    if (!data?.name) return ''
 
-    const annotated = `painter/${data.name} [input]`
+    const annotated = `painter/${uploaded.name} [input]`
     writeMaskWidget(annotated)
     isDirty.value = false
     return annotated

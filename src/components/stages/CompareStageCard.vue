@@ -16,6 +16,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
 import ImageCompare from '@/components/widgets/ImageCompare.vue'
@@ -26,7 +27,7 @@ const props = defineProps<{
   onCancelRequest: () => void
   onDisconnect: (slot: string) => void
   onAction: (id: string) => void
-  node: any
+  node: LGraphNode
 }>()
 
 function resolvedInput(slot: string): string | null {

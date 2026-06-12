@@ -40,9 +40,7 @@ class TextStage(io.ComfyNode):
             display_name="Text Stage",
             category="ComfyTV/Generate",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=TEXT_WORKFLOWS or [""],
                                default=TEXT_WORKFLOWS[0] if TEXT_WORKFLOWS else "",
                                tooltip="Which backend text workflow to invoke when Run is clicked. Placeholder for now."),
@@ -62,27 +60,20 @@ class TextStage(io.ComfyNode):
 
         text_vals = _autogrow_values(texts)
         combined_prompt = _combine_prompt(main_prompt, text_vals, sep="\n")
-        runner = RUNNER_REGISTRY.by_label(workflow, 'text')
-        payload = None
-        if runner is not None:
-            try:
-                ctx = RunnerContext(
-                    kind='text',
-                    main_prompt=combined_prompt,
-                    upstream={
-                        'texts':  text_vals,
-                        'images': _autogrow_values(images),
-                        'videos': _autogrow_values(videos),
-                    },
-                    options={},
-                )
-                payload = await runner.invoke(ctx)
-            except NotImplementedError:
-                payload = None
-        if not payload:
-            raise RuntimeError(f"TextStage: workflow {workflow!r} returned no output")
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        return await run_stage_workflow(
+            cls,
+            kind='text',
+            label=workflow,
+            project_id=project_id,
+            parent_output_id=parent_output_id,
+            main_prompt=combined_prompt,
+            upstream={
+                'texts':  text_vals,
+                'images': _autogrow_values(images),
+                'videos': _autogrow_values(videos),
+            },
+            options={},
+        )
 
 
 class ImageStage(io.ComfyNode):
@@ -94,9 +85,7 @@ class ImageStage(io.ComfyNode):
             display_name="Image Stage",
             category="ComfyTV/Generate",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=IMAGE_WORKFLOWS or [""],
                                default=IMAGE_WORKFLOWS[0] if IMAGE_WORKFLOWS else "",
                                tooltip="Which backend image workflow to invoke when Run is clicked. Placeholder for now."),
@@ -125,28 +114,20 @@ class ImageStage(io.ComfyNode):
 
         text_vals = _autogrow_values(texts)
         combined_prompt = _combine_prompt(main_prompt, text_vals)
-        runner = RUNNER_REGISTRY.by_label(workflow, 'image')
-        payload = None
-        if runner is not None:
-            try:
-                ctx = RunnerContext(
-                    kind='image',
-                    main_prompt=combined_prompt,
-                    upstream={
-                        'texts':  text_vals,
-                        'images': _autogrow_values(images),
-                    },
-                    options={
-                        'resolution':   resolution,
-                        'aspect_ratio': aspect_ratio,
-                        'batch_size':   int(batch_size or 1),
-                    },
-                )
-                payload = await runner.invoke(ctx)
-            except NotImplementedError:
-                payload = None
-        if not payload:
-            raise RuntimeError(f"ImageStage: workflow {workflow!r} returned no output")
+        payload = await invoke_runner(
+            kind='image',
+            label=workflow,
+            main_prompt=combined_prompt,
+            upstream={
+                'texts':  text_vals,
+                'images': _autogrow_values(images),
+            },
+            options={
+                'resolution':   resolution,
+                'aspect_ratio': aspect_ratio,
+                'batch_size':   int(batch_size or 1),
+            },
+        )
         picked_idx = int(selected_index or 1)
         picked_url = _pick_image_from_batch(payload, picked_idx)
         return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
@@ -163,9 +144,7 @@ class VideoStage(io.ComfyNode):
             display_name="Video Stage",
             category="ComfyTV/Generate",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=VIDEO_WORKFLOWS or [""],
                                default=VIDEO_WORKFLOWS[0] if VIDEO_WORKFLOWS else "",
                                tooltip="Which backend video workflow to invoke when Run is clicked. Placeholder for now."),
@@ -199,33 +178,26 @@ class VideoStage(io.ComfyNode):
 
         text_vals = _autogrow_values(texts)
         combined_prompt = _combine_prompt(main_prompt, text_vals)
-        runner = RUNNER_REGISTRY.by_label(workflow, 'video')
-        payload = None
-        if runner is not None:
-            try:
-                ctx = RunnerContext(
-                    kind='video',
-                    main_prompt=combined_prompt,
-                    upstream={
-                        'texts':  text_vals,
-                        'images': _autogrow_values(images),
-                        'videos': _autogrow_values(videos),
-                        'audio':  audio,
-                    },
-                    options={
-                        'resolution':     resolution,
-                        'aspect_ratio':   aspect_ratio,
-                        'duration_s':     duration_s,
-                        'generate_audio': generate_audio,
-                    },
-                )
-                payload = await runner.invoke(ctx)
-            except NotImplementedError:
-                payload = None
-        if not payload:
-            raise RuntimeError(f"VideoStage: workflow {workflow!r} returned no output")
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        return await run_stage_workflow(
+            cls,
+            kind='video',
+            label=workflow,
+            project_id=project_id,
+            parent_output_id=parent_output_id,
+            main_prompt=combined_prompt,
+            upstream={
+                'texts':  text_vals,
+                'images': _autogrow_values(images),
+                'videos': _autogrow_values(videos),
+                'audio':  audio,
+            },
+            options={
+                'resolution':     resolution,
+                'aspect_ratio':   aspect_ratio,
+                'duration_s':     duration_s,
+                'generate_audio': generate_audio,
+            },
+        )
 
 
 class AudioStage(io.ComfyNode):
@@ -237,9 +209,7 @@ class AudioStage(io.ComfyNode):
             display_name="Audio Stage",
             category="ComfyTV/Generate",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=AUDIO_WORKFLOWS,
                                default=AUDIO_WORKFLOWS[0] if AUDIO_WORKFLOWS else "",
                                tooltip="Audio generation backend."),
@@ -259,26 +229,19 @@ class AudioStage(io.ComfyNode):
     @classmethod
     async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                       workflow="", main_prompt="", duration_s=30.0, lyrics=""):
-        runner = RUNNER_REGISTRY.by_label(workflow, 'audio')
-        payload = None
-        if runner is not None:
-            try:
-                ctx = RunnerContext(
-                    kind='audio',
-                    main_prompt=(main_prompt or '').strip(),
-                    upstream={},
-                    options={
-                        'duration_s': float(duration_s or 30.0),
-                        'lyrics':     (lyrics or '').strip(),
-                    },
-                )
-                payload = await runner.invoke(ctx)
-            except NotImplementedError:
-                payload = None
-        if not payload:
-            raise RuntimeError(f"AudioStage: workflow {workflow!r} returned no output")
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        return await run_stage_workflow(
+            cls,
+            kind='audio',
+            label=workflow,
+            project_id=project_id,
+            parent_output_id=parent_output_id,
+            main_prompt=(main_prompt or '').strip(),
+            upstream={},
+            options={
+                'duration_s': float(duration_s or 30.0),
+                'lyrics':     (lyrics or '').strip(),
+            },
+        )
 
 
 class ImagePickerStage(io.ComfyNode):
@@ -320,9 +283,7 @@ class ShotImagesStage(io.ComfyNode):
             display_name="Shot Images",
             category="ComfyTV/Compose",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 io.Combo.Input("workflow",
                                options=SHOT_IMAGES_WORKFLOWS or [""],
                                default=SHOT_IMAGES_WORKFLOWS[0] if SHOT_IMAGES_WORKFLOWS else "",
@@ -356,6 +317,12 @@ class ShotImagesStage(io.ComfyNode):
                 shots = []
 
         runner = RUNNER_REGISTRY.by_label(workflow, 'image')
+        if runner is None:
+            raise StageRunnerMissing(
+                f"no runner registered for image/{workflow!r} — was the workflow "
+                f"added or renamed after startup? (restart ComfyUI to pick up new "
+                f"workflow files, or re-open the workflow in the sidebar editor)"
+            )
         shared_refs = _autogrow_values(images)
         out_images: list[dict] = []
         any_real = False
@@ -420,9 +387,7 @@ class StoryboardStage(io.ComfyNode):
             display_name="Storyboard",
             category="ComfyTV/Generate",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=STORYBOARD_WORKFLOWS or [""],
                                default=STORYBOARD_WORKFLOWS[0] if STORYBOARD_WORKFLOWS else "",
                                tooltip="LLM backend that produces the 16-field shot list."),
@@ -458,22 +423,15 @@ class StoryboardStage(io.ComfyNode):
             shot_count=int(shot_count or 6),
             characters=characters or '',
         )
-        payload = None
-        runner = RUNNER_REGISTRY.by_label(workflow, 'storyboard')
-        if runner is not None:
-            try:
-                ctx = RunnerContext(
-                    kind='storyboard',
-                    main_prompt=composed_prompt,
-                    upstream={},
-                    options={'max_length': 6144},
-                )
-                raw_text = await runner.invoke(ctx)
-                payload = _shape_storyboard_from_llm(str(raw_text or ''))
-            except NotImplementedError:
-                payload = None
-        if not payload:
-            raise RuntimeError(f"StoryboardStage: workflow {workflow!r} returned no output")
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        return await run_stage_workflow(
+            cls,
+            kind='storyboard',
+            label=workflow,
+            project_id=project_id,
+            parent_output_id=parent_output_id,
+            main_prompt=composed_prompt,
+            upstream={},
+            options={'max_length': 6144},
+            transform=lambda raw: _shape_storyboard_from_llm(str(raw or '')),
+        )
 

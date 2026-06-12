@@ -10,7 +10,7 @@ function makeWidget(name: string, value: any = 0) {
   return { name, value, callback: vi.fn() }
 }
 
-function makeNode(widgets: any[] = []) {
+function makeNode(widgets: any[] = []): any {
   return { id: 7, widgets, onConfigure: null as any }
 }
 

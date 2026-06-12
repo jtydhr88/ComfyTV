@@ -1,3 +1,4 @@
+import { apiFetch, apiSend, OkSchema, WorkflowStateSchema } from '@/api'
 import { app } from '@/lib/comfyApp'
 
 interface PrepState {
@@ -34,19 +35,6 @@ export function subscribePrepState(
   return () => { set?.delete(fn) }
 }
 
-async function _fetchJson<T>(path: string, init?: RequestInit): Promise<T> {
-  const resp = await (app as any).api.fetchApi(path, init)
-  if (resp.status >= 400) {
-    let detail = `${resp.status} ${resp.statusText}`
-    try {
-      const j = await resp.json()
-      if (j?.error) detail += ` — ${j.error}`
-    } catch { /* not json */ }
-    throw new Error(detail)
-  }
-  return resp.json()
-}
-
 export function prepareWorkflow(kind: string, label: string): Promise<void> {
   if (!kind || !label) return Promise.resolve()
   const key = _key(kind, label)
@@ -56,12 +44,10 @@ export function prepareWorkflow(kind: string, label: string): Promise<void> {
   const task = (async () => {
     _set(key, { busy: true, error: null })
     try {
-      const state = await _fetchJson<{
-        has_api: boolean
-        file_path: string
-        file_mtime: number | null
-        file_exists: boolean
-      }>(`/comfytv/workflows/state?kind=${encodeURIComponent(kind)}&label=${encodeURIComponent(label)}`)
+      const state = await apiFetch(
+        `/comfytv/workflows/state?kind=${encodeURIComponent(kind)}&label=${encodeURIComponent(label)}`,
+        WorkflowStateSchema,
+      )
 
       if (state.has_api) {
         _set(key, { busy: false, ready: true })
@@ -90,10 +76,8 @@ export function prepareWorkflow(kind: string, label: string): Promise<void> {
 
       const apiJson = await _convertGuiToApi(guiJson)
 
-      await _fetchJson('/comfytv/workflows/api_json', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ kind, label, api_json: apiJson, file_mtime: fileMtime }),
+      await apiSend('/comfytv/workflows/api_json', 'POST', OkSchema, {
+        kind, label, api_json: apiJson, file_mtime: fileMtime,
       })
 
       _set(key, { busy: false, ready: true })

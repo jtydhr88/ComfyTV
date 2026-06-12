@@ -1,6 +1,13 @@
 {
   "name": "comfytv",
   "version": "1.0.2",
+  "private": true,
+  "license": "MIT",
+  "description": "LibTV-style Canvas pipeline for ComfyUI",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jtydhr88/ComfyTV"
+  },
   "type": "module",
   "dependencies": {
     "@tiptap/core": "^3.26.0",
@@ -16,7 +23,6 @@
     "@types/three": "^0.170.0",
     "@vueuse/core": "^14.3.0",
     "pinia": "^3.0.4",
-    "primevue": "^4.2.5",
     "reka-ui": "^2.9.9",
     "three": "^0.170.0",
     "tippy.js": "^6.3.7",

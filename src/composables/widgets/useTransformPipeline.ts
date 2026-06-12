@@ -1,6 +1,6 @@
 import { ref, watch, type Ref } from 'vue'
 import { useStageStore, type StageState } from '@/stores/stageStore'
-import { app } from '@/lib/comfyApp'
+import { uploadBlob } from '@/utils/uploadCanvas'
 
 
 export interface UseTransformPipelineOptions {
@@ -74,25 +74,10 @@ export function useTransformPipeline(options: UseTransformPipelineOptions) {
       if (mySeq !== computeSeq) return
 
       const filename = `${filenamePrefix}-${nodeId}-${Date.now()}.png`
-      const body = new FormData()
-      body.append('image', blob, filename)
-      body.append('subfolder', subfolder)
-      body.append('type', 'input')
-
-      const resp = await (app as any).api.fetchApi('/upload/image', {
-        method: 'POST', body,
-      })
-      if (resp.status !== 200) {
-        throw new Error(`upload ${resp.status} ${resp.statusText}`)
-      }
-      const data = await resp.json() as { name?: string }
-      if (!data?.name) throw new Error('upload returned no name')
+      const viewUrl = await uploadBlob(blob, { subfolder, filename })
 
       if (mySeq !== computeSeq) return
 
-      const viewUrl = `/view?filename=${encodeURIComponent(data.name)}`
-                    + `&subfolder=${encodeURIComponent(subfolder)}`
-                    + `&type=input`
       store.applyExecutedPayload(state, { output: [viewUrl] })
     } catch (e) {
       console.error(`[ComfyTV/transform:${filenamePrefix}] compute failed`, e)

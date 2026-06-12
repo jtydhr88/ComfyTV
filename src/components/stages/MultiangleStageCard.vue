@@ -32,11 +32,13 @@
 
 <script setup lang="ts">
 import { onBeforeUnmount, watch } from 'vue'
+import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
 import SceneCanvas from '@/components/widgets/SceneCanvas.vue'
 import CameraControlPanel from '@/components/widgets/CameraControlPanel.vue'
 import { useCameraWidget } from '@/composables/widgets/useCameraWidget'
+import { getWidget, readWidgetNum, writeWidget } from '@/utils/widget'
 import type { CameraState } from '@/widgets/three/types'
 
 const props = defineProps<{
@@ -45,41 +47,31 @@ const props = defineProps<{
   onCancelRequest: () => void
   onDisconnect: (slot: string) => void
   onAction: (id: string) => void
-  node: any
+  node: LGraphNode
 }>()
 
 const PROP_KEY = 'comfytv_multiangle_camera'
 
-function getWidgetValue(name: string, fallback: number): number {
-  const w = props.node?.widgets?.find((x: any) => x.name === name)
-  return w ? Number(w.value) : fallback
-}
-
 function readInitial(): Partial<CameraState> {
-  const stored = props.node?.properties?.[PROP_KEY]
+  const stored = props.node?.properties?.[PROP_KEY] as Partial<CameraState> | undefined
   if (stored && typeof stored === 'object') {
     return {
-      azimuth:   stored.azimuth   ?? getWidgetValue('horizontal_angle', 0),
-      elevation: stored.elevation ?? getWidgetValue('vertical_angle', 0),
-      distance:  stored.distance  ?? getWidgetValue('zoom', 5),
+      azimuth:   stored.azimuth   ?? readWidgetNum(props.node, 'horizontal_angle', 0),
+      elevation: stored.elevation ?? readWidgetNum(props.node, 'vertical_angle', 0),
+      distance:  stored.distance  ?? readWidgetNum(props.node, 'zoom', 5),
     }
   }
   return {
-    azimuth:   getWidgetValue('horizontal_angle', 0),
-    elevation: getWidgetValue('vertical_angle', 0),
-    distance:  getWidgetValue('zoom', 5),
+    azimuth:   readWidgetNum(props.node, 'horizontal_angle', 0),
+    elevation: readWidgetNum(props.node, 'vertical_angle', 0),
+    distance:  readWidgetNum(props.node, 'zoom', 5),
   }
-}
-
-function writeWidget(name: string, value: number) {
-  const w = props.node?.widgets?.find((x: any) => x.name === name)
-  if (w) w.value = value
 }
 
 function writeProperties(state: Partial<CameraState>) {
   if (!props.node) return
   if (!props.node.properties) props.node.properties = {}
-  const existing = props.node.properties[PROP_KEY] ?? {}
+  const existing = (props.node.properties[PROP_KEY] ?? {}) as Partial<CameraState>
   props.node.properties[PROP_KEY] = { ...existing, ...state }
 }
 
@@ -87,9 +79,9 @@ const {
   azimuth, elevation, distance, prompt,
   initScene, setState, reset, cleanup,
 } = useCameraWidget(readInitial(), (s: CameraState) => {
-  writeWidget('horizontal_angle', Math.round(s.azimuth))
-  writeWidget('vertical_angle',   Math.round(s.elevation))
-  writeWidget('zoom',             Number(s.distance.toFixed(2)))
+  writeWidget(props.node, 'horizontal_angle', Math.round(s.azimuth), { fireCallback: false })
+  writeWidget(props.node, 'vertical_angle',   Math.round(s.elevation), { fireCallback: false })
+  writeWidget(props.node, 'zoom',             Number(s.distance.toFixed(2)), { fireCallback: false })
   writeProperties({
     azimuth: s.azimuth,
     elevation: s.elevation,
@@ -98,7 +90,7 @@ const {
 })
 
 function wireWidgetCallback(name: string, apply: (v: number) => void) {
-  const w = props.node?.widgets?.find((x: any) => x.name === name)
+  const w = getWidget(props.node, name)
   if (!w) return
   const orig = w.callback
   w.callback = (value: unknown) => {

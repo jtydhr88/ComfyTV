@@ -8,9 +8,7 @@ class DirectorTimelineStage(io.ComfyNode):
             display_name="Director Timeline",
             category="ComfyTV/Compose",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
 
                 io.String.Input("timeline_data", default="",
                                 socketless=True, extra_dict={"hidden": True},
@@ -49,9 +47,7 @@ class TimelineVideoStage(io.ComfyNode):
             display_name="Timeline Render",
             category="ComfyTV/Compose",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=TIMELINE_WORKFLOWS,
                                default=TIMELINE_WORKFLOWS[0] if TIMELINE_WORKFLOWS else "",
                                tooltip="Which multi-shot video backend renders the timeline. Placeholder for now."),
@@ -70,21 +66,15 @@ class TimelineVideoStage(io.ComfyNode):
             comfy.model_management.throw_exception_if_processing_interrupted()
             _emit_progress(cls, value, total, text)
 
-        runner = RUNNER_REGISTRY.by_label(workflow, 'timeline')
-        payload = None
-        if runner is not None:
-            try:
-                ctx = RunnerContext(
-                    kind='timeline',
-                    upstream={'timeline': timeline},
-                    progress=_progress,
-                )
-                payload = await runner.invoke(ctx)
-            except NotImplementedError:
-                payload = None
-        if not payload:
-            raise RuntimeError(f"TimelineVideoStage: workflow {workflow!r} returned no output")
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        return await run_stage_workflow(
+            cls,
+            kind='timeline',
+            label=workflow,
+            project_id=project_id,
+            parent_output_id=parent_output_id,
+            main_prompt=None,  # timeline render has no text prompt
+            upstream={'timeline': timeline},
+            progress=_progress,
+        )
 
 

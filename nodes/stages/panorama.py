@@ -10,9 +10,7 @@ class PanoramaStage(io.ComfyNode):
             display_name="Panorama",
             category="ComfyTV/Panorama",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=PANORAMA_WORKFLOWS,
                                default=PANORAMA_WORKFLOWS[0] if PANORAMA_WORKFLOWS else "",
                                tooltip="Which panorama generation workflow to invoke on Run. Leave at the default if you only want to upload an HDRI manually."),
@@ -37,25 +35,23 @@ class PanoramaStage(io.ComfyNode):
                                     payload_str=manual_source.strip(),
                                     parent_output_id=parent_output_id)
 
-        runner = RUNNER_REGISTRY.by_label(workflow, 'panorama') if workflow else None
-        if runner is not None:
+        if workflow:
             try:
                 user_prompt = (main_prompt or '').strip()
                 composed = ("equirectangular 360 degree panorama, " + user_prompt) \
                     if user_prompt else \
                     "equirectangular 360 degree panorama, a peaceful landscape"
-                ctx = RunnerContext(
+                payload = await invoke_runner(
                     kind='panorama',
+                    label=workflow,
                     main_prompt=composed,
                     upstream={'images': [image] if image else []},
                     options={},
                 )
-                payload = await runner.invoke(ctx)
-                if payload:
-                    return _stage_emit_auto(cls, project_id=project_id,
-                                            payload_str=payload,
-                                            parent_output_id=parent_output_id)
-            except NotImplementedError:
+                return _stage_emit_auto(cls, project_id=project_id,
+                                        payload_str=payload,
+                                        parent_output_id=parent_output_id)
+            except StageError:
                 pass
 
         source = (image or "").strip()
@@ -75,9 +71,7 @@ class PanoramaCurrentViewStage(io.ComfyNode):
             display_name="Panorama · Current View",
             category="ComfyTV/Panorama",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 io.Float.Input("yaw", default=0.0, min=-180.0, max=180.0, step=0.1,
                                socketless=True, extra_dict={"hidden": True},
                                tooltip="Camera azimuth (degrees, -180..180, 0 = forward)."),
@@ -117,9 +111,7 @@ class PanoramaMultiViewStage(io.ComfyNode):
             display_name="Panorama · Multi-View",
             category="ComfyTV/Panorama",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 io.Int.Input("view_count", default=4, min=1, max=64, step=1,
                              socketless=True, extra_dict={"hidden": True},
                              tooltip="How many viewport screenshots to extract. Hidden — driven by the Vue panel's slider."),

@@ -1,6 +1,9 @@
 from ....runners import RUNNER_REGISTRY
 
 
+def labels_for(kind: str) -> list[str]:
+    return RUNNER_REGISTRY.labels_for_kind(kind)
+
 TEXT_WORKFLOWS        = RUNNER_REGISTRY.labels_for_kind('text')
 IMAGE_WORKFLOWS       = RUNNER_REGISTRY.labels_for_kind('image')
 SHOT_IMAGES_WORKFLOWS = RUNNER_REGISTRY.labels_for_kind('shot-images')

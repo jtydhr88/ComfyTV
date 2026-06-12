@@ -90,6 +90,7 @@
 <script setup lang="ts">
 import StageCard from '@/components/stages/StageCard.vue'
 import { useGridSplit } from '@/composables/stages/useGridSplit'
+import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 
 const PRESETS = [
@@ -106,7 +107,7 @@ const props = defineProps<{
   onCancelRequest: () => void
   onDisconnect: (slot: string) => void
   onAction: (id: string) => void
-  node: any
+  node: LGraphNode
 }>()
 
 const { sourceImageUrl, rows, cols, setGrid, splitting } = useGridSplit(props.node, props.state)

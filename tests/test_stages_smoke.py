@@ -322,27 +322,30 @@ class TestVideoAudioEditStageExecute:
         )
         assert out.values[0]
 
-    def test_video_upscale(self, reset_db):
+    def test_video_upscale_not_implemented(self, reset_db):
         from ComfyTV.nodes.stages.video_audio import VideoUpscaleStage
-        out = VideoUpscaleStage.execute(
-            project_id="default", video="/view?filename=v.mp4", scale="2x",
-        )
-        assert out.values[0]
+        from ComfyTV.nodes.stages.common import StageNotImplemented
+        with pytest.raises(StageNotImplemented):
+            VideoUpscaleStage.execute(
+                project_id="default", video="/view?filename=v.mp4", scale="2x",
+            )
 
-    def test_subtitle_smart_erase(self, reset_db):
+    def test_subtitle_smart_erase_not_implemented(self, reset_db):
         from ComfyTV.nodes.stages.video_audio import VideoSubtitleSmartEraseStage
-        out = VideoSubtitleSmartEraseStage.execute(
-            project_id="default", video="/view?filename=v.mp4",
-        )
-        assert out.values[0]
+        from ComfyTV.nodes.stages.common import StageNotImplemented
+        with pytest.raises(StageNotImplemented):
+            VideoSubtitleSmartEraseStage.execute(
+                project_id="default", video="/view?filename=v.mp4",
+            )
 
-    def test_subtitle_select_erase(self, reset_db):
+    def test_subtitle_select_erase_not_implemented(self, reset_db):
         from ComfyTV.nodes.stages.video_audio import VideoSubtitleSelectEraseStage
-        out = VideoSubtitleSelectEraseStage.execute(
-            project_id="default", video="/view?filename=v.mp4",
-            region_x=0, region_y=0, region_w=100, region_h=100,
-        )
-        assert out.values[0]
+        from ComfyTV.nodes.stages.common import StageNotImplemented
+        with pytest.raises(StageNotImplemented):
+            VideoSubtitleSelectEraseStage.execute(
+                project_id="default", video="/view?filename=v.mp4",
+                region_x=0, region_y=0, region_w=100, region_h=100,
+            )
 
     @pytest.mark.skip(reason="requires workflow runner; stage raises on empty workflow")
     @pytest.mark.asyncio

@@ -10,9 +10,7 @@ class CropStage(io.ComfyNode):
             display_name="Crop",
             category="ComfyTV/Image",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 io.Int.Input("crop_x", default=0, min=0, max=8192,
                              socketless=True, extra_dict={"hidden": True}),
                 io.Int.Input("crop_y", default=0, min=0, max=8192,
@@ -43,9 +41,7 @@ class RotateStage(io.ComfyNode):
             display_name="Rotate",
             category="ComfyTV/Image",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 io.Int.Input("angle", default=0, min=-180, max=180, step=1,
                              socketless=True, extra_dict={"hidden": True},
                              tooltip="Rotation angle in degrees (-180 to 180, positive = clockwise)."),
@@ -71,9 +67,7 @@ class MirrorStage(io.ComfyNode):
             display_name="Mirror",
             category="ComfyTV/Image",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 io.Boolean.Input("flip_horizontal", default=False,
                                  socketless=True, extra_dict={"hidden": True},
                                  tooltip="Flip left↔right."),
@@ -102,9 +96,7 @@ class GridSplitStage(io.ComfyNode):
             display_name="Grid Split",
             category="ComfyTV/Image",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 io.Int.Input("rows", default=2, min=1, max=10, step=1,
                              socketless=True, extra_dict={"hidden": True},
                              tooltip="Number of grid rows. Hidden — driven by the Vue panel."),

@@ -26,11 +26,13 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
 import CropCanvas from '@/components/widgets/CropCanvas.vue'
 import type { Bounds } from '@/composables/widgets/useImageCrop'
 import { useTransformPipeline } from '@/composables/widgets/useTransformPipeline'
+import { getWidget, readWidgetNum, writeWidget } from '@/utils/widget'
 
 const props = defineProps<{
   state: StageState
@@ -38,7 +40,7 @@ const props = defineProps<{
   onCancelRequest: () => void
   onDisconnect: (slot: string) => void
   onAction: (id: string) => void
-  node: any
+  node: LGraphNode
 }>()
 
 const sourceImageUrl = computed<string | null>(() => {
@@ -47,41 +49,27 @@ const sourceImageUrl = computed<string | null>(() => {
   return inp.content
 })
 
-function widgetValue(name: string, fallback = 0): number {
-  const w = props.node?.widgets?.find((x: any) => x.name === name)
-  return w ? Number(w.value) : fallback
-}
-
 const bounds = ref<Bounds>({
-  x:      widgetValue('crop_x', 0),
-  y:      widgetValue('crop_y', 0),
-  width:  widgetValue('crop_w', 0),
-  height: widgetValue('crop_h', 0),
+  x:      readWidgetNum(props.node, 'crop_x', 0),
+  y:      readWidgetNum(props.node, 'crop_y', 0),
+  width:  readWidgetNum(props.node, 'crop_w', 0),
+  height: readWidgetNum(props.node, 'crop_h', 0),
 })
-
-function writeWidget(name: string, value: number) {
-  const w = props.node?.widgets?.find((x: any) => x.name === name)
-  if (!w) return
-  if (w.value !== value) {
-    w.value = value
-    w.callback?.(value)
-  }
-}
 
 function onBoundsUpdate(v: Bounds) {
   bounds.value = v
 }
 
 watch(bounds, (v) => {
-  writeWidget('crop_x', v.x)
-  writeWidget('crop_y', v.y)
-  writeWidget('crop_w', v.width)
-  writeWidget('crop_h', v.height)
+  writeWidget(props.node, 'crop_x', v.x)
+  writeWidget(props.node, 'crop_y', v.y)
+  writeWidget(props.node, 'crop_w', v.width)
+  writeWidget(props.node, 'crop_h', v.height)
   requestRecompute()
 }, { deep: true })
 
 function wireWidgetCallback(name: string, apply: (v: number) => void) {
-  const w = props.node?.widgets?.find((x: any) => x.name === name)
+  const w = getWidget(props.node, name)
   if (!w) return
   const orig = w.callback
   w.callback = (value: unknown) => {
@@ -99,10 +87,10 @@ if (props.node) {
   props.node.onConfigure = function (info: any) {
     orig?.call(this, info)
     const restored: Bounds = {
-      x:      widgetValue('crop_x', bounds.value.x),
-      y:      widgetValue('crop_y', bounds.value.y),
-      width:  widgetValue('crop_w', bounds.value.width),
-      height: widgetValue('crop_h', bounds.value.height),
+      x:      readWidgetNum(props.node, 'crop_x', bounds.value.x),
+      y:      readWidgetNum(props.node, 'crop_y', bounds.value.y),
+      width:  readWidgetNum(props.node, 'crop_w', bounds.value.width),
+      height: readWidgetNum(props.node, 'crop_h', bounds.value.height),
     }
     if (restored.x !== bounds.value.x || restored.y !== bounds.value.y
       || restored.width !== bounds.value.width || restored.height !== bounds.value.height) {

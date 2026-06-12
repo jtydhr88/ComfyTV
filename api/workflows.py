@@ -3,7 +3,7 @@ import re
 
 from aiohttp import web
 
-from ..runners import workflow_db
+from ..runners import workflow_db, refresh_registry
 from ._common import routes
 
 
@@ -83,6 +83,8 @@ async def workflow_reset_to_preset(request: web.Request) -> web.Response:
             {"error": "workflow not found, file missing, or no shipped preset"},
             status=404,
         )
+
+    refresh_registry()
     return web.json_response(result)
 
 

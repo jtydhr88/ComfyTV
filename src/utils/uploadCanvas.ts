@@ -7,6 +7,13 @@ export interface UploadOptions {
   filenamePrefix?: string
 }
 
+export interface UploadResult {
+  name: string
+  subfolder: string
+  type: 'input' | 'temp' | 'output'
+  url: string
+}
+
 export async function uploadCanvas(
   canvas: HTMLCanvasElement,
   opts: UploadOptions,
@@ -18,7 +25,7 @@ export async function uploadCanvas(
   return uploadBlob(blob, opts)
 }
 
-export async function uploadBlob(blob: Blob, opts: UploadOptions): Promise<string> {
+export async function uploadBlobNamed(blob: Blob, opts: UploadOptions): Promise<UploadResult> {
   const subfolder = opts.subfolder
   const type = opts.type ?? 'input'
   const filename = opts.filename
@@ -36,7 +43,12 @@ export async function uploadBlob(blob: Blob, opts: UploadOptions): Promise<strin
   const data = await resp.json() as { name?: string }
   if (!data?.name) throw new Error('upload response missing `name`')
 
-  return `/view?filename=${encodeURIComponent(data.name)}`
-       + `&subfolder=${encodeURIComponent(subfolder)}`
-       + `&type=${encodeURIComponent(type)}`
+  const url = `/view?filename=${encodeURIComponent(data.name)}`
+            + `&subfolder=${encodeURIComponent(subfolder)}`
+            + `&type=${encodeURIComponent(type)}`
+  return { name: data.name, subfolder, type, url }
+}
+
+export async function uploadBlob(blob: Blob, opts: UploadOptions): Promise<string> {
+  return (await uploadBlobNamed(blob, opts)).url
 }

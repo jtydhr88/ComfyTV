@@ -1,13 +1,15 @@
 import { computed, ref, watch } from 'vue'
 
+import type { LGraphNode } from '@/lib/comfyApp'
 import { useStageStore, type StageState } from '@/stores/stageStore'
 import { uploadCanvas } from '@/utils/uploadCanvas'
+import { getWidget, readWidgetNum, writeWidget } from '@/utils/widget'
 
 const SCHEDULE_DELAY_MS = 250
 const MIN_GRID = 1
 const MAX_GRID = 10
 
-export function useGridSplit(node: any, state: StageState) {
+export function useGridSplit(node: LGraphNode, state: StageState) {
   const store = useStageStore()
 
   const sourceImageUrl = computed<string | null>(() => {
@@ -15,22 +17,8 @@ export function useGridSplit(node: any, state: StageState) {
     return inp && inp.source === 'upstream' && inp.content ? inp.content : null
   })
 
-  function getWidget(name: string): any | null {
-    return node?.widgets?.find((w: any) => w.name === name) ?? null
-  }
-  function readInt(name: string, fallback: number): number {
-    const w = getWidget(name)
-    const n = w ? Number(w.value) : NaN
-    return Number.isFinite(n) ? n : fallback
-  }
-  function writeWidget(name: string, value: number) {
-    const w = getWidget(name)
-    if (!w) return
-    if (w.value !== value) { w.value = value; w.callback?.(value) }
-  }
-
-  const rows = ref<number>(readInt('rows', 2))
-  const cols = ref<number>(readInt('cols', 2))
+  const rows = ref<number>(readWidgetNum(node, 'rows', 2))
+  const cols = ref<number>(readWidgetNum(node, 'cols', 2))
 
   function setGrid(r: number, c: number) {
     rows.value = Math.max(MIN_GRID, Math.min(MAX_GRID, r))
@@ -38,7 +26,7 @@ export function useGridSplit(node: any, state: StageState) {
   }
 
   function wireWidget(name: string, apply: (v: number) => void) {
-    const w = getWidget(name)
+    const w = getWidget(node, name)
     if (!w) return
     const orig = w.callback
     w.callback = (v: unknown) => { orig?.call(w, v); apply(Number(v)) }
@@ -50,8 +38,8 @@ export function useGridSplit(node: any, state: StageState) {
     const orig = node.onConfigure
     node.onConfigure = function (info: any) {
       orig?.call(this, info)
-      const r = readInt('rows', rows.value)
-      const c = readInt('cols', cols.value)
+      const r = readWidgetNum(node, 'rows', rows.value)
+      const c = readWidgetNum(node, 'cols', cols.value)
       if (r !== rows.value) rows.value = r
       if (c !== cols.value) cols.value = c
     }
@@ -133,8 +121,8 @@ export function useGridSplit(node: any, state: StageState) {
   }
 
   watch([rows, cols], ([r, c]) => {
-    writeWidget('rows', r)
-    writeWidget('cols', c)
+    writeWidget(node, 'rows', r)
+    writeWidget(node, 'cols', c)
     schedule()
   })
   watch(sourceImageUrl, () => schedule(), { immediate: true })

@@ -168,6 +168,7 @@
 <script setup lang="ts">
 import StageCard from '@/components/stages/StageCard.vue'
 import { useStoryboardShots, type Shot } from '@/composables/stages/useStoryboardShots'
+import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 
 const META_FIELDS: ReadonlyArray<{ key: keyof Shot; label: string; multiline?: boolean }> = [
@@ -187,7 +188,7 @@ const props = defineProps<{
   onCancelRequest: () => void
   onDisconnect: (slot: string) => void
   onAction: (id: string) => void
-  node: any
+  node: LGraphNode
 }>()
 
 const {

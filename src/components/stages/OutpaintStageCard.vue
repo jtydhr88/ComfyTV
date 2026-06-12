@@ -94,6 +94,7 @@ import { ref } from 'vue'
 
 import StageCard from '@/components/stages/StageCard.vue'
 import { SIDES, useOutpaintCanvas } from '@/composables/stages/useOutpaintCanvas'
+import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 
 const props = defineProps<{
@@ -102,7 +103,7 @@ const props = defineProps<{
   onCancelRequest: () => void
   onDisconnect: (slot: string) => void
   onAction: (id: string) => void
-  node: any
+  node: LGraphNode
 }>()
 
 const rootEl   = ref<HTMLElement | null>(null)

@@ -1,8 +1,15 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
+
+vi.mock('@/api', () => ({
+  fetchCaps: vi.fn(() => new Promise(() => {})),
+}))
+
+import { fetchCaps } from '@/api'
 
 import {
   buildBindingOptions,
-  CAPS_BY_KIND,
+  DEFAULT_CAPS_BY_KIND,
+  loadCaps,
   type ExposedWidget,
 } from './workflowConfigCatalog'
 
@@ -75,11 +82,35 @@ describe('buildBindingOptions', () => {
     expect(vals.some(v => v.startsWith('upstream_text:'))).toBe(true)
   })
 
-  it('every kind in CAPS_BY_KIND produces a valid options list', () => {
-    for (const kind of Object.keys(CAPS_BY_KIND)) {
+  it('warns loudly on an unknown (non-empty) workflow kind', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    buildBindingOptions([], 'totally-unknown-kind')
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('totally-unknown-kind'),
+    )
+    warn.mockRestore()
+  })
+
+  it('every kind in DEFAULT_CAPS_BY_KIND produces a valid options list', () => {
+    for (const kind of Object.keys(DEFAULT_CAPS_BY_KIND)) {
       const opts = buildBindingOptions([], kind)
       expect(opts[0].value).toBe('__VALUE__')
       for (const o of opts) expect(o.label.length).toBeGreaterThan(0)
     }
+  })
+})
+
+describe('caps loading', () => {
+  it('lazily triggers fetchCaps the first time options are built', () => {
+    buildBindingOptions([], 'image')
+    void loadCaps()
+    expect(fetchCaps).toHaveBeenCalled()
+  })
+
+  it('serves baked-in default caps before the server responds', () => {
+    const opts = buildBindingOptions([], 'audio')
+    const vals = opts.map(o => o.value)
+    expect(vals).toContain('option:lyrics')
+    expect(vals).toContain('computed:length')
   })
 })

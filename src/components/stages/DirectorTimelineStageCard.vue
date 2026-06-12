@@ -151,6 +151,7 @@ import { ref } from 'vue'
 
 import StageCard from '@/components/stages/StageCard.vue'
 import { PPF as ppf, useTimelineEditor } from '@/composables/stages/useTimelineEditor'
+import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 
 const props = defineProps<{
@@ -159,7 +160,7 @@ const props = defineProps<{
   onCancelRequest: () => void
   onDisconnect: (slot: string) => void
   onAction: (id: string) => void
-  node: any
+  node: LGraphNode
 }>()
 
 const rootEl = ref<HTMLElement | null>(null)

@@ -1,5 +1,7 @@
 import os
 
+WEB_DIRECTORY = "./js"
+
 if os.environ.get("COMFYTV_TESTING") == "1":
     CUSTOM_NODE_DIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -8,20 +10,19 @@ if os.environ.get("COMFYTV_TESTING") == "1":
 
     __all__ = ["comfy_entrypoint"]
 else:
-    import nodes as _comfy_nodes
-    from comfy_config import config_parser
-
     from . import db as _db
+
+    CUSTOM_NODE_DIR = os.path.dirname(os.path.realpath(__file__))
+
+    _db.init()
+
+    from . import runners as _runners
+    _runners.seed_workflows()
+
     from . import api as _api
     from . import storage as _storage
     from .nodes.stages import ComfyTVExtension as _ComfyTVExtension
 
-    CUSTOM_NODE_DIR = os.path.dirname(os.path.realpath(__file__))
-
-    project_config = config_parser.extract_node_configuration(CUSTOM_NODE_DIR)
-    _comfy_nodes.EXTENSION_WEB_DIRS[project_config.project.name] = os.path.join(CUSTOM_NODE_DIR, "js")
-
-    _db.init()
     _storage.ensure_default_project()
 
 

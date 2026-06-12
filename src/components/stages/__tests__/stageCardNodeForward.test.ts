@@ -21,7 +21,7 @@ describe('stage cards forward `node` to <StageCard>', () => {
 
   for (const { file, src } of cards) {
     it(`${file} declares a node prop and forwards :node`, () => {
-      expect(src).toMatch(/node:\s*any/)
+      expect(src).toMatch(/node\??:\s*LGraphNode/)
 
       const stageCardBlock = src.match(/<StageCard\b[^>]*?(?:\/>|>[^<]*<\/StageCard>)/s)
       expect(stageCardBlock, `${file}: no <StageCard ...> usage`).not.toBeNull()

@@ -1,21 +1,3 @@
-/*
- * ComfyTV's own Tailwind build.
- *
- * ComfyUI's frontend compiles Tailwind on-demand against ITS OWN sources, so
- * utility classes used only by this plugin do not exist in the page's CSS.
- * We compile our own utilities here and inject them at runtime
- * (vite-plugin-css-injected-by-js).
- *
- * Leakage rules:
- *  - utilities only — `tailwindcss/preflight` is deliberately NOT imported, so
- *    no element-level resets touch ComfyUI's DOM.
- *  - `source(none)` + explicit @source pins scanning to our src/ tree, so the
- *    committed js/ build output is never scanned.
- *  - semantic color tokens are declared `@theme inline`, so utilities compile
- *    to `var(--primary-background)` etc. — the runtime variables ComfyUI's
- *    design system sets on :root / .dark-theme. Colors track the active theme
- *    with no values of our own.
- */
 @layer theme, utilities;
 
 @import 'tailwindcss/theme' layer(theme);
@@ -27,37 +9,35 @@
 @source './main.ts';
 
 @theme inline {
-  /* Semantic tokens — runtime vars provided by ComfyUI's design system. */
-  --color-base-foreground: var(--base-foreground);
-  --color-base-background: var(--base-background);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted-background: var(--muted-background);
-  --color-accent-background: var(--accent-background);
-  --color-primary-background: var(--primary-background);
-  --color-primary-background-hover: var(--primary-background-hover);
-  --color-secondary-background: var(--secondary-background);
-  --color-secondary-background-hover: var(--secondary-background-hover);
-  --color-secondary-background-selected: var(--secondary-background-selected);
+  --color-base-foreground: var(--base-foreground, #e0e0e0);
+  --color-base-background: var(--base-background, #1e1e1e);
+  --color-muted-foreground: var(--muted-foreground, #888888);
+  --color-muted-background: var(--muted-background, #2a2a2a);
+  --color-accent-background: var(--accent-background, #4ea8ff);
+  --color-primary-background: var(--primary-background, rgba(78,168,255,0.6));
+  --color-primary-background-hover: var(--primary-background-hover, rgba(78,168,255,0.75));
+  --color-secondary-background: var(--secondary-background, rgba(255,255,255,0.06));
+  --color-secondary-background-hover: var(--secondary-background-hover, rgba(255,255,255,0.10));
+  --color-secondary-background-selected: var(--secondary-background-selected, rgba(78,168,255,0.20));
   /* Not a runtime var in the shipped frontend (1.45.x) — fall back. */
-  --color-secondary-foreground: var(--secondary-foreground, var(--base-foreground));
-  --color-destructive-background: var(--destructive-background);
-  --color-destructive-background-hover: var(--destructive-background-hover);
-  --color-warning-background: var(--warning-background);
-  --color-warning-background-hover: var(--warning-background-hover);
-  --color-success-background: var(--success-background);
-  --color-border-default: var(--border-default);
-  --color-border-subtle: var(--border-subtle);
-  --color-interface-menu-surface: var(--interface-menu-surface);
-  --color-interface-menu-stroke: var(--interface-menu-stroke);
-  --color-interface-panel-surface: var(--interface-panel-surface);
-  --color-interface-menu-component-surface-hovered: var(--interface-menu-component-surface-hovered);
-  --color-interface-menu-component-surface-selected: var(--interface-menu-component-surface-selected);
-  --color-node-component-border: var(--node-component-border);
-  --color-modal-card-background: var(--modal-card-background);
+  --color-secondary-foreground: var(--secondary-foreground, var(--base-foreground, #e0e0e0));
+  --color-destructive-background: var(--destructive-background, #c0392b);
+  --color-destructive-background-hover: var(--destructive-background-hover, #d44637);
+  --color-warning-background: var(--warning-background, #d39e00);
+  --color-warning-background-hover: var(--warning-background-hover, #e0ad1a);
+  --color-success-background: var(--success-background, #2e9e4f);
+  --color-border-default: var(--border-default, rgba(255,255,255,0.15));
+  --color-border-subtle: var(--border-subtle, rgba(255,255,255,0.08));
+  --color-interface-menu-surface: var(--interface-menu-surface, #232323);
+  --color-interface-menu-stroke: var(--interface-menu-stroke, rgba(255,255,255,0.10));
+  --color-interface-panel-surface: var(--interface-panel-surface, #1e1e1e);
+  --color-interface-menu-component-surface-hovered: var(--interface-menu-component-surface-hovered, rgba(255,255,255,0.08));
+  --color-interface-menu-component-surface-selected: var(--interface-menu-component-surface-selected, rgba(78,168,255,0.18));
+  --color-node-component-border: var(--node-component-border, rgba(255,255,255,0.20));
+  --color-modal-card-background: var(--modal-card-background, #232323);
 }
 
 @theme {
-  /* ComfyUI's extra text sizes (static values, same as the native frontend). */
   --text-2xs: 0.625rem;
   --text-2xs--line-height: calc(1 / 0.625);
   --text-3xs: 0.5625rem;

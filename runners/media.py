@@ -30,7 +30,17 @@ def view_url_to_path(view_url: str) -> Optional[Path]:
     if not base:
         return None
     p = Path(base) / subfolder / filename if subfolder else Path(base) / filename
-    return p if p.exists() else None
+
+    base_resolved = Path(base).resolve()
+    p_resolved = p.resolve()
+    try:
+        p_resolved.relative_to(base_resolved)
+    except ValueError:
+        raise ValueError(
+            f"view URL escapes {type_!r} directory: {view_url!r}"
+        )
+
+    return p_resolved if p_resolved.exists() else None
 
 
 def path_to_view_url(p: Path, type_: str = 'output') -> str:

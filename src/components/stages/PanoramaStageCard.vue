@@ -22,9 +22,11 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import type { LGraphNode } from '@/lib/comfyApp'
 import { useStageStore, type StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
 import PanoramaCanvas from '@/components/widgets/PanoramaCanvas.vue'
+import { getWidget, readWidgetStr, writeWidget } from '@/utils/widget'
 
 const props = defineProps<{
   state: StageState
@@ -32,16 +34,12 @@ const props = defineProps<{
   onCancelRequest: () => void
   onDisconnect: (slot: string) => void
   onAction: (id: string) => void
-  node: any
+  node: LGraphNode
 }>()
 
 const store = useStageStore()
 
-function getWidget(name: string): any | null {
-  return props.node?.widgets?.find((w: any) => w.name === name) ?? null
-}
-
-const manualSource = ref<string>(String(getWidget('manual_source')?.value ?? ''))
+const manualSource = ref<string>(readWidgetStr(props.node, 'manual_source', ''))
 
 const localPreviewUrl = ref<string | null>(null)
 
@@ -50,16 +48,12 @@ const visibleUrl = computed<string | null>(
 )
 
 function writeManualSource(value: string) {
-  const w = getWidget('manual_source')
-  if (!w) return
-  if (w.value !== value) {
-    w.value = value
-    w.callback?.(value)
-  }
+  if (!getWidget(props.node, 'manual_source')) return
+  writeWidget(props.node, 'manual_source', value)
   manualSource.value = value
 }
 
-const msWidget = getWidget('manual_source')
+const msWidget = getWidget(props.node, 'manual_source')
 if (msWidget) {
   const orig = msWidget.callback
   msWidget.callback = (v: unknown) => {
@@ -72,7 +66,7 @@ if (props.node) {
   const origOnConfigure = props.node.onConfigure
   props.node.onConfigure = function (info: any) {
     origOnConfigure?.call(this, info)
-    const v = String(getWidget('manual_source')?.value ?? '')
+    const v = readWidgetStr(props.node, 'manual_source', '')
     if (v && v !== manualSource.value) manualSource.value = v
   }
 }

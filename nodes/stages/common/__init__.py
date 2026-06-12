@@ -28,6 +28,10 @@ from .emit import (
     _persist, _stage_emit, _stage_emit_auto,
     _input_file_url, _pick_image_from_batch,
 )
+from .invoke import (
+    run_stage_workflow, invoke_runner, _standard_stage_inputs,
+    StageError, StageRunnerMissing, StageNotImplemented, StageEmptyOutput,
+)
 from .prompts import (
     _combine_prompt,
     _multiangle_prompt, _MULTIANGLE_AZIMUTHS,
@@ -74,6 +78,8 @@ __all__ = [
     "_text_template", "_image_template", "_video_template",
     "_emit_progress", "_fake_run_ticks", "_persist", "_stage_emit_auto",
     "_stage_emit", "_input_file_url", "_pick_image_from_batch",
+    "run_stage_workflow", "invoke_runner", "_standard_stage_inputs",
+    "StageError", "StageRunnerMissing", "StageNotImplemented", "StageEmptyOutput",
     "_seed", "_autogrow_values", "_combine_prompt",
     "_fake_text", "_fake_image", "_fake_video", "_fake_audio",
     "_fake_storyboard", "_fake_image_batch_from_storyboard",

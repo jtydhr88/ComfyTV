@@ -1,6 +1,5 @@
 import { createApp } from 'vue'
 import { createPinia, getActivePinia, setActivePinia } from 'pinia'
-import PrimeVue from 'primevue/config'
 
 import WorkflowConfigSidebar from '@/components/sidebar/WorkflowConfigSidebar.vue'
 import StageCard from '@/components/stages/StageCard.vue'
@@ -18,7 +17,8 @@ import DirectorTimelineStageCard from '@/components/stages/DirectorTimelineStage
 import OutpaintStageCard from '@/components/stages/OutpaintStageCard.vue'
 import StoryboardStageCard from '@/components/stages/StoryboardStageCard.vue'
 import ProjectCard from '@/components/stages/ProjectCard.vue'
-import ExecutionStatusBar from '@/components/ExecutionStatusBar.vue'
+import ComfyTVMountHost from '@/components/ComfyTVMountHost.vue'
+import { registerMount, unregisterMount } from '@/composables/stages/widgetMounts'
 import { useStageNode } from '@/composables/stages/useStageNode'
 import { useChainCallback } from '@/composables/functional/useChainCallback'
 import {
@@ -30,7 +30,6 @@ import { useStageStore, type StageKind, type StageVariant } from '@/stores/stage
 import { useProjectStore } from '@/stores/projectStore'
 import { useEntryStore } from '@/stores/entryStore'
 import { useDialogStore } from '@/stores/dialogStore'
-import ComfyTVDialog from '@/components/dialog/ComfyTVDialog.vue'
 import EntryManagerPanel from '@/components/dialog/EntryManagerPanel.vue'
 import { useExecutionStore } from '@/stores/executionStore'
 import { useSelectionStore } from '@/stores/selectionStore'
@@ -39,7 +38,10 @@ import { i18n } from '@/i18n'
 import './tailwind.css'
 import './style.css'
 
-import { app } from '@/lib/comfyApp'
+import { app, type ComfyNode } from '@/lib/comfyApp'
+import type { ComfyExtension, ComfyNodeDef } from '@comfyorg/comfyui-frontend-types'
+import { getWidget } from '@/utils/widget'
+import { checkThemeTokens } from '@/utils/devTokenCheck'
 
 ;(window as any).__comfytv_host_pinia = getActivePinia()
 
@@ -50,15 +52,16 @@ loadStageMeta()
 
 useExecutionStore().bindToApi(app.api)
 
-;(function mountStatusBar() {
+let mountKeySeq = 0
+
+;(function mountHost() {
   const host = document.createElement('div')
   host.className = 'comfytv-status-host'
   document.body.appendChild(host)
-  const statusApp = createApp(ExecutionStatusBar)
-  statusApp.use(pinia)
-  statusApp.use(i18n)
-  statusApp.use(PrimeVue, { theme: 'none' })
-  statusApp.mount(host)
+  const hostApp = createApp(ComfyTVMountHost)
+  hostApp.use(pinia)
+  hostApp.use(i18n)
+  hostApp.mount(host)
 })()
 
 const RICH_STAGE_CARDS: Record<string, any> = {
@@ -93,7 +96,7 @@ const RICH_STAGE_MIN_HEIGHTS: Record<string, number> = {
   'ComfyTV.OutpaintStage':            620,
 }
 
-function mountStage(node: any, kind: StageKind, variant: StageVariant = 'generator') {
+function mountStage(node: ComfyNode, kind: StageKind, variant: StageVariant = 'generator') {
   const container = document.createElement('div')
   container.className = 'comfytv-root'
   const richMinHeight = RICH_STAGE_MIN_HEIGHTS[node.comfyClass]
@@ -123,18 +126,15 @@ function mountStage(node: any, kind: StageKind, variant: StageVariant = 'generat
   const Card = RICH_STAGE_CARDS[node.comfyClass] ?? StageCard
   const props: any = { state, node, onRunRequest, onCancelRequest, onDisconnect, onAction }
 
-  const vueApp = createApp(Card, props)
-  vueApp.use(pinia)
-  vueApp.use(i18n)
-  vueApp.use(PrimeVue, { theme: 'none' })
-  vueApp.mount(container)
+  const mountKey = `stage-${mountKeySeq++}`
+  registerMount(mountKey, container, Card, props)
 
   node.onRemoved = useChainCallback(node.onRemoved, () => {
-    vueApp.unmount()
+    unregisterMount(mountKey)
   })
 }
 
-function mountProjectStage(node: any) {
+function mountProjectStage(node: ComfyNode) {
   const container = document.createElement('div')
   container.className = 'comfytv-root'
   Object.assign(container.style, {
@@ -150,15 +150,12 @@ function mountProjectStage(node: any) {
     serialize: false,
   })
 
-  const vueApp = createApp(ProjectCard)
-  vueApp.use(pinia)
-  vueApp.use(i18n)
-  vueApp.use(PrimeVue, { theme: 'none' })
-  vueApp.mount(container)
+  const mountKey = `project-${mountKeySeq++}`
+  registerMount(mountKey, container, ProjectCard, {})
 
   const store = useProjectStore()
-  const idWidget   = node.widgets?.find((w: any) => w.name === 'project_id')
-  const nameWidget = node.widgets?.find((w: any) => w.name === 'project_name')
+  const idWidget   = getWidget(node, 'project_id')
+  const nameWidget = getWidget(node, 'project_name')
 
   if (idWidget?.value && typeof idWidget.value === 'string') {
     store.setCurrent(idWidget.value)
@@ -172,20 +169,18 @@ function mountProjectStage(node: any) {
   })()
 
   if (idWidget) {
-    const orig = idWidget.callback
-    idWidget.callback = function (...args: any[]) {
-      orig?.apply(this, args)
+    idWidget.callback = useChainCallback(idWidget.callback, () => {
       if (idWidget.value) store.setCurrent(String(idWidget.value))
-    }
+    })
   }
 
   node.onRemoved = useChainCallback(node.onRemoved, () => {
     stopProjectSync()
-    vueApp.unmount()
+    unregisterMount(mountKey)
   })
 }
 
-app.registerExtension({
+const extension: ComfyExtension = {
   name: 'ComfyTV',
 
   commands: [
@@ -203,18 +198,9 @@ app.registerExtension({
   ],
 
   setup() {
+    checkThemeTokens()
     const selection = useSelectionStore()
     const a = app as any
-
-    {
-      const dlgRoot = document.createElement('div')
-      dlgRoot.id = 'comfytv-dialog-root'
-      document.body.appendChild(dlgRoot)
-      const dlgApp = createApp(ComfyTVDialog)
-      dlgApp.use(pinia)
-      dlgApp.use(i18n)
-      dlgApp.mount(dlgRoot)
-    }
 
     try {
       const ComfyButton = (window as any).comfyAPI?.button?.ComfyButton
@@ -272,7 +258,6 @@ app.registerExtension({
         sidebarApp = createApp(WorkflowConfigSidebar)
         sidebarApp.use(pinia)
         sidebarApp.use(i18n)
-        sidebarApp.use(PrimeVue)
         sidebarApp.mount(container)
       },
       destroy: () => {
@@ -282,13 +267,14 @@ app.registerExtension({
     })
   },
 
-  async beforeRegisterNodeDef(nodeType: any, nodeData: any) {
+  async beforeRegisterNodeDef(nodeType, nodeData: ComfyNodeDef) {
     const stages = await loadStageMeta()
     if (!stages.has(nodeData.name)) return  //
     if (nodeData.name === 'ComfyTV.ProjectStage') return
-    nodeType.prototype.onExecuted = useChainCallback(
-      nodeType.prototype.onExecuted,
-      function (this: any, msg: any) {
+    const proto = nodeType.prototype as ComfyNode
+    proto.onExecuted = useChainCallback(
+      proto.onExecuted,
+      function (this: ComfyNode, msg: unknown) {
         const store = useStageStore()
         const state = store.getStage(this)
         if (!state) return
@@ -297,8 +283,9 @@ app.registerExtension({
     )
   },
 
-  async nodeCreated(node: any) {
+  async nodeCreated(rawNode) {
     await loadStageMeta()
+    const node = rawNode as ComfyNode
     const entry = getStageMeta(node.comfyClass)
     if (!entry) return
     if (entry.kind === 'project') {
@@ -320,4 +307,6 @@ app.registerExtension({
     const [w, h] = node.size
     node.setSize([Math.max(w, 320), Math.max(h, minH)])
   },
-})
+}
+
+app.registerExtension(extension)

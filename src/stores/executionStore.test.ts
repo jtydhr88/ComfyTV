@@ -165,4 +165,101 @@ describe('executionStore.bindToApi', () => {
     expect(api.listeners.get('status')?.size).toBe(0)
     expect(api.listeners.get('executing')?.size).toBe(0)
   })
+
+  it('binds progress and progress_text listeners', () => {
+    const store = useExecutionStore()
+    store.bindToApi(api)
+    expect(api.listeners.get('progress')?.size).toBeGreaterThanOrEqual(1)
+    expect(api.listeners.get('progress_text')?.size).toBeGreaterThanOrEqual(1)
+  })
+
+  it('progress dispatches to the matching node and updates nodeProgress', () => {
+    const store = useExecutionStore()
+    store.bindToApi(api)
+    const seen: any[] = []
+    store.registerNodeHandlers({ getNodeId: () => '7', onProgress: d => seen.push(d) })
+    api.fire('progress', { node: '7', value: 2, max: 4 })
+    expect(seen).toHaveLength(1)
+    expect(store.progressForNode('7')).toMatchObject({ value: 2, max: 4 })
+    expect(store.progressForNode(7)).toMatchObject({ value: 2, max: 4 })
+  })
+
+  it('progress for an unregistered node is ignored', () => {
+    const store = useExecutionStore()
+    store.bindToApi(api)
+    api.fire('progress', { node: '99', value: 1, max: 2 })
+    expect(store.progressForNode('99')).toBeUndefined()
+  })
+
+  it('progress_text carries text into nodeProgress', () => {
+    const store = useExecutionStore()
+    store.bindToApi(api)
+    const seen: any[] = []
+    store.registerNodeHandlers({ getNodeId: () => '8', onProgressText: d => seen.push(d) })
+    api.fire('progress', { node: '8', value: 1, max: 3 })
+    api.fire('progress_text', { node: '8', text: 'denoising' })
+    expect(seen).toHaveLength(1)
+    expect(store.progressForNode('8')).toMatchObject({ value: 1, max: 3, text: 'denoising' })
+  })
+
+  it('execution_error dispatches only to the node matching node_id', () => {
+    const store = useExecutionStore()
+    store.bindToApi(api)
+    const a: any[] = []
+    const b: any[] = []
+    store.registerNodeHandlers({ getNodeId: () => '1', onError: d => a.push(d) })
+    store.registerNodeHandlers({ getNodeId: () => '2', onError: d => b.push(d) })
+    api.fire('execution_error', { node_id: '2', exception_message: 'boom' })
+    expect(a).toHaveLength(0)
+    expect(b).toHaveLength(1)
+  })
+
+  it('execution_interrupted dispatches only to the matching node', () => {
+    const store = useExecutionStore()
+    store.bindToApi(api)
+    const seen: any[] = []
+    store.registerNodeHandlers({ getNodeId: () => '5', onInterrupted: d => seen.push(d) })
+    store.registerNodeHandlers({ getNodeId: () => '6', onInterrupted: () => { throw new Error('wrong node') } })
+    api.fire('execution_interrupted', { node_id: '5' })
+    expect(seen).toHaveLength(1)
+  })
+
+  it('execution_success and status broadcast to all registered nodes', () => {
+    const store = useExecutionStore()
+    store.bindToApi(api)
+    let successes = 0
+    let statuses = 0
+    store.registerNodeHandlers({ getNodeId: () => '1', onSuccess: () => { successes++ }, onStatus: () => { statuses++ } })
+    store.registerNodeHandlers({ getNodeId: () => '2', onSuccess: () => { successes++ }, onStatus: () => { statuses++ } })
+    api.fire('execution_success', { prompt_id: 'p1' })
+    api.fire('status', { status: { exec_info: { queue_remaining: 0 } } })
+    expect(successes).toBe(2)
+    expect(statuses).toBe(2)
+  })
+
+  it('unregister stops dispatch and clears progress', () => {
+    const store = useExecutionStore()
+    store.bindToApi(api)
+    const seen: any[] = []
+    const handlers = { getNodeId: () => '3', onProgress: (d: any) => seen.push(d) }
+    store.registerNodeHandlers(handlers)
+    api.fire('progress', { node: '3', value: 1, max: 2 })
+    store.unregisterNodeHandlers(handlers)
+    api.fire('progress', { node: '3', value: 2, max: 2 })
+    expect(seen).toHaveLength(1)
+    expect(store.progressForNode('3')).toBeUndefined()
+  })
+
+  it('dispatch resolves node id lazily via getNodeId', () => {
+    const store = useExecutionStore()
+    store.bindToApi(api)
+    let id = '-1'
+    const seen: any[] = []
+    store.registerNodeHandlers({ getNodeId: () => id, onProgress: d => seen.push(d) })
+    api.fire('progress', { node: '10', value: 1, max: 2 })
+    expect(seen).toHaveLength(0)
+    id = '10'
+    api.fire('progress', { node: '10', value: 1, max: 2 })
+    expect(seen).toHaveLength(1)
+  })
 })

@@ -110,10 +110,11 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import type { LGraphNode } from '@/lib/comfyApp'
 import { usePainter } from '@/composables/widgets/usePainter'
 
 const props = defineProps<{
-  node: any
+  node: LGraphNode
   sourceImageUrl: string | null
 }>()
 

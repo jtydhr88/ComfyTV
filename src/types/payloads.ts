@@ -1,3 +1,5 @@
+import type { ImagePickContext } from '@/stores/stageStore'
+
 export interface BatchImage {
   index?: string
   label?: string
@@ -5,12 +7,7 @@ export interface BatchImage {
   image_url: string
 }
 
-export interface ItemClickPayload {
-  index: string
-  label?: string
-  prompt?: string
-  imageUrl?: string
-}
+export type ItemClickPayload = ImagePickContext
 
 export interface StoryboardShot {
   shot_no?: string

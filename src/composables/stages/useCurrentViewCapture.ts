@@ -1,14 +1,16 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch, type Ref } from 'vue'
 
+import type { LGraphNode } from '@/lib/comfyApp'
 import { useStageStore, type StageState } from '@/stores/stageStore'
 import { captureDimensions } from '@/utils/panoramaProjection'
 import { uploadCanvas } from '@/utils/uploadCanvas'
+import { readWidgetNum, writeWidget } from '@/utils/widget'
 import { PanoramaViewer } from '@/widgets/three/PanoramaViewer'
 
 const SCHEDULE_DELAY_MS = 250
 
 export function useCurrentViewCapture(
-  node: any,
+  node: LGraphNode,
   state: StageState,
   viewerHostEl: Ref<HTMLElement | null>,
   aspectRatio: Ref<string>,
@@ -22,24 +24,6 @@ export function useCurrentViewCapture(
   })
 
   const capturing = ref(false)
-
-  function getWidget(name: string): any | null {
-    return node?.widgets?.find((w: any) => w.name === name) ?? null
-  }
-  function readWidgetFloat(name: string, fallback: number): number {
-    const w = getWidget(name)
-    if (!w) return fallback
-    const n = Number(w.value)
-    return Number.isFinite(n) ? n : fallback
-  }
-  function writeWidget(name: string, value: number | string) {
-    const w = getWidget(name)
-    if (!w) return
-    if (w.value !== value) {
-      w.value = value
-      w.callback?.(value)
-    }
-  }
 
   const captureSize = computed(() => captureDimensions(aspectRatio.value, resolution.value))
 
@@ -59,9 +43,9 @@ export function useCurrentViewCapture(
   async function runCapture() {
     if (!viewer || !panoramaUrl.value) return
     const orient = viewer.getCameraOrientation()
-    writeWidget('yaw',   Number(orient.yaw.toFixed(2)))
-    writeWidget('pitch', Number(orient.pitch.toFixed(2)))
-    writeWidget('fov',   Number(orient.fov.toFixed(2)))
+    writeWidget(node, 'yaw',   Number(orient.yaw.toFixed(2)))
+    writeWidget(node, 'pitch', Number(orient.pitch.toFixed(2)))
+    writeWidget(node, 'fov',   Number(orient.fov.toFixed(2)))
 
     const mySeq = ++captureSeq
     capturing.value = true
@@ -85,8 +69,8 @@ export function useCurrentViewCapture(
     }
   }
 
-  watch(aspectRatio, (v) => { writeWidget('aspect_ratio', v); scheduleCapture() })
-  watch(resolution,  (v) => { writeWidget('resolution',   v); scheduleCapture() })
+  watch(aspectRatio, (v) => { writeWidget(node, 'aspect_ratio', v); scheduleCapture() })
+  watch(resolution,  (v) => { writeWidget(node, 'resolution',   v); scheduleCapture() })
 
   onMounted(() => {
     if (!viewerHostEl.value) return
@@ -95,9 +79,9 @@ export function useCurrentViewCapture(
       onOrbitEnd: () => scheduleCapture(),
     })
     viewer.setCameraOrientation({
-      yaw:   readWidgetFloat('yaw',   0),
-      pitch: readWidgetFloat('pitch', 0),
-      fov:   readWidgetFloat('fov',   75),
+      yaw:   readWidgetNum(node, 'yaw',   0),
+      pitch: readWidgetNum(node, 'pitch', 0),
+      fov:   readWidgetNum(node, 'fov',   75),
     })
     if (panoramaUrl.value) {
       void (async () => {

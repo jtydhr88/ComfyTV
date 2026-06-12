@@ -1,13 +1,15 @@
 import { computed, ref, watch, type Ref } from 'vue'
 
 import { useChainCallback } from '@/composables/functional/useChainCallback'
+import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
+import { readWidgetNum, writeWidget } from '@/utils/widget'
 
 export type Side = 'left' | 'top' | 'right' | 'bottom'
 export const SIDES: Side[] = ['left', 'top', 'right', 'bottom']
 
 export function useOutpaintCanvas(
-  node: any,
+  node: LGraphNode,
   state: StageState,
   canvasEl: Ref<HTMLElement | null>,
   rootEl: Ref<HTMLElement | null>,
@@ -26,30 +28,16 @@ export function useOutpaintCanvas(
     naturalH.value = img.naturalHeight
   }
 
-  function widgetValue(name: string, fallback = 0): number {
-    const w = node?.widgets?.find((x: any) => x.name === name)
-    return w ? Number(w.value) || 0 : fallback
-  }
-
   function readPadFromWidgets(): Record<Side, number> {
     return {
-      left:   widgetValue('pad_left',   0),
-      top:    widgetValue('pad_top',    0),
-      right:  widgetValue('pad_right',  0),
-      bottom: widgetValue('pad_bottom', 0),
+      left:   readWidgetNum(node, 'pad_left',   0),
+      top:    readWidgetNum(node, 'pad_top',    0),
+      right:  readWidgetNum(node, 'pad_right',  0),
+      bottom: readWidgetNum(node, 'pad_bottom', 0),
     }
   }
 
   const pad = ref<Record<Side, number>>(readPadFromWidgets())
-
-  function writeWidget(name: string, value: number) {
-    const w = node?.widgets?.find((x: any) => x.name === name)
-    if (!w) return
-    if (w.value !== value) {
-      w.value = value
-      w.callback?.(value)
-    }
-  }
 
   function setPad(side: Side, value: number) {
     const clamped = Math.max(0, Math.min(4096, Math.round(value || 0)))
@@ -62,10 +50,10 @@ export function useOutpaintCanvas(
   }
 
   watch(pad, (v) => {
-    writeWidget('pad_left',   v.left)
-    writeWidget('pad_top',    v.top)
-    writeWidget('pad_right',  v.right)
-    writeWidget('pad_bottom', v.bottom)
+    writeWidget(node, 'pad_left',   v.left)
+    writeWidget(node, 'pad_top',    v.top)
+    writeWidget(node, 'pad_right',  v.right)
+    writeWidget(node, 'pad_bottom', v.bottom)
   }, { deep: true })
 
   if (node) {

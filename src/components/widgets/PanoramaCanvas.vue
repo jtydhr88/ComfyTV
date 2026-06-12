@@ -55,7 +55,7 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { PanoramaViewer } from '@/widgets/three/PanoramaViewer'
-import { app } from '@/lib/comfyApp'
+import { uploadBlob } from '@/utils/uploadCanvas'
 
 const props = defineProps<{
   panoramaUrl: string | null
@@ -108,17 +108,7 @@ async function onFilePicked(e: Event) {
   uploading.value = true
   loadError.value = false
   try {
-    const body = new FormData()
-    body.append('image', file, file.name)
-    body.append('subfolder', 'panorama')
-    body.append('type', 'input')
-    const resp = await (app as any).api.fetchApi('/upload/image', { method: 'POST', body })
-    if (resp.status !== 200) throw new Error(`upload ${resp.status} ${resp.statusText}`)
-    const data = await resp.json() as { name?: string }
-    if (!data?.name) throw new Error('upload returned no name')
-
-    const viewUrl = `/view?filename=${encodeURIComponent(data.name)}`
-                  + `&subfolder=panorama&type=input`
+    const viewUrl = await uploadBlob(file, { subfolder: 'panorama', filename: file.name })
     emit('manual-source-changed', viewUrl)
   } catch (e) {
     console.error('[ComfyTV/panorama] upload failed', e)

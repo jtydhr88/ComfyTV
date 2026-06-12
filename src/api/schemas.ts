@@ -33,8 +33,8 @@ export const OutputSchema = z.object({
   stage_node_id: z.string().nullable().optional(),
   output_type: z.string(),
   payload_url: z.string(),
-  payload_json: z.any().nullable().optional(),
-  params_json: z.any().nullable().optional(),
+  payload_json: z.unknown().nullable().optional(),
+  params_json: z.unknown().nullable().optional(),
   parent_output_id: z.number().nullable().optional(),
   created_at: z.string().nullable().optional(),
 })
@@ -69,7 +69,7 @@ export const EntrySchema = z.object({
   kind:       z.string(),
   label:      z.string(),
   content:    z.string(),
-  metadata:   z.record(z.string(), z.any()).default({}),
+  metadata:   z.record(z.string(), z.unknown()).default({}),
   updated_at: z.string().nullable().optional(),
 })
 export type Entry = z.infer<typeof EntrySchema>
@@ -86,3 +86,74 @@ export const UpsertEntrySchema = z.object({
 export const DeleteEntrySchema = z.object({
   ok: z.literal(true),
 })
+
+export const OkSchema = z.object({
+  ok: z.boolean(),
+})
+
+export const WorkflowStateSchema = z.object({
+  has_api: z.boolean(),
+  file_path: z.string(),
+  file_mtime: z.number().nullable(),
+  file_exists: z.boolean(),
+})
+export type WorkflowState = z.infer<typeof WorkflowStateSchema>
+
+export const ExposedWidgetSchema = z.object({
+  node_id: z.string(),
+  node_title: z.string(),
+  node_type: z.string(),
+  group_title: z.string().nullable(),
+  widget_name: z.string(),
+  widget_type: z.string(),
+  widget_props: z.record(z.string(), z.unknown()),
+  current_value: z.unknown(),
+  stage_binding: z.string().nullable(),
+  override_value: z.string().nullable(),
+  cast: z.string().nullable(),
+})
+
+export const WorkflowConfigSchema = z.object({
+  id: z.number(),
+  kind: z.string(),
+  label: z.string(),
+  has_api: z.boolean(),
+  description: z.string().nullable(),
+  gui_notes: z.array(z.object({ type: z.string(), text: z.string() })),
+  exposed_widgets: z.array(ExposedWidgetSchema),
+}).passthrough()
+export type WorkflowConfig = z.infer<typeof WorkflowConfigSchema>
+
+const WorkflowUsageEntrySchema = z.object({
+  uses: z.record(z.string(), z.boolean()),
+  requires: z.record(z.string(), z.boolean()),
+  requires_count: z.record(z.string(), z.number()).optional(),
+  max_inputs: z.record(z.string(), z.number().nullable()),
+})
+
+export const WorkflowInfoSchema = z.record(
+  z.string(),
+  z.record(z.string(), WorkflowUsageEntrySchema),
+)
+export type WorkflowInfo = z.infer<typeof WorkflowInfoSchema>
+
+export const CapsSchema = z.object({
+  upstream_kinds: z.array(z.string()),
+  option_keys:    z.array(z.string()),
+  computed_keys:  z.array(z.string()),
+})
+export type CapsResponse = z.infer<typeof CapsSchema>
+
+export const CapsPayloadSchema = z.object({
+  caps_by_kind:  z.record(z.string(), CapsSchema),
+  fallback_caps: CapsSchema,
+})
+export type CapsPayload = z.infer<typeof CapsPayloadSchema>
+
+export const ExecutedPayloadSchema = z.object({
+  output: z.union([z.string(), z.array(z.unknown())]).optional(),
+  picked: z.union([z.string(), z.array(z.unknown())]).optional(),
+  picked_index: z.union([z.string(), z.number(), z.array(z.unknown())]).optional(),
+  output_id: z.union([z.string(), z.number(), z.array(z.unknown())]).optional(),
+}).passthrough()
+export type ExecutedPayload = z.infer<typeof ExecutedPayloadSchema>

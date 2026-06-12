@@ -10,9 +10,7 @@ class UpscaleStage(io.ComfyNode):
             display_name="Upscale",
             category="ComfyTV/Image",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=UPSCALE_WORKFLOWS,
                                default=UPSCALE_WORKFLOWS[0] if UPSCALE_WORKFLOWS else "",
                                tooltip="Which upscale workflow to run."),
@@ -29,23 +27,16 @@ class UpscaleStage(io.ComfyNode):
     @classmethod
     async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                       workflow="", scale="2x", main_prompt="", image=""):
-        runner = RUNNER_REGISTRY.by_label(workflow, 'upscale')
-        payload = None
-        if runner is not None:
-            try:
-                ctx = RunnerContext(
-                    kind='upscale',
-                    main_prompt=main_prompt,
-                    upstream={'images': [image] if image else []},
-                    options={'scale': scale},
-                )
-                payload = await runner.invoke(ctx)
-            except NotImplementedError:
-                payload = None
-        if not payload:
-            raise RuntimeError(f"UpscaleStage: workflow {workflow!r} returned no output")
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        return await run_stage_workflow(
+            cls,
+            kind='upscale',
+            label=workflow,
+            project_id=project_id,
+            parent_output_id=parent_output_id,
+            main_prompt=main_prompt,
+            upstream={'images': [image] if image else []},
+            options={'scale': scale},
+        )
 
 
 class OutpaintStage(io.ComfyNode):
@@ -57,9 +48,7 @@ class OutpaintStage(io.ComfyNode):
             display_name="Outpaint",
             category="ComfyTV/Image",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=OUTPAINT_WORKFLOWS,
                                default=OUTPAINT_WORKFLOWS[0] if OUTPAINT_WORKFLOWS else "",
                                tooltip="Which outpaint workflow to run."),
@@ -90,29 +79,22 @@ class OutpaintStage(io.ComfyNode):
     async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                       workflow="", pad_left=0, pad_top=0, pad_right=0, pad_bottom=0,
                       feathering=40, main_prompt="", image=""):
-        runner = RUNNER_REGISTRY.by_label(workflow, 'outpaint')
-        payload = None
-        if runner is not None:
-            try:
-                ctx = RunnerContext(
-                    kind='outpaint',
-                    main_prompt=main_prompt,
-                    upstream={'images': [image] if image else []},
-                    options={
-                        'pad_left':   int(pad_left   or 0),
-                        'pad_top':    int(pad_top    or 0),
-                        'pad_right':  int(pad_right  or 0),
-                        'pad_bottom': int(pad_bottom or 0),
-                        'feathering': int(feathering or 0),
-                    },
-                )
-                payload = await runner.invoke(ctx)
-            except NotImplementedError:
-                payload = None
-        if not payload:
-            raise RuntimeError(f"OutpaintStage: workflow {workflow!r} returned no output")
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        return await run_stage_workflow(
+            cls,
+            kind='outpaint',
+            label=workflow,
+            project_id=project_id,
+            parent_output_id=parent_output_id,
+            main_prompt=main_prompt,
+            upstream={'images': [image] if image else []},
+            options={
+                'pad_left':   int(pad_left   or 0),
+                'pad_top':    int(pad_top    or 0),
+                'pad_right':  int(pad_right  or 0),
+                'pad_bottom': int(pad_bottom or 0),
+                'feathering': int(feathering or 0),
+            },
+        )
 
 
 class InpaintStage(io.ComfyNode):
@@ -124,9 +106,7 @@ class InpaintStage(io.ComfyNode):
             display_name="Inpaint",
             category="ComfyTV/Image",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=INPAINT_WORKFLOWS,
                                default=INPAINT_WORKFLOWS[0] if INPAINT_WORKFLOWS else "",
                                tooltip="Which inpaint workflow to run."),
@@ -144,23 +124,16 @@ class InpaintStage(io.ComfyNode):
     @classmethod
     async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                       workflow="", mask_data="", main_prompt="", image=""):
-        runner = RUNNER_REGISTRY.by_label(workflow, 'inpaint')
-        payload = None
-        if runner is not None:
-            try:
-                ctx = RunnerContext(
-                    kind='inpaint',
-                    main_prompt=main_prompt,
-                    upstream={'images': [image] if image else []},
-                    options={'mask_data': mask_data or ''},
-                )
-                payload = await runner.invoke(ctx)
-            except NotImplementedError:
-                payload = None
-        if not payload:
-            raise RuntimeError(f"InpaintStage: workflow {workflow!r} returned no output")
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        return await run_stage_workflow(
+            cls,
+            kind='inpaint',
+            label=workflow,
+            project_id=project_id,
+            parent_output_id=parent_output_id,
+            main_prompt=main_prompt,
+            upstream={'images': [image] if image else []},
+            options={'mask_data': mask_data or ''},
+        )
 
 
 class ImageEditStage(io.ComfyNode):
@@ -172,9 +145,7 @@ class ImageEditStage(io.ComfyNode):
             display_name="Image Edit",
             category="ComfyTV/Image",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=IMAGE_EDIT_WORKFLOWS,
                                default=IMAGE_EDIT_WORKFLOWS[0] if IMAGE_EDIT_WORKFLOWS else "",
                                tooltip="Which instruction-edit workflow to run."),
@@ -189,23 +160,16 @@ class ImageEditStage(io.ComfyNode):
     @classmethod
     async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                       workflow="", main_prompt="", image=""):
-        runner = RUNNER_REGISTRY.by_label(workflow, 'image-edit')
-        payload = None
-        if runner is not None:
-            try:
-                ctx = RunnerContext(
-                    kind='image-edit',
-                    main_prompt=main_prompt,
-                    upstream={'images': [image] if image else []},
-                    options={},
-                )
-                payload = await runner.invoke(ctx)
-            except NotImplementedError:
-                payload = None
-        if not payload:
-            raise RuntimeError(f"ImageEditStage: workflow {workflow!r} returned no output")
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        return await run_stage_workflow(
+            cls,
+            kind='image-edit',
+            label=workflow,
+            project_id=project_id,
+            parent_output_id=parent_output_id,
+            main_prompt=main_prompt,
+            upstream={'images': [image] if image else []},
+            options={},
+        )
 
 
 class EraseStage(io.ComfyNode):
@@ -217,9 +181,7 @@ class EraseStage(io.ComfyNode):
             display_name="Erase",
             category="ComfyTV/Image",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=ERASE_WORKFLOWS,
                                default=ERASE_WORKFLOWS[0] if ERASE_WORKFLOWS else "",
                                tooltip="Which erase backend to run."),
@@ -236,23 +198,16 @@ class EraseStage(io.ComfyNode):
     @classmethod
     async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                       workflow="", mask_data="", image=""):
-        runner = RUNNER_REGISTRY.by_label(workflow, 'erase')
-        payload = None
-        if runner is not None:
-            try:
-                ctx = RunnerContext(
-                    kind='erase',
-                    main_prompt='',  # erase is promptless — workflow uses a literal fill prompt
-                    upstream={'images': [image] if image else []},
-                    options={'mask_data': mask_data or ''},
-                )
-                payload = await runner.invoke(ctx)
-            except NotImplementedError:
-                payload = None
-        if not payload:
-            raise RuntimeError(f"EraseStage: workflow {workflow!r} returned no output")
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        return await run_stage_workflow(
+            cls,
+            kind='erase',
+            label=workflow,
+            project_id=project_id,
+            parent_output_id=parent_output_id,
+            main_prompt='',  # erase is promptless — workflow uses a literal fill prompt
+            upstream={'images': [image] if image else []},
+            options={'mask_data': mask_data or ''},
+        )
 
 
 class CutoutStage(io.ComfyNode):
@@ -264,9 +219,7 @@ class CutoutStage(io.ComfyNode):
             display_name="Cutout",
             category="ComfyTV/Image",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=CUTOUT_WORKFLOWS,
                                default=CUTOUT_WORKFLOWS[0] if CUTOUT_WORKFLOWS else "",
                                tooltip="Which segmentation backend to run."),
@@ -280,23 +233,16 @@ class CutoutStage(io.ComfyNode):
     @classmethod
     async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                       workflow="", image=""):
-        runner = RUNNER_REGISTRY.by_label(workflow, 'cutout')
-        payload = None
-        if runner is not None:
-            try:
-                ctx = RunnerContext(
-                    kind='cutout',
-                    main_prompt='',
-                    upstream={'images': [image] if image else []},
-                    options={},
-                )
-                payload = await runner.invoke(ctx)
-            except NotImplementedError:
-                payload = None
-        if not payload:
-            raise RuntimeError(f"CutoutStage: workflow {workflow!r} returned no output")
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        return await run_stage_workflow(
+            cls,
+            kind='cutout',
+            label=workflow,
+            project_id=project_id,
+            parent_output_id=parent_output_id,
+            main_prompt='',
+            upstream={'images': [image] if image else []},
+            options={},
+        )
 
 
 class RelightStage(io.ComfyNode):
@@ -308,9 +254,7 @@ class RelightStage(io.ComfyNode):
             display_name="Relight",
             category="ComfyTV/Image",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=RELIGHT_WORKFLOWS,
                                default=RELIGHT_WORKFLOWS[0] if RELIGHT_WORKFLOWS else "",
                                tooltip="Which relight backend to run. Pick the `(with reference)` variant when wiring a 2nd image as light reference."),
@@ -339,23 +283,16 @@ class RelightStage(io.ComfyNode):
         has_ref = len(upstream_images) >= 2
         composed = _relight_prompt(brightness, color, rim_light, main_prompt,
                                    has_reference=has_ref)
-        runner = RUNNER_REGISTRY.by_label(workflow, 'relight')
-        payload = None
-        if runner is not None:
-            try:
-                ctx = RunnerContext(
-                    kind='relight',
-                    main_prompt=composed,
-                    upstream={'images': upstream_images},
-                    options={},
-                )
-                payload = await runner.invoke(ctx)
-            except NotImplementedError:
-                payload = None
-        if not payload:
-            raise RuntimeError(f"RelightStage: workflow {workflow!r} returned no output")
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        return await run_stage_workflow(
+            cls,
+            kind='relight',
+            label=workflow,
+            project_id=project_id,
+            parent_output_id=parent_output_id,
+            main_prompt=composed,
+            upstream={'images': upstream_images},
+            options={},
+        )
 
 
 class MultiangleStage(io.ComfyNode):
@@ -367,9 +304,7 @@ class MultiangleStage(io.ComfyNode):
             display_name="Multiangle",
             category="ComfyTV/Image",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=MULTIANGLE_WORKFLOWS,
                                default=MULTIANGLE_WORKFLOWS[0] if MULTIANGLE_WORKFLOWS else "",
                                tooltip="Which multiangle workflow to run."),
@@ -397,20 +332,13 @@ class MultiangleStage(io.ComfyNode):
         prompt = _multiangle_prompt(horizontal_angle, vertical_angle, zoom,
                                     extra=main_prompt or "")
 
-        runner = RUNNER_REGISTRY.by_label(workflow, 'multiangle')
-        payload = None
-        if runner is not None:
-            try:
-                ctx = RunnerContext(
-                    kind='multiangle',
-                    main_prompt=prompt,
-                    upstream={'images': [image] if image else []},
-                    options={},
-                )
-                payload = await runner.invoke(ctx)
-            except NotImplementedError:
-                payload = None
-        if not payload:
-            raise RuntimeError(f"MultiangleStage: workflow {workflow!r} returned no output")
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        return await run_stage_workflow(
+            cls,
+            kind='multiangle',
+            label=workflow,
+            project_id=project_id,
+            parent_output_id=parent_output_id,
+            main_prompt=prompt,
+            upstream={'images': [image] if image else []},
+            options={},
+        )

@@ -60,9 +60,11 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
 import { useTransformPipeline } from '@/composables/widgets/useTransformPipeline'
+import { getWidget, readWidgetNum, writeWidget } from '@/utils/widget'
 
 const props = defineProps<{
   state: StageState
@@ -70,7 +72,7 @@ const props = defineProps<{
   onCancelRequest: () => void
   onDisconnect: (slot: string) => void
   onAction: (id: string) => void
-  node: any
+  node: LGraphNode
 }>()
 
 const sourceImageUrl = computed<string | null>(() => {
@@ -79,24 +81,10 @@ const sourceImageUrl = computed<string | null>(() => {
   return inp.content
 })
 
-function widgetValue(name: string, fallback = 0): number {
-  const w = props.node?.widgets?.find((x: any) => x.name === name)
-  return w ? Number(w.value) : fallback
-}
-
-const angle = ref<number>(widgetValue('angle', 0))
-
-function writeWidget(name: string, value: number) {
-  const w = props.node?.widgets?.find((x: any) => x.name === name)
-  if (!w) return
-  if (w.value !== value) {
-    w.value = value
-    w.callback?.(value)
-  }
-}
+const angle = ref<number>(readWidgetNum(props.node, 'angle', 0))
 
 function wireWidget(name: string, apply: (v: number) => void) {
-  const w = props.node?.widgets?.find((x: any) => x.name === name)
+  const w = getWidget(props.node, name)
   if (!w) return
   const orig = w.callback
   w.callback = (v: unknown) => { orig?.call(w, v); apply(Number(v)) }
@@ -107,7 +95,7 @@ if (props.node) {
   const orig = props.node.onConfigure
   props.node.onConfigure = function (info: any) {
     orig?.call(this, info)
-    const v = widgetValue('angle', angle.value)
+    const v = readWidgetNum(props.node, 'angle', angle.value)
     if (Number.isFinite(v) && v !== angle.value) angle.value = v
   }
 }
@@ -129,7 +117,7 @@ const { computing, requestRecompute } = useTransformPipeline({
 })
 
 watch(angle, (v) => {
-  writeWidget('angle', v)
+  writeWidget(props.node, 'angle', v)
   requestRecompute()
 })
 

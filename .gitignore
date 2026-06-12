@@ -3,6 +3,9 @@ __pycache__/
 *.pyc
 .DS_Store
 
+node.zip
+*.zip
+
 _build.log
 _install.log
 

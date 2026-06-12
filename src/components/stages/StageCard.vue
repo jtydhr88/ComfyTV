@@ -181,11 +181,12 @@ import {
   presetLabelKey,
   presetTooltipKey,
 } from '@/composables/stages/actionLabels'
+import type { LGraphNode } from '@/lib/comfyApp'
 import { useStageStore, type InputSource, type StageState, type ImagePickContext } from '@/stores/stageStore'
 
 const props = defineProps<{
   state: StageState
-  node?: any
+  node?: LGraphNode
   onRunRequest: () => void | Promise<void>
   onCancelRequest: () => void | Promise<void>
   onDisconnect: (slotName: string) => void

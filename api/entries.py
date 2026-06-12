@@ -7,12 +7,16 @@ from ._common import routes, broadcast_entry_event
 @routes.get("/comfytv/projects/{pid}/entries")
 async def list_entries(request: web.Request) -> web.Response:
     pid = request.match_info["pid"]
+    if not storage.project_exists(pid):
+        return web.json_response({"error": "project not found"}, status=404)
     return web.json_response({"entries": storage.list_entries(pid)})
 
 
 @routes.post("/comfytv/projects/{pid}/entries")
 async def upsert_entry(request: web.Request) -> web.Response:
     pid = request.match_info["pid"]
+    if not storage.project_exists(pid):
+        return web.json_response({"error": "project not found"}, status=404)
     try:
         body = await request.json()
     except Exception as e:

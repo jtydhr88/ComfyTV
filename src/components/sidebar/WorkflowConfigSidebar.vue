@@ -170,6 +170,7 @@ import { useCollapsedFlag, useCollapsedNodeIds } from '@/composables/sidebar/use
 import { useWorkflowConfig } from '@/composables/sidebar/useWorkflowConfig'
 import {
   buildBindingOptions,
+  loadCaps,
   type ExposedWidget,
   type NodeBlock,
 } from '@/composables/sidebar/workflowConfigCatalog'
@@ -258,6 +259,7 @@ watch(
 
 let _pollTimer: ReturnType<typeof setInterval> | null = null
 onMounted(() => {
+  void loadCaps()
   selection.refreshFromCanvas()
   _pollTimer = setInterval(() => selection.refreshFromCanvas(), 400)
 })

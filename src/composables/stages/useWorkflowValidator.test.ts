@@ -2,11 +2,13 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 async function loadModuleWithInfo(workflowInfo: any) {
   vi.resetModules()
-  ;(global as any).fetch = vi.fn(async () => ({
-    ok: true,
-    json: async () => workflowInfo,
-  }))
-  return await import('./useWorkflowValidator')
+  const fetchApi = vi.fn(async () =>
+    new Response(JSON.stringify(workflowInfo), {
+      status: 200, headers: { 'content-type': 'application/json' },
+    }),
+  )
+  vi.doMock('@/lib/comfyApp', () => ({ app: { api: { fetchApi } } }))
+  return { ...(await import('./useWorkflowValidator')), fetchApi }
 }
 
 const makeNode = (overrides: any = {}) => ({
@@ -174,14 +176,14 @@ describe('validateNode', () => {
 
 describe('invalidateWorkflowInfo', () => {
   it('clears cached info so next call refetches', async () => {
-    const { loadWorkflowInfo, invalidateWorkflowInfo } = await loadModuleWithInfo(info)
+    const { loadWorkflowInfo, invalidateWorkflowInfo, fetchApi } = await loadModuleWithInfo(info)
     await loadWorkflowInfo()
-    expect((global as any).fetch).toHaveBeenCalledTimes(1)
+    expect(fetchApi).toHaveBeenCalledTimes(1)
     await loadWorkflowInfo()
-    expect((global as any).fetch).toHaveBeenCalledTimes(1)  // cached
+    expect(fetchApi).toHaveBeenCalledTimes(1)  // cached
     invalidateWorkflowInfo()
     await loadWorkflowInfo()
-    expect((global as any).fetch).toHaveBeenCalledTimes(2)
+    expect(fetchApi).toHaveBeenCalledTimes(2)
   })
 })
 

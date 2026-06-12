@@ -23,6 +23,7 @@ def ensure_default_project() -> dict:
             s.add(proj)
             s.commit()
             logger.info("[ComfyTV] created default project")
+            _seed_defaults(s, DEFAULT_PROJECT_ID)
         return _project_to_dict(proj)
 
 
@@ -44,6 +45,7 @@ def create_project(name: str = "Untitled") -> dict:
         proj = Project(id=pid, name=name.strip() or "Untitled")
         s.add(proj)
         s.commit()
+        _seed_defaults(s, pid)
         return _project_to_dict(proj)
 
 
@@ -105,8 +107,12 @@ def _entry_to_dict(e: Entry) -> dict:
     }
 
 
+def project_exists(project_id: str) -> bool:
+    with db.get_session() as s:
+        return s.get(Project, project_id) is not None
+
+
 def list_entries(project_id: str) -> list[dict]:
-    _seed_defaults_if_empty(project_id)
     with db.get_session() as s:
         rows = s.execute(
             select(Entry)
@@ -160,16 +166,15 @@ def delete_entry(project_id: str, entry_id: int) -> bool:
         return True
 
 
-def _seed_defaults_if_empty(project_id: str) -> None:
-    with db.get_session() as s:
-        existing = s.execute(
-            select(Entry.id).where(Entry.project_id == project_id).limit(1)
-        ).scalar_one_or_none()
-        if existing is not None:
-            return
-        for label, content in _DEFAULT_FRAGMENTS:
-            s.add(Entry(project_id=project_id, kind="fragment", label=label, content=content))
-        s.commit()
+def _seed_defaults(session, project_id: str) -> None:
+    existing = session.execute(
+        select(Entry.id).where(Entry.project_id == project_id).limit(1)
+    ).scalar_one_or_none()
+    if existing is not None:
+        return
+    for label, content in _DEFAULT_FRAGMENTS:
+        session.add(Entry(project_id=project_id, kind="fragment", label=label, content=content))
+    session.commit()
 
 def persist_output(
     *,
@@ -213,10 +218,16 @@ def persist_output(
                 Output.project_id == pid,
                 Output.stage_node_id == str(stage_node_id),
             ).order_by(Output.id.desc()).limit(OUTPUT_RETENTION_PER_STAGE)
+            referenced_parents = (
+                select(Output.parent_output_id)
+                .where(Output.parent_output_id.isnot(None))
+                .distinct()
+            )
             s.query(Output).filter(
                 Output.project_id == pid,
                 Output.stage_node_id == str(stage_node_id),
                 Output.id.notin_(keepers),
+                Output.id.notin_(referenced_parents),
             ).delete(synchronize_session=False)
             s.commit()
         return _output_to_dict(out)

@@ -104,7 +104,9 @@ class Output(Base):
     payload_url:      Mapped[str] = mapped_column(Text, default="")
     payload_json:     Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     params_json:      Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    parent_output_id: Mapped[Optional[int]] = mapped_column(Integer, ForeignKey("comfytv_outputs.id"), nullable=True)
+    parent_output_id: Mapped[Optional[int]] = mapped_column(
+        Integer, ForeignKey("comfytv_outputs.id", ondelete="SET NULL"), nullable=True
+    )
     picked_index:     Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     created_at:       Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
 

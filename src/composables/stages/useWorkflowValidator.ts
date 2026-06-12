@@ -1,3 +1,5 @@
+import { apiFetch, WorkflowInfoSchema } from '@/api'
+
 export type SlotWarningStatus = 'wired_but_unused' | 'required_but_missing'
 
 export interface SlotWarning {
@@ -22,8 +24,8 @@ let _infoPromise: Promise<WorkflowInfo> | null = null
 
 export function loadWorkflowInfo(): Promise<WorkflowInfo> {
   if (!_infoPromise) {
-    _infoPromise = fetch('/comfytv/workflow_info')
-      .then(r => r.ok ? r.json() : {})
+    _infoPromise = apiFetch('/comfytv/workflow_info', WorkflowInfoSchema)
+      .then(info => info as WorkflowInfo)
       .catch(err => {
         console.warn('[ComfyTV/validator] workflow_info fetch failed:', err)
         return {}

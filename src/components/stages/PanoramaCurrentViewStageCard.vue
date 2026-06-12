@@ -58,12 +58,14 @@ import { computed, ref } from 'vue'
 
 import StageCard from '@/components/stages/StageCard.vue'
 import { useCurrentViewCapture } from '@/composables/stages/useCurrentViewCapture'
+import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import {
   ASPECT_OPTIONS as aspectOptions,
   parseAspect,
   RESOLUTION_OPTIONS as resolutionOptions,
 } from '@/utils/panoramaProjection'
+import { readWidgetStr } from '@/utils/widget'
 
 const VIEWER_HEIGHT_PX = 300
 
@@ -73,19 +75,12 @@ const props = defineProps<{
   onCancelRequest: () => void
   onDisconnect: (slot: string) => void
   onAction: (id: string) => void
-  node: any
+  node: LGraphNode
 }>()
 
-function readWidgetStr(name: string, fallback: string): string {
-  const w = props.node?.widgets?.find((x: any) => x.name === name)
-  if (!w) return fallback
-  const v = String(w.value ?? '')
-  return v || fallback
-}
-
 const viewerHostEl = ref<HTMLDivElement | null>(null)
-const aspectRatio = ref<string>(readWidgetStr('aspect_ratio', '16:9'))
-const resolution  = ref<string>(readWidgetStr('resolution',   '1K'))
+const aspectRatio = ref<string>(readWidgetStr(props.node, 'aspect_ratio', '16:9'))
+const resolution  = ref<string>(readWidgetStr(props.node, 'resolution',   '1K'))
 
 const { panoramaUrl, capturing, captureSize } = useCurrentViewCapture(
   props.node, props.state, viewerHostEl, aspectRatio, resolution,

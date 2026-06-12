@@ -14,9 +14,7 @@ class VideoExtractFrameStage(io.ComfyNode):
             display_name="Extract Frame",
             category="ComfyTV/Video",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 io.Combo.Input("position", options=['last', 'first', 'middle', 'custom'],
                                default='last',
                                tooltip="Which frame to grab. 'custom' uses at_seconds."),
@@ -51,9 +49,7 @@ class VideoClipStage(io.ComfyNode):
             display_name="Video Clip",
             category="ComfyTV/Video",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 io.Float.Input("start_s", default=0.0, min=0.0, max=3600.0, step=0.1,
                                tooltip="起始时间（秒）/ Start time in seconds."),
                 io.Float.Input("end_s", default=5.0, min=0.0, max=3600.0, step=0.1,
@@ -95,9 +91,7 @@ class VideoCropStage(io.ComfyNode):
             display_name="Video Crop",
             category="ComfyTV/Video",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 io.Int.Input("x", default=0, min=0, max=8192, step=2,
                              tooltip="Crop top-left X in pixels."),
                 io.Int.Input("y", default=0, min=0, max=8192, step=2,
@@ -134,9 +128,7 @@ class VideoResizeStage(io.ComfyNode):
             display_name="Video Resize",
             category="ComfyTV/Video",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 io.Int.Input("width", default=1280, min=-1, max=8192, step=2,
                              tooltip="Output width in pixels. Use -1 to derive from height + source aspect ratio."),
                 io.Int.Input("height", default=720, min=-1, max=8192, step=2,
@@ -169,9 +161,7 @@ class VideoUpscaleStage(io.ComfyNode):
             display_name="Video Upscale",
             category="ComfyTV/Video",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 io.Combo.Input("scale", options=["2x", "4x"], default="2x",
                                tooltip="放大倍数 / Upscale factor."),
                 COMFYTV_VIDEO.Input("video", optional=True),
@@ -183,9 +173,11 @@ class VideoUpscaleStage(io.ComfyNode):
 
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,scale="2x", video=""):
-        payload = _fake_video(force_run_token, scale, video)
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        raise StageNotImplemented(
+            "stage video (Video Upscale) not implemented yet — no real "
+            "upscale backend is wired. (Previously this fabricated a sample "
+            "clip URL and persisted it as a real output.)"
+        )
 
 
 class VideoSubtitleSmartEraseStage(io.ComfyNode):
@@ -197,9 +189,7 @@ class VideoSubtitleSmartEraseStage(io.ComfyNode):
             display_name="Subtitle Erase (Smart)",
             category="ComfyTV/Video",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 COMFYTV_VIDEO.Input("video", optional=True),
             ],
             outputs=[COMFYTV_VIDEO.Output("video")],
@@ -209,9 +199,11 @@ class VideoSubtitleSmartEraseStage(io.ComfyNode):
 
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,video=""):
-        payload = _fake_video(force_run_token, "subtitle-smart", video)
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        raise StageNotImplemented(
+            "stage video (Subtitle Erase / Smart) not implemented yet — no "
+            "real subtitle-erase backend is wired. (Previously this fabricated "
+            "a sample clip URL and persisted it as a real output.)"
+        )
 
 
 class VideoSubtitleSelectEraseStage(io.ComfyNode):
@@ -223,9 +215,7 @@ class VideoSubtitleSelectEraseStage(io.ComfyNode):
             display_name="Subtitle Erase (Region)",
             category="ComfyTV/Video",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 io.Int.Input("region_x", default=0, min=0, max=8192,
                              socketless=True, extra_dict={"hidden": True}),
                 io.Int.Input("region_y", default=0, min=0, max=8192,
@@ -243,9 +233,11 @@ class VideoSubtitleSelectEraseStage(io.ComfyNode):
 
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,region_x=0, region_y=0, region_w=0, region_h=0, video=""):
-        payload = _fake_video(force_run_token, region_x, region_y, region_w, region_h, video)
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        raise StageNotImplemented(
+            "stage video (Subtitle Erase / Region) not implemented yet — no "
+            "real subtitle-erase backend is wired. (Previously this fabricated "
+            "a sample clip URL and persisted it as a real output.)"
+        )
 
 
 class AudioExtractVocalStage(io.ComfyNode):
@@ -257,9 +249,7 @@ class AudioExtractVocalStage(io.ComfyNode):
             display_name="Audio · Vocals Only",
             category="ComfyTV/Audio",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=AUDIO_VOCAL_WORKFLOWS,
                                default=AUDIO_VOCAL_WORKFLOWS[0] if AUDIO_VOCAL_WORKFLOWS else "",
                                tooltip="Which vocal-extraction workflow to run."),
@@ -273,22 +263,16 @@ class AudioExtractVocalStage(io.ComfyNode):
     @classmethod
     async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                       workflow="", video=""):
-        runner = RUNNER_REGISTRY.by_label(workflow, 'audio-vocal')
-        payload = None
-        if runner is not None:
-            try:
-                ctx = RunnerContext(
-                    kind='audio-vocal',
-                    upstream={'videos': [video] if video else []},
-                    options={},
-                )
-                payload = await runner.invoke(ctx)
-            except NotImplementedError:
-                payload = None
-        if not payload:
-            raise RuntimeError(f"AudioExtractVocalStage: workflow {workflow!r} returned no output")
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        return await run_stage_workflow(
+            cls,
+            kind='audio-vocal',
+            label=workflow,
+            project_id=project_id,
+            parent_output_id=parent_output_id,
+            main_prompt=None,  # vocal extraction takes no text prompt
+            upstream={'videos': [video] if video else []},
+            options={},
+        )
 
 
 class AudioExtractBgStage(io.ComfyNode):
@@ -299,9 +283,7 @@ class AudioExtractBgStage(io.ComfyNode):
             display_name="Audio · Background Only",
             category="ComfyTV/Audio",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=AUDIO_BG_WORKFLOWS,
                                default=AUDIO_BG_WORKFLOWS[0] if AUDIO_BG_WORKFLOWS else "",
                                tooltip="Which background-extraction workflow to run."),
@@ -315,22 +297,16 @@ class AudioExtractBgStage(io.ComfyNode):
     @classmethod
     async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                       workflow="", video=""):
-        runner = RUNNER_REGISTRY.by_label(workflow, 'audio-bg')
-        payload = None
-        if runner is not None:
-            try:
-                ctx = RunnerContext(
-                    kind='audio-bg',
-                    upstream={'videos': [video] if video else []},
-                    options={},
-                )
-                payload = await runner.invoke(ctx)
-            except NotImplementedError:
-                payload = None
-        if not payload:
-            raise RuntimeError(f"AudioExtractBgStage: workflow {workflow!r} returned no output")
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        return await run_stage_workflow(
+            cls,
+            kind='audio-bg',
+            label=workflow,
+            project_id=project_id,
+            parent_output_id=parent_output_id,
+            main_prompt=None,  # background extraction takes no text prompt
+            upstream={'videos': [video] if video else []},
+            options={},
+        )
 
 
 class AudioVideoDemuxAudioStage(io.ComfyNode):
@@ -342,9 +318,7 @@ class AudioVideoDemuxAudioStage(io.ComfyNode):
             display_name="Demux · Audio Track",
             category="ComfyTV/Audio",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 COMFYTV_VIDEO.Input("video", optional=True),
             ],
             outputs=[COMFYTV_AUDIO.Output("audio")],
@@ -372,9 +346,7 @@ class AudioVideoDemuxVideoStage(io.ComfyNode):
             display_name="Demux · Silent Video",
             category="ComfyTV/Audio",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 COMFYTV_VIDEO.Input("video", optional=True),
             ],
             outputs=[COMFYTV_VIDEO.Output("video")],

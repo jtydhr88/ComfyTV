@@ -1,6 +1,8 @@
 import { computed, ref, watch, type Ref } from 'vue'
 
+import type { LGraphNode } from '@/lib/comfyApp'
 import { useStageStore, type StageState } from '@/stores/stageStore'
+import { readWidgetNum, readWidgetStr, writeWidget } from '@/utils/widget'
 
 export interface Segment {
   id: string
@@ -25,7 +27,7 @@ function newId() {
 }
 
 export function useTimelineEditor(
-  node: any,
+  node: LGraphNode,
   state: StageState,
   rootEl: Ref<HTMLElement | null>,
 ) {
@@ -84,10 +86,6 @@ export function useTimelineEditor(
     return ticks
   })
 
-  function getWidget(name: string): any | null {
-    return node?.widgets?.find((w: any) => w.name === name) ?? null
-  }
-
   function serialize(): string {
     let acc = 0
     const segOut = segments.value.map((s) => {
@@ -105,16 +103,14 @@ export function useTimelineEditor(
 
   function commit() {
     const json = serialize()
-    const w = getWidget('timeline_data')
-    if (w && w.value !== json) { w.value = json; w.callback?.(json) }
-    const fw = getWidget('frame_rate')
-    if (fw && fw.value !== frameRate.value) { fw.value = frameRate.value; fw.callback?.(frameRate.value) }
+    writeWidget(node, 'timeline_data', json)
+    writeWidget(node, 'frame_rate', frameRate.value)
     store.applyExecutedPayload(state, { output: [json] })
   }
 
   function restore() {
-    const raw = String(getWidget('timeline_data')?.value ?? '')
-    const fr = Number(getWidget('frame_rate')?.value)
+    const raw = readWidgetStr(node, 'timeline_data', '')
+    const fr = readWidgetNum(node, 'frame_rate', NaN)
     if (Number.isFinite(fr) && fr > 0) frameRate.value = fr
     if (!raw) return
     try {

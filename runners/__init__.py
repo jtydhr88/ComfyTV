@@ -22,13 +22,8 @@ WORKFLOW_KINDS: tuple[str, ...] = (
 )
 
 
-def _build_workflow_runners() -> list[LocalComfyUIRunner]:
-    try:
-        workflow_db.seed_workflows_from_disk(WORKFLOW_KINDS)
-    except Exception as e:
-        _log.exception("[ComfyTV] workflow seed failed; continuing without seeded runners: %s", e)
-
-    runners = []
+def _workflow_runners_from_db() -> list[LocalComfyUIRunner]:
+    runners: list[LocalComfyUIRunner] = []
     try:
         entries = workflow_db.list_workflows()
     except Exception as e:
@@ -43,14 +38,31 @@ def _build_workflow_runners() -> list[LocalComfyUIRunner]:
     return runners
 
 
+def _populate(registry: RunnerRegistry) -> None:
+    for r in _workflow_runners_from_db():
+        registry.register(r)
+    registry.register(
+        FakeMultishotRunner('local-multishot-fake', 'Multishot (placeholder)', {'timeline'})
+    )
+
 RUNNER_REGISTRY = RunnerRegistry()
+_populate(RUNNER_REGISTRY)
 
-for r in _build_workflow_runners():
-    RUNNER_REGISTRY.register(r)
 
-RUNNER_REGISTRY.register(
-    FakeMultishotRunner('local-multishot-fake', 'Multishot (placeholder)', {'timeline'})
-)
+def seed_workflows() -> None:
+    try:
+        workflow_db.seed_workflows_from_disk(WORKFLOW_KINDS)
+    except Exception as e:
+        _log.exception(
+            "[ComfyTV] workflow seed failed; continuing without seeded runners: %s", e
+        )
+    refresh_registry()
+
+
+def refresh_registry() -> RunnerRegistry:
+    RUNNER_REGISTRY._runners.clear()
+    _populate(RUNNER_REGISTRY)
+    return RUNNER_REGISTRY
 
 
 __all__ = [
@@ -61,4 +73,6 @@ __all__ = [
     'StageKind',
     'OutputPayload',
     'WORKFLOW_KINDS',
+    'seed_workflows',
+    'refresh_registry',
 ]

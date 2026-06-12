@@ -18,23 +18,23 @@ import { delegate as tippyDelegate } from 'tippy.js'
 import 'tippy.js/dist/tippy.css'
 
 import { useMentionSuggestion } from '@/composables/stages/useMentionSuggestion'
+import type { LGraphNode } from '@/lib/comfyApp'
 import { useEntryStore } from '@/stores/entryStore'
 import { useProjectStore } from '@/stores/projectStore'
 import { MENTION_RE } from '@/utils/labelRegex'
+import { getWidget, writeWidget } from '@/utils/widget'
 
 import MentionList from './MentionList.vue'
 
-const props = defineProps<{ node: any }>()
+const props = defineProps<{ node?: LGraphNode }>()
 
 const entryStore = useEntryStore()
 const projectStore = useProjectStore()
 const projectId = computed(() => projectStore.currentProjectId || '')
 
-const widget = computed(() =>
-  props.node?.widgets?.find((w: any) => w.name === 'main_prompt'),
-)
+const widget = computed(() => getWidget(props.node, 'main_prompt'))
 const placeholder = computed(() => {
-  const w = widget.value
+  const w = widget.value as { options?: { placeholder?: string }; placeholder?: string } | undefined
   return w?.options?.placeholder ?? w?.placeholder ?? ''
 })
 
@@ -108,16 +108,13 @@ const editor = useEditor({
   onUpdate: ({ editor }) => {
     if (suppressWriteback) return
     const text = editor.getText({ blockSeparator: '\n' })
-    const w = widget.value
-    if (w && w.value !== text) {
-      w.value = text
-    }
+    if (widget.value) writeWidget(props.node, 'main_prompt', text, { fireCallback: false })
   },
 })
 
 import { useStageStore } from '@/stores/stageStore'
 const stageStore = useStageStore()
-const stageState = computed(() => stageStore.getStage(props.node))
+const stageState = computed(() => props.node ? stageStore.getStage(props.node) : undefined)
 
 watch(
   () => stageState.value?.mainPrompt,

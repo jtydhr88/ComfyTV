@@ -63,9 +63,11 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
 import { useTransformPipeline } from '@/composables/widgets/useTransformPipeline'
+import { getWidget, writeWidget } from '@/utils/widget'
 
 const props = defineProps<{
   state: StageState
@@ -73,7 +75,7 @@ const props = defineProps<{
   onCancelRequest: () => void
   onDisconnect: (slot: string) => void
   onAction: (id: string) => void
-  node: any
+  node: LGraphNode
 }>()
 
 const sourceImageUrl = computed<string | null>(() => {
@@ -83,24 +85,15 @@ const sourceImageUrl = computed<string | null>(() => {
 })
 
 function widgetValueBool(name: string, fallback = false): boolean {
-  const w = props.node?.widgets?.find((x: any) => x.name === name)
+  const w = getWidget(props.node, name)
   return w ? Boolean(w.value) : fallback
 }
 
 const flipH = ref<boolean>(widgetValueBool('flip_horizontal', false))
 const flipV = ref<boolean>(widgetValueBool('flip_vertical', false))
 
-function writeWidget(name: string, value: boolean) {
-  const w = props.node?.widgets?.find((x: any) => x.name === name)
-  if (!w) return
-  if (w.value !== value) {
-    w.value = value
-    w.callback?.(value)
-  }
-}
-
 function wireWidget(name: string, apply: (v: boolean) => void) {
-  const w = props.node?.widgets?.find((x: any) => x.name === name)
+  const w = getWidget(props.node, name)
   if (!w) return
   const orig = w.callback
   w.callback = (v: unknown) => { orig?.call(w, v); apply(Boolean(v)) }
@@ -134,8 +127,8 @@ const { computing, requestRecompute } = useTransformPipeline({
 })
 
 watch([flipH, flipV], ([h, v]) => {
-  writeWidget('flip_horizontal', h)
-  writeWidget('flip_vertical', v)
+  writeWidget(props.node, 'flip_horizontal', h)
+  writeWidget(props.node, 'flip_vertical', v)
   requestRecompute()
 })
 

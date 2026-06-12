@@ -19,6 +19,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
 import PainterCanvas from '@/components/widgets/PainterCanvas.vue'
@@ -29,7 +30,7 @@ const props = defineProps<{
   onCancelRequest: () => void
   onDisconnect: (slot: string) => void
   onAction: (id: string) => void
-  node: any
+  node: LGraphNode
 }>()
 
 const painterRef = ref<InstanceType<typeof PainterCanvas> | null>(null)

@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 
+import { apiFetch, apiSend, OkSchema, WorkflowConfigSchema } from '@/api'
 import { invalidateWorkflowInfo } from '@/composables/stages/useWorkflowValidator'
 import { prepareWorkflow } from '@/composables/stages/useWorkflowPrep'
 import { app } from '@/lib/comfyApp'
@@ -10,16 +11,6 @@ import {
 } from '@/utils/download'
 
 import type { ConfigPayload } from './workflowConfigCatalog'
-
-async function fetchJson(path: string, init?: RequestInit) {
-  const resp = await (app as any).api.fetchApi(path, init)
-  if (resp.status >= 400) {
-    let detail = `${resp.status} ${resp.statusText}`
-    try { const j = await resp.json(); if (j?.error) detail += ` — ${j.error}` } catch {}
-    throw new Error(detail)
-  }
-  return resp.json()
-}
 
 export function useWorkflowConfig(t: (key: string, args?: Record<string, unknown>) => string) {
   const selection = useSelectionStore()
@@ -38,9 +29,10 @@ export function useWorkflowConfig(t: (key: string, args?: Record<string, unknown
     config.value = null
     try {
       try { await prepareWorkflow(kind, label) } catch {}
-      config.value = await fetchJson(
-        `/comfytv/workflows/config?kind=${encodeURIComponent(kind)}&label=${encodeURIComponent(label)}`
-      )
+      config.value = await apiFetch(
+        `/comfytv/workflows/config?kind=${encodeURIComponent(kind)}&label=${encodeURIComponent(label)}`,
+        WorkflowConfigSchema,
+      ) as ConfigPayload
     } catch (e: any) {
       loadError.value = String(e?.message || e || 'load failed')
     }
@@ -79,15 +71,11 @@ export function useWorkflowConfig(t: (key: string, args?: Record<string, unknown
     resetBusy.value = true
     resetError.value = null
     try {
-      const resp = await (app as any).api.fetchApi(
+      await apiSend(
         `/comfytv/workflows/${config.value.id}/reset_to_preset`,
-        { method: 'POST' },
+        'POST',
+        OkSchema,
       )
-      if (resp.status >= 400) {
-        let detail = `${resp.status} ${resp.statusText}`
-        try { const j = await resp.json(); if (j?.error) detail += ` — ${j.error}` } catch {}
-        throw new Error(detail)
-      }
       const sel = selection.selected
       if (sel?.workflowKind && sel?.workflowLabel) {
         await loadConfig(sel.workflowKind, sel.workflowLabel)
@@ -109,10 +97,8 @@ export function useWorkflowConfig(t: (key: string, args?: Record<string, unknown
   async function postBinding(payload: Record<string, unknown>) {
     if (!config.value) return
     try {
-      await fetchJson('/comfytv/workflows/config/binding', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ workflow_id: config.value.id, ...payload }),
+      await apiSend('/comfytv/workflows/config/binding', 'POST', OkSchema, {
+        workflow_id: config.value.id, ...payload,
       })
       notifyValidatorOfBindingChange()
     } catch (e: any) {
@@ -123,13 +109,9 @@ export function useWorkflowConfig(t: (key: string, args?: Record<string, unknown
   async function deleteBinding(node_id: string, widget_name: string) {
     if (!config.value) return
     try {
-      await fetchJson('/comfytv/workflows/config/binding', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          workflow_id: config.value.id,
-          node_id, input_name: widget_name,
-        }),
+      await apiSend('/comfytv/workflows/config/binding', 'DELETE', OkSchema, {
+        workflow_id: config.value.id,
+        node_id, input_name: widget_name,
       })
       notifyValidatorOfBindingChange()
     } catch (e: any) {

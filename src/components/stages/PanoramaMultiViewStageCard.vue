@@ -54,11 +54,13 @@ import { ref } from 'vue'
 
 import StageCard from '@/components/stages/StageCard.vue'
 import { useMultiViewCapture } from '@/composables/stages/useMultiViewCapture'
+import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import {
   ASPECT_OPTIONS as aspectOptions,
   RESOLUTION_OPTIONS as resolutionOptions,
 } from '@/utils/panoramaProjection'
+import { readWidgetNum, readWidgetStr } from '@/utils/widget'
 
 const props = defineProps<{
   state: StageState
@@ -66,22 +68,12 @@ const props = defineProps<{
   onCancelRequest: () => void
   onDisconnect: (slot: string) => void
   onAction: (id: string) => void
-  node: any
+  node: LGraphNode
 }>()
 
-function getWidget(name: string): any | null {
-  return props.node?.widgets?.find((w: any) => w.name === name) ?? null
-}
-function readWidgetStr(name: string, fallback: string): string {
-  const w = getWidget(name)
-  if (!w) return fallback
-  const v = String(w.value ?? '')
-  return v || fallback
-}
-
-const viewCount   = ref<number>(Number(getWidget('view_count')?.value ?? 4) || 4)
-const aspectRatio = ref<string>(readWidgetStr('aspect_ratio', '16:9'))
-const resolution  = ref<string>(readWidgetStr('resolution',   '1K'))
+const viewCount   = ref<number>(readWidgetNum(props.node, 'view_count', 4))
+const aspectRatio = ref<string>(readWidgetStr(props.node, 'aspect_ratio', '16:9'))
+const resolution  = ref<string>(readWidgetStr(props.node, 'resolution',   '1K'))
 
 const { panoramaUrl, capturing, captureProgress, captureSize } = useMultiViewCapture(
   props.node, props.state, viewCount, aspectRatio, resolution,

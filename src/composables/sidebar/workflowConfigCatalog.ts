@@ -29,6 +29,10 @@ export interface NodeBlock {
   widgets: ExposedWidget[]
 }
 
+import { reactive } from 'vue'
+
+import { fetchCaps } from '@/api'
+
 export type UpstreamKind = 'image' | 'video' | 'audio' | 'text'
 
 export interface Caps {
@@ -37,7 +41,7 @@ export interface Caps {
   computed_keys:  string[]
 }
 
-export const CAPS_BY_KIND: Record<string, Caps> = {
+export const DEFAULT_CAPS_BY_KIND: Record<string, Caps> = {
   text:          { upstream_kinds: ['text'],                       option_keys: [],
                                                                    computed_keys: [] },
   image:         { upstream_kinds: ['image', 'text'],              option_keys: ['option:negative', 'option:seed', 'option:batch_size'],
@@ -108,10 +112,36 @@ export const UPSTREAM_KIND_LABELS: Record<string, string> = {
   audio: 'Upstream audio', text:  'Upstream text',
 }
 
-const FALLBACK_CAPS: Caps = {
+export const DEFAULT_FALLBACK_CAPS: Caps = {
   upstream_kinds: ['image', 'video', 'audio', 'text'],
   option_keys:    ['option:negative', 'option:seed', 'option:batch_size'],
   computed_keys:  ['computed:width', 'computed:height', 'computed:length'],
+}
+
+interface CapsState {
+  byKind:   Record<string, Caps>
+  fallback: Caps
+}
+
+const capsState = reactive<CapsState>({
+  byKind:   { ...DEFAULT_CAPS_BY_KIND },
+  fallback: { ...DEFAULT_FALLBACK_CAPS },
+})
+
+let capsPromise: Promise<void> | null = null
+
+export function loadCaps(): Promise<void> {
+  if (!capsPromise) {
+    capsPromise = fetchCaps()
+      .then((payload) => {
+        capsState.byKind   = payload.caps_by_kind as Record<string, Caps>
+        capsState.fallback = payload.fallback_caps as Caps
+      })
+      .catch((e) => {
+        console.warn('[ComfyTV] fetchCaps failed; using baked-in default caps table', e)
+      })
+  }
+  return capsPromise
 }
 
 function maxUsedUpstreamIndex(widgets: ExposedWidget[], kind: string): number {
@@ -132,7 +162,16 @@ export function buildBindingOptions(
   widgets: ExposedWidget[],
   workflowKind: string | null | undefined,
 ): Array<{ value: string; label: string }> {
-  const caps = (workflowKind ? CAPS_BY_KIND[workflowKind] : null) ?? FALLBACK_CAPS
+  void loadCaps()
+  let caps = workflowKind ? capsState.byKind[workflowKind] : null
+  if (!caps) {
+    if (workflowKind) {
+      console.warn(
+        `[ComfyTV] no caps entry for workflow kind "${workflowKind}"; using permissive fallback caps`,
+      )
+    }
+    caps = capsState.fallback
+  }
   const out: Array<{ value: string; label: string }> = [
     { value: '__VALUE__', label: '(use this value)' },
     { value: 'main_prompt', label: 'Stage prompt' },

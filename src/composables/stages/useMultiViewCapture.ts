@@ -1,8 +1,10 @@
 import { computed, ref, watch, type Ref } from 'vue'
 
+import type { LGraphNode } from '@/lib/comfyApp'
 import { useStageStore, type StageState } from '@/stores/stageStore'
 import { CAPTURE_FOV, captureDimensions, LABELS_4 } from '@/utils/panoramaProjection'
 import { uploadCanvas } from '@/utils/uploadCanvas'
+import { getWidget, writeWidget } from '@/utils/widget'
 import { capturePanoramaOffscreen } from '@/widgets/three/PanoramaViewer'
 
 const SCHEDULE_DELAY_MS = 350
@@ -10,7 +12,7 @@ const MIN_VIEWS = 2
 const MAX_VIEWS = 24
 
 export function useMultiViewCapture(
-  node: any,
+  node: LGraphNode,
   state: StageState,
   viewCount: Ref<number>,
   aspectRatio: Ref<string>,
@@ -23,19 +25,7 @@ export function useMultiViewCapture(
     return inp && inp.source === 'upstream' && inp.content ? inp.content : null
   })
 
-  function getWidget(name: string): any | null {
-    return node?.widgets?.find((w: any) => w.name === name) ?? null
-  }
-  function writeWidget(name: string, value: number | string) {
-    const w = getWidget(name)
-    if (!w) return
-    if (w.value !== value) {
-      w.value = value
-      w.callback?.(value)
-    }
-  }
-
-  const vcw = getWidget('view_count')
+  const vcw = getWidget(node, 'view_count')
   if (vcw) {
     const orig = vcw.callback
     vcw.callback = (v: unknown) => {
@@ -112,9 +102,9 @@ export function useMultiViewCapture(
     }
   }
 
-  watch(viewCount,   (n) => { writeWidget('view_count',   n); schedule() })
-  watch(aspectRatio, (v) => { writeWidget('aspect_ratio', v); schedule() })
-  watch(resolution,  (v) => { writeWidget('resolution',   v); schedule() })
+  watch(viewCount,   (n) => { writeWidget(node, 'view_count',   n); schedule() })
+  watch(aspectRatio, (v) => { writeWidget(node, 'aspect_ratio', v); schedule() })
+  watch(resolution,  (v) => { writeWidget(node, 'resolution',   v); schedule() })
 
   watch(panoramaUrl, () => schedule(), { immediate: true })
 

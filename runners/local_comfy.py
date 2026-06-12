@@ -1,3 +1,4 @@
+import asyncio
 import json
 import logging
 import random
@@ -261,6 +262,15 @@ def _view_url(filename: str, subfolder: str, type_: str) -> str:
 
 _NESTED_EXECUTOR = None
 
+_NESTED_LOCK: asyncio.Lock | None = None
+
+
+def _get_nested_lock() -> asyncio.Lock:
+    global _NESTED_LOCK
+    if _NESTED_LOCK is None:
+        _NESTED_LOCK = asyncio.Lock()
+    return _NESTED_LOCK
+
 
 def _get_nested_executor():
     global _NESTED_EXECUTOR
@@ -281,13 +291,7 @@ async def _run_subprompt(sub_prompt: dict, sub_prompt_id: str,
 
     from server import PromptServer
 
-    executor = _get_nested_executor()
     server = PromptServer.instance
-
-    outer_client_id = server.client_id
-
-    outer_node_id = getattr(server, 'last_node_id', None)
-    orig_send_sync = server.send_sync
 
     total_nodes = float(len(sub_prompt) or 1)
 
@@ -310,45 +314,57 @@ async def _run_subprompt(sub_prompt: dict, sub_prompt_id: str,
                     pass
         return finished + running_frac, total_nodes
 
-    def wrapped_send_sync(event, data, sid=None):
+    loop = asyncio.get_running_loop()
+
+    async with _get_nested_lock():
+        executor = _get_nested_executor()
+
+        outer_client_id = server.client_id
+        outer_node_id = getattr(server, 'last_node_id', None)
+        orig_send_sync = server.send_sync
+
+        def wrapped_send_sync(event, data, sid=None):
+            try:
+                if outer_node_id is not None and isinstance(data, dict) \
+                        and data.get('prompt_id') == sub_prompt_id:
+                    if event == 'progress_state':
+                        nodes_dict = data.get('nodes') or {}
+                        if nodes_dict:
+                            v, m = _aggregate(nodes_dict)
+                            orig_send_sync('progress', {
+                                'value':     v,
+                                'max':       m,
+                                'prompt_id': sub_prompt_id,
+                                'node':      str(outer_node_id),
+                            }, sid)
+                    elif event == 'progress_text':
+                        fwd = {**data,
+                               'node_id': str(outer_node_id),
+                               'nodeId':  str(outer_node_id)}
+                        orig_send_sync(event, fwd, sid)
+            except Exception:
+                pass
+            return orig_send_sync(event, data, sid)
+
+        server.send_sync = wrapped_send_sync
         try:
-            if outer_node_id is not None and isinstance(data, dict) \
-                    and data.get('prompt_id') == sub_prompt_id:
-                if event == 'progress_state':
-                    nodes_dict = data.get('nodes') or {}
-                    if nodes_dict:
-                        v, m = _aggregate(nodes_dict)
-                        orig_send_sync('progress', {
-                            'value':     v,
-                            'max':       m,
-                            'prompt_id': sub_prompt_id,
-                            'node':      str(outer_node_id),
-                        }, sid)
-                elif event == 'progress_text':
-                    fwd = {**data,
-                           'node_id': str(outer_node_id),
-                           'nodeId':  str(outer_node_id)}
-                    orig_send_sync(event, fwd, sid)
-        except Exception:
-            pass
-        return orig_send_sync(event, data, sid)
+            await loop.run_in_executor(
+                None,
+                lambda: executor.execute(
+                    sub_prompt, sub_prompt_id,
+                    extra_data={"client_id": outer_client_id},
+                    execute_outputs=execute_outputs,
+                ),
+            )
+        finally:
+            server.send_sync = orig_send_sync
+            server.client_id = outer_client_id
 
-    server.send_sync = wrapped_send_sync
-    try:
-        await executor.execute_async(
-            sub_prompt, sub_prompt_id,
-            extra_data={"client_id": outer_client_id},
-            execute_outputs=execute_outputs,
-        )
-    finally:
-        server.send_sync = orig_send_sync
-        server.client_id = outer_client_id
-
-    if not executor.success:
-        raise RuntimeError(
-            f"Local workflow failed (sub_prompt_id={sub_prompt_id})"
-        )
-    return executor
+        if not executor.success:
+            raise RuntimeError(
+                f"Local workflow failed (sub_prompt_id={sub_prompt_id})"
+            )
+        return executor
 
 _SAVE_UI_KEYS = ("images", "audio", "videos", "gifs", "video")
 

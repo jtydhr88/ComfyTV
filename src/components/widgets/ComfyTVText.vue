@@ -1,29 +1,29 @@
 <template>
-  <Textarea
+  <textarea
     v-if="multiline"
-    :model-value="modelValue ?? ''"
+    ref="textareaEl"
+    class="ctv-text-input ctv-text-area"
+    :value="modelValue ?? ''"
     :disabled="disabled"
     :rows="rows ?? 3"
     :placeholder="placeholder ?? ''"
-    auto-resize
-    :pt="{ root: { class: 'ctv-text-input ctv-text-area' } }"
-    @update:model-value="onChange"
+    @input="onTextareaInput"
   />
-  <InputText
+  <input
     v-else
-    :model-value="modelValue ?? ''"
+    class="ctv-text-input"
+    type="text"
+    :value="modelValue ?? ''"
     :disabled="disabled"
     :placeholder="placeholder ?? ''"
-    :pt="{ root: { class: 'ctv-text-input' } }"
-    @update:model-value="onChange"
+    @input="onInput"
   />
 </template>
 
 <script setup lang="ts">
-import InputText from 'primevue/inputtext'
-import Textarea  from 'primevue/textarea'
+import { nextTick, onMounted, ref, watch } from 'vue'
 
-defineProps<{
+const props = defineProps<{
   modelValue: string | null
   disabled?: boolean
   multiline?: boolean
@@ -32,7 +32,26 @@ defineProps<{
 }>()
 const emit = defineEmits<{ 'update:modelValue': [v: string] }>()
 
-function onChange(v: string | undefined) { emit('update:modelValue', v ?? '') }
+const textareaEl = ref<HTMLTextAreaElement | null>(null)
+
+function resize() {
+  const el = textareaEl.value
+  if (!el) return
+  el.style.height = 'auto'
+  el.style.height = `${el.scrollHeight}px`
+}
+
+function onInput(e: Event) {
+  emit('update:modelValue', (e.target as HTMLInputElement).value)
+}
+
+function onTextareaInput(e: Event) {
+  emit('update:modelValue', (e.target as HTMLTextAreaElement).value)
+  resize()
+}
+
+onMounted(() => { if (props.multiline) nextTick(resize) })
+watch(() => props.modelValue, () => { if (props.multiline) nextTick(resize) })
 </script>
 
 <style>
@@ -46,6 +65,7 @@ function onChange(v: string | undefined) { emit('update:modelValue', v ?? '') }
   padding: 6px 12px;
   color: var(--base-foreground, #ddd);
   font-size: 12px;
+  font-family: inherit;
   width: 100%;
   min-width: 0;
   outline: none;
@@ -54,7 +74,7 @@ function onChange(v: string | undefined) { emit('update:modelValue', v ?? '') }
 .ctv-text-input::placeholder,
 .ctv-text-input input::placeholder,
 .ctv-text-input textarea::placeholder { color: var(--muted-foreground, #888); }
-.ctv-text-area textarea { line-height: 1.4; resize: vertical; min-height: 48px; }
+.ctv-text-area { line-height: 1.4; resize: vertical; min-height: 48px; overflow: hidden; }
 .ctv-text-input:focus-visible,
 .ctv-text-input input:focus-visible,
 .ctv-text-input textarea:focus-visible {

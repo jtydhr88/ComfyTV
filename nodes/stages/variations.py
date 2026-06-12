@@ -11,9 +11,7 @@ class ImageVariationsStage(io.ComfyNode):
             display_name="Image Variations",
             category="ComfyTV/Image",
             inputs=[
-                _force_run_token(),
-                _project_id_input(),
-                _parent_output_id_input(),
+                *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=all_workflows,
                                default=all_workflows[0] if all_workflows else "",
                                tooltip="Multi-view (parallel angles) or sequence (chained next-scene) workflow. Each one fans the source image into its own fixed batch."),
@@ -33,23 +31,14 @@ class ImageVariationsStage(io.ComfyNode):
     async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                       workflow="", variant_count=3, main_prompt="", image="",
                       selected_index=1):
-        runner = (RUNNER_REGISTRY.by_label(workflow, 'multiview')
-                  or RUNNER_REGISTRY.by_label(workflow, 'sequence'))
-        payload = None
-        if runner is not None:
-            kind = 'multiview' if workflow in (MULTIVIEW_WORKFLOWS or []) else 'sequence'
-            try:
-                ctx = RunnerContext(
-                    kind=kind,
-                    main_prompt=(main_prompt or '').strip(),
-                    upstream={'images': [image] if image else []},
-                    options={},
-                )
-                payload = await runner.invoke(ctx)
-            except NotImplementedError:
-                payload = None
-        if not payload:
-            raise RuntimeError(f"ImageVariationsStage: workflow {workflow!r} returned no output")
+        kind = 'multiview' if workflow in (MULTIVIEW_WORKFLOWS or []) else 'sequence'
+        payload = await invoke_runner(
+            kind=kind,
+            label=workflow,
+            main_prompt=(main_prompt or '').strip(),
+            upstream={'images': [image] if image else []},
+            options={},
+        )
         picked_idx = int(selected_index or 1)
         picked_url = _pick_image_from_batch(payload, picked_idx)
         return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
