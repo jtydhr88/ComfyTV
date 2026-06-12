@@ -152,11 +152,19 @@
         class="ctv:fixed ctv:inset-0 ctv:z-[9999] ctv:flex ctv:items-center ctv:justify-center ctv:cursor-zoom-out ctv:bg-black/90"
         role="dialog"
         @click.self="lightboxUrl = null"
+        @wheel.prevent.stop
       >
-        <img :src="lightboxUrl"
-             class="ctv:max-w-[95vw] ctv:max-h-[95vh] ctv:object-contain ctv:cursor-default
-                    ctv:shadow-[0_8px_40px_rgb(0_0_0/0.6)]"
-             :alt="lightboxUrl" />
+        <div
+          ref="lightboxContainer"
+          class="ctv:inline-flex ctv:items-center ctv:justify-center ctv:touch-none ctv:select-none ctv:cursor-grab"
+          @click.stop
+        >
+          <img ref="lightboxImg" :src="lightboxUrl"
+               class="ctv:block ctv:max-w-[60vw] ctv:max-h-[60vh] ctv:object-contain ctv:cursor-[inherit]
+                      ctv:shadow-[0_8px_40px_rgb(0_0_0/0.6)]"
+               draggable="false"
+               :alt="lightboxUrl" />
+        </div>
         <button
           type="button"
           class="ctv:absolute ctv:top-4 ctv:right-4 ctv:size-9 ctv:flex ctv:items-center ctv:justify-center ctv:text-sm ctv:leading-none
@@ -189,6 +197,8 @@ const zoomContainer = ref<HTMLElement | null>(null)
 const zoomImg = ref<HTMLImageElement | null>(null)
 
 const lightboxUrl = ref<string | null>(null)
+const lightboxContainer = ref<HTMLElement | null>(null)
+const lightboxImg = ref<HTMLImageElement | null>(null)
 
 function openViewer(url: string) {
   if (url) lightboxUrl.value = url
@@ -227,6 +237,7 @@ const props = defineProps<{
 }>()
 
 useImagePanZoom(zoomContainer, zoomImg, { resetKey: toRef(props, 'content') })
+useImagePanZoom(lightboxContainer, lightboxImg, { resetKey: lightboxUrl, minZoom: 0.2, maxZoom: 8 })
 
 const hasContent = computed(() => props.content != null && String(props.content).length > 0)
 

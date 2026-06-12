@@ -41,8 +41,8 @@ export function usePainter(options: UsePainterOptions) {
 
   const tool = ref<PainterTool>(PAINTER_TOOLS.BRUSH)
   const brushSize = ref(20)
-  const brushColor = ref('#ffffff')
-  const brushOpacity = ref(1)
+  const brushColor = ref('#000000')
+  const brushOpacity = ref(0.7)
   const brushHardness = ref(1)
 
   const canvasWidth = ref(512)
