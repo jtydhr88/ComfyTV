@@ -1,6 +1,6 @@
 @layer theme, utilities;
 
-@import 'tailwindcss/theme' layer(theme);
+@import 'tailwindcss/theme' layer(theme) prefix(ctv);
 @import 'tailwindcss/utilities' layer(utilities) source(none);
 
 @source './components';

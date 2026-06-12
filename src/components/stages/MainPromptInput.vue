@@ -1,5 +1,5 @@
 <template>
-  <div v-if="widget" class="pt-1.5 px-2 pb-1">
+  <div v-if="widget" class="ctv:pt-1.5 ctv:px-2 ctv:pb-1">
     <EditorContent :editor="editor" class="comfytv-prompt-editor" />
   </div>
 </template>
@@ -75,9 +75,9 @@ const editor = useEditor({
     }),
     Mention.configure({
       HTMLAttributes: {
-        class: 'inline-block py-0 px-1 mx-px rounded font-medium whitespace-nowrap '
-             + 'bg-primary-background/20 border border-primary-background/45 '
-             + 'text-primary-background',
+        class: 'ctv:inline-block ctv:py-0 ctv:px-1 ctv:mx-px ctv:rounded ctv:font-medium ctv:whitespace-nowrap '
+             + 'ctv:bg-primary-background/20 ctv:border ctv:border-primary-background/45 '
+             + 'ctv:text-primary-background',
       },
       renderText: ({ node }) => `@${node.attrs.label}`,
       renderHTML: ({ node, HTMLAttributes }: any) => [
@@ -95,13 +95,13 @@ const editor = useEditor({
   editorProps: {
     attributes: {
       class: 'comfytv-prompt-prosemirror'
-           + ' min-h-11 max-h-80 overflow-y-auto py-1.5 px-2 rounded'
-           + ' bg-secondary-background'
-           + ' text-base-foreground'
-           + ' border border-border-default'
-           + ' focus:border-primary-background'
-           + ' text-xs leading-snug [font-family:inherit] outline-none box-border'
-           + ' whitespace-pre-wrap break-words',
+           + ' ctv:min-h-11 ctv:max-h-80 ctv:overflow-y-auto ctv:py-1.5 ctv:px-2 ctv:rounded'
+           + ' ctv:bg-secondary-background'
+           + ' ctv:text-base-foreground'
+           + ' ctv:border ctv:border-border-default'
+           + ' ctv:focus:border-primary-background'
+           + ' ctv:text-xs ctv:leading-snug ctv:[font-family:inherit] ctv:outline-none ctv:box-border'
+           + ' ctv:whitespace-pre-wrap ctv:break-words',
       spellcheck: 'false',
     },
   },

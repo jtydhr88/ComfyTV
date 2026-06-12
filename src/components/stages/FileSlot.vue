@@ -1,12 +1,12 @@
 <template>
   <div
-    class="relative flex items-center justify-center min-h-20 rounded overflow-hidden
-           bg-black/20 transition-colors"
+    class="ctv:relative ctv:flex ctv:items-center ctv:justify-center ctv:min-h-20 ctv:rounded ctv:overflow-hidden
+           ctv:bg-black/20 ctv:transition-colors"
     :class="[
-      value ? 'border border-solid' : 'border border-dashed',
+      value ? 'ctv:border ctv:border-solid' : 'ctv:border ctv:border-dashed',
       isDragOver
-        ? 'border-primary-background bg-primary-background/10'
-        : 'border-border-default',
+        ? 'ctv:border-primary-background ctv:bg-primary-background/10'
+        : 'ctv:border-border-default',
     ]"
     @dragenter.prevent="onDragEnter"
     @dragover.prevent="onDragOver"
@@ -15,11 +15,11 @@
   >
     <template v-if="!value">
       <button
-        class="flex flex-col items-center gap-1 w-full p-3.5 bg-transparent border-0
-               text-muted-foreground text-xs cursor-pointer hover:bg-base-foreground/5 hover:text-base-foreground"
+        class="ctv:flex ctv:flex-col ctv:items-center ctv:gap-1 ctv:w-full ctv:p-3.5 ctv:bg-transparent ctv:border-0
+               ctv:text-muted-foreground ctv:text-xs ctv:cursor-pointer ctv:hover:bg-base-foreground/5 ctv:hover:text-base-foreground"
         @click="open"
       >
-        <span class="text-lg leading-none">+</span>
+        <span class="ctv:text-lg ctv:leading-none">+</span>
         <span>{{ isDragOver ? '松开上传' : `点击或拖入${kindLabel}` }}</span>
       </button>
     </template>
@@ -28,19 +28,19 @@
       <img
         v-if="kind === 'image'"
         :src="value"
-        class="block w-full max-h-44 object-contain cursor-pointer bg-black"
+        class="ctv:block ctv:w-full ctv:max-h-44 ctv:object-contain ctv:cursor-pointer ctv:bg-black"
         @click="open"
       />
       <video
         v-else-if="kind === 'video'"
         :src="value"
-        class="block w-full max-h-44 object-contain cursor-pointer bg-black"
+        class="ctv:block ctv:w-full ctv:max-h-44 ctv:object-contain ctv:cursor-pointer ctv:bg-black"
         controls muted preload="metadata"
       />
       <button
-        class="absolute top-0.5 right-0.5 size-[22px] p-0 border-0 rounded-sm cursor-pointer
-               bg-black/65 text-white text-sm leading-none
-               hover:bg-destructive-background"
+        class="ctv:absolute ctv:top-0.5 ctv:right-0.5 ctv:size-[22px] ctv:p-0 ctv:border-0 ctv:rounded-sm ctv:cursor-pointer
+               ctv:bg-black/65 ctv:text-white ctv:text-sm ctv:leading-none
+               ctv:hover:bg-destructive-background"
         :title="`移除${kindLabel}`"
         @click.stop="$emit('clear')"
       >×</button>
@@ -50,7 +50,7 @@
       ref="picker"
       type="file"
       :accept="accept"
-      class="hidden"
+      class="ctv:hidden"
       @change="onFileChange"
     />
   </div>

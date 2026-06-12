@@ -1,25 +1,25 @@
 <template>
   <div
-    class="flex flex-col gap-1.5 w-full"
+    class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full"
     @pointerdown.stop
     @pointermove.stop
     @pointerup.stop
   >
     <div
-      class="relative w-full max-h-[360px] flex items-center justify-center
-             bg-black rounded-md overflow-hidden border border-border-subtle"
+      class="ctv:relative ctv:w-full ctv:max-h-[360px] ctv:flex ctv:items-center ctv:justify-center
+             ctv:bg-black ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle"
       :style="canvasShellStyle"
     >
       <img
         v-if="sourceImageUrl"
         :src="sourceImageUrl"
-        class="absolute inset-0 size-full object-contain pointer-events-none select-none"
+        class="ctv:absolute ctv:inset-0 ctv:size-full ctv:object-contain ctv:pointer-events-none ctv:select-none"
         draggable="false"
         @dragstart.prevent
       />
       <canvas
         ref="canvasEl"
-        class="absolute inset-0 size-full touch-none cursor-none"
+        class="ctv:absolute ctv:inset-0 ctv:size-full ctv:touch-none ctv:cursor-none"
         @pointerdown="handlePointerDown"
         @pointermove="handlePointerMove"
         @pointerup="handlePointerUp"
@@ -29,20 +29,20 @@
       <div
         v-show="cursorVisible"
         ref="cursorEl"
-        class="absolute top-0 left-0 rounded-full pointer-events-none border border-black/70
-               shadow-[0_0_0_1px_rgb(255_255_255/0.8)] will-change-transform"
+        class="ctv:absolute ctv:top-0 ctv:left-0 ctv:rounded-full ctv:pointer-events-none ctv:border ctv:border-black/70
+               ctv:shadow-[0_0_0_1px_rgb(255_255_255/0.8)] ctv:will-change-transform"
         :style="cursorStyle"
       />
     </div>
 
-    <div v-if="sourceImageUrl" class="text-2xs text-center font-mono text-muted-foreground">
+    <div v-if="sourceImageUrl" class="ctv:text-2xs ctv:text-center ctv:font-mono ctv:text-muted-foreground">
       {{ canvasWidth }} × {{ canvasHeight }}
     </div>
 
-    <div class="flex flex-col gap-1">
+    <div class="ctv:flex ctv:flex-col ctv:gap-1">
       <div :class="rowClass">
         <span :class="labelClass">{{ $t('painter.tool') }}</span>
-        <div class="flex gap-0.5 p-0.5 rounded bg-secondary-background">
+        <div class="ctv:flex ctv:gap-0.5 ctv:p-0.5 ctv:rounded ctv:bg-secondary-background">
           <button v-for="t in TOOLS" :key="t.id" type="button"
                   :class="toolBtnClass(tool === t.id)"
                   :title="$t(t.i18n)"
@@ -54,7 +54,7 @@
         <span :class="labelClass">{{ $t('painter.size') }}</span>
         <input
           type="range" min="1" max="200" step="1"
-          class="w-full"
+          class="ctv:w-full"
           :value="brushSize"
           @input="(e) => brushSize = Number((e.target as HTMLInputElement).value)"
         />
@@ -66,18 +66,18 @@
           <span :class="labelClass">{{ $t('painter.color') }}</span>
           <input
             type="color"
-            class="w-7 h-[18px] p-0 border-0 bg-transparent cursor-pointer"
+            class="ctv:w-7 ctv:h-[18px] ctv:p-0 ctv:border-0 ctv:bg-transparent ctv:cursor-pointer"
             :value="brushColorDisplay"
             @input="(e) => brushColorDisplay = (e.target as HTMLInputElement).value"
           />
-          <span :class="`${valueClass} font-mono`">{{ brushColorDisplay }}</span>
+          <span :class="`${valueClass} ctv:font-mono`">{{ brushColorDisplay }}</span>
         </div>
 
         <div :class="rowClass">
           <span :class="labelClass">{{ $t('painter.opacity') }}</span>
           <input
             type="range" min="0" max="100" step="1"
-            class="w-full"
+            class="ctv:w-full"
             :value="brushOpacityPercent"
             @input="(e) => brushOpacityPercent = Number((e.target as HTMLInputElement).value)"
           />
@@ -90,7 +90,7 @@
           <span :class="labelClass">{{ $t('painter.hardness') }}</span>
           <input
             type="range" min="0" max="100" step="1"
-            class="w-full"
+            class="ctv:w-full"
             :value="brushHardnessPercent"
             @input="(e) => brushHardnessPercent = Number((e.target as HTMLInputElement).value)"
           />
@@ -100,8 +100,8 @@
 
       <button
         type="button"
-        class="mt-0.5 py-1 px-2.5 text-[11px] rounded cursor-pointer transition-colors duration-150
-               bg-secondary-background text-base-foreground border border-border-subtle hover:bg-secondary-background-hover"
+        class="ctv:mt-0.5 ctv:py-1 ctv:px-2.5 ctv:text-[11px] ctv:rounded ctv:cursor-pointer ctv:transition-colors ctv:duration-150
+               ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle ctv:hover:bg-secondary-background-hover"
         @click="handleClear"
       >↶ {{ $t('painter.clear') }}</button>
     </div>
@@ -170,16 +170,16 @@ const TOOLS = [
   { id: 'label',   icon: '①',  i18n: 'painter.label' },
 ] as const
 
-const rowClass   = 'grid grid-cols-[64px_1fr_48px] items-center gap-1.5 text-[11px]'
-const labelClass = 'text-2xs uppercase tracking-wide text-muted-foreground'
-const valueClass = 'text-right text-base-foreground'
+const rowClass   = 'ctv:grid ctv:grid-cols-[64px_1fr_48px] ctv:items-center ctv:gap-1.5 ctv:text-[11px]'
+const labelClass = 'ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground'
+const valueClass = 'ctv:text-right ctv:text-base-foreground'
 
 function toolBtnClass(active: boolean) {
   return [
-    'flex-1 py-0.5 px-2 text-[11px] cursor-pointer border-0 bg-transparent rounded-sm',
+    'ctv:flex-1 ctv:py-0.5 ctv:px-2 ctv:text-[11px] ctv:cursor-pointer ctv:border-0 ctv:bg-transparent ctv:rounded-sm',
     active
-      ? 'bg-secondary-background-selected text-primary-background font-semibold'
-      : 'text-muted-foreground hover:text-base-foreground',
+      ? 'ctv:bg-secondary-background-selected ctv:text-primary-background ctv:font-semibold'
+      : 'ctv:text-muted-foreground ctv:hover:text-base-foreground',
   ].join(' ')
 }
 </script>

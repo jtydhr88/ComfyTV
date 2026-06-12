@@ -1,12 +1,12 @@
 <template>
-  <div class="flex flex-col size-full">
-    <div class="relative w-full h-[350px] shrink-0 rounded-lg overflow-hidden bg-black mb-1.5">
+  <div class="ctv:flex ctv:flex-col ctv:size-full">
+    <div class="ctv:relative ctv:w-full ctv:h-[350px] ctv:shrink-0 ctv:rounded-lg ctv:overflow-hidden ctv:bg-black ctv:mb-1.5">
       <SceneCanvas :init-scene="initScene" />
       <div
-        class="absolute top-2 left-2 right-2 z-10 pointer-events-none
-               bg-black/90 border border-[rgb(233_61_130/0.3)] rounded-md
-               py-1.5 px-2.5 text-xs text-[#E93D82] font-mono leading-snug break-all
-               backdrop-blur-sm"
+        class="ctv:absolute ctv:top-2 ctv:left-2 ctv:right-2 ctv:z-10 ctv:pointer-events-none
+               ctv:bg-black/90 ctv:border ctv:border-[rgb(233_61_130/0.3)] ctv:rounded-md
+               ctv:py-1.5 ctv:px-2.5 ctv:text-xs ctv:text-[#E93D82] ctv:font-mono ctv:leading-snug ctv:break-all
+               ctv:backdrop-blur-sm"
       >{{ prompt }}</div>
       <CameraControlPanel
         :azimuth="azimuth"

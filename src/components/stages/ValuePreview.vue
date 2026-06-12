@@ -9,12 +9,12 @@
     <div
       v-else-if="(type === 'COMFYTV_IMAGE' || type === 'COMFYTV_PANORAMA') && !compact"
       ref="zoomContainer"
-      class="group relative w-full flex-1 min-h-0 overflow-hidden rounded-sm touch-none cursor-grab"
+      class="ctv:group ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden ctv:rounded-sm ctv:touch-none ctv:cursor-grab"
     >
       <img
         ref="zoomImg"
         :src="String(content)"
-        class="block size-full object-contain select-none"
+        class="ctv:block ctv:size-full ctv:object-contain ctv:select-none"
         :alt="String(content)"
         draggable="false"
       />
@@ -43,31 +43,31 @@
 
     <template v-else-if="type === 'COMFYTV_AUDIO'">
       <div v-if="compact" :class="compactSummary">
-        <span class="text-[22px] leading-none">🔊</span>
+        <span class="ctv:text-[22px] ctv:leading-none">🔊</span>
       </div>
       <audio
         v-else
         :src="String(content)"
-        class="block w-full mt-3.5"
+        class="ctv:block ctv:w-full ctv:mt-3.5"
         controls preload="metadata"
       />
     </template>
 
     <template v-else-if="type === 'COMFYTV_STORYBOARD'">
-      <div v-if="compact" class="flex flex-col gap-0.5 size-full py-[3px] px-1 box-border overflow-hidden">
-        <div class="flex items-baseline gap-1 shrink-0">
-          <span class="text-[11px] leading-none">📋</span>
-          <span class="vp-sb-count text-xs font-bold leading-none text-[#d8b0ff]">{{ storyboardShots.length }}</span>
-          <span v-if="storyboardTotalSec" class="ml-auto text-3xs tracking-wide text-muted-foreground">{{ storyboardTotalSec }}s</span>
+      <div v-if="compact" class="ctv:flex ctv:flex-col ctv:gap-0.5 ctv:size-full ctv:py-[3px] ctv:px-1 ctv:box-border ctv:overflow-hidden">
+        <div class="ctv:flex ctv:items-baseline ctv:gap-1 ctv:shrink-0">
+          <span class="ctv:text-[11px] ctv:leading-none">📋</span>
+          <span class="vp-sb-count ctv:text-xs ctv:font-bold ctv:leading-none ctv:text-[#d8b0ff]">{{ storyboardShots.length }}</span>
+          <span v-if="storyboardTotalSec" class="ctv:ml-auto ctv:text-3xs ctv:tracking-wide ctv:text-muted-foreground">{{ storyboardTotalSec }}s</span>
         </div>
-        <ul class="list-none m-0 p-0 flex flex-col gap-px flex-auto min-h-0">
+        <ul class="ctv:list-none ctv:m-0 ctv:p-0 ctv:flex ctv:flex-col ctv:gap-px ctv:flex-auto ctv:min-h-0">
           <li v-for="(shot, i) in storyboardShots.slice(0, 3)" :key="i"
-              class="vp-sb-item flex items-baseline gap-[3px] text-3xs leading-tight whitespace-nowrap overflow-hidden">
-            <span class="shrink-0 font-semibold text-[#d8b0ff] min-w-2">{{ shot.shot_no ?? i + 1 }}</span>
-            <span class="flex-auto overflow-hidden text-ellipsis text-base-foreground/80">{{ shotSummary(shot) }}</span>
+              class="vp-sb-item ctv:flex ctv:items-baseline ctv:gap-[3px] ctv:text-3xs ctv:leading-tight ctv:whitespace-nowrap ctv:overflow-hidden">
+            <span class="ctv:shrink-0 ctv:font-semibold ctv:text-[#d8b0ff] ctv:min-w-2">{{ shot.shot_no ?? i + 1 }}</span>
+            <span class="ctv:flex-auto ctv:overflow-hidden ctv:text-ellipsis ctv:text-base-foreground/80">{{ shotSummary(shot) }}</span>
           </li>
         </ul>
-        <div v-if="storyboardShots.length > 3" class="vp-sb-more text-[8px] text-right italic text-muted-foreground/60">
+        <div v-if="storyboardShots.length > 3" class="vp-sb-more ctv:text-[8px] ctv:text-right ctv:italic ctv:text-muted-foreground/60">
           + {{ storyboardShots.length - 3 }} more
         </div>
       </div>
@@ -82,8 +82,8 @@
 
     <template v-else-if="type === 'COMFYTV_TIMELINE'">
       <div v-if="compact" :class="compactSummary">
-        <span class="text-[22px] leading-none">🎬</span>
-        <span class="vp-compact-count-text text-sm font-bold text-[#d8b0ff]">{{ timelineSegs.length }}</span>
+        <span class="ctv:text-[22px] ctv:leading-none">🎬</span>
+        <span class="vp-compact-count-text ctv:text-sm ctv:font-bold ctv:text-[#d8b0ff]">{{ timelineSegs.length }}</span>
       </div>
       <div v-else :class="storyboardListClass">
         <div v-for="(seg, i) in timelineSegs" :key="i" :class="shotRowClass">
@@ -105,9 +105,9 @@
         />
         <div v-else :class="emptyClass">{{ emptyLabel || '…' }}</div>
         <span v-if="batchImages.length > 0"
-              class="absolute top-0.5 left-0.5 pointer-events-none py-px px-[5px]
-                     text-3xs font-bold tracking-wide rounded-lg
-                     bg-[rgb(255_140_200/0.85)] text-white">
+              class="ctv:absolute ctv:top-0.5 ctv:left-0.5 ctv:pointer-events-none ctv:py-px ctv:px-[5px]
+                     ctv:text-3xs ctv:font-bold ctv:tracking-wide ctv:rounded-lg
+                     ctv:bg-[rgb(255_140_200/0.85)] ctv:text-white">
           {{ batchImages.length }}
         </span>
       </template>
@@ -122,14 +122,14 @@
           @click="clickMode === 'pick' ? onItemClick(img, i) : undefined"
         >
           <img :src="img.image_url" :alt="img.label || img.prompt || `item ${i + 1}`"
-               class="block size-full object-cover pointer-events-none" />
-          <span class="absolute bottom-0.5 left-0.5 py-px px-1 text-3xs font-bold rounded-sm
-                       bg-black/70 text-[#ffb0d8]">
+               class="ctv:block ctv:size-full ctv:object-cover ctv:pointer-events-none" />
+          <span class="ctv:absolute ctv:bottom-0.5 ctv:left-0.5 ctv:py-px ctv:px-1 ctv:text-3xs ctv:font-bold ctv:rounded-sm
+                       ctv:bg-black/70 ctv:text-[#ffb0d8]">
             {{ img.label ?? `#${img.index ?? i + 1}` }}
           </span>
           <span v-if="clickMode === 'pick'"
-                class="absolute top-0.5 right-0.5 py-px px-1 text-2xs rounded-sm
-                       bg-black/55 opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+                class="ctv:absolute ctv:top-0.5 ctv:right-0.5 ctv:py-px ctv:px-1 ctv:text-2xs ctv:rounded-sm
+                       ctv:bg-black/55 ctv:opacity-0 ctv:transition-opacity ctv:duration-150 ctv:group-hover:opacity-100">
             {{ clickHintIcon }}
           </span>
           <div :class="imgActionsClass">
@@ -149,20 +149,20 @@
     <Teleport to="body">
       <div
         v-if="lightboxUrl"
-        class="fixed inset-0 z-[9999] flex items-center justify-center cursor-zoom-out bg-black/90"
+        class="ctv:fixed ctv:inset-0 ctv:z-[9999] ctv:flex ctv:items-center ctv:justify-center ctv:cursor-zoom-out ctv:bg-black/90"
         role="dialog"
         @click.self="lightboxUrl = null"
       >
         <img :src="lightboxUrl"
-             class="max-w-[95vw] max-h-[95vh] object-contain cursor-default
-                    shadow-[0_8px_40px_rgb(0_0_0/0.6)]"
+             class="ctv:max-w-[95vw] ctv:max-h-[95vh] ctv:object-contain ctv:cursor-default
+                    ctv:shadow-[0_8px_40px_rgb(0_0_0/0.6)]"
              :alt="lightboxUrl" />
         <button
           type="button"
-          class="absolute top-4 right-4 size-9 flex items-center justify-center text-sm leading-none
-                 rounded-full cursor-pointer
-                 bg-black/55 text-white border border-white/30
-                 hover:bg-black/85 hover:border-white/55"
+          class="ctv:absolute ctv:top-4 ctv:right-4 ctv:size-9 ctv:flex ctv:items-center ctv:justify-center ctv:text-sm ctv:leading-none
+                 ctv:rounded-full ctv:cursor-pointer
+                 ctv:bg-black/55 ctv:text-white ctv:border ctv:border-white/30
+                 ctv:hover:bg-black/85 ctv:hover:border-white/55"
           :title="$t('stage.action.close')"
           @click="lightboxUrl = null"
         >✕</button>
@@ -318,80 +318,80 @@ const timelineSegs = computed<TimelineSeg[]>(() => {
 })
 
 const rootClass = computed(() => {
-  if (props.compact) return 'relative size-full overflow-hidden'
-  return 'relative flex flex-col min-h-12 text-xs overflow-hidden'
+  if (props.compact) return 'ctv:relative ctv:size-full ctv:overflow-hidden'
+  return 'ctv:relative ctv:flex ctv:flex-col ctv:min-h-12 ctv:text-xs ctv:overflow-hidden'
 })
 
 const TYPE_BADGE_COLORS: Record<string, string> = {
-  COMFYTV_TEXT:       'bg-[rgb(120_200_120/0.25)] text-[#b5e3a5]',
-  COMFYTV_IMAGE:      'bg-[rgb(78_168_255/0.25)] text-[#9dd0ff]',
-  COMFYTV_PANORAMA:   'bg-[rgb(78_168_255/0.25)] text-[#9dd0ff]',
-  COMFYTV_VIDEO:      'bg-[rgb(255_171_64/0.25)] text-[#ffd089]',
-  COMFYTV_AUDIO:      'bg-[rgb(255_100_100/0.22)] text-[#ffb0b0]',
-  COMFYTV_STORYBOARD: 'bg-[rgb(200_130_255/0.25)] text-[#d8b0ff]',
-  COMFYTV_IMAGES:     'bg-[rgb(255_140_200/0.25)] text-[#ffb0d8]',
+  COMFYTV_TEXT:       'ctv:bg-[rgb(120_200_120/0.25)] ctv:text-[#b5e3a5]',
+  COMFYTV_IMAGE:      'ctv:bg-[rgb(78_168_255/0.25)] ctv:text-[#9dd0ff]',
+  COMFYTV_PANORAMA:   'ctv:bg-[rgb(78_168_255/0.25)] ctv:text-[#9dd0ff]',
+  COMFYTV_VIDEO:      'ctv:bg-[rgb(255_171_64/0.25)] ctv:text-[#ffd089]',
+  COMFYTV_AUDIO:      'ctv:bg-[rgb(255_100_100/0.22)] ctv:text-[#ffb0b0]',
+  COMFYTV_STORYBOARD: 'ctv:bg-[rgb(200_130_255/0.25)] ctv:text-[#d8b0ff]',
+  COMFYTV_IMAGES:     'ctv:bg-[rgb(255_140_200/0.25)] ctv:text-[#ffb0d8]',
 }
 const typeBadgeClass = computed(() => {
-  const palette = TYPE_BADGE_COLORS[props.type] ?? 'bg-white/10 text-white/70'
-  return `absolute top-[3px] right-[3px] py-px px-[5px] text-3xs tracking-wide rounded-sm pointer-events-none ${palette}`
+  const palette = TYPE_BADGE_COLORS[props.type] ?? 'ctv:bg-white/10 ctv:text-white/70'
+  return `ctv:absolute ctv:top-[3px] ctv:right-[3px] ctv:py-px ctv:px-[5px] ctv:text-3xs ctv:tracking-wide ctv:rounded-sm ctv:pointer-events-none ${palette}`
 })
 
 const emptyClass = computed(() =>
   props.compact
-    ? 'flex items-center justify-center h-full p-1 text-3xs italic opacity-50'
-    : 'flex items-center justify-center h-full min-h-10 text-[11px] italic opacity-50'
+    ? 'ctv:flex ctv:items-center ctv:justify-center ctv:h-full ctv:p-1 ctv:text-3xs ctv:italic ctv:opacity-50'
+    : 'ctv:flex ctv:items-center ctv:justify-center ctv:h-full ctv:min-h-10 ctv:text-[11px] ctv:italic ctv:opacity-50'
 )
 
 const textClass = computed(() => {
   if (props.compact) {
-    return 'm-0 p-1 max-h-full text-2xs leading-[1.3] overflow-hidden whitespace-pre-wrap font-mono break-words text-base-foreground'
-         + ' [display:-webkit-box] [-webkit-line-clamp:5] [-webkit-box-orient:vertical]'
+    return 'ctv:m-0 ctv:p-1 ctv:max-h-full ctv:text-2xs ctv:leading-[1.3] ctv:overflow-hidden ctv:whitespace-pre-wrap ctv:font-mono ctv:break-words ctv:text-base-foreground'
+         + ' ctv:[display:-webkit-box] ctv:[-webkit-line-clamp:5] ctv:[-webkit-box-orient:vertical]'
   }
-  return 'm-0 py-0.5 px-1 max-h-[120px] overflow-auto whitespace-pre-wrap break-words'
-       + ' text-[11px] leading-snug font-mono text-base-foreground'
+  return 'ctv:m-0 ctv:py-0.5 ctv:px-1 ctv:max-h-[120px] ctv:overflow-auto ctv:whitespace-pre-wrap ctv:break-words'
+       + ' ctv:text-[11px] ctv:leading-snug ctv:font-mono ctv:text-base-foreground'
 })
 
 const imgClass = computed(() =>
   props.compact
-    ? 'block size-full object-cover'
-    : 'block w-full max-h-40 object-contain rounded-sm'
+    ? 'ctv:block ctv:size-full ctv:object-cover'
+    : 'ctv:block ctv:w-full ctv:max-h-40 ctv:object-contain ctv:rounded-sm'
 )
 
 const videoClass = computed(() =>
   props.compact
-    ? 'block size-full object-cover bg-black'
-    : 'block w-full max-h-52 rounded-sm bg-black'
+    ? 'ctv:block ctv:size-full ctv:object-cover ctv:bg-black'
+    : 'ctv:block ctv:w-full ctv:max-h-52 ctv:rounded-sm ctv:bg-black'
 )
 
-const compactSummary = 'flex flex-col items-center justify-center size-full gap-0.5'
+const compactSummary = 'ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:size-full ctv:gap-0.5'
 
-const storyboardListClass = 'flex flex-col gap-1 pt-3.5 max-h-56 overflow-auto'
-const shotRowClass = 'flex items-baseline gap-1.5 py-[3px] px-[5px] text-[11px] rounded-sm'
-  + ' bg-base-foreground/[0.03] border-l-2 border-[rgb(200_130_255/0.4)]'
-const shotNoClass     = 'shrink-0 font-bold text-[#d8b0ff]'
-const shotDurClass    = 'shrink-0 py-px px-1 text-2xs rounded-sm bg-base-foreground/5 text-muted-foreground'
-const shotPromptClass = 'flex-auto break-words text-base-foreground'
+const storyboardListClass = 'ctv:flex ctv:flex-col ctv:gap-1 ctv:pt-3.5 ctv:max-h-56 ctv:overflow-auto'
+const shotRowClass = 'ctv:flex ctv:items-baseline ctv:gap-1.5 ctv:py-[3px] ctv:px-[5px] ctv:text-[11px] ctv:rounded-sm'
+  + ' ctv:bg-base-foreground/[0.03] ctv:border-l-2 ctv:border-[rgb(200_130_255/0.4)]'
+const shotNoClass     = 'ctv:shrink-0 ctv:font-bold ctv:text-[#d8b0ff]'
+const shotDurClass    = 'ctv:shrink-0 ctv:py-px ctv:px-1 ctv:text-2xs ctv:rounded-sm ctv:bg-base-foreground/5 ctv:text-muted-foreground'
+const shotPromptClass = 'ctv:flex-auto ctv:break-words ctv:text-base-foreground'
 
-const COMFY_BTN_BASE = 'relative inline-flex items-center justify-center gap-2 cursor-pointer'
-  + ' touch-manipulation whitespace-nowrap appearance-none border-none transition-colors'
-  + ' disabled:pointer-events-none disabled:opacity-50'
+const COMFY_BTN_BASE = 'ctv:relative ctv:inline-flex ctv:items-center ctv:justify-center ctv:gap-2 ctv:cursor-pointer'
+  + ' ctv:touch-manipulation ctv:whitespace-nowrap ctv:appearance-none ctv:border-none ctv:transition-colors'
+  + ' ctv:disabled:pointer-events-none ctv:disabled:opacity-50'
 
-const imgActionsClass = 'absolute top-1 right-1 z-10 flex gap-1 opacity-0 transition-opacity duration-150'
-  + ' group-hover:opacity-100'
+const imgActionsClass = 'ctv:absolute ctv:top-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1 ctv:opacity-0 ctv:transition-opacity ctv:duration-150'
+  + ' ctv:group-hover:opacity-100'
 
 const imgActionBtn = COMFY_BTN_BASE
-  + ' size-5 p-0 rounded-sm text-sm'
-  + ' bg-white text-gray-600 hover:bg-white/90'
+  + ' ctv:size-5 ctv:p-0 ctv:rounded-sm ctv:text-sm'
+  + ' ctv:bg-white ctv:text-gray-600 ctv:hover:bg-white/90'
 
 function batchCellClass(selected: boolean) {
-  const base = 'group relative aspect-video rounded-sm overflow-hidden p-0 bg-black transition-colors'
-  const interactive = props.clickMode === 'pick' ? ' cursor-pointer' : ' cursor-default'
+  const base = 'ctv:group ctv:relative ctv:aspect-video ctv:rounded-sm ctv:overflow-hidden ctv:p-0 ctv:bg-black ctv:transition-colors'
+  const interactive = props.clickMode === 'pick' ? ' ctv:cursor-pointer' : ' ctv:cursor-default'
   if (selected) {
-    return base + interactive + ' ring-3 ring-inset ring-primary-background'
+    return base + interactive + ' ctv:ring-3 ctv:ring-inset ctv:ring-primary-background'
   }
   return base + interactive
-    + ' border border-border-default'
-    + (props.clickMode === 'pick' ? ' hover:border-primary-background' : '')
+    + ' ctv:border ctv:border-border-default'
+    + (props.clickMode === 'pick' ? ' ctv:hover:border-primary-background' : '')
 }
 </script>
 

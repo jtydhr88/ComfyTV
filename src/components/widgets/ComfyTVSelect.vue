@@ -9,60 +9,60 @@
     <ComboboxAnchor as-child>
       <ComboboxTrigger as-child>
         <button type="button"
-                class="flex w-full cursor-pointer items-center justify-between select-none
-                       h-8 px-3 py-1 text-xs rounded-lg
-                       bg-secondary-background text-base-foreground
-                       transition-all duration-200 ease-in-out
-                       hover:bg-secondary-background-hover
-                       border-[2.5px] border-solid border-transparent
-                       focus:border-node-component-border focus:outline-none
-                       data-[state=open]:border-node-component-border
-                       disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-secondary-background"
+                class="ctv:flex ctv:w-full ctv:cursor-pointer ctv:items-center ctv:justify-between ctv:select-none
+                       ctv:h-8 ctv:px-3 ctv:py-1 ctv:text-xs ctv:rounded-lg
+                       ctv:bg-secondary-background ctv:text-base-foreground
+                       ctv:transition-all ctv:duration-200 ctv:ease-in-out
+                       ctv:hover:bg-secondary-background-hover
+                       ctv:border-[2.5px] ctv:border-solid ctv:border-transparent
+                       ctv:focus:border-node-component-border ctv:focus:outline-none
+                       ctv:data-[state=open]:border-node-component-border
+                       ctv:disabled:cursor-not-allowed ctv:disabled:opacity-30 ctv:disabled:hover:bg-secondary-background"
                 :disabled="disabled"
                 :aria-expanded="isOpen">
-          <span class="truncate text-left">{{ display }}</span>
-          <span class="shrink-0 text-muted-foreground text-2xs">▾</span>
+          <span class="ctv:truncate ctv:text-left">{{ display }}</span>
+          <span class="ctv:shrink-0 ctv:text-muted-foreground ctv:text-2xs">▾</span>
         </button>
       </ComboboxTrigger>
     </ComboboxAnchor>
 
     <ComboboxPortal>
       <ComboboxContent
-        class="z-3000 overflow-hidden rounded-lg p-2 bg-base-background text-base-foreground
-               border border-solid border-border-default shadow-md
-               min-w-[var(--reka-combobox-trigger-width)] max-w-[360px]"
+        class="ctv:z-3000 ctv:overflow-hidden ctv:rounded-lg ctv:p-2 ctv:bg-base-background ctv:text-base-foreground
+               ctv:border ctv:border-solid ctv:border-border-default ctv:shadow-md
+               ctv:min-w-[var(--reka-combobox-trigger-width)] ctv:max-w-[360px]"
         position="popper"
         :side-offset="2"
         align="start"
       >
-        <div v-if="filterable" class="px-1 pb-2">
+        <div v-if="filterable" class="ctv:px-1 ctv:pb-2">
           <ComboboxInput
             v-model="query"
             :placeholder="filterPlaceholder ?? 'Filter…'"
             auto-focus
-            class="flex h-7 w-full min-w-0 appearance-none rounded-lg border-none
-                   bg-secondary-background px-3 py-1 text-xs text-base-foreground
-                   placeholder:text-muted-foreground
-                   focus-visible:ring-1 focus-visible:ring-border-default focus-visible:outline-none"
+            class="ctv:flex ctv:h-7 ctv:w-full ctv:min-w-0 ctv:appearance-none ctv:rounded-lg ctv:border-none
+                   ctv:bg-secondary-background ctv:px-3 ctv:py-1 ctv:text-xs ctv:text-base-foreground
+                   ctv:placeholder:text-muted-foreground
+                   ctv:focus-visible:ring-1 ctv:focus-visible:ring-border-default ctv:focus-visible:outline-none"
           />
         </div>
-        <div class="max-h-60 overflow-y-auto" role="presentation">
+        <div class="ctv:max-h-60 ctv:overflow-y-auto" role="presentation">
           <ComboboxItem
             v-for="opt in filteredOptions"
             :key="opt.value"
             :value="opt.value"
             :text-value="opt.label"
-            class="relative flex w-full cursor-pointer items-center justify-between select-none
-                   gap-3 rounded-sm px-2 py-2 text-xs outline-none
-                   hover:bg-secondary-background-hover
-                   data-[highlighted]:bg-secondary-background-hover
-                   data-[state=checked]:bg-secondary-background-selected
-                   data-[state=checked]:hover:bg-secondary-background-selected"
+            class="ctv:relative ctv:flex ctv:w-full ctv:cursor-pointer ctv:items-center ctv:justify-between ctv:select-none
+                   ctv:gap-3 ctv:rounded-sm ctv:px-2 ctv:py-2 ctv:text-xs ctv:outline-none
+                   ctv:hover:bg-secondary-background-hover
+                   ctv:data-[highlighted]:bg-secondary-background-hover
+                   ctv:data-[state=checked]:bg-secondary-background-selected
+                   ctv:data-[state=checked]:hover:bg-secondary-background-selected"
           >
-            <span class="truncate">{{ opt.label }}</span>
-            <ComboboxItemIndicator class="flex shrink-0 items-center justify-center text-base-foreground">✓</ComboboxItemIndicator>
+            <span class="ctv:truncate">{{ opt.label }}</span>
+            <ComboboxItemIndicator class="ctv:flex ctv:shrink-0 ctv:items-center ctv:justify-center ctv:text-base-foreground">✓</ComboboxItemIndicator>
           </ComboboxItem>
-          <div v-if="!filteredOptions.length" class="px-3 pb-2 text-xs text-muted-foreground">
+          <div v-if="!filteredOptions.length" class="ctv:px-3 ctv:pb-2 ctv:text-xs ctv:text-muted-foreground">
             no matches
           </div>
         </div>

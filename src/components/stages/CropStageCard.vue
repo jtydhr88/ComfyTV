@@ -1,16 +1,16 @@
 <template>
-  <div class="flex flex-col gap-1.5 size-full">
+  <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full">
     <CropCanvas
       :source-image-url="sourceImageUrl"
       :bounds="bounds"
       @update:bounds="onBoundsUpdate"
     />
 
-    <div class="text-2xs text-center py-0.5 tracking-wide">
-      <span v-if="!sourceImageUrl" class="text-muted-foreground">{{ $t('imageCrop.noInputImage') }}</span>
-      <span v-else-if="computing" class="text-muted-foreground">{{ $t('imageCrop.applying') }}</span>
-      <span v-else-if="state.output" class="text-success-background">{{ $t('imageCrop.applied') }}</span>
-      <span v-else class="text-muted-foreground">{{ $t('imageCrop.adjustToApply') }}</span>
+    <div class="ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide">
+      <span v-if="!sourceImageUrl" class="ctv:text-muted-foreground">{{ $t('imageCrop.noInputImage') }}</span>
+      <span v-else-if="computing" class="ctv:text-muted-foreground">{{ $t('imageCrop.applying') }}</span>
+      <span v-else-if="state.output" class="ctv:text-success-background">{{ $t('imageCrop.applied') }}</span>
+      <span v-else class="ctv:text-muted-foreground">{{ $t('imageCrop.adjustToApply') }}</span>
     </div>
 
     <StageCard

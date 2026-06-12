@@ -1,52 +1,52 @@
 <template>
-  <div class="flex flex-col gap-1.5 size-full">
-    <div class="relative w-full h-[280px] rounded-md overflow-hidden border border-border-subtle
-                bg-black flex items-center justify-center">
-      <div v-if="!sourceImageUrl" class="flex flex-col items-center justify-center gap-1.5 text-white/50">
-        <div class="text-[32px] opacity-60">⊟</div>
-        <div class="text-xs">{{ $t('imageCrop.noInputImage') }}</div>
+  <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full">
+    <div class="ctv:relative ctv:w-full ctv:h-[280px] ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle
+                ctv:bg-black ctv:flex ctv:items-center ctv:justify-center">
+      <div v-if="!sourceImageUrl" class="ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50">
+        <div class="ctv:text-[32px] ctv:opacity-60">⊟</div>
+        <div class="ctv:text-xs">{{ $t('imageCrop.noInputImage') }}</div>
       </div>
       <img
         v-else
         :src="sourceImageUrl"
-        class="max-w-full max-h-full object-contain select-none pointer-events-none"
+        class="ctv:max-w-full ctv:max-h-full ctv:object-contain ctv:select-none ctv:pointer-events-none"
         :style="previewStyle"
         draggable="false"
         @dragstart.prevent
       />
     </div>
 
-    <div class="text-2xs text-center py-0.5">
-      <span v-if="!sourceImageUrl" class="text-muted-foreground">{{ $t('imageCrop.noInputImage') }}</span>
-      <span v-else-if="computing" class="text-muted-foreground">{{ $t('mirror.applying') }}</span>
-      <span v-else-if="state.output" class="text-success-background">{{ $t('mirror.applied') }}</span>
-      <span v-else class="text-muted-foreground">{{ $t('mirror.adjustToApply') }}</span>
+    <div class="ctv:text-2xs ctv:text-center ctv:py-0.5">
+      <span v-if="!sourceImageUrl" class="ctv:text-muted-foreground">{{ $t('imageCrop.noInputImage') }}</span>
+      <span v-else-if="computing" class="ctv:text-muted-foreground">{{ $t('mirror.applying') }}</span>
+      <span v-else-if="state.output" class="ctv:text-success-background">{{ $t('mirror.applied') }}</span>
+      <span v-else class="ctv:text-muted-foreground">{{ $t('mirror.adjustToApply') }}</span>
     </div>
 
-    <div class="flex gap-1.5">
+    <div class="ctv:flex ctv:gap-1.5">
       <button
         type="button"
-        class="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded
-               text-xs border cursor-pointer"
+        class="ctv:flex-1 ctv:flex ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:py-1.5 ctv:px-2.5 ctv:rounded
+               ctv:text-xs ctv:border ctv:cursor-pointer"
         :class="flipH
-          ? 'bg-secondary-background-selected border-primary-background text-primary-background font-semibold'
-          : 'bg-secondary-background border-border-subtle text-base-foreground hover:bg-secondary-background-hover'"
+          ? 'ctv:bg-secondary-background-selected ctv:border-primary-background ctv:text-primary-background ctv:font-semibold'
+          : 'ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:bg-secondary-background-hover'"
         :title="$t('mirror.horizontal')"
         @click="flipH = !flipH"
       >
-        <span class="text-sm leading-none">⇋</span> {{ $t('mirror.horizontal') }}
+        <span class="ctv:text-sm ctv:leading-none">⇋</span> {{ $t('mirror.horizontal') }}
       </button>
       <button
         type="button"
-        class="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded
-               text-xs border cursor-pointer"
+        class="ctv:flex-1 ctv:flex ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:py-1.5 ctv:px-2.5 ctv:rounded
+               ctv:text-xs ctv:border ctv:cursor-pointer"
         :class="flipV
-          ? 'bg-secondary-background-selected border-primary-background text-primary-background font-semibold'
-          : 'bg-secondary-background border-border-subtle text-base-foreground hover:bg-secondary-background-hover'"
+          ? 'ctv:bg-secondary-background-selected ctv:border-primary-background ctv:text-primary-background ctv:font-semibold'
+          : 'ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:bg-secondary-background-hover'"
         :title="$t('mirror.vertical')"
         @click="flipV = !flipV"
       >
-        <span class="text-sm leading-none">⇅</span> {{ $t('mirror.vertical') }}
+        <span class="ctv:text-sm ctv:leading-none">⇅</span> {{ $t('mirror.vertical') }}
       </button>
     </div>
 

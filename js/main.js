@@ -1,4 +1,4 @@
-(function() {  "use strict";  try {    if (typeof document != "undefined") {      var elementStyle = document.createElement("style");      elementStyle.appendChild(document.createTextNode(`.ctv-num-root {  display: flex;  align-items: center;  width: 100%;  min-width: 0;  background: var(--secondary-background, rgba(255,255,255,0.04));  border-radius: 8px;  box-sizing: border-box;}.ctv-num-root .ctv-num-input,.ctv-num-root input {  appearance: none;  background: transparent;  border: none;  border-radius: 8px;  padding: 6px 12px;  color: var(--base-foreground, #ddd);  font-size: 12px;  font-family: inherit;  width: 100%;  min-width: 0;  flex: 1;  outline: none;  text-align: left;  box-sizing: border-box;}.ctv-num-root input::placeholder { color: var(--muted-foreground, #888);}.ctv-num-root:focus-within {  box-shadow: 0 0 0 1px var(--border-default, rgba(255,255,255,0.25));}.ctv-num-root input:disabled { opacity: 0.5; pointer-events: none;}.ctv-num-btn {  flex-shrink: 0;  appearance: none;  background: transparent;  border: none;  color: var(--muted-foreground, #888);  font-size: 13px;  line-height: 1;  width: 22px;  height: 100%;  min-height: 28px;  cursor: pointer;  user-select: none;  display: inline-flex;  align-items: center;  justify-content: center;}.ctv-num-btn:hover { color: var(--base-foreground, #ddd);}.ctv-num-btn[data-disabled] { opacity: 0.4; pointer-events: none;}.ctv-toggle {  display: inline-flex;  align-items: center;  flex-shrink: 0;  width: 32px;  height: 18px;  padding: 2px;  border: none;  border-radius: 9999px;  background: var(--secondary-background, rgba(255,255,255,0.12));  cursor: pointer;  transition: background 0.15s ease;}.ctv-toggle[data-state='checked'] {  background: var(--primary-background, rgba(78,168,255,0.6));}.ctv-toggle:disabled,.ctv-toggle[data-disabled] {  opacity: 0.5;  cursor: not-allowed;  pointer-events: none;}.ctv-toggle:focus-visible {  outline: none;  box-shadow: 0 0 0 1px var(--border-default, rgba(255,255,255,0.25));}.ctv-toggle-thumb {  display: block;  width: 14px;  height: 14px;  border-radius: 9999px;  background: #fff;  transition: transform 0.15s ease;  transform: translateX(0);  will-change: transform;  pointer-events: none;}.ctv-toggle[data-state='checked'] .ctv-toggle-thumb {  transform: translateX(14px);}.ctv-text-input,.ctv-text-input input,.ctv-text-input textarea {  appearance: none;  background: var(--secondary-background, rgba(255,255,255,0.04));  border: none;  border-radius: 8px;  padding: 6px 12px;  color: var(--base-foreground, #ddd);  font-size: 12px;  font-family: inherit;  width: 100%;  min-width: 0;  outline: none;  box-sizing: border-box;}.ctv-text-input::placeholder,.ctv-text-input input::placeholder,.ctv-text-input textarea::placeholder { color: var(--muted-foreground, #888);}.ctv-text-area { line-height: 1.4; resize: vertical; min-height: 48px; overflow: hidden;}.ctv-text-input:focus-visible,.ctv-text-input input:focus-visible,.ctv-text-input textarea:focus-visible {  box-shadow: 0 0 0 1px var(--border-default, rgba(255,255,255,0.25));}.ctv-text-input:disabled,.ctv-text-input input:disabled,.ctv-text-input textarea:disabled { opacity: 0.5; pointer-events: none;}.tippy-box[data-animation=fade][data-state=hidden]{opacity:0}[data-tippy-root]{max-width:calc(100vw - 10px)}.tippy-box{position:relative;background-color:#333;color:#fff;border-radius:4px;font-size:14px;line-height:1.4;white-space:normal;outline:0;transition-property:transform,visibility,opacity}.tippy-box[data-placement^=top]>.tippy-arrow{bottom:0}.tippy-box[data-placement^=top]>.tippy-arrow:before{bottom:-7px;left:0;border-width:8px 8px 0;border-top-color:initial;transform-origin:center top}.tippy-box[data-placement^=bottom]>.tippy-arrow{top:0}.tippy-box[data-placement^=bottom]>.tippy-arrow:before{top:-7px;left:0;border-width:0 8px 8px;border-bottom-color:initial;transform-origin:center bottom}.tippy-box[data-placement^=left]>.tippy-arrow{right:0}.tippy-box[data-placement^=left]>.tippy-arrow:before{border-width:8px 0 8px 8px;border-left-color:initial;right:-7px;transform-origin:center left}.tippy-box[data-placement^=right]>.tippy-arrow{left:0}.tippy-box[data-placement^=right]>.tippy-arrow:before{left:-7px;border-width:8px 8px 8px 0;border-right-color:initial;transform-origin:center right}.tippy-box[data-inertia][data-state=visible]{transition-timing-function:cubic-bezier(.54,1.5,.38,1.11)}.tippy-arrow{width:16px;height:16px;color:#333}.tippy-arrow:before{content:"";position:absolute;border-color:transparent;border-style:solid}.tippy-content{position:relative;padding:5px 9px;z-index:1}.tippy-box[data-theme~='comfytv-transparent'] {\r  background: transparent;\r  box-shadow: none;}.tippy-box[data-theme~='comfytv-transparent'] > .tippy-content { padding: 0;}.tippy-box[data-theme~='comfytv-tooltip'] {\r  background: var(--interface-menu-surface, #1a1a1a);\r  border: 1px solid var(--border-default, #3a3a3a);\r  color: var(--base-foreground, #e0e0e0);\r  font-size: 11px;\r  line-height: 1.45;\r  border-radius: 4px;\r  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);}.tippy-box[data-theme~='comfytv-tooltip'] > .tippy-content {\r  padding: 6px 8px;\r  white-space: pre-wrap;\r  word-break: break-word;}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='top']    > .tippy-arrow::before { border-top-color: var(--border-default, #3a3a3a);}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='bottom'] > .tippy-arrow::before { border-bottom-color: var(--border-default, #3a3a3a);}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='left']   > .tippy-arrow::before { border-left-color: var(--border-default, #3a3a3a);}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='right']  > .tippy-arrow::before { border-right-color: var(--border-default, #3a3a3a);}\r.comfytv-prompt-editor[data-v-ef168908] p { margin: 0;}.comfytv-prompt-editor[data-v-ef168908] p.is-editor-empty:first-child::before {\r  content: attr(data-placeholder);\r  color: var(--muted-foreground, #888);\r  opacity: 0.65;\r  float: left;\r  height: 0;\r  pointer-events: none;}\r.ctv-batch-grid[data-v-06cfa3e9] {\r  display: grid;\r  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));\r  gap: 4px;\r  padding-top: 14px;\r  max-height: 320px;\r  overflow: auto;}\r.ctv-input-tile:hover .ctv-tile-disconnect[data-v-a9856bb1] { display: inline-flex;}.ctv-picker-input.ctv-src-upstream         .ctv-src-tag[data-v-a9856bb1] { background: color-mix(in srgb, var(--primary-background) 22%, transparent); color: var(--primary-background);}.ctv-picker-input.ctv-src-upstream-pending .ctv-src-tag[data-v-a9856bb1] { background: color-mix(in srgb, var(--warning-background) 18%, transparent); color: var(--warning-background);}\r.ctv-camera-dropdown option[data-v-45c9df89] {\r  background: var(--interface-menu-surface, #1a1a2e);\r  color: var(--base-foreground, #e0e0e0);}\r.ctv-crop-select[data-v-0594121d] option {\r  background: var(--interface-menu-surface, #1a1a1f);\r  color: var(--base-foreground, #ddd);}.ctv-bound-input[data-v-0594121d] { -moz-appearance: textfield;}.ctv-bound-input[data-v-0594121d]::-webkit-inner-spin-button,\r.ctv-bound-input[data-v-0594121d]::-webkit-outer-spin-button {\r  -webkit-appearance: none;}\r.ctv-pano-select[data-v-966a504e] {  appearance: none;  background-color: var(--secondary-background, rgb(255 255 255 / 0.04));  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6' viewBox='0 0 8 6'><path d='M0 0l4 6 4-6z' fill='%23bbb'/></svg>");  background-repeat: no-repeat;  background-position: right 6px center;  color: var(--base-foreground, rgb(255 255 255 / 0.9));  border: 1px solid var(--border-subtle, rgb(255 255 255 / 0.15));  border-radius: 4px;  padding: 3px 18px 3px 6px;  font-size: 11px;  font-family: ui-monospace, SFMono-Regular, monospace;  cursor: pointer;  outline: none;  min-width: 70px;}.ctv-pano-select[data-v-966a504e]:hover { border-color: var(--border-default, rgb(255 255 255 / 0.3));}.ctv-pano-select[data-v-966a504e]:focus { border-color: var(--primary-background, rgb(78 168 255 / 0.6));}.ctv-pano-select option[data-v-966a504e] { background: var(--interface-menu-surface, #1a1a2e); color: var(--base-foreground, #e0e0e0);}.ctv-pano-select[data-v-d6d9757a] {  appearance: none;  background-color: var(--secondary-background, rgb(255 255 255 / 0.04));  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6' viewBox='0 0 8 6'><path d='M0 0l4 6 4-6z' fill='%23bbb'/></svg>");  background-repeat: no-repeat;  background-position: right 6px center;  color: var(--base-foreground, rgb(255 255 255 / 0.9));  border: 1px solid var(--border-subtle, rgb(255 255 255 / 0.15));  border-radius: 4px;  padding: 3px 18px 3px 6px;  font-size: 11px;  font-family: ui-monospace, SFMono-Regular, monospace;  cursor: pointer;  outline: none;  min-width: 70px;}.ctv-pano-select[data-v-d6d9757a]:hover { border-color: var(--border-default, rgb(255 255 255 / 0.3));}.ctv-pano-select[data-v-d6d9757a]:focus { border-color: var(--primary-background, rgb(78 168 255 / 0.6));}.ctv-pano-select option[data-v-d6d9757a] { background: var(--interface-menu-surface, #1a1a2e); color: var(--base-foreground, #e0e0e0);}.ctv-pad-area[data-v-9808b8b2] {\r  background-image:\r    linear-gradient(45deg, rgba(255,255,255,0.04) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.04) 75%),\r    linear-gradient(45deg, rgba(255,255,255,0.04) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.04) 75%);\r  background-size: 12px 12px;\r  background-position: 0 0, 6px 6px;\r  border: 1px dashed color-mix(in srgb, var(--primary-background, #4ea8ff) 45%, transparent);}.ctv-outpaint-handle[data-v-9808b8b2]::before {\r  content: '';\r  position: absolute;\r  background: color-mix(in srgb, var(--primary-background, #4ea8ff) 65%, transparent);\r  border-radius: 2px;}.ctv-handle-left[data-v-9808b8b2]::before,  .ctv-handle-right[data-v-9808b8b2]::before  { width: 3px; height: 100%;}.ctv-handle-top[data-v-9808b8b2]::before,   .ctv-handle-bottom[data-v-9808b8b2]::before { height: 3px; width: 100%;}.ctv-outpaint-handle[data-v-9808b8b2]:hover::before { background: var(--primary-background, #4ea8ff);}\r.ctv-entry-table th[data-v-023e7761],\r.ctv-entry-table td[data-v-023e7761] {\r  text-align: left;\r  padding: 6px 8px;\r  border-bottom: 1px solid var(--border-subtle, #2a2a2a);\r  vertical-align: top;}.ctv-entry-table th[data-v-023e7761] {\r  font-weight: 600;\r  color: var(--muted-foreground, #aaa);}\r/*! tailwindcss v4.3.0 | MIT License | https://tailwindcss.com */@layer properties {  @supports (((-webkit-hyphens: none)) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {    *, :before, :after, ::backdrop {      --tw-translate-x: 0;      --tw-translate-y: 0;      --tw-translate-z: 0;      --tw-rotate-x: initial;      --tw-rotate-y: initial;      --tw-rotate-z: initial;      --tw-skew-x: initial;      --tw-skew-y: initial;      --tw-border-style: solid;      --tw-gradient-position: initial;      --tw-gradient-from: #0000;      --tw-gradient-via: #0000;      --tw-gradient-to: #0000;      --tw-gradient-stops: initial;      --tw-gradient-via-stops: initial;      --tw-gradient-from-position: 0%;      --tw-gradient-via-position: 50%;      --tw-gradient-to-position: 100%;      --tw-leading: initial;      --tw-font-weight: initial;      --tw-tracking: initial;      --tw-shadow: 0 0 #0000;      --tw-shadow-color: initial;      --tw-shadow-alpha: 100%;      --tw-inset-shadow: 0 0 #0000;      --tw-inset-shadow-color: initial;      --tw-inset-shadow-alpha: 100%;      --tw-ring-color: initial;      --tw-ring-shadow: 0 0 #0000;      --tw-inset-ring-color: initial;      --tw-inset-ring-shadow: 0 0 #0000;      --tw-ring-inset: initial;      --tw-ring-offset-width: 0px;      --tw-ring-offset-color: #fff;      --tw-ring-offset-shadow: 0 0 #0000;      --tw-outline-style: solid;      --tw-blur: initial;      --tw-brightness: initial;      --tw-contrast: initial;      --tw-grayscale: initial;      --tw-hue-rotate: initial;      --tw-invert: initial;      --tw-opacity: initial;      --tw-saturate: initial;      --tw-sepia: initial;      --tw-drop-shadow: initial;      --tw-drop-shadow-color: initial;      --tw-drop-shadow-alpha: 100%;      --tw-drop-shadow-size: initial;      --tw-backdrop-blur: initial;      --tw-backdrop-brightness: initial;      --tw-backdrop-contrast: initial;      --tw-backdrop-grayscale: initial;      --tw-backdrop-hue-rotate: initial;      --tw-backdrop-invert: initial;      --tw-backdrop-opacity: initial;      --tw-backdrop-saturate: initial;      --tw-backdrop-sepia: initial;      --tw-duration: initial;      --tw-ease: initial;      --tw-scale-x: 1;      --tw-scale-y: 1;      --tw-scale-z: 1;    }  }}@layer theme {  :root, :host {    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",    monospace;    --color-gray-600: oklch(44.6% .03 256.802);    --color-black: #000;    --color-white: #fff;    --spacing: .25rem;    --container-md: 28rem;    --text-xs: .75rem;    --text-xs--line-height: calc(1 / .75);    --text-sm: .875rem;    --text-sm--line-height: calc(1.25 / .875);    --text-lg: 1.125rem;    --text-lg--line-height: calc(1.75 / 1.125);    --font-weight-medium: 500;    --font-weight-semibold: 600;    --font-weight-bold: 700;    --tracking-wide: .025em;    --tracking-wider: .05em;    --leading-tight: 1.25;    --leading-snug: 1.375;    --radius-sm: .25rem;    --radius-md: .375rem;    --radius-lg: .5rem;    --ease-in: cubic-bezier(.4, 0, 1, 1);    --ease-out: cubic-bezier(0, 0, .2, 1);    --ease-in-out: cubic-bezier(.4, 0, .2, 1);    --animate-pulse: pulse 2s cubic-bezier(.4, 0, .6, 1) infinite;    --blur-sm: 8px;    --aspect-video: 16 / 9;    --default-transition-duration: .15s;    --default-transition-timing-function: cubic-bezier(.4, 0, .2, 1);    --text-2xs: .625rem;    --text-2xs--line-height: calc(1 / .625);    --text-3xs: .5625rem;    --text-3xs--line-height: calc(1 / .5625);  }}@layer utilities {  .pointer-events-none {    pointer-events: none;  }  .absolute {    position: absolute;  }  .fixed {    position: fixed;  }  .relative {    position: relative;  }  .sticky {    position: sticky;  }  .inset-0 {    inset: calc(var(--spacing) * 0);  }  .inset-x-0 {    inset-inline: calc(var(--spacing) * 0);  }  .-top-2 {    top: calc(var(--spacing) * -2);  }  .top-0 {    top: calc(var(--spacing) * 0);  }  .top-0\\.5 {    top: calc(var(--spacing) * .5);  }  .top-1 {    top: calc(var(--spacing) * 1);  }  .top-1\\/2 {    top: 50%;  }  .top-2 {    top: calc(var(--spacing) * 2);  }  .top-4 {    top: calc(var(--spacing) * 4);  }  .top-\\[3px\\] {    top: 3px;  }  .right-0 {    right: calc(var(--spacing) * 0);  }  .right-0\\.5 {    right: calc(var(--spacing) * .5);  }  .right-1 {    right: calc(var(--spacing) * 1);  }  .right-2 {    right: calc(var(--spacing) * 2);  }  .right-4 {    right: calc(var(--spacing) * 4);  }  .right-\\[3px\\] {    right: 3px;  }  .right-\\[14px\\] {    right: 14px;  }  .bottom-0 {    bottom: calc(var(--spacing) * 0);  }  .bottom-0\\.5 {    bottom: calc(var(--spacing) * .5);  }  .bottom-2 {    bottom: calc(var(--spacing) * 2);  }  .bottom-4 {    bottom: calc(var(--spacing) * 4);  }  .bottom-px {    bottom: 1px;  }  .left-0 {    left: calc(var(--spacing) * 0);  }  .left-0\\.5 {    left: calc(var(--spacing) * .5);  }  .left-2 {    left: calc(var(--spacing) * 2);  }  .z-10 {    z-index: 10;  }  .z-3000 {    z-index: 3000;  }  .z-\\[1\\] {    z-index: 1;  }  .z-\\[2\\] {    z-index: 2;  }  .z-\\[3\\] {    z-index: 3;  }  .z-\\[5\\] {    z-index: 5;  }  .z-\\[6\\] {    z-index: 6;  }  .z-\\[7\\] {    z-index: 7;  }  .z-\\[9999\\] {    z-index: 9999;  }  .z-\\[10000\\] {    z-index: 10000;  }  .container {    width: 100%;  }  @media (min-width: 40rem) {    .container {      max-width: 40rem;    }  }  @media (min-width: 48rem) {    .container {      max-width: 48rem;    }  }  @media (min-width: 64rem) {    .container {      max-width: 64rem;    }  }  @media (min-width: 80rem) {    .container {      max-width: 80rem;    }  }  @media (min-width: 96rem) {    .container {      max-width: 96rem;    }  }  .m-0 {    margin: calc(var(--spacing) * 0);  }  .m-0\\.5 {    margin: calc(var(--spacing) * .5);  }  .m-1 {    margin: calc(var(--spacing) * 1);  }  .-mx-2\\.5 {    margin-inline: calc(var(--spacing) * -2.5);  }  .mx-px {    margin-inline: 1px;  }  .my-1\\.5 {    margin-block: calc(var(--spacing) * 1.5);  }  .-mt-2 {    margin-top: calc(var(--spacing) * -2);  }  .mt-0\\.5 {    margin-top: calc(var(--spacing) * .5);  }  .mt-1 {    margin-top: calc(var(--spacing) * 1);  }  .mt-3\\.5 {    margin-top: calc(var(--spacing) * 3.5);  }  .mt-4 {    margin-top: calc(var(--spacing) * 4);  }  .mr-1 {    margin-right: calc(var(--spacing) * 1);  }  .-mb-px {    margin-bottom: -1px;  }  .mb-1 {    margin-bottom: calc(var(--spacing) * 1);  }  .mb-1\\.5 {    margin-bottom: calc(var(--spacing) * 1.5);  }  .mb-2 {    margin-bottom: calc(var(--spacing) * 2);  }  .mb-2\\.5 {    margin-bottom: calc(var(--spacing) * 2.5);  }  .mb-\\[3px\\] {    margin-bottom: 3px;  }  .-ml-px {    margin-left: -1px;  }  .ml-0\\.5 {    margin-left: calc(var(--spacing) * .5);  }  .ml-auto {    margin-left: auto;  }  .box-border {    box-sizing: border-box;  }  .box-content {    box-sizing: content-box;  }  .\\[display\\:-webkit-box\\] {    display: -webkit-box;  }  .block {    display: block;  }  .flex {    display: flex;  }  .grid {    display: grid;  }  .hidden {    display: none;  }  .inline-block {    display: inline-block;  }  .inline-flex {    display: inline-flex;  }  .table {    display: table;  }  .aspect-video {    aspect-ratio: var(--aspect-video);  }  .size-2 {    width: calc(var(--spacing) * 2);    height: calc(var(--spacing) * 2);  }  .size-3 {    width: calc(var(--spacing) * 3);    height: calc(var(--spacing) * 3);  }  .size-5 {    width: calc(var(--spacing) * 5);    height: calc(var(--spacing) * 5);  }  .size-6 {    width: calc(var(--spacing) * 6);    height: calc(var(--spacing) * 6);  }  .size-7 {    width: calc(var(--spacing) * 7);    height: calc(var(--spacing) * 7);  }  .size-9 {    width: calc(var(--spacing) * 9);    height: calc(var(--spacing) * 9);  }  .size-\\[22px\\] {    width: 22px;    height: 22px;  }  .size-full {    width: 100%;    height: 100%;  }  .h-1\\.5 {    height: calc(var(--spacing) * 1.5);  }  .h-4 {    height: calc(var(--spacing) * 4);  }  .h-6 {    height: calc(var(--spacing) * 6);  }  .h-7 {    height: calc(var(--spacing) * 7);  }  .h-8 {    height: calc(var(--spacing) * 8);  }  .h-9 {    height: calc(var(--spacing) * 9);  }  .h-10 {    height: calc(var(--spacing) * 10);  }  .h-11 {    height: calc(var(--spacing) * 11);  }  .h-80 {    height: calc(var(--spacing) * 80);  }  .h-\\[13px\\] {    height: 13px;  }  .h-\\[18px\\] {    height: 18px;  }  .h-\\[72px\\] {    height: 72px;  }  .h-\\[76px\\] {    height: 76px;  }  .h-\\[280px\\] {    height: 280px;  }  .h-\\[340px\\] {    height: 340px;  }  .h-\\[350px\\] {    height: 350px;  }  .h-full {    height: 100%;  }  .h-px {    height: 1px;  }  .max-h-40 {    max-height: calc(var(--spacing) * 40);  }  .max-h-44 {    max-height: calc(var(--spacing) * 44);  }  .max-h-52 {    max-height: calc(var(--spacing) * 52);  }  .max-h-56 {    max-height: calc(var(--spacing) * 56);  }  .max-h-60 {    max-height: calc(var(--spacing) * 60);  }  .max-h-80 {    max-height: calc(var(--spacing) * 80);  }  .max-h-\\[95vh\\] {    max-height: 95vh;  }  .max-h-\\[120px\\] {    max-height: 120px;  }  .max-h-\\[360px\\] {    max-height: 360px;  }  .max-h-\\[calc\\(100vh-48px\\)\\] {    max-height: calc(100vh - 48px);  }  .max-h-full {    max-height: 100%;  }  .min-h-0 {    min-height: calc(var(--spacing) * 0);  }  .min-h-10 {    min-height: calc(var(--spacing) * 10);  }  .min-h-11 {    min-height: calc(var(--spacing) * 11);  }  .min-h-12 {    min-height: calc(var(--spacing) * 12);  }  .min-h-14 {    min-height: calc(var(--spacing) * 14);  }  .min-h-20 {    min-height: calc(var(--spacing) * 20);  }  .min-h-\\[22px\\] {    min-height: 22px;  }  .min-h-\\[116px\\] {    min-height: 116px;  }  .min-h-\\[280px\\] {    min-height: 280px;  }  .w-0\\.5 {    width: calc(var(--spacing) * .5);  }  .w-2 {    width: calc(var(--spacing) * 2);  }  .w-2\\.5 {    width: calc(var(--spacing) * 2.5);  }  .w-3 {    width: calc(var(--spacing) * 3);  }  .w-4 {    width: calc(var(--spacing) * 4);  }  .w-7 {    width: calc(var(--spacing) * 7);  }  .w-12 {    width: calc(var(--spacing) * 12);  }  .w-14 {    width: calc(var(--spacing) * 14);  }  .w-24 {    width: calc(var(--spacing) * 24);  }  .w-\\[38px\\] {    width: 38px;  }  .w-\\[76px\\] {    width: 76px;  }  .w-\\[140px\\] {    width: 140px;  }  .w-\\[180px\\] {    width: 180px;  }  .w-auto {    width: auto;  }  .w-full {    width: 100%;  }  .w-px {    width: 1px;  }  .max-w-\\[90px\\] {    max-width: 90px;  }  .max-w-\\[95vw\\] {    max-width: 95vw;  }  .max-w-\\[360px\\] {    max-width: 360px;  }  .max-w-full {    max-width: 100%;  }  .max-w-md {    max-width: var(--container-md);  }  .min-w-0 {    min-width: calc(var(--spacing) * 0);  }  .min-w-2 {    min-width: calc(var(--spacing) * 2);  }  .min-w-4 {    min-width: calc(var(--spacing) * 4);  }  .min-w-8 {    min-width: calc(var(--spacing) * 8);  }  .min-w-9 {    min-width: calc(var(--spacing) * 9);  }  .min-w-64 {    min-width: calc(var(--spacing) * 64);  }  .min-w-\\[44px\\] {    min-width: 44px;  }  .min-w-\\[60px\\] {    min-width: 60px;  }  .min-w-\\[var\\(--reka-combobox-trigger-width\\)\\] {    min-width: var(--reka-combobox-trigger-width);  }  .flex-1 {    flex: 1;  }  .flex-auto {    flex: auto;  }  .flex-shrink {    flex-shrink: 1;  }  .shrink-0 {    flex-shrink: 0;  }  .border-collapse {    border-collapse: collapse;  }  .-translate-x-1\\/2 {    --tw-translate-x: calc(calc(1 / 2 * 100%) * -1);    translate: var(--tw-translate-x) var(--tw-translate-y);  }  .-translate-y-1\\/2 {    --tw-translate-y: calc(calc(1 / 2 * 100%) * -1);    translate: var(--tw-translate-x) var(--tw-translate-y);  }  .transform {    transform: var(--tw-rotate-x, ) var(--tw-rotate-y, ) var(--tw-rotate-z, ) var(--tw-skew-x, ) var(--tw-skew-y, );  }  .animate-pulse {    animation: var(--animate-pulse);  }  .cursor-default {    cursor: default;  }  .cursor-ew-resize {    cursor: ew-resize;  }  .cursor-grab {    cursor: grab;  }  .cursor-grabbing {    cursor: grabbing;  }  .cursor-move {    cursor: move;  }  .cursor-none {    cursor: none;  }  .cursor-not-allowed {    cursor: not-allowed;  }  .cursor-ns-resize {    cursor: ns-resize;  }  .cursor-pointer {    cursor: pointer;  }  .cursor-zoom-out {    cursor: zoom-out;  }  .touch-manipulation {    touch-action: manipulation;  }  .touch-none {    touch-action: none;  }  .resize {    resize: both;  }  .resize-none {    resize: none;  }  .resize-y {    resize: vertical;  }  .list-none {    list-style-type: none;  }  .appearance-none {    appearance: none;  }  .grid-cols-4 {    grid-template-columns: repeat(4, minmax(0, 1fr));  }  .grid-cols-\\[60px_1fr\\] {    grid-template-columns: 60px 1fr;  }  .grid-cols-\\[64px_1fr_48px\\] {    grid-template-columns: 64px 1fr 48px;  }  .grid-cols-\\[80px_1fr_36px\\] {    grid-template-columns: 80px 1fr 36px;  }  .grid-cols-\\[max-content_1fr\\] {    grid-template-columns: max-content 1fr;  }  .grid-cols-\\[repeat\\(auto-fill\\,minmax\\(110px\\,1fr\\)\\)\\] {    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));  }  .flex-col {    flex-direction: column;  }  .flex-wrap {    flex-wrap: wrap;  }  .items-baseline {    align-items: baseline;  }  .items-center {    align-items: center;  }  .items-start {    align-items: flex-start;  }  .justify-around {    justify-content: space-around;  }  .justify-between {    justify-content: space-between;  }  .justify-center {    justify-content: center;  }  .justify-end {    justify-content: flex-end;  }  .gap-0\\.5 {    gap: calc(var(--spacing) * .5);  }  .gap-1 {    gap: calc(var(--spacing) * 1);  }  .gap-1\\.5 {    gap: calc(var(--spacing) * 1.5);  }  .gap-2 {    gap: calc(var(--spacing) * 2);  }  .gap-2\\.5 {    gap: calc(var(--spacing) * 2.5);  }  .gap-3 {    gap: calc(var(--spacing) * 3);  }  .gap-\\[3px\\] {    gap: 3px;  }  .gap-px {    gap: 1px;  }  .gap-x-2\\.5 {    column-gap: calc(var(--spacing) * 2.5);  }  .gap-y-\\[3px\\] {    row-gap: 3px;  }  .self-start {    align-self: flex-start;  }  .truncate {    text-overflow: ellipsis;    white-space: nowrap;    overflow: hidden;  }  .overflow-auto {    overflow: auto;  }  .overflow-hidden {    overflow: hidden;  }  .overflow-x-auto {    overflow-x: auto;  }  .overflow-y-auto {    overflow-y: auto;  }  .overflow-y-hidden {    overflow-y: hidden;  }  .rounded {    border-radius: .25rem;  }  .rounded-full {    border-radius: 3.40282e38px;  }  .rounded-lg {    border-radius: var(--radius-lg);  }  .rounded-md {    border-radius: var(--radius-md);  }  .rounded-none {    border-radius: 0;  }  .rounded-sm {    border-radius: var(--radius-sm);  }  .rounded-t {    border-top-left-radius: .25rem;    border-top-right-radius: .25rem;  }  .border {    border-style: var(--tw-border-style);    border-width: 1px;  }  .border-0 {    border-style: var(--tw-border-style);    border-width: 0;  }  .border-2 {    border-style: var(--tw-border-style);    border-width: 2px;  }  .border-\\[2\\.5px\\] {    border-style: var(--tw-border-style);    border-width: 2.5px;  }  .border-t {    border-top-style: var(--tw-border-style);    border-top-width: 1px;  }  .border-b {    border-bottom-style: var(--tw-border-style);    border-bottom-width: 1px;  }  .border-b-0 {    border-bottom-style: var(--tw-border-style);    border-bottom-width: 0;  }  .border-l {    border-left-style: var(--tw-border-style);    border-left-width: 1px;  }  .border-l-2 {    border-left-style: var(--tw-border-style);    border-left-width: 2px;  }  .border-dashed {    --tw-border-style: dashed;    border-style: dashed;  }  .border-none {    --tw-border-style: none;    border-style: none;  }  .border-solid {    --tw-border-style: solid;    border-style: solid;  }  .border-\\[rgb\\(200_130_255\\/0\\.4\\)\\] {    border-color: #c882ff66;  }  .border-\\[rgb\\(233_61_130\\/0\\.3\\)\\] {    border-color: #e93d824d;  }  .border-\\[rgb\\(233_61_130\\/0\\.4\\)\\] {    border-color: #e93d8266;  }  .border-black\\/70 {    border-color: #000000b3;  }  @supports (color: color-mix(in lab, red, red)) {    .border-black\\/70 {      border-color: color-mix(in oklab, var(--color-black) 70%, transparent);    }  }  .border-border-default {    border-color: var(--border-default, #ffffff26);  }  .border-border-subtle {    border-color: var(--border-subtle, #ffffff14);  }  .border-destructive-background, .border-destructive-background\\/30 {    border-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .border-destructive-background\\/30 {      border-color: color-mix(in oklab, var(--destructive-background, #c0392b) 30%, transparent);    }  }  .border-destructive-background\\/50 {    border-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .border-destructive-background\\/50 {      border-color: color-mix(in oklab, var(--destructive-background, #c0392b) 50%, transparent);    }  }  .border-destructive-background\\/55 {    border-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .border-destructive-background\\/55 {      border-color: color-mix(in oklab, var(--destructive-background, #c0392b) 55%, transparent);    }  }  .border-primary-background, .border-primary-background\\/30 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .border-primary-background\\/30 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 30%, transparent);    }  }  .border-primary-background\\/40 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .border-primary-background\\/40 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 40%, transparent);    }  }  .border-primary-background\\/45 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .border-primary-background\\/45 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 45%, transparent);    }  }  .border-primary-background\\/50 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .border-primary-background\\/50 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 50%, transparent);    }  }  .border-primary-background\\/60 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .border-primary-background\\/60 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 60%, transparent);    }  }  .border-primary-background\\/70 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .border-primary-background\\/70 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 70%, transparent);    }  }  .border-success-background\\/30 {    border-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .border-success-background\\/30 {      border-color: color-mix(in oklab, var(--success-background, #2e9e4f) 30%, transparent);    }  }  .border-success-background\\/50 {    border-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .border-success-background\\/50 {      border-color: color-mix(in oklab, var(--success-background, #2e9e4f) 50%, transparent);    }  }  .border-transparent {    border-color: #0000;  }  .border-warning-background\\/25 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .border-warning-background\\/25 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 25%, transparent);    }  }  .border-warning-background\\/50 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .border-warning-background\\/50 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 50%, transparent);    }  }  .border-warning-background\\/55 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .border-warning-background\\/55 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 55%, transparent);    }  }  .border-warning-background\\/70 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .border-warning-background\\/70 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 70%, transparent);    }  }  .border-white {    border-color: var(--color-white);  }  .border-white\\/10 {    border-color: #ffffff1a;  }  @supports (color: color-mix(in lab, red, red)) {    .border-white\\/10 {      border-color: color-mix(in oklab, var(--color-white) 10%, transparent);    }  }  .border-white\\/15 {    border-color: #ffffff26;  }  @supports (color: color-mix(in lab, red, red)) {    .border-white\\/15 {      border-color: color-mix(in oklab, var(--color-white) 15%, transparent);    }  }  .border-white\\/20 {    border-color: #fff3;  }  @supports (color: color-mix(in lab, red, red)) {    .border-white\\/20 {      border-color: color-mix(in oklab, var(--color-white) 20%, transparent);    }  }  .border-white\\/30 {    border-color: #ffffff4d;  }  @supports (color: color-mix(in lab, red, red)) {    .border-white\\/30 {      border-color: color-mix(in oklab, var(--color-white) 30%, transparent);    }  }  .border-b-transparent {    border-bottom-color: #0000;  }  .border-b-warning-background\\/15 {    border-bottom-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .border-b-warning-background\\/15 {      border-bottom-color: color-mix(in oklab, var(--warning-background, #d39e00) 15%, transparent);    }  }  .bg-\\[rgb\\(78_168_255\\/0\\.25\\)\\] {    background-color: #4ea8ff40;  }  .bg-\\[rgb\\(120_200_120\\/0\\.25\\)\\] {    background-color: #78c87840;  }  .bg-\\[rgb\\(200_130_255\\/0\\.25\\)\\] {    background-color: #c882ff40;  }  .bg-\\[rgb\\(255_100_100\\/0\\.22\\)\\] {    background-color: #ff646438;  }  .bg-\\[rgb\\(255_140_200\\/0\\.25\\)\\] {    background-color: #ff8cc840;  }  .bg-\\[rgb\\(255_140_200\\/0\\.85\\)\\] {    background-color: #ff8cc8d9;  }  .bg-\\[rgb\\(255_171_64\\/0\\.25\\)\\] {    background-color: #ffab4040;  }  .bg-base-background {    background-color: var(--base-background, #1e1e1e);  }  .bg-base-foreground\\/5 {    background-color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .bg-base-foreground\\/5 {      background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 5%, transparent);    }  }  .bg-base-foreground\\/10 {    background-color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .bg-base-foreground\\/10 {      background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 10%, transparent);    }  }  .bg-base-foreground\\/\\[0\\.03\\] {    background-color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .bg-base-foreground\\/\\[0\\.03\\] {      background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 3%, transparent);    }  }  .bg-black {    background-color: var(--color-black);  }  .bg-black\\/20 {    background-color: #0003;  }  @supports (color: color-mix(in lab, red, red)) {    .bg-black\\/20 {      background-color: color-mix(in oklab, var(--color-black) 20%, transparent);    }  }  .bg-black\\/30 {    background-color: #0000004d;  }  @supports (color: color-mix(in lab, red, red)) {    .bg-black\\/30 {      background-color: color-mix(in oklab, var(--color-black) 30%, transparent);    }  }  .bg-black\\/50 {    background-color: #00000080;  }  @supports (color: color-mix(in lab, red, red)) {    .bg-black\\/50 {      background-color: color-mix(in oklab, var(--color-black) 50%, transparent);    }  }  .bg-black\\/55 {    background-color: #0000008c;  }  @supports (color: color-mix(in lab, red, red)) {    .bg-black\\/55 {      background-color: color-mix(in oklab, var(--color-black) 55%, transparent);    }  }  .bg-black\\/60 {    background-color: #0009;  }  @supports (color: color-mix(in lab, red, red)) {    .bg-black\\/60 {      background-color: color-mix(in oklab, var(--color-black) 60%, transparent);    }  }  .bg-black\\/65 {    background-color: #000000a6;  }  @supports (color: color-mix(in lab, red, red)) {    .bg-black\\/65 {      background-color: color-mix(in oklab, var(--color-black) 65%, transparent);    }  }  .bg-black\\/70 {    background-color: #000000b3;  }  @supports (color: color-mix(in lab, red, red)) {    .bg-black\\/70 {      background-color: color-mix(in oklab, var(--color-black) 70%, transparent);    }  }  .bg-black\\/80 {    background-color: #000c;  }  @supports (color: color-mix(in lab, red, red)) {    .bg-black\\/80 {      background-color: color-mix(in oklab, var(--color-black) 80%, transparent);    }  }  .bg-black\\/90 {    background-color: #000000e6;  }  @supports (color: color-mix(in lab, red, red)) {    .bg-black\\/90 {      background-color: color-mix(in oklab, var(--color-black) 90%, transparent);    }  }  .bg-destructive-background, .bg-destructive-background\\/10 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .bg-destructive-background\\/10 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 10%, transparent);    }  }  .bg-destructive-background\\/15 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .bg-destructive-background\\/15 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 15%, transparent);    }  }  .bg-destructive-background\\/30 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .bg-destructive-background\\/30 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 30%, transparent);    }  }  .bg-destructive-background\\/70 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .bg-destructive-background\\/70 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 70%, transparent);    }  }  .bg-interface-menu-component-surface-selected {    background-color: var(--interface-menu-component-surface-selected, #4ea8ff2e);  }  .bg-interface-menu-surface, .bg-interface-menu-surface\\/85 {    background-color: var(--interface-menu-surface, #232323);  }  @supports (color: color-mix(in lab, red, red)) {    .bg-interface-menu-surface\\/85 {      background-color: color-mix(in oklab, var(--interface-menu-surface, #232323) 85%, transparent);    }  }  .bg-interface-panel-surface {    background-color: var(--interface-panel-surface, #1e1e1e);  }  .bg-primary-background, .bg-primary-background\\/5 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .bg-primary-background\\/5 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 5%, transparent);    }  }  .bg-primary-background\\/10 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .bg-primary-background\\/10 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 10%, transparent);    }  }  .bg-primary-background\\/15 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .bg-primary-background\\/15 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 15%, transparent);    }  }  .bg-primary-background\\/20 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .bg-primary-background\\/20 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 20%, transparent);    }  }  .bg-primary-background\\/30 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .bg-primary-background\\/30 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 30%, transparent);    }  }  .bg-secondary-background {    background-color: var(--secondary-background, #ffffff0f);  }  .bg-secondary-background-selected {    background-color: var(--secondary-background-selected, #4ea8ff33);  }  .bg-success-background\\/5 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .bg-success-background\\/5 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 5%, transparent);    }  }  .bg-success-background\\/10 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .bg-success-background\\/10 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 10%, transparent);    }  }  .bg-success-background\\/15 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .bg-success-background\\/15 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 15%, transparent);    }  }  .bg-success-background\\/20 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .bg-success-background\\/20 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 20%, transparent);    }  }  .bg-transparent {    background-color: #0000;  }  .bg-warning-background, .bg-warning-background\\/5 {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .bg-warning-background\\/5 {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 5%, transparent);    }  }  .bg-warning-background\\/10 {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .bg-warning-background\\/10 {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 10%, transparent);    }  }  .bg-warning-background\\/30 {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .bg-warning-background\\/30 {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 30%, transparent);    }  }  .bg-warning-background\\/\\[0\\.03\\] {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .bg-warning-background\\/\\[0\\.03\\] {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 3%, transparent);    }  }  .bg-white {    background-color: var(--color-white);  }  .bg-white\\/10 {    background-color: #ffffff1a;  }  @supports (color: color-mix(in lab, red, red)) {    .bg-white\\/10 {      background-color: color-mix(in oklab, var(--color-white) 10%, transparent);    }  }  .bg-white\\/30 {    background-color: #ffffff4d;  }  @supports (color: color-mix(in lab, red, red)) {    .bg-white\\/30 {      background-color: color-mix(in oklab, var(--color-white) 30%, transparent);    }  }  .bg-white\\/70 {    background-color: #ffffffb3;  }  @supports (color: color-mix(in lab, red, red)) {    .bg-white\\/70 {      background-color: color-mix(in oklab, var(--color-white) 70%, transparent);    }  }  .bg-white\\/85 {    background-color: #ffffffd9;  }  @supports (color: color-mix(in lab, red, red)) {    .bg-white\\/85 {      background-color: color-mix(in oklab, var(--color-white) 85%, transparent);    }  }  .bg-linear-to-b {    --tw-gradient-position: to bottom;  }  @supports (background-image: linear-gradient(in lab, red, red)) {    .bg-linear-to-b {      --tw-gradient-position: to bottom in oklab;    }  }  .bg-linear-to-b {    background-image: linear-gradient(var(--tw-gradient-stops));  }  .bg-linear-to-r {    --tw-gradient-position: to right;  }  @supports (background-image: linear-gradient(in lab, red, red)) {    .bg-linear-to-r {      --tw-gradient-position: to right in oklab;    }  }  .bg-linear-to-r {    background-image: linear-gradient(var(--tw-gradient-stops));  }  .from-primary-background\\/85 {    --tw-gradient-from: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .from-primary-background\\/85 {      --tw-gradient-from: color-mix(in oklab, var(--primary-background, #4ea8ff99) 85%, transparent);    }  }  .from-primary-background\\/85 {    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .from-transparent {    --tw-gradient-from: transparent;    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .to-black\\/75 {    --tw-gradient-to: #000000bf;  }  @supports (color: color-mix(in lab, red, red)) {    .to-black\\/75 {      --tw-gradient-to: color-mix(in oklab, var(--color-black) 75%, transparent);    }  }  .to-black\\/75 {    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .to-primary-background-hover\\/85 {    --tw-gradient-to: var(--primary-background-hover, #4ea8ffbf);  }  @supports (color: color-mix(in lab, red, red)) {    .to-primary-background-hover\\/85 {      --tw-gradient-to: color-mix(in oklab, var(--primary-background-hover, #4ea8ffbf) 85%, transparent);    }  }  .to-primary-background-hover\\/85 {    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .object-contain {    object-fit: contain;  }  .object-cover {    object-fit: cover;  }  .p-0 {    padding: calc(var(--spacing) * 0);  }  .p-0\\.5 {    padding: calc(var(--spacing) * .5);  }  .p-1 {    padding: calc(var(--spacing) * 1);  }  .p-2 {    padding: calc(var(--spacing) * 2);  }  .p-3 {    padding: calc(var(--spacing) * 3);  }  .p-3\\.5 {    padding: calc(var(--spacing) * 3.5);  }  .p-4 {    padding: calc(var(--spacing) * 4);  }  .p-6 {    padding: calc(var(--spacing) * 6);  }  .px-0\\.5 {    padding-inline: calc(var(--spacing) * .5);  }  .px-1 {    padding-inline: calc(var(--spacing) * 1);  }  .px-1\\.5 {    padding-inline: calc(var(--spacing) * 1.5);  }  .px-2 {    padding-inline: calc(var(--spacing) * 2);  }  .px-2\\.5 {    padding-inline: calc(var(--spacing) * 2.5);  }  .px-3 {    padding-inline: calc(var(--spacing) * 3);  }  .px-3\\.5 {    padding-inline: calc(var(--spacing) * 3.5);  }  .px-4 {    padding-inline: calc(var(--spacing) * 4);  }  .px-\\[3px\\] {    padding-inline: 3px;  }  .px-\\[5px\\] {    padding-inline: 5px;  }  .py-0 {    padding-block: calc(var(--spacing) * 0);  }  .py-0\\.5 {    padding-block: calc(var(--spacing) * .5);  }  .py-1 {    padding-block: calc(var(--spacing) * 1);  }  .py-1\\.5 {    padding-block: calc(var(--spacing) * 1.5);  }  .py-2 {    padding-block: calc(var(--spacing) * 2);  }  .py-2\\.5 {    padding-block: calc(var(--spacing) * 2.5);  }  .py-5 {    padding-block: calc(var(--spacing) * 5);  }  .py-\\[3px\\] {    padding-block: 3px;  }  .py-\\[5px\\] {    padding-block: 5px;  }  .py-px {    padding-block: 1px;  }  .pt-1 {    padding-top: calc(var(--spacing) * 1);  }  .pt-1\\.5 {    padding-top: calc(var(--spacing) * 1.5);  }  .pt-2 {    padding-top: calc(var(--spacing) * 2);  }  .pt-2\\.5 {    padding-top: calc(var(--spacing) * 2.5);  }  .pt-3\\.5 {    padding-top: calc(var(--spacing) * 3.5);  }  .pb-1 {    padding-bottom: calc(var(--spacing) * 1);  }  .pb-2 {    padding-bottom: calc(var(--spacing) * 2);  }  .pb-3\\.5 {    padding-bottom: calc(var(--spacing) * 3.5);  }  .pb-6 {    padding-bottom: calc(var(--spacing) * 6);  }  .pl-1\\.5 {    padding-left: calc(var(--spacing) * 1.5);  }  .text-center {    text-align: center;  }  .text-left {    text-align: left;  }  .text-right {    text-align: right;  }  .\\[font-family\\:inherit\\] {    font-family: inherit;  }  .font-mono {    font-family: var(--font-mono);  }  .text-2xs {    font-size: var(--text-2xs);    line-height: var(--tw-leading, var(--text-2xs--line-height));  }  .text-3xs {    font-size: var(--text-3xs);    line-height: var(--tw-leading, var(--text-3xs--line-height));  }  .text-lg {    font-size: var(--text-lg);    line-height: var(--tw-leading, var(--text-lg--line-height));  }  .text-sm {    font-size: var(--text-sm);    line-height: var(--tw-leading, var(--text-sm--line-height));  }  .text-xs {    font-size: var(--text-xs);    line-height: var(--tw-leading, var(--text-xs--line-height));  }  .text-\\[8px\\] {    font-size: 8px;  }  .text-\\[11px\\] {    font-size: 11px;  }  .text-\\[13px\\] {    font-size: 13px;  }  .text-\\[22px\\] {    font-size: 22px;  }  .text-\\[28px\\] {    font-size: 28px;  }  .text-\\[32px\\] {    font-size: 32px;  }  .leading-\\[1\\.3\\] {    --tw-leading: 1.3;    line-height: 1.3;  }  .leading-none {    --tw-leading: 1;    line-height: 1;  }  .leading-snug {    --tw-leading: var(--leading-snug);    line-height: var(--leading-snug);  }  .leading-tight {    --tw-leading: var(--leading-tight);    line-height: var(--leading-tight);  }  .font-bold {    --tw-font-weight: var(--font-weight-bold);    font-weight: var(--font-weight-bold);  }  .font-medium {    --tw-font-weight: var(--font-weight-medium);    font-weight: var(--font-weight-medium);  }  .font-semibold {    --tw-font-weight: var(--font-weight-semibold);    font-weight: var(--font-weight-semibold);  }  .tracking-wide {    --tw-tracking: var(--tracking-wide);    letter-spacing: var(--tracking-wide);  }  .tracking-wider {    --tw-tracking: var(--tracking-wider);    letter-spacing: var(--tracking-wider);  }  .break-words {    overflow-wrap: break-word;  }  .break-all {    word-break: break-all;  }  .text-ellipsis {    text-overflow: ellipsis;  }  .whitespace-nowrap {    white-space: nowrap;  }  .whitespace-pre-wrap {    white-space: pre-wrap;  }  .text-\\[\\#00FFD0\\] {    color: #00ffd0;  }  .text-\\[\\#9dd0ff\\] {    color: #9dd0ff;  }  .text-\\[\\#E93D82\\] {    color: #e93d82;  }  .text-\\[\\#FFB800\\] {    color: #ffb800;  }  .text-\\[\\#b5e3a5\\] {    color: #b5e3a5;  }  .text-\\[\\#d8b0ff\\] {    color: #d8b0ff;  }  .text-\\[\\#ffb0b0\\] {    color: #ffb0b0;  }  .text-\\[\\#ffb0d8\\] {    color: #ffb0d8;  }  .text-\\[\\#ffd089\\] {    color: #ffd089;  }  .text-base-foreground, .text-base-foreground\\/80 {    color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .text-base-foreground\\/80 {      color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 80%, transparent);    }  }  .text-destructive-background {    color: var(--destructive-background, #c0392b);  }  .text-gray-600 {    color: var(--color-gray-600);  }  .text-inherit {    color: inherit;  }  .text-muted-foreground, .text-muted-foreground\\/60 {    color: var(--muted-foreground, #888);  }  @supports (color: color-mix(in lab, red, red)) {    .text-muted-foreground\\/60 {      color: color-mix(in oklab, var(--muted-foreground, #888) 60%, transparent);    }  }  .text-primary-background {    color: var(--primary-background, #4ea8ff99);  }  .text-secondary-foreground {    color: var(--secondary-foreground, var(--base-foreground, #e0e0e0));  }  .text-success-background {    color: var(--success-background, #2e9e4f);  }  .text-warning-background, .text-warning-background\\/70 {    color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .text-warning-background\\/70 {      color: color-mix(in oklab, var(--warning-background, #d39e00) 70%, transparent);    }  }  .text-warning-background\\/75 {    color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .text-warning-background\\/75 {      color: color-mix(in oklab, var(--warning-background, #d39e00) 75%, transparent);    }  }  .text-white {    color: var(--color-white);  }  .text-white\\/30 {    color: #ffffff4d;  }  @supports (color: color-mix(in lab, red, red)) {    .text-white\\/30 {      color: color-mix(in oklab, var(--color-white) 30%, transparent);    }  }  .text-white\\/35 {    color: #ffffff59;  }  @supports (color: color-mix(in lab, red, red)) {    .text-white\\/35 {      color: color-mix(in oklab, var(--color-white) 35%, transparent);    }  }  .text-white\\/40 {    color: #fff6;  }  @supports (color: color-mix(in lab, red, red)) {    .text-white\\/40 {      color: color-mix(in oklab, var(--color-white) 40%, transparent);    }  }  .text-white\\/50 {    color: #ffffff80;  }  @supports (color: color-mix(in lab, red, red)) {    .text-white\\/50 {      color: color-mix(in oklab, var(--color-white) 50%, transparent);    }  }  .text-white\\/70 {    color: #ffffffb3;  }  @supports (color: color-mix(in lab, red, red)) {    .text-white\\/70 {      color: color-mix(in oklab, var(--color-white) 70%, transparent);    }  }  .text-white\\/85 {    color: #ffffffd9;  }  @supports (color: color-mix(in lab, red, red)) {    .text-white\\/85 {      color: color-mix(in oklab, var(--color-white) 85%, transparent);    }  }  .text-white\\/90 {    color: #ffffffe6;  }  @supports (color: color-mix(in lab, red, red)) {    .text-white\\/90 {      color: color-mix(in oklab, var(--color-white) 90%, transparent);    }  }  .uppercase {    text-transform: uppercase;  }  .italic {    font-style: italic;  }  .opacity-0 {    opacity: 0;  }  .opacity-50 {    opacity: .5;  }  .opacity-60 {    opacity: .6;  }  .opacity-70 {    opacity: .7;  }  .opacity-75 {    opacity: .75;  }  .opacity-80 {    opacity: .8;  }  .opacity-100 {    opacity: 1;  }  .shadow {    --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, #0000001a), 0 1px 2px -1px var(--tw-shadow-color, #0000001a);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .shadow-\\[0_0_0_1px_rgb\\(255_255_255\\/0\\.8\\)\\] {    --tw-shadow: 0 0 0 1px var(--tw-shadow-color, #fffc);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .shadow-\\[0_0_0_1px_var\\(--primary-background\\)\\] {    --tw-shadow: 0 0 0 1px var(--tw-shadow-color, var(--primary-background));    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .shadow-\\[0_0_0_9999px_rgb\\(0_0_0\\/0\\.5\\)\\] {    --tw-shadow: 0 0 0 9999px var(--tw-shadow-color, #00000080);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .shadow-\\[0_0_2px_rgb\\(0_0_0\\/0\\.6\\)\\] {    --tw-shadow: 0 0 2px var(--tw-shadow-color, #0009);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .shadow-\\[0_0_4px_rgb\\(0_0_0\\/0\\.6\\)\\] {    --tw-shadow: 0 0 4px var(--tw-shadow-color, #0009);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .shadow-\\[0_0_8px_var\\(--primary-background\\)\\] {    --tw-shadow: 0 0 8px var(--tw-shadow-color, var(--primary-background));    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .shadow-\\[0_1px_4px_rgb\\(0_0_0\\/0\\.5\\)\\] {    --tw-shadow: 0 1px 4px var(--tw-shadow-color, #00000080);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .shadow-\\[0_8px_40px_rgb\\(0_0_0\\/0\\.6\\)\\] {    --tw-shadow: 0 8px 40px var(--tw-shadow-color, #0009);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .shadow-\\[0_16px_48px_rgb\\(0_0_0\\/0\\.5\\)\\] {    --tw-shadow: 0 16px 48px var(--tw-shadow-color, #00000080);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .shadow-md {    --tw-shadow: 0 4px 6px -1px var(--tw-shadow-color, #0000001a), 0 2px 4px -2px var(--tw-shadow-color, #0000001a);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ring-3 {    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ring-primary-background {    --tw-ring-color: var(--primary-background, #4ea8ff99);  }  .outline, .outline-1 {    outline-style: var(--tw-outline-style);    outline-width: 1px;  }  .-outline-offset-1 {    outline-offset: calc(1px * -1);  }  .outline-destructive-background\\/55 {    outline-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .outline-destructive-background\\/55 {      outline-color: color-mix(in oklab, var(--destructive-background, #c0392b) 55%, transparent);    }  }  .outline-warning-background\\/50 {    outline-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .outline-warning-background\\/50 {      outline-color: color-mix(in oklab, var(--warning-background, #d39e00) 50%, transparent);    }  }  .outline-white\\/70 {    outline-color: #ffffffb3;  }  @supports (color: color-mix(in lab, red, red)) {    .outline-white\\/70 {      outline-color: color-mix(in oklab, var(--color-white) 70%, transparent);    }  }  .filter {    filter: var(--tw-blur, ) var(--tw-brightness, ) var(--tw-contrast, ) var(--tw-grayscale, ) var(--tw-hue-rotate, ) var(--tw-invert, ) var(--tw-saturate, ) var(--tw-sepia, ) var(--tw-drop-shadow, );  }  .backdrop-blur {    --tw-backdrop-blur: blur(8px);    -webkit-backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );    backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );  }  .backdrop-blur-\\[2px\\] {    --tw-backdrop-blur: blur(2px);    -webkit-backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );    backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );  }  .backdrop-blur-sm {    --tw-backdrop-blur: blur(var(--blur-sm));    -webkit-backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );    backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );  }  .transition {    transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to, opacity, box-shadow, transform, translate, scale, rotate, filter, -webkit-backdrop-filter, backdrop-filter, display, content-visibility, overlay, pointer-events;    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));    transition-duration: var(--tw-duration, var(--default-transition-duration));  }  .transition-\\[width\\] {    transition-property: width;    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));    transition-duration: var(--tw-duration, var(--default-transition-duration));  }  .transition-all {    transition-property: all;    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));    transition-duration: var(--tw-duration, var(--default-transition-duration));  }  .transition-colors {    transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));    transition-duration: var(--tw-duration, var(--default-transition-duration));  }  .transition-opacity {    transition-property: opacity;    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));    transition-duration: var(--tw-duration, var(--default-transition-duration));  }  .duration-150 {    --tw-duration: .15s;    transition-duration: .15s;  }  .duration-200 {    --tw-duration: .2s;    transition-duration: .2s;  }  .ease-in {    --tw-ease: var(--ease-in);    transition-timing-function: var(--ease-in);  }  .ease-in-out {    --tw-ease: var(--ease-in-out);    transition-timing-function: var(--ease-in-out);  }  .ease-out {    --tw-ease: var(--ease-out);    transition-timing-function: var(--ease-out);  }  .will-change-transform {    will-change: transform;  }  .outline-none {    --tw-outline-style: none;    outline-style: none;  }  .select-none {    -webkit-user-select: none;    user-select: none;  }  .\\[-webkit-box-orient\\:vertical\\] {    -webkit-box-orient: vertical;  }  .\\[-webkit-line-clamp\\:5\\] {    -webkit-line-clamp: 5;  }  .ring-inset {    --tw-ring-inset: inset;  }  @media (hover: hover) {    .group-hover\\:opacity-100:is(:where(.group):hover *) {      opacity: 1;    }  }  .placeholder\\:text-muted-foreground::placeholder {    color: var(--muted-foreground, #888);  }  @media (hover: hover) {    .hover\\:border-\\[\\#E93D82\\]:hover {      border-color: #e93d82;    }    .hover\\:border-border-subtle:hover {      border-color: var(--border-subtle, #ffffff14);    }    .hover\\:border-destructive-background:hover {      border-color: var(--destructive-background, #c0392b);    }    .hover\\:border-primary-background:hover {      border-color: var(--primary-background, #4ea8ff99);    }    .hover\\:border-white\\/40:hover {      border-color: #fff6;    }    @supports (color: color-mix(in lab, red, red)) {      .hover\\:border-white\\/40:hover {        border-color: color-mix(in oklab, var(--color-white) 40%, transparent);      }    }    .hover\\:border-white\\/55:hover {      border-color: #ffffff8c;    }    @supports (color: color-mix(in lab, red, red)) {      .hover\\:border-white\\/55:hover {        border-color: color-mix(in oklab, var(--color-white) 55%, transparent);      }    }    .hover\\:bg-\\[rgb\\(233_61_130\\/0\\.2\\)\\]:hover {      background-color: #e93d8233;    }    .hover\\:bg-base-foreground\\/5:hover {      background-color: var(--base-foreground, #e0e0e0);    }    @supports (color: color-mix(in lab, red, red)) {      .hover\\:bg-base-foreground\\/5:hover {        background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 5%, transparent);      }    }    .hover\\:bg-black\\/85:hover {      background-color: #000000d9;    }    @supports (color: color-mix(in lab, red, red)) {      .hover\\:bg-black\\/85:hover {        background-color: color-mix(in oklab, var(--color-black) 85%, transparent);      }    }    .hover\\:bg-destructive-background:hover {      background-color: var(--destructive-background, #c0392b);    }    .hover\\:bg-destructive-background-hover:hover {      background-color: var(--destructive-background-hover, #d44637);    }    .hover\\:bg-destructive-background\\/10:hover {      background-color: var(--destructive-background, #c0392b);    }    @supports (color: color-mix(in lab, red, red)) {      .hover\\:bg-destructive-background\\/10:hover {        background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 10%, transparent);      }    }    .hover\\:bg-destructive-background\\/30:hover {      background-color: var(--destructive-background, #c0392b);    }    @supports (color: color-mix(in lab, red, red)) {      .hover\\:bg-destructive-background\\/30:hover {        background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 30%, transparent);      }    }    .hover\\:bg-interface-menu-component-surface-hovered:hover {      background-color: var(--interface-menu-component-surface-hovered, #ffffff14);    }    .hover\\:bg-primary-background-hover:hover {      background-color: var(--primary-background-hover, #4ea8ffbf);    }    .hover\\:bg-primary-background\\/15:hover {      background-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .hover\\:bg-primary-background\\/15:hover {        background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 15%, transparent);      }    }    .hover\\:bg-primary-background\\/20:hover {      background-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .hover\\:bg-primary-background\\/20:hover {        background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 20%, transparent);      }    }    .hover\\:bg-primary-background\\/25:hover {      background-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .hover\\:bg-primary-background\\/25:hover {        background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 25%, transparent);      }    }    .hover\\:bg-secondary-background-hover:hover {      background-color: var(--secondary-background-hover, #ffffff1a);    }    .hover\\:bg-warning-background\\/10:hover {      background-color: var(--warning-background, #d39e00);    }    @supports (color: color-mix(in lab, red, red)) {      .hover\\:bg-warning-background\\/10:hover {        background-color: color-mix(in oklab, var(--warning-background, #d39e00) 10%, transparent);      }    }    .hover\\:bg-white\\/30:hover {      background-color: #ffffff4d;    }    @supports (color: color-mix(in lab, red, red)) {      .hover\\:bg-white\\/30:hover {        background-color: color-mix(in oklab, var(--color-white) 30%, transparent);      }    }    .hover\\:bg-white\\/90:hover {      background-color: #ffffffe6;    }    @supports (color: color-mix(in lab, red, red)) {      .hover\\:bg-white\\/90:hover {        background-color: color-mix(in oklab, var(--color-white) 90%, transparent);      }    }    .hover\\:text-base-foreground:hover {      color: var(--base-foreground, #e0e0e0);    }    .hover\\:text-destructive-background:hover {      color: var(--destructive-background, #c0392b);    }    .hover\\:text-warning-background:hover {      color: var(--warning-background, #d39e00);    }    .hover\\:opacity-100:hover {      opacity: 1;    }  }  .focus\\:border-\\[\\#00FFD0\\]:focus {    border-color: #00ffd0;  }  .focus\\:border-\\[\\#E93D82\\]:focus {    border-color: #e93d82;  }  .focus\\:border-\\[\\#FFB800\\]:focus {    border-color: #ffb800;  }  .focus\\:border-node-component-border:focus {    border-color: var(--node-component-border, #fff3);  }  .focus\\:border-primary-background:focus, .focus\\:border-primary-background\\/50:focus {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .focus\\:border-primary-background\\/50:focus {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 50%, transparent);    }  }  .focus\\:bg-primary-background\\/10:focus {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .focus\\:bg-primary-background\\/10:focus {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 10%, transparent);    }  }  .focus\\:bg-secondary-background-hover:focus {    background-color: var(--secondary-background-hover, #ffffff1a);  }  .focus\\:outline:focus, .focus\\:outline-1:focus {    outline-style: var(--tw-outline-style);    outline-width: 1px;  }  .focus\\:outline-primary-background\\/50:focus {    outline-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .focus\\:outline-primary-background\\/50:focus {      outline-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 50%, transparent);    }  }  .focus\\:outline-none:focus {    --tw-outline-style: none;    outline-style: none;  }  .focus-visible\\:ring-1:focus-visible {    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .focus-visible\\:ring-border-default:focus-visible {    --tw-ring-color: var(--border-default, #ffffff26);  }  .focus-visible\\:outline-none:focus-visible {    --tw-outline-style: none;    outline-style: none;  }  .active\\:scale-95:active {    --tw-scale-x: 95%;    --tw-scale-y: 95%;    --tw-scale-z: 95%;    scale: var(--tw-scale-x) var(--tw-scale-y);  }  @media (hover: hover) {    .hover\\:enabled\\:bg-secondary-background-hover:hover:enabled {      background-color: var(--secondary-background-hover, #ffffff1a);    }  }  .disabled\\:pointer-events-none:disabled {    pointer-events: none;  }  .disabled\\:cursor-default:disabled {    cursor: default;  }  .disabled\\:cursor-not-allowed:disabled {    cursor: not-allowed;  }  .disabled\\:opacity-30:disabled {    opacity: .3;  }  .disabled\\:opacity-40:disabled {    opacity: .4;  }  .disabled\\:opacity-50:disabled {    opacity: .5;  }  .disabled\\:opacity-60:disabled {    opacity: .6;  }  @media (hover: hover) {    .disabled\\:hover\\:bg-secondary-background:disabled:hover {      background-color: var(--secondary-background, #ffffff0f);    }  }  .data-\\[highlighted\\]\\:bg-secondary-background-hover[data-highlighted] {    background-color: var(--secondary-background-hover, #ffffff1a);  }  .data-\\[state\\=checked\\]\\:bg-secondary-background-selected[data-state="checked"] {    background-color: var(--secondary-background-selected, #4ea8ff33);  }  @media (hover: hover) {    .data-\\[state\\=checked\\]\\:hover\\:bg-secondary-background-selected[data-state="checked"]:hover {      background-color: var(--secondary-background-selected, #4ea8ff33);    }  }  .data-\\[state\\=open\\]\\:border-node-component-border[data-state="open"] {    border-color: var(--node-component-border, #fff3);  }  .\\[\\&_\\+_\\&\\]\\:border-t + .\\[\\&_\\+_\\&\\]\\:border-t {    border-top-style: var(--tw-border-style);    border-top-width: 1px;  }  .\\[\\&_\\+_\\&\\]\\:border-solid + .\\[\\&_\\+_\\&\\]\\:border-solid {    --tw-border-style: solid;    border-style: solid;  }  .\\[\\&_\\+_\\&\\]\\:border-border-subtle + .\\[\\&_\\+_\\&\\]\\:border-border-subtle {    border-color: var(--border-subtle, #ffffff14);  }  .\\[\\&_\\+_\\&\\]\\:pt-1\\.5 + .\\[\\&_\\+_\\&\\]\\:pt-1\\.5 {    padding-top: calc(var(--spacing) * 1.5);  }}@property --tw-translate-x {  syntax: "*";  inherits: false;  initial-value: 0;}@property --tw-translate-y {  syntax: "*";  inherits: false;  initial-value: 0;}@property --tw-translate-z {  syntax: "*";  inherits: false;  initial-value: 0;}@property --tw-rotate-x {  syntax: "*";  inherits: false}@property --tw-rotate-y {  syntax: "*";  inherits: false}@property --tw-rotate-z {  syntax: "*";  inherits: false}@property --tw-skew-x {  syntax: "*";  inherits: false}@property --tw-skew-y {  syntax: "*";  inherits: false}@property --tw-border-style {  syntax: "*";  inherits: false;  initial-value: solid;}@property --tw-gradient-position {  syntax: "*";  inherits: false}@property --tw-gradient-from {  syntax: "<color>";  inherits: false;  initial-value: #0000;}@property --tw-gradient-via {  syntax: "<color>";  inherits: false;  initial-value: #0000;}@property --tw-gradient-to {  syntax: "<color>";  inherits: false;  initial-value: #0000;}@property --tw-gradient-stops {  syntax: "*";  inherits: false}@property --tw-gradient-via-stops {  syntax: "*";  inherits: false}@property --tw-gradient-from-position {  syntax: "<length-percentage>";  inherits: false;  initial-value: 0%;}@property --tw-gradient-via-position {  syntax: "<length-percentage>";  inherits: false;  initial-value: 50%;}@property --tw-gradient-to-position {  syntax: "<length-percentage>";  inherits: false;  initial-value: 100%;}@property --tw-leading {  syntax: "*";  inherits: false}@property --tw-font-weight {  syntax: "*";  inherits: false}@property --tw-tracking {  syntax: "*";  inherits: false}@property --tw-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-shadow-color {  syntax: "*";  inherits: false}@property --tw-shadow-alpha {  syntax: "<percentage>";  inherits: false;  initial-value: 100%;}@property --tw-inset-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-inset-shadow-color {  syntax: "*";  inherits: false}@property --tw-inset-shadow-alpha {  syntax: "<percentage>";  inherits: false;  initial-value: 100%;}@property --tw-ring-color {  syntax: "*";  inherits: false}@property --tw-ring-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-inset-ring-color {  syntax: "*";  inherits: false}@property --tw-inset-ring-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-ring-inset {  syntax: "*";  inherits: false}@property --tw-ring-offset-width {  syntax: "<length>";  inherits: false;  initial-value: 0;}@property --tw-ring-offset-color {  syntax: "*";  inherits: false;  initial-value: #fff;}@property --tw-ring-offset-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-outline-style {  syntax: "*";  inherits: false;  initial-value: solid;}@property --tw-blur {  syntax: "*";  inherits: false}@property --tw-brightness {  syntax: "*";  inherits: false}@property --tw-contrast {  syntax: "*";  inherits: false}@property --tw-grayscale {  syntax: "*";  inherits: false}@property --tw-hue-rotate {  syntax: "*";  inherits: false}@property --tw-invert {  syntax: "*";  inherits: false}@property --tw-opacity {  syntax: "*";  inherits: false}@property --tw-saturate {  syntax: "*";  inherits: false}@property --tw-sepia {  syntax: "*";  inherits: false}@property --tw-drop-shadow {  syntax: "*";  inherits: false}@property --tw-drop-shadow-color {  syntax: "*";  inherits: false}@property --tw-drop-shadow-alpha {  syntax: "<percentage>";  inherits: false;  initial-value: 100%;}@property --tw-drop-shadow-size {  syntax: "*";  inherits: false}@property --tw-backdrop-blur {  syntax: "*";  inherits: false}@property --tw-backdrop-brightness {  syntax: "*";  inherits: false}@property --tw-backdrop-contrast {  syntax: "*";  inherits: false}@property --tw-backdrop-grayscale {  syntax: "*";  inherits: false}@property --tw-backdrop-hue-rotate {  syntax: "*";  inherits: false}@property --tw-backdrop-invert {  syntax: "*";  inherits: false}@property --tw-backdrop-opacity {  syntax: "*";  inherits: false}@property --tw-backdrop-saturate {  syntax: "*";  inherits: false}@property --tw-backdrop-sepia {  syntax: "*";  inherits: false}@property --tw-duration {  syntax: "*";  inherits: false}@property --tw-ease {  syntax: "*";  inherits: false}@property --tw-scale-x {  syntax: "*";  inherits: false;  initial-value: 1;}@property --tw-scale-y {  syntax: "*";  inherits: false;  initial-value: 1;}@property --tw-scale-z {  syntax: "*";  inherits: false;  initial-value: 1;}@keyframes pulse {  50% {    opacity: .5;  }}.comfytv-root, .comfytv-dialog {\r  --p-primary-color: #4ea8ff;\r  --p-primary-contrast-color: #fff;\r  --p-primary-hover-color: #66b6ff;\r  --p-primary-active-color: #3a96ee;\r\r  --p-surface-0:  #1e1e1e;\r  --p-surface-50: #232323;\r  --p-surface-100: #2a2a2a;\r  --p-surface-200: #333;\r  --p-surface-300: #3d3d3d;\r  --p-surface-400: #555;\r  --p-surface-500: #777;\r  --p-surface-600: #999;\r  --p-surface-700: #bbb;\r  --p-surface-800: #ddd;\r  --p-surface-900: #eee;\r  --p-surface-950: #f6f6f6;\r\r  --p-content-background: var(--p-surface-0);\r  --p-content-hover-background: var(--p-surface-100);\r  --p-content-border-color: var(--p-surface-300);\r  --p-content-border-radius: 4px;\r\r  --p-text-color: var(--p-surface-800);\r  --p-text-muted-color: var(--p-surface-600);\r\r  --p-mask-background: rgba(0, 0, 0, 0.55);\r\r  --p-focus-ring-width: 1px;\r  --p-focus-ring-style: solid;\r  --p-focus-ring-color: var(--p-primary-color);\r  --p-focus-ring-offset: 1px;\r}\r\r.comfytv-root {\r  font-size: 12px;\r  color: var(--p-text-color);\r}\r\r.comfytv-root .p-datatable {\r  font-size: 12px;\r  display: flex;\r  flex-direction: column;\r  height: 100%;\r  min-height: 0;\r  width: 100%;\r}\r.comfytv-root .p-datatable-table-container,\r.comfytv-root .p-datatable-wrapper {\r  flex: 1;\r  min-height: 0;\r  overflow: auto;\r}\r.comfytv-root .p-datatable-table {\r  border-collapse: separate;\r  border-spacing: 0;\r  table-layout: auto;\r}\r.comfytv-root .p-datatable-thead > tr > th {\r  background: var(--p-surface-100);\r  color: var(--p-text-color);\r  border-bottom: 1px solid var(--p-content-border-color);\r  padding: 6px 8px;\r  font-weight: 600;\r  text-align: left;\r}\r.comfytv-root .p-datatable-tbody > tr > td {\r  padding: 6px 8px;\r  border-bottom: 1px solid var(--p-content-border-color);\r  vertical-align: top;\r}\r.comfytv-root .p-datatable-tbody > tr.p-row-odd {\r  background: var(--p-surface-50);\r}\r.comfytv-root .p-datatable-tbody > tr:hover {\r  background: var(--p-content-hover-background);\r}\r.comfytv-root .p-datatable-frozen-column {\r  position: sticky;\r  left: 0;\r  z-index: 1;\r  background: inherit;\r}\r\r/* Select (dropdown) */\r.comfytv-root .p-select {\r  display: inline-flex;\r  align-items: center;\r  background: var(--p-surface-100);\r  border: 1px solid var(--p-content-border-color);\r  border-radius: 3px;\r  min-height: 22px;\r  cursor: pointer;\r  position: relative;\r}\r.comfytv-root .p-select:hover {\r  border-color: var(--p-surface-500);\r}\r.comfytv-root .p-select-focus {\r  border-color: var(--p-primary-color);\r}\r.comfytv-root .p-select-label {\r  padding: 2px 8px;\r  font-size: 11px;\r  color: var(--p-text-color);\r  flex: 1;\r  user-select: none;\r}\r.comfytv-root .p-select-dropdown {\r  padding: 0 6px;\r  color: var(--p-text-muted-color);\r}\r\r/* SelectButton (toggle group) */\r.comfytv-root .p-selectbutton {\r  display: inline-flex;\r  border: 1px solid var(--p-content-border-color);\r  border-radius: 3px;\r  overflow: hidden;\r}\r.comfytv-root .p-togglebutton {\r  background: var(--p-surface-100);\r  color: var(--p-text-muted-color);\r  border: none;\r  padding: 2px 10px;\r  font-size: 11px;\r  cursor: pointer;\r}\r.comfytv-root .p-togglebutton:hover {\r  background: var(--p-surface-200);\r  color: var(--p-text-color);\r}\r.comfytv-root .p-togglebutton-checked {\r  background: var(--p-primary-color);\r  color: var(--p-primary-contrast-color);\r}\r\r.comfytv-root .p-inputtext,\r.comfytv-root .cell-input,\r.comfytv-root .cell-textarea {\r  background: var(--p-surface-100);\r  border: 1px solid var(--p-primary-color);\r  color: var(--p-text-color);\r  font: inherit;\r  padding: 4px 6px;\r  border-radius: 3px;\r  width: 100%;\r  box-sizing: border-box;\r  outline: none;\r}\r.comfytv-root .cell-textarea {\r  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;\r  font-size: 11px;\r  line-height: 1.4;\r  resize: vertical;\r  min-height: 32px;\r}\r.comfytv-root .cell-select { width: 100%; }\r\r.comfytv-root .p-datatable-tbody > tr > td.p-editable-column { cursor: text; }\r.comfytv-root .p-datatable-tbody > tr > td.p-cell-editing {\r  padding: 2px !important;\r  background: rgba(78, 168, 255, 0.08);\r}\r\r.comfytv-dialog.p-dialog {\r  background: var(--p-surface-0);\r  border: 1px solid var(--p-content-border-color);\r  border-radius: 8px;\r  color: var(--p-text-color);\r  box-shadow: 0 24px 48px rgba(0,0,0,0.6);\r}\r.comfytv-dialog .p-dialog-header {\r  padding: 12px 16px;\r  border-bottom: 1px solid var(--p-content-border-color);\r  background: var(--p-surface-50);\r  border-radius: 8px 8px 0 0;\r  font-weight: 600;\r  display: flex;\r  justify-content: space-between;\r  align-items: center;\r}\r.comfytv-dialog .p-dialog-title {\r  font-size: 14px;\r}\r.comfytv-dialog .p-dialog-content {\r  padding: 16px;\r  background: var(--p-surface-0);\r  overflow: auto;\r}\r.comfytv-dialog .p-dialog-close-button {\r  background: transparent;\r  border: none;\r  color: var(--p-text-muted-color);\r  cursor: pointer;\r  font-size: 18px;\r  padding: 2px 6px;\r}\r.comfytv-dialog .p-dialog-close-button:hover {\r  color: var(--p-text-color);\r}\r\rbody > .p-blockui-mask.p-blockui-mask-document:empty,\rbody > .p-overlay-mask.p-blockui-mask-document.p-overlay-mask-leave:empty {\r  display: none !important;\r  pointer-events: none !important;\r}`));      document.head.appendChild(elementStyle);    }  } catch (e) {    console.error("vite-plugin-css-injected-by-js", e);  }})();
+(function() {  "use strict";  try {    if (typeof document != "undefined") {      var elementStyle = document.createElement("style");      elementStyle.appendChild(document.createTextNode(`.ctv-num-root {\r  display: flex;\r  align-items: center;\r  width: 100%;\r  min-width: 0;\r  background: var(--secondary-background, rgba(255,255,255,0.04));\r  border-radius: 8px;\r  box-sizing: border-box;}.ctv-num-root .ctv-num-input,\r.ctv-num-root input {\r  appearance: none;\r  background: transparent;\r  border: none;\r  border-radius: 8px;\r  padding: 6px 12px;\r  color: var(--base-foreground, #ddd);\r  font-size: 12px;\r  font-family: inherit;\r  width: 100%;\r  min-width: 0;\r  flex: 1;\r  outline: none;\r  text-align: left;\r  box-sizing: border-box;}.ctv-num-root input::placeholder { color: var(--muted-foreground, #888);}.ctv-num-root:focus-within {\r  box-shadow: 0 0 0 1px var(--border-default, rgba(255,255,255,0.25));}.ctv-num-root input:disabled { opacity: 0.5; pointer-events: none;}.ctv-num-btn {\r  flex-shrink: 0;\r  appearance: none;\r  background: transparent;\r  border: none;\r  color: var(--muted-foreground, #888);\r  font-size: 13px;\r  line-height: 1;\r  width: 22px;\r  height: 100%;\r  min-height: 28px;\r  cursor: pointer;\r  user-select: none;\r  display: inline-flex;\r  align-items: center;\r  justify-content: center;}.ctv-num-btn:hover { color: var(--base-foreground, #ddd);}.ctv-num-btn[data-disabled] { opacity: 0.4; pointer-events: none;}\r.ctv-toggle {\r  display: inline-flex;\r  align-items: center;\r  flex-shrink: 0;\r  width: 32px;\r  height: 18px;\r  padding: 2px;\r  border: none;\r  border-radius: 9999px;\r  background: var(--secondary-background, rgba(255,255,255,0.12));\r  cursor: pointer;\r  transition: background 0.15s ease;}.ctv-toggle[data-state='checked'] {\r  background: var(--primary-background, rgba(78,168,255,0.6));}.ctv-toggle:disabled,\r.ctv-toggle[data-disabled] {\r  opacity: 0.5;\r  cursor: not-allowed;\r  pointer-events: none;}.ctv-toggle:focus-visible {\r  outline: none;\r  box-shadow: 0 0 0 1px var(--border-default, rgba(255,255,255,0.25));}.ctv-toggle-thumb {\r  display: block;\r  width: 14px;\r  height: 14px;\r  border-radius: 9999px;\r  background: #fff;\r  transition: transform 0.15s ease;\r  transform: translateX(0);\r  will-change: transform;\r  pointer-events: none;}.ctv-toggle[data-state='checked'] .ctv-toggle-thumb {\r  transform: translateX(14px);}\r.ctv-text-input,\r.ctv-text-input input,\r.ctv-text-input textarea {\r  appearance: none;\r  background: var(--secondary-background, rgba(255,255,255,0.04));\r  border: none;\r  border-radius: 8px;\r  padding: 6px 12px;\r  color: var(--base-foreground, #ddd);\r  font-size: 12px;\r  font-family: inherit;\r  width: 100%;\r  min-width: 0;\r  outline: none;\r  box-sizing: border-box;}.ctv-text-input::placeholder,\r.ctv-text-input input::placeholder,\r.ctv-text-input textarea::placeholder { color: var(--muted-foreground, #888);}.ctv-text-area { line-height: 1.4; resize: vertical; min-height: 48px; overflow: hidden;}.ctv-text-input:focus-visible,\r.ctv-text-input input:focus-visible,\r.ctv-text-input textarea:focus-visible {\r  box-shadow: 0 0 0 1px var(--border-default, rgba(255,255,255,0.25));}.ctv-text-input:disabled,\r.ctv-text-input input:disabled,\r.ctv-text-input textarea:disabled { opacity: 0.5; pointer-events: none;}\r.tippy-box[data-animation=fade][data-state=hidden]{opacity:0}[data-tippy-root]{max-width:calc(100vw - 10px)}.tippy-box{position:relative;background-color:#333;color:#fff;border-radius:4px;font-size:14px;line-height:1.4;white-space:normal;outline:0;transition-property:transform,visibility,opacity}.tippy-box[data-placement^=top]>.tippy-arrow{bottom:0}.tippy-box[data-placement^=top]>.tippy-arrow:before{bottom:-7px;left:0;border-width:8px 8px 0;border-top-color:initial;transform-origin:center top}.tippy-box[data-placement^=bottom]>.tippy-arrow{top:0}.tippy-box[data-placement^=bottom]>.tippy-arrow:before{top:-7px;left:0;border-width:0 8px 8px;border-bottom-color:initial;transform-origin:center bottom}.tippy-box[data-placement^=left]>.tippy-arrow{right:0}.tippy-box[data-placement^=left]>.tippy-arrow:before{border-width:8px 0 8px 8px;border-left-color:initial;right:-7px;transform-origin:center left}.tippy-box[data-placement^=right]>.tippy-arrow{left:0}.tippy-box[data-placement^=right]>.tippy-arrow:before{left:-7px;border-width:8px 8px 8px 0;border-right-color:initial;transform-origin:center right}.tippy-box[data-inertia][data-state=visible]{transition-timing-function:cubic-bezier(.54,1.5,.38,1.11)}.tippy-arrow{width:16px;height:16px;color:#333}.tippy-arrow:before{content:"";position:absolute;border-color:transparent;border-style:solid}.tippy-content{position:relative;padding:5px 9px;z-index:1}.tippy-box[data-theme~='comfytv-transparent'] {  background: transparent;  box-shadow: none;}.tippy-box[data-theme~='comfytv-transparent'] > .tippy-content { padding: 0;}.tippy-box[data-theme~='comfytv-tooltip'] {  background: var(--interface-menu-surface, #1a1a1a);  border: 1px solid var(--border-default, #3a3a3a);  color: var(--base-foreground, #e0e0e0);  font-size: 11px;  line-height: 1.45;  border-radius: 4px;  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);}.tippy-box[data-theme~='comfytv-tooltip'] > .tippy-content {  padding: 6px 8px;  white-space: pre-wrap;  word-break: break-word;}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='top']    > .tippy-arrow::before { border-top-color: var(--border-default, #3a3a3a);}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='bottom'] > .tippy-arrow::before { border-bottom-color: var(--border-default, #3a3a3a);}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='left']   > .tippy-arrow::before { border-left-color: var(--border-default, #3a3a3a);}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='right']  > .tippy-arrow::before { border-right-color: var(--border-default, #3a3a3a);}.comfytv-prompt-editor[data-v-e0f1f5f0] p { margin: 0;}.comfytv-prompt-editor[data-v-e0f1f5f0] p.is-editor-empty:first-child::before {  content: attr(data-placeholder);  color: var(--muted-foreground, #888);  opacity: 0.65;  float: left;  height: 0;  pointer-events: none;}.ctv-batch-grid[data-v-bb90a6ca] {  display: grid;  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));  gap: 4px;  padding-top: 14px;  max-height: 320px;  overflow: auto;}.ctv-input-tile:hover .ctv-tile-disconnect[data-v-aa4d74ad] { display: inline-flex;}.ctv-picker-input.ctv-src-upstream         .ctv-src-tag[data-v-aa4d74ad] { background: color-mix(in srgb, var(--primary-background) 22%, transparent); color: var(--primary-background);}.ctv-picker-input.ctv-src-upstream-pending .ctv-src-tag[data-v-aa4d74ad] { background: color-mix(in srgb, var(--warning-background) 18%, transparent); color: var(--warning-background);}\r.ctv-camera-dropdown option[data-v-43267b78] {\r  background: var(--interface-menu-surface, #1a1a2e);\r  color: var(--base-foreground, #e0e0e0);}\r.ctv-crop-select[data-v-c343d075] option {\r  background: var(--interface-menu-surface, #1a1a1f);\r  color: var(--base-foreground, #ddd);}.ctv-bound-input[data-v-c343d075] { -moz-appearance: textfield;}.ctv-bound-input[data-v-c343d075]::-webkit-inner-spin-button,\r.ctv-bound-input[data-v-c343d075]::-webkit-outer-spin-button {\r  -webkit-appearance: none;}\r.ctv-pano-select[data-v-fe8b2afc] {\r  appearance: none;\r  background-color: var(--secondary-background, rgb(255 255 255 / 0.04));\r  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6' viewBox='0 0 8 6'><path d='M0 0l4 6 4-6z' fill='%23bbb'/></svg>");\r  background-repeat: no-repeat;\r  background-position: right 6px center;\r  color: var(--base-foreground, rgb(255 255 255 / 0.9));\r  border: 1px solid var(--border-subtle, rgb(255 255 255 / 0.15));\r  border-radius: 4px;\r  padding: 3px 18px 3px 6px;\r  font-size: 11px;\r  font-family: ui-monospace, SFMono-Regular, monospace;\r  cursor: pointer;\r  outline: none;\r  min-width: 70px;}.ctv-pano-select[data-v-fe8b2afc]:hover { border-color: var(--border-default, rgb(255 255 255 / 0.3));}.ctv-pano-select[data-v-fe8b2afc]:focus { border-color: var(--primary-background, rgb(78 168 255 / 0.6));}.ctv-pano-select option[data-v-fe8b2afc] { background: var(--interface-menu-surface, #1a1a2e); color: var(--base-foreground, #e0e0e0);}\r.ctv-pano-select[data-v-3d309c18] {\r  appearance: none;\r  background-color: var(--secondary-background, rgb(255 255 255 / 0.04));\r  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6' viewBox='0 0 8 6'><path d='M0 0l4 6 4-6z' fill='%23bbb'/></svg>");\r  background-repeat: no-repeat;\r  background-position: right 6px center;\r  color: var(--base-foreground, rgb(255 255 255 / 0.9));\r  border: 1px solid var(--border-subtle, rgb(255 255 255 / 0.15));\r  border-radius: 4px;\r  padding: 3px 18px 3px 6px;\r  font-size: 11px;\r  font-family: ui-monospace, SFMono-Regular, monospace;\r  cursor: pointer;\r  outline: none;\r  min-width: 70px;}.ctv-pano-select[data-v-3d309c18]:hover { border-color: var(--border-default, rgb(255 255 255 / 0.3));}.ctv-pano-select[data-v-3d309c18]:focus { border-color: var(--primary-background, rgb(78 168 255 / 0.6));}.ctv-pano-select option[data-v-3d309c18] { background: var(--interface-menu-surface, #1a1a2e); color: var(--base-foreground, #e0e0e0);}\r.ctv-pad-area[data-v-da53c66d] {\r  background-image:\r    linear-gradient(45deg, rgba(255,255,255,0.04) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.04) 75%),\r    linear-gradient(45deg, rgba(255,255,255,0.04) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.04) 75%);\r  background-size: 12px 12px;\r  background-position: 0 0, 6px 6px;\r  border: 1px dashed color-mix(in srgb, var(--primary-background, #4ea8ff) 45%, transparent);}.ctv-outpaint-handle[data-v-da53c66d]::before {\r  content: '';\r  position: absolute;\r  background: color-mix(in srgb, var(--primary-background, #4ea8ff) 65%, transparent);\r  border-radius: 2px;}.ctv-handle-left[data-v-da53c66d]::before,  .ctv-handle-right[data-v-da53c66d]::before  { width: 3px; height: 100%;}.ctv-handle-top[data-v-da53c66d]::before,   .ctv-handle-bottom[data-v-da53c66d]::before { height: 3px; width: 100%;}.ctv-outpaint-handle[data-v-da53c66d]:hover::before { background: var(--primary-background, #4ea8ff);}\r.ctv-entry-table th[data-v-575f43cb],.ctv-entry-table td[data-v-575f43cb] {  text-align: left;  padding: 6px 8px;  border-bottom: 1px solid var(--border-subtle, #2a2a2a);  vertical-align: top;}.ctv-entry-table th[data-v-575f43cb] {  font-weight: 600;  color: var(--muted-foreground, #aaa);}/*! tailwindcss v4.3.0 | MIT License | https://tailwindcss.com */@layer properties {  @supports (((-webkit-hyphens: none)) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {    *, :before, :after, ::backdrop {      --tw-translate-x: 0;      --tw-translate-y: 0;      --tw-translate-z: 0;      --tw-border-style: solid;      --tw-gradient-position: initial;      --tw-gradient-from: #0000;      --tw-gradient-via: #0000;      --tw-gradient-to: #0000;      --tw-gradient-stops: initial;      --tw-gradient-via-stops: initial;      --tw-gradient-from-position: 0%;      --tw-gradient-via-position: 50%;      --tw-gradient-to-position: 100%;      --tw-leading: initial;      --tw-font-weight: initial;      --tw-tracking: initial;      --tw-shadow: 0 0 #0000;      --tw-shadow-color: initial;      --tw-shadow-alpha: 100%;      --tw-inset-shadow: 0 0 #0000;      --tw-inset-shadow-color: initial;      --tw-inset-shadow-alpha: 100%;      --tw-ring-color: initial;      --tw-ring-shadow: 0 0 #0000;      --tw-inset-ring-color: initial;      --tw-inset-ring-shadow: 0 0 #0000;      --tw-ring-inset: initial;      --tw-ring-offset-width: 0px;      --tw-ring-offset-color: #fff;      --tw-ring-offset-shadow: 0 0 #0000;      --tw-outline-style: solid;      --tw-backdrop-blur: initial;      --tw-backdrop-brightness: initial;      --tw-backdrop-contrast: initial;      --tw-backdrop-grayscale: initial;      --tw-backdrop-hue-rotate: initial;      --tw-backdrop-invert: initial;      --tw-backdrop-opacity: initial;      --tw-backdrop-saturate: initial;      --tw-backdrop-sepia: initial;      --tw-duration: initial;      --tw-ease: initial;      --tw-scale-x: 1;      --tw-scale-y: 1;      --tw-scale-z: 1;    }  }}@layer theme {  :root, :host {    --ctv-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",    monospace;    --ctv-color-gray-600: oklch(44.6% .03 256.802);    --ctv-color-black: #000;    --ctv-color-white: #fff;    --ctv-spacing: .25rem;    --ctv-container-md: 28rem;    --ctv-text-xs: .75rem;    --ctv-text-xs--line-height: calc(1 / .75);    --ctv-text-sm: .875rem;    --ctv-text-sm--line-height: calc(1.25 / .875);    --ctv-text-lg: 1.125rem;    --ctv-text-lg--line-height: calc(1.75 / 1.125);    --ctv-font-weight-medium: 500;    --ctv-font-weight-semibold: 600;    --ctv-font-weight-bold: 700;    --ctv-tracking-wide: .025em;    --ctv-tracking-wider: .05em;    --ctv-leading-tight: 1.25;    --ctv-leading-snug: 1.375;    --ctv-radius-sm: .25rem;    --ctv-radius-md: .375rem;    --ctv-radius-lg: .5rem;    --ctv-ease-in: cubic-bezier(.4, 0, 1, 1);    --ctv-ease-out: cubic-bezier(0, 0, .2, 1);    --ctv-ease-in-out: cubic-bezier(.4, 0, .2, 1);    --ctv-animate-pulse: pulse 2s cubic-bezier(.4, 0, .6, 1) infinite;    --ctv-blur-sm: 8px;    --ctv-aspect-video: 16 / 9;    --ctv-default-transition-duration: .15s;    --ctv-default-transition-timing-function: cubic-bezier(.4, 0, .2, 1);    --ctv-text-2xs: .625rem;    --ctv-text-2xs--line-height: calc(1 / .625);    --ctv-text-3xs: .5625rem;    --ctv-text-3xs--line-height: calc(1 / .5625);  }}@layer utilities {  .ctv\\:pointer-events-none {    pointer-events: none;  }  .ctv\\:absolute {    position: absolute;  }  .ctv\\:fixed {    position: fixed;  }  .ctv\\:relative {    position: relative;  }  .ctv\\:sticky {    position: sticky;  }  .ctv\\:inset-0 {    inset: calc(var(--ctv-spacing) * 0);  }  .ctv\\:inset-x-0 {    inset-inline: calc(var(--ctv-spacing) * 0);  }  .ctv\\:-top-2 {    top: calc(var(--ctv-spacing) * -2);  }  .ctv\\:top-0 {    top: calc(var(--ctv-spacing) * 0);  }  .ctv\\:top-0\\.5 {    top: calc(var(--ctv-spacing) * .5);  }  .ctv\\:top-1 {    top: calc(var(--ctv-spacing) * 1);  }  .ctv\\:top-1\\/2 {    top: 50%;  }  .ctv\\:top-2 {    top: calc(var(--ctv-spacing) * 2);  }  .ctv\\:top-4 {    top: calc(var(--ctv-spacing) * 4);  }  .ctv\\:top-\\[3px\\] {    top: 3px;  }  .ctv\\:right-0 {    right: calc(var(--ctv-spacing) * 0);  }  .ctv\\:right-0\\.5 {    right: calc(var(--ctv-spacing) * .5);  }  .ctv\\:right-1 {    right: calc(var(--ctv-spacing) * 1);  }  .ctv\\:right-2 {    right: calc(var(--ctv-spacing) * 2);  }  .ctv\\:right-4 {    right: calc(var(--ctv-spacing) * 4);  }  .ctv\\:right-\\[3px\\] {    right: 3px;  }  .ctv\\:right-\\[14px\\] {    right: 14px;  }  .ctv\\:bottom-0 {    bottom: calc(var(--ctv-spacing) * 0);  }  .ctv\\:bottom-0\\.5 {    bottom: calc(var(--ctv-spacing) * .5);  }  .ctv\\:bottom-2 {    bottom: calc(var(--ctv-spacing) * 2);  }  .ctv\\:bottom-4 {    bottom: calc(var(--ctv-spacing) * 4);  }  .ctv\\:bottom-px {    bottom: 1px;  }  .ctv\\:left-0 {    left: calc(var(--ctv-spacing) * 0);  }  .ctv\\:left-0\\.5 {    left: calc(var(--ctv-spacing) * .5);  }  .ctv\\:left-2 {    left: calc(var(--ctv-spacing) * 2);  }  .ctv\\:z-10 {    z-index: 10;  }  .ctv\\:z-3000 {    z-index: 3000;  }  .ctv\\:z-\\[1\\] {    z-index: 1;  }  .ctv\\:z-\\[2\\] {    z-index: 2;  }  .ctv\\:z-\\[3\\] {    z-index: 3;  }  .ctv\\:z-\\[5\\] {    z-index: 5;  }  .ctv\\:z-\\[6\\] {    z-index: 6;  }  .ctv\\:z-\\[7\\] {    z-index: 7;  }  .ctv\\:z-\\[9999\\] {    z-index: 9999;  }  .ctv\\:z-\\[10000\\] {    z-index: 10000;  }  .ctv\\:m-0 {    margin: calc(var(--ctv-spacing) * 0);  }  .ctv\\:m-0\\.5 {    margin: calc(var(--ctv-spacing) * .5);  }  .ctv\\:m-1 {    margin: calc(var(--ctv-spacing) * 1);  }  .ctv\\:-mx-2\\.5 {    margin-inline: calc(var(--ctv-spacing) * -2.5);  }  .ctv\\:mx-px {    margin-inline: 1px;  }  .ctv\\:my-1\\.5 {    margin-block: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:-mt-2 {    margin-top: calc(var(--ctv-spacing) * -2);  }  .ctv\\:mt-0\\.5 {    margin-top: calc(var(--ctv-spacing) * .5);  }  .ctv\\:mt-1 {    margin-top: calc(var(--ctv-spacing) * 1);  }  .ctv\\:mt-3\\.5 {    margin-top: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:mt-4 {    margin-top: calc(var(--ctv-spacing) * 4);  }  .ctv\\:mr-1 {    margin-right: calc(var(--ctv-spacing) * 1);  }  .ctv\\:-mb-px {    margin-bottom: -1px;  }  .ctv\\:mb-1 {    margin-bottom: calc(var(--ctv-spacing) * 1);  }  .ctv\\:mb-1\\.5 {    margin-bottom: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:mb-2 {    margin-bottom: calc(var(--ctv-spacing) * 2);  }  .ctv\\:mb-2\\.5 {    margin-bottom: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:mb-\\[3px\\] {    margin-bottom: 3px;  }  .ctv\\:-ml-px {    margin-left: -1px;  }  .ctv\\:ml-0\\.5 {    margin-left: calc(var(--ctv-spacing) * .5);  }  .ctv\\:ml-auto {    margin-left: auto;  }  .ctv\\:box-border {    box-sizing: border-box;  }  .ctv\\:box-content {    box-sizing: content-box;  }  .ctv\\:\\[display\\:-webkit-box\\] {    display: -webkit-box;  }  .ctv\\:block {    display: block;  }  .ctv\\:flex {    display: flex;  }  .ctv\\:grid {    display: grid;  }  .ctv\\:hidden {    display: none;  }  .ctv\\:inline-block {    display: inline-block;  }  .ctv\\:inline-flex {    display: inline-flex;  }  .ctv\\:aspect-video {    aspect-ratio: var(--ctv-aspect-video);  }  .ctv\\:size-2 {    width: calc(var(--ctv-spacing) * 2);    height: calc(var(--ctv-spacing) * 2);  }  .ctv\\:size-3 {    width: calc(var(--ctv-spacing) * 3);    height: calc(var(--ctv-spacing) * 3);  }  .ctv\\:size-5 {    width: calc(var(--ctv-spacing) * 5);    height: calc(var(--ctv-spacing) * 5);  }  .ctv\\:size-6 {    width: calc(var(--ctv-spacing) * 6);    height: calc(var(--ctv-spacing) * 6);  }  .ctv\\:size-7 {    width: calc(var(--ctv-spacing) * 7);    height: calc(var(--ctv-spacing) * 7);  }  .ctv\\:size-9 {    width: calc(var(--ctv-spacing) * 9);    height: calc(var(--ctv-spacing) * 9);  }  .ctv\\:size-\\[22px\\] {    width: 22px;    height: 22px;  }  .ctv\\:size-full {    width: 100%;    height: 100%;  }  .ctv\\:h-1\\.5 {    height: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:h-4 {    height: calc(var(--ctv-spacing) * 4);  }  .ctv\\:h-6 {    height: calc(var(--ctv-spacing) * 6);  }  .ctv\\:h-7 {    height: calc(var(--ctv-spacing) * 7);  }  .ctv\\:h-8 {    height: calc(var(--ctv-spacing) * 8);  }  .ctv\\:h-9 {    height: calc(var(--ctv-spacing) * 9);  }  .ctv\\:h-10 {    height: calc(var(--ctv-spacing) * 10);  }  .ctv\\:h-11 {    height: calc(var(--ctv-spacing) * 11);  }  .ctv\\:h-80 {    height: calc(var(--ctv-spacing) * 80);  }  .ctv\\:h-\\[13px\\] {    height: 13px;  }  .ctv\\:h-\\[18px\\] {    height: 18px;  }  .ctv\\:h-\\[72px\\] {    height: 72px;  }  .ctv\\:h-\\[76px\\] {    height: 76px;  }  .ctv\\:h-\\[280px\\] {    height: 280px;  }  .ctv\\:h-\\[340px\\] {    height: 340px;  }  .ctv\\:h-\\[350px\\] {    height: 350px;  }  .ctv\\:h-full {    height: 100%;  }  .ctv\\:h-px {    height: 1px;  }  .ctv\\:max-h-40 {    max-height: calc(var(--ctv-spacing) * 40);  }  .ctv\\:max-h-44 {    max-height: calc(var(--ctv-spacing) * 44);  }  .ctv\\:max-h-52 {    max-height: calc(var(--ctv-spacing) * 52);  }  .ctv\\:max-h-56 {    max-height: calc(var(--ctv-spacing) * 56);  }  .ctv\\:max-h-60 {    max-height: calc(var(--ctv-spacing) * 60);  }  .ctv\\:max-h-80 {    max-height: calc(var(--ctv-spacing) * 80);  }  .ctv\\:max-h-\\[95vh\\] {    max-height: 95vh;  }  .ctv\\:max-h-\\[120px\\] {    max-height: 120px;  }  .ctv\\:max-h-\\[360px\\] {    max-height: 360px;  }  .ctv\\:max-h-\\[calc\\(100vh-48px\\)\\] {    max-height: calc(100vh - 48px);  }  .ctv\\:max-h-full {    max-height: 100%;  }  .ctv\\:min-h-0 {    min-height: calc(var(--ctv-spacing) * 0);  }  .ctv\\:min-h-10 {    min-height: calc(var(--ctv-spacing) * 10);  }  .ctv\\:min-h-11 {    min-height: calc(var(--ctv-spacing) * 11);  }  .ctv\\:min-h-12 {    min-height: calc(var(--ctv-spacing) * 12);  }  .ctv\\:min-h-14 {    min-height: calc(var(--ctv-spacing) * 14);  }  .ctv\\:min-h-20 {    min-height: calc(var(--ctv-spacing) * 20);  }  .ctv\\:min-h-\\[22px\\] {    min-height: 22px;  }  .ctv\\:min-h-\\[116px\\] {    min-height: 116px;  }  .ctv\\:min-h-\\[280px\\] {    min-height: 280px;  }  .ctv\\:w-0\\.5 {    width: calc(var(--ctv-spacing) * .5);  }  .ctv\\:w-2 {    width: calc(var(--ctv-spacing) * 2);  }  .ctv\\:w-2\\.5 {    width: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:w-3 {    width: calc(var(--ctv-spacing) * 3);  }  .ctv\\:w-4 {    width: calc(var(--ctv-spacing) * 4);  }  .ctv\\:w-7 {    width: calc(var(--ctv-spacing) * 7);  }  .ctv\\:w-12 {    width: calc(var(--ctv-spacing) * 12);  }  .ctv\\:w-14 {    width: calc(var(--ctv-spacing) * 14);  }  .ctv\\:w-24 {    width: calc(var(--ctv-spacing) * 24);  }  .ctv\\:w-\\[38px\\] {    width: 38px;  }  .ctv\\:w-\\[76px\\] {    width: 76px;  }  .ctv\\:w-\\[140px\\] {    width: 140px;  }  .ctv\\:w-\\[180px\\] {    width: 180px;  }  .ctv\\:w-auto {    width: auto;  }  .ctv\\:w-full {    width: 100%;  }  .ctv\\:w-px {    width: 1px;  }  .ctv\\:max-w-\\[90px\\] {    max-width: 90px;  }  .ctv\\:max-w-\\[95vw\\] {    max-width: 95vw;  }  .ctv\\:max-w-\\[360px\\] {    max-width: 360px;  }  .ctv\\:max-w-full {    max-width: 100%;  }  .ctv\\:max-w-md {    max-width: var(--ctv-container-md);  }  .ctv\\:min-w-0 {    min-width: calc(var(--ctv-spacing) * 0);  }  .ctv\\:min-w-2 {    min-width: calc(var(--ctv-spacing) * 2);  }  .ctv\\:min-w-4 {    min-width: calc(var(--ctv-spacing) * 4);  }  .ctv\\:min-w-8 {    min-width: calc(var(--ctv-spacing) * 8);  }  .ctv\\:min-w-9 {    min-width: calc(var(--ctv-spacing) * 9);  }  .ctv\\:min-w-64 {    min-width: calc(var(--ctv-spacing) * 64);  }  .ctv\\:min-w-\\[44px\\] {    min-width: 44px;  }  .ctv\\:min-w-\\[60px\\] {    min-width: 60px;  }  .ctv\\:min-w-\\[var\\(--reka-combobox-trigger-width\\)\\] {    min-width: var(--reka-combobox-trigger-width);  }  .ctv\\:flex-1 {    flex: 1;  }  .ctv\\:flex-auto {    flex: auto;  }  .ctv\\:shrink-0 {    flex-shrink: 0;  }  .ctv\\:border-collapse {    border-collapse: collapse;  }  .ctv\\:-translate-x-1\\/2 {    --tw-translate-x: calc(calc(1 / 2 * 100%) * -1);    translate: var(--tw-translate-x) var(--tw-translate-y);  }  .ctv\\:-translate-y-1\\/2 {    --tw-translate-y: calc(calc(1 / 2 * 100%) * -1);    translate: var(--tw-translate-x) var(--tw-translate-y);  }  .ctv\\:animate-pulse {    animation: var(--ctv-animate-pulse);  }  .ctv\\:cursor-default {    cursor: default;  }  .ctv\\:cursor-ew-resize {    cursor: ew-resize;  }  .ctv\\:cursor-grab {    cursor: grab;  }  .ctv\\:cursor-grabbing {    cursor: grabbing;  }  .ctv\\:cursor-move {    cursor: move;  }  .ctv\\:cursor-none {    cursor: none;  }  .ctv\\:cursor-not-allowed {    cursor: not-allowed;  }  .ctv\\:cursor-ns-resize {    cursor: ns-resize;  }  .ctv\\:cursor-pointer {    cursor: pointer;  }  .ctv\\:cursor-zoom-out {    cursor: zoom-out;  }  .ctv\\:touch-manipulation {    touch-action: manipulation;  }  .ctv\\:touch-none {    touch-action: none;  }  .ctv\\:resize-none {    resize: none;  }  .ctv\\:resize-y {    resize: vertical;  }  .ctv\\:list-none {    list-style-type: none;  }  .ctv\\:appearance-none {    appearance: none;  }  .ctv\\:grid-cols-4 {    grid-template-columns: repeat(4, minmax(0, 1fr));  }  .ctv\\:grid-cols-\\[60px_1fr\\] {    grid-template-columns: 60px 1fr;  }  .ctv\\:grid-cols-\\[64px_1fr_48px\\] {    grid-template-columns: 64px 1fr 48px;  }  .ctv\\:grid-cols-\\[80px_1fr_36px\\] {    grid-template-columns: 80px 1fr 36px;  }  .ctv\\:grid-cols-\\[max-content_1fr\\] {    grid-template-columns: max-content 1fr;  }  .ctv\\:grid-cols-\\[repeat\\(auto-fill\\,minmax\\(110px\\,1fr\\)\\)\\] {    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));  }  .ctv\\:flex-col {    flex-direction: column;  }  .ctv\\:flex-wrap {    flex-wrap: wrap;  }  .ctv\\:items-baseline {    align-items: baseline;  }  .ctv\\:items-center {    align-items: center;  }  .ctv\\:items-start {    align-items: flex-start;  }  .ctv\\:justify-around {    justify-content: space-around;  }  .ctv\\:justify-between {    justify-content: space-between;  }  .ctv\\:justify-center {    justify-content: center;  }  .ctv\\:justify-end {    justify-content: flex-end;  }  .ctv\\:gap-0\\.5 {    gap: calc(var(--ctv-spacing) * .5);  }  .ctv\\:gap-1 {    gap: calc(var(--ctv-spacing) * 1);  }  .ctv\\:gap-1\\.5 {    gap: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:gap-2 {    gap: calc(var(--ctv-spacing) * 2);  }  .ctv\\:gap-2\\.5 {    gap: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:gap-3 {    gap: calc(var(--ctv-spacing) * 3);  }  .ctv\\:gap-\\[3px\\] {    gap: 3px;  }  .ctv\\:gap-px {    gap: 1px;  }  .ctv\\:gap-x-2\\.5 {    column-gap: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:gap-y-\\[3px\\] {    row-gap: 3px;  }  .ctv\\:self-start {    align-self: flex-start;  }  .ctv\\:truncate {    text-overflow: ellipsis;    white-space: nowrap;    overflow: hidden;  }  .ctv\\:overflow-auto {    overflow: auto;  }  .ctv\\:overflow-hidden {    overflow: hidden;  }  .ctv\\:overflow-x-auto {    overflow-x: auto;  }  .ctv\\:overflow-y-auto {    overflow-y: auto;  }  .ctv\\:overflow-y-hidden {    overflow-y: hidden;  }  .ctv\\:rounded {    border-radius: .25rem;  }  .ctv\\:rounded-full {    border-radius: 3.40282e38px;  }  .ctv\\:rounded-lg {    border-radius: var(--ctv-radius-lg);  }  .ctv\\:rounded-md {    border-radius: var(--ctv-radius-md);  }  .ctv\\:rounded-none {    border-radius: 0;  }  .ctv\\:rounded-sm {    border-radius: var(--ctv-radius-sm);  }  .ctv\\:rounded-t {    border-top-left-radius: .25rem;    border-top-right-radius: .25rem;  }  .ctv\\:border {    border-style: var(--tw-border-style);    border-width: 1px;  }  .ctv\\:border-0 {    border-style: var(--tw-border-style);    border-width: 0;  }  .ctv\\:border-2 {    border-style: var(--tw-border-style);    border-width: 2px;  }  .ctv\\:border-\\[2\\.5px\\] {    border-style: var(--tw-border-style);    border-width: 2.5px;  }  .ctv\\:border-t {    border-top-style: var(--tw-border-style);    border-top-width: 1px;  }  .ctv\\:border-b {    border-bottom-style: var(--tw-border-style);    border-bottom-width: 1px;  }  .ctv\\:border-b-0 {    border-bottom-style: var(--tw-border-style);    border-bottom-width: 0;  }  .ctv\\:border-l {    border-left-style: var(--tw-border-style);    border-left-width: 1px;  }  .ctv\\:border-l-2 {    border-left-style: var(--tw-border-style);    border-left-width: 2px;  }  .ctv\\:border-dashed {    --tw-border-style: dashed;    border-style: dashed;  }  .ctv\\:border-none {    --tw-border-style: none;    border-style: none;  }  .ctv\\:border-solid {    --tw-border-style: solid;    border-style: solid;  }  .ctv\\:border-\\[rgb\\(200_130_255\\/0\\.4\\)\\] {    border-color: #c882ff66;  }  .ctv\\:border-\\[rgb\\(233_61_130\\/0\\.3\\)\\] {    border-color: #e93d824d;  }  .ctv\\:border-\\[rgb\\(233_61_130\\/0\\.4\\)\\] {    border-color: #e93d8266;  }  .ctv\\:border-black\\/70 {    border-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-black\\/70 {      border-color: color-mix(in oklab, var(--ctv-color-black) 70%, transparent);    }  }  .ctv\\:border-border-default {    border-color: var(--border-default, #ffffff26);  }  .ctv\\:border-border-subtle {    border-color: var(--border-subtle, #ffffff14);  }  .ctv\\:border-destructive-background, .ctv\\:border-destructive-background\\/30 {    border-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-destructive-background\\/30 {      border-color: color-mix(in oklab, var(--destructive-background, #c0392b) 30%, transparent);    }  }  .ctv\\:border-destructive-background\\/50 {    border-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-destructive-background\\/50 {      border-color: color-mix(in oklab, var(--destructive-background, #c0392b) 50%, transparent);    }  }  .ctv\\:border-destructive-background\\/55 {    border-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-destructive-background\\/55 {      border-color: color-mix(in oklab, var(--destructive-background, #c0392b) 55%, transparent);    }  }  .ctv\\:border-primary-background, .ctv\\:border-primary-background\\/30 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/30 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 30%, transparent);    }  }  .ctv\\:border-primary-background\\/40 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/40 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 40%, transparent);    }  }  .ctv\\:border-primary-background\\/45 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/45 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 45%, transparent);    }  }  .ctv\\:border-primary-background\\/50 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/50 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 50%, transparent);    }  }  .ctv\\:border-primary-background\\/60 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/60 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 60%, transparent);    }  }  .ctv\\:border-primary-background\\/70 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/70 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 70%, transparent);    }  }  .ctv\\:border-success-background\\/30 {    border-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-success-background\\/30 {      border-color: color-mix(in oklab, var(--success-background, #2e9e4f) 30%, transparent);    }  }  .ctv\\:border-success-background\\/50 {    border-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-success-background\\/50 {      border-color: color-mix(in oklab, var(--success-background, #2e9e4f) 50%, transparent);    }  }  .ctv\\:border-transparent {    border-color: #0000;  }  .ctv\\:border-warning-background\\/25 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/25 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 25%, transparent);    }  }  .ctv\\:border-warning-background\\/50 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/50 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 50%, transparent);    }  }  .ctv\\:border-warning-background\\/55 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/55 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 55%, transparent);    }  }  .ctv\\:border-warning-background\\/70 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/70 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 70%, transparent);    }  }  .ctv\\:border-white, .ctv\\:border-white\\/10 {    border-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-white\\/10 {      border-color: color-mix(in oklab, var(--ctv-color-white) 10%, transparent);    }  }  .ctv\\:border-white\\/15 {    border-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-white\\/15 {      border-color: color-mix(in oklab, var(--ctv-color-white) 15%, transparent);    }  }  .ctv\\:border-white\\/20 {    border-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-white\\/20 {      border-color: color-mix(in oklab, var(--ctv-color-white) 20%, transparent);    }  }  .ctv\\:border-white\\/30 {    border-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-white\\/30 {      border-color: color-mix(in oklab, var(--ctv-color-white) 30%, transparent);    }  }  .ctv\\:border-b-transparent {    border-bottom-color: #0000;  }  .ctv\\:border-b-warning-background\\/15 {    border-bottom-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-b-warning-background\\/15 {      border-bottom-color: color-mix(in oklab, var(--warning-background, #d39e00) 15%, transparent);    }  }  .ctv\\:bg-\\[rgb\\(78_168_255\\/0\\.25\\)\\] {    background-color: #4ea8ff40;  }  .ctv\\:bg-\\[rgb\\(120_200_120\\/0\\.25\\)\\] {    background-color: #78c87840;  }  .ctv\\:bg-\\[rgb\\(200_130_255\\/0\\.25\\)\\] {    background-color: #c882ff40;  }  .ctv\\:bg-\\[rgb\\(255_100_100\\/0\\.22\\)\\] {    background-color: #ff646438;  }  .ctv\\:bg-\\[rgb\\(255_140_200\\/0\\.25\\)\\] {    background-color: #ff8cc840;  }  .ctv\\:bg-\\[rgb\\(255_140_200\\/0\\.85\\)\\] {    background-color: #ff8cc8d9;  }  .ctv\\:bg-\\[rgb\\(255_171_64\\/0\\.25\\)\\] {    background-color: #ffab4040;  }  .ctv\\:bg-base-background {    background-color: var(--base-background, #1e1e1e);  }  .ctv\\:bg-base-foreground\\/5 {    background-color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-base-foreground\\/5 {      background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 5%, transparent);    }  }  .ctv\\:bg-base-foreground\\/10 {    background-color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-base-foreground\\/10 {      background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 10%, transparent);    }  }  .ctv\\:bg-base-foreground\\/\\[0\\.03\\] {    background-color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-base-foreground\\/\\[0\\.03\\] {      background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 3%, transparent);    }  }  .ctv\\:bg-black, .ctv\\:bg-black\\/20 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/20 {      background-color: color-mix(in oklab, var(--ctv-color-black) 20%, transparent);    }  }  .ctv\\:bg-black\\/30 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/30 {      background-color: color-mix(in oklab, var(--ctv-color-black) 30%, transparent);    }  }  .ctv\\:bg-black\\/50 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/50 {      background-color: color-mix(in oklab, var(--ctv-color-black) 50%, transparent);    }  }  .ctv\\:bg-black\\/55 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/55 {      background-color: color-mix(in oklab, var(--ctv-color-black) 55%, transparent);    }  }  .ctv\\:bg-black\\/60 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/60 {      background-color: color-mix(in oklab, var(--ctv-color-black) 60%, transparent);    }  }  .ctv\\:bg-black\\/65 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/65 {      background-color: color-mix(in oklab, var(--ctv-color-black) 65%, transparent);    }  }  .ctv\\:bg-black\\/70 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/70 {      background-color: color-mix(in oklab, var(--ctv-color-black) 70%, transparent);    }  }  .ctv\\:bg-black\\/80 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/80 {      background-color: color-mix(in oklab, var(--ctv-color-black) 80%, transparent);    }  }  .ctv\\:bg-black\\/90 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/90 {      background-color: color-mix(in oklab, var(--ctv-color-black) 90%, transparent);    }  }  .ctv\\:bg-destructive-background, .ctv\\:bg-destructive-background\\/10 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-destructive-background\\/10 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 10%, transparent);    }  }  .ctv\\:bg-destructive-background\\/15 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-destructive-background\\/15 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 15%, transparent);    }  }  .ctv\\:bg-destructive-background\\/30 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-destructive-background\\/30 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 30%, transparent);    }  }  .ctv\\:bg-destructive-background\\/70 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-destructive-background\\/70 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 70%, transparent);    }  }  .ctv\\:bg-interface-menu-component-surface-selected {    background-color: var(--interface-menu-component-surface-selected, #4ea8ff2e);  }  .ctv\\:bg-interface-menu-surface, .ctv\\:bg-interface-menu-surface\\/85 {    background-color: var(--interface-menu-surface, #232323);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-interface-menu-surface\\/85 {      background-color: color-mix(in oklab, var(--interface-menu-surface, #232323) 85%, transparent);    }  }  .ctv\\:bg-interface-panel-surface {    background-color: var(--interface-panel-surface, #1e1e1e);  }  .ctv\\:bg-primary-background, .ctv\\:bg-primary-background\\/5 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/5 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 5%, transparent);    }  }  .ctv\\:bg-primary-background\\/10 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/10 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 10%, transparent);    }  }  .ctv\\:bg-primary-background\\/15 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/15 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 15%, transparent);    }  }  .ctv\\:bg-primary-background\\/20 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/20 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 20%, transparent);    }  }  .ctv\\:bg-primary-background\\/30 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/30 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 30%, transparent);    }  }  .ctv\\:bg-secondary-background {    background-color: var(--secondary-background, #ffffff0f);  }  .ctv\\:bg-secondary-background-selected {    background-color: var(--secondary-background-selected, #4ea8ff33);  }  .ctv\\:bg-success-background\\/5 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-success-background\\/5 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 5%, transparent);    }  }  .ctv\\:bg-success-background\\/10 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-success-background\\/10 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 10%, transparent);    }  }  .ctv\\:bg-success-background\\/15 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-success-background\\/15 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 15%, transparent);    }  }  .ctv\\:bg-success-background\\/20 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-success-background\\/20 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 20%, transparent);    }  }  .ctv\\:bg-transparent {    background-color: #0000;  }  .ctv\\:bg-warning-background, .ctv\\:bg-warning-background\\/5 {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/5 {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 5%, transparent);    }  }  .ctv\\:bg-warning-background\\/10 {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/10 {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 10%, transparent);    }  }  .ctv\\:bg-warning-background\\/30 {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/30 {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 30%, transparent);    }  }  .ctv\\:bg-warning-background\\/\\[0\\.03\\] {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/\\[0\\.03\\] {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 3%, transparent);    }  }  .ctv\\:bg-white, .ctv\\:bg-white\\/10 {    background-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-white\\/10 {      background-color: color-mix(in oklab, var(--ctv-color-white) 10%, transparent);    }  }  .ctv\\:bg-white\\/30 {    background-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-white\\/30 {      background-color: color-mix(in oklab, var(--ctv-color-white) 30%, transparent);    }  }  .ctv\\:bg-white\\/70 {    background-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-white\\/70 {      background-color: color-mix(in oklab, var(--ctv-color-white) 70%, transparent);    }  }  .ctv\\:bg-white\\/85 {    background-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-white\\/85 {      background-color: color-mix(in oklab, var(--ctv-color-white) 85%, transparent);    }  }  .ctv\\:bg-linear-to-b {    --tw-gradient-position: to bottom;  }  @supports (background-image: linear-gradient(in lab, red, red)) {    .ctv\\:bg-linear-to-b {      --tw-gradient-position: to bottom in oklab;    }  }  .ctv\\:bg-linear-to-b {    background-image: linear-gradient(var(--tw-gradient-stops));  }  .ctv\\:bg-linear-to-r {    --tw-gradient-position: to right;  }  @supports (background-image: linear-gradient(in lab, red, red)) {    .ctv\\:bg-linear-to-r {      --tw-gradient-position: to right in oklab;    }  }  .ctv\\:bg-linear-to-r {    background-image: linear-gradient(var(--tw-gradient-stops));  }  .ctv\\:from-primary-background\\/85 {    --tw-gradient-from: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:from-primary-background\\/85 {      --tw-gradient-from: color-mix(in oklab, var(--primary-background, #4ea8ff99) 85%, transparent);    }  }  .ctv\\:from-primary-background\\/85 {    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .ctv\\:from-transparent {    --tw-gradient-from: transparent;    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .ctv\\:to-black\\/75 {    --tw-gradient-to: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:to-black\\/75 {      --tw-gradient-to: color-mix(in oklab, var(--ctv-color-black) 75%, transparent);    }  }  .ctv\\:to-black\\/75 {    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .ctv\\:to-primary-background-hover\\/85 {    --tw-gradient-to: var(--primary-background-hover, #4ea8ffbf);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:to-primary-background-hover\\/85 {      --tw-gradient-to: color-mix(in oklab, var(--primary-background-hover, #4ea8ffbf) 85%, transparent);    }  }  .ctv\\:to-primary-background-hover\\/85 {    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .ctv\\:object-contain {    object-fit: contain;  }  .ctv\\:object-cover {    object-fit: cover;  }  .ctv\\:p-0 {    padding: calc(var(--ctv-spacing) * 0);  }  .ctv\\:p-0\\.5 {    padding: calc(var(--ctv-spacing) * .5);  }  .ctv\\:p-1 {    padding: calc(var(--ctv-spacing) * 1);  }  .ctv\\:p-2 {    padding: calc(var(--ctv-spacing) * 2);  }  .ctv\\:p-3 {    padding: calc(var(--ctv-spacing) * 3);  }  .ctv\\:p-3\\.5 {    padding: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:p-4 {    padding: calc(var(--ctv-spacing) * 4);  }  .ctv\\:p-6 {    padding: calc(var(--ctv-spacing) * 6);  }  .ctv\\:px-0\\.5 {    padding-inline: calc(var(--ctv-spacing) * .5);  }  .ctv\\:px-1 {    padding-inline: calc(var(--ctv-spacing) * 1);  }  .ctv\\:px-1\\.5 {    padding-inline: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:px-2 {    padding-inline: calc(var(--ctv-spacing) * 2);  }  .ctv\\:px-2\\.5 {    padding-inline: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:px-3 {    padding-inline: calc(var(--ctv-spacing) * 3);  }  .ctv\\:px-3\\.5 {    padding-inline: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:px-4 {    padding-inline: calc(var(--ctv-spacing) * 4);  }  .ctv\\:px-\\[3px\\] {    padding-inline: 3px;  }  .ctv\\:px-\\[5px\\] {    padding-inline: 5px;  }  .ctv\\:py-0 {    padding-block: calc(var(--ctv-spacing) * 0);  }  .ctv\\:py-0\\.5 {    padding-block: calc(var(--ctv-spacing) * .5);  }  .ctv\\:py-1 {    padding-block: calc(var(--ctv-spacing) * 1);  }  .ctv\\:py-1\\.5 {    padding-block: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:py-2 {    padding-block: calc(var(--ctv-spacing) * 2);  }  .ctv\\:py-2\\.5 {    padding-block: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:py-5 {    padding-block: calc(var(--ctv-spacing) * 5);  }  .ctv\\:py-\\[3px\\] {    padding-block: 3px;  }  .ctv\\:py-\\[5px\\] {    padding-block: 5px;  }  .ctv\\:py-px {    padding-block: 1px;  }  .ctv\\:pt-1 {    padding-top: calc(var(--ctv-spacing) * 1);  }  .ctv\\:pt-1\\.5 {    padding-top: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:pt-2 {    padding-top: calc(var(--ctv-spacing) * 2);  }  .ctv\\:pt-2\\.5 {    padding-top: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:pt-3\\.5 {    padding-top: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:pb-1 {    padding-bottom: calc(var(--ctv-spacing) * 1);  }  .ctv\\:pb-2 {    padding-bottom: calc(var(--ctv-spacing) * 2);  }  .ctv\\:pb-3\\.5 {    padding-bottom: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:pb-6 {    padding-bottom: calc(var(--ctv-spacing) * 6);  }  .ctv\\:pl-1\\.5 {    padding-left: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:text-center {    text-align: center;  }  .ctv\\:text-left {    text-align: left;  }  .ctv\\:text-right {    text-align: right;  }  .ctv\\:\\[font-family\\:inherit\\] {    font-family: inherit;  }  .ctv\\:font-mono {    font-family: var(--ctv-font-mono);  }  .ctv\\:text-2xs {    font-size: var(--ctv-text-2xs);    line-height: var(--tw-leading, var(--ctv-text-2xs--line-height));  }  .ctv\\:text-3xs {    font-size: var(--ctv-text-3xs);    line-height: var(--tw-leading, var(--ctv-text-3xs--line-height));  }  .ctv\\:text-lg {    font-size: var(--ctv-text-lg);    line-height: var(--tw-leading, var(--ctv-text-lg--line-height));  }  .ctv\\:text-sm {    font-size: var(--ctv-text-sm);    line-height: var(--tw-leading, var(--ctv-text-sm--line-height));  }  .ctv\\:text-xs {    font-size: var(--ctv-text-xs);    line-height: var(--tw-leading, var(--ctv-text-xs--line-height));  }  .ctv\\:text-\\[8px\\] {    font-size: 8px;  }  .ctv\\:text-\\[11px\\] {    font-size: 11px;  }  .ctv\\:text-\\[13px\\] {    font-size: 13px;  }  .ctv\\:text-\\[22px\\] {    font-size: 22px;  }  .ctv\\:text-\\[28px\\] {    font-size: 28px;  }  .ctv\\:text-\\[32px\\] {    font-size: 32px;  }  .ctv\\:leading-\\[1\\.3\\] {    --tw-leading: 1.3;    line-height: 1.3;  }  .ctv\\:leading-none {    --tw-leading: 1;    line-height: 1;  }  .ctv\\:leading-snug {    --tw-leading: var(--ctv-leading-snug);    line-height: var(--ctv-leading-snug);  }  .ctv\\:leading-tight {    --tw-leading: var(--ctv-leading-tight);    line-height: var(--ctv-leading-tight);  }  .ctv\\:font-bold {    --tw-font-weight: var(--ctv-font-weight-bold);    font-weight: var(--ctv-font-weight-bold);  }  .ctv\\:font-medium {    --tw-font-weight: var(--ctv-font-weight-medium);    font-weight: var(--ctv-font-weight-medium);  }  .ctv\\:font-semibold {    --tw-font-weight: var(--ctv-font-weight-semibold);    font-weight: var(--ctv-font-weight-semibold);  }  .ctv\\:tracking-wide {    --tw-tracking: var(--ctv-tracking-wide);    letter-spacing: var(--ctv-tracking-wide);  }  .ctv\\:tracking-wider {    --tw-tracking: var(--ctv-tracking-wider);    letter-spacing: var(--ctv-tracking-wider);  }  .ctv\\:break-words {    overflow-wrap: break-word;  }  .ctv\\:break-all {    word-break: break-all;  }  .ctv\\:text-ellipsis {    text-overflow: ellipsis;  }  .ctv\\:whitespace-nowrap {    white-space: nowrap;  }  .ctv\\:whitespace-pre-wrap {    white-space: pre-wrap;  }  .ctv\\:text-\\[\\#00FFD0\\] {    color: #00ffd0;  }  .ctv\\:text-\\[\\#9dd0ff\\] {    color: #9dd0ff;  }  .ctv\\:text-\\[\\#E93D82\\] {    color: #e93d82;  }  .ctv\\:text-\\[\\#FFB800\\] {    color: #ffb800;  }  .ctv\\:text-\\[\\#b5e3a5\\] {    color: #b5e3a5;  }  .ctv\\:text-\\[\\#d8b0ff\\] {    color: #d8b0ff;  }  .ctv\\:text-\\[\\#ffb0b0\\] {    color: #ffb0b0;  }  .ctv\\:text-\\[\\#ffb0d8\\] {    color: #ffb0d8;  }  .ctv\\:text-\\[\\#ffd089\\] {    color: #ffd089;  }  .ctv\\:text-base-foreground, .ctv\\:text-base-foreground\\/80 {    color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-base-foreground\\/80 {      color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 80%, transparent);    }  }  .ctv\\:text-destructive-background {    color: var(--destructive-background, #c0392b);  }  .ctv\\:text-gray-600 {    color: var(--ctv-color-gray-600);  }  .ctv\\:text-inherit {    color: inherit;  }  .ctv\\:text-muted-foreground, .ctv\\:text-muted-foreground\\/60 {    color: var(--muted-foreground, #888);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-muted-foreground\\/60 {      color: color-mix(in oklab, var(--muted-foreground, #888) 60%, transparent);    }  }  .ctv\\:text-primary-background {    color: var(--primary-background, #4ea8ff99);  }  .ctv\\:text-secondary-foreground {    color: var(--secondary-foreground, var(--base-foreground, #e0e0e0));  }  .ctv\\:text-success-background {    color: var(--success-background, #2e9e4f);  }  .ctv\\:text-warning-background, .ctv\\:text-warning-background\\/70 {    color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-warning-background\\/70 {      color: color-mix(in oklab, var(--warning-background, #d39e00) 70%, transparent);    }  }  .ctv\\:text-warning-background\\/75 {    color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-warning-background\\/75 {      color: color-mix(in oklab, var(--warning-background, #d39e00) 75%, transparent);    }  }  .ctv\\:text-white, .ctv\\:text-white\\/30 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/30 {      color: color-mix(in oklab, var(--ctv-color-white) 30%, transparent);    }  }  .ctv\\:text-white\\/35 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/35 {      color: color-mix(in oklab, var(--ctv-color-white) 35%, transparent);    }  }  .ctv\\:text-white\\/40 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/40 {      color: color-mix(in oklab, var(--ctv-color-white) 40%, transparent);    }  }  .ctv\\:text-white\\/50 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/50 {      color: color-mix(in oklab, var(--ctv-color-white) 50%, transparent);    }  }  .ctv\\:text-white\\/70 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/70 {      color: color-mix(in oklab, var(--ctv-color-white) 70%, transparent);    }  }  .ctv\\:text-white\\/85 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/85 {      color: color-mix(in oklab, var(--ctv-color-white) 85%, transparent);    }  }  .ctv\\:text-white\\/90 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/90 {      color: color-mix(in oklab, var(--ctv-color-white) 90%, transparent);    }  }  .ctv\\:uppercase {    text-transform: uppercase;  }  .ctv\\:italic {    font-style: italic;  }  .ctv\\:opacity-0 {    opacity: 0;  }  .ctv\\:opacity-50 {    opacity: .5;  }  .ctv\\:opacity-60 {    opacity: .6;  }  .ctv\\:opacity-70 {    opacity: .7;  }  .ctv\\:opacity-75 {    opacity: .75;  }  .ctv\\:opacity-80 {    opacity: .8;  }  .ctv\\:opacity-100 {    opacity: 1;  }  .ctv\\:shadow-\\[0_0_0_1px_rgb\\(255_255_255\\/0\\.8\\)\\] {    --tw-shadow: 0 0 0 1px var(--tw-shadow-color, #fffc);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_0_1px_var\\(--primary-background\\)\\] {    --tw-shadow: 0 0 0 1px var(--tw-shadow-color, var(--primary-background));    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_0_9999px_rgb\\(0_0_0\\/0\\.5\\)\\] {    --tw-shadow: 0 0 0 9999px var(--tw-shadow-color, #00000080);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_2px_rgb\\(0_0_0\\/0\\.6\\)\\] {    --tw-shadow: 0 0 2px var(--tw-shadow-color, #0009);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_4px_rgb\\(0_0_0\\/0\\.6\\)\\] {    --tw-shadow: 0 0 4px var(--tw-shadow-color, #0009);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_8px_var\\(--primary-background\\)\\] {    --tw-shadow: 0 0 8px var(--tw-shadow-color, var(--primary-background));    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_1px_4px_rgb\\(0_0_0\\/0\\.5\\)\\] {    --tw-shadow: 0 1px 4px var(--tw-shadow-color, #00000080);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_8px_40px_rgb\\(0_0_0\\/0\\.6\\)\\] {    --tw-shadow: 0 8px 40px var(--tw-shadow-color, #0009);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_16px_48px_rgb\\(0_0_0\\/0\\.5\\)\\] {    --tw-shadow: 0 16px 48px var(--tw-shadow-color, #00000080);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-md {    --tw-shadow: 0 4px 6px -1px var(--tw-shadow-color, #0000001a), 0 2px 4px -2px var(--tw-shadow-color, #0000001a);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:ring-3 {    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:ring-primary-background {    --tw-ring-color: var(--primary-background, #4ea8ff99);  }  .ctv\\:outline, .ctv\\:outline-1 {    outline-style: var(--tw-outline-style);    outline-width: 1px;  }  .ctv\\:-outline-offset-1 {    outline-offset: calc(1px * -1);  }  .ctv\\:outline-destructive-background\\/55 {    outline-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:outline-destructive-background\\/55 {      outline-color: color-mix(in oklab, var(--destructive-background, #c0392b) 55%, transparent);    }  }  .ctv\\:outline-warning-background\\/50 {    outline-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:outline-warning-background\\/50 {      outline-color: color-mix(in oklab, var(--warning-background, #d39e00) 50%, transparent);    }  }  .ctv\\:outline-white\\/70 {    outline-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:outline-white\\/70 {      outline-color: color-mix(in oklab, var(--ctv-color-white) 70%, transparent);    }  }  .ctv\\:backdrop-blur {    --tw-backdrop-blur: blur(8px);    -webkit-backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );    backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );  }  .ctv\\:backdrop-blur-\\[2px\\] {    --tw-backdrop-blur: blur(2px);    -webkit-backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );    backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );  }  .ctv\\:backdrop-blur-sm {    --tw-backdrop-blur: blur(var(--ctv-blur-sm));    -webkit-backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );    backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );  }  .ctv\\:transition-\\[width\\] {    transition-property: width;    transition-timing-function: var(--tw-ease, var(--ctv-default-transition-timing-function));    transition-duration: var(--tw-duration, var(--ctv-default-transition-duration));  }  .ctv\\:transition-all {    transition-property: all;    transition-timing-function: var(--tw-ease, var(--ctv-default-transition-timing-function));    transition-duration: var(--tw-duration, var(--ctv-default-transition-duration));  }  .ctv\\:transition-colors {    transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;    transition-timing-function: var(--tw-ease, var(--ctv-default-transition-timing-function));    transition-duration: var(--tw-duration, var(--ctv-default-transition-duration));  }  .ctv\\:transition-opacity {    transition-property: opacity;    transition-timing-function: var(--tw-ease, var(--ctv-default-transition-timing-function));    transition-duration: var(--tw-duration, var(--ctv-default-transition-duration));  }  .ctv\\:duration-150 {    --tw-duration: .15s;    transition-duration: .15s;  }  .ctv\\:duration-200 {    --tw-duration: .2s;    transition-duration: .2s;  }  .ctv\\:ease-in {    --tw-ease: var(--ctv-ease-in);    transition-timing-function: var(--ctv-ease-in);  }  .ctv\\:ease-in-out {    --tw-ease: var(--ctv-ease-in-out);    transition-timing-function: var(--ctv-ease-in-out);  }  .ctv\\:ease-out {    --tw-ease: var(--ctv-ease-out);    transition-timing-function: var(--ctv-ease-out);  }  .ctv\\:will-change-transform {    will-change: transform;  }  .ctv\\:outline-none {    --tw-outline-style: none;    outline-style: none;  }  .ctv\\:select-none {    -webkit-user-select: none;    user-select: none;  }  .ctv\\:\\[-webkit-box-orient\\:vertical\\] {    -webkit-box-orient: vertical;  }  .ctv\\:\\[-webkit-line-clamp\\:5\\] {    -webkit-line-clamp: 5;  }  .ctv\\:ring-inset {    --tw-ring-inset: inset;  }  @media (hover: hover) {    .ctv\\:group-hover\\:opacity-100:is(:where(.ctv\\:group):hover *) {      opacity: 1;    }  }  .ctv\\:placeholder\\:text-muted-foreground::placeholder {    color: var(--muted-foreground, #888);  }  @media (hover: hover) {    .ctv\\:hover\\:border-\\[\\#E93D82\\]:hover {      border-color: #e93d82;    }    .ctv\\:hover\\:border-border-subtle:hover {      border-color: var(--border-subtle, #ffffff14);    }    .ctv\\:hover\\:border-destructive-background:hover {      border-color: var(--destructive-background, #c0392b);    }    .ctv\\:hover\\:border-primary-background:hover {      border-color: var(--primary-background, #4ea8ff99);    }    .ctv\\:hover\\:border-white\\/40:hover {      border-color: var(--ctv-color-white);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:border-white\\/40:hover {        border-color: color-mix(in oklab, var(--ctv-color-white) 40%, transparent);      }    }    .ctv\\:hover\\:border-white\\/55:hover {      border-color: var(--ctv-color-white);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:border-white\\/55:hover {        border-color: color-mix(in oklab, var(--ctv-color-white) 55%, transparent);      }    }    .ctv\\:hover\\:bg-\\[rgb\\(233_61_130\\/0\\.2\\)\\]:hover {      background-color: #e93d8233;    }    .ctv\\:hover\\:bg-base-foreground\\/5:hover {      background-color: var(--base-foreground, #e0e0e0);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-base-foreground\\/5:hover {        background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 5%, transparent);      }    }    .ctv\\:hover\\:bg-black\\/85:hover {      background-color: var(--ctv-color-black);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-black\\/85:hover {        background-color: color-mix(in oklab, var(--ctv-color-black) 85%, transparent);      }    }    .ctv\\:hover\\:bg-destructive-background:hover {      background-color: var(--destructive-background, #c0392b);    }    .ctv\\:hover\\:bg-destructive-background-hover:hover {      background-color: var(--destructive-background-hover, #d44637);    }    .ctv\\:hover\\:bg-destructive-background\\/10:hover {      background-color: var(--destructive-background, #c0392b);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-destructive-background\\/10:hover {        background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 10%, transparent);      }    }    .ctv\\:hover\\:bg-destructive-background\\/30:hover {      background-color: var(--destructive-background, #c0392b);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-destructive-background\\/30:hover {        background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 30%, transparent);      }    }    .ctv\\:hover\\:bg-interface-menu-component-surface-hovered:hover {      background-color: var(--interface-menu-component-surface-hovered, #ffffff14);    }    .ctv\\:hover\\:bg-primary-background-hover:hover {      background-color: var(--primary-background-hover, #4ea8ffbf);    }    .ctv\\:hover\\:bg-primary-background\\/15:hover {      background-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-primary-background\\/15:hover {        background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 15%, transparent);      }    }    .ctv\\:hover\\:bg-primary-background\\/20:hover {      background-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-primary-background\\/20:hover {        background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 20%, transparent);      }    }    .ctv\\:hover\\:bg-primary-background\\/25:hover {      background-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-primary-background\\/25:hover {        background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 25%, transparent);      }    }    .ctv\\:hover\\:bg-secondary-background-hover:hover {      background-color: var(--secondary-background-hover, #ffffff1a);    }    .ctv\\:hover\\:bg-warning-background\\/10:hover {      background-color: var(--warning-background, #d39e00);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-warning-background\\/10:hover {        background-color: color-mix(in oklab, var(--warning-background, #d39e00) 10%, transparent);      }    }    .ctv\\:hover\\:bg-white\\/30:hover {      background-color: var(--ctv-color-white);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-white\\/30:hover {        background-color: color-mix(in oklab, var(--ctv-color-white) 30%, transparent);      }    }    .ctv\\:hover\\:bg-white\\/90:hover {      background-color: var(--ctv-color-white);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-white\\/90:hover {        background-color: color-mix(in oklab, var(--ctv-color-white) 90%, transparent);      }    }    .ctv\\:hover\\:text-base-foreground:hover {      color: var(--base-foreground, #e0e0e0);    }    .ctv\\:hover\\:text-destructive-background:hover {      color: var(--destructive-background, #c0392b);    }    .ctv\\:hover\\:text-warning-background:hover {      color: var(--warning-background, #d39e00);    }    .ctv\\:hover\\:opacity-100:hover {      opacity: 1;    }  }  .ctv\\:focus\\:border-\\[\\#00FFD0\\]:focus {    border-color: #00ffd0;  }  .ctv\\:focus\\:border-\\[\\#E93D82\\]:focus {    border-color: #e93d82;  }  .ctv\\:focus\\:border-\\[\\#FFB800\\]:focus {    border-color: #ffb800;  }  .ctv\\:focus\\:border-node-component-border:focus {    border-color: var(--node-component-border, #fff3);  }  .ctv\\:focus\\:border-primary-background:focus, .ctv\\:focus\\:border-primary-background\\/50:focus {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:focus\\:border-primary-background\\/50:focus {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 50%, transparent);    }  }  .ctv\\:focus\\:bg-primary-background\\/10:focus {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:focus\\:bg-primary-background\\/10:focus {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 10%, transparent);    }  }  .ctv\\:focus\\:bg-secondary-background-hover:focus {    background-color: var(--secondary-background-hover, #ffffff1a);  }  .ctv\\:focus\\:outline:focus, .ctv\\:focus\\:outline-1:focus {    outline-style: var(--tw-outline-style);    outline-width: 1px;  }  .ctv\\:focus\\:outline-primary-background\\/50:focus {    outline-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:focus\\:outline-primary-background\\/50:focus {      outline-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 50%, transparent);    }  }  .ctv\\:focus\\:outline-none:focus {    --tw-outline-style: none;    outline-style: none;  }  .ctv\\:focus-visible\\:ring-1:focus-visible {    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:focus-visible\\:ring-border-default:focus-visible {    --tw-ring-color: var(--border-default, #ffffff26);  }  .ctv\\:focus-visible\\:outline-none:focus-visible {    --tw-outline-style: none;    outline-style: none;  }  .ctv\\:active\\:scale-95:active {    --tw-scale-x: 95%;    --tw-scale-y: 95%;    --tw-scale-z: 95%;    scale: var(--tw-scale-x) var(--tw-scale-y);  }  @media (hover: hover) {    .ctv\\:hover\\:enabled\\:bg-secondary-background-hover:hover:enabled {      background-color: var(--secondary-background-hover, #ffffff1a);    }  }  .ctv\\:disabled\\:pointer-events-none:disabled {    pointer-events: none;  }  .ctv\\:disabled\\:cursor-default:disabled {    cursor: default;  }  .ctv\\:disabled\\:cursor-not-allowed:disabled {    cursor: not-allowed;  }  .ctv\\:disabled\\:opacity-30:disabled {    opacity: .3;  }  .ctv\\:disabled\\:opacity-40:disabled {    opacity: .4;  }  .ctv\\:disabled\\:opacity-50:disabled {    opacity: .5;  }  .ctv\\:disabled\\:opacity-60:disabled {    opacity: .6;  }  @media (hover: hover) {    .ctv\\:disabled\\:hover\\:bg-secondary-background:disabled:hover {      background-color: var(--secondary-background, #ffffff0f);    }  }  .ctv\\:data-\\[highlighted\\]\\:bg-secondary-background-hover[data-highlighted] {    background-color: var(--secondary-background-hover, #ffffff1a);  }  .ctv\\:data-\\[state\\=checked\\]\\:bg-secondary-background-selected[data-state="checked"] {    background-color: var(--secondary-background-selected, #4ea8ff33);  }  @media (hover: hover) {    .ctv\\:data-\\[state\\=checked\\]\\:hover\\:bg-secondary-background-selected[data-state="checked"]:hover {      background-color: var(--secondary-background-selected, #4ea8ff33);    }  }  .ctv\\:data-\\[state\\=open\\]\\:border-node-component-border[data-state="open"] {    border-color: var(--node-component-border, #fff3);  }  .ctv\\:\\[\\&_\\+_\\&\\]\\:border-t + .ctv\\:\\[\\&_\\+_\\&\\]\\:border-t {    border-top-style: var(--tw-border-style);    border-top-width: 1px;  }  .ctv\\:\\[\\&_\\+_\\&\\]\\:border-solid + .ctv\\:\\[\\&_\\+_\\&\\]\\:border-solid {    --tw-border-style: solid;    border-style: solid;  }  .ctv\\:\\[\\&_\\+_\\&\\]\\:border-border-subtle + .ctv\\:\\[\\&_\\+_\\&\\]\\:border-border-subtle {    border-color: var(--border-subtle, #ffffff14);  }  .ctv\\:\\[\\&_\\+_\\&\\]\\:pt-1\\.5 + .ctv\\:\\[\\&_\\+_\\&\\]\\:pt-1\\.5 {    padding-top: calc(var(--ctv-spacing) * 1.5);  }}@property --tw-translate-x {  syntax: "*";  inherits: false;  initial-value: 0;}@property --tw-translate-y {  syntax: "*";  inherits: false;  initial-value: 0;}@property --tw-translate-z {  syntax: "*";  inherits: false;  initial-value: 0;}@property --tw-border-style {  syntax: "*";  inherits: false;  initial-value: solid;}@property --tw-gradient-position {  syntax: "*";  inherits: false}@property --tw-gradient-from {  syntax: "<color>";  inherits: false;  initial-value: #0000;}@property --tw-gradient-via {  syntax: "<color>";  inherits: false;  initial-value: #0000;}@property --tw-gradient-to {  syntax: "<color>";  inherits: false;  initial-value: #0000;}@property --tw-gradient-stops {  syntax: "*";  inherits: false}@property --tw-gradient-via-stops {  syntax: "*";  inherits: false}@property --tw-gradient-from-position {  syntax: "<length-percentage>";  inherits: false;  initial-value: 0%;}@property --tw-gradient-via-position {  syntax: "<length-percentage>";  inherits: false;  initial-value: 50%;}@property --tw-gradient-to-position {  syntax: "<length-percentage>";  inherits: false;  initial-value: 100%;}@property --tw-leading {  syntax: "*";  inherits: false}@property --tw-font-weight {  syntax: "*";  inherits: false}@property --tw-tracking {  syntax: "*";  inherits: false}@property --tw-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-shadow-color {  syntax: "*";  inherits: false}@property --tw-shadow-alpha {  syntax: "<percentage>";  inherits: false;  initial-value: 100%;}@property --tw-inset-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-inset-shadow-color {  syntax: "*";  inherits: false}@property --tw-inset-shadow-alpha {  syntax: "<percentage>";  inherits: false;  initial-value: 100%;}@property --tw-ring-color {  syntax: "*";  inherits: false}@property --tw-ring-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-inset-ring-color {  syntax: "*";  inherits: false}@property --tw-inset-ring-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-ring-inset {  syntax: "*";  inherits: false}@property --tw-ring-offset-width {  syntax: "<length>";  inherits: false;  initial-value: 0;}@property --tw-ring-offset-color {  syntax: "*";  inherits: false;  initial-value: #fff;}@property --tw-ring-offset-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-outline-style {  syntax: "*";  inherits: false;  initial-value: solid;}@property --tw-backdrop-blur {  syntax: "*";  inherits: false}@property --tw-backdrop-brightness {  syntax: "*";  inherits: false}@property --tw-backdrop-contrast {  syntax: "*";  inherits: false}@property --tw-backdrop-grayscale {  syntax: "*";  inherits: false}@property --tw-backdrop-hue-rotate {  syntax: "*";  inherits: false}@property --tw-backdrop-invert {  syntax: "*";  inherits: false}@property --tw-backdrop-opacity {  syntax: "*";  inherits: false}@property --tw-backdrop-saturate {  syntax: "*";  inherits: false}@property --tw-backdrop-sepia {  syntax: "*";  inherits: false}@property --tw-duration {  syntax: "*";  inherits: false}@property --tw-ease {  syntax: "*";  inherits: false}@property --tw-scale-x {  syntax: "*";  inherits: false;  initial-value: 1;}@property --tw-scale-y {  syntax: "*";  inherits: false;  initial-value: 1;}@property --tw-scale-z {  syntax: "*";  inherits: false;  initial-value: 1;}@keyframes pulse {  50% {    opacity: .5;  }}.comfytv-root, .comfytv-dialog {\r  --p-primary-color: #4ea8ff;\r  --p-primary-contrast-color: #fff;\r  --p-primary-hover-color: #66b6ff;\r  --p-primary-active-color: #3a96ee;\r\r  --p-surface-0:  #1e1e1e;\r  --p-surface-50: #232323;\r  --p-surface-100: #2a2a2a;\r  --p-surface-200: #333;\r  --p-surface-300: #3d3d3d;\r  --p-surface-400: #555;\r  --p-surface-500: #777;\r  --p-surface-600: #999;\r  --p-surface-700: #bbb;\r  --p-surface-800: #ddd;\r  --p-surface-900: #eee;\r  --p-surface-950: #f6f6f6;\r\r  --p-content-background: var(--p-surface-0);\r  --p-content-hover-background: var(--p-surface-100);\r  --p-content-border-color: var(--p-surface-300);\r  --p-content-border-radius: 4px;\r\r  --p-text-color: var(--p-surface-800);\r  --p-text-muted-color: var(--p-surface-600);\r\r  --p-mask-background: rgba(0, 0, 0, 0.55);\r\r  --p-focus-ring-width: 1px;\r  --p-focus-ring-style: solid;\r  --p-focus-ring-color: var(--p-primary-color);\r  --p-focus-ring-offset: 1px;\r}\r\r.comfytv-root {\r  font-size: 12px;\r  color: var(--p-text-color);\r}\r\r.comfytv-root .p-datatable {\r  font-size: 12px;\r  display: flex;\r  flex-direction: column;\r  height: 100%;\r  min-height: 0;\r  width: 100%;\r}\r.comfytv-root .p-datatable-table-container,\r.comfytv-root .p-datatable-wrapper {\r  flex: 1;\r  min-height: 0;\r  overflow: auto;\r}\r.comfytv-root .p-datatable-table {\r  border-collapse: separate;\r  border-spacing: 0;\r  table-layout: auto;\r}\r.comfytv-root .p-datatable-thead > tr > th {\r  background: var(--p-surface-100);\r  color: var(--p-text-color);\r  border-bottom: 1px solid var(--p-content-border-color);\r  padding: 6px 8px;\r  font-weight: 600;\r  text-align: left;\r}\r.comfytv-root .p-datatable-tbody > tr > td {\r  padding: 6px 8px;\r  border-bottom: 1px solid var(--p-content-border-color);\r  vertical-align: top;\r}\r.comfytv-root .p-datatable-tbody > tr.p-row-odd {\r  background: var(--p-surface-50);\r}\r.comfytv-root .p-datatable-tbody > tr:hover {\r  background: var(--p-content-hover-background);\r}\r.comfytv-root .p-datatable-frozen-column {\r  position: sticky;\r  left: 0;\r  z-index: 1;\r  background: inherit;\r}\r\r/* Select (dropdown) */\r.comfytv-root .p-select {\r  display: inline-flex;\r  align-items: center;\r  background: var(--p-surface-100);\r  border: 1px solid var(--p-content-border-color);\r  border-radius: 3px;\r  min-height: 22px;\r  cursor: pointer;\r  position: relative;\r}\r.comfytv-root .p-select:hover {\r  border-color: var(--p-surface-500);\r}\r.comfytv-root .p-select-focus {\r  border-color: var(--p-primary-color);\r}\r.comfytv-root .p-select-label {\r  padding: 2px 8px;\r  font-size: 11px;\r  color: var(--p-text-color);\r  flex: 1;\r  user-select: none;\r}\r.comfytv-root .p-select-dropdown {\r  padding: 0 6px;\r  color: var(--p-text-muted-color);\r}\r\r/* SelectButton (toggle group) */\r.comfytv-root .p-selectbutton {\r  display: inline-flex;\r  border: 1px solid var(--p-content-border-color);\r  border-radius: 3px;\r  overflow: hidden;\r}\r.comfytv-root .p-togglebutton {\r  background: var(--p-surface-100);\r  color: var(--p-text-muted-color);\r  border: none;\r  padding: 2px 10px;\r  font-size: 11px;\r  cursor: pointer;\r}\r.comfytv-root .p-togglebutton:hover {\r  background: var(--p-surface-200);\r  color: var(--p-text-color);\r}\r.comfytv-root .p-togglebutton-checked {\r  background: var(--p-primary-color);\r  color: var(--p-primary-contrast-color);\r}\r\r.comfytv-root .p-inputtext,\r.comfytv-root .cell-input,\r.comfytv-root .cell-textarea {\r  background: var(--p-surface-100);\r  border: 1px solid var(--p-primary-color);\r  color: var(--p-text-color);\r  font: inherit;\r  padding: 4px 6px;\r  border-radius: 3px;\r  width: 100%;\r  box-sizing: border-box;\r  outline: none;\r}\r.comfytv-root .cell-textarea {\r  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;\r  font-size: 11px;\r  line-height: 1.4;\r  resize: vertical;\r  min-height: 32px;\r}\r.comfytv-root .cell-select { width: 100%; }\r\r.comfytv-root .p-datatable-tbody > tr > td.p-editable-column { cursor: text; }\r.comfytv-root .p-datatable-tbody > tr > td.p-cell-editing {\r  padding: 2px !important;\r  background: rgba(78, 168, 255, 0.08);\r}\r\r.comfytv-dialog.p-dialog {\r  background: var(--p-surface-0);\r  border: 1px solid var(--p-content-border-color);\r  border-radius: 8px;\r  color: var(--p-text-color);\r  box-shadow: 0 24px 48px rgba(0,0,0,0.6);\r}\r.comfytv-dialog .p-dialog-header {\r  padding: 12px 16px;\r  border-bottom: 1px solid var(--p-content-border-color);\r  background: var(--p-surface-50);\r  border-radius: 8px 8px 0 0;\r  font-weight: 600;\r  display: flex;\r  justify-content: space-between;\r  align-items: center;\r}\r.comfytv-dialog .p-dialog-title {\r  font-size: 14px;\r}\r.comfytv-dialog .p-dialog-content {\r  padding: 16px;\r  background: var(--p-surface-0);\r  overflow: auto;\r}\r.comfytv-dialog .p-dialog-close-button {\r  background: transparent;\r  border: none;\r  color: var(--p-text-muted-color);\r  cursor: pointer;\r  font-size: 18px;\r  padding: 2px 6px;\r}\r.comfytv-dialog .p-dialog-close-button:hover {\r  color: var(--p-text-color);\r}\r\rbody > .p-blockui-mask.p-blockui-mask-document:empty,\rbody > .p-overlay-mask.p-blockui-mask-document.p-overlay-mask-leave:empty {\r  display: none !important;\r  pointer-events: none !important;\r}`));      document.head.appendChild(elementStyle);    }  } catch (e) {    console.error("vite-plugin-css-injected-by-js", e);  }})();
 var __defProp = Object.defineProperty;
 var __typeError = (msg) => {
   throw TypeError(msg);
@@ -20237,19 +20237,19 @@ var SwitchThumb_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ de
 });
 var SwitchThumb_default = SwitchThumb_vue_vue_type_script_setup_true_lang_default;
 const _hoisted_1$t = ["disabled", "aria-expanded"];
-const _hoisted_2$o = { class: "truncate text-left" };
+const _hoisted_2$o = { class: "ctv:truncate ctv:text-left" };
 const _hoisted_3$n = {
   key: 0,
-  class: "px-1 pb-2"
+  class: "ctv:px-1 ctv:pb-2"
 };
 const _hoisted_4$k = {
-  class: "max-h-60 overflow-y-auto",
+  class: "ctv:max-h-60 ctv:overflow-y-auto",
   role: "presentation"
 };
-const _hoisted_5$k = { class: "truncate" };
+const _hoisted_5$k = { class: "ctv:truncate" };
 const _hoisted_6$j = {
   key: 0,
-  class: "px-3 pb-2 text-xs text-muted-foreground"
+  class: "ctv:px-3 ctv:pb-2 ctv:text-xs ctv:text-muted-foreground"
 };
 const _sfc_main$x = /* @__PURE__ */ defineComponent({
   __name: "ComfyTVSelect",
@@ -20308,12 +20308,12 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
                 default: withCtx(() => [
                   createBaseVNode("button", {
                     type: "button",
-                    class: "flex w-full cursor-pointer items-center justify-between select-none h-8 px-3 py-1 text-xs rounded-lg bg-secondary-background text-base-foreground transition-all duration-200 ease-in-out hover:bg-secondary-background-hover border-[2.5px] border-solid border-transparent focus:border-node-component-border focus:outline-none data-[state=open]:border-node-component-border disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-secondary-background",
+                    class: "ctv:flex ctv:w-full ctv:cursor-pointer ctv:items-center ctv:justify-between ctv:select-none ctv:h-8 ctv:px-3 ctv:py-1 ctv:text-xs ctv:rounded-lg ctv:bg-secondary-background ctv:text-base-foreground ctv:transition-all ctv:duration-200 ctv:ease-in-out ctv:hover:bg-secondary-background-hover ctv:border-[2.5px] ctv:border-solid ctv:border-transparent ctv:focus:border-node-component-border ctv:focus:outline-none ctv:data-[state=open]:border-node-component-border ctv:disabled:cursor-not-allowed ctv:disabled:opacity-30 ctv:disabled:hover:bg-secondary-background",
                     disabled: __props.disabled,
                     "aria-expanded": isOpen.value
                   }, [
                     createBaseVNode("span", _hoisted_2$o, toDisplayString$1(display.value), 1),
-                    _cache2[2] || (_cache2[2] = createBaseVNode("span", { class: "shrink-0 text-muted-foreground text-2xs" }, "▾", -1))
+                    _cache2[2] || (_cache2[2] = createBaseVNode("span", { class: "ctv:shrink-0 ctv:text-muted-foreground ctv:text-2xs" }, "▾", -1))
                   ], 8, _hoisted_1$t)
                 ]),
                 _: 1
@@ -20324,7 +20324,7 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
           createVNode(unref(ComboboxPortal_default), null, {
             default: withCtx(() => [
               createVNode(unref(ComboboxContent_default), {
-                class: "z-3000 overflow-hidden rounded-lg p-2 bg-base-background text-base-foreground border border-solid border-border-default shadow-md min-w-[var(--reka-combobox-trigger-width)] max-w-[360px]",
+                class: "ctv:z-3000 ctv:overflow-hidden ctv:rounded-lg ctv:p-2 ctv:bg-base-background ctv:text-base-foreground ctv:border ctv:border-solid ctv:border-border-default ctv:shadow-md ctv:min-w-[var(--reka-combobox-trigger-width)] ctv:max-w-[360px]",
                 position: "popper",
                 "side-offset": 2,
                 align: "start"
@@ -20336,7 +20336,7 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
                       "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => query.value = $event),
                       placeholder: __props.filterPlaceholder ?? "Filter…",
                       "auto-focus": "",
-                      class: "flex h-7 w-full min-w-0 appearance-none rounded-lg border-none bg-secondary-background px-3 py-1 text-xs text-base-foreground placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-border-default focus-visible:outline-none"
+                      class: "ctv:flex ctv:h-7 ctv:w-full ctv:min-w-0 ctv:appearance-none ctv:rounded-lg ctv:border-none ctv:bg-secondary-background ctv:px-3 ctv:py-1 ctv:text-xs ctv:text-base-foreground ctv:placeholder:text-muted-foreground ctv:focus-visible:ring-1 ctv:focus-visible:ring-border-default ctv:focus-visible:outline-none"
                     }, null, 8, ["modelValue", "placeholder"])
                   ])) : createCommentVNode("", true),
                   createBaseVNode("div", _hoisted_4$k, [
@@ -20345,11 +20345,11 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
                         key: opt.value,
                         value: opt.value,
                         "text-value": opt.label,
-                        class: "relative flex w-full cursor-pointer items-center justify-between select-none gap-3 rounded-sm px-2 py-2 text-xs outline-none hover:bg-secondary-background-hover data-[highlighted]:bg-secondary-background-hover data-[state=checked]:bg-secondary-background-selected data-[state=checked]:hover:bg-secondary-background-selected"
+                        class: "ctv:relative ctv:flex ctv:w-full ctv:cursor-pointer ctv:items-center ctv:justify-between ctv:select-none ctv:gap-3 ctv:rounded-sm ctv:px-2 ctv:py-2 ctv:text-xs ctv:outline-none ctv:hover:bg-secondary-background-hover ctv:data-[highlighted]:bg-secondary-background-hover ctv:data-[state=checked]:bg-secondary-background-selected ctv:data-[state=checked]:hover:bg-secondary-background-selected"
                       }, {
                         default: withCtx(() => [
                           createBaseVNode("span", _hoisted_5$k, toDisplayString$1(opt.label), 1),
-                          createVNode(unref(ComboboxItemIndicator_default), { class: "flex shrink-0 items-center justify-center text-base-foreground" }, {
+                          createVNode(unref(ComboboxItemIndicator_default), { class: "ctv:flex ctv:shrink-0 ctv:items-center ctv:justify-center ctv:text-base-foreground" }, {
                             default: withCtx(() => [..._cache2[3] || (_cache2[3] = [
                               createTextVNode("✓", -1)
                             ])]),
@@ -20582,7 +20582,7 @@ const _sfc_main$t = /* @__PURE__ */ defineComponent({
         "onUpdate:modelValue": _cache2[3] || (_cache2[3] = ($event) => emit2("update:modelValue", $event))
       }, null, 8, ["model-value", "disabled", "multiline", "placeholder"])) : (openBlock(), createElementBlock("input", {
         key: 4,
-        class: "w-full py-1 px-1.5 rounded-sm text-2xs font-mono bg-base-foreground/[0.03] border border-dashed border-warning-background/50 text-warning-background cursor-not-allowed",
+        class: "ctv:w-full ctv:py-1 ctv:px-1.5 ctv:rounded-sm ctv:text-2xs ctv:font-mono ctv:bg-base-foreground/[0.03] ctv:border ctv:border-dashed ctv:border-warning-background/50 ctv:text-warning-background ctv:cursor-not-allowed",
         value: String(__props.modelValue ?? ""),
         readonly: "",
         title: `Unsupported widget type: ${__props.kind}`
@@ -26312,78 +26312,78 @@ function buildBindingOptions(widgets, workflowKind) {
   }
   return out;
 }
-const _hoisted_1$q = { class: "flex flex-col size-full box-border overflow-auto text-xs pt-2 pb-6 px-2.5 text-base-foreground" };
-const _hoisted_2$m = { class: "sticky -top-2 z-[1] -mx-2.5 -mt-2 mb-2 py-1.5 px-2.5 bg-interface-panel-surface border-b border-border-subtle" };
-const _hoisted_3$m = { class: "font-semibold text-sm" };
+const _hoisted_1$q = { class: "ctv:flex ctv:flex-col ctv:size-full ctv:box-border ctv:overflow-auto ctv:text-xs ctv:pt-2 ctv:pb-6 ctv:px-2.5 ctv:text-base-foreground" };
+const _hoisted_2$m = { class: "ctv:sticky ctv:-top-2 ctv:z-[1] ctv:-mx-2.5 ctv:-mt-2 ctv:mb-2 ctv:py-1.5 ctv:px-2.5 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle" };
+const _hoisted_3$m = { class: "ctv:font-semibold ctv:text-sm" };
 const _hoisted_4$j = {
   key: 2,
-  class: "my-1.5 py-1.5 px-2 text-xs rounded bg-destructive-background/15 border border-destructive-background/50 text-destructive-background"
+  class: "ctv:my-1.5 ctv:py-1.5 ctv:px-2 ctv:text-xs ctv:rounded ctv:bg-destructive-background/15 ctv:border ctv:border-destructive-background/50 ctv:text-destructive-background"
 };
 const _hoisted_5$j = {
   key: 3,
-  class: "flex flex-col gap-3"
+  class: "ctv:flex ctv:flex-col ctv:gap-3"
 };
-const _hoisted_6$i = { class: "flex flex-col gap-0.5 pt-1 pb-2 border-b border-border-subtle" };
-const _hoisted_7$h = { class: "text-3xs uppercase tracking-wide text-muted-foreground" };
-const _hoisted_8$h = { class: "text-xs font-semibold" };
+const _hoisted_6$i = { class: "ctv:flex ctv:flex-col ctv:gap-0.5 ctv:pt-1 ctv:pb-2 ctv:border-b ctv:border-border-subtle" };
+const _hoisted_7$h = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_8$h = { class: "ctv:text-xs ctv:font-semibold" };
 const _hoisted_9$h = {
   key: 0,
-  class: "mt-1 text-2xs italic text-warning-background"
+  class: "ctv:mt-1 ctv:text-2xs ctv:italic ctv:text-warning-background"
 };
 const _hoisted_10$g = {
   key: 0,
-  class: "rounded overflow-hidden bg-warning-background/[0.03] border border-warning-background/25"
+  class: "ctv:rounded ctv:overflow-hidden ctv:bg-warning-background/[0.03] ctv:border ctv:border-warning-background/25"
 };
 const _hoisted_11$e = ["aria-expanded"];
-const _hoisted_12$e = { class: "w-2.5 text-2xs text-warning-background/75" };
-const _hoisted_13$c = { class: "flex-1 text-2xs uppercase tracking-wide font-semibold text-warning-background" };
-const _hoisted_14$a = { class: "text-3xs font-mono py-px px-1.5 rounded-lg bg-warning-background/10 text-warning-background/70" };
+const _hoisted_12$e = { class: "ctv:w-2.5 ctv:text-2xs ctv:text-warning-background/75" };
+const _hoisted_13$c = { class: "ctv:flex-1 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:font-semibold ctv:text-warning-background" };
+const _hoisted_14$a = { class: "ctv:text-3xs ctv:font-mono ctv:py-px ctv:px-1.5 ctv:rounded-lg ctv:bg-warning-background/10 ctv:text-warning-background/70" };
 const _hoisted_15$a = {
   key: 0,
-  class: "flex flex-col gap-1 py-1.5 px-2"
+  class: "ctv:flex ctv:flex-col ctv:gap-1 ctv:py-1.5 ctv:px-2"
 };
-const _hoisted_16$a = { class: "m-0 text-xs whitespace-pre-wrap [font-family:inherit] text-base-foreground" };
+const _hoisted_16$a = { class: "ctv:m-0 ctv:text-xs ctv:whitespace-pre-wrap ctv:[font-family:inherit] ctv:text-base-foreground" };
 const _hoisted_17$a = { key: 1 };
 const _hoisted_18$8 = {
   key: 0,
-  class: "py-1 text-3xs uppercase tracking-wide text-muted-foreground border-b border-border-subtle"
+  class: "ctv:py-1 ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground ctv:border-b ctv:border-border-subtle"
 };
 const _hoisted_19$6 = ["aria-expanded", "onClick"];
-const _hoisted_20$5 = { class: "w-2.5 text-2xs text-muted-foreground" };
-const _hoisted_21$5 = { class: "text-xs font-semibold text-base-foreground" };
+const _hoisted_20$5 = { class: "ctv:w-2.5 ctv:text-2xs ctv:text-muted-foreground" };
+const _hoisted_21$5 = { class: "ctv:text-xs ctv:font-semibold ctv:text-base-foreground" };
 const _hoisted_22$5 = {
   key: 0,
-  class: "text-2xs font-mono text-muted-foreground/60"
+  class: "ctv:text-2xs ctv:font-mono ctv:text-muted-foreground/60"
 };
-const _hoisted_23$5 = { class: "text-2xs font-mono text-muted-foreground/60" };
-const _hoisted_24$4 = { class: "text-3xs font-mono py-px px-1.5 rounded-lg bg-base-foreground/5 text-muted-foreground" };
+const _hoisted_23$5 = { class: "ctv:text-2xs ctv:font-mono ctv:text-muted-foreground/60" };
+const _hoisted_24$4 = { class: "ctv:text-3xs ctv:font-mono ctv:py-px ctv:px-1.5 ctv:rounded-lg ctv:bg-base-foreground/5 ctv:text-muted-foreground" };
 const _hoisted_25$4 = {
   key: 0,
-  class: "flex flex-col gap-1.5 p-2"
+  class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2"
 };
-const _hoisted_26$3 = { class: "text-2xs" };
-const _hoisted_27$3 = { class: "font-mono text-muted-foreground" };
-const _hoisted_28$3 = { class: "grid grid-cols-[60px_1fr] items-center gap-1.5 mt-0.5" };
-const _hoisted_29$3 = { class: "text-3xs uppercase tracking-wide text-muted-foreground" };
+const _hoisted_26$3 = { class: "ctv:text-2xs" };
+const _hoisted_27$3 = { class: "ctv:font-mono ctv:text-muted-foreground" };
+const _hoisted_28$3 = { class: "ctv:grid ctv:grid-cols-[60px_1fr] ctv:items-center ctv:gap-1.5 ctv:mt-0.5" };
+const _hoisted_29$3 = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_30$3 = {
   key: 2,
-  class: "p-2 text-xs text-left italic text-muted-foreground/60"
+  class: "ctv:p-2 ctv:text-xs ctv:text-left ctv:italic ctv:text-muted-foreground/60"
 };
 const _hoisted_31$3 = { key: 3 };
-const _hoisted_32$2 = { class: "m-0 text-xs whitespace-pre-wrap text-muted-foreground" };
-const _hoisted_33$1 = { class: "mt-4 pt-2.5 pb-3.5 px-3 flex flex-col gap-1 border-t border-border-subtle" };
+const _hoisted_32$2 = { class: "ctv:m-0 ctv:text-xs ctv:whitespace-pre-wrap ctv:text-muted-foreground" };
+const _hoisted_33$1 = { class: "ctv:mt-4 ctv:pt-2.5 ctv:pb-3.5 ctv:px-3 ctv:flex ctv:flex-col ctv:gap-1 ctv:border-t ctv:border-border-subtle" };
 const _hoisted_34$1 = ["disabled", "title"];
 const _hoisted_35$1 = ["disabled", "title"];
 const _hoisted_36 = {
   key: 0,
-  class: "text-xs text-destructive-background"
+  class: "ctv:text-xs ctv:text-destructive-background"
 };
 const _hoisted_37 = {
   key: 1,
-  class: "text-xs text-destructive-background"
+  class: "ctv:text-xs ctv:text-destructive-background"
 };
-const emptyClass = "py-5 px-1.5 text-center italic text-xs text-muted-foreground/60";
-const sectionHeading = "mt-1 mb-1.5 text-xs uppercase tracking-wide text-muted-foreground";
+const emptyClass = "ctv:py-5 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-xs ctv:text-muted-foreground/60";
+const sectionHeading = "ctv:mt-1 ctv:mb-1.5 ctv:text-xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground";
 const _sfc_main$s = /* @__PURE__ */ defineComponent({
   __name: "WorkflowConfigSidebar",
   setup(__props) {
@@ -26487,13 +26487,13 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
       }
     });
     const COMFY_BTN_SM = [
-      "inline-flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap appearance-none",
-      "border-none transition-colors focus-visible:outline-none",
-      "disabled:pointer-events-none disabled:opacity-50",
-      "h-6 rounded-sm px-2 py-1 text-xs font-medium"
+      "ctv:inline-flex ctv:items-center ctv:justify-center ctv:gap-1 ctv:cursor-pointer ctv:whitespace-nowrap ctv:appearance-none",
+      "ctv:border-none ctv:transition-colors ctv:focus-visible:outline-none",
+      "ctv:disabled:pointer-events-none ctv:disabled:opacity-50",
+      "ctv:h-6 ctv:rounded-sm ctv:px-2 ctv:py-1 ctv:text-xs ctv:font-medium"
     ].join(" ");
-    const exportBtn = COMFY_BTN_SM + " self-start text-secondary-foreground bg-secondary-background hover:bg-secondary-background-hover";
-    const resetBtn = COMFY_BTN_SM + " self-start bg-transparent text-muted-foreground hover:bg-warning-background/10 hover:text-warning-background";
+    const exportBtn = COMFY_BTN_SM + " ctv:self-start ctv:text-secondary-foreground ctv:bg-secondary-background ctv:hover:bg-secondary-background-hover";
+    const resetBtn = COMFY_BTN_SM + " ctv:self-start ctv:bg-transparent ctv:text-muted-foreground ctv:hover:bg-warning-background/10 ctv:hover:text-warning-background";
     return (_ctx, _cache2) => {
       var _a2, _b2;
       return openBlock(), createElementBlock("div", _hoisted_1$q, [
@@ -26515,10 +26515,10 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
           ((_a2 = unref(config2).gui_notes) == null ? void 0 : _a2.length) ? (openBlock(), createElementBlock("section", _hoisted_10$g, [
             createBaseVNode("button", {
               class: normalizeClass([
-                "flex items-center gap-1.5 w-full py-[5px] px-2 text-left cursor-pointer [font-family:inherit]",
-                "bg-warning-background/5 border-0 border-b text-inherit",
-                "hover:bg-warning-background/10",
-                unref(notesCollapsed) ? "border-b-transparent" : "border-b-warning-background/15"
+                "ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:py-[5px] ctv:px-2 ctv:text-left ctv:cursor-pointer ctv:[font-family:inherit]",
+                "ctv:bg-warning-background/5 ctv:border-0 ctv:border-b ctv:text-inherit",
+                "ctv:hover:bg-warning-background/10",
+                unref(notesCollapsed) ? "ctv:border-b-transparent" : "ctv:border-b-warning-background/15"
               ]),
               "aria-expanded": !unref(notesCollapsed),
               onClick: _cache2[0] || (_cache2[0] = //@ts-ignore
@@ -26532,7 +26532,7 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(config2).gui_notes, (note, i) => {
                 return openBlock(), createElementBlock("div", {
                   key: i,
-                  class: "py-1 px-2 rounded-sm border-l-2 bg-warning-background/5 border-warning-background/50"
+                  class: "ctv:py-1 ctv:px-2 ctv:rounded-sm ctv:border-l-2 ctv:bg-warning-background/5 ctv:border-warning-background/50"
                 }, [
                   createBaseVNode("pre", _hoisted_16$a, toDisplayString$1(note.text), 1)
                 ]);
@@ -26546,18 +26546,18 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(groupedWidgets.value, (grp, gi) => {
               return openBlock(), createElementBlock("div", {
                 key: gi,
-                class: "flex flex-col gap-1.5 mb-2.5"
+                class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:mb-2.5"
               }, [
                 grp.title ? (openBlock(), createElementBlock("div", _hoisted_18$8, toDisplayString$1(grp.title), 1)) : createCommentVNode("", true),
                 (openBlock(true), createElementBlock(Fragment$1, null, renderList(grp.nodes, (node) => {
                   return openBlock(), createElementBlock("div", {
                     key: node.node_id,
-                    class: "rounded-lg overflow-hidden bg-base-foreground/[0.03]"
+                    class: "ctv:rounded-lg ctv:overflow-hidden ctv:bg-base-foreground/[0.03]"
                   }, [
                     createBaseVNode("button", {
                       class: normalizeClass([
-                        "flex items-center gap-1.5 w-full py-1.5 px-2 text-left cursor-pointer text-inherit [font-family:inherit]",
-                        "bg-transparent border-none hover:bg-secondary-background-hover"
+                        "ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:py-1.5 ctv:px-2 ctv:text-left ctv:cursor-pointer ctv:text-inherit ctv:[font-family:inherit]",
+                        "ctv:bg-transparent ctv:border-none ctv:hover:bg-secondary-background-hover"
                       ]),
                       "aria-expanded": !unref(isCollapsed)(node.node_id),
                       onClick: ($event) => unref(toggleCollapsed)(node.node_id)
@@ -26566,7 +26566,7 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
                       createBaseVNode("span", _hoisted_21$5, toDisplayString$1(node.node_title), 1),
                       node.node_title !== node.node_type ? (openBlock(), createElementBlock("span", _hoisted_22$5, " (" + toDisplayString$1(node.node_type) + ") ", 1)) : createCommentVNode("", true),
                       createBaseVNode("span", _hoisted_23$5, "#" + toDisplayString$1(node.node_id), 1),
-                      _cache2[3] || (_cache2[3] = createBaseVNode("span", { class: "flex-1" }, null, -1)),
+                      _cache2[3] || (_cache2[3] = createBaseVNode("span", { class: "ctv:flex-1" }, null, -1)),
                       createBaseVNode("span", _hoisted_24$4, toDisplayString$1(boundCountFor(node)) + " / " + toDisplayString$1(node.widgets.length), 1)
                     ], 8, _hoisted_19$6),
                     !unref(isCollapsed)(node.node_id) ? (openBlock(), createElementBlock("div", _hoisted_25$4, [
@@ -26574,7 +26574,7 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
                         var _a3;
                         return openBlock(), createElementBlock("div", {
                           key: `${w.node_id}/${w.widget_name}`,
-                          class: "flex flex-col gap-1 [&_+_&]:pt-1.5 [&_+_&]:border-t [&_+_&]:border-solid [&_+_&]:border-border-subtle"
+                          class: "ctv:flex ctv:flex-col ctv:gap-1 ctv:[&_+_&]:pt-1.5 ctv:[&_+_&]:border-t ctv:[&_+_&]:border-solid ctv:[&_+_&]:border-border-subtle"
                         }, [
                           createBaseVNode("div", _hoisted_26$3, [
                             createBaseVNode("span", _hoisted_27$3, "." + toDisplayString$1(w.widget_name), 1)
@@ -49347,21 +49347,21 @@ function writeWidget(node, name, value, opts) {
   if ((opts == null ? void 0 : opts.fireCallback) === false) return;
   (_a2 = w.callback) == null ? void 0 : _a2.call(w, value);
 }
-const _hoisted_1$p = { class: "min-w-64 max-w-md max-h-60 overflow-y-auto rounded text-xs bg-interface-menu-surface text-base-foreground border border-border-default shadow-md" };
+const _hoisted_1$p = { class: "ctv:min-w-64 ctv:max-w-md ctv:max-h-60 ctv:overflow-y-auto ctv:rounded ctv:text-xs ctv:bg-interface-menu-surface ctv:text-base-foreground ctv:border ctv:border-border-default ctv:shadow-md" };
 const _hoisted_2$l = ["title", "onClick"];
-const _hoisted_3$l = { class: "font-mono text-base-foreground shrink-0" };
-const _hoisted_4$i = { class: "text-muted-foreground overflow-hidden text-ellipsis whitespace-nowrap" };
-const _hoisted_5$i = { class: "text-muted-foreground overflow-hidden text-ellipsis whitespace-nowrap" };
+const _hoisted_3$l = { class: "ctv:font-mono ctv:text-base-foreground ctv:shrink-0" };
+const _hoisted_4$i = { class: "ctv:text-muted-foreground ctv:overflow-hidden ctv:text-ellipsis ctv:whitespace-nowrap" };
+const _hoisted_5$i = { class: "ctv:text-muted-foreground ctv:overflow-hidden ctv:text-ellipsis ctv:whitespace-nowrap" };
 const _hoisted_6$h = {
   key: 1,
-  class: "py-1.5 px-2 italic text-xs text-muted-foreground"
+  class: "ctv:py-1.5 ctv:px-2 ctv:italic ctv:text-xs ctv:text-muted-foreground"
 };
-const _hoisted_7$g = { class: "text-xs text-muted-foreground" };
-const _hoisted_8$g = { class: "text-base-foreground font-mono" };
-const _hoisted_9$g = { class: "flex justify-end gap-1.5" };
+const _hoisted_7$g = { class: "ctv:text-xs ctv:text-muted-foreground" };
+const _hoisted_8$g = { class: "ctv:text-base-foreground ctv:font-mono" };
+const _hoisted_9$g = { class: "ctv:flex ctv:justify-end ctv:gap-1.5" };
 const _hoisted_10$f = ["disabled"];
-const KIND_TAG_BASE = "shrink-0 py-px px-1.5 rounded-sm text-3xs font-semibold uppercase tracking-wide bg-secondary-background text-secondary-foreground";
-const ACTION_BTN_BASE = "relative inline-flex items-center justify-center gap-2 cursor-pointer touch-manipulation whitespace-nowrap appearance-none border-none transition-colors h-6 rounded-sm px-2 py-1 text-xs font-medium disabled:pointer-events-none disabled:opacity-50";
+const KIND_TAG_BASE = "ctv:shrink-0 ctv:py-px ctv:px-1.5 ctv:rounded-sm ctv:text-3xs ctv:font-semibold ctv:uppercase ctv:tracking-wide ctv:bg-secondary-background ctv:text-secondary-foreground";
+const ACTION_BTN_BASE = "ctv:relative ctv:inline-flex ctv:items-center ctv:justify-center ctv:gap-2 ctv:cursor-pointer ctv:touch-manipulation ctv:whitespace-nowrap ctv:appearance-none ctv:border-none ctv:transition-colors ctv:h-6 ctv:rounded-sm ctv:px-2 ctv:py-1 ctv:text-xs ctv:font-medium ctv:disabled:pointer-events-none ctv:disabled:opacity-50";
 const _sfc_main$r = /* @__PURE__ */ defineComponent({
   __name: "MentionList",
   props: {
@@ -49470,8 +49470,8 @@ const _sfc_main$r = /* @__PURE__ */ defineComponent({
       return KIND_TAG_BASE;
     }
     const ACTION_BTN_VARIANTS = {
-      default: " bg-secondary-background text-secondary-foreground hover:bg-secondary-background-hover",
-      save: " bg-primary-background text-base-foreground hover:bg-primary-background-hover"
+      default: " ctv:bg-secondary-background ctv:text-secondary-foreground ctv:hover:bg-secondary-background-hover",
+      save: " ctv:bg-primary-background ctv:text-base-foreground ctv:hover:bg-primary-background-hover"
     };
     function actionBtn(variant = "default") {
       return ACTION_BTN_BASE + ACTION_BTN_VARIANTS[variant];
@@ -49483,9 +49483,9 @@ const _sfc_main$r = /* @__PURE__ */ defineComponent({
             return openBlock(), createElementBlock("div", {
               key: item.id,
               class: normalizeClass([
-                "flex items-baseline gap-2 py-1 px-2 cursor-pointer",
-                "hover:bg-interface-menu-component-surface-hovered",
-                i === activeIndex.value ? "bg-interface-menu-component-surface-selected" : ""
+                "ctv:flex ctv:items-baseline ctv:gap-2 ctv:py-1 ctv:px-2 ctv:cursor-pointer",
+                "ctv:hover:bg-interface-menu-component-surface-hovered",
+                i === activeIndex.value ? "ctv:bg-interface-menu-component-surface-selected" : ""
               ]),
               title: item.content,
               onMousedown: _cache2[0] || (_cache2[0] = withModifiers(() => {
@@ -49503,9 +49503,9 @@ const _sfc_main$r = /* @__PURE__ */ defineComponent({
           canCreate.value ? (openBlock(), createElementBlock("div", {
             key: 0,
             class: normalizeClass([
-              "flex items-baseline gap-2 py-1 px-2 cursor-pointer border-t border-border-subtle",
-              "hover:bg-interface-menu-component-surface-hovered",
-              activeIndex.value === __props.items.length ? "bg-interface-menu-component-surface-selected" : ""
+              "ctv:flex ctv:items-baseline ctv:gap-2 ctv:py-1 ctv:px-2 ctv:cursor-pointer ctv:border-t ctv:border-border-subtle",
+              "ctv:hover:bg-interface-menu-component-surface-hovered",
+              activeIndex.value === __props.items.length ? "ctv:bg-interface-menu-component-surface-selected" : ""
             ]),
             onMousedown: _cache2[1] || (_cache2[1] = withModifiers(() => {
             }, ["prevent"])),
@@ -49515,7 +49515,7 @@ const _sfc_main$r = /* @__PURE__ */ defineComponent({
               key: 0,
               class: normalizeClass(kindTag())
             }, "new", 2)) : createCommentVNode("", true),
-            _cache2[5] || (_cache2[5] = createBaseVNode("span", { class: "font-mono text-base-foreground shrink-0" }, "+ Create", -1)),
+            _cache2[5] || (_cache2[5] = createBaseVNode("span", { class: "ctv:font-mono ctv:text-base-foreground ctv:shrink-0" }, "+ Create", -1)),
             createBaseVNode("span", _hoisted_5$i, [
               _cache2[4] || (_cache2[4] = createTextVNode(" new fragment ", -1)),
               createBaseVNode("code", null, "@" + toDisplayString$1(__props.query), 1)
@@ -49524,7 +49524,7 @@ const _sfc_main$r = /* @__PURE__ */ defineComponent({
           __props.items.length === 0 && !canCreate.value ? (openBlock(), createElementBlock("div", _hoisted_6$h, toDisplayString$1(__props.query ? "Invalid label — start with a letter / underscore (中文 OK), then letters / digits / _ / -" : "No entries yet — type a label to create one"), 1)) : createCommentVNode("", true)
         ], 64)) : (openBlock(), createElementBlock("div", {
           key: 1,
-          class: "flex flex-col gap-1.5 p-2",
+          class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2",
           onMousedown: _cache2[3] || (_cache2[3] = withModifiers(() => {
           }, ["stop"]))
         }, [
@@ -49537,7 +49537,7 @@ const _sfc_main$r = /* @__PURE__ */ defineComponent({
             ref: createTa,
             "onUpdate:modelValue": _cache2[2] || (_cache2[2] = ($event) => pendingContent.value = $event),
             rows: "3",
-            class: "w-full py-1.5 px-2 rounded-sm resize-y outline-none box-border text-xs leading-snug bg-secondary-background text-base-foreground border border-border-default focus:border-primary-background",
+            class: "ctv:w-full ctv:py-1.5 ctv:px-2 ctv:rounded-sm ctv:resize-y ctv:outline-none ctv:box-border ctv:text-xs ctv:leading-snug ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-default ctv:focus:border-primary-background",
             placeholder: "Content this @-token expands to. (For characters / other kinds, use the ComfyTV button → Entries dialog.)",
             onKeydown: withModifiers(onCreateKeydown, ["stop"])
           }, null, 544), [
@@ -49704,7 +49704,7 @@ function computePickedFromBatch(batch2, wantIdx) {
 }
 const _hoisted_1$o = {
   key: 0,
-  class: "pt-1.5 px-2 pb-1"
+  class: "ctv:pt-1.5 ctv:px-2 ctv:pb-1"
 };
 const _sfc_main$q = /* @__PURE__ */ defineComponent({
   __name: "MainPromptInput",
@@ -49757,7 +49757,7 @@ const _sfc_main$q = /* @__PURE__ */ defineComponent({
         }),
         index_default$3.configure({
           HTMLAttributes: {
-            class: "inline-block py-0 px-1 mx-px rounded font-medium whitespace-nowrap bg-primary-background/20 border border-primary-background/45 text-primary-background"
+            class: "ctv:inline-block ctv:py-0 ctv:px-1 ctv:mx-px ctv:rounded ctv:font-medium ctv:whitespace-nowrap ctv:bg-primary-background/20 ctv:border ctv:border-primary-background/45 ctv:text-primary-background"
           },
           renderText: ({ node }) => `@${node.attrs.label}`,
           renderHTML: ({ node, HTMLAttributes }) => [
@@ -49774,7 +49774,7 @@ const _sfc_main$q = /* @__PURE__ */ defineComponent({
       ],
       editorProps: {
         attributes: {
-          class: "comfytv-prompt-prosemirror min-h-11 max-h-80 overflow-y-auto py-1.5 px-2 rounded bg-secondary-background text-base-foreground border border-border-default focus:border-primary-background text-xs leading-snug [font-family:inherit] outline-none box-border whitespace-pre-wrap break-words",
+          class: "comfytv-prompt-prosemirror ctv:min-h-11 ctv:max-h-80 ctv:overflow-y-auto ctv:py-1.5 ctv:px-2 ctv:rounded ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-default ctv:focus:border-primary-background ctv:text-xs ctv:leading-snug ctv:[font-family:inherit] ctv:outline-none ctv:box-border ctv:whitespace-pre-wrap ctv:break-words",
           spellcheck: "false"
         }
       },
@@ -49874,7 +49874,7 @@ const _export_sfc = (sfc, props) => {
   }
   return target;
 };
-const MainPromptInput = /* @__PURE__ */ _export_sfc(_sfc_main$q, [["__scopeId", "data-v-ef168908"]]);
+const MainPromptInput = /* @__PURE__ */ _export_sfc(_sfc_main$q, [["__scopeId", "data-v-e0f1f5f0"]]);
 function useImagePanZoom(containerEl, imgEl, options = {}) {
   const minZoom = options.minZoom ?? 1;
   const maxZoom = options.maxZoom ?? 6;
@@ -49983,49 +49983,49 @@ const _hoisted_5$h = ["src"];
 const _hoisted_6$g = ["src"];
 const _hoisted_7$f = {
   key: 0,
-  class: "flex flex-col gap-0.5 size-full py-[3px] px-1 box-border overflow-hidden"
+  class: "ctv:flex ctv:flex-col ctv:gap-0.5 ctv:size-full ctv:py-[3px] ctv:px-1 ctv:box-border ctv:overflow-hidden"
 };
-const _hoisted_8$f = { class: "flex items-baseline gap-1 shrink-0" };
-const _hoisted_9$f = { class: "vp-sb-count text-xs font-bold leading-none text-[#d8b0ff]" };
+const _hoisted_8$f = { class: "ctv:flex ctv:items-baseline ctv:gap-1 ctv:shrink-0" };
+const _hoisted_9$f = { class: "vp-sb-count ctv:text-xs ctv:font-bold ctv:leading-none ctv:text-[#d8b0ff]" };
 const _hoisted_10$e = {
   key: 0,
-  class: "ml-auto text-3xs tracking-wide text-muted-foreground"
+  class: "ctv:ml-auto ctv:text-3xs ctv:tracking-wide ctv:text-muted-foreground"
 };
-const _hoisted_11$d = { class: "list-none m-0 p-0 flex flex-col gap-px flex-auto min-h-0" };
-const _hoisted_12$d = { class: "shrink-0 font-semibold text-[#d8b0ff] min-w-2" };
-const _hoisted_13$b = { class: "flex-auto overflow-hidden text-ellipsis text-base-foreground/80" };
+const _hoisted_11$d = { class: "ctv:list-none ctv:m-0 ctv:p-0 ctv:flex ctv:flex-col ctv:gap-px ctv:flex-auto ctv:min-h-0" };
+const _hoisted_12$d = { class: "ctv:shrink-0 ctv:font-semibold ctv:text-[#d8b0ff] ctv:min-w-2" };
+const _hoisted_13$b = { class: "ctv:flex-auto ctv:overflow-hidden ctv:text-ellipsis ctv:text-base-foreground/80" };
 const _hoisted_14$9 = {
   key: 0,
-  class: "vp-sb-more text-[8px] text-right italic text-muted-foreground/60"
+  class: "vp-sb-more ctv:text-[8px] ctv:text-right ctv:italic ctv:text-muted-foreground/60"
 };
-const _hoisted_15$9 = { class: "vp-compact-count-text text-sm font-bold text-[#d8b0ff]" };
+const _hoisted_15$9 = { class: "vp-compact-count-text ctv:text-sm ctv:font-bold ctv:text-[#d8b0ff]" };
 const _hoisted_16$9 = ["src", "alt"];
 const _hoisted_17$9 = {
   key: 2,
-  class: "absolute top-0.5 left-0.5 pointer-events-none py-px px-[5px] text-3xs font-bold tracking-wide rounded-lg bg-[rgb(255_140_200/0.85)] text-white"
+  class: "ctv:absolute ctv:top-0.5 ctv:left-0.5 ctv:pointer-events-none ctv:py-px ctv:px-[5px] ctv:text-3xs ctv:font-bold ctv:tracking-wide ctv:rounded-lg ctv:bg-[rgb(255_140_200/0.85)] ctv:text-white"
 };
 const _hoisted_18$7 = {
   key: 1,
   class: "ctv-batch-grid"
 };
 const _hoisted_19$5 = ["src", "alt"];
-const _hoisted_20$4 = { class: "absolute bottom-0.5 left-0.5 py-px px-1 text-3xs font-bold rounded-sm bg-black/70 text-[#ffb0d8]" };
+const _hoisted_20$4 = { class: "ctv:absolute ctv:bottom-0.5 ctv:left-0.5 ctv:py-px ctv:px-1 ctv:text-3xs ctv:font-bold ctv:rounded-sm ctv:bg-black/70 ctv:text-[#ffb0d8]" };
 const _hoisted_21$4 = {
   key: 0,
-  class: "absolute top-0.5 right-0.5 py-px px-1 text-2xs rounded-sm bg-black/55 opacity-0 transition-opacity duration-150 group-hover:opacity-100"
+  class: "ctv:absolute ctv:top-0.5 ctv:right-0.5 ctv:py-px ctv:px-1 ctv:text-2xs ctv:rounded-sm ctv:bg-black/55 ctv:opacity-0 ctv:transition-opacity ctv:duration-150 ctv:group-hover:opacity-100"
 };
 const _hoisted_22$4 = ["title", "onClick"];
 const _hoisted_23$4 = ["title", "onClick"];
 const _hoisted_24$3 = ["src", "alt"];
 const _hoisted_25$3 = ["title"];
-const compactSummary = "flex flex-col items-center justify-center size-full gap-0.5";
-const storyboardListClass = "flex flex-col gap-1 pt-3.5 max-h-56 overflow-auto";
-const shotRowClass = "flex items-baseline gap-1.5 py-[3px] px-[5px] text-[11px] rounded-sm bg-base-foreground/[0.03] border-l-2 border-[rgb(200_130_255/0.4)]";
-const shotNoClass = "shrink-0 font-bold text-[#d8b0ff]";
-const shotDurClass = "shrink-0 py-px px-1 text-2xs rounded-sm bg-base-foreground/5 text-muted-foreground";
-const shotPromptClass = "flex-auto break-words text-base-foreground";
-const COMFY_BTN_BASE$1 = "relative inline-flex items-center justify-center gap-2 cursor-pointer touch-manipulation whitespace-nowrap appearance-none border-none transition-colors disabled:pointer-events-none disabled:opacity-50";
-const imgActionsClass = "absolute top-1 right-1 z-10 flex gap-1 opacity-0 transition-opacity duration-150 group-hover:opacity-100";
+const compactSummary = "ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:size-full ctv:gap-0.5";
+const storyboardListClass = "ctv:flex ctv:flex-col ctv:gap-1 ctv:pt-3.5 ctv:max-h-56 ctv:overflow-auto";
+const shotRowClass = "ctv:flex ctv:items-baseline ctv:gap-1.5 ctv:py-[3px] ctv:px-[5px] ctv:text-[11px] ctv:rounded-sm ctv:bg-base-foreground/[0.03] ctv:border-l-2 ctv:border-[rgb(200_130_255/0.4)]";
+const shotNoClass = "ctv:shrink-0 ctv:font-bold ctv:text-[#d8b0ff]";
+const shotDurClass = "ctv:shrink-0 ctv:py-px ctv:px-1 ctv:text-2xs ctv:rounded-sm ctv:bg-base-foreground/5 ctv:text-muted-foreground";
+const shotPromptClass = "ctv:flex-auto ctv:break-words ctv:text-base-foreground";
+const COMFY_BTN_BASE$1 = "ctv:relative ctv:inline-flex ctv:items-center ctv:justify-center ctv:gap-2 ctv:cursor-pointer ctv:touch-manipulation ctv:whitespace-nowrap ctv:appearance-none ctv:border-none ctv:transition-colors ctv:disabled:pointer-events-none ctv:disabled:opacity-50";
+const imgActionsClass = "ctv:absolute ctv:top-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1 ctv:opacity-0 ctv:transition-opacity ctv:duration-150 ctv:group-hover:opacity-100";
 const _sfc_main$p = /* @__PURE__ */ defineComponent({
   __name: "ValuePreview",
   props: {
@@ -50144,45 +50144,45 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
       }
     });
     const rootClass = computed(() => {
-      if (props.compact) return "relative size-full overflow-hidden";
-      return "relative flex flex-col min-h-12 text-xs overflow-hidden";
+      if (props.compact) return "ctv:relative ctv:size-full ctv:overflow-hidden";
+      return "ctv:relative ctv:flex ctv:flex-col ctv:min-h-12 ctv:text-xs ctv:overflow-hidden";
     });
     const TYPE_BADGE_COLORS = {
-      COMFYTV_TEXT: "bg-[rgb(120_200_120/0.25)] text-[#b5e3a5]",
-      COMFYTV_IMAGE: "bg-[rgb(78_168_255/0.25)] text-[#9dd0ff]",
-      COMFYTV_PANORAMA: "bg-[rgb(78_168_255/0.25)] text-[#9dd0ff]",
-      COMFYTV_VIDEO: "bg-[rgb(255_171_64/0.25)] text-[#ffd089]",
-      COMFYTV_AUDIO: "bg-[rgb(255_100_100/0.22)] text-[#ffb0b0]",
-      COMFYTV_STORYBOARD: "bg-[rgb(200_130_255/0.25)] text-[#d8b0ff]",
-      COMFYTV_IMAGES: "bg-[rgb(255_140_200/0.25)] text-[#ffb0d8]"
+      COMFYTV_TEXT: "ctv:bg-[rgb(120_200_120/0.25)] ctv:text-[#b5e3a5]",
+      COMFYTV_IMAGE: "ctv:bg-[rgb(78_168_255/0.25)] ctv:text-[#9dd0ff]",
+      COMFYTV_PANORAMA: "ctv:bg-[rgb(78_168_255/0.25)] ctv:text-[#9dd0ff]",
+      COMFYTV_VIDEO: "ctv:bg-[rgb(255_171_64/0.25)] ctv:text-[#ffd089]",
+      COMFYTV_AUDIO: "ctv:bg-[rgb(255_100_100/0.22)] ctv:text-[#ffb0b0]",
+      COMFYTV_STORYBOARD: "ctv:bg-[rgb(200_130_255/0.25)] ctv:text-[#d8b0ff]",
+      COMFYTV_IMAGES: "ctv:bg-[rgb(255_140_200/0.25)] ctv:text-[#ffb0d8]"
     };
     const typeBadgeClass = computed(() => {
-      const palette = TYPE_BADGE_COLORS[props.type] ?? "bg-white/10 text-white/70";
-      return `absolute top-[3px] right-[3px] py-px px-[5px] text-3xs tracking-wide rounded-sm pointer-events-none ${palette}`;
+      const palette = TYPE_BADGE_COLORS[props.type] ?? "ctv:bg-white/10 ctv:text-white/70";
+      return `ctv:absolute ctv:top-[3px] ctv:right-[3px] ctv:py-px ctv:px-[5px] ctv:text-3xs ctv:tracking-wide ctv:rounded-sm ctv:pointer-events-none ${palette}`;
     });
     const emptyClass2 = computed(
-      () => props.compact ? "flex items-center justify-center h-full p-1 text-3xs italic opacity-50" : "flex items-center justify-center h-full min-h-10 text-[11px] italic opacity-50"
+      () => props.compact ? "ctv:flex ctv:items-center ctv:justify-center ctv:h-full ctv:p-1 ctv:text-3xs ctv:italic ctv:opacity-50" : "ctv:flex ctv:items-center ctv:justify-center ctv:h-full ctv:min-h-10 ctv:text-[11px] ctv:italic ctv:opacity-50"
     );
     const textClass = computed(() => {
       if (props.compact) {
-        return "m-0 p-1 max-h-full text-2xs leading-[1.3] overflow-hidden whitespace-pre-wrap font-mono break-words text-base-foreground [display:-webkit-box] [-webkit-line-clamp:5] [-webkit-box-orient:vertical]";
+        return "ctv:m-0 ctv:p-1 ctv:max-h-full ctv:text-2xs ctv:leading-[1.3] ctv:overflow-hidden ctv:whitespace-pre-wrap ctv:font-mono ctv:break-words ctv:text-base-foreground ctv:[display:-webkit-box] ctv:[-webkit-line-clamp:5] ctv:[-webkit-box-orient:vertical]";
       }
-      return "m-0 py-0.5 px-1 max-h-[120px] overflow-auto whitespace-pre-wrap break-words text-[11px] leading-snug font-mono text-base-foreground";
+      return "ctv:m-0 ctv:py-0.5 ctv:px-1 ctv:max-h-[120px] ctv:overflow-auto ctv:whitespace-pre-wrap ctv:break-words ctv:text-[11px] ctv:leading-snug ctv:font-mono ctv:text-base-foreground";
     });
     const imgClass = computed(
-      () => props.compact ? "block size-full object-cover" : "block w-full max-h-40 object-contain rounded-sm"
+      () => props.compact ? "ctv:block ctv:size-full ctv:object-cover" : "ctv:block ctv:w-full ctv:max-h-40 ctv:object-contain ctv:rounded-sm"
     );
     const videoClass = computed(
-      () => props.compact ? "block size-full object-cover bg-black" : "block w-full max-h-52 rounded-sm bg-black"
+      () => props.compact ? "ctv:block ctv:size-full ctv:object-cover ctv:bg-black" : "ctv:block ctv:w-full ctv:max-h-52 ctv:rounded-sm ctv:bg-black"
     );
-    const imgActionBtn = COMFY_BTN_BASE$1 + " size-5 p-0 rounded-sm text-sm bg-white text-gray-600 hover:bg-white/90";
+    const imgActionBtn = COMFY_BTN_BASE$1 + " ctv:size-5 ctv:p-0 ctv:rounded-sm ctv:text-sm ctv:bg-white ctv:text-gray-600 ctv:hover:bg-white/90";
     function batchCellClass(selected) {
-      const base2 = "group relative aspect-video rounded-sm overflow-hidden p-0 bg-black transition-colors";
-      const interactive = props.clickMode === "pick" ? " cursor-pointer" : " cursor-default";
+      const base2 = "ctv:group ctv:relative ctv:aspect-video ctv:rounded-sm ctv:overflow-hidden ctv:p-0 ctv:bg-black ctv:transition-colors";
+      const interactive = props.clickMode === "pick" ? " ctv:cursor-pointer" : " ctv:cursor-default";
       if (selected) {
-        return base2 + interactive + " ring-3 ring-inset ring-primary-background";
+        return base2 + interactive + " ctv:ring-3 ctv:ring-inset ctv:ring-primary-background";
       }
-      return base2 + interactive + " border border-border-default" + (props.clickMode === "pick" ? " hover:border-primary-background" : "");
+      return base2 + interactive + " ctv:border ctv:border-border-default" + (props.clickMode === "pick" ? " ctv:hover:border-primary-background" : "");
     }
     return (_ctx, _cache2) => {
       return openBlock(), createElementBlock("div", {
@@ -50202,13 +50202,13 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
           key: 3,
           ref_key: "zoomContainer",
           ref: zoomContainer,
-          class: "group relative w-full flex-1 min-h-0 overflow-hidden rounded-sm touch-none cursor-grab"
+          class: "ctv:group ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden ctv:rounded-sm ctv:touch-none ctv:cursor-grab"
         }, [
           createBaseVNode("img", {
             ref_key: "zoomImg",
             ref: zoomImg,
             src: String(__props.content),
-            class: "block size-full object-contain select-none",
+            class: "ctv:block ctv:size-full ctv:object-contain ctv:select-none",
             alt: String(__props.content),
             draggable: "false"
           }, null, 8, _hoisted_1$n),
@@ -50246,18 +50246,18 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
             key: 0,
             class: normalizeClass(compactSummary)
           }, [..._cache2[4] || (_cache2[4] = [
-            createBaseVNode("span", { class: "text-[22px] leading-none" }, "🔊", -1)
+            createBaseVNode("span", { class: "ctv:text-[22px] ctv:leading-none" }, "🔊", -1)
           ])])) : (openBlock(), createElementBlock("audio", {
             key: 1,
             src: String(__props.content),
-            class: "block w-full mt-3.5",
+            class: "ctv:block ctv:w-full ctv:mt-3.5",
             controls: "",
             preload: "metadata"
           }, null, 8, _hoisted_6$g))
         ], 64)) : __props.type === "COMFYTV_STORYBOARD" ? (openBlock(), createElementBlock(Fragment$1, { key: 7 }, [
           __props.compact ? (openBlock(), createElementBlock("div", _hoisted_7$f, [
             createBaseVNode("div", _hoisted_8$f, [
-              _cache2[5] || (_cache2[5] = createBaseVNode("span", { class: "text-[11px] leading-none" }, "📋", -1)),
+              _cache2[5] || (_cache2[5] = createBaseVNode("span", { class: "ctv:text-[11px] ctv:leading-none" }, "📋", -1)),
               createBaseVNode("span", _hoisted_9$f, toDisplayString$1(storyboardShots.value.length), 1),
               storyboardTotalSec.value ? (openBlock(), createElementBlock("span", _hoisted_10$e, toDisplayString$1(storyboardTotalSec.value) + "s", 1)) : createCommentVNode("", true)
             ]),
@@ -50265,7 +50265,7 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(storyboardShots.value.slice(0, 3), (shot, i) => {
                 return openBlock(), createElementBlock("li", {
                   key: i,
-                  class: "vp-sb-item flex items-baseline gap-[3px] text-3xs leading-tight whitespace-nowrap overflow-hidden"
+                  class: "vp-sb-item ctv:flex ctv:items-baseline ctv:gap-[3px] ctv:text-3xs ctv:leading-tight ctv:whitespace-nowrap ctv:overflow-hidden"
                 }, [
                   createBaseVNode("span", _hoisted_12$d, toDisplayString$1(shot.shot_no ?? i + 1), 1),
                   createBaseVNode("span", _hoisted_13$b, toDisplayString$1(shotSummary(shot)), 1)
@@ -50300,7 +50300,7 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
             key: 0,
             class: normalizeClass(compactSummary)
           }, [
-            _cache2[6] || (_cache2[6] = createBaseVNode("span", { class: "text-[22px] leading-none" }, "🎬", -1)),
+            _cache2[6] || (_cache2[6] = createBaseVNode("span", { class: "ctv:text-[22px] ctv:leading-none" }, "🎬", -1)),
             createBaseVNode("span", _hoisted_15$9, toDisplayString$1(timelineSegs.value.length), 1)
           ])) : (openBlock(), createElementBlock("div", {
             key: 1,
@@ -50353,7 +50353,7 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
                   createBaseVNode("img", {
                     src: img.image_url,
                     alt: img.label || img.prompt || `item ${i + 1}`,
-                    class: "block size-full object-cover pointer-events-none"
+                    class: "ctv:block ctv:size-full ctv:object-cover ctv:pointer-events-none"
                   }, null, 8, _hoisted_19$5),
                   createBaseVNode("span", _hoisted_20$4, toDisplayString$1(img.label ?? `#${img.index ?? i + 1}`), 1),
                   __props.clickMode === "pick" ? (openBlock(), createElementBlock("span", _hoisted_21$4, toDisplayString$1(clickHintIcon.value), 1)) : createCommentVNode("", true),
@@ -50385,18 +50385,18 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
         (openBlock(), createBlock(Teleport, { to: "body" }, [
           lightboxUrl.value ? (openBlock(), createElementBlock("div", {
             key: 0,
-            class: "fixed inset-0 z-[9999] flex items-center justify-center cursor-zoom-out bg-black/90",
+            class: "ctv:fixed ctv:inset-0 ctv:z-[9999] ctv:flex ctv:items-center ctv:justify-center ctv:cursor-zoom-out ctv:bg-black/90",
             role: "dialog",
             onClick: _cache2[3] || (_cache2[3] = withModifiers(($event) => lightboxUrl.value = null, ["self"]))
           }, [
             createBaseVNode("img", {
               src: lightboxUrl.value,
-              class: "max-w-[95vw] max-h-[95vh] object-contain cursor-default shadow-[0_8px_40px_rgb(0_0_0/0.6)]",
+              class: "ctv:max-w-[95vw] ctv:max-h-[95vh] ctv:object-contain ctv:cursor-default ctv:shadow-[0_8px_40px_rgb(0_0_0/0.6)]",
               alt: lightboxUrl.value
             }, null, 8, _hoisted_24$3),
             createBaseVNode("button", {
               type: "button",
-              class: "absolute top-4 right-4 size-9 flex items-center justify-center text-sm leading-none rounded-full cursor-pointer bg-black/55 text-white border border-white/30 hover:bg-black/85 hover:border-white/55",
+              class: "ctv:absolute ctv:top-4 ctv:right-4 ctv:size-9 ctv:flex ctv:items-center ctv:justify-center ctv:text-sm ctv:leading-none ctv:rounded-full ctv:cursor-pointer ctv:bg-black/55 ctv:text-white ctv:border ctv:border-white/30 ctv:hover:bg-black/85 ctv:hover:border-white/55",
               title: _ctx.$t("stage.action.close"),
               onClick: _cache2[2] || (_cache2[2] = ($event) => lightboxUrl.value = null)
             }, "✕", 8, _hoisted_25$3)
@@ -50406,7 +50406,7 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const ValuePreview = /* @__PURE__ */ _export_sfc(_sfc_main$p, [["__scopeId", "data-v-06cfa3e9"]]);
+const ValuePreview = /* @__PURE__ */ _export_sfc(_sfc_main$p, [["__scopeId", "data-v-bb90a6ca"]]);
 const cat$2 = "imageVariant";
 const IMAGE_VARIANT_PRESETS = [
   {
@@ -50562,20 +50562,20 @@ function presetTooltipKey(category, presetId) {
 }
 const _hoisted_1$m = {
   key: 0,
-  class: "flex flex-col gap-1"
+  class: "ctv:flex ctv:flex-col ctv:gap-1"
 };
-const _hoisted_2$j = { class: "flex items-baseline gap-2" };
-const _hoisted_3$j = { class: "text-[11px] font-semibold" };
-const _hoisted_4$g = { class: "ctv-src-tag text-3xs py-px px-1.5 rounded-sm tracking-wide bg-base-foreground/5 text-muted-foreground" };
+const _hoisted_2$j = { class: "ctv:flex ctv:items-baseline ctv:gap-2" };
+const _hoisted_3$j = { class: "ctv:text-[11px] ctv:font-semibold" };
+const _hoisted_4$g = { class: "ctv-src-tag ctv:text-3xs ctv:py-px ctv:px-1.5 ctv:rounded-sm ctv:tracking-wide ctv:bg-base-foreground/5 ctv:text-muted-foreground" };
 const _hoisted_5$g = ["title", "onClick"];
 const _hoisted_6$f = {
   key: 1,
-  class: "flex flex-wrap gap-1.5"
+  class: "ctv:flex ctv:flex-wrap ctv:gap-1.5"
 };
 const _hoisted_7$e = ["title"];
-const _hoisted_8$e = { class: "absolute bottom-0 inset-x-0 py-0.5 px-1 text-3xs font-semibold tracking-wide text-white/90 overflow-hidden whitespace-nowrap text-ellipsis pointer-events-none bg-linear-to-b from-transparent to-black/75" };
+const _hoisted_8$e = { class: "ctv:absolute ctv:bottom-0 ctv:inset-x-0 ctv:py-0.5 ctv:px-1 ctv:text-3xs ctv:font-semibold ctv:tracking-wide ctv:text-white/90 ctv:overflow-hidden ctv:whitespace-nowrap ctv:text-ellipsis ctv:pointer-events-none ctv:bg-linear-to-b ctv:from-transparent ctv:to-black/75" };
 const _hoisted_9$e = ["title", "onClick"];
-const _hoisted_10$d = { class: "text-[13px]" };
+const _hoisted_10$d = { class: "ctv:text-[13px]" };
 const _hoisted_11$c = ["title"];
 const _hoisted_12$c = ["title"];
 const _hoisted_13$a = ["disabled"];
@@ -50585,37 +50585,37 @@ const _hoisted_16$8 = { key: 2 };
 const _hoisted_17$8 = { key: 3 };
 const _hoisted_18$6 = {
   key: 3,
-  class: "flex items-center gap-1.5 mt-0.5"
+  class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:mt-0.5"
 };
-const _hoisted_19$4 = { class: "relative flex-auto h-1.5 rounded-sm overflow-hidden bg-base-foreground/10" };
-const _hoisted_20$3 = { class: "shrink-0 min-w-[60px] text-2xs text-right font-mono text-muted-foreground" };
+const _hoisted_19$4 = { class: "ctv:relative ctv:flex-auto ctv:h-1.5 ctv:rounded-sm ctv:overflow-hidden ctv:bg-base-foreground/10" };
+const _hoisted_20$3 = { class: "ctv:shrink-0 ctv:min-w-[60px] ctv:text-2xs ctv:text-right ctv:font-mono ctv:text-muted-foreground" };
 const _hoisted_21$3 = {
   key: 4,
-  class: "output flex-1 min-h-0 flex flex-col gap-1"
+  class: "output ctv:flex-1 ctv:min-h-0 ctv:flex ctv:flex-col ctv:gap-1"
 };
 const _hoisted_22$3 = {
   key: 5,
-  class: "flex flex-col gap-1"
+  class: "ctv:flex ctv:flex-col ctv:gap-1"
 };
-const _hoisted_23$3 = { class: "action-list flex flex-wrap gap-1.5" };
+const _hoisted_23$3 = { class: "action-list ctv:flex ctv:flex-wrap ctv:gap-1.5" };
 const _hoisted_24$2 = ["title", "onClick"];
-const _hoisted_25$2 = { class: "text-xs" };
-const _hoisted_26$2 = { class: "font-semibold" };
+const _hoisted_25$2 = { class: "ctv:text-xs" };
+const _hoisted_26$2 = { class: "ctv:font-semibold" };
 const _hoisted_27$2 = {
   key: 0,
-  class: "ml-0.5 text-3xs opacity-70"
+  class: "ctv:ml-0.5 ctv:text-3xs ctv:opacity-70"
 };
 const _hoisted_28$2 = {
   key: 0,
-  class: "grid gap-1 p-1 mt-0.5 rounded-sm grid-cols-[repeat(auto-fill,minmax(110px,1fr))] bg-primary-background/5 border border-dashed border-primary-background/30"
+  class: "ctv:grid ctv:gap-1 ctv:p-1 ctv:mt-0.5 ctv:rounded-sm ctv:grid-cols-[repeat(auto-fill,minmax(110px,1fr))] ctv:bg-primary-background/5 ctv:border ctv:border-dashed ctv:border-primary-background/30"
 };
 const _hoisted_29$2 = ["title", "onClick"];
-const _hoisted_30$2 = { class: "shrink-0 text-xs" };
-const _hoisted_31$2 = { class: "flex-1" };
-const sectionLabel = "text-2xs uppercase tracking-wide opacity-60 mb-[3px]";
-const COMFY_BTN_BASE = "relative inline-flex items-center justify-center gap-2 cursor-pointer touch-manipulation whitespace-nowrap appearance-none border-none transition-colors disabled:pointer-events-none disabled:opacity-50";
-const COMFY_SIZE_LG = " h-10 rounded-lg px-4 py-2 text-sm font-medium";
-const COMFY_SIZE_SM = " h-6 rounded-sm px-2 py-1 text-xs font-medium";
+const _hoisted_30$2 = { class: "ctv:shrink-0 ctv:text-xs" };
+const _hoisted_31$2 = { class: "ctv:flex-1" };
+const sectionLabel = "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:opacity-60 ctv:mb-[3px]";
+const COMFY_BTN_BASE = "ctv:relative ctv:inline-flex ctv:items-center ctv:justify-center ctv:gap-2 ctv:cursor-pointer ctv:touch-manipulation ctv:whitespace-nowrap ctv:appearance-none ctv:border-none ctv:transition-colors ctv:disabled:pointer-events-none ctv:disabled:opacity-50";
+const COMFY_SIZE_LG = " ctv:h-10 ctv:rounded-lg ctv:px-4 ctv:py-2 ctv:text-sm ctv:font-medium";
+const COMFY_SIZE_SM = " ctv:h-6 ctv:rounded-sm ctv:px-2 ctv:py-1 ctv:text-xs ctv:font-medium";
 const _sfc_main$o = /* @__PURE__ */ defineComponent({
   __name: "StageCard",
   props: {
@@ -50708,23 +50708,23 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
       props.onDisconnect(slot);
     }
     const cardClass = computed(() => {
-      const base2 = "flex flex-col gap-2 p-2 size-full box-border text-xs text-base-foreground";
+      const base2 = "ctv:flex ctv:flex-col ctv:gap-2 ctv:p-2 ctv:size-full ctv:box-border ctv:text-xs ctv:text-base-foreground";
       if (!props.state.error) return base2;
       if (props.state.error.type === "Cancelled")
-        return `${base2} rounded outline outline-1 -outline-offset-1 outline-warning-background/50`;
-      return `${base2} rounded outline outline-1 -outline-offset-1 outline-destructive-background/55`;
+        return `${base2} ctv:rounded ctv:outline ctv:outline-1 ctv:-outline-offset-1 ctv:outline-warning-background/50`;
+      return `${base2} ctv:rounded ctv:outline ctv:outline-1 ctv:-outline-offset-1 ctv:outline-destructive-background/55`;
     });
-    const disconnectBtn = COMFY_BTN_BASE + " size-5 p-0 rounded-sm shrink-0 ml-auto bg-transparent text-muted-foreground hover:bg-secondary-background-hover";
-    const tileDisconnectBtn = COMFY_BTN_BASE + " size-5 p-0 rounded-full bg-transparent text-destructive-background hover:bg-destructive-background/10";
+    const disconnectBtn = COMFY_BTN_BASE + " ctv:size-5 ctv:p-0 ctv:rounded-sm ctv:shrink-0 ctv:ml-auto ctv:bg-transparent ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover";
+    const tileDisconnectBtn = COMFY_BTN_BASE + " ctv:size-5 ctv:p-0 ctv:rounded-full ctv:bg-transparent ctv:text-destructive-background ctv:hover:bg-destructive-background/10";
     const runBtnClass = computed(() => {
-      const v = props.state.running ? " bg-destructive-background text-base-foreground hover:bg-destructive-background-hover" : " bg-primary-background text-base-foreground hover:bg-primary-background-hover";
+      const v = props.state.running ? " ctv:bg-destructive-background ctv:text-base-foreground ctv:hover:bg-destructive-background-hover" : " ctv:bg-primary-background ctv:text-base-foreground ctv:hover:bg-primary-background-hover";
       return COMFY_BTN_BASE + COMFY_SIZE_LG + v;
     });
     function actionBtnClass(open) {
-      const v = open ? " bg-primary-background text-base-foreground hover:bg-primary-background-hover" : " bg-secondary-background text-secondary-foreground hover:bg-secondary-background-hover";
+      const v = open ? " ctv:bg-primary-background ctv:text-base-foreground ctv:hover:bg-primary-background-hover" : " ctv:bg-secondary-background ctv:text-secondary-foreground ctv:hover:bg-secondary-background-hover";
       return COMFY_BTN_BASE + COMFY_SIZE_SM + v;
     }
-    const presetBtnClass = COMFY_BTN_BASE + COMFY_SIZE_SM + " bg-secondary-background text-secondary-foreground hover:bg-secondary-background-hover";
+    const presetBtnClass = COMFY_BTN_BASE + COMFY_SIZE_SM + " ctv:bg-secondary-background ctv:text-secondary-foreground ctv:hover:bg-secondary-background-hover";
     return (_ctx, _cache2) => {
       var _a2;
       return openBlock(), createElementBlock("div", {
@@ -50738,7 +50738,7 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
           __props.state.kind === "image-picker" ? (openBlock(true), createElementBlock(Fragment$1, { key: 0 }, renderList(connectedInputs.value, (inp) => {
             return openBlock(), createElementBlock("div", {
               key: inp.slot,
-              class: normalizeClass(["ctv-picker-input flex flex-col gap-1 py-1", `ctv-src-${inp.source}`])
+              class: normalizeClass(["ctv-picker-input ctv:flex ctv:flex-col ctv:gap-1 ctv:py-1", `ctv-src-${inp.source}`])
             }, [
               createBaseVNode("div", _hoisted_2$j, [
                 createBaseVNode("span", _hoisted_3$j, toDisplayString$1(formatSlot(inp.slot)), 1),
@@ -50763,8 +50763,8 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
               return openBlock(), createElementBlock("div", {
                 key: inp.slot,
                 class: normalizeClass([
-                  "ctv-input-tile relative w-[76px] h-[76px] rounded-sm overflow-hidden bg-black/30 border",
-                  inp.source === "upstream" ? "border-primary-background/70" : inp.source === "upstream-pending" ? "border-warning-background/70" : "border-border-default"
+                  "ctv-input-tile ctv:relative ctv:w-[76px] ctv:h-[76px] ctv:rounded-sm ctv:overflow-hidden ctv:bg-black/30 ctv:border",
+                  inp.source === "upstream" ? "ctv:border-primary-background/70" : inp.source === "upstream-pending" ? "ctv:border-warning-background/70" : "ctv:border-border-default"
                 ]),
                 title: `${formatSlot(inp.slot)} — ${sourceLabel(inp.source)}`
               }, [
@@ -50776,7 +50776,7 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
                 }, null, 8, ["type", "content", "empty-label"]),
                 createBaseVNode("span", _hoisted_8$e, toDisplayString$1(formatSlot(inp.slot)), 1),
                 createBaseVNode("button", {
-                  class: normalizeClass(["ctv-tile-disconnect absolute top-0.5 right-0.5 hidden", tileDisconnectBtn]),
+                  class: normalizeClass(["ctv-tile-disconnect ctv:absolute ctv:top-0.5 ctv:right-0.5 ctv:hidden", tileDisconnectBtn]),
                   title: _ctx.$t("stage.disconnect"),
                   onClick: ($event) => onDisconnect(inp.slot)
                 }, "×", 10, _hoisted_9$e)
@@ -50787,20 +50787,20 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
         __props.state.error ? (openBlock(), createElementBlock("div", {
           key: 1,
           class: normalizeClass([
-            "error-row flex items-start gap-1.5 py-1.5 px-2 rounded-sm text-[11px] leading-snug border",
-            __props.state.error.type === "Cancelled" ? "is-cancel-banner border-warning-background/55 bg-warning-background/10 text-warning-background" : "border-destructive-background/55 bg-destructive-background/10 text-destructive-background"
+            "error-row ctv:flex ctv:items-start ctv:gap-1.5 ctv:py-1.5 ctv:px-2 ctv:rounded-sm ctv:text-[11px] ctv:leading-snug ctv:border",
+            __props.state.error.type === "Cancelled" ? "is-cancel-banner ctv:border-warning-background/55 ctv:bg-warning-background/10 ctv:text-warning-background" : "ctv:border-destructive-background/55 ctv:bg-destructive-background/10 ctv:text-destructive-background"
           ])
         }, [
           createBaseVNode("span", _hoisted_10$d, toDisplayString$1(__props.state.error.type === "Cancelled" ? "⏹" : "⚠️"), 1),
           createBaseVNode("span", {
-            class: "flex-1 break-words font-mono",
+            class: "ctv:flex-1 ctv:break-words ctv:font-mono",
             title: __props.state.error.traceback
           }, [
             __props.state.error.type ? (openBlock(), createElementBlock("span", {
               key: 0,
               class: normalizeClass([
-                "inline-block mr-1 py-0 px-1 rounded-sm font-bold",
-                __props.state.error.type === "Cancelled" ? "bg-warning-background/30 text-base-foreground" : "bg-destructive-background/30 text-base-foreground"
+                "ctv:inline-block ctv:mr-1 ctv:py-0 ctv:px-1 ctv:rounded-sm ctv:font-bold",
+                __props.state.error.type === "Cancelled" ? "ctv:bg-warning-background/30 ctv:text-base-foreground" : "ctv:bg-destructive-background/30 ctv:text-base-foreground"
               ])
             }, toDisplayString$1(__props.state.error.type) + ":", 3)) : createCommentVNode("", true),
             createTextVNode(" " + toDisplayString$1(__props.state.error.message), 1)
@@ -50822,7 +50822,7 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
         __props.state.running ? (openBlock(), createElementBlock("div", _hoisted_18$6, [
           createBaseVNode("div", _hoisted_19$4, [
             createBaseVNode("div", {
-              class: "progress-fill h-full transition-[width] duration-150 ease-out bg-linear-to-r from-primary-background/85 to-primary-background-hover/85",
+              class: "progress-fill ctv:h-full ctv:transition-[width] ctv:duration-150 ctv:ease-out ctv:bg-linear-to-r ctv:from-primary-background/85 ctv:to-primary-background-hover/85",
               style: normalizeStyle({ width: `${progressPercent.value}%` })
             }, null, 4)
           ]),
@@ -50833,7 +50833,7 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
             class: normalizeClass(sectionLabel)
           }, toDisplayString$1(_ctx.$t("stage.section.output", { type: __props.state.outputType })), 1),
           createVNode(ValuePreview, {
-            class: "flex-1 min-h-0",
+            class: "ctv:flex-1 ctv:min-h-0",
             type: __props.state.outputType,
             content: __props.state.output,
             "empty-label": __props.state.running ? _ctx.$t("stage.empty.generating") : _ctx.$t("stage.empty.no_output"),
@@ -50879,7 +50879,7 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const StageCard = /* @__PURE__ */ _export_sfc(_sfc_main$o, [["__scopeId", "data-v-a9856bb1"]]);
+const StageCard = /* @__PURE__ */ _export_sfc(_sfc_main$o, [["__scopeId", "data-v-aa4d74ad"]]);
 const _sfc_main$n = /* @__PURE__ */ defineComponent({
   __name: "SceneCanvas",
   props: {
@@ -50897,31 +50897,31 @@ const _sfc_main$n = /* @__PURE__ */ defineComponent({
       return openBlock(), createElementBlock("div", {
         ref_key: "canvasRef",
         ref: canvasRef,
-        class: "relative block size-full"
+        class: "ctv:relative ctv:block ctv:size-full"
       }, null, 512);
     };
   }
 });
-const _hoisted_1$l = { class: "absolute bottom-2 left-2 right-2 z-10 flex flex-col gap-1 py-1.5 px-2.5 text-[11px] text-white/85 rounded-md backdrop-blur-sm bg-black/90 border border-[rgb(233_61_130/0.3)]" };
-const _hoisted_2$i = { class: "flex justify-around items-center" };
-const _hoisted_3$i = { class: "flex items-center gap-1" };
-const _hoisted_4$f = { class: "text-3xs uppercase tracking-wide whitespace-nowrap text-[#E93D82]" };
+const _hoisted_1$l = { class: "ctv:absolute ctv:bottom-2 ctv:left-2 ctv:right-2 ctv:z-10 ctv:flex ctv:flex-col ctv:gap-1 ctv:py-1.5 ctv:px-2.5 ctv:text-[11px] ctv:text-white/85 ctv:rounded-md ctv:backdrop-blur-sm ctv:bg-black/90 ctv:border ctv:border-[rgb(233_61_130/0.3)]" };
+const _hoisted_2$i = { class: "ctv:flex ctv:justify-around ctv:items-center" };
+const _hoisted_3$i = { class: "ctv:flex ctv:items-center ctv:gap-1" };
+const _hoisted_4$f = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:whitespace-nowrap ctv:text-[#E93D82]" };
 const _hoisted_5$f = ["value"];
 const _hoisted_6$e = ["value"];
-const _hoisted_7$d = { class: "flex items-center gap-1" };
-const _hoisted_8$d = { class: "text-3xs uppercase tracking-wide whitespace-nowrap text-[#00FFD0]" };
+const _hoisted_7$d = { class: "ctv:flex ctv:items-center ctv:gap-1" };
+const _hoisted_8$d = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:whitespace-nowrap ctv:text-[#00FFD0]" };
 const _hoisted_9$d = ["value"];
 const _hoisted_10$c = ["value"];
-const _hoisted_11$b = { class: "flex items-center gap-1" };
-const _hoisted_12$b = { class: "text-3xs uppercase tracking-wide whitespace-nowrap text-[#FFB800]" };
+const _hoisted_11$b = { class: "ctv:flex ctv:items-center ctv:gap-1" };
+const _hoisted_12$b = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:whitespace-nowrap ctv:text-[#FFB800]" };
 const _hoisted_13$9 = ["value"];
 const _hoisted_14$7 = ["value"];
-const _hoisted_15$7 = { class: "flex justify-around items-center" };
-const _hoisted_16$7 = { class: "text-center text-[13px] font-semibold text-[#E93D82]" };
-const _hoisted_17$7 = { class: "text-center text-[13px] font-semibold text-[#00FFD0]" };
-const _hoisted_18$5 = { class: "text-center text-[13px] font-semibold text-[#FFB800]" };
+const _hoisted_15$7 = { class: "ctv:flex ctv:justify-around ctv:items-center" };
+const _hoisted_16$7 = { class: "ctv:text-center ctv:text-[13px] ctv:font-semibold ctv:text-[#E93D82]" };
+const _hoisted_17$7 = { class: "ctv:text-center ctv:text-[13px] ctv:font-semibold ctv:text-[#00FFD0]" };
+const _hoisted_18$5 = { class: "ctv:text-center ctv:text-[13px] ctv:font-semibold ctv:text-[#FFB800]" };
 const _hoisted_19$3 = ["title"];
-const DROPDOWN_BASE = "ctv-camera-dropdown min-w-0 max-w-[90px] py-0.5 px-1 text-3xs cursor-pointer rounded outline-none backdrop-blur-sm bg-black/90 text-white/85 border border-white/20 hover:border-white/40";
+const DROPDOWN_BASE = "ctv-camera-dropdown ctv:min-w-0 ctv:max-w-[90px] ctv:py-0.5 ctv:px-1 ctv:text-3xs ctv:cursor-pointer ctv:rounded ctv:outline-none ctv:backdrop-blur-sm ctv:bg-black/90 ctv:text-white/85 ctv:border ctv:border-white/20 ctv:hover:border-white/40";
 const _sfc_main$m = /* @__PURE__ */ defineComponent({
   __name: "CameraControlPanel",
   props: {
@@ -50987,9 +50987,9 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
       emit2("update:distance", parseInt(e.target.value, 10));
     }
     const DROPDOWN_FOCUS = {
-      azimuth: "focus:border-[#E93D82]",
-      elevation: "focus:border-[#00FFD0]",
-      distance: "focus:border-[#FFB800]"
+      azimuth: "ctv:focus:border-[#E93D82]",
+      elevation: "ctv:focus:border-[#00FFD0]",
+      distance: "ctv:focus:border-[#FFB800]"
     };
     function dropdownClass(channel) {
       return `${DROPDOWN_BASE} ${DROPDOWN_FOCUS[channel]}`;
@@ -51048,7 +51048,7 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
           createBaseVNode("div", _hoisted_17$7, toDisplayString$1(Math.round(__props.elevation)) + "°", 1),
           createBaseVNode("div", _hoisted_18$5, toDisplayString$1(__props.distance.toFixed(1)), 1),
           createBaseVNode("button", {
-            class: "shrink-0 size-6 flex items-center justify-center text-sm cursor-pointer rounded bg-black/80 text-[#E93D82] border border-[rgb(233_61_130/0.4)] transition-all duration-200 hover:bg-[rgb(233_61_130/0.2)] hover:border-[#E93D82] active:scale-95",
+            class: "ctv:shrink-0 ctv:size-6 ctv:flex ctv:items-center ctv:justify-center ctv:text-sm ctv:cursor-pointer ctv:rounded ctv:bg-black/80 ctv:text-[#E93D82] ctv:border ctv:border-[rgb(233_61_130/0.4)] ctv:transition-all ctv:duration-200 ctv:hover:bg-[rgb(233_61_130/0.2)] ctv:hover:border-[#E93D82] ctv:active:scale-95",
             title: _ctx.$t("camera.resetToDefaults"),
             onClick: _cache2[0] || (_cache2[0] = ($event) => _ctx.$emit("reset"))
           }, "↺", 8, _hoisted_19$3)
@@ -51057,7 +51057,7 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const CameraControlPanel = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["__scopeId", "data-v-45c9df89"]]);
+const CameraControlPanel = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["__scopeId", "data-v-43267b78"]]);
 /**
  * @license
  * Copyright 2010-2024 Three.js Authors
@@ -72462,9 +72462,9 @@ function useCameraWidget(initialState = {}, onExternalStateChange) {
     cleanup
   };
 }
-const _hoisted_1$k = { class: "flex flex-col size-full" };
-const _hoisted_2$h = { class: "relative w-full h-[350px] shrink-0 rounded-lg overflow-hidden bg-black mb-1.5" };
-const _hoisted_3$h = { class: "absolute top-2 left-2 right-2 z-10 pointer-events-none bg-black/90 border border-[rgb(233_61_130/0.3)] rounded-md py-1.5 px-2.5 text-xs text-[#E93D82] font-mono leading-snug break-all backdrop-blur-sm" };
+const _hoisted_1$k = { class: "ctv:flex ctv:flex-col ctv:size-full" };
+const _hoisted_2$h = { class: "ctv:relative ctv:w-full ctv:h-[350px] ctv:shrink-0 ctv:rounded-lg ctv:overflow-hidden ctv:bg-black ctv:mb-1.5" };
+const _hoisted_3$h = { class: "ctv:absolute ctv:top-2 ctv:left-2 ctv:right-2 ctv:z-10 ctv:pointer-events-none ctv:bg-black/90 ctv:border ctv:border-[rgb(233_61_130/0.3)] ctv:rounded-md ctv:py-1.5 ctv:px-2.5 ctv:text-xs ctv:text-[#E93D82] ctv:font-mono ctv:leading-snug ctv:break-all ctv:backdrop-blur-sm" };
 const PROP_KEY$1 = "comfytv_multiangle_camera";
 const _sfc_main$l = /* @__PURE__ */ defineComponent({
   __name: "MultiangleStageCard",
@@ -73311,19 +73311,19 @@ function usePainter(options) {
 const _hoisted_1$j = ["src"];
 const _hoisted_2$g = {
   key: 0,
-  class: "text-2xs text-center font-mono text-muted-foreground"
+  class: "ctv:text-2xs ctv:text-center ctv:font-mono ctv:text-muted-foreground"
 };
-const _hoisted_3$g = { class: "flex flex-col gap-1" };
-const _hoisted_4$e = { class: "flex gap-0.5 p-0.5 rounded bg-secondary-background" };
+const _hoisted_3$g = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
+const _hoisted_4$e = { class: "ctv:flex ctv:gap-0.5 ctv:p-0.5 ctv:rounded ctv:bg-secondary-background" };
 const _hoisted_5$e = ["title", "onClick"];
 const _hoisted_6$d = ["value"];
 const _hoisted_7$c = ["value"];
 const _hoisted_8$c = ["value"];
 const _hoisted_9$c = ["value"];
 const SHELL_MAX_HEIGHT_PX = 360;
-const rowClass = "grid grid-cols-[64px_1fr_48px] items-center gap-1.5 text-[11px]";
-const labelClass = "text-2xs uppercase tracking-wide text-muted-foreground";
-const valueClass = "text-right text-base-foreground";
+const rowClass = "ctv:grid ctv:grid-cols-[64px_1fr_48px] ctv:items-center ctv:gap-1.5 ctv:text-[11px]";
+const labelClass = "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground";
+const valueClass = "ctv:text-right ctv:text-base-foreground";
 const _sfc_main$k = /* @__PURE__ */ defineComponent({
   __name: "PainterCanvas",
   props: {
@@ -73391,13 +73391,13 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
     ];
     function toolBtnClass(active) {
       return [
-        "flex-1 py-0.5 px-2 text-[11px] cursor-pointer border-0 bg-transparent rounded-sm",
-        active ? "bg-secondary-background-selected text-primary-background font-semibold" : "text-muted-foreground hover:text-base-foreground"
+        "ctv:flex-1 ctv:py-0.5 ctv:px-2 ctv:text-[11px] ctv:cursor-pointer ctv:border-0 ctv:bg-transparent ctv:rounded-sm",
+        active ? "ctv:bg-secondary-background-selected ctv:text-primary-background ctv:font-semibold" : "ctv:text-muted-foreground ctv:hover:text-base-foreground"
       ].join(" ");
     }
     return (_ctx, _cache2) => {
       return openBlock(), createElementBlock("div", {
-        class: "flex flex-col gap-1.5 w-full",
+        class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full",
         onPointerdown: _cache2[11] || (_cache2[11] = withModifiers(() => {
         }, ["stop"])),
         onPointermove: _cache2[12] || (_cache2[12] = withModifiers(() => {
@@ -73406,13 +73406,13 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
         }, ["stop"]))
       }, [
         createBaseVNode("div", {
-          class: "relative w-full max-h-[360px] flex items-center justify-center bg-black rounded-md overflow-hidden border border-border-subtle",
+          class: "ctv:relative ctv:w-full ctv:max-h-[360px] ctv:flex ctv:items-center ctv:justify-center ctv:bg-black ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle",
           style: normalizeStyle(canvasShellStyle.value)
         }, [
           __props.sourceImageUrl ? (openBlock(), createElementBlock("img", {
             key: 0,
             src: __props.sourceImageUrl,
-            class: "absolute inset-0 size-full object-contain pointer-events-none select-none",
+            class: "ctv:absolute ctv:inset-0 ctv:size-full ctv:object-contain ctv:pointer-events-none ctv:select-none",
             draggable: "false",
             onDragstart: _cache2[0] || (_cache2[0] = withModifiers(() => {
             }, ["prevent"]))
@@ -73420,7 +73420,7 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
           createBaseVNode("canvas", {
             ref_key: "canvasEl",
             ref: canvasEl,
-            class: "absolute inset-0 size-full touch-none cursor-none",
+            class: "ctv:absolute ctv:inset-0 ctv:size-full ctv:touch-none ctv:cursor-none",
             onPointerdown: _cache2[1] || (_cache2[1] = //@ts-ignore
             (...args) => unref(handlePointerDown) && unref(handlePointerDown)(...args)),
             onPointermove: _cache2[2] || (_cache2[2] = //@ts-ignore
@@ -73435,7 +73435,7 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
           withDirectives(createBaseVNode("div", {
             ref_key: "cursorEl",
             ref: cursorEl,
-            class: "absolute top-0 left-0 rounded-full pointer-events-none border border-black/70 shadow-[0_0_0_1px_rgb(255_255_255/0.8)] will-change-transform",
+            class: "ctv:absolute ctv:top-0 ctv:left-0 ctv:rounded-full ctv:pointer-events-none ctv:border ctv:border-black/70 ctv:shadow-[0_0_0_1px_rgb(255_255_255/0.8)] ctv:will-change-transform",
             style: normalizeStyle(cursorStyle.value)
           }, null, 4), [
             [vShow, unref(cursorVisible)]
@@ -73472,7 +73472,7 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
               min: "1",
               max: "200",
               step: "1",
-              class: "w-full",
+              class: "ctv:w-full",
               value: unref(brushSize),
               onInput: _cache2[6] || (_cache2[6] = (e) => brushSize.value = Number(e.target.value))
             }, null, 40, _hoisted_6$d),
@@ -73489,12 +73489,12 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
               }, toDisplayString$1(_ctx.$t("painter.color")), 1),
               createBaseVNode("input", {
                 type: "color",
-                class: "w-7 h-[18px] p-0 border-0 bg-transparent cursor-pointer",
+                class: "ctv:w-7 ctv:h-[18px] ctv:p-0 ctv:border-0 ctv:bg-transparent ctv:cursor-pointer",
                 value: unref(brushColorDisplay),
                 onInput: _cache2[7] || (_cache2[7] = (e) => brushColorDisplay.value = e.target.value)
               }, null, 40, _hoisted_7$c),
               createBaseVNode("span", {
-                class: normalizeClass(`${valueClass} font-mono`)
+                class: normalizeClass(`${valueClass} ctv:font-mono`)
               }, toDisplayString$1(unref(brushColorDisplay)), 3)
             ]),
             createBaseVNode("div", {
@@ -73508,7 +73508,7 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
                 min: "0",
                 max: "100",
                 step: "1",
-                class: "w-full",
+                class: "ctv:w-full",
                 value: brushOpacityPercent.value,
                 onInput: _cache2[8] || (_cache2[8] = (e) => brushOpacityPercent.value = Number(e.target.value))
               }, null, 40, _hoisted_8$c),
@@ -73529,7 +73529,7 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
               min: "0",
               max: "100",
               step: "1",
-              class: "w-full",
+              class: "ctv:w-full",
               value: brushHardnessPercent.value,
               onInput: _cache2[9] || (_cache2[9] = (e) => brushHardnessPercent.value = Number(e.target.value))
             }, null, 40, _hoisted_9$c),
@@ -73539,7 +73539,7 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
           ])) : createCommentVNode("", true),
           createBaseVNode("button", {
             type: "button",
-            class: "mt-0.5 py-1 px-2.5 text-[11px] rounded cursor-pointer transition-colors duration-150 bg-secondary-background text-base-foreground border border-border-subtle hover:bg-secondary-background-hover",
+            class: "ctv:mt-0.5 ctv:py-1 ctv:px-2.5 ctv:text-[11px] ctv:rounded ctv:cursor-pointer ctv:transition-colors ctv:duration-150 ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle ctv:hover:bg-secondary-background-hover",
             onClick: _cache2[10] || (_cache2[10] = //@ts-ignore
             (...args) => unref(handleClear) && unref(handleClear)(...args))
           }, "↶ " + toDisplayString$1(_ctx.$t("painter.clear")), 1)
@@ -73548,7 +73548,7 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$i = { class: "flex flex-col gap-1.5 size-full" };
+const _hoisted_1$i = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
 const _sfc_main$j = /* @__PURE__ */ defineComponent({
   __name: "PainterStageCard",
   props: {
@@ -74030,22 +74030,22 @@ function useImageCrop(options) {
 }
 const _hoisted_1$h = {
   key: 0,
-  class: "h-full flex flex-col items-center justify-center gap-1.5 text-white/50"
+  class: "ctv:h-full ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50"
 };
-const _hoisted_2$f = { class: "text-xs" };
+const _hoisted_2$f = { class: "ctv:text-xs" };
 const _hoisted_3$f = ["src", "alt"];
 const _hoisted_4$d = {
   key: 0,
-  class: "absolute inset-0 z-10 flex items-center justify-center text-xs bg-black/90 text-white/85"
+  class: "ctv:absolute ctv:inset-0 ctv:z-10 ctv:flex ctv:items-center ctv:justify-center ctv:text-xs ctv:bg-black/90 ctv:text-white/85"
 };
 const _hoisted_5$d = ["onPointerdown"];
-const _hoisted_6$c = { class: "flex flex-col gap-1" };
-const _hoisted_7$b = { class: "flex items-center gap-1.5 text-[11px]" };
-const _hoisted_8$b = { class: "min-w-9 text-2xs uppercase tracking-wide text-muted-foreground" };
+const _hoisted_6$c = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
+const _hoisted_7$b = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
+const _hoisted_8$b = { class: "ctv:min-w-9 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_9$b = ["value"];
 const _hoisted_10$b = ["title"];
-const _hoisted_11$a = { class: "flex items-center gap-1 text-[11px]" };
-const _hoisted_12$a = { class: "w-3 text-2xs text-muted-foreground" };
+const _hoisted_11$a = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-[11px]" };
+const _hoisted_12$a = { class: "ctv:w-3 ctv:text-2xs ctv:text-muted-foreground" };
 const _hoisted_13$8 = ["min", "value", "onChange"];
 const _sfc_main$i = /* @__PURE__ */ defineComponent({
   __name: "CropCanvas",
@@ -74119,7 +74119,7 @@ const _sfc_main$i = /* @__PURE__ */ defineComponent({
     }
     return (_ctx, _cache2) => {
       return openBlock(), createElementBlock("div", {
-        class: "flex flex-col gap-1.5 w-full",
+        class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full",
         onPointerdown: _cache2[10] || (_cache2[10] = withModifiers(() => {
         }, ["stop"])),
         onPointermove: _cache2[11] || (_cache2[11] = withModifiers(() => {
@@ -74130,10 +74130,10 @@ const _sfc_main$i = /* @__PURE__ */ defineComponent({
         createBaseVNode("div", {
           ref_key: "containerEl",
           ref: containerEl,
-          class: "relative w-full h-[340px] rounded-md overflow-hidden bg-black border border-border-subtle"
+          class: "ctv:relative ctv:w-full ctv:h-[340px] ctv:rounded-md ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle"
         }, [
           !unref(imageUrl) ? (openBlock(), createElementBlock("div", _hoisted_1$h, [
-            _cache2[13] || (_cache2[13] = createBaseVNode("div", { class: "text-[32px] opacity-60" }, "⊟", -1)),
+            _cache2[13] || (_cache2[13] = createBaseVNode("div", { class: "ctv:text-[32px] ctv:opacity-60" }, "⊟", -1)),
             createBaseVNode("div", _hoisted_2$f, toDisplayString$1(_ctx.$t("imageCrop.noInputImage")), 1)
           ])) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
             createBaseVNode("img", {
@@ -74141,7 +74141,7 @@ const _sfc_main$i = /* @__PURE__ */ defineComponent({
               ref: imageEl,
               src: unref(imageUrl),
               alt: _ctx.$t("imageCrop.cropPreviewAlt"),
-              class: "block size-full object-contain pointer-events-none select-none",
+              class: "ctv:block ctv:size-full ctv:object-contain ctv:pointer-events-none ctv:select-none",
               draggable: "false",
               onLoad: _cache2[0] || (_cache2[0] = //@ts-ignore
               (...args) => unref(handleImageLoad) && unref(handleImageLoad)(...args)),
@@ -74153,7 +74153,7 @@ const _sfc_main$i = /* @__PURE__ */ defineComponent({
             unref(isLoading) ? (openBlock(), createElementBlock("div", _hoisted_4$d, toDisplayString$1(_ctx.$t("imageCrop.loading")), 1)) : createCommentVNode("", true),
             !unref(isLoading) ? (openBlock(), createElementBlock("div", {
               key: 1,
-              class: "absolute box-content border-2 border-white cursor-move select-none shadow-[0_0_0_9999px_rgb(0_0_0/0.5)]",
+              class: "ctv:absolute ctv:box-content ctv:border-2 ctv:border-white ctv:cursor-move ctv:select-none ctv:shadow-[0_0_0_9999px_rgb(0_0_0/0.5)]",
               style: normalizeStyle(unref(cropBoxStyle)),
               onPointerdown: _cache2[3] || (_cache2[3] = //@ts-ignore
               (...args) => unref(handleDragStart) && unref(handleDragStart)(...args)),
@@ -74165,7 +74165,7 @@ const _sfc_main$i = /* @__PURE__ */ defineComponent({
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(resizeHandles), (handle) => {
               return withDirectives((openBlock(), createElementBlock("div", {
                 key: handle.direction,
-                class: normalizeClass(["absolute", handle.isCorner ? "bg-white/85 rounded-sm" : "bg-transparent"]),
+                class: normalizeClass(["ctv:absolute", handle.isCorner ? "ctv:bg-white/85 ctv:rounded-sm" : "ctv:bg-transparent"]),
                 style: normalizeStyle({ ...handle.style, cursor: handle.cursor }),
                 onPointerdown: (e) => unref(handleResizeStart)(e, handle.direction),
                 onPointermove: _cache2[6] || (_cache2[6] = //@ts-ignore
@@ -74183,7 +74183,7 @@ const _sfc_main$i = /* @__PURE__ */ defineComponent({
             createBaseVNode("span", _hoisted_8$b, toDisplayString$1(_ctx.$t("imageCrop.ratio")), 1),
             withDirectives(createBaseVNode("select", {
               "onUpdate:modelValue": _cache2[8] || (_cache2[8] = ($event) => /* @__PURE__ */ isRef(selectedRatio) ? selectedRatio.value = $event : null),
-              class: "ctv-crop-select shrink-0 py-[3px] px-1.5 text-[11px] rounded bg-secondary-background text-base-foreground border border-border-subtle"
+              class: "ctv-crop-select ctv:shrink-0 ctv:py-[3px] ctv:px-1.5 ctv:text-[11px] ctv:rounded ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle"
             }, [
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(ratioKeys), (key) => {
                 return openBlock(), createElementBlock("option", {
@@ -74197,8 +74197,8 @@ const _sfc_main$i = /* @__PURE__ */ defineComponent({
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass([
-                "w-7 h-6 text-xs rounded cursor-pointer border",
-                unref(isLockEnabled) ? "bg-secondary-background-selected border-primary-background text-primary-background" : "bg-secondary-background border-border-subtle text-base-foreground"
+                "ctv:w-7 ctv:h-6 ctv:text-xs ctv:rounded ctv:cursor-pointer ctv:border",
+                unref(isLockEnabled) ? "ctv:bg-secondary-background-selected ctv:border-primary-background ctv:text-primary-background" : "ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground"
               ]),
               title: unref(isLockEnabled) ? _ctx.$t("imageCrop.unlockRatio") : _ctx.$t("imageCrop.lockRatio"),
               onClick: _cache2[9] || (_cache2[9] = ($event) => isLockEnabled.value = !unref(isLockEnabled))
@@ -74208,14 +74208,14 @@ const _sfc_main$i = /* @__PURE__ */ defineComponent({
             (openBlock(), createElementBlock(Fragment$1, null, renderList(BOUND_FIELDS, (b) => {
               return createBaseVNode("label", {
                 key: b.label,
-                class: "flex-1 flex items-center gap-1 py-0.5 px-1 rounded bg-secondary-background border border-border-subtle"
+                class: "ctv:flex-1 ctv:flex ctv:items-center ctv:gap-1 ctv:py-0.5 ctv:px-1 ctv:rounded ctv:bg-secondary-background ctv:border ctv:border-border-subtle"
               }, [
                 createBaseVNode("span", _hoisted_12$a, toDisplayString$1(b.label), 1),
                 createBaseVNode("input", {
                   type: "number",
                   min: b.min,
                   step: "1",
-                  class: "ctv-bound-input w-full border-0 outline-none bg-transparent text-[11px] font-mono text-base-foreground",
+                  class: "ctv-bound-input ctv:w-full ctv:border-0 ctv:outline-none ctv:bg-transparent ctv:text-[11px] ctv:font-mono ctv:text-base-foreground",
                   value: boundFieldValue(b),
                   onChange: (e) => boundFieldSet(b, e.target.value)
                 }, null, 40, _hoisted_13$8)
@@ -74227,7 +74227,7 @@ const _sfc_main$i = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const CropCanvas = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["__scopeId", "data-v-0594121d"]]);
+const CropCanvas = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["__scopeId", "data-v-c343d075"]]);
 function useTransformPipeline(options) {
   const {
     sourceImageUrl,
@@ -74306,23 +74306,23 @@ function useTransformPipeline(options) {
     requestRecompute
   };
 }
-const _hoisted_1$g = { class: "flex flex-col gap-1.5 size-full" };
-const _hoisted_2$e = { class: "text-2xs text-center py-0.5 tracking-wide" };
+const _hoisted_1$g = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
+const _hoisted_2$e = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
 const _hoisted_3$e = {
   key: 0,
-  class: "text-muted-foreground"
+  class: "ctv:text-muted-foreground"
 };
 const _hoisted_4$c = {
   key: 1,
-  class: "text-muted-foreground"
+  class: "ctv:text-muted-foreground"
 };
 const _hoisted_5$c = {
   key: 2,
-  class: "text-success-background"
+  class: "ctv:text-success-background"
 };
 const _hoisted_6$b = {
   key: 3,
-  class: "text-muted-foreground"
+  class: "ctv:text-muted-foreground"
 };
 const _sfc_main$h = /* @__PURE__ */ defineComponent({
   __name: "CropStageCard",
@@ -74442,37 +74442,37 @@ const _sfc_main$h = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$f = { class: "flex flex-col gap-1.5 size-full" };
-const _hoisted_2$d = { class: "relative w-full h-[280px] rounded-md overflow-hidden border border-border-subtle bg-black flex items-center justify-center" };
+const _hoisted_1$f = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
+const _hoisted_2$d = { class: "ctv:relative ctv:w-full ctv:h-[280px] ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle ctv:bg-black ctv:flex ctv:items-center ctv:justify-center" };
 const _hoisted_3$d = {
   key: 0,
-  class: "flex flex-col items-center justify-center gap-1.5 text-white/50"
+  class: "ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50"
 };
-const _hoisted_4$b = { class: "text-xs" };
+const _hoisted_4$b = { class: "ctv:text-xs" };
 const _hoisted_5$b = ["src"];
-const _hoisted_6$a = { class: "text-2xs text-center py-0.5 tracking-wide" };
+const _hoisted_6$a = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
 const _hoisted_7$a = {
   key: 0,
-  class: "text-muted-foreground"
+  class: "ctv:text-muted-foreground"
 };
 const _hoisted_8$a = {
   key: 1,
-  class: "text-muted-foreground"
+  class: "ctv:text-muted-foreground"
 };
 const _hoisted_9$a = {
   key: 2,
-  class: "text-success-background"
+  class: "ctv:text-success-background"
 };
 const _hoisted_10$a = {
   key: 3,
-  class: "text-muted-foreground"
+  class: "ctv:text-muted-foreground"
 };
-const _hoisted_11$9 = { class: "flex flex-col gap-1" };
-const _hoisted_12$9 = { class: "grid grid-cols-[64px_1fr_48px] items-center gap-1.5 text-xs" };
-const _hoisted_13$7 = { class: "text-2xs uppercase tracking-wider text-muted-foreground" };
+const _hoisted_11$9 = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
+const _hoisted_12$9 = { class: "ctv:grid ctv:grid-cols-[64px_1fr_48px] ctv:items-center ctv:gap-1.5 ctv:text-xs" };
+const _hoisted_13$7 = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wider ctv:text-muted-foreground" };
 const _hoisted_14$6 = ["value"];
-const _hoisted_15$6 = { class: "text-right text-base-foreground font-mono" };
-const _hoisted_16$6 = { class: "grid grid-cols-4 gap-1.5 text-xs" };
+const _hoisted_15$6 = { class: "ctv:text-right ctv:text-base-foreground ctv:font-mono" };
+const _hoisted_16$6 = { class: "ctv:grid ctv:grid-cols-4 ctv:gap-1.5 ctv:text-xs" };
 const _hoisted_17$6 = ["onClick"];
 const _sfc_main$g = /* @__PURE__ */ defineComponent({
   __name: "RotateStageCard",
@@ -74557,12 +74557,12 @@ const _sfc_main$g = /* @__PURE__ */ defineComponent({
       return openBlock(), createElementBlock("div", _hoisted_1$f, [
         createBaseVNode("div", _hoisted_2$d, [
           !sourceImageUrl.value ? (openBlock(), createElementBlock("div", _hoisted_3$d, [
-            _cache2[2] || (_cache2[2] = createBaseVNode("div", { class: "text-[32px] opacity-60" }, "⊟", -1)),
+            _cache2[2] || (_cache2[2] = createBaseVNode("div", { class: "ctv:text-[32px] ctv:opacity-60" }, "⊟", -1)),
             createBaseVNode("div", _hoisted_4$b, toDisplayString$1(_ctx.$t("imageCrop.noInputImage")), 1)
           ])) : (openBlock(), createElementBlock("img", {
             key: 1,
             src: sourceImageUrl.value,
-            class: "max-w-full max-h-full object-contain select-none pointer-events-none",
+            class: "ctv:max-w-full ctv:max-h-full ctv:object-contain ctv:select-none ctv:pointer-events-none",
             style: normalizeStyle(previewStyle.value),
             draggable: "false",
             onDragstart: _cache2[0] || (_cache2[0] = withModifiers(() => {
@@ -74577,7 +74577,7 @@ const _sfc_main$g = /* @__PURE__ */ defineComponent({
             createBaseVNode("span", _hoisted_13$7, toDisplayString$1(_ctx.$t("rotate.angle")), 1),
             createBaseVNode("input", {
               type: "range",
-              class: "w-full",
+              class: "ctv:w-full",
               min: "-180",
               max: "180",
               step: "1",
@@ -74591,7 +74591,7 @@ const _sfc_main$g = /* @__PURE__ */ defineComponent({
               return createBaseVNode("button", {
                 key: q.l,
                 type: "button",
-                class: "py-1 px-1.5 rounded text-xs cursor-pointer bg-secondary-background border border-border-subtle text-base-foreground hover:bg-secondary-background-hover",
+                class: "ctv:py-1 ctv:px-1.5 ctv:rounded ctv:text-xs ctv:cursor-pointer ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground ctv:hover:bg-secondary-background-hover",
                 onClick: ($event) => snap(q.d)
               }, toDisplayString$1(q.l), 9, _hoisted_17$6);
             }), 64))
@@ -74609,32 +74609,32 @@ const _sfc_main$g = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$e = { class: "flex flex-col gap-1.5 size-full" };
-const _hoisted_2$c = { class: "relative w-full h-[280px] rounded-md overflow-hidden border border-border-subtle bg-black flex items-center justify-center" };
+const _hoisted_1$e = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
+const _hoisted_2$c = { class: "ctv:relative ctv:w-full ctv:h-[280px] ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle ctv:bg-black ctv:flex ctv:items-center ctv:justify-center" };
 const _hoisted_3$c = {
   key: 0,
-  class: "flex flex-col items-center justify-center gap-1.5 text-white/50"
+  class: "ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50"
 };
-const _hoisted_4$a = { class: "text-xs" };
+const _hoisted_4$a = { class: "ctv:text-xs" };
 const _hoisted_5$a = ["src"];
-const _hoisted_6$9 = { class: "text-2xs text-center py-0.5" };
+const _hoisted_6$9 = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5" };
 const _hoisted_7$9 = {
   key: 0,
-  class: "text-muted-foreground"
+  class: "ctv:text-muted-foreground"
 };
 const _hoisted_8$9 = {
   key: 1,
-  class: "text-muted-foreground"
+  class: "ctv:text-muted-foreground"
 };
 const _hoisted_9$9 = {
   key: 2,
-  class: "text-success-background"
+  class: "ctv:text-success-background"
 };
 const _hoisted_10$9 = {
   key: 3,
-  class: "text-muted-foreground"
+  class: "ctv:text-muted-foreground"
 };
-const _hoisted_11$8 = { class: "flex gap-1.5" };
+const _hoisted_11$8 = { class: "ctv:flex ctv:gap-1.5" };
 const _hoisted_12$8 = ["title"];
 const _hoisted_13$6 = ["title"];
 const _sfc_main$f = /* @__PURE__ */ defineComponent({
@@ -74723,12 +74723,12 @@ const _sfc_main$f = /* @__PURE__ */ defineComponent({
       return openBlock(), createElementBlock("div", _hoisted_1$e, [
         createBaseVNode("div", _hoisted_2$c, [
           !sourceImageUrl.value ? (openBlock(), createElementBlock("div", _hoisted_3$c, [
-            _cache2[3] || (_cache2[3] = createBaseVNode("div", { class: "text-[32px] opacity-60" }, "⊟", -1)),
+            _cache2[3] || (_cache2[3] = createBaseVNode("div", { class: "ctv:text-[32px] ctv:opacity-60" }, "⊟", -1)),
             createBaseVNode("div", _hoisted_4$a, toDisplayString$1(_ctx.$t("imageCrop.noInputImage")), 1)
           ])) : (openBlock(), createElementBlock("img", {
             key: 1,
             src: sourceImageUrl.value,
-            class: "max-w-full max-h-full object-contain select-none pointer-events-none",
+            class: "ctv:max-w-full ctv:max-h-full ctv:object-contain ctv:select-none ctv:pointer-events-none",
             style: normalizeStyle(previewStyle.value),
             draggable: "false",
             onDragstart: _cache2[0] || (_cache2[0] = withModifiers(() => {
@@ -74741,20 +74741,20 @@ const _sfc_main$f = /* @__PURE__ */ defineComponent({
         createBaseVNode("div", _hoisted_11$8, [
           createBaseVNode("button", {
             type: "button",
-            class: normalizeClass(["flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded text-xs border cursor-pointer", flipH.value ? "bg-secondary-background-selected border-primary-background text-primary-background font-semibold" : "bg-secondary-background border-border-subtle text-base-foreground hover:bg-secondary-background-hover"]),
+            class: normalizeClass(["ctv:flex-1 ctv:flex ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:py-1.5 ctv:px-2.5 ctv:rounded ctv:text-xs ctv:border ctv:cursor-pointer", flipH.value ? "ctv:bg-secondary-background-selected ctv:border-primary-background ctv:text-primary-background ctv:font-semibold" : "ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:bg-secondary-background-hover"]),
             title: _ctx.$t("mirror.horizontal"),
             onClick: _cache2[1] || (_cache2[1] = ($event) => flipH.value = !flipH.value)
           }, [
-            _cache2[4] || (_cache2[4] = createBaseVNode("span", { class: "text-sm leading-none" }, "⇋", -1)),
+            _cache2[4] || (_cache2[4] = createBaseVNode("span", { class: "ctv:text-sm ctv:leading-none" }, "⇋", -1)),
             createTextVNode(" " + toDisplayString$1(_ctx.$t("mirror.horizontal")), 1)
           ], 10, _hoisted_12$8),
           createBaseVNode("button", {
             type: "button",
-            class: normalizeClass(["flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded text-xs border cursor-pointer", flipV.value ? "bg-secondary-background-selected border-primary-background text-primary-background font-semibold" : "bg-secondary-background border-border-subtle text-base-foreground hover:bg-secondary-background-hover"]),
+            class: normalizeClass(["ctv:flex-1 ctv:flex ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:py-1.5 ctv:px-2.5 ctv:rounded ctv:text-xs ctv:border ctv:cursor-pointer", flipV.value ? "ctv:bg-secondary-background-selected ctv:border-primary-background ctv:text-primary-background ctv:font-semibold" : "ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:bg-secondary-background-hover"]),
             title: _ctx.$t("mirror.vertical"),
             onClick: _cache2[2] || (_cache2[2] = ($event) => flipV.value = !flipV.value)
           }, [
-            _cache2[5] || (_cache2[5] = createBaseVNode("span", { class: "text-sm leading-none" }, "⇅", -1)),
+            _cache2[5] || (_cache2[5] = createBaseVNode("span", { class: "ctv:text-sm ctv:leading-none" }, "⇅", -1)),
             createTextVNode(" " + toDisplayString$1(_ctx.$t("mirror.vertical")), 1)
           ], 10, _hoisted_13$6)
         ]),
@@ -77909,24 +77909,24 @@ async function capturePanoramaOffscreen(url, options) {
   geo.dispose();
   return out;
 }
-const _hoisted_1$d = { class: "flex flex-col gap-1.5 w-full" };
+const _hoisted_1$d = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full" };
 const _hoisted_2$b = {
   key: 0,
-  class: "absolute inset-0 flex flex-col items-center justify-center gap-1.5 text-white/50 pointer-events-none"
+  class: "ctv:absolute ctv:inset-0 ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50 ctv:pointer-events-none"
 };
-const _hoisted_3$b = { class: "text-xs" };
+const _hoisted_3$b = { class: "ctv:text-xs" };
 const _hoisted_4$9 = {
   key: 1,
-  class: "absolute inset-0 flex items-center justify-center text-[11px] bg-destructive-background/30 text-destructive-background pointer-events-none"
+  class: "ctv:absolute ctv:inset-0 ctv:flex ctv:items-center ctv:justify-center ctv:text-[11px] ctv:bg-destructive-background/30 ctv:text-destructive-background ctv:pointer-events-none"
 };
-const _hoisted_5$9 = { class: "flex flex-wrap gap-1.5 items-center" };
+const _hoisted_5$9 = { class: "ctv:flex ctv:flex-wrap ctv:gap-1.5 ctv:items-center" };
 const _hoisted_6$8 = ["disabled"];
 const _hoisted_7$8 = { key: 0 };
 const _hoisted_8$8 = { key: 1 };
 const _hoisted_9$8 = ["title"];
 const _hoisted_10$8 = {
   key: 1,
-  class: "text-2xs py-0.5 px-1.5 rounded-lg tracking-wide bg-primary-background/20 text-primary-background"
+  class: "ctv:text-2xs ctv:py-0.5 ctv:px-1.5 ctv:rounded-lg ctv:tracking-wide ctv:bg-primary-background/20 ctv:text-primary-background"
 };
 const _sfc_main$e = /* @__PURE__ */ defineComponent({
   __name: "PanoramaCanvas",
@@ -77990,10 +77990,10 @@ const _sfc_main$e = /* @__PURE__ */ defineComponent({
         createBaseVNode("div", {
           ref_key: "containerEl",
           ref: containerEl,
-          class: "relative w-full h-80 rounded-md overflow-hidden bg-black border border-border-subtle"
+          class: "ctv:relative ctv:w-full ctv:h-80 ctv:rounded-md ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle"
         }, [
           !__props.panoramaUrl ? (openBlock(), createElementBlock("div", _hoisted_2$b, [
-            _cache2[1] || (_cache2[1] = createBaseVNode("div", { class: "text-[32px] opacity-60" }, "🌐", -1)),
+            _cache2[1] || (_cache2[1] = createBaseVNode("div", { class: "ctv:text-[32px] ctv:opacity-60" }, "🌐", -1)),
             createBaseVNode("div", _hoisted_3$b, toDisplayString$1(_ctx.$t("panorama.empty")), 1)
           ])) : createCommentVNode("", true),
           loadError.value ? (openBlock(), createElementBlock("div", _hoisted_4$9, toDisplayString$1(_ctx.$t("panorama.loadError")), 1)) : createCommentVNode("", true)
@@ -78004,12 +78004,12 @@ const _sfc_main$e = /* @__PURE__ */ defineComponent({
             ref: fileInputEl,
             type: "file",
             accept: ".hdr,.exr,.jpg,.jpeg,.png,.webp",
-            class: "hidden",
+            class: "ctv:hidden",
             onChange: onFilePicked
           }, null, 544),
           createBaseVNode("button", {
             type: "button",
-            class: "py-1 px-2.5 text-[11px] rounded cursor-pointer bg-secondary-background text-base-foreground border border-border-subtle hover:enabled:bg-secondary-background-hover disabled:opacity-60 disabled:cursor-not-allowed",
+            class: "ctv:py-1 ctv:px-2.5 ctv:text-[11px] ctv:rounded ctv:cursor-pointer ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle ctv:hover:enabled:bg-secondary-background-hover ctv:disabled:opacity-60 ctv:disabled:cursor-not-allowed",
             disabled: uploading.value,
             onClick: _cache2[0] || (_cache2[0] = ($event) => {
               var _a2;
@@ -78021,7 +78021,7 @@ const _sfc_main$e = /* @__PURE__ */ defineComponent({
           __props.manualSource ? (openBlock(), createElementBlock("button", {
             key: 0,
             type: "button",
-            class: "py-1 px-2.5 text-[11px] rounded cursor-pointer bg-secondary-background text-destructive-background border border-destructive-background/30 hover:bg-destructive-background/10",
+            class: "ctv:py-1 ctv:px-2.5 ctv:text-[11px] ctv:rounded ctv:cursor-pointer ctv:bg-secondary-background ctv:text-destructive-background ctv:border ctv:border-destructive-background/30 ctv:hover:bg-destructive-background/10",
             title: _ctx.$t("panorama.clearUploadTooltip"),
             onClick: onClearManual
           }, "✕ " + toDisplayString$1(_ctx.$t("panorama.clearUpload")), 9, _hoisted_9$8)) : createCommentVNode("", true),
@@ -78031,7 +78031,7 @@ const _sfc_main$e = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$c = { class: "flex flex-col gap-1.5 size-full" };
+const _hoisted_1$c = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
 const _sfc_main$d = /* @__PURE__ */ defineComponent({
   __name: "PanoramaStageCard",
   props: {
@@ -78245,37 +78245,37 @@ function useCurrentViewCapture(node, state, viewerHostEl, aspectRatio, resolutio
     captureSize
   };
 }
-const _hoisted_1$b = { class: "flex flex-col gap-1.5 size-full" };
-const _hoisted_2$a = { class: "flex items-center justify-center w-full" };
+const _hoisted_1$b = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
+const _hoisted_2$a = { class: "ctv:flex ctv:items-center ctv:justify-center ctv:w-full" };
 const _hoisted_3$a = {
   key: 0,
-  class: "absolute inset-0 flex flex-col items-center justify-center gap-1.5 text-white/50 pointer-events-none"
+  class: "ctv:absolute ctv:inset-0 ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50 ctv:pointer-events-none"
 };
-const _hoisted_4$8 = { class: "text-xs text-center px-3" };
-const _hoisted_5$8 = { class: "flex items-center gap-2 flex-wrap" };
-const _hoisted_6$7 = { class: "flex items-center gap-1" };
-const _hoisted_7$7 = { class: "text-2xs uppercase tracking-wide text-muted-foreground" };
+const _hoisted_4$8 = { class: "ctv:text-xs ctv:text-center ctv:px-3" };
+const _hoisted_5$8 = { class: "ctv:flex ctv:items-center ctv:gap-2 ctv:flex-wrap" };
+const _hoisted_6$7 = { class: "ctv:flex ctv:items-center ctv:gap-1" };
+const _hoisted_7$7 = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_8$7 = ["value"];
-const _hoisted_9$7 = { class: "flex items-center gap-1" };
-const _hoisted_10$7 = { class: "text-2xs uppercase tracking-wide text-muted-foreground" };
+const _hoisted_9$7 = { class: "ctv:flex ctv:items-center ctv:gap-1" };
+const _hoisted_10$7 = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_11$7 = ["value"];
-const _hoisted_12$7 = { class: "ml-auto text-2xs font-mono text-muted-foreground" };
-const _hoisted_13$5 = { class: "text-2xs text-center py-0.5" };
+const _hoisted_12$7 = { class: "ctv:ml-auto ctv:text-2xs ctv:font-mono ctv:text-muted-foreground" };
+const _hoisted_13$5 = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5" };
 const _hoisted_14$5 = {
   key: 0,
-  class: "text-muted-foreground"
+  class: "ctv:text-muted-foreground"
 };
 const _hoisted_15$5 = {
   key: 1,
-  class: "text-muted-foreground"
+  class: "ctv:text-muted-foreground"
 };
 const _hoisted_16$5 = {
   key: 2,
-  class: "text-success-background"
+  class: "ctv:text-success-background"
 };
 const _hoisted_17$5 = {
   key: 3,
-  class: "text-muted-foreground"
+  class: "ctv:text-muted-foreground"
 };
 const VIEWER_HEIGHT_PX = 300;
 const _sfc_main$c = /* @__PURE__ */ defineComponent({
@@ -78313,11 +78313,11 @@ const _sfc_main$c = /* @__PURE__ */ defineComponent({
           createBaseVNode("div", {
             ref_key: "viewerHostEl",
             ref: viewerHostEl,
-            class: "relative max-w-full rounded-md overflow-hidden border border-border-subtle bg-black",
+            class: "ctv:relative ctv:max-w-full ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle ctv:bg-black",
             style: normalizeStyle(viewerStyle.value)
           }, [
             !unref(panoramaUrl) ? (openBlock(), createElementBlock("div", _hoisted_3$a, [
-              _cache2[2] || (_cache2[2] = createBaseVNode("div", { class: "text-[32px] opacity-60" }, "🌐", -1)),
+              _cache2[2] || (_cache2[2] = createBaseVNode("div", { class: "ctv:text-[32px] ctv:opacity-60" }, "🌐", -1)),
               createBaseVNode("div", _hoisted_4$8, toDisplayString$1(_ctx.$t("panoramaView.connectPanorama")), 1)
             ])) : createCommentVNode("", true)
           ], 4)
@@ -78374,7 +78374,7 @@ const _sfc_main$c = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const PanoramaCurrentViewStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["__scopeId", "data-v-966a504e"]]);
+const PanoramaCurrentViewStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["__scopeId", "data-v-fe8b2afc"]]);
 const SCHEDULE_DELAY_MS$1 = 350;
 const MIN_VIEWS = 2;
 const MAX_VIEWS = 24;
@@ -78473,36 +78473,36 @@ function useMultiViewCapture(node, state, viewCount, aspectRatio, resolution) {
     captureSize
   };
 }
-const _hoisted_1$a = { class: "flex flex-col gap-1.5 size-full" };
-const _hoisted_2$9 = { class: "text-[11px] text-center py-1" };
+const _hoisted_1$a = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
+const _hoisted_2$9 = { class: "ctv:text-[11px] ctv:text-center ctv:py-1" };
 const _hoisted_3$9 = {
   key: 0,
-  class: "text-muted-foreground"
+  class: "ctv:text-muted-foreground"
 };
 const _hoisted_4$7 = {
   key: 1,
-  class: "text-muted-foreground"
+  class: "ctv:text-muted-foreground"
 };
 const _hoisted_5$7 = {
   key: 2,
-  class: "text-success-background"
+  class: "ctv:text-success-background"
 };
 const _hoisted_6$6 = {
   key: 3,
-  class: "text-muted-foreground"
+  class: "ctv:text-muted-foreground"
 };
-const _hoisted_7$6 = { class: "flex items-center gap-2 flex-wrap" };
-const _hoisted_8$6 = { class: "flex items-center gap-1" };
-const _hoisted_9$6 = { class: "text-2xs uppercase tracking-wide text-muted-foreground" };
+const _hoisted_7$6 = { class: "ctv:flex ctv:items-center ctv:gap-2 ctv:flex-wrap" };
+const _hoisted_8$6 = { class: "ctv:flex ctv:items-center ctv:gap-1" };
+const _hoisted_9$6 = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_10$6 = ["value"];
-const _hoisted_11$6 = { class: "flex items-center gap-1" };
-const _hoisted_12$6 = { class: "text-2xs uppercase tracking-wide text-muted-foreground" };
+const _hoisted_11$6 = { class: "ctv:flex ctv:items-center ctv:gap-1" };
+const _hoisted_12$6 = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_13$4 = ["value"];
-const _hoisted_14$4 = { class: "ml-auto text-2xs font-mono text-muted-foreground" };
-const _hoisted_15$4 = { class: "grid grid-cols-[80px_1fr_36px] items-center gap-1.5 py-1 px-2 rounded bg-secondary-background border border-border-subtle" };
-const _hoisted_16$4 = { class: "text-xs text-muted-foreground" };
+const _hoisted_14$4 = { class: "ctv:ml-auto ctv:text-2xs ctv:font-mono ctv:text-muted-foreground" };
+const _hoisted_15$4 = { class: "ctv:grid ctv:grid-cols-[80px_1fr_36px] ctv:items-center ctv:gap-1.5 ctv:py-1 ctv:px-2 ctv:rounded ctv:bg-secondary-background ctv:border ctv:border-border-subtle" };
+const _hoisted_16$4 = { class: "ctv:text-xs ctv:text-muted-foreground" };
 const _hoisted_17$4 = ["value", "disabled"];
-const _hoisted_18$4 = { class: "text-right text-xs font-mono text-base-foreground" };
+const _hoisted_18$4 = { class: "ctv:text-right ctv:text-xs ctv:font-mono ctv:text-base-foreground" };
 const _sfc_main$b = /* @__PURE__ */ defineComponent({
   __name: "PanoramaMultiViewStageCard",
   props: {
@@ -78572,7 +78572,7 @@ const _sfc_main$b = /* @__PURE__ */ defineComponent({
             min: "2",
             max: "24",
             step: "1",
-            class: "w-full disabled:opacity-40",
+            class: "ctv:w-full ctv:disabled:opacity-40",
             value: viewCount.value,
             disabled: !unref(panoramaUrl),
             onInput: _cache2[2] || (_cache2[2] = (e) => viewCount.value = Number(e.target.value))
@@ -78592,14 +78592,14 @@ const _sfc_main$b = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const PanoramaMultiViewStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["__scopeId", "data-v-d6d9757a"]]);
+const PanoramaMultiViewStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["__scopeId", "data-v-3d309c18"]]);
 const _hoisted_1$9 = ["src", "alt"];
 const _hoisted_2$8 = ["src", "alt"];
-const _hoisted_3$8 = { class: "absolute top-2 left-2 z-[7] py-0.5 px-1.5 rounded-lg bg-black/60 text-white/90 text-2xs tracking-wide pointer-events-none" };
-const _hoisted_4$6 = { class: "absolute top-2 right-2 z-[7] py-0.5 px-1.5 rounded-lg bg-black/60 text-white/90 text-2xs tracking-wide pointer-events-none" };
+const _hoisted_3$8 = { class: "ctv:absolute ctv:top-2 ctv:left-2 ctv:z-[7] ctv:py-0.5 ctv:px-1.5 ctv:rounded-lg ctv:bg-black/60 ctv:text-white/90 ctv:text-2xs ctv:tracking-wide ctv:pointer-events-none" };
+const _hoisted_4$6 = { class: "ctv:absolute ctv:top-2 ctv:right-2 ctv:z-[7] ctv:py-0.5 ctv:px-1.5 ctv:rounded-lg ctv:bg-black/60 ctv:text-white/90 ctv:text-2xs ctv:tracking-wide ctv:pointer-events-none" };
 const _hoisted_5$6 = {
   key: 1,
-  class: "absolute inset-0 flex items-center justify-center px-4 text-center text-white/50 text-xs"
+  class: "ctv:absolute ctv:inset-0 ctv:flex ctv:items-center ctv:justify-center ctv:px-4 ctv:text-center ctv:text-white/50 ctv:text-xs"
 };
 const _sfc_main$a = /* @__PURE__ */ defineComponent({
   __name: "ImageCompare",
@@ -78622,7 +78622,7 @@ const _sfc_main$a = /* @__PURE__ */ defineComponent({
       return openBlock(), createElementBlock("div", {
         ref_key: "containerRef",
         ref: containerRef,
-        class: "relative w-full h-80 rounded-md overflow-hidden cursor-ew-resize bg-black border border-border-subtle",
+        class: "ctv:relative ctv:w-full ctv:h-80 ctv:rounded-md ctv:overflow-hidden ctv:cursor-ew-resize ctv:bg-black ctv:border ctv:border-border-subtle",
         onPointerdown: _cache2[2] || (_cache2[2] = withModifiers(() => {
         }, ["stop"]))
       }, [
@@ -78631,7 +78631,7 @@ const _sfc_main$a = /* @__PURE__ */ defineComponent({
             key: 0,
             src: __props.afterImage,
             alt: _ctx.$t("imageCompare.after"),
-            class: "absolute inset-0 size-full object-contain select-none",
+            class: "ctv:absolute ctv:inset-0 ctv:size-full ctv:object-contain ctv:select-none",
             draggable: "false",
             onDragstart: _cache2[0] || (_cache2[0] = withModifiers(() => {
             }, ["prevent"]))
@@ -78640,7 +78640,7 @@ const _sfc_main$a = /* @__PURE__ */ defineComponent({
             key: 1,
             src: __props.beforeImage,
             alt: _ctx.$t("imageCompare.before"),
-            class: "absolute inset-0 size-full object-contain select-none",
+            class: "ctv:absolute ctv:inset-0 ctv:size-full ctv:object-contain ctv:select-none",
             draggable: "false",
             style: normalizeStyle(hasBoth.value ? { clipPath: `inset(0 ${100 - sliderPosition.value}% 0 0)` } : void 0),
             onDragstart: _cache2[1] || (_cache2[1] = withModifiers(() => {
@@ -78648,11 +78648,11 @@ const _sfc_main$a = /* @__PURE__ */ defineComponent({
           }, null, 44, _hoisted_2$8)) : createCommentVNode("", true),
           hasBoth.value ? (openBlock(), createElementBlock(Fragment$1, { key: 2 }, [
             createBaseVNode("div", {
-              class: "absolute top-0 bottom-0 w-0.5 -ml-px z-[5] pointer-events-none bg-white/85 shadow-[0_0_4px_rgb(0_0_0/0.6)]",
+              class: "ctv:absolute ctv:top-0 ctv:bottom-0 ctv:w-0.5 ctv:-ml-px ctv:z-[5] ctv:pointer-events-none ctv:bg-white/85 ctv:shadow-[0_0_4px_rgb(0_0_0/0.6)]",
               style: normalizeStyle({ left: `${sliderPosition.value}%` })
             }, null, 4),
             createBaseVNode("div", {
-              class: "absolute top-1/2 size-6 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-white/30 backdrop-blur-[2px] shadow-[0_1px_4px_rgb(0_0_0/0.5)] pointer-events-none z-[6]",
+              class: "ctv:absolute ctv:top-1/2 ctv:size-6 ctv:-translate-x-1/2 ctv:-translate-y-1/2 ctv:rounded-full ctv:border-2 ctv:border-white ctv:bg-white/30 ctv:backdrop-blur-[2px] ctv:shadow-[0_1px_4px_rgb(0_0_0/0.5)] ctv:pointer-events-none ctv:z-[6]",
               style: normalizeStyle({ left: `${sliderPosition.value}%` })
             }, null, 4),
             createBaseVNode("span", _hoisted_3$8, toDisplayString$1(_ctx.$t("imageCompare.before")), 1),
@@ -78663,7 +78663,7 @@ const _sfc_main$a = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$8 = { class: "flex flex-col gap-1.5 size-full" };
+const _hoisted_1$8 = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
 const _sfc_main$9 = /* @__PURE__ */ defineComponent({
   __name: "CompareStageCard",
   props: {
@@ -78830,38 +78830,38 @@ function useGridSplit(node, state) {
     splitting
   };
 }
-const _hoisted_1$7 = { class: "flex flex-col gap-1.5 size-full" };
-const _hoisted_2$7 = { class: "relative w-full h-[280px] rounded-md overflow-hidden border border-border-subtle bg-black flex items-center justify-center" };
+const _hoisted_1$7 = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
+const _hoisted_2$7 = { class: "ctv:relative ctv:w-full ctv:h-[280px] ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle ctv:bg-black ctv:flex ctv:items-center ctv:justify-center" };
 const _hoisted_3$7 = {
   key: 0,
-  class: "flex flex-col items-center justify-center gap-1.5 text-white/50"
+  class: "ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50"
 };
-const _hoisted_4$5 = { class: "text-xs" };
+const _hoisted_4$5 = { class: "ctv:text-xs" };
 const _hoisted_5$5 = ["src"];
-const _hoisted_6$5 = { class: "absolute inset-0 pointer-events-none" };
-const _hoisted_7$5 = { class: "text-2xs text-center py-0.5" };
+const _hoisted_6$5 = { class: "ctv:absolute ctv:inset-0 ctv:pointer-events-none" };
+const _hoisted_7$5 = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5" };
 const _hoisted_8$5 = {
   key: 0,
-  class: "text-muted-foreground"
+  class: "ctv:text-muted-foreground"
 };
 const _hoisted_9$5 = {
   key: 1,
-  class: "text-muted-foreground"
+  class: "ctv:text-muted-foreground"
 };
 const _hoisted_10$5 = {
   key: 2,
-  class: "text-success-background"
+  class: "ctv:text-success-background"
 };
 const _hoisted_11$5 = {
   key: 3,
-  class: "text-muted-foreground"
+  class: "ctv:text-muted-foreground"
 };
-const _hoisted_12$5 = { class: "flex gap-1 flex-wrap" };
+const _hoisted_12$5 = { class: "ctv:flex ctv:gap-1 ctv:flex-wrap" };
 const _hoisted_13$3 = ["onClick"];
-const _hoisted_14$3 = { class: "flex gap-2" };
-const _hoisted_15$3 = { class: "text-2xs uppercase tracking-wide text-muted-foreground" };
+const _hoisted_14$3 = { class: "ctv:flex ctv:gap-2" };
+const _hoisted_15$3 = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_16$3 = ["onClick"];
-const _hoisted_17$3 = { class: "ml-auto min-w-4 text-center font-mono text-xs text-base-foreground" };
+const _hoisted_17$3 = { class: "ctv:ml-auto ctv:min-w-4 ctv:text-center ctv:font-mono ctv:text-xs ctv:text-base-foreground" };
 const _hoisted_18$3 = ["onClick"];
 const _sfc_main$8 = /* @__PURE__ */ defineComponent({
   __name: "GridSplitStageCard",
@@ -78887,12 +78887,12 @@ const _sfc_main$8 = /* @__PURE__ */ defineComponent({
       return openBlock(), createElementBlock("div", _hoisted_1$7, [
         createBaseVNode("div", _hoisted_2$7, [
           !unref(sourceImageUrl) ? (openBlock(), createElementBlock("div", _hoisted_3$7, [
-            _cache2[1] || (_cache2[1] = createBaseVNode("div", { class: "text-[32px] opacity-60" }, "▦", -1)),
+            _cache2[1] || (_cache2[1] = createBaseVNode("div", { class: "ctv:text-[32px] ctv:opacity-60" }, "▦", -1)),
             createBaseVNode("div", _hoisted_4$5, toDisplayString$1(_ctx.$t("gridSplit.connectImage")), 1)
           ])) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
             createBaseVNode("img", {
               src: unref(sourceImageUrl),
-              class: "max-w-full max-h-full object-contain select-none pointer-events-none",
+              class: "ctv:max-w-full ctv:max-h-full ctv:object-contain ctv:select-none ctv:pointer-events-none",
               draggable: "false",
               onDragstart: _cache2[0] || (_cache2[0] = withModifiers(() => {
               }, ["prevent"]))
@@ -78901,14 +78901,14 @@ const _sfc_main$8 = /* @__PURE__ */ defineComponent({
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(cols) - 1, (c2) => {
                 return openBlock(), createElementBlock("div", {
                   key: `v${c2}`,
-                  class: "absolute top-0 bottom-0 w-px bg-white/70 shadow-[0_0_2px_rgb(0_0_0/0.6)]",
+                  class: "ctv:absolute ctv:top-0 ctv:bottom-0 ctv:w-px ctv:bg-white/70 ctv:shadow-[0_0_2px_rgb(0_0_0/0.6)]",
                   style: normalizeStyle({ left: `${c2 / unref(cols) * 100}%` })
                 }, null, 4);
               }), 128)),
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(rows) - 1, (r) => {
                 return openBlock(), createElementBlock("div", {
                   key: `h${r}`,
-                  class: "absolute left-0 right-0 h-px bg-white/70 shadow-[0_0_2px_rgb(0_0_0/0.6)]",
+                  class: "ctv:absolute ctv:left-0 ctv:right-0 ctv:h-px ctv:bg-white/70 ctv:shadow-[0_0_2px_rgb(0_0_0/0.6)]",
                   style: normalizeStyle({ top: `${r / unref(rows) * 100}%` })
                 }, null, 4);
               }), 128))
@@ -78923,7 +78923,7 @@ const _sfc_main$8 = /* @__PURE__ */ defineComponent({
             return createBaseVNode("button", {
               key: p2.label,
               type: "button",
-              class: normalizeClass(["flex-1 min-w-[44px] py-1 px-1.5 rounded text-xs font-mono cursor-pointer border", unref(rows) === p2.r && unref(cols) === p2.c ? "bg-secondary-background-selected border-primary-background text-primary-background font-semibold" : "bg-secondary-background border-border-subtle text-base-foreground hover:bg-secondary-background-hover"]),
+              class: normalizeClass(["ctv:flex-1 ctv:min-w-[44px] ctv:py-1 ctv:px-1.5 ctv:rounded ctv:text-xs ctv:font-mono ctv:cursor-pointer ctv:border", unref(rows) === p2.r && unref(cols) === p2.c ? "ctv:bg-secondary-background-selected ctv:border-primary-background ctv:text-primary-background ctv:font-semibold" : "ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:bg-secondary-background-hover"]),
               onClick: ($event) => unref(setGrid)(p2.r, p2.c)
             }, toDisplayString$1(p2.label), 11, _hoisted_13$3);
           }), 64))
@@ -78935,18 +78935,18 @@ const _sfc_main$8 = /* @__PURE__ */ defineComponent({
           ], ([lbl, val, setRow]) => {
             return openBlock(), createElementBlock("div", {
               key: String(lbl),
-              class: "flex-1 flex items-center gap-1.5 py-0.5 px-1.5 rounded bg-secondary-background border border-border-subtle"
+              class: "ctv:flex-1 ctv:flex ctv:items-center ctv:gap-1.5 ctv:py-0.5 ctv:px-1.5 ctv:rounded ctv:bg-secondary-background ctv:border ctv:border-border-subtle"
             }, [
               createBaseVNode("span", _hoisted_15$3, toDisplayString$1(lbl), 1),
               createBaseVNode("button", {
                 type: "button",
-                class: "size-5 rounded-sm border border-border-subtle bg-secondary-background text-base-foreground text-[13px] leading-none cursor-pointer hover:bg-secondary-background-hover",
+                class: "ctv:size-5 ctv:rounded-sm ctv:border ctv:border-border-subtle ctv:bg-secondary-background ctv:text-base-foreground ctv:text-[13px] ctv:leading-none ctv:cursor-pointer ctv:hover:bg-secondary-background-hover",
                 onClick: ($event) => setRow(val - 1)
               }, "−", 8, _hoisted_16$3),
               createBaseVNode("span", _hoisted_17$3, toDisplayString$1(val), 1),
               createBaseVNode("button", {
                 type: "button",
-                class: "size-5 rounded-sm border border-border-subtle bg-secondary-background text-base-foreground text-[13px] leading-none cursor-pointer hover:bg-secondary-background-hover",
+                class: "ctv:size-5 ctv:rounded-sm ctv:border ctv:border-border-subtle ctv:bg-secondary-background ctv:text-base-foreground ctv:text-[13px] ctv:leading-none ctv:cursor-pointer ctv:hover:bg-secondary-background-hover",
                 onClick: ($event) => setRow(val + 1)
               }, "+", 8, _hoisted_18$3)
             ]);
@@ -79250,53 +79250,53 @@ function useTimelineEditor(node, state, rootEl) {
     onAudioResizePointerDown
   };
 }
-const _hoisted_1$6 = { class: "flex flex-col gap-1" };
-const _hoisted_2$6 = { class: "text-2xs uppercase tracking-wide text-muted-foreground" };
+const _hoisted_1$6 = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
+const _hoisted_2$6 = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_3$6 = {
   key: 0,
-  class: "text-xs text-muted-foreground/60 p-1"
+  class: "ctv:text-xs ctv:text-muted-foreground/60 ctv:p-1"
 };
 const _hoisted_4$4 = {
   key: 1,
-  class: "flex gap-1 flex-wrap"
+  class: "ctv:flex ctv:gap-1 ctv:flex-wrap"
 };
 const _hoisted_5$4 = ["title", "onClick"];
 const _hoisted_6$4 = ["src", "alt"];
-const _hoisted_7$4 = { class: "absolute bottom-px left-0.5 text-3xs py-0 px-0.5 rounded-sm bg-black/70 text-white/90" };
-const _hoisted_8$4 = { class: "shrink-0 overflow-x-auto overflow-y-hidden rounded-md border border-border-subtle bg-black" };
-const _hoisted_9$4 = { class: "relative h-4 border-b border-white/10" };
-const _hoisted_10$4 = { class: "text-[8px] text-white/40 ml-0.5" };
-const _hoisted_11$4 = { class: "relative h-11 m-1 rounded bg-primary-background/5" };
+const _hoisted_7$4 = { class: "ctv:absolute ctv:bottom-px ctv:left-0.5 ctv:text-3xs ctv:py-0 ctv:px-0.5 ctv:rounded-sm ctv:bg-black/70 ctv:text-white/90" };
+const _hoisted_8$4 = { class: "ctv:shrink-0 ctv:overflow-x-auto ctv:overflow-y-hidden ctv:rounded-md ctv:border ctv:border-border-subtle ctv:bg-black" };
+const _hoisted_9$4 = { class: "ctv:relative ctv:h-4 ctv:border-b ctv:border-white/10" };
+const _hoisted_10$4 = { class: "ctv:text-[8px] ctv:text-white/40 ctv:ml-0.5" };
+const _hoisted_11$4 = { class: "ctv:relative ctv:h-11 ctv:m-1 ctv:rounded ctv:bg-primary-background/5" };
 const _hoisted_12$4 = ["onPointerdown"];
 const _hoisted_13$2 = ["src"];
-const _hoisted_14$2 = { class: "absolute bottom-px right-[14px] text-3xs py-0 px-0.5 rounded-sm bg-black/60 text-white pointer-events-none" };
+const _hoisted_14$2 = { class: "ctv:absolute ctv:bottom-px ctv:right-[14px] ctv:text-3xs ctv:py-0 ctv:px-0.5 ctv:rounded-sm ctv:bg-black/60 ctv:text-white ctv:pointer-events-none" };
 const _hoisted_15$2 = ["onPointerdown"];
 const _hoisted_16$2 = {
   key: 0,
-  class: "text-xs text-white/40 p-1"
+  class: "ctv:text-xs ctv:text-white/40 ctv:p-1"
 };
-const _hoisted_17$2 = { class: "relative h-7 m-1 rounded bg-success-background/5" };
-const _hoisted_18$2 = { class: "text-2xs text-success-background pointer-events-none" };
+const _hoisted_17$2 = { class: "ctv:relative ctv:h-7 ctv:m-1 ctv:rounded ctv:bg-success-background/5" };
+const _hoisted_18$2 = { class: "ctv:text-2xs ctv:text-success-background ctv:pointer-events-none" };
 const _hoisted_19$2 = {
   key: 2,
-  class: "text-xs text-white/30 p-1"
+  class: "ctv:text-xs ctv:text-white/30 ctv:p-1"
 };
 const _hoisted_20$2 = {
   key: 0,
-  class: "flex flex-col gap-1"
+  class: "ctv:flex ctv:flex-col ctv:gap-1"
 };
-const _hoisted_21$2 = { class: "flex items-center gap-1.5" };
-const _hoisted_22$2 = { class: "text-2xs uppercase tracking-wide text-muted-foreground" };
+const _hoisted_21$2 = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
+const _hoisted_22$2 = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_23$2 = ["value", "placeholder"];
-const _hoisted_24$1 = { class: "flex items-center gap-1.5" };
-const _hoisted_25$1 = { class: "text-2xs uppercase tracking-wide text-muted-foreground" };
+const _hoisted_24$1 = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
+const _hoisted_25$1 = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_26$1 = ["value"];
-const _hoisted_27$1 = { class: "text-2xs text-muted-foreground" };
-const _hoisted_28$1 = { class: "flex items-center gap-2.5" };
-const _hoisted_29$1 = { class: "flex items-center gap-1" };
-const _hoisted_30$1 = { class: "text-2xs uppercase tracking-wide text-muted-foreground" };
+const _hoisted_27$1 = { class: "ctv:text-2xs ctv:text-muted-foreground" };
+const _hoisted_28$1 = { class: "ctv:flex ctv:items-center ctv:gap-2.5" };
+const _hoisted_29$1 = { class: "ctv:flex ctv:items-center ctv:gap-1" };
+const _hoisted_30$1 = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_31$1 = ["value"];
-const _hoisted_32$1 = { class: "ml-auto text-2xs font-mono text-muted-foreground" };
+const _hoisted_32$1 = { class: "ctv:ml-auto ctv:text-2xs ctv:font-mono ctv:text-muted-foreground" };
 const _sfc_main$7 = /* @__PURE__ */ defineComponent({
   __name: "DirectorTimelineStageCard",
   props: {
@@ -79339,7 +79339,7 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
       return openBlock(), createElementBlock("div", {
         ref_key: "rootEl",
         ref: rootEl,
-        class: "flex flex-col gap-1.5 size-full"
+        class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full"
       }, [
         createBaseVNode("div", _hoisted_1$6, [
           createBaseVNode("span", _hoisted_2$6, toDisplayString$1(_ctx.$t("timeline.keyframes")), 1),
@@ -79348,14 +79348,14 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
               return openBlock(), createElementBlock("button", {
                 key: i,
                 type: "button",
-                class: "relative w-12 h-9 p-0 rounded border border-border-subtle overflow-hidden cursor-pointer bg-black hover:border-primary-background",
+                class: "ctv:relative ctv:w-12 ctv:h-9 ctv:p-0 ctv:rounded ctv:border ctv:border-border-subtle ctv:overflow-hidden ctv:cursor-pointer ctv:bg-black ctv:hover:border-primary-background",
                 title: _ctx.$t("timeline.addSegment"),
                 onClick: ($event) => unref(addSegment)(i)
               }, [
                 createBaseVNode("img", {
                   src: url,
                   alt: `#${i + 1}`,
-                  class: "w-full h-full object-cover"
+                  class: "ctv:w-full ctv:h-full ctv:object-cover"
                 }, null, 8, _hoisted_6$4),
                 createBaseVNode("span", _hoisted_7$4, toDisplayString$1(i + 1), 1)
               ], 8, _hoisted_5$4);
@@ -79364,14 +79364,14 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
         ]),
         createBaseVNode("div", _hoisted_8$4, [
           createBaseVNode("div", {
-            class: "relative min-h-[116px]",
+            class: "ctv:relative ctv:min-h-[116px]",
             style: normalizeStyle({ width: `${unref(trackWidthPx)}px` })
           }, [
             createBaseVNode("div", _hoisted_9$4, [
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(ruler), (tick) => {
                 return openBlock(), createElementBlock("div", {
                   key: tick.frame,
-                  class: "absolute top-0 h-4 border-l border-white/15",
+                  class: "ctv:absolute ctv:top-0 ctv:h-4 ctv:border-l ctv:border-white/15",
                   style: normalizeStyle({ left: `${tick.frame * unref(PPF)}px` })
                 }, [
                   createBaseVNode("span", _hoisted_10$4, toDisplayString$1(tick.label), 1)
@@ -79383,9 +79383,9 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
                 var _a2;
                 return openBlock(), createElementBlock("div", {
                   key: seg.id,
-                  class: normalizeClass(["absolute top-0.5 h-10 rounded border overflow-hidden flex items-center border-primary-background/50 bg-primary-background/15", [
-                    seg.id === unref(selectedId) ? "border-primary-background shadow-[0_0_0_1px_var(--primary-background)]" : "",
-                    ((_a2 = unref(drag)) == null ? void 0 : _a2.id) === seg.id ? "opacity-80 cursor-grabbing z-[5]" : "cursor-grab"
+                  class: normalizeClass(["ctv:absolute ctv:top-0.5 ctv:h-10 ctv:rounded ctv:border ctv:overflow-hidden ctv:flex ctv:items-center ctv:border-primary-background/50 ctv:bg-primary-background/15", [
+                    seg.id === unref(selectedId) ? "ctv:border-primary-background ctv:shadow-[0_0_0_1px_var(--primary-background)]" : "",
+                    ((_a2 = unref(drag)) == null ? void 0 : _a2.id) === seg.id ? "ctv:opacity-80 ctv:cursor-grabbing ctv:z-[5]" : "ctv:cursor-grab"
                   ]]),
                   style: normalizeStyle(unref(segStyle)(idx)),
                   onPointerdown: ($event) => unref(onSegPointerDown)($event, seg, idx)
@@ -79393,12 +79393,12 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
                   seg.imageUrl ? (openBlock(), createElementBlock("img", {
                     key: 0,
                     src: seg.imageUrl,
-                    class: "h-full w-auto object-cover pointer-events-none",
+                    class: "ctv:h-full ctv:w-auto ctv:object-cover ctv:pointer-events-none",
                     draggable: "false"
                   }, null, 8, _hoisted_13$2)) : createCommentVNode("", true),
                   createBaseVNode("span", _hoisted_14$2, toDisplayString$1(seg.length) + "f", 1),
                   createBaseVNode("div", {
-                    class: "absolute top-0 right-0 w-2 h-full cursor-ew-resize bg-white/10 hover:bg-white/30",
+                    class: "ctv:absolute ctv:top-0 ctv:right-0 ctv:w-2 ctv:h-full ctv:cursor-ew-resize ctv:bg-white/10 ctv:hover:bg-white/30",
                     onPointerdown: withModifiers(($event) => unref(onResizePointerDown)($event, seg), ["stop"])
                   }, null, 40, _hoisted_15$2)
                 ], 46, _hoisted_12$4);
@@ -79408,19 +79408,19 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
             createBaseVNode("div", _hoisted_17$2, [
               unref(audioSeg) ? (openBlock(), createElementBlock("div", {
                 key: 0,
-                class: normalizeClass(["absolute top-0.5 h-6 rounded border flex items-center pl-1.5 border-success-background/50 bg-success-background/20", unref(audioDrag) ? "opacity-80 cursor-grabbing" : "cursor-grab"]),
+                class: normalizeClass(["ctv:absolute ctv:top-0.5 ctv:h-6 ctv:rounded ctv:border ctv:flex ctv:items-center ctv:pl-1.5 ctv:border-success-background/50 ctv:bg-success-background/20", unref(audioDrag) ? "ctv:opacity-80 ctv:cursor-grabbing" : "ctv:cursor-grab"]),
                 style: normalizeStyle({ left: `${unref(audioSeg).start * unref(PPF)}px`, width: `${unref(audioSeg).length * unref(PPF)}px` }),
                 onPointerdown: _cache2[1] || (_cache2[1] = ($event) => unref(onAudioPointerDown)($event))
               }, [
                 createBaseVNode("span", _hoisted_18$2, "🎵 " + toDisplayString$1(unref(audioSeg).length) + "f", 1),
                 createBaseVNode("div", {
-                  class: "absolute top-0 right-0 w-2 h-full cursor-ew-resize bg-white/10 hover:bg-white/30",
+                  class: "ctv:absolute ctv:top-0 ctv:right-0 ctv:w-2 ctv:h-full ctv:cursor-ew-resize ctv:bg-white/10 ctv:hover:bg-white/30",
                   onPointerdown: _cache2[0] || (_cache2[0] = withModifiers(($event) => unref(onAudioResizePointerDown)($event), ["stop"]))
                 }, null, 32)
               ], 38)) : unref(audioUrl) ? (openBlock(), createElementBlock("button", {
                 key: 1,
                 type: "button",
-                class: "m-0.5 py-0.5 px-2 text-xs rounded border cursor-pointer bg-success-background/10 border-success-background/30 text-success-background",
+                class: "ctv:m-0.5 ctv:py-0.5 ctv:px-2 ctv:text-xs ctv:rounded ctv:border ctv:cursor-pointer ctv:bg-success-background/10 ctv:border-success-background/30 ctv:text-success-background",
                 onClick: _cache2[2] || (_cache2[2] = //@ts-ignore
                 (...args) => unref(addAudio) && unref(addAudio)(...args))
               }, "🎵 " + toDisplayString$1(_ctx.$t("timeline.addAudio")), 1)) : (openBlock(), createElementBlock("div", _hoisted_19$2, toDisplayString$1(_ctx.$t("timeline.noAudio")), 1))
@@ -79432,12 +79432,12 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
             createBaseVNode("span", _hoisted_22$2, toDisplayString$1(_ctx.$t("timeline.segmentPrompt")), 1),
             createBaseVNode("button", {
               type: "button",
-              class: "ml-auto bg-transparent border-0 cursor-pointer text-[13px]",
+              class: "ctv:ml-auto ctv:bg-transparent ctv:border-0 ctv:cursor-pointer ctv:text-[13px]",
               onClick: _cache2[3] || (_cache2[3] = ($event) => unref(removeSegment)(unref(selectedSeg).id))
             }, "🗑")
           ]),
           createBaseVNode("textarea", {
-            class: "w-full min-h-11 resize-y py-1 px-1.5 rounded text-xs box-border bg-secondary-background text-base-foreground border border-border-subtle",
+            class: "ctv:w-full ctv:min-h-11 ctv:resize-y ctv:py-1 ctv:px-1.5 ctv:rounded ctv:text-xs ctv:box-border ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle",
             value: unref(selectedSeg).prompt,
             placeholder: _ctx.$t("timeline.promptPlaceholder"),
             onInput: _cache2[4] || (_cache2[4] = (e) => unref(updatePrompt)(e.target.value))
@@ -79449,7 +79449,7 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
               min: "1",
               max: "600",
               step: "1",
-              class: "w-14 py-0.5 px-1 rounded text-xs font-mono bg-secondary-background text-base-foreground border border-border-subtle",
+              class: "ctv:w-14 ctv:py-0.5 ctv:px-1 ctv:rounded ctv:text-xs ctv:font-mono ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle",
               value: unref(selectedSeg).length,
               onChange: _cache2[5] || (_cache2[5] = (e) => unref(setLength)(unref(selectedSeg).id, Number(e.target.value)))
             }, null, 40, _hoisted_26$1),
@@ -79464,7 +79464,7 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
               min: "1",
               max: "120",
               step: "1",
-              class: "w-14 py-0.5 px-1 rounded text-xs font-mono bg-secondary-background text-base-foreground border border-border-subtle",
+              class: "ctv:w-14 ctv:py-0.5 ctv:px-1 ctv:rounded ctv:text-xs ctv:font-mono ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle",
               value: unref(frameRate),
               onChange: _cache2[6] || (_cache2[6] = (e) => unref(setFrameRate)(Number(e.target.value)))
             }, null, 40, _hoisted_31$1)
@@ -79651,19 +79651,19 @@ function useOutpaintCanvas(node, state, canvasEl, rootEl) {
 }
 const _hoisted_1$5 = {
   key: 0,
-  class: "flex flex-col items-center gap-1.5 text-white/50"
+  class: "ctv:flex ctv:flex-col ctv:items-center ctv:gap-1.5 ctv:text-white/50"
 };
-const _hoisted_2$5 = { class: "text-xs" };
+const _hoisted_2$5 = { class: "ctv:text-xs" };
 const _hoisted_3$5 = ["src"];
 const _hoisted_4$3 = ["onPointerdown"];
-const _hoisted_5$3 = { class: "flex flex-col gap-1" };
-const _hoisted_6$3 = { class: "flex items-center gap-1.5 flex-wrap" };
-const _hoisted_7$3 = { class: "text-3xs min-w-8 uppercase tracking-wide text-muted-foreground" };
+const _hoisted_5$3 = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
+const _hoisted_6$3 = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-wrap" };
+const _hoisted_7$3 = { class: "ctv:text-3xs ctv:min-w-8 ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_8$3 = ["value", "disabled", "onChange"];
 const _hoisted_9$3 = ["disabled"];
-const _hoisted_10$3 = { class: "flex items-center gap-1.5 flex-wrap" };
-const _hoisted_11$3 = { class: "text-2xs text-muted-foreground/60" };
-const _hoisted_12$3 = { class: "text-[11px] font-mono text-base-foreground" };
+const _hoisted_10$3 = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-wrap" };
+const _hoisted_11$3 = { class: "ctv:text-2xs ctv:text-muted-foreground/60" };
+const _hoisted_12$3 = { class: "ctv:text-[11px] ctv:font-mono ctv:text-base-foreground" };
 const _sfc_main$6 = /* @__PURE__ */ defineComponent({
   __name: "OutpaintStageCard",
   props: {
@@ -79695,24 +79695,24 @@ const _sfc_main$6 = /* @__PURE__ */ defineComponent({
       return openBlock(), createElementBlock("div", {
         ref_key: "rootEl",
         ref: rootEl,
-        class: "flex flex-col gap-1.5 size-full"
+        class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full"
       }, [
         createBaseVNode("div", {
           ref_key: "canvasEl",
           ref: canvasEl,
-          class: normalizeClass(["relative flex-auto min-h-[280px] bg-black rounded-md overflow-hidden select-none border border-border-subtle", { "flex items-center justify-center": !unref(sourceImageUrl) }])
+          class: normalizeClass(["ctv:relative ctv:flex-auto ctv:min-h-[280px] ctv:bg-black ctv:rounded-md ctv:overflow-hidden ctv:select-none ctv:border ctv:border-border-subtle", { "ctv:flex ctv:items-center ctv:justify-center": !unref(sourceImageUrl) }])
         }, [
           !unref(sourceImageUrl) ? (openBlock(), createElementBlock("div", _hoisted_1$5, [
-            _cache2[3] || (_cache2[3] = createBaseVNode("div", { class: "text-[28px] opacity-60" }, "↔", -1)),
+            _cache2[3] || (_cache2[3] = createBaseVNode("div", { class: "ctv:text-[28px] ctv:opacity-60" }, "↔", -1)),
             createBaseVNode("div", _hoisted_2$5, toDisplayString$1(_ctx.$t("outpaint.noInputImage")), 1)
           ])) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
             createBaseVNode("div", {
-              class: "absolute ctv-pad-area",
+              class: "ctv:absolute ctv-pad-area",
               style: normalizeStyle(unref(padAreaStyle))
             }, null, 4),
             createBaseVNode("img", {
               src: unref(sourceImageUrl),
-              class: "absolute pointer-events-none outline outline-1 outline-white/70",
+              class: "ctv:absolute ctv:pointer-events-none ctv:outline ctv:outline-1 ctv:outline-white/70",
               style: normalizeStyle(unref(imgStyle)),
               draggable: "false",
               onLoad: _cache2[0] || (_cache2[0] = //@ts-ignore
@@ -79723,20 +79723,20 @@ const _sfc_main$6 = /* @__PURE__ */ defineComponent({
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(SIDES), (side) => {
               return openBlock(), createElementBlock("div", {
                 key: side,
-                class: normalizeClass(["absolute flex items-center justify-center z-[3] ctv-outpaint-handle", [
+                class: normalizeClass(["ctv:absolute ctv:flex ctv:items-center ctv:justify-center ctv:z-[3] ctv-outpaint-handle", [
                   `ctv-handle-${side}`,
-                  side === "left" || side === "right" ? "cursor-ew-resize" : "cursor-ns-resize"
+                  side === "left" || side === "right" ? "ctv:cursor-ew-resize" : "ctv:cursor-ns-resize"
                 ]]),
                 style: normalizeStyle(unref(handleStyle)(side)),
                 onPointerdown: ($event) => unref(onHandlePointerDown)($event, side)
               }, [..._cache2[4] || (_cache2[4] = [
-                createBaseVNode("span", { class: "absolute size-3 rounded-full bg-primary-background border-2 border-white shadow-[0_1px_4px_rgb(0_0_0/0.5)]" }, null, -1)
+                createBaseVNode("span", { class: "ctv:absolute ctv:size-3 ctv:rounded-full ctv:bg-primary-background ctv:border-2 ctv:border-white ctv:shadow-[0_1px_4px_rgb(0_0_0/0.5)]" }, null, -1)
               ])], 46, _hoisted_4$3);
             }), 128)),
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(SIDES), (side) => {
               return openBlock(), createElementBlock("span", {
                 key: `v-${side}`,
-                class: "absolute z-[2] pointer-events-none py-px px-[5px] rounded-sm text-2xs font-mono bg-black/60 text-white/90",
+                class: "ctv:absolute ctv:z-[2] ctv:pointer-events-none ctv:py-px ctv:px-[5px] ctv:rounded-sm ctv:text-2xs ctv:font-mono ctv:bg-black/60 ctv:text-white/90",
                 style: normalizeStyle(unref(badgeStyle)(side))
               }, toDisplayString$1(unref(pad)[side]) + "px", 5);
             }), 128))
@@ -79747,7 +79747,7 @@ const _sfc_main$6 = /* @__PURE__ */ defineComponent({
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(SIDES), (side) => {
               return openBlock(), createElementBlock("label", {
                 key: `in-${side}`,
-                class: "flex items-center gap-[3px] py-0.5 px-1 rounded-sm bg-secondary-background border border-border-subtle"
+                class: "ctv:flex ctv:items-center ctv:gap-[3px] ctv:py-0.5 ctv:px-1 ctv:rounded-sm ctv:bg-secondary-background ctv:border ctv:border-border-subtle"
               }, [
                 createBaseVNode("span", _hoisted_7$3, toDisplayString$1(_ctx.$t(`outpaint.${side}`)), 1),
                 createBaseVNode("input", {
@@ -79755,7 +79755,7 @@ const _sfc_main$6 = /* @__PURE__ */ defineComponent({
                   min: "0",
                   max: "4096",
                   step: "8",
-                  class: "w-12 py-px px-[3px] rounded-sm text-[11px] font-mono bg-secondary-background text-base-foreground border border-border-subtle disabled:opacity-40",
+                  class: "ctv:w-12 ctv:py-px ctv:px-[3px] ctv:rounded-sm ctv:text-[11px] ctv:font-mono ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle ctv:disabled:opacity-40",
                   value: unref(pad)[side],
                   disabled: !unref(sourceImageUrl),
                   onChange: (e) => unref(setPad)(side, Number(e.target.value))
@@ -79764,7 +79764,7 @@ const _sfc_main$6 = /* @__PURE__ */ defineComponent({
             }), 128)),
             createBaseVNode("button", {
               type: "button",
-              class: "ml-auto py-0.5 px-2.5 text-[11px] rounded-sm cursor-pointer bg-secondary-background text-base-foreground border border-border-subtle hover:enabled:bg-secondary-background-hover disabled:opacity-40 disabled:cursor-default",
+              class: "ctv:ml-auto ctv:py-0.5 ctv:px-2.5 ctv:text-[11px] ctv:rounded-sm ctv:cursor-pointer ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle ctv:hover:enabled:bg-secondary-background-hover ctv:disabled:opacity-40 ctv:disabled:cursor-default",
               disabled: !unref(sourceImageUrl),
               onClick: _cache2[2] || (_cache2[2] = //@ts-ignore
               (...args) => unref(resetAll) && unref(resetAll)(...args))
@@ -79788,7 +79788,7 @@ const _sfc_main$6 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const OutpaintStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["__scopeId", "data-v-9808b8b2"]]);
+const OutpaintStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["__scopeId", "data-v-da53c66d"]]);
 function newId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 }
@@ -80034,57 +80034,57 @@ function useStoryboardShots(node, state) {
     onFilePicked
   };
 }
-const _hoisted_1$4 = { class: "flex flex-col gap-1.5 size-full" };
-const _hoisted_2$4 = { class: "flex items-center gap-2" };
-const _hoisted_3$4 = { class: "text-[11px] font-semibold text-muted-foreground" };
+const _hoisted_1$4 = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
+const _hoisted_2$4 = { class: "ctv:flex ctv:items-center ctv:gap-2" };
+const _hoisted_3$4 = { class: "ctv:text-[11px] ctv:font-semibold ctv:text-muted-foreground" };
 const _hoisted_4$2 = {
   key: 0,
-  class: "text-[11px] text-muted-foreground/60 p-3 text-center"
+  class: "ctv:text-[11px] ctv:text-muted-foreground/60 ctv:p-3 ctv:text-center"
 };
 const _hoisted_5$2 = {
   key: 1,
-  class: "flex flex-col gap-1.5"
+  class: "ctv:flex ctv:flex-col ctv:gap-1.5"
 };
-const _hoisted_6$2 = { class: "flex items-center gap-1.5 flex-wrap" };
-const _hoisted_7$2 = { class: "text-[13px] font-bold text-base-foreground" };
-const _hoisted_8$2 = { class: "flex items-center gap-0.5 text-2xs text-muted-foreground" };
+const _hoisted_6$2 = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-wrap" };
+const _hoisted_7$2 = { class: "ctv:text-[13px] ctv:font-bold ctv:text-base-foreground" };
+const _hoisted_8$2 = { class: "ctv:flex ctv:items-center ctv:gap-0.5 ctv:text-2xs ctv:text-muted-foreground" };
 const _hoisted_9$2 = ["value", "onChange"];
 const _hoisted_10$2 = {
   key: 0,
-  class: "py-px px-1.5 rounded-sm text-2xs bg-secondary-background text-base-foreground"
+  class: "ctv:py-px ctv:px-1.5 ctv:rounded-sm ctv:text-2xs ctv:bg-secondary-background ctv:text-base-foreground"
 };
 const _hoisted_11$2 = {
   key: 1,
-  class: "py-px px-1.5 rounded-sm text-2xs bg-success-background/15 text-success-background"
+  class: "ctv:py-px ctv:px-1.5 ctv:rounded-sm ctv:text-2xs ctv:bg-success-background/15 ctv:text-success-background"
 };
-const _hoisted_12$2 = { class: "flex flex-col gap-px ml-auto" };
+const _hoisted_12$2 = { class: "ctv:flex ctv:flex-col ctv:gap-px ctv:ml-auto" };
 const _hoisted_13$1 = ["disabled", "onClick", "title"];
 const _hoisted_14$1 = ["disabled", "onClick", "title"];
 const _hoisted_15$1 = ["disabled", "title", "onClick"];
 const _hoisted_16$1 = ["title", "onClick"];
 const _hoisted_17$1 = ["value", "placeholder", "onInput"];
-const _hoisted_18$1 = { class: "flex gap-1.5" };
-const _hoisted_19$1 = { class: "relative shrink-0 w-24 h-[72px] rounded overflow-hidden bg-black border border-border-subtle" };
+const _hoisted_18$1 = { class: "ctv:flex ctv:gap-1.5" };
+const _hoisted_19$1 = { class: "ctv:relative ctv:shrink-0 ctv:w-24 ctv:h-[72px] ctv:rounded ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle" };
 const _hoisted_20$1 = ["src", "alt"];
 const _hoisted_21$1 = {
   key: 1,
-  class: "size-full flex items-center justify-center text-3xs text-white/35 text-center px-1"
+  class: "ctv:size-full ctv:flex ctv:items-center ctv:justify-center ctv:text-3xs ctv:text-white/35 ctv:text-center ctv:px-1"
 };
 const _hoisted_22$1 = ["disabled", "title", "onClick"];
 const _hoisted_23$1 = ["title", "onClick"];
 const _hoisted_24 = ["value", "placeholder", "onInput"];
-const _hoisted_25 = { class: "grid grid-cols-[max-content_1fr] gap-x-2.5 gap-y-[3px] m-0 text-2xs items-start" };
-const _hoisted_26 = { class: "opacity-50 whitespace-nowrap pt-1" };
-const _hoisted_27 = { class: "m-0" };
+const _hoisted_25 = { class: "ctv:grid ctv:grid-cols-[max-content_1fr] ctv:gap-x-2.5 ctv:gap-y-[3px] ctv:m-0 ctv:text-2xs ctv:items-start" };
+const _hoisted_26 = { class: "ctv:opacity-50 ctv:whitespace-nowrap ctv:pt-1" };
+const _hoisted_27 = { class: "ctv:m-0" };
 const _hoisted_28 = ["value", "onInput"];
 const _hoisted_29 = ["value", "onInput"];
 const _hoisted_30 = ["open"];
-const _hoisted_31 = { class: "cursor-pointer opacity-75 select-none pb-1 hover:opacity-100" };
+const _hoisted_31 = { class: "ctv:cursor-pointer ctv:opacity-75 ctv:select-none ctv:pb-1 ctv:hover:opacity-100" };
 const _hoisted_32 = ["value", "onInput"];
 const _hoisted_33 = ["open"];
-const _hoisted_34 = { class: "cursor-pointer opacity-75 select-none pb-1 hover:opacity-100" };
+const _hoisted_34 = { class: "ctv:cursor-pointer ctv:opacity-75 ctv:select-none ctv:pb-1 ctv:hover:opacity-100" };
 const _hoisted_35 = ["value", "onInput"];
-const META_INPUT_BASE = "w-full box-border py-0.5 px-1.5 text-2xs leading-snug rounded-sm [font-family:inherit] bg-secondary-background text-base-foreground border border-transparent hover:border-border-subtle focus:outline-none focus:border-primary-background/50 focus:bg-secondary-background-hover";
+const META_INPUT_BASE = "ctv:w-full ctv:box-border ctv:py-0.5 ctv:px-1.5 ctv:text-2xs ctv:leading-snug ctv:rounded-sm ctv:[font-family:inherit] ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-transparent ctv:hover:border-border-subtle ctv:focus:outline-none ctv:focus:border-primary-background/50 ctv:focus:bg-secondary-background-hover";
 const _sfc_main$5 = /* @__PURE__ */ defineComponent({
   __name: "StoryboardStageCard",
   props: {
@@ -80123,13 +80123,13 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent({
       onFilePicked
     } = useStoryboardShots(props.node, props.state);
     const moveBtn = [
-      "w-4 h-[13px] leading-none text-[8px] p-0 rounded-sm cursor-pointer",
-      "bg-secondary-background text-muted-foreground border border-border-subtle",
-      "disabled:opacity-30 disabled:cursor-default"
+      "ctv:w-4 ctv:h-[13px] ctv:leading-none ctv:text-[8px] ctv:p-0 ctv:rounded-sm ctv:cursor-pointer",
+      "ctv:bg-secondary-background ctv:text-muted-foreground ctv:border ctv:border-border-subtle",
+      "ctv:disabled:opacity-30 ctv:disabled:cursor-default"
     ].join(" ");
     function metaInput(multiline, mono = false) {
-      const ml = multiline ? " min-h-[22px] resize-y" : "";
-      const m = mono ? " font-mono min-h-10" : "";
+      const ml = multiline ? " ctv:min-h-[22px] ctv:resize-y" : "";
+      const m = mono ? " ctv:font-mono ctv:min-h-10" : "";
       return `${META_INPUT_BASE}${ml}${m}`;
     }
     return (_ctx, _cache2) => {
@@ -80138,7 +80138,7 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent({
           createBaseVNode("span", _hoisted_3$4, toDisplayString$1(_ctx.$t("storyboard.shots")) + " · " + toDisplayString$1(unref(shots).length), 1),
           createBaseVNode("button", {
             type: "button",
-            class: "ml-auto py-0.5 px-2.5 text-[11px] rounded cursor-pointer bg-primary-background/15 border border-primary-background/40 text-primary-background hover:bg-primary-background/25",
+            class: "ctv:ml-auto ctv:py-0.5 ctv:px-2.5 ctv:text-[11px] ctv:rounded ctv:cursor-pointer ctv:bg-primary-background/15 ctv:border ctv:border-primary-background/40 ctv:text-primary-background ctv:hover:bg-primary-background/25",
             onClick: _cache2[0] || (_cache2[0] = //@ts-ignore
             (...args) => unref(addShot) && unref(addShot)(...args))
           }, "+ " + toDisplayString$1(_ctx.$t("storyboard.addShot")), 1)
@@ -80147,7 +80147,7 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent({
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(shots), (shot, idx) => {
             return openBlock(), createElementBlock("div", {
               key: shot.id,
-              class: "flex flex-col gap-1.5 p-2 rounded-md border border-border-subtle bg-base-foreground/5"
+              class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2 ctv:rounded-md ctv:border ctv:border-border-subtle ctv:bg-base-foreground/5"
             }, [
               createBaseVNode("header", _hoisted_6$2, [
                 createBaseVNode("span", _hoisted_7$2, "#" + toDisplayString$1(idx + 1), 1),
@@ -80158,7 +80158,7 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent({
                     max: "60",
                     step: "1",
                     value: shot.duration,
-                    class: "w-[38px] py-0.5 px-1 rounded-sm text-[11px] font-mono bg-secondary-background text-base-foreground border border-border-subtle",
+                    class: "ctv:w-[38px] ctv:py-0.5 ctv:px-1 ctv:rounded-sm ctv:text-[11px] ctv:font-mono ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle",
                     onChange: (e) => unref(setDuration)(shot.id, Number(e.target.value))
                   }, null, 40, _hoisted_9$2),
                   _cache2[2] || (_cache2[2] = createBaseVNode("span", null, "s", -1))
@@ -80183,20 +80183,20 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent({
                 ]),
                 createBaseVNode("button", {
                   type: "button",
-                  class: "bg-transparent border-0 cursor-pointer text-xs px-0.5 opacity-70 hover:opacity-100 disabled:opacity-40 disabled:cursor-default",
+                  class: "ctv:bg-transparent ctv:border-0 ctv:cursor-pointer ctv:text-xs ctv:px-0.5 ctv:opacity-70 ctv:hover:opacity-100 ctv:disabled:opacity-40 ctv:disabled:cursor-default",
                   disabled: unref(regeneratingId) === shot.id,
                   title: _ctx.$t("storyboard.regenerate"),
                   onClick: ($event) => unref(regenerateShot)(shot.id, idx + 1)
                 }, toDisplayString$1(unref(regeneratingId) === shot.id ? "…" : "🔄"), 9, _hoisted_15$1),
                 createBaseVNode("button", {
                   type: "button",
-                  class: "bg-transparent border-0 cursor-pointer text-[13px]",
+                  class: "ctv:bg-transparent ctv:border-0 ctv:cursor-pointer ctv:text-[13px]",
                   title: _ctx.$t("storyboard.remove"),
                   onClick: ($event) => unref(removeShot)(shot.id)
                 }, "🗑", 8, _hoisted_16$1)
               ]),
               createBaseVNode("textarea", {
-                class: "w-full box-border resize-none border-0 border-l-2 rounded-none py-1 px-2 text-[11px] italic leading-snug min-h-[22px] [font-family:inherit] bg-primary-background/5 border-primary-background/60 text-base-foreground focus:outline focus:outline-1 focus:outline-primary-background/50 focus:bg-primary-background/10",
+                class: "ctv:w-full ctv:box-border ctv:resize-none ctv:border-0 ctv:border-l-2 ctv:rounded-none ctv:py-1 ctv:px-2 ctv:text-[11px] ctv:italic ctv:leading-snug ctv:min-h-[22px] ctv:[font-family:inherit] ctv:bg-primary-background/5 ctv:border-primary-background/60 ctv:text-base-foreground ctv:focus:outline ctv:focus:outline-1 ctv:focus:outline-primary-background/50 ctv:focus:bg-primary-background/10",
                 value: shot.scene_purpose,
                 placeholder: _ctx.$t("storyboard.cols.scene_purpose"),
                 rows: "1",
@@ -80208,12 +80208,12 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent({
                     key: 0,
                     src: shot.image_url,
                     alt: `shot ${idx + 1}`,
-                    class: "size-full object-cover",
+                    class: "ctv:size-full ctv:object-cover",
                     draggable: "false"
                   }, null, 8, _hoisted_20$1)) : (openBlock(), createElementBlock("div", _hoisted_21$1, toDisplayString$1(_ctx.$t("storyboard.noRef")), 1)),
                   createBaseVNode("button", {
                     type: "button",
-                    class: "absolute bottom-0.5 right-0.5 size-5 p-0 border-0 rounded cursor-pointer text-[11px] bg-black/60 text-white disabled:opacity-60",
+                    class: "ctv:absolute ctv:bottom-0.5 ctv:right-0.5 ctv:size-5 ctv:p-0 ctv:border-0 ctv:rounded ctv:cursor-pointer ctv:text-[11px] ctv:bg-black/60 ctv:text-white ctv:disabled:opacity-60",
                     disabled: unref(uploadingId) === shot.id,
                     title: _ctx.$t("storyboard.uploadRef"),
                     onClick: ($event) => unref(pickFile)(shot.id)
@@ -80221,13 +80221,13 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent({
                   shot.image_url ? (openBlock(), createElementBlock("button", {
                     key: 2,
                     type: "button",
-                    class: "absolute top-0.5 right-0.5 size-5 p-0 border-0 rounded cursor-pointer text-[11px] bg-destructive-background/70 text-white",
+                    class: "ctv:absolute ctv:top-0.5 ctv:right-0.5 ctv:size-5 ctv:p-0 ctv:border-0 ctv:rounded ctv:cursor-pointer ctv:text-[11px] ctv:bg-destructive-background/70 ctv:text-white",
                     title: _ctx.$t("storyboard.clearRef"),
                     onClick: ($event) => unref(setImage)(shot.id, null)
                   }, "✕", 8, _hoisted_23$1)) : createCommentVNode("", true)
                 ]),
                 createBaseVNode("textarea", {
-                  class: "flex-1 min-h-14 resize-y box-border py-1 px-1.5 rounded text-[11px] leading-snug bg-secondary-background text-base-foreground border border-border-subtle",
+                  class: "ctv:flex-1 ctv:min-h-14 ctv:resize-y ctv:box-border ctv:py-1 ctv:px-1.5 ctv:rounded ctv:text-[11px] ctv:leading-snug ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle",
                   value: shot.image_prompt,
                   placeholder: _ctx.$t("storyboard.promptPlaceholder"),
                   onInput: (e) => unref(setField)(
@@ -80264,7 +80264,7 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent({
                 }), 64))
               ]),
               createBaseVNode("details", {
-                class: "text-2xs py-[3px] px-1.5 rounded border border-dashed border-border-subtle",
+                class: "ctv:text-2xs ctv:py-[3px] ctv:px-1.5 ctv:rounded ctv:border ctv:border-dashed ctv:border-border-subtle",
                 open: !!shot.character_desc
               }, [
                 createBaseVNode("summary", _hoisted_31, toDisplayString$1(_ctx.$t("storyboard.cols.character_desc")), 1),
@@ -80276,7 +80276,7 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent({
                 }, null, 42, _hoisted_32)
               ], 8, _hoisted_30),
               createBaseVNode("details", {
-                class: "text-2xs py-[3px] px-1.5 rounded border border-dashed border-border-subtle",
+                class: "ctv:text-2xs ctv:py-[3px] ctv:px-1.5 ctv:rounded ctv:border ctv:border-dashed ctv:border-border-subtle",
                 open: !!shot.motion_prompt
               }, [
                 createBaseVNode("summary", _hoisted_34, toDisplayString$1(_ctx.$t("storyboard.cols.motion_prompt")), 1),
@@ -80295,7 +80295,7 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent({
           ref: fileInputEl,
           type: "file",
           accept: "image/*",
-          class: "hidden",
+          class: "ctv:hidden",
           onChange: _cache2[1] || (_cache2[1] = //@ts-ignore
           (...args) => unref(onFilePicked) && unref(onFilePicked)(...args))
         }, null, 544),
@@ -80312,9 +80312,9 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$3 = { class: "flex flex-col gap-1.5 py-1.5 px-2 size-full box-border text-xs text-base-foreground" };
-const _hoisted_2$3 = { class: "flex items-center gap-1.5 pb-1 font-semibold text-[11px] uppercase tracking-wide text-muted-foreground border-b border-border-default" };
-const _hoisted_3$3 = { class: "flex items-center gap-1" };
+const _hoisted_1$3 = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:py-1.5 ctv:px-2 ctv:size-full ctv:box-border ctv:text-xs ctv:text-base-foreground" };
+const _hoisted_2$3 = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:pb-1 ctv:font-semibold ctv:text-[11px] ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground ctv:border-b ctv:border-border-default" };
+const _hoisted_3$3 = { class: "ctv:flex ctv:items-center ctv:gap-1" };
 const _hoisted_4$1 = ["value"];
 const _hoisted_5$1 = ["value"];
 const _hoisted_6$1 = {
@@ -80323,14 +80323,14 @@ const _hoisted_6$1 = {
 };
 const _hoisted_7$1 = ["title"];
 const _hoisted_8$1 = ["title"];
-const _hoisted_9$1 = { class: "flex items-center justify-between text-2xs text-muted-foreground/60" };
-const _hoisted_10$1 = { class: "font-mono break-all" };
+const _hoisted_9$1 = { class: "ctv:flex ctv:items-center ctv:justify-between ctv:text-2xs ctv:text-muted-foreground/60" };
+const _hoisted_10$1 = { class: "ctv:font-mono ctv:break-all" };
 const _hoisted_11$1 = ["title"];
 const _hoisted_12$1 = {
   key: 0,
-  class: "text-2xs italic text-muted-foreground"
+  class: "ctv:text-2xs ctv:italic ctv:text-muted-foreground"
 };
-const ICON_BTN_BASE = "inline-flex items-center justify-center size-6 p-0 rounded-sm cursor-pointer text-[13px]";
+const ICON_BTN_BASE = "ctv:inline-flex ctv:items-center ctv:justify-center ctv:size-6 ctv:p-0 ctv:rounded-sm ctv:cursor-pointer ctv:text-[13px]";
 const _sfc_main$4 = /* @__PURE__ */ defineComponent({
   __name: "ProjectCard",
   setup(__props) {
@@ -80385,9 +80385,9 @@ const _sfc_main$4 = /* @__PURE__ */ defineComponent({
       store.setCurrent(newId2);
     }
     const ICON_BTN_VARIANTS = {
-      default: "bg-secondary-background text-base-foreground border border-border-default hover:bg-secondary-background-hover",
-      primary: "bg-secondary-background text-primary-background border border-primary-background/60 hover:bg-primary-background/20",
-      danger: "bg-secondary-background text-destructive-background border border-destructive-background/50 hover:bg-destructive-background/30 hover:text-base-foreground"
+      default: "ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-default ctv:hover:bg-secondary-background-hover",
+      primary: "ctv:bg-secondary-background ctv:text-primary-background ctv:border ctv:border-primary-background/60 ctv:hover:bg-primary-background/20",
+      danger: "ctv:bg-secondary-background ctv:text-destructive-background ctv:border ctv:border-destructive-background/50 ctv:hover:bg-destructive-background/30 ctv:hover:text-base-foreground"
     };
     function iconBtn(variant = "default") {
       return `${ICON_BTN_BASE} ${ICON_BTN_VARIANTS[variant]}`;
@@ -80395,12 +80395,12 @@ const _sfc_main$4 = /* @__PURE__ */ defineComponent({
     return (_ctx, _cache2) => {
       return openBlock(), createElementBlock("div", _hoisted_1$3, [
         createBaseVNode("div", _hoisted_2$3, [
-          _cache2[0] || (_cache2[0] = createBaseVNode("span", { class: "text-sm" }, "📁", -1)),
+          _cache2[0] || (_cache2[0] = createBaseVNode("span", { class: "ctv:text-sm" }, "📁", -1)),
           createBaseVNode("span", null, toDisplayString$1(_ctx.$t("project.label")), 1)
         ]),
         createBaseVNode("div", _hoisted_3$3, [
           createBaseVNode("select", {
-            class: "flex-auto py-1 px-1.5 text-xs rounded-sm bg-secondary-background text-base-foreground border border-border-default",
+            class: "ctv:flex-auto ctv:py-1 ctv:px-1.5 ctv:text-xs ctv:rounded-sm ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-default",
             value: unref(store).currentProjectId,
             onChange: onSelectChange
           }, [
@@ -80590,12 +80590,12 @@ const useExecutionStore = /* @__PURE__ */ defineStore("comfytv-execution", () =>
 });
 const _hoisted_1$2 = {
   key: 0,
-  class: "fixed bottom-4 right-4 z-[9999] inline-flex items-center gap-2 py-1.5 px-3 rounded-full backdrop-blur pointer-events-none select-none bg-interface-menu-surface/85 border border-border-subtle text-base-foreground text-[11px] font-mono tracking-wide"
+  class: "ctv:fixed ctv:bottom-4 ctv:right-4 ctv:z-[9999] ctv:inline-flex ctv:items-center ctv:gap-2 ctv:py-1.5 ctv:px-3 ctv:rounded-full ctv:backdrop-blur ctv:pointer-events-none ctv:select-none ctv:bg-interface-menu-surface/85 ctv:border ctv:border-border-subtle ctv:text-base-foreground ctv:text-[11px] ctv:font-mono ctv:tracking-wide"
 };
-const _hoisted_2$2 = { class: "font-medium" };
+const _hoisted_2$2 = { class: "ctv:font-medium" };
 const _hoisted_3$2 = {
   key: 0,
-  class: "py-px px-1.5 rounded-lg bg-base-foreground/10 text-2xs font-semibold"
+  class: "ctv:py-px ctv:px-1.5 ctv:rounded-lg ctv:bg-base-foreground/10 ctv:text-2xs ctv:font-semibold"
 };
 const _sfc_main$3 = /* @__PURE__ */ defineComponent({
   __name: "ExecutionStatusBar",
@@ -80604,7 +80604,7 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent({
     return (_ctx, _cache2) => {
       return unref(store).isBusy ? (openBlock(), createElementBlock("div", _hoisted_1$2, [
         createBaseVNode("span", {
-          class: normalizeClass(["size-2 rounded-full", unref(store).currentNodeId ? "bg-primary-background shadow-[0_0_8px_var(--primary-background)] animate-pulse" : "bg-warning-background"])
+          class: normalizeClass(["ctv:size-2 ctv:rounded-full", unref(store).currentNodeId ? "ctv:bg-primary-background ctv:shadow-[0_0_8px_var(--primary-background)] ctv:animate-pulse" : "ctv:bg-warning-background"])
         }, null, 2),
         createBaseVNode("span", _hoisted_2$2, [
           unref(store).currentNodeId ? (openBlock(), createElementBlock(Fragment$1, { key: 0 }, [
@@ -80641,9 +80641,9 @@ const useDialogStore = /* @__PURE__ */ defineStore("comfytv-dialog", () => {
   }
   return { open, title, component, props, width, show, close: close2 };
 });
-const _hoisted_1$1 = { class: "flex items-center justify-between py-2.5 px-3.5 bg-base-foreground/[0.03] border-b border-border-subtle" };
-const _hoisted_2$1 = { class: "m-0 text-sm font-semibold text-base-foreground" };
-const _hoisted_3$1 = { class: "flex-1 overflow-y-auto p-3.5 text-xs" };
+const _hoisted_1$1 = { class: "ctv:flex ctv:items-center ctv:justify-between ctv:py-2.5 ctv:px-3.5 ctv:bg-base-foreground/[0.03] ctv:border-b ctv:border-border-subtle" };
+const _hoisted_2$1 = { class: "ctv:m-0 ctv:text-sm ctv:font-semibold ctv:text-base-foreground" };
+const _hoisted_3$1 = { class: "ctv:flex-1 ctv:overflow-y-auto ctv:p-3.5 ctv:text-xs" };
 const _sfc_main$2 = /* @__PURE__ */ defineComponent({
   __name: "ComfyTVDialog",
   setup(__props) {
@@ -80659,27 +80659,27 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
     return (_ctx, _cache2) => {
       return openBlock(), createBlock(Teleport, { to: "body" }, [
         createVNode(Transition, {
-          "enter-active-class": "duration-150 ease-out",
-          "enter-from-class": "opacity-0",
-          "enter-to-class": "opacity-100",
-          "leave-active-class": "duration-150 ease-in",
-          "leave-from-class": "opacity-100",
-          "leave-to-class": "opacity-0"
+          "enter-active-class": "ctv:duration-150 ctv:ease-out",
+          "enter-from-class": "ctv:opacity-0",
+          "enter-to-class": "ctv:opacity-100",
+          "leave-active-class": "ctv:duration-150 ctv:ease-in",
+          "leave-from-class": "ctv:opacity-100",
+          "leave-to-class": "ctv:opacity-0"
         }, {
           default: withCtx(() => [
             unref(store).open ? (openBlock(), createElementBlock("div", {
               key: 0,
-              class: "fixed inset-0 z-[10000] flex items-center justify-center p-6 bg-black/50 transition-opacity",
+              class: "ctv:fixed ctv:inset-0 ctv:z-[10000] ctv:flex ctv:items-center ctv:justify-center ctv:p-6 ctv:bg-black/50 ctv:transition-opacity",
               onMousedown: _cache2[1] || (_cache2[1] = withModifiers(($event) => unref(store).close(), ["self"]))
             }, [
               createBaseVNode("div", {
-                class: "w-full max-h-[calc(100vh-48px)] rounded-md overflow-hidden flex flex-col shadow-[0_16px_48px_rgb(0_0_0/0.5)] bg-interface-menu-surface text-base-foreground border border-border-default",
+                class: "ctv:w-full ctv:max-h-[calc(100vh-48px)] ctv:rounded-md ctv:overflow-hidden ctv:flex ctv:flex-col ctv:shadow-[0_16px_48px_rgb(0_0_0/0.5)] ctv:bg-interface-menu-surface ctv:text-base-foreground ctv:border ctv:border-border-default",
                 style: normalizeStyle({ maxWidth: unref(store).width })
               }, [
                 createBaseVNode("header", _hoisted_1$1, [
                   createBaseVNode("h2", _hoisted_2$1, toDisplayString$1(unref(store).title), 1),
                   createBaseVNode("button", {
-                    class: "bg-transparent border-0 cursor-pointer rounded size-7 text-[22px] leading-none text-muted-foreground hover:bg-secondary-background-hover hover:text-base-foreground",
+                    class: "ctv:bg-transparent ctv:border-0 ctv:cursor-pointer ctv:rounded ctv:size-7 ctv:text-[22px] ctv:leading-none ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground",
                     "aria-label": "Close",
                     onClick: _cache2[0] || (_cache2[0] = ($event) => unref(store).close())
                   }, "×")
@@ -81624,20 +81624,20 @@ function useEntryEditor(projectId, activeKind, metaFields) {
     kickHydrate
   };
 }
-const _hoisted_1 = { class: "flex flex-col gap-2.5" };
+const _hoisted_1 = { class: "ctv:flex ctv:flex-col ctv:gap-2.5" };
 const _hoisted_2 = {
   key: 0,
-  class: "flex gap-1 border-b border-border-subtle"
+  class: "ctv:flex ctv:gap-1 ctv:border-b ctv:border-border-subtle"
 };
 const _hoisted_3 = ["onClick"];
-const _hoisted_4 = { class: "py-0 px-1.5 rounded-lg text-2xs bg-base-foreground/10" };
-const _hoisted_5 = { class: "w-full border-collapse text-xs ctv-entry-table" };
-const _hoisted_6 = { class: "w-[140px]" };
+const _hoisted_4 = { class: "ctv:py-0 ctv:px-1.5 ctv:rounded-lg ctv:text-2xs ctv:bg-base-foreground/10" };
+const _hoisted_5 = { class: "ctv:w-full ctv:border-collapse ctv:text-xs ctv-entry-table" };
+const _hoisted_6 = { class: "ctv:w-[140px]" };
 const _hoisted_7 = ["onUpdate:modelValue", "onBlur", "onKeydown"];
 const _hoisted_8 = ["onUpdate:modelValue", "onBlur", "onKeydown"];
 const _hoisted_9 = ["onUpdate:modelValue", "onBlur"];
 const _hoisted_10 = ["onUpdate:modelValue", "placeholder", "onBlur"];
-const _hoisted_11 = { class: "w-24 text-right whitespace-nowrap" };
+const _hoisted_11 = { class: "ctv:w-24 ctv:text-right ctv:whitespace-nowrap" };
 const _hoisted_12 = ["title", "onClick"];
 const _hoisted_13 = { key: 0 };
 const _hoisted_14 = ["colspan"];
@@ -81645,16 +81645,16 @@ const _hoisted_15 = {
   key: 1,
   class: "create-row"
 };
-const _hoisted_16 = { class: "w-[140px]" };
+const _hoisted_16 = { class: "ctv:w-[140px]" };
 const _hoisted_17 = ["title"];
 const _hoisted_18 = ["placeholder"];
 const _hoisted_19 = ["onUpdate:modelValue", "placeholder"];
 const _hoisted_20 = ["onUpdate:modelValue", "placeholder"];
-const _hoisted_21 = { class: "w-24 text-right whitespace-nowrap" };
+const _hoisted_21 = { class: "ctv:w-24 ctv:text-right ctv:whitespace-nowrap" };
 const _hoisted_22 = ["disabled"];
-const _hoisted_23 = { class: "mt-1" };
-const FIELD_BASE = "w-full py-1 px-1.5 text-xs leading-snug rounded-sm outline-none box-border [font-family:inherit] bg-secondary-background text-base-foreground focus:border-primary-background";
-const BTN_BASE = "rounded-sm text-[11px] cursor-pointer [font-family:inherit] bg-secondary-background text-base-foreground border border-border-default";
+const _hoisted_23 = { class: "ctv:mt-1" };
+const FIELD_BASE = "ctv:w-full ctv:py-1 ctv:px-1.5 ctv:text-xs ctv:leading-snug ctv:rounded-sm ctv:outline-none ctv:box-border ctv:[font-family:inherit] ctv:bg-secondary-background ctv:text-base-foreground ctv:focus:border-primary-background";
+const BTN_BASE = "ctv:rounded-sm ctv:text-[11px] ctv:cursor-pointer ctv:[font-family:inherit] ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-default";
 const _sfc_main = /* @__PURE__ */ defineComponent({
   __name: "EntryManagerPanel",
   setup(__props) {
@@ -81682,34 +81682,34 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     onMounted(kickHydrate);
     function tabClass(active) {
       return [
-        "py-1.5 px-3 text-xs cursor-pointer inline-flex items-center gap-1.5",
-        "border border-transparent border-b-0 rounded-t bg-transparent",
-        active ? "-mb-px bg-secondary-background border-border-default text-base-foreground" : "text-muted-foreground hover:text-base-foreground"
+        "ctv:py-1.5 ctv:px-3 ctv:text-xs ctv:cursor-pointer ctv:inline-flex ctv:items-center ctv:gap-1.5",
+        "ctv:border ctv:border-transparent ctv:border-b-0 ctv:rounded-t ctv:bg-transparent",
+        active ? "ctv:-mb-px ctv:bg-secondary-background ctv:border-border-default ctv:text-base-foreground" : "ctv:text-muted-foreground ctv:hover:text-base-foreground"
       ].join(" ");
     }
     function inputClass() {
-      return `${FIELD_BASE} border border-border-default`;
+      return `${FIELD_BASE} ctv:border ctv:border-border-default`;
     }
     function textareaClass() {
-      return `${FIELD_BASE} border border-border-default resize-y`;
+      return `${FIELD_BASE} ctv:border ctv:border-border-default ctv:resize-y`;
     }
     function labelInputClass(invalid) {
-      return `${FIELD_BASE} font-mono border ${invalid ? "invalid border-destructive-background" : "border-border-default"}`;
+      return `${FIELD_BASE} ctv:font-mono ctv:border ${invalid ? "invalid ctv:border-destructive-background" : "ctv:border-border-default"}`;
     }
     function btnClass(variant) {
       const v = {
-        del: " py-0.5 px-2.5 hover:border-destructive-background hover:text-destructive-background",
-        save: " py-0.5 px-2 bg-primary-background/30 border-primary-background/60 disabled:opacity-40 disabled:cursor-not-allowed",
-        mini: " py-0.5 px-2",
-        add: " py-0.5 px-2.5 self-start hover:bg-primary-background/15"
+        del: " ctv:py-0.5 ctv:px-2.5 ctv:hover:border-destructive-background ctv:hover:text-destructive-background",
+        save: " ctv:py-0.5 ctv:px-2 ctv:bg-primary-background/30 ctv:border-primary-background/60 ctv:disabled:opacity-40 ctv:disabled:cursor-not-allowed",
+        mini: " ctv:py-0.5 ctv:px-2",
+        add: " ctv:py-0.5 ctv:px-2.5 ctv:self-start ctv:hover:bg-primary-background/15"
       }[variant];
       return BTN_BASE + v;
     }
     return (_ctx, _cache2) => {
       return openBlock(), createElementBlock("div", _hoisted_1, [
-        _cache2[14] || (_cache2[14] = createBaseVNode("p", { class: "m-0 mb-1 text-[11px] text-muted-foreground" }, [
+        _cache2[14] || (_cache2[14] = createBaseVNode("p", { class: "ctv:m-0 ctv:mb-1 ctv:text-[11px] ctv:text-muted-foreground" }, [
           createTextVNode(" Reference any entry in a stage's prompt with "),
-          createBaseVNode("code", { class: "py-0 px-1 rounded-sm font-mono bg-primary-background/20 border border-primary-background/45 text-primary-background" }, "@label"),
+          createBaseVNode("code", { class: "ctv:py-0 ctv:px-1 ctv:rounded-sm ctv:font-mono ctv:bg-primary-background/20 ctv:border ctv:border-primary-background/45 ctv:text-primary-background" }, "@label"),
           createTextVNode(". Unknown tokens stay literal. ")
         ], -1)),
         unref(ENTRY_KINDS).length > 1 ? (openBlock(), createElementBlock("div", _hoisted_2, [
@@ -81728,15 +81728,15 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
         createBaseVNode("table", _hoisted_5, [
           createBaseVNode("thead", null, [
             createBaseVNode("tr", null, [
-              _cache2[9] || (_cache2[9] = createBaseVNode("th", { class: "w-[140px]" }, "Label", -1)),
+              _cache2[9] || (_cache2[9] = createBaseVNode("th", { class: "ctv:w-[140px]" }, "Label", -1)),
               _cache2[10] || (_cache2[10] = createBaseVNode("th", null, "Content", -1)),
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(metaFields.value, (f) => {
                 return openBlock(), createElementBlock("th", {
                   key: f.name,
-                  class: "w-[180px]"
+                  class: "ctv:w-[180px]"
                 }, toDisplayString$1(f.label), 1);
               }), 128)),
-              _cache2[11] || (_cache2[11] = createBaseVNode("th", { class: "w-24 text-right whitespace-nowrap" }, null, -1))
+              _cache2[11] || (_cache2[11] = createBaseVNode("th", { class: "ctv:w-24 ctv:text-right ctv:whitespace-nowrap" }, null, -1))
             ])
           ]),
           createBaseVNode("tbody", null, [
@@ -81774,7 +81774,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                 (openBlock(true), createElementBlock(Fragment$1, null, renderList(metaFields.value, (f) => {
                   return openBlock(), createElementBlock("td", {
                     key: f.name,
-                    class: "w-[180px]"
+                    class: "ctv:w-[180px]"
                   }, [
                     f.type === "textarea" ? withDirectives((openBlock(), createElementBlock("textarea", {
                       key: 0,
@@ -81807,7 +81807,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
             unref(activeRows).length === 0 && !unref(creating) ? (openBlock(), createElementBlock("tr", _hoisted_13, [
               createBaseVNode("td", {
                 colspan: 3 + metaFields.value.length,
-                class: "text-center italic p-4 text-muted-foreground"
+                class: "ctv:text-center ctv:italic ctv:p-4 ctv:text-muted-foreground"
               }, [
                 createTextVNode(" No " + toDisplayString$1(unref(KIND_LABELS)[activeKind.value].toLowerCase()) + " yet. Click ", 1),
                 _cache2[12] || (_cache2[12] = createBaseVNode("strong", null, "+ Add", -1)),
@@ -81862,7 +81862,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(metaFields.value, (f) => {
                 return openBlock(), createElementBlock("td", {
                   key: f.name,
-                  class: "w-[180px]"
+                  class: "ctv:w-[180px]"
                 }, [
                   f.type === "textarea" ? withDirectives((openBlock(), createElementBlock("textarea", {
                     key: 0,
@@ -81910,7 +81910,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const EntryManagerPanel = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-023e7761"]]);
+const EntryManagerPanel = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-575f43cb"]]);
 const stage$1 = { "run": "Run", "rerun": "Re-run", "running": "Running…", "cancel": "Cancel", "preparingWorkflow": "Preparing workflow…", "section": { "context": "Context", "output": "Output ({type})", "actions": "Actions" }, "empty": { "no_output": "no output yet", "generating": "generating…", "pending_upstream": "upstream pending", "unsupported_type": "unsupported type {type}" }, "source": { "upstream": "← upstream", "pending": "… waiting" }, "disconnect": "Disconnect", "starting": "starting…", "runByKind": { "text": "Generate Text", "image": "Generate Image", "image-batch": "Generate Images", "video": "Generate Video", "audio": "Generate Audio", "panorama": "Generate Panorama", "storyboard": "Generate Storyboard" }, "action": { "viewFull": "View full size", "download": "Download", "close": "Close" } };
 const error$1 = { "dismiss": "Dismiss", "cancelled": "Cancelled" };
 const configSidebar$1 = { "title": "Workflow Config", "empty": "Select a stage node on the canvas to edit its workflow config.", "noWorkflowPicked": "This stage's workflow combo is empty — pick one first.", "loading": "Loading…", "noExposedWidgets": "This workflow has no editable widgets, or hasn't been prepared yet — pick it on any stage first so the browser can analyze it.", "pickWorkflowFirst": "Pick this workflow on any stage first to populate widget metadata (the browser-side graphToPrompt has to run).", "bindTo": "Bind to:", "exportPreset": "Export preset.json", "exportPresetTooltip": "Download the current bindings as a *_preset.json file. Drop it next to the workflow JSON in workflows/<kind>/ to ship these defaults to other users.", "exportPresetFailed": "Export failed: {detail}", "resetToPreset": "↻ Reset to shipped preset", "resetToPresetTooltip": "Wipe all bindings + meta for this workflow and re-apply its shipped _preset.json from disk. Your own edits will be lost.", "resetToPresetConfirm": "Reset all bindings for this workflow to the shipped preset? Your edits will be lost.", "resetToPresetFailed": "Reset failed: {detail}", "section": { "widgets": "Widgets", "notes": "Workflow notes", "description": "Description" } };

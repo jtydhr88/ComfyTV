@@ -36,9 +36,9 @@
   />
 
   <input v-else
-         class="w-full py-1 px-1.5 rounded-sm text-2xs font-mono
-                bg-base-foreground/[0.03] border border-dashed border-warning-background/50
-                text-warning-background cursor-not-allowed"
+         class="ctv:w-full ctv:py-1 ctv:px-1.5 ctv:rounded-sm ctv:text-2xs ctv:font-mono
+                ctv:bg-base-foreground/[0.03] ctv:border ctv:border-dashed ctv:border-warning-background/50
+                ctv:text-warning-background ctv:cursor-not-allowed"
          :value="String(modelValue ?? '')"
          readonly
          :title="`Unsupported widget type: ${kind}`" />
