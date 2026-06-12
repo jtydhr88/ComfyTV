@@ -1,62 +1,62 @@
 <template>
-  <div class="min-w-64 max-w-md max-h-60 overflow-y-auto rounded text-xs
-              bg-interface-menu-surface text-base-foreground
-              border border-border-default shadow-md">
+  <div class="ctv:min-w-64 ctv:max-w-md ctv:max-h-60 ctv:overflow-y-auto ctv:rounded ctv:text-xs
+              ctv:bg-interface-menu-surface ctv:text-base-foreground
+              ctv:border ctv:border-border-default ctv:shadow-md">
     <template v-if="!creating">
       <div
         v-for="(item, i) in items"
         :key="item.id"
         :class="[
-          'flex items-baseline gap-2 py-1 px-2 cursor-pointer',
-          'hover:bg-interface-menu-component-surface-hovered',
-          i === activeIndex ? 'bg-interface-menu-component-surface-selected' : '',
+          'ctv:flex ctv:items-baseline ctv:gap-2 ctv:py-1 ctv:px-2 ctv:cursor-pointer',
+          'ctv:hover:bg-interface-menu-component-surface-hovered',
+          i === activeIndex ? 'ctv:bg-interface-menu-component-surface-selected' : '',
         ]"
         :title="item.content"
         @mousedown.prevent
         @click="selectItem(i)"
       >
         <span v-if="showKindTag" :class="kindTag(item.kind)">{{ item.kind }}</span>
-        <span class="font-mono text-base-foreground shrink-0">@{{ item.label }}</span>
-        <span class="text-muted-foreground overflow-hidden text-ellipsis whitespace-nowrap">{{ item.content }}</span>
+        <span class="ctv:font-mono ctv:text-base-foreground ctv:shrink-0">@{{ item.label }}</span>
+        <span class="ctv:text-muted-foreground ctv:overflow-hidden ctv:text-ellipsis ctv:whitespace-nowrap">{{ item.content }}</span>
       </div>
       <div
         v-if="canCreate"
         :class="[
-          'flex items-baseline gap-2 py-1 px-2 cursor-pointer border-t border-border-subtle',
-          'hover:bg-interface-menu-component-surface-hovered',
-          activeIndex === items.length ? 'bg-interface-menu-component-surface-selected' : '',
+          'ctv:flex ctv:items-baseline ctv:gap-2 ctv:py-1 ctv:px-2 ctv:cursor-pointer ctv:border-t ctv:border-border-subtle',
+          'ctv:hover:bg-interface-menu-component-surface-hovered',
+          activeIndex === items.length ? 'ctv:bg-interface-menu-component-surface-selected' : '',
         ]"
         @mousedown.prevent
         @click="startCreate"
       >
         <span v-if="showKindTag" :class="kindTag('create')">new</span>
-        <span class="font-mono text-base-foreground shrink-0">+ Create</span>
-        <span class="text-muted-foreground overflow-hidden text-ellipsis whitespace-nowrap">
+        <span class="ctv:font-mono ctv:text-base-foreground ctv:shrink-0">+ Create</span>
+        <span class="ctv:text-muted-foreground ctv:overflow-hidden ctv:text-ellipsis ctv:whitespace-nowrap">
           new fragment <code>@{{ query }}</code>
         </span>
       </div>
       <div v-if="items.length === 0 && !canCreate"
-           class="py-1.5 px-2 italic text-xs text-muted-foreground">
+           class="ctv:py-1.5 ctv:px-2 ctv:italic ctv:text-xs ctv:text-muted-foreground">
         {{ query ? 'Invalid label — start with a letter / underscore (中文 OK), then letters / digits / _ / -' : 'No entries yet — type a label to create one' }}
       </div>
     </template>
 
-    <div v-else class="flex flex-col gap-1.5 p-2" @mousedown.stop>
-      <div class="text-xs text-muted-foreground">
-        + Create fragment <code class="text-base-foreground font-mono">@{{ pendingLabel }}</code>
+    <div v-else class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2" @mousedown.stop>
+      <div class="ctv:text-xs ctv:text-muted-foreground">
+        + Create fragment <code class="ctv:text-base-foreground ctv:font-mono">@{{ pendingLabel }}</code>
       </div>
       <textarea
         ref="createTa"
         v-model="pendingContent"
         rows="3"
-        class="w-full py-1.5 px-2 rounded-sm resize-y outline-none box-border text-xs leading-snug
-               bg-secondary-background text-base-foreground
-               border border-border-default
-               focus:border-primary-background"
+        class="ctv:w-full ctv:py-1.5 ctv:px-2 ctv:rounded-sm ctv:resize-y ctv:outline-none ctv:box-border ctv:text-xs ctv:leading-snug
+               ctv:bg-secondary-background ctv:text-base-foreground
+               ctv:border ctv:border-border-default
+               ctv:focus:border-primary-background"
         placeholder="Content this @-token expands to. (For characters / other kinds, use the ComfyTV button → Entries dialog.)"
         @keydown.stop="onCreateKeydown"
       />
-      <div class="flex justify-end gap-1.5">
+      <div class="ctv:flex ctv:justify-end ctv:gap-1.5">
         <button :class="actionBtn()" @click="cancelCreate">Cancel</button>
         <button
           :class="actionBtn('save')"
@@ -164,17 +164,17 @@ defineExpose({
   },
 })
 
-const KIND_TAG_BASE = 'shrink-0 py-px px-1.5 rounded-sm text-3xs font-semibold uppercase tracking-wide'
-  + ' bg-secondary-background text-secondary-foreground'
+const KIND_TAG_BASE = 'ctv:shrink-0 ctv:py-px ctv:px-1.5 ctv:rounded-sm ctv:text-3xs ctv:font-semibold ctv:uppercase ctv:tracking-wide'
+  + ' ctv:bg-secondary-background ctv:text-secondary-foreground'
 function kindTag(_kind: string) { return KIND_TAG_BASE }
 
-const ACTION_BTN_BASE = 'relative inline-flex items-center justify-center gap-2 cursor-pointer'
-  + ' touch-manipulation whitespace-nowrap appearance-none border-none transition-colors'
-  + ' h-6 rounded-sm px-2 py-1 text-xs font-medium'
-  + ' disabled:pointer-events-none disabled:opacity-50'
+const ACTION_BTN_BASE = 'ctv:relative ctv:inline-flex ctv:items-center ctv:justify-center ctv:gap-2 ctv:cursor-pointer'
+  + ' ctv:touch-manipulation ctv:whitespace-nowrap ctv:appearance-none ctv:border-none ctv:transition-colors'
+  + ' ctv:h-6 ctv:rounded-sm ctv:px-2 ctv:py-1 ctv:text-xs ctv:font-medium'
+  + ' ctv:disabled:pointer-events-none ctv:disabled:opacity-50'
 const ACTION_BTN_VARIANTS = {
-  default: ' bg-secondary-background text-secondary-foreground hover:bg-secondary-background-hover',
-  save:    ' bg-primary-background text-base-foreground hover:bg-primary-background-hover',
+  default: ' ctv:bg-secondary-background ctv:text-secondary-foreground ctv:hover:bg-secondary-background-hover',
+  save:    ' ctv:bg-primary-background ctv:text-base-foreground ctv:hover:bg-primary-background-hover',
 } as const
 function actionBtn(variant: keyof typeof ACTION_BTN_VARIANTS = 'default') {
   return ACTION_BTN_BASE + ACTION_BTN_VARIANTS[variant]

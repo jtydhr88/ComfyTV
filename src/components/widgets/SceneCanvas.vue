@@ -1,5 +1,5 @@
 <template>
-  <div ref="canvasRef" class="relative block size-full" />
+  <div ref="canvasRef" class="ctv:relative ctv:block ctv:size-full" />
 </template>
 
 <script setup lang="ts">

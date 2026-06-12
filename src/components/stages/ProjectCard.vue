@@ -1,15 +1,15 @@
 <template>
-  <div class="flex flex-col gap-1.5 py-1.5 px-2 size-full box-border text-xs text-base-foreground">
-    <div class="flex items-center gap-1.5 pb-1 font-semibold text-[11px] uppercase tracking-wide
-                text-muted-foreground border-b border-border-default">
-      <span class="text-sm">📁</span>
+  <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:py-1.5 ctv:px-2 ctv:size-full ctv:box-border ctv:text-xs ctv:text-base-foreground">
+    <div class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:pb-1 ctv:font-semibold ctv:text-[11px] ctv:uppercase ctv:tracking-wide
+                ctv:text-muted-foreground ctv:border-b ctv:border-border-default">
+      <span class="ctv:text-sm">📁</span>
       <span>{{ $t('project.label') }}</span>
     </div>
 
-    <div class="flex items-center gap-1">
+    <div class="ctv:flex ctv:items-center ctv:gap-1">
       <select
-        class="flex-auto py-1 px-1.5 text-xs rounded-sm bg-secondary-background
-               text-base-foreground border border-border-default"
+        class="ctv:flex-auto ctv:py-1 ctv:px-1.5 ctv:text-xs ctv:rounded-sm ctv:bg-secondary-background
+               ctv:text-base-foreground ctv:border ctv:border-border-default"
         :value="store.currentProjectId"
         @change="onSelectChange"
       >
@@ -36,8 +36,8 @@
       >+</button>
     </div>
 
-    <div class="flex items-center justify-between text-2xs text-muted-foreground/60">
-      <span class="font-mono break-all">{{ $t('project.id_prefix') }} {{ store.currentProjectId }}</span>
+    <div class="ctv:flex ctv:items-center ctv:justify-between ctv:text-2xs ctv:text-muted-foreground/60">
+      <span class="ctv:font-mono ctv:break-all">{{ $t('project.id_prefix') }} {{ store.currentProjectId }}</span>
       <button
         v-if="store.currentProjectId !== 'default'"
         :class="iconBtn('danger')"
@@ -47,7 +47,7 @@
       >🗑</button>
     </div>
 
-    <div v-if="status" class="text-2xs italic text-muted-foreground">{{ status }}</div>
+    <div v-if="status" class="ctv:text-2xs ctv:italic ctv:text-muted-foreground">{{ status }}</div>
   </div>
 </template>
 
@@ -112,11 +112,11 @@ function onSelectChange(e: Event) {
   store.setCurrent(newId)
 }
 
-const ICON_BTN_BASE = 'inline-flex items-center justify-center size-6 p-0 rounded-sm cursor-pointer text-[13px]'
+const ICON_BTN_BASE = 'ctv:inline-flex ctv:items-center ctv:justify-center ctv:size-6 ctv:p-0 ctv:rounded-sm ctv:cursor-pointer ctv:text-[13px]'
 const ICON_BTN_VARIANTS = {
-  default: 'bg-secondary-background text-base-foreground border border-border-default hover:bg-secondary-background-hover',
-  primary: 'bg-secondary-background text-primary-background border border-primary-background/60 hover:bg-primary-background/20',
-  danger:  'bg-secondary-background text-destructive-background border border-destructive-background/50 hover:bg-destructive-background/30 hover:text-base-foreground',
+  default: 'ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-default ctv:hover:bg-secondary-background-hover',
+  primary: 'ctv:bg-secondary-background ctv:text-primary-background ctv:border ctv:border-primary-background/60 ctv:hover:bg-primary-background/20',
+  danger:  'ctv:bg-secondary-background ctv:text-destructive-background ctv:border ctv:border-destructive-background/50 ctv:hover:bg-destructive-background/30 ctv:hover:text-base-foreground',
 } as const
 function iconBtn(variant: keyof typeof ICON_BTN_VARIANTS = 'default') {
   return `${ICON_BTN_BASE} ${ICON_BTN_VARIANTS[variant]}`

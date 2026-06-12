@@ -1,134 +1,134 @@
 <template>
-  <div ref="rootEl" class="flex flex-col gap-1.5 size-full">
-    <div class="flex flex-col gap-1">
-      <span class="text-2xs uppercase tracking-wide text-muted-foreground">{{ $t('timeline.keyframes') }}</span>
-      <div v-if="keyframes.length === 0" class="text-xs text-muted-foreground/60 p-1">
+  <div ref="rootEl" class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full">
+    <div class="ctv:flex ctv:flex-col ctv:gap-1">
+      <span class="ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">{{ $t('timeline.keyframes') }}</span>
+      <div v-if="keyframes.length === 0" class="ctv:text-xs ctv:text-muted-foreground/60 ctv:p-1">
         {{ $t('timeline.connectImages') }}
       </div>
-      <div v-else class="flex gap-1 flex-wrap">
+      <div v-else class="ctv:flex ctv:gap-1 ctv:flex-wrap">
         <button
           v-for="(url, i) in keyframes"
           :key="i"
           type="button"
-          class="relative w-12 h-9 p-0 rounded border border-border-subtle overflow-hidden cursor-pointer
-                 bg-black hover:border-primary-background"
+          class="ctv:relative ctv:w-12 ctv:h-9 ctv:p-0 ctv:rounded ctv:border ctv:border-border-subtle ctv:overflow-hidden ctv:cursor-pointer
+                 ctv:bg-black ctv:hover:border-primary-background"
           :title="$t('timeline.addSegment')"
           @click="addSegment(i)"
         >
-          <img :src="url" :alt="`#${i + 1}`" class="w-full h-full object-cover" />
-          <span class="absolute bottom-px left-0.5 text-3xs py-0 px-0.5 rounded-sm
-                       bg-black/70 text-white/90">{{ i + 1 }}</span>
+          <img :src="url" :alt="`#${i + 1}`" class="ctv:w-full ctv:h-full ctv:object-cover" />
+          <span class="ctv:absolute ctv:bottom-px ctv:left-0.5 ctv:text-3xs ctv:py-0 ctv:px-0.5 ctv:rounded-sm
+                       ctv:bg-black/70 ctv:text-white/90">{{ i + 1 }}</span>
         </button>
       </div>
     </div>
 
-    <div class="shrink-0 overflow-x-auto overflow-y-hidden rounded-md border border-border-subtle bg-black">
-      <div class="relative min-h-[116px]" :style="{ width: `${trackWidthPx}px` }">
-        <div class="relative h-4 border-b border-white/10">
+    <div class="ctv:shrink-0 ctv:overflow-x-auto ctv:overflow-y-hidden ctv:rounded-md ctv:border ctv:border-border-subtle ctv:bg-black">
+      <div class="ctv:relative ctv:min-h-[116px]" :style="{ width: `${trackWidthPx}px` }">
+        <div class="ctv:relative ctv:h-4 ctv:border-b ctv:border-white/10">
           <div
             v-for="tick in ruler"
             :key="tick.frame"
-            class="absolute top-0 h-4 border-l border-white/15"
+            class="ctv:absolute ctv:top-0 ctv:h-4 ctv:border-l ctv:border-white/15"
             :style="{ left: `${tick.frame * ppf}px` }"
           >
-            <span class="text-[8px] text-white/40 ml-0.5">{{ tick.label }}</span>
+            <span class="ctv:text-[8px] ctv:text-white/40 ctv:ml-0.5">{{ tick.label }}</span>
           </div>
         </div>
 
-        <div class="relative h-11 m-1 rounded bg-primary-background/5">
+        <div class="ctv:relative ctv:h-11 ctv:m-1 ctv:rounded ctv:bg-primary-background/5">
           <div
             v-for="(seg, idx) in segments"
             :key="seg.id"
-            class="absolute top-0.5 h-10 rounded border overflow-hidden flex items-center
-                   border-primary-background/50 bg-primary-background/15"
+            class="ctv:absolute ctv:top-0.5 ctv:h-10 ctv:rounded ctv:border ctv:overflow-hidden ctv:flex ctv:items-center
+                   ctv:border-primary-background/50 ctv:bg-primary-background/15"
             :class="[
-              seg.id === selectedId ? 'border-primary-background shadow-[0_0_0_1px_var(--primary-background)]' : '',
-              drag?.id === seg.id ? 'opacity-80 cursor-grabbing z-[5]' : 'cursor-grab',
+              seg.id === selectedId ? 'ctv:border-primary-background ctv:shadow-[0_0_0_1px_var(--primary-background)]' : '',
+              drag?.id === seg.id ? 'ctv:opacity-80 ctv:cursor-grabbing ctv:z-[5]' : 'ctv:cursor-grab',
             ]"
             :style="segStyle(idx)"
             @pointerdown="onSegPointerDown($event, seg, idx)"
           >
             <img v-if="seg.imageUrl" :src="seg.imageUrl"
-                 class="h-full w-auto object-cover pointer-events-none" draggable="false" />
-            <span class="absolute bottom-px right-[14px] text-3xs py-0 px-0.5 rounded-sm
-                         bg-black/60 text-white pointer-events-none">{{ seg.length }}f</span>
+                 class="ctv:h-full ctv:w-auto ctv:object-cover ctv:pointer-events-none" draggable="false" />
+            <span class="ctv:absolute ctv:bottom-px ctv:right-[14px] ctv:text-3xs ctv:py-0 ctv:px-0.5 ctv:rounded-sm
+                         ctv:bg-black/60 ctv:text-white ctv:pointer-events-none">{{ seg.length }}f</span>
             <div
-              class="absolute top-0 right-0 w-2 h-full cursor-ew-resize bg-white/10 hover:bg-white/30"
+              class="ctv:absolute ctv:top-0 ctv:right-0 ctv:w-2 ctv:h-full ctv:cursor-ew-resize ctv:bg-white/10 ctv:hover:bg-white/30"
               @pointerdown.stop="onResizePointerDown($event, seg)"
             />
           </div>
-          <div v-if="segments.length === 0" class="text-xs text-white/40 p-1">
+          <div v-if="segments.length === 0" class="ctv:text-xs ctv:text-white/40 ctv:p-1">
             {{ $t('timeline.clickKeyframe') }}
           </div>
         </div>
-        <div class="relative h-7 m-1 rounded bg-success-background/5">
+        <div class="ctv:relative ctv:h-7 ctv:m-1 ctv:rounded ctv:bg-success-background/5">
           <div
             v-if="audioSeg"
-            class="absolute top-0.5 h-6 rounded border flex items-center pl-1.5
-                   border-success-background/50 bg-success-background/20"
-            :class="audioDrag ? 'opacity-80 cursor-grabbing' : 'cursor-grab'"
+            class="ctv:absolute ctv:top-0.5 ctv:h-6 ctv:rounded ctv:border ctv:flex ctv:items-center ctv:pl-1.5
+                   ctv:border-success-background/50 ctv:bg-success-background/20"
+            :class="audioDrag ? 'ctv:opacity-80 ctv:cursor-grabbing' : 'ctv:cursor-grab'"
             :style="{ left: `${audioSeg.start * ppf}px`, width: `${audioSeg.length * ppf}px` }"
             @pointerdown="onAudioPointerDown($event)"
           >
-            <span class="text-2xs text-success-background pointer-events-none">🎵 {{ audioSeg.length }}f</span>
+            <span class="ctv:text-2xs ctv:text-success-background ctv:pointer-events-none">🎵 {{ audioSeg.length }}f</span>
             <div
-              class="absolute top-0 right-0 w-2 h-full cursor-ew-resize bg-white/10 hover:bg-white/30"
+              class="ctv:absolute ctv:top-0 ctv:right-0 ctv:w-2 ctv:h-full ctv:cursor-ew-resize ctv:bg-white/10 ctv:hover:bg-white/30"
               @pointerdown.stop="onAudioResizePointerDown($event)"
             />
           </div>
           <button
             v-else-if="audioUrl"
             type="button"
-            class="m-0.5 py-0.5 px-2 text-xs rounded border cursor-pointer
-                   bg-success-background/10 border-success-background/30 text-success-background"
+            class="ctv:m-0.5 ctv:py-0.5 ctv:px-2 ctv:text-xs ctv:rounded ctv:border ctv:cursor-pointer
+                   ctv:bg-success-background/10 ctv:border-success-background/30 ctv:text-success-background"
             @click="addAudio"
           >🎵 {{ $t('timeline.addAudio') }}</button>
-          <div v-else class="text-xs text-white/30 p-1">{{ $t('timeline.noAudio') }}</div>
+          <div v-else class="ctv:text-xs ctv:text-white/30 ctv:p-1">{{ $t('timeline.noAudio') }}</div>
         </div>
       </div>
     </div>
 
-    <div v-if="selectedSeg" class="flex flex-col gap-1">
-      <div class="flex items-center gap-1.5">
-        <span class="text-2xs uppercase tracking-wide text-muted-foreground">{{ $t('timeline.segmentPrompt') }}</span>
+    <div v-if="selectedSeg" class="ctv:flex ctv:flex-col ctv:gap-1">
+      <div class="ctv:flex ctv:items-center ctv:gap-1.5">
+        <span class="ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">{{ $t('timeline.segmentPrompt') }}</span>
         <button
           type="button"
-          class="ml-auto bg-transparent border-0 cursor-pointer text-[13px]"
+          class="ctv:ml-auto ctv:bg-transparent ctv:border-0 ctv:cursor-pointer ctv:text-[13px]"
           @click="removeSegment(selectedSeg.id)"
         >🗑</button>
       </div>
       <textarea
-        class="w-full min-h-11 resize-y py-1 px-1.5 rounded text-xs box-border
-               bg-secondary-background text-base-foreground border border-border-subtle"
+        class="ctv:w-full ctv:min-h-11 ctv:resize-y ctv:py-1 ctv:px-1.5 ctv:rounded ctv:text-xs ctv:box-border
+               ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle"
         :value="selectedSeg.prompt"
         :placeholder="$t('timeline.promptPlaceholder')"
         @input="(e) => updatePrompt((e.target as HTMLTextAreaElement).value)"
       />
-      <div class="flex items-center gap-1.5">
-        <span class="text-2xs uppercase tracking-wide text-muted-foreground">{{ $t('timeline.length') }}</span>
+      <div class="ctv:flex ctv:items-center ctv:gap-1.5">
+        <span class="ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">{{ $t('timeline.length') }}</span>
         <input
           type="number" min="1" max="600" step="1"
-          class="w-14 py-0.5 px-1 rounded text-xs font-mono
-                 bg-secondary-background text-base-foreground border border-border-subtle"
+          class="ctv:w-14 ctv:py-0.5 ctv:px-1 ctv:rounded ctv:text-xs ctv:font-mono
+                 ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle"
           :value="selectedSeg.length"
           @change="(e) => setLength(selectedSeg!.id, Number((e.target as HTMLInputElement).value))"
         />
-        <span class="text-2xs text-muted-foreground">f ≈ {{ (selectedSeg.length / frameRate).toFixed(2) }}s</span>
+        <span class="ctv:text-2xs ctv:text-muted-foreground">f ≈ {{ (selectedSeg.length / frameRate).toFixed(2) }}s</span>
       </div>
     </div>
 
-    <div class="flex items-center gap-2.5">
-      <div class="flex items-center gap-1">
-        <span class="text-2xs uppercase tracking-wide text-muted-foreground">{{ $t('timeline.fps') }}</span>
+    <div class="ctv:flex ctv:items-center ctv:gap-2.5">
+      <div class="ctv:flex ctv:items-center ctv:gap-1">
+        <span class="ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">{{ $t('timeline.fps') }}</span>
         <input
           type="number" min="1" max="120" step="1"
-          class="w-14 py-0.5 px-1 rounded text-xs font-mono
-                 bg-secondary-background text-base-foreground border border-border-subtle"
+          class="ctv:w-14 ctv:py-0.5 ctv:px-1 ctv:rounded ctv:text-xs ctv:font-mono
+                 ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle"
           :value="frameRate"
           @change="(e) => setFrameRate(Number((e.target as HTMLInputElement).value))"
         />
       </div>
-      <span class="ml-auto text-2xs font-mono text-muted-foreground">
+      <span class="ctv:ml-auto ctv:text-2xs ctv:font-mono ctv:text-muted-foreground">
         {{ totalFrames }}f · {{ (totalFrames / frameRate).toFixed(1) }}s · {{ segments.length }} {{ $t('timeline.shots') }}
       </span>
     </div>

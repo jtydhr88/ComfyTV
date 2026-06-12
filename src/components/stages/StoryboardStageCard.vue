@@ -1,42 +1,42 @@
 <template>
-  <div class="flex flex-col gap-1.5 size-full">
-    <div class="flex items-center gap-2">
-      <span class="text-[11px] font-semibold text-muted-foreground">{{ $t('storyboard.shots') }} · {{ shots.length }}</span>
+  <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full">
+    <div class="ctv:flex ctv:items-center ctv:gap-2">
+      <span class="ctv:text-[11px] ctv:font-semibold ctv:text-muted-foreground">{{ $t('storyboard.shots') }} · {{ shots.length }}</span>
       <button
         type="button"
-        class="ml-auto py-0.5 px-2.5 text-[11px] rounded cursor-pointer
-               bg-primary-background/15 border border-primary-background/40 text-primary-background
-               hover:bg-primary-background/25"
+        class="ctv:ml-auto ctv:py-0.5 ctv:px-2.5 ctv:text-[11px] ctv:rounded ctv:cursor-pointer
+               ctv:bg-primary-background/15 ctv:border ctv:border-primary-background/40 ctv:text-primary-background
+               ctv:hover:bg-primary-background/25"
         @click="addShot"
       >+ {{ $t('storyboard.addShot') }}</button>
     </div>
 
-    <div v-if="shots.length === 0" class="text-[11px] text-muted-foreground/60 p-3 text-center">
+    <div v-if="shots.length === 0" class="ctv:text-[11px] ctv:text-muted-foreground/60 ctv:p-3 ctv:text-center">
       {{ $t('storyboard.empty') }}
     </div>
 
-    <div v-else class="flex flex-col gap-1.5">
+    <div v-else class="ctv:flex ctv:flex-col ctv:gap-1.5">
       <div
         v-for="(shot, idx) in shots"
         :key="shot.id"
-        class="flex flex-col gap-1.5 p-2 rounded-md border border-border-subtle bg-base-foreground/5"
+        class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2 ctv:rounded-md ctv:border ctv:border-border-subtle ctv:bg-base-foreground/5"
       >
-        <header class="flex items-center gap-1.5 flex-wrap">
-          <span class="text-[13px] font-bold text-base-foreground">#{{ idx + 1 }}</span>
-          <label class="flex items-center gap-0.5 text-2xs text-muted-foreground">
+        <header class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-wrap">
+          <span class="ctv:text-[13px] ctv:font-bold ctv:text-base-foreground">#{{ idx + 1 }}</span>
+          <label class="ctv:flex ctv:items-center ctv:gap-0.5 ctv:text-2xs ctv:text-muted-foreground">
             <input
               type="number" min="1" max="60" step="1"
               :value="shot.duration"
-              class="w-[38px] py-0.5 px-1 rounded-sm text-[11px] font-mono
-                     bg-secondary-background text-base-foreground border border-border-subtle"
+              class="ctv:w-[38px] ctv:py-0.5 ctv:px-1 ctv:rounded-sm ctv:text-[11px] ctv:font-mono
+                     ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle"
               @change="(e) => setDuration(shot.id, Number((e.target as HTMLInputElement).value))"
             /><span>s</span>
           </label>
           <span v-if="shot.shot_size"
-                class="py-px px-1.5 rounded-sm text-2xs bg-secondary-background text-base-foreground">{{ shot.shot_size }}</span>
+                class="ctv:py-px ctv:px-1.5 ctv:rounded-sm ctv:text-2xs ctv:bg-secondary-background ctv:text-base-foreground">{{ shot.shot_size }}</span>
           <span v-if="shot.character && shot.character !== '无'"
-                class="py-px px-1.5 rounded-sm text-2xs bg-success-background/15 text-success-background">{{ shot.character }}</span>
-          <div class="flex flex-col gap-px ml-auto">
+                class="ctv:py-px ctv:px-1.5 ctv:rounded-sm ctv:text-2xs ctv:bg-success-background/15 ctv:text-success-background">{{ shot.character }}</span>
+          <div class="ctv:flex ctv:flex-col ctv:gap-px ctv:ml-auto">
             <button type="button" :class="moveBtn" :disabled="idx === 0"
                     @click="move(idx, -1)" :title="$t('storyboard.moveUp')">▲</button>
             <button type="button" :class="moveBtn" :disabled="idx === shots.length - 1"
@@ -44,39 +44,39 @@
           </div>
           <button
             type="button"
-            class="bg-transparent border-0 cursor-pointer text-xs px-0.5 opacity-70
-                   hover:opacity-100 disabled:opacity-40 disabled:cursor-default"
+            class="ctv:bg-transparent ctv:border-0 ctv:cursor-pointer ctv:text-xs ctv:px-0.5 ctv:opacity-70
+                   ctv:hover:opacity-100 ctv:disabled:opacity-40 ctv:disabled:cursor-default"
             :disabled="regeneratingId === shot.id"
             :title="$t('storyboard.regenerate')"
             @click="regenerateShot(shot.id, idx + 1)"
           >{{ regeneratingId === shot.id ? '…' : '🔄' }}</button>
           <button type="button"
-                  class="bg-transparent border-0 cursor-pointer text-[13px]"
+                  class="ctv:bg-transparent ctv:border-0 ctv:cursor-pointer ctv:text-[13px]"
                   :title="$t('storyboard.remove')" @click="removeShot(shot.id)">🗑</button>
         </header>
 
         <textarea
-          class="w-full box-border resize-none border-0 border-l-2 rounded-none
-                 py-1 px-2 text-[11px] italic leading-snug min-h-[22px] [font-family:inherit]
-                 bg-primary-background/5 border-primary-background/60 text-base-foreground
-                 focus:outline focus:outline-1 focus:outline-primary-background/50 focus:bg-primary-background/10"
+          class="ctv:w-full ctv:box-border ctv:resize-none ctv:border-0 ctv:border-l-2 ctv:rounded-none
+                 ctv:py-1 ctv:px-2 ctv:text-[11px] ctv:italic ctv:leading-snug ctv:min-h-[22px] ctv:[font-family:inherit]
+                 ctv:bg-primary-background/5 ctv:border-primary-background/60 ctv:text-base-foreground
+                 ctv:focus:outline ctv:focus:outline-1 ctv:focus:outline-primary-background/50 ctv:focus:bg-primary-background/10"
           :value="shot.scene_purpose"
           :placeholder="$t('storyboard.cols.scene_purpose')"
           rows="1"
           @input="(e) => setField(shot.id, 'scene_purpose', (e.target as HTMLTextAreaElement).value)"
         />
 
-        <div class="flex gap-1.5">
-          <div class="relative shrink-0 w-24 h-[72px] rounded overflow-hidden bg-black border border-border-subtle">
+        <div class="ctv:flex ctv:gap-1.5">
+          <div class="ctv:relative ctv:shrink-0 ctv:w-24 ctv:h-[72px] ctv:rounded ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle">
             <img v-if="shot.image_url" :src="shot.image_url" :alt="`shot ${idx + 1}`"
-                 class="size-full object-cover" draggable="false" />
-            <div v-else class="size-full flex items-center justify-center text-3xs text-white/35 text-center px-1">
+                 class="ctv:size-full ctv:object-cover" draggable="false" />
+            <div v-else class="ctv:size-full ctv:flex ctv:items-center ctv:justify-center ctv:text-3xs ctv:text-white/35 ctv:text-center ctv:px-1">
               {{ $t('storyboard.noRef') }}
             </div>
             <button
               type="button"
-              class="absolute bottom-0.5 right-0.5 size-5 p-0 border-0 rounded cursor-pointer text-[11px]
-                     bg-black/60 text-white disabled:opacity-60"
+              class="ctv:absolute ctv:bottom-0.5 ctv:right-0.5 ctv:size-5 ctv:p-0 ctv:border-0 ctv:rounded ctv:cursor-pointer ctv:text-[11px]
+                     ctv:bg-black/60 ctv:text-white ctv:disabled:opacity-60"
               :disabled="uploadingId === shot.id"
               :title="$t('storyboard.uploadRef')"
               @click="pickFile(shot.id)"
@@ -84,26 +84,26 @@
             <button
               v-if="shot.image_url"
               type="button"
-              class="absolute top-0.5 right-0.5 size-5 p-0 border-0 rounded cursor-pointer text-[11px]
-                     bg-destructive-background/70 text-white"
+              class="ctv:absolute ctv:top-0.5 ctv:right-0.5 ctv:size-5 ctv:p-0 ctv:border-0 ctv:rounded ctv:cursor-pointer ctv:text-[11px]
+                     ctv:bg-destructive-background/70 ctv:text-white"
               :title="$t('storyboard.clearRef')"
               @click="setImage(shot.id, null)"
             >✕</button>
           </div>
 
           <textarea
-            class="flex-1 min-h-14 resize-y box-border py-1 px-1.5 rounded text-[11px] leading-snug
-                   bg-secondary-background text-base-foreground border border-border-subtle"
+            class="ctv:flex-1 ctv:min-h-14 ctv:resize-y ctv:box-border ctv:py-1 ctv:px-1.5 ctv:rounded ctv:text-[11px] ctv:leading-snug
+                   ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle"
             :value="shot.image_prompt"
             :placeholder="$t('storyboard.promptPlaceholder')"
             @input="(e) => setField(shot.id, 'image_prompt', (e.target as HTMLTextAreaElement).value, /*mirror=*/'prompt')"
           />
         </div>
 
-        <dl class="grid grid-cols-[max-content_1fr] gap-x-2.5 gap-y-[3px] m-0 text-2xs items-start">
+        <dl class="ctv:grid ctv:grid-cols-[max-content_1fr] ctv:gap-x-2.5 ctv:gap-y-[3px] ctv:m-0 ctv:text-2xs ctv:items-start">
           <template v-for="field in META_FIELDS" :key="field.key">
-            <dt class="opacity-50 whitespace-nowrap pt-1">{{ $t(field.label) }}</dt>
-            <dd class="m-0">
+            <dt class="ctv:opacity-50 ctv:whitespace-nowrap ctv:pt-1">{{ $t(field.label) }}</dt>
+            <dd class="ctv:m-0">
               <textarea
                 v-if="field.multiline"
                 :class="metaInput(true)"
@@ -122,9 +122,9 @@
           </template>
         </dl>
 
-        <details class="text-2xs py-[3px] px-1.5 rounded border border-dashed border-border-subtle"
+        <details class="ctv:text-2xs ctv:py-[3px] ctv:px-1.5 ctv:rounded ctv:border ctv:border-dashed ctv:border-border-subtle"
                  :open="!!shot.character_desc">
-          <summary class="cursor-pointer opacity-75 select-none pb-1 hover:opacity-100">{{ $t('storyboard.cols.character_desc') }}</summary>
+          <summary class="ctv:cursor-pointer ctv:opacity-75 ctv:select-none ctv:pb-1 ctv:hover:opacity-100">{{ $t('storyboard.cols.character_desc') }}</summary>
           <textarea
             :class="metaInput(true, true)"
             :value="shot.character_desc"
@@ -132,9 +132,9 @@
             @input="(e) => setField(shot.id, 'character_desc', (e.target as HTMLTextAreaElement).value)"
           />
         </details>
-        <details class="text-2xs py-[3px] px-1.5 rounded border border-dashed border-border-subtle"
+        <details class="ctv:text-2xs ctv:py-[3px] ctv:px-1.5 ctv:rounded ctv:border ctv:border-dashed ctv:border-border-subtle"
                  :open="!!shot.motion_prompt">
-          <summary class="cursor-pointer opacity-75 select-none pb-1 hover:opacity-100">{{ $t('storyboard.cols.motion_prompt') }}</summary>
+          <summary class="ctv:cursor-pointer ctv:opacity-75 ctv:select-none ctv:pb-1 ctv:hover:opacity-100">{{ $t('storyboard.cols.motion_prompt') }}</summary>
           <textarea
             :class="metaInput(true, true)"
             :value="shot.motion_prompt"
@@ -149,7 +149,7 @@
       ref="fileInputEl"
       type="file"
       accept="image/*"
-      class="hidden"
+      class="ctv:hidden"
       @change="onFilePicked"
     />
 
@@ -200,18 +200,18 @@ const {
 } = useStoryboardShots(props.node, props.state)
 
 const moveBtn = [
-  'w-4 h-[13px] leading-none text-[8px] p-0 rounded-sm cursor-pointer',
-  'bg-secondary-background text-muted-foreground border border-border-subtle',
-  'disabled:opacity-30 disabled:cursor-default',
+  'ctv:w-4 ctv:h-[13px] ctv:leading-none ctv:text-[8px] ctv:p-0 ctv:rounded-sm ctv:cursor-pointer',
+  'ctv:bg-secondary-background ctv:text-muted-foreground ctv:border ctv:border-border-subtle',
+  'ctv:disabled:opacity-30 ctv:disabled:cursor-default',
 ].join(' ')
 
-const META_INPUT_BASE = 'w-full box-border py-0.5 px-1.5 text-2xs leading-snug rounded-sm [font-family:inherit]'
-  + ' bg-secondary-background text-base-foreground border border-transparent'
-  + ' hover:border-border-subtle'
-  + ' focus:outline-none focus:border-primary-background/50 focus:bg-secondary-background-hover'
+const META_INPUT_BASE = 'ctv:w-full ctv:box-border ctv:py-0.5 ctv:px-1.5 ctv:text-2xs ctv:leading-snug ctv:rounded-sm ctv:[font-family:inherit]'
+  + ' ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-transparent'
+  + ' ctv:hover:border-border-subtle'
+  + ' ctv:focus:outline-none ctv:focus:border-primary-background/50 ctv:focus:bg-secondary-background-hover'
 function metaInput(multiline: boolean, mono = false) {
-  const ml = multiline ? ' min-h-[22px] resize-y' : ''
-  const m = mono ? ' font-mono min-h-10' : ''
+  const ml = multiline ? ' ctv:min-h-[22px] ctv:resize-y' : ''
+  const m = mono ? ' ctv:font-mono ctv:min-h-10' : ''
   return `${META_INPUT_BASE}${ml}${m}`
 }
 </script>

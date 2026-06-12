@@ -1,43 +1,43 @@
 <template>
-  <div class="flex flex-col gap-1.5 size-full">
-    <div class="flex items-center justify-center w-full">
+  <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full">
+    <div class="ctv:flex ctv:items-center ctv:justify-center ctv:w-full">
       <div
         ref="viewerHostEl"
-        class="relative max-w-full rounded-md overflow-hidden border border-border-subtle bg-black"
+        class="ctv:relative ctv:max-w-full ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle ctv:bg-black"
         :style="viewerStyle"
       >
         <div
           v-if="!panoramaUrl"
-          class="absolute inset-0 flex flex-col items-center justify-center gap-1.5
-                 text-white/50 pointer-events-none"
+          class="ctv:absolute ctv:inset-0 ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5
+                 ctv:text-white/50 ctv:pointer-events-none"
         >
-          <div class="text-[32px] opacity-60">🌐</div>
-          <div class="text-xs text-center px-3">{{ $t('panoramaView.connectPanorama') }}</div>
+          <div class="ctv:text-[32px] ctv:opacity-60">🌐</div>
+          <div class="ctv:text-xs ctv:text-center ctv:px-3">{{ $t('panoramaView.connectPanorama') }}</div>
         </div>
       </div>
     </div>
 
-    <div class="flex items-center gap-2 flex-wrap">
-      <div class="flex items-center gap-1">
-        <span class="text-2xs uppercase tracking-wide text-muted-foreground">{{ $t('panoramaView.aspect') }}</span>
+    <div class="ctv:flex ctv:items-center ctv:gap-2 ctv:flex-wrap">
+      <div class="ctv:flex ctv:items-center ctv:gap-1">
+        <span class="ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">{{ $t('panoramaView.aspect') }}</span>
         <select v-model="aspectRatio" class="ctv-pano-select">
           <option v-for="opt in aspectOptions" :key="opt" :value="opt">{{ opt }}</option>
         </select>
       </div>
-      <div class="flex items-center gap-1">
-        <span class="text-2xs uppercase tracking-wide text-muted-foreground">{{ $t('panoramaView.resolution') }}</span>
+      <div class="ctv:flex ctv:items-center ctv:gap-1">
+        <span class="ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">{{ $t('panoramaView.resolution') }}</span>
         <select v-model="resolution" class="ctv-pano-select">
           <option v-for="opt in resolutionOptions" :key="opt" :value="opt">{{ opt }}</option>
         </select>
       </div>
-      <span class="ml-auto text-2xs font-mono text-muted-foreground">{{ captureSize.w }}×{{ captureSize.h }}</span>
+      <span class="ctv:ml-auto ctv:text-2xs ctv:font-mono ctv:text-muted-foreground">{{ captureSize.w }}×{{ captureSize.h }}</span>
     </div>
 
-    <div class="text-2xs text-center py-0.5">
-      <span v-if="!panoramaUrl" class="text-muted-foreground">{{ $t('panoramaView.connectPanorama') }}</span>
-      <span v-else-if="capturing" class="text-muted-foreground">{{ $t('panoramaView.capturing') }}</span>
-      <span v-else-if="state.output" class="text-success-background">{{ $t('panoramaView.captured') }}</span>
-      <span v-else class="text-muted-foreground">{{ $t('panoramaView.orbitToCapture') }}</span>
+    <div class="ctv:text-2xs ctv:text-center ctv:py-0.5">
+      <span v-if="!panoramaUrl" class="ctv:text-muted-foreground">{{ $t('panoramaView.connectPanorama') }}</span>
+      <span v-else-if="capturing" class="ctv:text-muted-foreground">{{ $t('panoramaView.capturing') }}</span>
+      <span v-else-if="state.output" class="ctv:text-success-background">{{ $t('panoramaView.captured') }}</span>
+      <span v-else class="ctv:text-muted-foreground">{{ $t('panoramaView.orbitToCapture') }}</span>
     </div>
 
     <StageCard

@@ -1,16 +1,16 @@
 <template>
   <div
-    class="flex flex-col gap-1.5 w-full"
+    class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full"
     @pointerdown.stop
     @pointermove.stop
     @pointerup.stop
   >
     <div ref="containerEl"
-         class="relative w-full h-[340px] rounded-md overflow-hidden bg-black border border-border-subtle">
+         class="ctv:relative ctv:w-full ctv:h-[340px] ctv:rounded-md ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle">
       <div v-if="!imageUrl"
-           class="h-full flex flex-col items-center justify-center gap-1.5 text-white/50">
-        <div class="text-[32px] opacity-60">⊟</div>
-        <div class="text-xs">{{ $t('imageCrop.noInputImage') }}</div>
+           class="ctv:h-full ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50">
+        <div class="ctv:text-[32px] ctv:opacity-60">⊟</div>
+        <div class="ctv:text-xs">{{ $t('imageCrop.noInputImage') }}</div>
       </div>
 
       <template v-else>
@@ -18,7 +18,7 @@
           ref="imageEl"
           :src="imageUrl"
           :alt="$t('imageCrop.cropPreviewAlt')"
-          class="block size-full object-contain pointer-events-none select-none"
+          class="ctv:block ctv:size-full ctv:object-contain ctv:pointer-events-none ctv:select-none"
           draggable="false"
           @load="handleImageLoad"
           @error="handleImageError"
@@ -26,15 +26,15 @@
         />
 
         <div v-if="isLoading"
-             class="absolute inset-0 z-10 flex items-center justify-center text-xs
-                    bg-black/90 text-white/85">
+             class="ctv:absolute ctv:inset-0 ctv:z-10 ctv:flex ctv:items-center ctv:justify-center ctv:text-xs
+                    ctv:bg-black/90 ctv:text-white/85">
           {{ $t('imageCrop.loading') }}
         </div>
 
         <div
           v-if="!isLoading"
-          class="absolute box-content border-2 border-white cursor-move select-none
-                 shadow-[0_0_0_9999px_rgb(0_0_0/0.5)]"
+          class="ctv:absolute ctv:box-content ctv:border-2 ctv:border-white ctv:cursor-move ctv:select-none
+                 ctv:shadow-[0_0_0_9999px_rgb(0_0_0/0.5)]"
           :style="cropBoxStyle"
           @pointerdown="handleDragStart"
           @pointermove="handleDragMove"
@@ -45,7 +45,7 @@
           v-for="handle in resizeHandles"
           v-show="!isLoading"
           :key="handle.direction"
-          :class="['absolute', handle.isCorner ? 'bg-white/85 rounded-sm' : 'bg-transparent']"
+          :class="['ctv:absolute', handle.isCorner ? 'ctv:bg-white/85 ctv:rounded-sm' : 'ctv:bg-transparent']"
           :style="{ ...handle.style, cursor: handle.cursor }"
           @pointerdown="(e) => handleResizeStart(e, handle.direction)"
           @pointermove="handleResizeMove"
@@ -54,13 +54,13 @@
       </template>
     </div>
 
-    <div class="flex flex-col gap-1">
-      <div class="flex items-center gap-1.5 text-[11px]">
-        <span class="min-w-9 text-2xs uppercase tracking-wide text-muted-foreground">{{ $t('imageCrop.ratio') }}</span>
+    <div class="ctv:flex ctv:flex-col ctv:gap-1">
+      <div class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]">
+        <span class="ctv:min-w-9 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">{{ $t('imageCrop.ratio') }}</span>
         <select
           v-model="selectedRatio"
-          class="ctv-crop-select shrink-0 py-[3px] px-1.5 text-[11px] rounded
-                 bg-secondary-background text-base-foreground border border-border-subtle"
+          class="ctv-crop-select ctv:shrink-0 ctv:py-[3px] ctv:px-1.5 ctv:text-[11px] ctv:rounded
+                 ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle"
         >
           <option v-for="key in ratioKeys" :key="key" :value="key">
             {{ key === 'custom' ? $t('imageCrop.custom') : key }}
@@ -69,25 +69,25 @@
         <button
           type="button"
           :class="[
-            'w-7 h-6 text-xs rounded cursor-pointer border',
+            'ctv:w-7 ctv:h-6 ctv:text-xs ctv:rounded ctv:cursor-pointer ctv:border',
             isLockEnabled
-              ? 'bg-secondary-background-selected border-primary-background text-primary-background'
-              : 'bg-secondary-background border-border-subtle text-base-foreground',
+              ? 'ctv:bg-secondary-background-selected ctv:border-primary-background ctv:text-primary-background'
+              : 'ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground',
           ]"
           :title="isLockEnabled ? $t('imageCrop.unlockRatio') : $t('imageCrop.lockRatio')"
           @click="isLockEnabled = !isLockEnabled"
         >{{ isLockEnabled ? '🔒' : '🔓' }}</button>
       </div>
 
-      <div class="flex items-center gap-1 text-[11px]">
+      <div class="ctv:flex ctv:items-center ctv:gap-1 ctv:text-[11px]">
         <label v-for="b in BOUND_FIELDS" :key="b.label"
-               class="flex-1 flex items-center gap-1 py-0.5 px-1 rounded
-                      bg-secondary-background border border-border-subtle">
-          <span class="w-3 text-2xs text-muted-foreground">{{ b.label }}</span>
+               class="ctv:flex-1 ctv:flex ctv:items-center ctv:gap-1 ctv:py-0.5 ctv:px-1 ctv:rounded
+                      ctv:bg-secondary-background ctv:border ctv:border-border-subtle">
+          <span class="ctv:w-3 ctv:text-2xs ctv:text-muted-foreground">{{ b.label }}</span>
           <input
             type="number"
             :min="b.min" step="1"
-            class="ctv-bound-input w-full border-0 outline-none bg-transparent text-[11px] font-mono text-base-foreground"
+            class="ctv-bound-input ctv:w-full ctv:border-0 ctv:outline-none ctv:bg-transparent ctv:text-[11px] ctv:font-mono ctv:text-base-foreground"
             :value="boundFieldValue(b)"
             @change="(e) => boundFieldSet(b, (e.target as HTMLInputElement).value)"
           />

@@ -1,10 +1,10 @@
 <template>
-  <div class="absolute bottom-2 left-2 right-2 z-10 flex flex-col gap-1 py-1.5 px-2.5
-              text-[11px] text-white/85 rounded-md backdrop-blur-sm
-              bg-black/90 border border-[rgb(233_61_130/0.3)]">
-    <div class="flex justify-around items-center">
-      <div class="flex items-center gap-1">
-        <span class="text-3xs uppercase tracking-wide whitespace-nowrap text-[#E93D82]">{{ $t('camera.horizontal') }}</span>
+  <div class="ctv:absolute ctv:bottom-2 ctv:left-2 ctv:right-2 ctv:z-10 ctv:flex ctv:flex-col ctv:gap-1 ctv:py-1.5 ctv:px-2.5
+              ctv:text-[11px] ctv:text-white/85 ctv:rounded-md ctv:backdrop-blur-sm
+              ctv:bg-black/90 ctv:border ctv:border-[rgb(233_61_130/0.3)]">
+    <div class="ctv:flex ctv:justify-around ctv:items-center">
+      <div class="ctv:flex ctv:items-center ctv:gap-1">
+        <span class="ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:whitespace-nowrap ctv:text-[#E93D82]">{{ $t('camera.horizontal') }}</span>
         <select
           :class="dropdownClass('azimuth')"
           :value="closestAzimuth"
@@ -15,8 +15,8 @@
           </option>
         </select>
       </div>
-      <div class="flex items-center gap-1">
-        <span class="text-3xs uppercase tracking-wide whitespace-nowrap text-[#00FFD0]">{{ $t('camera.vertical') }}</span>
+      <div class="ctv:flex ctv:items-center ctv:gap-1">
+        <span class="ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:whitespace-nowrap ctv:text-[#00FFD0]">{{ $t('camera.vertical') }}</span>
         <select
           :class="dropdownClass('elevation')"
           :value="closestElevation"
@@ -27,8 +27,8 @@
           </option>
         </select>
       </div>
-      <div class="flex items-center gap-1">
-        <span class="text-3xs uppercase tracking-wide whitespace-nowrap text-[#FFB800]">{{ $t('camera.zoom') }}</span>
+      <div class="ctv:flex ctv:items-center ctv:gap-1">
+        <span class="ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:whitespace-nowrap ctv:text-[#FFB800]">{{ $t('camera.zoom') }}</span>
         <select
           :class="dropdownClass('distance')"
           :value="closestDistance"
@@ -40,15 +40,15 @@
         </select>
       </div>
     </div>
-    <div class="flex justify-around items-center">
-      <div class="text-center text-[13px] font-semibold text-[#E93D82]">{{ Math.round(azimuth) }}&deg;</div>
-      <div class="text-center text-[13px] font-semibold text-[#00FFD0]">{{ Math.round(elevation) }}&deg;</div>
-      <div class="text-center text-[13px] font-semibold text-[#FFB800]">{{ distance.toFixed(1) }}</div>
+    <div class="ctv:flex ctv:justify-around ctv:items-center">
+      <div class="ctv:text-center ctv:text-[13px] ctv:font-semibold ctv:text-[#E93D82]">{{ Math.round(azimuth) }}&deg;</div>
+      <div class="ctv:text-center ctv:text-[13px] ctv:font-semibold ctv:text-[#00FFD0]">{{ Math.round(elevation) }}&deg;</div>
+      <div class="ctv:text-center ctv:text-[13px] ctv:font-semibold ctv:text-[#FFB800]">{{ distance.toFixed(1) }}</div>
       <button
-        class="shrink-0 size-6 flex items-center justify-center text-sm cursor-pointer rounded
-               bg-black/80 text-[#E93D82] border border-[rgb(233_61_130/0.4)]
-               transition-all duration-200 hover:bg-[rgb(233_61_130/0.2)] hover:border-[#E93D82]
-               active:scale-95"
+        class="ctv:shrink-0 ctv:size-6 ctv:flex ctv:items-center ctv:justify-center ctv:text-sm ctv:cursor-pointer ctv:rounded
+               ctv:bg-black/80 ctv:text-[#E93D82] ctv:border ctv:border-[rgb(233_61_130/0.4)]
+               ctv:transition-all ctv:duration-200 ctv:hover:bg-[rgb(233_61_130/0.2)] ctv:hover:border-[#E93D82]
+               ctv:active:scale-95"
         :title="$t('camera.resetToDefaults')"
         @click="$emit('reset')"
       >&#8634;</button>
@@ -139,12 +139,12 @@ function onDistanceSelect(e: Event) {
   emit('update:distance', parseInt((e.target as HTMLSelectElement).value, 10))
 }
 
-const DROPDOWN_BASE = 'ctv-camera-dropdown min-w-0 max-w-[90px] py-0.5 px-1 text-3xs cursor-pointer rounded outline-none backdrop-blur-sm'
-  + ' bg-black/90 text-white/85 border border-white/20 hover:border-white/40'
+const DROPDOWN_BASE = 'ctv-camera-dropdown ctv:min-w-0 ctv:max-w-[90px] ctv:py-0.5 ctv:px-1 ctv:text-3xs ctv:cursor-pointer ctv:rounded ctv:outline-none ctv:backdrop-blur-sm'
+  + ' ctv:bg-black/90 ctv:text-white/85 ctv:border ctv:border-white/20 ctv:hover:border-white/40'
 const DROPDOWN_FOCUS = {
-  azimuth:   'focus:border-[#E93D82]',
-  elevation: 'focus:border-[#00FFD0]',
-  distance:  'focus:border-[#FFB800]',
+  azimuth:   'ctv:focus:border-[#E93D82]',
+  elevation: 'ctv:focus:border-[#00FFD0]',
+  distance:  'ctv:focus:border-[#FFB800]',
 } as const
 function dropdownClass(channel: keyof typeof DROPDOWN_FOCUS) {
   return `${DROPDOWN_BASE} ${DROPDOWN_FOCUS[channel]}`

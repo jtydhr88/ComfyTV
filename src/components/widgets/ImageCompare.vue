@@ -1,8 +1,8 @@
 <template>
   <div
     ref="containerRef"
-    class="relative w-full h-80 rounded-md overflow-hidden cursor-ew-resize
-           bg-black border border-border-subtle"
+    class="ctv:relative ctv:w-full ctv:h-80 ctv:rounded-md ctv:overflow-hidden ctv:cursor-ew-resize
+           ctv:bg-black ctv:border ctv:border-border-subtle"
     @pointerdown.stop
   >
     <template v-if="beforeImage || afterImage">
@@ -10,7 +10,7 @@
         v-if="afterImage"
         :src="afterImage"
         :alt="$t('imageCompare.after')"
-        class="absolute inset-0 size-full object-contain select-none"
+        class="ctv:absolute ctv:inset-0 ctv:size-full ctv:object-contain ctv:select-none"
         draggable="false"
         @dragstart.prevent
       />
@@ -18,29 +18,29 @@
         v-if="beforeImage"
         :src="beforeImage"
         :alt="$t('imageCompare.before')"
-        class="absolute inset-0 size-full object-contain select-none"
+        class="ctv:absolute ctv:inset-0 ctv:size-full ctv:object-contain ctv:select-none"
         draggable="false"
         :style="hasBoth ? { clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` } : undefined"
         @dragstart.prevent
       />
       <template v-if="hasBoth">
         <div
-          class="absolute top-0 bottom-0 w-0.5 -ml-px z-[5] pointer-events-none
-                 bg-white/85 shadow-[0_0_4px_rgb(0_0_0/0.6)]"
+          class="ctv:absolute ctv:top-0 ctv:bottom-0 ctv:w-0.5 ctv:-ml-px ctv:z-[5] ctv:pointer-events-none
+                 ctv:bg-white/85 ctv:shadow-[0_0_4px_rgb(0_0_0/0.6)]"
           :style="{ left: `${sliderPosition}%` }"
         />
         <div
-          class="absolute top-1/2 size-6 -translate-x-1/2 -translate-y-1/2 rounded-full
-                 border-2 border-white bg-white/30 backdrop-blur-[2px]
-                 shadow-[0_1px_4px_rgb(0_0_0/0.5)] pointer-events-none z-[6]"
+          class="ctv:absolute ctv:top-1/2 ctv:size-6 ctv:-translate-x-1/2 ctv:-translate-y-1/2 ctv:rounded-full
+                 ctv:border-2 ctv:border-white ctv:bg-white/30 ctv:backdrop-blur-[2px]
+                 ctv:shadow-[0_1px_4px_rgb(0_0_0/0.5)] ctv:pointer-events-none ctv:z-[6]"
           :style="{ left: `${sliderPosition}%` }"
         />
-        <span class="absolute top-2 left-2 z-[7] py-0.5 px-1.5 rounded-lg
-                     bg-black/60 text-white/90 text-2xs tracking-wide pointer-events-none">
+        <span class="ctv:absolute ctv:top-2 ctv:left-2 ctv:z-[7] ctv:py-0.5 ctv:px-1.5 ctv:rounded-lg
+                     ctv:bg-black/60 ctv:text-white/90 ctv:text-2xs ctv:tracking-wide ctv:pointer-events-none">
           {{ $t('imageCompare.before') }}
         </span>
-        <span class="absolute top-2 right-2 z-[7] py-0.5 px-1.5 rounded-lg
-                     bg-black/60 text-white/90 text-2xs tracking-wide pointer-events-none">
+        <span class="ctv:absolute ctv:top-2 ctv:right-2 ctv:z-[7] ctv:py-0.5 ctv:px-1.5 ctv:rounded-lg
+                     ctv:bg-black/60 ctv:text-white/90 ctv:text-2xs ctv:tracking-wide ctv:pointer-events-none">
           {{ $t('imageCompare.after') }}
         </span>
       </template>
@@ -48,8 +48,8 @@
 
     <div
       v-else
-      class="absolute inset-0 flex items-center justify-center px-4 text-center
-             text-white/50 text-xs"
+      class="ctv:absolute ctv:inset-0 ctv:flex ctv:items-center ctv:justify-center ctv:px-4 ctv:text-center
+             ctv:text-white/50 ctv:text-xs"
     >{{ $t('imageCompare.noImages') }}</div>
   </div>
 </template>

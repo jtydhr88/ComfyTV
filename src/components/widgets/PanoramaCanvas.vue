@@ -1,33 +1,33 @@
 <template>
-  <div class="flex flex-col gap-1.5 w-full">
+  <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full">
     <div ref="containerEl"
-         class="relative w-full h-80 rounded-md overflow-hidden bg-black border border-border-subtle">
+         class="ctv:relative ctv:w-full ctv:h-80 ctv:rounded-md ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle">
       <div v-if="!panoramaUrl"
-           class="absolute inset-0 flex flex-col items-center justify-center gap-1.5
-                  text-white/50 pointer-events-none">
-        <div class="text-[32px] opacity-60">🌐</div>
-        <div class="text-xs">{{ $t('panorama.empty') }}</div>
+           class="ctv:absolute ctv:inset-0 ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5
+                  ctv:text-white/50 ctv:pointer-events-none">
+        <div class="ctv:text-[32px] ctv:opacity-60">🌐</div>
+        <div class="ctv:text-xs">{{ $t('panorama.empty') }}</div>
       </div>
       <div v-if="loadError"
-           class="absolute inset-0 flex items-center justify-center text-[11px]
-                  bg-destructive-background/30 text-destructive-background pointer-events-none">
+           class="ctv:absolute ctv:inset-0 ctv:flex ctv:items-center ctv:justify-center ctv:text-[11px]
+                  ctv:bg-destructive-background/30 ctv:text-destructive-background ctv:pointer-events-none">
         {{ $t('panorama.loadError') }}
       </div>
     </div>
 
-    <div class="flex flex-wrap gap-1.5 items-center">
+    <div class="ctv:flex ctv:flex-wrap ctv:gap-1.5 ctv:items-center">
       <input
         ref="fileInputEl"
         type="file"
         accept=".hdr,.exr,.jpg,.jpeg,.png,.webp"
-        class="hidden"
+        class="ctv:hidden"
         @change="onFilePicked"
       />
       <button
         type="button"
-        class="py-1 px-2.5 text-[11px] rounded cursor-pointer
-               bg-secondary-background text-base-foreground border border-border-subtle
-               hover:enabled:bg-secondary-background-hover disabled:opacity-60 disabled:cursor-not-allowed"
+        class="ctv:py-1 ctv:px-2.5 ctv:text-[11px] ctv:rounded ctv:cursor-pointer
+               ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle
+               ctv:hover:enabled:bg-secondary-background-hover ctv:disabled:opacity-60 ctv:disabled:cursor-not-allowed"
         :disabled="uploading"
         @click="fileInputEl?.click()"
       >
@@ -37,15 +37,15 @@
       <button
         v-if="manualSource"
         type="button"
-        class="py-1 px-2.5 text-[11px] rounded cursor-pointer
-               bg-secondary-background text-destructive-background
-               border border-destructive-background/30 hover:bg-destructive-background/10"
+        class="ctv:py-1 ctv:px-2.5 ctv:text-[11px] ctv:rounded ctv:cursor-pointer
+               ctv:bg-secondary-background ctv:text-destructive-background
+               ctv:border ctv:border-destructive-background/30 ctv:hover:bg-destructive-background/10"
         :title="$t('panorama.clearUploadTooltip')"
         @click="onClearManual"
       >✕ {{ $t('panorama.clearUpload') }}</button>
       <span v-if="manualSource"
-            class="text-2xs py-0.5 px-1.5 rounded-lg tracking-wide
-                   bg-primary-background/20 text-primary-background">
+            class="ctv:text-2xs ctv:py-0.5 ctv:px-1.5 ctv:rounded-lg ctv:tracking-wide
+                   ctv:bg-primary-background/20 ctv:text-primary-background">
         {{ $t('panorama.manualSourceBadge') }}
       </span>
     </div>

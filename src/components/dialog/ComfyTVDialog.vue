@@ -1,43 +1,43 @@
 <template>
   <Teleport to="body">
     <Transition
-      enter-active-class="duration-150 ease-out"
-      enter-from-class="opacity-0"
-      enter-to-class="opacity-100"
-      leave-active-class="duration-150 ease-in"
-      leave-from-class="opacity-100"
-      leave-to-class="opacity-0"
+      enter-active-class="ctv:duration-150 ctv:ease-out"
+      enter-from-class="ctv:opacity-0"
+      enter-to-class="ctv:opacity-100"
+      leave-active-class="ctv:duration-150 ctv:ease-in"
+      leave-from-class="ctv:opacity-100"
+      leave-to-class="ctv:opacity-0"
     >
       <div
         v-if="store.open"
-        class="fixed inset-0 z-[10000] flex items-center justify-center p-6
-               bg-black/50 transition-opacity"
+        class="ctv:fixed ctv:inset-0 ctv:z-[10000] ctv:flex ctv:items-center ctv:justify-center ctv:p-6
+               ctv:bg-black/50 ctv:transition-opacity"
         @mousedown.self="store.close()"
       >
         <div
-          class="w-full max-h-[calc(100vh-48px)] rounded-md overflow-hidden
-                 flex flex-col shadow-[0_16px_48px_rgb(0_0_0/0.5)]
-                 bg-interface-menu-surface text-base-foreground
-                 border border-border-default"
+          class="ctv:w-full ctv:max-h-[calc(100vh-48px)] ctv:rounded-md ctv:overflow-hidden
+                 ctv:flex ctv:flex-col ctv:shadow-[0_16px_48px_rgb(0_0_0/0.5)]
+                 ctv:bg-interface-menu-surface ctv:text-base-foreground
+                 ctv:border ctv:border-border-default"
           :style="{ maxWidth: store.width }"
         >
           <header
-            class="flex items-center justify-between py-2.5 px-3.5
-                   bg-base-foreground/[0.03] border-b border-border-subtle"
+            class="ctv:flex ctv:items-center ctv:justify-between ctv:py-2.5 ctv:px-3.5
+                   ctv:bg-base-foreground/[0.03] ctv:border-b ctv:border-border-subtle"
           >
-            <h2 class="m-0 text-sm font-semibold text-base-foreground">
+            <h2 class="ctv:m-0 ctv:text-sm ctv:font-semibold ctv:text-base-foreground">
               {{ store.title }}
             </h2>
             <button
-              class="bg-transparent border-0 cursor-pointer rounded
-                     size-7 text-[22px] leading-none
-                     text-muted-foreground
-                     hover:bg-secondary-background-hover hover:text-base-foreground"
+              class="ctv:bg-transparent ctv:border-0 ctv:cursor-pointer ctv:rounded
+                     ctv:size-7 ctv:text-[22px] ctv:leading-none
+                     ctv:text-muted-foreground
+                     ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground"
               aria-label="Close"
               @click="store.close()"
             >×</button>
           </header>
-          <div class="flex-1 overflow-y-auto p-3.5 text-xs">
+          <div class="ctv:flex-1 ctv:overflow-y-auto ctv:p-3.5 ctv:text-xs">
             <component
               :is="store.component"
               v-if="store.component"

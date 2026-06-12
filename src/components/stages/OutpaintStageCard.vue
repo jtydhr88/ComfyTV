@@ -1,22 +1,22 @@
 <template>
-  <div ref="rootEl" class="flex flex-col gap-1.5 size-full">
+  <div ref="rootEl" class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full">
     <div
       ref="canvasEl"
-      class="relative flex-auto min-h-[280px] bg-black rounded-md overflow-hidden select-none
-             border border-border-subtle"
-      :class="{ 'flex items-center justify-center': !sourceImageUrl }"
+      class="ctv:relative ctv:flex-auto ctv:min-h-[280px] ctv:bg-black ctv:rounded-md ctv:overflow-hidden ctv:select-none
+             ctv:border ctv:border-border-subtle"
+      :class="{ 'ctv:flex ctv:items-center ctv:justify-center': !sourceImageUrl }"
     >
       <template v-if="!sourceImageUrl">
-        <div class="flex flex-col items-center gap-1.5 text-white/50">
-          <div class="text-[28px] opacity-60">↔</div>
-          <div class="text-xs">{{ $t('outpaint.noInputImage') }}</div>
+        <div class="ctv:flex ctv:flex-col ctv:items-center ctv:gap-1.5 ctv:text-white/50">
+          <div class="ctv:text-[28px] ctv:opacity-60">↔</div>
+          <div class="ctv:text-xs">{{ $t('outpaint.noInputImage') }}</div>
         </div>
       </template>
       <template v-else>
-        <div class="absolute ctv-pad-area" :style="padAreaStyle" />
+        <div class="ctv:absolute ctv-pad-area" :style="padAreaStyle" />
         <img
           :src="sourceImageUrl"
-          class="absolute pointer-events-none outline outline-1 outline-white/70"
+          class="ctv:absolute ctv:pointer-events-none ctv:outline ctv:outline-1 ctv:outline-white/70"
           :style="imgStyle"
           draggable="false"
           @load="onSourceLoaded"
@@ -25,38 +25,38 @@
         <div
           v-for="side in SIDES"
           :key="side"
-          class="absolute flex items-center justify-center z-[3] ctv-outpaint-handle"
+          class="ctv:absolute ctv:flex ctv:items-center ctv:justify-center ctv:z-[3] ctv-outpaint-handle"
           :class="[
             `ctv-handle-${side}`,
-            side === 'left' || side === 'right' ? 'cursor-ew-resize' : 'cursor-ns-resize',
+            side === 'left' || side === 'right' ? 'ctv:cursor-ew-resize' : 'ctv:cursor-ns-resize',
           ]"
           :style="handleStyle(side)"
           @pointerdown="onHandlePointerDown($event, side)"
         >
-          <span class="absolute size-3 rounded-full bg-primary-background border-2 border-white
-                       shadow-[0_1px_4px_rgb(0_0_0/0.5)]" />
+          <span class="ctv:absolute ctv:size-3 ctv:rounded-full ctv:bg-primary-background ctv:border-2 ctv:border-white
+                       ctv:shadow-[0_1px_4px_rgb(0_0_0/0.5)]" />
         </div>
         <span
           v-for="side in SIDES"
           :key="`v-${side}`"
-          class="absolute z-[2] pointer-events-none py-px px-[5px] rounded-sm
-                 text-2xs font-mono bg-black/60 text-white/90"
+          class="ctv:absolute ctv:z-[2] ctv:pointer-events-none ctv:py-px ctv:px-[5px] ctv:rounded-sm
+                 ctv:text-2xs ctv:font-mono ctv:bg-black/60 ctv:text-white/90"
           :style="badgeStyle(side)"
         >{{ pad[side] }}px</span>
       </template>
     </div>
 
-    <div class="flex flex-col gap-1">
-      <div class="flex items-center gap-1.5 flex-wrap">
+    <div class="ctv:flex ctv:flex-col ctv:gap-1">
+      <div class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-wrap">
         <label v-for="side in SIDES" :key="`in-${side}`"
-               class="flex items-center gap-[3px] py-0.5 px-1 rounded-sm
-                      bg-secondary-background border border-border-subtle">
-          <span class="text-3xs min-w-8 uppercase tracking-wide text-muted-foreground">{{ $t(`outpaint.${side}`) }}</span>
+               class="ctv:flex ctv:items-center ctv:gap-[3px] ctv:py-0.5 ctv:px-1 ctv:rounded-sm
+                      ctv:bg-secondary-background ctv:border ctv:border-border-subtle">
+          <span class="ctv:text-3xs ctv:min-w-8 ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">{{ $t(`outpaint.${side}`) }}</span>
           <input
             type="number" min="0" max="4096" step="8"
-            class="w-12 py-px px-[3px] rounded-sm text-[11px] font-mono
-                   bg-secondary-background text-base-foreground border border-border-subtle
-                   disabled:opacity-40"
+            class="ctv:w-12 ctv:py-px ctv:px-[3px] ctv:rounded-sm ctv:text-[11px] ctv:font-mono
+                   ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle
+                   ctv:disabled:opacity-40"
             :value="pad[side]"
             :disabled="!sourceImageUrl"
             @change="(e) => setPad(side, Number((e.target as HTMLInputElement).value))"
@@ -64,16 +64,16 @@
         </label>
         <button
           type="button"
-          class="ml-auto py-0.5 px-2.5 text-[11px] rounded-sm cursor-pointer
-                 bg-secondary-background text-base-foreground border border-border-subtle
-                 hover:enabled:bg-secondary-background-hover disabled:opacity-40 disabled:cursor-default"
+          class="ctv:ml-auto ctv:py-0.5 ctv:px-2.5 ctv:text-[11px] ctv:rounded-sm ctv:cursor-pointer
+                 ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle
+                 ctv:hover:enabled:bg-secondary-background-hover ctv:disabled:opacity-40 ctv:disabled:cursor-default"
           :disabled="!sourceImageUrl"
           @click="resetAll"
         >{{ $t('outpaint.reset') }}</button>
       </div>
-      <div class="flex items-center gap-1.5 flex-wrap">
-        <span class="text-2xs text-muted-foreground/60">{{ $t('outpaint.output') }}:</span>
-        <span class="text-[11px] font-mono text-base-foreground">{{ outDims }}</span>
+      <div class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-wrap">
+        <span class="ctv:text-2xs ctv:text-muted-foreground/60">{{ $t('outpaint.output') }}:</span>
+        <span class="ctv:text-[11px] ctv:font-mono ctv:text-base-foreground">{{ outDims }}</span>
       </div>
     </div>
 

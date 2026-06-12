@@ -1,40 +1,40 @@
 <template>
-  <div class="flex flex-col gap-1.5 size-full">
-    <div class="text-[11px] text-center py-1">
-      <span v-if="!panoramaUrl" class="text-muted-foreground">{{ $t('panoramaView.connectPanorama') }}</span>
-      <span v-else-if="capturing" class="text-muted-foreground">{{ $t('panoramaView.capturingCount', { i: captureProgress, n: viewCount }) }}</span>
-      <span v-else-if="state.output" class="text-success-background">{{ $t('panoramaView.capturedN', { n: viewCount }) }}</span>
-      <span v-else class="text-muted-foreground">{{ $t('panoramaView.adjustCountToCapture') }}</span>
+  <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full">
+    <div class="ctv:text-[11px] ctv:text-center ctv:py-1">
+      <span v-if="!panoramaUrl" class="ctv:text-muted-foreground">{{ $t('panoramaView.connectPanorama') }}</span>
+      <span v-else-if="capturing" class="ctv:text-muted-foreground">{{ $t('panoramaView.capturingCount', { i: captureProgress, n: viewCount }) }}</span>
+      <span v-else-if="state.output" class="ctv:text-success-background">{{ $t('panoramaView.capturedN', { n: viewCount }) }}</span>
+      <span v-else class="ctv:text-muted-foreground">{{ $t('panoramaView.adjustCountToCapture') }}</span>
     </div>
 
-    <div class="flex items-center gap-2 flex-wrap">
-      <div class="flex items-center gap-1">
-        <span class="text-2xs uppercase tracking-wide text-muted-foreground">{{ $t('panoramaView.aspect') }}</span>
+    <div class="ctv:flex ctv:items-center ctv:gap-2 ctv:flex-wrap">
+      <div class="ctv:flex ctv:items-center ctv:gap-1">
+        <span class="ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">{{ $t('panoramaView.aspect') }}</span>
         <select v-model="aspectRatio" class="ctv-pano-select">
           <option v-for="opt in aspectOptions" :key="opt" :value="opt">{{ opt }}</option>
         </select>
       </div>
-      <div class="flex items-center gap-1">
-        <span class="text-2xs uppercase tracking-wide text-muted-foreground">{{ $t('panoramaView.resolution') }}</span>
+      <div class="ctv:flex ctv:items-center ctv:gap-1">
+        <span class="ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">{{ $t('panoramaView.resolution') }}</span>
         <select v-model="resolution" class="ctv-pano-select">
           <option v-for="opt in resolutionOptions" :key="opt" :value="opt">{{ opt }}</option>
         </select>
       </div>
-      <span class="ml-auto text-2xs font-mono text-muted-foreground">{{ captureSize.w }}×{{ captureSize.h }}</span>
+      <span class="ctv:ml-auto ctv:text-2xs ctv:font-mono ctv:text-muted-foreground">{{ captureSize.w }}×{{ captureSize.h }}</span>
     </div>
 
-    <div class="grid grid-cols-[80px_1fr_36px] items-center gap-1.5 py-1 px-2 rounded
-                bg-secondary-background border border-border-subtle">
-      <span class="text-xs text-muted-foreground">{{ $t('panoramaView.viewCount') }}</span>
+    <div class="ctv:grid ctv:grid-cols-[80px_1fr_36px] ctv:items-center ctv:gap-1.5 ctv:py-1 ctv:px-2 ctv:rounded
+                ctv:bg-secondary-background ctv:border ctv:border-border-subtle">
+      <span class="ctv:text-xs ctv:text-muted-foreground">{{ $t('panoramaView.viewCount') }}</span>
       <input
         type="range"
         min="2" max="24" step="1"
-        class="w-full disabled:opacity-40"
+        class="ctv:w-full ctv:disabled:opacity-40"
         :value="viewCount"
         :disabled="!panoramaUrl"
         @input="(e) => viewCount = Number((e.target as HTMLInputElement).value)"
       />
-      <span class="text-right text-xs font-mono text-base-foreground">{{ viewCount }}</span>
+      <span class="ctv:text-right ctv:text-xs ctv:font-mono ctv:text-base-foreground">{{ viewCount }}</span>
     </div>
 
     <StageCard

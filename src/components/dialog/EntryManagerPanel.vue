@@ -1,14 +1,14 @@
 <template>
-  <div class="flex flex-col gap-2.5">
-    <p class="m-0 mb-1 text-[11px] text-muted-foreground">
+  <div class="ctv:flex ctv:flex-col ctv:gap-2.5">
+    <p class="ctv:m-0 ctv:mb-1 ctv:text-[11px] ctv:text-muted-foreground">
       Reference any entry in a stage's prompt with
-      <code class="py-0 px-1 rounded-sm font-mono
-                   bg-primary-background/20 border border-primary-background/45 text-primary-background">@label</code>.
+      <code class="ctv:py-0 ctv:px-1 ctv:rounded-sm ctv:font-mono
+                   ctv:bg-primary-background/20 ctv:border ctv:border-primary-background/45 ctv:text-primary-background">@label</code>.
       Unknown tokens stay literal.
     </p>
 
     <div v-if="ENTRY_KINDS.length > 1"
-         class="flex gap-1 border-b border-border-subtle">
+         class="ctv:flex ctv:gap-1 ctv:border-b ctv:border-border-subtle">
       <button
         v-for="k in ENTRY_KINDS"
         :key="k"
@@ -16,24 +16,24 @@
         @click="activeKind = k"
       >
         {{ KIND_LABELS[k] }}
-        <span class="py-0 px-1.5 rounded-lg text-2xs bg-base-foreground/10">{{ rowsByKind[k]?.length ?? 0 }}</span>
+        <span class="ctv:py-0 ctv:px-1.5 ctv:rounded-lg ctv:text-2xs ctv:bg-base-foreground/10">{{ rowsByKind[k]?.length ?? 0 }}</span>
       </button>
     </div>
 
-    <table class="w-full border-collapse text-xs ctv-entry-table">
+    <table class="ctv:w-full ctv:border-collapse ctv:text-xs ctv-entry-table">
       <thead>
         <tr>
-          <th class="w-[140px]">Label</th>
+          <th class="ctv:w-[140px]">Label</th>
           <th>Content</th>
-          <th v-for="f in metaFields" :key="f.name" class="w-[180px]">
+          <th v-for="f in metaFields" :key="f.name" class="ctv:w-[180px]">
             {{ f.label }}
           </th>
-          <th class="w-24 text-right whitespace-nowrap"></th>
+          <th class="ctv:w-24 ctv:text-right ctv:whitespace-nowrap"></th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="entry in activeRows" :key="entry.id">
-          <td class="w-[140px]">
+          <td class="ctv:w-[140px]">
             <input
               v-model="drafts[entry.id].label"
               :class="labelInputClass(!isValidLabel(drafts[entry.id].label))"
@@ -52,7 +52,7 @@
               @keydown.meta.enter.prevent="saveIfDirty(entry)"
             />
           </td>
-          <td v-for="f in metaFields" :key="f.name" class="w-[180px]">
+          <td v-for="f in metaFields" :key="f.name" class="ctv:w-[180px]">
             <textarea
               v-if="f.type === 'textarea'"
               v-model="drafts[entry.id].metadata[f.name]"
@@ -68,7 +68,7 @@
               @blur="saveIfDirty(entry)"
             />
           </td>
-          <td class="w-24 text-right whitespace-nowrap">
+          <td class="ctv:w-24 ctv:text-right ctv:whitespace-nowrap">
             <button :class="btnClass('del')"
                     :title="`Delete @${entry.label}`"
                     @click="confirmDelete(entry)">🗑</button>
@@ -77,13 +77,13 @@
 
         <tr v-if="activeRows.length === 0 && !creating">
           <td :colspan="3 + metaFields.length"
-              class="text-center italic p-4 text-muted-foreground">
+              class="ctv:text-center ctv:italic ctv:p-4 ctv:text-muted-foreground">
             No {{ KIND_LABELS[activeKind].toLowerCase() }} yet. Click <strong>+ Add</strong> below.
           </td>
         </tr>
 
         <tr v-if="creating" class="create-row">
-          <td class="w-[140px]">
+          <td class="ctv:w-[140px]">
             <input
               ref="newLabelInput"
               v-model="newDraft.label"
@@ -104,7 +104,7 @@
               @keydown.meta.enter.prevent="saveNew"
             />
           </td>
-          <td v-for="f in metaFields" :key="f.name" class="w-[180px]">
+          <td v-for="f in metaFields" :key="f.name" class="ctv:w-[180px]">
             <textarea
               v-if="f.type === 'textarea'"
               v-model="newDraft.metadata[f.name]"
@@ -119,7 +119,7 @@
               :placeholder="f.placeholder ?? ''"
             />
           </td>
-          <td class="w-24 text-right whitespace-nowrap">
+          <td class="ctv:w-24 ctv:text-right ctv:whitespace-nowrap">
             <button :class="btnClass('save')" :disabled="!canSaveNew" @click="saveNew">Save</button>
             <button :class="btnClass('mini')" @click="cancelCreate">Cancel</button>
           </td>
@@ -127,7 +127,7 @@
       </tbody>
     </table>
 
-    <div class="mt-1">
+    <div class="ctv:mt-1">
       <button v-if="!creating" :class="btnClass('add')" @click="startCreate">
         + Add {{ KIND_LABELS[activeKind].slice(0, -1).toLowerCase() }}
       </button>
@@ -169,37 +169,37 @@ onMounted(kickHydrate)
 
 function tabClass(active: boolean) {
   return [
-    'py-1.5 px-3 text-xs cursor-pointer inline-flex items-center gap-1.5',
-    'border border-transparent border-b-0 rounded-t bg-transparent',
+    'ctv:py-1.5 ctv:px-3 ctv:text-xs ctv:cursor-pointer ctv:inline-flex ctv:items-center ctv:gap-1.5',
+    'ctv:border ctv:border-transparent ctv:border-b-0 ctv:rounded-t ctv:bg-transparent',
     active
-      ? '-mb-px bg-secondary-background border-border-default text-base-foreground'
-      : 'text-muted-foreground hover:text-base-foreground',
+      ? 'ctv:-mb-px ctv:bg-secondary-background ctv:border-border-default ctv:text-base-foreground'
+      : 'ctv:text-muted-foreground ctv:hover:text-base-foreground',
   ].join(' ')
 }
 
-const FIELD_BASE = 'w-full py-1 px-1.5 text-xs leading-snug rounded-sm outline-none box-border [font-family:inherit]'
-  + ' bg-secondary-background text-base-foreground'
-  + ' focus:border-primary-background'
+const FIELD_BASE = 'ctv:w-full ctv:py-1 ctv:px-1.5 ctv:text-xs ctv:leading-snug ctv:rounded-sm ctv:outline-none ctv:box-border ctv:[font-family:inherit]'
+  + ' ctv:bg-secondary-background ctv:text-base-foreground'
+  + ' ctv:focus:border-primary-background'
 
 function inputClass() {
-  return `${FIELD_BASE} border border-border-default`
+  return `${FIELD_BASE} ctv:border ctv:border-border-default`
 }
 function textareaClass() {
-  return `${FIELD_BASE} border border-border-default resize-y`
+  return `${FIELD_BASE} ctv:border ctv:border-border-default ctv:resize-y`
 }
 function labelInputClass(invalid: boolean) {
-  return `${FIELD_BASE} font-mono border ${invalid ? 'invalid border-destructive-background' : 'border-border-default'}`
+  return `${FIELD_BASE} ctv:font-mono ctv:border ${invalid ? 'invalid ctv:border-destructive-background' : 'ctv:border-border-default'}`
 }
 
-const BTN_BASE = 'rounded-sm text-[11px] cursor-pointer [font-family:inherit]'
-  + ' bg-secondary-background text-base-foreground'
-  + ' border border-border-default'
+const BTN_BASE = 'ctv:rounded-sm ctv:text-[11px] ctv:cursor-pointer ctv:[font-family:inherit]'
+  + ' ctv:bg-secondary-background ctv:text-base-foreground'
+  + ' ctv:border ctv:border-border-default'
 function btnClass(variant: 'del' | 'save' | 'mini' | 'add') {
   const v = {
-    del:  ' py-0.5 px-2.5 hover:border-destructive-background hover:text-destructive-background',
-    save: ' py-0.5 px-2 bg-primary-background/30 border-primary-background/60 disabled:opacity-40 disabled:cursor-not-allowed',
-    mini: ' py-0.5 px-2',
-    add:  ' py-0.5 px-2.5 self-start hover:bg-primary-background/15',
+    del:  ' ctv:py-0.5 ctv:px-2.5 ctv:hover:border-destructive-background ctv:hover:text-destructive-background',
+    save: ' ctv:py-0.5 ctv:px-2 ctv:bg-primary-background/30 ctv:border-primary-background/60 ctv:disabled:opacity-40 ctv:disabled:cursor-not-allowed',
+    mini: ' ctv:py-0.5 ctv:px-2',
+    add:  ' ctv:py-0.5 ctv:px-2.5 ctv:self-start ctv:hover:bg-primary-background/15',
   }[variant]
   return BTN_BASE + v
 }

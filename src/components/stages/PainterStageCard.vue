@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-1.5 size-full">
+  <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full">
     <PainterCanvas
       ref="painterRef"
       :node="node"
