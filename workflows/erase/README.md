@@ -15,8 +15,9 @@ The shipped workflow uses LaMa via Acly's `comfyui-inpaint-nodes` plugin.
 ## What your workflow needs
 
 - A `SaveImage` output node (auto-detected).
-- A `LoadImage` for the source image.
-- A `LoadImageMask` for the mask (`channel = "alpha"`).
+- A `LoadImage` for the source image, plus the mask via **either** of:
+  - a separate `LoadImageMask` node (`channel = "alpha"`) — bind it to **Stage mask (painter output)**; or
+  - the `LoadImage`'s own **MASK output** — bind the `LoadImage`'s `image` input to **Upstream image + painted mask (alpha)**; ComfyTV bakes the painted mask into the image's alpha channel at run time.
 - LaMa (or equivalent) inference: `INPAINT_LoadInpaintModel` + `INPAINT_InpaintWithModel` from the Acly plugin.
 
 To add your own workflow see [docs/custom-workflows.md](../../docs/custom-workflows.md); to configure per-node bindings, select the stage on the canvas and open the left **ComfyTV** sidebar — see [docs/sidebar-config-editor.md](../../docs/sidebar-config-editor.md).

@@ -182,6 +182,82 @@ class TestViewUrlAnnotated:
             lc._view_url_to_annotated(None)  # type: ignore[arg-type]
 
 
+class TestCompositeMaskedImage:
+    @pytest.fixture()
+    def fs(self, tmp_path, monkeypatch):
+        import folder_paths
+
+        def fake_annotated(name):
+            base, _, kind = name.rpartition(" [")
+            return str(tmp_path / kind.rstrip("]") / base)
+
+        monkeypatch.setattr(folder_paths, "get_annotated_filepath",
+                            fake_annotated, raising=False)
+        monkeypatch.setattr(folder_paths, "get_input_directory",
+                            lambda: str(tmp_path / "input"), raising=False)
+        return tmp_path
+
+    def _write_source(self, fs, size=(64, 64), color=(255, 0, 0)):
+        from PIL import Image
+        out = fs / "output"
+        out.mkdir(parents=True, exist_ok=True)
+        Image.new("RGB", size, color).save(out / "src.png")
+        return "/view?filename=src.png&subfolder=&type=output"
+
+    def _write_mask(self, fs, size=(64, 64), hole=(8, 8, 24, 24)):
+        """White opaque PNG with a transparent (painted) rectangle —
+        the painter's export format."""
+        from PIL import Image
+        d = fs / "input" / "painter"
+        d.mkdir(parents=True, exist_ok=True)
+        m = Image.new("RGBA", size, (255, 255, 255, 255))
+        if hole:
+            m.paste((0, 0, 0, 0), hole)
+        m.save(d / "mask.png")
+        return "painter/mask.png [input]"
+
+    def test_composites_alpha_into_source(self, fs):
+        from PIL import Image
+        url = self._write_source(fs)
+        mask = self._write_mask(fs)
+
+        annotated = lc._composite_masked_image(url, mask)
+        assert annotated.startswith("painter/comfytv-masked-")
+        assert annotated.endswith(".png [input]")
+
+        saved = Image.open(fs / "input" / annotated[: -len(" [input]")])
+        assert saved.mode == "RGBA"
+        assert saved.size == (64, 64)
+
+        assert saved.getpixel((10, 10)) == (255, 0, 0, 0)
+        assert saved.getpixel((40, 40)) == (255, 0, 0, 255)
+
+    def test_mask_resized_to_image(self, fs):
+        from PIL import Image
+        url = self._write_source(fs, size=(128, 128))
+        mask = self._write_mask(fs, size=(64, 64), hole=(0, 0, 32, 32))
+
+        annotated = lc._composite_masked_image(url, mask)
+        saved = Image.open(fs / "input" / annotated[: -len(" [input]")])
+        assert saved.size == (128, 128)
+        assert saved.getpixel((10, 10))[3] == 0      # inside scaled hole
+        assert saved.getpixel((100, 100))[3] == 255  # outside
+
+    def test_mask_without_alpha_raises(self, fs):
+        from PIL import Image
+        url = self._write_source(fs)
+        d = fs / "input" / "painter"
+        d.mkdir(parents=True, exist_ok=True)
+        Image.new("RGB", (64, 64), (255, 255, 255)).save(d / "mask.png")
+        with pytest.raises(RuntimeError, match="no alpha channel"):
+            lc._composite_masked_image(url, "painter/mask.png [input]")
+
+    def test_rejects_non_view_source(self, fs):
+        mask = self._write_mask(fs)
+        with pytest.raises(RuntimeError, match="must be a ComfyUI"):
+            lc._composite_masked_image("not-a-url", mask)
+
+
 # ─── _Resolver ───────────────────────────────────────────────────────────────
 
 class TestResolver:
@@ -286,6 +362,55 @@ class TestResolver:
         }))
         v = r.resolve("x.y", {"from": "upstream_image:annotated[2]", "default": "x.png"})
         assert v == "x.png"
+
+    def test_upstream_image_masked(self, monkeypatch):
+        calls = []
+        monkeypatch.setattr(
+            lc, "_composite_masked_image",
+            lambda url, mask: calls.append((url, mask)) or "painter/combined.png [input]",
+        )
+        r = self._r(self._ctx(
+            upstream={"images": ["/view?filename=a.png&subfolder=&type=output"],
+                      "videos": [], "audio": [], "texts": []},
+            options={"mask_data": "painter/m.png [input]"},
+        ))
+        v = r.resolve("x.y", {"from": "upstream_image:masked[0]"})
+        assert v == "painter/combined.png [input]"
+        assert calls == [("/view?filename=a.png&subfolder=&type=output",
+                          "painter/m.png [input]")]
+
+    def test_upstream_image_masked_caches_composite(self, monkeypatch):
+        calls = []
+        monkeypatch.setattr(
+            lc, "_composite_masked_image",
+            lambda url, mask: calls.append(url) or "painter/combined.png [input]",
+        )
+        r = self._r(self._ctx(
+            upstream={"images": ["/view?filename=a.png&subfolder=&type=output"],
+                      "videos": [], "audio": [], "texts": []},
+            options={"mask_data": "painter/m.png [input]"},
+        ))
+        r.resolve("a", {"from": "upstream_image:masked[0]"})
+        r.resolve("b", {"from": "upstream_image:masked[0]"})
+        assert len(calls) == 1
+
+    def test_upstream_image_masked_empty_mask_hits_required(self):
+        r = self._r(self._ctx(
+            upstream={"images": ["/view?filename=a.png&subfolder=&type=output"],
+                      "videos": [], "audio": [], "texts": []},
+            options={},
+        ))
+        with pytest.raises(RuntimeError, match="paint a mask first"):
+            r.resolve("x.y", {"from": "upstream_image:masked[0]",
+                              "required": True, "error": "paint a mask first"})
+
+    def test_masked_on_non_image_kind_raises(self):
+        r = self._r(self._ctx(upstream={
+            "images": [], "videos": ["/view?filename=v.mp4&type=output"],
+            "audio": [], "texts": [],
+        }))
+        with pytest.raises(RuntimeError, match="only valid for upstream_image"):
+            r.resolve("x.y", {"from": "upstream_video:masked[0]"})
 
     def test_literal(self):
         r = self._r(self._ctx())

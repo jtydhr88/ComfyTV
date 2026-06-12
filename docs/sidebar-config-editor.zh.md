@@ -48,6 +48,7 @@
 | **Stage negative prompt** / **Stage seed** / **Stage batch size** / **Stage lyrics** / **Stage scale** / **Stage duration (s)** / **Stage generate audio** / **Stage mask (painter output)** / **Stage pad left/top/right/bottom** / **Stage feathering** / **Stage LLM max output length** | 对应 stage widget 的当前值;具体出现哪些取决于 stage 类型 |
 | **Stage width** / **Stage height** / **Stage video length** | 由 stage 的 resolution + aspect_ratio + duration 推导出来 |
 | **Upstream image #N** | 接进 stage 的第 N 张图 |
+| **Upstream image + painted mask (alpha)** | 仅 Inpaint / Erase。上游图 + 画笔 mask 烘进 alpha 通道后的合成图;工作流如果从 `LoadImage` 的 MASK 输出取 mask(而不是单独的 `LoadImageMask` 节点),就把 `LoadImage` 的 `image` 输入绑到这一项 |
 | **Upstream video #N** / **Upstream audio #N** / **Upstream text #N** | 其它上游类型同理 |
 
 ---

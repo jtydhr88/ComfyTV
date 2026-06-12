@@ -69,6 +69,9 @@ def _ensure_comfyui_stubs():
             get_directory_by_type=lambda t: os.path.join(base, t),
         )
 
+    if "node_helpers" not in sys.modules:
+        _make_module("node_helpers", pillow=lambda fn, *a, **kw: fn(*a, **kw))
+
     # server.PromptServer — needs a singleton with `.instance.routes` (an
     # aiohttp RouteTableDef so `routes.get(...)` decorators don't choke).
     if "server" not in sys.modules:

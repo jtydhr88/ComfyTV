@@ -14,8 +14,9 @@
 ## 工作流需要包含
 
 - 一个 `SaveImage` 输出节点(自动检测)。
-- 一个 `LoadImage` 接源图。
-- 一个 `LoadImageMask` 接 mask(`channel = "alpha"`)。
+- 一个 `LoadImage` 接源图;mask 走以下**两种方式之一**:
+  - 单独的 `LoadImageMask` 节点(`channel = "alpha"`),绑定到 **Stage mask (painter output)**;
+  - 直接用 `LoadImage` 自己的 **MASK 输出**(在 ComfyUI 自带 mask 编辑器上画蒙版的常见做法),把 `LoadImage` 的 `image` 输入绑定到 **Upstream image + painted mask (alpha)**。运行时 ComfyTV 会把涂抹的 mask 烘进图片的 alpha 通道,单个 `LoadImage` 同时输出图和 mask。
 - 一个 `CLIPTextEncode` 接提示词。
 - 模型对应的 inpaint conditioning(Flux Fill 用 `InpaintModelConditioning`、SD1.5 用 `VAEEncodeForInpaint`)。
 - `KSampler` 一个,`denoise=1.0` 完全重生成被 mask 区域。

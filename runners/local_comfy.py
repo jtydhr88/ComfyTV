@@ -5,6 +5,7 @@ import random
 import re
 import urllib.parse
 import uuid
+from pathlib import Path
 from typing import Any
 
 from .base import Runner, RunnerContext
@@ -13,7 +14,7 @@ from .base import Runner, RunnerContext
 _log = logging.getLogger(__name__)
 
 _UPSTREAM_PAT = re.compile(
-    r'^upstream_(image|video|audio|text):(annotated|value)(?:\[(\d+)\])?$'
+    r'^upstream_(image|video|audio|text):(annotated|value|masked)(?:\[(\d+)\])?$'
 )
 _UPSTREAM_BUCKET_BY_KIND = {
     'image': 'images', 'video': 'videos', 'audio': 'audio', 'text': 'texts',
@@ -74,6 +75,37 @@ def _view_url_to_annotated(url: str) -> str:
     return f"{path} [{type_}]"
 
 
+def _composite_masked_image(image_url: str, mask_annotated: str) -> str:
+    import folder_paths
+    import node_helpers
+    from PIL import Image, ImageOps
+
+    image_annotated = _view_url_to_annotated(image_url)
+    img_path = folder_paths.get_annotated_filepath(image_annotated)
+    mask_path = folder_paths.get_annotated_filepath(mask_annotated)
+
+    img = node_helpers.pillow(Image.open, img_path)
+    img = node_helpers.pillow(ImageOps.exif_transpose, img)
+    rgb = img.convert("RGB")
+
+    mask_img = node_helpers.pillow(Image.open, mask_path)
+    if "A" not in mask_img.getbands():
+        raise RuntimeError(
+            f"mask {mask_annotated!r} has no alpha channel — "
+            f"expected a painter-exported PNG"
+        )
+    alpha = mask_img.getchannel("A")
+    if alpha.size != rgb.size:
+        alpha = alpha.resize(rgb.size, Image.Resampling.BILINEAR)
+    rgb.putalpha(alpha)
+
+    out_dir = Path(folder_paths.get_input_directory()) / "painter"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    name = f"comfytv-masked-{uuid.uuid4().hex[:8]}.png"
+    rgb.save(out_dir / name, format="PNG", compress_level=4)
+    return f"painter/{name} [input]"
+
+
 def _cast(value: Any, cast: str | None) -> Any:
     if cast is None:
         return value
@@ -99,6 +131,7 @@ class _Resolver:
         self.sizing = config.get("sizing") or {}
         self._wh: tuple[int, int] | None = None
         self._length: int | None = None
+        self._masked: dict[str, str] = {}
 
     def _wh_cached(self) -> tuple[int, int]:
         if self._wh is None:
@@ -109,6 +142,14 @@ class _Resolver:
         if self._length is None:
             self._length = _resolve_length(self.sizing, self.ctx.options)
         return self._length
+
+    def _masked_cached(self, url: str) -> str:
+        if url not in self._masked:
+            mask = str(self.ctx.options.get("mask_data") or "")
+            if not mask:
+                return ""  # falls through to default / required handling
+            self._masked[url] = _composite_masked_image(url, mask)
+        return self._masked[url]
 
     def resolve(self, where: str, spec: dict) -> Any:
         src = str(spec.get("from") or "")
@@ -134,11 +175,18 @@ class _Resolver:
             upstream = self.ctx.upstream.get(_UPSTREAM_BUCKET_BY_KIND[kind]) or []
             if isinstance(upstream, str):  # audio may be a single string
                 upstream = [upstream]
+            if suffix == "masked" and kind != "image":
+                raise RuntimeError(
+                    f"{where}: `masked` is only valid for upstream_image"
+                )
             if idx >= len(upstream):
                 value = None
             elif suffix == "annotated":
                 src_val = upstream[idx]
                 value = _view_url_to_annotated(src_val) if src_val else None
+            elif suffix == "masked":
+                src_val = upstream[idx]
+                value = self._masked_cached(src_val) if src_val else None
             else:
                 value = upstream[idx]
         elif src.startswith("literal:"):
