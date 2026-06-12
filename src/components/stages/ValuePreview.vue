@@ -180,6 +180,12 @@
 import { computed, ref, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useImagePanZoom } from '@/composables/widgets/useImagePanZoom'
+import type {
+  BatchImage,
+  ItemClickPayload,
+  StoryboardShot,
+  TimelineSeg,
+} from '@/types/payloads'
 import { downloadFile } from '@/utils/download'
 
 const { t } = useI18n()
@@ -243,19 +249,6 @@ const shortType = computed(() => {
   }
 })
 
-interface BatchImage {
-  index?: string
-  label?: string
-  prompt?: string
-  image_url: string
-}
-
-interface ItemClickPayload {
-  index: string
-  label?: string
-  prompt?: string
-  imageUrl?: string
-}
 const emit = defineEmits<{
   (e: 'item-click', payload: ItemClickPayload): void
 }>()
@@ -292,14 +285,6 @@ const batchImages = computed<BatchImage[]>(() => {
   }
 })
 
-interface StoryboardShot {
-  shot_no?: string
-  duration?: string | number
-  prompt?: string
-  scene_purpose?: string
-  image_prompt?: string
-  [k: string]: unknown
-}
 const storyboardShots = computed<StoryboardShot[]>(() => {
   if (props.type !== 'COMFYTV_STORYBOARD' || !props.content) return []
   try {
@@ -327,7 +312,6 @@ function shotSummary(s: StoryboardShot): string {
   return raw.replace(/\s+/g, ' ').slice(0, 60)
 }
 
-interface TimelineSeg { length?: number; prompt?: string }
 const timelineSegs = computed<TimelineSeg[]>(() => {
   if (props.type !== 'COMFYTV_TIMELINE' || !props.content) return []
   try {

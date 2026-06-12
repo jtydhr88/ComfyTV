@@ -11,6 +11,10 @@ async function loadModuleWith(state: MockState) {
 
   class FakeGraph {
     nodes: any[] = []
+    events = {
+      addEventListener: (_evt: string, _fn: any) => {},
+      dispatch: (_evt: string, _detail: any) => {},
+    }
     configure(_json: any) { /* sync */ }
   }
   const ctor = state.graphCtor ?? FakeGraph

@@ -60,6 +60,7 @@ import { computed, nextTick, ref, watch } from 'vue'
 import type { Entry } from '@/api/schemas'
 import { ENTRY_KINDS, useEntryStore } from '@/stores/entryStore'
 import { useProjectStore } from '@/stores/projectStore'
+import { LABEL_RE } from '@/utils/labelRegex'
 
 const props = defineProps<{
   items: Entry[]
@@ -77,8 +78,7 @@ const activeIndex = ref(0)
 watch(() => props.items, () => { activeIndex.value = 0 })
 watch(() => props.query,  () => { activeIndex.value = 0 })
 
-const NAME_RE = /^[\p{L}_][\p{L}\p{N}_-]*$/u
-const canCreate = computed(() => !!props.query && NAME_RE.test(props.query))
+const canCreate = computed(() => !!props.query && LABEL_RE.test(props.query))
 
 const creating = ref(false)
 const pendingLabel = ref('')

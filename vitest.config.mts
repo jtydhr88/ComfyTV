@@ -12,6 +12,8 @@ export default defineConfig({
     globals: true,
     include: ['src/**/*.test.ts', 'src/**/*.spec.ts'],
     setupFiles: ['./src/__tests__/setup.ts'],
+    retry: process.env.CI ? 2 : 0,
+    silent: 'passed-only',
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html'],
@@ -31,6 +33,9 @@ export default defineConfig({
         'src/composables/widgets/useImagePanZoom.ts',
         'src/composables/widgets/usePainter.ts',
         'src/composables/widgets/useTransformPipeline.ts',
+        'src/composables/stages/useCurrentViewCapture.ts',
+        'src/composables/stages/useMultiViewCapture.ts',
+        'src/composables/stages/useMentionSuggestion.ts',
         'src/main.ts',
         'src/i18n.ts',
         'src/lib/comfyApp.ts',

@@ -132,132 +132,36 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
-import type { Entry } from '@/api/schemas'
+import {
+  KIND_CONTENT_PLACEHOLDER,
+  KIND_LABELS,
+  KIND_META_FIELDS,
+} from '@/composables/dialog/entryCatalog'
+import { useEntryEditor } from '@/composables/dialog/useEntryEditor'
 import { useProjectStore } from '@/stores/projectStore'
-import { ENTRY_KINDS, useEntryStore, type EntryKind } from '@/stores/entryStore'
+import { ENTRY_KINDS, type EntryKind } from '@/stores/entryStore'
+import { isValidLabel } from '@/utils/labelRegex'
 
-interface MetaField {
-  name: string
-  label: string
-  type: 'text' | 'textarea'
-  placeholder?: string
-}
-
-const KIND_LABELS: Record<EntryKind, string> = {
-  fragment: 'Fragments',
-}
-
-const KIND_META_FIELDS: Record<EntryKind, MetaField[]> = {
-  fragment: [],
-}
-
-const KIND_CONTENT_PLACEHOLDER: Record<EntryKind, string> = {
-  fragment: 'Content this @-token expands to',
-}
-
-const entryStore = useEntryStore()
 const projectStore = useProjectStore()
 const projectId = computed(() => projectStore.currentProjectId || '')
 
 const activeKind = ref<EntryKind>('fragment')
-
-const allRows = computed<Entry[]>(() => entryStore.list(projectId.value))
-const rowsByKind = computed<Record<string, Entry[]>>(() => {
-  const out: Record<string, Entry[]> = {}
-  for (const k of ENTRY_KINDS) out[k] = []
-  for (const e of allRows.value) (out[e.kind] ??= []).push(e)
-  return out
-})
-const activeRows = computed<Entry[]>(() => rowsByKind.value[activeKind.value] ?? [])
-const metaFields = computed<MetaField[]>(() => KIND_META_FIELDS[activeKind.value])
+const metaFields = computed(() => KIND_META_FIELDS[activeKind.value])
 const newContentPlaceholder = computed(() => KIND_CONTENT_PLACEHOLDER[activeKind.value])
 
-interface Draft { label: string; content: string; metadata: Record<string, any> }
-const drafts = reactive<Record<number, Draft>>({})
+const {
+  activeRows, rowsByKind,
+  drafts,
+  saveIfDirty, confirmDelete,
+  creating, newDraft, newLabelInput,
+  newLabelError, canSaveNew,
+  startCreate, cancelCreate, saveNew,
+  kickHydrate,
+} = useEntryEditor(projectId, activeKind, metaFields)
 
-watch(allRows, list => {
-  for (const e of list) {
-    if (!(e.id in drafts)) {
-      drafts[e.id] = {
-        label: e.label,
-        content: e.content,
-        metadata: { ...e.metadata },
-      }
-    }
-  }
-  for (const id of Object.keys(drafts).map(Number)) {
-    if (!list.find(e => e.id === id)) delete drafts[id]
-  }
-}, { immediate: true, deep: false })
-
-const LABEL_RE = /^[\p{L}_][\p{L}\p{N}_-]*$/u
-function isValidLabel(s: string): boolean { return LABEL_RE.test(s) }
-
-async function saveIfDirty(entry: Entry) {
-  const d = drafts[entry.id]
-  if (!d) return
-  if (!isValidLabel(d.label)) return
-  const sameLabel = d.label === entry.label
-  const sameContent = d.content === entry.content
-  const sameMeta = JSON.stringify(d.metadata) === JSON.stringify(entry.metadata)
-  if (sameLabel && sameContent && sameMeta) return
-  await entryStore.upsert(projectId.value, {
-    id: entry.id,
-    kind: entry.kind as EntryKind,
-    label: d.label,
-    content: d.content,
-    metadata: d.metadata,
-  })
-}
-
-async function confirmDelete(entry: Entry) {
-  if (!window.confirm(`Delete @${entry.label}? Existing @${entry.label} tokens will fall back to literal text.`)) return
-  await entryStore.remove(projectId.value, entry.id)
-}
-
-const creating = ref(false)
-const newDraft = reactive<Draft>({ label: '', content: '', metadata: {} })
-const newLabelInput = ref<HTMLInputElement | null>(null)
-
-const newLabelError = computed(() => {
-  if (!newDraft.label) return ''
-  if (!isValidLabel(newDraft.label)) return '以字母 / 下划线开头(支持中文),后跟字母 / 数字 / _ / - / Letters or _ first, then letters / digits / _ / -'
-  return ''
-})
-const canSaveNew = computed(() =>
-  isValidLabel(newDraft.label) && !!newDraft.content.trim(),
-)
-
-function startCreate() {
-  creating.value = true
-  newDraft.label = ''
-  newDraft.content = ''
-  newDraft.metadata = {}
-  for (const f of metaFields.value) newDraft.metadata[f.name] = ''
-  nextTick(() => newLabelInput.value?.focus())
-}
-
-function cancelCreate() {
-  creating.value = false
-  newDraft.label = ''
-  newDraft.content = ''
-  newDraft.metadata = {}
-}
-
-async function saveNew() {
-  if (!canSaveNew.value) return
-  await entryStore.upsert(projectId.value, {
-    kind: activeKind.value,
-    label: newDraft.label,
-    content: newDraft.content.trim(),
-    metadata: { ...newDraft.metadata },
-  })
-  cancelCreate()
-}
-
-onMounted(() => { void entryStore.list(projectId.value) })
+onMounted(kickHydrate)
 </script>
 
 <style scoped>

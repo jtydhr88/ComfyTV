@@ -26,7 +26,7 @@
           <option v-for="opt in resolutionOptions" :key="opt" :value="opt">{{ opt }}</option>
         </select>
       </div>
-      <span class="dims">{{ captureW }}×{{ captureH }}</span>
+      <span class="dims">{{ captureSize.w }}×{{ captureSize.h }}</span>
     </div>
 
     <div class="status">
@@ -50,21 +50,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { useStageStore, type StageState } from '@/stores/stageStore'
-import StageCard from '@/components/stages/StageCard.vue'
-import { PanoramaViewer } from '@/widgets/three/PanoramaViewer'
-import { app } from '@/lib/comfyApp'
+import { computed, ref } from 'vue'
 
-const aspectOptions = [
-  '1:1', '9:16', '16:9', '3:4', '4:3', '3:2', '2:3', '4:5', '5:4', '21:9',
-] as const
-const resolutionOptions = ['1K', '2K', '4K'] as const
-const RESOLUTION_TO_SHORT_SIDE: Record<string, number> = {
-  '1K': 1024,
-  '2K': 2048,
-  '4K': 4096,
-}
+import StageCard from '@/components/stages/StageCard.vue'
+import { useCurrentViewCapture } from '@/composables/stages/useCurrentViewCapture'
+import type { StageState } from '@/stores/stageStore'
+import {
+  ASPECT_OPTIONS as aspectOptions,
+  parseAspect,
+  RESOLUTION_OPTIONS as resolutionOptions,
+} from '@/utils/panoramaProjection'
+
 const VIEWER_HEIGHT_PX = 300
 
 const props = defineProps<{
@@ -76,180 +72,27 @@ const props = defineProps<{
   node: any
 }>()
 
-const store = useStageStore()
-
-const panoramaUrl = computed<string | null>(() => {
-  const inp = props.state.inputs.find(i => i.slot === 'panorama')
-  if (!inp || inp.source !== 'upstream' || !inp.content) return null
-  return inp.content
-})
-
-function getWidget(name: string): any | null {
-  return props.node?.widgets?.find((w: any) => w.name === name) ?? null
-}
-
-function readWidgetFloat(name: string, fallback: number): number {
-  const w = getWidget(name)
-  if (!w) return fallback
-  const n = Number(w.value)
-  return Number.isFinite(n) ? n : fallback
-}
-
 function readWidgetStr(name: string, fallback: string): string {
-  const w = getWidget(name)
+  const w = props.node?.widgets?.find((x: any) => x.name === name)
   if (!w) return fallback
   const v = String(w.value ?? '')
   return v || fallback
 }
 
-function writeWidget(name: string, value: number | string) {
-  const w = getWidget(name)
-  if (!w) return
-  if (w.value !== value) {
-    w.value = value
-    w.callback?.(value)
-  }
-}
-
 const viewerHostEl = ref<HTMLDivElement | null>(null)
-const capturing = ref(false)
-
 const aspectRatio = ref<string>(readWidgetStr('aspect_ratio', '16:9'))
 const resolution  = ref<string>(readWidgetStr('resolution',   '1K'))
 
-let viewer: PanoramaViewer | null = null
-let captureTimer: number | null = null
-let captureSeq = 0
+const { panoramaUrl, capturing, captureSize } = useCurrentViewCapture(
+  props.node, props.state, viewerHostEl, aspectRatio, resolution,
+)
 
-function parseAspect(s: string): { w: number; h: number } {
-  const [a, b] = s.split(':')
-  const wa = Number(a), wb = Number(b)
-  if (!Number.isFinite(wa) || !Number.isFinite(wb) || wb === 0) {
-    return { w: 16, h: 9 }
+const viewerStyle = computed(() => {
+  const { w, h } = parseAspect(aspectRatio.value)
+  return {
+    height: `${VIEWER_HEIGHT_PX}px`,
+    aspectRatio: `${w} / ${h}`,
   }
-  return { w: wa, h: wb }
-}
-
-const aspectParts = computed(() => parseAspect(aspectRatio.value))
-
-const captureW = computed(() => {
-  const { w, h } = aspectParts.value
-  const short = RESOLUTION_TO_SHORT_SIDE[resolution.value] ?? 1024
-
-  if (w >= h) {
-    return Math.max(16, Math.round((short * w / h) / 8) * 8)
-  }
-  return Math.max(16, Math.round(short / 8) * 8)
-})
-
-const captureH = computed(() => {
-  const { w, h } = aspectParts.value
-  const short = RESOLUTION_TO_SHORT_SIDE[resolution.value] ?? 1024
-  if (w >= h) {
-    return Math.max(16, Math.round(short / 8) * 8)
-  }
-  return Math.max(16, Math.round((short * h / w) / 8) * 8)
-})
-
-const viewerStyle = computed(() => ({
-  height: `${VIEWER_HEIGHT_PX}px`,
-  aspectRatio: `${aspectParts.value.w} / ${aspectParts.value.h}`,
-}))
-
-function scheduleCapture() {
-  if (!viewer || !panoramaUrl.value) return
-  if (captureTimer != null) window.clearTimeout(captureTimer)
-  captureTimer = window.setTimeout(() => {
-    captureTimer = null
-    void runCapture()
-  }, 250)
-}
-
-async function runCapture() {
-  if (!viewer || !panoramaUrl.value) return
-  const orient = viewer.getCameraOrientation()
-  writeWidget('yaw',   Number(orient.yaw.toFixed(2)))
-  writeWidget('pitch', Number(orient.pitch.toFixed(2)))
-  writeWidget('fov',   Number(orient.fov.toFixed(2)))
-
-  const mySeq = ++captureSeq
-  capturing.value = true
-  try {
-    const canvas = viewer.captureCurrentView(captureW.value, captureH.value)
-    if (mySeq !== captureSeq) return
-
-    const blob = await new Promise<Blob | null>((resolve) =>
-      canvas.toBlob(resolve, 'image/png'),
-    )
-    if (!blob) throw new Error('toBlob returned null')
-    if (mySeq !== captureSeq) return
-
-    const nodeId = String(props.node?.id ?? 'unknown')
-    const filename = `comfytv-pano-view-${nodeId}-${Date.now()}.png`
-    const body = new FormData()
-    body.append('image', blob, filename)
-    body.append('subfolder', 'panorama-view')
-    body.append('type', 'input')
-
-    const resp = await (app as any).api.fetchApi('/upload/image', {
-      method: 'POST', body,
-    })
-    if (resp.status !== 200) throw new Error(`upload ${resp.status} ${resp.statusText}`)
-    const data = await resp.json() as { name?: string }
-    if (!data?.name) throw new Error('upload returned no name')
-    if (mySeq !== captureSeq) return
-
-    const viewUrl = `/view?filename=${encodeURIComponent(data.name)}`
-                  + `&subfolder=panorama-view&type=input`
-    store.applyExecutedPayload(props.state, { output: [viewUrl] })
-  } catch (e) {
-    console.error('[ComfyTV/PanoramaCurrentView] capture failed', e)
-  } finally {
-    if (mySeq === captureSeq) capturing.value = false
-  }
-}
-
-watch(aspectRatio, (v) => {
-  writeWidget('aspect_ratio', v)
-  scheduleCapture()
-})
-watch(resolution, (v) => {
-  writeWidget('resolution', v)
-  scheduleCapture()
-})
-
-onMounted(() => {
-  if (!viewerHostEl.value) return
-  viewer = new PanoramaViewer({
-    container: viewerHostEl.value,
-    onOrbitEnd: () => scheduleCapture(),
-  })
-  viewer.setCameraOrientation({
-    yaw:   readWidgetFloat('yaw',   0),
-    pitch: readWidgetFloat('pitch', 0),
-    fov:   readWidgetFloat('fov',   75),
-  })
-  if (panoramaUrl.value) {
-    void (async () => {
-      await viewer!.setPanoramaUrl(panoramaUrl.value)
-      scheduleCapture()
-    })()
-  }
-})
-
-watch(panoramaUrl, async (url) => {
-  if (!viewer) return
-  await viewer.setPanoramaUrl(url)
-  if (url) scheduleCapture()
-})
-
-onBeforeUnmount(() => {
-  if (captureTimer != null) {
-    window.clearTimeout(captureTimer)
-    captureTimer = null
-  }
-  viewer?.dispose()
-  viewer = null
 })
 </script>
 
