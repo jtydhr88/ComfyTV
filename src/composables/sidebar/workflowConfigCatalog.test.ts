@@ -73,6 +73,17 @@ describe('buildBindingOptions', () => {
     expect(max).toBe(7)
   })
 
+  it('offers the masked-image source only for mask_data-capable kinds', () => {
+    for (const kind of ['inpaint', 'erase']) {
+      const vals = buildBindingOptions([], kind).map(o => o.value)
+      expect(vals).toContain('upstream_image:masked[0]')
+    }
+    for (const kind of ['image', 'outpaint', 'video']) {
+      const vals = buildBindingOptions([], kind).map(o => o.value)
+      expect(vals).not.toContain('upstream_image:masked[0]')
+    }
+  })
+
   it('falls back to a permissive set when kind is unknown', () => {
     const opts = buildBindingOptions([], undefined)
     const vals = opts.map(o => o.value)

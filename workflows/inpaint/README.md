@@ -14,8 +14,9 @@ Workflows in this folder appear in the **Inpaint** dropdown. The user paints a m
 ## What your workflow needs
 
 - A `SaveImage` output node (auto-detected).
-- A `LoadImage` for the source image.
-- A `LoadImageMask` for the mask (`channel = "alpha"`).
+- A `LoadImage` for the source image, plus the mask via **either** of:
+  - a separate `LoadImageMask` node (`channel = "alpha"`) — bind it to **Stage mask (painter output)**; or
+  - the `LoadImage`'s own **MASK output** (the common pattern when masks are drawn in ComfyUI's mask editor) — bind the `LoadImage`'s `image` input to **Upstream image + painted mask (alpha)**. At run time ComfyTV bakes the painted mask into the image's alpha channel, so the single `LoadImage` outputs both.
 - A `CLIPTextEncode` for the prompt.
 - The model's inpaint conditioning (Flux Fill uses `InpaintModelConditioning`, SD1.5 uses `VAEEncodeForInpaint`).
 - A `KSampler` with `denoise=1.0` to fully regenerate the masked region.

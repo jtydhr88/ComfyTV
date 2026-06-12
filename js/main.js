@@ -26309,6 +26309,12 @@ function buildBindingOptions(widgets, workflowKind) {
         label: `${label} #${i + 1}`
       });
     }
+    if (ukind === "image" && caps.option_keys.includes("option:mask_data")) {
+      out.push({
+        value: "upstream_image:masked[0]",
+        label: "Upstream image + painted mask (alpha)"
+      });
+    }
   }
   return out;
 }

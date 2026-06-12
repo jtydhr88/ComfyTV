@@ -28,7 +28,7 @@ async def list_caps(_request: web.Request) -> web.Response:
 
 
 _UPSTREAM_PAT = re.compile(
-    r'^upstream_(image|video|audio|text):(annotated|value)(?:\[(\d+)\])?$'
+    r'^upstream_(image|video|audio|text):(annotated|value|masked)(?:\[(\d+)\])?$'
 )
 _KINDS = ("image", "video", "audio", "text")
 

@@ -89,6 +89,15 @@ class TestComputeInputUsage:
         assert out["requires_count"]["image"] == 0
         assert out["max_inputs"]["image"] == 3
 
+    def test_upstream_image_masked_counts_like_annotated(self):
+        out = self._api()([
+            {"from": "upstream_image:masked[0]", "required": True},
+        ])
+        assert out["uses"]["image"] is True
+        assert out["requires"]["image"] is True
+        assert out["requires_count"]["image"] == 1
+        assert out["max_inputs"]["image"] == 1
+
     def test_ignores_unmatching(self):
         out = self._api()([
             {"from": "literal:abc"},

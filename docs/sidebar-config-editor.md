@@ -50,6 +50,7 @@ The dropdown lists the stage's own inputs. The label you see and what it means:
 | **Stage negative prompt** / **Stage seed** / **Stage batch size** / **Stage lyrics** / **Stage scale** / **Stage duration (s)** / **Stage generate audio** / **Stage mask (painter output)** / **Stage pad left/top/right/bottom** / **Stage feathering** / **Stage LLM max output length** | The current value of the corresponding stage widget. Which ones appear depends on the stage type. |
 | **Stage width** / **Stage height** / **Stage video length** | Derived from the stage's resolution + aspect ratio + duration. |
 | **Upstream image #N** | The N-th image wired into the stage. |
+| **Upstream image + painted mask (alpha)** | Inpaint / Erase only. The upstream image with the painter mask baked into its alpha channel — bind a `LoadImage`'s `image` input to this when your workflow takes the mask from the `LoadImage`'s MASK output instead of a separate `LoadImageMask` node. |
 | **Upstream video #N** / **Upstream audio #N** / **Upstream text #N** | Same idea for other upstream types. |
 
 For a CheckpointLoader's `ckpt_name`, pick **(use this value)** and type the model filename in the Value editor. For a KSampler's `seed`, pick **Stage seed** — that's all; the runtime generates a fresh random seed each run.
