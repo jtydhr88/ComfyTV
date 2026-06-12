@@ -1,16 +1,16 @@
 <template>
-  <div class="crop-stage">
+  <div class="flex flex-col gap-1.5 size-full">
     <CropCanvas
       :source-image-url="sourceImageUrl"
       :bounds="bounds"
       @update:bounds="onBoundsUpdate"
     />
 
-    <div class="status">
-      <span v-if="!sourceImageUrl" class="muted">{{ $t('imageCrop.noInputImage') }}</span>
-      <span v-else-if="computing" class="muted">{{ $t('imageCrop.applying') }}</span>
-      <span v-else-if="state.output" class="ok">{{ $t('imageCrop.applied') }}</span>
-      <span v-else class="muted">{{ $t('imageCrop.adjustToApply') }}</span>
+    <div class="text-2xs text-center py-0.5 tracking-wide">
+      <span v-if="!sourceImageUrl" class="text-muted-foreground">{{ $t('imageCrop.noInputImage') }}</span>
+      <span v-else-if="computing" class="text-muted-foreground">{{ $t('imageCrop.applying') }}</span>
+      <span v-else-if="state.output" class="text-success-background">{{ $t('imageCrop.applied') }}</span>
+      <span v-else class="text-muted-foreground">{{ $t('imageCrop.adjustToApply') }}</span>
     </div>
 
     <StageCard
@@ -139,22 +139,3 @@ watch(sourceImageUrl, (url) => {
   }
 }, { immediate: true })
 </script>
-
-<style scoped>
-.crop-stage {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
-  height: 100%;
-}
-
-.status {
-  font-size: 10px;
-  text-align: center;
-  padding: 2px 0;
-  letter-spacing: 0.3px;
-}
-.status .muted { color: rgba(255, 255, 255, 0.5); }
-.status .ok    { color: #b5e3a5; }
-</style>

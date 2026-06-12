@@ -1,30 +1,56 @@
 <template>
   <div
-    class="file-slot"
-    :class="[`k-${kind}`, { filled: !!value, dragover: isDragOver }]"
+    class="relative flex items-center justify-center min-h-20 rounded overflow-hidden
+           bg-black/20 transition-colors"
+    :class="[
+      value ? 'border border-solid' : 'border border-dashed',
+      isDragOver
+        ? 'border-primary-background bg-primary-background/10'
+        : 'border-border-default',
+    ]"
     @dragenter.prevent="onDragEnter"
     @dragover.prevent="onDragOver"
     @dragleave.prevent="onDragLeave"
     @drop.prevent="onDrop"
   >
     <template v-if="!value">
-      <button class="picker" @click="open">
-        <span class="plus">+</span>
-        <span class="hint">{{ isDragOver ? '松开上传' : `点击或拖入${kindLabel}` }}</span>
+      <button
+        class="flex flex-col items-center gap-1 w-full p-3.5 bg-transparent border-0
+               text-muted-foreground text-xs cursor-pointer hover:bg-base-foreground/5 hover:text-base-foreground"
+        @click="open"
+      >
+        <span class="text-lg leading-none">+</span>
+        <span>{{ isDragOver ? '松开上传' : `点击或拖入${kindLabel}` }}</span>
       </button>
     </template>
 
     <template v-else>
-      <img v-if="kind === 'image'" :src="value" class="thumb" @click="open" />
-      <video v-else-if="kind === 'video'" :src="value" class="thumb" controls muted preload="metadata" />
-      <button class="clear-btn" :title="`移除${kindLabel}`" @click.stop="$emit('clear')">×</button>
+      <img
+        v-if="kind === 'image'"
+        :src="value"
+        class="block w-full max-h-44 object-contain cursor-pointer bg-black"
+        @click="open"
+      />
+      <video
+        v-else-if="kind === 'video'"
+        :src="value"
+        class="block w-full max-h-44 object-contain cursor-pointer bg-black"
+        controls muted preload="metadata"
+      />
+      <button
+        class="absolute top-0.5 right-0.5 size-[22px] p-0 border-0 rounded-sm cursor-pointer
+               bg-black/65 text-white text-sm leading-none
+               hover:bg-destructive-background"
+        :title="`移除${kindLabel}`"
+        @click.stop="$emit('clear')"
+      >×</button>
     </template>
 
     <input
       ref="picker"
       type="file"
       :accept="accept"
-      style="display:none"
+      class="hidden"
       @change="onFileChange"
     />
   </div>
@@ -90,55 +116,3 @@ function onDrop(ev: DragEvent) {
   if (file) acceptFile(file)
 }
 </script>
-
-<style scoped>
-.file-slot {
-  position: relative;
-  border: 1px dashed var(--border-color, #555);
-  border-radius: 4px;
-  background: rgba(0,0,0,0.2);
-  overflow: hidden;
-  min-height: 80px;
-  display: flex; align-items: center; justify-content: center;
-  transition: border-color 0.12s ease, background 0.12s ease;
-}
-.file-slot.filled { border-style: solid; padding: 0; }
-.file-slot.dragover {
-  border-color: var(--p-primary-color, #4ea8ff);
-  background: rgba(78, 168, 255, 0.08);
-}
-
-.picker {
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
-  width: 100%; padding: 14px;
-  background: transparent;
-  border: none;
-  color: rgba(255,255,255,0.65);
-  font-size: 11px;
-  cursor: pointer;
-}
-.picker .plus { font-size: 18px; line-height: 1; }
-.picker:hover { background: rgba(255,255,255,0.04); color: #fff; }
-
-.thumb {
-  display: block;
-  width: 100%;
-  max-height: 180px;
-  object-fit: contain;
-  cursor: pointer;
-  background: #000;
-}
-
-.clear-btn {
-  position: absolute;
-  top: 2px; right: 2px;
-  width: 22px; height: 22px;
-  border: none;
-  background: rgba(0,0,0,0.65);
-  color: #fff;
-  border-radius: 3px;
-  cursor: pointer;
-  font-size: 14px; line-height: 1; padding: 0;
-}
-.clear-btn:hover { background: rgba(220,50,50,0.85); }
-</style>

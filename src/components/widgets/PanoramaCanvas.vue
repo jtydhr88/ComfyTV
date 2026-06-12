@@ -1,24 +1,33 @@
 <template>
-  <div class="panorama-widget">
-    <div ref="containerEl" class="viewer-shell">
-      <div v-if="!panoramaUrl" class="empty-state">
-        <div class="empty-icon">🌐</div>
-        <div class="empty-text">{{ $t('panorama.empty') }}</div>
+  <div class="flex flex-col gap-1.5 w-full">
+    <div ref="containerEl"
+         class="relative w-full h-80 rounded-md overflow-hidden bg-black border border-border-subtle">
+      <div v-if="!panoramaUrl"
+           class="absolute inset-0 flex flex-col items-center justify-center gap-1.5
+                  text-white/50 pointer-events-none">
+        <div class="text-[32px] opacity-60">🌐</div>
+        <div class="text-xs">{{ $t('panorama.empty') }}</div>
       </div>
-      <div v-if="loadError" class="error-overlay">{{ $t('panorama.loadError') }}</div>
+      <div v-if="loadError"
+           class="absolute inset-0 flex items-center justify-center text-[11px]
+                  bg-destructive-background/30 text-destructive-background pointer-events-none">
+        {{ $t('panorama.loadError') }}
+      </div>
     </div>
 
-    <div class="controls">
+    <div class="flex flex-wrap gap-1.5 items-center">
       <input
         ref="fileInputEl"
         type="file"
         accept=".hdr,.exr,.jpg,.jpeg,.png,.webp"
-        class="file-input"
+        class="hidden"
         @change="onFilePicked"
       />
       <button
         type="button"
-        class="upload-btn"
+        class="py-1 px-2.5 text-[11px] rounded cursor-pointer
+               bg-secondary-background text-base-foreground border border-border-subtle
+               hover:enabled:bg-secondary-background-hover disabled:opacity-60 disabled:cursor-not-allowed"
         :disabled="uploading"
         @click="fileInputEl?.click()"
       >
@@ -28,13 +37,17 @@
       <button
         v-if="manualSource"
         type="button"
-        class="clear-btn"
+        class="py-1 px-2.5 text-[11px] rounded cursor-pointer
+               bg-secondary-background text-destructive-background
+               border border-destructive-background/30 hover:bg-destructive-background/10"
         :title="$t('panorama.clearUploadTooltip')"
         @click="onClearManual"
-      >
-        ✕ {{ $t('panorama.clearUpload') }}
-      </button>
-      <span v-if="manualSource" class="badge">{{ $t('panorama.manualSourceBadge') }}</span>
+      >✕ {{ $t('panorama.clearUpload') }}</button>
+      <span v-if="manualSource"
+            class="text-2xs py-0.5 px-1.5 rounded-lg tracking-wide
+                   bg-primary-background/20 text-primary-background">
+        {{ $t('panorama.manualSourceBadge') }}
+      </span>
     </div>
   </div>
 </template>
@@ -119,86 +132,3 @@ function onClearManual() {
   emit('manual-source-cleared')
 }
 </script>
-
-<style scoped>
-.panorama-widget {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
-}
-
-.viewer-shell {
-  position: relative;
-  width: 100%;
-  height: 320px;
-  background: #0a0a0f;
-  border-radius: 6px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.empty-state {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: rgba(255, 255, 255, 0.5);
-  gap: 6px;
-  pointer-events: none;
-}
-.empty-icon { font-size: 32px; opacity: 0.6; }
-.empty-text { font-size: 12px; }
-
-.error-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(120, 20, 20, 0.4);
-  color: #ffb0b0;
-  font-size: 11px;
-  pointer-events: none;
-}
-
-.controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  align-items: center;
-}
-.file-input {
-  display: none;
-}
-.upload-btn,
-.clear-btn {
-  padding: 5px 10px;
-  font-size: 11px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 4px;
-  color: rgba(255, 255, 255, 0.85);
-  cursor: pointer;
-}
-.upload-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-.upload-btn:hover:not(:disabled),
-.clear-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-.clear-btn {
-  color: rgba(255, 180, 180, 0.85);
-  border-color: rgba(255, 100, 100, 0.25);
-}
-
-.badge {
-  font-size: 10px;
-  padding: 2px 6px;
-  border-radius: 8px;
-  background: rgba(78, 168, 255, 0.2);
-  color: #9dd0ff;
-  letter-spacing: 0.3px;
-}
-</style>

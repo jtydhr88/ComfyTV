@@ -1,60 +1,82 @@
 <template>
-  <div class="storyboard-stage">
-    <div class="board-header">
-      <span class="title">{{ $t('storyboard.shots') }} · {{ shots.length }}</span>
-      <button type="button" class="add-btn" @click="addShot">+ {{ $t('storyboard.addShot') }}</button>
+  <div class="flex flex-col gap-1.5 size-full">
+    <div class="flex items-center gap-2">
+      <span class="text-[11px] font-semibold text-muted-foreground">{{ $t('storyboard.shots') }} · {{ shots.length }}</span>
+      <button
+        type="button"
+        class="ml-auto py-0.5 px-2.5 text-[11px] rounded cursor-pointer
+               bg-primary-background/15 border border-primary-background/40 text-primary-background
+               hover:bg-primary-background/25"
+        @click="addShot"
+      >+ {{ $t('storyboard.addShot') }}</button>
     </div>
 
-    <div v-if="shots.length === 0" class="board-empty">
+    <div v-if="shots.length === 0" class="text-[11px] text-muted-foreground/60 p-3 text-center">
       {{ $t('storyboard.empty') }}
     </div>
 
-    <div v-else class="shot-list">
+    <div v-else class="flex flex-col gap-1.5">
       <div
         v-for="(shot, idx) in shots"
         :key="shot.id"
-        class="shot-card"
+        class="flex flex-col gap-1.5 p-2 rounded-md border border-border-subtle bg-base-foreground/5"
       >
-        <header class="shot-head">
-          <span class="shot-no">#{{ idx + 1 }}</span>
-          <label class="dur">
+        <header class="flex items-center gap-1.5 flex-wrap">
+          <span class="text-[13px] font-bold text-base-foreground">#{{ idx + 1 }}</span>
+          <label class="flex items-center gap-0.5 text-2xs text-muted-foreground">
             <input
               type="number" min="1" max="60" step="1"
               :value="shot.duration"
+              class="w-[38px] py-0.5 px-1 rounded-sm text-[11px] font-mono
+                     bg-secondary-background text-base-foreground border border-border-subtle"
               @change="(e) => setDuration(shot.id, Number((e.target as HTMLInputElement).value))"
             /><span>s</span>
           </label>
-          <span v-if="shot.shot_size" class="chip size">{{ shot.shot_size }}</span>
-          <span v-if="shot.character && shot.character !== '无'" class="chip char">{{ shot.character }}</span>
-          <div class="shot-move">
-            <button type="button" :disabled="idx === 0" @click="move(idx, -1)" :title="$t('storyboard.moveUp')">▲</button>
-            <button type="button" :disabled="idx === shots.length - 1" @click="move(idx, 1)" :title="$t('storyboard.moveDown')">▼</button>
+          <span v-if="shot.shot_size"
+                class="py-px px-1.5 rounded-sm text-2xs bg-secondary-background text-base-foreground">{{ shot.shot_size }}</span>
+          <span v-if="shot.character && shot.character !== '无'"
+                class="py-px px-1.5 rounded-sm text-2xs bg-success-background/15 text-success-background">{{ shot.character }}</span>
+          <div class="flex flex-col gap-px ml-auto">
+            <button type="button" :class="moveBtn" :disabled="idx === 0"
+                    @click="move(idx, -1)" :title="$t('storyboard.moveUp')">▲</button>
+            <button type="button" :class="moveBtn" :disabled="idx === shots.length - 1"
+                    @click="move(idx, 1)" :title="$t('storyboard.moveDown')">▼</button>
           </div>
           <button
             type="button"
-            class="regen"
+            class="bg-transparent border-0 cursor-pointer text-xs px-0.5 opacity-70
+                   hover:opacity-100 disabled:opacity-40 disabled:cursor-default"
             :disabled="regeneratingId === shot.id"
             :title="$t('storyboard.regenerate')"
             @click="regenerateShot(shot.id, idx + 1)"
           >{{ regeneratingId === shot.id ? '…' : '🔄' }}</button>
-          <button type="button" class="del" :title="$t('storyboard.remove')" @click="removeShot(shot.id)">🗑</button>
+          <button type="button"
+                  class="bg-transparent border-0 cursor-pointer text-[13px]"
+                  :title="$t('storyboard.remove')" @click="removeShot(shot.id)">🗑</button>
         </header>
 
         <textarea
-          class="shot-purpose"
+          class="w-full box-border resize-none border-0 border-l-2 rounded-none
+                 py-1 px-2 text-[11px] italic leading-snug min-h-[22px] [font-family:inherit]
+                 bg-primary-background/5 border-primary-background/60 text-base-foreground
+                 focus:outline focus:outline-1 focus:outline-primary-background/50 focus:bg-primary-background/10"
           :value="shot.scene_purpose"
           :placeholder="$t('storyboard.cols.scene_purpose')"
           rows="1"
           @input="(e) => setField(shot.id, 'scene_purpose', (e.target as HTMLTextAreaElement).value)"
         />
 
-        <div class="shot-body">
-          <div class="shot-img">
-            <img v-if="shot.image_url" :src="shot.image_url" :alt="`shot ${idx + 1}`" draggable="false" />
-            <div v-else class="img-placeholder">{{ $t('storyboard.noRef') }}</div>
+        <div class="flex gap-1.5">
+          <div class="relative shrink-0 w-24 h-[72px] rounded overflow-hidden bg-black border border-border-subtle">
+            <img v-if="shot.image_url" :src="shot.image_url" :alt="`shot ${idx + 1}`"
+                 class="size-full object-cover" draggable="false" />
+            <div v-else class="size-full flex items-center justify-center text-3xs text-white/35 text-center px-1">
+              {{ $t('storyboard.noRef') }}
+            </div>
             <button
               type="button"
-              class="upload-mini"
+              class="absolute bottom-0.5 right-0.5 size-5 p-0 border-0 rounded cursor-pointer text-[11px]
+                     bg-black/60 text-white disabled:opacity-60"
               :disabled="uploadingId === shot.id"
               :title="$t('storyboard.uploadRef')"
               @click="pickFile(shot.id)"
@@ -62,34 +84,36 @@
             <button
               v-if="shot.image_url"
               type="button"
-              class="clear-mini"
+              class="absolute top-0.5 right-0.5 size-5 p-0 border-0 rounded cursor-pointer text-[11px]
+                     bg-destructive-background/70 text-white"
               :title="$t('storyboard.clearRef')"
               @click="setImage(shot.id, null)"
             >✕</button>
           </div>
 
           <textarea
-            class="shot-prompt"
+            class="flex-1 min-h-14 resize-y box-border py-1 px-1.5 rounded text-[11px] leading-snug
+                   bg-secondary-background text-base-foreground border border-border-subtle"
             :value="shot.image_prompt"
             :placeholder="$t('storyboard.promptPlaceholder')"
             @input="(e) => setField(shot.id, 'image_prompt', (e.target as HTMLTextAreaElement).value, /*mirror=*/'prompt')"
           />
         </div>
 
-        <dl class="meta">
+        <dl class="grid grid-cols-[max-content_1fr] gap-x-2.5 gap-y-[3px] m-0 text-2xs items-start">
           <template v-for="field in META_FIELDS" :key="field.key">
-            <dt>{{ $t(field.label) }}</dt>
-            <dd>
+            <dt class="opacity-50 whitespace-nowrap pt-1">{{ $t(field.label) }}</dt>
+            <dd class="m-0">
               <textarea
                 v-if="field.multiline"
-                class="meta-input multiline"
+                :class="metaInput(true)"
                 :value="String(shot[field.key] ?? '')"
                 rows="1"
                 @input="(e) => setField(shot.id, field.key, (e.target as HTMLTextAreaElement).value)"
               />
               <input
                 v-else
-                class="meta-input"
+                :class="metaInput(false)"
                 type="text"
                 :value="String(shot[field.key] ?? '')"
                 @input="(e) => setField(shot.id, field.key, (e.target as HTMLInputElement).value)"
@@ -98,19 +122,21 @@
           </template>
         </dl>
 
-        <details class="more" :open="!!shot.character_desc">
-          <summary>{{ $t('storyboard.cols.character_desc') }}</summary>
+        <details class="text-2xs py-[3px] px-1.5 rounded border border-dashed border-border-subtle"
+                 :open="!!shot.character_desc">
+          <summary class="cursor-pointer opacity-75 select-none pb-1 hover:opacity-100">{{ $t('storyboard.cols.character_desc') }}</summary>
           <textarea
-            class="meta-input multiline"
+            :class="metaInput(true, true)"
             :value="shot.character_desc"
             rows="2"
             @input="(e) => setField(shot.id, 'character_desc', (e.target as HTMLTextAreaElement).value)"
           />
         </details>
-        <details class="more" :open="!!shot.motion_prompt">
-          <summary>{{ $t('storyboard.cols.motion_prompt') }}</summary>
+        <details class="text-2xs py-[3px] px-1.5 rounded border border-dashed border-border-subtle"
+                 :open="!!shot.motion_prompt">
+          <summary class="cursor-pointer opacity-75 select-none pb-1 hover:opacity-100">{{ $t('storyboard.cols.motion_prompt') }}</summary>
           <textarea
-            class="meta-input multiline"
+            :class="metaInput(true, true)"
             :value="shot.motion_prompt"
             rows="2"
             @input="(e) => setField(shot.id, 'motion_prompt', (e.target as HTMLTextAreaElement).value)"
@@ -123,7 +149,7 @@
       ref="fileInputEl"
       type="file"
       accept="image/*"
-      class="hidden-file"
+      class="hidden"
       @change="onFilePicked"
     />
 
@@ -171,117 +197,20 @@ const {
   regenerateShot,
   pickFile, onFilePicked,
 } = useStoryboardShots(props.node, props.state)
+
+const moveBtn = [
+  'w-4 h-[13px] leading-none text-[8px] p-0 rounded-sm cursor-pointer',
+  'bg-secondary-background text-muted-foreground border border-border-subtle',
+  'disabled:opacity-30 disabled:cursor-default',
+].join(' ')
+
+const META_INPUT_BASE = 'w-full box-border py-0.5 px-1.5 text-2xs leading-snug rounded-sm [font-family:inherit]'
+  + ' bg-secondary-background text-base-foreground border border-transparent'
+  + ' hover:border-border-subtle'
+  + ' focus:outline-none focus:border-primary-background/50 focus:bg-secondary-background-hover'
+function metaInput(multiline: boolean, mono = false) {
+  const ml = multiline ? ' min-h-[22px] resize-y' : ''
+  const m = mono ? ' font-mono min-h-10' : ''
+  return `${META_INPUT_BASE}${ml}${m}`
+}
 </script>
-
-<style scoped>
-.storyboard-stage {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
-  height: 100%;
-}
-.board-header { display: flex; align-items: center; gap: 8px; }
-.title { font-size: 11px; color: rgba(255,255,255,0.7); font-weight: 600; }
-.add-btn {
-  margin-left: auto; padding: 3px 10px; font-size: 11px;
-  background: rgba(233,61,130,0.2); border: 1px solid rgba(233,61,130,0.4);
-  border-radius: 4px; color: #ffb0d8; cursor: pointer;
-}
-.add-btn:hover { background: rgba(233,61,130,0.32); }
-.board-empty { font-size: 11px; color: rgba(255,255,255,0.4); padding: 12px; text-align: center; }
-
-.shot-list { display: flex; flex-direction: column; gap: 6px; }
-.shot-card {
-  border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;
-  background: rgba(255,255,255,0.03); padding: 8px; display: flex; flex-direction: column; gap: 6px;
-}
-.shot-head { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.shot-no { font-size: 13px; font-weight: 700; color: #d8b0ff; }
-.chip {
-  padding: 1px 6px; border-radius: 3px; font-size: 10px;
-  background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8);
-}
-.chip.char { background: rgba(120,200,120,0.15); color: #b5e3a5; }
-.shot-purpose {
-  width: 100%; box-sizing: border-box; resize: none;
-  background: rgba(78,168,255,0.06); color: rgba(255,255,255,0.85);
-  border: none; border-left: 2px solid rgba(78,168,255,0.6); border-radius: 0;
-  padding: 4px 8px; font-size: 11px; font-style: italic; line-height: 1.4;
-  font-family: inherit; min-height: 22px;
-}
-.shot-purpose:focus { outline: 1px solid rgba(78,168,255,0.5); outline-offset: -1px; background: rgba(78,168,255,0.1); }
-.meta { display: grid; grid-template-columns: max-content 1fr; gap: 3px 10px; margin: 0; font-size: 10px; align-items: start; }
-.meta dt { opacity: 0.5; white-space: nowrap; padding-top: 4px; }
-.meta dd { margin: 0; }
-.meta-input {
-  width: 100%; box-sizing: border-box;
-  background: rgba(0,0,0,0.25); color: rgba(255,255,255,0.85);
-  border: 1px solid transparent; border-radius: 3px;
-  padding: 2px 5px; font-size: 10px; line-height: 1.4;
-  font-family: inherit;
-}
-.meta-input:hover { border-color: rgba(255,255,255,0.08); }
-.meta-input:focus {
-  outline: none;
-  border-color: rgba(78,168,255,0.5);
-  background: rgba(0,0,0,0.4);
-}
-.meta-input.multiline { min-height: 22px; resize: vertical; }
-.more {
-  font-size: 10px; border: 1px dashed rgba(255,255,255,0.15);
-  border-radius: 4px; padding: 3px 6px;
-}
-.more > summary { cursor: pointer; opacity: 0.75; user-select: none; padding-bottom: 4px; }
-.more > summary:hover { opacity: 1; }
-.more .meta-input.multiline { font-family: ui-monospace, monospace; min-height: 40px; }
-.shot-move { display: flex; flex-direction: column; gap: 1px; margin-left: auto; }
-.shot-move button {
-  width: 16px; height: 13px; line-height: 1; font-size: 8px; padding: 0;
-  border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.05);
-  color: rgba(255,255,255,0.7); border-radius: 2px; cursor: pointer;
-}
-.shot-move button:disabled { opacity: 0.3; cursor: default; }
-.dur { display: flex; align-items: center; gap: 2px; font-size: 10px; color: rgba(255,255,255,0.5); }
-.dur input {
-  width: 38px; background: rgba(0,0,0,0.3); color: rgba(255,255,255,0.9);
-  border: 1px solid rgba(255,255,255,0.15); border-radius: 3px; padding: 2px 4px;
-  font-size: 11px; font-family: ui-monospace, monospace;
-}
-.del { background: none; border: none; cursor: pointer; font-size: 13px; }
-.regen {
-  background: none; border: none; cursor: pointer; font-size: 12px;
-  padding: 0 2px; opacity: 0.7;
-}
-.regen:hover:not(:disabled) { opacity: 1; }
-.regen:disabled { opacity: 0.4; cursor: default; }
-
-.shot-body { display: flex; gap: 6px; }
-.shot-img {
-  position: relative; flex: 0 0 96px; width: 96px; height: 72px;
-  border-radius: 4px; overflow: hidden; background: #000;
-  border: 1px solid rgba(255,255,255,0.1);
-}
-.shot-img img { width: 100%; height: 100%; object-fit: cover; }
-.img-placeholder {
-  width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
-  font-size: 9px; color: rgba(255,255,255,0.35); text-align: center; padding: 0 4px;
-}
-.upload-mini, .clear-mini {
-  position: absolute; width: 20px; height: 20px; padding: 0;
-  border: none; border-radius: 4px; cursor: pointer; font-size: 11px;
-  background: rgba(0,0,0,0.6); color: #fff;
-}
-.upload-mini { bottom: 2px; right: 2px; }
-.upload-mini:disabled { opacity: 0.6; }
-.clear-mini { top: 2px; right: 2px; background: rgba(120,20,20,0.7); }
-
-.shot-prompt {
-  flex: 1; min-height: 56px; resize: vertical; box-sizing: border-box;
-  background: rgba(0,0,0,0.3); color: var(--input-text,#ddd);
-  border: 1px solid rgba(255,255,255,0.15); border-radius: 4px;
-  padding: 4px 6px; font-size: 11px; line-height: 1.4;
-}
-
-.hidden-file { display: none; }
-</style>

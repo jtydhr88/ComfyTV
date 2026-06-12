@@ -39,22 +39,28 @@ function onChange(v: string | undefined) { emit('update:modelValue', v ?? '') }
 .ctv-text-input,
 .ctv-text-input input,
 .ctv-text-input textarea {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 3px;
-  padding: 4px 6px;
-  color: var(--input-text, #ddd);
-  font-size: 11px;
-  font-family: ui-monospace, SFMono-Regular, monospace;
+  appearance: none;
+  background: var(--secondary-background, rgba(255,255,255,0.04));
+  border: none;
+  border-radius: 8px;
+  padding: 6px 12px;
+  color: var(--base-foreground, #ddd);
+  font-size: 12px;
   width: 100%;
+  min-width: 0;
   outline: none;
   box-sizing: border-box;
 }
+.ctv-text-input::placeholder,
+.ctv-text-input input::placeholder,
+.ctv-text-input textarea::placeholder { color: var(--muted-foreground, #888); }
 .ctv-text-area textarea { line-height: 1.4; resize: vertical; min-height: 48px; }
-.ctv-text-input input:hover, .ctv-text-input textarea:hover {
-  border-color: rgba(255,255,255,0.25);
+.ctv-text-input:focus-visible,
+.ctv-text-input input:focus-visible,
+.ctv-text-input textarea:focus-visible {
+  box-shadow: 0 0 0 1px var(--border-default, rgba(255,255,255,0.25));
 }
-.ctv-text-input input:focus, .ctv-text-input textarea:focus {
-  border-color: rgba(78,168,255,0.6);
-}
+.ctv-text-input:disabled,
+.ctv-text-input input:disabled,
+.ctv-text-input textarea:disabled { opacity: 0.5; pointer-events: none; }
 </style>

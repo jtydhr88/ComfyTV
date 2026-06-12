@@ -1,5 +1,5 @@
 <template>
-  <div class="painter-stage">
+  <div class="flex flex-col gap-1.5 size-full">
     <PainterCanvas
       ref="painterRef"
       :node="node"
@@ -49,13 +49,3 @@ async function onRunWithMaskCommit() {
   props.onRunRequest()
 }
 </script>
-
-<style scoped>
-.painter-stage {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
-  height: 100%;
-}
-</style>

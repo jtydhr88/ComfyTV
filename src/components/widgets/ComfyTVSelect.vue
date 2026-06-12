@@ -9,33 +9,62 @@
     <ComboboxAnchor as-child>
       <ComboboxTrigger as-child>
         <button type="button"
-                class="ctv-sel-trigger"
+                class="flex w-full cursor-pointer items-center justify-between select-none
+                       h-8 px-3 py-1 text-xs rounded-lg
+                       bg-secondary-background text-base-foreground
+                       transition-all duration-200 ease-in-out
+                       hover:bg-secondary-background-hover
+                       border-[2.5px] border-solid border-transparent
+                       focus:border-node-component-border focus:outline-none
+                       data-[state=open]:border-node-component-border
+                       disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-secondary-background"
                 :disabled="disabled"
                 :aria-expanded="isOpen">
-          <span class="ctv-sel-val">{{ display }}</span>
-          <span class="ctv-sel-caret">▾</span>
+          <span class="truncate text-left">{{ display }}</span>
+          <span class="shrink-0 text-muted-foreground text-2xs">▾</span>
         </button>
       </ComboboxTrigger>
     </ComboboxAnchor>
 
     <ComboboxPortal>
-      <ComboboxContent class="ctv-sel-content" position="popper" :side-offset="2" align="start">
-        <div v-if="filterable" class="ctv-sel-search">
-          <ComboboxInput v-model="query"
-                         :placeholder="filterPlaceholder ?? 'Filter…'"
-                         auto-focus
-                         class="ctv-sel-search-input" />
+      <ComboboxContent
+        class="z-3000 overflow-hidden rounded-lg p-2 bg-base-background text-base-foreground
+               border border-solid border-border-default shadow-md
+               min-w-[var(--reka-combobox-trigger-width)] max-w-[360px]"
+        position="popper"
+        :side-offset="2"
+        align="start"
+      >
+        <div v-if="filterable" class="px-1 pb-2">
+          <ComboboxInput
+            v-model="query"
+            :placeholder="filterPlaceholder ?? 'Filter…'"
+            auto-focus
+            class="flex h-7 w-full min-w-0 appearance-none rounded-lg border-none
+                   bg-secondary-background px-3 py-1 text-xs text-base-foreground
+                   placeholder:text-muted-foreground
+                   focus-visible:ring-1 focus-visible:ring-border-default focus-visible:outline-none"
+          />
         </div>
-        <div class="ctv-sel-list" role="presentation">
-          <ComboboxItem v-for="opt in filteredOptions"
-                        :key="opt.value"
-                        :value="opt.value"
-                        :text-value="opt.label"
-                        class="ctv-sel-item">
-            <span class="ctv-sel-item-lbl">{{ opt.label }}</span>
-            <ComboboxItemIndicator class="ctv-sel-check">✓</ComboboxItemIndicator>
+        <div class="max-h-60 overflow-y-auto" role="presentation">
+          <ComboboxItem
+            v-for="opt in filteredOptions"
+            :key="opt.value"
+            :value="opt.value"
+            :text-value="opt.label"
+            class="relative flex w-full cursor-pointer items-center justify-between select-none
+                   gap-3 rounded-sm px-2 py-2 text-xs outline-none
+                   hover:bg-secondary-background-hover
+                   data-[highlighted]:bg-secondary-background-hover
+                   data-[state=checked]:bg-secondary-background-selected
+                   data-[state=checked]:hover:bg-secondary-background-selected"
+          >
+            <span class="truncate">{{ opt.label }}</span>
+            <ComboboxItemIndicator class="flex shrink-0 items-center justify-center text-base-foreground">✓</ComboboxItemIndicator>
           </ComboboxItem>
-          <div v-if="!filteredOptions.length" class="ctv-sel-empty">no matches</div>
+          <div v-if="!filteredOptions.length" class="px-3 pb-2 text-xs text-muted-foreground">
+            no matches
+          </div>
         </div>
       </ComboboxContent>
     </ComboboxPortal>
@@ -100,71 +129,3 @@ function onPick(v: any) {
   query.value = ''
 }
 </script>
-
-<style scoped>
-.ctv-sel-trigger {
-  display: flex; align-items: center; gap: 6px;
-  width: 100%;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 3px;
-  padding: 4px 8px;
-  color: var(--input-text, #ddd);
-  font-size: 11px;
-  font-family: ui-monospace, SFMono-Regular, monospace;
-  cursor: pointer;
-  outline: none;
-  text-align: left;
-}
-.ctv-sel-trigger:hover:not(:disabled) { border-color: rgba(255,255,255,0.25); }
-.ctv-sel-trigger[aria-expanded='true'] { border-color: rgba(78,168,255,0.6); }
-.ctv-sel-trigger:disabled { opacity: 0.5; cursor: default; }
-.ctv-sel-val { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.ctv-sel-caret { color: rgba(255,255,255,0.55); font-size: 10px; }
-</style>
-
-<style>
-.ctv-sel-content {
-  background: #1a1a1f;
-  border: 1px solid rgba(255,255,255,0.18);
-  border-radius: 4px;
-  box-shadow: 0 6px 24px rgba(0,0,0,0.4);
-  z-index: 3000;
-  min-width: var(--reka-combobox-trigger-width);
-  max-width: 360px;
-  padding: 4px;
-  font-size: 11px;
-  color: #ddd;
-  font-family: ui-monospace, SFMono-Regular, monospace;
-}
-.ctv-sel-search {
-  padding: 2px 4px 6px;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-  margin-bottom: 4px;
-}
-.ctv-sel-search-input {
-  width: 100%;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 3px;
-  padding: 3px 6px;
-  color: #ddd;
-  font: inherit;
-  outline: none;
-}
-.ctv-sel-search-input:focus { border-color: rgba(78,168,255,0.6); }
-.ctv-sel-list { max-height: 240px; overflow-y: auto; }
-.ctv-sel-item {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 4px 6px;
-  border-radius: 2px;
-  cursor: pointer;
-  user-select: none;
-  gap: 6px;
-}
-.ctv-sel-item[data-highlighted] { background: rgba(78,168,255,0.18); }
-.ctv-sel-item[data-state='checked'] { color: #b5e3a5; }
-.ctv-sel-item-lbl { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.ctv-sel-check { color: #b5e3a5; font-weight: bold; }
-.ctv-sel-empty { padding: 6px; color: rgba(255,255,255,0.45); text-align: center; font-style: italic; }
-</style>

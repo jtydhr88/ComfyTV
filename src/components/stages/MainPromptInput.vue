@@ -1,6 +1,6 @@
 <template>
-  <div v-if="widget" class="comfytv-main-prompt">
-    <EditorContent :editor="editor" class="prompt-editor" />
+  <div v-if="widget" class="pt-1.5 px-2 pb-1">
+    <EditorContent :editor="editor" class="comfytv-prompt-editor" />
   </div>
 </template>
 
@@ -74,7 +74,11 @@ const editor = useEditor({
       placeholder: placeholder.value || 'Prompt — type @ to insert a saved fragment / character',
     }),
     Mention.configure({
-      HTMLAttributes: { class: 'mention-chip' },
+      HTMLAttributes: {
+        class: 'inline-block py-0 px-1 mx-px rounded font-medium whitespace-nowrap '
+             + 'bg-primary-background/20 border border-primary-background/45 '
+             + 'text-primary-background',
+      },
       renderText: ({ node }) => `@${node.attrs.label}`,
       renderHTML: ({ node, HTMLAttributes }: any) => [
         'span',
@@ -90,7 +94,14 @@ const editor = useEditor({
   ],
   editorProps: {
     attributes: {
-      class: 'comfytv-prompt-prosemirror',
+      class: 'comfytv-prompt-prosemirror'
+           + ' min-h-11 max-h-80 overflow-y-auto py-1.5 px-2 rounded'
+           + ' bg-secondary-background'
+           + ' text-base-foreground'
+           + ' border border-border-default'
+           + ' focus:border-primary-background'
+           + ' text-xs leading-snug [font-family:inherit] outline-none box-border'
+           + ' whitespace-pre-wrap break-words',
       spellcheck: 'false',
     },
   },
@@ -181,9 +192,9 @@ onBeforeUnmount(() => {
 .tippy-box[data-theme~='comfytv-transparent'] > .tippy-content { padding: 0; }
 
 .tippy-box[data-theme~='comfytv-tooltip'] {
-  background: var(--comfy-input-bg, #1a1a1a);
-  border: 1px solid var(--border-color, #3a3a3a);
-  color: var(--input-text, #e0e0e0);
+  background: var(--interface-menu-surface, #1a1a1a);
+  border: 1px solid var(--border-default, #3a3a3a);
+  color: var(--base-foreground, #e0e0e0);
   font-size: 11px;
   line-height: 1.45;
   border-radius: 4px;
@@ -194,60 +205,20 @@ onBeforeUnmount(() => {
   white-space: pre-wrap;
   word-break: break-word;
 }
-.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='top']    > .tippy-arrow::before { border-top-color: var(--border-color, #3a3a3a); }
-.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='bottom'] > .tippy-arrow::before { border-bottom-color: var(--border-color, #3a3a3a); }
-.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='left']   > .tippy-arrow::before { border-left-color: var(--border-color, #3a3a3a); }
-.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='right']  > .tippy-arrow::before { border-right-color: var(--border-color, #3a3a3a); }
+.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='top']    > .tippy-arrow::before { border-top-color: var(--border-default, #3a3a3a); }
+.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='bottom'] > .tippy-arrow::before { border-bottom-color: var(--border-default, #3a3a3a); }
+.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='left']   > .tippy-arrow::before { border-left-color: var(--border-default, #3a3a3a); }
+.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='right']  > .tippy-arrow::before { border-right-color: var(--border-default, #3a3a3a); }
 </style>
 
 <style scoped>
-.comfytv-main-prompt {
-  padding: 6px 8px 4px;
-}
-
-.prompt-editor {
-  /* :deep is how scoped styles cross into ProseMirror's rendered DOM. */
-}
-
-.prompt-editor :deep(.comfytv-prompt-prosemirror) {
-  min-height: 44px;
-  max-height: 320px;
-  overflow-y: auto;
-  padding: 6px 8px;
-  background: var(--comfy-input-bg, #1a1a1a);
-  color: var(--input-text, #e0e0e0);
-  border: 1px solid var(--border-color, #3a3a3a);
-  border-radius: 4px;
-  font-size: 12px;
-  font-family: inherit;
-  line-height: 1.4;
-  outline: none;
-  box-sizing: border-box;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-.prompt-editor :deep(.comfytv-prompt-prosemirror:focus) {
-  border-color: var(--primary-color, #6c8eef);
-}
-.prompt-editor :deep(p) {
-  margin: 0;
-}
-.prompt-editor :deep(p.is-editor-empty:first-child::before) {
+.comfytv-prompt-editor :deep(p) { margin: 0; }
+.comfytv-prompt-editor :deep(p.is-editor-empty:first-child::before) {
   content: attr(data-placeholder);
-  color: var(--input-text-secondary, #888);
+  color: var(--muted-foreground, #888);
   opacity: 0.65;
   float: left;
   height: 0;
   pointer-events: none;
-}
-.prompt-editor :deep(.mention-chip) {
-  background: rgba(108, 142, 239, 0.18);
-  border: 1px solid rgba(108, 142, 239, 0.45);
-  border-radius: 4px;
-  padding: 0 4px;
-  margin: 0 1px;
-  color: rgba(140, 170, 255, 1);
-  font-weight: 500;
-  white-space: nowrap;
 }
 </style>

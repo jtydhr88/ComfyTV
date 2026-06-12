@@ -1,109 +1,97 @@
 <template>
-  <div class="vp" :class="[`type-${type.toLowerCase()}`, { 'is-compact': compact }]">
-    <span v-if="!compact" class="vp-type-badge">{{ shortType }}</span>
+  <div :class="rootClass">
+    <span v-if="!compact" :class="typeBadgeClass">{{ shortType }}</span>
 
-    <div v-if="!hasContent" class="vp-empty">{{ emptyLabel }}</div>
+    <div v-if="!hasContent" :class="emptyClass">{{ emptyLabel }}</div>
 
-    <pre v-else-if="type === 'COMFYTV_TEXT'" class="vp-text">{{ content }}</pre>
+    <pre v-else-if="type === 'COMFYTV_TEXT'" :class="textClass">{{ content }}</pre>
 
     <div
       v-else-if="(type === 'COMFYTV_IMAGE' || type === 'COMFYTV_PANORAMA') && !compact"
       ref="zoomContainer"
-      class="vp-img-zoom"
+      class="group relative w-full flex-1 min-h-0 overflow-hidden rounded-sm touch-none cursor-grab"
     >
       <img
         ref="zoomImg"
         :src="String(content)"
-        class="vp-img"
+        class="block size-full object-contain select-none"
         :alt="String(content)"
+        draggable="false"
       />
-      <div class="vp-img-actions">
-        <button
-          type="button"
-          class="vp-img-action"
-          :title="$t('stage.action.viewFull')"
-          @click.stop="openViewer(String(content))"
-        >⤢</button>
-        <button
-          type="button"
-          class="vp-img-action"
-          :title="$t('stage.action.download')"
-          @click.stop="onDownload(String(content))"
-        >⬇</button>
+      <div :class="imgActionsClass">
+        <button type="button" :class="imgActionBtn"
+                :title="$t('stage.action.viewFull')"
+                @click.stop="openViewer(String(content))">⤢</button>
+        <button type="button" :class="imgActionBtn"
+                :title="$t('stage.action.download')"
+                @click.stop="onDownload(String(content))">⬇</button>
       </div>
     </div>
     <img
       v-else-if="type === 'COMFYTV_IMAGE' || type === 'COMFYTV_PANORAMA'"
       :src="String(content)"
-      class="vp-img"
+      :class="imgClass"
       :alt="String(content)"
     />
 
     <video
       v-else-if="type === 'COMFYTV_VIDEO'"
       :src="String(content)"
-      class="vp-video"
-      controls
-      muted
-      playsinline
-      preload="metadata"
+      :class="videoClass"
+      controls muted playsinline preload="metadata"
     />
 
     <template v-else-if="type === 'COMFYTV_AUDIO'">
-      <div v-if="compact" class="vp-compact-summary">
-        <span class="vp-compact-icon">🔊</span>
+      <div v-if="compact" :class="compactSummary">
+        <span class="text-[22px] leading-none">🔊</span>
       </div>
       <audio
         v-else
         :src="String(content)"
-        class="vp-audio"
-        controls
-        preload="metadata"
+        class="block w-full mt-3.5"
+        controls preload="metadata"
       />
     </template>
 
     <template v-else-if="type === 'COMFYTV_STORYBOARD'">
-      <div v-if="compact" class="vp-storyboard-compact">
-        <div class="vp-sb-head">
-          <span class="vp-sb-icon">📋</span>
-          <span class="vp-sb-count">{{ storyboardShots.length }}</span>
-          <span v-if="storyboardTotalSec" class="vp-sb-dur">{{ storyboardTotalSec }}s</span>
+      <div v-if="compact" class="flex flex-col gap-0.5 size-full py-[3px] px-1 box-border overflow-hidden">
+        <div class="flex items-baseline gap-1 shrink-0">
+          <span class="text-[11px] leading-none">📋</span>
+          <span class="vp-sb-count text-xs font-bold leading-none text-[#d8b0ff]">{{ storyboardShots.length }}</span>
+          <span v-if="storyboardTotalSec" class="ml-auto text-3xs tracking-wide text-muted-foreground">{{ storyboardTotalSec }}s</span>
         </div>
-        <ul class="vp-sb-list">
-          <li
-            v-for="(shot, i) in storyboardShots.slice(0, 3)"
-            :key="i"
-            class="vp-sb-item"
-          >
-            <span class="vp-sb-no">{{ shot.shot_no ?? i + 1 }}</span>
-            <span class="vp-sb-text">{{ shotSummary(shot) }}</span>
+        <ul class="list-none m-0 p-0 flex flex-col gap-px flex-auto min-h-0">
+          <li v-for="(shot, i) in storyboardShots.slice(0, 3)" :key="i"
+              class="vp-sb-item flex items-baseline gap-[3px] text-3xs leading-tight whitespace-nowrap overflow-hidden">
+            <span class="shrink-0 font-semibold text-[#d8b0ff] min-w-2">{{ shot.shot_no ?? i + 1 }}</span>
+            <span class="flex-auto overflow-hidden text-ellipsis text-base-foreground/80">{{ shotSummary(shot) }}</span>
           </li>
         </ul>
-        <div v-if="storyboardShots.length > 3" class="vp-sb-more">
+        <div v-if="storyboardShots.length > 3" class="vp-sb-more text-[8px] text-right italic text-muted-foreground/60">
           + {{ storyboardShots.length - 3 }} more
         </div>
       </div>
-      <div v-else class="vp-storyboard">
-        <div v-for="(shot, i) in storyboardShots" :key="i" class="vp-shot-row">
-          <span class="vp-shot-no">#{{ shot.shot_no ?? i + 1 }}</span>
-          <span v-if="shot.duration" class="vp-shot-dur">{{ shot.duration }}</span>
-          <span class="vp-shot-prompt">{{ shot.prompt }}</span>
+      <div v-else :class="storyboardListClass">
+        <div v-for="(shot, i) in storyboardShots" :key="i" :class="shotRowClass">
+          <span :class="shotNoClass">#{{ shot.shot_no ?? i + 1 }}</span>
+          <span v-if="shot.duration" :class="shotDurClass">{{ shot.duration }}</span>
+          <span :class="shotPromptClass">{{ shot.prompt }}</span>
         </div>
       </div>
     </template>
 
     <template v-else-if="type === 'COMFYTV_TIMELINE'">
-      <div v-if="compact" class="vp-compact-summary">
-        <span class="vp-compact-icon">🎬</span>
-        <span class="vp-compact-count-text">{{ timelineSegs.length }}</span>
+      <div v-if="compact" :class="compactSummary">
+        <span class="text-[22px] leading-none">🎬</span>
+        <span class="vp-compact-count-text text-sm font-bold text-[#d8b0ff]">{{ timelineSegs.length }}</span>
       </div>
-      <div v-else class="vp-storyboard">
-        <div v-for="(seg, i) in timelineSegs" :key="i" class="vp-shot-row">
-          <span class="vp-shot-no">#{{ i + 1 }}</span>
-          <span v-if="seg.length" class="vp-shot-dur">{{ seg.length }}f</span>
-          <span class="vp-shot-prompt">{{ seg.prompt || '—' }}</span>
+      <div v-else :class="storyboardListClass">
+        <div v-for="(seg, i) in timelineSegs" :key="i" :class="shotRowClass">
+          <span :class="shotNoClass">#{{ i + 1 }}</span>
+          <span v-if="seg.length" :class="shotDurClass">{{ seg.length }}f</span>
+          <span :class="shotPromptClass">{{ seg.prompt || '—' }}</span>
         </div>
-        <div v-if="timelineSegs.length === 0" class="vp-empty">empty timeline</div>
+        <div v-if="timelineSegs.length === 0" :class="emptyClass">empty timeline</div>
       </div>
     </template>
 
@@ -112,62 +100,69 @@
         <img
           v-if="batchImages[0]"
           :src="batchImages[0].image_url"
-          class="vp-img"
+          :class="imgClass"
           :alt="`${batchImages.length} items`"
         />
-        <div v-else class="vp-empty">{{ emptyLabel || '…' }}</div>
-        <span v-if="batchImages.length > 0" class="vp-compact-count">{{ batchImages.length }}</span>
+        <div v-else :class="emptyClass">{{ emptyLabel || '…' }}</div>
+        <span v-if="batchImages.length > 0"
+              class="absolute top-0.5 left-0.5 pointer-events-none py-px px-[5px]
+                     text-3xs font-bold tracking-wide rounded-lg
+                     bg-[rgb(255_140_200/0.85)] text-white">
+          {{ batchImages.length }}
+        </span>
       </template>
-      <div
-        v-else
-        class="vp-image-batch"
-        :class="{ 'is-pickable': clickMode === 'pick' }"
-      >
+      <div v-else class="ctv-batch-grid">
         <component
           :is="clickMode === 'pick' ? 'button' : 'div'"
           v-for="(img, i) in batchImages"
           :key="i"
           :type="clickMode === 'pick' ? 'button' : undefined"
-          class="vp-batch-cell"
-          :class="{ 'is-selected': isItemSelected(img, i), 'is-readonly': clickMode !== 'pick' }"
+          :class="batchCellClass(isItemSelected(img, i))"
           :title="cellTooltip(img, i)"
           @click="clickMode === 'pick' ? onItemClick(img, i) : undefined"
         >
-          <img :src="img.image_url" :alt="img.label || img.prompt || `item ${i + 1}`" />
-          <span class="vp-batch-cell-no">{{ img.label ?? `#${img.index ?? i + 1}` }}</span>
-          <span v-if="clickMode === 'pick'" class="vp-batch-cell-hint">{{ clickHintIcon }}</span>
-          <span v-if="isItemSelected(img, i)" class="vp-batch-cell-check">✓</span>
-          <div class="vp-img-actions">
-            <button
-              type="button"
-              class="vp-img-action"
-              :title="$t('stage.action.viewFull')"
-              @click.stop="openViewer(img.image_url)"
-            >⤢</button>
-            <button
-              type="button"
-              class="vp-img-action"
-              :title="$t('stage.action.download')"
-              @click.stop="onDownload(img.image_url)"
-            >⬇</button>
+          <img :src="img.image_url" :alt="img.label || img.prompt || `item ${i + 1}`"
+               class="block size-full object-cover pointer-events-none" />
+          <span class="absolute bottom-0.5 left-0.5 py-px px-1 text-3xs font-bold rounded-sm
+                       bg-black/70 text-[#ffb0d8]">
+            {{ img.label ?? `#${img.index ?? i + 1}` }}
+          </span>
+          <span v-if="clickMode === 'pick'"
+                class="absolute top-0.5 right-0.5 py-px px-1 text-2xs rounded-sm
+                       bg-black/55 opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+            {{ clickHintIcon }}
+          </span>
+          <div :class="imgActionsClass">
+            <button type="button" :class="imgActionBtn"
+                    :title="$t('stage.action.viewFull')"
+                    @click.stop="openViewer(img.image_url)">⤢</button>
+            <button type="button" :class="imgActionBtn"
+                    :title="$t('stage.action.download')"
+                    @click.stop="onDownload(img.image_url)">⬇</button>
           </div>
         </component>
       </div>
     </template>
 
-    <div v-else class="vp-empty">{{ $t('stage.empty.unsupported_type', { type }) }}</div>
+    <div v-else :class="emptyClass">{{ $t('stage.empty.unsupported_type', { type }) }}</div>
 
     <Teleport to="body">
       <div
         v-if="lightboxUrl"
-        class="vp-lightbox"
+        class="fixed inset-0 z-[9999] flex items-center justify-center cursor-zoom-out bg-black/90"
         role="dialog"
         @click.self="lightboxUrl = null"
       >
-        <img :src="lightboxUrl" class="vp-lightbox-img" :alt="lightboxUrl" />
+        <img :src="lightboxUrl"
+             class="max-w-[95vw] max-h-[95vh] object-contain cursor-default
+                    shadow-[0_8px_40px_rgb(0_0_0/0.6)]"
+             :alt="lightboxUrl" />
         <button
           type="button"
-          class="vp-lightbox-close"
+          class="absolute top-4 right-4 size-9 flex items-center justify-center text-sm leading-none
+                 rounded-full cursor-pointer
+                 bg-black/55 text-white border border-white/30
+                 hover:bg-black/85 hover:border-white/55"
           :title="$t('stage.action.close')"
           @click="lightboxUrl = null"
         >✕</button>
@@ -321,402 +316,92 @@ const timelineSegs = computed<TimelineSeg[]>(() => {
     return []
   }
 })
+
+const rootClass = computed(() => {
+  if (props.compact) return 'relative size-full overflow-hidden'
+  return 'relative flex flex-col min-h-12 text-xs overflow-hidden'
+})
+
+const TYPE_BADGE_COLORS: Record<string, string> = {
+  COMFYTV_TEXT:       'bg-[rgb(120_200_120/0.25)] text-[#b5e3a5]',
+  COMFYTV_IMAGE:      'bg-[rgb(78_168_255/0.25)] text-[#9dd0ff]',
+  COMFYTV_PANORAMA:   'bg-[rgb(78_168_255/0.25)] text-[#9dd0ff]',
+  COMFYTV_VIDEO:      'bg-[rgb(255_171_64/0.25)] text-[#ffd089]',
+  COMFYTV_AUDIO:      'bg-[rgb(255_100_100/0.22)] text-[#ffb0b0]',
+  COMFYTV_STORYBOARD: 'bg-[rgb(200_130_255/0.25)] text-[#d8b0ff]',
+  COMFYTV_IMAGES:     'bg-[rgb(255_140_200/0.25)] text-[#ffb0d8]',
+}
+const typeBadgeClass = computed(() => {
+  const palette = TYPE_BADGE_COLORS[props.type] ?? 'bg-white/10 text-white/70'
+  return `absolute top-[3px] right-[3px] py-px px-[5px] text-3xs tracking-wide rounded-sm pointer-events-none ${palette}`
+})
+
+const emptyClass = computed(() =>
+  props.compact
+    ? 'flex items-center justify-center h-full p-1 text-3xs italic opacity-50'
+    : 'flex items-center justify-center h-full min-h-10 text-[11px] italic opacity-50'
+)
+
+const textClass = computed(() => {
+  if (props.compact) {
+    return 'm-0 p-1 max-h-full text-2xs leading-[1.3] overflow-hidden whitespace-pre-wrap font-mono break-words text-base-foreground'
+         + ' [display:-webkit-box] [-webkit-line-clamp:5] [-webkit-box-orient:vertical]'
+  }
+  return 'm-0 py-0.5 px-1 max-h-[120px] overflow-auto whitespace-pre-wrap break-words'
+       + ' text-[11px] leading-snug font-mono text-base-foreground'
+})
+
+const imgClass = computed(() =>
+  props.compact
+    ? 'block size-full object-cover'
+    : 'block w-full max-h-40 object-contain rounded-sm'
+)
+
+const videoClass = computed(() =>
+  props.compact
+    ? 'block size-full object-cover bg-black'
+    : 'block w-full max-h-52 rounded-sm bg-black'
+)
+
+const compactSummary = 'flex flex-col items-center justify-center size-full gap-0.5'
+
+const storyboardListClass = 'flex flex-col gap-1 pt-3.5 max-h-56 overflow-auto'
+const shotRowClass = 'flex items-baseline gap-1.5 py-[3px] px-[5px] text-[11px] rounded-sm'
+  + ' bg-base-foreground/[0.03] border-l-2 border-[rgb(200_130_255/0.4)]'
+const shotNoClass     = 'shrink-0 font-bold text-[#d8b0ff]'
+const shotDurClass    = 'shrink-0 py-px px-1 text-2xs rounded-sm bg-base-foreground/5 text-muted-foreground'
+const shotPromptClass = 'flex-auto break-words text-base-foreground'
+
+const COMFY_BTN_BASE = 'relative inline-flex items-center justify-center gap-2 cursor-pointer'
+  + ' touch-manipulation whitespace-nowrap appearance-none border-none transition-colors'
+  + ' disabled:pointer-events-none disabled:opacity-50'
+
+const imgActionsClass = 'absolute top-1 right-1 z-10 flex gap-1 opacity-0 transition-opacity duration-150'
+  + ' group-hover:opacity-100'
+
+const imgActionBtn = COMFY_BTN_BASE
+  + ' size-5 p-0 rounded-sm text-sm'
+  + ' bg-white text-gray-600 hover:bg-white/90'
+
+function batchCellClass(selected: boolean) {
+  const base = 'group relative aspect-video rounded-sm overflow-hidden p-0 bg-black transition-colors'
+  const interactive = props.clickMode === 'pick' ? ' cursor-pointer' : ' cursor-default'
+  if (selected) {
+    return base + interactive + ' ring-3 ring-inset ring-primary-background'
+  }
+  return base + interactive
+    + ' border border-border-default'
+    + (props.clickMode === 'pick' ? ' hover:border-primary-background' : '')
+}
 </script>
 
 <style scoped>
-.vp {
-  position: relative;
-  border: 1px solid var(--border-color, #3a3a3a);
-  border-radius: 4px;
-  background: rgba(0, 0, 0, 0.25);
-  padding: 4px;
-  min-height: 48px;
-  font-size: 11px;
-  overflow: hidden;
-}
-
-.vp.is-compact {
-  border: none;
-  border-radius: 0;
-  background: transparent;
-  padding: 0;
-  min-height: 0;
-  width: 100%;
-  height: 100%;
-}
-.vp.is-compact .vp-img,
-.vp.is-compact .vp-video {
-  width: 100%;
-  height: 100%;
-  max-height: none;
-  object-fit: cover;
-  border-radius: 0;
-}
-.vp.is-compact .vp-text {
-  margin: 0;
-  padding: 4px;
-  max-height: 100%;
-  font-size: 10px;
-  line-height: 1.3;
-  display: -webkit-box;
-  -webkit-line-clamp: 5;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.vp.is-compact .vp-empty {
-  font-size: 9px;
-  padding: 4px;
-  min-height: 0;
-}
-.vp-compact-summary {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%; height: 100%;
-  gap: 2px;
-}
-.vp-compact-icon { font-size: 22px; line-height: 1; }
-.vp-compact-count-text {
-  font-size: 14px;
-  font-weight: 700;
-  color: #d8b0ff;
-}
-
-.vp-storyboard-compact {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  width: 100%; height: 100%;
-  padding: 3px 4px;
-  box-sizing: border-box;
-  overflow: hidden;
-}
-.vp-sb-head {
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
-  flex: 0 0 auto;
-}
-.vp-sb-icon { font-size: 11px; line-height: 1; }
-.vp-sb-count {
-  font-size: 12px; font-weight: 700; color: #d8b0ff;
-  line-height: 1;
-}
-.vp-sb-dur {
-  font-size: 9px; color: rgba(255, 255, 255, 0.55);
-  letter-spacing: 0.3px;
-  margin-left: auto;
-}
-.vp-sb-list {
-  list-style: none;
-  margin: 0; padding: 0;
-  display: flex; flex-direction: column; gap: 1px;
-  flex: 1 1 auto;
-  min-height: 0;
-}
-.vp-sb-item {
-  display: flex;
-  align-items: baseline;
-  gap: 3px;
-  font-size: 9px;
-  line-height: 1.2;
-  white-space: nowrap;
-  overflow: hidden;
-}
-.vp-sb-no {
-  flex: 0 0 auto;
-  color: #d8b0ff;
-  font-weight: 600;
-  min-width: 8px;
-}
-.vp-sb-text {
-  flex: 1 1 auto;
-  color: rgba(255, 255, 255, 0.78);
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.vp-sb-more {
-  font-size: 8px;
-  color: rgba(255, 255, 255, 0.4);
-  text-align: right;
-  font-style: italic;
-}
-.vp-compact-count {
-  position: absolute;
-  top: 2px; left: 2px;
-  font-size: 9px;
-  font-weight: 700;
-  padding: 1px 5px;
-  background: rgba(255, 140, 200, 0.85);
-  color: #fff;
-  border-radius: 8px;
-  letter-spacing: 0.3px;
-  pointer-events: none;
-}
-.vp-type-badge {
-  position: absolute;
-  top: 3px; right: 3px;
-  font-size: 9px;
-  padding: 1px 5px;
-  border-radius: 2px;
-  background: rgba(255, 255, 255, 0.12);
-  color: rgba(255, 255, 255, 0.7);
-  letter-spacing: 0.5px;
-  pointer-events: none;
-}
-.vp.type-comfytv_text       .vp-type-badge { background: rgba(120, 200, 120, 0.25); color: #b5e3a5; }
-.vp.type-comfytv_image      .vp-type-badge { background: rgba(78, 168, 255, 0.25);  color: #9dd0ff; }
-.vp.type-comfytv_video      .vp-type-badge { background: rgba(255, 171, 64, 0.25);  color: #ffd089; }
-.vp.type-comfytv_audio      .vp-type-badge { background: rgba(255, 100, 100, 0.22); color: #ffb0b0; }
-.vp.type-comfytv_storyboard  .vp-type-badge { background: rgba(200, 130, 255, 0.25); color: #d8b0ff; }
-.vp.type-comfytv_images .vp-type-badge { background: rgba(255, 140, 200, 0.25); color: #ffb0d8; }
-
-.vp-empty {
-  opacity: 0.5;
-  font-size: 11px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  min-height: 40px;
-  font-style: italic;
-}
-
-.vp-text {
-  margin: 0;
-  padding: 2px 4px;
-  font: 11px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
-  white-space: pre-wrap;
-  word-break: break-word;
-  max-height: 120px;
-  overflow: auto;
-  color: #ddd;
-}
-
-.vp-img {
-  display: block;
-  width: 100%;
-  max-height: 160px;
-  object-fit: contain;
-  border-radius: 2px;
-}
-
-.vp-img-zoom {
-  position: relative;
-  width: 100%;
-  max-height: 160px;
-  height: 160px;
-  overflow: hidden;
-  border-radius: 2px;
-  cursor: grab;
-  touch-action: none;
-}
-.vp-img-zoom.is-panning { cursor: grabbing; }
-.vp-img-zoom .vp-img {
-  width: 100%;
-  height: 100%;
-  max-height: none;
-  -webkit-user-drag: none;
-  user-select: none;
-}
-
-.vp-video {
-  display: block;
-  width: 100%;
-  max-height: 200px;
-  border-radius: 2px;
-  background: #000;
-}
-
-.vp-audio {
-  display: block;
-  width: 100%;
-  margin-top: 14px;
-}
-
-.vp-storyboard {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  padding-top: 14px;
-  max-height: 220px;
-  overflow: auto;
-}
-.vp-shot-row {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  padding: 3px 5px;
-  font-size: 11px;
-  border-left: 2px solid rgba(200, 130, 255, 0.4);
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 2px;
-}
-.vp-shot-no {
-  font-weight: 700;
-  color: #d8b0ff;
-  flex: 0 0 auto;
-}
-.vp-shot-dur {
-  font-size: 10px;
-  padding: 1px 4px;
-  border-radius: 2px;
-  background: rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.55);
-  flex: 0 0 auto;
-}
-.vp-shot-prompt {
-  color: #ccc;
-  flex: 1 1 auto;
-  word-break: break-word;
-}
-
-.vp-image-batch {
+.ctv-batch-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
   gap: 4px;
   padding-top: 14px;
   max-height: 320px;
   overflow: auto;
-}
-.vp-batch-cell {
-  position: relative;
-  border-radius: 2px;
-  overflow: hidden;
-  background: #000;
-  aspect-ratio: 16 / 9;
-  border: 1px solid rgba(255, 140, 200, 0.3);
-  padding: 0;
-  transition: transform 80ms ease, border-color 120ms ease;
-}
-.vp-image-batch.is-pickable .vp-batch-cell { cursor: pointer; }
-.vp-image-batch.is-pickable .vp-batch-cell:hover {
-  border-color: rgba(255, 140, 200, 0.8);
-  transform: translateY(-1px);
-}
-.vp-image-batch.is-pickable .vp-batch-cell:active { transform: translateY(0); }
-.vp-batch-cell.is-readonly { cursor: default; }
-.vp-batch-cell img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  display: block;
-  pointer-events: none;
-}
-.vp-batch-cell-no {
-  position: absolute;
-  bottom: 2px; left: 2px;
-  font-size: 9px;
-  font-weight: 700;
-  padding: 1px 4px;
-  border-radius: 2px;
-  background: rgba(0, 0, 0, 0.7);
-  color: #ffb0d8;
-}
-.vp-batch-cell-hint {
-  position: absolute;
-  top: 2px; right: 2px;
-  font-size: 10px;
-  padding: 1px 4px;
-  border-radius: 2px;
-  background: rgba(0, 0, 0, 0.55);
-  opacity: 0;
-  transition: opacity 120ms ease;
-}
-.vp-batch-cell:hover .vp-batch-cell-hint { opacity: 1; }
-
-.vp-batch-cell.is-selected {
-  border-color: #4ea8ff;
-  box-shadow: 0 0 0 2px rgba(78, 168, 255, 0.5);
-}
-.vp-batch-cell.is-selected:hover { border-color: #79bfff; }
-.vp-batch-cell-check {
-  position: absolute;
-  top: 2px; left: 2px;
-  font-size: 10px;
-  font-weight: 700;
-  width: 16px; height: 16px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: #4ea8ff;
-  color: #fff;
-}
-
-.vp-img-actions {
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  display: flex;
-  gap: 4px;
-  opacity: 0;
-  transition: opacity 120ms ease;
-  z-index: 5;
-  pointer-events: none;
-}
-.vp-img-zoom:hover .vp-img-actions,
-.vp-batch-cell:hover .vp-img-actions {
-  opacity: 1;
-  pointer-events: auto;
-}
-.vp-img-action {
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  background: rgba(0, 0, 0, 0.6);
-  color: #fff;
-  border-radius: 4px;
-  font-size: 13px;
-  line-height: 1;
-  cursor: pointer;
-  text-decoration: none;
-}
-.vp-img-action:hover {
-  background: rgba(0, 0, 0, 0.8);
-  border-color: rgba(255, 255, 255, 0.4);
-}
-
-.vp-lightbox {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background: rgba(0, 0, 0, 0.88);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: zoom-out;
-}
-.vp-lightbox-img {
-  max-width: 95vw;
-  max-height: 95vh;
-  object-fit: contain;
-  cursor: default;
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
-}
-.vp-lightbox-close {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 36px;
-  height: 36px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  background: rgba(0, 0, 0, 0.55);
-  color: #fff;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 14px;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.vp-lightbox-close:hover {
-  background: rgba(0, 0, 0, 0.85);
-  border-color: rgba(255, 255, 255, 0.55);
 }
 </style>

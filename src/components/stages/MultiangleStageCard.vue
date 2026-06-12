@@ -1,8 +1,13 @@
 <template>
-  <div class="multiangle-stage">
-    <div class="scene-shell">
+  <div class="flex flex-col size-full">
+    <div class="relative w-full h-[350px] shrink-0 rounded-lg overflow-hidden bg-black mb-1.5">
       <SceneCanvas :init-scene="initScene" />
-      <div class="prompt-overlay">{{ prompt }}</div>
+      <div
+        class="absolute top-2 left-2 right-2 z-10 pointer-events-none
+               bg-black/90 border border-[rgb(233_61_130/0.3)] rounded-md
+               py-1.5 px-2.5 text-xs text-[#E93D82] font-mono leading-snug break-all
+               backdrop-blur-sm"
+      >{{ prompt }}</div>
       <CameraControlPanel
         :azimuth="azimuth"
         :elevation="elevation"
@@ -114,42 +119,3 @@ onBeforeUnmount(() => {
   cleanup()
 })
 </script>
-
-<style scoped>
-.multiangle-stage {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-}
-
-.scene-shell {
-  position: relative;
-  width: 100%;
-  height: 350px;
-  flex: 0 0 350px;
-  border-radius: 8px;
-  overflow: hidden;
-  background: #0a0a0f;
-  margin-bottom: 6px;
-}
-
-.prompt-overlay {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  right: 8px;
-  background: rgba(10, 10, 15, 0.9);
-  border: 1px solid rgba(233, 61, 130, 0.3);
-  border-radius: 6px;
-  padding: 6px 10px;
-  font-size: 11px;
-  color: #E93D82;
-  backdrop-filter: blur(4px);
-  font-family: 'Consolas', 'Monaco', monospace;
-  word-break: break-all;
-  line-height: 1.4;
-  pointer-events: none;
-  z-index: 10;
-}
-</style>

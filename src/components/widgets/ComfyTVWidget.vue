@@ -36,7 +36,9 @@
   />
 
   <input v-else
-         class="ctv-widget-fallback"
+         class="w-full py-1 px-1.5 rounded-sm text-2xs font-mono
+                bg-base-foreground/[0.03] border border-dashed border-warning-background/50
+                text-warning-background cursor-not-allowed"
          :value="String(modelValue ?? '')"
          readonly
          :title="`Unsupported widget type: ${kind}`" />
@@ -82,17 +84,3 @@ const multiline = computed(() =>
   props.multiline === true || stringValue.value.includes('\n')
 )
 </script>
-
-<style scoped>
-.ctv-widget-fallback {
-  width: 100%;
-  background: rgba(255,255,255,0.02);
-  border: 1px dashed rgba(255,180,80,0.5);
-  border-radius: 3px;
-  padding: 4px 6px;
-  color: rgba(255,180,80,0.85);
-  font-size: 10px;
-  font-family: ui-monospace, SFMono-Regular, monospace;
-  cursor: not-allowed;
-}
-</style>

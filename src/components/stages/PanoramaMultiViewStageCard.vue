@@ -1,38 +1,40 @@
 <template>
-  <div class="pano-multi-stage">
-    <div class="info">
-      <span v-if="!panoramaUrl" class="muted">{{ $t('panoramaView.connectPanorama') }}</span>
-      <span v-else-if="capturing" class="muted">{{ $t('panoramaView.capturingCount', { i: captureProgress, n: viewCount }) }}</span>
-      <span v-else-if="state.output" class="ok">{{ $t('panoramaView.capturedN', { n: viewCount }) }}</span>
-      <span v-else class="muted">{{ $t('panoramaView.adjustCountToCapture') }}</span>
+  <div class="flex flex-col gap-1.5 size-full">
+    <div class="text-[11px] text-center py-1">
+      <span v-if="!panoramaUrl" class="text-muted-foreground">{{ $t('panoramaView.connectPanorama') }}</span>
+      <span v-else-if="capturing" class="text-muted-foreground">{{ $t('panoramaView.capturingCount', { i: captureProgress, n: viewCount }) }}</span>
+      <span v-else-if="state.output" class="text-success-background">{{ $t('panoramaView.capturedN', { n: viewCount }) }}</span>
+      <span v-else class="text-muted-foreground">{{ $t('panoramaView.adjustCountToCapture') }}</span>
     </div>
 
-    <div class="ratio-row">
-      <div class="ctl">
-        <span class="label">{{ $t('panoramaView.aspect') }}</span>
-        <select v-model="aspectRatio" class="select">
+    <div class="flex items-center gap-2 flex-wrap">
+      <div class="flex items-center gap-1">
+        <span class="text-2xs uppercase tracking-wide text-muted-foreground">{{ $t('panoramaView.aspect') }}</span>
+        <select v-model="aspectRatio" class="ctv-pano-select">
           <option v-for="opt in aspectOptions" :key="opt" :value="opt">{{ opt }}</option>
         </select>
       </div>
-      <div class="ctl">
-        <span class="label">{{ $t('panoramaView.resolution') }}</span>
-        <select v-model="resolution" class="select">
+      <div class="flex items-center gap-1">
+        <span class="text-2xs uppercase tracking-wide text-muted-foreground">{{ $t('panoramaView.resolution') }}</span>
+        <select v-model="resolution" class="ctv-pano-select">
           <option v-for="opt in resolutionOptions" :key="opt" :value="opt">{{ opt }}</option>
         </select>
       </div>
-      <span class="dims">{{ captureSize.w }}×{{ captureSize.h }}</span>
+      <span class="ml-auto text-2xs font-mono text-muted-foreground">{{ captureSize.w }}×{{ captureSize.h }}</span>
     </div>
 
-    <div class="controls">
-      <span class="label">{{ $t('panoramaView.viewCount') }}</span>
+    <div class="grid grid-cols-[80px_1fr_36px] items-center gap-1.5 py-1 px-2 rounded
+                bg-secondary-background border border-border-subtle">
+      <span class="text-xs text-muted-foreground">{{ $t('panoramaView.viewCount') }}</span>
       <input
         type="range"
         min="2" max="24" step="1"
+        class="w-full disabled:opacity-40"
         :value="viewCount"
         :disabled="!panoramaUrl"
         @input="(e) => viewCount = Number((e.target as HTMLInputElement).value)"
       />
-      <span class="value">{{ viewCount }}</span>
+      <span class="text-right text-xs font-mono text-base-foreground">{{ viewCount }}</span>
     </div>
 
     <StageCard
@@ -87,48 +89,14 @@ const { panoramaUrl, capturing, captureProgress, captureSize } = useMultiViewCap
 </script>
 
 <style scoped>
-.pano-multi-stage {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
-  height: 100%;
-}
-.info {
-  font-size: 11px;
-  text-align: center;
-  padding: 4px 0;
-}
-.info .muted { color: rgba(255, 255, 255, 0.55); }
-.info .ok    { color: #b5e3a5; }
-
-.ratio-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.ctl {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.label {
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.55);
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-}
-.select {
+.ctv-pano-select {
   appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-color: rgba(255, 255, 255, 0.04);
+  background-color: var(--secondary-background, rgb(255 255 255 / 0.04));
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6' viewBox='0 0 8 6'><path d='M0 0l4 6 4-6z' fill='%23bbb'/></svg>");
   background-repeat: no-repeat;
   background-position: right 6px center;
-  color: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--base-foreground, rgb(255 255 255 / 0.9));
+  border: 1px solid var(--border-subtle, rgb(255 255 255 / 0.15));
   border-radius: 4px;
   padding: 3px 18px 3px 6px;
   font-size: 11px;
@@ -137,38 +105,7 @@ const { panoramaUrl, capturing, captureProgress, captureSize } = useMultiViewCap
   outline: none;
   min-width: 70px;
 }
-.select:hover  { border-color: rgba(255, 255, 255, 0.3); }
-.select:focus  { border-color: rgba(78, 168, 255, 0.6); }
-.select option { background: #1a1a2e; color: #e0e0e0; }
-.dims {
-  margin-left: auto;
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.55);
-  font-family: ui-monospace, SFMono-Regular, monospace;
-}
-
-.controls {
-  display: grid;
-  grid-template-columns: 80px 1fr 36px;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 8px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 4px;
-}
-.controls .label {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 11px;
-  text-transform: none;
-  letter-spacing: 0;
-}
-.value {
-  text-align: right;
-  color: rgba(255, 255, 255, 0.9);
-  font-family: ui-monospace, SFMono-Regular, monospace;
-  font-size: 11px;
-}
-input[type='range'] { width: 100%; }
-input[type='range']:disabled { opacity: 0.4; }
+.ctv-pano-select:hover { border-color: var(--border-default, rgb(255 255 255 / 0.3)); }
+.ctv-pano-select:focus { border-color: var(--primary-background, rgb(78 168 255 / 0.6)); }
+.ctv-pano-select option { background: var(--interface-menu-surface, #1a1a2e); color: var(--base-foreground, #e0e0e0); }
 </style>

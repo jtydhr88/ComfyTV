@@ -25,11 +25,10 @@ function onChange(v: boolean) { emit('update:modelValue', !!v) }
   --p-toggleswitch-height: 18px;
 }
 .ctv-toggle .p-toggleswitch-slider {
-  background: rgba(255,255,255,0.12);
-  border: 1px solid rgba(255,255,255,0.15);
+  background: var(--secondary-background, rgba(255,255,255,0.12));
+  border: none;
 }
 .ctv-toggle.p-toggleswitch-checked .p-toggleswitch-slider {
-  background: rgba(78,168,255,0.6);
-  border-color: rgba(78,168,255,0.8);
+  background: var(--primary-background, rgba(78,168,255,0.6));
 }
 </style>

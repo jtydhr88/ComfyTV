@@ -1,5 +1,5 @@
 <template>
-  <div ref="canvasRef" class="scene-canvas" />
+  <div ref="canvasRef" class="relative block size-full" />
 </template>
 
 <script setup lang="ts">
@@ -17,12 +17,3 @@ onMounted(() => {
   }
 })
 </script>
-
-<style scoped>
-.scene-canvas {
-  width: 100%;
-  height: 100%;
-  display: block;
-  position: relative;
-}
-</style>

@@ -1,43 +1,49 @@
 <template>
-  <div class="rotate-stage">
-    <div class="preview-shell">
-      <div v-if="!sourceImageUrl" class="empty-state">
-        <div class="empty-icon">⊟</div>
-        <div class="empty-text">{{ $t('imageCrop.noInputImage') }}</div>
+  <div class="flex flex-col gap-1.5 size-full">
+    <div class="relative w-full h-[280px] rounded-md overflow-hidden border border-border-subtle
+                bg-black flex items-center justify-center">
+      <div v-if="!sourceImageUrl" class="flex flex-col items-center justify-center gap-1.5 text-white/50">
+        <div class="text-[32px] opacity-60">⊟</div>
+        <div class="text-xs">{{ $t('imageCrop.noInputImage') }}</div>
       </div>
       <img
         v-else
         :src="sourceImageUrl"
-        class="preview-img"
+        class="max-w-full max-h-full object-contain select-none pointer-events-none"
         :style="previewStyle"
         draggable="false"
         @dragstart.prevent
       />
     </div>
 
-    <div class="status">
-      <span v-if="!sourceImageUrl" class="muted">{{ $t('imageCrop.noInputImage') }}</span>
-      <span v-else-if="computing" class="muted">{{ $t('rotate.applying') }}</span>
-      <span v-else-if="state.output" class="ok">{{ $t('rotate.applied') }}</span>
-      <span v-else class="muted">{{ $t('rotate.adjustToApply') }}</span>
+    <div class="text-2xs text-center py-0.5 tracking-wide">
+      <span v-if="!sourceImageUrl" class="text-muted-foreground">{{ $t('imageCrop.noInputImage') }}</span>
+      <span v-else-if="computing" class="text-muted-foreground">{{ $t('rotate.applying') }}</span>
+      <span v-else-if="state.output" class="text-success-background">{{ $t('rotate.applied') }}</span>
+      <span v-else class="text-muted-foreground">{{ $t('rotate.adjustToApply') }}</span>
     </div>
 
-    <div class="controls">
-      <div class="row">
-        <span class="label">{{ $t('rotate.angle') }}</span>
+    <div class="flex flex-col gap-1">
+      <div class="grid grid-cols-[64px_1fr_48px] items-center gap-1.5 text-xs">
+        <span class="text-2xs uppercase tracking-wider text-muted-foreground">{{ $t('rotate.angle') }}</span>
         <input
           type="range"
+          class="w-full"
           min="-180" max="180" step="1"
           :value="angle"
           @input="(e) => angle = Number((e.target as HTMLInputElement).value)"
         />
-        <span class="value">{{ angle }}°</span>
+        <span class="text-right text-base-foreground font-mono">{{ angle }}°</span>
       </div>
-      <div class="row quick-row">
-        <button type="button" class="quick" @click="snap(-90)">⟲ 90°</button>
-        <button type="button" class="quick" @click="snap(0)">0°</button>
-        <button type="button" class="quick" @click="snap(180)">180°</button>
-        <button type="button" class="quick" @click="snap(90)">⟳ 90°</button>
+      <div class="grid grid-cols-4 gap-1.5 text-xs">
+        <button
+          v-for="q in [{ d: -90, l: '⟲ 90°' }, { d: 0, l: '0°' }, { d: 180, l: '180°' }, { d: 90, l: '⟳ 90°' }]"
+          :key="q.l"
+          type="button"
+          class="py-1 px-1.5 rounded text-xs cursor-pointer
+                 bg-secondary-background border border-border-subtle text-base-foreground hover:bg-secondary-background-hover"
+          @click="snap(q.d)"
+        >{{ q.l }}</button>
       </div>
     </div>
 
@@ -152,90 +158,3 @@ function rotateCanvas(img: HTMLImageElement, deg: number): HTMLCanvasElement {
   return canvas
 }
 </script>
-
-<style scoped>
-.rotate-stage {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
-  height: 100%;
-}
-
-.preview-shell {
-  position: relative;
-  width: 100%;
-  height: 280px;
-  background: #0a0a0f;
-  border-radius: 6px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.preview-img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  user-select: none;
-  pointer-events: none;
-}
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: rgba(255, 255, 255, 0.5);
-  gap: 6px;
-}
-.empty-icon { font-size: 32px; opacity: 0.6; }
-.empty-text { font-size: 12px; }
-
-.status {
-  font-size: 10px;
-  text-align: center;
-  padding: 2px 0;
-  letter-spacing: 0.3px;
-}
-.status .muted { color: rgba(255, 255, 255, 0.5); }
-.status .ok    { color: #b5e3a5; }
-
-.controls {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.row {
-  display: grid;
-  grid-template-columns: 64px 1fr 48px;
-  align-items: center;
-  gap: 6px;
-  font-size: 11px;
-}
-.label {
-  color: rgba(255, 255, 255, 0.6);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-size: 10px;
-}
-.value {
-  text-align: right;
-  color: rgba(255, 255, 255, 0.85);
-  font-family: ui-monospace, SFMono-Regular, monospace;
-}
-.quick-row {
-  grid-template-columns: repeat(4, 1fr);
-}
-.quick {
-  padding: 4px 6px;
-  font-size: 11px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 4px;
-  color: rgba(255, 255, 255, 0.85);
-  cursor: pointer;
-}
-.quick:hover { background: rgba(255, 255, 255, 0.1); }
-input[type='range'] { width: 100%; }
-</style>

@@ -1,21 +1,22 @@
 <template>
-  <div ref="rootEl" class="outpaint-stage">
+  <div ref="rootEl" class="flex flex-col gap-1.5 size-full">
     <div
       ref="canvasEl"
-      class="canvas-area"
-      :class="{ 'is-empty': !sourceImageUrl }"
+      class="relative flex-auto min-h-[280px] bg-black rounded-md overflow-hidden select-none
+             border border-border-subtle"
+      :class="{ 'flex items-center justify-center': !sourceImageUrl }"
     >
       <template v-if="!sourceImageUrl">
-        <div class="empty-state">
-          <div class="empty-icon">↔</div>
-          <div class="empty-text">{{ $t('outpaint.noInputImage') }}</div>
+        <div class="flex flex-col items-center gap-1.5 text-white/50">
+          <div class="text-[28px] opacity-60">↔</div>
+          <div class="text-xs">{{ $t('outpaint.noInputImage') }}</div>
         </div>
       </template>
       <template v-else>
-        <div class="pad-area" :style="padAreaStyle" />
+        <div class="absolute ctv-pad-area" :style="padAreaStyle" />
         <img
           :src="sourceImageUrl"
-          class="src-img"
+          class="absolute pointer-events-none outline outline-1 outline-white/70"
           :style="imgStyle"
           draggable="false"
           @load="onSourceLoaded"
@@ -24,29 +25,38 @@
         <div
           v-for="side in SIDES"
           :key="side"
-          class="handle"
-          :class="`handle-${side}`"
+          class="absolute flex items-center justify-center z-[3] ctv-outpaint-handle"
+          :class="[
+            `ctv-handle-${side}`,
+            side === 'left' || side === 'right' ? 'cursor-ew-resize' : 'cursor-ns-resize',
+          ]"
           :style="handleStyle(side)"
           @pointerdown="onHandlePointerDown($event, side)"
         >
-          <span class="handle-grip" />
+          <span class="absolute size-3 rounded-full bg-primary-background border-2 border-white
+                       shadow-[0_1px_4px_rgb(0_0_0/0.5)]" />
         </div>
         <span
           v-for="side in SIDES"
           :key="`v-${side}`"
-          class="pad-value"
-          :class="`pad-value-${side}`"
+          class="absolute z-[2] pointer-events-none py-px px-[5px] rounded-sm
+                 text-2xs font-mono bg-black/60 text-white/90"
           :style="badgeStyle(side)"
         >{{ pad[side] }}px</span>
       </template>
     </div>
 
-    <div class="controls">
-      <div class="row">
-        <label v-for="side in SIDES" :key="`in-${side}`" class="num">
-          <span class="num-label">{{ $t(`outpaint.${side}`) }}</span>
+    <div class="flex flex-col gap-1">
+      <div class="flex items-center gap-1.5 flex-wrap">
+        <label v-for="side in SIDES" :key="`in-${side}`"
+               class="flex items-center gap-[3px] py-0.5 px-1 rounded-sm
+                      bg-secondary-background border border-border-subtle">
+          <span class="text-3xs min-w-8 uppercase tracking-wide text-muted-foreground">{{ $t(`outpaint.${side}`) }}</span>
           <input
             type="number" min="0" max="4096" step="8"
+            class="w-12 py-px px-[3px] rounded-sm text-[11px] font-mono
+                   bg-secondary-background text-base-foreground border border-border-subtle
+                   disabled:opacity-40"
             :value="pad[side]"
             :disabled="!sourceImageUrl"
             @change="(e) => setPad(side, Number((e.target as HTMLInputElement).value))"
@@ -54,14 +64,16 @@
         </label>
         <button
           type="button"
-          class="reset-btn"
+          class="ml-auto py-0.5 px-2.5 text-[11px] rounded-sm cursor-pointer
+                 bg-secondary-background text-base-foreground border border-border-subtle
+                 hover:enabled:bg-secondary-background-hover disabled:opacity-40 disabled:cursor-default"
           :disabled="!sourceImageUrl"
           @click="resetAll"
         >{{ $t('outpaint.reset') }}</button>
       </div>
-      <div class="row dim-row">
-        <span class="muted">{{ $t('outpaint.output') }}:</span>
-        <span class="dim">{{ outDims }}</span>
+      <div class="flex items-center gap-1.5 flex-wrap">
+        <span class="text-2xs text-muted-foreground/60">{{ $t('outpaint.output') }}:</span>
+        <span class="text-[11px] font-mono text-base-foreground">{{ outDims }}</span>
       </div>
     </div>
 
@@ -107,126 +119,21 @@ const {
 </script>
 
 <style scoped>
-.outpaint-stage {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
-  height: 100%;
-}
-
-.canvas-area {
-  position: relative;
-  flex: 1 1 auto;
-  min-height: 280px;
-  background: #0a0a0f;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 6px;
-  overflow: hidden;
-  user-select: none;
-}
-.canvas-area.is-empty { display: flex; align-items: center; justify-content: center; }
-.empty-state {
-  display: flex; flex-direction: column; align-items: center; gap: 6px;
-  color: rgba(255, 255, 255, 0.5);
-}
-.empty-icon { font-size: 28px; opacity: 0.6; }
-.empty-text { font-size: 12px; }
-
-.pad-area {
-  position: absolute;
+.ctv-pad-area {
   background-image:
     linear-gradient(45deg, rgba(255,255,255,0.04) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.04) 75%),
     linear-gradient(45deg, rgba(255,255,255,0.04) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.04) 75%);
   background-size: 12px 12px;
   background-position: 0 0, 6px 6px;
-  border: 1px dashed rgba(255, 140, 200, 0.45);
+  border: 1px dashed color-mix(in srgb, var(--primary-background, #4ea8ff) 45%, transparent);
 }
-.src-img {
-  position: absolute;
-  pointer-events: none;
-  outline: 1px solid rgba(255, 255, 255, 0.7);
-}
-
-.handle {
-  position: absolute;
-  background: transparent;
-  display: flex; align-items: center; justify-content: center;
-  z-index: 3;
-}
-.handle-left, .handle-right  { cursor: ew-resize; }
-.handle-top,  .handle-bottom { cursor: ns-resize; }
-.handle::before {
+.ctv-outpaint-handle::before {
   content: '';
   position: absolute;
-  background: rgba(78, 168, 255, 0.65);
+  background: color-mix(in srgb, var(--primary-background, #4ea8ff) 65%, transparent);
   border-radius: 2px;
 }
-.handle-left::before,  .handle-right::before  { width: 3px; height: 100%; }
-.handle-top::before,   .handle-bottom::before { height: 3px; width: 100%; }
-.handle:hover::before { background: rgba(78, 168, 255, 1); }
-.handle-grip {
-  position: absolute;
-  width: 12px; height: 12px;
-  background: #4ea8ff;
-  border: 2px solid #fff;
-  border-radius: 50%;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.5);
-}
-
-.pad-value {
-  position: absolute;
-  font-size: 10px;
-  background: rgba(0, 0, 0, 0.6);
-  color: rgba(255, 255, 255, 0.9);
-  padding: 1px 5px;
-  border-radius: 3px;
-  font-family: ui-monospace, monospace;
-  z-index: 2;
-  pointer-events: none;
-}
-
-.controls { display: flex; flex-direction: column; gap: 4px; }
-.row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.num {
-  display: flex; align-items: center; gap: 3px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
-  padding: 2px 4px;
-}
-.num-label {
-  font-size: 9px;
-  color: rgba(255, 255, 255, 0.55);
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-  min-width: 32px;
-}
-.num input {
-  width: 48px;
-  background: rgba(0, 0, 0, 0.3);
-  color: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 3px;
-  padding: 1px 3px;
-  font-size: 11px;
-  font-family: ui-monospace, monospace;
-}
-.num input:disabled { opacity: 0.4; }
-
-.reset-btn {
-  margin-left: auto;
-  padding: 3px 10px;
-  font-size: 11px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: rgba(255, 255, 255, 0.85);
-  border-radius: 3px;
-  cursor: pointer;
-}
-.reset-btn:hover:not(:disabled) { background: rgba(255, 255, 255, 0.12); }
-.reset-btn:disabled { opacity: 0.4; cursor: default; }
-
-.dim-row .muted { font-size: 10px; color: rgba(255, 255, 255, 0.4); }
-.dim { font-size: 11px; color: rgba(255, 255, 255, 0.8); font-family: ui-monospace, monospace; }
+.ctv-handle-left::before,  .ctv-handle-right::before  { width: 3px; height: 100%; }
+.ctv-handle-top::before,   .ctv-handle-bottom::before { height: 3px; width: 100%; }
+.ctv-outpaint-handle:hover::before { background: var(--primary-background, #4ea8ff); }
 </style>

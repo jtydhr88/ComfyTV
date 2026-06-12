@@ -1,21 +1,25 @@
 <template>
   <div
-    class="painter"
+    class="flex flex-col gap-1.5 w-full"
     @pointerdown.stop
     @pointermove.stop
     @pointerup.stop
   >
-    <div class="canvas-shell" :style="canvasShellStyle">
+    <div
+      class="relative w-full max-h-[360px] flex items-center justify-center
+             bg-black rounded-md overflow-hidden border border-border-subtle"
+      :style="canvasShellStyle"
+    >
       <img
         v-if="sourceImageUrl"
         :src="sourceImageUrl"
-        class="bg-img"
+        class="absolute inset-0 size-full object-contain pointer-events-none select-none"
         draggable="false"
         @dragstart.prevent
       />
       <canvas
         ref="canvasEl"
-        class="paint-canvas"
+        class="absolute inset-0 size-full touch-none cursor-none"
         @pointerdown="handlePointerDown"
         @pointermove="handlePointerMove"
         @pointerup="handlePointerUp"
@@ -25,103 +29,81 @@
       <div
         v-show="cursorVisible"
         ref="cursorEl"
-        class="cursor-circle"
+        class="absolute top-0 left-0 rounded-full pointer-events-none border border-black/70
+               shadow-[0_0_0_1px_rgb(255_255_255/0.8)] will-change-transform"
         :style="cursorStyle"
       />
     </div>
 
-    <div class="size-readout" v-if="sourceImageUrl">
+    <div v-if="sourceImageUrl" class="text-2xs text-center font-mono text-muted-foreground">
       {{ canvasWidth }} × {{ canvasHeight }}
     </div>
 
-    <div class="controls">
-      <div class="row">
-        <span class="label">{{ $t('painter.tool') }}</span>
-        <div class="tool-toggle">
-          <button
-            type="button"
-            :class="['toggle-btn', tool === 'brush' && 'active']"
-            :title="$t('painter.brush')"
-            @click="tool = 'brush'"
-          >✏️</button>
-          <button
-            type="button"
-            :class="['toggle-btn', tool === 'eraser' && 'active']"
-            :title="$t('painter.eraser')"
-            @click="tool = 'eraser'"
-          >🧽</button>
-          <button
-            type="button"
-            :class="['toggle-btn', tool === 'rect' && 'active']"
-            :title="$t('painter.rect')"
-            @click="tool = 'rect'"
-          >▭</button>
-          <button
-            type="button"
-            :class="['toggle-btn', tool === 'ellipse' && 'active']"
-            :title="$t('painter.ellipse')"
-            @click="tool = 'ellipse'"
-          >◯</button>
-          <button
-            type="button"
-            :class="['toggle-btn', tool === 'label' && 'active']"
-            :title="$t('painter.label')"
-            @click="tool = 'label'"
-          >①</button>
+    <div class="flex flex-col gap-1">
+      <div :class="rowClass">
+        <span :class="labelClass">{{ $t('painter.tool') }}</span>
+        <div class="flex gap-0.5 p-0.5 rounded bg-secondary-background">
+          <button v-for="t in TOOLS" :key="t.id" type="button"
+                  :class="toolBtnClass(tool === t.id)"
+                  :title="$t(t.i18n)"
+                  @click="tool = t.id">{{ t.icon }}</button>
         </div>
       </div>
 
-      <div class="row">
-        <span class="label">{{ $t('painter.size') }}</span>
+      <div :class="rowClass">
+        <span :class="labelClass">{{ $t('painter.size') }}</span>
         <input
-          type="range"
-          min="1" max="200" step="1"
+          type="range" min="1" max="200" step="1"
+          class="w-full"
           :value="brushSize"
           @input="(e) => brushSize = Number((e.target as HTMLInputElement).value)"
         />
-        <span class="value">{{ brushSize }}</span>
+        <span :class="valueClass">{{ brushSize }}</span>
       </div>
 
       <template v-if="tool !== 'eraser'">
-        <div class="row">
-          <span class="label">{{ $t('painter.color') }}</span>
+        <div :class="rowClass">
+          <span :class="labelClass">{{ $t('painter.color') }}</span>
           <input
             type="color"
-            class="color-swatch"
+            class="w-7 h-[18px] p-0 border-0 bg-transparent cursor-pointer"
             :value="brushColorDisplay"
             @input="(e) => brushColorDisplay = (e.target as HTMLInputElement).value"
           />
-          <span class="value mono">{{ brushColorDisplay }}</span>
+          <span :class="`${valueClass} font-mono`">{{ brushColorDisplay }}</span>
         </div>
 
-        <div class="row">
-          <span class="label">{{ $t('painter.opacity') }}</span>
+        <div :class="rowClass">
+          <span :class="labelClass">{{ $t('painter.opacity') }}</span>
           <input
-            type="range"
-            min="0" max="100" step="1"
+            type="range" min="0" max="100" step="1"
+            class="w-full"
             :value="brushOpacityPercent"
             @input="(e) => brushOpacityPercent = Number((e.target as HTMLInputElement).value)"
           />
-          <span class="value">{{ brushOpacityPercent }}%</span>
+          <span :class="valueClass">{{ brushOpacityPercent }}%</span>
         </div>
       </template>
 
       <template v-if="tool === 'brush'">
-        <div class="row">
-          <span class="label">{{ $t('painter.hardness') }}</span>
+        <div :class="rowClass">
+          <span :class="labelClass">{{ $t('painter.hardness') }}</span>
           <input
-            type="range"
-            min="0" max="100" step="1"
+            type="range" min="0" max="100" step="1"
+            class="w-full"
             :value="brushHardnessPercent"
             @input="(e) => brushHardnessPercent = Number((e.target as HTMLInputElement).value)"
           />
-          <span class="value">{{ brushHardnessPercent }}%</span>
+          <span :class="valueClass">{{ brushHardnessPercent }}%</span>
         </div>
       </template>
 
-      <button class="clear-btn" type="button" @click="handleClear">
-        ↶ {{ $t('painter.clear') }}
-      </button>
+      <button
+        type="button"
+        class="mt-0.5 py-1 px-2.5 text-[11px] rounded cursor-pointer transition-colors duration-150
+               bg-secondary-background text-base-foreground border border-border-subtle hover:bg-secondary-background-hover"
+        @click="handleClear"
+      >↶ {{ $t('painter.clear') }}</button>
     </div>
   </div>
 </template>
@@ -178,137 +160,25 @@ const brushHardnessPercent = computed({
   get: () => Math.round(brushHardness.value * 100),
   set: (v: number) => { brushHardness.value = v / 100 },
 })
+
+const TOOLS = [
+  { id: 'brush',   icon: '✏️', i18n: 'painter.brush' },
+  { id: 'eraser',  icon: '🧽', i18n: 'painter.eraser' },
+  { id: 'rect',    icon: '▭',  i18n: 'painter.rect' },
+  { id: 'ellipse', icon: '◯',  i18n: 'painter.ellipse' },
+  { id: 'label',   icon: '①',  i18n: 'painter.label' },
+] as const
+
+const rowClass   = 'grid grid-cols-[64px_1fr_48px] items-center gap-1.5 text-[11px]'
+const labelClass = 'text-2xs uppercase tracking-wide text-muted-foreground'
+const valueClass = 'text-right text-base-foreground'
+
+function toolBtnClass(active: boolean) {
+  return [
+    'flex-1 py-0.5 px-2 text-[11px] cursor-pointer border-0 bg-transparent rounded-sm',
+    active
+      ? 'bg-secondary-background-selected text-primary-background font-semibold'
+      : 'text-muted-foreground hover:text-base-foreground',
+  ].join(' ')
+}
 </script>
-
-<style scoped>
-.painter {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
-}
-
-.canvas-shell {
-  position: relative;
-  width: 100%;
-  max-height: 360px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #0a0a0f;
-  border-radius: 6px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-.bg-img,
-.paint-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-.bg-img {
-  object-fit: contain;
-  pointer-events: none;
-  user-select: none;
-}
-.paint-canvas {
-  cursor: none;
-  touch-action: none;
-}
-.cursor-circle {
-  position: absolute;
-  top: 0;
-  left: 0;
-  border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.7);
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.8);
-  pointer-events: none;
-  will-change: transform;
-}
-
-.size-readout {
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.5);
-  text-align: center;
-  font-family: ui-monospace, SFMono-Regular, monospace;
-}
-
-.controls {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.row {
-  display: grid;
-  grid-template-columns: 64px 1fr 48px;
-  align-items: center;
-  gap: 6px;
-  font-size: 11px;
-}
-.label {
-  color: rgba(255, 255, 255, 0.6);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-size: 10px;
-}
-.value {
-  text-align: right;
-  color: rgba(255, 255, 255, 0.85);
-}
-.value.mono {
-  font-family: ui-monospace, SFMono-Regular, monospace;
-}
-input[type='range'] {
-  width: 100%;
-}
-.color-swatch {
-  width: 28px;
-  height: 18px;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  padding: 0;
-}
-
-.tool-toggle {
-  display: flex;
-  gap: 2px;
-  background: rgba(255, 255, 255, 0.04);
-  border-radius: 4px;
-  padding: 2px;
-}
-.toggle-btn {
-  flex: 1;
-  padding: 3px 8px;
-  border: none;
-  background: transparent;
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 11px;
-  cursor: pointer;
-  border-radius: 3px;
-}
-.toggle-btn:hover {
-  color: rgba(255, 255, 255, 0.9);
-}
-.toggle-btn.active {
-  background: rgba(233, 61, 130, 0.25);
-  color: #ffb0d8;
-  font-weight: 600;
-}
-
-.clear-btn {
-  margin-top: 2px;
-  padding: 5px 10px;
-  font-size: 11px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 4px;
-  color: rgba(255, 255, 255, 0.85);
-  cursor: pointer;
-  transition: background 120ms;
-}
-.clear-btn:hover {
-  background: rgba(255, 255, 255, 0.12);
-}
-</style>

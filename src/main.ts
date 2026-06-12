@@ -36,6 +36,7 @@ import { useExecutionStore } from '@/stores/executionStore'
 import { useSelectionStore } from '@/stores/selectionStore'
 import { i18n } from '@/i18n'
 
+import './tailwind.css'
 import './style.css'
 
 import { app } from '@/lib/comfyApp'

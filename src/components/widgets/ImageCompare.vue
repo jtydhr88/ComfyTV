@@ -1,7 +1,8 @@
 <template>
   <div
     ref="containerRef"
-    class="compare"
+    class="relative w-full h-80 rounded-md overflow-hidden cursor-ew-resize
+           bg-black border border-border-subtle"
     @pointerdown.stop
   >
     <template v-if="beforeImage || afterImage">
@@ -9,7 +10,7 @@
         v-if="afterImage"
         :src="afterImage"
         :alt="$t('imageCompare.after')"
-        class="layer"
+        class="absolute inset-0 size-full object-contain select-none"
         draggable="false"
         @dragstart.prevent
       />
@@ -17,20 +18,39 @@
         v-if="beforeImage"
         :src="beforeImage"
         :alt="$t('imageCompare.before')"
-        class="layer"
+        class="absolute inset-0 size-full object-contain select-none"
         draggable="false"
         :style="hasBoth ? { clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` } : undefined"
         @dragstart.prevent
       />
       <template v-if="hasBoth">
-        <div class="divider" :style="{ left: `${sliderPosition}%` }" />
-        <div class="handle" :style="{ left: `${sliderPosition}%` }" />
-        <span class="tag tag-a">{{ $t('imageCompare.before') }}</span>
-        <span class="tag tag-b">{{ $t('imageCompare.after') }}</span>
+        <div
+          class="absolute top-0 bottom-0 w-0.5 -ml-px z-[5] pointer-events-none
+                 bg-white/85 shadow-[0_0_4px_rgb(0_0_0/0.6)]"
+          :style="{ left: `${sliderPosition}%` }"
+        />
+        <div
+          class="absolute top-1/2 size-6 -translate-x-1/2 -translate-y-1/2 rounded-full
+                 border-2 border-white bg-white/30 backdrop-blur-[2px]
+                 shadow-[0_1px_4px_rgb(0_0_0/0.5)] pointer-events-none z-[6]"
+          :style="{ left: `${sliderPosition}%` }"
+        />
+        <span class="absolute top-2 left-2 z-[7] py-0.5 px-1.5 rounded-lg
+                     bg-black/60 text-white/90 text-2xs tracking-wide pointer-events-none">
+          {{ $t('imageCompare.before') }}
+        </span>
+        <span class="absolute top-2 right-2 z-[7] py-0.5 px-1.5 rounded-lg
+                     bg-black/60 text-white/90 text-2xs tracking-wide pointer-events-none">
+          {{ $t('imageCompare.after') }}
+        </span>
       </template>
     </template>
 
-    <div v-else class="empty">{{ $t('imageCompare.noImages') }}</div>
+    <div
+      v-else
+      class="absolute inset-0 flex items-center justify-center px-4 text-center
+             text-white/50 text-xs"
+    >{{ $t('imageCompare.noImages') }}</div>
   </div>
 </template>
 
@@ -55,74 +75,3 @@ watch([elementX, elementWidth, isOutside], ([x, width, outside]) => {
   }
 })
 </script>
-
-<style scoped>
-.compare {
-  position: relative;
-  width: 100%;
-  height: 320px;
-  background: #0a0a0f;
-  border-radius: 6px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  cursor: ew-resize;
-}
-.layer {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  user-select: none;
-}
-.divider {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  margin-left: -1px;
-  background: rgba(255, 255, 255, 0.85);
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
-  pointer-events: none;
-  z-index: 5;
-}
-.handle {
-  position: absolute;
-  top: 50%;
-  width: 24px;
-  height: 24px;
-  transform: translate(-50%, -50%);
-  border: 2px solid #fff;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(2px);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
-  pointer-events: none;
-  z-index: 6;
-}
-.tag {
-  position: absolute;
-  top: 8px;
-  font-size: 10px;
-  padding: 2px 6px;
-  border-radius: 8px;
-  background: rgba(0, 0, 0, 0.6);
-  color: rgba(255, 255, 255, 0.9);
-  letter-spacing: 0.3px;
-  pointer-events: none;
-  z-index: 7;
-}
-.tag-a { left: 8px; }
-.tag-b { right: 8px; }
-.empty {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 12px;
-  text-align: center;
-  padding: 0 16px;
-}
-</style>

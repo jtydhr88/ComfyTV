@@ -1,5 +1,5 @@
 <template>
-  <div class="panorama-stage">
+  <div class="flex flex-col gap-1.5 size-full">
     <PanoramaCanvas
       :panorama-url="visibleUrl"
       :manual-source="manualSource"
@@ -98,13 +98,3 @@ watch(
   { immediate: true },
 )
 </script>
-
-<style scoped>
-.panorama-stage {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
-  height: 100%;
-}
-</style>

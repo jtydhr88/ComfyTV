@@ -1,63 +1,77 @@
 <template>
-  <div class="grid-split-stage">
-    <div class="preview-shell">
-      <div v-if="!sourceImageUrl" class="empty-state">
-        <div class="empty-icon">▦</div>
-        <div class="empty-text">{{ $t('gridSplit.connectImage') }}</div>
+  <div class="flex flex-col gap-1.5 size-full">
+    <div class="relative w-full h-[280px] rounded-md overflow-hidden border border-border-subtle
+                bg-black flex items-center justify-center">
+      <div v-if="!sourceImageUrl"
+           class="flex flex-col items-center justify-center gap-1.5 text-white/50">
+        <div class="text-[32px] opacity-60">▦</div>
+        <div class="text-xs">{{ $t('gridSplit.connectImage') }}</div>
       </div>
       <template v-else>
         <img
           :src="sourceImageUrl"
-          class="preview-img"
+          class="max-w-full max-h-full object-contain select-none pointer-events-none"
           draggable="false"
           @dragstart.prevent
         />
-        <div class="grid-overlay">
+        <div class="absolute inset-0 pointer-events-none">
           <div
             v-for="c in cols - 1"
             :key="`v${c}`"
-            class="line v"
+            class="absolute top-0 bottom-0 w-px bg-white/70 shadow-[0_0_2px_rgb(0_0_0/0.6)]"
             :style="{ left: `${(c / cols) * 100}%` }"
           />
           <div
             v-for="r in rows - 1"
             :key="`h${r}`"
-            class="line h"
+            class="absolute left-0 right-0 h-px bg-white/70 shadow-[0_0_2px_rgb(0_0_0/0.6)]"
             :style="{ top: `${(r / rows) * 100}%` }"
           />
         </div>
       </template>
     </div>
 
-    <div class="status">
-      <span v-if="!sourceImageUrl" class="muted">{{ $t('gridSplit.connectImage') }}</span>
-      <span v-else-if="splitting" class="muted">{{ $t('gridSplit.splitting', { n: rows * cols }) }}</span>
-      <span v-else-if="state.output" class="ok">{{ $t('gridSplit.done', { n: rows * cols }) }}</span>
-      <span v-else class="muted">{{ $t('gridSplit.pickGrid') }}</span>
+    <div class="text-2xs text-center py-0.5">
+      <span v-if="!sourceImageUrl" class="text-muted-foreground">{{ $t('gridSplit.connectImage') }}</span>
+      <span v-else-if="splitting" class="text-muted-foreground">{{ $t('gridSplit.splitting', { n: rows * cols }) }}</span>
+      <span v-else-if="state.output" class="text-success-background">{{ $t('gridSplit.done', { n: rows * cols }) }}</span>
+      <span v-else class="text-muted-foreground">{{ $t('gridSplit.pickGrid') }}</span>
     </div>
 
-    <div class="presets">
+    <div class="flex gap-1 flex-wrap">
       <button
         v-for="p in PRESETS"
         :key="p.label"
         type="button"
-        class="preset"
-        :class="{ active: rows === p.r && cols === p.c }"
+        class="flex-1 min-w-[44px] py-1 px-1.5 rounded text-xs font-mono cursor-pointer border"
+        :class="rows === p.r && cols === p.c
+          ? 'bg-secondary-background-selected border-primary-background text-primary-background font-semibold'
+          : 'bg-secondary-background border-border-subtle text-base-foreground hover:bg-secondary-background-hover'"
         @click="setGrid(p.r, p.c)"
       >{{ p.label }}</button>
     </div>
-    <div class="steppers">
-      <div class="stepper">
-        <span class="label">{{ $t('gridSplit.rows') }}</span>
-        <button type="button" @click="setGrid(rows - 1, cols)">−</button>
-        <span class="num">{{ rows }}</span>
-        <button type="button" @click="setGrid(rows + 1, cols)">+</button>
-      </div>
-      <div class="stepper">
-        <span class="label">{{ $t('gridSplit.cols') }}</span>
-        <button type="button" @click="setGrid(rows, cols - 1)">−</button>
-        <span class="num">{{ cols }}</span>
-        <button type="button" @click="setGrid(rows, cols + 1)">+</button>
+    <div class="flex gap-2">
+      <div
+        v-for="[lbl, val, setRow] in [
+          [$t('gridSplit.rows'), rows, (n: number) => setGrid(n, cols)],
+          [$t('gridSplit.cols'), cols, (n: number) => setGrid(rows, n)],
+        ] as const"
+        :key="String(lbl)"
+        class="flex-1 flex items-center gap-1.5 py-0.5 px-1.5 rounded
+               bg-secondary-background border border-border-subtle"
+      >
+        <span class="text-2xs uppercase tracking-wide text-muted-foreground">{{ lbl }}</span>
+        <button
+          type="button"
+          class="size-5 rounded-sm border border-border-subtle bg-secondary-background text-base-foreground text-[13px] leading-none cursor-pointer hover:bg-secondary-background-hover"
+          @click="setRow(val - 1)"
+        >−</button>
+        <span class="ml-auto min-w-4 text-center font-mono text-xs text-base-foreground">{{ val }}</span>
+        <button
+          type="button"
+          class="size-5 rounded-sm border border-border-subtle bg-secondary-background text-base-foreground text-[13px] leading-none cursor-pointer hover:bg-secondary-background-hover"
+          @click="setRow(val + 1)"
+        >+</button>
       </div>
     </div>
 
@@ -97,87 +111,3 @@ const props = defineProps<{
 
 const { sourceImageUrl, rows, cols, setGrid, splitting } = useGridSplit(props.node, props.state)
 </script>
-
-<style scoped>
-.grid-split-stage {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
-  height: 100%;
-}
-.preview-shell {
-  position: relative;
-  width: 100%;
-  height: 280px;
-  background: #0a0a0f;
-  border-radius: 6px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.preview-img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  user-select: none;
-  pointer-events: none;
-}
-.grid-overlay { position: absolute; inset: 0; pointer-events: none; }
-.line { position: absolute; background: rgba(255, 255, 255, 0.7); box-shadow: 0 0 2px rgba(0,0,0,0.6); }
-.line.v { top: 0; bottom: 0; width: 1px; }
-.line.h { left: 0; right: 0; height: 1px; }
-
-.empty-state {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  color: rgba(255, 255, 255, 0.5); gap: 6px;
-}
-.empty-icon { font-size: 32px; opacity: 0.6; }
-.empty-text { font-size: 12px; }
-
-.status { font-size: 10px; text-align: center; padding: 2px 0; }
-.status .muted { color: rgba(255, 255, 255, 0.5); }
-.status .ok    { color: #b5e3a5; }
-
-.presets { display: flex; gap: 4px; flex-wrap: wrap; }
-.preset {
-  flex: 1 1 0; min-width: 44px;
-  padding: 4px 6px; font-size: 11px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 4px; color: rgba(255, 255, 255, 0.85); cursor: pointer;
-  font-family: ui-monospace, SFMono-Regular, monospace;
-}
-.preset:hover { background: rgba(255, 255, 255, 0.1); }
-.preset.active {
-  background: rgba(233, 61, 130, 0.25);
-  border-color: rgba(233, 61, 130, 0.6);
-  color: #ffb0d8; font-weight: 600;
-}
-
-.steppers { display: flex; gap: 8px; }
-.stepper {
-  flex: 1; display: flex; align-items: center; gap: 6px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 4px; padding: 2px 6px;
-}
-.stepper .label {
-  font-size: 10px; color: rgba(255, 255, 255, 0.55);
-  text-transform: uppercase; letter-spacing: 0.4px;
-}
-.stepper button {
-  width: 20px; height: 20px; border-radius: 3px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.04); color: rgba(255, 255, 255, 0.85);
-  cursor: pointer; font-size: 13px; line-height: 1;
-}
-.stepper button:hover { background: rgba(255, 255, 255, 0.12); }
-.stepper .num {
-  margin-left: auto; min-width: 16px; text-align: center;
-  font-family: ui-monospace, SFMono-Regular, monospace; font-size: 12px;
-  color: rgba(255, 255, 255, 0.9);
-}
-</style>

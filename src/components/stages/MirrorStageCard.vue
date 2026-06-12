@@ -1,45 +1,52 @@
 <template>
-  <div class="mirror-stage">
-    <div class="preview-shell">
-      <div v-if="!sourceImageUrl" class="empty-state">
-        <div class="empty-icon">⊟</div>
-        <div class="empty-text">{{ $t('imageCrop.noInputImage') }}</div>
+  <div class="flex flex-col gap-1.5 size-full">
+    <div class="relative w-full h-[280px] rounded-md overflow-hidden border border-border-subtle
+                bg-black flex items-center justify-center">
+      <div v-if="!sourceImageUrl" class="flex flex-col items-center justify-center gap-1.5 text-white/50">
+        <div class="text-[32px] opacity-60">⊟</div>
+        <div class="text-xs">{{ $t('imageCrop.noInputImage') }}</div>
       </div>
       <img
         v-else
         :src="sourceImageUrl"
-        class="preview-img"
+        class="max-w-full max-h-full object-contain select-none pointer-events-none"
         :style="previewStyle"
         draggable="false"
         @dragstart.prevent
       />
     </div>
 
-    <div class="status">
-      <span v-if="!sourceImageUrl" class="muted">{{ $t('imageCrop.noInputImage') }}</span>
-      <span v-else-if="computing" class="muted">{{ $t('mirror.applying') }}</span>
-      <span v-else-if="state.output" class="ok">{{ $t('mirror.applied') }}</span>
-      <span v-else class="muted">{{ $t('mirror.adjustToApply') }}</span>
+    <div class="text-2xs text-center py-0.5">
+      <span v-if="!sourceImageUrl" class="text-muted-foreground">{{ $t('imageCrop.noInputImage') }}</span>
+      <span v-else-if="computing" class="text-muted-foreground">{{ $t('mirror.applying') }}</span>
+      <span v-else-if="state.output" class="text-success-background">{{ $t('mirror.applied') }}</span>
+      <span v-else class="text-muted-foreground">{{ $t('mirror.adjustToApply') }}</span>
     </div>
 
-    <div class="controls">
+    <div class="flex gap-1.5">
       <button
         type="button"
-        class="toggle"
-        :class="{ active: flipH }"
+        class="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded
+               text-xs border cursor-pointer"
+        :class="flipH
+          ? 'bg-secondary-background-selected border-primary-background text-primary-background font-semibold'
+          : 'bg-secondary-background border-border-subtle text-base-foreground hover:bg-secondary-background-hover'"
         :title="$t('mirror.horizontal')"
         @click="flipH = !flipH"
       >
-        <span class="icon">⇋</span> {{ $t('mirror.horizontal') }}
+        <span class="text-sm leading-none">⇋</span> {{ $t('mirror.horizontal') }}
       </button>
       <button
         type="button"
-        class="toggle"
-        :class="{ active: flipV }"
+        class="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded
+               text-xs border cursor-pointer"
+        :class="flipV
+          ? 'bg-secondary-background-selected border-primary-background text-primary-background font-semibold'
+          : 'bg-secondary-background border-border-subtle text-base-foreground hover:bg-secondary-background-hover'"
         :title="$t('mirror.vertical')"
         @click="flipV = !flipV"
       >
-        <span class="icon">⇅</span> {{ $t('mirror.vertical') }}
+        <span class="text-sm leading-none">⇅</span> {{ $t('mirror.vertical') }}
       </button>
     </div>
 
@@ -151,78 +158,3 @@ function mirrorCanvas(img: HTMLImageElement, horizontal: boolean, vertical: bool
   return canvas
 }
 </script>
-
-<style scoped>
-.mirror-stage {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
-  height: 100%;
-}
-
-.preview-shell {
-  position: relative;
-  width: 100%;
-  height: 280px;
-  background: #0a0a0f;
-  border-radius: 6px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.preview-img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  user-select: none;
-  pointer-events: none;
-}
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: rgba(255, 255, 255, 0.5);
-  gap: 6px;
-}
-.empty-icon { font-size: 32px; opacity: 0.6; }
-.empty-text { font-size: 12px; }
-
-.status {
-  font-size: 10px;
-  text-align: center;
-  padding: 2px 0;
-}
-.status .muted { color: rgba(255, 255, 255, 0.5); }
-.status .ok    { color: #b5e3a5; }
-
-.controls {
-  display: flex;
-  gap: 6px;
-}
-.toggle {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 6px 10px;
-  font-size: 11px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 4px;
-  color: rgba(255, 255, 255, 0.7);
-  cursor: pointer;
-}
-.toggle:hover { background: rgba(255, 255, 255, 0.1); }
-.toggle.active {
-  background: rgba(233, 61, 130, 0.25);
-  border-color: rgba(233, 61, 130, 0.6);
-  color: #ffb0d8;
-  font-weight: 600;
-}
-.icon { font-size: 14px; line-height: 1; }
-</style>

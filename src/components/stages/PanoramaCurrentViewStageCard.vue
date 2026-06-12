@@ -1,39 +1,43 @@
 <template>
-  <div class="pano-view-stage">
-    <div class="viewer-wrap">
+  <div class="flex flex-col gap-1.5 size-full">
+    <div class="flex items-center justify-center w-full">
       <div
         ref="viewerHostEl"
-        class="viewer-shell"
+        class="relative max-w-full rounded-md overflow-hidden border border-border-subtle bg-black"
         :style="viewerStyle"
       >
-        <div v-if="!panoramaUrl" class="empty-state">
-          <div class="empty-icon">🌐</div>
-          <div class="empty-text">{{ $t('panoramaView.connectPanorama') }}</div>
+        <div
+          v-if="!panoramaUrl"
+          class="absolute inset-0 flex flex-col items-center justify-center gap-1.5
+                 text-white/50 pointer-events-none"
+        >
+          <div class="text-[32px] opacity-60">🌐</div>
+          <div class="text-xs text-center px-3">{{ $t('panoramaView.connectPanorama') }}</div>
         </div>
       </div>
     </div>
 
-    <div class="controls">
-      <div class="ctl">
-        <span class="label">{{ $t('panoramaView.aspect') }}</span>
-        <select v-model="aspectRatio" class="select">
+    <div class="flex items-center gap-2 flex-wrap">
+      <div class="flex items-center gap-1">
+        <span class="text-2xs uppercase tracking-wide text-muted-foreground">{{ $t('panoramaView.aspect') }}</span>
+        <select v-model="aspectRatio" class="ctv-pano-select">
           <option v-for="opt in aspectOptions" :key="opt" :value="opt">{{ opt }}</option>
         </select>
       </div>
-      <div class="ctl">
-        <span class="label">{{ $t('panoramaView.resolution') }}</span>
-        <select v-model="resolution" class="select">
+      <div class="flex items-center gap-1">
+        <span class="text-2xs uppercase tracking-wide text-muted-foreground">{{ $t('panoramaView.resolution') }}</span>
+        <select v-model="resolution" class="ctv-pano-select">
           <option v-for="opt in resolutionOptions" :key="opt" :value="opt">{{ opt }}</option>
         </select>
       </div>
-      <span class="dims">{{ captureSize.w }}×{{ captureSize.h }}</span>
+      <span class="ml-auto text-2xs font-mono text-muted-foreground">{{ captureSize.w }}×{{ captureSize.h }}</span>
     </div>
 
-    <div class="status">
-      <span v-if="!panoramaUrl" class="muted">{{ $t('panoramaView.connectPanorama') }}</span>
-      <span v-else-if="capturing" class="muted">{{ $t('panoramaView.capturing') }}</span>
-      <span v-else-if="state.output" class="ok">{{ $t('panoramaView.captured') }}</span>
-      <span v-else class="muted">{{ $t('panoramaView.orbitToCapture') }}</span>
+    <div class="text-2xs text-center py-0.5">
+      <span v-if="!panoramaUrl" class="text-muted-foreground">{{ $t('panoramaView.connectPanorama') }}</span>
+      <span v-else-if="capturing" class="text-muted-foreground">{{ $t('panoramaView.capturing') }}</span>
+      <span v-else-if="state.output" class="text-success-background">{{ $t('panoramaView.captured') }}</span>
+      <span v-else class="text-muted-foreground">{{ $t('panoramaView.orbitToCapture') }}</span>
     </div>
 
     <StageCard
@@ -97,70 +101,14 @@ const viewerStyle = computed(() => {
 </script>
 
 <style scoped>
-.pano-view-stage {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
-  height: 100%;
-}
-
-.viewer-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-}
-.viewer-shell {
-  position: relative;
-  max-width: 100%;
-  background: #0a0a0f;
-  border-radius: 6px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.empty-state {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: rgba(255, 255, 255, 0.5);
-  gap: 6px;
-  pointer-events: none;
-}
-.empty-icon { font-size: 32px; opacity: 0.6; }
-.empty-text { font-size: 12px; text-align: center; padding: 0 12px; }
-
-.controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.ctl {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.label {
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.55);
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-}
-.select {
+.ctv-pano-select {
   appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-color: rgba(255, 255, 255, 0.04);
+  background-color: var(--secondary-background, rgb(255 255 255 / 0.04));
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6' viewBox='0 0 8 6'><path d='M0 0l4 6 4-6z' fill='%23bbb'/></svg>");
   background-repeat: no-repeat;
   background-position: right 6px center;
-  color: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--base-foreground, rgb(255 255 255 / 0.9));
+  border: 1px solid var(--border-subtle, rgb(255 255 255 / 0.15));
   border-radius: 4px;
   padding: 3px 18px 3px 6px;
   font-size: 11px;
@@ -169,28 +117,7 @@ const viewerStyle = computed(() => {
   outline: none;
   min-width: 70px;
 }
-.select:hover {
-  border-color: rgba(255, 255, 255, 0.3);
-}
-.select:focus {
-  border-color: rgba(78, 168, 255, 0.6);
-}
-.select option {
-  background: #1a1a2e;
-  color: #e0e0e0;
-}
-.dims {
-  margin-left: auto;
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.55);
-  font-family: ui-monospace, SFMono-Regular, monospace;
-}
-
-.status {
-  font-size: 10px;
-  text-align: center;
-  padding: 2px 0;
-}
-.status .muted { color: rgba(255, 255, 255, 0.5); }
-.status .ok    { color: #b5e3a5; }
+.ctv-pano-select:hover { border-color: var(--border-default, rgb(255 255 255 / 0.3)); }
+.ctv-pano-select:focus { border-color: var(--primary-background, rgb(78 168 255 / 0.6)); }
+.ctv-pano-select option { background: var(--interface-menu-surface, #1a1a2e); color: var(--base-foreground, #e0e0e0); }
 </style>

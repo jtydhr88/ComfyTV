@@ -1,13 +1,15 @@
 <template>
-  <div class="project-card">
-    <div class="header">
-      <span class="header-icon">📁</span>
-      <span class="header-label">{{ $t('project.label') }}</span>
+  <div class="flex flex-col gap-1.5 py-1.5 px-2 size-full box-border text-xs text-base-foreground">
+    <div class="flex items-center gap-1.5 pb-1 font-semibold text-[11px] uppercase tracking-wide
+                text-muted-foreground border-b border-border-default">
+      <span class="text-sm">📁</span>
+      <span>{{ $t('project.label') }}</span>
     </div>
 
-    <div class="picker-row">
+    <div class="flex items-center gap-1">
       <select
-        class="project-select"
+        class="flex-auto py-1 px-1.5 text-xs rounded-sm bg-secondary-background
+               text-base-foreground border border-border-default"
         :value="store.currentProjectId"
         @change="onSelectChange"
       >
@@ -21,31 +23,31 @@
         <option v-if="!store.projects.length" value="default">Default {{ $t('project.shared_suffix') }}</option>
       </select>
       <button
-        class="icon-btn"
+        :class="iconBtn()"
         type="button"
         :title="$t('project.refresh')"
         @click="onRefresh"
       >↻</button>
       <button
-        class="icon-btn primary"
+        :class="iconBtn('primary')"
         type="button"
         :title="$t('project.create')"
         @click="onCreate"
       >+</button>
     </div>
 
-    <div class="meta-row">
-      <span class="meta-id">{{ $t('project.id_prefix') }} {{ store.currentProjectId }}</span>
+    <div class="flex items-center justify-between text-2xs text-muted-foreground/60">
+      <span class="font-mono break-all">{{ $t('project.id_prefix') }} {{ store.currentProjectId }}</span>
       <button
         v-if="store.currentProjectId !== 'default'"
-        class="icon-btn danger"
+        :class="iconBtn('danger')"
         type="button"
         :title="$t('project.delete')"
         @click="onDelete"
       >🗑</button>
     </div>
 
-    <div v-if="status" class="status">{{ status }}</div>
+    <div v-if="status" class="text-2xs italic text-muted-foreground">{{ status }}</div>
   </div>
 </template>
 
@@ -109,100 +111,14 @@ function onSelectChange(e: Event) {
   const newId = (e.target as HTMLSelectElement).value
   store.setCurrent(newId)
 }
+
+const ICON_BTN_BASE = 'inline-flex items-center justify-center size-6 p-0 rounded-sm cursor-pointer text-[13px]'
+const ICON_BTN_VARIANTS = {
+  default: 'bg-secondary-background text-base-foreground border border-border-default hover:bg-secondary-background-hover',
+  primary: 'bg-secondary-background text-primary-background border border-primary-background/60 hover:bg-primary-background/20',
+  danger:  'bg-secondary-background text-destructive-background border border-destructive-background/50 hover:bg-destructive-background/30 hover:text-base-foreground',
+} as const
+function iconBtn(variant: keyof typeof ICON_BTN_VARIANTS = 'default') {
+  return `${ICON_BTN_BASE} ${ICON_BTN_VARIANTS[variant]}`
+}
 </script>
-
-<style scoped>
-.project-card {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 6px 8px;
-  font-size: 12px;
-  color: var(--input-text, #ddd);
-  height: 100%;
-  box-sizing: border-box;
-}
-
-.header {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-weight: 600;
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.7);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  padding-bottom: 4px;
-  border-bottom: 1px solid var(--border-color, #444);
-}
-.header-icon { font-size: 14px; }
-
-.picker-row {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.project-select {
-  flex: 1 1 auto;
-  padding: 4px 6px;
-  font-size: 12px;
-  background: rgba(0, 0, 0, 0.3);
-  color: var(--input-text, #ddd);
-  border: 1px solid var(--border-color, #555);
-  border-radius: 3px;
-}
-
-.icon-btn {
-  flex: 0 0 auto;
-  width: 24px;
-  height: 24px;
-  border: 1px solid var(--border-color, #555);
-  background: rgba(255, 255, 255, 0.04);
-  color: rgba(255, 255, 255, 0.8);
-  border-radius: 3px;
-  cursor: pointer;
-  font-size: 13px;
-  padding: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-.icon-btn:hover {
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
-}
-.icon-btn.primary {
-  border-color: rgba(78, 168, 255, 0.6);
-  color: #9dd0ff;
-}
-.icon-btn.primary:hover {
-  background: rgba(78, 168, 255, 0.22);
-}
-.icon-btn.danger {
-  border-color: rgba(220, 50, 50, 0.5);
-  color: #ff9a9a;
-}
-.icon-btn.danger:hover {
-  background: rgba(220, 50, 50, 0.3);
-  color: #fff;
-}
-
-.meta-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.45);
-}
-.meta-id {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  word-break: break-all;
-}
-
-.status {
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.55);
-  font-style: italic;
-}
-</style>

@@ -1,40 +1,42 @@
 <template>
-  <div class="entry-manager">
-    <p class="entry-hint">
-      Reference any entry in a stage's prompt with <code>@label</code>. Unknown tokens stay literal.
+  <div class="flex flex-col gap-2.5">
+    <p class="m-0 mb-1 text-[11px] text-muted-foreground">
+      Reference any entry in a stage's prompt with
+      <code class="py-0 px-1 rounded-sm font-mono
+                   bg-primary-background/20 border border-primary-background/45 text-primary-background">@label</code>.
+      Unknown tokens stay literal.
     </p>
 
-    <div v-if="ENTRY_KINDS.length > 1" class="tabs">
+    <div v-if="ENTRY_KINDS.length > 1"
+         class="flex gap-1 border-b border-border-subtle">
       <button
         v-for="k in ENTRY_KINDS"
         :key="k"
-        class="tab"
-        :class="{ active: activeKind === k }"
+        :class="tabClass(activeKind === k)"
         @click="activeKind = k"
       >
         {{ KIND_LABELS[k] }}
-        <span class="tab-count">{{ rowsByKind[k]?.length ?? 0 }}</span>
+        <span class="py-0 px-1.5 rounded-lg text-2xs bg-base-foreground/10">{{ rowsByKind[k]?.length ?? 0 }}</span>
       </button>
     </div>
 
-    <table class="entry-table">
+    <table class="w-full border-collapse text-xs ctv-entry-table">
       <thead>
         <tr>
-          <th class="col-label">Label</th>
+          <th class="w-[140px]">Label</th>
           <th>Content</th>
-          <th v-for="f in metaFields" :key="f.name" class="col-meta">
+          <th v-for="f in metaFields" :key="f.name" class="w-[180px]">
             {{ f.label }}
           </th>
-          <th class="col-actions"></th>
+          <th class="w-24 text-right whitespace-nowrap"></th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="entry in activeRows" :key="entry.id">
-          <td class="col-label">
+          <td class="w-[140px]">
             <input
               v-model="drafts[entry.id].label"
-              class="label-input"
-              :class="{ invalid: !isValidLabel(drafts[entry.id].label) }"
+              :class="labelInputClass(!isValidLabel(drafts[entry.id].label))"
               @blur="saveIfDirty(entry)"
               @keydown.ctrl.enter.prevent="saveIfDirty(entry)"
               @keydown.meta.enter.prevent="saveIfDirty(entry)"
@@ -43,47 +45,49 @@
           <td>
             <textarea
               v-model="drafts[entry.id].content"
-              class="content-textarea"
+              :class="textareaClass()"
               rows="2"
               @blur="saveIfDirty(entry)"
               @keydown.ctrl.enter.prevent="saveIfDirty(entry)"
               @keydown.meta.enter.prevent="saveIfDirty(entry)"
             />
           </td>
-          <td v-for="f in metaFields" :key="f.name" class="col-meta">
+          <td v-for="f in metaFields" :key="f.name" class="w-[180px]">
             <textarea
               v-if="f.type === 'textarea'"
               v-model="drafts[entry.id].metadata[f.name]"
-              class="meta-textarea"
+              :class="textareaClass()"
               rows="2"
               @blur="saveIfDirty(entry)"
             />
             <input
               v-else
               v-model="drafts[entry.id].metadata[f.name]"
-              class="meta-input"
+              :class="inputClass()"
               :placeholder="f.placeholder ?? ''"
               @blur="saveIfDirty(entry)"
             />
           </td>
-          <td class="col-actions">
-            <button class="del-btn" :title="`Delete @${entry.label}`" @click="confirmDelete(entry)">🗑</button>
+          <td class="w-24 text-right whitespace-nowrap">
+            <button :class="btnClass('del')"
+                    :title="`Delete @${entry.label}`"
+                    @click="confirmDelete(entry)">🗑</button>
           </td>
         </tr>
 
-        <tr v-if="activeRows.length === 0 && !creating" class="empty-row">
-          <td :colspan="3 + metaFields.length">
+        <tr v-if="activeRows.length === 0 && !creating">
+          <td :colspan="3 + metaFields.length"
+              class="text-center italic p-4 text-muted-foreground">
             No {{ KIND_LABELS[activeKind].toLowerCase() }} yet. Click <strong>+ Add</strong> below.
           </td>
         </tr>
 
         <tr v-if="creating" class="create-row">
-          <td class="col-label">
+          <td class="w-[140px]">
             <input
               ref="newLabelInput"
               v-model="newDraft.label"
-              class="label-input"
-              :class="{ invalid: !!newLabelError }"
+              :class="['label-input', labelInputClass(!!newLabelError)]"
               :title="newLabelError"
               placeholder="label"
               @keydown.escape="cancelCreate"
@@ -92,7 +96,7 @@
           <td>
             <textarea
               v-model="newDraft.content"
-              class="content-textarea"
+              :class="['content-textarea', textareaClass()]"
               rows="2"
               :placeholder="newContentPlaceholder"
               @keydown.escape="cancelCreate"
@@ -100,31 +104,31 @@
               @keydown.meta.enter.prevent="saveNew"
             />
           </td>
-          <td v-for="f in metaFields" :key="f.name" class="col-meta">
+          <td v-for="f in metaFields" :key="f.name" class="w-[180px]">
             <textarea
               v-if="f.type === 'textarea'"
               v-model="newDraft.metadata[f.name]"
-              class="meta-textarea"
+              :class="textareaClass()"
               rows="2"
               :placeholder="f.placeholder ?? ''"
             />
             <input
               v-else
               v-model="newDraft.metadata[f.name]"
-              class="meta-input"
+              :class="inputClass()"
               :placeholder="f.placeholder ?? ''"
             />
           </td>
-          <td class="col-actions">
-            <button class="btn-mini btn-save" :disabled="!canSaveNew" @click="saveNew">Save</button>
-            <button class="btn-mini" @click="cancelCreate">Cancel</button>
+          <td class="w-24 text-right whitespace-nowrap">
+            <button :class="btnClass('save')" :disabled="!canSaveNew" @click="saveNew">Save</button>
+            <button :class="btnClass('mini')" @click="cancelCreate">Cancel</button>
           </td>
         </tr>
       </tbody>
     </table>
 
-    <div class="footer">
-      <button v-if="!creating" class="btn-add" @click="startCreate">
+    <div class="mt-1">
+      <button v-if="!creating" :class="btnClass('add')" @click="startCreate">
         + Add {{ KIND_LABELS[activeKind].slice(0, -1).toLowerCase() }}
       </button>
     </div>
@@ -162,130 +166,55 @@ const {
 } = useEntryEditor(projectId, activeKind, metaFields)
 
 onMounted(kickHydrate)
+
+function tabClass(active: boolean) {
+  return [
+    'py-1.5 px-3 text-xs cursor-pointer inline-flex items-center gap-1.5',
+    'border border-transparent border-b-0 rounded-t bg-transparent',
+    active
+      ? '-mb-px bg-secondary-background border-border-default text-base-foreground'
+      : 'text-muted-foreground hover:text-base-foreground',
+  ].join(' ')
+}
+
+const FIELD_BASE = 'w-full py-1 px-1.5 text-xs leading-snug rounded-sm outline-none box-border [font-family:inherit]'
+  + ' bg-secondary-background text-base-foreground'
+  + ' focus:border-primary-background'
+
+function inputClass() {
+  return `${FIELD_BASE} border border-border-default`
+}
+function textareaClass() {
+  return `${FIELD_BASE} border border-border-default resize-y`
+}
+function labelInputClass(invalid: boolean) {
+  return `${FIELD_BASE} font-mono border ${invalid ? 'invalid border-destructive-background' : 'border-border-default'}`
+}
+
+const BTN_BASE = 'rounded-sm text-[11px] cursor-pointer [font-family:inherit]'
+  + ' bg-secondary-background text-base-foreground'
+  + ' border border-border-default'
+function btnClass(variant: 'del' | 'save' | 'mini' | 'add') {
+  const v = {
+    del:  ' py-0.5 px-2.5 hover:border-destructive-background hover:text-destructive-background',
+    save: ' py-0.5 px-2 bg-primary-background/30 border-primary-background/60 disabled:opacity-40 disabled:cursor-not-allowed',
+    mini: ' py-0.5 px-2',
+    add:  ' py-0.5 px-2.5 self-start hover:bg-primary-background/15',
+  }[variant]
+  return BTN_BASE + v
+}
 </script>
 
 <style scoped>
-.entry-manager {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.entry-hint {
-  margin: 0 0 4px;
-  font-size: 11px;
-  color: var(--input-text-secondary, #aaa);
-}
-.entry-hint code {
-  background: rgba(108, 142, 239, 0.18);
-  border: 1px solid rgba(108, 142, 239, 0.45);
-  padding: 0 4px;
-  border-radius: 3px;
-  color: rgba(140, 170, 255, 1);
-  font-family: ui-monospace, monospace;
-}
-
-.tabs {
-  display: flex;
-  gap: 4px;
-  border-bottom: 1px solid var(--border-color, #2a2a2a);
-}
-.tab {
-  padding: 6px 12px;
-  background: transparent;
-  border: 1px solid transparent;
-  border-bottom: 0;
-  border-radius: 4px 4px 0 0;
-  color: var(--input-text-secondary, #aaa);
-  font-size: 12px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-.tab:hover { color: var(--input-text, #e0e0e0); }
-.tab.active {
-  background: var(--comfy-input-bg, #1a1a1a);
-  border-color: var(--border-color, #3a3a3a);
-  color: var(--input-text, #e0e0e0);
-  margin-bottom: -1px;
-}
-.tab-count {
-  background: rgba(255, 255, 255, 0.08);
-  padding: 0 6px;
-  border-radius: 8px;
-  font-size: 10px;
-}
-
-.entry-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 12px;
-}
-.entry-table th,
-.entry-table td {
+.ctv-entry-table th,
+.ctv-entry-table td {
   text-align: left;
   padding: 6px 8px;
-  border-bottom: 1px solid var(--border-color, #2a2a2a);
+  border-bottom: 1px solid var(--border-subtle, #2a2a2a);
   vertical-align: top;
 }
-.entry-table th {
+.ctv-entry-table th {
   font-weight: 600;
-  color: var(--input-text-secondary, #aaa);
+  color: var(--muted-foreground, #aaa);
 }
-.col-label { width: 140px; }
-.col-meta  { width: 180px; }
-.col-actions {
-  width: 96px;
-  text-align: right;
-  white-space: nowrap;
-}
-
-.label-input, .content-textarea, .meta-input, .meta-textarea {
-  width: 100%;
-  background: var(--comfy-input-bg, #1a1a1a);
-  color: var(--input-text, #e0e0e0);
-  border: 1px solid var(--border-color, #3a3a3a);
-  border-radius: 3px;
-  padding: 4px 6px;
-  font-size: 12px;
-  font-family: inherit;
-  line-height: 1.4;
-  outline: none;
-  box-sizing: border-box;
-}
-.label-input { font-family: ui-monospace, monospace; }
-.content-textarea, .meta-textarea { resize: vertical; }
-.label-input:focus, .content-textarea:focus,
-.meta-input:focus, .meta-textarea:focus {
-  border-color: var(--primary-color, #6c8eef);
-}
-.label-input.invalid { border-color: #b65454; }
-
-.empty-row td {
-  color: var(--input-text-secondary, #888);
-  font-style: italic;
-  text-align: center;
-  padding: 16px;
-}
-
-.del-btn, .btn-add, .btn-mini {
-  background: var(--comfy-input-bg, #1a1a1a);
-  border: 1px solid var(--border-color, #3a3a3a);
-  color: var(--input-text, #e0e0e0);
-  border-radius: 3px;
-  padding: 3px 10px;
-  font-size: 11px;
-  cursor: pointer;
-  font-family: inherit;
-}
-.del-btn:hover { border-color: #b65454; color: #b65454; }
-.btn-mini { padding: 3px 8px; }
-.btn-mini.btn-save {
-  background: rgba(108, 142, 239, 0.3);
-  border-color: rgba(108, 142, 239, 0.6);
-}
-.btn-mini.btn-save:disabled { opacity: 0.4; cursor: not-allowed; }
-.btn-add:hover { background: rgba(108, 142, 239, 0.16); }
-.btn-add { align-self: flex-start; }
-.footer { margin-top: 4px; }
 </style>

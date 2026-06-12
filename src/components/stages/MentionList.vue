@@ -1,51 +1,65 @@
 <template>
-  <div class="mention-list">
+  <div class="min-w-64 max-w-md max-h-60 overflow-y-auto rounded text-xs
+              bg-interface-menu-surface text-base-foreground
+              border border-border-default shadow-md">
     <template v-if="!creating">
       <div
         v-for="(item, i) in items"
         :key="item.id"
-        class="ml-item"
-        :class="{ active: i === activeIndex }"
+        :class="[
+          'flex items-baseline gap-2 py-1 px-2 cursor-pointer',
+          'hover:bg-interface-menu-component-surface-hovered',
+          i === activeIndex ? 'bg-interface-menu-component-surface-selected' : '',
+        ]"
         :title="item.content"
         @mousedown.prevent
         @click="selectItem(i)"
       >
-        <span v-if="showKindTag" class="ml-kind" :class="`kind-${item.kind}`">{{ item.kind }}</span>
-        <span class="ml-label">@{{ item.label }}</span>
-        <span class="ml-content">{{ item.content }}</span>
+        <span v-if="showKindTag" :class="kindTag(item.kind)">{{ item.kind }}</span>
+        <span class="font-mono text-base-foreground shrink-0">@{{ item.label }}</span>
+        <span class="text-muted-foreground overflow-hidden text-ellipsis whitespace-nowrap">{{ item.content }}</span>
       </div>
       <div
         v-if="canCreate"
-        class="ml-item ml-create"
-        :class="{ active: activeIndex === items.length }"
+        :class="[
+          'flex items-baseline gap-2 py-1 px-2 cursor-pointer border-t border-border-subtle',
+          'hover:bg-interface-menu-component-surface-hovered',
+          activeIndex === items.length ? 'bg-interface-menu-component-surface-selected' : '',
+        ]"
         @mousedown.prevent
         @click="startCreate"
       >
-        <span v-if="showKindTag" class="ml-kind kind-create">new</span>
-        <span class="ml-label">+ Create</span>
-        <span class="ml-content">new fragment <code>@{{ query }}</code></span>
+        <span v-if="showKindTag" :class="kindTag('create')">new</span>
+        <span class="font-mono text-base-foreground shrink-0">+ Create</span>
+        <span class="text-muted-foreground overflow-hidden text-ellipsis whitespace-nowrap">
+          new fragment <code>@{{ query }}</code>
+        </span>
       </div>
-      <div v-if="items.length === 0 && !canCreate" class="ml-empty">
+      <div v-if="items.length === 0 && !canCreate"
+           class="py-1.5 px-2 italic text-xs text-muted-foreground">
         {{ query ? 'Invalid label — start with a letter / underscore (中文 OK), then letters / digits / _ / -' : 'No entries yet — type a label to create one' }}
       </div>
     </template>
 
-    <div v-else class="ml-create-form" @mousedown.stop>
-      <div class="ml-create-header">
-        + Create fragment <code>@{{ pendingLabel }}</code>
+    <div v-else class="flex flex-col gap-1.5 p-2" @mousedown.stop>
+      <div class="text-xs text-muted-foreground">
+        + Create fragment <code class="text-base-foreground font-mono">@{{ pendingLabel }}</code>
       </div>
       <textarea
         ref="createTa"
         v-model="pendingContent"
-        class="ml-create-textarea"
         rows="3"
+        class="w-full py-1.5 px-2 rounded-sm resize-y outline-none box-border text-xs leading-snug
+               bg-secondary-background text-base-foreground
+               border border-border-default
+               focus:border-primary-background"
         placeholder="Content this @-token expands to. (For characters / other kinds, use the ComfyTV button → Entries dialog.)"
         @keydown.stop="onCreateKeydown"
       />
-      <div class="ml-create-actions">
-        <button class="ml-btn" @click="cancelCreate">Cancel</button>
+      <div class="flex justify-end gap-1.5">
+        <button :class="actionBtn()" @click="cancelCreate">Cancel</button>
         <button
-          class="ml-btn ml-btn-save"
+          :class="actionBtn('save')"
           :disabled="!pendingContent.trim()"
           @click="saveCreate"
         >Save (Ctrl+Enter)</button>
@@ -149,110 +163,20 @@ defineExpose({
     return false
   },
 })
+
+const KIND_TAG_BASE = 'shrink-0 py-px px-1.5 rounded-sm text-3xs font-semibold uppercase tracking-wide'
+  + ' bg-secondary-background text-secondary-foreground'
+function kindTag(_kind: string) { return KIND_TAG_BASE }
+
+const ACTION_BTN_BASE = 'relative inline-flex items-center justify-center gap-2 cursor-pointer'
+  + ' touch-manipulation whitespace-nowrap appearance-none border-none transition-colors'
+  + ' h-6 rounded-sm px-2 py-1 text-xs font-medium'
+  + ' disabled:pointer-events-none disabled:opacity-50'
+const ACTION_BTN_VARIANTS = {
+  default: ' bg-secondary-background text-secondary-foreground hover:bg-secondary-background-hover',
+  save:    ' bg-primary-background text-base-foreground hover:bg-primary-background-hover',
+} as const
+function actionBtn(variant: keyof typeof ACTION_BTN_VARIANTS = 'default') {
+  return ACTION_BTN_BASE + ACTION_BTN_VARIANTS[variant]
+}
 </script>
-
-<style scoped>
-.mention-list {
-  background: var(--comfy-input-bg, #1a1a1a);
-  border: 1px solid var(--border-color, #3a3a3a);
-  border-radius: 4px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  min-width: 260px;
-  max-width: 420px;
-  max-height: 240px;
-  overflow-y: auto;
-  font-size: 12px;
-  color: var(--input-text, #e0e0e0);
-}
-
-.ml-item {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  padding: 5px 8px;
-  cursor: pointer;
-}
-.ml-item:hover, .ml-item.active {
-  background: rgba(108, 142, 239, 0.18);
-}
-.ml-create { border-top: 1px solid var(--border-color, #2a2a2a); }
-
-.ml-kind {
-  font-size: 9px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  padding: 1px 5px;
-  border-radius: 3px;
-  flex-shrink: 0;
-  font-weight: 600;
-  border: 1px solid;
-}
-.ml-kind.kind-fragment  { color: #7fb5e0; border-color: rgba(127, 181, 224, 0.4); background: rgba(127, 181, 224, 0.08); }
-.ml-kind.kind-character { color: #d8a26f; border-color: rgba(216, 162, 111, 0.4); background: rgba(216, 162, 111, 0.08); }
-.ml-kind.kind-create    { color: #7fd87f; border-color: rgba(127, 216, 127, 0.4); background: rgba(127, 216, 127, 0.08); }
-
-.ml-label {
-  font-family: ui-monospace, monospace;
-  color: rgba(140, 170, 255, 1);
-  flex-shrink: 0;
-}
-.ml-content {
-  color: var(--input-text-secondary, #888);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.ml-empty {
-  padding: 6px 8px;
-  font-style: italic;
-  color: var(--input-text-secondary, #888);
-  font-size: 11px;
-}
-
-.ml-create-form {
-  padding: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.ml-create-header {
-  font-size: 11px;
-  color: var(--input-text-secondary, #aaa);
-}
-.ml-create-header code {
-  color: #7fd87f;
-  font-family: ui-monospace, monospace;
-}
-.ml-create-textarea {
-  width: 100%;
-  padding: 6px 8px;
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--input-text, #e0e0e0);
-  border: 1px solid var(--border-color, #3a3a3a);
-  border-radius: 3px;
-  font: 12px / 1.4 inherit;
-  resize: vertical;
-  outline: none;
-  box-sizing: border-box;
-}
-.ml-create-textarea:focus { border-color: var(--primary-color, #6c8eef); }
-.ml-create-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 6px;
-}
-.ml-btn {
-  padding: 3px 10px;
-  font-size: 11px;
-  border-radius: 3px;
-  background: var(--comfy-input-bg, #1a1a1a);
-  border: 1px solid var(--border-color, #3a3a3a);
-  color: var(--input-text, #e0e0e0);
-  cursor: pointer;
-}
-.ml-btn-save {
-  background: rgba(108, 142, 239, 0.3);
-  border-color: rgba(108, 142, 239, 0.6);
-}
-.ml-btn-save:disabled { opacity: 0.4; cursor: not-allowed; }
-</style>

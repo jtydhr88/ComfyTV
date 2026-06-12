@@ -1,78 +1,106 @@
 <template>
-  <div class="wf-config-sidebar">
-    <div class="header">
-      <span class="title">{{ $t('configSidebar.title') }}</span>
+  <div class="flex flex-col size-full box-border overflow-auto text-xs
+              pt-2 pb-6 px-2.5 text-base-foreground">
+    <div class="sticky -top-2 z-[1] -mx-2.5 -mt-2 mb-2 py-1.5 px-2.5
+                bg-interface-panel-surface border-b border-border-subtle">
+      <span class="font-semibold text-sm">{{ $t('configSidebar.title') }}</span>
     </div>
 
-    <div v-if="!selected" class="empty">
+    <div v-if="!selected" :class="emptyClass">
       {{ $t('configSidebar.empty') }}
     </div>
 
-    <div v-else-if="!selected.workflowLabel" class="empty">
+    <div v-else-if="!selected.workflowLabel" :class="emptyClass">
       {{ $t('configSidebar.noWorkflowPicked') }}
     </div>
 
-    <div v-else-if="loadError" class="error">{{ loadError }}</div>
+    <div v-else-if="loadError"
+         class="my-1.5 py-1.5 px-2 text-xs rounded
+                bg-destructive-background/15 border border-destructive-background/50 text-destructive-background">
+      {{ loadError }}
+    </div>
 
-    <div v-else-if="config" class="body">
-      <div class="header-meta">
-        <span class="kind">{{ config.kind }}</span>
-        <span class="lbl">{{ config.label }}</span>
-        <span v-if="!config.has_api" class="cache-warn">
+    <div v-else-if="config" class="flex flex-col gap-3">
+      <div class="flex flex-col gap-0.5 pt-1 pb-2 border-b border-border-subtle">
+        <span class="text-3xs uppercase tracking-wide text-muted-foreground">{{ config.kind }}</span>
+        <span class="text-xs font-semibold">{{ config.label }}</span>
+        <span v-if="!config.has_api" class="mt-1 text-2xs italic text-warning-background">
           {{ $t('configSidebar.pickWorkflowFirst') }}
         </span>
       </div>
 
-      <section v-if="config.gui_notes?.length" class="notes-block">
+      <section v-if="config.gui_notes?.length"
+               class="rounded overflow-hidden
+                      bg-warning-background/[0.03] border border-warning-background/25">
         <button
-          class="notes-header"
-          :class="{ 'is-collapsed': notesCollapsed }"
+          :class="[
+            'flex items-center gap-1.5 w-full py-[5px] px-2 text-left cursor-pointer [font-family:inherit]',
+            'bg-warning-background/5 border-0 border-b text-inherit',
+            'hover:bg-warning-background/10',
+            notesCollapsed ? 'border-b-transparent' : 'border-b-warning-background/15',
+          ]"
           :aria-expanded="!notesCollapsed"
           @click="toggleNotesCollapsed"
         >
-          <span class="notes-caret">{{ notesCollapsed ? '▸' : '▾' }}</span>
-          <span class="notes-title">{{ $t('configSidebar.section.notes') }}</span>
-          <span class="notes-count">{{ config.gui_notes.length }}</span>
+          <span class="w-2.5 text-2xs text-warning-background/75">{{ notesCollapsed ? '▸' : '▾' }}</span>
+          <span class="flex-1 text-2xs uppercase tracking-wide font-semibold text-warning-background">
+            {{ $t('configSidebar.section.notes') }}
+          </span>
+          <span class="text-3xs font-mono py-px px-1.5 rounded-lg
+                       bg-warning-background/10 text-warning-background/70">
+            {{ config.gui_notes.length }}
+          </span>
         </button>
-        <div v-if="!notesCollapsed" class="notes-body">
-          <div v-for="(note, i) in config.gui_notes" :key="i" class="workflow-note">
-            <pre class="workflow-note-text">{{ note.text }}</pre>
+        <div v-if="!notesCollapsed" class="flex flex-col gap-1 py-1.5 px-2">
+          <div v-for="(note, i) in config.gui_notes" :key="i"
+               class="py-1 px-2 rounded-sm border-l-2
+                      bg-warning-background/5 border-warning-background/50">
+            <pre class="m-0 text-xs whitespace-pre-wrap [font-family:inherit] text-base-foreground">{{ note.text }}</pre>
           </div>
         </div>
       </section>
 
-      <section v-if="config.exposed_widgets?.length" class="widgets-block">
-        <h3>{{ $t('configSidebar.section.widgets') }}</h3>
-        <div v-for="(grp, gi) in groupedWidgets" :key="gi" class="widget-group">
-          <div v-if="grp.title" class="group-head">{{ grp.title }}</div>
+      <section v-if="config.exposed_widgets?.length">
+        <h3 :class="sectionHeading">{{ $t('configSidebar.section.widgets') }}</h3>
+        <div v-for="(grp, gi) in groupedWidgets" :key="gi"
+             class="flex flex-col gap-1.5 mb-2.5">
+          <div v-if="grp.title"
+               class="py-1 text-3xs uppercase tracking-wide
+                      text-muted-foreground border-b border-border-subtle">
+            {{ grp.title }}
+          </div>
 
-          <div v-for="node in grp.nodes" :key="node.node_id" class="node-block">
+          <div v-for="node in grp.nodes" :key="node.node_id"
+               class="rounded-lg overflow-hidden bg-base-foreground/[0.03]">
             <button
-              class="node-header"
-              :class="{ 'is-collapsed': isCollapsed(node.node_id) }"
+              :class="[
+                'flex items-center gap-1.5 w-full py-1.5 px-2 text-left cursor-pointer text-inherit [font-family:inherit]',
+                'bg-transparent border-none hover:bg-secondary-background-hover',
+              ]"
               :aria-expanded="!isCollapsed(node.node_id)"
               @click="toggleCollapsed(node.node_id)"
             >
-              <span class="node-caret">{{ isCollapsed(node.node_id) ? '▸' : '▾' }}</span>
-              <span class="node-header-title">{{ node.node_title }}</span>
-              <span v-if="node.node_title !== node.node_type" class="node-header-class mono">
+              <span class="w-2.5 text-2xs text-muted-foreground">{{ isCollapsed(node.node_id) ? '▸' : '▾' }}</span>
+              <span class="text-xs font-semibold text-base-foreground">{{ node.node_title }}</span>
+              <span v-if="node.node_title !== node.node_type"
+                    class="text-2xs font-mono text-muted-foreground/60">
                 ({{ node.node_type }})
               </span>
-              <span class="node-header-id mono">#{{ node.node_id }}</span>
-              <span class="node-header-spacer"></span>
-              <span class="node-header-count">
+              <span class="text-2xs font-mono text-muted-foreground/60">#{{ node.node_id }}</span>
+              <span class="flex-1"></span>
+              <span class="text-3xs font-mono py-px px-1.5 rounded-lg bg-base-foreground/5 text-muted-foreground">
                 {{ boundCountFor(node) }} / {{ node.widgets.length }}
               </span>
             </button>
 
-            <div v-if="!isCollapsed(node.node_id)" class="node-body">
+            <div v-if="!isCollapsed(node.node_id)" class="flex flex-col gap-1.5 p-2">
               <div
                 v-for="w in node.widgets"
                 :key="`${w.node_id}/${w.widget_name}`"
-                class="widget-row"
+                class="flex flex-col gap-1 [&_+_&]:pt-1.5 [&_+_&]:border-t [&_+_&]:border-solid [&_+_&]:border-border-subtle"
               >
-                <div class="widget-name-row">
-                  <span class="widget-name mono">.{{ w.widget_name }}</span>
+                <div class="text-2xs">
+                  <span class="font-mono text-muted-foreground">.{{ w.widget_name }}</span>
                 </div>
                 <ComfyTVWidget
                   :kind="w.widget_type"
@@ -86,8 +114,8 @@
                   :disabled="isStageBound(w)"
                   @update:model-value="onValueChange(w, $event)"
                 />
-                <div class="widget-bind-row">
-                  <span class="lbl">{{ $t('configSidebar.bindTo') }}</span>
+                <div class="grid grid-cols-[60px_1fr] items-center gap-1.5 mt-0.5">
+                  <span class="text-3xs uppercase tracking-wide text-muted-foreground">{{ $t('configSidebar.bindTo') }}</span>
                   <ComfyTVSelect
                     :model-value="dropdownValueFor(w)"
                     :options="bindingOptions"
@@ -100,38 +128,34 @@
         </div>
       </section>
 
-      <div v-else class="empty-sub">
+      <div v-else class="p-2 text-xs text-left italic text-muted-foreground/60">
         {{ $t('configSidebar.noExposedWidgets') }}
       </div>
 
-      <section v-if="config.description" class="desc-block">
-        <h3>{{ $t('configSidebar.section.description') }}</h3>
-        <p class="desc-text">{{ config.description }}</p>
+      <section v-if="config.description">
+        <h3 :class="sectionHeading">{{ $t('configSidebar.section.description') }}</h3>
+        <p class="m-0 text-xs whitespace-pre-wrap text-muted-foreground">{{ config.description }}</p>
       </section>
 
-      <div class="export-row">
+      <div class="mt-4 pt-2.5 pb-3.5 px-3 flex flex-col gap-1 border-t border-border-subtle">
         <button
-          class="export-button"
+          :class="exportBtn"
           :disabled="!config.has_api || exportBusy"
           :title="$t('configSidebar.exportPresetTooltip')"
           @click="onExportPreset"
-        >
-          ⇩ {{ $t('configSidebar.exportPreset') }}
-        </button>
+        >⇩ {{ $t('configSidebar.exportPreset') }}</button>
         <button
-          class="reset-button"
+          :class="resetBtn"
           :disabled="resetBusy"
           :title="$t('configSidebar.resetToPresetTooltip')"
           @click="onResetToPreset"
-        >
-          {{ $t('configSidebar.resetToPreset') }}
-        </button>
-        <span v-if="exportError" class="export-error">{{ exportError }}</span>
-        <span v-if="resetError" class="export-error">{{ resetError }}</span>
+        >{{ $t('configSidebar.resetToPreset') }}</button>
+        <span v-if="exportError" class="text-xs text-destructive-background">{{ exportError }}</span>
+        <span v-if="resetError" class="text-xs text-destructive-background">{{ resetError }}</span>
       </div>
     </div>
 
-    <div v-else class="empty">{{ $t('configSidebar.loading') }}</div>
+    <div v-else :class="emptyClass">{{ $t('configSidebar.loading') }}</div>
   </div>
 </template>
 
@@ -240,258 +264,20 @@ onMounted(() => {
 onBeforeUnmount(() => {
   if (_pollTimer) { clearInterval(_pollTimer); _pollTimer = null }
 })
+
+const emptyClass     = 'py-5 px-1.5 text-center italic text-xs text-muted-foreground/60'
+const sectionHeading = 'mt-1 mb-1.5 text-xs uppercase tracking-wide text-muted-foreground'
+
+const COMFY_BTN_SM = [
+  'inline-flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap appearance-none',
+  'border-none transition-colors focus-visible:outline-none',
+  'disabled:pointer-events-none disabled:opacity-50',
+  'h-6 rounded-sm px-2 py-1 text-xs font-medium',
+].join(' ')
+
+const exportBtn = COMFY_BTN_SM
+  + ' self-start text-secondary-foreground bg-secondary-background hover:bg-secondary-background-hover'
+
+const resetBtn = COMFY_BTN_SM
+  + ' self-start bg-transparent text-muted-foreground hover:bg-warning-background/10 hover:text-warning-background'
 </script>
-
-<style scoped>
-.wf-config-sidebar {
-  display: flex; flex-direction: column;
-  width: 100%; height: 100%;
-  padding: 8px 10px 24px;
-  box-sizing: border-box;
-  overflow: auto;
-  color: var(--input-text, #ddd);
-  font-size: 12px;
-}
-.header {
-  position: sticky; top: -8px;
-  margin: -8px -10px 8px;
-  padding: 6px 10px;
-  background: var(--comfy-input-bg, #1e1e1e);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  z-index: 1;
-}
-.title { font-weight: 600; font-size: 13px; }
-.empty, .empty-sub {
-  padding: 20px 6px;
-  text-align: center;
-  color: rgba(255,255,255,0.45);
-  font-style: italic;
-  font-size: 11px;
-}
-.empty-sub { padding: 8px; text-align: left; }
-.error {
-  padding: 6px 8px; margin: 6px 0;
-  background: rgba(220, 80, 80, 0.15);
-  border: 1px solid rgba(220, 80, 80, 0.5);
-  border-radius: 4px;
-  color: #ffb0b0;
-  font-size: 11px;
-}
-.body { display: flex; flex-direction: column; gap: 12px; }
-.header-meta {
-  display: flex; flex-direction: column; gap: 2px;
-  padding: 4px 0 8px;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-}
-.header-meta .kind {
-  font-size: 9px; text-transform: uppercase; letter-spacing: .4px;
-  color: rgba(255,255,255,0.5);
-}
-.header-meta .lbl { font-size: 12px; font-weight: 600; }
-.cache-warn {
-  margin-top: 4px;
-  font-size: 10px;
-  color: rgba(255, 200, 100, 0.85);
-  font-style: italic;
-}
-
-section h3 {
-  margin: 4px 0 6px;
-  font-size: 11px; text-transform: uppercase; letter-spacing: .5px;
-  color: rgba(255,255,255,0.6);
-}
-
-.widget-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
-.group-head {
-  font-size: 9px; text-transform: uppercase; letter-spacing: .5px;
-  color: rgba(255, 200, 100, 0.85);
-  padding: 4px 0 2px;
-  border-bottom: 1px dashed rgba(255, 200, 100, 0.25);
-}
-
-.node-block {
-  background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 4px;
-  overflow: hidden;
-}
-.node-header {
-  display: flex; align-items: center; gap: 6px;
-  width: 100%;
-  background: rgba(255,255,255,0.03);
-  border: none;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-  padding: 6px 8px;
-  color: inherit;
-  text-align: left;
-  cursor: pointer;
-  font: inherit;
-}
-.node-header:hover { background: rgba(78,168,255,0.08); }
-.node-header.is-collapsed { border-bottom-color: transparent; }
-.node-caret {
-  width: 10px;
-  font-size: 10px;
-  color: rgba(255,255,255,0.55);
-}
-.node-header-title { font-weight: 600; color: #cfe6ff; font-size: 11px; }
-.node-header-class { color: rgba(255,255,255,0.4); font-size: 10px; }
-.node-header-id { color: rgba(255,255,255,0.4); font-size: 10px; }
-.node-header-spacer { flex: 1; }
-.node-header-count {
-  font-size: 9px;
-  color: rgba(255,255,255,0.5);
-  font-family: ui-monospace, SFMono-Regular, monospace;
-  padding: 1px 6px;
-  background: rgba(255,255,255,0.04);
-  border-radius: 8px;
-}
-
-.node-body {
-  display: flex; flex-direction: column; gap: 6px;
-  padding: 8px;
-}
-.widget-row {
-  display: flex; flex-direction: column; gap: 4px;
-}
-.widget-row + .widget-row {
-  padding-top: 6px;
-  border-top: 1px dashed rgba(255,255,255,0.06);
-}
-.widget-name-row {
-  font-size: 10px;
-}
-.widget-name { color: rgba(255,255,255,0.7); }
-.mono { font-family: ui-monospace, SFMono-Regular, monospace; }
-
-.widget-bind-row {
-  display: grid; grid-template-columns: 60px 1fr; align-items: center; gap: 6px;
-  margin-top: 2px;
-}
-.widget-bind-row .lbl {
-  font-size: 9px; text-transform: uppercase; letter-spacing: .4px;
-  color: rgba(255,255,255,0.5);
-}
-
-.notes-block {
-  background: rgba(255, 235, 150, 0.03);
-  border: 1px solid rgba(255, 235, 150, 0.25);
-  border-radius: 4px;
-  overflow: hidden;
-}
-.notes-header {
-  display: flex; align-items: center; gap: 6px;
-  width: 100%;
-  background: rgba(255, 235, 150, 0.06);
-  border: none;
-  border-bottom: 1px solid rgba(255, 235, 150, 0.15);
-  padding: 5px 8px;
-  color: inherit;
-  text-align: left;
-  cursor: pointer;
-  font: inherit;
-}
-.notes-header:hover { background: rgba(255, 235, 150, 0.12); }
-.notes-header.is-collapsed { border-bottom-color: transparent; }
-.notes-caret { width: 10px; font-size: 10px; color: rgba(255, 235, 150, 0.75); }
-.notes-title {
-  font-size: 10px; text-transform: uppercase; letter-spacing: .5px;
-  color: rgba(255, 235, 150, 0.85);
-  font-weight: 600;
-  flex: 1;
-}
-.notes-count {
-  font-size: 9px;
-  color: rgba(255, 235, 150, 0.7);
-  font-family: ui-monospace, SFMono-Regular, monospace;
-  padding: 1px 6px;
-  background: rgba(255, 235, 150, 0.08);
-  border-radius: 8px;
-}
-.notes-body {
-  padding: 6px 8px;
-  display: flex; flex-direction: column; gap: 4px;
-}
-.notes-block .workflow-note {
-  background: rgba(255, 235, 150, 0.04);
-  border-left: 2px solid rgba(255, 235, 150, 0.5);
-  border-radius: 2px;
-  padding: 4px 8px;
-}
-.notes-block .workflow-note-text {
-  margin: 0;
-  font-family: inherit;
-  font-size: 11px;
-  white-space: pre-wrap;
-  color: rgba(255,255,255,0.75);
-}
-
-.desc-block .desc-text {
-  margin: 0;
-  font-size: 11px;
-  color: rgba(255,255,255,0.7);
-  white-space: pre-wrap;
-}
-
-.export-row {
-  margin-top: 16px;
-  padding: 10px 12px 14px;
-  border-top: 1px solid rgba(255,255,255,0.08);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.export-button {
-  align-self: flex-start;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 5px 10px;
-  font-size: 11px;
-  background: rgba(255,255,255,0.06);
-  color: rgba(255,255,255,0.85);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 4px;
-  cursor: pointer;
-}
-.export-button:hover:not(:disabled) {
-  background: rgba(255,255,255,0.1);
-  border-color: rgba(255,255,255,0.2);
-}
-.export-button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.export-error {
-  font-size: 11px;
-  color: rgb(255, 110, 110);
-}
-
-/* Reset button — same shape as export, slightly muted so the primary
- * action remains Export. */
-.reset-button {
-  align-self: flex-start;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 5px 10px;
-  font-size: 11px;
-  background: transparent;
-  color: rgba(255,255,255,0.65);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 4px;
-  cursor: pointer;
-  font-family: inherit;
-}
-.reset-button:hover:not(:disabled) {
-  background: rgba(255,200,100,0.08);
-  border-color: rgba(255,200,100,0.3);
-  color: rgba(255,200,100,0.95);
-}
-.reset-button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-</style>

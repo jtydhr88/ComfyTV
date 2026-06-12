@@ -1,72 +1,57 @@
 <template>
-  <div class="control-panel">
-    <div class="info-row">
-      <div class="control">
-        <span class="dropdown-label azimuth">{{ $t('camera.horizontal') }}</span>
+  <div class="absolute bottom-2 left-2 right-2 z-10 flex flex-col gap-1 py-1.5 px-2.5
+              text-[11px] text-white/85 rounded-md backdrop-blur-sm
+              bg-black/90 border border-[rgb(233_61_130/0.3)]">
+    <div class="flex justify-around items-center">
+      <div class="flex items-center gap-1">
+        <span class="text-3xs uppercase tracking-wide whitespace-nowrap text-[#E93D82]">{{ $t('camera.horizontal') }}</span>
         <select
-          class="dropdown azimuth"
+          :class="dropdownClass('azimuth')"
           :value="closestAzimuth"
           @change="onAzimuthSelect"
         >
-          <option
-            v-for="opt in azimuthOptions"
-            :key="opt.value"
-            :value="opt.value"
-          >
+          <option v-for="opt in azimuthOptions" :key="opt.value" :value="opt.value">
             {{ $t(`camera.azimuth.${opt.key}`) }}
           </option>
         </select>
       </div>
-      <div class="control">
-        <span class="dropdown-label elevation">{{ $t('camera.vertical') }}</span>
+      <div class="flex items-center gap-1">
+        <span class="text-3xs uppercase tracking-wide whitespace-nowrap text-[#00FFD0]">{{ $t('camera.vertical') }}</span>
         <select
-          class="dropdown elevation"
+          :class="dropdownClass('elevation')"
           :value="closestElevation"
           @change="onElevationSelect"
         >
-          <option
-            v-for="opt in elevationOptions"
-            :key="opt.value"
-            :value="opt.value"
-          >
+          <option v-for="opt in elevationOptions" :key="opt.value" :value="opt.value">
             {{ $t(`camera.elevation.${opt.key}`) }}
           </option>
         </select>
       </div>
-      <div class="control">
-        <span class="dropdown-label distance">{{ $t('camera.zoom') }}</span>
+      <div class="flex items-center gap-1">
+        <span class="text-3xs uppercase tracking-wide whitespace-nowrap text-[#FFB800]">{{ $t('camera.zoom') }}</span>
         <select
-          class="dropdown distance"
+          :class="dropdownClass('distance')"
           :value="closestDistance"
           @change="onDistanceSelect"
         >
-          <option
-            v-for="opt in distanceOptions"
-            :key="opt.value"
-            :value="opt.value"
-          >
+          <option v-for="opt in distanceOptions" :key="opt.value" :value="opt.value">
             {{ $t(`camera.distance.${opt.key}`) }}
           </option>
         </select>
       </div>
     </div>
-    <div class="info-row">
-      <div class="param">
-        <div class="param-value azimuth">{{ Math.round(azimuth) }}&deg;</div>
-      </div>
-      <div class="param">
-        <div class="param-value elevation">{{ Math.round(elevation) }}&deg;</div>
-      </div>
-      <div class="param">
-        <div class="param-value distance">{{ distance.toFixed(1) }}</div>
-      </div>
+    <div class="flex justify-around items-center">
+      <div class="text-center text-[13px] font-semibold text-[#E93D82]">{{ Math.round(azimuth) }}&deg;</div>
+      <div class="text-center text-[13px] font-semibold text-[#00FFD0]">{{ Math.round(elevation) }}&deg;</div>
+      <div class="text-center text-[13px] font-semibold text-[#FFB800]">{{ distance.toFixed(1) }}</div>
       <button
-        class="reset-btn"
+        class="shrink-0 size-6 flex items-center justify-center text-sm cursor-pointer rounded
+               bg-black/80 text-[#E93D82] border border-[rgb(233_61_130/0.4)]
+               transition-all duration-200 hover:bg-[rgb(233_61_130/0.2)] hover:border-[#E93D82]
+               active:scale-95"
         :title="$t('camera.resetToDefaults')"
         @click="$emit('reset')"
-      >
-        &#8634;
-      </button>
+      >&#8634;</button>
     </div>
   </div>
 </template>
@@ -153,141 +138,22 @@ function onElevationSelect(e: Event) {
 function onDistanceSelect(e: Event) {
   emit('update:distance', parseInt((e.target as HTMLSelectElement).value, 10))
 }
+
+const DROPDOWN_BASE = 'ctv-camera-dropdown min-w-0 max-w-[90px] py-0.5 px-1 text-3xs cursor-pointer rounded outline-none backdrop-blur-sm'
+  + ' bg-black/90 text-white/85 border border-white/20 hover:border-white/40'
+const DROPDOWN_FOCUS = {
+  azimuth:   'focus:border-[#E93D82]',
+  elevation: 'focus:border-[#00FFD0]',
+  distance:  'focus:border-[#FFB800]',
+} as const
+function dropdownClass(channel: keyof typeof DROPDOWN_FOCUS) {
+  return `${DROPDOWN_BASE} ${DROPDOWN_FOCUS[channel]}`
+}
 </script>
 
 <style scoped>
-.control-panel {
-  position: absolute;
-  bottom: 8px;
-  left: 8px;
-  right: 8px;
-  background: rgba(10, 10, 15, 0.9);
-  border: 1px solid rgba(233, 61, 130, 0.3);
-  border-radius: 6px;
-  padding: 6px 10px;
-  font-size: 11px;
-  color: #e0e0e0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  backdrop-filter: blur(4px);
-  z-index: 10;
-}
-
-.info-row {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-}
-
-.control {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.param {
-  text-align: center;
-}
-
-.param-value {
-  font-weight: 600;
-  font-size: 13px;
-}
-
-.param-value.azimuth {
-  color: #E93D82;
-}
-
-.param-value.elevation {
-  color: #00FFD0;
-}
-
-.param-value.distance {
-  color: #FFB800;
-}
-
-.dropdown-label {
-  font-size: 9px;
-  color: #888;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  white-space: nowrap;
-}
-
-.dropdown-label.azimuth {
-  color: #E93D82;
-}
-
-.dropdown-label.elevation {
-  color: #00FFD0;
-}
-
-.dropdown-label.distance {
-  color: #FFB800;
-}
-
-.dropdown {
-  background: rgba(10, 10, 15, 0.9);
-  border: 1px solid rgba(100, 100, 120, 0.4);
-  border-radius: 4px;
-  padding: 2px 4px;
-  font-size: 9px;
-  color: #e0e0e0;
-  cursor: pointer;
-  outline: none;
-  min-width: 0;
-  max-width: 90px;
-  backdrop-filter: blur(4px);
-}
-
-.dropdown:hover {
-  border-color: rgba(150, 150, 170, 0.6);
-}
-
-.dropdown:focus {
-  border-color: #E93D82;
-}
-
-.dropdown.azimuth:focus {
-  border-color: #E93D82;
-}
-
-.dropdown.elevation:focus {
-  border-color: #00FFD0;
-}
-
-.dropdown.distance:focus {
-  border-color: #FFB800;
-}
-
-.dropdown option {
-  background: #1a1a2e;
-  color: #e0e0e0;
-}
-
-.reset-btn {
-  width: 24px;
-  height: 24px;
-  border-radius: 4px;
-  border: 1px solid rgba(233, 61, 130, 0.4);
-  background: rgba(10, 10, 15, 0.8);
-  color: #E93D82;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-}
-
-.reset-btn:hover {
-  background: rgba(233, 61, 130, 0.2);
-  border-color: #E93D82;
-}
-
-.reset-btn:active {
-  transform: scale(0.95);
+.ctv-camera-dropdown option {
+  background: var(--interface-menu-surface, #1a1a2e);
+  color: var(--base-foreground, #e0e0e0);
 }
 </style>

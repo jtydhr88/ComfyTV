@@ -1,5 +1,5 @@
 <template>
-  <div class="compare-stage">
+  <div class="flex flex-col gap-1.5 size-full">
     <ImageCompare :before-image="imageA" :after-image="imageB" />
 
     <StageCard
@@ -38,13 +38,3 @@ function resolvedInput(slot: string): string | null {
 const imageA = computed(() => resolvedInput('image_a'))
 const imageB = computed(() => resolvedInput('image_b'))
 </script>
-
-<style scoped>
-.compare-stage {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
-  height: 100%;
-}
-</style>

@@ -1,19 +1,43 @@
 <template>
   <Teleport to="body">
-    <Transition name="comfytv-dlg">
+    <Transition
+      enter-active-class="duration-150 ease-out"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="duration-150 ease-in"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
       <div
         v-if="store.open"
-        class="comfytv-dlg-backdrop"
+        class="fixed inset-0 z-[10000] flex items-center justify-center p-6
+               bg-black/50 transition-opacity"
         @mousedown.self="store.close()"
       >
-        <div class="comfytv-dlg" :style="{ maxWidth: store.width }">
-          <header class="comfytv-dlg-header">
-            <h2 class="comfytv-dlg-title">{{ store.title }}</h2>
-            <button class="comfytv-dlg-close" @click="store.close()" aria-label="Close">
-              ×
-            </button>
+        <div
+          class="w-full max-h-[calc(100vh-48px)] rounded-md overflow-hidden
+                 flex flex-col shadow-[0_16px_48px_rgb(0_0_0/0.5)]
+                 bg-interface-menu-surface text-base-foreground
+                 border border-border-default"
+          :style="{ maxWidth: store.width }"
+        >
+          <header
+            class="flex items-center justify-between py-2.5 px-3.5
+                   bg-base-foreground/[0.03] border-b border-border-subtle"
+          >
+            <h2 class="m-0 text-sm font-semibold text-base-foreground">
+              {{ store.title }}
+            </h2>
+            <button
+              class="bg-transparent border-0 cursor-pointer rounded
+                     size-7 text-[22px] leading-none
+                     text-muted-foreground
+                     hover:bg-secondary-background-hover hover:text-base-foreground"
+              aria-label="Close"
+              @click="store.close()"
+            >×</button>
           </header>
-          <div class="comfytv-dlg-body">
+          <div class="flex-1 overflow-y-auto p-3.5 text-xs">
             <component
               :is="store.component"
               v-if="store.component"
@@ -42,77 +66,3 @@ function onKey(e: KeyboardEvent) {
 onMounted(() => window.addEventListener('keydown', onKey, true))
 onUnmounted(() => window.removeEventListener('keydown', onKey, true))
 </script>
-
-<style scoped>
-.comfytv-dlg-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 10000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-}
-.comfytv-dlg {
-  width: 100%;
-  max-height: calc(100vh - 48px);
-  background: var(--comfy-menu-bg, #202020);
-  color: var(--input-text, #e0e0e0);
-  border: 1px solid var(--border-color, #3a3a3a);
-  border-radius: 6px;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-.comfytv-dlg-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 14px;
-  border-bottom: 1px solid var(--border-color, #2a2a2a);
-  background: rgba(255, 255, 255, 0.02);
-}
-.comfytv-dlg-title {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--input-text, #e0e0e0);
-}
-.comfytv-dlg-close {
-  background: transparent;
-  border: 0;
-  color: var(--input-text-secondary, #aaa);
-  font-size: 22px;
-  line-height: 1;
-  width: 28px;
-  height: 28px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-.comfytv-dlg-close:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--input-text, #e0e0e0);
-}
-.comfytv-dlg-body {
-  flex: 1 1 auto;
-  overflow-y: auto;
-  padding: 14px;
-  font-size: 12px;
-}
-
-.comfytv-dlg-enter-active, .comfytv-dlg-leave-active {
-  transition: opacity 160ms ease;
-}
-.comfytv-dlg-enter-active .comfytv-dlg, .comfytv-dlg-leave-active .comfytv-dlg {
-  transition: transform 160ms ease, opacity 160ms ease;
-}
-.comfytv-dlg-enter-from, .comfytv-dlg-leave-to {
-  opacity: 0;
-}
-.comfytv-dlg-enter-from .comfytv-dlg, .comfytv-dlg-leave-to .comfytv-dlg {
-  transform: translateY(-12px) scale(0.985);
-  opacity: 0;
-}
-</style>
