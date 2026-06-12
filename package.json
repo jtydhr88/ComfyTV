@@ -27,6 +27,9 @@
   "devDependencies": {
     "@comfyorg/comfyui-frontend-types": "^1.35.4",
     "@pinia/testing": "^1.0.3",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/user-event": "^14.6.1",
+    "@testing-library/vue": "^8.1.0",
     "@types/node": "^22.10.1",
     "@vitejs/plugin-vue": "^5.2.3",
     "@vitest/coverage-v8": "^4.1.8",

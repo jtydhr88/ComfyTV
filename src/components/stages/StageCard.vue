@@ -144,9 +144,11 @@
 import { computed, ref } from 'vue'
 import MainPromptInput from './MainPromptInput.vue'
 import ValuePreview from './ValuePreview.vue'
-import { IMAGE_VARIANT_PRESETS, type ImagePreset } from '@/composables/stages/imagePresets'
-import { IMAGE_EDIT_PRESETS } from '@/composables/stages/imageEditPresets'
-import { VIDEO_CHANGE_PRESETS } from '@/composables/stages/videoChangePresets'
+import { type ImagePreset } from '@/composables/stages/imagePresets'
+import {
+  ACTIONS_BY_KIND,
+  type StageAction,
+} from '@/composables/stages/stageActions'
 import {
   actionLabelKey,
   actionTooltipKey,
@@ -154,12 +156,6 @@ import {
   presetTooltipKey,
 } from '@/composables/stages/actionLabels'
 import { useStageStore, type InputSource, type StageState, type ImagePickContext } from '@/stores/stageStore'
-
-interface StageAction {
-  id: string
-  icon: string
-  presets?: ImagePreset[]
-}
 
 const props = defineProps<{
   state: StageState
@@ -171,33 +167,6 @@ const props = defineProps<{
   hideContext?: boolean
   hideOutput?: boolean
 }>()
-
-const imageActions: StageAction[] = [
-  { id: 'edit',       icon: '✏️', presets: IMAGE_EDIT_PRESETS },
-  { id: 'panorama',   icon: '🌐' },
-  { id: 'multiangle', icon: '📐' },
-  { id: 'relight',    icon: '💡' },
-  { id: 'preset',     icon: '🎴', presets: IMAGE_VARIANT_PRESETS },
-]
-
-const ACTIONS_BY_KIND: Record<string, StageAction[]> = {
-  text:  [{ id: 'refine', icon: '✏️' }],
-  image: imageActions,
-  'image-picker': imageActions,
-  'image-batch': imageActions,
-  video: [
-    { id: 'extend', icon: '↪' },
-    { id: 'change', icon: '✏️', presets: VIDEO_CHANGE_PRESETS },
-  ],
-  panorama: [
-    { id: 'view-current', icon: '📸' },
-    { id: 'view-four',    icon: '🎬' },
-    { id: 'view-twelve',  icon: '🔭' },
-  ],
-  storyboard: [
-    { id: 'gen-shots', icon: '📸' },
-  ],
-}
 
 const stageActions = computed<StageAction[]>(() => ACTIONS_BY_KIND[props.state.kind] || [])
 

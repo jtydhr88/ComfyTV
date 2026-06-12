@@ -13,13 +13,14 @@ import Mention     from '@tiptap/extension-mention'
 import Paragraph   from '@tiptap/extension-paragraph'
 import Placeholder from '@tiptap/extension-placeholder'
 import Text        from '@tiptap/extension-text'
-import { EditorContent, useEditor, VueRenderer } from '@tiptap/vue-3'
-import tippy, { delegate as tippyDelegate, type Instance as TippyInstance } from 'tippy.js'
+import { EditorContent, useEditor } from '@tiptap/vue-3'
+import { delegate as tippyDelegate } from 'tippy.js'
 import 'tippy.js/dist/tippy.css'
 
-import type { Entry } from '@/api/schemas'
+import { useMentionSuggestion } from '@/composables/stages/useMentionSuggestion'
 import { useEntryStore } from '@/stores/entryStore'
 import { useProjectStore } from '@/stores/projectStore'
+import { MENTION_RE } from '@/utils/labelRegex'
 
 import MentionList from './MentionList.vue'
 
@@ -37,16 +38,14 @@ const placeholder = computed(() => {
   return w?.options?.placeholder ?? w?.placeholder ?? ''
 })
 
-const TOKEN_RE = /@[\p{L}_][\p{L}\p{N}_-]*/gu
-
 function textToContent(text: string): any {
   const content: any[] = []
   let i = 0
-  const matches = text.matchAll(TOKEN_RE)
+  const matches = text.matchAll(MENTION_RE)
   for (const m of matches) {
     const start = m.index!
     if (start > i) content.push({ type: 'text', text: text.slice(i, start) })
-    const label = m[0].slice(1)
+    const label = m[1]
     content.push({
       type: 'mention',
       attrs: { id: label, label },
@@ -60,58 +59,6 @@ function textToContent(text: string): any {
   }
 }
 
-function buildSuggestion() {
-  return {
-    char: '@',
-    items: ({ query }: { query: string }) => {
-      const list = entryStore.list(projectId.value)
-      if (!query) return list.slice(0, 12)
-      const q = query.toLowerCase()
-      return list.filter(e => e.label.toLowerCase().includes(q)).slice(0, 12)
-    },
-    render: () => {
-      let component: any
-      let popup: TippyInstance[] | undefined
-      return {
-        onStart: (props: any) => {
-          component = new VueRenderer(MentionList, {
-            props,
-            editor: props.editor,
-          })
-          if (!props.clientRect) return
-          popup = tippy('body', {
-            getReferenceClientRect: props.clientRect,
-            appendTo: () => document.body,
-            content: component.element,
-            showOnCreate: true,
-            interactive: true,
-            trigger: 'manual',
-            placement: 'bottom-start',
-            arrow: false,
-            offset: [0, 4],
-            theme: 'comfytv-transparent',
-          })
-        },
-        onUpdate: (props: any) => {
-          component?.updateProps(props)
-          if (!props.clientRect) return
-          popup?.[0]?.setProps({ getReferenceClientRect: props.clientRect })
-        },
-        onKeyDown: (props: any) => {
-          if (props.event.key === 'Escape') {
-            popup?.[0]?.hide()
-            return true
-          }
-          return component?.ref?.onKeyDown(props)
-        },
-        onExit: () => {
-          popup?.[0]?.destroy()
-          component?.destroy()
-        },
-      }
-    },
-  }
-}
 
 const initialText = String(widget.value?.value ?? '')
 let suppressWriteback = false
@@ -138,7 +85,7 @@ const editor = useEditor({
         },
         `@${node.attrs.label}`,
       ],
-      suggestion: buildSuggestion(),
+      suggestion: useMentionSuggestion(projectId, MentionList),
     }),
   ],
   editorProps: {

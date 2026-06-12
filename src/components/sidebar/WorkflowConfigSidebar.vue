@@ -136,287 +136,49 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useSelectionStore } from '@/stores/selectionStore'
-import { invalidateWorkflowInfo } from '@/composables/stages/useWorkflowValidator'
-import { prepareWorkflow } from '@/composables/stages/useWorkflowPrep'
-import { app } from '@/lib/comfyApp'
 
 import ComfyTVWidget from '@/components/widgets/ComfyTVWidget.vue'
 import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
+import { useBindingWriter } from '@/composables/sidebar/useBindingWriter'
+import { useCollapsedFlag, useCollapsedNodeIds } from '@/composables/sidebar/useCollapsedState'
+import { useWorkflowConfig } from '@/composables/sidebar/useWorkflowConfig'
+import {
+  buildBindingOptions,
+  type ExposedWidget,
+  type NodeBlock,
+} from '@/composables/sidebar/workflowConfigCatalog'
+import { useSelectionStore } from '@/stores/selectionStore'
 
 const { t } = useI18n()
 
-interface ExposedWidget {
-  node_id:      string
-  node_title:   string
-  node_type:    string
-  group_title:  string | null
-  widget_name:  string
-  widget_type:  string
-  widget_props: Record<string, any>
-  current_value: any
-  stage_binding: string | null
-  override_value: string | null
-  cast: string | null
-}
-interface ConfigPayload {
-  id: number
-  kind: string
-  label: string
-  has_api: boolean
-  description: string | null
-  gui_notes: Array<{ type: string; text: string }>
-  exposed_widgets: ExposedWidget[]
-}
-
 const selection = useSelectionStore()
 const selected  = computed(() => selection.selected)
-const config    = ref<ConfigPayload | null>(null)
-const loadError = ref<string | null>(null)
 
-const exportBusy = ref(false)
-const exportError = ref<string | null>(null)
+const {
+  config, loadError,
+  exportBusy, exportError,
+  resetBusy,  resetError,
+  loadConfig,
+  onExportPreset,
+  onResetToPreset,
+  postBinding,
+  deleteBinding,
+} = useWorkflowConfig(t)
 
-const resetBusy = ref(false)
-const resetError = ref<string | null>(null)
+const workflowId = computed(() => config.value?.id ?? null)
+const { isCollapsed, toggle: toggleCollapsed } = useCollapsedNodeIds(workflowId)
+const { collapsed: notesCollapsed, toggle: toggleNotesCollapsed } =
+  useCollapsedFlag(workflowId, 'comfytv:sidebar:notes-collapsed:')
 
-type Caps = {
-  upstream_kinds: Array<'image' | 'video' | 'audio' | 'text'>
-  option_keys:    string[]
-  computed_keys:  string[]
-}
-
-const CAPS_BY_KIND: Record<string, Caps> = {
-  text:          { upstream_kinds: ['text'],                       option_keys: [],
-                                                                   computed_keys: [] },
-  image:         { upstream_kinds: ['image', 'text'],              option_keys: ['option:negative', 'option:seed', 'option:batch_size'],
-                                                                   computed_keys: ['computed:width', 'computed:height'] },
-  'shot-images': { upstream_kinds: ['image', 'text'],              option_keys: ['option:negative', 'option:seed', 'option:batch_size'],
-                                                                   computed_keys: ['computed:width', 'computed:height'] },
-  video:         { upstream_kinds: ['image', 'video', 'text'],     option_keys: ['option:negative', 'option:seed', 'option:duration_s', 'option:generate_audio'],
-                                                                   computed_keys: ['computed:width', 'computed:height', 'computed:length'] },
-  audio:         { upstream_kinds: ['text', 'audio'],              option_keys: ['option:seed', 'option:duration_s', 'option:lyrics'],
-                                                                   computed_keys: ['computed:length'] },
-  storyboard:    { upstream_kinds: ['text'],                       option_keys: ['option:max_length'],
-                                                                   computed_keys: [] },
-  panorama:      { upstream_kinds: ['image', 'text'],              option_keys: ['option:seed'],
-                                                                   computed_keys: [] },
-  upscale:       { upstream_kinds: ['image'],                      option_keys: ['option:seed', 'option:scale'],
-                                                                   computed_keys: [] },
-  outpaint:      { upstream_kinds: ['image'],                      option_keys: ['option:seed', 'option:negative', 'option:pad_left', 'option:pad_top', 'option:pad_right', 'option:pad_bottom', 'option:feathering'],
-                                                                   computed_keys: [] },
-  inpaint:       { upstream_kinds: ['image'],                      option_keys: ['option:seed', 'option:negative', 'option:mask_data'],
-                                                                   computed_keys: [] },
-  erase:         { upstream_kinds: ['image'],                      option_keys: ['option:seed', 'option:mask_data'],
-                                                                   computed_keys: [] },
-  cutout:        { upstream_kinds: ['image'],                      option_keys: [],
-                                                                   computed_keys: [] },
-  relight:       { upstream_kinds: ['image'],                      option_keys: ['option:seed', 'option:negative'],
-                                                                   computed_keys: [] },
-  multiangle:    { upstream_kinds: ['image'],                      option_keys: ['option:seed'],
-                                                                   computed_keys: [] },
-  'image-edit':  { upstream_kinds: ['image'],                      option_keys: ['option:seed'],
-                                                                   computed_keys: [] },
-  multiview:     { upstream_kinds: ['image'],                      option_keys: ['option:seed'],
-                                                                   computed_keys: [] },
-  sequence:      { upstream_kinds: ['image'],                      option_keys: ['option:seed'],
-                                                                   computed_keys: [] },
-  timeline:      { upstream_kinds: [],                             option_keys: [],
-                                                                   computed_keys: [] },
-  'audio-vocal': { upstream_kinds: ['audio'],                      option_keys: [],
-                                                                   computed_keys: [] },
-  'audio-bg':    { upstream_kinds: ['audio'],                      option_keys: [],
-                                                                   computed_keys: [] },
-}
-
-const STAGE_OPTION_LABELS: Record<string, string> = {
-  'option:negative':       'Stage negative prompt',
-  'option:seed':           'Stage seed',
-  'option:batch_size':     'Stage batch size',
-  'option:pad_left':       'Stage pad left',
-  'option:pad_top':        'Stage pad top',
-  'option:pad_right':      'Stage pad right',
-  'option:pad_bottom':     'Stage pad bottom',
-  'option:feathering':     'Stage feathering',
-  'option:duration_s':     'Stage duration (s)',
-  'option:generate_audio': 'Stage generate audio',
-  'option:lyrics':         'Stage lyrics',
-  'option:scale':          'Stage scale',
-  'option:mask_data':      'Stage mask (painter output)',
-  'option:max_length':     'Stage LLM max output length',
-}
-const STAGE_COMPUTED_LABELS: Record<string, string> = {
-  'computed:width':  'Stage width',
-  'computed:height': 'Stage height',
-  'computed:length': 'Stage video length',
-}
-const UPSTREAM_KIND_LABELS: Record<string, string> = {
-  image: 'Upstream image', video: 'Upstream video',
-  audio: 'Upstream audio', text:  'Upstream text',
-}
-
-function maxUsedUpstreamIndex(widgets: ExposedWidget[], kind: string): number {
-  const pat = new RegExp(`^upstream_${kind}:[^\\[]+\\[(\\d+)\\]$`)
-  let max = -1
-  for (const w of widgets) {
-    if (!w.stage_binding) continue
-    const m = w.stage_binding.match(pat)
-    if (m) {
-      const idx = parseInt(m[1], 10)
-      if (idx > max) max = idx
-    }
-  }
-  return max
-}
-
-const bindingOptions = computed<Array<{ value: string; label: string }>>(() => {
-  const sel = selection.selected
-  const widgets = config.value?.exposed_widgets ?? []
-  const caps = (sel ? CAPS_BY_KIND[sel.workflowKind] : null) ?? {
-    upstream_kinds: ['image', 'video', 'audio', 'text'],
-    option_keys:    ['option:negative', 'option:seed', 'option:batch_size'],
-    computed_keys:  ['computed:width', 'computed:height', 'computed:length'],
-  }
-
-  const out: Array<{ value: string; label: string }> = [
-    { value: '__VALUE__', label: '(use this value)' },
-    { value: 'main_prompt', label: 'Stage prompt' },
-  ]
-  for (const k of caps.option_keys) {
-    out.push({ value: k, label: STAGE_OPTION_LABELS[k] ?? k })
-  }
-  for (const k of caps.computed_keys) {
-    out.push({ value: k, label: STAGE_COMPUTED_LABELS[k] ?? k })
-  }
-  for (const ukind of caps.upstream_kinds) {
-    const maxUsed = maxUsedUpstreamIndex(widgets, ukind)
-    const showUpTo = Math.min(7, maxUsed + 1)
-    const suffix = ukind === 'text' ? 'value' : 'annotated'
-    const label  = UPSTREAM_KIND_LABELS[ukind]
-    for (let i = 0; i <= showUpTo; i++) {
-      out.push({
-        value: `upstream_${ukind}:${suffix}[${i}]`,
-        label: `${label} #${i + 1}`,
-      })
-    }
-  }
-  return out
-})
-
-async function fetchJson(path: string, init?: RequestInit) {
-  const resp = await (app as any).api.fetchApi(path, init)
-  if (resp.status >= 400) {
-    let detail = `${resp.status} ${resp.statusText}`
-    try { const j = await resp.json(); if (j?.error) detail += ` — ${j.error}` } catch {}
-    throw new Error(detail)
-  }
-  return resp.json()
-}
-
-async function loadConfig(kind: string, label: string) {
-  loadError.value = null
-  config.value = null
-  try {
-    try { await prepareWorkflow(kind, label) } catch {}
-    config.value = await fetchJson(
-      `/comfytv/workflows/config?kind=${encodeURIComponent(kind)}&label=${encodeURIComponent(label)}`
-    )
-  } catch (e: any) {
-    loadError.value = String(e?.message || e || 'load failed')
-  }
-}
-
-async function onExportPreset() {
-  if (!selected.value || !config.value) return
-  exportError.value = null
-  exportBusy.value = true
-  try {
-    const kind  = selected.value.workflowKind
-    const label = selected.value.workflowLabel
-    const resp = await (app as any).api.fetchApi(
-      `/comfytv/workflows/preset?kind=${encodeURIComponent(kind)}` +
-      `&label=${encodeURIComponent(label)}`,
-    )
-    if (resp.status >= 400) {
-      let detail = `${resp.status} ${resp.statusText}`
-      try { const j = await resp.json(); if (j?.error) detail += ` — ${j.error}` } catch {}
-      throw new Error(detail)
-    }
-    const cd = resp.headers.get('Content-Disposition') || ''
-    const m  = cd.match(/filename="?([^"]+)"?/i)
-    const filename = m ? m[1] : 'preset.json'
-    const blob = await resp.blob()
-    const url  = URL.createObjectURL(blob)
-    const a    = document.createElement('a')
-    a.href     = url
-    a.download = filename
-    document.body.appendChild(a)
-    a.click()
-    a.remove()
-    setTimeout(() => URL.revokeObjectURL(url), 1000)
-  } catch (e: any) {
-    const detail = String(e?.message || e || 'export failed')
-    exportError.value = t('configSidebar.exportPresetFailed', { detail })
-  } finally {
-    exportBusy.value = false
-  }
-}
-
-async function onResetToPreset() {
-  if (!config.value) return
-  if (!window.confirm(t('configSidebar.resetToPresetConfirm'))) return
-  resetBusy.value = true
-  resetError.value = null
-  try {
-    const resp = await (app as any).api.fetchApi(
-      `/comfytv/workflows/${config.value.id}/reset_to_preset`,
-      { method: 'POST' },
-    )
-    if (resp.status >= 400) {
-      let detail = `${resp.status} ${resp.statusText}`
-      try { const j = await resp.json(); if (j?.error) detail += ` — ${j.error}` } catch {}
-      throw new Error(detail)
-    }
-    const sel = selection.selected
-    if (sel?.workflowKind && sel?.workflowLabel) {
-      await loadConfig(sel.workflowKind, sel.workflowLabel)
-    }
-    invalidateWorkflowInfo()
-  } catch (e: any) {
-    const detail = String(e?.message || e || 'reset failed')
-    resetError.value = t('configSidebar.resetToPresetFailed', { detail })
-  } finally {
-    resetBusy.value = false
-  }
-}
-
-watch(
-  () => selection.selectedKey,
-  () => {
-    const sel = selection.selected
-    if (!sel || !sel.workflowLabel) { config.value = null; return }
-    void loadConfig(sel.workflowKind, sel.workflowLabel)
-  },
-  { immediate: true },
+const bindingOptions = computed(() =>
+  buildBindingOptions(
+    config.value?.exposed_widgets ?? [],
+    selection.selected?.workflowKind,
+  ),
 )
 
-let _pollTimer: ReturnType<typeof setInterval> | null = null
-onMounted(() => {
-  selection.refreshFromCanvas()
-  _pollTimer = setInterval(() => selection.refreshFromCanvas(), 400)
-})
-onBeforeUnmount(() => {
-  if (_pollTimer) { clearInterval(_pollTimer); _pollTimer = null }
-})
-
-interface NodeBlock {
-  node_id: string
-  node_title: string
-  node_type: string
-  widgets: ExposedWidget[]
-}
 const groupedWidgets = computed(() => {
   const groups: Array<{ title: string | null; nodes: NodeBlock[] }> = []
   const groupIdx = new Map<string, number>()
@@ -446,220 +208,38 @@ const groupedWidgets = computed(() => {
   return groups
 })
 
-const collapsedNodes = ref<Set<string>>(new Set())
-
-function storageKeyForCollapsed(workflowId: number): string {
-  return `comfytv:sidebar:collapsed:${workflowId}`
-}
-function loadCollapsedFor(workflowId: number) {
-  try {
-    const raw = localStorage.getItem(storageKeyForCollapsed(workflowId))
-    if (raw) {
-      const arr = JSON.parse(raw)
-      if (Array.isArray(arr)) collapsedNodes.value = new Set(arr.map(String))
-      return
-    }
-  } catch {}
-  collapsedNodes.value = new Set()
-}
-function saveCollapsed(workflowId: number) {
-  try {
-    localStorage.setItem(
-      storageKeyForCollapsed(workflowId),
-      JSON.stringify(Array.from(collapsedNodes.value)),
-    )
-  } catch {}
-}
-watch(
-  () => config.value?.id,
-  (wid) => { if (wid != null) loadCollapsedFor(wid) },
-)
-
-function isCollapsed(nodeId: string): boolean {
-  return collapsedNodes.value.has(nodeId)
-}
-function toggleCollapsed(nodeId: string) {
-  if (collapsedNodes.value.has(nodeId)) collapsedNodes.value.delete(nodeId)
-  else collapsedNodes.value.add(nodeId)
-  collapsedNodes.value = new Set(collapsedNodes.value)
-  if (config.value?.id != null) saveCollapsed(config.value.id)
-}
+const {
+  isStageBound,
+  dropdownValueFor,
+  effectiveValue,
+  comboOptions,
+  numProp,
+  onValueChange,
+  onBindingChange,
+} = useBindingWriter(postBinding, deleteBinding)
 
 function boundCountFor(node: NodeBlock): number {
   return node.widgets.filter(w => isStageBound(w) || w.stage_binding?.startsWith('literal:')).length
 }
 
-const notesCollapsed = ref(false)
-function storageKeyForNotes(workflowId: number): string {
-  return `comfytv:sidebar:notes-collapsed:${workflowId}`
-}
-function loadNotesCollapsedFor(workflowId: number) {
-  try {
-    const raw = localStorage.getItem(storageKeyForNotes(workflowId))
-    notesCollapsed.value = raw === '1'
-  } catch { notesCollapsed.value = false }
-}
-function toggleNotesCollapsed() {
-  notesCollapsed.value = !notesCollapsed.value
-  const wid = config.value?.id
-  if (wid != null) {
-    try { localStorage.setItem(storageKeyForNotes(wid), notesCollapsed.value ? '1' : '0') } catch {}
-  }
-}
 watch(
-  () => config.value?.id,
-  (wid) => { if (wid != null) loadNotesCollapsedFor(wid) },
+  () => selection.selectedKey,
+  () => {
+    const sel = selection.selected
+    if (!sel || !sel.workflowLabel) { config.value = null; return }
+    void loadConfig(sel.workflowKind, sel.workflowLabel)
+  },
+  { immediate: true },
 )
 
-function comboOptions(w: ExposedWidget): string[] {
-  if (w.widget_type !== 'COMBO') return []
-  const vals = w.widget_props?.values
-  return Array.isArray(vals) ? vals.map((x: any) => String(x)) : []
-}
-function numProp(w: ExposedWidget, key: string): number | undefined {
-  const v = w.widget_props?.[key]
-  return typeof v === 'number' ? v : undefined
-}
-function isStageBound(w: ExposedWidget): boolean {
-  if (!w.stage_binding) return false
-  if (w.stage_binding.startsWith('literal:')) return false
-  return true
-}
-
-function dropdownValueFor(w: ExposedWidget): string {
-  if (!w.stage_binding) return '__VALUE__'
-  if (w.stage_binding.startsWith('literal:')) return '__VALUE__'
-  return w.stage_binding
-}
-function effectiveValue(w: ExposedWidget): any {
-  if (typeof w.stage_binding === 'string' && w.stage_binding.startsWith('literal:')) {
-    const lit = w.stage_binding.slice('literal:'.length)
-    if (lit !== '') return coerceForWidget(w, lit)
-  }
-  if (w.override_value !== null && w.override_value !== undefined && w.override_value !== '') {
-    return coerceForWidget(w, w.override_value)
-  }
-  return w.current_value
-}
-
-function coerceForWidget(w: ExposedWidget, raw: any): any {
-  if (w.widget_type === 'INT' || w.widget_type === 'FLOAT') {
-    const n = Number(raw)
-    return Number.isFinite(n) ? n : w.current_value
-  }
-  if (w.widget_type === 'BOOLEAN') {
-    if (typeof raw === 'boolean') return raw
-    const s = String(raw).toLowerCase()
-    return s === 'true' || s === '1' || s === 'on' || s === 'yes'
-  }
-  return raw
-}
-
-function notifyValidatorOfBindingChange() {
-  invalidateWorkflowInfo()
-  selection.bumpBindings()
-}
-
-async function postBinding(payload: any) {
-  if (!config.value) return
-  try {
-    await fetchJson('/comfytv/workflows/config/binding', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ workflow_id: config.value.id, ...payload }),
-    })
-    notifyValidatorOfBindingChange()
-  } catch (e: any) {
-    loadError.value = `save failed: ${e?.message || e}`
-  }
-}
-async function deleteBinding(node_id: string, widget_name: string) {
-  if (!config.value) return
-  try {
-    await fetchJson('/comfytv/workflows/config/binding', {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        workflow_id: config.value.id,
-        node_id, input_name: widget_name,
-      }),
-    })
-    notifyValidatorOfBindingChange()
-  } catch (e: any) {
-    loadError.value = `delete failed: ${e?.message || e}`
-  }
-}
-
-function inferCast(widgetType: string): string | null {
-  switch (widgetType) {
-    case 'INT':     return 'int'
-    case 'FLOAT':   return 'float'
-    case 'BOOLEAN': return 'bool'
-    default:        return null
-  }
-}
-
-async function onValueChange(w: ExposedWidget, newVal: any) {
-  if (isStageBound(w)) return  // shouldn't happen — UI disables it
-
-  const isCleared =
-    newVal === null || newVal === undefined ||
-    (typeof newVal === 'string' && newVal === '')
-  if (isCleared) {
-    w.override_value = null
-    w.stage_binding  = null
-    await deleteBinding(w.node_id, w.widget_name)
-    return
-  }
-
-  w.override_value = String(newVal)
-  w.stage_binding  = `literal:${w.override_value}`
-  w.cast           = inferCast(w.widget_type)
-
-  await postBinding({
-    node_id:    w.node_id,
-    input_name: w.widget_name,
-    from:       w.stage_binding,
-    default:    w.override_value,
-    cast:       w.cast,
-    required:   false,
-  })
-}
-
-async function onBindingChange(w: ExposedWidget, newBinding: string) {
-  if (newBinding === '__VALUE__') {
-    if (w.stage_binding) {
-      await deleteBinding(w.node_id, w.widget_name)
-    }
-    w.stage_binding  = null
-    w.override_value = null
-    return
-  }
-  let cast: string | null = null
-  let defaultValue: string | null = null
-  if (newBinding === 'option:seed') {
-    cast = 'int'
-    defaultValue = 'random_int31'
-  } else if (newBinding === 'option:batch_size' ||
-             newBinding === 'computed:width' ||
-             newBinding === 'computed:height' ||
-             newBinding === 'computed:length') {
-    cast = 'int'
-  }
-  const isUpstream = newBinding.startsWith('upstream_')
-  w.stage_binding  = newBinding
-  w.override_value = defaultValue
-  w.cast           = cast
-
-  await postBinding({
-    node_id:    w.node_id,
-    input_name: w.widget_name,
-    from:       newBinding,
-    default:    defaultValue,
-    cast:       cast,
-    required:   isUpstream,
-  })
-}
+let _pollTimer: ReturnType<typeof setInterval> | null = null
+onMounted(() => {
+  selection.refreshFromCanvas()
+  _pollTimer = setInterval(() => selection.refreshFromCanvas(), 400)
+})
+onBeforeUnmount(() => {
+  if (_pollTimer) { clearInterval(_pollTimer); _pollTimer = null }
+})
 </script>
 
 <style scoped>

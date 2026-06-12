@@ -74,10 +74,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
-import { useStageStore, type StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
-import { app } from '@/lib/comfyApp'
+import { useGridSplit } from '@/composables/stages/useGridSplit'
+import type { StageState } from '@/stores/stageStore'
 
 const PRESETS = [
   { label: '1×2', r: 1, c: 2 },
@@ -96,144 +95,7 @@ const props = defineProps<{
   node: any
 }>()
 
-const store = useStageStore()
-
-const sourceImageUrl = computed<string | null>(() => {
-  const inp = props.state.inputs.find(i => i.slot === 'image')
-  if (!inp || inp.source !== 'upstream' || !inp.content) return null
-  return inp.content
-})
-
-function getWidget(name: string): any | null {
-  return props.node?.widgets?.find((w: any) => w.name === name) ?? null
-}
-function readInt(name: string, fallback: number): number {
-  const w = getWidget(name)
-  const n = w ? Number(w.value) : NaN
-  return Number.isFinite(n) ? n : fallback
-}
-function writeWidget(name: string, value: number) {
-  const w = getWidget(name)
-  if (!w) return
-  if (w.value !== value) { w.value = value; w.callback?.(value) }
-}
-
-const rows = ref<number>(readInt('rows', 2))
-const cols = ref<number>(readInt('cols', 2))
-
-function setGrid(r: number, c: number) {
-  rows.value = Math.max(1, Math.min(10, r))
-  cols.value = Math.max(1, Math.min(10, c))
-}
-
-function wireWidget(name: string, apply: (v: number) => void) {
-  const w = getWidget(name)
-  if (!w) return
-  const orig = w.callback
-  w.callback = (v: unknown) => { orig?.call(w, v); apply(Number(v)) }
-}
-wireWidget('rows', v => { if (v !== rows.value) rows.value = v })
-wireWidget('cols', v => { if (v !== cols.value) cols.value = v })
-
-if (props.node) {
-  const orig = props.node.onConfigure
-  props.node.onConfigure = function (info: any) {
-    orig?.call(this, info)
-    const r = readInt('rows', rows.value)
-    const c = readInt('cols', cols.value)
-    if (r !== rows.value) rows.value = r
-    if (c !== cols.value) cols.value = c
-  }
-}
-
-const splitting = ref(false)
-let timer: number | null = null
-let seq = 0
-let cachedImg: HTMLImageElement | null = null
-let cachedUrl: string | null = null
-
-function getSourceImage(url: string): Promise<HTMLImageElement> {
-  if (cachedImg && cachedUrl === url && cachedImg.complete) return Promise.resolve(cachedImg)
-  return new Promise((resolve, reject) => {
-    const img = new Image()
-    img.crossOrigin = 'anonymous'
-    img.onload = () => { cachedImg = img; cachedUrl = url; resolve(img) }
-    img.onerror = reject
-    img.src = url
-  })
-}
-
-function schedule() {
-  if (!sourceImageUrl.value) return
-  if (timer != null) window.clearTimeout(timer)
-  timer = window.setTimeout(() => { timer = null; void run() }, 250)
-}
-
-async function run() {
-  const url = sourceImageUrl.value
-  const r = rows.value, c = cols.value
-  if (!url || r < 1 || c < 1) return
-
-  const mySeq = ++seq
-  splitting.value = true
-  try {
-    const img = await getSourceImage(url)
-    if (mySeq !== seq) return
-    const cellW = Math.floor(img.naturalWidth / c)
-    const cellH = Math.floor(img.naturalHeight / r)
-    if (cellW < 1 || cellH < 1) return
-
-    const items: { index: string; label: string; image_url: string }[] = []
-    let n = 0
-    for (let row = 0; row < r; row++) {
-      for (let col = 0; col < c; col++) {
-        if (mySeq !== seq) return
-        n++
-        const canvas = document.createElement('canvas')
-        canvas.width = cellW
-        canvas.height = cellH
-        const ctx = canvas.getContext('2d')
-        if (!ctx) throw new Error('2d context unavailable')
-        ctx.drawImage(img, col * cellW, row * cellH, cellW, cellH, 0, 0, cellW, cellH)
-
-        const blob = await new Promise<Blob | null>((res) => canvas.toBlob(res, 'image/png'))
-        if (!blob) throw new Error('toBlob null')
-        if (mySeq !== seq) return
-
-        const nodeId = String(props.node?.id ?? 'unknown')
-        const filename = `comfytv-grid-${nodeId}-${Date.now()}-${n}.png`
-        const body = new FormData()
-        body.append('image', blob, filename)
-        body.append('subfolder', 'gridsplit')
-        body.append('type', 'input')
-        const resp = await (app as any).api.fetchApi('/upload/image', { method: 'POST', body })
-        if (resp.status !== 200) throw new Error(`upload ${resp.status}`)
-        const data = await resp.json() as { name?: string }
-        if (!data?.name) throw new Error('no name')
-        if (mySeq !== seq) return
-
-        items.push({
-          index: String(n),
-          label: `R${row + 1}C${col + 1}`,
-          image_url: `/view?filename=${encodeURIComponent(data.name)}&subfolder=gridsplit&type=input`,
-        })
-      }
-    }
-    if (mySeq !== seq) return
-    store.applyExecutedPayload(props.state, { output: [JSON.stringify({ images: items })] })
-  } catch (e) {
-    console.error('[ComfyTV/gridsplit] split failed', e)
-  } finally {
-    if (mySeq === seq) splitting.value = false
-  }
-}
-
-watch([rows, cols], ([r, c]) => {
-  writeWidget('rows', r)
-  writeWidget('cols', c)
-  schedule()
-})
-watch(sourceImageUrl, () => schedule(), { immediate: true })
+const { sourceImageUrl, rows, cols, setGrid, splitting } = useGridSplit(props.node, props.state)
 </script>
 
 <style scoped>

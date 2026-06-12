@@ -9,9 +9,7 @@ import {
   UpsertEntrySchema,
 } from '@/api/schemas'
 import { app } from '@/lib/comfyApp'
-
-const TOKEN_RE = /@([\p{L}_][\p{L}\p{N}_-]*)/gu
-const LABEL_RE = /^[\p{L}_][\p{L}\p{N}_-]*$/u
+import { LABEL_RE, MENTION_RE } from '@/utils/labelRegex'
 
 export const ENTRY_KINDS = ['fragment'] as const
 export type EntryKind = typeof ENTRY_KINDS[number]
@@ -95,7 +93,7 @@ export const useEntryStore = defineStore('entries', () => {
     if (!text || !text.includes('@')) return text
     const all = byProject.get(projectId)
     if (!all || all.length === 0) return text
-    return text.replace(TOKEN_RE, (match, label) => {
+    return text.replace(MENTION_RE, (match, label) => {
       const hit = all
         .filter(e => e.label === label)
         .sort((a, b) => a.id - b.id)[0]

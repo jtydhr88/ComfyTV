@@ -20,7 +20,7 @@
           <option v-for="opt in resolutionOptions" :key="opt" :value="opt">{{ opt }}</option>
         </select>
       </div>
-      <span class="dims">{{ captureW }}×{{ captureH }}</span>
+      <span class="dims">{{ captureSize.w }}×{{ captureSize.h }}</span>
     </div>
 
     <div class="controls">
@@ -48,23 +48,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
-import { useStageStore, type StageState } from '@/stores/stageStore'
-import StageCard from '@/components/stages/StageCard.vue'
-import { capturePanoramaOffscreen } from '@/widgets/three/PanoramaViewer'
-import { app } from '@/lib/comfyApp'
+import { ref } from 'vue'
 
-const aspectOptions = [
-  '1:1', '9:16', '16:9', '3:4', '4:3', '3:2', '2:3', '4:5', '5:4', '21:9',
-] as const
-const resolutionOptions = ['1K', '2K', '4K'] as const
-const RESOLUTION_TO_SHORT_SIDE: Record<string, number> = {
-  '1K': 1024,
-  '2K': 2048,
-  '4K': 4096,
-}
-const CAPTURE_FOV = 75
-const LABELS_4 = ['Front', 'Right', 'Back', 'Left']
+import StageCard from '@/components/stages/StageCard.vue'
+import { useMultiViewCapture } from '@/composables/stages/useMultiViewCapture'
+import type { StageState } from '@/stores/stageStore'
+import {
+  ASPECT_OPTIONS as aspectOptions,
+  RESOLUTION_OPTIONS as resolutionOptions,
+} from '@/utils/panoramaProjection'
 
 const props = defineProps<{
   state: StageState
@@ -75,18 +67,9 @@ const props = defineProps<{
   node: any
 }>()
 
-const store = useStageStore()
-
-const panoramaUrl = computed<string | null>(() => {
-  const inp = props.state.inputs.find(i => i.slot === 'panorama')
-  if (!inp || inp.source !== 'upstream' || !inp.content) return null
-  return inp.content
-})
-
 function getWidget(name: string): any | null {
   return props.node?.widgets?.find((w: any) => w.name === name) ?? null
 }
-
 function readWidgetStr(name: string, fallback: string): string {
   const w = getWidget(name)
   if (!w) return fallback
@@ -98,147 +81,9 @@ const viewCount   = ref<number>(Number(getWidget('view_count')?.value ?? 4) || 4
 const aspectRatio = ref<string>(readWidgetStr('aspect_ratio', '16:9'))
 const resolution  = ref<string>(readWidgetStr('resolution',   '1K'))
 
-function writeWidget(name: string, value: number | string) {
-  const w = getWidget(name)
-  if (!w) return
-  if (w.value !== value) {
-    w.value = value
-    w.callback?.(value)
-  }
-}
-
-function parseAspect(s: string): { w: number; h: number } {
-  const [a, b] = s.split(':')
-  const wa = Number(a), wb = Number(b)
-  if (!Number.isFinite(wa) || !Number.isFinite(wb) || wb === 0) {
-    return { w: 16, h: 9 }
-  }
-  return { w: wa, h: wb }
-}
-
-const aspectParts = computed(() => parseAspect(aspectRatio.value))
-const captureW = computed(() => {
-  const { w, h } = aspectParts.value
-  const short = RESOLUTION_TO_SHORT_SIDE[resolution.value] ?? 1024
-  return w >= h
-    ? Math.max(16, Math.round((short * w / h) / 8) * 8)
-    : Math.max(16, Math.round(short / 8) * 8)
-})
-const captureH = computed(() => {
-  const { w, h } = aspectParts.value
-  const short = RESOLUTION_TO_SHORT_SIDE[resolution.value] ?? 1024
-  return w >= h
-    ? Math.max(16, Math.round(short / 8) * 8)
-    : Math.max(16, Math.round((short * h / w) / 8) * 8)
-})
-
-const vcw = getWidget('view_count')
-if (vcw) {
-  const orig = vcw.callback
-  vcw.callback = (v: unknown) => {
-    orig?.call(vcw, v)
-    const n = Number(v)
-    if (Number.isFinite(n) && n !== viewCount.value) viewCount.value = n
-  }
-}
-
-const capturing = ref(false)
-const captureProgress = ref(0)
-let captureTimer: number | null = null
-let captureSeq = 0
-
-function schedule() {
-  if (!panoramaUrl.value) return
-  if (captureTimer != null) window.clearTimeout(captureTimer)
-  captureTimer = window.setTimeout(() => {
-    captureTimer = null
-    void run()
-  }, 350)
-}
-
-async function run() {
-  const url = panoramaUrl.value
-  const n = Math.max(2, Math.min(24, Math.round(viewCount.value)))
-  if (!url || n < 2) return
-
-  const mySeq = ++captureSeq
-  capturing.value = true
-  captureProgress.value = 0
-  try {
-    const items: { index: string; label: string; image_url: string }[] = []
-    const labels = n === 4
-      ? LABELS_4
-      : Array.from({ length: n }, (_, i) => `View ${i + 1}`)
-
-    for (let i = 0; i < n; i++) {
-      if (mySeq !== captureSeq) return
-      const yaw = (i / n) * 360
-      const canvas = await capturePanoramaOffscreen(url, {
-        yaw, pitch: 0, fov: CAPTURE_FOV,
-        width: captureW.value, height: captureH.value,
-      })
-      if (mySeq !== captureSeq) return
-
-      const blob = await new Promise<Blob | null>((resolve) =>
-        canvas.toBlob(resolve, 'image/png'),
-      )
-      if (!blob) throw new Error('toBlob returned null')
-      if (mySeq !== captureSeq) return
-
-      const nodeId = String(props.node?.id ?? 'unknown')
-      const filename = `comfytv-pano-multi-${nodeId}-${Date.now()}-${i}.png`
-      const body = new FormData()
-      body.append('image', blob, filename)
-      body.append('subfolder', 'panorama-view')
-      body.append('type', 'input')
-
-      const resp = await (app as any).api.fetchApi('/upload/image', {
-        method: 'POST', body,
-      })
-      if (resp.status !== 200) throw new Error(`upload ${resp.status} ${resp.statusText}`)
-      const data = await resp.json() as { name?: string }
-      if (!data?.name) throw new Error('upload returned no name')
-      if (mySeq !== captureSeq) return
-
-      const imageUrl = `/view?filename=${encodeURIComponent(data.name)}`
-                     + `&subfolder=panorama-view&type=input`
-      items.push({
-        index: String(i + 1),
-        label: labels[i] ?? `View ${i + 1}`,
-        image_url: imageUrl,
-      })
-      captureProgress.value = i + 1
-    }
-
-    if (mySeq !== captureSeq) return
-    const payload = JSON.stringify({ images: items })
-    store.applyExecutedPayload(props.state, { output: [payload] })
-  } catch (e: any) {
-    console.error('[ComfyTV/PanoramaMultiView] capture failed', e)
-
-    store.applyExecutionError(props.state, {
-      message: String(e?.message || e || 'panorama multi-view capture failed'),
-      type: 'PanoramaMultiViewCaptureFailed',
-    })
-  } finally {
-    if (mySeq === captureSeq) capturing.value = false
-  }
-}
-
-watch(viewCount, (n) => {
-  writeWidget('view_count', n)
-  schedule()
-})
-watch(aspectRatio, (v) => {
-  writeWidget('aspect_ratio', v)
-  schedule()
-})
-watch(resolution, (v) => {
-  writeWidget('resolution', v)
-  schedule()
-})
-
-watch(panoramaUrl, () => schedule(), { immediate: true })
+const { panoramaUrl, capturing, captureProgress, captureSize } = useMultiViewCapture(
+  props.node, props.state, viewCount, aspectRatio, resolution,
+)
 </script>
 
 <style scoped>
