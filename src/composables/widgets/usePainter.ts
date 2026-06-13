@@ -1,6 +1,7 @@
 import { computed, onMounted, onUnmounted, ref, watch, type Ref } from 'vue'
 
 import { getEffectiveBrushSize, getEffectiveHardness } from '@/widgets/painter/brushUtils'
+import { floodFill } from '@/widgets/painter/floodFill'
 import { StrokeProcessor } from '@/widgets/painter/StrokeProcessor'
 import {
   hexToRgb,
@@ -434,6 +435,23 @@ export function usePainter(options: UsePainterOptions) {
     hasBaseSnapshot = false
   }
 
+  function applyFill(e: PointerEvent) {
+    const ctx = getCtx()
+    const el = canvasEl.value
+    const p = getCanvasPoint(e)
+    if (!ctx || !el || !p) return
+    const imageData = ctx.getImageData(0, 0, el.width, el.height)
+    const changed = floodFill(
+      imageData,
+      p.x, p.y,
+      hexToRgb(brushColor.value),
+      brushOpacity.value * 255,
+    )
+    if (!changed) return
+    ctx.putImageData(imageData, 0, 0)
+    isDirty.value = true
+  }
+
   function placeLabel(e: PointerEvent) {
     const ctx = getCtx()
     const el = canvasEl.value
@@ -468,7 +486,9 @@ export function usePainter(options: UsePainterOptions) {
     if (e.button !== 0) return
     cacheCanvasRect()
     updateCursorPos(e)
-    if (tool.value === PAINTER_TOOLS.LABEL) {
+    if (tool.value === PAINTER_TOOLS.FILL) {
+      applyFill(e)
+    } else if (tool.value === PAINTER_TOOLS.LABEL) {
       placeLabel(e)
     } else if (isShapeTool()) {
       startShape(e)

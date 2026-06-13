@@ -3,11 +3,12 @@ export interface Point {
   y: number
 }
 
-export type PainterTool = 'brush' | 'eraser' | 'rect' | 'ellipse' | 'label'
+export type PainterTool = 'brush' | 'eraser' | 'fill' | 'rect' | 'ellipse' | 'label'
 
 export const PAINTER_TOOLS = {
   BRUSH: 'brush' as const,
   ERASER: 'eraser' as const,
+  FILL: 'fill' as const,
   RECT: 'rect' as const,
   ELLIPSE: 'ellipse' as const,
   LABEL: 'label' as const,

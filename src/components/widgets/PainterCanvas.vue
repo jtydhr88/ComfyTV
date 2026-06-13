@@ -19,7 +19,8 @@
       />
       <canvas
         ref="canvasEl"
-        class="ctv:absolute ctv:inset-0 ctv:size-full ctv:touch-none ctv:cursor-none"
+        class="ctv:absolute ctv:inset-0 ctv:size-full ctv:touch-none"
+        :class="tool === 'fill' ? 'ctv:cursor-crosshair' : 'ctv:cursor-none'"
         @pointerdown="handlePointerDown"
         @pointermove="handlePointerMove"
         @pointerup="handlePointerUp"
@@ -27,7 +28,7 @@
         @pointerleave="handlePointerLeave"
       />
       <div
-        v-show="cursorVisible"
+        v-show="cursorVisible && tool !== 'fill'"
         ref="cursorEl"
         class="ctv:absolute ctv:top-0 ctv:left-0 ctv:rounded-full ctv:pointer-events-none ctv:border ctv:border-black/70
                ctv:shadow-[0_0_0_1px_rgb(255_255_255/0.8)] ctv:will-change-transform"
@@ -46,11 +47,17 @@
           <button v-for="t in TOOLS" :key="t.id" type="button"
                   :class="toolBtnClass(tool === t.id)"
                   :title="$t(t.i18n)"
-                  @click="tool = t.id">{{ t.icon }}</button>
+                  @click="tool = t.id">
+            <svg v-if="t.id === 'fill'" viewBox="0 0 24 24"
+                 class="ctv:size-3.5 ctv:mx-auto ctv:fill-current">
+              <path :d="FILL_ICON_PATH" />
+            </svg>
+            <template v-else>{{ t.icon }}</template>
+          </button>
         </div>
       </div>
 
-      <div :class="rowClass">
+      <div v-if="tool !== 'fill'" :class="rowClass">
         <span :class="labelClass">{{ $t('painter.size') }}</span>
         <input
           type="range" min="1" max="200" step="1"
@@ -162,9 +169,16 @@ const brushHardnessPercent = computed({
   set: (v: number) => { brushHardness.value = v / 100 },
 })
 
+const FILL_ICON_PATH =
+  'M16.56 8.94L7.62 0 6.21 1.41l2.38 2.38-5.15 5.15c-.59.59-.59 1.54 0 2.12l5.5 5.5'
+  + 'c.29.29.68.44 1.06.44s.77-.15 1.06-.44l5.5-5.5c.59-.58.59-1.53 0-2.12z'
+  + 'M5.21 10L10 5.21 14.79 10H5.21z'
+  + 'M19 11.5s-2 2.17-2 3.5c0 1.1.9 2 2 2s2-.9 2-2c0-1.33-2-3.5-2-3.5z'
+
 const TOOLS = [
   { id: 'brush',   icon: '✏️', i18n: 'painter.brush' },
   { id: 'eraser',  icon: '🧽', i18n: 'painter.eraser' },
+  { id: 'fill',    icon: '',   i18n: 'painter.fill' },
   { id: 'rect',    icon: '▭',  i18n: 'painter.rect' },
   { id: 'ellipse', icon: '◯',  i18n: 'painter.ellipse' },
   { id: 'label',   icon: '①',  i18n: 'painter.label' },

@@ -372,6 +372,7 @@
     "tool": "Tool",
     "brush": "Brush",
     "eraser": "Eraser",
+    "fill": "Fill",
     "rect": "Rectangle",
     "ellipse": "Ellipse",
     "label": "Numbered label",
