@@ -57,9 +57,9 @@ import { useMultiViewCapture } from '@/composables/stages/useMultiViewCapture'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import {
-  ASPECT_OPTIONS as aspectOptions,
-  RESOLUTION_OPTIONS as resolutionOptions,
-} from '@/utils/panoramaProjection'
+  ASPECT_RATIOS as aspectOptions,
+  RESOLUTIONS as resolutionOptions,
+} from '@/utils/sizing'
 import { readWidgetNum, readWidgetStr } from '@/utils/widget'
 
 const props = defineProps<{

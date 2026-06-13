@@ -7,8 +7,16 @@
     "preparingWorkflow": "准备工作流中…",
     "section": {
       "context": "上游输入",
+      "pool": "图片池",
       "output": "输出 ({type})",
       "actions": "动作"
+    },
+    "pool": {
+      "clear": "清除",
+      "clearHint": "清空图片池并重置选择",
+      "confirmClear": "确认清空？",
+      "confirm": "是",
+      "cancel": "否"
     },
     "empty": {
       "no_output": "暂无输出",

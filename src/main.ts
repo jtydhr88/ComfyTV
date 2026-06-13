@@ -227,6 +227,20 @@ const extension: ComfyExtension = {
 
     useEntryStore().installWebSocketSync()
 
+    try {
+      a.api?.addEventListener?.('comfytv-toast', (event: any) => {
+        const d = event?.detail ?? event ?? {}
+        a.extensionManager?.toast?.add?.({
+          severity: d.severity || 'warn',
+          summary:  d.summary  || 'ComfyTV',
+          detail:   d.detail   || '',
+          life:     d.life     || 8000,
+        })
+      })
+    } catch (e) {
+      console.warn('[ComfyTV] toast listener install failed', e)
+    }
+
     const hookSelection = () => {
       if (!a.canvas) { requestAnimationFrame(hookSelection); return }
       const prev = a.canvas.onSelectionChange

@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 
-import { useStageStore, computePickedImageUrl, type StageState } from './stageStore'
+import { useStageStore, computePickedImageUrl, mergeImagePool, type StageState } from './stageStore'
 
 function freshState(overrides: Partial<StageState> = {}): StageState {
   return {
@@ -297,5 +297,58 @@ describe('computePickedImageUrl', () => {
 
   it('handles missing images array', () => {
     expect(computePickedImageUrl(makeState('{}'))).toBeNull()
+  })
+
+  it('prefers the pool over the live upstream batch', () => {
+    const pool = JSON.stringify({ images: [{ index: '1', image_url: 'pooled' }] })
+    const batch = JSON.stringify({ images: [{ index: '1', image_url: 'live' }] })
+    const state = freshState({
+      kind: 'image-picker',
+      pool,
+      inputs: [{ slot: 'batch', type: 'COMFYTV_IMAGES', source: 'upstream', content: batch }],
+      pickedIndex: 1,
+    })
+    expect(computePickedImageUrl(state)).toBe('pooled')
+  })
+})
+
+describe('mergeImagePool', () => {
+  const img = (url: string) => ({ index: '1', image_url: url, label: url })
+  const pool = (...urls: string[]) => JSON.stringify({ images: urls.map(img) })
+  const urls = (json: string) =>
+    (JSON.parse(json).images as Array<{ image_url: string }>).map(i => i.image_url)
+  const indices = (json: string) =>
+    (JSON.parse(json).images as Array<{ index: string }>).map(i => i.index)
+
+  it('prepends fresh images so the newest sit at the front', () => {
+    const merged = mergeImagePool(pool('a', 'b'), pool('c'))
+    expect(urls(merged)).toEqual(['c', 'a', 'b'])
+  })
+
+  it('dedupes by image_url, only fresh ones move to the front', () => {
+    const merged = mergeImagePool(pool('a', 'b'), pool('b', 'c'))
+    expect(urls(merged)).toEqual(['c', 'a', 'b'])
+  })
+
+  it('keeps incoming batch order within the prepended block', () => {
+    const merged = mergeImagePool(pool('a', 'b'), pool('c', 'd'))
+    expect(urls(merged)).toEqual(['c', 'd', 'a', 'b'])
+    expect(indices(merged)).toEqual(['1', '2', '3', '4'])
+  })
+
+  it('seeds an empty pool from the incoming batch', () => {
+    expect(urls(mergeImagePool(null, pool('a', 'b')))).toEqual(['a', 'b'])
+    expect(urls(mergeImagePool('', pool('a')))).toEqual(['a'])
+  })
+
+  it('ignores entries without an image_url and bad JSON', () => {
+    const incoming = JSON.stringify({ images: [{ index: '1' }, img('a')] })
+    expect(urls(mergeImagePool('not json', incoming))).toEqual(['a'])
+  })
+
+  it('is idempotent when the same batch arrives twice', () => {
+    const first = mergeImagePool(pool('a'), pool('b'))
+    const second = mergeImagePool(first, pool('b'))
+    expect(second).toBe(first)
   })
 })

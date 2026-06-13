@@ -11,6 +11,8 @@ import {
   useStageStore,
   computePickedImageUrl,
   computePickedFromBatch,
+  mergeImagePool,
+  imagePoolCount,
   type StageKind,
   type StageVariant,
   type ImagePickContext,
@@ -338,6 +340,12 @@ export function useStageNode(
         })
       }
     }
+
+    if (kind === 'image-picker') {
+      // Restore the accumulated pool persisted on the node (survives save/reload).
+      const poolWidget = node.widgets?.find((w: any) => w.name === 'pool')
+      state.pool = poolWidget ? (String(poolWidget.value ?? '') || null) : null
+    }
   } else if (variant === 'loader') {
     const widgetName = kind === 'image' ? 'image'
                      : kind === 'video' ? 'video'
@@ -422,14 +430,22 @@ export function useStageNode(
         },
         () => {
           const inp = state.inputs.find(i => i.slot === 'batch')
-          if (!inp) return                          // inputs not populated yet
-          if (inp.source === 'upstream-pending') return  // wired, upstream not ready
 
-          const before = state.output
-          const after: string | null = inp.source === 'empty'
-            ? null
-            : computePickedImageUrl(state)
-          if (after !== before) {
+          if (inp && inp.source === 'upstream' && inp.content) {
+            const before = imagePoolCount(state.pool)
+            const merged = mergeImagePool(state.pool, inp.content)
+            store.setPickerPool(node, state, merged)
+            const added = imagePoolCount(merged) - before
+            if (added > 0 && before > 0 && (state.pickedIndex ?? 0) >= 1) {
+              const shifted = (state.pickedIndex ?? 1) + added
+              state.pickedIndex = shifted
+              setWidget(node, 'selected_index', shifted)
+            }
+          }
+          const after: string | null = state.pool
+            ? computePickedImageUrl(state)
+            : (inp && inp.source === 'empty' ? null : computePickedImageUrl(state))
+          if (after !== state.output) {
             store.setOutputSlot(state, 0, after)
           }
         },
@@ -560,6 +576,10 @@ export function useStageNode(
   }
 
   const onAction = (actionId: string, context?: ImagePickContext) => {
+    if (actionId === 'clear-pool' && kind === 'image-picker') {
+      store.clearPickerPool(node, state)
+      return
+    }
     if (actionId === 'pick-item' && context && (kind === 'image-picker' || kind === 'image-batch')) {
       const newIdx = Number(context.index) || 1
       state.pickedIndex = newIdx

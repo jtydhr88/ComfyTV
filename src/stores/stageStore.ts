@@ -50,6 +50,7 @@ export interface StageState {
   inputs: ResolvedInput[]
   mainPrompt: string
   pickedIndex?: number
+  pool?: string | null
   progress?: { value: number; max: number; text?: string } | null
   error?: { message: string; type?: string; traceback?: string } | null
    outputId?: number | null
@@ -171,6 +172,22 @@ export const useStageStore = defineStore('comfytv-stage', () => {
     bumpStateTick()
   }
 
+  function setPickerPool(node: any, state: StageState, poolJson: string) {
+    if (state.pool === poolJson) return
+    state.pool = poolJson
+    const w = node?.widgets?.find((x: any) => x.name === 'pool')
+    if (w) w.value = poolJson
+    bumpStateTick()
+  }
+
+  function clearPickerPool(node: any, state: StageState) {
+    setPickerPool(node, state, '')
+    state.pickedIndex = 1
+    const idx = node?.widgets?.find((x: any) => x.name === 'selected_index')
+    if (idx) idx.value = 1
+    setOutputSlot(state, 0, null)
+  }
+
   function setOutputSlot(state: StageState, slot: number, value: string | null) {
     while (state.outputs.length <= slot) state.outputs.push(null)
     if (state.outputs[slot] === value) return
@@ -204,13 +221,54 @@ export const useStageStore = defineStore('comfytv-stage', () => {
     applyExecutionError,
     clearError,
     setOutputSlot,
+    setPickerPool,
+    clearPickerPool,
   }
 })
 
 export function computePickedImageUrl(state: StageState): string | null {
-  const upstream = state.inputs.find(i => i.slot === 'batch')
-  if (!upstream?.content) return null
-  return computePickedFromBatch(upstream.content, state.pickedIndex ?? 1)
+  const source = state.pool
+    ? state.pool
+    : state.inputs.find(i => i.slot === 'batch')?.content
+  if (!source) return null
+  return computePickedFromBatch(source, state.pickedIndex ?? 1)
+}
+
+export function imagePoolCount(json: string | null | undefined): number {
+  if (!json) return 0
+  try {
+    const p = JSON.parse(String(json))
+    return Array.isArray(p?.images) ? p.images.length : 0
+  } catch {
+    return 0
+  }
+}
+
+export function mergeImagePool(
+  existingPoolJson: string | null | undefined,
+  incomingJson: string | null | undefined,
+): string {
+  const parse = (s: string | null | undefined): Array<Record<string, any>> => {
+    if (!s) return []
+    try {
+      const p = JSON.parse(String(s))
+      return Array.isArray(p?.images) ? p.images : []
+    } catch {
+      return []
+    }
+  }
+  const existing = parse(existingPoolJson)
+  const seen = new Set(existing.map(im => String(im.image_url ?? '')))
+  const fresh: Array<Record<string, any>> = []
+  for (const im of parse(incomingJson)) {
+    const url = String(im.image_url ?? '')
+    if (!url || seen.has(url)) continue
+    seen.add(url)
+    fresh.push({ ...im })
+  }
+  const merged = [...fresh, ...existing]
+  merged.forEach((im, i) => { im.index = String(i + 1) })
+  return JSON.stringify({ images: merged })
 }
 
 export function computePickedFromBatch(batch: string | null | undefined, wantIdx: number): string | null {

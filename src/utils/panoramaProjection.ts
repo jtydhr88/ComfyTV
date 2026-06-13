@@ -1,16 +1,4 @@
-export const ASPECT_OPTIONS = [
-  '1:1', '9:16', '16:9', '3:4', '4:3', '3:2', '2:3', '4:5', '5:4', '21:9',
-] as const
-
-export const RESOLUTION_OPTIONS = ['1K', '2K', '4K'] as const
-
-export const RESOLUTION_TO_SHORT_SIDE: Record<string, number> = {
-  '1K': 1024,
-  '2K': 2048,
-  '4K': 4096,
-}
-
-export const DEFAULT_SHORT_SIDE = 1024
+import { SHORT_SIDE_BY_TIER, DEFAULT_SHORT_SIDE } from './sizing'
 
 export const CAPTURE_FOV = 75
 
@@ -30,7 +18,7 @@ export function captureDimensions(
   resolution: string,
 ): { w: number; h: number } {
   const { w: aw, h: ah } = parseAspect(aspect)
-  const short = RESOLUTION_TO_SHORT_SIDE[resolution] ?? DEFAULT_SHORT_SIDE
+  const short = SHORT_SIDE_BY_TIER[resolution] ?? DEFAULT_SHORT_SIDE
   if (aw >= ah) {
     return {
       w: Math.max(16, Math.round((short * aw / ah) / 8) * 8),

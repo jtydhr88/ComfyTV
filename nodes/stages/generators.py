@@ -89,9 +89,9 @@ class ImageStage(io.ComfyNode):
                 io.Combo.Input("workflow", options=IMAGE_WORKFLOWS or [""],
                                default=IMAGE_WORKFLOWS[0] if IMAGE_WORKFLOWS else "",
                                tooltip="Which backend image workflow to invoke when Run is clicked. Placeholder for now."),
-                io.Combo.Input("resolution", options=IMAGE_RESOLUTIONS, default=IMAGE_RESOLUTIONS[0],
-                               tooltip="Target output resolution tier. The wrapped workflow resolves this to concrete (w, h) based on the model's native base size and the chosen aspect ratio."),
-                io.Combo.Input("aspect_ratio", options=IMAGE_ASPECT_RATIOS, default=IMAGE_ASPECT_RATIOS[0],
+                io.Combo.Input("resolution", options=RESOLUTIONS, default="1K",
+                               tooltip="Target output resolution tier (the short side, in px). Combined with the aspect ratio to compute (w, h)."),
+                io.Combo.Input("aspect_ratio", options=ASPECT_RATIOS, default="1:1",
                                tooltip="Target output aspect ratio. Combined with resolution to compute actual (w, h) downstream."),
                 io.Int.Input("batch_size", default=1, min=1, max=8, step=1,
                              display_mode=io.NumberDisplay.slider,
@@ -148,9 +148,9 @@ class VideoStage(io.ComfyNode):
                 io.Combo.Input("workflow", options=VIDEO_WORKFLOWS or [""],
                                default=VIDEO_WORKFLOWS[0] if VIDEO_WORKFLOWS else "",
                                tooltip="Which backend video workflow to invoke when Run is clicked. Placeholder for now."),
-                io.Combo.Input("resolution", options=VIDEO_RESOLUTIONS, default=VIDEO_RESOLUTIONS[1],
-                               tooltip="Target output resolution tier. The wrapped workflow resolves this to concrete (w, h) based on the chosen aspect ratio."),
-                io.Combo.Input("aspect_ratio", options=VIDEO_ASPECT_RATIOS, default=VIDEO_ASPECT_RATIOS[2],
+                io.Combo.Input("resolution", options=RESOLUTIONS, default="720P",
+                               tooltip="Target output resolution tier (the short side, in px). Combined with the aspect ratio to compute (w, h)."),
+                io.Combo.Input("aspect_ratio", options=ASPECT_RATIOS, default="16:9",
                                tooltip="Target output aspect ratio. Combined with resolution to compute actual (w, h) downstream."),
                 io.Int.Input("duration_s", default=VIDEO_DURATION_DEFAULT_S,
                              min=VIDEO_DURATION_MIN_S, max=VIDEO_DURATION_MAX_S, step=1,
@@ -260,6 +260,11 @@ class ImagePickerStage(io.ComfyNode):
                              socketless=True,
                              extra_dict={"hidden": True},
                              tooltip="Which item to extract (1-indexed). Hidden — set by clicking a thumbnail."),
+                io.String.Input("pool", default="", multiline=False,
+                                socketless=True, extra_dict={"hidden": True},
+                                tooltip="Accumulated image pool (JSON {images:[...]}). Managed by the UI: "
+                                        "new upstream batches are appended (deduped by image_url) and survive "
+                                        "regeneration/disconnect; emptied by the Clear button."),
                 COMFYTV_IMAGES.Input("batch", optional=True),
             ],
             outputs=[COMFYTV_IMAGE.Output("image")],
@@ -268,8 +273,9 @@ class ImagePickerStage(io.ComfyNode):
         )
 
     @classmethod
-    def execute(cls, project_id="", parent_output_id=0, selected_index=1, batch=None):
-        payload = _pick_image_from_batch(batch, int(selected_index or 1))
+    def execute(cls, project_id="", parent_output_id=0, selected_index=1, pool="", batch=None):
+        source = pool if (pool or "").strip() else batch
+        payload = _pick_image_from_batch(source, int(selected_index or 1))
         return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
                                 emit_ui=False, parent_output_id=parent_output_id)
 
@@ -288,9 +294,9 @@ class ShotImagesStage(io.ComfyNode):
                                options=SHOT_IMAGES_WORKFLOWS or [""],
                                default=SHOT_IMAGES_WORKFLOWS[0] if SHOT_IMAGES_WORKFLOWS else "",
                                tooltip="Image-generation workflow to use for each shot."),
-                io.Combo.Input("resolution", options=IMAGE_RESOLUTIONS, default=IMAGE_RESOLUTIONS[0],
-                               tooltip="Target output resolution tier for every shot."),
-                io.Combo.Input("aspect_ratio", options=IMAGE_ASPECT_RATIOS, default=IMAGE_ASPECT_RATIOS[0],
+                io.Combo.Input("resolution", options=RESOLUTIONS, default="1K",
+                               tooltip="Target output resolution tier for every shot (the short side, in px)."),
+                io.Combo.Input("aspect_ratio", options=ASPECT_RATIOS, default="1:1",
                                tooltip="Target output aspect ratio for every shot."),
                 COMFYTV_STORYBOARD.Input("storyboard", optional=True),
                 io.Autogrow.Input("images", template=_image_template(8)),

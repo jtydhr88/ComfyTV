@@ -7,8 +7,16 @@
     "preparingWorkflow": "Preparing workflow…",
     "section": {
       "context": "Context",
+      "pool": "Pool",
       "output": "Output ({type})",
       "actions": "Actions"
+    },
+    "pool": {
+      "clear": "Clear",
+      "clearHint": "Empty the picker pool and reset the selection",
+      "confirmClear": "Clear pool?",
+      "confirm": "Yes",
+      "cancel": "No"
     },
     "empty": {
       "no_output": "no output yet",

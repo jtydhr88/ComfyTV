@@ -100,6 +100,46 @@ class TestResolveWH:
         # 512 / (9/16) ≈ 910.2 → 904
         assert h == 904
 
+    def test_tier_map_matches_resolution_options(self):
+        from ComfyTV.nodes.stages.common.constants import RESOLUTIONS
+        assert list(lc._SHORT_SIDE_BY_TIER.keys()) == list(RESOLUTIONS)
+
+    def test_image_resolution_tier_changes_short_side(self):
+        w, h = lc._resolve_wh(
+            {"type": "image", "base": 512, "snap": 8},
+            {"resolution": "1K", "aspect_ratio": "16:9"},
+        )
+        assert (w, h) == (1816, 1024)
+
+    def test_image_resolution_tier_2k(self):
+        w, h = lc._resolve_wh(
+            {"type": "image", "base": 512, "snap": 8},
+            {"resolution": "2K", "aspect_ratio": "1:1"},
+        )
+        assert (w, h) == (2048, 2048)
+
+    def test_image_low_tier(self):
+        w, h = lc._resolve_wh(
+            {"type": "image", "base": 1024, "snap": 8},
+            {"resolution": "480P", "aspect_ratio": "1:1"},
+        )
+        assert (w, h) == (480, 480)
+
+    def test_image_no_resolution_falls_back_to_base(self):
+        w, h = lc._resolve_wh(
+            {"type": "image", "base": 768, "snap": 8},
+            {"aspect_ratio": "1:1"},
+        )
+        assert (w, h) == (768, 768)
+
+    def test_image_preset_tier_map_overrides_builtin(self):
+        sizing = {
+            "type": "image", "snap": 8,
+            "short_side_by_tier": {"1K": 640},
+        }
+        w, h = lc._resolve_wh(sizing, {"resolution": "1K", "aspect_ratio": "1:1"})
+        assert (w, h) == (640, 640)
+
     def test_video_tier_lookup(self):
         sizing = {
             "type": "video",
@@ -580,12 +620,17 @@ class TestApplyOverrides:
         lc._apply_overrides(wf, cfg, resolver)
         assert wf["3"]["inputs"]["seed"] == 99
 
-    def test_missing_node_raises(self):
-        wf = {"3": {"class_type": "X", "inputs": {}}}
-        cfg = {"inputs": {"NOT_A_NODE": {"x": {"from": "main_prompt"}}}}
+    def test_missing_node_is_skipped_not_raised(self):
+
+        wf = {"3": {"class_type": "X", "inputs": {"seed": 0}}}
+        cfg = {"inputs": {
+            "NOT_A_NODE": {"x": {"from": "main_prompt"}},
+            "3": {"seed": {"from": "option:seed", "cast": "int"}},
+        }}
         resolver = lc._Resolver(cfg, self._ctx())
-        with pytest.raises(RuntimeError, match="missing workflow node"):
-            lc._apply_overrides(wf, cfg, resolver)
+        lc._apply_overrides(wf, cfg, resolver)  # no raise
+        assert wf["3"]["inputs"]["seed"] == 99
+        assert "NOT_A_NODE" not in wf
 
     def test_missing_node_silenced_when_pruned(self):
         wf = {}

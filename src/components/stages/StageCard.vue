@@ -2,40 +2,48 @@
   <div :class="cardClass">
     <MainPromptInput :node="node" />
 
-    <section v-if="!hideContext && state.variant !== 'loader' && connectedInputs.length > 0"
+    <section
+      v-if="state.kind === 'image-picker' && !hideContext && (poolCount > 0 || connectedInputs.length > 0)"
+      class="ctv-picker-input ctv:flex ctv:flex-col ctv:gap-1 ctv:py-1"
+      :class="`ctv-src-${pickerSource}`"
+    >
+      <div class="ctv:flex ctv:items-center ctv:gap-2">
+        <span class="ctv:text-[11px] ctv:font-semibold">{{ $t('stage.section.pool') }}</span>
+        <span class="ctv:text-3xs ctv:text-muted-foreground ctv:font-mono">{{ poolCount }}</span>
+        <span v-if="pickerSource !== 'empty'" class="ctv-src-tag ctv:text-3xs ctv:py-px ctv:px-1.5 ctv:rounded-sm ctv:tracking-wide ctv:bg-base-foreground/5 ctv:text-muted-foreground">
+          {{ sourceLabel(pickerSource) }}
+        </span>
+        <template v-if="poolCount > 0">
+          <button
+            v-if="!confirmingClear"
+            :class="['ctv:ml-auto', clearBtn]"
+            :title="$t('stage.pool.clearHint')"
+            @click="confirmingClear = true"
+          >{{ $t('stage.pool.clear') }}</button>
+          <template v-else>
+            <span class="ctv:ml-auto ctv:text-3xs ctv:text-destructive-background ctv:font-semibold">
+              {{ $t('stage.pool.confirmClear') }}
+            </span>
+            <button :class="clearConfirmBtn" @click="onClearPool">{{ $t('stage.pool.confirm') }}</button>
+            <button :class="clearBtn" @click="confirmingClear = false">{{ $t('stage.pool.cancel') }}</button>
+          </template>
+        </template>
+      </div>
+      <ValuePreview
+        type="COMFYTV_IMAGES"
+        :content="poolContent"
+        :empty-label="pickerSource === 'upstream-pending' ? $t('stage.empty.pending_upstream') : $t('stage.empty.no_output')"
+        :selected-index="state.pickedIndex"
+        click-mode="pick"
+        @item-click="onItemClick"
+      />
+    </section>
+
+    <section v-if="!hideContext && state.variant !== 'loader' && state.kind !== 'image-picker' && connectedInputs.length > 0"
              class="ctv:flex ctv:flex-col ctv:gap-1">
       <div :class="sectionLabel">{{ $t('stage.section.context') }}</div>
 
-      <template v-if="state.kind === 'image-picker'">
-        <div
-          v-for="inp in connectedInputs"
-          :key="inp.slot"
-          class="ctv-picker-input ctv:flex ctv:flex-col ctv:gap-1 ctv:py-1"
-          :class="`ctv-src-${inp.source}`"
-        >
-          <div class="ctv:flex ctv:items-baseline ctv:gap-2">
-            <span class="ctv:text-[11px] ctv:font-semibold">{{ formatSlot(inp.slot) }}</span>
-            <span class="ctv-src-tag ctv:text-3xs ctv:py-px ctv:px-1.5 ctv:rounded-sm ctv:tracking-wide ctv:bg-base-foreground/5 ctv:text-muted-foreground">
-              {{ sourceLabel(inp.source) }}
-            </span>
-            <button
-              :class="disconnectBtn"
-              :title="$t('stage.disconnect')"
-              @click="onDisconnect(inp.slot)"
-            >×</button>
-          </div>
-          <ValuePreview
-            :type="inp.type"
-            :content="inp.content"
-            :empty-label="inp.source === 'upstream-pending' ? $t('stage.empty.pending_upstream') : ''"
-            :selected-index="inp.slot === 'batch' ? state.pickedIndex : undefined"
-            click-mode="pick"
-            @item-click="onItemClick"
-          />
-        </div>
-      </template>
-
-      <div v-else class="ctv:flex ctv:flex-wrap ctv:gap-1.5">
+      <div class="ctv:flex ctv:flex-wrap ctv:gap-1.5">
         <div
           v-for="inp in connectedInputs"
           :key="inp.slot"
@@ -167,7 +175,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import MainPromptInput from './MainPromptInput.vue'
 import ValuePreview from './ValuePreview.vue'
 import { type ImagePreset } from '@/composables/stages/imagePresets'
@@ -296,13 +304,42 @@ const COMFY_BTN_BASE = 'ctv:relative ctv:inline-flex ctv:items-center ctv:justif
 const COMFY_SIZE_LG = ' ctv:h-10 ctv:rounded-lg ctv:px-4 ctv:py-2 ctv:text-sm ctv:font-medium'
 const COMFY_SIZE_SM = ' ctv:h-6 ctv:rounded-sm ctv:px-2 ctv:py-1 ctv:text-xs ctv:font-medium'
 
-const disconnectBtn = COMFY_BTN_BASE
-  + ' ctv:size-5 ctv:p-0 ctv:rounded-sm ctv:shrink-0 ctv:ml-auto'
-  + ' ctv:bg-transparent ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover'
-
 const tileDisconnectBtn = COMFY_BTN_BASE
   + ' ctv:size-5 ctv:p-0 ctv:rounded-full'
   + ' ctv:bg-transparent ctv:text-destructive-background ctv:hover:bg-destructive-background/10'
+
+const clearBtn = COMFY_BTN_BASE
+  + ' ctv:h-5 ctv:px-1.5 ctv:rounded-sm ctv:text-3xs ctv:font-semibold ctv:tracking-wide'
+  + ' ctv:bg-transparent ctv:text-muted-foreground ctv:hover:bg-destructive-background/10 ctv:hover:text-destructive-background'
+
+const clearConfirmBtn = COMFY_BTN_BASE
+  + ' ctv:h-5 ctv:px-1.5 ctv:rounded-sm ctv:text-3xs ctv:font-semibold ctv:tracking-wide'
+  + ' ctv:bg-destructive-background ctv:text-base-foreground ctv:hover:bg-destructive-background-hover'
+
+const batchInput = computed(() =>
+  props.state.inputs.find(i => i.slot === 'batch')
+)
+const poolContent = computed<string | null>(() =>
+  props.state.pool ?? batchInput.value?.content ?? null
+)
+const poolCount = computed(() => {
+  try {
+    const p = JSON.parse(String(poolContent.value ?? ''))
+    return Array.isArray(p?.images) ? p.images.length : 0
+  } catch {
+    return 0
+  }
+})
+const pickerSource = computed<InputSource>(() => batchInput.value?.source ?? 'empty')
+
+const confirmingClear = ref(false)
+
+watch(poolCount, (n) => { if (n === 0) confirmingClear.value = false })
+
+function onClearPool() {
+  props.onAction('clear-pool')
+  confirmingClear.value = false
+}
 
 const runBtnClass = computed(() => {
   const v = props.state.running

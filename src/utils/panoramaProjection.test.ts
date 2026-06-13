@@ -2,11 +2,10 @@ import { describe, expect, it } from 'vitest'
 
 import {
   captureDimensions,
-  DEFAULT_SHORT_SIDE,
   LABELS_4,
   parseAspect,
-  RESOLUTION_TO_SHORT_SIDE,
 } from './panoramaProjection'
+import { DEFAULT_SHORT_SIDE } from './sizing'
 
 describe('parseAspect', () => {
   it('parses "16:9" into { w: 16, h: 9 }', () => {
@@ -63,12 +62,6 @@ describe('captureDimensions', () => {
     const a = captureDimensions('16:9', 'NOPE')
     const b = captureDimensions('16:9', String(DEFAULT_SHORT_SIDE))
     expect(a.h).toBe(1024)
-  })
-
-  it('resolution map is consistent with the chips users see', () => {
-    expect(RESOLUTION_TO_SHORT_SIDE['1K']).toBe(1024)
-    expect(RESOLUTION_TO_SHORT_SIDE['2K']).toBe(2048)
-    expect(RESOLUTION_TO_SHORT_SIDE['4K']).toBe(4096)
   })
 
   it('4-view labels are stable', () => {

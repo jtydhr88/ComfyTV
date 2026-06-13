@@ -60,11 +60,11 @@ import StageCard from '@/components/stages/StageCard.vue'
 import { useCurrentViewCapture } from '@/composables/stages/useCurrentViewCapture'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
+import { parseAspect } from '@/utils/panoramaProjection'
 import {
-  ASPECT_OPTIONS as aspectOptions,
-  parseAspect,
-  RESOLUTION_OPTIONS as resolutionOptions,
-} from '@/utils/panoramaProjection'
+  ASPECT_RATIOS as aspectOptions,
+  RESOLUTIONS as resolutionOptions,
+} from '@/utils/sizing'
 import { readWidgetStr } from '@/utils/widget'
 
 const VIEWER_HEIGHT_PX = 300

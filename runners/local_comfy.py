@@ -28,15 +28,18 @@ def _aspect_ratio_value(s: str) -> float:
         return 1.0
 
 
+_SHORT_SIDE_BY_TIER = {
+    "480P": 480, "720P": 720, "1K": 1024, "1080P": 1080,
+    "1440P": 1440, "2K": 2048, "2160P": 2160, "4K": 4096,
+}
+
+
 def _resolve_wh(sizing: dict, options: dict) -> tuple[int, int]:
     snap = int(sizing.get("snap") or 8)
-    kind = sizing.get("type") or "image"
-    if kind == "video":
-        tiers = sizing.get("short_side_by_tier") or {}
-        short = int(tiers.get(options.get("resolution"))
-                    or next(iter(tiers.values()), 480))
-    else:
-        short = int(sizing.get("base") or 512)
+    tiers = sizing.get("short_side_by_tier") or _SHORT_SIDE_BY_TIER
+    short = int(tiers.get(options.get("resolution"))
+                or sizing.get("base")
+                or next(iter(tiers.values()), 512))
     ar = _aspect_ratio_value(options.get("aspect_ratio") or "1:1")
     if ar >= 1.0:
         h = short
@@ -288,19 +291,33 @@ def _apply_overrides(workflow: dict, config: dict, resolver: _Resolver,
                      pruned_nodes: set[str] | None = None) -> None:
     pruned_nodes = pruned_nodes or set()
     overrides = config.get("inputs") or {}
+    orphaned: list[str] = []
     for node_id, fields in overrides.items():
         node = workflow.get(node_id)
         if node is None:
-            if node_id in pruned_nodes:
-                continue
-            raise RuntimeError(
-                f"inputs references missing workflow node {node_id!r} — "
-                f"did the API workflow get re-exported with different node ids?"
-            )
+            if node_id not in pruned_nodes:
+                orphaned.append(str(node_id))
+                _log.warning(
+                    "[ComfyTV/local-comfy] skipping override for missing workflow "
+                    "node %r — workflow was likely re-saved with different node ids; "
+                    "re-map this input in the Workflow Config sidebar if still needed.",
+                    node_id,
+                )
+            continue
         node_inputs = node.setdefault("inputs", {})
         for input_name, spec in (fields or {}).items():
             where = f"node {node_id} input {input_name!r}"
             node_inputs[input_name] = resolver.resolve(where, spec)
+
+    if orphaned:
+        from .notify import notify_toast
+        notify_toast(
+            "warn",
+            "Workflow input mapping skipped",
+            f"{len(orphaned)} input mapping(s) point at nodes no longer in this "
+            f"workflow ({', '.join(orphaned[:5])}). It ran with the workflow's own "
+            f"defaults — re-map them in the Workflow Config sidebar.",
+        )
 
 def _view_url(filename: str, subfolder: str, type_: str) -> str:
     qs = urllib.parse.urlencode({

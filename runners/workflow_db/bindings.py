@@ -224,5 +224,30 @@ def set_api_json(kind: str, label: str, api_json: dict, file_mtime: float) -> bo
             return False
         row.api_json = json.dumps(api_json)
         row.file_mtime = file_mtime
+
+        valid_ids = {str(k) for k in api_json.keys()} if isinstance(api_json, dict) else set()
+        bindings = s.execute(
+            select(db.WorkflowInputBinding)
+            .where(db.WorkflowInputBinding.workflow_id == row.id)
+        ).scalars().all()
+        orphaned = [b for b in bindings if str(b.node_id) not in valid_ids]
+        for b in orphaned:
+            s.delete(b)
+        if orphaned:
+            gone = sorted({str(b.node_id) for b in orphaned})
+            _log.warning(
+                "[ComfyTV/workflow_db] %s/%s: pruned %d orphaned binding(s) after "
+                "a workflow change — node id(s) gone: %s. Re-map these inputs in "
+                "the Workflow Config sidebar if they're still needed.",
+                kind, label, len(orphaned), gone[:8],
+            )
+            from ..notify import notify_toast
+            notify_toast(
+                "warn",
+                f"{label}: workflow changed",
+                f"{len(orphaned)} input mapping(s) no longer match this workflow "
+                f"(node id(s) {', '.join(gone[:5])}) and were removed. Re-map them "
+                f"in the Workflow Config sidebar.",
+            )
         s.commit()
     return True

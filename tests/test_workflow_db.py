@@ -544,6 +544,45 @@ class TestSeedAndCRUD:
     def test_set_api_json_invalid_workflow(self, reset_db):
         assert wdb.set_api_json("image", "Nope", {}, 0.0) is False
 
+    def test_set_api_json_prunes_orphaned_bindings(self, reset_db, tmp_path, monkeypatch):
+        from pathlib import Path
+        wdir = tmp_path / "workflows"
+        self._make_workflow(wdir, "sd15", "image")
+        monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
+        wdb.seed_workflows_from_disk(("image",))
+        wid = wdb.get_workflow_config("image", "Sd15")["id"]
+
+        wdb.upsert_input_binding(wid, "3", "seed", "option:seed")
+        wdb.upsert_input_binding(wid, "42", "text", "main_prompt")
+
+        wdb.set_api_json(
+            "image", "Sd15",
+            {"3": {"class_type": "KSampler", "inputs": {"seed": 0}}},
+            200.0,
+        )
+
+        cfg = wdb.get_workflow_config("image", "Sd15")
+        node_ids = {b["node_id"] for b in cfg["bindings"]}
+        assert node_ids == {"3"}, "orphaned binding on node 42 should be pruned"
+
+    def test_set_api_json_keeps_bindings_when_nodes_unchanged(self, reset_db, tmp_path, monkeypatch):
+        from pathlib import Path
+        wdir = tmp_path / "workflows"
+        self._make_workflow(wdir, "sd15", "image")
+        monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
+        wdb.seed_workflows_from_disk(("image",))
+        wid = wdb.get_workflow_config("image", "Sd15")["id"]
+
+        wdb.upsert_input_binding(wid, "3", "seed", "option:seed")
+        # Same node id present → binding must survive a re-prep (e.g. value-only edit).
+        wdb.set_api_json(
+            "image", "Sd15",
+            {"3": {"class_type": "KSampler", "inputs": {"seed": 5}}},
+            300.0,
+        )
+        cfg = wdb.get_workflow_config("image", "Sd15")
+        assert {b["node_id"] for b in cfg["bindings"]} == {"3"}
+
     def test_upsert_then_delete_binding(self, reset_db, tmp_path, monkeypatch):
         from pathlib import Path
         wdir = tmp_path / "workflows"
