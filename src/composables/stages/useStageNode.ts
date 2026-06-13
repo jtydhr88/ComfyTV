@@ -30,6 +30,7 @@ import {
   subscribePrepState,
 } from '@/composables/stages/useWorkflowPrep'
 import { getStageMeta } from '@/composables/stages/stageMeta'
+import { addWorkflowUploadButton } from '@/composables/stages/workflowUpload'
 import { useSelectionStore } from '@/stores/selectionStore'
 import {
   collectReachableNodeIds,
@@ -403,6 +404,7 @@ export function useStageNode(
         queueMicrotask(triggerPrepForCurrentWorkflow)
         queueMicrotask(() => selectionStore.refreshFromCanvas())
       })
+      if (workflowKind) addWorkflowUploadButton(node, wfWidget, workflowKind)
     }
     queueMicrotask(triggerPrepForCurrentWorkflow)
   }

@@ -50,6 +50,7 @@ from .fakes import (
     _VIDEO_SAMPLES, _AUDIO_SAMPLES,
 )
 from .workflow_lists import (
+    labels_for,
     TEXT_WORKFLOWS, IMAGE_WORKFLOWS, SHOT_IMAGES_WORKFLOWS,
     VIDEO_WORKFLOWS, AUDIO_WORKFLOWS,
     STORYBOARD_WORKFLOWS, PANORAMA_WORKFLOWS, TIMELINE_WORKFLOWS,
@@ -86,6 +87,7 @@ __all__ = [
     "_storyboard_regenerate_shot_prompt", "_parse_shotlist_text",
     "_fake_image_variations", "_fake_panorama_views",
     "_PANORAMA_VIEW_LABELS_4",
+    "labels_for",
     "TEXT_WORKFLOWS", "IMAGE_WORKFLOWS", "SHOT_IMAGES_WORKFLOWS",
     "VIDEO_WORKFLOWS", "AUDIO_WORKFLOWS",
     "STORYBOARD_WORKFLOWS", "PANORAMA_WORKFLOWS", "TIMELINE_WORKFLOWS",

@@ -412,6 +412,71 @@ class TestSeedAndCRUD:
         assert len(cfg["bindings"]) == 1
         assert cfg["bindings"][0]["from"] == "option:seed"
 
+    def test_import_workflow_writes_and_upserts(self, reset_db, tmp_path, monkeypatch):
+        from pathlib import Path
+        wdir = tmp_path / "workflows"
+        wdir.mkdir(parents=True, exist_ok=True)
+        monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
+
+        gui = json.dumps({"nodes": [{"id": 1, "type": "KSampler"}], "links": []})
+        result = wdb.import_workflow("inpaint", "My Cool Upload.json", gui)
+
+        assert result["kind"] == "inpaint"
+        assert result["label"] == "My Cool Upload"
+
+        written = Path(wdir / "inpaint" / "My-Cool-Upload.json")
+        assert written.exists()
+
+        rows = wdb.list_workflows()
+        assert any(r["kind"] == "inpaint" and r["label"] == "My Cool Upload" for r in rows)
+
+    def test_import_workflow_does_not_prune_other_kinds(self, reset_db, tmp_path, monkeypatch):
+        from pathlib import Path
+        wdir = tmp_path / "workflows"
+        self._make_workflow(wdir, "wan", "video")
+        monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
+        wdb.seed_workflows_from_disk(("video",))
+        assert any(r["kind"] == "video" for r in wdb.list_workflows())
+
+        wdb.import_workflow("image", "fresh.json",
+                            json.dumps({"nodes": [{"id": 1}]}))
+
+        labels = {(r["kind"], r["label"]) for r in wdb.list_workflows()}
+        assert ("image", "Fresh") in labels
+        assert ("video", "Wan") in labels  # untouched — targeted upsert, no prune
+
+    def test_import_workflow_rejects_non_gui(self, reset_db, tmp_path, monkeypatch):
+        from pathlib import Path
+        monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(tmp_path / "workflows"))
+        api_format = json.dumps({"3": {"class_type": "KSampler", "inputs": {}}})
+        with pytest.raises(ValueError, match="GUI-format"):
+            wdb.import_workflow("image", "bad.json", api_format)
+
+    def test_import_workflow_rejects_preset_name(self, reset_db, tmp_path, monkeypatch):
+        from pathlib import Path
+        monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(tmp_path / "workflows"))
+        with pytest.raises(ValueError, match="_preset"):
+            wdb.import_workflow("image", "thing_preset.json",
+                                json.dumps({"nodes": []}))
+
+    def test_import_then_registry_lists_it(self, reset_db, tmp_path, monkeypatch):
+        from pathlib import Path
+        from ComfyTV.runners import refresh_registry, RUNNER_REGISTRY
+        wdir = tmp_path / "workflows"
+        wdir.mkdir(parents=True, exist_ok=True)
+        monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
+
+        wdb.import_workflow("inpaint", "Flux Fill Inpaint33.json",
+                            json.dumps({"nodes": [{"id": 1}]}))
+        refresh_registry()
+        assert "Flux Fill Inpaint33" in RUNNER_REGISTRY.labels_for_kind("inpaint")
+
+    def test_safe_stem(self):
+        assert wdb._safe_stem("My Cool Upload.json") == "My-Cool-Upload"
+        assert wdb._safe_stem("../../etc/passwd") == "passwd"
+        assert wdb._safe_stem("a/b/c.JSON") == "c"
+        assert wdb._safe_stem("  spaced name .json") == "spaced-name"
+
     def test_seed_skips_preset_on_existing_row(self, reset_db, tmp_path, monkeypatch):
         """The whole point of the once-only preset rule — user edits survive
         the next seed."""

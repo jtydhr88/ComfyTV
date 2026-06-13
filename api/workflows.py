@@ -3,7 +3,7 @@ import re
 
 from aiohttp import web
 
-from ..runners import workflow_db, refresh_registry
+from ..runners import workflow_db, refresh_registry, WORKFLOW_KINDS
 from ._common import routes
 
 
@@ -86,6 +86,37 @@ async def workflow_reset_to_preset(request: web.Request) -> web.Response:
 
     refresh_registry()
     return web.json_response(result)
+
+
+@routes.post("/comfytv/workflows/import")
+async def workflow_import(request: web.Request) -> web.Response:
+    try:
+        body = await request.json()
+    except Exception:
+        return web.json_response({"error": "json body required"}, status=400)
+
+    kind     = str(body.get("kind") or "")
+    filename = str(body.get("filename") or "")
+    content  = body.get("content")
+    if isinstance(content, (dict, list)):
+        content = json.dumps(content)
+    elif content is not None:
+        content = str(content)
+
+    if kind not in WORKFLOW_KINDS:
+        return web.json_response({"error": f"unknown workflow kind {kind!r}"}, status=400)
+    if not content:
+        return web.json_response({"error": "content required"}, status=400)
+
+    try:
+        result = workflow_db.import_workflow(kind, filename, content)
+    except ValueError as e:
+        return web.json_response({"error": str(e)}, status=400)
+    except OSError as e:
+        return web.json_response({"error": f"could not write workflow file: {e}"}, status=500)
+
+    refresh_registry()
+    return web.json_response({"ok": True, **result})
 
 
 @routes.post("/comfytv/workflows/config/binding")

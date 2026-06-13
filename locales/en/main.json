@@ -1,4 +1,10 @@
 {
+  "workflow": {
+    "uploadButton": "⬆ Upload workflow",
+    "imported": "Imported \"{label}\"",
+    "importFailed": "Workflow import failed",
+    "notJson": "That file isn't valid JSON"
+  },
   "stage": {
     "run": "Run",
     "rerun": "Re-run",

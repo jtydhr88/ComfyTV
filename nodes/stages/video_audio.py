@@ -250,7 +250,7 @@ class AudioExtractVocalStage(io.ComfyNode):
             category="ComfyTV/Audio",
             inputs=[
                 *_standard_stage_inputs(),
-                io.Combo.Input("workflow", options=AUDIO_VOCAL_WORKFLOWS,
+                io.Combo.Input("workflow", options=labels_for('audio-vocal'),
                                default=AUDIO_VOCAL_WORKFLOWS[0] if AUDIO_VOCAL_WORKFLOWS else "",
                                tooltip="Which vocal-extraction workflow to run."),
                 COMFYTV_VIDEO.Input("video", optional=True),
@@ -284,7 +284,7 @@ class AudioExtractBgStage(io.ComfyNode):
             category="ComfyTV/Audio",
             inputs=[
                 *_standard_stage_inputs(),
-                io.Combo.Input("workflow", options=AUDIO_BG_WORKFLOWS,
+                io.Combo.Input("workflow", options=labels_for('audio-bg'),
                                default=AUDIO_BG_WORKFLOWS[0] if AUDIO_BG_WORKFLOWS else "",
                                tooltip="Which background-extraction workflow to run."),
                 COMFYTV_VIDEO.Input("video", optional=True),

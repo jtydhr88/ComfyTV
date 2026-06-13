@@ -2,7 +2,8 @@ from . import seed, config, bindings  # noqa: F401 — for test monkeypatching
 from .seed import (
     seed_workflows_from_disk,
     reset_workflow_to_preset,
-    _is_gui_format, _humanize, _read_preset,
+    import_workflow,
+    _is_gui_format, _humanize, _read_preset, _safe_stem,
     _apply_preset_to_new_row, _upsert_workflow_row,
 )
 from .config import (
@@ -26,6 +27,7 @@ from .bindings import (
 __all__ = [
     "seed_workflows_from_disk",
     "reset_workflow_to_preset",
+    "import_workflow",
     "build_preset",
     "get_workflow_for_invoke",
     "get_workflow_config",

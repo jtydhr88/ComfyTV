@@ -25463,6 +25463,12 @@ const DeleteEntrySchema = object({
 const OkSchema = object({
   ok: boolean()
 });
+const ImportWorkflowResultSchema = object({
+  ok: boolean(),
+  kind: string(),
+  label: string(),
+  file_path: string().optional()
+});
 const WorkflowStateSchema = object({
   has_api: boolean(),
   file_path: string(),
@@ -25556,6 +25562,13 @@ async function apiSend(path, method, schema, body) {
 }
 function fetchCaps() {
   return apiFetch("/comfytv/caps", CapsPayloadSchema);
+}
+function importWorkflow(kind, filename, content) {
+  return apiSend("/comfytv/workflows/import", "POST", ImportWorkflowResultSchema, {
+    kind,
+    filename,
+    content
+  });
 }
 let _infoPromise = null;
 function loadWorkflowInfo() {
@@ -80138,11 +80151,11 @@ function useStoryboardShots(node, state) {
     if (idx < 0) return;
     regeneratingId.value = shotId;
     try {
-      const workflow = readWidgetStr(node, "workflow", "");
+      const workflow2 = readWidgetStr(node, "workflow", "");
       const premise = readWidgetStr(node, "main_prompt", "");
       const characters = readWidgetStr(node, "characters", "");
       const body = {
-        workflow,
+        workflow: workflow2,
         premise,
         characters,
         shots: shots.value.map((s) => ({ ...s, shot_no: s.shot_no })),
@@ -80933,6 +80946,184 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
     };
   }
 });
+const workflow$1 = { "uploadButton": "⬆ Upload workflow", "imported": 'Imported "{label}"', "importFailed": "Workflow import failed", "notJson": "That file isn't valid JSON" };
+const stage$1 = { "run": "Run", "rerun": "Re-run", "running": "Running…", "cancel": "Cancel", "preparingWorkflow": "Preparing workflow…", "section": { "context": "Context", "pool": "Pool", "output": "Output ({type})", "actions": "Actions" }, "pool": { "clear": "Clear", "clearHint": "Empty the picker pool and reset the selection", "confirmClear": "Clear pool?", "confirm": "Yes", "cancel": "No" }, "empty": { "no_output": "no output yet", "generating": "generating…", "pending_upstream": "upstream pending", "unsupported_type": "unsupported type {type}" }, "source": { "upstream": "← upstream", "pending": "… waiting" }, "disconnect": "Disconnect", "starting": "starting…", "runByKind": { "text": "Generate Text", "image": "Generate Image", "image-batch": "Generate Images", "video": "Generate Video", "audio": "Generate Audio", "panorama": "Generate Panorama", "storyboard": "Generate Storyboard" }, "action": { "viewFull": "View full size", "download": "Download", "close": "Close" } };
+const error$1 = { "dismiss": "Dismiss", "cancelled": "Cancelled" };
+const configSidebar$1 = { "title": "Workflow Config", "empty": "Select a stage node on the canvas to edit its workflow config.", "noWorkflowPicked": "This stage's workflow combo is empty — pick one first.", "loading": "Loading…", "noExposedWidgets": "This workflow has no editable widgets, or hasn't been prepared yet — pick it on any stage first so the browser can analyze it.", "pickWorkflowFirst": "Pick this workflow on any stage first to populate widget metadata (the browser-side graphToPrompt has to run).", "bindTo": "Bind to:", "exportPreset": "Export preset.json", "exportPresetTooltip": "Download the current bindings as a *_preset.json file. Drop it next to the workflow JSON in workflows/<kind>/ to ship these defaults to other users.", "exportPresetFailed": "Export failed: {detail}", "resetToPreset": "↻ Reset to shipped preset", "resetToPresetTooltip": "Wipe all bindings + meta for this workflow and re-apply its shipped _preset.json from disk. Your own edits will be lost.", "resetToPresetConfirm": "Reset all bindings for this workflow to the shipped preset? Your edits will be lost.", "resetToPresetFailed": "Reset failed: {detail}", "section": { "widgets": "Widgets", "notes": "Workflow notes", "description": "Description" } };
+const project$1 = { "label": "Current Project", "shared_suffix": "(shared)", "id_prefix": "id:", "refresh": "Refresh project list", "create": "New project", "delete": "Delete this project (files on disk stay)", "delete_confirm": "Delete this project? DB rows will be cleared; files on disk stay.", "create_prompt": "New project name:", "create_default": "Project {n}", "status": { "refreshing": "refreshing…", "refresh_failed": "refresh failed", "create_failed": "create failed", "deleted": "deleted", "delete_failed": "delete failed", "load_failed": "Failed to load project list" } };
+const execution$1 = { "running": "running: node #{nodeId}", "queued": "queued" };
+const actions$1 = { "image": { "edit": { "label": "Edit Image", "tooltip": "Edits that change size or need rich UI (HD / outpaint / inpaint / erase / cutout / crop)" }, "panorama": { "label": "Panorama", "tooltip": "Turn this image into a panorama and explore viewpoints" }, "multiangle": { "label": "Multi-angle", "tooltip": "Re-render this image from a different camera angle" }, "relight": { "label": "Relight", "tooltip": "Brightness / color / rim-light, or reference another image's lighting" }, "preset": { "label": "Presets", "tooltip": "Size-preserving, no-rich-UI preset transforms (multi-view / grid / scene progression)" } }, "video": { "extend": { "label": "Extend", "tooltip": "Extract this clip's last frame and spawn a new VideoStage using it as the I2V start frame — write a prompt for the continuation" }, "change": { "label": "Edit Video", "tooltip": "Modify an existing video: clip / HD / subtitle erase / audio separation" } }, "text": { "refine": { "label": "Refine", "tooltip": "Continue rewriting in a new TextStage" } }, "panorama": { "view-current": { "label": "Current View", "tooltip": "Extract the current viewport as a single image" }, "view-four": { "label": "4 Views", "tooltip": "Extract 4 viewpoints as an image batch" }, "view-twelve": { "label": "12 Views", "tooltip": "Extract 12 viewpoints as an image batch" } }, "storyboard": { "gen-shots": { "label": "Generate Shot Images", "tooltip": "Spawn a Shot Images stage wired to this storyboard — iterates the shot list and renders one image per shot" } } };
+const presets$1 = { "imageVariant": { "multi-cam-9": { "label": "Multi-cam 9-grid", "tooltip": "9 camera angles arranged in a grid" }, "story-4": { "label": "Story Progression (4)", "tooltip": "4 consecutive narrative shots" }, "face-3view": { "label": "Face 3-view", "tooltip": "Face: front / side / 45°" }, "product-3view": { "label": "Product 3-view", "tooltip": "Product: front / side / back" }, "character-3view": { "label": "Character 3-view", "tooltip": "Full-body character: front / side / back" }, "storyboard-25": { "label": "25-grid Storyboard", "tooltip": "25 consecutive storyboard shots" }, "cinematic-light": { "label": "Cinematic Lighting", "tooltip": "Apply cinematic lighting and color grade" }, "frame-3s": { "label": "Project +3s", "tooltip": "Project the scene 3 seconds later" }, "frame-5s": { "label": "Project +5s", "tooltip": "Project the scene 5 seconds later" } }, "imageEdit": { "hd": { "label": "HD", "tooltip": "Upscale to a higher resolution (output is larger)" }, "outpaint": { "label": "Outpaint", "tooltip": "Extend the canvas outward (output is larger)" }, "inpaint": { "label": "Inpaint", "tooltip": "Regenerate a masked region" }, "erase": { "label": "Erase", "tooltip": "Remove a masked region" }, "cutout": { "label": "Cutout", "tooltip": "Extract the subject with a transparent background" }, "crop": { "label": "Crop", "tooltip": "Crop to a bounding box" }, "rotate": { "label": "Rotate", "tooltip": "Rotate by an angle (browser-side, no GPU)" }, "mirror": { "label": "Mirror", "tooltip": "Flip horizontally / vertically (browser-side)" }, "grid": { "label": "Grid Split", "tooltip": "Slice into an R×C grid of tiles (browser-side) → image batch" } }, "videoChange": { "clip": { "label": "Clip", "tooltip": "Clip / trim — pick start and end times" }, "crop": { "label": "Crop", "tooltip": "Spatial crop — keep a rectangle (x, y, w, h) of every frame" }, "resize": { "label": "Resize", "tooltip": "Scale video to a target width × height (use -1 to auto-derive from aspect)" }, "extract-frame": { "label": "Extract Frame", "tooltip": "Pull a single frame out as an image (first / last / middle / custom seconds)" }, "hd": { "label": "HD", "tooltip": "Upscale" }, "subtitle-smart": { "label": "Auto Subtitle Erase", "tooltip": "Auto-detect and remove subtitles" }, "subtitle-select": { "label": "Region Subtitle Erase", "tooltip": "Manually box a region to erase (needs region-selector UI)" }, "audio-vocal": { "label": "Vocals Only", "tooltip": "Voice separation — vocals only" }, "audio-bg": { "label": "Background Only", "tooltip": "Voice separation — instrumental / ambient" }, "demux": { "label": "Demux A/V", "tooltip": "Split into audio track + silent video (two nodes spawned)" } } };
+const shotCell$1 = { "pick": "Pick {tag}", "refine": "Refine {tag}" };
+const imageCrop$1 = { "noInputImage": "No input image — connect an image upstream", "cropPreviewAlt": "Crop preview", "loading": "Loading…", "ratio": "Ratio", "custom": "Custom", "lockRatio": "Lock aspect ratio", "unlockRatio": "Unlock aspect ratio", "applying": "Applying crop…", "applied": "Crop applied — ready for downstream", "adjustToApply": "Drag the rectangle or pick a ratio to apply" };
+const panorama$1 = { "empty": "No panorama yet — upload an HDRI / equirect image or click Run with an upstream image", "uploading": "Uploading…", "upload": "Upload panorama", "clearUpload": "Clear upload", "clearUploadTooltip": "Drop the manual source — Run will then derive from upstream again", "manualSourceBadge": "manual", "loadError": "Failed to load panorama" };
+const imageCompare$1 = { "before": "Before", "after": "After", "noImages": "Connect two images to compare (A / B)" };
+const storyboard$1 = { "shots": "Shots", "addShot": "Add shot", "empty": "No shots yet — Run to generate from the premise, or add shots manually", "moveUp": "Move up", "moveDown": "Move down", "remove": "Remove shot", "regenerate": "Regenerate this shot via the LLM (keeps the rest)", "noRef": "no reference", "uploadRef": "Upload reference image", "clearRef": "Clear reference", "promptPlaceholder": "Describe this shot…", "cols": { "scene_purpose": "Purpose", "character": "Character", "character_desc": "Character notes", "shot_size": "Shot size", "action": "Action", "emotion": "Emotion", "scene_tags": "Scene", "lighting": "Lighting", "sfx": "SFX", "dialogue": "Dialogue", "image_prompt": "Image prompt", "motion_prompt": "Motion prompt" } };
+const timeline$1 = { "keyframes": "Keyframes", "connectImages": "Connect images upstream to use as shots", "addSegment": "Add as a shot", "clickKeyframe": "Click a keyframe above to add a shot", "addAudio": "Add audio track", "noAudio": "Connect audio upstream to add a track", "segmentPrompt": "Shot prompt", "promptPlaceholder": "What happens in this shot…", "length": "Length", "fps": "FPS", "shots": "shots" };
+const gridSplit$1 = { "connectImage": "Connect an image to split", "pickGrid": "Pick a grid preset or set rows × cols", "splitting": "Slicing into {n} tiles…", "done": "Split into {n} tiles — ready for downstream", "rows": "Rows", "cols": "Cols" };
+const panoramaView$1 = { "connectPanorama": "Connect a panorama upstream", "orbitToCapture": "Drag to look around — releasing captures the view", "capturing": "Capturing viewport…", "captured": "Viewport captured — ready for downstream", "aspect": "Aspect", "resolution": "Resolution", "viewCount": "View count", "adjustCountToCapture": "Move the slider to capture views", "capturingCount": "Capturing {i}/{n}…", "capturedN": "Captured {n} views — ready for downstream" };
+const rotate$1 = { "angle": "Angle", "applying": "Applying rotation…", "applied": "Rotation applied — ready for downstream", "adjustToApply": "Slide or click a quick angle to apply" };
+const mirror$1 = { "horizontal": "Horizontal flip", "vertical": "Vertical flip", "applying": "Applying mirror…", "applied": "Mirror applied — ready for downstream", "adjustToApply": "Toggle flips to apply" };
+const painter$1 = { "tool": "Tool", "brush": "Brush", "eraser": "Eraser", "fill": "Fill", "rect": "Rectangle", "ellipse": "Ellipse", "label": "Numbered label", "size": "Size", "color": "Color", "opacity": "Opacity", "hardness": "Hardness", "clear": "Clear" };
+const camera$1 = { "horizontal": "H", "vertical": "V", "zoom": "Z", "resetToDefaults": "Reset to defaults", "azimuth": { "frontView": "front view", "frontRightQuarterView": "front-right quarter view", "rightSideView": "right side view", "backRightQuarterView": "back-right quarter view", "backView": "back view", "backLeftQuarterView": "back-left quarter view", "leftSideView": "left side view", "frontLeftQuarterView": "front-left quarter view" }, "elevation": { "lowAngleShot": "low-angle shot", "eyeLevelShot": "eye-level shot", "elevatedShot": "elevated shot", "highAngleShot": "high-angle shot" }, "distance": { "wideShot": "wide shot", "mediumShot": "medium shot", "closeUp": "close-up" } };
+const outpaint$1 = { "left": "Left", "top": "Top", "right": "Right", "bottom": "Bottom", "reset": "Reset", "output": "Output", "noInputImage": "Wire an image to begin" };
+const en = {
+  workflow: workflow$1,
+  stage: stage$1,
+  error: error$1,
+  configSidebar: configSidebar$1,
+  project: project$1,
+  execution: execution$1,
+  actions: actions$1,
+  presets: presets$1,
+  shotCell: shotCell$1,
+  imageCrop: imageCrop$1,
+  panorama: panorama$1,
+  imageCompare: imageCompare$1,
+  storyboard: storyboard$1,
+  timeline: timeline$1,
+  gridSplit: gridSplit$1,
+  panoramaView: panoramaView$1,
+  rotate: rotate$1,
+  mirror: mirror$1,
+  painter: painter$1,
+  camera: camera$1,
+  outpaint: outpaint$1
+};
+const workflow = { "uploadButton": "⬆ 上传工作流", "imported": "已导入「{label}」", "importFailed": "工作流导入失败", "notJson": "该文件不是合法 JSON" };
+const stage = { "run": "运行", "rerun": "重新运行", "running": "运行中…", "cancel": "取消", "preparingWorkflow": "准备工作流中…", "section": { "context": "上游输入", "pool": "图片池", "output": "输出 ({type})", "actions": "动作" }, "pool": { "clear": "清除", "clearHint": "清空图片池并重置选择", "confirmClear": "确认清空？", "confirm": "是", "cancel": "否" }, "empty": { "no_output": "暂无输出", "generating": "生成中…", "pending_upstream": "上游待运行", "unsupported_type": "不支持的类型 {type}" }, "source": { "upstream": "← 上游", "pending": "… 等待中" }, "disconnect": "断开此连接", "starting": "启动中…", "runByKind": { "text": "生成文本", "image": "生成图片", "image-batch": "生成图片", "video": "生成视频", "audio": "生成音频", "panorama": "生成全景图", "storyboard": "生成分镜" }, "action": { "viewFull": "查看大图", "download": "下载", "close": "关闭" } };
+const error = { "dismiss": "清除", "cancelled": "已取消" };
+const configSidebar = { "title": "工作流配置", "empty": "在画布上选中某个 Stage 节点以编辑它的工作流配置。", "noWorkflowPicked": "该 Stage 还没选工作流 —— 先在下拉里挑一个。", "loading": "加载中…", "noExposedWidgets": "这个工作流没有可编辑的 widget，或者还没准备过 —— 先在画布上任一 Stage 选中它，浏览器侧 graphToPrompt 跑一遍后才有 widget 元数据。", "pickWorkflowFirst": "先在画布上任一 Stage 上选中这个工作流 —— 浏览器侧 graphToPrompt 跑过一遍才有 widget 元数据。", "bindTo": "绑定到：", "exportPreset": "导出 preset.json", "exportPresetTooltip": "把当前绑定导出为 *_preset.json 文件，丢进 workflows/<kind>/ 和工作流 JSON 同目录，其他用户首次启动时会自动应用这套默认。", "exportPresetFailed": "导出失败: {detail}", "resetToPreset": "↻ 重置为内置 preset", "resetToPresetTooltip": "清空该工作流的所有绑定和元数据，重新读取磁盘上的 _preset.json 文件。你自己改过的内容会丢失。", "resetToPresetConfirm": "把这个工作流的所有绑定重置成内置 preset？你自己改过的会丢失。", "resetToPresetFailed": "重置失败: {detail}", "section": { "widgets": "Widget 列表", "notes": "工作流笔记", "description": "说明" } };
+const project = { "label": "当前项目", "shared_suffix": "(共享)", "id_prefix": "id:", "refresh": "刷新项目列表", "create": "新建项目", "delete": "删除该项目（不会删磁盘文件）", "delete_confirm": "确定删除该项目？数据库会清空，磁盘上的生成文件保留。", "create_prompt": "新项目名称：", "create_default": "项目 {n}", "status": { "refreshing": "刷新中…", "refresh_failed": "刷新失败", "create_failed": "创建失败", "deleted": "已删除", "delete_failed": "删除失败", "load_failed": "加载项目列表失败" } };
+const execution = { "running": "运行中：节点 #{nodeId}", "queued": "排队中" };
+const actions = { "image": { "edit": { "label": "修改图片", "tooltip": "改变尺寸或需要交互 UI 的图像编辑（高清 / 扩图 / 重绘 / 擦除 / 抠图 / 裁剪）" }, "panorama": { "label": "全景图", "tooltip": "把当前图变为全景，进入视角操作" }, "multiangle": { "label": "多角度", "tooltip": "从不同相机角度重新渲染该图" }, "relight": { "label": "打光", "tooltip": "调亮度 / 颜色 / 轮廓光，或参考另一张图的灯光" }, "preset": { "label": "预设", "tooltip": "保持尺寸、无需复杂 UI 的预设变换（多视图 / 宫格 / 画面推演 ...）" } }, "video": { "extend": { "label": "延伸", "tooltip": "抽出本段末帧,派生新 VideoStage 用作 I2V 起始帧 —— 写个 prompt 描述接下来要发生什么" }, "change": { "label": "修改视频", "tooltip": "对已上传/已生成的视频做修改：剪辑 / 高清 / 去字幕 / 音频分离" } }, "text": { "refine": { "label": "改写", "tooltip": "在新 TextStage 中继续改写" } }, "panorama": { "view-current": { "label": "当前视角截图", "tooltip": "提取当前视角为单张图" }, "view-four": { "label": "四大视角截图", "tooltip": "提取 4 个视角组成图集" }, "view-twelve": { "label": "12 视角截图", "tooltip": "提取 12 个视角组成图集" } }, "storyboard": { "gen-shots": { "label": "生成分镜图", "tooltip": "派生一个 Shot Images 节点接到这个分镜板上 —— 按镜头列表逐个出图" } } };
+const presets = { "imageVariant": { "multi-cam-9": { "label": "多机位九宫格", "tooltip": "9 个相机角度排列" }, "story-4": { "label": "剧情推演四宫格", "tooltip": "4 连贯剧情画面" }, "face-3view": { "label": "角色脸部三视图", "tooltip": "人脸正/侧/45° 视图" }, "product-3view": { "label": "产品三视图", "tooltip": "产品正/侧/背" }, "character-3view": { "label": "角色三视图", "tooltip": "全身角色正/侧/背" }, "storyboard-25": { "label": "25 宫格连贯分镜", "tooltip": "25 张连贯分镜" }, "cinematic-light": { "label": "电影级光影校正", "tooltip": "应用电影级打光与色彩" }, "frame-3s": { "label": "画面推演 +3s", "tooltip": "推演 3 秒后的画面" }, "frame-5s": { "label": "画面推演 +5s", "tooltip": "推演 5 秒后的画面" } }, "imageEdit": { "hd": { "label": "高清", "tooltip": "提升分辨率 (Upscale) — 输出尺寸大于输入" }, "outpaint": { "label": "扩图", "tooltip": "向外延伸画面 (Outpaint) — 输出比输入大" }, "inpaint": { "label": "重绘", "tooltip": "局部重新生成 (Inpaint) — 需要蒙版" }, "erase": { "label": "擦除", "tooltip": "抹除指定区域 (Erase) — 需要蒙版" }, "cutout": { "label": "抠图", "tooltip": "抠出主体，背景透明 (Cutout / matting)" }, "crop": { "label": "裁剪", "tooltip": "按框裁切 (Crop) — 需要 bbox 拖拽" }, "rotate": { "label": "旋转", "tooltip": "按角度旋转（浏览器端，不占 GPU）" }, "mirror": { "label": "镜像", "tooltip": "水平 / 垂直翻转（浏览器端）" }, "grid": { "label": "宫格切分", "tooltip": "按 R×C 切成多张（浏览器端）→ 图片批次" } }, "videoChange": { "clip": { "label": "剪辑", "tooltip": "裁剪片段 — 输入起始结束时间" }, "crop": { "label": "裁剪", "tooltip": "空间裁剪 — 每帧保留 (x, y, w, h) 矩形" }, "resize": { "label": "缩放", "tooltip": "缩放视频到目标 宽×高(其中一个填 -1 按比例自动算另一个)" }, "extract-frame": { "label": "抽帧", "tooltip": "从视频抽一张图(首/末/中/任意秒数)" }, "hd": { "label": "高清", "tooltip": "提升分辨率" }, "subtitle-smart": { "label": "智能去字幕", "tooltip": "自动检测并擦除字幕" }, "subtitle-select": { "label": "扣选去字幕", "tooltip": "手动框选区域擦除（需要 region selector UI）" }, "audio-vocal": { "label": "仅保留人声", "tooltip": "人声分离 — 仅保留人声" }, "audio-bg": { "label": "仅保留背景声", "tooltip": "人声分离 — 仅保留背景声" }, "demux": { "label": "音视频分离", "tooltip": "同时产出音频轨和静默视频（双节点）" } } };
+const shotCell = { "pick": "选择 {tag}", "refine": "微调 {tag}" };
+const imageCrop = { "noInputImage": "无输入图像 — 请上游连接一张图", "cropPreviewAlt": "裁剪预览", "loading": "加载中…", "ratio": "比例", "custom": "自定义", "lockRatio": "锁定纵横比", "unlockRatio": "解锁纵横比", "applying": "应用裁剪中…", "applied": "裁剪已应用 — 下游可直接使用", "adjustToApply": "拖动矩形或选择比例以应用" };
+const panorama = { "empty": "暂无全景图 — 上传 HDRI / 等距柱状投影图，或接入上游图后点 Run", "uploading": "上传中…", "upload": "上传全景图", "clearUpload": "清除上传", "clearUploadTooltip": "丢弃手动来源 — 之后 Run 会重新从上游派生", "manualSourceBadge": "手动", "loadError": "加载全景图失败" };
+const imageCompare = { "before": "之前", "after": "之后", "noImages": "连接两张图进行对比（A / B）" };
+const storyboard = { "shots": "分镜", "addShot": "添加分镜", "empty": "暂无分镜 — 点 Run 从剧本生成，或手动添加", "moveUp": "上移", "moveDown": "下移", "remove": "删除分镜", "regenerate": "用 LLM 重新生成此镜头(其他镜头保持)", "noRef": "无参考图", "uploadRef": "上传参考图", "clearRef": "清除参考图", "promptPlaceholder": "描述这个镜头…", "cols": { "scene_purpose": "画面描述", "character": "角色", "character_desc": "角色描述", "shot_size": "景别", "action": "角色动作", "emotion": "情绪", "scene_tags": "场景标签", "lighting": "光影氛围", "sfx": "音效", "dialogue": "对白", "image_prompt": "分镜提示词", "motion_prompt": "视频运动提示词" } };
+const timeline = { "keyframes": "关键帧", "connectImages": "上游连接图片作为分镜素材", "addSegment": "添加为分镜", "clickKeyframe": "点击上方关键帧添加分镜", "addAudio": "添加音频轨", "noAudio": "上游连接音频以添加音轨", "segmentPrompt": "分镜提示词", "promptPlaceholder": "这个镜头里发生什么…", "length": "时长", "fps": "帧率", "shots": "镜头" };
+const gridSplit = { "connectImage": "请连接一张图以切分", "pickGrid": "选择宫格预设或设置行 × 列", "splitting": "切分为 {n} 块中…", "done": "已切分为 {n} 块 — 下游可直接使用", "rows": "行", "cols": "列" };
+const panoramaView = { "connectPanorama": "请在上游接入全景图", "orbitToCapture": "拖动环视 — 松开后自动截取当前视角", "capturing": "截取视角中…", "captured": "视角已截取 — 下游可直接使用", "aspect": "比例", "resolution": "分辨率", "viewCount": "视角数", "adjustCountToCapture": "拖动滑块以批量截取", "capturingCount": "截取中 {i}/{n}…", "capturedN": "已截取 {n} 张 — 下游可直接使用" };
+const rotate = { "angle": "角度", "applying": "旋转应用中…", "applied": "旋转已应用 — 下游可直接使用", "adjustToApply": "拖动滑块或点击快速角度以应用" };
+const mirror = { "horizontal": "水平翻转", "vertical": "垂直翻转", "applying": "镜像应用中…", "applied": "镜像已应用 — 下游可直接使用", "adjustToApply": "切换翻转开关以应用" };
+const painter = { "tool": "工具", "brush": "画笔", "eraser": "橡皮", "fill": "填充", "rect": "矩形", "ellipse": "椭圆", "label": "编号标记", "size": "大小", "color": "颜色", "opacity": "不透明度", "hardness": "硬度", "clear": "清除" };
+const camera = { "horizontal": "水平", "vertical": "垂直", "zoom": "距离", "resetToDefaults": "重置为默认值", "azimuth": { "frontView": "正面视角", "frontRightQuarterView": "右前方视角", "rightSideView": "右侧视角", "backRightQuarterView": "右后方视角", "backView": "背面视角", "backLeftQuarterView": "左后方视角", "leftSideView": "左侧视角", "frontLeftQuarterView": "左前方视角" }, "elevation": { "lowAngleShot": "仰拍", "eyeLevelShot": "平视", "elevatedShot": "高角度", "highAngleShot": "俯拍" }, "distance": { "wideShot": "远景", "mediumShot": "中景", "closeUp": "特写" } };
+const outpaint = { "left": "左", "top": "上", "right": "右", "bottom": "下", "reset": "重置", "output": "输出", "noInputImage": "先把一张图片连进来" };
+const zh = {
+  workflow,
+  stage,
+  error,
+  configSidebar,
+  project,
+  execution,
+  actions,
+  presets,
+  shotCell,
+  imageCrop,
+  panorama,
+  imageCompare,
+  storyboard,
+  timeline,
+  gridSplit,
+  panoramaView,
+  rotate,
+  mirror,
+  painter,
+  camera,
+  outpaint
+};
+function pickLocale() {
+  var _a2, _b2, _c, _d, _e, _f;
+  let stored;
+  try {
+    stored = ((_c = (_b2 = (_a2 = app == null ? void 0 : app.ui) == null ? void 0 : _a2.settings) == null ? void 0 : _b2.getSettingValue) == null ? void 0 : _c.call(_b2, "Comfy.Locale")) ?? ((_f = (_e = (_d = app == null ? void 0 : app.extensionManager) == null ? void 0 : _d.setting) == null ? void 0 : _e.get) == null ? void 0 : _f.call(_e, "Comfy.Locale"));
+  } catch {
+    stored = void 0;
+  }
+  const candidate = (stored || navigator.language || "en").toLowerCase();
+  if (candidate.startsWith("zh")) return "zh";
+  return "en";
+}
+const i18n = createI18n({
+  legacy: false,
+  locale: pickLocale(),
+  fallbackLocale: "en",
+  messages: { en, zh },
+  missingWarn: false,
+  fallbackWarn: false
+});
+i18n.global.t;
+function toast(severity, summary, detail = "") {
+  var _a2, _b2, _c;
+  (_c = (_b2 = (_a2 = app == null ? void 0 : app.extensionManager) == null ? void 0 : _a2.toast) == null ? void 0 : _b2.add) == null ? void 0 : _c.call(_b2, { severity, summary, detail, life: 5e3 });
+}
+function addOptionEverywhere(kind, label) {
+  var _a2, _b2, _c, _d, _e;
+  const nodes = ((_a2 = app == null ? void 0 : app.graph) == null ? void 0 : _a2._nodes) ?? [];
+  for (const n of nodes) {
+    if (((_b2 = getStageMeta(n == null ? void 0 : n.comfyClass)) == null ? void 0 : _b2.workflow_kind) !== kind) continue;
+    const vals = (_e = (_d = (_c = n.widgets) == null ? void 0 : _c.find((w) => w.name === "workflow")) == null ? void 0 : _d.options) == null ? void 0 : _e.values;
+    if (Array.isArray(vals) && !vals.includes(label)) vals.push(label);
+  }
+}
+async function doUpload(node, wfWidget, kind) {
+  const t = i18n.global.t;
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = ".json,application/json";
+  input.style.display = "none";
+  input.onchange = async () => {
+    var _a2, _b2, _c, _d;
+    const file = (_a2 = input.files) == null ? void 0 : _a2[0];
+    input.remove();
+    if (!file) return;
+    try {
+      const text = await file.text();
+      try {
+        JSON.parse(text);
+      } catch {
+        toast("warn", t("workflow.importFailed"), t("workflow.notJson"));
+        return;
+      }
+      const res = await importWorkflow(kind, file.name, text);
+      addOptionEverywhere(kind, res.label);
+      wfWidget.value = res.label;
+      (_b2 = wfWidget.callback) == null ? void 0 : _b2.call(wfWidget, res.label);
+      (_d = (_c = app == null ? void 0 : app.graph) == null ? void 0 : _c.setDirtyCanvas) == null ? void 0 : _d.call(_c, true, true);
+      toast("success", t("workflow.imported", { label: res.label }));
+    } catch (e) {
+      toast("error", t("workflow.importFailed"), String((e == null ? void 0 : e.message) || e));
+    }
+  };
+  document.body.appendChild(input);
+  input.click();
+}
+function addWorkflowUploadButton(node, wfWidget, kind) {
+  var _a2;
+  if (!(node == null ? void 0 : node.addWidget) || !wfWidget) return;
+  if ((_a2 = node.widgets) == null ? void 0 : _a2.some((w) => w.__comfytvUpload)) return;
+  const btn = node.addWidget(
+    "button",
+    i18n.global.t("workflow.uploadButton"),
+    null,
+    () => {
+      void doUpload(node, wfWidget, kind);
+    }
+  );
+  btn.__comfytvUpload = true;
+  btn.serialize = false;
+  const widgets = node.widgets;
+  if (Array.isArray(widgets)) {
+    const bi = widgets.indexOf(btn);
+    const wi = widgets.indexOf(wfWidget);
+    if (bi > -1 && wi > -1 && bi !== wi + 1) {
+      widgets.splice(bi, 1);
+      widgets.splice(wi + 1, 0, btn);
+    }
+  }
+}
 const LG_MODE_NEVER = 2;
 const LG_MODE_BYPASS = 4;
 function collectReachableNodeIds(app2, target) {
@@ -81409,6 +81600,7 @@ function useStageNode(node, kind, variant = "generator") {
         queueMicrotask(triggerPrepForCurrentWorkflow);
         queueMicrotask(() => selectionStore.refreshFromCanvas());
       });
+      if (workflowKind) addWorkflowUploadButton(node, wfWidget, workflowKind);
     }
     queueMicrotask(triggerPrepForCurrentWorkflow);
   }
@@ -82132,111 +82324,6 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
   }
 });
 const EntryManagerPanel = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-5ba79c38"]]);
-const stage$1 = { "run": "Run", "rerun": "Re-run", "running": "Running…", "cancel": "Cancel", "preparingWorkflow": "Preparing workflow…", "section": { "context": "Context", "pool": "Pool", "output": "Output ({type})", "actions": "Actions" }, "pool": { "clear": "Clear", "clearHint": "Empty the picker pool and reset the selection", "confirmClear": "Clear pool?", "confirm": "Yes", "cancel": "No" }, "empty": { "no_output": "no output yet", "generating": "generating…", "pending_upstream": "upstream pending", "unsupported_type": "unsupported type {type}" }, "source": { "upstream": "← upstream", "pending": "… waiting" }, "disconnect": "Disconnect", "starting": "starting…", "runByKind": { "text": "Generate Text", "image": "Generate Image", "image-batch": "Generate Images", "video": "Generate Video", "audio": "Generate Audio", "panorama": "Generate Panorama", "storyboard": "Generate Storyboard" }, "action": { "viewFull": "View full size", "download": "Download", "close": "Close" } };
-const error$1 = { "dismiss": "Dismiss", "cancelled": "Cancelled" };
-const configSidebar$1 = { "title": "Workflow Config", "empty": "Select a stage node on the canvas to edit its workflow config.", "noWorkflowPicked": "This stage's workflow combo is empty — pick one first.", "loading": "Loading…", "noExposedWidgets": "This workflow has no editable widgets, or hasn't been prepared yet — pick it on any stage first so the browser can analyze it.", "pickWorkflowFirst": "Pick this workflow on any stage first to populate widget metadata (the browser-side graphToPrompt has to run).", "bindTo": "Bind to:", "exportPreset": "Export preset.json", "exportPresetTooltip": "Download the current bindings as a *_preset.json file. Drop it next to the workflow JSON in workflows/<kind>/ to ship these defaults to other users.", "exportPresetFailed": "Export failed: {detail}", "resetToPreset": "↻ Reset to shipped preset", "resetToPresetTooltip": "Wipe all bindings + meta for this workflow and re-apply its shipped _preset.json from disk. Your own edits will be lost.", "resetToPresetConfirm": "Reset all bindings for this workflow to the shipped preset? Your edits will be lost.", "resetToPresetFailed": "Reset failed: {detail}", "section": { "widgets": "Widgets", "notes": "Workflow notes", "description": "Description" } };
-const project$1 = { "label": "Current Project", "shared_suffix": "(shared)", "id_prefix": "id:", "refresh": "Refresh project list", "create": "New project", "delete": "Delete this project (files on disk stay)", "delete_confirm": "Delete this project? DB rows will be cleared; files on disk stay.", "create_prompt": "New project name:", "create_default": "Project {n}", "status": { "refreshing": "refreshing…", "refresh_failed": "refresh failed", "create_failed": "create failed", "deleted": "deleted", "delete_failed": "delete failed", "load_failed": "Failed to load project list" } };
-const execution$1 = { "running": "running: node #{nodeId}", "queued": "queued" };
-const actions$1 = { "image": { "edit": { "label": "Edit Image", "tooltip": "Edits that change size or need rich UI (HD / outpaint / inpaint / erase / cutout / crop)" }, "panorama": { "label": "Panorama", "tooltip": "Turn this image into a panorama and explore viewpoints" }, "multiangle": { "label": "Multi-angle", "tooltip": "Re-render this image from a different camera angle" }, "relight": { "label": "Relight", "tooltip": "Brightness / color / rim-light, or reference another image's lighting" }, "preset": { "label": "Presets", "tooltip": "Size-preserving, no-rich-UI preset transforms (multi-view / grid / scene progression)" } }, "video": { "extend": { "label": "Extend", "tooltip": "Extract this clip's last frame and spawn a new VideoStage using it as the I2V start frame — write a prompt for the continuation" }, "change": { "label": "Edit Video", "tooltip": "Modify an existing video: clip / HD / subtitle erase / audio separation" } }, "text": { "refine": { "label": "Refine", "tooltip": "Continue rewriting in a new TextStage" } }, "panorama": { "view-current": { "label": "Current View", "tooltip": "Extract the current viewport as a single image" }, "view-four": { "label": "4 Views", "tooltip": "Extract 4 viewpoints as an image batch" }, "view-twelve": { "label": "12 Views", "tooltip": "Extract 12 viewpoints as an image batch" } }, "storyboard": { "gen-shots": { "label": "Generate Shot Images", "tooltip": "Spawn a Shot Images stage wired to this storyboard — iterates the shot list and renders one image per shot" } } };
-const presets$1 = { "imageVariant": { "multi-cam-9": { "label": "Multi-cam 9-grid", "tooltip": "9 camera angles arranged in a grid" }, "story-4": { "label": "Story Progression (4)", "tooltip": "4 consecutive narrative shots" }, "face-3view": { "label": "Face 3-view", "tooltip": "Face: front / side / 45°" }, "product-3view": { "label": "Product 3-view", "tooltip": "Product: front / side / back" }, "character-3view": { "label": "Character 3-view", "tooltip": "Full-body character: front / side / back" }, "storyboard-25": { "label": "25-grid Storyboard", "tooltip": "25 consecutive storyboard shots" }, "cinematic-light": { "label": "Cinematic Lighting", "tooltip": "Apply cinematic lighting and color grade" }, "frame-3s": { "label": "Project +3s", "tooltip": "Project the scene 3 seconds later" }, "frame-5s": { "label": "Project +5s", "tooltip": "Project the scene 5 seconds later" } }, "imageEdit": { "hd": { "label": "HD", "tooltip": "Upscale to a higher resolution (output is larger)" }, "outpaint": { "label": "Outpaint", "tooltip": "Extend the canvas outward (output is larger)" }, "inpaint": { "label": "Inpaint", "tooltip": "Regenerate a masked region" }, "erase": { "label": "Erase", "tooltip": "Remove a masked region" }, "cutout": { "label": "Cutout", "tooltip": "Extract the subject with a transparent background" }, "crop": { "label": "Crop", "tooltip": "Crop to a bounding box" }, "rotate": { "label": "Rotate", "tooltip": "Rotate by an angle (browser-side, no GPU)" }, "mirror": { "label": "Mirror", "tooltip": "Flip horizontally / vertically (browser-side)" }, "grid": { "label": "Grid Split", "tooltip": "Slice into an R×C grid of tiles (browser-side) → image batch" } }, "videoChange": { "clip": { "label": "Clip", "tooltip": "Clip / trim — pick start and end times" }, "crop": { "label": "Crop", "tooltip": "Spatial crop — keep a rectangle (x, y, w, h) of every frame" }, "resize": { "label": "Resize", "tooltip": "Scale video to a target width × height (use -1 to auto-derive from aspect)" }, "extract-frame": { "label": "Extract Frame", "tooltip": "Pull a single frame out as an image (first / last / middle / custom seconds)" }, "hd": { "label": "HD", "tooltip": "Upscale" }, "subtitle-smart": { "label": "Auto Subtitle Erase", "tooltip": "Auto-detect and remove subtitles" }, "subtitle-select": { "label": "Region Subtitle Erase", "tooltip": "Manually box a region to erase (needs region-selector UI)" }, "audio-vocal": { "label": "Vocals Only", "tooltip": "Voice separation — vocals only" }, "audio-bg": { "label": "Background Only", "tooltip": "Voice separation — instrumental / ambient" }, "demux": { "label": "Demux A/V", "tooltip": "Split into audio track + silent video (two nodes spawned)" } } };
-const shotCell$1 = { "pick": "Pick {tag}", "refine": "Refine {tag}" };
-const imageCrop$1 = { "noInputImage": "No input image — connect an image upstream", "cropPreviewAlt": "Crop preview", "loading": "Loading…", "ratio": "Ratio", "custom": "Custom", "lockRatio": "Lock aspect ratio", "unlockRatio": "Unlock aspect ratio", "applying": "Applying crop…", "applied": "Crop applied — ready for downstream", "adjustToApply": "Drag the rectangle or pick a ratio to apply" };
-const panorama$1 = { "empty": "No panorama yet — upload an HDRI / equirect image or click Run with an upstream image", "uploading": "Uploading…", "upload": "Upload panorama", "clearUpload": "Clear upload", "clearUploadTooltip": "Drop the manual source — Run will then derive from upstream again", "manualSourceBadge": "manual", "loadError": "Failed to load panorama" };
-const imageCompare$1 = { "before": "Before", "after": "After", "noImages": "Connect two images to compare (A / B)" };
-const storyboard$1 = { "shots": "Shots", "addShot": "Add shot", "empty": "No shots yet — Run to generate from the premise, or add shots manually", "moveUp": "Move up", "moveDown": "Move down", "remove": "Remove shot", "regenerate": "Regenerate this shot via the LLM (keeps the rest)", "noRef": "no reference", "uploadRef": "Upload reference image", "clearRef": "Clear reference", "promptPlaceholder": "Describe this shot…", "cols": { "scene_purpose": "Purpose", "character": "Character", "character_desc": "Character notes", "shot_size": "Shot size", "action": "Action", "emotion": "Emotion", "scene_tags": "Scene", "lighting": "Lighting", "sfx": "SFX", "dialogue": "Dialogue", "image_prompt": "Image prompt", "motion_prompt": "Motion prompt" } };
-const timeline$1 = { "keyframes": "Keyframes", "connectImages": "Connect images upstream to use as shots", "addSegment": "Add as a shot", "clickKeyframe": "Click a keyframe above to add a shot", "addAudio": "Add audio track", "noAudio": "Connect audio upstream to add a track", "segmentPrompt": "Shot prompt", "promptPlaceholder": "What happens in this shot…", "length": "Length", "fps": "FPS", "shots": "shots" };
-const gridSplit$1 = { "connectImage": "Connect an image to split", "pickGrid": "Pick a grid preset or set rows × cols", "splitting": "Slicing into {n} tiles…", "done": "Split into {n} tiles — ready for downstream", "rows": "Rows", "cols": "Cols" };
-const panoramaView$1 = { "connectPanorama": "Connect a panorama upstream", "orbitToCapture": "Drag to look around — releasing captures the view", "capturing": "Capturing viewport…", "captured": "Viewport captured — ready for downstream", "aspect": "Aspect", "resolution": "Resolution", "viewCount": "View count", "adjustCountToCapture": "Move the slider to capture views", "capturingCount": "Capturing {i}/{n}…", "capturedN": "Captured {n} views — ready for downstream" };
-const rotate$1 = { "angle": "Angle", "applying": "Applying rotation…", "applied": "Rotation applied — ready for downstream", "adjustToApply": "Slide or click a quick angle to apply" };
-const mirror$1 = { "horizontal": "Horizontal flip", "vertical": "Vertical flip", "applying": "Applying mirror…", "applied": "Mirror applied — ready for downstream", "adjustToApply": "Toggle flips to apply" };
-const painter$1 = { "tool": "Tool", "brush": "Brush", "eraser": "Eraser", "fill": "Fill", "rect": "Rectangle", "ellipse": "Ellipse", "label": "Numbered label", "size": "Size", "color": "Color", "opacity": "Opacity", "hardness": "Hardness", "clear": "Clear" };
-const camera$1 = { "horizontal": "H", "vertical": "V", "zoom": "Z", "resetToDefaults": "Reset to defaults", "azimuth": { "frontView": "front view", "frontRightQuarterView": "front-right quarter view", "rightSideView": "right side view", "backRightQuarterView": "back-right quarter view", "backView": "back view", "backLeftQuarterView": "back-left quarter view", "leftSideView": "left side view", "frontLeftQuarterView": "front-left quarter view" }, "elevation": { "lowAngleShot": "low-angle shot", "eyeLevelShot": "eye-level shot", "elevatedShot": "elevated shot", "highAngleShot": "high-angle shot" }, "distance": { "wideShot": "wide shot", "mediumShot": "medium shot", "closeUp": "close-up" } };
-const outpaint$1 = { "left": "Left", "top": "Top", "right": "Right", "bottom": "Bottom", "reset": "Reset", "output": "Output", "noInputImage": "Wire an image to begin" };
-const en = {
-  stage: stage$1,
-  error: error$1,
-  configSidebar: configSidebar$1,
-  project: project$1,
-  execution: execution$1,
-  actions: actions$1,
-  presets: presets$1,
-  shotCell: shotCell$1,
-  imageCrop: imageCrop$1,
-  panorama: panorama$1,
-  imageCompare: imageCompare$1,
-  storyboard: storyboard$1,
-  timeline: timeline$1,
-  gridSplit: gridSplit$1,
-  panoramaView: panoramaView$1,
-  rotate: rotate$1,
-  mirror: mirror$1,
-  painter: painter$1,
-  camera: camera$1,
-  outpaint: outpaint$1
-};
-const stage = { "run": "运行", "rerun": "重新运行", "running": "运行中…", "cancel": "取消", "preparingWorkflow": "准备工作流中…", "section": { "context": "上游输入", "pool": "图片池", "output": "输出 ({type})", "actions": "动作" }, "pool": { "clear": "清除", "clearHint": "清空图片池并重置选择", "confirmClear": "确认清空？", "confirm": "是", "cancel": "否" }, "empty": { "no_output": "暂无输出", "generating": "生成中…", "pending_upstream": "上游待运行", "unsupported_type": "不支持的类型 {type}" }, "source": { "upstream": "← 上游", "pending": "… 等待中" }, "disconnect": "断开此连接", "starting": "启动中…", "runByKind": { "text": "生成文本", "image": "生成图片", "image-batch": "生成图片", "video": "生成视频", "audio": "生成音频", "panorama": "生成全景图", "storyboard": "生成分镜" }, "action": { "viewFull": "查看大图", "download": "下载", "close": "关闭" } };
-const error = { "dismiss": "清除", "cancelled": "已取消" };
-const configSidebar = { "title": "工作流配置", "empty": "在画布上选中某个 Stage 节点以编辑它的工作流配置。", "noWorkflowPicked": "该 Stage 还没选工作流 —— 先在下拉里挑一个。", "loading": "加载中…", "noExposedWidgets": "这个工作流没有可编辑的 widget，或者还没准备过 —— 先在画布上任一 Stage 选中它，浏览器侧 graphToPrompt 跑一遍后才有 widget 元数据。", "pickWorkflowFirst": "先在画布上任一 Stage 上选中这个工作流 —— 浏览器侧 graphToPrompt 跑过一遍才有 widget 元数据。", "bindTo": "绑定到：", "exportPreset": "导出 preset.json", "exportPresetTooltip": "把当前绑定导出为 *_preset.json 文件，丢进 workflows/<kind>/ 和工作流 JSON 同目录，其他用户首次启动时会自动应用这套默认。", "exportPresetFailed": "导出失败: {detail}", "resetToPreset": "↻ 重置为内置 preset", "resetToPresetTooltip": "清空该工作流的所有绑定和元数据，重新读取磁盘上的 _preset.json 文件。你自己改过的内容会丢失。", "resetToPresetConfirm": "把这个工作流的所有绑定重置成内置 preset？你自己改过的会丢失。", "resetToPresetFailed": "重置失败: {detail}", "section": { "widgets": "Widget 列表", "notes": "工作流笔记", "description": "说明" } };
-const project = { "label": "当前项目", "shared_suffix": "(共享)", "id_prefix": "id:", "refresh": "刷新项目列表", "create": "新建项目", "delete": "删除该项目（不会删磁盘文件）", "delete_confirm": "确定删除该项目？数据库会清空，磁盘上的生成文件保留。", "create_prompt": "新项目名称：", "create_default": "项目 {n}", "status": { "refreshing": "刷新中…", "refresh_failed": "刷新失败", "create_failed": "创建失败", "deleted": "已删除", "delete_failed": "删除失败", "load_failed": "加载项目列表失败" } };
-const execution = { "running": "运行中：节点 #{nodeId}", "queued": "排队中" };
-const actions = { "image": { "edit": { "label": "修改图片", "tooltip": "改变尺寸或需要交互 UI 的图像编辑（高清 / 扩图 / 重绘 / 擦除 / 抠图 / 裁剪）" }, "panorama": { "label": "全景图", "tooltip": "把当前图变为全景，进入视角操作" }, "multiangle": { "label": "多角度", "tooltip": "从不同相机角度重新渲染该图" }, "relight": { "label": "打光", "tooltip": "调亮度 / 颜色 / 轮廓光，或参考另一张图的灯光" }, "preset": { "label": "预设", "tooltip": "保持尺寸、无需复杂 UI 的预设变换（多视图 / 宫格 / 画面推演 ...）" } }, "video": { "extend": { "label": "延伸", "tooltip": "抽出本段末帧,派生新 VideoStage 用作 I2V 起始帧 —— 写个 prompt 描述接下来要发生什么" }, "change": { "label": "修改视频", "tooltip": "对已上传/已生成的视频做修改：剪辑 / 高清 / 去字幕 / 音频分离" } }, "text": { "refine": { "label": "改写", "tooltip": "在新 TextStage 中继续改写" } }, "panorama": { "view-current": { "label": "当前视角截图", "tooltip": "提取当前视角为单张图" }, "view-four": { "label": "四大视角截图", "tooltip": "提取 4 个视角组成图集" }, "view-twelve": { "label": "12 视角截图", "tooltip": "提取 12 个视角组成图集" } }, "storyboard": { "gen-shots": { "label": "生成分镜图", "tooltip": "派生一个 Shot Images 节点接到这个分镜板上 —— 按镜头列表逐个出图" } } };
-const presets = { "imageVariant": { "multi-cam-9": { "label": "多机位九宫格", "tooltip": "9 个相机角度排列" }, "story-4": { "label": "剧情推演四宫格", "tooltip": "4 连贯剧情画面" }, "face-3view": { "label": "角色脸部三视图", "tooltip": "人脸正/侧/45° 视图" }, "product-3view": { "label": "产品三视图", "tooltip": "产品正/侧/背" }, "character-3view": { "label": "角色三视图", "tooltip": "全身角色正/侧/背" }, "storyboard-25": { "label": "25 宫格连贯分镜", "tooltip": "25 张连贯分镜" }, "cinematic-light": { "label": "电影级光影校正", "tooltip": "应用电影级打光与色彩" }, "frame-3s": { "label": "画面推演 +3s", "tooltip": "推演 3 秒后的画面" }, "frame-5s": { "label": "画面推演 +5s", "tooltip": "推演 5 秒后的画面" } }, "imageEdit": { "hd": { "label": "高清", "tooltip": "提升分辨率 (Upscale) — 输出尺寸大于输入" }, "outpaint": { "label": "扩图", "tooltip": "向外延伸画面 (Outpaint) — 输出比输入大" }, "inpaint": { "label": "重绘", "tooltip": "局部重新生成 (Inpaint) — 需要蒙版" }, "erase": { "label": "擦除", "tooltip": "抹除指定区域 (Erase) — 需要蒙版" }, "cutout": { "label": "抠图", "tooltip": "抠出主体，背景透明 (Cutout / matting)" }, "crop": { "label": "裁剪", "tooltip": "按框裁切 (Crop) — 需要 bbox 拖拽" }, "rotate": { "label": "旋转", "tooltip": "按角度旋转（浏览器端，不占 GPU）" }, "mirror": { "label": "镜像", "tooltip": "水平 / 垂直翻转（浏览器端）" }, "grid": { "label": "宫格切分", "tooltip": "按 R×C 切成多张（浏览器端）→ 图片批次" } }, "videoChange": { "clip": { "label": "剪辑", "tooltip": "裁剪片段 — 输入起始结束时间" }, "crop": { "label": "裁剪", "tooltip": "空间裁剪 — 每帧保留 (x, y, w, h) 矩形" }, "resize": { "label": "缩放", "tooltip": "缩放视频到目标 宽×高(其中一个填 -1 按比例自动算另一个)" }, "extract-frame": { "label": "抽帧", "tooltip": "从视频抽一张图(首/末/中/任意秒数)" }, "hd": { "label": "高清", "tooltip": "提升分辨率" }, "subtitle-smart": { "label": "智能去字幕", "tooltip": "自动检测并擦除字幕" }, "subtitle-select": { "label": "扣选去字幕", "tooltip": "手动框选区域擦除（需要 region selector UI）" }, "audio-vocal": { "label": "仅保留人声", "tooltip": "人声分离 — 仅保留人声" }, "audio-bg": { "label": "仅保留背景声", "tooltip": "人声分离 — 仅保留背景声" }, "demux": { "label": "音视频分离", "tooltip": "同时产出音频轨和静默视频（双节点）" } } };
-const shotCell = { "pick": "选择 {tag}", "refine": "微调 {tag}" };
-const imageCrop = { "noInputImage": "无输入图像 — 请上游连接一张图", "cropPreviewAlt": "裁剪预览", "loading": "加载中…", "ratio": "比例", "custom": "自定义", "lockRatio": "锁定纵横比", "unlockRatio": "解锁纵横比", "applying": "应用裁剪中…", "applied": "裁剪已应用 — 下游可直接使用", "adjustToApply": "拖动矩形或选择比例以应用" };
-const panorama = { "empty": "暂无全景图 — 上传 HDRI / 等距柱状投影图，或接入上游图后点 Run", "uploading": "上传中…", "upload": "上传全景图", "clearUpload": "清除上传", "clearUploadTooltip": "丢弃手动来源 — 之后 Run 会重新从上游派生", "manualSourceBadge": "手动", "loadError": "加载全景图失败" };
-const imageCompare = { "before": "之前", "after": "之后", "noImages": "连接两张图进行对比（A / B）" };
-const storyboard = { "shots": "分镜", "addShot": "添加分镜", "empty": "暂无分镜 — 点 Run 从剧本生成，或手动添加", "moveUp": "上移", "moveDown": "下移", "remove": "删除分镜", "regenerate": "用 LLM 重新生成此镜头(其他镜头保持)", "noRef": "无参考图", "uploadRef": "上传参考图", "clearRef": "清除参考图", "promptPlaceholder": "描述这个镜头…", "cols": { "scene_purpose": "画面描述", "character": "角色", "character_desc": "角色描述", "shot_size": "景别", "action": "角色动作", "emotion": "情绪", "scene_tags": "场景标签", "lighting": "光影氛围", "sfx": "音效", "dialogue": "对白", "image_prompt": "分镜提示词", "motion_prompt": "视频运动提示词" } };
-const timeline = { "keyframes": "关键帧", "connectImages": "上游连接图片作为分镜素材", "addSegment": "添加为分镜", "clickKeyframe": "点击上方关键帧添加分镜", "addAudio": "添加音频轨", "noAudio": "上游连接音频以添加音轨", "segmentPrompt": "分镜提示词", "promptPlaceholder": "这个镜头里发生什么…", "length": "时长", "fps": "帧率", "shots": "镜头" };
-const gridSplit = { "connectImage": "请连接一张图以切分", "pickGrid": "选择宫格预设或设置行 × 列", "splitting": "切分为 {n} 块中…", "done": "已切分为 {n} 块 — 下游可直接使用", "rows": "行", "cols": "列" };
-const panoramaView = { "connectPanorama": "请在上游接入全景图", "orbitToCapture": "拖动环视 — 松开后自动截取当前视角", "capturing": "截取视角中…", "captured": "视角已截取 — 下游可直接使用", "aspect": "比例", "resolution": "分辨率", "viewCount": "视角数", "adjustCountToCapture": "拖动滑块以批量截取", "capturingCount": "截取中 {i}/{n}…", "capturedN": "已截取 {n} 张 — 下游可直接使用" };
-const rotate = { "angle": "角度", "applying": "旋转应用中…", "applied": "旋转已应用 — 下游可直接使用", "adjustToApply": "拖动滑块或点击快速角度以应用" };
-const mirror = { "horizontal": "水平翻转", "vertical": "垂直翻转", "applying": "镜像应用中…", "applied": "镜像已应用 — 下游可直接使用", "adjustToApply": "切换翻转开关以应用" };
-const painter = { "tool": "工具", "brush": "画笔", "eraser": "橡皮", "fill": "填充", "rect": "矩形", "ellipse": "椭圆", "label": "编号标记", "size": "大小", "color": "颜色", "opacity": "不透明度", "hardness": "硬度", "clear": "清除" };
-const camera = { "horizontal": "水平", "vertical": "垂直", "zoom": "距离", "resetToDefaults": "重置为默认值", "azimuth": { "frontView": "正面视角", "frontRightQuarterView": "右前方视角", "rightSideView": "右侧视角", "backRightQuarterView": "右后方视角", "backView": "背面视角", "backLeftQuarterView": "左后方视角", "leftSideView": "左侧视角", "frontLeftQuarterView": "左前方视角" }, "elevation": { "lowAngleShot": "仰拍", "eyeLevelShot": "平视", "elevatedShot": "高角度", "highAngleShot": "俯拍" }, "distance": { "wideShot": "远景", "mediumShot": "中景", "closeUp": "特写" } };
-const outpaint = { "left": "左", "top": "上", "right": "右", "bottom": "下", "reset": "重置", "output": "输出", "noInputImage": "先把一张图片连进来" };
-const zh = {
-  stage,
-  error,
-  configSidebar,
-  project,
-  execution,
-  actions,
-  presets,
-  shotCell,
-  imageCrop,
-  panorama,
-  imageCompare,
-  storyboard,
-  timeline,
-  gridSplit,
-  panoramaView,
-  rotate,
-  mirror,
-  painter,
-  camera,
-  outpaint
-};
-function pickLocale() {
-  var _a2, _b2, _c, _d, _e, _f;
-  let stored;
-  try {
-    stored = ((_c = (_b2 = (_a2 = app == null ? void 0 : app.ui) == null ? void 0 : _a2.settings) == null ? void 0 : _b2.getSettingValue) == null ? void 0 : _c.call(_b2, "Comfy.Locale")) ?? ((_f = (_e = (_d = app == null ? void 0 : app.extensionManager) == null ? void 0 : _d.setting) == null ? void 0 : _e.get) == null ? void 0 : _f.call(_e, "Comfy.Locale"));
-  } catch {
-    stored = void 0;
-  }
-  const candidate = (stored || navigator.language || "en").toLowerCase();
-  if (candidate.startsWith("zh")) return "zh";
-  return "en";
-}
-const i18n = createI18n({
-  legacy: false,
-  locale: pickLocale(),
-  fallbackLocale: "en",
-  messages: { en, zh },
-  missingWarn: false,
-  fallbackWarn: false
-});
-i18n.global.t;
 window.__comfytv_host_pinia = getActivePinia();
 const pinia = createPinia();
 setActivePinia(pinia);

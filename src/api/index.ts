@@ -2,8 +2,8 @@ import type { z } from 'zod'
 
 import { app } from '@/lib/comfyApp'
 
-import { CapsPayloadSchema } from './schemas'
-import type { CapsPayload } from './schemas'
+import { CapsPayloadSchema, ImportWorkflowResultSchema } from './schemas'
+import type { CapsPayload, ImportWorkflowResult } from './schemas'
 
 export class ApiError extends Error {
   constructor(public path: string, public status: number, message: string) {
@@ -53,6 +53,14 @@ export async function apiSend<T extends z.ZodType>(
 
 export function fetchCaps(): Promise<CapsPayload> {
   return apiFetch('/comfytv/caps', CapsPayloadSchema)
+}
+
+export function importWorkflow(
+  kind: string, filename: string, content: string,
+): Promise<ImportWorkflowResult> {
+  return apiSend('/comfytv/workflows/import', 'POST', ImportWorkflowResultSchema, {
+    kind, filename, content,
+  })
 }
 
 export * from './schemas'

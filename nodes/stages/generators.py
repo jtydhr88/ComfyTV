@@ -41,7 +41,7 @@ class TextStage(io.ComfyNode):
             category="ComfyTV/Generate",
             inputs=[
                 *_standard_stage_inputs(),
-                io.Combo.Input("workflow", options=TEXT_WORKFLOWS or [""],
+                io.Combo.Input("workflow", options=labels_for('text') or [""],
                                default=TEXT_WORKFLOWS[0] if TEXT_WORKFLOWS else "",
                                tooltip="Which backend text workflow to invoke when Run is clicked. Placeholder for now."),
                 _main_prompt_input(tooltip="Primary prompt — the user's intent for this stage. Upstream text inputs are treated as additional context."),
@@ -86,7 +86,7 @@ class ImageStage(io.ComfyNode):
             category="ComfyTV/Generate",
             inputs=[
                 *_standard_stage_inputs(),
-                io.Combo.Input("workflow", options=IMAGE_WORKFLOWS or [""],
+                io.Combo.Input("workflow", options=labels_for('image') or [""],
                                default=IMAGE_WORKFLOWS[0] if IMAGE_WORKFLOWS else "",
                                tooltip="Which backend image workflow to invoke when Run is clicked. Placeholder for now."),
                 io.Combo.Input("resolution", options=RESOLUTIONS, default="1K",
@@ -145,7 +145,7 @@ class VideoStage(io.ComfyNode):
             category="ComfyTV/Generate",
             inputs=[
                 *_standard_stage_inputs(),
-                io.Combo.Input("workflow", options=VIDEO_WORKFLOWS or [""],
+                io.Combo.Input("workflow", options=labels_for('video') or [""],
                                default=VIDEO_WORKFLOWS[0] if VIDEO_WORKFLOWS else "",
                                tooltip="Which backend video workflow to invoke when Run is clicked. Placeholder for now."),
                 io.Combo.Input("resolution", options=RESOLUTIONS, default="720P",
@@ -210,7 +210,7 @@ class AudioStage(io.ComfyNode):
             category="ComfyTV/Generate",
             inputs=[
                 *_standard_stage_inputs(),
-                io.Combo.Input("workflow", options=AUDIO_WORKFLOWS,
+                io.Combo.Input("workflow", options=labels_for('audio'),
                                default=AUDIO_WORKFLOWS[0] if AUDIO_WORKFLOWS else "",
                                tooltip="Audio generation backend."),
                 _main_prompt_input(placeholder="Tags / genre / mood / BPM (e.g. 'lo-fi, jazz piano, rainy, 90bpm')", tooltip="音频生成 tags / Genre / mood / BPM tags."),
@@ -291,7 +291,7 @@ class ShotImagesStage(io.ComfyNode):
             inputs=[
                 *_standard_stage_inputs(),
                 io.Combo.Input("workflow",
-                               options=SHOT_IMAGES_WORKFLOWS or [""],
+                               options=labels_for('shot-images') or [""],
                                default=SHOT_IMAGES_WORKFLOWS[0] if SHOT_IMAGES_WORKFLOWS else "",
                                tooltip="Image-generation workflow to use for each shot."),
                 io.Combo.Input("resolution", options=RESOLUTIONS, default="1K",
@@ -394,7 +394,7 @@ class StoryboardStage(io.ComfyNode):
             category="ComfyTV/Generate",
             inputs=[
                 *_standard_stage_inputs(),
-                io.Combo.Input("workflow", options=STORYBOARD_WORKFLOWS or [""],
+                io.Combo.Input("workflow", options=labels_for('storyboard') or [""],
                                default=STORYBOARD_WORKFLOWS[0] if STORYBOARD_WORKFLOWS else "",
                                tooltip="LLM backend that produces the 16-field shot list."),
                 _main_prompt_input(placeholder="故事大纲 / Story premise — one to a few sentences describing the scene's beats.", tooltip="The story / scene premise the LLM expands into a shot list."),

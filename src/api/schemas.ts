@@ -91,6 +91,14 @@ export const OkSchema = z.object({
   ok: z.boolean(),
 })
 
+export const ImportWorkflowResultSchema = z.object({
+  ok: z.boolean(),
+  kind: z.string(),
+  label: z.string(),
+  file_path: z.string().optional(),
+})
+export type ImportWorkflowResult = z.infer<typeof ImportWorkflowResultSchema>
+
 export const WorkflowStateSchema = z.object({
   has_api: z.boolean(),
   file_path: z.string(),

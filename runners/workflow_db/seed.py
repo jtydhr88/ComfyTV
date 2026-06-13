@@ -1,5 +1,6 @@
 import json
 import logging
+import re
 from pathlib import Path
 from typing import Optional
 
@@ -202,6 +203,42 @@ def reset_workflow_to_preset(workflow_id: int) -> Optional[dict]:
         _log.info("[ComfyTV/workflow_db] reset workflow %s to shipped preset (kind=%s, label=%s)",
                   workflow_id, row.kind, row.label)
         return {"ok": True, "kind": row.kind, "label": row.label}
+
+
+def _safe_stem(filename: str) -> str:
+    stem = Path(filename or "").name
+    if stem.lower().endswith(".json"):
+        stem = stem[:-5]
+    stem = re.sub(r"[^A-Za-z0-9._-]+", "-", stem).strip("-._ ")
+    return stem
+
+
+def import_workflow(kind: str, filename: str, content: str) -> dict:
+    db.init()
+    stem = _safe_stem(filename)
+    if not stem:
+        raise ValueError("invalid or empty filename")
+    if stem.endswith("_preset"):
+        raise ValueError("'_preset.json' files are binding presets, not workflows")
+    if not _is_gui_format(content):
+        raise ValueError(
+            "not a GUI-format workflow (missing a top-level 'nodes' array) — "
+            "export it from ComfyUI with normal Save, not 'Save (API Format)'"
+        )
+
+    kind_dir = _WORKFLOWS_DIR / kind
+    kind_dir.mkdir(parents=True, exist_ok=True)
+    path = kind_dir / f"{stem}.json"
+    path.write_text(content, encoding="utf-8")
+
+    with db.get_session() as s:
+        row = _upsert_workflow_row(s, kind, path)
+        label = row.label
+        s.commit()
+
+    _log.info("[ComfyTV/workflow_db] imported workflow %s/%s from upload (%s)",
+              kind, label, path.name)
+    return {"kind": kind, "label": label, "file_path": str(path)}
 
 
 def seed_workflows_from_disk(kinds: tuple[str, ...]) -> None:

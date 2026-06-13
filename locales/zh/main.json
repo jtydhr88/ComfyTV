@@ -1,4 +1,10 @@
 {
+  "workflow": {
+    "uploadButton": "⬆ 上传工作流",
+    "imported": "已导入「{label}」",
+    "importFailed": "工作流导入失败",
+    "notJson": "该文件不是合法 JSON"
+  },
   "stage": {
     "run": "运行",
     "rerun": "重新运行",

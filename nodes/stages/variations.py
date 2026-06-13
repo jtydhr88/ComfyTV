@@ -5,7 +5,7 @@ class ImageVariationsStage(io.ComfyNode):
 
     @classmethod
     def define_schema(cls):
-        all_workflows = (MULTIVIEW_WORKFLOWS or []) + (SEQUENCE_WORKFLOWS or [])
+        all_workflows = (labels_for('multiview') or []) + (labels_for('sequence') or [])
         return io.Schema(
             node_id="ComfyTV.ImageVariationsStage",
             display_name="Image Variations",
