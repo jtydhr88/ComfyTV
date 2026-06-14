@@ -351,6 +351,29 @@ def _get_nested_executor():
     return _NESTED_EXECUTOR
 
 
+def _translate_subprompt_event(event, data, sub_prompt_id, outer_node_id, aggregate):
+    if event == 'progress_state':
+        nodes_dict = data.get('nodes') or {}
+        if not nodes_dict:
+            return []
+        v, m = aggregate(nodes_dict)
+        return [('progress', {
+            'value':     v,
+            'max':       m,
+            'prompt_id': sub_prompt_id,
+            'node':      str(outer_node_id),
+        })]
+    if event == 'progress':
+        return [('progress', {**data, 'node': str(outer_node_id)})]
+    if event == 'progress_text':
+        return [('progress_text', {
+            **data,
+            'node_id': str(outer_node_id),
+            'nodeId':  str(outer_node_id),
+        })]
+    return []
+
+
 async def _run_subprompt(sub_prompt: dict, sub_prompt_id: str,
                           execute_outputs: list[str]):
 
@@ -389,26 +412,19 @@ async def _run_subprompt(sub_prompt: dict, sub_prompt_id: str,
         orig_send_sync = server.send_sync
 
         def wrapped_send_sync(event, data, sid=None):
-            try:
-                if outer_node_id is not None and isinstance(data, dict) \
-                        and data.get('prompt_id') == sub_prompt_id:
-                    if event == 'progress_state':
-                        nodes_dict = data.get('nodes') or {}
-                        if nodes_dict:
-                            v, m = _aggregate(nodes_dict)
-                            orig_send_sync('progress', {
-                                'value':     v,
-                                'max':       m,
-                                'prompt_id': sub_prompt_id,
-                                'node':      str(outer_node_id),
-                            }, sid)
-                    elif event == 'progress_text':
-                        fwd = {**data,
-                               'node_id': str(outer_node_id),
-                               'nodeId':  str(outer_node_id)}
-                        orig_send_sync(event, fwd, sid)
-            except Exception:
-                pass
+            is_sub = (
+                isinstance(data, dict)
+                and data.get('prompt_id') == sub_prompt_id
+            )
+            if is_sub and outer_node_id is not None:
+                try:
+                    for ev, payload in _translate_subprompt_event(
+                        event, data, sub_prompt_id, outer_node_id, _aggregate,
+                    ):
+                        orig_send_sync(ev, payload, sid)
+                except Exception:
+                    pass
+                return None
             return orig_send_sync(event, data, sid)
 
         server.send_sync = wrapped_send_sync

@@ -808,3 +808,53 @@ class TestOutputNodeIds:
         prompt = {"9": {"class_type": "Mystery"}}
         ids = lc._output_node_ids(prompt, "9")
         assert ids == ["9"]
+
+
+class TestTranslateSubpromptEvent:
+    def _agg(self, _nodes):
+        return (1.0, 4.0)
+
+    def test_executing_is_swallowed(self):
+        out = lc._translate_subprompt_event(
+            'executing', {'node': '1', 'prompt_id': 'sub'}, 'sub', 71, self._agg)
+        assert out == []
+
+    def test_execution_lifecycle_swallowed(self):
+        for ev in ('executed', 'execution_cached', 'execution_start',
+                   'execution_success', 'execution_error'):
+            out = lc._translate_subprompt_event(
+                ev, {'nodes': ['1'], 'node': '2', 'prompt_id': 'sub'},
+                'sub', 71, self._agg)
+            assert out == [], ev
+
+    def test_progress_state_aggregates_onto_outer_node(self):
+        out = lc._translate_subprompt_event(
+            'progress_state',
+            {'nodes': {'1': {'state': 'running', 'value': 1, 'max': 4}},
+             'prompt_id': 'sub'},
+            'sub', 71, self._agg)
+        assert len(out) == 1
+        ev, payload = out[0]
+        assert ev == 'progress'
+        assert payload['node'] == '71'        # outer stage node, not inner '1'
+        assert payload['value'] == 1.0 and payload['max'] == 4.0
+
+    def test_progress_state_empty_nodes_swallowed(self):
+        out = lc._translate_subprompt_event(
+            'progress_state', {'nodes': {}, 'prompt_id': 'sub'}, 'sub', 71, self._agg)
+        assert out == []
+
+    def test_progress_reattributed_to_outer_node(self):
+        out = lc._translate_subprompt_event(
+            'progress', {'value': 2, 'max': 8, 'node': '3', 'prompt_id': 'sub'},
+            'sub', 71, self._agg)
+        assert out == [('progress', {'value': 2, 'max': 8, 'node': '71', 'prompt_id': 'sub'})]
+
+    def test_progress_text_reattributed(self):
+        out = lc._translate_subprompt_event(
+            'progress_text', {'text': 'hi', 'node_id': '3', 'prompt_id': 'sub'},
+            'sub', 71, self._agg)
+        assert len(out) == 1
+        ev, payload = out[0]
+        assert ev == 'progress_text'
+        assert payload['node_id'] == '71' and payload['nodeId'] == '71'
