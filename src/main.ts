@@ -297,6 +297,10 @@ const extension: ComfyExtension = {
     )
   },
 
+  loadedGraphNode(node: ComfyNode) {
+    ;(node as any).__comfytvFromSave = true
+  },
+
   async nodeCreated(rawNode) {
     const node = rawNode as ComfyNode
     applyHiddenWidgetFlags(node)

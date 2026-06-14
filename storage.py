@@ -247,6 +247,60 @@ def latest_output(project_id: str, stage_node_id: str) -> Optional[dict]:
     return rows[0] if rows else None
 
 
+def latest_output_by_uid(project_id: str, stage_uid: str) -> Optional[dict]:
+    if not stage_uid:
+        return None
+    with db.get_session() as s:
+        q = (
+            select(Output)
+            .where(Output.project_id == project_id, Output.stage_uid == str(stage_uid))
+            .order_by(desc(Output.id))
+            .limit(1)
+        )
+        out = s.execute(q).scalars().first()
+        return _output_to_dict(out) if out is not None else None
+
+
+def set_output_stage_uid(output_id: int, stage_uid: str) -> Optional[dict]:
+    if not stage_uid:
+        return None
+    with db.get_session() as s:
+        out = s.get(Output, int(output_id))
+        if out is None:
+            return None
+        out.stage_uid = str(stage_uid)
+        s.commit()
+        return _output_to_dict(out)
+
+
+def adopt_outputs(
+    project_id: str,
+    stage_node_id: str,
+    stage_class: str,
+    stage_uid: str,
+) -> Optional[dict]:
+    if not stage_uid or not stage_node_id or not stage_class:
+        return None
+    with db.get_session() as s:
+        rows = (
+            s.query(Output)
+            .filter(
+                Output.project_id == project_id,
+                Output.stage_node_id == str(stage_node_id),
+                Output.stage_class == str(stage_class),
+                Output.stage_uid.is_(None),
+            )
+            .order_by(desc(Output.id))
+            .all()
+        )
+        if not rows:
+            return None
+        for r in rows:
+            r.stage_uid = str(stage_uid)
+        s.commit()
+        return _output_to_dict(rows[0])
+
+
 def update_output_picked_index(output_id: int, picked_index: int) -> Optional[dict]:
     with db.get_session() as s:
         out = s.get(Output, int(output_id))
@@ -263,6 +317,7 @@ def _output_to_dict(o: Output) -> dict:
         "project_id": o.project_id,
         "stage_class": o.stage_class,
         "stage_node_id": o.stage_node_id,
+        "stage_uid": o.stage_uid,
         "output_type": o.output_type,
         "payload_url": o.payload_url,
         "payload_json": json.loads(o.payload_json) if o.payload_json else None,

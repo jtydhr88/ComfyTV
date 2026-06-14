@@ -25416,6 +25416,7 @@ const OutputSchema = object({
   project_id: string(),
   stage_class: string(),
   stage_node_id: string().nullable().optional(),
+  stage_uid: string().nullable().optional(),
   output_type: string(),
   payload_url: string(),
   payload_json: unknown().nullable().optional(),
@@ -49315,17 +49316,45 @@ const useProjectStore = /* @__PURE__ */ defineStore("comfytv-project", () => {
   function setCurrent(projectId) {
     currentProjectId.value = projectId || DEFAULT_PROJECT_ID;
   }
-  async function fetchLatestOutput(projectId, stageNodeId) {
-    if (!projectId || !stageNodeId) return null;
+  async function fetchLatestOutput(projectId, stageUid) {
+    if (!projectId || !stageUid) return null;
     try {
       const data = await apiFetch(
-        `/comfytv/projects/${encodeURIComponent(projectId)}/outputs/latest?stage_node_id=${encodeURIComponent(stageNodeId)}`,
+        `/comfytv/projects/${encodeURIComponent(projectId)}/outputs/latest?stage_uid=${encodeURIComponent(stageUid)}`,
         LatestOutputSchema
       );
       return data.output;
     } catch (e) {
       console.warn("[ComfyTV/project] fetchLatestOutput failed", e);
       return null;
+    }
+  }
+  async function adoptOutputs(projectId, stageNodeId, stageClass, stageUid) {
+    if (!projectId || !stageNodeId || !stageClass || !stageUid) return null;
+    try {
+      const data = await apiSend(
+        `/comfytv/projects/${encodeURIComponent(projectId)}/outputs/adopt`,
+        "POST",
+        LatestOutputSchema,
+        { stage_node_id: stageNodeId, stage_class: stageClass, stage_uid: stageUid }
+      );
+      return data.output;
+    } catch (e) {
+      console.warn("[ComfyTV/project] adoptOutputs failed", e);
+      return null;
+    }
+  }
+  async function tagOutputStageUid(outputId, stageUid) {
+    if (!outputId || outputId < 0 || !stageUid) return;
+    try {
+      await apiSend(
+        `/comfytv/outputs/${encodeURIComponent(String(outputId))}/stage_uid`,
+        "POST",
+        LatestOutputSchema,
+        { stage_uid: stageUid }
+      );
+    } catch (e) {
+      console.warn("[ComfyTV/project] tagOutputStageUid failed", e);
     }
   }
   return {
@@ -49338,7 +49367,9 @@ const useProjectStore = /* @__PURE__ */ defineStore("comfytv-project", () => {
     rename,
     remove: remove2,
     setCurrent,
-    fetchLatestOutput
+    fetchLatestOutput,
+    adoptOutputs,
+    tagOutputStageUid
   };
 });
 function getWidget(node, name) {
@@ -81134,6 +81165,27 @@ function addWorkflowUploadButton(node, wfWidget, kind) {
     };
   }
 }
+const PROP = "comfytv_stage_uid";
+function genUid() {
+  const c2 = globalThis.crypto;
+  if (c2 && typeof c2.randomUUID === "function") return c2.randomUUID();
+  return "uid-" + Math.random().toString(36).slice(2, 10) + Math.random().toString(36).slice(2, 10);
+}
+function ensureStageUid(node) {
+  if (!node) return "";
+  if (!node.properties || typeof node.properties !== "object") node.properties = {};
+  let uid2 = node.properties[PROP];
+  if (typeof uid2 !== "string" || uid2.length === 0) {
+    uid2 = genUid();
+    node.properties[PROP] = uid2;
+  }
+  return uid2;
+}
+function stageClassName(node) {
+  const cc = String((node == null ? void 0 : node.comfyClass) ?? (node == null ? void 0 : node.type) ?? "");
+  const dot = cc.lastIndexOf(".");
+  return dot >= 0 ? cc.slice(dot + 1) : cc;
+}
 const LG_MODE_NEVER = 2;
 const LG_MODE_BYPASS = 4;
 function collectReachableNodeIds(app2, target) {
@@ -81870,13 +81922,52 @@ function useStageNode(node, kind, variant = "generator") {
       void restoreLatestOutput(newId2);
     }
   );
-  async function restoreLatestOutput(projectId) {
+  const stopTagWatch = watch(
+    () => state.outputId,
+    (oid) => {
+      if (oid && oid > 0) {
+        void projectStore.tagOutputStageUid(Number(oid), ensureStageUid(node));
+      }
+    }
+  );
+  function applyRestoredOutput(latest) {
     var _a3;
+    const pj = latest.payload_json;
+    const restored = latest.payload_url ? String(latest.payload_url) : typeof pj === "string" ? pj : pj != null ? JSON.stringify(pj) : "";
+    if (latest.id != null && state.outputId !== latest.id) {
+      state.outputId = Number(latest.id);
+    }
+    if (restored && restored !== state.output) {
+      store.setOutputSlot(state, 0, restored);
+    }
+    if (kind === "image-batch" && restored) {
+      const widget = (_a3 = node.widgets) == null ? void 0 : _a3.find((wi) => wi.name === "selected_index");
+      const fromDb = Number(latest.picked_index);
+      const fromWidget = Number(widget == null ? void 0 : widget.value);
+      const idx = Number.isFinite(fromDb) && fromDb >= 1 ? Math.floor(fromDb) : Number.isFinite(fromWidget) && fromWidget >= 1 ? Math.floor(fromWidget) : 1;
+      state.pickedIndex = idx;
+      if (widget && widget.value !== idx) widget.value = idx;
+      const picked = computePickedFromBatch(restored, idx);
+      store.setOutputSlot(state, 1, picked ?? null);
+    }
+  }
+  let adoptionTried = false;
+  async function restoreLatestOutput(projectId) {
     if (variant === "loader") return;
     if (kind === "image-picker") return;
     if (!node.id || node.id < 0) return;
+    const uid2 = ensureStageUid(node);
     try {
-      const latest = await projectStore.fetchLatestOutput(projectId, String(node.id));
+      let latest = await projectStore.fetchLatestOutput(projectId, uid2);
+      if (!latest && node.__comfytvFromSave && !adoptionTried) {
+        adoptionTried = true;
+        latest = await projectStore.adoptOutputs(
+          projectId,
+          String(node.id),
+          stageClassName(node),
+          uid2
+        );
+      }
       if (!latest) {
         if (state.output != null) {
           store.setOutputSlot(state, 0, null);
@@ -81884,23 +81975,7 @@ function useStageNode(node, kind, variant = "generator") {
         }
         return;
       }
-      const restored = latest.payload_url || (latest.payload_json ? JSON.stringify(latest.payload_json) : "");
-      if (latest.id != null && state.outputId !== latest.id) {
-        state.outputId = Number(latest.id);
-      }
-      if (restored && restored !== state.output) {
-        store.setOutputSlot(state, 0, restored);
-      }
-      if (kind === "image-batch" && restored) {
-        const widget = (_a3 = node.widgets) == null ? void 0 : _a3.find((wi) => wi.name === "selected_index");
-        const fromDb = Number(latest.picked_index);
-        const fromWidget = Number(widget == null ? void 0 : widget.value);
-        const idx = Number.isFinite(fromDb) && fromDb >= 1 ? Math.floor(fromDb) : Number.isFinite(fromWidget) && fromWidget >= 1 ? Math.floor(fromWidget) : 1;
-        state.pickedIndex = idx;
-        if (widget && widget.value !== idx) widget.value = idx;
-        const picked = computePickedFromBatch(restored, idx);
-        store.setOutputSlot(state, 1, picked ?? null);
-      }
+      applyRestoredOutput(latest);
     } catch (e) {
       console.warn(`[ComfyTV/stage] restoreLatestOutput failed for node ${node.id}`, e);
     }
@@ -81920,6 +81995,7 @@ function useStageNode(node, kind, variant = "generator") {
     stopTickWatch();
     stopPickerWatch == null ? void 0 : stopPickerWatch();
     stopProjectWatch();
+    stopTagWatch();
     stopBindingsWatch();
     executionStore.unregisterNodeHandlers(nodeRunHandlers);
     clearWatchdog();
@@ -82570,6 +82646,9 @@ const extension = {
         store.applyExecutedPayload(state, msg);
       }
     );
+  },
+  loadedGraphNode(node) {
+    node.__comfytvFromSave = true;
   },
   async nodeCreated(rawNode) {
     const node = rawNode;

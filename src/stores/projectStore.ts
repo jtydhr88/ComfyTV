@@ -73,19 +73,54 @@ export const useProjectStore = defineStore('comfytv-project', () => {
 
   async function fetchLatestOutput(
     projectId: string,
-    stageNodeId: string,
+    stageUid: string,
   ) {
-    if (!projectId || !stageNodeId) return null
+    if (!projectId || !stageUid) return null
     try {
       const data = await apiFetch(
         `/comfytv/projects/${encodeURIComponent(projectId)}/outputs/latest`
-        + `?stage_node_id=${encodeURIComponent(stageNodeId)}`,
+        + `?stage_uid=${encodeURIComponent(stageUid)}`,
         LatestOutputSchema,
       )
       return data.output
     } catch (e) {
       console.warn('[ComfyTV/project] fetchLatestOutput failed', e)
       return null
+    }
+  }
+
+  async function adoptOutputs(
+    projectId: string,
+    stageNodeId: string,
+    stageClass: string,
+    stageUid: string,
+  ) {
+    if (!projectId || !stageNodeId || !stageClass || !stageUid) return null
+    try {
+      const data = await apiSend(
+        `/comfytv/projects/${encodeURIComponent(projectId)}/outputs/adopt`,
+        'POST',
+        LatestOutputSchema,
+        { stage_node_id: stageNodeId, stage_class: stageClass, stage_uid: stageUid },
+      )
+      return data.output
+    } catch (e) {
+      console.warn('[ComfyTV/project] adoptOutputs failed', e)
+      return null
+    }
+  }
+
+  async function tagOutputStageUid(outputId: number, stageUid: string) {
+    if (!outputId || outputId < 0 || !stageUid) return
+    try {
+      await apiSend(
+        `/comfytv/outputs/${encodeURIComponent(String(outputId))}/stage_uid`,
+        'POST',
+        LatestOutputSchema,
+        { stage_uid: stageUid },
+      )
+    } catch (e) {
+      console.warn('[ComfyTV/project] tagOutputStageUid failed', e)
     }
   }
 
@@ -100,6 +135,8 @@ export const useProjectStore = defineStore('comfytv-project', () => {
     remove,
     setCurrent,
     fetchLatestOutput,
+    adoptOutputs,
+    tagOutputStageUid,
   }
 })
 

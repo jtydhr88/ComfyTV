@@ -250,6 +250,56 @@ class TestOutputsRoutes:
         data = await resp.json()
         assert data["output"]["payload_url"] == "/x"
 
+    async def test_latest_output_by_uid(self, client):
+        from ComfyTV import storage
+        out = storage.persist_output(
+            project_id="default", stage_class="X", stage_node_id="9",
+            output_type="image", payload_url="/uid-x",
+        )
+        storage.set_output_stage_uid(out["id"], "uid-9")
+        resp = await client.get("/comfytv/projects/default/outputs/latest",
+                                params={"stage_uid": "uid-9"})
+        data = await resp.json()
+        assert data["output"]["payload_url"] == "/uid-x"
+
+    async def test_patch_stage_uid(self, client):
+        from ComfyTV import storage
+        out = storage.persist_output(
+            project_id="default", stage_class="X", stage_node_id="9",
+            output_type="image", payload_url="/x",
+        )
+        resp = await client.post(f"/comfytv/outputs/{out['id']}/stage_uid",
+                                 json={"stage_uid": "uid-9"})
+        assert resp.status == 200
+        assert storage.latest_output_by_uid("default", "uid-9")["id"] == out["id"]
+
+    async def test_patch_stage_uid_missing_row(self, client):
+        resp = await client.post("/comfytv/outputs/99999/stage_uid",
+                                 json={"stage_uid": "uid-9"})
+        assert resp.status == 404
+
+    async def test_adopt_outputs(self, client):
+        from ComfyTV import storage
+        storage.persist_output(
+            project_id="default", stage_class="CropStage", stage_node_id="7",
+            output_type="image", payload_url="/old",
+        )
+        resp = await client.post("/comfytv/projects/default/outputs/adopt",
+                                 json={"stage_node_id": "7", "stage_class": "CropStage",
+                                       "stage_uid": "uid-crop"})
+        data = await resp.json()
+        assert data["output"]["payload_url"] == "/old"
+        # idempotent / one-time: a different uid can't re-claim
+        resp2 = await client.post("/comfytv/projects/default/outputs/adopt",
+                                  json={"stage_node_id": "7", "stage_class": "CropStage",
+                                        "stage_uid": "uid-other"})
+        assert (await resp2.json())["output"] is None
+
+    async def test_adopt_outputs_requires_fields(self, client):
+        resp = await client.post("/comfytv/projects/default/outputs/adopt",
+                                 json={"stage_node_id": "7"})
+        assert resp.status == 400
+
 
 class TestStagesRoute:
     async def test_list_stages_returns_meta(self, client):

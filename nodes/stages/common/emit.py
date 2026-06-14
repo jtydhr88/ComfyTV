@@ -13,6 +13,11 @@ from .progress import _emit_progress
 _JSON_PAYLOAD_TYPES = {'storyboard', 'images', 'timeline'}
 
 
+def _stage_name(cls) -> str:
+    name = getattr(cls, '__name__', '') or ''
+    return name[:-5] if name.endswith('Clone') else name
+
+
 def _persist(
     *,
     cls,
@@ -28,7 +33,7 @@ def _persist(
         node_id = getattr(cls.hidden, "unique_id", None) if hasattr(cls, "hidden") else None
         row = _storage_module.persist_output(
             project_id=project_id or "",
-            stage_class=cls.__name__,
+            stage_class=_stage_name(cls),
             stage_node_id=str(node_id) if node_id is not None else None,
             output_type=output_type,
             payload_url=payload_url,
@@ -45,7 +50,13 @@ def _persist(
 
 def _stage_emit_auto(cls, *, project_id, payload_str, params=None, emit_ui: bool = True,
                      parent_output_id=None, picked_payload=None, picked_index=None):
-    meta = STAGE_META.get(cls.__name__, {})
+    meta = STAGE_META.get(_stage_name(cls))
+    if meta is None:
+        logging.warning(
+            "[ComfyTV] STAGE_META miss for %s; defaulting output_type to 'image'",
+            _stage_name(cls),
+        )
+        meta = {}
     kind = meta.get('kind', 'image')
     output_type = _KIND_TO_OUTPUT_TYPE.get(kind, kind)
     _emit_progress(cls, 1, 1, text="done")
@@ -68,12 +79,19 @@ def _stage_emit(
     picked_index=None,
 ):
     is_json = output_type in _JSON_PAYLOAD_TYPES
+
+    payload_json = None
+    if is_json:
+        try:
+            payload_json = json.loads(payload_str)
+        except (ValueError, TypeError):
+            payload_json = payload_str
     row_id = _persist(
         cls=cls,
         project_id=project_id,
         output_type=output_type,
         payload_url=payload_str if not is_json else "",
-        payload_json=payload_str if is_json else None,
+        payload_json=payload_json,
         params=params,
         parent_output_id=parent_output_id,
         picked_index=picked_index,

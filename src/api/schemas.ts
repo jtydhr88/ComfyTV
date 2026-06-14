@@ -31,6 +31,7 @@ export const OutputSchema = z.object({
   project_id: z.string(),
   stage_class: z.string(),
   stage_node_id: z.string().nullable().optional(),
+  stage_uid: z.string().nullable().optional(),
   output_type: z.string(),
   payload_url: z.string(),
   payload_json: z.unknown().nullable().optional(),

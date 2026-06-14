@@ -184,3 +184,71 @@ class TestOutputs:
         assert out["params_json"] is None
         assert out["parent_output_id"] is None
         assert out["created_at"] is not None
+        assert out["stage_uid"] is None
+
+
+class TestStageUidIdentity:
+    def test_set_and_lookup_by_uid(self, reset_db):
+        from ComfyTV import storage
+        out = storage.persist_output(
+            project_id="default", stage_class="ImageStage", stage_node_id="1",
+            output_type="image", payload_url="/view?filename=a.png",
+        )
+        assert storage.latest_output_by_uid("default", "uid-A") is None
+        tagged = storage.set_output_stage_uid(out["id"], "uid-A")
+        assert tagged["stage_uid"] == "uid-A"
+        found = storage.latest_output_by_uid("default", "uid-A")
+        assert found is not None and found["id"] == out["id"]
+
+    def test_uid_lookup_survives_node_id_reuse(self, reset_db):
+        from ComfyTV import storage
+        old = storage.persist_output(
+            project_id="default", stage_class="ImageStage", stage_node_id="1",
+            output_type="image", payload_url="/view?filename=OLD.png",
+        )
+        storage.set_output_stage_uid(old["id"], "uid-old")
+        new = storage.persist_output(
+            project_id="default", stage_class="CropStage", stage_node_id="1",
+            output_type="image", payload_url="/view?filename=NEW.png",
+        )
+        storage.set_output_stage_uid(new["id"], "uid-new")
+
+        assert storage.latest_output_by_uid("default", "uid-old")["payload_url"].endswith("OLD.png")
+        assert storage.latest_output_by_uid("default", "uid-new")["payload_url"].endswith("NEW.png")
+
+    def test_set_output_stage_uid_missing_row(self, reset_db):
+        from ComfyTV import storage
+        assert storage.set_output_stage_uid(99999, "uid-A") is None
+
+    def test_adopt_claims_null_rows_by_node_and_class(self, reset_db):
+        from ComfyTV import storage
+        for name in ("OLD1.png", "OLD2.png"):
+            storage.persist_output(
+                project_id="default", stage_class="CropStage", stage_node_id="7",
+                output_type="image", payload_url=f"/view?filename={name}",
+            )
+        adopted = storage.adopt_outputs("default", "7", "CropStage", "uid-crop")
+        assert adopted is not None
+        assert adopted["payload_url"].endswith("OLD2.png")  # latest
+
+        rows = storage.list_outputs("default", stage_node_id="7")
+        assert all(r["stage_uid"] == "uid-crop" for r in rows)
+
+    def test_adopt_is_one_time_only(self, reset_db):
+        from ComfyTV import storage
+        storage.persist_output(
+            project_id="default", stage_class="CropStage", stage_node_id="7",
+            output_type="image", payload_url="/view?filename=a.png",
+        )
+        assert storage.adopt_outputs("default", "7", "CropStage", "uid-1") is not None
+
+        assert storage.adopt_outputs("default", "7", "CropStage", "uid-2") is None
+
+    def test_adopt_requires_class_match(self, reset_db):
+        from ComfyTV import storage
+        storage.persist_output(
+            project_id="default", stage_class="ImagePickerStage", stage_node_id="2",
+            output_type="image", payload_url="/view?filename=a.png",
+        )
+
+        assert storage.adopt_outputs("default", "2", "CropStage", "uid-x") is None

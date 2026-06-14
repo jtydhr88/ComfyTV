@@ -494,3 +494,43 @@ class TestPersistHelper:
         c._persist(cls=FakeCls, project_id="", output_type="image",
                    payload_url="")
         assert captured["stage_node_id"] is None
+
+    def test_persist_strips_clone_suffix(self, monkeypatch):
+        from ComfyTV import storage
+        captured = {}
+        monkeypatch.setattr(storage, "persist_output",
+                            lambda **kw: captured.update(kw) or {"id": 1})
+        FakeCls = type("ImageStageClone", (), {})
+        c._persist(cls=FakeCls, project_id="", output_type="image", payload_url="")
+        assert captured["stage_class"] == "ImageStage"
+
+
+class TestStageEmitAutoOutputType:
+    def test_clone_named_class_resolves_real_output_type(self, monkeypatch):
+        from ComfyTV import storage
+        captured = {}
+        monkeypatch.setattr(storage, "persist_output",
+                            lambda **kw: captured.update(kw) or {"id": 1})
+        monkeypatch.setattr(c, "_emit_progress", lambda *a, **k: None)
+
+        FakeCls = type("ImageStageClone", (), {
+            "hidden": type("H", (), {"unique_id": 1})(),
+        })
+        c._stage_emit_auto(FakeCls, project_id="default",
+                           payload_str='{"images": []}', emit_ui=False)
+        assert captured["output_type"] == "images"
+        assert captured["stage_class"] == "ImageStage"
+
+    def test_json_payload_passed_as_parsed_object(self, monkeypatch):
+        from ComfyTV import storage
+        captured = {}
+        monkeypatch.setattr(storage, "persist_output",
+                            lambda **kw: captured.update(kw) or {"id": 1})
+        monkeypatch.setattr(c, "_emit_progress", lambda *a, **k: None)
+        FakeCls = type("ImageStageClone", (), {
+            "hidden": type("H", (), {"unique_id": 1})(),
+        })
+        c._stage_emit_auto(FakeCls, project_id="default",
+                           payload_str='{"images": [{"index": "1"}]}', emit_ui=False)
+        assert captured["payload_json"] == {"images": [{"index": "1"}]}
+        assert captured["payload_url"] == ""

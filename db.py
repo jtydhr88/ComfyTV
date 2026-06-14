@@ -100,6 +100,7 @@ class Output(Base):
     project_id:       Mapped[str] = mapped_column(String, ForeignKey("comfytv_projects.id"), index=True)
     stage_class:      Mapped[str] = mapped_column(String, index=True)
     stage_node_id:    Mapped[Optional[str]] = mapped_column(String, nullable=True, index=True)
+    stage_uid:        Mapped[Optional[str]] = mapped_column(String, nullable=True, index=True)
     output_type:      Mapped[str] = mapped_column(String)
     payload_url:      Mapped[str] = mapped_column(Text, default="")
     payload_json:     Mapped[Optional[str]] = mapped_column(Text, nullable=True)
@@ -176,6 +177,16 @@ def _migrate_additive_columns(engine) -> None:
                     "ALTER TABLE comfytv_outputs ADD COLUMN picked_index INTEGER"
                 ))
             logging.info("[ComfyTV] migrated: comfytv_outputs + picked_index")
+        if "stage_uid" not in cols:
+            with engine.begin() as conn:
+                conn.execute(text(
+                    "ALTER TABLE comfytv_outputs ADD COLUMN stage_uid VARCHAR"
+                ))
+                conn.execute(text(
+                    "CREATE INDEX IF NOT EXISTS ix_comfytv_outputs_stage_uid "
+                    "ON comfytv_outputs (stage_uid)"
+                ))
+            logging.info("[ComfyTV] migrated: comfytv_outputs + stage_uid")
     except Exception as e:
         logging.warning("[ComfyTV] additive migration failed: %s", e)
 

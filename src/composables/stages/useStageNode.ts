@@ -31,6 +31,7 @@ import {
 } from '@/composables/stages/useWorkflowPrep'
 import { getStageMeta } from '@/composables/stages/stageMeta'
 import { addWorkflowUploadButton } from '@/composables/stages/workflowUpload'
+import { ensureStageUid, stageClassName } from '@/composables/stages/stageIdentity'
 import { useSelectionStore } from '@/stores/selectionStore'
 import {
   collectReachableNodeIds,
@@ -698,12 +699,57 @@ export function useStageNode(
     },
   )
 
+  const stopTagWatch = watch(
+    () => state.outputId,
+    (oid) => {
+      if (oid && oid > 0) {
+        void projectStore.tagOutputStageUid(Number(oid), ensureStageUid(node))
+      }
+    },
+  )
+
+  function applyRestoredOutput(latest: any) {
+    const pj = latest.payload_json
+    const restored = latest.payload_url
+      ? String(latest.payload_url)
+      : typeof pj === 'string'
+        ? pj
+        : (pj != null ? JSON.stringify(pj) : '')
+    if (latest.id != null && state.outputId !== latest.id) {
+      state.outputId = Number(latest.id)
+    }
+    if (restored && restored !== state.output) {
+      store.setOutputSlot(state, 0, restored)
+    }
+    if (kind === 'image-batch' && restored) {
+      const widget = node.widgets?.find((wi: any) => wi.name === 'selected_index')
+      const fromDb = Number(latest.picked_index)
+      const fromWidget = Number(widget?.value)
+      const idx = Number.isFinite(fromDb) && fromDb >= 1 ? Math.floor(fromDb)
+                : Number.isFinite(fromWidget) && fromWidget >= 1 ? Math.floor(fromWidget)
+                : 1
+      state.pickedIndex = idx
+      if (widget && widget.value !== idx) widget.value = idx
+      const picked = computePickedFromBatch(restored, idx)
+      store.setOutputSlot(state, 1, picked ?? null)
+    }
+  }
+
+  let adoptionTried = false
   async function restoreLatestOutput(projectId: string) {
     if (variant === 'loader') return
     if (kind === 'image-picker') return
     if (!node.id || node.id < 0) return
+    const uid = ensureStageUid(node)
     try {
-      const latest = await projectStore.fetchLatestOutput(projectId, String(node.id))
+      let latest = await projectStore.fetchLatestOutput(projectId, uid)
+
+      if (!latest && node.__comfytvFromSave && !adoptionTried) {
+        adoptionTried = true
+        latest = await projectStore.adoptOutputs(
+          projectId, String(node.id), stageClassName(node), uid,
+        )
+      }
       if (!latest) {
         if (state.output != null) {
           store.setOutputSlot(state, 0, null)
@@ -711,27 +757,8 @@ export function useStageNode(
         }
         return
       }
-      const restored = latest.payload_url || (latest.payload_json
-        ? JSON.stringify(latest.payload_json)
-        : '')
-      if (latest.id != null && state.outputId !== latest.id) {
-        state.outputId = Number(latest.id)
-      }
-      if (restored && restored !== state.output) {
-        store.setOutputSlot(state, 0, restored)
-      }
-      if (kind === 'image-batch' && restored) {
-        const widget = node.widgets?.find((wi: any) => wi.name === 'selected_index')
-        const fromDb = Number((latest as any).picked_index)
-        const fromWidget = Number(widget?.value)
-        const idx = Number.isFinite(fromDb) && fromDb >= 1 ? Math.floor(fromDb)
-                  : Number.isFinite(fromWidget) && fromWidget >= 1 ? Math.floor(fromWidget)
-                  : 1
-        state.pickedIndex = idx
-        if (widget && widget.value !== idx) widget.value = idx
-        const picked = computePickedFromBatch(restored, idx)
-        store.setOutputSlot(state, 1, picked ?? null)
-      }
+
+      applyRestoredOutput(latest)
     } catch (e) {
       console.warn(`[ComfyTV/stage] restoreLatestOutput failed for node ${node.id}`, e)
     }
@@ -753,6 +780,7 @@ export function useStageNode(
     stopTickWatch()
     stopPickerWatch?.()
     stopProjectWatch()
+    stopTagWatch()
     stopBindingsWatch()
     executionStore.unregisterNodeHandlers(nodeRunHandlers)
     clearWatchdog()
