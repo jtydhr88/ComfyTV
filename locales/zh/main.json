@@ -49,11 +49,15 @@
       "viewFull": "查看大图",
       "download": "下载",
       "close": "关闭"
-    }
+    },
+    "preparingWorkflowDetail": "稍等 — 正在把工作流转换成 api JSON。稍后再点运行。"
   },
   "error": {
     "dismiss": "清除",
-    "cancelled": "已取消"
+    "cancelled": "已取消",
+    "upstreamNotReady": "上游未就绪",
+    "upstreamNotReadyDetail": "上游未就绪:{list}。请先运行这些 stage 生成快照,然后再运行此 stage。",
+    "workerDied": "后端未返回结果就停止了。prompt worker 可能已崩溃(通常是清理阶段 CUDA OOM)。重启 ComfyUI 后恢复。"
   },
   "configSidebar": {
     "title": "工作流配置",
@@ -334,7 +338,8 @@
       "dialogue": "对白",
       "image_prompt": "分镜提示词",
       "motion_prompt": "视频运动提示词"
-    }
+    },
+    "regenerateFailed": "重新生成镜头失败"
   },
   "timeline": {
     "keyframes": "关键帧",
@@ -431,5 +436,45 @@
     "reset": "重置",
     "output": "输出",
     "noInputImage": "先把一张图片连进来"
+  },
+  "fileSlot": {
+    "releaseToUpload": "松开上传",
+    "clickOrDrag": "点击或拖入{kind}",
+    "remove": "移除{kind}",
+    "image": "图片",
+    "video": "视频"
+  },
+  "mention": {
+    "newTag": "新建",
+    "create": "+ 新建",
+    "newFragment": "新建片段",
+    "createFragment": "+ 新建片段",
+    "invalidLabel": "标签无效 — 以字母 / 下划线开头(支持中文),后跟字母 / 数字 / _ / -",
+    "noEntries": "还没有条目 — 输入标签即可新建",
+    "contentPlaceholder": "此 @ 标记展开后的内容。(角色等其他类型请用 ComfyTV 按钮 → 条目对话框。)",
+    "save": "保存 (Ctrl+Enter)"
+  },
+  "entries": {
+    "refHelpPre": "在 stage 提示词里用",
+    "refHelpPost": "引用任意条目;未知标记保持原文。",
+    "colLabel": "标签",
+    "colContent": "内容",
+    "deleteTitle": "删除 @{label}",
+    "confirmDelete": "删除 @{label}?现有的 @{label} 标记将回退为原文。",
+    "labelError": "以字母 / 下划线开头(支持中文),后跟字母 / 数字 / _ / -",
+    "emptyKind": "还没有{kind}。点击下方 + 添加。",
+    "labelPlaceholder": "标签",
+    "save": "保存",
+    "addKind": "+ 添加{kind}"
+  },
+  "menu": {
+    "openEntryManager": "ComfyTV — 打开条目管理",
+    "entriesTitle": "ComfyTV 条目",
+    "entriesButtonTooltip": "ComfyTV — 条目(片段 / 角色 / …)",
+    "configSidebarTooltip": "编辑选中 stage 节点的工作流配置"
+  },
+  "valuePreview": {
+    "moreShots": "+ 还有 {n} 个",
+    "emptyTimeline": "空时间轴"
   }
 }

@@ -51,9 +51,9 @@ class VideoClipStage(io.ComfyNode):
             inputs=[
                 *_standard_stage_inputs(),
                 io.Float.Input("start_s", default=0.0, min=0.0, max=3600.0, step=0.1,
-                               tooltip="起始时间（秒）/ Start time in seconds."),
+                               ),
                 io.Float.Input("end_s", default=5.0, min=0.0, max=3600.0, step=0.1,
-                               tooltip="结束时间（秒）/ End time in seconds (0 = end)."),
+                               ),
                 COMFYTV_VIDEO.Input("video", optional=True),
             ],
             outputs=[COMFYTV_VIDEO.Output("video")],
@@ -163,7 +163,7 @@ class VideoUpscaleStage(io.ComfyNode):
             inputs=[
                 *_standard_stage_inputs(),
                 io.Combo.Input("scale", options=["2x", "4x"], default="2x",
-                               tooltip="放大倍数 / Upscale factor."),
+                               ),
                 COMFYTV_VIDEO.Input("video", optional=True),
             ],
             outputs=[COMFYTV_VIDEO.Output("video")],

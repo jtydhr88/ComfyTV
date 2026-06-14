@@ -52,7 +52,7 @@ def _main_prompt_input(*, tooltip: str = "", placeholder: str = "") -> 'io.Strin
         default="", multiline=True,
         socketless=True,
         extra_dict=extra,
-        tooltip=tooltip,
+        tooltip=tooltip or None,
     )
 
 

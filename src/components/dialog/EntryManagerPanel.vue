@@ -1,10 +1,10 @@
 <template>
   <div class="ctv:flex ctv:flex-col ctv:gap-2.5">
     <p class="ctv:m-0 ctv:mb-1 ctv:text-[11px] ctv:text-muted-foreground">
-      Reference any entry in a stage's prompt with
+      {{ $t('entries.refHelpPre') }}
       <code class="ctv:py-0 ctv:px-1 ctv:rounded-sm ctv:font-mono
-                   ctv:bg-primary-background/20 ctv:border ctv:border-primary-background/45 ctv:text-primary-background">@label</code>.
-      Unknown tokens stay literal.
+                   ctv:bg-primary-background/20 ctv:border ctv:border-primary-background/45 ctv:text-primary-background">@label</code>
+      {{ $t('entries.refHelpPost') }}
     </p>
 
     <div v-if="ENTRY_KINDS.length > 1"
@@ -23,8 +23,8 @@
     <table class="ctv:w-full ctv:border-collapse ctv:text-xs ctv-entry-table">
       <thead>
         <tr>
-          <th class="ctv:w-[140px]">Label</th>
-          <th>Content</th>
+          <th class="ctv:w-[140px]">{{ $t('entries.colLabel') }}</th>
+          <th>{{ $t('entries.colContent') }}</th>
           <th v-for="f in metaFields" :key="f.name" class="ctv:w-[180px]">
             {{ f.label }}
           </th>
@@ -70,7 +70,7 @@
           </td>
           <td class="ctv:w-24 ctv:text-right ctv:whitespace-nowrap">
             <button :class="btnClass('del')"
-                    :title="`Delete @${entry.label}`"
+                    :title="$t('entries.deleteTitle', { label: entry.label })"
                     @click="confirmDelete(entry)">🗑</button>
           </td>
         </tr>
@@ -78,7 +78,7 @@
         <tr v-if="activeRows.length === 0 && !creating">
           <td :colspan="3 + metaFields.length"
               class="ctv:text-center ctv:italic ctv:p-4 ctv:text-muted-foreground">
-            No {{ KIND_LABELS[activeKind].toLowerCase() }} yet. Click <strong>+ Add</strong> below.
+            {{ $t('entries.emptyKind', { kind: KIND_LABELS[activeKind].toLowerCase() }) }}
           </td>
         </tr>
 
@@ -89,7 +89,7 @@
               v-model="newDraft.label"
               :class="['label-input', labelInputClass(!!newLabelError)]"
               :title="newLabelError"
-              placeholder="label"
+              :placeholder="$t('entries.labelPlaceholder')"
               @keydown.escape="cancelCreate"
             />
           </td>
@@ -120,8 +120,8 @@
             />
           </td>
           <td class="ctv:w-24 ctv:text-right ctv:whitespace-nowrap">
-            <button :class="btnClass('save')" :disabled="!canSaveNew" @click="saveNew">Save</button>
-            <button :class="btnClass('mini')" @click="cancelCreate">Cancel</button>
+            <button :class="btnClass('save')" :disabled="!canSaveNew" @click="saveNew">{{ $t('entries.save') }}</button>
+            <button :class="btnClass('mini')" @click="cancelCreate">{{ $t('stage.cancel') }}</button>
           </td>
         </tr>
       </tbody>
@@ -129,7 +129,7 @@
 
     <div class="ctv:mt-1">
       <button v-if="!creating" :class="btnClass('add')" @click="startCreate">
-        + Add {{ KIND_LABELS[activeKind].slice(0, -1).toLowerCase() }}
+        {{ $t('entries.addKind', { kind: KIND_LABELS[activeKind].slice(0, -1).toLowerCase() }) }}
       </button>
     </div>
   </div>

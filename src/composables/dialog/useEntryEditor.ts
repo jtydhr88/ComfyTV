@@ -3,6 +3,7 @@ import { computed, nextTick, reactive, ref, watch, type Ref } from 'vue'
 import type { Entry } from '@/api/schemas'
 import { ENTRY_KINDS, useEntryStore, type EntryKind } from '@/stores/entryStore'
 import { isValidLabel } from '@/utils/labelRegex'
+import { t } from '@/i18n'
 
 import { draftFromEntry, type Draft, type MetaField } from './entryCatalog'
 
@@ -51,9 +52,7 @@ export function useEntryEditor(
   }
 
   async function confirmDelete(entry: Entry) {
-    if (!window.confirm(
-      `Delete @${entry.label}? Existing @${entry.label} tokens will fall back to literal text.`,
-    )) return
+    if (!window.confirm(t('entries.confirmDelete', { label: entry.label }))) return
     await entryStore.remove(projectId.value, entry.id)
   }
 
@@ -64,7 +63,7 @@ export function useEntryEditor(
   const newLabelError = computed(() => {
     if (!newDraft.label) return ''
     if (!isValidLabel(newDraft.label)) {
-      return '以字母 / 下划线开头(支持中文),后跟字母 / 数字 / _ / - / Letters or _ first, then letters / digits / _ / -'
+      return t('entries.labelError')
     }
     return ''
   })

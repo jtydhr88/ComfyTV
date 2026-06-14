@@ -49,11 +49,15 @@
       "viewFull": "View full size",
       "download": "Download",
       "close": "Close"
-    }
+    },
+    "preparingWorkflowDetail": "Hang on — converting workflow to api JSON. Try Run again in a moment."
   },
   "error": {
     "dismiss": "Dismiss",
-    "cancelled": "Cancelled"
+    "cancelled": "Cancelled",
+    "upstreamNotReady": "Upstream not ready",
+    "upstreamNotReadyDetail": "Upstream not ready: {list}. Run those stage(s) first so they produce a snapshot, then Run this stage again.",
+    "workerDied": "Backend stopped without sending a result. The prompt worker likely died (CUDA OOM during cleanup is the usual cause). Restart ComfyUI to recover."
   },
   "configSidebar": {
     "title": "Workflow Config",
@@ -334,7 +338,8 @@
       "dialogue": "Dialogue",
       "image_prompt": "Image prompt",
       "motion_prompt": "Motion prompt"
-    }
+    },
+    "regenerateFailed": "Regenerate shot failed"
   },
   "timeline": {
     "keyframes": "Keyframes",
@@ -431,5 +436,45 @@
     "reset": "Reset",
     "output": "Output",
     "noInputImage": "Wire an image to begin"
+  },
+  "fileSlot": {
+    "releaseToUpload": "Release to upload",
+    "clickOrDrag": "Click or drag {kind}",
+    "remove": "Remove {kind}",
+    "image": "image",
+    "video": "video"
+  },
+  "mention": {
+    "newTag": "new",
+    "create": "+ Create",
+    "newFragment": "new fragment",
+    "createFragment": "+ Create fragment",
+    "invalidLabel": "Invalid label — start with a letter / underscore (Chinese is fine), then letters / digits / _ / -",
+    "noEntries": "No entries yet — type a label to create one",
+    "contentPlaceholder": "Content this @-token expands to. (For characters / other kinds, use the ComfyTV button → Entries dialog.)",
+    "save": "Save (Ctrl+Enter)"
+  },
+  "entries": {
+    "refHelpPre": "Reference any entry in a stage's prompt with",
+    "refHelpPost": "Unknown tokens stay literal.",
+    "colLabel": "Label",
+    "colContent": "Content",
+    "deleteTitle": "Delete @{label}",
+    "confirmDelete": "Delete @{label}? Existing @{label} tokens will fall back to literal text.",
+    "labelError": "Start with a letter / underscore (Chinese is fine), then letters / digits / _ / -",
+    "emptyKind": "No {kind} yet. Click + Add below.",
+    "labelPlaceholder": "label",
+    "save": "Save",
+    "addKind": "+ Add {kind}"
+  },
+  "menu": {
+    "openEntryManager": "ComfyTV — open entry manager",
+    "entriesTitle": "ComfyTV Entries",
+    "entriesButtonTooltip": "ComfyTV — entries (fragments / characters / …)",
+    "configSidebarTooltip": "Edit the selected stage node's workflow config"
+  },
+  "valuePreview": {
+    "moreShots": "+ {n} more",
+    "emptyTimeline": "empty timeline"
   }
 }

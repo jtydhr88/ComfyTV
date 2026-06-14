@@ -213,7 +213,7 @@ class AudioStage(io.ComfyNode):
                 io.Combo.Input("workflow", options=labels_for('audio'),
                                default=AUDIO_WORKFLOWS[0] if AUDIO_WORKFLOWS else "",
                                tooltip="Audio generation backend."),
-                _main_prompt_input(placeholder="Tags / genre / mood / BPM (e.g. 'lo-fi, jazz piano, rainy, 90bpm')", tooltip="音频生成 tags / Genre / mood / BPM tags."),
+                _main_prompt_input(placeholder="Tags / genre / mood / BPM (e.g. 'lo-fi, jazz piano, rainy, 90bpm')", ),
                 io.Float.Input("duration_s", default=30.0, min=1.0, max=240.0, step=1.0,
                                display_mode=io.NumberDisplay.slider,
                                tooltip="Length of generated audio in seconds."),

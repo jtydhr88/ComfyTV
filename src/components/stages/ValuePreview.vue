@@ -68,7 +68,7 @@
           </li>
         </ul>
         <div v-if="storyboardShots.length > 3" class="vp-sb-more ctv:text-[8px] ctv:text-right ctv:italic ctv:text-muted-foreground/60">
-          + {{ storyboardShots.length - 3 }} more
+          {{ $t('valuePreview.moreShots', { n: storyboardShots.length - 3 }) }}
         </div>
       </div>
       <div v-else :class="storyboardListClass">
@@ -91,7 +91,7 @@
           <span v-if="seg.length" :class="shotDurClass">{{ seg.length }}f</span>
           <span :class="shotPromptClass">{{ seg.prompt || '—' }}</span>
         </div>
-        <div v-if="timelineSegs.length === 0" :class="emptyClass">empty timeline</div>
+        <div v-if="timelineSegs.length === 0" :class="emptyClass">{{ $t('valuePreview.emptyTimeline') }}</div>
       </div>
     </template>
 
