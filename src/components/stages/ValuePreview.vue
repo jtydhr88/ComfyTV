@@ -24,7 +24,7 @@
                 @click.stop="openViewer(String(content))">⤢</button>
         <button type="button" :class="imgActionBtn"
                 :title="$t('stage.action.download')"
-                @click.stop="onDownload(String(content))">⬇</button>
+                @click.stop="onDownload(String(content))">⤓</button>
       </div>
     </div>
     <img
@@ -138,7 +138,7 @@
                     @click.stop="openViewer(img.image_url)">⤢</button>
             <button type="button" :class="imgActionBtn"
                     :title="$t('stage.action.download')"
-                    @click.stop="onDownload(img.image_url)">⬇</button>
+                    @click.stop="onDownload(img.image_url)">⤓</button>
           </div>
         </component>
       </div>
