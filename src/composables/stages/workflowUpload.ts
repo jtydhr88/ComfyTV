@@ -68,4 +68,15 @@ export function addWorkflowUploadButton(node: any, wfWidget: any, kind: string):
       widgets.splice(wi + 1, 0, btn)
     }
   }
+
+  if (!node.__comfytvCompactWidgets) {
+    node.__comfytvCompactWidgets = true
+    const prevOnSerialize = node.onSerialize
+    node.onSerialize = function (this: any, o: any) {
+      prevOnSerialize?.call(this, o)
+      if (Array.isArray(o?.widgets_values)) {
+        o.widgets_values = o.widgets_values.filter(() => true)
+      }
+    }
+  }
 }
