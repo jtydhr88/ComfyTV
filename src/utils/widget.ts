@@ -6,6 +6,12 @@ export function getWidget(node: MaybeNode, name: string): IBaseWidget | undefine
   return node?.widgets?.find((w) => w.name === name)
 }
 
+export function applyHiddenWidgetFlags(node: MaybeNode): void {
+  for (const w of node?.widgets ?? []) {
+    if (w.options?.hidden) w.hidden = true
+  }
+}
+
 export function readWidgetStr(node: MaybeNode, name: string, fallback: string): string {
   const w = getWidget(node, name)
   if (!w) return fallback

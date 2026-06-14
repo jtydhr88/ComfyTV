@@ -40,7 +40,7 @@ import './style.css'
 
 import { app, type ComfyNode } from '@/lib/comfyApp'
 import type { ComfyExtension, ComfyNodeDef } from '@comfyorg/comfyui-frontend-types'
-import { getWidget } from '@/utils/widget'
+import { applyHiddenWidgetFlags, getWidget } from '@/utils/widget'
 import { checkThemeTokens } from '@/utils/devTokenCheck'
 
 ;(window as any).__comfytv_host_pinia = getActivePinia()
@@ -298,8 +298,9 @@ const extension: ComfyExtension = {
   },
 
   async nodeCreated(rawNode) {
-    await loadStageMeta()
     const node = rawNode as ComfyNode
+    applyHiddenWidgetFlags(node)
+    await loadStageMeta()
     const entry = getStageMeta(node.comfyClass)
     if (!entry) return
     if (entry.kind === 'project') {
