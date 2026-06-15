@@ -32,6 +32,7 @@ import {
 import { getStageMeta } from '@/composables/stages/stageMeta'
 import { addWorkflowUploadButton } from '@/composables/stages/workflowUpload'
 import { ensureStageUid, stageClassName } from '@/composables/stages/stageIdentity'
+import { t } from '@/i18n'
 import { useSelectionStore } from '@/stores/selectionStore'
 import {
   collectReachableNodeIds,
@@ -462,8 +463,8 @@ export function useStageNode(
     if (state.preparingWorkflow) {
       ;(app as any)?.extensionManager?.toast?.add?.({
         severity: 'warn',
-        summary: 'Workflow preparing',
-        detail: 'Hang on — converting workflow to api JSON. Try Run again in a moment.',
+        summary: t('stage.preparingWorkflow'),
+        detail: t('stage.preparingWorkflowDetail'),
         life: 3000,
       })
       return
@@ -524,13 +525,11 @@ export function useStageNode(
 
       if (missingUpstream.length > 0) {
         const list = [...new Set(missingUpstream)].join(', ')
-        const msg =
-          `Upstream not ready: ${list}. ` +
-          `Run those stage(s) first so they produce a snapshot, then Run this stage again.`
+        const msg = t('error.upstreamNotReadyDetail', { list })
         console.warn(`[ComfyTV/stage] ${msg}`)
         ;(app as any)?.extensionManager?.toast?.add?.({
           severity: 'warn',
-          summary: 'Upstream not ready',
+          summary: t('error.upstreamNotReady'),
           detail: msg,
           life: 6000,
         })
@@ -639,7 +638,7 @@ export function useStageNode(
   const onExecInterrupted = (d: any) => {
     if (!d) return
     store.applyExecutionError(state, {
-      message: '已取消 / cancelled',
+      message: t('error.cancelled'),
       type: 'Cancelled',
     })
     runningPromptId = null
@@ -666,7 +665,7 @@ export function useStageNode(
       if (runningPromptId !== pid || !state.running) return
       console.warn(`[ComfyTV/stage] watchdog firing on node ${node.id} — queue empty but no execution_success/error for prompt ${pid}`)
       store.applyExecutionError(state, {
-        message: 'Backend stopped without sending a result. The prompt worker likely died (CUDA OOM during cleanup is the usual cause). Restart ComfyUI to recover.',
+        message: t('error.workerDied'),
         type: 'WorkerDied',
       })
       runningPromptId = null

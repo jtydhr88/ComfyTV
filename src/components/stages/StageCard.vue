@@ -176,6 +176,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import { t } from '@/i18n'
 import MainPromptInput from './MainPromptInput.vue'
 import ValuePreview from './ValuePreview.vue'
 import { type ImagePreset } from '@/composables/stages/imagePresets'
@@ -219,7 +220,7 @@ const progressPercent = computed(() => {
 })
 const progressFallbackText = computed(() => {
   const p = props.state.progress
-  if (!p) return 'starting…'
+  if (!p) return t('stage.starting')
   return `${p.value} / ${p.max}`
 })
 
@@ -251,12 +252,10 @@ function onOutputItemClick(payload: ImagePickContext) {
   props.onAction('pick-item', payload)
 }
 
-const t_disconnect = '断开此连接'
-
 function sourceLabel(s: InputSource): string {
   switch (s) {
-    case 'upstream':         return '← upstream'
-    case 'upstream-pending': return '… waiting'
+    case 'upstream':         return t('stage.source.upstream')
+    case 'upstream-pending': return t('stage.source.pending')
     default:                 return ''
   }
 }

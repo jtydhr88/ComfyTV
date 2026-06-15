@@ -20,7 +20,7 @@
         @click="open"
       >
         <span class="ctv:text-lg ctv:leading-none">+</span>
-        <span>{{ isDragOver ? '松开上传' : `点击或拖入${kindLabel}` }}</span>
+        <span>{{ isDragOver ? $t('fileSlot.releaseToUpload') : $t('fileSlot.clickOrDrag', { kind: kindLabel }) }}</span>
       </button>
     </template>
 
@@ -41,7 +41,7 @@
         class="ctv:absolute ctv:top-0.5 ctv:right-0.5 ctv:size-[22px] ctv:p-0 ctv:border-0 ctv:rounded-sm ctv:cursor-pointer
                ctv:bg-black/65 ctv:text-white ctv:text-sm ctv:leading-none
                ctv:hover:bg-destructive-background"
-        :title="`移除${kindLabel}`"
+        :title="$t('fileSlot.remove', { kind: kindLabel })"
         @click.stop="$emit('clear')"
       >×</button>
     </template>
@@ -58,6 +58,9 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   value: string
@@ -73,7 +76,7 @@ const picker = ref<HTMLInputElement | null>(null)
 const isDragOver = ref(false)
 let dragCounter = 0
 
-const kindLabel = computed(() => (props.kind === 'image' ? '图片' : '视频'))
+const kindLabel = computed(() => (props.kind === 'image' ? t('fileSlot.image') : t('fileSlot.video')))
 
 function open() { picker.value?.click() }
 

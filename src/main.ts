@@ -186,10 +186,10 @@ const extension: ComfyExtension = {
   commands: [
     {
       id: 'ComfyTV.openEntryManager',
-      label: 'ComfyTV — open entry manager',
+      label: i18n.global.t('menu.openEntryManager'),
       function: () => {
         useDialogStore().show({
-          title: 'ComfyTV Entries',
+          title: i18n.global.t('menu.entriesTitle'),
           component: EntryManagerPanel,
           width: '900px',
         })
@@ -209,11 +209,11 @@ const extension: ComfyExtension = {
         settingsGroup.append(
           new ComfyButton({
             icon: 'at-sign',
-            tooltip: 'ComfyTV — entries (fragments / characters / …)',
+            tooltip: i18n.global.t('menu.entriesButtonTooltip'),
             content: 'ComfyTV',
             action: () => {
               useDialogStore().show({
-                title: 'ComfyTV Entries',
+                title: i18n.global.t('menu.entriesTitle'),
                 component: EntryManagerPanel,
                 width: '900px',
               })
@@ -260,7 +260,7 @@ const extension: ComfyExtension = {
       id:      'comfytv-workflow-config',
       title:   'ComfyTV',
       icon:    'pi pi-sliders-h',
-      tooltip: 'Edit the selected stage node\'s workflow config',
+      tooltip: i18n.global.t('menu.configSidebarTooltip'),
       type:    'custom',
       render: (container: HTMLElement) => {
         if (sidebarApp) { sidebarApp.unmount(); sidebarApp = null }

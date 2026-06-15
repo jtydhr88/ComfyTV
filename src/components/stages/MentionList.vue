@@ -29,21 +29,21 @@
         @mousedown.prevent
         @click="startCreate"
       >
-        <span v-if="showKindTag" :class="kindTag('create')">new</span>
-        <span class="ctv:font-mono ctv:text-base-foreground ctv:shrink-0">+ Create</span>
+        <span v-if="showKindTag" :class="kindTag('create')">{{ $t('mention.newTag') }}</span>
+        <span class="ctv:font-mono ctv:text-base-foreground ctv:shrink-0">{{ $t('mention.create') }}</span>
         <span class="ctv:text-muted-foreground ctv:overflow-hidden ctv:text-ellipsis ctv:whitespace-nowrap">
-          new fragment <code>@{{ query }}</code>
+          {{ $t('mention.newFragment') }} <code>@{{ query }}</code>
         </span>
       </div>
       <div v-if="items.length === 0 && !canCreate"
            class="ctv:py-1.5 ctv:px-2 ctv:italic ctv:text-xs ctv:text-muted-foreground">
-        {{ query ? 'Invalid label — start with a letter / underscore (中文 OK), then letters / digits / _ / -' : 'No entries yet — type a label to create one' }}
+        {{ query ? $t('mention.invalidLabel') : $t('mention.noEntries') }}
       </div>
     </template>
 
     <div v-else class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2" @mousedown.stop>
       <div class="ctv:text-xs ctv:text-muted-foreground">
-        + Create fragment <code class="ctv:text-base-foreground ctv:font-mono">@{{ pendingLabel }}</code>
+        {{ $t('mention.createFragment') }} <code class="ctv:text-base-foreground ctv:font-mono">@{{ pendingLabel }}</code>
       </div>
       <textarea
         ref="createTa"
@@ -53,16 +53,16 @@
                ctv:bg-secondary-background ctv:text-base-foreground
                ctv:border ctv:border-border-default
                ctv:focus:border-primary-background"
-        placeholder="Content this @-token expands to. (For characters / other kinds, use the ComfyTV button → Entries dialog.)"
+        :placeholder="$t('mention.contentPlaceholder')"
         @keydown.stop="onCreateKeydown"
       />
       <div class="ctv:flex ctv:justify-end ctv:gap-1.5">
-        <button :class="actionBtn()" @click="cancelCreate">Cancel</button>
+        <button :class="actionBtn()" @click="cancelCreate">{{ $t('stage.cancel') }}</button>
         <button
           :class="actionBtn('save')"
           :disabled="!pendingContent.trim()"
           @click="saveCreate"
-        >Save (Ctrl+Enter)</button>
+        >{{ $t('mention.save') }}</button>
       </div>
     </div>
   </div>

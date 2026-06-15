@@ -1,5 +1,7 @@
 import { ref, watch } from 'vue'
 
+import { t } from '@/i18n'
+
 import { app, type LGraphNode } from '@/lib/comfyApp'
 import { useStageStore, type StageState } from '@/stores/stageStore'
 import { uploadBlob } from '@/utils/uploadCanvas'
@@ -198,7 +200,7 @@ export function useStoryboardShots(node: LGraphNode, state: StageState) {
       console.error('[ComfyTV/storyboard] regenerate failed', err)
       ;(app as any)?.extensionManager?.toast?.add?.({
         severity: 'warn',
-        summary: 'Regenerate shot failed',
+        summary: t('storyboard.regenerateFailed'),
         detail: String(err?.message || err),
         life: 5000,
       })

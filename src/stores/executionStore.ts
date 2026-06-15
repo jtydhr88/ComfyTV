@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import { computed, reactive, ref } from 'vue'
 
+import { t } from '@/i18n'
+
 export interface ExecutionEvent {
   ts: number
   kind: string
@@ -131,7 +133,7 @@ export const useExecutionStore = defineStore('comfytv-execution', () => {
       pushEvent({
         kind: 'cancelled',
         promptId: d?.prompt_id,
-        label: '已取消',
+        label: t('error.cancelled'),
       })
       const h = d?.node_id != null ? handlersForId(String(d.node_id)) : undefined
       h?.onInterrupted?.(d)

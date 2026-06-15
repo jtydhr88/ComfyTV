@@ -1,40 +1,177 @@
 {
-  "ComfyTV.ProjectStage":                { "display_name": "Project" },
-
-  "ComfyTV.TextStage":                   { "display_name": "Text Stage" },
-  "ComfyTV.ImageStage":                  { "display_name": "Image Stage" },
-  "ComfyTV.VideoStage":                  { "display_name": "Video Stage" },
-  "ComfyTV.AudioStage":                  { "display_name": "Audio Stage" },
-
-  "ComfyTV.StoryboardStage":             { "display_name": "Storyboard" },
-  "ComfyTV.ShotImagesStage":             { "display_name": "Shot Images" },
-  "ComfyTV.ImagePickerStage":            { "display_name": "Image Picker" },
-
-  "ComfyTV.PanoramaStage":               { "display_name": "Panorama" },
-  "ComfyTV.PanoramaCurrentViewStage":    { "display_name": "Panorama · Current View" },
-  "ComfyTV.PanoramaMultiViewStage":      { "display_name": "Panorama · Multi-View" },
-
-  "ComfyTV.MultiangleStage":             { "display_name": "Multiangle" },
-  "ComfyTV.RelightStage":                { "display_name": "Relight" },
-  "ComfyTV.ImageVariationsStage":        { "display_name": "Image Variations" },
-
-  "ComfyTV.UpscaleStage":                { "display_name": "Upscale" },
-  "ComfyTV.OutpaintStage":               { "display_name": "Outpaint" },
-  "ComfyTV.InpaintStage":                { "display_name": "Inpaint" },
-  "ComfyTV.EraseStage":                  { "display_name": "Erase" },
-  "ComfyTV.CutoutStage":                 { "display_name": "Cutout" },
-  "ComfyTV.CropStage":                   { "display_name": "Crop" },
-
-  "ComfyTV.VideoClipStage":              { "display_name": "Video Clip" },
-  "ComfyTV.VideoUpscaleStage":           { "display_name": "Video Upscale" },
-  "ComfyTV.VideoSubtitleSmartEraseStage":{ "display_name": "Subtitle Erase (Smart)" },
-  "ComfyTV.VideoSubtitleSelectEraseStage":{ "display_name": "Subtitle Erase (Region)" },
-
-  "ComfyTV.AudioExtractVocalStage":      { "display_name": "Audio · Vocals Only" },
-  "ComfyTV.AudioExtractBgStage":         { "display_name": "Audio · Background Only" },
-  "ComfyTV.AudioVideoDemuxAudioStage":   { "display_name": "Demux · Audio Track" },
-  "ComfyTV.AudioVideoDemuxVideoStage":   { "display_name": "Demux · Silent Video" },
-
-  "ComfyTV.ImageLoaderStage":            { "display_name": "Load Image" },
-  "ComfyTV.VideoLoaderStage":            { "display_name": "Load Video" }
+  "ComfyTV.ProjectStage": {
+    "display_name": "Project"
+  },
+  "ComfyTV.TextStage": {
+    "display_name": "Text Stage"
+  },
+  "ComfyTV.ImageStage": {
+    "display_name": "Image Stage"
+  },
+  "ComfyTV.VideoStage": {
+    "display_name": "Video Stage"
+  },
+  "ComfyTV.AudioStage": {
+    "display_name": "Audio Stage",
+    "inputs": {
+      "main_prompt": {
+        "tooltip": "Genre / mood / BPM tags."
+      }
+    }
+  },
+  "ComfyTV.StoryboardStage": {
+    "display_name": "Storyboard"
+  },
+  "ComfyTV.ShotImagesStage": {
+    "display_name": "Shot Images"
+  },
+  "ComfyTV.ImagePickerStage": {
+    "display_name": "Image Picker"
+  },
+  "ComfyTV.PanoramaStage": {
+    "display_name": "Panorama"
+  },
+  "ComfyTV.PanoramaCurrentViewStage": {
+    "display_name": "Panorama · Current View"
+  },
+  "ComfyTV.PanoramaMultiViewStage": {
+    "display_name": "Panorama · Multi-View"
+  },
+  "ComfyTV.MultiangleStage": {
+    "display_name": "Multiangle",
+    "inputs": {
+      "horizontal_angle": {
+        "tooltip": "Camera azimuth angle (0–360°)."
+      },
+      "vertical_angle": {
+        "tooltip": "Camera elevation angle (-30° to 60°)."
+      },
+      "zoom": {
+        "tooltip": "Camera distance (0 = wide, 10 = close-up)."
+      }
+    }
+  },
+  "ComfyTV.RelightStage": {
+    "display_name": "Relight",
+    "inputs": {
+      "brightness": {
+        "tooltip": "Light brightness (0=dark, 100=bright)."
+      },
+      "color": {
+        "tooltip": "Light color. Hex string; defaults to white."
+      },
+      "rim_light": {
+        "tooltip": "Add a rim/back light to separate subject from background."
+      }
+    }
+  },
+  "ComfyTV.ImageVariationsStage": {
+    "display_name": "Image Variations"
+  },
+  "ComfyTV.UpscaleStage": {
+    "display_name": "Upscale",
+    "inputs": {
+      "scale": {
+        "tooltip": "Upscale factor (workflow-dependent)."
+      }
+    }
+  },
+  "ComfyTV.OutpaintStage": {
+    "display_name": "Outpaint",
+    "inputs": {
+      "pad_left": {
+        "tooltip": "Pixels to extend left."
+      },
+      "pad_top": {
+        "tooltip": "Pixels to extend top."
+      },
+      "pad_right": {
+        "tooltip": "Pixels to extend right."
+      },
+      "pad_bottom": {
+        "tooltip": "Pixels to extend bottom."
+      },
+      "feathering": {
+        "tooltip": "Mask feathering pixels."
+      },
+      "main_prompt": {
+        "tooltip": "Prompt: describe the WHOLE finished image (subject + scene + style + lighting), not what to add. Leave blank to use the workflow's generic descriptive default."
+      }
+    }
+  },
+  "ComfyTV.InpaintStage": {
+    "display_name": "Inpaint",
+    "inputs": {
+      "mask_data": {
+        "tooltip": "Annotated path of the mask PNG, written by the painter on Run."
+      },
+      "main_prompt": {
+        "tooltip": "What should appear in the masked region. Leave blank to use the workflow's default."
+      }
+    }
+  },
+  "ComfyTV.EraseStage": {
+    "display_name": "Erase",
+    "inputs": {
+      "mask_data": {
+        "tooltip": "Annotated path of the mask PNG, written by the painter on Run."
+      }
+    }
+  },
+  "ComfyTV.CutoutStage": {
+    "display_name": "Cutout"
+  },
+  "ComfyTV.CropStage": {
+    "display_name": "Crop"
+  },
+  "ComfyTV.VideoClipStage": {
+    "display_name": "Video Clip",
+    "inputs": {
+      "start_s": {
+        "tooltip": "Start time in seconds."
+      },
+      "end_s": {
+        "tooltip": "End time in seconds (0 = end)."
+      }
+    }
+  },
+  "ComfyTV.VideoUpscaleStage": {
+    "display_name": "Video Upscale",
+    "inputs": {
+      "scale": {
+        "tooltip": "Upscale factor."
+      }
+    }
+  },
+  "ComfyTV.VideoSubtitleSmartEraseStage": {
+    "display_name": "Subtitle Erase (Smart)"
+  },
+  "ComfyTV.VideoSubtitleSelectEraseStage": {
+    "display_name": "Subtitle Erase (Region)"
+  },
+  "ComfyTV.AudioExtractVocalStage": {
+    "display_name": "Audio · Vocals Only"
+  },
+  "ComfyTV.AudioExtractBgStage": {
+    "display_name": "Audio · Background Only"
+  },
+  "ComfyTV.AudioVideoDemuxAudioStage": {
+    "display_name": "Demux · Audio Track"
+  },
+  "ComfyTV.AudioVideoDemuxVideoStage": {
+    "display_name": "Demux · Silent Video"
+  },
+  "ComfyTV.ImageLoaderStage": {
+    "display_name": "Load Image"
+  },
+  "ComfyTV.VideoLoaderStage": {
+    "display_name": "Load Video"
+  },
+  "ComfyTV.ImageEditStage": {
+    "inputs": {
+      "main_prompt": {
+        "tooltip": "Edit instruction (required). Action-based language: 'remove X', 'change X to Y', 'replace X with Y'. Different from Inpaint — this model doesn't use a mask; the instruction is the whole interface."
+      }
+    }
+  }
 }
