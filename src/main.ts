@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import { createPinia, getActivePinia, setActivePinia } from 'pinia'
 
-import WorkflowConfigSidebar from '@/components/sidebar/WorkflowConfigSidebar.vue'
+import ComfyTVSidebar from '@/components/sidebar/ComfyTVSidebar.vue'
 import StageCard from '@/components/stages/StageCard.vue'
 import MultiangleStageCard from '@/components/stages/MultiangleStageCard.vue'
 import PainterStageCard from '@/components/stages/PainterStageCard.vue'
@@ -269,7 +269,7 @@ const extension: ComfyExtension = {
           display: 'flex', flexDirection: 'column',
           overflow: 'hidden',
         })
-        sidebarApp = createApp(WorkflowConfigSidebar)
+        sidebarApp = createApp(ComfyTVSidebar)
         sidebarApp.use(pinia)
         sidebarApp.use(i18n)
         sidebarApp.mount(container)

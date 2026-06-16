@@ -18,6 +18,7 @@ import {
   type ImagePickContext,
 } from '@/stores/stageStore'
 import { useProjectStore } from '@/stores/projectStore'
+import { useAssetStore } from '@/stores/assetStore'
 import { useEntryStore } from '@/stores/entryStore'
 import { useExecutionStore } from '@/stores/executionStore'
 import {
@@ -38,6 +39,12 @@ import {
   collectReachableNodeIds,
   buildScopedPrompt,
 } from '@/utils/graphSerialize'
+import {
+  injectImageRefs,
+  nodeAcceptsAutogrowImages,
+  type ResolvedImageRef,
+} from '@/composables/stages/assetSlots'
+import { readImageRefs } from '@/composables/stages/imageRefs'
 import { extractRunError } from '@/utils/runError'
 import { postPickedIndex } from '@/composables/stages/stageApi'
 import { app } from '@/lib/comfyApp'
@@ -369,11 +376,16 @@ export function useStageNode(
   const refresh = () => store.refreshStageInputs(node, state, app as any)
 
   const reValidate = () => {
-    validateWorkflowInputs(node, kind).then((map: SlotWarningMap) => {
-      node._comfytvSlotWarnings = map
-      applySlotWarnings(node)
-      ;(app as any)?.graph?.setDirtyCanvas?.(true, true)
-    })
+    const assetStore = useAssetStore()
+    assetStore.hydrate()
+      .then(() => validateWorkflowInputs(node, kind, {
+        assetExists: (id: number) => !!assetStore.byId(id),
+      }))
+      .then((map: SlotWarningMap) => {
+        node._comfytvSlotWarnings = map
+        applySlotWarnings(node)
+        ;(app as any)?.graph?.setDirtyCanvas?.(true, true)
+      })
   }
 
   const _selectionStore = useSelectionStore()
@@ -538,10 +550,38 @@ export function useStageNode(
       }
 
       const entries = useEntryStore()
+      const assetStore = useAssetStore()
       const pid = useProjectStore().currentProjectId || ''
-      for (const inputs of Object.values(pm?.output ?? {})) {
+
+      const refsByNode = new Map<string, ReturnType<typeof readImageRefs>>()
+      for (const nid of Object.keys(pm?.output ?? {})) {
+        const gn = a.graph?.getNodeById?.(Number(nid)) ?? a.graph?.getNodeById?.(String(nid))
+        const refs = readImageRefs(gn)
+        if (refs.length) refsByNode.set(String(nid), refs)
+      }
+      if (refsByNode.size > 0) await assetStore.hydrate()
+
+      for (const [nid, inputs] of Object.entries(pm?.output ?? {})) {
         const obj = (inputs as any)?.inputs
         if (!obj) continue
+
+        const refs = refsByNode.get(String(nid))
+        if (refs?.length) {
+          const graphNode = a.graph?.getNodeById?.(Number(nid))
+                         ?? a.graph?.getNodeById?.(String(nid))
+          if (nodeAcceptsAutogrowImages(graphNode)) {
+            const resolved: ResolvedImageRef[] = []
+            for (const r of refs) {
+              const asset = assetStore.byId(r.asset_id)
+              if (asset) resolved.push({ id: r.asset_id, url: asset.payload_url, slot: r.slot })
+              else console.warn(`[ComfyTV/stage] node #${nid}: image ref ${r.asset_id} missing from library`)
+            }
+            for (const w of injectImageRefs(obj, resolved)) {
+              console.warn(`[ComfyTV/stage] node #${nid}: ${w}`)
+            }
+          }
+        }
+
         const mp = obj.main_prompt
         if (typeof mp === 'string' && mp.includes('@')) {
           obj.main_prompt = entries.expand(pid, mp)

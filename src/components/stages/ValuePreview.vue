@@ -25,6 +25,9 @@
         <button type="button" :class="imgActionBtn"
                 :title="$t('stage.action.download')"
                 @click.stop="onDownload(String(content))">⤓</button>
+        <button type="button" :class="tagActionBtn(String(content))"
+                :title="$t('stage.action.addTag')"
+                @click.stop="openTagMenu(String(content), nameFromUrl(String(content)), $event)">🏷</button>
       </div>
     </div>
     <img
@@ -139,6 +142,9 @@
             <button type="button" :class="imgActionBtn"
                     :title="$t('stage.action.download')"
                     @click.stop="onDownload(img.image_url)">⤓</button>
+            <button type="button" :class="tagActionBtn(img.image_url)"
+                    :title="$t('stage.action.addTag')"
+                    @click.stop="openTagMenu(img.image_url, img.label || img.prompt || nameFromUrl(img.image_url), $event)">🏷</button>
           </div>
         </component>
       </div>
@@ -176,6 +182,41 @@
         >✕</button>
       </div>
     </Teleport>
+
+    <Teleport to="body">
+      <div
+        v-if="tagMenu"
+        class="ctv:fixed ctv:inset-0 ctv:z-[9999]"
+        @click="tagMenu = null"
+        @wheel.prevent.stop
+      >
+        <div
+          class="ctv:absolute ctv:w-44 ctv:max-h-64 ctv:overflow-y-auto ctv:p-1 ctv:rounded ctv:shadow-md ctv:text-xs
+                 ctv:bg-interface-menu-surface ctv:border ctv:border-border-default"
+          :style="tagMenuStyle"
+          @click.stop
+        >
+          <div
+            v-if="categories.length === 0"
+            class="ctv:py-2 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60 ctv:text-2xs"
+          >
+            {{ $t('assets.tagPopover.empty') }}
+          </div>
+          <button
+            v-for="cat in categories"
+            :key="cat.id"
+            type="button"
+            class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:px-1.5 ctv:py-1 ctv:rounded-sm ctv:cursor-pointer
+                   ctv:text-left ctv:text-2xs ctv:bg-transparent ctv:border-none ctv:text-base-foreground
+                   ctv:hover:bg-secondary-background-hover"
+            @click.stop="toggleOutputTag(cat.id)"
+          >
+            <span class="ctv:w-3 ctv:inline-block ctv:text-primary-background">{{ tagMenuHas(cat.id) ? '✓' : '' }}</span>
+            <span class="ctv:flex-1 ctv:truncate">{{ cat.name }}</span>
+          </button>
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>
 
@@ -183,6 +224,7 @@
 import { computed, ref, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useImagePanZoom } from '@/composables/widgets/useImagePanZoom'
+import { useOutputAssetTagging } from '@/composables/stages/useOutputAssetTagging'
 import type {
   BatchImage,
   ItemClickPayload,
@@ -192,6 +234,18 @@ import type {
 import { downloadFile } from '@/utils/download'
 
 const { t } = useI18n()
+
+const {
+  tagMenu,
+  categories,
+  tagMenuStyle,
+  nameFromUrl,
+  isSaved,
+  openTagMenu,
+  closeTagMenu,
+  tagMenuHas,
+  toggleOutputTag,
+} = useOutputAssetTagging()
 
 const zoomContainer = ref<HTMLElement | null>(null)
 const zoomImg = ref<HTMLImageElement | null>(null)
@@ -215,7 +269,9 @@ async function onDownload(url: string) {
 
 import { onBeforeUnmount, onMounted } from 'vue'
 function onKeydown(e: KeyboardEvent) {
-  if (e.key === 'Escape' && lightboxUrl.value) lightboxUrl.value = null
+  if (e.key !== 'Escape') return
+  if (tagMenu.value) closeTagMenu()
+  else if (lightboxUrl.value) lightboxUrl.value = null
 }
 onMounted(() => window.addEventListener('keydown', onKeydown))
 onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown))
@@ -393,6 +449,15 @@ const imgActionsClass = 'ctv:absolute ctv:top-1 ctv:right-1 ctv:z-10 ctv:flex ct
 const imgActionBtn = COMFY_BTN_BASE
   + ' ctv:size-5 ctv:p-0 ctv:rounded-sm ctv:text-sm'
   + ' ctv:bg-white ctv:text-gray-600 ctv:hover:bg-white/90'
+
+function tagActionBtn(url: string) {
+  const saved = isSaved(url)
+  return COMFY_BTN_BASE
+    + ' ctv:size-5 ctv:p-0 ctv:rounded-sm ctv:text-sm'
+    + (saved
+      ? ' ctv:bg-primary-background ctv:text-white ctv:hover:bg-primary-background/90'
+      : ' ctv:bg-white ctv:text-gray-600 ctv:hover:bg-white/90')
+}
 
 function batchCellClass(selected: boolean) {
   const base = 'ctv:group ctv:relative ctv:aspect-video ctv:rounded-sm ctv:overflow-hidden ctv:p-0 ctv:bg-black ctv:transition-colors'

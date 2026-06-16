@@ -112,6 +112,46 @@ class Output(Base):
     created_at:       Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
 
 
+class AssetCategory(Base):
+    __tablename__ = "comfytv_asset_categories"
+
+    id:         Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    name:       Mapped[str] = mapped_column(String, unique=True)
+    order_:     Mapped[int] = mapped_column("order", Integer, default=100)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
+
+
+class Asset(Base):
+    __tablename__ = "comfytv_assets"
+
+    id:          Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    name:        Mapped[str] = mapped_column(String, default="")
+    media_type:  Mapped[str] = mapped_column(String, default="image", index=True)
+    payload_url: Mapped[str] = mapped_column(Text, default="")
+    mime_type:   Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    width:       Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    height:      Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    size_bytes:  Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    source:      Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    metadata_json: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    created_at:  Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
+    updated_at:  Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
+
+
+class AssetCategoryLink(Base):
+    __tablename__ = "comfytv_asset_category_links"
+
+    asset_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("comfytv_assets.id", ondelete="CASCADE"),
+        primary_key=True,
+    )
+    category_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("comfytv_asset_categories.id", ondelete="CASCADE"),
+        primary_key=True, index=True,
+    )
+
+
 _engine = None
 _Session: Optional[sessionmaker] = None
 _init_lock = threading.Lock()

@@ -37,10 +37,9 @@ const info = {
       max_inputs: { image: 3, video: 0, audio: 0, text: null },
     },
     'Relight (with reference)': {
-      // Needs 2 image inputs wired (subject + light reference)
       uses: { image: true, video: false, audio: false, text: true },
       requires: { image: true, video: false, audio: false, text: false },
-      requires_count: { image: 2, video: 0, audio: 0, text: 0 },
+      required_slots: { image: [0, 1], video: [], audio: [], text: [] },
       max_inputs: { image: 2, video: 0, audio: 0, text: null },
     },
   },
@@ -128,10 +127,43 @@ describe('validateNode', () => {
     })
     const w = await validateNode(node, 'image')
     expect(w['images.image1']?.status).toBe('required_but_missing')
-    expect(w['images.image1']?.message).toContain('2 image inputs')
+    expect(w['images.image1']?.message).toContain('slot #2')
     expect(w['images.image1']?.message).toContain('1/2')
     expect(w['images.image0']).toBeUndefined()
   })
+
+  it('reference satisfies a required image slot (no false error)', async () => {
+    const { validateNode } = await loadModuleWithInfo(info)
+    const node = makeNode({
+      widgets: [{ name: 'workflow', value: 'Relight (with reference)' }],
+      inputs: [
+        { name: 'images.image0', type: 'COMFYTV_IMAGE', link: 1 },
+        { name: 'images.image1', type: 'COMFYTV_IMAGE', link: null },
+      ],
+    })
+    const w = await validateNode(node, 'image', {
+      imageRefs: [{ asset_id: 7, slot: 1 }],
+      assetExists: () => true,
+    })
+    expect(w).toEqual({})
+  })
+
+  it('reference to a deleted asset does NOT satisfy a required slot', async () => {
+    const { validateNode } = await loadModuleWithInfo(info)
+    const node = makeNode({
+      widgets: [{ name: 'workflow', value: 'Relight (with reference)' }],
+      inputs: [
+        { name: 'images.image0', type: 'COMFYTV_IMAGE', link: 1 },
+        { name: 'images.image1', type: 'COMFYTV_IMAGE', link: null },
+      ],
+    })
+    const w = await validateNode(node, 'image', {
+      imageRefs: [{ asset_id: 7, slot: 1 }],
+      assetExists: () => false,
+    })
+    expect(w['images.image1']?.status).toBe('required_but_missing')
+  })
+
 
   it('no flag when both required slots are wired', async () => {
     const { validateNode } = await loadModuleWithInfo(info)
@@ -180,7 +212,7 @@ describe('invalidateWorkflowInfo', () => {
     await loadWorkflowInfo()
     expect(fetchApi).toHaveBeenCalledTimes(1)
     await loadWorkflowInfo()
-    expect(fetchApi).toHaveBeenCalledTimes(1)  // cached
+    expect(fetchApi).toHaveBeenCalledTimes(1)
     invalidateWorkflowInfo()
     await loadWorkflowInfo()
     expect(fetchApi).toHaveBeenCalledTimes(2)

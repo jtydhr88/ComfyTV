@@ -5,19 +5,18 @@
     <template v-if="!creating">
       <div
         v-for="(item, i) in items"
-        :key="item.id"
+        :key="itemKey(item)"
         :class="[
-          'ctv:flex ctv:items-baseline ctv:gap-2 ctv:py-1 ctv:px-2 ctv:cursor-pointer',
+          'ctv:flex ctv:items-center ctv:gap-2 ctv:py-1 ctv:px-2 ctv:cursor-pointer',
           'ctv:hover:bg-interface-menu-component-surface-hovered',
           i === activeIndex ? 'ctv:bg-interface-menu-component-surface-selected' : '',
         ]"
-        :title="item.content"
+        :title="itemTitle(item)"
         @mousedown.prevent
         @click="selectItem(i)"
       >
-        <span v-if="showKindTag" :class="kindTag(item.kind)">{{ item.kind }}</span>
-        <span class="ctv:font-mono ctv:text-base-foreground ctv:shrink-0">@{{ item.label }}</span>
-        <span class="ctv:text-muted-foreground ctv:overflow-hidden ctv:text-ellipsis ctv:whitespace-nowrap">{{ item.content }}</span>
+        <span class="ctv:font-mono ctv:text-base-foreground ctv:shrink-0">@{{ item.entry.label }}</span>
+        <span class="ctv:text-muted-foreground ctv:overflow-hidden ctv:text-ellipsis ctv:whitespace-nowrap">{{ item.entry.content }}</span>
       </div>
       <div
         v-if="canCreate"
@@ -29,7 +28,6 @@
         @mousedown.prevent
         @click="startCreate"
       >
-        <span v-if="showKindTag" :class="kindTag('create')">{{ $t('mention.newTag') }}</span>
         <span class="ctv:font-mono ctv:text-base-foreground ctv:shrink-0">{{ $t('mention.create') }}</span>
         <span class="ctv:text-muted-foreground ctv:overflow-hidden ctv:text-ellipsis ctv:whitespace-nowrap">
           {{ $t('mention.newFragment') }} <code>@{{ query }}</code>
@@ -71,21 +69,25 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from 'vue'
 
-import type { Entry } from '@/api/schemas'
-import { ENTRY_KINDS, useEntryStore } from '@/stores/entryStore'
+import type { MentionSuggestionItem } from '@/composables/stages/useMentionSuggestion'
+import { useEntryStore } from '@/stores/entryStore'
 import { useProjectStore } from '@/stores/projectStore'
 import { LABEL_RE } from '@/utils/labelRegex'
 
+export interface MentionCommandAttrs {
+  id: number | string
+  label: string
+  mentionType?: 'entry'
+}
+
 const props = defineProps<{
-  items: Entry[]
-  command: (attrs: { id: number | string; label: string }) => void
+  items: MentionSuggestionItem[]
+  command: (attrs: MentionCommandAttrs) => void
   query: string
 }>()
 
 const entryStore = useEntryStore()
 const projectStore = useProjectStore()
-
-const showKindTag = ENTRY_KINDS.length > 1
 
 const activeIndex = ref(0)
 
@@ -93,6 +95,14 @@ watch(() => props.items, () => { activeIndex.value = 0 })
 watch(() => props.query,  () => { activeIndex.value = 0 })
 
 const canCreate = computed(() => !!props.query && LABEL_RE.test(props.query))
+
+function itemKey(item: MentionSuggestionItem): string {
+  return `e${item.entry.id}`
+}
+
+function itemTitle(item: MentionSuggestionItem): string {
+  return item.entry.content
+}
 
 const creating = ref(false)
 const pendingLabel = ref('')
@@ -121,7 +131,7 @@ async function saveCreate() {
   creating.value = false
   pendingContent.value = ''
   if (row) {
-    props.command({ id: row.id, label: row.label })
+    props.command({ id: row.id, label: row.label, mentionType: 'entry' })
   }
 }
 function onCreateKeydown(e: KeyboardEvent) {
@@ -135,7 +145,8 @@ function onCreateKeydown(e: KeyboardEvent) {
 function selectItem(index: number) {
   if (index < props.items.length) {
     const item = props.items[index]
-    if (item) props.command({ id: item.id, label: item.label })
+    if (!item) return
+    props.command({ id: item.entry.id, label: item.entry.label, mentionType: 'entry' })
   } else if (canCreate.value) {
     startCreate()
   }
@@ -163,10 +174,6 @@ defineExpose({
     return false
   },
 })
-
-const KIND_TAG_BASE = 'ctv:shrink-0 ctv:py-px ctv:px-1.5 ctv:rounded-sm ctv:text-3xs ctv:font-semibold ctv:uppercase ctv:tracking-wide'
-  + ' ctv:bg-secondary-background ctv:text-secondary-foreground'
-function kindTag(_kind: string) { return KIND_TAG_BASE }
 
 const ACTION_BTN_BASE = 'ctv:relative ctv:inline-flex ctv:items-center ctv:justify-center ctv:gap-2 ctv:cursor-pointer'
   + ' ctv:touch-manipulation ctv:whitespace-nowrap ctv:appearance-none ctv:border-none ctv:transition-colors'

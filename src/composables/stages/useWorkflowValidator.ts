@@ -1,4 +1,11 @@
 import { apiFetch, WorkflowInfoSchema } from '@/api'
+import {
+  missingRequiredImageSlots,
+  nodeAcceptsAutogrowImages,
+  refCoveredImageSlots,
+  wiredImageSlots,
+} from '@/composables/stages/assetSlots'
+import { type ImageRef, readImageRefs } from '@/composables/stages/imageRefs'
 
 export type SlotWarningStatus = 'wired_but_unused' | 'required_but_missing'
 
@@ -9,16 +16,27 @@ export interface SlotWarning {
 
 export type SlotWarningMap = Record<string, SlotWarning>
 
+export interface ValidateOpts {
+  imageRefs?: ImageRef[]
+  assetExists?: (id: number) => boolean
+}
+
 type Kind = 'image' | 'video' | 'audio' | 'text'
 
 interface UsageEntry {
   uses:       Record<Kind, boolean>
   requires:   Record<Kind, boolean>
-  requires_count?: Record<Kind, number>
+  required_slots?: Record<Kind, number[]>
   max_inputs: Record<Kind, number | null>
 }
 
 type WorkflowInfo = Record<string, Record<string, UsageEntry>>
+
+function requiredSlotsOf(entry: UsageEntry, kind: Kind): number[] {
+  const explicit = entry.required_slots?.[kind]
+  if (explicit) return explicit
+  return entry.requires[kind] ? [0] : []
+}
 
 let _infoPromise: Promise<WorkflowInfo> | null = null
 
@@ -67,6 +85,7 @@ function countWiredOfKind(node: any, kind: Kind): number {
 export async function validateNode(
   node: any,
   _stageKind: string,
+  opts: ValidateOpts = {},
 ): Promise<SlotWarningMap> {
   const info = await loadWorkflowInfo()
   const out: SlotWarningMap = {}
@@ -80,6 +99,9 @@ export async function validateNode(
     if (labels && label in labels) { entry = labels[label]; break }
   }
   if (!entry) return out
+
+  const imageRefs = opts.imageRefs ?? readImageRefs(node)
+  const assetExists = opts.assetExists ?? (() => true)
 
   const wiredCount: Record<Kind, number> = { image: 0, video: 0, audio: 0, text: 0 }
   for (const inp of node?.inputs ?? []) {
@@ -106,9 +128,29 @@ export async function validateNode(
     }
   }
 
-  for (const kind of ['image', 'video', 'audio', 'text'] as const) {
-    const needed = entry.requires_count?.[kind]
-      ?? (entry.requires[kind] ? 1 : 0)
+  if (nodeAcceptsAutogrowImages(node)) {
+    const required = requiredSlotsOf(entry, 'image')
+    if (required.length) {
+      const wired = wiredImageSlots(node)
+      const resolvedRefs = imageRefs.filter(r => assetExists(r.asset_id))
+      const refCovered = refCoveredImageSlots(resolvedRefs)
+      const missing = missingRequiredImageSlots(required, wired, refCovered)
+      const total = required.length
+      for (const idx of missing) {
+        const msg = total === 1
+          ? `"${label}" requires an image — wire one into this slot or add an image reference.`
+          : `"${label}" image slot #${idx + 1} has no source — wire one in or add an image ` +
+            `reference (${total - missing.length}/${total} ready).`
+        out[`images.image${idx}`] = { status: 'required_but_missing', message: msg }
+      }
+    }
+  }
+
+  const otherKinds = nodeAcceptsAutogrowImages(node)
+    ? (['video', 'audio', 'text'] as const)
+    : (['image', 'video', 'audio', 'text'] as const)
+  for (const kind of otherKinds) {
+    const needed = requiredSlotsOf(entry, kind).length
     if (needed === 0) continue
     const wired = countWiredOfKind(node, kind)
     if (wired >= needed) continue

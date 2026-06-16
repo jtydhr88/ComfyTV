@@ -19,6 +19,8 @@
 !image/local-sd15-i2i_preset.json
 !image/local-sd15.json
 !image/local-sd15_preset.json
+!image/pose-transfer-sd15.json
+!image/pose-transfer-sd15_preset.json
 !inpaint/flux-fill-inpaint.json
 !inpaint/flux-fill-inpaint_preset.json
 !inpaint/fooocus-sdxl-inpaint.json

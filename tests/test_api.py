@@ -56,37 +56,34 @@ class TestComputeInputUsage:
         ])
         assert out["requires"]["video"] is True
 
-    def test_requires_count_simple(self):
-        # `upstream_image:annotated` (no [N]) → idx=0 → count=1
+    def test_required_slots_simple(self):
         out = self._api()([
             {"from": "upstream_image:annotated", "required": True},
         ])
-        assert out["requires_count"]["image"] == 1
+        assert out["required_slots"]["image"] == [0]
 
-    def test_requires_count_indexed(self):
-        # `[1]` with required=true → count=2 (need slots 0 AND 1)
+    def test_required_slots_indexed(self):
         out = self._api()([
             {"from": "upstream_image:annotated[0]", "required": True},
             {"from": "upstream_image:annotated[1]", "required": True},
         ])
-        assert out["requires_count"]["image"] == 2
+        assert out["required_slots"]["image"] == [0, 1]
 
-    def test_requires_count_max_wins(self):
-        # Highest required idx+1 dominates, even if intermediate is optional
+    def test_required_slots_non_contiguous(self):
         out = self._api()([
             {"from": "upstream_image:annotated[0]", "required": True},
             {"from": "upstream_image:annotated[1]", "required": False},
             {"from": "upstream_image:annotated[2]", "required": True},
         ])
-        assert out["requires_count"]["image"] == 3
+        assert out["required_slots"]["image"] == [0, 2]
+        assert out["max_inputs"]["image"] == 3
 
-    def test_requires_count_unrequired_zero(self):
-        # All optional → count stays 0 even though max_inputs grows
+    def test_required_slots_unrequired_empty(self):
         out = self._api()([
             {"from": "upstream_image:annotated[0]"},
             {"from": "upstream_image:annotated[2]"},
         ])
-        assert out["requires_count"]["image"] == 0
+        assert out["required_slots"]["image"] == []
         assert out["max_inputs"]["image"] == 3
 
     def test_upstream_image_masked_counts_like_annotated(self):
@@ -95,7 +92,7 @@ class TestComputeInputUsage:
         ])
         assert out["uses"]["image"] is True
         assert out["requires"]["image"] is True
-        assert out["requires_count"]["image"] == 1
+        assert out["required_slots"]["image"] == [0]
         assert out["max_inputs"]["image"] == 1
 
     def test_ignores_unmatching(self):

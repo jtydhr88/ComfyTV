@@ -2,7 +2,12 @@ import { VueRenderer } from '@tiptap/vue-3'
 import tippy, { type Instance as TippyInstance } from 'tippy.js'
 import { type Component, type Ref } from 'vue'
 
+import type { Entry } from '@/api/schemas'
 import { useEntryStore } from '@/stores/entryStore'
+
+export type MentionSuggestionItem = { type: 'entry'; entry: Entry }
+
+const MAX_ENTRIES = 8
 
 export function useMentionSuggestion(
   projectId: Ref<string>,
@@ -12,11 +17,13 @@ export function useMentionSuggestion(
 
   return {
     char: '@',
-    items: ({ query }: { query: string }) => {
-      const list = entryStore.list(projectId.value)
-      if (!query) return list.slice(0, 12)
+    items: ({ query }: { query: string }): MentionSuggestionItem[] => {
       const q = query.toLowerCase()
-      return list.filter((e) => e.label.toLowerCase().includes(q)).slice(0, 12)
+
+      let entries = entryStore.list(projectId.value)
+      if (q) entries = entries.filter(e => e.label.toLowerCase().includes(q))
+
+      return entries.slice(0, MAX_ENTRIES).map(entry => ({ type: 'entry' as const, entry }))
     },
     render: () => {
       let component: any

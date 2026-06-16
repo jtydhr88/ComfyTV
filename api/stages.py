@@ -36,7 +36,7 @@ _KINDS = ("image", "video", "audio", "text")
 def _compute_input_usage(bindings: list[dict]) -> dict:
     uses     = {k: False for k in _KINDS}
     requires = {k: False for k in _KINDS}
-    requires_count: dict[str, int] = {k: 0 for k in _KINDS}
+    required_slots: dict[str, set[int]] = {k: set() for k in _KINDS}
     max_inputs: dict[str, int | None] = {k: 0 for k in _KINDS}
     uses_main_prompt = False
 
@@ -53,8 +53,7 @@ def _compute_input_usage(bindings: list[dict]) -> dict:
         uses[kind] = True
         if cell.get("required") is True:
             requires[kind] = True
-            if idx + 1 > requires_count[kind]:
-                requires_count[kind] = idx + 1
+            required_slots[kind].add(idx)
         cur = max_inputs[kind] or 0
         if idx + 1 > cur:
             max_inputs[kind] = idx + 1
@@ -66,7 +65,7 @@ def _compute_input_usage(bindings: list[dict]) -> dict:
     return {
         "uses": uses,
         "requires": requires,
-        "requires_count": requires_count,
+        "required_slots": {k: sorted(v) for k, v in required_slots.items()},
         "max_inputs": max_inputs,
     }
 
@@ -88,7 +87,7 @@ async def workflow_info(_request: web.Request) -> web.Response:
                 out[k][r.label] = {
                     "uses":           {k_: False for k_ in _KINDS},
                     "requires":       {k_: False for k_ in _KINDS},
-                    "requires_count": {k_: 0     for k_ in _KINDS},
+                    "required_slots": {k_: []    for k_ in _KINDS},
                     "max_inputs":     {k_: 0     for k_ in _KINDS},
                 }
 

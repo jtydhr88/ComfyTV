@@ -2,6 +2,8 @@
   <div :class="cardClass">
     <MainPromptInput :node="node" />
 
+    <ImageReferences v-if="!hideContext && state.variant !== 'loader'" :node="node" />
+
     <section
       v-if="state.kind === 'image-picker' && !hideContext && (poolCount > 0 || connectedInputs.length > 0)"
       class="ctv-picker-input ctv:flex ctv:flex-col ctv:gap-1 ctv:py-1"
@@ -176,8 +178,10 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { t } from '@/i18n'
+
+import ImageReferences from './ImageReferences.vue'
 import MainPromptInput from './MainPromptInput.vue'
+import { t } from '@/i18n'
 import ValuePreview from './ValuePreview.vue'
 import { type ImagePreset } from '@/composables/stages/imagePresets'
 import {

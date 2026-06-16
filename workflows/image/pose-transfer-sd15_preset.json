@@ -1,0 +1,56 @@
+{
+  "label":       "Pose Transfer (SD1.5 IPAdapter + OpenPose)",
+  "order":       31,
+  "description": "Action/pose transfer: take the subject's appearance from image[0] (via IPAdapter) and re-pose it to image[1] (via the native SDPose parser → OpenPose ControlNet). Output size comes from the stage resolution/aspect. Tune: IPAdapter weight on the Apply IPAdapter node (higher = stronger subject identity), ControlNet strength on the Apply ControlNet node, and the prompt. Models: DreamShaper_8 (SD1.5), control_v11p_sd15_openpose_fp16, sdpose_wholebody_fp16, ip-adapter-plus_sd15, clip_vision_h (CLIP-ViT-H).",
+
+  "result": { "type": "ui_save_batch", "node": "15" },
+
+  "sizing": { "type": "image", "base": 512, "snap": 8 },
+
+  "inputs": {
+    "1": {
+      "ckpt_name": { "from": "literal:DreamShaper_8_pruned.safetensors" }
+    },
+    "5": {
+      "ipadapter_file": { "from": "literal:ip-adapter-plus_sd15.safetensors" }
+    },
+    "6": {
+      "clip_name": { "from": "literal:clip_vision_h.safetensors" }
+    },
+    "10": {
+      "control_net_name": { "from": "literal:control_v11p_sd15_openpose_fp16.safetensors" }
+    },
+    "2": {
+      "image": {
+        "from": "upstream_image:annotated[0]",
+        "required": true,
+        "error": "Pose Transfer needs a subject image — wire the original into the stage's image[0] input."
+      }
+    },
+    "3": {
+      "image": {
+        "from": "upstream_image:annotated[1]",
+        "required": true,
+        "error": "Pose Transfer needs an action-reference image — wire a pose reference into the stage's image[1] input."
+      }
+    },
+    "8": {
+      "text": {
+        "from": "main_prompt",
+        "default": "a person, best quality, highly detailed, sharp focus"
+      }
+    },
+    "12": {
+      "width":      { "from": "computed:width",  "cast": "int" },
+      "height":     { "from": "computed:height", "cast": "int" },
+      "batch_size": { "from": "option:batch_size", "default": "1", "cast": "int" }
+    },
+    "13": {
+      "seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    }
+  }
+}

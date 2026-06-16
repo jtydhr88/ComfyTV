@@ -48,6 +48,7 @@
     "action": {
       "viewFull": "View full size",
       "download": "Download",
+      "addTag": "Save to library / tag",
       "close": "Close"
     },
     "preparingWorkflowDetail": "Hang on — converting workflow to api JSON. Try Run again in a moment."
@@ -58,6 +59,63 @@
     "upstreamNotReady": "Upstream not ready",
     "upstreamNotReadyDetail": "Upstream not ready: {list}. Run those stage(s) first so they produce a snapshot, then Run this stage again.",
     "workerDied": "Backend stopped without sending a result. The prompt worker likely died (CUDA OOM during cleanup is the usual cause). Restart ComfyUI to recover."
+  },
+  "sidebar": {
+    "tab": {
+      "workflow": "Workflow",
+      "assets": "Assets"
+    }
+  },
+  "assets": {
+    "title": "Asset Library",
+    "empty": "No assets yet — add images to reuse them across projects.",
+    "emptyCategory": "No assets in this category yet.",
+    "add": "Add images",
+    "addTooltip": "Upload images into the library (or drag & drop them onto this panel)",
+    "uploading": "Uploading {done}/{total}…",
+    "uploadFailed": "Upload failed: {detail}",
+    "dropHint": "Drop images to add them to the library",
+    "category": {
+      "all": "All",
+      "none": "Uncategorized",
+      "new": "New category",
+      "newPrompt": "New category name:",
+      "rename": "Rename category",
+      "renamePrompt": "Category name:",
+      "delete": "Delete category",
+      "deleteConfirm": "Delete this category? It is removed from all assets; the assets and files on disk stay."
+    },
+    "card": {
+      "rename": "Rename",
+      "renamePrompt": "Asset name:",
+      "delete": "Remove from library",
+      "deleteConfirm": "Remove this asset from the library? The file on disk stays.",
+      "tags": "Edit tags"
+    },
+    "tagPopover": {
+      "empty": "No categories yet."
+    }
+  },
+  "imageRefs": {
+    "title": "Image references",
+    "empty": "No reference images — click + to pin one from the library.",
+    "add": "Add reference image",
+    "remove": "Remove",
+    "warnDuplicate": "Reference slot #{n} is pinned by multiple images — only the last one applies at run.",
+    "warnOverride": "Reference slot #{n} already has an upstream connection — the pinned image overrides it at run.",
+    "warnOverflow": "The workflow binds only {total} reference slot(s) — {count} pinned image(s) won't be consumed.",
+    "warnNoSlots": "This workflow has no image input that can receive reference images — they'll be ignored at run."
+  },
+  "promptAssets": {
+    "addTooltip": "Insert an image asset from the library — it will be sent as a reference image at run",
+    "search": "Search assets…",
+    "empty": "No matching assets — add some in the sidebar Assets tab.",
+    "missing": "asset #{id} was removed from the library — this chip is ignored at run",
+    "slotTitle": "Reference image slot",
+    "slotShort": "→ reference slot #{n}",
+    "slotWired": "wired",
+    "slotClaimed": "taken",
+    "slotEmpty": "This workflow has no reference-image slots bound yet — bind a LoadImage to \"Upstream image #N\" in the sidebar workflow config first."
   },
   "configSidebar": {
     "title": "Workflow Config",
@@ -451,7 +509,7 @@
     "createFragment": "+ Create fragment",
     "invalidLabel": "Invalid label — start with a letter / underscore (Chinese is fine), then letters / digits / _ / -",
     "noEntries": "No entries yet — type a label to create one",
-    "contentPlaceholder": "Content this @-token expands to. (For characters / other kinds, use the ComfyTV button → Entries dialog.)",
+    "contentPlaceholder": "Content this {'@'}-token expands to. (For characters / other kinds, use the ComfyTV button → Entries dialog.)",
     "save": "Save (Ctrl+Enter)"
   },
   "entries": {
@@ -459,8 +517,8 @@
     "refHelpPost": "Unknown tokens stay literal.",
     "colLabel": "Label",
     "colContent": "Content",
-    "deleteTitle": "Delete @{label}",
-    "confirmDelete": "Delete @{label}? Existing @{label} tokens will fall back to literal text.",
+    "deleteTitle": "Delete {'@'}{label}",
+    "confirmDelete": "Delete {'@'}{label}? Existing {'@'}{label} tokens will fall back to literal text.",
     "labelError": "Start with a letter / underscore (Chinese is fine), then letters / digits / _ / -",
     "emptyKind": "No {kind} yet. Click + Add below.",
     "labelPlaceholder": "label",
@@ -471,7 +529,7 @@
     "openEntryManager": "ComfyTV — open entry manager",
     "entriesTitle": "ComfyTV Entries",
     "entriesButtonTooltip": "ComfyTV — entries (fragments / characters / …)",
-    "configSidebarTooltip": "Edit the selected stage node's workflow config"
+    "configSidebarTooltip": "ComfyTV — workflow config & asset library"
   },
   "valuePreview": {
     "moreShots": "+ {n} more",

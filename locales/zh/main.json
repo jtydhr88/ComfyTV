@@ -48,6 +48,7 @@
     "action": {
       "viewFull": "查看大图",
       "download": "下载",
+      "addTag": "存入资产库 / 打标签",
       "close": "关闭"
     },
     "preparingWorkflowDetail": "稍等 — 正在把工作流转换成 api JSON。稍后再点运行。"
@@ -58,6 +59,63 @@
     "upstreamNotReady": "上游未就绪",
     "upstreamNotReadyDetail": "上游未就绪:{list}。请先运行这些 stage 生成快照,然后再运行此 stage。",
     "workerDied": "后端未返回结果就停止了。prompt worker 可能已崩溃(通常是清理阶段 CUDA OOM)。重启 ComfyUI 后恢复。"
+  },
+  "sidebar": {
+    "tab": {
+      "workflow": "工作流",
+      "assets": "资产库"
+    }
+  },
+  "assets": {
+    "title": "资产库",
+    "empty": "还没有资产 —— 添加图片后可跨项目复用。",
+    "emptyCategory": "这个分类下还没有资产。",
+    "add": "添加图片",
+    "addTooltip": "上传图片到资产库（也可以直接拖拽图片到这个面板）",
+    "uploading": "上传中 {done}/{total}…",
+    "uploadFailed": "上传失败: {detail}",
+    "dropHint": "松开把图片添加到资产库",
+    "category": {
+      "all": "全部",
+      "none": "未分类",
+      "new": "新建分类",
+      "newPrompt": "新分类名称：",
+      "rename": "重命名分类",
+      "renamePrompt": "分类名称：",
+      "delete": "删除分类",
+      "deleteConfirm": "删除这个分类？它会从所有资产上移除；资产和磁盘上的文件保留。"
+    },
+    "card": {
+      "rename": "重命名",
+      "renamePrompt": "资产名称：",
+      "delete": "从资产库移除",
+      "deleteConfirm": "把这个资产从资产库移除？磁盘上的文件保留。",
+      "tags": "编辑标签"
+    },
+    "tagPopover": {
+      "empty": "还没有分类。"
+    }
+  },
+  "imageRefs": {
+    "title": "图片引用",
+    "empty": "暂无参考图 —— 点 + 从资产库选一张。",
+    "add": "添加参考图",
+    "remove": "移除",
+    "warnDuplicate": "参考槽位 #{n} 被多张图片绑定 —— 运行时只有最后一张生效。",
+    "warnOverride": "参考槽位 #{n} 已有上游连接 —— 绑定的图片会在运行时覆盖它。",
+    "warnOverflow": "该工作流只绑定了 {total} 个参考槽位 —— 有 {count} 张图片不会被使用。",
+    "warnNoSlots": "该工作流没有可接收参考图的图片输入 —— 运行时这些图会被忽略。"
+  },
+  "promptAssets": {
+    "addTooltip": "从资产库插入图片 —— 运行时会作为参考图传给工作流",
+    "search": "搜索资产…",
+    "empty": "没有匹配的资产 —— 先在侧边栏「资产库」里添加。",
+    "missing": "资产 #{id} 已从资产库移除 —— 运行时会忽略这个标记",
+    "slotTitle": "参考图槽位",
+    "slotShort": "→ 参考图槽位 #{n}",
+    "slotWired": "已连线",
+    "slotClaimed": "已占用",
+    "slotEmpty": "这个工作流还没绑定参考图槽位 —— 先在侧边栏工作流配置里把 LoadImage 绑到「Upstream image #N」。"
   },
   "configSidebar": {
     "title": "工作流配置",
@@ -451,7 +509,7 @@
     "createFragment": "+ 新建片段",
     "invalidLabel": "标签无效 — 以字母 / 下划线开头(支持中文),后跟字母 / 数字 / _ / -",
     "noEntries": "还没有条目 — 输入标签即可新建",
-    "contentPlaceholder": "此 @ 标记展开后的内容。(角色等其他类型请用 ComfyTV 按钮 → 条目对话框。)",
+    "contentPlaceholder": "此 {'@'} 标记展开后的内容。(角色等其他类型请用 ComfyTV 按钮 → 条目对话框。)",
     "save": "保存 (Ctrl+Enter)"
   },
   "entries": {
@@ -459,8 +517,8 @@
     "refHelpPost": "引用任意条目;未知标记保持原文。",
     "colLabel": "标签",
     "colContent": "内容",
-    "deleteTitle": "删除 @{label}",
-    "confirmDelete": "删除 @{label}?现有的 @{label} 标记将回退为原文。",
+    "deleteTitle": "删除 {'@'}{label}",
+    "confirmDelete": "删除 {'@'}{label}?现有的 {'@'}{label} 标记将回退为原文。",
     "labelError": "以字母 / 下划线开头(支持中文),后跟字母 / 数字 / _ / -",
     "emptyKind": "还没有{kind}。点击下方 + 添加。",
     "labelPlaceholder": "标签",
@@ -471,7 +529,7 @@
     "openEntryManager": "ComfyTV — 打开条目管理",
     "entriesTitle": "ComfyTV 条目",
     "entriesButtonTooltip": "ComfyTV — 条目(片段 / 角色 / …)",
-    "configSidebarTooltip": "编辑选中 stage 节点的工作流配置"
+    "configSidebarTooltip": "ComfyTV — 工作流配置与素材库"
   },
   "valuePreview": {
     "moreShots": "+ 还有 {n} 个",

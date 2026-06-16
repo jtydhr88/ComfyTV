@@ -1,11 +1,12 @@
 <template>
-  <div v-if="widget" class="ctv:pt-1.5 ctv:px-2 ctv:pb-1">
+  <div v-if="widget" ref="rootEl" class="ctv:relative ctv:pt-1 ctv:px-2 ctv:pb-1">
     <EditorContent :editor="editor" class="comfytv-prompt-editor" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, watch, computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import Document    from '@tiptap/extension-document'
 import HardBreak   from '@tiptap/extension-hard-break'
@@ -21,15 +22,18 @@ import { useMentionSuggestion } from '@/composables/stages/useMentionSuggestion'
 import type { LGraphNode } from '@/lib/comfyApp'
 import { useEntryStore } from '@/stores/entryStore'
 import { useProjectStore } from '@/stores/projectStore'
-import { MENTION_RE } from '@/utils/labelRegex'
+import { useStageStore } from '@/stores/stageStore'
 import { getWidget, writeWidget } from '@/utils/widget'
 
 import MentionList from './MentionList.vue'
 
 const props = defineProps<{ node?: LGraphNode }>()
 
+const { t } = useI18n()
+
 const entryStore = useEntryStore()
 const projectStore = useProjectStore()
+const stageStore = useStageStore()
 const projectId = computed(() => projectStore.currentProjectId || '')
 
 const widget = computed(() => getWidget(props.node, 'main_prompt'))
@@ -38,18 +42,23 @@ const placeholder = computed(() => {
   return w?.options?.placeholder ?? w?.placeholder ?? ''
 })
 
+const rootEl = ref<HTMLElement | null>(null)
+
+const ENTRY_CHIP_CLASS = 'mention-chip '
+  + 'ctv:inline-block ctv:py-0 ctv:px-1 ctv:mx-px ctv:rounded ctv:font-medium ctv:whitespace-nowrap '
+  + 'ctv:bg-primary-background/20 ctv:border ctv:border-primary-background/45 '
+  + 'ctv:text-primary-background'
+
+const ENTRY_TOKEN_RE = /@([\p{L}_][\p{L}\p{N}_-]*)/gu
+
 function textToContent(text: string): any {
   const content: any[] = []
   let i = 0
-  const matches = text.matchAll(MENTION_RE)
-  for (const m of matches) {
+  for (const m of text.matchAll(ENTRY_TOKEN_RE)) {
     const start = m.index!
     if (start > i) content.push({ type: 'text', text: text.slice(i, start) })
     const label = m[1]
-    content.push({
-      type: 'mention',
-      attrs: { id: label, label },
-    })
+    content.push({ type: 'mention', attrs: { id: label, label } })
     i = start + m[0].length
   }
   if (i < text.length) content.push({ type: 'text', text: text.slice(i) })
@@ -58,7 +67,6 @@ function textToContent(text: string): any {
     content: [{ type: 'paragraph', content: content.length ? content : undefined }],
   }
 }
-
 
 const initialText = String(widget.value?.value ?? '')
 let suppressWriteback = false
@@ -71,24 +79,16 @@ const editor = useEditor({
     Text,
     HardBreak,
     Placeholder.configure({
-      placeholder: placeholder.value || 'Prompt — type @ to insert a saved fragment / character',
+      placeholder: placeholder.value || 'Prompt — type @ to insert a saved fragment',
     }),
     Mention.configure({
-      HTMLAttributes: {
-        class: 'ctv:inline-block ctv:py-0 ctv:px-1 ctv:mx-px ctv:rounded ctv:font-medium ctv:whitespace-nowrap '
-             + 'ctv:bg-primary-background/20 ctv:border ctv:border-primary-background/45 '
-             + 'ctv:text-primary-background',
-      },
       renderText: ({ node }) => `@${node.attrs.label}`,
-      renderHTML: ({ node, HTMLAttributes }: any) => [
-        'span',
-        {
-          ...HTMLAttributes,
-          'data-mention-id': node.attrs.id,
-          'data-mention-label': node.attrs.label,
-        },
-        `@${node.attrs.label}`,
-      ],
+      renderHTML: ({ node }: any) => ['span', {
+        class: ENTRY_CHIP_CLASS,
+        'data-mention-id': String(node.attrs.id),
+        'data-mention-label': node.attrs.label,
+        'data-mention-type': 'entry',
+      }, `@${node.attrs.label}`],
       suggestion: useMentionSuggestion(projectId, MentionList),
     }),
   ],
@@ -112,8 +112,16 @@ const editor = useEditor({
   },
 })
 
-import { useStageStore } from '@/stores/stageStore'
-const stageStore = useStageStore()
+function setContentFromText(text: string) {
+  if (!editor.value) return
+  suppressWriteback = true
+  try {
+    editor.value.commands.setContent(textToContent(text), { emitUpdate: false })
+  } finally {
+    suppressWriteback = false
+  }
+}
+
 const stageState = computed(() => props.node ? stageStore.getStage(props.node) : undefined)
 
 watch(
@@ -123,18 +131,22 @@ watch(
     if (!editor.value) return
     const current = editor.value.getText({ blockSeparator: '\n' })
     if (next === current) return
-    suppressWriteback = true
-    try {
-      editor.value.commands.setContent(textToContent(next), { emitUpdate: false })
-    } finally {
-      suppressWriteback = false
-    }
+    setContentFromText(next)
   },
 )
 
 let chipTooltips: any = null
 
 function stopBubble(e: Event) { e.stopPropagation() }
+
+function entryTooltip(label: string): string {
+  const matches = entryStore.list(projectId.value).filter(e => e.label === label)
+  if (matches.length === 0) {
+    return `@${label} — no matching entry (will stay literal at run)`
+  }
+  if (matches.length === 1) return matches[0].content
+  return matches.map(e => `[${e.kind}] ${e.content}`).join('\n──────\n')
+}
 
 onMounted(() => {
   void entryStore.list(projectId.value)
@@ -149,12 +161,7 @@ onMounted(() => {
       content: (ref) => {
         const el = ref as HTMLElement
         const label = el.dataset.mentionLabel ?? el.textContent?.slice(1) ?? ''
-        const matches = entryStore.list(projectId.value).filter(e => e.label === label)
-        if (matches.length === 0) {
-          return `@${label} — no matching entry (will stay literal at run)`
-        }
-        if (matches.length === 1) return matches[0].content
-        return matches.map(e => `[${e.kind}] ${e.content}`).join('\n──────\n')
+        return entryTooltip(label)
       },
       placement: 'top',
       arrow: true,

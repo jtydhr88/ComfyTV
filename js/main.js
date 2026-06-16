@@ -1,4 +1,4 @@
-(function() {  "use strict";  try {    if (typeof document != "undefined") {      var elementStyle = document.createElement("style");      elementStyle.appendChild(document.createTextNode(`.ctv-num-root {\r  display: flex;\r  align-items: center;\r  width: 100%;\r  min-width: 0;\r  background: var(--secondary-background, rgba(255,255,255,0.04));\r  border-radius: 8px;\r  box-sizing: border-box;}.ctv-num-root .ctv-num-input,\r.ctv-num-root input {\r  appearance: none;\r  background: transparent;\r  border: none;\r  border-radius: 8px;\r  padding: 6px 12px;\r  color: var(--base-foreground, #ddd);\r  font-size: 12px;\r  font-family: inherit;\r  width: 100%;\r  min-width: 0;\r  flex: 1;\r  outline: none;\r  text-align: left;\r  box-sizing: border-box;}.ctv-num-root input::placeholder { color: var(--muted-foreground, #888);}.ctv-num-root:focus-within {\r  box-shadow: 0 0 0 1px var(--border-default, rgba(255,255,255,0.25));}.ctv-num-root input:disabled { opacity: 0.5; pointer-events: none;}.ctv-num-btn {\r  flex-shrink: 0;\r  appearance: none;\r  background: transparent;\r  border: none;\r  color: var(--muted-foreground, #888);\r  font-size: 13px;\r  line-height: 1;\r  width: 22px;\r  height: 100%;\r  min-height: 28px;\r  cursor: pointer;\r  user-select: none;\r  display: inline-flex;\r  align-items: center;\r  justify-content: center;}.ctv-num-btn:hover { color: var(--base-foreground, #ddd);}.ctv-num-btn[data-disabled] { opacity: 0.4; pointer-events: none;}\r.ctv-toggle {\r  display: inline-flex;\r  align-items: center;\r  flex-shrink: 0;\r  width: 32px;\r  height: 18px;\r  padding: 2px;\r  border: none;\r  border-radius: 9999px;\r  background: var(--secondary-background, rgba(255,255,255,0.12));\r  cursor: pointer;\r  transition: background 0.15s ease;}.ctv-toggle[data-state='checked'] {\r  background: var(--primary-background, rgba(78,168,255,0.6));}.ctv-toggle:disabled,\r.ctv-toggle[data-disabled] {\r  opacity: 0.5;\r  cursor: not-allowed;\r  pointer-events: none;}.ctv-toggle:focus-visible {\r  outline: none;\r  box-shadow: 0 0 0 1px var(--border-default, rgba(255,255,255,0.25));}.ctv-toggle-thumb {\r  display: block;\r  width: 14px;\r  height: 14px;\r  border-radius: 9999px;\r  background: #fff;\r  transition: transform 0.15s ease;\r  transform: translateX(0);\r  will-change: transform;\r  pointer-events: none;}.ctv-toggle[data-state='checked'] .ctv-toggle-thumb {\r  transform: translateX(14px);}\r.ctv-text-input,\r.ctv-text-input input,\r.ctv-text-input textarea {\r  appearance: none;\r  background: var(--secondary-background, rgba(255,255,255,0.04));\r  border: none;\r  border-radius: 8px;\r  padding: 6px 12px;\r  color: var(--base-foreground, #ddd);\r  font-size: 12px;\r  font-family: inherit;\r  width: 100%;\r  min-width: 0;\r  outline: none;\r  box-sizing: border-box;}.ctv-text-input::placeholder,\r.ctv-text-input input::placeholder,\r.ctv-text-input textarea::placeholder { color: var(--muted-foreground, #888);}.ctv-text-area { line-height: 1.4; resize: vertical; min-height: 48px; overflow: hidden;}.ctv-text-input:focus-visible,\r.ctv-text-input input:focus-visible,\r.ctv-text-input textarea:focus-visible {\r  box-shadow: 0 0 0 1px var(--border-default, rgba(255,255,255,0.25));}.ctv-text-input:disabled,\r.ctv-text-input input:disabled,\r.ctv-text-input textarea:disabled { opacity: 0.5; pointer-events: none;}\r.tippy-box[data-animation=fade][data-state=hidden]{opacity:0}[data-tippy-root]{max-width:calc(100vw - 10px)}.tippy-box{position:relative;background-color:#333;color:#fff;border-radius:4px;font-size:14px;line-height:1.4;white-space:normal;outline:0;transition-property:transform,visibility,opacity}.tippy-box[data-placement^=top]>.tippy-arrow{bottom:0}.tippy-box[data-placement^=top]>.tippy-arrow:before{bottom:-7px;left:0;border-width:8px 8px 0;border-top-color:initial;transform-origin:center top}.tippy-box[data-placement^=bottom]>.tippy-arrow{top:0}.tippy-box[data-placement^=bottom]>.tippy-arrow:before{top:-7px;left:0;border-width:0 8px 8px;border-bottom-color:initial;transform-origin:center bottom}.tippy-box[data-placement^=left]>.tippy-arrow{right:0}.tippy-box[data-placement^=left]>.tippy-arrow:before{border-width:8px 0 8px 8px;border-left-color:initial;right:-7px;transform-origin:center left}.tippy-box[data-placement^=right]>.tippy-arrow{left:0}.tippy-box[data-placement^=right]>.tippy-arrow:before{left:-7px;border-width:8px 8px 8px 0;border-right-color:initial;transform-origin:center right}.tippy-box[data-inertia][data-state=visible]{transition-timing-function:cubic-bezier(.54,1.5,.38,1.11)}.tippy-arrow{width:16px;height:16px;color:#333}.tippy-arrow:before{content:"";position:absolute;border-color:transparent;border-style:solid}.tippy-content{position:relative;padding:5px 9px;z-index:1}.tippy-box[data-theme~='comfytv-transparent'] {\r  background: transparent;\r  box-shadow: none;}.tippy-box[data-theme~='comfytv-transparent'] > .tippy-content { padding: 0;}.tippy-box[data-theme~='comfytv-tooltip'] {\r  background: var(--interface-menu-surface, #1a1a1a);\r  border: 1px solid var(--border-default, #3a3a3a);\r  color: var(--base-foreground, #e0e0e0);\r  font-size: 11px;\r  line-height: 1.45;\r  border-radius: 4px;\r  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);}.tippy-box[data-theme~='comfytv-tooltip'] > .tippy-content {\r  padding: 6px 8px;\r  white-space: pre-wrap;\r  word-break: break-word;}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='top']    > .tippy-arrow::before { border-top-color: var(--border-default, #3a3a3a);}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='bottom'] > .tippy-arrow::before { border-bottom-color: var(--border-default, #3a3a3a);}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='left']   > .tippy-arrow::before { border-left-color: var(--border-default, #3a3a3a);}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='right']  > .tippy-arrow::before { border-right-color: var(--border-default, #3a3a3a);}\r.comfytv-prompt-editor[data-v-8a6e9db0] p { margin: 0;}.comfytv-prompt-editor[data-v-8a6e9db0] p.is-editor-empty:first-child::before {\r  content: attr(data-placeholder);\r  color: var(--muted-foreground, #888);\r  opacity: 0.65;\r  float: left;\r  height: 0;\r  pointer-events: none;}\r.ctv-batch-grid[data-v-504c4134] {\r  display: grid;\r  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));\r  gap: 4px;\r  padding-top: 14px;\r  max-height: 320px;\r  overflow: auto;}\r.ctv-input-tile:hover .ctv-tile-disconnect[data-v-3ba8c6e4] { display: inline-flex;}.ctv-picker-input.ctv-src-upstream         .ctv-src-tag[data-v-3ba8c6e4] { background: color-mix(in srgb, var(--primary-background) 22%, transparent); color: var(--primary-background);}.ctv-picker-input.ctv-src-upstream-pending .ctv-src-tag[data-v-3ba8c6e4] { background: color-mix(in srgb, var(--warning-background) 18%, transparent); color: var(--warning-background);}\r.ctv-camera-dropdown option[data-v-43267b78] {\r  background: var(--interface-menu-surface, #1a1a2e);\r  color: var(--base-foreground, #e0e0e0);}\r.ctv-crop-select[data-v-c343d075] option {\r  background: var(--interface-menu-surface, #1a1a1f);\r  color: var(--base-foreground, #ddd);}.ctv-bound-input[data-v-c343d075] { -moz-appearance: textfield;}.ctv-bound-input[data-v-c343d075]::-webkit-inner-spin-button,\r.ctv-bound-input[data-v-c343d075]::-webkit-outer-spin-button {\r  -webkit-appearance: none;}\r.ctv-pano-select[data-v-e0f33c2f] {\r  appearance: none;\r  background-color: var(--secondary-background, rgb(255 255 255 / 0.04));\r  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6' viewBox='0 0 8 6'><path d='M0 0l4 6 4-6z' fill='%23bbb'/></svg>");\r  background-repeat: no-repeat;\r  background-position: right 6px center;\r  color: var(--base-foreground, rgb(255 255 255 / 0.9));\r  border: 1px solid var(--border-subtle, rgb(255 255 255 / 0.15));\r  border-radius: 4px;\r  padding: 3px 18px 3px 6px;\r  font-size: 11px;\r  font-family: ui-monospace, SFMono-Regular, monospace;\r  cursor: pointer;\r  outline: none;\r  min-width: 70px;}.ctv-pano-select[data-v-e0f33c2f]:hover { border-color: var(--border-default, rgb(255 255 255 / 0.3));}.ctv-pano-select[data-v-e0f33c2f]:focus { border-color: var(--primary-background, rgb(78 168 255 / 0.6));}.ctv-pano-select option[data-v-e0f33c2f] { background: var(--interface-menu-surface, #1a1a2e); color: var(--base-foreground, #e0e0e0);}\r.ctv-pano-select[data-v-6cb1afcc] {\r  appearance: none;\r  background-color: var(--secondary-background, rgb(255 255 255 / 0.04));\r  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6' viewBox='0 0 8 6'><path d='M0 0l4 6 4-6z' fill='%23bbb'/></svg>");\r  background-repeat: no-repeat;\r  background-position: right 6px center;\r  color: var(--base-foreground, rgb(255 255 255 / 0.9));\r  border: 1px solid var(--border-subtle, rgb(255 255 255 / 0.15));\r  border-radius: 4px;\r  padding: 3px 18px 3px 6px;\r  font-size: 11px;\r  font-family: ui-monospace, SFMono-Regular, monospace;\r  cursor: pointer;\r  outline: none;\r  min-width: 70px;}.ctv-pano-select[data-v-6cb1afcc]:hover { border-color: var(--border-default, rgb(255 255 255 / 0.3));}.ctv-pano-select[data-v-6cb1afcc]:focus { border-color: var(--primary-background, rgb(78 168 255 / 0.6));}.ctv-pano-select option[data-v-6cb1afcc] { background: var(--interface-menu-surface, #1a1a2e); color: var(--base-foreground, #e0e0e0);}\r.ctv-pad-area[data-v-da53c66d] {\r  background-image:\r    linear-gradient(45deg, rgba(255,255,255,0.04) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.04) 75%),\r    linear-gradient(45deg, rgba(255,255,255,0.04) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.04) 75%);\r  background-size: 12px 12px;\r  background-position: 0 0, 6px 6px;\r  border: 1px dashed color-mix(in srgb, var(--primary-background, #4ea8ff) 45%, transparent);}.ctv-outpaint-handle[data-v-da53c66d]::before {\r  content: '';\r  position: absolute;\r  background: color-mix(in srgb, var(--primary-background, #4ea8ff) 65%, transparent);\r  border-radius: 2px;}.ctv-handle-left[data-v-da53c66d]::before,  .ctv-handle-right[data-v-da53c66d]::before  { width: 3px; height: 100%;}.ctv-handle-top[data-v-da53c66d]::before,   .ctv-handle-bottom[data-v-da53c66d]::before { height: 3px; width: 100%;}.ctv-outpaint-handle[data-v-da53c66d]:hover::before { background: var(--primary-background, #4ea8ff);}\r.ctv-entry-table th[data-v-cab17390],\r.ctv-entry-table td[data-v-cab17390] {\r  text-align: left;\r  padding: 6px 8px;\r  border-bottom: 1px solid var(--border-subtle, #2a2a2a);\r  vertical-align: top;}.ctv-entry-table th[data-v-cab17390] {\r  font-weight: 600;\r  color: var(--muted-foreground, #aaa);}\r/*! tailwindcss v4.3.0 | MIT License | https://tailwindcss.com */@layer properties {  @supports (((-webkit-hyphens: none)) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {    *, :before, :after, ::backdrop {      --tw-translate-x: 0;      --tw-translate-y: 0;      --tw-translate-z: 0;      --tw-border-style: solid;      --tw-gradient-position: initial;      --tw-gradient-from: #0000;      --tw-gradient-via: #0000;      --tw-gradient-to: #0000;      --tw-gradient-stops: initial;      --tw-gradient-via-stops: initial;      --tw-gradient-from-position: 0%;      --tw-gradient-via-position: 50%;      --tw-gradient-to-position: 100%;      --tw-leading: initial;      --tw-font-weight: initial;      --tw-tracking: initial;      --tw-shadow: 0 0 #0000;      --tw-shadow-color: initial;      --tw-shadow-alpha: 100%;      --tw-inset-shadow: 0 0 #0000;      --tw-inset-shadow-color: initial;      --tw-inset-shadow-alpha: 100%;      --tw-ring-color: initial;      --tw-ring-shadow: 0 0 #0000;      --tw-inset-ring-color: initial;      --tw-inset-ring-shadow: 0 0 #0000;      --tw-ring-inset: initial;      --tw-ring-offset-width: 0px;      --tw-ring-offset-color: #fff;      --tw-ring-offset-shadow: 0 0 #0000;      --tw-outline-style: solid;      --tw-backdrop-blur: initial;      --tw-backdrop-brightness: initial;      --tw-backdrop-contrast: initial;      --tw-backdrop-grayscale: initial;      --tw-backdrop-hue-rotate: initial;      --tw-backdrop-invert: initial;      --tw-backdrop-opacity: initial;      --tw-backdrop-saturate: initial;      --tw-backdrop-sepia: initial;      --tw-duration: initial;      --tw-ease: initial;      --tw-scale-x: 1;      --tw-scale-y: 1;      --tw-scale-z: 1;    }  }}@layer theme {  :root, :host {    --ctv-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",    monospace;    --ctv-color-gray-600: oklch(44.6% .03 256.802);    --ctv-color-black: #000;    --ctv-color-white: #fff;    --ctv-spacing: .25rem;    --ctv-container-md: 28rem;    --ctv-text-xs: .75rem;    --ctv-text-xs--line-height: calc(1 / .75);    --ctv-text-sm: .875rem;    --ctv-text-sm--line-height: calc(1.25 / .875);    --ctv-text-lg: 1.125rem;    --ctv-text-lg--line-height: calc(1.75 / 1.125);    --ctv-font-weight-medium: 500;    --ctv-font-weight-semibold: 600;    --ctv-font-weight-bold: 700;    --ctv-tracking-wide: .025em;    --ctv-tracking-wider: .05em;    --ctv-leading-tight: 1.25;    --ctv-leading-snug: 1.375;    --ctv-radius-sm: .25rem;    --ctv-radius-md: .375rem;    --ctv-radius-lg: .5rem;    --ctv-ease-in: cubic-bezier(.4, 0, 1, 1);    --ctv-ease-out: cubic-bezier(0, 0, .2, 1);    --ctv-ease-in-out: cubic-bezier(.4, 0, .2, 1);    --ctv-animate-pulse: pulse 2s cubic-bezier(.4, 0, .6, 1) infinite;    --ctv-blur-sm: 8px;    --ctv-aspect-video: 16 / 9;    --ctv-default-transition-duration: .15s;    --ctv-default-transition-timing-function: cubic-bezier(.4, 0, .2, 1);    --ctv-text-2xs: .625rem;    --ctv-text-2xs--line-height: calc(1 / .625);    --ctv-text-3xs: .5625rem;    --ctv-text-3xs--line-height: calc(1 / .5625);  }}@layer utilities {  .ctv\\:pointer-events-none {    pointer-events: none;  }  .ctv\\:absolute {    position: absolute;  }  .ctv\\:fixed {    position: fixed;  }  .ctv\\:relative {    position: relative;  }  .ctv\\:sticky {    position: sticky;  }  .ctv\\:inset-0 {    inset: calc(var(--ctv-spacing) * 0);  }  .ctv\\:inset-x-0 {    inset-inline: calc(var(--ctv-spacing) * 0);  }  .ctv\\:-top-2 {    top: calc(var(--ctv-spacing) * -2);  }  .ctv\\:top-0 {    top: calc(var(--ctv-spacing) * 0);  }  .ctv\\:top-0\\.5 {    top: calc(var(--ctv-spacing) * .5);  }  .ctv\\:top-1 {    top: calc(var(--ctv-spacing) * 1);  }  .ctv\\:top-1\\/2 {    top: 50%;  }  .ctv\\:top-2 {    top: calc(var(--ctv-spacing) * 2);  }  .ctv\\:top-4 {    top: calc(var(--ctv-spacing) * 4);  }  .ctv\\:top-\\[3px\\] {    top: 3px;  }  .ctv\\:right-0 {    right: calc(var(--ctv-spacing) * 0);  }  .ctv\\:right-0\\.5 {    right: calc(var(--ctv-spacing) * .5);  }  .ctv\\:right-1 {    right: calc(var(--ctv-spacing) * 1);  }  .ctv\\:right-2 {    right: calc(var(--ctv-spacing) * 2);  }  .ctv\\:right-4 {    right: calc(var(--ctv-spacing) * 4);  }  .ctv\\:right-\\[3px\\] {    right: 3px;  }  .ctv\\:right-\\[14px\\] {    right: 14px;  }  .ctv\\:bottom-0 {    bottom: calc(var(--ctv-spacing) * 0);  }  .ctv\\:bottom-0\\.5 {    bottom: calc(var(--ctv-spacing) * .5);  }  .ctv\\:bottom-2 {    bottom: calc(var(--ctv-spacing) * 2);  }  .ctv\\:bottom-4 {    bottom: calc(var(--ctv-spacing) * 4);  }  .ctv\\:bottom-px {    bottom: 1px;  }  .ctv\\:left-0 {    left: calc(var(--ctv-spacing) * 0);  }  .ctv\\:left-0\\.5 {    left: calc(var(--ctv-spacing) * .5);  }  .ctv\\:left-2 {    left: calc(var(--ctv-spacing) * 2);  }  .ctv\\:z-10 {    z-index: 10;  }  .ctv\\:z-3000 {    z-index: 3000;  }  .ctv\\:z-\\[1\\] {    z-index: 1;  }  .ctv\\:z-\\[2\\] {    z-index: 2;  }  .ctv\\:z-\\[3\\] {    z-index: 3;  }  .ctv\\:z-\\[5\\] {    z-index: 5;  }  .ctv\\:z-\\[6\\] {    z-index: 6;  }  .ctv\\:z-\\[7\\] {    z-index: 7;  }  .ctv\\:z-\\[9999\\] {    z-index: 9999;  }  .ctv\\:z-\\[10000\\] {    z-index: 10000;  }  .ctv\\:m-0 {    margin: calc(var(--ctv-spacing) * 0);  }  .ctv\\:m-0\\.5 {    margin: calc(var(--ctv-spacing) * .5);  }  .ctv\\:m-1 {    margin: calc(var(--ctv-spacing) * 1);  }  .ctv\\:-mx-2\\.5 {    margin-inline: calc(var(--ctv-spacing) * -2.5);  }  .ctv\\:mx-auto {    margin-inline: auto;  }  .ctv\\:mx-px {    margin-inline: 1px;  }  .ctv\\:my-1\\.5 {    margin-block: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:-mt-2 {    margin-top: calc(var(--ctv-spacing) * -2);  }  .ctv\\:mt-0\\.5 {    margin-top: calc(var(--ctv-spacing) * .5);  }  .ctv\\:mt-1 {    margin-top: calc(var(--ctv-spacing) * 1);  }  .ctv\\:mt-3\\.5 {    margin-top: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:mt-4 {    margin-top: calc(var(--ctv-spacing) * 4);  }  .ctv\\:mr-1 {    margin-right: calc(var(--ctv-spacing) * 1);  }  .ctv\\:-mb-px {    margin-bottom: -1px;  }  .ctv\\:mb-1 {    margin-bottom: calc(var(--ctv-spacing) * 1);  }  .ctv\\:mb-1\\.5 {    margin-bottom: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:mb-2 {    margin-bottom: calc(var(--ctv-spacing) * 2);  }  .ctv\\:mb-2\\.5 {    margin-bottom: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:mb-\\[3px\\] {    margin-bottom: 3px;  }  .ctv\\:-ml-px {    margin-left: -1px;  }  .ctv\\:ml-0\\.5 {    margin-left: calc(var(--ctv-spacing) * .5);  }  .ctv\\:ml-auto {    margin-left: auto;  }  .ctv\\:box-border {    box-sizing: border-box;  }  .ctv\\:box-content {    box-sizing: content-box;  }  .ctv\\:\\[display\\:-webkit-box\\] {    display: -webkit-box;  }  .ctv\\:block {    display: block;  }  .ctv\\:flex {    display: flex;  }  .ctv\\:grid {    display: grid;  }  .ctv\\:hidden {    display: none;  }  .ctv\\:inline-block {    display: inline-block;  }  .ctv\\:inline-flex {    display: inline-flex;  }  .ctv\\:aspect-video {    aspect-ratio: var(--ctv-aspect-video);  }  .ctv\\:size-2 {    width: calc(var(--ctv-spacing) * 2);    height: calc(var(--ctv-spacing) * 2);  }  .ctv\\:size-3 {    width: calc(var(--ctv-spacing) * 3);    height: calc(var(--ctv-spacing) * 3);  }  .ctv\\:size-3\\.5 {    width: calc(var(--ctv-spacing) * 3.5);    height: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:size-5 {    width: calc(var(--ctv-spacing) * 5);    height: calc(var(--ctv-spacing) * 5);  }  .ctv\\:size-6 {    width: calc(var(--ctv-spacing) * 6);    height: calc(var(--ctv-spacing) * 6);  }  .ctv\\:size-7 {    width: calc(var(--ctv-spacing) * 7);    height: calc(var(--ctv-spacing) * 7);  }  .ctv\\:size-9 {    width: calc(var(--ctv-spacing) * 9);    height: calc(var(--ctv-spacing) * 9);  }  .ctv\\:size-\\[22px\\] {    width: 22px;    height: 22px;  }  .ctv\\:size-full {    width: 100%;    height: 100%;  }  .ctv\\:h-1\\.5 {    height: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:h-4 {    height: calc(var(--ctv-spacing) * 4);  }  .ctv\\:h-5 {    height: calc(var(--ctv-spacing) * 5);  }  .ctv\\:h-6 {    height: calc(var(--ctv-spacing) * 6);  }  .ctv\\:h-7 {    height: calc(var(--ctv-spacing) * 7);  }  .ctv\\:h-8 {    height: calc(var(--ctv-spacing) * 8);  }  .ctv\\:h-9 {    height: calc(var(--ctv-spacing) * 9);  }  .ctv\\:h-10 {    height: calc(var(--ctv-spacing) * 10);  }  .ctv\\:h-11 {    height: calc(var(--ctv-spacing) * 11);  }  .ctv\\:h-80 {    height: calc(var(--ctv-spacing) * 80);  }  .ctv\\:h-\\[13px\\] {    height: 13px;  }  .ctv\\:h-\\[18px\\] {    height: 18px;  }  .ctv\\:h-\\[72px\\] {    height: 72px;  }  .ctv\\:h-\\[76px\\] {    height: 76px;  }  .ctv\\:h-\\[280px\\] {    height: 280px;  }  .ctv\\:h-\\[340px\\] {    height: 340px;  }  .ctv\\:h-\\[350px\\] {    height: 350px;  }  .ctv\\:h-full {    height: 100%;  }  .ctv\\:h-px {    height: 1px;  }  .ctv\\:max-h-40 {    max-height: calc(var(--ctv-spacing) * 40);  }  .ctv\\:max-h-44 {    max-height: calc(var(--ctv-spacing) * 44);  }  .ctv\\:max-h-52 {    max-height: calc(var(--ctv-spacing) * 52);  }  .ctv\\:max-h-56 {    max-height: calc(var(--ctv-spacing) * 56);  }  .ctv\\:max-h-60 {    max-height: calc(var(--ctv-spacing) * 60);  }  .ctv\\:max-h-80 {    max-height: calc(var(--ctv-spacing) * 80);  }  .ctv\\:max-h-\\[60vh\\] {    max-height: 60vh;  }  .ctv\\:max-h-\\[120px\\] {    max-height: 120px;  }  .ctv\\:max-h-\\[360px\\] {    max-height: 360px;  }  .ctv\\:max-h-\\[calc\\(100vh-48px\\)\\] {    max-height: calc(100vh - 48px);  }  .ctv\\:max-h-full {    max-height: 100%;  }  .ctv\\:min-h-0 {    min-height: calc(var(--ctv-spacing) * 0);  }  .ctv\\:min-h-10 {    min-height: calc(var(--ctv-spacing) * 10);  }  .ctv\\:min-h-11 {    min-height: calc(var(--ctv-spacing) * 11);  }  .ctv\\:min-h-12 {    min-height: calc(var(--ctv-spacing) * 12);  }  .ctv\\:min-h-14 {    min-height: calc(var(--ctv-spacing) * 14);  }  .ctv\\:min-h-20 {    min-height: calc(var(--ctv-spacing) * 20);  }  .ctv\\:min-h-\\[22px\\] {    min-height: 22px;  }  .ctv\\:min-h-\\[116px\\] {    min-height: 116px;  }  .ctv\\:min-h-\\[280px\\] {    min-height: 280px;  }  .ctv\\:w-0\\.5 {    width: calc(var(--ctv-spacing) * .5);  }  .ctv\\:w-2 {    width: calc(var(--ctv-spacing) * 2);  }  .ctv\\:w-2\\.5 {    width: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:w-3 {    width: calc(var(--ctv-spacing) * 3);  }  .ctv\\:w-4 {    width: calc(var(--ctv-spacing) * 4);  }  .ctv\\:w-7 {    width: calc(var(--ctv-spacing) * 7);  }  .ctv\\:w-12 {    width: calc(var(--ctv-spacing) * 12);  }  .ctv\\:w-14 {    width: calc(var(--ctv-spacing) * 14);  }  .ctv\\:w-24 {    width: calc(var(--ctv-spacing) * 24);  }  .ctv\\:w-\\[38px\\] {    width: 38px;  }  .ctv\\:w-\\[76px\\] {    width: 76px;  }  .ctv\\:w-\\[140px\\] {    width: 140px;  }  .ctv\\:w-\\[180px\\] {    width: 180px;  }  .ctv\\:w-auto {    width: auto;  }  .ctv\\:w-full {    width: 100%;  }  .ctv\\:w-px {    width: 1px;  }  .ctv\\:max-w-\\[60vw\\] {    max-width: 60vw;  }  .ctv\\:max-w-\\[90px\\] {    max-width: 90px;  }  .ctv\\:max-w-\\[360px\\] {    max-width: 360px;  }  .ctv\\:max-w-full {    max-width: 100%;  }  .ctv\\:max-w-md {    max-width: var(--ctv-container-md);  }  .ctv\\:min-w-0 {    min-width: calc(var(--ctv-spacing) * 0);  }  .ctv\\:min-w-2 {    min-width: calc(var(--ctv-spacing) * 2);  }  .ctv\\:min-w-4 {    min-width: calc(var(--ctv-spacing) * 4);  }  .ctv\\:min-w-8 {    min-width: calc(var(--ctv-spacing) * 8);  }  .ctv\\:min-w-9 {    min-width: calc(var(--ctv-spacing) * 9);  }  .ctv\\:min-w-64 {    min-width: calc(var(--ctv-spacing) * 64);  }  .ctv\\:min-w-\\[44px\\] {    min-width: 44px;  }  .ctv\\:min-w-\\[60px\\] {    min-width: 60px;  }  .ctv\\:min-w-\\[var\\(--reka-combobox-trigger-width\\)\\] {    min-width: var(--reka-combobox-trigger-width);  }  .ctv\\:flex-1 {    flex: 1;  }  .ctv\\:flex-auto {    flex: auto;  }  .ctv\\:shrink-0 {    flex-shrink: 0;  }  .ctv\\:border-collapse {    border-collapse: collapse;  }  .ctv\\:-translate-x-1\\/2 {    --tw-translate-x: calc(calc(1 / 2 * 100%) * -1);    translate: var(--tw-translate-x) var(--tw-translate-y);  }  .ctv\\:-translate-y-1\\/2 {    --tw-translate-y: calc(calc(1 / 2 * 100%) * -1);    translate: var(--tw-translate-x) var(--tw-translate-y);  }  .ctv\\:animate-pulse {    animation: var(--ctv-animate-pulse);  }  .ctv\\:cursor-\\[inherit\\] {    cursor: inherit;  }  .ctv\\:cursor-crosshair {    cursor: crosshair;  }  .ctv\\:cursor-default {    cursor: default;  }  .ctv\\:cursor-ew-resize {    cursor: ew-resize;  }  .ctv\\:cursor-grab {    cursor: grab;  }  .ctv\\:cursor-grabbing {    cursor: grabbing;  }  .ctv\\:cursor-move {    cursor: move;  }  .ctv\\:cursor-none {    cursor: none;  }  .ctv\\:cursor-not-allowed {    cursor: not-allowed;  }  .ctv\\:cursor-ns-resize {    cursor: ns-resize;  }  .ctv\\:cursor-pointer {    cursor: pointer;  }  .ctv\\:cursor-zoom-out {    cursor: zoom-out;  }  .ctv\\:touch-manipulation {    touch-action: manipulation;  }  .ctv\\:touch-none {    touch-action: none;  }  .ctv\\:resize-none {    resize: none;  }  .ctv\\:resize-y {    resize: vertical;  }  .ctv\\:list-none {    list-style-type: none;  }  .ctv\\:appearance-none {    appearance: none;  }  .ctv\\:grid-cols-4 {    grid-template-columns: repeat(4, minmax(0, 1fr));  }  .ctv\\:grid-cols-\\[60px_1fr\\] {    grid-template-columns: 60px 1fr;  }  .ctv\\:grid-cols-\\[64px_1fr_48px\\] {    grid-template-columns: 64px 1fr 48px;  }  .ctv\\:grid-cols-\\[80px_1fr_36px\\] {    grid-template-columns: 80px 1fr 36px;  }  .ctv\\:grid-cols-\\[max-content_1fr\\] {    grid-template-columns: max-content 1fr;  }  .ctv\\:grid-cols-\\[repeat\\(auto-fill\\,minmax\\(110px\\,1fr\\)\\)\\] {    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));  }  .ctv\\:flex-col {    flex-direction: column;  }  .ctv\\:flex-wrap {    flex-wrap: wrap;  }  .ctv\\:items-baseline {    align-items: baseline;  }  .ctv\\:items-center {    align-items: center;  }  .ctv\\:items-start {    align-items: flex-start;  }  .ctv\\:justify-around {    justify-content: space-around;  }  .ctv\\:justify-between {    justify-content: space-between;  }  .ctv\\:justify-center {    justify-content: center;  }  .ctv\\:justify-end {    justify-content: flex-end;  }  .ctv\\:gap-0\\.5 {    gap: calc(var(--ctv-spacing) * .5);  }  .ctv\\:gap-1 {    gap: calc(var(--ctv-spacing) * 1);  }  .ctv\\:gap-1\\.5 {    gap: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:gap-2 {    gap: calc(var(--ctv-spacing) * 2);  }  .ctv\\:gap-2\\.5 {    gap: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:gap-3 {    gap: calc(var(--ctv-spacing) * 3);  }  .ctv\\:gap-\\[3px\\] {    gap: 3px;  }  .ctv\\:gap-px {    gap: 1px;  }  .ctv\\:gap-x-2\\.5 {    column-gap: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:gap-y-\\[3px\\] {    row-gap: 3px;  }  .ctv\\:self-start {    align-self: flex-start;  }  .ctv\\:truncate {    text-overflow: ellipsis;    white-space: nowrap;    overflow: hidden;  }  .ctv\\:overflow-auto {    overflow: auto;  }  .ctv\\:overflow-hidden {    overflow: hidden;  }  .ctv\\:overflow-x-auto {    overflow-x: auto;  }  .ctv\\:overflow-y-auto {    overflow-y: auto;  }  .ctv\\:overflow-y-hidden {    overflow-y: hidden;  }  .ctv\\:rounded {    border-radius: .25rem;  }  .ctv\\:rounded-full {    border-radius: 3.40282e38px;  }  .ctv\\:rounded-lg {    border-radius: var(--ctv-radius-lg);  }  .ctv\\:rounded-md {    border-radius: var(--ctv-radius-md);  }  .ctv\\:rounded-none {    border-radius: 0;  }  .ctv\\:rounded-sm {    border-radius: var(--ctv-radius-sm);  }  .ctv\\:rounded-t {    border-top-left-radius: .25rem;    border-top-right-radius: .25rem;  }  .ctv\\:border {    border-style: var(--tw-border-style);    border-width: 1px;  }  .ctv\\:border-0 {    border-style: var(--tw-border-style);    border-width: 0;  }  .ctv\\:border-2 {    border-style: var(--tw-border-style);    border-width: 2px;  }  .ctv\\:border-\\[2\\.5px\\] {    border-style: var(--tw-border-style);    border-width: 2.5px;  }  .ctv\\:border-t {    border-top-style: var(--tw-border-style);    border-top-width: 1px;  }  .ctv\\:border-b {    border-bottom-style: var(--tw-border-style);    border-bottom-width: 1px;  }  .ctv\\:border-b-0 {    border-bottom-style: var(--tw-border-style);    border-bottom-width: 0;  }  .ctv\\:border-l {    border-left-style: var(--tw-border-style);    border-left-width: 1px;  }  .ctv\\:border-l-2 {    border-left-style: var(--tw-border-style);    border-left-width: 2px;  }  .ctv\\:border-dashed {    --tw-border-style: dashed;    border-style: dashed;  }  .ctv\\:border-none {    --tw-border-style: none;    border-style: none;  }  .ctv\\:border-solid {    --tw-border-style: solid;    border-style: solid;  }  .ctv\\:border-\\[rgb\\(200_130_255\\/0\\.4\\)\\] {    border-color: #c882ff66;  }  .ctv\\:border-\\[rgb\\(233_61_130\\/0\\.3\\)\\] {    border-color: #e93d824d;  }  .ctv\\:border-\\[rgb\\(233_61_130\\/0\\.4\\)\\] {    border-color: #e93d8266;  }  .ctv\\:border-black\\/70 {    border-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-black\\/70 {      border-color: color-mix(in oklab, var(--ctv-color-black) 70%, transparent);    }  }  .ctv\\:border-border-default {    border-color: var(--border-default, #ffffff26);  }  .ctv\\:border-border-subtle {    border-color: var(--border-subtle, #ffffff14);  }  .ctv\\:border-destructive-background, .ctv\\:border-destructive-background\\/30 {    border-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-destructive-background\\/30 {      border-color: color-mix(in oklab, var(--destructive-background, #c0392b) 30%, transparent);    }  }  .ctv\\:border-destructive-background\\/50 {    border-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-destructive-background\\/50 {      border-color: color-mix(in oklab, var(--destructive-background, #c0392b) 50%, transparent);    }  }  .ctv\\:border-destructive-background\\/55 {    border-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-destructive-background\\/55 {      border-color: color-mix(in oklab, var(--destructive-background, #c0392b) 55%, transparent);    }  }  .ctv\\:border-primary-background, .ctv\\:border-primary-background\\/30 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/30 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 30%, transparent);    }  }  .ctv\\:border-primary-background\\/40 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/40 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 40%, transparent);    }  }  .ctv\\:border-primary-background\\/45 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/45 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 45%, transparent);    }  }  .ctv\\:border-primary-background\\/50 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/50 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 50%, transparent);    }  }  .ctv\\:border-primary-background\\/60 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/60 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 60%, transparent);    }  }  .ctv\\:border-primary-background\\/70 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/70 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 70%, transparent);    }  }  .ctv\\:border-success-background\\/30 {    border-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-success-background\\/30 {      border-color: color-mix(in oklab, var(--success-background, #2e9e4f) 30%, transparent);    }  }  .ctv\\:border-success-background\\/50 {    border-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-success-background\\/50 {      border-color: color-mix(in oklab, var(--success-background, #2e9e4f) 50%, transparent);    }  }  .ctv\\:border-transparent {    border-color: #0000;  }  .ctv\\:border-warning-background\\/25 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/25 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 25%, transparent);    }  }  .ctv\\:border-warning-background\\/50 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/50 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 50%, transparent);    }  }  .ctv\\:border-warning-background\\/55 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/55 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 55%, transparent);    }  }  .ctv\\:border-warning-background\\/70 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/70 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 70%, transparent);    }  }  .ctv\\:border-white, .ctv\\:border-white\\/10 {    border-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-white\\/10 {      border-color: color-mix(in oklab, var(--ctv-color-white) 10%, transparent);    }  }  .ctv\\:border-white\\/15 {    border-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-white\\/15 {      border-color: color-mix(in oklab, var(--ctv-color-white) 15%, transparent);    }  }  .ctv\\:border-white\\/20 {    border-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-white\\/20 {      border-color: color-mix(in oklab, var(--ctv-color-white) 20%, transparent);    }  }  .ctv\\:border-white\\/30 {    border-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-white\\/30 {      border-color: color-mix(in oklab, var(--ctv-color-white) 30%, transparent);    }  }  .ctv\\:border-b-transparent {    border-bottom-color: #0000;  }  .ctv\\:border-b-warning-background\\/15 {    border-bottom-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-b-warning-background\\/15 {      border-bottom-color: color-mix(in oklab, var(--warning-background, #d39e00) 15%, transparent);    }  }  .ctv\\:bg-\\[rgb\\(78_168_255\\/0\\.25\\)\\] {    background-color: #4ea8ff40;  }  .ctv\\:bg-\\[rgb\\(120_200_120\\/0\\.25\\)\\] {    background-color: #78c87840;  }  .ctv\\:bg-\\[rgb\\(200_130_255\\/0\\.25\\)\\] {    background-color: #c882ff40;  }  .ctv\\:bg-\\[rgb\\(255_100_100\\/0\\.22\\)\\] {    background-color: #ff646438;  }  .ctv\\:bg-\\[rgb\\(255_140_200\\/0\\.25\\)\\] {    background-color: #ff8cc840;  }  .ctv\\:bg-\\[rgb\\(255_140_200\\/0\\.85\\)\\] {    background-color: #ff8cc8d9;  }  .ctv\\:bg-\\[rgb\\(255_171_64\\/0\\.25\\)\\] {    background-color: #ffab4040;  }  .ctv\\:bg-base-background {    background-color: var(--base-background, #1e1e1e);  }  .ctv\\:bg-base-foreground\\/5 {    background-color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-base-foreground\\/5 {      background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 5%, transparent);    }  }  .ctv\\:bg-base-foreground\\/10 {    background-color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-base-foreground\\/10 {      background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 10%, transparent);    }  }  .ctv\\:bg-base-foreground\\/\\[0\\.03\\] {    background-color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-base-foreground\\/\\[0\\.03\\] {      background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 3%, transparent);    }  }  .ctv\\:bg-black, .ctv\\:bg-black\\/20 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/20 {      background-color: color-mix(in oklab, var(--ctv-color-black) 20%, transparent);    }  }  .ctv\\:bg-black\\/30 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/30 {      background-color: color-mix(in oklab, var(--ctv-color-black) 30%, transparent);    }  }  .ctv\\:bg-black\\/50 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/50 {      background-color: color-mix(in oklab, var(--ctv-color-black) 50%, transparent);    }  }  .ctv\\:bg-black\\/55 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/55 {      background-color: color-mix(in oklab, var(--ctv-color-black) 55%, transparent);    }  }  .ctv\\:bg-black\\/60 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/60 {      background-color: color-mix(in oklab, var(--ctv-color-black) 60%, transparent);    }  }  .ctv\\:bg-black\\/65 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/65 {      background-color: color-mix(in oklab, var(--ctv-color-black) 65%, transparent);    }  }  .ctv\\:bg-black\\/70 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/70 {      background-color: color-mix(in oklab, var(--ctv-color-black) 70%, transparent);    }  }  .ctv\\:bg-black\\/80 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/80 {      background-color: color-mix(in oklab, var(--ctv-color-black) 80%, transparent);    }  }  .ctv\\:bg-black\\/90 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/90 {      background-color: color-mix(in oklab, var(--ctv-color-black) 90%, transparent);    }  }  .ctv\\:bg-destructive-background, .ctv\\:bg-destructive-background\\/10 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-destructive-background\\/10 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 10%, transparent);    }  }  .ctv\\:bg-destructive-background\\/15 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-destructive-background\\/15 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 15%, transparent);    }  }  .ctv\\:bg-destructive-background\\/30 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-destructive-background\\/30 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 30%, transparent);    }  }  .ctv\\:bg-destructive-background\\/70 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-destructive-background\\/70 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 70%, transparent);    }  }  .ctv\\:bg-interface-menu-component-surface-selected {    background-color: var(--interface-menu-component-surface-selected, #4ea8ff2e);  }  .ctv\\:bg-interface-menu-surface, .ctv\\:bg-interface-menu-surface\\/85 {    background-color: var(--interface-menu-surface, #232323);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-interface-menu-surface\\/85 {      background-color: color-mix(in oklab, var(--interface-menu-surface, #232323) 85%, transparent);    }  }  .ctv\\:bg-interface-panel-surface {    background-color: var(--interface-panel-surface, #1e1e1e);  }  .ctv\\:bg-primary-background, .ctv\\:bg-primary-background\\/5 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/5 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 5%, transparent);    }  }  .ctv\\:bg-primary-background\\/10 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/10 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 10%, transparent);    }  }  .ctv\\:bg-primary-background\\/15 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/15 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 15%, transparent);    }  }  .ctv\\:bg-primary-background\\/20 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/20 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 20%, transparent);    }  }  .ctv\\:bg-primary-background\\/30 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/30 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 30%, transparent);    }  }  .ctv\\:bg-secondary-background {    background-color: var(--secondary-background, #ffffff0f);  }  .ctv\\:bg-secondary-background-selected {    background-color: var(--secondary-background-selected, #4ea8ff33);  }  .ctv\\:bg-success-background\\/5 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-success-background\\/5 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 5%, transparent);    }  }  .ctv\\:bg-success-background\\/10 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-success-background\\/10 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 10%, transparent);    }  }  .ctv\\:bg-success-background\\/15 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-success-background\\/15 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 15%, transparent);    }  }  .ctv\\:bg-success-background\\/20 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-success-background\\/20 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 20%, transparent);    }  }  .ctv\\:bg-transparent {    background-color: #0000;  }  .ctv\\:bg-warning-background, .ctv\\:bg-warning-background\\/5 {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/5 {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 5%, transparent);    }  }  .ctv\\:bg-warning-background\\/10 {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/10 {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 10%, transparent);    }  }  .ctv\\:bg-warning-background\\/30 {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/30 {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 30%, transparent);    }  }  .ctv\\:bg-warning-background\\/\\[0\\.03\\] {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/\\[0\\.03\\] {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 3%, transparent);    }  }  .ctv\\:bg-white, .ctv\\:bg-white\\/10 {    background-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-white\\/10 {      background-color: color-mix(in oklab, var(--ctv-color-white) 10%, transparent);    }  }  .ctv\\:bg-white\\/30 {    background-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-white\\/30 {      background-color: color-mix(in oklab, var(--ctv-color-white) 30%, transparent);    }  }  .ctv\\:bg-white\\/70 {    background-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-white\\/70 {      background-color: color-mix(in oklab, var(--ctv-color-white) 70%, transparent);    }  }  .ctv\\:bg-white\\/85 {    background-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-white\\/85 {      background-color: color-mix(in oklab, var(--ctv-color-white) 85%, transparent);    }  }  .ctv\\:bg-linear-to-b {    --tw-gradient-position: to bottom;  }  @supports (background-image: linear-gradient(in lab, red, red)) {    .ctv\\:bg-linear-to-b {      --tw-gradient-position: to bottom in oklab;    }  }  .ctv\\:bg-linear-to-b {    background-image: linear-gradient(var(--tw-gradient-stops));  }  .ctv\\:bg-linear-to-r {    --tw-gradient-position: to right;  }  @supports (background-image: linear-gradient(in lab, red, red)) {    .ctv\\:bg-linear-to-r {      --tw-gradient-position: to right in oklab;    }  }  .ctv\\:bg-linear-to-r {    background-image: linear-gradient(var(--tw-gradient-stops));  }  .ctv\\:from-primary-background\\/85 {    --tw-gradient-from: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:from-primary-background\\/85 {      --tw-gradient-from: color-mix(in oklab, var(--primary-background, #4ea8ff99) 85%, transparent);    }  }  .ctv\\:from-primary-background\\/85 {    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .ctv\\:from-transparent {    --tw-gradient-from: transparent;    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .ctv\\:to-black\\/75 {    --tw-gradient-to: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:to-black\\/75 {      --tw-gradient-to: color-mix(in oklab, var(--ctv-color-black) 75%, transparent);    }  }  .ctv\\:to-black\\/75 {    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .ctv\\:to-primary-background-hover\\/85 {    --tw-gradient-to: var(--primary-background-hover, #4ea8ffbf);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:to-primary-background-hover\\/85 {      --tw-gradient-to: color-mix(in oklab, var(--primary-background-hover, #4ea8ffbf) 85%, transparent);    }  }  .ctv\\:to-primary-background-hover\\/85 {    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .ctv\\:fill-current {    fill: currentColor;  }  .ctv\\:object-contain {    object-fit: contain;  }  .ctv\\:object-cover {    object-fit: cover;  }  .ctv\\:p-0 {    padding: calc(var(--ctv-spacing) * 0);  }  .ctv\\:p-0\\.5 {    padding: calc(var(--ctv-spacing) * .5);  }  .ctv\\:p-1 {    padding: calc(var(--ctv-spacing) * 1);  }  .ctv\\:p-2 {    padding: calc(var(--ctv-spacing) * 2);  }  .ctv\\:p-3 {    padding: calc(var(--ctv-spacing) * 3);  }  .ctv\\:p-3\\.5 {    padding: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:p-4 {    padding: calc(var(--ctv-spacing) * 4);  }  .ctv\\:p-6 {    padding: calc(var(--ctv-spacing) * 6);  }  .ctv\\:px-0\\.5 {    padding-inline: calc(var(--ctv-spacing) * .5);  }  .ctv\\:px-1 {    padding-inline: calc(var(--ctv-spacing) * 1);  }  .ctv\\:px-1\\.5 {    padding-inline: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:px-2 {    padding-inline: calc(var(--ctv-spacing) * 2);  }  .ctv\\:px-2\\.5 {    padding-inline: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:px-3 {    padding-inline: calc(var(--ctv-spacing) * 3);  }  .ctv\\:px-3\\.5 {    padding-inline: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:px-4 {    padding-inline: calc(var(--ctv-spacing) * 4);  }  .ctv\\:px-\\[3px\\] {    padding-inline: 3px;  }  .ctv\\:px-\\[5px\\] {    padding-inline: 5px;  }  .ctv\\:py-0 {    padding-block: calc(var(--ctv-spacing) * 0);  }  .ctv\\:py-0\\.5 {    padding-block: calc(var(--ctv-spacing) * .5);  }  .ctv\\:py-1 {    padding-block: calc(var(--ctv-spacing) * 1);  }  .ctv\\:py-1\\.5 {    padding-block: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:py-2 {    padding-block: calc(var(--ctv-spacing) * 2);  }  .ctv\\:py-2\\.5 {    padding-block: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:py-5 {    padding-block: calc(var(--ctv-spacing) * 5);  }  .ctv\\:py-\\[3px\\] {    padding-block: 3px;  }  .ctv\\:py-\\[5px\\] {    padding-block: 5px;  }  .ctv\\:py-px {    padding-block: 1px;  }  .ctv\\:pt-1 {    padding-top: calc(var(--ctv-spacing) * 1);  }  .ctv\\:pt-1\\.5 {    padding-top: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:pt-2 {    padding-top: calc(var(--ctv-spacing) * 2);  }  .ctv\\:pt-2\\.5 {    padding-top: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:pt-3\\.5 {    padding-top: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:pb-1 {    padding-bottom: calc(var(--ctv-spacing) * 1);  }  .ctv\\:pb-2 {    padding-bottom: calc(var(--ctv-spacing) * 2);  }  .ctv\\:pb-3\\.5 {    padding-bottom: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:pb-6 {    padding-bottom: calc(var(--ctv-spacing) * 6);  }  .ctv\\:pl-1\\.5 {    padding-left: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:text-center {    text-align: center;  }  .ctv\\:text-left {    text-align: left;  }  .ctv\\:text-right {    text-align: right;  }  .ctv\\:\\[font-family\\:inherit\\] {    font-family: inherit;  }  .ctv\\:font-mono {    font-family: var(--ctv-font-mono);  }  .ctv\\:text-2xs {    font-size: var(--ctv-text-2xs);    line-height: var(--tw-leading, var(--ctv-text-2xs--line-height));  }  .ctv\\:text-3xs {    font-size: var(--ctv-text-3xs);    line-height: var(--tw-leading, var(--ctv-text-3xs--line-height));  }  .ctv\\:text-lg {    font-size: var(--ctv-text-lg);    line-height: var(--tw-leading, var(--ctv-text-lg--line-height));  }  .ctv\\:text-sm {    font-size: var(--ctv-text-sm);    line-height: var(--tw-leading, var(--ctv-text-sm--line-height));  }  .ctv\\:text-xs {    font-size: var(--ctv-text-xs);    line-height: var(--tw-leading, var(--ctv-text-xs--line-height));  }  .ctv\\:text-\\[8px\\] {    font-size: 8px;  }  .ctv\\:text-\\[11px\\] {    font-size: 11px;  }  .ctv\\:text-\\[13px\\] {    font-size: 13px;  }  .ctv\\:text-\\[22px\\] {    font-size: 22px;  }  .ctv\\:text-\\[28px\\] {    font-size: 28px;  }  .ctv\\:text-\\[32px\\] {    font-size: 32px;  }  .ctv\\:leading-\\[1\\.3\\] {    --tw-leading: 1.3;    line-height: 1.3;  }  .ctv\\:leading-none {    --tw-leading: 1;    line-height: 1;  }  .ctv\\:leading-snug {    --tw-leading: var(--ctv-leading-snug);    line-height: var(--ctv-leading-snug);  }  .ctv\\:leading-tight {    --tw-leading: var(--ctv-leading-tight);    line-height: var(--ctv-leading-tight);  }  .ctv\\:font-bold {    --tw-font-weight: var(--ctv-font-weight-bold);    font-weight: var(--ctv-font-weight-bold);  }  .ctv\\:font-medium {    --tw-font-weight: var(--ctv-font-weight-medium);    font-weight: var(--ctv-font-weight-medium);  }  .ctv\\:font-semibold {    --tw-font-weight: var(--ctv-font-weight-semibold);    font-weight: var(--ctv-font-weight-semibold);  }  .ctv\\:tracking-wide {    --tw-tracking: var(--ctv-tracking-wide);    letter-spacing: var(--ctv-tracking-wide);  }  .ctv\\:tracking-wider {    --tw-tracking: var(--ctv-tracking-wider);    letter-spacing: var(--ctv-tracking-wider);  }  .ctv\\:break-words {    overflow-wrap: break-word;  }  .ctv\\:break-all {    word-break: break-all;  }  .ctv\\:text-ellipsis {    text-overflow: ellipsis;  }  .ctv\\:whitespace-nowrap {    white-space: nowrap;  }  .ctv\\:whitespace-pre-wrap {    white-space: pre-wrap;  }  .ctv\\:text-\\[\\#00FFD0\\] {    color: #00ffd0;  }  .ctv\\:text-\\[\\#9dd0ff\\] {    color: #9dd0ff;  }  .ctv\\:text-\\[\\#E93D82\\] {    color: #e93d82;  }  .ctv\\:text-\\[\\#FFB800\\] {    color: #ffb800;  }  .ctv\\:text-\\[\\#b5e3a5\\] {    color: #b5e3a5;  }  .ctv\\:text-\\[\\#d8b0ff\\] {    color: #d8b0ff;  }  .ctv\\:text-\\[\\#ffb0b0\\] {    color: #ffb0b0;  }  .ctv\\:text-\\[\\#ffb0d8\\] {    color: #ffb0d8;  }  .ctv\\:text-\\[\\#ffd089\\] {    color: #ffd089;  }  .ctv\\:text-base-foreground, .ctv\\:text-base-foreground\\/80 {    color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-base-foreground\\/80 {      color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 80%, transparent);    }  }  .ctv\\:text-destructive-background {    color: var(--destructive-background, #c0392b);  }  .ctv\\:text-gray-600 {    color: var(--ctv-color-gray-600);  }  .ctv\\:text-inherit {    color: inherit;  }  .ctv\\:text-muted-foreground, .ctv\\:text-muted-foreground\\/60 {    color: var(--muted-foreground, #888);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-muted-foreground\\/60 {      color: color-mix(in oklab, var(--muted-foreground, #888) 60%, transparent);    }  }  .ctv\\:text-primary-background {    color: var(--primary-background, #4ea8ff99);  }  .ctv\\:text-secondary-foreground {    color: var(--secondary-foreground, var(--base-foreground, #e0e0e0));  }  .ctv\\:text-success-background {    color: var(--success-background, #2e9e4f);  }  .ctv\\:text-warning-background, .ctv\\:text-warning-background\\/70 {    color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-warning-background\\/70 {      color: color-mix(in oklab, var(--warning-background, #d39e00) 70%, transparent);    }  }  .ctv\\:text-warning-background\\/75 {    color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-warning-background\\/75 {      color: color-mix(in oklab, var(--warning-background, #d39e00) 75%, transparent);    }  }  .ctv\\:text-white, .ctv\\:text-white\\/30 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/30 {      color: color-mix(in oklab, var(--ctv-color-white) 30%, transparent);    }  }  .ctv\\:text-white\\/35 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/35 {      color: color-mix(in oklab, var(--ctv-color-white) 35%, transparent);    }  }  .ctv\\:text-white\\/40 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/40 {      color: color-mix(in oklab, var(--ctv-color-white) 40%, transparent);    }  }  .ctv\\:text-white\\/50 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/50 {      color: color-mix(in oklab, var(--ctv-color-white) 50%, transparent);    }  }  .ctv\\:text-white\\/70 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/70 {      color: color-mix(in oklab, var(--ctv-color-white) 70%, transparent);    }  }  .ctv\\:text-white\\/85 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/85 {      color: color-mix(in oklab, var(--ctv-color-white) 85%, transparent);    }  }  .ctv\\:text-white\\/90 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/90 {      color: color-mix(in oklab, var(--ctv-color-white) 90%, transparent);    }  }  .ctv\\:uppercase {    text-transform: uppercase;  }  .ctv\\:italic {    font-style: italic;  }  .ctv\\:opacity-0 {    opacity: 0;  }  .ctv\\:opacity-50 {    opacity: .5;  }  .ctv\\:opacity-60 {    opacity: .6;  }  .ctv\\:opacity-70 {    opacity: .7;  }  .ctv\\:opacity-75 {    opacity: .75;  }  .ctv\\:opacity-80 {    opacity: .8;  }  .ctv\\:opacity-100 {    opacity: 1;  }  .ctv\\:shadow-\\[0_0_0_1px_rgb\\(255_255_255\\/0\\.8\\)\\] {    --tw-shadow: 0 0 0 1px var(--tw-shadow-color, #fffc);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_0_1px_var\\(--primary-background\\)\\] {    --tw-shadow: 0 0 0 1px var(--tw-shadow-color, var(--primary-background));    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_0_9999px_rgb\\(0_0_0\\/0\\.5\\)\\] {    --tw-shadow: 0 0 0 9999px var(--tw-shadow-color, #00000080);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_2px_rgb\\(0_0_0\\/0\\.6\\)\\] {    --tw-shadow: 0 0 2px var(--tw-shadow-color, #0009);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_4px_rgb\\(0_0_0\\/0\\.6\\)\\] {    --tw-shadow: 0 0 4px var(--tw-shadow-color, #0009);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_8px_var\\(--primary-background\\)\\] {    --tw-shadow: 0 0 8px var(--tw-shadow-color, var(--primary-background));    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_1px_4px_rgb\\(0_0_0\\/0\\.5\\)\\] {    --tw-shadow: 0 1px 4px var(--tw-shadow-color, #00000080);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_8px_40px_rgb\\(0_0_0\\/0\\.6\\)\\] {    --tw-shadow: 0 8px 40px var(--tw-shadow-color, #0009);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_16px_48px_rgb\\(0_0_0\\/0\\.5\\)\\] {    --tw-shadow: 0 16px 48px var(--tw-shadow-color, #00000080);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-md {    --tw-shadow: 0 4px 6px -1px var(--tw-shadow-color, #0000001a), 0 2px 4px -2px var(--tw-shadow-color, #0000001a);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:ring-3 {    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:ring-primary-background {    --tw-ring-color: var(--primary-background, #4ea8ff99);  }  .ctv\\:outline, .ctv\\:outline-1 {    outline-style: var(--tw-outline-style);    outline-width: 1px;  }  .ctv\\:-outline-offset-1 {    outline-offset: calc(1px * -1);  }  .ctv\\:outline-destructive-background\\/55 {    outline-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:outline-destructive-background\\/55 {      outline-color: color-mix(in oklab, var(--destructive-background, #c0392b) 55%, transparent);    }  }  .ctv\\:outline-warning-background\\/50 {    outline-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:outline-warning-background\\/50 {      outline-color: color-mix(in oklab, var(--warning-background, #d39e00) 50%, transparent);    }  }  .ctv\\:outline-white\\/70 {    outline-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:outline-white\\/70 {      outline-color: color-mix(in oklab, var(--ctv-color-white) 70%, transparent);    }  }  .ctv\\:backdrop-blur {    --tw-backdrop-blur: blur(8px);    -webkit-backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );    backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );  }  .ctv\\:backdrop-blur-\\[2px\\] {    --tw-backdrop-blur: blur(2px);    -webkit-backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );    backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );  }  .ctv\\:backdrop-blur-sm {    --tw-backdrop-blur: blur(var(--ctv-blur-sm));    -webkit-backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );    backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );  }  .ctv\\:transition-\\[width\\] {    transition-property: width;    transition-timing-function: var(--tw-ease, var(--ctv-default-transition-timing-function));    transition-duration: var(--tw-duration, var(--ctv-default-transition-duration));  }  .ctv\\:transition-all {    transition-property: all;    transition-timing-function: var(--tw-ease, var(--ctv-default-transition-timing-function));    transition-duration: var(--tw-duration, var(--ctv-default-transition-duration));  }  .ctv\\:transition-colors {    transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;    transition-timing-function: var(--tw-ease, var(--ctv-default-transition-timing-function));    transition-duration: var(--tw-duration, var(--ctv-default-transition-duration));  }  .ctv\\:transition-opacity {    transition-property: opacity;    transition-timing-function: var(--tw-ease, var(--ctv-default-transition-timing-function));    transition-duration: var(--tw-duration, var(--ctv-default-transition-duration));  }  .ctv\\:duration-150 {    --tw-duration: .15s;    transition-duration: .15s;  }  .ctv\\:duration-200 {    --tw-duration: .2s;    transition-duration: .2s;  }  .ctv\\:ease-in {    --tw-ease: var(--ctv-ease-in);    transition-timing-function: var(--ctv-ease-in);  }  .ctv\\:ease-in-out {    --tw-ease: var(--ctv-ease-in-out);    transition-timing-function: var(--ctv-ease-in-out);  }  .ctv\\:ease-out {    --tw-ease: var(--ctv-ease-out);    transition-timing-function: var(--ctv-ease-out);  }  .ctv\\:will-change-transform {    will-change: transform;  }  .ctv\\:outline-none {    --tw-outline-style: none;    outline-style: none;  }  .ctv\\:select-none {    -webkit-user-select: none;    user-select: none;  }  .ctv\\:\\[-webkit-box-orient\\:vertical\\] {    -webkit-box-orient: vertical;  }  .ctv\\:\\[-webkit-line-clamp\\:5\\] {    -webkit-line-clamp: 5;  }  .ctv\\:ring-inset {    --tw-ring-inset: inset;  }  @media (hover: hover) {    .ctv\\:group-hover\\:opacity-100:is(:where(.ctv\\:group):hover *) {      opacity: 1;    }  }  .ctv\\:placeholder\\:text-muted-foreground::placeholder {    color: var(--muted-foreground, #888);  }  @media (hover: hover) {    .ctv\\:hover\\:border-\\[\\#E93D82\\]:hover {      border-color: #e93d82;    }    .ctv\\:hover\\:border-border-subtle:hover {      border-color: var(--border-subtle, #ffffff14);    }    .ctv\\:hover\\:border-destructive-background:hover {      border-color: var(--destructive-background, #c0392b);    }    .ctv\\:hover\\:border-primary-background:hover {      border-color: var(--primary-background, #4ea8ff99);    }    .ctv\\:hover\\:border-white\\/40:hover {      border-color: var(--ctv-color-white);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:border-white\\/40:hover {        border-color: color-mix(in oklab, var(--ctv-color-white) 40%, transparent);      }    }    .ctv\\:hover\\:border-white\\/55:hover {      border-color: var(--ctv-color-white);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:border-white\\/55:hover {        border-color: color-mix(in oklab, var(--ctv-color-white) 55%, transparent);      }    }    .ctv\\:hover\\:bg-\\[rgb\\(233_61_130\\/0\\.2\\)\\]:hover {      background-color: #e93d8233;    }    .ctv\\:hover\\:bg-base-foreground\\/5:hover {      background-color: var(--base-foreground, #e0e0e0);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-base-foreground\\/5:hover {        background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 5%, transparent);      }    }    .ctv\\:hover\\:bg-black\\/85:hover {      background-color: var(--ctv-color-black);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-black\\/85:hover {        background-color: color-mix(in oklab, var(--ctv-color-black) 85%, transparent);      }    }    .ctv\\:hover\\:bg-destructive-background:hover {      background-color: var(--destructive-background, #c0392b);    }    .ctv\\:hover\\:bg-destructive-background-hover:hover {      background-color: var(--destructive-background-hover, #d44637);    }    .ctv\\:hover\\:bg-destructive-background\\/10:hover {      background-color: var(--destructive-background, #c0392b);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-destructive-background\\/10:hover {        background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 10%, transparent);      }    }    .ctv\\:hover\\:bg-destructive-background\\/30:hover {      background-color: var(--destructive-background, #c0392b);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-destructive-background\\/30:hover {        background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 30%, transparent);      }    }    .ctv\\:hover\\:bg-interface-menu-component-surface-hovered:hover {      background-color: var(--interface-menu-component-surface-hovered, #ffffff14);    }    .ctv\\:hover\\:bg-primary-background-hover:hover {      background-color: var(--primary-background-hover, #4ea8ffbf);    }    .ctv\\:hover\\:bg-primary-background\\/15:hover {      background-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-primary-background\\/15:hover {        background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 15%, transparent);      }    }    .ctv\\:hover\\:bg-primary-background\\/20:hover {      background-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-primary-background\\/20:hover {        background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 20%, transparent);      }    }    .ctv\\:hover\\:bg-primary-background\\/25:hover {      background-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-primary-background\\/25:hover {        background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 25%, transparent);      }    }    .ctv\\:hover\\:bg-secondary-background-hover:hover {      background-color: var(--secondary-background-hover, #ffffff1a);    }    .ctv\\:hover\\:bg-warning-background\\/10:hover {      background-color: var(--warning-background, #d39e00);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-warning-background\\/10:hover {        background-color: color-mix(in oklab, var(--warning-background, #d39e00) 10%, transparent);      }    }    .ctv\\:hover\\:bg-white\\/30:hover {      background-color: var(--ctv-color-white);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-white\\/30:hover {        background-color: color-mix(in oklab, var(--ctv-color-white) 30%, transparent);      }    }    .ctv\\:hover\\:bg-white\\/90:hover {      background-color: var(--ctv-color-white);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-white\\/90:hover {        background-color: color-mix(in oklab, var(--ctv-color-white) 90%, transparent);      }    }    .ctv\\:hover\\:text-base-foreground:hover {      color: var(--base-foreground, #e0e0e0);    }    .ctv\\:hover\\:text-destructive-background:hover {      color: var(--destructive-background, #c0392b);    }    .ctv\\:hover\\:text-warning-background:hover {      color: var(--warning-background, #d39e00);    }    .ctv\\:hover\\:opacity-100:hover {      opacity: 1;    }  }  .ctv\\:focus\\:border-\\[\\#00FFD0\\]:focus {    border-color: #00ffd0;  }  .ctv\\:focus\\:border-\\[\\#E93D82\\]:focus {    border-color: #e93d82;  }  .ctv\\:focus\\:border-\\[\\#FFB800\\]:focus {    border-color: #ffb800;  }  .ctv\\:focus\\:border-node-component-border:focus {    border-color: var(--node-component-border, #fff3);  }  .ctv\\:focus\\:border-primary-background:focus, .ctv\\:focus\\:border-primary-background\\/50:focus {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:focus\\:border-primary-background\\/50:focus {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 50%, transparent);    }  }  .ctv\\:focus\\:bg-primary-background\\/10:focus {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:focus\\:bg-primary-background\\/10:focus {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 10%, transparent);    }  }  .ctv\\:focus\\:bg-secondary-background-hover:focus {    background-color: var(--secondary-background-hover, #ffffff1a);  }  .ctv\\:focus\\:outline:focus, .ctv\\:focus\\:outline-1:focus {    outline-style: var(--tw-outline-style);    outline-width: 1px;  }  .ctv\\:focus\\:outline-primary-background\\/50:focus {    outline-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:focus\\:outline-primary-background\\/50:focus {      outline-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 50%, transparent);    }  }  .ctv\\:focus\\:outline-none:focus {    --tw-outline-style: none;    outline-style: none;  }  .ctv\\:focus-visible\\:ring-1:focus-visible {    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:focus-visible\\:ring-border-default:focus-visible {    --tw-ring-color: var(--border-default, #ffffff26);  }  .ctv\\:focus-visible\\:outline-none:focus-visible {    --tw-outline-style: none;    outline-style: none;  }  .ctv\\:active\\:scale-95:active {    --tw-scale-x: 95%;    --tw-scale-y: 95%;    --tw-scale-z: 95%;    scale: var(--tw-scale-x) var(--tw-scale-y);  }  @media (hover: hover) {    .ctv\\:hover\\:enabled\\:bg-secondary-background-hover:hover:enabled {      background-color: var(--secondary-background-hover, #ffffff1a);    }  }  .ctv\\:disabled\\:pointer-events-none:disabled {    pointer-events: none;  }  .ctv\\:disabled\\:cursor-default:disabled {    cursor: default;  }  .ctv\\:disabled\\:cursor-not-allowed:disabled {    cursor: not-allowed;  }  .ctv\\:disabled\\:opacity-30:disabled {    opacity: .3;  }  .ctv\\:disabled\\:opacity-40:disabled {    opacity: .4;  }  .ctv\\:disabled\\:opacity-50:disabled {    opacity: .5;  }  .ctv\\:disabled\\:opacity-60:disabled {    opacity: .6;  }  @media (hover: hover) {    .ctv\\:disabled\\:hover\\:bg-secondary-background:disabled:hover {      background-color: var(--secondary-background, #ffffff0f);    }  }  .ctv\\:data-\\[highlighted\\]\\:bg-secondary-background-hover[data-highlighted] {    background-color: var(--secondary-background-hover, #ffffff1a);  }  .ctv\\:data-\\[state\\=checked\\]\\:bg-secondary-background-selected[data-state="checked"] {    background-color: var(--secondary-background-selected, #4ea8ff33);  }  @media (hover: hover) {    .ctv\\:data-\\[state\\=checked\\]\\:hover\\:bg-secondary-background-selected[data-state="checked"]:hover {      background-color: var(--secondary-background-selected, #4ea8ff33);    }  }  .ctv\\:data-\\[state\\=open\\]\\:border-node-component-border[data-state="open"] {    border-color: var(--node-component-border, #fff3);  }  .ctv\\:\\[\\&_\\+_\\&\\]\\:border-t + .ctv\\:\\[\\&_\\+_\\&\\]\\:border-t {    border-top-style: var(--tw-border-style);    border-top-width: 1px;  }  .ctv\\:\\[\\&_\\+_\\&\\]\\:border-solid + .ctv\\:\\[\\&_\\+_\\&\\]\\:border-solid {    --tw-border-style: solid;    border-style: solid;  }  .ctv\\:\\[\\&_\\+_\\&\\]\\:border-border-subtle + .ctv\\:\\[\\&_\\+_\\&\\]\\:border-border-subtle {    border-color: var(--border-subtle, #ffffff14);  }  .ctv\\:\\[\\&_\\+_\\&\\]\\:pt-1\\.5 + .ctv\\:\\[\\&_\\+_\\&\\]\\:pt-1\\.5 {    padding-top: calc(var(--ctv-spacing) * 1.5);  }}@property --tw-translate-x {  syntax: "*";  inherits: false;  initial-value: 0;}@property --tw-translate-y {  syntax: "*";  inherits: false;  initial-value: 0;}@property --tw-translate-z {  syntax: "*";  inherits: false;  initial-value: 0;}@property --tw-border-style {  syntax: "*";  inherits: false;  initial-value: solid;}@property --tw-gradient-position {  syntax: "*";  inherits: false}@property --tw-gradient-from {  syntax: "<color>";  inherits: false;  initial-value: #0000;}@property --tw-gradient-via {  syntax: "<color>";  inherits: false;  initial-value: #0000;}@property --tw-gradient-to {  syntax: "<color>";  inherits: false;  initial-value: #0000;}@property --tw-gradient-stops {  syntax: "*";  inherits: false}@property --tw-gradient-via-stops {  syntax: "*";  inherits: false}@property --tw-gradient-from-position {  syntax: "<length-percentage>";  inherits: false;  initial-value: 0%;}@property --tw-gradient-via-position {  syntax: "<length-percentage>";  inherits: false;  initial-value: 50%;}@property --tw-gradient-to-position {  syntax: "<length-percentage>";  inherits: false;  initial-value: 100%;}@property --tw-leading {  syntax: "*";  inherits: false}@property --tw-font-weight {  syntax: "*";  inherits: false}@property --tw-tracking {  syntax: "*";  inherits: false}@property --tw-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-shadow-color {  syntax: "*";  inherits: false}@property --tw-shadow-alpha {  syntax: "<percentage>";  inherits: false;  initial-value: 100%;}@property --tw-inset-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-inset-shadow-color {  syntax: "*";  inherits: false}@property --tw-inset-shadow-alpha {  syntax: "<percentage>";  inherits: false;  initial-value: 100%;}@property --tw-ring-color {  syntax: "*";  inherits: false}@property --tw-ring-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-inset-ring-color {  syntax: "*";  inherits: false}@property --tw-inset-ring-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-ring-inset {  syntax: "*";  inherits: false}@property --tw-ring-offset-width {  syntax: "<length>";  inherits: false;  initial-value: 0;}@property --tw-ring-offset-color {  syntax: "*";  inherits: false;  initial-value: #fff;}@property --tw-ring-offset-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-outline-style {  syntax: "*";  inherits: false;  initial-value: solid;}@property --tw-backdrop-blur {  syntax: "*";  inherits: false}@property --tw-backdrop-brightness {  syntax: "*";  inherits: false}@property --tw-backdrop-contrast {  syntax: "*";  inherits: false}@property --tw-backdrop-grayscale {  syntax: "*";  inherits: false}@property --tw-backdrop-hue-rotate {  syntax: "*";  inherits: false}@property --tw-backdrop-invert {  syntax: "*";  inherits: false}@property --tw-backdrop-opacity {  syntax: "*";  inherits: false}@property --tw-backdrop-saturate {  syntax: "*";  inherits: false}@property --tw-backdrop-sepia {  syntax: "*";  inherits: false}@property --tw-duration {  syntax: "*";  inherits: false}@property --tw-ease {  syntax: "*";  inherits: false}@property --tw-scale-x {  syntax: "*";  inherits: false;  initial-value: 1;}@property --tw-scale-y {  syntax: "*";  inherits: false;  initial-value: 1;}@property --tw-scale-z {  syntax: "*";  inherits: false;  initial-value: 1;}@keyframes pulse {  50% {    opacity: .5;  }}.comfytv-root, .comfytv-dialog {\r  --p-primary-color: #4ea8ff;\r  --p-primary-contrast-color: #fff;\r  --p-primary-hover-color: #66b6ff;\r  --p-primary-active-color: #3a96ee;\r\r  --p-surface-0:  #1e1e1e;\r  --p-surface-50: #232323;\r  --p-surface-100: #2a2a2a;\r  --p-surface-200: #333;\r  --p-surface-300: #3d3d3d;\r  --p-surface-400: #555;\r  --p-surface-500: #777;\r  --p-surface-600: #999;\r  --p-surface-700: #bbb;\r  --p-surface-800: #ddd;\r  --p-surface-900: #eee;\r  --p-surface-950: #f6f6f6;\r\r  --p-content-background: var(--p-surface-0);\r  --p-content-hover-background: var(--p-surface-100);\r  --p-content-border-color: var(--p-surface-300);\r  --p-content-border-radius: 4px;\r\r  --p-text-color: var(--p-surface-800);\r  --p-text-muted-color: var(--p-surface-600);\r\r  --p-mask-background: rgba(0, 0, 0, 0.55);\r\r  --p-focus-ring-width: 1px;\r  --p-focus-ring-style: solid;\r  --p-focus-ring-color: var(--p-primary-color);\r  --p-focus-ring-offset: 1px;\r}\r\r.comfytv-root {\r  font-size: 12px;\r  color: var(--p-text-color);\r}\r\r.comfytv-root .p-datatable {\r  font-size: 12px;\r  display: flex;\r  flex-direction: column;\r  height: 100%;\r  min-height: 0;\r  width: 100%;\r}\r.comfytv-root .p-datatable-table-container,\r.comfytv-root .p-datatable-wrapper {\r  flex: 1;\r  min-height: 0;\r  overflow: auto;\r}\r.comfytv-root .p-datatable-table {\r  border-collapse: separate;\r  border-spacing: 0;\r  table-layout: auto;\r}\r.comfytv-root .p-datatable-thead > tr > th {\r  background: var(--p-surface-100);\r  color: var(--p-text-color);\r  border-bottom: 1px solid var(--p-content-border-color);\r  padding: 6px 8px;\r  font-weight: 600;\r  text-align: left;\r}\r.comfytv-root .p-datatable-tbody > tr > td {\r  padding: 6px 8px;\r  border-bottom: 1px solid var(--p-content-border-color);\r  vertical-align: top;\r}\r.comfytv-root .p-datatable-tbody > tr.p-row-odd {\r  background: var(--p-surface-50);\r}\r.comfytv-root .p-datatable-tbody > tr:hover {\r  background: var(--p-content-hover-background);\r}\r.comfytv-root .p-datatable-frozen-column {\r  position: sticky;\r  left: 0;\r  z-index: 1;\r  background: inherit;\r}\r\r/* Select (dropdown) */\r.comfytv-root .p-select {\r  display: inline-flex;\r  align-items: center;\r  background: var(--p-surface-100);\r  border: 1px solid var(--p-content-border-color);\r  border-radius: 3px;\r  min-height: 22px;\r  cursor: pointer;\r  position: relative;\r}\r.comfytv-root .p-select:hover {\r  border-color: var(--p-surface-500);\r}\r.comfytv-root .p-select-focus {\r  border-color: var(--p-primary-color);\r}\r.comfytv-root .p-select-label {\r  padding: 2px 8px;\r  font-size: 11px;\r  color: var(--p-text-color);\r  flex: 1;\r  user-select: none;\r}\r.comfytv-root .p-select-dropdown {\r  padding: 0 6px;\r  color: var(--p-text-muted-color);\r}\r\r/* SelectButton (toggle group) */\r.comfytv-root .p-selectbutton {\r  display: inline-flex;\r  border: 1px solid var(--p-content-border-color);\r  border-radius: 3px;\r  overflow: hidden;\r}\r.comfytv-root .p-togglebutton {\r  background: var(--p-surface-100);\r  color: var(--p-text-muted-color);\r  border: none;\r  padding: 2px 10px;\r  font-size: 11px;\r  cursor: pointer;\r}\r.comfytv-root .p-togglebutton:hover {\r  background: var(--p-surface-200);\r  color: var(--p-text-color);\r}\r.comfytv-root .p-togglebutton-checked {\r  background: var(--p-primary-color);\r  color: var(--p-primary-contrast-color);\r}\r\r.comfytv-root .p-inputtext,\r.comfytv-root .cell-input,\r.comfytv-root .cell-textarea {\r  background: var(--p-surface-100);\r  border: 1px solid var(--p-primary-color);\r  color: var(--p-text-color);\r  font: inherit;\r  padding: 4px 6px;\r  border-radius: 3px;\r  width: 100%;\r  box-sizing: border-box;\r  outline: none;\r}\r.comfytv-root .cell-textarea {\r  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;\r  font-size: 11px;\r  line-height: 1.4;\r  resize: vertical;\r  min-height: 32px;\r}\r.comfytv-root .cell-select { width: 100%; }\r\r.comfytv-root .p-datatable-tbody > tr > td.p-editable-column { cursor: text; }\r.comfytv-root .p-datatable-tbody > tr > td.p-cell-editing {\r  padding: 2px !important;\r  background: rgba(78, 168, 255, 0.08);\r}\r\r.comfytv-dialog.p-dialog {\r  background: var(--p-surface-0);\r  border: 1px solid var(--p-content-border-color);\r  border-radius: 8px;\r  color: var(--p-text-color);\r  box-shadow: 0 24px 48px rgba(0,0,0,0.6);\r}\r.comfytv-dialog .p-dialog-header {\r  padding: 12px 16px;\r  border-bottom: 1px solid var(--p-content-border-color);\r  background: var(--p-surface-50);\r  border-radius: 8px 8px 0 0;\r  font-weight: 600;\r  display: flex;\r  justify-content: space-between;\r  align-items: center;\r}\r.comfytv-dialog .p-dialog-title {\r  font-size: 14px;\r}\r.comfytv-dialog .p-dialog-content {\r  padding: 16px;\r  background: var(--p-surface-0);\r  overflow: auto;\r}\r.comfytv-dialog .p-dialog-close-button {\r  background: transparent;\r  border: none;\r  color: var(--p-text-muted-color);\r  cursor: pointer;\r  font-size: 18px;\r  padding: 2px 6px;\r}\r.comfytv-dialog .p-dialog-close-button:hover {\r  color: var(--p-text-color);\r}\r\rbody > .p-blockui-mask.p-blockui-mask-document:empty,\rbody > .p-overlay-mask.p-blockui-mask-document.p-overlay-mask-leave:empty {\r  display: none !important;\r  pointer-events: none !important;\r}`));      document.head.appendChild(elementStyle);    }  } catch (e) {    console.error("vite-plugin-css-injected-by-js", e);  }})();
+(function() {  "use strict";  try {    if (typeof document != "undefined") {      var elementStyle = document.createElement("style");      elementStyle.appendChild(document.createTextNode(`.ctv-num-root {\r  display: flex;\r  align-items: center;\r  width: 100%;\r  min-width: 0;\r  background: var(--secondary-background, rgba(255,255,255,0.04));\r  border-radius: 8px;\r  box-sizing: border-box;}.ctv-num-root .ctv-num-input,\r.ctv-num-root input {\r  appearance: none;\r  background: transparent;\r  border: none;\r  border-radius: 8px;\r  padding: 6px 12px;\r  color: var(--base-foreground, #ddd);\r  font-size: 12px;\r  font-family: inherit;\r  width: 100%;\r  min-width: 0;\r  flex: 1;\r  outline: none;\r  text-align: left;\r  box-sizing: border-box;}.ctv-num-root input::placeholder { color: var(--muted-foreground, #888);}.ctv-num-root:focus-within {\r  box-shadow: 0 0 0 1px var(--border-default, rgba(255,255,255,0.25));}.ctv-num-root input:disabled { opacity: 0.5; pointer-events: none;}.ctv-num-btn {\r  flex-shrink: 0;\r  appearance: none;\r  background: transparent;\r  border: none;\r  color: var(--muted-foreground, #888);\r  font-size: 13px;\r  line-height: 1;\r  width: 22px;\r  height: 100%;\r  min-height: 28px;\r  cursor: pointer;\r  user-select: none;\r  display: inline-flex;\r  align-items: center;\r  justify-content: center;}.ctv-num-btn:hover { color: var(--base-foreground, #ddd);}.ctv-num-btn[data-disabled] { opacity: 0.4; pointer-events: none;}\r.ctv-toggle {\r  display: inline-flex;\r  align-items: center;\r  flex-shrink: 0;\r  width: 32px;\r  height: 18px;\r  padding: 2px;\r  border: none;\r  border-radius: 9999px;\r  background: var(--secondary-background, rgba(255,255,255,0.12));\r  cursor: pointer;\r  transition: background 0.15s ease;}.ctv-toggle[data-state='checked'] {\r  background: var(--primary-background, rgba(78,168,255,0.6));}.ctv-toggle:disabled,\r.ctv-toggle[data-disabled] {\r  opacity: 0.5;\r  cursor: not-allowed;\r  pointer-events: none;}.ctv-toggle:focus-visible {\r  outline: none;\r  box-shadow: 0 0 0 1px var(--border-default, rgba(255,255,255,0.25));}.ctv-toggle-thumb {\r  display: block;\r  width: 14px;\r  height: 14px;\r  border-radius: 9999px;\r  background: #fff;\r  transition: transform 0.15s ease;\r  transform: translateX(0);\r  will-change: transform;\r  pointer-events: none;}.ctv-toggle[data-state='checked'] .ctv-toggle-thumb {\r  transform: translateX(14px);}\r.ctv-text-input,\r.ctv-text-input input,\r.ctv-text-input textarea {\r  appearance: none;\r  background: var(--secondary-background, rgba(255,255,255,0.04));\r  border: none;\r  border-radius: 8px;\r  padding: 6px 12px;\r  color: var(--base-foreground, #ddd);\r  font-size: 12px;\r  font-family: inherit;\r  width: 100%;\r  min-width: 0;\r  outline: none;\r  box-sizing: border-box;}.ctv-text-input::placeholder,\r.ctv-text-input input::placeholder,\r.ctv-text-input textarea::placeholder { color: var(--muted-foreground, #888);}.ctv-text-area { line-height: 1.4; resize: vertical; min-height: 48px; overflow: hidden;}.ctv-text-input:focus-visible,\r.ctv-text-input input:focus-visible,\r.ctv-text-input textarea:focus-visible {\r  box-shadow: 0 0 0 1px var(--border-default, rgba(255,255,255,0.25));}.ctv-text-input:disabled,\r.ctv-text-input input:disabled,\r.ctv-text-input textarea:disabled { opacity: 0.5; pointer-events: none;}\r.comfytv-asset-scroll {\r  scrollbar-width: thin;\r  scrollbar-color: rgba(255, 255, 255, 0.35) transparent;}.comfytv-asset-scroll::-webkit-scrollbar {\r  width: 10px;}.comfytv-asset-scroll::-webkit-scrollbar-track {\r  background: transparent;}.comfytv-asset-scroll::-webkit-scrollbar-thumb {\r  background-color: rgba(255, 255, 255, 0.35);\r  border-radius: 5px;\r  border: 2px solid transparent;\r  background-clip: content-box;}.comfytv-asset-scroll:hover::-webkit-scrollbar-thumb {\r  background-color: rgba(255, 255, 255, 0.55);}\r.tippy-box[data-animation=fade][data-state=hidden]{opacity:0}[data-tippy-root]{max-width:calc(100vw - 10px)}.tippy-box{position:relative;background-color:#333;color:#fff;border-radius:4px;font-size:14px;line-height:1.4;white-space:normal;outline:0;transition-property:transform,visibility,opacity}.tippy-box[data-placement^=top]>.tippy-arrow{bottom:0}.tippy-box[data-placement^=top]>.tippy-arrow:before{bottom:-7px;left:0;border-width:8px 8px 0;border-top-color:initial;transform-origin:center top}.tippy-box[data-placement^=bottom]>.tippy-arrow{top:0}.tippy-box[data-placement^=bottom]>.tippy-arrow:before{top:-7px;left:0;border-width:0 8px 8px;border-bottom-color:initial;transform-origin:center bottom}.tippy-box[data-placement^=left]>.tippy-arrow{right:0}.tippy-box[data-placement^=left]>.tippy-arrow:before{border-width:8px 0 8px 8px;border-left-color:initial;right:-7px;transform-origin:center left}.tippy-box[data-placement^=right]>.tippy-arrow{left:0}.tippy-box[data-placement^=right]>.tippy-arrow:before{left:-7px;border-width:8px 8px 8px 0;border-right-color:initial;transform-origin:center right}.tippy-box[data-inertia][data-state=visible]{transition-timing-function:cubic-bezier(.54,1.5,.38,1.11)}.tippy-arrow{width:16px;height:16px;color:#333}.tippy-arrow:before{content:"";position:absolute;border-color:transparent;border-style:solid}.tippy-content{position:relative;padding:5px 9px;z-index:1}.tippy-box[data-theme~='comfytv-transparent'] {\r  background: transparent;\r  box-shadow: none;}.tippy-box[data-theme~='comfytv-transparent'] > .tippy-content { padding: 0;}.tippy-box[data-theme~='comfytv-tooltip'] {\r  background: var(--interface-menu-surface, #1a1a1a);\r  border: 1px solid var(--border-default, #3a3a3a);\r  color: var(--base-foreground, #e0e0e0);\r  font-size: 11px;\r  line-height: 1.45;\r  border-radius: 4px;\r  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);}.tippy-box[data-theme~='comfytv-tooltip'] > .tippy-content {\r  padding: 6px 8px;\r  white-space: pre-wrap;\r  word-break: break-word;}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='top']    > .tippy-arrow::before { border-top-color: var(--border-default, #3a3a3a);}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='bottom'] > .tippy-arrow::before { border-bottom-color: var(--border-default, #3a3a3a);}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='left']   > .tippy-arrow::before { border-left-color: var(--border-default, #3a3a3a);}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='right']  > .tippy-arrow::before { border-right-color: var(--border-default, #3a3a3a);}\r.comfytv-prompt-editor[data-v-47152a2d] p { margin: 0;}.comfytv-prompt-editor[data-v-47152a2d] p.is-editor-empty:first-child::before {\r  content: attr(data-placeholder);\r  color: var(--muted-foreground, #888);\r  opacity: 0.65;\r  float: left;\r  height: 0;\r  pointer-events: none;}\r.ctv-batch-grid[data-v-09e6e163] {\r  display: grid;\r  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));\r  gap: 4px;\r  padding-top: 14px;\r  max-height: 320px;\r  overflow: auto;}\r.ctv-input-tile:hover .ctv-tile-disconnect[data-v-95136374] { display: inline-flex;}.ctv-picker-input.ctv-src-upstream         .ctv-src-tag[data-v-95136374] { background: color-mix(in srgb, var(--primary-background) 22%, transparent); color: var(--primary-background);}.ctv-picker-input.ctv-src-upstream-pending .ctv-src-tag[data-v-95136374] { background: color-mix(in srgb, var(--warning-background) 18%, transparent); color: var(--warning-background);}\r.ctv-camera-dropdown option[data-v-43267b78] {\r  background: var(--interface-menu-surface, #1a1a2e);\r  color: var(--base-foreground, #e0e0e0);}\r.ctv-crop-select[data-v-c343d075] option {\r  background: var(--interface-menu-surface, #1a1a1f);\r  color: var(--base-foreground, #ddd);}.ctv-bound-input[data-v-c343d075] { -moz-appearance: textfield;}.ctv-bound-input[data-v-c343d075]::-webkit-inner-spin-button,\r.ctv-bound-input[data-v-c343d075]::-webkit-outer-spin-button {\r  -webkit-appearance: none;}\r.ctv-pano-select[data-v-e0f33c2f] {\r  appearance: none;\r  background-color: var(--secondary-background, rgb(255 255 255 / 0.04));\r  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6' viewBox='0 0 8 6'><path d='M0 0l4 6 4-6z' fill='%23bbb'/></svg>");\r  background-repeat: no-repeat;\r  background-position: right 6px center;\r  color: var(--base-foreground, rgb(255 255 255 / 0.9));\r  border: 1px solid var(--border-subtle, rgb(255 255 255 / 0.15));\r  border-radius: 4px;\r  padding: 3px 18px 3px 6px;\r  font-size: 11px;\r  font-family: ui-monospace, SFMono-Regular, monospace;\r  cursor: pointer;\r  outline: none;\r  min-width: 70px;}.ctv-pano-select[data-v-e0f33c2f]:hover { border-color: var(--border-default, rgb(255 255 255 / 0.3));}.ctv-pano-select[data-v-e0f33c2f]:focus { border-color: var(--primary-background, rgb(78 168 255 / 0.6));}.ctv-pano-select option[data-v-e0f33c2f] { background: var(--interface-menu-surface, #1a1a2e); color: var(--base-foreground, #e0e0e0);}\r.ctv-pano-select[data-v-6cb1afcc] {\r  appearance: none;\r  background-color: var(--secondary-background, rgb(255 255 255 / 0.04));\r  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6' viewBox='0 0 8 6'><path d='M0 0l4 6 4-6z' fill='%23bbb'/></svg>");\r  background-repeat: no-repeat;\r  background-position: right 6px center;\r  color: var(--base-foreground, rgb(255 255 255 / 0.9));\r  border: 1px solid var(--border-subtle, rgb(255 255 255 / 0.15));\r  border-radius: 4px;\r  padding: 3px 18px 3px 6px;\r  font-size: 11px;\r  font-family: ui-monospace, SFMono-Regular, monospace;\r  cursor: pointer;\r  outline: none;\r  min-width: 70px;}.ctv-pano-select[data-v-6cb1afcc]:hover { border-color: var(--border-default, rgb(255 255 255 / 0.3));}.ctv-pano-select[data-v-6cb1afcc]:focus { border-color: var(--primary-background, rgb(78 168 255 / 0.6));}.ctv-pano-select option[data-v-6cb1afcc] { background: var(--interface-menu-surface, #1a1a2e); color: var(--base-foreground, #e0e0e0);}\r.ctv-pad-area[data-v-da53c66d] {\r  background-image:\r    linear-gradient(45deg, rgba(255,255,255,0.04) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.04) 75%),\r    linear-gradient(45deg, rgba(255,255,255,0.04) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.04) 75%);\r  background-size: 12px 12px;\r  background-position: 0 0, 6px 6px;\r  border: 1px dashed color-mix(in srgb, var(--primary-background, #4ea8ff) 45%, transparent);}.ctv-outpaint-handle[data-v-da53c66d]::before {\r  content: '';\r  position: absolute;\r  background: color-mix(in srgb, var(--primary-background, #4ea8ff) 65%, transparent);\r  border-radius: 2px;}.ctv-handle-left[data-v-da53c66d]::before,  .ctv-handle-right[data-v-da53c66d]::before  { width: 3px; height: 100%;}.ctv-handle-top[data-v-da53c66d]::before,   .ctv-handle-bottom[data-v-da53c66d]::before { height: 3px; width: 100%;}.ctv-outpaint-handle[data-v-da53c66d]:hover::before { background: var(--primary-background, #4ea8ff);}\r.ctv-entry-table th[data-v-cab17390],\r.ctv-entry-table td[data-v-cab17390] {\r  text-align: left;\r  padding: 6px 8px;\r  border-bottom: 1px solid var(--border-subtle, #2a2a2a);\r  vertical-align: top;}.ctv-entry-table th[data-v-cab17390] {\r  font-weight: 600;\r  color: var(--muted-foreground, #aaa);}\r/*! tailwindcss v4.3.0 | MIT License | https://tailwindcss.com */@layer properties {  @supports (((-webkit-hyphens: none)) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {    *, :before, :after, ::backdrop {      --tw-translate-x: 0;      --tw-translate-y: 0;      --tw-translate-z: 0;      --tw-border-style: solid;      --tw-gradient-position: initial;      --tw-gradient-from: #0000;      --tw-gradient-via: #0000;      --tw-gradient-to: #0000;      --tw-gradient-stops: initial;      --tw-gradient-via-stops: initial;      --tw-gradient-from-position: 0%;      --tw-gradient-via-position: 50%;      --tw-gradient-to-position: 100%;      --tw-leading: initial;      --tw-font-weight: initial;      --tw-tracking: initial;      --tw-shadow: 0 0 #0000;      --tw-shadow-color: initial;      --tw-shadow-alpha: 100%;      --tw-inset-shadow: 0 0 #0000;      --tw-inset-shadow-color: initial;      --tw-inset-shadow-alpha: 100%;      --tw-ring-color: initial;      --tw-ring-shadow: 0 0 #0000;      --tw-inset-ring-color: initial;      --tw-inset-ring-shadow: 0 0 #0000;      --tw-ring-inset: initial;      --tw-ring-offset-width: 0px;      --tw-ring-offset-color: #fff;      --tw-ring-offset-shadow: 0 0 #0000;      --tw-outline-style: solid;      --tw-backdrop-blur: initial;      --tw-backdrop-brightness: initial;      --tw-backdrop-contrast: initial;      --tw-backdrop-grayscale: initial;      --tw-backdrop-hue-rotate: initial;      --tw-backdrop-invert: initial;      --tw-backdrop-opacity: initial;      --tw-backdrop-saturate: initial;      --tw-backdrop-sepia: initial;      --tw-duration: initial;      --tw-ease: initial;      --tw-scale-x: 1;      --tw-scale-y: 1;      --tw-scale-z: 1;    }  }}@layer theme {  :root, :host {    --ctv-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",    monospace;    --ctv-color-gray-600: oklch(44.6% .03 256.802);    --ctv-color-black: #000;    --ctv-color-white: #fff;    --ctv-spacing: .25rem;    --ctv-container-md: 28rem;    --ctv-text-xs: .75rem;    --ctv-text-xs--line-height: calc(1 / .75);    --ctv-text-sm: .875rem;    --ctv-text-sm--line-height: calc(1.25 / .875);    --ctv-text-lg: 1.125rem;    --ctv-text-lg--line-height: calc(1.75 / 1.125);    --ctv-font-weight-medium: 500;    --ctv-font-weight-semibold: 600;    --ctv-font-weight-bold: 700;    --ctv-tracking-wide: .025em;    --ctv-tracking-wider: .05em;    --ctv-leading-tight: 1.25;    --ctv-leading-snug: 1.375;    --ctv-radius-sm: .25rem;    --ctv-radius-md: .375rem;    --ctv-radius-lg: .5rem;    --ctv-ease-in: cubic-bezier(.4, 0, 1, 1);    --ctv-ease-out: cubic-bezier(0, 0, .2, 1);    --ctv-ease-in-out: cubic-bezier(.4, 0, .2, 1);    --ctv-animate-pulse: pulse 2s cubic-bezier(.4, 0, .6, 1) infinite;    --ctv-blur-sm: 8px;    --ctv-aspect-video: 16 / 9;    --ctv-default-transition-duration: .15s;    --ctv-default-transition-timing-function: cubic-bezier(.4, 0, .2, 1);    --ctv-text-2xs: .625rem;    --ctv-text-2xs--line-height: calc(1 / .625);    --ctv-text-3xs: .5625rem;    --ctv-text-3xs--line-height: calc(1 / .5625);  }}@layer utilities {  .ctv\\:pointer-events-none {    pointer-events: none;  }  .ctv\\:absolute {    position: absolute;  }  .ctv\\:fixed {    position: fixed;  }  .ctv\\:relative {    position: relative;  }  .ctv\\:sticky {    position: sticky;  }  .ctv\\:inset-0 {    inset: calc(var(--ctv-spacing) * 0);  }  .ctv\\:inset-x-0 {    inset-inline: calc(var(--ctv-spacing) * 0);  }  .ctv\\:-top-2 {    top: calc(var(--ctv-spacing) * -2);  }  .ctv\\:top-0 {    top: calc(var(--ctv-spacing) * 0);  }  .ctv\\:top-0\\.5 {    top: calc(var(--ctv-spacing) * .5);  }  .ctv\\:top-1 {    top: calc(var(--ctv-spacing) * 1);  }  .ctv\\:top-1\\/2 {    top: 50%;  }  .ctv\\:top-2 {    top: calc(var(--ctv-spacing) * 2);  }  .ctv\\:top-4 {    top: calc(var(--ctv-spacing) * 4);  }  .ctv\\:top-\\[3px\\] {    top: 3px;  }  .ctv\\:right-0 {    right: calc(var(--ctv-spacing) * 0);  }  .ctv\\:right-0\\.5 {    right: calc(var(--ctv-spacing) * .5);  }  .ctv\\:right-1 {    right: calc(var(--ctv-spacing) * 1);  }  .ctv\\:right-2 {    right: calc(var(--ctv-spacing) * 2);  }  .ctv\\:right-4 {    right: calc(var(--ctv-spacing) * 4);  }  .ctv\\:right-\\[3px\\] {    right: 3px;  }  .ctv\\:right-\\[14px\\] {    right: 14px;  }  .ctv\\:bottom-0 {    bottom: calc(var(--ctv-spacing) * 0);  }  .ctv\\:bottom-0\\.5 {    bottom: calc(var(--ctv-spacing) * .5);  }  .ctv\\:bottom-2 {    bottom: calc(var(--ctv-spacing) * 2);  }  .ctv\\:bottom-4 {    bottom: calc(var(--ctv-spacing) * 4);  }  .ctv\\:bottom-px {    bottom: 1px;  }  .ctv\\:left-0 {    left: calc(var(--ctv-spacing) * 0);  }  .ctv\\:left-0\\.5 {    left: calc(var(--ctv-spacing) * .5);  }  .ctv\\:left-2 {    left: calc(var(--ctv-spacing) * 2);  }  .ctv\\:z-10 {    z-index: 10;  }  .ctv\\:z-20 {    z-index: 20;  }  .ctv\\:z-30 {    z-index: 30;  }  .ctv\\:z-3000 {    z-index: 3000;  }  .ctv\\:z-\\[1\\] {    z-index: 1;  }  .ctv\\:z-\\[2\\] {    z-index: 2;  }  .ctv\\:z-\\[3\\] {    z-index: 3;  }  .ctv\\:z-\\[5\\] {    z-index: 5;  }  .ctv\\:z-\\[6\\] {    z-index: 6;  }  .ctv\\:z-\\[7\\] {    z-index: 7;  }  .ctv\\:z-\\[9999\\] {    z-index: 9999;  }  .ctv\\:z-\\[10000\\] {    z-index: 10000;  }  .ctv\\:m-0 {    margin: calc(var(--ctv-spacing) * 0);  }  .ctv\\:m-0\\.5 {    margin: calc(var(--ctv-spacing) * .5);  }  .ctv\\:m-1 {    margin: calc(var(--ctv-spacing) * 1);  }  .ctv\\:-mx-2\\.5 {    margin-inline: calc(var(--ctv-spacing) * -2.5);  }  .ctv\\:mx-2\\.5 {    margin-inline: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:mx-auto {    margin-inline: auto;  }  .ctv\\:mx-px {    margin-inline: 1px;  }  .ctv\\:my-1\\.5 {    margin-block: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:-mt-2 {    margin-top: calc(var(--ctv-spacing) * -2);  }  .ctv\\:mt-0\\.5 {    margin-top: calc(var(--ctv-spacing) * .5);  }  .ctv\\:mt-1 {    margin-top: calc(var(--ctv-spacing) * 1);  }  .ctv\\:mt-3\\.5 {    margin-top: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:mt-4 {    margin-top: calc(var(--ctv-spacing) * 4);  }  .ctv\\:mr-1 {    margin-right: calc(var(--ctv-spacing) * 1);  }  .ctv\\:-mb-px {    margin-bottom: -1px;  }  .ctv\\:mb-1 {    margin-bottom: calc(var(--ctv-spacing) * 1);  }  .ctv\\:mb-1\\.5 {    margin-bottom: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:mb-2 {    margin-bottom: calc(var(--ctv-spacing) * 2);  }  .ctv\\:mb-2\\.5 {    margin-bottom: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:mb-\\[3px\\] {    margin-bottom: 3px;  }  .ctv\\:-ml-px {    margin-left: -1px;  }  .ctv\\:ml-0\\.5 {    margin-left: calc(var(--ctv-spacing) * .5);  }  .ctv\\:ml-auto {    margin-left: auto;  }  .ctv\\:box-border {    box-sizing: border-box;  }  .ctv\\:box-content {    box-sizing: content-box;  }  .ctv\\:\\[display\\:-webkit-box\\] {    display: -webkit-box;  }  .ctv\\:block {    display: block;  }  .ctv\\:flex {    display: flex;  }  .ctv\\:grid {    display: grid;  }  .ctv\\:hidden {    display: none;  }  .ctv\\:inline-block {    display: inline-block;  }  .ctv\\:inline-flex {    display: inline-flex;  }  .ctv\\:aspect-square {    aspect-ratio: 1;  }  .ctv\\:aspect-video {    aspect-ratio: var(--ctv-aspect-video);  }  .ctv\\:size-2 {    width: calc(var(--ctv-spacing) * 2);    height: calc(var(--ctv-spacing) * 2);  }  .ctv\\:size-3 {    width: calc(var(--ctv-spacing) * 3);    height: calc(var(--ctv-spacing) * 3);  }  .ctv\\:size-3\\.5 {    width: calc(var(--ctv-spacing) * 3.5);    height: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:size-4 {    width: calc(var(--ctv-spacing) * 4);    height: calc(var(--ctv-spacing) * 4);  }  .ctv\\:size-5 {    width: calc(var(--ctv-spacing) * 5);    height: calc(var(--ctv-spacing) * 5);  }  .ctv\\:size-6 {    width: calc(var(--ctv-spacing) * 6);    height: calc(var(--ctv-spacing) * 6);  }  .ctv\\:size-7 {    width: calc(var(--ctv-spacing) * 7);    height: calc(var(--ctv-spacing) * 7);  }  .ctv\\:size-9 {    width: calc(var(--ctv-spacing) * 9);    height: calc(var(--ctv-spacing) * 9);  }  .ctv\\:size-\\[22px\\] {    width: 22px;    height: 22px;  }  .ctv\\:size-full {    width: 100%;    height: 100%;  }  .ctv\\:h-1\\.5 {    height: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:h-4 {    height: calc(var(--ctv-spacing) * 4);  }  .ctv\\:h-5 {    height: calc(var(--ctv-spacing) * 5);  }  .ctv\\:h-6 {    height: calc(var(--ctv-spacing) * 6);  }  .ctv\\:h-7 {    height: calc(var(--ctv-spacing) * 7);  }  .ctv\\:h-8 {    height: calc(var(--ctv-spacing) * 8);  }  .ctv\\:h-9 {    height: calc(var(--ctv-spacing) * 9);  }  .ctv\\:h-10 {    height: calc(var(--ctv-spacing) * 10);  }  .ctv\\:h-11 {    height: calc(var(--ctv-spacing) * 11);  }  .ctv\\:h-80 {    height: calc(var(--ctv-spacing) * 80);  }  .ctv\\:h-\\[13px\\] {    height: 13px;  }  .ctv\\:h-\\[18px\\] {    height: 18px;  }  .ctv\\:h-\\[72px\\] {    height: 72px;  }  .ctv\\:h-\\[76px\\] {    height: 76px;  }  .ctv\\:h-\\[224px\\] {    height: 224px;  }  .ctv\\:h-\\[280px\\] {    height: 280px;  }  .ctv\\:h-\\[340px\\] {    height: 340px;  }  .ctv\\:h-\\[350px\\] {    height: 350px;  }  .ctv\\:h-full {    height: 100%;  }  .ctv\\:h-px {    height: 1px;  }  .ctv\\:max-h-40 {    max-height: calc(var(--ctv-spacing) * 40);  }  .ctv\\:max-h-44 {    max-height: calc(var(--ctv-spacing) * 44);  }  .ctv\\:max-h-52 {    max-height: calc(var(--ctv-spacing) * 52);  }  .ctv\\:max-h-56 {    max-height: calc(var(--ctv-spacing) * 56);  }  .ctv\\:max-h-60 {    max-height: calc(var(--ctv-spacing) * 60);  }  .ctv\\:max-h-64 {    max-height: calc(var(--ctv-spacing) * 64);  }  .ctv\\:max-h-80 {    max-height: calc(var(--ctv-spacing) * 80);  }  .ctv\\:max-h-\\[60vh\\] {    max-height: 60vh;  }  .ctv\\:max-h-\\[120px\\] {    max-height: 120px;  }  .ctv\\:max-h-\\[360px\\] {    max-height: 360px;  }  .ctv\\:max-h-\\[calc\\(100vh-48px\\)\\] {    max-height: calc(100vh - 48px);  }  .ctv\\:max-h-full {    max-height: 100%;  }  .ctv\\:min-h-0 {    min-height: calc(var(--ctv-spacing) * 0);  }  .ctv\\:min-h-10 {    min-height: calc(var(--ctv-spacing) * 10);  }  .ctv\\:min-h-11 {    min-height: calc(var(--ctv-spacing) * 11);  }  .ctv\\:min-h-12 {    min-height: calc(var(--ctv-spacing) * 12);  }  .ctv\\:min-h-14 {    min-height: calc(var(--ctv-spacing) * 14);  }  .ctv\\:min-h-20 {    min-height: calc(var(--ctv-spacing) * 20);  }  .ctv\\:min-h-\\[22px\\] {    min-height: 22px;  }  .ctv\\:min-h-\\[116px\\] {    min-height: 116px;  }  .ctv\\:min-h-\\[280px\\] {    min-height: 280px;  }  .ctv\\:w-0\\.5 {    width: calc(var(--ctv-spacing) * .5);  }  .ctv\\:w-2 {    width: calc(var(--ctv-spacing) * 2);  }  .ctv\\:w-2\\.5 {    width: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:w-3 {    width: calc(var(--ctv-spacing) * 3);  }  .ctv\\:w-4 {    width: calc(var(--ctv-spacing) * 4);  }  .ctv\\:w-7 {    width: calc(var(--ctv-spacing) * 7);  }  .ctv\\:w-12 {    width: calc(var(--ctv-spacing) * 12);  }  .ctv\\:w-14 {    width: calc(var(--ctv-spacing) * 14);  }  .ctv\\:w-24 {    width: calc(var(--ctv-spacing) * 24);  }  .ctv\\:w-44 {    width: calc(var(--ctv-spacing) * 44);  }  .ctv\\:w-64 {    width: calc(var(--ctv-spacing) * 64);  }  .ctv\\:w-\\[38px\\] {    width: 38px;  }  .ctv\\:w-\\[76px\\] {    width: 76px;  }  .ctv\\:w-\\[140px\\] {    width: 140px;  }  .ctv\\:w-\\[180px\\] {    width: 180px;  }  .ctv\\:w-auto {    width: auto;  }  .ctv\\:w-full {    width: 100%;  }  .ctv\\:w-px {    width: 1px;  }  .ctv\\:max-w-\\[60vw\\] {    max-width: 60vw;  }  .ctv\\:max-w-\\[90px\\] {    max-width: 90px;  }  .ctv\\:max-w-\\[360px\\] {    max-width: 360px;  }  .ctv\\:max-w-full {    max-width: 100%;  }  .ctv\\:max-w-md {    max-width: var(--ctv-container-md);  }  .ctv\\:min-w-0 {    min-width: calc(var(--ctv-spacing) * 0);  }  .ctv\\:min-w-2 {    min-width: calc(var(--ctv-spacing) * 2);  }  .ctv\\:min-w-4 {    min-width: calc(var(--ctv-spacing) * 4);  }  .ctv\\:min-w-8 {    min-width: calc(var(--ctv-spacing) * 8);  }  .ctv\\:min-w-9 {    min-width: calc(var(--ctv-spacing) * 9);  }  .ctv\\:min-w-64 {    min-width: calc(var(--ctv-spacing) * 64);  }  .ctv\\:min-w-\\[44px\\] {    min-width: 44px;  }  .ctv\\:min-w-\\[60px\\] {    min-width: 60px;  }  .ctv\\:min-w-\\[var\\(--reka-combobox-trigger-width\\)\\] {    min-width: var(--reka-combobox-trigger-width);  }  .ctv\\:flex-1 {    flex: 1;  }  .ctv\\:flex-auto {    flex: auto;  }  .ctv\\:shrink-0 {    flex-shrink: 0;  }  .ctv\\:border-collapse {    border-collapse: collapse;  }  .ctv\\:-translate-x-1\\/2 {    --tw-translate-x: calc(calc(1 / 2 * 100%) * -1);    translate: var(--tw-translate-x) var(--tw-translate-y);  }  .ctv\\:-translate-y-1\\/2 {    --tw-translate-y: calc(calc(1 / 2 * 100%) * -1);    translate: var(--tw-translate-x) var(--tw-translate-y);  }  .ctv\\:animate-pulse {    animation: var(--ctv-animate-pulse);  }  .ctv\\:cursor-\\[inherit\\] {    cursor: inherit;  }  .ctv\\:cursor-crosshair {    cursor: crosshair;  }  .ctv\\:cursor-default {    cursor: default;  }  .ctv\\:cursor-ew-resize {    cursor: ew-resize;  }  .ctv\\:cursor-grab {    cursor: grab;  }  .ctv\\:cursor-grabbing {    cursor: grabbing;  }  .ctv\\:cursor-move {    cursor: move;  }  .ctv\\:cursor-none {    cursor: none;  }  .ctv\\:cursor-not-allowed {    cursor: not-allowed;  }  .ctv\\:cursor-ns-resize {    cursor: ns-resize;  }  .ctv\\:cursor-pointer {    cursor: pointer;  }  .ctv\\:cursor-zoom-out {    cursor: zoom-out;  }  .ctv\\:touch-manipulation {    touch-action: manipulation;  }  .ctv\\:touch-none {    touch-action: none;  }  .ctv\\:resize-none {    resize: none;  }  .ctv\\:resize-y {    resize: vertical;  }  .ctv\\:list-none {    list-style-type: none;  }  .ctv\\:appearance-none {    appearance: none;  }  .ctv\\:grid-cols-4 {    grid-template-columns: repeat(4, minmax(0, 1fr));  }  .ctv\\:grid-cols-\\[60px_1fr\\] {    grid-template-columns: 60px 1fr;  }  .ctv\\:grid-cols-\\[64px_1fr_48px\\] {    grid-template-columns: 64px 1fr 48px;  }  .ctv\\:grid-cols-\\[80px_1fr_36px\\] {    grid-template-columns: 80px 1fr 36px;  }  .ctv\\:grid-cols-\\[max-content_1fr\\] {    grid-template-columns: max-content 1fr;  }  .ctv\\:grid-cols-\\[repeat\\(auto-fill\\,minmax\\(64px\\,1fr\\)\\)\\] {    grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));  }  .ctv\\:grid-cols-\\[repeat\\(auto-fill\\,minmax\\(88px\\,1fr\\)\\)\\] {    grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));  }  .ctv\\:grid-cols-\\[repeat\\(auto-fill\\,minmax\\(110px\\,1fr\\)\\)\\] {    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));  }  .ctv\\:flex-col {    flex-direction: column;  }  .ctv\\:flex-wrap {    flex-wrap: wrap;  }  .ctv\\:items-baseline {    align-items: baseline;  }  .ctv\\:items-center {    align-items: center;  }  .ctv\\:items-start {    align-items: flex-start;  }  .ctv\\:justify-around {    justify-content: space-around;  }  .ctv\\:justify-between {    justify-content: space-between;  }  .ctv\\:justify-center {    justify-content: center;  }  .ctv\\:justify-end {    justify-content: flex-end;  }  .ctv\\:gap-0\\.5 {    gap: calc(var(--ctv-spacing) * .5);  }  .ctv\\:gap-1 {    gap: calc(var(--ctv-spacing) * 1);  }  .ctv\\:gap-1\\.5 {    gap: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:gap-2 {    gap: calc(var(--ctv-spacing) * 2);  }  .ctv\\:gap-2\\.5 {    gap: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:gap-3 {    gap: calc(var(--ctv-spacing) * 3);  }  .ctv\\:gap-\\[3px\\] {    gap: 3px;  }  .ctv\\:gap-px {    gap: 1px;  }  .ctv\\:gap-x-2\\.5 {    column-gap: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:gap-y-\\[3px\\] {    row-gap: 3px;  }  .ctv\\:self-start {    align-self: flex-start;  }  .ctv\\:truncate {    text-overflow: ellipsis;    white-space: nowrap;    overflow: hidden;  }  .ctv\\:overflow-auto {    overflow: auto;  }  .ctv\\:overflow-hidden {    overflow: hidden;  }  .ctv\\:overflow-x-auto {    overflow-x: auto;  }  .ctv\\:overflow-y-auto {    overflow-y: auto;  }  .ctv\\:overflow-y-hidden {    overflow-y: hidden;  }  .ctv\\:overflow-y-scroll {    overflow-y: scroll;  }  .ctv\\:rounded {    border-radius: .25rem;  }  .ctv\\:rounded-full {    border-radius: 3.40282e38px;  }  .ctv\\:rounded-lg {    border-radius: var(--ctv-radius-lg);  }  .ctv\\:rounded-md {    border-radius: var(--ctv-radius-md);  }  .ctv\\:rounded-none {    border-radius: 0;  }  .ctv\\:rounded-sm {    border-radius: var(--ctv-radius-sm);  }  .ctv\\:rounded-t {    border-top-left-radius: .25rem;    border-top-right-radius: .25rem;  }  .ctv\\:border {    border-style: var(--tw-border-style);    border-width: 1px;  }  .ctv\\:border-0 {    border-style: var(--tw-border-style);    border-width: 0;  }  .ctv\\:border-2 {    border-style: var(--tw-border-style);    border-width: 2px;  }  .ctv\\:border-\\[2\\.5px\\] {    border-style: var(--tw-border-style);    border-width: 2.5px;  }  .ctv\\:border-t {    border-top-style: var(--tw-border-style);    border-top-width: 1px;  }  .ctv\\:border-b {    border-bottom-style: var(--tw-border-style);    border-bottom-width: 1px;  }  .ctv\\:border-b-0 {    border-bottom-style: var(--tw-border-style);    border-bottom-width: 0;  }  .ctv\\:border-l {    border-left-style: var(--tw-border-style);    border-left-width: 1px;  }  .ctv\\:border-l-2 {    border-left-style: var(--tw-border-style);    border-left-width: 2px;  }  .ctv\\:border-dashed {    --tw-border-style: dashed;    border-style: dashed;  }  .ctv\\:border-none {    --tw-border-style: none;    border-style: none;  }  .ctv\\:border-solid {    --tw-border-style: solid;    border-style: solid;  }  .ctv\\:border-\\[rgb\\(200_130_255\\/0\\.4\\)\\] {    border-color: #c882ff66;  }  .ctv\\:border-\\[rgb\\(233_61_130\\/0\\.3\\)\\] {    border-color: #e93d824d;  }  .ctv\\:border-\\[rgb\\(233_61_130\\/0\\.4\\)\\] {    border-color: #e93d8266;  }  .ctv\\:border-black\\/70 {    border-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-black\\/70 {      border-color: color-mix(in oklab, var(--ctv-color-black) 70%, transparent);    }  }  .ctv\\:border-border-default {    border-color: var(--border-default, #ffffff26);  }  .ctv\\:border-border-subtle {    border-color: var(--border-subtle, #ffffff14);  }  .ctv\\:border-destructive-background, .ctv\\:border-destructive-background\\/30 {    border-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-destructive-background\\/30 {      border-color: color-mix(in oklab, var(--destructive-background, #c0392b) 30%, transparent);    }  }  .ctv\\:border-destructive-background\\/50 {    border-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-destructive-background\\/50 {      border-color: color-mix(in oklab, var(--destructive-background, #c0392b) 50%, transparent);    }  }  .ctv\\:border-destructive-background\\/55 {    border-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-destructive-background\\/55 {      border-color: color-mix(in oklab, var(--destructive-background, #c0392b) 55%, transparent);    }  }  .ctv\\:border-primary-background, .ctv\\:border-primary-background\\/30 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/30 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 30%, transparent);    }  }  .ctv\\:border-primary-background\\/40 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/40 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 40%, transparent);    }  }  .ctv\\:border-primary-background\\/45 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/45 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 45%, transparent);    }  }  .ctv\\:border-primary-background\\/50 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/50 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 50%, transparent);    }  }  .ctv\\:border-primary-background\\/60 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/60 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 60%, transparent);    }  }  .ctv\\:border-primary-background\\/70 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/70 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 70%, transparent);    }  }  .ctv\\:border-success-background\\/30 {    border-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-success-background\\/30 {      border-color: color-mix(in oklab, var(--success-background, #2e9e4f) 30%, transparent);    }  }  .ctv\\:border-success-background\\/50 {    border-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-success-background\\/50 {      border-color: color-mix(in oklab, var(--success-background, #2e9e4f) 50%, transparent);    }  }  .ctv\\:border-transparent {    border-color: #0000;  }  .ctv\\:border-warning-background\\/25 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/25 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 25%, transparent);    }  }  .ctv\\:border-warning-background\\/40 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/40 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 40%, transparent);    }  }  .ctv\\:border-warning-background\\/50 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/50 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 50%, transparent);    }  }  .ctv\\:border-warning-background\\/55 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/55 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 55%, transparent);    }  }  .ctv\\:border-warning-background\\/70 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/70 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 70%, transparent);    }  }  .ctv\\:border-white, .ctv\\:border-white\\/10 {    border-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-white\\/10 {      border-color: color-mix(in oklab, var(--ctv-color-white) 10%, transparent);    }  }  .ctv\\:border-white\\/15 {    border-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-white\\/15 {      border-color: color-mix(in oklab, var(--ctv-color-white) 15%, transparent);    }  }  .ctv\\:border-white\\/20 {    border-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-white\\/20 {      border-color: color-mix(in oklab, var(--ctv-color-white) 20%, transparent);    }  }  .ctv\\:border-white\\/30 {    border-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-white\\/30 {      border-color: color-mix(in oklab, var(--ctv-color-white) 30%, transparent);    }  }  .ctv\\:border-b-transparent {    border-bottom-color: #0000;  }  .ctv\\:border-b-warning-background\\/15 {    border-bottom-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-b-warning-background\\/15 {      border-bottom-color: color-mix(in oklab, var(--warning-background, #d39e00) 15%, transparent);    }  }  .ctv\\:bg-\\[rgb\\(78_168_255\\/0\\.25\\)\\] {    background-color: #4ea8ff40;  }  .ctv\\:bg-\\[rgb\\(120_200_120\\/0\\.25\\)\\] {    background-color: #78c87840;  }  .ctv\\:bg-\\[rgb\\(200_130_255\\/0\\.25\\)\\] {    background-color: #c882ff40;  }  .ctv\\:bg-\\[rgb\\(255_100_100\\/0\\.22\\)\\] {    background-color: #ff646438;  }  .ctv\\:bg-\\[rgb\\(255_140_200\\/0\\.25\\)\\] {    background-color: #ff8cc840;  }  .ctv\\:bg-\\[rgb\\(255_140_200\\/0\\.85\\)\\] {    background-color: #ff8cc8d9;  }  .ctv\\:bg-\\[rgb\\(255_171_64\\/0\\.25\\)\\] {    background-color: #ffab4040;  }  .ctv\\:bg-base-background {    background-color: var(--base-background, #1e1e1e);  }  .ctv\\:bg-base-foreground\\/5 {    background-color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-base-foreground\\/5 {      background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 5%, transparent);    }  }  .ctv\\:bg-base-foreground\\/10 {    background-color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-base-foreground\\/10 {      background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 10%, transparent);    }  }  .ctv\\:bg-base-foreground\\/\\[0\\.03\\] {    background-color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-base-foreground\\/\\[0\\.03\\] {      background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 3%, transparent);    }  }  .ctv\\:bg-black, .ctv\\:bg-black\\/20 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/20 {      background-color: color-mix(in oklab, var(--ctv-color-black) 20%, transparent);    }  }  .ctv\\:bg-black\\/30 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/30 {      background-color: color-mix(in oklab, var(--ctv-color-black) 30%, transparent);    }  }  .ctv\\:bg-black\\/50 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/50 {      background-color: color-mix(in oklab, var(--ctv-color-black) 50%, transparent);    }  }  .ctv\\:bg-black\\/55 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/55 {      background-color: color-mix(in oklab, var(--ctv-color-black) 55%, transparent);    }  }  .ctv\\:bg-black\\/60 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/60 {      background-color: color-mix(in oklab, var(--ctv-color-black) 60%, transparent);    }  }  .ctv\\:bg-black\\/65 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/65 {      background-color: color-mix(in oklab, var(--ctv-color-black) 65%, transparent);    }  }  .ctv\\:bg-black\\/70 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/70 {      background-color: color-mix(in oklab, var(--ctv-color-black) 70%, transparent);    }  }  .ctv\\:bg-black\\/80 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/80 {      background-color: color-mix(in oklab, var(--ctv-color-black) 80%, transparent);    }  }  .ctv\\:bg-black\\/90 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/90 {      background-color: color-mix(in oklab, var(--ctv-color-black) 90%, transparent);    }  }  .ctv\\:bg-destructive-background, .ctv\\:bg-destructive-background\\/10 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-destructive-background\\/10 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 10%, transparent);    }  }  .ctv\\:bg-destructive-background\\/15 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-destructive-background\\/15 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 15%, transparent);    }  }  .ctv\\:bg-destructive-background\\/30 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-destructive-background\\/30 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 30%, transparent);    }  }  .ctv\\:bg-destructive-background\\/70 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-destructive-background\\/70 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 70%, transparent);    }  }  .ctv\\:bg-interface-menu-component-surface-hovered {    background-color: var(--interface-menu-component-surface-hovered, #ffffff14);  }  .ctv\\:bg-interface-menu-component-surface-selected {    background-color: var(--interface-menu-component-surface-selected, #4ea8ff2e);  }  .ctv\\:bg-interface-menu-surface, .ctv\\:bg-interface-menu-surface\\/85 {    background-color: var(--interface-menu-surface, #232323);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-interface-menu-surface\\/85 {      background-color: color-mix(in oklab, var(--interface-menu-surface, #232323) 85%, transparent);    }  }  .ctv\\:bg-interface-panel-surface, .ctv\\:bg-interface-panel-surface\\/90 {    background-color: var(--interface-panel-surface, #1e1e1e);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-interface-panel-surface\\/90 {      background-color: color-mix(in oklab, var(--interface-panel-surface, #1e1e1e) 90%, transparent);    }  }  .ctv\\:bg-primary-background, .ctv\\:bg-primary-background\\/5 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/5 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 5%, transparent);    }  }  .ctv\\:bg-primary-background\\/10 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/10 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 10%, transparent);    }  }  .ctv\\:bg-primary-background\\/15 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/15 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 15%, transparent);    }  }  .ctv\\:bg-primary-background\\/20 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/20 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 20%, transparent);    }  }  .ctv\\:bg-primary-background\\/30 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/30 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 30%, transparent);    }  }  .ctv\\:bg-secondary-background {    background-color: var(--secondary-background, #ffffff0f);  }  .ctv\\:bg-secondary-background-selected {    background-color: var(--secondary-background-selected, #4ea8ff33);  }  .ctv\\:bg-success-background\\/5 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-success-background\\/5 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 5%, transparent);    }  }  .ctv\\:bg-success-background\\/10 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-success-background\\/10 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 10%, transparent);    }  }  .ctv\\:bg-success-background\\/15 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-success-background\\/15 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 15%, transparent);    }  }  .ctv\\:bg-success-background\\/20 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-success-background\\/20 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 20%, transparent);    }  }  .ctv\\:bg-transparent {    background-color: #0000;  }  .ctv\\:bg-warning-background, .ctv\\:bg-warning-background\\/5 {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/5 {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 5%, transparent);    }  }  .ctv\\:bg-warning-background\\/10 {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/10 {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 10%, transparent);    }  }  .ctv\\:bg-warning-background\\/15 {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/15 {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 15%, transparent);    }  }  .ctv\\:bg-warning-background\\/30 {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/30 {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 30%, transparent);    }  }  .ctv\\:bg-warning-background\\/\\[0\\.03\\] {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/\\[0\\.03\\] {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 3%, transparent);    }  }  .ctv\\:bg-white, .ctv\\:bg-white\\/10 {    background-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-white\\/10 {      background-color: color-mix(in oklab, var(--ctv-color-white) 10%, transparent);    }  }  .ctv\\:bg-white\\/30 {    background-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-white\\/30 {      background-color: color-mix(in oklab, var(--ctv-color-white) 30%, transparent);    }  }  .ctv\\:bg-white\\/70 {    background-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-white\\/70 {      background-color: color-mix(in oklab, var(--ctv-color-white) 70%, transparent);    }  }  .ctv\\:bg-white\\/85 {    background-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-white\\/85 {      background-color: color-mix(in oklab, var(--ctv-color-white) 85%, transparent);    }  }  .ctv\\:bg-linear-to-b {    --tw-gradient-position: to bottom;  }  @supports (background-image: linear-gradient(in lab, red, red)) {    .ctv\\:bg-linear-to-b {      --tw-gradient-position: to bottom in oklab;    }  }  .ctv\\:bg-linear-to-b {    background-image: linear-gradient(var(--tw-gradient-stops));  }  .ctv\\:bg-linear-to-r {    --tw-gradient-position: to right;  }  @supports (background-image: linear-gradient(in lab, red, red)) {    .ctv\\:bg-linear-to-r {      --tw-gradient-position: to right in oklab;    }  }  .ctv\\:bg-linear-to-r {    background-image: linear-gradient(var(--tw-gradient-stops));  }  .ctv\\:from-primary-background\\/85 {    --tw-gradient-from: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:from-primary-background\\/85 {      --tw-gradient-from: color-mix(in oklab, var(--primary-background, #4ea8ff99) 85%, transparent);    }  }  .ctv\\:from-primary-background\\/85 {    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .ctv\\:from-transparent {    --tw-gradient-from: transparent;    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .ctv\\:to-black\\/75 {    --tw-gradient-to: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:to-black\\/75 {      --tw-gradient-to: color-mix(in oklab, var(--ctv-color-black) 75%, transparent);    }  }  .ctv\\:to-black\\/75 {    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .ctv\\:to-primary-background-hover\\/85 {    --tw-gradient-to: var(--primary-background-hover, #4ea8ffbf);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:to-primary-background-hover\\/85 {      --tw-gradient-to: color-mix(in oklab, var(--primary-background-hover, #4ea8ffbf) 85%, transparent);    }  }  .ctv\\:to-primary-background-hover\\/85 {    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .ctv\\:fill-current {    fill: currentColor;  }  .ctv\\:object-contain {    object-fit: contain;  }  .ctv\\:object-cover {    object-fit: cover;  }  .ctv\\:p-0 {    padding: calc(var(--ctv-spacing) * 0);  }  .ctv\\:p-0\\.5 {    padding: calc(var(--ctv-spacing) * .5);  }  .ctv\\:p-1 {    padding: calc(var(--ctv-spacing) * 1);  }  .ctv\\:p-1\\.5 {    padding: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:p-2 {    padding: calc(var(--ctv-spacing) * 2);  }  .ctv\\:p-2\\.5 {    padding: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:p-3 {    padding: calc(var(--ctv-spacing) * 3);  }  .ctv\\:p-3\\.5 {    padding: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:p-4 {    padding: calc(var(--ctv-spacing) * 4);  }  .ctv\\:p-6 {    padding: calc(var(--ctv-spacing) * 6);  }  .ctv\\:px-0\\.5 {    padding-inline: calc(var(--ctv-spacing) * .5);  }  .ctv\\:px-1 {    padding-inline: calc(var(--ctv-spacing) * 1);  }  .ctv\\:px-1\\.5 {    padding-inline: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:px-2 {    padding-inline: calc(var(--ctv-spacing) * 2);  }  .ctv\\:px-2\\.5 {    padding-inline: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:px-3 {    padding-inline: calc(var(--ctv-spacing) * 3);  }  .ctv\\:px-3\\.5 {    padding-inline: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:px-4 {    padding-inline: calc(var(--ctv-spacing) * 4);  }  .ctv\\:px-\\[3px\\] {    padding-inline: 3px;  }  .ctv\\:px-\\[5px\\] {    padding-inline: 5px;  }  .ctv\\:py-0 {    padding-block: calc(var(--ctv-spacing) * 0);  }  .ctv\\:py-0\\.5 {    padding-block: calc(var(--ctv-spacing) * .5);  }  .ctv\\:py-1 {    padding-block: calc(var(--ctv-spacing) * 1);  }  .ctv\\:py-1\\.5 {    padding-block: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:py-2 {    padding-block: calc(var(--ctv-spacing) * 2);  }  .ctv\\:py-2\\.5 {    padding-block: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:py-4 {    padding-block: calc(var(--ctv-spacing) * 4);  }  .ctv\\:py-5 {    padding-block: calc(var(--ctv-spacing) * 5);  }  .ctv\\:py-\\[3px\\] {    padding-block: 3px;  }  .ctv\\:py-\\[5px\\] {    padding-block: 5px;  }  .ctv\\:py-px {    padding-block: 1px;  }  .ctv\\:pt-1 {    padding-top: calc(var(--ctv-spacing) * 1);  }  .ctv\\:pt-2 {    padding-top: calc(var(--ctv-spacing) * 2);  }  .ctv\\:pt-2\\.5 {    padding-top: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:pt-3\\.5 {    padding-top: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:pb-1 {    padding-bottom: calc(var(--ctv-spacing) * 1);  }  .ctv\\:pb-2 {    padding-bottom: calc(var(--ctv-spacing) * 2);  }  .ctv\\:pb-3\\.5 {    padding-bottom: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:pb-6 {    padding-bottom: calc(var(--ctv-spacing) * 6);  }  .ctv\\:pl-1\\.5 {    padding-left: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:text-center {    text-align: center;  }  .ctv\\:text-left {    text-align: left;  }  .ctv\\:text-right {    text-align: right;  }  .ctv\\:\\[font-family\\:inherit\\] {    font-family: inherit;  }  .ctv\\:font-mono {    font-family: var(--ctv-font-mono);  }  .ctv\\:text-2xs {    font-size: var(--ctv-text-2xs);    line-height: var(--tw-leading, var(--ctv-text-2xs--line-height));  }  .ctv\\:text-3xs {    font-size: var(--ctv-text-3xs);    line-height: var(--tw-leading, var(--ctv-text-3xs--line-height));  }  .ctv\\:text-lg {    font-size: var(--ctv-text-lg);    line-height: var(--tw-leading, var(--ctv-text-lg--line-height));  }  .ctv\\:text-sm {    font-size: var(--ctv-text-sm);    line-height: var(--tw-leading, var(--ctv-text-sm--line-height));  }  .ctv\\:text-xs {    font-size: var(--ctv-text-xs);    line-height: var(--tw-leading, var(--ctv-text-xs--line-height));  }  .ctv\\:text-\\[8px\\] {    font-size: 8px;  }  .ctv\\:text-\\[11px\\] {    font-size: 11px;  }  .ctv\\:text-\\[13px\\] {    font-size: 13px;  }  .ctv\\:text-\\[22px\\] {    font-size: 22px;  }  .ctv\\:text-\\[28px\\] {    font-size: 28px;  }  .ctv\\:text-\\[32px\\] {    font-size: 32px;  }  .ctv\\:leading-\\[1\\.3\\] {    --tw-leading: 1.3;    line-height: 1.3;  }  .ctv\\:leading-none {    --tw-leading: 1;    line-height: 1;  }  .ctv\\:leading-snug {    --tw-leading: var(--ctv-leading-snug);    line-height: var(--ctv-leading-snug);  }  .ctv\\:leading-tight {    --tw-leading: var(--ctv-leading-tight);    line-height: var(--ctv-leading-tight);  }  .ctv\\:font-bold {    --tw-font-weight: var(--ctv-font-weight-bold);    font-weight: var(--ctv-font-weight-bold);  }  .ctv\\:font-medium {    --tw-font-weight: var(--ctv-font-weight-medium);    font-weight: var(--ctv-font-weight-medium);  }  .ctv\\:font-semibold {    --tw-font-weight: var(--ctv-font-weight-semibold);    font-weight: var(--ctv-font-weight-semibold);  }  .ctv\\:tracking-wide {    --tw-tracking: var(--ctv-tracking-wide);    letter-spacing: var(--ctv-tracking-wide);  }  .ctv\\:tracking-wider {    --tw-tracking: var(--ctv-tracking-wider);    letter-spacing: var(--ctv-tracking-wider);  }  .ctv\\:break-words {    overflow-wrap: break-word;  }  .ctv\\:break-all {    word-break: break-all;  }  .ctv\\:text-ellipsis {    text-overflow: ellipsis;  }  .ctv\\:whitespace-normal {    white-space: normal;  }  .ctv\\:whitespace-nowrap {    white-space: nowrap;  }  .ctv\\:whitespace-pre-wrap {    white-space: pre-wrap;  }  .ctv\\:text-\\[\\#00FFD0\\] {    color: #00ffd0;  }  .ctv\\:text-\\[\\#9dd0ff\\] {    color: #9dd0ff;  }  .ctv\\:text-\\[\\#E93D82\\] {    color: #e93d82;  }  .ctv\\:text-\\[\\#FFB800\\] {    color: #ffb800;  }  .ctv\\:text-\\[\\#b5e3a5\\] {    color: #b5e3a5;  }  .ctv\\:text-\\[\\#d8b0ff\\] {    color: #d8b0ff;  }  .ctv\\:text-\\[\\#ffb0b0\\] {    color: #ffb0b0;  }  .ctv\\:text-\\[\\#ffb0d8\\] {    color: #ffb0d8;  }  .ctv\\:text-\\[\\#ffd089\\] {    color: #ffd089;  }  .ctv\\:text-base-foreground, .ctv\\:text-base-foreground\\/80 {    color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-base-foreground\\/80 {      color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 80%, transparent);    }  }  .ctv\\:text-destructive-background {    color: var(--destructive-background, #c0392b);  }  .ctv\\:text-gray-600 {    color: var(--ctv-color-gray-600);  }  .ctv\\:text-inherit {    color: inherit;  }  .ctv\\:text-muted-foreground, .ctv\\:text-muted-foreground\\/60 {    color: var(--muted-foreground, #888);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-muted-foreground\\/60 {      color: color-mix(in oklab, var(--muted-foreground, #888) 60%, transparent);    }  }  .ctv\\:text-primary-background {    color: var(--primary-background, #4ea8ff99);  }  .ctv\\:text-secondary-foreground {    color: var(--secondary-foreground, var(--base-foreground, #e0e0e0));  }  .ctv\\:text-success-background {    color: var(--success-background, #2e9e4f);  }  .ctv\\:text-warning-background, .ctv\\:text-warning-background\\/70 {    color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-warning-background\\/70 {      color: color-mix(in oklab, var(--warning-background, #d39e00) 70%, transparent);    }  }  .ctv\\:text-warning-background\\/75 {    color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-warning-background\\/75 {      color: color-mix(in oklab, var(--warning-background, #d39e00) 75%, transparent);    }  }  .ctv\\:text-white, .ctv\\:text-white\\/30 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/30 {      color: color-mix(in oklab, var(--ctv-color-white) 30%, transparent);    }  }  .ctv\\:text-white\\/35 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/35 {      color: color-mix(in oklab, var(--ctv-color-white) 35%, transparent);    }  }  .ctv\\:text-white\\/40 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/40 {      color: color-mix(in oklab, var(--ctv-color-white) 40%, transparent);    }  }  .ctv\\:text-white\\/50 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/50 {      color: color-mix(in oklab, var(--ctv-color-white) 50%, transparent);    }  }  .ctv\\:text-white\\/70 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/70 {      color: color-mix(in oklab, var(--ctv-color-white) 70%, transparent);    }  }  .ctv\\:text-white\\/85 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/85 {      color: color-mix(in oklab, var(--ctv-color-white) 85%, transparent);    }  }  .ctv\\:text-white\\/90 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/90 {      color: color-mix(in oklab, var(--ctv-color-white) 90%, transparent);    }  }  .ctv\\:uppercase {    text-transform: uppercase;  }  .ctv\\:italic {    font-style: italic;  }  .ctv\\:opacity-0 {    opacity: 0;  }  .ctv\\:opacity-50 {    opacity: .5;  }  .ctv\\:opacity-55 {    opacity: .55;  }  .ctv\\:opacity-60 {    opacity: .6;  }  .ctv\\:opacity-70 {    opacity: .7;  }  .ctv\\:opacity-75 {    opacity: .75;  }  .ctv\\:opacity-80 {    opacity: .8;  }  .ctv\\:opacity-100 {    opacity: 1;  }  .ctv\\:shadow-\\[0_0_0_1px_rgb\\(255_255_255\\/0\\.8\\)\\] {    --tw-shadow: 0 0 0 1px var(--tw-shadow-color, #fffc);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_0_1px_var\\(--primary-background\\)\\] {    --tw-shadow: 0 0 0 1px var(--tw-shadow-color, var(--primary-background));    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_0_9999px_rgb\\(0_0_0\\/0\\.5\\)\\] {    --tw-shadow: 0 0 0 9999px var(--tw-shadow-color, #00000080);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_2px_rgb\\(0_0_0\\/0\\.6\\)\\] {    --tw-shadow: 0 0 2px var(--tw-shadow-color, #0009);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_4px_rgb\\(0_0_0\\/0\\.6\\)\\] {    --tw-shadow: 0 0 4px var(--tw-shadow-color, #0009);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_8px_var\\(--primary-background\\)\\] {    --tw-shadow: 0 0 8px var(--tw-shadow-color, var(--primary-background));    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_1px_4px_rgb\\(0_0_0\\/0\\.5\\)\\] {    --tw-shadow: 0 1px 4px var(--tw-shadow-color, #00000080);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_8px_40px_rgb\\(0_0_0\\/0\\.6\\)\\] {    --tw-shadow: 0 8px 40px var(--tw-shadow-color, #0009);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_16px_48px_rgb\\(0_0_0\\/0\\.5\\)\\] {    --tw-shadow: 0 16px 48px var(--tw-shadow-color, #00000080);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-md {    --tw-shadow: 0 4px 6px -1px var(--tw-shadow-color, #0000001a), 0 2px 4px -2px var(--tw-shadow-color, #0000001a);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:ring-3 {    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:ring-primary-background {    --tw-ring-color: var(--primary-background, #4ea8ff99);  }  .ctv\\:outline, .ctv\\:outline-1 {    outline-style: var(--tw-outline-style);    outline-width: 1px;  }  .ctv\\:-outline-offset-1 {    outline-offset: calc(1px * -1);  }  .ctv\\:outline-destructive-background\\/55 {    outline-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:outline-destructive-background\\/55 {      outline-color: color-mix(in oklab, var(--destructive-background, #c0392b) 55%, transparent);    }  }  .ctv\\:outline-warning-background\\/50 {    outline-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:outline-warning-background\\/50 {      outline-color: color-mix(in oklab, var(--warning-background, #d39e00) 50%, transparent);    }  }  .ctv\\:outline-white\\/70 {    outline-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:outline-white\\/70 {      outline-color: color-mix(in oklab, var(--ctv-color-white) 70%, transparent);    }  }  .ctv\\:backdrop-blur {    --tw-backdrop-blur: blur(8px);    -webkit-backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );    backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );  }  .ctv\\:backdrop-blur-\\[2px\\] {    --tw-backdrop-blur: blur(2px);    -webkit-backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );    backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );  }  .ctv\\:backdrop-blur-sm {    --tw-backdrop-blur: blur(var(--ctv-blur-sm));    -webkit-backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );    backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );  }  .ctv\\:transition-\\[width\\] {    transition-property: width;    transition-timing-function: var(--tw-ease, var(--ctv-default-transition-timing-function));    transition-duration: var(--tw-duration, var(--ctv-default-transition-duration));  }  .ctv\\:transition-all {    transition-property: all;    transition-timing-function: var(--tw-ease, var(--ctv-default-transition-timing-function));    transition-duration: var(--tw-duration, var(--ctv-default-transition-duration));  }  .ctv\\:transition-colors {    transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;    transition-timing-function: var(--tw-ease, var(--ctv-default-transition-timing-function));    transition-duration: var(--tw-duration, var(--ctv-default-transition-duration));  }  .ctv\\:transition-opacity {    transition-property: opacity;    transition-timing-function: var(--tw-ease, var(--ctv-default-transition-timing-function));    transition-duration: var(--tw-duration, var(--ctv-default-transition-duration));  }  .ctv\\:duration-150 {    --tw-duration: .15s;    transition-duration: .15s;  }  .ctv\\:duration-200 {    --tw-duration: .2s;    transition-duration: .2s;  }  .ctv\\:ease-in {    --tw-ease: var(--ctv-ease-in);    transition-timing-function: var(--ctv-ease-in);  }  .ctv\\:ease-in-out {    --tw-ease: var(--ctv-ease-in-out);    transition-timing-function: var(--ctv-ease-in-out);  }  .ctv\\:ease-out {    --tw-ease: var(--ctv-ease-out);    transition-timing-function: var(--ctv-ease-out);  }  .ctv\\:will-change-transform {    will-change: transform;  }  .ctv\\:outline-none {    --tw-outline-style: none;    outline-style: none;  }  .ctv\\:select-none {    -webkit-user-select: none;    user-select: none;  }  .ctv\\:\\[-webkit-box-orient\\:vertical\\] {    -webkit-box-orient: vertical;  }  .ctv\\:\\[-webkit-line-clamp\\:5\\] {    -webkit-line-clamp: 5;  }  .ctv\\:ring-inset {    --tw-ring-inset: inset;  }  @media (hover: hover) {    .ctv\\:group-hover\\:flex:is(:where(.ctv\\:group):hover *) {      display: flex;    }    .ctv\\:group-hover\\:opacity-100:is(:where(.ctv\\:group):hover *) {      opacity: 1;    }  }  .ctv\\:placeholder\\:text-muted-foreground::placeholder {    color: var(--muted-foreground, #888);  }  @media (hover: hover) {    .ctv\\:hover\\:border-\\[\\#E93D82\\]:hover {      border-color: #e93d82;    }    .ctv\\:hover\\:border-border-default:hover {      border-color: var(--border-default, #ffffff26);    }    .ctv\\:hover\\:border-border-subtle:hover {      border-color: var(--border-subtle, #ffffff14);    }    .ctv\\:hover\\:border-destructive-background:hover {      border-color: var(--destructive-background, #c0392b);    }    .ctv\\:hover\\:border-primary-background:hover, .ctv\\:hover\\:border-primary-background\\/60:hover {      border-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:border-primary-background\\/60:hover {        border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 60%, transparent);      }    }    .ctv\\:hover\\:border-primary-background\\/70:hover {      border-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:border-primary-background\\/70:hover {        border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 70%, transparent);      }    }    .ctv\\:hover\\:border-white\\/40:hover {      border-color: var(--ctv-color-white);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:border-white\\/40:hover {        border-color: color-mix(in oklab, var(--ctv-color-white) 40%, transparent);      }    }    .ctv\\:hover\\:border-white\\/55:hover {      border-color: var(--ctv-color-white);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:border-white\\/55:hover {        border-color: color-mix(in oklab, var(--ctv-color-white) 55%, transparent);      }    }    .ctv\\:hover\\:bg-\\[rgb\\(233_61_130\\/0\\.2\\)\\]:hover {      background-color: #e93d8233;    }    .ctv\\:hover\\:bg-base-foreground\\/5:hover {      background-color: var(--base-foreground, #e0e0e0);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-base-foreground\\/5:hover {        background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 5%, transparent);      }    }    .ctv\\:hover\\:bg-black\\/85:hover {      background-color: var(--ctv-color-black);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-black\\/85:hover {        background-color: color-mix(in oklab, var(--ctv-color-black) 85%, transparent);      }    }    .ctv\\:hover\\:bg-destructive-background:hover {      background-color: var(--destructive-background, #c0392b);    }    .ctv\\:hover\\:bg-destructive-background-hover:hover {      background-color: var(--destructive-background-hover, #d44637);    }    .ctv\\:hover\\:bg-destructive-background\\/10:hover {      background-color: var(--destructive-background, #c0392b);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-destructive-background\\/10:hover {        background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 10%, transparent);      }    }    .ctv\\:hover\\:bg-destructive-background\\/30:hover {      background-color: var(--destructive-background, #c0392b);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-destructive-background\\/30:hover {        background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 30%, transparent);      }    }    .ctv\\:hover\\:bg-destructive-background\\/80:hover {      background-color: var(--destructive-background, #c0392b);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-destructive-background\\/80:hover {        background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 80%, transparent);      }    }    .ctv\\:hover\\:bg-interface-menu-component-surface-hovered:hover {      background-color: var(--interface-menu-component-surface-hovered, #ffffff14);    }    .ctv\\:hover\\:bg-primary-background-hover:hover {      background-color: var(--primary-background-hover, #4ea8ffbf);    }    .ctv\\:hover\\:bg-primary-background\\/15:hover {      background-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-primary-background\\/15:hover {        background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 15%, transparent);      }    }    .ctv\\:hover\\:bg-primary-background\\/20:hover {      background-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-primary-background\\/20:hover {        background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 20%, transparent);      }    }    .ctv\\:hover\\:bg-primary-background\\/25:hover {      background-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-primary-background\\/25:hover {        background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 25%, transparent);      }    }    .ctv\\:hover\\:bg-primary-background\\/90:hover {      background-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-primary-background\\/90:hover {        background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 90%, transparent);      }    }    .ctv\\:hover\\:bg-secondary-background-hover:hover {      background-color: var(--secondary-background-hover, #ffffff1a);    }    .ctv\\:hover\\:bg-warning-background\\/10:hover {      background-color: var(--warning-background, #d39e00);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-warning-background\\/10:hover {        background-color: color-mix(in oklab, var(--warning-background, #d39e00) 10%, transparent);      }    }    .ctv\\:hover\\:bg-white\\/30:hover {      background-color: var(--ctv-color-white);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-white\\/30:hover {        background-color: color-mix(in oklab, var(--ctv-color-white) 30%, transparent);      }    }    .ctv\\:hover\\:bg-white\\/90:hover {      background-color: var(--ctv-color-white);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-white\\/90:hover {        background-color: color-mix(in oklab, var(--ctv-color-white) 90%, transparent);      }    }    .ctv\\:hover\\:text-base-foreground:hover {      color: var(--base-foreground, #e0e0e0);    }    .ctv\\:hover\\:text-destructive-background:hover {      color: var(--destructive-background, #c0392b);    }    .ctv\\:hover\\:text-warning-background:hover {      color: var(--warning-background, #d39e00);    }    .ctv\\:hover\\:opacity-100:hover {      opacity: 1;    }  }  .ctv\\:focus\\:border-\\[\\#00FFD0\\]:focus {    border-color: #00ffd0;  }  .ctv\\:focus\\:border-\\[\\#E93D82\\]:focus {    border-color: #e93d82;  }  .ctv\\:focus\\:border-\\[\\#FFB800\\]:focus {    border-color: #ffb800;  }  .ctv\\:focus\\:border-node-component-border:focus {    border-color: var(--node-component-border, #fff3);  }  .ctv\\:focus\\:border-primary-background:focus, .ctv\\:focus\\:border-primary-background\\/50:focus {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:focus\\:border-primary-background\\/50:focus {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 50%, transparent);    }  }  .ctv\\:focus\\:bg-primary-background\\/10:focus {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:focus\\:bg-primary-background\\/10:focus {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 10%, transparent);    }  }  .ctv\\:focus\\:bg-secondary-background-hover:focus {    background-color: var(--secondary-background-hover, #ffffff1a);  }  .ctv\\:focus\\:outline:focus, .ctv\\:focus\\:outline-1:focus {    outline-style: var(--tw-outline-style);    outline-width: 1px;  }  .ctv\\:focus\\:outline-primary-background\\/50:focus {    outline-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:focus\\:outline-primary-background\\/50:focus {      outline-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 50%, transparent);    }  }  .ctv\\:focus\\:outline-none:focus {    --tw-outline-style: none;    outline-style: none;  }  .ctv\\:focus-visible\\:ring-1:focus-visible {    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:focus-visible\\:ring-border-default:focus-visible {    --tw-ring-color: var(--border-default, #ffffff26);  }  .ctv\\:focus-visible\\:outline-none:focus-visible {    --tw-outline-style: none;    outline-style: none;  }  .ctv\\:active\\:scale-95:active {    --tw-scale-x: 95%;    --tw-scale-y: 95%;    --tw-scale-z: 95%;    scale: var(--tw-scale-x) var(--tw-scale-y);  }  @media (hover: hover) {    .ctv\\:hover\\:enabled\\:bg-secondary-background-hover:hover:enabled {      background-color: var(--secondary-background-hover, #ffffff1a);    }  }  .ctv\\:disabled\\:pointer-events-none:disabled {    pointer-events: none;  }  .ctv\\:disabled\\:cursor-default:disabled {    cursor: default;  }  .ctv\\:disabled\\:cursor-not-allowed:disabled {    cursor: not-allowed;  }  .ctv\\:disabled\\:opacity-30:disabled {    opacity: .3;  }  .ctv\\:disabled\\:opacity-40:disabled {    opacity: .4;  }  .ctv\\:disabled\\:opacity-50:disabled {    opacity: .5;  }  .ctv\\:disabled\\:opacity-60:disabled {    opacity: .6;  }  @media (hover: hover) {    .ctv\\:disabled\\:hover\\:bg-secondary-background:disabled:hover {      background-color: var(--secondary-background, #ffffff0f);    }  }  .ctv\\:data-\\[highlighted\\]\\:bg-secondary-background-hover[data-highlighted] {    background-color: var(--secondary-background-hover, #ffffff1a);  }  .ctv\\:data-\\[state\\=checked\\]\\:bg-secondary-background-selected[data-state="checked"] {    background-color: var(--secondary-background-selected, #4ea8ff33);  }  @media (hover: hover) {    .ctv\\:data-\\[state\\=checked\\]\\:hover\\:bg-secondary-background-selected[data-state="checked"]:hover {      background-color: var(--secondary-background-selected, #4ea8ff33);    }  }  .ctv\\:data-\\[state\\=open\\]\\:border-node-component-border[data-state="open"] {    border-color: var(--node-component-border, #fff3);  }  .ctv\\:\\[\\&_\\+_\\&\\]\\:border-t + .ctv\\:\\[\\&_\\+_\\&\\]\\:border-t {    border-top-style: var(--tw-border-style);    border-top-width: 1px;  }  .ctv\\:\\[\\&_\\+_\\&\\]\\:border-solid + .ctv\\:\\[\\&_\\+_\\&\\]\\:border-solid {    --tw-border-style: solid;    border-style: solid;  }  .ctv\\:\\[\\&_\\+_\\&\\]\\:border-border-subtle + .ctv\\:\\[\\&_\\+_\\&\\]\\:border-border-subtle {    border-color: var(--border-subtle, #ffffff14);  }  .ctv\\:\\[\\&_\\+_\\&\\]\\:pt-1\\.5 + .ctv\\:\\[\\&_\\+_\\&\\]\\:pt-1\\.5 {    padding-top: calc(var(--ctv-spacing) * 1.5);  }}@property --tw-translate-x {  syntax: "*";  inherits: false;  initial-value: 0;}@property --tw-translate-y {  syntax: "*";  inherits: false;  initial-value: 0;}@property --tw-translate-z {  syntax: "*";  inherits: false;  initial-value: 0;}@property --tw-border-style {  syntax: "*";  inherits: false;  initial-value: solid;}@property --tw-gradient-position {  syntax: "*";  inherits: false}@property --tw-gradient-from {  syntax: "<color>";  inherits: false;  initial-value: #0000;}@property --tw-gradient-via {  syntax: "<color>";  inherits: false;  initial-value: #0000;}@property --tw-gradient-to {  syntax: "<color>";  inherits: false;  initial-value: #0000;}@property --tw-gradient-stops {  syntax: "*";  inherits: false}@property --tw-gradient-via-stops {  syntax: "*";  inherits: false}@property --tw-gradient-from-position {  syntax: "<length-percentage>";  inherits: false;  initial-value: 0%;}@property --tw-gradient-via-position {  syntax: "<length-percentage>";  inherits: false;  initial-value: 50%;}@property --tw-gradient-to-position {  syntax: "<length-percentage>";  inherits: false;  initial-value: 100%;}@property --tw-leading {  syntax: "*";  inherits: false}@property --tw-font-weight {  syntax: "*";  inherits: false}@property --tw-tracking {  syntax: "*";  inherits: false}@property --tw-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-shadow-color {  syntax: "*";  inherits: false}@property --tw-shadow-alpha {  syntax: "<percentage>";  inherits: false;  initial-value: 100%;}@property --tw-inset-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-inset-shadow-color {  syntax: "*";  inherits: false}@property --tw-inset-shadow-alpha {  syntax: "<percentage>";  inherits: false;  initial-value: 100%;}@property --tw-ring-color {  syntax: "*";  inherits: false}@property --tw-ring-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-inset-ring-color {  syntax: "*";  inherits: false}@property --tw-inset-ring-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-ring-inset {  syntax: "*";  inherits: false}@property --tw-ring-offset-width {  syntax: "<length>";  inherits: false;  initial-value: 0;}@property --tw-ring-offset-color {  syntax: "*";  inherits: false;  initial-value: #fff;}@property --tw-ring-offset-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-outline-style {  syntax: "*";  inherits: false;  initial-value: solid;}@property --tw-backdrop-blur {  syntax: "*";  inherits: false}@property --tw-backdrop-brightness {  syntax: "*";  inherits: false}@property --tw-backdrop-contrast {  syntax: "*";  inherits: false}@property --tw-backdrop-grayscale {  syntax: "*";  inherits: false}@property --tw-backdrop-hue-rotate {  syntax: "*";  inherits: false}@property --tw-backdrop-invert {  syntax: "*";  inherits: false}@property --tw-backdrop-opacity {  syntax: "*";  inherits: false}@property --tw-backdrop-saturate {  syntax: "*";  inherits: false}@property --tw-backdrop-sepia {  syntax: "*";  inherits: false}@property --tw-duration {  syntax: "*";  inherits: false}@property --tw-ease {  syntax: "*";  inherits: false}@property --tw-scale-x {  syntax: "*";  inherits: false;  initial-value: 1;}@property --tw-scale-y {  syntax: "*";  inherits: false;  initial-value: 1;}@property --tw-scale-z {  syntax: "*";  inherits: false;  initial-value: 1;}@keyframes pulse {  50% {    opacity: .5;  }}.comfytv-root, .comfytv-dialog {\r  --p-primary-color: #4ea8ff;\r  --p-primary-contrast-color: #fff;\r  --p-primary-hover-color: #66b6ff;\r  --p-primary-active-color: #3a96ee;\r\r  --p-surface-0:  #1e1e1e;\r  --p-surface-50: #232323;\r  --p-surface-100: #2a2a2a;\r  --p-surface-200: #333;\r  --p-surface-300: #3d3d3d;\r  --p-surface-400: #555;\r  --p-surface-500: #777;\r  --p-surface-600: #999;\r  --p-surface-700: #bbb;\r  --p-surface-800: #ddd;\r  --p-surface-900: #eee;\r  --p-surface-950: #f6f6f6;\r\r  --p-content-background: var(--p-surface-0);\r  --p-content-hover-background: var(--p-surface-100);\r  --p-content-border-color: var(--p-surface-300);\r  --p-content-border-radius: 4px;\r\r  --p-text-color: var(--p-surface-800);\r  --p-text-muted-color: var(--p-surface-600);\r\r  --p-mask-background: rgba(0, 0, 0, 0.55);\r\r  --p-focus-ring-width: 1px;\r  --p-focus-ring-style: solid;\r  --p-focus-ring-color: var(--p-primary-color);\r  --p-focus-ring-offset: 1px;\r}\r\r.comfytv-root {\r  font-size: 12px;\r  color: var(--p-text-color);\r}\r\r.comfytv-root .p-datatable {\r  font-size: 12px;\r  display: flex;\r  flex-direction: column;\r  height: 100%;\r  min-height: 0;\r  width: 100%;\r}\r.comfytv-root .p-datatable-table-container,\r.comfytv-root .p-datatable-wrapper {\r  flex: 1;\r  min-height: 0;\r  overflow: auto;\r}\r.comfytv-root .p-datatable-table {\r  border-collapse: separate;\r  border-spacing: 0;\r  table-layout: auto;\r}\r.comfytv-root .p-datatable-thead > tr > th {\r  background: var(--p-surface-100);\r  color: var(--p-text-color);\r  border-bottom: 1px solid var(--p-content-border-color);\r  padding: 6px 8px;\r  font-weight: 600;\r  text-align: left;\r}\r.comfytv-root .p-datatable-tbody > tr > td {\r  padding: 6px 8px;\r  border-bottom: 1px solid var(--p-content-border-color);\r  vertical-align: top;\r}\r.comfytv-root .p-datatable-tbody > tr.p-row-odd {\r  background: var(--p-surface-50);\r}\r.comfytv-root .p-datatable-tbody > tr:hover {\r  background: var(--p-content-hover-background);\r}\r.comfytv-root .p-datatable-frozen-column {\r  position: sticky;\r  left: 0;\r  z-index: 1;\r  background: inherit;\r}\r\r/* Select (dropdown) */\r.comfytv-root .p-select {\r  display: inline-flex;\r  align-items: center;\r  background: var(--p-surface-100);\r  border: 1px solid var(--p-content-border-color);\r  border-radius: 3px;\r  min-height: 22px;\r  cursor: pointer;\r  position: relative;\r}\r.comfytv-root .p-select:hover {\r  border-color: var(--p-surface-500);\r}\r.comfytv-root .p-select-focus {\r  border-color: var(--p-primary-color);\r}\r.comfytv-root .p-select-label {\r  padding: 2px 8px;\r  font-size: 11px;\r  color: var(--p-text-color);\r  flex: 1;\r  user-select: none;\r}\r.comfytv-root .p-select-dropdown {\r  padding: 0 6px;\r  color: var(--p-text-muted-color);\r}\r\r/* SelectButton (toggle group) */\r.comfytv-root .p-selectbutton {\r  display: inline-flex;\r  border: 1px solid var(--p-content-border-color);\r  border-radius: 3px;\r  overflow: hidden;\r}\r.comfytv-root .p-togglebutton {\r  background: var(--p-surface-100);\r  color: var(--p-text-muted-color);\r  border: none;\r  padding: 2px 10px;\r  font-size: 11px;\r  cursor: pointer;\r}\r.comfytv-root .p-togglebutton:hover {\r  background: var(--p-surface-200);\r  color: var(--p-text-color);\r}\r.comfytv-root .p-togglebutton-checked {\r  background: var(--p-primary-color);\r  color: var(--p-primary-contrast-color);\r}\r\r.comfytv-root .p-inputtext,\r.comfytv-root .cell-input,\r.comfytv-root .cell-textarea {\r  background: var(--p-surface-100);\r  border: 1px solid var(--p-primary-color);\r  color: var(--p-text-color);\r  font: inherit;\r  padding: 4px 6px;\r  border-radius: 3px;\r  width: 100%;\r  box-sizing: border-box;\r  outline: none;\r}\r.comfytv-root .cell-textarea {\r  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;\r  font-size: 11px;\r  line-height: 1.4;\r  resize: vertical;\r  min-height: 32px;\r}\r.comfytv-root .cell-select { width: 100%; }\r\r.comfytv-root .p-datatable-tbody > tr > td.p-editable-column { cursor: text; }\r.comfytv-root .p-datatable-tbody > tr > td.p-cell-editing {\r  padding: 2px !important;\r  background: rgba(78, 168, 255, 0.08);\r}\r\r.comfytv-dialog.p-dialog {\r  background: var(--p-surface-0);\r  border: 1px solid var(--p-content-border-color);\r  border-radius: 8px;\r  color: var(--p-text-color);\r  box-shadow: 0 24px 48px rgba(0,0,0,0.6);\r}\r.comfytv-dialog .p-dialog-header {\r  padding: 12px 16px;\r  border-bottom: 1px solid var(--p-content-border-color);\r  background: var(--p-surface-50);\r  border-radius: 8px 8px 0 0;\r  font-weight: 600;\r  display: flex;\r  justify-content: space-between;\r  align-items: center;\r}\r.comfytv-dialog .p-dialog-title {\r  font-size: 14px;\r}\r.comfytv-dialog .p-dialog-content {\r  padding: 16px;\r  background: var(--p-surface-0);\r  overflow: auto;\r}\r.comfytv-dialog .p-dialog-close-button {\r  background: transparent;\r  border: none;\r  color: var(--p-text-muted-color);\r  cursor: pointer;\r  font-size: 18px;\r  padding: 2px 6px;\r}\r.comfytv-dialog .p-dialog-close-button:hover {\r  color: var(--p-text-color);\r}\r\rbody > .p-blockui-mask.p-blockui-mask-document:empty,\rbody > .p-overlay-mask.p-blockui-mask-document.p-overlay-mask-leave:empty {\r  display: none !important;\r  pointer-events: none !important;\r}`));      document.head.appendChild(elementStyle);    }  } catch (e) {    console.error("vite-plugin-css-injected-by-js", e);  }})();
 var __defProp = Object.defineProperty;
 var __typeError = (msg) => {
   throw TypeError(msg);
@@ -1697,7 +1697,7 @@ class GetterRefImpl {
   }
 }
 // @__NO_SIDE_EFFECTS__
-function toRef(source, key, defaultValue) {
+function toRef$1(source, key, defaultValue) {
   if (/* @__PURE__ */ isRef(source)) {
     return source;
   } else if (isFunction$2(source)) {
@@ -7919,9 +7919,9 @@ function createPinia() {
   });
   return pinia2;
 }
-const noop = () => {
+const noop$1 = () => {
 };
-function addSubscription(subscriptions, callback, detached, onCleanup = noop) {
+function addSubscription(subscriptions, callback, detached, onCleanup = noop$1) {
   subscriptions.add(callback);
   const removeSubscription = () => {
     const isDel = subscriptions.delete(callback);
@@ -8041,7 +8041,7 @@ function createSetupStore($id, setup, options = {}, pinia2, hot, isOptionsStore)
     });
   } : (
     /* istanbul ignore next */
-    noop
+    noop$1
   );
   function $dispose() {
     scope.stop();
@@ -8194,6 +8194,838 @@ function defineStore(id, setup, setupOptions) {
   useStore.$id = id;
   return useStore;
 }
+function computedEager(fn2, options) {
+  var _options$flush;
+  const result = /* @__PURE__ */ shallowRef();
+  watchEffect(() => {
+    result.value = fn2();
+  }, {
+    ...options,
+    flush: (_options$flush = options === null || options === void 0 ? void 0 : options.flush) !== null && _options$flush !== void 0 ? _options$flush : "sync"
+  });
+  return /* @__PURE__ */ readonly$1(result);
+}
+function tryOnScopeDispose(fn2, failSilently) {
+  if (getCurrentScope()) {
+    onScopeDispose(fn2, failSilently);
+    return true;
+  }
+  return false;
+}
+// @__NO_SIDE_EFFECTS__
+function createEventHook() {
+  const fns = /* @__PURE__ */ new Set();
+  const off = (fn2) => {
+    fns.delete(fn2);
+  };
+  const clear = () => {
+    fns.clear();
+  };
+  const on = (fn2) => {
+    fns.add(fn2);
+    const offFn = () => off(fn2);
+    tryOnScopeDispose(offFn);
+    return { off: offFn };
+  };
+  const trigger2 = (...args) => {
+    return Promise.all(Array.from(fns).map((fn2) => fn2(...args)));
+  };
+  return {
+    on,
+    off,
+    trigger: trigger2,
+    clear
+  };
+}
+// @__NO_SIDE_EFFECTS__
+function createGlobalState(stateFactory) {
+  let initialized = false;
+  let state;
+  const scope = effectScope(true);
+  return ((...args) => {
+    if (!initialized) {
+      state = scope.run(() => stateFactory(...args));
+      initialized = true;
+    }
+    return state;
+  });
+}
+const isClient = typeof window !== "undefined" && typeof document !== "undefined";
+typeof WorkerGlobalScope !== "undefined" && globalThis instanceof WorkerGlobalScope;
+const isDef = (val) => typeof val !== "undefined";
+const notNullish = (val) => val != null;
+const toString = Object.prototype.toString;
+const isObject$3 = (val) => toString.call(val) === "[object Object]";
+const noop = () => {
+};
+function toRef(...args) {
+  if (args.length !== 1) return /* @__PURE__ */ toRef$1(...args);
+  const r = args[0];
+  return typeof r === "function" ? /* @__PURE__ */ readonly$1(customRef(() => ({
+    get: r,
+    set: noop
+  }))) : /* @__PURE__ */ ref(r);
+}
+function createFilterWrapper(filter, fn2) {
+  function wrapper(...args) {
+    return new Promise((resolve2, reject) => {
+      Promise.resolve(filter(() => fn2.apply(this, args), {
+        fn: fn2,
+        thisArg: this,
+        args
+      })).then(resolve2).catch(reject);
+    });
+  }
+  return wrapper;
+}
+const bypassFilter = (invoke) => {
+  return invoke();
+};
+function debounceFilter(ms, options = {}) {
+  let timer;
+  let maxTimer;
+  let lastRejector = noop;
+  const _clearTimeout = (timer2) => {
+    clearTimeout(timer2);
+    lastRejector();
+    lastRejector = noop;
+  };
+  let lastInvoker;
+  const filter = (invoke) => {
+    const duration2 = toValue$1(ms);
+    const maxDuration = toValue$1(options.maxWait);
+    if (timer) _clearTimeout(timer);
+    if (duration2 <= 0 || maxDuration !== void 0 && maxDuration <= 0) {
+      if (maxTimer) {
+        _clearTimeout(maxTimer);
+        maxTimer = void 0;
+      }
+      return Promise.resolve(invoke());
+    }
+    return new Promise((resolve2, reject) => {
+      lastRejector = options.rejectOnCancel ? reject : resolve2;
+      lastInvoker = invoke;
+      if (maxDuration && !maxTimer) maxTimer = setTimeout(() => {
+        if (timer) _clearTimeout(timer);
+        maxTimer = void 0;
+        resolve2(lastInvoker());
+      }, maxDuration);
+      timer = setTimeout(() => {
+        if (maxTimer) _clearTimeout(maxTimer);
+        maxTimer = void 0;
+        resolve2(invoke());
+      }, duration2);
+    });
+  };
+  return filter;
+}
+function pausableFilter(extendFilter = bypassFilter, options = {}) {
+  const { initialState = "active" } = options;
+  const isActive2 = toRef(initialState === "active");
+  function pause() {
+    isActive2.value = false;
+  }
+  function resume() {
+    isActive2.value = true;
+  }
+  const eventFilter = (...args) => {
+    if (isActive2.value) extendFilter(...args);
+  };
+  return {
+    isActive: /* @__PURE__ */ shallowReadonly(isActive2),
+    pause,
+    resume,
+    eventFilter
+  };
+}
+function toArray(value) {
+  return Array.isArray(value) ? value : [value];
+}
+function getLifeCycleTarget(target) {
+  return getCurrentInstance();
+}
+// @__NO_SIDE_EFFECTS__
+function createSharedComposable(composable) {
+  if (!isClient) return composable;
+  let subscribers = 0;
+  let state;
+  let scope;
+  const dispose = () => {
+    subscribers -= 1;
+    if (scope && subscribers <= 0) {
+      scope.stop();
+      state = void 0;
+      scope = void 0;
+    }
+  };
+  return ((...args) => {
+    subscribers += 1;
+    if (!scope) {
+      scope = effectScope(true);
+      state = scope.run(() => composable(...args));
+    }
+    tryOnScopeDispose(dispose);
+    return state;
+  });
+}
+function toReactive(objectRef) {
+  if (!/* @__PURE__ */ isRef(objectRef)) return /* @__PURE__ */ reactive(objectRef);
+  return /* @__PURE__ */ reactive(new Proxy({}, {
+    get(_, p2, receiver) {
+      return unref(Reflect.get(objectRef.value, p2, receiver));
+    },
+    set(_, p2, value) {
+      if (/* @__PURE__ */ isRef(objectRef.value[p2]) && !/* @__PURE__ */ isRef(value)) objectRef.value[p2].value = value;
+      else objectRef.value[p2] = value;
+      return true;
+    },
+    deleteProperty(_, p2) {
+      return Reflect.deleteProperty(objectRef.value, p2);
+    },
+    has(_, p2) {
+      return Reflect.has(objectRef.value, p2);
+    },
+    ownKeys() {
+      return Object.keys(objectRef.value);
+    },
+    getOwnPropertyDescriptor() {
+      return {
+        enumerable: true,
+        configurable: true
+      };
+    }
+  }));
+}
+function reactiveComputed(fn2) {
+  return toReactive(computed(fn2));
+}
+function refAutoReset(defaultValue, afterMs = 1e4) {
+  return customRef((track2, trigger2) => {
+    let value = toValue$1(defaultValue);
+    let timer;
+    const resetAfter = () => setTimeout(() => {
+      value = toValue$1(defaultValue);
+      trigger2();
+    }, toValue$1(afterMs));
+    tryOnScopeDispose(() => {
+      clearTimeout(timer);
+    });
+    return {
+      get() {
+        track2();
+        return value;
+      },
+      set(newValue) {
+        value = newValue;
+        trigger2();
+        clearTimeout(timer);
+        timer = resetAfter();
+      }
+    };
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function useDebounceFn(fn2, ms = 200, options = {}) {
+  return createFilterWrapper(debounceFilter(ms, options), fn2);
+}
+function watchWithFilter(source, cb, options = {}) {
+  const { eventFilter = bypassFilter, ...watchOptions } = options;
+  return watch(source, createFilterWrapper(eventFilter, cb), watchOptions);
+}
+function watchPausable(source, cb, options = {}) {
+  const { eventFilter: filter, initialState = "active", ...watchOptions } = options;
+  const { eventFilter, pause, resume, isActive: isActive2 } = pausableFilter(filter, { initialState });
+  return {
+    stop: watchWithFilter(source, cb, {
+      ...watchOptions,
+      eventFilter
+    }),
+    pause,
+    resume,
+    isActive: isActive2
+  };
+}
+function tryOnBeforeUnmount(fn2, target) {
+  if (getLifeCycleTarget()) onBeforeUnmount(fn2, target);
+}
+function tryOnMounted(fn2, sync = true, target) {
+  if (getLifeCycleTarget()) onMounted(fn2, target);
+  else if (sync) fn2();
+  else nextTick(fn2);
+}
+function watchImmediate(source, cb, options) {
+  return watch(source, cb, {
+    ...options,
+    immediate: true
+  });
+}
+const defaultWindow = isClient ? window : void 0;
+function unrefElement(elRef) {
+  var _$el;
+  const plain = toValue$1(elRef);
+  return (_$el = plain === null || plain === void 0 ? void 0 : plain.$el) !== null && _$el !== void 0 ? _$el : plain;
+}
+function useEventListener(...args) {
+  const register = (el, event, listener, options) => {
+    el.addEventListener(event, listener, options);
+    return () => el.removeEventListener(event, listener, options);
+  };
+  const firstParamTargets = computed(() => {
+    const test = toArray(toValue$1(args[0])).filter((e) => e != null);
+    return test.every((e) => typeof e !== "string") ? test : void 0;
+  });
+  return watchImmediate(() => {
+    var _firstParamTargets$va, _firstParamTargets$va2;
+    return [
+      (_firstParamTargets$va = (_firstParamTargets$va2 = firstParamTargets.value) === null || _firstParamTargets$va2 === void 0 ? void 0 : _firstParamTargets$va2.map((e) => unrefElement(e))) !== null && _firstParamTargets$va !== void 0 ? _firstParamTargets$va : [defaultWindow].filter((e) => e != null),
+      toArray(toValue$1(firstParamTargets.value ? args[1] : args[0])),
+      toArray(unref(firstParamTargets.value ? args[2] : args[1])),
+      toValue$1(firstParamTargets.value ? args[3] : args[2])
+    ];
+  }, ([raw_targets, raw_events, raw_listeners, raw_options], _, onCleanup) => {
+    if (!(raw_targets === null || raw_targets === void 0 ? void 0 : raw_targets.length) || !(raw_events === null || raw_events === void 0 ? void 0 : raw_events.length) || !(raw_listeners === null || raw_listeners === void 0 ? void 0 : raw_listeners.length)) return;
+    const optionsClone = isObject$3(raw_options) ? { ...raw_options } : raw_options;
+    const cleanups = raw_targets.flatMap((el) => raw_events.flatMap((event) => raw_listeners.map((listener) => register(el, event, listener, optionsClone))));
+    onCleanup(() => {
+      cleanups.forEach((fn2) => fn2());
+    });
+  }, { flush: "post" });
+}
+function onClickOutside(target, handler, options = {}) {
+  const { window: window2 = defaultWindow, ignore = [], capture = true, detectIframe = false, controls = false } = options;
+  if (!window2) return controls ? {
+    stop: noop,
+    cancel: noop,
+    trigger: noop
+  } : noop;
+  let shouldListen = true;
+  const shouldIgnore = (event) => {
+    return toValue$1(ignore).some((target2) => {
+      if (typeof target2 === "string") return Array.from(window2.document.querySelectorAll(target2)).some((el) => el === event.target || event.composedPath().includes(el));
+      else {
+        const el = unrefElement(target2);
+        return el && (event.target === el || event.composedPath().includes(el));
+      }
+    });
+  };
+  function hasMultipleRoots(target2) {
+    const vm = toValue$1(target2);
+    return vm && vm.$.subTree.shapeFlag === 16;
+  }
+  function checkMultipleRoots(target2, event) {
+    const vm = toValue$1(target2);
+    const children = vm.$.subTree && vm.$.subTree.children;
+    if (children == null || !Array.isArray(children)) return false;
+    return children.some((child) => child.el === event.target || event.composedPath().includes(child.el));
+  }
+  const listener = (event) => {
+    const el = unrefElement(target);
+    if (event.target == null) return;
+    if (!(el instanceof Element) && hasMultipleRoots(target) && checkMultipleRoots(target, event)) return;
+    if (!el || el === event.target || event.composedPath().includes(el)) return;
+    if ("detail" in event && event.detail === 0) shouldListen = !shouldIgnore(event);
+    if (!shouldListen) {
+      shouldListen = true;
+      return;
+    }
+    handler(event);
+  };
+  let isProcessingClick = false;
+  const cleanup = [
+    useEventListener(window2, "click", (event) => {
+      if (!isProcessingClick) {
+        isProcessingClick = true;
+        setTimeout(() => {
+          isProcessingClick = false;
+        }, 0);
+        listener(event);
+      }
+    }, {
+      passive: true,
+      capture
+    }),
+    useEventListener(window2, "pointerdown", (e) => {
+      const el = unrefElement(target);
+      shouldListen = !shouldIgnore(e) && !!(el && !e.composedPath().includes(el));
+    }, { passive: true }),
+    detectIframe && useEventListener(window2, "blur", (event) => {
+      setTimeout(() => {
+        const el = unrefElement(target);
+        let activeEl = window2.document.activeElement;
+        while (activeEl === null || activeEl === void 0 ? void 0 : activeEl.shadowRoot) activeEl = activeEl.shadowRoot.activeElement;
+        if ((activeEl === null || activeEl === void 0 ? void 0 : activeEl.tagName) === "IFRAME" && !(el === null || el === void 0 ? void 0 : el.contains(window2.document.activeElement))) handler(event);
+      }, 0);
+    }, { passive: true })
+  ].filter(Boolean);
+  const stop = () => cleanup.forEach((fn2) => fn2());
+  if (controls) return {
+    stop,
+    cancel: () => {
+      shouldListen = false;
+    },
+    trigger: (event) => {
+      shouldListen = true;
+      listener(event);
+      shouldListen = false;
+    }
+  };
+  return stop;
+}
+// @__NO_SIDE_EFFECTS__
+function useMounted() {
+  const isMounted = /* @__PURE__ */ shallowRef(false);
+  const instance = getCurrentInstance();
+  if (instance) onMounted(() => {
+    isMounted.value = true;
+  }, instance);
+  return isMounted;
+}
+// @__NO_SIDE_EFFECTS__
+function useSupported(callback) {
+  const isMounted = /* @__PURE__ */ useMounted();
+  return computed(() => {
+    isMounted.value;
+    return Boolean(callback());
+  });
+}
+function useMutationObserver(target, callback, options = {}) {
+  const { window: window2 = defaultWindow, ...mutationOptions } = options;
+  let observer;
+  const isSupported = /* @__PURE__ */ useSupported(() => window2 && "MutationObserver" in window2);
+  const cleanup = () => {
+    if (observer) {
+      observer.disconnect();
+      observer = void 0;
+    }
+  };
+  const stopWatch = watch(computed(() => {
+    const items = toArray(toValue$1(target)).map(unrefElement).filter(notNullish);
+    return new Set(items);
+  }), (newTargets) => {
+    cleanup();
+    if (isSupported.value && newTargets.size) {
+      observer = new MutationObserver(callback);
+      newTargets.forEach((el) => observer.observe(el, mutationOptions));
+    }
+  }, {
+    immediate: true,
+    flush: "post"
+  });
+  const takeRecords = () => {
+    return observer === null || observer === void 0 ? void 0 : observer.takeRecords();
+  };
+  const stop = () => {
+    stopWatch();
+    cleanup();
+  };
+  tryOnScopeDispose(stop);
+  return {
+    isSupported,
+    stop,
+    takeRecords
+  };
+}
+function createKeyPredicate(keyFilter) {
+  if (typeof keyFilter === "function") return keyFilter;
+  else if (typeof keyFilter === "string") return (event) => event.key === keyFilter;
+  else if (Array.isArray(keyFilter)) return (event) => keyFilter.includes(event.key);
+  return () => true;
+}
+function onKeyStroke(...args) {
+  let key;
+  let handler;
+  let options = {};
+  if (args.length === 3) {
+    key = args[0];
+    handler = args[1];
+    options = args[2];
+  } else if (args.length === 2) if (typeof args[1] === "object") {
+    key = true;
+    handler = args[0];
+    options = args[1];
+  } else {
+    key = args[0];
+    handler = args[1];
+  }
+  else {
+    key = true;
+    handler = args[0];
+  }
+  const { target = defaultWindow, eventName = "keydown", passive: passive2 = false, dedupe = false } = options;
+  const predicate = createKeyPredicate(key);
+  const listener = (e) => {
+    if (e.repeat && toValue$1(dedupe)) return;
+    if (predicate(e)) handler(e);
+  };
+  return useEventListener(target, eventName, listener, passive2);
+}
+function cloneFnJSON(source) {
+  return JSON.parse(JSON.stringify(source));
+}
+const _global = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
+const globalKey = "__vueuse_ssr_handlers__";
+const handlers$1 = /* @__PURE__ */ getHandlers();
+function getHandlers() {
+  if (!(globalKey in _global)) _global[globalKey] = _global[globalKey] || {};
+  return _global[globalKey];
+}
+function getSSRHandler(key, fallback) {
+  return handlers$1[key] || fallback;
+}
+function guessSerializerType(rawInit) {
+  return rawInit == null ? "any" : rawInit instanceof Set ? "set" : rawInit instanceof Map ? "map" : rawInit instanceof Date ? "date" : typeof rawInit === "boolean" ? "boolean" : typeof rawInit === "string" ? "string" : typeof rawInit === "object" ? "object" : !Number.isNaN(rawInit) ? "number" : "any";
+}
+const StorageSerializers = {
+  boolean: {
+    read: (v) => v === "true",
+    write: (v) => String(v)
+  },
+  object: {
+    read: (v) => JSON.parse(v),
+    write: (v) => JSON.stringify(v)
+  },
+  number: {
+    read: (v) => Number.parseFloat(v),
+    write: (v) => String(v)
+  },
+  any: {
+    read: (v) => v,
+    write: (v) => String(v)
+  },
+  string: {
+    read: (v) => v,
+    write: (v) => String(v)
+  },
+  map: {
+    read: (v) => new Map(JSON.parse(v)),
+    write: (v) => JSON.stringify(Array.from(v.entries()))
+  },
+  set: {
+    read: (v) => new Set(JSON.parse(v)),
+    write: (v) => JSON.stringify(Array.from(v))
+  },
+  date: {
+    read: (v) => new Date(v),
+    write: (v) => v.toISOString()
+  }
+};
+const customStorageEventName = "vueuse-storage";
+function useStorage(key, defaults, storage, options = {}) {
+  var _options$serializer;
+  const { flush = "pre", deep = true, listenToStorageChanges = true, writeDefaults = true, mergeDefaults: mergeDefaults2 = false, shallow, window: window2 = defaultWindow, eventFilter, onError = (e) => {
+    console.error(e);
+  }, initOnMounted } = options;
+  const data = (shallow ? shallowRef : ref)(defaults);
+  const keyComputed = computed(() => toValue$1(key));
+  if (!storage) try {
+    storage = getSSRHandler("getDefaultStorage", () => defaultWindow === null || defaultWindow === void 0 ? void 0 : defaultWindow.localStorage)();
+  } catch (e) {
+    onError(e);
+  }
+  if (!storage) return data;
+  const rawInit = toValue$1(defaults);
+  const type = guessSerializerType(rawInit);
+  const serializer = (_options$serializer = options.serializer) !== null && _options$serializer !== void 0 ? _options$serializer : StorageSerializers[type];
+  const { pause: pauseWatch, resume: resumeWatch } = watchPausable(data, (newValue) => write2(newValue), {
+    flush,
+    deep,
+    eventFilter
+  });
+  watch(keyComputed, () => update(), { flush });
+  let firstMounted = false;
+  const onStorageEvent = (ev) => {
+    if (initOnMounted && !firstMounted) return;
+    update(ev);
+  };
+  const onStorageCustomEvent = (ev) => {
+    if (initOnMounted && !firstMounted) return;
+    updateFromCustomEvent(ev);
+  };
+  if (window2 && listenToStorageChanges) if (storage instanceof Storage) useEventListener(window2, "storage", onStorageEvent, { passive: true });
+  else useEventListener(window2, customStorageEventName, onStorageCustomEvent);
+  if (initOnMounted) tryOnMounted(() => {
+    firstMounted = true;
+    update();
+  });
+  else update();
+  function dispatchWriteEvent(oldValue, newValue) {
+    if (window2) {
+      const payload = {
+        key: keyComputed.value,
+        oldValue,
+        newValue,
+        storageArea: storage
+      };
+      window2.dispatchEvent(storage instanceof Storage ? new StorageEvent("storage", payload) : new CustomEvent(customStorageEventName, { detail: payload }));
+    }
+  }
+  function write2(v) {
+    try {
+      const oldValue = storage.getItem(keyComputed.value);
+      if (v == null) {
+        dispatchWriteEvent(oldValue, null);
+        storage.removeItem(keyComputed.value);
+      } else {
+        const serialized = serializer.write(v);
+        if (oldValue !== serialized) {
+          storage.setItem(keyComputed.value, serialized);
+          dispatchWriteEvent(oldValue, serialized);
+        }
+      }
+    } catch (e) {
+      onError(e);
+    }
+  }
+  function read2(event) {
+    const rawValue = event ? event.newValue : storage.getItem(keyComputed.value);
+    if (rawValue == null) {
+      if (writeDefaults && rawInit != null) storage.setItem(keyComputed.value, serializer.write(rawInit));
+      return rawInit;
+    } else if (!event && mergeDefaults2) {
+      const value = serializer.read(rawValue);
+      if (typeof mergeDefaults2 === "function") return mergeDefaults2(value, rawInit);
+      else if (type === "object" && !Array.isArray(value)) return {
+        ...rawInit,
+        ...value
+      };
+      return value;
+    } else if (typeof rawValue !== "string") return rawValue;
+    else return serializer.read(rawValue);
+  }
+  function update(event) {
+    if (event && event.storageArea !== storage) return;
+    if (event && event.key == null) {
+      data.value = rawInit;
+      return;
+    }
+    if (event && event.key !== keyComputed.value) return;
+    pauseWatch();
+    try {
+      const serializedData = serializer.write(data.value);
+      if (event === void 0 || (event === null || event === void 0 ? void 0 : event.newValue) !== serializedData) data.value = read2(event);
+    } catch (e) {
+      onError(e);
+    } finally {
+      if (event) nextTick(resumeWatch);
+      else resumeWatch();
+    }
+  }
+  function updateFromCustomEvent(event) {
+    update(event.detail);
+  }
+  return data;
+}
+function useResizeObserver(target, callback, options = {}) {
+  const { window: window2 = defaultWindow, ...observerOptions } = options;
+  let observer;
+  const isSupported = /* @__PURE__ */ useSupported(() => window2 && "ResizeObserver" in window2);
+  const cleanup = () => {
+    if (observer) {
+      observer.disconnect();
+      observer = void 0;
+    }
+  };
+  const stopWatch = watch(computed(() => {
+    const _targets = toValue$1(target);
+    return Array.isArray(_targets) ? _targets.map((el) => unrefElement(el)) : [unrefElement(_targets)];
+  }), (els) => {
+    cleanup();
+    if (isSupported.value && window2) {
+      observer = new ResizeObserver(callback);
+      for (const _el of els) if (_el) observer.observe(_el, observerOptions);
+    }
+  }, {
+    immediate: true,
+    flush: "post"
+  });
+  const stop = () => {
+    cleanup();
+    stopWatch();
+  };
+  tryOnScopeDispose(stop);
+  return {
+    isSupported,
+    stop
+  };
+}
+const UseMouseBuiltinExtractors = {
+  page: (event) => [event.pageX, event.pageY],
+  client: (event) => [event.clientX, event.clientY],
+  screen: (event) => [event.screenX, event.screenY],
+  movement: (event) => event instanceof MouseEvent ? [event.movementX, event.movementY] : null
+};
+function useMouse(options = {}) {
+  const { type = "page", touch = true, resetOnTouchEnds = false, initialValue = {
+    x: 0,
+    y: 0
+  }, window: window2 = defaultWindow, target = window2, scroll = true, eventFilter } = options;
+  let _prevMouseEvent = null;
+  let _prevScrollX = 0;
+  let _prevScrollY = 0;
+  const x = /* @__PURE__ */ shallowRef(initialValue.x);
+  const y = /* @__PURE__ */ shallowRef(initialValue.y);
+  const sourceType = /* @__PURE__ */ shallowRef(null);
+  const extractor = typeof type === "function" ? type : UseMouseBuiltinExtractors[type];
+  const mouseHandler = (event) => {
+    const result = extractor(event);
+    _prevMouseEvent = event;
+    if (result) {
+      [x.value, y.value] = result;
+      sourceType.value = "mouse";
+    }
+    if (window2) {
+      _prevScrollX = window2.scrollX;
+      _prevScrollY = window2.scrollY;
+    }
+  };
+  const touchHandler = (event) => {
+    if (event.touches.length > 0) {
+      const result = extractor(event.touches[0]);
+      if (result) {
+        [x.value, y.value] = result;
+        sourceType.value = "touch";
+      }
+    }
+  };
+  const scrollHandler = () => {
+    if (!_prevMouseEvent || !window2) return;
+    const pos = extractor(_prevMouseEvent);
+    if (_prevMouseEvent instanceof MouseEvent && pos) {
+      x.value = pos[0] + window2.scrollX - _prevScrollX;
+      y.value = pos[1] + window2.scrollY - _prevScrollY;
+    }
+  };
+  const reset = () => {
+    x.value = initialValue.x;
+    y.value = initialValue.y;
+  };
+  const mouseHandlerWrapper = eventFilter ? (event) => eventFilter(() => mouseHandler(event), {}) : (event) => mouseHandler(event);
+  const touchHandlerWrapper = eventFilter ? (event) => eventFilter(() => touchHandler(event), {}) : (event) => touchHandler(event);
+  const scrollHandlerWrapper = eventFilter ? () => eventFilter(() => scrollHandler(), {}) : () => scrollHandler();
+  if (target) {
+    const listenerOptions = { passive: true };
+    useEventListener(target, ["mousemove", "dragover"], mouseHandlerWrapper, listenerOptions);
+    if (touch && type !== "movement") {
+      useEventListener(target, ["touchstart", "touchmove"], touchHandlerWrapper, listenerOptions);
+      if (resetOnTouchEnds) useEventListener(target, "touchend", reset, listenerOptions);
+    }
+    if (scroll && type === "page") useEventListener(window2, "scroll", scrollHandlerWrapper, listenerOptions);
+  }
+  return {
+    x,
+    y,
+    sourceType
+  };
+}
+function useMouseInElement(target, options = {}) {
+  const { windowResize = true, windowScroll = true, handleOutside = true, window: window2 = defaultWindow } = options;
+  const type = options.type || "page";
+  const { x, y, sourceType } = useMouse(options);
+  const targetRef = /* @__PURE__ */ shallowRef(target !== null && target !== void 0 ? target : window2 === null || window2 === void 0 ? void 0 : window2.document.body);
+  const elementX = /* @__PURE__ */ shallowRef(0);
+  const elementY = /* @__PURE__ */ shallowRef(0);
+  const elementPositionX = /* @__PURE__ */ shallowRef(0);
+  const elementPositionY = /* @__PURE__ */ shallowRef(0);
+  const elementHeight = /* @__PURE__ */ shallowRef(0);
+  const elementWidth = /* @__PURE__ */ shallowRef(0);
+  const isOutside = /* @__PURE__ */ shallowRef(true);
+  function update() {
+    if (!window2) return;
+    const el = unrefElement(targetRef);
+    if (!el || !(el instanceof Element)) return;
+    for (const rect of el.getClientRects()) {
+      const { left: left2, top: top2, width, height } = rect;
+      elementPositionX.value = left2 + (type === "page" ? window2.pageXOffset : 0);
+      elementPositionY.value = top2 + (type === "page" ? window2.pageYOffset : 0);
+      elementHeight.value = height;
+      elementWidth.value = width;
+      const elX = x.value - elementPositionX.value;
+      const elY = y.value - elementPositionY.value;
+      isOutside.value = width === 0 || height === 0 || elX < 0 || elY < 0 || elX > width || elY > height;
+      if (handleOutside || !isOutside.value) {
+        elementX.value = elX;
+        elementY.value = elY;
+      }
+      if (!isOutside.value) break;
+    }
+  }
+  const stopFnList = [];
+  function stop() {
+    stopFnList.forEach((fn2) => fn2());
+    stopFnList.length = 0;
+  }
+  tryOnMounted(() => {
+    update();
+  });
+  if (window2) {
+    const { stop: stopResizeObserver } = useResizeObserver(targetRef, update);
+    const { stop: stopMutationObserver } = useMutationObserver(targetRef, update, { attributeFilter: ["style", "class"] });
+    const stopWatch = watch([
+      targetRef,
+      x,
+      y
+    ], update);
+    stopFnList.push(stopResizeObserver, stopMutationObserver, stopWatch);
+    useEventListener(document, "mouseleave", () => isOutside.value = true, { passive: true });
+    if (windowScroll) stopFnList.push(useEventListener("scroll", update, {
+      capture: true,
+      passive: true
+    }));
+    if (windowResize) stopFnList.push(useEventListener("resize", update, { passive: true }));
+  }
+  return {
+    x,
+    y,
+    sourceType,
+    elementX,
+    elementY,
+    elementPositionX,
+    elementPositionY,
+    elementHeight,
+    elementWidth,
+    isOutside,
+    stop
+  };
+}
+// @__NO_SIDE_EFFECTS__
+function useVModel(props, key, emit2, options = {}) {
+  var _vm$$emit, _vm$proxy;
+  const { clone: clone2 = false, passive: passive2 = false, eventName, deep = false, defaultValue, shouldEmit } = options;
+  const vm = getCurrentInstance();
+  const _emit = emit2 || (vm === null || vm === void 0 ? void 0 : vm.emit) || (vm === null || vm === void 0 || (_vm$$emit = vm.$emit) === null || _vm$$emit === void 0 ? void 0 : _vm$$emit.bind(vm)) || (vm === null || vm === void 0 || (_vm$proxy = vm.proxy) === null || _vm$proxy === void 0 || (_vm$proxy = _vm$proxy.$emit) === null || _vm$proxy === void 0 ? void 0 : _vm$proxy.bind(vm === null || vm === void 0 ? void 0 : vm.proxy));
+  let event = eventName;
+  if (!key) key = "modelValue";
+  event = event || `update:${key.toString()}`;
+  const cloneFn = (val) => !clone2 ? val : typeof clone2 === "function" ? clone2(val) : cloneFnJSON(val);
+  const getValue2 = () => isDef(props[key]) ? cloneFn(props[key]) : defaultValue;
+  const triggerEmit = (value) => {
+    if (shouldEmit) {
+      if (shouldEmit(value)) _emit(event, value);
+    } else _emit(event, value);
+  };
+  if (passive2) {
+    const proxy = /* @__PURE__ */ ref(getValue2());
+    let isUpdating = false;
+    watch(() => props[key], (v) => {
+      if (!isUpdating) {
+        isUpdating = true;
+        proxy.value = cloneFn(v);
+        nextTick(() => isUpdating = false);
+      }
+    });
+    watch(proxy, (v) => {
+      if (!isUpdating && (v !== props[key] || deep)) triggerEmit(v);
+    }, { deep });
+    return proxy;
+  } else return computed({
+    get() {
+      return getValue2();
+    },
+    set(value) {
+      triggerEmit(value);
+    }
+  });
+}
 /*!
   * shared v9.14.5
   * (c) 2025 kazuya kawaguchi
@@ -8254,14 +9086,14 @@ const isArray = Array.isArray;
 const isFunction$1 = (val) => typeof val === "function";
 const isString$1 = (val) => typeof val === "string";
 const isBoolean = (val) => typeof val === "boolean";
-const isObject$3 = (val) => val !== null && typeof val === "object";
+const isObject$2 = (val) => val !== null && typeof val === "object";
 const isPromise = (val) => {
-  return isObject$3(val) && isFunction$1(val.then) && isFunction$1(val.catch);
+  return isObject$2(val) && isFunction$1(val.then) && isFunction$1(val.catch);
 };
 const objectToString = Object.prototype.toString;
 const toTypeString = (value) => objectToString.call(value);
 const isPlainObject$3 = (val) => {
-  if (!isObject$3(val))
+  if (!isObject$2(val))
     return false;
   const proto = Object.getPrototypeOf(val);
   return proto === null || proto.constructor === Object;
@@ -8276,7 +9108,7 @@ function incrementer(code) {
   let current = code;
   return () => ++current;
 }
-const isNotObjectOrIsArray = (val) => !isObject$3(val) || isArray(val);
+const isNotObjectOrIsArray = (val) => !isObject$2(val) || isArray(val);
 function deepCopy(src, des) {
   if (isNotObjectOrIsArray(src) || isNotObjectOrIsArray(des)) {
     throw new Error("Invalid value");
@@ -8288,7 +9120,7 @@ function deepCopy(src, des) {
       if (key === "__proto__") {
         return;
       }
-      if (isObject$3(src2[key]) && !isObject$3(des2[key])) {
+      if (isObject$2(src2[key]) && !isObject$2(des2[key])) {
         des2[key] = Array.isArray(src2[key]) ? [] : create();
       }
       if (isNotObjectOrIsArray(des2[key]) || isNotObjectOrIsArray(src2[key])) {
@@ -8313,7 +9145,7 @@ function createLocation(start2, end2, source) {
 }
 const RE_ARGS = /\{([0-9a-zA-Z]+)\}/g;
 function format$1(message, ...args) {
-  if (args.length === 1 && isObject$2(args[0])) {
+  if (args.length === 1 && isObject$1(args[0])) {
     args = args[0];
   }
   if (!args || !args.hasOwnProperty) {
@@ -8325,7 +9157,7 @@ function format$1(message, ...args) {
 }
 const assign = Object.assign;
 const isString = (val) => typeof val === "string";
-const isObject$2 = (val) => val !== null && typeof val === "object";
+const isObject$1 = (val) => val !== null && typeof val === "object";
 function join$1(items, separator = "") {
   return items.reduce((str, item, index) => index === 0 ? str + item : str + separator + item, "");
 }
@@ -9865,7 +10697,7 @@ function initFeatureFlags$1() {
   }
 }
 function isMessageAST(val) {
-  return isObject$3(val) && resolveType(val) === 0 && (hasOwn(val, "b") || hasOwn(val, "body"));
+  return isObject$2(val) && resolveType(val) === 0 && (hasOwn(val, "b") || hasOwn(val, "body"));
 }
 const PROPS_BODY = ["b", "body"];
 function resolveBody(node) {
@@ -10350,10 +11182,10 @@ function parse$1(path) {
 }
 const cache = /* @__PURE__ */ new Map();
 function resolveWithKeyValue(obj, path) {
-  return isObject$3(obj) ? obj[path] : null;
+  return isObject$2(obj) ? obj[path] : null;
 }
 function resolveValue(obj, path) {
-  if (!isObject$3(obj)) {
+  if (!isObject$2(obj)) {
     return null;
   }
   let hit = cache.get(path);
@@ -10413,8 +11245,8 @@ function normalizeNamed(pluralIndex, props) {
 function createMessageContext(options = {}) {
   const locale = options.locale;
   const pluralIndex = getPluralIndex(options);
-  const pluralRule = isObject$3(options.pluralRules) && isString$1(locale) && isFunction$1(options.pluralRules[locale]) ? options.pluralRules[locale] : pluralDefault;
-  const orgPluralRule = isObject$3(options.pluralRules) && isString$1(locale) && isFunction$1(options.pluralRules[locale]) ? pluralDefault : void 0;
+  const pluralRule = isObject$2(options.pluralRules) && isString$1(locale) && isFunction$1(options.pluralRules[locale]) ? options.pluralRules[locale] : pluralDefault;
+  const orgPluralRule = isObject$2(options.pluralRules) && isString$1(locale) && isFunction$1(options.pluralRules[locale]) ? pluralDefault : void 0;
   const plural = (messages) => {
     return messages[pluralRule(pluralIndex, messages.length, orgPluralRule)];
   };
@@ -10424,7 +11256,7 @@ function createMessageContext(options = {}) {
   isNumber$1(options.pluralIndex) && normalizeNamed(pluralIndex, _named);
   const named = (key) => _named[key];
   function message(key) {
-    const msg = isFunction$1(options.messages) ? options.messages(key) : isObject$3(options.messages) ? options.messages[key] : false;
+    const msg = isFunction$1(options.messages) ? options.messages(key) : isObject$2(options.messages) ? options.messages[key] : false;
     return !msg ? options.parent ? options.parent.message(key) : DEFAULT_MESSAGE : msg;
   }
   const _modifier = (name) => options.modifiers ? options.modifiers[name] : DEFAULT_MODIFIER;
@@ -10436,7 +11268,7 @@ function createMessageContext(options = {}) {
     let type2 = "text";
     let modifier = "";
     if (args.length === 1) {
-      if (isObject$3(arg1)) {
+      if (isObject$2(arg1)) {
         modifier = arg1.modifier || modifier;
         type2 = arg1.type || type2;
       } else if (isString$1(arg1)) {
@@ -10586,7 +11418,7 @@ function resolveLocale(locale) {
 function fallbackWithSimple(ctx, fallback, start2) {
   return [.../* @__PURE__ */ new Set([
     start2,
-    ...isArray(fallback) ? fallback : isObject$3(fallback) ? Object.keys(fallback) : isString$1(fallback) ? [fallback] : [start2]
+    ...isArray(fallback) ? fallback : isObject$2(fallback) ? Object.keys(fallback) : isString$1(fallback) ? [fallback] : [start2]
   ])];
 }
 function fallbackWithLocaleChain(ctx, fallback, start2) {
@@ -10654,13 +11486,13 @@ const capitalize = (str) => `${str.charAt(0).toLocaleUpperCase()}${str.substr(1)
 function getDefaultLinkedModifiers() {
   return {
     upper: (val, type) => {
-      return type === "text" && isString$1(val) ? val.toUpperCase() : type === "vnode" && isObject$3(val) && "__v_isVNode" in val ? val.children.toUpperCase() : val;
+      return type === "text" && isString$1(val) ? val.toUpperCase() : type === "vnode" && isObject$2(val) && "__v_isVNode" in val ? val.children.toUpperCase() : val;
     },
     lower: (val, type) => {
-      return type === "text" && isString$1(val) ? val.toLowerCase() : type === "vnode" && isObject$3(val) && "__v_isVNode" in val ? val.children.toLowerCase() : val;
+      return type === "text" && isString$1(val) ? val.toLowerCase() : type === "vnode" && isObject$2(val) && "__v_isVNode" in val ? val.children.toLowerCase() : val;
     },
     capitalize: (val, type) => {
-      return type === "text" && isString$1(val) ? capitalize(val) : type === "vnode" && isObject$3(val) && "__v_isVNode" in val ? capitalize(val.children) : val;
+      return type === "text" && isString$1(val) ? capitalize(val) : type === "vnode" && isObject$2(val) && "__v_isVNode" in val ? capitalize(val.children) : val;
     }
   };
 }
@@ -10710,11 +11542,11 @@ function createCoreContext(options = {}) {
   const messageCompiler = isFunction$1(options.messageCompiler) ? options.messageCompiler : _compiler;
   const messageResolver = isFunction$1(options.messageResolver) ? options.messageResolver : _resolver || resolveWithKeyValue;
   const localeFallbacker = isFunction$1(options.localeFallbacker) ? options.localeFallbacker : _fallbacker || fallbackWithSimple;
-  const fallbackContext = isObject$3(options.fallbackContext) ? options.fallbackContext : void 0;
+  const fallbackContext = isObject$2(options.fallbackContext) ? options.fallbackContext : void 0;
   const internalOptions = options;
-  const __datetimeFormatters = isObject$3(internalOptions.__datetimeFormatters) ? internalOptions.__datetimeFormatters : /* @__PURE__ */ new Map();
-  const __numberFormatters = isObject$3(internalOptions.__numberFormatters) ? internalOptions.__numberFormatters : /* @__PURE__ */ new Map();
-  const __meta = isObject$3(internalOptions.__meta) ? internalOptions.__meta : {};
+  const __datetimeFormatters = isObject$2(internalOptions.__datetimeFormatters) ? internalOptions.__datetimeFormatters : /* @__PURE__ */ new Map();
+  const __numberFormatters = isObject$2(internalOptions.__numberFormatters) ? internalOptions.__numberFormatters : /* @__PURE__ */ new Map();
+  const __meta = isObject$2(internalOptions.__meta) ? internalOptions.__meta : {};
   _cid++;
   const context2 = {
     version: version2,
@@ -10978,7 +11810,7 @@ function translate(context2, ...args) {
 function escapeParams(options) {
   if (isArray(options.list)) {
     options.list = options.list.map((item) => isString$1(item) ? escapeHtml(item) : item);
-  } else if (isObject$3(options.named)) {
+  } else if (isObject$2(options.named)) {
     Object.keys(options.named).forEach((key) => {
       if (isString$1(options.named[key])) {
         options.named[key] = escapeHtml(options.named[key]);
@@ -11453,7 +12285,7 @@ const SetPluralRulesSymbol = makeSymbol("__setPluralRules");
 const InejctWithOptionSymbol = /* @__PURE__ */ makeSymbol("__injectWithOption");
 const DisposeSymbol = /* @__PURE__ */ makeSymbol("__dispose");
 function handleFlatJson(obj) {
-  if (!isObject$3(obj)) {
+  if (!isObject$2(obj)) {
     return obj;
   }
   if (isMessageAST(obj)) {
@@ -11464,7 +12296,7 @@ function handleFlatJson(obj) {
       continue;
     }
     if (!key.includes(".")) {
-      if (isObject$3(obj[key])) {
+      if (isObject$2(obj[key])) {
         handleFlatJson(obj[key]);
       }
     } else {
@@ -11479,7 +12311,7 @@ function handleFlatJson(obj) {
         if (!(subKeys[i] in currentObj)) {
           currentObj[subKeys[i]] = create();
         }
-        if (!isObject$3(currentObj[subKeys[i]])) {
+        if (!isObject$2(currentObj[subKeys[i]])) {
           hasStringValue = true;
           break;
         }
@@ -11497,7 +12329,7 @@ function handleFlatJson(obj) {
       }
       if (!isMessageAST(currentObj)) {
         const target = currentObj[subKeys[lastIndex]];
-        if (isObject$3(target)) {
+        if (isObject$2(target)) {
           handleFlatJson(target);
         }
       }
@@ -11536,7 +12368,7 @@ function getComponentOptions(instance) {
   return instance.type;
 }
 function adjustI18nResources(gl, options, componentOptions) {
-  let messages = isObject$3(options.messages) ? options.messages : create();
+  let messages = isObject$2(options.messages) ? options.messages : create();
   if ("__i18nGlobal" in componentOptions) {
     messages = getLocaleMessages(gl.locale.value, {
       messages,
@@ -11550,7 +12382,7 @@ function adjustI18nResources(gl, options, componentOptions) {
     });
   }
   {
-    if (isObject$3(options.datetimeFormats)) {
+    if (isObject$2(options.datetimeFormats)) {
       const locales2 = Object.keys(options.datetimeFormats);
       if (locales2.length) {
         locales2.forEach((locale) => {
@@ -11558,7 +12390,7 @@ function adjustI18nResources(gl, options, componentOptions) {
         });
       }
     }
-    if (isObject$3(options.numberFormats)) {
+    if (isObject$2(options.numberFormats)) {
       const locales2 = Object.keys(options.numberFormats);
       if (locales2.length) {
         locales2.forEach((locale) => {
@@ -11724,7 +12556,7 @@ function createComposer(options = {}, VueI18nLegacy) {
   }
   function rt(...args) {
     const [arg1, arg2, arg3] = args;
-    if (arg3 && !isObject$3(arg3)) {
+    if (arg3 && !isObject$2(arg3)) {
       throw createI18nError(I18nErrorCodes.INVALID_ARGUMENT);
     }
     return t2(...[arg1, arg2, assign$1({ resolvedMessage: true }, arg3 || {})]);
@@ -12367,7 +13199,7 @@ const TranslationImpl = /* @__PURE__ */ defineComponent({
       const arg = getInterpolateArg(context2, keys2);
       const children = i18n2[TranslateVNodeSymbol](props.keypath, arg, options);
       const assignedAttrs = assign$1(create(), attrs);
-      const tag = isString$1(props.tag) || isObject$3(props.tag) ? props.tag : getFragmentableTag();
+      const tag = isString$1(props.tag) || isObject$2(props.tag) ? props.tag : getFragmentableTag();
       return h(tag, assignedAttrs, children);
     };
   }
@@ -12386,7 +13218,7 @@ function renderFormatter(props, context2, slotKeys, partFormatter) {
     }
     if (isString$1(props.format)) {
       options.key = props.format;
-    } else if (isObject$3(props.format)) {
+    } else if (isObject$2(props.format)) {
       if (isString$1(props.format.key)) {
         options.key = props.format.key;
       }
@@ -12409,7 +13241,7 @@ function renderFormatter(props, context2, slotKeys, partFormatter) {
       children = [parts];
     }
     const assignedAttrs = assign$1(create(), attrs);
-    const tag = isString$1(props.tag) || isObject$3(props.tag) ? props.tag : getFragmentableTag();
+    const tag = isString$1(props.tag) || isObject$2(props.tag) ? props.tag : getFragmentableTag();
     return h(tag, assignedAttrs, children);
   };
 }
@@ -13212,6 +14044,5536 @@ if (__INTLIFY_PROD_DEVTOOLS__) {
   target.__INTLIFY__ = true;
   setDevToolsHook(target.__INTLIFY_DEVTOOLS_GLOBAL_HOOK__);
 }
+const app = app$1;
+var _a$2;
+function $constructor(name, initializer2, params) {
+  function init(inst, def2) {
+    if (!inst._zod) {
+      Object.defineProperty(inst, "_zod", {
+        value: {
+          def: def2,
+          constr: _,
+          traits: /* @__PURE__ */ new Set()
+        },
+        enumerable: false
+      });
+    }
+    if (inst._zod.traits.has(name)) {
+      return;
+    }
+    inst._zod.traits.add(name);
+    initializer2(inst, def2);
+    const proto = _.prototype;
+    const keys2 = Object.keys(proto);
+    for (let i = 0; i < keys2.length; i++) {
+      const k = keys2[i];
+      if (!(k in inst)) {
+        inst[k] = proto[k].bind(inst);
+      }
+    }
+  }
+  const Parent = (params == null ? void 0 : params.Parent) ?? Object;
+  class Definition extends Parent {
+  }
+  Object.defineProperty(Definition, "name", { value: name });
+  function _(def2) {
+    var _a2;
+    const inst = (params == null ? void 0 : params.Parent) ? new Definition() : this;
+    init(inst, def2);
+    (_a2 = inst._zod).deferred ?? (_a2.deferred = []);
+    for (const fn2 of inst._zod.deferred) {
+      fn2();
+    }
+    return inst;
+  }
+  Object.defineProperty(_, "init", { value: init });
+  Object.defineProperty(_, Symbol.hasInstance, {
+    value: (inst) => {
+      var _a2, _b2;
+      if ((params == null ? void 0 : params.Parent) && inst instanceof params.Parent)
+        return true;
+      return (_b2 = (_a2 = inst == null ? void 0 : inst._zod) == null ? void 0 : _a2.traits) == null ? void 0 : _b2.has(name);
+    }
+  });
+  Object.defineProperty(_, "name", { value: name });
+  return _;
+}
+class $ZodAsyncError extends Error {
+  constructor() {
+    super(`Encountered Promise during synchronous parse. Use .parseAsync() instead.`);
+  }
+}
+class $ZodEncodeError extends Error {
+  constructor(name) {
+    super(`Encountered unidirectional transform during encode: ${name}`);
+    this.name = "ZodEncodeError";
+  }
+}
+(_a$2 = globalThis).__zod_globalConfig ?? (_a$2.__zod_globalConfig = {});
+const globalConfig = globalThis.__zod_globalConfig;
+function config(newConfig) {
+  return globalConfig;
+}
+function getEnumValues(entries2) {
+  const numericValues = Object.values(entries2).filter((v) => typeof v === "number");
+  const values = Object.entries(entries2).filter(([k, _]) => numericValues.indexOf(+k) === -1).map(([_, v]) => v);
+  return values;
+}
+function jsonStringifyReplacer(_, value) {
+  if (typeof value === "bigint")
+    return value.toString();
+  return value;
+}
+function cached(getter) {
+  return {
+    get value() {
+      {
+        const value = getter();
+        Object.defineProperty(this, "value", { value });
+        return value;
+      }
+    }
+  };
+}
+function nullish(input) {
+  return input === null || input === void 0;
+}
+function cleanRegex(source) {
+  const start2 = source.startsWith("^") ? 1 : 0;
+  const end2 = source.endsWith("$") ? source.length - 1 : source.length;
+  return source.slice(start2, end2);
+}
+function floatSafeRemainder(val, step) {
+  const ratio = val / step;
+  const roundedRatio = Math.round(ratio);
+  const tolerance = Number.EPSILON * Math.max(Math.abs(ratio), 1);
+  if (Math.abs(ratio - roundedRatio) < tolerance)
+    return 0;
+  return ratio - roundedRatio;
+}
+const EVALUATING = /* @__PURE__ */ Symbol("evaluating");
+function defineLazy(object2, key, getter) {
+  let value = void 0;
+  Object.defineProperty(object2, key, {
+    get() {
+      if (value === EVALUATING) {
+        return void 0;
+      }
+      if (value === void 0) {
+        value = EVALUATING;
+        value = getter();
+      }
+      return value;
+    },
+    set(v) {
+      Object.defineProperty(object2, key, {
+        value: v
+        // configurable: true,
+      });
+    },
+    configurable: true
+  });
+}
+function assignProp(target, prop, value) {
+  Object.defineProperty(target, prop, {
+    value,
+    writable: true,
+    enumerable: true,
+    configurable: true
+  });
+}
+function mergeDefs(...defs) {
+  const mergedDescriptors = {};
+  for (const def2 of defs) {
+    const descriptors = Object.getOwnPropertyDescriptors(def2);
+    Object.assign(mergedDescriptors, descriptors);
+  }
+  return Object.defineProperties({}, mergedDescriptors);
+}
+function esc(str) {
+  return JSON.stringify(str);
+}
+function slugify(input) {
+  return input.toLowerCase().trim().replace(/[^\w\s-]/g, "").replace(/[\s_-]+/g, "-").replace(/^-+|-+$/g, "");
+}
+const captureStackTrace = "captureStackTrace" in Error ? Error.captureStackTrace : (..._args) => {
+};
+function isObject(data) {
+  return typeof data === "object" && data !== null && !Array.isArray(data);
+}
+const allowsEval = /* @__PURE__ */ cached(() => {
+  var _a2;
+  if (globalConfig.jitless) {
+    return false;
+  }
+  if (typeof navigator !== "undefined" && ((_a2 = navigator == null ? void 0 : navigator.userAgent) == null ? void 0 : _a2.includes("Cloudflare"))) {
+    return false;
+  }
+  try {
+    const F = Function;
+    new F("");
+    return true;
+  } catch (_) {
+    return false;
+  }
+});
+function isPlainObject$2(o) {
+  if (isObject(o) === false)
+    return false;
+  const ctor = o.constructor;
+  if (ctor === void 0)
+    return true;
+  if (typeof ctor !== "function")
+    return true;
+  const prot = ctor.prototype;
+  if (isObject(prot) === false)
+    return false;
+  if (Object.prototype.hasOwnProperty.call(prot, "isPrototypeOf") === false) {
+    return false;
+  }
+  return true;
+}
+function shallowClone(o) {
+  if (isPlainObject$2(o))
+    return { ...o };
+  if (Array.isArray(o))
+    return [...o];
+  if (o instanceof Map)
+    return new Map(o);
+  if (o instanceof Set)
+    return new Set(o);
+  return o;
+}
+const propertyKeyTypes = /* @__PURE__ */ new Set(["string", "number", "symbol"]);
+function escapeRegex(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+function clone(inst, def2, params) {
+  const cl = new inst._zod.constr(def2 ?? inst._zod.def);
+  if (!def2 || (params == null ? void 0 : params.parent))
+    cl._zod.parent = inst;
+  return cl;
+}
+function normalizeParams(_params) {
+  const params = _params;
+  if (!params)
+    return {};
+  if (typeof params === "string")
+    return { error: () => params };
+  if ((params == null ? void 0 : params.message) !== void 0) {
+    if ((params == null ? void 0 : params.error) !== void 0)
+      throw new Error("Cannot specify both `message` and `error` params");
+    params.error = params.message;
+  }
+  delete params.message;
+  if (typeof params.error === "string")
+    return { ...params, error: () => params.error };
+  return params;
+}
+function optionalKeys(shape) {
+  return Object.keys(shape).filter((k) => {
+    return shape[k]._zod.optin === "optional" && shape[k]._zod.optout === "optional";
+  });
+}
+const NUMBER_FORMAT_RANGES = {
+  safeint: [Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER],
+  int32: [-2147483648, 2147483647],
+  uint32: [0, 4294967295],
+  float32: [-34028234663852886e22, 34028234663852886e22],
+  float64: [-Number.MAX_VALUE, Number.MAX_VALUE]
+};
+function pick(schema, mask) {
+  const currDef = schema._zod.def;
+  const checks = currDef.checks;
+  const hasChecks = checks && checks.length > 0;
+  if (hasChecks) {
+    throw new Error(".pick() cannot be used on object schemas containing refinements");
+  }
+  const def2 = mergeDefs(schema._zod.def, {
+    get shape() {
+      const newShape = {};
+      for (const key in mask) {
+        if (!(key in currDef.shape)) {
+          throw new Error(`Unrecognized key: "${key}"`);
+        }
+        if (!mask[key])
+          continue;
+        newShape[key] = currDef.shape[key];
+      }
+      assignProp(this, "shape", newShape);
+      return newShape;
+    },
+    checks: []
+  });
+  return clone(schema, def2);
+}
+function omit(schema, mask) {
+  const currDef = schema._zod.def;
+  const checks = currDef.checks;
+  const hasChecks = checks && checks.length > 0;
+  if (hasChecks) {
+    throw new Error(".omit() cannot be used on object schemas containing refinements");
+  }
+  const def2 = mergeDefs(schema._zod.def, {
+    get shape() {
+      const newShape = { ...schema._zod.def.shape };
+      for (const key in mask) {
+        if (!(key in currDef.shape)) {
+          throw new Error(`Unrecognized key: "${key}"`);
+        }
+        if (!mask[key])
+          continue;
+        delete newShape[key];
+      }
+      assignProp(this, "shape", newShape);
+      return newShape;
+    },
+    checks: []
+  });
+  return clone(schema, def2);
+}
+function extend(schema, shape) {
+  if (!isPlainObject$2(shape)) {
+    throw new Error("Invalid input to extend: expected a plain object");
+  }
+  const checks = schema._zod.def.checks;
+  const hasChecks = checks && checks.length > 0;
+  if (hasChecks) {
+    const existingShape = schema._zod.def.shape;
+    for (const key in shape) {
+      if (Object.getOwnPropertyDescriptor(existingShape, key) !== void 0) {
+        throw new Error("Cannot overwrite keys on object schemas containing refinements. Use `.safeExtend()` instead.");
+      }
+    }
+  }
+  const def2 = mergeDefs(schema._zod.def, {
+    get shape() {
+      const _shape = { ...schema._zod.def.shape, ...shape };
+      assignProp(this, "shape", _shape);
+      return _shape;
+    }
+  });
+  return clone(schema, def2);
+}
+function safeExtend(schema, shape) {
+  if (!isPlainObject$2(shape)) {
+    throw new Error("Invalid input to safeExtend: expected a plain object");
+  }
+  const def2 = mergeDefs(schema._zod.def, {
+    get shape() {
+      const _shape = { ...schema._zod.def.shape, ...shape };
+      assignProp(this, "shape", _shape);
+      return _shape;
+    }
+  });
+  return clone(schema, def2);
+}
+function merge(a, b) {
+  var _a2;
+  if ((_a2 = a._zod.def.checks) == null ? void 0 : _a2.length) {
+    throw new Error(".merge() cannot be used on object schemas containing refinements. Use .safeExtend() instead.");
+  }
+  const def2 = mergeDefs(a._zod.def, {
+    get shape() {
+      const _shape = { ...a._zod.def.shape, ...b._zod.def.shape };
+      assignProp(this, "shape", _shape);
+      return _shape;
+    },
+    get catchall() {
+      return b._zod.def.catchall;
+    },
+    checks: b._zod.def.checks ?? []
+  });
+  return clone(a, def2);
+}
+function partial(Class, schema, mask) {
+  const currDef = schema._zod.def;
+  const checks = currDef.checks;
+  const hasChecks = checks && checks.length > 0;
+  if (hasChecks) {
+    throw new Error(".partial() cannot be used on object schemas containing refinements");
+  }
+  const def2 = mergeDefs(schema._zod.def, {
+    get shape() {
+      const oldShape = schema._zod.def.shape;
+      const shape = { ...oldShape };
+      if (mask) {
+        for (const key in mask) {
+          if (!(key in oldShape)) {
+            throw new Error(`Unrecognized key: "${key}"`);
+          }
+          if (!mask[key])
+            continue;
+          shape[key] = Class ? new Class({
+            type: "optional",
+            innerType: oldShape[key]
+          }) : oldShape[key];
+        }
+      } else {
+        for (const key in oldShape) {
+          shape[key] = Class ? new Class({
+            type: "optional",
+            innerType: oldShape[key]
+          }) : oldShape[key];
+        }
+      }
+      assignProp(this, "shape", shape);
+      return shape;
+    },
+    checks: []
+  });
+  return clone(schema, def2);
+}
+function required(Class, schema, mask) {
+  const def2 = mergeDefs(schema._zod.def, {
+    get shape() {
+      const oldShape = schema._zod.def.shape;
+      const shape = { ...oldShape };
+      if (mask) {
+        for (const key in mask) {
+          if (!(key in shape)) {
+            throw new Error(`Unrecognized key: "${key}"`);
+          }
+          if (!mask[key])
+            continue;
+          shape[key] = new Class({
+            type: "nonoptional",
+            innerType: oldShape[key]
+          });
+        }
+      } else {
+        for (const key in oldShape) {
+          shape[key] = new Class({
+            type: "nonoptional",
+            innerType: oldShape[key]
+          });
+        }
+      }
+      assignProp(this, "shape", shape);
+      return shape;
+    }
+  });
+  return clone(schema, def2);
+}
+function aborted(x, startIndex = 0) {
+  var _a2;
+  if (x.aborted === true)
+    return true;
+  for (let i = startIndex; i < x.issues.length; i++) {
+    if (((_a2 = x.issues[i]) == null ? void 0 : _a2.continue) !== true) {
+      return true;
+    }
+  }
+  return false;
+}
+function explicitlyAborted(x, startIndex = 0) {
+  var _a2;
+  if (x.aborted === true)
+    return true;
+  for (let i = startIndex; i < x.issues.length; i++) {
+    if (((_a2 = x.issues[i]) == null ? void 0 : _a2.continue) === false) {
+      return true;
+    }
+  }
+  return false;
+}
+function prefixIssues(path, issues) {
+  return issues.map((iss) => {
+    var _a2;
+    (_a2 = iss).path ?? (_a2.path = []);
+    iss.path.unshift(path);
+    return iss;
+  });
+}
+function unwrapMessage(message) {
+  return typeof message === "string" ? message : message == null ? void 0 : message.message;
+}
+function finalizeIssue(iss, ctx, config2) {
+  var _a2, _b2, _c, _d, _e, _f;
+  const message = iss.message ? iss.message : unwrapMessage((_c = (_b2 = (_a2 = iss.inst) == null ? void 0 : _a2._zod.def) == null ? void 0 : _b2.error) == null ? void 0 : _c.call(_b2, iss)) ?? unwrapMessage((_d = ctx == null ? void 0 : ctx.error) == null ? void 0 : _d.call(ctx, iss)) ?? unwrapMessage((_e = config2.customError) == null ? void 0 : _e.call(config2, iss)) ?? unwrapMessage((_f = config2.localeError) == null ? void 0 : _f.call(config2, iss)) ?? "Invalid input";
+  const { inst: _inst, continue: _continue, input: _input, ...rest } = iss;
+  rest.path ?? (rest.path = []);
+  rest.message = message;
+  if (ctx == null ? void 0 : ctx.reportInput) {
+    rest.input = _input;
+  }
+  return rest;
+}
+function getLengthableOrigin(input) {
+  if (Array.isArray(input))
+    return "array";
+  if (typeof input === "string")
+    return "string";
+  return "unknown";
+}
+function issue(...args) {
+  const [iss, input, inst] = args;
+  if (typeof iss === "string") {
+    return {
+      message: iss,
+      code: "custom",
+      input,
+      inst
+    };
+  }
+  return { ...iss };
+}
+const initializer$1 = (inst, def2) => {
+  inst.name = "$ZodError";
+  Object.defineProperty(inst, "_zod", {
+    value: inst._zod,
+    enumerable: false
+  });
+  Object.defineProperty(inst, "issues", {
+    value: def2,
+    enumerable: false
+  });
+  inst.message = JSON.stringify(def2, jsonStringifyReplacer, 2);
+  Object.defineProperty(inst, "toString", {
+    value: () => inst.message,
+    enumerable: false
+  });
+};
+const $ZodError = $constructor("$ZodError", initializer$1);
+const $ZodRealError = $constructor("$ZodError", initializer$1, { Parent: Error });
+function flattenError(error2, mapper = (issue2) => issue2.message) {
+  const fieldErrors = {};
+  const formErrors = [];
+  for (const sub of error2.issues) {
+    if (sub.path.length > 0) {
+      fieldErrors[sub.path[0]] = fieldErrors[sub.path[0]] || [];
+      fieldErrors[sub.path[0]].push(mapper(sub));
+    } else {
+      formErrors.push(mapper(sub));
+    }
+  }
+  return { formErrors, fieldErrors };
+}
+function formatError(error2, mapper = (issue2) => issue2.message) {
+  const fieldErrors = { _errors: [] };
+  const processError = (error3, path = []) => {
+    for (const issue2 of error3.issues) {
+      if (issue2.code === "invalid_union" && issue2.errors.length) {
+        issue2.errors.map((issues) => processError({ issues }, [...path, ...issue2.path]));
+      } else if (issue2.code === "invalid_key") {
+        processError({ issues: issue2.issues }, [...path, ...issue2.path]);
+      } else if (issue2.code === "invalid_element") {
+        processError({ issues: issue2.issues }, [...path, ...issue2.path]);
+      } else {
+        const fullpath = [...path, ...issue2.path];
+        if (fullpath.length === 0) {
+          fieldErrors._errors.push(mapper(issue2));
+        } else {
+          let curr = fieldErrors;
+          let i = 0;
+          while (i < fullpath.length) {
+            const el = fullpath[i];
+            const terminal = i === fullpath.length - 1;
+            if (!terminal) {
+              curr[el] = curr[el] || { _errors: [] };
+            } else {
+              curr[el] = curr[el] || { _errors: [] };
+              curr[el]._errors.push(mapper(issue2));
+            }
+            curr = curr[el];
+            i++;
+          }
+        }
+      }
+    }
+  };
+  processError(error2);
+  return fieldErrors;
+}
+const _parse = (_Err) => (schema, value, _ctx, _params) => {
+  const ctx = _ctx ? { ..._ctx, async: false } : { async: false };
+  const result = schema._zod.run({ value, issues: [] }, ctx);
+  if (result instanceof Promise) {
+    throw new $ZodAsyncError();
+  }
+  if (result.issues.length) {
+    const e = new ((_params == null ? void 0 : _params.Err) ?? _Err)(result.issues.map((iss) => finalizeIssue(iss, ctx, config())));
+    captureStackTrace(e, _params == null ? void 0 : _params.callee);
+    throw e;
+  }
+  return result.value;
+};
+const _parseAsync = (_Err) => async (schema, value, _ctx, params) => {
+  const ctx = _ctx ? { ..._ctx, async: true } : { async: true };
+  let result = schema._zod.run({ value, issues: [] }, ctx);
+  if (result instanceof Promise)
+    result = await result;
+  if (result.issues.length) {
+    const e = new ((params == null ? void 0 : params.Err) ?? _Err)(result.issues.map((iss) => finalizeIssue(iss, ctx, config())));
+    captureStackTrace(e, params == null ? void 0 : params.callee);
+    throw e;
+  }
+  return result.value;
+};
+const _safeParse = (_Err) => (schema, value, _ctx) => {
+  const ctx = _ctx ? { ..._ctx, async: false } : { async: false };
+  const result = schema._zod.run({ value, issues: [] }, ctx);
+  if (result instanceof Promise) {
+    throw new $ZodAsyncError();
+  }
+  return result.issues.length ? {
+    success: false,
+    error: new (_Err ?? $ZodError)(result.issues.map((iss) => finalizeIssue(iss, ctx, config())))
+  } : { success: true, data: result.value };
+};
+const safeParse$1 = /* @__PURE__ */ _safeParse($ZodRealError);
+const _safeParseAsync = (_Err) => async (schema, value, _ctx) => {
+  const ctx = _ctx ? { ..._ctx, async: true } : { async: true };
+  let result = schema._zod.run({ value, issues: [] }, ctx);
+  if (result instanceof Promise)
+    result = await result;
+  return result.issues.length ? {
+    success: false,
+    error: new _Err(result.issues.map((iss) => finalizeIssue(iss, ctx, config())))
+  } : { success: true, data: result.value };
+};
+const safeParseAsync$1 = /* @__PURE__ */ _safeParseAsync($ZodRealError);
+const _encode = (_Err) => (schema, value, _ctx) => {
+  const ctx = _ctx ? { ..._ctx, direction: "backward" } : { direction: "backward" };
+  return _parse(_Err)(schema, value, ctx);
+};
+const _decode = (_Err) => (schema, value, _ctx) => {
+  return _parse(_Err)(schema, value, _ctx);
+};
+const _encodeAsync = (_Err) => async (schema, value, _ctx) => {
+  const ctx = _ctx ? { ..._ctx, direction: "backward" } : { direction: "backward" };
+  return _parseAsync(_Err)(schema, value, ctx);
+};
+const _decodeAsync = (_Err) => async (schema, value, _ctx) => {
+  return _parseAsync(_Err)(schema, value, _ctx);
+};
+const _safeEncode = (_Err) => (schema, value, _ctx) => {
+  const ctx = _ctx ? { ..._ctx, direction: "backward" } : { direction: "backward" };
+  return _safeParse(_Err)(schema, value, ctx);
+};
+const _safeDecode = (_Err) => (schema, value, _ctx) => {
+  return _safeParse(_Err)(schema, value, _ctx);
+};
+const _safeEncodeAsync = (_Err) => async (schema, value, _ctx) => {
+  const ctx = _ctx ? { ..._ctx, direction: "backward" } : { direction: "backward" };
+  return _safeParseAsync(_Err)(schema, value, ctx);
+};
+const _safeDecodeAsync = (_Err) => async (schema, value, _ctx) => {
+  return _safeParseAsync(_Err)(schema, value, _ctx);
+};
+const cuid = /^[cC][0-9a-z]{6,}$/;
+const cuid2 = /^[0-9a-z]+$/;
+const ulid = /^[0-9A-HJKMNP-TV-Za-hjkmnp-tv-z]{26}$/;
+const xid = /^[0-9a-vA-V]{20}$/;
+const ksuid = /^[A-Za-z0-9]{27}$/;
+const nanoid = /^[a-zA-Z0-9_-]{21}$/;
+const duration$1 = /^P(?:(\d+W)|(?!.*W)(?=\d|T\d)(\d+Y)?(\d+M)?(\d+D)?(T(?=\d)(\d+H)?(\d+M)?(\d+([.,]\d+)?S)?)?)$/;
+const guid = /^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$/;
+const uuid = (version2) => {
+  if (!version2)
+    return /^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$/;
+  return new RegExp(`^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-${version2}[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$`);
+};
+const email = /^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$/;
+const _emoji$1 = `^(\\p{Extended_Pictographic}|\\p{Emoji_Component})+$`;
+function emoji() {
+  return new RegExp(_emoji$1, "u");
+}
+const ipv4 = /^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$/;
+const ipv6 = /^(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:))$/;
+const cidrv4 = /^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\/([0-9]|[1-2][0-9]|3[0-2])$/;
+const cidrv6 = /^(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|::|([0-9a-fA-F]{1,4})?::([0-9a-fA-F]{1,4}:?){0,6})\/(12[0-8]|1[01][0-9]|[1-9]?[0-9])$/;
+const base64 = /^$|^(?:[0-9a-zA-Z+/]{4})*(?:(?:[0-9a-zA-Z+/]{2}==)|(?:[0-9a-zA-Z+/]{3}=))?$/;
+const base64url = /^[A-Za-z0-9_-]*$/;
+const httpProtocol = /^https?$/;
+const e164 = /^\+[1-9]\d{6,14}$/;
+const dateSource = `(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))`;
+const date$1 = /* @__PURE__ */ new RegExp(`^${dateSource}$`);
+function timeSource(args) {
+  const hhmm = `(?:[01]\\d|2[0-3]):[0-5]\\d`;
+  const regex = typeof args.precision === "number" ? args.precision === -1 ? `${hhmm}` : args.precision === 0 ? `${hhmm}:[0-5]\\d` : `${hhmm}:[0-5]\\d\\.\\d{${args.precision}}` : `${hhmm}(?::[0-5]\\d(?:\\.\\d+)?)?`;
+  return regex;
+}
+function time$1(args) {
+  return new RegExp(`^${timeSource(args)}$`);
+}
+function datetime$1(args) {
+  const time2 = timeSource({ precision: args.precision });
+  const opts = ["Z"];
+  if (args.local)
+    opts.push("");
+  if (args.offset)
+    opts.push(`([+-](?:[01]\\d|2[0-3]):[0-5]\\d)`);
+  const timeRegex = `${time2}(?:${opts.join("|")})`;
+  return new RegExp(`^${dateSource}T(?:${timeRegex})$`);
+}
+const string$1 = (params) => {
+  const regex = params ? `[\\s\\S]{${(params == null ? void 0 : params.minimum) ?? 0},${(params == null ? void 0 : params.maximum) ?? ""}}` : `[\\s\\S]*`;
+  return new RegExp(`^${regex}$`);
+};
+const integer = /^-?\d+$/;
+const number$1 = /^-?\d+(?:\.\d+)?$/;
+const boolean$1 = /^(?:true|false)$/i;
+const lowercase = /^[^A-Z]*$/;
+const uppercase = /^[^a-z]*$/;
+const $ZodCheck = /* @__PURE__ */ $constructor("$ZodCheck", (inst, def2) => {
+  var _a2;
+  inst._zod ?? (inst._zod = {});
+  inst._zod.def = def2;
+  (_a2 = inst._zod).onattach ?? (_a2.onattach = []);
+});
+const numericOriginMap = {
+  number: "number",
+  bigint: "bigint",
+  object: "date"
+};
+const $ZodCheckLessThan = /* @__PURE__ */ $constructor("$ZodCheckLessThan", (inst, def2) => {
+  $ZodCheck.init(inst, def2);
+  const origin = numericOriginMap[typeof def2.value];
+  inst._zod.onattach.push((inst2) => {
+    const bag = inst2._zod.bag;
+    const curr = (def2.inclusive ? bag.maximum : bag.exclusiveMaximum) ?? Number.POSITIVE_INFINITY;
+    if (def2.value < curr) {
+      if (def2.inclusive)
+        bag.maximum = def2.value;
+      else
+        bag.exclusiveMaximum = def2.value;
+    }
+  });
+  inst._zod.check = (payload) => {
+    if (def2.inclusive ? payload.value <= def2.value : payload.value < def2.value) {
+      return;
+    }
+    payload.issues.push({
+      origin,
+      code: "too_big",
+      maximum: typeof def2.value === "object" ? def2.value.getTime() : def2.value,
+      input: payload.value,
+      inclusive: def2.inclusive,
+      inst,
+      continue: !def2.abort
+    });
+  };
+});
+const $ZodCheckGreaterThan = /* @__PURE__ */ $constructor("$ZodCheckGreaterThan", (inst, def2) => {
+  $ZodCheck.init(inst, def2);
+  const origin = numericOriginMap[typeof def2.value];
+  inst._zod.onattach.push((inst2) => {
+    const bag = inst2._zod.bag;
+    const curr = (def2.inclusive ? bag.minimum : bag.exclusiveMinimum) ?? Number.NEGATIVE_INFINITY;
+    if (def2.value > curr) {
+      if (def2.inclusive)
+        bag.minimum = def2.value;
+      else
+        bag.exclusiveMinimum = def2.value;
+    }
+  });
+  inst._zod.check = (payload) => {
+    if (def2.inclusive ? payload.value >= def2.value : payload.value > def2.value) {
+      return;
+    }
+    payload.issues.push({
+      origin,
+      code: "too_small",
+      minimum: typeof def2.value === "object" ? def2.value.getTime() : def2.value,
+      input: payload.value,
+      inclusive: def2.inclusive,
+      inst,
+      continue: !def2.abort
+    });
+  };
+});
+const $ZodCheckMultipleOf = /* @__PURE__ */ $constructor("$ZodCheckMultipleOf", (inst, def2) => {
+  $ZodCheck.init(inst, def2);
+  inst._zod.onattach.push((inst2) => {
+    var _a2;
+    (_a2 = inst2._zod.bag).multipleOf ?? (_a2.multipleOf = def2.value);
+  });
+  inst._zod.check = (payload) => {
+    if (typeof payload.value !== typeof def2.value)
+      throw new Error("Cannot mix number and bigint in multiple_of check.");
+    const isMultiple = typeof payload.value === "bigint" ? payload.value % def2.value === BigInt(0) : floatSafeRemainder(payload.value, def2.value) === 0;
+    if (isMultiple)
+      return;
+    payload.issues.push({
+      origin: typeof payload.value,
+      code: "not_multiple_of",
+      divisor: def2.value,
+      input: payload.value,
+      inst,
+      continue: !def2.abort
+    });
+  };
+});
+const $ZodCheckNumberFormat = /* @__PURE__ */ $constructor("$ZodCheckNumberFormat", (inst, def2) => {
+  var _a2;
+  $ZodCheck.init(inst, def2);
+  def2.format = def2.format || "float64";
+  const isInt = (_a2 = def2.format) == null ? void 0 : _a2.includes("int");
+  const origin = isInt ? "int" : "number";
+  const [minimum, maximum] = NUMBER_FORMAT_RANGES[def2.format];
+  inst._zod.onattach.push((inst2) => {
+    const bag = inst2._zod.bag;
+    bag.format = def2.format;
+    bag.minimum = minimum;
+    bag.maximum = maximum;
+    if (isInt)
+      bag.pattern = integer;
+  });
+  inst._zod.check = (payload) => {
+    const input = payload.value;
+    if (isInt) {
+      if (!Number.isInteger(input)) {
+        payload.issues.push({
+          expected: origin,
+          format: def2.format,
+          code: "invalid_type",
+          continue: false,
+          input,
+          inst
+        });
+        return;
+      }
+      if (!Number.isSafeInteger(input)) {
+        if (input > 0) {
+          payload.issues.push({
+            input,
+            code: "too_big",
+            maximum: Number.MAX_SAFE_INTEGER,
+            note: "Integers must be within the safe integer range.",
+            inst,
+            origin,
+            inclusive: true,
+            continue: !def2.abort
+          });
+        } else {
+          payload.issues.push({
+            input,
+            code: "too_small",
+            minimum: Number.MIN_SAFE_INTEGER,
+            note: "Integers must be within the safe integer range.",
+            inst,
+            origin,
+            inclusive: true,
+            continue: !def2.abort
+          });
+        }
+        return;
+      }
+    }
+    if (input < minimum) {
+      payload.issues.push({
+        origin: "number",
+        input,
+        code: "too_small",
+        minimum,
+        inclusive: true,
+        inst,
+        continue: !def2.abort
+      });
+    }
+    if (input > maximum) {
+      payload.issues.push({
+        origin: "number",
+        input,
+        code: "too_big",
+        maximum,
+        inclusive: true,
+        inst,
+        continue: !def2.abort
+      });
+    }
+  };
+});
+const $ZodCheckMaxLength = /* @__PURE__ */ $constructor("$ZodCheckMaxLength", (inst, def2) => {
+  var _a2;
+  $ZodCheck.init(inst, def2);
+  (_a2 = inst._zod.def).when ?? (_a2.when = (payload) => {
+    const val = payload.value;
+    return !nullish(val) && val.length !== void 0;
+  });
+  inst._zod.onattach.push((inst2) => {
+    const curr = inst2._zod.bag.maximum ?? Number.POSITIVE_INFINITY;
+    if (def2.maximum < curr)
+      inst2._zod.bag.maximum = def2.maximum;
+  });
+  inst._zod.check = (payload) => {
+    const input = payload.value;
+    const length = input.length;
+    if (length <= def2.maximum)
+      return;
+    const origin = getLengthableOrigin(input);
+    payload.issues.push({
+      origin,
+      code: "too_big",
+      maximum: def2.maximum,
+      inclusive: true,
+      input,
+      inst,
+      continue: !def2.abort
+    });
+  };
+});
+const $ZodCheckMinLength = /* @__PURE__ */ $constructor("$ZodCheckMinLength", (inst, def2) => {
+  var _a2;
+  $ZodCheck.init(inst, def2);
+  (_a2 = inst._zod.def).when ?? (_a2.when = (payload) => {
+    const val = payload.value;
+    return !nullish(val) && val.length !== void 0;
+  });
+  inst._zod.onattach.push((inst2) => {
+    const curr = inst2._zod.bag.minimum ?? Number.NEGATIVE_INFINITY;
+    if (def2.minimum > curr)
+      inst2._zod.bag.minimum = def2.minimum;
+  });
+  inst._zod.check = (payload) => {
+    const input = payload.value;
+    const length = input.length;
+    if (length >= def2.minimum)
+      return;
+    const origin = getLengthableOrigin(input);
+    payload.issues.push({
+      origin,
+      code: "too_small",
+      minimum: def2.minimum,
+      inclusive: true,
+      input,
+      inst,
+      continue: !def2.abort
+    });
+  };
+});
+const $ZodCheckLengthEquals = /* @__PURE__ */ $constructor("$ZodCheckLengthEquals", (inst, def2) => {
+  var _a2;
+  $ZodCheck.init(inst, def2);
+  (_a2 = inst._zod.def).when ?? (_a2.when = (payload) => {
+    const val = payload.value;
+    return !nullish(val) && val.length !== void 0;
+  });
+  inst._zod.onattach.push((inst2) => {
+    const bag = inst2._zod.bag;
+    bag.minimum = def2.length;
+    bag.maximum = def2.length;
+    bag.length = def2.length;
+  });
+  inst._zod.check = (payload) => {
+    const input = payload.value;
+    const length = input.length;
+    if (length === def2.length)
+      return;
+    const origin = getLengthableOrigin(input);
+    const tooBig = length > def2.length;
+    payload.issues.push({
+      origin,
+      ...tooBig ? { code: "too_big", maximum: def2.length } : { code: "too_small", minimum: def2.length },
+      inclusive: true,
+      exact: true,
+      input: payload.value,
+      inst,
+      continue: !def2.abort
+    });
+  };
+});
+const $ZodCheckStringFormat = /* @__PURE__ */ $constructor("$ZodCheckStringFormat", (inst, def2) => {
+  var _a2, _b2;
+  $ZodCheck.init(inst, def2);
+  inst._zod.onattach.push((inst2) => {
+    const bag = inst2._zod.bag;
+    bag.format = def2.format;
+    if (def2.pattern) {
+      bag.patterns ?? (bag.patterns = /* @__PURE__ */ new Set());
+      bag.patterns.add(def2.pattern);
+    }
+  });
+  if (def2.pattern)
+    (_a2 = inst._zod).check ?? (_a2.check = (payload) => {
+      def2.pattern.lastIndex = 0;
+      if (def2.pattern.test(payload.value))
+        return;
+      payload.issues.push({
+        origin: "string",
+        code: "invalid_format",
+        format: def2.format,
+        input: payload.value,
+        ...def2.pattern ? { pattern: def2.pattern.toString() } : {},
+        inst,
+        continue: !def2.abort
+      });
+    });
+  else
+    (_b2 = inst._zod).check ?? (_b2.check = () => {
+    });
+});
+const $ZodCheckRegex = /* @__PURE__ */ $constructor("$ZodCheckRegex", (inst, def2) => {
+  $ZodCheckStringFormat.init(inst, def2);
+  inst._zod.check = (payload) => {
+    def2.pattern.lastIndex = 0;
+    if (def2.pattern.test(payload.value))
+      return;
+    payload.issues.push({
+      origin: "string",
+      code: "invalid_format",
+      format: "regex",
+      input: payload.value,
+      pattern: def2.pattern.toString(),
+      inst,
+      continue: !def2.abort
+    });
+  };
+});
+const $ZodCheckLowerCase = /* @__PURE__ */ $constructor("$ZodCheckLowerCase", (inst, def2) => {
+  def2.pattern ?? (def2.pattern = lowercase);
+  $ZodCheckStringFormat.init(inst, def2);
+});
+const $ZodCheckUpperCase = /* @__PURE__ */ $constructor("$ZodCheckUpperCase", (inst, def2) => {
+  def2.pattern ?? (def2.pattern = uppercase);
+  $ZodCheckStringFormat.init(inst, def2);
+});
+const $ZodCheckIncludes = /* @__PURE__ */ $constructor("$ZodCheckIncludes", (inst, def2) => {
+  $ZodCheck.init(inst, def2);
+  const escapedRegex = escapeRegex(def2.includes);
+  const pattern = new RegExp(typeof def2.position === "number" ? `^.{${def2.position}}${escapedRegex}` : escapedRegex);
+  def2.pattern = pattern;
+  inst._zod.onattach.push((inst2) => {
+    const bag = inst2._zod.bag;
+    bag.patterns ?? (bag.patterns = /* @__PURE__ */ new Set());
+    bag.patterns.add(pattern);
+  });
+  inst._zod.check = (payload) => {
+    if (payload.value.includes(def2.includes, def2.position))
+      return;
+    payload.issues.push({
+      origin: "string",
+      code: "invalid_format",
+      format: "includes",
+      includes: def2.includes,
+      input: payload.value,
+      inst,
+      continue: !def2.abort
+    });
+  };
+});
+const $ZodCheckStartsWith = /* @__PURE__ */ $constructor("$ZodCheckStartsWith", (inst, def2) => {
+  $ZodCheck.init(inst, def2);
+  const pattern = new RegExp(`^${escapeRegex(def2.prefix)}.*`);
+  def2.pattern ?? (def2.pattern = pattern);
+  inst._zod.onattach.push((inst2) => {
+    const bag = inst2._zod.bag;
+    bag.patterns ?? (bag.patterns = /* @__PURE__ */ new Set());
+    bag.patterns.add(pattern);
+  });
+  inst._zod.check = (payload) => {
+    if (payload.value.startsWith(def2.prefix))
+      return;
+    payload.issues.push({
+      origin: "string",
+      code: "invalid_format",
+      format: "starts_with",
+      prefix: def2.prefix,
+      input: payload.value,
+      inst,
+      continue: !def2.abort
+    });
+  };
+});
+const $ZodCheckEndsWith = /* @__PURE__ */ $constructor("$ZodCheckEndsWith", (inst, def2) => {
+  $ZodCheck.init(inst, def2);
+  const pattern = new RegExp(`.*${escapeRegex(def2.suffix)}$`);
+  def2.pattern ?? (def2.pattern = pattern);
+  inst._zod.onattach.push((inst2) => {
+    const bag = inst2._zod.bag;
+    bag.patterns ?? (bag.patterns = /* @__PURE__ */ new Set());
+    bag.patterns.add(pattern);
+  });
+  inst._zod.check = (payload) => {
+    if (payload.value.endsWith(def2.suffix))
+      return;
+    payload.issues.push({
+      origin: "string",
+      code: "invalid_format",
+      format: "ends_with",
+      suffix: def2.suffix,
+      input: payload.value,
+      inst,
+      continue: !def2.abort
+    });
+  };
+});
+const $ZodCheckOverwrite = /* @__PURE__ */ $constructor("$ZodCheckOverwrite", (inst, def2) => {
+  $ZodCheck.init(inst, def2);
+  inst._zod.check = (payload) => {
+    payload.value = def2.tx(payload.value);
+  };
+});
+class Doc {
+  constructor(args = []) {
+    this.content = [];
+    this.indent = 0;
+    if (this)
+      this.args = args;
+  }
+  indented(fn2) {
+    this.indent += 1;
+    fn2(this);
+    this.indent -= 1;
+  }
+  write(arg) {
+    if (typeof arg === "function") {
+      arg(this, { execution: "sync" });
+      arg(this, { execution: "async" });
+      return;
+    }
+    const content = arg;
+    const lines = content.split("\n").filter((x) => x);
+    const minIndent = Math.min(...lines.map((x) => x.length - x.trimStart().length));
+    const dedented = lines.map((x) => x.slice(minIndent)).map((x) => " ".repeat(this.indent * 2) + x);
+    for (const line of dedented) {
+      this.content.push(line);
+    }
+  }
+  compile() {
+    const F = Function;
+    const args = this == null ? void 0 : this.args;
+    const content = (this == null ? void 0 : this.content) ?? [``];
+    const lines = [...content.map((x) => `  ${x}`)];
+    return new F(...args, lines.join("\n"));
+  }
+}
+const version = {
+  major: 4,
+  minor: 4,
+  patch: 3
+};
+const $ZodType = /* @__PURE__ */ $constructor("$ZodType", (inst, def2) => {
+  var _a3;
+  var _a2;
+  inst ?? (inst = {});
+  inst._zod.def = def2;
+  inst._zod.bag = inst._zod.bag || {};
+  inst._zod.version = version;
+  const checks = [...inst._zod.def.checks ?? []];
+  if (inst._zod.traits.has("$ZodCheck")) {
+    checks.unshift(inst);
+  }
+  for (const ch of checks) {
+    for (const fn2 of ch._zod.onattach) {
+      fn2(inst);
+    }
+  }
+  if (checks.length === 0) {
+    (_a2 = inst._zod).deferred ?? (_a2.deferred = []);
+    (_a3 = inst._zod.deferred) == null ? void 0 : _a3.push(() => {
+      inst._zod.run = inst._zod.parse;
+    });
+  } else {
+    const runChecks = (payload, checks2, ctx) => {
+      let isAborted = aborted(payload);
+      let asyncResult;
+      for (const ch of checks2) {
+        if (ch._zod.def.when) {
+          if (explicitlyAborted(payload))
+            continue;
+          const shouldRun = ch._zod.def.when(payload);
+          if (!shouldRun)
+            continue;
+        } else if (isAborted) {
+          continue;
+        }
+        const currLen = payload.issues.length;
+        const _ = ch._zod.check(payload);
+        if (_ instanceof Promise && (ctx == null ? void 0 : ctx.async) === false) {
+          throw new $ZodAsyncError();
+        }
+        if (asyncResult || _ instanceof Promise) {
+          asyncResult = (asyncResult ?? Promise.resolve()).then(async () => {
+            await _;
+            const nextLen = payload.issues.length;
+            if (nextLen === currLen)
+              return;
+            if (!isAborted)
+              isAborted = aborted(payload, currLen);
+          });
+        } else {
+          const nextLen = payload.issues.length;
+          if (nextLen === currLen)
+            continue;
+          if (!isAborted)
+            isAborted = aborted(payload, currLen);
+        }
+      }
+      if (asyncResult) {
+        return asyncResult.then(() => {
+          return payload;
+        });
+      }
+      return payload;
+    };
+    const handleCanaryResult = (canary, payload, ctx) => {
+      if (aborted(canary)) {
+        canary.aborted = true;
+        return canary;
+      }
+      const checkResult = runChecks(payload, checks, ctx);
+      if (checkResult instanceof Promise) {
+        if (ctx.async === false)
+          throw new $ZodAsyncError();
+        return checkResult.then((checkResult2) => inst._zod.parse(checkResult2, ctx));
+      }
+      return inst._zod.parse(checkResult, ctx);
+    };
+    inst._zod.run = (payload, ctx) => {
+      if (ctx.skipChecks) {
+        return inst._zod.parse(payload, ctx);
+      }
+      if (ctx.direction === "backward") {
+        const canary = inst._zod.parse({ value: payload.value, issues: [] }, { ...ctx, skipChecks: true });
+        if (canary instanceof Promise) {
+          return canary.then((canary2) => {
+            return handleCanaryResult(canary2, payload, ctx);
+          });
+        }
+        return handleCanaryResult(canary, payload, ctx);
+      }
+      const result = inst._zod.parse(payload, ctx);
+      if (result instanceof Promise) {
+        if (ctx.async === false)
+          throw new $ZodAsyncError();
+        return result.then((result2) => runChecks(result2, checks, ctx));
+      }
+      return runChecks(result, checks, ctx);
+    };
+  }
+  defineLazy(inst, "~standard", () => ({
+    validate: (value) => {
+      var _a4;
+      try {
+        const r = safeParse$1(inst, value);
+        return r.success ? { value: r.data } : { issues: (_a4 = r.error) == null ? void 0 : _a4.issues };
+      } catch (_) {
+        return safeParseAsync$1(inst, value).then((r) => {
+          var _a5;
+          return r.success ? { value: r.data } : { issues: (_a5 = r.error) == null ? void 0 : _a5.issues };
+        });
+      }
+    },
+    vendor: "zod",
+    version: 1
+  }));
+});
+const $ZodString = /* @__PURE__ */ $constructor("$ZodString", (inst, def2) => {
+  var _a2;
+  $ZodType.init(inst, def2);
+  inst._zod.pattern = [...((_a2 = inst == null ? void 0 : inst._zod.bag) == null ? void 0 : _a2.patterns) ?? []].pop() ?? string$1(inst._zod.bag);
+  inst._zod.parse = (payload, _) => {
+    if (def2.coerce)
+      try {
+        payload.value = String(payload.value);
+      } catch (_2) {
+      }
+    if (typeof payload.value === "string")
+      return payload;
+    payload.issues.push({
+      expected: "string",
+      code: "invalid_type",
+      input: payload.value,
+      inst
+    });
+    return payload;
+  };
+});
+const $ZodStringFormat = /* @__PURE__ */ $constructor("$ZodStringFormat", (inst, def2) => {
+  $ZodCheckStringFormat.init(inst, def2);
+  $ZodString.init(inst, def2);
+});
+const $ZodGUID = /* @__PURE__ */ $constructor("$ZodGUID", (inst, def2) => {
+  def2.pattern ?? (def2.pattern = guid);
+  $ZodStringFormat.init(inst, def2);
+});
+const $ZodUUID = /* @__PURE__ */ $constructor("$ZodUUID", (inst, def2) => {
+  if (def2.version) {
+    const versionMap = {
+      v1: 1,
+      v2: 2,
+      v3: 3,
+      v4: 4,
+      v5: 5,
+      v6: 6,
+      v7: 7,
+      v8: 8
+    };
+    const v = versionMap[def2.version];
+    if (v === void 0)
+      throw new Error(`Invalid UUID version: "${def2.version}"`);
+    def2.pattern ?? (def2.pattern = uuid(v));
+  } else
+    def2.pattern ?? (def2.pattern = uuid());
+  $ZodStringFormat.init(inst, def2);
+});
+const $ZodEmail = /* @__PURE__ */ $constructor("$ZodEmail", (inst, def2) => {
+  def2.pattern ?? (def2.pattern = email);
+  $ZodStringFormat.init(inst, def2);
+});
+const $ZodURL = /* @__PURE__ */ $constructor("$ZodURL", (inst, def2) => {
+  $ZodStringFormat.init(inst, def2);
+  inst._zod.check = (payload) => {
+    var _a2;
+    try {
+      const trimmed = payload.value.trim();
+      if (!def2.normalize && ((_a2 = def2.protocol) == null ? void 0 : _a2.source) === httpProtocol.source) {
+        if (!/^https?:\/\//i.test(trimmed)) {
+          payload.issues.push({
+            code: "invalid_format",
+            format: "url",
+            note: "Invalid URL format",
+            input: payload.value,
+            inst,
+            continue: !def2.abort
+          });
+          return;
+        }
+      }
+      const url = new URL(trimmed);
+      if (def2.hostname) {
+        def2.hostname.lastIndex = 0;
+        if (!def2.hostname.test(url.hostname)) {
+          payload.issues.push({
+            code: "invalid_format",
+            format: "url",
+            note: "Invalid hostname",
+            pattern: def2.hostname.source,
+            input: payload.value,
+            inst,
+            continue: !def2.abort
+          });
+        }
+      }
+      if (def2.protocol) {
+        def2.protocol.lastIndex = 0;
+        if (!def2.protocol.test(url.protocol.endsWith(":") ? url.protocol.slice(0, -1) : url.protocol)) {
+          payload.issues.push({
+            code: "invalid_format",
+            format: "url",
+            note: "Invalid protocol",
+            pattern: def2.protocol.source,
+            input: payload.value,
+            inst,
+            continue: !def2.abort
+          });
+        }
+      }
+      if (def2.normalize) {
+        payload.value = url.href;
+      } else {
+        payload.value = trimmed;
+      }
+      return;
+    } catch (_) {
+      payload.issues.push({
+        code: "invalid_format",
+        format: "url",
+        input: payload.value,
+        inst,
+        continue: !def2.abort
+      });
+    }
+  };
+});
+const $ZodEmoji = /* @__PURE__ */ $constructor("$ZodEmoji", (inst, def2) => {
+  def2.pattern ?? (def2.pattern = emoji());
+  $ZodStringFormat.init(inst, def2);
+});
+const $ZodNanoID = /* @__PURE__ */ $constructor("$ZodNanoID", (inst, def2) => {
+  def2.pattern ?? (def2.pattern = nanoid);
+  $ZodStringFormat.init(inst, def2);
+});
+const $ZodCUID = /* @__PURE__ */ $constructor("$ZodCUID", (inst, def2) => {
+  def2.pattern ?? (def2.pattern = cuid);
+  $ZodStringFormat.init(inst, def2);
+});
+const $ZodCUID2 = /* @__PURE__ */ $constructor("$ZodCUID2", (inst, def2) => {
+  def2.pattern ?? (def2.pattern = cuid2);
+  $ZodStringFormat.init(inst, def2);
+});
+const $ZodULID = /* @__PURE__ */ $constructor("$ZodULID", (inst, def2) => {
+  def2.pattern ?? (def2.pattern = ulid);
+  $ZodStringFormat.init(inst, def2);
+});
+const $ZodXID = /* @__PURE__ */ $constructor("$ZodXID", (inst, def2) => {
+  def2.pattern ?? (def2.pattern = xid);
+  $ZodStringFormat.init(inst, def2);
+});
+const $ZodKSUID = /* @__PURE__ */ $constructor("$ZodKSUID", (inst, def2) => {
+  def2.pattern ?? (def2.pattern = ksuid);
+  $ZodStringFormat.init(inst, def2);
+});
+const $ZodISODateTime = /* @__PURE__ */ $constructor("$ZodISODateTime", (inst, def2) => {
+  def2.pattern ?? (def2.pattern = datetime$1(def2));
+  $ZodStringFormat.init(inst, def2);
+});
+const $ZodISODate = /* @__PURE__ */ $constructor("$ZodISODate", (inst, def2) => {
+  def2.pattern ?? (def2.pattern = date$1);
+  $ZodStringFormat.init(inst, def2);
+});
+const $ZodISOTime = /* @__PURE__ */ $constructor("$ZodISOTime", (inst, def2) => {
+  def2.pattern ?? (def2.pattern = time$1(def2));
+  $ZodStringFormat.init(inst, def2);
+});
+const $ZodISODuration = /* @__PURE__ */ $constructor("$ZodISODuration", (inst, def2) => {
+  def2.pattern ?? (def2.pattern = duration$1);
+  $ZodStringFormat.init(inst, def2);
+});
+const $ZodIPv4 = /* @__PURE__ */ $constructor("$ZodIPv4", (inst, def2) => {
+  def2.pattern ?? (def2.pattern = ipv4);
+  $ZodStringFormat.init(inst, def2);
+  inst._zod.bag.format = `ipv4`;
+});
+const $ZodIPv6 = /* @__PURE__ */ $constructor("$ZodIPv6", (inst, def2) => {
+  def2.pattern ?? (def2.pattern = ipv6);
+  $ZodStringFormat.init(inst, def2);
+  inst._zod.bag.format = `ipv6`;
+  inst._zod.check = (payload) => {
+    try {
+      new URL(`http://[${payload.value}]`);
+    } catch {
+      payload.issues.push({
+        code: "invalid_format",
+        format: "ipv6",
+        input: payload.value,
+        inst,
+        continue: !def2.abort
+      });
+    }
+  };
+});
+const $ZodCIDRv4 = /* @__PURE__ */ $constructor("$ZodCIDRv4", (inst, def2) => {
+  def2.pattern ?? (def2.pattern = cidrv4);
+  $ZodStringFormat.init(inst, def2);
+});
+const $ZodCIDRv6 = /* @__PURE__ */ $constructor("$ZodCIDRv6", (inst, def2) => {
+  def2.pattern ?? (def2.pattern = cidrv6);
+  $ZodStringFormat.init(inst, def2);
+  inst._zod.check = (payload) => {
+    const parts = payload.value.split("/");
+    try {
+      if (parts.length !== 2)
+        throw new Error();
+      const [address, prefix] = parts;
+      if (!prefix)
+        throw new Error();
+      const prefixNum = Number(prefix);
+      if (`${prefixNum}` !== prefix)
+        throw new Error();
+      if (prefixNum < 0 || prefixNum > 128)
+        throw new Error();
+      new URL(`http://[${address}]`);
+    } catch {
+      payload.issues.push({
+        code: "invalid_format",
+        format: "cidrv6",
+        input: payload.value,
+        inst,
+        continue: !def2.abort
+      });
+    }
+  };
+});
+function isValidBase64(data) {
+  if (data === "")
+    return true;
+  if (/\s/.test(data))
+    return false;
+  if (data.length % 4 !== 0)
+    return false;
+  try {
+    atob(data);
+    return true;
+  } catch {
+    return false;
+  }
+}
+const $ZodBase64 = /* @__PURE__ */ $constructor("$ZodBase64", (inst, def2) => {
+  def2.pattern ?? (def2.pattern = base64);
+  $ZodStringFormat.init(inst, def2);
+  inst._zod.bag.contentEncoding = "base64";
+  inst._zod.check = (payload) => {
+    if (isValidBase64(payload.value))
+      return;
+    payload.issues.push({
+      code: "invalid_format",
+      format: "base64",
+      input: payload.value,
+      inst,
+      continue: !def2.abort
+    });
+  };
+});
+function isValidBase64URL(data) {
+  if (!base64url.test(data))
+    return false;
+  const base642 = data.replace(/[-_]/g, (c2) => c2 === "-" ? "+" : "/");
+  const padded = base642.padEnd(Math.ceil(base642.length / 4) * 4, "=");
+  return isValidBase64(padded);
+}
+const $ZodBase64URL = /* @__PURE__ */ $constructor("$ZodBase64URL", (inst, def2) => {
+  def2.pattern ?? (def2.pattern = base64url);
+  $ZodStringFormat.init(inst, def2);
+  inst._zod.bag.contentEncoding = "base64url";
+  inst._zod.check = (payload) => {
+    if (isValidBase64URL(payload.value))
+      return;
+    payload.issues.push({
+      code: "invalid_format",
+      format: "base64url",
+      input: payload.value,
+      inst,
+      continue: !def2.abort
+    });
+  };
+});
+const $ZodE164 = /* @__PURE__ */ $constructor("$ZodE164", (inst, def2) => {
+  def2.pattern ?? (def2.pattern = e164);
+  $ZodStringFormat.init(inst, def2);
+});
+function isValidJWT(token, algorithm = null) {
+  try {
+    const tokensParts = token.split(".");
+    if (tokensParts.length !== 3)
+      return false;
+    const [header] = tokensParts;
+    if (!header)
+      return false;
+    const parsedHeader = JSON.parse(atob(header));
+    if ("typ" in parsedHeader && (parsedHeader == null ? void 0 : parsedHeader.typ) !== "JWT")
+      return false;
+    if (!parsedHeader.alg)
+      return false;
+    if (algorithm && (!("alg" in parsedHeader) || parsedHeader.alg !== algorithm))
+      return false;
+    return true;
+  } catch {
+    return false;
+  }
+}
+const $ZodJWT = /* @__PURE__ */ $constructor("$ZodJWT", (inst, def2) => {
+  $ZodStringFormat.init(inst, def2);
+  inst._zod.check = (payload) => {
+    if (isValidJWT(payload.value, def2.alg))
+      return;
+    payload.issues.push({
+      code: "invalid_format",
+      format: "jwt",
+      input: payload.value,
+      inst,
+      continue: !def2.abort
+    });
+  };
+});
+const $ZodNumber = /* @__PURE__ */ $constructor("$ZodNumber", (inst, def2) => {
+  $ZodType.init(inst, def2);
+  inst._zod.pattern = inst._zod.bag.pattern ?? number$1;
+  inst._zod.parse = (payload, _ctx) => {
+    if (def2.coerce)
+      try {
+        payload.value = Number(payload.value);
+      } catch (_) {
+      }
+    const input = payload.value;
+    if (typeof input === "number" && !Number.isNaN(input) && Number.isFinite(input)) {
+      return payload;
+    }
+    const received = typeof input === "number" ? Number.isNaN(input) ? "NaN" : !Number.isFinite(input) ? "Infinity" : void 0 : void 0;
+    payload.issues.push({
+      expected: "number",
+      code: "invalid_type",
+      input,
+      inst,
+      ...received ? { received } : {}
+    });
+    return payload;
+  };
+});
+const $ZodNumberFormat = /* @__PURE__ */ $constructor("$ZodNumberFormat", (inst, def2) => {
+  $ZodCheckNumberFormat.init(inst, def2);
+  $ZodNumber.init(inst, def2);
+});
+const $ZodBoolean = /* @__PURE__ */ $constructor("$ZodBoolean", (inst, def2) => {
+  $ZodType.init(inst, def2);
+  inst._zod.pattern = boolean$1;
+  inst._zod.parse = (payload, _ctx) => {
+    if (def2.coerce)
+      try {
+        payload.value = Boolean(payload.value);
+      } catch (_) {
+      }
+    const input = payload.value;
+    if (typeof input === "boolean")
+      return payload;
+    payload.issues.push({
+      expected: "boolean",
+      code: "invalid_type",
+      input,
+      inst
+    });
+    return payload;
+  };
+});
+const $ZodUnknown = /* @__PURE__ */ $constructor("$ZodUnknown", (inst, def2) => {
+  $ZodType.init(inst, def2);
+  inst._zod.parse = (payload) => payload;
+});
+const $ZodNever = /* @__PURE__ */ $constructor("$ZodNever", (inst, def2) => {
+  $ZodType.init(inst, def2);
+  inst._zod.parse = (payload, _ctx) => {
+    payload.issues.push({
+      expected: "never",
+      code: "invalid_type",
+      input: payload.value,
+      inst
+    });
+    return payload;
+  };
+});
+function handleArrayResult(result, final, index) {
+  if (result.issues.length) {
+    final.issues.push(...prefixIssues(index, result.issues));
+  }
+  final.value[index] = result.value;
+}
+const $ZodArray = /* @__PURE__ */ $constructor("$ZodArray", (inst, def2) => {
+  $ZodType.init(inst, def2);
+  inst._zod.parse = (payload, ctx) => {
+    const input = payload.value;
+    if (!Array.isArray(input)) {
+      payload.issues.push({
+        expected: "array",
+        code: "invalid_type",
+        input,
+        inst
+      });
+      return payload;
+    }
+    payload.value = Array(input.length);
+    const proms = [];
+    for (let i = 0; i < input.length; i++) {
+      const item = input[i];
+      const result = def2.element._zod.run({
+        value: item,
+        issues: []
+      }, ctx);
+      if (result instanceof Promise) {
+        proms.push(result.then((result2) => handleArrayResult(result2, payload, i)));
+      } else {
+        handleArrayResult(result, payload, i);
+      }
+    }
+    if (proms.length) {
+      return Promise.all(proms).then(() => payload);
+    }
+    return payload;
+  };
+});
+function handlePropertyResult(result, final, key, input, isOptionalIn, isOptionalOut) {
+  const isPresent = key in input;
+  if (result.issues.length) {
+    if (isOptionalIn && isOptionalOut && !isPresent) {
+      return;
+    }
+    final.issues.push(...prefixIssues(key, result.issues));
+  }
+  if (!isPresent && !isOptionalIn) {
+    if (!result.issues.length) {
+      final.issues.push({
+        code: "invalid_type",
+        expected: "nonoptional",
+        input: void 0,
+        path: [key]
+      });
+    }
+    return;
+  }
+  if (result.value === void 0) {
+    if (isPresent) {
+      final.value[key] = void 0;
+    }
+  } else {
+    final.value[key] = result.value;
+  }
+}
+function normalizeDef(def2) {
+  var _a2, _b2, _c, _d;
+  const keys2 = Object.keys(def2.shape);
+  for (const k of keys2) {
+    if (!((_d = (_c = (_b2 = (_a2 = def2.shape) == null ? void 0 : _a2[k]) == null ? void 0 : _b2._zod) == null ? void 0 : _c.traits) == null ? void 0 : _d.has("$ZodType"))) {
+      throw new Error(`Invalid element at key "${k}": expected a Zod schema`);
+    }
+  }
+  const okeys = optionalKeys(def2.shape);
+  return {
+    ...def2,
+    keys: keys2,
+    keySet: new Set(keys2),
+    numKeys: keys2.length,
+    optionalKeys: new Set(okeys)
+  };
+}
+function handleCatchall(proms, input, payload, ctx, def2, inst) {
+  const unrecognized = [];
+  const keySet = def2.keySet;
+  const _catchall = def2.catchall._zod;
+  const t2 = _catchall.def.type;
+  const isOptionalIn = _catchall.optin === "optional";
+  const isOptionalOut = _catchall.optout === "optional";
+  for (const key in input) {
+    if (key === "__proto__")
+      continue;
+    if (keySet.has(key))
+      continue;
+    if (t2 === "never") {
+      unrecognized.push(key);
+      continue;
+    }
+    const r = _catchall.run({ value: input[key], issues: [] }, ctx);
+    if (r instanceof Promise) {
+      proms.push(r.then((r2) => handlePropertyResult(r2, payload, key, input, isOptionalIn, isOptionalOut)));
+    } else {
+      handlePropertyResult(r, payload, key, input, isOptionalIn, isOptionalOut);
+    }
+  }
+  if (unrecognized.length) {
+    payload.issues.push({
+      code: "unrecognized_keys",
+      keys: unrecognized,
+      input,
+      inst
+    });
+  }
+  if (!proms.length)
+    return payload;
+  return Promise.all(proms).then(() => {
+    return payload;
+  });
+}
+const $ZodObject = /* @__PURE__ */ $constructor("$ZodObject", (inst, def2) => {
+  $ZodType.init(inst, def2);
+  const desc = Object.getOwnPropertyDescriptor(def2, "shape");
+  if (!(desc == null ? void 0 : desc.get)) {
+    const sh = def2.shape;
+    Object.defineProperty(def2, "shape", {
+      get: () => {
+        const newSh = { ...sh };
+        Object.defineProperty(def2, "shape", {
+          value: newSh
+        });
+        return newSh;
+      }
+    });
+  }
+  const _normalized = cached(() => normalizeDef(def2));
+  defineLazy(inst._zod, "propValues", () => {
+    const shape = def2.shape;
+    const propValues = {};
+    for (const key in shape) {
+      const field = shape[key]._zod;
+      if (field.values) {
+        propValues[key] ?? (propValues[key] = /* @__PURE__ */ new Set());
+        for (const v of field.values)
+          propValues[key].add(v);
+      }
+    }
+    return propValues;
+  });
+  const isObject$12 = isObject;
+  const catchall = def2.catchall;
+  let value;
+  inst._zod.parse = (payload, ctx) => {
+    value ?? (value = _normalized.value);
+    const input = payload.value;
+    if (!isObject$12(input)) {
+      payload.issues.push({
+        expected: "object",
+        code: "invalid_type",
+        input,
+        inst
+      });
+      return payload;
+    }
+    payload.value = {};
+    const proms = [];
+    const shape = value.shape;
+    for (const key of value.keys) {
+      const el = shape[key];
+      const isOptionalIn = el._zod.optin === "optional";
+      const isOptionalOut = el._zod.optout === "optional";
+      const r = el._zod.run({ value: input[key], issues: [] }, ctx);
+      if (r instanceof Promise) {
+        proms.push(r.then((r2) => handlePropertyResult(r2, payload, key, input, isOptionalIn, isOptionalOut)));
+      } else {
+        handlePropertyResult(r, payload, key, input, isOptionalIn, isOptionalOut);
+      }
+    }
+    if (!catchall) {
+      return proms.length ? Promise.all(proms).then(() => payload) : payload;
+    }
+    return handleCatchall(proms, input, payload, ctx, _normalized.value, inst);
+  };
+});
+const $ZodObjectJIT = /* @__PURE__ */ $constructor("$ZodObjectJIT", (inst, def2) => {
+  $ZodObject.init(inst, def2);
+  const superParse = inst._zod.parse;
+  const _normalized = cached(() => normalizeDef(def2));
+  const generateFastpass = (shape) => {
+    var _a2, _b2;
+    const doc2 = new Doc(["shape", "payload", "ctx"]);
+    const normalized = _normalized.value;
+    const parseStr = (key) => {
+      const k = esc(key);
+      return `shape[${k}]._zod.run({ value: input[${k}], issues: [] }, ctx)`;
+    };
+    doc2.write(`const input = payload.value;`);
+    const ids = /* @__PURE__ */ Object.create(null);
+    let counter = 0;
+    for (const key of normalized.keys) {
+      ids[key] = `key_${counter++}`;
+    }
+    doc2.write(`const newResult = {};`);
+    for (const key of normalized.keys) {
+      const id = ids[key];
+      const k = esc(key);
+      const schema = shape[key];
+      const isOptionalIn = ((_a2 = schema == null ? void 0 : schema._zod) == null ? void 0 : _a2.optin) === "optional";
+      const isOptionalOut = ((_b2 = schema == null ? void 0 : schema._zod) == null ? void 0 : _b2.optout) === "optional";
+      doc2.write(`const ${id} = ${parseStr(key)};`);
+      if (isOptionalIn && isOptionalOut) {
+        doc2.write(`
+        if (${id}.issues.length) {
+          if (${k} in input) {
+            payload.issues = payload.issues.concat(${id}.issues.map(iss => ({
+              ...iss,
+              path: iss.path ? [${k}, ...iss.path] : [${k}]
+            })));
+          }
+        }
+        
+        if (${id}.value === undefined) {
+          if (${k} in input) {
+            newResult[${k}] = undefined;
+          }
+        } else {
+          newResult[${k}] = ${id}.value;
+        }
+        
+      `);
+      } else if (!isOptionalIn) {
+        doc2.write(`
+        const ${id}_present = ${k} in input;
+        if (${id}.issues.length) {
+          payload.issues = payload.issues.concat(${id}.issues.map(iss => ({
+            ...iss,
+            path: iss.path ? [${k}, ...iss.path] : [${k}]
+          })));
+        }
+        if (!${id}_present && !${id}.issues.length) {
+          payload.issues.push({
+            code: "invalid_type",
+            expected: "nonoptional",
+            input: undefined,
+            path: [${k}]
+          });
+        }
+
+        if (${id}_present) {
+          if (${id}.value === undefined) {
+            newResult[${k}] = undefined;
+          } else {
+            newResult[${k}] = ${id}.value;
+          }
+        }
+
+      `);
+      } else {
+        doc2.write(`
+        if (${id}.issues.length) {
+          payload.issues = payload.issues.concat(${id}.issues.map(iss => ({
+            ...iss,
+            path: iss.path ? [${k}, ...iss.path] : [${k}]
+          })));
+        }
+        
+        if (${id}.value === undefined) {
+          if (${k} in input) {
+            newResult[${k}] = undefined;
+          }
+        } else {
+          newResult[${k}] = ${id}.value;
+        }
+        
+      `);
+      }
+    }
+    doc2.write(`payload.value = newResult;`);
+    doc2.write(`return payload;`);
+    const fn2 = doc2.compile();
+    return (payload, ctx) => fn2(shape, payload, ctx);
+  };
+  let fastpass;
+  const isObject$12 = isObject;
+  const jit = !globalConfig.jitless;
+  const allowsEval$1 = allowsEval;
+  const fastEnabled = jit && allowsEval$1.value;
+  const catchall = def2.catchall;
+  let value;
+  inst._zod.parse = (payload, ctx) => {
+    value ?? (value = _normalized.value);
+    const input = payload.value;
+    if (!isObject$12(input)) {
+      payload.issues.push({
+        expected: "object",
+        code: "invalid_type",
+        input,
+        inst
+      });
+      return payload;
+    }
+    if (jit && fastEnabled && (ctx == null ? void 0 : ctx.async) === false && ctx.jitless !== true) {
+      if (!fastpass)
+        fastpass = generateFastpass(def2.shape);
+      payload = fastpass(payload, ctx);
+      if (!catchall)
+        return payload;
+      return handleCatchall([], input, payload, ctx, value, inst);
+    }
+    return superParse(payload, ctx);
+  };
+});
+function handleUnionResults(results, final, inst, ctx) {
+  for (const result of results) {
+    if (result.issues.length === 0) {
+      final.value = result.value;
+      return final;
+    }
+  }
+  const nonaborted = results.filter((r) => !aborted(r));
+  if (nonaborted.length === 1) {
+    final.value = nonaborted[0].value;
+    return nonaborted[0];
+  }
+  final.issues.push({
+    code: "invalid_union",
+    input: final.value,
+    inst,
+    errors: results.map((result) => result.issues.map((iss) => finalizeIssue(iss, ctx, config())))
+  });
+  return final;
+}
+const $ZodUnion = /* @__PURE__ */ $constructor("$ZodUnion", (inst, def2) => {
+  $ZodType.init(inst, def2);
+  defineLazy(inst._zod, "optin", () => def2.options.some((o) => o._zod.optin === "optional") ? "optional" : void 0);
+  defineLazy(inst._zod, "optout", () => def2.options.some((o) => o._zod.optout === "optional") ? "optional" : void 0);
+  defineLazy(inst._zod, "values", () => {
+    if (def2.options.every((o) => o._zod.values)) {
+      return new Set(def2.options.flatMap((option) => Array.from(option._zod.values)));
+    }
+    return void 0;
+  });
+  defineLazy(inst._zod, "pattern", () => {
+    if (def2.options.every((o) => o._zod.pattern)) {
+      const patterns = def2.options.map((o) => o._zod.pattern);
+      return new RegExp(`^(${patterns.map((p2) => cleanRegex(p2.source)).join("|")})$`);
+    }
+    return void 0;
+  });
+  const first2 = def2.options.length === 1 ? def2.options[0]._zod.run : null;
+  inst._zod.parse = (payload, ctx) => {
+    if (first2) {
+      return first2(payload, ctx);
+    }
+    let async = false;
+    const results = [];
+    for (const option of def2.options) {
+      const result = option._zod.run({
+        value: payload.value,
+        issues: []
+      }, ctx);
+      if (result instanceof Promise) {
+        results.push(result);
+        async = true;
+      } else {
+        if (result.issues.length === 0)
+          return result;
+        results.push(result);
+      }
+    }
+    if (!async)
+      return handleUnionResults(results, payload, inst, ctx);
+    return Promise.all(results).then((results2) => {
+      return handleUnionResults(results2, payload, inst, ctx);
+    });
+  };
+});
+const $ZodIntersection = /* @__PURE__ */ $constructor("$ZodIntersection", (inst, def2) => {
+  $ZodType.init(inst, def2);
+  inst._zod.parse = (payload, ctx) => {
+    const input = payload.value;
+    const left2 = def2.left._zod.run({ value: input, issues: [] }, ctx);
+    const right2 = def2.right._zod.run({ value: input, issues: [] }, ctx);
+    const async = left2 instanceof Promise || right2 instanceof Promise;
+    if (async) {
+      return Promise.all([left2, right2]).then(([left3, right3]) => {
+        return handleIntersectionResults(payload, left3, right3);
+      });
+    }
+    return handleIntersectionResults(payload, left2, right2);
+  };
+});
+function mergeValues(a, b) {
+  if (a === b) {
+    return { valid: true, data: a };
+  }
+  if (a instanceof Date && b instanceof Date && +a === +b) {
+    return { valid: true, data: a };
+  }
+  if (isPlainObject$2(a) && isPlainObject$2(b)) {
+    const bKeys = Object.keys(b);
+    const sharedKeys = Object.keys(a).filter((key) => bKeys.indexOf(key) !== -1);
+    const newObj = { ...a, ...b };
+    for (const key of sharedKeys) {
+      const sharedValue = mergeValues(a[key], b[key]);
+      if (!sharedValue.valid) {
+        return {
+          valid: false,
+          mergeErrorPath: [key, ...sharedValue.mergeErrorPath]
+        };
+      }
+      newObj[key] = sharedValue.data;
+    }
+    return { valid: true, data: newObj };
+  }
+  if (Array.isArray(a) && Array.isArray(b)) {
+    if (a.length !== b.length) {
+      return { valid: false, mergeErrorPath: [] };
+    }
+    const newArray = [];
+    for (let index = 0; index < a.length; index++) {
+      const itemA = a[index];
+      const itemB = b[index];
+      const sharedValue = mergeValues(itemA, itemB);
+      if (!sharedValue.valid) {
+        return {
+          valid: false,
+          mergeErrorPath: [index, ...sharedValue.mergeErrorPath]
+        };
+      }
+      newArray.push(sharedValue.data);
+    }
+    return { valid: true, data: newArray };
+  }
+  return { valid: false, mergeErrorPath: [] };
+}
+function handleIntersectionResults(result, left2, right2) {
+  const unrecKeys = /* @__PURE__ */ new Map();
+  let unrecIssue;
+  for (const iss of left2.issues) {
+    if (iss.code === "unrecognized_keys") {
+      unrecIssue ?? (unrecIssue = iss);
+      for (const k of iss.keys) {
+        if (!unrecKeys.has(k))
+          unrecKeys.set(k, {});
+        unrecKeys.get(k).l = true;
+      }
+    } else {
+      result.issues.push(iss);
+    }
+  }
+  for (const iss of right2.issues) {
+    if (iss.code === "unrecognized_keys") {
+      for (const k of iss.keys) {
+        if (!unrecKeys.has(k))
+          unrecKeys.set(k, {});
+        unrecKeys.get(k).r = true;
+      }
+    } else {
+      result.issues.push(iss);
+    }
+  }
+  const bothKeys = [...unrecKeys].filter(([, f]) => f.l && f.r).map(([k]) => k);
+  if (bothKeys.length && unrecIssue) {
+    result.issues.push({ ...unrecIssue, keys: bothKeys });
+  }
+  if (aborted(result))
+    return result;
+  const merged = mergeValues(left2.value, right2.value);
+  if (!merged.valid) {
+    throw new Error(`Unmergable intersection. Error path: ${JSON.stringify(merged.mergeErrorPath)}`);
+  }
+  result.value = merged.data;
+  return result;
+}
+const $ZodRecord = /* @__PURE__ */ $constructor("$ZodRecord", (inst, def2) => {
+  $ZodType.init(inst, def2);
+  inst._zod.parse = (payload, ctx) => {
+    const input = payload.value;
+    if (!isPlainObject$2(input)) {
+      payload.issues.push({
+        expected: "record",
+        code: "invalid_type",
+        input,
+        inst
+      });
+      return payload;
+    }
+    const proms = [];
+    const values = def2.keyType._zod.values;
+    if (values) {
+      payload.value = {};
+      const recordKeys = /* @__PURE__ */ new Set();
+      for (const key of values) {
+        if (typeof key === "string" || typeof key === "number" || typeof key === "symbol") {
+          recordKeys.add(typeof key === "number" ? key.toString() : key);
+          const keyResult = def2.keyType._zod.run({ value: key, issues: [] }, ctx);
+          if (keyResult instanceof Promise) {
+            throw new Error("Async schemas not supported in object keys currently");
+          }
+          if (keyResult.issues.length) {
+            payload.issues.push({
+              code: "invalid_key",
+              origin: "record",
+              issues: keyResult.issues.map((iss) => finalizeIssue(iss, ctx, config())),
+              input: key,
+              path: [key],
+              inst
+            });
+            continue;
+          }
+          const outKey = keyResult.value;
+          const result = def2.valueType._zod.run({ value: input[key], issues: [] }, ctx);
+          if (result instanceof Promise) {
+            proms.push(result.then((result2) => {
+              if (result2.issues.length) {
+                payload.issues.push(...prefixIssues(key, result2.issues));
+              }
+              payload.value[outKey] = result2.value;
+            }));
+          } else {
+            if (result.issues.length) {
+              payload.issues.push(...prefixIssues(key, result.issues));
+            }
+            payload.value[outKey] = result.value;
+          }
+        }
+      }
+      let unrecognized;
+      for (const key in input) {
+        if (!recordKeys.has(key)) {
+          unrecognized = unrecognized ?? [];
+          unrecognized.push(key);
+        }
+      }
+      if (unrecognized && unrecognized.length > 0) {
+        payload.issues.push({
+          code: "unrecognized_keys",
+          input,
+          inst,
+          keys: unrecognized
+        });
+      }
+    } else {
+      payload.value = {};
+      for (const key of Reflect.ownKeys(input)) {
+        if (key === "__proto__")
+          continue;
+        if (!Object.prototype.propertyIsEnumerable.call(input, key))
+          continue;
+        let keyResult = def2.keyType._zod.run({ value: key, issues: [] }, ctx);
+        if (keyResult instanceof Promise) {
+          throw new Error("Async schemas not supported in object keys currently");
+        }
+        const checkNumericKey = typeof key === "string" && number$1.test(key) && keyResult.issues.length;
+        if (checkNumericKey) {
+          const retryResult = def2.keyType._zod.run({ value: Number(key), issues: [] }, ctx);
+          if (retryResult instanceof Promise) {
+            throw new Error("Async schemas not supported in object keys currently");
+          }
+          if (retryResult.issues.length === 0) {
+            keyResult = retryResult;
+          }
+        }
+        if (keyResult.issues.length) {
+          if (def2.mode === "loose") {
+            payload.value[key] = input[key];
+          } else {
+            payload.issues.push({
+              code: "invalid_key",
+              origin: "record",
+              issues: keyResult.issues.map((iss) => finalizeIssue(iss, ctx, config())),
+              input: key,
+              path: [key],
+              inst
+            });
+          }
+          continue;
+        }
+        const result = def2.valueType._zod.run({ value: input[key], issues: [] }, ctx);
+        if (result instanceof Promise) {
+          proms.push(result.then((result2) => {
+            if (result2.issues.length) {
+              payload.issues.push(...prefixIssues(key, result2.issues));
+            }
+            payload.value[keyResult.value] = result2.value;
+          }));
+        } else {
+          if (result.issues.length) {
+            payload.issues.push(...prefixIssues(key, result.issues));
+          }
+          payload.value[keyResult.value] = result.value;
+        }
+      }
+    }
+    if (proms.length) {
+      return Promise.all(proms).then(() => payload);
+    }
+    return payload;
+  };
+});
+const $ZodEnum = /* @__PURE__ */ $constructor("$ZodEnum", (inst, def2) => {
+  $ZodType.init(inst, def2);
+  const values = getEnumValues(def2.entries);
+  const valuesSet = new Set(values);
+  inst._zod.values = valuesSet;
+  inst._zod.pattern = new RegExp(`^(${values.filter((k) => propertyKeyTypes.has(typeof k)).map((o) => typeof o === "string" ? escapeRegex(o) : o.toString()).join("|")})$`);
+  inst._zod.parse = (payload, _ctx) => {
+    const input = payload.value;
+    if (valuesSet.has(input)) {
+      return payload;
+    }
+    payload.issues.push({
+      code: "invalid_value",
+      values,
+      input,
+      inst
+    });
+    return payload;
+  };
+});
+const $ZodLiteral = /* @__PURE__ */ $constructor("$ZodLiteral", (inst, def2) => {
+  $ZodType.init(inst, def2);
+  if (def2.values.length === 0) {
+    throw new Error("Cannot create literal schema with no valid values");
+  }
+  const values = new Set(def2.values);
+  inst._zod.values = values;
+  inst._zod.pattern = new RegExp(`^(${def2.values.map((o) => typeof o === "string" ? escapeRegex(o) : o ? escapeRegex(o.toString()) : String(o)).join("|")})$`);
+  inst._zod.parse = (payload, _ctx) => {
+    const input = payload.value;
+    if (values.has(input)) {
+      return payload;
+    }
+    payload.issues.push({
+      code: "invalid_value",
+      values: def2.values,
+      input,
+      inst
+    });
+    return payload;
+  };
+});
+const $ZodTransform = /* @__PURE__ */ $constructor("$ZodTransform", (inst, def2) => {
+  $ZodType.init(inst, def2);
+  inst._zod.optin = "optional";
+  inst._zod.parse = (payload, ctx) => {
+    if (ctx.direction === "backward") {
+      throw new $ZodEncodeError(inst.constructor.name);
+    }
+    const _out = def2.transform(payload.value, payload);
+    if (ctx.async) {
+      const output = _out instanceof Promise ? _out : Promise.resolve(_out);
+      return output.then((output2) => {
+        payload.value = output2;
+        payload.fallback = true;
+        return payload;
+      });
+    }
+    if (_out instanceof Promise) {
+      throw new $ZodAsyncError();
+    }
+    payload.value = _out;
+    payload.fallback = true;
+    return payload;
+  };
+});
+function handleOptionalResult(result, input) {
+  if (input === void 0 && (result.issues.length || result.fallback)) {
+    return { issues: [], value: void 0 };
+  }
+  return result;
+}
+const $ZodOptional = /* @__PURE__ */ $constructor("$ZodOptional", (inst, def2) => {
+  $ZodType.init(inst, def2);
+  inst._zod.optin = "optional";
+  inst._zod.optout = "optional";
+  defineLazy(inst._zod, "values", () => {
+    return def2.innerType._zod.values ? /* @__PURE__ */ new Set([...def2.innerType._zod.values, void 0]) : void 0;
+  });
+  defineLazy(inst._zod, "pattern", () => {
+    const pattern = def2.innerType._zod.pattern;
+    return pattern ? new RegExp(`^(${cleanRegex(pattern.source)})?$`) : void 0;
+  });
+  inst._zod.parse = (payload, ctx) => {
+    if (def2.innerType._zod.optin === "optional") {
+      const input = payload.value;
+      const result = def2.innerType._zod.run(payload, ctx);
+      if (result instanceof Promise)
+        return result.then((r) => handleOptionalResult(r, input));
+      return handleOptionalResult(result, input);
+    }
+    if (payload.value === void 0) {
+      return payload;
+    }
+    return def2.innerType._zod.run(payload, ctx);
+  };
+});
+const $ZodExactOptional = /* @__PURE__ */ $constructor("$ZodExactOptional", (inst, def2) => {
+  $ZodOptional.init(inst, def2);
+  defineLazy(inst._zod, "values", () => def2.innerType._zod.values);
+  defineLazy(inst._zod, "pattern", () => def2.innerType._zod.pattern);
+  inst._zod.parse = (payload, ctx) => {
+    return def2.innerType._zod.run(payload, ctx);
+  };
+});
+const $ZodNullable = /* @__PURE__ */ $constructor("$ZodNullable", (inst, def2) => {
+  $ZodType.init(inst, def2);
+  defineLazy(inst._zod, "optin", () => def2.innerType._zod.optin);
+  defineLazy(inst._zod, "optout", () => def2.innerType._zod.optout);
+  defineLazy(inst._zod, "pattern", () => {
+    const pattern = def2.innerType._zod.pattern;
+    return pattern ? new RegExp(`^(${cleanRegex(pattern.source)}|null)$`) : void 0;
+  });
+  defineLazy(inst._zod, "values", () => {
+    return def2.innerType._zod.values ? /* @__PURE__ */ new Set([...def2.innerType._zod.values, null]) : void 0;
+  });
+  inst._zod.parse = (payload, ctx) => {
+    if (payload.value === null)
+      return payload;
+    return def2.innerType._zod.run(payload, ctx);
+  };
+});
+const $ZodDefault = /* @__PURE__ */ $constructor("$ZodDefault", (inst, def2) => {
+  $ZodType.init(inst, def2);
+  inst._zod.optin = "optional";
+  defineLazy(inst._zod, "values", () => def2.innerType._zod.values);
+  inst._zod.parse = (payload, ctx) => {
+    if (ctx.direction === "backward") {
+      return def2.innerType._zod.run(payload, ctx);
+    }
+    if (payload.value === void 0) {
+      payload.value = def2.defaultValue;
+      return payload;
+    }
+    const result = def2.innerType._zod.run(payload, ctx);
+    if (result instanceof Promise) {
+      return result.then((result2) => handleDefaultResult(result2, def2));
+    }
+    return handleDefaultResult(result, def2);
+  };
+});
+function handleDefaultResult(payload, def2) {
+  if (payload.value === void 0) {
+    payload.value = def2.defaultValue;
+  }
+  return payload;
+}
+const $ZodPrefault = /* @__PURE__ */ $constructor("$ZodPrefault", (inst, def2) => {
+  $ZodType.init(inst, def2);
+  inst._zod.optin = "optional";
+  defineLazy(inst._zod, "values", () => def2.innerType._zod.values);
+  inst._zod.parse = (payload, ctx) => {
+    if (ctx.direction === "backward") {
+      return def2.innerType._zod.run(payload, ctx);
+    }
+    if (payload.value === void 0) {
+      payload.value = def2.defaultValue;
+    }
+    return def2.innerType._zod.run(payload, ctx);
+  };
+});
+const $ZodNonOptional = /* @__PURE__ */ $constructor("$ZodNonOptional", (inst, def2) => {
+  $ZodType.init(inst, def2);
+  defineLazy(inst._zod, "values", () => {
+    const v = def2.innerType._zod.values;
+    return v ? new Set([...v].filter((x) => x !== void 0)) : void 0;
+  });
+  inst._zod.parse = (payload, ctx) => {
+    const result = def2.innerType._zod.run(payload, ctx);
+    if (result instanceof Promise) {
+      return result.then((result2) => handleNonOptionalResult(result2, inst));
+    }
+    return handleNonOptionalResult(result, inst);
+  };
+});
+function handleNonOptionalResult(payload, inst) {
+  if (!payload.issues.length && payload.value === void 0) {
+    payload.issues.push({
+      code: "invalid_type",
+      expected: "nonoptional",
+      input: payload.value,
+      inst
+    });
+  }
+  return payload;
+}
+const $ZodCatch = /* @__PURE__ */ $constructor("$ZodCatch", (inst, def2) => {
+  $ZodType.init(inst, def2);
+  inst._zod.optin = "optional";
+  defineLazy(inst._zod, "optout", () => def2.innerType._zod.optout);
+  defineLazy(inst._zod, "values", () => def2.innerType._zod.values);
+  inst._zod.parse = (payload, ctx) => {
+    if (ctx.direction === "backward") {
+      return def2.innerType._zod.run(payload, ctx);
+    }
+    const result = def2.innerType._zod.run(payload, ctx);
+    if (result instanceof Promise) {
+      return result.then((result2) => {
+        payload.value = result2.value;
+        if (result2.issues.length) {
+          payload.value = def2.catchValue({
+            ...payload,
+            error: {
+              issues: result2.issues.map((iss) => finalizeIssue(iss, ctx, config()))
+            },
+            input: payload.value
+          });
+          payload.issues = [];
+          payload.fallback = true;
+        }
+        return payload;
+      });
+    }
+    payload.value = result.value;
+    if (result.issues.length) {
+      payload.value = def2.catchValue({
+        ...payload,
+        error: {
+          issues: result.issues.map((iss) => finalizeIssue(iss, ctx, config()))
+        },
+        input: payload.value
+      });
+      payload.issues = [];
+      payload.fallback = true;
+    }
+    return payload;
+  };
+});
+const $ZodPipe = /* @__PURE__ */ $constructor("$ZodPipe", (inst, def2) => {
+  $ZodType.init(inst, def2);
+  defineLazy(inst._zod, "values", () => def2.in._zod.values);
+  defineLazy(inst._zod, "optin", () => def2.in._zod.optin);
+  defineLazy(inst._zod, "optout", () => def2.out._zod.optout);
+  defineLazy(inst._zod, "propValues", () => def2.in._zod.propValues);
+  inst._zod.parse = (payload, ctx) => {
+    if (ctx.direction === "backward") {
+      const right2 = def2.out._zod.run(payload, ctx);
+      if (right2 instanceof Promise) {
+        return right2.then((right3) => handlePipeResult(right3, def2.in, ctx));
+      }
+      return handlePipeResult(right2, def2.in, ctx);
+    }
+    const left2 = def2.in._zod.run(payload, ctx);
+    if (left2 instanceof Promise) {
+      return left2.then((left3) => handlePipeResult(left3, def2.out, ctx));
+    }
+    return handlePipeResult(left2, def2.out, ctx);
+  };
+});
+function handlePipeResult(left2, next, ctx) {
+  if (left2.issues.length) {
+    left2.aborted = true;
+    return left2;
+  }
+  return next._zod.run({ value: left2.value, issues: left2.issues, fallback: left2.fallback }, ctx);
+}
+const $ZodReadonly = /* @__PURE__ */ $constructor("$ZodReadonly", (inst, def2) => {
+  $ZodType.init(inst, def2);
+  defineLazy(inst._zod, "propValues", () => def2.innerType._zod.propValues);
+  defineLazy(inst._zod, "values", () => def2.innerType._zod.values);
+  defineLazy(inst._zod, "optin", () => {
+    var _a2, _b2;
+    return (_b2 = (_a2 = def2.innerType) == null ? void 0 : _a2._zod) == null ? void 0 : _b2.optin;
+  });
+  defineLazy(inst._zod, "optout", () => {
+    var _a2, _b2;
+    return (_b2 = (_a2 = def2.innerType) == null ? void 0 : _a2._zod) == null ? void 0 : _b2.optout;
+  });
+  inst._zod.parse = (payload, ctx) => {
+    if (ctx.direction === "backward") {
+      return def2.innerType._zod.run(payload, ctx);
+    }
+    const result = def2.innerType._zod.run(payload, ctx);
+    if (result instanceof Promise) {
+      return result.then(handleReadonlyResult);
+    }
+    return handleReadonlyResult(result);
+  };
+});
+function handleReadonlyResult(payload) {
+  payload.value = Object.freeze(payload.value);
+  return payload;
+}
+const $ZodCustom = /* @__PURE__ */ $constructor("$ZodCustom", (inst, def2) => {
+  $ZodCheck.init(inst, def2);
+  $ZodType.init(inst, def2);
+  inst._zod.parse = (payload, _) => {
+    return payload;
+  };
+  inst._zod.check = (payload) => {
+    const input = payload.value;
+    const r = def2.fn(input);
+    if (r instanceof Promise) {
+      return r.then((r2) => handleRefineResult(r2, payload, input, inst));
+    }
+    handleRefineResult(r, payload, input, inst);
+    return;
+  };
+});
+function handleRefineResult(result, payload, input, inst) {
+  if (!result) {
+    const _iss = {
+      code: "custom",
+      input,
+      inst,
+      // incorporates params.error into issue reporting
+      path: [...inst._zod.def.path ?? []],
+      // incorporates params.error into issue reporting
+      continue: !inst._zod.def.abort
+      // params: inst._zod.def.params,
+    };
+    if (inst._zod.def.params)
+      _iss.params = inst._zod.def.params;
+    payload.issues.push(issue(_iss));
+  }
+}
+var _a$1;
+class $ZodRegistry {
+  constructor() {
+    this._map = /* @__PURE__ */ new WeakMap();
+    this._idmap = /* @__PURE__ */ new Map();
+  }
+  add(schema, ..._meta) {
+    const meta = _meta[0];
+    this._map.set(schema, meta);
+    if (meta && typeof meta === "object" && "id" in meta) {
+      this._idmap.set(meta.id, schema);
+    }
+    return this;
+  }
+  clear() {
+    this._map = /* @__PURE__ */ new WeakMap();
+    this._idmap = /* @__PURE__ */ new Map();
+    return this;
+  }
+  remove(schema) {
+    const meta = this._map.get(schema);
+    if (meta && typeof meta === "object" && "id" in meta) {
+      this._idmap.delete(meta.id);
+    }
+    this._map.delete(schema);
+    return this;
+  }
+  get(schema) {
+    const p2 = schema._zod.parent;
+    if (p2) {
+      const pm = { ...this.get(p2) ?? {} };
+      delete pm.id;
+      const f = { ...pm, ...this._map.get(schema) };
+      return Object.keys(f).length ? f : void 0;
+    }
+    return this._map.get(schema);
+  }
+  has(schema) {
+    return this._map.has(schema);
+  }
+}
+function registry() {
+  return new $ZodRegistry();
+}
+(_a$1 = globalThis).__zod_globalRegistry ?? (_a$1.__zod_globalRegistry = registry());
+const globalRegistry = globalThis.__zod_globalRegistry;
+// @__NO_SIDE_EFFECTS__
+function _string(Class, params) {
+  return new Class({
+    type: "string",
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _email(Class, params) {
+  return new Class({
+    type: "string",
+    format: "email",
+    check: "string_format",
+    abort: false,
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _guid(Class, params) {
+  return new Class({
+    type: "string",
+    format: "guid",
+    check: "string_format",
+    abort: false,
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _uuid(Class, params) {
+  return new Class({
+    type: "string",
+    format: "uuid",
+    check: "string_format",
+    abort: false,
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _uuidv4(Class, params) {
+  return new Class({
+    type: "string",
+    format: "uuid",
+    check: "string_format",
+    abort: false,
+    version: "v4",
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _uuidv6(Class, params) {
+  return new Class({
+    type: "string",
+    format: "uuid",
+    check: "string_format",
+    abort: false,
+    version: "v6",
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _uuidv7(Class, params) {
+  return new Class({
+    type: "string",
+    format: "uuid",
+    check: "string_format",
+    abort: false,
+    version: "v7",
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _url(Class, params) {
+  return new Class({
+    type: "string",
+    format: "url",
+    check: "string_format",
+    abort: false,
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _emoji(Class, params) {
+  return new Class({
+    type: "string",
+    format: "emoji",
+    check: "string_format",
+    abort: false,
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _nanoid(Class, params) {
+  return new Class({
+    type: "string",
+    format: "nanoid",
+    check: "string_format",
+    abort: false,
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _cuid(Class, params) {
+  return new Class({
+    type: "string",
+    format: "cuid",
+    check: "string_format",
+    abort: false,
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _cuid2(Class, params) {
+  return new Class({
+    type: "string",
+    format: "cuid2",
+    check: "string_format",
+    abort: false,
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _ulid(Class, params) {
+  return new Class({
+    type: "string",
+    format: "ulid",
+    check: "string_format",
+    abort: false,
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _xid(Class, params) {
+  return new Class({
+    type: "string",
+    format: "xid",
+    check: "string_format",
+    abort: false,
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _ksuid(Class, params) {
+  return new Class({
+    type: "string",
+    format: "ksuid",
+    check: "string_format",
+    abort: false,
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _ipv4(Class, params) {
+  return new Class({
+    type: "string",
+    format: "ipv4",
+    check: "string_format",
+    abort: false,
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _ipv6(Class, params) {
+  return new Class({
+    type: "string",
+    format: "ipv6",
+    check: "string_format",
+    abort: false,
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _cidrv4(Class, params) {
+  return new Class({
+    type: "string",
+    format: "cidrv4",
+    check: "string_format",
+    abort: false,
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _cidrv6(Class, params) {
+  return new Class({
+    type: "string",
+    format: "cidrv6",
+    check: "string_format",
+    abort: false,
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _base64(Class, params) {
+  return new Class({
+    type: "string",
+    format: "base64",
+    check: "string_format",
+    abort: false,
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _base64url(Class, params) {
+  return new Class({
+    type: "string",
+    format: "base64url",
+    check: "string_format",
+    abort: false,
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _e164(Class, params) {
+  return new Class({
+    type: "string",
+    format: "e164",
+    check: "string_format",
+    abort: false,
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _jwt(Class, params) {
+  return new Class({
+    type: "string",
+    format: "jwt",
+    check: "string_format",
+    abort: false,
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _isoDateTime(Class, params) {
+  return new Class({
+    type: "string",
+    format: "datetime",
+    check: "string_format",
+    offset: false,
+    local: false,
+    precision: null,
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _isoDate(Class, params) {
+  return new Class({
+    type: "string",
+    format: "date",
+    check: "string_format",
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _isoTime(Class, params) {
+  return new Class({
+    type: "string",
+    format: "time",
+    check: "string_format",
+    precision: null,
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _isoDuration(Class, params) {
+  return new Class({
+    type: "string",
+    format: "duration",
+    check: "string_format",
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _number(Class, params) {
+  return new Class({
+    type: "number",
+    checks: [],
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _int(Class, params) {
+  return new Class({
+    type: "number",
+    check: "number_format",
+    abort: false,
+    format: "safeint",
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _boolean(Class, params) {
+  return new Class({
+    type: "boolean",
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _unknown(Class) {
+  return new Class({
+    type: "unknown"
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _never(Class, params) {
+  return new Class({
+    type: "never",
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _lt(value, params) {
+  return new $ZodCheckLessThan({
+    check: "less_than",
+    ...normalizeParams(params),
+    value,
+    inclusive: false
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _lte(value, params) {
+  return new $ZodCheckLessThan({
+    check: "less_than",
+    ...normalizeParams(params),
+    value,
+    inclusive: true
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _gt(value, params) {
+  return new $ZodCheckGreaterThan({
+    check: "greater_than",
+    ...normalizeParams(params),
+    value,
+    inclusive: false
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _gte(value, params) {
+  return new $ZodCheckGreaterThan({
+    check: "greater_than",
+    ...normalizeParams(params),
+    value,
+    inclusive: true
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _multipleOf(value, params) {
+  return new $ZodCheckMultipleOf({
+    check: "multiple_of",
+    ...normalizeParams(params),
+    value
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _maxLength(maximum, params) {
+  const ch = new $ZodCheckMaxLength({
+    check: "max_length",
+    ...normalizeParams(params),
+    maximum
+  });
+  return ch;
+}
+// @__NO_SIDE_EFFECTS__
+function _minLength(minimum, params) {
+  return new $ZodCheckMinLength({
+    check: "min_length",
+    ...normalizeParams(params),
+    minimum
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _length(length, params) {
+  return new $ZodCheckLengthEquals({
+    check: "length_equals",
+    ...normalizeParams(params),
+    length
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _regex(pattern, params) {
+  return new $ZodCheckRegex({
+    check: "string_format",
+    format: "regex",
+    ...normalizeParams(params),
+    pattern
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _lowercase(params) {
+  return new $ZodCheckLowerCase({
+    check: "string_format",
+    format: "lowercase",
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _uppercase(params) {
+  return new $ZodCheckUpperCase({
+    check: "string_format",
+    format: "uppercase",
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _includes(includes, params) {
+  return new $ZodCheckIncludes({
+    check: "string_format",
+    format: "includes",
+    ...normalizeParams(params),
+    includes
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _startsWith(prefix, params) {
+  return new $ZodCheckStartsWith({
+    check: "string_format",
+    format: "starts_with",
+    ...normalizeParams(params),
+    prefix
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _endsWith(suffix, params) {
+  return new $ZodCheckEndsWith({
+    check: "string_format",
+    format: "ends_with",
+    ...normalizeParams(params),
+    suffix
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _overwrite(tx) {
+  return new $ZodCheckOverwrite({
+    check: "overwrite",
+    tx
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _normalize(form) {
+  return /* @__PURE__ */ _overwrite((input) => input.normalize(form));
+}
+// @__NO_SIDE_EFFECTS__
+function _trim() {
+  return /* @__PURE__ */ _overwrite((input) => input.trim());
+}
+// @__NO_SIDE_EFFECTS__
+function _toLowerCase() {
+  return /* @__PURE__ */ _overwrite((input) => input.toLowerCase());
+}
+// @__NO_SIDE_EFFECTS__
+function _toUpperCase() {
+  return /* @__PURE__ */ _overwrite((input) => input.toUpperCase());
+}
+// @__NO_SIDE_EFFECTS__
+function _slugify() {
+  return /* @__PURE__ */ _overwrite((input) => slugify(input));
+}
+// @__NO_SIDE_EFFECTS__
+function _array(Class, element, params) {
+  return new Class({
+    type: "array",
+    element,
+    // get element() {
+    //   return element;
+    // },
+    ...normalizeParams(params)
+  });
+}
+// @__NO_SIDE_EFFECTS__
+function _refine(Class, fn2, _params) {
+  const schema = new Class({
+    type: "custom",
+    check: "custom",
+    fn: fn2,
+    ...normalizeParams(_params)
+  });
+  return schema;
+}
+// @__NO_SIDE_EFFECTS__
+function _superRefine(fn2, params) {
+  const ch = /* @__PURE__ */ _check((payload) => {
+    payload.addIssue = (issue$1) => {
+      if (typeof issue$1 === "string") {
+        payload.issues.push(issue(issue$1, payload.value, ch._zod.def));
+      } else {
+        const _issue = issue$1;
+        if (_issue.fatal)
+          _issue.continue = false;
+        _issue.code ?? (_issue.code = "custom");
+        _issue.input ?? (_issue.input = payload.value);
+        _issue.inst ?? (_issue.inst = ch);
+        _issue.continue ?? (_issue.continue = !ch._zod.def.abort);
+        payload.issues.push(issue(_issue));
+      }
+    };
+    return fn2(payload.value, payload);
+  }, params);
+  return ch;
+}
+// @__NO_SIDE_EFFECTS__
+function _check(fn2, params) {
+  const ch = new $ZodCheck({
+    check: "custom",
+    ...normalizeParams(params)
+  });
+  ch._zod.check = fn2;
+  return ch;
+}
+function initializeContext(params) {
+  let target = (params == null ? void 0 : params.target) ?? "draft-2020-12";
+  if (target === "draft-4")
+    target = "draft-04";
+  if (target === "draft-7")
+    target = "draft-07";
+  return {
+    processors: params.processors ?? {},
+    metadataRegistry: (params == null ? void 0 : params.metadata) ?? globalRegistry,
+    target,
+    unrepresentable: (params == null ? void 0 : params.unrepresentable) ?? "throw",
+    override: (params == null ? void 0 : params.override) ?? (() => {
+    }),
+    io: (params == null ? void 0 : params.io) ?? "output",
+    counter: 0,
+    seen: /* @__PURE__ */ new Map(),
+    cycles: (params == null ? void 0 : params.cycles) ?? "ref",
+    reused: (params == null ? void 0 : params.reused) ?? "inline",
+    external: (params == null ? void 0 : params.external) ?? void 0
+  };
+}
+function process(schema, ctx, _params = { path: [], schemaPath: [] }) {
+  var _a3, _b2;
+  var _a2;
+  const def2 = schema._zod.def;
+  const seen = ctx.seen.get(schema);
+  if (seen) {
+    seen.count++;
+    const isCycle = _params.schemaPath.includes(schema);
+    if (isCycle) {
+      seen.cycle = _params.path;
+    }
+    return seen.schema;
+  }
+  const result = { schema: {}, count: 1, cycle: void 0, path: _params.path };
+  ctx.seen.set(schema, result);
+  const overrideSchema = (_b2 = (_a3 = schema._zod).toJSONSchema) == null ? void 0 : _b2.call(_a3);
+  if (overrideSchema) {
+    result.schema = overrideSchema;
+  } else {
+    const params = {
+      ..._params,
+      schemaPath: [..._params.schemaPath, schema],
+      path: _params.path
+    };
+    if (schema._zod.processJSONSchema) {
+      schema._zod.processJSONSchema(ctx, result.schema, params);
+    } else {
+      const _json = result.schema;
+      const processor = ctx.processors[def2.type];
+      if (!processor) {
+        throw new Error(`[toJSONSchema]: Non-representable type encountered: ${def2.type}`);
+      }
+      processor(schema, ctx, _json, params);
+    }
+    const parent = schema._zod.parent;
+    if (parent) {
+      if (!result.ref)
+        result.ref = parent;
+      process(parent, ctx, params);
+      ctx.seen.get(parent).isParent = true;
+    }
+  }
+  const meta = ctx.metadataRegistry.get(schema);
+  if (meta)
+    Object.assign(result.schema, meta);
+  if (ctx.io === "input" && isTransforming(schema)) {
+    delete result.schema.examples;
+    delete result.schema.default;
+  }
+  if (ctx.io === "input" && "_prefault" in result.schema)
+    (_a2 = result.schema).default ?? (_a2.default = result.schema._prefault);
+  delete result.schema._prefault;
+  const _result = ctx.seen.get(schema);
+  return _result.schema;
+}
+function extractDefs(ctx, schema) {
+  var _a2, _b2, _c, _d;
+  const root = ctx.seen.get(schema);
+  if (!root)
+    throw new Error("Unprocessed schema. This is a bug in Zod.");
+  const idToSchema = /* @__PURE__ */ new Map();
+  for (const entry of ctx.seen.entries()) {
+    const id = (_a2 = ctx.metadataRegistry.get(entry[0])) == null ? void 0 : _a2.id;
+    if (id) {
+      const existing = idToSchema.get(id);
+      if (existing && existing !== entry[0]) {
+        throw new Error(`Duplicate schema id "${id}" detected during JSON Schema conversion. Two different schemas cannot share the same id when converted together.`);
+      }
+      idToSchema.set(id, entry[0]);
+    }
+  }
+  const makeURI = (entry) => {
+    var _a3;
+    const defsSegment = ctx.target === "draft-2020-12" ? "$defs" : "definitions";
+    if (ctx.external) {
+      const externalId = (_a3 = ctx.external.registry.get(entry[0])) == null ? void 0 : _a3.id;
+      const uriGenerator = ctx.external.uri ?? ((id2) => id2);
+      if (externalId) {
+        return { ref: uriGenerator(externalId) };
+      }
+      const id = entry[1].defId ?? entry[1].schema.id ?? `schema${ctx.counter++}`;
+      entry[1].defId = id;
+      return { defId: id, ref: `${uriGenerator("__shared")}#/${defsSegment}/${id}` };
+    }
+    if (entry[1] === root) {
+      return { ref: "#" };
+    }
+    const uriPrefix = `#`;
+    const defUriPrefix = `${uriPrefix}/${defsSegment}/`;
+    const defId = entry[1].schema.id ?? `__schema${ctx.counter++}`;
+    return { defId, ref: defUriPrefix + defId };
+  };
+  const extractToDef = (entry) => {
+    if (entry[1].schema.$ref) {
+      return;
+    }
+    const seen = entry[1];
+    const { ref: ref2, defId } = makeURI(entry);
+    seen.def = { ...seen.schema };
+    if (defId)
+      seen.defId = defId;
+    const schema2 = seen.schema;
+    for (const key in schema2) {
+      delete schema2[key];
+    }
+    schema2.$ref = ref2;
+  };
+  if (ctx.cycles === "throw") {
+    for (const entry of ctx.seen.entries()) {
+      const seen = entry[1];
+      if (seen.cycle) {
+        throw new Error(`Cycle detected: #/${(_b2 = seen.cycle) == null ? void 0 : _b2.join("/")}/<root>
+
+Set the \`cycles\` parameter to \`"ref"\` to resolve cyclical schemas with defs.`);
+      }
+    }
+  }
+  for (const entry of ctx.seen.entries()) {
+    const seen = entry[1];
+    if (schema === entry[0]) {
+      extractToDef(entry);
+      continue;
+    }
+    if (ctx.external) {
+      const ext = (_c = ctx.external.registry.get(entry[0])) == null ? void 0 : _c.id;
+      if (schema !== entry[0] && ext) {
+        extractToDef(entry);
+        continue;
+      }
+    }
+    const id = (_d = ctx.metadataRegistry.get(entry[0])) == null ? void 0 : _d.id;
+    if (id) {
+      extractToDef(entry);
+      continue;
+    }
+    if (seen.cycle) {
+      extractToDef(entry);
+      continue;
+    }
+    if (seen.count > 1) {
+      if (ctx.reused === "ref") {
+        extractToDef(entry);
+        continue;
+      }
+    }
+  }
+}
+function finalize(ctx, schema) {
+  var _a2, _b2, _c, _d;
+  const root = ctx.seen.get(schema);
+  if (!root)
+    throw new Error("Unprocessed schema. This is a bug in Zod.");
+  const flattenRef = (zodSchema) => {
+    const seen = ctx.seen.get(zodSchema);
+    if (seen.ref === null)
+      return;
+    const schema2 = seen.def ?? seen.schema;
+    const _cached = { ...schema2 };
+    const ref2 = seen.ref;
+    seen.ref = null;
+    if (ref2) {
+      flattenRef(ref2);
+      const refSeen = ctx.seen.get(ref2);
+      const refSchema = refSeen.schema;
+      if (refSchema.$ref && (ctx.target === "draft-07" || ctx.target === "draft-04" || ctx.target === "openapi-3.0")) {
+        schema2.allOf = schema2.allOf ?? [];
+        schema2.allOf.push(refSchema);
+      } else {
+        Object.assign(schema2, refSchema);
+      }
+      Object.assign(schema2, _cached);
+      const isParentRef = zodSchema._zod.parent === ref2;
+      if (isParentRef) {
+        for (const key in schema2) {
+          if (key === "$ref" || key === "allOf")
+            continue;
+          if (!(key in _cached)) {
+            delete schema2[key];
+          }
+        }
+      }
+      if (refSchema.$ref && refSeen.def) {
+        for (const key in schema2) {
+          if (key === "$ref" || key === "allOf")
+            continue;
+          if (key in refSeen.def && JSON.stringify(schema2[key]) === JSON.stringify(refSeen.def[key])) {
+            delete schema2[key];
+          }
+        }
+      }
+    }
+    const parent = zodSchema._zod.parent;
+    if (parent && parent !== ref2) {
+      flattenRef(parent);
+      const parentSeen = ctx.seen.get(parent);
+      if (parentSeen == null ? void 0 : parentSeen.schema.$ref) {
+        schema2.$ref = parentSeen.schema.$ref;
+        if (parentSeen.def) {
+          for (const key in schema2) {
+            if (key === "$ref" || key === "allOf")
+              continue;
+            if (key in parentSeen.def && JSON.stringify(schema2[key]) === JSON.stringify(parentSeen.def[key])) {
+              delete schema2[key];
+            }
+          }
+        }
+      }
+    }
+    ctx.override({
+      zodSchema,
+      jsonSchema: schema2,
+      path: seen.path ?? []
+    });
+  };
+  for (const entry of [...ctx.seen.entries()].reverse()) {
+    flattenRef(entry[0]);
+  }
+  const result = {};
+  if (ctx.target === "draft-2020-12") {
+    result.$schema = "https://json-schema.org/draft/2020-12/schema";
+  } else if (ctx.target === "draft-07") {
+    result.$schema = "http://json-schema.org/draft-07/schema#";
+  } else if (ctx.target === "draft-04") {
+    result.$schema = "http://json-schema.org/draft-04/schema#";
+  } else if (ctx.target === "openapi-3.0") ;
+  else ;
+  if ((_a2 = ctx.external) == null ? void 0 : _a2.uri) {
+    const id = (_b2 = ctx.external.registry.get(schema)) == null ? void 0 : _b2.id;
+    if (!id)
+      throw new Error("Schema is missing an `id` property");
+    result.$id = ctx.external.uri(id);
+  }
+  Object.assign(result, root.def ?? root.schema);
+  const rootMetaId = (_c = ctx.metadataRegistry.get(schema)) == null ? void 0 : _c.id;
+  if (rootMetaId !== void 0 && result.id === rootMetaId)
+    delete result.id;
+  const defs = ((_d = ctx.external) == null ? void 0 : _d.defs) ?? {};
+  for (const entry of ctx.seen.entries()) {
+    const seen = entry[1];
+    if (seen.def && seen.defId) {
+      if (seen.def.id === seen.defId)
+        delete seen.def.id;
+      defs[seen.defId] = seen.def;
+    }
+  }
+  if (ctx.external) ;
+  else {
+    if (Object.keys(defs).length > 0) {
+      if (ctx.target === "draft-2020-12") {
+        result.$defs = defs;
+      } else {
+        result.definitions = defs;
+      }
+    }
+  }
+  try {
+    const finalized = JSON.parse(JSON.stringify(result));
+    Object.defineProperty(finalized, "~standard", {
+      value: {
+        ...schema["~standard"],
+        jsonSchema: {
+          input: createStandardJSONSchemaMethod(schema, "input", ctx.processors),
+          output: createStandardJSONSchemaMethod(schema, "output", ctx.processors)
+        }
+      },
+      enumerable: false,
+      writable: false
+    });
+    return finalized;
+  } catch (_err) {
+    throw new Error("Error converting schema to JSON.");
+  }
+}
+function isTransforming(_schema, _ctx) {
+  const ctx = _ctx ?? { seen: /* @__PURE__ */ new Set() };
+  if (ctx.seen.has(_schema))
+    return false;
+  ctx.seen.add(_schema);
+  const def2 = _schema._zod.def;
+  if (def2.type === "transform")
+    return true;
+  if (def2.type === "array")
+    return isTransforming(def2.element, ctx);
+  if (def2.type === "set")
+    return isTransforming(def2.valueType, ctx);
+  if (def2.type === "lazy")
+    return isTransforming(def2.getter(), ctx);
+  if (def2.type === "promise" || def2.type === "optional" || def2.type === "nonoptional" || def2.type === "nullable" || def2.type === "readonly" || def2.type === "default" || def2.type === "prefault") {
+    return isTransforming(def2.innerType, ctx);
+  }
+  if (def2.type === "intersection") {
+    return isTransforming(def2.left, ctx) || isTransforming(def2.right, ctx);
+  }
+  if (def2.type === "record" || def2.type === "map") {
+    return isTransforming(def2.keyType, ctx) || isTransforming(def2.valueType, ctx);
+  }
+  if (def2.type === "pipe") {
+    if (_schema._zod.traits.has("$ZodCodec"))
+      return true;
+    return isTransforming(def2.in, ctx) || isTransforming(def2.out, ctx);
+  }
+  if (def2.type === "object") {
+    for (const key in def2.shape) {
+      if (isTransforming(def2.shape[key], ctx))
+        return true;
+    }
+    return false;
+  }
+  if (def2.type === "union") {
+    for (const option of def2.options) {
+      if (isTransforming(option, ctx))
+        return true;
+    }
+    return false;
+  }
+  if (def2.type === "tuple") {
+    for (const item of def2.items) {
+      if (isTransforming(item, ctx))
+        return true;
+    }
+    if (def2.rest && isTransforming(def2.rest, ctx))
+      return true;
+    return false;
+  }
+  return false;
+}
+const createToJSONSchemaMethod = (schema, processors = {}) => (params) => {
+  const ctx = initializeContext({ ...params, processors });
+  process(schema, ctx);
+  extractDefs(ctx, schema);
+  return finalize(ctx, schema);
+};
+const createStandardJSONSchemaMethod = (schema, io, processors = {}) => (params) => {
+  const { libraryOptions, target } = params ?? {};
+  const ctx = initializeContext({ ...libraryOptions ?? {}, target, io, processors });
+  process(schema, ctx);
+  extractDefs(ctx, schema);
+  return finalize(ctx, schema);
+};
+const formatMap = {
+  guid: "uuid",
+  url: "uri",
+  datetime: "date-time",
+  json_string: "json-string",
+  regex: ""
+  // do not set
+};
+const stringProcessor = (schema, ctx, _json, _params) => {
+  const json = _json;
+  json.type = "string";
+  const { minimum, maximum, format: format2, patterns, contentEncoding } = schema._zod.bag;
+  if (typeof minimum === "number")
+    json.minLength = minimum;
+  if (typeof maximum === "number")
+    json.maxLength = maximum;
+  if (format2) {
+    json.format = formatMap[format2] ?? format2;
+    if (json.format === "")
+      delete json.format;
+    if (format2 === "time") {
+      delete json.format;
+    }
+  }
+  if (contentEncoding)
+    json.contentEncoding = contentEncoding;
+  if (patterns && patterns.size > 0) {
+    const regexes = [...patterns];
+    if (regexes.length === 1)
+      json.pattern = regexes[0].source;
+    else if (regexes.length > 1) {
+      json.allOf = [
+        ...regexes.map((regex) => ({
+          ...ctx.target === "draft-07" || ctx.target === "draft-04" || ctx.target === "openapi-3.0" ? { type: "string" } : {},
+          pattern: regex.source
+        }))
+      ];
+    }
+  }
+};
+const numberProcessor = (schema, ctx, _json, _params) => {
+  const json = _json;
+  const { minimum, maximum, format: format2, multipleOf, exclusiveMaximum, exclusiveMinimum } = schema._zod.bag;
+  if (typeof format2 === "string" && format2.includes("int"))
+    json.type = "integer";
+  else
+    json.type = "number";
+  const exMin = typeof exclusiveMinimum === "number" && exclusiveMinimum >= (minimum ?? Number.NEGATIVE_INFINITY);
+  const exMax = typeof exclusiveMaximum === "number" && exclusiveMaximum <= (maximum ?? Number.POSITIVE_INFINITY);
+  const legacy = ctx.target === "draft-04" || ctx.target === "openapi-3.0";
+  if (exMin) {
+    if (legacy) {
+      json.minimum = exclusiveMinimum;
+      json.exclusiveMinimum = true;
+    } else {
+      json.exclusiveMinimum = exclusiveMinimum;
+    }
+  } else if (typeof minimum === "number") {
+    json.minimum = minimum;
+  }
+  if (exMax) {
+    if (legacy) {
+      json.maximum = exclusiveMaximum;
+      json.exclusiveMaximum = true;
+    } else {
+      json.exclusiveMaximum = exclusiveMaximum;
+    }
+  } else if (typeof maximum === "number") {
+    json.maximum = maximum;
+  }
+  if (typeof multipleOf === "number")
+    json.multipleOf = multipleOf;
+};
+const booleanProcessor = (_schema, _ctx, json, _params) => {
+  json.type = "boolean";
+};
+const neverProcessor = (_schema, _ctx, json, _params) => {
+  json.not = {};
+};
+const unknownProcessor = (_schema, _ctx, _json, _params) => {
+};
+const enumProcessor = (schema, _ctx, json, _params) => {
+  const def2 = schema._zod.def;
+  const values = getEnumValues(def2.entries);
+  if (values.every((v) => typeof v === "number"))
+    json.type = "number";
+  if (values.every((v) => typeof v === "string"))
+    json.type = "string";
+  json.enum = values;
+};
+const literalProcessor = (schema, ctx, json, _params) => {
+  const def2 = schema._zod.def;
+  const vals = [];
+  for (const val of def2.values) {
+    if (val === void 0) {
+      if (ctx.unrepresentable === "throw") {
+        throw new Error("Literal `undefined` cannot be represented in JSON Schema");
+      }
+    } else if (typeof val === "bigint") {
+      if (ctx.unrepresentable === "throw") {
+        throw new Error("BigInt literals cannot be represented in JSON Schema");
+      } else {
+        vals.push(Number(val));
+      }
+    } else {
+      vals.push(val);
+    }
+  }
+  if (vals.length === 0) ;
+  else if (vals.length === 1) {
+    const val = vals[0];
+    json.type = val === null ? "null" : typeof val;
+    if (ctx.target === "draft-04" || ctx.target === "openapi-3.0") {
+      json.enum = [val];
+    } else {
+      json.const = val;
+    }
+  } else {
+    if (vals.every((v) => typeof v === "number"))
+      json.type = "number";
+    if (vals.every((v) => typeof v === "string"))
+      json.type = "string";
+    if (vals.every((v) => typeof v === "boolean"))
+      json.type = "boolean";
+    if (vals.every((v) => v === null))
+      json.type = "null";
+    json.enum = vals;
+  }
+};
+const customProcessor = (_schema, ctx, _json, _params) => {
+  if (ctx.unrepresentable === "throw") {
+    throw new Error("Custom types cannot be represented in JSON Schema");
+  }
+};
+const transformProcessor = (_schema, ctx, _json, _params) => {
+  if (ctx.unrepresentable === "throw") {
+    throw new Error("Transforms cannot be represented in JSON Schema");
+  }
+};
+const arrayProcessor = (schema, ctx, _json, params) => {
+  const json = _json;
+  const def2 = schema._zod.def;
+  const { minimum, maximum } = schema._zod.bag;
+  if (typeof minimum === "number")
+    json.minItems = minimum;
+  if (typeof maximum === "number")
+    json.maxItems = maximum;
+  json.type = "array";
+  json.items = process(def2.element, ctx, {
+    ...params,
+    path: [...params.path, "items"]
+  });
+};
+const objectProcessor = (schema, ctx, _json, params) => {
+  var _a2;
+  const json = _json;
+  const def2 = schema._zod.def;
+  json.type = "object";
+  json.properties = {};
+  const shape = def2.shape;
+  for (const key in shape) {
+    json.properties[key] = process(shape[key], ctx, {
+      ...params,
+      path: [...params.path, "properties", key]
+    });
+  }
+  const allKeys = new Set(Object.keys(shape));
+  const requiredKeys = new Set([...allKeys].filter((key) => {
+    const v = def2.shape[key]._zod;
+    if (ctx.io === "input") {
+      return v.optin === void 0;
+    } else {
+      return v.optout === void 0;
+    }
+  }));
+  if (requiredKeys.size > 0) {
+    json.required = Array.from(requiredKeys);
+  }
+  if (((_a2 = def2.catchall) == null ? void 0 : _a2._zod.def.type) === "never") {
+    json.additionalProperties = false;
+  } else if (!def2.catchall) {
+    if (ctx.io === "output")
+      json.additionalProperties = false;
+  } else if (def2.catchall) {
+    json.additionalProperties = process(def2.catchall, ctx, {
+      ...params,
+      path: [...params.path, "additionalProperties"]
+    });
+  }
+};
+const unionProcessor = (schema, ctx, json, params) => {
+  const def2 = schema._zod.def;
+  const isExclusive = def2.inclusive === false;
+  const options = def2.options.map((x, i) => process(x, ctx, {
+    ...params,
+    path: [...params.path, isExclusive ? "oneOf" : "anyOf", i]
+  }));
+  if (isExclusive) {
+    json.oneOf = options;
+  } else {
+    json.anyOf = options;
+  }
+};
+const intersectionProcessor = (schema, ctx, json, params) => {
+  const def2 = schema._zod.def;
+  const a = process(def2.left, ctx, {
+    ...params,
+    path: [...params.path, "allOf", 0]
+  });
+  const b = process(def2.right, ctx, {
+    ...params,
+    path: [...params.path, "allOf", 1]
+  });
+  const isSimpleIntersection = (val) => "allOf" in val && Object.keys(val).length === 1;
+  const allOf = [
+    ...isSimpleIntersection(a) ? a.allOf : [a],
+    ...isSimpleIntersection(b) ? b.allOf : [b]
+  ];
+  json.allOf = allOf;
+};
+const recordProcessor = (schema, ctx, _json, params) => {
+  const json = _json;
+  const def2 = schema._zod.def;
+  json.type = "object";
+  const keyType = def2.keyType;
+  const keyBag = keyType._zod.bag;
+  const patterns = keyBag == null ? void 0 : keyBag.patterns;
+  if (def2.mode === "loose" && patterns && patterns.size > 0) {
+    const valueSchema = process(def2.valueType, ctx, {
+      ...params,
+      path: [...params.path, "patternProperties", "*"]
+    });
+    json.patternProperties = {};
+    for (const pattern of patterns) {
+      json.patternProperties[pattern.source] = valueSchema;
+    }
+  } else {
+    if (ctx.target === "draft-07" || ctx.target === "draft-2020-12") {
+      json.propertyNames = process(def2.keyType, ctx, {
+        ...params,
+        path: [...params.path, "propertyNames"]
+      });
+    }
+    json.additionalProperties = process(def2.valueType, ctx, {
+      ...params,
+      path: [...params.path, "additionalProperties"]
+    });
+  }
+  const keyValues = keyType._zod.values;
+  if (keyValues) {
+    const validKeyValues = [...keyValues].filter((v) => typeof v === "string" || typeof v === "number");
+    if (validKeyValues.length > 0) {
+      json.required = validKeyValues;
+    }
+  }
+};
+const nullableProcessor = (schema, ctx, json, params) => {
+  const def2 = schema._zod.def;
+  const inner = process(def2.innerType, ctx, params);
+  const seen = ctx.seen.get(schema);
+  if (ctx.target === "openapi-3.0") {
+    seen.ref = def2.innerType;
+    json.nullable = true;
+  } else {
+    json.anyOf = [inner, { type: "null" }];
+  }
+};
+const nonoptionalProcessor = (schema, ctx, _json, params) => {
+  const def2 = schema._zod.def;
+  process(def2.innerType, ctx, params);
+  const seen = ctx.seen.get(schema);
+  seen.ref = def2.innerType;
+};
+const defaultProcessor = (schema, ctx, json, params) => {
+  const def2 = schema._zod.def;
+  process(def2.innerType, ctx, params);
+  const seen = ctx.seen.get(schema);
+  seen.ref = def2.innerType;
+  json.default = JSON.parse(JSON.stringify(def2.defaultValue));
+};
+const prefaultProcessor = (schema, ctx, json, params) => {
+  const def2 = schema._zod.def;
+  process(def2.innerType, ctx, params);
+  const seen = ctx.seen.get(schema);
+  seen.ref = def2.innerType;
+  if (ctx.io === "input")
+    json._prefault = JSON.parse(JSON.stringify(def2.defaultValue));
+};
+const catchProcessor = (schema, ctx, json, params) => {
+  const def2 = schema._zod.def;
+  process(def2.innerType, ctx, params);
+  const seen = ctx.seen.get(schema);
+  seen.ref = def2.innerType;
+  let catchValue;
+  try {
+    catchValue = def2.catchValue(void 0);
+  } catch {
+    throw new Error("Dynamic catch values are not supported in JSON Schema");
+  }
+  json.default = catchValue;
+};
+const pipeProcessor = (schema, ctx, _json, params) => {
+  const def2 = schema._zod.def;
+  const inIsTransform = def2.in._zod.traits.has("$ZodTransform");
+  const innerType = ctx.io === "input" ? inIsTransform ? def2.out : def2.in : def2.out;
+  process(innerType, ctx, params);
+  const seen = ctx.seen.get(schema);
+  seen.ref = innerType;
+};
+const readonlyProcessor = (schema, ctx, json, params) => {
+  const def2 = schema._zod.def;
+  process(def2.innerType, ctx, params);
+  const seen = ctx.seen.get(schema);
+  seen.ref = def2.innerType;
+  json.readOnly = true;
+};
+const optionalProcessor = (schema, ctx, _json, params) => {
+  const def2 = schema._zod.def;
+  process(def2.innerType, ctx, params);
+  const seen = ctx.seen.get(schema);
+  seen.ref = def2.innerType;
+};
+const ZodISODateTime = /* @__PURE__ */ $constructor("ZodISODateTime", (inst, def2) => {
+  $ZodISODateTime.init(inst, def2);
+  ZodStringFormat.init(inst, def2);
+});
+function datetime(params) {
+  return /* @__PURE__ */ _isoDateTime(ZodISODateTime, params);
+}
+const ZodISODate = /* @__PURE__ */ $constructor("ZodISODate", (inst, def2) => {
+  $ZodISODate.init(inst, def2);
+  ZodStringFormat.init(inst, def2);
+});
+function date(params) {
+  return /* @__PURE__ */ _isoDate(ZodISODate, params);
+}
+const ZodISOTime = /* @__PURE__ */ $constructor("ZodISOTime", (inst, def2) => {
+  $ZodISOTime.init(inst, def2);
+  ZodStringFormat.init(inst, def2);
+});
+function time(params) {
+  return /* @__PURE__ */ _isoTime(ZodISOTime, params);
+}
+const ZodISODuration = /* @__PURE__ */ $constructor("ZodISODuration", (inst, def2) => {
+  $ZodISODuration.init(inst, def2);
+  ZodStringFormat.init(inst, def2);
+});
+function duration(params) {
+  return /* @__PURE__ */ _isoDuration(ZodISODuration, params);
+}
+const initializer = (inst, issues) => {
+  $ZodError.init(inst, issues);
+  inst.name = "ZodError";
+  Object.defineProperties(inst, {
+    format: {
+      value: (mapper) => formatError(inst, mapper)
+      // enumerable: false,
+    },
+    flatten: {
+      value: (mapper) => flattenError(inst, mapper)
+      // enumerable: false,
+    },
+    addIssue: {
+      value: (issue2) => {
+        inst.issues.push(issue2);
+        inst.message = JSON.stringify(inst.issues, jsonStringifyReplacer, 2);
+      }
+      // enumerable: false,
+    },
+    addIssues: {
+      value: (issues2) => {
+        inst.issues.push(...issues2);
+        inst.message = JSON.stringify(inst.issues, jsonStringifyReplacer, 2);
+      }
+      // enumerable: false,
+    },
+    isEmpty: {
+      get() {
+        return inst.issues.length === 0;
+      }
+      // enumerable: false,
+    }
+  });
+};
+const ZodRealError = /* @__PURE__ */ $constructor("ZodError", initializer, {
+  Parent: Error
+});
+const parse = /* @__PURE__ */ _parse(ZodRealError);
+const parseAsync = /* @__PURE__ */ _parseAsync(ZodRealError);
+const safeParse = /* @__PURE__ */ _safeParse(ZodRealError);
+const safeParseAsync = /* @__PURE__ */ _safeParseAsync(ZodRealError);
+const encode = /* @__PURE__ */ _encode(ZodRealError);
+const decode = /* @__PURE__ */ _decode(ZodRealError);
+const encodeAsync = /* @__PURE__ */ _encodeAsync(ZodRealError);
+const decodeAsync = /* @__PURE__ */ _decodeAsync(ZodRealError);
+const safeEncode = /* @__PURE__ */ _safeEncode(ZodRealError);
+const safeDecode = /* @__PURE__ */ _safeDecode(ZodRealError);
+const safeEncodeAsync = /* @__PURE__ */ _safeEncodeAsync(ZodRealError);
+const safeDecodeAsync = /* @__PURE__ */ _safeDecodeAsync(ZodRealError);
+const _installedGroups = /* @__PURE__ */ new WeakMap();
+function _installLazyMethods(inst, group, methods) {
+  const proto = Object.getPrototypeOf(inst);
+  let installed = _installedGroups.get(proto);
+  if (!installed) {
+    installed = /* @__PURE__ */ new Set();
+    _installedGroups.set(proto, installed);
+  }
+  if (installed.has(group))
+    return;
+  installed.add(group);
+  for (const key in methods) {
+    const fn2 = methods[key];
+    Object.defineProperty(proto, key, {
+      configurable: true,
+      enumerable: false,
+      get() {
+        const bound = fn2.bind(this);
+        Object.defineProperty(this, key, {
+          configurable: true,
+          writable: true,
+          enumerable: true,
+          value: bound
+        });
+        return bound;
+      },
+      set(v) {
+        Object.defineProperty(this, key, {
+          configurable: true,
+          writable: true,
+          enumerable: true,
+          value: v
+        });
+      }
+    });
+  }
+}
+const ZodType = /* @__PURE__ */ $constructor("ZodType", (inst, def2) => {
+  $ZodType.init(inst, def2);
+  Object.assign(inst["~standard"], {
+    jsonSchema: {
+      input: createStandardJSONSchemaMethod(inst, "input"),
+      output: createStandardJSONSchemaMethod(inst, "output")
+    }
+  });
+  inst.toJSONSchema = createToJSONSchemaMethod(inst, {});
+  inst.def = def2;
+  inst.type = def2.type;
+  Object.defineProperty(inst, "_def", { value: def2 });
+  inst.parse = (data, params) => parse(inst, data, params, { callee: inst.parse });
+  inst.safeParse = (data, params) => safeParse(inst, data, params);
+  inst.parseAsync = async (data, params) => parseAsync(inst, data, params, { callee: inst.parseAsync });
+  inst.safeParseAsync = async (data, params) => safeParseAsync(inst, data, params);
+  inst.spa = inst.safeParseAsync;
+  inst.encode = (data, params) => encode(inst, data, params);
+  inst.decode = (data, params) => decode(inst, data, params);
+  inst.encodeAsync = async (data, params) => encodeAsync(inst, data, params);
+  inst.decodeAsync = async (data, params) => decodeAsync(inst, data, params);
+  inst.safeEncode = (data, params) => safeEncode(inst, data, params);
+  inst.safeDecode = (data, params) => safeDecode(inst, data, params);
+  inst.safeEncodeAsync = async (data, params) => safeEncodeAsync(inst, data, params);
+  inst.safeDecodeAsync = async (data, params) => safeDecodeAsync(inst, data, params);
+  _installLazyMethods(inst, "ZodType", {
+    check(...chks) {
+      const def3 = this.def;
+      return this.clone(mergeDefs(def3, {
+        checks: [
+          ...def3.checks ?? [],
+          ...chks.map((ch) => typeof ch === "function" ? { _zod: { check: ch, def: { check: "custom" }, onattach: [] } } : ch)
+        ]
+      }), { parent: true });
+    },
+    with(...chks) {
+      return this.check(...chks);
+    },
+    clone(def3, params) {
+      return clone(this, def3, params);
+    },
+    brand() {
+      return this;
+    },
+    register(reg, meta) {
+      reg.add(this, meta);
+      return this;
+    },
+    refine(check, params) {
+      return this.check(refine(check, params));
+    },
+    superRefine(refinement, params) {
+      return this.check(superRefine(refinement, params));
+    },
+    overwrite(fn2) {
+      return this.check(/* @__PURE__ */ _overwrite(fn2));
+    },
+    optional() {
+      return optional(this);
+    },
+    exactOptional() {
+      return exactOptional(this);
+    },
+    nullable() {
+      return nullable(this);
+    },
+    nullish() {
+      return optional(nullable(this));
+    },
+    nonoptional(params) {
+      return nonoptional(this, params);
+    },
+    array() {
+      return array(this);
+    },
+    or(arg) {
+      return union([this, arg]);
+    },
+    and(arg) {
+      return intersection(this, arg);
+    },
+    transform(tx) {
+      return pipe(this, transform(tx));
+    },
+    default(d) {
+      return _default(this, d);
+    },
+    prefault(d) {
+      return prefault(this, d);
+    },
+    catch(params) {
+      return _catch(this, params);
+    },
+    pipe(target) {
+      return pipe(this, target);
+    },
+    readonly() {
+      return readonly(this);
+    },
+    describe(description) {
+      const cl = this.clone();
+      globalRegistry.add(cl, { description });
+      return cl;
+    },
+    meta(...args) {
+      if (args.length === 0)
+        return globalRegistry.get(this);
+      const cl = this.clone();
+      globalRegistry.add(cl, args[0]);
+      return cl;
+    },
+    isOptional() {
+      return this.safeParse(void 0).success;
+    },
+    isNullable() {
+      return this.safeParse(null).success;
+    },
+    apply(fn2) {
+      return fn2(this);
+    }
+  });
+  Object.defineProperty(inst, "description", {
+    get() {
+      var _a2;
+      return (_a2 = globalRegistry.get(inst)) == null ? void 0 : _a2.description;
+    },
+    configurable: true
+  });
+  return inst;
+});
+const _ZodString = /* @__PURE__ */ $constructor("_ZodString", (inst, def2) => {
+  $ZodString.init(inst, def2);
+  ZodType.init(inst, def2);
+  inst._zod.processJSONSchema = (ctx, json, params) => stringProcessor(inst, ctx, json);
+  const bag = inst._zod.bag;
+  inst.format = bag.format ?? null;
+  inst.minLength = bag.minimum ?? null;
+  inst.maxLength = bag.maximum ?? null;
+  _installLazyMethods(inst, "_ZodString", {
+    regex(...args) {
+      return this.check(/* @__PURE__ */ _regex(...args));
+    },
+    includes(...args) {
+      return this.check(/* @__PURE__ */ _includes(...args));
+    },
+    startsWith(...args) {
+      return this.check(/* @__PURE__ */ _startsWith(...args));
+    },
+    endsWith(...args) {
+      return this.check(/* @__PURE__ */ _endsWith(...args));
+    },
+    min(...args) {
+      return this.check(/* @__PURE__ */ _minLength(...args));
+    },
+    max(...args) {
+      return this.check(/* @__PURE__ */ _maxLength(...args));
+    },
+    length(...args) {
+      return this.check(/* @__PURE__ */ _length(...args));
+    },
+    nonempty(...args) {
+      return this.check(/* @__PURE__ */ _minLength(1, ...args));
+    },
+    lowercase(params) {
+      return this.check(/* @__PURE__ */ _lowercase(params));
+    },
+    uppercase(params) {
+      return this.check(/* @__PURE__ */ _uppercase(params));
+    },
+    trim() {
+      return this.check(/* @__PURE__ */ _trim());
+    },
+    normalize(...args) {
+      return this.check(/* @__PURE__ */ _normalize(...args));
+    },
+    toLowerCase() {
+      return this.check(/* @__PURE__ */ _toLowerCase());
+    },
+    toUpperCase() {
+      return this.check(/* @__PURE__ */ _toUpperCase());
+    },
+    slugify() {
+      return this.check(/* @__PURE__ */ _slugify());
+    }
+  });
+});
+const ZodString = /* @__PURE__ */ $constructor("ZodString", (inst, def2) => {
+  $ZodString.init(inst, def2);
+  _ZodString.init(inst, def2);
+  inst.email = (params) => inst.check(/* @__PURE__ */ _email(ZodEmail, params));
+  inst.url = (params) => inst.check(/* @__PURE__ */ _url(ZodURL, params));
+  inst.jwt = (params) => inst.check(/* @__PURE__ */ _jwt(ZodJWT, params));
+  inst.emoji = (params) => inst.check(/* @__PURE__ */ _emoji(ZodEmoji, params));
+  inst.guid = (params) => inst.check(/* @__PURE__ */ _guid(ZodGUID, params));
+  inst.uuid = (params) => inst.check(/* @__PURE__ */ _uuid(ZodUUID, params));
+  inst.uuidv4 = (params) => inst.check(/* @__PURE__ */ _uuidv4(ZodUUID, params));
+  inst.uuidv6 = (params) => inst.check(/* @__PURE__ */ _uuidv6(ZodUUID, params));
+  inst.uuidv7 = (params) => inst.check(/* @__PURE__ */ _uuidv7(ZodUUID, params));
+  inst.nanoid = (params) => inst.check(/* @__PURE__ */ _nanoid(ZodNanoID, params));
+  inst.guid = (params) => inst.check(/* @__PURE__ */ _guid(ZodGUID, params));
+  inst.cuid = (params) => inst.check(/* @__PURE__ */ _cuid(ZodCUID, params));
+  inst.cuid2 = (params) => inst.check(/* @__PURE__ */ _cuid2(ZodCUID2, params));
+  inst.ulid = (params) => inst.check(/* @__PURE__ */ _ulid(ZodULID, params));
+  inst.base64 = (params) => inst.check(/* @__PURE__ */ _base64(ZodBase64, params));
+  inst.base64url = (params) => inst.check(/* @__PURE__ */ _base64url(ZodBase64URL, params));
+  inst.xid = (params) => inst.check(/* @__PURE__ */ _xid(ZodXID, params));
+  inst.ksuid = (params) => inst.check(/* @__PURE__ */ _ksuid(ZodKSUID, params));
+  inst.ipv4 = (params) => inst.check(/* @__PURE__ */ _ipv4(ZodIPv4, params));
+  inst.ipv6 = (params) => inst.check(/* @__PURE__ */ _ipv6(ZodIPv6, params));
+  inst.cidrv4 = (params) => inst.check(/* @__PURE__ */ _cidrv4(ZodCIDRv4, params));
+  inst.cidrv6 = (params) => inst.check(/* @__PURE__ */ _cidrv6(ZodCIDRv6, params));
+  inst.e164 = (params) => inst.check(/* @__PURE__ */ _e164(ZodE164, params));
+  inst.datetime = (params) => inst.check(datetime(params));
+  inst.date = (params) => inst.check(date(params));
+  inst.time = (params) => inst.check(time(params));
+  inst.duration = (params) => inst.check(duration(params));
+});
+function string(params) {
+  return /* @__PURE__ */ _string(ZodString, params);
+}
+const ZodStringFormat = /* @__PURE__ */ $constructor("ZodStringFormat", (inst, def2) => {
+  $ZodStringFormat.init(inst, def2);
+  _ZodString.init(inst, def2);
+});
+const ZodEmail = /* @__PURE__ */ $constructor("ZodEmail", (inst, def2) => {
+  $ZodEmail.init(inst, def2);
+  ZodStringFormat.init(inst, def2);
+});
+const ZodGUID = /* @__PURE__ */ $constructor("ZodGUID", (inst, def2) => {
+  $ZodGUID.init(inst, def2);
+  ZodStringFormat.init(inst, def2);
+});
+const ZodUUID = /* @__PURE__ */ $constructor("ZodUUID", (inst, def2) => {
+  $ZodUUID.init(inst, def2);
+  ZodStringFormat.init(inst, def2);
+});
+const ZodURL = /* @__PURE__ */ $constructor("ZodURL", (inst, def2) => {
+  $ZodURL.init(inst, def2);
+  ZodStringFormat.init(inst, def2);
+});
+const ZodEmoji = /* @__PURE__ */ $constructor("ZodEmoji", (inst, def2) => {
+  $ZodEmoji.init(inst, def2);
+  ZodStringFormat.init(inst, def2);
+});
+const ZodNanoID = /* @__PURE__ */ $constructor("ZodNanoID", (inst, def2) => {
+  $ZodNanoID.init(inst, def2);
+  ZodStringFormat.init(inst, def2);
+});
+const ZodCUID = /* @__PURE__ */ $constructor("ZodCUID", (inst, def2) => {
+  $ZodCUID.init(inst, def2);
+  ZodStringFormat.init(inst, def2);
+});
+const ZodCUID2 = /* @__PURE__ */ $constructor("ZodCUID2", (inst, def2) => {
+  $ZodCUID2.init(inst, def2);
+  ZodStringFormat.init(inst, def2);
+});
+const ZodULID = /* @__PURE__ */ $constructor("ZodULID", (inst, def2) => {
+  $ZodULID.init(inst, def2);
+  ZodStringFormat.init(inst, def2);
+});
+const ZodXID = /* @__PURE__ */ $constructor("ZodXID", (inst, def2) => {
+  $ZodXID.init(inst, def2);
+  ZodStringFormat.init(inst, def2);
+});
+const ZodKSUID = /* @__PURE__ */ $constructor("ZodKSUID", (inst, def2) => {
+  $ZodKSUID.init(inst, def2);
+  ZodStringFormat.init(inst, def2);
+});
+const ZodIPv4 = /* @__PURE__ */ $constructor("ZodIPv4", (inst, def2) => {
+  $ZodIPv4.init(inst, def2);
+  ZodStringFormat.init(inst, def2);
+});
+const ZodIPv6 = /* @__PURE__ */ $constructor("ZodIPv6", (inst, def2) => {
+  $ZodIPv6.init(inst, def2);
+  ZodStringFormat.init(inst, def2);
+});
+const ZodCIDRv4 = /* @__PURE__ */ $constructor("ZodCIDRv4", (inst, def2) => {
+  $ZodCIDRv4.init(inst, def2);
+  ZodStringFormat.init(inst, def2);
+});
+const ZodCIDRv6 = /* @__PURE__ */ $constructor("ZodCIDRv6", (inst, def2) => {
+  $ZodCIDRv6.init(inst, def2);
+  ZodStringFormat.init(inst, def2);
+});
+const ZodBase64 = /* @__PURE__ */ $constructor("ZodBase64", (inst, def2) => {
+  $ZodBase64.init(inst, def2);
+  ZodStringFormat.init(inst, def2);
+});
+const ZodBase64URL = /* @__PURE__ */ $constructor("ZodBase64URL", (inst, def2) => {
+  $ZodBase64URL.init(inst, def2);
+  ZodStringFormat.init(inst, def2);
+});
+const ZodE164 = /* @__PURE__ */ $constructor("ZodE164", (inst, def2) => {
+  $ZodE164.init(inst, def2);
+  ZodStringFormat.init(inst, def2);
+});
+const ZodJWT = /* @__PURE__ */ $constructor("ZodJWT", (inst, def2) => {
+  $ZodJWT.init(inst, def2);
+  ZodStringFormat.init(inst, def2);
+});
+const ZodNumber = /* @__PURE__ */ $constructor("ZodNumber", (inst, def2) => {
+  $ZodNumber.init(inst, def2);
+  ZodType.init(inst, def2);
+  inst._zod.processJSONSchema = (ctx, json, params) => numberProcessor(inst, ctx, json);
+  _installLazyMethods(inst, "ZodNumber", {
+    gt(value, params) {
+      return this.check(/* @__PURE__ */ _gt(value, params));
+    },
+    gte(value, params) {
+      return this.check(/* @__PURE__ */ _gte(value, params));
+    },
+    min(value, params) {
+      return this.check(/* @__PURE__ */ _gte(value, params));
+    },
+    lt(value, params) {
+      return this.check(/* @__PURE__ */ _lt(value, params));
+    },
+    lte(value, params) {
+      return this.check(/* @__PURE__ */ _lte(value, params));
+    },
+    max(value, params) {
+      return this.check(/* @__PURE__ */ _lte(value, params));
+    },
+    int(params) {
+      return this.check(int(params));
+    },
+    safe(params) {
+      return this.check(int(params));
+    },
+    positive(params) {
+      return this.check(/* @__PURE__ */ _gt(0, params));
+    },
+    nonnegative(params) {
+      return this.check(/* @__PURE__ */ _gte(0, params));
+    },
+    negative(params) {
+      return this.check(/* @__PURE__ */ _lt(0, params));
+    },
+    nonpositive(params) {
+      return this.check(/* @__PURE__ */ _lte(0, params));
+    },
+    multipleOf(value, params) {
+      return this.check(/* @__PURE__ */ _multipleOf(value, params));
+    },
+    step(value, params) {
+      return this.check(/* @__PURE__ */ _multipleOf(value, params));
+    },
+    finite() {
+      return this;
+    }
+  });
+  const bag = inst._zod.bag;
+  inst.minValue = Math.max(bag.minimum ?? Number.NEGATIVE_INFINITY, bag.exclusiveMinimum ?? Number.NEGATIVE_INFINITY) ?? null;
+  inst.maxValue = Math.min(bag.maximum ?? Number.POSITIVE_INFINITY, bag.exclusiveMaximum ?? Number.POSITIVE_INFINITY) ?? null;
+  inst.isInt = (bag.format ?? "").includes("int") || Number.isSafeInteger(bag.multipleOf ?? 0.5);
+  inst.isFinite = true;
+  inst.format = bag.format ?? null;
+});
+function number(params) {
+  return /* @__PURE__ */ _number(ZodNumber, params);
+}
+const ZodNumberFormat = /* @__PURE__ */ $constructor("ZodNumberFormat", (inst, def2) => {
+  $ZodNumberFormat.init(inst, def2);
+  ZodNumber.init(inst, def2);
+});
+function int(params) {
+  return /* @__PURE__ */ _int(ZodNumberFormat, params);
+}
+const ZodBoolean = /* @__PURE__ */ $constructor("ZodBoolean", (inst, def2) => {
+  $ZodBoolean.init(inst, def2);
+  ZodType.init(inst, def2);
+  inst._zod.processJSONSchema = (ctx, json, params) => booleanProcessor(inst, ctx, json);
+});
+function boolean(params) {
+  return /* @__PURE__ */ _boolean(ZodBoolean, params);
+}
+const ZodUnknown = /* @__PURE__ */ $constructor("ZodUnknown", (inst, def2) => {
+  $ZodUnknown.init(inst, def2);
+  ZodType.init(inst, def2);
+  inst._zod.processJSONSchema = (ctx, json, params) => unknownProcessor();
+});
+function unknown() {
+  return /* @__PURE__ */ _unknown(ZodUnknown);
+}
+const ZodNever = /* @__PURE__ */ $constructor("ZodNever", (inst, def2) => {
+  $ZodNever.init(inst, def2);
+  ZodType.init(inst, def2);
+  inst._zod.processJSONSchema = (ctx, json, params) => neverProcessor(inst, ctx, json);
+});
+function never(params) {
+  return /* @__PURE__ */ _never(ZodNever, params);
+}
+const ZodArray = /* @__PURE__ */ $constructor("ZodArray", (inst, def2) => {
+  $ZodArray.init(inst, def2);
+  ZodType.init(inst, def2);
+  inst._zod.processJSONSchema = (ctx, json, params) => arrayProcessor(inst, ctx, json, params);
+  inst.element = def2.element;
+  _installLazyMethods(inst, "ZodArray", {
+    min(n, params) {
+      return this.check(/* @__PURE__ */ _minLength(n, params));
+    },
+    nonempty(params) {
+      return this.check(/* @__PURE__ */ _minLength(1, params));
+    },
+    max(n, params) {
+      return this.check(/* @__PURE__ */ _maxLength(n, params));
+    },
+    length(n, params) {
+      return this.check(/* @__PURE__ */ _length(n, params));
+    },
+    unwrap() {
+      return this.element;
+    }
+  });
+});
+function array(element, params) {
+  return /* @__PURE__ */ _array(ZodArray, element, params);
+}
+const ZodObject = /* @__PURE__ */ $constructor("ZodObject", (inst, def2) => {
+  $ZodObjectJIT.init(inst, def2);
+  ZodType.init(inst, def2);
+  inst._zod.processJSONSchema = (ctx, json, params) => objectProcessor(inst, ctx, json, params);
+  defineLazy(inst, "shape", () => {
+    return def2.shape;
+  });
+  _installLazyMethods(inst, "ZodObject", {
+    keyof() {
+      return _enum(Object.keys(this._zod.def.shape));
+    },
+    catchall(catchall) {
+      return this.clone({ ...this._zod.def, catchall });
+    },
+    passthrough() {
+      return this.clone({ ...this._zod.def, catchall: unknown() });
+    },
+    loose() {
+      return this.clone({ ...this._zod.def, catchall: unknown() });
+    },
+    strict() {
+      return this.clone({ ...this._zod.def, catchall: never() });
+    },
+    strip() {
+      return this.clone({ ...this._zod.def, catchall: void 0 });
+    },
+    extend(incoming) {
+      return extend(this, incoming);
+    },
+    safeExtend(incoming) {
+      return safeExtend(this, incoming);
+    },
+    merge(other) {
+      return merge(this, other);
+    },
+    pick(mask) {
+      return pick(this, mask);
+    },
+    omit(mask) {
+      return omit(this, mask);
+    },
+    partial(...args) {
+      return partial(ZodOptional, this, args[0]);
+    },
+    required(...args) {
+      return required(ZodNonOptional, this, args[0]);
+    }
+  });
+});
+function object(shape, params) {
+  const def2 = {
+    type: "object",
+    shape: shape ?? {},
+    ...normalizeParams(params)
+  };
+  return new ZodObject(def2);
+}
+const ZodUnion = /* @__PURE__ */ $constructor("ZodUnion", (inst, def2) => {
+  $ZodUnion.init(inst, def2);
+  ZodType.init(inst, def2);
+  inst._zod.processJSONSchema = (ctx, json, params) => unionProcessor(inst, ctx, json, params);
+  inst.options = def2.options;
+});
+function union(options, params) {
+  return new ZodUnion({
+    type: "union",
+    options,
+    ...normalizeParams(params)
+  });
+}
+const ZodIntersection = /* @__PURE__ */ $constructor("ZodIntersection", (inst, def2) => {
+  $ZodIntersection.init(inst, def2);
+  ZodType.init(inst, def2);
+  inst._zod.processJSONSchema = (ctx, json, params) => intersectionProcessor(inst, ctx, json, params);
+});
+function intersection(left2, right2) {
+  return new ZodIntersection({
+    type: "intersection",
+    left: left2,
+    right: right2
+  });
+}
+const ZodRecord = /* @__PURE__ */ $constructor("ZodRecord", (inst, def2) => {
+  $ZodRecord.init(inst, def2);
+  ZodType.init(inst, def2);
+  inst._zod.processJSONSchema = (ctx, json, params) => recordProcessor(inst, ctx, json, params);
+  inst.keyType = def2.keyType;
+  inst.valueType = def2.valueType;
+});
+function record(keyType, valueType, params) {
+  if (!valueType || !valueType._zod) {
+    return new ZodRecord({
+      type: "record",
+      keyType: string(),
+      valueType: keyType,
+      ...normalizeParams(valueType)
+    });
+  }
+  return new ZodRecord({
+    type: "record",
+    keyType,
+    valueType,
+    ...normalizeParams(params)
+  });
+}
+const ZodEnum = /* @__PURE__ */ $constructor("ZodEnum", (inst, def2) => {
+  $ZodEnum.init(inst, def2);
+  ZodType.init(inst, def2);
+  inst._zod.processJSONSchema = (ctx, json, params) => enumProcessor(inst, ctx, json);
+  inst.enum = def2.entries;
+  inst.options = Object.values(def2.entries);
+  const keys2 = new Set(Object.keys(def2.entries));
+  inst.extract = (values, params) => {
+    const newEntries = {};
+    for (const value of values) {
+      if (keys2.has(value)) {
+        newEntries[value] = def2.entries[value];
+      } else
+        throw new Error(`Key ${value} not found in enum`);
+    }
+    return new ZodEnum({
+      ...def2,
+      checks: [],
+      ...normalizeParams(params),
+      entries: newEntries
+    });
+  };
+  inst.exclude = (values, params) => {
+    const newEntries = { ...def2.entries };
+    for (const value of values) {
+      if (keys2.has(value)) {
+        delete newEntries[value];
+      } else
+        throw new Error(`Key ${value} not found in enum`);
+    }
+    return new ZodEnum({
+      ...def2,
+      checks: [],
+      ...normalizeParams(params),
+      entries: newEntries
+    });
+  };
+});
+function _enum(values, params) {
+  const entries2 = Array.isArray(values) ? Object.fromEntries(values.map((v) => [v, v])) : values;
+  return new ZodEnum({
+    type: "enum",
+    entries: entries2,
+    ...normalizeParams(params)
+  });
+}
+const ZodLiteral = /* @__PURE__ */ $constructor("ZodLiteral", (inst, def2) => {
+  $ZodLiteral.init(inst, def2);
+  ZodType.init(inst, def2);
+  inst._zod.processJSONSchema = (ctx, json, params) => literalProcessor(inst, ctx, json);
+  inst.values = new Set(def2.values);
+  Object.defineProperty(inst, "value", {
+    get() {
+      if (def2.values.length > 1) {
+        throw new Error("This schema contains multiple valid literal values. Use `.values` instead.");
+      }
+      return def2.values[0];
+    }
+  });
+});
+function literal(value, params) {
+  return new ZodLiteral({
+    type: "literal",
+    values: Array.isArray(value) ? value : [value],
+    ...normalizeParams(params)
+  });
+}
+const ZodTransform = /* @__PURE__ */ $constructor("ZodTransform", (inst, def2) => {
+  $ZodTransform.init(inst, def2);
+  ZodType.init(inst, def2);
+  inst._zod.processJSONSchema = (ctx, json, params) => transformProcessor(inst, ctx);
+  inst._zod.parse = (payload, _ctx) => {
+    if (_ctx.direction === "backward") {
+      throw new $ZodEncodeError(inst.constructor.name);
+    }
+    payload.addIssue = (issue$1) => {
+      if (typeof issue$1 === "string") {
+        payload.issues.push(issue(issue$1, payload.value, def2));
+      } else {
+        const _issue = issue$1;
+        if (_issue.fatal)
+          _issue.continue = false;
+        _issue.code ?? (_issue.code = "custom");
+        _issue.input ?? (_issue.input = payload.value);
+        _issue.inst ?? (_issue.inst = inst);
+        payload.issues.push(issue(_issue));
+      }
+    };
+    const output = def2.transform(payload.value, payload);
+    if (output instanceof Promise) {
+      return output.then((output2) => {
+        payload.value = output2;
+        payload.fallback = true;
+        return payload;
+      });
+    }
+    payload.value = output;
+    payload.fallback = true;
+    return payload;
+  };
+});
+function transform(fn2) {
+  return new ZodTransform({
+    type: "transform",
+    transform: fn2
+  });
+}
+const ZodOptional = /* @__PURE__ */ $constructor("ZodOptional", (inst, def2) => {
+  $ZodOptional.init(inst, def2);
+  ZodType.init(inst, def2);
+  inst._zod.processJSONSchema = (ctx, json, params) => optionalProcessor(inst, ctx, json, params);
+  inst.unwrap = () => inst._zod.def.innerType;
+});
+function optional(innerType) {
+  return new ZodOptional({
+    type: "optional",
+    innerType
+  });
+}
+const ZodExactOptional = /* @__PURE__ */ $constructor("ZodExactOptional", (inst, def2) => {
+  $ZodExactOptional.init(inst, def2);
+  ZodType.init(inst, def2);
+  inst._zod.processJSONSchema = (ctx, json, params) => optionalProcessor(inst, ctx, json, params);
+  inst.unwrap = () => inst._zod.def.innerType;
+});
+function exactOptional(innerType) {
+  return new ZodExactOptional({
+    type: "optional",
+    innerType
+  });
+}
+const ZodNullable = /* @__PURE__ */ $constructor("ZodNullable", (inst, def2) => {
+  $ZodNullable.init(inst, def2);
+  ZodType.init(inst, def2);
+  inst._zod.processJSONSchema = (ctx, json, params) => nullableProcessor(inst, ctx, json, params);
+  inst.unwrap = () => inst._zod.def.innerType;
+});
+function nullable(innerType) {
+  return new ZodNullable({
+    type: "nullable",
+    innerType
+  });
+}
+const ZodDefault = /* @__PURE__ */ $constructor("ZodDefault", (inst, def2) => {
+  $ZodDefault.init(inst, def2);
+  ZodType.init(inst, def2);
+  inst._zod.processJSONSchema = (ctx, json, params) => defaultProcessor(inst, ctx, json, params);
+  inst.unwrap = () => inst._zod.def.innerType;
+  inst.removeDefault = inst.unwrap;
+});
+function _default(innerType, defaultValue) {
+  return new ZodDefault({
+    type: "default",
+    innerType,
+    get defaultValue() {
+      return typeof defaultValue === "function" ? defaultValue() : shallowClone(defaultValue);
+    }
+  });
+}
+const ZodPrefault = /* @__PURE__ */ $constructor("ZodPrefault", (inst, def2) => {
+  $ZodPrefault.init(inst, def2);
+  ZodType.init(inst, def2);
+  inst._zod.processJSONSchema = (ctx, json, params) => prefaultProcessor(inst, ctx, json, params);
+  inst.unwrap = () => inst._zod.def.innerType;
+});
+function prefault(innerType, defaultValue) {
+  return new ZodPrefault({
+    type: "prefault",
+    innerType,
+    get defaultValue() {
+      return typeof defaultValue === "function" ? defaultValue() : shallowClone(defaultValue);
+    }
+  });
+}
+const ZodNonOptional = /* @__PURE__ */ $constructor("ZodNonOptional", (inst, def2) => {
+  $ZodNonOptional.init(inst, def2);
+  ZodType.init(inst, def2);
+  inst._zod.processJSONSchema = (ctx, json, params) => nonoptionalProcessor(inst, ctx, json, params);
+  inst.unwrap = () => inst._zod.def.innerType;
+});
+function nonoptional(innerType, params) {
+  return new ZodNonOptional({
+    type: "nonoptional",
+    innerType,
+    ...normalizeParams(params)
+  });
+}
+const ZodCatch = /* @__PURE__ */ $constructor("ZodCatch", (inst, def2) => {
+  $ZodCatch.init(inst, def2);
+  ZodType.init(inst, def2);
+  inst._zod.processJSONSchema = (ctx, json, params) => catchProcessor(inst, ctx, json, params);
+  inst.unwrap = () => inst._zod.def.innerType;
+  inst.removeCatch = inst.unwrap;
+});
+function _catch(innerType, catchValue) {
+  return new ZodCatch({
+    type: "catch",
+    innerType,
+    catchValue: typeof catchValue === "function" ? catchValue : () => catchValue
+  });
+}
+const ZodPipe = /* @__PURE__ */ $constructor("ZodPipe", (inst, def2) => {
+  $ZodPipe.init(inst, def2);
+  ZodType.init(inst, def2);
+  inst._zod.processJSONSchema = (ctx, json, params) => pipeProcessor(inst, ctx, json, params);
+  inst.in = def2.in;
+  inst.out = def2.out;
+});
+function pipe(in_, out) {
+  return new ZodPipe({
+    type: "pipe",
+    in: in_,
+    out
+    // ...util.normalizeParams(params),
+  });
+}
+const ZodReadonly = /* @__PURE__ */ $constructor("ZodReadonly", (inst, def2) => {
+  $ZodReadonly.init(inst, def2);
+  ZodType.init(inst, def2);
+  inst._zod.processJSONSchema = (ctx, json, params) => readonlyProcessor(inst, ctx, json, params);
+  inst.unwrap = () => inst._zod.def.innerType;
+});
+function readonly(innerType) {
+  return new ZodReadonly({
+    type: "readonly",
+    innerType
+  });
+}
+const ZodCustom = /* @__PURE__ */ $constructor("ZodCustom", (inst, def2) => {
+  $ZodCustom.init(inst, def2);
+  ZodType.init(inst, def2);
+  inst._zod.processJSONSchema = (ctx, json, params) => customProcessor(inst, ctx);
+});
+function refine(fn2, _params = {}) {
+  return /* @__PURE__ */ _refine(ZodCustom, fn2, _params);
+}
+function superRefine(fn2, params) {
+  return /* @__PURE__ */ _superRefine(fn2, params);
+}
+const ProjectSchema = object({
+  id: string(),
+  name: string(),
+  blueprint: string().nullable().optional(),
+  created_at: string().nullable().optional(),
+  updated_at: string().nullable().optional()
+});
+const ListProjectsSchema = object({
+  projects: array(ProjectSchema)
+});
+object({
+  project: ProjectSchema
+});
+const MutateProjectSchema = object({
+  ok: literal(true),
+  project: ProjectSchema.optional()
+});
+const DeleteProjectSchema = object({
+  ok: literal(true)
+});
+const OutputSchema = object({
+  id: number(),
+  project_id: string(),
+  stage_class: string(),
+  stage_node_id: string().nullable().optional(),
+  stage_uid: string().nullable().optional(),
+  output_type: string(),
+  payload_url: string(),
+  payload_json: unknown().nullable().optional(),
+  params_json: unknown().nullable().optional(),
+  parent_output_id: number().nullable().optional(),
+  created_at: string().nullable().optional()
+});
+object({
+  outputs: array(OutputSchema)
+});
+const LatestOutputSchema = object({
+  output: OutputSchema.nullable()
+});
+const StageMetaEntrySchema = object({
+  node_id: string(),
+  kind: string(),
+  variant: union([
+    literal("loader"),
+    literal("generator"),
+    literal("transform")
+  ]).nullable().optional(),
+  workflow_kind: string().nullable().optional()
+});
+const StageMetaResponseSchema = object({
+  stages: array(StageMetaEntrySchema)
+});
+const EntrySchema = object({
+  id: number(),
+  kind: string(),
+  label: string(),
+  content: string(),
+  metadata: record(string(), unknown()).default({}),
+  updated_at: string().nullable().optional()
+});
+const ListEntriesSchema = object({
+  entries: array(EntrySchema)
+});
+const UpsertEntrySchema = object({
+  ok: literal(true),
+  entry: EntrySchema
+});
+const DeleteEntrySchema = object({
+  ok: literal(true)
+});
+const OkSchema = object({
+  ok: boolean()
+});
+const ImportWorkflowResultSchema = object({
+  ok: boolean(),
+  kind: string(),
+  label: string(),
+  file_path: string().optional()
+});
+const AssetCategorySchema = object({
+  id: number(),
+  name: string(),
+  created_at: string().nullable().optional(),
+  updated_at: string().nullable().optional()
+});
+const ListAssetCategoriesSchema = object({
+  categories: array(AssetCategorySchema)
+});
+const MutateAssetCategorySchema = object({
+  ok: literal(true),
+  category: AssetCategorySchema
+});
+const AssetSchema = object({
+  id: number(),
+  category_ids: array(number()).default([]),
+  name: string(),
+  media_type: string(),
+  payload_url: string(),
+  mime_type: string().nullable().optional(),
+  width: number().nullable().optional(),
+  height: number().nullable().optional(),
+  size_bytes: number().nullable().optional(),
+  source: string().nullable().optional(),
+  metadata: record(string(), unknown()).default({}),
+  created_at: string().nullable().optional(),
+  updated_at: string().nullable().optional()
+});
+const ListAssetsSchema = object({
+  assets: array(AssetSchema)
+});
+const MutateAssetSchema = object({
+  ok: literal(true),
+  asset: AssetSchema
+});
+const DeleteAssetSchema = object({
+  ok: literal(true)
+});
+const WorkflowStateSchema = object({
+  has_api: boolean(),
+  file_path: string(),
+  file_mtime: number().nullable(),
+  file_exists: boolean()
+});
+const ExposedWidgetSchema = object({
+  node_id: string(),
+  node_title: string(),
+  node_type: string(),
+  group_title: string().nullable(),
+  widget_name: string(),
+  widget_type: string(),
+  widget_props: record(string(), unknown()),
+  current_value: unknown(),
+  stage_binding: string().nullable(),
+  override_value: string().nullable(),
+  cast: string().nullable()
+});
+const WorkflowConfigSchema = object({
+  id: number(),
+  kind: string(),
+  label: string(),
+  has_api: boolean(),
+  description: string().nullable(),
+  gui_notes: array(object({ type: string(), text: string() })),
+  exposed_widgets: array(ExposedWidgetSchema)
+}).passthrough();
+const WorkflowUsageEntrySchema = object({
+  uses: record(string(), boolean()),
+  requires: record(string(), boolean()),
+  required_slots: record(string(), array(number())).optional(),
+  max_inputs: record(string(), number().nullable())
+});
+const WorkflowInfoSchema = record(
+  string(),
+  record(string(), WorkflowUsageEntrySchema)
+);
+const CapsSchema = object({
+  upstream_kinds: array(string()),
+  option_keys: array(string()),
+  computed_keys: array(string())
+});
+const CapsPayloadSchema = object({
+  caps_by_kind: record(string(), CapsSchema),
+  fallback_caps: CapsSchema
+});
+object({
+  output: union([string(), array(unknown())]).optional(),
+  picked: union([string(), array(unknown())]).optional(),
+  picked_index: union([string(), number(), array(unknown())]).optional(),
+  output_id: union([string(), number(), array(unknown())]).optional()
+}).passthrough();
+class ApiError extends Error {
+  constructor(path, status, message) {
+    super(`${path} failed [${status}]: ${message}`);
+    this.path = path;
+    this.status = status;
+    this.name = "ApiError";
+  }
+}
+class ApiValidationError extends Error {
+  constructor(path, zodError) {
+    super(`${path}: response did not match schema:
+${JSON.stringify(zodError, null, 2)}`);
+    this.path = path;
+    this.zodError = zodError;
+    this.name = "ApiValidationError";
+  }
+}
+async function apiFetch(path, schema, init) {
+  const r = await app.api.fetchApi(path, init);
+  if (!r.ok) {
+    const text = await r.text().catch(() => "");
+    throw new ApiError(path, r.status, text || r.statusText);
+  }
+  const data = await r.json();
+  const result = schema.safeParse(data);
+  if (!result.success) {
+    console.error(`[ComfyTV/api] ${path} schema mismatch`, result.error.format(), "raw:", data);
+    throw new ApiValidationError(path, result.error.format());
+  }
+  return result.data;
+}
+async function apiSend(path, method, schema, body) {
+  return apiFetch(path, schema, {
+    method,
+    headers: body !== void 0 ? { "Content-Type": "application/json" } : void 0,
+    body: body !== void 0 ? JSON.stringify(body) : void 0
+  });
+}
+function fetchCaps() {
+  return apiFetch("/comfytv/caps", CapsPayloadSchema);
+}
+function importWorkflow(kind, filename, content) {
+  return apiSend("/comfytv/workflows/import", "POST", ImportWorkflowResultSchema, {
+    kind,
+    filename,
+    content
+  });
+}
+const useAssetStore = /* @__PURE__ */ defineStore("assets", () => {
+  const categories = /* @__PURE__ */ ref([]);
+  const assets2 = /* @__PURE__ */ ref([]);
+  let hydrating = null;
+  let hydratePromise = null;
+  let wsInstalled = false;
+  function _hydrate() {
+    if (hydrating === "fetched") return Promise.resolve();
+    if (hydrating === "in-flight" && hydratePromise) return hydratePromise;
+    hydrating = "in-flight";
+    hydratePromise = (async () => {
+      try {
+        const [cats, rows] = await Promise.all([
+          apiFetch("/comfytv/asset_categories", ListAssetCategoriesSchema),
+          apiFetch("/comfytv/assets?category=all", ListAssetsSchema)
+        ]);
+        categories.value = cats.categories;
+        assets2.value = rows.assets;
+        hydrating = "fetched";
+      } catch (e) {
+        console.warn("[ComfyTV/assets] hydrate failed", e);
+        hydrating = null;
+      } finally {
+        hydratePromise = null;
+      }
+    })();
+    return hydratePromise;
+  }
+  function ensureHydrated() {
+    if (!hydrating) void _hydrate();
+  }
+  function hydrate() {
+    return _hydrate();
+  }
+  async function refresh() {
+    hydrating = null;
+    await _hydrate();
+  }
+  function byId(id) {
+    return assets2.value.find((a) => a.id === id);
+  }
+  function byPayloadUrl(url) {
+    return assets2.value.find((a) => a.payload_url === url);
+  }
+  function listByCategory(filter) {
+    if (filter === "all") return assets2.value;
+    if (filter === "none") return assets2.value.filter((a) => a.category_ids.length === 0);
+    return assets2.value.filter((a) => a.category_ids.includes(filter));
+  }
+  function countByCategory(filter) {
+    return listByCategory(filter).length;
+  }
+  async function createCategory(name) {
+    if (!name.trim()) return null;
+    try {
+      const data = await apiSend(
+        "/comfytv/asset_categories",
+        "POST",
+        MutateAssetCategorySchema,
+        { name: name.trim() }
+      );
+      categories.value = [...categories.value, data.category].sort((a, b) => a.name.localeCompare(b.name));
+      return data.category;
+    } catch (e) {
+      console.warn("[ComfyTV/assets] create category failed", name, e);
+      return null;
+    }
+  }
+  async function renameCategory(id, name) {
+    if (!name.trim()) return null;
+    try {
+      const data = await apiSend(
+        `/comfytv/asset_categories/${id}`,
+        "PATCH",
+        MutateAssetCategorySchema,
+        { name: name.trim() }
+      );
+      categories.value = categories.value.map((c2) => c2.id === id ? data.category : c2).sort((a, b) => a.name.localeCompare(b.name));
+      return data.category;
+    } catch (e) {
+      console.warn("[ComfyTV/assets] rename category failed", id, e);
+      return null;
+    }
+  }
+  async function removeCategory(id) {
+    try {
+      await apiSend(`/comfytv/asset_categories/${id}`, "DELETE", DeleteAssetSchema);
+      categories.value = categories.value.filter((c2) => c2.id !== id);
+      assets2.value = assets2.value.map(
+        (a) => a.category_ids.includes(id) ? { ...a, category_ids: a.category_ids.filter((c2) => c2 !== id) } : a
+      );
+      return true;
+    } catch (e) {
+      console.warn("[ComfyTV/assets] delete category failed", id, e);
+      return false;
+    }
+  }
+  async function create2(opts) {
+    try {
+      const data = await apiSend("/comfytv/assets", "POST", MutateAssetSchema, opts);
+      assets2.value = [data.asset, ...assets2.value];
+      return data.asset;
+    } catch (e) {
+      console.warn("[ComfyTV/assets] create failed", opts.name, e);
+      return null;
+    }
+  }
+  async function rename(id, name) {
+    try {
+      const data = await apiSend(
+        `/comfytv/assets/${id}`,
+        "PATCH",
+        MutateAssetSchema,
+        { name }
+      );
+      assets2.value = assets2.value.map((a) => a.id === id ? data.asset : a);
+      return data.asset;
+    } catch (e) {
+      console.warn("[ComfyTV/assets] rename failed", id, e);
+      return null;
+    }
+  }
+  async function addTag(id, categoryId) {
+    try {
+      const data = await apiSend(
+        `/comfytv/assets/${id}/categories/${categoryId}`,
+        "POST",
+        MutateAssetSchema
+      );
+      assets2.value = assets2.value.map((a) => a.id === id ? data.asset : a);
+      return data.asset;
+    } catch (e) {
+      console.warn("[ComfyTV/assets] add tag failed", id, categoryId, e);
+      return null;
+    }
+  }
+  async function removeTag(id, categoryId) {
+    try {
+      const data = await apiSend(
+        `/comfytv/assets/${id}/categories/${categoryId}`,
+        "DELETE",
+        MutateAssetSchema
+      );
+      assets2.value = assets2.value.map((a) => a.id === id ? data.asset : a);
+      return data.asset;
+    } catch (e) {
+      console.warn("[ComfyTV/assets] remove tag failed", id, categoryId, e);
+      return null;
+    }
+  }
+  async function remove2(id) {
+    assets2.value = assets2.value.filter((a) => a.id !== id);
+    try {
+      await apiSend(`/comfytv/assets/${id}`, "DELETE", DeleteAssetSchema);
+    } catch (e) {
+      console.warn("[ComfyTV/assets] delete failed", id, e);
+    }
+  }
+  function installWebSocketSync() {
+    if (wsInstalled) return;
+    const api = app == null ? void 0 : app.api;
+    if (!(api == null ? void 0 : api.addEventListener)) return;
+    wsInstalled = true;
+    api.addEventListener("comfytv-assets", () => {
+      void refresh();
+    });
+  }
+  return {
+    categories,
+    assets: assets2,
+    ensureHydrated,
+    hydrate,
+    refresh,
+    byId,
+    byPayloadUrl,
+    listByCategory,
+    countByCategory,
+    createCategory,
+    renameCategory,
+    removeCategory,
+    create: create2,
+    rename,
+    addTag,
+    removeTag,
+    remove: remove2,
+    installWebSocketSync
+  };
+});
+async function uploadCanvas(canvas, opts) {
+  const blob = await new Promise(
+    (resolve2) => canvas.toBlob(resolve2, "image/png")
+  );
+  if (!blob) throw new Error("canvas.toBlob returned null");
+  return uploadBlob(blob, opts);
+}
+async function uploadBlobNamed(blob, opts) {
+  const subfolder = opts.subfolder;
+  const type = opts.type ?? "input";
+  const filename = opts.filename ?? `${opts.filenamePrefix ?? "comfytv"}-${Date.now()}.png`;
+  const body = new FormData();
+  body.append("image", blob, filename);
+  body.append("subfolder", subfolder);
+  body.append("type", type);
+  const resp = await app.api.fetchApi("/upload/image", { method: "POST", body });
+  if (resp.status !== 200) {
+    throw new Error(`upload ${resp.status} ${resp.statusText}`);
+  }
+  const data = await resp.json();
+  if (!(data == null ? void 0 : data.name)) throw new Error("upload response missing `name`");
+  const url = `/view?filename=${encodeURIComponent(data.name)}&subfolder=${encodeURIComponent(subfolder)}&type=${encodeURIComponent(type)}`;
+  return { name: data.name, subfolder, type, url };
+}
+async function uploadBlob(blob, opts) {
+  return (await uploadBlobNamed(blob, opts)).url;
+}
+const ASSET_DRAG_MIME = "application/x-comfytv-asset-id";
+function stripExtension(filename) {
+  const i = filename.lastIndexOf(".");
+  return i > 0 ? filename.slice(0, i) : filename;
+}
+function probeImageSize(file) {
+  return new Promise((resolve2) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      resolve2({ width: img.naturalWidth, height: img.naturalHeight });
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      resolve2(null);
+    };
+    img.src = url;
+  });
+}
+function useAssetsPanel(isActive2) {
+  const { t: t2 } = useI18n();
+  const store = useAssetStore();
+  const activeFilter = /* @__PURE__ */ ref("all");
+  const uploading = /* @__PURE__ */ ref(false);
+  const uploadDone = /* @__PURE__ */ ref(0);
+  const uploadTotal = /* @__PURE__ */ ref(0);
+  const uploadError = /* @__PURE__ */ ref(null);
+  const fileDragDepth = /* @__PURE__ */ ref(0);
+  const visibleAssets = computed(() => store.listByCategory(activeFilter.value));
+  const uploadCategoryIds = computed(
+    () => typeof activeFilter.value === "number" ? [activeFilter.value] : []
+  );
+  const tagEditor = /* @__PURE__ */ ref(null);
+  const editorAsset = computed(
+    () => tagEditor.value ? store.byId(tagEditor.value.assetId) ?? null : null
+  );
+  const tagEditorStyle = computed(
+    () => tagEditor.value ? { left: `${tagEditor.value.x}px`, top: `${tagEditor.value.y}px` } : {}
+  );
+  function catName(id) {
+    var _a2;
+    return ((_a2 = store.categories.find((c2) => c2.id === id)) == null ? void 0 : _a2.name) ?? `#${id}`;
+  }
+  function openTagEditor(asset, e) {
+    const r = e.currentTarget.getBoundingClientRect();
+    tagEditor.value = { assetId: asset.id, x: Math.max(8, r.right - 176), y: r.bottom + 4 };
+  }
+  function closeTagEditor() {
+    tagEditor.value = null;
+  }
+  function editorHas(catId) {
+    var _a2;
+    return ((_a2 = editorAsset.value) == null ? void 0 : _a2.category_ids.includes(catId)) ?? false;
+  }
+  function toggleTag(catId) {
+    const a = editorAsset.value;
+    if (!a) return;
+    if (a.category_ids.includes(catId)) void store.removeTag(a.id, catId);
+    else void store.addTag(a.id, catId);
+  }
+  function assetTooltip(asset) {
+    const dims = asset.width && asset.height ? ` · ${asset.width}×${asset.height}` : "";
+    return `${asset.name || "—"}${dims}`;
+  }
+  function onPickFiles(e) {
+    const input = e.target;
+    const files = Array.from(input.files ?? []);
+    input.value = "";
+    void addFiles(files);
+  }
+  async function addFiles(files) {
+    const images = files.filter((f) => f.type.startsWith("image/"));
+    if (images.length === 0 || uploading.value) return;
+    uploading.value = true;
+    uploadDone.value = 0;
+    uploadTotal.value = images.length;
+    uploadError.value = null;
+    try {
+      for (const file of images) {
+        const dims = await probeImageSize(file);
+        const uploaded = await uploadBlobNamed(file, {
+          subfolder: "comfytv/assets",
+          type: "input",
+          filename: file.name
+        });
+        await store.create({
+          name: stripExtension(file.name),
+          payload_url: uploaded.url,
+          media_type: "image",
+          category_ids: uploadCategoryIds.value,
+          mime_type: file.type || null,
+          width: (dims == null ? void 0 : dims.width) ?? null,
+          height: (dims == null ? void 0 : dims.height) ?? null,
+          size_bytes: file.size,
+          source: "upload"
+        });
+        uploadDone.value += 1;
+      }
+    } catch (e) {
+      console.warn("[ComfyTV/assets] upload failed", e);
+      uploadError.value = t2("assets.uploadFailed", { detail: String(e) });
+    } finally {
+      uploading.value = false;
+    }
+  }
+  function onCreateCategory() {
+    var _a2;
+    const name = (_a2 = window.prompt(t2("assets.category.newPrompt"))) == null ? void 0 : _a2.trim();
+    if (!name) return;
+    void store.createCategory(name).then((cat2) => {
+      if (cat2) activeFilter.value = cat2.id;
+    });
+  }
+  function onRenameCategory(id, current) {
+    var _a2;
+    const name = (_a2 = window.prompt(t2("assets.category.renamePrompt"), current)) == null ? void 0 : _a2.trim();
+    if (!name || name === current) return;
+    void store.renameCategory(id, name);
+  }
+  function onDeleteCategory(id) {
+    if (!window.confirm(t2("assets.category.deleteConfirm"))) return;
+    void store.removeCategory(id).then((ok) => {
+      if (ok && activeFilter.value === id) activeFilter.value = "all";
+    });
+  }
+  function onRenameAsset(asset) {
+    var _a2;
+    const name = (_a2 = window.prompt(t2("assets.card.renamePrompt"), asset.name)) == null ? void 0 : _a2.trim();
+    if (name === void 0 || name === null || name === asset.name) return;
+    void store.rename(asset.id, name);
+  }
+  function onDeleteAsset(asset) {
+    if (!window.confirm(t2("assets.card.deleteConfirm"))) return;
+    void store.remove(asset.id);
+  }
+  function onAssetDragStart(asset, e) {
+    var _a2;
+    (_a2 = e.dataTransfer) == null ? void 0 : _a2.setData(ASSET_DRAG_MIME, String(asset.id));
+  }
+  function onChipDrop(categoryId, e) {
+    var _a2;
+    const raw = (_a2 = e.dataTransfer) == null ? void 0 : _a2.getData(ASSET_DRAG_MIME);
+    if (!raw) return;
+    const id = Number(raw);
+    if (!Number.isFinite(id)) return;
+    void store.addTag(id, categoryId);
+  }
+  function isFileDrag(e) {
+    var _a2;
+    return Array.from(((_a2 = e.dataTransfer) == null ? void 0 : _a2.types) ?? []).includes("Files");
+  }
+  function onDragEnter(e) {
+    if (isFileDrag(e)) fileDragDepth.value += 1;
+  }
+  function onDragLeave(e) {
+    if (isFileDrag(e)) fileDragDepth.value = Math.max(0, fileDragDepth.value - 1);
+  }
+  function onDrop(e) {
+    var _a2;
+    if (isFileDrag(e)) {
+      fileDragDepth.value = 0;
+      void addFiles(Array.from(((_a2 = e.dataTransfer) == null ? void 0 : _a2.files) ?? []));
+    }
+  }
+  watch(isActive2, (active) => {
+    if (active) {
+      store.ensureHydrated();
+      store.installWebSocketSync();
+    }
+  }, { immediate: true });
+  return {
+    store,
+    activeFilter,
+    uploading,
+    uploadDone,
+    uploadTotal,
+    uploadError,
+    fileDragDepth,
+    visibleAssets,
+    tagEditor,
+    tagEditorStyle,
+    catName,
+    openTagEditor,
+    closeTagEditor,
+    editorHas,
+    toggleTag,
+    assetTooltip,
+    onPickFiles,
+    addFiles,
+    onCreateCategory,
+    onRenameCategory,
+    onDeleteCategory,
+    onRenameAsset,
+    onDeleteAsset,
+    onAssetDragStart,
+    onChipDrop,
+    onDragEnter,
+    onDragLeave,
+    onDrop
+  };
+}
+const _hoisted_1$x = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:py-1.5 ctv:px-2.5 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle" };
+const _hoisted_2$t = { class: "ctv:flex-1 ctv:font-semibold ctv:text-sm" };
+const _hoisted_3$s = ["disabled", "title"];
+const _hoisted_4$p = { class: "ctv:shrink-0 ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1 ctv:py-1.5 ctv:px-2.5 ctv:border-b ctv:border-border-subtle" };
+const _hoisted_5$p = ["onDrop", "onClick"];
+const _hoisted_6$n = ["title", "onClick"];
+const _hoisted_7$l = ["title", "onClick"];
+const _hoisted_8$k = ["title"];
+const _hoisted_9$k = {
+  key: 0,
+  class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:my-1.5 ctv:mx-2.5 ctv:py-1.5 ctv:px-2 ctv:text-xs ctv:rounded ctv:bg-destructive-background/15 ctv:border ctv:border-destructive-background/50 ctv:text-destructive-background"
+};
+const _hoisted_10$k = { class: "ctv:flex-1" };
+const _hoisted_11$h = { class: "ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-2.5" };
+const _hoisted_12$h = {
+  key: 0,
+  class: "ctv:py-5 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60"
+};
+const _hoisted_13$d = {
+  key: 1,
+  class: "ctv:grid ctv:grid-cols-[repeat(auto-fill,minmax(88px,1fr))] ctv:gap-1.5"
+};
+const _hoisted_14$b = ["onDragstart"];
+const _hoisted_15$b = ["src", "alt", "title"];
+const _hoisted_16$b = { class: "ctv:truncate ctv:py-0.5 ctv:px-1 ctv:text-2xs ctv:text-muted-foreground" };
+const _hoisted_17$b = {
+  key: 0,
+  class: "ctv:flex ctv:flex-wrap ctv:gap-0.5 ctv:px-1 ctv:pb-1"
+};
+const _hoisted_18$9 = { class: "ctv:absolute ctv:top-1 ctv:right-1 ctv:flex ctv:gap-0.5 ctv:opacity-0 ctv:group-hover:opacity-100 ctv:transition-opacity" };
+const _hoisted_19$7 = ["title", "onClick"];
+const _hoisted_20$6 = ["title", "onClick"];
+const _hoisted_21$6 = ["title", "onClick"];
+const _hoisted_22$6 = {
+  key: 1,
+  class: "ctv:absolute ctv:inset-0 ctv:z-10 ctv:flex ctv:items-center ctv:justify-center ctv:pointer-events-none ctv:bg-primary-background/15 ctv:border-2 ctv:border-dashed ctv:border-primary-background ctv:rounded-lg"
+};
+const _hoisted_23$6 = { class: "ctv:py-1 ctv:px-2.5 ctv:rounded ctv:text-xs ctv:font-semibold ctv:bg-interface-panel-surface ctv:text-base-foreground" };
+const _hoisted_24$6 = {
+  key: 0,
+  class: "ctv:py-2 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60 ctv:text-2xs"
+};
+const _hoisted_25$6 = ["onClick"];
+const _hoisted_26$5 = { class: "ctv:w-3 ctv:inline-block ctv:text-primary-background" };
+const _hoisted_27$5 = { class: "ctv:flex-1 ctv:truncate" };
+const chipCountClass = "ctv:py-0 ctv:px-1 ctv:rounded-lg ctv:text-3xs ctv:bg-base-foreground/10";
+const _sfc_main$C = /* @__PURE__ */ defineComponent({
+  __name: "AssetsPanel",
+  props: {
+    active: { type: Boolean }
+  },
+  setup(__props) {
+    const props = __props;
+    const filePicker = /* @__PURE__ */ ref(null);
+    const {
+      store,
+      activeFilter,
+      uploading,
+      uploadDone,
+      uploadTotal,
+      uploadError,
+      fileDragDepth,
+      visibleAssets,
+      tagEditor,
+      tagEditorStyle,
+      catName,
+      openTagEditor,
+      closeTagEditor,
+      editorHas,
+      toggleTag,
+      assetTooltip,
+      onPickFiles,
+      onCreateCategory,
+      onRenameCategory,
+      onDeleteCategory,
+      onRenameAsset,
+      onDeleteAsset,
+      onAssetDragStart,
+      onChipDrop,
+      onDragEnter,
+      onDragLeave,
+      onDrop
+    } = useAssetsPanel(() => props.active);
+    function chipClass(active) {
+      return [
+        "ctv:inline-flex ctv:items-center ctv:gap-1 ctv:cursor-pointer ctv:[font-family:inherit]",
+        "ctv:rounded-lg ctv:border ctv:px-2 ctv:py-0.5 ctv:text-2xs ctv:transition-colors",
+        active ? "ctv:bg-secondary-background-selected ctv:border-primary-background/60 ctv:text-base-foreground" : "ctv:bg-secondary-background ctv:border-border-subtle ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground"
+      ].join(" ");
+    }
+    const addBtnClass = [
+      "ctv:inline-flex ctv:items-center ctv:justify-center ctv:gap-1 ctv:cursor-pointer ctv:whitespace-nowrap ctv:appearance-none",
+      "ctv:border-none ctv:transition-colors ctv:focus-visible:outline-none ctv:[font-family:inherit]",
+      "ctv:disabled:pointer-events-none ctv:disabled:opacity-50",
+      "ctv:h-6 ctv:rounded-sm ctv:px-2 ctv:py-1 ctv:text-xs ctv:font-medium",
+      "ctv:text-secondary-foreground ctv:bg-secondary-background ctv:hover:bg-secondary-background-hover"
+    ].join(" ");
+    const cardBtnClass = [
+      "ctv:flex ctv:items-center ctv:justify-center ctv:size-5 ctv:cursor-pointer ctv:[font-family:inherit]",
+      "ctv:rounded-sm ctv:border ctv:border-border-default ctv:text-2xs",
+      "ctv:bg-interface-panel-surface/90 ctv:text-base-foreground ctv:hover:bg-secondary-background-hover"
+    ].join(" ");
+    return (_ctx, _cache2) => {
+      return openBlock(), createElementBlock("div", {
+        class: "ctv:relative ctv:flex ctv:flex-col ctv:size-full ctv:box-border ctv:overflow-hidden ctv:text-xs ctv:text-base-foreground",
+        onDragenter: _cache2[9] || (_cache2[9] = //@ts-ignore
+        (...args) => unref(onDragEnter) && unref(onDragEnter)(...args)),
+        onDragover: _cache2[10] || (_cache2[10] = withModifiers(() => {
+        }, ["prevent"])),
+        onDragleave: _cache2[11] || (_cache2[11] = //@ts-ignore
+        (...args) => unref(onDragLeave) && unref(onDragLeave)(...args)),
+        onDrop: _cache2[12] || (_cache2[12] = withModifiers(
+          //@ts-ignore
+          (...args) => unref(onDrop) && unref(onDrop)(...args),
+          ["prevent"]
+        ))
+      }, [
+        createBaseVNode("div", _hoisted_1$x, [
+          createBaseVNode("span", _hoisted_2$t, toDisplayString$1(_ctx.$t("assets.title")), 1),
+          createBaseVNode("button", {
+            class: normalizeClass(unref(addBtnClass)),
+            disabled: unref(uploading),
+            title: _ctx.$t("assets.addTooltip"),
+            onClick: _cache2[0] || (_cache2[0] = ($event) => {
+              var _a2;
+              return (_a2 = filePicker.value) == null ? void 0 : _a2.click();
+            })
+          }, toDisplayString$1(unref(uploading) ? _ctx.$t("assets.uploading", { done: unref(uploadDone), total: unref(uploadTotal) }) : `+ ${_ctx.$t("assets.add")}`), 11, _hoisted_3$s),
+          createBaseVNode("input", {
+            ref_key: "filePicker",
+            ref: filePicker,
+            type: "file",
+            accept: "image/*",
+            multiple: "",
+            class: "ctv:hidden",
+            onChange: _cache2[1] || (_cache2[1] = //@ts-ignore
+            (...args) => unref(onPickFiles) && unref(onPickFiles)(...args))
+          }, null, 544)
+        ]),
+        createBaseVNode("div", _hoisted_4$p, [
+          createBaseVNode("button", {
+            class: normalizeClass(chipClass(unref(activeFilter) === "all")),
+            onClick: _cache2[2] || (_cache2[2] = ($event) => activeFilter.value = "all")
+          }, [
+            createTextVNode(toDisplayString$1(_ctx.$t("assets.category.all")) + " ", 1),
+            createBaseVNode("span", {
+              class: normalizeClass(chipCountClass)
+            }, toDisplayString$1(unref(store).countByCategory("all")), 1)
+          ], 2),
+          createBaseVNode("button", {
+            class: normalizeClass(chipClass(unref(activeFilter) === "none")),
+            onClick: _cache2[3] || (_cache2[3] = ($event) => activeFilter.value = "none")
+          }, [
+            createTextVNode(toDisplayString$1(_ctx.$t("assets.category.none")) + " ", 1),
+            createBaseVNode("span", {
+              class: normalizeClass(chipCountClass)
+            }, toDisplayString$1(unref(store).countByCategory("none")), 1)
+          ], 2),
+          (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(store).categories, (cat2) => {
+            return openBlock(), createElementBlock("button", {
+              key: cat2.id,
+              class: normalizeClass(chipClass(unref(activeFilter) === cat2.id)),
+              onDragover: _cache2[4] || (_cache2[4] = withModifiers(() => {
+              }, ["prevent"])),
+              onDrop: withModifiers(($event) => unref(onChipDrop)(cat2.id, $event), ["prevent", "stop"]),
+              onClick: ($event) => activeFilter.value = cat2.id
+            }, [
+              createTextVNode(toDisplayString$1(cat2.name) + " ", 1),
+              createBaseVNode("span", {
+                class: normalizeClass(chipCountClass)
+              }, toDisplayString$1(unref(store).countByCategory(cat2.id)), 1),
+              unref(activeFilter) === cat2.id ? (openBlock(), createElementBlock(Fragment$1, { key: 0 }, [
+                createBaseVNode("span", {
+                  role: "button",
+                  class: "ctv:ml-0.5 ctv:opacity-60 ctv:hover:opacity-100",
+                  title: _ctx.$t("assets.category.rename"),
+                  onClick: withModifiers(($event) => unref(onRenameCategory)(cat2.id, cat2.name), ["stop"])
+                }, "✎", 8, _hoisted_6$n),
+                createBaseVNode("span", {
+                  role: "button",
+                  class: "ctv:opacity-60 ctv:hover:opacity-100 ctv:hover:text-destructive-background",
+                  title: _ctx.$t("assets.category.delete"),
+                  onClick: withModifiers(($event) => unref(onDeleteCategory)(cat2.id), ["stop"])
+                }, "✕", 8, _hoisted_7$l)
+              ], 64)) : createCommentVNode("", true)
+            ], 42, _hoisted_5$p);
+          }), 128)),
+          createBaseVNode("button", {
+            class: normalizeClass(chipClass(false)),
+            title: _ctx.$t("assets.category.new"),
+            onClick: _cache2[5] || (_cache2[5] = //@ts-ignore
+            (...args) => unref(onCreateCategory) && unref(onCreateCategory)(...args))
+          }, "＋", 10, _hoisted_8$k)
+        ]),
+        unref(uploadError) ? (openBlock(), createElementBlock("div", _hoisted_9$k, [
+          createBaseVNode("span", _hoisted_10$k, toDisplayString$1(unref(uploadError)), 1),
+          createBaseVNode("button", {
+            class: "ctv:bg-transparent ctv:border-none ctv:cursor-pointer ctv:text-inherit ctv:opacity-70 ctv:hover:opacity-100",
+            onClick: _cache2[6] || (_cache2[6] = ($event) => uploadError.value = null)
+          }, "✕")
+        ])) : createCommentVNode("", true),
+        createBaseVNode("div", _hoisted_11$h, [
+          unref(visibleAssets).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_12$h, toDisplayString$1(unref(activeFilter) === "all" ? _ctx.$t("assets.empty") : _ctx.$t("assets.emptyCategory")), 1)) : (openBlock(), createElementBlock("div", _hoisted_13$d, [
+            (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(visibleAssets), (asset) => {
+              return openBlock(), createElementBlock("div", {
+                key: asset.id,
+                class: "ctv:group ctv:relative ctv:rounded-lg ctv:overflow-hidden ctv:cursor-grab ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:hover:border-border-default",
+                draggable: "true",
+                onDragstart: ($event) => unref(onAssetDragStart)(asset, $event)
+              }, [
+                createBaseVNode("img", {
+                  src: asset.payload_url,
+                  alt: asset.name,
+                  title: unref(assetTooltip)(asset),
+                  loading: "lazy",
+                  class: "ctv:block ctv:w-full ctv:aspect-square ctv:object-cover"
+                }, null, 8, _hoisted_15$b),
+                createBaseVNode("div", _hoisted_16$b, toDisplayString$1(asset.name || "—"), 1),
+                asset.category_ids.length ? (openBlock(), createElementBlock("div", _hoisted_17$b, [
+                  (openBlock(true), createElementBlock(Fragment$1, null, renderList(asset.category_ids, (cid) => {
+                    return openBlock(), createElementBlock("span", {
+                      key: cid,
+                      class: "ctv:max-w-full ctv:truncate ctv:py-0 ctv:px-1 ctv:rounded ctv:text-3xs ctv:bg-base-foreground/10 ctv:text-muted-foreground"
+                    }, toDisplayString$1(unref(catName)(cid)), 1);
+                  }), 128))
+                ])) : createCommentVNode("", true),
+                createBaseVNode("div", _hoisted_18$9, [
+                  createBaseVNode("button", {
+                    class: normalizeClass(unref(cardBtnClass)),
+                    title: _ctx.$t("assets.card.tags"),
+                    onClick: ($event) => unref(openTagEditor)(asset, $event)
+                  }, "🏷", 10, _hoisted_19$7),
+                  createBaseVNode("button", {
+                    class: normalizeClass(unref(cardBtnClass)),
+                    title: _ctx.$t("assets.card.rename"),
+                    onClick: ($event) => unref(onRenameAsset)(asset)
+                  }, "✎", 10, _hoisted_20$6),
+                  createBaseVNode("button", {
+                    class: normalizeClass(`${unref(cardBtnClass)} ctv:hover:text-destructive-background`),
+                    title: _ctx.$t("assets.card.delete"),
+                    onClick: ($event) => unref(onDeleteAsset)(asset)
+                  }, "✕", 10, _hoisted_21$6)
+                ])
+              ], 40, _hoisted_14$b);
+            }), 128))
+          ]))
+        ]),
+        unref(fileDragDepth) > 0 ? (openBlock(), createElementBlock("div", _hoisted_22$6, [
+          createBaseVNode("span", _hoisted_23$6, toDisplayString$1(_ctx.$t("assets.dropHint")), 1)
+        ])) : createCommentVNode("", true),
+        unref(tagEditor) ? (openBlock(), createElementBlock("div", {
+          key: 2,
+          class: "ctv:fixed ctv:inset-0 ctv:z-20",
+          onClick: _cache2[8] || (_cache2[8] = ($event) => unref(closeTagEditor)())
+        }, [
+          createBaseVNode("div", {
+            class: "ctv:absolute ctv:w-44 ctv:max-h-64 ctv:overflow-y-auto ctv:p-1 ctv:rounded ctv:shadow-md ctv:bg-interface-menu-surface ctv:border ctv:border-border-default",
+            style: normalizeStyle(unref(tagEditorStyle)),
+            onClick: _cache2[7] || (_cache2[7] = withModifiers(() => {
+            }, ["stop"]))
+          }, [
+            unref(store).categories.length === 0 ? (openBlock(), createElementBlock("div", _hoisted_24$6, toDisplayString$1(_ctx.$t("assets.tagPopover.empty")), 1)) : createCommentVNode("", true),
+            (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(store).categories, (cat2) => {
+              return openBlock(), createElementBlock("button", {
+                key: cat2.id,
+                class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:px-1.5 ctv:py-1 ctv:rounded-sm ctv:cursor-pointer ctv:text-left ctv:text-2xs ctv:[font-family:inherit] ctv:bg-transparent ctv:border-none ctv:text-base-foreground ctv:hover:bg-secondary-background-hover",
+                onClick: ($event) => unref(toggleTag)(cat2.id)
+              }, [
+                createBaseVNode("span", _hoisted_26$5, toDisplayString$1(unref(editorHas)(cat2.id) ? "✓" : ""), 1),
+                createBaseVNode("span", _hoisted_27$5, toDisplayString$1(cat2.name), 1)
+              ], 8, _hoisted_25$6);
+            }), 128))
+          ], 4)
+        ])) : createCommentVNode("", true)
+      ], 32);
+    };
+  }
+});
 function serialize(o) {
   return typeof o == "string" ? `'${o}'` : new c().serialize(o);
 }
@@ -13383,507 +19745,6 @@ function handleAndDispatchCustomEvent(name, handler, detail) {
 function isNullish(value) {
   return value === null || value === void 0;
 }
-function computedEager(fn2, options) {
-  var _options$flush;
-  const result = /* @__PURE__ */ shallowRef();
-  watchEffect(() => {
-    result.value = fn2();
-  }, {
-    ...options,
-    flush: (_options$flush = options === null || options === void 0 ? void 0 : options.flush) !== null && _options$flush !== void 0 ? _options$flush : "sync"
-  });
-  return /* @__PURE__ */ readonly$1(result);
-}
-function tryOnScopeDispose(fn2, failSilently) {
-  if (getCurrentScope()) {
-    onScopeDispose(fn2, failSilently);
-    return true;
-  }
-  return false;
-}
-// @__NO_SIDE_EFFECTS__
-function createEventHook() {
-  const fns = /* @__PURE__ */ new Set();
-  const off = (fn2) => {
-    fns.delete(fn2);
-  };
-  const clear = () => {
-    fns.clear();
-  };
-  const on = (fn2) => {
-    fns.add(fn2);
-    const offFn = () => off(fn2);
-    tryOnScopeDispose(offFn);
-    return { off: offFn };
-  };
-  const trigger2 = (...args) => {
-    return Promise.all(Array.from(fns).map((fn2) => fn2(...args)));
-  };
-  return {
-    on,
-    off,
-    trigger: trigger2,
-    clear
-  };
-}
-// @__NO_SIDE_EFFECTS__
-function createGlobalState(stateFactory) {
-  let initialized = false;
-  let state;
-  const scope = effectScope(true);
-  return ((...args) => {
-    if (!initialized) {
-      state = scope.run(() => stateFactory(...args));
-      initialized = true;
-    }
-    return state;
-  });
-}
-const isClient = typeof window !== "undefined" && typeof document !== "undefined";
-typeof WorkerGlobalScope !== "undefined" && globalThis instanceof WorkerGlobalScope;
-const isDef = (val) => typeof val !== "undefined";
-const notNullish = (val) => val != null;
-const toString = Object.prototype.toString;
-const isObject$1 = (val) => toString.call(val) === "[object Object]";
-const isIOS = /* @__PURE__ */ getIsIOS();
-function getIsIOS() {
-  var _window, _window2, _window3;
-  return isClient && !!((_window = window) === null || _window === void 0 || (_window = _window.navigator) === null || _window === void 0 ? void 0 : _window.userAgent) && (/iP(?:ad|hone|od)/.test(window.navigator.userAgent) || ((_window2 = window) === null || _window2 === void 0 || (_window2 = _window2.navigator) === null || _window2 === void 0 ? void 0 : _window2.maxTouchPoints) > 2 && /iPad|Macintosh/.test((_window3 = window) === null || _window3 === void 0 ? void 0 : _window3.navigator.userAgent));
-}
-function toArray(value) {
-  return Array.isArray(value) ? value : [value];
-}
-function getLifeCycleTarget(target) {
-  return getCurrentInstance();
-}
-// @__NO_SIDE_EFFECTS__
-function createSharedComposable(composable) {
-  if (!isClient) return composable;
-  let subscribers = 0;
-  let state;
-  let scope;
-  const dispose = () => {
-    subscribers -= 1;
-    if (scope && subscribers <= 0) {
-      scope.stop();
-      state = void 0;
-      scope = void 0;
-    }
-  };
-  return ((...args) => {
-    subscribers += 1;
-    if (!scope) {
-      scope = effectScope(true);
-      state = scope.run(() => composable(...args));
-    }
-    tryOnScopeDispose(dispose);
-    return state;
-  });
-}
-function toReactive(objectRef) {
-  if (!/* @__PURE__ */ isRef(objectRef)) return /* @__PURE__ */ reactive(objectRef);
-  return /* @__PURE__ */ reactive(new Proxy({}, {
-    get(_, p2, receiver) {
-      return unref(Reflect.get(objectRef.value, p2, receiver));
-    },
-    set(_, p2, value) {
-      if (/* @__PURE__ */ isRef(objectRef.value[p2]) && !/* @__PURE__ */ isRef(value)) objectRef.value[p2].value = value;
-      else objectRef.value[p2] = value;
-      return true;
-    },
-    deleteProperty(_, p2) {
-      return Reflect.deleteProperty(objectRef.value, p2);
-    },
-    has(_, p2) {
-      return Reflect.has(objectRef.value, p2);
-    },
-    ownKeys() {
-      return Object.keys(objectRef.value);
-    },
-    getOwnPropertyDescriptor() {
-      return {
-        enumerable: true,
-        configurable: true
-      };
-    }
-  }));
-}
-function reactiveComputed(fn2) {
-  return toReactive(computed(fn2));
-}
-function refAutoReset(defaultValue, afterMs = 1e4) {
-  return customRef((track2, trigger2) => {
-    let value = toValue$1(defaultValue);
-    let timer;
-    const resetAfter = () => setTimeout(() => {
-      value = toValue$1(defaultValue);
-      trigger2();
-    }, toValue$1(afterMs));
-    tryOnScopeDispose(() => {
-      clearTimeout(timer);
-    });
-    return {
-      get() {
-        track2();
-        return value;
-      },
-      set(newValue) {
-        value = newValue;
-        trigger2();
-        clearTimeout(timer);
-        timer = resetAfter();
-      }
-    };
-  });
-}
-function tryOnBeforeUnmount(fn2, target) {
-  if (getLifeCycleTarget()) onBeforeUnmount(fn2, target);
-}
-function tryOnMounted(fn2, sync = true, target) {
-  if (getLifeCycleTarget()) onMounted(fn2, target);
-  else if (sync) fn2();
-  else nextTick(fn2);
-}
-function watchImmediate(source, cb, options) {
-  return watch(source, cb, {
-    ...options,
-    immediate: true
-  });
-}
-const defaultWindow = isClient ? window : void 0;
-function unrefElement(elRef) {
-  var _$el;
-  const plain = toValue$1(elRef);
-  return (_$el = plain === null || plain === void 0 ? void 0 : plain.$el) !== null && _$el !== void 0 ? _$el : plain;
-}
-function useEventListener(...args) {
-  const register = (el, event, listener, options) => {
-    el.addEventListener(event, listener, options);
-    return () => el.removeEventListener(event, listener, options);
-  };
-  const firstParamTargets = computed(() => {
-    const test = toArray(toValue$1(args[0])).filter((e) => e != null);
-    return test.every((e) => typeof e !== "string") ? test : void 0;
-  });
-  return watchImmediate(() => {
-    var _firstParamTargets$va, _firstParamTargets$va2;
-    return [
-      (_firstParamTargets$va = (_firstParamTargets$va2 = firstParamTargets.value) === null || _firstParamTargets$va2 === void 0 ? void 0 : _firstParamTargets$va2.map((e) => unrefElement(e))) !== null && _firstParamTargets$va !== void 0 ? _firstParamTargets$va : [defaultWindow].filter((e) => e != null),
-      toArray(toValue$1(firstParamTargets.value ? args[1] : args[0])),
-      toArray(unref(firstParamTargets.value ? args[2] : args[1])),
-      toValue$1(firstParamTargets.value ? args[3] : args[2])
-    ];
-  }, ([raw_targets, raw_events, raw_listeners, raw_options], _, onCleanup) => {
-    if (!(raw_targets === null || raw_targets === void 0 ? void 0 : raw_targets.length) || !(raw_events === null || raw_events === void 0 ? void 0 : raw_events.length) || !(raw_listeners === null || raw_listeners === void 0 ? void 0 : raw_listeners.length)) return;
-    const optionsClone = isObject$1(raw_options) ? { ...raw_options } : raw_options;
-    const cleanups = raw_targets.flatMap((el) => raw_events.flatMap((event) => raw_listeners.map((listener) => register(el, event, listener, optionsClone))));
-    onCleanup(() => {
-      cleanups.forEach((fn2) => fn2());
-    });
-  }, { flush: "post" });
-}
-// @__NO_SIDE_EFFECTS__
-function useMounted() {
-  const isMounted = /* @__PURE__ */ shallowRef(false);
-  const instance = getCurrentInstance();
-  if (instance) onMounted(() => {
-    isMounted.value = true;
-  }, instance);
-  return isMounted;
-}
-// @__NO_SIDE_EFFECTS__
-function useSupported(callback) {
-  const isMounted = /* @__PURE__ */ useMounted();
-  return computed(() => {
-    isMounted.value;
-    return Boolean(callback());
-  });
-}
-function useMutationObserver(target, callback, options = {}) {
-  const { window: window2 = defaultWindow, ...mutationOptions } = options;
-  let observer;
-  const isSupported = /* @__PURE__ */ useSupported(() => window2 && "MutationObserver" in window2);
-  const cleanup = () => {
-    if (observer) {
-      observer.disconnect();
-      observer = void 0;
-    }
-  };
-  const stopWatch = watch(computed(() => {
-    const items = toArray(toValue$1(target)).map(unrefElement).filter(notNullish);
-    return new Set(items);
-  }), (newTargets) => {
-    cleanup();
-    if (isSupported.value && newTargets.size) {
-      observer = new MutationObserver(callback);
-      newTargets.forEach((el) => observer.observe(el, mutationOptions));
-    }
-  }, {
-    immediate: true,
-    flush: "post"
-  });
-  const takeRecords = () => {
-    return observer === null || observer === void 0 ? void 0 : observer.takeRecords();
-  };
-  const stop = () => {
-    stopWatch();
-    cleanup();
-  };
-  tryOnScopeDispose(stop);
-  return {
-    isSupported,
-    stop,
-    takeRecords
-  };
-}
-function createKeyPredicate(keyFilter) {
-  if (typeof keyFilter === "function") return keyFilter;
-  else if (typeof keyFilter === "string") return (event) => event.key === keyFilter;
-  else if (Array.isArray(keyFilter)) return (event) => keyFilter.includes(event.key);
-  return () => true;
-}
-function onKeyStroke(...args) {
-  let key;
-  let handler;
-  let options = {};
-  if (args.length === 3) {
-    key = args[0];
-    handler = args[1];
-    options = args[2];
-  } else if (args.length === 2) if (typeof args[1] === "object") {
-    key = true;
-    handler = args[0];
-    options = args[1];
-  } else {
-    key = args[0];
-    handler = args[1];
-  }
-  else {
-    key = true;
-    handler = args[0];
-  }
-  const { target = defaultWindow, eventName = "keydown", passive: passive2 = false, dedupe = false } = options;
-  const predicate = createKeyPredicate(key);
-  const listener = (e) => {
-    if (e.repeat && toValue$1(dedupe)) return;
-    if (predicate(e)) handler(e);
-  };
-  return useEventListener(target, eventName, listener, passive2);
-}
-function cloneFnJSON(source) {
-  return JSON.parse(JSON.stringify(source));
-}
-function useResizeObserver(target, callback, options = {}) {
-  const { window: window2 = defaultWindow, ...observerOptions } = options;
-  let observer;
-  const isSupported = /* @__PURE__ */ useSupported(() => window2 && "ResizeObserver" in window2);
-  const cleanup = () => {
-    if (observer) {
-      observer.disconnect();
-      observer = void 0;
-    }
-  };
-  const stopWatch = watch(computed(() => {
-    const _targets = toValue$1(target);
-    return Array.isArray(_targets) ? _targets.map((el) => unrefElement(el)) : [unrefElement(_targets)];
-  }), (els) => {
-    cleanup();
-    if (isSupported.value && window2) {
-      observer = new ResizeObserver(callback);
-      for (const _el of els) if (_el) observer.observe(_el, observerOptions);
-    }
-  }, {
-    immediate: true,
-    flush: "post"
-  });
-  const stop = () => {
-    cleanup();
-    stopWatch();
-  };
-  tryOnScopeDispose(stop);
-  return {
-    isSupported,
-    stop
-  };
-}
-const UseMouseBuiltinExtractors = {
-  page: (event) => [event.pageX, event.pageY],
-  client: (event) => [event.clientX, event.clientY],
-  screen: (event) => [event.screenX, event.screenY],
-  movement: (event) => event instanceof MouseEvent ? [event.movementX, event.movementY] : null
-};
-function useMouse(options = {}) {
-  const { type = "page", touch = true, resetOnTouchEnds = false, initialValue = {
-    x: 0,
-    y: 0
-  }, window: window2 = defaultWindow, target = window2, scroll = true, eventFilter } = options;
-  let _prevMouseEvent = null;
-  let _prevScrollX = 0;
-  let _prevScrollY = 0;
-  const x = /* @__PURE__ */ shallowRef(initialValue.x);
-  const y = /* @__PURE__ */ shallowRef(initialValue.y);
-  const sourceType = /* @__PURE__ */ shallowRef(null);
-  const extractor = typeof type === "function" ? type : UseMouseBuiltinExtractors[type];
-  const mouseHandler = (event) => {
-    const result = extractor(event);
-    _prevMouseEvent = event;
-    if (result) {
-      [x.value, y.value] = result;
-      sourceType.value = "mouse";
-    }
-    if (window2) {
-      _prevScrollX = window2.scrollX;
-      _prevScrollY = window2.scrollY;
-    }
-  };
-  const touchHandler = (event) => {
-    if (event.touches.length > 0) {
-      const result = extractor(event.touches[0]);
-      if (result) {
-        [x.value, y.value] = result;
-        sourceType.value = "touch";
-      }
-    }
-  };
-  const scrollHandler = () => {
-    if (!_prevMouseEvent || !window2) return;
-    const pos = extractor(_prevMouseEvent);
-    if (_prevMouseEvent instanceof MouseEvent && pos) {
-      x.value = pos[0] + window2.scrollX - _prevScrollX;
-      y.value = pos[1] + window2.scrollY - _prevScrollY;
-    }
-  };
-  const reset = () => {
-    x.value = initialValue.x;
-    y.value = initialValue.y;
-  };
-  const mouseHandlerWrapper = eventFilter ? (event) => eventFilter(() => mouseHandler(event), {}) : (event) => mouseHandler(event);
-  const touchHandlerWrapper = eventFilter ? (event) => eventFilter(() => touchHandler(event), {}) : (event) => touchHandler(event);
-  const scrollHandlerWrapper = eventFilter ? () => eventFilter(() => scrollHandler(), {}) : () => scrollHandler();
-  if (target) {
-    const listenerOptions = { passive: true };
-    useEventListener(target, ["mousemove", "dragover"], mouseHandlerWrapper, listenerOptions);
-    if (touch && type !== "movement") {
-      useEventListener(target, ["touchstart", "touchmove"], touchHandlerWrapper, listenerOptions);
-      if (resetOnTouchEnds) useEventListener(target, "touchend", reset, listenerOptions);
-    }
-    if (scroll && type === "page") useEventListener(window2, "scroll", scrollHandlerWrapper, listenerOptions);
-  }
-  return {
-    x,
-    y,
-    sourceType
-  };
-}
-function useMouseInElement(target, options = {}) {
-  const { windowResize = true, windowScroll = true, handleOutside = true, window: window2 = defaultWindow } = options;
-  const type = options.type || "page";
-  const { x, y, sourceType } = useMouse(options);
-  const targetRef = /* @__PURE__ */ shallowRef(target !== null && target !== void 0 ? target : window2 === null || window2 === void 0 ? void 0 : window2.document.body);
-  const elementX = /* @__PURE__ */ shallowRef(0);
-  const elementY = /* @__PURE__ */ shallowRef(0);
-  const elementPositionX = /* @__PURE__ */ shallowRef(0);
-  const elementPositionY = /* @__PURE__ */ shallowRef(0);
-  const elementHeight = /* @__PURE__ */ shallowRef(0);
-  const elementWidth = /* @__PURE__ */ shallowRef(0);
-  const isOutside = /* @__PURE__ */ shallowRef(true);
-  function update() {
-    if (!window2) return;
-    const el = unrefElement(targetRef);
-    if (!el || !(el instanceof Element)) return;
-    for (const rect of el.getClientRects()) {
-      const { left: left2, top: top2, width, height } = rect;
-      elementPositionX.value = left2 + (type === "page" ? window2.pageXOffset : 0);
-      elementPositionY.value = top2 + (type === "page" ? window2.pageYOffset : 0);
-      elementHeight.value = height;
-      elementWidth.value = width;
-      const elX = x.value - elementPositionX.value;
-      const elY = y.value - elementPositionY.value;
-      isOutside.value = width === 0 || height === 0 || elX < 0 || elY < 0 || elX > width || elY > height;
-      if (handleOutside || !isOutside.value) {
-        elementX.value = elX;
-        elementY.value = elY;
-      }
-      if (!isOutside.value) break;
-    }
-  }
-  const stopFnList = [];
-  function stop() {
-    stopFnList.forEach((fn2) => fn2());
-    stopFnList.length = 0;
-  }
-  tryOnMounted(() => {
-    update();
-  });
-  if (window2) {
-    const { stop: stopResizeObserver } = useResizeObserver(targetRef, update);
-    const { stop: stopMutationObserver } = useMutationObserver(targetRef, update, { attributeFilter: ["style", "class"] });
-    const stopWatch = watch([
-      targetRef,
-      x,
-      y
-    ], update);
-    stopFnList.push(stopResizeObserver, stopMutationObserver, stopWatch);
-    useEventListener(document, "mouseleave", () => isOutside.value = true, { passive: true });
-    if (windowScroll) stopFnList.push(useEventListener("scroll", update, {
-      capture: true,
-      passive: true
-    }));
-    if (windowResize) stopFnList.push(useEventListener("resize", update, { passive: true }));
-  }
-  return {
-    x,
-    y,
-    sourceType,
-    elementX,
-    elementY,
-    elementPositionX,
-    elementPositionY,
-    elementHeight,
-    elementWidth,
-    isOutside,
-    stop
-  };
-}
-// @__NO_SIDE_EFFECTS__
-function useVModel(props, key, emit2, options = {}) {
-  var _vm$$emit, _vm$proxy;
-  const { clone: clone2 = false, passive: passive2 = false, eventName, deep = false, defaultValue, shouldEmit } = options;
-  const vm = getCurrentInstance();
-  const _emit = emit2 || (vm === null || vm === void 0 ? void 0 : vm.emit) || (vm === null || vm === void 0 || (_vm$$emit = vm.$emit) === null || _vm$$emit === void 0 ? void 0 : _vm$$emit.bind(vm)) || (vm === null || vm === void 0 || (_vm$proxy = vm.proxy) === null || _vm$proxy === void 0 || (_vm$proxy = _vm$proxy.$emit) === null || _vm$proxy === void 0 ? void 0 : _vm$proxy.bind(vm === null || vm === void 0 ? void 0 : vm.proxy));
-  let event = eventName;
-  if (!key) key = "modelValue";
-  event = event || `update:${key.toString()}`;
-  const cloneFn = (val) => !clone2 ? val : typeof clone2 === "function" ? clone2(val) : cloneFnJSON(val);
-  const getValue2 = () => isDef(props[key]) ? cloneFn(props[key]) : defaultValue;
-  const triggerEmit = (value) => {
-    if (shouldEmit) {
-      if (shouldEmit(value)) _emit(event, value);
-    } else _emit(event, value);
-  };
-  if (passive2) {
-    const proxy = /* @__PURE__ */ ref(getValue2());
-    let isUpdating = false;
-    watch(() => props[key], (v) => {
-      if (!isUpdating) {
-        isUpdating = true;
-        proxy.value = cloneFn(v);
-        nextTick(() => isUpdating = false);
-      }
-    });
-    watch(proxy, (v) => {
-      if (!isUpdating && (v !== props[key] || deep)) triggerEmit(v);
-    }, { deep });
-    return proxy;
-  } else return computed({
-    get() {
-      return getValue2();
-    },
-    set(value) {
-      triggerEmit(value);
-    }
-  });
-}
 function renderSlotFragments(children) {
   if (!children) return [];
   return children.flatMap((child) => {
@@ -13892,7 +19753,7 @@ function renderSlotFragments(children) {
   });
 }
 const [injectConfigProviderContext] = /* @__PURE__ */ createContext("ConfigProvider");
-function isPlainObject$2(value) {
+function isPlainObject$1(value) {
   if (value === null || typeof value !== "object") {
     return false;
   }
@@ -13909,7 +19770,7 @@ function isPlainObject$2(value) {
   return true;
 }
 function _defu(baseObject, defaults, namespace = ".", merger) {
-  if (!isPlainObject$2(defaults)) {
+  if (!isPlainObject$1(defaults)) {
     return _defu(baseObject, {}, namespace, merger);
   }
   const object2 = { ...defaults };
@@ -13926,7 +19787,7 @@ function _defu(baseObject, defaults, namespace = ".", merger) {
     }
     if (Array.isArray(value) && Array.isArray(object2[key])) {
       object2[key] = [...value, ...object2[key]];
-    } else if (isPlainObject$2(value) && isPlainObject$2(object2[key])) {
+    } else if (isPlainObject$1(value) && isPlainObject$1(object2[key])) {
       object2[key] = _defu(
         value,
         object2[key],
@@ -13954,14 +19815,12 @@ const useBodyLockStackCount = /* @__PURE__ */ createSharedComposable(() => {
     return false;
   });
   const context2 = injectConfigProviderContext({ scrollBody: /* @__PURE__ */ ref(true) });
-  let stopTouchMoveListener = null;
   const resetBodyStyle = () => {
     document.body.style.paddingRight = "";
     document.body.style.marginRight = "";
     document.body.style.pointerEvents = "";
     document.documentElement.style.removeProperty("--scrollbar-width");
     document.body.style.overflow = initialOverflow.value ?? "";
-    isIOS && (stopTouchMoveListener == null ? void 0 : stopTouchMoveListener());
     initialOverflow.value = void 0;
   };
   watch(locked, (val, oldVal) => {
@@ -13990,7 +19849,6 @@ const useBodyLockStackCount = /* @__PURE__ */ createSharedComposable(() => {
       document.documentElement.style.setProperty("--scrollbar-width", `${verticalScrollbarWidth}px`);
       document.body.style.overflow = "hidden";
     }
-    if (isIOS) stopTouchMoveListener = useEventListener(document, "touchmove", (e) => preventDefault(e), { passive: false });
     nextTick(() => {
       if (!locked.value) return;
       document.body.style.pointerEvents = "none";
@@ -14014,23 +19872,6 @@ function useBodyScrollLock(initialState) {
     map2.value.delete(id);
   });
   return locked;
-}
-function checkOverflowScroll(ele) {
-  const style2 = window.getComputedStyle(ele);
-  if (style2.overflowX === "scroll" || style2.overflowY === "scroll" || style2.overflowX === "auto" && ele.clientWidth < ele.scrollWidth || style2.overflowY === "auto" && ele.clientHeight < ele.scrollHeight) return true;
-  else {
-    const parent = ele.parentNode;
-    if (!(parent instanceof Element) || parent.tagName === "BODY") return false;
-    return checkOverflowScroll(parent);
-  }
-}
-function preventDefault(rawEvent) {
-  const e = rawEvent || window.event;
-  const _target2 = e.target;
-  if (_target2 instanceof Element && checkOverflowScroll(_target2)) return false;
-  if (e.touches.length > 1) return true;
-  if (e.preventDefault && e.cancelable) e.preventDefault();
-  return false;
 }
 function useComposing(onEnd) {
   const isComposing = /* @__PURE__ */ ref(false);
@@ -14192,7 +20033,7 @@ function useForwardProps(props) {
     if (defaultValue !== void 0) prev[curr] = defaultValue;
     return prev;
   }, {});
-  const refProps = /* @__PURE__ */ toRef(props);
+  const refProps = /* @__PURE__ */ toRef$1(props);
   return computed(() => {
     const preservedProps = {};
     const assignedProps = (vm == null ? void 0 : vm.vnode.props) ?? {};
@@ -20236,22 +26077,22 @@ var SwitchThumb_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ de
   }
 });
 var SwitchThumb_default = SwitchThumb_vue_vue_type_script_setup_true_lang_default;
-const _hoisted_1$t = ["disabled", "aria-expanded"];
-const _hoisted_2$o = { class: "ctv:truncate ctv:text-left" };
-const _hoisted_3$n = {
+const _hoisted_1$w = ["disabled", "aria-expanded"];
+const _hoisted_2$s = { class: "ctv:truncate ctv:text-left" };
+const _hoisted_3$r = {
   key: 0,
   class: "ctv:px-1 ctv:pb-2"
 };
-const _hoisted_4$k = {
+const _hoisted_4$o = {
   class: "ctv:max-h-60 ctv:overflow-y-auto",
   role: "presentation"
 };
-const _hoisted_5$k = { class: "ctv:truncate" };
-const _hoisted_6$j = {
+const _hoisted_5$o = { class: "ctv:truncate" };
+const _hoisted_6$m = {
   key: 0,
   class: "ctv:px-3 ctv:pb-2 ctv:text-xs ctv:text-muted-foreground"
 };
-const _sfc_main$x = /* @__PURE__ */ defineComponent({
+const _sfc_main$B = /* @__PURE__ */ defineComponent({
   __name: "ComfyTVSelect",
   props: {
     modelValue: {},
@@ -20312,9 +26153,9 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
                     disabled: __props.disabled,
                     "aria-expanded": isOpen.value
                   }, [
-                    createBaseVNode("span", _hoisted_2$o, toDisplayString$1(display.value), 1),
+                    createBaseVNode("span", _hoisted_2$s, toDisplayString$1(display.value), 1),
                     _cache2[2] || (_cache2[2] = createBaseVNode("span", { class: "ctv:shrink-0 ctv:text-muted-foreground ctv:text-2xs" }, "▾", -1))
-                  ], 8, _hoisted_1$t)
+                  ], 8, _hoisted_1$w)
                 ]),
                 _: 1
               })
@@ -20330,7 +26171,7 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
                 align: "start"
               }, {
                 default: withCtx(() => [
-                  filterable.value ? (openBlock(), createElementBlock("div", _hoisted_3$n, [
+                  filterable.value ? (openBlock(), createElementBlock("div", _hoisted_3$r, [
                     createVNode(unref(ComboboxInput_default), {
                       modelValue: query.value,
                       "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => query.value = $event),
@@ -20339,7 +26180,7 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
                       class: "ctv:flex ctv:h-7 ctv:w-full ctv:min-w-0 ctv:appearance-none ctv:rounded-lg ctv:border-none ctv:bg-secondary-background ctv:px-3 ctv:py-1 ctv:text-xs ctv:text-base-foreground ctv:placeholder:text-muted-foreground ctv:focus-visible:ring-1 ctv:focus-visible:ring-border-default ctv:focus-visible:outline-none"
                     }, null, 8, ["modelValue", "placeholder"])
                   ])) : createCommentVNode("", true),
-                  createBaseVNode("div", _hoisted_4$k, [
+                  createBaseVNode("div", _hoisted_4$o, [
                     (openBlock(true), createElementBlock(Fragment$1, null, renderList(filteredOptions.value, (opt) => {
                       return openBlock(), createBlock(unref(ComboboxItem_default), {
                         key: opt.value,
@@ -20348,7 +26189,7 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
                         class: "ctv:relative ctv:flex ctv:w-full ctv:cursor-pointer ctv:items-center ctv:justify-between ctv:select-none ctv:gap-3 ctv:rounded-sm ctv:px-2 ctv:py-2 ctv:text-xs ctv:outline-none ctv:hover:bg-secondary-background-hover ctv:data-[highlighted]:bg-secondary-background-hover ctv:data-[state=checked]:bg-secondary-background-selected ctv:data-[state=checked]:hover:bg-secondary-background-selected"
                       }, {
                         default: withCtx(() => [
-                          createBaseVNode("span", _hoisted_5$k, toDisplayString$1(opt.label), 1),
+                          createBaseVNode("span", _hoisted_5$o, toDisplayString$1(opt.label), 1),
                           createVNode(unref(ComboboxItemIndicator_default), { class: "ctv:flex ctv:shrink-0 ctv:items-center ctv:justify-center ctv:text-base-foreground" }, {
                             default: withCtx(() => [..._cache2[3] || (_cache2[3] = [
                               createTextVNode("✓", -1)
@@ -20359,7 +26200,7 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
                         _: 2
                       }, 1032, ["value", "text-value"]);
                     }), 128)),
-                    !filteredOptions.value.length ? (openBlock(), createElementBlock("div", _hoisted_6$j, " no matches ")) : createCommentVNode("", true)
+                    !filteredOptions.value.length ? (openBlock(), createElementBlock("div", _hoisted_6$m, " no matches ")) : createCommentVNode("", true)
                   ])
                 ]),
                 _: 1
@@ -20373,7 +26214,7 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _sfc_main$w = /* @__PURE__ */ defineComponent({
+const _sfc_main$A = /* @__PURE__ */ defineComponent({
   __name: "ComfyTVNumber",
   props: {
     modelValue: {},
@@ -20434,7 +26275,7 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _sfc_main$v = /* @__PURE__ */ defineComponent({
+const _sfc_main$z = /* @__PURE__ */ defineComponent({
   __name: "ComfyTVToggle",
   props: {
     modelValue: { type: [Boolean, null] },
@@ -20461,9 +26302,9 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$s = ["value", "disabled", "rows", "placeholder"];
-const _hoisted_2$n = ["value", "disabled", "placeholder"];
-const _sfc_main$u = /* @__PURE__ */ defineComponent({
+const _hoisted_1$v = ["value", "disabled", "rows", "placeholder"];
+const _hoisted_2$r = ["value", "disabled", "placeholder"];
+const _sfc_main$y = /* @__PURE__ */ defineComponent({
   __name: "ComfyTVText",
   props: {
     modelValue: {},
@@ -20507,7 +26348,7 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
         rows: __props.rows ?? 3,
         placeholder: __props.placeholder ?? "",
         onInput: onTextareaInput
-      }, null, 40, _hoisted_1$s)) : (openBlock(), createElementBlock("input", {
+      }, null, 40, _hoisted_1$v)) : (openBlock(), createElementBlock("input", {
         key: 1,
         class: "ctv-text-input",
         type: "text",
@@ -20515,12 +26356,12 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
         disabled: __props.disabled,
         placeholder: __props.placeholder ?? "",
         onInput
-      }, null, 40, _hoisted_2$n));
+      }, null, 40, _hoisted_2$r));
     };
   }
 });
-const _hoisted_1$r = ["value", "title"];
-const _sfc_main$t = /* @__PURE__ */ defineComponent({
+const _hoisted_1$u = ["value", "title"];
+const _sfc_main$x = /* @__PURE__ */ defineComponent({
   __name: "ComfyTVWidget",
   props: {
     kind: {},
@@ -20552,14 +26393,14 @@ const _sfc_main$t = /* @__PURE__ */ defineComponent({
       () => props.multiline === true || stringValue.value.includes("\n")
     );
     return (_ctx, _cache2) => {
-      return __props.kind === "COMBO" ? (openBlock(), createBlock(_sfc_main$x, {
+      return __props.kind === "COMBO" ? (openBlock(), createBlock(_sfc_main$B, {
         key: 0,
         "model-value": __props.modelValue,
         options: __props.options ?? [],
         disabled: __props.disabled,
         placeholder: __props.placeholder,
         "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => emit2("update:modelValue", $event))
-      }, null, 8, ["model-value", "options", "disabled", "placeholder"])) : __props.kind === "INT" || __props.kind === "FLOAT" ? (openBlock(), createBlock(_sfc_main$w, {
+      }, null, 8, ["model-value", "options", "disabled", "placeholder"])) : __props.kind === "INT" || __props.kind === "FLOAT" ? (openBlock(), createBlock(_sfc_main$A, {
         key: 1,
         "model-value": numericValue.value,
         disabled: __props.disabled,
@@ -20568,12 +26409,12 @@ const _sfc_main$t = /* @__PURE__ */ defineComponent({
         step: __props.step ?? (__props.kind === "INT" ? 1 : 0.01),
         precision: __props.kind === "INT" ? 0 : __props.precision,
         "onUpdate:modelValue": _cache2[1] || (_cache2[1] = ($event) => emit2("update:modelValue", $event))
-      }, null, 8, ["model-value", "disabled", "min", "max", "step", "precision"])) : __props.kind === "BOOLEAN" ? (openBlock(), createBlock(_sfc_main$v, {
+      }, null, 8, ["model-value", "disabled", "min", "max", "step", "precision"])) : __props.kind === "BOOLEAN" ? (openBlock(), createBlock(_sfc_main$z, {
         key: 2,
         "model-value": boolValue.value,
         disabled: __props.disabled,
         "onUpdate:modelValue": _cache2[2] || (_cache2[2] = ($event) => emit2("update:modelValue", $event))
-      }, null, 8, ["model-value", "disabled"])) : __props.kind === "STRING" ? (openBlock(), createBlock(_sfc_main$u, {
+      }, null, 8, ["model-value", "disabled"])) : __props.kind === "STRING" ? (openBlock(), createBlock(_sfc_main$y, {
         key: 3,
         "model-value": stringValue.value,
         disabled: __props.disabled,
@@ -20586,7 +26427,7 @@ const _sfc_main$t = /* @__PURE__ */ defineComponent({
         value: String(__props.modelValue ?? ""),
         readonly: "",
         title: `Unsupported widget type: ${__props.kind}`
-      }, null, 8, _hoisted_1$r));
+      }, null, 8, _hoisted_1$u));
     };
   }
 });
@@ -20774,4802 +26615,253 @@ function useCollapsedFlag(workflowId, keyPrefix, defaultValue = false) {
   }
   return { collapsed, toggle };
 }
-const app = app$1;
-var _a$2;
-function $constructor(name, initializer2, params) {
-  function init(inst, def2) {
-    if (!inst._zod) {
-      Object.defineProperty(inst, "_zod", {
-        value: {
-          def: def2,
-          constr: _,
-          traits: /* @__PURE__ */ new Set()
-        },
-        enumerable: false
-      });
+let _stages = /* @__PURE__ */ new Map();
+let _pending = null;
+async function fetchStageMeta() {
+  const data = await apiFetch("/comfytv/stages", StageMetaResponseSchema);
+  const m = /* @__PURE__ */ new Map();
+  for (const s of data.stages) {
+    m.set(s.node_id, s);
+  }
+  _stages = m;
+  return m;
+}
+function loadStageMeta() {
+  if (_pending) return _pending;
+  _pending = fetchStageMeta().catch((e) => {
+    console.error("[ComfyTV/stageMeta] load failed", e);
+    _pending = null;
+    return /* @__PURE__ */ new Map();
+  });
+  return _pending;
+}
+function getStageMeta(nodeId) {
+  return _stages.get(nodeId);
+}
+function isStageKind(kind) {
+  return kind !== "project";
+}
+const useSelectionStore = /* @__PURE__ */ defineStore("comfytv-selection", () => {
+  const selected = /* @__PURE__ */ ref(null);
+  const selectedKey = computed(
+    () => selected.value ? `${selected.value.workflowKind}::${selected.value.workflowLabel}` : null
+  );
+  const bindingsVersion = /* @__PURE__ */ ref(0);
+  function bumpBindings() {
+    bindingsVersion.value++;
+  }
+  function refreshFromCanvas() {
+    var _a2;
+    const app2 = window.app;
+    const selectedNodes = (_a2 = app2 == null ? void 0 : app2.canvas) == null ? void 0 : _a2.selected_nodes;
+    let nodes = [];
+    if (selectedNodes) {
+      if (typeof selectedNodes[Symbol.iterator] === "function") {
+        nodes = Array.from(selectedNodes);
+      } else {
+        nodes = Object.values(selectedNodes);
+      }
     }
-    if (inst._zod.traits.has(name)) {
+    if (nodes.length !== 1) {
+      if (selected.value !== null) selected.value = null;
       return;
     }
-    inst._zod.traits.add(name);
-    initializer2(inst, def2);
-    const proto = _.prototype;
-    const keys2 = Object.keys(proto);
-    for (let i = 0; i < keys2.length; i++) {
-      const k = keys2[i];
-      if (!(k in inst)) {
-        inst[k] = proto[k].bind(inst);
-      }
+    const node = nodes[0];
+    const cls = String((node == null ? void 0 : node.comfyClass) ?? "");
+    const meta = getStageMeta(cls);
+    if (!meta || !meta.workflow_kind) {
+      if (selected.value !== null) selected.value = null;
+      return;
     }
-  }
-  const Parent = (params == null ? void 0 : params.Parent) ?? Object;
-  class Definition extends Parent {
-  }
-  Object.defineProperty(Definition, "name", { value: name });
-  function _(def2) {
-    var _a2;
-    const inst = (params == null ? void 0 : params.Parent) ? new Definition() : this;
-    init(inst, def2);
-    (_a2 = inst._zod).deferred ?? (_a2.deferred = []);
-    for (const fn2 of inst._zod.deferred) {
-      fn2();
-    }
-    return inst;
-  }
-  Object.defineProperty(_, "init", { value: init });
-  Object.defineProperty(_, Symbol.hasInstance, {
-    value: (inst) => {
-      var _a2, _b2;
-      if ((params == null ? void 0 : params.Parent) && inst instanceof params.Parent)
-        return true;
-      return (_b2 = (_a2 = inst == null ? void 0 : inst._zod) == null ? void 0 : _a2.traits) == null ? void 0 : _b2.has(name);
-    }
-  });
-  Object.defineProperty(_, "name", { value: name });
-  return _;
-}
-class $ZodAsyncError extends Error {
-  constructor() {
-    super(`Encountered Promise during synchronous parse. Use .parseAsync() instead.`);
-  }
-}
-class $ZodEncodeError extends Error {
-  constructor(name) {
-    super(`Encountered unidirectional transform during encode: ${name}`);
-    this.name = "ZodEncodeError";
-  }
-}
-(_a$2 = globalThis).__zod_globalConfig ?? (_a$2.__zod_globalConfig = {});
-const globalConfig = globalThis.__zod_globalConfig;
-function config(newConfig) {
-  return globalConfig;
-}
-function getEnumValues(entries2) {
-  const numericValues = Object.values(entries2).filter((v) => typeof v === "number");
-  const values = Object.entries(entries2).filter(([k, _]) => numericValues.indexOf(+k) === -1).map(([_, v]) => v);
-  return values;
-}
-function jsonStringifyReplacer(_, value) {
-  if (typeof value === "bigint")
-    return value.toString();
-  return value;
-}
-function cached(getter) {
-  return {
-    get value() {
-      {
-        const value = getter();
-        Object.defineProperty(this, "value", { value });
-        return value;
-      }
-    }
-  };
-}
-function nullish(input) {
-  return input === null || input === void 0;
-}
-function cleanRegex(source) {
-  const start2 = source.startsWith("^") ? 1 : 0;
-  const end2 = source.endsWith("$") ? source.length - 1 : source.length;
-  return source.slice(start2, end2);
-}
-function floatSafeRemainder(val, step) {
-  const ratio = val / step;
-  const roundedRatio = Math.round(ratio);
-  const tolerance = Number.EPSILON * Math.max(Math.abs(ratio), 1);
-  if (Math.abs(ratio - roundedRatio) < tolerance)
-    return 0;
-  return ratio - roundedRatio;
-}
-const EVALUATING = /* @__PURE__ */ Symbol("evaluating");
-function defineLazy(object2, key, getter) {
-  let value = void 0;
-  Object.defineProperty(object2, key, {
-    get() {
-      if (value === EVALUATING) {
-        return void 0;
-      }
-      if (value === void 0) {
-        value = EVALUATING;
-        value = getter();
-      }
-      return value;
-    },
-    set(v) {
-      Object.defineProperty(object2, key, {
-        value: v
-        // configurable: true,
-      });
-    },
-    configurable: true
-  });
-}
-function assignProp(target, prop, value) {
-  Object.defineProperty(target, prop, {
-    value,
-    writable: true,
-    enumerable: true,
-    configurable: true
-  });
-}
-function mergeDefs(...defs) {
-  const mergedDescriptors = {};
-  for (const def2 of defs) {
-    const descriptors = Object.getOwnPropertyDescriptors(def2);
-    Object.assign(mergedDescriptors, descriptors);
-  }
-  return Object.defineProperties({}, mergedDescriptors);
-}
-function esc(str) {
-  return JSON.stringify(str);
-}
-function slugify(input) {
-  return input.toLowerCase().trim().replace(/[^\w\s-]/g, "").replace(/[\s_-]+/g, "-").replace(/^-+|-+$/g, "");
-}
-const captureStackTrace = "captureStackTrace" in Error ? Error.captureStackTrace : (..._args) => {
-};
-function isObject(data) {
-  return typeof data === "object" && data !== null && !Array.isArray(data);
-}
-const allowsEval = /* @__PURE__ */ cached(() => {
-  var _a2;
-  if (globalConfig.jitless) {
-    return false;
-  }
-  if (typeof navigator !== "undefined" && ((_a2 = navigator == null ? void 0 : navigator.userAgent) == null ? void 0 : _a2.includes("Cloudflare"))) {
-    return false;
-  }
-  try {
-    const F = Function;
-    new F("");
-    return true;
-  } catch (_) {
-    return false;
-  }
-});
-function isPlainObject$1(o) {
-  if (isObject(o) === false)
-    return false;
-  const ctor = o.constructor;
-  if (ctor === void 0)
-    return true;
-  if (typeof ctor !== "function")
-    return true;
-  const prot = ctor.prototype;
-  if (isObject(prot) === false)
-    return false;
-  if (Object.prototype.hasOwnProperty.call(prot, "isPrototypeOf") === false) {
-    return false;
-  }
-  return true;
-}
-function shallowClone(o) {
-  if (isPlainObject$1(o))
-    return { ...o };
-  if (Array.isArray(o))
-    return [...o];
-  if (o instanceof Map)
-    return new Map(o);
-  if (o instanceof Set)
-    return new Set(o);
-  return o;
-}
-const propertyKeyTypes = /* @__PURE__ */ new Set(["string", "number", "symbol"]);
-function escapeRegex(str) {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-function clone(inst, def2, params) {
-  const cl = new inst._zod.constr(def2 ?? inst._zod.def);
-  if (!def2 || (params == null ? void 0 : params.parent))
-    cl._zod.parent = inst;
-  return cl;
-}
-function normalizeParams(_params) {
-  const params = _params;
-  if (!params)
-    return {};
-  if (typeof params === "string")
-    return { error: () => params };
-  if ((params == null ? void 0 : params.message) !== void 0) {
-    if ((params == null ? void 0 : params.error) !== void 0)
-      throw new Error("Cannot specify both `message` and `error` params");
-    params.error = params.message;
-  }
-  delete params.message;
-  if (typeof params.error === "string")
-    return { ...params, error: () => params.error };
-  return params;
-}
-function optionalKeys(shape) {
-  return Object.keys(shape).filter((k) => {
-    return shape[k]._zod.optin === "optional" && shape[k]._zod.optout === "optional";
-  });
-}
-const NUMBER_FORMAT_RANGES = {
-  safeint: [Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER],
-  int32: [-2147483648, 2147483647],
-  uint32: [0, 4294967295],
-  float32: [-34028234663852886e22, 34028234663852886e22],
-  float64: [-Number.MAX_VALUE, Number.MAX_VALUE]
-};
-function pick(schema, mask) {
-  const currDef = schema._zod.def;
-  const checks = currDef.checks;
-  const hasChecks = checks && checks.length > 0;
-  if (hasChecks) {
-    throw new Error(".pick() cannot be used on object schemas containing refinements");
-  }
-  const def2 = mergeDefs(schema._zod.def, {
-    get shape() {
-      const newShape = {};
-      for (const key in mask) {
-        if (!(key in currDef.shape)) {
-          throw new Error(`Unrecognized key: "${key}"`);
-        }
-        if (!mask[key])
-          continue;
-        newShape[key] = currDef.shape[key];
-      }
-      assignProp(this, "shape", newShape);
-      return newShape;
-    },
-    checks: []
-  });
-  return clone(schema, def2);
-}
-function omit(schema, mask) {
-  const currDef = schema._zod.def;
-  const checks = currDef.checks;
-  const hasChecks = checks && checks.length > 0;
-  if (hasChecks) {
-    throw new Error(".omit() cannot be used on object schemas containing refinements");
-  }
-  const def2 = mergeDefs(schema._zod.def, {
-    get shape() {
-      const newShape = { ...schema._zod.def.shape };
-      for (const key in mask) {
-        if (!(key in currDef.shape)) {
-          throw new Error(`Unrecognized key: "${key}"`);
-        }
-        if (!mask[key])
-          continue;
-        delete newShape[key];
-      }
-      assignProp(this, "shape", newShape);
-      return newShape;
-    },
-    checks: []
-  });
-  return clone(schema, def2);
-}
-function extend(schema, shape) {
-  if (!isPlainObject$1(shape)) {
-    throw new Error("Invalid input to extend: expected a plain object");
-  }
-  const checks = schema._zod.def.checks;
-  const hasChecks = checks && checks.length > 0;
-  if (hasChecks) {
-    const existingShape = schema._zod.def.shape;
-    for (const key in shape) {
-      if (Object.getOwnPropertyDescriptor(existingShape, key) !== void 0) {
-        throw new Error("Cannot overwrite keys on object schemas containing refinements. Use `.safeExtend()` instead.");
-      }
-    }
-  }
-  const def2 = mergeDefs(schema._zod.def, {
-    get shape() {
-      const _shape = { ...schema._zod.def.shape, ...shape };
-      assignProp(this, "shape", _shape);
-      return _shape;
-    }
-  });
-  return clone(schema, def2);
-}
-function safeExtend(schema, shape) {
-  if (!isPlainObject$1(shape)) {
-    throw new Error("Invalid input to safeExtend: expected a plain object");
-  }
-  const def2 = mergeDefs(schema._zod.def, {
-    get shape() {
-      const _shape = { ...schema._zod.def.shape, ...shape };
-      assignProp(this, "shape", _shape);
-      return _shape;
-    }
-  });
-  return clone(schema, def2);
-}
-function merge(a, b) {
-  var _a2;
-  if ((_a2 = a._zod.def.checks) == null ? void 0 : _a2.length) {
-    throw new Error(".merge() cannot be used on object schemas containing refinements. Use .safeExtend() instead.");
-  }
-  const def2 = mergeDefs(a._zod.def, {
-    get shape() {
-      const _shape = { ...a._zod.def.shape, ...b._zod.def.shape };
-      assignProp(this, "shape", _shape);
-      return _shape;
-    },
-    get catchall() {
-      return b._zod.def.catchall;
-    },
-    checks: b._zod.def.checks ?? []
-  });
-  return clone(a, def2);
-}
-function partial(Class, schema, mask) {
-  const currDef = schema._zod.def;
-  const checks = currDef.checks;
-  const hasChecks = checks && checks.length > 0;
-  if (hasChecks) {
-    throw new Error(".partial() cannot be used on object schemas containing refinements");
-  }
-  const def2 = mergeDefs(schema._zod.def, {
-    get shape() {
-      const oldShape = schema._zod.def.shape;
-      const shape = { ...oldShape };
-      if (mask) {
-        for (const key in mask) {
-          if (!(key in oldShape)) {
-            throw new Error(`Unrecognized key: "${key}"`);
-          }
-          if (!mask[key])
-            continue;
-          shape[key] = Class ? new Class({
-            type: "optional",
-            innerType: oldShape[key]
-          }) : oldShape[key];
-        }
-      } else {
-        for (const key in oldShape) {
-          shape[key] = Class ? new Class({
-            type: "optional",
-            innerType: oldShape[key]
-          }) : oldShape[key];
-        }
-      }
-      assignProp(this, "shape", shape);
-      return shape;
-    },
-    checks: []
-  });
-  return clone(schema, def2);
-}
-function required(Class, schema, mask) {
-  const def2 = mergeDefs(schema._zod.def, {
-    get shape() {
-      const oldShape = schema._zod.def.shape;
-      const shape = { ...oldShape };
-      if (mask) {
-        for (const key in mask) {
-          if (!(key in shape)) {
-            throw new Error(`Unrecognized key: "${key}"`);
-          }
-          if (!mask[key])
-            continue;
-          shape[key] = new Class({
-            type: "nonoptional",
-            innerType: oldShape[key]
-          });
-        }
-      } else {
-        for (const key in oldShape) {
-          shape[key] = new Class({
-            type: "nonoptional",
-            innerType: oldShape[key]
-          });
-        }
-      }
-      assignProp(this, "shape", shape);
-      return shape;
-    }
-  });
-  return clone(schema, def2);
-}
-function aborted(x, startIndex = 0) {
-  var _a2;
-  if (x.aborted === true)
-    return true;
-  for (let i = startIndex; i < x.issues.length; i++) {
-    if (((_a2 = x.issues[i]) == null ? void 0 : _a2.continue) !== true) {
-      return true;
-    }
-  }
-  return false;
-}
-function explicitlyAborted(x, startIndex = 0) {
-  var _a2;
-  if (x.aborted === true)
-    return true;
-  for (let i = startIndex; i < x.issues.length; i++) {
-    if (((_a2 = x.issues[i]) == null ? void 0 : _a2.continue) === false) {
-      return true;
-    }
-  }
-  return false;
-}
-function prefixIssues(path, issues) {
-  return issues.map((iss) => {
-    var _a2;
-    (_a2 = iss).path ?? (_a2.path = []);
-    iss.path.unshift(path);
-    return iss;
-  });
-}
-function unwrapMessage(message) {
-  return typeof message === "string" ? message : message == null ? void 0 : message.message;
-}
-function finalizeIssue(iss, ctx, config2) {
-  var _a2, _b2, _c, _d, _e, _f;
-  const message = iss.message ? iss.message : unwrapMessage((_c = (_b2 = (_a2 = iss.inst) == null ? void 0 : _a2._zod.def) == null ? void 0 : _b2.error) == null ? void 0 : _c.call(_b2, iss)) ?? unwrapMessage((_d = ctx == null ? void 0 : ctx.error) == null ? void 0 : _d.call(ctx, iss)) ?? unwrapMessage((_e = config2.customError) == null ? void 0 : _e.call(config2, iss)) ?? unwrapMessage((_f = config2.localeError) == null ? void 0 : _f.call(config2, iss)) ?? "Invalid input";
-  const { inst: _inst, continue: _continue, input: _input, ...rest } = iss;
-  rest.path ?? (rest.path = []);
-  rest.message = message;
-  if (ctx == null ? void 0 : ctx.reportInput) {
-    rest.input = _input;
-  }
-  return rest;
-}
-function getLengthableOrigin(input) {
-  if (Array.isArray(input))
-    return "array";
-  if (typeof input === "string")
-    return "string";
-  return "unknown";
-}
-function issue(...args) {
-  const [iss, input, inst] = args;
-  if (typeof iss === "string") {
-    return {
-      message: iss,
-      code: "custom",
-      input,
-      inst
+    const wfWidget = (node.widgets ?? []).find((w) => w.name === "workflow");
+    const label = wfWidget ? String(wfWidget.value ?? "") : "";
+    const next = {
+      nodeId: node.id,
+      comfyClass: cls,
+      workflowKind: meta.workflow_kind,
+      workflowLabel: label
     };
-  }
-  return { ...iss };
-}
-const initializer$1 = (inst, def2) => {
-  inst.name = "$ZodError";
-  Object.defineProperty(inst, "_zod", {
-    value: inst._zod,
-    enumerable: false
-  });
-  Object.defineProperty(inst, "issues", {
-    value: def2,
-    enumerable: false
-  });
-  inst.message = JSON.stringify(def2, jsonStringifyReplacer, 2);
-  Object.defineProperty(inst, "toString", {
-    value: () => inst.message,
-    enumerable: false
-  });
-};
-const $ZodError = $constructor("$ZodError", initializer$1);
-const $ZodRealError = $constructor("$ZodError", initializer$1, { Parent: Error });
-function flattenError(error2, mapper = (issue2) => issue2.message) {
-  const fieldErrors = {};
-  const formErrors = [];
-  for (const sub of error2.issues) {
-    if (sub.path.length > 0) {
-      fieldErrors[sub.path[0]] = fieldErrors[sub.path[0]] || [];
-      fieldErrors[sub.path[0]].push(mapper(sub));
-    } else {
-      formErrors.push(mapper(sub));
+    const cur = selected.value;
+    if (!cur || cur.nodeId !== next.nodeId || cur.comfyClass !== next.comfyClass || cur.workflowKind !== next.workflowKind || cur.workflowLabel !== next.workflowLabel) {
+      selected.value = next;
     }
   }
-  return { formErrors, fieldErrors };
-}
-function formatError(error2, mapper = (issue2) => issue2.message) {
-  const fieldErrors = { _errors: [] };
-  const processError = (error3, path = []) => {
-    for (const issue2 of error3.issues) {
-      if (issue2.code === "invalid_union" && issue2.errors.length) {
-        issue2.errors.map((issues) => processError({ issues }, [...path, ...issue2.path]));
-      } else if (issue2.code === "invalid_key") {
-        processError({ issues: issue2.issues }, [...path, ...issue2.path]);
-      } else if (issue2.code === "invalid_element") {
-        processError({ issues: issue2.issues }, [...path, ...issue2.path]);
-      } else {
-        const fullpath = [...path, ...issue2.path];
-        if (fullpath.length === 0) {
-          fieldErrors._errors.push(mapper(issue2));
-        } else {
-          let curr = fieldErrors;
-          let i = 0;
-          while (i < fullpath.length) {
-            const el = fullpath[i];
-            const terminal = i === fullpath.length - 1;
-            if (!terminal) {
-              curr[el] = curr[el] || { _errors: [] };
-            } else {
-              curr[el] = curr[el] || { _errors: [] };
-              curr[el]._errors.push(mapper(issue2));
-            }
-            curr = curr[el];
-            i++;
-          }
-        }
-      }
-    }
-  };
-  processError(error2);
-  return fieldErrors;
-}
-const _parse = (_Err) => (schema, value, _ctx, _params) => {
-  const ctx = _ctx ? { ..._ctx, async: false } : { async: false };
-  const result = schema._zod.run({ value, issues: [] }, ctx);
-  if (result instanceof Promise) {
-    throw new $ZodAsyncError();
-  }
-  if (result.issues.length) {
-    const e = new ((_params == null ? void 0 : _params.Err) ?? _Err)(result.issues.map((iss) => finalizeIssue(iss, ctx, config())));
-    captureStackTrace(e, _params == null ? void 0 : _params.callee);
-    throw e;
-  }
-  return result.value;
-};
-const _parseAsync = (_Err) => async (schema, value, _ctx, params) => {
-  const ctx = _ctx ? { ..._ctx, async: true } : { async: true };
-  let result = schema._zod.run({ value, issues: [] }, ctx);
-  if (result instanceof Promise)
-    result = await result;
-  if (result.issues.length) {
-    const e = new ((params == null ? void 0 : params.Err) ?? _Err)(result.issues.map((iss) => finalizeIssue(iss, ctx, config())));
-    captureStackTrace(e, params == null ? void 0 : params.callee);
-    throw e;
-  }
-  return result.value;
-};
-const _safeParse = (_Err) => (schema, value, _ctx) => {
-  const ctx = _ctx ? { ..._ctx, async: false } : { async: false };
-  const result = schema._zod.run({ value, issues: [] }, ctx);
-  if (result instanceof Promise) {
-    throw new $ZodAsyncError();
-  }
-  return result.issues.length ? {
-    success: false,
-    error: new (_Err ?? $ZodError)(result.issues.map((iss) => finalizeIssue(iss, ctx, config())))
-  } : { success: true, data: result.value };
-};
-const safeParse$1 = /* @__PURE__ */ _safeParse($ZodRealError);
-const _safeParseAsync = (_Err) => async (schema, value, _ctx) => {
-  const ctx = _ctx ? { ..._ctx, async: true } : { async: true };
-  let result = schema._zod.run({ value, issues: [] }, ctx);
-  if (result instanceof Promise)
-    result = await result;
-  return result.issues.length ? {
-    success: false,
-    error: new _Err(result.issues.map((iss) => finalizeIssue(iss, ctx, config())))
-  } : { success: true, data: result.value };
-};
-const safeParseAsync$1 = /* @__PURE__ */ _safeParseAsync($ZodRealError);
-const _encode = (_Err) => (schema, value, _ctx) => {
-  const ctx = _ctx ? { ..._ctx, direction: "backward" } : { direction: "backward" };
-  return _parse(_Err)(schema, value, ctx);
-};
-const _decode = (_Err) => (schema, value, _ctx) => {
-  return _parse(_Err)(schema, value, _ctx);
-};
-const _encodeAsync = (_Err) => async (schema, value, _ctx) => {
-  const ctx = _ctx ? { ..._ctx, direction: "backward" } : { direction: "backward" };
-  return _parseAsync(_Err)(schema, value, ctx);
-};
-const _decodeAsync = (_Err) => async (schema, value, _ctx) => {
-  return _parseAsync(_Err)(schema, value, _ctx);
-};
-const _safeEncode = (_Err) => (schema, value, _ctx) => {
-  const ctx = _ctx ? { ..._ctx, direction: "backward" } : { direction: "backward" };
-  return _safeParse(_Err)(schema, value, ctx);
-};
-const _safeDecode = (_Err) => (schema, value, _ctx) => {
-  return _safeParse(_Err)(schema, value, _ctx);
-};
-const _safeEncodeAsync = (_Err) => async (schema, value, _ctx) => {
-  const ctx = _ctx ? { ..._ctx, direction: "backward" } : { direction: "backward" };
-  return _safeParseAsync(_Err)(schema, value, ctx);
-};
-const _safeDecodeAsync = (_Err) => async (schema, value, _ctx) => {
-  return _safeParseAsync(_Err)(schema, value, _ctx);
-};
-const cuid = /^[cC][0-9a-z]{6,}$/;
-const cuid2 = /^[0-9a-z]+$/;
-const ulid = /^[0-9A-HJKMNP-TV-Za-hjkmnp-tv-z]{26}$/;
-const xid = /^[0-9a-vA-V]{20}$/;
-const ksuid = /^[A-Za-z0-9]{27}$/;
-const nanoid = /^[a-zA-Z0-9_-]{21}$/;
-const duration$1 = /^P(?:(\d+W)|(?!.*W)(?=\d|T\d)(\d+Y)?(\d+M)?(\d+D)?(T(?=\d)(\d+H)?(\d+M)?(\d+([.,]\d+)?S)?)?)$/;
-const guid = /^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$/;
-const uuid = (version2) => {
-  if (!version2)
-    return /^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$/;
-  return new RegExp(`^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-${version2}[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$`);
-};
-const email = /^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$/;
-const _emoji$1 = `^(\\p{Extended_Pictographic}|\\p{Emoji_Component})+$`;
-function emoji() {
-  return new RegExp(_emoji$1, "u");
-}
-const ipv4 = /^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$/;
-const ipv6 = /^(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:))$/;
-const cidrv4 = /^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\/([0-9]|[1-2][0-9]|3[0-2])$/;
-const cidrv6 = /^(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|::|([0-9a-fA-F]{1,4})?::([0-9a-fA-F]{1,4}:?){0,6})\/(12[0-8]|1[01][0-9]|[1-9]?[0-9])$/;
-const base64 = /^$|^(?:[0-9a-zA-Z+/]{4})*(?:(?:[0-9a-zA-Z+/]{2}==)|(?:[0-9a-zA-Z+/]{3}=))?$/;
-const base64url = /^[A-Za-z0-9_-]*$/;
-const httpProtocol = /^https?$/;
-const e164 = /^\+[1-9]\d{6,14}$/;
-const dateSource = `(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))`;
-const date$1 = /* @__PURE__ */ new RegExp(`^${dateSource}$`);
-function timeSource(args) {
-  const hhmm = `(?:[01]\\d|2[0-3]):[0-5]\\d`;
-  const regex = typeof args.precision === "number" ? args.precision === -1 ? `${hhmm}` : args.precision === 0 ? `${hhmm}:[0-5]\\d` : `${hhmm}:[0-5]\\d\\.\\d{${args.precision}}` : `${hhmm}(?::[0-5]\\d(?:\\.\\d+)?)?`;
-  return regex;
-}
-function time$1(args) {
-  return new RegExp(`^${timeSource(args)}$`);
-}
-function datetime$1(args) {
-  const time2 = timeSource({ precision: args.precision });
-  const opts = ["Z"];
-  if (args.local)
-    opts.push("");
-  if (args.offset)
-    opts.push(`([+-](?:[01]\\d|2[0-3]):[0-5]\\d)`);
-  const timeRegex = `${time2}(?:${opts.join("|")})`;
-  return new RegExp(`^${dateSource}T(?:${timeRegex})$`);
-}
-const string$1 = (params) => {
-  const regex = params ? `[\\s\\S]{${(params == null ? void 0 : params.minimum) ?? 0},${(params == null ? void 0 : params.maximum) ?? ""}}` : `[\\s\\S]*`;
-  return new RegExp(`^${regex}$`);
-};
-const integer = /^-?\d+$/;
-const number$1 = /^-?\d+(?:\.\d+)?$/;
-const boolean$1 = /^(?:true|false)$/i;
-const lowercase = /^[^A-Z]*$/;
-const uppercase = /^[^a-z]*$/;
-const $ZodCheck = /* @__PURE__ */ $constructor("$ZodCheck", (inst, def2) => {
+  return { selected, selectedKey, bindingsVersion, bumpBindings, refreshFromCanvas };
+});
+function getWidget(node, name) {
   var _a2;
-  inst._zod ?? (inst._zod = {});
-  inst._zod.def = def2;
-  (_a2 = inst._zod).onattach ?? (_a2.onattach = []);
-});
-const numericOriginMap = {
-  number: "number",
-  bigint: "bigint",
-  object: "date"
-};
-const $ZodCheckLessThan = /* @__PURE__ */ $constructor("$ZodCheckLessThan", (inst, def2) => {
-  $ZodCheck.init(inst, def2);
-  const origin = numericOriginMap[typeof def2.value];
-  inst._zod.onattach.push((inst2) => {
-    const bag = inst2._zod.bag;
-    const curr = (def2.inclusive ? bag.maximum : bag.exclusiveMaximum) ?? Number.POSITIVE_INFINITY;
-    if (def2.value < curr) {
-      if (def2.inclusive)
-        bag.maximum = def2.value;
-      else
-        bag.exclusiveMaximum = def2.value;
-    }
-  });
-  inst._zod.check = (payload) => {
-    if (def2.inclusive ? payload.value <= def2.value : payload.value < def2.value) {
-      return;
-    }
-    payload.issues.push({
-      origin,
-      code: "too_big",
-      maximum: typeof def2.value === "object" ? def2.value.getTime() : def2.value,
-      input: payload.value,
-      inclusive: def2.inclusive,
-      inst,
-      continue: !def2.abort
-    });
-  };
-});
-const $ZodCheckGreaterThan = /* @__PURE__ */ $constructor("$ZodCheckGreaterThan", (inst, def2) => {
-  $ZodCheck.init(inst, def2);
-  const origin = numericOriginMap[typeof def2.value];
-  inst._zod.onattach.push((inst2) => {
-    const bag = inst2._zod.bag;
-    const curr = (def2.inclusive ? bag.minimum : bag.exclusiveMinimum) ?? Number.NEGATIVE_INFINITY;
-    if (def2.value > curr) {
-      if (def2.inclusive)
-        bag.minimum = def2.value;
-      else
-        bag.exclusiveMinimum = def2.value;
-    }
-  });
-  inst._zod.check = (payload) => {
-    if (def2.inclusive ? payload.value >= def2.value : payload.value > def2.value) {
-      return;
-    }
-    payload.issues.push({
-      origin,
-      code: "too_small",
-      minimum: typeof def2.value === "object" ? def2.value.getTime() : def2.value,
-      input: payload.value,
-      inclusive: def2.inclusive,
-      inst,
-      continue: !def2.abort
-    });
-  };
-});
-const $ZodCheckMultipleOf = /* @__PURE__ */ $constructor("$ZodCheckMultipleOf", (inst, def2) => {
-  $ZodCheck.init(inst, def2);
-  inst._zod.onattach.push((inst2) => {
-    var _a2;
-    (_a2 = inst2._zod.bag).multipleOf ?? (_a2.multipleOf = def2.value);
-  });
-  inst._zod.check = (payload) => {
-    if (typeof payload.value !== typeof def2.value)
-      throw new Error("Cannot mix number and bigint in multiple_of check.");
-    const isMultiple = typeof payload.value === "bigint" ? payload.value % def2.value === BigInt(0) : floatSafeRemainder(payload.value, def2.value) === 0;
-    if (isMultiple)
-      return;
-    payload.issues.push({
-      origin: typeof payload.value,
-      code: "not_multiple_of",
-      divisor: def2.value,
-      input: payload.value,
-      inst,
-      continue: !def2.abort
-    });
-  };
-});
-const $ZodCheckNumberFormat = /* @__PURE__ */ $constructor("$ZodCheckNumberFormat", (inst, def2) => {
+  return (_a2 = node == null ? void 0 : node.widgets) == null ? void 0 : _a2.find((w) => w.name === name);
+}
+function applyHiddenWidgetFlags(node) {
   var _a2;
-  $ZodCheck.init(inst, def2);
-  def2.format = def2.format || "float64";
-  const isInt = (_a2 = def2.format) == null ? void 0 : _a2.includes("int");
-  const origin = isInt ? "int" : "number";
-  const [minimum, maximum] = NUMBER_FORMAT_RANGES[def2.format];
-  inst._zod.onattach.push((inst2) => {
-    const bag = inst2._zod.bag;
-    bag.format = def2.format;
-    bag.minimum = minimum;
-    bag.maximum = maximum;
-    if (isInt)
-      bag.pattern = integer;
-  });
-  inst._zod.check = (payload) => {
-    const input = payload.value;
-    if (isInt) {
-      if (!Number.isInteger(input)) {
-        payload.issues.push({
-          expected: origin,
-          format: def2.format,
-          code: "invalid_type",
-          continue: false,
-          input,
-          inst
-        });
-        return;
-      }
-      if (!Number.isSafeInteger(input)) {
-        if (input > 0) {
-          payload.issues.push({
-            input,
-            code: "too_big",
-            maximum: Number.MAX_SAFE_INTEGER,
-            note: "Integers must be within the safe integer range.",
-            inst,
-            origin,
-            inclusive: true,
-            continue: !def2.abort
-          });
-        } else {
-          payload.issues.push({
-            input,
-            code: "too_small",
-            minimum: Number.MIN_SAFE_INTEGER,
-            note: "Integers must be within the safe integer range.",
-            inst,
-            origin,
-            inclusive: true,
-            continue: !def2.abort
-          });
-        }
-        return;
-      }
-    }
-    if (input < minimum) {
-      payload.issues.push({
-        origin: "number",
-        input,
-        code: "too_small",
-        minimum,
-        inclusive: true,
-        inst,
-        continue: !def2.abort
-      });
-    }
-    if (input > maximum) {
-      payload.issues.push({
-        origin: "number",
-        input,
-        code: "too_big",
-        maximum,
-        inclusive: true,
-        inst,
-        continue: !def2.abort
-      });
-    }
-  };
-});
-const $ZodCheckMaxLength = /* @__PURE__ */ $constructor("$ZodCheckMaxLength", (inst, def2) => {
+  for (const w of (node == null ? void 0 : node.widgets) ?? []) {
+    if ((_a2 = w.options) == null ? void 0 : _a2.hidden) w.hidden = true;
+  }
+}
+function readWidgetStr(node, name, fallback) {
+  const w = getWidget(node, name);
+  if (!w) return fallback;
+  const v = String(w.value ?? "");
+  return v || fallback;
+}
+function readWidgetNum(node, name, fallback) {
+  const w = getWidget(node, name);
+  if (!w) return fallback;
+  const n = Number(w.value);
+  return Number.isFinite(n) ? n : fallback;
+}
+function writeWidget(node, name, value, opts) {
   var _a2;
-  $ZodCheck.init(inst, def2);
-  (_a2 = inst._zod.def).when ?? (_a2.when = (payload) => {
-    const val = payload.value;
-    return !nullish(val) && val.length !== void 0;
-  });
-  inst._zod.onattach.push((inst2) => {
-    const curr = inst2._zod.bag.maximum ?? Number.POSITIVE_INFINITY;
-    if (def2.maximum < curr)
-      inst2._zod.bag.maximum = def2.maximum;
-  });
-  inst._zod.check = (payload) => {
-    const input = payload.value;
-    const length = input.length;
-    if (length <= def2.maximum)
-      return;
-    const origin = getLengthableOrigin(input);
-    payload.issues.push({
-      origin,
-      code: "too_big",
-      maximum: def2.maximum,
-      inclusive: true,
-      input,
-      inst,
-      continue: !def2.abort
-    });
-  };
-});
-const $ZodCheckMinLength = /* @__PURE__ */ $constructor("$ZodCheckMinLength", (inst, def2) => {
+  const w = getWidget(node, name);
+  if (!w) return;
+  if (w.value === value) return;
+  w.value = value;
+  if ((opts == null ? void 0 : opts.fireCallback) === false) return;
+  (_a2 = w.callback) == null ? void 0 : _a2.call(w, value);
+}
+const SLOT_BINDING_RE = /^upstream_image:(?:annotated|value|masked)\[(\d+)\]$/;
+function imageSlotsFromConfig(widgets) {
   var _a2;
-  $ZodCheck.init(inst, def2);
-  (_a2 = inst._zod.def).when ?? (_a2.when = (payload) => {
-    const val = payload.value;
-    return !nullish(val) && val.length !== void 0;
-  });
-  inst._zod.onattach.push((inst2) => {
-    const curr = inst2._zod.bag.minimum ?? Number.NEGATIVE_INFINITY;
-    if (def2.minimum > curr)
-      inst2._zod.bag.minimum = def2.minimum;
-  });
-  inst._zod.check = (payload) => {
-    const input = payload.value;
-    const length = input.length;
-    if (length >= def2.minimum)
-      return;
-    const origin = getLengthableOrigin(input);
-    payload.issues.push({
-      origin,
-      code: "too_small",
-      minimum: def2.minimum,
-      inclusive: true,
-      input,
-      inst,
-      continue: !def2.abort
-    });
-  };
-});
-const $ZodCheckLengthEquals = /* @__PURE__ */ $constructor("$ZodCheckLengthEquals", (inst, def2) => {
-  var _a2;
-  $ZodCheck.init(inst, def2);
-  (_a2 = inst._zod.def).when ?? (_a2.when = (payload) => {
-    const val = payload.value;
-    return !nullish(val) && val.length !== void 0;
-  });
-  inst._zod.onattach.push((inst2) => {
-    const bag = inst2._zod.bag;
-    bag.minimum = def2.length;
-    bag.maximum = def2.length;
-    bag.length = def2.length;
-  });
-  inst._zod.check = (payload) => {
-    const input = payload.value;
-    const length = input.length;
-    if (length === def2.length)
-      return;
-    const origin = getLengthableOrigin(input);
-    const tooBig = length > def2.length;
-    payload.issues.push({
-      origin,
-      ...tooBig ? { code: "too_big", maximum: def2.length } : { code: "too_small", minimum: def2.length },
-      inclusive: true,
-      exact: true,
-      input: payload.value,
-      inst,
-      continue: !def2.abort
-    });
-  };
-});
-const $ZodCheckStringFormat = /* @__PURE__ */ $constructor("$ZodCheckStringFormat", (inst, def2) => {
+  const bySlot = /* @__PURE__ */ new Map();
+  for (const w of widgets) {
+    const m = (_a2 = w.stage_binding) == null ? void 0 : _a2.match(SLOT_BINDING_RE);
+    if (!m) continue;
+    const slot = Number(m[1]);
+    const titles = bySlot.get(slot) ?? /* @__PURE__ */ new Set();
+    titles.add(w.node_title || w.node_type);
+    bySlot.set(slot, titles);
+  }
+  return [...bySlot.entries()].sort((a, b) => a[0] - b[0]).map(([slot, titles]) => ({ slot, nodeTitles: [...titles] }));
+}
+function workflowRefOfNode(node) {
   var _a2, _b2;
-  $ZodCheck.init(inst, def2);
-  inst._zod.onattach.push((inst2) => {
-    const bag = inst2._zod.bag;
-    bag.format = def2.format;
-    if (def2.pattern) {
-      bag.patterns ?? (bag.patterns = /* @__PURE__ */ new Set());
-      bag.patterns.add(def2.pattern);
-    }
-  });
-  if (def2.pattern)
-    (_a2 = inst._zod).check ?? (_a2.check = (payload) => {
-      def2.pattern.lastIndex = 0;
-      if (def2.pattern.test(payload.value))
-        return;
-      payload.issues.push({
-        origin: "string",
-        code: "invalid_format",
-        format: def2.format,
-        input: payload.value,
-        ...def2.pattern ? { pattern: def2.pattern.toString() } : {},
-        inst,
-        continue: !def2.abort
-      });
-    });
-  else
-    (_b2 = inst._zod).check ?? (_b2.check = () => {
-    });
-});
-const $ZodCheckRegex = /* @__PURE__ */ $constructor("$ZodCheckRegex", (inst, def2) => {
-  $ZodCheckStringFormat.init(inst, def2);
-  inst._zod.check = (payload) => {
-    def2.pattern.lastIndex = 0;
-    if (def2.pattern.test(payload.value))
-      return;
-    payload.issues.push({
-      origin: "string",
-      code: "invalid_format",
-      format: "regex",
-      input: payload.value,
-      pattern: def2.pattern.toString(),
-      inst,
-      continue: !def2.abort
-    });
-  };
-});
-const $ZodCheckLowerCase = /* @__PURE__ */ $constructor("$ZodCheckLowerCase", (inst, def2) => {
-  def2.pattern ?? (def2.pattern = lowercase);
-  $ZodCheckStringFormat.init(inst, def2);
-});
-const $ZodCheckUpperCase = /* @__PURE__ */ $constructor("$ZodCheckUpperCase", (inst, def2) => {
-  def2.pattern ?? (def2.pattern = uppercase);
-  $ZodCheckStringFormat.init(inst, def2);
-});
-const $ZodCheckIncludes = /* @__PURE__ */ $constructor("$ZodCheckIncludes", (inst, def2) => {
-  $ZodCheck.init(inst, def2);
-  const escapedRegex = escapeRegex(def2.includes);
-  const pattern = new RegExp(typeof def2.position === "number" ? `^.{${def2.position}}${escapedRegex}` : escapedRegex);
-  def2.pattern = pattern;
-  inst._zod.onattach.push((inst2) => {
-    const bag = inst2._zod.bag;
-    bag.patterns ?? (bag.patterns = /* @__PURE__ */ new Set());
-    bag.patterns.add(pattern);
-  });
-  inst._zod.check = (payload) => {
-    if (payload.value.includes(def2.includes, def2.position))
-      return;
-    payload.issues.push({
-      origin: "string",
-      code: "invalid_format",
-      format: "includes",
-      includes: def2.includes,
-      input: payload.value,
-      inst,
-      continue: !def2.abort
-    });
-  };
-});
-const $ZodCheckStartsWith = /* @__PURE__ */ $constructor("$ZodCheckStartsWith", (inst, def2) => {
-  $ZodCheck.init(inst, def2);
-  const pattern = new RegExp(`^${escapeRegex(def2.prefix)}.*`);
-  def2.pattern ?? (def2.pattern = pattern);
-  inst._zod.onattach.push((inst2) => {
-    const bag = inst2._zod.bag;
-    bag.patterns ?? (bag.patterns = /* @__PURE__ */ new Set());
-    bag.patterns.add(pattern);
-  });
-  inst._zod.check = (payload) => {
-    if (payload.value.startsWith(def2.prefix))
-      return;
-    payload.issues.push({
-      origin: "string",
-      code: "invalid_format",
-      format: "starts_with",
-      prefix: def2.prefix,
-      input: payload.value,
-      inst,
-      continue: !def2.abort
-    });
-  };
-});
-const $ZodCheckEndsWith = /* @__PURE__ */ $constructor("$ZodCheckEndsWith", (inst, def2) => {
-  $ZodCheck.init(inst, def2);
-  const pattern = new RegExp(`.*${escapeRegex(def2.suffix)}$`);
-  def2.pattern ?? (def2.pattern = pattern);
-  inst._zod.onattach.push((inst2) => {
-    const bag = inst2._zod.bag;
-    bag.patterns ?? (bag.patterns = /* @__PURE__ */ new Set());
-    bag.patterns.add(pattern);
-  });
-  inst._zod.check = (payload) => {
-    if (payload.value.endsWith(def2.suffix))
-      return;
-    payload.issues.push({
-      origin: "string",
-      code: "invalid_format",
-      format: "ends_with",
-      suffix: def2.suffix,
-      input: payload.value,
-      inst,
-      continue: !def2.abort
-    });
-  };
-});
-const $ZodCheckOverwrite = /* @__PURE__ */ $constructor("$ZodCheckOverwrite", (inst, def2) => {
-  $ZodCheck.init(inst, def2);
-  inst._zod.check = (payload) => {
-    payload.value = def2.tx(payload.value);
-  };
-});
-class Doc {
-  constructor(args = []) {
-    this.content = [];
-    this.indent = 0;
-    if (this)
-      this.args = args;
-  }
-  indented(fn2) {
-    this.indent += 1;
-    fn2(this);
-    this.indent -= 1;
-  }
-  write(arg) {
-    if (typeof arg === "function") {
-      arg(this, { execution: "sync" });
-      arg(this, { execution: "async" });
-      return;
-    }
-    const content = arg;
-    const lines = content.split("\n").filter((x) => x);
-    const minIndent = Math.min(...lines.map((x) => x.length - x.trimStart().length));
-    const dedented = lines.map((x) => x.slice(minIndent)).map((x) => " ".repeat(this.indent * 2) + x);
-    for (const line of dedented) {
-      this.content.push(line);
-    }
-  }
-  compile() {
-    const F = Function;
-    const args = this == null ? void 0 : this.args;
-    const content = (this == null ? void 0 : this.content) ?? [``];
-    const lines = [...content.map((x) => `  ${x}`)];
-    return new F(...args, lines.join("\n"));
-  }
+  const comfyClass = String((node == null ? void 0 : node.comfyClass) ?? "");
+  const kind = (_a2 = getStageMeta(comfyClass)) == null ? void 0 : _a2.workflow_kind;
+  if (!kind) return null;
+  const label = String(((_b2 = getWidget(node, "workflow")) == null ? void 0 : _b2.value) ?? "");
+  if (!label) return null;
+  return { kind, label };
 }
-const version = {
-  major: 4,
-  minor: 4,
-  patch: 3
-};
-const $ZodType = /* @__PURE__ */ $constructor("$ZodType", (inst, def2) => {
-  var _a3;
+async function fetchImageSlotOptions(kind, label) {
+  const config2 = await apiFetch(
+    `/comfytv/workflows/config?kind=${encodeURIComponent(kind)}&label=${encodeURIComponent(label)}`,
+    WorkflowConfigSchema
+  );
+  return imageSlotsFromConfig(config2.exposed_widgets);
+}
+const _slotOptionsCache = /* @__PURE__ */ new Map();
+function fetchImageSlotOptionsCached(kind, label) {
+  const version2 = useSelectionStore().bindingsVersion;
+  const key = `${kind}::${label}::v${version2}`;
+  let hit = _slotOptionsCache.get(key);
+  if (!hit) {
+    _slotOptionsCache.clear();
+    hit = fetchImageSlotOptions(kind, label).catch((e) => {
+      _slotOptionsCache.delete(key);
+      throw e;
+    });
+    _slotOptionsCache.set(key, hit);
+  }
+  return hit;
+}
+const AUTOGROW_IMAGE_KEY_RE = /^images\.image(\d+)$/;
+function assetChipLabel(asset, id) {
+  return (asset == null ? void 0 : asset.name) || `asset:${id}`;
+}
+function nodeAcceptsAutogrowImages(node) {
+  const inputs = node == null ? void 0 : node.inputs;
+  if (!Array.isArray(inputs)) return false;
+  return inputs.some(
+    (i) => typeof (i == null ? void 0 : i.name) === "string" && AUTOGROW_IMAGE_KEY_RE.test(i.name)
+  );
+}
+function wiredImageSlots(node) {
+  const inputs = node == null ? void 0 : node.inputs;
+  if (!Array.isArray(inputs)) return [];
+  const out = [];
+  for (const i of inputs) {
+    if (typeof (i == null ? void 0 : i.name) !== "string") continue;
+    const m = AUTOGROW_IMAGE_KEY_RE.exec(i.name);
+    if (m && i.link != null) out.push(Number(m[1]));
+  }
+  return out;
+}
+function refCoveredImageSlots(refs) {
+  return new Set(refs.map((r) => r.slot));
+}
+function missingRequiredImageSlots(requiredSlots, wired, refCovered) {
+  const have = /* @__PURE__ */ new Set([...wired, ...refCovered]);
+  return [...requiredSlots].filter((idx) => !have.has(idx));
+}
+function refSlotWarnings(refs, wired, options) {
+  const out = [];
+  if (refs.length === 0) return out;
+  const pinCounts = /* @__PURE__ */ new Map();
+  for (const r of refs) pinCounts.set(r.slot, (pinCounts.get(r.slot) ?? 0) + 1);
+  const wiredSet = new Set(wired);
+  for (const [slot, count2] of [...pinCounts.entries()].sort((a, b) => a[0] - b[0])) {
+    if (count2 > 1) out.push({ kind: "duplicate", slot });
+    if (wiredSet.has(slot)) out.push({ kind: "override", slot });
+  }
+  if (options != null) {
+    if (options.length === 0) {
+      out.push({ kind: "noSlots" });
+    } else {
+      const bound = new Set(options.map((o) => o.slot));
+      const unused = refs.filter((r) => !bound.has(r.slot)).length;
+      if (unused > 0) out.push({ kind: "overflow", count: unused, total: options.length });
+    }
+  }
+  return out;
+}
+function injectImageRefs(inputs, refs) {
+  if (refs.length === 0) return [];
+  const wired = /* @__PURE__ */ new Set();
+  for (const key of Object.keys(inputs)) {
+    const m = AUTOGROW_IMAGE_KEY_RE.exec(key);
+    if (m) wired.add(Number(m[1]));
+  }
+  const warnings = [];
+  const seen = /* @__PURE__ */ new Set();
+  for (const ref2 of refs) {
+    if (seen.has(ref2.slot)) {
+      warnings.push(`reference slot #${ref2.slot + 1} pinned by two images — the later one wins`);
+    } else if (wired.has(ref2.slot)) {
+      warnings.push(`reference slot #${ref2.slot + 1} had an upstream connection — the pinned image overrides it`);
+    }
+    seen.add(ref2.slot);
+  }
+  for (const ref2 of refs) {
+    inputs[`images.image${ref2.slot}`] = ref2.url;
+  }
+  return warnings;
+}
+const IMAGE_REFS_PROP = "comfytv_image_refs";
+function readImageRefs(node) {
   var _a2;
-  inst ?? (inst = {});
-  inst._zod.def = def2;
-  inst._zod.bag = inst._zod.bag || {};
-  inst._zod.version = version;
-  const checks = [...inst._zod.def.checks ?? []];
-  if (inst._zod.traits.has("$ZodCheck")) {
-    checks.unshift(inst);
+  const raw = (_a2 = node == null ? void 0 : node.properties) == null ? void 0 : _a2[IMAGE_REFS_PROP];
+  if (!Array.isArray(raw)) return [];
+  const out = [];
+  for (const r of raw) {
+    const id = Number(r == null ? void 0 : r.asset_id);
+    const rawSlot = r == null ? void 0 : r.slot;
+    const slot = typeof rawSlot === "number" ? rawSlot : NaN;
+    if (!Number.isInteger(id) || !Number.isInteger(slot)) continue;
+    out.push({ asset_id: id, slot });
   }
-  for (const ch of checks) {
-    for (const fn2 of ch._zod.onattach) {
-      fn2(inst);
-    }
-  }
-  if (checks.length === 0) {
-    (_a2 = inst._zod).deferred ?? (_a2.deferred = []);
-    (_a3 = inst._zod.deferred) == null ? void 0 : _a3.push(() => {
-      inst._zod.run = inst._zod.parse;
-    });
-  } else {
-    const runChecks = (payload, checks2, ctx) => {
-      let isAborted = aborted(payload);
-      let asyncResult;
-      for (const ch of checks2) {
-        if (ch._zod.def.when) {
-          if (explicitlyAborted(payload))
-            continue;
-          const shouldRun = ch._zod.def.when(payload);
-          if (!shouldRun)
-            continue;
-        } else if (isAborted) {
-          continue;
-        }
-        const currLen = payload.issues.length;
-        const _ = ch._zod.check(payload);
-        if (_ instanceof Promise && (ctx == null ? void 0 : ctx.async) === false) {
-          throw new $ZodAsyncError();
-        }
-        if (asyncResult || _ instanceof Promise) {
-          asyncResult = (asyncResult ?? Promise.resolve()).then(async () => {
-            await _;
-            const nextLen = payload.issues.length;
-            if (nextLen === currLen)
-              return;
-            if (!isAborted)
-              isAborted = aborted(payload, currLen);
-          });
-        } else {
-          const nextLen = payload.issues.length;
-          if (nextLen === currLen)
-            continue;
-          if (!isAborted)
-            isAborted = aborted(payload, currLen);
-        }
-      }
-      if (asyncResult) {
-        return asyncResult.then(() => {
-          return payload;
-        });
-      }
-      return payload;
-    };
-    const handleCanaryResult = (canary, payload, ctx) => {
-      if (aborted(canary)) {
-        canary.aborted = true;
-        return canary;
-      }
-      const checkResult = runChecks(payload, checks, ctx);
-      if (checkResult instanceof Promise) {
-        if (ctx.async === false)
-          throw new $ZodAsyncError();
-        return checkResult.then((checkResult2) => inst._zod.parse(checkResult2, ctx));
-      }
-      return inst._zod.parse(checkResult, ctx);
-    };
-    inst._zod.run = (payload, ctx) => {
-      if (ctx.skipChecks) {
-        return inst._zod.parse(payload, ctx);
-      }
-      if (ctx.direction === "backward") {
-        const canary = inst._zod.parse({ value: payload.value, issues: [] }, { ...ctx, skipChecks: true });
-        if (canary instanceof Promise) {
-          return canary.then((canary2) => {
-            return handleCanaryResult(canary2, payload, ctx);
-          });
-        }
-        return handleCanaryResult(canary, payload, ctx);
-      }
-      const result = inst._zod.parse(payload, ctx);
-      if (result instanceof Promise) {
-        if (ctx.async === false)
-          throw new $ZodAsyncError();
-        return result.then((result2) => runChecks(result2, checks, ctx));
-      }
-      return runChecks(result, checks, ctx);
-    };
-  }
-  defineLazy(inst, "~standard", () => ({
-    validate: (value) => {
-      var _a4;
-      try {
-        const r = safeParse$1(inst, value);
-        return r.success ? { value: r.data } : { issues: (_a4 = r.error) == null ? void 0 : _a4.issues };
-      } catch (_) {
-        return safeParseAsync$1(inst, value).then((r) => {
-          var _a5;
-          return r.success ? { value: r.data } : { issues: (_a5 = r.error) == null ? void 0 : _a5.issues };
-        });
-      }
-    },
-    vendor: "zod",
-    version: 1
-  }));
-});
-const $ZodString = /* @__PURE__ */ $constructor("$ZodString", (inst, def2) => {
+  return out;
+}
+function writeImageRefs(node, refs) {
+  const n = node;
+  if (!n) return;
+  if (!n.properties) n.properties = {};
+  n.properties[IMAGE_REFS_PROP] = refs.map((r) => ({ asset_id: r.asset_id, slot: r.slot }));
+}
+function requiredSlotsOf(entry, kind) {
   var _a2;
-  $ZodType.init(inst, def2);
-  inst._zod.pattern = [...((_a2 = inst == null ? void 0 : inst._zod.bag) == null ? void 0 : _a2.patterns) ?? []].pop() ?? string$1(inst._zod.bag);
-  inst._zod.parse = (payload, _) => {
-    if (def2.coerce)
-      try {
-        payload.value = String(payload.value);
-      } catch (_2) {
-      }
-    if (typeof payload.value === "string")
-      return payload;
-    payload.issues.push({
-      expected: "string",
-      code: "invalid_type",
-      input: payload.value,
-      inst
-    });
-    return payload;
-  };
-});
-const $ZodStringFormat = /* @__PURE__ */ $constructor("$ZodStringFormat", (inst, def2) => {
-  $ZodCheckStringFormat.init(inst, def2);
-  $ZodString.init(inst, def2);
-});
-const $ZodGUID = /* @__PURE__ */ $constructor("$ZodGUID", (inst, def2) => {
-  def2.pattern ?? (def2.pattern = guid);
-  $ZodStringFormat.init(inst, def2);
-});
-const $ZodUUID = /* @__PURE__ */ $constructor("$ZodUUID", (inst, def2) => {
-  if (def2.version) {
-    const versionMap = {
-      v1: 1,
-      v2: 2,
-      v3: 3,
-      v4: 4,
-      v5: 5,
-      v6: 6,
-      v7: 7,
-      v8: 8
-    };
-    const v = versionMap[def2.version];
-    if (v === void 0)
-      throw new Error(`Invalid UUID version: "${def2.version}"`);
-    def2.pattern ?? (def2.pattern = uuid(v));
-  } else
-    def2.pattern ?? (def2.pattern = uuid());
-  $ZodStringFormat.init(inst, def2);
-});
-const $ZodEmail = /* @__PURE__ */ $constructor("$ZodEmail", (inst, def2) => {
-  def2.pattern ?? (def2.pattern = email);
-  $ZodStringFormat.init(inst, def2);
-});
-const $ZodURL = /* @__PURE__ */ $constructor("$ZodURL", (inst, def2) => {
-  $ZodStringFormat.init(inst, def2);
-  inst._zod.check = (payload) => {
-    var _a2;
-    try {
-      const trimmed = payload.value.trim();
-      if (!def2.normalize && ((_a2 = def2.protocol) == null ? void 0 : _a2.source) === httpProtocol.source) {
-        if (!/^https?:\/\//i.test(trimmed)) {
-          payload.issues.push({
-            code: "invalid_format",
-            format: "url",
-            note: "Invalid URL format",
-            input: payload.value,
-            inst,
-            continue: !def2.abort
-          });
-          return;
-        }
-      }
-      const url = new URL(trimmed);
-      if (def2.hostname) {
-        def2.hostname.lastIndex = 0;
-        if (!def2.hostname.test(url.hostname)) {
-          payload.issues.push({
-            code: "invalid_format",
-            format: "url",
-            note: "Invalid hostname",
-            pattern: def2.hostname.source,
-            input: payload.value,
-            inst,
-            continue: !def2.abort
-          });
-        }
-      }
-      if (def2.protocol) {
-        def2.protocol.lastIndex = 0;
-        if (!def2.protocol.test(url.protocol.endsWith(":") ? url.protocol.slice(0, -1) : url.protocol)) {
-          payload.issues.push({
-            code: "invalid_format",
-            format: "url",
-            note: "Invalid protocol",
-            pattern: def2.protocol.source,
-            input: payload.value,
-            inst,
-            continue: !def2.abort
-          });
-        }
-      }
-      if (def2.normalize) {
-        payload.value = url.href;
-      } else {
-        payload.value = trimmed;
-      }
-      return;
-    } catch (_) {
-      payload.issues.push({
-        code: "invalid_format",
-        format: "url",
-        input: payload.value,
-        inst,
-        continue: !def2.abort
-      });
-    }
-  };
-});
-const $ZodEmoji = /* @__PURE__ */ $constructor("$ZodEmoji", (inst, def2) => {
-  def2.pattern ?? (def2.pattern = emoji());
-  $ZodStringFormat.init(inst, def2);
-});
-const $ZodNanoID = /* @__PURE__ */ $constructor("$ZodNanoID", (inst, def2) => {
-  def2.pattern ?? (def2.pattern = nanoid);
-  $ZodStringFormat.init(inst, def2);
-});
-const $ZodCUID = /* @__PURE__ */ $constructor("$ZodCUID", (inst, def2) => {
-  def2.pattern ?? (def2.pattern = cuid);
-  $ZodStringFormat.init(inst, def2);
-});
-const $ZodCUID2 = /* @__PURE__ */ $constructor("$ZodCUID2", (inst, def2) => {
-  def2.pattern ?? (def2.pattern = cuid2);
-  $ZodStringFormat.init(inst, def2);
-});
-const $ZodULID = /* @__PURE__ */ $constructor("$ZodULID", (inst, def2) => {
-  def2.pattern ?? (def2.pattern = ulid);
-  $ZodStringFormat.init(inst, def2);
-});
-const $ZodXID = /* @__PURE__ */ $constructor("$ZodXID", (inst, def2) => {
-  def2.pattern ?? (def2.pattern = xid);
-  $ZodStringFormat.init(inst, def2);
-});
-const $ZodKSUID = /* @__PURE__ */ $constructor("$ZodKSUID", (inst, def2) => {
-  def2.pattern ?? (def2.pattern = ksuid);
-  $ZodStringFormat.init(inst, def2);
-});
-const $ZodISODateTime = /* @__PURE__ */ $constructor("$ZodISODateTime", (inst, def2) => {
-  def2.pattern ?? (def2.pattern = datetime$1(def2));
-  $ZodStringFormat.init(inst, def2);
-});
-const $ZodISODate = /* @__PURE__ */ $constructor("$ZodISODate", (inst, def2) => {
-  def2.pattern ?? (def2.pattern = date$1);
-  $ZodStringFormat.init(inst, def2);
-});
-const $ZodISOTime = /* @__PURE__ */ $constructor("$ZodISOTime", (inst, def2) => {
-  def2.pattern ?? (def2.pattern = time$1(def2));
-  $ZodStringFormat.init(inst, def2);
-});
-const $ZodISODuration = /* @__PURE__ */ $constructor("$ZodISODuration", (inst, def2) => {
-  def2.pattern ?? (def2.pattern = duration$1);
-  $ZodStringFormat.init(inst, def2);
-});
-const $ZodIPv4 = /* @__PURE__ */ $constructor("$ZodIPv4", (inst, def2) => {
-  def2.pattern ?? (def2.pattern = ipv4);
-  $ZodStringFormat.init(inst, def2);
-  inst._zod.bag.format = `ipv4`;
-});
-const $ZodIPv6 = /* @__PURE__ */ $constructor("$ZodIPv6", (inst, def2) => {
-  def2.pattern ?? (def2.pattern = ipv6);
-  $ZodStringFormat.init(inst, def2);
-  inst._zod.bag.format = `ipv6`;
-  inst._zod.check = (payload) => {
-    try {
-      new URL(`http://[${payload.value}]`);
-    } catch {
-      payload.issues.push({
-        code: "invalid_format",
-        format: "ipv6",
-        input: payload.value,
-        inst,
-        continue: !def2.abort
-      });
-    }
-  };
-});
-const $ZodCIDRv4 = /* @__PURE__ */ $constructor("$ZodCIDRv4", (inst, def2) => {
-  def2.pattern ?? (def2.pattern = cidrv4);
-  $ZodStringFormat.init(inst, def2);
-});
-const $ZodCIDRv6 = /* @__PURE__ */ $constructor("$ZodCIDRv6", (inst, def2) => {
-  def2.pattern ?? (def2.pattern = cidrv6);
-  $ZodStringFormat.init(inst, def2);
-  inst._zod.check = (payload) => {
-    const parts = payload.value.split("/");
-    try {
-      if (parts.length !== 2)
-        throw new Error();
-      const [address, prefix] = parts;
-      if (!prefix)
-        throw new Error();
-      const prefixNum = Number(prefix);
-      if (`${prefixNum}` !== prefix)
-        throw new Error();
-      if (prefixNum < 0 || prefixNum > 128)
-        throw new Error();
-      new URL(`http://[${address}]`);
-    } catch {
-      payload.issues.push({
-        code: "invalid_format",
-        format: "cidrv6",
-        input: payload.value,
-        inst,
-        continue: !def2.abort
-      });
-    }
-  };
-});
-function isValidBase64(data) {
-  if (data === "")
-    return true;
-  if (/\s/.test(data))
-    return false;
-  if (data.length % 4 !== 0)
-    return false;
-  try {
-    atob(data);
-    return true;
-  } catch {
-    return false;
-  }
-}
-const $ZodBase64 = /* @__PURE__ */ $constructor("$ZodBase64", (inst, def2) => {
-  def2.pattern ?? (def2.pattern = base64);
-  $ZodStringFormat.init(inst, def2);
-  inst._zod.bag.contentEncoding = "base64";
-  inst._zod.check = (payload) => {
-    if (isValidBase64(payload.value))
-      return;
-    payload.issues.push({
-      code: "invalid_format",
-      format: "base64",
-      input: payload.value,
-      inst,
-      continue: !def2.abort
-    });
-  };
-});
-function isValidBase64URL(data) {
-  if (!base64url.test(data))
-    return false;
-  const base642 = data.replace(/[-_]/g, (c2) => c2 === "-" ? "+" : "/");
-  const padded = base642.padEnd(Math.ceil(base642.length / 4) * 4, "=");
-  return isValidBase64(padded);
-}
-const $ZodBase64URL = /* @__PURE__ */ $constructor("$ZodBase64URL", (inst, def2) => {
-  def2.pattern ?? (def2.pattern = base64url);
-  $ZodStringFormat.init(inst, def2);
-  inst._zod.bag.contentEncoding = "base64url";
-  inst._zod.check = (payload) => {
-    if (isValidBase64URL(payload.value))
-      return;
-    payload.issues.push({
-      code: "invalid_format",
-      format: "base64url",
-      input: payload.value,
-      inst,
-      continue: !def2.abort
-    });
-  };
-});
-const $ZodE164 = /* @__PURE__ */ $constructor("$ZodE164", (inst, def2) => {
-  def2.pattern ?? (def2.pattern = e164);
-  $ZodStringFormat.init(inst, def2);
-});
-function isValidJWT(token, algorithm = null) {
-  try {
-    const tokensParts = token.split(".");
-    if (tokensParts.length !== 3)
-      return false;
-    const [header] = tokensParts;
-    if (!header)
-      return false;
-    const parsedHeader = JSON.parse(atob(header));
-    if ("typ" in parsedHeader && (parsedHeader == null ? void 0 : parsedHeader.typ) !== "JWT")
-      return false;
-    if (!parsedHeader.alg)
-      return false;
-    if (algorithm && (!("alg" in parsedHeader) || parsedHeader.alg !== algorithm))
-      return false;
-    return true;
-  } catch {
-    return false;
-  }
-}
-const $ZodJWT = /* @__PURE__ */ $constructor("$ZodJWT", (inst, def2) => {
-  $ZodStringFormat.init(inst, def2);
-  inst._zod.check = (payload) => {
-    if (isValidJWT(payload.value, def2.alg))
-      return;
-    payload.issues.push({
-      code: "invalid_format",
-      format: "jwt",
-      input: payload.value,
-      inst,
-      continue: !def2.abort
-    });
-  };
-});
-const $ZodNumber = /* @__PURE__ */ $constructor("$ZodNumber", (inst, def2) => {
-  $ZodType.init(inst, def2);
-  inst._zod.pattern = inst._zod.bag.pattern ?? number$1;
-  inst._zod.parse = (payload, _ctx) => {
-    if (def2.coerce)
-      try {
-        payload.value = Number(payload.value);
-      } catch (_) {
-      }
-    const input = payload.value;
-    if (typeof input === "number" && !Number.isNaN(input) && Number.isFinite(input)) {
-      return payload;
-    }
-    const received = typeof input === "number" ? Number.isNaN(input) ? "NaN" : !Number.isFinite(input) ? "Infinity" : void 0 : void 0;
-    payload.issues.push({
-      expected: "number",
-      code: "invalid_type",
-      input,
-      inst,
-      ...received ? { received } : {}
-    });
-    return payload;
-  };
-});
-const $ZodNumberFormat = /* @__PURE__ */ $constructor("$ZodNumberFormat", (inst, def2) => {
-  $ZodCheckNumberFormat.init(inst, def2);
-  $ZodNumber.init(inst, def2);
-});
-const $ZodBoolean = /* @__PURE__ */ $constructor("$ZodBoolean", (inst, def2) => {
-  $ZodType.init(inst, def2);
-  inst._zod.pattern = boolean$1;
-  inst._zod.parse = (payload, _ctx) => {
-    if (def2.coerce)
-      try {
-        payload.value = Boolean(payload.value);
-      } catch (_) {
-      }
-    const input = payload.value;
-    if (typeof input === "boolean")
-      return payload;
-    payload.issues.push({
-      expected: "boolean",
-      code: "invalid_type",
-      input,
-      inst
-    });
-    return payload;
-  };
-});
-const $ZodUnknown = /* @__PURE__ */ $constructor("$ZodUnknown", (inst, def2) => {
-  $ZodType.init(inst, def2);
-  inst._zod.parse = (payload) => payload;
-});
-const $ZodNever = /* @__PURE__ */ $constructor("$ZodNever", (inst, def2) => {
-  $ZodType.init(inst, def2);
-  inst._zod.parse = (payload, _ctx) => {
-    payload.issues.push({
-      expected: "never",
-      code: "invalid_type",
-      input: payload.value,
-      inst
-    });
-    return payload;
-  };
-});
-function handleArrayResult(result, final, index) {
-  if (result.issues.length) {
-    final.issues.push(...prefixIssues(index, result.issues));
-  }
-  final.value[index] = result.value;
-}
-const $ZodArray = /* @__PURE__ */ $constructor("$ZodArray", (inst, def2) => {
-  $ZodType.init(inst, def2);
-  inst._zod.parse = (payload, ctx) => {
-    const input = payload.value;
-    if (!Array.isArray(input)) {
-      payload.issues.push({
-        expected: "array",
-        code: "invalid_type",
-        input,
-        inst
-      });
-      return payload;
-    }
-    payload.value = Array(input.length);
-    const proms = [];
-    for (let i = 0; i < input.length; i++) {
-      const item = input[i];
-      const result = def2.element._zod.run({
-        value: item,
-        issues: []
-      }, ctx);
-      if (result instanceof Promise) {
-        proms.push(result.then((result2) => handleArrayResult(result2, payload, i)));
-      } else {
-        handleArrayResult(result, payload, i);
-      }
-    }
-    if (proms.length) {
-      return Promise.all(proms).then(() => payload);
-    }
-    return payload;
-  };
-});
-function handlePropertyResult(result, final, key, input, isOptionalIn, isOptionalOut) {
-  const isPresent = key in input;
-  if (result.issues.length) {
-    if (isOptionalIn && isOptionalOut && !isPresent) {
-      return;
-    }
-    final.issues.push(...prefixIssues(key, result.issues));
-  }
-  if (!isPresent && !isOptionalIn) {
-    if (!result.issues.length) {
-      final.issues.push({
-        code: "invalid_type",
-        expected: "nonoptional",
-        input: void 0,
-        path: [key]
-      });
-    }
-    return;
-  }
-  if (result.value === void 0) {
-    if (isPresent) {
-      final.value[key] = void 0;
-    }
-  } else {
-    final.value[key] = result.value;
-  }
-}
-function normalizeDef(def2) {
-  var _a2, _b2, _c, _d;
-  const keys2 = Object.keys(def2.shape);
-  for (const k of keys2) {
-    if (!((_d = (_c = (_b2 = (_a2 = def2.shape) == null ? void 0 : _a2[k]) == null ? void 0 : _b2._zod) == null ? void 0 : _c.traits) == null ? void 0 : _d.has("$ZodType"))) {
-      throw new Error(`Invalid element at key "${k}": expected a Zod schema`);
-    }
-  }
-  const okeys = optionalKeys(def2.shape);
-  return {
-    ...def2,
-    keys: keys2,
-    keySet: new Set(keys2),
-    numKeys: keys2.length,
-    optionalKeys: new Set(okeys)
-  };
-}
-function handleCatchall(proms, input, payload, ctx, def2, inst) {
-  const unrecognized = [];
-  const keySet = def2.keySet;
-  const _catchall = def2.catchall._zod;
-  const t2 = _catchall.def.type;
-  const isOptionalIn = _catchall.optin === "optional";
-  const isOptionalOut = _catchall.optout === "optional";
-  for (const key in input) {
-    if (key === "__proto__")
-      continue;
-    if (keySet.has(key))
-      continue;
-    if (t2 === "never") {
-      unrecognized.push(key);
-      continue;
-    }
-    const r = _catchall.run({ value: input[key], issues: [] }, ctx);
-    if (r instanceof Promise) {
-      proms.push(r.then((r2) => handlePropertyResult(r2, payload, key, input, isOptionalIn, isOptionalOut)));
-    } else {
-      handlePropertyResult(r, payload, key, input, isOptionalIn, isOptionalOut);
-    }
-  }
-  if (unrecognized.length) {
-    payload.issues.push({
-      code: "unrecognized_keys",
-      keys: unrecognized,
-      input,
-      inst
-    });
-  }
-  if (!proms.length)
-    return payload;
-  return Promise.all(proms).then(() => {
-    return payload;
-  });
-}
-const $ZodObject = /* @__PURE__ */ $constructor("$ZodObject", (inst, def2) => {
-  $ZodType.init(inst, def2);
-  const desc = Object.getOwnPropertyDescriptor(def2, "shape");
-  if (!(desc == null ? void 0 : desc.get)) {
-    const sh = def2.shape;
-    Object.defineProperty(def2, "shape", {
-      get: () => {
-        const newSh = { ...sh };
-        Object.defineProperty(def2, "shape", {
-          value: newSh
-        });
-        return newSh;
-      }
-    });
-  }
-  const _normalized = cached(() => normalizeDef(def2));
-  defineLazy(inst._zod, "propValues", () => {
-    const shape = def2.shape;
-    const propValues = {};
-    for (const key in shape) {
-      const field = shape[key]._zod;
-      if (field.values) {
-        propValues[key] ?? (propValues[key] = /* @__PURE__ */ new Set());
-        for (const v of field.values)
-          propValues[key].add(v);
-      }
-    }
-    return propValues;
-  });
-  const isObject$12 = isObject;
-  const catchall = def2.catchall;
-  let value;
-  inst._zod.parse = (payload, ctx) => {
-    value ?? (value = _normalized.value);
-    const input = payload.value;
-    if (!isObject$12(input)) {
-      payload.issues.push({
-        expected: "object",
-        code: "invalid_type",
-        input,
-        inst
-      });
-      return payload;
-    }
-    payload.value = {};
-    const proms = [];
-    const shape = value.shape;
-    for (const key of value.keys) {
-      const el = shape[key];
-      const isOptionalIn = el._zod.optin === "optional";
-      const isOptionalOut = el._zod.optout === "optional";
-      const r = el._zod.run({ value: input[key], issues: [] }, ctx);
-      if (r instanceof Promise) {
-        proms.push(r.then((r2) => handlePropertyResult(r2, payload, key, input, isOptionalIn, isOptionalOut)));
-      } else {
-        handlePropertyResult(r, payload, key, input, isOptionalIn, isOptionalOut);
-      }
-    }
-    if (!catchall) {
-      return proms.length ? Promise.all(proms).then(() => payload) : payload;
-    }
-    return handleCatchall(proms, input, payload, ctx, _normalized.value, inst);
-  };
-});
-const $ZodObjectJIT = /* @__PURE__ */ $constructor("$ZodObjectJIT", (inst, def2) => {
-  $ZodObject.init(inst, def2);
-  const superParse = inst._zod.parse;
-  const _normalized = cached(() => normalizeDef(def2));
-  const generateFastpass = (shape) => {
-    var _a2, _b2;
-    const doc2 = new Doc(["shape", "payload", "ctx"]);
-    const normalized = _normalized.value;
-    const parseStr = (key) => {
-      const k = esc(key);
-      return `shape[${k}]._zod.run({ value: input[${k}], issues: [] }, ctx)`;
-    };
-    doc2.write(`const input = payload.value;`);
-    const ids = /* @__PURE__ */ Object.create(null);
-    let counter = 0;
-    for (const key of normalized.keys) {
-      ids[key] = `key_${counter++}`;
-    }
-    doc2.write(`const newResult = {};`);
-    for (const key of normalized.keys) {
-      const id = ids[key];
-      const k = esc(key);
-      const schema = shape[key];
-      const isOptionalIn = ((_a2 = schema == null ? void 0 : schema._zod) == null ? void 0 : _a2.optin) === "optional";
-      const isOptionalOut = ((_b2 = schema == null ? void 0 : schema._zod) == null ? void 0 : _b2.optout) === "optional";
-      doc2.write(`const ${id} = ${parseStr(key)};`);
-      if (isOptionalIn && isOptionalOut) {
-        doc2.write(`
-        if (${id}.issues.length) {
-          if (${k} in input) {
-            payload.issues = payload.issues.concat(${id}.issues.map(iss => ({
-              ...iss,
-              path: iss.path ? [${k}, ...iss.path] : [${k}]
-            })));
-          }
-        }
-        
-        if (${id}.value === undefined) {
-          if (${k} in input) {
-            newResult[${k}] = undefined;
-          }
-        } else {
-          newResult[${k}] = ${id}.value;
-        }
-        
-      `);
-      } else if (!isOptionalIn) {
-        doc2.write(`
-        const ${id}_present = ${k} in input;
-        if (${id}.issues.length) {
-          payload.issues = payload.issues.concat(${id}.issues.map(iss => ({
-            ...iss,
-            path: iss.path ? [${k}, ...iss.path] : [${k}]
-          })));
-        }
-        if (!${id}_present && !${id}.issues.length) {
-          payload.issues.push({
-            code: "invalid_type",
-            expected: "nonoptional",
-            input: undefined,
-            path: [${k}]
-          });
-        }
-
-        if (${id}_present) {
-          if (${id}.value === undefined) {
-            newResult[${k}] = undefined;
-          } else {
-            newResult[${k}] = ${id}.value;
-          }
-        }
-
-      `);
-      } else {
-        doc2.write(`
-        if (${id}.issues.length) {
-          payload.issues = payload.issues.concat(${id}.issues.map(iss => ({
-            ...iss,
-            path: iss.path ? [${k}, ...iss.path] : [${k}]
-          })));
-        }
-        
-        if (${id}.value === undefined) {
-          if (${k} in input) {
-            newResult[${k}] = undefined;
-          }
-        } else {
-          newResult[${k}] = ${id}.value;
-        }
-        
-      `);
-      }
-    }
-    doc2.write(`payload.value = newResult;`);
-    doc2.write(`return payload;`);
-    const fn2 = doc2.compile();
-    return (payload, ctx) => fn2(shape, payload, ctx);
-  };
-  let fastpass;
-  const isObject$12 = isObject;
-  const jit = !globalConfig.jitless;
-  const allowsEval$1 = allowsEval;
-  const fastEnabled = jit && allowsEval$1.value;
-  const catchall = def2.catchall;
-  let value;
-  inst._zod.parse = (payload, ctx) => {
-    value ?? (value = _normalized.value);
-    const input = payload.value;
-    if (!isObject$12(input)) {
-      payload.issues.push({
-        expected: "object",
-        code: "invalid_type",
-        input,
-        inst
-      });
-      return payload;
-    }
-    if (jit && fastEnabled && (ctx == null ? void 0 : ctx.async) === false && ctx.jitless !== true) {
-      if (!fastpass)
-        fastpass = generateFastpass(def2.shape);
-      payload = fastpass(payload, ctx);
-      if (!catchall)
-        return payload;
-      return handleCatchall([], input, payload, ctx, value, inst);
-    }
-    return superParse(payload, ctx);
-  };
-});
-function handleUnionResults(results, final, inst, ctx) {
-  for (const result of results) {
-    if (result.issues.length === 0) {
-      final.value = result.value;
-      return final;
-    }
-  }
-  const nonaborted = results.filter((r) => !aborted(r));
-  if (nonaborted.length === 1) {
-    final.value = nonaborted[0].value;
-    return nonaborted[0];
-  }
-  final.issues.push({
-    code: "invalid_union",
-    input: final.value,
-    inst,
-    errors: results.map((result) => result.issues.map((iss) => finalizeIssue(iss, ctx, config())))
-  });
-  return final;
-}
-const $ZodUnion = /* @__PURE__ */ $constructor("$ZodUnion", (inst, def2) => {
-  $ZodType.init(inst, def2);
-  defineLazy(inst._zod, "optin", () => def2.options.some((o) => o._zod.optin === "optional") ? "optional" : void 0);
-  defineLazy(inst._zod, "optout", () => def2.options.some((o) => o._zod.optout === "optional") ? "optional" : void 0);
-  defineLazy(inst._zod, "values", () => {
-    if (def2.options.every((o) => o._zod.values)) {
-      return new Set(def2.options.flatMap((option) => Array.from(option._zod.values)));
-    }
-    return void 0;
-  });
-  defineLazy(inst._zod, "pattern", () => {
-    if (def2.options.every((o) => o._zod.pattern)) {
-      const patterns = def2.options.map((o) => o._zod.pattern);
-      return new RegExp(`^(${patterns.map((p2) => cleanRegex(p2.source)).join("|")})$`);
-    }
-    return void 0;
-  });
-  const first2 = def2.options.length === 1 ? def2.options[0]._zod.run : null;
-  inst._zod.parse = (payload, ctx) => {
-    if (first2) {
-      return first2(payload, ctx);
-    }
-    let async = false;
-    const results = [];
-    for (const option of def2.options) {
-      const result = option._zod.run({
-        value: payload.value,
-        issues: []
-      }, ctx);
-      if (result instanceof Promise) {
-        results.push(result);
-        async = true;
-      } else {
-        if (result.issues.length === 0)
-          return result;
-        results.push(result);
-      }
-    }
-    if (!async)
-      return handleUnionResults(results, payload, inst, ctx);
-    return Promise.all(results).then((results2) => {
-      return handleUnionResults(results2, payload, inst, ctx);
-    });
-  };
-});
-const $ZodIntersection = /* @__PURE__ */ $constructor("$ZodIntersection", (inst, def2) => {
-  $ZodType.init(inst, def2);
-  inst._zod.parse = (payload, ctx) => {
-    const input = payload.value;
-    const left2 = def2.left._zod.run({ value: input, issues: [] }, ctx);
-    const right2 = def2.right._zod.run({ value: input, issues: [] }, ctx);
-    const async = left2 instanceof Promise || right2 instanceof Promise;
-    if (async) {
-      return Promise.all([left2, right2]).then(([left3, right3]) => {
-        return handleIntersectionResults(payload, left3, right3);
-      });
-    }
-    return handleIntersectionResults(payload, left2, right2);
-  };
-});
-function mergeValues(a, b) {
-  if (a === b) {
-    return { valid: true, data: a };
-  }
-  if (a instanceof Date && b instanceof Date && +a === +b) {
-    return { valid: true, data: a };
-  }
-  if (isPlainObject$1(a) && isPlainObject$1(b)) {
-    const bKeys = Object.keys(b);
-    const sharedKeys = Object.keys(a).filter((key) => bKeys.indexOf(key) !== -1);
-    const newObj = { ...a, ...b };
-    for (const key of sharedKeys) {
-      const sharedValue = mergeValues(a[key], b[key]);
-      if (!sharedValue.valid) {
-        return {
-          valid: false,
-          mergeErrorPath: [key, ...sharedValue.mergeErrorPath]
-        };
-      }
-      newObj[key] = sharedValue.data;
-    }
-    return { valid: true, data: newObj };
-  }
-  if (Array.isArray(a) && Array.isArray(b)) {
-    if (a.length !== b.length) {
-      return { valid: false, mergeErrorPath: [] };
-    }
-    const newArray = [];
-    for (let index = 0; index < a.length; index++) {
-      const itemA = a[index];
-      const itemB = b[index];
-      const sharedValue = mergeValues(itemA, itemB);
-      if (!sharedValue.valid) {
-        return {
-          valid: false,
-          mergeErrorPath: [index, ...sharedValue.mergeErrorPath]
-        };
-      }
-      newArray.push(sharedValue.data);
-    }
-    return { valid: true, data: newArray };
-  }
-  return { valid: false, mergeErrorPath: [] };
-}
-function handleIntersectionResults(result, left2, right2) {
-  const unrecKeys = /* @__PURE__ */ new Map();
-  let unrecIssue;
-  for (const iss of left2.issues) {
-    if (iss.code === "unrecognized_keys") {
-      unrecIssue ?? (unrecIssue = iss);
-      for (const k of iss.keys) {
-        if (!unrecKeys.has(k))
-          unrecKeys.set(k, {});
-        unrecKeys.get(k).l = true;
-      }
-    } else {
-      result.issues.push(iss);
-    }
-  }
-  for (const iss of right2.issues) {
-    if (iss.code === "unrecognized_keys") {
-      for (const k of iss.keys) {
-        if (!unrecKeys.has(k))
-          unrecKeys.set(k, {});
-        unrecKeys.get(k).r = true;
-      }
-    } else {
-      result.issues.push(iss);
-    }
-  }
-  const bothKeys = [...unrecKeys].filter(([, f]) => f.l && f.r).map(([k]) => k);
-  if (bothKeys.length && unrecIssue) {
-    result.issues.push({ ...unrecIssue, keys: bothKeys });
-  }
-  if (aborted(result))
-    return result;
-  const merged = mergeValues(left2.value, right2.value);
-  if (!merged.valid) {
-    throw new Error(`Unmergable intersection. Error path: ${JSON.stringify(merged.mergeErrorPath)}`);
-  }
-  result.value = merged.data;
-  return result;
-}
-const $ZodRecord = /* @__PURE__ */ $constructor("$ZodRecord", (inst, def2) => {
-  $ZodType.init(inst, def2);
-  inst._zod.parse = (payload, ctx) => {
-    const input = payload.value;
-    if (!isPlainObject$1(input)) {
-      payload.issues.push({
-        expected: "record",
-        code: "invalid_type",
-        input,
-        inst
-      });
-      return payload;
-    }
-    const proms = [];
-    const values = def2.keyType._zod.values;
-    if (values) {
-      payload.value = {};
-      const recordKeys = /* @__PURE__ */ new Set();
-      for (const key of values) {
-        if (typeof key === "string" || typeof key === "number" || typeof key === "symbol") {
-          recordKeys.add(typeof key === "number" ? key.toString() : key);
-          const keyResult = def2.keyType._zod.run({ value: key, issues: [] }, ctx);
-          if (keyResult instanceof Promise) {
-            throw new Error("Async schemas not supported in object keys currently");
-          }
-          if (keyResult.issues.length) {
-            payload.issues.push({
-              code: "invalid_key",
-              origin: "record",
-              issues: keyResult.issues.map((iss) => finalizeIssue(iss, ctx, config())),
-              input: key,
-              path: [key],
-              inst
-            });
-            continue;
-          }
-          const outKey = keyResult.value;
-          const result = def2.valueType._zod.run({ value: input[key], issues: [] }, ctx);
-          if (result instanceof Promise) {
-            proms.push(result.then((result2) => {
-              if (result2.issues.length) {
-                payload.issues.push(...prefixIssues(key, result2.issues));
-              }
-              payload.value[outKey] = result2.value;
-            }));
-          } else {
-            if (result.issues.length) {
-              payload.issues.push(...prefixIssues(key, result.issues));
-            }
-            payload.value[outKey] = result.value;
-          }
-        }
-      }
-      let unrecognized;
-      for (const key in input) {
-        if (!recordKeys.has(key)) {
-          unrecognized = unrecognized ?? [];
-          unrecognized.push(key);
-        }
-      }
-      if (unrecognized && unrecognized.length > 0) {
-        payload.issues.push({
-          code: "unrecognized_keys",
-          input,
-          inst,
-          keys: unrecognized
-        });
-      }
-    } else {
-      payload.value = {};
-      for (const key of Reflect.ownKeys(input)) {
-        if (key === "__proto__")
-          continue;
-        if (!Object.prototype.propertyIsEnumerable.call(input, key))
-          continue;
-        let keyResult = def2.keyType._zod.run({ value: key, issues: [] }, ctx);
-        if (keyResult instanceof Promise) {
-          throw new Error("Async schemas not supported in object keys currently");
-        }
-        const checkNumericKey = typeof key === "string" && number$1.test(key) && keyResult.issues.length;
-        if (checkNumericKey) {
-          const retryResult = def2.keyType._zod.run({ value: Number(key), issues: [] }, ctx);
-          if (retryResult instanceof Promise) {
-            throw new Error("Async schemas not supported in object keys currently");
-          }
-          if (retryResult.issues.length === 0) {
-            keyResult = retryResult;
-          }
-        }
-        if (keyResult.issues.length) {
-          if (def2.mode === "loose") {
-            payload.value[key] = input[key];
-          } else {
-            payload.issues.push({
-              code: "invalid_key",
-              origin: "record",
-              issues: keyResult.issues.map((iss) => finalizeIssue(iss, ctx, config())),
-              input: key,
-              path: [key],
-              inst
-            });
-          }
-          continue;
-        }
-        const result = def2.valueType._zod.run({ value: input[key], issues: [] }, ctx);
-        if (result instanceof Promise) {
-          proms.push(result.then((result2) => {
-            if (result2.issues.length) {
-              payload.issues.push(...prefixIssues(key, result2.issues));
-            }
-            payload.value[keyResult.value] = result2.value;
-          }));
-        } else {
-          if (result.issues.length) {
-            payload.issues.push(...prefixIssues(key, result.issues));
-          }
-          payload.value[keyResult.value] = result.value;
-        }
-      }
-    }
-    if (proms.length) {
-      return Promise.all(proms).then(() => payload);
-    }
-    return payload;
-  };
-});
-const $ZodEnum = /* @__PURE__ */ $constructor("$ZodEnum", (inst, def2) => {
-  $ZodType.init(inst, def2);
-  const values = getEnumValues(def2.entries);
-  const valuesSet = new Set(values);
-  inst._zod.values = valuesSet;
-  inst._zod.pattern = new RegExp(`^(${values.filter((k) => propertyKeyTypes.has(typeof k)).map((o) => typeof o === "string" ? escapeRegex(o) : o.toString()).join("|")})$`);
-  inst._zod.parse = (payload, _ctx) => {
-    const input = payload.value;
-    if (valuesSet.has(input)) {
-      return payload;
-    }
-    payload.issues.push({
-      code: "invalid_value",
-      values,
-      input,
-      inst
-    });
-    return payload;
-  };
-});
-const $ZodLiteral = /* @__PURE__ */ $constructor("$ZodLiteral", (inst, def2) => {
-  $ZodType.init(inst, def2);
-  if (def2.values.length === 0) {
-    throw new Error("Cannot create literal schema with no valid values");
-  }
-  const values = new Set(def2.values);
-  inst._zod.values = values;
-  inst._zod.pattern = new RegExp(`^(${def2.values.map((o) => typeof o === "string" ? escapeRegex(o) : o ? escapeRegex(o.toString()) : String(o)).join("|")})$`);
-  inst._zod.parse = (payload, _ctx) => {
-    const input = payload.value;
-    if (values.has(input)) {
-      return payload;
-    }
-    payload.issues.push({
-      code: "invalid_value",
-      values: def2.values,
-      input,
-      inst
-    });
-    return payload;
-  };
-});
-const $ZodTransform = /* @__PURE__ */ $constructor("$ZodTransform", (inst, def2) => {
-  $ZodType.init(inst, def2);
-  inst._zod.optin = "optional";
-  inst._zod.parse = (payload, ctx) => {
-    if (ctx.direction === "backward") {
-      throw new $ZodEncodeError(inst.constructor.name);
-    }
-    const _out = def2.transform(payload.value, payload);
-    if (ctx.async) {
-      const output = _out instanceof Promise ? _out : Promise.resolve(_out);
-      return output.then((output2) => {
-        payload.value = output2;
-        payload.fallback = true;
-        return payload;
-      });
-    }
-    if (_out instanceof Promise) {
-      throw new $ZodAsyncError();
-    }
-    payload.value = _out;
-    payload.fallback = true;
-    return payload;
-  };
-});
-function handleOptionalResult(result, input) {
-  if (input === void 0 && (result.issues.length || result.fallback)) {
-    return { issues: [], value: void 0 };
-  }
-  return result;
-}
-const $ZodOptional = /* @__PURE__ */ $constructor("$ZodOptional", (inst, def2) => {
-  $ZodType.init(inst, def2);
-  inst._zod.optin = "optional";
-  inst._zod.optout = "optional";
-  defineLazy(inst._zod, "values", () => {
-    return def2.innerType._zod.values ? /* @__PURE__ */ new Set([...def2.innerType._zod.values, void 0]) : void 0;
-  });
-  defineLazy(inst._zod, "pattern", () => {
-    const pattern = def2.innerType._zod.pattern;
-    return pattern ? new RegExp(`^(${cleanRegex(pattern.source)})?$`) : void 0;
-  });
-  inst._zod.parse = (payload, ctx) => {
-    if (def2.innerType._zod.optin === "optional") {
-      const input = payload.value;
-      const result = def2.innerType._zod.run(payload, ctx);
-      if (result instanceof Promise)
-        return result.then((r) => handleOptionalResult(r, input));
-      return handleOptionalResult(result, input);
-    }
-    if (payload.value === void 0) {
-      return payload;
-    }
-    return def2.innerType._zod.run(payload, ctx);
-  };
-});
-const $ZodExactOptional = /* @__PURE__ */ $constructor("$ZodExactOptional", (inst, def2) => {
-  $ZodOptional.init(inst, def2);
-  defineLazy(inst._zod, "values", () => def2.innerType._zod.values);
-  defineLazy(inst._zod, "pattern", () => def2.innerType._zod.pattern);
-  inst._zod.parse = (payload, ctx) => {
-    return def2.innerType._zod.run(payload, ctx);
-  };
-});
-const $ZodNullable = /* @__PURE__ */ $constructor("$ZodNullable", (inst, def2) => {
-  $ZodType.init(inst, def2);
-  defineLazy(inst._zod, "optin", () => def2.innerType._zod.optin);
-  defineLazy(inst._zod, "optout", () => def2.innerType._zod.optout);
-  defineLazy(inst._zod, "pattern", () => {
-    const pattern = def2.innerType._zod.pattern;
-    return pattern ? new RegExp(`^(${cleanRegex(pattern.source)}|null)$`) : void 0;
-  });
-  defineLazy(inst._zod, "values", () => {
-    return def2.innerType._zod.values ? /* @__PURE__ */ new Set([...def2.innerType._zod.values, null]) : void 0;
-  });
-  inst._zod.parse = (payload, ctx) => {
-    if (payload.value === null)
-      return payload;
-    return def2.innerType._zod.run(payload, ctx);
-  };
-});
-const $ZodDefault = /* @__PURE__ */ $constructor("$ZodDefault", (inst, def2) => {
-  $ZodType.init(inst, def2);
-  inst._zod.optin = "optional";
-  defineLazy(inst._zod, "values", () => def2.innerType._zod.values);
-  inst._zod.parse = (payload, ctx) => {
-    if (ctx.direction === "backward") {
-      return def2.innerType._zod.run(payload, ctx);
-    }
-    if (payload.value === void 0) {
-      payload.value = def2.defaultValue;
-      return payload;
-    }
-    const result = def2.innerType._zod.run(payload, ctx);
-    if (result instanceof Promise) {
-      return result.then((result2) => handleDefaultResult(result2, def2));
-    }
-    return handleDefaultResult(result, def2);
-  };
-});
-function handleDefaultResult(payload, def2) {
-  if (payload.value === void 0) {
-    payload.value = def2.defaultValue;
-  }
-  return payload;
-}
-const $ZodPrefault = /* @__PURE__ */ $constructor("$ZodPrefault", (inst, def2) => {
-  $ZodType.init(inst, def2);
-  inst._zod.optin = "optional";
-  defineLazy(inst._zod, "values", () => def2.innerType._zod.values);
-  inst._zod.parse = (payload, ctx) => {
-    if (ctx.direction === "backward") {
-      return def2.innerType._zod.run(payload, ctx);
-    }
-    if (payload.value === void 0) {
-      payload.value = def2.defaultValue;
-    }
-    return def2.innerType._zod.run(payload, ctx);
-  };
-});
-const $ZodNonOptional = /* @__PURE__ */ $constructor("$ZodNonOptional", (inst, def2) => {
-  $ZodType.init(inst, def2);
-  defineLazy(inst._zod, "values", () => {
-    const v = def2.innerType._zod.values;
-    return v ? new Set([...v].filter((x) => x !== void 0)) : void 0;
-  });
-  inst._zod.parse = (payload, ctx) => {
-    const result = def2.innerType._zod.run(payload, ctx);
-    if (result instanceof Promise) {
-      return result.then((result2) => handleNonOptionalResult(result2, inst));
-    }
-    return handleNonOptionalResult(result, inst);
-  };
-});
-function handleNonOptionalResult(payload, inst) {
-  if (!payload.issues.length && payload.value === void 0) {
-    payload.issues.push({
-      code: "invalid_type",
-      expected: "nonoptional",
-      input: payload.value,
-      inst
-    });
-  }
-  return payload;
-}
-const $ZodCatch = /* @__PURE__ */ $constructor("$ZodCatch", (inst, def2) => {
-  $ZodType.init(inst, def2);
-  inst._zod.optin = "optional";
-  defineLazy(inst._zod, "optout", () => def2.innerType._zod.optout);
-  defineLazy(inst._zod, "values", () => def2.innerType._zod.values);
-  inst._zod.parse = (payload, ctx) => {
-    if (ctx.direction === "backward") {
-      return def2.innerType._zod.run(payload, ctx);
-    }
-    const result = def2.innerType._zod.run(payload, ctx);
-    if (result instanceof Promise) {
-      return result.then((result2) => {
-        payload.value = result2.value;
-        if (result2.issues.length) {
-          payload.value = def2.catchValue({
-            ...payload,
-            error: {
-              issues: result2.issues.map((iss) => finalizeIssue(iss, ctx, config()))
-            },
-            input: payload.value
-          });
-          payload.issues = [];
-          payload.fallback = true;
-        }
-        return payload;
-      });
-    }
-    payload.value = result.value;
-    if (result.issues.length) {
-      payload.value = def2.catchValue({
-        ...payload,
-        error: {
-          issues: result.issues.map((iss) => finalizeIssue(iss, ctx, config()))
-        },
-        input: payload.value
-      });
-      payload.issues = [];
-      payload.fallback = true;
-    }
-    return payload;
-  };
-});
-const $ZodPipe = /* @__PURE__ */ $constructor("$ZodPipe", (inst, def2) => {
-  $ZodType.init(inst, def2);
-  defineLazy(inst._zod, "values", () => def2.in._zod.values);
-  defineLazy(inst._zod, "optin", () => def2.in._zod.optin);
-  defineLazy(inst._zod, "optout", () => def2.out._zod.optout);
-  defineLazy(inst._zod, "propValues", () => def2.in._zod.propValues);
-  inst._zod.parse = (payload, ctx) => {
-    if (ctx.direction === "backward") {
-      const right2 = def2.out._zod.run(payload, ctx);
-      if (right2 instanceof Promise) {
-        return right2.then((right3) => handlePipeResult(right3, def2.in, ctx));
-      }
-      return handlePipeResult(right2, def2.in, ctx);
-    }
-    const left2 = def2.in._zod.run(payload, ctx);
-    if (left2 instanceof Promise) {
-      return left2.then((left3) => handlePipeResult(left3, def2.out, ctx));
-    }
-    return handlePipeResult(left2, def2.out, ctx);
-  };
-});
-function handlePipeResult(left2, next, ctx) {
-  if (left2.issues.length) {
-    left2.aborted = true;
-    return left2;
-  }
-  return next._zod.run({ value: left2.value, issues: left2.issues, fallback: left2.fallback }, ctx);
-}
-const $ZodReadonly = /* @__PURE__ */ $constructor("$ZodReadonly", (inst, def2) => {
-  $ZodType.init(inst, def2);
-  defineLazy(inst._zod, "propValues", () => def2.innerType._zod.propValues);
-  defineLazy(inst._zod, "values", () => def2.innerType._zod.values);
-  defineLazy(inst._zod, "optin", () => {
-    var _a2, _b2;
-    return (_b2 = (_a2 = def2.innerType) == null ? void 0 : _a2._zod) == null ? void 0 : _b2.optin;
-  });
-  defineLazy(inst._zod, "optout", () => {
-    var _a2, _b2;
-    return (_b2 = (_a2 = def2.innerType) == null ? void 0 : _a2._zod) == null ? void 0 : _b2.optout;
-  });
-  inst._zod.parse = (payload, ctx) => {
-    if (ctx.direction === "backward") {
-      return def2.innerType._zod.run(payload, ctx);
-    }
-    const result = def2.innerType._zod.run(payload, ctx);
-    if (result instanceof Promise) {
-      return result.then(handleReadonlyResult);
-    }
-    return handleReadonlyResult(result);
-  };
-});
-function handleReadonlyResult(payload) {
-  payload.value = Object.freeze(payload.value);
-  return payload;
-}
-const $ZodCustom = /* @__PURE__ */ $constructor("$ZodCustom", (inst, def2) => {
-  $ZodCheck.init(inst, def2);
-  $ZodType.init(inst, def2);
-  inst._zod.parse = (payload, _) => {
-    return payload;
-  };
-  inst._zod.check = (payload) => {
-    const input = payload.value;
-    const r = def2.fn(input);
-    if (r instanceof Promise) {
-      return r.then((r2) => handleRefineResult(r2, payload, input, inst));
-    }
-    handleRefineResult(r, payload, input, inst);
-    return;
-  };
-});
-function handleRefineResult(result, payload, input, inst) {
-  if (!result) {
-    const _iss = {
-      code: "custom",
-      input,
-      inst,
-      // incorporates params.error into issue reporting
-      path: [...inst._zod.def.path ?? []],
-      // incorporates params.error into issue reporting
-      continue: !inst._zod.def.abort
-      // params: inst._zod.def.params,
-    };
-    if (inst._zod.def.params)
-      _iss.params = inst._zod.def.params;
-    payload.issues.push(issue(_iss));
-  }
-}
-var _a$1;
-class $ZodRegistry {
-  constructor() {
-    this._map = /* @__PURE__ */ new WeakMap();
-    this._idmap = /* @__PURE__ */ new Map();
-  }
-  add(schema, ..._meta) {
-    const meta = _meta[0];
-    this._map.set(schema, meta);
-    if (meta && typeof meta === "object" && "id" in meta) {
-      this._idmap.set(meta.id, schema);
-    }
-    return this;
-  }
-  clear() {
-    this._map = /* @__PURE__ */ new WeakMap();
-    this._idmap = /* @__PURE__ */ new Map();
-    return this;
-  }
-  remove(schema) {
-    const meta = this._map.get(schema);
-    if (meta && typeof meta === "object" && "id" in meta) {
-      this._idmap.delete(meta.id);
-    }
-    this._map.delete(schema);
-    return this;
-  }
-  get(schema) {
-    const p2 = schema._zod.parent;
-    if (p2) {
-      const pm = { ...this.get(p2) ?? {} };
-      delete pm.id;
-      const f = { ...pm, ...this._map.get(schema) };
-      return Object.keys(f).length ? f : void 0;
-    }
-    return this._map.get(schema);
-  }
-  has(schema) {
-    return this._map.has(schema);
-  }
-}
-function registry() {
-  return new $ZodRegistry();
-}
-(_a$1 = globalThis).__zod_globalRegistry ?? (_a$1.__zod_globalRegistry = registry());
-const globalRegistry = globalThis.__zod_globalRegistry;
-// @__NO_SIDE_EFFECTS__
-function _string(Class, params) {
-  return new Class({
-    type: "string",
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _email(Class, params) {
-  return new Class({
-    type: "string",
-    format: "email",
-    check: "string_format",
-    abort: false,
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _guid(Class, params) {
-  return new Class({
-    type: "string",
-    format: "guid",
-    check: "string_format",
-    abort: false,
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _uuid(Class, params) {
-  return new Class({
-    type: "string",
-    format: "uuid",
-    check: "string_format",
-    abort: false,
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _uuidv4(Class, params) {
-  return new Class({
-    type: "string",
-    format: "uuid",
-    check: "string_format",
-    abort: false,
-    version: "v4",
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _uuidv6(Class, params) {
-  return new Class({
-    type: "string",
-    format: "uuid",
-    check: "string_format",
-    abort: false,
-    version: "v6",
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _uuidv7(Class, params) {
-  return new Class({
-    type: "string",
-    format: "uuid",
-    check: "string_format",
-    abort: false,
-    version: "v7",
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _url(Class, params) {
-  return new Class({
-    type: "string",
-    format: "url",
-    check: "string_format",
-    abort: false,
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _emoji(Class, params) {
-  return new Class({
-    type: "string",
-    format: "emoji",
-    check: "string_format",
-    abort: false,
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _nanoid(Class, params) {
-  return new Class({
-    type: "string",
-    format: "nanoid",
-    check: "string_format",
-    abort: false,
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _cuid(Class, params) {
-  return new Class({
-    type: "string",
-    format: "cuid",
-    check: "string_format",
-    abort: false,
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _cuid2(Class, params) {
-  return new Class({
-    type: "string",
-    format: "cuid2",
-    check: "string_format",
-    abort: false,
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _ulid(Class, params) {
-  return new Class({
-    type: "string",
-    format: "ulid",
-    check: "string_format",
-    abort: false,
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _xid(Class, params) {
-  return new Class({
-    type: "string",
-    format: "xid",
-    check: "string_format",
-    abort: false,
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _ksuid(Class, params) {
-  return new Class({
-    type: "string",
-    format: "ksuid",
-    check: "string_format",
-    abort: false,
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _ipv4(Class, params) {
-  return new Class({
-    type: "string",
-    format: "ipv4",
-    check: "string_format",
-    abort: false,
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _ipv6(Class, params) {
-  return new Class({
-    type: "string",
-    format: "ipv6",
-    check: "string_format",
-    abort: false,
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _cidrv4(Class, params) {
-  return new Class({
-    type: "string",
-    format: "cidrv4",
-    check: "string_format",
-    abort: false,
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _cidrv6(Class, params) {
-  return new Class({
-    type: "string",
-    format: "cidrv6",
-    check: "string_format",
-    abort: false,
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _base64(Class, params) {
-  return new Class({
-    type: "string",
-    format: "base64",
-    check: "string_format",
-    abort: false,
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _base64url(Class, params) {
-  return new Class({
-    type: "string",
-    format: "base64url",
-    check: "string_format",
-    abort: false,
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _e164(Class, params) {
-  return new Class({
-    type: "string",
-    format: "e164",
-    check: "string_format",
-    abort: false,
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _jwt(Class, params) {
-  return new Class({
-    type: "string",
-    format: "jwt",
-    check: "string_format",
-    abort: false,
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _isoDateTime(Class, params) {
-  return new Class({
-    type: "string",
-    format: "datetime",
-    check: "string_format",
-    offset: false,
-    local: false,
-    precision: null,
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _isoDate(Class, params) {
-  return new Class({
-    type: "string",
-    format: "date",
-    check: "string_format",
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _isoTime(Class, params) {
-  return new Class({
-    type: "string",
-    format: "time",
-    check: "string_format",
-    precision: null,
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _isoDuration(Class, params) {
-  return new Class({
-    type: "string",
-    format: "duration",
-    check: "string_format",
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _number(Class, params) {
-  return new Class({
-    type: "number",
-    checks: [],
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _int(Class, params) {
-  return new Class({
-    type: "number",
-    check: "number_format",
-    abort: false,
-    format: "safeint",
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _boolean(Class, params) {
-  return new Class({
-    type: "boolean",
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _unknown(Class) {
-  return new Class({
-    type: "unknown"
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _never(Class, params) {
-  return new Class({
-    type: "never",
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _lt(value, params) {
-  return new $ZodCheckLessThan({
-    check: "less_than",
-    ...normalizeParams(params),
-    value,
-    inclusive: false
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _lte(value, params) {
-  return new $ZodCheckLessThan({
-    check: "less_than",
-    ...normalizeParams(params),
-    value,
-    inclusive: true
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _gt(value, params) {
-  return new $ZodCheckGreaterThan({
-    check: "greater_than",
-    ...normalizeParams(params),
-    value,
-    inclusive: false
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _gte(value, params) {
-  return new $ZodCheckGreaterThan({
-    check: "greater_than",
-    ...normalizeParams(params),
-    value,
-    inclusive: true
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _multipleOf(value, params) {
-  return new $ZodCheckMultipleOf({
-    check: "multiple_of",
-    ...normalizeParams(params),
-    value
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _maxLength(maximum, params) {
-  const ch = new $ZodCheckMaxLength({
-    check: "max_length",
-    ...normalizeParams(params),
-    maximum
-  });
-  return ch;
-}
-// @__NO_SIDE_EFFECTS__
-function _minLength(minimum, params) {
-  return new $ZodCheckMinLength({
-    check: "min_length",
-    ...normalizeParams(params),
-    minimum
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _length(length, params) {
-  return new $ZodCheckLengthEquals({
-    check: "length_equals",
-    ...normalizeParams(params),
-    length
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _regex(pattern, params) {
-  return new $ZodCheckRegex({
-    check: "string_format",
-    format: "regex",
-    ...normalizeParams(params),
-    pattern
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _lowercase(params) {
-  return new $ZodCheckLowerCase({
-    check: "string_format",
-    format: "lowercase",
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _uppercase(params) {
-  return new $ZodCheckUpperCase({
-    check: "string_format",
-    format: "uppercase",
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _includes(includes, params) {
-  return new $ZodCheckIncludes({
-    check: "string_format",
-    format: "includes",
-    ...normalizeParams(params),
-    includes
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _startsWith(prefix, params) {
-  return new $ZodCheckStartsWith({
-    check: "string_format",
-    format: "starts_with",
-    ...normalizeParams(params),
-    prefix
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _endsWith(suffix, params) {
-  return new $ZodCheckEndsWith({
-    check: "string_format",
-    format: "ends_with",
-    ...normalizeParams(params),
-    suffix
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _overwrite(tx) {
-  return new $ZodCheckOverwrite({
-    check: "overwrite",
-    tx
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _normalize(form) {
-  return /* @__PURE__ */ _overwrite((input) => input.normalize(form));
-}
-// @__NO_SIDE_EFFECTS__
-function _trim() {
-  return /* @__PURE__ */ _overwrite((input) => input.trim());
-}
-// @__NO_SIDE_EFFECTS__
-function _toLowerCase() {
-  return /* @__PURE__ */ _overwrite((input) => input.toLowerCase());
-}
-// @__NO_SIDE_EFFECTS__
-function _toUpperCase() {
-  return /* @__PURE__ */ _overwrite((input) => input.toUpperCase());
-}
-// @__NO_SIDE_EFFECTS__
-function _slugify() {
-  return /* @__PURE__ */ _overwrite((input) => slugify(input));
-}
-// @__NO_SIDE_EFFECTS__
-function _array(Class, element, params) {
-  return new Class({
-    type: "array",
-    element,
-    // get element() {
-    //   return element;
-    // },
-    ...normalizeParams(params)
-  });
-}
-// @__NO_SIDE_EFFECTS__
-function _refine(Class, fn2, _params) {
-  const schema = new Class({
-    type: "custom",
-    check: "custom",
-    fn: fn2,
-    ...normalizeParams(_params)
-  });
-  return schema;
-}
-// @__NO_SIDE_EFFECTS__
-function _superRefine(fn2, params) {
-  const ch = /* @__PURE__ */ _check((payload) => {
-    payload.addIssue = (issue$1) => {
-      if (typeof issue$1 === "string") {
-        payload.issues.push(issue(issue$1, payload.value, ch._zod.def));
-      } else {
-        const _issue = issue$1;
-        if (_issue.fatal)
-          _issue.continue = false;
-        _issue.code ?? (_issue.code = "custom");
-        _issue.input ?? (_issue.input = payload.value);
-        _issue.inst ?? (_issue.inst = ch);
-        _issue.continue ?? (_issue.continue = !ch._zod.def.abort);
-        payload.issues.push(issue(_issue));
-      }
-    };
-    return fn2(payload.value, payload);
-  }, params);
-  return ch;
-}
-// @__NO_SIDE_EFFECTS__
-function _check(fn2, params) {
-  const ch = new $ZodCheck({
-    check: "custom",
-    ...normalizeParams(params)
-  });
-  ch._zod.check = fn2;
-  return ch;
-}
-function initializeContext(params) {
-  let target = (params == null ? void 0 : params.target) ?? "draft-2020-12";
-  if (target === "draft-4")
-    target = "draft-04";
-  if (target === "draft-7")
-    target = "draft-07";
-  return {
-    processors: params.processors ?? {},
-    metadataRegistry: (params == null ? void 0 : params.metadata) ?? globalRegistry,
-    target,
-    unrepresentable: (params == null ? void 0 : params.unrepresentable) ?? "throw",
-    override: (params == null ? void 0 : params.override) ?? (() => {
-    }),
-    io: (params == null ? void 0 : params.io) ?? "output",
-    counter: 0,
-    seen: /* @__PURE__ */ new Map(),
-    cycles: (params == null ? void 0 : params.cycles) ?? "ref",
-    reused: (params == null ? void 0 : params.reused) ?? "inline",
-    external: (params == null ? void 0 : params.external) ?? void 0
-  };
-}
-function process(schema, ctx, _params = { path: [], schemaPath: [] }) {
-  var _a3, _b2;
-  var _a2;
-  const def2 = schema._zod.def;
-  const seen = ctx.seen.get(schema);
-  if (seen) {
-    seen.count++;
-    const isCycle = _params.schemaPath.includes(schema);
-    if (isCycle) {
-      seen.cycle = _params.path;
-    }
-    return seen.schema;
-  }
-  const result = { schema: {}, count: 1, cycle: void 0, path: _params.path };
-  ctx.seen.set(schema, result);
-  const overrideSchema = (_b2 = (_a3 = schema._zod).toJSONSchema) == null ? void 0 : _b2.call(_a3);
-  if (overrideSchema) {
-    result.schema = overrideSchema;
-  } else {
-    const params = {
-      ..._params,
-      schemaPath: [..._params.schemaPath, schema],
-      path: _params.path
-    };
-    if (schema._zod.processJSONSchema) {
-      schema._zod.processJSONSchema(ctx, result.schema, params);
-    } else {
-      const _json = result.schema;
-      const processor = ctx.processors[def2.type];
-      if (!processor) {
-        throw new Error(`[toJSONSchema]: Non-representable type encountered: ${def2.type}`);
-      }
-      processor(schema, ctx, _json, params);
-    }
-    const parent = schema._zod.parent;
-    if (parent) {
-      if (!result.ref)
-        result.ref = parent;
-      process(parent, ctx, params);
-      ctx.seen.get(parent).isParent = true;
-    }
-  }
-  const meta = ctx.metadataRegistry.get(schema);
-  if (meta)
-    Object.assign(result.schema, meta);
-  if (ctx.io === "input" && isTransforming(schema)) {
-    delete result.schema.examples;
-    delete result.schema.default;
-  }
-  if (ctx.io === "input" && "_prefault" in result.schema)
-    (_a2 = result.schema).default ?? (_a2.default = result.schema._prefault);
-  delete result.schema._prefault;
-  const _result = ctx.seen.get(schema);
-  return _result.schema;
-}
-function extractDefs(ctx, schema) {
-  var _a2, _b2, _c, _d;
-  const root = ctx.seen.get(schema);
-  if (!root)
-    throw new Error("Unprocessed schema. This is a bug in Zod.");
-  const idToSchema = /* @__PURE__ */ new Map();
-  for (const entry of ctx.seen.entries()) {
-    const id = (_a2 = ctx.metadataRegistry.get(entry[0])) == null ? void 0 : _a2.id;
-    if (id) {
-      const existing = idToSchema.get(id);
-      if (existing && existing !== entry[0]) {
-        throw new Error(`Duplicate schema id "${id}" detected during JSON Schema conversion. Two different schemas cannot share the same id when converted together.`);
-      }
-      idToSchema.set(id, entry[0]);
-    }
-  }
-  const makeURI = (entry) => {
-    var _a3;
-    const defsSegment = ctx.target === "draft-2020-12" ? "$defs" : "definitions";
-    if (ctx.external) {
-      const externalId = (_a3 = ctx.external.registry.get(entry[0])) == null ? void 0 : _a3.id;
-      const uriGenerator = ctx.external.uri ?? ((id2) => id2);
-      if (externalId) {
-        return { ref: uriGenerator(externalId) };
-      }
-      const id = entry[1].defId ?? entry[1].schema.id ?? `schema${ctx.counter++}`;
-      entry[1].defId = id;
-      return { defId: id, ref: `${uriGenerator("__shared")}#/${defsSegment}/${id}` };
-    }
-    if (entry[1] === root) {
-      return { ref: "#" };
-    }
-    const uriPrefix = `#`;
-    const defUriPrefix = `${uriPrefix}/${defsSegment}/`;
-    const defId = entry[1].schema.id ?? `__schema${ctx.counter++}`;
-    return { defId, ref: defUriPrefix + defId };
-  };
-  const extractToDef = (entry) => {
-    if (entry[1].schema.$ref) {
-      return;
-    }
-    const seen = entry[1];
-    const { ref: ref2, defId } = makeURI(entry);
-    seen.def = { ...seen.schema };
-    if (defId)
-      seen.defId = defId;
-    const schema2 = seen.schema;
-    for (const key in schema2) {
-      delete schema2[key];
-    }
-    schema2.$ref = ref2;
-  };
-  if (ctx.cycles === "throw") {
-    for (const entry of ctx.seen.entries()) {
-      const seen = entry[1];
-      if (seen.cycle) {
-        throw new Error(`Cycle detected: #/${(_b2 = seen.cycle) == null ? void 0 : _b2.join("/")}/<root>
-
-Set the \`cycles\` parameter to \`"ref"\` to resolve cyclical schemas with defs.`);
-      }
-    }
-  }
-  for (const entry of ctx.seen.entries()) {
-    const seen = entry[1];
-    if (schema === entry[0]) {
-      extractToDef(entry);
-      continue;
-    }
-    if (ctx.external) {
-      const ext = (_c = ctx.external.registry.get(entry[0])) == null ? void 0 : _c.id;
-      if (schema !== entry[0] && ext) {
-        extractToDef(entry);
-        continue;
-      }
-    }
-    const id = (_d = ctx.metadataRegistry.get(entry[0])) == null ? void 0 : _d.id;
-    if (id) {
-      extractToDef(entry);
-      continue;
-    }
-    if (seen.cycle) {
-      extractToDef(entry);
-      continue;
-    }
-    if (seen.count > 1) {
-      if (ctx.reused === "ref") {
-        extractToDef(entry);
-        continue;
-      }
-    }
-  }
-}
-function finalize(ctx, schema) {
-  var _a2, _b2, _c, _d;
-  const root = ctx.seen.get(schema);
-  if (!root)
-    throw new Error("Unprocessed schema. This is a bug in Zod.");
-  const flattenRef = (zodSchema) => {
-    const seen = ctx.seen.get(zodSchema);
-    if (seen.ref === null)
-      return;
-    const schema2 = seen.def ?? seen.schema;
-    const _cached = { ...schema2 };
-    const ref2 = seen.ref;
-    seen.ref = null;
-    if (ref2) {
-      flattenRef(ref2);
-      const refSeen = ctx.seen.get(ref2);
-      const refSchema = refSeen.schema;
-      if (refSchema.$ref && (ctx.target === "draft-07" || ctx.target === "draft-04" || ctx.target === "openapi-3.0")) {
-        schema2.allOf = schema2.allOf ?? [];
-        schema2.allOf.push(refSchema);
-      } else {
-        Object.assign(schema2, refSchema);
-      }
-      Object.assign(schema2, _cached);
-      const isParentRef = zodSchema._zod.parent === ref2;
-      if (isParentRef) {
-        for (const key in schema2) {
-          if (key === "$ref" || key === "allOf")
-            continue;
-          if (!(key in _cached)) {
-            delete schema2[key];
-          }
-        }
-      }
-      if (refSchema.$ref && refSeen.def) {
-        for (const key in schema2) {
-          if (key === "$ref" || key === "allOf")
-            continue;
-          if (key in refSeen.def && JSON.stringify(schema2[key]) === JSON.stringify(refSeen.def[key])) {
-            delete schema2[key];
-          }
-        }
-      }
-    }
-    const parent = zodSchema._zod.parent;
-    if (parent && parent !== ref2) {
-      flattenRef(parent);
-      const parentSeen = ctx.seen.get(parent);
-      if (parentSeen == null ? void 0 : parentSeen.schema.$ref) {
-        schema2.$ref = parentSeen.schema.$ref;
-        if (parentSeen.def) {
-          for (const key in schema2) {
-            if (key === "$ref" || key === "allOf")
-              continue;
-            if (key in parentSeen.def && JSON.stringify(schema2[key]) === JSON.stringify(parentSeen.def[key])) {
-              delete schema2[key];
-            }
-          }
-        }
-      }
-    }
-    ctx.override({
-      zodSchema,
-      jsonSchema: schema2,
-      path: seen.path ?? []
-    });
-  };
-  for (const entry of [...ctx.seen.entries()].reverse()) {
-    flattenRef(entry[0]);
-  }
-  const result = {};
-  if (ctx.target === "draft-2020-12") {
-    result.$schema = "https://json-schema.org/draft/2020-12/schema";
-  } else if (ctx.target === "draft-07") {
-    result.$schema = "http://json-schema.org/draft-07/schema#";
-  } else if (ctx.target === "draft-04") {
-    result.$schema = "http://json-schema.org/draft-04/schema#";
-  } else if (ctx.target === "openapi-3.0") ;
-  else ;
-  if ((_a2 = ctx.external) == null ? void 0 : _a2.uri) {
-    const id = (_b2 = ctx.external.registry.get(schema)) == null ? void 0 : _b2.id;
-    if (!id)
-      throw new Error("Schema is missing an `id` property");
-    result.$id = ctx.external.uri(id);
-  }
-  Object.assign(result, root.def ?? root.schema);
-  const rootMetaId = (_c = ctx.metadataRegistry.get(schema)) == null ? void 0 : _c.id;
-  if (rootMetaId !== void 0 && result.id === rootMetaId)
-    delete result.id;
-  const defs = ((_d = ctx.external) == null ? void 0 : _d.defs) ?? {};
-  for (const entry of ctx.seen.entries()) {
-    const seen = entry[1];
-    if (seen.def && seen.defId) {
-      if (seen.def.id === seen.defId)
-        delete seen.def.id;
-      defs[seen.defId] = seen.def;
-    }
-  }
-  if (ctx.external) ;
-  else {
-    if (Object.keys(defs).length > 0) {
-      if (ctx.target === "draft-2020-12") {
-        result.$defs = defs;
-      } else {
-        result.definitions = defs;
-      }
-    }
-  }
-  try {
-    const finalized = JSON.parse(JSON.stringify(result));
-    Object.defineProperty(finalized, "~standard", {
-      value: {
-        ...schema["~standard"],
-        jsonSchema: {
-          input: createStandardJSONSchemaMethod(schema, "input", ctx.processors),
-          output: createStandardJSONSchemaMethod(schema, "output", ctx.processors)
-        }
-      },
-      enumerable: false,
-      writable: false
-    });
-    return finalized;
-  } catch (_err) {
-    throw new Error("Error converting schema to JSON.");
-  }
-}
-function isTransforming(_schema, _ctx) {
-  const ctx = _ctx ?? { seen: /* @__PURE__ */ new Set() };
-  if (ctx.seen.has(_schema))
-    return false;
-  ctx.seen.add(_schema);
-  const def2 = _schema._zod.def;
-  if (def2.type === "transform")
-    return true;
-  if (def2.type === "array")
-    return isTransforming(def2.element, ctx);
-  if (def2.type === "set")
-    return isTransforming(def2.valueType, ctx);
-  if (def2.type === "lazy")
-    return isTransforming(def2.getter(), ctx);
-  if (def2.type === "promise" || def2.type === "optional" || def2.type === "nonoptional" || def2.type === "nullable" || def2.type === "readonly" || def2.type === "default" || def2.type === "prefault") {
-    return isTransforming(def2.innerType, ctx);
-  }
-  if (def2.type === "intersection") {
-    return isTransforming(def2.left, ctx) || isTransforming(def2.right, ctx);
-  }
-  if (def2.type === "record" || def2.type === "map") {
-    return isTransforming(def2.keyType, ctx) || isTransforming(def2.valueType, ctx);
-  }
-  if (def2.type === "pipe") {
-    if (_schema._zod.traits.has("$ZodCodec"))
-      return true;
-    return isTransforming(def2.in, ctx) || isTransforming(def2.out, ctx);
-  }
-  if (def2.type === "object") {
-    for (const key in def2.shape) {
-      if (isTransforming(def2.shape[key], ctx))
-        return true;
-    }
-    return false;
-  }
-  if (def2.type === "union") {
-    for (const option of def2.options) {
-      if (isTransforming(option, ctx))
-        return true;
-    }
-    return false;
-  }
-  if (def2.type === "tuple") {
-    for (const item of def2.items) {
-      if (isTransforming(item, ctx))
-        return true;
-    }
-    if (def2.rest && isTransforming(def2.rest, ctx))
-      return true;
-    return false;
-  }
-  return false;
-}
-const createToJSONSchemaMethod = (schema, processors = {}) => (params) => {
-  const ctx = initializeContext({ ...params, processors });
-  process(schema, ctx);
-  extractDefs(ctx, schema);
-  return finalize(ctx, schema);
-};
-const createStandardJSONSchemaMethod = (schema, io, processors = {}) => (params) => {
-  const { libraryOptions, target } = params ?? {};
-  const ctx = initializeContext({ ...libraryOptions ?? {}, target, io, processors });
-  process(schema, ctx);
-  extractDefs(ctx, schema);
-  return finalize(ctx, schema);
-};
-const formatMap = {
-  guid: "uuid",
-  url: "uri",
-  datetime: "date-time",
-  json_string: "json-string",
-  regex: ""
-  // do not set
-};
-const stringProcessor = (schema, ctx, _json, _params) => {
-  const json = _json;
-  json.type = "string";
-  const { minimum, maximum, format: format2, patterns, contentEncoding } = schema._zod.bag;
-  if (typeof minimum === "number")
-    json.minLength = minimum;
-  if (typeof maximum === "number")
-    json.maxLength = maximum;
-  if (format2) {
-    json.format = formatMap[format2] ?? format2;
-    if (json.format === "")
-      delete json.format;
-    if (format2 === "time") {
-      delete json.format;
-    }
-  }
-  if (contentEncoding)
-    json.contentEncoding = contentEncoding;
-  if (patterns && patterns.size > 0) {
-    const regexes = [...patterns];
-    if (regexes.length === 1)
-      json.pattern = regexes[0].source;
-    else if (regexes.length > 1) {
-      json.allOf = [
-        ...regexes.map((regex) => ({
-          ...ctx.target === "draft-07" || ctx.target === "draft-04" || ctx.target === "openapi-3.0" ? { type: "string" } : {},
-          pattern: regex.source
-        }))
-      ];
-    }
-  }
-};
-const numberProcessor = (schema, ctx, _json, _params) => {
-  const json = _json;
-  const { minimum, maximum, format: format2, multipleOf, exclusiveMaximum, exclusiveMinimum } = schema._zod.bag;
-  if (typeof format2 === "string" && format2.includes("int"))
-    json.type = "integer";
-  else
-    json.type = "number";
-  const exMin = typeof exclusiveMinimum === "number" && exclusiveMinimum >= (minimum ?? Number.NEGATIVE_INFINITY);
-  const exMax = typeof exclusiveMaximum === "number" && exclusiveMaximum <= (maximum ?? Number.POSITIVE_INFINITY);
-  const legacy = ctx.target === "draft-04" || ctx.target === "openapi-3.0";
-  if (exMin) {
-    if (legacy) {
-      json.minimum = exclusiveMinimum;
-      json.exclusiveMinimum = true;
-    } else {
-      json.exclusiveMinimum = exclusiveMinimum;
-    }
-  } else if (typeof minimum === "number") {
-    json.minimum = minimum;
-  }
-  if (exMax) {
-    if (legacy) {
-      json.maximum = exclusiveMaximum;
-      json.exclusiveMaximum = true;
-    } else {
-      json.exclusiveMaximum = exclusiveMaximum;
-    }
-  } else if (typeof maximum === "number") {
-    json.maximum = maximum;
-  }
-  if (typeof multipleOf === "number")
-    json.multipleOf = multipleOf;
-};
-const booleanProcessor = (_schema, _ctx, json, _params) => {
-  json.type = "boolean";
-};
-const neverProcessor = (_schema, _ctx, json, _params) => {
-  json.not = {};
-};
-const unknownProcessor = (_schema, _ctx, _json, _params) => {
-};
-const enumProcessor = (schema, _ctx, json, _params) => {
-  const def2 = schema._zod.def;
-  const values = getEnumValues(def2.entries);
-  if (values.every((v) => typeof v === "number"))
-    json.type = "number";
-  if (values.every((v) => typeof v === "string"))
-    json.type = "string";
-  json.enum = values;
-};
-const literalProcessor = (schema, ctx, json, _params) => {
-  const def2 = schema._zod.def;
-  const vals = [];
-  for (const val of def2.values) {
-    if (val === void 0) {
-      if (ctx.unrepresentable === "throw") {
-        throw new Error("Literal `undefined` cannot be represented in JSON Schema");
-      }
-    } else if (typeof val === "bigint") {
-      if (ctx.unrepresentable === "throw") {
-        throw new Error("BigInt literals cannot be represented in JSON Schema");
-      } else {
-        vals.push(Number(val));
-      }
-    } else {
-      vals.push(val);
-    }
-  }
-  if (vals.length === 0) ;
-  else if (vals.length === 1) {
-    const val = vals[0];
-    json.type = val === null ? "null" : typeof val;
-    if (ctx.target === "draft-04" || ctx.target === "openapi-3.0") {
-      json.enum = [val];
-    } else {
-      json.const = val;
-    }
-  } else {
-    if (vals.every((v) => typeof v === "number"))
-      json.type = "number";
-    if (vals.every((v) => typeof v === "string"))
-      json.type = "string";
-    if (vals.every((v) => typeof v === "boolean"))
-      json.type = "boolean";
-    if (vals.every((v) => v === null))
-      json.type = "null";
-    json.enum = vals;
-  }
-};
-const customProcessor = (_schema, ctx, _json, _params) => {
-  if (ctx.unrepresentable === "throw") {
-    throw new Error("Custom types cannot be represented in JSON Schema");
-  }
-};
-const transformProcessor = (_schema, ctx, _json, _params) => {
-  if (ctx.unrepresentable === "throw") {
-    throw new Error("Transforms cannot be represented in JSON Schema");
-  }
-};
-const arrayProcessor = (schema, ctx, _json, params) => {
-  const json = _json;
-  const def2 = schema._zod.def;
-  const { minimum, maximum } = schema._zod.bag;
-  if (typeof minimum === "number")
-    json.minItems = minimum;
-  if (typeof maximum === "number")
-    json.maxItems = maximum;
-  json.type = "array";
-  json.items = process(def2.element, ctx, {
-    ...params,
-    path: [...params.path, "items"]
-  });
-};
-const objectProcessor = (schema, ctx, _json, params) => {
-  var _a2;
-  const json = _json;
-  const def2 = schema._zod.def;
-  json.type = "object";
-  json.properties = {};
-  const shape = def2.shape;
-  for (const key in shape) {
-    json.properties[key] = process(shape[key], ctx, {
-      ...params,
-      path: [...params.path, "properties", key]
-    });
-  }
-  const allKeys = new Set(Object.keys(shape));
-  const requiredKeys = new Set([...allKeys].filter((key) => {
-    const v = def2.shape[key]._zod;
-    if (ctx.io === "input") {
-      return v.optin === void 0;
-    } else {
-      return v.optout === void 0;
-    }
-  }));
-  if (requiredKeys.size > 0) {
-    json.required = Array.from(requiredKeys);
-  }
-  if (((_a2 = def2.catchall) == null ? void 0 : _a2._zod.def.type) === "never") {
-    json.additionalProperties = false;
-  } else if (!def2.catchall) {
-    if (ctx.io === "output")
-      json.additionalProperties = false;
-  } else if (def2.catchall) {
-    json.additionalProperties = process(def2.catchall, ctx, {
-      ...params,
-      path: [...params.path, "additionalProperties"]
-    });
-  }
-};
-const unionProcessor = (schema, ctx, json, params) => {
-  const def2 = schema._zod.def;
-  const isExclusive = def2.inclusive === false;
-  const options = def2.options.map((x, i) => process(x, ctx, {
-    ...params,
-    path: [...params.path, isExclusive ? "oneOf" : "anyOf", i]
-  }));
-  if (isExclusive) {
-    json.oneOf = options;
-  } else {
-    json.anyOf = options;
-  }
-};
-const intersectionProcessor = (schema, ctx, json, params) => {
-  const def2 = schema._zod.def;
-  const a = process(def2.left, ctx, {
-    ...params,
-    path: [...params.path, "allOf", 0]
-  });
-  const b = process(def2.right, ctx, {
-    ...params,
-    path: [...params.path, "allOf", 1]
-  });
-  const isSimpleIntersection = (val) => "allOf" in val && Object.keys(val).length === 1;
-  const allOf = [
-    ...isSimpleIntersection(a) ? a.allOf : [a],
-    ...isSimpleIntersection(b) ? b.allOf : [b]
-  ];
-  json.allOf = allOf;
-};
-const recordProcessor = (schema, ctx, _json, params) => {
-  const json = _json;
-  const def2 = schema._zod.def;
-  json.type = "object";
-  const keyType = def2.keyType;
-  const keyBag = keyType._zod.bag;
-  const patterns = keyBag == null ? void 0 : keyBag.patterns;
-  if (def2.mode === "loose" && patterns && patterns.size > 0) {
-    const valueSchema = process(def2.valueType, ctx, {
-      ...params,
-      path: [...params.path, "patternProperties", "*"]
-    });
-    json.patternProperties = {};
-    for (const pattern of patterns) {
-      json.patternProperties[pattern.source] = valueSchema;
-    }
-  } else {
-    if (ctx.target === "draft-07" || ctx.target === "draft-2020-12") {
-      json.propertyNames = process(def2.keyType, ctx, {
-        ...params,
-        path: [...params.path, "propertyNames"]
-      });
-    }
-    json.additionalProperties = process(def2.valueType, ctx, {
-      ...params,
-      path: [...params.path, "additionalProperties"]
-    });
-  }
-  const keyValues = keyType._zod.values;
-  if (keyValues) {
-    const validKeyValues = [...keyValues].filter((v) => typeof v === "string" || typeof v === "number");
-    if (validKeyValues.length > 0) {
-      json.required = validKeyValues;
-    }
-  }
-};
-const nullableProcessor = (schema, ctx, json, params) => {
-  const def2 = schema._zod.def;
-  const inner = process(def2.innerType, ctx, params);
-  const seen = ctx.seen.get(schema);
-  if (ctx.target === "openapi-3.0") {
-    seen.ref = def2.innerType;
-    json.nullable = true;
-  } else {
-    json.anyOf = [inner, { type: "null" }];
-  }
-};
-const nonoptionalProcessor = (schema, ctx, _json, params) => {
-  const def2 = schema._zod.def;
-  process(def2.innerType, ctx, params);
-  const seen = ctx.seen.get(schema);
-  seen.ref = def2.innerType;
-};
-const defaultProcessor = (schema, ctx, json, params) => {
-  const def2 = schema._zod.def;
-  process(def2.innerType, ctx, params);
-  const seen = ctx.seen.get(schema);
-  seen.ref = def2.innerType;
-  json.default = JSON.parse(JSON.stringify(def2.defaultValue));
-};
-const prefaultProcessor = (schema, ctx, json, params) => {
-  const def2 = schema._zod.def;
-  process(def2.innerType, ctx, params);
-  const seen = ctx.seen.get(schema);
-  seen.ref = def2.innerType;
-  if (ctx.io === "input")
-    json._prefault = JSON.parse(JSON.stringify(def2.defaultValue));
-};
-const catchProcessor = (schema, ctx, json, params) => {
-  const def2 = schema._zod.def;
-  process(def2.innerType, ctx, params);
-  const seen = ctx.seen.get(schema);
-  seen.ref = def2.innerType;
-  let catchValue;
-  try {
-    catchValue = def2.catchValue(void 0);
-  } catch {
-    throw new Error("Dynamic catch values are not supported in JSON Schema");
-  }
-  json.default = catchValue;
-};
-const pipeProcessor = (schema, ctx, _json, params) => {
-  const def2 = schema._zod.def;
-  const inIsTransform = def2.in._zod.traits.has("$ZodTransform");
-  const innerType = ctx.io === "input" ? inIsTransform ? def2.out : def2.in : def2.out;
-  process(innerType, ctx, params);
-  const seen = ctx.seen.get(schema);
-  seen.ref = innerType;
-};
-const readonlyProcessor = (schema, ctx, json, params) => {
-  const def2 = schema._zod.def;
-  process(def2.innerType, ctx, params);
-  const seen = ctx.seen.get(schema);
-  seen.ref = def2.innerType;
-  json.readOnly = true;
-};
-const optionalProcessor = (schema, ctx, _json, params) => {
-  const def2 = schema._zod.def;
-  process(def2.innerType, ctx, params);
-  const seen = ctx.seen.get(schema);
-  seen.ref = def2.innerType;
-};
-const ZodISODateTime = /* @__PURE__ */ $constructor("ZodISODateTime", (inst, def2) => {
-  $ZodISODateTime.init(inst, def2);
-  ZodStringFormat.init(inst, def2);
-});
-function datetime(params) {
-  return /* @__PURE__ */ _isoDateTime(ZodISODateTime, params);
-}
-const ZodISODate = /* @__PURE__ */ $constructor("ZodISODate", (inst, def2) => {
-  $ZodISODate.init(inst, def2);
-  ZodStringFormat.init(inst, def2);
-});
-function date(params) {
-  return /* @__PURE__ */ _isoDate(ZodISODate, params);
-}
-const ZodISOTime = /* @__PURE__ */ $constructor("ZodISOTime", (inst, def2) => {
-  $ZodISOTime.init(inst, def2);
-  ZodStringFormat.init(inst, def2);
-});
-function time(params) {
-  return /* @__PURE__ */ _isoTime(ZodISOTime, params);
-}
-const ZodISODuration = /* @__PURE__ */ $constructor("ZodISODuration", (inst, def2) => {
-  $ZodISODuration.init(inst, def2);
-  ZodStringFormat.init(inst, def2);
-});
-function duration(params) {
-  return /* @__PURE__ */ _isoDuration(ZodISODuration, params);
-}
-const initializer = (inst, issues) => {
-  $ZodError.init(inst, issues);
-  inst.name = "ZodError";
-  Object.defineProperties(inst, {
-    format: {
-      value: (mapper) => formatError(inst, mapper)
-      // enumerable: false,
-    },
-    flatten: {
-      value: (mapper) => flattenError(inst, mapper)
-      // enumerable: false,
-    },
-    addIssue: {
-      value: (issue2) => {
-        inst.issues.push(issue2);
-        inst.message = JSON.stringify(inst.issues, jsonStringifyReplacer, 2);
-      }
-      // enumerable: false,
-    },
-    addIssues: {
-      value: (issues2) => {
-        inst.issues.push(...issues2);
-        inst.message = JSON.stringify(inst.issues, jsonStringifyReplacer, 2);
-      }
-      // enumerable: false,
-    },
-    isEmpty: {
-      get() {
-        return inst.issues.length === 0;
-      }
-      // enumerable: false,
-    }
-  });
-};
-const ZodRealError = /* @__PURE__ */ $constructor("ZodError", initializer, {
-  Parent: Error
-});
-const parse = /* @__PURE__ */ _parse(ZodRealError);
-const parseAsync = /* @__PURE__ */ _parseAsync(ZodRealError);
-const safeParse = /* @__PURE__ */ _safeParse(ZodRealError);
-const safeParseAsync = /* @__PURE__ */ _safeParseAsync(ZodRealError);
-const encode = /* @__PURE__ */ _encode(ZodRealError);
-const decode = /* @__PURE__ */ _decode(ZodRealError);
-const encodeAsync = /* @__PURE__ */ _encodeAsync(ZodRealError);
-const decodeAsync = /* @__PURE__ */ _decodeAsync(ZodRealError);
-const safeEncode = /* @__PURE__ */ _safeEncode(ZodRealError);
-const safeDecode = /* @__PURE__ */ _safeDecode(ZodRealError);
-const safeEncodeAsync = /* @__PURE__ */ _safeEncodeAsync(ZodRealError);
-const safeDecodeAsync = /* @__PURE__ */ _safeDecodeAsync(ZodRealError);
-const _installedGroups = /* @__PURE__ */ new WeakMap();
-function _installLazyMethods(inst, group, methods) {
-  const proto = Object.getPrototypeOf(inst);
-  let installed = _installedGroups.get(proto);
-  if (!installed) {
-    installed = /* @__PURE__ */ new Set();
-    _installedGroups.set(proto, installed);
-  }
-  if (installed.has(group))
-    return;
-  installed.add(group);
-  for (const key in methods) {
-    const fn2 = methods[key];
-    Object.defineProperty(proto, key, {
-      configurable: true,
-      enumerable: false,
-      get() {
-        const bound = fn2.bind(this);
-        Object.defineProperty(this, key, {
-          configurable: true,
-          writable: true,
-          enumerable: true,
-          value: bound
-        });
-        return bound;
-      },
-      set(v) {
-        Object.defineProperty(this, key, {
-          configurable: true,
-          writable: true,
-          enumerable: true,
-          value: v
-        });
-      }
-    });
-  }
-}
-const ZodType = /* @__PURE__ */ $constructor("ZodType", (inst, def2) => {
-  $ZodType.init(inst, def2);
-  Object.assign(inst["~standard"], {
-    jsonSchema: {
-      input: createStandardJSONSchemaMethod(inst, "input"),
-      output: createStandardJSONSchemaMethod(inst, "output")
-    }
-  });
-  inst.toJSONSchema = createToJSONSchemaMethod(inst, {});
-  inst.def = def2;
-  inst.type = def2.type;
-  Object.defineProperty(inst, "_def", { value: def2 });
-  inst.parse = (data, params) => parse(inst, data, params, { callee: inst.parse });
-  inst.safeParse = (data, params) => safeParse(inst, data, params);
-  inst.parseAsync = async (data, params) => parseAsync(inst, data, params, { callee: inst.parseAsync });
-  inst.safeParseAsync = async (data, params) => safeParseAsync(inst, data, params);
-  inst.spa = inst.safeParseAsync;
-  inst.encode = (data, params) => encode(inst, data, params);
-  inst.decode = (data, params) => decode(inst, data, params);
-  inst.encodeAsync = async (data, params) => encodeAsync(inst, data, params);
-  inst.decodeAsync = async (data, params) => decodeAsync(inst, data, params);
-  inst.safeEncode = (data, params) => safeEncode(inst, data, params);
-  inst.safeDecode = (data, params) => safeDecode(inst, data, params);
-  inst.safeEncodeAsync = async (data, params) => safeEncodeAsync(inst, data, params);
-  inst.safeDecodeAsync = async (data, params) => safeDecodeAsync(inst, data, params);
-  _installLazyMethods(inst, "ZodType", {
-    check(...chks) {
-      const def3 = this.def;
-      return this.clone(mergeDefs(def3, {
-        checks: [
-          ...def3.checks ?? [],
-          ...chks.map((ch) => typeof ch === "function" ? { _zod: { check: ch, def: { check: "custom" }, onattach: [] } } : ch)
-        ]
-      }), { parent: true });
-    },
-    with(...chks) {
-      return this.check(...chks);
-    },
-    clone(def3, params) {
-      return clone(this, def3, params);
-    },
-    brand() {
-      return this;
-    },
-    register(reg, meta) {
-      reg.add(this, meta);
-      return this;
-    },
-    refine(check, params) {
-      return this.check(refine(check, params));
-    },
-    superRefine(refinement, params) {
-      return this.check(superRefine(refinement, params));
-    },
-    overwrite(fn2) {
-      return this.check(/* @__PURE__ */ _overwrite(fn2));
-    },
-    optional() {
-      return optional(this);
-    },
-    exactOptional() {
-      return exactOptional(this);
-    },
-    nullable() {
-      return nullable(this);
-    },
-    nullish() {
-      return optional(nullable(this));
-    },
-    nonoptional(params) {
-      return nonoptional(this, params);
-    },
-    array() {
-      return array(this);
-    },
-    or(arg) {
-      return union([this, arg]);
-    },
-    and(arg) {
-      return intersection(this, arg);
-    },
-    transform(tx) {
-      return pipe(this, transform(tx));
-    },
-    default(d) {
-      return _default(this, d);
-    },
-    prefault(d) {
-      return prefault(this, d);
-    },
-    catch(params) {
-      return _catch(this, params);
-    },
-    pipe(target) {
-      return pipe(this, target);
-    },
-    readonly() {
-      return readonly(this);
-    },
-    describe(description) {
-      const cl = this.clone();
-      globalRegistry.add(cl, { description });
-      return cl;
-    },
-    meta(...args) {
-      if (args.length === 0)
-        return globalRegistry.get(this);
-      const cl = this.clone();
-      globalRegistry.add(cl, args[0]);
-      return cl;
-    },
-    isOptional() {
-      return this.safeParse(void 0).success;
-    },
-    isNullable() {
-      return this.safeParse(null).success;
-    },
-    apply(fn2) {
-      return fn2(this);
-    }
-  });
-  Object.defineProperty(inst, "description", {
-    get() {
-      var _a2;
-      return (_a2 = globalRegistry.get(inst)) == null ? void 0 : _a2.description;
-    },
-    configurable: true
-  });
-  return inst;
-});
-const _ZodString = /* @__PURE__ */ $constructor("_ZodString", (inst, def2) => {
-  $ZodString.init(inst, def2);
-  ZodType.init(inst, def2);
-  inst._zod.processJSONSchema = (ctx, json, params) => stringProcessor(inst, ctx, json);
-  const bag = inst._zod.bag;
-  inst.format = bag.format ?? null;
-  inst.minLength = bag.minimum ?? null;
-  inst.maxLength = bag.maximum ?? null;
-  _installLazyMethods(inst, "_ZodString", {
-    regex(...args) {
-      return this.check(/* @__PURE__ */ _regex(...args));
-    },
-    includes(...args) {
-      return this.check(/* @__PURE__ */ _includes(...args));
-    },
-    startsWith(...args) {
-      return this.check(/* @__PURE__ */ _startsWith(...args));
-    },
-    endsWith(...args) {
-      return this.check(/* @__PURE__ */ _endsWith(...args));
-    },
-    min(...args) {
-      return this.check(/* @__PURE__ */ _minLength(...args));
-    },
-    max(...args) {
-      return this.check(/* @__PURE__ */ _maxLength(...args));
-    },
-    length(...args) {
-      return this.check(/* @__PURE__ */ _length(...args));
-    },
-    nonempty(...args) {
-      return this.check(/* @__PURE__ */ _minLength(1, ...args));
-    },
-    lowercase(params) {
-      return this.check(/* @__PURE__ */ _lowercase(params));
-    },
-    uppercase(params) {
-      return this.check(/* @__PURE__ */ _uppercase(params));
-    },
-    trim() {
-      return this.check(/* @__PURE__ */ _trim());
-    },
-    normalize(...args) {
-      return this.check(/* @__PURE__ */ _normalize(...args));
-    },
-    toLowerCase() {
-      return this.check(/* @__PURE__ */ _toLowerCase());
-    },
-    toUpperCase() {
-      return this.check(/* @__PURE__ */ _toUpperCase());
-    },
-    slugify() {
-      return this.check(/* @__PURE__ */ _slugify());
-    }
-  });
-});
-const ZodString = /* @__PURE__ */ $constructor("ZodString", (inst, def2) => {
-  $ZodString.init(inst, def2);
-  _ZodString.init(inst, def2);
-  inst.email = (params) => inst.check(/* @__PURE__ */ _email(ZodEmail, params));
-  inst.url = (params) => inst.check(/* @__PURE__ */ _url(ZodURL, params));
-  inst.jwt = (params) => inst.check(/* @__PURE__ */ _jwt(ZodJWT, params));
-  inst.emoji = (params) => inst.check(/* @__PURE__ */ _emoji(ZodEmoji, params));
-  inst.guid = (params) => inst.check(/* @__PURE__ */ _guid(ZodGUID, params));
-  inst.uuid = (params) => inst.check(/* @__PURE__ */ _uuid(ZodUUID, params));
-  inst.uuidv4 = (params) => inst.check(/* @__PURE__ */ _uuidv4(ZodUUID, params));
-  inst.uuidv6 = (params) => inst.check(/* @__PURE__ */ _uuidv6(ZodUUID, params));
-  inst.uuidv7 = (params) => inst.check(/* @__PURE__ */ _uuidv7(ZodUUID, params));
-  inst.nanoid = (params) => inst.check(/* @__PURE__ */ _nanoid(ZodNanoID, params));
-  inst.guid = (params) => inst.check(/* @__PURE__ */ _guid(ZodGUID, params));
-  inst.cuid = (params) => inst.check(/* @__PURE__ */ _cuid(ZodCUID, params));
-  inst.cuid2 = (params) => inst.check(/* @__PURE__ */ _cuid2(ZodCUID2, params));
-  inst.ulid = (params) => inst.check(/* @__PURE__ */ _ulid(ZodULID, params));
-  inst.base64 = (params) => inst.check(/* @__PURE__ */ _base64(ZodBase64, params));
-  inst.base64url = (params) => inst.check(/* @__PURE__ */ _base64url(ZodBase64URL, params));
-  inst.xid = (params) => inst.check(/* @__PURE__ */ _xid(ZodXID, params));
-  inst.ksuid = (params) => inst.check(/* @__PURE__ */ _ksuid(ZodKSUID, params));
-  inst.ipv4 = (params) => inst.check(/* @__PURE__ */ _ipv4(ZodIPv4, params));
-  inst.ipv6 = (params) => inst.check(/* @__PURE__ */ _ipv6(ZodIPv6, params));
-  inst.cidrv4 = (params) => inst.check(/* @__PURE__ */ _cidrv4(ZodCIDRv4, params));
-  inst.cidrv6 = (params) => inst.check(/* @__PURE__ */ _cidrv6(ZodCIDRv6, params));
-  inst.e164 = (params) => inst.check(/* @__PURE__ */ _e164(ZodE164, params));
-  inst.datetime = (params) => inst.check(datetime(params));
-  inst.date = (params) => inst.check(date(params));
-  inst.time = (params) => inst.check(time(params));
-  inst.duration = (params) => inst.check(duration(params));
-});
-function string(params) {
-  return /* @__PURE__ */ _string(ZodString, params);
-}
-const ZodStringFormat = /* @__PURE__ */ $constructor("ZodStringFormat", (inst, def2) => {
-  $ZodStringFormat.init(inst, def2);
-  _ZodString.init(inst, def2);
-});
-const ZodEmail = /* @__PURE__ */ $constructor("ZodEmail", (inst, def2) => {
-  $ZodEmail.init(inst, def2);
-  ZodStringFormat.init(inst, def2);
-});
-const ZodGUID = /* @__PURE__ */ $constructor("ZodGUID", (inst, def2) => {
-  $ZodGUID.init(inst, def2);
-  ZodStringFormat.init(inst, def2);
-});
-const ZodUUID = /* @__PURE__ */ $constructor("ZodUUID", (inst, def2) => {
-  $ZodUUID.init(inst, def2);
-  ZodStringFormat.init(inst, def2);
-});
-const ZodURL = /* @__PURE__ */ $constructor("ZodURL", (inst, def2) => {
-  $ZodURL.init(inst, def2);
-  ZodStringFormat.init(inst, def2);
-});
-const ZodEmoji = /* @__PURE__ */ $constructor("ZodEmoji", (inst, def2) => {
-  $ZodEmoji.init(inst, def2);
-  ZodStringFormat.init(inst, def2);
-});
-const ZodNanoID = /* @__PURE__ */ $constructor("ZodNanoID", (inst, def2) => {
-  $ZodNanoID.init(inst, def2);
-  ZodStringFormat.init(inst, def2);
-});
-const ZodCUID = /* @__PURE__ */ $constructor("ZodCUID", (inst, def2) => {
-  $ZodCUID.init(inst, def2);
-  ZodStringFormat.init(inst, def2);
-});
-const ZodCUID2 = /* @__PURE__ */ $constructor("ZodCUID2", (inst, def2) => {
-  $ZodCUID2.init(inst, def2);
-  ZodStringFormat.init(inst, def2);
-});
-const ZodULID = /* @__PURE__ */ $constructor("ZodULID", (inst, def2) => {
-  $ZodULID.init(inst, def2);
-  ZodStringFormat.init(inst, def2);
-});
-const ZodXID = /* @__PURE__ */ $constructor("ZodXID", (inst, def2) => {
-  $ZodXID.init(inst, def2);
-  ZodStringFormat.init(inst, def2);
-});
-const ZodKSUID = /* @__PURE__ */ $constructor("ZodKSUID", (inst, def2) => {
-  $ZodKSUID.init(inst, def2);
-  ZodStringFormat.init(inst, def2);
-});
-const ZodIPv4 = /* @__PURE__ */ $constructor("ZodIPv4", (inst, def2) => {
-  $ZodIPv4.init(inst, def2);
-  ZodStringFormat.init(inst, def2);
-});
-const ZodIPv6 = /* @__PURE__ */ $constructor("ZodIPv6", (inst, def2) => {
-  $ZodIPv6.init(inst, def2);
-  ZodStringFormat.init(inst, def2);
-});
-const ZodCIDRv4 = /* @__PURE__ */ $constructor("ZodCIDRv4", (inst, def2) => {
-  $ZodCIDRv4.init(inst, def2);
-  ZodStringFormat.init(inst, def2);
-});
-const ZodCIDRv6 = /* @__PURE__ */ $constructor("ZodCIDRv6", (inst, def2) => {
-  $ZodCIDRv6.init(inst, def2);
-  ZodStringFormat.init(inst, def2);
-});
-const ZodBase64 = /* @__PURE__ */ $constructor("ZodBase64", (inst, def2) => {
-  $ZodBase64.init(inst, def2);
-  ZodStringFormat.init(inst, def2);
-});
-const ZodBase64URL = /* @__PURE__ */ $constructor("ZodBase64URL", (inst, def2) => {
-  $ZodBase64URL.init(inst, def2);
-  ZodStringFormat.init(inst, def2);
-});
-const ZodE164 = /* @__PURE__ */ $constructor("ZodE164", (inst, def2) => {
-  $ZodE164.init(inst, def2);
-  ZodStringFormat.init(inst, def2);
-});
-const ZodJWT = /* @__PURE__ */ $constructor("ZodJWT", (inst, def2) => {
-  $ZodJWT.init(inst, def2);
-  ZodStringFormat.init(inst, def2);
-});
-const ZodNumber = /* @__PURE__ */ $constructor("ZodNumber", (inst, def2) => {
-  $ZodNumber.init(inst, def2);
-  ZodType.init(inst, def2);
-  inst._zod.processJSONSchema = (ctx, json, params) => numberProcessor(inst, ctx, json);
-  _installLazyMethods(inst, "ZodNumber", {
-    gt(value, params) {
-      return this.check(/* @__PURE__ */ _gt(value, params));
-    },
-    gte(value, params) {
-      return this.check(/* @__PURE__ */ _gte(value, params));
-    },
-    min(value, params) {
-      return this.check(/* @__PURE__ */ _gte(value, params));
-    },
-    lt(value, params) {
-      return this.check(/* @__PURE__ */ _lt(value, params));
-    },
-    lte(value, params) {
-      return this.check(/* @__PURE__ */ _lte(value, params));
-    },
-    max(value, params) {
-      return this.check(/* @__PURE__ */ _lte(value, params));
-    },
-    int(params) {
-      return this.check(int(params));
-    },
-    safe(params) {
-      return this.check(int(params));
-    },
-    positive(params) {
-      return this.check(/* @__PURE__ */ _gt(0, params));
-    },
-    nonnegative(params) {
-      return this.check(/* @__PURE__ */ _gte(0, params));
-    },
-    negative(params) {
-      return this.check(/* @__PURE__ */ _lt(0, params));
-    },
-    nonpositive(params) {
-      return this.check(/* @__PURE__ */ _lte(0, params));
-    },
-    multipleOf(value, params) {
-      return this.check(/* @__PURE__ */ _multipleOf(value, params));
-    },
-    step(value, params) {
-      return this.check(/* @__PURE__ */ _multipleOf(value, params));
-    },
-    finite() {
-      return this;
-    }
-  });
-  const bag = inst._zod.bag;
-  inst.minValue = Math.max(bag.minimum ?? Number.NEGATIVE_INFINITY, bag.exclusiveMinimum ?? Number.NEGATIVE_INFINITY) ?? null;
-  inst.maxValue = Math.min(bag.maximum ?? Number.POSITIVE_INFINITY, bag.exclusiveMaximum ?? Number.POSITIVE_INFINITY) ?? null;
-  inst.isInt = (bag.format ?? "").includes("int") || Number.isSafeInteger(bag.multipleOf ?? 0.5);
-  inst.isFinite = true;
-  inst.format = bag.format ?? null;
-});
-function number(params) {
-  return /* @__PURE__ */ _number(ZodNumber, params);
-}
-const ZodNumberFormat = /* @__PURE__ */ $constructor("ZodNumberFormat", (inst, def2) => {
-  $ZodNumberFormat.init(inst, def2);
-  ZodNumber.init(inst, def2);
-});
-function int(params) {
-  return /* @__PURE__ */ _int(ZodNumberFormat, params);
-}
-const ZodBoolean = /* @__PURE__ */ $constructor("ZodBoolean", (inst, def2) => {
-  $ZodBoolean.init(inst, def2);
-  ZodType.init(inst, def2);
-  inst._zod.processJSONSchema = (ctx, json, params) => booleanProcessor(inst, ctx, json);
-});
-function boolean(params) {
-  return /* @__PURE__ */ _boolean(ZodBoolean, params);
-}
-const ZodUnknown = /* @__PURE__ */ $constructor("ZodUnknown", (inst, def2) => {
-  $ZodUnknown.init(inst, def2);
-  ZodType.init(inst, def2);
-  inst._zod.processJSONSchema = (ctx, json, params) => unknownProcessor();
-});
-function unknown() {
-  return /* @__PURE__ */ _unknown(ZodUnknown);
-}
-const ZodNever = /* @__PURE__ */ $constructor("ZodNever", (inst, def2) => {
-  $ZodNever.init(inst, def2);
-  ZodType.init(inst, def2);
-  inst._zod.processJSONSchema = (ctx, json, params) => neverProcessor(inst, ctx, json);
-});
-function never(params) {
-  return /* @__PURE__ */ _never(ZodNever, params);
-}
-const ZodArray = /* @__PURE__ */ $constructor("ZodArray", (inst, def2) => {
-  $ZodArray.init(inst, def2);
-  ZodType.init(inst, def2);
-  inst._zod.processJSONSchema = (ctx, json, params) => arrayProcessor(inst, ctx, json, params);
-  inst.element = def2.element;
-  _installLazyMethods(inst, "ZodArray", {
-    min(n, params) {
-      return this.check(/* @__PURE__ */ _minLength(n, params));
-    },
-    nonempty(params) {
-      return this.check(/* @__PURE__ */ _minLength(1, params));
-    },
-    max(n, params) {
-      return this.check(/* @__PURE__ */ _maxLength(n, params));
-    },
-    length(n, params) {
-      return this.check(/* @__PURE__ */ _length(n, params));
-    },
-    unwrap() {
-      return this.element;
-    }
-  });
-});
-function array(element, params) {
-  return /* @__PURE__ */ _array(ZodArray, element, params);
-}
-const ZodObject = /* @__PURE__ */ $constructor("ZodObject", (inst, def2) => {
-  $ZodObjectJIT.init(inst, def2);
-  ZodType.init(inst, def2);
-  inst._zod.processJSONSchema = (ctx, json, params) => objectProcessor(inst, ctx, json, params);
-  defineLazy(inst, "shape", () => {
-    return def2.shape;
-  });
-  _installLazyMethods(inst, "ZodObject", {
-    keyof() {
-      return _enum(Object.keys(this._zod.def.shape));
-    },
-    catchall(catchall) {
-      return this.clone({ ...this._zod.def, catchall });
-    },
-    passthrough() {
-      return this.clone({ ...this._zod.def, catchall: unknown() });
-    },
-    loose() {
-      return this.clone({ ...this._zod.def, catchall: unknown() });
-    },
-    strict() {
-      return this.clone({ ...this._zod.def, catchall: never() });
-    },
-    strip() {
-      return this.clone({ ...this._zod.def, catchall: void 0 });
-    },
-    extend(incoming) {
-      return extend(this, incoming);
-    },
-    safeExtend(incoming) {
-      return safeExtend(this, incoming);
-    },
-    merge(other) {
-      return merge(this, other);
-    },
-    pick(mask) {
-      return pick(this, mask);
-    },
-    omit(mask) {
-      return omit(this, mask);
-    },
-    partial(...args) {
-      return partial(ZodOptional, this, args[0]);
-    },
-    required(...args) {
-      return required(ZodNonOptional, this, args[0]);
-    }
-  });
-});
-function object(shape, params) {
-  const def2 = {
-    type: "object",
-    shape: shape ?? {},
-    ...normalizeParams(params)
-  };
-  return new ZodObject(def2);
-}
-const ZodUnion = /* @__PURE__ */ $constructor("ZodUnion", (inst, def2) => {
-  $ZodUnion.init(inst, def2);
-  ZodType.init(inst, def2);
-  inst._zod.processJSONSchema = (ctx, json, params) => unionProcessor(inst, ctx, json, params);
-  inst.options = def2.options;
-});
-function union(options, params) {
-  return new ZodUnion({
-    type: "union",
-    options,
-    ...normalizeParams(params)
-  });
-}
-const ZodIntersection = /* @__PURE__ */ $constructor("ZodIntersection", (inst, def2) => {
-  $ZodIntersection.init(inst, def2);
-  ZodType.init(inst, def2);
-  inst._zod.processJSONSchema = (ctx, json, params) => intersectionProcessor(inst, ctx, json, params);
-});
-function intersection(left2, right2) {
-  return new ZodIntersection({
-    type: "intersection",
-    left: left2,
-    right: right2
-  });
-}
-const ZodRecord = /* @__PURE__ */ $constructor("ZodRecord", (inst, def2) => {
-  $ZodRecord.init(inst, def2);
-  ZodType.init(inst, def2);
-  inst._zod.processJSONSchema = (ctx, json, params) => recordProcessor(inst, ctx, json, params);
-  inst.keyType = def2.keyType;
-  inst.valueType = def2.valueType;
-});
-function record(keyType, valueType, params) {
-  if (!valueType || !valueType._zod) {
-    return new ZodRecord({
-      type: "record",
-      keyType: string(),
-      valueType: keyType,
-      ...normalizeParams(valueType)
-    });
-  }
-  return new ZodRecord({
-    type: "record",
-    keyType,
-    valueType,
-    ...normalizeParams(params)
-  });
-}
-const ZodEnum = /* @__PURE__ */ $constructor("ZodEnum", (inst, def2) => {
-  $ZodEnum.init(inst, def2);
-  ZodType.init(inst, def2);
-  inst._zod.processJSONSchema = (ctx, json, params) => enumProcessor(inst, ctx, json);
-  inst.enum = def2.entries;
-  inst.options = Object.values(def2.entries);
-  const keys2 = new Set(Object.keys(def2.entries));
-  inst.extract = (values, params) => {
-    const newEntries = {};
-    for (const value of values) {
-      if (keys2.has(value)) {
-        newEntries[value] = def2.entries[value];
-      } else
-        throw new Error(`Key ${value} not found in enum`);
-    }
-    return new ZodEnum({
-      ...def2,
-      checks: [],
-      ...normalizeParams(params),
-      entries: newEntries
-    });
-  };
-  inst.exclude = (values, params) => {
-    const newEntries = { ...def2.entries };
-    for (const value of values) {
-      if (keys2.has(value)) {
-        delete newEntries[value];
-      } else
-        throw new Error(`Key ${value} not found in enum`);
-    }
-    return new ZodEnum({
-      ...def2,
-      checks: [],
-      ...normalizeParams(params),
-      entries: newEntries
-    });
-  };
-});
-function _enum(values, params) {
-  const entries2 = Array.isArray(values) ? Object.fromEntries(values.map((v) => [v, v])) : values;
-  return new ZodEnum({
-    type: "enum",
-    entries: entries2,
-    ...normalizeParams(params)
-  });
-}
-const ZodLiteral = /* @__PURE__ */ $constructor("ZodLiteral", (inst, def2) => {
-  $ZodLiteral.init(inst, def2);
-  ZodType.init(inst, def2);
-  inst._zod.processJSONSchema = (ctx, json, params) => literalProcessor(inst, ctx, json);
-  inst.values = new Set(def2.values);
-  Object.defineProperty(inst, "value", {
-    get() {
-      if (def2.values.length > 1) {
-        throw new Error("This schema contains multiple valid literal values. Use `.values` instead.");
-      }
-      return def2.values[0];
-    }
-  });
-});
-function literal(value, params) {
-  return new ZodLiteral({
-    type: "literal",
-    values: Array.isArray(value) ? value : [value],
-    ...normalizeParams(params)
-  });
-}
-const ZodTransform = /* @__PURE__ */ $constructor("ZodTransform", (inst, def2) => {
-  $ZodTransform.init(inst, def2);
-  ZodType.init(inst, def2);
-  inst._zod.processJSONSchema = (ctx, json, params) => transformProcessor(inst, ctx);
-  inst._zod.parse = (payload, _ctx) => {
-    if (_ctx.direction === "backward") {
-      throw new $ZodEncodeError(inst.constructor.name);
-    }
-    payload.addIssue = (issue$1) => {
-      if (typeof issue$1 === "string") {
-        payload.issues.push(issue(issue$1, payload.value, def2));
-      } else {
-        const _issue = issue$1;
-        if (_issue.fatal)
-          _issue.continue = false;
-        _issue.code ?? (_issue.code = "custom");
-        _issue.input ?? (_issue.input = payload.value);
-        _issue.inst ?? (_issue.inst = inst);
-        payload.issues.push(issue(_issue));
-      }
-    };
-    const output = def2.transform(payload.value, payload);
-    if (output instanceof Promise) {
-      return output.then((output2) => {
-        payload.value = output2;
-        payload.fallback = true;
-        return payload;
-      });
-    }
-    payload.value = output;
-    payload.fallback = true;
-    return payload;
-  };
-});
-function transform(fn2) {
-  return new ZodTransform({
-    type: "transform",
-    transform: fn2
-  });
-}
-const ZodOptional = /* @__PURE__ */ $constructor("ZodOptional", (inst, def2) => {
-  $ZodOptional.init(inst, def2);
-  ZodType.init(inst, def2);
-  inst._zod.processJSONSchema = (ctx, json, params) => optionalProcessor(inst, ctx, json, params);
-  inst.unwrap = () => inst._zod.def.innerType;
-});
-function optional(innerType) {
-  return new ZodOptional({
-    type: "optional",
-    innerType
-  });
-}
-const ZodExactOptional = /* @__PURE__ */ $constructor("ZodExactOptional", (inst, def2) => {
-  $ZodExactOptional.init(inst, def2);
-  ZodType.init(inst, def2);
-  inst._zod.processJSONSchema = (ctx, json, params) => optionalProcessor(inst, ctx, json, params);
-  inst.unwrap = () => inst._zod.def.innerType;
-});
-function exactOptional(innerType) {
-  return new ZodExactOptional({
-    type: "optional",
-    innerType
-  });
-}
-const ZodNullable = /* @__PURE__ */ $constructor("ZodNullable", (inst, def2) => {
-  $ZodNullable.init(inst, def2);
-  ZodType.init(inst, def2);
-  inst._zod.processJSONSchema = (ctx, json, params) => nullableProcessor(inst, ctx, json, params);
-  inst.unwrap = () => inst._zod.def.innerType;
-});
-function nullable(innerType) {
-  return new ZodNullable({
-    type: "nullable",
-    innerType
-  });
-}
-const ZodDefault = /* @__PURE__ */ $constructor("ZodDefault", (inst, def2) => {
-  $ZodDefault.init(inst, def2);
-  ZodType.init(inst, def2);
-  inst._zod.processJSONSchema = (ctx, json, params) => defaultProcessor(inst, ctx, json, params);
-  inst.unwrap = () => inst._zod.def.innerType;
-  inst.removeDefault = inst.unwrap;
-});
-function _default(innerType, defaultValue) {
-  return new ZodDefault({
-    type: "default",
-    innerType,
-    get defaultValue() {
-      return typeof defaultValue === "function" ? defaultValue() : shallowClone(defaultValue);
-    }
-  });
-}
-const ZodPrefault = /* @__PURE__ */ $constructor("ZodPrefault", (inst, def2) => {
-  $ZodPrefault.init(inst, def2);
-  ZodType.init(inst, def2);
-  inst._zod.processJSONSchema = (ctx, json, params) => prefaultProcessor(inst, ctx, json, params);
-  inst.unwrap = () => inst._zod.def.innerType;
-});
-function prefault(innerType, defaultValue) {
-  return new ZodPrefault({
-    type: "prefault",
-    innerType,
-    get defaultValue() {
-      return typeof defaultValue === "function" ? defaultValue() : shallowClone(defaultValue);
-    }
-  });
-}
-const ZodNonOptional = /* @__PURE__ */ $constructor("ZodNonOptional", (inst, def2) => {
-  $ZodNonOptional.init(inst, def2);
-  ZodType.init(inst, def2);
-  inst._zod.processJSONSchema = (ctx, json, params) => nonoptionalProcessor(inst, ctx, json, params);
-  inst.unwrap = () => inst._zod.def.innerType;
-});
-function nonoptional(innerType, params) {
-  return new ZodNonOptional({
-    type: "nonoptional",
-    innerType,
-    ...normalizeParams(params)
-  });
-}
-const ZodCatch = /* @__PURE__ */ $constructor("ZodCatch", (inst, def2) => {
-  $ZodCatch.init(inst, def2);
-  ZodType.init(inst, def2);
-  inst._zod.processJSONSchema = (ctx, json, params) => catchProcessor(inst, ctx, json, params);
-  inst.unwrap = () => inst._zod.def.innerType;
-  inst.removeCatch = inst.unwrap;
-});
-function _catch(innerType, catchValue) {
-  return new ZodCatch({
-    type: "catch",
-    innerType,
-    catchValue: typeof catchValue === "function" ? catchValue : () => catchValue
-  });
-}
-const ZodPipe = /* @__PURE__ */ $constructor("ZodPipe", (inst, def2) => {
-  $ZodPipe.init(inst, def2);
-  ZodType.init(inst, def2);
-  inst._zod.processJSONSchema = (ctx, json, params) => pipeProcessor(inst, ctx, json, params);
-  inst.in = def2.in;
-  inst.out = def2.out;
-});
-function pipe(in_, out) {
-  return new ZodPipe({
-    type: "pipe",
-    in: in_,
-    out
-    // ...util.normalizeParams(params),
-  });
-}
-const ZodReadonly = /* @__PURE__ */ $constructor("ZodReadonly", (inst, def2) => {
-  $ZodReadonly.init(inst, def2);
-  ZodType.init(inst, def2);
-  inst._zod.processJSONSchema = (ctx, json, params) => readonlyProcessor(inst, ctx, json, params);
-  inst.unwrap = () => inst._zod.def.innerType;
-});
-function readonly(innerType) {
-  return new ZodReadonly({
-    type: "readonly",
-    innerType
-  });
-}
-const ZodCustom = /* @__PURE__ */ $constructor("ZodCustom", (inst, def2) => {
-  $ZodCustom.init(inst, def2);
-  ZodType.init(inst, def2);
-  inst._zod.processJSONSchema = (ctx, json, params) => customProcessor(inst, ctx);
-});
-function refine(fn2, _params = {}) {
-  return /* @__PURE__ */ _refine(ZodCustom, fn2, _params);
-}
-function superRefine(fn2, params) {
-  return /* @__PURE__ */ _superRefine(fn2, params);
-}
-const ProjectSchema = object({
-  id: string(),
-  name: string(),
-  blueprint: string().nullable().optional(),
-  created_at: string().nullable().optional(),
-  updated_at: string().nullable().optional()
-});
-const ListProjectsSchema = object({
-  projects: array(ProjectSchema)
-});
-object({
-  project: ProjectSchema
-});
-const MutateProjectSchema = object({
-  ok: literal(true),
-  project: ProjectSchema.optional()
-});
-const DeleteProjectSchema = object({
-  ok: literal(true)
-});
-const OutputSchema = object({
-  id: number(),
-  project_id: string(),
-  stage_class: string(),
-  stage_node_id: string().nullable().optional(),
-  stage_uid: string().nullable().optional(),
-  output_type: string(),
-  payload_url: string(),
-  payload_json: unknown().nullable().optional(),
-  params_json: unknown().nullable().optional(),
-  parent_output_id: number().nullable().optional(),
-  created_at: string().nullable().optional()
-});
-object({
-  outputs: array(OutputSchema)
-});
-const LatestOutputSchema = object({
-  output: OutputSchema.nullable()
-});
-const StageMetaEntrySchema = object({
-  node_id: string(),
-  kind: string(),
-  variant: union([
-    literal("loader"),
-    literal("generator"),
-    literal("transform")
-  ]).nullable().optional(),
-  workflow_kind: string().nullable().optional()
-});
-const StageMetaResponseSchema = object({
-  stages: array(StageMetaEntrySchema)
-});
-const EntrySchema = object({
-  id: number(),
-  kind: string(),
-  label: string(),
-  content: string(),
-  metadata: record(string(), unknown()).default({}),
-  updated_at: string().nullable().optional()
-});
-const ListEntriesSchema = object({
-  entries: array(EntrySchema)
-});
-const UpsertEntrySchema = object({
-  ok: literal(true),
-  entry: EntrySchema
-});
-const DeleteEntrySchema = object({
-  ok: literal(true)
-});
-const OkSchema = object({
-  ok: boolean()
-});
-const ImportWorkflowResultSchema = object({
-  ok: boolean(),
-  kind: string(),
-  label: string(),
-  file_path: string().optional()
-});
-const WorkflowStateSchema = object({
-  has_api: boolean(),
-  file_path: string(),
-  file_mtime: number().nullable(),
-  file_exists: boolean()
-});
-const ExposedWidgetSchema = object({
-  node_id: string(),
-  node_title: string(),
-  node_type: string(),
-  group_title: string().nullable(),
-  widget_name: string(),
-  widget_type: string(),
-  widget_props: record(string(), unknown()),
-  current_value: unknown(),
-  stage_binding: string().nullable(),
-  override_value: string().nullable(),
-  cast: string().nullable()
-});
-const WorkflowConfigSchema = object({
-  id: number(),
-  kind: string(),
-  label: string(),
-  has_api: boolean(),
-  description: string().nullable(),
-  gui_notes: array(object({ type: string(), text: string() })),
-  exposed_widgets: array(ExposedWidgetSchema)
-}).passthrough();
-const WorkflowUsageEntrySchema = object({
-  uses: record(string(), boolean()),
-  requires: record(string(), boolean()),
-  requires_count: record(string(), number()).optional(),
-  max_inputs: record(string(), number().nullable())
-});
-const WorkflowInfoSchema = record(
-  string(),
-  record(string(), WorkflowUsageEntrySchema)
-);
-const CapsSchema = object({
-  upstream_kinds: array(string()),
-  option_keys: array(string()),
-  computed_keys: array(string())
-});
-const CapsPayloadSchema = object({
-  caps_by_kind: record(string(), CapsSchema),
-  fallback_caps: CapsSchema
-});
-object({
-  output: union([string(), array(unknown())]).optional(),
-  picked: union([string(), array(unknown())]).optional(),
-  picked_index: union([string(), number(), array(unknown())]).optional(),
-  output_id: union([string(), number(), array(unknown())]).optional()
-}).passthrough();
-class ApiError extends Error {
-  constructor(path, status, message) {
-    super(`${path} failed [${status}]: ${message}`);
-    this.path = path;
-    this.status = status;
-    this.name = "ApiError";
-  }
-}
-class ApiValidationError extends Error {
-  constructor(path, zodError) {
-    super(`${path}: response did not match schema:
-${JSON.stringify(zodError, null, 2)}`);
-    this.path = path;
-    this.zodError = zodError;
-    this.name = "ApiValidationError";
-  }
-}
-async function apiFetch(path, schema, init) {
-  const r = await app.api.fetchApi(path, init);
-  if (!r.ok) {
-    const text = await r.text().catch(() => "");
-    throw new ApiError(path, r.status, text || r.statusText);
-  }
-  const data = await r.json();
-  const result = schema.safeParse(data);
-  if (!result.success) {
-    console.error(`[ComfyTV/api] ${path} schema mismatch`, result.error.format(), "raw:", data);
-    throw new ApiValidationError(path, result.error.format());
-  }
-  return result.data;
-}
-async function apiSend(path, method, schema, body) {
-  return apiFetch(path, schema, {
-    method,
-    headers: body !== void 0 ? { "Content-Type": "application/json" } : void 0,
-    body: body !== void 0 ? JSON.stringify(body) : void 0
-  });
-}
-function fetchCaps() {
-  return apiFetch("/comfytv/caps", CapsPayloadSchema);
-}
-function importWorkflow(kind, filename, content) {
-  return apiSend("/comfytv/workflows/import", "POST", ImportWorkflowResultSchema, {
-    kind,
-    filename,
-    content
-  });
+  const explicit = (_a2 = entry.required_slots) == null ? void 0 : _a2[kind];
+  if (explicit) return explicit;
+  return entry.requires[kind] ? [0] : [];
 }
 let _infoPromise = null;
 function loadWorkflowInfo() {
@@ -25612,8 +26904,8 @@ function countWiredOfKind(node, kind) {
   }
   return n;
 }
-async function validateNode(node, _stageKind) {
-  var _a2, _b2;
+async function validateNode(node, _stageKind, opts = {}) {
+  var _a2;
   const info = await loadWorkflowInfo();
   const out = {};
   const wfWidget = (_a2 = node == null ? void 0 : node.widgets) == null ? void 0 : _a2.find((w) => w.name === "workflow");
@@ -25627,6 +26919,8 @@ async function validateNode(node, _stageKind) {
     }
   }
   if (!entry) return out;
+  const imageRefs2 = opts.imageRefs ?? readImageRefs(node);
+  const assetExists = opts.assetExists ?? (() => true);
   const wiredCount = { image: 0, video: 0, audio: 0, text: 0 };
   for (const inp of (node == null ? void 0 : node.inputs) ?? []) {
     if (inp.link == null) continue;
@@ -25647,8 +26941,23 @@ async function validateNode(node, _stageKind) {
       };
     }
   }
-  for (const kind of ["image", "video", "audio", "text"]) {
-    const needed = ((_b2 = entry.requires_count) == null ? void 0 : _b2[kind]) ?? (entry.requires[kind] ? 1 : 0);
+  if (nodeAcceptsAutogrowImages(node)) {
+    const required2 = requiredSlotsOf(entry, "image");
+    if (required2.length) {
+      const wired = wiredImageSlots(node);
+      const resolvedRefs = imageRefs2.filter((r) => assetExists(r.asset_id));
+      const refCovered = refCoveredImageSlots(resolvedRefs);
+      const missing = missingRequiredImageSlots(required2, wired, refCovered);
+      const total = required2.length;
+      for (const idx of missing) {
+        const msg = total === 1 ? `"${label}" requires an image — wire one into this slot or add an image reference.` : `"${label}" image slot #${idx + 1} has no source — wire one in or add an image reference (${total - missing.length}/${total} ready).`;
+        out[`images.image${idx}`] = { status: "required_but_missing", message: msg };
+      }
+    }
+  }
+  const otherKinds = nodeAcceptsAutogrowImages(node) ? ["video", "audio", "text"] : ["image", "video", "audio", "text"];
+  for (const kind of otherKinds) {
+    const needed = requiredSlotsOf(entry, kind).length;
     if (needed === 0) continue;
     const wired = countWiredOfKind(node, kind);
     if (wired >= needed) continue;
@@ -25885,79 +27194,6 @@ async function _convertGuiToApi(guiJson) {
   }
   return (result == null ? void 0 : result.output) ?? result;
 }
-let _stages = /* @__PURE__ */ new Map();
-let _pending = null;
-async function fetchStageMeta() {
-  const data = await apiFetch("/comfytv/stages", StageMetaResponseSchema);
-  const m = /* @__PURE__ */ new Map();
-  for (const s of data.stages) {
-    m.set(s.node_id, s);
-  }
-  _stages = m;
-  return m;
-}
-function loadStageMeta() {
-  if (_pending) return _pending;
-  _pending = fetchStageMeta().catch((e) => {
-    console.error("[ComfyTV/stageMeta] load failed", e);
-    _pending = null;
-    return /* @__PURE__ */ new Map();
-  });
-  return _pending;
-}
-function getStageMeta(nodeId) {
-  return _stages.get(nodeId);
-}
-function isStageKind(kind) {
-  return kind !== "project";
-}
-const useSelectionStore = /* @__PURE__ */ defineStore("comfytv-selection", () => {
-  const selected = /* @__PURE__ */ ref(null);
-  const selectedKey = computed(
-    () => selected.value ? `${selected.value.workflowKind}::${selected.value.workflowLabel}` : null
-  );
-  const bindingsVersion = /* @__PURE__ */ ref(0);
-  function bumpBindings() {
-    bindingsVersion.value++;
-  }
-  function refreshFromCanvas() {
-    var _a2;
-    const app2 = window.app;
-    const selectedNodes = (_a2 = app2 == null ? void 0 : app2.canvas) == null ? void 0 : _a2.selected_nodes;
-    let nodes = [];
-    if (selectedNodes) {
-      if (typeof selectedNodes[Symbol.iterator] === "function") {
-        nodes = Array.from(selectedNodes);
-      } else {
-        nodes = Object.values(selectedNodes);
-      }
-    }
-    if (nodes.length !== 1) {
-      if (selected.value !== null) selected.value = null;
-      return;
-    }
-    const node = nodes[0];
-    const cls = String((node == null ? void 0 : node.comfyClass) ?? "");
-    const meta = getStageMeta(cls);
-    if (!meta || !meta.workflow_kind) {
-      if (selected.value !== null) selected.value = null;
-      return;
-    }
-    const wfWidget = (node.widgets ?? []).find((w) => w.name === "workflow");
-    const label = wfWidget ? String(wfWidget.value ?? "") : "";
-    const next = {
-      nodeId: node.id,
-      comfyClass: cls,
-      workflowKind: meta.workflow_kind,
-      workflowLabel: label
-    };
-    const cur = selected.value;
-    if (!cur || cur.nodeId !== next.nodeId || cur.comfyClass !== next.comfyClass || cur.workflowKind !== next.workflowKind || cur.workflowLabel !== next.workflowLabel) {
-      selected.value = next;
-    }
-  }
-  return { selected, selectedKey, bindingsVersion, bumpBindings, refreshFromCanvas };
-});
 const DEFAULT_DOWNLOAD_FILENAME = "download";
 function extractFilenameFromUrl(url) {
   try {
@@ -26332,30 +27568,30 @@ function buildBindingOptions(widgets, workflowKind) {
   }
   return out;
 }
-const _hoisted_1$q = { class: "ctv:flex ctv:flex-col ctv:size-full ctv:box-border ctv:overflow-auto ctv:text-xs ctv:pt-2 ctv:pb-6 ctv:px-2.5 ctv:text-base-foreground" };
-const _hoisted_2$m = { class: "ctv:sticky ctv:-top-2 ctv:z-[1] ctv:-mx-2.5 ctv:-mt-2 ctv:mb-2 ctv:py-1.5 ctv:px-2.5 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle" };
-const _hoisted_3$m = { class: "ctv:font-semibold ctv:text-sm" };
-const _hoisted_4$j = {
+const _hoisted_1$t = { class: "ctv:flex ctv:flex-col ctv:size-full ctv:box-border ctv:overflow-auto ctv:text-xs ctv:pt-2 ctv:pb-6 ctv:px-2.5 ctv:text-base-foreground" };
+const _hoisted_2$q = { class: "ctv:sticky ctv:-top-2 ctv:z-[1] ctv:-mx-2.5 ctv:-mt-2 ctv:mb-2 ctv:py-1.5 ctv:px-2.5 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle" };
+const _hoisted_3$q = { class: "ctv:font-semibold ctv:text-sm" };
+const _hoisted_4$n = {
   key: 2,
   class: "ctv:my-1.5 ctv:py-1.5 ctv:px-2 ctv:text-xs ctv:rounded ctv:bg-destructive-background/15 ctv:border ctv:border-destructive-background/50 ctv:text-destructive-background"
 };
-const _hoisted_5$j = {
+const _hoisted_5$n = {
   key: 3,
   class: "ctv:flex ctv:flex-col ctv:gap-3"
 };
-const _hoisted_6$i = { class: "ctv:flex ctv:flex-col ctv:gap-0.5 ctv:pt-1 ctv:pb-2 ctv:border-b ctv:border-border-subtle" };
-const _hoisted_7$h = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_8$h = { class: "ctv:text-xs ctv:font-semibold" };
-const _hoisted_9$h = {
+const _hoisted_6$l = { class: "ctv:flex ctv:flex-col ctv:gap-0.5 ctv:pt-1 ctv:pb-2 ctv:border-b ctv:border-border-subtle" };
+const _hoisted_7$k = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_8$j = { class: "ctv:text-xs ctv:font-semibold" };
+const _hoisted_9$j = {
   key: 0,
   class: "ctv:mt-1 ctv:text-2xs ctv:italic ctv:text-warning-background"
 };
-const _hoisted_10$h = {
+const _hoisted_10$j = {
   key: 0,
   class: "ctv:rounded ctv:overflow-hidden ctv:bg-warning-background/[0.03] ctv:border ctv:border-warning-background/25"
 };
-const _hoisted_11$f = ["aria-expanded"];
-const _hoisted_12$f = { class: "ctv:w-2.5 ctv:text-2xs ctv:text-warning-background/75" };
+const _hoisted_11$g = ["aria-expanded"];
+const _hoisted_12$g = { class: "ctv:w-2.5 ctv:text-2xs ctv:text-warning-background/75" };
 const _hoisted_13$c = { class: "ctv:flex-1 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:font-semibold ctv:text-warning-background" };
 const _hoisted_14$a = { class: "ctv:text-3xs ctv:font-mono ctv:py-px ctv:px-1.5 ctv:rounded-lg ctv:bg-warning-background/10 ctv:text-warning-background/70" };
 const _hoisted_15$a = {
@@ -26381,15 +27617,15 @@ const _hoisted_25$5 = {
   key: 0,
   class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2"
 };
-const _hoisted_26$3 = { class: "ctv:text-2xs" };
-const _hoisted_27$3 = { class: "ctv:font-mono ctv:text-muted-foreground" };
-const _hoisted_28$3 = { class: "ctv:grid ctv:grid-cols-[60px_1fr] ctv:items-center ctv:gap-1.5 ctv:mt-0.5" };
-const _hoisted_29$3 = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_30$3 = {
+const _hoisted_26$4 = { class: "ctv:text-2xs" };
+const _hoisted_27$4 = { class: "ctv:font-mono ctv:text-muted-foreground" };
+const _hoisted_28$4 = { class: "ctv:grid ctv:grid-cols-[60px_1fr] ctv:items-center ctv:gap-1.5 ctv:mt-0.5" };
+const _hoisted_29$4 = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_30$4 = {
   key: 2,
   class: "ctv:p-2 ctv:text-xs ctv:text-left ctv:italic ctv:text-muted-foreground/60"
 };
-const _hoisted_31$3 = { key: 3 };
+const _hoisted_31$4 = { key: 3 };
 const _hoisted_32$3 = { class: "ctv:m-0 ctv:text-xs ctv:whitespace-pre-wrap ctv:text-muted-foreground" };
 const _hoisted_33$2 = { class: "ctv:mt-4 ctv:pt-2.5 ctv:pb-3.5 ctv:px-3 ctv:flex ctv:flex-col ctv:gap-1 ctv:border-t ctv:border-border-subtle" };
 const _hoisted_34$1 = ["disabled", "title"];
@@ -26404,7 +27640,7 @@ const _hoisted_37 = {
 };
 const emptyClass = "ctv:py-5 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-xs ctv:text-muted-foreground/60";
 const sectionHeading = "ctv:mt-1 ctv:mb-1.5 ctv:text-xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground";
-const _sfc_main$s = /* @__PURE__ */ defineComponent({
+const _sfc_main$w = /* @__PURE__ */ defineComponent({
   __name: "WorkflowConfigSidebar",
   setup(__props) {
     const { t: t2 } = useI18n();
@@ -26516,9 +27752,9 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
     const resetBtn = COMFY_BTN_SM + " ctv:self-start ctv:bg-transparent ctv:text-muted-foreground ctv:hover:bg-warning-background/10 ctv:hover:text-warning-background";
     return (_ctx, _cache2) => {
       var _a2, _b2;
-      return openBlock(), createElementBlock("div", _hoisted_1$q, [
-        createBaseVNode("div", _hoisted_2$m, [
-          createBaseVNode("span", _hoisted_3$m, toDisplayString$1(_ctx.$t("configSidebar.title")), 1)
+      return openBlock(), createElementBlock("div", _hoisted_1$t, [
+        createBaseVNode("div", _hoisted_2$q, [
+          createBaseVNode("span", _hoisted_3$q, toDisplayString$1(_ctx.$t("configSidebar.title")), 1)
         ]),
         !selected.value ? (openBlock(), createElementBlock("div", {
           key: 0,
@@ -26526,13 +27762,13 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
         }, toDisplayString$1(_ctx.$t("configSidebar.empty")), 1)) : !selected.value.workflowLabel ? (openBlock(), createElementBlock("div", {
           key: 1,
           class: normalizeClass(emptyClass)
-        }, toDisplayString$1(_ctx.$t("configSidebar.noWorkflowPicked")), 1)) : unref(loadError) ? (openBlock(), createElementBlock("div", _hoisted_4$j, toDisplayString$1(unref(loadError)), 1)) : unref(config2) ? (openBlock(), createElementBlock("div", _hoisted_5$j, [
-          createBaseVNode("div", _hoisted_6$i, [
-            createBaseVNode("span", _hoisted_7$h, toDisplayString$1(unref(config2).kind), 1),
-            createBaseVNode("span", _hoisted_8$h, toDisplayString$1(unref(config2).label), 1),
-            !unref(config2).has_api ? (openBlock(), createElementBlock("span", _hoisted_9$h, toDisplayString$1(_ctx.$t("configSidebar.pickWorkflowFirst")), 1)) : createCommentVNode("", true)
+        }, toDisplayString$1(_ctx.$t("configSidebar.noWorkflowPicked")), 1)) : unref(loadError) ? (openBlock(), createElementBlock("div", _hoisted_4$n, toDisplayString$1(unref(loadError)), 1)) : unref(config2) ? (openBlock(), createElementBlock("div", _hoisted_5$n, [
+          createBaseVNode("div", _hoisted_6$l, [
+            createBaseVNode("span", _hoisted_7$k, toDisplayString$1(unref(config2).kind), 1),
+            createBaseVNode("span", _hoisted_8$j, toDisplayString$1(unref(config2).label), 1),
+            !unref(config2).has_api ? (openBlock(), createElementBlock("span", _hoisted_9$j, toDisplayString$1(_ctx.$t("configSidebar.pickWorkflowFirst")), 1)) : createCommentVNode("", true)
           ]),
-          ((_a2 = unref(config2).gui_notes) == null ? void 0 : _a2.length) ? (openBlock(), createElementBlock("section", _hoisted_10$h, [
+          ((_a2 = unref(config2).gui_notes) == null ? void 0 : _a2.length) ? (openBlock(), createElementBlock("section", _hoisted_10$j, [
             createBaseVNode("button", {
               class: normalizeClass([
                 "ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:py-[5px] ctv:px-2 ctv:text-left ctv:cursor-pointer ctv:[font-family:inherit]",
@@ -26544,10 +27780,10 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
               onClick: _cache2[0] || (_cache2[0] = //@ts-ignore
               (...args) => unref(toggleNotesCollapsed) && unref(toggleNotesCollapsed)(...args))
             }, [
-              createBaseVNode("span", _hoisted_12$f, toDisplayString$1(unref(notesCollapsed) ? "▸" : "▾"), 1),
+              createBaseVNode("span", _hoisted_12$g, toDisplayString$1(unref(notesCollapsed) ? "▸" : "▾"), 1),
               createBaseVNode("span", _hoisted_13$c, toDisplayString$1(_ctx.$t("configSidebar.section.notes")), 1),
               createBaseVNode("span", _hoisted_14$a, toDisplayString$1(unref(config2).gui_notes.length), 1)
-            ], 10, _hoisted_11$f),
+            ], 10, _hoisted_11$g),
             !unref(notesCollapsed) ? (openBlock(), createElementBlock("div", _hoisted_15$a, [
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(config2).gui_notes, (note, i) => {
                 return openBlock(), createElementBlock("div", {
@@ -26596,10 +27832,10 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
                           key: `${w.node_id}/${w.widget_name}`,
                           class: "ctv:flex ctv:flex-col ctv:gap-1 ctv:[&_+_&]:pt-1.5 ctv:[&_+_&]:border-t ctv:[&_+_&]:border-solid ctv:[&_+_&]:border-border-subtle"
                         }, [
-                          createBaseVNode("div", _hoisted_26$3, [
-                            createBaseVNode("span", _hoisted_27$3, "." + toDisplayString$1(w.widget_name), 1)
+                          createBaseVNode("div", _hoisted_26$4, [
+                            createBaseVNode("span", _hoisted_27$4, "." + toDisplayString$1(w.widget_name), 1)
                           ]),
-                          createVNode(_sfc_main$t, {
+                          createVNode(_sfc_main$x, {
                             kind: w.widget_type,
                             "model-value": unref(effectiveValue)(w),
                             options: unref(comboOptions)(w),
@@ -26611,9 +27847,9 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
                             disabled: unref(isStageBound)(w),
                             "onUpdate:modelValue": ($event) => unref(onValueChange)(w, $event)
                           }, null, 8, ["kind", "model-value", "options", "min", "max", "step", "precision", "multiline", "disabled", "onUpdate:modelValue"]),
-                          createBaseVNode("div", _hoisted_28$3, [
-                            createBaseVNode("span", _hoisted_29$3, toDisplayString$1(_ctx.$t("configSidebar.bindTo")), 1),
-                            createVNode(_sfc_main$x, {
+                          createBaseVNode("div", _hoisted_28$4, [
+                            createBaseVNode("span", _hoisted_29$4, toDisplayString$1(_ctx.$t("configSidebar.bindTo")), 1),
+                            createVNode(_sfc_main$B, {
                               "model-value": unref(dropdownValueFor)(w),
                               options: bindingOptions.value,
                               "onUpdate:modelValue": ($event) => unref(onBindingChange)(w, $event)
@@ -26626,8 +27862,8 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
                 }), 128))
               ]);
             }), 128))
-          ])) : (openBlock(), createElementBlock("div", _hoisted_30$3, toDisplayString$1(_ctx.$t("configSidebar.noExposedWidgets")), 1)),
-          unref(config2).description ? (openBlock(), createElementBlock("section", _hoisted_31$3, [
+          ])) : (openBlock(), createElementBlock("div", _hoisted_30$4, toDisplayString$1(_ctx.$t("configSidebar.noExposedWidgets")), 1)),
+          unref(config2).description ? (openBlock(), createElementBlock("section", _hoisted_31$4, [
             createBaseVNode("h3", {
               class: normalizeClass(sectionHeading)
             }, toDisplayString$1(_ctx.$t("configSidebar.section.description")), 1),
@@ -26659,135 +27895,521 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const workflow$1 = { "uploadButton": "⬆ Upload workflow", "imported": 'Imported "{label}"', "importFailed": "Workflow import failed", "notJson": "That file isn't valid JSON" };
-const stage$1 = { "run": "Run", "rerun": "Re-run", "running": "Running…", "cancel": "Cancel", "preparingWorkflow": "Preparing workflow…", "section": { "context": "Context", "pool": "Pool", "output": "Output ({type})", "actions": "Actions" }, "pool": { "clear": "Clear", "clearHint": "Empty the picker pool and reset the selection", "confirmClear": "Clear pool?", "confirm": "Yes", "cancel": "No" }, "empty": { "no_output": "no output yet", "generating": "generating…", "pending_upstream": "upstream pending", "unsupported_type": "unsupported type {type}" }, "source": { "upstream": "← upstream", "pending": "… waiting" }, "disconnect": "Disconnect", "starting": "starting…", "runByKind": { "text": "Generate Text", "image": "Generate Image", "image-batch": "Generate Images", "video": "Generate Video", "audio": "Generate Audio", "panorama": "Generate Panorama", "storyboard": "Generate Storyboard" }, "action": { "viewFull": "View full size", "download": "Download", "close": "Close" }, "preparingWorkflowDetail": "Hang on — converting workflow to api JSON. Try Run again in a moment." };
-const error$1 = { "dismiss": "Dismiss", "cancelled": "Cancelled", "upstreamNotReady": "Upstream not ready", "upstreamNotReadyDetail": "Upstream not ready: {list}. Run those stage(s) first so they produce a snapshot, then Run this stage again.", "workerDied": "Backend stopped without sending a result. The prompt worker likely died (CUDA OOM during cleanup is the usual cause). Restart ComfyUI to recover." };
-const configSidebar$1 = { "title": "Workflow Config", "empty": "Select a stage node on the canvas to edit its workflow config.", "noWorkflowPicked": "This stage's workflow combo is empty — pick one first.", "loading": "Loading…", "noExposedWidgets": "This workflow has no editable widgets, or hasn't been prepared yet — pick it on any stage first so the browser can analyze it.", "pickWorkflowFirst": "Pick this workflow on any stage first to populate widget metadata (the browser-side graphToPrompt has to run).", "bindTo": "Bind to:", "exportPreset": "Export preset.json", "exportPresetTooltip": "Download the current bindings as a *_preset.json file. Drop it next to the workflow JSON in workflows/<kind>/ to ship these defaults to other users.", "exportPresetFailed": "Export failed: {detail}", "resetToPreset": "↻ Reset to shipped preset", "resetToPresetTooltip": "Wipe all bindings + meta for this workflow and re-apply its shipped _preset.json from disk. Your own edits will be lost.", "resetToPresetConfirm": "Reset all bindings for this workflow to the shipped preset? Your edits will be lost.", "resetToPresetFailed": "Reset failed: {detail}", "section": { "widgets": "Widgets", "notes": "Workflow notes", "description": "Description" } };
-const project$1 = { "label": "Current Project", "shared_suffix": "(shared)", "id_prefix": "id:", "refresh": "Refresh project list", "create": "New project", "delete": "Delete this project (files on disk stay)", "delete_confirm": "Delete this project? DB rows will be cleared; files on disk stay.", "create_prompt": "New project name:", "create_default": "Project {n}", "status": { "refreshing": "refreshing…", "refresh_failed": "refresh failed", "create_failed": "create failed", "deleted": "deleted", "delete_failed": "delete failed", "load_failed": "Failed to load project list" } };
-const execution$1 = { "running": "running: node #{nodeId}", "queued": "queued" };
-const actions$1 = { "image": { "edit": { "label": "Edit Image", "tooltip": "Edits that change size or need rich UI (HD / outpaint / inpaint / erase / cutout / crop)" }, "panorama": { "label": "Panorama", "tooltip": "Turn this image into a panorama and explore viewpoints" }, "multiangle": { "label": "Multi-angle", "tooltip": "Re-render this image from a different camera angle" }, "relight": { "label": "Relight", "tooltip": "Brightness / color / rim-light, or reference another image's lighting" }, "preset": { "label": "Presets", "tooltip": "Size-preserving, no-rich-UI preset transforms (multi-view / grid / scene progression)" } }, "video": { "extend": { "label": "Extend", "tooltip": "Extract this clip's last frame and spawn a new VideoStage using it as the I2V start frame — write a prompt for the continuation" }, "change": { "label": "Edit Video", "tooltip": "Modify an existing video: clip / HD / subtitle erase / audio separation" } }, "text": { "refine": { "label": "Refine", "tooltip": "Continue rewriting in a new TextStage" } }, "panorama": { "view-current": { "label": "Current View", "tooltip": "Extract the current viewport as a single image" }, "view-four": { "label": "4 Views", "tooltip": "Extract 4 viewpoints as an image batch" }, "view-twelve": { "label": "12 Views", "tooltip": "Extract 12 viewpoints as an image batch" } }, "storyboard": { "gen-shots": { "label": "Generate Shot Images", "tooltip": "Spawn a Shot Images stage wired to this storyboard — iterates the shot list and renders one image per shot" } } };
-const presets$1 = { "imageVariant": { "multi-cam-9": { "label": "Multi-cam 9-grid", "tooltip": "9 camera angles arranged in a grid" }, "story-4": { "label": "Story Progression (4)", "tooltip": "4 consecutive narrative shots" }, "face-3view": { "label": "Face 3-view", "tooltip": "Face: front / side / 45°" }, "product-3view": { "label": "Product 3-view", "tooltip": "Product: front / side / back" }, "character-3view": { "label": "Character 3-view", "tooltip": "Full-body character: front / side / back" }, "storyboard-25": { "label": "25-grid Storyboard", "tooltip": "25 consecutive storyboard shots" }, "cinematic-light": { "label": "Cinematic Lighting", "tooltip": "Apply cinematic lighting and color grade" }, "frame-3s": { "label": "Project +3s", "tooltip": "Project the scene 3 seconds later" }, "frame-5s": { "label": "Project +5s", "tooltip": "Project the scene 5 seconds later" } }, "imageEdit": { "hd": { "label": "HD", "tooltip": "Upscale to a higher resolution (output is larger)" }, "outpaint": { "label": "Outpaint", "tooltip": "Extend the canvas outward (output is larger)" }, "inpaint": { "label": "Inpaint", "tooltip": "Regenerate a masked region" }, "erase": { "label": "Erase", "tooltip": "Remove a masked region" }, "cutout": { "label": "Cutout", "tooltip": "Extract the subject with a transparent background" }, "crop": { "label": "Crop", "tooltip": "Crop to a bounding box" }, "rotate": { "label": "Rotate", "tooltip": "Rotate by an angle (browser-side, no GPU)" }, "mirror": { "label": "Mirror", "tooltip": "Flip horizontally / vertically (browser-side)" }, "grid": { "label": "Grid Split", "tooltip": "Slice into an R×C grid of tiles (browser-side) → image batch" } }, "videoChange": { "clip": { "label": "Clip", "tooltip": "Clip / trim — pick start and end times" }, "crop": { "label": "Crop", "tooltip": "Spatial crop — keep a rectangle (x, y, w, h) of every frame" }, "resize": { "label": "Resize", "tooltip": "Scale video to a target width × height (use -1 to auto-derive from aspect)" }, "extract-frame": { "label": "Extract Frame", "tooltip": "Pull a single frame out as an image (first / last / middle / custom seconds)" }, "hd": { "label": "HD", "tooltip": "Upscale" }, "subtitle-smart": { "label": "Auto Subtitle Erase", "tooltip": "Auto-detect and remove subtitles" }, "subtitle-select": { "label": "Region Subtitle Erase", "tooltip": "Manually box a region to erase (needs region-selector UI)" }, "audio-vocal": { "label": "Vocals Only", "tooltip": "Voice separation — vocals only" }, "audio-bg": { "label": "Background Only", "tooltip": "Voice separation — instrumental / ambient" }, "demux": { "label": "Demux A/V", "tooltip": "Split into audio track + silent video (two nodes spawned)" } } };
-const shotCell$1 = { "pick": "Pick {tag}", "refine": "Refine {tag}" };
-const imageCrop$1 = { "noInputImage": "No input image — connect an image upstream", "cropPreviewAlt": "Crop preview", "loading": "Loading…", "ratio": "Ratio", "custom": "Custom", "lockRatio": "Lock aspect ratio", "unlockRatio": "Unlock aspect ratio", "applying": "Applying crop…", "applied": "Crop applied — ready for downstream", "adjustToApply": "Drag the rectangle or pick a ratio to apply" };
-const panorama$1 = { "empty": "No panorama yet — upload an HDRI / equirect image or click Run with an upstream image", "uploading": "Uploading…", "upload": "Upload panorama", "clearUpload": "Clear upload", "clearUploadTooltip": "Drop the manual source — Run will then derive from upstream again", "manualSourceBadge": "manual", "loadError": "Failed to load panorama" };
-const imageCompare$1 = { "before": "Before", "after": "After", "noImages": "Connect two images to compare (A / B)" };
-const storyboard$1 = { "shots": "Shots", "addShot": "Add shot", "empty": "No shots yet — Run to generate from the premise, or add shots manually", "moveUp": "Move up", "moveDown": "Move down", "remove": "Remove shot", "regenerate": "Regenerate this shot via the LLM (keeps the rest)", "noRef": "no reference", "uploadRef": "Upload reference image", "clearRef": "Clear reference", "promptPlaceholder": "Describe this shot…", "cols": { "scene_purpose": "Purpose", "character": "Character", "character_desc": "Character notes", "shot_size": "Shot size", "action": "Action", "emotion": "Emotion", "scene_tags": "Scene", "lighting": "Lighting", "sfx": "SFX", "dialogue": "Dialogue", "image_prompt": "Image prompt", "motion_prompt": "Motion prompt" }, "regenerateFailed": "Regenerate shot failed" };
-const timeline$1 = { "keyframes": "Keyframes", "connectImages": "Connect images upstream to use as shots", "addSegment": "Add as a shot", "clickKeyframe": "Click a keyframe above to add a shot", "addAudio": "Add audio track", "noAudio": "Connect audio upstream to add a track", "segmentPrompt": "Shot prompt", "promptPlaceholder": "What happens in this shot…", "length": "Length", "fps": "FPS", "shots": "shots" };
-const gridSplit$1 = { "connectImage": "Connect an image to split", "pickGrid": "Pick a grid preset or set rows × cols", "splitting": "Slicing into {n} tiles…", "done": "Split into {n} tiles — ready for downstream", "rows": "Rows", "cols": "Cols" };
-const panoramaView$1 = { "connectPanorama": "Connect a panorama upstream", "orbitToCapture": "Drag to look around — releasing captures the view", "capturing": "Capturing viewport…", "captured": "Viewport captured — ready for downstream", "aspect": "Aspect", "resolution": "Resolution", "viewCount": "View count", "adjustCountToCapture": "Move the slider to capture views", "capturingCount": "Capturing {i}/{n}…", "capturedN": "Captured {n} views — ready for downstream" };
-const rotate$1 = { "angle": "Angle", "applying": "Applying rotation…", "applied": "Rotation applied — ready for downstream", "adjustToApply": "Slide or click a quick angle to apply" };
-const mirror$1 = { "horizontal": "Horizontal flip", "vertical": "Vertical flip", "applying": "Applying mirror…", "applied": "Mirror applied — ready for downstream", "adjustToApply": "Toggle flips to apply" };
-const painter$1 = { "tool": "Tool", "brush": "Brush", "eraser": "Eraser", "fill": "Fill", "rect": "Rectangle", "ellipse": "Ellipse", "label": "Numbered label", "size": "Size", "color": "Color", "opacity": "Opacity", "hardness": "Hardness", "clear": "Clear" };
-const camera$1 = { "horizontal": "H", "vertical": "V", "zoom": "Z", "resetToDefaults": "Reset to defaults", "azimuth": { "frontView": "front view", "frontRightQuarterView": "front-right quarter view", "rightSideView": "right side view", "backRightQuarterView": "back-right quarter view", "backView": "back view", "backLeftQuarterView": "back-left quarter view", "leftSideView": "left side view", "frontLeftQuarterView": "front-left quarter view" }, "elevation": { "lowAngleShot": "low-angle shot", "eyeLevelShot": "eye-level shot", "elevatedShot": "elevated shot", "highAngleShot": "high-angle shot" }, "distance": { "wideShot": "wide shot", "mediumShot": "medium shot", "closeUp": "close-up" } };
-const outpaint$1 = { "left": "Left", "top": "Top", "right": "Right", "bottom": "Bottom", "reset": "Reset", "output": "Output", "noInputImage": "Wire an image to begin" };
-const fileSlot$1 = { "releaseToUpload": "Release to upload", "clickOrDrag": "Click or drag {kind}", "remove": "Remove {kind}", "image": "image", "video": "video" };
-const mention$1 = { "newTag": "new", "create": "+ Create", "newFragment": "new fragment", "createFragment": "+ Create fragment", "invalidLabel": "Invalid label — start with a letter / underscore (Chinese is fine), then letters / digits / _ / -", "noEntries": "No entries yet — type a label to create one", "contentPlaceholder": "Content this @-token expands to. (For characters / other kinds, use the ComfyTV button → Entries dialog.)", "save": "Save (Ctrl+Enter)" };
-const entries$1 = { "refHelpPre": "Reference any entry in a stage's prompt with", "refHelpPost": "Unknown tokens stay literal.", "colLabel": "Label", "colContent": "Content", "deleteTitle": "Delete @{label}", "confirmDelete": "Delete @{label}? Existing @{label} tokens will fall back to literal text.", "labelError": "Start with a letter / underscore (Chinese is fine), then letters / digits / _ / -", "emptyKind": "No {kind} yet. Click + Add below.", "labelPlaceholder": "label", "save": "Save", "addKind": "+ Add {kind}" };
-const menu$1 = { "openEntryManager": "ComfyTV — open entry manager", "entriesTitle": "ComfyTV Entries", "entriesButtonTooltip": "ComfyTV — entries (fragments / characters / …)", "configSidebarTooltip": "Edit the selected stage node's workflow config" };
-const valuePreview$1 = { "moreShots": "+ {n} more", "emptyTimeline": "empty timeline" };
-const en = {
-  workflow: workflow$1,
-  stage: stage$1,
-  error: error$1,
-  configSidebar: configSidebar$1,
-  project: project$1,
-  execution: execution$1,
-  actions: actions$1,
-  presets: presets$1,
-  shotCell: shotCell$1,
-  imageCrop: imageCrop$1,
-  panorama: panorama$1,
-  imageCompare: imageCompare$1,
-  storyboard: storyboard$1,
-  timeline: timeline$1,
-  gridSplit: gridSplit$1,
-  panoramaView: panoramaView$1,
-  rotate: rotate$1,
-  mirror: mirror$1,
-  painter: painter$1,
-  camera: camera$1,
-  outpaint: outpaint$1,
-  fileSlot: fileSlot$1,
-  mention: mention$1,
-  entries: entries$1,
-  menu: menu$1,
-  valuePreview: valuePreview$1
+const _hoisted_1$s = { class: "ctv:flex ctv:flex-col ctv:size-full ctv:overflow-hidden ctv:text-base-foreground" };
+const _hoisted_2$p = {
+  role: "tablist",
+  class: "ctv:flex ctv:shrink-0 ctv:gap-1 ctv:p-1.5 ctv:border-b ctv:border-border-subtle ctv:bg-interface-panel-surface"
 };
-const workflow = { "uploadButton": "⬆ 上传工作流", "imported": "已导入「{label}」", "importFailed": "工作流导入失败", "notJson": "该文件不是合法 JSON" };
-const stage = { "run": "运行", "rerun": "重新运行", "running": "运行中…", "cancel": "取消", "preparingWorkflow": "准备工作流中…", "section": { "context": "上游输入", "pool": "图片池", "output": "输出 ({type})", "actions": "动作" }, "pool": { "clear": "清除", "clearHint": "清空图片池并重置选择", "confirmClear": "确认清空？", "confirm": "是", "cancel": "否" }, "empty": { "no_output": "暂无输出", "generating": "生成中…", "pending_upstream": "上游待运行", "unsupported_type": "不支持的类型 {type}" }, "source": { "upstream": "← 上游", "pending": "… 等待中" }, "disconnect": "断开此连接", "starting": "启动中…", "runByKind": { "text": "生成文本", "image": "生成图片", "image-batch": "生成图片", "video": "生成视频", "audio": "生成音频", "panorama": "生成全景图", "storyboard": "生成分镜" }, "action": { "viewFull": "查看大图", "download": "下载", "close": "关闭" }, "preparingWorkflowDetail": "稍等 — 正在把工作流转换成 api JSON。稍后再点运行。" };
-const error = { "dismiss": "清除", "cancelled": "已取消", "upstreamNotReady": "上游未就绪", "upstreamNotReadyDetail": "上游未就绪:{list}。请先运行这些 stage 生成快照,然后再运行此 stage。", "workerDied": "后端未返回结果就停止了。prompt worker 可能已崩溃(通常是清理阶段 CUDA OOM)。重启 ComfyUI 后恢复。" };
-const configSidebar = { "title": "工作流配置", "empty": "在画布上选中某个 Stage 节点以编辑它的工作流配置。", "noWorkflowPicked": "该 Stage 还没选工作流 —— 先在下拉里挑一个。", "loading": "加载中…", "noExposedWidgets": "这个工作流没有可编辑的 widget，或者还没准备过 —— 先在画布上任一 Stage 选中它，浏览器侧 graphToPrompt 跑一遍后才有 widget 元数据。", "pickWorkflowFirst": "先在画布上任一 Stage 上选中这个工作流 —— 浏览器侧 graphToPrompt 跑过一遍才有 widget 元数据。", "bindTo": "绑定到：", "exportPreset": "导出 preset.json", "exportPresetTooltip": "把当前绑定导出为 *_preset.json 文件，丢进 workflows/<kind>/ 和工作流 JSON 同目录，其他用户首次启动时会自动应用这套默认。", "exportPresetFailed": "导出失败: {detail}", "resetToPreset": "↻ 重置为内置 preset", "resetToPresetTooltip": "清空该工作流的所有绑定和元数据，重新读取磁盘上的 _preset.json 文件。你自己改过的内容会丢失。", "resetToPresetConfirm": "把这个工作流的所有绑定重置成内置 preset？你自己改过的会丢失。", "resetToPresetFailed": "重置失败: {detail}", "section": { "widgets": "Widget 列表", "notes": "工作流笔记", "description": "说明" } };
-const project = { "label": "当前项目", "shared_suffix": "(共享)", "id_prefix": "id:", "refresh": "刷新项目列表", "create": "新建项目", "delete": "删除该项目（不会删磁盘文件）", "delete_confirm": "确定删除该项目？数据库会清空，磁盘上的生成文件保留。", "create_prompt": "新项目名称：", "create_default": "项目 {n}", "status": { "refreshing": "刷新中…", "refresh_failed": "刷新失败", "create_failed": "创建失败", "deleted": "已删除", "delete_failed": "删除失败", "load_failed": "加载项目列表失败" } };
-const execution = { "running": "运行中：节点 #{nodeId}", "queued": "排队中" };
-const actions = { "image": { "edit": { "label": "修改图片", "tooltip": "改变尺寸或需要交互 UI 的图像编辑（高清 / 扩图 / 重绘 / 擦除 / 抠图 / 裁剪）" }, "panorama": { "label": "全景图", "tooltip": "把当前图变为全景，进入视角操作" }, "multiangle": { "label": "多角度", "tooltip": "从不同相机角度重新渲染该图" }, "relight": { "label": "打光", "tooltip": "调亮度 / 颜色 / 轮廓光，或参考另一张图的灯光" }, "preset": { "label": "预设", "tooltip": "保持尺寸、无需复杂 UI 的预设变换（多视图 / 宫格 / 画面推演 ...）" } }, "video": { "extend": { "label": "延伸", "tooltip": "抽出本段末帧,派生新 VideoStage 用作 I2V 起始帧 —— 写个 prompt 描述接下来要发生什么" }, "change": { "label": "修改视频", "tooltip": "对已上传/已生成的视频做修改：剪辑 / 高清 / 去字幕 / 音频分离" } }, "text": { "refine": { "label": "改写", "tooltip": "在新 TextStage 中继续改写" } }, "panorama": { "view-current": { "label": "当前视角截图", "tooltip": "提取当前视角为单张图" }, "view-four": { "label": "四大视角截图", "tooltip": "提取 4 个视角组成图集" }, "view-twelve": { "label": "12 视角截图", "tooltip": "提取 12 个视角组成图集" } }, "storyboard": { "gen-shots": { "label": "生成分镜图", "tooltip": "派生一个 Shot Images 节点接到这个分镜板上 —— 按镜头列表逐个出图" } } };
-const presets = { "imageVariant": { "multi-cam-9": { "label": "多机位九宫格", "tooltip": "9 个相机角度排列" }, "story-4": { "label": "剧情推演四宫格", "tooltip": "4 连贯剧情画面" }, "face-3view": { "label": "角色脸部三视图", "tooltip": "人脸正/侧/45° 视图" }, "product-3view": { "label": "产品三视图", "tooltip": "产品正/侧/背" }, "character-3view": { "label": "角色三视图", "tooltip": "全身角色正/侧/背" }, "storyboard-25": { "label": "25 宫格连贯分镜", "tooltip": "25 张连贯分镜" }, "cinematic-light": { "label": "电影级光影校正", "tooltip": "应用电影级打光与色彩" }, "frame-3s": { "label": "画面推演 +3s", "tooltip": "推演 3 秒后的画面" }, "frame-5s": { "label": "画面推演 +5s", "tooltip": "推演 5 秒后的画面" } }, "imageEdit": { "hd": { "label": "高清", "tooltip": "提升分辨率 (Upscale) — 输出尺寸大于输入" }, "outpaint": { "label": "扩图", "tooltip": "向外延伸画面 (Outpaint) — 输出比输入大" }, "inpaint": { "label": "重绘", "tooltip": "局部重新生成 (Inpaint) — 需要蒙版" }, "erase": { "label": "擦除", "tooltip": "抹除指定区域 (Erase) — 需要蒙版" }, "cutout": { "label": "抠图", "tooltip": "抠出主体，背景透明 (Cutout / matting)" }, "crop": { "label": "裁剪", "tooltip": "按框裁切 (Crop) — 需要 bbox 拖拽" }, "rotate": { "label": "旋转", "tooltip": "按角度旋转（浏览器端，不占 GPU）" }, "mirror": { "label": "镜像", "tooltip": "水平 / 垂直翻转（浏览器端）" }, "grid": { "label": "宫格切分", "tooltip": "按 R×C 切成多张（浏览器端）→ 图片批次" } }, "videoChange": { "clip": { "label": "剪辑", "tooltip": "裁剪片段 — 输入起始结束时间" }, "crop": { "label": "裁剪", "tooltip": "空间裁剪 — 每帧保留 (x, y, w, h) 矩形" }, "resize": { "label": "缩放", "tooltip": "缩放视频到目标 宽×高(其中一个填 -1 按比例自动算另一个)" }, "extract-frame": { "label": "抽帧", "tooltip": "从视频抽一张图(首/末/中/任意秒数)" }, "hd": { "label": "高清", "tooltip": "提升分辨率" }, "subtitle-smart": { "label": "智能去字幕", "tooltip": "自动检测并擦除字幕" }, "subtitle-select": { "label": "扣选去字幕", "tooltip": "手动框选区域擦除（需要 region selector UI）" }, "audio-vocal": { "label": "仅保留人声", "tooltip": "人声分离 — 仅保留人声" }, "audio-bg": { "label": "仅保留背景声", "tooltip": "人声分离 — 仅保留背景声" }, "demux": { "label": "音视频分离", "tooltip": "同时产出音频轨和静默视频（双节点）" } } };
-const shotCell = { "pick": "选择 {tag}", "refine": "微调 {tag}" };
-const imageCrop = { "noInputImage": "无输入图像 — 请上游连接一张图", "cropPreviewAlt": "裁剪预览", "loading": "加载中…", "ratio": "比例", "custom": "自定义", "lockRatio": "锁定纵横比", "unlockRatio": "解锁纵横比", "applying": "应用裁剪中…", "applied": "裁剪已应用 — 下游可直接使用", "adjustToApply": "拖动矩形或选择比例以应用" };
-const panorama = { "empty": "暂无全景图 — 上传 HDRI / 等距柱状投影图，或接入上游图后点 Run", "uploading": "上传中…", "upload": "上传全景图", "clearUpload": "清除上传", "clearUploadTooltip": "丢弃手动来源 — 之后 Run 会重新从上游派生", "manualSourceBadge": "手动", "loadError": "加载全景图失败" };
-const imageCompare = { "before": "之前", "after": "之后", "noImages": "连接两张图进行对比（A / B）" };
-const storyboard = { "shots": "分镜", "addShot": "添加分镜", "empty": "暂无分镜 — 点 Run 从剧本生成，或手动添加", "moveUp": "上移", "moveDown": "下移", "remove": "删除分镜", "regenerate": "用 LLM 重新生成此镜头(其他镜头保持)", "noRef": "无参考图", "uploadRef": "上传参考图", "clearRef": "清除参考图", "promptPlaceholder": "描述这个镜头…", "cols": { "scene_purpose": "画面描述", "character": "角色", "character_desc": "角色描述", "shot_size": "景别", "action": "角色动作", "emotion": "情绪", "scene_tags": "场景标签", "lighting": "光影氛围", "sfx": "音效", "dialogue": "对白", "image_prompt": "分镜提示词", "motion_prompt": "视频运动提示词" }, "regenerateFailed": "重新生成镜头失败" };
-const timeline = { "keyframes": "关键帧", "connectImages": "上游连接图片作为分镜素材", "addSegment": "添加为分镜", "clickKeyframe": "点击上方关键帧添加分镜", "addAudio": "添加音频轨", "noAudio": "上游连接音频以添加音轨", "segmentPrompt": "分镜提示词", "promptPlaceholder": "这个镜头里发生什么…", "length": "时长", "fps": "帧率", "shots": "镜头" };
-const gridSplit = { "connectImage": "请连接一张图以切分", "pickGrid": "选择宫格预设或设置行 × 列", "splitting": "切分为 {n} 块中…", "done": "已切分为 {n} 块 — 下游可直接使用", "rows": "行", "cols": "列" };
-const panoramaView = { "connectPanorama": "请在上游接入全景图", "orbitToCapture": "拖动环视 — 松开后自动截取当前视角", "capturing": "截取视角中…", "captured": "视角已截取 — 下游可直接使用", "aspect": "比例", "resolution": "分辨率", "viewCount": "视角数", "adjustCountToCapture": "拖动滑块以批量截取", "capturingCount": "截取中 {i}/{n}…", "capturedN": "已截取 {n} 张 — 下游可直接使用" };
-const rotate = { "angle": "角度", "applying": "旋转应用中…", "applied": "旋转已应用 — 下游可直接使用", "adjustToApply": "拖动滑块或点击快速角度以应用" };
-const mirror = { "horizontal": "水平翻转", "vertical": "垂直翻转", "applying": "镜像应用中…", "applied": "镜像已应用 — 下游可直接使用", "adjustToApply": "切换翻转开关以应用" };
-const painter = { "tool": "工具", "brush": "画笔", "eraser": "橡皮", "fill": "填充", "rect": "矩形", "ellipse": "椭圆", "label": "编号标记", "size": "大小", "color": "颜色", "opacity": "不透明度", "hardness": "硬度", "clear": "清除" };
-const camera = { "horizontal": "水平", "vertical": "垂直", "zoom": "距离", "resetToDefaults": "重置为默认值", "azimuth": { "frontView": "正面视角", "frontRightQuarterView": "右前方视角", "rightSideView": "右侧视角", "backRightQuarterView": "右后方视角", "backView": "背面视角", "backLeftQuarterView": "左后方视角", "leftSideView": "左侧视角", "frontLeftQuarterView": "左前方视角" }, "elevation": { "lowAngleShot": "仰拍", "eyeLevelShot": "平视", "elevatedShot": "高角度", "highAngleShot": "俯拍" }, "distance": { "wideShot": "远景", "mediumShot": "中景", "closeUp": "特写" } };
-const outpaint = { "left": "左", "top": "上", "right": "右", "bottom": "下", "reset": "重置", "output": "输出", "noInputImage": "先把一张图片连进来" };
-const fileSlot = { "releaseToUpload": "松开上传", "clickOrDrag": "点击或拖入{kind}", "remove": "移除{kind}", "image": "图片", "video": "视频" };
-const mention = { "newTag": "新建", "create": "+ 新建", "newFragment": "新建片段", "createFragment": "+ 新建片段", "invalidLabel": "标签无效 — 以字母 / 下划线开头(支持中文),后跟字母 / 数字 / _ / -", "noEntries": "还没有条目 — 输入标签即可新建", "contentPlaceholder": "此 @ 标记展开后的内容。(角色等其他类型请用 ComfyTV 按钮 → 条目对话框。)", "save": "保存 (Ctrl+Enter)" };
-const entries = { "refHelpPre": "在 stage 提示词里用", "refHelpPost": "引用任意条目;未知标记保持原文。", "colLabel": "标签", "colContent": "内容", "deleteTitle": "删除 @{label}", "confirmDelete": "删除 @{label}?现有的 @{label} 标记将回退为原文。", "labelError": "以字母 / 下划线开头(支持中文),后跟字母 / 数字 / _ / -", "emptyKind": "还没有{kind}。点击下方 + 添加。", "labelPlaceholder": "标签", "save": "保存", "addKind": "+ 添加{kind}" };
-const menu = { "openEntryManager": "ComfyTV — 打开条目管理", "entriesTitle": "ComfyTV 条目", "entriesButtonTooltip": "ComfyTV — 条目(片段 / 角色 / …)", "configSidebarTooltip": "编辑选中 stage 节点的工作流配置" };
-const valuePreview = { "moreShots": "+ 还有 {n} 个", "emptyTimeline": "空时间轴" };
-const zh = {
-  workflow,
-  stage,
-  error,
-  configSidebar,
-  project,
-  execution,
-  actions,
-  presets,
-  shotCell,
-  imageCrop,
-  panorama,
-  imageCompare,
-  storyboard,
-  timeline,
-  gridSplit,
-  panoramaView,
-  rotate,
-  mirror,
-  painter,
-  camera,
-  outpaint,
-  fileSlot,
-  mention,
-  entries,
-  menu,
-  valuePreview
-};
-function pickLocale() {
-  var _a2, _b2, _c, _d, _e, _f;
-  let stored;
-  try {
-    stored = ((_c = (_b2 = (_a2 = app == null ? void 0 : app.ui) == null ? void 0 : _a2.settings) == null ? void 0 : _b2.getSettingValue) == null ? void 0 : _c.call(_b2, "Comfy.Locale")) ?? ((_f = (_e = (_d = app == null ? void 0 : app.extensionManager) == null ? void 0 : _d.setting) == null ? void 0 : _e.get) == null ? void 0 : _f.call(_e, "Comfy.Locale"));
-  } catch {
-    stored = void 0;
+const _hoisted_3$p = ["aria-selected", "onClick"];
+const _hoisted_4$m = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
+const _hoisted_5$m = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
+const _sfc_main$v = /* @__PURE__ */ defineComponent({
+  __name: "ComfyTVSidebar",
+  setup(__props) {
+    const TABS = [
+      { id: "workflow", labelKey: "sidebar.tab.workflow" },
+      { id: "assets", labelKey: "sidebar.tab.assets" }
+    ];
+    const activeTab = useStorage("comfytv:sidebar:active-tab", "workflow");
+    function tabClass(active) {
+      return [
+        "ctv:flex ctv:shrink-0 ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:[font-family:inherit]",
+        "ctv:rounded-lg ctv:border-none ctv:px-2.5 ctv:py-1.5 ctv:text-xs ctv:transition-all ctv:duration-200",
+        "ctv:focus-visible:outline-none",
+        active ? "ctv:bg-interface-menu-component-surface-hovered ctv:text-base-foreground ctv:font-semibold" : "ctv:bg-transparent ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover"
+      ].join(" ");
+    }
+    return (_ctx, _cache2) => {
+      return openBlock(), createElementBlock("div", _hoisted_1$s, [
+        createBaseVNode("div", _hoisted_2$p, [
+          (openBlock(), createElementBlock(Fragment$1, null, renderList(TABS, (tab) => {
+            return createBaseVNode("button", {
+              key: tab.id,
+              role: "tab",
+              "aria-selected": unref(activeTab) === tab.id,
+              class: normalizeClass(tabClass(unref(activeTab) === tab.id)),
+              onClick: ($event) => activeTab.value = tab.id
+            }, toDisplayString$1(_ctx.$t(tab.labelKey)), 11, _hoisted_3$p);
+          }), 64))
+        ]),
+        withDirectives(createBaseVNode("div", _hoisted_4$m, [
+          createVNode(_sfc_main$w)
+        ], 512), [
+          [vShow, unref(activeTab) === "workflow"]
+        ]),
+        withDirectives(createBaseVNode("div", _hoisted_5$m, [
+          createVNode(_sfc_main$C, {
+            active: unref(activeTab) === "assets"
+          }, null, 8, ["active"])
+        ], 512), [
+          [vShow, unref(activeTab) === "assets"]
+        ])
+      ]);
+    };
   }
-  const candidate = (stored || navigator.language || "en").toLowerCase();
-  if (candidate.startsWith("zh")) return "zh";
-  return "en";
-}
-const i18n = createI18n({
-  legacy: false,
-  locale: pickLocale(),
-  fallbackLocale: "en",
-  messages: { en, zh },
-  missingWarn: false,
-  fallbackWarn: false
 });
-const t = i18n.global.t;
+const _hoisted_1$r = { class: "ctv:flex ctv:gap-1.5 ctv:items-center" };
+const _hoisted_2$o = ["placeholder"];
+const _hoisted_3$o = { class: "ctv:w-24 ctv:shrink-0" };
+const _hoisted_4$l = { class: "comfytv-asset-scroll ctv:h-[224px] ctv:shrink-0 ctv:overflow-y-scroll" };
+const _hoisted_5$l = {
+  key: 0,
+  class: "ctv:py-4 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60"
+};
+const _hoisted_6$k = {
+  key: 1,
+  class: "ctv:grid ctv:grid-cols-[repeat(auto-fill,minmax(64px,1fr))] ctv:gap-1"
+};
+const _hoisted_7$j = ["title", "onClick"];
+const _hoisted_8$i = ["src", "alt"];
+const _hoisted_9$i = {
+  key: 0,
+  class: "ctv:absolute ctv:top-0.5 ctv:right-0.5 ctv:flex ctv:items-center ctv:justify-center ctv:size-4 ctv:rounded-full ctv:text-3xs ctv:leading-none ctv:bg-primary-background ctv:text-white"
+};
+const _hoisted_10$i = { class: "ctv:w-full ctv:truncate ctv:py-0.5 ctv:px-1 ctv:text-left ctv:text-3xs ctv:text-muted-foreground" };
+const _sfc_main$u = /* @__PURE__ */ defineComponent({
+  __name: "AssetPickerPopup",
+  props: {
+    addedIds: {}
+  },
+  emits: ["select", "close"],
+  setup(__props) {
+    const props = __props;
+    function isAdded(id) {
+      var _a2;
+      return ((_a2 = props.addedIds) == null ? void 0 : _a2.includes(id)) ?? false;
+    }
+    const { t: t2 } = useI18n();
+    const store = useAssetStore();
+    const searchEl = /* @__PURE__ */ ref(null);
+    const query = /* @__PURE__ */ ref("");
+    const filter = /* @__PURE__ */ ref("all");
+    const filterValue = computed(
+      () => typeof filter.value === "number" ? String(filter.value) : filter.value
+    );
+    const categoryOptions = computed(() => [
+      { label: t2("assets.category.all"), value: "all" },
+      { label: t2("assets.category.none"), value: "none" },
+      ...store.categories.map((c2) => ({ label: c2.name, value: String(c2.id) }))
+    ]);
+    function onFilterChange(v) {
+      if (v === "all" || v === "none") filter.value = v;
+      else if (v != null) filter.value = Number(v);
+    }
+    const filtered = computed(() => {
+      let rows = store.listByCategory(filter.value);
+      const q = query.value.trim().toLowerCase();
+      if (q) rows = rows.filter((a) => a.name.toLowerCase().includes(q));
+      return rows;
+    });
+    onMounted(() => {
+      var _a2;
+      store.ensureHydrated();
+      (_a2 = searchEl.value) == null ? void 0 : _a2.focus();
+    });
+    return (_ctx, _cache2) => {
+      return openBlock(), createElementBlock("div", {
+        class: "ctv:w-full ctv:mt-1 ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2 ctv:rounded ctv:text-xs ctv:bg-interface-menu-surface ctv:text-base-foreground ctv:border ctv:border-border-default",
+        onKeydown: _cache2[1] || (_cache2[1] = withKeys(withModifiers(($event) => _ctx.$emit("close"), ["stop"]), ["escape"]))
+      }, [
+        createBaseVNode("div", _hoisted_1$r, [
+          withDirectives(createBaseVNode("input", {
+            ref_key: "searchEl",
+            ref: searchEl,
+            "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => query.value = $event),
+            type: "text",
+            placeholder: _ctx.$t("promptAssets.search"),
+            class: "ctv:flex-1 ctv:min-w-0 ctv:py-1 ctv:px-1.5 ctv:rounded-sm ctv:outline-none ctv:box-border ctv:text-xs ctv:leading-snug ctv:[font-family:inherit] ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-default ctv:focus:border-primary-background"
+          }, null, 8, _hoisted_2$o), [
+            [vModelText, query.value]
+          ]),
+          createBaseVNode("div", _hoisted_3$o, [
+            createVNode(_sfc_main$B, {
+              "model-value": filterValue.value,
+              options: categoryOptions.value,
+              "onUpdate:modelValue": onFilterChange
+            }, null, 8, ["model-value", "options"])
+          ])
+        ]),
+        createBaseVNode("div", _hoisted_4$l, [
+          filtered.value.length === 0 ? (openBlock(), createElementBlock("div", _hoisted_5$l, toDisplayString$1(_ctx.$t("promptAssets.empty")), 1)) : (openBlock(), createElementBlock("div", _hoisted_6$k, [
+            (openBlock(true), createElementBlock(Fragment$1, null, renderList(filtered.value, (asset) => {
+              return openBlock(), createElementBlock("button", {
+                key: asset.id,
+                type: "button",
+                class: normalizeClass([
+                  "ctv:relative ctv:flex ctv:flex-col ctv:p-0 ctv:cursor-pointer ctv:overflow-hidden ctv:rounded",
+                  "ctv:bg-secondary-background ctv:border ctv:[font-family:inherit]",
+                  isAdded(asset.id) ? "ctv:border-primary-background" : "ctv:border-border-subtle ctv:hover:border-primary-background/60"
+                ]),
+                title: asset.name,
+                onClick: ($event) => _ctx.$emit("select", asset)
+              }, [
+                createBaseVNode("img", {
+                  src: asset.payload_url,
+                  alt: asset.name,
+                  loading: "lazy",
+                  class: normalizeClass([
+                    "ctv:block ctv:w-full ctv:aspect-square ctv:object-cover",
+                    isAdded(asset.id) ? "ctv:opacity-55" : ""
+                  ])
+                }, null, 10, _hoisted_8$i),
+                isAdded(asset.id) ? (openBlock(), createElementBlock("span", _hoisted_9$i, "✓")) : createCommentVNode("", true),
+                createBaseVNode("span", _hoisted_10$i, toDisplayString$1(asset.name || "—"), 1)
+              ], 10, _hoisted_7$j);
+            }), 128))
+          ]))
+        ])
+      ], 32);
+    };
+  }
+});
+const _hoisted_1$q = { class: "ctv:py-1 ctv:px-2 ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_2$n = {
+  key: 0,
+  class: "ctv:py-1.5 ctv:px-2 ctv:italic ctv:text-muted-foreground"
+};
+const _hoisted_3$n = {
+  key: 1,
+  class: "ctv:py-1.5 ctv:px-2 ctv:text-destructive-background"
+};
+const _hoisted_4$k = ["onClick"];
+const _hoisted_5$k = { class: "ctv:shrink-0 ctv:font-mono ctv:text-muted-foreground" };
+const _hoisted_6$j = { class: "ctv:flex-1 ctv:truncate ctv:text-left" };
+const _hoisted_7$i = {
+  key: 0,
+  class: "ctv:py-1.5 ctv:px-2 ctv:italic ctv:text-muted-foreground ctv:whitespace-normal"
+};
+const badgeClass = "ctv:shrink-0 ctv:py-px ctv:px-1 ctv:rounded-sm ctv:text-3xs ctv:bg-warning-background/15 ctv:text-warning-background";
+const _sfc_main$t = /* @__PURE__ */ defineComponent({
+  __name: "MentionSlotPopover",
+  props: {
+    x: {},
+    y: {},
+    loading: { type: Boolean },
+    error: {},
+    options: {},
+    currentSlot: {},
+    wiredSlots: {},
+    claimedSlots: {}
+  },
+  emits: ["pick", "close"],
+  setup(__props, { emit: __emit }) {
+    const emit2 = __emit;
+    const rootEl = /* @__PURE__ */ ref(null);
+    onClickOutside(rootEl, () => emit2("close"));
+    function rowClass2(active) {
+      return [
+        "ctv:flex ctv:items-center ctv:gap-2 ctv:w-full ctv:py-1 ctv:px-2 ctv:cursor-pointer ctv:rounded-sm",
+        "ctv:border-none ctv:text-xs ctv:text-left ctv:[font-family:inherit]",
+        active ? "ctv:bg-interface-menu-component-surface-selected ctv:text-base-foreground" : "ctv:bg-transparent ctv:text-base-foreground ctv:hover:bg-interface-menu-component-surface-hovered"
+      ].join(" ");
+    }
+    return (_ctx, _cache2) => {
+      return openBlock(), createElementBlock("div", {
+        ref_key: "rootEl",
+        ref: rootEl,
+        class: "comfytv-slot-popover ctv:absolute ctv:z-30 ctv:w-64 ctv:flex ctv:flex-col ctv:p-1 ctv:rounded ctv:shadow-md ctv:text-xs ctv:bg-interface-menu-surface ctv:text-base-foreground ctv:border ctv:border-border-default",
+        style: normalizeStyle({ left: `${__props.x}px`, top: `${__props.y}px` }),
+        onKeydown: _cache2[0] || (_cache2[0] = withKeys(withModifiers(($event) => _ctx.$emit("close"), ["stop"]), ["escape"]))
+      }, [
+        createBaseVNode("div", _hoisted_1$q, toDisplayString$1(_ctx.$t("promptAssets.slotTitle")), 1),
+        __props.loading ? (openBlock(), createElementBlock("div", _hoisted_2$n, toDisplayString$1(_ctx.$t("configSidebar.loading")), 1)) : __props.error ? (openBlock(), createElementBlock("div", _hoisted_3$n, toDisplayString$1(__props.error), 1)) : (openBlock(), createElementBlock(Fragment$1, { key: 2 }, [
+          (openBlock(true), createElementBlock(Fragment$1, null, renderList(__props.options, (opt) => {
+            return openBlock(), createElementBlock("button", {
+              key: opt.slot,
+              type: "button",
+              class: normalizeClass(rowClass2(__props.currentSlot === opt.slot)),
+              onClick: ($event) => _ctx.$emit("pick", opt.slot)
+            }, [
+              createBaseVNode("span", _hoisted_5$k, "#" + toDisplayString$1(opt.slot + 1), 1),
+              createBaseVNode("span", _hoisted_6$j, toDisplayString$1(opt.nodeTitles.join(" / ")), 1),
+              __props.wiredSlots.includes(opt.slot) ? (openBlock(), createElementBlock("span", {
+                key: 0,
+                class: normalizeClass(badgeClass)
+              }, toDisplayString$1(_ctx.$t("promptAssets.slotWired")), 1)) : __props.claimedSlots.includes(opt.slot) && __props.currentSlot !== opt.slot ? (openBlock(), createElementBlock("span", {
+                key: 1,
+                class: normalizeClass(badgeClass)
+              }, toDisplayString$1(_ctx.$t("promptAssets.slotClaimed")), 1)) : createCommentVNode("", true)
+            ], 10, _hoisted_4$k);
+          }), 128)),
+          __props.options.length === 0 ? (openBlock(), createElementBlock("div", _hoisted_7$i, toDisplayString$1(_ctx.$t("promptAssets.slotEmpty")), 1)) : createCommentVNode("", true)
+        ], 64))
+      ], 36);
+    };
+  }
+});
+function useImageReferences(getNode, rootEl) {
+  const { t: t2 } = useI18n();
+  const assetStore = useAssetStore();
+  const selectionStore = useSelectionStore();
+  const refs = /* @__PURE__ */ ref(readImageRefs(getNode()));
+  const pickerOpen = /* @__PURE__ */ ref(false);
+  const slotPicker = /* @__PURE__ */ ref(null);
+  const slotWarnings = /* @__PURE__ */ ref([]);
+  const accepts = computed(() => nodeAcceptsAutogrowImages(getNode()));
+  function assetOf(ref2) {
+    return assetStore.byId(ref2.asset_id);
+  }
+  function assetLabel(ref2) {
+    return assetChipLabel(assetOf(ref2), ref2.asset_id);
+  }
+  function tileTooltip(ref2) {
+    return `${assetLabel(ref2)} · ${t2("promptAssets.slotShort", { n: ref2.slot + 1 })}`;
+  }
+  function nextFreeSlot() {
+    const taken = /* @__PURE__ */ new Set([
+      ...wiredImageSlots(getNode()),
+      ...refs.value.map((r) => r.slot).filter((s) => s != null)
+    ]);
+    let i = 0;
+    while (taken.has(i)) i++;
+    return i;
+  }
+  function setRefs(next) {
+    refs.value = next;
+    writeImageRefs(getNode(), next);
+    void scheduleSlotWarnings();
+    selectionStore.bumpBindings();
+  }
+  function onAddAsset(asset) {
+    if (refs.value.some((r) => r.asset_id === asset.id)) return;
+    setRefs([...refs.value, { asset_id: asset.id, slot: nextFreeSlot() }]);
+  }
+  function removeRef(index) {
+    setRefs(refs.value.filter((_, i) => i !== index));
+  }
+  function openSlotPicker(index, e) {
+    var _a2, _b2;
+    const rootRect = (_a2 = rootEl.value) == null ? void 0 : _a2.getBoundingClientRect();
+    if (!rootRect) return;
+    const tile = e.currentTarget.getBoundingClientRect();
+    const x = Math.max(0, Math.min(tile.left - rootRect.left, rootRect.width - 260));
+    const y = tile.bottom - rootRect.top + 4;
+    const wired = wiredImageSlots(getNode());
+    slotPicker.value = {
+      index,
+      currentSlot: ((_b2 = refs.value[index]) == null ? void 0 : _b2.slot) ?? null,
+      x,
+      y,
+      loading: true,
+      error: null,
+      options: [],
+      wiredSlots: wired,
+      claimedSlots: refs.value.filter((_, i) => i !== index).map((r) => r.slot)
+    };
+    const wf = workflowRefOfNode(getNode());
+    if (!wf) {
+      slotPicker.value.loading = false;
+      return;
+    }
+    fetchImageSlotOptions(wf.kind, wf.label).then((options) => {
+      var _a3;
+      if (((_a3 = slotPicker.value) == null ? void 0 : _a3.index) === index) Object.assign(slotPicker.value, { loading: false, options });
+    }).catch((err2) => {
+      var _a3;
+      if (((_a3 = slotPicker.value) == null ? void 0 : _a3.index) === index) {
+        Object.assign(slotPicker.value, { loading: false, error: String((err2 == null ? void 0 : err2.message) || err2) });
+      }
+    });
+  }
+  function onSlotPick(slot) {
+    const picker = slotPicker.value;
+    slotPicker.value = null;
+    if (!picker) return;
+    const next = refs.value.slice();
+    if (!next[picker.index]) return;
+    next[picker.index] = { ...next[picker.index], slot };
+    setRefs(next);
+  }
+  function closeSlotPicker() {
+    slotPicker.value = null;
+  }
+  let warningsSeq = 0;
+  function warningMessage(w) {
+    switch (w.kind) {
+      case "duplicate":
+        return t2("imageRefs.warnDuplicate", { n: w.slot + 1 });
+      case "override":
+        return t2("imageRefs.warnOverride", { n: w.slot + 1 });
+      case "overflow":
+        return t2("imageRefs.warnOverflow", { count: w.count, total: w.total });
+      case "noSlots":
+        return t2("imageRefs.warnNoSlots");
+    }
+  }
+  async function recomputeSlotWarnings() {
+    const seq = ++warningsSeq;
+    const list = refs.value;
+    if (list.length === 0) {
+      slotWarnings.value = [];
+      return;
+    }
+    const wired = wiredImageSlots(getNode());
+    let options = null;
+    const wf = workflowRefOfNode(getNode());
+    if (wf) {
+      try {
+        options = await fetchImageSlotOptionsCached(wf.kind, wf.label);
+      } catch {
+        options = null;
+      }
+    }
+    if (seq !== warningsSeq) return;
+    slotWarnings.value = refSlotWarnings(list, wired, options).map(warningMessage);
+  }
+  const scheduleSlotWarnings = /* @__PURE__ */ useDebounceFn(() => void recomputeSlotWarnings(), 300);
+  watch(() => selectionStore.bindingsVersion, () => void scheduleSlotWarnings());
+  function init() {
+    assetStore.ensureHydrated();
+    void scheduleSlotWarnings();
+  }
+  return {
+    refs,
+    accepts,
+    pickerOpen,
+    slotPicker,
+    slotWarnings,
+    assetOf,
+    assetLabel,
+    tileTooltip,
+    onAddAsset,
+    removeRef,
+    openSlotPicker,
+    onSlotPick,
+    closeSlotPicker,
+    init
+  };
+}
+const _hoisted_1$p = { class: "ctv:flex ctv:items-center ctv:gap-2" };
+const _hoisted_2$m = { class: "ctv:text-[11px] ctv:font-semibold" };
+const _hoisted_3$m = { class: "ctv:text-3xs ctv:text-muted-foreground ctv:font-mono" };
+const _hoisted_4$j = ["title"];
+const _hoisted_5$j = {
+  key: 1,
+  class: "ctv:flex ctv:flex-wrap ctv:gap-1.5"
+};
+const _hoisted_6$i = ["title", "onClick"];
+const _hoisted_7$h = ["src", "alt"];
+const _hoisted_8$h = {
+  key: 1,
+  class: "ctv:flex ctv:items-center ctv:justify-center ctv:size-full ctv:p-1 ctv:text-center ctv:text-3xs ctv:italic ctv:text-muted-foreground/60"
+};
+const _hoisted_9$h = { class: "ctv:absolute ctv:bottom-0 ctv:inset-x-0 ctv:py-0.5 ctv:px-1 ctv:text-3xs ctv:font-semibold ctv:text-white/90 ctv:overflow-hidden ctv:whitespace-nowrap ctv:text-ellipsis ctv:pointer-events-none ctv:bg-linear-to-b ctv:from-transparent ctv:to-black/75" };
+const _hoisted_10$h = ["title", "onClick"];
+const _hoisted_11$f = {
+  key: 2,
+  class: "ctv:text-2xs ctv:italic ctv:text-muted-foreground/60"
+};
+const _hoisted_12$f = {
+  key: 3,
+  class: "ctv:flex ctv:flex-col ctv:gap-0.5 ctv:py-1 ctv:px-1.5 ctv:rounded ctv:text-2xs ctv:bg-warning-background/10 ctv:border ctv:border-warning-background/40 ctv:text-warning-background"
+};
+const _sfc_main$s = /* @__PURE__ */ defineComponent({
+  __name: "ImageReferences",
+  props: {
+    node: {}
+  },
+  setup(__props) {
+    const props = __props;
+    const rootEl = /* @__PURE__ */ ref(null);
+    const {
+      refs,
+      accepts,
+      pickerOpen,
+      slotPicker,
+      slotWarnings,
+      assetOf,
+      tileTooltip,
+      onAddAsset,
+      removeRef,
+      openSlotPicker,
+      onSlotPick,
+      closeSlotPicker,
+      init
+    } = useImageReferences(() => props.node, rootEl);
+    onMounted(init);
+    const plusBtnClass = [
+      "ctv:inline-flex ctv:items-center ctv:justify-center ctv:size-5 ctv:cursor-pointer ctv:[font-family:inherit]",
+      "ctv:rounded-sm ctv:border ctv:border-border-default ctv:text-xs ctv:leading-none",
+      "ctv:bg-secondary-background ctv:text-muted-foreground",
+      "ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground"
+    ].join(" ");
+    const removeBtn = [
+      "ctv:absolute ctv:top-0.5 ctv:right-0.5 ctv:hidden ctv:group-hover:flex ctv:items-center ctv:justify-center",
+      "ctv:size-4 ctv:rounded-sm ctv:cursor-pointer ctv:text-2xs ctv:leading-none ctv:[font-family:inherit]",
+      "ctv:bg-black/60 ctv:text-white ctv:border ctv:border-white/30 ctv:hover:bg-destructive-background/80"
+    ].join(" ");
+    return (_ctx, _cache2) => {
+      return unref(accepts) ? (openBlock(), createElementBlock("section", {
+        key: 0,
+        ref_key: "rootEl",
+        ref: rootEl,
+        class: "ctv:relative ctv:flex ctv:flex-col ctv:gap-1"
+      }, [
+        createBaseVNode("div", _hoisted_1$p, [
+          createBaseVNode("span", _hoisted_2$m, toDisplayString$1(_ctx.$t("imageRefs.title")), 1),
+          createBaseVNode("span", _hoisted_3$m, toDisplayString$1(unref(refs).length || ""), 1),
+          createBaseVNode("button", {
+            type: "button",
+            class: normalizeClass(["ctv:ml-auto", unref(plusBtnClass)]),
+            title: unref(pickerOpen) ? _ctx.$t("stage.action.close") : _ctx.$t("imageRefs.add"),
+            onClick: _cache2[0] || (_cache2[0] = withModifiers(($event) => pickerOpen.value = !unref(pickerOpen), ["stop"]))
+          }, toDisplayString$1(unref(pickerOpen) ? "×" : "＋"), 11, _hoisted_4$j)
+        ]),
+        unref(pickerOpen) ? (openBlock(), createBlock(_sfc_main$u, {
+          key: 0,
+          "added-ids": unref(refs).map((r) => r.asset_id),
+          onSelect: unref(onAddAsset),
+          onClose: _cache2[1] || (_cache2[1] = ($event) => pickerOpen.value = false)
+        }, null, 8, ["added-ids", "onSelect"])) : createCommentVNode("", true),
+        unref(refs).length ? (openBlock(), createElementBlock("div", _hoisted_5$j, [
+          (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(refs), (ref2, i) => {
+            return openBlock(), createElementBlock("div", {
+              key: ref2.asset_id,
+              class: "ctv:group ctv:relative ctv:w-[76px] ctv:h-[76px] ctv:rounded-sm ctv:overflow-hidden ctv:cursor-pointer ctv:bg-black/30 ctv:border ctv:border-border-default ctv:hover:border-primary-background/70",
+              title: unref(tileTooltip)(ref2),
+              onClick: ($event) => unref(openSlotPicker)(i, $event)
+            }, [
+              unref(assetOf)(ref2) ? (openBlock(), createElementBlock("img", {
+                key: 0,
+                src: unref(assetOf)(ref2).payload_url,
+                alt: unref(assetOf)(ref2).name,
+                class: "ctv:block ctv:size-full ctv:object-cover",
+                draggable: "false"
+              }, null, 8, _hoisted_7$h)) : (openBlock(), createElementBlock("div", _hoisted_8$h, toDisplayString$1(_ctx.$t("promptAssets.missing", { id: ref2.asset_id })), 1)),
+              createBaseVNode("span", _hoisted_9$h, toDisplayString$1(`#${ref2.slot + 1}`), 1),
+              createBaseVNode("button", {
+                type: "button",
+                class: normalizeClass(unref(removeBtn)),
+                title: _ctx.$t("imageRefs.remove"),
+                onClick: withModifiers(($event) => unref(removeRef)(i), ["stop"])
+              }, "×", 10, _hoisted_10$h)
+            ], 8, _hoisted_6$i);
+          }), 128))
+        ])) : (openBlock(), createElementBlock("div", _hoisted_11$f, toDisplayString$1(_ctx.$t("imageRefs.empty")), 1)),
+        unref(slotWarnings).length ? (openBlock(), createElementBlock("div", _hoisted_12$f, [
+          (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(slotWarnings), (w, i) => {
+            return openBlock(), createElementBlock("div", { key: i }, "⚠ " + toDisplayString$1(w), 1);
+          }), 128))
+        ])) : createCommentVNode("", true),
+        unref(slotPicker) ? (openBlock(), createBlock(_sfc_main$t, {
+          key: 4,
+          x: unref(slotPicker).x,
+          y: unref(slotPicker).y,
+          loading: unref(slotPicker).loading,
+          error: unref(slotPicker).error,
+          options: unref(slotPicker).options,
+          "current-slot": unref(slotPicker).currentSlot,
+          "wired-slots": unref(slotPicker).wiredSlots,
+          "claimed-slots": unref(slotPicker).claimedSlots,
+          onPick: unref(onSlotPick),
+          onClose: unref(closeSlotPicker)
+        }, null, 8, ["x", "y", "loading", "error", "options", "current-slot", "wired-slots", "claimed-slots", "onPick", "onClose"])) : createCommentVNode("", true)
+      ], 512)) : createCommentVNode("", true);
+    };
+  }
+});
 function OrderedMap(content) {
   this.content = content;
 }
@@ -48218,7 +49840,7 @@ var defaultProps = Object.assign({
   },
   onUntrigger: function onUntrigger() {
   },
-  onClickOutside: function onClickOutside() {
+  onClickOutside: function onClickOutside2() {
   },
   placement: "top",
   plugins: [],
@@ -49338,15 +50960,16 @@ const useEntryStore = /* @__PURE__ */ defineStore("entries", () => {
     _hydrate
   };
 });
+const MAX_ENTRIES = 8;
 function useMentionSuggestion(projectId, MentionList) {
   const entryStore = useEntryStore();
   return {
     char: "@",
     items: ({ query }) => {
-      const list = entryStore.list(projectId.value);
-      if (!query) return list.slice(0, 12);
       const q = query.toLowerCase();
-      return list.filter((e) => e.label.toLowerCase().includes(q)).slice(0, 12);
+      let entries2 = entryStore.list(projectId.value);
+      if (q) entries2 = entries2.filter((e) => e.label.toLowerCase().includes(q));
+      return entries2.slice(0, MAX_ENTRIES).map((entry) => ({ type: "entry", entry }));
     },
     render: () => {
       let component;
@@ -49500,251 +51123,6 @@ const useProjectStore = /* @__PURE__ */ defineStore("comfytv-project", () => {
     adoptOutputs,
     tagOutputStageUid
   };
-});
-function getWidget(node, name) {
-  var _a2;
-  return (_a2 = node == null ? void 0 : node.widgets) == null ? void 0 : _a2.find((w) => w.name === name);
-}
-function applyHiddenWidgetFlags(node) {
-  var _a2;
-  for (const w of (node == null ? void 0 : node.widgets) ?? []) {
-    if ((_a2 = w.options) == null ? void 0 : _a2.hidden) w.hidden = true;
-  }
-}
-function readWidgetStr(node, name, fallback) {
-  const w = getWidget(node, name);
-  if (!w) return fallback;
-  const v = String(w.value ?? "");
-  return v || fallback;
-}
-function readWidgetNum(node, name, fallback) {
-  const w = getWidget(node, name);
-  if (!w) return fallback;
-  const n = Number(w.value);
-  return Number.isFinite(n) ? n : fallback;
-}
-function writeWidget(node, name, value, opts) {
-  var _a2;
-  const w = getWidget(node, name);
-  if (!w) return;
-  if (w.value === value) return;
-  w.value = value;
-  if ((opts == null ? void 0 : opts.fireCallback) === false) return;
-  (_a2 = w.callback) == null ? void 0 : _a2.call(w, value);
-}
-const _hoisted_1$p = { class: "ctv:min-w-64 ctv:max-w-md ctv:max-h-60 ctv:overflow-y-auto ctv:rounded ctv:text-xs ctv:bg-interface-menu-surface ctv:text-base-foreground ctv:border ctv:border-border-default ctv:shadow-md" };
-const _hoisted_2$l = ["title", "onClick"];
-const _hoisted_3$l = { class: "ctv:font-mono ctv:text-base-foreground ctv:shrink-0" };
-const _hoisted_4$i = { class: "ctv:text-muted-foreground ctv:overflow-hidden ctv:text-ellipsis ctv:whitespace-nowrap" };
-const _hoisted_5$i = { class: "ctv:font-mono ctv:text-base-foreground ctv:shrink-0" };
-const _hoisted_6$h = { class: "ctv:text-muted-foreground ctv:overflow-hidden ctv:text-ellipsis ctv:whitespace-nowrap" };
-const _hoisted_7$g = {
-  key: 1,
-  class: "ctv:py-1.5 ctv:px-2 ctv:italic ctv:text-xs ctv:text-muted-foreground"
-};
-const _hoisted_8$g = { class: "ctv:text-xs ctv:text-muted-foreground" };
-const _hoisted_9$g = { class: "ctv:text-base-foreground ctv:font-mono" };
-const _hoisted_10$g = ["placeholder"];
-const _hoisted_11$e = { class: "ctv:flex ctv:justify-end ctv:gap-1.5" };
-const _hoisted_12$e = ["disabled"];
-const KIND_TAG_BASE = "ctv:shrink-0 ctv:py-px ctv:px-1.5 ctv:rounded-sm ctv:text-3xs ctv:font-semibold ctv:uppercase ctv:tracking-wide ctv:bg-secondary-background ctv:text-secondary-foreground";
-const ACTION_BTN_BASE = "ctv:relative ctv:inline-flex ctv:items-center ctv:justify-center ctv:gap-2 ctv:cursor-pointer ctv:touch-manipulation ctv:whitespace-nowrap ctv:appearance-none ctv:border-none ctv:transition-colors ctv:h-6 ctv:rounded-sm ctv:px-2 ctv:py-1 ctv:text-xs ctv:font-medium ctv:disabled:pointer-events-none ctv:disabled:opacity-50";
-const _sfc_main$r = /* @__PURE__ */ defineComponent({
-  __name: "MentionList",
-  props: {
-    items: {},
-    command: { type: Function },
-    query: {}
-  },
-  setup(__props, { expose: __expose }) {
-    const props = __props;
-    const entryStore = useEntryStore();
-    const projectStore = useProjectStore();
-    const showKindTag = ENTRY_KINDS.length > 1;
-    const activeIndex = /* @__PURE__ */ ref(0);
-    watch(() => props.items, () => {
-      activeIndex.value = 0;
-    });
-    watch(() => props.query, () => {
-      activeIndex.value = 0;
-    });
-    const canCreate = computed(() => !!props.query && LABEL_RE.test(props.query));
-    const creating = /* @__PURE__ */ ref(false);
-    const pendingLabel = /* @__PURE__ */ ref("");
-    const pendingContent = /* @__PURE__ */ ref("");
-    const createTa = /* @__PURE__ */ ref(null);
-    function startCreate() {
-      pendingLabel.value = props.query;
-      pendingContent.value = "";
-      creating.value = true;
-      nextTick(() => {
-        var _a2;
-        return (_a2 = createTa.value) == null ? void 0 : _a2.focus();
-      });
-    }
-    function cancelCreate() {
-      creating.value = false;
-      pendingLabel.value = "";
-      pendingContent.value = "";
-    }
-    async function saveCreate() {
-      const content = pendingContent.value.trim();
-      if (!content) return;
-      const row = await entryStore.upsert(projectStore.currentProjectId || "", {
-        kind: "fragment",
-        label: pendingLabel.value,
-        content
-      });
-      creating.value = false;
-      pendingContent.value = "";
-      if (row) {
-        props.command({ id: row.id, label: row.label });
-      }
-    }
-    function onCreateKeydown(e) {
-      if (e.key === "Escape") {
-        cancelCreate();
-        return;
-      }
-      if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
-        e.preventDefault();
-        void saveCreate();
-      }
-    }
-    function selectItem(index) {
-      if (index < props.items.length) {
-        const item = props.items[index];
-        if (item) props.command({ id: item.id, label: item.label });
-      } else if (canCreate.value) {
-        startCreate();
-      }
-    }
-    function upHandler() {
-      const total = props.items.length + (canCreate.value ? 1 : 0);
-      if (total === 0) return;
-      activeIndex.value = (activeIndex.value + total - 1) % total;
-    }
-    function downHandler() {
-      const total = props.items.length + (canCreate.value ? 1 : 0);
-      if (total === 0) return;
-      activeIndex.value = (activeIndex.value + 1) % total;
-    }
-    function enterHandler() {
-      selectItem(activeIndex.value);
-    }
-    __expose({
-      onKeyDown({ event }) {
-        if (creating.value) return event.key === "Escape";
-        if (event.key === "ArrowUp") {
-          upHandler();
-          return true;
-        }
-        if (event.key === "ArrowDown") {
-          downHandler();
-          return true;
-        }
-        if (event.key === "Enter" || event.key === "Tab") {
-          enterHandler();
-          return true;
-        }
-        if (event.key === "Escape") {
-          return true;
-        }
-        return false;
-      }
-    });
-    function kindTag(_kind) {
-      return KIND_TAG_BASE;
-    }
-    const ACTION_BTN_VARIANTS = {
-      default: " ctv:bg-secondary-background ctv:text-secondary-foreground ctv:hover:bg-secondary-background-hover",
-      save: " ctv:bg-primary-background ctv:text-base-foreground ctv:hover:bg-primary-background-hover"
-    };
-    function actionBtn(variant = "default") {
-      return ACTION_BTN_BASE + ACTION_BTN_VARIANTS[variant];
-    }
-    return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$p, [
-        !creating.value ? (openBlock(), createElementBlock(Fragment$1, { key: 0 }, [
-          (openBlock(true), createElementBlock(Fragment$1, null, renderList(__props.items, (item, i) => {
-            return openBlock(), createElementBlock("div", {
-              key: item.id,
-              class: normalizeClass([
-                "ctv:flex ctv:items-baseline ctv:gap-2 ctv:py-1 ctv:px-2 ctv:cursor-pointer",
-                "ctv:hover:bg-interface-menu-component-surface-hovered",
-                i === activeIndex.value ? "ctv:bg-interface-menu-component-surface-selected" : ""
-              ]),
-              title: item.content,
-              onMousedown: _cache2[0] || (_cache2[0] = withModifiers(() => {
-              }, ["prevent"])),
-              onClick: ($event) => selectItem(i)
-            }, [
-              showKindTag ? (openBlock(), createElementBlock("span", {
-                key: 0,
-                class: normalizeClass(kindTag(item.kind))
-              }, toDisplayString$1(item.kind), 3)) : createCommentVNode("", true),
-              createBaseVNode("span", _hoisted_3$l, "@" + toDisplayString$1(item.label), 1),
-              createBaseVNode("span", _hoisted_4$i, toDisplayString$1(item.content), 1)
-            ], 42, _hoisted_2$l);
-          }), 128)),
-          canCreate.value ? (openBlock(), createElementBlock("div", {
-            key: 0,
-            class: normalizeClass([
-              "ctv:flex ctv:items-baseline ctv:gap-2 ctv:py-1 ctv:px-2 ctv:cursor-pointer ctv:border-t ctv:border-border-subtle",
-              "ctv:hover:bg-interface-menu-component-surface-hovered",
-              activeIndex.value === __props.items.length ? "ctv:bg-interface-menu-component-surface-selected" : ""
-            ]),
-            onMousedown: _cache2[1] || (_cache2[1] = withModifiers(() => {
-            }, ["prevent"])),
-            onClick: startCreate
-          }, [
-            showKindTag ? (openBlock(), createElementBlock("span", {
-              key: 0,
-              class: normalizeClass(kindTag())
-            }, toDisplayString$1(_ctx.$t("mention.newTag")), 3)) : createCommentVNode("", true),
-            createBaseVNode("span", _hoisted_5$i, toDisplayString$1(_ctx.$t("mention.create")), 1),
-            createBaseVNode("span", _hoisted_6$h, [
-              createTextVNode(toDisplayString$1(_ctx.$t("mention.newFragment")) + " ", 1),
-              createBaseVNode("code", null, "@" + toDisplayString$1(__props.query), 1)
-            ])
-          ], 34)) : createCommentVNode("", true),
-          __props.items.length === 0 && !canCreate.value ? (openBlock(), createElementBlock("div", _hoisted_7$g, toDisplayString$1(__props.query ? _ctx.$t("mention.invalidLabel") : _ctx.$t("mention.noEntries")), 1)) : createCommentVNode("", true)
-        ], 64)) : (openBlock(), createElementBlock("div", {
-          key: 1,
-          class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2",
-          onMousedown: _cache2[3] || (_cache2[3] = withModifiers(() => {
-          }, ["stop"]))
-        }, [
-          createBaseVNode("div", _hoisted_8$g, [
-            createTextVNode(toDisplayString$1(_ctx.$t("mention.createFragment")) + " ", 1),
-            createBaseVNode("code", _hoisted_9$g, "@" + toDisplayString$1(pendingLabel.value), 1)
-          ]),
-          withDirectives(createBaseVNode("textarea", {
-            ref_key: "createTa",
-            ref: createTa,
-            "onUpdate:modelValue": _cache2[2] || (_cache2[2] = ($event) => pendingContent.value = $event),
-            rows: "3",
-            class: "ctv:w-full ctv:py-1.5 ctv:px-2 ctv:rounded-sm ctv:resize-y ctv:outline-none ctv:box-border ctv:text-xs ctv:leading-snug ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-default ctv:focus:border-primary-background",
-            placeholder: _ctx.$t("mention.contentPlaceholder"),
-            onKeydown: withModifiers(onCreateKeydown, ["stop"])
-          }, null, 40, _hoisted_10$g), [
-            [vModelText, pendingContent.value]
-          ]),
-          createBaseVNode("div", _hoisted_11$e, [
-            createBaseVNode("button", {
-              class: normalizeClass(actionBtn()),
-              onClick: cancelCreate
-            }, toDisplayString$1(_ctx.$t("stage.cancel")), 3),
-            createBaseVNode("button", {
-              class: normalizeClass(actionBtn("save")),
-              disabled: !pendingContent.value.trim(),
-              onClick: saveCreate
-            }, toDisplayString$1(_ctx.$t("mention.save")), 11, _hoisted_12$e)
-          ])
-        ], 32))
-      ]);
-    };
-  }
 });
 const KIND_TO_TYPE = {
   text: "COMFYTV_TEXT",
@@ -49942,10 +51320,215 @@ function computePickedFromBatch(batch2, wantIdx) {
     return null;
   }
 }
-const _hoisted_1$o = {
-  key: 0,
-  class: "ctv:pt-1.5 ctv:px-2 ctv:pb-1"
+const _hoisted_1$o = { class: "ctv:min-w-64 ctv:max-w-md ctv:max-h-60 ctv:overflow-y-auto ctv:rounded ctv:text-xs ctv:bg-interface-menu-surface ctv:text-base-foreground ctv:border ctv:border-border-default ctv:shadow-md" };
+const _hoisted_2$l = ["title", "onClick"];
+const _hoisted_3$l = { class: "ctv:font-mono ctv:text-base-foreground ctv:shrink-0" };
+const _hoisted_4$i = { class: "ctv:text-muted-foreground ctv:overflow-hidden ctv:text-ellipsis ctv:whitespace-nowrap" };
+const _hoisted_5$i = { class: "ctv:font-mono ctv:text-base-foreground ctv:shrink-0" };
+const _hoisted_6$h = { class: "ctv:text-muted-foreground ctv:overflow-hidden ctv:text-ellipsis ctv:whitespace-nowrap" };
+const _hoisted_7$g = {
+  key: 1,
+  class: "ctv:py-1.5 ctv:px-2 ctv:italic ctv:text-xs ctv:text-muted-foreground"
 };
+const _hoisted_8$g = { class: "ctv:text-xs ctv:text-muted-foreground" };
+const _hoisted_9$g = { class: "ctv:text-base-foreground ctv:font-mono" };
+const _hoisted_10$g = ["placeholder"];
+const _hoisted_11$e = { class: "ctv:flex ctv:justify-end ctv:gap-1.5" };
+const _hoisted_12$e = ["disabled"];
+const ACTION_BTN_BASE = "ctv:relative ctv:inline-flex ctv:items-center ctv:justify-center ctv:gap-2 ctv:cursor-pointer ctv:touch-manipulation ctv:whitespace-nowrap ctv:appearance-none ctv:border-none ctv:transition-colors ctv:h-6 ctv:rounded-sm ctv:px-2 ctv:py-1 ctv:text-xs ctv:font-medium ctv:disabled:pointer-events-none ctv:disabled:opacity-50";
+const _sfc_main$r = /* @__PURE__ */ defineComponent({
+  __name: "MentionList",
+  props: {
+    items: {},
+    command: { type: Function },
+    query: {}
+  },
+  setup(__props, { expose: __expose }) {
+    const props = __props;
+    const entryStore = useEntryStore();
+    const projectStore = useProjectStore();
+    const activeIndex = /* @__PURE__ */ ref(0);
+    watch(() => props.items, () => {
+      activeIndex.value = 0;
+    });
+    watch(() => props.query, () => {
+      activeIndex.value = 0;
+    });
+    const canCreate = computed(() => !!props.query && LABEL_RE.test(props.query));
+    function itemKey(item) {
+      return `e${item.entry.id}`;
+    }
+    function itemTitle(item) {
+      return item.entry.content;
+    }
+    const creating = /* @__PURE__ */ ref(false);
+    const pendingLabel = /* @__PURE__ */ ref("");
+    const pendingContent = /* @__PURE__ */ ref("");
+    const createTa = /* @__PURE__ */ ref(null);
+    function startCreate() {
+      pendingLabel.value = props.query;
+      pendingContent.value = "";
+      creating.value = true;
+      nextTick(() => {
+        var _a2;
+        return (_a2 = createTa.value) == null ? void 0 : _a2.focus();
+      });
+    }
+    function cancelCreate() {
+      creating.value = false;
+      pendingLabel.value = "";
+      pendingContent.value = "";
+    }
+    async function saveCreate() {
+      const content = pendingContent.value.trim();
+      if (!content) return;
+      const row = await entryStore.upsert(projectStore.currentProjectId || "", {
+        kind: "fragment",
+        label: pendingLabel.value,
+        content
+      });
+      creating.value = false;
+      pendingContent.value = "";
+      if (row) {
+        props.command({ id: row.id, label: row.label, mentionType: "entry" });
+      }
+    }
+    function onCreateKeydown(e) {
+      if (e.key === "Escape") {
+        cancelCreate();
+        return;
+      }
+      if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        void saveCreate();
+      }
+    }
+    function selectItem(index) {
+      if (index < props.items.length) {
+        const item = props.items[index];
+        if (!item) return;
+        props.command({ id: item.entry.id, label: item.entry.label, mentionType: "entry" });
+      } else if (canCreate.value) {
+        startCreate();
+      }
+    }
+    function upHandler() {
+      const total = props.items.length + (canCreate.value ? 1 : 0);
+      if (total === 0) return;
+      activeIndex.value = (activeIndex.value + total - 1) % total;
+    }
+    function downHandler() {
+      const total = props.items.length + (canCreate.value ? 1 : 0);
+      if (total === 0) return;
+      activeIndex.value = (activeIndex.value + 1) % total;
+    }
+    function enterHandler() {
+      selectItem(activeIndex.value);
+    }
+    __expose({
+      onKeyDown({ event }) {
+        if (creating.value) return event.key === "Escape";
+        if (event.key === "ArrowUp") {
+          upHandler();
+          return true;
+        }
+        if (event.key === "ArrowDown") {
+          downHandler();
+          return true;
+        }
+        if (event.key === "Enter" || event.key === "Tab") {
+          enterHandler();
+          return true;
+        }
+        if (event.key === "Escape") {
+          return true;
+        }
+        return false;
+      }
+    });
+    const ACTION_BTN_VARIANTS = {
+      default: " ctv:bg-secondary-background ctv:text-secondary-foreground ctv:hover:bg-secondary-background-hover",
+      save: " ctv:bg-primary-background ctv:text-base-foreground ctv:hover:bg-primary-background-hover"
+    };
+    function actionBtn(variant = "default") {
+      return ACTION_BTN_BASE + ACTION_BTN_VARIANTS[variant];
+    }
+    return (_ctx, _cache2) => {
+      return openBlock(), createElementBlock("div", _hoisted_1$o, [
+        !creating.value ? (openBlock(), createElementBlock(Fragment$1, { key: 0 }, [
+          (openBlock(true), createElementBlock(Fragment$1, null, renderList(__props.items, (item, i) => {
+            return openBlock(), createElementBlock("div", {
+              key: itemKey(item),
+              class: normalizeClass([
+                "ctv:flex ctv:items-center ctv:gap-2 ctv:py-1 ctv:px-2 ctv:cursor-pointer",
+                "ctv:hover:bg-interface-menu-component-surface-hovered",
+                i === activeIndex.value ? "ctv:bg-interface-menu-component-surface-selected" : ""
+              ]),
+              title: itemTitle(item),
+              onMousedown: _cache2[0] || (_cache2[0] = withModifiers(() => {
+              }, ["prevent"])),
+              onClick: ($event) => selectItem(i)
+            }, [
+              createBaseVNode("span", _hoisted_3$l, "@" + toDisplayString$1(item.entry.label), 1),
+              createBaseVNode("span", _hoisted_4$i, toDisplayString$1(item.entry.content), 1)
+            ], 42, _hoisted_2$l);
+          }), 128)),
+          canCreate.value ? (openBlock(), createElementBlock("div", {
+            key: 0,
+            class: normalizeClass([
+              "ctv:flex ctv:items-baseline ctv:gap-2 ctv:py-1 ctv:px-2 ctv:cursor-pointer ctv:border-t ctv:border-border-subtle",
+              "ctv:hover:bg-interface-menu-component-surface-hovered",
+              activeIndex.value === __props.items.length ? "ctv:bg-interface-menu-component-surface-selected" : ""
+            ]),
+            onMousedown: _cache2[1] || (_cache2[1] = withModifiers(() => {
+            }, ["prevent"])),
+            onClick: startCreate
+          }, [
+            createBaseVNode("span", _hoisted_5$i, toDisplayString$1(_ctx.$t("mention.create")), 1),
+            createBaseVNode("span", _hoisted_6$h, [
+              createTextVNode(toDisplayString$1(_ctx.$t("mention.newFragment")) + " ", 1),
+              createBaseVNode("code", null, "@" + toDisplayString$1(__props.query), 1)
+            ])
+          ], 34)) : createCommentVNode("", true),
+          __props.items.length === 0 && !canCreate.value ? (openBlock(), createElementBlock("div", _hoisted_7$g, toDisplayString$1(__props.query ? _ctx.$t("mention.invalidLabel") : _ctx.$t("mention.noEntries")), 1)) : createCommentVNode("", true)
+        ], 64)) : (openBlock(), createElementBlock("div", {
+          key: 1,
+          class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2",
+          onMousedown: _cache2[3] || (_cache2[3] = withModifiers(() => {
+          }, ["stop"]))
+        }, [
+          createBaseVNode("div", _hoisted_8$g, [
+            createTextVNode(toDisplayString$1(_ctx.$t("mention.createFragment")) + " ", 1),
+            createBaseVNode("code", _hoisted_9$g, "@" + toDisplayString$1(pendingLabel.value), 1)
+          ]),
+          withDirectives(createBaseVNode("textarea", {
+            ref_key: "createTa",
+            ref: createTa,
+            "onUpdate:modelValue": _cache2[2] || (_cache2[2] = ($event) => pendingContent.value = $event),
+            rows: "3",
+            class: "ctv:w-full ctv:py-1.5 ctv:px-2 ctv:rounded-sm ctv:resize-y ctv:outline-none ctv:box-border ctv:text-xs ctv:leading-snug ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-default ctv:focus:border-primary-background",
+            placeholder: _ctx.$t("mention.contentPlaceholder"),
+            onKeydown: withModifiers(onCreateKeydown, ["stop"])
+          }, null, 40, _hoisted_10$g), [
+            [vModelText, pendingContent.value]
+          ]),
+          createBaseVNode("div", _hoisted_11$e, [
+            createBaseVNode("button", {
+              class: normalizeClass(actionBtn()),
+              onClick: cancelCreate
+            }, toDisplayString$1(_ctx.$t("stage.cancel")), 3),
+            createBaseVNode("button", {
+              class: normalizeClass(actionBtn("save")),
+              disabled: !pendingContent.value.trim(),
+              onClick: saveCreate
+            }, toDisplayString$1(_ctx.$t("mention.save")), 11, _hoisted_12$e)
+          ])
+        ], 32))
+      ]);
+    };
+  }
+});
+const ENTRY_CHIP_CLASS = "mention-chip ctv:inline-block ctv:py-0 ctv:px-1 ctv:mx-px ctv:rounded ctv:font-medium ctv:whitespace-nowrap ctv:bg-primary-background/20 ctv:border ctv:border-primary-background/45 ctv:text-primary-background";
 const _sfc_main$q = /* @__PURE__ */ defineComponent({
   __name: "MainPromptInput",
   props: {
@@ -49954,8 +51537,10 @@ const _sfc_main$q = /* @__PURE__ */ defineComponent({
   setup(__props) {
     var _a2;
     const props = __props;
+    const { t: t2 } = useI18n();
     const entryStore = useEntryStore();
     const projectStore = useProjectStore();
+    const stageStore = useStageStore();
     const projectId = computed(() => projectStore.currentProjectId || "");
     const widget = computed(() => getWidget(props.node, "main_prompt"));
     const placeholder = computed(() => {
@@ -49963,18 +51548,16 @@ const _sfc_main$q = /* @__PURE__ */ defineComponent({
       const w = widget.value;
       return ((_a3 = w == null ? void 0 : w.options) == null ? void 0 : _a3.placeholder) ?? (w == null ? void 0 : w.placeholder) ?? "";
     });
+    const rootEl = /* @__PURE__ */ ref(null);
+    const ENTRY_TOKEN_RE = /@([\p{L}_][\p{L}\p{N}_-]*)/gu;
     function textToContent(text) {
       const content = [];
       let i = 0;
-      const matches2 = text.matchAll(MENTION_RE);
-      for (const m of matches2) {
+      for (const m of text.matchAll(ENTRY_TOKEN_RE)) {
         const start2 = m.index;
         if (start2 > i) content.push({ type: "text", text: text.slice(i, start2) });
         const label = m[1];
-        content.push({
-          type: "mention",
-          attrs: { id: label, label }
-        });
+        content.push({ type: "mention", attrs: { id: label, label } });
         i = start2 + m[0].length;
       }
       if (i < text.length) content.push({ type: "text", text: text.slice(i) });
@@ -49993,22 +51576,16 @@ const _sfc_main$q = /* @__PURE__ */ defineComponent({
         index_default,
         index_default$4,
         index_default$1.configure({
-          placeholder: placeholder.value || "Prompt — type @ to insert a saved fragment / character"
+          placeholder: placeholder.value || "Prompt — type @ to insert a saved fragment"
         }),
         index_default$3.configure({
-          HTMLAttributes: {
-            class: "ctv:inline-block ctv:py-0 ctv:px-1 ctv:mx-px ctv:rounded ctv:font-medium ctv:whitespace-nowrap ctv:bg-primary-background/20 ctv:border ctv:border-primary-background/45 ctv:text-primary-background"
-          },
           renderText: ({ node }) => `@${node.attrs.label}`,
-          renderHTML: ({ node, HTMLAttributes }) => [
-            "span",
-            {
-              ...HTMLAttributes,
-              "data-mention-id": node.attrs.id,
-              "data-mention-label": node.attrs.label
-            },
-            `@${node.attrs.label}`
-          ],
+          renderHTML: ({ node }) => ["span", {
+            class: ENTRY_CHIP_CLASS,
+            "data-mention-id": String(node.attrs.id),
+            "data-mention-label": node.attrs.label,
+            "data-mention-type": "entry"
+          }, `@${node.attrs.label}`],
           suggestion: useMentionSuggestion(projectId, _sfc_main$r)
         })
       ],
@@ -50024,7 +51601,15 @@ const _sfc_main$q = /* @__PURE__ */ defineComponent({
         if (widget.value) writeWidget(props.node, "main_prompt", text, { fireCallback: false });
       }
     });
-    const stageStore = useStageStore();
+    function setContentFromText(text) {
+      if (!editor.value) return;
+      suppressWriteback = true;
+      try {
+        editor.value.commands.setContent(textToContent(text), { emitUpdate: false });
+      } finally {
+        suppressWriteback = false;
+      }
+    }
     const stageState = computed(() => props.node ? stageStore.getStage(props.node) : void 0);
     watch(
       () => {
@@ -50036,17 +51621,20 @@ const _sfc_main$q = /* @__PURE__ */ defineComponent({
         if (!editor.value) return;
         const current = editor.value.getText({ blockSeparator: "\n" });
         if (next === current) return;
-        suppressWriteback = true;
-        try {
-          editor.value.commands.setContent(textToContent(next), { emitUpdate: false });
-        } finally {
-          suppressWriteback = false;
-        }
+        setContentFromText(next);
       }
     );
     let chipTooltips = null;
     function stopBubble(e) {
       e.stopPropagation();
+    }
+    function entryTooltip(label) {
+      const matches2 = entryStore.list(projectId.value).filter((e) => e.label === label);
+      if (matches2.length === 0) {
+        return `@${label} — no matching entry (will stay literal at run)`;
+      }
+      if (matches2.length === 1) return matches2[0].content;
+      return matches2.map((e) => `[${e.kind}] ${e.content}`).join("\n──────\n");
     }
     onMounted(() => {
       void entryStore.list(projectId.value);
@@ -50063,12 +51651,7 @@ const _sfc_main$q = /* @__PURE__ */ defineComponent({
             var _a4;
             const el = ref2;
             const label = el.dataset.mentionLabel ?? ((_a4 = el.textContent) == null ? void 0 : _a4.slice(1)) ?? "";
-            const matches2 = entryStore.list(projectId.value).filter((e) => e.label === label);
-            if (matches2.length === 0) {
-              return `@${label} — no matching entry (will stay literal at run)`;
-            }
-            if (matches2.length === 1) return matches2[0].content;
-            return matches2.map((e) => `[${e.kind}] ${e.content}`).join("\n──────\n");
+            return entryTooltip(label);
           },
           placement: "top",
           arrow: true,
@@ -50081,9 +51664,9 @@ const _sfc_main$q = /* @__PURE__ */ defineComponent({
     });
     onBeforeUnmount(() => {
       var _a3, _b2, _c, _d;
-      if (Array.isArray(chipTooltips)) chipTooltips.forEach((t2) => {
+      if (Array.isArray(chipTooltips)) chipTooltips.forEach((t22) => {
         var _a4;
-        return (_a4 = t2 == null ? void 0 : t2.destroy) == null ? void 0 : _a4.call(t2);
+        return (_a4 = t22 == null ? void 0 : t22.destroy) == null ? void 0 : _a4.call(t22);
       });
       else (_a3 = chipTooltips == null ? void 0 : chipTooltips.destroy) == null ? void 0 : _a3.call(chipTooltips);
       try {
@@ -50098,12 +51681,17 @@ const _sfc_main$q = /* @__PURE__ */ defineComponent({
       (_d = editor.value) == null ? void 0 : _d.destroy();
     });
     return (_ctx, _cache2) => {
-      return widget.value ? (openBlock(), createElementBlock("div", _hoisted_1$o, [
+      return widget.value ? (openBlock(), createElementBlock("div", {
+        key: 0,
+        ref_key: "rootEl",
+        ref: rootEl,
+        class: "ctv:relative ctv:pt-1 ctv:px-2 ctv:pb-1"
+      }, [
         createVNode(unref(EditorContent), {
           editor: unref(editor),
           class: "comfytv-prompt-editor"
         }, null, 8, ["editor"])
-      ])) : createCommentVNode("", true);
+      ], 512)) : createCommentVNode("", true);
     };
   }
 });
@@ -50114,7 +51702,152 @@ const _export_sfc = (sfc, props) => {
   }
   return target;
 };
-const MainPromptInput = /* @__PURE__ */ _export_sfc(_sfc_main$q, [["__scopeId", "data-v-8a6e9db0"]]);
+const MainPromptInput = /* @__PURE__ */ _export_sfc(_sfc_main$q, [["__scopeId", "data-v-47152a2d"]]);
+const workflow$1 = { "uploadButton": "⬆ Upload workflow", "imported": 'Imported "{label}"', "importFailed": "Workflow import failed", "notJson": "That file isn't valid JSON" };
+const stage$1 = { "run": "Run", "rerun": "Re-run", "running": "Running…", "cancel": "Cancel", "preparingWorkflow": "Preparing workflow…", "section": { "context": "Context", "pool": "Pool", "output": "Output ({type})", "actions": "Actions" }, "pool": { "clear": "Clear", "clearHint": "Empty the picker pool and reset the selection", "confirmClear": "Clear pool?", "confirm": "Yes", "cancel": "No" }, "empty": { "no_output": "no output yet", "generating": "generating…", "pending_upstream": "upstream pending", "unsupported_type": "unsupported type {type}" }, "source": { "upstream": "← upstream", "pending": "… waiting" }, "disconnect": "Disconnect", "starting": "starting…", "runByKind": { "text": "Generate Text", "image": "Generate Image", "image-batch": "Generate Images", "video": "Generate Video", "audio": "Generate Audio", "panorama": "Generate Panorama", "storyboard": "Generate Storyboard" }, "action": { "viewFull": "View full size", "download": "Download", "addTag": "Save to library / tag", "close": "Close" }, "preparingWorkflowDetail": "Hang on — converting workflow to api JSON. Try Run again in a moment." };
+const error$1 = { "dismiss": "Dismiss", "cancelled": "Cancelled", "upstreamNotReady": "Upstream not ready", "upstreamNotReadyDetail": "Upstream not ready: {list}. Run those stage(s) first so they produce a snapshot, then Run this stage again.", "workerDied": "Backend stopped without sending a result. The prompt worker likely died (CUDA OOM during cleanup is the usual cause). Restart ComfyUI to recover." };
+const sidebar$1 = { "tab": { "workflow": "Workflow", "assets": "Assets" } };
+const assets$1 = { "title": "Asset Library", "empty": "No assets yet — add images to reuse them across projects.", "emptyCategory": "No assets in this category yet.", "add": "Add images", "addTooltip": "Upload images into the library (or drag & drop them onto this panel)", "uploading": "Uploading {done}/{total}…", "uploadFailed": "Upload failed: {detail}", "dropHint": "Drop images to add them to the library", "category": { "all": "All", "none": "Uncategorized", "new": "New category", "newPrompt": "New category name:", "rename": "Rename category", "renamePrompt": "Category name:", "delete": "Delete category", "deleteConfirm": "Delete this category? It is removed from all assets; the assets and files on disk stay." }, "card": { "rename": "Rename", "renamePrompt": "Asset name:", "delete": "Remove from library", "deleteConfirm": "Remove this asset from the library? The file on disk stays.", "tags": "Edit tags" }, "tagPopover": { "empty": "No categories yet." } };
+const imageRefs$1 = { "title": "Image references", "empty": "No reference images — click + to pin one from the library.", "add": "Add reference image", "remove": "Remove", "warnDuplicate": "Reference slot #{n} is pinned by multiple images — only the last one applies at run.", "warnOverride": "Reference slot #{n} already has an upstream connection — the pinned image overrides it at run.", "warnOverflow": "The workflow binds only {total} reference slot(s) — {count} pinned image(s) won't be consumed.", "warnNoSlots": "This workflow has no image input that can receive reference images — they'll be ignored at run." };
+const promptAssets$1 = { "addTooltip": "Insert an image asset from the library — it will be sent as a reference image at run", "search": "Search assets…", "empty": "No matching assets — add some in the sidebar Assets tab.", "missing": "asset #{id} was removed from the library — this chip is ignored at run", "slotTitle": "Reference image slot", "slotShort": "→ reference slot #{n}", "slotWired": "wired", "slotClaimed": "taken", "slotEmpty": 'This workflow has no reference-image slots bound yet — bind a LoadImage to "Upstream image #N" in the sidebar workflow config first.' };
+const configSidebar$1 = { "title": "Workflow Config", "empty": "Select a stage node on the canvas to edit its workflow config.", "noWorkflowPicked": "This stage's workflow combo is empty — pick one first.", "loading": "Loading…", "noExposedWidgets": "This workflow has no editable widgets, or hasn't been prepared yet — pick it on any stage first so the browser can analyze it.", "pickWorkflowFirst": "Pick this workflow on any stage first to populate widget metadata (the browser-side graphToPrompt has to run).", "bindTo": "Bind to:", "exportPreset": "Export preset.json", "exportPresetTooltip": "Download the current bindings as a *_preset.json file. Drop it next to the workflow JSON in workflows/<kind>/ to ship these defaults to other users.", "exportPresetFailed": "Export failed: {detail}", "resetToPreset": "↻ Reset to shipped preset", "resetToPresetTooltip": "Wipe all bindings + meta for this workflow and re-apply its shipped _preset.json from disk. Your own edits will be lost.", "resetToPresetConfirm": "Reset all bindings for this workflow to the shipped preset? Your edits will be lost.", "resetToPresetFailed": "Reset failed: {detail}", "section": { "widgets": "Widgets", "notes": "Workflow notes", "description": "Description" } };
+const project$1 = { "label": "Current Project", "shared_suffix": "(shared)", "id_prefix": "id:", "refresh": "Refresh project list", "create": "New project", "delete": "Delete this project (files on disk stay)", "delete_confirm": "Delete this project? DB rows will be cleared; files on disk stay.", "create_prompt": "New project name:", "create_default": "Project {n}", "status": { "refreshing": "refreshing…", "refresh_failed": "refresh failed", "create_failed": "create failed", "deleted": "deleted", "delete_failed": "delete failed", "load_failed": "Failed to load project list" } };
+const execution$1 = { "running": "running: node #{nodeId}", "queued": "queued" };
+const actions$1 = { "image": { "edit": { "label": "Edit Image", "tooltip": "Edits that change size or need rich UI (HD / outpaint / inpaint / erase / cutout / crop)" }, "panorama": { "label": "Panorama", "tooltip": "Turn this image into a panorama and explore viewpoints" }, "multiangle": { "label": "Multi-angle", "tooltip": "Re-render this image from a different camera angle" }, "relight": { "label": "Relight", "tooltip": "Brightness / color / rim-light, or reference another image's lighting" }, "preset": { "label": "Presets", "tooltip": "Size-preserving, no-rich-UI preset transforms (multi-view / grid / scene progression)" } }, "video": { "extend": { "label": "Extend", "tooltip": "Extract this clip's last frame and spawn a new VideoStage using it as the I2V start frame — write a prompt for the continuation" }, "change": { "label": "Edit Video", "tooltip": "Modify an existing video: clip / HD / subtitle erase / audio separation" } }, "text": { "refine": { "label": "Refine", "tooltip": "Continue rewriting in a new TextStage" } }, "panorama": { "view-current": { "label": "Current View", "tooltip": "Extract the current viewport as a single image" }, "view-four": { "label": "4 Views", "tooltip": "Extract 4 viewpoints as an image batch" }, "view-twelve": { "label": "12 Views", "tooltip": "Extract 12 viewpoints as an image batch" } }, "storyboard": { "gen-shots": { "label": "Generate Shot Images", "tooltip": "Spawn a Shot Images stage wired to this storyboard — iterates the shot list and renders one image per shot" } } };
+const presets$1 = { "imageVariant": { "multi-cam-9": { "label": "Multi-cam 9-grid", "tooltip": "9 camera angles arranged in a grid" }, "story-4": { "label": "Story Progression (4)", "tooltip": "4 consecutive narrative shots" }, "face-3view": { "label": "Face 3-view", "tooltip": "Face: front / side / 45°" }, "product-3view": { "label": "Product 3-view", "tooltip": "Product: front / side / back" }, "character-3view": { "label": "Character 3-view", "tooltip": "Full-body character: front / side / back" }, "storyboard-25": { "label": "25-grid Storyboard", "tooltip": "25 consecutive storyboard shots" }, "cinematic-light": { "label": "Cinematic Lighting", "tooltip": "Apply cinematic lighting and color grade" }, "frame-3s": { "label": "Project +3s", "tooltip": "Project the scene 3 seconds later" }, "frame-5s": { "label": "Project +5s", "tooltip": "Project the scene 5 seconds later" } }, "imageEdit": { "hd": { "label": "HD", "tooltip": "Upscale to a higher resolution (output is larger)" }, "outpaint": { "label": "Outpaint", "tooltip": "Extend the canvas outward (output is larger)" }, "inpaint": { "label": "Inpaint", "tooltip": "Regenerate a masked region" }, "erase": { "label": "Erase", "tooltip": "Remove a masked region" }, "cutout": { "label": "Cutout", "tooltip": "Extract the subject with a transparent background" }, "crop": { "label": "Crop", "tooltip": "Crop to a bounding box" }, "rotate": { "label": "Rotate", "tooltip": "Rotate by an angle (browser-side, no GPU)" }, "mirror": { "label": "Mirror", "tooltip": "Flip horizontally / vertically (browser-side)" }, "grid": { "label": "Grid Split", "tooltip": "Slice into an R×C grid of tiles (browser-side) → image batch" } }, "videoChange": { "clip": { "label": "Clip", "tooltip": "Clip / trim — pick start and end times" }, "crop": { "label": "Crop", "tooltip": "Spatial crop — keep a rectangle (x, y, w, h) of every frame" }, "resize": { "label": "Resize", "tooltip": "Scale video to a target width × height (use -1 to auto-derive from aspect)" }, "extract-frame": { "label": "Extract Frame", "tooltip": "Pull a single frame out as an image (first / last / middle / custom seconds)" }, "hd": { "label": "HD", "tooltip": "Upscale" }, "subtitle-smart": { "label": "Auto Subtitle Erase", "tooltip": "Auto-detect and remove subtitles" }, "subtitle-select": { "label": "Region Subtitle Erase", "tooltip": "Manually box a region to erase (needs region-selector UI)" }, "audio-vocal": { "label": "Vocals Only", "tooltip": "Voice separation — vocals only" }, "audio-bg": { "label": "Background Only", "tooltip": "Voice separation — instrumental / ambient" }, "demux": { "label": "Demux A/V", "tooltip": "Split into audio track + silent video (two nodes spawned)" } } };
+const shotCell$1 = { "pick": "Pick {tag}", "refine": "Refine {tag}" };
+const imageCrop$1 = { "noInputImage": "No input image — connect an image upstream", "cropPreviewAlt": "Crop preview", "loading": "Loading…", "ratio": "Ratio", "custom": "Custom", "lockRatio": "Lock aspect ratio", "unlockRatio": "Unlock aspect ratio", "applying": "Applying crop…", "applied": "Crop applied — ready for downstream", "adjustToApply": "Drag the rectangle or pick a ratio to apply" };
+const panorama$1 = { "empty": "No panorama yet — upload an HDRI / equirect image or click Run with an upstream image", "uploading": "Uploading…", "upload": "Upload panorama", "clearUpload": "Clear upload", "clearUploadTooltip": "Drop the manual source — Run will then derive from upstream again", "manualSourceBadge": "manual", "loadError": "Failed to load panorama" };
+const imageCompare$1 = { "before": "Before", "after": "After", "noImages": "Connect two images to compare (A / B)" };
+const storyboard$1 = { "shots": "Shots", "addShot": "Add shot", "empty": "No shots yet — Run to generate from the premise, or add shots manually", "moveUp": "Move up", "moveDown": "Move down", "remove": "Remove shot", "regenerate": "Regenerate this shot via the LLM (keeps the rest)", "noRef": "no reference", "uploadRef": "Upload reference image", "clearRef": "Clear reference", "promptPlaceholder": "Describe this shot…", "cols": { "scene_purpose": "Purpose", "character": "Character", "character_desc": "Character notes", "shot_size": "Shot size", "action": "Action", "emotion": "Emotion", "scene_tags": "Scene", "lighting": "Lighting", "sfx": "SFX", "dialogue": "Dialogue", "image_prompt": "Image prompt", "motion_prompt": "Motion prompt" }, "regenerateFailed": "Regenerate shot failed" };
+const timeline$1 = { "keyframes": "Keyframes", "connectImages": "Connect images upstream to use as shots", "addSegment": "Add as a shot", "clickKeyframe": "Click a keyframe above to add a shot", "addAudio": "Add audio track", "noAudio": "Connect audio upstream to add a track", "segmentPrompt": "Shot prompt", "promptPlaceholder": "What happens in this shot…", "length": "Length", "fps": "FPS", "shots": "shots" };
+const gridSplit$1 = { "connectImage": "Connect an image to split", "pickGrid": "Pick a grid preset or set rows × cols", "splitting": "Slicing into {n} tiles…", "done": "Split into {n} tiles — ready for downstream", "rows": "Rows", "cols": "Cols" };
+const panoramaView$1 = { "connectPanorama": "Connect a panorama upstream", "orbitToCapture": "Drag to look around — releasing captures the view", "capturing": "Capturing viewport…", "captured": "Viewport captured — ready for downstream", "aspect": "Aspect", "resolution": "Resolution", "viewCount": "View count", "adjustCountToCapture": "Move the slider to capture views", "capturingCount": "Capturing {i}/{n}…", "capturedN": "Captured {n} views — ready for downstream" };
+const rotate$1 = { "angle": "Angle", "applying": "Applying rotation…", "applied": "Rotation applied — ready for downstream", "adjustToApply": "Slide or click a quick angle to apply" };
+const mirror$1 = { "horizontal": "Horizontal flip", "vertical": "Vertical flip", "applying": "Applying mirror…", "applied": "Mirror applied — ready for downstream", "adjustToApply": "Toggle flips to apply" };
+const painter$1 = { "tool": "Tool", "brush": "Brush", "eraser": "Eraser", "fill": "Fill", "rect": "Rectangle", "ellipse": "Ellipse", "label": "Numbered label", "size": "Size", "color": "Color", "opacity": "Opacity", "hardness": "Hardness", "clear": "Clear" };
+const camera$1 = { "horizontal": "H", "vertical": "V", "zoom": "Z", "resetToDefaults": "Reset to defaults", "azimuth": { "frontView": "front view", "frontRightQuarterView": "front-right quarter view", "rightSideView": "right side view", "backRightQuarterView": "back-right quarter view", "backView": "back view", "backLeftQuarterView": "back-left quarter view", "leftSideView": "left side view", "frontLeftQuarterView": "front-left quarter view" }, "elevation": { "lowAngleShot": "low-angle shot", "eyeLevelShot": "eye-level shot", "elevatedShot": "elevated shot", "highAngleShot": "high-angle shot" }, "distance": { "wideShot": "wide shot", "mediumShot": "medium shot", "closeUp": "close-up" } };
+const outpaint$1 = { "left": "Left", "top": "Top", "right": "Right", "bottom": "Bottom", "reset": "Reset", "output": "Output", "noInputImage": "Wire an image to begin" };
+const fileSlot$1 = { "releaseToUpload": "Release to upload", "clickOrDrag": "Click or drag {kind}", "remove": "Remove {kind}", "image": "image", "video": "video" };
+const mention$1 = { "newTag": "new", "create": "+ Create", "newFragment": "new fragment", "createFragment": "+ Create fragment", "invalidLabel": "Invalid label — start with a letter / underscore (Chinese is fine), then letters / digits / _ / -", "noEntries": "No entries yet — type a label to create one", "contentPlaceholder": "Content this {'@'}-token expands to. (For characters / other kinds, use the ComfyTV button → Entries dialog.)", "save": "Save (Ctrl+Enter)" };
+const entries$1 = { "refHelpPre": "Reference any entry in a stage's prompt with", "refHelpPost": "Unknown tokens stay literal.", "colLabel": "Label", "colContent": "Content", "deleteTitle": "Delete {'@'}{label}", "confirmDelete": "Delete {'@'}{label}? Existing {'@'}{label} tokens will fall back to literal text.", "labelError": "Start with a letter / underscore (Chinese is fine), then letters / digits / _ / -", "emptyKind": "No {kind} yet. Click + Add below.", "labelPlaceholder": "label", "save": "Save", "addKind": "+ Add {kind}" };
+const menu$1 = { "openEntryManager": "ComfyTV — open entry manager", "entriesTitle": "ComfyTV Entries", "entriesButtonTooltip": "ComfyTV — entries (fragments / characters / …)", "configSidebarTooltip": "ComfyTV — workflow config & asset library" };
+const valuePreview$1 = { "moreShots": "+ {n} more", "emptyTimeline": "empty timeline" };
+const en = {
+  workflow: workflow$1,
+  stage: stage$1,
+  error: error$1,
+  sidebar: sidebar$1,
+  assets: assets$1,
+  imageRefs: imageRefs$1,
+  promptAssets: promptAssets$1,
+  configSidebar: configSidebar$1,
+  project: project$1,
+  execution: execution$1,
+  actions: actions$1,
+  presets: presets$1,
+  shotCell: shotCell$1,
+  imageCrop: imageCrop$1,
+  panorama: panorama$1,
+  imageCompare: imageCompare$1,
+  storyboard: storyboard$1,
+  timeline: timeline$1,
+  gridSplit: gridSplit$1,
+  panoramaView: panoramaView$1,
+  rotate: rotate$1,
+  mirror: mirror$1,
+  painter: painter$1,
+  camera: camera$1,
+  outpaint: outpaint$1,
+  fileSlot: fileSlot$1,
+  mention: mention$1,
+  entries: entries$1,
+  menu: menu$1,
+  valuePreview: valuePreview$1
+};
+const workflow = { "uploadButton": "⬆ 上传工作流", "imported": "已导入「{label}」", "importFailed": "工作流导入失败", "notJson": "该文件不是合法 JSON" };
+const stage = { "run": "运行", "rerun": "重新运行", "running": "运行中…", "cancel": "取消", "preparingWorkflow": "准备工作流中…", "section": { "context": "上游输入", "pool": "图片池", "output": "输出 ({type})", "actions": "动作" }, "pool": { "clear": "清除", "clearHint": "清空图片池并重置选择", "confirmClear": "确认清空？", "confirm": "是", "cancel": "否" }, "empty": { "no_output": "暂无输出", "generating": "生成中…", "pending_upstream": "上游待运行", "unsupported_type": "不支持的类型 {type}" }, "source": { "upstream": "← 上游", "pending": "… 等待中" }, "disconnect": "断开此连接", "starting": "启动中…", "runByKind": { "text": "生成文本", "image": "生成图片", "image-batch": "生成图片", "video": "生成视频", "audio": "生成音频", "panorama": "生成全景图", "storyboard": "生成分镜" }, "action": { "viewFull": "查看大图", "download": "下载", "addTag": "存入资产库 / 打标签", "close": "关闭" }, "preparingWorkflowDetail": "稍等 — 正在把工作流转换成 api JSON。稍后再点运行。" };
+const error = { "dismiss": "清除", "cancelled": "已取消", "upstreamNotReady": "上游未就绪", "upstreamNotReadyDetail": "上游未就绪:{list}。请先运行这些 stage 生成快照,然后再运行此 stage。", "workerDied": "后端未返回结果就停止了。prompt worker 可能已崩溃(通常是清理阶段 CUDA OOM)。重启 ComfyUI 后恢复。" };
+const sidebar = { "tab": { "workflow": "工作流", "assets": "资产库" } };
+const assets = { "title": "资产库", "empty": "还没有资产 —— 添加图片后可跨项目复用。", "emptyCategory": "这个分类下还没有资产。", "add": "添加图片", "addTooltip": "上传图片到资产库（也可以直接拖拽图片到这个面板）", "uploading": "上传中 {done}/{total}…", "uploadFailed": "上传失败: {detail}", "dropHint": "松开把图片添加到资产库", "category": { "all": "全部", "none": "未分类", "new": "新建分类", "newPrompt": "新分类名称：", "rename": "重命名分类", "renamePrompt": "分类名称：", "delete": "删除分类", "deleteConfirm": "删除这个分类？它会从所有资产上移除；资产和磁盘上的文件保留。" }, "card": { "rename": "重命名", "renamePrompt": "资产名称：", "delete": "从资产库移除", "deleteConfirm": "把这个资产从资产库移除？磁盘上的文件保留。", "tags": "编辑标签" }, "tagPopover": { "empty": "还没有分类。" } };
+const imageRefs = { "title": "图片引用", "empty": "暂无参考图 —— 点 + 从资产库选一张。", "add": "添加参考图", "remove": "移除", "warnDuplicate": "参考槽位 #{n} 被多张图片绑定 —— 运行时只有最后一张生效。", "warnOverride": "参考槽位 #{n} 已有上游连接 —— 绑定的图片会在运行时覆盖它。", "warnOverflow": "该工作流只绑定了 {total} 个参考槽位 —— 有 {count} 张图片不会被使用。", "warnNoSlots": "该工作流没有可接收参考图的图片输入 —— 运行时这些图会被忽略。" };
+const promptAssets = { "addTooltip": "从资产库插入图片 —— 运行时会作为参考图传给工作流", "search": "搜索资产…", "empty": "没有匹配的资产 —— 先在侧边栏「资产库」里添加。", "missing": "资产 #{id} 已从资产库移除 —— 运行时会忽略这个标记", "slotTitle": "参考图槽位", "slotShort": "→ 参考图槽位 #{n}", "slotWired": "已连线", "slotClaimed": "已占用", "slotEmpty": "这个工作流还没绑定参考图槽位 —— 先在侧边栏工作流配置里把 LoadImage 绑到「Upstream image #N」。" };
+const configSidebar = { "title": "工作流配置", "empty": "在画布上选中某个 Stage 节点以编辑它的工作流配置。", "noWorkflowPicked": "该 Stage 还没选工作流 —— 先在下拉里挑一个。", "loading": "加载中…", "noExposedWidgets": "这个工作流没有可编辑的 widget，或者还没准备过 —— 先在画布上任一 Stage 选中它，浏览器侧 graphToPrompt 跑一遍后才有 widget 元数据。", "pickWorkflowFirst": "先在画布上任一 Stage 上选中这个工作流 —— 浏览器侧 graphToPrompt 跑过一遍才有 widget 元数据。", "bindTo": "绑定到：", "exportPreset": "导出 preset.json", "exportPresetTooltip": "把当前绑定导出为 *_preset.json 文件，丢进 workflows/<kind>/ 和工作流 JSON 同目录，其他用户首次启动时会自动应用这套默认。", "exportPresetFailed": "导出失败: {detail}", "resetToPreset": "↻ 重置为内置 preset", "resetToPresetTooltip": "清空该工作流的所有绑定和元数据，重新读取磁盘上的 _preset.json 文件。你自己改过的内容会丢失。", "resetToPresetConfirm": "把这个工作流的所有绑定重置成内置 preset？你自己改过的会丢失。", "resetToPresetFailed": "重置失败: {detail}", "section": { "widgets": "Widget 列表", "notes": "工作流笔记", "description": "说明" } };
+const project = { "label": "当前项目", "shared_suffix": "(共享)", "id_prefix": "id:", "refresh": "刷新项目列表", "create": "新建项目", "delete": "删除该项目（不会删磁盘文件）", "delete_confirm": "确定删除该项目？数据库会清空，磁盘上的生成文件保留。", "create_prompt": "新项目名称：", "create_default": "项目 {n}", "status": { "refreshing": "刷新中…", "refresh_failed": "刷新失败", "create_failed": "创建失败", "deleted": "已删除", "delete_failed": "删除失败", "load_failed": "加载项目列表失败" } };
+const execution = { "running": "运行中：节点 #{nodeId}", "queued": "排队中" };
+const actions = { "image": { "edit": { "label": "修改图片", "tooltip": "改变尺寸或需要交互 UI 的图像编辑（高清 / 扩图 / 重绘 / 擦除 / 抠图 / 裁剪）" }, "panorama": { "label": "全景图", "tooltip": "把当前图变为全景，进入视角操作" }, "multiangle": { "label": "多角度", "tooltip": "从不同相机角度重新渲染该图" }, "relight": { "label": "打光", "tooltip": "调亮度 / 颜色 / 轮廓光，或参考另一张图的灯光" }, "preset": { "label": "预设", "tooltip": "保持尺寸、无需复杂 UI 的预设变换（多视图 / 宫格 / 画面推演 ...）" } }, "video": { "extend": { "label": "延伸", "tooltip": "抽出本段末帧,派生新 VideoStage 用作 I2V 起始帧 —— 写个 prompt 描述接下来要发生什么" }, "change": { "label": "修改视频", "tooltip": "对已上传/已生成的视频做修改：剪辑 / 高清 / 去字幕 / 音频分离" } }, "text": { "refine": { "label": "改写", "tooltip": "在新 TextStage 中继续改写" } }, "panorama": { "view-current": { "label": "当前视角截图", "tooltip": "提取当前视角为单张图" }, "view-four": { "label": "四大视角截图", "tooltip": "提取 4 个视角组成图集" }, "view-twelve": { "label": "12 视角截图", "tooltip": "提取 12 个视角组成图集" } }, "storyboard": { "gen-shots": { "label": "生成分镜图", "tooltip": "派生一个 Shot Images 节点接到这个分镜板上 —— 按镜头列表逐个出图" } } };
+const presets = { "imageVariant": { "multi-cam-9": { "label": "多机位九宫格", "tooltip": "9 个相机角度排列" }, "story-4": { "label": "剧情推演四宫格", "tooltip": "4 连贯剧情画面" }, "face-3view": { "label": "角色脸部三视图", "tooltip": "人脸正/侧/45° 视图" }, "product-3view": { "label": "产品三视图", "tooltip": "产品正/侧/背" }, "character-3view": { "label": "角色三视图", "tooltip": "全身角色正/侧/背" }, "storyboard-25": { "label": "25 宫格连贯分镜", "tooltip": "25 张连贯分镜" }, "cinematic-light": { "label": "电影级光影校正", "tooltip": "应用电影级打光与色彩" }, "frame-3s": { "label": "画面推演 +3s", "tooltip": "推演 3 秒后的画面" }, "frame-5s": { "label": "画面推演 +5s", "tooltip": "推演 5 秒后的画面" } }, "imageEdit": { "hd": { "label": "高清", "tooltip": "提升分辨率 (Upscale) — 输出尺寸大于输入" }, "outpaint": { "label": "扩图", "tooltip": "向外延伸画面 (Outpaint) — 输出比输入大" }, "inpaint": { "label": "重绘", "tooltip": "局部重新生成 (Inpaint) — 需要蒙版" }, "erase": { "label": "擦除", "tooltip": "抹除指定区域 (Erase) — 需要蒙版" }, "cutout": { "label": "抠图", "tooltip": "抠出主体，背景透明 (Cutout / matting)" }, "crop": { "label": "裁剪", "tooltip": "按框裁切 (Crop) — 需要 bbox 拖拽" }, "rotate": { "label": "旋转", "tooltip": "按角度旋转（浏览器端，不占 GPU）" }, "mirror": { "label": "镜像", "tooltip": "水平 / 垂直翻转（浏览器端）" }, "grid": { "label": "宫格切分", "tooltip": "按 R×C 切成多张（浏览器端）→ 图片批次" } }, "videoChange": { "clip": { "label": "剪辑", "tooltip": "裁剪片段 — 输入起始结束时间" }, "crop": { "label": "裁剪", "tooltip": "空间裁剪 — 每帧保留 (x, y, w, h) 矩形" }, "resize": { "label": "缩放", "tooltip": "缩放视频到目标 宽×高(其中一个填 -1 按比例自动算另一个)" }, "extract-frame": { "label": "抽帧", "tooltip": "从视频抽一张图(首/末/中/任意秒数)" }, "hd": { "label": "高清", "tooltip": "提升分辨率" }, "subtitle-smart": { "label": "智能去字幕", "tooltip": "自动检测并擦除字幕" }, "subtitle-select": { "label": "扣选去字幕", "tooltip": "手动框选区域擦除（需要 region selector UI）" }, "audio-vocal": { "label": "仅保留人声", "tooltip": "人声分离 — 仅保留人声" }, "audio-bg": { "label": "仅保留背景声", "tooltip": "人声分离 — 仅保留背景声" }, "demux": { "label": "音视频分离", "tooltip": "同时产出音频轨和静默视频（双节点）" } } };
+const shotCell = { "pick": "选择 {tag}", "refine": "微调 {tag}" };
+const imageCrop = { "noInputImage": "无输入图像 — 请上游连接一张图", "cropPreviewAlt": "裁剪预览", "loading": "加载中…", "ratio": "比例", "custom": "自定义", "lockRatio": "锁定纵横比", "unlockRatio": "解锁纵横比", "applying": "应用裁剪中…", "applied": "裁剪已应用 — 下游可直接使用", "adjustToApply": "拖动矩形或选择比例以应用" };
+const panorama = { "empty": "暂无全景图 — 上传 HDRI / 等距柱状投影图，或接入上游图后点 Run", "uploading": "上传中…", "upload": "上传全景图", "clearUpload": "清除上传", "clearUploadTooltip": "丢弃手动来源 — 之后 Run 会重新从上游派生", "manualSourceBadge": "手动", "loadError": "加载全景图失败" };
+const imageCompare = { "before": "之前", "after": "之后", "noImages": "连接两张图进行对比（A / B）" };
+const storyboard = { "shots": "分镜", "addShot": "添加分镜", "empty": "暂无分镜 — 点 Run 从剧本生成，或手动添加", "moveUp": "上移", "moveDown": "下移", "remove": "删除分镜", "regenerate": "用 LLM 重新生成此镜头(其他镜头保持)", "noRef": "无参考图", "uploadRef": "上传参考图", "clearRef": "清除参考图", "promptPlaceholder": "描述这个镜头…", "cols": { "scene_purpose": "画面描述", "character": "角色", "character_desc": "角色描述", "shot_size": "景别", "action": "角色动作", "emotion": "情绪", "scene_tags": "场景标签", "lighting": "光影氛围", "sfx": "音效", "dialogue": "对白", "image_prompt": "分镜提示词", "motion_prompt": "视频运动提示词" }, "regenerateFailed": "重新生成镜头失败" };
+const timeline = { "keyframes": "关键帧", "connectImages": "上游连接图片作为分镜素材", "addSegment": "添加为分镜", "clickKeyframe": "点击上方关键帧添加分镜", "addAudio": "添加音频轨", "noAudio": "上游连接音频以添加音轨", "segmentPrompt": "分镜提示词", "promptPlaceholder": "这个镜头里发生什么…", "length": "时长", "fps": "帧率", "shots": "镜头" };
+const gridSplit = { "connectImage": "请连接一张图以切分", "pickGrid": "选择宫格预设或设置行 × 列", "splitting": "切分为 {n} 块中…", "done": "已切分为 {n} 块 — 下游可直接使用", "rows": "行", "cols": "列" };
+const panoramaView = { "connectPanorama": "请在上游接入全景图", "orbitToCapture": "拖动环视 — 松开后自动截取当前视角", "capturing": "截取视角中…", "captured": "视角已截取 — 下游可直接使用", "aspect": "比例", "resolution": "分辨率", "viewCount": "视角数", "adjustCountToCapture": "拖动滑块以批量截取", "capturingCount": "截取中 {i}/{n}…", "capturedN": "已截取 {n} 张 — 下游可直接使用" };
+const rotate = { "angle": "角度", "applying": "旋转应用中…", "applied": "旋转已应用 — 下游可直接使用", "adjustToApply": "拖动滑块或点击快速角度以应用" };
+const mirror = { "horizontal": "水平翻转", "vertical": "垂直翻转", "applying": "镜像应用中…", "applied": "镜像已应用 — 下游可直接使用", "adjustToApply": "切换翻转开关以应用" };
+const painter = { "tool": "工具", "brush": "画笔", "eraser": "橡皮", "fill": "填充", "rect": "矩形", "ellipse": "椭圆", "label": "编号标记", "size": "大小", "color": "颜色", "opacity": "不透明度", "hardness": "硬度", "clear": "清除" };
+const camera = { "horizontal": "水平", "vertical": "垂直", "zoom": "距离", "resetToDefaults": "重置为默认值", "azimuth": { "frontView": "正面视角", "frontRightQuarterView": "右前方视角", "rightSideView": "右侧视角", "backRightQuarterView": "右后方视角", "backView": "背面视角", "backLeftQuarterView": "左后方视角", "leftSideView": "左侧视角", "frontLeftQuarterView": "左前方视角" }, "elevation": { "lowAngleShot": "仰拍", "eyeLevelShot": "平视", "elevatedShot": "高角度", "highAngleShot": "俯拍" }, "distance": { "wideShot": "远景", "mediumShot": "中景", "closeUp": "特写" } };
+const outpaint = { "left": "左", "top": "上", "right": "右", "bottom": "下", "reset": "重置", "output": "输出", "noInputImage": "先把一张图片连进来" };
+const fileSlot = { "releaseToUpload": "松开上传", "clickOrDrag": "点击或拖入{kind}", "remove": "移除{kind}", "image": "图片", "video": "视频" };
+const mention = { "newTag": "新建", "create": "+ 新建", "newFragment": "新建片段", "createFragment": "+ 新建片段", "invalidLabel": "标签无效 — 以字母 / 下划线开头(支持中文),后跟字母 / 数字 / _ / -", "noEntries": "还没有条目 — 输入标签即可新建", "contentPlaceholder": "此 {'@'} 标记展开后的内容。(角色等其他类型请用 ComfyTV 按钮 → 条目对话框。)", "save": "保存 (Ctrl+Enter)" };
+const entries = { "refHelpPre": "在 stage 提示词里用", "refHelpPost": "引用任意条目;未知标记保持原文。", "colLabel": "标签", "colContent": "内容", "deleteTitle": "删除 {'@'}{label}", "confirmDelete": "删除 {'@'}{label}?现有的 {'@'}{label} 标记将回退为原文。", "labelError": "以字母 / 下划线开头(支持中文),后跟字母 / 数字 / _ / -", "emptyKind": "还没有{kind}。点击下方 + 添加。", "labelPlaceholder": "标签", "save": "保存", "addKind": "+ 添加{kind}" };
+const menu = { "openEntryManager": "ComfyTV — 打开条目管理", "entriesTitle": "ComfyTV 条目", "entriesButtonTooltip": "ComfyTV — 条目(片段 / 角色 / …)", "configSidebarTooltip": "ComfyTV — 工作流配置与素材库" };
+const valuePreview = { "moreShots": "+ 还有 {n} 个", "emptyTimeline": "空时间轴" };
+const zh = {
+  workflow,
+  stage,
+  error,
+  sidebar,
+  assets,
+  imageRefs,
+  promptAssets,
+  configSidebar,
+  project,
+  execution,
+  actions,
+  presets,
+  shotCell,
+  imageCrop,
+  panorama,
+  imageCompare,
+  storyboard,
+  timeline,
+  gridSplit,
+  panoramaView,
+  rotate,
+  mirror,
+  painter,
+  camera,
+  outpaint,
+  fileSlot,
+  mention,
+  entries,
+  menu,
+  valuePreview
+};
+function pickLocale() {
+  var _a2, _b2, _c, _d, _e, _f;
+  let stored;
+  try {
+    stored = ((_c = (_b2 = (_a2 = app == null ? void 0 : app.ui) == null ? void 0 : _a2.settings) == null ? void 0 : _b2.getSettingValue) == null ? void 0 : _c.call(_b2, "Comfy.Locale")) ?? ((_f = (_e = (_d = app == null ? void 0 : app.extensionManager) == null ? void 0 : _d.setting) == null ? void 0 : _e.get) == null ? void 0 : _f.call(_e, "Comfy.Locale"));
+  } catch {
+    stored = void 0;
+  }
+  const candidate = (stored || navigator.language || "en").toLowerCase();
+  if (candidate.startsWith("zh")) return "zh";
+  return "en";
+}
+const i18n = createI18n({
+  legacy: false,
+  locale: pickLocale(),
+  fallbackLocale: "en",
+  messages: { en, zh },
+  missingWarn: false,
+  fallbackWarn: false
+});
+const t = i18n.global.t;
 function useImagePanZoom(containerEl, imgEl, options = {}) {
   const minZoom = options.minZoom ?? 1;
   const maxZoom = options.maxZoom ?? 6;
@@ -50215,49 +51948,122 @@ function useImagePanZoom(containerEl, imgEl, options = {}) {
   onBeforeUnmount(unbind);
   return { reset };
 }
+function useOutputAssetTagging() {
+  const assetStore = useAssetStore();
+  const tagMenu = /* @__PURE__ */ ref(null);
+  const categories = computed(() => assetStore.categories);
+  const tagMenuAsset = computed(
+    () => tagMenu.value ? assetStore.byPayloadUrl(tagMenu.value.url) ?? null : null
+  );
+  const tagMenuStyle = computed(
+    () => tagMenu.value ? { left: `${Math.max(8, tagMenu.value.x - 176)}px`, top: `${tagMenu.value.y}px` } : {}
+  );
+  function nameFromUrl(url) {
+    try {
+      const u = new URL(url, window.location.origin);
+      const fn2 = u.searchParams.get("filename") || u.pathname.split("/").pop() || "image";
+      return fn2.replace(/\.[^.]+$/, "");
+    } catch {
+      return "image";
+    }
+  }
+  function isSaved(url) {
+    return !!url && !!assetStore.byPayloadUrl(url);
+  }
+  function openTagMenu(url, name, e) {
+    if (!url) return;
+    assetStore.ensureHydrated();
+    const r = e.currentTarget.getBoundingClientRect();
+    tagMenu.value = { url, name, x: r.right, y: r.bottom + 4 };
+  }
+  function closeTagMenu() {
+    tagMenu.value = null;
+  }
+  function tagMenuHas(catId) {
+    var _a2;
+    return ((_a2 = tagMenuAsset.value) == null ? void 0 : _a2.category_ids.includes(catId)) ?? false;
+  }
+  async function toggleOutputTag(catId) {
+    if (!tagMenu.value) return;
+    await assetStore.hydrate();
+    if (!tagMenu.value) return;
+    const existing = tagMenuAsset.value;
+    if (!existing) {
+      await assetStore.create({
+        name: tagMenu.value.name,
+        payload_url: tagMenu.value.url,
+        media_type: "image",
+        category_ids: [catId]
+      });
+      return;
+    }
+    if (existing.category_ids.includes(catId)) await assetStore.removeTag(existing.id, catId);
+    else await assetStore.addTag(existing.id, catId);
+  }
+  return {
+    tagMenu,
+    categories,
+    tagMenuStyle,
+    nameFromUrl,
+    isSaved,
+    openTagMenu,
+    closeTagMenu,
+    tagMenuHas,
+    toggleOutputTag
+  };
+}
 const _hoisted_1$n = ["src", "alt"];
 const _hoisted_2$k = ["title"];
 const _hoisted_3$k = ["title"];
-const _hoisted_4$h = ["src", "alt"];
-const _hoisted_5$h = ["src"];
+const _hoisted_4$h = ["title"];
+const _hoisted_5$h = ["src", "alt"];
 const _hoisted_6$g = ["src"];
-const _hoisted_7$f = {
+const _hoisted_7$f = ["src"];
+const _hoisted_8$f = {
   key: 0,
   class: "ctv:flex ctv:flex-col ctv:gap-0.5 ctv:size-full ctv:py-[3px] ctv:px-1 ctv:box-border ctv:overflow-hidden"
 };
-const _hoisted_8$f = { class: "ctv:flex ctv:items-baseline ctv:gap-1 ctv:shrink-0" };
-const _hoisted_9$f = { class: "vp-sb-count ctv:text-xs ctv:font-bold ctv:leading-none ctv:text-[#d8b0ff]" };
-const _hoisted_10$f = {
+const _hoisted_9$f = { class: "ctv:flex ctv:items-baseline ctv:gap-1 ctv:shrink-0" };
+const _hoisted_10$f = { class: "vp-sb-count ctv:text-xs ctv:font-bold ctv:leading-none ctv:text-[#d8b0ff]" };
+const _hoisted_11$d = {
   key: 0,
   class: "ctv:ml-auto ctv:text-3xs ctv:tracking-wide ctv:text-muted-foreground"
 };
-const _hoisted_11$d = { class: "ctv:list-none ctv:m-0 ctv:p-0 ctv:flex ctv:flex-col ctv:gap-px ctv:flex-auto ctv:min-h-0" };
-const _hoisted_12$d = { class: "ctv:shrink-0 ctv:font-semibold ctv:text-[#d8b0ff] ctv:min-w-2" };
-const _hoisted_13$b = { class: "ctv:flex-auto ctv:overflow-hidden ctv:text-ellipsis ctv:text-base-foreground/80" };
-const _hoisted_14$9 = {
+const _hoisted_12$d = { class: "ctv:list-none ctv:m-0 ctv:p-0 ctv:flex ctv:flex-col ctv:gap-px ctv:flex-auto ctv:min-h-0" };
+const _hoisted_13$b = { class: "ctv:shrink-0 ctv:font-semibold ctv:text-[#d8b0ff] ctv:min-w-2" };
+const _hoisted_14$9 = { class: "ctv:flex-auto ctv:overflow-hidden ctv:text-ellipsis ctv:text-base-foreground/80" };
+const _hoisted_15$9 = {
   key: 0,
   class: "vp-sb-more ctv:text-[8px] ctv:text-right ctv:italic ctv:text-muted-foreground/60"
 };
-const _hoisted_15$9 = { class: "vp-compact-count-text ctv:text-sm ctv:font-bold ctv:text-[#d8b0ff]" };
-const _hoisted_16$9 = ["src", "alt"];
-const _hoisted_17$9 = {
+const _hoisted_16$9 = { class: "vp-compact-count-text ctv:text-sm ctv:font-bold ctv:text-[#d8b0ff]" };
+const _hoisted_17$9 = ["src", "alt"];
+const _hoisted_18$7 = {
   key: 2,
   class: "ctv:absolute ctv:top-0.5 ctv:left-0.5 ctv:pointer-events-none ctv:py-px ctv:px-[5px] ctv:text-3xs ctv:font-bold ctv:tracking-wide ctv:rounded-lg ctv:bg-[rgb(255_140_200/0.85)] ctv:text-white"
 };
-const _hoisted_18$7 = {
+const _hoisted_19$5 = {
   key: 1,
   class: "ctv-batch-grid"
 };
-const _hoisted_19$5 = ["src", "alt"];
-const _hoisted_20$4 = { class: "ctv:absolute ctv:bottom-0.5 ctv:left-0.5 ctv:py-px ctv:px-1 ctv:text-3xs ctv:font-bold ctv:rounded-sm ctv:bg-black/70 ctv:text-[#ffb0d8]" };
-const _hoisted_21$4 = {
+const _hoisted_20$4 = ["src", "alt"];
+const _hoisted_21$4 = { class: "ctv:absolute ctv:bottom-0.5 ctv:left-0.5 ctv:py-px ctv:px-1 ctv:text-3xs ctv:font-bold ctv:rounded-sm ctv:bg-black/70 ctv:text-[#ffb0d8]" };
+const _hoisted_22$4 = {
   key: 0,
   class: "ctv:absolute ctv:top-0.5 ctv:right-0.5 ctv:py-px ctv:px-1 ctv:text-2xs ctv:rounded-sm ctv:bg-black/55 ctv:opacity-0 ctv:transition-opacity ctv:duration-150 ctv:group-hover:opacity-100"
 };
-const _hoisted_22$4 = ["title", "onClick"];
 const _hoisted_23$4 = ["title", "onClick"];
-const _hoisted_24$4 = ["src", "alt"];
-const _hoisted_25$4 = ["title"];
+const _hoisted_24$4 = ["title", "onClick"];
+const _hoisted_25$4 = ["title", "onClick"];
+const _hoisted_26$3 = ["src", "alt"];
+const _hoisted_27$3 = ["title"];
+const _hoisted_28$3 = {
+  key: 0,
+  class: "ctv:py-2 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60 ctv:text-2xs"
+};
+const _hoisted_29$3 = ["onClick"];
+const _hoisted_30$3 = { class: "ctv:w-3 ctv:inline-block ctv:text-primary-background" };
+const _hoisted_31$3 = { class: "ctv:flex-1 ctv:truncate" };
 const compactSummary = "ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:size-full ctv:gap-0.5";
 const storyboardListClass = "ctv:flex ctv:flex-col ctv:gap-1 ctv:pt-3.5 ctv:max-h-56 ctv:overflow-auto";
 const shotRowClass = "ctv:flex ctv:items-baseline ctv:gap-1.5 ctv:py-[3px] ctv:px-[5px] ctv:text-[11px] ctv:rounded-sm ctv:bg-base-foreground/[0.03] ctv:border-l-2 ctv:border-[rgb(200_130_255/0.4)]";
@@ -50279,6 +52085,17 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
   emits: ["item-click"],
   setup(__props, { emit: __emit }) {
     const { t: t2 } = useI18n();
+    const {
+      tagMenu,
+      categories,
+      tagMenuStyle,
+      nameFromUrl,
+      isSaved,
+      openTagMenu,
+      closeTagMenu,
+      tagMenuHas,
+      toggleOutputTag
+    } = useOutputAssetTagging();
     const zoomContainer = /* @__PURE__ */ ref(null);
     const zoomImg = /* @__PURE__ */ ref(null);
     const lightboxUrl = /* @__PURE__ */ ref(null);
@@ -50296,12 +52113,14 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
       }
     }
     function onKeydown(e) {
-      if (e.key === "Escape" && lightboxUrl.value) lightboxUrl.value = null;
+      if (e.key !== "Escape") return;
+      if (tagMenu.value) closeTagMenu();
+      else if (lightboxUrl.value) lightboxUrl.value = null;
     }
     onMounted(() => window.addEventListener("keydown", onKeydown));
     onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
     const props = __props;
-    useImagePanZoom(zoomContainer, zoomImg, { resetKey: /* @__PURE__ */ toRef(props, "content") });
+    useImagePanZoom(zoomContainer, zoomImg, { resetKey: /* @__PURE__ */ toRef$1(props, "content") });
     useImagePanZoom(lightboxContainer, lightboxImg, { resetKey: lightboxUrl, minZoom: 0.2, maxZoom: 8 });
     const hasContent = computed(() => props.content != null && String(props.content).length > 0);
     const shortType = computed(() => {
@@ -50419,6 +52238,10 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
       () => props.compact ? "ctv:block ctv:size-full ctv:object-cover ctv:bg-black" : "ctv:block ctv:w-full ctv:max-h-52 ctv:rounded-sm ctv:bg-black"
     );
     const imgActionBtn = COMFY_BTN_BASE$1 + " ctv:size-5 ctv:p-0 ctv:rounded-sm ctv:text-sm ctv:bg-white ctv:text-gray-600 ctv:hover:bg-white/90";
+    function tagActionBtn(url) {
+      const saved = isSaved(url);
+      return COMFY_BTN_BASE$1 + " ctv:size-5 ctv:p-0 ctv:rounded-sm ctv:text-sm" + (saved ? " ctv:bg-primary-background ctv:text-white ctv:hover:bg-primary-background/90" : " ctv:bg-white ctv:text-gray-600 ctv:hover:bg-white/90");
+    }
     function batchCellClass(selected) {
       const base2 = "ctv:group ctv:relative ctv:aspect-video ctv:rounded-sm ctv:overflow-hidden ctv:p-0 ctv:bg-black ctv:transition-colors";
       const interactive = props.clickMode === "pick" ? " ctv:cursor-pointer" : " ctv:cursor-default";
@@ -50469,14 +52292,20 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
               class: normalizeClass(imgActionBtn),
               title: _ctx.$t("stage.action.download"),
               onClick: _cache2[1] || (_cache2[1] = withModifiers(($event) => onDownload(String(__props.content)), ["stop"]))
-            }, "⤓", 8, _hoisted_3$k)
+            }, "⤓", 8, _hoisted_3$k),
+            createBaseVNode("button", {
+              type: "button",
+              class: normalizeClass(tagActionBtn(String(__props.content))),
+              title: _ctx.$t("stage.action.addTag"),
+              onClick: _cache2[2] || (_cache2[2] = withModifiers(($event) => unref(openTagMenu)(String(__props.content), unref(nameFromUrl)(String(__props.content)), $event), ["stop"]))
+            }, "🏷", 10, _hoisted_4$h)
           ])
         ], 512)) : __props.type === "COMFYTV_IMAGE" || __props.type === "COMFYTV_PANORAMA" ? (openBlock(), createElementBlock("img", {
           key: 4,
           src: String(__props.content),
           class: normalizeClass(imgClass.value),
           alt: String(__props.content)
-        }, null, 10, _hoisted_4$h)) : __props.type === "COMFYTV_VIDEO" ? (openBlock(), createElementBlock("video", {
+        }, null, 10, _hoisted_5$h)) : __props.type === "COMFYTV_VIDEO" ? (openBlock(), createElementBlock("video", {
           key: 5,
           src: String(__props.content),
           class: normalizeClass(videoClass.value),
@@ -50484,11 +52313,11 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
           muted: "",
           playsinline: "",
           preload: "metadata"
-        }, null, 10, _hoisted_5$h)) : __props.type === "COMFYTV_AUDIO" ? (openBlock(), createElementBlock(Fragment$1, { key: 6 }, [
+        }, null, 10, _hoisted_6$g)) : __props.type === "COMFYTV_AUDIO" ? (openBlock(), createElementBlock(Fragment$1, { key: 6 }, [
           __props.compact ? (openBlock(), createElementBlock("div", {
             key: 0,
             class: normalizeClass(compactSummary)
-          }, [..._cache2[6] || (_cache2[6] = [
+          }, [..._cache2[10] || (_cache2[10] = [
             createBaseVNode("span", { class: "ctv:text-[22px] ctv:leading-none" }, "🔊", -1)
           ])])) : (openBlock(), createElementBlock("audio", {
             key: 1,
@@ -50496,26 +52325,26 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
             class: "ctv:block ctv:w-full ctv:mt-3.5",
             controls: "",
             preload: "metadata"
-          }, null, 8, _hoisted_6$g))
+          }, null, 8, _hoisted_7$f))
         ], 64)) : __props.type === "COMFYTV_STORYBOARD" ? (openBlock(), createElementBlock(Fragment$1, { key: 7 }, [
-          __props.compact ? (openBlock(), createElementBlock("div", _hoisted_7$f, [
-            createBaseVNode("div", _hoisted_8$f, [
-              _cache2[7] || (_cache2[7] = createBaseVNode("span", { class: "ctv:text-[11px] ctv:leading-none" }, "📋", -1)),
-              createBaseVNode("span", _hoisted_9$f, toDisplayString$1(storyboardShots.value.length), 1),
-              storyboardTotalSec.value ? (openBlock(), createElementBlock("span", _hoisted_10$f, toDisplayString$1(storyboardTotalSec.value) + "s", 1)) : createCommentVNode("", true)
+          __props.compact ? (openBlock(), createElementBlock("div", _hoisted_8$f, [
+            createBaseVNode("div", _hoisted_9$f, [
+              _cache2[11] || (_cache2[11] = createBaseVNode("span", { class: "ctv:text-[11px] ctv:leading-none" }, "📋", -1)),
+              createBaseVNode("span", _hoisted_10$f, toDisplayString$1(storyboardShots.value.length), 1),
+              storyboardTotalSec.value ? (openBlock(), createElementBlock("span", _hoisted_11$d, toDisplayString$1(storyboardTotalSec.value) + "s", 1)) : createCommentVNode("", true)
             ]),
-            createBaseVNode("ul", _hoisted_11$d, [
+            createBaseVNode("ul", _hoisted_12$d, [
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(storyboardShots.value.slice(0, 3), (shot, i) => {
                 return openBlock(), createElementBlock("li", {
                   key: i,
                   class: "vp-sb-item ctv:flex ctv:items-baseline ctv:gap-[3px] ctv:text-3xs ctv:leading-tight ctv:whitespace-nowrap ctv:overflow-hidden"
                 }, [
-                  createBaseVNode("span", _hoisted_12$d, toDisplayString$1(shot.shot_no ?? i + 1), 1),
-                  createBaseVNode("span", _hoisted_13$b, toDisplayString$1(shotSummary(shot)), 1)
+                  createBaseVNode("span", _hoisted_13$b, toDisplayString$1(shot.shot_no ?? i + 1), 1),
+                  createBaseVNode("span", _hoisted_14$9, toDisplayString$1(shotSummary(shot)), 1)
                 ]);
               }), 128))
             ]),
-            storyboardShots.value.length > 3 ? (openBlock(), createElementBlock("div", _hoisted_14$9, toDisplayString$1(_ctx.$t("valuePreview.moreShots", { n: storyboardShots.value.length - 3 })), 1)) : createCommentVNode("", true)
+            storyboardShots.value.length > 3 ? (openBlock(), createElementBlock("div", _hoisted_15$9, toDisplayString$1(_ctx.$t("valuePreview.moreShots", { n: storyboardShots.value.length - 3 })), 1)) : createCommentVNode("", true)
           ])) : (openBlock(), createElementBlock("div", {
             key: 1,
             class: normalizeClass(storyboardListClass)
@@ -50543,8 +52372,8 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
             key: 0,
             class: normalizeClass(compactSummary)
           }, [
-            _cache2[8] || (_cache2[8] = createBaseVNode("span", { class: "ctv:text-[22px] ctv:leading-none" }, "🎬", -1)),
-            createBaseVNode("span", _hoisted_15$9, toDisplayString$1(timelineSegs.value.length), 1)
+            _cache2[12] || (_cache2[12] = createBaseVNode("span", { class: "ctv:text-[22px] ctv:leading-none" }, "🎬", -1)),
+            createBaseVNode("span", _hoisted_16$9, toDisplayString$1(timelineSegs.value.length), 1)
           ])) : (openBlock(), createElementBlock("div", {
             key: 1,
             class: normalizeClass(storyboardListClass)
@@ -50578,12 +52407,12 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
               src: batchImages.value[0].image_url,
               class: normalizeClass(imgClass.value),
               alt: `${batchImages.value.length} items`
-            }, null, 10, _hoisted_16$9)) : (openBlock(), createElementBlock("div", {
+            }, null, 10, _hoisted_17$9)) : (openBlock(), createElementBlock("div", {
               key: 1,
               class: normalizeClass(emptyClass2.value)
             }, toDisplayString$1(__props.emptyLabel || "…"), 3)),
-            batchImages.value.length > 0 ? (openBlock(), createElementBlock("span", _hoisted_17$9, toDisplayString$1(batchImages.value.length), 1)) : createCommentVNode("", true)
-          ], 64)) : (openBlock(), createElementBlock("div", _hoisted_18$7, [
+            batchImages.value.length > 0 ? (openBlock(), createElementBlock("span", _hoisted_18$7, toDisplayString$1(batchImages.value.length), 1)) : createCommentVNode("", true)
+          ], 64)) : (openBlock(), createElementBlock("div", _hoisted_19$5, [
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(batchImages.value, (img, i) => {
               return openBlock(), createBlock(resolveDynamicComponent(__props.clickMode === "pick" ? "button" : "div"), {
                 key: i,
@@ -50597,9 +52426,9 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
                     src: img.image_url,
                     alt: img.label || img.prompt || `item ${i + 1}`,
                     class: "ctv:block ctv:size-full ctv:object-cover ctv:pointer-events-none"
-                  }, null, 8, _hoisted_19$5),
-                  createBaseVNode("span", _hoisted_20$4, toDisplayString$1(img.label ?? `#${img.index ?? i + 1}`), 1),
-                  __props.clickMode === "pick" ? (openBlock(), createElementBlock("span", _hoisted_21$4, toDisplayString$1(clickHintIcon.value), 1)) : createCommentVNode("", true),
+                  }, null, 8, _hoisted_20$4),
+                  createBaseVNode("span", _hoisted_21$4, toDisplayString$1(img.label ?? `#${img.index ?? i + 1}`), 1),
+                  __props.clickMode === "pick" ? (openBlock(), createElementBlock("span", _hoisted_22$4, toDisplayString$1(clickHintIcon.value), 1)) : createCommentVNode("", true),
                   createBaseVNode("div", {
                     class: normalizeClass(imgActionsClass)
                   }, [
@@ -50608,13 +52437,19 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
                       class: normalizeClass(imgActionBtn),
                       title: _ctx.$t("stage.action.viewFull"),
                       onClick: withModifiers(($event) => openViewer(img.image_url), ["stop"])
-                    }, "⤢", 8, _hoisted_22$4),
+                    }, "⤢", 8, _hoisted_23$4),
                     createBaseVNode("button", {
                       type: "button",
                       class: normalizeClass(imgActionBtn),
                       title: _ctx.$t("stage.action.download"),
                       onClick: withModifiers(($event) => onDownload(img.image_url), ["stop"])
-                    }, "⤓", 8, _hoisted_23$4)
+                    }, "⤓", 8, _hoisted_24$4),
+                    createBaseVNode("button", {
+                      type: "button",
+                      class: normalizeClass(tagActionBtn(img.image_url)),
+                      title: _ctx.$t("stage.action.addTag"),
+                      onClick: withModifiers(($event) => unref(openTagMenu)(img.image_url, img.label || img.prompt || unref(nameFromUrl)(img.image_url), $event), ["stop"])
+                    }, "🏷", 10, _hoisted_25$4)
                   ])
                 ]),
                 _: 2
@@ -50630,15 +52465,15 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
             key: 0,
             class: "ctv:fixed ctv:inset-0 ctv:z-[9999] ctv:flex ctv:items-center ctv:justify-center ctv:cursor-zoom-out ctv:bg-black/90",
             role: "dialog",
-            onClick: _cache2[4] || (_cache2[4] = withModifiers(($event) => lightboxUrl.value = null, ["self"])),
-            onWheel: _cache2[5] || (_cache2[5] = withModifiers(() => {
+            onClick: _cache2[5] || (_cache2[5] = withModifiers(($event) => lightboxUrl.value = null, ["self"])),
+            onWheel: _cache2[6] || (_cache2[6] = withModifiers(() => {
             }, ["prevent", "stop"]))
           }, [
             createBaseVNode("div", {
               ref_key: "lightboxContainer",
               ref: lightboxContainer,
               class: "ctv:inline-flex ctv:items-center ctv:justify-center ctv:touch-none ctv:select-none ctv:cursor-grab",
-              onClick: _cache2[2] || (_cache2[2] = withModifiers(() => {
+              onClick: _cache2[3] || (_cache2[3] = withModifiers(() => {
               }, ["stop"]))
             }, [
               createBaseVNode("img", {
@@ -50648,21 +52483,50 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
                 class: "ctv:block ctv:max-w-[60vw] ctv:max-h-[60vh] ctv:object-contain ctv:cursor-[inherit] ctv:shadow-[0_8px_40px_rgb(0_0_0/0.6)]",
                 draggable: "false",
                 alt: lightboxUrl.value
-              }, null, 8, _hoisted_24$4)
+              }, null, 8, _hoisted_26$3)
             ], 512),
             createBaseVNode("button", {
               type: "button",
               class: "ctv:absolute ctv:top-4 ctv:right-4 ctv:size-9 ctv:flex ctv:items-center ctv:justify-center ctv:text-sm ctv:leading-none ctv:rounded-full ctv:cursor-pointer ctv:bg-black/55 ctv:text-white ctv:border ctv:border-white/30 ctv:hover:bg-black/85 ctv:hover:border-white/55",
               title: _ctx.$t("stage.action.close"),
-              onClick: _cache2[3] || (_cache2[3] = ($event) => lightboxUrl.value = null)
-            }, "✕", 8, _hoisted_25$4)
+              onClick: _cache2[4] || (_cache2[4] = ($event) => lightboxUrl.value = null)
+            }, "✕", 8, _hoisted_27$3)
+          ], 32)) : createCommentVNode("", true)
+        ])),
+        (openBlock(), createBlock(Teleport, { to: "body" }, [
+          unref(tagMenu) ? (openBlock(), createElementBlock("div", {
+            key: 0,
+            class: "ctv:fixed ctv:inset-0 ctv:z-[9999]",
+            onClick: _cache2[8] || (_cache2[8] = ($event) => tagMenu.value = null),
+            onWheel: _cache2[9] || (_cache2[9] = withModifiers(() => {
+            }, ["prevent", "stop"]))
+          }, [
+            createBaseVNode("div", {
+              class: "ctv:absolute ctv:w-44 ctv:max-h-64 ctv:overflow-y-auto ctv:p-1 ctv:rounded ctv:shadow-md ctv:text-xs ctv:bg-interface-menu-surface ctv:border ctv:border-border-default",
+              style: normalizeStyle(unref(tagMenuStyle)),
+              onClick: _cache2[7] || (_cache2[7] = withModifiers(() => {
+              }, ["stop"]))
+            }, [
+              unref(categories).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_28$3, toDisplayString$1(_ctx.$t("assets.tagPopover.empty")), 1)) : createCommentVNode("", true),
+              (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(categories), (cat2) => {
+                return openBlock(), createElementBlock("button", {
+                  key: cat2.id,
+                  type: "button",
+                  class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:px-1.5 ctv:py-1 ctv:rounded-sm ctv:cursor-pointer ctv:text-left ctv:text-2xs ctv:bg-transparent ctv:border-none ctv:text-base-foreground ctv:hover:bg-secondary-background-hover",
+                  onClick: withModifiers(($event) => unref(toggleOutputTag)(cat2.id), ["stop"])
+                }, [
+                  createBaseVNode("span", _hoisted_30$3, toDisplayString$1(unref(tagMenuHas)(cat2.id) ? "✓" : ""), 1),
+                  createBaseVNode("span", _hoisted_31$3, toDisplayString$1(cat2.name), 1)
+                ], 8, _hoisted_29$3);
+              }), 128))
+            ], 4)
           ], 32)) : createCommentVNode("", true)
         ]))
       ], 2);
     };
   }
 });
-const ValuePreview = /* @__PURE__ */ _export_sfc(_sfc_main$p, [["__scopeId", "data-v-504c4134"]]);
+const ValuePreview = /* @__PURE__ */ _export_sfc(_sfc_main$p, [["__scopeId", "data-v-09e6e163"]]);
 const cat$2 = "imageVariant";
 const IMAGE_VARIANT_PRESETS = [
   {
@@ -50826,7 +52690,7 @@ const _hoisted_4$g = {
 const _hoisted_5$g = ["title"];
 const _hoisted_6$f = { class: "ctv:ml-auto ctv:text-3xs ctv:text-destructive-background ctv:font-semibold" };
 const _hoisted_7$e = {
-  key: 1,
+  key: 2,
   class: "ctv:flex ctv:flex-col ctv:gap-1"
 };
 const _hoisted_8$e = { class: "ctv:flex ctv:flex-wrap ctv:gap-1.5" };
@@ -50842,17 +52706,17 @@ const _hoisted_17$8 = { key: 1 };
 const _hoisted_18$6 = { key: 2 };
 const _hoisted_19$4 = { key: 3 };
 const _hoisted_20$3 = {
-  key: 4,
+  key: 5,
   class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:mt-0.5"
 };
 const _hoisted_21$3 = { class: "ctv:relative ctv:flex-auto ctv:h-1.5 ctv:rounded-sm ctv:overflow-hidden ctv:bg-base-foreground/10" };
 const _hoisted_22$3 = { class: "ctv:shrink-0 ctv:min-w-[60px] ctv:text-2xs ctv:text-right ctv:font-mono ctv:text-muted-foreground" };
 const _hoisted_23$3 = {
-  key: 5,
+  key: 6,
   class: "output ctv:flex-1 ctv:min-h-0 ctv:flex ctv:flex-col ctv:gap-1"
 };
 const _hoisted_24$3 = {
-  key: 6,
+  key: 7,
   class: "ctv:flex ctv:flex-col ctv:gap-1"
 };
 const _hoisted_25$3 = { class: "action-list ctv:flex ctv:flex-wrap ctv:gap-1.5" };
@@ -51019,8 +52883,12 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
         class: normalizeClass(cardClass.value)
       }, [
         createVNode(MainPromptInput, { node: __props.node }, null, 8, ["node"]),
-        __props.state.kind === "image-picker" && !__props.hideContext && (poolCount.value > 0 || connectedInputs.value.length > 0) ? (openBlock(), createElementBlock("section", {
+        !__props.hideContext && __props.state.variant !== "loader" ? (openBlock(), createBlock(_sfc_main$s, {
           key: 0,
+          node: __props.node
+        }, null, 8, ["node"])) : createCommentVNode("", true),
+        __props.state.kind === "image-picker" && !__props.hideContext && (poolCount.value > 0 || connectedInputs.value.length > 0) ? (openBlock(), createElementBlock("section", {
+          key: 1,
           class: normalizeClass(["ctv-picker-input ctv:flex ctv:flex-col ctv:gap-1 ctv:py-1", `ctv-src-${pickerSource.value}`])
         }, [
           createBaseVNode("div", _hoisted_1$m, [
@@ -51086,7 +52954,7 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
           ])
         ])) : createCommentVNode("", true),
         __props.state.error ? (openBlock(), createElementBlock("div", {
-          key: 2,
+          key: 3,
           class: normalizeClass([
             "error-row ctv:flex ctv:items-start ctv:gap-1.5 ctv:py-1.5 ctv:px-2 ctv:rounded-sm ctv:text-[11px] ctv:leading-snug ctv:border",
             __props.state.error.type === "Cancelled" ? "is-cancel-banner ctv:border-warning-background/55 ctv:bg-warning-background/10 ctv:text-warning-background" : "ctv:border-destructive-background/55 ctv:bg-destructive-background/10 ctv:text-destructive-background"
@@ -51113,7 +52981,7 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
           }, "×", 8, _hoisted_14$8)
         ], 2)) : createCommentVNode("", true),
         __props.state.variant !== "loader" && __props.state.variant !== "transform" && __props.state.kind !== "image-picker" ? (openBlock(), createElementBlock("button", {
-          key: 3,
+          key: 4,
           class: normalizeClass(["run-btn", __props.state.running && "is-cancel", runBtnClass.value]),
           disabled: !__props.state.running && !canRun.value,
           onClick: _cache2[2] || (_cache2[2] = ($event) => __props.state.running ? onCancel() : onRun())
@@ -51180,7 +53048,7 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const StageCard = /* @__PURE__ */ _export_sfc(_sfc_main$o, [["__scopeId", "data-v-3ba8c6e4"]]);
+const StageCard = /* @__PURE__ */ _export_sfc(_sfc_main$o, [["__scopeId", "data-v-95136374"]]);
 const _sfc_main$n = /* @__PURE__ */ defineComponent({
   __name: "SceneCanvas",
   props: {
@@ -73065,33 +74933,6 @@ function toHex(val) {
   if (/^#[0-9a-f]{8}$/.test(raw)) return raw.slice(0, 7);
   return "#000000";
 }
-async function uploadCanvas(canvas, opts) {
-  const blob = await new Promise(
-    (resolve2) => canvas.toBlob(resolve2, "image/png")
-  );
-  if (!blob) throw new Error("canvas.toBlob returned null");
-  return uploadBlob(blob, opts);
-}
-async function uploadBlobNamed(blob, opts) {
-  const subfolder = opts.subfolder;
-  const type = opts.type ?? "input";
-  const filename = opts.filename ?? `${opts.filenamePrefix ?? "comfytv"}-${Date.now()}.png`;
-  const body = new FormData();
-  body.append("image", blob, filename);
-  body.append("subfolder", subfolder);
-  body.append("type", type);
-  const resp = await app.api.fetchApi("/upload/image", { method: "POST", body });
-  if (resp.status !== 200) {
-    throw new Error(`upload ${resp.status} ${resp.statusText}`);
-  }
-  const data = await resp.json();
-  if (!(data == null ? void 0 : data.name)) throw new Error("upload response missing `name`");
-  const url = `/view?filename=${encodeURIComponent(data.name)}&subfolder=${encodeURIComponent(subfolder)}&type=${encodeURIComponent(type)}`;
-  return { name: data.name, subfolder, type, url };
-}
-async function uploadBlob(blob, opts) {
-  return (await uploadBlobNamed(blob, opts)).url;
-}
 const PROP_KEY = "comfytv_painter_settings";
 function usePainter(options) {
   const { canvasEl, cursorEl, sourceImageUrl, node, maskWidgetName = "mask_data" } = options;
@@ -81645,7 +83486,10 @@ function useStageNode(node, kind, variant = "generator") {
   }
   const refresh = () => store.refreshStageInputs(node, state, app);
   const reValidate = () => {
-    validateNode(node).then((map2) => {
+    const assetStore = useAssetStore();
+    assetStore.hydrate().then(() => validateNode(node, kind, {
+      assetExists: (id) => !!assetStore.byId(id)
+    })).then((map2) => {
       var _a3, _b3;
       node._comfytvSlotWarnings = map2;
       applySlotWarnings(node);
@@ -81726,7 +83570,7 @@ function useStageNode(node, kind, variant = "generator") {
     { immediate: true }
   ) : null;
   const onRunRequest = async () => {
-    var _a3, _b3, _c2, _d2, _e2, _f3, _g, _h, _i, _j, _k, _l, _m, _n;
+    var _a3, _b3, _c2, _d2, _e2, _f3, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s, _t, _u, _v2;
     if (state.running) return;
     if (variant === "loader") return;
     if (state.preparingWorkflow) {
@@ -81793,10 +83637,33 @@ function useStageNode(node, kind, variant = "generator") {
         return;
       }
       const entries2 = useEntryStore();
+      const assetStore = useAssetStore();
       const pid = useProjectStore().currentProjectId || "";
-      for (const inputs of Object.values((pm == null ? void 0 : pm.output) ?? {})) {
+      const refsByNode = /* @__PURE__ */ new Map();
+      for (const nid of Object.keys((pm == null ? void 0 : pm.output) ?? {})) {
+        const gn = ((_p = (_o = a.graph) == null ? void 0 : _o.getNodeById) == null ? void 0 : _p.call(_o, Number(nid))) ?? ((_r = (_q = a.graph) == null ? void 0 : _q.getNodeById) == null ? void 0 : _r.call(_q, String(nid)));
+        const refs = readImageRefs(gn);
+        if (refs.length) refsByNode.set(String(nid), refs);
+      }
+      if (refsByNode.size > 0) await assetStore.hydrate();
+      for (const [nid, inputs] of Object.entries((pm == null ? void 0 : pm.output) ?? {})) {
         const obj = inputs == null ? void 0 : inputs.inputs;
         if (!obj) continue;
+        const refs = refsByNode.get(String(nid));
+        if (refs == null ? void 0 : refs.length) {
+          const graphNode = ((_t = (_s = a.graph) == null ? void 0 : _s.getNodeById) == null ? void 0 : _t.call(_s, Number(nid))) ?? ((_v2 = (_u = a.graph) == null ? void 0 : _u.getNodeById) == null ? void 0 : _v2.call(_u, String(nid)));
+          if (nodeAcceptsAutogrowImages(graphNode)) {
+            const resolved = [];
+            for (const r of refs) {
+              const asset = assetStore.byId(r.asset_id);
+              if (asset) resolved.push({ id: r.asset_id, url: asset.payload_url, slot: r.slot });
+              else console.warn(`[ComfyTV/stage] node #${nid}: image ref ${r.asset_id} missing from library`);
+            }
+            for (const w of injectImageRefs(obj, resolved)) {
+              console.warn(`[ComfyTV/stage] node #${nid}: ${w}`);
+            }
+          }
+        }
         const mp = obj.main_prompt;
         if (typeof mp === "string" && mp.includes("@")) {
           obj.main_prompt = entries2.expand(pid, mp);
@@ -82639,7 +84506,7 @@ const extension = {
           flexDirection: "column",
           overflow: "hidden"
         });
-        sidebarApp = createApp(_sfc_main$s);
+        sidebarApp = createApp(_sfc_main$v);
         sidebarApp.use(pinia);
         sidebarApp.use(i18n);
         sidebarApp.mount(container);
