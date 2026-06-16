@@ -9,6 +9,7 @@ import { fetchCaps } from '@/api'
 import {
   buildBindingOptions,
   DEFAULT_CAPS_BY_KIND,
+  groupExposedWidgets,
   loadCaps,
   type ExposedWidget,
 } from './workflowConfigCatalog'
@@ -123,5 +124,42 @@ describe('caps loading', () => {
     const vals = opts.map(o => o.value)
     expect(vals).toContain('option:lyrics')
     expect(vals).toContain('computed:length')
+  })
+})
+
+describe('groupExposedWidgets', () => {
+  it('returns nothing for no widgets', () => {
+    expect(groupExposedWidgets([])).toEqual([])
+  })
+
+  it('groups widgets by group_title, then by node, preserving first-seen order', () => {
+    const ws = [
+      widget({ group_title: 'A', node_id: '1', widget_name: 'a1' }),
+      widget({ group_title: 'A', node_id: '1', widget_name: 'a2' }),
+      widget({ group_title: 'B', node_id: '2', widget_name: 'b1' }),
+      widget({ group_title: 'A', node_id: '3', widget_name: 'a3' }),
+    ]
+    const groups = groupExposedWidgets(ws)
+    expect(groups.map(g => g.title)).toEqual(['A', 'B'])
+    expect(groups[0].nodes.map(n => n.node_id)).toEqual(['1', '3'])
+    expect(groups[0].nodes[0].widgets.map(w => w.widget_name)).toEqual(['a1', 'a2'])
+    expect(groups[1].nodes[0].widgets.map(w => w.widget_name)).toEqual(['b1'])
+  })
+
+  it('keeps a null group_title as its own group', () => {
+    const groups = groupExposedWidgets([widget({ group_title: null, node_id: '1' })])
+    expect(groups).toHaveLength(1)
+    expect(groups[0].title).toBeNull()
+  })
+
+  it('splits same node_id across different groups', () => {
+    const ws = [
+      widget({ group_title: 'A', node_id: '1', widget_name: 'x' }),
+      widget({ group_title: 'B', node_id: '1', widget_name: 'y' }),
+    ]
+    const groups = groupExposedWidgets(ws)
+    expect(groups).toHaveLength(2)
+    expect(groups[0].nodes[0].widgets[0].widget_name).toBe('x')
+    expect(groups[1].nodes[0].widgets[0].widget_name).toBe('y')
   })
 })

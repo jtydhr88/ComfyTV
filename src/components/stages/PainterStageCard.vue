@@ -22,6 +22,7 @@ import { computed, ref } from 'vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
+import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
 import PainterCanvas from '@/components/widgets/PainterCanvas.vue'
 
 const props = defineProps<{
@@ -35,11 +36,7 @@ const props = defineProps<{
 
 const painterRef = ref<InstanceType<typeof PainterCanvas> | null>(null)
 
-const sourceImageUrl = computed<string | null>(() => {
-  const inp = props.state.inputs.find(i => i.slot === 'image')
-  if (!inp || inp.source !== 'upstream' || !inp.content) return null
-  return inp.content
-})
+const sourceImageUrl = computed(() => pickSourceImageUrl(props.state.inputs))
 
 async function onRunWithMaskCommit() {
   try {

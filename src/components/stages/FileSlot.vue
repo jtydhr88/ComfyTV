@@ -60,6 +60,8 @@
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import { useFileDrop } from '@/composables/stages/useFileDrop'
+
 const { t } = useI18n()
 
 const props = defineProps<{
@@ -73,49 +75,21 @@ const emit = defineEmits<{
 }>()
 
 const picker = ref<HTMLInputElement | null>(null)
-const isDragOver = ref(false)
-let dragCounter = 0
 
 const kindLabel = computed(() => (props.kind === 'image' ? t('fileSlot.image') : t('fileSlot.video')))
 
 function open() { picker.value?.click() }
 
 function acceptFile(f: File) {
-  const url = URL.createObjectURL(f)
-  emit('change', url)
+  emit('change', URL.createObjectURL(f))
 }
 
 function onFileChange(ev: Event) {
-  const t = ev.target as HTMLInputElement
-  const f = t.files?.[0]
+  const input = ev.target as HTMLInputElement
+  const f = input.files?.[0]
   if (f) acceptFile(f)
-  t.value = ''
+  input.value = ''
 }
 
-function isMatchingFile(item: DataTransferItem): boolean {
-  if (item.kind !== 'file') return false
-  if (props.kind === 'image') return item.type.startsWith('image/')
-  return item.type.startsWith('video/')
-}
-function onDragEnter(ev: DragEvent) {
-  if (!Array.from(ev.dataTransfer?.items || []).some(isMatchingFile)) return
-  dragCounter++
-  isDragOver.value = true
-}
-function onDragOver(ev: DragEvent) {
-  if (!ev.dataTransfer) return
-  ev.dataTransfer.dropEffect = 'copy'
-}
-function onDragLeave() {
-  dragCounter = Math.max(0, dragCounter - 1)
-  if (dragCounter === 0) isDragOver.value = false
-}
-function onDrop(ev: DragEvent) {
-  dragCounter = 0
-  isDragOver.value = false
-  const file = Array.from(ev.dataTransfer?.files || []).find(f =>
-    (props.kind === 'image' ? f.type.startsWith('image/') : f.type.startsWith('video/'))
-  )
-  if (file) acceptFile(file)
-}
+const { isDragOver, onDragEnter, onDragOver, onDragLeave, onDrop } = useFileDrop(() => props.kind, acceptFile)
 </script>

@@ -29,6 +29,40 @@ export interface NodeBlock {
   widgets: ExposedWidget[]
 }
 
+export interface WidgetGroup {
+  title: string | null
+  nodes: NodeBlock[]
+}
+
+export function groupExposedWidgets(widgets: ExposedWidget[]): WidgetGroup[] {
+  const groups: WidgetGroup[] = []
+  const groupIdx = new Map<string, number>()
+  const nodeIdx  = new Map<string, number>()
+  for (const w of widgets) {
+    const gkey = w.group_title ?? ''
+    let gi = groupIdx.get(gkey)
+    if (gi === undefined) {
+      gi = groups.length
+      groupIdx.set(gkey, gi)
+      groups.push({ title: w.group_title, nodes: [] })
+    }
+    const nkey = `${gi}/${w.node_id}`
+    let ni = nodeIdx.get(nkey)
+    if (ni === undefined) {
+      ni = groups[gi].nodes.length
+      nodeIdx.set(nkey, ni)
+      groups[gi].nodes.push({
+        node_id:    w.node_id,
+        node_title: w.node_title,
+        node_type:  w.node_type,
+        widgets:    [],
+      })
+    }
+    groups[gi].nodes[ni].widgets.push(w)
+  }
+  return groups
+}
+
 import { reactive } from 'vue'
 
 import { fetchCaps } from '@/api'

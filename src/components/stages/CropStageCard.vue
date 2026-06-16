@@ -30,9 +30,10 @@ import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
 import CropCanvas from '@/components/widgets/CropCanvas.vue'
+import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
 import type { Bounds } from '@/composables/widgets/useImageCrop'
 import { useTransformPipeline } from '@/composables/widgets/useTransformPipeline'
-import { getWidget, readWidgetNum, writeWidget } from '@/utils/widget'
+import { bindWidgetCallback, onNodeConfigure, readWidgetNum, writeWidget } from '@/utils/widget'
 
 const props = defineProps<{
   state: StageState
@@ -43,11 +44,7 @@ const props = defineProps<{
   node: LGraphNode
 }>()
 
-const sourceImageUrl = computed<string | null>(() => {
-  const inp = props.state.inputs.find(i => i.slot === 'image')
-  if (!inp || inp.source !== 'upstream' || !inp.content) return null
-  return inp.content
-})
+const sourceImageUrl = computed(() => pickSourceImageUrl(props.state.inputs))
 
 const bounds = ref<Bounds>({
   x:      readWidgetNum(props.node, 'crop_x', 0),
@@ -68,36 +65,29 @@ watch(bounds, (v) => {
   requestRecompute()
 }, { deep: true })
 
-function wireWidgetCallback(name: string, apply: (v: number) => void) {
-  const w = getWidget(props.node, name)
-  if (!w) return
-  const orig = w.callback
-  w.callback = (value: unknown) => {
-    orig?.call(w, value)
-    apply(Number(value))
-  }
+function bindBound(name: string, key: keyof Bounds) {
+  bindWidgetCallback(props.node, name, (value) => {
+    const v = Number(value)
+    if (v !== bounds.value[key]) bounds.value = { ...bounds.value, [key]: v }
+  })
 }
-wireWidgetCallback('crop_x', v => { if (v !== bounds.value.x)      bounds.value = { ...bounds.value, x: v } })
-wireWidgetCallback('crop_y', v => { if (v !== bounds.value.y)      bounds.value = { ...bounds.value, y: v } })
-wireWidgetCallback('crop_w', v => { if (v !== bounds.value.width)  bounds.value = { ...bounds.value, width: v } })
-wireWidgetCallback('crop_h', v => { if (v !== bounds.value.height) bounds.value = { ...bounds.value, height: v } })
+bindBound('crop_x', 'x')
+bindBound('crop_y', 'y')
+bindBound('crop_w', 'width')
+bindBound('crop_h', 'height')
 
-if (props.node) {
-  const orig = props.node.onConfigure
-  props.node.onConfigure = function (info: any) {
-    orig?.call(this, info)
-    const restored: Bounds = {
-      x:      readWidgetNum(props.node, 'crop_x', bounds.value.x),
-      y:      readWidgetNum(props.node, 'crop_y', bounds.value.y),
-      width:  readWidgetNum(props.node, 'crop_w', bounds.value.width),
-      height: readWidgetNum(props.node, 'crop_h', bounds.value.height),
-    }
-    if (restored.x !== bounds.value.x || restored.y !== bounds.value.y
-      || restored.width !== bounds.value.width || restored.height !== bounds.value.height) {
-      bounds.value = restored
-    }
+onNodeConfigure(props.node, () => {
+  const restored: Bounds = {
+    x:      readWidgetNum(props.node, 'crop_x', bounds.value.x),
+    y:      readWidgetNum(props.node, 'crop_y', bounds.value.y),
+    width:  readWidgetNum(props.node, 'crop_w', bounds.value.width),
+    height: readWidgetNum(props.node, 'crop_h', bounds.value.height),
   }
-}
+  if (restored.x !== bounds.value.x || restored.y !== bounds.value.y
+    || restored.width !== bounds.value.width || restored.height !== bounds.value.height) {
+    bounds.value = restored
+  }
+})
 
 const { computing, requestRecompute } = useTransformPipeline({
   sourceImageUrl,

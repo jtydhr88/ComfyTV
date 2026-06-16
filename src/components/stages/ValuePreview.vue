@@ -225,11 +225,14 @@ import { computed, ref, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useImagePanZoom } from '@/composables/widgets/useImagePanZoom'
 import { useOutputAssetTagging } from '@/composables/stages/useOutputAssetTagging'
+import {
+  isBatchItemSelected,
+  shotSummary,
+  useValuePreview,
+} from '@/composables/stages/useValuePreview'
 import type {
   BatchImage,
   ItemClickPayload,
-  StoryboardShot,
-  TimelineSeg,
 } from '@/types/payloads'
 import { downloadFile } from '@/utils/download'
 
@@ -295,21 +298,14 @@ const props = defineProps<{
 useImagePanZoom(zoomContainer, zoomImg, { resetKey: toRef(props, 'content') })
 useImagePanZoom(lightboxContainer, lightboxImg, { resetKey: lightboxUrl, minZoom: 0.2, maxZoom: 8 })
 
-const hasContent = computed(() => props.content != null && String(props.content).length > 0)
-
-const shortType = computed(() => {
-  switch (props.type) {
-    case 'COMFYTV_TEXT':       return 'TEXT'
-    case 'COMFYTV_IMAGE':      return 'IMG'
-    case 'COMFYTV_VIDEO':      return 'VID'
-    case 'COMFYTV_AUDIO':      return 'AUDIO'
-    case 'COMFYTV_PANORAMA':   return '360°'
-    case 'COMFYTV_STORYBOARD': return 'BOARD'
-    case 'COMFYTV_IMAGES':     return 'BATCH'
-    case 'COMFYTV_TIMELINE':   return 'TIMELINE'
-    default: return props.type
-  }
-})
+const {
+  hasContent,
+  shortType,
+  batchImages,
+  storyboardShots,
+  timelineSegs,
+  storyboardTotalSec,
+} = useValuePreview(() => props.type, () => props.content)
 
 const emit = defineEmits<{
   (e: 'item-click', payload: ItemClickPayload): void
@@ -327,62 +323,13 @@ function onItemClick(img: BatchImage, i: number) {
 const clickHintIcon = computed(() => props.clickMode === 'pick' ? '✓' : '✏️')
 
 function isItemSelected(img: BatchImage, i: number): boolean {
-  if (props.selectedIndex == null) return false
-  const cellIdx = img.index ?? String(i + 1)
-  return Number(cellIdx) === Number(props.selectedIndex)
+  return isBatchItemSelected(img, i, props.selectedIndex)
 }
 
 function cellTooltip(img: BatchImage, i: number): string {
   const tag = img.label ?? `#${img.index ?? i + 1}`
   return props.clickMode === 'pick' ? t('shotCell.pick', { tag }) : t('shotCell.refine', { tag })
 }
-
-const batchImages = computed<BatchImage[]>(() => {
-  if (props.type !== 'COMFYTV_IMAGES' || !props.content) return []
-  try {
-    const parsed = JSON.parse(String(props.content))
-    return Array.isArray(parsed?.images) ? parsed.images : []
-  } catch {
-    return []
-  }
-})
-
-const storyboardShots = computed<StoryboardShot[]>(() => {
-  if (props.type !== 'COMFYTV_STORYBOARD' || !props.content) return []
-  try {
-    const parsed = JSON.parse(String(props.content))
-    return Array.isArray(parsed?.shots) ? parsed.shots : []
-  } catch {
-    return []
-  }
-})
-
-const storyboardTotalSec = computed<number>(() => {
-  let total = 0
-  for (const s of storyboardShots.value) {
-    const raw = s.duration
-    if (raw == null) continue
-    const n = parseFloat(String(raw).replace(/s$/i, ''))
-    if (Number.isFinite(n)) total += n
-  }
-  return Math.round(total)
-})
-
-function shotSummary(s: StoryboardShot): string {
-  const raw = String(s.scene_purpose || s.prompt || s.image_prompt || '').trim()
-
-  return raw.replace(/\s+/g, ' ').slice(0, 60)
-}
-
-const timelineSegs = computed<TimelineSeg[]>(() => {
-  if (props.type !== 'COMFYTV_TIMELINE' || !props.content) return []
-  try {
-    const parsed = JSON.parse(String(props.content))
-    return Array.isArray(parsed?.segments) ? parsed.segments : []
-  } catch {
-    return []
-  }
-})
 
 const rootClass = computed(() => {
   if (props.compact) return 'ctv:relative ctv:size-full ctv:overflow-hidden'

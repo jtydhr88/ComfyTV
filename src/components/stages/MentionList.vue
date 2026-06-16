@@ -70,6 +70,7 @@
 import { computed, nextTick, ref, watch } from 'vue'
 
 import type { MentionSuggestionItem } from '@/composables/stages/useMentionSuggestion'
+import { useListKeyboardNav } from '@/composables/useListKeyboardNav'
 import { useEntryStore } from '@/stores/entryStore'
 import { useProjectStore } from '@/stores/projectStore'
 import { LABEL_RE } from '@/utils/labelRegex'
@@ -89,12 +90,13 @@ const props = defineProps<{
 const entryStore = useEntryStore()
 const projectStore = useProjectStore()
 
-const activeIndex = ref(0)
-
-watch(() => props.items, () => { activeIndex.value = 0 })
-watch(() => props.query,  () => { activeIndex.value = 0 })
-
 const canCreate = computed(() => !!props.query && LABEL_RE.test(props.query))
+
+const nav = useListKeyboardNav(() => props.items.length + (canCreate.value ? 1 : 0))
+const activeIndex = nav.activeIndex
+
+watch(() => props.items, nav.reset)
+watch(() => props.query, nav.reset)
 
 function itemKey(item: MentionSuggestionItem): string {
   return item.module.id
@@ -153,26 +155,10 @@ function selectItem(index: number) {
   }
 }
 
-function upHandler() {
-  const total = props.items.length + (canCreate.value ? 1 : 0)
-  if (total === 0) return
-  activeIndex.value = (activeIndex.value + total - 1) % total
-}
-function downHandler() {
-  const total = props.items.length + (canCreate.value ? 1 : 0)
-  if (total === 0) return
-  activeIndex.value = (activeIndex.value + 1) % total
-}
-function enterHandler() { selectItem(activeIndex.value) }
-
 defineExpose({
   onKeyDown({ event }: { event: KeyboardEvent }): boolean {
     if (creating.value) return event.key === 'Escape'
-    if (event.key === 'ArrowUp')   { upHandler();    return true }
-    if (event.key === 'ArrowDown') { downHandler();  return true }
-    if (event.key === 'Enter' || event.key === 'Tab') { enterHandler(); return true }
-    if (event.key === 'Escape') { return true }
-    return false
+    return nav.onKeyDown(event, selectItem)
   },
 })
 

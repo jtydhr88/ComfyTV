@@ -177,17 +177,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed } from 'vue'
 
 import ImageReferences from './ImageReferences.vue'
 import MainPromptInput from './MainPromptInput.vue'
 import { t } from '@/i18n'
 import ValuePreview from './ValuePreview.vue'
-import { type ImagePreset } from '@/composables/stages/imagePresets'
-import {
-  ACTIONS_BY_KIND,
-  type StageAction,
-} from '@/composables/stages/stageActions'
+import { formatSlot, useStageCard } from '@/composables/stages/useStageCard'
 import {
   actionLabelKey,
   actionTooltipKey,
@@ -208,20 +204,22 @@ const props = defineProps<{
   hideOutput?: boolean
 }>()
 
-const stageActions = computed<StageAction[]>(() => ACTIONS_BY_KIND[props.state.kind] || [])
+const {
+  stageActions,
+  openActionId,
+  openPresets,
+  onActionClick,
+  onPresetClick,
+  connectedInputs,
+  canRun,
+  progressPercent,
+  poolContent,
+  poolCount,
+  pickerSource,
+  confirmingClear,
+  onClearPool,
+} = useStageCard(() => props.state, props.onAction)
 
-const openActionId = ref<string | null>(null)
-const openPresets = computed<ImagePreset[]>(() => {
-  if (!openActionId.value) return []
-  const a = stageActions.value.find(x => x.id === openActionId.value)
-  return a?.presets ?? []
-})
-
-const progressPercent = computed(() => {
-  const p = props.state.progress
-  if (!p || !p.max) return 0
-  return Math.max(0, Math.min(100, (p.value / p.max) * 100))
-})
 const progressFallbackText = computed(() => {
   const p = props.state.progress
   if (!p) return t('stage.starting')
@@ -230,21 +228,6 @@ const progressFallbackText = computed(() => {
 
 function onDismissError() {
   useStageStore().clearError(props.state)
-}
-
-function onActionClick(a: StageAction) {
-  if (a.presets && a.presets.length) {
-    openActionId.value = openActionId.value === a.id ? null : a.id
-    return
-  }
-  openActionId.value = null
-  props.onAction(a.id)
-}
-
-function onPresetClick(p: ImagePreset) {
-  if (!openActionId.value) return
-  props.onAction(`${openActionId.value}:${p.id}`)
-  openActionId.value = null
 }
 
 function onItemClick(payload: ImagePickContext) {
@@ -263,28 +246,6 @@ function sourceLabel(s: InputSource): string {
     default:                 return ''
   }
 }
-
-function formatSlot(slot: string): string {
-  const dot = slot.indexOf('.')
-  if (dot < 0) return slot
-  const tail = slot.slice(dot + 1)
-  const m = tail.match(/^([a-zA-Z_]+)(\d+)$/)
-  if (m) return `${m[1]} #${m[2]}`
-  return tail
-}
-
-const connectedInputs = computed(() =>
-  props.state.inputs.filter(
-    i => i.source === 'upstream' || i.source === 'upstream-pending'
-  )
-)
-
-const canRun = computed(() => {
-  if (props.state.preparingWorkflow) return false
-  const hasPrompt = !!(props.state.mainPrompt && props.state.mainPrompt.trim())
-
-  return hasPrompt || connectedInputs.value.length > 0
-})
 
 function onRun() { if (canRun.value) props.onRunRequest() }
 function onCancel() { props.onCancelRequest() }
@@ -318,31 +279,6 @@ const clearBtn = COMFY_BTN_BASE
 const clearConfirmBtn = COMFY_BTN_BASE
   + ' ctv:h-5 ctv:px-1.5 ctv:rounded-sm ctv:text-3xs ctv:font-semibold ctv:tracking-wide'
   + ' ctv:bg-destructive-background ctv:text-base-foreground ctv:hover:bg-destructive-background-hover'
-
-const batchInput = computed(() =>
-  props.state.inputs.find(i => i.slot === 'batch')
-)
-const poolContent = computed<string | null>(() =>
-  props.state.pool ?? batchInput.value?.content ?? null
-)
-const poolCount = computed(() => {
-  try {
-    const p = JSON.parse(String(poolContent.value ?? ''))
-    return Array.isArray(p?.images) ? p.images.length : 0
-  } catch {
-    return 0
-  }
-})
-const pickerSource = computed<InputSource>(() => batchInput.value?.source ?? 'empty')
-
-const confirmingClear = ref(false)
-
-watch(poolCount, (n) => { if (n === 0) confirmingClear.value = false })
-
-function onClearPool() {
-  props.onAction('clear-pool')
-  confirmingClear.value = false
-}
 
 const runBtnClass = computed(() => {
   const v = props.state.running

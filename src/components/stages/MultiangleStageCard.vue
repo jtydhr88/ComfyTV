@@ -38,7 +38,7 @@ import StageCard from '@/components/stages/StageCard.vue'
 import SceneCanvas from '@/components/widgets/SceneCanvas.vue'
 import CameraControlPanel from '@/components/widgets/CameraControlPanel.vue'
 import { useCameraWidget } from '@/composables/widgets/useCameraWidget'
-import { getWidget, readWidgetNum, writeWidget } from '@/utils/widget'
+import { bindWidgetCallback, readWidgetNum, writeWidget } from '@/utils/widget'
 import type { CameraState } from '@/widgets/three/types'
 
 const props = defineProps<{
@@ -89,19 +89,9 @@ const {
   })
 })
 
-function wireWidgetCallback(name: string, apply: (v: number) => void) {
-  const w = getWidget(props.node, name)
-  if (!w) return
-  const orig = w.callback
-  w.callback = (value: unknown) => {
-    orig?.call(w, value)
-    apply(Number(value))
-  }
-}
-
-wireWidgetCallback('horizontal_angle', v => setState({ azimuth: v }))
-wireWidgetCallback('vertical_angle',   v => setState({ elevation: v }))
-wireWidgetCallback('zoom',             v => setState({ distance: v }))
+bindWidgetCallback(props.node, 'horizontal_angle', v => setState({ azimuth: Number(v) }))
+bindWidgetCallback(props.node, 'vertical_angle',   v => setState({ elevation: Number(v) }))
+bindWidgetCallback(props.node, 'zoom',             v => setState({ distance: Number(v) }))
 
 watch(() => props.state.output, (newUrl) => {
   void newUrl

@@ -59,10 +59,13 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-interface DropdownOption {
-  key: string
-  value: number
-}
+import {
+  AZIMUTH_OPTIONS,
+  DISTANCE_OPTIONS,
+  ELEVATION_OPTIONS,
+  findClosestDistanceOption,
+  findClosestOption,
+} from '@/composables/widgets/cameraViewOptions'
 
 const props = defineProps<{
   azimuth: number
@@ -77,51 +80,9 @@ const emit = defineEmits<{
   'reset': []
 }>()
 
-const azimuthOptions: DropdownOption[] = [
-  { key: 'frontView', value: 0 },
-  { key: 'frontRightQuarterView', value: 45 },
-  { key: 'rightSideView', value: 90 },
-  { key: 'backRightQuarterView', value: 135 },
-  { key: 'backView', value: 180 },
-  { key: 'backLeftQuarterView', value: 225 },
-  { key: 'leftSideView', value: 270 },
-  { key: 'frontLeftQuarterView', value: 315 }
-]
-
-const elevationOptions: DropdownOption[] = [
-  { key: 'lowAngleShot', value: -30 },
-  { key: 'eyeLevelShot', value: 0 },
-  { key: 'elevatedShot', value: 30 },
-  { key: 'highAngleShot', value: 60 }
-]
-
-const distanceOptions: DropdownOption[] = [
-  { key: 'wideShot', value: 1 },
-  { key: 'mediumShot', value: 4 },
-  { key: 'closeUp', value: 8 }
-]
-
-function findClosestOption(value: number, options: DropdownOption[], isAzimuth = false): number {
-  let closest = options[0].value
-  let minDiff = Math.abs(value - options[0].value)
-  for (const opt of options) {
-    let diff = Math.abs(value - opt.value)
-    if (isAzimuth) {
-      diff = Math.min(diff, Math.abs(value - opt.value - 360), Math.abs(value - opt.value + 360))
-    }
-    if (diff < minDiff) {
-      minDiff = diff
-      closest = opt.value
-    }
-  }
-  return closest
-}
-
-function findClosestDistanceOption(dist: number): number {
-  if (dist < 2) return 1
-  if (dist < 6) return 4
-  return 8
-}
+const azimuthOptions = AZIMUTH_OPTIONS
+const elevationOptions = ELEVATION_OPTIONS
+const distanceOptions = DISTANCE_OPTIONS
 
 const closestAzimuth = computed(() => findClosestOption(props.azimuth, azimuthOptions, true))
 const closestElevation = computed(() => findClosestOption(props.elevation, elevationOptions))

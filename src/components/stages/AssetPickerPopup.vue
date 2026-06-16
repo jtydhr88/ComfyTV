@@ -21,7 +21,7 @@
         <ComfyTVSelect
           :model-value="filterValue"
           :options="categoryOptions"
-          @update:model-value="onFilterChange"
+          @update:model-value="setFilter"
         />
       </div>
     </div>
@@ -69,12 +69,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { onMounted, ref } from 'vue'
 
 import type { Asset } from '@/api/schemas'
 import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
-import { type AssetCategoryFilter, useAssetStore } from '@/stores/assetStore'
+import { useAssetPicker } from '@/composables/stages/useAssetPicker'
 
 const props = defineProps<{
   addedIds?: number[]
@@ -85,41 +84,20 @@ defineEmits<{
   close: []
 }>()
 
-function isAdded(id: number): boolean {
-  return props.addedIds?.includes(id) ?? false
-}
-
-const { t } = useI18n()
-const store = useAssetStore()
-
 const searchEl = ref<HTMLInputElement | null>(null)
-const query = ref('')
-const filter = ref<AssetCategoryFilter>('all')
 
-const filterValue = computed(() =>
-  typeof filter.value === 'number' ? String(filter.value) : filter.value,
-)
-
-const categoryOptions = computed(() => [
-  { label: t('assets.category.all'), value: 'all' },
-  { label: t('assets.category.none'), value: 'none' },
-  ...store.categories.map(c => ({ label: c.name, value: String(c.id) })),
-])
-
-function onFilterChange(v: string | number | null) {
-  if (v === 'all' || v === 'none') filter.value = v
-  else if (v != null) filter.value = Number(v)
-}
-
-const filtered = computed(() => {
-  let rows = store.listByCategory(filter.value)
-  const q = query.value.trim().toLowerCase()
-  if (q) rows = rows.filter(a => a.name.toLowerCase().includes(q))
-  return rows
-})
+const {
+  query,
+  filterValue,
+  categoryOptions,
+  setFilter,
+  filtered,
+  isAdded,
+  ensureHydrated,
+} = useAssetPicker(() => props.addedIds ?? [])
 
 onMounted(() => {
-  store.ensureHydrated()
+  ensureHydrated()
   searchEl.value?.focus()
 })
 </script>

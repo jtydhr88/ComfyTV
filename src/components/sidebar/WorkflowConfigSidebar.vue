@@ -170,8 +170,8 @@ import { useCollapsedFlag, useCollapsedNodeIds } from '@/composables/sidebar/use
 import { useWorkflowConfig } from '@/composables/sidebar/useWorkflowConfig'
 import {
   buildBindingOptions,
+  groupExposedWidgets,
   loadCaps,
-  type ExposedWidget,
   type NodeBlock,
 } from '@/composables/sidebar/workflowConfigCatalog'
 import { useSelectionStore } from '@/stores/selectionStore'
@@ -204,34 +204,7 @@ const bindingOptions = computed(() =>
   ),
 )
 
-const groupedWidgets = computed(() => {
-  const groups: Array<{ title: string | null; nodes: NodeBlock[] }> = []
-  const groupIdx = new Map<string, number>()
-  const nodeIdx  = new Map<string, number>()   // key: `${groupIdx}/${node_id}`
-  for (const w of config.value?.exposed_widgets ?? []) {
-    const gkey = w.group_title ?? ''
-    let gi = groupIdx.get(gkey)
-    if (gi === undefined) {
-      gi = groups.length
-      groupIdx.set(gkey, gi)
-      groups.push({ title: w.group_title, nodes: [] })
-    }
-    const nkey = `${gi}/${w.node_id}`
-    let ni = nodeIdx.get(nkey)
-    if (ni === undefined) {
-      ni = groups[gi].nodes.length
-      nodeIdx.set(nkey, ni)
-      groups[gi].nodes.push({
-        node_id:    w.node_id,
-        node_title: w.node_title,
-        node_type:  w.node_type,
-        widgets:    [],
-      })
-    }
-    groups[gi].nodes[ni].widgets.push(w)
-  }
-  return groups
-})
+const groupedWidgets = computed(() => groupExposedWidgets(config.value?.exposed_widgets ?? []))
 
 const {
   isStageBound,

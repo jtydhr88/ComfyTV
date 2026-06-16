@@ -39,3 +39,27 @@ export function writeWidget(
   if (opts?.fireCallback === false) return
   w.callback?.(value)
 }
+
+export function bindWidgetCallback(
+  node: MaybeNode,
+  name: string,
+  apply: (value: unknown) => void,
+): void {
+  const w = getWidget(node, name)
+  if (!w) return
+  const orig = w.callback
+  w.callback = (value: unknown) => {
+    orig?.call(w, value)
+    apply(value)
+  }
+}
+
+export function onNodeConfigure(node: MaybeNode, cb: () => void): void {
+  if (!node) return
+  const n = node as { onConfigure?: (info: unknown) => void }
+  const orig = n.onConfigure
+  n.onConfigure = function (this: unknown, info: unknown) {
+    orig?.call(this, info)
+    cb()
+  }
+}

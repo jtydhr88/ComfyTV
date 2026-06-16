@@ -66,8 +66,9 @@ import { computed, ref, watch } from 'vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
+import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
 import { useTransformPipeline } from '@/composables/widgets/useTransformPipeline'
-import { getWidget, writeWidget } from '@/utils/widget'
+import { bindWidgetCallback, getWidget, onNodeConfigure, writeWidget } from '@/utils/widget'
 
 const props = defineProps<{
   state: StageState
@@ -78,11 +79,7 @@ const props = defineProps<{
   node: LGraphNode
 }>()
 
-const sourceImageUrl = computed<string | null>(() => {
-  const inp = props.state.inputs.find(i => i.slot === 'image')
-  if (!inp || inp.source !== 'upstream' || !inp.content) return null
-  return inp.content
-})
+const sourceImageUrl = computed(() => pickSourceImageUrl(props.state.inputs))
 
 function widgetValueBool(name: string, fallback = false): boolean {
   const w = getWidget(props.node, name)
@@ -92,25 +89,21 @@ function widgetValueBool(name: string, fallback = false): boolean {
 const flipH = ref<boolean>(widgetValueBool('flip_horizontal', false))
 const flipV = ref<boolean>(widgetValueBool('flip_vertical', false))
 
-function wireWidget(name: string, apply: (v: boolean) => void) {
-  const w = getWidget(props.node, name)
-  if (!w) return
-  const orig = w.callback
-  w.callback = (v: unknown) => { orig?.call(w, v); apply(Boolean(v)) }
-}
-wireWidget('flip_horizontal', v => { if (v !== flipH.value) flipH.value = v })
-wireWidget('flip_vertical',   v => { if (v !== flipV.value) flipV.value = v })
+bindWidgetCallback(props.node, 'flip_horizontal', (v) => {
+  const b = Boolean(v)
+  if (b !== flipH.value) flipH.value = b
+})
+bindWidgetCallback(props.node, 'flip_vertical', (v) => {
+  const b = Boolean(v)
+  if (b !== flipV.value) flipV.value = b
+})
 
-if (props.node) {
-  const orig = props.node.onConfigure
-  props.node.onConfigure = function (info: any) {
-    orig?.call(this, info)
-    const h = widgetValueBool('flip_horizontal', flipH.value)
-    const v = widgetValueBool('flip_vertical', flipV.value)
-    if (h !== flipH.value) flipH.value = h
-    if (v !== flipV.value) flipV.value = v
-  }
-}
+onNodeConfigure(props.node, () => {
+  const h = widgetValueBool('flip_horizontal', flipH.value)
+  const v = widgetValueBool('flip_vertical', flipV.value)
+  if (h !== flipH.value) flipH.value = h
+  if (v !== flipV.value) flipV.value = v
+})
 
 const previewStyle = computed(() => ({
   transform: `scale(${flipH.value ? -1 : 1}, ${flipV.value ? -1 : 1})`,

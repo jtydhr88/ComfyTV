@@ -1,4 +1,4 @@
-(function() {  "use strict";  try {    if (typeof document != "undefined") {      var elementStyle = document.createElement("style");      elementStyle.appendChild(document.createTextNode(`.ctv-num-root {\r  display: flex;\r  align-items: center;\r  width: 100%;\r  min-width: 0;\r  background: var(--secondary-background, rgba(255,255,255,0.04));\r  border-radius: 8px;\r  box-sizing: border-box;}.ctv-num-root .ctv-num-input,\r.ctv-num-root input {\r  appearance: none;\r  background: transparent;\r  border: none;\r  border-radius: 8px;\r  padding: 6px 12px;\r  color: var(--base-foreground, #ddd);\r  font-size: 12px;\r  font-family: inherit;\r  width: 100%;\r  min-width: 0;\r  flex: 1;\r  outline: none;\r  text-align: left;\r  box-sizing: border-box;}.ctv-num-root input::placeholder { color: var(--muted-foreground, #888);}.ctv-num-root:focus-within {\r  box-shadow: 0 0 0 1px var(--border-default, rgba(255,255,255,0.25));}.ctv-num-root input:disabled { opacity: 0.5; pointer-events: none;}.ctv-num-btn {\r  flex-shrink: 0;\r  appearance: none;\r  background: transparent;\r  border: none;\r  color: var(--muted-foreground, #888);\r  font-size: 13px;\r  line-height: 1;\r  width: 22px;\r  height: 100%;\r  min-height: 28px;\r  cursor: pointer;\r  user-select: none;\r  display: inline-flex;\r  align-items: center;\r  justify-content: center;}.ctv-num-btn:hover { color: var(--base-foreground, #ddd);}.ctv-num-btn[data-disabled] { opacity: 0.4; pointer-events: none;}\r.ctv-toggle {\r  display: inline-flex;\r  align-items: center;\r  flex-shrink: 0;\r  width: 32px;\r  height: 18px;\r  padding: 2px;\r  border: none;\r  border-radius: 9999px;\r  background: var(--secondary-background, rgba(255,255,255,0.12));\r  cursor: pointer;\r  transition: background 0.15s ease;}.ctv-toggle[data-state='checked'] {\r  background: var(--primary-background, rgba(78,168,255,0.6));}.ctv-toggle:disabled,\r.ctv-toggle[data-disabled] {\r  opacity: 0.5;\r  cursor: not-allowed;\r  pointer-events: none;}.ctv-toggle:focus-visible {\r  outline: none;\r  box-shadow: 0 0 0 1px var(--border-default, rgba(255,255,255,0.25));}.ctv-toggle-thumb {\r  display: block;\r  width: 14px;\r  height: 14px;\r  border-radius: 9999px;\r  background: #fff;\r  transition: transform 0.15s ease;\r  transform: translateX(0);\r  will-change: transform;\r  pointer-events: none;}.ctv-toggle[data-state='checked'] .ctv-toggle-thumb {\r  transform: translateX(14px);}\r.ctv-text-input,\r.ctv-text-input input,\r.ctv-text-input textarea {\r  appearance: none;\r  background: var(--secondary-background, rgba(255,255,255,0.04));\r  border: none;\r  border-radius: 8px;\r  padding: 6px 12px;\r  color: var(--base-foreground, #ddd);\r  font-size: 12px;\r  font-family: inherit;\r  width: 100%;\r  min-width: 0;\r  outline: none;\r  box-sizing: border-box;}.ctv-text-input::placeholder,\r.ctv-text-input input::placeholder,\r.ctv-text-input textarea::placeholder { color: var(--muted-foreground, #888);}.ctv-text-area { line-height: 1.4; resize: vertical; min-height: 48px; overflow: hidden;}.ctv-text-input:focus-visible,\r.ctv-text-input input:focus-visible,\r.ctv-text-input textarea:focus-visible {\r  box-shadow: 0 0 0 1px var(--border-default, rgba(255,255,255,0.25));}.ctv-text-input:disabled,\r.ctv-text-input input:disabled,\r.ctv-text-input textarea:disabled { opacity: 0.5; pointer-events: none;}\r.comfytv-asset-scroll {\r  scrollbar-width: thin;\r  scrollbar-color: rgba(255, 255, 255, 0.35) transparent;}.comfytv-asset-scroll::-webkit-scrollbar {\r  width: 10px;}.comfytv-asset-scroll::-webkit-scrollbar-track {\r  background: transparent;}.comfytv-asset-scroll::-webkit-scrollbar-thumb {\r  background-color: rgba(255, 255, 255, 0.35);\r  border-radius: 5px;\r  border: 2px solid transparent;\r  background-clip: content-box;}.comfytv-asset-scroll:hover::-webkit-scrollbar-thumb {\r  background-color: rgba(255, 255, 255, 0.55);}\r.tippy-box[data-animation=fade][data-state=hidden]{opacity:0}[data-tippy-root]{max-width:calc(100vw - 10px)}.tippy-box{position:relative;background-color:#333;color:#fff;border-radius:4px;font-size:14px;line-height:1.4;white-space:normal;outline:0;transition-property:transform,visibility,opacity}.tippy-box[data-placement^=top]>.tippy-arrow{bottom:0}.tippy-box[data-placement^=top]>.tippy-arrow:before{bottom:-7px;left:0;border-width:8px 8px 0;border-top-color:initial;transform-origin:center top}.tippy-box[data-placement^=bottom]>.tippy-arrow{top:0}.tippy-box[data-placement^=bottom]>.tippy-arrow:before{top:-7px;left:0;border-width:0 8px 8px;border-bottom-color:initial;transform-origin:center bottom}.tippy-box[data-placement^=left]>.tippy-arrow{right:0}.tippy-box[data-placement^=left]>.tippy-arrow:before{border-width:8px 0 8px 8px;border-left-color:initial;right:-7px;transform-origin:center left}.tippy-box[data-placement^=right]>.tippy-arrow{left:0}.tippy-box[data-placement^=right]>.tippy-arrow:before{left:-7px;border-width:8px 8px 8px 0;border-right-color:initial;transform-origin:center right}.tippy-box[data-inertia][data-state=visible]{transition-timing-function:cubic-bezier(.54,1.5,.38,1.11)}.tippy-arrow{width:16px;height:16px;color:#333}.tippy-arrow:before{content:"";position:absolute;border-color:transparent;border-style:solid}.tippy-content{position:relative;padding:5px 9px;z-index:1}.comfytv-prompt-prosemirror {  scrollbar-width: thin;  scrollbar-color: rgba(255, 255, 255, 0.35) transparent;}.comfytv-prompt-prosemirror::-webkit-scrollbar {  width: 10px;}.comfytv-prompt-prosemirror::-webkit-scrollbar-track {  background: transparent;}.comfytv-prompt-prosemirror::-webkit-scrollbar-thumb {  background-color: rgba(255, 255, 255, 0.35);  border-radius: 5px;  border: 2px solid transparent;  background-clip: content-box;}.comfytv-prompt-prosemirror:hover::-webkit-scrollbar-thumb {  background-color: rgba(255, 255, 255, 0.55);}.tippy-box[data-theme~='comfytv-transparent'] {  background: transparent;  box-shadow: none;}.tippy-box[data-theme~='comfytv-transparent'] > .tippy-content { padding: 0;}.tippy-box[data-theme~='comfytv-tooltip'] {  background: var(--interface-menu-surface, #1a1a1a);  border: 1px solid var(--border-default, #3a3a3a);  color: var(--base-foreground, #e0e0e0);  font-size: 11px;  line-height: 1.45;  border-radius: 4px;  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);}.tippy-box[data-theme~='comfytv-tooltip'] > .tippy-content {  padding: 6px 8px;  white-space: pre-wrap;  word-break: break-word;}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='top']    > .tippy-arrow::before { border-top-color: var(--border-default, #3a3a3a);}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='bottom'] > .tippy-arrow::before { border-bottom-color: var(--border-default, #3a3a3a);}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='left']   > .tippy-arrow::before { border-left-color: var(--border-default, #3a3a3a);}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='right']  > .tippy-arrow::before { border-right-color: var(--border-default, #3a3a3a);}.comfytv-prompt-editor[data-v-9006be38] p { margin: 0;}.comfytv-prompt-editor[data-v-9006be38] p.is-editor-empty:first-child::before {  content: attr(data-placeholder);  color: var(--muted-foreground, #888);  opacity: 0.65;  float: left;  height: 0;  pointer-events: none;}.ctv-batch-grid[data-v-09e6e163] {\r  display: grid;\r  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));\r  gap: 4px;\r  padding-top: 14px;\r  max-height: 320px;\r  overflow: auto;}\r.ctv-input-tile:hover .ctv-tile-disconnect[data-v-95136374] { display: inline-flex;}.ctv-picker-input.ctv-src-upstream         .ctv-src-tag[data-v-95136374] { background: color-mix(in srgb, var(--primary-background) 22%, transparent); color: var(--primary-background);}.ctv-picker-input.ctv-src-upstream-pending .ctv-src-tag[data-v-95136374] { background: color-mix(in srgb, var(--warning-background) 18%, transparent); color: var(--warning-background);}\r.ctv-camera-dropdown option[data-v-43267b78] {\r  background: var(--interface-menu-surface, #1a1a2e);\r  color: var(--base-foreground, #e0e0e0);}\r.ctv-crop-select[data-v-c343d075] option {\r  background: var(--interface-menu-surface, #1a1a1f);\r  color: var(--base-foreground, #ddd);}.ctv-bound-input[data-v-c343d075] { -moz-appearance: textfield;}.ctv-bound-input[data-v-c343d075]::-webkit-inner-spin-button,\r.ctv-bound-input[data-v-c343d075]::-webkit-outer-spin-button {\r  -webkit-appearance: none;}\r.ctv-pano-select[data-v-e0f33c2f] {\r  appearance: none;\r  background-color: var(--secondary-background, rgb(255 255 255 / 0.04));\r  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6' viewBox='0 0 8 6'><path d='M0 0l4 6 4-6z' fill='%23bbb'/></svg>");\r  background-repeat: no-repeat;\r  background-position: right 6px center;\r  color: var(--base-foreground, rgb(255 255 255 / 0.9));\r  border: 1px solid var(--border-subtle, rgb(255 255 255 / 0.15));\r  border-radius: 4px;\r  padding: 3px 18px 3px 6px;\r  font-size: 11px;\r  font-family: ui-monospace, SFMono-Regular, monospace;\r  cursor: pointer;\r  outline: none;\r  min-width: 70px;}.ctv-pano-select[data-v-e0f33c2f]:hover { border-color: var(--border-default, rgb(255 255 255 / 0.3));}.ctv-pano-select[data-v-e0f33c2f]:focus { border-color: var(--primary-background, rgb(78 168 255 / 0.6));}.ctv-pano-select option[data-v-e0f33c2f] { background: var(--interface-menu-surface, #1a1a2e); color: var(--base-foreground, #e0e0e0);}\r.ctv-pano-select[data-v-6cb1afcc] {\r  appearance: none;\r  background-color: var(--secondary-background, rgb(255 255 255 / 0.04));\r  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6' viewBox='0 0 8 6'><path d='M0 0l4 6 4-6z' fill='%23bbb'/></svg>");\r  background-repeat: no-repeat;\r  background-position: right 6px center;\r  color: var(--base-foreground, rgb(255 255 255 / 0.9));\r  border: 1px solid var(--border-subtle, rgb(255 255 255 / 0.15));\r  border-radius: 4px;\r  padding: 3px 18px 3px 6px;\r  font-size: 11px;\r  font-family: ui-monospace, SFMono-Regular, monospace;\r  cursor: pointer;\r  outline: none;\r  min-width: 70px;}.ctv-pano-select[data-v-6cb1afcc]:hover { border-color: var(--border-default, rgb(255 255 255 / 0.3));}.ctv-pano-select[data-v-6cb1afcc]:focus { border-color: var(--primary-background, rgb(78 168 255 / 0.6));}.ctv-pano-select option[data-v-6cb1afcc] { background: var(--interface-menu-surface, #1a1a2e); color: var(--base-foreground, #e0e0e0);}\r.ctv-pad-area[data-v-da53c66d] {\r  background-image:\r    linear-gradient(45deg, rgba(255,255,255,0.04) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.04) 75%),\r    linear-gradient(45deg, rgba(255,255,255,0.04) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.04) 75%);\r  background-size: 12px 12px;\r  background-position: 0 0, 6px 6px;\r  border: 1px dashed color-mix(in srgb, var(--primary-background, #4ea8ff) 45%, transparent);}.ctv-outpaint-handle[data-v-da53c66d]::before {\r  content: '';\r  position: absolute;\r  background: color-mix(in srgb, var(--primary-background, #4ea8ff) 65%, transparent);\r  border-radius: 2px;}.ctv-handle-left[data-v-da53c66d]::before,  .ctv-handle-right[data-v-da53c66d]::before  { width: 3px; height: 100%;}.ctv-handle-top[data-v-da53c66d]::before,   .ctv-handle-bottom[data-v-da53c66d]::before { height: 3px; width: 100%;}.ctv-outpaint-handle[data-v-da53c66d]:hover::before { background: var(--primary-background, #4ea8ff);}\r.ctv-entry-table th[data-v-cab17390],\r.ctv-entry-table td[data-v-cab17390] {\r  text-align: left;\r  padding: 6px 8px;\r  border-bottom: 1px solid var(--border-subtle, #2a2a2a);\r  vertical-align: top;}.ctv-entry-table th[data-v-cab17390] {\r  font-weight: 600;\r  color: var(--muted-foreground, #aaa);}\r/*! tailwindcss v4.3.0 | MIT License | https://tailwindcss.com */@layer properties {  @supports (((-webkit-hyphens: none)) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {    *, :before, :after, ::backdrop {      --tw-translate-x: 0;      --tw-translate-y: 0;      --tw-translate-z: 0;      --tw-border-style: solid;      --tw-gradient-position: initial;      --tw-gradient-from: #0000;      --tw-gradient-via: #0000;      --tw-gradient-to: #0000;      --tw-gradient-stops: initial;      --tw-gradient-via-stops: initial;      --tw-gradient-from-position: 0%;      --tw-gradient-via-position: 50%;      --tw-gradient-to-position: 100%;      --tw-leading: initial;      --tw-font-weight: initial;      --tw-tracking: initial;      --tw-shadow: 0 0 #0000;      --tw-shadow-color: initial;      --tw-shadow-alpha: 100%;      --tw-inset-shadow: 0 0 #0000;      --tw-inset-shadow-color: initial;      --tw-inset-shadow-alpha: 100%;      --tw-ring-color: initial;      --tw-ring-shadow: 0 0 #0000;      --tw-inset-ring-color: initial;      --tw-inset-ring-shadow: 0 0 #0000;      --tw-ring-inset: initial;      --tw-ring-offset-width: 0px;      --tw-ring-offset-color: #fff;      --tw-ring-offset-shadow: 0 0 #0000;      --tw-outline-style: solid;      --tw-backdrop-blur: initial;      --tw-backdrop-brightness: initial;      --tw-backdrop-contrast: initial;      --tw-backdrop-grayscale: initial;      --tw-backdrop-hue-rotate: initial;      --tw-backdrop-invert: initial;      --tw-backdrop-opacity: initial;      --tw-backdrop-saturate: initial;      --tw-backdrop-sepia: initial;      --tw-duration: initial;      --tw-ease: initial;      --tw-scale-x: 1;      --tw-scale-y: 1;      --tw-scale-z: 1;    }  }}@layer theme {  :root, :host {    --ctv-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",    monospace;    --ctv-color-gray-600: oklch(44.6% .03 256.802);    --ctv-color-black: #000;    --ctv-color-white: #fff;    --ctv-spacing: .25rem;    --ctv-container-md: 28rem;    --ctv-text-xs: .75rem;    --ctv-text-xs--line-height: calc(1 / .75);    --ctv-text-sm: .875rem;    --ctv-text-sm--line-height: calc(1.25 / .875);    --ctv-text-lg: 1.125rem;    --ctv-text-lg--line-height: calc(1.75 / 1.125);    --ctv-font-weight-medium: 500;    --ctv-font-weight-semibold: 600;    --ctv-font-weight-bold: 700;    --ctv-tracking-wide: .025em;    --ctv-tracking-wider: .05em;    --ctv-leading-tight: 1.25;    --ctv-leading-snug: 1.375;    --ctv-radius-sm: .25rem;    --ctv-radius-md: .375rem;    --ctv-radius-lg: .5rem;    --ctv-ease-in: cubic-bezier(.4, 0, 1, 1);    --ctv-ease-out: cubic-bezier(0, 0, .2, 1);    --ctv-ease-in-out: cubic-bezier(.4, 0, .2, 1);    --ctv-animate-pulse: pulse 2s cubic-bezier(.4, 0, .6, 1) infinite;    --ctv-blur-sm: 8px;    --ctv-aspect-video: 16 / 9;    --ctv-default-transition-duration: .15s;    --ctv-default-transition-timing-function: cubic-bezier(.4, 0, .2, 1);    --ctv-text-2xs: .625rem;    --ctv-text-2xs--line-height: calc(1 / .625);    --ctv-text-3xs: .5625rem;    --ctv-text-3xs--line-height: calc(1 / .5625);  }}@layer utilities {  .ctv\\:pointer-events-none {    pointer-events: none;  }  .ctv\\:absolute {    position: absolute;  }  .ctv\\:fixed {    position: fixed;  }  .ctv\\:relative {    position: relative;  }  .ctv\\:sticky {    position: sticky;  }  .ctv\\:inset-0 {    inset: calc(var(--ctv-spacing) * 0);  }  .ctv\\:inset-x-0 {    inset-inline: calc(var(--ctv-spacing) * 0);  }  .ctv\\:-top-2 {    top: calc(var(--ctv-spacing) * -2);  }  .ctv\\:top-0 {    top: calc(var(--ctv-spacing) * 0);  }  .ctv\\:top-0\\.5 {    top: calc(var(--ctv-spacing) * .5);  }  .ctv\\:top-1 {    top: calc(var(--ctv-spacing) * 1);  }  .ctv\\:top-1\\/2 {    top: 50%;  }  .ctv\\:top-2 {    top: calc(var(--ctv-spacing) * 2);  }  .ctv\\:top-4 {    top: calc(var(--ctv-spacing) * 4);  }  .ctv\\:top-\\[3px\\] {    top: 3px;  }  .ctv\\:right-0 {    right: calc(var(--ctv-spacing) * 0);  }  .ctv\\:right-0\\.5 {    right: calc(var(--ctv-spacing) * .5);  }  .ctv\\:right-1 {    right: calc(var(--ctv-spacing) * 1);  }  .ctv\\:right-2 {    right: calc(var(--ctv-spacing) * 2);  }  .ctv\\:right-4 {    right: calc(var(--ctv-spacing) * 4);  }  .ctv\\:right-\\[3px\\] {    right: 3px;  }  .ctv\\:right-\\[14px\\] {    right: 14px;  }  .ctv\\:bottom-0 {    bottom: calc(var(--ctv-spacing) * 0);  }  .ctv\\:bottom-0\\.5 {    bottom: calc(var(--ctv-spacing) * .5);  }  .ctv\\:bottom-2 {    bottom: calc(var(--ctv-spacing) * 2);  }  .ctv\\:bottom-4 {    bottom: calc(var(--ctv-spacing) * 4);  }  .ctv\\:bottom-px {    bottom: 1px;  }  .ctv\\:left-0 {    left: calc(var(--ctv-spacing) * 0);  }  .ctv\\:left-0\\.5 {    left: calc(var(--ctv-spacing) * .5);  }  .ctv\\:left-2 {    left: calc(var(--ctv-spacing) * 2);  }  .ctv\\:z-10 {    z-index: 10;  }  .ctv\\:z-20 {    z-index: 20;  }  .ctv\\:z-30 {    z-index: 30;  }  .ctv\\:z-3000 {    z-index: 3000;  }  .ctv\\:z-\\[1\\] {    z-index: 1;  }  .ctv\\:z-\\[2\\] {    z-index: 2;  }  .ctv\\:z-\\[3\\] {    z-index: 3;  }  .ctv\\:z-\\[5\\] {    z-index: 5;  }  .ctv\\:z-\\[6\\] {    z-index: 6;  }  .ctv\\:z-\\[7\\] {    z-index: 7;  }  .ctv\\:z-\\[9999\\] {    z-index: 9999;  }  .ctv\\:z-\\[10000\\] {    z-index: 10000;  }  .ctv\\:m-0 {    margin: calc(var(--ctv-spacing) * 0);  }  .ctv\\:m-0\\.5 {    margin: calc(var(--ctv-spacing) * .5);  }  .ctv\\:m-1 {    margin: calc(var(--ctv-spacing) * 1);  }  .ctv\\:-mx-2\\.5 {    margin-inline: calc(var(--ctv-spacing) * -2.5);  }  .ctv\\:mx-2\\.5 {    margin-inline: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:mx-auto {    margin-inline: auto;  }  .ctv\\:mx-px {    margin-inline: 1px;  }  .ctv\\:my-1\\.5 {    margin-block: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:-mt-2 {    margin-top: calc(var(--ctv-spacing) * -2);  }  .ctv\\:mt-0\\.5 {    margin-top: calc(var(--ctv-spacing) * .5);  }  .ctv\\:mt-1 {    margin-top: calc(var(--ctv-spacing) * 1);  }  .ctv\\:mt-3\\.5 {    margin-top: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:mt-4 {    margin-top: calc(var(--ctv-spacing) * 4);  }  .ctv\\:mr-1 {    margin-right: calc(var(--ctv-spacing) * 1);  }  .ctv\\:-mb-px {    margin-bottom: -1px;  }  .ctv\\:mb-1 {    margin-bottom: calc(var(--ctv-spacing) * 1);  }  .ctv\\:mb-1\\.5 {    margin-bottom: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:mb-2 {    margin-bottom: calc(var(--ctv-spacing) * 2);  }  .ctv\\:mb-2\\.5 {    margin-bottom: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:mb-\\[3px\\] {    margin-bottom: 3px;  }  .ctv\\:-ml-px {    margin-left: -1px;  }  .ctv\\:ml-0\\.5 {    margin-left: calc(var(--ctv-spacing) * .5);  }  .ctv\\:ml-auto {    margin-left: auto;  }  .ctv\\:box-border {    box-sizing: border-box;  }  .ctv\\:box-content {    box-sizing: content-box;  }  .ctv\\:\\[display\\:-webkit-box\\] {    display: -webkit-box;  }  .ctv\\:block {    display: block;  }  .ctv\\:flex {    display: flex;  }  .ctv\\:grid {    display: grid;  }  .ctv\\:hidden {    display: none;  }  .ctv\\:inline-block {    display: inline-block;  }  .ctv\\:inline-flex {    display: inline-flex;  }  .ctv\\:aspect-square {    aspect-ratio: 1;  }  .ctv\\:aspect-video {    aspect-ratio: var(--ctv-aspect-video);  }  .ctv\\:size-2 {    width: calc(var(--ctv-spacing) * 2);    height: calc(var(--ctv-spacing) * 2);  }  .ctv\\:size-3 {    width: calc(var(--ctv-spacing) * 3);    height: calc(var(--ctv-spacing) * 3);  }  .ctv\\:size-3\\.5 {    width: calc(var(--ctv-spacing) * 3.5);    height: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:size-4 {    width: calc(var(--ctv-spacing) * 4);    height: calc(var(--ctv-spacing) * 4);  }  .ctv\\:size-5 {    width: calc(var(--ctv-spacing) * 5);    height: calc(var(--ctv-spacing) * 5);  }  .ctv\\:size-6 {    width: calc(var(--ctv-spacing) * 6);    height: calc(var(--ctv-spacing) * 6);  }  .ctv\\:size-7 {    width: calc(var(--ctv-spacing) * 7);    height: calc(var(--ctv-spacing) * 7);  }  .ctv\\:size-9 {    width: calc(var(--ctv-spacing) * 9);    height: calc(var(--ctv-spacing) * 9);  }  .ctv\\:size-\\[22px\\] {    width: 22px;    height: 22px;  }  .ctv\\:size-full {    width: 100%;    height: 100%;  }  .ctv\\:h-1\\.5 {    height: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:h-4 {    height: calc(var(--ctv-spacing) * 4);  }  .ctv\\:h-5 {    height: calc(var(--ctv-spacing) * 5);  }  .ctv\\:h-6 {    height: calc(var(--ctv-spacing) * 6);  }  .ctv\\:h-7 {    height: calc(var(--ctv-spacing) * 7);  }  .ctv\\:h-8 {    height: calc(var(--ctv-spacing) * 8);  }  .ctv\\:h-9 {    height: calc(var(--ctv-spacing) * 9);  }  .ctv\\:h-10 {    height: calc(var(--ctv-spacing) * 10);  }  .ctv\\:h-11 {    height: calc(var(--ctv-spacing) * 11);  }  .ctv\\:h-80 {    height: calc(var(--ctv-spacing) * 80);  }  .ctv\\:h-\\[13px\\] {    height: 13px;  }  .ctv\\:h-\\[18px\\] {    height: 18px;  }  .ctv\\:h-\\[72px\\] {    height: 72px;  }  .ctv\\:h-\\[76px\\] {    height: 76px;  }  .ctv\\:h-\\[224px\\] {    height: 224px;  }  .ctv\\:h-\\[280px\\] {    height: 280px;  }  .ctv\\:h-\\[340px\\] {    height: 340px;  }  .ctv\\:h-\\[350px\\] {    height: 350px;  }  .ctv\\:h-full {    height: 100%;  }  .ctv\\:h-px {    height: 1px;  }  .ctv\\:max-h-40 {    max-height: calc(var(--ctv-spacing) * 40);  }  .ctv\\:max-h-44 {    max-height: calc(var(--ctv-spacing) * 44);  }  .ctv\\:max-h-52 {    max-height: calc(var(--ctv-spacing) * 52);  }  .ctv\\:max-h-56 {    max-height: calc(var(--ctv-spacing) * 56);  }  .ctv\\:max-h-60 {    max-height: calc(var(--ctv-spacing) * 60);  }  .ctv\\:max-h-64 {    max-height: calc(var(--ctv-spacing) * 64);  }  .ctv\\:max-h-80 {    max-height: calc(var(--ctv-spacing) * 80);  }  .ctv\\:max-h-\\[60vh\\] {    max-height: 60vh;  }  .ctv\\:max-h-\\[120px\\] {    max-height: 120px;  }  .ctv\\:max-h-\\[360px\\] {    max-height: 360px;  }  .ctv\\:max-h-\\[calc\\(100vh-48px\\)\\] {    max-height: calc(100vh - 48px);  }  .ctv\\:max-h-full {    max-height: 100%;  }  .ctv\\:min-h-0 {    min-height: calc(var(--ctv-spacing) * 0);  }  .ctv\\:min-h-10 {    min-height: calc(var(--ctv-spacing) * 10);  }  .ctv\\:min-h-11 {    min-height: calc(var(--ctv-spacing) * 11);  }  .ctv\\:min-h-12 {    min-height: calc(var(--ctv-spacing) * 12);  }  .ctv\\:min-h-14 {    min-height: calc(var(--ctv-spacing) * 14);  }  .ctv\\:min-h-20 {    min-height: calc(var(--ctv-spacing) * 20);  }  .ctv\\:min-h-\\[22px\\] {    min-height: 22px;  }  .ctv\\:min-h-\\[116px\\] {    min-height: 116px;  }  .ctv\\:min-h-\\[280px\\] {    min-height: 280px;  }  .ctv\\:w-0\\.5 {    width: calc(var(--ctv-spacing) * .5);  }  .ctv\\:w-2 {    width: calc(var(--ctv-spacing) * 2);  }  .ctv\\:w-2\\.5 {    width: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:w-3 {    width: calc(var(--ctv-spacing) * 3);  }  .ctv\\:w-4 {    width: calc(var(--ctv-spacing) * 4);  }  .ctv\\:w-7 {    width: calc(var(--ctv-spacing) * 7);  }  .ctv\\:w-12 {    width: calc(var(--ctv-spacing) * 12);  }  .ctv\\:w-14 {    width: calc(var(--ctv-spacing) * 14);  }  .ctv\\:w-24 {    width: calc(var(--ctv-spacing) * 24);  }  .ctv\\:w-44 {    width: calc(var(--ctv-spacing) * 44);  }  .ctv\\:w-64 {    width: calc(var(--ctv-spacing) * 64);  }  .ctv\\:w-\\[38px\\] {    width: 38px;  }  .ctv\\:w-\\[76px\\] {    width: 76px;  }  .ctv\\:w-\\[140px\\] {    width: 140px;  }  .ctv\\:w-\\[180px\\] {    width: 180px;  }  .ctv\\:w-auto {    width: auto;  }  .ctv\\:w-full {    width: 100%;  }  .ctv\\:w-px {    width: 1px;  }  .ctv\\:max-w-\\[60vw\\] {    max-width: 60vw;  }  .ctv\\:max-w-\\[90px\\] {    max-width: 90px;  }  .ctv\\:max-w-\\[360px\\] {    max-width: 360px;  }  .ctv\\:max-w-full {    max-width: 100%;  }  .ctv\\:max-w-md {    max-width: var(--ctv-container-md);  }  .ctv\\:min-w-0 {    min-width: calc(var(--ctv-spacing) * 0);  }  .ctv\\:min-w-2 {    min-width: calc(var(--ctv-spacing) * 2);  }  .ctv\\:min-w-4 {    min-width: calc(var(--ctv-spacing) * 4);  }  .ctv\\:min-w-8 {    min-width: calc(var(--ctv-spacing) * 8);  }  .ctv\\:min-w-9 {    min-width: calc(var(--ctv-spacing) * 9);  }  .ctv\\:min-w-64 {    min-width: calc(var(--ctv-spacing) * 64);  }  .ctv\\:min-w-\\[44px\\] {    min-width: 44px;  }  .ctv\\:min-w-\\[60px\\] {    min-width: 60px;  }  .ctv\\:min-w-\\[var\\(--reka-combobox-trigger-width\\)\\] {    min-width: var(--reka-combobox-trigger-width);  }  .ctv\\:flex-1 {    flex: 1;  }  .ctv\\:flex-auto {    flex: auto;  }  .ctv\\:shrink-0 {    flex-shrink: 0;  }  .ctv\\:border-collapse {    border-collapse: collapse;  }  .ctv\\:-translate-x-1\\/2 {    --tw-translate-x: calc(calc(1 / 2 * 100%) * -1);    translate: var(--tw-translate-x) var(--tw-translate-y);  }  .ctv\\:-translate-y-1\\/2 {    --tw-translate-y: calc(calc(1 / 2 * 100%) * -1);    translate: var(--tw-translate-x) var(--tw-translate-y);  }  .ctv\\:animate-pulse {    animation: var(--ctv-animate-pulse);  }  .ctv\\:cursor-\\[inherit\\] {    cursor: inherit;  }  .ctv\\:cursor-crosshair {    cursor: crosshair;  }  .ctv\\:cursor-default {    cursor: default;  }  .ctv\\:cursor-ew-resize {    cursor: ew-resize;  }  .ctv\\:cursor-grab {    cursor: grab;  }  .ctv\\:cursor-grabbing {    cursor: grabbing;  }  .ctv\\:cursor-move {    cursor: move;  }  .ctv\\:cursor-none {    cursor: none;  }  .ctv\\:cursor-not-allowed {    cursor: not-allowed;  }  .ctv\\:cursor-ns-resize {    cursor: ns-resize;  }  .ctv\\:cursor-pointer {    cursor: pointer;  }  .ctv\\:cursor-zoom-out {    cursor: zoom-out;  }  .ctv\\:touch-manipulation {    touch-action: manipulation;  }  .ctv\\:touch-none {    touch-action: none;  }  .ctv\\:resize-none {    resize: none;  }  .ctv\\:resize-y {    resize: vertical;  }  .ctv\\:list-none {    list-style-type: none;  }  .ctv\\:appearance-none {    appearance: none;  }  .ctv\\:grid-cols-2 {    grid-template-columns: repeat(2, minmax(0, 1fr));  }  .ctv\\:grid-cols-4 {    grid-template-columns: repeat(4, minmax(0, 1fr));  }  .ctv\\:grid-cols-\\[60px_1fr\\] {    grid-template-columns: 60px 1fr;  }  .ctv\\:grid-cols-\\[64px_1fr_48px\\] {    grid-template-columns: 64px 1fr 48px;  }  .ctv\\:grid-cols-\\[80px_1fr_36px\\] {    grid-template-columns: 80px 1fr 36px;  }  .ctv\\:grid-cols-\\[max-content_1fr\\] {    grid-template-columns: max-content 1fr;  }  .ctv\\:grid-cols-\\[repeat\\(auto-fill\\,minmax\\(64px\\,1fr\\)\\)\\] {    grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));  }  .ctv\\:grid-cols-\\[repeat\\(auto-fill\\,minmax\\(88px\\,1fr\\)\\)\\] {    grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));  }  .ctv\\:grid-cols-\\[repeat\\(auto-fill\\,minmax\\(110px\\,1fr\\)\\)\\] {    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));  }  .ctv\\:flex-col {    flex-direction: column;  }  .ctv\\:flex-wrap {    flex-wrap: wrap;  }  .ctv\\:items-baseline {    align-items: baseline;  }  .ctv\\:items-center {    align-items: center;  }  .ctv\\:items-start {    align-items: flex-start;  }  .ctv\\:justify-around {    justify-content: space-around;  }  .ctv\\:justify-between {    justify-content: space-between;  }  .ctv\\:justify-center {    justify-content: center;  }  .ctv\\:justify-end {    justify-content: flex-end;  }  .ctv\\:gap-0\\.5 {    gap: calc(var(--ctv-spacing) * .5);  }  .ctv\\:gap-1 {    gap: calc(var(--ctv-spacing) * 1);  }  .ctv\\:gap-1\\.5 {    gap: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:gap-2 {    gap: calc(var(--ctv-spacing) * 2);  }  .ctv\\:gap-2\\.5 {    gap: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:gap-3 {    gap: calc(var(--ctv-spacing) * 3);  }  .ctv\\:gap-\\[3px\\] {    gap: 3px;  }  .ctv\\:gap-px {    gap: 1px;  }  .ctv\\:gap-x-2\\.5 {    column-gap: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:gap-y-\\[3px\\] {    row-gap: 3px;  }  .ctv\\:self-start {    align-self: flex-start;  }  .ctv\\:truncate {    text-overflow: ellipsis;    white-space: nowrap;    overflow: hidden;  }  .ctv\\:overflow-auto {    overflow: auto;  }  .ctv\\:overflow-hidden {    overflow: hidden;  }  .ctv\\:overflow-x-auto {    overflow-x: auto;  }  .ctv\\:overflow-y-auto {    overflow-y: auto;  }  .ctv\\:overflow-y-hidden {    overflow-y: hidden;  }  .ctv\\:overflow-y-scroll {    overflow-y: scroll;  }  .ctv\\:rounded {    border-radius: .25rem;  }  .ctv\\:rounded-full {    border-radius: 3.40282e38px;  }  .ctv\\:rounded-lg {    border-radius: var(--ctv-radius-lg);  }  .ctv\\:rounded-md {    border-radius: var(--ctv-radius-md);  }  .ctv\\:rounded-none {    border-radius: 0;  }  .ctv\\:rounded-sm {    border-radius: var(--ctv-radius-sm);  }  .ctv\\:rounded-t {    border-top-left-radius: .25rem;    border-top-right-radius: .25rem;  }  .ctv\\:border {    border-style: var(--tw-border-style);    border-width: 1px;  }  .ctv\\:border-0 {    border-style: var(--tw-border-style);    border-width: 0;  }  .ctv\\:border-2 {    border-style: var(--tw-border-style);    border-width: 2px;  }  .ctv\\:border-\\[2\\.5px\\] {    border-style: var(--tw-border-style);    border-width: 2.5px;  }  .ctv\\:border-t {    border-top-style: var(--tw-border-style);    border-top-width: 1px;  }  .ctv\\:border-b {    border-bottom-style: var(--tw-border-style);    border-bottom-width: 1px;  }  .ctv\\:border-b-0 {    border-bottom-style: var(--tw-border-style);    border-bottom-width: 0;  }  .ctv\\:border-l {    border-left-style: var(--tw-border-style);    border-left-width: 1px;  }  .ctv\\:border-l-2 {    border-left-style: var(--tw-border-style);    border-left-width: 2px;  }  .ctv\\:border-dashed {    --tw-border-style: dashed;    border-style: dashed;  }  .ctv\\:border-none {    --tw-border-style: none;    border-style: none;  }  .ctv\\:border-solid {    --tw-border-style: solid;    border-style: solid;  }  .ctv\\:border-\\[rgb\\(200_130_255\\/0\\.4\\)\\] {    border-color: #c882ff66;  }  .ctv\\:border-\\[rgb\\(233_61_130\\/0\\.3\\)\\] {    border-color: #e93d824d;  }  .ctv\\:border-\\[rgb\\(233_61_130\\/0\\.4\\)\\] {    border-color: #e93d8266;  }  .ctv\\:border-black\\/70 {    border-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-black\\/70 {      border-color: color-mix(in oklab, var(--ctv-color-black) 70%, transparent);    }  }  .ctv\\:border-border-default {    border-color: var(--border-default, #ffffff26);  }  .ctv\\:border-border-subtle {    border-color: var(--border-subtle, #ffffff14);  }  .ctv\\:border-destructive-background, .ctv\\:border-destructive-background\\/30 {    border-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-destructive-background\\/30 {      border-color: color-mix(in oklab, var(--destructive-background, #c0392b) 30%, transparent);    }  }  .ctv\\:border-destructive-background\\/50 {    border-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-destructive-background\\/50 {      border-color: color-mix(in oklab, var(--destructive-background, #c0392b) 50%, transparent);    }  }  .ctv\\:border-destructive-background\\/55 {    border-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-destructive-background\\/55 {      border-color: color-mix(in oklab, var(--destructive-background, #c0392b) 55%, transparent);    }  }  .ctv\\:border-primary-background, .ctv\\:border-primary-background\\/30 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/30 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 30%, transparent);    }  }  .ctv\\:border-primary-background\\/40 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/40 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 40%, transparent);    }  }  .ctv\\:border-primary-background\\/45 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/45 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 45%, transparent);    }  }  .ctv\\:border-primary-background\\/50 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/50 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 50%, transparent);    }  }  .ctv\\:border-primary-background\\/60 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/60 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 60%, transparent);    }  }  .ctv\\:border-primary-background\\/70 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/70 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 70%, transparent);    }  }  .ctv\\:border-success-background\\/30 {    border-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-success-background\\/30 {      border-color: color-mix(in oklab, var(--success-background, #2e9e4f) 30%, transparent);    }  }  .ctv\\:border-success-background\\/50 {    border-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-success-background\\/50 {      border-color: color-mix(in oklab, var(--success-background, #2e9e4f) 50%, transparent);    }  }  .ctv\\:border-transparent {    border-color: #0000;  }  .ctv\\:border-warning-background\\/25 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/25 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 25%, transparent);    }  }  .ctv\\:border-warning-background\\/40 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/40 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 40%, transparent);    }  }  .ctv\\:border-warning-background\\/50 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/50 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 50%, transparent);    }  }  .ctv\\:border-warning-background\\/55 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/55 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 55%, transparent);    }  }  .ctv\\:border-warning-background\\/70 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/70 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 70%, transparent);    }  }  .ctv\\:border-white, .ctv\\:border-white\\/10 {    border-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-white\\/10 {      border-color: color-mix(in oklab, var(--ctv-color-white) 10%, transparent);    }  }  .ctv\\:border-white\\/15 {    border-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-white\\/15 {      border-color: color-mix(in oklab, var(--ctv-color-white) 15%, transparent);    }  }  .ctv\\:border-white\\/20 {    border-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-white\\/20 {      border-color: color-mix(in oklab, var(--ctv-color-white) 20%, transparent);    }  }  .ctv\\:border-white\\/30 {    border-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-white\\/30 {      border-color: color-mix(in oklab, var(--ctv-color-white) 30%, transparent);    }  }  .ctv\\:border-b-transparent {    border-bottom-color: #0000;  }  .ctv\\:border-b-warning-background\\/15 {    border-bottom-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-b-warning-background\\/15 {      border-bottom-color: color-mix(in oklab, var(--warning-background, #d39e00) 15%, transparent);    }  }  .ctv\\:bg-\\[rgb\\(78_168_255\\/0\\.25\\)\\] {    background-color: #4ea8ff40;  }  .ctv\\:bg-\\[rgb\\(120_200_120\\/0\\.25\\)\\] {    background-color: #78c87840;  }  .ctv\\:bg-\\[rgb\\(200_130_255\\/0\\.25\\)\\] {    background-color: #c882ff40;  }  .ctv\\:bg-\\[rgb\\(255_100_100\\/0\\.22\\)\\] {    background-color: #ff646438;  }  .ctv\\:bg-\\[rgb\\(255_140_200\\/0\\.25\\)\\] {    background-color: #ff8cc840;  }  .ctv\\:bg-\\[rgb\\(255_140_200\\/0\\.85\\)\\] {    background-color: #ff8cc8d9;  }  .ctv\\:bg-\\[rgb\\(255_171_64\\/0\\.25\\)\\] {    background-color: #ffab4040;  }  .ctv\\:bg-base-background {    background-color: var(--base-background, #1e1e1e);  }  .ctv\\:bg-base-foreground\\/5 {    background-color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-base-foreground\\/5 {      background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 5%, transparent);    }  }  .ctv\\:bg-base-foreground\\/10 {    background-color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-base-foreground\\/10 {      background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 10%, transparent);    }  }  .ctv\\:bg-base-foreground\\/\\[0\\.03\\] {    background-color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-base-foreground\\/\\[0\\.03\\] {      background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 3%, transparent);    }  }  .ctv\\:bg-black, .ctv\\:bg-black\\/20 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/20 {      background-color: color-mix(in oklab, var(--ctv-color-black) 20%, transparent);    }  }  .ctv\\:bg-black\\/30 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/30 {      background-color: color-mix(in oklab, var(--ctv-color-black) 30%, transparent);    }  }  .ctv\\:bg-black\\/50 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/50 {      background-color: color-mix(in oklab, var(--ctv-color-black) 50%, transparent);    }  }  .ctv\\:bg-black\\/55 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/55 {      background-color: color-mix(in oklab, var(--ctv-color-black) 55%, transparent);    }  }  .ctv\\:bg-black\\/60 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/60 {      background-color: color-mix(in oklab, var(--ctv-color-black) 60%, transparent);    }  }  .ctv\\:bg-black\\/65 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/65 {      background-color: color-mix(in oklab, var(--ctv-color-black) 65%, transparent);    }  }  .ctv\\:bg-black\\/70 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/70 {      background-color: color-mix(in oklab, var(--ctv-color-black) 70%, transparent);    }  }  .ctv\\:bg-black\\/80 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/80 {      background-color: color-mix(in oklab, var(--ctv-color-black) 80%, transparent);    }  }  .ctv\\:bg-black\\/90 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/90 {      background-color: color-mix(in oklab, var(--ctv-color-black) 90%, transparent);    }  }  .ctv\\:bg-destructive-background, .ctv\\:bg-destructive-background\\/10 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-destructive-background\\/10 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 10%, transparent);    }  }  .ctv\\:bg-destructive-background\\/15 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-destructive-background\\/15 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 15%, transparent);    }  }  .ctv\\:bg-destructive-background\\/30 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-destructive-background\\/30 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 30%, transparent);    }  }  .ctv\\:bg-destructive-background\\/70 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-destructive-background\\/70 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 70%, transparent);    }  }  .ctv\\:bg-interface-menu-component-surface-hovered {    background-color: var(--interface-menu-component-surface-hovered, #ffffff14);  }  .ctv\\:bg-interface-menu-component-surface-selected {    background-color: var(--interface-menu-component-surface-selected, #4ea8ff2e);  }  .ctv\\:bg-interface-menu-surface, .ctv\\:bg-interface-menu-surface\\/85 {    background-color: var(--interface-menu-surface, #232323);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-interface-menu-surface\\/85 {      background-color: color-mix(in oklab, var(--interface-menu-surface, #232323) 85%, transparent);    }  }  .ctv\\:bg-interface-panel-surface, .ctv\\:bg-interface-panel-surface\\/90 {    background-color: var(--interface-panel-surface, #1e1e1e);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-interface-panel-surface\\/90 {      background-color: color-mix(in oklab, var(--interface-panel-surface, #1e1e1e) 90%, transparent);    }  }  .ctv\\:bg-primary-background, .ctv\\:bg-primary-background\\/5 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/5 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 5%, transparent);    }  }  .ctv\\:bg-primary-background\\/10 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/10 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 10%, transparent);    }  }  .ctv\\:bg-primary-background\\/15 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/15 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 15%, transparent);    }  }  .ctv\\:bg-primary-background\\/20 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/20 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 20%, transparent);    }  }  .ctv\\:bg-primary-background\\/25 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/25 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 25%, transparent);    }  }  .ctv\\:bg-primary-background\\/30 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/30 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 30%, transparent);    }  }  .ctv\\:bg-secondary-background {    background-color: var(--secondary-background, #ffffff0f);  }  .ctv\\:bg-secondary-background-selected {    background-color: var(--secondary-background-selected, #4ea8ff33);  }  .ctv\\:bg-success-background\\/5 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-success-background\\/5 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 5%, transparent);    }  }  .ctv\\:bg-success-background\\/10 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-success-background\\/10 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 10%, transparent);    }  }  .ctv\\:bg-success-background\\/15 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-success-background\\/15 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 15%, transparent);    }  }  .ctv\\:bg-success-background\\/20 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-success-background\\/20 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 20%, transparent);    }  }  .ctv\\:bg-transparent {    background-color: #0000;  }  .ctv\\:bg-warning-background, .ctv\\:bg-warning-background\\/5 {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/5 {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 5%, transparent);    }  }  .ctv\\:bg-warning-background\\/10 {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/10 {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 10%, transparent);    }  }  .ctv\\:bg-warning-background\\/15 {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/15 {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 15%, transparent);    }  }  .ctv\\:bg-warning-background\\/30 {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/30 {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 30%, transparent);    }  }  .ctv\\:bg-warning-background\\/\\[0\\.03\\] {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/\\[0\\.03\\] {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 3%, transparent);    }  }  .ctv\\:bg-white, .ctv\\:bg-white\\/10 {    background-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-white\\/10 {      background-color: color-mix(in oklab, var(--ctv-color-white) 10%, transparent);    }  }  .ctv\\:bg-white\\/30 {    background-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-white\\/30 {      background-color: color-mix(in oklab, var(--ctv-color-white) 30%, transparent);    }  }  .ctv\\:bg-white\\/70 {    background-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-white\\/70 {      background-color: color-mix(in oklab, var(--ctv-color-white) 70%, transparent);    }  }  .ctv\\:bg-white\\/85 {    background-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-white\\/85 {      background-color: color-mix(in oklab, var(--ctv-color-white) 85%, transparent);    }  }  .ctv\\:bg-linear-to-b {    --tw-gradient-position: to bottom;  }  @supports (background-image: linear-gradient(in lab, red, red)) {    .ctv\\:bg-linear-to-b {      --tw-gradient-position: to bottom in oklab;    }  }  .ctv\\:bg-linear-to-b {    background-image: linear-gradient(var(--tw-gradient-stops));  }  .ctv\\:bg-linear-to-r {    --tw-gradient-position: to right;  }  @supports (background-image: linear-gradient(in lab, red, red)) {    .ctv\\:bg-linear-to-r {      --tw-gradient-position: to right in oklab;    }  }  .ctv\\:bg-linear-to-r {    background-image: linear-gradient(var(--tw-gradient-stops));  }  .ctv\\:from-primary-background\\/85 {    --tw-gradient-from: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:from-primary-background\\/85 {      --tw-gradient-from: color-mix(in oklab, var(--primary-background, #4ea8ff99) 85%, transparent);    }  }  .ctv\\:from-primary-background\\/85 {    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .ctv\\:from-transparent {    --tw-gradient-from: transparent;    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .ctv\\:to-black\\/75 {    --tw-gradient-to: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:to-black\\/75 {      --tw-gradient-to: color-mix(in oklab, var(--ctv-color-black) 75%, transparent);    }  }  .ctv\\:to-black\\/75 {    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .ctv\\:to-primary-background-hover\\/85 {    --tw-gradient-to: var(--primary-background-hover, #4ea8ffbf);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:to-primary-background-hover\\/85 {      --tw-gradient-to: color-mix(in oklab, var(--primary-background-hover, #4ea8ffbf) 85%, transparent);    }  }  .ctv\\:to-primary-background-hover\\/85 {    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .ctv\\:fill-current {    fill: currentColor;  }  .ctv\\:object-contain {    object-fit: contain;  }  .ctv\\:object-cover {    object-fit: cover;  }  .ctv\\:p-0 {    padding: calc(var(--ctv-spacing) * 0);  }  .ctv\\:p-0\\.5 {    padding: calc(var(--ctv-spacing) * .5);  }  .ctv\\:p-1 {    padding: calc(var(--ctv-spacing) * 1);  }  .ctv\\:p-1\\.5 {    padding: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:p-2 {    padding: calc(var(--ctv-spacing) * 2);  }  .ctv\\:p-2\\.5 {    padding: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:p-3 {    padding: calc(var(--ctv-spacing) * 3);  }  .ctv\\:p-3\\.5 {    padding: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:p-4 {    padding: calc(var(--ctv-spacing) * 4);  }  .ctv\\:p-6 {    padding: calc(var(--ctv-spacing) * 6);  }  .ctv\\:px-0\\.5 {    padding-inline: calc(var(--ctv-spacing) * .5);  }  .ctv\\:px-1 {    padding-inline: calc(var(--ctv-spacing) * 1);  }  .ctv\\:px-1\\.5 {    padding-inline: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:px-2 {    padding-inline: calc(var(--ctv-spacing) * 2);  }  .ctv\\:px-2\\.5 {    padding-inline: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:px-3 {    padding-inline: calc(var(--ctv-spacing) * 3);  }  .ctv\\:px-3\\.5 {    padding-inline: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:px-4 {    padding-inline: calc(var(--ctv-spacing) * 4);  }  .ctv\\:px-\\[3px\\] {    padding-inline: 3px;  }  .ctv\\:px-\\[5px\\] {    padding-inline: 5px;  }  .ctv\\:py-0 {    padding-block: calc(var(--ctv-spacing) * 0);  }  .ctv\\:py-0\\.5 {    padding-block: calc(var(--ctv-spacing) * .5);  }  .ctv\\:py-1 {    padding-block: calc(var(--ctv-spacing) * 1);  }  .ctv\\:py-1\\.5 {    padding-block: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:py-2 {    padding-block: calc(var(--ctv-spacing) * 2);  }  .ctv\\:py-2\\.5 {    padding-block: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:py-4 {    padding-block: calc(var(--ctv-spacing) * 4);  }  .ctv\\:py-5 {    padding-block: calc(var(--ctv-spacing) * 5);  }  .ctv\\:py-\\[3px\\] {    padding-block: 3px;  }  .ctv\\:py-\\[5px\\] {    padding-block: 5px;  }  .ctv\\:py-px {    padding-block: 1px;  }  .ctv\\:pt-1 {    padding-top: calc(var(--ctv-spacing) * 1);  }  .ctv\\:pt-2 {    padding-top: calc(var(--ctv-spacing) * 2);  }  .ctv\\:pt-2\\.5 {    padding-top: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:pt-3\\.5 {    padding-top: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:pb-1 {    padding-bottom: calc(var(--ctv-spacing) * 1);  }  .ctv\\:pb-2 {    padding-bottom: calc(var(--ctv-spacing) * 2);  }  .ctv\\:pb-3\\.5 {    padding-bottom: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:pb-6 {    padding-bottom: calc(var(--ctv-spacing) * 6);  }  .ctv\\:pl-1\\.5 {    padding-left: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:text-center {    text-align: center;  }  .ctv\\:text-left {    text-align: left;  }  .ctv\\:text-right {    text-align: right;  }  .ctv\\:\\[font-family\\:inherit\\] {    font-family: inherit;  }  .ctv\\:font-mono {    font-family: var(--ctv-font-mono);  }  .ctv\\:text-2xs {    font-size: var(--ctv-text-2xs);    line-height: var(--tw-leading, var(--ctv-text-2xs--line-height));  }  .ctv\\:text-3xs {    font-size: var(--ctv-text-3xs);    line-height: var(--tw-leading, var(--ctv-text-3xs--line-height));  }  .ctv\\:text-lg {    font-size: var(--ctv-text-lg);    line-height: var(--tw-leading, var(--ctv-text-lg--line-height));  }  .ctv\\:text-sm {    font-size: var(--ctv-text-sm);    line-height: var(--tw-leading, var(--ctv-text-sm--line-height));  }  .ctv\\:text-xs {    font-size: var(--ctv-text-xs);    line-height: var(--tw-leading, var(--ctv-text-xs--line-height));  }  .ctv\\:text-\\[8px\\] {    font-size: 8px;  }  .ctv\\:text-\\[11px\\] {    font-size: 11px;  }  .ctv\\:text-\\[13px\\] {    font-size: 13px;  }  .ctv\\:text-\\[22px\\] {    font-size: 22px;  }  .ctv\\:text-\\[28px\\] {    font-size: 28px;  }  .ctv\\:text-\\[32px\\] {    font-size: 32px;  }  .ctv\\:leading-\\[1\\.3\\] {    --tw-leading: 1.3;    line-height: 1.3;  }  .ctv\\:leading-none {    --tw-leading: 1;    line-height: 1;  }  .ctv\\:leading-snug {    --tw-leading: var(--ctv-leading-snug);    line-height: var(--ctv-leading-snug);  }  .ctv\\:leading-tight {    --tw-leading: var(--ctv-leading-tight);    line-height: var(--ctv-leading-tight);  }  .ctv\\:font-bold {    --tw-font-weight: var(--ctv-font-weight-bold);    font-weight: var(--ctv-font-weight-bold);  }  .ctv\\:font-medium {    --tw-font-weight: var(--ctv-font-weight-medium);    font-weight: var(--ctv-font-weight-medium);  }  .ctv\\:font-semibold {    --tw-font-weight: var(--ctv-font-weight-semibold);    font-weight: var(--ctv-font-weight-semibold);  }  .ctv\\:tracking-wide {    --tw-tracking: var(--ctv-tracking-wide);    letter-spacing: var(--ctv-tracking-wide);  }  .ctv\\:tracking-wider {    --tw-tracking: var(--ctv-tracking-wider);    letter-spacing: var(--ctv-tracking-wider);  }  .ctv\\:break-words {    overflow-wrap: break-word;  }  .ctv\\:break-all {    word-break: break-all;  }  .ctv\\:text-ellipsis {    text-overflow: ellipsis;  }  .ctv\\:whitespace-normal {    white-space: normal;  }  .ctv\\:whitespace-nowrap {    white-space: nowrap;  }  .ctv\\:whitespace-pre-wrap {    white-space: pre-wrap;  }  .ctv\\:text-\\[\\#00FFD0\\] {    color: #00ffd0;  }  .ctv\\:text-\\[\\#9dd0ff\\] {    color: #9dd0ff;  }  .ctv\\:text-\\[\\#E93D82\\] {    color: #e93d82;  }  .ctv\\:text-\\[\\#FFB800\\] {    color: #ffb800;  }  .ctv\\:text-\\[\\#b5e3a5\\] {    color: #b5e3a5;  }  .ctv\\:text-\\[\\#d8b0ff\\] {    color: #d8b0ff;  }  .ctv\\:text-\\[\\#ffb0b0\\] {    color: #ffb0b0;  }  .ctv\\:text-\\[\\#ffb0d8\\] {    color: #ffb0d8;  }  .ctv\\:text-\\[\\#ffd089\\] {    color: #ffd089;  }  .ctv\\:text-base-foreground, .ctv\\:text-base-foreground\\/80 {    color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-base-foreground\\/80 {      color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 80%, transparent);    }  }  .ctv\\:text-destructive-background {    color: var(--destructive-background, #c0392b);  }  .ctv\\:text-gray-600 {    color: var(--ctv-color-gray-600);  }  .ctv\\:text-inherit {    color: inherit;  }  .ctv\\:text-muted-foreground, .ctv\\:text-muted-foreground\\/60 {    color: var(--muted-foreground, #888);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-muted-foreground\\/60 {      color: color-mix(in oklab, var(--muted-foreground, #888) 60%, transparent);    }  }  .ctv\\:text-primary-background {    color: var(--primary-background, #4ea8ff99);  }  .ctv\\:text-secondary-foreground {    color: var(--secondary-foreground, var(--base-foreground, #e0e0e0));  }  .ctv\\:text-success-background {    color: var(--success-background, #2e9e4f);  }  .ctv\\:text-warning-background, .ctv\\:text-warning-background\\/70 {    color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-warning-background\\/70 {      color: color-mix(in oklab, var(--warning-background, #d39e00) 70%, transparent);    }  }  .ctv\\:text-warning-background\\/75 {    color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-warning-background\\/75 {      color: color-mix(in oklab, var(--warning-background, #d39e00) 75%, transparent);    }  }  .ctv\\:text-white, .ctv\\:text-white\\/30 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/30 {      color: color-mix(in oklab, var(--ctv-color-white) 30%, transparent);    }  }  .ctv\\:text-white\\/35 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/35 {      color: color-mix(in oklab, var(--ctv-color-white) 35%, transparent);    }  }  .ctv\\:text-white\\/40 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/40 {      color: color-mix(in oklab, var(--ctv-color-white) 40%, transparent);    }  }  .ctv\\:text-white\\/50 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/50 {      color: color-mix(in oklab, var(--ctv-color-white) 50%, transparent);    }  }  .ctv\\:text-white\\/70 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/70 {      color: color-mix(in oklab, var(--ctv-color-white) 70%, transparent);    }  }  .ctv\\:text-white\\/85 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/85 {      color: color-mix(in oklab, var(--ctv-color-white) 85%, transparent);    }  }  .ctv\\:text-white\\/90 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/90 {      color: color-mix(in oklab, var(--ctv-color-white) 90%, transparent);    }  }  .ctv\\:uppercase {    text-transform: uppercase;  }  .ctv\\:italic {    font-style: italic;  }  .ctv\\:opacity-0 {    opacity: 0;  }  .ctv\\:opacity-50 {    opacity: .5;  }  .ctv\\:opacity-55 {    opacity: .55;  }  .ctv\\:opacity-60 {    opacity: .6;  }  .ctv\\:opacity-70 {    opacity: .7;  }  .ctv\\:opacity-75 {    opacity: .75;  }  .ctv\\:opacity-80 {    opacity: .8;  }  .ctv\\:opacity-100 {    opacity: 1;  }  .ctv\\:shadow-\\[0_0_0_1px_rgb\\(255_255_255\\/0\\.8\\)\\] {    --tw-shadow: 0 0 0 1px var(--tw-shadow-color, #fffc);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_0_1px_var\\(--primary-background\\)\\] {    --tw-shadow: 0 0 0 1px var(--tw-shadow-color, var(--primary-background));    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_0_9999px_rgb\\(0_0_0\\/0\\.5\\)\\] {    --tw-shadow: 0 0 0 9999px var(--tw-shadow-color, #00000080);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_2px_rgb\\(0_0_0\\/0\\.6\\)\\] {    --tw-shadow: 0 0 2px var(--tw-shadow-color, #0009);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_4px_rgb\\(0_0_0\\/0\\.6\\)\\] {    --tw-shadow: 0 0 4px var(--tw-shadow-color, #0009);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_8px_var\\(--primary-background\\)\\] {    --tw-shadow: 0 0 8px var(--tw-shadow-color, var(--primary-background));    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_1px_4px_rgb\\(0_0_0\\/0\\.5\\)\\] {    --tw-shadow: 0 1px 4px var(--tw-shadow-color, #00000080);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_8px_40px_rgb\\(0_0_0\\/0\\.6\\)\\] {    --tw-shadow: 0 8px 40px var(--tw-shadow-color, #0009);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_16px_48px_rgb\\(0_0_0\\/0\\.5\\)\\] {    --tw-shadow: 0 16px 48px var(--tw-shadow-color, #00000080);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-md {    --tw-shadow: 0 4px 6px -1px var(--tw-shadow-color, #0000001a), 0 2px 4px -2px var(--tw-shadow-color, #0000001a);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:ring-3 {    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:ring-primary-background {    --tw-ring-color: var(--primary-background, #4ea8ff99);  }  .ctv\\:outline, .ctv\\:outline-1 {    outline-style: var(--tw-outline-style);    outline-width: 1px;  }  .ctv\\:-outline-offset-1 {    outline-offset: calc(1px * -1);  }  .ctv\\:outline-destructive-background\\/55 {    outline-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:outline-destructive-background\\/55 {      outline-color: color-mix(in oklab, var(--destructive-background, #c0392b) 55%, transparent);    }  }  .ctv\\:outline-warning-background\\/50 {    outline-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:outline-warning-background\\/50 {      outline-color: color-mix(in oklab, var(--warning-background, #d39e00) 50%, transparent);    }  }  .ctv\\:outline-white\\/70 {    outline-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:outline-white\\/70 {      outline-color: color-mix(in oklab, var(--ctv-color-white) 70%, transparent);    }  }  .ctv\\:backdrop-blur {    --tw-backdrop-blur: blur(8px);    -webkit-backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );    backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );  }  .ctv\\:backdrop-blur-\\[2px\\] {    --tw-backdrop-blur: blur(2px);    -webkit-backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );    backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );  }  .ctv\\:backdrop-blur-sm {    --tw-backdrop-blur: blur(var(--ctv-blur-sm));    -webkit-backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );    backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );  }  .ctv\\:transition-\\[width\\] {    transition-property: width;    transition-timing-function: var(--tw-ease, var(--ctv-default-transition-timing-function));    transition-duration: var(--tw-duration, var(--ctv-default-transition-duration));  }  .ctv\\:transition-all {    transition-property: all;    transition-timing-function: var(--tw-ease, var(--ctv-default-transition-timing-function));    transition-duration: var(--tw-duration, var(--ctv-default-transition-duration));  }  .ctv\\:transition-colors {    transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;    transition-timing-function: var(--tw-ease, var(--ctv-default-transition-timing-function));    transition-duration: var(--tw-duration, var(--ctv-default-transition-duration));  }  .ctv\\:transition-opacity {    transition-property: opacity;    transition-timing-function: var(--tw-ease, var(--ctv-default-transition-timing-function));    transition-duration: var(--tw-duration, var(--ctv-default-transition-duration));  }  .ctv\\:duration-150 {    --tw-duration: .15s;    transition-duration: .15s;  }  .ctv\\:duration-200 {    --tw-duration: .2s;    transition-duration: .2s;  }  .ctv\\:ease-in {    --tw-ease: var(--ctv-ease-in);    transition-timing-function: var(--ctv-ease-in);  }  .ctv\\:ease-in-out {    --tw-ease: var(--ctv-ease-in-out);    transition-timing-function: var(--ctv-ease-in-out);  }  .ctv\\:ease-out {    --tw-ease: var(--ctv-ease-out);    transition-timing-function: var(--ctv-ease-out);  }  .ctv\\:will-change-transform {    will-change: transform;  }  .ctv\\:outline-none {    --tw-outline-style: none;    outline-style: none;  }  .ctv\\:select-none {    -webkit-user-select: none;    user-select: none;  }  .ctv\\:\\[-webkit-box-orient\\:vertical\\] {    -webkit-box-orient: vertical;  }  .ctv\\:\\[-webkit-line-clamp\\:5\\] {    -webkit-line-clamp: 5;  }  .ctv\\:ring-inset {    --tw-ring-inset: inset;  }  @media (hover: hover) {    .ctv\\:group-hover\\:flex:is(:where(.ctv\\:group):hover *) {      display: flex;    }    .ctv\\:group-hover\\:opacity-100:is(:where(.ctv\\:group):hover *) {      opacity: 1;    }  }  .ctv\\:placeholder\\:text-muted-foreground::placeholder {    color: var(--muted-foreground, #888);  }  @media (hover: hover) {    .ctv\\:hover\\:border-\\[\\#E93D82\\]:hover {      border-color: #e93d82;    }    .ctv\\:hover\\:border-border-default:hover {      border-color: var(--border-default, #ffffff26);    }    .ctv\\:hover\\:border-border-subtle:hover {      border-color: var(--border-subtle, #ffffff14);    }    .ctv\\:hover\\:border-destructive-background:hover {      border-color: var(--destructive-background, #c0392b);    }    .ctv\\:hover\\:border-primary-background:hover, .ctv\\:hover\\:border-primary-background\\/50:hover {      border-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:border-primary-background\\/50:hover {        border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 50%, transparent);      }    }    .ctv\\:hover\\:border-primary-background\\/60:hover {      border-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:border-primary-background\\/60:hover {        border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 60%, transparent);      }    }    .ctv\\:hover\\:border-primary-background\\/70:hover {      border-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:border-primary-background\\/70:hover {        border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 70%, transparent);      }    }    .ctv\\:hover\\:border-white\\/40:hover {      border-color: var(--ctv-color-white);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:border-white\\/40:hover {        border-color: color-mix(in oklab, var(--ctv-color-white) 40%, transparent);      }    }    .ctv\\:hover\\:border-white\\/55:hover {      border-color: var(--ctv-color-white);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:border-white\\/55:hover {        border-color: color-mix(in oklab, var(--ctv-color-white) 55%, transparent);      }    }    .ctv\\:hover\\:bg-\\[rgb\\(233_61_130\\/0\\.2\\)\\]:hover {      background-color: #e93d8233;    }    .ctv\\:hover\\:bg-base-foreground\\/5:hover {      background-color: var(--base-foreground, #e0e0e0);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-base-foreground\\/5:hover {        background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 5%, transparent);      }    }    .ctv\\:hover\\:bg-black\\/85:hover {      background-color: var(--ctv-color-black);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-black\\/85:hover {        background-color: color-mix(in oklab, var(--ctv-color-black) 85%, transparent);      }    }    .ctv\\:hover\\:bg-destructive-background:hover {      background-color: var(--destructive-background, #c0392b);    }    .ctv\\:hover\\:bg-destructive-background-hover:hover {      background-color: var(--destructive-background-hover, #d44637);    }    .ctv\\:hover\\:bg-destructive-background\\/10:hover {      background-color: var(--destructive-background, #c0392b);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-destructive-background\\/10:hover {        background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 10%, transparent);      }    }    .ctv\\:hover\\:bg-destructive-background\\/30:hover {      background-color: var(--destructive-background, #c0392b);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-destructive-background\\/30:hover {        background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 30%, transparent);      }    }    .ctv\\:hover\\:bg-destructive-background\\/80:hover {      background-color: var(--destructive-background, #c0392b);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-destructive-background\\/80:hover {        background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 80%, transparent);      }    }    .ctv\\:hover\\:bg-interface-menu-component-surface-hovered:hover {      background-color: var(--interface-menu-component-surface-hovered, #ffffff14);    }    .ctv\\:hover\\:bg-primary-background-hover:hover {      background-color: var(--primary-background-hover, #4ea8ffbf);    }    .ctv\\:hover\\:bg-primary-background\\/15:hover {      background-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-primary-background\\/15:hover {        background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 15%, transparent);      }    }    .ctv\\:hover\\:bg-primary-background\\/20:hover {      background-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-primary-background\\/20:hover {        background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 20%, transparent);      }    }    .ctv\\:hover\\:bg-primary-background\\/25:hover {      background-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-primary-background\\/25:hover {        background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 25%, transparent);      }    }    .ctv\\:hover\\:bg-primary-background\\/90:hover {      background-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-primary-background\\/90:hover {        background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 90%, transparent);      }    }    .ctv\\:hover\\:bg-secondary-background-hover:hover {      background-color: var(--secondary-background-hover, #ffffff1a);    }    .ctv\\:hover\\:bg-warning-background\\/10:hover {      background-color: var(--warning-background, #d39e00);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-warning-background\\/10:hover {        background-color: color-mix(in oklab, var(--warning-background, #d39e00) 10%, transparent);      }    }    .ctv\\:hover\\:bg-white\\/30:hover {      background-color: var(--ctv-color-white);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-white\\/30:hover {        background-color: color-mix(in oklab, var(--ctv-color-white) 30%, transparent);      }    }    .ctv\\:hover\\:bg-white\\/90:hover {      background-color: var(--ctv-color-white);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-white\\/90:hover {        background-color: color-mix(in oklab, var(--ctv-color-white) 90%, transparent);      }    }    .ctv\\:hover\\:text-base-foreground:hover {      color: var(--base-foreground, #e0e0e0);    }    .ctv\\:hover\\:text-destructive-background:hover {      color: var(--destructive-background, #c0392b);    }    .ctv\\:hover\\:text-primary-background:hover {      color: var(--primary-background, #4ea8ff99);    }    .ctv\\:hover\\:text-warning-background:hover {      color: var(--warning-background, #d39e00);    }    .ctv\\:hover\\:opacity-100:hover {      opacity: 1;    }  }  .ctv\\:focus\\:border-\\[\\#00FFD0\\]:focus {    border-color: #00ffd0;  }  .ctv\\:focus\\:border-\\[\\#E93D82\\]:focus {    border-color: #e93d82;  }  .ctv\\:focus\\:border-\\[\\#FFB800\\]:focus {    border-color: #ffb800;  }  .ctv\\:focus\\:border-node-component-border:focus {    border-color: var(--node-component-border, #fff3);  }  .ctv\\:focus\\:border-primary-background:focus, .ctv\\:focus\\:border-primary-background\\/50:focus {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:focus\\:border-primary-background\\/50:focus {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 50%, transparent);    }  }  .ctv\\:focus\\:bg-primary-background\\/10:focus {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:focus\\:bg-primary-background\\/10:focus {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 10%, transparent);    }  }  .ctv\\:focus\\:bg-secondary-background-hover:focus {    background-color: var(--secondary-background-hover, #ffffff1a);  }  .ctv\\:focus\\:outline:focus, .ctv\\:focus\\:outline-1:focus {    outline-style: var(--tw-outline-style);    outline-width: 1px;  }  .ctv\\:focus\\:outline-primary-background\\/50:focus {    outline-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:focus\\:outline-primary-background\\/50:focus {      outline-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 50%, transparent);    }  }  .ctv\\:focus\\:outline-none:focus {    --tw-outline-style: none;    outline-style: none;  }  .ctv\\:focus-visible\\:ring-1:focus-visible {    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:focus-visible\\:ring-border-default:focus-visible {    --tw-ring-color: var(--border-default, #ffffff26);  }  .ctv\\:focus-visible\\:outline-none:focus-visible {    --tw-outline-style: none;    outline-style: none;  }  .ctv\\:active\\:scale-95:active {    --tw-scale-x: 95%;    --tw-scale-y: 95%;    --tw-scale-z: 95%;    scale: var(--tw-scale-x) var(--tw-scale-y);  }  @media (hover: hover) {    .ctv\\:hover\\:enabled\\:bg-secondary-background-hover:hover:enabled {      background-color: var(--secondary-background-hover, #ffffff1a);    }  }  .ctv\\:disabled\\:pointer-events-none:disabled {    pointer-events: none;  }  .ctv\\:disabled\\:cursor-default:disabled {    cursor: default;  }  .ctv\\:disabled\\:cursor-not-allowed:disabled {    cursor: not-allowed;  }  .ctv\\:disabled\\:opacity-30:disabled {    opacity: .3;  }  .ctv\\:disabled\\:opacity-40:disabled {    opacity: .4;  }  .ctv\\:disabled\\:opacity-50:disabled {    opacity: .5;  }  .ctv\\:disabled\\:opacity-60:disabled {    opacity: .6;  }  @media (hover: hover) {    .ctv\\:disabled\\:hover\\:bg-secondary-background:disabled:hover {      background-color: var(--secondary-background, #ffffff0f);    }  }  .ctv\\:data-\\[highlighted\\]\\:bg-secondary-background-hover[data-highlighted] {    background-color: var(--secondary-background-hover, #ffffff1a);  }  .ctv\\:data-\\[state\\=checked\\]\\:bg-secondary-background-selected[data-state="checked"] {    background-color: var(--secondary-background-selected, #4ea8ff33);  }  @media (hover: hover) {    .ctv\\:data-\\[state\\=checked\\]\\:hover\\:bg-secondary-background-selected[data-state="checked"]:hover {      background-color: var(--secondary-background-selected, #4ea8ff33);    }  }  .ctv\\:data-\\[state\\=open\\]\\:border-node-component-border[data-state="open"] {    border-color: var(--node-component-border, #fff3);  }  .ctv\\:\\[\\&_\\+_\\&\\]\\:border-t + .ctv\\:\\[\\&_\\+_\\&\\]\\:border-t {    border-top-style: var(--tw-border-style);    border-top-width: 1px;  }  .ctv\\:\\[\\&_\\+_\\&\\]\\:border-solid + .ctv\\:\\[\\&_\\+_\\&\\]\\:border-solid {    --tw-border-style: solid;    border-style: solid;  }  .ctv\\:\\[\\&_\\+_\\&\\]\\:border-border-subtle + .ctv\\:\\[\\&_\\+_\\&\\]\\:border-border-subtle {    border-color: var(--border-subtle, #ffffff14);  }  .ctv\\:\\[\\&_\\+_\\&\\]\\:pt-1\\.5 + .ctv\\:\\[\\&_\\+_\\&\\]\\:pt-1\\.5 {    padding-top: calc(var(--ctv-spacing) * 1.5);  }}@property --tw-translate-x {  syntax: "*";  inherits: false;  initial-value: 0;}@property --tw-translate-y {  syntax: "*";  inherits: false;  initial-value: 0;}@property --tw-translate-z {  syntax: "*";  inherits: false;  initial-value: 0;}@property --tw-border-style {  syntax: "*";  inherits: false;  initial-value: solid;}@property --tw-gradient-position {  syntax: "*";  inherits: false}@property --tw-gradient-from {  syntax: "<color>";  inherits: false;  initial-value: #0000;}@property --tw-gradient-via {  syntax: "<color>";  inherits: false;  initial-value: #0000;}@property --tw-gradient-to {  syntax: "<color>";  inherits: false;  initial-value: #0000;}@property --tw-gradient-stops {  syntax: "*";  inherits: false}@property --tw-gradient-via-stops {  syntax: "*";  inherits: false}@property --tw-gradient-from-position {  syntax: "<length-percentage>";  inherits: false;  initial-value: 0%;}@property --tw-gradient-via-position {  syntax: "<length-percentage>";  inherits: false;  initial-value: 50%;}@property --tw-gradient-to-position {  syntax: "<length-percentage>";  inherits: false;  initial-value: 100%;}@property --tw-leading {  syntax: "*";  inherits: false}@property --tw-font-weight {  syntax: "*";  inherits: false}@property --tw-tracking {  syntax: "*";  inherits: false}@property --tw-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-shadow-color {  syntax: "*";  inherits: false}@property --tw-shadow-alpha {  syntax: "<percentage>";  inherits: false;  initial-value: 100%;}@property --tw-inset-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-inset-shadow-color {  syntax: "*";  inherits: false}@property --tw-inset-shadow-alpha {  syntax: "<percentage>";  inherits: false;  initial-value: 100%;}@property --tw-ring-color {  syntax: "*";  inherits: false}@property --tw-ring-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-inset-ring-color {  syntax: "*";  inherits: false}@property --tw-inset-ring-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-ring-inset {  syntax: "*";  inherits: false}@property --tw-ring-offset-width {  syntax: "<length>";  inherits: false;  initial-value: 0;}@property --tw-ring-offset-color {  syntax: "*";  inherits: false;  initial-value: #fff;}@property --tw-ring-offset-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-outline-style {  syntax: "*";  inherits: false;  initial-value: solid;}@property --tw-backdrop-blur {  syntax: "*";  inherits: false}@property --tw-backdrop-brightness {  syntax: "*";  inherits: false}@property --tw-backdrop-contrast {  syntax: "*";  inherits: false}@property --tw-backdrop-grayscale {  syntax: "*";  inherits: false}@property --tw-backdrop-hue-rotate {  syntax: "*";  inherits: false}@property --tw-backdrop-invert {  syntax: "*";  inherits: false}@property --tw-backdrop-opacity {  syntax: "*";  inherits: false}@property --tw-backdrop-saturate {  syntax: "*";  inherits: false}@property --tw-backdrop-sepia {  syntax: "*";  inherits: false}@property --tw-duration {  syntax: "*";  inherits: false}@property --tw-ease {  syntax: "*";  inherits: false}@property --tw-scale-x {  syntax: "*";  inherits: false;  initial-value: 1;}@property --tw-scale-y {  syntax: "*";  inherits: false;  initial-value: 1;}@property --tw-scale-z {  syntax: "*";  inherits: false;  initial-value: 1;}@keyframes pulse {  50% {    opacity: .5;  }}.comfytv-root, .comfytv-dialog {\r  --p-primary-color: #4ea8ff;\r  --p-primary-contrast-color: #fff;\r  --p-primary-hover-color: #66b6ff;\r  --p-primary-active-color: #3a96ee;\r\r  --p-surface-0:  #1e1e1e;\r  --p-surface-50: #232323;\r  --p-surface-100: #2a2a2a;\r  --p-surface-200: #333;\r  --p-surface-300: #3d3d3d;\r  --p-surface-400: #555;\r  --p-surface-500: #777;\r  --p-surface-600: #999;\r  --p-surface-700: #bbb;\r  --p-surface-800: #ddd;\r  --p-surface-900: #eee;\r  --p-surface-950: #f6f6f6;\r\r  --p-content-background: var(--p-surface-0);\r  --p-content-hover-background: var(--p-surface-100);\r  --p-content-border-color: var(--p-surface-300);\r  --p-content-border-radius: 4px;\r\r  --p-text-color: var(--p-surface-800);\r  --p-text-muted-color: var(--p-surface-600);\r\r  --p-mask-background: rgba(0, 0, 0, 0.55);\r\r  --p-focus-ring-width: 1px;\r  --p-focus-ring-style: solid;\r  --p-focus-ring-color: var(--p-primary-color);\r  --p-focus-ring-offset: 1px;\r}\r\r.comfytv-root {\r  font-size: 12px;\r  color: var(--p-text-color);\r}\r\r.comfytv-root .p-datatable {\r  font-size: 12px;\r  display: flex;\r  flex-direction: column;\r  height: 100%;\r  min-height: 0;\r  width: 100%;\r}\r.comfytv-root .p-datatable-table-container,\r.comfytv-root .p-datatable-wrapper {\r  flex: 1;\r  min-height: 0;\r  overflow: auto;\r}\r.comfytv-root .p-datatable-table {\r  border-collapse: separate;\r  border-spacing: 0;\r  table-layout: auto;\r}\r.comfytv-root .p-datatable-thead > tr > th {\r  background: var(--p-surface-100);\r  color: var(--p-text-color);\r  border-bottom: 1px solid var(--p-content-border-color);\r  padding: 6px 8px;\r  font-weight: 600;\r  text-align: left;\r}\r.comfytv-root .p-datatable-tbody > tr > td {\r  padding: 6px 8px;\r  border-bottom: 1px solid var(--p-content-border-color);\r  vertical-align: top;\r}\r.comfytv-root .p-datatable-tbody > tr.p-row-odd {\r  background: var(--p-surface-50);\r}\r.comfytv-root .p-datatable-tbody > tr:hover {\r  background: var(--p-content-hover-background);\r}\r.comfytv-root .p-datatable-frozen-column {\r  position: sticky;\r  left: 0;\r  z-index: 1;\r  background: inherit;\r}\r\r/* Select (dropdown) */\r.comfytv-root .p-select {\r  display: inline-flex;\r  align-items: center;\r  background: var(--p-surface-100);\r  border: 1px solid var(--p-content-border-color);\r  border-radius: 3px;\r  min-height: 22px;\r  cursor: pointer;\r  position: relative;\r}\r.comfytv-root .p-select:hover {\r  border-color: var(--p-surface-500);\r}\r.comfytv-root .p-select-focus {\r  border-color: var(--p-primary-color);\r}\r.comfytv-root .p-select-label {\r  padding: 2px 8px;\r  font-size: 11px;\r  color: var(--p-text-color);\r  flex: 1;\r  user-select: none;\r}\r.comfytv-root .p-select-dropdown {\r  padding: 0 6px;\r  color: var(--p-text-muted-color);\r}\r\r/* SelectButton (toggle group) */\r.comfytv-root .p-selectbutton {\r  display: inline-flex;\r  border: 1px solid var(--p-content-border-color);\r  border-radius: 3px;\r  overflow: hidden;\r}\r.comfytv-root .p-togglebutton {\r  background: var(--p-surface-100);\r  color: var(--p-text-muted-color);\r  border: none;\r  padding: 2px 10px;\r  font-size: 11px;\r  cursor: pointer;\r}\r.comfytv-root .p-togglebutton:hover {\r  background: var(--p-surface-200);\r  color: var(--p-text-color);\r}\r.comfytv-root .p-togglebutton-checked {\r  background: var(--p-primary-color);\r  color: var(--p-primary-contrast-color);\r}\r\r.comfytv-root .p-inputtext,\r.comfytv-root .cell-input,\r.comfytv-root .cell-textarea {\r  background: var(--p-surface-100);\r  border: 1px solid var(--p-primary-color);\r  color: var(--p-text-color);\r  font: inherit;\r  padding: 4px 6px;\r  border-radius: 3px;\r  width: 100%;\r  box-sizing: border-box;\r  outline: none;\r}\r.comfytv-root .cell-textarea {\r  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;\r  font-size: 11px;\r  line-height: 1.4;\r  resize: vertical;\r  min-height: 32px;\r}\r.comfytv-root .cell-select { width: 100%; }\r\r.comfytv-root .p-datatable-tbody > tr > td.p-editable-column { cursor: text; }\r.comfytv-root .p-datatable-tbody > tr > td.p-cell-editing {\r  padding: 2px !important;\r  background: rgba(78, 168, 255, 0.08);\r}\r\r.comfytv-dialog.p-dialog {\r  background: var(--p-surface-0);\r  border: 1px solid var(--p-content-border-color);\r  border-radius: 8px;\r  color: var(--p-text-color);\r  box-shadow: 0 24px 48px rgba(0,0,0,0.6);\r}\r.comfytv-dialog .p-dialog-header {\r  padding: 12px 16px;\r  border-bottom: 1px solid var(--p-content-border-color);\r  background: var(--p-surface-50);\r  border-radius: 8px 8px 0 0;\r  font-weight: 600;\r  display: flex;\r  justify-content: space-between;\r  align-items: center;\r}\r.comfytv-dialog .p-dialog-title {\r  font-size: 14px;\r}\r.comfytv-dialog .p-dialog-content {\r  padding: 16px;\r  background: var(--p-surface-0);\r  overflow: auto;\r}\r.comfytv-dialog .p-dialog-close-button {\r  background: transparent;\r  border: none;\r  color: var(--p-text-muted-color);\r  cursor: pointer;\r  font-size: 18px;\r  padding: 2px 6px;\r}\r.comfytv-dialog .p-dialog-close-button:hover {\r  color: var(--p-text-color);\r}\r\rbody > .p-blockui-mask.p-blockui-mask-document:empty,\rbody > .p-overlay-mask.p-blockui-mask-document.p-overlay-mask-leave:empty {\r  display: none !important;\r  pointer-events: none !important;\r}`));      document.head.appendChild(elementStyle);    }  } catch (e) {    console.error("vite-plugin-css-injected-by-js", e);  }})();
+(function() {  "use strict";  try {    if (typeof document != "undefined") {      var elementStyle = document.createElement("style");      elementStyle.appendChild(document.createTextNode(`.ctv-num-root {\r  display: flex;\r  align-items: center;\r  width: 100%;\r  min-width: 0;\r  background: var(--secondary-background, rgba(255,255,255,0.04));\r  border-radius: 8px;\r  box-sizing: border-box;}.ctv-num-root .ctv-num-input,\r.ctv-num-root input {\r  appearance: none;\r  background: transparent;\r  border: none;\r  border-radius: 8px;\r  padding: 6px 12px;\r  color: var(--base-foreground, #ddd);\r  font-size: 12px;\r  font-family: inherit;\r  width: 100%;\r  min-width: 0;\r  flex: 1;\r  outline: none;\r  text-align: left;\r  box-sizing: border-box;}.ctv-num-root input::placeholder { color: var(--muted-foreground, #888);}.ctv-num-root:focus-within {\r  box-shadow: 0 0 0 1px var(--border-default, rgba(255,255,255,0.25));}.ctv-num-root input:disabled { opacity: 0.5; pointer-events: none;}.ctv-num-btn {\r  flex-shrink: 0;\r  appearance: none;\r  background: transparent;\r  border: none;\r  color: var(--muted-foreground, #888);\r  font-size: 13px;\r  line-height: 1;\r  width: 22px;\r  height: 100%;\r  min-height: 28px;\r  cursor: pointer;\r  user-select: none;\r  display: inline-flex;\r  align-items: center;\r  justify-content: center;}.ctv-num-btn:hover { color: var(--base-foreground, #ddd);}.ctv-num-btn[data-disabled] { opacity: 0.4; pointer-events: none;}\r.ctv-toggle {\r  display: inline-flex;\r  align-items: center;\r  flex-shrink: 0;\r  width: 32px;\r  height: 18px;\r  padding: 2px;\r  border: none;\r  border-radius: 9999px;\r  background: var(--secondary-background, rgba(255,255,255,0.12));\r  cursor: pointer;\r  transition: background 0.15s ease;}.ctv-toggle[data-state='checked'] {\r  background: var(--primary-background, rgba(78,168,255,0.6));}.ctv-toggle:disabled,\r.ctv-toggle[data-disabled] {\r  opacity: 0.5;\r  cursor: not-allowed;\r  pointer-events: none;}.ctv-toggle:focus-visible {\r  outline: none;\r  box-shadow: 0 0 0 1px var(--border-default, rgba(255,255,255,0.25));}.ctv-toggle-thumb {\r  display: block;\r  width: 14px;\r  height: 14px;\r  border-radius: 9999px;\r  background: #fff;\r  transition: transform 0.15s ease;\r  transform: translateX(0);\r  will-change: transform;\r  pointer-events: none;}.ctv-toggle[data-state='checked'] .ctv-toggle-thumb {\r  transform: translateX(14px);}\r.ctv-text-input,\r.ctv-text-input input,\r.ctv-text-input textarea {\r  appearance: none;\r  background: var(--secondary-background, rgba(255,255,255,0.04));\r  border: none;\r  border-radius: 8px;\r  padding: 6px 12px;\r  color: var(--base-foreground, #ddd);\r  font-size: 12px;\r  font-family: inherit;\r  width: 100%;\r  min-width: 0;\r  outline: none;\r  box-sizing: border-box;}.ctv-text-input::placeholder,\r.ctv-text-input input::placeholder,\r.ctv-text-input textarea::placeholder { color: var(--muted-foreground, #888);}.ctv-text-area { line-height: 1.4; resize: vertical; min-height: 48px; overflow: hidden;}.ctv-text-input:focus-visible,\r.ctv-text-input input:focus-visible,\r.ctv-text-input textarea:focus-visible {\r  box-shadow: 0 0 0 1px var(--border-default, rgba(255,255,255,0.25));}.ctv-text-input:disabled,\r.ctv-text-input input:disabled,\r.ctv-text-input textarea:disabled { opacity: 0.5; pointer-events: none;}\r.comfytv-asset-scroll {\r  scrollbar-width: thin;\r  scrollbar-color: rgba(255, 255, 255, 0.35) transparent;}.comfytv-asset-scroll::-webkit-scrollbar {\r  width: 10px;}.comfytv-asset-scroll::-webkit-scrollbar-track {\r  background: transparent;}.comfytv-asset-scroll::-webkit-scrollbar-thumb {\r  background-color: rgba(255, 255, 255, 0.35);\r  border-radius: 5px;\r  border: 2px solid transparent;\r  background-clip: content-box;}.comfytv-asset-scroll:hover::-webkit-scrollbar-thumb {\r  background-color: rgba(255, 255, 255, 0.55);}\r.tippy-box[data-animation=fade][data-state=hidden]{opacity:0}[data-tippy-root]{max-width:calc(100vw - 10px)}.tippy-box{position:relative;background-color:#333;color:#fff;border-radius:4px;font-size:14px;line-height:1.4;white-space:normal;outline:0;transition-property:transform,visibility,opacity}.tippy-box[data-placement^=top]>.tippy-arrow{bottom:0}.tippy-box[data-placement^=top]>.tippy-arrow:before{bottom:-7px;left:0;border-width:8px 8px 0;border-top-color:initial;transform-origin:center top}.tippy-box[data-placement^=bottom]>.tippy-arrow{top:0}.tippy-box[data-placement^=bottom]>.tippy-arrow:before{top:-7px;left:0;border-width:0 8px 8px;border-bottom-color:initial;transform-origin:center bottom}.tippy-box[data-placement^=left]>.tippy-arrow{right:0}.tippy-box[data-placement^=left]>.tippy-arrow:before{border-width:8px 0 8px 8px;border-left-color:initial;right:-7px;transform-origin:center left}.tippy-box[data-placement^=right]>.tippy-arrow{left:0}.tippy-box[data-placement^=right]>.tippy-arrow:before{left:-7px;border-width:8px 8px 8px 0;border-right-color:initial;transform-origin:center right}.tippy-box[data-inertia][data-state=visible]{transition-timing-function:cubic-bezier(.54,1.5,.38,1.11)}.tippy-arrow{width:16px;height:16px;color:#333}.tippy-arrow:before{content:"";position:absolute;border-color:transparent;border-style:solid}.tippy-content{position:relative;padding:5px 9px;z-index:1}.comfytv-prompt-prosemirror {\r  scrollbar-width: thin;\r  scrollbar-color: rgba(255, 255, 255, 0.35) transparent;}.comfytv-prompt-prosemirror::-webkit-scrollbar {\r  width: 10px;}.comfytv-prompt-prosemirror::-webkit-scrollbar-track {\r  background: transparent;}.comfytv-prompt-prosemirror::-webkit-scrollbar-thumb {\r  background-color: rgba(255, 255, 255, 0.35);\r  border-radius: 5px;\r  border: 2px solid transparent;\r  background-clip: content-box;}.comfytv-prompt-prosemirror:hover::-webkit-scrollbar-thumb {\r  background-color: rgba(255, 255, 255, 0.55);}.tippy-box[data-theme~='comfytv-transparent'] {\r  background: transparent;\r  box-shadow: none;}.tippy-box[data-theme~='comfytv-transparent'] > .tippy-content { padding: 0;}.tippy-box[data-theme~='comfytv-tooltip'] {\r  background: var(--interface-menu-surface, #1a1a1a);\r  border: 1px solid var(--border-default, #3a3a3a);\r  color: var(--base-foreground, #e0e0e0);\r  font-size: 11px;\r  line-height: 1.45;\r  border-radius: 4px;\r  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);}.tippy-box[data-theme~='comfytv-tooltip'] > .tippy-content {\r  padding: 6px 8px;\r  white-space: pre-wrap;\r  word-break: break-word;}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='top']    > .tippy-arrow::before { border-top-color: var(--border-default, #3a3a3a);}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='bottom'] > .tippy-arrow::before { border-bottom-color: var(--border-default, #3a3a3a);}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='left']   > .tippy-arrow::before { border-left-color: var(--border-default, #3a3a3a);}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='right']  > .tippy-arrow::before { border-right-color: var(--border-default, #3a3a3a);}\r.comfytv-prompt-editor[data-v-906058c4] p { margin: 0;}.comfytv-prompt-editor[data-v-906058c4] p.is-editor-empty:first-child::before {\r  content: attr(data-placeholder);\r  color: var(--muted-foreground, #888);\r  opacity: 0.65;\r  float: left;\r  height: 0;\r  pointer-events: none;}\r.ctv-batch-grid[data-v-702d0be3] {\r  display: grid;\r  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));\r  gap: 4px;\r  padding-top: 14px;\r  max-height: 320px;\r  overflow: auto;}\r.ctv-input-tile:hover .ctv-tile-disconnect[data-v-1454d384] { display: inline-flex;}.ctv-picker-input.ctv-src-upstream         .ctv-src-tag[data-v-1454d384] { background: color-mix(in srgb, var(--primary-background) 22%, transparent); color: var(--primary-background);}.ctv-picker-input.ctv-src-upstream-pending .ctv-src-tag[data-v-1454d384] { background: color-mix(in srgb, var(--warning-background) 18%, transparent); color: var(--warning-background);}\r.ctv-camera-dropdown option[data-v-d255fcd1] {\r  background: var(--interface-menu-surface, #1a1a2e);\r  color: var(--base-foreground, #e0e0e0);}\r.ctv-crop-select[data-v-c343d075] option {\r  background: var(--interface-menu-surface, #1a1a1f);\r  color: var(--base-foreground, #ddd);}.ctv-bound-input[data-v-c343d075] { -moz-appearance: textfield;}.ctv-bound-input[data-v-c343d075]::-webkit-inner-spin-button,\r.ctv-bound-input[data-v-c343d075]::-webkit-outer-spin-button {\r  -webkit-appearance: none;}\r.ctv-pano-select[data-v-e0f33c2f] {\r  appearance: none;\r  background-color: var(--secondary-background, rgb(255 255 255 / 0.04));\r  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6' viewBox='0 0 8 6'><path d='M0 0l4 6 4-6z' fill='%23bbb'/></svg>");\r  background-repeat: no-repeat;\r  background-position: right 6px center;\r  color: var(--base-foreground, rgb(255 255 255 / 0.9));\r  border: 1px solid var(--border-subtle, rgb(255 255 255 / 0.15));\r  border-radius: 4px;\r  padding: 3px 18px 3px 6px;\r  font-size: 11px;\r  font-family: ui-monospace, SFMono-Regular, monospace;\r  cursor: pointer;\r  outline: none;\r  min-width: 70px;}.ctv-pano-select[data-v-e0f33c2f]:hover { border-color: var(--border-default, rgb(255 255 255 / 0.3));}.ctv-pano-select[data-v-e0f33c2f]:focus { border-color: var(--primary-background, rgb(78 168 255 / 0.6));}.ctv-pano-select option[data-v-e0f33c2f] { background: var(--interface-menu-surface, #1a1a2e); color: var(--base-foreground, #e0e0e0);}\r.ctv-pano-select[data-v-6cb1afcc] {\r  appearance: none;\r  background-color: var(--secondary-background, rgb(255 255 255 / 0.04));\r  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6' viewBox='0 0 8 6'><path d='M0 0l4 6 4-6z' fill='%23bbb'/></svg>");\r  background-repeat: no-repeat;\r  background-position: right 6px center;\r  color: var(--base-foreground, rgb(255 255 255 / 0.9));\r  border: 1px solid var(--border-subtle, rgb(255 255 255 / 0.15));\r  border-radius: 4px;\r  padding: 3px 18px 3px 6px;\r  font-size: 11px;\r  font-family: ui-monospace, SFMono-Regular, monospace;\r  cursor: pointer;\r  outline: none;\r  min-width: 70px;}.ctv-pano-select[data-v-6cb1afcc]:hover { border-color: var(--border-default, rgb(255 255 255 / 0.3));}.ctv-pano-select[data-v-6cb1afcc]:focus { border-color: var(--primary-background, rgb(78 168 255 / 0.6));}.ctv-pano-select option[data-v-6cb1afcc] { background: var(--interface-menu-surface, #1a1a2e); color: var(--base-foreground, #e0e0e0);}\r.ctv-pad-area[data-v-da53c66d] {\r  background-image:\r    linear-gradient(45deg, rgba(255,255,255,0.04) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.04) 75%),\r    linear-gradient(45deg, rgba(255,255,255,0.04) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.04) 75%);\r  background-size: 12px 12px;\r  background-position: 0 0, 6px 6px;\r  border: 1px dashed color-mix(in srgb, var(--primary-background, #4ea8ff) 45%, transparent);}.ctv-outpaint-handle[data-v-da53c66d]::before {\r  content: '';\r  position: absolute;\r  background: color-mix(in srgb, var(--primary-background, #4ea8ff) 65%, transparent);\r  border-radius: 2px;}.ctv-handle-left[data-v-da53c66d]::before,  .ctv-handle-right[data-v-da53c66d]::before  { width: 3px; height: 100%;}.ctv-handle-top[data-v-da53c66d]::before,   .ctv-handle-bottom[data-v-da53c66d]::before { height: 3px; width: 100%;}.ctv-outpaint-handle[data-v-da53c66d]:hover::before { background: var(--primary-background, #4ea8ff);}\r.ctv-entry-table th[data-v-cab17390],\r.ctv-entry-table td[data-v-cab17390] {\r  text-align: left;\r  padding: 6px 8px;\r  border-bottom: 1px solid var(--border-subtle, #2a2a2a);\r  vertical-align: top;}.ctv-entry-table th[data-v-cab17390] {\r  font-weight: 600;\r  color: var(--muted-foreground, #aaa);}\r/*! tailwindcss v4.3.0 | MIT License | https://tailwindcss.com */@layer properties {  @supports (((-webkit-hyphens: none)) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {    *, :before, :after, ::backdrop {      --tw-translate-x: 0;      --tw-translate-y: 0;      --tw-translate-z: 0;      --tw-border-style: solid;      --tw-gradient-position: initial;      --tw-gradient-from: #0000;      --tw-gradient-via: #0000;      --tw-gradient-to: #0000;      --tw-gradient-stops: initial;      --tw-gradient-via-stops: initial;      --tw-gradient-from-position: 0%;      --tw-gradient-via-position: 50%;      --tw-gradient-to-position: 100%;      --tw-leading: initial;      --tw-font-weight: initial;      --tw-tracking: initial;      --tw-shadow: 0 0 #0000;      --tw-shadow-color: initial;      --tw-shadow-alpha: 100%;      --tw-inset-shadow: 0 0 #0000;      --tw-inset-shadow-color: initial;      --tw-inset-shadow-alpha: 100%;      --tw-ring-color: initial;      --tw-ring-shadow: 0 0 #0000;      --tw-inset-ring-color: initial;      --tw-inset-ring-shadow: 0 0 #0000;      --tw-ring-inset: initial;      --tw-ring-offset-width: 0px;      --tw-ring-offset-color: #fff;      --tw-ring-offset-shadow: 0 0 #0000;      --tw-outline-style: solid;      --tw-backdrop-blur: initial;      --tw-backdrop-brightness: initial;      --tw-backdrop-contrast: initial;      --tw-backdrop-grayscale: initial;      --tw-backdrop-hue-rotate: initial;      --tw-backdrop-invert: initial;      --tw-backdrop-opacity: initial;      --tw-backdrop-saturate: initial;      --tw-backdrop-sepia: initial;      --tw-duration: initial;      --tw-ease: initial;      --tw-scale-x: 1;      --tw-scale-y: 1;      --tw-scale-z: 1;    }  }}@layer theme {  :root, :host {    --ctv-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",    monospace;    --ctv-color-gray-600: oklch(44.6% .03 256.802);    --ctv-color-black: #000;    --ctv-color-white: #fff;    --ctv-spacing: .25rem;    --ctv-container-md: 28rem;    --ctv-text-xs: .75rem;    --ctv-text-xs--line-height: calc(1 / .75);    --ctv-text-sm: .875rem;    --ctv-text-sm--line-height: calc(1.25 / .875);    --ctv-text-lg: 1.125rem;    --ctv-text-lg--line-height: calc(1.75 / 1.125);    --ctv-font-weight-medium: 500;    --ctv-font-weight-semibold: 600;    --ctv-font-weight-bold: 700;    --ctv-tracking-wide: .025em;    --ctv-tracking-wider: .05em;    --ctv-leading-tight: 1.25;    --ctv-leading-snug: 1.375;    --ctv-radius-sm: .25rem;    --ctv-radius-md: .375rem;    --ctv-radius-lg: .5rem;    --ctv-ease-in: cubic-bezier(.4, 0, 1, 1);    --ctv-ease-out: cubic-bezier(0, 0, .2, 1);    --ctv-ease-in-out: cubic-bezier(.4, 0, .2, 1);    --ctv-animate-pulse: pulse 2s cubic-bezier(.4, 0, .6, 1) infinite;    --ctv-blur-sm: 8px;    --ctv-aspect-video: 16 / 9;    --ctv-default-transition-duration: .15s;    --ctv-default-transition-timing-function: cubic-bezier(.4, 0, .2, 1);    --ctv-text-2xs: .625rem;    --ctv-text-2xs--line-height: calc(1 / .625);    --ctv-text-3xs: .5625rem;    --ctv-text-3xs--line-height: calc(1 / .5625);  }}@layer utilities {  .ctv\\:pointer-events-none {    pointer-events: none;  }  .ctv\\:absolute {    position: absolute;  }  .ctv\\:fixed {    position: fixed;  }  .ctv\\:relative {    position: relative;  }  .ctv\\:sticky {    position: sticky;  }  .ctv\\:inset-0 {    inset: calc(var(--ctv-spacing) * 0);  }  .ctv\\:inset-x-0 {    inset-inline: calc(var(--ctv-spacing) * 0);  }  .ctv\\:-top-2 {    top: calc(var(--ctv-spacing) * -2);  }  .ctv\\:top-0 {    top: calc(var(--ctv-spacing) * 0);  }  .ctv\\:top-0\\.5 {    top: calc(var(--ctv-spacing) * .5);  }  .ctv\\:top-1 {    top: calc(var(--ctv-spacing) * 1);  }  .ctv\\:top-1\\/2 {    top: 50%;  }  .ctv\\:top-2 {    top: calc(var(--ctv-spacing) * 2);  }  .ctv\\:top-4 {    top: calc(var(--ctv-spacing) * 4);  }  .ctv\\:top-\\[3px\\] {    top: 3px;  }  .ctv\\:right-0 {    right: calc(var(--ctv-spacing) * 0);  }  .ctv\\:right-0\\.5 {    right: calc(var(--ctv-spacing) * .5);  }  .ctv\\:right-1 {    right: calc(var(--ctv-spacing) * 1);  }  .ctv\\:right-2 {    right: calc(var(--ctv-spacing) * 2);  }  .ctv\\:right-4 {    right: calc(var(--ctv-spacing) * 4);  }  .ctv\\:right-\\[3px\\] {    right: 3px;  }  .ctv\\:right-\\[14px\\] {    right: 14px;  }  .ctv\\:bottom-0 {    bottom: calc(var(--ctv-spacing) * 0);  }  .ctv\\:bottom-0\\.5 {    bottom: calc(var(--ctv-spacing) * .5);  }  .ctv\\:bottom-2 {    bottom: calc(var(--ctv-spacing) * 2);  }  .ctv\\:bottom-4 {    bottom: calc(var(--ctv-spacing) * 4);  }  .ctv\\:bottom-px {    bottom: 1px;  }  .ctv\\:left-0 {    left: calc(var(--ctv-spacing) * 0);  }  .ctv\\:left-0\\.5 {    left: calc(var(--ctv-spacing) * .5);  }  .ctv\\:left-2 {    left: calc(var(--ctv-spacing) * 2);  }  .ctv\\:z-10 {    z-index: 10;  }  .ctv\\:z-20 {    z-index: 20;  }  .ctv\\:z-30 {    z-index: 30;  }  .ctv\\:z-3000 {    z-index: 3000;  }  .ctv\\:z-\\[1\\] {    z-index: 1;  }  .ctv\\:z-\\[2\\] {    z-index: 2;  }  .ctv\\:z-\\[3\\] {    z-index: 3;  }  .ctv\\:z-\\[5\\] {    z-index: 5;  }  .ctv\\:z-\\[6\\] {    z-index: 6;  }  .ctv\\:z-\\[7\\] {    z-index: 7;  }  .ctv\\:z-\\[9999\\] {    z-index: 9999;  }  .ctv\\:z-\\[10000\\] {    z-index: 10000;  }  .ctv\\:m-0 {    margin: calc(var(--ctv-spacing) * 0);  }  .ctv\\:m-0\\.5 {    margin: calc(var(--ctv-spacing) * .5);  }  .ctv\\:m-1 {    margin: calc(var(--ctv-spacing) * 1);  }  .ctv\\:-mx-2\\.5 {    margin-inline: calc(var(--ctv-spacing) * -2.5);  }  .ctv\\:mx-2\\.5 {    margin-inline: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:mx-auto {    margin-inline: auto;  }  .ctv\\:mx-px {    margin-inline: 1px;  }  .ctv\\:my-1\\.5 {    margin-block: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:-mt-2 {    margin-top: calc(var(--ctv-spacing) * -2);  }  .ctv\\:mt-0\\.5 {    margin-top: calc(var(--ctv-spacing) * .5);  }  .ctv\\:mt-1 {    margin-top: calc(var(--ctv-spacing) * 1);  }  .ctv\\:mt-3\\.5 {    margin-top: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:mt-4 {    margin-top: calc(var(--ctv-spacing) * 4);  }  .ctv\\:mr-1 {    margin-right: calc(var(--ctv-spacing) * 1);  }  .ctv\\:-mb-px {    margin-bottom: -1px;  }  .ctv\\:mb-1 {    margin-bottom: calc(var(--ctv-spacing) * 1);  }  .ctv\\:mb-1\\.5 {    margin-bottom: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:mb-2 {    margin-bottom: calc(var(--ctv-spacing) * 2);  }  .ctv\\:mb-2\\.5 {    margin-bottom: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:mb-\\[3px\\] {    margin-bottom: 3px;  }  .ctv\\:-ml-px {    margin-left: -1px;  }  .ctv\\:ml-0\\.5 {    margin-left: calc(var(--ctv-spacing) * .5);  }  .ctv\\:ml-auto {    margin-left: auto;  }  .ctv\\:box-border {    box-sizing: border-box;  }  .ctv\\:box-content {    box-sizing: content-box;  }  .ctv\\:\\[display\\:-webkit-box\\] {    display: -webkit-box;  }  .ctv\\:block {    display: block;  }  .ctv\\:flex {    display: flex;  }  .ctv\\:grid {    display: grid;  }  .ctv\\:hidden {    display: none;  }  .ctv\\:inline-block {    display: inline-block;  }  .ctv\\:inline-flex {    display: inline-flex;  }  .ctv\\:aspect-square {    aspect-ratio: 1;  }  .ctv\\:aspect-video {    aspect-ratio: var(--ctv-aspect-video);  }  .ctv\\:size-2 {    width: calc(var(--ctv-spacing) * 2);    height: calc(var(--ctv-spacing) * 2);  }  .ctv\\:size-3 {    width: calc(var(--ctv-spacing) * 3);    height: calc(var(--ctv-spacing) * 3);  }  .ctv\\:size-3\\.5 {    width: calc(var(--ctv-spacing) * 3.5);    height: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:size-4 {    width: calc(var(--ctv-spacing) * 4);    height: calc(var(--ctv-spacing) * 4);  }  .ctv\\:size-5 {    width: calc(var(--ctv-spacing) * 5);    height: calc(var(--ctv-spacing) * 5);  }  .ctv\\:size-6 {    width: calc(var(--ctv-spacing) * 6);    height: calc(var(--ctv-spacing) * 6);  }  .ctv\\:size-7 {    width: calc(var(--ctv-spacing) * 7);    height: calc(var(--ctv-spacing) * 7);  }  .ctv\\:size-9 {    width: calc(var(--ctv-spacing) * 9);    height: calc(var(--ctv-spacing) * 9);  }  .ctv\\:size-\\[22px\\] {    width: 22px;    height: 22px;  }  .ctv\\:size-full {    width: 100%;    height: 100%;  }  .ctv\\:h-1\\.5 {    height: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:h-4 {    height: calc(var(--ctv-spacing) * 4);  }  .ctv\\:h-5 {    height: calc(var(--ctv-spacing) * 5);  }  .ctv\\:h-6 {    height: calc(var(--ctv-spacing) * 6);  }  .ctv\\:h-7 {    height: calc(var(--ctv-spacing) * 7);  }  .ctv\\:h-8 {    height: calc(var(--ctv-spacing) * 8);  }  .ctv\\:h-9 {    height: calc(var(--ctv-spacing) * 9);  }  .ctv\\:h-10 {    height: calc(var(--ctv-spacing) * 10);  }  .ctv\\:h-11 {    height: calc(var(--ctv-spacing) * 11);  }  .ctv\\:h-80 {    height: calc(var(--ctv-spacing) * 80);  }  .ctv\\:h-\\[13px\\] {    height: 13px;  }  .ctv\\:h-\\[18px\\] {    height: 18px;  }  .ctv\\:h-\\[72px\\] {    height: 72px;  }  .ctv\\:h-\\[76px\\] {    height: 76px;  }  .ctv\\:h-\\[224px\\] {    height: 224px;  }  .ctv\\:h-\\[280px\\] {    height: 280px;  }  .ctv\\:h-\\[340px\\] {    height: 340px;  }  .ctv\\:h-\\[350px\\] {    height: 350px;  }  .ctv\\:h-full {    height: 100%;  }  .ctv\\:h-px {    height: 1px;  }  .ctv\\:max-h-40 {    max-height: calc(var(--ctv-spacing) * 40);  }  .ctv\\:max-h-44 {    max-height: calc(var(--ctv-spacing) * 44);  }  .ctv\\:max-h-52 {    max-height: calc(var(--ctv-spacing) * 52);  }  .ctv\\:max-h-56 {    max-height: calc(var(--ctv-spacing) * 56);  }  .ctv\\:max-h-60 {    max-height: calc(var(--ctv-spacing) * 60);  }  .ctv\\:max-h-64 {    max-height: calc(var(--ctv-spacing) * 64);  }  .ctv\\:max-h-80 {    max-height: calc(var(--ctv-spacing) * 80);  }  .ctv\\:max-h-\\[60vh\\] {    max-height: 60vh;  }  .ctv\\:max-h-\\[120px\\] {    max-height: 120px;  }  .ctv\\:max-h-\\[360px\\] {    max-height: 360px;  }  .ctv\\:max-h-\\[calc\\(100vh-48px\\)\\] {    max-height: calc(100vh - 48px);  }  .ctv\\:max-h-full {    max-height: 100%;  }  .ctv\\:min-h-0 {    min-height: calc(var(--ctv-spacing) * 0);  }  .ctv\\:min-h-10 {    min-height: calc(var(--ctv-spacing) * 10);  }  .ctv\\:min-h-11 {    min-height: calc(var(--ctv-spacing) * 11);  }  .ctv\\:min-h-12 {    min-height: calc(var(--ctv-spacing) * 12);  }  .ctv\\:min-h-14 {    min-height: calc(var(--ctv-spacing) * 14);  }  .ctv\\:min-h-20 {    min-height: calc(var(--ctv-spacing) * 20);  }  .ctv\\:min-h-\\[22px\\] {    min-height: 22px;  }  .ctv\\:min-h-\\[116px\\] {    min-height: 116px;  }  .ctv\\:min-h-\\[280px\\] {    min-height: 280px;  }  .ctv\\:w-0\\.5 {    width: calc(var(--ctv-spacing) * .5);  }  .ctv\\:w-2 {    width: calc(var(--ctv-spacing) * 2);  }  .ctv\\:w-2\\.5 {    width: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:w-3 {    width: calc(var(--ctv-spacing) * 3);  }  .ctv\\:w-4 {    width: calc(var(--ctv-spacing) * 4);  }  .ctv\\:w-7 {    width: calc(var(--ctv-spacing) * 7);  }  .ctv\\:w-12 {    width: calc(var(--ctv-spacing) * 12);  }  .ctv\\:w-14 {    width: calc(var(--ctv-spacing) * 14);  }  .ctv\\:w-24 {    width: calc(var(--ctv-spacing) * 24);  }  .ctv\\:w-44 {    width: calc(var(--ctv-spacing) * 44);  }  .ctv\\:w-64 {    width: calc(var(--ctv-spacing) * 64);  }  .ctv\\:w-\\[38px\\] {    width: 38px;  }  .ctv\\:w-\\[76px\\] {    width: 76px;  }  .ctv\\:w-\\[140px\\] {    width: 140px;  }  .ctv\\:w-\\[180px\\] {    width: 180px;  }  .ctv\\:w-auto {    width: auto;  }  .ctv\\:w-full {    width: 100%;  }  .ctv\\:w-px {    width: 1px;  }  .ctv\\:max-w-\\[60vw\\] {    max-width: 60vw;  }  .ctv\\:max-w-\\[90px\\] {    max-width: 90px;  }  .ctv\\:max-w-\\[360px\\] {    max-width: 360px;  }  .ctv\\:max-w-full {    max-width: 100%;  }  .ctv\\:max-w-md {    max-width: var(--ctv-container-md);  }  .ctv\\:min-w-0 {    min-width: calc(var(--ctv-spacing) * 0);  }  .ctv\\:min-w-2 {    min-width: calc(var(--ctv-spacing) * 2);  }  .ctv\\:min-w-4 {    min-width: calc(var(--ctv-spacing) * 4);  }  .ctv\\:min-w-8 {    min-width: calc(var(--ctv-spacing) * 8);  }  .ctv\\:min-w-9 {    min-width: calc(var(--ctv-spacing) * 9);  }  .ctv\\:min-w-64 {    min-width: calc(var(--ctv-spacing) * 64);  }  .ctv\\:min-w-\\[44px\\] {    min-width: 44px;  }  .ctv\\:min-w-\\[60px\\] {    min-width: 60px;  }  .ctv\\:min-w-\\[var\\(--reka-combobox-trigger-width\\)\\] {    min-width: var(--reka-combobox-trigger-width);  }  .ctv\\:flex-1 {    flex: 1;  }  .ctv\\:flex-auto {    flex: auto;  }  .ctv\\:shrink-0 {    flex-shrink: 0;  }  .ctv\\:border-collapse {    border-collapse: collapse;  }  .ctv\\:-translate-x-1\\/2 {    --tw-translate-x: calc(calc(1 / 2 * 100%) * -1);    translate: var(--tw-translate-x) var(--tw-translate-y);  }  .ctv\\:-translate-y-1\\/2 {    --tw-translate-y: calc(calc(1 / 2 * 100%) * -1);    translate: var(--tw-translate-x) var(--tw-translate-y);  }  .ctv\\:animate-pulse {    animation: var(--ctv-animate-pulse);  }  .ctv\\:cursor-\\[inherit\\] {    cursor: inherit;  }  .ctv\\:cursor-crosshair {    cursor: crosshair;  }  .ctv\\:cursor-default {    cursor: default;  }  .ctv\\:cursor-ew-resize {    cursor: ew-resize;  }  .ctv\\:cursor-grab {    cursor: grab;  }  .ctv\\:cursor-grabbing {    cursor: grabbing;  }  .ctv\\:cursor-move {    cursor: move;  }  .ctv\\:cursor-none {    cursor: none;  }  .ctv\\:cursor-not-allowed {    cursor: not-allowed;  }  .ctv\\:cursor-ns-resize {    cursor: ns-resize;  }  .ctv\\:cursor-pointer {    cursor: pointer;  }  .ctv\\:cursor-zoom-out {    cursor: zoom-out;  }  .ctv\\:touch-manipulation {    touch-action: manipulation;  }  .ctv\\:touch-none {    touch-action: none;  }  .ctv\\:resize-none {    resize: none;  }  .ctv\\:resize-y {    resize: vertical;  }  .ctv\\:list-none {    list-style-type: none;  }  .ctv\\:appearance-none {    appearance: none;  }  .ctv\\:grid-cols-2 {    grid-template-columns: repeat(2, minmax(0, 1fr));  }  .ctv\\:grid-cols-4 {    grid-template-columns: repeat(4, minmax(0, 1fr));  }  .ctv\\:grid-cols-\\[60px_1fr\\] {    grid-template-columns: 60px 1fr;  }  .ctv\\:grid-cols-\\[64px_1fr_48px\\] {    grid-template-columns: 64px 1fr 48px;  }  .ctv\\:grid-cols-\\[80px_1fr_36px\\] {    grid-template-columns: 80px 1fr 36px;  }  .ctv\\:grid-cols-\\[max-content_1fr\\] {    grid-template-columns: max-content 1fr;  }  .ctv\\:grid-cols-\\[repeat\\(auto-fill\\,minmax\\(64px\\,1fr\\)\\)\\] {    grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));  }  .ctv\\:grid-cols-\\[repeat\\(auto-fill\\,minmax\\(88px\\,1fr\\)\\)\\] {    grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));  }  .ctv\\:grid-cols-\\[repeat\\(auto-fill\\,minmax\\(110px\\,1fr\\)\\)\\] {    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));  }  .ctv\\:flex-col {    flex-direction: column;  }  .ctv\\:flex-wrap {    flex-wrap: wrap;  }  .ctv\\:items-baseline {    align-items: baseline;  }  .ctv\\:items-center {    align-items: center;  }  .ctv\\:items-start {    align-items: flex-start;  }  .ctv\\:justify-around {    justify-content: space-around;  }  .ctv\\:justify-between {    justify-content: space-between;  }  .ctv\\:justify-center {    justify-content: center;  }  .ctv\\:justify-end {    justify-content: flex-end;  }  .ctv\\:gap-0\\.5 {    gap: calc(var(--ctv-spacing) * .5);  }  .ctv\\:gap-1 {    gap: calc(var(--ctv-spacing) * 1);  }  .ctv\\:gap-1\\.5 {    gap: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:gap-2 {    gap: calc(var(--ctv-spacing) * 2);  }  .ctv\\:gap-2\\.5 {    gap: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:gap-3 {    gap: calc(var(--ctv-spacing) * 3);  }  .ctv\\:gap-\\[3px\\] {    gap: 3px;  }  .ctv\\:gap-px {    gap: 1px;  }  .ctv\\:gap-x-2\\.5 {    column-gap: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:gap-y-\\[3px\\] {    row-gap: 3px;  }  .ctv\\:self-start {    align-self: flex-start;  }  .ctv\\:truncate {    text-overflow: ellipsis;    white-space: nowrap;    overflow: hidden;  }  .ctv\\:overflow-auto {    overflow: auto;  }  .ctv\\:overflow-hidden {    overflow: hidden;  }  .ctv\\:overflow-x-auto {    overflow-x: auto;  }  .ctv\\:overflow-y-auto {    overflow-y: auto;  }  .ctv\\:overflow-y-hidden {    overflow-y: hidden;  }  .ctv\\:overflow-y-scroll {    overflow-y: scroll;  }  .ctv\\:rounded {    border-radius: .25rem;  }  .ctv\\:rounded-full {    border-radius: 3.40282e38px;  }  .ctv\\:rounded-lg {    border-radius: var(--ctv-radius-lg);  }  .ctv\\:rounded-md {    border-radius: var(--ctv-radius-md);  }  .ctv\\:rounded-none {    border-radius: 0;  }  .ctv\\:rounded-sm {    border-radius: var(--ctv-radius-sm);  }  .ctv\\:rounded-t {    border-top-left-radius: .25rem;    border-top-right-radius: .25rem;  }  .ctv\\:border {    border-style: var(--tw-border-style);    border-width: 1px;  }  .ctv\\:border-0 {    border-style: var(--tw-border-style);    border-width: 0;  }  .ctv\\:border-2 {    border-style: var(--tw-border-style);    border-width: 2px;  }  .ctv\\:border-\\[2\\.5px\\] {    border-style: var(--tw-border-style);    border-width: 2.5px;  }  .ctv\\:border-t {    border-top-style: var(--tw-border-style);    border-top-width: 1px;  }  .ctv\\:border-b {    border-bottom-style: var(--tw-border-style);    border-bottom-width: 1px;  }  .ctv\\:border-b-0 {    border-bottom-style: var(--tw-border-style);    border-bottom-width: 0;  }  .ctv\\:border-l {    border-left-style: var(--tw-border-style);    border-left-width: 1px;  }  .ctv\\:border-l-2 {    border-left-style: var(--tw-border-style);    border-left-width: 2px;  }  .ctv\\:border-dashed {    --tw-border-style: dashed;    border-style: dashed;  }  .ctv\\:border-none {    --tw-border-style: none;    border-style: none;  }  .ctv\\:border-solid {    --tw-border-style: solid;    border-style: solid;  }  .ctv\\:border-\\[rgb\\(200_130_255\\/0\\.4\\)\\] {    border-color: #c882ff66;  }  .ctv\\:border-\\[rgb\\(233_61_130\\/0\\.3\\)\\] {    border-color: #e93d824d;  }  .ctv\\:border-\\[rgb\\(233_61_130\\/0\\.4\\)\\] {    border-color: #e93d8266;  }  .ctv\\:border-black\\/70 {    border-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-black\\/70 {      border-color: color-mix(in oklab, var(--ctv-color-black) 70%, transparent);    }  }  .ctv\\:border-border-default {    border-color: var(--border-default, #ffffff26);  }  .ctv\\:border-border-subtle {    border-color: var(--border-subtle, #ffffff14);  }  .ctv\\:border-destructive-background, .ctv\\:border-destructive-background\\/30 {    border-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-destructive-background\\/30 {      border-color: color-mix(in oklab, var(--destructive-background, #c0392b) 30%, transparent);    }  }  .ctv\\:border-destructive-background\\/50 {    border-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-destructive-background\\/50 {      border-color: color-mix(in oklab, var(--destructive-background, #c0392b) 50%, transparent);    }  }  .ctv\\:border-destructive-background\\/55 {    border-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-destructive-background\\/55 {      border-color: color-mix(in oklab, var(--destructive-background, #c0392b) 55%, transparent);    }  }  .ctv\\:border-primary-background, .ctv\\:border-primary-background\\/30 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/30 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 30%, transparent);    }  }  .ctv\\:border-primary-background\\/40 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/40 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 40%, transparent);    }  }  .ctv\\:border-primary-background\\/45 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/45 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 45%, transparent);    }  }  .ctv\\:border-primary-background\\/50 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/50 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 50%, transparent);    }  }  .ctv\\:border-primary-background\\/60 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/60 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 60%, transparent);    }  }  .ctv\\:border-primary-background\\/70 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/70 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 70%, transparent);    }  }  .ctv\\:border-success-background\\/30 {    border-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-success-background\\/30 {      border-color: color-mix(in oklab, var(--success-background, #2e9e4f) 30%, transparent);    }  }  .ctv\\:border-success-background\\/50 {    border-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-success-background\\/50 {      border-color: color-mix(in oklab, var(--success-background, #2e9e4f) 50%, transparent);    }  }  .ctv\\:border-transparent {    border-color: #0000;  }  .ctv\\:border-warning-background\\/25 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/25 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 25%, transparent);    }  }  .ctv\\:border-warning-background\\/40 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/40 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 40%, transparent);    }  }  .ctv\\:border-warning-background\\/50 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/50 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 50%, transparent);    }  }  .ctv\\:border-warning-background\\/55 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/55 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 55%, transparent);    }  }  .ctv\\:border-warning-background\\/70 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/70 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 70%, transparent);    }  }  .ctv\\:border-white, .ctv\\:border-white\\/10 {    border-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-white\\/10 {      border-color: color-mix(in oklab, var(--ctv-color-white) 10%, transparent);    }  }  .ctv\\:border-white\\/15 {    border-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-white\\/15 {      border-color: color-mix(in oklab, var(--ctv-color-white) 15%, transparent);    }  }  .ctv\\:border-white\\/20 {    border-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-white\\/20 {      border-color: color-mix(in oklab, var(--ctv-color-white) 20%, transparent);    }  }  .ctv\\:border-white\\/30 {    border-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-white\\/30 {      border-color: color-mix(in oklab, var(--ctv-color-white) 30%, transparent);    }  }  .ctv\\:border-b-transparent {    border-bottom-color: #0000;  }  .ctv\\:border-b-warning-background\\/15 {    border-bottom-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-b-warning-background\\/15 {      border-bottom-color: color-mix(in oklab, var(--warning-background, #d39e00) 15%, transparent);    }  }  .ctv\\:bg-\\[rgb\\(78_168_255\\/0\\.25\\)\\] {    background-color: #4ea8ff40;  }  .ctv\\:bg-\\[rgb\\(120_200_120\\/0\\.25\\)\\] {    background-color: #78c87840;  }  .ctv\\:bg-\\[rgb\\(200_130_255\\/0\\.25\\)\\] {    background-color: #c882ff40;  }  .ctv\\:bg-\\[rgb\\(255_100_100\\/0\\.22\\)\\] {    background-color: #ff646438;  }  .ctv\\:bg-\\[rgb\\(255_140_200\\/0\\.25\\)\\] {    background-color: #ff8cc840;  }  .ctv\\:bg-\\[rgb\\(255_140_200\\/0\\.85\\)\\] {    background-color: #ff8cc8d9;  }  .ctv\\:bg-\\[rgb\\(255_171_64\\/0\\.25\\)\\] {    background-color: #ffab4040;  }  .ctv\\:bg-base-background {    background-color: var(--base-background, #1e1e1e);  }  .ctv\\:bg-base-foreground\\/5 {    background-color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-base-foreground\\/5 {      background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 5%, transparent);    }  }  .ctv\\:bg-base-foreground\\/10 {    background-color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-base-foreground\\/10 {      background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 10%, transparent);    }  }  .ctv\\:bg-base-foreground\\/\\[0\\.03\\] {    background-color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-base-foreground\\/\\[0\\.03\\] {      background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 3%, transparent);    }  }  .ctv\\:bg-black, .ctv\\:bg-black\\/20 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/20 {      background-color: color-mix(in oklab, var(--ctv-color-black) 20%, transparent);    }  }  .ctv\\:bg-black\\/30 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/30 {      background-color: color-mix(in oklab, var(--ctv-color-black) 30%, transparent);    }  }  .ctv\\:bg-black\\/50 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/50 {      background-color: color-mix(in oklab, var(--ctv-color-black) 50%, transparent);    }  }  .ctv\\:bg-black\\/55 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/55 {      background-color: color-mix(in oklab, var(--ctv-color-black) 55%, transparent);    }  }  .ctv\\:bg-black\\/60 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/60 {      background-color: color-mix(in oklab, var(--ctv-color-black) 60%, transparent);    }  }  .ctv\\:bg-black\\/65 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/65 {      background-color: color-mix(in oklab, var(--ctv-color-black) 65%, transparent);    }  }  .ctv\\:bg-black\\/70 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/70 {      background-color: color-mix(in oklab, var(--ctv-color-black) 70%, transparent);    }  }  .ctv\\:bg-black\\/80 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/80 {      background-color: color-mix(in oklab, var(--ctv-color-black) 80%, transparent);    }  }  .ctv\\:bg-black\\/90 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/90 {      background-color: color-mix(in oklab, var(--ctv-color-black) 90%, transparent);    }  }  .ctv\\:bg-destructive-background, .ctv\\:bg-destructive-background\\/10 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-destructive-background\\/10 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 10%, transparent);    }  }  .ctv\\:bg-destructive-background\\/15 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-destructive-background\\/15 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 15%, transparent);    }  }  .ctv\\:bg-destructive-background\\/30 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-destructive-background\\/30 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 30%, transparent);    }  }  .ctv\\:bg-destructive-background\\/70 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-destructive-background\\/70 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 70%, transparent);    }  }  .ctv\\:bg-interface-menu-component-surface-hovered {    background-color: var(--interface-menu-component-surface-hovered, #ffffff14);  }  .ctv\\:bg-interface-menu-component-surface-selected {    background-color: var(--interface-menu-component-surface-selected, #4ea8ff2e);  }  .ctv\\:bg-interface-menu-surface, .ctv\\:bg-interface-menu-surface\\/85 {    background-color: var(--interface-menu-surface, #232323);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-interface-menu-surface\\/85 {      background-color: color-mix(in oklab, var(--interface-menu-surface, #232323) 85%, transparent);    }  }  .ctv\\:bg-interface-panel-surface, .ctv\\:bg-interface-panel-surface\\/90 {    background-color: var(--interface-panel-surface, #1e1e1e);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-interface-panel-surface\\/90 {      background-color: color-mix(in oklab, var(--interface-panel-surface, #1e1e1e) 90%, transparent);    }  }  .ctv\\:bg-primary-background, .ctv\\:bg-primary-background\\/5 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/5 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 5%, transparent);    }  }  .ctv\\:bg-primary-background\\/10 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/10 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 10%, transparent);    }  }  .ctv\\:bg-primary-background\\/15 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/15 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 15%, transparent);    }  }  .ctv\\:bg-primary-background\\/20 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/20 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 20%, transparent);    }  }  .ctv\\:bg-primary-background\\/25 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/25 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 25%, transparent);    }  }  .ctv\\:bg-primary-background\\/30 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/30 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 30%, transparent);    }  }  .ctv\\:bg-secondary-background {    background-color: var(--secondary-background, #ffffff0f);  }  .ctv\\:bg-secondary-background-selected {    background-color: var(--secondary-background-selected, #4ea8ff33);  }  .ctv\\:bg-success-background\\/5 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-success-background\\/5 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 5%, transparent);    }  }  .ctv\\:bg-success-background\\/10 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-success-background\\/10 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 10%, transparent);    }  }  .ctv\\:bg-success-background\\/15 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-success-background\\/15 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 15%, transparent);    }  }  .ctv\\:bg-success-background\\/20 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-success-background\\/20 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 20%, transparent);    }  }  .ctv\\:bg-transparent {    background-color: #0000;  }  .ctv\\:bg-warning-background, .ctv\\:bg-warning-background\\/5 {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/5 {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 5%, transparent);    }  }  .ctv\\:bg-warning-background\\/10 {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/10 {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 10%, transparent);    }  }  .ctv\\:bg-warning-background\\/15 {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/15 {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 15%, transparent);    }  }  .ctv\\:bg-warning-background\\/30 {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/30 {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 30%, transparent);    }  }  .ctv\\:bg-warning-background\\/\\[0\\.03\\] {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/\\[0\\.03\\] {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 3%, transparent);    }  }  .ctv\\:bg-white, .ctv\\:bg-white\\/10 {    background-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-white\\/10 {      background-color: color-mix(in oklab, var(--ctv-color-white) 10%, transparent);    }  }  .ctv\\:bg-white\\/30 {    background-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-white\\/30 {      background-color: color-mix(in oklab, var(--ctv-color-white) 30%, transparent);    }  }  .ctv\\:bg-white\\/70 {    background-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-white\\/70 {      background-color: color-mix(in oklab, var(--ctv-color-white) 70%, transparent);    }  }  .ctv\\:bg-white\\/85 {    background-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-white\\/85 {      background-color: color-mix(in oklab, var(--ctv-color-white) 85%, transparent);    }  }  .ctv\\:bg-linear-to-b {    --tw-gradient-position: to bottom;  }  @supports (background-image: linear-gradient(in lab, red, red)) {    .ctv\\:bg-linear-to-b {      --tw-gradient-position: to bottom in oklab;    }  }  .ctv\\:bg-linear-to-b {    background-image: linear-gradient(var(--tw-gradient-stops));  }  .ctv\\:bg-linear-to-r {    --tw-gradient-position: to right;  }  @supports (background-image: linear-gradient(in lab, red, red)) {    .ctv\\:bg-linear-to-r {      --tw-gradient-position: to right in oklab;    }  }  .ctv\\:bg-linear-to-r {    background-image: linear-gradient(var(--tw-gradient-stops));  }  .ctv\\:from-primary-background\\/85 {    --tw-gradient-from: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:from-primary-background\\/85 {      --tw-gradient-from: color-mix(in oklab, var(--primary-background, #4ea8ff99) 85%, transparent);    }  }  .ctv\\:from-primary-background\\/85 {    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .ctv\\:from-transparent {    --tw-gradient-from: transparent;    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .ctv\\:to-black\\/75 {    --tw-gradient-to: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:to-black\\/75 {      --tw-gradient-to: color-mix(in oklab, var(--ctv-color-black) 75%, transparent);    }  }  .ctv\\:to-black\\/75 {    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .ctv\\:to-primary-background-hover\\/85 {    --tw-gradient-to: var(--primary-background-hover, #4ea8ffbf);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:to-primary-background-hover\\/85 {      --tw-gradient-to: color-mix(in oklab, var(--primary-background-hover, #4ea8ffbf) 85%, transparent);    }  }  .ctv\\:to-primary-background-hover\\/85 {    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .ctv\\:fill-current {    fill: currentColor;  }  .ctv\\:object-contain {    object-fit: contain;  }  .ctv\\:object-cover {    object-fit: cover;  }  .ctv\\:p-0 {    padding: calc(var(--ctv-spacing) * 0);  }  .ctv\\:p-0\\.5 {    padding: calc(var(--ctv-spacing) * .5);  }  .ctv\\:p-1 {    padding: calc(var(--ctv-spacing) * 1);  }  .ctv\\:p-1\\.5 {    padding: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:p-2 {    padding: calc(var(--ctv-spacing) * 2);  }  .ctv\\:p-2\\.5 {    padding: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:p-3 {    padding: calc(var(--ctv-spacing) * 3);  }  .ctv\\:p-3\\.5 {    padding: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:p-4 {    padding: calc(var(--ctv-spacing) * 4);  }  .ctv\\:p-6 {    padding: calc(var(--ctv-spacing) * 6);  }  .ctv\\:px-0\\.5 {    padding-inline: calc(var(--ctv-spacing) * .5);  }  .ctv\\:px-1 {    padding-inline: calc(var(--ctv-spacing) * 1);  }  .ctv\\:px-1\\.5 {    padding-inline: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:px-2 {    padding-inline: calc(var(--ctv-spacing) * 2);  }  .ctv\\:px-2\\.5 {    padding-inline: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:px-3 {    padding-inline: calc(var(--ctv-spacing) * 3);  }  .ctv\\:px-3\\.5 {    padding-inline: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:px-4 {    padding-inline: calc(var(--ctv-spacing) * 4);  }  .ctv\\:px-\\[3px\\] {    padding-inline: 3px;  }  .ctv\\:px-\\[5px\\] {    padding-inline: 5px;  }  .ctv\\:py-0 {    padding-block: calc(var(--ctv-spacing) * 0);  }  .ctv\\:py-0\\.5 {    padding-block: calc(var(--ctv-spacing) * .5);  }  .ctv\\:py-1 {    padding-block: calc(var(--ctv-spacing) * 1);  }  .ctv\\:py-1\\.5 {    padding-block: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:py-2 {    padding-block: calc(var(--ctv-spacing) * 2);  }  .ctv\\:py-2\\.5 {    padding-block: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:py-4 {    padding-block: calc(var(--ctv-spacing) * 4);  }  .ctv\\:py-5 {    padding-block: calc(var(--ctv-spacing) * 5);  }  .ctv\\:py-\\[3px\\] {    padding-block: 3px;  }  .ctv\\:py-\\[5px\\] {    padding-block: 5px;  }  .ctv\\:py-px {    padding-block: 1px;  }  .ctv\\:pt-1 {    padding-top: calc(var(--ctv-spacing) * 1);  }  .ctv\\:pt-2 {    padding-top: calc(var(--ctv-spacing) * 2);  }  .ctv\\:pt-2\\.5 {    padding-top: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:pt-3\\.5 {    padding-top: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:pb-1 {    padding-bottom: calc(var(--ctv-spacing) * 1);  }  .ctv\\:pb-2 {    padding-bottom: calc(var(--ctv-spacing) * 2);  }  .ctv\\:pb-3\\.5 {    padding-bottom: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:pb-6 {    padding-bottom: calc(var(--ctv-spacing) * 6);  }  .ctv\\:pl-1\\.5 {    padding-left: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:text-center {    text-align: center;  }  .ctv\\:text-left {    text-align: left;  }  .ctv\\:text-right {    text-align: right;  }  .ctv\\:\\[font-family\\:inherit\\] {    font-family: inherit;  }  .ctv\\:font-mono {    font-family: var(--ctv-font-mono);  }  .ctv\\:text-2xs {    font-size: var(--ctv-text-2xs);    line-height: var(--tw-leading, var(--ctv-text-2xs--line-height));  }  .ctv\\:text-3xs {    font-size: var(--ctv-text-3xs);    line-height: var(--tw-leading, var(--ctv-text-3xs--line-height));  }  .ctv\\:text-lg {    font-size: var(--ctv-text-lg);    line-height: var(--tw-leading, var(--ctv-text-lg--line-height));  }  .ctv\\:text-sm {    font-size: var(--ctv-text-sm);    line-height: var(--tw-leading, var(--ctv-text-sm--line-height));  }  .ctv\\:text-xs {    font-size: var(--ctv-text-xs);    line-height: var(--tw-leading, var(--ctv-text-xs--line-height));  }  .ctv\\:text-\\[8px\\] {    font-size: 8px;  }  .ctv\\:text-\\[11px\\] {    font-size: 11px;  }  .ctv\\:text-\\[13px\\] {    font-size: 13px;  }  .ctv\\:text-\\[22px\\] {    font-size: 22px;  }  .ctv\\:text-\\[28px\\] {    font-size: 28px;  }  .ctv\\:text-\\[32px\\] {    font-size: 32px;  }  .ctv\\:leading-\\[1\\.3\\] {    --tw-leading: 1.3;    line-height: 1.3;  }  .ctv\\:leading-none {    --tw-leading: 1;    line-height: 1;  }  .ctv\\:leading-snug {    --tw-leading: var(--ctv-leading-snug);    line-height: var(--ctv-leading-snug);  }  .ctv\\:leading-tight {    --tw-leading: var(--ctv-leading-tight);    line-height: var(--ctv-leading-tight);  }  .ctv\\:font-bold {    --tw-font-weight: var(--ctv-font-weight-bold);    font-weight: var(--ctv-font-weight-bold);  }  .ctv\\:font-medium {    --tw-font-weight: var(--ctv-font-weight-medium);    font-weight: var(--ctv-font-weight-medium);  }  .ctv\\:font-semibold {    --tw-font-weight: var(--ctv-font-weight-semibold);    font-weight: var(--ctv-font-weight-semibold);  }  .ctv\\:tracking-wide {    --tw-tracking: var(--ctv-tracking-wide);    letter-spacing: var(--ctv-tracking-wide);  }  .ctv\\:tracking-wider {    --tw-tracking: var(--ctv-tracking-wider);    letter-spacing: var(--ctv-tracking-wider);  }  .ctv\\:break-words {    overflow-wrap: break-word;  }  .ctv\\:break-all {    word-break: break-all;  }  .ctv\\:text-ellipsis {    text-overflow: ellipsis;  }  .ctv\\:whitespace-normal {    white-space: normal;  }  .ctv\\:whitespace-nowrap {    white-space: nowrap;  }  .ctv\\:whitespace-pre-wrap {    white-space: pre-wrap;  }  .ctv\\:text-\\[\\#00FFD0\\] {    color: #00ffd0;  }  .ctv\\:text-\\[\\#9dd0ff\\] {    color: #9dd0ff;  }  .ctv\\:text-\\[\\#E93D82\\] {    color: #e93d82;  }  .ctv\\:text-\\[\\#FFB800\\] {    color: #ffb800;  }  .ctv\\:text-\\[\\#b5e3a5\\] {    color: #b5e3a5;  }  .ctv\\:text-\\[\\#d8b0ff\\] {    color: #d8b0ff;  }  .ctv\\:text-\\[\\#ffb0b0\\] {    color: #ffb0b0;  }  .ctv\\:text-\\[\\#ffb0d8\\] {    color: #ffb0d8;  }  .ctv\\:text-\\[\\#ffd089\\] {    color: #ffd089;  }  .ctv\\:text-base-foreground, .ctv\\:text-base-foreground\\/80 {    color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-base-foreground\\/80 {      color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 80%, transparent);    }  }  .ctv\\:text-destructive-background {    color: var(--destructive-background, #c0392b);  }  .ctv\\:text-gray-600 {    color: var(--ctv-color-gray-600);  }  .ctv\\:text-inherit {    color: inherit;  }  .ctv\\:text-muted-foreground, .ctv\\:text-muted-foreground\\/60 {    color: var(--muted-foreground, #888);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-muted-foreground\\/60 {      color: color-mix(in oklab, var(--muted-foreground, #888) 60%, transparent);    }  }  .ctv\\:text-primary-background {    color: var(--primary-background, #4ea8ff99);  }  .ctv\\:text-secondary-foreground {    color: var(--secondary-foreground, var(--base-foreground, #e0e0e0));  }  .ctv\\:text-success-background {    color: var(--success-background, #2e9e4f);  }  .ctv\\:text-warning-background, .ctv\\:text-warning-background\\/70 {    color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-warning-background\\/70 {      color: color-mix(in oklab, var(--warning-background, #d39e00) 70%, transparent);    }  }  .ctv\\:text-warning-background\\/75 {    color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-warning-background\\/75 {      color: color-mix(in oklab, var(--warning-background, #d39e00) 75%, transparent);    }  }  .ctv\\:text-white, .ctv\\:text-white\\/30 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/30 {      color: color-mix(in oklab, var(--ctv-color-white) 30%, transparent);    }  }  .ctv\\:text-white\\/35 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/35 {      color: color-mix(in oklab, var(--ctv-color-white) 35%, transparent);    }  }  .ctv\\:text-white\\/40 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/40 {      color: color-mix(in oklab, var(--ctv-color-white) 40%, transparent);    }  }  .ctv\\:text-white\\/50 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/50 {      color: color-mix(in oklab, var(--ctv-color-white) 50%, transparent);    }  }  .ctv\\:text-white\\/70 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/70 {      color: color-mix(in oklab, var(--ctv-color-white) 70%, transparent);    }  }  .ctv\\:text-white\\/85 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/85 {      color: color-mix(in oklab, var(--ctv-color-white) 85%, transparent);    }  }  .ctv\\:text-white\\/90 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/90 {      color: color-mix(in oklab, var(--ctv-color-white) 90%, transparent);    }  }  .ctv\\:uppercase {    text-transform: uppercase;  }  .ctv\\:italic {    font-style: italic;  }  .ctv\\:opacity-0 {    opacity: 0;  }  .ctv\\:opacity-50 {    opacity: .5;  }  .ctv\\:opacity-55 {    opacity: .55;  }  .ctv\\:opacity-60 {    opacity: .6;  }  .ctv\\:opacity-70 {    opacity: .7;  }  .ctv\\:opacity-75 {    opacity: .75;  }  .ctv\\:opacity-80 {    opacity: .8;  }  .ctv\\:opacity-100 {    opacity: 1;  }  .ctv\\:shadow-\\[0_0_0_1px_rgb\\(255_255_255\\/0\\.8\\)\\] {    --tw-shadow: 0 0 0 1px var(--tw-shadow-color, #fffc);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_0_1px_var\\(--primary-background\\)\\] {    --tw-shadow: 0 0 0 1px var(--tw-shadow-color, var(--primary-background));    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_0_9999px_rgb\\(0_0_0\\/0\\.5\\)\\] {    --tw-shadow: 0 0 0 9999px var(--tw-shadow-color, #00000080);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_2px_rgb\\(0_0_0\\/0\\.6\\)\\] {    --tw-shadow: 0 0 2px var(--tw-shadow-color, #0009);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_4px_rgb\\(0_0_0\\/0\\.6\\)\\] {    --tw-shadow: 0 0 4px var(--tw-shadow-color, #0009);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_8px_var\\(--primary-background\\)\\] {    --tw-shadow: 0 0 8px var(--tw-shadow-color, var(--primary-background));    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_1px_4px_rgb\\(0_0_0\\/0\\.5\\)\\] {    --tw-shadow: 0 1px 4px var(--tw-shadow-color, #00000080);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_8px_40px_rgb\\(0_0_0\\/0\\.6\\)\\] {    --tw-shadow: 0 8px 40px var(--tw-shadow-color, #0009);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_16px_48px_rgb\\(0_0_0\\/0\\.5\\)\\] {    --tw-shadow: 0 16px 48px var(--tw-shadow-color, #00000080);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-md {    --tw-shadow: 0 4px 6px -1px var(--tw-shadow-color, #0000001a), 0 2px 4px -2px var(--tw-shadow-color, #0000001a);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:ring-3 {    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:ring-primary-background {    --tw-ring-color: var(--primary-background, #4ea8ff99);  }  .ctv\\:outline, .ctv\\:outline-1 {    outline-style: var(--tw-outline-style);    outline-width: 1px;  }  .ctv\\:-outline-offset-1 {    outline-offset: calc(1px * -1);  }  .ctv\\:outline-destructive-background\\/55 {    outline-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:outline-destructive-background\\/55 {      outline-color: color-mix(in oklab, var(--destructive-background, #c0392b) 55%, transparent);    }  }  .ctv\\:outline-warning-background\\/50 {    outline-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:outline-warning-background\\/50 {      outline-color: color-mix(in oklab, var(--warning-background, #d39e00) 50%, transparent);    }  }  .ctv\\:outline-white\\/70 {    outline-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:outline-white\\/70 {      outline-color: color-mix(in oklab, var(--ctv-color-white) 70%, transparent);    }  }  .ctv\\:backdrop-blur {    --tw-backdrop-blur: blur(8px);    -webkit-backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );    backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );  }  .ctv\\:backdrop-blur-\\[2px\\] {    --tw-backdrop-blur: blur(2px);    -webkit-backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );    backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );  }  .ctv\\:backdrop-blur-sm {    --tw-backdrop-blur: blur(var(--ctv-blur-sm));    -webkit-backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );    backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );  }  .ctv\\:transition-\\[width\\] {    transition-property: width;    transition-timing-function: var(--tw-ease, var(--ctv-default-transition-timing-function));    transition-duration: var(--tw-duration, var(--ctv-default-transition-duration));  }  .ctv\\:transition-all {    transition-property: all;    transition-timing-function: var(--tw-ease, var(--ctv-default-transition-timing-function));    transition-duration: var(--tw-duration, var(--ctv-default-transition-duration));  }  .ctv\\:transition-colors {    transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;    transition-timing-function: var(--tw-ease, var(--ctv-default-transition-timing-function));    transition-duration: var(--tw-duration, var(--ctv-default-transition-duration));  }  .ctv\\:transition-opacity {    transition-property: opacity;    transition-timing-function: var(--tw-ease, var(--ctv-default-transition-timing-function));    transition-duration: var(--tw-duration, var(--ctv-default-transition-duration));  }  .ctv\\:duration-150 {    --tw-duration: .15s;    transition-duration: .15s;  }  .ctv\\:duration-200 {    --tw-duration: .2s;    transition-duration: .2s;  }  .ctv\\:ease-in {    --tw-ease: var(--ctv-ease-in);    transition-timing-function: var(--ctv-ease-in);  }  .ctv\\:ease-in-out {    --tw-ease: var(--ctv-ease-in-out);    transition-timing-function: var(--ctv-ease-in-out);  }  .ctv\\:ease-out {    --tw-ease: var(--ctv-ease-out);    transition-timing-function: var(--ctv-ease-out);  }  .ctv\\:will-change-transform {    will-change: transform;  }  .ctv\\:outline-none {    --tw-outline-style: none;    outline-style: none;  }  .ctv\\:select-none {    -webkit-user-select: none;    user-select: none;  }  .ctv\\:\\[-webkit-box-orient\\:vertical\\] {    -webkit-box-orient: vertical;  }  .ctv\\:\\[-webkit-line-clamp\\:5\\] {    -webkit-line-clamp: 5;  }  .ctv\\:ring-inset {    --tw-ring-inset: inset;  }  @media (hover: hover) {    .ctv\\:group-hover\\:flex:is(:where(.ctv\\:group):hover *) {      display: flex;    }    .ctv\\:group-hover\\:opacity-100:is(:where(.ctv\\:group):hover *) {      opacity: 1;    }  }  .ctv\\:placeholder\\:text-muted-foreground::placeholder {    color: var(--muted-foreground, #888);  }  @media (hover: hover) {    .ctv\\:hover\\:border-\\[\\#E93D82\\]:hover {      border-color: #e93d82;    }    .ctv\\:hover\\:border-border-default:hover {      border-color: var(--border-default, #ffffff26);    }    .ctv\\:hover\\:border-border-subtle:hover {      border-color: var(--border-subtle, #ffffff14);    }    .ctv\\:hover\\:border-destructive-background:hover {      border-color: var(--destructive-background, #c0392b);    }    .ctv\\:hover\\:border-primary-background:hover, .ctv\\:hover\\:border-primary-background\\/50:hover {      border-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:border-primary-background\\/50:hover {        border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 50%, transparent);      }    }    .ctv\\:hover\\:border-primary-background\\/60:hover {      border-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:border-primary-background\\/60:hover {        border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 60%, transparent);      }    }    .ctv\\:hover\\:border-primary-background\\/70:hover {      border-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:border-primary-background\\/70:hover {        border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 70%, transparent);      }    }    .ctv\\:hover\\:border-white\\/40:hover {      border-color: var(--ctv-color-white);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:border-white\\/40:hover {        border-color: color-mix(in oklab, var(--ctv-color-white) 40%, transparent);      }    }    .ctv\\:hover\\:border-white\\/55:hover {      border-color: var(--ctv-color-white);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:border-white\\/55:hover {        border-color: color-mix(in oklab, var(--ctv-color-white) 55%, transparent);      }    }    .ctv\\:hover\\:bg-\\[rgb\\(233_61_130\\/0\\.2\\)\\]:hover {      background-color: #e93d8233;    }    .ctv\\:hover\\:bg-base-foreground\\/5:hover {      background-color: var(--base-foreground, #e0e0e0);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-base-foreground\\/5:hover {        background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 5%, transparent);      }    }    .ctv\\:hover\\:bg-black\\/85:hover {      background-color: var(--ctv-color-black);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-black\\/85:hover {        background-color: color-mix(in oklab, var(--ctv-color-black) 85%, transparent);      }    }    .ctv\\:hover\\:bg-destructive-background:hover {      background-color: var(--destructive-background, #c0392b);    }    .ctv\\:hover\\:bg-destructive-background-hover:hover {      background-color: var(--destructive-background-hover, #d44637);    }    .ctv\\:hover\\:bg-destructive-background\\/10:hover {      background-color: var(--destructive-background, #c0392b);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-destructive-background\\/10:hover {        background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 10%, transparent);      }    }    .ctv\\:hover\\:bg-destructive-background\\/30:hover {      background-color: var(--destructive-background, #c0392b);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-destructive-background\\/30:hover {        background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 30%, transparent);      }    }    .ctv\\:hover\\:bg-destructive-background\\/80:hover {      background-color: var(--destructive-background, #c0392b);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-destructive-background\\/80:hover {        background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 80%, transparent);      }    }    .ctv\\:hover\\:bg-interface-menu-component-surface-hovered:hover {      background-color: var(--interface-menu-component-surface-hovered, #ffffff14);    }    .ctv\\:hover\\:bg-primary-background-hover:hover {      background-color: var(--primary-background-hover, #4ea8ffbf);    }    .ctv\\:hover\\:bg-primary-background\\/15:hover {      background-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-primary-background\\/15:hover {        background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 15%, transparent);      }    }    .ctv\\:hover\\:bg-primary-background\\/20:hover {      background-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-primary-background\\/20:hover {        background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 20%, transparent);      }    }    .ctv\\:hover\\:bg-primary-background\\/25:hover {      background-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-primary-background\\/25:hover {        background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 25%, transparent);      }    }    .ctv\\:hover\\:bg-primary-background\\/90:hover {      background-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-primary-background\\/90:hover {        background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 90%, transparent);      }    }    .ctv\\:hover\\:bg-secondary-background-hover:hover {      background-color: var(--secondary-background-hover, #ffffff1a);    }    .ctv\\:hover\\:bg-warning-background\\/10:hover {      background-color: var(--warning-background, #d39e00);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-warning-background\\/10:hover {        background-color: color-mix(in oklab, var(--warning-background, #d39e00) 10%, transparent);      }    }    .ctv\\:hover\\:bg-white\\/30:hover {      background-color: var(--ctv-color-white);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-white\\/30:hover {        background-color: color-mix(in oklab, var(--ctv-color-white) 30%, transparent);      }    }    .ctv\\:hover\\:bg-white\\/90:hover {      background-color: var(--ctv-color-white);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-white\\/90:hover {        background-color: color-mix(in oklab, var(--ctv-color-white) 90%, transparent);      }    }    .ctv\\:hover\\:text-base-foreground:hover {      color: var(--base-foreground, #e0e0e0);    }    .ctv\\:hover\\:text-destructive-background:hover {      color: var(--destructive-background, #c0392b);    }    .ctv\\:hover\\:text-primary-background:hover {      color: var(--primary-background, #4ea8ff99);    }    .ctv\\:hover\\:text-warning-background:hover {      color: var(--warning-background, #d39e00);    }    .ctv\\:hover\\:opacity-100:hover {      opacity: 1;    }  }  .ctv\\:focus\\:border-\\[\\#00FFD0\\]:focus {    border-color: #00ffd0;  }  .ctv\\:focus\\:border-\\[\\#E93D82\\]:focus {    border-color: #e93d82;  }  .ctv\\:focus\\:border-\\[\\#FFB800\\]:focus {    border-color: #ffb800;  }  .ctv\\:focus\\:border-node-component-border:focus {    border-color: var(--node-component-border, #fff3);  }  .ctv\\:focus\\:border-primary-background:focus, .ctv\\:focus\\:border-primary-background\\/50:focus {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:focus\\:border-primary-background\\/50:focus {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 50%, transparent);    }  }  .ctv\\:focus\\:bg-primary-background\\/10:focus {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:focus\\:bg-primary-background\\/10:focus {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 10%, transparent);    }  }  .ctv\\:focus\\:bg-secondary-background-hover:focus {    background-color: var(--secondary-background-hover, #ffffff1a);  }  .ctv\\:focus\\:outline:focus, .ctv\\:focus\\:outline-1:focus {    outline-style: var(--tw-outline-style);    outline-width: 1px;  }  .ctv\\:focus\\:outline-primary-background\\/50:focus {    outline-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:focus\\:outline-primary-background\\/50:focus {      outline-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 50%, transparent);    }  }  .ctv\\:focus\\:outline-none:focus {    --tw-outline-style: none;    outline-style: none;  }  .ctv\\:focus-visible\\:ring-1:focus-visible {    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:focus-visible\\:ring-border-default:focus-visible {    --tw-ring-color: var(--border-default, #ffffff26);  }  .ctv\\:focus-visible\\:outline-none:focus-visible {    --tw-outline-style: none;    outline-style: none;  }  .ctv\\:active\\:scale-95:active {    --tw-scale-x: 95%;    --tw-scale-y: 95%;    --tw-scale-z: 95%;    scale: var(--tw-scale-x) var(--tw-scale-y);  }  @media (hover: hover) {    .ctv\\:hover\\:enabled\\:bg-secondary-background-hover:hover:enabled {      background-color: var(--secondary-background-hover, #ffffff1a);    }  }  .ctv\\:disabled\\:pointer-events-none:disabled {    pointer-events: none;  }  .ctv\\:disabled\\:cursor-default:disabled {    cursor: default;  }  .ctv\\:disabled\\:cursor-not-allowed:disabled {    cursor: not-allowed;  }  .ctv\\:disabled\\:opacity-30:disabled {    opacity: .3;  }  .ctv\\:disabled\\:opacity-40:disabled {    opacity: .4;  }  .ctv\\:disabled\\:opacity-50:disabled {    opacity: .5;  }  .ctv\\:disabled\\:opacity-60:disabled {    opacity: .6;  }  @media (hover: hover) {    .ctv\\:disabled\\:hover\\:bg-secondary-background:disabled:hover {      background-color: var(--secondary-background, #ffffff0f);    }  }  .ctv\\:data-\\[highlighted\\]\\:bg-secondary-background-hover[data-highlighted] {    background-color: var(--secondary-background-hover, #ffffff1a);  }  .ctv\\:data-\\[state\\=checked\\]\\:bg-secondary-background-selected[data-state="checked"] {    background-color: var(--secondary-background-selected, #4ea8ff33);  }  @media (hover: hover) {    .ctv\\:data-\\[state\\=checked\\]\\:hover\\:bg-secondary-background-selected[data-state="checked"]:hover {      background-color: var(--secondary-background-selected, #4ea8ff33);    }  }  .ctv\\:data-\\[state\\=open\\]\\:border-node-component-border[data-state="open"] {    border-color: var(--node-component-border, #fff3);  }  .ctv\\:\\[\\&_\\+_\\&\\]\\:border-t + .ctv\\:\\[\\&_\\+_\\&\\]\\:border-t {    border-top-style: var(--tw-border-style);    border-top-width: 1px;  }  .ctv\\:\\[\\&_\\+_\\&\\]\\:border-solid + .ctv\\:\\[\\&_\\+_\\&\\]\\:border-solid {    --tw-border-style: solid;    border-style: solid;  }  .ctv\\:\\[\\&_\\+_\\&\\]\\:border-border-subtle + .ctv\\:\\[\\&_\\+_\\&\\]\\:border-border-subtle {    border-color: var(--border-subtle, #ffffff14);  }  .ctv\\:\\[\\&_\\+_\\&\\]\\:pt-1\\.5 + .ctv\\:\\[\\&_\\+_\\&\\]\\:pt-1\\.5 {    padding-top: calc(var(--ctv-spacing) * 1.5);  }}@property --tw-translate-x {  syntax: "*";  inherits: false;  initial-value: 0;}@property --tw-translate-y {  syntax: "*";  inherits: false;  initial-value: 0;}@property --tw-translate-z {  syntax: "*";  inherits: false;  initial-value: 0;}@property --tw-border-style {  syntax: "*";  inherits: false;  initial-value: solid;}@property --tw-gradient-position {  syntax: "*";  inherits: false}@property --tw-gradient-from {  syntax: "<color>";  inherits: false;  initial-value: #0000;}@property --tw-gradient-via {  syntax: "<color>";  inherits: false;  initial-value: #0000;}@property --tw-gradient-to {  syntax: "<color>";  inherits: false;  initial-value: #0000;}@property --tw-gradient-stops {  syntax: "*";  inherits: false}@property --tw-gradient-via-stops {  syntax: "*";  inherits: false}@property --tw-gradient-from-position {  syntax: "<length-percentage>";  inherits: false;  initial-value: 0%;}@property --tw-gradient-via-position {  syntax: "<length-percentage>";  inherits: false;  initial-value: 50%;}@property --tw-gradient-to-position {  syntax: "<length-percentage>";  inherits: false;  initial-value: 100%;}@property --tw-leading {  syntax: "*";  inherits: false}@property --tw-font-weight {  syntax: "*";  inherits: false}@property --tw-tracking {  syntax: "*";  inherits: false}@property --tw-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-shadow-color {  syntax: "*";  inherits: false}@property --tw-shadow-alpha {  syntax: "<percentage>";  inherits: false;  initial-value: 100%;}@property --tw-inset-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-inset-shadow-color {  syntax: "*";  inherits: false}@property --tw-inset-shadow-alpha {  syntax: "<percentage>";  inherits: false;  initial-value: 100%;}@property --tw-ring-color {  syntax: "*";  inherits: false}@property --tw-ring-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-inset-ring-color {  syntax: "*";  inherits: false}@property --tw-inset-ring-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-ring-inset {  syntax: "*";  inherits: false}@property --tw-ring-offset-width {  syntax: "<length>";  inherits: false;  initial-value: 0;}@property --tw-ring-offset-color {  syntax: "*";  inherits: false;  initial-value: #fff;}@property --tw-ring-offset-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-outline-style {  syntax: "*";  inherits: false;  initial-value: solid;}@property --tw-backdrop-blur {  syntax: "*";  inherits: false}@property --tw-backdrop-brightness {  syntax: "*";  inherits: false}@property --tw-backdrop-contrast {  syntax: "*";  inherits: false}@property --tw-backdrop-grayscale {  syntax: "*";  inherits: false}@property --tw-backdrop-hue-rotate {  syntax: "*";  inherits: false}@property --tw-backdrop-invert {  syntax: "*";  inherits: false}@property --tw-backdrop-opacity {  syntax: "*";  inherits: false}@property --tw-backdrop-saturate {  syntax: "*";  inherits: false}@property --tw-backdrop-sepia {  syntax: "*";  inherits: false}@property --tw-duration {  syntax: "*";  inherits: false}@property --tw-ease {  syntax: "*";  inherits: false}@property --tw-scale-x {  syntax: "*";  inherits: false;  initial-value: 1;}@property --tw-scale-y {  syntax: "*";  inherits: false;  initial-value: 1;}@property --tw-scale-z {  syntax: "*";  inherits: false;  initial-value: 1;}@keyframes pulse {  50% {    opacity: .5;  }}.comfytv-root, .comfytv-dialog {\r  --p-primary-color: #4ea8ff;\r  --p-primary-contrast-color: #fff;\r  --p-primary-hover-color: #66b6ff;\r  --p-primary-active-color: #3a96ee;\r\r  --p-surface-0:  #1e1e1e;\r  --p-surface-50: #232323;\r  --p-surface-100: #2a2a2a;\r  --p-surface-200: #333;\r  --p-surface-300: #3d3d3d;\r  --p-surface-400: #555;\r  --p-surface-500: #777;\r  --p-surface-600: #999;\r  --p-surface-700: #bbb;\r  --p-surface-800: #ddd;\r  --p-surface-900: #eee;\r  --p-surface-950: #f6f6f6;\r\r  --p-content-background: var(--p-surface-0);\r  --p-content-hover-background: var(--p-surface-100);\r  --p-content-border-color: var(--p-surface-300);\r  --p-content-border-radius: 4px;\r\r  --p-text-color: var(--p-surface-800);\r  --p-text-muted-color: var(--p-surface-600);\r\r  --p-mask-background: rgba(0, 0, 0, 0.55);\r\r  --p-focus-ring-width: 1px;\r  --p-focus-ring-style: solid;\r  --p-focus-ring-color: var(--p-primary-color);\r  --p-focus-ring-offset: 1px;\r}\r\r.comfytv-root {\r  font-size: 12px;\r  color: var(--p-text-color);\r}\r\r.comfytv-root .p-datatable {\r  font-size: 12px;\r  display: flex;\r  flex-direction: column;\r  height: 100%;\r  min-height: 0;\r  width: 100%;\r}\r.comfytv-root .p-datatable-table-container,\r.comfytv-root .p-datatable-wrapper {\r  flex: 1;\r  min-height: 0;\r  overflow: auto;\r}\r.comfytv-root .p-datatable-table {\r  border-collapse: separate;\r  border-spacing: 0;\r  table-layout: auto;\r}\r.comfytv-root .p-datatable-thead > tr > th {\r  background: var(--p-surface-100);\r  color: var(--p-text-color);\r  border-bottom: 1px solid var(--p-content-border-color);\r  padding: 6px 8px;\r  font-weight: 600;\r  text-align: left;\r}\r.comfytv-root .p-datatable-tbody > tr > td {\r  padding: 6px 8px;\r  border-bottom: 1px solid var(--p-content-border-color);\r  vertical-align: top;\r}\r.comfytv-root .p-datatable-tbody > tr.p-row-odd {\r  background: var(--p-surface-50);\r}\r.comfytv-root .p-datatable-tbody > tr:hover {\r  background: var(--p-content-hover-background);\r}\r.comfytv-root .p-datatable-frozen-column {\r  position: sticky;\r  left: 0;\r  z-index: 1;\r  background: inherit;\r}\r\r/* Select (dropdown) */\r.comfytv-root .p-select {\r  display: inline-flex;\r  align-items: center;\r  background: var(--p-surface-100);\r  border: 1px solid var(--p-content-border-color);\r  border-radius: 3px;\r  min-height: 22px;\r  cursor: pointer;\r  position: relative;\r}\r.comfytv-root .p-select:hover {\r  border-color: var(--p-surface-500);\r}\r.comfytv-root .p-select-focus {\r  border-color: var(--p-primary-color);\r}\r.comfytv-root .p-select-label {\r  padding: 2px 8px;\r  font-size: 11px;\r  color: var(--p-text-color);\r  flex: 1;\r  user-select: none;\r}\r.comfytv-root .p-select-dropdown {\r  padding: 0 6px;\r  color: var(--p-text-muted-color);\r}\r\r/* SelectButton (toggle group) */\r.comfytv-root .p-selectbutton {\r  display: inline-flex;\r  border: 1px solid var(--p-content-border-color);\r  border-radius: 3px;\r  overflow: hidden;\r}\r.comfytv-root .p-togglebutton {\r  background: var(--p-surface-100);\r  color: var(--p-text-muted-color);\r  border: none;\r  padding: 2px 10px;\r  font-size: 11px;\r  cursor: pointer;\r}\r.comfytv-root .p-togglebutton:hover {\r  background: var(--p-surface-200);\r  color: var(--p-text-color);\r}\r.comfytv-root .p-togglebutton-checked {\r  background: var(--p-primary-color);\r  color: var(--p-primary-contrast-color);\r}\r\r.comfytv-root .p-inputtext,\r.comfytv-root .cell-input,\r.comfytv-root .cell-textarea {\r  background: var(--p-surface-100);\r  border: 1px solid var(--p-primary-color);\r  color: var(--p-text-color);\r  font: inherit;\r  padding: 4px 6px;\r  border-radius: 3px;\r  width: 100%;\r  box-sizing: border-box;\r  outline: none;\r}\r.comfytv-root .cell-textarea {\r  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;\r  font-size: 11px;\r  line-height: 1.4;\r  resize: vertical;\r  min-height: 32px;\r}\r.comfytv-root .cell-select { width: 100%; }\r\r.comfytv-root .p-datatable-tbody > tr > td.p-editable-column { cursor: text; }\r.comfytv-root .p-datatable-tbody > tr > td.p-cell-editing {\r  padding: 2px !important;\r  background: rgba(78, 168, 255, 0.08);\r}\r\r.comfytv-dialog.p-dialog {\r  background: var(--p-surface-0);\r  border: 1px solid var(--p-content-border-color);\r  border-radius: 8px;\r  color: var(--p-text-color);\r  box-shadow: 0 24px 48px rgba(0,0,0,0.6);\r}\r.comfytv-dialog .p-dialog-header {\r  padding: 12px 16px;\r  border-bottom: 1px solid var(--p-content-border-color);\r  background: var(--p-surface-50);\r  border-radius: 8px 8px 0 0;\r  font-weight: 600;\r  display: flex;\r  justify-content: space-between;\r  align-items: center;\r}\r.comfytv-dialog .p-dialog-title {\r  font-size: 14px;\r}\r.comfytv-dialog .p-dialog-content {\r  padding: 16px;\r  background: var(--p-surface-0);\r  overflow: auto;\r}\r.comfytv-dialog .p-dialog-close-button {\r  background: transparent;\r  border: none;\r  color: var(--p-text-muted-color);\r  cursor: pointer;\r  font-size: 18px;\r  padding: 2px 6px;\r}\r.comfytv-dialog .p-dialog-close-button:hover {\r  color: var(--p-text-color);\r}\r\rbody > .p-blockui-mask.p-blockui-mask-document:empty,\rbody > .p-overlay-mask.p-blockui-mask-document.p-overlay-mask-leave:empty {\r  display: none !important;\r  pointer-events: none !important;\r}`));      document.head.appendChild(elementStyle);    }  } catch (e) {    console.error("vite-plugin-css-injected-by-js", e);  }})();
 var __defProp = Object.defineProperty;
 var __typeError = (msg) => {
   throw TypeError(msg);
@@ -26719,6 +26719,24 @@ function writeWidget(node, name, value, opts) {
   if ((opts == null ? void 0 : opts.fireCallback) === false) return;
   (_a2 = w.callback) == null ? void 0 : _a2.call(w, value);
 }
+function bindWidgetCallback(node, name, apply2) {
+  const w = getWidget(node, name);
+  if (!w) return;
+  const orig = w.callback;
+  w.callback = (value) => {
+    orig == null ? void 0 : orig.call(w, value);
+    apply2(value);
+  };
+}
+function onNodeConfigure(node, cb) {
+  if (!node) return;
+  const n = node;
+  const orig = n.onConfigure;
+  n.onConfigure = function(info) {
+    orig == null ? void 0 : orig.call(this, info);
+    cb();
+  };
+}
 const SLOT_BINDING_RE = /^upstream_image:(?:annotated|value|masked)\[(\d+)\]$/;
 function imageSlotsFromConfig(widgets) {
   var _a2;
@@ -27364,6 +27382,34 @@ function useWorkflowConfig(t2) {
     deleteBinding
   };
 }
+function groupExposedWidgets(widgets) {
+  const groups = [];
+  const groupIdx = /* @__PURE__ */ new Map();
+  const nodeIdx = /* @__PURE__ */ new Map();
+  for (const w of widgets) {
+    const gkey = w.group_title ?? "";
+    let gi = groupIdx.get(gkey);
+    if (gi === void 0) {
+      gi = groups.length;
+      groupIdx.set(gkey, gi);
+      groups.push({ title: w.group_title, nodes: [] });
+    }
+    const nkey = `${gi}/${w.node_id}`;
+    let ni = nodeIdx.get(nkey);
+    if (ni === void 0) {
+      ni = groups[gi].nodes.length;
+      nodeIdx.set(nkey, ni);
+      groups[gi].nodes.push({
+        node_id: w.node_id,
+        node_title: w.node_title,
+        node_type: w.node_type,
+        widgets: []
+      });
+    }
+    groups[gi].nodes[ni].widgets.push(w);
+  }
+  return groups;
+}
 const DEFAULT_CAPS_BY_KIND = {
   text: {
     upstream_kinds: ["text"],
@@ -27676,32 +27722,7 @@ const _sfc_main$y = /* @__PURE__ */ defineComponent({
     );
     const groupedWidgets = computed(() => {
       var _a2;
-      const groups = [];
-      const groupIdx = /* @__PURE__ */ new Map();
-      const nodeIdx = /* @__PURE__ */ new Map();
-      for (const w of ((_a2 = config2.value) == null ? void 0 : _a2.exposed_widgets) ?? []) {
-        const gkey = w.group_title ?? "";
-        let gi = groupIdx.get(gkey);
-        if (gi === void 0) {
-          gi = groups.length;
-          groupIdx.set(gkey, gi);
-          groups.push({ title: w.group_title, nodes: [] });
-        }
-        const nkey = `${gi}/${w.node_id}`;
-        let ni = nodeIdx.get(nkey);
-        if (ni === void 0) {
-          ni = groups[gi].nodes.length;
-          nodeIdx.set(nkey, ni);
-          groups[gi].nodes.push({
-            node_id: w.node_id,
-            node_title: w.node_title,
-            node_type: w.node_type,
-            widgets: []
-          });
-        }
-        groups[gi].nodes[ni].widgets.push(w);
-      }
-      return groups;
+      return groupExposedWidgets(((_a2 = config2.value) == null ? void 0 : _a2.exposed_widgets) ?? []);
     });
     const {
       isStageBound,
@@ -27948,6 +27969,198 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
     };
   }
 });
+const workflow$1 = { "uploadButton": "⬆ Upload workflow", "imported": 'Imported "{label}"', "importFailed": "Workflow import failed", "notJson": "That file isn't valid JSON" };
+const stage$1 = { "run": "Run", "rerun": "Re-run", "running": "Running…", "cancel": "Cancel", "preparingWorkflow": "Preparing workflow…", "section": { "context": "Context", "pool": "Pool", "output": "Output ({type})", "actions": "Actions" }, "pool": { "clear": "Clear", "clearHint": "Empty the picker pool and reset the selection", "confirmClear": "Clear pool?", "confirm": "Yes", "cancel": "No" }, "empty": { "no_output": "no output yet", "generating": "generating…", "pending_upstream": "upstream pending", "unsupported_type": "unsupported type {type}" }, "source": { "upstream": "← upstream", "pending": "… waiting" }, "disconnect": "Disconnect", "starting": "starting…", "runByKind": { "text": "Generate Text", "image": "Generate Image", "image-batch": "Generate Images", "video": "Generate Video", "audio": "Generate Audio", "panorama": "Generate Panorama", "storyboard": "Generate Storyboard" }, "action": { "viewFull": "View full size", "download": "Download", "addTag": "Save to library / tag", "close": "Close" }, "preparingWorkflowDetail": "Hang on — converting workflow to api JSON. Try Run again in a moment." };
+const error$1 = { "dismiss": "Dismiss", "cancelled": "Cancelled", "upstreamNotReady": "Upstream not ready", "upstreamNotReadyDetail": "Upstream not ready: {list}. Run those stage(s) first so they produce a snapshot, then Run this stage again.", "workerDied": "Backend stopped without sending a result. The prompt worker likely died (CUDA OOM during cleanup is the usual cause). Restart ComfyUI to recover." };
+const sidebar$1 = { "tab": { "workflow": "Workflow", "assets": "Assets" } };
+const assets$1 = { "title": "Asset Library", "empty": "No assets yet — add images to reuse them across projects.", "emptyCategory": "No assets in this category yet.", "add": "Add images", "addTooltip": "Upload images into the library (or drag & drop them onto this panel)", "uploading": "Uploading {done}/{total}…", "uploadFailed": "Upload failed: {detail}", "dropHint": "Drop images to add them to the library", "category": { "all": "All", "none": "Uncategorized", "new": "New category", "newPrompt": "New category name:", "rename": "Rename category", "renamePrompt": "Category name:", "delete": "Delete category", "deleteConfirm": "Delete this category? It is removed from all assets; the assets and files on disk stay." }, "card": { "rename": "Rename", "renamePrompt": "Asset name:", "delete": "Remove from library", "deleteConfirm": "Remove this asset from the library? The file on disk stays.", "tags": "Edit tags" }, "tagPopover": { "empty": "No categories yet." } };
+const promptHelper$1 = { "open": "Prompt helper — quick starters & enhancement tags", "templates": "Templates", "template": { "storyboardGrid": "Storyboard grid", "characterSheet": "Character sheet", "moodBoard": "Mood board", "upscale": "Upscale" }, "quickStart": "Quick starters", "quick": { "portrait": "Portrait", "landscape": "Landscape", "product": "Product", "fantasy": "Fantasy", "scifi": "Sci-Fi", "food": "Food", "architecture": "Architecture", "anime": "Anime" }, "category": { "quality": "Quality", "lighting": "Lighting", "mood": "Mood", "style": "Style" } };
+const cameraPrompt$1 = { "open": "Cinematic camera — compile camera/lens/aperture into the prompt", "camera": "Camera", "lens": "Lens", "focal": "Focal length", "aperture": "Aperture", "empty": "Pick a camera, lens, focal length or aperture to build a cinematic suffix.", "insert": "Insert into prompt", "clear": "Clear" };
+const imageRefs$1 = { "title": "Image references", "empty": "No reference images — click + to pin one from the library.", "add": "Add reference image", "remove": "Remove", "warnDuplicate": "Reference slot #{n} is pinned by multiple images — only the last one applies at run.", "warnOverride": "Reference slot #{n} already has an upstream connection — the pinned image overrides it at run.", "warnOverflow": "The workflow binds only {total} reference slot(s) — {count} pinned image(s) won't be consumed.", "warnNoSlots": "This workflow has no image input that can receive reference images — they'll be ignored at run." };
+const promptAssets$1 = { "addTooltip": "Insert an image asset from the library — it will be sent as a reference image at run", "search": "Search assets…", "empty": "No matching assets — add some in the sidebar Assets tab.", "missing": "asset #{id} was removed from the library — this chip is ignored at run", "slotTitle": "Reference image slot", "slotShort": "→ reference slot #{n}", "slotWired": "wired", "slotClaimed": "taken", "slotEmpty": 'This workflow has no reference-image slots bound yet — bind a LoadImage to "Upstream image #N" in the sidebar workflow config first.' };
+const configSidebar$1 = { "title": "Workflow Config", "empty": "Select a stage node on the canvas to edit its workflow config.", "noWorkflowPicked": "This stage's workflow combo is empty — pick one first.", "loading": "Loading…", "noExposedWidgets": "This workflow has no editable widgets, or hasn't been prepared yet — pick it on any stage first so the browser can analyze it.", "pickWorkflowFirst": "Pick this workflow on any stage first to populate widget metadata (the browser-side graphToPrompt has to run).", "bindTo": "Bind to:", "exportPreset": "Export preset.json", "exportPresetTooltip": "Download the current bindings as a *_preset.json file. Drop it next to the workflow JSON in workflows/<kind>/ to ship these defaults to other users.", "exportPresetFailed": "Export failed: {detail}", "resetToPreset": "↻ Reset to shipped preset", "resetToPresetTooltip": "Wipe all bindings + meta for this workflow and re-apply its shipped _preset.json from disk. Your own edits will be lost.", "resetToPresetConfirm": "Reset all bindings for this workflow to the shipped preset? Your edits will be lost.", "resetToPresetFailed": "Reset failed: {detail}", "section": { "widgets": "Widgets", "notes": "Workflow notes", "description": "Description" } };
+const project$1 = { "label": "Current Project", "shared_suffix": "(shared)", "id_prefix": "id:", "refresh": "Refresh project list", "create": "New project", "delete": "Delete this project (files on disk stay)", "delete_confirm": "Delete this project? DB rows will be cleared; files on disk stay.", "create_prompt": "New project name:", "create_default": "Project {n}", "status": { "refreshing": "refreshing…", "refresh_failed": "refresh failed", "create_failed": "create failed", "deleted": "deleted", "delete_failed": "delete failed", "load_failed": "Failed to load project list" } };
+const execution$1 = { "running": "running: node #{nodeId}", "queued": "queued" };
+const actions$1 = { "image": { "edit": { "label": "Edit Image", "tooltip": "Edits that change size or need rich UI (HD / outpaint / inpaint / erase / cutout / crop)" }, "panorama": { "label": "Panorama", "tooltip": "Turn this image into a panorama and explore viewpoints" }, "multiangle": { "label": "Multi-angle", "tooltip": "Re-render this image from a different camera angle" }, "relight": { "label": "Relight", "tooltip": "Brightness / color / rim-light, or reference another image's lighting" }, "preset": { "label": "Presets", "tooltip": "Size-preserving, no-rich-UI preset transforms (multi-view / grid / scene progression)" } }, "video": { "extend": { "label": "Extend", "tooltip": "Extract this clip's last frame and spawn a new VideoStage using it as the I2V start frame — write a prompt for the continuation" }, "change": { "label": "Edit Video", "tooltip": "Modify an existing video: clip / HD / subtitle erase / audio separation" } }, "text": { "refine": { "label": "Refine", "tooltip": "Continue rewriting in a new TextStage" } }, "panorama": { "view-current": { "label": "Current View", "tooltip": "Extract the current viewport as a single image" }, "view-four": { "label": "4 Views", "tooltip": "Extract 4 viewpoints as an image batch" }, "view-twelve": { "label": "12 Views", "tooltip": "Extract 12 viewpoints as an image batch" } }, "storyboard": { "gen-shots": { "label": "Generate Shot Images", "tooltip": "Spawn a Shot Images stage wired to this storyboard — iterates the shot list and renders one image per shot" } } };
+const presets$1 = { "imageVariant": { "multi-cam-9": { "label": "Multi-cam 9-grid", "tooltip": "9 camera angles arranged in a grid" }, "story-4": { "label": "Story Progression (4)", "tooltip": "4 consecutive narrative shots" }, "face-3view": { "label": "Face 3-view", "tooltip": "Face: front / side / 45°" }, "product-3view": { "label": "Product 3-view", "tooltip": "Product: front / side / back" }, "character-3view": { "label": "Character 3-view", "tooltip": "Full-body character: front / side / back" }, "storyboard-25": { "label": "25-grid Storyboard", "tooltip": "25 consecutive storyboard shots" }, "cinematic-light": { "label": "Cinematic Lighting", "tooltip": "Apply cinematic lighting and color grade" }, "frame-3s": { "label": "Project +3s", "tooltip": "Project the scene 3 seconds later" }, "frame-5s": { "label": "Project +5s", "tooltip": "Project the scene 5 seconds later" } }, "imageEdit": { "hd": { "label": "HD", "tooltip": "Upscale to a higher resolution (output is larger)" }, "outpaint": { "label": "Outpaint", "tooltip": "Extend the canvas outward (output is larger)" }, "inpaint": { "label": "Inpaint", "tooltip": "Regenerate a masked region" }, "erase": { "label": "Erase", "tooltip": "Remove a masked region" }, "cutout": { "label": "Cutout", "tooltip": "Extract the subject with a transparent background" }, "crop": { "label": "Crop", "tooltip": "Crop to a bounding box" }, "rotate": { "label": "Rotate", "tooltip": "Rotate by an angle (browser-side, no GPU)" }, "mirror": { "label": "Mirror", "tooltip": "Flip horizontally / vertically (browser-side)" }, "grid": { "label": "Grid Split", "tooltip": "Slice into an R×C grid of tiles (browser-side) → image batch" } }, "videoChange": { "clip": { "label": "Clip", "tooltip": "Clip / trim — pick start and end times" }, "crop": { "label": "Crop", "tooltip": "Spatial crop — keep a rectangle (x, y, w, h) of every frame" }, "resize": { "label": "Resize", "tooltip": "Scale video to a target width × height (use -1 to auto-derive from aspect)" }, "extract-frame": { "label": "Extract Frame", "tooltip": "Pull a single frame out as an image (first / last / middle / custom seconds)" }, "hd": { "label": "HD", "tooltip": "Upscale" }, "subtitle-smart": { "label": "Auto Subtitle Erase", "tooltip": "Auto-detect and remove subtitles" }, "subtitle-select": { "label": "Region Subtitle Erase", "tooltip": "Manually box a region to erase (needs region-selector UI)" }, "audio-vocal": { "label": "Vocals Only", "tooltip": "Voice separation — vocals only" }, "audio-bg": { "label": "Background Only", "tooltip": "Voice separation — instrumental / ambient" }, "demux": { "label": "Demux A/V", "tooltip": "Split into audio track + silent video (two nodes spawned)" } } };
+const shotCell$1 = { "pick": "Pick {tag}", "refine": "Refine {tag}" };
+const imageCrop$1 = { "noInputImage": "No input image — connect an image upstream", "cropPreviewAlt": "Crop preview", "loading": "Loading…", "ratio": "Ratio", "custom": "Custom", "lockRatio": "Lock aspect ratio", "unlockRatio": "Unlock aspect ratio", "applying": "Applying crop…", "applied": "Crop applied — ready for downstream", "adjustToApply": "Drag the rectangle or pick a ratio to apply" };
+const panorama$1 = { "empty": "No panorama yet — upload an HDRI / equirect image or click Run with an upstream image", "uploading": "Uploading…", "upload": "Upload panorama", "clearUpload": "Clear upload", "clearUploadTooltip": "Drop the manual source — Run will then derive from upstream again", "manualSourceBadge": "manual", "loadError": "Failed to load panorama" };
+const imageCompare$1 = { "before": "Before", "after": "After", "noImages": "Connect two images to compare (A / B)" };
+const storyboard$1 = { "shots": "Shots", "addShot": "Add shot", "empty": "No shots yet — Run to generate from the premise, or add shots manually", "moveUp": "Move up", "moveDown": "Move down", "remove": "Remove shot", "regenerate": "Regenerate this shot via the LLM (keeps the rest)", "noRef": "no reference", "uploadRef": "Upload reference image", "clearRef": "Clear reference", "promptPlaceholder": "Describe this shot…", "cols": { "scene_purpose": "Purpose", "character": "Character", "character_desc": "Character notes", "shot_size": "Shot size", "action": "Action", "emotion": "Emotion", "scene_tags": "Scene", "lighting": "Lighting", "sfx": "SFX", "dialogue": "Dialogue", "image_prompt": "Image prompt", "motion_prompt": "Motion prompt" }, "regenerateFailed": "Regenerate shot failed" };
+const timeline$1 = { "keyframes": "Keyframes", "connectImages": "Connect images upstream to use as shots", "addSegment": "Add as a shot", "clickKeyframe": "Click a keyframe above to add a shot", "addAudio": "Add audio track", "noAudio": "Connect audio upstream to add a track", "segmentPrompt": "Shot prompt", "promptPlaceholder": "What happens in this shot…", "length": "Length", "fps": "FPS", "shots": "shots" };
+const gridSplit$1 = { "connectImage": "Connect an image to split", "pickGrid": "Pick a grid preset or set rows × cols", "splitting": "Slicing into {n} tiles…", "done": "Split into {n} tiles — ready for downstream", "rows": "Rows", "cols": "Cols" };
+const panoramaView$1 = { "connectPanorama": "Connect a panorama upstream", "orbitToCapture": "Drag to look around — releasing captures the view", "capturing": "Capturing viewport…", "captured": "Viewport captured — ready for downstream", "aspect": "Aspect", "resolution": "Resolution", "viewCount": "View count", "adjustCountToCapture": "Move the slider to capture views", "capturingCount": "Capturing {i}/{n}…", "capturedN": "Captured {n} views — ready for downstream" };
+const rotate$1 = { "angle": "Angle", "applying": "Applying rotation…", "applied": "Rotation applied — ready for downstream", "adjustToApply": "Slide or click a quick angle to apply" };
+const mirror$1 = { "horizontal": "Horizontal flip", "vertical": "Vertical flip", "applying": "Applying mirror…", "applied": "Mirror applied — ready for downstream", "adjustToApply": "Toggle flips to apply" };
+const painter$1 = { "tool": "Tool", "brush": "Brush", "eraser": "Eraser", "fill": "Fill", "rect": "Rectangle", "ellipse": "Ellipse", "label": "Numbered label", "size": "Size", "color": "Color", "opacity": "Opacity", "hardness": "Hardness", "clear": "Clear" };
+const camera$1 = { "horizontal": "H", "vertical": "V", "zoom": "Z", "resetToDefaults": "Reset to defaults", "azimuth": { "frontView": "front view", "frontRightQuarterView": "front-right quarter view", "rightSideView": "right side view", "backRightQuarterView": "back-right quarter view", "backView": "back view", "backLeftQuarterView": "back-left quarter view", "leftSideView": "left side view", "frontLeftQuarterView": "front-left quarter view" }, "elevation": { "lowAngleShot": "low-angle shot", "eyeLevelShot": "eye-level shot", "elevatedShot": "elevated shot", "highAngleShot": "high-angle shot" }, "distance": { "wideShot": "wide shot", "mediumShot": "medium shot", "closeUp": "close-up" } };
+const outpaint$1 = { "left": "Left", "top": "Top", "right": "Right", "bottom": "Bottom", "reset": "Reset", "output": "Output", "noInputImage": "Wire an image to begin" };
+const fileSlot$1 = { "releaseToUpload": "Release to upload", "clickOrDrag": "Click or drag {kind}", "remove": "Remove {kind}", "image": "image", "video": "video" };
+const mention$1 = { "newTag": "new", "create": "+ Create", "newFragment": "new fragment", "createFragment": "+ Create fragment", "invalidLabel": "Invalid label — start with a letter / underscore (Chinese is fine), then letters / digits / _ / -", "noEntries": "No entries yet — type a label to create one", "contentPlaceholder": "Content this {'@'}-token expands to. (For characters / other kinds, use the ComfyTV button → Entries dialog.)", "save": "Save (Ctrl+Enter)" };
+const entries$1 = { "refHelpPre": "Reference any entry in a stage's prompt with", "refHelpPost": "Unknown tokens stay literal.", "colLabel": "Label", "colContent": "Content", "deleteTitle": "Delete {'@'}{label}", "confirmDelete": "Delete {'@'}{label}? Existing {'@'}{label} tokens will fall back to literal text.", "labelError": "Start with a letter / underscore (Chinese is fine), then letters / digits / _ / -", "emptyKind": "No {kind} yet. Click + Add below.", "labelPlaceholder": "label", "save": "Save", "addKind": "+ Add {kind}" };
+const menu$1 = { "openEntryManager": "ComfyTV — open entry manager", "entriesTitle": "ComfyTV Entries", "entriesButtonTooltip": "ComfyTV — entries (fragments / characters / …)", "configSidebarTooltip": "ComfyTV — workflow config & asset library" };
+const valuePreview$1 = { "moreShots": "+ {n} more", "emptyTimeline": "empty timeline" };
+const en = {
+  workflow: workflow$1,
+  stage: stage$1,
+  error: error$1,
+  sidebar: sidebar$1,
+  assets: assets$1,
+  promptHelper: promptHelper$1,
+  cameraPrompt: cameraPrompt$1,
+  imageRefs: imageRefs$1,
+  promptAssets: promptAssets$1,
+  configSidebar: configSidebar$1,
+  project: project$1,
+  execution: execution$1,
+  actions: actions$1,
+  presets: presets$1,
+  shotCell: shotCell$1,
+  imageCrop: imageCrop$1,
+  panorama: panorama$1,
+  imageCompare: imageCompare$1,
+  storyboard: storyboard$1,
+  timeline: timeline$1,
+  gridSplit: gridSplit$1,
+  panoramaView: panoramaView$1,
+  rotate: rotate$1,
+  mirror: mirror$1,
+  painter: painter$1,
+  camera: camera$1,
+  outpaint: outpaint$1,
+  fileSlot: fileSlot$1,
+  mention: mention$1,
+  entries: entries$1,
+  menu: menu$1,
+  valuePreview: valuePreview$1
+};
+const workflow = { "uploadButton": "⬆ 上传工作流", "imported": "已导入「{label}」", "importFailed": "工作流导入失败", "notJson": "该文件不是合法 JSON" };
+const stage = { "run": "运行", "rerun": "重新运行", "running": "运行中…", "cancel": "取消", "preparingWorkflow": "准备工作流中…", "section": { "context": "上游输入", "pool": "图片池", "output": "输出 ({type})", "actions": "动作" }, "pool": { "clear": "清除", "clearHint": "清空图片池并重置选择", "confirmClear": "确认清空？", "confirm": "是", "cancel": "否" }, "empty": { "no_output": "暂无输出", "generating": "生成中…", "pending_upstream": "上游待运行", "unsupported_type": "不支持的类型 {type}" }, "source": { "upstream": "← 上游", "pending": "… 等待中" }, "disconnect": "断开此连接", "starting": "启动中…", "runByKind": { "text": "生成文本", "image": "生成图片", "image-batch": "生成图片", "video": "生成视频", "audio": "生成音频", "panorama": "生成全景图", "storyboard": "生成分镜" }, "action": { "viewFull": "查看大图", "download": "下载", "addTag": "存入资产库 / 打标签", "close": "关闭" }, "preparingWorkflowDetail": "稍等 — 正在把工作流转换成 api JSON。稍后再点运行。" };
+const error = { "dismiss": "清除", "cancelled": "已取消", "upstreamNotReady": "上游未就绪", "upstreamNotReadyDetail": "上游未就绪:{list}。请先运行这些 stage 生成快照,然后再运行此 stage。", "workerDied": "后端未返回结果就停止了。prompt worker 可能已崩溃(通常是清理阶段 CUDA OOM)。重启 ComfyUI 后恢复。" };
+const sidebar = { "tab": { "workflow": "工作流", "assets": "资产库" } };
+const assets = { "title": "资产库", "empty": "还没有资产 —— 添加图片后可跨项目复用。", "emptyCategory": "这个分类下还没有资产。", "add": "添加图片", "addTooltip": "上传图片到资产库（也可以直接拖拽图片到这个面板）", "uploading": "上传中 {done}/{total}…", "uploadFailed": "上传失败: {detail}", "dropHint": "松开把图片添加到资产库", "category": { "all": "全部", "none": "未分类", "new": "新建分类", "newPrompt": "新分类名称：", "rename": "重命名分类", "renamePrompt": "分类名称：", "delete": "删除分类", "deleteConfirm": "删除这个分类？它会从所有资产上移除；资产和磁盘上的文件保留。" }, "card": { "rename": "重命名", "renamePrompt": "资产名称：", "delete": "从资产库移除", "deleteConfirm": "把这个资产从资产库移除？磁盘上的文件保留。", "tags": "编辑标签" }, "tagPopover": { "empty": "还没有分类。" } };
+const promptHelper = { "open": "提示词助手 —— 快速起步 & 增强标签", "templates": "模板", "template": { "storyboardGrid": "分镜九宫格", "characterSheet": "角色设定表", "moodBoard": "情绪板", "upscale": "高清放大" }, "quickStart": "快速起步", "quick": { "portrait": "人像", "landscape": "风景", "product": "产品", "fantasy": "奇幻", "scifi": "科幻", "food": "美食", "architecture": "建筑", "anime": "动漫" }, "category": { "quality": "画质", "lighting": "光照", "mood": "氛围", "style": "风格" } };
+const cameraPrompt = { "open": "电影感相机 —— 把相机/镜头/光圈编译进提示词", "camera": "相机", "lens": "镜头", "focal": "焦段", "aperture": "光圈", "empty": "选择相机 / 镜头 / 焦段 / 光圈，自动拼出一段电影感后缀。", "insert": "插入提示词", "clear": "清空" };
+const imageRefs = { "title": "图片引用", "empty": "暂无参考图 —— 点 + 从资产库选一张。", "add": "添加参考图", "remove": "移除", "warnDuplicate": "参考槽位 #{n} 被多张图片绑定 —— 运行时只有最后一张生效。", "warnOverride": "参考槽位 #{n} 已有上游连接 —— 绑定的图片会在运行时覆盖它。", "warnOverflow": "该工作流只绑定了 {total} 个参考槽位 —— 有 {count} 张图片不会被使用。", "warnNoSlots": "该工作流没有可接收参考图的图片输入 —— 运行时这些图会被忽略。" };
+const promptAssets = { "addTooltip": "从资产库插入图片 —— 运行时会作为参考图传给工作流", "search": "搜索资产…", "empty": "没有匹配的资产 —— 先在侧边栏「资产库」里添加。", "missing": "资产 #{id} 已从资产库移除 —— 运行时会忽略这个标记", "slotTitle": "参考图槽位", "slotShort": "→ 参考图槽位 #{n}", "slotWired": "已连线", "slotClaimed": "已占用", "slotEmpty": "这个工作流还没绑定参考图槽位 —— 先在侧边栏工作流配置里把 LoadImage 绑到「Upstream image #N」。" };
+const configSidebar = { "title": "工作流配置", "empty": "在画布上选中某个 Stage 节点以编辑它的工作流配置。", "noWorkflowPicked": "该 Stage 还没选工作流 —— 先在下拉里挑一个。", "loading": "加载中…", "noExposedWidgets": "这个工作流没有可编辑的 widget，或者还没准备过 —— 先在画布上任一 Stage 选中它，浏览器侧 graphToPrompt 跑一遍后才有 widget 元数据。", "pickWorkflowFirst": "先在画布上任一 Stage 上选中这个工作流 —— 浏览器侧 graphToPrompt 跑过一遍才有 widget 元数据。", "bindTo": "绑定到：", "exportPreset": "导出 preset.json", "exportPresetTooltip": "把当前绑定导出为 *_preset.json 文件，丢进 workflows/<kind>/ 和工作流 JSON 同目录，其他用户首次启动时会自动应用这套默认。", "exportPresetFailed": "导出失败: {detail}", "resetToPreset": "↻ 重置为内置 preset", "resetToPresetTooltip": "清空该工作流的所有绑定和元数据，重新读取磁盘上的 _preset.json 文件。你自己改过的内容会丢失。", "resetToPresetConfirm": "把这个工作流的所有绑定重置成内置 preset？你自己改过的会丢失。", "resetToPresetFailed": "重置失败: {detail}", "section": { "widgets": "Widget 列表", "notes": "工作流笔记", "description": "说明" } };
+const project = { "label": "当前项目", "shared_suffix": "(共享)", "id_prefix": "id:", "refresh": "刷新项目列表", "create": "新建项目", "delete": "删除该项目（不会删磁盘文件）", "delete_confirm": "确定删除该项目？数据库会清空，磁盘上的生成文件保留。", "create_prompt": "新项目名称：", "create_default": "项目 {n}", "status": { "refreshing": "刷新中…", "refresh_failed": "刷新失败", "create_failed": "创建失败", "deleted": "已删除", "delete_failed": "删除失败", "load_failed": "加载项目列表失败" } };
+const execution = { "running": "运行中：节点 #{nodeId}", "queued": "排队中" };
+const actions = { "image": { "edit": { "label": "修改图片", "tooltip": "改变尺寸或需要交互 UI 的图像编辑（高清 / 扩图 / 重绘 / 擦除 / 抠图 / 裁剪）" }, "panorama": { "label": "全景图", "tooltip": "把当前图变为全景，进入视角操作" }, "multiangle": { "label": "多角度", "tooltip": "从不同相机角度重新渲染该图" }, "relight": { "label": "打光", "tooltip": "调亮度 / 颜色 / 轮廓光，或参考另一张图的灯光" }, "preset": { "label": "预设", "tooltip": "保持尺寸、无需复杂 UI 的预设变换（多视图 / 宫格 / 画面推演 ...）" } }, "video": { "extend": { "label": "延伸", "tooltip": "抽出本段末帧,派生新 VideoStage 用作 I2V 起始帧 —— 写个 prompt 描述接下来要发生什么" }, "change": { "label": "修改视频", "tooltip": "对已上传/已生成的视频做修改：剪辑 / 高清 / 去字幕 / 音频分离" } }, "text": { "refine": { "label": "改写", "tooltip": "在新 TextStage 中继续改写" } }, "panorama": { "view-current": { "label": "当前视角截图", "tooltip": "提取当前视角为单张图" }, "view-four": { "label": "四大视角截图", "tooltip": "提取 4 个视角组成图集" }, "view-twelve": { "label": "12 视角截图", "tooltip": "提取 12 个视角组成图集" } }, "storyboard": { "gen-shots": { "label": "生成分镜图", "tooltip": "派生一个 Shot Images 节点接到这个分镜板上 —— 按镜头列表逐个出图" } } };
+const presets = { "imageVariant": { "multi-cam-9": { "label": "多机位九宫格", "tooltip": "9 个相机角度排列" }, "story-4": { "label": "剧情推演四宫格", "tooltip": "4 连贯剧情画面" }, "face-3view": { "label": "角色脸部三视图", "tooltip": "人脸正/侧/45° 视图" }, "product-3view": { "label": "产品三视图", "tooltip": "产品正/侧/背" }, "character-3view": { "label": "角色三视图", "tooltip": "全身角色正/侧/背" }, "storyboard-25": { "label": "25 宫格连贯分镜", "tooltip": "25 张连贯分镜" }, "cinematic-light": { "label": "电影级光影校正", "tooltip": "应用电影级打光与色彩" }, "frame-3s": { "label": "画面推演 +3s", "tooltip": "推演 3 秒后的画面" }, "frame-5s": { "label": "画面推演 +5s", "tooltip": "推演 5 秒后的画面" } }, "imageEdit": { "hd": { "label": "高清", "tooltip": "提升分辨率 (Upscale) — 输出尺寸大于输入" }, "outpaint": { "label": "扩图", "tooltip": "向外延伸画面 (Outpaint) — 输出比输入大" }, "inpaint": { "label": "重绘", "tooltip": "局部重新生成 (Inpaint) — 需要蒙版" }, "erase": { "label": "擦除", "tooltip": "抹除指定区域 (Erase) — 需要蒙版" }, "cutout": { "label": "抠图", "tooltip": "抠出主体，背景透明 (Cutout / matting)" }, "crop": { "label": "裁剪", "tooltip": "按框裁切 (Crop) — 需要 bbox 拖拽" }, "rotate": { "label": "旋转", "tooltip": "按角度旋转（浏览器端，不占 GPU）" }, "mirror": { "label": "镜像", "tooltip": "水平 / 垂直翻转（浏览器端）" }, "grid": { "label": "宫格切分", "tooltip": "按 R×C 切成多张（浏览器端）→ 图片批次" } }, "videoChange": { "clip": { "label": "剪辑", "tooltip": "裁剪片段 — 输入起始结束时间" }, "crop": { "label": "裁剪", "tooltip": "空间裁剪 — 每帧保留 (x, y, w, h) 矩形" }, "resize": { "label": "缩放", "tooltip": "缩放视频到目标 宽×高(其中一个填 -1 按比例自动算另一个)" }, "extract-frame": { "label": "抽帧", "tooltip": "从视频抽一张图(首/末/中/任意秒数)" }, "hd": { "label": "高清", "tooltip": "提升分辨率" }, "subtitle-smart": { "label": "智能去字幕", "tooltip": "自动检测并擦除字幕" }, "subtitle-select": { "label": "扣选去字幕", "tooltip": "手动框选区域擦除（需要 region selector UI）" }, "audio-vocal": { "label": "仅保留人声", "tooltip": "人声分离 — 仅保留人声" }, "audio-bg": { "label": "仅保留背景声", "tooltip": "人声分离 — 仅保留背景声" }, "demux": { "label": "音视频分离", "tooltip": "同时产出音频轨和静默视频（双节点）" } } };
+const shotCell = { "pick": "选择 {tag}", "refine": "微调 {tag}" };
+const imageCrop = { "noInputImage": "无输入图像 — 请上游连接一张图", "cropPreviewAlt": "裁剪预览", "loading": "加载中…", "ratio": "比例", "custom": "自定义", "lockRatio": "锁定纵横比", "unlockRatio": "解锁纵横比", "applying": "应用裁剪中…", "applied": "裁剪已应用 — 下游可直接使用", "adjustToApply": "拖动矩形或选择比例以应用" };
+const panorama = { "empty": "暂无全景图 — 上传 HDRI / 等距柱状投影图，或接入上游图后点 Run", "uploading": "上传中…", "upload": "上传全景图", "clearUpload": "清除上传", "clearUploadTooltip": "丢弃手动来源 — 之后 Run 会重新从上游派生", "manualSourceBadge": "手动", "loadError": "加载全景图失败" };
+const imageCompare = { "before": "之前", "after": "之后", "noImages": "连接两张图进行对比（A / B）" };
+const storyboard = { "shots": "分镜", "addShot": "添加分镜", "empty": "暂无分镜 — 点 Run 从剧本生成，或手动添加", "moveUp": "上移", "moveDown": "下移", "remove": "删除分镜", "regenerate": "用 LLM 重新生成此镜头(其他镜头保持)", "noRef": "无参考图", "uploadRef": "上传参考图", "clearRef": "清除参考图", "promptPlaceholder": "描述这个镜头…", "cols": { "scene_purpose": "画面描述", "character": "角色", "character_desc": "角色描述", "shot_size": "景别", "action": "角色动作", "emotion": "情绪", "scene_tags": "场景标签", "lighting": "光影氛围", "sfx": "音效", "dialogue": "对白", "image_prompt": "分镜提示词", "motion_prompt": "视频运动提示词" }, "regenerateFailed": "重新生成镜头失败" };
+const timeline = { "keyframes": "关键帧", "connectImages": "上游连接图片作为分镜素材", "addSegment": "添加为分镜", "clickKeyframe": "点击上方关键帧添加分镜", "addAudio": "添加音频轨", "noAudio": "上游连接音频以添加音轨", "segmentPrompt": "分镜提示词", "promptPlaceholder": "这个镜头里发生什么…", "length": "时长", "fps": "帧率", "shots": "镜头" };
+const gridSplit = { "connectImage": "请连接一张图以切分", "pickGrid": "选择宫格预设或设置行 × 列", "splitting": "切分为 {n} 块中…", "done": "已切分为 {n} 块 — 下游可直接使用", "rows": "行", "cols": "列" };
+const panoramaView = { "connectPanorama": "请在上游接入全景图", "orbitToCapture": "拖动环视 — 松开后自动截取当前视角", "capturing": "截取视角中…", "captured": "视角已截取 — 下游可直接使用", "aspect": "比例", "resolution": "分辨率", "viewCount": "视角数", "adjustCountToCapture": "拖动滑块以批量截取", "capturingCount": "截取中 {i}/{n}…", "capturedN": "已截取 {n} 张 — 下游可直接使用" };
+const rotate = { "angle": "角度", "applying": "旋转应用中…", "applied": "旋转已应用 — 下游可直接使用", "adjustToApply": "拖动滑块或点击快速角度以应用" };
+const mirror = { "horizontal": "水平翻转", "vertical": "垂直翻转", "applying": "镜像应用中…", "applied": "镜像已应用 — 下游可直接使用", "adjustToApply": "切换翻转开关以应用" };
+const painter = { "tool": "工具", "brush": "画笔", "eraser": "橡皮", "fill": "填充", "rect": "矩形", "ellipse": "椭圆", "label": "编号标记", "size": "大小", "color": "颜色", "opacity": "不透明度", "hardness": "硬度", "clear": "清除" };
+const camera = { "horizontal": "水平", "vertical": "垂直", "zoom": "距离", "resetToDefaults": "重置为默认值", "azimuth": { "frontView": "正面视角", "frontRightQuarterView": "右前方视角", "rightSideView": "右侧视角", "backRightQuarterView": "右后方视角", "backView": "背面视角", "backLeftQuarterView": "左后方视角", "leftSideView": "左侧视角", "frontLeftQuarterView": "左前方视角" }, "elevation": { "lowAngleShot": "仰拍", "eyeLevelShot": "平视", "elevatedShot": "高角度", "highAngleShot": "俯拍" }, "distance": { "wideShot": "远景", "mediumShot": "中景", "closeUp": "特写" } };
+const outpaint = { "left": "左", "top": "上", "right": "右", "bottom": "下", "reset": "重置", "output": "输出", "noInputImage": "先把一张图片连进来" };
+const fileSlot = { "releaseToUpload": "松开上传", "clickOrDrag": "点击或拖入{kind}", "remove": "移除{kind}", "image": "图片", "video": "视频" };
+const mention = { "newTag": "新建", "create": "+ 新建", "newFragment": "新建片段", "createFragment": "+ 新建片段", "invalidLabel": "标签无效 — 以字母 / 下划线开头(支持中文),后跟字母 / 数字 / _ / -", "noEntries": "还没有条目 — 输入标签即可新建", "contentPlaceholder": "此 {'@'} 标记展开后的内容。(角色等其他类型请用 ComfyTV 按钮 → 条目对话框。)", "save": "保存 (Ctrl+Enter)" };
+const entries = { "refHelpPre": "在 stage 提示词里用", "refHelpPost": "引用任意条目;未知标记保持原文。", "colLabel": "标签", "colContent": "内容", "deleteTitle": "删除 {'@'}{label}", "confirmDelete": "删除 {'@'}{label}?现有的 {'@'}{label} 标记将回退为原文。", "labelError": "以字母 / 下划线开头(支持中文),后跟字母 / 数字 / _ / -", "emptyKind": "还没有{kind}。点击下方 + 添加。", "labelPlaceholder": "标签", "save": "保存", "addKind": "+ 添加{kind}" };
+const menu = { "openEntryManager": "ComfyTV — 打开条目管理", "entriesTitle": "ComfyTV 条目", "entriesButtonTooltip": "ComfyTV — 条目(片段 / 角色 / …)", "configSidebarTooltip": "ComfyTV — 工作流配置与素材库" };
+const valuePreview = { "moreShots": "+ 还有 {n} 个", "emptyTimeline": "空时间轴" };
+const zh = {
+  workflow,
+  stage,
+  error,
+  sidebar,
+  assets,
+  promptHelper,
+  cameraPrompt,
+  imageRefs,
+  promptAssets,
+  configSidebar,
+  project,
+  execution,
+  actions,
+  presets,
+  shotCell,
+  imageCrop,
+  panorama,
+  imageCompare,
+  storyboard,
+  timeline,
+  gridSplit,
+  panoramaView,
+  rotate,
+  mirror,
+  painter,
+  camera,
+  outpaint,
+  fileSlot,
+  mention,
+  entries,
+  menu,
+  valuePreview
+};
+function pickLocale() {
+  var _a2, _b2, _c, _d, _e, _f;
+  let stored;
+  try {
+    stored = ((_c = (_b2 = (_a2 = app == null ? void 0 : app.ui) == null ? void 0 : _a2.settings) == null ? void 0 : _b2.getSettingValue) == null ? void 0 : _c.call(_b2, "Comfy.Locale")) ?? ((_f = (_e = (_d = app == null ? void 0 : app.extensionManager) == null ? void 0 : _d.setting) == null ? void 0 : _e.get) == null ? void 0 : _f.call(_e, "Comfy.Locale"));
+  } catch {
+    stored = void 0;
+  }
+  const candidate = (stored || navigator.language || "en").toLowerCase();
+  if (candidate.startsWith("zh")) return "zh";
+  return "en";
+}
+const i18n = createI18n({
+  legacy: false,
+  locale: pickLocale(),
+  fallbackLocale: "en",
+  messages: { en, zh },
+  missingWarn: false,
+  fallbackWarn: false
+});
+const t = i18n.global.t;
+function useAssetPicker(getAddedIds = () => []) {
+  const store = useAssetStore();
+  const query = /* @__PURE__ */ ref("");
+  const filter = /* @__PURE__ */ ref("all");
+  const filterValue = computed(
+    () => typeof filter.value === "number" ? String(filter.value) : filter.value
+  );
+  const categoryOptions = computed(() => [
+    { label: t("assets.category.all"), value: "all" },
+    { label: t("assets.category.none"), value: "none" },
+    ...store.categories.map((c2) => ({ label: c2.name, value: String(c2.id) }))
+  ]);
+  function setFilter(v) {
+    if (v === "all" || v === "none") filter.value = v;
+    else if (v != null) filter.value = Number(v);
+  }
+  const filtered = computed(() => {
+    let rows = store.listByCategory(filter.value);
+    const q = query.value.trim().toLowerCase();
+    if (q) rows = rows.filter((a) => a.name.toLowerCase().includes(q));
+    return rows;
+  });
+  function isAdded(id) {
+    return getAddedIds().includes(id);
+  }
+  function ensureHydrated() {
+    store.ensureHydrated();
+  }
+  return {
+    query,
+    filter,
+    filterValue,
+    categoryOptions,
+    setFilter,
+    filtered,
+    isAdded,
+    ensureHydrated
+  };
+}
 const _hoisted_1$u = { class: "ctv:flex ctv:gap-1.5 ctv:items-center" };
 const _hoisted_2$r = ["placeholder"];
 const _hoisted_3$r = { class: "ctv:w-24 ctv:shrink-0" };
@@ -27975,36 +28188,19 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
   emits: ["select", "close"],
   setup(__props) {
     const props = __props;
-    function isAdded(id) {
-      var _a2;
-      return ((_a2 = props.addedIds) == null ? void 0 : _a2.includes(id)) ?? false;
-    }
-    const { t: t2 } = useI18n();
-    const store = useAssetStore();
     const searchEl = /* @__PURE__ */ ref(null);
-    const query = /* @__PURE__ */ ref("");
-    const filter = /* @__PURE__ */ ref("all");
-    const filterValue = computed(
-      () => typeof filter.value === "number" ? String(filter.value) : filter.value
-    );
-    const categoryOptions = computed(() => [
-      { label: t2("assets.category.all"), value: "all" },
-      { label: t2("assets.category.none"), value: "none" },
-      ...store.categories.map((c2) => ({ label: c2.name, value: String(c2.id) }))
-    ]);
-    function onFilterChange(v) {
-      if (v === "all" || v === "none") filter.value = v;
-      else if (v != null) filter.value = Number(v);
-    }
-    const filtered = computed(() => {
-      let rows = store.listByCategory(filter.value);
-      const q = query.value.trim().toLowerCase();
-      if (q) rows = rows.filter((a) => a.name.toLowerCase().includes(q));
-      return rows;
-    });
+    const {
+      query,
+      filterValue,
+      categoryOptions,
+      setFilter,
+      filtered,
+      isAdded,
+      ensureHydrated
+    } = useAssetPicker(() => props.addedIds ?? []);
     onMounted(() => {
       var _a2;
-      store.ensureHydrated();
+      ensureHydrated();
       (_a2 = searchEl.value) == null ? void 0 : _a2.focus();
     });
     return (_ctx, _cache2) => {
@@ -28016,31 +28212,31 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
           withDirectives(createBaseVNode("input", {
             ref_key: "searchEl",
             ref: searchEl,
-            "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => query.value = $event),
+            "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(query) ? query.value = $event : null),
             type: "text",
             placeholder: _ctx.$t("promptAssets.search"),
             class: "ctv:flex-1 ctv:min-w-0 ctv:py-1 ctv:px-1.5 ctv:rounded-sm ctv:outline-none ctv:box-border ctv:text-xs ctv:leading-snug ctv:[font-family:inherit] ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-default ctv:focus:border-primary-background"
           }, null, 8, _hoisted_2$r), [
-            [vModelText, query.value]
+            [vModelText, unref(query)]
           ]),
           createBaseVNode("div", _hoisted_3$r, [
             createVNode(_sfc_main$D, {
-              "model-value": filterValue.value,
-              options: categoryOptions.value,
-              "onUpdate:modelValue": onFilterChange
-            }, null, 8, ["model-value", "options"])
+              "model-value": unref(filterValue),
+              options: unref(categoryOptions),
+              "onUpdate:modelValue": unref(setFilter)
+            }, null, 8, ["model-value", "options", "onUpdate:modelValue"])
           ])
         ]),
         createBaseVNode("div", _hoisted_4$n, [
-          filtered.value.length === 0 ? (openBlock(), createElementBlock("div", _hoisted_5$m, toDisplayString$1(_ctx.$t("promptAssets.empty")), 1)) : (openBlock(), createElementBlock("div", _hoisted_6$l, [
-            (openBlock(true), createElementBlock(Fragment$1, null, renderList(filtered.value, (asset) => {
+          unref(filtered).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_5$m, toDisplayString$1(_ctx.$t("promptAssets.empty")), 1)) : (openBlock(), createElementBlock("div", _hoisted_6$l, [
+            (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(filtered), (asset) => {
               return openBlock(), createElementBlock("button", {
                 key: asset.id,
                 type: "button",
                 class: normalizeClass([
                   "ctv:relative ctv:flex ctv:flex-col ctv:p-0 ctv:cursor-pointer ctv:overflow-hidden ctv:rounded",
                   "ctv:bg-secondary-background ctv:border ctv:[font-family:inherit]",
-                  isAdded(asset.id) ? "ctv:border-primary-background" : "ctv:border-border-subtle ctv:hover:border-primary-background/60"
+                  unref(isAdded)(asset.id) ? "ctv:border-primary-background" : "ctv:border-border-subtle ctv:hover:border-primary-background/60"
                 ]),
                 title: asset.name,
                 onClick: ($event) => _ctx.$emit("select", asset)
@@ -28051,10 +28247,10 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
                   loading: "lazy",
                   class: normalizeClass([
                     "ctv:block ctv:w-full ctv:aspect-square ctv:object-cover",
-                    isAdded(asset.id) ? "ctv:opacity-55" : ""
+                    unref(isAdded)(asset.id) ? "ctv:opacity-55" : ""
                   ])
                 }, null, 10, _hoisted_8$j),
-                isAdded(asset.id) ? (openBlock(), createElementBlock("span", _hoisted_9$j, "✓")) : createCommentVNode("", true),
+                unref(isAdded)(asset.id) ? (openBlock(), createElementBlock("span", _hoisted_9$j, "✓")) : createCommentVNode("", true),
                 createBaseVNode("span", _hoisted_10$j, toDisplayString$1(asset.name || "—"), 1)
               ], 10, _hoisted_7$k);
             }), 128))
@@ -51773,6 +51969,41 @@ const _sfc_main$t = /* @__PURE__ */ defineComponent({
     };
   }
 });
+function wrapIndex(current, count2, delta) {
+  if (count2 <= 0) return 0;
+  return ((current + delta) % count2 + count2) % count2;
+}
+function useListKeyboardNav(count2) {
+  const activeIndex = /* @__PURE__ */ ref(0);
+  function moveUp() {
+    activeIndex.value = wrapIndex(activeIndex.value, count2(), -1);
+  }
+  function moveDown() {
+    activeIndex.value = wrapIndex(activeIndex.value, count2(), 1);
+  }
+  function reset() {
+    activeIndex.value = 0;
+  }
+  function onKeyDown2(event, onSelect) {
+    switch (event.key) {
+      case "ArrowUp":
+        moveUp();
+        return true;
+      case "ArrowDown":
+        moveDown();
+        return true;
+      case "Enter":
+      case "Tab":
+        onSelect(activeIndex.value);
+        return true;
+      case "Escape":
+        return true;
+      default:
+        return false;
+    }
+  }
+  return { activeIndex, moveUp, moveDown, reset, onKeyDown: onKeyDown2 };
+}
 const _hoisted_1$q = { class: "ctv:min-w-64 ctv:max-w-md ctv:max-h-60 ctv:overflow-y-auto ctv:rounded ctv:text-xs ctv:bg-interface-menu-surface ctv:text-base-foreground ctv:border ctv:border-border-default ctv:shadow-md" };
 const _hoisted_2$n = ["title", "onClick"];
 const _hoisted_3$n = { class: "ctv:font-mono ctv:text-base-foreground ctv:shrink-0" };
@@ -51800,14 +52031,11 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
     const props = __props;
     const entryStore = useEntryStore();
     const projectStore = useProjectStore();
-    const activeIndex = /* @__PURE__ */ ref(0);
-    watch(() => props.items, () => {
-      activeIndex.value = 0;
-    });
-    watch(() => props.query, () => {
-      activeIndex.value = 0;
-    });
     const canCreate = computed(() => !!props.query && LABEL_RE.test(props.query));
+    const nav2 = useListKeyboardNav(() => props.items.length + (canCreate.value ? 1 : 0));
+    const activeIndex = nav2.activeIndex;
+    watch(() => props.items, nav2.reset);
+    watch(() => props.query, nav2.reset);
     function itemKey(item) {
       return item.module.id;
     }
@@ -51866,38 +52094,10 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
         startCreate();
       }
     }
-    function upHandler() {
-      const total = props.items.length + (canCreate.value ? 1 : 0);
-      if (total === 0) return;
-      activeIndex.value = (activeIndex.value + total - 1) % total;
-    }
-    function downHandler() {
-      const total = props.items.length + (canCreate.value ? 1 : 0);
-      if (total === 0) return;
-      activeIndex.value = (activeIndex.value + 1) % total;
-    }
-    function enterHandler() {
-      selectItem(activeIndex.value);
-    }
     __expose({
       onKeyDown({ event }) {
         if (creating.value) return event.key === "Escape";
-        if (event.key === "ArrowUp") {
-          upHandler();
-          return true;
-        }
-        if (event.key === "ArrowDown") {
-          downHandler();
-          return true;
-        }
-        if (event.key === "Enter" || event.key === "Tab") {
-          enterHandler();
-          return true;
-        }
-        if (event.key === "Escape") {
-          return true;
-        }
-        return false;
+        return nav2.onKeyDown(event, selectItem);
       }
     });
     const ACTION_BTN_VARIANTS = {
@@ -51916,7 +52116,7 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
               class: normalizeClass([
                 "ctv:flex ctv:items-center ctv:gap-2 ctv:py-1 ctv:px-2 ctv:cursor-pointer",
                 "ctv:hover:bg-interface-menu-component-surface-hovered",
-                i === activeIndex.value ? "ctv:bg-interface-menu-component-surface-selected" : ""
+                i === unref(activeIndex) ? "ctv:bg-interface-menu-component-surface-selected" : ""
               ]),
               title: itemTitle(item),
               onMousedown: _cache2[0] || (_cache2[0] = withModifiers(() => {
@@ -51932,7 +52132,7 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
             class: normalizeClass([
               "ctv:flex ctv:items-baseline ctv:gap-2 ctv:py-1 ctv:px-2 ctv:cursor-pointer ctv:border-t ctv:border-border-subtle",
               "ctv:hover:bg-interface-menu-component-surface-hovered",
-              activeIndex.value === __props.items.length ? "ctv:bg-interface-menu-component-surface-selected" : ""
+              unref(activeIndex) === __props.items.length ? "ctv:bg-interface-menu-component-surface-selected" : ""
             ]),
             onMousedown: _cache2[1] || (_cache2[1] = withModifiers(() => {
             }, ["prevent"])),
@@ -52238,160 +52438,7 @@ const _export_sfc = (sfc, props) => {
   }
   return target;
 };
-const MainPromptInput = /* @__PURE__ */ _export_sfc(_sfc_main$q, [["__scopeId", "data-v-9006be38"]]);
-const workflow$1 = { "uploadButton": "⬆ Upload workflow", "imported": 'Imported "{label}"', "importFailed": "Workflow import failed", "notJson": "That file isn't valid JSON" };
-const stage$1 = { "run": "Run", "rerun": "Re-run", "running": "Running…", "cancel": "Cancel", "preparingWorkflow": "Preparing workflow…", "section": { "context": "Context", "pool": "Pool", "output": "Output ({type})", "actions": "Actions" }, "pool": { "clear": "Clear", "clearHint": "Empty the picker pool and reset the selection", "confirmClear": "Clear pool?", "confirm": "Yes", "cancel": "No" }, "empty": { "no_output": "no output yet", "generating": "generating…", "pending_upstream": "upstream pending", "unsupported_type": "unsupported type {type}" }, "source": { "upstream": "← upstream", "pending": "… waiting" }, "disconnect": "Disconnect", "starting": "starting…", "runByKind": { "text": "Generate Text", "image": "Generate Image", "image-batch": "Generate Images", "video": "Generate Video", "audio": "Generate Audio", "panorama": "Generate Panorama", "storyboard": "Generate Storyboard" }, "action": { "viewFull": "View full size", "download": "Download", "addTag": "Save to library / tag", "close": "Close" }, "preparingWorkflowDetail": "Hang on — converting workflow to api JSON. Try Run again in a moment." };
-const error$1 = { "dismiss": "Dismiss", "cancelled": "Cancelled", "upstreamNotReady": "Upstream not ready", "upstreamNotReadyDetail": "Upstream not ready: {list}. Run those stage(s) first so they produce a snapshot, then Run this stage again.", "workerDied": "Backend stopped without sending a result. The prompt worker likely died (CUDA OOM during cleanup is the usual cause). Restart ComfyUI to recover." };
-const sidebar$1 = { "tab": { "workflow": "Workflow", "assets": "Assets" } };
-const assets$1 = { "title": "Asset Library", "empty": "No assets yet — add images to reuse them across projects.", "emptyCategory": "No assets in this category yet.", "add": "Add images", "addTooltip": "Upload images into the library (or drag & drop them onto this panel)", "uploading": "Uploading {done}/{total}…", "uploadFailed": "Upload failed: {detail}", "dropHint": "Drop images to add them to the library", "category": { "all": "All", "none": "Uncategorized", "new": "New category", "newPrompt": "New category name:", "rename": "Rename category", "renamePrompt": "Category name:", "delete": "Delete category", "deleteConfirm": "Delete this category? It is removed from all assets; the assets and files on disk stay." }, "card": { "rename": "Rename", "renamePrompt": "Asset name:", "delete": "Remove from library", "deleteConfirm": "Remove this asset from the library? The file on disk stays.", "tags": "Edit tags" }, "tagPopover": { "empty": "No categories yet." } };
-const promptHelper$1 = { "open": "Prompt helper — quick starters & enhancement tags", "templates": "Templates", "template": { "storyboardGrid": "Storyboard grid", "characterSheet": "Character sheet", "moodBoard": "Mood board", "upscale": "Upscale" }, "quickStart": "Quick starters", "quick": { "portrait": "Portrait", "landscape": "Landscape", "product": "Product", "fantasy": "Fantasy", "scifi": "Sci-Fi", "food": "Food", "architecture": "Architecture", "anime": "Anime" }, "category": { "quality": "Quality", "lighting": "Lighting", "mood": "Mood", "style": "Style" } };
-const cameraPrompt$1 = { "open": "Cinematic camera — compile camera/lens/aperture into the prompt", "camera": "Camera", "lens": "Lens", "focal": "Focal length", "aperture": "Aperture", "empty": "Pick a camera, lens, focal length or aperture to build a cinematic suffix.", "insert": "Insert into prompt", "clear": "Clear" };
-const imageRefs$1 = { "title": "Image references", "empty": "No reference images — click + to pin one from the library.", "add": "Add reference image", "remove": "Remove", "warnDuplicate": "Reference slot #{n} is pinned by multiple images — only the last one applies at run.", "warnOverride": "Reference slot #{n} already has an upstream connection — the pinned image overrides it at run.", "warnOverflow": "The workflow binds only {total} reference slot(s) — {count} pinned image(s) won't be consumed.", "warnNoSlots": "This workflow has no image input that can receive reference images — they'll be ignored at run." };
-const promptAssets$1 = { "addTooltip": "Insert an image asset from the library — it will be sent as a reference image at run", "search": "Search assets…", "empty": "No matching assets — add some in the sidebar Assets tab.", "missing": "asset #{id} was removed from the library — this chip is ignored at run", "slotTitle": "Reference image slot", "slotShort": "→ reference slot #{n}", "slotWired": "wired", "slotClaimed": "taken", "slotEmpty": 'This workflow has no reference-image slots bound yet — bind a LoadImage to "Upstream image #N" in the sidebar workflow config first.' };
-const configSidebar$1 = { "title": "Workflow Config", "empty": "Select a stage node on the canvas to edit its workflow config.", "noWorkflowPicked": "This stage's workflow combo is empty — pick one first.", "loading": "Loading…", "noExposedWidgets": "This workflow has no editable widgets, or hasn't been prepared yet — pick it on any stage first so the browser can analyze it.", "pickWorkflowFirst": "Pick this workflow on any stage first to populate widget metadata (the browser-side graphToPrompt has to run).", "bindTo": "Bind to:", "exportPreset": "Export preset.json", "exportPresetTooltip": "Download the current bindings as a *_preset.json file. Drop it next to the workflow JSON in workflows/<kind>/ to ship these defaults to other users.", "exportPresetFailed": "Export failed: {detail}", "resetToPreset": "↻ Reset to shipped preset", "resetToPresetTooltip": "Wipe all bindings + meta for this workflow and re-apply its shipped _preset.json from disk. Your own edits will be lost.", "resetToPresetConfirm": "Reset all bindings for this workflow to the shipped preset? Your edits will be lost.", "resetToPresetFailed": "Reset failed: {detail}", "section": { "widgets": "Widgets", "notes": "Workflow notes", "description": "Description" } };
-const project$1 = { "label": "Current Project", "shared_suffix": "(shared)", "id_prefix": "id:", "refresh": "Refresh project list", "create": "New project", "delete": "Delete this project (files on disk stay)", "delete_confirm": "Delete this project? DB rows will be cleared; files on disk stay.", "create_prompt": "New project name:", "create_default": "Project {n}", "status": { "refreshing": "refreshing…", "refresh_failed": "refresh failed", "create_failed": "create failed", "deleted": "deleted", "delete_failed": "delete failed", "load_failed": "Failed to load project list" } };
-const execution$1 = { "running": "running: node #{nodeId}", "queued": "queued" };
-const actions$1 = { "image": { "edit": { "label": "Edit Image", "tooltip": "Edits that change size or need rich UI (HD / outpaint / inpaint / erase / cutout / crop)" }, "panorama": { "label": "Panorama", "tooltip": "Turn this image into a panorama and explore viewpoints" }, "multiangle": { "label": "Multi-angle", "tooltip": "Re-render this image from a different camera angle" }, "relight": { "label": "Relight", "tooltip": "Brightness / color / rim-light, or reference another image's lighting" }, "preset": { "label": "Presets", "tooltip": "Size-preserving, no-rich-UI preset transforms (multi-view / grid / scene progression)" } }, "video": { "extend": { "label": "Extend", "tooltip": "Extract this clip's last frame and spawn a new VideoStage using it as the I2V start frame — write a prompt for the continuation" }, "change": { "label": "Edit Video", "tooltip": "Modify an existing video: clip / HD / subtitle erase / audio separation" } }, "text": { "refine": { "label": "Refine", "tooltip": "Continue rewriting in a new TextStage" } }, "panorama": { "view-current": { "label": "Current View", "tooltip": "Extract the current viewport as a single image" }, "view-four": { "label": "4 Views", "tooltip": "Extract 4 viewpoints as an image batch" }, "view-twelve": { "label": "12 Views", "tooltip": "Extract 12 viewpoints as an image batch" } }, "storyboard": { "gen-shots": { "label": "Generate Shot Images", "tooltip": "Spawn a Shot Images stage wired to this storyboard — iterates the shot list and renders one image per shot" } } };
-const presets$1 = { "imageVariant": { "multi-cam-9": { "label": "Multi-cam 9-grid", "tooltip": "9 camera angles arranged in a grid" }, "story-4": { "label": "Story Progression (4)", "tooltip": "4 consecutive narrative shots" }, "face-3view": { "label": "Face 3-view", "tooltip": "Face: front / side / 45°" }, "product-3view": { "label": "Product 3-view", "tooltip": "Product: front / side / back" }, "character-3view": { "label": "Character 3-view", "tooltip": "Full-body character: front / side / back" }, "storyboard-25": { "label": "25-grid Storyboard", "tooltip": "25 consecutive storyboard shots" }, "cinematic-light": { "label": "Cinematic Lighting", "tooltip": "Apply cinematic lighting and color grade" }, "frame-3s": { "label": "Project +3s", "tooltip": "Project the scene 3 seconds later" }, "frame-5s": { "label": "Project +5s", "tooltip": "Project the scene 5 seconds later" } }, "imageEdit": { "hd": { "label": "HD", "tooltip": "Upscale to a higher resolution (output is larger)" }, "outpaint": { "label": "Outpaint", "tooltip": "Extend the canvas outward (output is larger)" }, "inpaint": { "label": "Inpaint", "tooltip": "Regenerate a masked region" }, "erase": { "label": "Erase", "tooltip": "Remove a masked region" }, "cutout": { "label": "Cutout", "tooltip": "Extract the subject with a transparent background" }, "crop": { "label": "Crop", "tooltip": "Crop to a bounding box" }, "rotate": { "label": "Rotate", "tooltip": "Rotate by an angle (browser-side, no GPU)" }, "mirror": { "label": "Mirror", "tooltip": "Flip horizontally / vertically (browser-side)" }, "grid": { "label": "Grid Split", "tooltip": "Slice into an R×C grid of tiles (browser-side) → image batch" } }, "videoChange": { "clip": { "label": "Clip", "tooltip": "Clip / trim — pick start and end times" }, "crop": { "label": "Crop", "tooltip": "Spatial crop — keep a rectangle (x, y, w, h) of every frame" }, "resize": { "label": "Resize", "tooltip": "Scale video to a target width × height (use -1 to auto-derive from aspect)" }, "extract-frame": { "label": "Extract Frame", "tooltip": "Pull a single frame out as an image (first / last / middle / custom seconds)" }, "hd": { "label": "HD", "tooltip": "Upscale" }, "subtitle-smart": { "label": "Auto Subtitle Erase", "tooltip": "Auto-detect and remove subtitles" }, "subtitle-select": { "label": "Region Subtitle Erase", "tooltip": "Manually box a region to erase (needs region-selector UI)" }, "audio-vocal": { "label": "Vocals Only", "tooltip": "Voice separation — vocals only" }, "audio-bg": { "label": "Background Only", "tooltip": "Voice separation — instrumental / ambient" }, "demux": { "label": "Demux A/V", "tooltip": "Split into audio track + silent video (two nodes spawned)" } } };
-const shotCell$1 = { "pick": "Pick {tag}", "refine": "Refine {tag}" };
-const imageCrop$1 = { "noInputImage": "No input image — connect an image upstream", "cropPreviewAlt": "Crop preview", "loading": "Loading…", "ratio": "Ratio", "custom": "Custom", "lockRatio": "Lock aspect ratio", "unlockRatio": "Unlock aspect ratio", "applying": "Applying crop…", "applied": "Crop applied — ready for downstream", "adjustToApply": "Drag the rectangle or pick a ratio to apply" };
-const panorama$1 = { "empty": "No panorama yet — upload an HDRI / equirect image or click Run with an upstream image", "uploading": "Uploading…", "upload": "Upload panorama", "clearUpload": "Clear upload", "clearUploadTooltip": "Drop the manual source — Run will then derive from upstream again", "manualSourceBadge": "manual", "loadError": "Failed to load panorama" };
-const imageCompare$1 = { "before": "Before", "after": "After", "noImages": "Connect two images to compare (A / B)" };
-const storyboard$1 = { "shots": "Shots", "addShot": "Add shot", "empty": "No shots yet — Run to generate from the premise, or add shots manually", "moveUp": "Move up", "moveDown": "Move down", "remove": "Remove shot", "regenerate": "Regenerate this shot via the LLM (keeps the rest)", "noRef": "no reference", "uploadRef": "Upload reference image", "clearRef": "Clear reference", "promptPlaceholder": "Describe this shot…", "cols": { "scene_purpose": "Purpose", "character": "Character", "character_desc": "Character notes", "shot_size": "Shot size", "action": "Action", "emotion": "Emotion", "scene_tags": "Scene", "lighting": "Lighting", "sfx": "SFX", "dialogue": "Dialogue", "image_prompt": "Image prompt", "motion_prompt": "Motion prompt" }, "regenerateFailed": "Regenerate shot failed" };
-const timeline$1 = { "keyframes": "Keyframes", "connectImages": "Connect images upstream to use as shots", "addSegment": "Add as a shot", "clickKeyframe": "Click a keyframe above to add a shot", "addAudio": "Add audio track", "noAudio": "Connect audio upstream to add a track", "segmentPrompt": "Shot prompt", "promptPlaceholder": "What happens in this shot…", "length": "Length", "fps": "FPS", "shots": "shots" };
-const gridSplit$1 = { "connectImage": "Connect an image to split", "pickGrid": "Pick a grid preset or set rows × cols", "splitting": "Slicing into {n} tiles…", "done": "Split into {n} tiles — ready for downstream", "rows": "Rows", "cols": "Cols" };
-const panoramaView$1 = { "connectPanorama": "Connect a panorama upstream", "orbitToCapture": "Drag to look around — releasing captures the view", "capturing": "Capturing viewport…", "captured": "Viewport captured — ready for downstream", "aspect": "Aspect", "resolution": "Resolution", "viewCount": "View count", "adjustCountToCapture": "Move the slider to capture views", "capturingCount": "Capturing {i}/{n}…", "capturedN": "Captured {n} views — ready for downstream" };
-const rotate$1 = { "angle": "Angle", "applying": "Applying rotation…", "applied": "Rotation applied — ready for downstream", "adjustToApply": "Slide or click a quick angle to apply" };
-const mirror$1 = { "horizontal": "Horizontal flip", "vertical": "Vertical flip", "applying": "Applying mirror…", "applied": "Mirror applied — ready for downstream", "adjustToApply": "Toggle flips to apply" };
-const painter$1 = { "tool": "Tool", "brush": "Brush", "eraser": "Eraser", "fill": "Fill", "rect": "Rectangle", "ellipse": "Ellipse", "label": "Numbered label", "size": "Size", "color": "Color", "opacity": "Opacity", "hardness": "Hardness", "clear": "Clear" };
-const camera$1 = { "horizontal": "H", "vertical": "V", "zoom": "Z", "resetToDefaults": "Reset to defaults", "azimuth": { "frontView": "front view", "frontRightQuarterView": "front-right quarter view", "rightSideView": "right side view", "backRightQuarterView": "back-right quarter view", "backView": "back view", "backLeftQuarterView": "back-left quarter view", "leftSideView": "left side view", "frontLeftQuarterView": "front-left quarter view" }, "elevation": { "lowAngleShot": "low-angle shot", "eyeLevelShot": "eye-level shot", "elevatedShot": "elevated shot", "highAngleShot": "high-angle shot" }, "distance": { "wideShot": "wide shot", "mediumShot": "medium shot", "closeUp": "close-up" } };
-const outpaint$1 = { "left": "Left", "top": "Top", "right": "Right", "bottom": "Bottom", "reset": "Reset", "output": "Output", "noInputImage": "Wire an image to begin" };
-const fileSlot$1 = { "releaseToUpload": "Release to upload", "clickOrDrag": "Click or drag {kind}", "remove": "Remove {kind}", "image": "image", "video": "video" };
-const mention$1 = { "newTag": "new", "create": "+ Create", "newFragment": "new fragment", "createFragment": "+ Create fragment", "invalidLabel": "Invalid label — start with a letter / underscore (Chinese is fine), then letters / digits / _ / -", "noEntries": "No entries yet — type a label to create one", "contentPlaceholder": "Content this {'@'}-token expands to. (For characters / other kinds, use the ComfyTV button → Entries dialog.)", "save": "Save (Ctrl+Enter)" };
-const entries$1 = { "refHelpPre": "Reference any entry in a stage's prompt with", "refHelpPost": "Unknown tokens stay literal.", "colLabel": "Label", "colContent": "Content", "deleteTitle": "Delete {'@'}{label}", "confirmDelete": "Delete {'@'}{label}? Existing {'@'}{label} tokens will fall back to literal text.", "labelError": "Start with a letter / underscore (Chinese is fine), then letters / digits / _ / -", "emptyKind": "No {kind} yet. Click + Add below.", "labelPlaceholder": "label", "save": "Save", "addKind": "+ Add {kind}" };
-const menu$1 = { "openEntryManager": "ComfyTV — open entry manager", "entriesTitle": "ComfyTV Entries", "entriesButtonTooltip": "ComfyTV — entries (fragments / characters / …)", "configSidebarTooltip": "ComfyTV — workflow config & asset library" };
-const valuePreview$1 = { "moreShots": "+ {n} more", "emptyTimeline": "empty timeline" };
-const en = {
-  workflow: workflow$1,
-  stage: stage$1,
-  error: error$1,
-  sidebar: sidebar$1,
-  assets: assets$1,
-  promptHelper: promptHelper$1,
-  cameraPrompt: cameraPrompt$1,
-  imageRefs: imageRefs$1,
-  promptAssets: promptAssets$1,
-  configSidebar: configSidebar$1,
-  project: project$1,
-  execution: execution$1,
-  actions: actions$1,
-  presets: presets$1,
-  shotCell: shotCell$1,
-  imageCrop: imageCrop$1,
-  panorama: panorama$1,
-  imageCompare: imageCompare$1,
-  storyboard: storyboard$1,
-  timeline: timeline$1,
-  gridSplit: gridSplit$1,
-  panoramaView: panoramaView$1,
-  rotate: rotate$1,
-  mirror: mirror$1,
-  painter: painter$1,
-  camera: camera$1,
-  outpaint: outpaint$1,
-  fileSlot: fileSlot$1,
-  mention: mention$1,
-  entries: entries$1,
-  menu: menu$1,
-  valuePreview: valuePreview$1
-};
-const workflow = { "uploadButton": "⬆ 上传工作流", "imported": "已导入「{label}」", "importFailed": "工作流导入失败", "notJson": "该文件不是合法 JSON" };
-const stage = { "run": "运行", "rerun": "重新运行", "running": "运行中…", "cancel": "取消", "preparingWorkflow": "准备工作流中…", "section": { "context": "上游输入", "pool": "图片池", "output": "输出 ({type})", "actions": "动作" }, "pool": { "clear": "清除", "clearHint": "清空图片池并重置选择", "confirmClear": "确认清空？", "confirm": "是", "cancel": "否" }, "empty": { "no_output": "暂无输出", "generating": "生成中…", "pending_upstream": "上游待运行", "unsupported_type": "不支持的类型 {type}" }, "source": { "upstream": "← 上游", "pending": "… 等待中" }, "disconnect": "断开此连接", "starting": "启动中…", "runByKind": { "text": "生成文本", "image": "生成图片", "image-batch": "生成图片", "video": "生成视频", "audio": "生成音频", "panorama": "生成全景图", "storyboard": "生成分镜" }, "action": { "viewFull": "查看大图", "download": "下载", "addTag": "存入资产库 / 打标签", "close": "关闭" }, "preparingWorkflowDetail": "稍等 — 正在把工作流转换成 api JSON。稍后再点运行。" };
-const error = { "dismiss": "清除", "cancelled": "已取消", "upstreamNotReady": "上游未就绪", "upstreamNotReadyDetail": "上游未就绪:{list}。请先运行这些 stage 生成快照,然后再运行此 stage。", "workerDied": "后端未返回结果就停止了。prompt worker 可能已崩溃(通常是清理阶段 CUDA OOM)。重启 ComfyUI 后恢复。" };
-const sidebar = { "tab": { "workflow": "工作流", "assets": "资产库" } };
-const assets = { "title": "资产库", "empty": "还没有资产 —— 添加图片后可跨项目复用。", "emptyCategory": "这个分类下还没有资产。", "add": "添加图片", "addTooltip": "上传图片到资产库（也可以直接拖拽图片到这个面板）", "uploading": "上传中 {done}/{total}…", "uploadFailed": "上传失败: {detail}", "dropHint": "松开把图片添加到资产库", "category": { "all": "全部", "none": "未分类", "new": "新建分类", "newPrompt": "新分类名称：", "rename": "重命名分类", "renamePrompt": "分类名称：", "delete": "删除分类", "deleteConfirm": "删除这个分类？它会从所有资产上移除；资产和磁盘上的文件保留。" }, "card": { "rename": "重命名", "renamePrompt": "资产名称：", "delete": "从资产库移除", "deleteConfirm": "把这个资产从资产库移除？磁盘上的文件保留。", "tags": "编辑标签" }, "tagPopover": { "empty": "还没有分类。" } };
-const promptHelper = { "open": "提示词助手 —— 快速起步 & 增强标签", "templates": "模板", "template": { "storyboardGrid": "分镜九宫格", "characterSheet": "角色设定表", "moodBoard": "情绪板", "upscale": "高清放大" }, "quickStart": "快速起步", "quick": { "portrait": "人像", "landscape": "风景", "product": "产品", "fantasy": "奇幻", "scifi": "科幻", "food": "美食", "architecture": "建筑", "anime": "动漫" }, "category": { "quality": "画质", "lighting": "光照", "mood": "氛围", "style": "风格" } };
-const cameraPrompt = { "open": "电影感相机 —— 把相机/镜头/光圈编译进提示词", "camera": "相机", "lens": "镜头", "focal": "焦段", "aperture": "光圈", "empty": "选择相机 / 镜头 / 焦段 / 光圈，自动拼出一段电影感后缀。", "insert": "插入提示词", "clear": "清空" };
-const imageRefs = { "title": "图片引用", "empty": "暂无参考图 —— 点 + 从资产库选一张。", "add": "添加参考图", "remove": "移除", "warnDuplicate": "参考槽位 #{n} 被多张图片绑定 —— 运行时只有最后一张生效。", "warnOverride": "参考槽位 #{n} 已有上游连接 —— 绑定的图片会在运行时覆盖它。", "warnOverflow": "该工作流只绑定了 {total} 个参考槽位 —— 有 {count} 张图片不会被使用。", "warnNoSlots": "该工作流没有可接收参考图的图片输入 —— 运行时这些图会被忽略。" };
-const promptAssets = { "addTooltip": "从资产库插入图片 —— 运行时会作为参考图传给工作流", "search": "搜索资产…", "empty": "没有匹配的资产 —— 先在侧边栏「资产库」里添加。", "missing": "资产 #{id} 已从资产库移除 —— 运行时会忽略这个标记", "slotTitle": "参考图槽位", "slotShort": "→ 参考图槽位 #{n}", "slotWired": "已连线", "slotClaimed": "已占用", "slotEmpty": "这个工作流还没绑定参考图槽位 —— 先在侧边栏工作流配置里把 LoadImage 绑到「Upstream image #N」。" };
-const configSidebar = { "title": "工作流配置", "empty": "在画布上选中某个 Stage 节点以编辑它的工作流配置。", "noWorkflowPicked": "该 Stage 还没选工作流 —— 先在下拉里挑一个。", "loading": "加载中…", "noExposedWidgets": "这个工作流没有可编辑的 widget，或者还没准备过 —— 先在画布上任一 Stage 选中它，浏览器侧 graphToPrompt 跑一遍后才有 widget 元数据。", "pickWorkflowFirst": "先在画布上任一 Stage 上选中这个工作流 —— 浏览器侧 graphToPrompt 跑过一遍才有 widget 元数据。", "bindTo": "绑定到：", "exportPreset": "导出 preset.json", "exportPresetTooltip": "把当前绑定导出为 *_preset.json 文件，丢进 workflows/<kind>/ 和工作流 JSON 同目录，其他用户首次启动时会自动应用这套默认。", "exportPresetFailed": "导出失败: {detail}", "resetToPreset": "↻ 重置为内置 preset", "resetToPresetTooltip": "清空该工作流的所有绑定和元数据，重新读取磁盘上的 _preset.json 文件。你自己改过的内容会丢失。", "resetToPresetConfirm": "把这个工作流的所有绑定重置成内置 preset？你自己改过的会丢失。", "resetToPresetFailed": "重置失败: {detail}", "section": { "widgets": "Widget 列表", "notes": "工作流笔记", "description": "说明" } };
-const project = { "label": "当前项目", "shared_suffix": "(共享)", "id_prefix": "id:", "refresh": "刷新项目列表", "create": "新建项目", "delete": "删除该项目（不会删磁盘文件）", "delete_confirm": "确定删除该项目？数据库会清空，磁盘上的生成文件保留。", "create_prompt": "新项目名称：", "create_default": "项目 {n}", "status": { "refreshing": "刷新中…", "refresh_failed": "刷新失败", "create_failed": "创建失败", "deleted": "已删除", "delete_failed": "删除失败", "load_failed": "加载项目列表失败" } };
-const execution = { "running": "运行中：节点 #{nodeId}", "queued": "排队中" };
-const actions = { "image": { "edit": { "label": "修改图片", "tooltip": "改变尺寸或需要交互 UI 的图像编辑（高清 / 扩图 / 重绘 / 擦除 / 抠图 / 裁剪）" }, "panorama": { "label": "全景图", "tooltip": "把当前图变为全景，进入视角操作" }, "multiangle": { "label": "多角度", "tooltip": "从不同相机角度重新渲染该图" }, "relight": { "label": "打光", "tooltip": "调亮度 / 颜色 / 轮廓光，或参考另一张图的灯光" }, "preset": { "label": "预设", "tooltip": "保持尺寸、无需复杂 UI 的预设变换（多视图 / 宫格 / 画面推演 ...）" } }, "video": { "extend": { "label": "延伸", "tooltip": "抽出本段末帧,派生新 VideoStage 用作 I2V 起始帧 —— 写个 prompt 描述接下来要发生什么" }, "change": { "label": "修改视频", "tooltip": "对已上传/已生成的视频做修改：剪辑 / 高清 / 去字幕 / 音频分离" } }, "text": { "refine": { "label": "改写", "tooltip": "在新 TextStage 中继续改写" } }, "panorama": { "view-current": { "label": "当前视角截图", "tooltip": "提取当前视角为单张图" }, "view-four": { "label": "四大视角截图", "tooltip": "提取 4 个视角组成图集" }, "view-twelve": { "label": "12 视角截图", "tooltip": "提取 12 个视角组成图集" } }, "storyboard": { "gen-shots": { "label": "生成分镜图", "tooltip": "派生一个 Shot Images 节点接到这个分镜板上 —— 按镜头列表逐个出图" } } };
-const presets = { "imageVariant": { "multi-cam-9": { "label": "多机位九宫格", "tooltip": "9 个相机角度排列" }, "story-4": { "label": "剧情推演四宫格", "tooltip": "4 连贯剧情画面" }, "face-3view": { "label": "角色脸部三视图", "tooltip": "人脸正/侧/45° 视图" }, "product-3view": { "label": "产品三视图", "tooltip": "产品正/侧/背" }, "character-3view": { "label": "角色三视图", "tooltip": "全身角色正/侧/背" }, "storyboard-25": { "label": "25 宫格连贯分镜", "tooltip": "25 张连贯分镜" }, "cinematic-light": { "label": "电影级光影校正", "tooltip": "应用电影级打光与色彩" }, "frame-3s": { "label": "画面推演 +3s", "tooltip": "推演 3 秒后的画面" }, "frame-5s": { "label": "画面推演 +5s", "tooltip": "推演 5 秒后的画面" } }, "imageEdit": { "hd": { "label": "高清", "tooltip": "提升分辨率 (Upscale) — 输出尺寸大于输入" }, "outpaint": { "label": "扩图", "tooltip": "向外延伸画面 (Outpaint) — 输出比输入大" }, "inpaint": { "label": "重绘", "tooltip": "局部重新生成 (Inpaint) — 需要蒙版" }, "erase": { "label": "擦除", "tooltip": "抹除指定区域 (Erase) — 需要蒙版" }, "cutout": { "label": "抠图", "tooltip": "抠出主体，背景透明 (Cutout / matting)" }, "crop": { "label": "裁剪", "tooltip": "按框裁切 (Crop) — 需要 bbox 拖拽" }, "rotate": { "label": "旋转", "tooltip": "按角度旋转（浏览器端，不占 GPU）" }, "mirror": { "label": "镜像", "tooltip": "水平 / 垂直翻转（浏览器端）" }, "grid": { "label": "宫格切分", "tooltip": "按 R×C 切成多张（浏览器端）→ 图片批次" } }, "videoChange": { "clip": { "label": "剪辑", "tooltip": "裁剪片段 — 输入起始结束时间" }, "crop": { "label": "裁剪", "tooltip": "空间裁剪 — 每帧保留 (x, y, w, h) 矩形" }, "resize": { "label": "缩放", "tooltip": "缩放视频到目标 宽×高(其中一个填 -1 按比例自动算另一个)" }, "extract-frame": { "label": "抽帧", "tooltip": "从视频抽一张图(首/末/中/任意秒数)" }, "hd": { "label": "高清", "tooltip": "提升分辨率" }, "subtitle-smart": { "label": "智能去字幕", "tooltip": "自动检测并擦除字幕" }, "subtitle-select": { "label": "扣选去字幕", "tooltip": "手动框选区域擦除（需要 region selector UI）" }, "audio-vocal": { "label": "仅保留人声", "tooltip": "人声分离 — 仅保留人声" }, "audio-bg": { "label": "仅保留背景声", "tooltip": "人声分离 — 仅保留背景声" }, "demux": { "label": "音视频分离", "tooltip": "同时产出音频轨和静默视频（双节点）" } } };
-const shotCell = { "pick": "选择 {tag}", "refine": "微调 {tag}" };
-const imageCrop = { "noInputImage": "无输入图像 — 请上游连接一张图", "cropPreviewAlt": "裁剪预览", "loading": "加载中…", "ratio": "比例", "custom": "自定义", "lockRatio": "锁定纵横比", "unlockRatio": "解锁纵横比", "applying": "应用裁剪中…", "applied": "裁剪已应用 — 下游可直接使用", "adjustToApply": "拖动矩形或选择比例以应用" };
-const panorama = { "empty": "暂无全景图 — 上传 HDRI / 等距柱状投影图，或接入上游图后点 Run", "uploading": "上传中…", "upload": "上传全景图", "clearUpload": "清除上传", "clearUploadTooltip": "丢弃手动来源 — 之后 Run 会重新从上游派生", "manualSourceBadge": "手动", "loadError": "加载全景图失败" };
-const imageCompare = { "before": "之前", "after": "之后", "noImages": "连接两张图进行对比（A / B）" };
-const storyboard = { "shots": "分镜", "addShot": "添加分镜", "empty": "暂无分镜 — 点 Run 从剧本生成，或手动添加", "moveUp": "上移", "moveDown": "下移", "remove": "删除分镜", "regenerate": "用 LLM 重新生成此镜头(其他镜头保持)", "noRef": "无参考图", "uploadRef": "上传参考图", "clearRef": "清除参考图", "promptPlaceholder": "描述这个镜头…", "cols": { "scene_purpose": "画面描述", "character": "角色", "character_desc": "角色描述", "shot_size": "景别", "action": "角色动作", "emotion": "情绪", "scene_tags": "场景标签", "lighting": "光影氛围", "sfx": "音效", "dialogue": "对白", "image_prompt": "分镜提示词", "motion_prompt": "视频运动提示词" }, "regenerateFailed": "重新生成镜头失败" };
-const timeline = { "keyframes": "关键帧", "connectImages": "上游连接图片作为分镜素材", "addSegment": "添加为分镜", "clickKeyframe": "点击上方关键帧添加分镜", "addAudio": "添加音频轨", "noAudio": "上游连接音频以添加音轨", "segmentPrompt": "分镜提示词", "promptPlaceholder": "这个镜头里发生什么…", "length": "时长", "fps": "帧率", "shots": "镜头" };
-const gridSplit = { "connectImage": "请连接一张图以切分", "pickGrid": "选择宫格预设或设置行 × 列", "splitting": "切分为 {n} 块中…", "done": "已切分为 {n} 块 — 下游可直接使用", "rows": "行", "cols": "列" };
-const panoramaView = { "connectPanorama": "请在上游接入全景图", "orbitToCapture": "拖动环视 — 松开后自动截取当前视角", "capturing": "截取视角中…", "captured": "视角已截取 — 下游可直接使用", "aspect": "比例", "resolution": "分辨率", "viewCount": "视角数", "adjustCountToCapture": "拖动滑块以批量截取", "capturingCount": "截取中 {i}/{n}…", "capturedN": "已截取 {n} 张 — 下游可直接使用" };
-const rotate = { "angle": "角度", "applying": "旋转应用中…", "applied": "旋转已应用 — 下游可直接使用", "adjustToApply": "拖动滑块或点击快速角度以应用" };
-const mirror = { "horizontal": "水平翻转", "vertical": "垂直翻转", "applying": "镜像应用中…", "applied": "镜像已应用 — 下游可直接使用", "adjustToApply": "切换翻转开关以应用" };
-const painter = { "tool": "工具", "brush": "画笔", "eraser": "橡皮", "fill": "填充", "rect": "矩形", "ellipse": "椭圆", "label": "编号标记", "size": "大小", "color": "颜色", "opacity": "不透明度", "hardness": "硬度", "clear": "清除" };
-const camera = { "horizontal": "水平", "vertical": "垂直", "zoom": "距离", "resetToDefaults": "重置为默认值", "azimuth": { "frontView": "正面视角", "frontRightQuarterView": "右前方视角", "rightSideView": "右侧视角", "backRightQuarterView": "右后方视角", "backView": "背面视角", "backLeftQuarterView": "左后方视角", "leftSideView": "左侧视角", "frontLeftQuarterView": "左前方视角" }, "elevation": { "lowAngleShot": "仰拍", "eyeLevelShot": "平视", "elevatedShot": "高角度", "highAngleShot": "俯拍" }, "distance": { "wideShot": "远景", "mediumShot": "中景", "closeUp": "特写" } };
-const outpaint = { "left": "左", "top": "上", "right": "右", "bottom": "下", "reset": "重置", "output": "输出", "noInputImage": "先把一张图片连进来" };
-const fileSlot = { "releaseToUpload": "松开上传", "clickOrDrag": "点击或拖入{kind}", "remove": "移除{kind}", "image": "图片", "video": "视频" };
-const mention = { "newTag": "新建", "create": "+ 新建", "newFragment": "新建片段", "createFragment": "+ 新建片段", "invalidLabel": "标签无效 — 以字母 / 下划线开头(支持中文),后跟字母 / 数字 / _ / -", "noEntries": "还没有条目 — 输入标签即可新建", "contentPlaceholder": "此 {'@'} 标记展开后的内容。(角色等其他类型请用 ComfyTV 按钮 → 条目对话框。)", "save": "保存 (Ctrl+Enter)" };
-const entries = { "refHelpPre": "在 stage 提示词里用", "refHelpPost": "引用任意条目;未知标记保持原文。", "colLabel": "标签", "colContent": "内容", "deleteTitle": "删除 {'@'}{label}", "confirmDelete": "删除 {'@'}{label}?现有的 {'@'}{label} 标记将回退为原文。", "labelError": "以字母 / 下划线开头(支持中文),后跟字母 / 数字 / _ / -", "emptyKind": "还没有{kind}。点击下方 + 添加。", "labelPlaceholder": "标签", "save": "保存", "addKind": "+ 添加{kind}" };
-const menu = { "openEntryManager": "ComfyTV — 打开条目管理", "entriesTitle": "ComfyTV 条目", "entriesButtonTooltip": "ComfyTV — 条目(片段 / 角色 / …)", "configSidebarTooltip": "ComfyTV — 工作流配置与素材库" };
-const valuePreview = { "moreShots": "+ 还有 {n} 个", "emptyTimeline": "空时间轴" };
-const zh = {
-  workflow,
-  stage,
-  error,
-  sidebar,
-  assets,
-  promptHelper,
-  cameraPrompt,
-  imageRefs,
-  promptAssets,
-  configSidebar,
-  project,
-  execution,
-  actions,
-  presets,
-  shotCell,
-  imageCrop,
-  panorama,
-  imageCompare,
-  storyboard,
-  timeline,
-  gridSplit,
-  panoramaView,
-  rotate,
-  mirror,
-  painter,
-  camera,
-  outpaint,
-  fileSlot,
-  mention,
-  entries,
-  menu,
-  valuePreview
-};
-function pickLocale() {
-  var _a2, _b2, _c, _d, _e, _f;
-  let stored;
-  try {
-    stored = ((_c = (_b2 = (_a2 = app == null ? void 0 : app.ui) == null ? void 0 : _a2.settings) == null ? void 0 : _b2.getSettingValue) == null ? void 0 : _c.call(_b2, "Comfy.Locale")) ?? ((_f = (_e = (_d = app == null ? void 0 : app.extensionManager) == null ? void 0 : _d.setting) == null ? void 0 : _e.get) == null ? void 0 : _f.call(_e, "Comfy.Locale"));
-  } catch {
-    stored = void 0;
-  }
-  const candidate = (stored || navigator.language || "en").toLowerCase();
-  if (candidate.startsWith("zh")) return "zh";
-  return "en";
-}
-const i18n = createI18n({
-  legacy: false,
-  locale: pickLocale(),
-  fallbackLocale: "en",
-  messages: { en, zh },
-  missingWarn: false,
-  fallbackWarn: false
-});
-const t = i18n.global.t;
+const MainPromptInput = /* @__PURE__ */ _export_sfc(_sfc_main$q, [["__scopeId", "data-v-906058c4"]]);
 function useImagePanZoom(containerEl, imgEl, options = {}) {
   const minZoom = options.minZoom ?? 1;
   const maxZoom = options.maxZoom ?? 6;
@@ -52556,6 +52603,67 @@ function useOutputAssetTagging() {
     toggleOutputTag
   };
 }
+function parsePayloadList(type, content, wantType, key) {
+  if (type !== wantType || !content) return [];
+  try {
+    const parsed = JSON.parse(String(content));
+    const list = parsed == null ? void 0 : parsed[key];
+    return Array.isArray(list) ? list : [];
+  } catch {
+    return [];
+  }
+}
+function sumShotDurations(shots) {
+  let total = 0;
+  for (const s of shots) {
+    if (s.duration == null) continue;
+    const n = parseFloat(String(s.duration).replace(/s$/i, ""));
+    if (Number.isFinite(n)) total += n;
+  }
+  return Math.round(total);
+}
+function shotSummary(s) {
+  return String(s.scene_purpose || s.prompt || s.image_prompt || "").trim().replace(/\s+/g, " ").slice(0, 60);
+}
+const SHORT_TYPE = {
+  COMFYTV_TEXT: "TEXT",
+  COMFYTV_IMAGE: "IMG",
+  COMFYTV_VIDEO: "VID",
+  COMFYTV_AUDIO: "AUDIO",
+  COMFYTV_PANORAMA: "360°",
+  COMFYTV_STORYBOARD: "BOARD",
+  COMFYTV_IMAGES: "BATCH",
+  COMFYTV_TIMELINE: "TIMELINE"
+};
+function shortTypeLabel(type) {
+  return SHORT_TYPE[type] ?? type;
+}
+function batchItemIndex(img, i) {
+  return img.index ?? String(i + 1);
+}
+function isBatchItemSelected(img, i, selectedIndex) {
+  if (selectedIndex == null) return false;
+  return Number(batchItemIndex(img, i)) === Number(selectedIndex);
+}
+function useValuePreview(getType2, getContent) {
+  const hasContent = computed(() => {
+    const c2 = getContent();
+    return c2 != null && String(c2).length > 0;
+  });
+  const shortType = computed(() => shortTypeLabel(getType2()));
+  const batchImages = computed(() => parsePayloadList(getType2(), getContent(), "COMFYTV_IMAGES", "images"));
+  const storyboardShots = computed(() => parsePayloadList(getType2(), getContent(), "COMFYTV_STORYBOARD", "shots"));
+  const timelineSegs = computed(() => parsePayloadList(getType2(), getContent(), "COMFYTV_TIMELINE", "segments"));
+  const storyboardTotalSec = computed(() => sumShotDurations(storyboardShots.value));
+  return {
+    hasContent,
+    shortType,
+    batchImages,
+    storyboardShots,
+    timelineSegs,
+    storyboardTotalSec
+  };
+}
 const _hoisted_1$n = ["src", "alt"];
 const _hoisted_2$k = ["title"];
 const _hoisted_3$k = ["title"];
@@ -52666,29 +52774,14 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
     const props = __props;
     useImagePanZoom(zoomContainer, zoomImg, { resetKey: /* @__PURE__ */ toRef$1(props, "content") });
     useImagePanZoom(lightboxContainer, lightboxImg, { resetKey: lightboxUrl, minZoom: 0.2, maxZoom: 8 });
-    const hasContent = computed(() => props.content != null && String(props.content).length > 0);
-    const shortType = computed(() => {
-      switch (props.type) {
-        case "COMFYTV_TEXT":
-          return "TEXT";
-        case "COMFYTV_IMAGE":
-          return "IMG";
-        case "COMFYTV_VIDEO":
-          return "VID";
-        case "COMFYTV_AUDIO":
-          return "AUDIO";
-        case "COMFYTV_PANORAMA":
-          return "360°";
-        case "COMFYTV_STORYBOARD":
-          return "BOARD";
-        case "COMFYTV_IMAGES":
-          return "BATCH";
-        case "COMFYTV_TIMELINE":
-          return "TIMELINE";
-        default:
-          return props.type;
-      }
-    });
+    const {
+      hasContent,
+      shortType,
+      batchImages,
+      storyboardShots,
+      timelineSegs,
+      storyboardTotalSec
+    } = useValuePreview(() => props.type, () => props.content);
     const emit2 = __emit;
     function onItemClick(img, i) {
       emit2("item-click", {
@@ -52700,55 +52793,12 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
     }
     const clickHintIcon = computed(() => props.clickMode === "pick" ? "✓" : "✏️");
     function isItemSelected(img, i) {
-      if (props.selectedIndex == null) return false;
-      const cellIdx = img.index ?? String(i + 1);
-      return Number(cellIdx) === Number(props.selectedIndex);
+      return isBatchItemSelected(img, i, props.selectedIndex);
     }
     function cellTooltip(img, i) {
       const tag = img.label ?? `#${img.index ?? i + 1}`;
       return props.clickMode === "pick" ? t2("shotCell.pick", { tag }) : t2("shotCell.refine", { tag });
     }
-    const batchImages = computed(() => {
-      if (props.type !== "COMFYTV_IMAGES" || !props.content) return [];
-      try {
-        const parsed = JSON.parse(String(props.content));
-        return Array.isArray(parsed == null ? void 0 : parsed.images) ? parsed.images : [];
-      } catch {
-        return [];
-      }
-    });
-    const storyboardShots = computed(() => {
-      if (props.type !== "COMFYTV_STORYBOARD" || !props.content) return [];
-      try {
-        const parsed = JSON.parse(String(props.content));
-        return Array.isArray(parsed == null ? void 0 : parsed.shots) ? parsed.shots : [];
-      } catch {
-        return [];
-      }
-    });
-    const storyboardTotalSec = computed(() => {
-      let total = 0;
-      for (const s of storyboardShots.value) {
-        const raw = s.duration;
-        if (raw == null) continue;
-        const n = parseFloat(String(raw).replace(/s$/i, ""));
-        if (Number.isFinite(n)) total += n;
-      }
-      return Math.round(total);
-    });
-    function shotSummary(s) {
-      const raw = String(s.scene_purpose || s.prompt || s.image_prompt || "").trim();
-      return raw.replace(/\s+/g, " ").slice(0, 60);
-    }
-    const timelineSegs = computed(() => {
-      if (props.type !== "COMFYTV_TIMELINE" || !props.content) return [];
-      try {
-        const parsed = JSON.parse(String(props.content));
-        return Array.isArray(parsed == null ? void 0 : parsed.segments) ? parsed.segments : [];
-      } catch {
-        return [];
-      }
-    });
     const rootClass = computed(() => {
       if (props.compact) return "ctv:relative ctv:size-full ctv:overflow-hidden";
       return "ctv:relative ctv:flex ctv:flex-col ctv:min-h-12 ctv:text-xs ctv:overflow-hidden";
@@ -52801,8 +52851,8 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
         !__props.compact ? (openBlock(), createElementBlock("span", {
           key: 0,
           class: normalizeClass(typeBadgeClass.value)
-        }, toDisplayString$1(shortType.value), 3)) : createCommentVNode("", true),
-        !hasContent.value ? (openBlock(), createElementBlock("div", {
+        }, toDisplayString$1(unref(shortType)), 3)) : createCommentVNode("", true),
+        !unref(hasContent) ? (openBlock(), createElementBlock("div", {
           key: 1,
           class: normalizeClass(emptyClass2.value)
         }, toDisplayString$1(__props.emptyLabel), 3)) : __props.type === "COMFYTV_TEXT" ? (openBlock(), createElementBlock("pre", {
@@ -52874,26 +52924,26 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
           __props.compact ? (openBlock(), createElementBlock("div", _hoisted_8$f, [
             createBaseVNode("div", _hoisted_9$f, [
               _cache2[11] || (_cache2[11] = createBaseVNode("span", { class: "ctv:text-[11px] ctv:leading-none" }, "📋", -1)),
-              createBaseVNode("span", _hoisted_10$f, toDisplayString$1(storyboardShots.value.length), 1),
-              storyboardTotalSec.value ? (openBlock(), createElementBlock("span", _hoisted_11$d, toDisplayString$1(storyboardTotalSec.value) + "s", 1)) : createCommentVNode("", true)
+              createBaseVNode("span", _hoisted_10$f, toDisplayString$1(unref(storyboardShots).length), 1),
+              unref(storyboardTotalSec) ? (openBlock(), createElementBlock("span", _hoisted_11$d, toDisplayString$1(unref(storyboardTotalSec)) + "s", 1)) : createCommentVNode("", true)
             ]),
             createBaseVNode("ul", _hoisted_12$d, [
-              (openBlock(true), createElementBlock(Fragment$1, null, renderList(storyboardShots.value.slice(0, 3), (shot, i) => {
+              (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(storyboardShots).slice(0, 3), (shot, i) => {
                 return openBlock(), createElementBlock("li", {
                   key: i,
                   class: "vp-sb-item ctv:flex ctv:items-baseline ctv:gap-[3px] ctv:text-3xs ctv:leading-tight ctv:whitespace-nowrap ctv:overflow-hidden"
                 }, [
                   createBaseVNode("span", _hoisted_13$b, toDisplayString$1(shot.shot_no ?? i + 1), 1),
-                  createBaseVNode("span", _hoisted_14$9, toDisplayString$1(shotSummary(shot)), 1)
+                  createBaseVNode("span", _hoisted_14$9, toDisplayString$1(unref(shotSummary)(shot)), 1)
                 ]);
               }), 128))
             ]),
-            storyboardShots.value.length > 3 ? (openBlock(), createElementBlock("div", _hoisted_15$9, toDisplayString$1(_ctx.$t("valuePreview.moreShots", { n: storyboardShots.value.length - 3 })), 1)) : createCommentVNode("", true)
+            unref(storyboardShots).length > 3 ? (openBlock(), createElementBlock("div", _hoisted_15$9, toDisplayString$1(_ctx.$t("valuePreview.moreShots", { n: unref(storyboardShots).length - 3 })), 1)) : createCommentVNode("", true)
           ])) : (openBlock(), createElementBlock("div", {
             key: 1,
             class: normalizeClass(storyboardListClass)
           }, [
-            (openBlock(true), createElementBlock(Fragment$1, null, renderList(storyboardShots.value, (shot, i) => {
+            (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(storyboardShots), (shot, i) => {
               return openBlock(), createElementBlock("div", {
                 key: i,
                 class: normalizeClass(shotRowClass)
@@ -52917,12 +52967,12 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
             class: normalizeClass(compactSummary)
           }, [
             _cache2[12] || (_cache2[12] = createBaseVNode("span", { class: "ctv:text-[22px] ctv:leading-none" }, "🎬", -1)),
-            createBaseVNode("span", _hoisted_16$9, toDisplayString$1(timelineSegs.value.length), 1)
+            createBaseVNode("span", _hoisted_16$9, toDisplayString$1(unref(timelineSegs).length), 1)
           ])) : (openBlock(), createElementBlock("div", {
             key: 1,
             class: normalizeClass(storyboardListClass)
           }, [
-            (openBlock(true), createElementBlock(Fragment$1, null, renderList(timelineSegs.value, (seg, i) => {
+            (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(timelineSegs), (seg, i) => {
               return openBlock(), createElementBlock("div", {
                 key: i,
                 class: normalizeClass(shotRowClass)
@@ -52939,25 +52989,25 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
                 }, toDisplayString$1(seg.prompt || "—"), 1)
               ]);
             }), 128)),
-            timelineSegs.value.length === 0 ? (openBlock(), createElementBlock("div", {
+            unref(timelineSegs).length === 0 ? (openBlock(), createElementBlock("div", {
               key: 0,
               class: normalizeClass(emptyClass2.value)
             }, toDisplayString$1(_ctx.$t("valuePreview.emptyTimeline")), 3)) : createCommentVNode("", true)
           ]))
         ], 64)) : __props.type === "COMFYTV_IMAGES" ? (openBlock(), createElementBlock(Fragment$1, { key: 9 }, [
           __props.compact ? (openBlock(), createElementBlock(Fragment$1, { key: 0 }, [
-            batchImages.value[0] ? (openBlock(), createElementBlock("img", {
+            unref(batchImages)[0] ? (openBlock(), createElementBlock("img", {
               key: 0,
-              src: batchImages.value[0].image_url,
+              src: unref(batchImages)[0].image_url,
               class: normalizeClass(imgClass.value),
-              alt: `${batchImages.value.length} items`
+              alt: `${unref(batchImages).length} items`
             }, null, 10, _hoisted_17$9)) : (openBlock(), createElementBlock("div", {
               key: 1,
               class: normalizeClass(emptyClass2.value)
             }, toDisplayString$1(__props.emptyLabel || "…"), 3)),
-            batchImages.value.length > 0 ? (openBlock(), createElementBlock("span", _hoisted_18$7, toDisplayString$1(batchImages.value.length), 1)) : createCommentVNode("", true)
+            unref(batchImages).length > 0 ? (openBlock(), createElementBlock("span", _hoisted_18$7, toDisplayString$1(unref(batchImages).length), 1)) : createCommentVNode("", true)
           ], 64)) : (openBlock(), createElementBlock("div", _hoisted_19$5, [
-            (openBlock(true), createElementBlock(Fragment$1, null, renderList(batchImages.value, (img, i) => {
+            (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(batchImages), (img, i) => {
               return openBlock(), createBlock(resolveDynamicComponent(__props.clickMode === "pick" ? "button" : "div"), {
                 key: i,
                 type: __props.clickMode === "pick" ? "button" : void 0,
@@ -53070,7 +53120,7 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const ValuePreview = /* @__PURE__ */ _export_sfc(_sfc_main$p, [["__scopeId", "data-v-09e6e163"]]);
+const ValuePreview = /* @__PURE__ */ _export_sfc(_sfc_main$p, [["__scopeId", "data-v-702d0be3"]]);
 const cat$2 = "imageVariant";
 const IMAGE_VARIANT_PRESETS = [
   {
@@ -53208,6 +53258,92 @@ const ACTIONS_BY_KIND = {
     { id: "gen-shots", icon: "📸" }
   ]
 };
+function formatSlot(slot) {
+  const dot = slot.indexOf(".");
+  if (dot < 0) return slot;
+  const tail = slot.slice(dot + 1);
+  const m = tail.match(/^([a-zA-Z_]+)(\d+)$/);
+  if (m) return `${m[1]} #${m[2]}`;
+  return tail;
+}
+function parsePoolCount(content) {
+  try {
+    const p2 = JSON.parse(String(content ?? ""));
+    return Array.isArray(p2 == null ? void 0 : p2.images) ? p2.images.length : 0;
+  } catch {
+    return 0;
+  }
+}
+function progressPercentOf(progress) {
+  if (!progress || !progress.max) return 0;
+  return Math.max(0, Math.min(100, progress.value / progress.max * 100));
+}
+function useStageCard(getState, onAction) {
+  const stageActions = computed(() => ACTIONS_BY_KIND[getState().kind] || []);
+  const openActionId = /* @__PURE__ */ ref(null);
+  const openPresets = computed(() => {
+    var _a2;
+    if (!openActionId.value) return [];
+    return ((_a2 = stageActions.value.find((x) => x.id === openActionId.value)) == null ? void 0 : _a2.presets) ?? [];
+  });
+  function onActionClick(a) {
+    if (a.presets && a.presets.length) {
+      openActionId.value = openActionId.value === a.id ? null : a.id;
+      return;
+    }
+    openActionId.value = null;
+    onAction(a.id);
+  }
+  function onPresetClick(p2) {
+    if (!openActionId.value) return;
+    onAction(`${openActionId.value}:${p2.id}`);
+    openActionId.value = null;
+  }
+  const connectedInputs = computed(() => getState().inputs.filter(
+    (i) => i.source === "upstream" || i.source === "upstream-pending"
+  ));
+  const canRun = computed(() => {
+    const s = getState();
+    if (s.preparingWorkflow) return false;
+    const hasPrompt = !!(s.mainPrompt && s.mainPrompt.trim());
+    return hasPrompt || connectedInputs.value.length > 0;
+  });
+  const progressPercent = computed(() => progressPercentOf(getState().progress));
+  const batchInput = computed(() => getState().inputs.find((i) => i.slot === "batch"));
+  const poolContent = computed(() => {
+    var _a2;
+    return getState().pool ?? ((_a2 = batchInput.value) == null ? void 0 : _a2.content) ?? null;
+  });
+  const poolCount = computed(() => parsePoolCount(poolContent.value));
+  const pickerSource = computed(() => {
+    var _a2;
+    return ((_a2 = batchInput.value) == null ? void 0 : _a2.source) ?? "empty";
+  });
+  const confirmingClear = /* @__PURE__ */ ref(false);
+  watch(poolCount, (n) => {
+    if (n === 0) confirmingClear.value = false;
+  });
+  function onClearPool() {
+    onAction("clear-pool");
+    confirmingClear.value = false;
+  }
+  return {
+    stageActions,
+    openActionId,
+    openPresets,
+    onActionClick,
+    onPresetClick,
+    connectedInputs,
+    canRun,
+    progressPercent,
+    batchInput,
+    poolContent,
+    poolCount,
+    pickerSource,
+    confirmingClear,
+    onClearPool
+  };
+}
 function actionNamespace(kind) {
   if (kind === "image-picker" || kind === "image-batch") return "image";
   return kind;
@@ -53296,18 +53432,21 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
   },
   setup(__props) {
     const props = __props;
-    const stageActions = computed(() => ACTIONS_BY_KIND[props.state.kind] || []);
-    const openActionId = /* @__PURE__ */ ref(null);
-    const openPresets = computed(() => {
-      if (!openActionId.value) return [];
-      const a = stageActions.value.find((x) => x.id === openActionId.value);
-      return (a == null ? void 0 : a.presets) ?? [];
-    });
-    const progressPercent = computed(() => {
-      const p2 = props.state.progress;
-      if (!p2 || !p2.max) return 0;
-      return Math.max(0, Math.min(100, p2.value / p2.max * 100));
-    });
+    const {
+      stageActions,
+      openActionId,
+      openPresets,
+      onActionClick,
+      onPresetClick,
+      connectedInputs,
+      canRun,
+      progressPercent,
+      poolContent,
+      poolCount,
+      pickerSource,
+      confirmingClear,
+      onClearPool
+    } = useStageCard(() => props.state, props.onAction);
     const progressFallbackText = computed(() => {
       const p2 = props.state.progress;
       if (!p2) return t("stage.starting");
@@ -53315,19 +53454,6 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
     });
     function onDismissError() {
       useStageStore().clearError(props.state);
-    }
-    function onActionClick(a) {
-      if (a.presets && a.presets.length) {
-        openActionId.value = openActionId.value === a.id ? null : a.id;
-        return;
-      }
-      openActionId.value = null;
-      props.onAction(a.id);
-    }
-    function onPresetClick(p2) {
-      if (!openActionId.value) return;
-      props.onAction(`${openActionId.value}:${p2.id}`);
-      openActionId.value = null;
     }
     function onItemClick(payload) {
       props.onAction("pick-item", payload);
@@ -53346,24 +53472,6 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
           return "";
       }
     }
-    function formatSlot(slot) {
-      const dot = slot.indexOf(".");
-      if (dot < 0) return slot;
-      const tail = slot.slice(dot + 1);
-      const m = tail.match(/^([a-zA-Z_]+)(\d+)$/);
-      if (m) return `${m[1]} #${m[2]}`;
-      return tail;
-    }
-    const connectedInputs = computed(
-      () => props.state.inputs.filter(
-        (i) => i.source === "upstream" || i.source === "upstream-pending"
-      )
-    );
-    const canRun = computed(() => {
-      if (props.state.preparingWorkflow) return false;
-      const hasPrompt = !!(props.state.mainPrompt && props.state.mainPrompt.trim());
-      return hasPrompt || connectedInputs.value.length > 0;
-    });
     function onRun() {
       if (canRun.value) props.onRunRequest();
     }
@@ -53383,35 +53491,6 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
     const tileDisconnectBtn = COMFY_BTN_BASE + " ctv:size-5 ctv:p-0 ctv:rounded-full ctv:bg-transparent ctv:text-destructive-background ctv:hover:bg-destructive-background/10";
     const clearBtn = COMFY_BTN_BASE + " ctv:h-5 ctv:px-1.5 ctv:rounded-sm ctv:text-3xs ctv:font-semibold ctv:tracking-wide ctv:bg-transparent ctv:text-muted-foreground ctv:hover:bg-destructive-background/10 ctv:hover:text-destructive-background";
     const clearConfirmBtn = COMFY_BTN_BASE + " ctv:h-5 ctv:px-1.5 ctv:rounded-sm ctv:text-3xs ctv:font-semibold ctv:tracking-wide ctv:bg-destructive-background ctv:text-base-foreground ctv:hover:bg-destructive-background-hover";
-    const batchInput = computed(
-      () => props.state.inputs.find((i) => i.slot === "batch")
-    );
-    const poolContent = computed(
-      () => {
-        var _a2;
-        return props.state.pool ?? ((_a2 = batchInput.value) == null ? void 0 : _a2.content) ?? null;
-      }
-    );
-    const poolCount = computed(() => {
-      try {
-        const p2 = JSON.parse(String(poolContent.value ?? ""));
-        return Array.isArray(p2 == null ? void 0 : p2.images) ? p2.images.length : 0;
-      } catch {
-        return 0;
-      }
-    });
-    const pickerSource = computed(() => {
-      var _a2;
-      return ((_a2 = batchInput.value) == null ? void 0 : _a2.source) ?? "empty";
-    });
-    const confirmingClear = /* @__PURE__ */ ref(false);
-    watch(poolCount, (n) => {
-      if (n === 0) confirmingClear.value = false;
-    });
-    function onClearPool() {
-      props.onAction("clear-pool");
-      confirmingClear.value = false;
-    }
     const runBtnClass = computed(() => {
       const v = props.state.running ? " ctv:bg-destructive-background ctv:text-base-foreground ctv:hover:bg-destructive-background-hover" : " ctv:bg-primary-background ctv:text-base-foreground ctv:hover:bg-primary-background-hover";
       return COMFY_BTN_BASE + COMFY_SIZE_LG + v;
@@ -53431,16 +53510,16 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
           key: 0,
           node: __props.node
         }, null, 8, ["node"])) : createCommentVNode("", true),
-        __props.state.kind === "image-picker" && !__props.hideContext && (poolCount.value > 0 || connectedInputs.value.length > 0) ? (openBlock(), createElementBlock("section", {
+        __props.state.kind === "image-picker" && !__props.hideContext && (unref(poolCount) > 0 || unref(connectedInputs).length > 0) ? (openBlock(), createElementBlock("section", {
           key: 1,
-          class: normalizeClass(["ctv-picker-input ctv:flex ctv:flex-col ctv:gap-1 ctv:py-1", `ctv-src-${pickerSource.value}`])
+          class: normalizeClass(["ctv-picker-input ctv:flex ctv:flex-col ctv:gap-1 ctv:py-1", `ctv-src-${unref(pickerSource)}`])
         }, [
           createBaseVNode("div", _hoisted_1$m, [
             createBaseVNode("span", _hoisted_2$j, toDisplayString$1(_ctx.$t("stage.section.pool")), 1),
-            createBaseVNode("span", _hoisted_3$j, toDisplayString$1(poolCount.value), 1),
-            pickerSource.value !== "empty" ? (openBlock(), createElementBlock("span", _hoisted_4$g, toDisplayString$1(sourceLabel(pickerSource.value)), 1)) : createCommentVNode("", true),
-            poolCount.value > 0 ? (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
-              !confirmingClear.value ? (openBlock(), createElementBlock("button", {
+            createBaseVNode("span", _hoisted_3$j, toDisplayString$1(unref(poolCount)), 1),
+            unref(pickerSource) !== "empty" ? (openBlock(), createElementBlock("span", _hoisted_4$g, toDisplayString$1(sourceLabel(unref(pickerSource))), 1)) : createCommentVNode("", true),
+            unref(poolCount) > 0 ? (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
+              !unref(confirmingClear) ? (openBlock(), createElementBlock("button", {
                 key: 0,
                 class: normalizeClass(["ctv:ml-auto", clearBtn]),
                 title: _ctx.$t("stage.pool.clearHint"),
@@ -53449,37 +53528,38 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
                 createBaseVNode("span", _hoisted_6$f, toDisplayString$1(_ctx.$t("stage.pool.confirmClear")), 1),
                 createBaseVNode("button", {
                   class: normalizeClass(clearConfirmBtn),
-                  onClick: onClearPool
+                  onClick: _cache2[1] || (_cache2[1] = //@ts-ignore
+                  (...args) => unref(onClearPool) && unref(onClearPool)(...args))
                 }, toDisplayString$1(_ctx.$t("stage.pool.confirm")), 1),
                 createBaseVNode("button", {
                   class: normalizeClass(clearBtn),
-                  onClick: _cache2[1] || (_cache2[1] = ($event) => confirmingClear.value = false)
+                  onClick: _cache2[2] || (_cache2[2] = ($event) => confirmingClear.value = false)
                 }, toDisplayString$1(_ctx.$t("stage.pool.cancel")), 1)
               ], 64))
             ], 64)) : createCommentVNode("", true)
           ]),
           createVNode(ValuePreview, {
             type: "COMFYTV_IMAGES",
-            content: poolContent.value,
-            "empty-label": pickerSource.value === "upstream-pending" ? _ctx.$t("stage.empty.pending_upstream") : _ctx.$t("stage.empty.no_output"),
+            content: unref(poolContent),
+            "empty-label": unref(pickerSource) === "upstream-pending" ? _ctx.$t("stage.empty.pending_upstream") : _ctx.$t("stage.empty.no_output"),
             "selected-index": __props.state.pickedIndex,
             "click-mode": "pick",
             onItemClick
           }, null, 8, ["content", "empty-label", "selected-index"])
         ], 2)) : createCommentVNode("", true),
-        !__props.hideContext && __props.state.variant !== "loader" && __props.state.kind !== "image-picker" && connectedInputs.value.length > 0 ? (openBlock(), createElementBlock("section", _hoisted_7$e, [
+        !__props.hideContext && __props.state.variant !== "loader" && __props.state.kind !== "image-picker" && unref(connectedInputs).length > 0 ? (openBlock(), createElementBlock("section", _hoisted_7$e, [
           createBaseVNode("div", {
             class: normalizeClass(sectionLabel)
           }, toDisplayString$1(_ctx.$t("stage.section.context")), 1),
           createBaseVNode("div", _hoisted_8$e, [
-            (openBlock(true), createElementBlock(Fragment$1, null, renderList(connectedInputs.value, (inp) => {
+            (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(connectedInputs), (inp) => {
               return openBlock(), createElementBlock("div", {
                 key: inp.slot,
                 class: normalizeClass([
                   "ctv-input-tile ctv:relative ctv:w-[76px] ctv:h-[76px] ctv:rounded-sm ctv:overflow-hidden ctv:bg-black/30 ctv:border",
                   inp.source === "upstream" ? "ctv:border-primary-background/70" : inp.source === "upstream-pending" ? "ctv:border-warning-background/70" : "ctv:border-border-default"
                 ]),
-                title: `${formatSlot(inp.slot)} — ${sourceLabel(inp.source)}`
+                title: `${unref(formatSlot)(inp.slot)} — ${sourceLabel(inp.source)}`
               }, [
                 createVNode(ValuePreview, {
                   compact: "",
@@ -53487,7 +53567,7 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
                   content: inp.content,
                   "empty-label": inp.source === "upstream-pending" ? "…" : ""
                 }, null, 8, ["type", "content", "empty-label"]),
-                createBaseVNode("span", _hoisted_10$e, toDisplayString$1(formatSlot(inp.slot)), 1),
+                createBaseVNode("span", _hoisted_10$e, toDisplayString$1(unref(formatSlot)(inp.slot)), 1),
                 createBaseVNode("button", {
                   class: normalizeClass(["ctv-tile-disconnect ctv:absolute ctv:top-0.5 ctv:right-0.5 ctv:hidden", tileDisconnectBtn]),
                   title: _ctx.$t("stage.disconnect"),
@@ -53527,8 +53607,8 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
         __props.state.variant !== "loader" && __props.state.variant !== "transform" && __props.state.kind !== "image-picker" ? (openBlock(), createElementBlock("button", {
           key: 4,
           class: normalizeClass(["run-btn", __props.state.running && "is-cancel", runBtnClass.value]),
-          disabled: !__props.state.running && !canRun.value,
-          onClick: _cache2[2] || (_cache2[2] = ($event) => __props.state.running ? onCancel() : onRun())
+          disabled: !__props.state.running && !unref(canRun),
+          onClick: _cache2[3] || (_cache2[3] = ($event) => __props.state.running ? onCancel() : onRun())
         }, [
           __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_16$8, "⏹ " + toDisplayString$1(_ctx.$t("stage.cancel")), 1)) : __props.state.preparingWorkflow ? (openBlock(), createElementBlock("span", _hoisted_17$8, "⏳ " + toDisplayString$1(_ctx.$t("stage.preparingWorkflow")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_18$6, "↻ " + toDisplayString$1(_ctx.$t("stage.rerun")), 1)) : (openBlock(), createElementBlock("span", _hoisted_19$4, "▶ " + toDisplayString$1(_ctx.$t(`stage.runByKind.${__props.state.kind}`, _ctx.$t("stage.run"))), 1))
         ], 10, _hoisted_15$8)) : createCommentVNode("", true),
@@ -53536,7 +53616,7 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
           createBaseVNode("div", _hoisted_21$3, [
             createBaseVNode("div", {
               class: "progress-fill ctv:h-full ctv:transition-[width] ctv:duration-150 ctv:ease-out ctv:bg-linear-to-r ctv:from-primary-background/85 ctv:to-primary-background-hover/85",
-              style: normalizeStyle({ width: `${progressPercent.value}%` })
+              style: normalizeStyle({ width: `${unref(progressPercent)}%` })
             }, null, 4)
           ]),
           createBaseVNode("span", _hoisted_22$3, toDisplayString$1(((_a2 = __props.state.progress) == null ? void 0 : _a2.text) || progressFallbackText.value), 1)
@@ -53555,32 +53635,32 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
             onItemClick: onOutputItemClick
           }, null, 8, ["type", "content", "empty-label", "click-mode", "selected-index"])
         ])) : createCommentVNode("", true),
-        __props.state.output && stageActions.value.length ? (openBlock(), createElementBlock("section", _hoisted_24$3, [
+        __props.state.output && unref(stageActions).length ? (openBlock(), createElementBlock("section", _hoisted_24$3, [
           createBaseVNode("div", {
             class: normalizeClass(sectionLabel)
           }, toDisplayString$1(_ctx.$t("stage.section.actions")), 1),
           createBaseVNode("div", _hoisted_25$3, [
-            (openBlock(true), createElementBlock(Fragment$1, null, renderList(stageActions.value, (a) => {
+            (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(stageActions), (a) => {
               var _a3;
               return openBlock(), createElementBlock("button", {
                 key: a.id,
-                class: normalizeClass(actionBtnClass(openActionId.value === a.id)),
+                class: normalizeClass(actionBtnClass(unref(openActionId) === a.id)),
                 title: _ctx.$t(unref(actionTooltipKey)(__props.state.kind, a.id)),
-                onClick: ($event) => onActionClick(a)
+                onClick: ($event) => unref(onActionClick)(a)
               }, [
                 createBaseVNode("span", _hoisted_27$2, toDisplayString$1(a.icon), 1),
                 createBaseVNode("span", _hoisted_28$2, toDisplayString$1(_ctx.$t(unref(actionLabelKey)(__props.state.kind, a.id))), 1),
-                ((_a3 = a.presets) == null ? void 0 : _a3.length) ? (openBlock(), createElementBlock("span", _hoisted_29$2, toDisplayString$1(openActionId.value === a.id ? "▾" : "▸"), 1)) : createCommentVNode("", true)
+                ((_a3 = a.presets) == null ? void 0 : _a3.length) ? (openBlock(), createElementBlock("span", _hoisted_29$2, toDisplayString$1(unref(openActionId) === a.id ? "▾" : "▸"), 1)) : createCommentVNode("", true)
               ], 10, _hoisted_26$2);
             }), 128))
           ]),
-          openPresets.value.length ? (openBlock(), createElementBlock("div", _hoisted_30$2, [
-            (openBlock(true), createElementBlock(Fragment$1, null, renderList(openPresets.value, (p2) => {
+          unref(openPresets).length ? (openBlock(), createElementBlock("div", _hoisted_30$2, [
+            (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(openPresets), (p2) => {
               return openBlock(), createElementBlock("button", {
                 key: p2.id,
                 class: normalizeClass(presetBtnClass),
                 title: _ctx.$t(unref(presetTooltipKey)(p2.category, p2.id)),
-                onClick: ($event) => onPresetClick(p2)
+                onClick: ($event) => unref(onPresetClick)(p2)
               }, [
                 createBaseVNode("span", _hoisted_32$2, toDisplayString$1(p2.icon), 1),
                 createBaseVNode("span", _hoisted_33$1, toDisplayString$1(_ctx.$t(unref(presetLabelKey)(p2.category, p2.id))), 1)
@@ -53592,7 +53672,7 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const StageCard = /* @__PURE__ */ _export_sfc(_sfc_main$o, [["__scopeId", "data-v-95136374"]]);
+const StageCard = /* @__PURE__ */ _export_sfc(_sfc_main$o, [["__scopeId", "data-v-1454d384"]]);
 const _sfc_main$n = /* @__PURE__ */ defineComponent({
   __name: "SceneCanvas",
   props: {
@@ -53615,6 +53695,47 @@ const _sfc_main$n = /* @__PURE__ */ defineComponent({
     };
   }
 });
+const AZIMUTH_OPTIONS = [
+  { key: "frontView", value: 0 },
+  { key: "frontRightQuarterView", value: 45 },
+  { key: "rightSideView", value: 90 },
+  { key: "backRightQuarterView", value: 135 },
+  { key: "backView", value: 180 },
+  { key: "backLeftQuarterView", value: 225 },
+  { key: "leftSideView", value: 270 },
+  { key: "frontLeftQuarterView", value: 315 }
+];
+const ELEVATION_OPTIONS = [
+  { key: "lowAngleShot", value: -30 },
+  { key: "eyeLevelShot", value: 0 },
+  { key: "elevatedShot", value: 30 },
+  { key: "highAngleShot", value: 60 }
+];
+const DISTANCE_OPTIONS = [
+  { key: "wideShot", value: 1 },
+  { key: "mediumShot", value: 4 },
+  { key: "closeUp", value: 8 }
+];
+function findClosestOption(value, options, isAzimuth = false) {
+  let closest = options[0].value;
+  let minDiff = Math.abs(value - options[0].value);
+  for (const opt of options) {
+    let diff = Math.abs(value - opt.value);
+    if (isAzimuth) {
+      diff = Math.min(diff, Math.abs(value - opt.value - 360), Math.abs(value - opt.value + 360));
+    }
+    if (diff < minDiff) {
+      minDiff = diff;
+      closest = opt.value;
+    }
+  }
+  return closest;
+}
+function findClosestDistanceOption(dist) {
+  if (dist < 2) return 1;
+  if (dist < 6) return 4;
+  return 8;
+}
 const _hoisted_1$l = { class: "ctv:absolute ctv:bottom-2 ctv:left-2 ctv:right-2 ctv:z-10 ctv:flex ctv:flex-col ctv:gap-1 ctv:py-1.5 ctv:px-2.5 ctv:text-[11px] ctv:text-white/85 ctv:rounded-md ctv:backdrop-blur-sm ctv:bg-black/90 ctv:border ctv:border-[rgb(233_61_130/0.3)]" };
 const _hoisted_2$i = { class: "ctv:flex ctv:justify-around ctv:items-center" };
 const _hoisted_3$i = { class: "ctv:flex ctv:items-center ctv:gap-1" };
@@ -53646,47 +53767,9 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
   setup(__props, { emit: __emit }) {
     const props = __props;
     const emit2 = __emit;
-    const azimuthOptions = [
-      { key: "frontView", value: 0 },
-      { key: "frontRightQuarterView", value: 45 },
-      { key: "rightSideView", value: 90 },
-      { key: "backRightQuarterView", value: 135 },
-      { key: "backView", value: 180 },
-      { key: "backLeftQuarterView", value: 225 },
-      { key: "leftSideView", value: 270 },
-      { key: "frontLeftQuarterView", value: 315 }
-    ];
-    const elevationOptions = [
-      { key: "lowAngleShot", value: -30 },
-      { key: "eyeLevelShot", value: 0 },
-      { key: "elevatedShot", value: 30 },
-      { key: "highAngleShot", value: 60 }
-    ];
-    const distanceOptions = [
-      { key: "wideShot", value: 1 },
-      { key: "mediumShot", value: 4 },
-      { key: "closeUp", value: 8 }
-    ];
-    function findClosestOption(value, options, isAzimuth = false) {
-      let closest = options[0].value;
-      let minDiff = Math.abs(value - options[0].value);
-      for (const opt of options) {
-        let diff = Math.abs(value - opt.value);
-        if (isAzimuth) {
-          diff = Math.min(diff, Math.abs(value - opt.value - 360), Math.abs(value - opt.value + 360));
-        }
-        if (diff < minDiff) {
-          minDiff = diff;
-          closest = opt.value;
-        }
-      }
-      return closest;
-    }
-    function findClosestDistanceOption(dist) {
-      if (dist < 2) return 1;
-      if (dist < 6) return 4;
-      return 8;
-    }
+    const azimuthOptions = AZIMUTH_OPTIONS;
+    const elevationOptions = ELEVATION_OPTIONS;
+    const distanceOptions = DISTANCE_OPTIONS;
     const closestAzimuth = computed(() => findClosestOption(props.azimuth, azimuthOptions, true));
     const closestElevation = computed(() => findClosestOption(props.elevation, elevationOptions));
     const closestDistance = computed(() => findClosestDistanceOption(props.distance));
@@ -53717,12 +53800,12 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
               value: closestAzimuth.value,
               onChange: onAzimuthSelect
             }, [
-              (openBlock(), createElementBlock(Fragment$1, null, renderList(azimuthOptions, (opt) => {
-                return createBaseVNode("option", {
+              (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(azimuthOptions), (opt) => {
+                return openBlock(), createElementBlock("option", {
                   key: opt.value,
                   value: opt.value
                 }, toDisplayString$1(_ctx.$t(`camera.azimuth.${opt.key}`)), 9, _hoisted_6$e);
-              }), 64))
+              }), 128))
             ], 42, _hoisted_5$f)
           ]),
           createBaseVNode("div", _hoisted_7$d, [
@@ -53732,12 +53815,12 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
               value: closestElevation.value,
               onChange: onElevationSelect
             }, [
-              (openBlock(), createElementBlock(Fragment$1, null, renderList(elevationOptions, (opt) => {
-                return createBaseVNode("option", {
+              (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(elevationOptions), (opt) => {
+                return openBlock(), createElementBlock("option", {
                   key: opt.value,
                   value: opt.value
                 }, toDisplayString$1(_ctx.$t(`camera.elevation.${opt.key}`)), 9, _hoisted_10$d);
-              }), 64))
+              }), 128))
             ], 42, _hoisted_9$d)
           ]),
           createBaseVNode("div", _hoisted_11$b, [
@@ -53747,12 +53830,12 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
               value: closestDistance.value,
               onChange: onDistanceSelect
             }, [
-              (openBlock(), createElementBlock(Fragment$1, null, renderList(distanceOptions, (opt) => {
-                return createBaseVNode("option", {
+              (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(distanceOptions), (opt) => {
+                return openBlock(), createElementBlock("option", {
                   key: opt.value,
                   value: opt.value
                 }, toDisplayString$1(_ctx.$t(`camera.distance.${opt.key}`)), 9, _hoisted_14$7);
-              }), 64))
+              }), 128))
             ], 42, _hoisted_13$9)
           ])
         ]),
@@ -53770,7 +53853,7 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const CameraControlPanel = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["__scopeId", "data-v-43267b78"]]);
+const CameraControlPanel = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["__scopeId", "data-v-d255fcd1"]]);
 /**
  * @license
  * Copyright 2010-2024 Three.js Authors
@@ -75232,18 +75315,9 @@ const _sfc_main$l = /* @__PURE__ */ defineComponent({
         distance: s.distance
       });
     });
-    function wireWidgetCallback(name, apply2) {
-      const w = getWidget(props.node, name);
-      if (!w) return;
-      const orig = w.callback;
-      w.callback = (value) => {
-        orig == null ? void 0 : orig.call(w, value);
-        apply2(Number(value));
-      };
-    }
-    wireWidgetCallback("horizontal_angle", (v) => setState({ azimuth: v }));
-    wireWidgetCallback("vertical_angle", (v) => setState({ elevation: v }));
-    wireWidgetCallback("zoom", (v) => setState({ distance: v }));
+    bindWidgetCallback(props.node, "horizontal_angle", (v) => setState({ azimuth: Number(v) }));
+    bindWidgetCallback(props.node, "vertical_angle", (v) => setState({ elevation: Number(v) }));
+    bindWidgetCallback(props.node, "zoom", (v) => setState({ distance: Number(v) }));
     watch(() => props.state.output, (newUrl) => {
     });
     onBeforeUnmount(() => {
@@ -75276,6 +75350,11 @@ const _sfc_main$l = /* @__PURE__ */ defineComponent({
     };
   }
 });
+function pickSourceImageUrl(inputs, slot = "image") {
+  const inp = inputs.find((i) => i.slot === slot);
+  if (!inp || inp.source !== "upstream" || !inp.content) return null;
+  return inp.content;
+}
 function getEffectiveBrushSize(size2, hardness) {
   const MAX_SCALE = 1.5;
   const scale = 1 + (1 - hardness) * (MAX_SCALE - 1);
@@ -76313,11 +76392,7 @@ const _sfc_main$j = /* @__PURE__ */ defineComponent({
   setup(__props) {
     const props = __props;
     const painterRef = /* @__PURE__ */ ref(null);
-    const sourceImageUrl = computed(() => {
-      const inp = props.state.inputs.find((i) => i.slot === "image");
-      if (!inp || inp.source !== "upstream" || !inp.content) return null;
-      return inp.content;
-    });
+    const sourceImageUrl = computed(() => pickSourceImageUrl(props.state.inputs));
     async function onRunWithMaskCommit() {
       var _a2;
       try {
@@ -77088,11 +77163,7 @@ const _sfc_main$h = /* @__PURE__ */ defineComponent({
   setup(__props) {
     var _a2;
     const props = __props;
-    const sourceImageUrl = computed(() => {
-      const inp = props.state.inputs.find((i) => i.slot === "image");
-      if (!inp || inp.source !== "upstream" || !inp.content) return null;
-      return inp.content;
-    });
+    const sourceImageUrl = computed(() => pickSourceImageUrl(props.state.inputs));
     const bounds = /* @__PURE__ */ ref({
       x: readWidgetNum(props.node, "crop_x", 0),
       y: readWidgetNum(props.node, "crop_y", 0),
@@ -77109,42 +77180,27 @@ const _sfc_main$h = /* @__PURE__ */ defineComponent({
       writeWidget(props.node, "crop_h", v.height);
       requestRecompute();
     }, { deep: true });
-    function wireWidgetCallback(name, apply2) {
-      const w = getWidget(props.node, name);
-      if (!w) return;
-      const orig = w.callback;
-      w.callback = (value) => {
-        orig == null ? void 0 : orig.call(w, value);
-        apply2(Number(value));
-      };
+    function bindBound(name, key) {
+      bindWidgetCallback(props.node, name, (value) => {
+        const v = Number(value);
+        if (v !== bounds.value[key]) bounds.value = { ...bounds.value, [key]: v };
+      });
     }
-    wireWidgetCallback("crop_x", (v) => {
-      if (v !== bounds.value.x) bounds.value = { ...bounds.value, x: v };
-    });
-    wireWidgetCallback("crop_y", (v) => {
-      if (v !== bounds.value.y) bounds.value = { ...bounds.value, y: v };
-    });
-    wireWidgetCallback("crop_w", (v) => {
-      if (v !== bounds.value.width) bounds.value = { ...bounds.value, width: v };
-    });
-    wireWidgetCallback("crop_h", (v) => {
-      if (v !== bounds.value.height) bounds.value = { ...bounds.value, height: v };
-    });
-    if (props.node) {
-      const orig = props.node.onConfigure;
-      props.node.onConfigure = function(info) {
-        orig == null ? void 0 : orig.call(this, info);
-        const restored = {
-          x: readWidgetNum(props.node, "crop_x", bounds.value.x),
-          y: readWidgetNum(props.node, "crop_y", bounds.value.y),
-          width: readWidgetNum(props.node, "crop_w", bounds.value.width),
-          height: readWidgetNum(props.node, "crop_h", bounds.value.height)
-        };
-        if (restored.x !== bounds.value.x || restored.y !== bounds.value.y || restored.width !== bounds.value.width || restored.height !== bounds.value.height) {
-          bounds.value = restored;
-        }
+    bindBound("crop_x", "x");
+    bindBound("crop_y", "y");
+    bindBound("crop_w", "width");
+    bindBound("crop_h", "height");
+    onNodeConfigure(props.node, () => {
+      const restored = {
+        x: readWidgetNum(props.node, "crop_x", bounds.value.x),
+        y: readWidgetNum(props.node, "crop_y", bounds.value.y),
+        width: readWidgetNum(props.node, "crop_w", bounds.value.width),
+        height: readWidgetNum(props.node, "crop_h", bounds.value.height)
       };
-    }
+      if (restored.x !== bounds.value.x || restored.y !== bounds.value.y || restored.width !== bounds.value.width || restored.height !== bounds.value.height) {
+        bounds.value = restored;
+      }
+    });
     const { computing, requestRecompute } = useTransformPipeline({
       sourceImageUrl,
       state: props.state,
@@ -77238,32 +77294,16 @@ const _sfc_main$g = /* @__PURE__ */ defineComponent({
   setup(__props) {
     var _a2;
     const props = __props;
-    const sourceImageUrl = computed(() => {
-      const inp = props.state.inputs.find((i) => i.slot === "image");
-      if (!inp || inp.source !== "upstream" || !inp.content) return null;
-      return inp.content;
-    });
+    const sourceImageUrl = computed(() => pickSourceImageUrl(props.state.inputs));
     const angle = /* @__PURE__ */ ref(readWidgetNum(props.node, "angle", 0));
-    function wireWidget(name, apply2) {
-      const w = getWidget(props.node, name);
-      if (!w) return;
-      const orig = w.callback;
-      w.callback = (v) => {
-        orig == null ? void 0 : orig.call(w, v);
-        apply2(Number(v));
-      };
-    }
-    wireWidget("angle", (v) => {
-      if (v !== angle.value) angle.value = v;
+    bindWidgetCallback(props.node, "angle", (v) => {
+      const n = Number(v);
+      if (n !== angle.value) angle.value = n;
     });
-    if (props.node) {
-      const orig = props.node.onConfigure;
-      props.node.onConfigure = function(info) {
-        orig == null ? void 0 : orig.call(this, info);
-        const v = readWidgetNum(props.node, "angle", angle.value);
-        if (Number.isFinite(v) && v !== angle.value) angle.value = v;
-      };
-    }
+    onNodeConfigure(props.node, () => {
+      const v = readWidgetNum(props.node, "angle", angle.value);
+      if (Number.isFinite(v) && v !== angle.value) angle.value = v;
+    });
     function snap(deg) {
       angle.value = deg;
     }
@@ -77401,42 +77441,27 @@ const _sfc_main$f = /* @__PURE__ */ defineComponent({
   setup(__props) {
     var _a2;
     const props = __props;
-    const sourceImageUrl = computed(() => {
-      const inp = props.state.inputs.find((i) => i.slot === "image");
-      if (!inp || inp.source !== "upstream" || !inp.content) return null;
-      return inp.content;
-    });
+    const sourceImageUrl = computed(() => pickSourceImageUrl(props.state.inputs));
     function widgetValueBool(name, fallback = false) {
       const w = getWidget(props.node, name);
       return w ? Boolean(w.value) : fallback;
     }
     const flipH = /* @__PURE__ */ ref(widgetValueBool("flip_horizontal", false));
     const flipV = /* @__PURE__ */ ref(widgetValueBool("flip_vertical", false));
-    function wireWidget(name, apply2) {
-      const w = getWidget(props.node, name);
-      if (!w) return;
-      const orig = w.callback;
-      w.callback = (v) => {
-        orig == null ? void 0 : orig.call(w, v);
-        apply2(Boolean(v));
-      };
-    }
-    wireWidget("flip_horizontal", (v) => {
-      if (v !== flipH.value) flipH.value = v;
+    bindWidgetCallback(props.node, "flip_horizontal", (v) => {
+      const b = Boolean(v);
+      if (b !== flipH.value) flipH.value = b;
     });
-    wireWidget("flip_vertical", (v) => {
+    bindWidgetCallback(props.node, "flip_vertical", (v) => {
+      const b = Boolean(v);
+      if (b !== flipV.value) flipV.value = b;
+    });
+    onNodeConfigure(props.node, () => {
+      const h2 = widgetValueBool("flip_horizontal", flipH.value);
+      const v = widgetValueBool("flip_vertical", flipV.value);
+      if (h2 !== flipH.value) flipH.value = h2;
       if (v !== flipV.value) flipV.value = v;
     });
-    if (props.node) {
-      const orig = props.node.onConfigure;
-      props.node.onConfigure = function(info) {
-        orig == null ? void 0 : orig.call(this, info);
-        const h2 = widgetValueBool("flip_horizontal", flipH.value);
-        const v = widgetValueBool("flip_vertical", flipV.value);
-        if (h2 !== flipH.value) flipH.value = h2;
-        if (v !== flipV.value) flipV.value = v;
-      };
-    }
     const previewStyle = computed(() => ({
       transform: `scale(${flipH.value ? -1 : 1}, ${flipV.value ? -1 : 1})`,
       transition: "transform 80ms linear"

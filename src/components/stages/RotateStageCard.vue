@@ -63,8 +63,9 @@ import { computed, ref, watch } from 'vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
+import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
 import { useTransformPipeline } from '@/composables/widgets/useTransformPipeline'
-import { getWidget, readWidgetNum, writeWidget } from '@/utils/widget'
+import { bindWidgetCallback, onNodeConfigure, readWidgetNum, writeWidget } from '@/utils/widget'
 
 const props = defineProps<{
   state: StageState
@@ -75,30 +76,19 @@ const props = defineProps<{
   node: LGraphNode
 }>()
 
-const sourceImageUrl = computed<string | null>(() => {
-  const inp = props.state.inputs.find(i => i.slot === 'image')
-  if (!inp || inp.source !== 'upstream' || !inp.content) return null
-  return inp.content
-})
+const sourceImageUrl = computed(() => pickSourceImageUrl(props.state.inputs))
 
 const angle = ref<number>(readWidgetNum(props.node, 'angle', 0))
 
-function wireWidget(name: string, apply: (v: number) => void) {
-  const w = getWidget(props.node, name)
-  if (!w) return
-  const orig = w.callback
-  w.callback = (v: unknown) => { orig?.call(w, v); apply(Number(v)) }
-}
-wireWidget('angle', v => { if (v !== angle.value) angle.value = v })
+bindWidgetCallback(props.node, 'angle', (v) => {
+  const n = Number(v)
+  if (n !== angle.value) angle.value = n
+})
 
-if (props.node) {
-  const orig = props.node.onConfigure
-  props.node.onConfigure = function (info: any) {
-    orig?.call(this, info)
-    const v = readWidgetNum(props.node, 'angle', angle.value)
-    if (Number.isFinite(v) && v !== angle.value) angle.value = v
-  }
-}
+onNodeConfigure(props.node, () => {
+  const v = readWidgetNum(props.node, 'angle', angle.value)
+  if (Number.isFinite(v) && v !== angle.value) angle.value = v
+})
 
 function snap(deg: number) { angle.value = deg }
 
