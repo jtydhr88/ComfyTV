@@ -2,10 +2,11 @@ import { VueRenderer } from '@tiptap/vue-3'
 import tippy, { type Instance as TippyInstance } from 'tippy.js'
 import { type Component, type Ref } from 'vue'
 
-import type { Entry } from '@/api/schemas'
+import { modulesForSurface } from '@/composables/stages/promptModules/catalog'
+import type { PromptModule } from '@/composables/stages/promptModules/types'
 import { useEntryStore } from '@/stores/entryStore'
 
-export type MentionSuggestionItem = { type: 'entry'; entry: Entry }
+export type MentionSuggestionItem = { type: 'snippet'; module: PromptModule }
 
 const MAX_ENTRIES = 8
 
@@ -20,10 +21,10 @@ export function useMentionSuggestion(
     items: ({ query }: { query: string }): MentionSuggestionItem[] => {
       const q = query.toLowerCase()
 
-      let entries = entryStore.list(projectId.value)
-      if (q) entries = entries.filter(e => e.label.toLowerCase().includes(q))
+      let mods = modulesForSurface('mention', entryStore.list(projectId.value))
+      if (q) mods = mods.filter(m => (m.label ?? '').toLowerCase().includes(q))
 
-      return entries.slice(0, MAX_ENTRIES).map(entry => ({ type: 'entry' as const, entry }))
+      return mods.slice(0, MAX_ENTRIES).map(module => ({ type: 'snippet' as const, module }))
     },
     render: () => {
       let component: any

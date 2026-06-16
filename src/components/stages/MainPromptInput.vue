@@ -1,12 +1,36 @@
 <template>
   <div v-if="widget" ref="rootEl" class="ctv:relative ctv:pt-1 ctv:px-2 ctv:pb-1">
     <EditorContent :editor="editor" class="comfytv-prompt-editor" />
+    <div class="ctv:flex ctv:gap-1 ctv:mt-1">
+      <button
+        type="button"
+        :class="[iconBtnClass, helperOpen
+          ? 'ctv:bg-primary-background/20 ctv:border-primary-background/50 ctv:text-primary-background'
+          : 'ctv:bg-secondary-background ctv:border-border-default ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground']"
+        :title="$t('promptHelper.open')"
+        @click="helperOpen = !helperOpen"
+      >✨</button>
+      <button
+        type="button"
+        :class="[iconBtnClass, cameraOpen
+          ? 'ctv:bg-primary-background/20 ctv:border-primary-background/50 ctv:text-primary-background'
+          : 'ctv:bg-secondary-background ctv:border-border-default ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground']"
+        :title="$t('cameraPrompt.open')"
+        @click="cameraOpen = !cameraOpen"
+      >🎥</button>
+    </div>
+    <PromptHelperPanel
+      v-if="helperOpen"
+      :groups="helper.groups"
+      :is-active="helper.isActive"
+      @apply="helper.apply"
+    />
+    <CameraPromptPanel v-if="cameraOpen" @insert="onCameraInsert" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, watch, computed, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
 
 import Document    from '@tiptap/extension-document'
 import HardBreak   from '@tiptap/extension-hard-break'
@@ -18,18 +42,21 @@ import { EditorContent, useEditor } from '@tiptap/vue-3'
 import { delegate as tippyDelegate } from 'tippy.js'
 import 'tippy.js/dist/tippy.css'
 
+import type { CameraSelection } from '@/composables/stages/cameraControlCatalog'
+import { CAMERA_BUILDER } from '@/composables/stages/promptModules/builders'
 import { useMentionSuggestion } from '@/composables/stages/useMentionSuggestion'
+import { usePromptModules } from '@/composables/stages/usePromptModules'
 import type { LGraphNode } from '@/lib/comfyApp'
 import { useEntryStore } from '@/stores/entryStore'
 import { useProjectStore } from '@/stores/projectStore'
 import { useStageStore } from '@/stores/stageStore'
 import { getWidget, writeWidget } from '@/utils/widget'
 
+import CameraPromptPanel from './CameraPromptPanel.vue'
 import MentionList from './MentionList.vue'
+import PromptHelperPanel from './PromptHelperPanel.vue'
 
 const props = defineProps<{ node?: LGraphNode }>()
-
-const { t } = useI18n()
 
 const entryStore = useEntryStore()
 const projectStore = useProjectStore()
@@ -69,6 +96,7 @@ function textToContent(text: string): any {
 }
 
 const initialText = String(widget.value?.value ?? '')
+const promptText = ref(initialText)
 let suppressWriteback = false
 
 const editor = useEditor({
@@ -95,7 +123,7 @@ const editor = useEditor({
   editorProps: {
     attributes: {
       class: 'comfytv-prompt-prosemirror'
-           + ' ctv:min-h-11 ctv:max-h-80 ctv:overflow-y-auto ctv:py-1.5 ctv:px-2 ctv:rounded'
+           + ' ctv:min-h-11 ctv:max-h-80 ctv:overflow-y-scroll ctv:py-1.5 ctv:px-2 ctv:rounded'
            + ' ctv:bg-secondary-background'
            + ' ctv:text-base-foreground'
            + ' ctv:border ctv:border-border-default'
@@ -108,6 +136,7 @@ const editor = useEditor({
   onUpdate: ({ editor }) => {
     if (suppressWriteback) return
     const text = editor.getText({ blockSeparator: '\n' })
+    promptText.value = text
     if (widget.value) writeWidget(props.node, 'main_prompt', text, { fireCallback: false })
   },
 })
@@ -117,10 +146,27 @@ function setContentFromText(text: string) {
   suppressWriteback = true
   try {
     editor.value.commands.setContent(textToContent(text), { emitUpdate: false })
+    promptText.value = text
   } finally {
     suppressWriteback = false
   }
 }
+
+function applyPromptText(text: string) {
+  setContentFromText(text)
+  if (widget.value) writeWidget(props.node, 'main_prompt', text, { fireCallback: false })
+}
+
+const helperOpen = ref(false)
+const helper = usePromptModules(() => promptText.value, applyPromptText)
+
+const cameraOpen = ref(false)
+function onCameraInsert(selection: CameraSelection) {
+  helper.apply(CAMERA_BUILDER, selection as Record<string, string>)
+}
+
+const iconBtnClass = 'ctv:inline-flex ctv:items-center ctv:justify-center ctv:size-5 ctv:cursor-pointer'
+  + ' ctv:rounded-sm ctv:border ctv:text-2xs ctv:leading-none ctv:[font-family:inherit] ctv:transition-colors'
 
 const stageState = computed(() => props.node ? stageStore.getStage(props.node) : undefined)
 
@@ -189,6 +235,26 @@ onBeforeUnmount(() => {
 </script>
 
 <style>
+.comfytv-prompt-prosemirror {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.35) transparent;
+}
+.comfytv-prompt-prosemirror::-webkit-scrollbar {
+  width: 10px;
+}
+.comfytv-prompt-prosemirror::-webkit-scrollbar-track {
+  background: transparent;
+}
+.comfytv-prompt-prosemirror::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.35);
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+.comfytv-prompt-prosemirror:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.55);
+}
+
 .tippy-box[data-theme~='comfytv-transparent'] {
   background: transparent;
   box-shadow: none;

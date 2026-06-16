@@ -96,6 +96,43 @@
       "empty": "No categories yet."
     }
   },
+  "promptHelper": {
+    "open": "Prompt helper — quick starters & enhancement tags",
+    "templates": "Templates",
+    "template": {
+      "storyboardGrid": "Storyboard grid",
+      "characterSheet": "Character sheet",
+      "moodBoard": "Mood board",
+      "upscale": "Upscale"
+    },
+    "quickStart": "Quick starters",
+    "quick": {
+      "portrait": "Portrait",
+      "landscape": "Landscape",
+      "product": "Product",
+      "fantasy": "Fantasy",
+      "scifi": "Sci-Fi",
+      "food": "Food",
+      "architecture": "Architecture",
+      "anime": "Anime"
+    },
+    "category": {
+      "quality": "Quality",
+      "lighting": "Lighting",
+      "mood": "Mood",
+      "style": "Style"
+    }
+  },
+  "cameraPrompt": {
+    "open": "Cinematic camera — compile camera/lens/aperture into the prompt",
+    "camera": "Camera",
+    "lens": "Lens",
+    "focal": "Focal length",
+    "aperture": "Aperture",
+    "empty": "Pick a camera, lens, focal length or aperture to build a cinematic suffix.",
+    "insert": "Insert into prompt",
+    "clear": "Clear"
+  },
   "imageRefs": {
     "title": "Image references",
     "empty": "No reference images — click + to pin one from the library.",

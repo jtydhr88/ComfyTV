@@ -96,6 +96,43 @@
       "empty": "还没有分类。"
     }
   },
+  "promptHelper": {
+    "open": "提示词助手 —— 快速起步 & 增强标签",
+    "templates": "模板",
+    "template": {
+      "storyboardGrid": "分镜九宫格",
+      "characterSheet": "角色设定表",
+      "moodBoard": "情绪板",
+      "upscale": "高清放大"
+    },
+    "quickStart": "快速起步",
+    "quick": {
+      "portrait": "人像",
+      "landscape": "风景",
+      "product": "产品",
+      "fantasy": "奇幻",
+      "scifi": "科幻",
+      "food": "美食",
+      "architecture": "建筑",
+      "anime": "动漫"
+    },
+    "category": {
+      "quality": "画质",
+      "lighting": "光照",
+      "mood": "氛围",
+      "style": "风格"
+    }
+  },
+  "cameraPrompt": {
+    "open": "电影感相机 —— 把相机/镜头/光圈编译进提示词",
+    "camera": "相机",
+    "lens": "镜头",
+    "focal": "焦段",
+    "aperture": "光圈",
+    "empty": "选择相机 / 镜头 / 焦段 / 光圈，自动拼出一段电影感后缀。",
+    "insert": "插入提示词",
+    "clear": "清空"
+  },
   "imageRefs": {
     "title": "图片引用",
     "empty": "暂无参考图 —— 点 + 从资产库选一张。",

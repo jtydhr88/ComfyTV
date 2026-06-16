@@ -15,8 +15,8 @@
         @mousedown.prevent
         @click="selectItem(i)"
       >
-        <span class="ctv:font-mono ctv:text-base-foreground ctv:shrink-0">@{{ item.entry.label }}</span>
-        <span class="ctv:text-muted-foreground ctv:overflow-hidden ctv:text-ellipsis ctv:whitespace-nowrap">{{ item.entry.content }}</span>
+        <span class="ctv:font-mono ctv:text-base-foreground ctv:shrink-0">@{{ item.module.label }}</span>
+        <span class="ctv:text-muted-foreground ctv:overflow-hidden ctv:text-ellipsis ctv:whitespace-nowrap">{{ item.module.body }}</span>
       </div>
       <div
         v-if="canCreate"
@@ -97,11 +97,11 @@ watch(() => props.query,  () => { activeIndex.value = 0 })
 const canCreate = computed(() => !!props.query && LABEL_RE.test(props.query))
 
 function itemKey(item: MentionSuggestionItem): string {
-  return `e${item.entry.id}`
+  return item.module.id
 }
 
 function itemTitle(item: MentionSuggestionItem): string {
-  return item.entry.content
+  return item.module.body
 }
 
 const creating = ref(false)
@@ -146,7 +146,8 @@ function selectItem(index: number) {
   if (index < props.items.length) {
     const item = props.items[index]
     if (!item) return
-    props.command({ id: item.entry.id, label: item.entry.label, mentionType: 'entry' })
+    const label = item.module.label ?? ''
+    props.command({ id: label, label, mentionType: 'entry' })
   } else if (canCreate.value) {
     startCreate()
   }
