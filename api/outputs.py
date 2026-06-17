@@ -40,11 +40,15 @@ async def adopt_outputs(request: web.Request) -> web.Response:
     stage_node_id = body.get("stage_node_id")
     stage_class = body.get("stage_class")
     stage_uid = body.get("stage_uid")
+    output_type = body.get("output_type")
     if not (stage_node_id and stage_class and stage_uid):
         return web.json_response(
             {"error": "stage_node_id, stage_class and stage_uid are required"}, status=400
         )
-    row = storage.adopt_outputs(pid, str(stage_node_id), str(stage_class), str(stage_uid))
+    row = storage.adopt_outputs(
+        pid, str(stage_node_id), str(stage_class), str(stage_uid),
+        output_type=str(output_type) if output_type else None,
+    )
     return web.json_response({"output": row})
 
 

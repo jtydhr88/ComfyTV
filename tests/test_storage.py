@@ -252,3 +252,22 @@ class TestStageUidIdentity:
         )
 
         assert storage.adopt_outputs("default", "2", "CropStage", "uid-x") is None
+
+    def test_adopt_rejects_output_type_mismatch(self, reset_db):
+        from ComfyTV import storage
+        storage.persist_output(
+            project_id="default", stage_class="TextStage", stage_node_id="1",
+            output_type="image", payload_url="a text payload, not a url",
+        )
+        assert storage.adopt_outputs("default", "1", "TextStage", "uid-t", output_type="text") is None
+        assert storage.list_outputs("default", stage_node_id="1")[0]["stage_uid"] is None
+
+    def test_adopt_claims_matching_output_type(self, reset_db):
+        from ComfyTV import storage
+        storage.persist_output(
+            project_id="default", stage_class="TextStage", stage_node_id="1",
+            output_type="text", payload_url="hello",
+        )
+        adopted = storage.adopt_outputs("default", "1", "TextStage", "uid-t", output_type="text")
+        assert adopted is not None
+        assert adopted["payload_url"] == "hello"

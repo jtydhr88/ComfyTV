@@ -51596,14 +51596,14 @@ const useProjectStore = /* @__PURE__ */ defineStore("comfytv-project", () => {
       return null;
     }
   }
-  async function adoptOutputs(projectId, stageNodeId, stageClass, stageUid) {
+  async function adoptOutputs(projectId, stageNodeId, stageClass, stageUid, outputType) {
     if (!projectId || !stageNodeId || !stageClass || !stageUid) return null;
     try {
       const data = await apiSend(
         `/comfytv/projects/${encodeURIComponent(projectId)}/outputs/adopt`,
         "POST",
         LatestOutputSchema,
-        { stage_node_id: stageNodeId, stage_class: stageClass, stage_uid: stageUid }
+        { stage_node_id: stageNodeId, stage_class: stageClass, stage_uid: stageUid, output_type: outputType }
       );
       return data.output;
     } catch (e) {
@@ -83618,6 +83618,13 @@ function stageClassName(node) {
   const dot = cc.lastIndexOf(".");
   return dot >= 0 ? cc.slice(dot + 1) : cc;
 }
+const KIND_TO_OUTPUT_TYPE = {
+  "image-batch": "images",
+  "image-picker": "image"
+};
+function outputTypeForKind(kind) {
+  return KIND_TO_OUTPUT_TYPE[kind] ?? kind;
+}
 const LG_MODE_NEVER = 2;
 const LG_MODE_BYPASS = 4;
 function collectReachableNodeIds(app2, target) {
@@ -84423,7 +84430,8 @@ function useStageNode(node, kind, variant = "generator") {
           projectId,
           String(node.id),
           stageClassName(node),
-          uid2
+          uid2,
+          outputTypeForKind(kind)
         );
       }
       if (!latest) {

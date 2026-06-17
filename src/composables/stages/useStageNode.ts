@@ -33,6 +33,7 @@ import {
 import { getStageMeta } from '@/composables/stages/stageMeta'
 import { addWorkflowUploadButton } from '@/composables/stages/workflowUpload'
 import { ensureStageUid, stageClassName } from '@/composables/stages/stageIdentity'
+import { outputTypeForKind } from '@/composables/stages/stageOutputType'
 import { t } from '@/i18n'
 import { useSelectionStore } from '@/stores/selectionStore'
 import {
@@ -786,7 +787,7 @@ export function useStageNode(
       if (!latest && node.__comfytvFromSave && !adoptionTried) {
         adoptionTried = true
         latest = await projectStore.adoptOutputs(
-          projectId, String(node.id), stageClassName(node), uid,
+          projectId, String(node.id), stageClassName(node), uid, outputTypeForKind(kind),
         )
       }
       if (!latest) {

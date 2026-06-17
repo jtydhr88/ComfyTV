@@ -278,21 +278,20 @@ def adopt_outputs(
     stage_node_id: str,
     stage_class: str,
     stage_uid: str,
+    output_type: Optional[str] = None,
 ) -> Optional[dict]:
     if not stage_uid or not stage_node_id or not stage_class:
         return None
     with db.get_session() as s:
-        rows = (
-            s.query(Output)
-            .filter(
-                Output.project_id == project_id,
-                Output.stage_node_id == str(stage_node_id),
-                Output.stage_class == str(stage_class),
-                Output.stage_uid.is_(None),
-            )
-            .order_by(desc(Output.id))
-            .all()
+        q = s.query(Output).filter(
+            Output.project_id == project_id,
+            Output.stage_node_id == str(stage_node_id),
+            Output.stage_class == str(stage_class),
+            Output.stage_uid.is_(None),
         )
+        if output_type:
+            q = q.filter(Output.output_type == str(output_type))
+        rows = q.order_by(desc(Output.id)).all()
         if not rows:
             return None
         for r in rows:
