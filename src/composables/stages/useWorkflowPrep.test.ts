@@ -337,3 +337,31 @@ describe('_convertGuiToApi shadow', () => {
     expect(app.graph).toBe(hostGraph)
   })
 })
+
+describe('captureNodeLayout', () => {
+  it('restores host node positions after a clobber', async () => {
+    const { captureNodeLayout } = await loadModuleWith({
+      fetchApi: vi.fn(), graphToPrompt: vi.fn(), graphCtor: undefined,
+    })
+    const nodes = [
+      { pos: [100, 200], size: [300, 60] },
+      { pos: [500, 50],  size: [220, 90] },
+    ]
+    const restore = captureNodeLayout(nodes)
+
+    for (const n of nodes) { n.pos = [10, 10]; n.size = [120, 60] }
+    restore()
+    expect(nodes[0].pos).toEqual([100, 200])
+    expect(nodes[0].size).toEqual([300, 60])
+    expect(nodes[1].pos).toEqual([500, 50])
+    expect(nodes[1].size).toEqual([220, 90])
+  })
+
+  it('tolerates nodes missing pos/size', async () => {
+    const { captureNodeLayout } = await loadModuleWith({
+      fetchApi: vi.fn(), graphToPrompt: vi.fn(), graphCtor: undefined,
+    })
+    const restore = captureNodeLayout([{}, { pos: [1, 2] }] as any)
+    expect(() => restore()).not.toThrow()
+  })
+})

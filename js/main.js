@@ -27142,8 +27142,26 @@ function prepareWorkflow(kind, label) {
   _inflight.set(key, task);
   return task;
 }
+function captureNodeLayout(nodes) {
+  const snap = (nodes ?? []).map((n) => {
+    var _a2, _b2, _c, _d;
+    return {
+      n,
+      x: (_a2 = n == null ? void 0 : n.pos) == null ? void 0 : _a2[0],
+      y: (_b2 = n == null ? void 0 : n.pos) == null ? void 0 : _b2[1],
+      w: (_c = n == null ? void 0 : n.size) == null ? void 0 : _c[0],
+      h: (_d = n == null ? void 0 : n.size) == null ? void 0 : _d[1]
+    };
+  });
+  return () => {
+    for (const s of snap) {
+      if (s.x != null && s.y != null) s.n.pos = [s.x, s.y];
+      if (s.w != null && s.h != null) s.n.size = [s.w, s.h];
+    }
+  };
+}
 async function _convertGuiToApi(guiJson) {
-  var _a2, _b2, _c;
+  var _a2, _b2, _c, _d;
   const a = app;
   if (typeof a.graphToPrompt !== "function") {
     throw new Error("app.graphToPrompt missing — ComfyUI frontend too old?");
@@ -27180,6 +27198,7 @@ async function _convertGuiToApi(guiJson) {
       console.warn("[ComfyTV/workflow-prep] subgraph forward failed:", err2);
     }
   });
+  const restoreHostLayout = captureNodeLayout(((_d = a.graph) == null ? void 0 : _d._nodes) ?? []);
   const configured = detached.configure(guiJson);
   if (configured && typeof configured.then === "function") {
     await configured;
@@ -27209,6 +27228,7 @@ async function _convertGuiToApi(guiJson) {
   } finally {
     restoreGraph();
     restoreRoot();
+    restoreHostLayout();
   }
   return (result == null ? void 0 : result.output) ?? result;
 }

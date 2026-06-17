@@ -95,6 +95,20 @@ export function prepareWorkflow(kind: string, label: string): Promise<void> {
   return task
 }
 
+export function captureNodeLayout(nodes: any[]): () => void {
+  const snap = (nodes ?? []).map((n: any) => ({
+    n,
+    x: n?.pos?.[0], y: n?.pos?.[1],
+    w: n?.size?.[0], h: n?.size?.[1],
+  }))
+  return () => {
+    for (const s of snap) {
+      if (s.x != null && s.y != null) s.n.pos = [s.x, s.y]
+      if (s.w != null && s.h != null) s.n.size = [s.w, s.h]
+    }
+  }
+}
+
 async function _convertGuiToApi(guiJson: any): Promise<any> {
   const a = app as any
   if (typeof a.graphToPrompt !== 'function') {
@@ -135,6 +149,8 @@ async function _convertGuiToApi(guiJson: any): Promise<any> {
     }
   })
 
+  const restoreHostLayout = captureNodeLayout(a.graph?._nodes ?? [])
+
   const configured = detached.configure(guiJson)
   if (configured && typeof configured.then === 'function') {
     await configured
@@ -161,6 +177,7 @@ async function _convertGuiToApi(guiJson: any): Promise<any> {
   } finally {
     restoreGraph()
     restoreRoot()
+    restoreHostLayout()
   }
 
   return result?.output ?? result
