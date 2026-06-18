@@ -292,14 +292,12 @@ def _load_image_tensor(url: str) -> tuple[torch.Tensor, torch.Tensor]:
 
     img = PILImage.open(image_path)
 
-    img = img.convert("RGBA") if img.mode in ("P", "LA") else img.convert("RGB")
-    arr = np.array(img).astype(np.float32) / 255.0
-    if arr.shape[-1] == 4:
-        rgb = arr[..., :3]
-        mask = 1.0 - arr[..., 3]
+    rgb = np.array(img.convert("RGB")).astype(np.float32) / 255.0
+    if "A" in img.getbands():
+        alpha = np.array(img.getchannel("A")).astype(np.float32) / 255.0
+        mask = 1.0 - alpha
     else:
-        rgb = arr
-        mask = np.zeros(arr.shape[:2], dtype=np.float32)
+        mask = np.zeros(rgb.shape[:2], dtype=np.float32)
     image_t = torch.from_numpy(rgb).unsqueeze(0)
     mask_t  = torch.from_numpy(mask).unsqueeze(0)
     return image_t, mask_t
@@ -349,12 +347,7 @@ class BridgeFromMask(io.ComfyNode):
     def execute(cls, image=""):
         if not image:
             raise RuntimeError("BridgeFromMask: input is empty")
-        annotated = _url_to_annotated_path(str(image))
-        image_path = folder_paths.get_annotated_filepath(annotated)
-        img = PILImage.open(image_path).convert("RGBA")
-        alpha = np.array(img).astype(np.float32)[..., 3] / 255.0
-
-        mask_t = torch.from_numpy(alpha).unsqueeze(0)
+        _image_t, mask_t = _load_image_tensor(str(image))
         return io.NodeOutput(mask_t)
 
 

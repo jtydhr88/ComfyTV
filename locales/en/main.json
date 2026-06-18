@@ -571,5 +571,8 @@
   "valuePreview": {
     "moreShots": "+ {n} more",
     "emptyTimeline": "empty timeline"
+  },
+  "run": {
+    "stagesRunPerNode": "ComfyTV stages run individually — use each node's Run button. Nothing to run with the global Run here."
   }
 }

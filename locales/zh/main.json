@@ -571,5 +571,8 @@
   "valuePreview": {
     "moreShots": "+ 还有 {n} 个",
     "emptyTimeline": "空时间轴"
+  },
+  "run": {
+    "stagesRunPerNode": "ComfyTV 节点各自独立运行 — 请用每个节点上的运行按钮。全局 Run 在这里没有可执行的节点。"
   }
 }

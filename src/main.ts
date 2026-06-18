@@ -42,6 +42,7 @@ import { app, type ComfyNode } from '@/lib/comfyApp'
 import type { ComfyExtension, ComfyNodeDef } from '@comfyorg/comfyui-frontend-types'
 import { applyHiddenWidgetFlags, getWidget } from '@/utils/widget'
 import { checkThemeTokens } from '@/utils/devTokenCheck'
+import { installGlobalRunBridge } from '@/utils/globalRunBridge'
 
 ;(window as any).__comfytv_host_pinia = getActivePinia()
 
@@ -201,6 +202,12 @@ const extension: ComfyExtension = {
     checkThemeTokens()
     const selection = useSelectionStore()
     const a = app as any
+
+    installGlobalRunBridge(a, {
+      resolveStore: () => useStageStore(pinia),
+      toast: (opts) => a.extensionManager?.toast?.add?.(opts),
+      t: (key, params) => i18n.global.t(key, params ?? {}),
+    })
 
     try {
       const ComfyButton = (window as any).comfyAPI?.button?.ComfyButton

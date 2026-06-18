@@ -49,8 +49,8 @@ class ComfyTVExtension(ComfyExtension):
 
 
 def _bridge_classes() -> list:
-    from ..bridges import INTO_BRIDGES
-    return INTO_BRIDGES
+    from ..bridges import ALL_BRIDGES
+    return ALL_BRIDGES
 
 
 async def comfy_entrypoint() -> ComfyTVExtension:
