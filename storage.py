@@ -247,16 +247,19 @@ def latest_output(project_id: str, stage_node_id: str) -> Optional[dict]:
     return rows[0] if rows else None
 
 
-def latest_output_by_uid(project_id: str, stage_uid: str) -> Optional[dict]:
+def latest_output_by_uid(
+    project_id: str, stage_uid: str, output_type: Optional[str] = None
+) -> Optional[dict]:
     if not stage_uid:
         return None
     with db.get_session() as s:
         q = (
             select(Output)
             .where(Output.project_id == project_id, Output.stage_uid == str(stage_uid))
-            .order_by(desc(Output.id))
-            .limit(1)
         )
+        if output_type:
+            q = q.where(Output.output_type == str(output_type))
+        q = q.order_by(desc(Output.id)).limit(1)
         out = s.execute(q).scalars().first()
         return _output_to_dict(out) if out is not None else None
 

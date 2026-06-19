@@ -858,3 +858,46 @@ class TestTranslateSubpromptEvent:
         ev, payload = out[0]
         assert ev == 'progress_text'
         assert payload['node_id'] == '71' and payload['nodeId'] == '71'
+
+
+class TestFilterSubpromptPreview:
+    PREVIEW = 4
+
+    def _preview(self, inner_node_id, prompt_id='sub'):
+        meta = {
+            'node_id': inner_node_id,
+            'display_node_id': inner_node_id,
+            'prompt_id': prompt_id,
+        }
+        return (b'<jpeg-preview-bytes>', meta)
+
+    def test_inner_preview_reattributed_to_outer_node(self):
+        handled, payload = lc._filter_subprompt_preview(
+            self.PREVIEW, self._preview('3'), 'sub', 71, self.PREVIEW)
+        assert handled is True
+        ev, (image, meta) = payload
+        assert ev == self.PREVIEW
+        assert image == b'<jpeg-preview-bytes>'
+        assert meta['node_id'] == '71'
+        assert meta['display_node_id'] == '71'
+        assert meta['prompt_id'] == 'sub'
+
+    def test_dropped_when_no_outer_node(self):
+        handled, payload = lc._filter_subprompt_preview(
+            self.PREVIEW, self._preview('3'), 'sub', None, self.PREVIEW)
+        assert handled is True and payload is None
+
+    def test_preview_from_other_prompt_passes_through(self):
+        handled, payload = lc._filter_subprompt_preview(
+            self.PREVIEW, self._preview('3', prompt_id='other'), 'sub', 71, self.PREVIEW)
+        assert handled is False and payload is None
+
+    def test_non_preview_event_ignored(self):
+        handled, payload = lc._filter_subprompt_preview(
+            'progress', {'prompt_id': 'sub'}, 'sub', 71, self.PREVIEW)
+        assert handled is False and payload is None
+
+    def test_legacy_preview_without_metadata_ignored(self):
+        handled, payload = lc._filter_subprompt_preview(
+            self.PREVIEW, ('JPEG', b'x', 512), 'sub', 71, self.PREVIEW)
+        assert handled is False and payload is None

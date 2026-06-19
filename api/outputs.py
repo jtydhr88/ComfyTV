@@ -20,8 +20,9 @@ async def list_outputs(request: web.Request) -> web.Response:
 async def get_latest_output(request: web.Request) -> web.Response:
     pid = request.match_info["pid"]
     stage_uid = request.query.get("stage_uid")
+    output_type = request.query.get("output_type")
     if stage_uid:
-        row = storage.latest_output_by_uid(pid, stage_uid)
+        row = storage.latest_output_by_uid(pid, stage_uid, output_type=output_type or None)
         return web.json_response({"output": row})
     stage_node_id = request.query.get("stage_node_id")
     if not stage_node_id:

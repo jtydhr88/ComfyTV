@@ -51607,13 +51607,12 @@ const useProjectStore = /* @__PURE__ */ defineStore("comfytv-project", () => {
   function setCurrent(projectId) {
     currentProjectId.value = projectId || DEFAULT_PROJECT_ID;
   }
-  async function fetchLatestOutput(projectId, stageUid) {
+  async function fetchLatestOutput(projectId, stageUid, outputType) {
     if (!projectId || !stageUid) return null;
     try {
-      const data = await apiFetch(
-        `/comfytv/projects/${encodeURIComponent(projectId)}/outputs/latest?stage_uid=${encodeURIComponent(stageUid)}`,
-        LatestOutputSchema
-      );
+      let url = `/comfytv/projects/${encodeURIComponent(projectId)}/outputs/latest?stage_uid=${encodeURIComponent(stageUid)}`;
+      if (outputType) url += `&output_type=${encodeURIComponent(outputType)}`;
+      const data = await apiFetch(url, LatestOutputSchema);
       return data.output;
     } catch (e) {
       console.warn("[ComfyTV/project] fetchLatestOutput failed", e);
@@ -84447,7 +84446,7 @@ function useStageNode(node, kind, variant = "generator") {
     if (!node.id || node.id < 0) return;
     const uid2 = ensureStageUid(node);
     try {
-      let latest = await projectStore.fetchLatestOutput(projectId, uid2);
+      let latest = await projectStore.fetchLatestOutput(projectId, uid2, outputTypeForKind(kind));
       if (!latest && node.__comfytvFromSave && !adoptionTried) {
         adoptionTried = true;
         latest = await projectStore.adoptOutputs(

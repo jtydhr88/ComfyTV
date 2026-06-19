@@ -271,3 +271,42 @@ class TestStageUidIdentity:
         adopted = storage.adopt_outputs("default", "1", "TextStage", "uid-t", output_type="text")
         assert adopted is not None
         assert adopted["payload_url"] == "hello"
+
+
+class TestLatestByUidOutputTypeGate:
+    def _row(self, output_type, payload, uid="uid-shared", node_id="1"):
+        from ComfyTV import storage
+        out = storage.persist_output(
+            project_id="default", stage_class="X", stage_node_id=node_id,
+            output_type=output_type, payload_url=payload,
+        )
+        storage.set_output_stage_uid(out["id"], uid)
+        return out
+
+    def test_filter_skips_mismatched_type_even_when_newer(self, reset_db):
+        from ComfyTV import storage
+        self._row("text", "my generated prompt text")
+        self._row("image", "/view?filename=example.png")
+        found = storage.latest_output_by_uid("default", "uid-shared", output_type="text")
+        assert found is not None
+        assert found["output_type"] == "text"
+        assert found["payload_url"] == "my generated prompt text"
+
+    def test_filter_returns_none_when_only_mismatched_exists(self, reset_db):
+        from ComfyTV import storage
+        self._row("image", "/view?filename=example.png")
+        assert storage.latest_output_by_uid("default", "uid-shared", output_type="text") is None
+
+    def test_no_filter_preserves_legacy_behaviour(self, reset_db):
+        from ComfyTV import storage
+        self._row("text", "older")
+        newer = self._row("image", "/view?filename=newer.png")
+        found = storage.latest_output_by_uid("default", "uid-shared")
+        assert found is not None and found["id"] == newer["id"]
+
+    def test_matching_type_still_restores(self, reset_db):
+        from ComfyTV import storage
+        self._row("images", '{"images": [{"index": "1", "image_url": "/view?filename=a.png"}]}')
+        found = storage.latest_output_by_uid("default", "uid-shared", output_type="images")
+        assert found is not None
+        assert found["output_type"] == "images"

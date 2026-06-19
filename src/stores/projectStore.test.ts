@@ -134,6 +134,23 @@ describe('projectStore', () => {
     expect(row).toEqual({ id: 1, project_id: 'p1' })
   })
 
+  it('fetchLatestOutput appends output_type so a mismatched row is filtered out', async () => {
+    mockFetch.mockResolvedValueOnce({ output: null })
+    const store = useProjectStore()
+    await store.fetchLatestOutput('p1', '42', 'text')
+    const url = mockFetch.mock.calls.at(-1)![0] as string
+    expect(url).toContain('stage_uid=42')
+    expect(url).toContain('output_type=text')
+  })
+
+  it('fetchLatestOutput omits output_type when not given (legacy callers)', async () => {
+    mockFetch.mockResolvedValueOnce({ output: null })
+    const store = useProjectStore()
+    await store.fetchLatestOutput('p1', '42')
+    const url = mockFetch.mock.calls.at(-1)![0] as string
+    expect(url).not.toContain('output_type')
+  })
+
   it('fetchLatestOutput returns null on empty args', async () => {
     const store = useProjectStore()
     expect(await store.fetchLatestOutput('', '1')).toBeNull()

@@ -74,14 +74,14 @@ export const useProjectStore = defineStore('comfytv-project', () => {
   async function fetchLatestOutput(
     projectId: string,
     stageUid: string,
+    outputType?: string,
   ) {
     if (!projectId || !stageUid) return null
     try {
-      const data = await apiFetch(
-        `/comfytv/projects/${encodeURIComponent(projectId)}/outputs/latest`
-        + `?stage_uid=${encodeURIComponent(stageUid)}`,
-        LatestOutputSchema,
-      )
+      let url = `/comfytv/projects/${encodeURIComponent(projectId)}/outputs/latest`
+        + `?stage_uid=${encodeURIComponent(stageUid)}`
+      if (outputType) url += `&output_type=${encodeURIComponent(outputType)}`
+      const data = await apiFetch(url, LatestOutputSchema)
       return data.output
     } catch (e) {
       console.warn('[ComfyTV/project] fetchLatestOutput failed', e)

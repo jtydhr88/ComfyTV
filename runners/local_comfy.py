@@ -374,12 +374,28 @@ def _translate_subprompt_event(event, data, sub_prompt_id, outer_node_id, aggreg
     return []
 
 
+def _filter_subprompt_preview(event, data, sub_prompt_id, outer_node_id, preview_event_type):
+    if event != preview_event_type:
+        return (False, None)
+    if not (isinstance(data, tuple) and len(data) == 2 and isinstance(data[1], dict)):
+        return (False, None)
+    image, meta = data
+    if meta.get('prompt_id') != sub_prompt_id:
+        return (False, None)
+    if outer_node_id is None:
+        return (True, None)
+    oid = str(outer_node_id)
+    rewritten = {**meta, 'node_id': oid, 'display_node_id': oid}
+    return (True, (event, (image, rewritten)))
+
+
 async def _run_subprompt(sub_prompt: dict, sub_prompt_id: str,
                           execute_outputs: list[str]):
 
-    from server import PromptServer
+    from server import BinaryEventTypes, PromptServer
 
     server = PromptServer.instance
+    preview_meta_event = getattr(BinaryEventTypes, 'PREVIEW_IMAGE_WITH_METADATA', None)
 
     total_nodes = float(len(sub_prompt) or 1)
 
@@ -412,6 +428,14 @@ async def _run_subprompt(sub_prompt: dict, sub_prompt_id: str,
         orig_send_sync = server.send_sync
 
         def wrapped_send_sync(event, data, sid=None):
+            if preview_meta_event is not None:
+                handled, payload = _filter_subprompt_preview(
+                    event, data, sub_prompt_id, outer_node_id, preview_meta_event,
+                )
+                if handled:
+                    if payload is not None:
+                        orig_send_sync(payload[0], payload[1], sid)
+                    return None
             is_sub = (
                 isinstance(data, dict)
                 and data.get('prompt_id') == sub_prompt_id

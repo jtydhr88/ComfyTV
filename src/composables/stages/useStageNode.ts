@@ -782,7 +782,7 @@ export function useStageNode(
     if (!node.id || node.id < 0) return
     const uid = ensureStageUid(node)
     try {
-      let latest = await projectStore.fetchLatestOutput(projectId, uid)
+      let latest = await projectStore.fetchLatestOutput(projectId, uid, outputTypeForKind(kind))
 
       if (!latest && node.__comfytvFromSave && !adoptionTried) {
         adoptionTried = true

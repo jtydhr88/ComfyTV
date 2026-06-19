@@ -21,6 +21,14 @@ describe('ValuePreview — type-driven branches', () => {
     expect(screen.getByText('hello world')).toBeInTheDocument()
   })
 
+  it('TEXT type never renders an <img>, even when content is an image URL', () => {
+    renderWithPlugins(ValuePreview, {
+      props: { type: 'COMFYTV_TEXT', content: '/view?filename=example.png&type=input' },
+    })
+    expect(screen.queryByRole('img')).toBeNull()
+    expect(screen.getByText('/view?filename=example.png&type=input')).toBeInTheDocument()
+  })
+
   it('renders IMAGE as an <img> with the right src + alt', () => {
     renderWithPlugins(ValuePreview, {
       props: { type: 'COMFYTV_IMAGE', content: '/view?filename=a.png' },
