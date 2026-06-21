@@ -6,6 +6,7 @@ import {
   type ImagePickContext,
   type InputSource,
   type StageState,
+  toImagePoolJson,
 } from '@/stores/stageStore'
 
 export function formatSlot(slot: string): string {
@@ -80,6 +81,19 @@ export function useStageCard(
   const poolCount = computed(() => parsePoolCount(poolContent.value))
   const pickerSource = computed<InputSource>(() => batchInput.value?.source ?? 'empty')
 
+  const upstreamBatchUrls = computed<string[]>(() => {
+    const inp = batchInput.value
+    if (!inp || inp.source !== 'upstream' || !inp.content) return []
+    try {
+      const p = JSON.parse(toImagePoolJson(inp.content))
+      return (p.images as Array<{ image_url?: string }>)
+        .map(im => String(im.image_url ?? ''))
+        .filter(Boolean)
+    } catch {
+      return []
+    }
+  })
+
   const confirmingClear = ref(false)
   watch(poolCount, (n) => { if (n === 0) confirmingClear.value = false })
 
@@ -101,6 +115,7 @@ export function useStageCard(
     poolContent,
     poolCount,
     pickerSource,
+    upstreamBatchUrls,
     confirmingClear,
     onClearPool,
   }

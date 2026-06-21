@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 
 import { apiFetch, apiSend, OkSchema, WorkflowConfigSchema } from '@/api'
+import { askConfirm } from '@/composables/dialog/useConfirmDialog'
 import { invalidateWorkflowInfo } from '@/composables/stages/useWorkflowValidator'
 import { prepareWorkflow } from '@/composables/stages/useWorkflowPrep'
 import { app } from '@/lib/comfyApp'
@@ -67,7 +68,12 @@ export function useWorkflowConfig(t: (key: string, args?: Record<string, unknown
 
   async function onResetToPreset() {
     if (!config.value) return
-    if (!window.confirm(t('configSidebar.resetToPresetConfirm'))) return
+    const ok = await askConfirm({
+      title: t('configSidebar.resetToPreset'),
+      message: t('configSidebar.resetToPresetConfirm'),
+      danger: true,
+    })
+    if (!ok) return
     resetBusy.value = true
     resetError.value = null
     try {

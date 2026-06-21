@@ -1,4 +1,8 @@
 {
+  "dialog": {
+    "confirm": "确定",
+    "cancel": "取消"
+  },
   "workflow": {
     "uploadButton": "⬆ 上传工作流",
     "imported": "已导入「{label}」",
@@ -49,6 +53,7 @@
       "viewFull": "查看大图",
       "download": "下载",
       "addTag": "存入资产库 / 打标签",
+      "removeFromPicker": "从选择器移除",
       "close": "关闭"
     },
     "preparingWorkflowDetail": "稍等 — 正在把工作流转换成 api JSON。稍后再点运行。"
@@ -572,7 +577,8 @@
   },
   "valuePreview": {
     "moreShots": "+ 还有 {n} 个",
-    "emptyTimeline": "空时间轴"
+    "emptyTimeline": "空时间轴",
+    "fromUpstream": "来自上游接入的 batch —— 请在上游移除，这里删不掉"
   },
   "run": {
     "stagesRunPerNode": "ComfyTV 节点各自独立运行 — 请用每个节点上的运行按钮。全局 Run 在这里没有可执行的节点。"

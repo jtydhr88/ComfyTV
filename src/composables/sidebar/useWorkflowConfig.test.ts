@@ -9,6 +9,11 @@ import { useWorkflowConfig } from './useWorkflowConfig'
 vi.mock('@/composables/stages/useWorkflowPrep', () => ({
   prepareWorkflow: vi.fn().mockResolvedValue(undefined),
 }))
+vi.mock('@/composables/dialog/useConfirmDialog', () => ({
+  askConfirm: vi.fn(async () => true),
+}))
+
+import { askConfirm } from '@/composables/dialog/useConfirmDialog'
 
 const jsonResp = (data: any, status = 200, headers: Record<string, string> = {}) =>
   new Response(JSON.stringify(data), {
@@ -109,9 +114,7 @@ describe('useWorkflowConfig', () => {
     fetchApi.mockResolvedValueOnce(jsonResp({ ok: true }))
     fetchApi.mockResolvedValueOnce(jsonResp(payloadV2))
 
-    ;(globalThis as any).confirm = () => true
-    ;(globalThis as any).window = (globalThis as any).window ?? globalThis
-    ;(globalThis as any).window.confirm = () => true
+    vi.mocked(askConfirm).mockResolvedValueOnce(true)
 
     const { config, loadConfig, onResetToPreset } = useWorkflowConfig(t)
     await loadConfig('image', 'X')
@@ -226,8 +229,7 @@ describe('useWorkflowConfig', () => {
     const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
     fetchApi.mockResolvedValueOnce(jsonResp(payload))
     fetchApi.mockResolvedValueOnce(jsonResp({ error: 'missing preset row' }, 500))
-    ;(globalThis as any).window = (globalThis as any).window ?? globalThis
-    ;(globalThis as any).window.confirm = () => true
+    vi.mocked(askConfirm).mockResolvedValueOnce(true)
 
     const { loadConfig, onResetToPreset, resetError, resetBusy } = useWorkflowConfig(t)
     await loadConfig('image', 'X')
@@ -243,8 +245,7 @@ describe('useWorkflowConfig', () => {
     }
     const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
     fetchApi.mockResolvedValueOnce(jsonResp(payload))
-    ;(globalThis as any).window = (globalThis as any).window ?? globalThis
-    ;(globalThis as any).window.confirm = () => false
+    vi.mocked(askConfirm).mockResolvedValueOnce(false)
 
     const { loadConfig, onResetToPreset } = useWorkflowConfig(t)
     await loadConfig('image', 'X')

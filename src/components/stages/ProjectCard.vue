@@ -54,6 +54,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { askConfirm } from '@/composables/dialog/useConfirmDialog'
+import { askText } from '@/composables/dialog/useTextInputDialog'
 import { useProjectStore } from '@/stores/projectStore'
 
 const store = useProjectStore()
@@ -82,10 +84,11 @@ async function onRefresh() {
 }
 
 async function onCreate() {
-  const name = window.prompt(
-    t('project.create_prompt'),
-    t('project.create_default', { n: Math.floor(Date.now() / 1000) }),
-  )
+  const name = await askText({
+    title: t('project.create'),
+    label: t('project.create_prompt'),
+    initialValue: t('project.create_default', { n: Math.floor(Date.now() / 1000) }),
+  })
   if (!name) return
   try {
     await store.createProject(name)
@@ -98,7 +101,12 @@ async function onCreate() {
 async function onDelete() {
   const pid = store.currentProjectId
   if (pid === 'default') return
-  if (!window.confirm(t('project.delete_confirm'))) return
+  const ok = await askConfirm({
+    title: t('project.delete'),
+    message: t('project.delete_confirm'),
+    danger: true,
+  })
+  if (!ok) return
   try {
     await store.remove(pid)
     status.value = t('project.status.deleted')

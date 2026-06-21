@@ -130,6 +130,10 @@
                        ctv:bg-black/70 ctv:text-[#ffb0d8]">
             {{ img.label ?? `#${img.index ?? i + 1}` }}
           </span>
+          <span v-if="removable && isUpstreamItem(img)"
+                class="ctv:absolute ctv:bottom-0.5 ctv:right-0.5 ctv:py-px ctv:px-1 ctv:text-3xs ctv:font-bold ctv:rounded-sm
+                       ctv:bg-primary-background/85 ctv:text-white"
+                :title="$t('valuePreview.fromUpstream')">↑</span>
           <span v-if="clickMode === 'pick'"
                 class="ctv:absolute ctv:top-0.5 ctv:right-0.5 ctv:py-px ctv:px-1 ctv:text-2xs ctv:rounded-sm
                        ctv:bg-black/55 ctv:opacity-0 ctv:transition-opacity ctv:duration-150 ctv:group-hover:opacity-100">
@@ -145,6 +149,9 @@
             <button type="button" :class="tagActionBtn(img.image_url)"
                     :title="$t('stage.action.addTag')"
                     @click.stop="openTagMenu(img.image_url, img.label || img.prompt || nameFromUrl(img.image_url), $event)">🏷</button>
+            <button v-if="canRemoveItem(img, i)" type="button" :class="removeActionBtn"
+                    :title="$t('stage.action.removeFromPicker')"
+                    @click.stop="onItemRemove(img, i)">✕</button>
           </div>
         </component>
       </div>
@@ -293,6 +300,8 @@ const props = defineProps<{
   selectedIndex?: string | number
   clickMode?: 'refine' | 'pick'
   compact?: boolean
+  removable?: boolean
+  upstreamUrls?: string[]
 }>()
 
 useImagePanZoom(zoomContainer, zoomImg, { resetKey: toRef(props, 'content') })
@@ -309,21 +318,38 @@ const {
 
 const emit = defineEmits<{
   (e: 'item-click', payload: ItemClickPayload): void
+  (e: 'item-remove', payload: ItemClickPayload): void
 }>()
 
-function onItemClick(img: BatchImage, i: number) {
-  emit('item-click', {
+function itemPayload(img: BatchImage, i: number): ItemClickPayload {
+  return {
     index: img.index ?? String(i + 1),
     label: img.label,
     prompt: img.prompt,
     imageUrl: img.image_url,
-  })
+  }
+}
+
+function onItemClick(img: BatchImage, i: number) {
+  emit('item-click', itemPayload(img, i))
+}
+
+function onItemRemove(img: BatchImage, i: number) {
+  emit('item-remove', itemPayload(img, i))
 }
 
 const clickHintIcon = computed(() => props.clickMode === 'pick' ? '✓' : '✏️')
 
 function isItemSelected(img: BatchImage, i: number): boolean {
   return isBatchItemSelected(img, i, props.selectedIndex)
+}
+
+function isUpstreamItem(img: BatchImage): boolean {
+  return (props.upstreamUrls ?? []).includes(img.image_url)
+}
+
+function canRemoveItem(img: BatchImage, i: number): boolean {
+  return !!props.removable && !isItemSelected(img, i) && !isUpstreamItem(img)
 }
 
 function cellTooltip(img: BatchImage, i: number): string {
@@ -396,6 +422,10 @@ const imgActionsClass = 'ctv:absolute ctv:top-1 ctv:right-1 ctv:z-10 ctv:flex ct
 const imgActionBtn = COMFY_BTN_BASE
   + ' ctv:size-5 ctv:p-0 ctv:rounded-sm ctv:text-sm'
   + ' ctv:bg-white ctv:text-gray-600 ctv:hover:bg-white/90'
+
+const removeActionBtn = COMFY_BTN_BASE
+  + ' ctv:size-5 ctv:p-0 ctv:rounded-sm ctv:text-xs'
+  + ' ctv:bg-white ctv:text-gray-600 ctv:hover:bg-destructive-background ctv:hover:text-white'
 
 function tagActionBtn(url: string) {
   const saved = isSaved(url)

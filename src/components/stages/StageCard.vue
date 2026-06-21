@@ -37,7 +37,10 @@
         :empty-label="pickerSource === 'upstream-pending' ? $t('stage.empty.pending_upstream') : $t('stage.empty.no_output')"
         :selected-index="state.pickedIndex"
         click-mode="pick"
+        removable
+        :upstream-urls="upstreamBatchUrls"
         @item-click="onItemClick"
+        @item-remove="onItemRemove"
       />
     </section>
 
@@ -216,6 +219,7 @@ const {
   poolContent,
   poolCount,
   pickerSource,
+  upstreamBatchUrls,
   confirmingClear,
   onClearPool,
 } = useStageCard(() => props.state, props.onAction)
@@ -232,6 +236,10 @@ function onDismissError() {
 
 function onItemClick(payload: ImagePickContext) {
   props.onAction('pick-item', payload)
+}
+
+function onItemRemove(payload: ImagePickContext) {
+  props.onAction('remove-pool-item', payload)
 }
 
 function onOutputItemClick(payload: ImagePickContext) {

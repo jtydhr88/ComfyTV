@@ -5,6 +5,11 @@ import { computed, nextTick, ref } from 'vue'
 import { app } from '@/lib/comfyApp'
 import { useEntryStore } from '@/stores/entryStore'
 
+vi.mock('@/composables/dialog/useConfirmDialog', () => ({
+  askConfirm: vi.fn(async () => false),
+}))
+
+import { askConfirm } from '@/composables/dialog/useConfirmDialog'
 import { useEntryEditor } from './useEntryEditor'
 import type { MetaField } from './entryCatalog'
 
@@ -104,8 +109,7 @@ describe('useEntryEditor', () => {
   it('confirmDelete cancels when user declines', async () => {
     const store = useEntryStore()
     seedEntries(store, 'p1', [entry({ id: 1, label: 'dontkill' })])
-    ;(globalThis as any).window = (globalThis as any).window ?? globalThis
-    ;(globalThis as any).window.confirm = () => false
+    vi.mocked(askConfirm).mockResolvedValueOnce(false)
 
     const ed = useEntryEditor(ref('p1'), ref('fragment'), computed(() => []))
     await nextTick()

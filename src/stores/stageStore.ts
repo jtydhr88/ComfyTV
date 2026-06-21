@@ -287,6 +287,22 @@ export function mergeImagePool(
   return JSON.stringify({ images: merged })
 }
 
+export function removeImageFromPool(
+  poolJson: string | null | undefined,
+  imageUrl: string,
+): string {
+  let images: Array<Record<string, any>> = []
+  try {
+    const p = JSON.parse(String(poolJson ?? ''))
+    if (Array.isArray(p?.images)) images = p.images
+  } catch {
+    images = []
+  }
+  const filtered = images.filter(im => String(im.image_url ?? '') !== String(imageUrl))
+  filtered.forEach((im, i) => { im.index = String(i + 1) })
+  return JSON.stringify({ images: filtered })
+}
+
 export function computePickedFromBatch(batch: string | null | undefined, wantIdx: number): string | null {
   if (!batch) return null
   try {

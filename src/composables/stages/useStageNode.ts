@@ -14,6 +14,7 @@ import {
   mergeImagePool,
   imagePoolCount,
   toImagePoolJson,
+  removeImageFromPool,
   type StageKind,
   type StageVariant,
   type ImagePickContext,
@@ -622,6 +623,24 @@ export function useStageNode(
   const onAction = (actionId: string, context?: ImagePickContext) => {
     if (actionId === 'clear-pool' && kind === 'image-picker') {
       store.clearPickerPool(node, state)
+      return
+    }
+    if (actionId === 'remove-pool-item' && context && kind === 'image-picker') {
+      const removedIndex = Number(context.index) || 0
+      const merged = removeImageFromPool(state.pool, context.imageUrl ?? '')
+      const count = imagePoolCount(merged)
+      if (count === 0) {
+        store.clearPickerPool(node, state)
+        return
+      }
+      store.setPickerPool(node, state, merged)
+      let idx = state.pickedIndex ?? 1
+      if (removedIndex && removedIndex < idx) idx -= 1
+      idx = Math.max(1, Math.min(count, idx))
+      state.pickedIndex = idx
+      setWidget(node, 'selected_index', idx)
+      const out = computePickedImageUrl(state)
+      if (out !== state.output) store.setOutputSlot(state, 0, out)
       return
     }
     if (actionId === 'pick-item' && context && (kind === 'image-picker' || kind === 'image-batch')) {

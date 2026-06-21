@@ -21,8 +21,16 @@ vi.mock('vue-i18n', () => ({ useI18n: () => ({ t: (k: string) => k }) }))
 vi.mock('@/utils/uploadCanvas', () => ({
   uploadBlobNamed: vi.fn(async (_f: File, o: any) => ({ url: `/up/${o.filename}` })),
 }))
+vi.mock('@/composables/dialog/useTextInputDialog', () => ({
+  askText: vi.fn(async () => null),
+}))
+vi.mock('@/composables/dialog/useConfirmDialog', () => ({
+  askConfirm: vi.fn(async () => false),
+}))
 
 import { uploadBlobNamed } from '@/utils/uploadCanvas'
+import { askText } from '@/composables/dialog/useTextInputDialog'
+import { askConfirm } from '@/composables/dialog/useConfirmDialog'
 
 import { useAssetsPanel } from './useAssetsPanel'
 
@@ -73,6 +81,24 @@ describe('useAssetsPanel', () => {
     expect(store.addTag).not.toHaveBeenCalled()
   })
 
+  const ASSET_MIME = 'application/x-comfytv-asset-id'
+
+  it('shows the add overlay for external files but not for a dragged in-library image', () => {
+    const p = useAssetsPanel(() => false)
+    p.onDragEnter(dragEvent(undefined, [], ['Files']))
+    expect(p.fileDragDepth.value).toBe(1)
+    p.onDragEnter(dragEvent(undefined, [], ['Files', ASSET_MIME]))
+    expect(p.fileDragDepth.value).toBe(1)
+  })
+
+  it('onDrop does not re-add an image already in the library (no duplicate)', async () => {
+    const file = new File(['x'], 'pic.png', { type: 'image/png' })
+    const p = useAssetsPanel(() => false)
+    p.onDrop(dragEvent(undefined, [file], ['Files', ASSET_MIME]))
+    await Promise.resolve()
+    expect(store.create).not.toHaveBeenCalled()
+  })
+
   it('openTagEditor + toggleTag add/remove via the resolved asset', () => {
     const p = useAssetsPanel(() => false)
     p.openTagEditor({ id: 5 } as any, { currentTarget: { getBoundingClientRect: () => ({ right: 200, bottom: 40 }) } } as any)
@@ -91,20 +117,32 @@ describe('useAssetsPanel', () => {
   })
 
   it('onCreateCategory prompts then creates and selects it', async () => {
-    vi.stubGlobal('prompt', vi.fn(() => 'characters'))
+    vi.mocked(askText).mockResolvedValueOnce('characters')
     const p = useAssetsPanel(() => false)
-    p.onCreateCategory()
-    await Promise.resolve(); await Promise.resolve()
+    await p.onCreateCategory()
+    expect(askText).toHaveBeenCalled()
     expect(store.createCategory).toHaveBeenCalledWith('characters')
-    vi.unstubAllGlobals()
   })
 
-  it('onDeleteCategory confirms before removing', () => {
-    vi.stubGlobal('confirm', vi.fn(() => false))
+  it('onCreateCategory does nothing when the dialog is cancelled', async () => {
+    vi.mocked(askText).mockResolvedValueOnce(null)
     const p = useAssetsPanel(() => false)
-    p.onDeleteCategory(1)
+    await p.onCreateCategory()
+    expect(store.createCategory).not.toHaveBeenCalled()
+  })
+
+  it('onDeleteCategory does not remove when the confirm is declined', async () => {
+    vi.mocked(askConfirm).mockResolvedValueOnce(false)
+    const p = useAssetsPanel(() => false)
+    await p.onDeleteCategory(1)
     expect(store.removeCategory).not.toHaveBeenCalled()
-    vi.unstubAllGlobals()
+  })
+
+  it('onDeleteCategory removes when the confirm is accepted', async () => {
+    vi.mocked(askConfirm).mockResolvedValueOnce(true)
+    const p = useAssetsPanel(() => false)
+    await p.onDeleteCategory(1)
+    expect(store.removeCategory).toHaveBeenCalledWith(1)
   })
 
   it('addFiles uploads images and creates assets under the active category', async () => {

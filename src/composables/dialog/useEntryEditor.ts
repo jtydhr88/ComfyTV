@@ -3,6 +3,7 @@ import { computed, nextTick, reactive, ref, watch, type Ref } from 'vue'
 import type { Entry } from '@/api/schemas'
 import { ENTRY_KINDS, useEntryStore, type EntryKind } from '@/stores/entryStore'
 import { isValidLabel } from '@/utils/labelRegex'
+import { askConfirm } from '@/composables/dialog/useConfirmDialog'
 import { t } from '@/i18n'
 
 import { draftFromEntry, type Draft, type MetaField } from './entryCatalog'
@@ -52,7 +53,12 @@ export function useEntryEditor(
   }
 
   async function confirmDelete(entry: Entry) {
-    if (!window.confirm(t('entries.confirmDelete', { label: entry.label }))) return
+    const ok = await askConfirm({
+      title: t('entries.deleteTitle', { label: entry.label }),
+      message: t('entries.confirmDelete', { label: entry.label }),
+      danger: true,
+    })
+    if (!ok) return
     await entryStore.remove(projectId.value, entry.id)
   }
 

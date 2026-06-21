@@ -124,6 +124,31 @@ describe('useStageCard — run gating + inputs', () => {
     expect(c.pickerSource.value).toBe('upstream')
   })
 
+  it('upstreamBatchUrls lists the urls of the live upstream batch', () => {
+    const batch = JSON.stringify({ images: [
+      { index: '1', image_url: '/a.png' },
+      { index: '2', image_url: '/b.png' },
+    ] })
+    const c = useStageCard(() => state({
+      inputs: [{ slot: 'batch', source: 'upstream', content: batch }],
+    }), vi.fn())
+    expect(c.upstreamBatchUrls.value).toEqual(['/a.png', '/b.png'])
+  })
+
+  it('upstreamBatchUrls handles a single upstream image url', () => {
+    const c = useStageCard(() => state({
+      inputs: [{ slot: 'batch', source: 'upstream', content: '/single.png' }],
+    }), vi.fn())
+    expect(c.upstreamBatchUrls.value).toEqual(['/single.png'])
+  })
+
+  it('upstreamBatchUrls is empty when nothing is connected upstream', () => {
+    const c = useStageCard(() => state({
+      inputs: [{ slot: 'batch', source: 'empty', content: null }],
+    }), vi.fn())
+    expect(c.upstreamBatchUrls.value).toEqual([])
+  })
+
   it('confirmingClear resets when the pool empties', async () => {
     const st = ref(state({ pool: JSON.stringify({ images: [1] }) }))
     const c = useStageCard(() => st.value, vi.fn())

@@ -1,4 +1,8 @@
 {
+  "dialog": {
+    "confirm": "OK",
+    "cancel": "Cancel"
+  },
   "workflow": {
     "uploadButton": "⬆ Upload workflow",
     "imported": "Imported \"{label}\"",
@@ -49,6 +53,7 @@
       "viewFull": "View full size",
       "download": "Download",
       "addTag": "Save to library / tag",
+      "removeFromPicker": "Remove from picker",
       "close": "Close"
     },
     "preparingWorkflowDetail": "Hang on — converting workflow to api JSON. Try Run again in a moment."
@@ -572,7 +577,8 @@
   },
   "valuePreview": {
     "moreShots": "+ {n} more",
-    "emptyTimeline": "empty timeline"
+    "emptyTimeline": "empty timeline",
+    "fromUpstream": "From the connected upstream batch — remove it upstream, not here"
   },
   "run": {
     "stagesRunPerNode": "ComfyTV stages run individually — use each node's Run button. Nothing to run with the global Run here."

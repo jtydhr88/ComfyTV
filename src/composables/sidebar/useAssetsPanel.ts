@@ -2,6 +2,8 @@ import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import type { Asset } from '@/api/schemas'
+import { askConfirm } from '@/composables/dialog/useConfirmDialog'
+import { askText } from '@/composables/dialog/useTextInputDialog'
 import { type AssetCategoryFilter, useAssetStore } from '@/stores/assetStore'
 import { uploadBlobNamed } from '@/utils/uploadCanvas'
 
@@ -128,35 +130,54 @@ export function useAssetsPanel(isActive: () => boolean | undefined) {
     }
   }
 
-  function onCreateCategory() {
-    const name = window.prompt(t('assets.category.newPrompt'))?.trim()
+  async function onCreateCategory() {
+    const name = (await askText({
+      title: t('assets.category.new'),
+      label: t('assets.category.newPrompt'),
+    }))?.trim()
     if (!name) return
-    void store.createCategory(name).then((cat) => {
-      if (cat) activeFilter.value = cat.id
-    })
+    const cat = await store.createCategory(name)
+    if (cat) activeFilter.value = cat.id
   }
 
-  function onRenameCategory(id: number, current: string) {
-    const name = window.prompt(t('assets.category.renamePrompt'), current)?.trim()
+  async function onRenameCategory(id: number, current: string) {
+    const name = (await askText({
+      title: t('assets.category.rename'),
+      label: t('assets.category.renamePrompt'),
+      initialValue: current,
+    }))?.trim()
     if (!name || name === current) return
     void store.renameCategory(id, name)
   }
 
-  function onDeleteCategory(id: number) {
-    if (!window.confirm(t('assets.category.deleteConfirm'))) return
-    void store.removeCategory(id).then((ok) => {
-      if (ok && activeFilter.value === id) activeFilter.value = 'all'
+  async function onDeleteCategory(id: number) {
+    const ok = await askConfirm({
+      title: t('assets.category.delete'),
+      message: t('assets.category.deleteConfirm'),
+      danger: true,
     })
+    if (!ok) return
+    const removed = await store.removeCategory(id)
+    if (removed && activeFilter.value === id) activeFilter.value = 'all'
   }
 
-  function onRenameAsset(asset: Asset) {
-    const name = window.prompt(t('assets.card.renamePrompt'), asset.name)?.trim()
-    if (name === undefined || name === null || name === asset.name) return
+  async function onRenameAsset(asset: Asset) {
+    const name = (await askText({
+      title: t('assets.card.rename'),
+      label: t('assets.card.renamePrompt'),
+      initialValue: asset.name,
+    }))?.trim()
+    if (!name || name === asset.name) return
     void store.rename(asset.id, name)
   }
 
-  function onDeleteAsset(asset: Asset) {
-    if (!window.confirm(t('assets.card.deleteConfirm'))) return
+  async function onDeleteAsset(asset: Asset) {
+    const ok = await askConfirm({
+      title: t('assets.card.delete'),
+      message: t('assets.card.deleteConfirm'),
+      danger: true,
+    })
+    if (!ok) return
     void store.remove(asset.id)
   }
 
@@ -173,7 +194,8 @@ export function useAssetsPanel(isActive: () => boolean | undefined) {
   }
 
   function isFileDrag(e: DragEvent): boolean {
-    return Array.from(e.dataTransfer?.types ?? []).includes('Files')
+    const types = Array.from(e.dataTransfer?.types ?? [])
+    return types.includes('Files') && !types.includes(ASSET_DRAG_MIME)
   }
 
   function onDragEnter(e: DragEvent) {

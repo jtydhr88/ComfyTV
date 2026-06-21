@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 
-import { useStageStore, computePickedImageUrl, mergeImagePool, toImagePoolJson, type StageState } from './stageStore'
+import { useStageStore, computePickedImageUrl, mergeImagePool, toImagePoolJson, removeImageFromPool, type StageState } from './stageStore'
 
 function freshState(overrides: Partial<StageState> = {}): StageState {
   return {
@@ -356,6 +356,34 @@ describe('mergeImagePool', () => {
   it('merges a single image url (COMFYTV_IMAGE) into the pool', () => {
     const merged = mergeImagePool(pool('a', 'b'), toImagePoolJson('/view?filename=c.png'))
     expect(urls(merged)).toEqual(['/view?filename=c.png', 'a', 'b'])
+  })
+})
+
+describe('removeImageFromPool', () => {
+  const img = (url: string) => ({ index: '1', image_url: url, label: url })
+  const pool = (...urls: string[]) => JSON.stringify({ images: urls.map(img) })
+  const urls = (json: string) =>
+    (JSON.parse(json).images as Array<{ image_url: string }>).map(i => i.image_url)
+  const indices = (json: string) =>
+    (JSON.parse(json).images as Array<{ index: string }>).map(i => i.index)
+
+  it('drops the matching image and re-indexes the survivors', () => {
+    const next = removeImageFromPool(pool('a', 'b', 'c'), 'b')
+    expect(urls(next)).toEqual(['a', 'c'])
+    expect(indices(next)).toEqual(['1', '2'])
+  })
+
+  it('is a no-op when the url is not in the pool', () => {
+    expect(urls(removeImageFromPool(pool('a', 'b'), 'z'))).toEqual(['a', 'b'])
+  })
+
+  it('yields an empty pool when the last image is removed', () => {
+    expect(urls(removeImageFromPool(pool('a'), 'a'))).toEqual([])
+  })
+
+  it('tolerates empty / malformed pool json', () => {
+    expect(urls(removeImageFromPool(null, 'a'))).toEqual([])
+    expect(urls(removeImageFromPool('not json', 'a'))).toEqual([])
   })
 })
 
