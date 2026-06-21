@@ -47,6 +47,7 @@ export function useImageCrop(options: UseImageCropOptions) {
 
   const naturalWidth = ref(0)
   const naturalHeight = ref(0)
+  const lastInitializedUrl = ref<string | null>(null)
   const displayedWidth = ref(0)
   const displayedHeight = ref(0)
   const scaleFactor = ref(1)
@@ -228,19 +229,29 @@ export function useImageCrop(options: UseImageCropOptions) {
     return allResizeHandles.value.filter(h => h.isCorner)
   })
 
+  function defaultBounds(): Bounds {
+    const w = Math.max(MIN_CROP_SIZE, Math.round(naturalWidth.value * 0.7))
+    const h = Math.max(MIN_CROP_SIZE, Math.round(naturalHeight.value * 0.7))
+    return {
+      x: Math.max(0, Math.floor((naturalWidth.value - w) / 2)),
+      y: Math.max(0, Math.floor((naturalHeight.value - h) / 2)),
+      width: w,
+      height: h,
+    }
+  }
+
   function handleImageLoad() {
     isLoading.value = false
     updateDisplayedDimensions()
-    if (modelValue.value.width <= 0 || modelValue.value.height <= 0) {
-      const w = Math.min(512, naturalWidth.value)
-      const h = Math.min(512, naturalHeight.value)
-      modelValue.value = {
-        x: Math.floor((naturalWidth.value - w) / 2),
-        y: Math.floor((naturalHeight.value - h) / 2),
-        width: w,
-        height: h,
-      }
+    if (naturalWidth.value <= 0 || naturalHeight.value <= 0) return
+
+    const noValidBounds = modelValue.value.width <= 0 || modelValue.value.height <= 0
+    const switchedImage =
+      lastInitializedUrl.value !== null && lastInitializedUrl.value !== imageUrl.value
+    if (noValidBounds || switchedImage) {
+      modelValue.value = defaultBounds()
     }
+    lastInitializedUrl.value = imageUrl.value
   }
 
   function handleImageError() {

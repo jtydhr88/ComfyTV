@@ -76464,6 +76464,7 @@ function useImageCrop(options) {
   const isLoading = /* @__PURE__ */ ref(false);
   const naturalWidth = /* @__PURE__ */ ref(0);
   const naturalHeight = /* @__PURE__ */ ref(0);
+  const lastInitializedUrl = /* @__PURE__ */ ref(null);
   const displayedWidth = /* @__PURE__ */ ref(0);
   const displayedHeight = /* @__PURE__ */ ref(0);
   const scaleFactor = /* @__PURE__ */ ref(1);
@@ -76688,19 +76689,26 @@ function useImageCrop(options) {
     if (!isLockEnabled.value) return allResizeHandles.value;
     return allResizeHandles.value.filter((h2) => h2.isCorner);
   });
+  function defaultBounds() {
+    const w = Math.max(MIN_CROP_SIZE, Math.round(naturalWidth.value * 0.7));
+    const h2 = Math.max(MIN_CROP_SIZE, Math.round(naturalHeight.value * 0.7));
+    return {
+      x: Math.max(0, Math.floor((naturalWidth.value - w) / 2)),
+      y: Math.max(0, Math.floor((naturalHeight.value - h2) / 2)),
+      width: w,
+      height: h2
+    };
+  }
   function handleImageLoad() {
     isLoading.value = false;
     updateDisplayedDimensions();
-    if (modelValue.value.width <= 0 || modelValue.value.height <= 0) {
-      const w = Math.min(512, naturalWidth.value);
-      const h2 = Math.min(512, naturalHeight.value);
-      modelValue.value = {
-        x: Math.floor((naturalWidth.value - w) / 2),
-        y: Math.floor((naturalHeight.value - h2) / 2),
-        width: w,
-        height: h2
-      };
+    if (naturalWidth.value <= 0 || naturalHeight.value <= 0) return;
+    const noValidBounds = modelValue.value.width <= 0 || modelValue.value.height <= 0;
+    const switchedImage = lastInitializedUrl.value !== null && lastInitializedUrl.value !== imageUrl.value;
+    if (noValidBounds || switchedImage) {
+      modelValue.value = defaultBounds();
     }
+    lastInitializedUrl.value = imageUrl.value;
   }
   function handleImageError() {
     isLoading.value = false;
