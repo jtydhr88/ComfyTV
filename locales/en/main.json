@@ -455,7 +455,9 @@
     "splitting": "Slicing into {n} tiles…",
     "done": "Split into {n} tiles — ready for downstream",
     "rows": "Rows",
-    "cols": "Cols"
+    "cols": "Cols",
+    "border": "Border",
+    "outerBorder": "Outer border"
   },
   "panoramaView": {
     "connectPanorama": "Connect a panorama upstream",

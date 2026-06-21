@@ -455,7 +455,9 @@
     "splitting": "切分为 {n} 块中…",
     "done": "已切分为 {n} 块 — 下游可直接使用",
     "rows": "行",
-    "cols": "列"
+    "cols": "列",
+    "border": "边框",
+    "outerBorder": "包括外框"
   },
   "panoramaView": {
     "connectPanorama": "请在上游接入全景图",

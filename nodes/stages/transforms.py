@@ -103,6 +103,15 @@ class GridSplitStage(io.ComfyNode):
                 io.Int.Input("cols", default=2, min=1, max=10, step=1,
                              socketless=True, extra_dict={"hidden": True},
                              tooltip="Number of grid columns. Hidden — driven by the Vue panel."),
+                io.Int.Input("border", default=0, min=0, max=4096, step=1,
+                             socketless=True, extra_dict={"hidden": True},
+                             tooltip="Width (in source px) of the dividing border cut out between "
+                                     "cells. 0 = plain split. Hidden — driven by the Vue panel."),
+                io.Boolean.Input("outer_border", default=False,
+                                 socketless=True, extra_dict={"hidden": True},
+                                 tooltip="Whether the border is also cut from the outer edges of the "
+                                         "image (a margin around the whole grid). Hidden — driven by "
+                                         "the Vue panel."),
                 COMFYTV_IMAGE.Input("image", optional=True),
                 _selected_index_input(),
             ],
@@ -114,7 +123,7 @@ class GridSplitStage(io.ComfyNode):
 
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
-                rows=2, cols=2, image="", selected_index=1):
+                rows=2, cols=2, border=0, outer_border=False, image="", selected_index=1):
         import json as _json
         return io.NodeOutput(_json.dumps({"images": [image] if image else []}), image)
 

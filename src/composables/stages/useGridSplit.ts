@@ -8,6 +8,7 @@ import { getWidget, readWidgetNum, writeWidget } from '@/utils/widget'
 const SCHEDULE_DELAY_MS = 250
 const MIN_GRID = 1
 const MAX_GRID = 10
+const MIN_BORDER = 0
 
 export function useGridSplit(node: LGraphNode, state: StageState) {
   const store = useStageStore()
@@ -19,10 +20,20 @@ export function useGridSplit(node: LGraphNode, state: StageState) {
 
   const rows = ref<number>(readWidgetNum(node, 'rows', 2))
   const cols = ref<number>(readWidgetNum(node, 'cols', 2))
+  const border = ref<number>(Math.max(MIN_BORDER, readWidgetNum(node, 'border', 0)))
+  const outerBorder = ref<boolean>(!!getWidget(node, 'outer_border')?.value)
 
   function setGrid(r: number, c: number) {
     rows.value = Math.max(MIN_GRID, Math.min(MAX_GRID, r))
     cols.value = Math.max(MIN_GRID, Math.min(MAX_GRID, c))
+  }
+
+  function setBorder(v: number) {
+    border.value = Math.max(MIN_BORDER, Math.round(Number.isFinite(v) ? v : 0))
+  }
+
+  function setOuterBorder(v: boolean) {
+    outerBorder.value = !!v
   }
 
   function wireWidget(name: string, apply: (v: number) => void) {
@@ -33,6 +44,15 @@ export function useGridSplit(node: LGraphNode, state: StageState) {
   }
   wireWidget('rows', (v) => { if (v !== rows.value) rows.value = v })
   wireWidget('cols', (v) => { if (v !== cols.value) cols.value = v })
+  wireWidget('border', (v) => { if (v !== border.value) border.value = Math.max(MIN_BORDER, v) })
+
+  {
+    const w = getWidget(node, 'outer_border')
+    if (w) {
+      const orig = w.callback
+      w.callback = (v: unknown) => { orig?.call(w, v); outerBorder.value = !!v }
+    }
+  }
 
   if (node) {
     const orig = node.onConfigure
@@ -40,8 +60,12 @@ export function useGridSplit(node: LGraphNode, state: StageState) {
       orig?.call(this, info)
       const r = readWidgetNum(node, 'rows', rows.value)
       const c = readWidgetNum(node, 'cols', cols.value)
+      const b = readWidgetNum(node, 'border', border.value)
+      const o = !!getWidget(node, 'outer_border')?.value
       if (r !== rows.value) rows.value = r
       if (c !== cols.value) cols.value = c
+      if (b !== border.value) border.value = Math.max(MIN_BORDER, b)
+      if (o !== outerBorder.value) outerBorder.value = o
     }
   }
 
@@ -80,8 +104,10 @@ export function useGridSplit(node: LGraphNode, state: StageState) {
     try {
       const img = await getSourceImage(url)
       if (mySeq !== seq) return
-      const cellW = Math.floor(img.naturalWidth / c)
-      const cellH = Math.floor(img.naturalHeight / r)
+      const b = Math.max(0, Math.round(border.value))
+      const o = outerBorder.value ? 1 : 0
+      const cellW = Math.floor((img.naturalWidth  - (c - 1 + 2 * o) * b) / c)
+      const cellH = Math.floor((img.naturalHeight - (r - 1 + 2 * o) * b) / r)
       if (cellW < 1 || cellH < 1) return
 
       const items: { index: string; label: string; image_url: string }[] = []
@@ -96,7 +122,7 @@ export function useGridSplit(node: LGraphNode, state: StageState) {
           canvas.height = cellH
           const ctx = canvas.getContext('2d')
           if (!ctx) throw new Error('2d context unavailable')
-          ctx.drawImage(img, col * cellW, row * cellH, cellW, cellH, 0, 0, cellW, cellH)
+          ctx.drawImage(img, o * b + col * (cellW + b), o * b + row * (cellH + b), cellW, cellH, 0, 0, cellW, cellH)
 
           const imageUrl = await uploadCanvas(canvas, {
             subfolder: 'gridsplit',
@@ -120,9 +146,11 @@ export function useGridSplit(node: LGraphNode, state: StageState) {
     }
   }
 
-  watch([rows, cols], ([r, c]) => {
+  watch([rows, cols, border, outerBorder], ([r, c, b, o]) => {
     writeWidget(node, 'rows', r)
     writeWidget(node, 'cols', c)
+    writeWidget(node, 'border', b)
+    writeWidget(node, 'outer_border', o)
     schedule()
   })
   watch(sourceImageUrl, () => schedule(), { immediate: true })
@@ -130,6 +158,8 @@ export function useGridSplit(node: LGraphNode, state: StageState) {
   return {
     sourceImageUrl,
     rows, cols, setGrid,
+    border, setBorder,
+    outerBorder, setOuterBorder,
     splitting,
   }
 }
