@@ -265,7 +265,10 @@ class ImagePickerStage(io.ComfyNode):
                                 tooltip="Accumulated image pool (JSON {images:[...]}). Managed by the UI: "
                                         "new upstream batches are appended (deduped by image_url) and survive "
                                         "regeneration/disconnect; emptied by the Clear button."),
-                COMFYTV_IMAGES.Input("batch", optional=True),
+                io.MultiType.Input("batch", [COMFYTV_IMAGES, COMFYTV_IMAGE], optional=True,
+                                   tooltip="Upstream image source. Accepts either a batch (COMFYTV_IMAGES) "
+                                           "or a single image (COMFYTV_IMAGE); a single image is treated as "
+                                           "a one-item batch."),
             ],
             outputs=[COMFYTV_IMAGE.Output("image")],
             is_output_node=True,

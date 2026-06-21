@@ -13,6 +13,7 @@ import {
   computePickedFromBatch,
   mergeImagePool,
   imagePoolCount,
+  toImagePoolJson,
   type StageKind,
   type StageVariant,
   type ImagePickContext,
@@ -450,7 +451,7 @@ export function useStageNode(
 
           if (inp && inp.source === 'upstream' && inp.content) {
             const before = imagePoolCount(state.pool)
-            const merged = mergeImagePool(state.pool, inp.content)
+            const merged = mergeImagePool(state.pool, toImagePoolJson(inp.content))
             store.setPickerPool(node, state, merged)
             const added = imagePoolCount(merged) - before
             if (added > 0 && before > 0 && (state.pickedIndex ?? 0) >= 1) {

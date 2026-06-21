@@ -305,8 +305,11 @@ class TestPickImageFromBatch:
         d = {"images": [{"index": "1", "image_url": "url1"}]}
         assert c._pick_image_from_batch(d, 1) == "url1"
 
-    def test_invalid_json(self):
-        assert c._pick_image_from_batch("not json", 1) == ""
+    def test_single_image_url(self):
+        # A single COMFYTV_IMAGE input arrives as a plain url (not batch JSON);
+        # it is treated as a one-item batch, so any index resolves to that url.
+        assert c._pick_image_from_batch("/view?filename=a.png", 1) == "/view?filename=a.png"
+        assert c._pick_image_from_batch("/view?filename=a.png", 5) == "/view?filename=a.png"
 
     def test_no_images_key(self):
         assert c._pick_image_from_batch("{}", 1) == ""

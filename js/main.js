@@ -51807,11 +51807,24 @@ const useStageStore = /* @__PURE__ */ defineStore("comfytv-stage", () => {
     clearPickerPool
   };
 });
+function toImagePoolJson(content) {
+  const empty2 = JSON.stringify({ images: [] });
+  if (!content) return empty2;
+  const s = String(content).trim();
+  if (!s) return empty2;
+  let parsed;
+  try {
+    parsed = JSON.parse(s);
+  } catch {
+    return JSON.stringify({ images: [{ index: "1", image_url: s }] });
+  }
+  return parsed && Array.isArray(parsed.images) ? s : empty2;
+}
 function computePickedImageUrl(state) {
   var _a2;
   const source = state.pool ? state.pool : (_a2 = state.inputs.find((i) => i.slot === "batch")) == null ? void 0 : _a2.content;
   if (!source) return null;
-  return computePickedFromBatch(source, state.pickedIndex ?? 1);
+  return computePickedFromBatch(toImagePoolJson(source), state.pickedIndex ?? 1);
 }
 function imagePoolCount(json) {
   if (!json) return 0;
@@ -84160,7 +84173,7 @@ function useStageNode(node, kind, variant = "generator") {
       const inp = state.inputs.find((i) => i.slot === "batch");
       if (inp && inp.source === "upstream" && inp.content) {
         const before = imagePoolCount(state.pool);
-        const merged = mergeImagePool(state.pool, inp.content);
+        const merged = mergeImagePool(state.pool, toImagePoolJson(inp.content));
         store.setPickerPool(node, state, merged);
         const added = imagePoolCount(merged) - before;
         if (added > 0 && before > 0 && (state.pickedIndex ?? 0) >= 1) {

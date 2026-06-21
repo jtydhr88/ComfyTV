@@ -126,11 +126,14 @@ def _input_file_url(filename: str) -> str:
 
 
 def _pick_image_from_batch(batch: Any, selected_index: int) -> str:
-    try:
-        data = json.loads(batch) if isinstance(batch, str) else batch
-        images = data.get("images", []) if isinstance(data, dict) else []
-    except (ValueError, TypeError):
-        return ""
+    if isinstance(batch, str):
+        try:
+            data = json.loads(batch)
+        except (ValueError, TypeError):
+            return batch.strip()
+    else:
+        data = batch
+    images = data.get("images", []) if isinstance(data, dict) else []
     if not isinstance(images, list):
         return ""
     match = next(

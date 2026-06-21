@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 
-import { useStageStore, computePickedImageUrl, mergeImagePool, type StageState } from './stageStore'
+import { useStageStore, computePickedImageUrl, mergeImagePool, toImagePoolJson, type StageState } from './stageStore'
 
 function freshState(overrides: Partial<StageState> = {}): StageState {
   return {
@@ -286,8 +286,9 @@ describe('computePickedImageUrl', () => {
     expect(computePickedImageUrl(makeState(batch))).toBe('u1')
   })
 
-  it('returns null on bad JSON', () => {
-    expect(computePickedImageUrl(makeState('not json'))).toBeNull()
+  it('treats a non-JSON string as a single image url', () => {
+    // A single COMFYTV_IMAGE input arrives as a plain url, not batch JSON.
+    expect(computePickedImageUrl(makeState('/view?filename=a.png'))).toBe('/view?filename=a.png')
   })
 
   it('returns null when no batch slot', () => {
@@ -350,5 +351,32 @@ describe('mergeImagePool', () => {
     const first = mergeImagePool(pool('a'), pool('b'))
     const second = mergeImagePool(first, pool('b'))
     expect(second).toBe(first)
+  })
+
+  it('merges a single image url (COMFYTV_IMAGE) into the pool', () => {
+    const merged = mergeImagePool(pool('a', 'b'), toImagePoolJson('/view?filename=c.png'))
+    expect(urls(merged)).toEqual(['/view?filename=c.png', 'a', 'b'])
+  })
+})
+
+describe('toImagePoolJson', () => {
+  const parse = (json: string) => JSON.parse(json).images as Array<Record<string, any>>
+
+  it('passes a batch through unchanged', () => {
+    const batch = JSON.stringify({ images: [{ index: '1', image_url: 'a' }] })
+    expect(toImagePoolJson(batch)).toBe(batch)
+  })
+
+  it('wraps a single image url as a one-item batch', () => {
+    expect(parse(toImagePoolJson('/view?filename=a.png'))).toEqual([
+      { index: '1', image_url: '/view?filename=a.png' },
+    ])
+  })
+
+  it('returns an empty batch for nullish, blank, or non-batch JSON', () => {
+    expect(parse(toImagePoolJson(null))).toEqual([])
+    expect(parse(toImagePoolJson(''))).toEqual([])
+    expect(parse(toImagePoolJson('   '))).toEqual([])
+    expect(parse(toImagePoolJson('{}'))).toEqual([])
   })
 })

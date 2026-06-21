@@ -226,12 +226,28 @@ export const useStageStore = defineStore('comfytv-stage', () => {
   }
 })
 
+export function toImagePoolJson(content: string | null | undefined): string {
+  const empty = JSON.stringify({ images: [] })
+  if (!content) return empty
+  const s = String(content).trim()
+  if (!s) return empty
+  let parsed: any
+  try {
+    parsed = JSON.parse(s)
+  } catch {
+    // Not JSON — a single image URL (COMFYTV_IMAGE) becomes a one-item batch.
+    return JSON.stringify({ images: [{ index: '1', image_url: s }] })
+  }
+  // Parsed as JSON: only a real batch carries images; any other shape is empty.
+  return parsed && Array.isArray(parsed.images) ? s : empty
+}
+
 export function computePickedImageUrl(state: StageState): string | null {
   const source = state.pool
     ? state.pool
     : state.inputs.find(i => i.slot === 'batch')?.content
   if (!source) return null
-  return computePickedFromBatch(source, state.pickedIndex ?? 1)
+  return computePickedFromBatch(toImagePoolJson(source), state.pickedIndex ?? 1)
 }
 
 export function imagePoolCount(json: string | null | undefined): number {
