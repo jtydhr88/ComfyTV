@@ -454,10 +454,10 @@ export function useStageNode(
             const merged = mergeImagePool(state.pool, toImagePoolJson(inp.content))
             store.setPickerPool(node, state, merged)
             const added = imagePoolCount(merged) - before
-            if (added > 0 && before > 0 && (state.pickedIndex ?? 0) >= 1) {
-              const shifted = (state.pickedIndex ?? 1) + added
-              state.pickedIndex = shifted
-              setWidget(node, 'selected_index', shifted)
+
+            if (added > 0) {
+              state.pickedIndex = 1
+              setWidget(node, 'selected_index', 1)
             }
           }
           const after: string | null = state.pool
