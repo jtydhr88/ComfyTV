@@ -1,7 +1,7 @@
 <template>
   <div
     ref="containerRef"
-    class="ctv:relative ctv:w-full ctv:h-80 ctv:rounded-md ctv:overflow-hidden ctv:cursor-ew-resize
+    class="ctv:relative ctv:w-full ctv:h-full ctv:min-h-[160px] ctv:rounded-md ctv:overflow-hidden ctv:cursor-ew-resize
            ctv:bg-black ctv:border ctv:border-border-subtle"
     @pointerdown.stop
   >

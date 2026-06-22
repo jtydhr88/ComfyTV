@@ -1,16 +1,22 @@
 <template>
   <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full">
-    <ImageCompare :before-image="imageA" :after-image="imageB" />
-
-    <StageCard
-      :state="state"
-      :node="node"
-      :on-run-request="onRunRequest"
-      :on-cancel-request="onCancelRequest"
-      :on-disconnect="onDisconnect"
-      :on-action="onAction"
-      hide-output
+    <ImageCompare
+      class="ctv:flex-1 ctv:min-h-0"
+      :before-image="imageA"
+      :after-image="imageB"
     />
+
+    <div class="ctv:shrink-0">
+      <StageCard
+        :state="state"
+        :node="node"
+        :on-run-request="onRunRequest"
+        :on-cancel-request="onCancelRequest"
+        :on-disconnect="onDisconnect"
+        :on-action="onAction"
+        hide-output
+      />
+    </div>
   </div>
 </template>
 
