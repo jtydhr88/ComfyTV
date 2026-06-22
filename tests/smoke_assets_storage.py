@@ -52,7 +52,11 @@ check("create with multiple tags",
 b = storage.create_asset(name="散图", payload_url="/view?filename=b.png&type=input")
 check("create uncategorized", b is not None and b["category_ids"] == [])
 check("bad media_type rejected",
-      storage.create_asset(name="x", payload_url="/v", media_type="video") is None)
+      storage.create_asset(name="x", payload_url="/v", media_type="model") is None)
+check("video media_type accepted",
+      storage.create_asset(name="v", payload_url="/v.mp4", media_type="video") is not None)
+check("audio media_type accepted",
+      storage.create_asset(name="a", payload_url="/a.mp3", media_type="audio") is not None)
 check("missing payload rejected", storage.create_asset(name="x", payload_url=" ") is None)
 check("bad category rejected",
       storage.create_asset(name="x", payload_url="/v", category_ids=[9999]) is None)

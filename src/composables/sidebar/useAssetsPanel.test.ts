@@ -69,6 +69,23 @@ describe('useAssetsPanel', () => {
     expect(store.listByCategory).toHaveBeenLastCalledWith(2)
   })
 
+  it('mediaFilter narrows visibleAssets and mediaCount reports per type', () => {
+    store.listByCategory.mockReturnValue([
+      { id: 1, media_type: 'image' },
+      { id: 2, media_type: 'video' },
+      { id: 3, media_type: 'audio' },
+      { id: 4, media_type: 'image' },
+    ] as any)
+    const p = useAssetsPanel(() => false)
+    expect(p.visibleAssets.value.map((a: any) => a.id)).toEqual([1, 2, 3, 4])
+    expect(p.mediaCount('all')).toBe(4)
+    expect(p.mediaCount('image')).toBe(2)
+    expect(p.mediaCount('video')).toBe(1)
+    expect(p.mediaCount('audio')).toBe(1)
+    p.mediaFilter.value = 'video'
+    expect(p.visibleAssets.value.map((a: any) => a.id)).toEqual([2])
+  })
+
   it('onChipDrop tags the dragged asset onto the category', () => {
     const p = useAssetsPanel(() => false)
     p.onChipDrop(2, dragEvent('7'))
@@ -163,7 +180,38 @@ describe('useAssetsPanel', () => {
     vi.unstubAllGlobals()
   })
 
-  it('addFiles skips non-image files', async () => {
+  it('addFiles uploads video assets with probed dimensions', async () => {
+    const spy = vi.spyOn(document, 'createElement').mockImplementation(((tag: string) => {
+      if (tag === 'video') {
+        return {
+          preload: '',
+          videoWidth: 640,
+          videoHeight: 480,
+          set src(_v: string) { queueMicrotask(() => (this as any).onloadedmetadata?.()) },
+        } as any
+      }
+      return {} as any
+    }) as any)
+    ;(URL as any).createObjectURL = vi.fn(() => 'blob:x')
+    ;(URL as any).revokeObjectURL = vi.fn()
+
+    const p = useAssetsPanel(() => false)
+    await p.addFiles([new File(['x'], 'clip.mp4', { type: 'video/mp4' })])
+    expect(store.create).toHaveBeenCalledWith(expect.objectContaining({
+      name: 'clip', media_type: 'video', width: 640, height: 480,
+    }))
+    spy.mockRestore()
+  })
+
+  it('addFiles uploads audio assets without dimensions', async () => {
+    const p = useAssetsPanel(() => false)
+    await p.addFiles([new File(['x'], 'song.mp3', { type: 'audio/mpeg' })])
+    expect(store.create).toHaveBeenCalledWith(expect.objectContaining({
+      name: 'song', media_type: 'audio', width: null, height: null,
+    }))
+  })
+
+  it('addFiles skips files that are not image/video/audio', async () => {
     const p = useAssetsPanel(() => false)
     await p.addFiles([new File(['x'], 'a.txt', { type: 'text/plain' })])
     expect(store.create).not.toHaveBeenCalled()

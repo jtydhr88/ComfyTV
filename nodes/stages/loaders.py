@@ -13,6 +13,34 @@ def _list_input_files(content_kinds: list[str]) -> list[str]:
         return []
 
 
+def _asset_loader_inputs() -> list:
+    return [
+        _project_id_input(),
+        _parent_output_id_input(),
+        io.String.Input(
+            "asset_url",
+            default="",
+            socketless=True,
+            extra_dict={"hidden": True},
+            tooltip="Internal — payload URL of the asset picked in the node body. Becomes this stage's output.",
+        ),
+        io.Int.Input(
+            "asset_id",
+            default=0, min=0, max=2_147_483_647,
+            socketless=True,
+            extra_dict={"hidden": True},
+            tooltip="Internal — library id of the picked asset (lineage/debug only).",
+        ),
+        io.String.Input(
+            "category",
+            default="all",
+            socketless=True,
+            extra_dict={"hidden": True},
+            tooltip="Internal — last-selected category filter, persisted so the node remembers it.",
+        ),
+    ]
+
+
 class ImageLoaderStage(io.ComfyNode):
 
     @classmethod
@@ -54,32 +82,48 @@ class AssetImageLoaderStage(io.ComfyNode):
             node_id="ComfyTV.AssetImageLoaderStage",
             display_name="Load Image from Asset",
             category="ComfyTV/Input",
-            inputs=[
-                _project_id_input(),
-                _parent_output_id_input(),
-                io.String.Input(
-                    "asset_url",
-                    default="",
-                    socketless=True,
-                    extra_dict={"hidden": True},
-                    tooltip="Internal — payload URL of the asset picked in the node body. Becomes this stage's output.",
-                ),
-                io.Int.Input(
-                    "asset_id",
-                    default=0, min=0, max=2_147_483_647,
-                    socketless=True,
-                    extra_dict={"hidden": True},
-                    tooltip="Internal — library id of the picked asset (lineage/debug only).",
-                ),
-                io.String.Input(
-                    "category",
-                    default="all",
-                    socketless=True,
-                    extra_dict={"hidden": True},
-                    tooltip="Internal — last-selected category filter, persisted so the node remembers it.",
-                ),
-            ],
+            inputs=_asset_loader_inputs(),
             outputs=[COMFYTV_IMAGE.Output("image")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, project_id="", parent_output_id=0, asset_url="", asset_id=0, category="all"):
+        return _stage_emit_auto(cls, project_id=project_id, payload_str=asset_url or "",
+                                parent_output_id=parent_output_id)
+
+
+class AssetVideoLoaderStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.AssetVideoLoaderStage",
+            display_name="Load Video from Asset",
+            category="ComfyTV/Input",
+            inputs=_asset_loader_inputs(),
+            outputs=[COMFYTV_VIDEO.Output("video")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, project_id="", parent_output_id=0, asset_url="", asset_id=0, category="all"):
+        return _stage_emit_auto(cls, project_id=project_id, payload_str=asset_url or "",
+                                parent_output_id=parent_output_id)
+
+
+class AssetAudioLoaderStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.AssetAudioLoaderStage",
+            display_name="Load Audio from Asset",
+            category="ComfyTV/Input",
+            inputs=_asset_loader_inputs(),
+            outputs=[COMFYTV_AUDIO.Output("audio")],
             is_output_node=True,
             hidden=[io.Hidden.unique_id],
         )
@@ -119,6 +163,39 @@ class VideoLoaderStage(io.ComfyNode):
     @classmethod
     def execute(cls, project_id="", parent_output_id=0, video=""):
         payload = _input_file_url(video)
+        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
+                                parent_output_id=parent_output_id)
+
+
+class AudioLoaderStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.AudioLoaderStage",
+            display_name="Load Audio",
+            category="ComfyTV/Input",
+            inputs=[
+                _project_id_input(),
+                _parent_output_id_input(),
+                io.Combo.Input(
+                    "audio",
+                    options=_list_input_files(["audio"]),
+                    upload=io.UploadType.audio,
+                    image_folder=io.FolderType.input,
+                    optional=True,
+                    default="",
+                    tooltip="Pick an existing input file or upload a new one. The selected audio becomes this stage's output.",
+                ),
+            ],
+            outputs=[COMFYTV_AUDIO.Output("audio")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, project_id="", parent_output_id=0, audio=""):
+        payload = _input_file_url(audio)
         return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
                                 parent_output_id=parent_output_id)
 

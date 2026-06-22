@@ -73,13 +73,19 @@
   },
   "assets": {
     "title": "Asset Library",
-    "empty": "No assets yet — add images to reuse them across projects.",
+    "empty": "No assets yet — add images, video, or audio to reuse them across projects.",
     "emptyCategory": "No assets in this category yet.",
-    "add": "Add images",
-    "addTooltip": "Upload images into the library (or drag & drop them onto this panel)",
+    "add": "Add media",
+    "addTooltip": "Upload images, video, or audio into the library (or drag & drop them onto this panel)",
     "uploading": "Uploading {done}/{total}…",
     "uploadFailed": "Upload failed: {detail}",
-    "dropHint": "Drop images to add them to the library",
+    "dropHint": "Drop files to add them to the library",
+    "media": {
+      "all": "All types",
+      "image": "Images",
+      "video": "Video",
+      "audio": "Audio"
+    },
     "category": {
       "all": "All",
       "none": "Uncategorized",
@@ -102,8 +108,8 @@
     }
   },
   "assetLoader": {
-    "empty": "No assets in the library yet — add some in the Assets panel.",
-    "pickHint": "Pick an image from the library to use as this node's output.",
+    "empty": "No matching assets in the library yet — add some in the Assets panel.",
+    "pickHint": "Pick an asset from the library to use as this node's output.",
     "selected": "Selected: {name}"
   },
   "promptHelper": {

@@ -12,7 +12,7 @@ import PanoramaStageCard from '@/components/stages/PanoramaStageCard.vue'
 import PanoramaCurrentViewStageCard from '@/components/stages/PanoramaCurrentViewStageCard.vue'
 import PanoramaMultiViewStageCard from '@/components/stages/PanoramaMultiViewStageCard.vue'
 import CompareStageCard from '@/components/stages/CompareStageCard.vue'
-import AssetImageLoaderStageCard from '@/components/stages/AssetImageLoaderStageCard.vue'
+import AssetLoaderCard from '@/components/stages/AssetLoaderCard.vue'
 import GridSplitStageCard from '@/components/stages/GridSplitStageCard.vue'
 import DirectorTimelineStageCard from '@/components/stages/DirectorTimelineStageCard.vue'
 import OutpaintStageCard from '@/components/stages/OutpaintStageCard.vue'
@@ -77,7 +77,9 @@ const RICH_STAGE_CARDS: Record<string, any> = {
   'ComfyTV.PanoramaCurrentViewStage': PanoramaCurrentViewStageCard,
   'ComfyTV.PanoramaMultiViewStage':   PanoramaMultiViewStageCard,
   'ComfyTV.CompareStage':             CompareStageCard,
-  'ComfyTV.AssetImageLoaderStage':    AssetImageLoaderStageCard,
+  'ComfyTV.AssetImageLoaderStage':    AssetLoaderCard,
+  'ComfyTV.AssetVideoLoaderStage':    AssetLoaderCard,
+  'ComfyTV.AssetAudioLoaderStage':    AssetLoaderCard,
   'ComfyTV.GridSplitStage':           GridSplitStageCard,
   'ComfyTV.DirectorTimelineStage':    DirectorTimelineStageCard,
   'ComfyTV.OutpaintStage':            OutpaintStageCard,
@@ -96,6 +98,8 @@ const RICH_STAGE_MIN_HEIGHTS: Record<string, number> = {
   'ComfyTV.PanoramaMultiViewStage':   480,
   'ComfyTV.CompareStage':             480,
   'ComfyTV.AssetImageLoaderStage':    420,
+  'ComfyTV.AssetVideoLoaderStage':    420,
+  'ComfyTV.AssetAudioLoaderStage':    420,
   'ComfyTV.GridSplitStage':           560,
   'ComfyTV.OutpaintStage':            620,
 }

@@ -44,7 +44,10 @@ STAGE_META: dict[str, dict] = {
     'StoryboardStage':              {'kind': 'storyboard',   'workflow_kind': 'storyboard'},
     'ImageLoaderStage':             {'kind': 'image',       'variant': 'loader'},
     'VideoLoaderStage':             {'kind': 'video',       'variant': 'loader'},
+    'AudioLoaderStage':             {'kind': 'audio',       'variant': 'loader'},
     'AssetImageLoaderStage':        {'kind': 'image',       'variant': 'loader'},
+    'AssetVideoLoaderStage':        {'kind': 'video',       'variant': 'loader'},
+    'AssetAudioLoaderStage':        {'kind': 'audio',       'variant': 'loader'},
 }
 
 

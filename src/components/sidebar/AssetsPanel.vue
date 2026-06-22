@@ -22,7 +22,7 @@
       <input
         ref="filePicker"
         type="file"
-        accept="image/*"
+        accept="image/*,video/*,audio/*"
         multiple
         class="ctv:hidden"
         @change="onPickFiles"
@@ -76,6 +76,18 @@
       >＋</button>
     </div>
 
+    <div class="ctv:shrink-0 ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1 ctv:py-1.5 ctv:px-2.5 ctv:border-b ctv:border-border-subtle">
+      <button
+        v-for="m in mediaFilters"
+        :key="m"
+        :class="chipClass(mediaFilter === m)"
+        @click="mediaFilter = m"
+      >
+        {{ $t(`assets.media.${m}`) }}
+        <span :class="chipCountClass">{{ mediaCount(m) }}</span>
+      </button>
+    </div>
+
     <div v-if="uploadError"
          class="ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:my-1.5 ctv:mx-2.5 ctv:py-1.5 ctv:px-2 ctv:text-xs ctv:rounded
                 ctv:bg-destructive-background/15 ctv:border ctv:border-destructive-background/50 ctv:text-destructive-background">
@@ -89,7 +101,7 @@
     <div class="ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-2.5">
       <div v-if="visibleAssets.length === 0"
            class="ctv:py-5 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60">
-        {{ activeFilter === 'all' ? $t('assets.empty') : $t('assets.emptyCategory') }}
+        {{ activeFilter === 'all' && mediaFilter === 'all' ? $t('assets.empty') : $t('assets.emptyCategory') }}
       </div>
 
       <div v-else class="ctv:grid ctv:grid-cols-[repeat(auto-fill,minmax(88px,1fr))] ctv:gap-1.5">
@@ -102,13 +114,36 @@
           draggable="true"
           @dragstart="onAssetDragStart(asset, $event)"
         >
+          <video
+            v-if="asset.media_type === 'video'"
+            :src="asset.payload_url"
+            :title="assetTooltip(asset)"
+            muted
+            playsinline
+            preload="metadata"
+            class="ctv:block ctv:w-full ctv:aspect-square ctv:object-cover ctv:bg-black"
+            @mouseenter="hoverPlay"
+            @mouseleave="hoverPause"
+          />
+          <div
+            v-else-if="asset.media_type === 'audio'"
+            :title="assetTooltip(asset)"
+            class="ctv:flex ctv:items-center ctv:justify-center ctv:w-full ctv:aspect-square ctv:text-2xl
+                   ctv:bg-secondary-background-hover ctv:text-muted-foreground"
+          >♪</div>
           <img
+            v-else
             :src="asset.payload_url"
             :alt="asset.name"
             :title="assetTooltip(asset)"
             loading="lazy"
             class="ctv:block ctv:w-full ctv:aspect-square ctv:object-cover"
           />
+          <span
+            v-if="asset.media_type === 'video' || asset.media_type === 'audio'"
+            class="ctv:absolute ctv:bottom-7 ctv:left-1 ctv:py-0 ctv:px-1 ctv:rounded ctv:text-3xs ctv:font-semibold
+                   ctv:bg-black/65 ctv:text-white/90 ctv:pointer-events-none"
+          >{{ asset.media_type === 'video' ? '▶' : '♪' }}</span>
           <div class="ctv:truncate ctv:py-0.5 ctv:px-1 ctv:text-2xs ctv:text-muted-foreground">
             {{ asset.name || '—' }}
           </div>
@@ -190,9 +225,21 @@ const props = defineProps<{
 
 const filePicker = ref<HTMLInputElement | null>(null)
 
+function hoverPlay(e: MouseEvent) {
+  void (e.currentTarget as HTMLVideoElement).play().catch(() => {})
+}
+function hoverPause(e: MouseEvent) {
+  const v = e.currentTarget as HTMLVideoElement
+  v.pause()
+  v.currentTime = 0
+}
+
 const {
   store,
   activeFilter,
+  mediaFilter,
+  mediaCount,
+  mediaFilters,
   uploading,
   uploadDone,
   uploadTotal,

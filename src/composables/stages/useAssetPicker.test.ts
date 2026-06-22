@@ -11,7 +11,8 @@ vi.mock('@/i18n', () => ({ t: (k: string) => k }))
 
 import { useAssetPicker } from './useAssetPicker'
 
-const A = (id: number, name: string) => ({ id, name, payload_url: `/u${id}`, category_ids: [] })
+const A = (id: number, name: string, media_type = 'image') =>
+  ({ id, name, payload_url: `/u${id}`, category_ids: [], media_type })
 
 beforeEach(() => {
   vi.clearAllMocks()
@@ -25,6 +26,30 @@ describe('useAssetPicker', () => {
     expect(p.filter.value).toBe('all')
     expect(p.filtered.value.map(a => a.id)).toEqual([1, 2, 3])
     expect(store.listByCategory).toHaveBeenCalledWith('all')
+  })
+
+  it('defaults to image-only, hiding video/audio assets', () => {
+    store.listByCategory.mockReturnValue([
+      A(1, 'Hero'), A(2, 'clip', 'video'), A(3, 'song', 'audio'),
+    ])
+    const p = useAssetPicker()
+    expect(p.filtered.value.map(a => a.id)).toEqual([1])
+  })
+
+  it('honors an explicit media-type allowlist', () => {
+    store.listByCategory.mockReturnValue([
+      A(1, 'Hero'), A(2, 'clip', 'video'), A(3, 'song', 'audio'),
+    ])
+    const p = useAssetPicker(() => [], ['video', 'audio'])
+    expect(p.filtered.value.map(a => a.id)).toEqual([2, 3])
+  })
+
+  it('passing null media types disables media filtering', () => {
+    store.listByCategory.mockReturnValue([
+      A(1, 'Hero'), A(2, 'clip', 'video'),
+    ])
+    const p = useAssetPicker(() => [], null)
+    expect(p.filtered.value.map(a => a.id)).toEqual([1, 2])
   })
 
   it('filters by a case-insensitive name search', () => {

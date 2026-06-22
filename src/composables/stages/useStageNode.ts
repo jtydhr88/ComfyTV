@@ -355,13 +355,13 @@ export function useStageNode(
     }
 
     if (kind === 'image-picker') {
-      // Restore the accumulated pool persisted on the node (survives save/reload).
       const poolWidget = node.widgets?.find((w: any) => w.name === 'pool')
       state.pool = poolWidget ? (String(poolWidget.value ?? '') || null) : null
     }
   } else if (variant === 'loader') {
     const widgetName = kind === 'image' ? 'image'
                      : kind === 'video' ? 'video'
+                     : kind === 'audio' ? 'audio'
                      : null
     const uploadWidget = widgetName
       ? node.widgets?.find((w: any) => w.name === widgetName)

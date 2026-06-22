@@ -55,9 +55,16 @@ class TestAssetCreate:
 
     def test_invalid_inputs_rejected(self, reset_db):
         from ComfyTV import storage
-        assert storage.create_asset(name="x", payload_url="/v", media_type="video") is None
+        assert storage.create_asset(name="x", payload_url="/v", media_type="model") is None
         assert storage.create_asset(name="x", payload_url="  ") is None
         assert storage.create_asset(name="x", payload_url="/v", category_ids=[9999]) is None
+
+    def test_create_video_and_audio(self, reset_db):
+        from ComfyTV import storage
+        vid = storage.create_asset(name="clip", payload_url="/v.mp4", media_type="video")
+        aud = storage.create_asset(name="track", payload_url="/a.mp3", media_type="audio")
+        assert vid is not None and vid["media_type"] == "video"
+        assert aud is not None and aud["media_type"] == "audio"
 
 
 class TestAssetList:

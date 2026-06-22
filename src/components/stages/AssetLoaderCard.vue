@@ -3,11 +3,11 @@
     <div class="ctv:shrink-0 ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1">
       <button :class="chipClass(activeFilter === 'all')" @click="setFilter('all')">
         {{ $t('assets.category.all') }}
-        <span :class="chipCountClass">{{ store.countByCategory('all') }}</span>
+        <span :class="chipCountClass">{{ mediaCount('all') }}</span>
       </button>
       <button :class="chipClass(activeFilter === 'none')" @click="setFilter('none')">
         {{ $t('assets.category.none') }}
-        <span :class="chipCountClass">{{ store.countByCategory('none') }}</span>
+        <span :class="chipCountClass">{{ mediaCount('none') }}</span>
       </button>
       <button
         v-for="cat in store.categories"
@@ -16,7 +16,7 @@
         @click="setFilter(cat.id)"
       >
         {{ cat.name }}
-        <span :class="chipCountClass">{{ store.countByCategory(cat.id) }}</span>
+        <span :class="chipCountClass">{{ mediaCount(cat.id) }}</span>
       </button>
     </div>
 
@@ -40,7 +40,23 @@
           :title="assetTooltip(asset)"
           @click="selectAsset(asset)"
         >
+          <video
+            v-if="mediaType === 'video'"
+            :src="asset.payload_url"
+            muted
+            playsinline
+            preload="metadata"
+            class="ctv:block ctv:w-full ctv:aspect-square ctv:object-cover ctv:bg-black"
+            @mouseenter="hoverPlay"
+            @mouseleave="hoverPause"
+          />
+          <div
+            v-else-if="mediaType === 'audio'"
+            class="ctv:flex ctv:items-center ctv:justify-center ctv:w-full ctv:aspect-square ctv:text-2xl
+                   ctv:bg-secondary-background-hover ctv:text-muted-foreground"
+          >♪</div>
           <img
+            v-else
             :src="asset.payload_url"
             :alt="asset.name"
             loading="lazy"
@@ -103,10 +119,23 @@ const props = defineProps<{
 const store = useAssetStore()
 const stageStore = useStageStore()
 
+const mediaType = computed<'image' | 'video' | 'audio'>(() =>
+  props.state.kind === 'video' ? 'video'
+    : props.state.kind === 'audio' ? 'audio'
+    : 'image',
+)
+
 const activeFilter = ref<AssetCategoryFilter>('all')
 const selectedId = ref<number | null>(null)
 
-const visibleAssets = computed(() => store.listByCategory(activeFilter.value))
+const visibleAssets = computed(() =>
+  store.listByCategory(activeFilter.value).filter(a => a.media_type === mediaType.value),
+)
+
+function mediaCount(filter: AssetCategoryFilter): number {
+  return store.listByCategory(filter).filter(a => a.media_type === mediaType.value).length
+}
+
 const selectedAsset = computed(() =>
   selectedId.value != null ? store.byId(selectedId.value) ?? null : null,
 )
@@ -132,6 +161,15 @@ function selectAsset(asset: Asset) {
   writeWidget(props.node, 'asset_url', asset.payload_url)
   writeWidget(props.node, 'asset_id', asset.id)
   stageStore.setOutputSlot(props.state, 0, asset.payload_url)
+}
+
+function hoverPlay(e: MouseEvent) {
+  void (e.currentTarget as HTMLVideoElement).play().catch(() => {})
+}
+function hoverPause(e: MouseEvent) {
+  const v = e.currentTarget as HTMLVideoElement
+  v.pause()
+  v.currentTime = 0
 }
 
 onMounted(async () => {

@@ -8,7 +8,10 @@ export interface AssetFilterOption {
   value: string
 }
 
-export function useAssetPicker(getAddedIds: () => number[] = () => []) {
+export function useAssetPicker(
+  getAddedIds: () => number[] = () => [],
+  mediaTypes: string[] | null = ['image'],
+) {
   const store = useAssetStore()
 
   const query = ref('')
@@ -31,6 +34,7 @@ export function useAssetPicker(getAddedIds: () => number[] = () => []) {
 
   const filtered = computed(() => {
     let rows = store.listByCategory(filter.value)
+    if (mediaTypes) rows = rows.filter(a => mediaTypes.includes(a.media_type))
     const q = query.value.trim().toLowerCase()
     if (q) rows = rows.filter(a => a.name.toLowerCase().includes(q))
     return rows

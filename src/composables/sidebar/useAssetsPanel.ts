@@ -14,6 +14,18 @@ function stripExtension(filename: string): string {
   return i > 0 ? filename.slice(0, i) : filename
 }
 
+type AssetMediaType = 'image' | 'video' | 'audio'
+export type AssetMediaFilter = 'all' | AssetMediaType
+
+export const ASSET_MEDIA_FILTERS: AssetMediaFilter[] = ['all', 'image', 'video', 'audio']
+
+function mediaTypeOf(file: File): AssetMediaType | null {
+  if (file.type.startsWith('image/')) return 'image'
+  if (file.type.startsWith('video/')) return 'video'
+  if (file.type.startsWith('audio/')) return 'audio'
+  return null
+}
+
 function probeImageSize(file: File): Promise<{ width: number; height: number } | null> {
   return new Promise((resolve) => {
     const url = URL.createObjectURL(file)
@@ -30,11 +42,35 @@ function probeImageSize(file: File): Promise<{ width: number; height: number } |
   })
 }
 
+function probeVideoSize(file: File): Promise<{ width: number; height: number } | null> {
+  return new Promise((resolve) => {
+    const url = URL.createObjectURL(file)
+    const video = document.createElement('video')
+    video.preload = 'metadata'
+    video.onloadedmetadata = () => {
+      URL.revokeObjectURL(url)
+      resolve({ width: video.videoWidth, height: video.videoHeight })
+    }
+    video.onerror = () => {
+      URL.revokeObjectURL(url)
+      resolve(null)
+    }
+    video.src = url
+  })
+}
+
+function probeMediaSize(file: File, kind: AssetMediaType): Promise<{ width: number; height: number } | null> {
+  if (kind === 'image') return probeImageSize(file)
+  if (kind === 'video') return probeVideoSize(file)
+  return Promise.resolve(null)
+}
+
 export function useAssetsPanel(isActive: () => boolean | undefined) {
   const { t } = useI18n()
   const store = useAssetStore()
 
   const activeFilter = ref<AssetCategoryFilter>('all')
+  const mediaFilter = ref<AssetMediaFilter>('all')
 
   const uploading = ref(false)
   const uploadDone = ref(0)
@@ -43,7 +79,18 @@ export function useAssetsPanel(isActive: () => boolean | undefined) {
 
   const fileDragDepth = ref(0)
 
-  const visibleAssets = computed(() => store.listByCategory(activeFilter.value))
+  const categoryAssets = computed(() => store.listByCategory(activeFilter.value))
+  const visibleAssets = computed(() =>
+    mediaFilter.value === 'all'
+      ? categoryAssets.value
+      : categoryAssets.value.filter(a => a.media_type === mediaFilter.value),
+  )
+
+  function mediaCount(type: AssetMediaFilter): number {
+    return type === 'all'
+      ? categoryAssets.value.length
+      : categoryAssets.value.filter(a => a.media_type === type).length
+  }
   const uploadCategoryIds = computed<number[]>(() =>
     typeof activeFilter.value === 'number' ? [activeFilter.value] : [],
   )
@@ -95,15 +142,17 @@ export function useAssetsPanel(isActive: () => boolean | undefined) {
   }
 
   async function addFiles(files: File[]) {
-    const images = files.filter(f => f.type.startsWith('image/'))
-    if (images.length === 0 || uploading.value) return
+    const media = files
+      .map(f => ({ file: f, kind: mediaTypeOf(f) }))
+      .filter((m): m is { file: File; kind: AssetMediaType } => m.kind !== null)
+    if (media.length === 0 || uploading.value) return
     uploading.value = true
     uploadDone.value = 0
-    uploadTotal.value = images.length
+    uploadTotal.value = media.length
     uploadError.value = null
     try {
-      for (const file of images) {
-        const dims = await probeImageSize(file)
+      for (const { file, kind } of media) {
+        const dims = await probeMediaSize(file, kind)
         const uploaded = await uploadBlobNamed(file, {
           subfolder: 'comfytv/assets',
           type: 'input',
@@ -112,7 +161,7 @@ export function useAssetsPanel(isActive: () => boolean | undefined) {
         await store.create({
           name: stripExtension(file.name),
           payload_url: uploaded.url,
-          media_type: 'image',
+          media_type: kind,
           category_ids: uploadCategoryIds.value,
           mime_type: file.type || null,
           width: dims?.width ?? null,
@@ -223,6 +272,9 @@ export function useAssetsPanel(isActive: () => boolean | undefined) {
   return {
     store,
     activeFilter,
+    mediaFilter,
+    mediaCount,
+    mediaFilters: ASSET_MEDIA_FILTERS,
     uploading,
     uploadDone,
     uploadTotal,

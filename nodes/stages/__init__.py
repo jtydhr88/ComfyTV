@@ -24,7 +24,8 @@ from .panorama import (
     PanoramaStage, PanoramaCurrentViewStage, PanoramaMultiViewStage,
 )
 from .loaders import (
-    ImageLoaderStage, VideoLoaderStage, AssetImageLoaderStage,
+    ImageLoaderStage, VideoLoaderStage, AudioLoaderStage,
+    AssetImageLoaderStage, AssetVideoLoaderStage, AssetAudioLoaderStage,
 )
 
 
@@ -43,7 +44,8 @@ class ComfyTVExtension(ComfyExtension):
             VideoExtractFrameStage,
             VideoClipStage, VideoCropStage, VideoResizeStage,
             AudioVideoDemuxAudioStage, AudioVideoDemuxVideoStage,
-            ImageLoaderStage, VideoLoaderStage, AssetImageLoaderStage,
+            ImageLoaderStage, VideoLoaderStage, AudioLoaderStage,
+            AssetImageLoaderStage, AssetVideoLoaderStage, AssetAudioLoaderStage,
             *_bridge_classes(),
         ]
 

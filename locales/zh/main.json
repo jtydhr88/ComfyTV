@@ -73,13 +73,19 @@
   },
   "assets": {
     "title": "资产库",
-    "empty": "还没有资产 —— 添加图片后可跨项目复用。",
+    "empty": "还没有资产 —— 添加图片、视频或音频后可跨项目复用。",
     "emptyCategory": "这个分类下还没有资产。",
-    "add": "添加图片",
-    "addTooltip": "上传图片到资产库（也可以直接拖拽图片到这个面板）",
+    "add": "添加素材",
+    "addTooltip": "上传图片、视频或音频到资产库（也可以直接拖拽文件到这个面板）",
     "uploading": "上传中 {done}/{total}…",
     "uploadFailed": "上传失败: {detail}",
-    "dropHint": "松开把图片添加到资产库",
+    "dropHint": "松开把文件添加到资产库",
+    "media": {
+      "all": "全部类型",
+      "image": "图片",
+      "video": "视频",
+      "audio": "音频"
+    },
     "category": {
       "all": "全部",
       "none": "未分类",
@@ -102,8 +108,8 @@
     }
   },
   "assetLoader": {
-    "empty": "资产库还是空的 —— 请先在资产面板中添加图片。",
-    "pickHint": "从资产库中选择一张图片作为该节点的输出。",
+    "empty": "资产库中还没有匹配的素材 —— 请先在资产面板中添加。",
+    "pickHint": "从资产库中选择一个素材作为该节点的输出。",
     "selected": "已选择：{name}"
   },
   "promptHelper": {
