@@ -19,7 +19,7 @@ from .schema import (
 )
 from .inputs import (
     _force_run_token, _project_id_input, _parent_output_id_input,
-    _selected_index_input, _main_prompt_input,
+    _selected_index_input, _main_prompt_input, _custom_params_input,
     _text_template, _image_template, _video_template,
 )
 from .meta import STAGE_META, _KIND_TO_OUTPUT_TYPE  # noqa: F401 (re-export)
@@ -74,7 +74,7 @@ __all__ = [
     "STAGE_META", "_KIND_TO_OUTPUT_TYPE",
     "_VIDEO_SAMPLES", "_AUDIO_SAMPLES",
     "_force_run_token", "_project_id_input", "_parent_output_id_input",
-    "_selected_index_input", "_main_prompt_input",
+    "_selected_index_input", "_main_prompt_input", "_custom_params_input",
     "_text_template", "_image_template", "_video_template",
     "_emit_progress", "_fake_run_ticks", "_persist", "_stage_emit_auto",
     "_stage_emit", "_input_file_url", "_pick_image_from_batch",

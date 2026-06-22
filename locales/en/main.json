@@ -68,7 +68,8 @@
   "sidebar": {
     "tab": {
       "workflow": "Workflow",
-      "assets": "Assets"
+      "assets": "Assets",
+      "params": "Params"
     }
   },
   "assets": {
@@ -111,6 +112,34 @@
     "empty": "No matching assets in the library yet — add some in the Assets panel.",
     "pickHint": "Pick an asset from the library to use as this node's output.",
     "selected": "Selected: {name}"
+  },
+  "stageParams": {
+    "section": "Parameters",
+    "add": "Add",
+    "addHint": "Attach a parameter defined in the ComfyTV sidebar",
+    "remove": "Detach from this node",
+    "sidebar": {
+      "title": "Stage Parameters",
+      "kind": "Stage",
+      "empty": "No parameters defined for this stage yet.",
+      "new": "New parameter",
+      "label": "Label",
+      "type": "Type",
+      "default": "Default",
+      "options": "Options (comma-separated)",
+      "min": "Min",
+      "max": "Max",
+      "step": "Step",
+      "sliderHint": "Set both min & max to show a slider on the node (otherwise a number field).",
+      "multiline": "Multiline",
+      "placeholder": "Placeholder",
+      "create": "Create",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "deleteConfirm": "Delete this parameter? Workflows binding to it will lose the binding.",
+      "system": "Built-in",
+      "labelRequired": "Label is required"
+    }
   },
   "promptHelper": {
     "open": "Prompt helper — quick starters & enhancement tags",

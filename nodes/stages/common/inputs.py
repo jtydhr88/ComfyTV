@@ -33,6 +33,16 @@ def _parent_output_id_input() -> 'io.Int.Input':
     )
 
 
+def _custom_params_input() -> 'io.String.Input':
+    return io.String.Input(
+        "custom_params",
+        default="{}",
+        socketless=True,
+        extra_dict={"hidden": True},
+        tooltip="Internal — JSON of user-defined parameter attachments/values for this node.",
+    )
+
+
 def _selected_index_input() -> 'io.Int.Input':
     return io.Int.Input(
         "selected_index",

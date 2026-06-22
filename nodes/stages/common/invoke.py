@@ -1,5 +1,9 @@
+import json
+import logging
+
 from .inputs import (
     _force_run_token, _project_id_input, _parent_output_id_input,
+    _custom_params_input,
 )
 from .emit import _stage_emit_auto
 from ....runners import RUNNER_REGISTRY, RunnerContext
@@ -27,6 +31,31 @@ def _standard_stage_inputs() -> list:
         _project_id_input(),
         _parent_output_id_input(),
     ]
+
+
+def _merge_custom_params(kind: str, custom_params, options: dict | None) -> dict:
+    merged: dict = {}
+    try:
+        from .... import storage
+        for d in storage.list_stage_params(kind):
+            if d.get("default") is not None:
+                merged[d["key"]] = d["default"]
+    except Exception as e:
+        logging.warning("[ComfyTV/stage-params] default merge failed for %s: %s", kind, e)
+
+    if custom_params:
+        try:
+            data = json.loads(custom_params) if isinstance(custom_params, str) else custom_params
+            for it in (data or {}).get("items", []):
+                key = it.get("key")
+                if key:
+                    merged[key] = it.get("value")
+        except (ValueError, TypeError, AttributeError) as e:
+            logging.warning("[ComfyTV/stage-params] bad custom_params JSON: %s", e)
+
+    if options:
+        merged.update(options)
+    return merged
 
 
 async def invoke_runner(
@@ -83,6 +112,7 @@ async def run_stage_workflow(
     main_prompt=None,
     upstream=None,
     options=None,
+    custom_params=None,
     progress=None,
     transform=None,
     picked_payload=None,
@@ -90,6 +120,7 @@ async def run_stage_workflow(
     emit_ui: bool = True,
     params=None,
 ):
+    options = _merge_custom_params(kind, custom_params, options)
     payload = await invoke_runner(
         kind=kind,
         label=label,

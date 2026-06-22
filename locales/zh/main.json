@@ -68,7 +68,8 @@
   "sidebar": {
     "tab": {
       "workflow": "工作流",
-      "assets": "资产库"
+      "assets": "资产库",
+      "params": "参数"
     }
   },
   "assets": {
@@ -111,6 +112,34 @@
     "empty": "资产库中还没有匹配的素材 —— 请先在资产面板中添加。",
     "pickHint": "从资产库中选择一个素材作为该节点的输出。",
     "selected": "已选择：{name}"
+  },
+  "stageParams": {
+    "section": "参数",
+    "add": "添加",
+    "addHint": "挂载一个在 ComfyTV 侧栏中定义好的参数",
+    "remove": "从该节点移除",
+    "sidebar": {
+      "title": "Stage 参数",
+      "kind": "Stage",
+      "empty": "这个 stage 还没有定义任何参数。",
+      "new": "新建参数",
+      "label": "名称",
+      "type": "类型",
+      "default": "默认值",
+      "options": "选项（用逗号分隔）",
+      "min": "最小值",
+      "max": "最大值",
+      "step": "步长",
+      "sliderHint": "同时设置最小值和最大值即可在节点上显示滑块（否则是数字输入框）。",
+      "multiline": "多行",
+      "placeholder": "占位提示",
+      "create": "创建",
+      "cancel": "取消",
+      "delete": "删除",
+      "deleteConfirm": "删除这个参数？绑定到它的工作流将失去该绑定。",
+      "system": "内置",
+      "labelRequired": "名称不能为空"
+    }
   },
   "promptHelper": {
     "open": "提示词助手 —— 快速起步 & 增强标签",

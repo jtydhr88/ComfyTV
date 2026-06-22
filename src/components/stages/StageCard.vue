@@ -103,6 +103,8 @@
       >×</button>
     </div>
 
+    <CustomParamsSection v-if="node" :state="state" :node="node" />
+
     <button
       v-if="state.variant !== 'loader' && state.variant !== 'transform' && state.kind !== 'image-picker'"
       :class="['run-btn', state.running && 'is-cancel', runBtnClass]"
@@ -184,6 +186,7 @@ import { computed } from 'vue'
 
 import ImageReferences from './ImageReferences.vue'
 import MainPromptInput from './MainPromptInput.vue'
+import CustomParamsSection from './CustomParamsSection.vue'
 import { t } from '@/i18n'
 import ValuePreview from './ValuePreview.vue'
 import { formatSlot, useStageCard } from '@/composables/stages/useStageCard'

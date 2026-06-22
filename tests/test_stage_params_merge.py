@@ -1,0 +1,49 @@
+from __future__ import annotations
+
+
+class TestMergeCustomParams:
+    def test_layering_defaults_attached_and_builtins(self, reset_db):
+        from ComfyTV import storage
+        from ComfyTV.nodes.stages.common.invoke import _merge_custom_params
+        storage.create_stage_param(kind="audio", label="Guidance", type="float", default=5.0)
+        storage.create_stage_param(kind="audio", label="BPM", type="int", default=120)
+        cp = '{"items":[{"key":"guidance","value":8.0}]}'
+        merged = _merge_custom_params("audio", cp, {"duration_s": 30.0})
+        assert merged["guidance"] == 8.0
+        assert merged["bpm"] == 120
+        assert merged["duration_s"] == 30.0
+
+    def test_builtin_option_wins_on_key_clash(self, reset_db):
+        from ComfyTV import storage
+        from ComfyTV.nodes.stages.common.invoke import _merge_custom_params
+        storage.create_stage_param(kind="audio", label="duration_s", type="float", default=1.0)
+        merged = _merge_custom_params("audio", "{}", {"duration_s": 30.0})
+        assert merged["duration_s"] == 30.0
+
+    def test_no_params_passes_options_through(self, reset_db):
+        from ComfyTV.nodes.stages.common.invoke import _merge_custom_params
+        assert _merge_custom_params("audio", "{}", {"x": 1}) == {"x": 1}
+        assert _merge_custom_params("audio", None, {"x": 1}) == {"x": 1}
+
+    def test_bad_json_ignored(self, reset_db):
+        from ComfyTV.nodes.stages.common.invoke import _merge_custom_params
+        assert _merge_custom_params("audio", "not json", {"x": 1}) == {"x": 1}
+
+
+class TestCapsMerge:
+    def test_custom_key_and_label_in_caps(self, reset_db):
+        from ComfyTV import storage
+        from ComfyTV.nodes.stages.common.caps import caps_payload
+        storage.create_stage_param(kind="audio", label="Guidance", type="float", default=5.0)
+        caps = caps_payload()
+        audio = caps["caps_by_kind"]["audio"]["option_keys"]
+        assert "option:guidance" in audio
+        # built-ins still present
+        assert "option:duration_s" in audio
+        assert caps["option_labels"]["option:guidance"] == "Guidance"
+
+    def test_no_custom_params_leaves_caps_baseline(self, reset_db):
+        from ComfyTV.nodes.stages.common.caps import caps_payload, CAPS_BY_KIND
+        caps = caps_payload()
+        assert caps["caps_by_kind"]["audio"]["option_keys"] == CAPS_BY_KIND["audio"]["option_keys"]
+        assert caps["option_labels"] == {}

@@ -139,6 +139,23 @@ class Asset(Base):
     updated_at:  Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
 
 
+class StageParam(Base):
+    __tablename__ = "comfytv_stage_params"
+    __table_args__ = (UniqueConstraint("kind", "key", name="uq_stage_param_kind_key"),)
+
+    id:           Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    kind:         Mapped[str] = mapped_column(String, index=True)
+    key:          Mapped[str] = mapped_column(String)
+    label:        Mapped[str] = mapped_column(String, default="")
+    type:         Mapped[str] = mapped_column(String, default="string")
+    default_json: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    config_json:  Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    origin:       Mapped[int] = mapped_column(Integer, default=1)  # 0=system, 1=user
+    order_:       Mapped[int] = mapped_column("order", Integer, default=100)
+    created_at:   Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
+    updated_at:   Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
+
+
 class AssetCategoryLink(Base):
     __tablename__ = "comfytv_asset_category_links"
 

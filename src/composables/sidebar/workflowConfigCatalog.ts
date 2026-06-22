@@ -155,11 +155,13 @@ export const DEFAULT_FALLBACK_CAPS: Caps = {
 interface CapsState {
   byKind:   Record<string, Caps>
   fallback: Caps
+  optionLabels: Record<string, string>
 }
 
 const capsState = reactive<CapsState>({
   byKind:   { ...DEFAULT_CAPS_BY_KIND },
   fallback: { ...DEFAULT_FALLBACK_CAPS },
+  optionLabels: {},
 })
 
 let capsPromise: Promise<void> | null = null
@@ -170,12 +172,18 @@ export function loadCaps(): Promise<void> {
       .then((payload) => {
         capsState.byKind   = payload.caps_by_kind as Record<string, Caps>
         capsState.fallback = payload.fallback_caps as Caps
+        capsState.optionLabels = (payload.option_labels ?? {}) as Record<string, string>
       })
       .catch((e) => {
         console.warn('[ComfyTV] fetchCaps failed; using baked-in default caps table', e)
       })
   }
   return capsPromise
+}
+
+export function reloadCaps(): Promise<void> {
+  capsPromise = null
+  return loadCaps()
 }
 
 function maxUsedUpstreamIndex(widgets: ExposedWidget[], kind: string): number {
@@ -211,7 +219,7 @@ export function buildBindingOptions(
     { value: 'main_prompt', label: 'Stage prompt' },
   ]
   for (const k of caps.option_keys) {
-    out.push({ value: k, label: STAGE_OPTION_LABELS[k] ?? k })
+    out.push({ value: k, label: capsState.optionLabels[k] ?? STAGE_OPTION_LABELS[k] ?? k })
   }
   for (const k of caps.computed_keys) {
     out.push({ value: k, label: STAGE_COMPUTED_LABELS[k] ?? k })

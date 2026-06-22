@@ -12,6 +12,8 @@ _install.log
 /_*.py
 /_*.md
 
+temp/
+
 runners/config.json
 
 workflows_backup/

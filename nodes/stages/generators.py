@@ -220,6 +220,7 @@ class AudioStage(io.ComfyNode):
                 io.String.Input("lyrics", default="", multiline=True,
                                 extra_dict={"placeholder": "Leave empty for instrumental. Type lyrics for a vocal track."},
                                 tooltip="Optional lyrics — non-empty triggers vocal generation."),
+                _custom_params_input(),
             ],
             outputs=[COMFYTV_AUDIO.Output("audio")],
             is_output_node=True,
@@ -228,7 +229,8 @@ class AudioStage(io.ComfyNode):
 
     @classmethod
     async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
-                      workflow="", main_prompt="", duration_s=30.0, lyrics=""):
+                      workflow="", main_prompt="", duration_s=30.0, lyrics="",
+                      custom_params="{}"):
         return await run_stage_workflow(
             cls,
             kind='audio',
@@ -241,6 +243,7 @@ class AudioStage(io.ComfyNode):
                 'duration_s': float(duration_s or 30.0),
                 'lyrics':     (lyrics or '').strip(),
             },
+            custom_params=custom_params,
         )
 
 

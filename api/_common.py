@@ -25,3 +25,13 @@ def broadcast_asset_event(event: str, payload: dict) -> None:
         )
     except Exception:
         _log.exception("[ComfyTV/assets] broadcast failed")
+
+
+def broadcast_stage_param_event(event: str, payload: dict) -> None:
+    try:
+        PromptServer.instance.send_sync(
+            "comfytv-stage-params",
+            {"event": event, **payload},
+        )
+    except Exception:
+        _log.exception("[ComfyTV/stage_params] broadcast failed")

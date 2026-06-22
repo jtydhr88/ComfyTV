@@ -59,7 +59,35 @@ FALLBACK_CAPS: dict = _caps(
 
 def caps_payload() -> dict:
     """The JSON body served at GET /comfytv/caps."""
+    import logging
+
+    by_kind: dict[str, dict] = {
+        k: {
+            "upstream_kinds": list(v["upstream_kinds"]),
+            "option_keys":    list(v["option_keys"]),
+            "computed_keys":  list(v["computed_keys"]),
+        }
+        for k, v in CAPS_BY_KIND.items()
+    }
+    option_labels: dict[str, str] = {}
+
+    try:
+        from .... import storage
+        for p in storage.list_stage_params():
+            kind = p["kind"]
+            key = f"option:{p['key']}"
+            entry = by_kind.get(kind)
+            if entry is None:
+                entry = {"upstream_kinds": [], "option_keys": [], "computed_keys": []}
+                by_kind[kind] = entry
+            if key not in entry["option_keys"]:
+                entry["option_keys"].append(key)
+            option_labels[key] = p["label"]
+    except Exception as e:
+        logging.warning("[ComfyTV/stage-params] caps merge failed: %s", e)
+
     return {
-        "caps_by_kind": CAPS_BY_KIND,
+        "caps_by_kind": by_kind,
         "fallback_caps": FALLBACK_CAPS,
+        "option_labels": option_labels,
     }
