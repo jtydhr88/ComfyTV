@@ -101,6 +101,11 @@
       "empty": "还没有分类。"
     }
   },
+  "assetLoader": {
+    "empty": "资产库还是空的 —— 请先在资产面板中添加图片。",
+    "pickHint": "从资产库中选择一张图片作为该节点的输出。",
+    "selected": "已选择：{name}"
+  },
   "promptHelper": {
     "open": "提示词助手 —— 快速起步 & 增强标签",
     "templates": "模板",

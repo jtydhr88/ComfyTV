@@ -101,6 +101,11 @@
       "empty": "No categories yet."
     }
   },
+  "assetLoader": {
+    "empty": "No assets in the library yet — add some in the Assets panel.",
+    "pickHint": "Pick an image from the library to use as this node's output.",
+    "selected": "Selected: {name}"
+  },
   "promptHelper": {
     "open": "Prompt helper — quick starters & enhancement tags",
     "templates": "Templates",

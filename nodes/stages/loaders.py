@@ -46,6 +46,50 @@ class ImageLoaderStage(io.ComfyNode):
                                 parent_output_id=parent_output_id)
 
 
+class AssetImageLoaderStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.AssetImageLoaderStage",
+            display_name="Load Image from Asset",
+            category="ComfyTV/Input",
+            inputs=[
+                _project_id_input(),
+                _parent_output_id_input(),
+                io.String.Input(
+                    "asset_url",
+                    default="",
+                    socketless=True,
+                    extra_dict={"hidden": True},
+                    tooltip="Internal — payload URL of the asset picked in the node body. Becomes this stage's output.",
+                ),
+                io.Int.Input(
+                    "asset_id",
+                    default=0, min=0, max=2_147_483_647,
+                    socketless=True,
+                    extra_dict={"hidden": True},
+                    tooltip="Internal — library id of the picked asset (lineage/debug only).",
+                ),
+                io.String.Input(
+                    "category",
+                    default="all",
+                    socketless=True,
+                    extra_dict={"hidden": True},
+                    tooltip="Internal — last-selected category filter, persisted so the node remembers it.",
+                ),
+            ],
+            outputs=[COMFYTV_IMAGE.Output("image")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, project_id="", parent_output_id=0, asset_url="", asset_id=0, category="all"):
+        return _stage_emit_auto(cls, project_id=project_id, payload_str=asset_url or "",
+                                parent_output_id=parent_output_id)
+
+
 class VideoLoaderStage(io.ComfyNode):
 
     @classmethod
