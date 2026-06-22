@@ -99,6 +99,7 @@ import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import type { StageParam } from '@/api/schemas'
+import { getStageMeta } from '@/composables/stages/stageMeta'
 import { useStageParamStore } from '@/stores/stageParamStore'
 import { bindWidgetCallback, getWidget, readWidgetStr, writeWidget } from '@/utils/widget'
 
@@ -113,8 +114,9 @@ const store = useStageParamStore()
 const menuOpen = ref(false)
 const items = ref<ParamItem[]>([])
 
+const paramKind = computed(() => getStageMeta(props.node.comfyClass ?? '')?.workflow_kind || props.state.kind)
 const hasWidget = computed(() => !!getWidget(props.node, 'custom_params'))
-const defs = computed(() => store.forKind(props.state.kind).filter(d => d.origin !== 0))
+const defs = computed(() => store.forKind(paramKind.value).filter(d => d.origin !== 0))
 
 const attached = computed(() =>
   items.value.filter(it => defs.value.some(d => d.key === it.key)),

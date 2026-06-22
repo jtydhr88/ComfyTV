@@ -29054,7 +29054,7 @@ const _sfc_main$B = /* @__PURE__ */ defineComponent({
   setup(__props) {
     const { t: t2 } = useI18n();
     const store = useStageParamStore();
-    const STAGE_PARAM_KINDS = ["audio"];
+    const STAGE_PARAM_KINDS = ["audio", "image"];
     const kindOptions = STAGE_PARAM_KINDS.map((k) => ({ value: k, label: k }));
     const activeKind = /* @__PURE__ */ ref(STAGE_PARAM_KINDS[0]);
     const typeOptions = STAGE_PARAM_TYPES.map((tp) => ({ value: tp, label: tp }));
@@ -53959,8 +53959,12 @@ const _sfc_main$r = /* @__PURE__ */ defineComponent({
     const store = useStageParamStore();
     const menuOpen = /* @__PURE__ */ ref(false);
     const items = /* @__PURE__ */ ref([]);
+    const paramKind = computed(() => {
+      var _a2;
+      return ((_a2 = getStageMeta(props.node.comfyClass ?? "")) == null ? void 0 : _a2.workflow_kind) || props.state.kind;
+    });
     const hasWidget = computed(() => !!getWidget(props.node, "custom_params"));
-    const defs = computed(() => store.forKind(props.state.kind).filter((d) => d.origin !== 0));
+    const defs = computed(() => store.forKind(paramKind.value).filter((d) => d.origin !== 0));
     const attached = computed(
       () => items.value.filter((it) => defs.value.some((d) => d.key === it.key))
     );

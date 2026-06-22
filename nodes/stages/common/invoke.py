@@ -65,6 +65,7 @@ async def invoke_runner(
     main_prompt=None,
     upstream=None,
     options=None,
+    custom_params=None,
     progress=None,
 ):
     runner = RUNNER_REGISTRY.by_label(label, kind)
@@ -78,7 +79,7 @@ async def invoke_runner(
     ctx_kwargs: dict = {
         'kind': kind,
         'upstream': upstream if upstream is not None else {},
-        'options': options if options is not None else {},
+        'options': _merge_custom_params(kind, custom_params, options),
     }
     if main_prompt is not None:
         ctx_kwargs['main_prompt'] = main_prompt
@@ -120,13 +121,13 @@ async def run_stage_workflow(
     emit_ui: bool = True,
     params=None,
 ):
-    options = _merge_custom_params(kind, custom_params, options)
     payload = await invoke_runner(
         kind=kind,
         label=label,
         main_prompt=main_prompt,
         upstream=upstream,
         options=options,
+        custom_params=custom_params,
         progress=progress,
     )
 

@@ -100,6 +100,7 @@ class ImageStage(io.ComfyNode):
                 io.Autogrow.Input("texts",  template=_text_template(8)),
                 io.Autogrow.Input("images", template=_image_template(12)),
                 _selected_index_input(),
+                _custom_params_input(),
             ],
 
             outputs=[COMFYTV_IMAGES.Output("images"), COMFYTV_IMAGE.Output("image")],
@@ -110,7 +111,7 @@ class ImageStage(io.ComfyNode):
     @classmethod
     async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,workflow="", resolution="",
                 aspect_ratio="", batch_size=1, main_prompt="", texts=None, images=None,
-                selected_index=1):
+                selected_index=1, custom_params="{}"):
 
         text_vals = _autogrow_values(texts)
         combined_prompt = _combine_prompt(main_prompt, text_vals)
@@ -127,6 +128,7 @@ class ImageStage(io.ComfyNode):
                 'aspect_ratio': aspect_ratio,
                 'batch_size':   int(batch_size or 1),
             },
+            custom_params=custom_params,
         )
         picked_idx = int(selected_index or 1)
         picked_url = _pick_image_from_batch(payload, picked_idx)
