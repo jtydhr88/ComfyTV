@@ -601,6 +601,30 @@ def _slugify_param_key(label: str) -> str:
     return base or "param"
 
 
+def seed_system_stage_params() -> int:
+    from .nodes.stages.common.caps import builtin_option_rows
+    seeded = 0
+    with db.get_session() as s:
+        existing = {
+            (r.kind, r.key)
+            for r in s.execute(select(StageParam.kind, StageParam.key)).all()
+        }
+        for row in builtin_option_rows():
+            kp = (row["kind"], row["key"])
+            if kp in existing:
+                continue
+            s.add(StageParam(
+                kind=row["kind"], key=row["key"], label=row["label"],
+                type=row["type"], default_json=None, config_json=None,
+                origin=0, order_=0,
+            ))
+            existing.add(kp)
+            seeded += 1
+        if seeded:
+            s.commit()
+    return seeded
+
+
 def _stage_param_to_dict(p: StageParam) -> dict:
     return {
         "id": p.id,

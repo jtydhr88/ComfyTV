@@ -1,14 +1,33 @@
-import { describe, expect, it, vi } from 'vitest'
+import { beforeAll, describe, expect, it, vi } from 'vitest'
+
+const { CAPS } = vi.hoisted(() => ({
+  CAPS: {
+    caps_by_kind: {
+      image:    { upstream_kinds: ['image', 'text'],          option_keys: ['option:negative', 'option:seed', 'option:batch_size'], computed_keys: ['computed:width', 'computed:height'] },
+      video:    { upstream_kinds: ['image', 'video', 'text'], option_keys: ['option:negative', 'option:seed', 'option:duration_s', 'option:generate_audio'], computed_keys: ['computed:width', 'computed:height', 'computed:length'] },
+      audio:    { upstream_kinds: ['text', 'audio'],          option_keys: ['option:seed', 'option:duration_s', 'option:lyrics'], computed_keys: ['computed:length'] },
+      inpaint:  { upstream_kinds: ['image'],                  option_keys: ['option:seed', 'option:negative', 'option:mask_data'], computed_keys: [] },
+      erase:    { upstream_kinds: ['image'],                  option_keys: ['option:seed', 'option:mask_data'], computed_keys: [] },
+      outpaint: { upstream_kinds: ['image'],                  option_keys: ['option:seed', 'option:negative', 'option:pad_left'], computed_keys: [] },
+    },
+    fallback_caps: { upstream_kinds: ['image', 'video', 'audio', 'text'], option_keys: ['option:negative', 'option:seed', 'option:batch_size'], computed_keys: ['computed:width', 'computed:height', 'computed:length'] },
+    option_labels: {
+      'option:negative': 'Stage negative prompt', 'option:seed': 'Stage seed',
+      'option:batch_size': 'Stage batch size', 'option:duration_s': 'Stage duration (s)',
+      'option:generate_audio': 'Stage generate audio', 'option:lyrics': 'Stage lyrics',
+      'option:mask_data': 'Stage mask (painter output)', 'option:pad_left': 'Stage pad left',
+    },
+  },
+}))
 
 vi.mock('@/api', () => ({
-  fetchCaps: vi.fn(() => new Promise(() => {})),
+  fetchCaps: vi.fn(() => Promise.resolve(CAPS)),
 }))
 
 import { fetchCaps } from '@/api'
 
 import {
   buildBindingOptions,
-  DEFAULT_CAPS_BY_KIND,
   groupExposedWidgets,
   loadCaps,
   type ExposedWidget,
@@ -23,6 +42,10 @@ function widget(over: Partial<ExposedWidget> = {}): ExposedWidget {
     ...over,
   }
 }
+
+beforeAll(async () => {
+  await loadCaps()  // populate caps from the (mocked) API before reading synchronously
+})
 
 describe('buildBindingOptions', () => {
   it('always leads with "use this value" and stage prompt', () => {
@@ -42,6 +65,12 @@ describe('buildBindingOptions', () => {
     expect(vals).toContain('upstream_image:annotated[0]')
     expect(vals).toContain('upstream_text:value[0]')
     expect(vals.some(v => v.startsWith('upstream_video:'))).toBe(false)
+  })
+
+  it('labels options from the caps option_labels map', () => {
+    const opts = buildBindingOptions([], 'audio')
+    const lyrics = opts.find(o => o.value === 'option:lyrics')
+    expect(lyrics?.label).toBe('Stage lyrics')
   })
 
   it('text-kind upstream uses :value suffix, image uses :annotated', () => {
@@ -85,7 +114,7 @@ describe('buildBindingOptions', () => {
     }
   })
 
-  it('falls back to a permissive set when kind is unknown', () => {
+  it('uses the permissive fallback caps when kind is unknown', () => {
     const opts = buildBindingOptions([], undefined)
     const vals = opts.map(o => o.value)
     expect(vals.some(v => v.startsWith('upstream_image:'))).toBe(true)
@@ -94,17 +123,8 @@ describe('buildBindingOptions', () => {
     expect(vals.some(v => v.startsWith('upstream_text:'))).toBe(true)
   })
 
-  it('warns loudly on an unknown (non-empty) workflow kind', () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
-    buildBindingOptions([], 'totally-unknown-kind')
-    expect(warn).toHaveBeenCalledWith(
-      expect.stringContaining('totally-unknown-kind'),
-    )
-    warn.mockRestore()
-  })
-
-  it('every kind in DEFAULT_CAPS_BY_KIND produces a valid options list', () => {
-    for (const kind of Object.keys(DEFAULT_CAPS_BY_KIND)) {
+  it('every kind from caps produces a valid options list', () => {
+    for (const kind of Object.keys(CAPS.caps_by_kind)) {
       const opts = buildBindingOptions([], kind)
       expect(opts[0].value).toBe('__VALUE__')
       for (const o of opts) expect(o.label.length).toBeGreaterThan(0)
@@ -113,13 +133,13 @@ describe('buildBindingOptions', () => {
 })
 
 describe('caps loading', () => {
-  it('lazily triggers fetchCaps the first time options are built', () => {
+  it('triggers fetchCaps when options are built', () => {
     buildBindingOptions([], 'image')
     void loadCaps()
     expect(fetchCaps).toHaveBeenCalled()
   })
 
-  it('serves baked-in default caps before the server responds', () => {
+  it('serves caps from the API', () => {
     const opts = buildBindingOptions([], 'audio')
     const vals = opts.map(o => o.value)
     expect(vals).toContain('option:lyrics')

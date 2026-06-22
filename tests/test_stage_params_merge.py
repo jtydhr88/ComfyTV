@@ -31,19 +31,28 @@ class TestMergeCustomParams:
 
 
 class TestCapsMerge:
-    def test_custom_key_and_label_in_caps(self, reset_db):
+    def test_custom_key_and_seeded_builtins_in_caps(self, reset_db):
         from ComfyTV import storage
         from ComfyTV.nodes.stages.common.caps import caps_payload
+        storage.seed_system_stage_params()
         storage.create_stage_param(kind="audio", label="Guidance", type="float", default=5.0)
         caps = caps_payload()
         audio = caps["caps_by_kind"]["audio"]["option_keys"]
         assert "option:guidance" in audio
-        # built-ins still present
         assert "option:duration_s" in audio
         assert caps["option_labels"]["option:guidance"] == "Guidance"
+        assert caps["option_labels"]["option:duration_s"] == "Stage duration (s)"
 
-    def test_no_custom_params_leaves_caps_baseline(self, reset_db):
-        from ComfyTV.nodes.stages.common.caps import caps_payload, CAPS_BY_KIND
+    def test_option_keys_empty_without_seeding(self, reset_db):
+        from ComfyTV.nodes.stages.common.caps import caps_payload
         caps = caps_payload()
-        assert caps["caps_by_kind"]["audio"]["option_keys"] == CAPS_BY_KIND["audio"]["option_keys"]
+        assert caps["caps_by_kind"]["audio"]["option_keys"] == []
         assert caps["option_labels"] == {}
+
+    def test_seeded_option_keys_match_static_vocabulary(self, reset_db):
+        from ComfyTV import storage
+        from ComfyTV.nodes.stages.common.caps import caps_payload, CAPS_BY_KIND
+        storage.seed_system_stage_params()
+        caps = caps_payload()
+        for kind, static in CAPS_BY_KIND.items():
+            assert set(caps["caps_by_kind"][kind]["option_keys"]) == set(static["option_keys"])

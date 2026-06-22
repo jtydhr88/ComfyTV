@@ -114,7 +114,7 @@ const menuOpen = ref(false)
 const items = ref<ParamItem[]>([])
 
 const hasWidget = computed(() => !!getWidget(props.node, 'custom_params'))
-const defs = computed(() => store.forKind(props.state.kind))
+const defs = computed(() => store.forKind(props.state.kind).filter(d => d.origin !== 0))
 
 const attached = computed(() =>
   items.value.filter(it => defs.value.some(d => d.key === it.key)),

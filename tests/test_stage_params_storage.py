@@ -16,12 +16,12 @@ class TestStageParamCreate:
         assert row["type"] == "float"
         assert row["default"] == 5.0
         assert row["config"] == {"min": 0, "max": 10, "step": 0.5}
-        assert row["origin"] == 1  # user
+        assert row["origin"] == 1
 
     def test_key_slugified_and_deduped(self, reset_db):
         from ComfyTV import storage
         a = _mk(storage, label="Top P", type="float")
-        b = _mk(storage, label="Top P", type="float")  # same label, same kind
+        b = _mk(storage, label="Top P", type="float")
         assert a["key"] == "top_p"
         assert b["key"] == "top_p_2"
 
@@ -65,7 +65,7 @@ class TestStageParamUpdateDelete:
         assert upd["label"] == "CFG"
         assert upd["default"] == 7.0
         assert upd["config"] == {"min": 1}
-        assert upd["key"] == "guidance"  # key is stable across rename
+        assert upd["key"] == "guidance"
 
     def test_default_can_be_cleared(self, reset_db):
         from ComfyTV import storage
@@ -94,3 +94,32 @@ class TestStageParamSystemOrigin:
         assert sys_row["origin"] == 0
         assert storage.update_stage_param(sys_row["id"], label="X") is None
         assert storage.delete_stage_param(sys_row["id"]) is False
+
+
+class TestStageParamSeed:
+    def test_seed_creates_system_rows(self, reset_db):
+        from ComfyTV import storage
+        n = storage.seed_system_stage_params()
+        assert n > 0
+        audio = storage.list_stage_params("audio")
+        keys = {p["key"] for p in audio}
+        assert {"seed", "duration_s", "lyrics"} <= keys
+        for p in audio:
+            assert p["origin"] == 0
+            assert p["default"] is None
+
+    def test_seed_is_idempotent(self, reset_db):
+        from ComfyTV import storage
+        first = storage.seed_system_stage_params()
+        again = storage.seed_system_stage_params()
+        assert again == 0
+        assert len(storage.list_stage_params()) == first
+
+    def test_seed_coexists_with_user_rows(self, reset_db):
+        from ComfyTV import storage
+        storage.seed_system_stage_params()
+        u = storage.create_stage_param(kind="audio", label="Guidance", type="float", default=5.0)
+        assert u["origin"] == 1
+        audio = storage.list_stage_params("audio")
+        assert any(p["origin"] == 0 for p in audio)
+        assert any(p["origin"] == 1 and p["key"] == "guidance" for p in audio)

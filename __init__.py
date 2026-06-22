@@ -24,6 +24,7 @@ else:
     from .nodes.stages import ComfyTVExtension as _ComfyTVExtension
 
     _storage.ensure_default_project()
+    _storage.seed_system_stage_params()
 
 
     async def comfy_entrypoint():

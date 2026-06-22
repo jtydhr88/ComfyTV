@@ -57,34 +57,57 @@ FALLBACK_CAPS: dict = _caps(
 )
 
 
+BUILTIN_OPTION_META: dict[str, tuple[str, str]] = {
+    'negative':       ('Stage negative prompt', 'string'),
+    'seed':           ('Stage seed', 'int'),
+    'batch_size':     ('Stage batch size', 'int'),
+    'duration_s':     ('Stage duration (s)', 'float'),
+    'generate_audio': ('Stage generate audio', 'boolean'),
+    'lyrics':         ('Stage lyrics', 'string'),
+    'max_length':     ('Stage LLM max output length', 'int'),
+    'scale':          ('Stage scale', 'string'),
+    'pad_left':       ('Stage pad left', 'int'),
+    'pad_top':        ('Stage pad top', 'int'),
+    'pad_right':      ('Stage pad right', 'int'),
+    'pad_bottom':     ('Stage pad bottom', 'int'),
+    'feathering':     ('Stage feathering', 'int'),
+    'mask_data':      ('Stage mask (painter output)', 'string'),
+}
+
+
+def builtin_option_rows() -> list[dict]:
+    rows: list[dict] = []
+    for kind, caps in CAPS_BY_KIND.items():
+        for okey in caps["option_keys"]:
+            key = okey.split(":", 1)[1] if okey.startswith("option:") else okey
+            label, type_ = BUILTIN_OPTION_META.get(key, (key, 'string'))
+            rows.append({"kind": kind, "key": key, "label": label, "type": type_})
+    return rows
+
+
 def caps_payload() -> dict:
-    """The JSON body served at GET /comfytv/caps."""
-    import logging
+    from .... import storage
 
     by_kind: dict[str, dict] = {
         k: {
             "upstream_kinds": list(v["upstream_kinds"]),
-            "option_keys":    list(v["option_keys"]),
+            "option_keys":    [],
             "computed_keys":  list(v["computed_keys"]),
         }
         for k, v in CAPS_BY_KIND.items()
     }
     option_labels: dict[str, str] = {}
 
-    try:
-        from .... import storage
-        for p in storage.list_stage_params():
-            kind = p["kind"]
-            key = f"option:{p['key']}"
-            entry = by_kind.get(kind)
-            if entry is None:
-                entry = {"upstream_kinds": [], "option_keys": [], "computed_keys": []}
-                by_kind[kind] = entry
-            if key not in entry["option_keys"]:
-                entry["option_keys"].append(key)
-            option_labels[key] = p["label"]
-    except Exception as e:
-        logging.warning("[ComfyTV/stage-params] caps merge failed: %s", e)
+    for p in storage.list_stage_params():
+        kind = p["kind"]
+        key = f"option:{p['key']}"
+        entry = by_kind.get(kind)
+        if entry is None:
+            entry = {"upstream_kinds": [], "option_keys": [], "computed_keys": []}
+            by_kind[kind] = entry
+        if key not in entry["option_keys"]:
+            entry["option_keys"].append(key)
+        option_labels[key] = p["label"]
 
     return {
         "caps_by_kind": by_kind,
