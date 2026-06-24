@@ -29054,7 +29054,22 @@ const _sfc_main$B = /* @__PURE__ */ defineComponent({
   setup(__props) {
     const { t: t2 } = useI18n();
     const store = useStageParamStore();
-    const STAGE_PARAM_KINDS = ["audio", "image"];
+    const STAGE_PARAM_KINDS = [
+      "text",
+      "image",
+      "video",
+      "audio",
+      "panorama",
+      "multiangle",
+      "relight",
+      "multiview",
+      "upscale",
+      "outpaint",
+      "inpaint",
+      "image-edit",
+      "erase",
+      "cutout"
+    ];
     const kindOptions = STAGE_PARAM_KINDS.map((k) => ({ value: k, label: k }));
     const activeKind = /* @__PURE__ */ ref(STAGE_PARAM_KINDS[0]);
     const typeOptions = STAGE_PARAM_TYPES.map((tp) => ({ value: tp, label: tp }));

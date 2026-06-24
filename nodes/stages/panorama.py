@@ -20,6 +20,7 @@ class PanoramaStage(io.ComfyNode):
                                 extra_dict={"hidden": True},
                                 tooltip="User-uploaded panorama path (annotated /view? URL string). When non-empty, overrides everything else."),
                 COMFYTV_IMAGE.Input("image", optional=True),
+                _custom_params_input(),
             ],
             outputs=[COMFYTV_PANORAMA.Output("panorama")],
             is_output_node=True,
@@ -28,7 +29,7 @@ class PanoramaStage(io.ComfyNode):
 
     @classmethod
     async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
-                      workflow="", main_prompt="", manual_source="", image=""):
+                      workflow="", main_prompt="", manual_source="", image="", custom_params="{}"):
 
         if (manual_source or "").strip():
             return _stage_emit_auto(cls, project_id=project_id,
@@ -42,6 +43,7 @@ class PanoramaStage(io.ComfyNode):
                     if user_prompt else \
                     "equirectangular 360 degree panorama, a peaceful landscape"
                 payload = await invoke_runner(
+                    custom_params=custom_params,
                     kind='panorama',
                     label=workflow,
                     main_prompt=composed,

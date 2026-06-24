@@ -48,6 +48,7 @@ class TextStage(io.ComfyNode):
                 io.Autogrow.Input("texts",  template=_text_template(8)),
                 io.Autogrow.Input("images", template=_image_template(8)),
                 io.Autogrow.Input("videos", template=_video_template(4)),
+                _custom_params_input(),
             ],
             outputs=[COMFYTV_TEXT.Output("text")],
             is_output_node=True,
@@ -56,12 +57,13 @@ class TextStage(io.ComfyNode):
 
     @classmethod
     async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,workflow="", main_prompt="",
-                texts=None, images=None, videos=None):
+                texts=None, images=None, videos=None, custom_params="{}"):
 
         text_vals = _autogrow_values(texts)
         combined_prompt = _combine_prompt(main_prompt, text_vals, sep="\n")
         return await run_stage_workflow(
             cls,
+            custom_params=custom_params,
             kind='text',
             label=workflow,
             project_id=project_id,
@@ -166,6 +168,7 @@ class VideoStage(io.ComfyNode):
                 io.Autogrow.Input("videos", template=_video_template(4)),
 
                 COMFYTV_AUDIO.Input("audio", optional=True),
+                _custom_params_input(),
             ],
             outputs=[COMFYTV_VIDEO.Output("video")],
             is_output_node=True,
@@ -176,12 +179,13 @@ class VideoStage(io.ComfyNode):
     async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,workflow="", resolution="",
                 aspect_ratio="", duration_s=VIDEO_DURATION_DEFAULT_S,
                 generate_audio=False, main_prompt="",
-                texts=None, images=None, videos=None, audio=""):
+                texts=None, images=None, videos=None, audio="", custom_params="{}"):
 
         text_vals = _autogrow_values(texts)
         combined_prompt = _combine_prompt(main_prompt, text_vals)
         return await run_stage_workflow(
             cls,
+            custom_params=custom_params,
             kind='video',
             label=workflow,
             project_id=project_id,
@@ -309,6 +313,7 @@ class ShotImagesStage(io.ComfyNode):
                 COMFYTV_STORYBOARD.Input("storyboard", optional=True),
                 io.Autogrow.Input("images", template=_image_template(8)),
                 _selected_index_input(),
+                _custom_params_input(),
             ],
 
             outputs=[COMFYTV_IMAGES.Output("images"), COMFYTV_IMAGE.Output("image")],
@@ -319,7 +324,7 @@ class ShotImagesStage(io.ComfyNode):
     @classmethod
     async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                       workflow="", resolution="", aspect_ratio="",
-                      storyboard=None, images=None, selected_index=1):
+                      storyboard=None, images=None, selected_index=1, custom_params="{}"):
 
         shots: list[dict] = []
         if storyboard:
@@ -418,6 +423,7 @@ class StoryboardStage(io.ComfyNode):
                                 socketless=True, extra_dict={"hidden": True},
                                 tooltip="Serialized shot list (JSON). Driven by the shot-board editor."),
                 io.Autogrow.Input("texts", template=_text_template(6)),
+                _custom_params_input(),
             ],
             outputs=[COMFYTV_STORYBOARD.Output("storyboard")],
             is_output_node=True,
@@ -427,7 +433,7 @@ class StoryboardStage(io.ComfyNode):
     @classmethod
     async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                       workflow="", main_prompt="", total_duration_s=30, shot_count=6,
-                      characters="", storyboard_data="", texts=None):
+                      characters="", storyboard_data="", texts=None, custom_params="{}"):
 
         text_vals = _autogrow_values(texts)
         premise = _combine_prompt(main_prompt, text_vals, sep="\n")
@@ -439,6 +445,7 @@ class StoryboardStage(io.ComfyNode):
         )
         return await run_stage_workflow(
             cls,
+            custom_params=custom_params,
             kind='storyboard',
             label=workflow,
             project_id=project_id,

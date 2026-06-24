@@ -18,6 +18,7 @@ class UpscaleStage(io.ComfyNode):
                                ),
                 _main_prompt_input(tooltip="Optional guide prompt for the diffusion-refine pass. Empty → workflow's default (e.g. 'masterpiece, 8k')."),
                 COMFYTV_IMAGE.Input("image", optional=True),
+                _custom_params_input(),
             ],
             outputs=[COMFYTV_IMAGE.Output("image")],
             is_output_node=True,
@@ -26,9 +27,10 @@ class UpscaleStage(io.ComfyNode):
 
     @classmethod
     async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
-                      workflow="", scale="2x", main_prompt="", image=""):
+                      workflow="", scale="2x", main_prompt="", image="", custom_params="{}"):
         return await run_stage_workflow(
             cls,
+            custom_params=custom_params,
             kind='upscale',
             label=workflow,
             project_id=project_id,
@@ -69,6 +71,7 @@ class OutpaintStage(io.ComfyNode):
                              ),
                 _main_prompt_input(placeholder="整张图最终的样子 / Describe the WHOLE finished image — subject + scene + style + lighting (e.g. 'a hiker on a forest path, golden hour, photorealistic'). Don't write instructions like 'extend the scene'.", ),
                 COMFYTV_IMAGE.Input("image", optional=True),
+                _custom_params_input(),
             ],
             outputs=[COMFYTV_IMAGE.Output("image")],
             is_output_node=True,
@@ -78,9 +81,10 @@ class OutpaintStage(io.ComfyNode):
     @classmethod
     async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                       workflow="", pad_left=0, pad_top=0, pad_right=0, pad_bottom=0,
-                      feathering=40, main_prompt="", image=""):
+                      feathering=40, main_prompt="", image="", custom_params="{}"):
         return await run_stage_workflow(
             cls,
+            custom_params=custom_params,
             kind='outpaint',
             label=workflow,
             project_id=project_id,
@@ -115,6 +119,7 @@ class InpaintStage(io.ComfyNode):
                                 ),
                 _main_prompt_input(placeholder="Describe what should appear in the masked region (e.g. 'a wooden chair', 'an empty wall').", ),
                 COMFYTV_IMAGE.Input("image", optional=True),
+                _custom_params_input(),
             ],
             outputs=[COMFYTV_IMAGE.Output("image")],
             is_output_node=True,
@@ -123,9 +128,10 @@ class InpaintStage(io.ComfyNode):
 
     @classmethod
     async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
-                      workflow="", mask_data="", main_prompt="", image=""):
+                      workflow="", mask_data="", main_prompt="", image="", custom_params="{}"):
         return await run_stage_workflow(
             cls,
+            custom_params=custom_params,
             kind='inpaint',
             label=workflow,
             project_id=project_id,
@@ -151,6 +157,7 @@ class ImageEditStage(io.ComfyNode):
                                tooltip="Which instruction-edit workflow to run."),
                 _main_prompt_input(placeholder="指令式描述要做什么:\"remove the bicycle\", \"change the dress to red\", \"replace the background with mountains\". Use imperative / action-based language; describe the change, not the whole scene.", ),
                 COMFYTV_IMAGE.Input("image", optional=True),
+                _custom_params_input(),
             ],
             outputs=[COMFYTV_IMAGE.Output("image")],
             is_output_node=True,
@@ -159,9 +166,10 @@ class ImageEditStage(io.ComfyNode):
 
     @classmethod
     async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
-                      workflow="", main_prompt="", image=""):
+                      workflow="", main_prompt="", image="", custom_params="{}"):
         return await run_stage_workflow(
             cls,
+            custom_params=custom_params,
             kind='image-edit',
             label=workflow,
             project_id=project_id,
@@ -189,6 +197,7 @@ class EraseStage(io.ComfyNode):
                                 socketless=True, extra_dict={"hidden": True},
                                 ),
                 COMFYTV_IMAGE.Input("image", optional=True),
+                _custom_params_input(),
             ],
             outputs=[COMFYTV_IMAGE.Output("image")],
             is_output_node=True,
@@ -197,9 +206,10 @@ class EraseStage(io.ComfyNode):
 
     @classmethod
     async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
-                      workflow="", mask_data="", image=""):
+                      workflow="", mask_data="", image="", custom_params="{}"):
         return await run_stage_workflow(
             cls,
+            custom_params=custom_params,
             kind='erase',
             label=workflow,
             project_id=project_id,
@@ -224,6 +234,7 @@ class CutoutStage(io.ComfyNode):
                                default=CUTOUT_WORKFLOWS[0] if CUTOUT_WORKFLOWS else "",
                                tooltip="Which segmentation backend to run."),
                 COMFYTV_IMAGE.Input("image", optional=True),
+                _custom_params_input(),
             ],
             outputs=[COMFYTV_IMAGE.Output("image")],
             is_output_node=True,
@@ -232,9 +243,10 @@ class CutoutStage(io.ComfyNode):
 
     @classmethod
     async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
-                      workflow="", image=""):
+                      workflow="", image="", custom_params="{}"):
         return await run_stage_workflow(
             cls,
+            custom_params=custom_params,
             kind='cutout',
             label=workflow,
             project_id=project_id,
@@ -268,6 +280,7 @@ class RelightStage(io.ComfyNode):
                 _main_prompt_input(tooltip="Additional natural-language description of the desired lighting (appended to the auto-composed instruction)."),
 
                 io.Autogrow.Input("images", template=_image_template(4)),
+                _custom_params_input(),
             ],
             outputs=[COMFYTV_IMAGE.Output("image")],
             is_output_node=True,
@@ -277,7 +290,7 @@ class RelightStage(io.ComfyNode):
     @classmethod
     async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                       workflow="", brightness=50, color="#ffffff", rim_light=False,
-                      main_prompt="", images=None):
+                      main_prompt="", images=None, custom_params="{}"):
         upstream_images = _autogrow_values(images)
 
         has_ref = len(upstream_images) >= 2
@@ -285,6 +298,7 @@ class RelightStage(io.ComfyNode):
                                    has_reference=has_ref)
         return await run_stage_workflow(
             cls,
+            custom_params=custom_params,
             kind='relight',
             label=workflow,
             project_id=project_id,
@@ -319,6 +333,7 @@ class MultiangleStage(io.ComfyNode):
                                ),
                 _main_prompt_input(placeholder="可选:主体/场景的补充描述。LoRA 自己负责相机控制,这里只是给模型多一点上下文(留空也 OK)。 / Optional: extra subject/scene context. The LoRA handles the camera; this just adds detail (empty is fine).", tooltip="Optional supplementary description appended after the LoRA's camera keywords."),
                 COMFYTV_IMAGE.Input("image", optional=True),
+                _custom_params_input(),
             ],
             outputs=[COMFYTV_IMAGE.Output("image")],
             is_output_node=True,
@@ -328,12 +343,13 @@ class MultiangleStage(io.ComfyNode):
     @classmethod
     async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                       workflow="", horizontal_angle=0, vertical_angle=0,
-                      zoom=5.0, main_prompt="", image=""):
+                      zoom=5.0, main_prompt="", image="", custom_params="{}"):
         prompt = _multiangle_prompt(horizontal_angle, vertical_angle, zoom,
                                     extra=main_prompt or "")
 
         return await run_stage_workflow(
             cls,
+            custom_params=custom_params,
             kind='multiangle',
             label=workflow,
             project_id=project_id,

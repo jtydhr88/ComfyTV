@@ -21,6 +21,7 @@ class ImageVariationsStage(io.ComfyNode):
                 _main_prompt_input(placeholder="Describe the subject (e.g. 'modern wooden chair', 'young Asian businesswoman, 30s').", tooltip="Subject / scene description. Each frame's prompt prepends an angle or sequence keyword automatically."),
                 COMFYTV_IMAGE.Input("image", optional=True),
                 _selected_index_input(),
+                _custom_params_input(),
             ],
             outputs=[COMFYTV_IMAGES.Output("images"), COMFYTV_IMAGE.Output("image")],
             is_output_node=True,
@@ -30,9 +31,10 @@ class ImageVariationsStage(io.ComfyNode):
     @classmethod
     async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                       workflow="", variant_count=3, main_prompt="", image="",
-                      selected_index=1):
+                      selected_index=1, custom_params="{}"):
         kind = 'multiview' if workflow in (MULTIVIEW_WORKFLOWS or []) else 'sequence'
         payload = await invoke_runner(
+            custom_params=custom_params,
             kind=kind,
             label=workflow,
             main_prompt=(main_prompt or '').strip(),

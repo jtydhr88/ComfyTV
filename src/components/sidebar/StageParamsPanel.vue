@@ -112,7 +112,11 @@ defineProps<{ active?: boolean }>()
 const { t } = useI18n()
 const store = useStageParamStore()
 
-const STAGE_PARAM_KINDS = ['audio', 'image'] as const
+const STAGE_PARAM_KINDS = [
+  'text', 'image', 'video', 'audio', 'panorama',
+  'multiangle', 'relight', 'multiview',
+  'upscale', 'outpaint', 'inpaint', 'image-edit', 'erase', 'cutout',
+] as const
 const kindOptions = STAGE_PARAM_KINDS.map(k => ({ value: k, label: k }))
 const activeKind = ref<string>(STAGE_PARAM_KINDS[0])
 
