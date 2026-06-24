@@ -40,6 +40,10 @@ import './tailwind.css'
 import './style.css'
 
 import { app, type ComfyNode } from '@/lib/comfyApp'
+import {
+  isHeadlessConvertMode,
+  runHeadlessConvertWorker,
+} from '@/composables/stages/headlessConvert'
 import type { ComfyExtension, ComfyNodeDef } from '@comfyorg/comfyui-frontend-types'
 import { applyHiddenWidgetFlags, getWidget } from '@/utils/widget'
 import { checkThemeTokens } from '@/utils/devTokenCheck'
@@ -206,6 +210,12 @@ const extension: ComfyExtension = {
   ],
 
   setup() {
+    if (isHeadlessConvertMode()) {
+      console.info('[ComfyTV] headless convert mode — UI init skipped')
+      runHeadlessConvertWorker()
+      return
+    }
+
     checkThemeTokens()
     const selection = useSelectionStore()
     const a = app as any

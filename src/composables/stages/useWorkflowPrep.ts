@@ -1,5 +1,6 @@
 import { apiFetch, apiSend, OkSchema, WorkflowStateSchema } from '@/api'
 import { app } from '@/lib/comfyApp'
+import { convertGuiToApiHeadless } from '@/composables/stages/headlessConvert'
 
 interface PrepState {
   busy: boolean
@@ -74,7 +75,8 @@ export function prepareWorkflow(kind: string, label: string): Promise<void> {
         )
       }
 
-      const apiJson = await _convertGuiToApi(guiJson)
+      const apiJson = await convertGuiToApiHeadless(guiJson)
+      console.info(`[ComfyTV/workflow-prep] ${kind}/${label}: converted via headless iframe`)
 
       await apiSend('/comfytv/workflows/api_json', 'POST', OkSchema, {
         kind, label, api_json: apiJson, file_mtime: fileMtime,
@@ -95,90 +97,3 @@ export function prepareWorkflow(kind: string, label: string): Promise<void> {
   return task
 }
 
-export function captureNodeLayout(nodes: any[]): () => void {
-  const snap = (nodes ?? []).map((n: any) => ({
-    n,
-    x: n?.pos?.[0], y: n?.pos?.[1],
-    w: n?.size?.[0], h: n?.size?.[1],
-  }))
-  return () => {
-    for (const s of snap) {
-      if (s.x != null && s.y != null) s.n.pos = [s.x, s.y]
-      if (s.w != null && s.h != null) s.n.size = [s.w, s.h]
-    }
-  }
-}
-
-async function _convertGuiToApi(guiJson: any): Promise<any> {
-  const a = app as any
-  if (typeof a.graphToPrompt !== 'function') {
-    throw new Error('app.graphToPrompt missing — ComfyUI frontend too old?')
-  }
-
-  const HostGraph = a.graph?.constructor
-  if (!HostGraph) throw new Error('app.graph not initialised')
-
-  const detached = new HostGraph()
-
-  const stripLayoutFields = (json: any): any => {
-    if (!json || typeof json !== 'object') return json
-    const clone = Array.isArray(json) ? json.slice() : { ...json }
-    if (Array.isArray(clone.nodes)) {
-      clone.nodes = clone.nodes.map((n: any) => {
-        if (!n || typeof n !== 'object') return n
-        const { pos: _pos, size: _size, ...rest } = n
-        return rest
-      })
-    }
-    if (clone.definitions?.subgraphs) {
-      clone.definitions = {
-        ...clone.definitions,
-        subgraphs: clone.definitions.subgraphs.map(stripLayoutFields),
-      }
-    }
-    return clone
-  }
-  guiJson = stripLayoutFields(guiJson)
-
-  const rootGraph = a.rootGraph ?? a.graph
-  detached.events?.addEventListener?.('subgraph-created', (e: any) => {
-    try {
-      rootGraph?.events?.dispatch('subgraph-created', e.detail)
-    } catch (err) {
-      console.warn('[ComfyTV/workflow-prep] subgraph forward failed:', err)
-    }
-  })
-
-  const restoreHostLayout = captureNodeLayout(a.graph?._nodes ?? [])
-
-  const configured = detached.configure(guiJson)
-  if (configured && typeof configured.then === 'function') {
-    await configured
-  }
-
-  function shadow(prop: string, value: any): () => void {
-    const owned = Object.getOwnPropertyDescriptor(a, prop)
-    Object.defineProperty(a, prop, {
-      value, configurable: true, writable: true, enumerable: true,
-    })
-    return () => {
-      if (owned) Object.defineProperty(a, prop, owned)
-      else       delete a[prop]
-    }
-  }
-
-  let result: any
-  let restoreRoot: () => void = () => {}
-  let restoreGraph: () => void = () => {}
-  try {
-    restoreRoot  = shadow('rootGraph', detached)
-    restoreGraph = shadow('graph',     detached)
-    result = await a.graphToPrompt()
-  } finally {
-    restoreGraph()
-    restoreRoot()
-    restoreHostLayout()
-  }
-
-  return result?.output ?? result
-}

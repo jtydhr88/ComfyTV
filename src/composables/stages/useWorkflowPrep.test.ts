@@ -1,5 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
+const CONVERTED_API = { '3': { class_type: 'KSampler' } }
+vi.mock('@/composables/stages/headlessConvert', () => ({
+  isHeadlessConvertMode: () => false,
+  runHeadlessConvertWorker: () => {},
+  convertGuiToApiHeadless: vi.fn(async () => CONVERTED_API),
+}))
+
 interface MockState {
   fetchApi: any
   graphToPrompt: any
@@ -15,7 +22,7 @@ async function loadModuleWith(state: MockState) {
       addEventListener: (_evt: string, _fn: any) => {},
       dispatch: (_evt: string, _detail: any) => {},
     }
-    configure(_json: any) { /* sync */ }
+    configure(_json: any) {}
   }
   const ctor = state.graphCtor ?? FakeGraph
 
@@ -77,8 +84,7 @@ describe('prepareWorkflow', () => {
     expect(getPrepState('image', 'X').error).toMatch(/missing on disk/)
   })
 
-  it('end-to-end happy path runs graphToPrompt and persists', async () => {
-    const apiJson = { '3': { class_type: 'KSampler' } }
+  it('end-to-end happy path converts via headless iframe and persists', async () => {
     const fetchApi = vi.fn(async (path: string, init?: RequestInit) => {
       if (path.startsWith('/comfytv/workflows/state')) {
         return jsonResp({
@@ -93,19 +99,17 @@ describe('prepareWorkflow', () => {
         const body = init?.body ? JSON.parse(String(init.body)) : null
         expect(body.kind).toBe('image')
         expect(body.label).toBe('X')
-        expect(body.api_json).toEqual(apiJson)
+        expect(body.api_json).toEqual(CONVERTED_API)
         return jsonResp({ ok: true })
       }
       throw new Error(`unexpected path ${path}`)
     })
-    const graphToPrompt = vi.fn(async () => ({ output: apiJson, workflow: {} }))
 
     const { prepareWorkflow, getPrepState } = await loadModuleWith({
-      fetchApi, graphToPrompt, graphCtor: undefined,
+      fetchApi, graphToPrompt: vi.fn(), graphCtor: undefined,
     })
     await prepareWorkflow('image', 'X')
     expect(getPrepState('image', 'X').ready).toBe(true)
-    expect(graphToPrompt).toHaveBeenCalledTimes(1)
   })
 
   it('rejects non-GUI-format file content', async () => {
@@ -184,7 +188,6 @@ describe('subscribePrepState', () => {
     const calls: any[] = []
     subscribePrepState('image', 'X', s => calls.push({ ...s }))
     await prepareWorkflow('image', 'X')
-    // initial + busy + ready
     expect(calls.length).toBeGreaterThanOrEqual(2)
     expect(calls[calls.length - 1]).toMatchObject({ ready: true, busy: false })
   })
@@ -211,157 +214,5 @@ describe('getPrepState', () => {
     expect(getPrepState('image', 'Nope')).toEqual({
       busy: false, ready: false, error: null,
     })
-  })
-})
-
-
-async function loadWithApp(app: any) {
-  vi.resetModules()
-  vi.doMock('@/lib/comfyApp', () => ({ app }))
-  return await import('./useWorkflowPrep')
-}
-
-function happyFetchApi(opts: { mtime?: number; nodes?: any[] } = {}) {
-  const { mtime = 1, nodes = [{ id: 42 }] } = opts
-  return vi.fn(async (path: string) => {
-    if (path.startsWith('/comfytv/workflows/state')) {
-      return jsonResp({
-        has_api: false, file_path: '/x.json', file_mtime: mtime, file_exists: true,
-      })
-    }
-    if (path.startsWith('/comfytv/workflows/file')) {
-      return textResp(JSON.stringify({ nodes }),
-        200, { 'X-Workflow-Mtime': String(mtime) })
-    }
-    if (path === '/comfytv/workflows/api_json') return jsonResp({ ok: true })
-    throw new Error(`unexpected ${path}`)
-  })
-}
-
-describe('_convertGuiToApi shadow', () => {
-  beforeEach(() => vi.resetModules())
-
-  it('routes detached graph through this.rootGraph even when graphToPrompt drops args (Manager-style wrapper)', async () => {
-    let seenRootGraph: any = null
-    let seenDetachedNodes: any[] | null = null
-    const graphToPrompt = vi.fn(async function (this: any) {
-      seenRootGraph = this.rootGraph
-      seenDetachedNodes = this.rootGraph?._nodes
-        ?? this.rootGraph?.nodes
-        ?? null
-      return { output: {}, workflow: {} }
-    })
-
-    class FakeGraph {
-      _nodes: any[] = []
-      configure(json: any) {
-        this._nodes = (json?.nodes ?? []).map((n: any) => ({ id: n.id }))
-      }
-    }
-    const hostGraph = new FakeGraph()
-    const app: any = {
-      api: { fetchApi: happyFetchApi({ nodes: [{ id: 1 }, { id: 2 }, { id: 3 }] }) },
-      graphToPrompt,
-      graph: hostGraph,
-    }
-
-    const { prepareWorkflow } = await loadWithApp(app)
-    await prepareWorkflow('image', 'X')
-
-    expect(seenRootGraph).not.toBe(hostGraph)
-    expect(seenRootGraph).toBeInstanceOf(FakeGraph)
-    expect(seenDetachedNodes).toEqual([{ id: 1 }, { id: 2 }, { id: 3 }])
-  })
-
-  it('restores rootGraph / graph after a successful call', async () => {
-    class FakeGraph { configure() {} }
-    const hostGraph = new FakeGraph()
-    const app: any = {
-      api: { fetchApi: happyFetchApi() },
-      graphToPrompt: vi.fn(async () => ({ output: {}, workflow: {} })),
-      graph: hostGraph,
-      rootGraph: hostGraph,
-    }
-
-    const { prepareWorkflow } = await loadWithApp(app)
-    await prepareWorkflow('image', 'X')
-
-    expect(app.graph).toBe(hostGraph)
-    expect(app.rootGraph).toBe(hostGraph)
-  })
-
-  it('restores rootGraph / graph even when graphToPrompt throws', async () => {
-    class FakeGraph { configure() {} }
-    const hostGraph = new FakeGraph()
-    const app: any = {
-      api: { fetchApi: happyFetchApi() },
-      graphToPrompt: vi.fn(async () => { throw new Error('boom') }),
-      graph: hostGraph,
-      rootGraph: hostGraph,
-    }
-
-    const { prepareWorkflow } = await loadWithApp(app)
-    await expect(prepareWorkflow('image', 'X')).rejects.toThrow(/boom/)
-
-    expect(app.graph).toBe(hostGraph)
-    expect(app.rootGraph).toBe(hostGraph)
-  })
-
-  it('shadows a readonly getter (the case in ComfyUI frontend v1.44.19+)', async () => {
-    class FakeGraph {
-      _nodes: any[] = []
-      configure(json: any) {
-        this._nodes = (json?.nodes ?? []).map((n: any) => ({ id: n.id }))
-      }
-    }
-    const hostGraph = new FakeGraph()
-    let seenRootGraph: any = null
-    const app: any = {
-      api: { fetchApi: happyFetchApi({ nodes: [{ id: 7 }] }) },
-      graphToPrompt: vi.fn(async function (this: any) {
-        seenRootGraph = this.rootGraph
-        return { output: {}, workflow: {} }
-      }),
-    }
-
-    Object.defineProperty(app, 'rootGraph', { get: () => hostGraph, configurable: true })
-    Object.defineProperty(app, 'graph',     { get: () => hostGraph, configurable: true })
-
-    const { prepareWorkflow } = await loadWithApp(app)
-    await prepareWorkflow('image', 'X')
-
-    expect(seenRootGraph).toBeInstanceOf(FakeGraph)
-    expect(seenRootGraph).not.toBe(hostGraph)
-
-    expect(app.rootGraph).toBe(hostGraph)
-    expect(app.graph).toBe(hostGraph)
-  })
-})
-
-describe('captureNodeLayout', () => {
-  it('restores host node positions after a clobber', async () => {
-    const { captureNodeLayout } = await loadModuleWith({
-      fetchApi: vi.fn(), graphToPrompt: vi.fn(), graphCtor: undefined,
-    })
-    const nodes = [
-      { pos: [100, 200], size: [300, 60] },
-      { pos: [500, 50],  size: [220, 90] },
-    ]
-    const restore = captureNodeLayout(nodes)
-
-    for (const n of nodes) { n.pos = [10, 10]; n.size = [120, 60] }
-    restore()
-    expect(nodes[0].pos).toEqual([100, 200])
-    expect(nodes[0].size).toEqual([300, 60])
-    expect(nodes[1].pos).toEqual([500, 50])
-    expect(nodes[1].size).toEqual([220, 90])
-  })
-
-  it('tolerates nodes missing pos/size', async () => {
-    const { captureNodeLayout } = await loadModuleWith({
-      fetchApi: vi.fn(), graphToPrompt: vi.fn(), graphCtor: undefined,
-    })
-    const restore = captureNodeLayout([{}, { pos: [1, 2] }] as any)
-    expect(() => restore()).not.toThrow()
   })
 })

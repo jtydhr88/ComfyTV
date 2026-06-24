@@ -11528,7 +11528,7 @@ function appendItemToChain(chain, target, blocks) {
   }
   return follow;
 }
-const VERSION$1 = "9.14.5";
+const VERSION$2 = "9.14.5";
 const NOT_REOSLVED = -1;
 const DEFAULT_LOCALE = "en-US";
 const MISSING_RESOLVE_VALUE = "";
@@ -11571,7 +11571,7 @@ const getFallbackContext = () => _fallbackContext;
 let _cid = 0;
 function createCoreContext(options = {}) {
   const onWarn = isFunction$1(options.onWarn) ? options.onWarn : warn;
-  const version2 = isString$1(options.version) ? options.version : VERSION$1;
+  const version2 = isString$1(options.version) ? options.version : VERSION$2;
   const locale = isString$1(options.locale) || isFunction$1(options.locale) ? options.locale : DEFAULT_LOCALE;
   const _locale = isFunction$1(locale) ? DEFAULT_LOCALE : locale;
   const fallbackLocale = isArray(options.fallbackLocale) || isPlainObject$3(options.fallbackLocale) || isString$1(options.fallbackLocale) || options.fallbackLocale === false ? options.fallbackLocale : _locale;
@@ -12239,7 +12239,7 @@ function clearNumberFormat(ctx, locale, format2) {
   * (c) 2025 kazuya kawaguchi
   * Released under the MIT License.
   */
-const VERSION = "9.14.5";
+const VERSION$1 = "9.14.5";
 function initFeatureFlags() {
   if (typeof __VUE_I18N_FULL_INSTALL__ !== "boolean") {
     getGlobalThis().__VUE_I18N_FULL_INSTALL__ = true;
@@ -12500,7 +12500,7 @@ function createComposer(options = {}, VueI18nLegacy) {
   const getCoreContext = () => {
     _isGlobal && setFallbackContext(null);
     const ctxOptions = {
-      version: VERSION,
+      version: VERSION$1,
       locale: _locale.value,
       fallbackLocale: _fallbackLocale.value,
       messages: _messages.value,
@@ -28154,6 +28154,261 @@ function applySlotWarnings(node) {
   }
   syncToErrorStore(node, warnings);
 }
+const HEADLESS_PARAM = "comfytvHeadless";
+const MSG = "__comfytvHeadless";
+const VERSION = "ctv-headless-1";
+const DEFAULT_BOOT_TIMEOUT_MS = 9e4;
+const DEFAULT_CONVERT_TIMEOUT_MS = 6e4;
+const DEFAULT_IDLE_TEARDOWN_MS = 6e4;
+function isHeadlessConvertMode() {
+  try {
+    return new URLSearchParams(window.location.search).get(HEADLESS_PARAM) != null;
+  } catch {
+    return false;
+  }
+}
+const LS_PROTECT = /^Comfy\.Workflow\.|^Comfy\.PreviousWorkflow|^Comfy\.OpenWorkflows|litegrapheditor_clipboard|workflow/i;
+function snapshotProtectedLS() {
+  const snap = {};
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && LS_PROTECT.test(k)) snap[k] = localStorage.getItem(k);
+    }
+  } catch {
+  }
+  return snap;
+}
+function restoreProtectedLS(snap) {
+  try {
+    const toCheck = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && LS_PROTECT.test(k)) toCheck.push(k);
+    }
+    for (const k of toCheck) if (!(k in snap)) localStorage.removeItem(k);
+    for (const [k, v] of Object.entries(snap)) {
+      if (v == null) localStorage.removeItem(k);
+      else localStorage.setItem(k, v);
+    }
+  } catch {
+  }
+}
+async function _realConvert(guiJson) {
+  const a = app;
+  if (typeof a.loadGraphData !== "function" || typeof a.graphToPrompt !== "function") {
+    throw new Error("headless: app.loadGraphData / graphToPrompt unavailable");
+  }
+  await a.loadGraphData(guiJson, true, false, null, {
+    skipAssetScans: true,
+    deferWarnings: true,
+    silentAssetErrors: true
+  });
+  const res = await a.graphToPrompt();
+  return JSON.parse(JSON.stringify((res == null ? void 0 : res.output) ?? res));
+}
+function runHeadlessConvertWorker() {
+  const origin = window.location.origin;
+  const post = (msg) => {
+    var _a2;
+    try {
+      (_a2 = window.parent) == null ? void 0 : _a2.postMessage({ [MSG]: true, version: VERSION, ...msg }, origin);
+    } catch (e) {
+      console.warn("[ComfyTV/headless] postMessage failed", e);
+    }
+  };
+  window.addEventListener("message", async (ev) => {
+    const d = ev.data;
+    if (!d || d[MSG] !== true || d.type !== "convert") return;
+    const reqId = d.reqId;
+    const snap = snapshotProtectedLS();
+    try {
+      console.info("[ComfyTV/headless] converting (reqId=" + reqId + ")");
+      const output = await _realConvert(d.guiJson);
+      post({ type: "convert-result", reqId, output });
+    } catch (e) {
+      console.error("[ComfyTV/headless] convert failed", e);
+      post({ type: "convert-error", reqId, error: String((e == null ? void 0 : e.message) || e) });
+    } finally {
+      restoreProtectedLS(snap);
+    }
+  });
+  requestAnimationFrame(() => {
+    console.info("[ComfyTV/headless] worker ready (" + VERSION + ")");
+    post({ type: "ready" });
+  });
+}
+class HeadlessConvertManager {
+  constructor() {
+    __publicField(this, "iframe", null);
+    __publicField(this, "ready", null);
+    __publicField(this, "resolveReady", null);
+    __publicField(this, "rejectReady", null);
+    __publicField(this, "bootTimer", null);
+    __publicField(this, "idleTimer", null);
+    __publicField(this, "listening", false);
+    __publicField(this, "seq", 0);
+    __publicField(this, "active", 0);
+    __publicField(this, "queue", Promise.resolve());
+    __publicField(this, "pending", /* @__PURE__ */ new Map());
+    __publicField(this, "onMessage", (ev) => {
+      var _a2;
+      if (!this.iframe || ev.source !== this.iframe.contentWindow) return;
+      const d = ev.data;
+      if (!d || d[MSG] !== true) return;
+      if (d.type === "ready") {
+        if (this.bootTimer) {
+          clearTimeout(this.bootTimer);
+          this.bootTimer = null;
+        }
+        (_a2 = this.resolveReady) == null ? void 0 : _a2.call(this);
+        this.resolveReady = null;
+        this.rejectReady = null;
+      } else if (d.type === "convert-result") {
+        const p2 = this.pending.get(d.reqId);
+        if (p2) {
+          this.pending.delete(d.reqId);
+          clearTimeout(p2.timer);
+          p2.resolve(d.output);
+        }
+      } else if (d.type === "convert-error") {
+        const p2 = this.pending.get(d.reqId);
+        if (p2) {
+          this.pending.delete(d.reqId);
+          clearTimeout(p2.timer);
+          p2.reject(new Error(d.error || "headless convert failed"));
+        }
+      }
+    });
+  }
+  get win() {
+    var _a2;
+    return ((_a2 = this.iframe) == null ? void 0 : _a2.contentWindow) ?? null;
+  }
+  ensureListener() {
+    if (this.listening) return;
+    this.listening = true;
+    window.addEventListener("message", this.onMessage);
+  }
+  clearIdle() {
+    if (this.idleTimer) {
+      clearTimeout(this.idleTimer);
+      this.idleTimer = null;
+    }
+  }
+  scheduleIdle(ms) {
+    this.clearIdle();
+    this.idleTimer = setTimeout(() => this.teardown(), ms);
+  }
+  teardown() {
+    this.clearIdle();
+    if (this.bootTimer) {
+      clearTimeout(this.bootTimer);
+      this.bootTimer = null;
+    }
+    this.resolveReady = null;
+    this.rejectReady = null;
+    this.ready = null;
+    const f = this.iframe;
+    this.iframe = null;
+    if (f) {
+      try {
+        f.remove();
+      } catch {
+      }
+    }
+  }
+  boot(bootTimeoutMs) {
+    var _a2;
+    this.ensureListener();
+    this.clearIdle();
+    if (this.ready && ((_a2 = this.iframe) == null ? void 0 : _a2.isConnected) && this.win) return this.ready;
+    this.teardown();
+    this.ready = new Promise((resolve2, reject) => {
+      this.resolveReady = resolve2;
+      this.rejectReady = reject;
+    });
+    let iframe;
+    try {
+      iframe = document.createElement("iframe");
+      const url = new URL(window.location.href);
+      url.searchParams.set(HEADLESS_PARAM, "1");
+      url.hash = "";
+      iframe.src = url.toString();
+      Object.assign(iframe.style, {
+        position: "fixed",
+        left: "-99999px",
+        top: "0",
+        width: "1280px",
+        height: "720px",
+        opacity: "0",
+        border: "0",
+        pointerEvents: "none",
+        visibility: "hidden"
+      });
+      iframe.setAttribute("aria-hidden", "true");
+      iframe.setAttribute("tabindex", "-1");
+      this.iframe = iframe;
+      document.body.appendChild(iframe);
+    } catch (e) {
+      const r = this.rejectReady;
+      this.teardown();
+      r == null ? void 0 : r(e);
+      return Promise.reject(e);
+    }
+    this.bootTimer = setTimeout(() => {
+      const r = this.rejectReady;
+      this.teardown();
+      r == null ? void 0 : r(new Error(`headless iframe boot timed out after ${bootTimeoutMs}ms`));
+    }, bootTimeoutMs);
+    return this.ready;
+  }
+  runOne(guiJson, timeoutMs, bootTimeoutMs) {
+    return this.boot(bootTimeoutMs).then(() => {
+      const cw = this.win;
+      if (!cw) throw new Error("headless iframe unavailable after boot");
+      const reqId = `ctv-${Date.now().toString(36)}-${this.seq++}`;
+      return new Promise((resolve2, reject) => {
+        const timer = setTimeout(() => {
+          this.pending.delete(reqId);
+          reject(new Error(`headless convert timed out after ${timeoutMs}ms`));
+        }, timeoutMs);
+        this.pending.set(reqId, { resolve: resolve2, reject, timer });
+        cw.postMessage({ [MSG]: true, type: "convert", reqId, guiJson }, window.location.origin);
+      });
+    });
+  }
+  convert(guiJson, opts = {}) {
+    const timeoutMs = opts.timeoutMs ?? DEFAULT_CONVERT_TIMEOUT_MS;
+    const bootTimeoutMs = opts.bootTimeoutMs ?? DEFAULT_BOOT_TIMEOUT_MS;
+    const idleMs = opts.idleTeardownMs ?? DEFAULT_IDLE_TEARDOWN_MS;
+    this.active++;
+    this.clearIdle();
+    const prev = this.queue;
+    let release;
+    this.queue = new Promise((r) => {
+      release = r;
+    });
+    const result = (async () => {
+      try {
+        await prev;
+      } catch {
+      }
+      return await this.runOne(guiJson, timeoutMs, bootTimeoutMs);
+    })();
+    const settle = () => {
+      release();
+      this.active--;
+      if (this.active === 0) this.scheduleIdle(idleMs);
+    };
+    result.then(settle, settle);
+    return result;
+  }
+}
+const _manager = new HeadlessConvertManager();
+function convertGuiToApiHeadless(guiJson, opts = {}) {
+  return _manager.convert(guiJson, opts);
+}
 const _state = /* @__PURE__ */ new Map();
 const _inflight = /* @__PURE__ */ new Map();
 const _listeners = /* @__PURE__ */ new Map();
@@ -28217,7 +28472,8 @@ function prepareWorkflow(kind, label) {
           `workflow file is not a GUI-format export (no top-level "nodes" array). Open it in ComfyUI and save normally — not "Save (API Format)" — to convert.`
         );
       }
-      const apiJson = await _convertGuiToApi(guiJson);
+      const apiJson = await convertGuiToApiHeadless(guiJson);
+      console.info(`[ComfyTV/workflow-prep] ${kind}/${label}: converted via headless iframe`);
       await apiSend("/comfytv/workflows/api_json", "POST", OkSchema, {
         kind,
         label,
@@ -28236,96 +28492,6 @@ function prepareWorkflow(kind, label) {
   })();
   _inflight.set(key, task);
   return task;
-}
-function captureNodeLayout(nodes) {
-  const snap = (nodes ?? []).map((n) => {
-    var _a2, _b2, _c, _d;
-    return {
-      n,
-      x: (_a2 = n == null ? void 0 : n.pos) == null ? void 0 : _a2[0],
-      y: (_b2 = n == null ? void 0 : n.pos) == null ? void 0 : _b2[1],
-      w: (_c = n == null ? void 0 : n.size) == null ? void 0 : _c[0],
-      h: (_d = n == null ? void 0 : n.size) == null ? void 0 : _d[1]
-    };
-  });
-  return () => {
-    for (const s of snap) {
-      if (s.x != null && s.y != null) s.n.pos = [s.x, s.y];
-      if (s.w != null && s.h != null) s.n.size = [s.w, s.h];
-    }
-  };
-}
-async function _convertGuiToApi(guiJson) {
-  var _a2, _b2, _c, _d;
-  const a = app;
-  if (typeof a.graphToPrompt !== "function") {
-    throw new Error("app.graphToPrompt missing — ComfyUI frontend too old?");
-  }
-  const HostGraph = (_a2 = a.graph) == null ? void 0 : _a2.constructor;
-  if (!HostGraph) throw new Error("app.graph not initialised");
-  const detached = new HostGraph();
-  const stripLayoutFields = (json) => {
-    var _a3;
-    if (!json || typeof json !== "object") return json;
-    const clone2 = Array.isArray(json) ? json.slice() : { ...json };
-    if (Array.isArray(clone2.nodes)) {
-      clone2.nodes = clone2.nodes.map((n) => {
-        if (!n || typeof n !== "object") return n;
-        const { pos: _pos, size: _size, ...rest } = n;
-        return rest;
-      });
-    }
-    if ((_a3 = clone2.definitions) == null ? void 0 : _a3.subgraphs) {
-      clone2.definitions = {
-        ...clone2.definitions,
-        subgraphs: clone2.definitions.subgraphs.map(stripLayoutFields)
-      };
-    }
-    return clone2;
-  };
-  guiJson = stripLayoutFields(guiJson);
-  const rootGraph = a.rootGraph ?? a.graph;
-  (_c = (_b2 = detached.events) == null ? void 0 : _b2.addEventListener) == null ? void 0 : _c.call(_b2, "subgraph-created", (e) => {
-    var _a3;
-    try {
-      (_a3 = rootGraph == null ? void 0 : rootGraph.events) == null ? void 0 : _a3.dispatch("subgraph-created", e.detail);
-    } catch (err2) {
-      console.warn("[ComfyTV/workflow-prep] subgraph forward failed:", err2);
-    }
-  });
-  const restoreHostLayout = captureNodeLayout(((_d = a.graph) == null ? void 0 : _d._nodes) ?? []);
-  const configured = detached.configure(guiJson);
-  if (configured && typeof configured.then === "function") {
-    await configured;
-  }
-  function shadow(prop, value) {
-    const owned = Object.getOwnPropertyDescriptor(a, prop);
-    Object.defineProperty(a, prop, {
-      value,
-      configurable: true,
-      writable: true,
-      enumerable: true
-    });
-    return () => {
-      if (owned) Object.defineProperty(a, prop, owned);
-      else delete a[prop];
-    };
-  }
-  let result;
-  let restoreRoot = () => {
-  };
-  let restoreGraph = () => {
-  };
-  try {
-    restoreRoot = shadow("rootGraph", detached);
-    restoreGraph = shadow("graph", detached);
-    result = await a.graphToPrompt();
-  } finally {
-    restoreGraph();
-    restoreRoot();
-    restoreHostLayout();
-  }
-  return (result == null ? void 0 : result.output) ?? result;
 }
 const DEFAULT_DOWNLOAD_FILENAME = "download";
 function extractFilenameFromUrl(url) {
@@ -87235,6 +87401,11 @@ const extension = {
   ],
   setup() {
     var _a2, _b2, _c, _d, _e, _f, _g;
+    if (isHeadlessConvertMode()) {
+      console.info("[ComfyTV] headless convert mode — UI init skipped");
+      runHeadlessConvertWorker();
+      return;
+    }
     const selection = useSelectionStore();
     const a = app;
     installGlobalRunBridge(a, {
