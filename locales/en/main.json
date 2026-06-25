@@ -375,6 +375,10 @@
         "label": "Mirror",
         "tooltip": "Flip horizontally / vertically (browser-side)"
       },
+      "colorGrade": {
+        "label": "Color Grade",
+        "tooltip": "Real-time GLSL color grading (browser-side, GPU)"
+      },
       "grid": {
         "label": "Grid Split",
         "tooltip": "Slice into an R×C grid of tiles (browser-side) → image batch"
@@ -521,6 +525,80 @@
     "applying": "Applying rotation…",
     "applied": "Rotation applied — ready for downstream",
     "adjustToApply": "Slide or click a quick angle to apply"
+  },
+  "colorGrade": {
+    "effect": "Effect",
+    "reset": "Reset",
+    "resetCurve": "Reset curve",
+    "on": "On",
+    "off": "Off",
+    "applying": "Applying grade…",
+    "applied": "Grade applied — ready for downstream",
+    "adjustToApply": "Adjust sliders to apply",
+    "noInputImage": "Connect an image to grade",
+    "effects": {
+      "brightnessContrast": "Brightness / Contrast",
+      "colorAdjustment": "Color Adjustment",
+      "colorBalance": "Color Balance",
+      "hueSaturation": "Hue / Saturation",
+      "imageLevels": "Levels",
+      "colorCurves": "Curves"
+    },
+    "params": {
+      "brightness": "Brightness",
+      "contrast": "Contrast",
+      "temperature": "Temperature",
+      "tint": "Tint",
+      "vibrance": "Vibrance",
+      "saturation": "Saturation",
+      "shadowsR": "Shadows R",
+      "shadowsG": "Shadows G",
+      "shadowsB": "Shadows B",
+      "midtonesR": "Midtones R",
+      "midtonesG": "Midtones G",
+      "midtonesB": "Midtones B",
+      "highlightsR": "Highlights R",
+      "highlightsG": "Highlights G",
+      "highlightsB": "Highlights B",
+      "preserveLuminosity": "Preserve luminosity",
+      "mode": "Range",
+      "colorspace": "Space",
+      "hue": "Hue",
+      "lightness": "Lightness",
+      "overlap": "Overlap",
+      "channel": "Channel",
+      "inputBlack": "In black",
+      "inputWhite": "In white",
+      "gamma": "Gamma",
+      "outputBlack": "Out black",
+      "outputWhite": "Out white",
+      "curveMaster": "RGB",
+      "curveRed": "Red",
+      "curveGreen": "Green",
+      "curveBlue": "Blue"
+    },
+    "options": {
+      "hsMode": {
+        "master": "Master",
+        "reds": "Reds",
+        "yellows": "Yellows",
+        "greens": "Greens",
+        "cyans": "Cyans",
+        "blues": "Blues",
+        "magentas": "Magentas",
+        "colorize": "Colorize"
+      },
+      "colorspace": {
+        "hsl": "HSL",
+        "hsv": "HSV"
+      },
+      "channel": {
+        "rgb": "RGB",
+        "r": "Red",
+        "g": "Green",
+        "b": "Blue"
+      }
+    }
   },
   "mirror": {
     "horizontal": "Horizontal flip",

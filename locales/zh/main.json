@@ -375,6 +375,10 @@
         "label": "镜像",
         "tooltip": "水平 / 垂直翻转（浏览器端）"
       },
+      "colorGrade": {
+        "label": "调色",
+        "tooltip": "WebGL/GLSL 实时调色（浏览器端，走 GPU）"
+      },
       "grid": {
         "label": "宫格切分",
         "tooltip": "按 R×C 切成多张（浏览器端）→ 图片批次"
@@ -521,6 +525,80 @@
     "applying": "旋转应用中…",
     "applied": "旋转已应用 — 下游可直接使用",
     "adjustToApply": "拖动滑块或点击快速角度以应用"
+  },
+  "colorGrade": {
+    "effect": "效果",
+    "reset": "重置",
+    "resetCurve": "重置曲线",
+    "on": "开",
+    "off": "关",
+    "applying": "调色应用中…",
+    "applied": "调色已应用 — 下游可直接使用",
+    "adjustToApply": "拖动滑块以应用",
+    "noInputImage": "连接图片以调色",
+    "effects": {
+      "brightnessContrast": "亮度 / 对比度",
+      "colorAdjustment": "色彩调整",
+      "colorBalance": "色彩平衡",
+      "hueSaturation": "色相 / 饱和度",
+      "imageLevels": "色阶",
+      "colorCurves": "曲线"
+    },
+    "params": {
+      "brightness": "亮度",
+      "contrast": "对比度",
+      "temperature": "色温",
+      "tint": "色调",
+      "vibrance": "自然饱和度",
+      "saturation": "饱和度",
+      "shadowsR": "阴影 R",
+      "shadowsG": "阴影 G",
+      "shadowsB": "阴影 B",
+      "midtonesR": "中间调 R",
+      "midtonesG": "中间调 G",
+      "midtonesB": "中间调 B",
+      "highlightsR": "高光 R",
+      "highlightsG": "高光 G",
+      "highlightsB": "高光 B",
+      "preserveLuminosity": "保持明度",
+      "mode": "范围",
+      "colorspace": "色彩空间",
+      "hue": "色相",
+      "lightness": "明度",
+      "overlap": "过渡",
+      "channel": "通道",
+      "inputBlack": "输入黑场",
+      "inputWhite": "输入白场",
+      "gamma": "伽马",
+      "outputBlack": "输出黑场",
+      "outputWhite": "输出白场",
+      "curveMaster": "RGB",
+      "curveRed": "红",
+      "curveGreen": "绿",
+      "curveBlue": "蓝"
+    },
+    "options": {
+      "hsMode": {
+        "master": "全图",
+        "reds": "红色",
+        "yellows": "黄色",
+        "greens": "绿色",
+        "cyans": "青色",
+        "blues": "蓝色",
+        "magentas": "洋红",
+        "colorize": "着色"
+      },
+      "colorspace": {
+        "hsl": "HSL",
+        "hsv": "HSV"
+      },
+      "channel": {
+        "rgb": "RGB",
+        "r": "红",
+        "g": "绿",
+        "b": "蓝"
+      }
+    }
   },
   "mirror": {
     "horizontal": "水平翻转",

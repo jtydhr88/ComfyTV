@@ -1,0 +1,148 @@
+import { CURVE_INTERPOLATIONS } from '@/components/widgets/curve/types'
+import type { CurveData, CurveInterpolation, CurvePoint } from '@/components/widgets/curve/types'
+
+export function isCurveData(value: unknown): value is CurveData {
+  if (typeof value !== 'object' || value === null || Array.isArray(value))
+    return false
+  const v = value as Record<string, unknown>
+  return (
+    Array.isArray(v.points) &&
+    v.points.every(
+      (p: unknown) =>
+        Array.isArray(p) &&
+        p.length === 2 &&
+        typeof p[0] === 'number' &&
+        typeof p[1] === 'number'
+    ) &&
+    typeof v.interpolation === 'string' &&
+    CURVE_INTERPOLATIONS.includes(v.interpolation as CurveInterpolation)
+  )
+}
+
+export function createLinearInterpolator(
+  points: CurvePoint[]
+): (x: number) => number {
+  if (points.length === 0) return () => 0
+  if (points.length === 1) return () => points[0][1]
+
+  const sorted = [...points].sort((a, b) => a[0] - b[0])
+  const n = sorted.length
+  const xs = sorted.map((p) => p[0])
+  const ys = sorted.map((p) => p[1])
+
+  return (x: number): number => {
+    if (x <= xs[0]) return ys[0]
+    if (x >= xs[n - 1]) return ys[n - 1]
+
+    let lo = 0
+    let hi = n - 1
+    while (lo < hi - 1) {
+      const mid = (lo + hi) >> 1
+      if (xs[mid] <= x) lo = mid
+      else hi = mid
+    }
+
+    const dx = xs[hi] - xs[lo]
+    if (dx === 0) return ys[lo]
+    const t = (x - xs[lo]) / dx
+    return ys[lo] + t * (ys[hi] - ys[lo])
+  }
+}
+
+export function createInterpolator(
+  points: CurvePoint[],
+  interpolation: CurveInterpolation
+): (x: number) => number {
+  return interpolation === 'linear'
+    ? createLinearInterpolator(points)
+    : createMonotoneInterpolator(points)
+}
+
+export function createMonotoneInterpolator(
+  points: CurvePoint[]
+): (x: number) => number {
+  if (points.length === 0) return () => 0
+  if (points.length === 1) return () => points[0][1]
+
+  const sorted = [...points].sort((a, b) => a[0] - b[0])
+  const n = sorted.length
+  const xs = sorted.map((p) => p[0])
+  const ys = sorted.map((p) => p[1])
+
+  const deltas: number[] = []
+  const slopes: number[] = []
+  for (let i = 0; i < n - 1; i++) {
+    const dx = xs[i + 1] - xs[i]
+    deltas.push(dx === 0 ? 0 : (ys[i + 1] - ys[i]) / dx)
+  }
+
+  slopes.push(deltas[0] ?? 0)
+  for (let i = 1; i < n - 1; i++) {
+    if (deltas[i - 1] * deltas[i] <= 0) {
+      slopes.push(0)
+    } else {
+      slopes.push((deltas[i - 1] + deltas[i]) / 2)
+    }
+  }
+  slopes.push(deltas[n - 2] ?? 0)
+
+  for (let i = 0; i < n - 1; i++) {
+    if (deltas[i] === 0) {
+      slopes[i] = 0
+      slopes[i + 1] = 0
+    } else {
+      const alpha = slopes[i] / deltas[i]
+      const beta = slopes[i + 1] / deltas[i]
+      const s = alpha * alpha + beta * beta
+      if (s > 9) {
+        const t = 3 / Math.sqrt(s)
+        slopes[i] = t * alpha * deltas[i]
+        slopes[i + 1] = t * beta * deltas[i]
+      }
+    }
+  }
+
+  return (x: number): number => {
+    if (x <= xs[0]) return ys[0]
+    if (x >= xs[n - 1]) return ys[n - 1]
+
+    let lo = 0
+    let hi = n - 1
+    while (lo < hi - 1) {
+      const mid = (lo + hi) >> 1
+      if (xs[mid] <= x) lo = mid
+      else hi = mid
+    }
+
+    const dx = xs[hi] - xs[lo]
+    if (dx === 0) return ys[lo]
+
+    const t = (x - xs[lo]) / dx
+    const t2 = t * t
+    const t3 = t2 * t
+
+    const h00 = 2 * t3 - 3 * t2 + 1
+    const h10 = t3 - 2 * t2 + t
+    const h01 = -2 * t3 + 3 * t2
+    const h11 = t3 - t2
+
+    return (
+      h00 * ys[lo] +
+      h10 * dx * slopes[lo] +
+      h01 * ys[hi] +
+      h11 * dx * slopes[hi]
+    )
+  }
+}
+
+export function curveDataToFloatLUT(
+  curve: CurveData,
+  size: number = 256
+): Float32Array {
+  const lut = new Float32Array(size)
+  const interpolate = createInterpolator(curve.points, curve.interpolation)
+  for (let i = 0; i < size; i++) {
+    lut[i] = interpolate(i / (size - 1))
+  }
+  return lut
+}

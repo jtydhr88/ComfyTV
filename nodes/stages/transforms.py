@@ -58,6 +58,33 @@ class RotateStage(io.ComfyNode):
         return io.NodeOutput(image)
 
 
+class ColorGradeStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.ColorGradeStage",
+            display_name="Color Grade",
+            category="ComfyTV/Image",
+            inputs=[
+                *_standard_stage_inputs(),
+                io.String.Input("grade_state", default="", multiline=False,
+                                socketless=True, extra_dict={"hidden": True},
+                                tooltip="JSON of the selected effect + slider values. "
+                                        "Hidden — driven by the Vue panel."),
+                COMFYTV_IMAGE.Input("image", optional=True),
+            ],
+            outputs=[COMFYTV_IMAGE.Output("image")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
+                grade_state="", image=""):
+        return io.NodeOutput(image)
+
+
 class MirrorStage(io.ComfyNode):
 
     @classmethod

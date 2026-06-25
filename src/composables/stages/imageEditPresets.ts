@@ -11,5 +11,6 @@ export const IMAGE_EDIT_PRESETS: ImagePreset[] = [
   { id: 'crop',     icon: '🔲', category: cat, targetClass: 'ComfyTV.CropStage',     inputSocket: 'image' },
   { id: 'rotate',   icon: '↻',  category: cat, targetClass: 'ComfyTV.RotateStage',   inputSocket: 'image' },
   { id: 'mirror',   icon: '⇋',  category: cat, targetClass: 'ComfyTV.MirrorStage',   inputSocket: 'image' },
+  { id: 'colorGrade', icon: '🎨', category: cat, targetClass: 'ComfyTV.ColorGradeStage', inputSocket: 'image' },
   { id: 'grid',     icon: '▦',  category: cat, targetClass: 'ComfyTV.GridSplitStage', inputSocket: 'image' },
 ]

@@ -8,6 +8,7 @@ import PainterStageCard from '@/components/stages/PainterStageCard.vue'
 import CropStageCard from '@/components/stages/CropStageCard.vue'
 import RotateStageCard from '@/components/stages/RotateStageCard.vue'
 import MirrorStageCard from '@/components/stages/MirrorStageCard.vue'
+import ColorGradeStageCard from '@/components/stages/ColorGradeStageCard.vue'
 import PanoramaStageCard from '@/components/stages/PanoramaStageCard.vue'
 import PanoramaCurrentViewStageCard from '@/components/stages/PanoramaCurrentViewStageCard.vue'
 import PanoramaMultiViewStageCard from '@/components/stages/PanoramaMultiViewStageCard.vue'
@@ -77,6 +78,7 @@ const RICH_STAGE_CARDS: Record<string, any> = {
   'ComfyTV.CropStage':       CropStageCard,
   'ComfyTV.RotateStage':     RotateStageCard,
   'ComfyTV.MirrorStage':     MirrorStageCard,
+  'ComfyTV.ColorGradeStage': ColorGradeStageCard,
   'ComfyTV.PanoramaStage':            PanoramaStageCard,
   'ComfyTV.PanoramaCurrentViewStage': PanoramaCurrentViewStageCard,
   'ComfyTV.PanoramaMultiViewStage':   PanoramaMultiViewStageCard,
@@ -97,6 +99,7 @@ const RICH_STAGE_MIN_HEIGHTS: Record<string, number> = {
   'ComfyTV.CropStage':       620,
   'ComfyTV.RotateStage':     560,
   'ComfyTV.MirrorStage':     520,
+  'ComfyTV.ColorGradeStage': 680,
   'ComfyTV.PanoramaStage':            620,
   'ComfyTV.PanoramaCurrentViewStage': 640,
   'ComfyTV.PanoramaMultiViewStage':   480,

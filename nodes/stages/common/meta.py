@@ -20,6 +20,7 @@ STAGE_META: dict[str, dict] = {
     'CropStage':                    {'kind': 'image',       'variant': 'transform'},
     'RotateStage':                  {'kind': 'image',       'variant': 'transform'},
     'MirrorStage':                  {'kind': 'image',       'variant': 'transform'},
+    'ColorGradeStage':              {'kind': 'image',       'variant': 'transform'},
     'CompareStage':                 {'kind': 'image',       'variant': 'transform'},
     'GridSplitStage':               {'kind': 'image-batch', 'variant': 'transform'},
     'DirectorTimelineStage':        {'kind': 'timeline',    'variant': 'transform'},

@@ -7,6 +7,7 @@ from .generators import (
 from .edits import (
     UpscaleStage, OutpaintStage, InpaintStage, ImageEditStage,
     EraseStage, CutoutStage, CropStage, RotateStage, MirrorStage,
+    ColorGradeStage,
     GridSplitStage, CompareStage, ImageVariationsStage, RelightStage,
     MultiangleStage,
 )
@@ -40,7 +41,7 @@ class ComfyTVExtension(ComfyExtension):
             MultiangleStage, RelightStage, ImageVariationsStage,
             UpscaleStage, OutpaintStage, InpaintStage, ImageEditStage,
             EraseStage, CutoutStage, CropStage,
-            RotateStage, MirrorStage, CompareStage, GridSplitStage,
+            RotateStage, MirrorStage, ColorGradeStage, CompareStage, GridSplitStage,
             VideoExtractFrameStage,
             VideoClipStage, VideoCropStage, VideoResizeStage,
             AudioVideoDemuxAudioStage, AudioVideoDemuxVideoStage,

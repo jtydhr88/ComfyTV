@@ -8,6 +8,7 @@
       :step="step ?? 1"
       :disabled="disabled"
       @update:model-value="onChange"
+      @value-commit="onCommit"
     >
       <SliderTrack class="ctv-slider-track">
         <SliderRange class="ctv-slider-range" />
@@ -30,7 +31,7 @@ const props = defineProps<{
   precision?: number
   disabled?: boolean
 }>()
-const emit = defineEmits<{ 'update:modelValue': [v: number] }>()
+const emit = defineEmits<{ 'update:modelValue': [v: number]; commit: [v: number] }>()
 
 const clamped = computed(() => {
   const v = props.modelValue ?? props.min
@@ -45,6 +46,11 @@ const display = computed(() => {
 function onChange(arr: number[] | undefined) {
   const v = arr?.[0]
   if (typeof v === 'number' && Number.isFinite(v)) emit('update:modelValue', v)
+}
+
+function onCommit(arr: number[] | undefined) {
+  const v = arr?.[0]
+  if (typeof v === 'number' && Number.isFinite(v)) emit('commit', v)
 }
 </script>
 
