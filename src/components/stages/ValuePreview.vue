@@ -9,7 +9,7 @@
     <div
       v-else-if="(type === 'COMFYTV_IMAGE' || type === 'COMFYTV_PANORAMA') && !compact"
       ref="zoomContainer"
-      class="ctv:group ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden ctv:rounded-sm ctv:touch-none ctv:cursor-grab"
+      class="vp-img-host ctv:group ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden ctv:rounded-sm ctv:touch-none ctv:cursor-grab"
     >
       <img
         ref="zoomImg"
@@ -115,14 +115,15 @@
         </span>
       </template>
       <div v-else class="ctv-batch-grid">
-        <component
-          :is="clickMode === 'pick' ? 'button' : 'div'"
+        <div
           v-for="(img, i) in batchImages"
           :key="i"
-          :type="clickMode === 'pick' ? 'button' : undefined"
           :class="batchCellClass(isItemSelected(img, i))"
           :title="cellTooltip(img, i)"
+          :role="clickMode === 'pick' ? 'button' : undefined"
+          :tabindex="clickMode === 'pick' ? 0 : undefined"
           @click="clickMode === 'pick' ? onItemClick(img, i) : undefined"
+          @keydown="clickMode === 'pick' ? onCellKey(img, i, $event) : undefined"
         >
           <img :src="img.image_url" :alt="img.label || img.prompt || `item ${i + 1}`"
                class="ctv:block ctv:size-full ctv:object-cover ctv:pointer-events-none" />
@@ -153,7 +154,7 @@
                     :title="$t('stage.action.removeFromPicker')"
                     @click.stop="onItemRemove(img, i)">✕</button>
           </div>
-        </component>
+        </div>
       </div>
     </template>
 
@@ -338,6 +339,13 @@ function onItemRemove(img: BatchImage, i: number) {
   emit('item-remove', itemPayload(img, i))
 }
 
+function onCellKey(img: BatchImage, i: number, e: KeyboardEvent) {
+  if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+    e.preventDefault()
+    onItemClick(img, i)
+  }
+}
+
 const clickHintIcon = computed(() => props.clickMode === 'pick' ? '✓' : '✏️')
 
 function isItemSelected(img: BatchImage, i: number): boolean {
@@ -416,8 +424,7 @@ const COMFY_BTN_BASE = 'ctv:relative ctv:inline-flex ctv:items-center ctv:justif
   + ' ctv:touch-manipulation ctv:whitespace-nowrap ctv:appearance-none ctv:border-none ctv:transition-colors'
   + ' ctv:disabled:pointer-events-none ctv:disabled:opacity-50'
 
-const imgActionsClass = 'ctv:absolute ctv:top-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1 ctv:opacity-0 ctv:transition-opacity ctv:duration-150'
-  + ' ctv:group-hover:opacity-100'
+const imgActionsClass = 'vp-img-actions ctv:absolute ctv:top-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1'
 
 const imgActionBtn = COMFY_BTN_BASE
   + ' ctv:size-5 ctv:p-0 ctv:rounded-sm ctv:text-sm'
@@ -437,7 +444,7 @@ function tagActionBtn(url: string) {
 }
 
 function batchCellClass(selected: boolean) {
-  const base = 'ctv:group ctv:relative ctv:aspect-video ctv:rounded-sm ctv:overflow-hidden ctv:p-0 ctv:bg-black ctv:transition-colors'
+  const base = 'vp-img-host ctv:group ctv:relative ctv:aspect-video ctv:rounded-sm ctv:overflow-hidden ctv:p-0 ctv:bg-black ctv:transition-colors'
   const interactive = props.clickMode === 'pick' ? ' ctv:cursor-pointer' : ' ctv:cursor-default'
   if (selected) {
     return base + interactive + ' ctv:ring-3 ctv:ring-inset ctv:ring-primary-background'
@@ -456,5 +463,23 @@ function batchCellClass(selected: boolean) {
   padding-top: 14px;
   max-height: 320px;
   overflow: auto;
+}
+
+.vp-img-actions {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+.vp-img-host:hover .vp-img-actions,
+.vp-img-host:focus-within .vp-img-actions {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .vp-img-actions {
+    opacity: 1;
+    pointer-events: auto;
+  }
 }
 </style>
