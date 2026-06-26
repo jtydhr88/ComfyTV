@@ -148,6 +148,20 @@ class TestNodeWidgetMeta:
         assert meta[0]["type"] == "COMBO"
         assert meta[0]["options"]["values"] == ["euler", "ddim"]
 
+    def test_combo_widget_v3_io_type(self, comfy_nodes):
+        class Foo:
+            @classmethod
+            def INPUT_TYPES(cls):
+                return {"required": {
+                    "language": ("COMBO", {"options": ["en", "zh"], "default": "en"}),
+                }}
+        comfy_nodes.NODE_CLASS_MAPPINGS["Foo"] = Foo
+        meta = wdb._node_widget_meta("Foo")
+        assert meta[0]["name"] == "language"
+        assert meta[0]["type"] == "COMBO"
+        assert meta[0]["options"]["values"] == ["en", "zh"]
+        assert meta[0]["options"]["default"] == "en"
+
     def test_link_input_skipped(self, comfy_nodes):
         class Foo:
             @classmethod

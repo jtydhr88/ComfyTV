@@ -139,6 +139,14 @@ def _node_widget_meta(class_type: str) -> dict:
                         "name": name, "type": "COMBO",
                         "options": {"values": list(t), **(opts or {})},
                     })
+                elif isinstance(t, str) and t.upper() == "COMBO":
+                    values = opts.get("options")
+                    if values is None:
+                        values = opts.get("values")
+                    out.append({
+                        "name": name, "type": "COMBO",
+                        "options": {**(opts or {}), "values": list(values or [])},
+                    })
                 elif isinstance(t, str) and t.upper() in _WIDGET_TYPES:
                     out.append({"name": name, "type": t.upper(), "options": opts})
             elif isinstance(spec, str) and spec.upper() in _WIDGET_TYPES:
