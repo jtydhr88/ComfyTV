@@ -55,6 +55,30 @@ export function useOutputAssetTagging() {
     return tagMenuAsset.value?.category_ids.includes(catId) ?? false
   }
 
+  function tagMenuIsUncategorized(): boolean {
+    const a = tagMenuAsset.value
+    return !!a && a.category_ids.length === 0
+  }
+
+  async function setUncategorized() {
+    if (!tagMenu.value) return
+    await assetStore.hydrate()
+    if (!tagMenu.value) return
+    const existing = tagMenuAsset.value
+    if (!existing) {
+      await assetStore.create({
+        name: tagMenu.value.name,
+        payload_url: tagMenu.value.url,
+        media_type: 'image',
+        category_ids: [],
+      })
+      return
+    }
+    for (const catId of [...existing.category_ids]) {
+      await assetStore.removeTag(existing.id, catId)
+    }
+  }
+
   async function toggleOutputTag(catId: number) {
     if (!tagMenu.value) return
     await assetStore.hydrate()
@@ -73,6 +97,14 @@ export function useOutputAssetTagging() {
     else await assetStore.addTag(existing.id, catId)
   }
 
+  async function createCategoryAndTag(name: string) {
+    const trimmed = name.trim()
+    if (!trimmed || !tagMenu.value) return
+    const cat = await assetStore.createCategory(trimmed)
+    if (!cat || !tagMenu.value) return
+    await toggleOutputTag(cat.id)
+  }
+
   return {
     tagMenu,
     categories,
@@ -82,6 +114,9 @@ export function useOutputAssetTagging() {
     openTagMenu,
     closeTagMenu,
     tagMenuHas,
+    tagMenuIsUncategorized,
+    setUncategorized,
     toggleOutputTag,
+    createCategoryAndTag,
   }
 }

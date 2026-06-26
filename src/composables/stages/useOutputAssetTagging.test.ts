@@ -6,6 +6,7 @@ const store = {
   ensureHydrated: vi.fn(),
   hydrate: vi.fn(() => Promise.resolve()),
   create: vi.fn(),
+  createCategory: vi.fn(),
   addTag: vi.fn(),
   removeTag: vi.fn(),
 }
@@ -86,6 +87,73 @@ describe('useOutputAssetTagging', () => {
     tag.openTagMenu('/a', 'pic', clickEvent(10, 10))
     await tag.toggleOutputTag(2)
     expect(store.removeTag).toHaveBeenCalledWith(9, 2)
+  })
+
+  it('tagMenuIsUncategorized is true only for a saved output with no categories', () => {
+    const tag = useOutputAssetTagging()
+    tag.openTagMenu('/a', 'pic', clickEvent(10, 10))
+    expect(tag.tagMenuIsUncategorized()).toBe(false)
+    store.byPayloadUrl.mockReturnValue({ id: 9, category_ids: [] })
+    tag.openTagMenu('/a', 'pic', clickEvent(10, 10))
+    expect(tag.tagMenuIsUncategorized()).toBe(true)
+    store.byPayloadUrl.mockReturnValue({ id: 9, category_ids: [2] })
+    tag.openTagMenu('/a', 'pic', clickEvent(10, 10))
+    expect(tag.tagMenuIsUncategorized()).toBe(false)
+  })
+
+  it('setUncategorized saves a not-yet-saved output with no category', async () => {
+    const tag = useOutputAssetTagging()
+    tag.openTagMenu('/a', 'pic', clickEvent(10, 10))
+    await tag.setUncategorized()
+    expect(store.create).toHaveBeenCalledWith({
+      name: 'pic', payload_url: '/a', media_type: 'image', category_ids: [],
+    })
+    expect(store.removeTag).not.toHaveBeenCalled()
+  })
+
+  it('setUncategorized strips every category from an already-saved output', async () => {
+    store.byPayloadUrl.mockReturnValue({ id: 9, category_ids: [1, 2] })
+    const tag = useOutputAssetTagging()
+    tag.openTagMenu('/a', 'pic', clickEvent(10, 10))
+    await tag.setUncategorized()
+    expect(store.create).not.toHaveBeenCalled()
+    expect(store.removeTag).toHaveBeenCalledWith(9, 1)
+    expect(store.removeTag).toHaveBeenCalledWith(9, 2)
+  })
+
+  it('createCategoryAndTag creates a category then files the output under it', async () => {
+    store.createCategory.mockResolvedValue({ id: 7, name: 'props' })
+    const tag = useOutputAssetTagging()
+    tag.openTagMenu('/a', 'pic', clickEvent(10, 10))
+    await tag.createCategoryAndTag('  props  ')
+    expect(store.createCategory).toHaveBeenCalledWith('props')
+    expect(store.create).toHaveBeenCalledWith({
+      name: 'pic', payload_url: '/a', media_type: 'image', category_ids: [7],
+    })
+  })
+
+  it('createCategoryAndTag ignores a blank name', async () => {
+    const tag = useOutputAssetTagging()
+    tag.openTagMenu('/a', 'pic', clickEvent(10, 10))
+    await tag.createCategoryAndTag('   ')
+    expect(store.createCategory).not.toHaveBeenCalled()
+    expect(store.create).not.toHaveBeenCalled()
+  })
+
+  it('createCategoryAndTag does nothing without an open menu', async () => {
+    const tag = useOutputAssetTagging()
+    await tag.createCategoryAndTag('props')
+    expect(store.createCategory).not.toHaveBeenCalled()
+  })
+
+  it('createCategoryAndTag bails out if category creation fails', async () => {
+    store.createCategory.mockResolvedValue(null)
+    const tag = useOutputAssetTagging()
+    tag.openTagMenu('/a', 'pic', clickEvent(10, 10))
+    await tag.createCategoryAndTag('props')
+    expect(store.createCategory).toHaveBeenCalledWith('props')
+    expect(store.create).not.toHaveBeenCalled()
+    expect(store.addTag).not.toHaveBeenCalled()
   })
 
   it('closeTagMenu clears the popover', () => {

@@ -204,12 +204,17 @@
           :style="tagMenuStyle"
           @click.stop
         >
-          <div
-            v-if="categories.length === 0"
-            class="ctv:py-2 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60 ctv:text-2xs"
+          <button
+            type="button"
+            class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:px-1.5 ctv:py-1 ctv:rounded-sm ctv:cursor-pointer
+                   ctv:text-left ctv:text-2xs ctv:bg-transparent ctv:border-none ctv:text-base-foreground
+                   ctv:hover:bg-secondary-background-hover"
+            @click.stop="setUncategorized"
           >
-            {{ $t('assets.tagPopover.empty') }}
-          </div>
+            <span class="ctv:w-3 ctv:inline-block ctv:text-primary-background">{{ tagMenuIsUncategorized() ? '✓' : '' }}</span>
+            <span class="ctv:flex-1 ctv:truncate ctv:italic ctv:text-muted-foreground">{{ $t('assets.category.none') }}</span>
+          </button>
+          <div class="ctv:my-1 ctv:border-t ctv:border-border-subtle"></div>
           <button
             v-for="cat in categories"
             :key="cat.id"
@@ -222,6 +227,17 @@
             <span class="ctv:w-3 ctv:inline-block ctv:text-primary-background">{{ tagMenuHas(cat.id) ? '✓' : '' }}</span>
             <span class="ctv:flex-1 ctv:truncate">{{ cat.name }}</span>
           </button>
+          <div v-if="categories.length" class="ctv:my-1 ctv:border-t ctv:border-border-subtle"></div>
+          <button
+            type="button"
+            class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:px-1.5 ctv:py-1 ctv:rounded-sm ctv:cursor-pointer
+                   ctv:text-left ctv:text-2xs ctv:bg-transparent ctv:border-none ctv:text-primary-background
+                   ctv:hover:bg-secondary-background-hover"
+            @click.stop="onCreateCategory"
+          >
+            <span class="ctv:w-3 ctv:inline-block">＋</span>
+            <span class="ctv:flex-1 ctv:truncate">{{ $t('assets.tagPopover.create') }}</span>
+          </button>
         </div>
       </div>
     </Teleport>
@@ -231,6 +247,7 @@
 <script setup lang="ts">
 import { computed, ref, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { askText } from '@/composables/dialog/useTextInputDialog'
 import { useImagePanZoom } from '@/composables/widgets/useImagePanZoom'
 import { useOutputAssetTagging } from '@/composables/stages/useOutputAssetTagging'
 import {
@@ -255,8 +272,20 @@ const {
   openTagMenu,
   closeTagMenu,
   tagMenuHas,
+  tagMenuIsUncategorized,
+  setUncategorized,
   toggleOutputTag,
+  createCategoryAndTag,
 } = useOutputAssetTagging()
+
+async function onCreateCategory() {
+  const name = (await askText({
+    title: t('assets.category.new'),
+    label: t('assets.category.newPrompt'),
+  }))?.trim()
+  if (!name) return
+  await createCategoryAndTag(name)
+}
 
 const zoomContainer = ref<HTMLElement | null>(null)
 const zoomImg = ref<HTMLImageElement | null>(null)

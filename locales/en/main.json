@@ -105,7 +105,8 @@
       "tags": "Edit tags"
     },
     "tagPopover": {
-      "empty": "No categories yet."
+      "empty": "No categories yet.",
+      "create": "New category"
     }
   },
   "assetLoader": {

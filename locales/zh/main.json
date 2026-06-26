@@ -105,7 +105,8 @@
       "tags": "编辑标签"
     },
     "tagPopover": {
-      "empty": "还没有分类。"
+      "empty": "还没有分类。",
+      "create": "新建分类"
     }
   },
   "assetLoader": {
