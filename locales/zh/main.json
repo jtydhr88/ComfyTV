@@ -103,7 +103,8 @@
       "renamePrompt": "资产名称：",
       "delete": "从资产库移除",
       "deleteConfirm": "把这个资产从资产库移除？磁盘上的文件保留。",
-      "tags": "编辑标签"
+      "tags": "编辑标签",
+      "loadNode": "作为节点添加到画布"
     },
     "tagPopover": {
       "empty": "还没有分类。",

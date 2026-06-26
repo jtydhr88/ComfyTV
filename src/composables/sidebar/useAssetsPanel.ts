@@ -2,6 +2,7 @@ import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import type { Asset } from '@/api/schemas'
+import { canvasCenter, createAssetLoaderNode } from '@/composables/stages/assetLoaderNode'
 import { askConfirm } from '@/composables/dialog/useConfirmDialog'
 import { askText } from '@/composables/dialog/useTextInputDialog'
 import { type AssetCategoryFilter, useAssetStore } from '@/stores/assetStore'
@@ -230,6 +231,10 @@ export function useAssetsPanel(isActive: () => boolean | undefined) {
     void store.remove(asset.id)
   }
 
+  function onLoadAssetNode(asset: Asset) {
+    createAssetLoaderNode(asset, canvasCenter(), { anchor: 'center', select: true })
+  }
+
   function onAssetDragStart(asset: Asset, e: DragEvent) {
     e.dataTransfer?.setData(ASSET_DRAG_MIME, String(asset.id))
   }
@@ -296,6 +301,7 @@ export function useAssetsPanel(isActive: () => boolean | undefined) {
     onDeleteCategory,
     onRenameAsset,
     onDeleteAsset,
+    onLoadAssetNode,
     onAssetDragStart,
     onChipDrop,
     onDragEnter,

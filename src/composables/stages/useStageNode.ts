@@ -32,6 +32,7 @@ import {
   prepareWorkflow,
   subscribePrepState,
 } from '@/composables/stages/useWorkflowPrep'
+import { createAssetLoaderNode } from '@/composables/stages/assetLoaderNode'
 import { getStageMeta } from '@/composables/stages/stageMeta'
 import { addWorkflowUploadButton } from '@/composables/stages/workflowUpload'
 import { ensureStageUid, stageClassName } from '@/composables/stages/stageIdentity'
@@ -247,12 +248,8 @@ async function spawnAssetImageLoader(srcNode: any, url: string, label?: string) 
     console.error('[ComfyTV/action] load-asset: could not add image to library', url)
     return
   }
-  const newNode = createNodeAt('ComfyTV.AssetImageLoaderStage', posRightOf(srcNode))
+  const newNode = createAssetLoaderNode(asset, posRightOf(srcNode))
   if (!newNode) return
-  const category = asset.category_ids.length > 0 ? String(asset.category_ids[0]) : 'none'
-  setWidget(newNode, 'category', category)
-  setWidget(newNode, 'asset_url', asset.payload_url)
-  setWidget(newNode, 'asset_id', asset.id)
   useStageStore().notifyDownstream()
 }
 

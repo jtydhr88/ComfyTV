@@ -103,7 +103,8 @@
       "renamePrompt": "Asset name:",
       "delete": "Remove from library",
       "deleteConfirm": "Remove this asset from the library? The file on disk stays.",
-      "tags": "Edit tags"
+      "tags": "Edit tags",
+      "loadNode": "Add as node to canvas"
     },
     "tagPopover": {
       "empty": "No categories yet.",

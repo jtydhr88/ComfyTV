@@ -108,7 +108,7 @@
         <div
           v-for="asset in visibleAssets"
           :key="asset.id"
-          class="ctv:group ctv:relative ctv:rounded-lg ctv:overflow-hidden ctv:cursor-grab
+          class="ctv-asset-card ctv:group ctv:relative ctv:rounded-lg ctv:overflow-hidden ctv:cursor-grab
                  ctv:bg-secondary-background ctv:border ctv:border-border-subtle
                  ctv:hover:border-border-default"
           draggable="true"
@@ -155,7 +155,12 @@
               class="ctv:max-w-full ctv:truncate ctv:py-0 ctv:px-1 ctv:rounded ctv:text-3xs ctv:bg-base-foreground/10 ctv:text-muted-foreground"
             >{{ catName(cid) }}</span>
           </div>
-          <div class="ctv:absolute ctv:top-1 ctv:right-1 ctv:flex ctv:gap-0.5 ctv:opacity-0 ctv:group-hover:opacity-100 ctv:transition-opacity">
+          <div class="ctv-asset-actions ctv:absolute ctv:top-1 ctv:right-1 ctv:flex ctv:gap-0.5">
+            <button
+              :class="cardBtnClass"
+              :title="$t('assets.card.loadNode')"
+              @click="onLoadAssetNode(asset)"
+            >📥</button>
             <button
               :class="cardBtnClass"
               :title="$t('assets.card.tags')"
@@ -260,6 +265,7 @@ const {
   onDeleteCategory,
   onRenameAsset,
   onDeleteAsset,
+  onLoadAssetNode,
   onAssetDragStart,
   onChipDrop,
   onDragEnter,
@@ -293,3 +299,23 @@ const cardBtnClass = [
   'ctv:bg-interface-panel-surface/90 ctv:text-base-foreground ctv:hover:bg-secondary-background-hover',
 ].join(' ')
 </script>
+
+<style scoped>
+.ctv-asset-actions {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+.ctv-asset-card:hover .ctv-asset-actions,
+.ctv-asset-card:focus-within .ctv-asset-actions {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .ctv-asset-actions {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+</style>
