@@ -231,6 +231,31 @@ function spawnPanoramaView(srcNode: any, mode: 'current' | 'four' | 'twelve') {
   setWidget(node, 'view_count', mode === 'four' ? 4 : 12)
 }
 
+async function spawnAssetImageLoader(srcNode: any, url: string, label?: string) {
+  const assetStore = useAssetStore()
+  await assetStore.hydrate()
+  let asset = assetStore.byPayloadUrl(url) ?? null
+  if (!asset) {
+    asset = await assetStore.create({
+      name: label || 'image',
+      payload_url: url,
+      media_type: 'image',
+      category_ids: [],
+    })
+  }
+  if (!asset) {
+    console.error('[ComfyTV/action] load-asset: could not add image to library', url)
+    return
+  }
+  const newNode = createNodeAt('ComfyTV.AssetImageLoaderStage', posRightOf(srcNode))
+  if (!newNode) return
+  const category = asset.category_ids.length > 0 ? String(asset.category_ids[0]) : 'none'
+  setWidget(newNode, 'category', category)
+  setWidget(newNode, 'asset_url', asset.payload_url)
+  setWidget(newNode, 'asset_id', asset.id)
+  useStageStore().notifyDownstream()
+}
+
 type SpawnHandler = (srcNode: any, context?: ImagePickContext) => void
 
 function makeImageActionHandlers(srcSlot: number): Record<string, SpawnHandler> {
@@ -621,6 +646,11 @@ export function useStageNode(
   }
 
   const onAction = (actionId: string, context?: ImagePickContext) => {
+    if (actionId === 'load-asset') {
+      const url = context?.imageUrl
+      if (url) void spawnAssetImageLoader(node, url, context?.label)
+      return
+    }
     if (actionId === 'clear-pool' && kind === 'image-picker') {
       store.clearPickerPool(node, state)
       return

@@ -46,6 +46,31 @@ describe('ValuePreview — type-driven branches', () => {
     expect(screen.getByTitle(/download/i)).toBeInTheDocument()
   })
 
+  it('IMAGE toolbar emits load-asset with the image url + derived name', async () => {
+    const { emitted } = renderWithPlugins(ValuePreview, {
+      props: { type: 'COMFYTV_IMAGE', content: '/view?filename=shot_01.png&type=output' },
+    })
+    await userEvent.click(screen.getByTitle(/load as asset node/i))
+    const events = emitted('load-asset') as Array<[any]>
+    expect(events).toHaveLength(1)
+    expect(events[0][0]).toEqual({
+      index: '', imageUrl: '/view?filename=shot_01.png&type=output', label: 'shot_01',
+    })
+  })
+
+  it('IMAGES batch toolbar emits load-asset with the cell url + label', async () => {
+    const payload = JSON.stringify({
+      images: [{ index: '1', label: 'hero', image_url: '/view?f=1.png' }],
+    })
+    const { emitted } = renderWithPlugins(ValuePreview, {
+      props: { type: 'COMFYTV_IMAGES', content: payload },
+    })
+    await userEvent.click(screen.getByTitle(/load as asset node/i))
+    const events = emitted('load-asset') as Array<[any]>
+    expect(events).toHaveLength(1)
+    expect(events[0][0]).toEqual({ index: '', imageUrl: '/view?f=1.png', label: 'hero' })
+  })
+
   it('IMAGE in compact mode hides the action toolbar', () => {
     renderWithPlugins(ValuePreview, {
       props: { type: 'COMFYTV_IMAGE', content: '/view?filename=a.png', compact: true },

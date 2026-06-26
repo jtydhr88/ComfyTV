@@ -41,6 +41,7 @@
         :upstream-urls="upstreamBatchUrls"
         @item-click="onItemClick"
         @item-remove="onItemRemove"
+        @load-asset="onLoadAssetAction"
       />
     </section>
 
@@ -141,6 +142,7 @@
         :click-mode="state.kind === 'image-batch' ? 'pick' : 'refine'"
         :selected-index="state.kind === 'image-batch' ? state.pickedIndex : undefined"
         @item-click="onOutputItemClick"
+        @load-asset="onLoadAssetAction"
       />
     </section>
 
@@ -248,6 +250,10 @@ function onItemRemove(payload: ImagePickContext) {
 function onOutputItemClick(payload: ImagePickContext) {
   if (props.state.kind !== 'image-batch') return
   props.onAction('pick-item', payload)
+}
+
+function onLoadAssetAction(payload: ImagePickContext) {
+  props.onAction('load-asset', payload)
 }
 
 function sourceLabel(s: InputSource): string {

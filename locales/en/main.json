@@ -54,7 +54,8 @@
       "download": "Download",
       "addTag": "Save to library / tag",
       "removeFromPicker": "Remove from picker",
-      "close": "Close"
+      "close": "Close",
+      "loadAsset": "Load as asset node"
     },
     "preparingWorkflowDetail": "Hang on — converting workflow to api JSON. Try Run again in a moment."
   },

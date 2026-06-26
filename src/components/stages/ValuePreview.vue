@@ -28,6 +28,9 @@
         <button type="button" :class="tagActionBtn(String(content))"
                 :title="$t('stage.action.addTag')"
                 @click.stop="openTagMenu(String(content), nameFromUrl(String(content)), $event)">🏷</button>
+        <button type="button" :class="imgActionBtn"
+                :title="$t('stage.action.loadAsset')"
+                @click.stop="onLoadAsset(String(content), nameFromUrl(String(content)))">📥</button>
       </div>
     </div>
     <img
@@ -150,6 +153,9 @@
             <button type="button" :class="tagActionBtn(img.image_url)"
                     :title="$t('stage.action.addTag')"
                     @click.stop="openTagMenu(img.image_url, img.label || img.prompt || nameFromUrl(img.image_url), $event)">🏷</button>
+            <button type="button" :class="imgActionBtn"
+                    :title="$t('stage.action.loadAsset')"
+                    @click.stop="onLoadAsset(img.image_url, img.label || img.prompt || nameFromUrl(img.image_url))">📥</button>
             <button v-if="canRemoveItem(img, i)" type="button" :class="removeActionBtn"
                     :title="$t('stage.action.removeFromPicker')"
                     @click.stop="onItemRemove(img, i)">✕</button>
@@ -349,7 +355,13 @@ const {
 const emit = defineEmits<{
   (e: 'item-click', payload: ItemClickPayload): void
   (e: 'item-remove', payload: ItemClickPayload): void
+  (e: 'load-asset', payload: ItemClickPayload): void
 }>()
+
+function onLoadAsset(url: string, label: string) {
+  if (!url) return
+  emit('load-asset', { index: '', imageUrl: url, label })
+}
 
 function itemPayload(img: BatchImage, i: number): ItemClickPayload {
   return {
