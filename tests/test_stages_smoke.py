@@ -45,7 +45,7 @@ class TestSchemaDefinitions:
         "ImageLoaderStage", "VideoLoaderStage",
         # Generators
         "ProjectStage", "TextStage", "ImageStage", "VideoStage",
-        "AudioStage", "ShotImagesStage", "StoryboardStage",
+        "AudioStage", "SpeechStage", "ShotImagesStage", "StoryboardStage",
         # Edits
         "UpscaleStage", "InpaintStage", "OutpaintStage", "EraseStage",
         "ImageEditStage", "ImageVariationsStage", "RelightStage",

@@ -29382,6 +29382,7 @@ const _sfc_main$E = /* @__PURE__ */ defineComponent({
       "image",
       "video",
       "audio",
+      "speech",
       "panorama",
       "multiangle",
       "relight",

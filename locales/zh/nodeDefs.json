@@ -12,10 +12,33 @@
     "display_name": "视频阶段"
   },
   "ComfyTV.AudioStage": {
-    "display_name": "音频阶段",
+    "display_name": "音乐阶段",
     "inputs": {
       "main_prompt": {
         "tooltip": "音频生成 tags"
+      }
+    }
+  },
+  "ComfyTV.SpeechStage": {
+    "display_name": "语音阶段",
+    "inputs": {
+      "main_prompt": {
+        "tooltip": "要念出来的文本 —— 声音朗读的台词脚本。"
+      },
+      "voice": {
+        "tooltip": "命名预设音色 / 说话人(用于预设音色模型)。"
+      },
+      "language": {
+        "tooltip": "多语言模型的语言。选 'Auto' 交给 workflow/模型决定;名称要跟所选模型对得上(如 Kokoro 用 'Mandarin Chinese')。"
+      },
+      "speed": {
+        "tooltip": "语速(1.0 为自然语速)。"
+      },
+      "reference_text": {
+        "tooltip": "参考音频的文字稿(F5-TTS / GPT-SoVITS 需要)。"
+      },
+      "reference_audio": {
+        "tooltip": "可选:用于克隆音色的语音样本。"
       }
     }
   },

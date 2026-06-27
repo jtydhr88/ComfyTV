@@ -1,7 +1,7 @@
 from ._common import *  # noqa: F401, F403
 
 from .generators import (
-    ProjectStage, TextStage, ImageStage, VideoStage, AudioStage,
+    ProjectStage, TextStage, ImageStage, VideoStage, AudioStage, SpeechStage,
     ImagePickerStage, ShotImagesStage, StoryboardStage,
 )
 from .edits import (
@@ -35,7 +35,7 @@ class ComfyTVExtension(ComfyExtension):
     async def get_node_list(self) -> list[type[io.ComfyNode]]:
         return [
             ProjectStage,
-            TextStage, ImageStage, VideoStage, AudioStage,
+            TextStage, ImageStage, VideoStage, AudioStage, SpeechStage,
             ImagePickerStage,
             PanoramaStage, PanoramaCurrentViewStage, PanoramaMultiViewStage,
             MultiangleStage, RelightStage, ImageVariationsStage,

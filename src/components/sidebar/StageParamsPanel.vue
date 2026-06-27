@@ -113,7 +113,7 @@ const { t } = useI18n()
 const store = useStageParamStore()
 
 const STAGE_PARAM_KINDS = [
-  'text', 'image', 'video', 'audio', 'panorama',
+  'text', 'image', 'video', 'audio', 'speech', 'panorama',
   'multiangle', 'relight', 'multiview',
   'upscale', 'outpaint', 'inpaint', 'image-edit', 'erase', 'cutout',
 ] as const

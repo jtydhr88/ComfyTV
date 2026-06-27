@@ -15,7 +15,7 @@ from . import workflow_db
 _log = logging.getLogger(__name__)
 
 WORKFLOW_KINDS: tuple[str, ...] = (
-    'text', 'image', 'shot-images', 'video', 'audio',
+    'text', 'image', 'shot-images', 'video', 'audio', 'speech',
     'storyboard', 'panorama', 'timeline',
     'upscale', 'outpaint', 'inpaint', 'erase', 'image-edit', 'multiangle',
     'relight', 'cutout', 'multiview', 'sequence', 'audio-vocal', 'audio-bg',

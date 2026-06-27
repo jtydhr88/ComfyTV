@@ -5,6 +5,14 @@ from ._common import *  # noqa: F401, F403
 _log = logging.getLogger(__name__)
 
 
+_SPEECH_LANGUAGES = [
+    "Auto",
+    "English", "English (British)", "Mandarin Chinese", "Japanese", "Korean",
+    "French", "German", "Spanish", "Brazilian Portuguese", "Portuguese",
+    "Italian", "Hindi", "Russian", "Arabic",
+]
+
+
 class ProjectStage(io.ComfyNode):
 
     @classmethod
@@ -212,7 +220,7 @@ class AudioStage(io.ComfyNode):
     def define_schema(cls):
         return io.Schema(
             node_id="ComfyTV.AudioStage",
-            display_name="Audio Stage",
+            display_name="Music Stage",
             category="ComfyTV/Generate",
             inputs=[
                 *_standard_stage_inputs(),
@@ -248,6 +256,67 @@ class AudioStage(io.ComfyNode):
             options={
                 'duration_s': float(duration_s or 30.0),
                 'lyrics':     (lyrics or '').strip(),
+            },
+            custom_params=custom_params,
+        )
+
+
+class SpeechStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.SpeechStage",
+            display_name="Speech Stage",
+            category="ComfyTV/Generate",
+            inputs=[
+                *_standard_stage_inputs(),
+                io.Combo.Input("workflow", options=labels_for('speech'),
+                               default=SPEECH_WORKFLOWS[0] if SPEECH_WORKFLOWS else "",
+                               tooltip="Text-to-speech backend."),
+                _main_prompt_input(placeholder="The text to speak — type the script / lines for the voice to read aloud."),
+                io.String.Input("voice", default="", multiline=False,
+                                extra_dict={"placeholder": "Preset voice / speaker id (leave empty when cloning from a reference clip)."},
+                                tooltip="Named preset voice for preset-voice models (Kokoro, Bark, ElevenLabs, …)."),
+                io.Combo.Input("language", options=_SPEECH_LANGUAGES, default="Auto",
+                               tooltip="Language for multilingual models. 'Auto' lets the workflow/model default decide; "
+                                       "ignored by single-language / auto-detect models. Note: names must match what the "
+                                       "selected model expects (e.g. Kokoro uses 'Mandarin Chinese')."),
+                io.Float.Input("speed", default=1.0, min=0.5, max=2.0, step=0.05,
+                               display_mode=io.NumberDisplay.slider,
+                               tooltip="Speaking rate (1.0 = natural)."),
+                io.String.Input("reference_text", default="", multiline=True,
+                                extra_dict={"placeholder": "Transcript of the reference voice clip (needed by F5-TTS / GPT-SoVITS cloning)."},
+                                tooltip="Transcript of the reference audio; auto-transcribing cloners can leave it empty."),
+                COMFYTV_AUDIO.Input("reference_audio", optional=True),
+                _custom_params_input(),
+            ],
+            outputs=[COMFYTV_AUDIO.Output("audio")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
+                      workflow="", main_prompt="", voice="", language="Auto",
+                      speed=1.0, reference_text="", reference_audio="",
+                      custom_params="{}"):
+        lang = "" if (language or "Auto") == "Auto" else language
+        return await run_stage_workflow(
+            cls,
+            kind='speech',
+            label=workflow,
+            project_id=project_id,
+            parent_output_id=parent_output_id,
+            main_prompt=(main_prompt or '').strip(),
+            upstream={
+                'audio': reference_audio,
+            },
+            options={
+                'voice':          (voice or '').strip(),
+                'language':       lang.strip(),
+                'speed':          float(speed or 1.0),
+                'reference_text': (reference_text or '').strip(),
             },
             custom_params=custom_params,
         )

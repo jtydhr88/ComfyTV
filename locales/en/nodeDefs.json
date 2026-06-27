@@ -12,10 +12,33 @@
     "display_name": "Video Stage"
   },
   "ComfyTV.AudioStage": {
-    "display_name": "Audio Stage",
+    "display_name": "Music Stage",
     "inputs": {
       "main_prompt": {
         "tooltip": "Genre / mood / BPM tags."
+      }
+    }
+  },
+  "ComfyTV.SpeechStage": {
+    "display_name": "Speech Stage",
+    "inputs": {
+      "main_prompt": {
+        "tooltip": "The text to speak — the script the voice reads aloud."
+      },
+      "voice": {
+        "tooltip": "Named preset voice / speaker (for preset-voice models)."
+      },
+      "language": {
+        "tooltip": "Language for multilingual models. 'Auto' lets the workflow/model decide. Names must match the selected model (e.g. Kokoro uses 'Mandarin Chinese')."
+      },
+      "speed": {
+        "tooltip": "Speaking rate (1.0 = natural)."
+      },
+      "reference_text": {
+        "tooltip": "Transcript of the reference voice clip (needed by F5-TTS / GPT-SoVITS)."
+      },
+      "reference_audio": {
+        "tooltip": "Optional voice sample to clone from."
       }
     }
   },
