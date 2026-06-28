@@ -553,78 +553,6 @@
       },
       "timeline_data": {
         "name": "Timeline data"
-      },
-      "images_image0": {
-        "name": "Image #0"
-      },
-      "images_image1": {
-        "name": "Image #1"
-      },
-      "images_image10": {
-        "name": "Image #10"
-      },
-      "images_image11": {
-        "name": "Image #11"
-      },
-      "images_image12": {
-        "name": "Image #12"
-      },
-      "images_image13": {
-        "name": "Image #13"
-      },
-      "images_image14": {
-        "name": "Image #14"
-      },
-      "images_image15": {
-        "name": "Image #15"
-      },
-      "images_image16": {
-        "name": "Image #16"
-      },
-      "images_image17": {
-        "name": "Image #17"
-      },
-      "images_image18": {
-        "name": "Image #18"
-      },
-      "images_image19": {
-        "name": "Image #19"
-      },
-      "images_image2": {
-        "name": "Image #2"
-      },
-      "images_image20": {
-        "name": "Image #20"
-      },
-      "images_image21": {
-        "name": "Image #21"
-      },
-      "images_image22": {
-        "name": "Image #22"
-      },
-      "images_image23": {
-        "name": "Image #23"
-      },
-      "images_image3": {
-        "name": "Image #3"
-      },
-      "images_image4": {
-        "name": "Image #4"
-      },
-      "images_image5": {
-        "name": "Image #5"
-      },
-      "images_image6": {
-        "name": "Image #6"
-      },
-      "images_image7": {
-        "name": "Image #7"
-      },
-      "images_image8": {
-        "name": "Image #8"
-      },
-      "images_image9": {
-        "name": "Image #9"
       }
     },
     "outputs": {
@@ -808,66 +736,6 @@
       },
       "workflow": {
         "name": "Workflow"
-      },
-      "images_image0": {
-        "name": "Image #0"
-      },
-      "images_image1": {
-        "name": "Image #1"
-      },
-      "images_image10": {
-        "name": "Image #10"
-      },
-      "images_image11": {
-        "name": "Image #11"
-      },
-      "images_image2": {
-        "name": "Image #2"
-      },
-      "images_image3": {
-        "name": "Image #3"
-      },
-      "images_image4": {
-        "name": "Image #4"
-      },
-      "images_image5": {
-        "name": "Image #5"
-      },
-      "images_image6": {
-        "name": "Image #6"
-      },
-      "images_image7": {
-        "name": "Image #7"
-      },
-      "images_image8": {
-        "name": "Image #8"
-      },
-      "images_image9": {
-        "name": "Image #9"
-      },
-      "texts_text0": {
-        "name": "Text #0"
-      },
-      "texts_text1": {
-        "name": "Text #1"
-      },
-      "texts_text2": {
-        "name": "Text #2"
-      },
-      "texts_text3": {
-        "name": "Text #3"
-      },
-      "texts_text4": {
-        "name": "Text #4"
-      },
-      "texts_text5": {
-        "name": "Text #5"
-      },
-      "texts_text6": {
-        "name": "Text #6"
-      },
-      "texts_text7": {
-        "name": "Text #7"
       }
     },
     "outputs": {
@@ -1129,18 +997,6 @@
       },
       "workflow": {
         "name": "Workflow"
-      },
-      "images_image0": {
-        "name": "Image #0"
-      },
-      "images_image1": {
-        "name": "Image #1"
-      },
-      "images_image2": {
-        "name": "Image #2"
-      },
-      "images_image3": {
-        "name": "Image #3"
       }
     },
     "outputs": {
@@ -1206,30 +1062,6 @@
       },
       "workflow": {
         "name": "Workflow"
-      },
-      "images_image0": {
-        "name": "Image #0"
-      },
-      "images_image1": {
-        "name": "Image #1"
-      },
-      "images_image2": {
-        "name": "Image #2"
-      },
-      "images_image3": {
-        "name": "Image #3"
-      },
-      "images_image4": {
-        "name": "Image #4"
-      },
-      "images_image5": {
-        "name": "Image #5"
-      },
-      "images_image6": {
-        "name": "Image #6"
-      },
-      "images_image7": {
-        "name": "Image #7"
       }
     },
     "outputs": {
@@ -1315,24 +1147,6 @@
       },
       "workflow": {
         "name": "Workflow"
-      },
-      "texts_text0": {
-        "name": "Text #0"
-      },
-      "texts_text1": {
-        "name": "Text #1"
-      },
-      "texts_text2": {
-        "name": "Text #2"
-      },
-      "texts_text3": {
-        "name": "Text #3"
-      },
-      "texts_text4": {
-        "name": "Text #4"
-      },
-      "texts_text5": {
-        "name": "Text #5"
       }
     },
     "outputs": {
@@ -1415,66 +1229,6 @@
       },
       "workflow": {
         "name": "Workflow"
-      },
-      "images_image0": {
-        "name": "Image #0"
-      },
-      "images_image1": {
-        "name": "Image #1"
-      },
-      "images_image2": {
-        "name": "Image #2"
-      },
-      "images_image3": {
-        "name": "Image #3"
-      },
-      "images_image4": {
-        "name": "Image #4"
-      },
-      "images_image5": {
-        "name": "Image #5"
-      },
-      "images_image6": {
-        "name": "Image #6"
-      },
-      "images_image7": {
-        "name": "Image #7"
-      },
-      "texts_text0": {
-        "name": "Text #0"
-      },
-      "texts_text1": {
-        "name": "Text #1"
-      },
-      "texts_text2": {
-        "name": "Text #2"
-      },
-      "texts_text3": {
-        "name": "Text #3"
-      },
-      "texts_text4": {
-        "name": "Text #4"
-      },
-      "texts_text5": {
-        "name": "Text #5"
-      },
-      "texts_text6": {
-        "name": "Text #6"
-      },
-      "texts_text7": {
-        "name": "Text #7"
-      },
-      "videos_video0": {
-        "name": "Video #0"
-      },
-      "videos_video1": {
-        "name": "Video #1"
-      },
-      "videos_video2": {
-        "name": "Video #2"
-      },
-      "videos_video3": {
-        "name": "Video #3"
       }
     },
     "outputs": {
@@ -1695,60 +1449,6 @@
       },
       "workflow": {
         "name": "Workflow"
-      },
-      "images_image0": {
-        "name": "Image #0"
-      },
-      "images_image1": {
-        "name": "Image #1"
-      },
-      "images_image2": {
-        "name": "Image #2"
-      },
-      "images_image3": {
-        "name": "Image #3"
-      },
-      "images_image4": {
-        "name": "Image #4"
-      },
-      "images_image5": {
-        "name": "Image #5"
-      },
-      "images_image6": {
-        "name": "Image #6"
-      },
-      "images_image7": {
-        "name": "Image #7"
-      },
-      "texts_text0": {
-        "name": "Text #0"
-      },
-      "texts_text1": {
-        "name": "Text #1"
-      },
-      "texts_text2": {
-        "name": "Text #2"
-      },
-      "texts_text3": {
-        "name": "Text #3"
-      },
-      "texts_text4": {
-        "name": "Text #4"
-      },
-      "texts_text5": {
-        "name": "Text #5"
-      },
-      "videos_video0": {
-        "name": "Video #0"
-      },
-      "videos_video1": {
-        "name": "Video #1"
-      },
-      "videos_video2": {
-        "name": "Video #2"
-      },
-      "videos_video3": {
-        "name": "Video #3"
       }
     },
     "outputs": {
