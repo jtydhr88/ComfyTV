@@ -68,17 +68,6 @@ JSON overrides for workflow sidebar params. See [sidebar-config-editor.md](https
 4. **Image**: `Qwen-Image-Edit 2511 Image-to-Panorama`, wire **COMFYTV_IMAGE**, prompt, Run.
 5. For flat frames: add **Current View** or **Multi-View**, connect **panorama**, operate viewer, Run.
 
-## Workflows & links
-
-| Resource | Link |
-|---|---|
-| ComfyTV repo | https://github.com/jtydhr88/ComfyTV |
-| Panorama workflows | https://github.com/jtydhr88/ComfyTV/tree/main/workflows/panorama |
-| Workflow README | https://github.com/jtydhr88/ComfyTV/blob/main/workflows/panorama/README.md |
-| Model list | https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.md |
-| Panorama guide | https://github.com/jtydhr88/ComfyTV/blob/main/docs/panorama.md |
-
-
 ## Full guides (recommended reading)
 
 > This page covers **one node only**. For end-to-end workflows, multi-stage pipelines, type conversion, and design rationale, see the [ComfyTV user guides](https://github.com/jtydhr88/ComfyTV/tree/main/docs) on GitHub:
@@ -95,11 +84,13 @@ JSON overrides for workflow sidebar params. See [sidebar-config-editor.md](https
 | --- | --- |
 | **GitHub repository** | https://github.com/jtydhr88/ComfyTV |
 | **User guides index** | https://github.com/jtydhr88/ComfyTV/tree/main/docs |
+| **Panorama guide** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/panorama.md |
 | **Built-in workflows** | https://github.com/jtydhr88/ComfyTV/tree/main/workflows |
 | **Model checklist** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.md |
 | **This node's workflow folder** | https://github.com/jtydhr88/ComfyTV/tree/main/workflows/panorama |
 | **Workflow README** | https://github.com/jtydhr88/ComfyTV/blob/main/workflows/panorama/README.md |
 | **Custom workflows** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.md |
+
 ## FAQ
 
 **Q: Uploaded file — Run does nothing new?**  

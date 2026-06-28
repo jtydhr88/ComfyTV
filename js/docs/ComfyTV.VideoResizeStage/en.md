@@ -1,10 +1,10 @@
 # Video Resize
 
-> Change output width/height (-1 keeps aspect). Frame rate unchanged. **PyAV** resample → `COMFYTV_VIDEO`.
+> Change output width/height (-1 keeps aspect). Frame rate unchanged. **PyAV** resample → `COMFYTV_VIDEO`. This is a **PyAV media-processing** stage—not AI video generation via **Video Stage**.
 
 ## What this node does
 
-**Video Resize** scales the full clip to **width × height**. Set **width** or **height** to **-1** to derive from the other dimension and source aspect ratio (ffmpeg-style). Use it to normalize resolution or shrink file size.
+**Video Resize** scales the full clip to **width × height**. Set **width** or **height** to **-1** to derive from the other dimension and source aspect ratio (ffmpeg-style). Use it to normalize resolution or shrink file size. It does not run text/image-to-video workflows.
 
 **PyAV** backend; no GPU.
 
@@ -67,6 +67,7 @@ Target pixels, default 1280×720. Either may be **-1**.
 | **Built-in workflows** | https://github.com/jtydhr88/ComfyTV/tree/main/workflows |
 | **Model checklist** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.md |
 | **Custom workflows** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.md |
+
 ## FAQ
 
 **Q: Stretched picture?**  

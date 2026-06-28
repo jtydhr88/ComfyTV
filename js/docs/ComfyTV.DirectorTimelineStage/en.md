@@ -1,3 +1,5 @@
+# Director Timeline
+
 > Arrange image clips and optional audio on a visual timeline, outputting structured `COMFYTV_TIMELINE`—the "edit decision list" for multi-shot short video.
 
 ## What this node does
@@ -95,6 +97,7 @@ Bridge for images/audio: [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/m
 | **Built-in workflows** | https://github.com/jtydhr88/ComfyTV/tree/main/workflows |
 | **Model checklist** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.md |
 | **Custom workflows** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.md |
+
 ## FAQ
 
 **Q: Wired images but timeline empty?**  

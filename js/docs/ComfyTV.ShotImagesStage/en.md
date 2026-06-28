@@ -1,3 +1,5 @@
+# Shot Images
+
 > Automatically run an image workflow **once per shot** from a **Storyboard**—turn a text shot list into a visual storyboard image set.
 
 ## What this node does
@@ -55,7 +57,7 @@ Details: [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges
 
 - **What**: Upstream `COMFYTV_STORYBOARD` wire.
 - **Wire**: **Storyboard → storyboard** here.
-- **Effect**: `shots.length` Run iterations; each shot's `prompt` / `image_prompt` becomes that shot's main_prompt.
+- **Effect**: `shots.length` Run iterations; each shot's `prompt` / `image_prompt` becomes that shot's generation prompt.
 - **Mistake**: Editing prompts on Shot Images—edit in **Storyboard UI**, then Run here.
 
 ### images (reference autogrow)
@@ -80,7 +82,7 @@ Details: [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges
 
 ## Step by step for beginners
 
-1. **Project** + **Storyboard**: premise, shot_count, duration, workflow (e.g. Qwen3 Storyboard), **▶ Run**.
+1. **Project** + **Storyboard**: premise, shot_count, duration; pick a workflow from the dropdown (e.g. Qwen3 Storyboard—may be a placeholder until the backend ships), **▶ Run**.
 2. Review/edit per-shot prompts in Storyboard UI.
 3. Add **Shot Images**, wire **storyboard**.
 4. Pick **workflow**, **resolution**, **aspect_ratio**; optional refs on **images**.
@@ -109,6 +111,7 @@ Details: [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges
 | **This node's workflow folder** | https://github.com/jtydhr88/ComfyTV/tree/main/workflows/shot-images |
 | **Workflow README** | https://github.com/jtydhr88/ComfyTV/blob/main/workflows/shot-images/README.md |
 | **Custom workflows** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.md |
+
 ## FAQ
 
 **Q: "no shots" / "returned no shots"?**  

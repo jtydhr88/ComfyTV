@@ -4,7 +4,7 @@
 
 ## 这个节点是做什么的
 
-ComfyTV **Cutout**、带 alpha 的 bridge PNG 等输出 **`COMFYTV_IMAGE`**。ComfyUI inpaint / ControlNet 等要 **`MASK`**（白=重绘区 convention：ComfyUI 里 mask 高值常表示 **保留**，本节点把 **alpha 反相** 为 mask，与 `_load_image_tensor` 一致）。
+ComfyTV **Cutout**、带 alpha 的 bridge PNG 等输出 **`COMFYTV_IMAGE`**。ComfyUI inpaint / ControlNet 等要 **`MASK`**。按 ComfyUI 约定，mask 高值表示 **保留区域**；本节点将 PNG **alpha 反相** 为 mask（`mask = 1.0 - alpha`），与 `_load_image_tensor` 逻辑一致。
 
 与 **← ComfyTV Image** 共用同一 URL 输入：Image 口要 RGB，Mask 口要 alpha 蒙版。
 

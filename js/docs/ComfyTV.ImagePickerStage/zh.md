@@ -90,14 +90,22 @@
 | **模型清单** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md |
 | **自定义工作流** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.zh.md |
 
-## 常见问题 FAQ
+## 常见问题
 
-**Q：节点帮助和完整教程有什么区别？**  
-A：本页只介绍**这一个节点**的参数与连线。端到端流程、多节点串联和原理说明见上方 **「完整教程（推荐阅读）」** 中的用户指南。
+**Q：直接在 Image Stage 上点缩略图不行吗？**  
+A：Image Stage 的 **image** 输出也有 **selected_index**；Picker 额外提供 **池子累积**、专用工具栏，以及合并多个上游批量。
 
+**Q：为什么要用 COMFYTV 类型？**  
+A：URL 快照会随项目保存，下游 stage 可独立 Run。原生插件输出需经 Bridge 转换。
 
-**Q：`COMFYTV_*` 类型和 ComfyUI 原生类型连不上怎么办？**  
-A：ComfyTV stage 传递的是项目内 **URL 快照**（如 `COMFYTV_IMAGE`），不是 GPU 里的 `IMAGE` tensor。请使用 **ComfyTV/Bridge** 下的入桥（→）或出桥（←）转换。完整说明见 [Bridge 接入插件](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md) 教程。
+**Q：池子太乱怎么办？**  
+A：在界面点 **Clear**，或新建一个 Picker 节点。
+
+**Q：没有工具栏？**  
+A：必须 **单击** 选中缩略图，不能只悬停。
+
+**Q：加载和生成有什么区别？**  
+A：Loader 导入已有文件；Image Stage 生成批量图。生成后先用 Picker（或 Stage 选图）再编辑。
 
 ## 相关节点
 

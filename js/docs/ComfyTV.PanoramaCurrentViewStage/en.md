@@ -78,6 +78,7 @@ Short-side tier: **1K**=1024, **2K**=2048, **4K**=4096.
 | **Built-in workflows** | https://github.com/jtydhr88/ComfyTV/tree/main/workflows |
 | **Model checklist** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.md |
 | **Custom workflows** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.md |
+
 ## FAQ
 
 **Q: Capture doesn't match preview?**  

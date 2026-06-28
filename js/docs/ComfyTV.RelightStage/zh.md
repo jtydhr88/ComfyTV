@@ -103,14 +103,13 @@ Bridge：[bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/brid
 | **本节点 workflow 说明** | https://github.com/jtydhr88/ComfyTV/blob/main/workflows/relight/README.zh.md |
 | **自定义工作流** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.zh.md |
 
-## 常见问题 FAQ
+## 常见问题
 
-**Q：节点帮助和完整教程有什么区别？**  
-A：本页只介绍**这一个节点**的参数与连线。端到端流程、多节点串联和原理说明见上方 **「完整教程（推荐阅读）」** 中的用户指南。
+**Q：和 Color Grade 有什么区别？**  
+A：Grade 是即时调色；Relight 是 AI 重打光，需 Run + 模型。
 
-
-**Q：`COMFYTV_*` 类型和 ComfyUI 原生类型连不上怎么办？**  
-A：ComfyTV stage 传递的是项目内 **URL 快照**（如 `COMFYTV_IMAGE`），不是 GPU 里的 `IMAGE` tensor。请使用 **ComfyTV/Bridge** 下的入桥（→）或出桥（←）转换。完整说明见 [Bridge 接入插件](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md) 教程。
+**Q：参考图被忽略了？**  
+A：选对 workflow 变体、接好第 2 个输入槽，并重新 Run。
 
 ## 相关节点
 

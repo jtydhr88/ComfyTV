@@ -7,7 +7,7 @@
 **mesh2motion**、AnimateDiff 导出、ComfyUI 原生 **Create Video** 等输出 **`VIDEO`** 类型——ComfyTV 的 **Video Clip**、**Demux**、**Video Stage** 只认 **`COMFYTV_VIDEO`** 字符串 URL。**→ ComfyTV Video** 在 Run 时把 VIDEO 对象 **save_to** mp4（codec 自动），注册 `/view?` 快照。
 
 ```
-[mesh2motion] ──VIDEO──→ [→ ComfyTV Video] ──COMFYTV_VIDEO──→ [Video Clip / Demux / Upscale…]
+[mesh2motion] ──VIDEO──→ [→ ComfyTV Video] ──COMFYTV_VIDEO──→ [Video Clip / Demux / …]
                               ▲ Run
 ```
 
@@ -23,7 +23,7 @@
 
 - **Stage** + **▶ 运行**；`_save_video_to_disk`，前缀 `ComfyTV/bridge`。
 - 容器/codec：`VideoContainer("auto")` / `VideoCodec("auto")`。
-- 快照持久化；下游 Run 不重编码 unless 你重 Run 入桥。
+- 快照持久化；下游 Run 不重编码，「除非」你重 Run 入桥。
 
 ## 类型说明
 
@@ -80,6 +80,9 @@
 | **Bridge 实现源码** | https://github.com/jtydhr88/ComfyTV/blob/main/nodes/bridges.py |
 | **自定义工作流** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.zh.md |
 ## 常见问题 FAQ
+
+**Q：Queue 和 Run 混淆？**  
+A：**Run** = ComfyTV stage / 入桥写入快照（本节点必须 Run）；**Queue** = 跑整条 ComfyUI 图。入桥不能用 Queue 代替 Run。
 
 **Q：mesh2motion 输出 IMAGE 不是 VIDEO？**  
 A：`Create Video` 设 fps → **→ ComfyTV Video**。

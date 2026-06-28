@@ -29,7 +29,7 @@
 | `COMFYTV_IMAGES` | 多图批量 JSON | 不是 `IMAGE` batch |
 | `COMFYTV_IMAGE` | 批量中当前选中一张 | 由 **selected_index** 决定 |
 
-**如何转换：** 批量进原生 → **← ComfyTV Image**（逐张）或插件 batch → **→ ComfyTV Images**。见 [bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md)。
+**如何转换：** ComfyTV → 原生：逐张用 **← ComfyTV Image**；原生 batch → ComfyTV：用 **→ ComfyTV Images**。见 [bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md)。
 
 ## 界面与参数说明
 
@@ -82,12 +82,14 @@
 
 ## 常见问题 FAQ
 
-**Q：节点帮助和完整教程有什么区别？**  
-A：本页只介绍**这一个节点**的参数与连线。端到端流程、多节点串联和原理说明见上方 **「完整教程（推荐阅读）」** 中的用户指南。
+**Q：Current View 和 Multi-View 怎么选？**  
+A：单个角度 → **Current View**；环绕一组 → **Multi-View**。
 
+**Q：要原生 ComfyUI batch？**  
+A：逐张用 **← ComfyTV Image**，或 **Image Picker** 后再出桥。
 
-**Q：`COMFYTV_*` 类型和 ComfyUI 原生类型连不上怎么办？**  
-A：ComfyTV stage 传递的是项目内 **URL 快照**（如 `COMFYTV_IMAGE`），不是 GPU 里的 `IMAGE` tensor。请使用 **ComfyTV/Bridge** 下的入桥（→）或出桥（←）转换。完整说明见 [Bridge 接入插件](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md) 教程。
+**Q：view_count 很大会很慢吗？**  
+A：浏览器端截取通常很快；4K 会增加文件体积。
 
 ## 相关节点
 

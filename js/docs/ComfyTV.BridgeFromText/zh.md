@@ -4,7 +4,7 @@
 
 ## 这个节点是做什么的
 
-ComfyTV **Text Stage** 或 **→ ComfyTV Text** 产出 **`COMFYTV_TEXT`**。原生节点（CLIP Text Encode、Show Text、LLM 链）要 **`STRING`。**← ComfyTV Text** 原样输出字符串，无磁盘 IO。
+ComfyTV **Text Stage** 或 **→ ComfyTV Text** 产出 **`COMFYTV_TEXT`**。原生节点（CLIP Text Encode、Show Text、LLM 链）要 **STRING**。**← ComfyTV Text** 原样输出字符串，无磁盘 IO。
 
 用于 ComfyTV 生成文案 → 原生 ComfyUI 工作流其他分支。
 

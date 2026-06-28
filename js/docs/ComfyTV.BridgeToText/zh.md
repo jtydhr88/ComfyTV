@@ -23,7 +23,7 @@
 
 - **Stage** + **▶ 运行**；`_stage_emit_auto` 存文本快照。
 - **force_input** 允许多 STRING 汇入或 widget 手输。
-- 下游 stage Run 时读取快照，不自动重跑 LLM unless 重 Run 入桥。
+- 下游 stage Run 时读取快照，不自动重跑 LLM，「除非」重 Run 入桥。
 
 ## 类型说明
 
@@ -80,6 +80,9 @@
 | **Bridge 实现源码** | https://github.com/jtydhr88/ComfyTV/blob/main/nodes/bridges.py |
 | **自定义工作流** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.zh.md |
 ## 常见问题 FAQ
+
+**Q：Queue 和 Run 混淆？**  
+A：**Run** = ComfyTV stage / 入桥写入快照（本节点必须 Run）；**Queue** = 跑整条 ComfyUI 图。入桥不能用 Queue 代替 Run。
 
 **Q：还要写 main_prompt 吗？**  
 A：**texts** 作上下文追加；stage 上 **main_prompt** 仍是主指令。可只用其一。

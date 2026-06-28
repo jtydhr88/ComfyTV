@@ -97,14 +97,19 @@
 | **本节点 workflow 说明** | https://github.com/jtydhr88/ComfyTV/blob/main/workflows/upscale/README.zh.md |
 | **自定义工作流** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.zh.md |
 
-## 常见问题 FAQ
+## 常见问题
 
-**Q：节点帮助和完整教程有什么区别？**  
-A：本页只介绍**这一个节点**的参数与连线。端到端流程、多节点串联和原理说明见上方 **「完整教程（推荐阅读）」** 中的用户指南。
+**Q：Run 失败 / 缺模型？**  
+A：把 `4x-UltraSharp.pth` 放到 `models/upscale_models/`，重启。
 
+**Q：workflow 列表为空？**  
+A：确认存在 `workflows/upscale/*.json`。
 
-**Q：`COMFYTV_*` 类型和 ComfyUI 原生类型连不上怎么办？**  
-A：ComfyTV stage 传递的是项目内 **URL 快照**（如 `COMFYTV_IMAGE`），不是 GPU 里的 `IMAGE` tensor。请使用 **ComfyTV/Bridge** 下的入桥（→）或出桥（←）转换。完整说明见 [Bridge 接入插件](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md) 教程。
+**Q：不是 2× 输出？**  
+A：Ultrasharp 固定 4×——要 2× 请用自定义 workflow。
+
+**Q：先调色再放大？**  
+A：常见顺序；调色改动后需重新 Run Upscale。
 
 ## 相关节点
 

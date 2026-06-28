@@ -88,14 +88,19 @@ ComfyTV 把「改图但不跑模型」的操作做成 **Stage**，但和 **Upsca
 | **模型清单** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md |
 | **自定义工作流** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.zh.md |
 
-## 常见问题 FAQ
+## 常见问题
 
-**Q：节点帮助和完整教程有什么区别？**  
-A：本页只介绍**这一个节点**的参数与连线。端到端流程、多节点串联和原理说明见上方 **「完整教程（推荐阅读）」** 中的用户指南。
+**Q：为什么没有 ▶ Run？**  
+A：Crop 是即时的，裁切框立即生效。只有 GPU/模型 stage 才有 Run。
 
+**Q：改了裁切但 Upscale 看起来一样？**  
+A：下游仍用上次 Run 快照。请重新 Run Upscale。
 
-**Q：`COMFYTV_*` 类型和 ComfyUI 原生类型连不上怎么办？**  
-A：ComfyTV stage 传递的是项目内 **URL 快照**（如 `COMFYTV_IMAGE`），不是 GPU 里的 `IMAGE` tensor。请使用 **ComfyTV/Bridge** 下的入桥（→）或出桥（←）转换。完整说明见 [Bridge 接入插件](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md) 教程。
+**Q：连不上 Save Image？**  
+A：类型不匹配。加 `→ ComfyTV Image` Bridge，Run 后再 Crop。
+
+**Q：输出分辨率是多少？**  
+A：正好是裁切框的宽×高；不会自动放大。
 
 ## 相关节点
 

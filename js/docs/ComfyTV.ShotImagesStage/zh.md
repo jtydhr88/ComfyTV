@@ -1,3 +1,5 @@
+# 分镜图集
+
 > 根据 **Storyboard** 分镜表，为每一镜自动跑图像 workflow 出图——把「文字分镜」变成「可视分镜图集」的批量生成节点。
 
 ## 这个节点是做什么的
@@ -55,7 +57,7 @@ Bridge：[bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/brid
 
 - **是什么**：上游 `COMFYTV_STORYBOARD` 连线。
 - **填什么**：**Storyboard → storyboard** 接到此处。
-- **影响**：shots 数组长度 = 运行次数；每镜 `prompt` / `image_prompt` 字段作为该镜 main_prompt。
+- **影响**：shots 数组长度 = 运行次数；每镜 `prompt` / `image_prompt` 字段作为该镜生成 prompt。
 - **误区**：在 Shot Images 里改 prompt——应在 **Storyboard 节点 UI** 编辑各镜后再 Run 本节点。
 
 ### images（参考图 autogrow）
@@ -81,7 +83,7 @@ Bridge：[bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/brid
 
 ## 新手一步一步
 
-1. **Project** + **Storyboard**：写故事 premise，设 shot_count、时长，选 workflow（如 Qwen3 Storyboard），**▶ 运行**。
+1. **Project** + **Storyboard**：写故事 premise，设 shot_count、时长；从下拉框选 Storyboard workflow（如 Qwen3 Storyboard，后端未就绪时可能仅为占位项），**▶ 运行**。
 2. 在 Storyboard UI **检查/修改**各镜 prompt。
 3. 添加 **Shot Images**，**storyboard** 口接上一步输出。
 4. 选 **workflow**（如 Flux Schnell）、**resolution**、**aspect_ratio**；可选连角色参考到 **images**。
@@ -111,14 +113,22 @@ Bridge：[bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/brid
 | **本节点 workflow 说明** | https://github.com/jtydhr88/ComfyTV/blob/main/workflows/shot-images/README.zh.md |
 | **自定义工作流** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.zh.md |
 
-## 常见问题 FAQ
+## 常见问题
 
-**Q：节点帮助和完整教程有什么区别？**  
-A：本页只介绍**这一个节点**的参数与连线。端到端流程、多节点串联和原理说明见上方 **「完整教程（推荐阅读）」** 中的用户指南。
+**Q：报 "no shots" 或 "returned no shots"？**  
+A：先 Run **Storyboard** 且 shots 非空；检查模型；查看控制台逐镜失败信息。
 
+**Q：与 Image Stage 有何区别？**  
+A：Image Stage = **一个 prompt，N 张相似图**。Shot Images = **N 个不同 prompt（分镜），每镜一张**。分镜批量渲染 vs 单 prompt 批量。
 
-**Q：`COMFYTV_*` 类型和 ComfyUI 原生类型连不上怎么办？**  
-A：ComfyTV stage 传递的是项目内 **URL 快照**（如 `COMFYTV_IMAGE`），不是 GPU 里的 `IMAGE` tensor。请使用 **ComfyTV/Bridge** 下的入桥（→）或出桥（←）转换。完整说明见 [Bridge 接入插件](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md) 教程。
+**Q：workflow 列表空白/灰色？**  
+A：重启 ComfyUI 重新扫描；确认 shot-images 或多 kind 配置存在。
+
+**Q：不用 Storyboard 能手动写 prompt 吗？**  
+A：设计用于分镜 JSON；先 Run Storyboard，在 UI 编辑分镜，再 Run Shot Images。
+
+**Q：Load 与 generate 的区别？**  
+A：Loader **导入**文件；Shot Images **生成**分镜画面。可混用：Loader 作参考，Shot Images 产出成品。
 
 ## 相关节点
 

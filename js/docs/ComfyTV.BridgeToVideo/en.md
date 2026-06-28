@@ -71,7 +71,11 @@ Upstream **VIDEO**. Unwired → error on Run.
 | **Model checklist** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.md |
 | **Bridge source code** | https://github.com/jtydhr88/ComfyTV/blob/main/nodes/bridges.py |
 | **Custom workflows** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.md |
+
 ## FAQ
+
+**Q: Queue vs Run?**  
+A: **Run** = ComfyTV stage / into-bridge snapshot (required for this node); **Queue** = execute full ComfyUI graph. Into-bridges cannot substitute Run with Queue.
 
 **Q: mesh2motion outputs IMAGE?**  
 A: **Create Video (fps)** → **→ ComfyTV Video**.

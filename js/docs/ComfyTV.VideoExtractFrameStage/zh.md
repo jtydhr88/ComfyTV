@@ -78,12 +78,14 @@
 
 ## 常见问题 FAQ
 
-**Q：节点帮助和完整教程有什么区别？**  
-A：本页只介绍**这一个节点**的参数与连线。端到端流程、多节点串联和原理说明见上方 **「完整教程（推荐阅读）」** 中的用户指南。
+**Q：提示 needs upstream video？**  
+A：Run 上游视频 stage；确认 **video** 已连线。
 
+**Q：和 Load Video + Save Image 比？**  
+A：Extract Frame 留在 ComfyTV 快照体系（下游 `COMFYTV_IMAGE`），且只跑本节点。
 
-**Q：`COMFYTV_*` 类型和 ComfyUI 原生类型连不上怎么办？**  
-A：ComfyTV stage 传递的是项目内 **URL 快照**（如 `COMFYTV_IMAGE`），不是 GPU 里的 `IMAGE` tensor。请使用 **ComfyTV/Bridge** 下的入桥（→）或出桥（←）转换。完整说明见 [Bridge 接入插件](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md) 教程。
+**Q：自定义时间超出时长？**  
+A：PyAV 会 clamp 到有效范围；可能落在末帧附近。
 
 ## 相关节点
 

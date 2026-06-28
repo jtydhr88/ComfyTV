@@ -1,10 +1,10 @@
 # 视频缩放 (Video Resize)
 
-> 改变输出宽高（可设 -1 保持比例），帧率不变，**PyAV** 重采样，输出 `COMFYTV_VIDEO`。
+> 改变输出宽高（可设 -1 保持比例），帧率不变，**PyAV** 重采样，输出 `COMFYTV_VIDEO`。这是 **PyAV 媒体处理** stage，不是 **Video Stage** 的 AI 视频生成。
 
 ## 这个节点是做什么的
 
-**Video Resize** 把整段视频缩放到目标 **width × height**。宽或高设为 **-1** 时，按另一维与源片宽高比自动推算——和常见 ffmpeg scale 行为一致。适合统一分辨率再上传、或减小文件体积。
+**Video Resize** 把整段视频缩放到目标 **width × height**。宽或高设为 **-1** 时，按另一维与源片宽高比自动推算——和常见 ffmpeg scale 行为一致。适合统一分辨率再上传、或减小文件体积。不跑文/图生视频 workflow。
 
 **PyAV** 后端，不占 GPU。
 
@@ -75,6 +75,7 @@ Bridge：[bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/brid
 | **内置工作流总览** | https://github.com/jtydhr88/ComfyTV/tree/main/workflows |
 | **模型清单** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md |
 | **自定义工作流** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.zh.md |
+
 ## 常见问题 FAQ
 
 **Q：画面被拉扁了？**  

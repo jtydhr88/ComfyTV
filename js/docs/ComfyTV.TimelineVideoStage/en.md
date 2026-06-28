@@ -1,8 +1,10 @@
+# Timeline Render
+
 > Encode a **Director Timeline** sequence into a finished video—the **export** step of a multi-shot timeline workflow.
 
 ## What this node does
 
-**Timeline Render** (`TimelineVideoStage`) reads upstream `COMFYTV_TIMELINE` JSON, invokes the selected **timeline workflow** backend, and **stitches/encodes** segment images (plus optional audio) into one `COMFYTV_VIDEO`.
+**Timeline Render** reads upstream `COMFYTV_TIMELINE` JSON, invokes the selected **timeline workflow** backend, and **stitches/encodes** segment images (plus optional audio) into one `COMFYTV_VIDEO`.
 
 vs Director Timeline: that node is the **edit list**; this one is the **master clip**. There is no text prompt—timing, order, and asset URLs come entirely from timeline JSON.
 
@@ -44,9 +46,9 @@ Details: [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges
 - **Wire**: **Director Timeline → timeline**.
 - **Mistake**: Empty timeline/segments → invalid or placeholder output.
 
-### custom_params / force_run_token
+### custom_params (hidden)
 
-- Standard hidden stage fields; sidebar may bind extra workflow params as timeline backends evolve.
+- Sidebar-bound extra workflow parameters as timeline backends evolve.
 
 ## Outputs
 
@@ -84,6 +86,7 @@ Details: [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges
 | **This node's workflow folder** | https://github.com/jtydhr88/ComfyTV/tree/main/workflows/timeline |
 | **Workflow README** | https://github.com/jtydhr88/ComfyTV/blob/main/workflows/timeline/README.md |
 | **Custom workflows** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.md |
+
 ## FAQ
 
 **Q: Output is a sample video, not my frames?**  
@@ -96,7 +99,7 @@ A: Confirm **timeline** wired and Director Timeline has non-empty segments; chec
 A: Video Stage **generates** AI video (text/image-to-video). Timeline Render **encodes arranged frames**. Generate vs stitch/export.
 
 **Q: Gray workflow list?**  
-A: Restart ComfyUI; timeline runners register in `runners/__init__.py`.
+A: Restart ComfyUI to rescan; timeline runners register at startup.
 
 **Q: Load vs generate?**  
 A: **Load Video** imports files; this node **encodes** a new master from timeline JSON. Loaders don't replace Render.

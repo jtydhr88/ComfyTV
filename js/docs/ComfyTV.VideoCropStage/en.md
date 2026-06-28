@@ -1,10 +1,10 @@
 # Video Crop
 
-> Crop the same rectangle on every frame. **PyAV** processing, frame rate unchanged → `COMFYTV_VIDEO`.
+> Crop the same rectangle on every frame. **PyAV** processing, frame rate unchanged → `COMFYTV_VIDEO`. This is a **PyAV media-processing** stage—not AI video generation via **Video Stage**.
 
 ## What this node does
 
-**Video Crop** applies **x, y, w, h** (pixels) identically on each frame — like Image Crop but for the full clip. Removes letterbox bars, fixed overlays, or dead zones.
+**Video Crop** applies **x, y, w, h** (pixels) identically on each frame — like Image Crop but for the full clip. Removes letterbox bars, fixed overlays, or dead zones. It does not run text/image-to-video workflows.
 
 **PyAV** re-encodes the cropped region on disk; no GPU.
 
@@ -70,6 +70,7 @@ Crop size in pixels, default 512×512.
 | **Built-in workflows** | https://github.com/jtydhr88/ComfyTV/tree/main/workflows |
 | **Model checklist** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.md |
 | **Custom workflows** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.md |
+
 ## FAQ
 
 **Q: Crop outside frame?**  

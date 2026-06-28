@@ -83,14 +83,19 @@
 | **模型清单** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md |
 | **自定义工作流** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.zh.md |
 
-## 常见问题 FAQ
+## 常见问题
 
-**Q：节点帮助和完整教程有什么区别？**  
-A：本页只介绍**这一个节点**的参数与连线。端到端流程、多节点串联和原理说明见上方 **「完整教程（推荐阅读）」** 中的用户指南。
+**Q：Load Image 和从资产加载图片有什么区别？**  
+A：**Load Image** = ComfyUI `input/` 里的原始文件（上传/磁盘）。**从资产加载图片** = 项目库中由 stage Run 或侧栏导入的条目。外部文件用本节点；生成结果用资产加载器。
 
+**Q：下游 Run 或连线失败？**  
+A：确认接口接受 `COMFYTV_IMAGE`，不是原生 `IMAGE`。tensor 需先用 **→ ComfyTV Image** Bridge。
 
-**Q：`COMFYTV_*` 类型和 ComfyUI 原生类型连不上怎么办？**  
-A：ComfyTV stage 传递的是项目内 **URL 快照**（如 `COMFYTV_IMAGE`），不是 GPU 里的 `IMAGE` tensor。请使用 **ComfyTV/Bridge** 下的入桥（→）或出桥（←）转换。完整说明见 [Bridge 接入插件](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md) 教程。
+**Q：和 Image Stage 有什么不同？**  
+A：本节点 **不生成**、不用 GPU 推理，只注册已有文件。AI 出图请用 **Generate → Image Stage**。
+
+**Q：没有 ▶ Run 按钮正常吗？**  
+A：正常。Input loader 选中即输出；只有绑定 workflow 的 stage 才有 Run。
 
 ## 相关节点
 

@@ -1,3 +1,5 @@
+# 从资产库加载图片
+
 > 从 ComfyTV **项目资产库**里挑选一张图片作为流程输入——适合复用本项目中生成、编辑或导入的结果，而不是 `input/` 里的原始文件。
 
 ## 这个节点是做什么的
@@ -85,14 +87,19 @@
 | **模型清单** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md |
 | **自定义工作流** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.zh.md |
 
-## 常见问题 FAQ
+## 常见问题
 
-**Q：节点帮助和完整教程有什么区别？**  
-A：本页只介绍**这一个节点**的参数与连线。端到端流程、多节点串联和原理说明见上方 **「完整教程（推荐阅读）」** 中的用户指南。
+**Q：资产库是空的？**  
+A：在同一 **Project** 下 Run 生成节点，或从侧栏导入。确认 Project 与画布一致。
 
+**Q：和 Load Image（input/）有什么区别？**  
+A：**外部/原始文件** → **Load Image**。**项目生成/导入** → **从资产加载图片**。Loader **复用**已有资源；生成器 **创建**新图（Image Stage）。
 
-**Q：`COMFYTV_*` 类型和 ComfyUI 原生类型连不上怎么办？**  
-A：ComfyTV stage 传递的是项目内 **URL 快照**（如 `COMFYTV_IMAGE`），不是 GPU 里的 `IMAGE` tensor。请使用 **ComfyTV/Bridge** 下的入桥（→）或出桥（←）转换。完整说明见 [Bridge 接入插件](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md) 教程。
+**Q：原生插件的图片？**  
+A：先 Run **→ ComfyTV Image** Bridge，结果才会进入资产库。
+
+**Q：点击没反应？**  
+A：刷新页面；确认资产 URL 仍有效。
 
 ## 相关节点
 

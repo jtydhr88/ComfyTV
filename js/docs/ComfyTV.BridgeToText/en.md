@@ -71,7 +71,11 @@ Upstream STRING or inline multiline input.
 | **Model checklist** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.md |
 | **Bridge source code** | https://github.com/jtydhr88/ComfyTV/blob/main/nodes/bridges.py |
 | **Custom workflows** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.md |
+
 ## FAQ
+
+**Q: Queue vs Run?**  
+A: **Run** = ComfyTV stage / into-bridge snapshot (required for this node); **Queue** = execute full ComfyUI graph. Into-bridges cannot substitute Run with Queue.
 
 **Q: Still need main_prompt?**  
 A: **texts** append context; **main_prompt** on stage is primary. Either works.

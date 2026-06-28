@@ -1,3 +1,5 @@
+# 加载视频
+
 > 从 ComfyUI 的 `input/` 文件夹选取或上传本地视频，作为 ComfyTV 视频流程的**起点**——剪辑、抽帧、Demux 等都从这里接。
 
 ## 这个节点是做什么的
@@ -12,7 +14,7 @@
 
 - 已有 MP4/WebM/MOV 等素材，要在 ComfyUI 里做 ComfyTV 式分步编辑。
 - 外部剪辑软件导出的成片，放入 `input/` 后在此选取。
-- 作为 **Video Stage**（图生视频）之前的参考素材输入（较少见，多数从图片出发）。
+- 将已有视频作为 ComfyTV **编辑工具链**（Clip、Crop、Demux 等）或 **IA2V**（图+音生视频）的源素材——不是用来给图生视频（I2V）流程提供起始图的（那类流程通常从图片出发）。
 - 需要把原生 ComfyUI 视频 tensor 转入 ComfyTV 时，可配合 Bridge（见类型说明）。
 
 ## 工作原理（为什么 ComfyTV 这样设计）
@@ -85,12 +87,17 @@
 
 ## 常见问题 FAQ
 
-**Q：节点帮助和完整教程有什么区别？**  
-A：本页只介绍**这一个节点**的参数与连线。端到端流程、多节点串联和原理说明见上方 **「完整教程（推荐阅读）」** 中的用户指南。
+**Q：加载视频 vs 从资产加载视频？**  
+A：本节点 = 原始 **`input/`** 文件。资产节点 = 生成/导入后的**项目库**。
 
+**Q：下游类型不匹配？**  
+A：接口须期望 `COMFYTV_VIDEO`。原生 `VIDEO` 需 **→ ComfyTV Video** Bridge。
 
-**Q：`COMFYTV_*` 类型和 ComfyUI 原生类型连不上怎么办？**  
-A：ComfyTV stage 传递的是项目内 **URL 快照**（如 `COMFYTV_IMAGE`），不是 GPU 里的 `IMAGE` tensor。请使用 **ComfyTV/Bridge** 下的入桥（→）或出桥（←）转换。完整说明见 [Bridge 接入插件](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md) 教程。
+**Q：和 Video Stage（AI 生成）比？**  
+A：本节点只**加载已有文件**——不做文/图生视频。要生成片段请用 **Generate → Video Stage**。
+
+**Q：上传后下拉列表没有？**  
+A：刷新页面；确认扩展名被识别为视频格式。
 
 ## 相关节点
 

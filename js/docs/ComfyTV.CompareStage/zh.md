@@ -85,14 +85,22 @@ Bridge：[bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/brid
 | **模型清单** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md |
 | **自定义工作流** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.zh.md |
 
-## 常见问题 FAQ
+## 常见问题
 
-**Q：节点帮助和完整教程有什么区别？**  
-A：本页只介绍**这一个节点**的参数与连线。端到端流程、多节点串联和原理说明见上方 **「完整教程（推荐阅读）」** 中的用户指南。
+**Q：为什么没有输出？**  
+A：设计如此——纯 **查看器**，避免把「对比混合」传到下游。请连你需要的编辑 stage。
 
+**Q：滑块只显示一张图？**  
+A：同时连 **image_a** 和 **image_b**；上游需已有 Run 快照。尺寸差太大可能留黑边。
 
-**Q：`COMFYTV_*` 类型和 ComfyUI 原生类型连不上怎么办？**  
-A：ComfyTV stage 传递的是项目内 **URL 快照**（如 `COMFYTV_IMAGE`），不是 GPU 里的 `IMAGE` tensor。请使用 **ComfyTV/Bridge** 下的入桥（→）或出桥（←）转换。完整说明见 [Bridge 接入插件](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md) 教程。
+**Q：上游是原生 IMAGE？**  
+A：先用 **→ ComfyTV Image** Bridge。
+
+**Q：和 Picker 工具栏重复吗？**  
+A：Picker 选图并唤起编辑；Compare 是 **像素级前后对比**，无工具栏。
+
+**Q：能加载或生成吗？**  
+A：Compare 既不加载也不生成——它 **对比** loader 或生成器已有的两个快照。
 
 ## 相关节点
 

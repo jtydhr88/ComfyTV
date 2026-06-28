@@ -95,14 +95,16 @@ Erase **不需要**写提示词；涂准要删的区域即可。
 | **本节点 workflow 说明** | https://github.com/jtydhr88/ComfyTV/blob/main/workflows/erase/README.zh.md |
 | **自定义工作流** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.zh.md |
 
-## 常见问题 FAQ
+## 常见问题
 
-**Q：节点帮助和完整教程有什么区别？**  
-A：本页只介绍**这一个节点**的参数与连线。端到端流程、多节点串联和原理说明见上方 **「完整教程（推荐阅读）」** 中的用户指南。
+**Q：缺少 INPAINT_ 节点？**  
+A：安装 comfyui-inpaint-nodes 后重启 ComfyUI。
 
+**Q：擦除区域模糊？**  
+A：扩大蒙版范围；复杂纹理可改用 **Inpaint** 并填写 prompt。
 
-**Q：`COMFYTV_*` 类型和 ComfyUI 原生类型连不上怎么办？**  
-A：ComfyTV stage 传递的是项目内 **URL 快照**（如 `COMFYTV_IMAGE`），不是 GPU 里的 `IMAGE` tensor。请使用 **ComfyTV/Bridge** 下的入桥（→）或出桥（←）转换。完整说明见 [Bridge 接入插件](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md) 教程。
+**Q：和 Inpaint 有什么区别？**  
+A：Erase 是擦除物体；Inpaint 是用 prompt 描述的内容替换蒙版区域。
 
 ## 相关节点
 

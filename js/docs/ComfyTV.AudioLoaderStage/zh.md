@@ -1,3 +1,5 @@
+# 加载音频
+
 > 从 ComfyUI 的 `input/` 文件夹选取或上传本地音频，作为 ComfyTV 音频流程的**起点**——配音、混音、接视频 IA2V 等都从这里接。
 
 ## 这个节点是做什么的
@@ -86,12 +88,17 @@
 
 ## 常见问题 FAQ
 
-**Q：节点帮助和完整教程有什么区别？**  
-A：本页只介绍**这一个节点**的参数与连线。端到端流程、多节点串联和原理说明见上方 **「完整教程（推荐阅读）」** 中的用户指南。
+**Q：加载 vs 生成（Speech/Music Stage）？**  
+A：**加载音频** = 已有文件，无 GPU 推理。**Speech/Music** = AI 创作，需 workflow + Run。Loader **导入**；生成器 **创造**。
 
+**Q：加载音频 vs 从资产加载音频？**  
+A：本节点 = **`input/` 磁盘**。资产节点 = 生成/导入后的**项目库**。
 
-**Q：`COMFYTV_*` 类型和 ComfyUI 原生类型连不上怎么办？**  
-A：ComfyTV stage 传递的是项目内 **URL 快照**（如 `COMFYTV_IMAGE`），不是 GPU 里的 `IMAGE` tensor。请使用 **ComfyTV/Bridge** 下的入桥（→）或出桥（←）转换。完整说明见 [Bridge 接入插件](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md) 教程。
+**Q：类型不匹配？**  
+A：下游须期望 `COMFYTV_AUDIO`；原生 `AUDIO` 需 **→ ComfyTV Audio** Bridge。
+
+**Q：没有 Run 按钮？**  
+A：正常——与加载图片/视频相同。
 
 ## 相关节点
 

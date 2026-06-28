@@ -1,3 +1,5 @@
+# Load Image from Asset
+
 > Pick an image from the ComfyTV **project asset library** as pipeline input—ideal for reusing generated, edited, or imported results in the current project, not raw `input/` files.
 
 ## What this node does
@@ -84,6 +86,7 @@ Details: [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges
 | **Built-in workflows** | https://github.com/jtydhr88/ComfyTV/tree/main/workflows |
 | **Model checklist** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.md |
 | **Custom workflows** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.md |
+
 ## FAQ
 
 **Q: Empty asset library?**  

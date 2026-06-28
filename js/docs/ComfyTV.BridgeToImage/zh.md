@@ -4,7 +4,7 @@
 
 ## 这个节点是做什么的
 
-ComfyTV stage 之间传递的是 **URL 快照**（`/view?filename=…` 字符串），不是 GPU 内存里的 tensor。任何输出 **`IMAGE`** 的 ComfyUI 节点——**IPAdapter**、ControlNet 预处理、**mesh2motion** 渲染帧、Save Image 上游、自定义 Python 节点——都不能 **直接** 接到 **Image Picker** 或 **Upscale** 这类 ComfyTV stage。
+ComfyTV stage 之间传递的是 **URL 快照**（`/view?filename=…` 字符串），不是 GPU 内存里的 tensor。任何输出 **`IMAGE`** 的 ComfyUI 节点——**IPAdapter**、ControlNet 预处理、**mesh2motion** 渲染帧、自定义 Python 节点——都不能 **直接** 接到 **Image Picker** 或 **Upscale** 这类 ComfyTV stage。
 
 **→ ComfyTV Image** 就是「入境检查站」：Run 时读取上游 tensor，**保存 PNG** 到磁盘，生成 ComfyTV 能读懂的快照 URL。
 
@@ -25,7 +25,7 @@ ComfyTV stage 之间传递的是 **URL 快照**（`/view?filename=…` 字符串
 - ComfyTV **Stage** 各自 **▶ 运行**，不 Queue 整图；快照让下游只读 URL，不必重跑昂贵上游。
 - **入桥本身也是 Stage**：有 Run 按钮。Run = 执行上游链路（若尚未执行）+ **写 PNG + 注册快照**。
 - 文件路径：`ComfyUI/output/ComfyTV/bridge/ComfyTV_bridge_xxxxx_.png`（见 [`bridges.py`](https://github.com/jtydhr88/ComfyTV/blob/main/nodes/bridges.py) `_save_images_to_disk`）。
-- 下游 ComfyTV stage 再 Run 时 **直接用桥的快照**，不会自动重跑 IPAdapter  unless 你再次 Run 入桥。
+- 下游 ComfyTV stage 再 Run 时 **直接用桥的快照**，不会自动重跑 IPAdapter，「除非」你再次 Run 入桥。
 
 ## 类型说明（COMFYTV_* vs ComfyUI 原生）— 必读
 
@@ -90,6 +90,9 @@ ComfyTV 内部 lineage；一般无需手改。
 | **Bridge 实现源码** | https://github.com/jtydhr88/ComfyTV/blob/main/nodes/bridges.py |
 | **自定义工作流** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.zh.md |
 ## 常见问题 FAQ
+
+**Q：Queue 和 Run 混淆？**  
+A：**Run** = ComfyTV stage / 入桥写入快照（本节点必须 Run）；**Queue** = 跑整条 ComfyUI 图。入桥不能用 Queue 代替 Run。
 
 **Q：连上了但 ComfyTV 下游空的？**  
 A：入桥 **必须 Run**。出桥（←）无 Run，入桥（→）有 Run。

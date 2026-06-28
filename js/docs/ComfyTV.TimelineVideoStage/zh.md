@@ -1,10 +1,12 @@
+# 时间线渲染
+
 > 把 **Director Timeline** 编排好的序列编码成成品视频——多镜时间线的「导出」步骤。
 
 ## 这个节点是做什么的
 
-**时间线渲染**（Timeline Render，节点 ID `TimelineVideoStage`）读取上游 `COMFYTV_TIMELINE` JSON，调用所选 **timeline workflow** 后端，将各 segment 的图片（与可选音轨）**拼接/编码**为一条 `COMFYTV_VIDEO`。
+**时间线渲染**（Timeline Render）读取上游 `COMFYTV_TIMELINE` JSON，调用所选 **timeline workflow** 后端，将各 segment 的图片（与可选音轨）**拼接/编码**为一条 `COMFYTV_VIDEO`。
 
-与 Director Timeline 的关系：前者**剪辑表**，后者**成片**。没有文本 prompt——时长、顺序、素材 URL 全部来自时间线 JSON。
+与 Director Timeline 的关系：**Director Timeline** 负责剪辑表编排，**Timeline Render（本节点）** 负责导出成片。没有文本 prompt——时长、顺序、素材 URL 全部来自时间线 JSON。
 
 ## 适用场景
 
@@ -32,7 +34,7 @@ Bridge：[bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/brid
 
 ### workflow
 
-- **是什么**：时间线渲染后端；选项来自 `RUNNER_REGISTRY` 中 `kind='timeline'` 的 runner。
+- **是什么**：时间线渲染后端；启动时从仓库注册的 timeline 类 workflow 加载选项。
 - **当前内置**：**Multishot (placeholder)** —— 开发占位，非最终生产编码器。
 - **选项从哪来**：仓库 [runners/](https://github.com/jtydhr88/ComfyTV/tree/main/runners) 注册 + 未来 `workflows/timeline/` 工作流文件。
 - **需要什么**：视具体 workflow；占位 runner 无需本地模型。
@@ -44,9 +46,9 @@ Bridge：[bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/brid
 - **填什么**：**Director Timeline → timeline**。
 - **误区**：空 timeline 或 segments 为空会导致无效/占位输出。
 
-### custom_params / force_run_token
+### custom_params（隐藏）
 
-- 标准 stage 隐藏字段；侧栏可绑额外 workflow 参数（随 timeline workflow 演进）。
+- 侧栏绑定的额外 workflow 参数（随 timeline workflow 演进）。
 
 ## 输出说明
 
@@ -85,14 +87,22 @@ Bridge：[bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/brid
 | **本节点 workflow 说明** | https://github.com/jtydhr88/ComfyTV/blob/main/workflows/timeline/README.zh.md |
 | **自定义工作流** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.zh.md |
 
-## 常见问题 FAQ
+## 常见问题
 
-**Q：节点帮助和完整教程有什么区别？**  
-A：本页只介绍**这一个节点**的参数与连线。端到端流程、多节点串联和原理说明见上方 **「完整教程（推荐阅读）」** 中的用户指南。
+**Q：输出是示例视频，不是我的画面？**  
+A：**Multishot (placeholder)** 在正式 timeline workflow 上线前会返回演示片段。
 
+**Q：Run 没反应？**  
+A：确认 **timeline** 已连线且 Director Timeline 有非空 segments；查看控制台。
 
-**Q：`COMFYTV_*` 类型和 ComfyUI 原生类型连不上怎么办？**  
-A：ComfyTV stage 传递的是项目内 **URL 快照**（如 `COMFYTV_IMAGE`），不是 GPU 里的 `IMAGE` tensor。请使用 **ComfyTV/Bridge** 下的入桥（→）或出桥（←）转换。完整说明见 [Bridge 接入插件](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md) 教程。
+**Q：与 Video Stage 有何区别？**  
+A：Video Stage **生成** AI 视频（文/图生视频）。Timeline Render **编码已编排的帧**。生成 vs 拼接/导出。
+
+**Q：workflow 列表灰色？**  
+A：重启 ComfyUI 重新扫描；timeline runner 在启动时注册。
+
+**Q：Load 与 generate 的区别？**  
+A：**Load Video** 导入文件；本节点从 timeline JSON **编码**新成片。Loader 不能替代 Render。
 
 ## 相关节点
 

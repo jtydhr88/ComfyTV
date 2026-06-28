@@ -82,6 +82,9 @@
 | **自定义工作流** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.zh.md |
 ## 常见问题 FAQ
 
+**Q：Queue 和 Run 混淆？**  
+A：**Run** = ComfyTV stage / 入桥写入快照（本节点必须 Run）；**Queue** = 跑整条 ComfyUI 图。入桥不能用 Queue 代替 Run。
+
 **Q：只有一张图能用吗？**  
 A：可以，等同 **→ ComfyTV Image** 但多一个 **images** JSON 口。
 
@@ -89,7 +92,7 @@ A：可以，等同 **→ ComfyTV Image** 但多一个 **images** JSON 口。
 A：有 VIDEO 对象 → **→ ComfyTV Video**；只有 IMAGE 帧 → **Images** 或 **Create Video**。
 
 **Q：Run 后文件在哪？**  
-A: 每张 `output/ComfyTV/bridge/ComfyTV_bridge_xxxxx_.png`。
+A：每张 `output/ComfyTV/bridge/ComfyTV_bridge_xxxxx_.png`。
 
 **Q：batch 很大 Run 很慢？**  
 A：每张 PNG 顺序写入 bridge；极大 batch 可考虑 **Create Video** 再 **→ ComfyTV Video**。

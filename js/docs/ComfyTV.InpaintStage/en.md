@@ -1,4 +1,4 @@
-> Paint a mask, describe what should appear there, ▶ Run an `workflows/inpaint/` workflow.
+> Paint a mask, describe what should appear there, ▶ Run a `workflows/inpaint/` workflow.
 
 ## What this node does
 

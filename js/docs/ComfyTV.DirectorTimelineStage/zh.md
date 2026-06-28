@@ -1,3 +1,5 @@
+# 导演时间线
+
 > 在可视化时间线上排列图片片段与可选音轨，输出结构化 `COMFYTV_TIMELINE`——多镜短视频的「剪辑表」编辑器。
 
 ## 这个节点是做什么的
@@ -96,14 +98,22 @@ Bridge 用于 image/audio 进入 ComfyTV：[bridges.zh.md](https://github.com/jt
 | **模型清单** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md |
 | **自定义工作流** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.zh.md |
 
-## 常见问题 FAQ
+## 常见问题
 
-**Q：节点帮助和完整教程有什么区别？**  
-A：本页只介绍**这一个节点**的参数与连线。端到端流程、多节点串联和原理说明见上方 **「完整教程（推荐阅读）」** 中的用户指南。
+**Q：接了 images 但时间线空白？**  
+A：在面板里**拖到 segment 上**——连线只填充素材池。
 
+**Q：与 Timeline Render 有何区别？**  
+A：Director Timeline **编辑** JSON；Timeline Render **编码**视频。编排 vs 导出。
 
-**Q：`COMFYTV_*` 类型和 ComfyUI 原生类型连不上怎么办？**  
-A：ComfyTV stage 传递的是项目内 **URL 快照**（如 `COMFYTV_IMAGE`），不是 GPU 里的 `IMAGE` tensor。请使用 **ComfyTV/Bridge** 下的入桥（→）或出桥（←）转换。完整说明见 [Bridge 接入插件](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md) 教程。
+**Q：没有 ▶ 运行？**  
+A：正常——timeline_data 在浏览器内即时保存。
+
+**Q：能否直接把 Video Loader 接到时间线？**  
+A：segment 期望**图片序列**——先用 Extract Frame 或视频工具链。
+
+**Q：Load 与 generate 的区别？**  
+A：Loader 提供素材；Timeline Render **生成**最终视频文件。本节点仅**编排**。
 
 ## 相关节点
 

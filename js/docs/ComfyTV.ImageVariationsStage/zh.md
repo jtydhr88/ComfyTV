@@ -114,14 +114,19 @@ Bridge：[bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/brid
 | **序列类 workflow** | https://github.com/jtydhr88/ComfyTV/tree/main/workflows/sequence |
 | **自定义工作流** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.zh.md |
 
-## 常见问题 FAQ
+## 常见问题
 
-**Q：节点帮助和完整教程有什么区别？**  
-A：本页只介绍**这一个节点**的参数与连线。端到端流程、多节点串联和原理说明见上方 **「完整教程（推荐阅读）」** 中的用户指南。
+**Q：改了 variant_count 但输出数量不变？**  
+A：每张 workflow 固定数量——请切换 workflow。
 
+**Q：multiview 和 sequence 怎么选？**  
+A：同一主体多角度 → multiview；叙事连续帧 → sequence。
 
-**Q：`COMFYTV_*` 类型和 ComfyUI 原生类型连不上怎么办？**  
-A：ComfyTV stage 传递的是项目内 **URL 快照**（如 `COMFYTV_IMAGE`），不是 GPU 里的 `IMAGE` tensor。请使用 **ComfyTV/Bridge** 下的入桥（→）或出桥（←）转换。完整说明见 [Bridge 接入插件](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md) 教程。
+**Q：Storyboard 25 漂移？**  
+A：已知长链限制——试试 Story 4 或更短 run。
+
+**Q：和 Multiangle 有什么区别？**  
+A：Multiangle 是自由设定一个 3D 角度；Variations 每次 Run 输出 preset 的 N 张图。
 
 ## 相关节点
 

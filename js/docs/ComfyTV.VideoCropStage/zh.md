@@ -1,10 +1,10 @@
 # 视频画面裁剪 (Video Crop)
 
-> 对每一帧裁切同一矩形区域，**PyAV** 处理，帧率不变，输出 `COMFYTV_VIDEO`。
+> 对每一帧裁切同一矩形区域，**PyAV** 处理，帧率不变，输出 `COMFYTV_VIDEO`。这是 **PyAV 媒体处理** stage，不是 **Video Stage** 的 AI 视频生成。
 
 ## 这个节点是做什么的
 
-**Video Crop** 用 **x, y, w, h**（像素）在每一帧上切同样一块画面，去掉周围黑边、水印区或无关区域。和 Image Crop 类似，但是 **整段视频** 逐帧应用同一矩形。
+**Video Crop** 用 **x, y, w, h**（像素）在每一帧上切同样一块画面，去掉周围黑边、水印区或无关区域。和 Image Crop 类似，但是 **整段视频** 逐帧应用同一矩形。不跑文/图生视频 workflow。
 
 后端 **PyAV** 直接在磁盘 mp4 上重编码裁切区域，不占 GPU。
 
@@ -48,7 +48,7 @@ Bridge：[bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/brid
 ## 新手一步一步
 
 1. Run 上游视频节点，连 **video**。
-2. 设 **x, y, w, h**（可在预览里估算）。
+2. 设 **x, y, w, h**（根据源视频分辨率手动填写像素坐标）。
 3. **▶ 运行**，检查裁切结果。
 4. 需要标准尺寸时接 **Video Resize**。
 
@@ -78,6 +78,7 @@ Bridge：[bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/brid
 | **内置工作流总览** | https://github.com/jtydhr88/ComfyTV/tree/main/workflows |
 | **模型清单** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md |
 | **自定义工作流** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.zh.md |
+
 ## 常见问题 FAQ
 
 **Q：裁切超出画面？**  

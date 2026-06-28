@@ -75,6 +75,9 @@ ComfyUI 音频节点输出 **`AUDIO`** `{waveform, sample_rate}` tensor dict。C
 | **自定义工作流** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.zh.md |
 ## 常见问题 FAQ
 
+**Q：Queue 和 Run 混淆？**  
+A：**Run** = ComfyTV stage / 入桥写入快照（本节点必须 Run）；**Queue** = 跑整条 ComfyUI 图。入桥不能用 Queue 代替 Run。
+
 **Q：Demux 已是 COMFYTV_AUDIO，还要桥吗？**  
 A：不需要。Demux 已在 ComfyTV 体系内。桥只用于 **原生 AUDIO**。
 

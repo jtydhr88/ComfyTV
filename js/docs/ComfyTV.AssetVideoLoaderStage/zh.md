@@ -1,3 +1,5 @@
+# 从资产库加载视频
+
 > 从 ComfyTV **项目资产库**选取视频片段，作为剪辑、Demux、再生成等下游步骤的输入——专用于复用本项目内的媒体成果。
 
 ## 这个节点是做什么的
@@ -85,12 +87,17 @@
 
 ## 常见问题 FAQ
 
-**Q：节点帮助和完整教程有什么区别？**  
-A：本页只介绍**这一个节点**的参数与连线。端到端流程、多节点串联和原理说明见上方 **「完整教程（推荐阅读）」** 中的用户指南。
+**Q：和加载视频（input/）比？**  
+A：**input/** = 外部原始文件。**资产库** = 项目内生成/导入。用 Video Stage 生成；用本节点复用。
 
+**Q：刚 Run 的视频找不到？**  
+A：是否同一 **Project**？Run 完成后刷新节点。
 
-**Q：`COMFYTV_*` 类型和 ComfyUI 原生类型连不上怎么办？**  
-A：ComfyTV stage 传递的是项目内 **URL 快照**（如 `COMFYTV_IMAGE`），不是 GPU 里的 `IMAGE` tensor。请使用 **ComfyTV/Bridge** 下的入桥（→）或出桥（←）转换。完整说明见 [Bridge 接入插件](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md) 教程。
+**Q：类型报错？**  
+A：下游需要 `COMFYTV_VIDEO`；原生 tensor 需 Bridge。
+
+**Q：能替代 Video Stage 吗？**  
+A：不能——本节点只**选取**，不**生成**视频。
 
 ## 相关节点
 
