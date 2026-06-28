@@ -88278,6 +88278,8 @@ function useStageNode(node, kind, variant = "generator") {
           obj.main_prompt = entries2.expand(pid, mp);
         }
       }
+      ;
+      pm.__comfytvOwnRun = true;
       const queueResp = await a.api.queuePrompt(0, pm, { partialExecutionTargets: [targetId] });
       runningPromptId = (queueResp == null ? void 0 : queueResp.prompt_id) ? String(queueResp.prompt_id) : null;
     } catch (e) {
@@ -88980,6 +88982,10 @@ function installGlobalRunBridge(app2, deps) {
   const origQueue = app2.api.queuePrompt.bind(app2.api);
   app2.api.queuePrompt = async (number2, data, options = {}) => {
     var _a3;
+    if (data == null ? void 0 : data.__comfytvOwnRun) {
+      if (data && typeof data === "object") delete data.__comfytvOwnRun;
+      return origQueue(number2, data, options);
+    }
     const isGlobalRun = !((_a3 = options == null ? void 0 : options.partialExecutionTargets) == null ? void 0 : _a3.length);
     if (isGlobalRun && (data == null ? void 0 : data.output)) {
       const store = deps.resolveStore();

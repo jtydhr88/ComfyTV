@@ -612,6 +612,7 @@ export function useStageNode(
           obj.main_prompt = entries.expand(pid, mp)
         }
       }
+      ;(pm as any).__comfytvOwnRun = true
       const queueResp = await a.api.queuePrompt(0, pm, { partialExecutionTargets: [targetId] })
       runningPromptId = queueResp?.prompt_id ? String(queueResp.prompt_id) : null
     } catch (e) {

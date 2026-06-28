@@ -73,6 +73,10 @@ export function installGlobalRunBridge(app: any, deps: InstallGlobalRunBridgeDep
 
   const origQueue = app.api.queuePrompt.bind(app.api)
   app.api.queuePrompt = async (number: number, data: any, options: any = {}) => {
+    if (data?.__comfytvOwnRun) {
+      if (data && typeof data === 'object') delete data.__comfytvOwnRun
+      return origQueue(number, data, options)
+    }
     const isGlobalRun = !options?.partialExecutionTargets?.length
     if (isGlobalRun && data?.output) {
       const store = deps.resolveStore()

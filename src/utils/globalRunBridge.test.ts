@@ -174,6 +174,23 @@ describe('installGlobalRunBridge (end-to-end via api.queuePrompt)', () => {
     expect(toast.mock.calls[0][0].detail).toContain('← ComfyTV Image (#3)')
   })
 
+  it('own-run marker passes through even when options are stripped by another hijacker', async () => {
+    const { app, origQueue, store, toast } = makeApp()
+    installGlobalRunBridge(app, deps(store, toast))
+
+    const data: any = {
+      output: { '1': { class_type: 'ComfyTV.ImageStage', inputs: {} } },
+      workflow: {},
+      __comfytvOwnRun: true,
+    }
+    const res = await app.api.queuePrompt(0, data, undefined)
+
+    expect(origQueue).toHaveBeenCalledTimes(1)
+    expect(res.prompt_id).toBe('p-123')
+    expect(toast).not.toHaveBeenCalled()
+    expect('__comfytvOwnRun' in origQueue.mock.calls[0][1]).toBe(false)
+  })
+
   it('global Run on a pure stage graph informs and does not queue', async () => {
     const { app, origQueue, store, toast } = makeApp()
     installGlobalRunBridge(app, deps(store, toast))
