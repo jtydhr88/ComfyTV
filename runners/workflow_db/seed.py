@@ -256,6 +256,8 @@ def seed_workflows_from_disk(kinds: tuple[str, ...]) -> None:
             for path in sorted(kind_dir.glob("*.json")):
                 if path.stem.endswith("_preset"):
                     continue
+                if path.name.endswith(".api.json"):
+                    continue
                 _upsert_workflow_row(s, kind, path)
                 found_paths.add(str(path.resolve()))
                 seen += 1

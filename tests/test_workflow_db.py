@@ -1007,3 +1007,122 @@ class TestBuildPreset:
         wdb.update_workflow_meta(cfg["id"], sizing={})
         exported = wdb.build_preset("image", "X")
         assert "sizing" not in exported
+
+
+class TestProvidedApiSidecar:
+    _GUI = {"nodes": [{"id": 9, "type": "SaveImage"},
+                      {"id": 57, "type": "sub-uuid"}]}
+    _API = {
+        "9":     {"class_type": "SaveImage",  "inputs": {"images": ["57:8", 0]}},
+        "57:3":  {"class_type": "KSampler",   "inputs": {"seed": 1}},
+        "57:8":  {"class_type": "VAEDecode",  "inputs": {}},
+    }
+
+    def _seed(self, monkeypatch, tmp_path, *, with_sidecar: bool,
+              name="byo", kind="image"):
+        from pathlib import Path
+        wdir = tmp_path / "workflows"
+        kdir = wdir / kind
+        kdir.mkdir(parents=True, exist_ok=True)
+        (kdir / f"{name}.json").write_text(json.dumps(self._GUI), encoding="utf-8")
+        if with_sidecar:
+            (kdir / f"{name}.api.json").write_text(json.dumps(self._API), encoding="utf-8")
+        monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
+        wdb.seed_workflows_from_disk((kind,))
+        return kdir
+
+    def test_sidecar_path_for_gui_file(self):
+        from pathlib import Path
+        assert wdb.bindings._sidecar_api_path("/a/b/foo.json") == Path("/a/b/foo.api.json")
+
+    def test_sidecar_path_none_for_api_or_empty(self):
+        assert wdb.bindings._sidecar_api_path("/a/b/foo.api.json") is None
+        assert wdb.bindings._sidecar_api_path("") is None
+
+    def test_load_api_format_accepts_api(self):
+        assert wdb.bindings._load_api_format(json.dumps(self._API)) == self._API
+
+    def test_load_api_format_rejects_gui_graph(self):
+        assert wdb.bindings._load_api_format(json.dumps(self._GUI)) is None
+
+    def test_load_api_format_rejects_junk(self):
+        assert wdb.bindings._load_api_format("not json") is None
+        assert wdb.bindings._load_api_format(json.dumps({"3": {"foo": 1}})) is None
+        assert wdb.bindings._load_api_format(json.dumps({})) is None
+
+    def test_seed_does_not_register_sidecar_as_workflow(self, reset_db, tmp_path, monkeypatch):
+        self._seed(monkeypatch, tmp_path, with_sidecar=True)
+        rows = wdb.list_workflows()
+        labels = [r["label"] for r in rows if r["kind"] == "image"]
+        assert "Byo" in labels
+        assert all("api" not in l.lower() for l in labels)
+        assert len(labels) == 1
+
+    def test_state_uses_sidecar_directly(self, reset_db, tmp_path, monkeypatch):
+        self._seed(monkeypatch, tmp_path, with_sidecar=True)
+        state = wdb.get_workflow_state("image", "Byo")
+        assert state["has_api"] is True
+        cfg = wdb.get_workflow_config("image", "Byo")
+        assert cfg["api_json"] == self._API
+
+    def test_state_no_sidecar_has_no_api(self, reset_db, tmp_path, monkeypatch):
+        self._seed(monkeypatch, tmp_path, with_sidecar=False)
+        state = wdb.get_workflow_state("image", "Byo")
+        assert state["has_api"] is False
+
+    def test_sidecar_survives_gui_mtime_change(self, reset_db, tmp_path, monkeypatch):
+        kdir = self._seed(monkeypatch, tmp_path, with_sidecar=True)
+        assert wdb.get_workflow_state("image", "Byo")["has_api"] is True
+        import os, time
+        gui = kdir / "byo.json"
+        os.utime(gui, (time.time() + 50, time.time() + 50))
+        state = wdb.get_workflow_state("image", "Byo")
+        assert state["has_api"] is True
+
+    def test_sidecar_dropped_at_runtime_is_picked_up(self, reset_db, tmp_path, monkeypatch):
+        kdir = self._seed(monkeypatch, tmp_path, with_sidecar=False)
+        assert wdb.get_workflow_state("image", "Byo")["has_api"] is False
+        (kdir / "byo.api.json").write_text(json.dumps(self._API), encoding="utf-8")
+        assert wdb.get_workflow_state("image", "Byo")["has_api"] is True
+
+    def test_sidecar_prunes_orphaned_bindings(self, reset_db, tmp_path, monkeypatch):
+        self._seed(monkeypatch, tmp_path, with_sidecar=False)
+        cfg = wdb.get_workflow_config("image", "Byo")
+        wid = cfg["id"]
+        wdb.upsert_input_binding(wid, "999", "text", "main_prompt")
+        wdb.upsert_input_binding(wid, "57:3", "seed", "option:seed")
+        from pathlib import Path
+        Path(cfg["file_path"]).parent.joinpath("byo.api.json").write_text(
+            json.dumps(self._API), encoding="utf-8")
+        wdb.get_workflow_state("image", "Byo")
+        cfg2 = wdb.get_workflow_config("image", "Byo")
+        node_ids = {b["node_id"] for b in cfg2["bindings"]}
+        assert "999" not in node_ids
+        assert "57:3" in node_ids
+
+    def test_invalid_sidecar_is_ignored(self, reset_db, tmp_path, monkeypatch):
+        kdir = self._seed(monkeypatch, tmp_path, with_sidecar=False)
+        (kdir / "byo.api.json").write_text(json.dumps(self._GUI), encoding="utf-8")
+        state = wdb.get_workflow_state("image", "Byo")
+        assert state["has_api"] is False
+
+    def test_save_api_sidecar_writes_and_adopts(self, reset_db, tmp_path, monkeypatch):
+        kdir = self._seed(monkeypatch, tmp_path, with_sidecar=False)
+        res = wdb.save_api_sidecar("image", "Byo", json.dumps(self._API))
+        assert res["ok"] is True
+        assert res["node_count"] == len(self._API)
+        assert res["sidecar"] == "byo.api.json"
+        assert (kdir / "byo.api.json").exists()
+        cfg = wdb.get_workflow_config("image", "Byo")
+        assert cfg["has_api"] is True
+        assert cfg["api_json"] == self._API
+
+    def test_save_api_sidecar_rejects_non_api(self, reset_db, tmp_path, monkeypatch):
+        self._seed(monkeypatch, tmp_path, with_sidecar=False)
+        with pytest.raises(ValueError, match="API-format"):
+            wdb.save_api_sidecar("image", "Byo", json.dumps(self._GUI))
+
+    def test_save_api_sidecar_unknown_workflow(self, reset_db, tmp_path, monkeypatch):
+        self._seed(monkeypatch, tmp_path, with_sidecar=False)
+        with pytest.raises(ValueError, match="not found"):
+            wdb.save_api_sidecar("image", "Nope", json.dumps(self._API))

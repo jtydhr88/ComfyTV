@@ -76,7 +76,25 @@ export function prepareWorkflow(kind: string, label: string): Promise<void> {
       }
 
       const apiJson = await convertGuiToApiHeadless(guiJson)
-      console.info(`[ComfyTV/workflow-prep] ${kind}/${label}: converted via headless iframe`)
+
+      const nodeCount =
+        apiJson && typeof apiJson === 'object' && !Array.isArray(apiJson)
+          ? Object.keys(apiJson).length
+          : 0
+      if (nodeCount === 0) {
+        const sidecar = String(state.file_path || `${label}.json`).replace(/\.json$/i, '.api.json')
+        throw new Error(
+          `Couldn't convert "${label}" to an API prompt: the GUI→API conversion ran ` +
+          `but emitted nothing (0 nodes) — usually a subgraph that fails to expand in ` +
+          `this ComfyUI setup. The workflow was NOT saved.\n\n` +
+          `Fix: open this workflow in ComfyUI, use "Save (API Format)", and save the ` +
+          `result next to the workflow file as:\n  ${sidecar}\n` +
+          `ComfyTV will use that API prompt directly and skip conversion.`,
+        )
+      }
+      console.info(
+        `[ComfyTV/workflow-prep] ${kind}/${label}: converted via headless iframe (${nodeCount} nodes)`,
+      )
 
       await apiSend('/comfytv/workflows/api_json', 'POST', OkSchema, {
         kind, label, api_json: apiJson, file_mtime: fileMtime,

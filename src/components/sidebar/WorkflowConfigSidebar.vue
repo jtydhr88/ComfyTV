@@ -128,8 +128,22 @@
         </div>
       </section>
 
-      <div v-else class="ctv:p-2 ctv:text-xs ctv:text-left ctv:italic ctv:text-muted-foreground/60">
-        {{ $t('configSidebar.noExposedWidgets') }}
+      <div v-else class="ctv:p-2 ctv:text-xs ctv:text-left ctv:flex ctv:flex-col ctv:gap-2">
+        <p class="ctv:m-0 ctv:italic ctv:text-muted-foreground/60">
+          {{ $t('configSidebar.noExposedWidgets') }}
+        </p>
+        <template v-if="config && !config.has_api">
+          <p class="ctv:m-0 ctv:text-muted-foreground/80">
+            {{ $t('configSidebar.conversionMayHaveFailed') }}
+          </p>
+          <button
+            :class="exportBtn"
+            :disabled="uploadApiBusy"
+            :title="$t('configSidebar.uploadApiTooltip')"
+            @click="onUploadApiSidecar"
+          >⇪ {{ $t('configSidebar.uploadApi') }}</button>
+          <span v-if="uploadApiError" class="ctv:text-destructive-background">{{ uploadApiError }}</span>
+        </template>
       </div>
 
       <section v-if="config.description">
@@ -185,9 +199,11 @@ const {
   config, loadError,
   exportBusy, exportError,
   resetBusy,  resetError,
+  uploadApiBusy, uploadApiError,
   loadConfig,
   onExportPreset,
   onResetToPreset,
+  onUploadApiSidecar,
   postBinding,
   deleteBinding,
 } = useWorkflowConfig(t)

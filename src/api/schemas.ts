@@ -100,6 +100,14 @@ export const ImportWorkflowResultSchema = z.object({
 })
 export type ImportWorkflowResult = z.infer<typeof ImportWorkflowResultSchema>
 
+export const ApiSidecarResultSchema = z.object({
+  ok: z.boolean(),
+  label: z.string(),
+  node_count: z.number(),
+  sidecar: z.string(),
+})
+export type ApiSidecarResult = z.infer<typeof ApiSidecarResultSchema>
+
 export const AssetCategorySchema = z.object({
   id:         z.number(),
   name:       z.string(),

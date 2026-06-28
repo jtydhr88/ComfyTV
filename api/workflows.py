@@ -211,3 +211,32 @@ async def workflow_set_api_json(request: web.Request) -> web.Response:
     if not ok:
         return web.json_response({"error": "workflow not found"}, status=404)
     return web.json_response({"ok": True})
+
+
+@routes.post("/comfytv/workflows/api_sidecar")
+async def workflow_save_api_sidecar(request: web.Request) -> web.Response:
+    try:
+        body = await request.json()
+    except Exception:
+        return web.json_response({"error": "json body required"}, status=400)
+
+    kind    = str(body.get("kind") or "")
+    label   = str(body.get("label") or "")
+    content = body.get("content")
+    if isinstance(content, (dict, list)):
+        content = json.dumps(content)
+    elif content is not None:
+        content = str(content)
+
+    if not kind or not label:
+        return web.json_response({"error": "kind and label required"}, status=400)
+    if not content:
+        return web.json_response({"error": "content required"}, status=400)
+
+    try:
+        result = workflow_db.save_api_sidecar(kind, label, content)
+    except ValueError as e:
+        return web.json_response({"error": str(e)}, status=400)
+    except OSError as e:
+        return web.json_response({"error": f"could not write sidecar: {e}"}, status=500)
+    return web.json_response(result)

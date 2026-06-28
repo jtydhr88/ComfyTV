@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 
-import { apiFetch, apiSend, OkSchema, WorkflowConfigSchema } from '@/api'
+import { apiFetch, apiSend, OkSchema, uploadApiSidecar, WorkflowConfigSchema } from '@/api'
 import { askConfirm } from '@/composables/dialog/useConfirmDialog'
 import { invalidateWorkflowInfo } from '@/composables/stages/useWorkflowValidator'
 import { prepareWorkflow } from '@/composables/stages/useWorkflowPrep'
@@ -24,6 +24,9 @@ export function useWorkflowConfig(t: (key: string, args?: Record<string, unknown
 
   const resetBusy  = ref(false)
   const resetError = ref<string | null>(null)
+
+  const uploadApiBusy  = ref(false)
+  const uploadApiError = ref<string | null>(null)
 
   async function loadConfig(kind: string, label: string) {
     loadError.value = null
@@ -95,6 +98,42 @@ export function useWorkflowConfig(t: (key: string, args?: Record<string, unknown
     }
   }
 
+  function onUploadApiSidecar() {
+    const sel = selection.selected
+    if (!sel?.workflowKind || !sel?.workflowLabel) return
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.accept = '.json,application/json'
+    input.style.display = 'none'
+    input.onchange = async () => {
+      const file = input.files?.[0]
+      input.remove()
+      if (!file) return
+      uploadApiError.value = null
+      uploadApiBusy.value = true
+      try {
+        const text = await file.text()
+        try { JSON.parse(text) } catch { throw new Error(t('configSidebar.uploadApiNotJson')) }
+        const res = await uploadApiSidecar(sel.workflowKind, sel.workflowLabel, text)
+        await loadConfig(sel.workflowKind, sel.workflowLabel)
+        invalidateWorkflowInfo()
+        ;(app as any)?.extensionManager?.toast?.add?.({
+          severity: 'success',
+          summary: t('configSidebar.uploadApiOk', { n: res.node_count }),
+          life: 4000,
+        })
+      } catch (e: any) {
+        uploadApiError.value = t('configSidebar.uploadApiFailed', {
+          detail: String(e?.message || e || 'upload failed'),
+        })
+      } finally {
+        uploadApiBusy.value = false
+      }
+    }
+    document.body.appendChild(input)
+    input.click()
+  }
+
   function notifyValidatorOfBindingChange() {
     invalidateWorkflowInfo()
     selection.bumpBindings()
@@ -130,9 +169,11 @@ export function useWorkflowConfig(t: (key: string, args?: Record<string, unknown
     loadError,
     exportBusy, exportError,
     resetBusy,  resetError,
+    uploadApiBusy, uploadApiError,
     loadConfig,
     onExportPreset,
     onResetToPreset,
+    onUploadApiSidecar,
     postBinding,
     deleteBinding,
   }

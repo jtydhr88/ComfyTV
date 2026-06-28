@@ -217,6 +217,12 @@
     "resetToPresetTooltip": "清空该工作流的所有绑定和元数据，重新读取磁盘上的 _preset.json 文件。你自己改过的内容会丢失。",
     "resetToPresetConfirm": "把这个工作流的所有绑定重置成内置 preset？你自己改过的会丢失。",
     "resetToPresetFailed": "重置失败: {detail}",
+    "conversionMayHaveFailed": "可能是 ComfyTV 转换失败。请在 ComfyUI 里手动导出一份 API 的 json（Save (API Format)），在这里上传，注意以同名 .api.json 命名。",
+    "uploadApi": "上传 API JSON",
+    "uploadApiTooltip": "把 Save (API Format) 导出的 json 附加到这个工作流。会存成工作流旁边的 <name>.api.json 并直接使用、跳过转换。",
+    "uploadApiOk": "API prompt 已保存（{n} 个节点）——工作流就绪。",
+    "uploadApiFailed": "上传失败: {detail}",
+    "uploadApiNotJson": "不是合法的 JSON。",
     "section": {
       "widgets": "Widget 列表",
       "notes": "工作流笔记",

@@ -22,6 +22,7 @@ from .bindings import (
     get_workflow_state,
     read_workflow_file,
     set_api_json,
+    save_api_sidecar,
 )
 
 __all__ = [
@@ -39,4 +40,5 @@ __all__ = [
     "get_workflow_state",
     "read_workflow_file",
     "set_api_json",
+    "save_api_sidecar",
 ]

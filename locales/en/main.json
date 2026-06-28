@@ -217,6 +217,12 @@
     "resetToPresetTooltip": "Wipe all bindings + meta for this workflow and re-apply its shipped _preset.json from disk. Your own edits will be lost.",
     "resetToPresetConfirm": "Reset all bindings for this workflow to the shipped preset? Your edits will be lost.",
     "resetToPresetFailed": "Reset failed: {detail}",
+    "conversionMayHaveFailed": "ComfyTV may have failed to convert this workflow. Export an API-format JSON from ComfyUI (Save (API Format)) and upload it here — name it as the matching .api.json next to the workflow.",
+    "uploadApi": "Upload API JSON",
+    "uploadApiTooltip": "Attach a Save (API Format) export to this workflow. It's stored as <name>.api.json next to the workflow and used directly, skipping conversion.",
+    "uploadApiOk": "API prompt saved ({n} nodes) — workflow ready.",
+    "uploadApiFailed": "Upload failed: {detail}",
+    "uploadApiNotJson": "Not valid JSON.",
     "section": {
       "widgets": "Widgets",
       "notes": "Workflow notes",

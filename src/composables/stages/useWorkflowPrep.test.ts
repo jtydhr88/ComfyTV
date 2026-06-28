@@ -112,6 +112,38 @@ describe('prepareWorkflow', () => {
     expect(getPrepState('image', 'X').ready).toBe(true)
   })
 
+  it('rejects an empty conversion result instead of persisting it', async () => {
+    let apiJsonPosted = false
+    const fetchApi = vi.fn(async (path: string) => {
+      if (path.startsWith('/comfytv/workflows/state')) {
+        return jsonResp({
+          has_api: false, file_path: '/x.json', file_mtime: 1.0, file_exists: true,
+        })
+      }
+      if (path.startsWith('/comfytv/workflows/file')) {
+        return textResp(JSON.stringify({ nodes: [{ id: 1, type: 'X' }] }),
+          200, { 'X-Workflow-Mtime': '1.0' })
+      }
+      if (path === '/comfytv/workflows/api_json') {
+        apiJsonPosted = true
+        return jsonResp({ ok: true })
+      }
+      throw new Error(`unexpected path ${path}`)
+    })
+
+    const { prepareWorkflow, getPrepState } = await loadModuleWith({
+      fetchApi, graphToPrompt: vi.fn(), graphCtor: undefined,
+    })
+    const { convertGuiToApiHeadless } = await import('@/composables/stages/headlessConvert')
+    ;(convertGuiToApiHeadless as any).mockResolvedValueOnce({})
+
+    await expect(prepareWorkflow('image', 'X')).rejects.toThrow(/0 nodes/)
+    expect(apiJsonPosted).toBe(false)
+    expect(getPrepState('image', 'X').ready).toBe(false)
+    expect(getPrepState('image', 'X').error).toMatch(/Save \(API Format\)/)
+    expect(getPrepState('image', 'X').error).toMatch(/\/x\.api\.json/)
+  })
+
   it('rejects non-GUI-format file content', async () => {
     const fetchApi = vi.fn(async (path: string) => {
       if (path.startsWith('/comfytv/workflows/state')) {

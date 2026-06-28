@@ -2,8 +2,8 @@ import type { z } from 'zod'
 
 import { app } from '@/lib/comfyApp'
 
-import { CapsPayloadSchema, ImportWorkflowResultSchema } from './schemas'
-import type { CapsPayload, ImportWorkflowResult } from './schemas'
+import { ApiSidecarResultSchema, CapsPayloadSchema, ImportWorkflowResultSchema } from './schemas'
+import type { ApiSidecarResult, CapsPayload, ImportWorkflowResult } from './schemas'
 
 export class ApiError extends Error {
   constructor(public path: string, public status: number, message: string) {
@@ -60,6 +60,14 @@ export function importWorkflow(
 ): Promise<ImportWorkflowResult> {
   return apiSend('/comfytv/workflows/import', 'POST', ImportWorkflowResultSchema, {
     kind, filename, content,
+  })
+}
+
+export function uploadApiSidecar(
+  kind: string, label: string, content: string,
+): Promise<ApiSidecarResult> {
+  return apiSend('/comfytv/workflows/api_sidecar', 'POST', ApiSidecarResultSchema, {
+    kind, label, content,
   })
 }
 
