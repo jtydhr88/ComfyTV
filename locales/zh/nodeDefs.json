@@ -580,7 +580,7 @@
     "display_name": "音乐阶段",
     "inputs": {
       "main_prompt": {
-        "tooltip": "音频生成 tags"
+        "tooltip": "音频生成标签"
       },
       "duration_s": {
         "name": "时长 (秒)"
@@ -920,7 +920,7 @@
     "display_name": "擦除",
     "inputs": {
       "mask_data": {
-        "tooltip": "蒙版的 annotated path,由画笔 UI 上传后写入",
+        "tooltip": "蒙版的标注路径，由画笔界面上传后写入",
         "name": "蒙版"
       },
       "image": {
@@ -1128,7 +1128,7 @@
     "display_name": "重绘",
     "inputs": {
       "mask_data": {
-        "tooltip": "蒙版的 annotated path,由画笔 UI 上传后写入",
+        "tooltip": "蒙版的标注路径，由画笔界面上传后写入",
         "name": "蒙版"
       },
       "main_prompt": {
@@ -1315,7 +1315,7 @@
         "name": "项目名称"
       },
       "schema_version": {
-        "name": "Schema 版本"
+        "name": "数据结构版本"
       }
     },
     "outputs": {}
@@ -1418,7 +1418,7 @@
         "name": "音色"
       },
       "language": {
-        "tooltip": "多语言模型的语言。选 'Auto' 交给 workflow/模型决定;名称要跟所选模型对得上(如 Kokoro 用 'Mandarin Chinese')。",
+        "tooltip": "多语言模型使用的语言。选择“Auto”可交由工作流或模型决定；名称必须与所选模型匹配（例如 Kokoro 使用“Mandarin Chinese”）。",
         "name": "语言"
       },
       "speed": {

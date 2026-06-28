@@ -68,14 +68,14 @@
       "next": "下一张",
       "pick": "选用这条"
     },
-    "preparingWorkflowDetail": "稍等 — 正在把工作流转换成 api JSON。稍后再点运行。"
+    "preparingWorkflowDetail": "请稍候——正在把工作流转换成 API JSON。稍后再点运行。"
   },
   "error": {
     "dismiss": "清除",
     "cancelled": "已取消",
     "upstreamNotReady": "上游未就绪",
-    "upstreamNotReadyDetail": "上游未就绪:{list}。请先运行这些 stage 生成快照,然后再运行此 stage。",
-    "workerDied": "后端未返回结果就停止了。prompt worker 可能已崩溃(通常是清理阶段 CUDA OOM)。重启 ComfyUI 后恢复。"
+    "upstreamNotReadyDetail": "上游未就绪：{list}。请先运行这些阶段生成快照，然后再运行当前阶段。",
+    "workerDied": "后端尚未返回结果便停止了。提示词工作进程可能已崩溃（通常是清理阶段发生 CUDA 显存不足）。重启 ComfyUI 后即可恢复。"
   },
   "sidebar": {
     "tab": {
@@ -292,9 +292,9 @@
     "addHint": "挂载一个在 ComfyTV 侧栏中定义好的参数",
     "remove": "从该节点移除",
     "sidebar": {
-      "title": "Stage 参数",
-      "kind": "Stage",
-      "empty": "这个 stage 还没有定义任何参数。",
+      "title": "阶段参数",
+      "kind": "阶段",
+      "empty": "这个阶段还没有定义任何参数。",
       "new": "新建参数",
       "label": "名称",
       "type": "类型",
@@ -380,22 +380,22 @@
     "slotShort": "→ 参考图槽位 #{n}",
     "slotWired": "已连线",
     "slotClaimed": "已占用",
-    "slotEmpty": "这个工作流还没绑定参考图槽位 —— 先在侧边栏工作流配置里把 LoadImage 绑到「Upstream image #N」。"
+    "slotEmpty": "这个工作流还没有绑定参考图槽位——请先在侧边栏的工作流配置中，将 LoadImage（加载图像）绑定到「上游图像 #N」。"
   },
   "configSidebar": {
     "title": "工作流配置",
-    "empty": "在画布上选中某个 Stage 节点以编辑它的工作流配置。导入的工作流在节点的 workflow 下拉框中选用 —— 全部清单见「Stage 管理」页。",
-    "noWorkflowPicked": "该 Stage 还没选工作流 —— 先在下拉里挑一个。",
+    "empty": "在画布上选中某个阶段节点，以编辑它的工作流配置。导入的工作流可从节点的“工作流”下拉菜单中选择；完整列表请前往“阶段管理”页面查看。",
+    "noWorkflowPicked": "该阶段尚未选择工作流——请先从下拉菜单中选择一个。",
     "loading": "加载中…",
-    "noExposedWidgets": "这个工作流没有可编辑的 widget，或者还没准备过 —— 先在画布上任一 Stage 选中它，浏览器侧 graphToPrompt 跑一遍后才有 widget 元数据。",
-    "pickWorkflowFirst": "先在画布上任一 Stage 上选中这个工作流 —— 浏览器侧 graphToPrompt 跑过一遍才有 widget 元数据。",
+    "noExposedWidgets": "这个工作流没有可编辑的控件，或者尚未完成准备——请先在画布上的任一阶段节点中选择它；浏览器端运行一次 graphToPrompt 后才会生成控件元数据。",
+    "pickWorkflowFirst": "请先在画布上的任一阶段节点中选择这个工作流；浏览器端运行一次 graphToPrompt 后才会生成控件元数据。",
     "bindTo": "绑定到：",
-    "exportPreset": "导出 preset.json",
+    "exportPreset": "导出 preset.json 预设",
     "exportPresetTooltip": "把当前绑定导出为 *_preset.json 文件，丢进 workflows/<kind>/ 和工作流 JSON 同目录，其他用户首次启动时会自动应用这套默认。",
     "exportPresetFailed": "导出失败: {detail}",
-    "resetToPreset": "↻ 重置为内置 preset",
+    "resetToPreset": "↻ 重置为内置预设",
     "resetToPresetTooltip": "清空该工作流的所有绑定和元数据，重新读取磁盘上的 _preset.json 文件。你自己改过的内容会丢失。",
-    "resetToPresetConfirm": "把这个工作流的所有绑定重置成内置 preset？你自己改过的会丢失。",
+    "resetToPresetConfirm": "将这个工作流的所有绑定重置为内置预设？你自己修改过的内容会丢失。",
     "resetToPresetFailed": "重置失败: {detail}",
     "conversionMayHaveFailed": "可能是 ComfyTV 转换失败。请在 ComfyUI 里手动导出一份 API 的 json（Save (API Format)），在这里上传，注意以同名 .api.json 命名。",
     "uploadApi": "上传 API JSON",
@@ -421,7 +421,7 @@
       "hint": "提示词里的图片提及在本工作流的模型下如何展开。"
     },
     "section": {
-      "widgets": "Widget 列表",
+      "widgets": "控件列表",
       "notes": "工作流笔记",
       "description": "说明",
       "result": "结果输出",
@@ -492,7 +492,7 @@
     "video": {
       "extend": {
         "label": "延伸",
-        "tooltip": "抽出本段末帧,派生新 VideoStage 用作 I2V 起始帧 —— 写个 prompt 描述接下来要发生什么"
+        "tooltip": "提取本段末帧并派生一个新的视频阶段节点，作为 I2V 起始帧——请用提示词描述接下来要发生的内容"
       },
       "change": {
         "label": "修改视频",
@@ -502,7 +502,7 @@
     "text": {
       "refine": {
         "label": "改写",
-        "tooltip": "在新 TextStage 中继续改写"
+        "tooltip": "在新的文本阶段节点中继续改写"
       }
     },
     "panorama": {
@@ -522,7 +522,7 @@
     "storyboard": {
       "gen-shots": {
         "label": "生成分镜图",
-        "tooltip": "派生一个 Shot Images 节点接到这个分镜板上 —— 按镜头列表逐个出图"
+        "tooltip": "派生一个分镜图集节点并连接到这个分镜板——按照镜头列表逐个生成图片"
       }
     },
     "model": {
@@ -710,7 +710,7 @@
       },
       "subtitle-select": {
         "label": "扣选去字幕",
-        "tooltip": "手动框选区域擦除（需要 region selector UI）"
+        "tooltip": "手动框选需要擦除的区域（需要区域选择界面）"
       },
       "audio-vocal": {
         "label": "仅保留人声",
@@ -1107,11 +1107,11 @@
     "adjustToApply": "拖动矩形或选择比例以应用"
   },
   "panorama": {
-    "empty": "暂无全景图 — 上传 HDRI / 等距柱状投影图，或接入上游图后点 Run",
+    "empty": "暂无全景图——请上传 HDRI / 等距柱状投影图，或接入上游图后点击“运行”",
     "uploading": "上传中…",
     "upload": "上传全景图",
     "clearUpload": "清除上传",
-    "clearUploadTooltip": "丢弃手动来源 — 之后 Run 会重新从上游派生",
+    "clearUploadTooltip": "丢弃手动来源——下次运行时会重新从上游生成",
     "manualSourceBadge": "手动",
     "loadError": "加载全景图失败"
   },
@@ -1123,7 +1123,7 @@
   "storyboard": {
     "shots": "分镜",
     "addShot": "添加分镜",
-    "empty": "暂无分镜 — 点 Run 从剧本生成，或手动添加",
+    "empty": "暂无分镜——点击“运行”从剧本生成，或手动添加",
     "moveUp": "上移",
     "moveDown": "下移",
     "remove": "删除分镜",
@@ -1486,7 +1486,7 @@
     "exportEmpty": "没有可导出的词条。",
     "importResult": "导入 {added} 条新词条,跳过 {dup} 条重复、{invalid} 条无效。",
     "importError": "导入失败:不是有效的词条 JSON 文件。",
-    "refHelpPre": "在 stage 提示词里用",
+    "refHelpPre": "在阶段提示词中使用",
     "refHelpPost": "引用任意条目;未知标记保持原文。",
     "colLabel": "标签",
     "colContent": "内容",
@@ -1524,10 +1524,10 @@
   "valuePreview": {
     "moreShots": "+ 还有 {n} 个",
     "emptyTimeline": "空时间轴",
-    "fromUpstream": "来自上游接入的 batch —— 请在上游移除，这里删不掉"
+    "fromUpstream": "来自上游接入的批次——请在上游移除，无法在此处删除"
   },
   "run": {
-    "stagesRunPerNode": "ComfyTV 节点各自独立运行 — 请用每个节点上的运行按钮。全局 Run 在这里没有可执行的节点。"
+    "stagesRunPerNode": "ComfyTV 节点各自独立运行——请使用每个节点上的运行按钮。全局“运行”在这里没有可执行的节点。"
   },
   "nodeCategories": {
     "ComfyTV": "ComfyTV",
