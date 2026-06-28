@@ -1,0 +1,110 @@
+# → ComfyTV 图像 (Bridge To Image)
+
+> **入桥**：把 ComfyUI 原生 **IMAGE** tensor（任意插件输出）转成 ComfyTV 的 **COMFYTV_IMAGE** URL 快照；须点 **▶ 运行** 写入 `output/ComfyTV/bridge/` 并持久化到项目。
+
+## 这个节点是做什么的
+
+ComfyTV stage 之间传递的是 **URL 快照**（`/view?filename=…` 字符串），不是 GPU 内存里的 tensor。任何输出 **`IMAGE`** 的 ComfyUI 节点——**IPAdapter**、ControlNet 预处理、**mesh2motion** 渲染帧、Save Image 上游、自定义 Python 节点——都不能 **直接** 接到 **Image Picker** 或 **Upscale** 这类 ComfyTV stage。
+
+**→ ComfyTV Image** 就是「入境检查站」：Run 时读取上游 tensor，**保存 PNG** 到磁盘，生成 ComfyTV 能读懂的快照 URL。
+
+```
+[IPAdapter 等] ──IMAGE tensor──→ [→ ComfyTV Image] ──COMFYTV_IMAGE URL──→ [Image Picker / Upscale / …]
+                                      ▲ Run + 快照
+```
+
+## 适用场景
+
+- mesh2motion / 3D 插件输出帧 → ComfyTV 编辑流水线
+- IPAdapter 风格图 → ComfyTV **Video Stage** I2V
+- ControlNet 预处理结果 → ComfyTV **Inpaint**
+- 任意第三方 IMAGE → ComfyTV 资产与 lineage 体系
+
+## 工作原理（为什么 ComfyTV 这样设计）
+
+- ComfyTV **Stage** 各自 **▶ 运行**，不 Queue 整图；快照让下游只读 URL，不必重跑昂贵上游。
+- **入桥本身也是 Stage**：有 Run 按钮。Run = 执行上游链路（若尚未执行）+ **写 PNG + 注册快照**。
+- 文件路径：`ComfyUI/output/ComfyTV/bridge/ComfyTV_bridge_xxxxx_.png`（见 [`bridges.py`](https://github.com/jtydhr88/ComfyTV/blob/main/nodes/bridges.py) `_save_images_to_disk`）。
+- 下游 ComfyTV stage 再 Run 时 **直接用桥的快照**，不会自动重跑 IPAdapter  unless 你再次 Run 入桥。
+
+## 类型说明（COMFYTV_* vs ComfyUI 原生）— 必读
+
+| 侧 | ComfyUI 原生 | ComfyTV |
+|---|---|---|
+| 图像 | `IMAGE` — torch tensor 批量 `[B,H,W,C]` | `COMFYTV_IMAGE` — **单图** `/view?` URL 字符串 |
+| 多图 | `IMAGE` batch（B>1） | `COMFYTV_IMAGES` — JSON 批量；单张用 **→ ComfyTV Images** |
+| 视频 | `VIDEO` 对象 | `COMFYTV_VIDEO` — mp4 URL |
+| 音频 | `AUDIO` dict `{waveform, sample_rate}` | `COMFYTV_AUDIO` — wav URL |
+| 文本 | `STRING` | `COMFYTV_TEXT` — 纯文本快照 |
+
+**连线规则：** 原生口 **不能** 直连 ComfyTV 口。必须经 **→** 入桥或 **←** 出桥。完整指南：[bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md)
+
+## 界面与参数说明
+
+### image（输入）
+上游 **IMAGE** tensor。只取 **batch 第 1 张**（`image[:1]`）。多帧请用 **→ ComfyTV Images** 或先 **Create Video**。
+
+### force_run_token / project_id / parent_output_id（隐藏）
+ComfyTV 内部 lineage；一般无需手改。
+
+## 输出说明
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **image** | `COMFYTV_IMAGE` | 持久化 PNG 的 `/view?` URL |
+
+## 新手一步一步
+
+1. 画布左侧跑通原生插件（如 IPAdapter）到 IMAGE 输出。
+2. 拖 **→ ComfyTV Image**，把 **image** 连上。
+3. 点入桥上 **▶ 运行**（关键！不 Run 则无快照）。
+4. 把 **image** 输出接到 **Image Picker** 或 **Upscale**。
+5. 改上游后 **重新 Run 入桥** 更新快照。
+
+## 链接
+
+| 资源 | 链接 |
+|---|---|
+| Bridge 总指南 | https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md |
+| ComfyTV 仓库 | https://github.com/jtydhr88/ComfyTV |
+
+
+## 完整教程（推荐阅读）
+
+> 本页只说明**这一个节点**。完整操作流程、多节点串联、类型转换与原理，请阅读上游官方仓库 [**jtydhr88/ComfyTV**](https://github.com/jtydhr88/ComfyTV) 的用户指南（文档链接均指向上游 `main`，而非本地 fork）：
+
+| 教程 | 内容 |
+| --- | --- |
+| [入门指南](https://github.com/jtydhr88/ComfyTV/blob/main/docs/getting-started.zh.md) | 安装、画布基础、逐节点 Run、快照、Project、Image Picker |
+| [Bridge 接入插件](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md) | COMFYTV_* 与原生类型、入桥/出桥、IPAdapter 等示例 |
+| [自定义工作流](https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.zh.md) | 导入自己的 ComfyUI JSON，不改 Python |
+
+## 上游仓库与工作流
+
+| 资源 | 链接 |
+| --- | --- |
+| **官方仓库（上游）** | https://github.com/jtydhr88/ComfyTV |
+| **用户指南目录** | https://github.com/jtydhr88/ComfyTV/tree/main/docs |
+| **内置工作流总览** | https://github.com/jtydhr88/ComfyTV/tree/main/workflows |
+| **模型清单** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md |
+| **Bridge 实现源码** | https://github.com/jtydhr88/ComfyTV/blob/main/nodes/bridges.py |
+| **自定义工作流** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.zh.md |
+## 常见问题 FAQ
+
+**Q：连上了但 ComfyTV 下游空的？**  
+A：入桥 **必须 Run**。出桥（←）无 Run，入桥（→）有 Run。
+
+**Q：IPAdapter 批量多张？**  
+A：用 **→ ComfyTV Images**；或只桥接第一张。
+
+**Q：mesh2motion 出 VIDEO 不是 IMAGE？**  
+A：用 **→ ComfyTV Video**；若只有 IMAGE 序列，先 **Create Video (fps)**。
+
+**Q：文件在哪？**  
+A：`output/ComfyTV/bridge/*.png`。
+
+## 相关节点
+
+- **→ ComfyTV Images** / **Video** / **Text** / **Audio**
+- **← ComfyTV Image** —— 反向出 ComfyTV
+- **Image Picker** —— 常见下游

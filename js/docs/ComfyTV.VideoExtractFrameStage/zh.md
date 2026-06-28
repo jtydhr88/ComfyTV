@@ -1,0 +1,94 @@
+# 提取帧 (Extract Frame)
+
+> 从视频里抽出一张静态图（首帧、末帧、中间帧或指定秒数），输出 `COMFYTV_IMAGE`，后端使用 **PyAV** 在磁盘原片上处理，不占 GPU。
+
+## 这个节点是做什么的
+
+**Extract Frame** 是 ComfyTV 视频工具链的「定格」步骤：给定一段 `COMFYTV_VIDEO`，按 **position** 或 **at_seconds** 取一帧，保存为图片快照。常用于从生成视频里拿末帧做 **↪ Extend** 续接、做缩略图、或送进 Image Edit / Upscale。
+
+处理在本地用 **PyAV**（FFmpeg 库）读写文件，不经过 ComfyUI 的 GPU tensor 管线，速度快、VRAM 零占用。
+
+## 适用场景
+
+- 从 AI 生成片段取最后一帧做 I2V 续接
+- 抽中间帧检查运动或构图
+- 视频 → 静态图 → 编辑 / 放大后再回视频
+
+## 工作原理（为什么 ComfyTV 这样设计）
+
+- **Stage** + **▶ 运行**：只对本节点上游视频快照抽帧，不 Queue 整图。
+- **快照**：读上游 **video** 的 URL；上游变更后须重跑上游再 Run 本节点。
+- **PyAV 后端**：直接解析 `/view?` 指向的 mp4 等文件，解码单帧写 PNG。详见 [video-and-audio.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/video-and-audio.zh.md)。
+
+## 类型说明（COMFYTV_* vs ComfyUI 原生）
+
+| ComfyTV 类型 | 是什么 | 与 ComfyUI 的区别 |
+|---|---|---|
+| `COMFYTV_VIDEO` | 视频 URL 快照 | 不是 ComfyUI `VIDEO` 对象 |
+| `COMFYTV_IMAGE` | 抽出的单帧 URL | 不是 `IMAGE` tensor |
+
+**如何转换：** 原生插件视频 → **→ ComfyTV Video**；帧变 tensor → **← ComfyTV Image**。见 [bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md)。
+
+## 界面与参数说明
+
+### video（输入）
+上游 `COMFYTV_VIDEO`。来自 **Video Stage**、**Load Video**、**Video Clip** 等。未连接时 Run 报错。
+
+### position
+- **last** — 末帧（续接常用）
+- **first** — 首帧
+- **middle** — 时长中点
+- **custom** — 用 **at_seconds**
+
+### at_seconds
+自定义时间戳（秒），仅 **position=custom** 时生效。范围 0–3600。
+
+## 输出说明
+
+| 输出 | 类型 | 含义 | 下游可接 |
+|---|---|---|---|
+| **image** | `COMFYTV_IMAGE` | 抽取的单帧 | Upscale、Image Edit、Video Stage（I2V） |
+
+## 新手一步一步
+
+1. 画布上有带 **COMFYTV_VIDEO** 输出的节点（如 **Video Stage**），先 Run 出视频。
+2. 拖 **Extract Frame**，连 **video**。
+3. **position** 选 **last**（或 **custom** + 秒数）。
+4. **▶ 运行**，在缩略图查看抽帧结果。
+5. 接到 **Upscale** 或 **Video Stage**（I2V）继续。
+
+## 完整教程（推荐阅读）
+
+> 本页只说明**这一个节点**。完整操作流程、多节点串联、类型转换与原理，请阅读上游官方仓库 [**jtydhr88/ComfyTV**](https://github.com/jtydhr88/ComfyTV) 的用户指南（文档链接均指向上游 `main`，而非本地 fork）：
+
+| 教程 | 内容 |
+| --- | --- |
+| [入门指南](https://github.com/jtydhr88/ComfyTV/blob/main/docs/getting-started.zh.md) | 安装、画布基础、逐节点 Run、快照、Project、Image Picker |
+| [视频与音频](https://github.com/jtydhr88/ComfyTV/blob/main/docs/video-and-audio.zh.md) | 剪辑、裁剪、缩放、抽帧、Demux、与 Generate 视频的区别 |
+
+## 上游仓库与工作流
+
+| 资源 | 链接 |
+| --- | --- |
+| **官方仓库（上游）** | https://github.com/jtydhr88/ComfyTV |
+| **用户指南目录** | https://github.com/jtydhr88/ComfyTV/tree/main/docs |
+| **内置工作流总览** | https://github.com/jtydhr88/ComfyTV/tree/main/workflows |
+| **模型清单** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md |
+| **自定义工作流** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.zh.md |
+
+## 常见问题 FAQ
+
+**Q：节点帮助和完整教程有什么区别？**  
+A：本页只介绍**这一个节点**的参数与连线。端到端流程、多节点串联和原理说明见上方 **「完整教程（推荐阅读）」** 中的 upstream 用户指南。
+
+**Q：链接为什么指向 jtydhr88/ComfyTV，而不是我的 fork？**  
+A：官方文档与用户指南维护在[上游仓库](https://github.com/jtydhr88/ComfyTV)的 `main` 分支；本地 clone/fork 用于开发与贡献，节点帮助内的链接统一指向上游，避免 fork 与官方文档不一致。
+
+**Q：`COMFYTV_*` 类型和 ComfyUI 原生类型连不上怎么办？**  
+A：ComfyTV stage 传递的是项目内 **URL 快照**（如 `COMFYTV_IMAGE`），不是 GPU 里的 `IMAGE` tensor。请使用 **ComfyTV/Bridge** 下的入桥（→）或出桥（←）转换。完整说明见 [Bridge 接入插件](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md) 教程。
+
+## 相关节点
+
+- **Video Stage** / **Load Video** —— 视频来源
+- **Video Clip** —— 先剪再抽帧
+- **↪ Extend**（工具栏）—— 自动抽末帧并新建 Video Stage
