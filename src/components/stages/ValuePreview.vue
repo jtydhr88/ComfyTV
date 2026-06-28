@@ -138,7 +138,11 @@
                 class="ctv:absolute ctv:bottom-0.5 ctv:right-0.5 ctv:py-px ctv:px-1 ctv:text-3xs ctv:font-bold ctv:rounded-sm
                        ctv:bg-primary-background/85 ctv:text-white"
                 :title="$t('valuePreview.fromUpstream')">↑</span>
-          <span v-if="clickMode === 'pick'"
+          <span v-if="clickMode === 'pick' && isItemSelected(img, i)"
+                class="ctv:absolute ctv:top-0.5 ctv:right-0.5 ctv:flex ctv:items-center ctv:justify-center
+                       ctv:size-4 ctv:rounded-full ctv:text-3xs ctv:leading-none
+                       ctv:bg-primary-background ctv:text-white ctv:shadow-[0_1px_3px_rgb(0_0_0/0.5)]">✓</span>
+          <span v-else-if="clickMode === 'pick'"
                 class="ctv:absolute ctv:top-0.5 ctv:right-0.5 ctv:py-px ctv:px-1 ctv:text-2xs ctv:rounded-sm
                        ctv:bg-black/55 ctv:opacity-0 ctv:transition-opacity ctv:duration-150 ctv:group-hover:opacity-100">
             {{ clickHintIcon }}
@@ -485,13 +489,13 @@ function tagActionBtn(url: string) {
 }
 
 function batchCellClass(selected: boolean) {
-  const base = 'vp-img-host ctv:group ctv:relative ctv:aspect-video ctv:rounded-sm ctv:overflow-hidden ctv:p-0 ctv:bg-black ctv:transition-colors'
+  const base = 'vp-img-host ctv:group ctv:relative ctv:aspect-video ctv:rounded-sm ctv:overflow-hidden ctv:p-0 ctv:bg-black ctv:border ctv:transition-colors'
   const interactive = props.clickMode === 'pick' ? ' ctv:cursor-pointer' : ' ctv:cursor-default'
   if (selected) {
-    return base + interactive + ' ctv:ring-3 ctv:ring-inset ctv:ring-primary-background'
+    return base + interactive + ' ctv:border-primary-background ctv:ring-[5px] ctv:ring-inset ctv:ring-primary-background'
   }
   return base + interactive
-    + ' ctv:border ctv:border-border-default'
+    + ' ctv:border-border-default'
     + (props.clickMode === 'pick' ? ' ctv:hover:border-primary-background' : '')
 }
 </script>
