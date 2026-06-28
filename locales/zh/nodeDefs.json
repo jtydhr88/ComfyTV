@@ -1,199 +1,1514 @@
 {
-  "ComfyTV.ProjectStage": {
-    "display_name": "项目"
+  "ComfyTV": {
+    "AssetAudioLoaderStage": {
+      "display_name": "从资产加载音频"
+    },
+    "AssetImageLoaderStage": {
+      "display_name": "从资产加载图片"
+    },
+    "AssetVideoLoaderStage": {
+      "display_name": "从资产加载视频"
+    },
+    "AudioExtractBgStage": {
+      "display_name": "音频 · 仅背景声"
+    },
+    "AudioExtractVocalStage": {
+      "display_name": "音频 · 仅人声"
+    },
+    "AudioLoaderStage": {
+      "display_name": "加载音频"
+    },
+    "AudioStage": {
+      "display_name": "音乐阶段"
+    },
+    "AudioVideoDemuxAudioStage": {
+      "display_name": "分离 · 音轨"
+    },
+    "AudioVideoDemuxVideoStage": {
+      "display_name": "分离 · 静默视频"
+    },
+    "BridgeFromAudio": {
+      "display_name": "← ComfyTV 音频"
+    },
+    "BridgeFromImage": {
+      "display_name": "← ComfyTV 图像"
+    },
+    "BridgeFromMask": {
+      "display_name": "← ComfyTV 蒙版"
+    },
+    "BridgeFromText": {
+      "display_name": "← ComfyTV 文本"
+    },
+    "BridgeFromVideo": {
+      "display_name": "← ComfyTV 视频"
+    },
+    "BridgeToAudio": {
+      "display_name": "→ ComfyTV 音频"
+    },
+    "BridgeToImage": {
+      "display_name": "→ ComfyTV 图像"
+    },
+    "BridgeToImages": {
+      "display_name": "→ ComfyTV 多图"
+    },
+    "BridgeToText": {
+      "display_name": "→ ComfyTV 文本"
+    },
+    "BridgeToVideo": {
+      "display_name": "→ ComfyTV 视频"
+    },
+    "ColorGradeStage": {
+      "display_name": "调色"
+    },
+    "CompareStage": {
+      "display_name": "对比"
+    },
+    "CropStage": {
+      "display_name": "裁剪"
+    },
+    "CutoutStage": {
+      "display_name": "抠图"
+    },
+    "DirectorTimelineStage": {
+      "display_name": "导演时间线"
+    },
+    "EraseStage": {
+      "display_name": "擦除"
+    },
+    "GridSplitStage": {
+      "display_name": "宫格分割"
+    },
+    "ImageEditStage": {
+      "display_name": "图像编辑"
+    },
+    "ImageLoaderStage": {
+      "display_name": "加载图片"
+    },
+    "ImagePickerStage": {
+      "display_name": "图片选择器"
+    },
+    "ImageStage": {
+      "display_name": "图像阶段"
+    },
+    "ImageVariationsStage": {
+      "display_name": "图像变体"
+    },
+    "InpaintStage": {
+      "display_name": "重绘"
+    },
+    "MirrorStage": {
+      "display_name": "镜像"
+    },
+    "MultiangleStage": {
+      "display_name": "多角度"
+    },
+    "OutpaintStage": {
+      "display_name": "扩图"
+    },
+    "PanoramaCurrentViewStage": {
+      "display_name": "全景 · 当前视角"
+    },
+    "PanoramaMultiViewStage": {
+      "display_name": "全景 · 多视角"
+    },
+    "PanoramaStage": {
+      "display_name": "全景图"
+    },
+    "ProjectStage": {
+      "display_name": "项目"
+    },
+    "RelightStage": {
+      "display_name": "打光"
+    },
+    "RotateStage": {
+      "display_name": "旋转"
+    },
+    "ShotImagesStage": {
+      "display_name": "分镜图集"
+    },
+    "SpeechStage": {
+      "display_name": "语音阶段"
+    },
+    "StoryboardStage": {
+      "display_name": "故事板"
+    },
+    "TextStage": {
+      "display_name": "文本阶段"
+    },
+    "TimelineVideoStage": {
+      "display_name": "时间线渲染"
+    },
+    "UpscaleStage": {
+      "display_name": "高清"
+    },
+    "VideoClipStage": {
+      "display_name": "视频剪辑"
+    },
+    "VideoCropStage": {
+      "display_name": "视频裁剪"
+    },
+    "VideoExtractFrameStage": {
+      "display_name": "抽帧"
+    },
+    "VideoLoaderStage": {
+      "display_name": "加载视频"
+    },
+    "VideoResizeStage": {
+      "display_name": "视频缩放"
+    },
+    "VideoStage": {
+      "display_name": "视频阶段"
+    },
+    "VideoSubtitleSelectEraseStage": {
+      "display_name": "扣选去字幕"
+    },
+    "VideoSubtitleSmartEraseStage": {
+      "display_name": "智能去字幕"
+    },
+    "VideoUpscaleStage": {
+      "display_name": "视频高清"
+    }
   },
-  "ComfyTV.TextStage": {
-    "display_name": "文本阶段"
+  "ComfyTV_AssetAudioLoaderStage": {
+    "display_name": "从资产加载音频",
+    "inputs": {},
+    "outputs": {
+      "0": {
+        "name": "音频"
+      }
+    }
   },
-  "ComfyTV.ImageStage": {
-    "display_name": "图像阶段"
+  "ComfyTV_AssetImageLoaderStage": {
+    "display_name": "从资产加载图片",
+    "inputs": {},
+    "outputs": {
+      "0": {
+        "name": "图像"
+      }
+    }
   },
-  "ComfyTV.VideoStage": {
-    "display_name": "视频阶段"
+  "ComfyTV_AssetVideoLoaderStage": {
+    "display_name": "从资产加载视频",
+    "inputs": {},
+    "outputs": {
+      "0": {
+        "name": "视频"
+      }
+    }
   },
-  "ComfyTV.AudioStage": {
+  "ComfyTV_AudioExtractBgStage": {
+    "display_name": "音频 · 仅背景声",
+    "inputs": {
+      "video": {
+        "name": "视频"
+      },
+      "workflow": {
+        "name": "工作流"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "音频"
+      }
+    }
+  },
+  "ComfyTV_AudioExtractVocalStage": {
+    "display_name": "音频 · 仅人声",
+    "inputs": {
+      "video": {
+        "name": "视频"
+      },
+      "workflow": {
+        "name": "工作流"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "音频"
+      }
+    }
+  },
+  "ComfyTV_AudioLoaderStage": {
+    "display_name": "加载音频",
+    "inputs": {},
+    "outputs": {
+      "0": {
+        "name": "音频"
+      }
+    }
+  },
+  "ComfyTV_AudioStage": {
     "display_name": "音乐阶段",
     "inputs": {
       "main_prompt": {
         "tooltip": "音频生成 tags"
+      },
+      "duration_s": {
+        "name": "时长 (秒)"
+      },
+      "lyrics": {
+        "name": "歌词"
+      },
+      "workflow": {
+        "name": "工作流"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "音频"
       }
     }
   },
-  "ComfyTV.SpeechStage": {
+  "ComfyTV_AudioVideoDemuxAudioStage": {
+    "display_name": "分离 · 音轨",
+    "inputs": {
+      "video": {
+        "name": "视频"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "音频"
+      }
+    }
+  },
+  "ComfyTV_AudioVideoDemuxVideoStage": {
+    "display_name": "分离 · 静默视频",
+    "inputs": {
+      "video": {
+        "name": "视频"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "视频"
+      }
+    }
+  },
+  "ComfyTV_BridgeFromAudio": {
+    "display_name": "← ComfyTV 音频",
+    "inputs": {
+      "audio": {
+        "name": "音频"
+      }
+    },
+    "outputs": {}
+  },
+  "ComfyTV_BridgeFromImage": {
+    "display_name": "← ComfyTV 图像",
+    "inputs": {
+      "image": {
+        "name": "图像"
+      }
+    },
+    "outputs": {}
+  },
+  "ComfyTV_BridgeFromMask": {
+    "display_name": "← ComfyTV 蒙版",
+    "inputs": {
+      "image": {
+        "name": "图像"
+      }
+    },
+    "outputs": {}
+  },
+  "ComfyTV_BridgeFromText": {
+    "display_name": "← ComfyTV 文本",
+    "inputs": {
+      "text": {
+        "name": "文本"
+      }
+    },
+    "outputs": {}
+  },
+  "ComfyTV_BridgeFromVideo": {
+    "display_name": "← ComfyTV 视频",
+    "inputs": {
+      "video": {
+        "name": "视频"
+      }
+    },
+    "outputs": {}
+  },
+  "ComfyTV_BridgeToAudio": {
+    "display_name": "→ ComfyTV 音频",
+    "inputs": {
+      "audio": {
+        "name": "音频"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "音频"
+      }
+    }
+  },
+  "ComfyTV_BridgeToImage": {
+    "display_name": "→ ComfyTV 图像",
+    "inputs": {
+      "image": {
+        "name": "图像"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "图像"
+      }
+    }
+  },
+  "ComfyTV_BridgeToImages": {
+    "display_name": "→ ComfyTV 多图",
+    "inputs": {
+      "images": {
+        "name": "图像"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "图像组"
+      },
+      "1": {
+        "name": "图像"
+      }
+    }
+  },
+  "ComfyTV_BridgeToText": {
+    "display_name": "→ ComfyTV 文本",
+    "inputs": {
+      "text": {
+        "name": "文本"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "文本"
+      }
+    }
+  },
+  "ComfyTV_BridgeToVideo": {
+    "display_name": "→ ComfyTV 视频",
+    "inputs": {
+      "video": {
+        "name": "视频"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "视频"
+      }
+    }
+  },
+  "ComfyTV_ColorGradeStage": {
+    "display_name": "调色",
+    "inputs": {
+      "grade_state": {
+        "name": "调色状态"
+      },
+      "image": {
+        "name": "图像"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "图像"
+      }
+    }
+  },
+  "ComfyTV_CompareStage": {
+    "display_name": "对比",
+    "inputs": {
+      "image_a": {
+        "name": "图像 A"
+      },
+      "image_b": {
+        "name": "图像 B"
+      }
+    },
+    "outputs": {}
+  },
+  "ComfyTV_CropStage": {
+    "display_name": "裁剪",
+    "inputs": {
+      "crop_h": {
+        "name": "裁剪高度"
+      },
+      "crop_w": {
+        "name": "裁剪宽度"
+      },
+      "crop_x": {
+        "name": "裁剪 X"
+      },
+      "crop_y": {
+        "name": "裁剪 Y"
+      },
+      "image": {
+        "name": "图像"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "图像"
+      }
+    }
+  },
+  "ComfyTV_CutoutStage": {
+    "display_name": "抠图",
+    "inputs": {
+      "image": {
+        "name": "图像"
+      },
+      "workflow": {
+        "name": "工作流"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "图像"
+      }
+    }
+  },
+  "ComfyTV_DirectorTimelineStage": {
+    "display_name": "导演时间线",
+    "inputs": {
+      "audio": {
+        "name": "音频"
+      },
+      "frame_rate": {
+        "name": "帧率"
+      },
+      "image0": {
+        "name": "图像 #0"
+      },
+      "image1": {
+        "name": "图像 #1"
+      },
+      "image10": {
+        "name": "图像 #10"
+      },
+      "image11": {
+        "name": "图像 #11"
+      },
+      "image12": {
+        "name": "图像 #12"
+      },
+      "image13": {
+        "name": "图像 #13"
+      },
+      "image14": {
+        "name": "图像 #14"
+      },
+      "image15": {
+        "name": "图像 #15"
+      },
+      "image16": {
+        "name": "图像 #16"
+      },
+      "image17": {
+        "name": "图像 #17"
+      },
+      "image18": {
+        "name": "图像 #18"
+      },
+      "image19": {
+        "name": "图像 #19"
+      },
+      "image2": {
+        "name": "图像 #2"
+      },
+      "image20": {
+        "name": "图像 #20"
+      },
+      "image21": {
+        "name": "图像 #21"
+      },
+      "image22": {
+        "name": "图像 #22"
+      },
+      "image23": {
+        "name": "图像 #23"
+      },
+      "image3": {
+        "name": "图像 #3"
+      },
+      "image4": {
+        "name": "图像 #4"
+      },
+      "image5": {
+        "name": "图像 #5"
+      },
+      "image6": {
+        "name": "图像 #6"
+      },
+      "image7": {
+        "name": "图像 #7"
+      },
+      "image8": {
+        "name": "图像 #8"
+      },
+      "image9": {
+        "name": "图像 #9"
+      },
+      "images": {
+        "name": "图像"
+      },
+      "timeline_data": {
+        "name": "时间线数据"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "时间线"
+      }
+    }
+  },
+  "ComfyTV_EraseStage": {
+    "display_name": "擦除",
+    "inputs": {
+      "mask_data": {
+        "tooltip": "蒙版的 annotated path,由画笔 UI 上传后写入",
+        "name": "蒙版"
+      },
+      "image": {
+        "name": "图像"
+      },
+      "workflow": {
+        "name": "工作流"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "图像"
+      }
+    }
+  },
+  "ComfyTV_GridSplitStage": {
+    "display_name": "宫格分割",
+    "inputs": {
+      "border": {
+        "name": "边框"
+      },
+      "cols": {
+        "name": "列数"
+      },
+      "image": {
+        "name": "图像"
+      },
+      "outer_border": {
+        "name": "外边框"
+      },
+      "rows": {
+        "name": "行数"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "图像组"
+      },
+      "1": {
+        "name": "图像"
+      }
+    }
+  },
+  "ComfyTV_ImageEditStage": {
+    "display_name": "图像编辑",
+    "inputs": {
+      "main_prompt": {
+        "tooltip": "编辑指令(必填)"
+      },
+      "image": {
+        "name": "图像"
+      },
+      "workflow": {
+        "name": "工作流"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "图像"
+      }
+    }
+  },
+  "ComfyTV_ImageLoaderStage": {
+    "display_name": "加载图片",
+    "inputs": {},
+    "outputs": {
+      "0": {
+        "name": "图像"
+      }
+    }
+  },
+  "ComfyTV_ImagePickerStage": {
+    "display_name": "图片选择器",
+    "inputs": {
+      "batch": {
+        "name": "批次"
+      },
+      "pool": {
+        "name": "池"
+      },
+      "selected_index": {
+        "name": "选中索引"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "图像"
+      }
+    }
+  },
+  "ComfyTV_ImageStage": {
+    "display_name": "图像阶段",
+    "inputs": {
+      "aspect_ratio": {
+        "name": "宽高比"
+      },
+      "batch_size": {
+        "name": "批次大小"
+      },
+      "image0": {
+        "name": "图像 #0"
+      },
+      "image1": {
+        "name": "图像 #1"
+      },
+      "image10": {
+        "name": "图像 #10"
+      },
+      "image11": {
+        "name": "图像 #11"
+      },
+      "image2": {
+        "name": "图像 #2"
+      },
+      "image3": {
+        "name": "图像 #3"
+      },
+      "image4": {
+        "name": "图像 #4"
+      },
+      "image5": {
+        "name": "图像 #5"
+      },
+      "image6": {
+        "name": "图像 #6"
+      },
+      "image7": {
+        "name": "图像 #7"
+      },
+      "image8": {
+        "name": "图像 #8"
+      },
+      "image9": {
+        "name": "图像 #9"
+      },
+      "images": {
+        "name": "图像"
+      },
+      "resolution": {
+        "name": "分辨率"
+      },
+      "text0": {
+        "name": "文本 #0"
+      },
+      "text1": {
+        "name": "文本 #1"
+      },
+      "text2": {
+        "name": "文本 #2"
+      },
+      "text3": {
+        "name": "文本 #3"
+      },
+      "text4": {
+        "name": "文本 #4"
+      },
+      "text5": {
+        "name": "文本 #5"
+      },
+      "text6": {
+        "name": "文本 #6"
+      },
+      "text7": {
+        "name": "文本 #7"
+      },
+      "texts": {
+        "name": "文本"
+      },
+      "workflow": {
+        "name": "工作流"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "图像组"
+      },
+      "1": {
+        "name": "图像"
+      }
+    }
+  },
+  "ComfyTV_ImageVariationsStage": {
+    "display_name": "图像变体",
+    "inputs": {
+      "image": {
+        "name": "图像"
+      },
+      "variant_count": {
+        "name": "变体数量"
+      },
+      "workflow": {
+        "name": "工作流"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "图像组"
+      },
+      "1": {
+        "name": "图像"
+      }
+    }
+  },
+  "ComfyTV_InpaintStage": {
+    "display_name": "重绘",
+    "inputs": {
+      "mask_data": {
+        "tooltip": "蒙版的 annotated path,由画笔 UI 上传后写入",
+        "name": "蒙版"
+      },
+      "main_prompt": {
+        "tooltip": "重绘内容描述"
+      },
+      "image": {
+        "name": "图像"
+      },
+      "workflow": {
+        "name": "工作流"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "图像"
+      }
+    }
+  },
+  "ComfyTV_MirrorStage": {
+    "display_name": "镜像",
+    "inputs": {
+      "flip_horizontal": {
+        "name": "水平翻转"
+      },
+      "flip_vertical": {
+        "name": "垂直翻转"
+      },
+      "image": {
+        "name": "图像"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "图像"
+      }
+    }
+  },
+  "ComfyTV_MultiangleStage": {
+    "display_name": "多角度",
+    "inputs": {
+      "horizontal_angle": {
+        "tooltip": "相机水平角度",
+        "name": "水平角度"
+      },
+      "vertical_angle": {
+        "tooltip": "相机俯仰角度",
+        "name": "俯仰角度"
+      },
+      "zoom": {
+        "tooltip": "相机距离",
+        "name": "缩放"
+      },
+      "image": {
+        "name": "图像"
+      },
+      "workflow": {
+        "name": "工作流"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "图像"
+      }
+    }
+  },
+  "ComfyTV_OutpaintStage": {
+    "display_name": "扩图",
+    "inputs": {
+      "pad_left": {
+        "tooltip": "左扩",
+        "name": "左扩"
+      },
+      "pad_top": {
+        "tooltip": "上扩",
+        "name": "上扩"
+      },
+      "pad_right": {
+        "tooltip": "右扩",
+        "name": "右扩"
+      },
+      "pad_bottom": {
+        "tooltip": "下扩",
+        "name": "下扩"
+      },
+      "feathering": {
+        "tooltip": "羽化像素",
+        "name": "羽化"
+      },
+      "main_prompt": {
+        "tooltip": "提示词:描述整张图最终长什么样(主体+场景+风格+光照),不要写'扩展/延伸'这种指令式语句。留空使用工作流自带的通用描述。"
+      },
+      "image": {
+        "name": "图像"
+      },
+      "workflow": {
+        "name": "工作流"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "图像"
+      }
+    }
+  },
+  "ComfyTV_PanoramaCurrentViewStage": {
+    "display_name": "全景 · 当前视角",
+    "inputs": {
+      "aspect_ratio": {
+        "name": "宽高比"
+      },
+      "fov": {
+        "name": "视场角"
+      },
+      "panorama": {
+        "name": "全景"
+      },
+      "pitch": {
+        "name": "俯仰"
+      },
+      "resolution": {
+        "name": "分辨率"
+      },
+      "yaw": {
+        "name": "偏航"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "图像"
+      }
+    }
+  },
+  "ComfyTV_PanoramaMultiViewStage": {
+    "display_name": "全景 · 多视角",
+    "inputs": {
+      "aspect_ratio": {
+        "name": "宽高比"
+      },
+      "panorama": {
+        "name": "全景"
+      },
+      "resolution": {
+        "name": "分辨率"
+      },
+      "view_count": {
+        "name": "视角数量"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "图像组"
+      },
+      "1": {
+        "name": "图像"
+      }
+    }
+  },
+  "ComfyTV_PanoramaStage": {
+    "display_name": "全景图",
+    "inputs": {
+      "image": {
+        "name": "图像"
+      },
+      "manual_source": {
+        "name": "手动来源"
+      },
+      "workflow": {
+        "name": "工作流"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "全景"
+      }
+    }
+  },
+  "ComfyTV_ProjectStage": {
+    "display_name": "项目",
+    "inputs": {
+      "project_id": {
+        "name": "项目 ID"
+      },
+      "project_name": {
+        "name": "项目名称"
+      },
+      "schema_version": {
+        "name": "Schema 版本"
+      }
+    },
+    "outputs": {}
+  },
+  "ComfyTV_RelightStage": {
+    "display_name": "打光",
+    "inputs": {
+      "brightness": {
+        "tooltip": "亮度",
+        "name": "亮度"
+      },
+      "color": {
+        "tooltip": "灯光颜色",
+        "name": "颜色"
+      },
+      "rim_light": {
+        "tooltip": "轮廓光",
+        "name": "轮廓光"
+      },
+      "image0": {
+        "name": "图像 #0"
+      },
+      "image1": {
+        "name": "图像 #1"
+      },
+      "image2": {
+        "name": "图像 #2"
+      },
+      "image3": {
+        "name": "图像 #3"
+      },
+      "images": {
+        "name": "图像"
+      },
+      "workflow": {
+        "name": "工作流"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "图像"
+      }
+    }
+  },
+  "ComfyTV_RotateStage": {
+    "display_name": "旋转",
+    "inputs": {
+      "angle": {
+        "name": "角度"
+      },
+      "image": {
+        "name": "图像"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "图像"
+      }
+    }
+  },
+  "ComfyTV_ShotImagesStage": {
+    "display_name": "分镜图集",
+    "inputs": {
+      "aspect_ratio": {
+        "name": "宽高比"
+      },
+      "image0": {
+        "name": "图像 #0"
+      },
+      "image1": {
+        "name": "图像 #1"
+      },
+      "image2": {
+        "name": "图像 #2"
+      },
+      "image3": {
+        "name": "图像 #3"
+      },
+      "image4": {
+        "name": "图像 #4"
+      },
+      "image5": {
+        "name": "图像 #5"
+      },
+      "image6": {
+        "name": "图像 #6"
+      },
+      "image7": {
+        "name": "图像 #7"
+      },
+      "images": {
+        "name": "图像"
+      },
+      "resolution": {
+        "name": "分辨率"
+      },
+      "storyboard": {
+        "name": "故事板"
+      },
+      "workflow": {
+        "name": "工作流"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "图像组"
+      },
+      "1": {
+        "name": "图像"
+      }
+    }
+  },
+  "ComfyTV_SpeechStage": {
     "display_name": "语音阶段",
     "inputs": {
       "main_prompt": {
         "tooltip": "要念出来的文本 —— 声音朗读的台词脚本。"
       },
       "voice": {
-        "tooltip": "命名预设音色 / 说话人(用于预设音色模型)。"
+        "tooltip": "命名预设音色 / 说话人(用于预设音色模型)。",
+        "name": "音色"
       },
       "language": {
-        "tooltip": "多语言模型的语言。选 'Auto' 交给 workflow/模型决定;名称要跟所选模型对得上(如 Kokoro 用 'Mandarin Chinese')。"
+        "tooltip": "多语言模型的语言。选 'Auto' 交给 workflow/模型决定;名称要跟所选模型对得上(如 Kokoro 用 'Mandarin Chinese')。",
+        "name": "语言"
       },
       "speed": {
-        "tooltip": "语速(1.0 为自然语速)。"
+        "tooltip": "语速(1.0 为自然语速)。",
+        "name": "语速"
       },
       "reference_text": {
-        "tooltip": "参考音频的文字稿(F5-TTS / GPT-SoVITS 需要)。"
+        "tooltip": "参考音频的文字稿(F5-TTS / GPT-SoVITS 需要)。",
+        "name": "参考文本"
       },
       "reference_audio": {
-        "tooltip": "可选:用于克隆音色的语音样本。"
+        "tooltip": "可选:用于克隆音色的语音样本。",
+        "name": "参考音频"
+      },
+      "workflow": {
+        "name": "工作流"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "音频"
       }
     }
   },
-  "ComfyTV.StoryboardStage": {
-    "display_name": "故事板"
-  },
-  "ComfyTV.ShotImagesStage": {
-    "display_name": "分镜图集"
-  },
-  "ComfyTV.ImagePickerStage": {
-    "display_name": "图片选择器"
-  },
-  "ComfyTV.PanoramaStage": {
-    "display_name": "全景图"
-  },
-  "ComfyTV.PanoramaCurrentViewStage": {
-    "display_name": "全景 · 当前视角"
-  },
-  "ComfyTV.PanoramaMultiViewStage": {
-    "display_name": "全景 · 多视角"
-  },
-  "ComfyTV.MultiangleStage": {
-    "display_name": "多角度",
+  "ComfyTV_StoryboardStage": {
+    "display_name": "故事板",
     "inputs": {
-      "horizontal_angle": {
-        "tooltip": "相机水平角度"
+      "characters": {
+        "name": "角色"
       },
-      "vertical_angle": {
-        "tooltip": "相机俯仰角度"
+      "shot_count": {
+        "name": "镜头数"
       },
-      "zoom": {
-        "tooltip": "相机距离"
+      "storyboard_data": {
+        "name": "故事板数据"
+      },
+      "text0": {
+        "name": "文本 #0"
+      },
+      "text1": {
+        "name": "文本 #1"
+      },
+      "text2": {
+        "name": "文本 #2"
+      },
+      "text3": {
+        "name": "文本 #3"
+      },
+      "text4": {
+        "name": "文本 #4"
+      },
+      "text5": {
+        "name": "文本 #5"
+      },
+      "texts": {
+        "name": "文本"
+      },
+      "total_duration_s": {
+        "name": "总时长 (秒)"
+      },
+      "workflow": {
+        "name": "工作流"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "故事板"
       }
     }
   },
-  "ComfyTV.RelightStage": {
-    "display_name": "打光",
+  "ComfyTV_TextStage": {
+    "display_name": "文本阶段",
     "inputs": {
-      "brightness": {
-        "tooltip": "亮度"
+      "image0": {
+        "name": "图像 #0"
       },
-      "color": {
-        "tooltip": "灯光颜色"
+      "image1": {
+        "name": "图像 #1"
       },
-      "rim_light": {
-        "tooltip": "轮廓光"
+      "image2": {
+        "name": "图像 #2"
+      },
+      "image3": {
+        "name": "图像 #3"
+      },
+      "image4": {
+        "name": "图像 #4"
+      },
+      "image5": {
+        "name": "图像 #5"
+      },
+      "image6": {
+        "name": "图像 #6"
+      },
+      "image7": {
+        "name": "图像 #7"
+      },
+      "images": {
+        "name": "图像"
+      },
+      "text0": {
+        "name": "文本 #0"
+      },
+      "text1": {
+        "name": "文本 #1"
+      },
+      "text2": {
+        "name": "文本 #2"
+      },
+      "text3": {
+        "name": "文本 #3"
+      },
+      "text4": {
+        "name": "文本 #4"
+      },
+      "text5": {
+        "name": "文本 #5"
+      },
+      "text6": {
+        "name": "文本 #6"
+      },
+      "text7": {
+        "name": "文本 #7"
+      },
+      "texts": {
+        "name": "文本"
+      },
+      "video0": {
+        "name": "视频 #0"
+      },
+      "video1": {
+        "name": "视频 #1"
+      },
+      "video2": {
+        "name": "视频 #2"
+      },
+      "video3": {
+        "name": "视频 #3"
+      },
+      "videos": {
+        "name": "视频"
+      },
+      "workflow": {
+        "name": "工作流"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "文本"
       }
     }
   },
-  "ComfyTV.ImageVariationsStage": {
-    "display_name": "图像变体"
+  "ComfyTV_TimelineVideoStage": {
+    "display_name": "时间线渲染",
+    "inputs": {
+      "timeline": {
+        "name": "时间线"
+      },
+      "workflow": {
+        "name": "工作流"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "视频"
+      }
+    }
   },
-  "ComfyTV.UpscaleStage": {
+  "ComfyTV_UpscaleStage": {
     "display_name": "高清",
     "inputs": {
       "scale": {
-        "tooltip": "放大倍数"
+        "tooltip": "放大倍数",
+        "name": "放大倍数"
+      },
+      "image": {
+        "name": "图像"
+      },
+      "workflow": {
+        "name": "工作流"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "图像"
       }
     }
   },
-  "ComfyTV.OutpaintStage": {
-    "display_name": "扩图",
-    "inputs": {
-      "pad_left": {
-        "tooltip": "左扩"
-      },
-      "pad_top": {
-        "tooltip": "上扩"
-      },
-      "pad_right": {
-        "tooltip": "右扩"
-      },
-      "pad_bottom": {
-        "tooltip": "下扩"
-      },
-      "feathering": {
-        "tooltip": "羽化像素"
-      },
-      "main_prompt": {
-        "tooltip": "提示词:描述整张图最终长什么样(主体+场景+风格+光照),不要写'扩展/延伸'这种指令式语句。留空使用工作流自带的通用描述。"
-      }
-    }
-  },
-  "ComfyTV.InpaintStage": {
-    "display_name": "重绘",
-    "inputs": {
-      "mask_data": {
-        "tooltip": "蒙版的 annotated path,由画笔 UI 上传后写入"
-      },
-      "main_prompt": {
-        "tooltip": "重绘内容描述"
-      }
-    }
-  },
-  "ComfyTV.EraseStage": {
-    "display_name": "擦除",
-    "inputs": {
-      "mask_data": {
-        "tooltip": "蒙版的 annotated path,由画笔 UI 上传后写入"
-      }
-    }
-  },
-  "ComfyTV.CutoutStage": {
-    "display_name": "抠图"
-  },
-  "ComfyTV.CropStage": {
-    "display_name": "裁剪"
-  },
-  "ComfyTV.VideoClipStage": {
+  "ComfyTV_VideoClipStage": {
     "display_name": "视频剪辑",
     "inputs": {
       "start_s": {
-        "tooltip": "起始时间（秒）"
+        "tooltip": "起始时间（秒）",
+        "name": "起始 (秒)"
       },
       "end_s": {
-        "tooltip": "结束时间（秒）"
+        "tooltip": "结束时间（秒）",
+        "name": "结束 (秒)"
+      },
+      "video": {
+        "name": "视频"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "视频"
       }
     }
   },
-  "ComfyTV.VideoUpscaleStage": {
+  "ComfyTV_VideoCropStage": {
+    "display_name": "视频裁剪",
+    "inputs": {
+      "h": {
+        "name": "高度"
+      },
+      "video": {
+        "name": "视频"
+      },
+      "w": {
+        "name": "宽度"
+      },
+      "x": {
+        "name": "X"
+      },
+      "y": {
+        "name": "Y"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "视频"
+      }
+    }
+  },
+  "ComfyTV_VideoExtractFrameStage": {
+    "display_name": "抽帧",
+    "inputs": {
+      "at_seconds": {
+        "name": "时间点 (秒)"
+      },
+      "position": {
+        "name": "位置"
+      },
+      "video": {
+        "name": "视频"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "图像"
+      }
+    }
+  },
+  "ComfyTV_VideoLoaderStage": {
+    "display_name": "加载视频",
+    "inputs": {},
+    "outputs": {
+      "0": {
+        "name": "视频"
+      }
+    }
+  },
+  "ComfyTV_VideoResizeStage": {
+    "display_name": "视频缩放",
+    "inputs": {
+      "height": {
+        "name": "高度"
+      },
+      "video": {
+        "name": "视频"
+      },
+      "width": {
+        "name": "宽度"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "视频"
+      }
+    }
+  },
+  "ComfyTV_VideoStage": {
+    "display_name": "视频阶段",
+    "inputs": {
+      "aspect_ratio": {
+        "name": "宽高比"
+      },
+      "audio": {
+        "name": "音频"
+      },
+      "duration_s": {
+        "name": "时长 (秒)"
+      },
+      "generate_audio": {
+        "name": "生成音频"
+      },
+      "image0": {
+        "name": "图像 #0"
+      },
+      "image1": {
+        "name": "图像 #1"
+      },
+      "image2": {
+        "name": "图像 #2"
+      },
+      "image3": {
+        "name": "图像 #3"
+      },
+      "image4": {
+        "name": "图像 #4"
+      },
+      "image5": {
+        "name": "图像 #5"
+      },
+      "image6": {
+        "name": "图像 #6"
+      },
+      "image7": {
+        "name": "图像 #7"
+      },
+      "images": {
+        "name": "图像"
+      },
+      "resolution": {
+        "name": "分辨率"
+      },
+      "text0": {
+        "name": "文本 #0"
+      },
+      "text1": {
+        "name": "文本 #1"
+      },
+      "text2": {
+        "name": "文本 #2"
+      },
+      "text3": {
+        "name": "文本 #3"
+      },
+      "text4": {
+        "name": "文本 #4"
+      },
+      "text5": {
+        "name": "文本 #5"
+      },
+      "texts": {
+        "name": "文本"
+      },
+      "video0": {
+        "name": "视频 #0"
+      },
+      "video1": {
+        "name": "视频 #1"
+      },
+      "video2": {
+        "name": "视频 #2"
+      },
+      "video3": {
+        "name": "视频 #3"
+      },
+      "videos": {
+        "name": "视频"
+      },
+      "workflow": {
+        "name": "工作流"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "视频"
+      }
+    }
+  },
+  "ComfyTV_VideoSubtitleSelectEraseStage": {
+    "display_name": "扣选去字幕",
+    "inputs": {
+      "region_h": {
+        "name": "区域高度"
+      },
+      "region_w": {
+        "name": "区域宽度"
+      },
+      "region_x": {
+        "name": "区域 X"
+      },
+      "region_y": {
+        "name": "区域 Y"
+      },
+      "video": {
+        "name": "视频"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "视频"
+      }
+    }
+  },
+  "ComfyTV_VideoSubtitleSmartEraseStage": {
+    "display_name": "智能去字幕",
+    "inputs": {
+      "video": {
+        "name": "视频"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "视频"
+      }
+    }
+  },
+  "ComfyTV_VideoUpscaleStage": {
     "display_name": "视频高清",
     "inputs": {
       "scale": {
-        "tooltip": "放大倍数"
+        "tooltip": "放大倍数",
+        "name": "放大倍数"
+      },
+      "video": {
+        "name": "视频"
       }
-    }
-  },
-  "ComfyTV.VideoSubtitleSmartEraseStage": {
-    "display_name": "智能去字幕"
-  },
-  "ComfyTV.VideoSubtitleSelectEraseStage": {
-    "display_name": "扣选去字幕"
-  },
-  "ComfyTV.AudioExtractVocalStage": {
-    "display_name": "音频 · 仅人声"
-  },
-  "ComfyTV.AudioExtractBgStage": {
-    "display_name": "音频 · 仅背景声"
-  },
-  "ComfyTV.AudioVideoDemuxAudioStage": {
-    "display_name": "分离 · 音轨"
-  },
-  "ComfyTV.AudioVideoDemuxVideoStage": {
-    "display_name": "分离 · 静默视频"
-  },
-  "ComfyTV.ImageLoaderStage": {
-    "display_name": "加载图片"
-  },
-  "ComfyTV.VideoLoaderStage": {
-    "display_name": "加载视频"
-  },
-  "ComfyTV.ImageEditStage": {
-    "inputs": {
-      "main_prompt": {
-        "tooltip": "编辑指令(必填)"
+    },
+    "outputs": {
+      "0": {
+        "name": "视频"
       }
     }
   }

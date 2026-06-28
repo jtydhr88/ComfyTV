@@ -703,5 +703,17 @@
   },
   "run": {
     "stagesRunPerNode": "ComfyTV stages run individually — use each node's Run button. Nothing to run with the global Run here."
+  },
+  "nodeCategories": {
+    "ComfyTV": "ComfyTV",
+    "Project": "Project",
+    "Generate": "Generate",
+    "Compose": "Compose",
+    "Panorama": "Panorama",
+    "Image": "Image",
+    "Video": "Video",
+    "Audio": "Audio",
+    "Input": "Input",
+    "Bridge": "Bridge"
   }
 }

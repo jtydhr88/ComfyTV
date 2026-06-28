@@ -1,199 +1,1514 @@
 {
-  "ComfyTV.ProjectStage": {
-    "display_name": "Project"
+  "ComfyTV": {
+    "AssetAudioLoaderStage": {
+      "display_name": "Load Audio from Asset"
+    },
+    "AssetImageLoaderStage": {
+      "display_name": "Load Image from Asset"
+    },
+    "AssetVideoLoaderStage": {
+      "display_name": "Load Video from Asset"
+    },
+    "AudioExtractBgStage": {
+      "display_name": "Audio · Background Only"
+    },
+    "AudioExtractVocalStage": {
+      "display_name": "Audio · Vocals Only"
+    },
+    "AudioLoaderStage": {
+      "display_name": "Load Audio"
+    },
+    "AudioStage": {
+      "display_name": "Music Stage"
+    },
+    "AudioVideoDemuxAudioStage": {
+      "display_name": "Demux · Audio Track"
+    },
+    "AudioVideoDemuxVideoStage": {
+      "display_name": "Demux · Silent Video"
+    },
+    "BridgeFromAudio": {
+      "display_name": "← ComfyTV Audio"
+    },
+    "BridgeFromImage": {
+      "display_name": "← ComfyTV Image"
+    },
+    "BridgeFromMask": {
+      "display_name": "← ComfyTV Mask"
+    },
+    "BridgeFromText": {
+      "display_name": "← ComfyTV Text"
+    },
+    "BridgeFromVideo": {
+      "display_name": "← ComfyTV Video"
+    },
+    "BridgeToAudio": {
+      "display_name": "→ ComfyTV Audio"
+    },
+    "BridgeToImage": {
+      "display_name": "→ ComfyTV Image"
+    },
+    "BridgeToImages": {
+      "display_name": "→ ComfyTV Images"
+    },
+    "BridgeToText": {
+      "display_name": "→ ComfyTV Text"
+    },
+    "BridgeToVideo": {
+      "display_name": "→ ComfyTV Video"
+    },
+    "ColorGradeStage": {
+      "display_name": "Color Grade"
+    },
+    "CompareStage": {
+      "display_name": "Compare"
+    },
+    "CropStage": {
+      "display_name": "Crop"
+    },
+    "CutoutStage": {
+      "display_name": "Cutout"
+    },
+    "DirectorTimelineStage": {
+      "display_name": "Director Timeline"
+    },
+    "EraseStage": {
+      "display_name": "Erase"
+    },
+    "GridSplitStage": {
+      "display_name": "Grid Split"
+    },
+    "ImageEditStage": {
+      "display_name": "Image Edit"
+    },
+    "ImageLoaderStage": {
+      "display_name": "Load Image"
+    },
+    "ImagePickerStage": {
+      "display_name": "Image Picker"
+    },
+    "ImageStage": {
+      "display_name": "Image Stage"
+    },
+    "ImageVariationsStage": {
+      "display_name": "Image Variations"
+    },
+    "InpaintStage": {
+      "display_name": "Inpaint"
+    },
+    "MirrorStage": {
+      "display_name": "Mirror"
+    },
+    "MultiangleStage": {
+      "display_name": "Multiangle"
+    },
+    "OutpaintStage": {
+      "display_name": "Outpaint"
+    },
+    "PanoramaCurrentViewStage": {
+      "display_name": "Panorama · Current View"
+    },
+    "PanoramaMultiViewStage": {
+      "display_name": "Panorama · Multi-View"
+    },
+    "PanoramaStage": {
+      "display_name": "Panorama"
+    },
+    "ProjectStage": {
+      "display_name": "Project"
+    },
+    "RelightStage": {
+      "display_name": "Relight"
+    },
+    "RotateStage": {
+      "display_name": "Rotate"
+    },
+    "ShotImagesStage": {
+      "display_name": "Shot Images"
+    },
+    "SpeechStage": {
+      "display_name": "Speech Stage"
+    },
+    "StoryboardStage": {
+      "display_name": "Storyboard"
+    },
+    "TextStage": {
+      "display_name": "Text Stage"
+    },
+    "TimelineVideoStage": {
+      "display_name": "Timeline Render"
+    },
+    "UpscaleStage": {
+      "display_name": "Upscale"
+    },
+    "VideoClipStage": {
+      "display_name": "Video Clip"
+    },
+    "VideoCropStage": {
+      "display_name": "Video Crop"
+    },
+    "VideoExtractFrameStage": {
+      "display_name": "Extract Frame"
+    },
+    "VideoLoaderStage": {
+      "display_name": "Load Video"
+    },
+    "VideoResizeStage": {
+      "display_name": "Video Resize"
+    },
+    "VideoStage": {
+      "display_name": "Video Stage"
+    },
+    "VideoSubtitleSelectEraseStage": {
+      "display_name": "Subtitle Erase (Region)"
+    },
+    "VideoSubtitleSmartEraseStage": {
+      "display_name": "Subtitle Erase (Smart)"
+    },
+    "VideoUpscaleStage": {
+      "display_name": "Video Upscale"
+    }
   },
-  "ComfyTV.TextStage": {
-    "display_name": "Text Stage"
+  "ComfyTV_AssetAudioLoaderStage": {
+    "display_name": "Load Audio from Asset",
+    "inputs": {},
+    "outputs": {
+      "0": {
+        "name": "Audio"
+      }
+    }
   },
-  "ComfyTV.ImageStage": {
-    "display_name": "Image Stage"
+  "ComfyTV_AssetImageLoaderStage": {
+    "display_name": "Load Image from Asset",
+    "inputs": {},
+    "outputs": {
+      "0": {
+        "name": "Image"
+      }
+    }
   },
-  "ComfyTV.VideoStage": {
-    "display_name": "Video Stage"
+  "ComfyTV_AssetVideoLoaderStage": {
+    "display_name": "Load Video from Asset",
+    "inputs": {},
+    "outputs": {
+      "0": {
+        "name": "Video"
+      }
+    }
   },
-  "ComfyTV.AudioStage": {
+  "ComfyTV_AudioExtractBgStage": {
+    "display_name": "Audio · Background Only",
+    "inputs": {
+      "video": {
+        "name": "Video"
+      },
+      "workflow": {
+        "name": "Workflow"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Audio"
+      }
+    }
+  },
+  "ComfyTV_AudioExtractVocalStage": {
+    "display_name": "Audio · Vocals Only",
+    "inputs": {
+      "video": {
+        "name": "Video"
+      },
+      "workflow": {
+        "name": "Workflow"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Audio"
+      }
+    }
+  },
+  "ComfyTV_AudioLoaderStage": {
+    "display_name": "Load Audio",
+    "inputs": {},
+    "outputs": {
+      "0": {
+        "name": "Audio"
+      }
+    }
+  },
+  "ComfyTV_AudioStage": {
     "display_name": "Music Stage",
     "inputs": {
       "main_prompt": {
         "tooltip": "Genre / mood / BPM tags."
+      },
+      "duration_s": {
+        "name": "Duration (s)"
+      },
+      "lyrics": {
+        "name": "Lyrics"
+      },
+      "workflow": {
+        "name": "Workflow"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Audio"
       }
     }
   },
-  "ComfyTV.SpeechStage": {
+  "ComfyTV_AudioVideoDemuxAudioStage": {
+    "display_name": "Demux · Audio Track",
+    "inputs": {
+      "video": {
+        "name": "Video"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Audio"
+      }
+    }
+  },
+  "ComfyTV_AudioVideoDemuxVideoStage": {
+    "display_name": "Demux · Silent Video",
+    "inputs": {
+      "video": {
+        "name": "Video"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Video"
+      }
+    }
+  },
+  "ComfyTV_BridgeFromAudio": {
+    "display_name": "← ComfyTV Audio",
+    "inputs": {
+      "audio": {
+        "name": "Audio"
+      }
+    },
+    "outputs": {}
+  },
+  "ComfyTV_BridgeFromImage": {
+    "display_name": "← ComfyTV Image",
+    "inputs": {
+      "image": {
+        "name": "Image"
+      }
+    },
+    "outputs": {}
+  },
+  "ComfyTV_BridgeFromMask": {
+    "display_name": "← ComfyTV Mask",
+    "inputs": {
+      "image": {
+        "name": "Image"
+      }
+    },
+    "outputs": {}
+  },
+  "ComfyTV_BridgeFromText": {
+    "display_name": "← ComfyTV Text",
+    "inputs": {
+      "text": {
+        "name": "Text"
+      }
+    },
+    "outputs": {}
+  },
+  "ComfyTV_BridgeFromVideo": {
+    "display_name": "← ComfyTV Video",
+    "inputs": {
+      "video": {
+        "name": "Video"
+      }
+    },
+    "outputs": {}
+  },
+  "ComfyTV_BridgeToAudio": {
+    "display_name": "→ ComfyTV Audio",
+    "inputs": {
+      "audio": {
+        "name": "Audio"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Audio"
+      }
+    }
+  },
+  "ComfyTV_BridgeToImage": {
+    "display_name": "→ ComfyTV Image",
+    "inputs": {
+      "image": {
+        "name": "Image"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Image"
+      }
+    }
+  },
+  "ComfyTV_BridgeToImages": {
+    "display_name": "→ ComfyTV Images",
+    "inputs": {
+      "images": {
+        "name": "Images"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Images"
+      },
+      "1": {
+        "name": "Image"
+      }
+    }
+  },
+  "ComfyTV_BridgeToText": {
+    "display_name": "→ ComfyTV Text",
+    "inputs": {
+      "text": {
+        "name": "Text"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Text"
+      }
+    }
+  },
+  "ComfyTV_BridgeToVideo": {
+    "display_name": "→ ComfyTV Video",
+    "inputs": {
+      "video": {
+        "name": "Video"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Video"
+      }
+    }
+  },
+  "ComfyTV_ColorGradeStage": {
+    "display_name": "Color Grade",
+    "inputs": {
+      "grade_state": {
+        "name": "Grade state"
+      },
+      "image": {
+        "name": "Image"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Image"
+      }
+    }
+  },
+  "ComfyTV_CompareStage": {
+    "display_name": "Compare",
+    "inputs": {
+      "image_a": {
+        "name": "Image A"
+      },
+      "image_b": {
+        "name": "Image B"
+      }
+    },
+    "outputs": {}
+  },
+  "ComfyTV_CropStage": {
+    "display_name": "Crop",
+    "inputs": {
+      "crop_h": {
+        "name": "Crop height"
+      },
+      "crop_w": {
+        "name": "Crop width"
+      },
+      "crop_x": {
+        "name": "Crop X"
+      },
+      "crop_y": {
+        "name": "Crop Y"
+      },
+      "image": {
+        "name": "Image"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Image"
+      }
+    }
+  },
+  "ComfyTV_CutoutStage": {
+    "display_name": "Cutout",
+    "inputs": {
+      "image": {
+        "name": "Image"
+      },
+      "workflow": {
+        "name": "Workflow"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Image"
+      }
+    }
+  },
+  "ComfyTV_DirectorTimelineStage": {
+    "display_name": "Director Timeline",
+    "inputs": {
+      "audio": {
+        "name": "Audio"
+      },
+      "frame_rate": {
+        "name": "Frame rate"
+      },
+      "image0": {
+        "name": "Image #0"
+      },
+      "image1": {
+        "name": "Image #1"
+      },
+      "image10": {
+        "name": "Image #10"
+      },
+      "image11": {
+        "name": "Image #11"
+      },
+      "image12": {
+        "name": "Image #12"
+      },
+      "image13": {
+        "name": "Image #13"
+      },
+      "image14": {
+        "name": "Image #14"
+      },
+      "image15": {
+        "name": "Image #15"
+      },
+      "image16": {
+        "name": "Image #16"
+      },
+      "image17": {
+        "name": "Image #17"
+      },
+      "image18": {
+        "name": "Image #18"
+      },
+      "image19": {
+        "name": "Image #19"
+      },
+      "image2": {
+        "name": "Image #2"
+      },
+      "image20": {
+        "name": "Image #20"
+      },
+      "image21": {
+        "name": "Image #21"
+      },
+      "image22": {
+        "name": "Image #22"
+      },
+      "image23": {
+        "name": "Image #23"
+      },
+      "image3": {
+        "name": "Image #3"
+      },
+      "image4": {
+        "name": "Image #4"
+      },
+      "image5": {
+        "name": "Image #5"
+      },
+      "image6": {
+        "name": "Image #6"
+      },
+      "image7": {
+        "name": "Image #7"
+      },
+      "image8": {
+        "name": "Image #8"
+      },
+      "image9": {
+        "name": "Image #9"
+      },
+      "images": {
+        "name": "Images"
+      },
+      "timeline_data": {
+        "name": "Timeline data"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Timeline"
+      }
+    }
+  },
+  "ComfyTV_EraseStage": {
+    "display_name": "Erase",
+    "inputs": {
+      "mask_data": {
+        "tooltip": "Annotated path of the mask PNG, written by the painter on Run.",
+        "name": "Mask"
+      },
+      "image": {
+        "name": "Image"
+      },
+      "workflow": {
+        "name": "Workflow"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Image"
+      }
+    }
+  },
+  "ComfyTV_GridSplitStage": {
+    "display_name": "Grid Split",
+    "inputs": {
+      "border": {
+        "name": "Border"
+      },
+      "cols": {
+        "name": "Columns"
+      },
+      "image": {
+        "name": "Image"
+      },
+      "outer_border": {
+        "name": "Outer border"
+      },
+      "rows": {
+        "name": "Rows"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Images"
+      },
+      "1": {
+        "name": "Image"
+      }
+    }
+  },
+  "ComfyTV_ImageEditStage": {
+    "display_name": "Image Edit",
+    "inputs": {
+      "main_prompt": {
+        "tooltip": "Edit instruction (required). Action-based language: 'remove X', 'change X to Y', 'replace X with Y'. Different from Inpaint — this model doesn't use a mask; the instruction is the whole interface."
+      },
+      "image": {
+        "name": "Image"
+      },
+      "workflow": {
+        "name": "Workflow"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Image"
+      }
+    }
+  },
+  "ComfyTV_ImageLoaderStage": {
+    "display_name": "Load Image",
+    "inputs": {},
+    "outputs": {
+      "0": {
+        "name": "Image"
+      }
+    }
+  },
+  "ComfyTV_ImagePickerStage": {
+    "display_name": "Image Picker",
+    "inputs": {
+      "batch": {
+        "name": "Batch"
+      },
+      "pool": {
+        "name": "Pool"
+      },
+      "selected_index": {
+        "name": "Selected index"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Image"
+      }
+    }
+  },
+  "ComfyTV_ImageStage": {
+    "display_name": "Image Stage",
+    "inputs": {
+      "aspect_ratio": {
+        "name": "Aspect ratio"
+      },
+      "batch_size": {
+        "name": "Batch size"
+      },
+      "image0": {
+        "name": "Image #0"
+      },
+      "image1": {
+        "name": "Image #1"
+      },
+      "image10": {
+        "name": "Image #10"
+      },
+      "image11": {
+        "name": "Image #11"
+      },
+      "image2": {
+        "name": "Image #2"
+      },
+      "image3": {
+        "name": "Image #3"
+      },
+      "image4": {
+        "name": "Image #4"
+      },
+      "image5": {
+        "name": "Image #5"
+      },
+      "image6": {
+        "name": "Image #6"
+      },
+      "image7": {
+        "name": "Image #7"
+      },
+      "image8": {
+        "name": "Image #8"
+      },
+      "image9": {
+        "name": "Image #9"
+      },
+      "images": {
+        "name": "Images"
+      },
+      "resolution": {
+        "name": "Resolution"
+      },
+      "text0": {
+        "name": "Text #0"
+      },
+      "text1": {
+        "name": "Text #1"
+      },
+      "text2": {
+        "name": "Text #2"
+      },
+      "text3": {
+        "name": "Text #3"
+      },
+      "text4": {
+        "name": "Text #4"
+      },
+      "text5": {
+        "name": "Text #5"
+      },
+      "text6": {
+        "name": "Text #6"
+      },
+      "text7": {
+        "name": "Text #7"
+      },
+      "texts": {
+        "name": "Texts"
+      },
+      "workflow": {
+        "name": "Workflow"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Images"
+      },
+      "1": {
+        "name": "Image"
+      }
+    }
+  },
+  "ComfyTV_ImageVariationsStage": {
+    "display_name": "Image Variations",
+    "inputs": {
+      "image": {
+        "name": "Image"
+      },
+      "variant_count": {
+        "name": "Variant count"
+      },
+      "workflow": {
+        "name": "Workflow"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Images"
+      },
+      "1": {
+        "name": "Image"
+      }
+    }
+  },
+  "ComfyTV_InpaintStage": {
+    "display_name": "Inpaint",
+    "inputs": {
+      "mask_data": {
+        "tooltip": "Annotated path of the mask PNG, written by the painter on Run.",
+        "name": "Mask"
+      },
+      "main_prompt": {
+        "tooltip": "What should appear in the masked region. Leave blank to use the workflow's default."
+      },
+      "image": {
+        "name": "Image"
+      },
+      "workflow": {
+        "name": "Workflow"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Image"
+      }
+    }
+  },
+  "ComfyTV_MirrorStage": {
+    "display_name": "Mirror",
+    "inputs": {
+      "flip_horizontal": {
+        "name": "Flip horizontal"
+      },
+      "flip_vertical": {
+        "name": "Flip vertical"
+      },
+      "image": {
+        "name": "Image"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Image"
+      }
+    }
+  },
+  "ComfyTV_MultiangleStage": {
+    "display_name": "Multiangle",
+    "inputs": {
+      "horizontal_angle": {
+        "tooltip": "Camera azimuth angle (0–360°).",
+        "name": "Horizontal angle"
+      },
+      "vertical_angle": {
+        "tooltip": "Camera elevation angle (-30° to 60°).",
+        "name": "Vertical angle"
+      },
+      "zoom": {
+        "tooltip": "Camera distance (0 = wide, 10 = close-up).",
+        "name": "Zoom"
+      },
+      "image": {
+        "name": "Image"
+      },
+      "workflow": {
+        "name": "Workflow"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Image"
+      }
+    }
+  },
+  "ComfyTV_OutpaintStage": {
+    "display_name": "Outpaint",
+    "inputs": {
+      "pad_left": {
+        "tooltip": "Pixels to extend left.",
+        "name": "Pad left"
+      },
+      "pad_top": {
+        "tooltip": "Pixels to extend top.",
+        "name": "Pad top"
+      },
+      "pad_right": {
+        "tooltip": "Pixels to extend right.",
+        "name": "Pad right"
+      },
+      "pad_bottom": {
+        "tooltip": "Pixels to extend bottom.",
+        "name": "Pad bottom"
+      },
+      "feathering": {
+        "tooltip": "Mask feathering pixels.",
+        "name": "Feathering"
+      },
+      "main_prompt": {
+        "tooltip": "Prompt: describe the WHOLE finished image (subject + scene + style + lighting), not what to add. Leave blank to use the workflow's generic descriptive default."
+      },
+      "image": {
+        "name": "Image"
+      },
+      "workflow": {
+        "name": "Workflow"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Image"
+      }
+    }
+  },
+  "ComfyTV_PanoramaCurrentViewStage": {
+    "display_name": "Panorama · Current View",
+    "inputs": {
+      "aspect_ratio": {
+        "name": "Aspect ratio"
+      },
+      "fov": {
+        "name": "FOV"
+      },
+      "panorama": {
+        "name": "Panorama"
+      },
+      "pitch": {
+        "name": "Pitch"
+      },
+      "resolution": {
+        "name": "Resolution"
+      },
+      "yaw": {
+        "name": "Yaw"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Image"
+      }
+    }
+  },
+  "ComfyTV_PanoramaMultiViewStage": {
+    "display_name": "Panorama · Multi-View",
+    "inputs": {
+      "aspect_ratio": {
+        "name": "Aspect ratio"
+      },
+      "panorama": {
+        "name": "Panorama"
+      },
+      "resolution": {
+        "name": "Resolution"
+      },
+      "view_count": {
+        "name": "View count"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Images"
+      },
+      "1": {
+        "name": "Image"
+      }
+    }
+  },
+  "ComfyTV_PanoramaStage": {
+    "display_name": "Panorama",
+    "inputs": {
+      "image": {
+        "name": "Image"
+      },
+      "manual_source": {
+        "name": "Manual source"
+      },
+      "workflow": {
+        "name": "Workflow"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Panorama"
+      }
+    }
+  },
+  "ComfyTV_ProjectStage": {
+    "display_name": "Project",
+    "inputs": {
+      "project_id": {
+        "name": "Project ID"
+      },
+      "project_name": {
+        "name": "Project name"
+      },
+      "schema_version": {
+        "name": "Schema version"
+      }
+    },
+    "outputs": {}
+  },
+  "ComfyTV_RelightStage": {
+    "display_name": "Relight",
+    "inputs": {
+      "brightness": {
+        "tooltip": "Light brightness (0=dark, 100=bright).",
+        "name": "Brightness"
+      },
+      "color": {
+        "tooltip": "Light color. Hex string; defaults to white.",
+        "name": "Color"
+      },
+      "rim_light": {
+        "tooltip": "Add a rim/back light to separate subject from background.",
+        "name": "Rim light"
+      },
+      "image0": {
+        "name": "Image #0"
+      },
+      "image1": {
+        "name": "Image #1"
+      },
+      "image2": {
+        "name": "Image #2"
+      },
+      "image3": {
+        "name": "Image #3"
+      },
+      "images": {
+        "name": "Images"
+      },
+      "workflow": {
+        "name": "Workflow"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Image"
+      }
+    }
+  },
+  "ComfyTV_RotateStage": {
+    "display_name": "Rotate",
+    "inputs": {
+      "angle": {
+        "name": "Angle"
+      },
+      "image": {
+        "name": "Image"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Image"
+      }
+    }
+  },
+  "ComfyTV_ShotImagesStage": {
+    "display_name": "Shot Images",
+    "inputs": {
+      "aspect_ratio": {
+        "name": "Aspect ratio"
+      },
+      "image0": {
+        "name": "Image #0"
+      },
+      "image1": {
+        "name": "Image #1"
+      },
+      "image2": {
+        "name": "Image #2"
+      },
+      "image3": {
+        "name": "Image #3"
+      },
+      "image4": {
+        "name": "Image #4"
+      },
+      "image5": {
+        "name": "Image #5"
+      },
+      "image6": {
+        "name": "Image #6"
+      },
+      "image7": {
+        "name": "Image #7"
+      },
+      "images": {
+        "name": "Images"
+      },
+      "resolution": {
+        "name": "Resolution"
+      },
+      "storyboard": {
+        "name": "Storyboard"
+      },
+      "workflow": {
+        "name": "Workflow"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Images"
+      },
+      "1": {
+        "name": "Image"
+      }
+    }
+  },
+  "ComfyTV_SpeechStage": {
     "display_name": "Speech Stage",
     "inputs": {
       "main_prompt": {
         "tooltip": "The text to speak — the script the voice reads aloud."
       },
       "voice": {
-        "tooltip": "Named preset voice / speaker (for preset-voice models)."
+        "tooltip": "Named preset voice / speaker (for preset-voice models).",
+        "name": "Voice"
       },
       "language": {
-        "tooltip": "Language for multilingual models. 'Auto' lets the workflow/model decide. Names must match the selected model (e.g. Kokoro uses 'Mandarin Chinese')."
+        "tooltip": "Language for multilingual models. 'Auto' lets the workflow/model decide. Names must match the selected model (e.g. Kokoro uses 'Mandarin Chinese').",
+        "name": "Language"
       },
       "speed": {
-        "tooltip": "Speaking rate (1.0 = natural)."
+        "tooltip": "Speaking rate (1.0 = natural).",
+        "name": "Speed"
       },
       "reference_text": {
-        "tooltip": "Transcript of the reference voice clip (needed by F5-TTS / GPT-SoVITS)."
+        "tooltip": "Transcript of the reference voice clip (needed by F5-TTS / GPT-SoVITS).",
+        "name": "Reference text"
       },
       "reference_audio": {
-        "tooltip": "Optional voice sample to clone from."
+        "tooltip": "Optional voice sample to clone from.",
+        "name": "Reference audio"
+      },
+      "workflow": {
+        "name": "Workflow"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Audio"
       }
     }
   },
-  "ComfyTV.StoryboardStage": {
-    "display_name": "Storyboard"
-  },
-  "ComfyTV.ShotImagesStage": {
-    "display_name": "Shot Images"
-  },
-  "ComfyTV.ImagePickerStage": {
-    "display_name": "Image Picker"
-  },
-  "ComfyTV.PanoramaStage": {
-    "display_name": "Panorama"
-  },
-  "ComfyTV.PanoramaCurrentViewStage": {
-    "display_name": "Panorama · Current View"
-  },
-  "ComfyTV.PanoramaMultiViewStage": {
-    "display_name": "Panorama · Multi-View"
-  },
-  "ComfyTV.MultiangleStage": {
-    "display_name": "Multiangle",
+  "ComfyTV_StoryboardStage": {
+    "display_name": "Storyboard",
     "inputs": {
-      "horizontal_angle": {
-        "tooltip": "Camera azimuth angle (0–360°)."
+      "characters": {
+        "name": "Characters"
       },
-      "vertical_angle": {
-        "tooltip": "Camera elevation angle (-30° to 60°)."
+      "shot_count": {
+        "name": "Shot count"
       },
-      "zoom": {
-        "tooltip": "Camera distance (0 = wide, 10 = close-up)."
+      "storyboard_data": {
+        "name": "Storyboard data"
+      },
+      "text0": {
+        "name": "Text #0"
+      },
+      "text1": {
+        "name": "Text #1"
+      },
+      "text2": {
+        "name": "Text #2"
+      },
+      "text3": {
+        "name": "Text #3"
+      },
+      "text4": {
+        "name": "Text #4"
+      },
+      "text5": {
+        "name": "Text #5"
+      },
+      "texts": {
+        "name": "Texts"
+      },
+      "total_duration_s": {
+        "name": "Total duration (s)"
+      },
+      "workflow": {
+        "name": "Workflow"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Storyboard"
       }
     }
   },
-  "ComfyTV.RelightStage": {
-    "display_name": "Relight",
+  "ComfyTV_TextStage": {
+    "display_name": "Text Stage",
     "inputs": {
-      "brightness": {
-        "tooltip": "Light brightness (0=dark, 100=bright)."
+      "image0": {
+        "name": "Image #0"
       },
-      "color": {
-        "tooltip": "Light color. Hex string; defaults to white."
+      "image1": {
+        "name": "Image #1"
       },
-      "rim_light": {
-        "tooltip": "Add a rim/back light to separate subject from background."
+      "image2": {
+        "name": "Image #2"
+      },
+      "image3": {
+        "name": "Image #3"
+      },
+      "image4": {
+        "name": "Image #4"
+      },
+      "image5": {
+        "name": "Image #5"
+      },
+      "image6": {
+        "name": "Image #6"
+      },
+      "image7": {
+        "name": "Image #7"
+      },
+      "images": {
+        "name": "Images"
+      },
+      "text0": {
+        "name": "Text #0"
+      },
+      "text1": {
+        "name": "Text #1"
+      },
+      "text2": {
+        "name": "Text #2"
+      },
+      "text3": {
+        "name": "Text #3"
+      },
+      "text4": {
+        "name": "Text #4"
+      },
+      "text5": {
+        "name": "Text #5"
+      },
+      "text6": {
+        "name": "Text #6"
+      },
+      "text7": {
+        "name": "Text #7"
+      },
+      "texts": {
+        "name": "Texts"
+      },
+      "video0": {
+        "name": "Video #0"
+      },
+      "video1": {
+        "name": "Video #1"
+      },
+      "video2": {
+        "name": "Video #2"
+      },
+      "video3": {
+        "name": "Video #3"
+      },
+      "videos": {
+        "name": "Videos"
+      },
+      "workflow": {
+        "name": "Workflow"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Text"
       }
     }
   },
-  "ComfyTV.ImageVariationsStage": {
-    "display_name": "Image Variations"
+  "ComfyTV_TimelineVideoStage": {
+    "display_name": "Timeline Render",
+    "inputs": {
+      "timeline": {
+        "name": "Timeline"
+      },
+      "workflow": {
+        "name": "Workflow"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Video"
+      }
+    }
   },
-  "ComfyTV.UpscaleStage": {
+  "ComfyTV_UpscaleStage": {
     "display_name": "Upscale",
     "inputs": {
       "scale": {
-        "tooltip": "Upscale factor (workflow-dependent)."
+        "tooltip": "Upscale factor (workflow-dependent).",
+        "name": "Scale"
+      },
+      "image": {
+        "name": "Image"
+      },
+      "workflow": {
+        "name": "Workflow"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Image"
       }
     }
   },
-  "ComfyTV.OutpaintStage": {
-    "display_name": "Outpaint",
-    "inputs": {
-      "pad_left": {
-        "tooltip": "Pixels to extend left."
-      },
-      "pad_top": {
-        "tooltip": "Pixels to extend top."
-      },
-      "pad_right": {
-        "tooltip": "Pixels to extend right."
-      },
-      "pad_bottom": {
-        "tooltip": "Pixels to extend bottom."
-      },
-      "feathering": {
-        "tooltip": "Mask feathering pixels."
-      },
-      "main_prompt": {
-        "tooltip": "Prompt: describe the WHOLE finished image (subject + scene + style + lighting), not what to add. Leave blank to use the workflow's generic descriptive default."
-      }
-    }
-  },
-  "ComfyTV.InpaintStage": {
-    "display_name": "Inpaint",
-    "inputs": {
-      "mask_data": {
-        "tooltip": "Annotated path of the mask PNG, written by the painter on Run."
-      },
-      "main_prompt": {
-        "tooltip": "What should appear in the masked region. Leave blank to use the workflow's default."
-      }
-    }
-  },
-  "ComfyTV.EraseStage": {
-    "display_name": "Erase",
-    "inputs": {
-      "mask_data": {
-        "tooltip": "Annotated path of the mask PNG, written by the painter on Run."
-      }
-    }
-  },
-  "ComfyTV.CutoutStage": {
-    "display_name": "Cutout"
-  },
-  "ComfyTV.CropStage": {
-    "display_name": "Crop"
-  },
-  "ComfyTV.VideoClipStage": {
+  "ComfyTV_VideoClipStage": {
     "display_name": "Video Clip",
     "inputs": {
       "start_s": {
-        "tooltip": "Start time in seconds."
+        "tooltip": "Start time in seconds.",
+        "name": "Start (s)"
       },
       "end_s": {
-        "tooltip": "End time in seconds (0 = end)."
+        "tooltip": "End time in seconds (0 = end).",
+        "name": "End (s)"
+      },
+      "video": {
+        "name": "Video"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Video"
       }
     }
   },
-  "ComfyTV.VideoUpscaleStage": {
+  "ComfyTV_VideoCropStage": {
+    "display_name": "Video Crop",
+    "inputs": {
+      "h": {
+        "name": "Height"
+      },
+      "video": {
+        "name": "Video"
+      },
+      "w": {
+        "name": "Width"
+      },
+      "x": {
+        "name": "X"
+      },
+      "y": {
+        "name": "Y"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Video"
+      }
+    }
+  },
+  "ComfyTV_VideoExtractFrameStage": {
+    "display_name": "Extract Frame",
+    "inputs": {
+      "at_seconds": {
+        "name": "At (s)"
+      },
+      "position": {
+        "name": "Position"
+      },
+      "video": {
+        "name": "Video"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Image"
+      }
+    }
+  },
+  "ComfyTV_VideoLoaderStage": {
+    "display_name": "Load Video",
+    "inputs": {},
+    "outputs": {
+      "0": {
+        "name": "Video"
+      }
+    }
+  },
+  "ComfyTV_VideoResizeStage": {
+    "display_name": "Video Resize",
+    "inputs": {
+      "height": {
+        "name": "Height"
+      },
+      "video": {
+        "name": "Video"
+      },
+      "width": {
+        "name": "Width"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Video"
+      }
+    }
+  },
+  "ComfyTV_VideoStage": {
+    "display_name": "Video Stage",
+    "inputs": {
+      "aspect_ratio": {
+        "name": "Aspect ratio"
+      },
+      "audio": {
+        "name": "Audio"
+      },
+      "duration_s": {
+        "name": "Duration (s)"
+      },
+      "generate_audio": {
+        "name": "Generate audio"
+      },
+      "image0": {
+        "name": "Image #0"
+      },
+      "image1": {
+        "name": "Image #1"
+      },
+      "image2": {
+        "name": "Image #2"
+      },
+      "image3": {
+        "name": "Image #3"
+      },
+      "image4": {
+        "name": "Image #4"
+      },
+      "image5": {
+        "name": "Image #5"
+      },
+      "image6": {
+        "name": "Image #6"
+      },
+      "image7": {
+        "name": "Image #7"
+      },
+      "images": {
+        "name": "Images"
+      },
+      "resolution": {
+        "name": "Resolution"
+      },
+      "text0": {
+        "name": "Text #0"
+      },
+      "text1": {
+        "name": "Text #1"
+      },
+      "text2": {
+        "name": "Text #2"
+      },
+      "text3": {
+        "name": "Text #3"
+      },
+      "text4": {
+        "name": "Text #4"
+      },
+      "text5": {
+        "name": "Text #5"
+      },
+      "texts": {
+        "name": "Texts"
+      },
+      "video0": {
+        "name": "Video #0"
+      },
+      "video1": {
+        "name": "Video #1"
+      },
+      "video2": {
+        "name": "Video #2"
+      },
+      "video3": {
+        "name": "Video #3"
+      },
+      "videos": {
+        "name": "Videos"
+      },
+      "workflow": {
+        "name": "Workflow"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Video"
+      }
+    }
+  },
+  "ComfyTV_VideoSubtitleSelectEraseStage": {
+    "display_name": "Subtitle Erase (Region)",
+    "inputs": {
+      "region_h": {
+        "name": "Region height"
+      },
+      "region_w": {
+        "name": "Region width"
+      },
+      "region_x": {
+        "name": "Region X"
+      },
+      "region_y": {
+        "name": "Region Y"
+      },
+      "video": {
+        "name": "Video"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Video"
+      }
+    }
+  },
+  "ComfyTV_VideoSubtitleSmartEraseStage": {
+    "display_name": "Subtitle Erase (Smart)",
+    "inputs": {
+      "video": {
+        "name": "Video"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Video"
+      }
+    }
+  },
+  "ComfyTV_VideoUpscaleStage": {
     "display_name": "Video Upscale",
     "inputs": {
       "scale": {
-        "tooltip": "Upscale factor."
+        "tooltip": "Upscale factor.",
+        "name": "Scale"
+      },
+      "video": {
+        "name": "Video"
       }
-    }
-  },
-  "ComfyTV.VideoSubtitleSmartEraseStage": {
-    "display_name": "Subtitle Erase (Smart)"
-  },
-  "ComfyTV.VideoSubtitleSelectEraseStage": {
-    "display_name": "Subtitle Erase (Region)"
-  },
-  "ComfyTV.AudioExtractVocalStage": {
-    "display_name": "Audio · Vocals Only"
-  },
-  "ComfyTV.AudioExtractBgStage": {
-    "display_name": "Audio · Background Only"
-  },
-  "ComfyTV.AudioVideoDemuxAudioStage": {
-    "display_name": "Demux · Audio Track"
-  },
-  "ComfyTV.AudioVideoDemuxVideoStage": {
-    "display_name": "Demux · Silent Video"
-  },
-  "ComfyTV.ImageLoaderStage": {
-    "display_name": "Load Image"
-  },
-  "ComfyTV.VideoLoaderStage": {
-    "display_name": "Load Video"
-  },
-  "ComfyTV.ImageEditStage": {
-    "inputs": {
-      "main_prompt": {
-        "tooltip": "Edit instruction (required). Action-based language: 'remove X', 'change X to Y', 'replace X with Y'. Different from Inpaint — this model doesn't use a mask; the instruction is the whole interface."
+    },
+    "outputs": {
+      "0": {
+        "name": "Video"
       }
     }
   }

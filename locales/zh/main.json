@@ -703,5 +703,17 @@
   },
   "run": {
     "stagesRunPerNode": "ComfyTV 节点各自独立运行 — 请用每个节点上的运行按钮。全局 Run 在这里没有可执行的节点。"
+  },
+  "nodeCategories": {
+    "ComfyTV": "ComfyTV",
+    "Project": "项目",
+    "Generate": "生成",
+    "Compose": "合成",
+    "Panorama": "全景",
+    "Image": "图像",
+    "Video": "视频",
+    "Audio": "音频",
+    "Input": "输入",
+    "Bridge": "桥接"
   }
 }
