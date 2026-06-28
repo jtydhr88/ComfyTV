@@ -27,10 +27,12 @@
 
 ## 类型说明（COMFYTV_AUDIO vs ComfyUI 原生）
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 | ComfyTV 类型 | 是什么 | 与 ComfyUI 的区别 |
 | --- | --- | --- |
-| `COMFYTV_AUDIO` | 语音片段的项目快照 | 不是内存 AUDIO tensor |
-| 原生 AUDIO | 采样 tensor | 需 Bridge 才能接 ComfyTV |
+| `COMFYTV_AUDIO` | 语音片段的项目快照 | 不是 ComfyUI 内存音频 |
+| 原生 AUDIO | 内存里的音频数据 | 需 Bridge 才能接 ComfyTV |
 
 **如何转换：**
 
@@ -76,7 +78,7 @@ pip install kokoro-onnx onnxruntime
 
 ### voice（预设音色）
 
-命名说话人 id，供 Kokoro、Bark、ElevenLabs 等**预设音色**模型使用。Kokoro 通过 preset 默认 `af_sarah` 等。
+命名说话人 id，供 Kokoro、Bark、ElevenLabs 等**预设音色**模型使用。Kokoro 通过 预设默认 `af_sarah` 等。
 
 从 **reference_audio** 克隆时可留空（取决于 workflow 是否支持克隆）。
 
@@ -98,11 +100,11 @@ Kokoro 必须使用其支持的名称之一，例如 `English`、`Mandarin Chine
 
 ### reference_audio（参考音频）
 
-可选 `COMFYTV_AUDIO`，用于**声音克隆**。接 Music/Speech 上游或 Load Audio from Asset。preset 里用 `upstream_audio:value` 绑定到克隆节点。
+可选 `COMFYTV_AUDIO`，用于**声音克隆**。接 Music/Speech 上游或 Load Audio from Asset。预设方案里用 `upstream_audio:value` 绑定到克隆节点。
 
 Kokoro **不支持**克隆，这两项对 Kokoro workflow 无效。
 
-### custom_params
+### 自定义参数（custom_params）
 
 侧栏绑定引擎特有参数（如 Kokoro 以外的 seed、speaker embedding 等）。
 
@@ -118,7 +120,7 @@ Kokoro **不支持**克隆，这两项对 Kokoro workflow 无效。
 2. **workflow** → **Kokoro TTS**。
 3. **main_prompt** 输入一段中文旁白（2–3 句即可）。
 4. **language** → `Mandarin Chinese`（中文朗读时勿用 Auto）。
-5. **voice** 可留空（用 preset 默认），**speed** `1.0`。
+5. **voice** 可留空（用 预设默认），**speed** `1.0`。
 6. 点 **▶ 运行**，节点上播放语音预览。
 7. 需要对口型视频：接 **Video Stage**，选 **IA2V**，Speech **audio** → Video **audio**，人物图 → **images**。
 
@@ -130,7 +132,7 @@ Kokoro **不支持**克隆，这两项对 Kokoro workflow 无效。
 | --- | --- |
 | [入门指南](https://github.com/jtydhr88/ComfyTV/blob/main/docs/getting-started.zh.md) | 安装、画布基础、逐节点 Run、快照、Project、Image Picker |
 | [生成内容](https://github.com/jtydhr88/ComfyTV/blob/main/docs/generate.zh.md) | Text / Image / Video / Music / Speech 生成器与 workflow 选型 |
-| [模型文件清单](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md) | 各 workflow 所需 checkpoint/LoRA 与放置目录 |
+| [模型文件清单](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md) | 各 workflow 所需 主模型与 LoRA 小模型 与放置目录 |
 | [自定义工作流](https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.zh.md) | 导入自己的 ComfyUI JSON，不改 Python |
 
 ## 仓库与工作流
@@ -156,7 +158,7 @@ A：念稿 → Speech；做 BGM 或歌曲 → Music Stage。
 A：安装 `comfyui-kokoro` 和 `kokoro-onnx`，重启 ComfyUI。
 
 **Q：reference_audio 没效果？**  
-A：Kokoro 不支持克隆；换 F5-TTS 等 workflow 并正确 preset 绑定。
+A：Kokoro 不支持克隆；换 F5-TTS 等 workflow 并正确 预设方案绑定。
 
 ## 相关节点
 

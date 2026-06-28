@@ -20,6 +20,8 @@
 
 ## 类型说明
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 `COMFYTV_IMAGE` — [bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md)
 
 ## 界面与参数说明
@@ -48,7 +50,7 @@
 
 避免：*「一张有人在山里的照片」*（那是生成描述，不是编辑指令）。
 
-### custom_params
+### 自定义参数（custom_params）
 
 侧栏 seed、denoise 等（若 workflow 暴露）。
 
@@ -75,7 +77,7 @@
 | --- | --- |
 | [入门指南](https://github.com/jtydhr88/ComfyTV/blob/main/docs/getting-started.zh.md) | 安装、画布基础、逐节点 Run、快照、Project、Image Picker |
 | [图像工具](https://github.com/jtydhr88/ComfyTV/blob/main/docs/image-tools.zh.md) | 裁剪、Inpaint、扩图、放大、多角度、变体 preset 等完整说明 |
-| [模型文件清单](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md) | 各 workflow 所需 checkpoint/LoRA 与放置目录 |
+| [模型文件清单](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md) | 各 workflow 所需 主模型与 LoRA 小模型 与放置目录 |
 | [自定义工作流](https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.zh.md) | 导入自己的 ComfyUI JSON，不改 Python |
 
 ## 仓库与工作流
@@ -96,7 +98,7 @@
 A：局部蒙版 + 内容 → Inpaint；整图指令 → Image Edit。
 
 **Q：构图漂移了？**  
-A：收窄指令；降低 denoise；换 seed。
+A：收窄指令；降低 denoise；换随机种子。
 
 ## 相关节点
 

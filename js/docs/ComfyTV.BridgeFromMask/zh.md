@@ -1,6 +1,6 @@
 # ← ComfyTV 蒙版 (Bridge From Mask)
 
-> **出桥**：从 **COMFYTV_IMAGE**（常带 alpha 的 PNG）提取 **MASK** tensor；**无 ▶ 运行**，Queue 时加载。
+> **出桥**：从 **COMFYTV_IMAGE**（常带 alpha 的 PNG）提取 **MASK** 内存蒙版；**无 ▶ 运行**，Queue 时加载。
 
 ## 这个节点是做什么的
 
@@ -21,6 +21,8 @@ ComfyTV **Cutout**、带 alpha 的 bridge PNG 等输出 **`COMFYTV_IMAGE`**。Co
 - 输出 shape `[1,H,W]` float。
 
 ## 类型说明
+
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
 
 | 输入 | 输出 |
 |---|---|
@@ -50,7 +52,6 @@ ComfyTV **Cutout**、带 alpha 的 bridge PNG 等输出 **`COMFYTV_IMAGE`**。Co
 | 资源 | 链接 |
 |---|---|
 | Bridge 指南 | https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md |
-
 
 ## 完整教程（推荐阅读）
 

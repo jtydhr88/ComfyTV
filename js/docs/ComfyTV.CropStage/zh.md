@@ -6,7 +6,7 @@
 
 这是 **即时（instant）** 节点：处理全在浏览器完成，不会提交 ComfyUI 队列，也不会下载模型。适合构图微调、去水印边缘、把横图裁成竖图等轻量操作。
 
-输入、输出都是 `COMFYTV_IMAGE`（一张图的 URL 快照），不是 ComfyUI 原生的 `IMAGE` tensor。若你的图来自 Save Image 或其它插件，请先接 **Bridge → ComfyTV Image**。
+输入、输出都是 `COMFYTV_IMAGE`（一张图的 URL 快照），不是 ComfyUI 内存图像。若你的图来自 Save Image 或其它插件，请先接 **Bridge → ComfyTV Image**。
 
 ## 适用场景
 
@@ -25,15 +25,17 @@ ComfyTV 把「改图但不跑模型」的操作做成 **Stage**，但和 **Upsca
 
 ## 类型说明（COMFYTV_* vs ComfyUI 原生）
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 | ComfyTV 类型 | 是什么 | 与 ComfyUI 的区别 |
 |---|---|---|
-| `COMFYTV_IMAGE` | 一张图的 URL 快照 | 不是内存里的 `IMAGE` tensor |
+| `COMFYTV_IMAGE` | 一张图的 URL 快照 | 不是 ComfyUI 内存图像 |
 | `COMFYTV_IMAGES` | 多图批量 JSON | 不是 `IMAGE` batch |
 
 **如何转换：**
 
 - 原生 → ComfyTV：`ComfyTV/Bridge` → `→ ComfyTV Image`（Run 后存快照）
-- ComfyTV → 原生：`← ComfyTV Image`（读快照变回 tensor）
+- ComfyTV → 原生：`← ComfyTV Image`（读快照变回 ComfyUI 内存图像）
 
 详见 [bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md)
 

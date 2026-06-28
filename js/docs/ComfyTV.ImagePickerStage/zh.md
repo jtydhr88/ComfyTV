@@ -21,15 +21,17 @@
 - **batch 口**：接受 `COMFYTV_IMAGES`（批量 JSON）或单张 `COMFYTV_IMAGE`（视为 1 张的批量）。
 - **pool（累积池）**：隐藏 JSON 字段 `{images:[...]}`。UI 会把上游新批量**追加**进池（按 `image_url` 去重），断开上游或重跑上游后池内容仍可保留，方便 A/B 对比候选。点 **Clear** 清空池。
 - **快照**：下游 stage Run 时用当前选中图 URL；改选缩略图会改变下游读到的快照。
-- **为何用 COMFYTV 类型**：ComfyTV 用 URL 快照在项目间持久化；原生 `IMAGE` tensor 无法直接跨 stage 保存。需 Bridge 转换（见下表）。
+- **为何用 COMFYTV 类型**：ComfyTV 用 URL 快照在项目间持久化；ComfyUI 内存图像 无法直接跨 stage 保存。需 Bridge 转换（见下表）。
 
 ## 类型说明（COMFYTV_* vs ComfyUI 原生）
+
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
 
 | ComfyTV 类型 | 是什么 | 与 ComfyUI 的区别 |
 |---|---|---|
 | `COMFYTV_IMAGES` | 多图 JSON 批量 | 接 **batch** 口 |
 | `COMFYTV_IMAGE` | 单图 URL 快照 | **image** 输出口；也可接 batch（当 1 张批量） |
-| 原生 `IMAGE` | tensor | 先 **→ ComfyTV Image(s)** Bridge |
+| 原生 `IMAGE` | ComfyUI 内存图像 | 先 **→ ComfyTV Image(s)** Bridge |
 
 **如何转换：** [bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md)
 

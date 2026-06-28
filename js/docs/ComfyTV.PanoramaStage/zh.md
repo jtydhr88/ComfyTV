@@ -30,12 +30,14 @@ Panorama 节点 **只显示 3D 查看器**，没有平面缩略图。要得到�
 
 ## 类型说明（COMFYTV_* vs ComfyUI 原生）
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 | ComfyTV 类型 | 是什么 | 与 ComfyUI 的区别 |
 |---|---|---|
-| `COMFYTV_PANORAMA` | 全景图的 `/view?` URL 快照 | 不是内存里的 `IMAGE` tensor |
+| `COMFYTV_PANORAMA` | 全景图的 `/view?` URL 快照 | 不是 ComfyUI 内存图像 |
 | `COMFYTV_IMAGE` | 单张图的 URL 快照 | 普通平面截图用此类型 |
 
-**如何转换：** 原生 `IMAGE` → ComfyTV 用 **→ ComfyTV Image**；截图变回 tensor 用 **← ComfyTV Image**。Bridge 详解见 [bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md)。
+**如何转换：** 原生 `IMAGE` → ComfyTV 用 **→ ComfyTV Image**；截图变回 ComfyUI 内存格式 用 **← ComfyTV Image**。Bridge 详解见 [bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md)。
 
 ## 界面与参数说明
 
@@ -51,7 +53,7 @@ Panorama 节点 **只显示 3D 查看器**，没有平面缩略图。要得到�
 ### manual_source（隐藏）
 **📤 Upload** 写入。非空时跳过 workflow。文件存 ComfyUI `input/`。**✕ Clear upload** 后可走生成。
 
-### custom_params
+### 自定义参数（custom_params）
 JSON，覆盖 workflow 侧栏参数。见 [sidebar-config-editor.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/sidebar-config-editor.zh.md)。
 
 ## 输出说明
@@ -76,7 +78,7 @@ JSON，覆盖 workflow 侧栏参数。见 [sidebar-config-editor.zh.md](https://
 | --- | --- |
 | [入门指南](https://github.com/jtydhr88/ComfyTV/blob/main/docs/getting-started.zh.md) | 安装、画布基础、逐节点 Run、快照、Project、Image Picker |
 | [全景图 360°](https://github.com/jtydhr88/ComfyTV/blob/main/docs/panorama.zh.md) | 上传/生成 equirectangular、Current View、Multi-View |
-| [模型文件清单](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md) | 各 workflow 所需 checkpoint/LoRA 与放置目录 |
+| [模型文件清单](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md) | 各 workflow 所需 主模型与 LoRA 小模型 与放置目录 |
 
 ## 仓库与工作流
 

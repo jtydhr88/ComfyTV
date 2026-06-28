@@ -22,10 +22,12 @@
 
 ## 类型说明（COMFYTV_* vs ComfyUI 原生）
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 | ComfyTV 类型 | 是什么 | 与 ComfyUI 的区别 |
 |---|---|---|
 | `COMFYTV_TIMELINE` | 时间线 JSON | **timeline** 输入，来自 Director Timeline |
-| `COMFYTV_VIDEO` | 视频快照 | **video** 输出；非原生 `VIDEO` tensor |
+| `COMFYTV_VIDEO` | 视频快照 | **video** 输出；不是 ComfyUI 内存视频 |
 | `COMFYTV_IMAGE` | 单图 | 已编进 timeline segments，不直连本节点 |
 
 Bridge：[bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md)
@@ -46,7 +48,7 @@ Bridge：[bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/brid
 - **填什么**：**Director Timeline → timeline**。
 - **误区**：空 timeline 或 segments 为空会导致无效/占位输出。
 
-### custom_params（隐藏）
+### 自定义参数（custom_params）（隐藏）
 
 - 侧栏绑定的额外 workflow 参数（随 timeline workflow 演进）。
 

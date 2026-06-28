@@ -9,7 +9,7 @@
 ## 适用场景
 
 - 产品/人像偏平，想要戏剧光或黄金时刻
-- Image Picker preset「电影级光影」会路由到 Relight
+- Image Picker 快捷方案「电影级光影」会会跳转到 Relight 节点
 - 抠图后 **Cutout** → Relight 统一光感
 - 有参考剧照时，用 **(with reference)** 变种
 
@@ -20,6 +20,8 @@
 - with-reference 版：`images` 自动增长槽位 — 第 1 张主体，第 2 张光照参考。
 
 ## 类型说明
+
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
 
 | 类型 | 说明 |
 |---|---|
@@ -62,9 +64,9 @@ Bridge：[bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/brid
 
 追加描述，如 *「柔和窗光从左侧」*；会与自动指令拼接。
 
-### custom_params
+### 自定义参数（custom_params）
 
-侧栏 seed 等。
+侧栏随机种子（seed）等。
 
 ## 输出说明
 
@@ -89,7 +91,7 @@ Bridge：[bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/brid
 | --- | --- |
 | [入门指南](https://github.com/jtydhr88/ComfyTV/blob/main/docs/getting-started.zh.md) | 安装、画布基础、逐节点 Run、快照、Project、Image Picker |
 | [图像工具](https://github.com/jtydhr88/ComfyTV/blob/main/docs/image-tools.zh.md) | 裁剪、Inpaint、扩图、放大、多角度、变体 preset 等完整说明 |
-| [模型文件清单](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md) | 各 workflow 所需 checkpoint/LoRA 与放置目录 |
+| [模型文件清单](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md) | 各 workflow 所需 主模型与 LoRA 小模型 与放置目录 |
 
 ## 仓库与工作流
 

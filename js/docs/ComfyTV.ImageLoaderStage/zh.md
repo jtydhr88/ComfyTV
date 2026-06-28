@@ -23,16 +23,18 @@
 
 ## 类型说明（COMFYTV_* vs ComfyUI 原生）
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 | ComfyTV 类型 | 是什么 | 与 ComfyUI 的区别 |
 |---|---|---|
-| `COMFYTV_IMAGE` | 一张图的 URL 快照 | 不是内存里的 `IMAGE` tensor |
+| `COMFYTV_IMAGE` | 一张图的 URL 快照 | 不是 ComfyUI 内存图像 |
 | `COMFYTV_IMAGES` | 多图批量 JSON | 不是 `IMAGE` batch |
 | `COMFYTV_VIDEO` / `COMFYTV_AUDIO` | 同理 | 需 Bridge 与原生节点互通 |
 
 **如何转换：**
 
 - 原生 → ComfyTV：`ComfyTV/Bridge` → `→ ComfyTV Image`（Run 后存快照）
-- ComfyTV → 原生：`← ComfyTV Image`（读快照变回 tensor）
+- ComfyTV → 原生：`← ComfyTV Image`（读快照变回 ComfyUI 内存图像）
 
 详细说明：[bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md)
 
@@ -45,7 +47,7 @@
 - **对结果的影响**：所选文件即本节点唯一输出；换文件即换快照。
 - **常见误区**：以为下拉框里是「项目里生成过的图」——那是 **从资产加载图片** 的职责。`input/` 是 ComfyUI 全局共享目录，所有 workflow 都能读。
 
-### project_id / parent_output_id（内部）
+### 项目 id（project_id） / 父输出来源 id（内部）
 
 - 隐藏字段，由 **Project** 节点与画布连线自动维护，一般无需手动改。
 
@@ -102,4 +104,4 @@ A：正常。Input loader 选中即输出；只有绑定 workflow 的 stage 才�
 - **从资产加载图片** —— 从项目资产库选取生成/导入的图。
 - **加载视频** / **加载音频** —— 同模式的其它媒体 Input。
 - **Image Picker** —— 从批量中挑一张并打开编辑工具栏。
-- **→ ComfyTV Image**（Bridge）—— 把原生 `IMAGE` tensor 转入 ComfyTV。
+- **→ ComfyTV Image**（Bridge）—— 把ComfyUI 内存图像 转入 ComfyTV。

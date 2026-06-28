@@ -22,6 +22,8 @@
 
 ## 类型说明
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 | 类型 | 说明 |
 |---|---|
 | `COMFYTV_VIDEO` 入/出 | URL 快照 |
@@ -55,7 +57,6 @@
 | 路线图 | https://github.com/jtydhr88/ComfyTV/blob/main/docs/roadmap.zh.md |
 | 视频与音频指南 | https://github.com/jtydhr88/ComfyTV/blob/main/docs/video-and-audio.zh.md |
 | ComfyTV 仓库 | https://github.com/jtydhr88/ComfyTV |
-
 
 ## 完整教程（推荐阅读）
 

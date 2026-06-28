@@ -4,7 +4,7 @@
 
 ## 这个节点是做什么的
 
-ComfyTV **Demux · Audio Track**、**Audio Stage** 等输出 **`COMFYTV_AUDIO`**。原生音频节点（VHS Load Audio、Stable Audio 后处理等）要 **`AUDIO`** `{waveform, sample_rate}`。**← ComfyTV Audio** 从 `/view?` wav 加载 tensor。
+ComfyTV **Demux · Audio Track**、**Audio Stage** 等输出 **`COMFYTV_AUDIO`**。原生音频节点（VHS Load Audio、Stable Audio 后处理等）要 **`AUDIO`** `{waveform, sample_rate}`。**← ComfyTV Audio** 从 `/view?` wav 加载为内存音频。
 
 与 **→ ComfyTV Audio** 配对：ComfyTV 分离/生成的音轨 → 原生生态。
 
@@ -20,6 +20,8 @@ ComfyTV **Demux · Audio Track**、**Audio Stage** 等输出 **`COMFYTV_AUDIO`**
 - URL 解析同其它出桥。
 
 ## 类型说明
+
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
 
 | ComfyTV | 原生 |
 |---|---|
@@ -50,7 +52,6 @@ ComfyTV **Demux · Audio Track**、**Audio Stage** 等输出 **`COMFYTV_AUDIO`**
 |---|---|
 | Bridge 指南 | https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md |
 | 视频与音频指南 | https://github.com/jtydhr88/ComfyTV/blob/main/docs/video-and-audio.zh.md |
-
 
 ## 完整教程（推荐阅读）
 

@@ -8,7 +8,7 @@
 
 输出类型是 `COMFYTV_TEXT`——不是 ComfyUI 原生的字符串 socket，而是一段带项目快照的文本 URL/载荷，可以接到 Image Stage、Video Stage 的 **texts** 输入，自动拼进它们的提示词。
 
-Text Stage 还可以接收上游的 **texts**、**images**、**videos** 作为多模态上下文（具体是否被 workflow 使用，取决于你选的 backend 和 preset 绑定）。
+Text Stage 还可以接收上游的 **texts**、**images**、**videos** 作为多模态上下文（具体是否被 workflow 使用，取决于你选的 backend 和 预设方案绑定）。
 
 ## 适用场景
 
@@ -23,19 +23,21 @@ Text Stage 还可以接收上游的 **texts**、**images**、**videos** 作为�
 - **快照**：Run 一次后，文本结果存进当前项目；下游 stage 再 Run 时读这份快照，**不会自动重跑** Text Stage。
 - **workflow 下拉框** = 仓库 [`workflows/text/`](https://github.com/jtydhr88/ComfyTV/tree/main/workflows/text) 里注册的 ComfyUI 子工作流 JSON。ComfyTV 负责把 `main_prompt`、seed、max_length 等映射进子图。
 
-文本 workflow 没有 `SaveImage`；ComfyTV 通过 preset 里的 `graph_output_first` 读取 LLM 节点第 0 个字符串输出。
+文本工作流不保存图片；ComfyTV 直接从 LLM 节点读取生成的字符串。
 
 ## 类型说明（COMFYTV_TEXT vs ComfyUI 原生）
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 | ComfyTV 类型 | 是什么 | 与 ComfyUI 的区别 |
 | --- | --- | --- |
-| `COMFYTV_TEXT` | 生成文本的项目快照 | 不是 ComfyUI 原生 STRING socket |
+| `COMFYTV_TEXT` | 生成文本的项目快照 | 不是 ComfyUI 原生 STRING 文本接口 |
 | 原生 STRING / 文本节点 | 内存里的字符串 | 不能直连 ComfyTV stage 的 texts 输入 |
 
 **如何转换：**
 
 - 原生 → ComfyTV：**ComfyTV/Bridge** → **→ ComfyTV Text**（Run 后存快照）
-- ComfyTV → 原生：**← ComfyTV Text**（读快照变回 tensor/字符串供原生节点使用）
+- ComfyTV → 原生：**← ComfyTV Text**（读快照变回 ComfyUI 内存图像/字符串供原生节点使用）
 
 详见 [bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md)。
 
@@ -55,13 +57,13 @@ Text Stage 还可以接收上游的 **texts**、**images**、**videos** 作为�
 
 ### texts / images / videos（上游上下文）
 
-Autogrow 槽，可接多个上游 stage 输出。Text 最常用；images/videos 留给支持多模态的 workflow（当前 Local Qwen3 4B 以文本为主）。
+可追加多个的接口槽，可接多个上游 stage 输出。Text 最常用；images/videos 留给支持多模态的 workflow（当前 Local Qwen3 4B 以文本为主）。
 
-### custom_params（自定义参数）
+### 自定义参数（custom_params）（自定义参数）
 
-在选中 stage 后，左侧 **ComfyTV** 侧栏配置额外参数（如 `max_length`、seed、temperature），映射到子 workflow 节点。详见 [sidebar-config-editor.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/sidebar-config-editor.zh.md)。
+在选中 stage 后，左侧 **ComfyTV** 侧栏配置额外参数（如 `max_length`、seed、temperature），映射到子工作流里的对应节点。详见 [sidebar-config-editor.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/sidebar-config-editor.zh.md)。
 
-### project_id / parent_output_id / force_run_token
+### 项目 id（project_id） / 父输出来源 id / 强制重跑标记
 
 由 UI 自动管理，一般无需手改。绑定当前 Project 与输出 lineage。
 
@@ -89,7 +91,7 @@ Autogrow 槽，可接多个上游 stage 输出。Text 最常用；images/videos 
 | --- | --- |
 | [入门指南](https://github.com/jtydhr88/ComfyTV/blob/main/docs/getting-started.zh.md) | 安装、画布基础、逐节点 Run、快照、Project、Image Picker |
 | [生成内容](https://github.com/jtydhr88/ComfyTV/blob/main/docs/generate.zh.md) | Text / Image / Video / Music / Speech 生成器与 workflow 选型 |
-| [模型文件清单](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md) | 各 workflow 所需 checkpoint/LoRA 与放置目录 |
+| [模型文件清单](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md) | 各 workflow 所需 主模型与 LoRA 小模型 与放置目录 |
 | [自定义工作流](https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.zh.md) | 导入自己的 ComfyUI JSON，不改 Python |
 
 ## 仓库与工作流

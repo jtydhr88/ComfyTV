@@ -13,21 +13,23 @@
 - **Upscale** 前后：同一张图是否多了伪细节。
 - **Inpaint / Erase** 后检查接缝是否穿帮。
 - **Relight / Image Edit** 与 Picker 原图对比。
-- 两个 **Image Stage** seed 对比（分别 Bridge 或 Picker 出单张后接入）。
+- 两个 **Image Stage** seed 对比（分别经 Bridge 或 Picker 选出单张后接入）。
 
 ## 工作原理（为什么 ComfyTV 这样设计）
 
 - **无 ▶ 运行**：浏览器即时渲染滑条；改连线后预览自动刷新（读最新快照 URL）。
 - **无快照产出**：Compare 不 emit 新 COMFYTV 类型；上游快照仍各自独立存在。
-- **为何需要 COMFYTV_IMAGE**：两张输入须为可加载的 URL 快照；原生 `IMAGE` tensor 无法直接进 Compare UI，需 **→ ComfyTV Image** Bridge。
+- **为何需要 COMFYTV_IMAGE**：两张输入须为可加载的 URL 快照；ComfyUI 内存图像 无法直接进 Compare UI，需 **→ ComfyTV Image** Bridge。
 - **与 Image Picker 区别**：Picker **选一个**继续 pipeline；Compare **只看**不选，不替代 Picker。
 
 ## 类型说明（COMFYTV_* vs ComfyUI 原生）
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 | ComfyTV 类型 | 是什么 | 与 ComfyUI 的区别 |
 |---|---|---|
 | `COMFYTV_IMAGE` | 单图 URL | **image_a** / **image_b** 均须此类型 |
-| 原生 `IMAGE` | tensor | 各接 **→ ComfyTV Image** 再进 Compare |
+| 原生 `IMAGE` | ComfyUI 内存图像 | 各接 **→ ComfyTV Image** 再进 Compare |
 | 输出 | 无 | 不能接 Video Stage 等下游 |
 
 Bridge：[bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md)
@@ -54,7 +56,7 @@ Bridge：[bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/brid
 
 ## 输出说明
 
-本节点**无输出 socket**。Compare 不生成合并图、不输出「获胜」一侧——请手动把 preferred 版本连到下游。
+本节点**无输出口**。Compare 不生成合并图、不输出「获胜」一侧——请手动把 preferred 版本连到下游。
 
 ## 新手一步一步
 
@@ -107,5 +109,5 @@ A：Compare 既不加载也不生成——它 **对比** loader 或生成器已�
 - **Upscale** / **Inpaint** / **Relight** / **Erase** —— 常见 image_b 来源。
 - **Image Picker** —— 常见 image_a 来源。
 - **Load Image** / **Asset Image Loader** —— 外部或库内原图。
-- **→ ComfyTV Image** —— 原生 tensor 转入。
+- **→ ComfyTV Image** —— ComfyUI 内存里的数据 转入。
 - **Image Stage** —— 生成候选后再 Picker + Compare 两套分支。

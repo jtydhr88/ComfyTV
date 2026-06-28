@@ -16,10 +16,12 @@
 ## 工作原理
 
 - BiRefNet 等分割模型在 workflow 内跑；ComfyTV 只传上游图。
-- Run 后快照；无 UI 参数（除 workflow / custom_params）。
+- Run 后快照；无 UI 参数（除 workflow / 自定义参数（custom_params））。
 - 输出分辨率与输入一致（除非 workflow 内缩放）。
 
 ## 类型说明
+
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
 
 `COMFYTV_IMAGE`（含 alpha）— [bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md)
 
@@ -39,7 +41,7 @@
 
 [models.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md)
 
-### custom_params
+### 自定义参数（custom_params）
 
 侧栏可换分割模型名等（高级）。
 
@@ -66,7 +68,7 @@
 | --- | --- |
 | [入门指南](https://github.com/jtydhr88/ComfyTV/blob/main/docs/getting-started.zh.md) | 安装、画布基础、逐节点 Run、快照、Project、Image Picker |
 | [图像工具](https://github.com/jtydhr88/ComfyTV/blob/main/docs/image-tools.zh.md) | 裁剪、Inpaint、扩图、放大、多角度、变体 preset 等完整说明 |
-| [模型文件清单](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md) | 各 workflow 所需 checkpoint/LoRA 与放置目录 |
+| [模型文件清单](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md) | 各 workflow 所需 主模型与 LoRA 小模型 与放置目录 |
 
 ## 仓库与工作流
 

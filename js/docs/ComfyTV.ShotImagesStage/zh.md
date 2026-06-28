@@ -30,12 +30,14 @@ Storyboard（LLM 分镜表）→ Shot Images（逐镜出图）→ Image Picker�
 
 ## 类型说明（COMFYTV_* vs ComfyUI 原生）
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 | ComfyTV 类型 | 是什么 | 与 ComfyUI 的区别 |
 |---|---|---|
 | `COMFYTV_STORYBOARD` | 分镜 JSON | Storyboard 输出，接 **storyboard** 口 |
 | `COMFYTV_IMAGES` | 多图批量 | **images** 输出，每镜一张 |
 | `COMFYTV_IMAGE` | 单图 | **image** 输出，由 **selected_index** 决定 |
-| 原生 `IMAGE` | tensor | 需 Bridge；本节点输出 COMFYTV 快照 |
+| 原生 `IMAGE` | ComfyUI 内存图像 | 需 Bridge；本节点输出 COMFYTV 快照 |
 
 Bridge：[bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md)
 
@@ -70,7 +72,7 @@ Bridge：[bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/brid
 
 - 决定 **image** 单输出口对应批量中第几张（1 起始）；点缩略图可改。
 
-### custom_params
+### 自定义参数（custom_params）
 
 - 侧栏绑定的额外 workflow 参数（种子、步数等）。
 

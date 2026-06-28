@@ -20,6 +20,8 @@
 
 ## 类型说明
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 `COMFYTV_IMAGE` 入/出 — [bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md)
 
 ## 界面与参数说明
@@ -54,7 +56,7 @@ Erase **不需要**写提示词；涂准要删的区域即可。
 
 画笔序列化数据。
 
-### custom_params
+### 自定义参数（custom_params）
 
 侧栏参数（一般仅 seed）。
 
@@ -81,7 +83,7 @@ Erase **不需要**写提示词；涂准要删的区域即可。
 | --- | --- |
 | [入门指南](https://github.com/jtydhr88/ComfyTV/blob/main/docs/getting-started.zh.md) | 安装、画布基础、逐节点 Run、快照、Project、Image Picker |
 | [图像工具](https://github.com/jtydhr88/ComfyTV/blob/main/docs/image-tools.zh.md) | 裁剪、Inpaint、扩图、放大、多角度、变体 preset 等完整说明 |
-| [模型文件清单](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md) | 各 workflow 所需 checkpoint/LoRA 与放置目录 |
+| [模型文件清单](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md) | 各 workflow 所需 主模型与 LoRA 小模型 与放置目录 |
 
 ## 仓库与工作流
 

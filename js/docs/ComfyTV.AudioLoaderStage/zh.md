@@ -25,9 +25,11 @@
 
 ## 类型说明（COMFYTV_* vs ComfyUI 原生）
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 | ComfyTV 类型 | 是什么 | 与 ComfyUI 的区别 |
 |---|---|---|
-| `COMFYTV_AUDIO` | 音频文件 URL 快照 | 不是内存 `AUDIO` tensor |
+| `COMFYTV_AUDIO` | 音频文件 URL 快照 | 不是 ComfyUI 内存音频 |
 | `COMFYTV_VIDEO` | 视频快照 | Demux 后可分离音轨再用本节点或资产加载 |
 | `COMFYTV_TEXT` | 文本快照 | Speech Stage 的台词输出，与本节点不同 |
 
@@ -47,7 +49,7 @@
 - **对结果的影响**：决定下游听到的源音频；格式需 ComfyUI 识别（WAV、MP3、FLAC 等）。
 - **常见误区**：把 **Music Stage / Speech Stage 跑出来的结果** 在这里找——应使用 **从资产加载音频** 或直接从生成节点连线。
 
-### project_id / parent_output_id（内部）
+### 项目 id（project_id） / 父输出来源 id（内部）
 
 - 隐藏；Project 与画布自动维护。
 

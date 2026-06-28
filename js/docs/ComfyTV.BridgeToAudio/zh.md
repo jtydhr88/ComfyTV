@@ -4,7 +4,7 @@
 
 ## 这个节点是做什么的
 
-ComfyUI 音频节点输出 **`AUDIO`** `{waveform, sample_rate}` tensor dict。ComfyTV **Video Stage (IA2V)**、**Audio Stage** 下游要 **`COMFYTV_AUDIO`** URL。**→ ComfyTV Audio** Run 时用 torchaudio 写 **WAV**（通用、无 codec 依赖）到 bridge 目录。
+ComfyUI 音频节点输出 **`AUDIO`** `{waveform, sample_rate}` 内存音频对象。ComfyTV **Video Stage (IA2V)**、**Audio Stage** 下游要 **`COMFYTV_AUDIO`** URL。**→ ComfyTV Audio** Run 时用 torchaudio 写 **WAV**（通用、无 codec 依赖）到 bridge 目录。
 
 适用于 Stable Audio、ACE-Step 原生输出、或任意插件 AUDIO 进 ComfyTV 流水线。
 
@@ -22,9 +22,11 @@ ComfyUI 音频节点输出 **`AUDIO`** `{waveform, sample_rate}` tensor dict。C
 
 ## 类型说明
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 | 原生 `AUDIO` | ComfyTV `COMFYTV_AUDIO` |
 |---|---|
-| tensor + sample_rate | wav `/view?` URL |
+| 内存音频 + 采样率 | wav `/view?` URL |
 
 [bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md)
 
@@ -51,7 +53,6 @@ ComfyUI 音频节点输出 **`AUDIO`** `{waveform, sample_rate}` tensor dict。C
 |---|---|
 | Bridge 指南 | https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md |
 | 视频与音频指南 | https://github.com/jtydhr88/ComfyTV/blob/main/docs/video-and-audio.zh.md |
-
 
 ## 完整教程（推荐阅读）
 

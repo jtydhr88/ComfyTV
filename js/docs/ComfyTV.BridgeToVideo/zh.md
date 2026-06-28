@@ -27,6 +27,8 @@
 
 ## 类型说明
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 | 原生 `VIDEO` | ComfyTV `COMFYTV_VIDEO` |
 |---|---|
 | ComfyUI 视频对象，内存/临时文件 | 持久 mp4 `/view?` URL |
@@ -57,7 +59,6 @@
 |---|---|
 | Bridge 指南 | https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md |
 | ComfyTV 仓库 | https://github.com/jtydhr88/ComfyTV |
-
 
 ## 完整教程（推荐阅读）
 

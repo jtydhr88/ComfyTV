@@ -21,6 +21,8 @@
 
 ## 类型说明
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 | 类型 | 说明 |
 |---|---|
 | `COMFYTV_IMAGE` | 源图与结果 |
@@ -68,9 +70,9 @@ Bridge：[bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/brid
 
 画笔数据 JSON，由 UI 写入。
 
-### custom_params
+### 自定义参数（custom_params）
 
-侧栏 seed 等。
+侧栏随机种子（seed）等。
 
 ## 输出说明
 
@@ -85,7 +87,7 @@ Bridge：[bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/brid
 3. 用 **✏️ 画笔**涂要修改的区域（可调笔刷大小）。
 4. **main_prompt** 写蒙版内目标内容。
 5. 点 **▶ 运行**。
-6. 不满意：橡皮修蒙版 / 改 prompt / 侧栏换 seed → 再 Run。
+6. 不满意：橡皮修蒙版 / 改 prompt / 侧栏换随机种子 → 再 Run。
 
 ## 完整教程（推荐阅读）
 
@@ -95,7 +97,7 @@ Bridge：[bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/brid
 | --- | --- |
 | [入门指南](https://github.com/jtydhr88/ComfyTV/blob/main/docs/getting-started.zh.md) | 安装、画布基础、逐节点 Run、快照、Project、Image Picker |
 | [图像工具](https://github.com/jtydhr88/ComfyTV/blob/main/docs/image-tools.zh.md) | 裁剪、Inpaint、扩图、放大、多角度、变体 preset 等完整说明 |
-| [模型文件清单](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md) | 各 workflow 所需 checkpoint/LoRA 与放置目录 |
+| [模型文件清单](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md) | 各 workflow 所需 主模型与 LoRA 小模型 与放置目录 |
 
 ## 仓库与工作流
 

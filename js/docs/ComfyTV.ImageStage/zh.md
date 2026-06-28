@@ -25,22 +25,24 @@
 
 - **Stage** 点 **▶ 运行**只跑 Image Stage 绑定的子 workflow，不 Queue 整张 ComfyUI 图。
 - **快照**：生成图的 URL 写入当前项目；下游 Upscale、Crop 等再 Run 时读快照，不会自动重跑 Image Stage。
-- **workflow 下拉框** 对应 [`workflows/image/`](https://github.com/jtydhr88/ComfyTV/tree/main/workflows/image) 里的 JSON；ComfyTV 把 prompt、resolution、aspect_ratio、batch_size、seed 映射进 `EmptyLatentImage`、`KSampler`、`CLIPTextEncode` 等节点。
+- **workflow 下拉框** 对应 [`workflows/image/`](https://github.com/jtydhr88/ComfyTV/tree/main/workflows/image) 里的 JSON；ComfyTV 把你的提示词、分辨率、宽高比、一次生成张数、随机种子等参数，传给子工作流里的采样、文本编码等节点。
 
 i2i workflow 额外把 **images** 上游的第一张图绑到子图里的 `LoadImage`。
 
 ## 类型说明（COMFYTV_IMAGE vs ComfyUI IMAGE）
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 | ComfyTV 类型 | 是什么 | 与 ComfyUI 的区别 |
 | --- | --- | --- |
-| `COMFYTV_IMAGE` | 单张图的项目快照（`/view?` URL） | **不是**内存里的 `IMAGE` tensor |
+| `COMFYTV_IMAGE` | 单张图的项目快照（`/view?` URL） | **不是** ComfyUI 内存图像 |
 | `COMFYTV_IMAGES` | 多图批量的 JSON `{images:[...]}` | **不是** ComfyUI 的 IMAGE batch |
-| 原生 `IMAGE` | GPU 内存中的像素 tensor | SaveImage 预览用；不能直接接 ComfyTV stage |
+| 原生 `IMAGE` | ComfyUI 内存图像（仅运行时在 GPU 里，不保存进项目） | SaveImage 预览用；不能直接接 ComfyTV stage |
 
 **如何转换：**
 
 - 原生 → ComfyTV：**ComfyTV/Bridge** → **→ ComfyTV Image**（Run 后存快照）
-- ComfyTV → 原生：**← ComfyTV Image**（读快照变回 `IMAGE` tensor，可接 ControlNet、IPAdapter 等）
+- ComfyTV → 原生：**← ComfyTV Image**（读快照变回 ComfyUI 内存图像，可接 ControlNet、IPAdapter 等）
 
 详见 [bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md)。
 
@@ -74,7 +76,7 @@ i2i workflow 额外把 **images** 上游的第一张图绑到子图里的 `LoadI
 
 如 `1:1`、`16:9`、`9:16`、`4:3`。竖版海报选 `9:16`，横版视频封面选 `16:9`。
 
-### batch_size（批量大小）
+### batch_size（一次生成张数）
 
 每次 Run 生成几张图（1–8）。采样器跑一轮出多张，便于对比构图。**image** 输出口由 **selected_index** 指定其中一张。
 
@@ -92,7 +94,7 @@ i2i workflow 额外把 **images** 上游的第一张图绑到子图里的 `LoadI
 
 决定 **image** 单路输出对应 batch 中第几张（**从 1 开始**）。也可直接点击节点缩略图切换；点击后会出现编辑工具栏（✏️ Edit、🌐 Panorama 等）。
 
-### custom_params（自定义参数）
+### 自定义参数（custom_params）（自定义参数）
 
 侧栏可绑 seed、negative prompt、steps、CFG 等到子 workflow 节点。
 
@@ -124,7 +126,7 @@ i2i workflow 额外把 **images** 上游的第一张图绑到子图里的 `LoadI
 | [入门指南](https://github.com/jtydhr88/ComfyTV/blob/main/docs/getting-started.zh.md) | 安装、画布基础、逐节点 Run、快照、Project、Image Picker |
 | [生成内容](https://github.com/jtydhr88/ComfyTV/blob/main/docs/generate.zh.md) | Text / Image / Video / Music / Speech 生成器与 workflow 选型 |
 | [图像工具](https://github.com/jtydhr88/ComfyTV/blob/main/docs/image-tools.zh.md) | 裁剪、Inpaint、扩图、放大、多角度、变体 preset 等完整说明 |
-| [模型文件清单](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md) | 各 workflow 所需 checkpoint/LoRA 与放置目录 |
+| [模型文件清单](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md) | 各 workflow 所需 主模型与 LoRA 小模型 与放置目录 |
 | [自定义工作流](https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.zh.md) | 导入自己的 ComfyUI JSON，不改 Python |
 
 ## 仓库与工作流

@@ -23,10 +23,12 @@
 
 ## 类型说明（COMFYTV_* vs ComfyUI 原生）
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 | ComfyTV 类型 | 是什么 | 与 ComfyUI 的区别 |
 |---|---|---|
 | `COMFYTV_PANORAMA` | 上游全景 URL | 输入 |
-| `COMFYTV_IMAGE` | 截出的单张图 URL | 不是 `IMAGE` tensor |
+| `COMFYTV_IMAGE` | 截出的单张图 URL | 不是 ComfyUI 内存图像 |
 
 **如何转换：** 要接 IPAdapter / ControlNet 等原生节点 → **← ComfyTV Image**；插件输出进 ComfyTV → **→ ComfyTV Image**。见 [bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md)。
 

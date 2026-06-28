@@ -6,7 +6,7 @@
 
 **Video Stage** 把提示词和可选的参考素材变成一段 MP4 预览。选好 **workflow**、分辨率、比例和时长，点 **▶ 运行**，节点上播放生成的片段。
 
-输出是 **`COMFYTV_VIDEO`**——项目里的视频快照 URL，不是 ComfyUI 原生 VIDEO tensor。可接到 Video Crop、Video Upscale、Timeline 等下游 stage，或通过 Bridge 转给原生节点。
+输出是 **`COMFYTV_VIDEO`**——项目里的视频快照 URL，不是 ComfyUI 内存视频。可接到 Video Crop、Video Upscale、Timeline 等下游 stage，或通过 Bridge 转给原生节点。
 
 根据 workflow 不同，你可能只需要文字（T2V），或需要接图片、首尾帧、音轨（I2V / FLF2V / IA2V）。
 
@@ -28,10 +28,12 @@
 
 ## 类型说明（COMFYTV_VIDEO vs ComfyUI 原生）
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 | ComfyTV 类型 | 是什么 | 与 ComfyUI 的区别 |
 | --- | --- | --- |
 | `COMFYTV_VIDEO` | 视频片段的项目快照 URL | 不是内存 VIDEO / LATENT 链 |
-| 原生视频节点输出 | tensor 或临时文件 | 需 Bridge 才能接 ComfyTV stage |
+| 原生视频节点输出 | 内存数据或临时文件 | 需 Bridge 才能接 ComfyTV stage |
 
 **如何转换：**
 
@@ -89,7 +91,7 @@ Workflow 说明：[workflows/video/README.zh.md](https://github.com/jtydhr88/Com
 
 **IA2V 必填**。接 Speech Stage、Music Stage 或 Load Audio from Asset 的 `COMFYTV_AUDIO`。其它 LTX workflow 不需要。
 
-### custom_params
+### 自定义参数（custom_params）
 
 侧栏可绑 seed、negative prompt 等。
 
@@ -122,7 +124,7 @@ Workflow 说明：[workflows/video/README.zh.md](https://github.com/jtydhr88/Com
 | [入门指南](https://github.com/jtydhr88/ComfyTV/blob/main/docs/getting-started.zh.md) | 安装、画布基础、逐节点 Run、快照、Project、Image Picker |
 | [生成内容](https://github.com/jtydhr88/ComfyTV/blob/main/docs/generate.zh.md) | Text / Image / Video / Music / Speech 生成器与 workflow 选型 |
 | [视频与音频](https://github.com/jtydhr88/ComfyTV/blob/main/docs/video-and-audio.zh.md) | 剪辑、裁剪、缩放、抽帧、Demux、与 Generate 视频的区别 |
-| [模型文件清单](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md) | 各 workflow 所需 checkpoint/LoRA 与放置目录 |
+| [模型文件清单](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md) | 各 workflow 所需 主模型与 LoRA 小模型 与放置目录 |
 
 ## 仓库与工作流
 
@@ -147,7 +149,7 @@ A：必须 **两张**——起始帧和结束帧，顺序不要反。
 A：**audio** 必填；音频时长与 **duration_s** 尽量接近；用 Speech/Music Stage 输出而非原生 AUDIO。
 
 **Q：视频类型连不上原生节点？**  
-A：用 **← ComfyTV Video** Bridge 转 tensor。
+A：用 **← ComfyTV Video** Bridge 转成 ComfyUI 内存格式。
 
 ## 相关节点
 

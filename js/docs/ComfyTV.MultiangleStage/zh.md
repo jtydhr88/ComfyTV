@@ -21,6 +21,8 @@
 
 ## 类型说明
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 `COMFYTV_IMAGE` — [bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md)
 
 ## 界面与参数说明
@@ -54,7 +56,7 @@
 
 主体/场景补充，例：*「现代木质椅子」*。留空也可；相机由 LoRA 控制。
 
-### custom_params
+### 自定义参数（custom_params）
 
 侧栏 seed。
 
@@ -71,7 +73,7 @@
 3. 在 **3D 相机** 拖到目标机位（或调三个滑块）。
 4. 可选填 main_prompt 描述主体。
 5. workflow 选 **Qwen Edit 2511 Multiangle**。
-6. **▶ 运行**；不满意改角度或 seed 再 Run。
+6. **▶ 运行**；不满意改角度或随机种子后再运行。
 
 ## 完整教程（推荐阅读）
 
@@ -81,7 +83,7 @@
 | --- | --- |
 | [入门指南](https://github.com/jtydhr88/ComfyTV/blob/main/docs/getting-started.zh.md) | 安装、画布基础、逐节点 Run、快照、Project、Image Picker |
 | [图像工具](https://github.com/jtydhr88/ComfyTV/blob/main/docs/image-tools.zh.md) | 裁剪、Inpaint、扩图、放大、多角度、变体 preset 等完整说明 |
-| [模型文件清单](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md) | 各 workflow 所需 checkpoint/LoRA 与放置目录 |
+| [模型文件清单](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md) | 各 workflow 所需 主模型与 LoRA 小模型 与放置目录 |
 
 ## 仓库与工作流
 

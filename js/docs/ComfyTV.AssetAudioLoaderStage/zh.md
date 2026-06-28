@@ -24,11 +24,13 @@
 
 ## 类型说明（COMFYTV_* vs ComfyUI 原生）
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 | ComfyTV 类型 | 是什么 | 与 ComfyUI 的区别 |
 |---|---|---|
-| `COMFYTV_AUDIO` | 音频 URL 快照 | 非 `AUDIO` tensor |
+| `COMFYTV_AUDIO` | 音频 URL 快照 | 不是 ComfyUI 内存音频 |
 | `COMFYTV_VIDEO` | 含音轨的视频 | 可用 Demux 再进库 |
-| 原生 `AUDIO` | tensor | **→ ComfyTV Audio** Bridge |
+| 原生 `AUDIO` | ComfyUI 内存音频 | **→ ComfyTV Audio** Bridge |
 
 详见：[bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md)
 
@@ -43,7 +45,7 @@
 
 - UI 写入；持久化 category 筛选。
 
-### project_id / parent_output_id
+### 项目 id（project_id） / 父输出来源 id
 
 - 隐藏内部字段。
 

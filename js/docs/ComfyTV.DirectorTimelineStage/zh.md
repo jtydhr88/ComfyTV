@@ -26,6 +26,8 @@
 
 ## 类型说明（COMFYTV_* vs ComfyUI 原生）
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 | ComfyTV 类型 | 是什么 | 与 ComfyUI 的区别 |
 |---|---|---|
 | `COMFYTV_TIMELINE` | 时间线 JSON 快照 | 无原生对应；仅 ComfyTV 编排链 |
@@ -59,7 +61,7 @@ Bridge 用于 image/audio 进入 ComfyTV：[bridges.zh.md](https://github.com/jt
 - **填什么**：Music Stage、Load Audio、Asset Audio Loader 等。
 - **影响**：写入 `audioSegments`，Render 时混音（视 workflow 能力）。
 
-### workflow / custom_params
+### workflow / 自定义参数（custom_params）
 
 - 本节点**无** workflow 下拉；生成视频在 **Timeline Render**。
 

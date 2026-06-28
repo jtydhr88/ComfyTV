@@ -1,15 +1,15 @@
 # → ComfyTV 图像 (Bridge To Image)
 
-> **入桥**：把 ComfyUI 原生 **IMAGE** tensor（任意插件输出）转成 ComfyTV 的 **COMFYTV_IMAGE** URL 快照；须点 **▶ 运行** 写入 `output/ComfyTV/bridge/` 并持久化到项目。
+> **入桥**：把 ComfyUI 原生 **IMAGE** 内存图像（任意插件输出）转成 ComfyTV 的 **COMFYTV_IMAGE** URL 快照；须点 **▶ 运行** 写入 `output/ComfyTV/bridge/` 并持久化到项目。
 
 ## 这个节点是做什么的
 
-ComfyTV stage 之间传递的是 **URL 快照**（`/view?filename=…` 字符串），不是 GPU 内存里的 tensor。任何输出 **`IMAGE`** 的 ComfyUI 节点——**IPAdapter**、ControlNet 预处理、**mesh2motion** 渲染帧、自定义 Python 节点——都不能 **直接** 接到 **Image Picker** 或 **Upscale** 这类 ComfyTV stage。
+ComfyTV stage 之间传递的是 **URL 快照**（`/view?filename=…` 字符串），不是 ComfyUI 内存里的图像/音频数据。任何输出 **`IMAGE`** 的 ComfyUI 节点——**IPAdapter**、ControlNet 预处理、**mesh2motion** 渲染帧、自定义 Python 节点——都不能 **直接** 接到 **Image Picker** 或 **Upscale** 这类 ComfyTV stage。
 
-**→ ComfyTV Image** 就是「入境检查站」：Run 时读取上游 tensor，**保存 PNG** 到磁盘，生成 ComfyTV 能读懂的快照 URL。
+**→ ComfyTV Image** 就是「入境检查站」：Run 时读取上游内存图像，**保存 PNG** 到磁盘，生成 ComfyTV 能读懂的快照 URL。
 
 ```
-[IPAdapter 等] ──IMAGE tensor──→ [→ ComfyTV Image] ──COMFYTV_IMAGE URL──→ [Image Picker / Upscale / …]
+[IPAdapter 等] ──ComfyUI 内存图像──→ [→ ComfyTV Image] ──COMFYTV_IMAGE URL──→ [Image Picker / Upscale / …]
                                       ▲ Run + 快照
 ```
 
@@ -27,11 +27,13 @@ ComfyTV stage 之间传递的是 **URL 快照**（`/view?filename=…` 字符串
 - 文件路径：`ComfyUI/output/ComfyTV/bridge/ComfyTV_bridge_xxxxx_.png`（见 [`bridges.py`](https://github.com/jtydhr88/ComfyTV/blob/main/nodes/bridges.py) `_save_images_to_disk`）。
 - 下游 ComfyTV stage 再 Run 时 **直接用桥的快照**，不会自动重跑 IPAdapter，「除非」你再次 Run 入桥。
 
-## 类型说明（COMFYTV_* vs ComfyUI 原生）— 必读
+## 类型说明（ComfyTV 与 ComfyUI 原生类型）
+
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
 
 | 侧 | ComfyUI 原生 | ComfyTV |
 |---|---|---|
-| 图像 | `IMAGE` — torch tensor 批量 `[B,H,W,C]` | `COMFYTV_IMAGE` — **单图** `/view?` URL 字符串 |
+| 图像 | `IMAGE` — PyTorch 内存张量 批量 `[B,H,W,C]` | `COMFYTV_IMAGE` — **单图** `/view?` URL 字符串 |
 | 多图 | `IMAGE` batch（B>1） | `COMFYTV_IMAGES` — JSON 批量；单张用 **→ ComfyTV Images** |
 | 视频 | `VIDEO` 对象 | `COMFYTV_VIDEO` — mp4 URL |
 | 音频 | `AUDIO` dict `{waveform, sample_rate}` | `COMFYTV_AUDIO` — wav URL |
@@ -42,9 +44,9 @@ ComfyTV stage 之间传递的是 **URL 快照**（`/view?filename=…` 字符串
 ## 界面与参数说明
 
 ### image（输入）
-上游 **IMAGE** tensor。只取 **batch 第 1 张**（`image[:1]`）。多帧请用 **→ ComfyTV Images** 或先 **Create Video**。
+上游 **IMAGE** 内存图像。只取 **batch 第 1 张**（`image[:1]`）。多帧请用 **→ ComfyTV Images** 或先 **Create Video**。
 
-### force_run_token / project_id / parent_output_id（隐藏）
+### 强制重跑标记 / 项目 id（project_id） / 父输出来源 id（隐藏）
 ComfyTV 内部 lineage；一般无需手改。
 
 ## 输出说明
@@ -67,7 +69,6 @@ ComfyTV 内部 lineage；一般无需手改。
 |---|---|
 | Bridge 总指南 | https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md |
 | ComfyTV 仓库 | https://github.com/jtydhr88/ComfyTV |
-
 
 ## 完整教程（推荐阅读）
 

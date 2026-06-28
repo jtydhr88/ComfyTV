@@ -6,7 +6,7 @@
 
 **Extract Frame** 是 ComfyTV 视频工具链的「定格」步骤：给定一段 `COMFYTV_VIDEO`，按 **position** 或 **at_seconds** 取一帧，保存为图片快照。常用于从生成视频里拿末帧做 **↪ Extend** 续接、做缩略图、或送进 Image Edit / Upscale。
 
-处理在本地用 **PyAV**（FFmpeg 库）读写文件，不经过 ComfyUI 的 GPU tensor 管线，速度快、VRAM 零占用。
+处理在本地用 **PyAV**（FFmpeg 库）读写文件，不经过 ComfyUI 的 GPU 图像/视频处理管线，速度快、VRAM 零占用。
 
 ## 适用场景
 
@@ -22,12 +22,14 @@
 
 ## 类型说明（COMFYTV_* vs ComfyUI 原生）
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 | ComfyTV 类型 | 是什么 | 与 ComfyUI 的区别 |
 |---|---|---|
 | `COMFYTV_VIDEO` | 视频 URL 快照 | 不是 ComfyUI `VIDEO` 对象 |
-| `COMFYTV_IMAGE` | 抽出的单帧 URL | 不是 `IMAGE` tensor |
+| `COMFYTV_IMAGE` | 抽出的单帧 URL | 不是 ComfyUI 内存图像 |
 
-**如何转换：** 原生插件视频 → **→ ComfyTV Video**；帧变 tensor → **← ComfyTV Image**。见 [bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md)。
+**如何转换：** 原生插件视频 → **→ ComfyTV Video**；帧变成 ComfyUI 内存图像 → **← ComfyTV Image**。见 [bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md)。
 
 ## 界面与参数说明
 

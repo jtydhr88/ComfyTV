@@ -26,6 +26,8 @@ ComfyTV 剪辑链输出 **`COMFYTV_VIDEO`**（`/view?` 指向 `output/ComfyTV/br
 
 ## 类型说明
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 | ComfyTV | 原生 |
 |---|---|
 | `COMFYTV_VIDEO` | `VIDEO` |
@@ -56,7 +58,6 @@ ComfyTV 剪辑链输出 **`COMFYTV_VIDEO`**（`/view?` 指向 `output/ComfyTV/br
 |---|---|
 | Bridge 指南 | https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md |
 | 视频与音频指南 | https://github.com/jtydhr88/ComfyTV/blob/main/docs/video-and-audio.zh.md |
-
 
 ## 完整教程（推荐阅读）
 
@@ -90,7 +91,7 @@ A：先 Run 上游 stage；URL 必须是 `/view?` 格式。
 A：`Video Stage → Clip → [← ComfyTV Video] → [VHS Save Video]`，ComfyTV 段用 stage Run，最后 Queue 保存。
 
 **Q：VHS 与 ComfyTV VIDEO 类型？**  
-A：VHS 部分节点仍用旧 tensor 路径；优先用 ComfyUI 官方 **VIDEO** 类型节点接 **← ComfyTV Video**。
+A：VHS 部分节点仍用旧内存数据路径；优先用 ComfyUI 官方 **VIDEO** 类型节点接 **← ComfyTV Video**。
 
 **Q：Clip 后再出桥常见吗？**  
 A：是——ComfyTV 内 PyAV 剪辑后再 **← ComfyTV Video** 给原生 Save/特效。

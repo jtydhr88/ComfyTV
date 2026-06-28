@@ -21,6 +21,8 @@ ComfyTV **Text Stage** 或 **→ ComfyTV Text** 产出 **`COMFYTV_TEXT`**。原�
 
 ## 类型说明
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 | ComfyTV | 原生 |
 |---|---|
 | `COMFYTV_TEXT` | `STRING` |
@@ -50,7 +52,6 @@ ComfyTV **Text Stage** 或 **→ ComfyTV Text** 产出 **`COMFYTV_TEXT`**。原�
 | 资源 | 链接 |
 |---|---|
 | Bridge 指南 | https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md |
-
 
 ## 完整教程（推荐阅读）
 
@@ -85,7 +86,7 @@ A：→ 进 ComfyTV（Run）；← 出 ComfyTV（无 Run）。
 | 方向 | 节点前缀 | 有 Run？ | 作用 |
 |---|---|---|---|
 | 进 ComfyTV | **→ ComfyTV *** | ✅ 必须 Run | STRING/IMAGE/… → COMFYTV_* 快照 |
-| 出 ComfyTV | **← ComfyTV *** | ❌ 无 Run | COMFYTV_* → 原生 tensor/STRING |
+| 出 ComfyTV | **← ComfyTV *** | ❌ 无 Run | COMFYTV_* → ComfyUI 内存里的数据/STRING |
 
 本节点是 **出桥** 文本方向。完整图解见 [bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md)。
 

@@ -24,6 +24,8 @@
 
 ## 类型说明
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 | 原生 | ComfyTV |
 |---|---|
 | `IMAGE` batch | `COMFYTV_IMAGES` + 选中 `COMFYTV_IMAGE` |
@@ -33,7 +35,7 @@
 ## 界面与参数说明
 
 ### images
-上游 IMAGE tensor，batch 维 >1 或 =1 均可。
+上游 ComfyUI 内存图像，batch 维 >1 或 =1 均可。
 
 ### selected_index
 **image** 口对应序号，默认 1。
@@ -58,7 +60,6 @@
 |---|---|
 | Bridge 指南 | https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md |
 | ComfyTV 仓库 | https://github.com/jtydhr88/ComfyTV |
-
 
 ## 完整教程（推荐阅读）
 

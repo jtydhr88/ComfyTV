@@ -22,6 +22,8 @@
 
 ## 类型说明
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 | 类型 | 说明 |
 |---|---|
 | `COMFYTV_VIDEO` | 输入（含音轨） |
@@ -55,7 +57,6 @@
 | 工作流总览 | https://github.com/jtydhr88/ComfyTV/blob/main/workflows/README.zh.md |
 | 视频与音频指南 | https://github.com/jtydhr88/ComfyTV/blob/main/docs/video-and-audio.zh.md |
 
-
 ## 完整教程（推荐阅读）
 
 > 本页只说明**这一个节点**的参数与用法。端到端流程与多节点串联，请见 GitHub 上的 [ComfyTV 用户指南](https://github.com/jtydhr88/ComfyTV/tree/main/docs)：
@@ -84,7 +85,7 @@ A：Demux 整轨抽出；Vocals Only **AI 分离** 人声与伴奏。
 A：正常，内置尚未发布；见 workflows README。
 
 **Q：实现后要什么模型？**  
-A：Demucs 权重 + ComfyUI_AudioTools；关注 [models.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md) 更新。
+A：Demucs 人声分离模型文件 + ComfyUI_AudioTools；关注 [models.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md) 更新。
 
 ## Demucs 实现预览（路线图）
 

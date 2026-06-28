@@ -25,9 +25,11 @@ Rotate 与 Crop 同属 **transform** 类 Stage：**无 Run 按钮**，参数变�
 
 ## 类型说明（COMFYTV_* vs ComfyUI 原生）
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 | ComfyTV 类型 | 是什么 | 与 ComfyUI 的区别 |
 |---|---|---|
-| `COMFYTV_IMAGE` | 一张图的 URL 快照 | 不是 `IMAGE` tensor |
+| `COMFYTV_IMAGE` | 一张图的 URL 快照 | 不是 ComfyUI 内存图像 |
 
 **如何转换：**
 

@@ -27,10 +27,12 @@ ComfyUI **原生没有「念稿」TTS**；Stable Audio / ACE-Step 类节点做�
 
 ## 类型说明（COMFYTV_AUDIO vs ComfyUI 原生）
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 | ComfyTV 类型 | 是什么 | 与 ComfyUI 的区别 |
 | --- | --- | --- |
-| `COMFYTV_AUDIO` | 音频片段的项目快照 URL | 不是内存 AUDIO tensor |
-| 原生 AUDIO | 采样 tensor | 需 Bridge 才能接 ComfyTV stage |
+| `COMFYTV_AUDIO` | 音频片段的项目快照 URL | 不是 ComfyUI 内存音频 |
+| 原生 AUDIO | 内存里的音频数据 | 需 Bridge 才能接 ComfyTV stage |
 
 **如何转换：**
 
@@ -79,7 +81,7 @@ ComfyUI **原生没有「念稿」TTS**；Stable Audio / ACE-Step 类节点做�
 
 多行歌词直接粘贴即可。
 
-### custom_params
+### 自定义参数（custom_params）
 
 侧栏可绑 seed 等 workflow 参数。
 
@@ -109,7 +111,7 @@ ComfyUI **原生没有「念稿」TTS**；Stable Audio / ACE-Step 类节点做�
 | --- | --- |
 | [入门指南](https://github.com/jtydhr88/ComfyTV/blob/main/docs/getting-started.zh.md) | 安装、画布基础、逐节点 Run、快照、Project、Image Picker |
 | [生成内容](https://github.com/jtydhr88/ComfyTV/blob/main/docs/generate.zh.md) | Text / Image / Video / Music / Speech 生成器与 workflow 选型 |
-| [模型文件清单](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md) | 各 workflow 所需 checkpoint/LoRA 与放置目录 |
+| [模型文件清单](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md) | 各 workflow 所需 主模型与 LoRA 小模型 与放置目录 |
 
 ## 仓库与工作流
 

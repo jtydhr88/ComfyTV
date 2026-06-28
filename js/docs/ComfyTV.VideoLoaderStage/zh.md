@@ -15,7 +15,7 @@
 - 已有 MP4/WebM/MOV 等素材，要在 ComfyUI 里做 ComfyTV 式分步编辑。
 - 外部剪辑软件导出的成片，放入 `input/` 后在此选取。
 - 将已有视频作为 ComfyTV **编辑工具链**（Clip、Crop、Demux 等）或 **IA2V**（图+音生视频）的源素材——不是用来给图生视频（I2V）流程提供起始图的（那类流程通常从图片出发）。
-- 需要把原生 ComfyUI 视频 tensor 转入 ComfyTV 时，可配合 Bridge（见类型说明）。
+- 需要把ComfyUI 原生内存视频 转入 ComfyTV 时，可配合 Bridge（见类型说明）。
 
 ## 工作原理（为什么 ComfyTV 这样设计）
 
@@ -24,6 +24,8 @@
 - **无 workflow**：纯文件登记，不涉及 `workflows/video/` 里的生成后端。
 
 ## 类型说明（COMFYTV_* vs ComfyUI 原生）
+
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
 
 | ComfyTV 类型 | 是什么 | 与 ComfyUI 的区别 |
 |---|---|---|
@@ -47,7 +49,7 @@
 - **对结果的影响**：决定整条下游链的源片段；格式需为 ComfyUI 可识别的常见容器（MP4 等）。
 - **常见误区**：在资产侧栏里找刚跑 **Video Stage** 生成的结果——应使用 **从资产加载视频**。
 
-### project_id / parent_output_id（内部）
+### 项目 id（project_id） / 父输出来源 id（内部）
 
 - 隐藏字段，由 Project 与连线自动维护。
 
@@ -104,4 +106,4 @@ A：刷新页面；确认扩展名被识别为视频格式。
 - **从资产加载视频** —— 项目资产库选取。
 - **加载音频** —— 纯音频 Input。
 - **Video Clip** / **Extract Frame** —— 常见下游第一步。
-- **→ ComfyTV Video**（Bridge）—— 原生视频 tensor 入 ComfyTV。
+- **→ ComfyTV Video**（Bridge）—— ComfyUI 内存视频 入 ComfyTV。

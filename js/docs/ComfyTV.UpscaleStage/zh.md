@@ -21,9 +21,11 @@
 
 ## 类型说明（COMFYTV_* vs ComfyUI 原生）
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 | ComfyTV 类型 | 是什么 | 与 ComfyUI 的区别 |
 |---|---|---|
-| `COMFYTV_IMAGE` | URL 快照 | 非 `IMAGE` tensor |
+| `COMFYTV_IMAGE` | URL 快照 | 不是 ComfyUI 内存图像 |
 
 - 原生 → ComfyTV：`→ ComfyTV Image`（Bridge Run）
 - ComfyTV → 原生：`← ComfyTV Image`
@@ -54,9 +56,9 @@
 
 ### main_prompt（提示词，可选）
 
-纯 GAN 上采样不用。带 KSampler refine 的自定义 workflow 可用来引导锐化/细节。
+纯 GAN 放大（不用扩散采样）不用。带二次采样 refine 的自定义 workflow 可用来引导锐化/细节。
 
-### custom_params
+### 自定义参数（custom_params）
 
 侧栏 **ComfyTV** 配置编辑器里的额外 workflow 参数（种子、模型名等）。
 
@@ -83,7 +85,7 @@
 | --- | --- |
 | [入门指南](https://github.com/jtydhr88/ComfyTV/blob/main/docs/getting-started.zh.md) | 安装、画布基础、逐节点 Run、快照、Project、Image Picker |
 | [图像工具](https://github.com/jtydhr88/ComfyTV/blob/main/docs/image-tools.zh.md) | 裁剪、Inpaint、扩图、放大、多角度、变体 preset 等完整说明 |
-| [模型文件清单](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md) | 各 workflow 所需 checkpoint/LoRA 与放置目录 |
+| [模型文件清单](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md) | 各 workflow 所需 主模型与 LoRA 小模型 与放置目录 |
 
 ## 仓库与工作流
 

@@ -20,12 +20,14 @@
 ## 工作原理（为什么 ComfyTV 这样设计）
 
 - **Stage** 只跑 [`workflows/storyboard/`](https://github.com/jtydhr88/ComfyTV/tree/main/workflows/storyboard) 里的 LLM 子 workflow。
-- ComfyTV 在发送给 LLM 前，会把 **main_prompt + 上游 texts**、**total_duration_s**、**shot_count**、**characters** 拼成结构化指令（见 `_storyboard_llm_prompt`），要求 LLM **严格输出指定数量的镜头**。
-- LLM 原始文本经 `_shape_storyboard_from_llm` 解析为 JSON；结果存快照，下游 Shot Images 读 **`storyboard`** 口，按镜号循环调用 image workflow。
+- ComfyTV 在发送给 LLM 前，会把 **main_prompt + 上游 texts**、**total_duration_s**、**shot_count**、**characters** 拼成结构化指令，要求 LLM **严格输出指定数量的镜头**。
+- LLM 返回的文本会解析为 JSON 分镜表；结果存快照，下游 Shot Images 读 **`storyboard`** 接口，按镜号循环调用图像工作流。
 
-文本输出走 `graph_output_first`（不是 SaveImage），必须在 workflow preset 里显式声明。
+文本输出不经过 SaveImage；需在侧栏工作流预设里声明从哪个 LLM 节点读取字符串。
 
 ## 类型说明（COMFYTV_STORYBOARD）
+
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
 
 | ComfyTV 类型 | 是什么 | 与 ComfyUI 的区别 |
 | --- | --- | --- |
@@ -75,13 +77,13 @@ Bridge 节点目前以 Image/Video/Audio/Text 为主；Storyboard 通常在 Comf
 
 ### texts（上游文本）
 
-Autogrow 槽，可接 Text Stage 扩写结果作为额外前提。
+可追加多个的接口槽，可接 Text Stage 扩写结果作为额外前提。
 
 ### storyboard_data（分镜数据）
 
 隐藏字段，由**分镜编辑器**读写 serialized JSON。一般不要手改；在 UI 表格里编辑各镜字段后会自动更新。
 
-### custom_params
+### 自定义参数（custom_params）
 
 侧栏可绑 LLM 的 max_length、temperature、seed 等。
 

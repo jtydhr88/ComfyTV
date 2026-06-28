@@ -20,17 +20,19 @@
 ## 工作原理（为什么 ComfyTV 这样设计）
 
 - **Stage 与运行按钮**：**无 ▶ 运行**。点击缩略图即登记快照，不跑 workflow、不占 Queue。
-- **快照**：选中资产的 payload URL 写入项目；下游 Run 读该 URL。换选另一张图会更新快照。
+- **快照**：选中资产的 输出数据地址（URL） 写入项目；下游 Run 读该 URL。换选另一张图会更新快照。
 - **资产库 vs input/**：`input/` 是 ComfyUI 全局文件夹，与项目无关；资产库按 **Project** 隔离，只含 ComfyTV stage 产出与显式导入项。
 - **无 workflow**：纯选取，不涉及 `workflows/image/`。
 
 ## 类型说明（COMFYTV_* vs ComfyUI 原生）
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 | ComfyTV 类型 | 是什么 | 与 ComfyUI 的区别 |
 |---|---|---|
-| `COMFYTV_IMAGE` | 单图 URL 快照 | 不是 `IMAGE` tensor |
+| `COMFYTV_IMAGE` | 单图 URL 快照 | 不是 ComfyUI 内存图像 |
 | `COMFYTV_IMAGES` | 多图 JSON 批量 | 批量在 Image Picker 里拆成单张 |
-| 原生 `IMAGE` | 内存 tensor | 需 **→ ComfyTV Image** Bridge 才能进资产流 |
+| 原生 `IMAGE` | ComfyUI 内存图像 | 需 **→ ComfyTV Image** Bridge 才能进资产流 |
 
 **如何转换：** [bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md)
 
@@ -45,11 +47,11 @@
 
 ### asset_url / asset_id / category（隐藏）
 
-- **asset_url**：UI 写入的内部 payload URL，即实际输出内容。
+- **asset_url**：UI 写入的内部 输出数据地址（URL），即实际输出内容。
 - **asset_id**：库内 id，用于 lineage/调试。
 - **category**：上次使用的分类筛选，持久化以便 reopen 工作流时记住筛选状态。
 
-### project_id / parent_output_id（内部）
+### 项目 id（project_id） / 父输出来源 id（内部）
 
 - 与 **Project** 节点绑定；资产库按项目隔离。
 

@@ -1,10 +1,10 @@
 # ← ComfyTV 图像 (Bridge From Image)
 
-> **出桥**：**COMFYTV_IMAGE** URL 快照 → 原生 **IMAGE** tensor；**无 ▶ 运行**，随 ComfyUI 图执行时从磁盘加载 PNG。
+> **出桥**：**COMFYTV_IMAGE** URL 快照 → 原生 **IMAGE** 内存图像；**无 ▶ 运行**，随 ComfyUI 图执行时从磁盘加载 PNG。
 
 ## 这个节点是做什么的
 
-ComfyTV stage 输出 **`COMFYTV_IMAGE`**（字符串 URL）。原生节点——**IPAdapter**、ControlNet、Save Image、VAE Encode——需要 **`IMAGE`** tensor。**← ComfyTV Image** 在图执行时解析 `/view?`，从 `output/` / `input/` / `temp` 读 PNG，转成 `[1,H,W,C]` float tensor。
+ComfyTV stage 输出 **`COMFYTV_IMAGE`**（字符串 URL）。原生节点——**IPAdapter**、ControlNet、Save Image、VAE Encode——需要 **`IMAGE`** 内存图像。**← ComfyTV Image** 在图执行时解析 `/view?`，从 `output/` / `input/` / `temp` 读 PNG，转成 `[1,H,W,C]` float 内存张量。
 
 与 **→ ComfyTV Image** 方向相反：ComfyTV → 原生插件生态。
 
@@ -27,9 +27,11 @@ ComfyTV stage 输出 **`COMFYTV_IMAGE`**（字符串 URL）。原生节点——
 
 ## 类型说明
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 | ComfyTV | 原生 |
 |---|---|
-| `COMFYTV_IMAGE` URL | `IMAGE` tensor |
+| `COMFYTV_IMAGE` URL | `IMAGE` 内存图像 |
 
 入 ComfyTV：**→ ComfyTV Image**（须 Run）。见 [bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md)
 
@@ -57,7 +59,6 @@ ComfyTV stage 输出 **`COMFYTV_IMAGE`**（字符串 URL）。原生节点——
 |---|---|
 | Bridge 指南 | https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md |
 | ComfyTV 仓库 | https://github.com/jtydhr88/ComfyTV |
-
 
 ## 完整教程（推荐阅读）
 

@@ -22,9 +22,11 @@ Mirror 与 Crop、Rotate 相同：**Stage 但无 Run**。翻转在浏览器完�
 
 ## 类型说明（COMFYTV_* vs ComfyUI 原生）
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 | ComfyTV 类型 | 是什么 | 与 ComfyUI 的区别 |
 |---|---|---|
-| `COMFYTV_IMAGE` | URL 快照 | 非 `IMAGE` tensor |
+| `COMFYTV_IMAGE` | URL 快照 | 不是 ComfyUI 内存图像 |
 
 转换：[bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md)
 

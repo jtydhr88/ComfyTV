@@ -26,11 +26,13 @@
 
 ## 类型说明（COMFYTV_* vs ComfyUI 原生）
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 | ComfyTV 类型 | 是什么 | 与 ComfyUI 的区别 |
 |---|---|---|
-| `COMFYTV_VIDEO` | 视频 URL 快照 | 非 `VIDEO` tensor |
+| `COMFYTV_VIDEO` | 视频 URL 快照 | 不是 ComfyUI 内存视频 |
 | `COMFYTV_IMAGE` | 单帧图 | Extract Frame 后可 Compare |
-| 原生 `VIDEO` | tensor | **→ ComfyTV Video** Bridge |
+| 原生 `VIDEO` | ComfyUI 内存视频 | **→ ComfyTV Video** Bridge |
 
 转换说明：[bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md)
 
@@ -43,10 +45,10 @@
 
 ### asset_url / asset_id / category（隐藏）
 
-- 由 UI 维护；`asset_url` 即输出 payload。
+- 由 UI 维护；`asset_url` 即输出的数据地址。
 - `category` 记住上次筛选。
 
-### project_id / parent_output_id
+### 项目 id（project_id） / 父输出来源 id
 
 - 隐藏；与 Project 绑定。
 
@@ -94,7 +96,7 @@ A：**input/** = 外部原始文件。**资产库** = 项目内生成/导入。�
 A：是否同一 **Project**？Run 完成后刷新节点。
 
 **Q：类型报错？**  
-A：下游需要 `COMFYTV_VIDEO`；原生 tensor 需 Bridge。
+A：下游需要 `COMFYTV_VIDEO`；ComfyUI 内存里的数据 需 Bridge。
 
 **Q：能替代 Video Stage 吗？**  
 A：不能——本节点只**选取**，不**生成**视频。

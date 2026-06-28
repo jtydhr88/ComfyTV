@@ -25,9 +25,11 @@ Grid Split 在浏览器按像素矩形切图，写入隐藏参数 `rows`、`cols
 
 ## 类型说明（COMFYTV_* vs ComfyUI 原生）
 
+> **术语提示**：`COMFYTV_*` 是 ComfyTV 保存在项目里的结果引用；ComfyUI 原生的 `IMAGE`/`VIDEO`/`AUDIO` 是**运行时才在内存里**的数据，二者不能直接连线，需用 **Bridge** 转换。
+
 | ComfyTV 类型 | 是什么 | 与 ComfyUI 的区别 |
 |---|---|---|
-| `COMFYTV_IMAGE` | 单张 URL 快照 | 非 `IMAGE` tensor |
+| `COMFYTV_IMAGE` | 单张 URL 快照 | 不是 ComfyUI 内存图像 |
 | `COMFYTV_IMAGES` | 多图 JSON 批量 | 非 `IMAGE` batch |
 
 Bridge：`→ ComfyTV Image(s)` / `← ComfyTV Images` — [bridges.zh.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.zh.md)
