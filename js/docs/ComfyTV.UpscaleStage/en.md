@@ -81,7 +81,7 @@ Extra bindings from the ComfyTV sidebar editor.
 
 ## Full guides (recommended reading)
 
-> This page covers **one node only**. For end-to-end workflows, multi-stage pipelines, type conversion, and design rationale, read the user guides in the upstream repo [**jtydhr88/ComfyTV**](https://github.com/jtydhr88/ComfyTV) (links point at upstream `main`, not a local fork):
+> This page covers **one node only**. For end-to-end workflows, multi-stage pipelines, type conversion, and design rationale, see the [ComfyTV user guides](https://github.com/jtydhr88/ComfyTV/tree/main/docs) on GitHub:
 
 | Guide | Contents |
 | --- | --- |
@@ -89,11 +89,11 @@ Extra bindings from the ComfyTV sidebar editor.
 | [Image tools](https://github.com/jtydhr88/ComfyTV/blob/main/docs/image-tools.md) | Crop, inpaint, outpaint, upscale, multi-angle, variation presets |
 | [Model files](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.md) | Checkpoints, LoRAs, and folder paths per workflow |
 
-## Upstream repository and workflows
+## Repository and workflows
 
 | Resource | Link |
 | --- | --- |
-| **Official upstream repo** | https://github.com/jtydhr88/ComfyTV |
+| **GitHub repository** | https://github.com/jtydhr88/ComfyTV |
 | **User guides index** | https://github.com/jtydhr88/ComfyTV/tree/main/docs |
 | **Built-in workflows** | https://github.com/jtydhr88/ComfyTV/tree/main/workflows |
 | **Model checklist** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.md |

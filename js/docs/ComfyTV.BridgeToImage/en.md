@@ -63,7 +63,7 @@ Internal lineage — leave default.
 
 ## Full guides (recommended reading)
 
-> This page covers **one node only**. For end-to-end workflows, multi-stage pipelines, type conversion, and design rationale, read the user guides in the upstream repo [**jtydhr88/ComfyTV**](https://github.com/jtydhr88/ComfyTV) (links point at upstream `main`, not a local fork):
+> This page covers **one node only**. For end-to-end workflows, multi-stage pipelines, type conversion, and design rationale, see the [ComfyTV user guides](https://github.com/jtydhr88/ComfyTV/tree/main/docs) on GitHub:
 
 | Guide | Contents |
 | --- | --- |
@@ -71,11 +71,11 @@ Internal lineage — leave default.
 | [Bridge nodes](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md) | COMFYTV_* vs native types, into/out bridges, plugin examples |
 | [Custom workflows](https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.md) | Import your ComfyUI workflow JSON without Python changes |
 
-## Upstream repository and workflows
+## Repository and workflows
 
 | Resource | Link |
 | --- | --- |
-| **Official upstream repo** | https://github.com/jtydhr88/ComfyTV |
+| **GitHub repository** | https://github.com/jtydhr88/ComfyTV |
 | **User guides index** | https://github.com/jtydhr88/ComfyTV/tree/main/docs |
 | **Built-in workflows** | https://github.com/jtydhr88/ComfyTV/tree/main/workflows |
 | **Model checklist** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.md |

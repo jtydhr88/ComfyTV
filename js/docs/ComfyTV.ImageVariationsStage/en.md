@@ -74,7 +74,7 @@ Count display; subject/scene text; 1-based pick; sidebar seed.
 
 ## Full guides (recommended reading)
 
-> This page covers **one node only**. For end-to-end workflows, multi-stage pipelines, type conversion, and design rationale, read the user guides in the upstream repo [**jtydhr88/ComfyTV**](https://github.com/jtydhr88/ComfyTV) (links point at upstream `main`, not a local fork):
+> This page covers **one node only**. For end-to-end workflows, multi-stage pipelines, type conversion, and design rationale, see the [ComfyTV user guides](https://github.com/jtydhr88/ComfyTV/tree/main/docs) on GitHub:
 
 | Guide | Contents |
 | --- | --- |
@@ -83,11 +83,11 @@ Count display; subject/scene text; 1-based pick; sidebar seed.
 | [Model files](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.md) | Checkpoints, LoRAs, and folder paths per workflow |
 | [Compose](https://github.com/jtydhr88/ComfyTV/blob/main/docs/compose.md) | Image Picker, Compare, Storyboard→Shot Images, timeline |
 
-## Upstream repository and workflows
+## Repository and workflows
 
 | Resource | Link |
 | --- | --- |
-| **Official upstream repo** | https://github.com/jtydhr88/ComfyTV |
+| **GitHub repository** | https://github.com/jtydhr88/ComfyTV |
 | **User guides index** | https://github.com/jtydhr88/ComfyTV/tree/main/docs |
 | **Built-in workflows** | https://github.com/jtydhr88/ComfyTV/tree/main/workflows |
 | **Model checklist** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.md |

@@ -51,18 +51,18 @@ Target pixels, default 1280×720. Either may be **-1**.
 
 ## Full guides (recommended reading)
 
-> This page covers **one node only**. For end-to-end workflows, multi-stage pipelines, type conversion, and design rationale, read the user guides in the upstream repo [**jtydhr88/ComfyTV**](https://github.com/jtydhr88/ComfyTV) (links point at upstream `main`, not a local fork):
+> This page covers **one node only**. For end-to-end workflows, multi-stage pipelines, type conversion, and design rationale, see the [ComfyTV user guides](https://github.com/jtydhr88/ComfyTV/tree/main/docs) on GitHub:
 
 | Guide | Contents |
 | --- | --- |
 | [Getting started](https://github.com/jtydhr88/ComfyTV/blob/main/docs/getting-started.md) | Install, canvas basics, per-stage Run, snapshots, Project, Image Picker |
 | [Video and audio](https://github.com/jtydhr88/ComfyTV/blob/main/docs/video-and-audio.md) | Clip, crop, resize, extract frame, demux vs Generate video |
 
-## Upstream repository and workflows
+## Repository and workflows
 
 | Resource | Link |
 | --- | --- |
-| **Official upstream repo** | https://github.com/jtydhr88/ComfyTV |
+| **GitHub repository** | https://github.com/jtydhr88/ComfyTV |
 | **User guides index** | https://github.com/jtydhr88/ComfyTV/tree/main/docs |
 | **Built-in workflows** | https://github.com/jtydhr88/ComfyTV/tree/main/workflows |
 | **Model checklist** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.md |

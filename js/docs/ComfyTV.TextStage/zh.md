@@ -83,7 +83,7 @@ Autogrow 槽，可接多个上游 stage 输出。Text 最常用；images/videos 
 
 ## 完整教程（推荐阅读）
 
-> 本页只说明**这一个节点**。完整操作流程、多节点串联、类型转换与原理，请阅读上游官方仓库 [**jtydhr88/ComfyTV**](https://github.com/jtydhr88/ComfyTV) 的用户指南（文档链接均指向上游 `main`，而非本地 fork）：
+> 本页只说明**这一个节点**的参数与用法。端到端流程与多节点串联，请见 GitHub 上的 [ComfyTV 用户指南](https://github.com/jtydhr88/ComfyTV/tree/main/docs)：
 
 | 教程 | 内容 |
 | --- | --- |
@@ -92,11 +92,11 @@ Autogrow 槽，可接多个上游 stage 输出。Text 最常用；images/videos 
 | [模型文件清单](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md) | 各 workflow 所需 checkpoint/LoRA 与放置目录 |
 | [自定义工作流](https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.zh.md) | 导入自己的 ComfyUI JSON，不改 Python |
 
-## 上游仓库与工作流
+## 仓库与工作流
 
 | 资源 | 链接 |
 | --- | --- |
-| **官方仓库（上游）** | https://github.com/jtydhr88/ComfyTV |
+| **GitHub 仓库** | https://github.com/jtydhr88/ComfyTV |
 | **用户指南目录** | https://github.com/jtydhr88/ComfyTV/tree/main/docs |
 | **内置工作流总览** | https://github.com/jtydhr88/ComfyTV/tree/main/workflows |
 | **模型清单** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.zh.md |
