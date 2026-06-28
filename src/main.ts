@@ -49,6 +49,7 @@ import type { ComfyExtension, ComfyNodeDef } from '@comfyorg/comfyui-frontend-ty
 import { applyHiddenWidgetFlags, getWidget } from '@/utils/widget'
 import { checkThemeTokens } from '@/utils/devTokenCheck'
 import { installGlobalRunBridge } from '@/utils/globalRunBridge'
+import { localizeNodeSockets } from '@/utils/localizeNodeSockets'
 
 ;(window as any).__comfytv_host_pinia = getActivePinia()
 
@@ -326,10 +327,26 @@ const extension: ComfyExtension = {
 
   loadedGraphNode(node: ComfyNode) {
     ;(node as any).__comfytvFromSave = true
+    if (node.comfyClass?.startsWith('ComfyTV.')) {
+      requestAnimationFrame(() => localizeNodeSockets(node))
+    }
   },
 
   async nodeCreated(rawNode) {
     const node = rawNode as ComfyNode
+
+    if (node.comfyClass?.startsWith('ComfyTV.')) {
+      const prevOnConnectionsChange = node.onConnectionsChange
+      node.onConnectionsChange = useChainCallback(
+        prevOnConnectionsChange,
+        function (this: ComfyNode) {
+          localizeNodeSockets(this)
+        },
+      )
+      localizeNodeSockets(node)
+      requestAnimationFrame(() => localizeNodeSockets(node))
+    }
+
     applyHiddenWidgetFlags(node)
     await loadStageMeta()
     const entry = getStageMeta(node.comfyClass)
