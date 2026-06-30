@@ -3,9 +3,23 @@ import vue from '@vitejs/plugin-vue'
 import tailwindcss from '@tailwindcss/vite'
 import cssInjectedByJs from 'vite-plugin-css-injected-by-js'
 import { resolve } from 'path'
+import { existsSync, cpSync } from 'fs'
+
+function copyNodeDocs() {
+  return {
+    name: 'copy-node-docs',
+    closeBundle() {
+      const src = resolve(__dirname, 'node-docs')
+      const dest = resolve(__dirname, 'js/docs')
+      if (existsSync(src)) {
+        cpSync(src, dest, { recursive: true })
+      }
+    }
+  }
+}
 
 export default defineConfig({
-  plugins: [vue(), tailwindcss(), cssInjectedByJs()],
+  plugins: [vue(), tailwindcss(), cssInjectedByJs(), copyNodeDocs()],
   resolve: {
     alias: { '@': resolve(__dirname, './src') }
   },
