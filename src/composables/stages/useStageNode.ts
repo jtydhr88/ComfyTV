@@ -522,13 +522,14 @@ export function useStageNode(
     state.running = true
     try {
       const a = app as any
-      const reachable = collectReachableNodeIds(a, node)
-      const pm = await buildScopedPrompt(a, reachable)
+      const isBridgeIn = typeof node?.comfyClass === 'string'
+                         && node.comfyClass.startsWith('ComfyTV.BridgeTo')
+      const pm = isBridgeIn
+        ? await a.graphToPrompt()
+        : await buildScopedPrompt(a, collectReachableNodeIds(a, node))
 
       const targetId = String(node.id)
       const myInputs = pm?.output?.[targetId]?.inputs
-      const isBridgeIn = typeof node?.comfyClass === 'string'
-                         && node.comfyClass.startsWith('ComfyTV.BridgeTo')
       const missingUpstream: string[] = []
       if (myInputs) {
         for (const key of Object.keys(myInputs)) {

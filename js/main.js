@@ -88351,11 +88351,10 @@ function useStageNode(node, kind, variant = "generator") {
     state.running = true;
     try {
       const a = app;
-      const reachable = collectReachableNodeIds(a, node);
-      const pm = await buildScopedPrompt(a, reachable);
+      const isBridgeIn = typeof (node == null ? void 0 : node.comfyClass) === "string" && node.comfyClass.startsWith("ComfyTV.BridgeTo");
+      const pm = isBridgeIn ? await a.graphToPrompt() : await buildScopedPrompt(a, collectReachableNodeIds(a, node));
       const targetId = String(node.id);
       const myInputs = (_f3 = (_e2 = pm == null ? void 0 : pm.output) == null ? void 0 : _e2[targetId]) == null ? void 0 : _f3.inputs;
-      const isBridgeIn = typeof (node == null ? void 0 : node.comfyClass) === "string" && node.comfyClass.startsWith("ComfyTV.BridgeTo");
       const missingUpstream = [];
       if (myInputs) {
         for (const key of Object.keys(myInputs)) {
