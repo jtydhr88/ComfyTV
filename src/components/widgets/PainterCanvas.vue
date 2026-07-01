@@ -48,11 +48,7 @@
                   :class="toolBtnClass(tool === t.id)"
                   :title="$t(t.i18n)"
                   @click="tool = t.id">
-            <svg v-if="t.id === 'fill'" viewBox="0 0 24 24"
-                 class="ctv:size-3.5 ctv:mx-auto ctv:fill-current">
-              <path :d="FILL_ICON_PATH" />
-            </svg>
-            <template v-else>{{ t.icon }}</template>
+            <StageIcon :name="t.icon" class="ctv:mx-auto" />
           </button>
         </div>
       </div>
@@ -110,7 +106,7 @@
         class="ctv:mt-0.5 ctv:py-1 ctv:px-2.5 ctv:text-[11px] ctv:rounded ctv:cursor-pointer ctv:transition-colors ctv:duration-150
                ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle ctv:hover:bg-secondary-background-hover"
         @click="handleClear"
-      >↶ {{ $t('painter.clear') }}</button>
+      ><i class="pi pi-undo" /> {{ $t('painter.clear') }}</button>
     </div>
   </div>
 </template>
@@ -119,6 +115,7 @@
 import { computed, ref } from 'vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import { usePainter } from '@/composables/widgets/usePainter'
+import StageIcon from '@/components/widgets/StageIcon.vue'
 
 const props = defineProps<{
   node: LGraphNode
@@ -169,19 +166,13 @@ const brushHardnessPercent = computed({
   set: (v: number) => { brushHardness.value = v / 100 },
 })
 
-const FILL_ICON_PATH =
-  'M16.56 8.94L7.62 0 6.21 1.41l2.38 2.38-5.15 5.15c-.59.59-.59 1.54 0 2.12l5.5 5.5'
-  + 'c.29.29.68.44 1.06.44s.77-.15 1.06-.44l5.5-5.5c.59-.58.59-1.53 0-2.12z'
-  + 'M5.21 10L10 5.21 14.79 10H5.21z'
-  + 'M19 11.5s-2 2.17-2 3.5c0 1.1.9 2 2 2s2-.9 2-2c0-1.33-2-3.5-2-3.5z'
-
 const TOOLS = [
-  { id: 'brush',   icon: '✏️', i18n: 'painter.brush' },
-  { id: 'eraser',  icon: '🧽', i18n: 'painter.eraser' },
-  { id: 'fill',    icon: '',   i18n: 'painter.fill' },
-  { id: 'rect',    icon: '▭',  i18n: 'painter.rect' },
-  { id: 'ellipse', icon: '◯',  i18n: 'painter.ellipse' },
-  { id: 'label',   icon: '①',  i18n: 'painter.label' },
+  { id: 'brush',   icon: 'pi pi-pencil',      i18n: 'painter.brush' },
+  { id: 'eraser',  icon: 'pi pi-eraser',      i18n: 'painter.eraser' },
+  { id: 'fill',    icon: 'lucide:paint-bucket', i18n: 'painter.fill' },
+  { id: 'rect',    icon: 'pi pi-stop',        i18n: 'painter.rect' },
+  { id: 'ellipse', icon: 'pi pi-circle',      i18n: 'painter.ellipse' },
+  { id: 'label',   icon: 'pi pi-map-marker',  i18n: 'painter.label' },
 ] as const
 
 const rowClass   = 'ctv:grid ctv:grid-cols-[64px_1fr_48px] ctv:items-center ctv:gap-1.5 ctv:text-[11px]'

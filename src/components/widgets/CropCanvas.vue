@@ -9,7 +9,7 @@
          class="ctv:relative ctv:w-full ctv:h-[340px] ctv:rounded-md ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle">
       <div v-if="!imageUrl"
            class="ctv:h-full ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50">
-        <div class="ctv:text-[32px] ctv:opacity-60">⊟</div>
+        <i class="pi pi-image ctv:text-[32px] ctv:opacity-60" />
         <div class="ctv:text-xs">{{ $t('imageCrop.noInputImage') }}</div>
       </div>
 
@@ -76,7 +76,7 @@
           ]"
           :title="isLockEnabled ? $t('imageCrop.unlockRatio') : $t('imageCrop.lockRatio')"
           @click="isLockEnabled = !isLockEnabled"
-        >{{ isLockEnabled ? '🔒' : '🔓' }}</button>
+        ><i :class="['pi', isLockEnabled ? 'pi-lock' : 'pi-lock-open']" /></button>
       </div>
 
       <div class="ctv:flex ctv:items-center ctv:gap-1 ctv:text-[11px]">

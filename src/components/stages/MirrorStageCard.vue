@@ -3,7 +3,7 @@
     <div class="ctv:relative ctv:w-full ctv:h-[280px] ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle
                 ctv:bg-black ctv:flex ctv:items-center ctv:justify-center">
       <div v-if="!sourceImageUrl" class="ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50">
-        <div class="ctv:text-[32px] ctv:opacity-60">⊟</div>
+        <i class="pi pi-image ctv:text-[32px] ctv:opacity-60" />
         <div class="ctv:text-xs">{{ $t('imageCrop.noInputImage') }}</div>
       </div>
       <img
@@ -34,7 +34,7 @@
         :title="$t('mirror.horizontal')"
         @click="flipH = !flipH"
       >
-        <span class="ctv:text-sm ctv:leading-none">⇋</span> {{ $t('mirror.horizontal') }}
+        <i class="pi pi-arrow-right-arrow-left ctv:text-sm ctv:leading-none" /> {{ $t('mirror.horizontal') }}
       </button>
       <button
         type="button"
@@ -46,7 +46,7 @@
         :title="$t('mirror.vertical')"
         @click="flipV = !flipV"
       >
-        <span class="ctv:text-sm ctv:leading-none">⇅</span> {{ $t('mirror.vertical') }}
+        <i class="pi pi-arrows-v ctv:text-sm ctv:leading-none" /> {{ $t('mirror.vertical') }}
       </button>
     </div>
 

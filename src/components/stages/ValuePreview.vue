@@ -26,16 +26,16 @@
       <div :class="imgActionsClass">
         <button type="button" :class="imgActionBtn"
                 :title="$t('stage.action.viewFull')"
-                @click.stop="openViewer(String(content))">⤢</button>
+                @click.stop="openViewer(String(content))"><i class="pi pi-window-maximize" /></button>
         <button type="button" :class="imgActionBtn"
                 :title="$t('stage.action.download')"
-                @click.stop="onDownload(String(content))">⤓</button>
+                @click.stop="onDownload(String(content))"><i class="pi pi-download" /></button>
         <button type="button" :class="tagActionBtn(String(content))"
                 :title="$t('stage.action.addTag')"
-                @click.stop="openTagMenu(String(content), nameFromUrl(String(content)), $event)">🏷</button>
+                @click.stop="openTagMenu(String(content), nameFromUrl(String(content)), $event)"><i class="pi pi-tag" /></button>
         <button type="button" :class="imgActionBtn"
                 :title="$t('stage.action.loadAsset')"
-                @click.stop="onLoadAsset(String(content), nameFromUrl(String(content)))">📥</button>
+                @click.stop="onLoadAsset(String(content), nameFromUrl(String(content)))"><i class="pi pi-bookmark" /></button>
       </div>
     </div>
     <img
@@ -54,7 +54,7 @@
 
     <template v-else-if="type === 'COMFYTV_AUDIO'">
       <div v-if="compact" :class="compactSummary">
-        <span class="ctv:text-[22px] ctv:leading-none">🔊</span>
+        <span class="ctv:text-[22px] ctv:leading-none"><i class="pi pi-volume-up" /></span>
       </div>
       <audio
         v-else
@@ -67,7 +67,7 @@
     <template v-else-if="type === 'COMFYTV_STORYBOARD'">
       <div v-if="compact" class="ctv:flex ctv:flex-col ctv:gap-0.5 ctv:size-full ctv:py-[3px] ctv:px-1 ctv:box-border ctv:overflow-hidden">
         <div class="ctv:flex ctv:items-baseline ctv:gap-1 ctv:shrink-0">
-          <span class="ctv:text-[11px] ctv:leading-none">📋</span>
+          <span class="ctv:text-[11px] ctv:leading-none"><i class="pi pi-copy" /></span>
           <span class="vp-sb-count ctv:text-xs ctv:font-bold ctv:leading-none ctv:text-[#d8b0ff]">{{ storyboardShots.length }}</span>
           <span v-if="storyboardTotalSec" class="ctv:ml-auto ctv:text-3xs ctv:tracking-wide ctv:text-muted-foreground">{{ storyboardTotalSec }}s</span>
         </div>
@@ -93,7 +93,7 @@
 
     <template v-else-if="type === 'COMFYTV_TIMELINE'">
       <div v-if="compact" :class="compactSummary">
-        <span class="ctv:text-[22px] ctv:leading-none">🎬</span>
+        <span class="ctv:text-[22px] ctv:leading-none"><i class="pi pi-video" /></span>
         <span class="vp-compact-count-text ctv:text-sm ctv:font-bold ctv:text-[#d8b0ff]">{{ timelineSegs.length }}</span>
       </div>
       <div v-else :class="storyboardListClass">
@@ -142,32 +142,32 @@
           <span v-if="removable && isUpstreamItem(img)"
                 class="ctv:absolute ctv:bottom-0.5 ctv:right-0.5 ctv:py-px ctv:px-1 ctv:text-3xs ctv:font-bold ctv:rounded-sm
                        ctv:bg-primary-background/85 ctv:text-white"
-                :title="$t('valuePreview.fromUpstream')">↑</span>
+                :title="$t('valuePreview.fromUpstream')"><i class="pi pi-arrow-up" /></span>
           <span v-if="clickMode === 'pick' && isItemSelected(img, i)"
                 class="ctv:absolute ctv:top-0.5 ctv:right-0.5 ctv:flex ctv:items-center ctv:justify-center
                        ctv:size-4 ctv:rounded-full ctv:text-3xs ctv:leading-none
-                       ctv:bg-primary-background ctv:text-white ctv:shadow-[0_1px_3px_rgb(0_0_0/0.5)]">✓</span>
+                       ctv:bg-primary-background ctv:text-white ctv:shadow-[0_1px_3px_rgb(0_0_0/0.5)]"><i class="pi pi-check" /></span>
           <span v-else-if="clickMode === 'pick'"
                 class="ctv:absolute ctv:top-0.5 ctv:right-0.5 ctv:py-px ctv:px-1 ctv:text-2xs ctv:rounded-sm
                        ctv:bg-black/55 ctv:opacity-0 ctv:transition-opacity ctv:duration-150 ctv:group-hover:opacity-100">
-            {{ clickHintIcon }}
+            <i :class="clickHintIcon" />
           </span>
           <div :class="imgActionsClass">
             <button type="button" :class="imgActionBtn"
                     :title="$t('stage.action.viewFull')"
-                    @click.stop="openViewer(img.image_url)">⤢</button>
+                    @click.stop="openViewer(img.image_url)"><i class="pi pi-window-maximize" /></button>
             <button type="button" :class="imgActionBtn"
                     :title="$t('stage.action.download')"
-                    @click.stop="onDownload(img.image_url)">⤓</button>
+                    @click.stop="onDownload(img.image_url)"><i class="pi pi-download" /></button>
             <button type="button" :class="tagActionBtn(img.image_url)"
                     :title="$t('stage.action.addTag')"
-                    @click.stop="openTagMenu(img.image_url, img.label || img.prompt || nameFromUrl(img.image_url), $event)">🏷</button>
+                    @click.stop="openTagMenu(img.image_url, img.label || img.prompt || nameFromUrl(img.image_url), $event)"><i class="pi pi-tag" /></button>
             <button type="button" :class="imgActionBtn"
                     :title="$t('stage.action.loadAsset')"
-                    @click.stop="onLoadAsset(img.image_url, img.label || img.prompt || nameFromUrl(img.image_url))">📥</button>
+                    @click.stop="onLoadAsset(img.image_url, img.label || img.prompt || nameFromUrl(img.image_url))"><i class="pi pi-bookmark" /></button>
             <button v-if="canRemoveItem(img, i)" type="button" :class="removeActionBtn"
                     :title="$t('stage.action.removeFromPicker')"
-                    @click.stop="onItemRemove(img, i)">✕</button>
+                    @click.stop="onItemRemove(img, i)"><i class="pi pi-times" /></button>
           </div>
         </div>
       </div>
@@ -202,7 +202,7 @@
                  ctv:hover:bg-black/85 ctv:hover:border-white/55"
           :title="$t('stage.action.close')"
           @click="lightboxUrl = null"
-        >✕</button>
+        ><i class="pi pi-times" /></button>
       </div>
     </Teleport>
 
@@ -226,7 +226,7 @@
                    ctv:hover:bg-secondary-background-hover"
             @click.stop="setUncategorized"
           >
-            <span class="ctv:w-3 ctv:inline-block ctv:text-primary-background">{{ tagMenuIsUncategorized() ? '✓' : '' }}</span>
+            <span class="ctv:w-3 ctv:inline-block ctv:text-primary-background"><i v-if="tagMenuIsUncategorized()" class="pi pi-check" /></span>
             <span class="ctv:flex-1 ctv:truncate ctv:italic ctv:text-muted-foreground">{{ $t('assets.category.none') }}</span>
           </button>
           <div class="ctv:my-1 ctv:border-t ctv:border-border-subtle"></div>
@@ -239,7 +239,7 @@
                    ctv:hover:bg-secondary-background-hover"
             @click.stop="toggleOutputTag(cat.id)"
           >
-            <span class="ctv:w-3 ctv:inline-block ctv:text-primary-background">{{ tagMenuHas(cat.id) ? '✓' : '' }}</span>
+            <span class="ctv:w-3 ctv:inline-block ctv:text-primary-background"><i v-if="tagMenuHas(cat.id)" class="pi pi-check" /></span>
             <span class="ctv:flex-1 ctv:truncate">{{ cat.name }}</span>
           </button>
           <div v-if="categories.length" class="ctv:my-1 ctv:border-t ctv:border-border-subtle"></div>
@@ -250,7 +250,7 @@
                    ctv:hover:bg-secondary-background-hover"
             @click.stop="onCreateCategory"
           >
-            <span class="ctv:w-3 ctv:inline-block">＋</span>
+            <span class="ctv:w-3 ctv:inline-block"><i class="pi pi-plus" /></span>
             <span class="ctv:flex-1 ctv:truncate">{{ $t('assets.tagPopover.create') }}</span>
           </button>
         </div>
@@ -396,7 +396,7 @@ function onCellKey(img: BatchImage, i: number, e: KeyboardEvent) {
   }
 }
 
-const clickHintIcon = computed(() => props.clickMode === 'pick' ? '✓' : '✏️')
+const clickHintIcon = computed(() => props.clickMode === 'pick' ? 'pi pi-check' : 'pi pi-pencil')
 
 function isItemSelected(img: BatchImage, i: number): boolean {
   return isBatchItemSelected(img, i, props.selectedIndex)

@@ -1,9 +1,10 @@
 import { defineConfig } from 'vitest/config'
 import vue from '@vitejs/plugin-vue'
+import Icons from 'unplugin-icons/vite'
 import { resolve } from 'path'
 
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [vue(), Icons({ compiler: 'vue3', autoInstall: false })],
   resolve: {
     alias: { '@': resolve(__dirname, './src') }
   },

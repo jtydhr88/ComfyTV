@@ -35,7 +35,7 @@
                      ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground"
               aria-label="Close"
               @click="store.close()"
-            >×</button>
+            ><i class="pi pi-times" /></button>
           </header>
           <div class="ctv:flex-1 ctv:overflow-y-auto ctv:p-3.5 ctv:text-xs">
             <component

@@ -42,7 +42,7 @@
           :aria-expanded="!notesCollapsed"
           @click="toggleNotesCollapsed"
         >
-          <span class="ctv:w-2.5 ctv:text-2xs ctv:text-warning-background/75">{{ notesCollapsed ? '▸' : '▾' }}</span>
+          <i :class="['pi', notesCollapsed ? 'pi-chevron-right' : 'pi-chevron-down', 'ctv:w-2.5 ctv:text-2xs ctv:text-warning-background/75']" />
           <span class="ctv:flex-1 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:font-semibold ctv:text-warning-background">
             {{ $t('configSidebar.section.notes') }}
           </span>
@@ -80,7 +80,7 @@
               :aria-expanded="!isCollapsed(node.node_id)"
               @click="toggleCollapsed(node.node_id)"
             >
-              <span class="ctv:w-2.5 ctv:text-2xs ctv:text-muted-foreground">{{ isCollapsed(node.node_id) ? '▸' : '▾' }}</span>
+              <i :class="['pi', isCollapsed(node.node_id) ? 'pi-chevron-right' : 'pi-chevron-down', 'ctv:w-2.5 ctv:text-2xs ctv:text-muted-foreground']" />
               <span class="ctv:text-xs ctv:font-semibold ctv:text-base-foreground">{{ node.node_title }}</span>
               <span v-if="node.node_title !== node.node_type"
                     class="ctv:text-2xs ctv:font-mono ctv:text-muted-foreground/60">
@@ -141,7 +141,7 @@
             :disabled="uploadApiBusy"
             :title="$t('configSidebar.uploadApiTooltip')"
             @click="onUploadApiSidecar"
-          >⇪ {{ $t('configSidebar.uploadApi') }}</button>
+          ><i class="pi pi-upload" /> {{ $t('configSidebar.uploadApi') }}</button>
           <span v-if="uploadApiError" class="ctv:text-destructive-background">{{ uploadApiError }}</span>
         </template>
       </div>
@@ -182,7 +182,7 @@
           :disabled="!config.has_api || exportBusy"
           :title="$t('configSidebar.exportPresetTooltip')"
           @click="onExportPreset"
-        >⇩ {{ $t('configSidebar.exportPreset') }}</button>
+        ><i class="pi pi-download" /> {{ $t('configSidebar.exportPreset') }}</button>
         <button
           :class="resetBtn"
           :disabled="resetBusy"

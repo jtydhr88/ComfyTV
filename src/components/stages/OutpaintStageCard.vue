@@ -8,7 +8,7 @@
     >
       <template v-if="!sourceImageUrl">
         <div class="ctv:flex ctv:flex-col ctv:items-center ctv:gap-1.5 ctv:text-white/50">
-          <div class="ctv:text-[28px] ctv:opacity-60">↔</div>
+          <i class="pi pi-arrows-alt ctv:text-[28px] ctv:opacity-60" />
           <div class="ctv:text-xs">{{ $t('outpaint.noInputImage') }}</div>
         </div>
       </template>

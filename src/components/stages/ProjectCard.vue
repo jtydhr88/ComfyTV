@@ -2,7 +2,7 @@
   <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:py-1.5 ctv:px-2 ctv:size-full ctv:box-border ctv:text-xs ctv:text-base-foreground">
     <div class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:pb-1 ctv:font-semibold ctv:text-[11px] ctv:uppercase ctv:tracking-wide
                 ctv:text-muted-foreground ctv:border-b ctv:border-border-default">
-      <span class="ctv:text-sm">📁</span>
+      <span class="ctv:text-sm"><i class="pi pi-folder" /></span>
       <span>{{ $t('project.label') }}</span>
     </div>
 
@@ -27,7 +27,7 @@
         type="button"
         :title="$t('project.refresh')"
         @click="onRefresh"
-      >↻</button>
+      ><i class="pi pi-refresh" /></button>
       <button
         :class="iconBtn('primary')"
         type="button"
@@ -44,7 +44,7 @@
         type="button"
         :title="$t('project.delete')"
         @click="onDelete"
-      >🗑</button>
+      ><i class="pi pi-trash" /></button>
     </div>
 
     <div v-if="status" class="ctv:text-2xs ctv:italic ctv:text-muted-foreground">{{ status }}</div>

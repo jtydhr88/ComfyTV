@@ -38,9 +38,9 @@
                 class="ctv:py-px ctv:px-1.5 ctv:rounded-sm ctv:text-2xs ctv:bg-success-background/15 ctv:text-success-background">{{ shot.character }}</span>
           <div class="ctv:flex ctv:flex-col ctv:gap-px ctv:ml-auto">
             <button type="button" :class="moveBtn" :disabled="idx === 0"
-                    @click="move(idx, -1)" :title="$t('storyboard.moveUp')">▲</button>
+                    @click="move(idx, -1)" :title="$t('storyboard.moveUp')"><i class="pi pi-chevron-up" /></button>
             <button type="button" :class="moveBtn" :disabled="idx === shots.length - 1"
-                    @click="move(idx, 1)" :title="$t('storyboard.moveDown')">▼</button>
+                    @click="move(idx, 1)" :title="$t('storyboard.moveDown')"><i class="pi pi-chevron-down" /></button>
           </div>
           <button
             type="button"
@@ -49,10 +49,10 @@
             :disabled="regeneratingId === shot.id"
             :title="$t('storyboard.regenerate')"
             @click="regenerateShot(shot.id, idx + 1)"
-          >{{ regeneratingId === shot.id ? '…' : '🔄' }}</button>
+          ><span v-if="regeneratingId === shot.id">…</span><i v-else class="pi pi-refresh" /></button>
           <button type="button"
                   class="ctv:bg-transparent ctv:border-0 ctv:cursor-pointer ctv:text-[13px]"
-                  :title="$t('storyboard.remove')" @click="removeShot(shot.id)">🗑</button>
+                  :title="$t('storyboard.remove')" @click="removeShot(shot.id)"><i class="pi pi-trash" /></button>
         </header>
 
         <textarea
@@ -80,7 +80,7 @@
               :disabled="uploadingId === shot.id"
               :title="$t('storyboard.uploadRef')"
               @click="pickFile(shot.id)"
-            >{{ uploadingId === shot.id ? '…' : '📤' }}</button>
+            ><span v-if="uploadingId === shot.id">…</span><i v-else class="pi pi-upload" /></button>
             <button
               v-if="shot.image_url"
               type="button"
@@ -88,7 +88,7 @@
                      ctv:bg-destructive-background/70 ctv:text-white"
               :title="$t('storyboard.clearRef')"
               @click="setImage(shot.id, null)"
-            >✕</button>
+            ><i class="pi pi-times" /></button>
           </div>
 
           <textarea

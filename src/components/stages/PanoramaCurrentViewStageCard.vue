@@ -11,7 +11,7 @@
           class="ctv:absolute ctv:inset-0 ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5
                  ctv:text-white/50 ctv:pointer-events-none"
         >
-          <div class="ctv:text-[32px] ctv:opacity-60">🌐</div>
+          <i class="pi pi-globe ctv:text-[32px] ctv:opacity-60" />
           <div class="ctv:text-xs ctv:text-center ctv:px-3">{{ $t('panoramaView.connectPanorama') }}</div>
         </div>
       </div>
@@ -20,15 +20,21 @@
     <div class="ctv:flex ctv:items-center ctv:gap-2 ctv:flex-wrap">
       <div class="ctv:flex ctv:items-center ctv:gap-1">
         <span class="ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">{{ $t('panoramaView.aspect') }}</span>
-        <select v-model="aspectRatio" class="ctv-pano-select">
-          <option v-for="opt in aspectOptions" :key="opt" :value="opt">{{ opt }}</option>
-        </select>
+        <span class="ctv-pano-select-wrap">
+          <select v-model="aspectRatio" class="ctv-pano-select">
+            <option v-for="opt in aspectOptions" :key="opt" :value="opt">{{ opt }}</option>
+          </select>
+          <i class="pi pi-chevron-down ctv-pano-caret" />
+        </span>
       </div>
       <div class="ctv:flex ctv:items-center ctv:gap-1">
         <span class="ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">{{ $t('panoramaView.resolution') }}</span>
-        <select v-model="resolution" class="ctv-pano-select">
-          <option v-for="opt in resolutionOptions" :key="opt" :value="opt">{{ opt }}</option>
-        </select>
+        <span class="ctv-pano-select-wrap">
+          <select v-model="resolution" class="ctv-pano-select">
+            <option v-for="opt in resolutionOptions" :key="opt" :value="opt">{{ opt }}</option>
+          </select>
+          <i class="pi pi-chevron-down ctv-pano-caret" />
+        </span>
       </div>
       <span class="ctv:ml-auto ctv:text-2xs ctv:font-mono ctv:text-muted-foreground">{{ captureSize.w }}×{{ captureSize.h }}</span>
     </div>
@@ -96,12 +102,23 @@ const viewerStyle = computed(() => {
 </script>
 
 <style scoped>
+.ctv-pano-select-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.ctv-pano-caret {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 8px;
+  color: var(--muted-foreground, rgb(255 255 255 / 0.5));
+  pointer-events: none;
+}
 .ctv-pano-select {
   appearance: none;
   background-color: var(--secondary-background, rgb(255 255 255 / 0.04));
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='6' viewBox='0 0 8 6'><path d='M0 0l4 6 4-6z' fill='%23bbb'/></svg>");
-  background-repeat: no-repeat;
-  background-position: right 6px center;
   color: var(--base-foreground, rgb(255 255 255 / 0.9));
   border: 1px solid var(--border-subtle, rgb(255 255 255 / 0.15));
   border-radius: 4px;

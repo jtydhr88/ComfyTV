@@ -12,7 +12,7 @@
     <div class="ctv:relative ctv:w-full ctv:h-[260px] ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle
                 ctv:bg-black ctv:flex ctv:items-center ctv:justify-center">
       <div v-if="!sourceImageUrl" class="ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50">
-        <div class="ctv:text-[32px] ctv:opacity-60">⊟</div>
+        <i class="pi pi-image ctv:text-[32px] ctv:opacity-60" />
         <div class="ctv:text-xs">{{ $t('colorGrade.noInputImage') }}</div>
       </div>
       <canvas

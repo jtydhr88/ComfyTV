@@ -12,28 +12,28 @@ export interface StageAction {
 }
 
 const imageActions: StageAction[] = [
-  { id: 'edit',       icon: '✏️', presets: IMAGE_EDIT_PRESETS },
-  { id: 'panorama',   icon: '🌐' },
-  { id: 'multiangle', icon: '📐' },
-  { id: 'relight',    icon: '💡' },
-  { id: 'preset',     icon: '🎴', presets: IMAGE_VARIANT_PRESETS },
+  { id: 'edit',       icon: 'pi pi-pencil',   presets: IMAGE_EDIT_PRESETS },
+  { id: 'panorama',   icon: 'pi pi-globe' },
+  { id: 'multiangle', icon: 'pi pi-compass' },
+  { id: 'relight',    icon: 'pi pi-lightbulb' },
+  { id: 'preset',     icon: 'pi pi-th-large', presets: IMAGE_VARIANT_PRESETS },
 ]
 
 export const ACTIONS_BY_KIND: Record<string, StageAction[]> = {
-  text:  [{ id: 'refine', icon: '✏️' }],
+  text:  [{ id: 'refine', icon: 'pi pi-pencil' }],
   image: imageActions,
   'image-picker': imageActions,
   'image-batch':  imageActions,
   video: [
-    { id: 'extend', icon: '↪' },
-    { id: 'change', icon: '✏️', presets: VIDEO_CHANGE_PRESETS },
+    { id: 'extend', icon: 'pi pi-arrow-right' },
+    { id: 'change', icon: 'pi pi-pencil', presets: VIDEO_CHANGE_PRESETS },
   ],
   panorama: [
-    { id: 'view-current', icon: '📸' },
-    { id: 'view-four',    icon: '🎬' },
-    { id: 'view-twelve',  icon: '🔭' },
+    { id: 'view-current', icon: 'pi pi-camera' },
+    { id: 'view-four',    icon: 'pi pi-video' },
+    { id: 'view-twelve',  icon: 'pi pi-eye' },
   ],
   storyboard: [
-    { id: 'gen-shots', icon: '📸' },
+    { id: 'gen-shots', icon: 'pi pi-camera' },
   ],
 }

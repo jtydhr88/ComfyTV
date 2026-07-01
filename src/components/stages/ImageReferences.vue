@@ -12,7 +12,7 @@
         :class="['ctv:ml-auto', plusBtnClass]"
         :title="pickerOpen ? $t('stage.action.close') : $t('imageRefs.add')"
         @click.stop="pickerOpen = !pickerOpen"
-      >{{ pickerOpen ? '×' : '＋' }}</button>
+      ><i :class="['pi', pickerOpen ? 'pi-times' : 'pi-plus']" /></button>
     </div>
 
     <AssetPickerPopup
@@ -54,7 +54,7 @@
           :class="removeBtn"
           :title="$t('imageRefs.remove')"
           @click.stop="removeRef(i)"
-        >×</button>
+        ><i class="pi pi-times" /></button>
       </div>
     </div>
     <div v-else class="ctv:text-2xs ctv:italic ctv:text-muted-foreground/60">
@@ -66,7 +66,7 @@
       class="ctv:flex ctv:flex-col ctv:gap-0.5 ctv:py-1 ctv:px-1.5 ctv:rounded ctv:text-2xs
              ctv:bg-warning-background/10 ctv:border ctv:border-warning-background/40 ctv:text-warning-background"
     >
-      <div v-for="(w, i) in slotWarnings" :key="i">⚠ {{ w }}</div>
+      <div v-for="(w, i) in slotWarnings" :key="i"><i class="pi pi-exclamation-triangle" /> {{ w }}</div>
     </div>
 
     <MentionSlotPopover

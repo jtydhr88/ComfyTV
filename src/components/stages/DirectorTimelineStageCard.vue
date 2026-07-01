@@ -70,7 +70,7 @@
             :style="{ left: `${audioSeg.start * ppf}px`, width: `${audioSeg.length * ppf}px` }"
             @pointerdown="onAudioPointerDown($event)"
           >
-            <span class="ctv:text-2xs ctv:text-success-background ctv:pointer-events-none">🎵 {{ audioSeg.length }}f</span>
+            <span class="ctv:text-2xs ctv:text-success-background ctv:pointer-events-none"><i class="pi pi-volume-up" /> {{ audioSeg.length }}f</span>
             <div
               class="ctv:absolute ctv:top-0 ctv:right-0 ctv:w-2 ctv:h-full ctv:cursor-ew-resize ctv:bg-white/10 ctv:hover:bg-white/30"
               @pointerdown.stop="onAudioResizePointerDown($event)"
@@ -82,7 +82,7 @@
             class="ctv:m-0.5 ctv:py-0.5 ctv:px-2 ctv:text-xs ctv:rounded ctv:border ctv:cursor-pointer
                    ctv:bg-success-background/10 ctv:border-success-background/30 ctv:text-success-background"
             @click="addAudio"
-          >🎵 {{ $t('timeline.addAudio') }}</button>
+          ><i class="pi pi-volume-up" /> {{ $t('timeline.addAudio') }}</button>
           <div v-else class="ctv:text-xs ctv:text-white/30 ctv:p-1">{{ $t('timeline.noAudio') }}</div>
         </div>
       </div>
@@ -95,7 +95,7 @@
           type="button"
           class="ctv:ml-auto ctv:bg-transparent ctv:border-0 ctv:cursor-pointer ctv:text-[13px]"
           @click="removeSegment(selectedSeg.id)"
-        >🗑</button>
+        ><i class="pi pi-trash" /></button>
       </div>
       <textarea
         class="ctv:w-full ctv:min-h-11 ctv:resize-y ctv:py-1 ctv:px-1.5 ctv:rounded ctv:text-xs ctv:box-border

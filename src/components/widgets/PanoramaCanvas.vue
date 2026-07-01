@@ -5,7 +5,7 @@
       <div v-if="!panoramaUrl"
            class="ctv:absolute ctv:inset-0 ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5
                   ctv:text-white/50 ctv:pointer-events-none">
-        <div class="ctv:text-[32px] ctv:opacity-60">🌐</div>
+        <div class="ctv:text-[32px] ctv:opacity-60"><i class="pi pi-globe" /></div>
         <div class="ctv:text-xs">{{ $t('panorama.empty') }}</div>
       </div>
       <div v-if="loadError"
@@ -32,7 +32,7 @@
         @click="fileInputEl?.click()"
       >
         <span v-if="uploading">{{ $t('panorama.uploading') }}</span>
-        <span v-else>📤 {{ $t('panorama.upload') }}</span>
+        <span v-else><i class="pi pi-upload" /> {{ $t('panorama.upload') }}</span>
       </button>
       <button
         v-if="manualSource"
@@ -42,7 +42,7 @@
                ctv:border ctv:border-destructive-background/30 ctv:hover:bg-destructive-background/10"
         :title="$t('panorama.clearUploadTooltip')"
         @click="onClearManual"
-      >✕ {{ $t('panorama.clearUpload') }}</button>
+      ><i class="pi pi-times" /> {{ $t('panorama.clearUpload') }}</button>
       <span v-if="manualSource"
             class="ctv:text-2xs ctv:py-0.5 ctv:px-1.5 ctv:rounded-lg ctv:tracking-wide
                    ctv:bg-primary-background/20 ctv:text-primary-background">

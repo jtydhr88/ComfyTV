@@ -21,7 +21,7 @@
                 :disabled="disabled"
                 :aria-expanded="isOpen">
           <span class="ctv:truncate ctv:text-left">{{ display }}</span>
-          <span class="ctv:shrink-0 ctv:text-muted-foreground ctv:text-2xs">▾</span>
+          <i class="pi pi-chevron-down ctv:shrink-0 ctv:text-muted-foreground ctv:text-2xs" />
         </button>
       </ComboboxTrigger>
     </ComboboxAnchor>
@@ -60,7 +60,7 @@
                    ctv:data-[state=checked]:hover:bg-secondary-background-selected"
           >
             <span class="ctv:truncate">{{ opt.label }}</span>
-            <ComboboxItemIndicator class="ctv:flex ctv:shrink-0 ctv:items-center ctv:justify-center ctv:text-base-foreground">✓</ComboboxItemIndicator>
+            <ComboboxItemIndicator class="ctv:flex ctv:shrink-0 ctv:items-center ctv:justify-center ctv:text-base-foreground"><i class="pi pi-check" /></ComboboxItemIndicator>
           </ComboboxItem>
           <div v-if="!filteredOptions.length" class="ctv:px-3 ctv:pb-2 ctv:text-xs ctv:text-muted-foreground">
             no matches

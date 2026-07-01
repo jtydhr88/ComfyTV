@@ -146,10 +146,10 @@ describe('ValuePreview — type-driven branches', () => {
     const payload = JSON.stringify({
       images: [{ index: '1', image_url: '/x' }],
     })
-    renderWithPlugins(ValuePreview, {
+    const { container } = renderWithPlugins(ValuePreview, {
       props: { type: 'COMFYTV_IMAGES', content: payload, clickMode: 'refine' },
     })
-    expect(screen.queryByText('✓')).not.toBeInTheDocument()
+    expect(container.querySelector('.pi-check')).not.toBeInTheDocument()
   })
 
   it('TIMELINE compact mode shows the segment count', () => {

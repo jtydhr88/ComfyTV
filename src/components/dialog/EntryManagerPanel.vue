@@ -71,7 +71,7 @@
           <td class="ctv:w-24 ctv:text-right ctv:whitespace-nowrap">
             <button :class="btnClass('del')"
                     :title="$t('entries.deleteTitle', { label: entry.label })"
-                    @click="confirmDelete(entry)">🗑</button>
+                    @click="confirmDelete(entry)"><i class="pi pi-trash" /></button>
           </td>
         </tr>
 

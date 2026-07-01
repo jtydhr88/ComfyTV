@@ -5,7 +5,7 @@
                 ctv:bg-black ctv:flex ctv:items-center ctv:justify-center">
       <div v-if="!sourceImageUrl"
            class="ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50">
-        <div class="ctv:text-[32px] ctv:opacity-60">▦</div>
+        <i class="pi pi-th-large ctv:text-[32px] ctv:opacity-60" />
         <div class="ctv:text-xs">{{ $t('gridSplit.connectImage') }}</div>
       </div>
       <template v-else>

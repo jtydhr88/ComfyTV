@@ -74,7 +74,7 @@
             :class="['ctv-tile-disconnect ctv:absolute ctv:top-0.5 ctv:right-0.5 ctv:hidden', tileDisconnectBtn]"
             :title="$t('stage.disconnect')"
             @click="onDisconnect(inp.slot)"
-          >×</button>
+          ><i class="pi pi-times" /></button>
         </div>
       </div>
     </section>
@@ -86,7 +86,7 @@
              ? 'is-cancel-banner ctv:border-warning-background/55 ctv:bg-warning-background/10 ctv:text-warning-background'
              : 'ctv:border-destructive-background/55 ctv:bg-destructive-background/10 ctv:text-destructive-background',
          ]">
-      <span class="ctv:text-[13px]">{{ state.error.type === 'Cancelled' ? '⏹' : '⚠️' }}</span>
+      <i :class="['pi', state.error.type === 'Cancelled' ? 'pi-stop-circle' : 'pi-exclamation-triangle', 'ctv:text-[13px]']" />
       <span class="ctv:flex-1 ctv:break-words ctv:font-mono" :title="state.error.traceback">
         <span v-if="state.error.type"
               :class="[
@@ -101,7 +101,7 @@
         :class="tileDisconnectBtn"
         :title="$t('error.dismiss')"
         @click="onDismissError"
-      >×</button>
+      ><i class="pi pi-times" /></button>
     </div>
 
     <CustomParamsSection v-if="node" :state="state" :node="node" />
@@ -112,10 +112,10 @@
       :disabled="!state.running && !canRun"
       @click="state.running ? onCancel() : onRun()"
     >
-      <span v-if="state.running">⏹ {{ $t('stage.cancel') }}</span>
-      <span v-else-if="state.preparingWorkflow">⏳ {{ $t('stage.preparingWorkflow') }}</span>
-      <span v-else-if="state.output">↻ {{ $t('stage.rerun') }}</span>
-      <span v-else>▶ {{ $t(`stage.runByKind.${state.kind}`, $t('stage.run')) }}</span>
+      <span v-if="state.running"><i class="pi pi-stop" /> {{ $t('stage.cancel') }}</span>
+      <span v-else-if="state.preparingWorkflow"><i class="pi pi-hourglass" /> {{ $t('stage.preparingWorkflow') }}</span>
+      <span v-else-if="state.output"><i class="pi pi-refresh" /> {{ $t('stage.rerun') }}</span>
+      <span v-else><i class="pi pi-play" /> {{ $t(`stage.runByKind.${state.kind}`, $t('stage.run')) }}</span>
     </button>
 
     <div v-if="state.running" class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:mt-0.5">
@@ -156,11 +156,10 @@
           :title="$t(actionTooltipKey(state.kind, a.id))"
           @click="onActionClick(a)"
         >
-          <span class="ctv:text-xs">{{ a.icon }}</span>
+          <StageIcon :name="a.icon" class="ctv:text-xs" />
           <span class="ctv:font-semibold">{{ $t(actionLabelKey(state.kind, a.id)) }}</span>
-          <span v-if="a.presets?.length" class="ctv:ml-0.5 ctv:text-3xs ctv:opacity-70">
-            {{ openActionId === a.id ? '▾' : '▸' }}
-          </span>
+          <i v-if="a.presets?.length"
+             :class="['pi', openActionId === a.id ? 'pi-chevron-down' : 'pi-chevron-right', 'ctv:ml-0.5 ctv:text-3xs ctv:opacity-70']" />
         </button>
       </div>
       <div
@@ -175,7 +174,7 @@
           :title="$t(presetTooltipKey(p.category, p.id))"
           @click="onPresetClick(p)"
         >
-          <span class="ctv:shrink-0 ctv:text-xs">{{ p.icon }}</span>
+          <StageIcon :name="p.icon" class="ctv:shrink-0 ctv:text-xs" />
           <span class="ctv:flex-1">{{ $t(presetLabelKey(p.category, p.id)) }}</span>
         </button>
       </div>
@@ -188,6 +187,7 @@ import { computed } from 'vue'
 
 import ImageReferences from './ImageReferences.vue'
 import MainPromptInput from './MainPromptInput.vue'
+import StageIcon from '@/components/widgets/StageIcon.vue'
 import CustomParamsSection from './CustomParamsSection.vue'
 import { t } from '@/i18n'
 import ValuePreview from './ValuePreview.vue'

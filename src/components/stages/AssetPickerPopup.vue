@@ -58,7 +58,7 @@
             class="ctv:absolute ctv:top-0.5 ctv:right-0.5 ctv:flex ctv:items-center ctv:justify-center
                    ctv:size-4 ctv:rounded-full ctv:text-3xs ctv:leading-none
                    ctv:bg-primary-background ctv:text-white"
-          >✓</span>
+          ><i class="pi pi-check" /></span>
           <span class="ctv:w-full ctv:truncate ctv:py-0.5 ctv:px-1 ctv:text-left ctv:text-3xs ctv:text-muted-foreground">
             {{ asset.name || '—' }}
           </span>

@@ -68,8 +68,9 @@ describe('StageCard — base states', () => {
   })
 
   it('shows the rerun label when state already has an output', () => {
-    renderCard(makeState({ output: '/view?filename=x.png' }))
-    expect(screen.getByText(/rerun|↻/i)).toBeInTheDocument()
+    const { container } = renderCard(makeState({ output: '/view?filename=x.png' }))
+    expect(screen.getByText(/re-?run/i)).toBeInTheDocument()
+    expect(container.querySelector('.run-btn .pi-refresh')).toBeInTheDocument()
   })
 
   it('renders an error banner when state.error is set', () => {
@@ -87,7 +88,7 @@ describe('StageCard — base states', () => {
     }))
     const banner = container.querySelector('.error-row.is-cancel-banner')
     expect(banner).toBeInTheDocument()
-    expect(screen.getByText(/⏹/)).toBeInTheDocument()
+    expect(banner?.querySelector('.pi-stop-circle')).toBeInTheDocument()
   })
 
   it('hides the run button for loader stages', () => {

@@ -54,7 +54,7 @@
             v-else-if="mediaType === 'audio'"
             class="ctv:flex ctv:items-center ctv:justify-center ctv:w-full ctv:aspect-square ctv:text-2xl
                    ctv:bg-secondary-background-hover ctv:text-muted-foreground"
-          >♪</div>
+          ><i class="pi pi-volume-up" /></div>
           <img
             v-else
             :src="asset.payload_url"
@@ -70,7 +70,7 @@
             v-if="asset.id === selectedId"
             class="ctv:absolute ctv:top-1 ctv:right-1 ctv:flex ctv:items-center ctv:justify-center ctv:size-4 ctv:rounded-full
                    ctv:bg-primary-background ctv:text-base-foreground ctv:text-3xs ctv:font-bold ctv:shadow"
-          >✓</span>
+          ><i class="pi pi-check" /></span>
         </button>
       </div>
     </div>

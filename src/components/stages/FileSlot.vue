@@ -43,7 +43,7 @@
                ctv:hover:bg-destructive-background"
         :title="$t('fileSlot.remove', { kind: kindLabel })"
         @click.stop="$emit('clear')"
-      >×</button>
+      ><i class="pi pi-times" /></button>
     </template>
 
     <input

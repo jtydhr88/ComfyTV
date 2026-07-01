@@ -9,7 +9,7 @@
           : 'ctv:bg-secondary-background ctv:border-border-default ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground']"
         :title="$t('promptHelper.open')"
         @click="helperOpen = !helperOpen"
-      >✨</button>
+      ><i class="pi pi-sparkles" /></button>
       <button
         type="button"
         :class="[iconBtnClass, cameraOpen
@@ -17,7 +17,7 @@
           : 'ctv:bg-secondary-background ctv:border-border-default ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground']"
         :title="$t('cameraPrompt.open')"
         @click="cameraOpen = !cameraOpen"
-      >🎥</button>
+      ><i class="pi pi-video" /></button>
     </div>
     <PromptHelperPanel
       v-if="helperOpen"

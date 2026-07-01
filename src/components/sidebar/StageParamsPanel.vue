@@ -89,7 +89,7 @@
           :class="deleteBtn"
           :title="$t('stageParams.sidebar.delete')"
           @click="onDelete(p)"
-        >✕</button>
+        ><i class="pi pi-times" /></button>
       </div>
     </div>
   </div>

@@ -60,20 +60,20 @@
             class="ctv:ml-0.5 ctv:opacity-60 ctv:hover:opacity-100"
             :title="$t('assets.category.rename')"
             @click.stop="onRenameCategory(cat.id, cat.name)"
-          >✎</span>
+          ><i class="pi pi-pencil" /></span>
           <span
             role="button"
             class="ctv:opacity-60 ctv:hover:opacity-100 ctv:hover:text-destructive-background"
             :title="$t('assets.category.delete')"
             @click.stop="onDeleteCategory(cat.id)"
-          >✕</span>
+          ><i class="pi pi-times" /></span>
         </template>
       </button>
       <button
         :class="chipClass(false)"
         :title="$t('assets.category.new')"
         @click="onCreateCategory"
-      >＋</button>
+      ><i class="pi pi-plus" /></button>
     </div>
 
     <div class="ctv:shrink-0 ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1 ctv:py-1.5 ctv:px-2.5 ctv:border-b ctv:border-border-subtle">
@@ -95,7 +95,7 @@
       <button
         class="ctv:bg-transparent ctv:border-none ctv:cursor-pointer ctv:text-inherit ctv:opacity-70 ctv:hover:opacity-100"
         @click="uploadError = null"
-      >✕</button>
+      ><i class="pi pi-times" /></button>
     </div>
 
     <div class="ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-2.5">
@@ -130,7 +130,7 @@
             :title="assetTooltip(asset)"
             class="ctv:flex ctv:items-center ctv:justify-center ctv:w-full ctv:aspect-square ctv:text-2xl
                    ctv:bg-secondary-background-hover ctv:text-muted-foreground"
-          >♪</div>
+          ><i class="pi pi-volume-up" /></div>
           <img
             v-else
             :src="asset.payload_url"
@@ -143,7 +143,7 @@
             v-if="asset.media_type === 'video' || asset.media_type === 'audio'"
             class="ctv:absolute ctv:bottom-7 ctv:left-1 ctv:py-0 ctv:px-1 ctv:rounded ctv:text-3xs ctv:font-semibold
                    ctv:bg-black/65 ctv:text-white/90 ctv:pointer-events-none"
-          >{{ asset.media_type === 'video' ? '▶' : '♪' }}</span>
+          ><i :class="['pi', asset.media_type === 'video' ? 'pi-play' : 'pi-volume-up']" /></span>
           <div class="ctv:truncate ctv:py-0.5 ctv:px-1 ctv:text-2xs ctv:text-muted-foreground">
             {{ asset.name || '—' }}
           </div>
@@ -160,22 +160,22 @@
               :class="cardBtnClass"
               :title="$t('assets.card.loadNode')"
               @click="onLoadAssetNode(asset)"
-            >📥</button>
+            ><i class="pi pi-download" /></button>
             <button
               :class="cardBtnClass"
               :title="$t('assets.card.tags')"
               @click="openTagEditor(asset, $event)"
-            >🏷</button>
+            ><i class="pi pi-tag" /></button>
             <button
               :class="cardBtnClass"
               :title="$t('assets.card.rename')"
               @click="onRenameAsset(asset)"
-            >✎</button>
+            ><i class="pi pi-pencil" /></button>
             <button
               :class="`${cardBtnClass} ctv:hover:text-destructive-background`"
               :title="$t('assets.card.delete')"
               @click="onDeleteAsset(asset)"
-            >✕</button>
+            ><i class="pi pi-times" /></button>
           </div>
         </div>
       </div>
@@ -211,7 +211,7 @@
                  ctv:hover:bg-secondary-background-hover"
           @click="toggleTag(cat.id)"
         >
-          <span class="ctv:w-3 ctv:inline-block ctv:text-primary-background">{{ editorHas(cat.id) ? '✓' : '' }}</span>
+          <span class="ctv:w-3 ctv:inline-block ctv:text-primary-background"><i v-if="editorHas(cat.id)" class="pi pi-check" /></span>
           <span class="ctv:flex-1 ctv:truncate">{{ cat.name }}</span>
         </button>
       </div>
