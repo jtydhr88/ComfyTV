@@ -89238,12 +89238,8 @@ function mountStage(node, kind, variant = "generator") {
     color: "var(--input-text, #e0e0e0)",
     fontSize: "12px"
   });
-  const measuredMinHeight = () => {
-    const inner = container.firstElementChild;
-    return Math.max(floor2, (inner == null ? void 0 : inner.scrollHeight) ?? 0);
-  };
   node.addDOMWidget("comfytv_stage", "stage", container, {
-    getMinHeight: measuredMinHeight,
+    getMinHeight: () => floor2,
     hideOnZoom: false,
     serialize: false
   });

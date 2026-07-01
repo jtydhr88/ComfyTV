@@ -125,13 +125,8 @@ function mountStage(node: ComfyNode, kind: StageKind, variant: StageVariant = 'g
     fontSize: '12px',
   })
 
-  const measuredMinHeight = () => {
-    const inner = container.firstElementChild as HTMLElement | null
-    return Math.max(floor, inner?.scrollHeight ?? 0)
-  }
-
   node.addDOMWidget('comfytv_stage', 'stage', container, {
-    getMinHeight: measuredMinHeight,
+    getMinHeight: () => floor,
     hideOnZoom: false,
     serialize: false,
   })
