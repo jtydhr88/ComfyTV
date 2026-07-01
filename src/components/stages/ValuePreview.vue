@@ -4,7 +4,12 @@
 
     <div v-if="!hasContent" :class="emptyClass">{{ emptyLabel }}</div>
 
-    <pre v-else-if="type === 'COMFYTV_TEXT'" :class="textClass">{{ content }}</pre>
+    <pre v-else-if="type === 'COMFYTV_TEXT' && compact" :class="textClass">{{ content }}</pre>
+
+    <div v-else-if="type === 'COMFYTV_TEXT'" class="ctv:relative ctv:flex-1 ctv:min-h-[160px]">
+      <pre class="vp-text-scroll ctv:absolute ctv:inset-0 ctv:m-0 ctv:py-0.5 ctv:px-1 ctv:overflow-y-auto
+                  ctv:whitespace-pre-wrap ctv:break-words ctv:text-[11px] ctv:leading-snug ctv:font-mono ctv:text-base-foreground">{{ content }}</pre>
+    </div>
 
     <div
       v-else-if="(type === 'COMFYTV_IMAGE' || type === 'COMFYTV_PANORAMA') && !compact"
@@ -435,14 +440,10 @@ const emptyClass = computed(() =>
     : 'ctv:flex ctv:items-center ctv:justify-center ctv:h-full ctv:min-h-10 ctv:text-[11px] ctv:italic ctv:opacity-50'
 )
 
-const textClass = computed(() => {
-  if (props.compact) {
-    return 'ctv:m-0 ctv:p-1 ctv:max-h-full ctv:text-2xs ctv:leading-[1.3] ctv:overflow-hidden ctv:whitespace-pre-wrap ctv:font-mono ctv:break-words ctv:text-base-foreground'
-         + ' ctv:[display:-webkit-box] ctv:[-webkit-line-clamp:5] ctv:[-webkit-box-orient:vertical]'
-  }
-  return 'ctv:m-0 ctv:py-0.5 ctv:px-1 ctv:max-h-[120px] ctv:overflow-auto ctv:whitespace-pre-wrap ctv:break-words'
-       + ' ctv:text-[11px] ctv:leading-snug ctv:font-mono ctv:text-base-foreground'
-})
+const textClass = computed(() =>
+  'ctv:m-0 ctv:p-1 ctv:max-h-full ctv:text-2xs ctv:leading-[1.3] ctv:overflow-hidden ctv:whitespace-pre-wrap ctv:font-mono ctv:break-words ctv:text-base-foreground'
+  + ' ctv:[display:-webkit-box] ctv:[-webkit-line-clamp:5] ctv:[-webkit-box-orient:vertical]'
+)
 
 const imgClass = computed(() =>
   props.compact
@@ -501,6 +502,26 @@ function batchCellClass(selected: boolean) {
 </script>
 
 <style scoped>
+.vp-text-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.35) transparent;
+}
+.vp-text-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+.vp-text-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.vp-text-scroll::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.35);
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+.vp-text-scroll:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.55);
+}
+
 .ctv-batch-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
