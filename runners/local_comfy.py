@@ -230,6 +230,17 @@ _BATCH_OUTPUT_KINDS = {
 }
 
 
+_TEXT_OUTPUT_NODES = (
+    "SaveText",
+    "SaveText|pysssss",
+    "ShowText|pysssss",
+    "ShowText",
+    "PreviewAny",
+    "Display Any (rgthree)",
+    "DisplayAny",
+)
+
+
 def _auto_detect_result(workflow: dict, ctx_kind: str | None = None) -> dict:
     image_default = (
         'ui_save_batch' if ctx_kind in _BATCH_OUTPUT_KINDS else 'ui_save_url'
@@ -252,9 +263,18 @@ def _auto_detect_result(workflow: dict, ctx_kind: str | None = None) -> dict:
         ct = node.get("class_type")
         if isinstance(ct, str) and ct in save_node_result:
             return {"type": save_node_result[ct], "node": node_id}
+
+    for wanted in _TEXT_OUTPUT_NODES:
+        for node_id, node in workflow.items():
+            if isinstance(node, dict) and node.get("class_type") == wanted:
+                return {"type": "graph_output_first", "node": node_id}
+
     raise RuntimeError(
-        "No save-class node found in workflow — declare `result` on the "
-        "workflow row (sidebar editor doesn't expose this yet; set via DB)."
+        "Couldn't auto-detect this workflow's result node: it has no save-class "
+        "node (SaveImage / SaveVideo / SaveAudio…) and no text-output node "
+        "(PreviewAny / ShowText / SaveText). Select the stage on the canvas, "
+        "open the ComfyTV sidebar, and pick a node under 'Result' to tell "
+        "ComfyTV which node produces this stage's output."
     )
 
 
@@ -581,8 +601,9 @@ class LocalComfyUIRunner(Runner):
         result_node = result_meta.get("node")
         if not result_node:
             raise RuntimeError(
-                f"{self.id}: result.node missing — declare `result` in the "
-                f"workflow's `_preset.json` (or re-export with a SaveImage)."
+                f"{self.id}: no result node — select the stage on the canvas, "
+                f"open the ComfyTV sidebar, and pick a node under 'Result' "
+                f"(or ship a `_preset.json` declaring `result`)."
             )
 
         sub_prompt_id = f"comfytv-{uuid.uuid4().hex[:8]}"

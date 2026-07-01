@@ -177,6 +177,14 @@ export const ExposedWidgetSchema = z.object({
   cast: z.string().nullable(),
 })
 
+export const GuiNodeSchema = z.object({
+  id: z.string(),
+  type: z.string(),
+  title: z.string().nullable().optional(),
+  is_output: z.boolean().nullable().optional(),
+  out_type: z.string().nullable().optional(),
+}).passthrough()
+
 export const WorkflowConfigSchema = z.object({
   id: z.number(),
   kind: z.string(),
@@ -185,6 +193,9 @@ export const WorkflowConfigSchema = z.object({
   description: z.string().nullable(),
   gui_notes: z.array(z.object({ type: z.string(), text: z.string() })),
   exposed_widgets: z.array(ExposedWidgetSchema),
+  gui_nodes: z.array(GuiNodeSchema).optional(),
+  result_type: z.string().nullable().optional(),
+  result_node: z.string().nullable().optional(),
 }).passthrough()
 export type WorkflowConfig = z.infer<typeof WorkflowConfigSchema>
 

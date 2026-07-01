@@ -524,9 +524,9 @@ class TestAutoDetectResult:
             "type": "ui_save_url", "node": "7",
         }
 
-    def test_no_save_node_raises(self):
+    def test_no_output_node_raises(self):
         wf = {"1": {"class_type": "KSampler", "inputs": {}}}
-        with pytest.raises(RuntimeError, match="No save-class node"):
+        with pytest.raises(RuntimeError, match="auto-detect this workflow's result"):
             lc._auto_detect_result(wf, "image")
 
     def test_skips_non_dict_entries(self):
@@ -535,6 +535,39 @@ class TestAutoDetectResult:
             "9": {"class_type": "SaveImage", "inputs": {}},
         }
         assert lc._auto_detect_result(wf, "image")["node"] == "9"
+
+    def test_text_previewany_graph_output_first(self):
+        wf = {
+            "1": {"class_type": "TextGenerate", "inputs": {}},
+            "3": {"class_type": "PreviewAny", "inputs": {}},
+        }
+        assert lc._auto_detect_result(wf, "text") == {
+            "type": "graph_output_first", "node": "3",
+        }
+
+    def test_text_showtext_detected(self):
+        wf = {"4": {"class_type": "ShowText|pysssss", "inputs": {}}}
+        assert lc._auto_detect_result(wf, "text") == {
+            "type": "graph_output_first", "node": "4",
+        }
+
+    def test_savetext_preferred_over_previewany(self):
+        wf = {
+            "3": {"class_type": "PreviewAny", "inputs": {}},
+            "8": {"class_type": "SaveText", "inputs": {}},
+        }
+        assert lc._auto_detect_result(wf, "text") == {
+            "type": "graph_output_first", "node": "8",
+        }
+
+    def test_media_save_node_beats_text_node(self):
+        wf = {
+            "3": {"class_type": "PreviewAny", "inputs": {}},
+            "9": {"class_type": "SaveImage", "inputs": {}},
+        }
+        assert lc._auto_detect_result(wf, "image") == {
+            "type": "ui_save_batch", "node": "9",
+        }
 
 
 # ─── _apply_prunes ───────────────────────────────────────────────────────────

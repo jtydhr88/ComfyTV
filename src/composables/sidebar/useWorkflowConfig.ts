@@ -151,6 +151,22 @@ export function useWorkflowConfig(t: (key: string, args?: Record<string, unknown
     }
   }
 
+  async function postMeta(payload: Record<string, unknown>) {
+    if (!config.value) return
+    try {
+      await apiSend('/comfytv/workflows/config/meta', 'POST', OkSchema, {
+        workflow_id: config.value.id, ...payload,
+      })
+      const sel = selection.selected
+      if (sel?.workflowKind && sel?.workflowLabel) {
+        await loadConfig(sel.workflowKind, sel.workflowLabel)
+      }
+      invalidateWorkflowInfo()
+    } catch (e: any) {
+      loadError.value = `save failed: ${e?.message || e}`
+    }
+  }
+
   async function deleteBinding(node_id: string, widget_name: string) {
     if (!config.value) return
     try {
@@ -176,5 +192,6 @@ export function useWorkflowConfig(t: (key: string, args?: Record<string, unknown
     onUploadApiSidecar,
     postBinding,
     deleteBinding,
+    postMeta,
   }
 }

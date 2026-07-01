@@ -223,10 +223,21 @@
     "uploadApiOk": "API prompt saved ({n} nodes) — workflow ready.",
     "uploadApiFailed": "Upload failed: {detail}",
     "uploadApiNotJson": "Not valid JSON.",
+    "resultNode": "Node",
+    "resultAutoDetect": "(auto-detect)",
+    "resultHintAuto": "Auto-detected from save / preview nodes. Pick a node to override which one produces this stage's output.",
+    "resultHintSet": "This node's output is used as the stage result.",
+    "resultType": {
+      "label": "As",
+      "text": "Text / value (slot 0)",
+      "file": "Saved file (image / video / audio)",
+      "batch": "Saved image batch"
+    },
     "section": {
       "widgets": "Widgets",
       "notes": "Workflow notes",
-      "description": "Description"
+      "description": "Description",
+      "result": "Result"
     }
   },
   "project": {

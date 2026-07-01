@@ -12,6 +12,14 @@ export interface ExposedWidget {
   cast: string | null
 }
 
+export interface GuiNode {
+  id: string
+  type: string
+  title?: string | null
+  is_output?: boolean | null
+  out_type?: string | null
+}
+
 export interface ConfigPayload {
   id: number
   kind: string
@@ -20,6 +28,53 @@ export interface ConfigPayload {
   description: string | null
   gui_notes: Array<{ type: string; text: string }>
   exposed_widgets: ExposedWidget[]
+  gui_nodes?: GuiNode[]
+  result_type?: string | null
+  result_node?: string | null
+}
+
+export const AUTO_RESULT_NODE = '__AUTO__'
+
+export type ResultType = 'graph_output_first' | 'ui_save_batch' | 'ui_save_url'
+
+const TEXT_RESULT_KINDS = new Set(['text', 'storyboard'])
+const BATCH_RESULT_KINDS = new Set(['image', 'shot-images', 'multiview', 'sequence'])
+
+export function resultTypesForKind(kind: string | null | undefined): ResultType[] {
+  if (!kind) return ['graph_output_first', 'ui_save_batch', 'ui_save_url']
+  if (TEXT_RESULT_KINDS.has(kind)) return ['graph_output_first']
+  if (BATCH_RESULT_KINDS.has(kind)) return ['ui_save_batch', 'ui_save_url']
+  return ['ui_save_url']
+}
+
+export function isResultNodeCandidate(node: GuiNode, kind: string | null | undefined): boolean {
+  if (node.is_output == null && node.out_type == null) return true
+  if (node.is_output) return true
+  if (!kind || TEXT_RESULT_KINDS.has(kind)) return node.out_type === 'STRING'
+  return false
+}
+
+export function buildResultNodeOptions(
+  guiNodes: GuiNode[] | undefined,
+  autoLabel: string,
+  kind?: string | null,
+  keepId?: string | null,
+): Array<{ value: string; label: string }> {
+  const out = [{ value: AUTO_RESULT_NODE, label: autoLabel }]
+  const all = guiNodes ?? []
+  let nodes = all
+  if (kind !== undefined) {
+    nodes = all.filter(
+      n => isResultNodeCandidate(n, kind) || (keepId != null && String(n.id) === String(keepId)),
+    )
+    if (!nodes.length) nodes = all
+  }
+  for (const n of nodes) {
+    const id = String(n.id)
+    const title = n.title && n.title !== n.type ? `${n.title} ` : ''
+    out.push({ value: id, label: `${title}(${n.type}) #${id}` })
+  }
+  return out
 }
 
 export interface NodeBlock {

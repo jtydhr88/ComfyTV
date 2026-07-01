@@ -264,6 +264,25 @@ def _exposed_widgets(workflow_id: int, file_path: str,
     return out
 
 
+def _node_output_meta(class_type: str) -> tuple[Optional[bool], Optional[str]]:
+    import nodes
+    cls = (
+        getattr(nodes, "NODE_CLASS_MAPPINGS", {}).get(class_type)
+        if hasattr(nodes, "NODE_CLASS_MAPPINGS") else None
+    )
+    if cls is None:
+        return None, None
+    is_output = bool(getattr(cls, "OUTPUT_NODE", False))
+    rt = getattr(cls, "RETURN_TYPES", ()) or ()
+    out0: Optional[str] = None
+    if isinstance(rt, (list, tuple)) and rt:
+        first = rt[0]
+        val = first.value if hasattr(first, "value") else first
+        if isinstance(val, str):
+            out0 = val
+    return is_output, out0
+
+
 def _extract_gui_view(file_path: str) -> dict:
     if not file_path or not os.path.exists(file_path):
         return {}
@@ -291,14 +310,17 @@ def _extract_gui_view(file_path: str) -> dict:
                 "text": text,
             })
             continue
+        is_output, out_type = _node_output_meta(ntype)
         gui_nodes.append({
-            "id":      str(nid) if nid is not None else "",
-            "type":    ntype,
-            "title":   n.get("title"),
-            "pos":     n.get("pos"),
-            "color":   n.get("color"),
-            "bgcolor": n.get("bgcolor"),
-            "mode":    n.get("mode", 0),
+            "id":        str(nid) if nid is not None else "",
+            "type":      ntype,
+            "title":     n.get("title"),
+            "pos":       n.get("pos"),
+            "color":     n.get("color"),
+            "bgcolor":   n.get("bgcolor"),
+            "mode":      n.get("mode", 0),
+            "is_output": is_output,
+            "out_type":  out_type,
         })
 
     gui_groups = []

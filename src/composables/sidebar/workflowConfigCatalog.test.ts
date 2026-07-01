@@ -27,9 +27,13 @@ vi.mock('@/api', () => ({
 import { fetchCaps } from '@/api'
 
 import {
+  AUTO_RESULT_NODE,
   buildBindingOptions,
+  buildResultNodeOptions,
   groupExposedWidgets,
+  isResultNodeCandidate,
   loadCaps,
+  resultTypesForKind,
   type ExposedWidget,
 } from './workflowConfigCatalog'
 
@@ -181,5 +185,96 @@ describe('groupExposedWidgets', () => {
     expect(groups).toHaveLength(2)
     expect(groups[0].nodes[0].widgets[0].widget_name).toBe('x')
     expect(groups[1].nodes[0].widgets[0].widget_name).toBe('y')
+  })
+})
+
+describe('buildResultNodeOptions', () => {
+  it('leads with a non-empty auto-detect sentinel so it stays selectable', () => {
+    const opts = buildResultNodeOptions(
+      [{ id: '3', type: 'PreviewAny', title: 'Global Context' }],
+      '(auto-detect)',
+    )
+    expect(opts[0]).toEqual({ value: AUTO_RESULT_NODE, label: '(auto-detect)' })
+    expect(AUTO_RESULT_NODE).not.toBe('')
+    expect(opts[1]).toEqual({ value: '3', label: 'Global Context (PreviewAny) #3' })
+  })
+
+  it('omits the title when it equals the node type', () => {
+    const opts = buildResultNodeOptions([{ id: '5', type: 'SaveText', title: 'SaveText' }], 'auto')
+    expect(opts[1].label).toBe('(SaveText) #5')
+  })
+
+  it('handles missing gui nodes', () => {
+    expect(buildResultNodeOptions(undefined, 'auto')).toEqual([{ value: AUTO_RESULT_NODE, label: 'auto' }])
+  })
+
+  it('filters out non-output nodes for a text kind', () => {
+    const nodes = [
+      { id: '1', type: 'TextGenerate', out_type: 'STRING', is_output: false },
+      { id: '2', type: 'CLIPLoader',   out_type: 'CLIP',   is_output: false },
+      { id: '3', type: 'PreviewAny',   out_type: 'STRING', is_output: true },
+    ]
+    const opts = buildResultNodeOptions(nodes, 'auto', 'text')
+    expect(opts.map(o => o.value)).toEqual([AUTO_RESULT_NODE, '1', '3'])
+  })
+
+  it('keeps the currently-selected node even if it would be filtered', () => {
+    const nodes = [{ id: '2', type: 'CLIPLoader', out_type: 'CLIP', is_output: false }]
+    const opts = buildResultNodeOptions(nodes, 'auto', 'text', '2')
+    expect(opts.map(o => o.value)).toEqual([AUTO_RESULT_NODE, '2'])
+  })
+
+  it('falls back to all nodes when nothing passes the filter', () => {
+    const nodes = [{ id: '2', type: 'CLIPLoader', out_type: 'CLIP', is_output: false }]
+    const opts = buildResultNodeOptions(nodes, 'auto', 'text')
+    expect(opts.map(o => o.value)).toEqual([AUTO_RESULT_NODE, '2'])
+  })
+})
+
+describe('isResultNodeCandidate', () => {
+  it('keeps output nodes for any kind', () => {
+    const save = { id: '9', type: 'SaveImage', is_output: true, out_type: null }
+    expect(isResultNodeCandidate(save, 'image')).toBe(true)
+    expect(isResultNodeCandidate(save, 'text')).toBe(true)
+  })
+
+  it('text kind keeps STRING producers, drops others', () => {
+    expect(isResultNodeCandidate({ id: '1', type: 'TextGenerate', out_type: 'STRING', is_output: false }, 'text')).toBe(true)
+    expect(isResultNodeCandidate({ id: '2', type: 'CLIPLoader', out_type: 'CLIP', is_output: false }, 'text')).toBe(false)
+  })
+
+  it('media kind drops non-output nodes even if they output something', () => {
+    expect(isResultNodeCandidate({ id: '5', type: 'VAEDecode', out_type: 'IMAGE', is_output: false }, 'image')).toBe(false)
+  })
+
+  it('keeps nodes whose class could not be resolved (subgraph interiors)', () => {
+    expect(isResultNodeCandidate({ id: '1:2', type: 'Whatever', is_output: null, out_type: null }, 'text')).toBe(true)
+  })
+})
+
+describe('resultTypesForKind', () => {
+  it('text-producing kinds get only slot-0 output', () => {
+    expect(resultTypesForKind('text')).toEqual(['graph_output_first'])
+    expect(resultTypesForKind('storyboard')).toEqual(['graph_output_first'])
+  })
+
+  it('batch kinds get batch + single file', () => {
+    expect(resultTypesForKind('image')).toEqual(['ui_save_batch', 'ui_save_url'])
+    expect(resultTypesForKind('multiview')).toEqual(['ui_save_batch', 'ui_save_url'])
+    expect(resultTypesForKind('sequence')).toEqual(['ui_save_batch', 'ui_save_url'])
+  })
+
+  it('other media kinds get a single file only', () => {
+    expect(resultTypesForKind('video')).toEqual(['ui_save_url'])
+    expect(resultTypesForKind('audio')).toEqual(['ui_save_url'])
+    expect(resultTypesForKind('inpaint')).toEqual(['ui_save_url'])
+    expect(resultTypesForKind('panorama')).toEqual(['ui_save_url'])
+  })
+
+  it('falls back to all types for unknown/empty kind', () => {
+    expect(resultTypesForKind(undefined)).toEqual(
+      ['graph_output_first', 'ui_save_batch', 'ui_save_url'],
+    )
+    expect(resultTypesForKind('')).toHaveLength(3)
   })
 })

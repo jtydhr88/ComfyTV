@@ -146,6 +146,31 @@
         </template>
       </div>
 
+      <section v-if="config.has_api">
+        <h3 :class="sectionHeading">{{ $t('configSidebar.section.result') }}</h3>
+        <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:px-1">
+          <div class="ctv:grid ctv:grid-cols-[42px_1fr] ctv:items-center ctv:gap-1.5">
+            <span class="ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">{{ $t('configSidebar.resultNode') }}</span>
+            <ComfyTVSelect
+              :model-value="resultNodeModel"
+              :options="resultNodeOptions"
+              @update:model-value="onResultNodeChange($event as string)"
+            />
+          </div>
+          <div v-if="hasResultNode && resultTypeOptions.length > 1" class="ctv:grid ctv:grid-cols-[42px_1fr] ctv:items-center ctv:gap-1.5">
+            <span class="ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">{{ $t('configSidebar.resultType.label') }}</span>
+            <ComfyTVSelect
+              :model-value="resultType"
+              :options="resultTypeOptions"
+              @update:model-value="onResultTypeChange($event as string)"
+            />
+          </div>
+          <p class="ctv:m-0 ctv:text-2xs ctv:italic ctv:text-muted-foreground/60">
+            {{ hasResultNode ? $t('configSidebar.resultHintSet') : $t('configSidebar.resultHintAuto') }}
+          </p>
+        </div>
+      </section>
+
       <section v-if="config.description">
         <h3 :class="sectionHeading">{{ $t('configSidebar.section.description') }}</h3>
         <p class="ctv:m-0 ctv:text-xs ctv:whitespace-pre-wrap ctv:text-muted-foreground">{{ config.description }}</p>
@@ -183,9 +208,12 @@ import { useBindingWriter } from '@/composables/sidebar/useBindingWriter'
 import { useCollapsedFlag, useCollapsedNodeIds } from '@/composables/sidebar/useCollapsedState'
 import { useWorkflowConfig } from '@/composables/sidebar/useWorkflowConfig'
 import {
+  AUTO_RESULT_NODE,
   buildBindingOptions,
+  buildResultNodeOptions,
   groupExposedWidgets,
   loadCaps,
+  resultTypesForKind,
   type NodeBlock,
 } from '@/composables/sidebar/workflowConfigCatalog'
 import { useSelectionStore } from '@/stores/selectionStore'
@@ -206,7 +234,49 @@ const {
   onUploadApiSidecar,
   postBinding,
   deleteBinding,
+  postMeta,
 } = useWorkflowConfig(t)
+
+const RESULT_TYPE_LABEL_KEY: Record<string, string> = {
+  graph_output_first: 'configSidebar.resultType.text',
+  ui_save_url:        'configSidebar.resultType.file',
+  ui_save_batch:      'configSidebar.resultType.batch',
+}
+
+const selectedResultNode = computed(() => config.value?.result_node ?? '')
+const hasResultNode = computed(() => !!selectedResultNode.value)
+const resultNodeModel = computed(() => selectedResultNode.value || AUTO_RESULT_NODE)
+
+const allowedResultTypes = computed(() => resultTypesForKind(config.value?.kind))
+const defaultResultType = computed(() => allowedResultTypes.value[0])
+const resultType = computed(() => config.value?.result_type || defaultResultType.value)
+
+const resultNodeOptions = computed(() =>
+  buildResultNodeOptions(
+    config.value?.gui_nodes,
+    t('configSidebar.resultAutoDetect'),
+    config.value?.kind,
+    selectedResultNode.value,
+  ),
+)
+const resultTypeOptions = computed(() => {
+  const values = [...allowedResultTypes.value] as string[]
+  const cur = config.value?.result_type
+  if (cur && !values.includes(cur)) values.unshift(cur)
+  return values.map(v => ({ value: v, label: t(RESULT_TYPE_LABEL_KEY[v] ?? v) }))
+})
+
+function onResultNodeChange(nodeId: string) {
+  if (!nodeId || nodeId === AUTO_RESULT_NODE) {
+    void postMeta({ result_node: null, result_type: null })
+  } else {
+    void postMeta({ result_node: nodeId, result_type: resultType.value })
+  }
+}
+function onResultTypeChange(type: string) {
+  if (!selectedResultNode.value) return
+  void postMeta({ result_node: selectedResultNode.value, result_type: type })
+}
 
 const workflowId = computed(() => config.value?.id ?? null)
 const { isCollapsed, toggle: toggleCollapsed } = useCollapsedNodeIds(workflowId)

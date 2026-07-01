@@ -223,10 +223,21 @@
     "uploadApiOk": "API prompt 已保存（{n} 个节点）——工作流就绪。",
     "uploadApiFailed": "上传失败: {detail}",
     "uploadApiNotJson": "不是合法的 JSON。",
+    "resultNode": "节点",
+    "resultAutoDetect": "(自动检测)",
+    "resultHintAuto": "默认从 save / preview 节点自动检测。选择一个节点可手动指定由哪个节点产出本阶段的输出。",
+    "resultHintSet": "该节点的输出将作为本阶段的结果。",
+    "resultType": {
+      "label": "类型",
+      "text": "文本 / 值 (slot 0)",
+      "file": "保存的文件 (图片 / 视频 / 音频)",
+      "batch": "保存的图片批次"
+    },
     "section": {
       "widgets": "Widget 列表",
       "notes": "工作流笔记",
-      "description": "说明"
+      "description": "说明",
+      "result": "结果输出"
     }
   },
   "project": {
