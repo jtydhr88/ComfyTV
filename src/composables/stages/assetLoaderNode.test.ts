@@ -1,6 +1,8 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { assetLoaderClass, canvasCenter, createAssetLoaderNode } from './assetLoaderNode'
+import { app } from '@/lib/comfyApp'
+
+import { assetLoaderClass, canvasCenter, clientToCanvasPos, createAssetLoaderNode } from './assetLoaderNode'
 
 function makeNode() {
   return {
@@ -77,5 +79,34 @@ describe('createAssetLoaderNode', () => {
 describe('canvasCenter', () => {
   it('falls back to the origin when canvas geometry is unavailable', () => {
     expect(canvasCenter()).toEqual([0, 0])
+  })
+})
+
+describe('clientToCanvasPos', () => {
+  const original = (app as any).canvas
+
+  afterEach(() => {
+    ;(app as any).canvas = original
+  })
+
+  it('uses convertCanvasToOffset against the client point minus the canvas rect', () => {
+    ;(app as any).canvas = {
+      canvas: { getBoundingClientRect: () => ({ left: 10, top: 20 }) },
+      ds: { convertCanvasToOffset: (v: number[]) => [v[0] + 1, v[1] + 2] },
+    }
+    expect(clientToCanvasPos(110, 220)).toEqual([101, 202])
+  })
+
+  it('falls back to scale + offset when convertCanvasToOffset is missing', () => {
+    ;(app as any).canvas = {
+      canvas: { getBoundingClientRect: () => ({ left: 0, top: 0 }) },
+      ds: { scale: 2, offset: [5, 7] },
+    }
+    expect(clientToCanvasPos(40, 60)).toEqual([15, 23])
+  })
+
+  it('returns the raw client point when no transform state is available', () => {
+    ;(app as any).canvas = {}
+    expect(clientToCanvasPos(33, 44)).toEqual([33, 44])
   })
 })

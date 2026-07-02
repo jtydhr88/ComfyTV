@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('@/lib/comfyApp', () => ({ app: {} }))
+vi.mock('@/lib/comfyApp', () => ({ app: { canvas: { canvas: undefined } } }))
 vi.mock('@/stores/assetStore', () => ({ useAssetStore: vi.fn() }))
 vi.mock('@/composables/stages/assetLoaderNode', () => ({
   clientToCanvasPos: vi.fn(() => [100, 200]),
@@ -84,5 +84,68 @@ describe('handleAssetDrop', () => {
       expect(e.stopPropagation).toHaveBeenCalled()
     }
     expect(createAssetLoaderNode).not.toHaveBeenCalled()
+  })
+})
+
+describe('installAssetCanvasDrop', () => {
+  it('attaches dragover + drop listeners once the graph canvas exists', async () => {
+    vi.resetModules()
+    const { app } = await import('@/lib/comfyApp')
+    const el = { addEventListener: vi.fn() }
+    ;(app as any).canvas.canvas = el
+    const mod = await import('./assetCanvasDrop')
+
+    mod.installAssetCanvasDrop({} as any)
+
+    expect(el.addEventListener).toHaveBeenCalledWith('dragover', expect.any(Function))
+    expect(el.addEventListener).toHaveBeenCalledWith('drop', expect.any(Function))
+  })
+
+  it('is idempotent — a second call attaches nothing more', async () => {
+    vi.resetModules()
+    const { app } = await import('@/lib/comfyApp')
+    const el = { addEventListener: vi.fn() }
+    ;(app as any).canvas.canvas = el
+    const mod = await import('./assetCanvasDrop')
+
+    mod.installAssetCanvasDrop({} as any)
+    el.addEventListener.mockClear()
+    mod.installAssetCanvasDrop({} as any)
+
+    expect(el.addEventListener).not.toHaveBeenCalled()
+  })
+
+  it('retries on the next frame while the canvas is absent', async () => {
+    vi.resetModules()
+    const { app } = await import('@/lib/comfyApp')
+    ;(app as any).canvas.canvas = undefined
+    const raf = vi.spyOn(window, 'requestAnimationFrame').mockReturnValue(0 as any)
+    const mod = await import('./assetCanvasDrop')
+
+    mod.installAssetCanvasDrop({} as any)
+
+    expect(raf).toHaveBeenCalledWith(expect.any(Function))
+    raf.mockRestore()
+  })
+
+  it('resolves the dropped asset through the store on a real drop', async () => {
+    vi.resetModules()
+    const storeMod = await import('@/stores/assetStore')
+    const byId = vi.fn(() => asset)
+    ;(storeMod.useAssetStore as any).mockReturnValue({ byId })
+    const { app } = await import('@/lib/comfyApp')
+    let dropHandler: ((e: DragEvent) => void) | undefined
+    const el = {
+      addEventListener: vi.fn((type: string, fn: any) => {
+        if (type === 'drop') dropHandler = fn
+      }),
+    }
+    ;(app as any).canvas.canvas = el
+    const mod = await import('./assetCanvasDrop')
+
+    mod.installAssetCanvasDrop({} as any)
+    dropHandler?.(dragEvent([mod.ASSET_DRAG_MIME], '7'))
+
+    expect(byId).toHaveBeenCalledWith(7)
   })
 })
