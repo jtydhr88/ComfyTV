@@ -37,6 +37,28 @@ export function canvasCenter(): [number, number] {
   return [0, 0]
 }
 
+export function clientToCanvasPos(clientX: number, clientY: number): [number, number] {
+  try {
+    const canvas = (app as any)?.canvas
+    const ds = canvas?.ds
+    const el = canvas?.canvas
+    const rect = el?.getBoundingClientRect?.()
+    const x = clientX - (rect?.left ?? 0)
+    const y = clientY - (rect?.top ?? 0)
+    if (ds?.convertCanvasToOffset) {
+      const out = ds.convertCanvasToOffset([x, y], [0, 0])
+      if (Array.isArray(out)) return [out[0], out[1]]
+    }
+    const scale = ds?.scale || 1
+    const off = ds?.offset
+    if (off) return [x / scale - off[0], y / scale - off[1]]
+    return [x, y]
+  } catch (e) {
+    console.warn('[ComfyTV/asset-loader] clientToCanvasPos failed', e)
+    return [0, 0]
+  }
+}
+
 export interface SpawnAssetLoaderOpts {
   anchor?: 'topleft' | 'center'
   select?: boolean

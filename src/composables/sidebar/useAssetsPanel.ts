@@ -3,13 +3,12 @@ import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import type { Asset } from '@/api/schemas'
+import { ASSET_DRAG_MIME } from '@/composables/sidebar/assetCanvasDrop'
 import { canvasCenter, createAssetLoaderNode } from '@/composables/stages/assetLoaderNode'
 import { askConfirm } from '@/composables/dialog/useConfirmDialog'
 import { askText } from '@/composables/dialog/useTextInputDialog'
 import { type AssetCategoryFilter, useAssetStore } from '@/stores/assetStore'
 import { uploadBlobNamed } from '@/utils/uploadCanvas'
-
-const ASSET_DRAG_MIME = 'application/x-comfytv-asset-id'
 
 function stripExtension(filename: string): string {
   const i = filename.lastIndexOf('.')
@@ -315,7 +314,9 @@ export function useAssetsPanel(isActive: () => boolean | undefined) {
   }
 
   function onAssetDragStart(asset: Asset, e: DragEvent) {
-    e.dataTransfer?.setData(ASSET_DRAG_MIME, String(asset.id))
+    if (!e.dataTransfer) return
+    e.dataTransfer.setData(ASSET_DRAG_MIME, String(asset.id))
+    e.dataTransfer.effectAllowed = 'copy'
   }
 
   function onChipDrop(categoryId: number, e: DragEvent) {

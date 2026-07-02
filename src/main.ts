@@ -35,6 +35,7 @@ import { useDialogStore } from '@/stores/dialogStore'
 import EntryManagerPanel from '@/components/dialog/EntryManagerPanel.vue'
 import { useExecutionStore } from '@/stores/executionStore'
 import { useSelectionStore } from '@/stores/selectionStore'
+import { installAssetCanvasDrop } from '@/composables/sidebar/assetCanvasDrop'
 import { i18n } from '@/i18n'
 
 import './tailwind.css'
@@ -217,6 +218,8 @@ const extension: ComfyExtension = {
     checkThemeTokens()
     const selection = useSelectionStore()
     const a = app as any
+
+    installAssetCanvasDrop(pinia)
 
     installGlobalRunBridge(a, {
       resolveStore: () => useStageStore(pinia),

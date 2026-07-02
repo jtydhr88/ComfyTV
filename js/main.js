@@ -14686,6 +14686,28 @@ function canvasCenter() {
   }
   return [0, 0];
 }
+function clientToCanvasPos(clientX, clientY) {
+  var _a2;
+  try {
+    const canvas = app == null ? void 0 : app.canvas;
+    const ds = canvas == null ? void 0 : canvas.ds;
+    const el = canvas == null ? void 0 : canvas.canvas;
+    const rect = (_a2 = el == null ? void 0 : el.getBoundingClientRect) == null ? void 0 : _a2.call(el);
+    const x = clientX - ((rect == null ? void 0 : rect.left) ?? 0);
+    const y = clientY - ((rect == null ? void 0 : rect.top) ?? 0);
+    if (ds == null ? void 0 : ds.convertCanvasToOffset) {
+      const out = ds.convertCanvasToOffset([x, y], [0, 0]);
+      if (Array.isArray(out)) return [out[0], out[1]];
+    }
+    const scale = (ds == null ? void 0 : ds.scale) || 1;
+    const off = ds == null ? void 0 : ds.offset;
+    if (off) return [x / scale - off[0], y / scale - off[1]];
+    return [x, y];
+  } catch (e) {
+    console.warn("[ComfyTV/asset-loader] clientToCanvasPos failed", e);
+    return [0, 0];
+  }
+}
 function createAssetLoaderNode(asset, pos, opts = {}) {
   var _a2, _b2, _c, _d, _e, _f, _g, _h;
   const win = window;
@@ -14713,197 +14735,6 @@ function createAssetLoaderNode(asset, pos, opts = {}) {
   if (opts.select) (_f = (_e = app == null ? void 0 : app.canvas) == null ? void 0 : _e.selectNode) == null ? void 0 : _f.call(_e, node);
   (_h = (_g = app == null ? void 0 : app.graph) == null ? void 0 : _g.setDirtyCanvas) == null ? void 0 : _h.call(_g, true, true);
   return node;
-}
-const _hoisted_1$N = { class: "ctv:flex ctv:flex-col ctv:gap-3" };
-const _hoisted_2$H = { class: "ctv:m-0 ctv:text-xs ctv:leading-relaxed ctv:text-base-foreground ctv:whitespace-pre-wrap" };
-const _hoisted_3$D = { class: "ctv:flex ctv:justify-end ctv:gap-2" };
-const btnGhost$2 = "ctv:appearance-none ctv:border-none ctv:cursor-pointer ctv:[font-family:inherit] ctv:focus-visible:outline-none ctv:h-7 ctv:px-3 ctv:rounded-sm ctv:text-xs ctv:bg-secondary-background ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground";
-const btnPrimary$2 = "ctv:appearance-none ctv:border-none ctv:cursor-pointer ctv:[font-family:inherit] ctv:focus-visible:outline-none ctv:h-7 ctv:px-3 ctv:rounded-sm ctv:text-xs ctv:font-medium ctv:bg-primary-background ctv:text-primary-foreground ctv:hover:opacity-90";
-const btnDanger = "ctv:appearance-none ctv:border-none ctv:cursor-pointer ctv:[font-family:inherit] ctv:focus-visible:outline-none ctv:h-7 ctv:px-3 ctv:rounded-sm ctv:text-xs ctv:font-medium ctv:bg-destructive-background ctv:text-white ctv:hover:opacity-90";
-const _sfc_main$P = /* @__PURE__ */ defineComponent({
-  __name: "ConfirmDialog",
-  props: {
-    message: {},
-    confirmText: {},
-    cancelText: {},
-    danger: { type: Boolean },
-    onResolve: { type: Function }
-  },
-  setup(__props) {
-    const props = __props;
-    let resolved = false;
-    function resolve2(value) {
-      if (resolved) return;
-      resolved = true;
-      props.onResolve(value);
-    }
-    onBeforeUnmount(() => resolve2(false));
-    return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$N, [
-        createBaseVNode("p", _hoisted_2$H, toDisplayString$1(__props.message), 1),
-        createBaseVNode("div", _hoisted_3$D, [
-          createBaseVNode("button", {
-            type: "button",
-            class: normalizeClass(btnGhost$2),
-            onClick: _cache2[0] || (_cache2[0] = ($event) => resolve2(false))
-          }, toDisplayString$1(__props.cancelText || _ctx.$t("dialog.cancel")), 1),
-          createBaseVNode("button", {
-            type: "button",
-            class: normalizeClass(__props.danger ? btnDanger : btnPrimary$2),
-            onClick: _cache2[1] || (_cache2[1] = ($event) => resolve2(true))
-          }, toDisplayString$1(__props.confirmText || _ctx.$t("dialog.confirm")), 3)
-        ])
-      ]);
-    };
-  }
-});
-const useDialogStore = /* @__PURE__ */ defineStore("comfytv-dialog", () => {
-  const open = /* @__PURE__ */ ref(false);
-  const title = /* @__PURE__ */ ref("");
-  const component = /* @__PURE__ */ shallowRef(null);
-  const props = /* @__PURE__ */ ref({});
-  const width = /* @__PURE__ */ ref("720px");
-  function show(opts) {
-    title.value = opts.title;
-    component.value = opts.component;
-    props.value = opts.props ?? {};
-    width.value = opts.width ?? "720px";
-    open.value = true;
-  }
-  function close2() {
-    open.value = false;
-    setTimeout(() => {
-      component.value = null;
-      props.value = {};
-      title.value = "";
-    }, 180);
-  }
-  return { open, title, component, props, width, show, close: close2 };
-});
-function askConfirm(opts) {
-  const dialog2 = useDialogStore();
-  return new Promise((resolve2) => {
-    let settled = false;
-    const done = (value) => {
-      if (settled) return;
-      settled = true;
-      resolve2(value);
-      dialog2.close();
-    };
-    dialog2.show({
-      title: opts.title,
-      width: opts.width ?? "420px",
-      component: markRaw(_sfc_main$P),
-      props: {
-        message: opts.message,
-        confirmText: opts.confirmText,
-        cancelText: opts.cancelText,
-        danger: opts.danger,
-        onResolve: done
-      }
-    });
-  });
-}
-const _hoisted_1$M = {
-  key: 0,
-  class: "ctv:text-xs ctv:text-muted-foreground"
-};
-const _hoisted_2$G = ["placeholder", "onKeydown"];
-const _hoisted_3$C = { class: "ctv:flex ctv:justify-end ctv:gap-2" };
-const _hoisted_4$y = ["disabled"];
-const btnGhost$1 = "ctv:appearance-none ctv:border-none ctv:cursor-pointer ctv:[font-family:inherit] ctv:focus-visible:outline-none ctv:h-7 ctv:px-3 ctv:rounded-sm ctv:text-xs ctv:bg-secondary-background ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground";
-const btnPrimary$1 = "ctv:appearance-none ctv:border-none ctv:cursor-pointer ctv:[font-family:inherit] ctv:focus-visible:outline-none ctv:h-7 ctv:px-3 ctv:rounded-sm ctv:text-xs ctv:font-medium ctv:bg-primary-background ctv:text-primary-foreground ctv:hover:opacity-90 ctv:disabled:opacity-50 ctv:disabled:pointer-events-none";
-const _sfc_main$O = /* @__PURE__ */ defineComponent({
-  __name: "TextInputDialog",
-  props: {
-    label: {},
-    initialValue: {},
-    placeholder: {},
-    confirmText: {},
-    cancelText: {},
-    onResolve: { type: Function }
-  },
-  setup(__props) {
-    const props = __props;
-    const value = /* @__PURE__ */ ref(props.initialValue ?? "");
-    const inputEl = /* @__PURE__ */ ref(null);
-    let resolved = false;
-    function settle(v) {
-      if (resolved) return;
-      resolved = true;
-      props.onResolve(v);
-    }
-    function confirm() {
-      const v = value.value.trim();
-      if (!v) return;
-      settle(v);
-    }
-    function cancel() {
-      settle(null);
-    }
-    onMounted(() => {
-      var _a2, _b2;
-      (_a2 = inputEl.value) == null ? void 0 : _a2.focus();
-      (_b2 = inputEl.value) == null ? void 0 : _b2.select();
-    });
-    onBeforeUnmount(() => settle(null));
-    return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("form", {
-        class: "ctv:flex ctv:flex-col ctv:gap-3",
-        onSubmit: withModifiers(confirm, ["prevent"])
-      }, [
-        __props.label ? (openBlock(), createElementBlock("label", _hoisted_1$M, toDisplayString$1(__props.label), 1)) : createCommentVNode("", true),
-        withDirectives(createBaseVNode("input", {
-          ref_key: "inputEl",
-          ref: inputEl,
-          "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => value.value = $event),
-          type: "text",
-          placeholder: __props.placeholder,
-          class: "ctv:appearance-none ctv:[font-family:inherit] ctv:focus-visible:outline-none ctv:w-full ctv:h-8 ctv:px-2.5 ctv:rounded-sm ctv:text-sm ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle ctv:focus:border-primary-background",
-          onKeydown: withKeys(withModifiers(cancel, ["prevent"]), ["esc"])
-        }, null, 40, _hoisted_2$G), [
-          [vModelText, value.value]
-        ]),
-        createBaseVNode("div", _hoisted_3$C, [
-          createBaseVNode("button", {
-            type: "button",
-            class: normalizeClass(btnGhost$1),
-            onClick: cancel
-          }, toDisplayString$1(__props.cancelText || _ctx.$t("dialog.cancel")), 1),
-          createBaseVNode("button", {
-            type: "submit",
-            class: normalizeClass(btnPrimary$1),
-            disabled: !value.value.trim()
-          }, toDisplayString$1(__props.confirmText || _ctx.$t("dialog.confirm")), 9, _hoisted_4$y)
-        ])
-      ], 32);
-    };
-  }
-});
-function askText(opts) {
-  const dialog2 = useDialogStore();
-  return new Promise((resolve2) => {
-    let settled = false;
-    const done = (value) => {
-      if (settled) return;
-      settled = true;
-      resolve2(value);
-      dialog2.close();
-    };
-    dialog2.show({
-      title: opts.title,
-      width: opts.width ?? "420px",
-      component: markRaw(_sfc_main$O),
-      props: {
-        label: opts.label,
-        initialValue: opts.initialValue,
-        placeholder: opts.placeholder,
-        confirmText: opts.confirmText,
-        cancelText: opts.cancelText,
-        onResolve: done
-      }
-    });
-  });
 }
 var _a$2;
 function $constructor(name, initializer2, params) {
@@ -18725,14 +18556,14 @@ const safeDecodeAsync = /* @__PURE__ */ _safeDecodeAsync(ZodRealError);
 const _installedGroups = /* @__PURE__ */ new WeakMap();
 function _installLazyMethods(inst, group, methods) {
   const proto = Object.getPrototypeOf(inst);
-  let installed = _installedGroups.get(proto);
-  if (!installed) {
-    installed = /* @__PURE__ */ new Set();
-    _installedGroups.set(proto, installed);
+  let installed2 = _installedGroups.get(proto);
+  if (!installed2) {
+    installed2 = /* @__PURE__ */ new Set();
+    _installedGroups.set(proto, installed2);
   }
-  if (installed.has(group))
+  if (installed2.has(group))
     return;
-  installed.add(group);
+  installed2.add(group);
   for (const key in methods) {
     const fn2 = methods[key];
     Object.defineProperty(proto, key, {
@@ -20012,6 +19843,245 @@ const useAssetStore = /* @__PURE__ */ defineStore("assets", () => {
     installWebSocketSync
   };
 });
+const ASSET_DRAG_MIME = "application/x-comfytv-asset-id";
+function isAssetDrag(e) {
+  var _a2;
+  const types = (_a2 = e.dataTransfer) == null ? void 0 : _a2.types;
+  return !!types && Array.from(types).includes(ASSET_DRAG_MIME);
+}
+function handleAssetDragOver(e) {
+  if (!isAssetDrag(e)) return;
+  e.preventDefault();
+  if (e.dataTransfer) e.dataTransfer.dropEffect = "copy";
+}
+function handleAssetDrop(e, resolveAsset2) {
+  var _a2;
+  if (!isAssetDrag(e)) return;
+  e.preventDefault();
+  e.stopPropagation();
+  const raw = ((_a2 = e.dataTransfer) == null ? void 0 : _a2.getData(ASSET_DRAG_MIME)) ?? "";
+  const id = Number(raw);
+  if (!Number.isFinite(id)) return;
+  const asset = resolveAsset2(id);
+  if (!asset) {
+    console.warn("[ComfyTV/assets] dropped asset not found:", raw);
+    return;
+  }
+  createAssetLoaderNode(asset, clientToCanvasPos(e.clientX, e.clientY), {
+    anchor: "center",
+    select: true
+  });
+}
+let installed = false;
+function installAssetCanvasDrop(pinia2) {
+  if (installed) return;
+  installed = true;
+  const resolveAsset2 = (id) => useAssetStore(pinia2).byId(id) ?? null;
+  let tries = 0;
+  const tryInstall = () => {
+    var _a2;
+    const el = (_a2 = app == null ? void 0 : app.canvas) == null ? void 0 : _a2.canvas;
+    if (!el) {
+      if (tries++ < 1200) requestAnimationFrame(tryInstall);
+      else console.warn("[ComfyTV/assets] graph canvas never appeared; drag-to-canvas disabled");
+      return;
+    }
+    el.addEventListener("dragover", handleAssetDragOver);
+    el.addEventListener("drop", (e) => handleAssetDrop(e, resolveAsset2));
+  };
+  tryInstall();
+}
+const _hoisted_1$N = { class: "ctv:flex ctv:flex-col ctv:gap-3" };
+const _hoisted_2$H = { class: "ctv:m-0 ctv:text-xs ctv:leading-relaxed ctv:text-base-foreground ctv:whitespace-pre-wrap" };
+const _hoisted_3$D = { class: "ctv:flex ctv:justify-end ctv:gap-2" };
+const btnGhost$2 = "ctv:appearance-none ctv:border-none ctv:cursor-pointer ctv:[font-family:inherit] ctv:focus-visible:outline-none ctv:h-7 ctv:px-3 ctv:rounded-sm ctv:text-xs ctv:bg-secondary-background ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground";
+const btnPrimary$2 = "ctv:appearance-none ctv:border-none ctv:cursor-pointer ctv:[font-family:inherit] ctv:focus-visible:outline-none ctv:h-7 ctv:px-3 ctv:rounded-sm ctv:text-xs ctv:font-medium ctv:bg-primary-background ctv:text-primary-foreground ctv:hover:opacity-90";
+const btnDanger = "ctv:appearance-none ctv:border-none ctv:cursor-pointer ctv:[font-family:inherit] ctv:focus-visible:outline-none ctv:h-7 ctv:px-3 ctv:rounded-sm ctv:text-xs ctv:font-medium ctv:bg-destructive-background ctv:text-white ctv:hover:opacity-90";
+const _sfc_main$P = /* @__PURE__ */ defineComponent({
+  __name: "ConfirmDialog",
+  props: {
+    message: {},
+    confirmText: {},
+    cancelText: {},
+    danger: { type: Boolean },
+    onResolve: { type: Function }
+  },
+  setup(__props) {
+    const props = __props;
+    let resolved = false;
+    function resolve2(value) {
+      if (resolved) return;
+      resolved = true;
+      props.onResolve(value);
+    }
+    onBeforeUnmount(() => resolve2(false));
+    return (_ctx, _cache2) => {
+      return openBlock(), createElementBlock("div", _hoisted_1$N, [
+        createBaseVNode("p", _hoisted_2$H, toDisplayString$1(__props.message), 1),
+        createBaseVNode("div", _hoisted_3$D, [
+          createBaseVNode("button", {
+            type: "button",
+            class: normalizeClass(btnGhost$2),
+            onClick: _cache2[0] || (_cache2[0] = ($event) => resolve2(false))
+          }, toDisplayString$1(__props.cancelText || _ctx.$t("dialog.cancel")), 1),
+          createBaseVNode("button", {
+            type: "button",
+            class: normalizeClass(__props.danger ? btnDanger : btnPrimary$2),
+            onClick: _cache2[1] || (_cache2[1] = ($event) => resolve2(true))
+          }, toDisplayString$1(__props.confirmText || _ctx.$t("dialog.confirm")), 3)
+        ])
+      ]);
+    };
+  }
+});
+const useDialogStore = /* @__PURE__ */ defineStore("comfytv-dialog", () => {
+  const open = /* @__PURE__ */ ref(false);
+  const title = /* @__PURE__ */ ref("");
+  const component = /* @__PURE__ */ shallowRef(null);
+  const props = /* @__PURE__ */ ref({});
+  const width = /* @__PURE__ */ ref("720px");
+  function show(opts) {
+    title.value = opts.title;
+    component.value = opts.component;
+    props.value = opts.props ?? {};
+    width.value = opts.width ?? "720px";
+    open.value = true;
+  }
+  function close2() {
+    open.value = false;
+    setTimeout(() => {
+      component.value = null;
+      props.value = {};
+      title.value = "";
+    }, 180);
+  }
+  return { open, title, component, props, width, show, close: close2 };
+});
+function askConfirm(opts) {
+  const dialog2 = useDialogStore();
+  return new Promise((resolve2) => {
+    let settled = false;
+    const done = (value) => {
+      if (settled) return;
+      settled = true;
+      resolve2(value);
+      dialog2.close();
+    };
+    dialog2.show({
+      title: opts.title,
+      width: opts.width ?? "420px",
+      component: markRaw(_sfc_main$P),
+      props: {
+        message: opts.message,
+        confirmText: opts.confirmText,
+        cancelText: opts.cancelText,
+        danger: opts.danger,
+        onResolve: done
+      }
+    });
+  });
+}
+const _hoisted_1$M = {
+  key: 0,
+  class: "ctv:text-xs ctv:text-muted-foreground"
+};
+const _hoisted_2$G = ["placeholder", "onKeydown"];
+const _hoisted_3$C = { class: "ctv:flex ctv:justify-end ctv:gap-2" };
+const _hoisted_4$y = ["disabled"];
+const btnGhost$1 = "ctv:appearance-none ctv:border-none ctv:cursor-pointer ctv:[font-family:inherit] ctv:focus-visible:outline-none ctv:h-7 ctv:px-3 ctv:rounded-sm ctv:text-xs ctv:bg-secondary-background ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground";
+const btnPrimary$1 = "ctv:appearance-none ctv:border-none ctv:cursor-pointer ctv:[font-family:inherit] ctv:focus-visible:outline-none ctv:h-7 ctv:px-3 ctv:rounded-sm ctv:text-xs ctv:font-medium ctv:bg-primary-background ctv:text-primary-foreground ctv:hover:opacity-90 ctv:disabled:opacity-50 ctv:disabled:pointer-events-none";
+const _sfc_main$O = /* @__PURE__ */ defineComponent({
+  __name: "TextInputDialog",
+  props: {
+    label: {},
+    initialValue: {},
+    placeholder: {},
+    confirmText: {},
+    cancelText: {},
+    onResolve: { type: Function }
+  },
+  setup(__props) {
+    const props = __props;
+    const value = /* @__PURE__ */ ref(props.initialValue ?? "");
+    const inputEl = /* @__PURE__ */ ref(null);
+    let resolved = false;
+    function settle(v) {
+      if (resolved) return;
+      resolved = true;
+      props.onResolve(v);
+    }
+    function confirm() {
+      const v = value.value.trim();
+      if (!v) return;
+      settle(v);
+    }
+    function cancel() {
+      settle(null);
+    }
+    onMounted(() => {
+      var _a2, _b2;
+      (_a2 = inputEl.value) == null ? void 0 : _a2.focus();
+      (_b2 = inputEl.value) == null ? void 0 : _b2.select();
+    });
+    onBeforeUnmount(() => settle(null));
+    return (_ctx, _cache2) => {
+      return openBlock(), createElementBlock("form", {
+        class: "ctv:flex ctv:flex-col ctv:gap-3",
+        onSubmit: withModifiers(confirm, ["prevent"])
+      }, [
+        __props.label ? (openBlock(), createElementBlock("label", _hoisted_1$M, toDisplayString$1(__props.label), 1)) : createCommentVNode("", true),
+        withDirectives(createBaseVNode("input", {
+          ref_key: "inputEl",
+          ref: inputEl,
+          "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => value.value = $event),
+          type: "text",
+          placeholder: __props.placeholder,
+          class: "ctv:appearance-none ctv:[font-family:inherit] ctv:focus-visible:outline-none ctv:w-full ctv:h-8 ctv:px-2.5 ctv:rounded-sm ctv:text-sm ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle ctv:focus:border-primary-background",
+          onKeydown: withKeys(withModifiers(cancel, ["prevent"]), ["esc"])
+        }, null, 40, _hoisted_2$G), [
+          [vModelText, value.value]
+        ]),
+        createBaseVNode("div", _hoisted_3$C, [
+          createBaseVNode("button", {
+            type: "button",
+            class: normalizeClass(btnGhost$1),
+            onClick: cancel
+          }, toDisplayString$1(__props.cancelText || _ctx.$t("dialog.cancel")), 1),
+          createBaseVNode("button", {
+            type: "submit",
+            class: normalizeClass(btnPrimary$1),
+            disabled: !value.value.trim()
+          }, toDisplayString$1(__props.confirmText || _ctx.$t("dialog.confirm")), 9, _hoisted_4$y)
+        ])
+      ], 32);
+    };
+  }
+});
+function askText(opts) {
+  const dialog2 = useDialogStore();
+  return new Promise((resolve2) => {
+    let settled = false;
+    const done = (value) => {
+      if (settled) return;
+      settled = true;
+      resolve2(value);
+      dialog2.close();
+    };
+    dialog2.show({
+      title: opts.title,
+      width: opts.width ?? "420px",
+      component: markRaw(_sfc_main$O),
+      props: {
+        label: opts.label,
+        initialValue: opts.initialValue,
+        placeholder: opts.placeholder,
+        confirmText: opts.confirmText,
+        cancelText: opts.cancelText,
+        onResolve: done
+      }
+    });
+  });
+}
 async function uploadCanvas(canvas, opts) {
   const blob = await new Promise(
     (resolve2) => canvas.toBlob(resolve2, "image/png")
@@ -20039,7 +20109,6 @@ async function uploadBlobNamed(blob, opts) {
 async function uploadBlob(blob, opts) {
   return (await uploadBlobNamed(blob, opts)).url;
 }
-const ASSET_DRAG_MIME = "application/x-comfytv-asset-id";
 function stripExtension(filename) {
   const i = filename.lastIndexOf(".");
   return i > 0 ? filename.slice(0, i) : filename;
@@ -20299,8 +20368,9 @@ function useAssetsPanel(isActive2) {
     createAssetLoaderNode(asset, canvasCenter(), { anchor: "center", select: true });
   }
   function onAssetDragStart(asset, e) {
-    var _a2;
-    (_a2 = e.dataTransfer) == null ? void 0 : _a2.setData(ASSET_DRAG_MIME, String(asset.id));
+    if (!e.dataTransfer) return;
+    e.dataTransfer.setData(ASSET_DRAG_MIME, String(asset.id));
+    e.dataTransfer.effectAllowed = "copy";
   }
   function onChipDrop(categoryId, e) {
     var _a2;
@@ -90535,6 +90605,7 @@ const extension = {
     }
     const selection = useSelectionStore();
     const a = app;
+    installAssetCanvasDrop(pinia);
     installGlobalRunBridge(a, {
       resolveStore: () => useStageStore(pinia),
       toast: (opts) => {
