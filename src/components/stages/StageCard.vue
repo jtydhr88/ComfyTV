@@ -5,7 +5,7 @@
     <ImageReferences v-if="!hideContext && state.variant !== 'loader'" :node="node" />
 
     <section
-      v-if="state.kind === 'image-picker' && !hideContext && (poolCount > 0 || connectedInputs.length > 0)"
+      v-if="(state.kind === 'image-picker' || state.kind === 'audio-picker') && !hideContext && (poolCount > 0 || connectedInputs.length > 0)"
       class="ctv-picker-input ctv:flex ctv:flex-col ctv:gap-1 ctv:py-1"
       :class="`ctv-src-${pickerSource}`"
     >
@@ -32,7 +32,7 @@
         </template>
       </div>
       <ValuePreview
-        type="COMFYTV_IMAGES"
+        :type="state.kind === 'audio-picker' ? 'COMFYTV_AUDIOS' : 'COMFYTV_IMAGES'"
         :content="poolContent"
         :empty-label="pickerSource === 'upstream-pending' ? $t('stage.empty.pending_upstream') : $t('stage.empty.no_output')"
         :selected-index="state.pickedIndex"
@@ -45,7 +45,7 @@
       />
     </section>
 
-    <section v-if="!hideContext && state.variant !== 'loader' && state.kind !== 'image-picker' && connectedInputs.length > 0"
+    <section v-if="!hideContext && state.variant !== 'loader' && state.kind !== 'image-picker' && state.kind !== 'audio-picker' && connectedInputs.length > 0"
              class="ctv:flex ctv:flex-col ctv:gap-1">
       <div :class="sectionLabel">{{ $t('stage.section.context') }}</div>
 
@@ -107,7 +107,7 @@
     <CustomParamsSection v-if="node" :state="state" :node="node" />
 
     <button
-      v-if="state.variant !== 'loader' && state.variant !== 'transform' && state.kind !== 'image-picker'"
+      v-if="state.variant !== 'loader' && state.variant !== 'transform' && state.kind !== 'image-picker' && state.kind !== 'audio-picker'"
       :class="['run-btn', state.running && 'is-cancel', runBtnClass]"
       :disabled="!state.running && !canRun"
       @click="state.running ? onCancel() : onRun()"
@@ -131,7 +131,7 @@
       </span>
     </div>
 
-    <section v-if="!hideOutput" class="output ctv:flex-1 ctv:min-h-0 ctv:flex ctv:flex-col ctv:gap-1">
+    <section v-if="!hideOutput && state.kind !== 'audio-picker'" class="output ctv:flex-1 ctv:min-h-0 ctv:flex ctv:flex-col ctv:gap-1">
       <div :class="sectionLabel">{{ $t('stage.section.output', { type: state.outputType }) }}</div>
 
       <ValuePreview

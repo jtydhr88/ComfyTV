@@ -74,8 +74,11 @@ export function useValuePreview(
 
   const shortType = computed(() => shortTypeLabel(getType()))
 
-  const batchImages = computed<BatchImage[]>(() =>
-    parsePayloadList(getType(), getContent(), 'COMFYTV_IMAGES', 'images'))
+  const batchImages = computed<BatchImage[]>(() => {
+    const t = getType()
+    if (t !== 'COMFYTV_IMAGES' && t !== 'COMFYTV_AUDIOS') return []
+    return parsePayloadList(t, getContent(), t, 'images')
+  })
 
   const storyboardShots = computed<StoryboardShot[]>(() =>
     parsePayloadList(getType(), getContent(), 'COMFYTV_STORYBOARD', 'shots'))

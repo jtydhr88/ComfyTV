@@ -389,6 +389,43 @@ class ImagePickerStage(io.ComfyNode):
                                 emit_ui=False, parent_output_id=parent_output_id)
 
 
+class AudioPickerStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.AudioPickerStage",
+            display_name="Music Picker",
+            category="ComfyTV/Compose",
+            inputs=[
+                _project_id_input(),
+                _parent_output_id_input(),
+
+                io.Int.Input("selected_index", default=1, min=1, max=999, step=1,
+                             socketless=True,
+                             extra_dict={"hidden": True},
+                             tooltip="Which track to extract (1-indexed). Hidden — set by clicking a track."),
+                io.String.Input("pool", default="", multiline=False,
+                                socketless=True, extra_dict={"hidden": True},
+                                tooltip="Accumulated music pool (JSON). Managed by the UI: new upstream tracks "
+                                        "are appended (deduped by URL) and survive regeneration/disconnect; "
+                                        "emptied by the Clear button."),
+                COMFYTV_AUDIO.Input("batch", optional=True,
+                                    tooltip="Upstream audio source. Each generated track is appended to the pool."),
+            ],
+            outputs=[COMFYTV_AUDIO.Output("audio")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, project_id="", parent_output_id=0, selected_index=1, pool="", batch=None):
+        source = pool if (pool or "").strip() else batch
+        payload = _pick_image_from_batch(source, int(selected_index or 1))
+        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
+                                emit_ui=False, parent_output_id=parent_output_id)
+
+
 class ShotImagesStage(io.ComfyNode):
 
     @classmethod

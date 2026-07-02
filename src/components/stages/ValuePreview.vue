@@ -173,6 +173,59 @@
       </div>
     </template>
 
+    <template v-else-if="type === 'COMFYTV_AUDIOS'">
+      <div v-if="compact" :class="compactSummary">
+        <span class="ctv:text-[22px] ctv:leading-none"><i class="pi pi-volume-up" /></span>
+        <span v-if="batchImages.length" class="vp-compact-count-text ctv:text-sm ctv:font-bold ctv:text-[#d8b0ff]">{{ batchImages.length }}</span>
+      </div>
+      <div v-else class="ctv:flex ctv:flex-col ctv:gap-1">
+        <div v-if="batchImages.length === 0" :class="emptyClass">{{ emptyLabel || '…' }}</div>
+        <div
+          v-for="(track, i) in batchImages"
+          :key="i"
+          :class="audioRowClass(isItemSelected(track, i))"
+          :title="cellTooltip(track, i)"
+        >
+          <div
+            class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:min-w-0"
+            :class="clickMode === 'pick' ? 'ctv:cursor-pointer' : undefined"
+            :role="clickMode === 'pick' ? 'button' : undefined"
+            :tabindex="clickMode === 'pick' ? 0 : undefined"
+            @click="clickMode === 'pick' ? onItemClick(track, i) : undefined"
+            @keydown="clickMode === 'pick' ? onCellKey(track, i, $event) : undefined"
+          >
+            <span v-if="clickMode === 'pick' && isItemSelected(track, i)"
+                  class="ctv:shrink-0 ctv:flex ctv:items-center ctv:justify-center ctv:size-4 ctv:rounded-full
+                         ctv:text-3xs ctv:leading-none ctv:bg-primary-background ctv:text-white
+                         ctv:shadow-[0_1px_3px_rgb(0_0_0/0.5)]"><i class="pi pi-check" /></span>
+            <span v-if="removable && isUpstreamItem(track)"
+                  class="ctv:shrink-0 ctv:flex ctv:items-center ctv:py-px ctv:px-1 ctv:text-3xs ctv:font-bold
+                         ctv:rounded-sm ctv:bg-primary-background/85 ctv:text-white"
+                  :title="$t('valuePreview.fromUpstream')"><i class="pi pi-arrow-up" /></span>
+            <span class="ctv:min-w-0 ctv:flex-1 ctv:truncate ctv:text-3xs ctv:font-bold ctv:text-[#ffb0d8]">
+              {{ track.label ?? `#${track.index ?? i + 1}` }}
+            </span>
+          </div>
+          <audio :src="track.image_url" class="ctv:block ctv:w-full ctv:h-8" controls preload="metadata"
+                 @click.stop />
+          <div :class="imgActionsClass">
+            <button type="button" :class="imgActionBtn"
+                    :title="$t('stage.action.download')"
+                    @click.stop="onDownload(track.image_url)"><i class="pi pi-download" /></button>
+            <button type="button" :class="tagActionBtn(track.image_url)"
+                    :title="$t('stage.action.addTag')"
+                    @click.stop="openTagMenu(track.image_url, track.label || track.prompt || nameFromUrl(track.image_url), $event)"><i class="pi pi-tag" /></button>
+            <button type="button" :class="imgActionBtn"
+                    :title="$t('stage.action.loadAsset')"
+                    @click.stop="onLoadAsset(track.image_url, track.label || track.prompt || nameFromUrl(track.image_url))"><i class="pi pi-bookmark" /></button>
+            <button v-if="canRemoveItem(track, i)" type="button" :class="removeActionBtn"
+                    :title="$t('stage.action.removeFromPicker')"
+                    @click.stop="onItemRemove(track, i)"><i class="pi pi-times" /></button>
+          </div>
+        </div>
+      </div>
+    </template>
+
     <div v-else :class="emptyClass">{{ $t('stage.empty.unsupported_type', { type }) }}</div>
 
     <Teleport to="body">
@@ -469,6 +522,15 @@ function batchCellClass(selected: boolean) {
   }
   return base + interactive
     + ' ctv:border-border-default'
+    + (props.clickMode === 'pick' ? ' ctv:hover:border-primary-background' : '')
+}
+
+function audioRowClass(selected: boolean) {
+  const base = 'vp-img-host ctv:group ctv:relative ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-1.5 ctv:rounded-sm ctv:border ctv:transition-colors'
+  if (selected) {
+    return base + ' ctv:border-primary-background ctv:bg-primary-background/10'
+  }
+  return base + ' ctv:border-border-default ctv:bg-base-foreground/[0.03]'
     + (props.clickMode === 'pick' ? ' ctv:hover:border-primary-background' : '')
 }
 </script>

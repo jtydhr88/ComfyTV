@@ -6,6 +6,7 @@ STAGE_META: dict[str, dict] = {
     'AudioStage':                   {'kind': 'audio',        'workflow_kind': 'audio'},
     'SpeechStage':                  {'kind': 'audio',        'workflow_kind': 'speech'},
     'ImagePickerStage':             {'kind': 'image-picker'},
+    'AudioPickerStage':             {'kind': 'audio-picker'},
     'ShotImagesStage':              {'kind': 'image-batch',  'workflow_kind': 'shot-images'},
     'UpscaleStage':                 {'kind': 'image',        'workflow_kind': 'upscale'},
     'OutpaintStage':                {'kind': 'image',        'workflow_kind': 'outpaint'},
@@ -56,4 +57,5 @@ STAGE_META: dict[str, dict] = {
 _KIND_TO_OUTPUT_TYPE: dict[str, str] = {
     'image-batch':  'images',
     'image-picker': 'image',
+    'audio-picker': 'audio',
 }

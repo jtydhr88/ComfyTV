@@ -62,6 +62,7 @@ const STAGE_CLASS_BY_KIND: Record<StageKind, string> = {
   storyboard:     'ComfyTV.StoryboardStage',
   'image-batch':  'ComfyTV.ShotImagesStage',
   'image-picker': 'ComfyTV.ImagePickerStage',
+  'audio-picker': 'ComfyTV.AudioPickerStage',
   timeline:       'ComfyTV.DirectorTimelineStage',
 }
 
@@ -74,6 +75,7 @@ const TARGET_GROUP_BY_KIND: Record<StageKind, 'texts' | 'images' | 'videos'> = {
   storyboard:     'texts',
   'image-batch':  'images',
   'image-picker': 'images',
+  'audio-picker': 'videos',
   timeline:       'images',
 }
 
@@ -363,7 +365,7 @@ export function useStageNode(
       })
     }
 
-    if (kind === 'image-picker' || kind === 'image-batch') {
+    if (kind === 'image-picker' || kind === 'image-batch' || kind === 'audio-picker') {
       const idxWidget = node.widgets?.find((w: any) => w.name === 'selected_index')
       if (idxWidget) {
         const initial = Number(idxWidget.value)
@@ -376,7 +378,7 @@ export function useStageNode(
       }
     }
 
-    if (kind === 'image-picker') {
+    if (kind === 'image-picker' || kind === 'audio-picker') {
       const poolWidget = node.widgets?.find((w: any) => w.name === 'pool')
       state.pool = poolWidget ? (String(poolWidget.value ?? '') || null) : null
     }
@@ -463,7 +465,7 @@ export function useStageNode(
     },
   )
 
-  const stopPickerWatch = kind === 'image-picker'
+  const stopPickerWatch = (kind === 'image-picker' || kind === 'audio-picker')
     ? watch(
         () => {
           const inp = state.inputs.find(i => i.slot === 'batch')
@@ -650,11 +652,11 @@ export function useStageNode(
       if (url) void spawnAssetImageLoader(node, url, context?.label)
       return
     }
-    if (actionId === 'clear-pool' && kind === 'image-picker') {
+    if (actionId === 'clear-pool' && (kind === 'image-picker' || kind === 'audio-picker')) {
       store.clearPickerPool(node, state)
       return
     }
-    if (actionId === 'remove-pool-item' && context && kind === 'image-picker') {
+    if (actionId === 'remove-pool-item' && context && (kind === 'image-picker' || kind === 'audio-picker')) {
       const removedIndex = Number(context.index) || 0
       const merged = removeImageFromPool(state.pool, context.imageUrl ?? '')
       const count = imagePoolCount(merged)
@@ -672,7 +674,7 @@ export function useStageNode(
       if (out !== state.output) store.setOutputSlot(state, 0, out)
       return
     }
-    if (actionId === 'pick-item' && context && (kind === 'image-picker' || kind === 'image-batch')) {
+    if (actionId === 'pick-item' && context && (kind === 'image-picker' || kind === 'image-batch' || kind === 'audio-picker')) {
       const newIdx = Number(context.index) || 1
       state.pickedIndex = newIdx
       setWidget(node, 'selected_index', newIdx)
@@ -827,7 +829,7 @@ export function useStageNode(
   let adoptionTried = false
   async function restoreLatestOutput(projectId: string) {
     if (variant === 'loader') return
-    if (kind === 'image-picker') return
+    if (kind === 'image-picker' || kind === 'audio-picker') return
     if (!node.id || node.id < 0) return
     const uid = ensureStageUid(node)
     try {

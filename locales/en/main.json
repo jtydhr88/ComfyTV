@@ -59,7 +59,8 @@
       "close": "Close",
       "loadAsset": "Load as asset node",
       "prev": "Previous",
-      "next": "Next"
+      "next": "Next",
+      "pick": "Select this track"
     },
     "preparingWorkflowDetail": "Hang on — converting workflow to api JSON. Try Run again in a moment."
   },

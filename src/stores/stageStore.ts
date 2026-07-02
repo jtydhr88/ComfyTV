@@ -10,6 +10,7 @@ export type StageKind =
   | 'storyboard'
   | 'image-batch'
   | 'image-picker'
+  | 'audio-picker'
   | 'timeline'
 
 export interface ImagePickContext {
@@ -66,6 +67,7 @@ const KIND_TO_TYPE: Record<StageKind, TypedValueType> = {
   storyboard:     'COMFYTV_STORYBOARD',
   'image-batch':  'COMFYTV_IMAGES',
   'image-picker': 'COMFYTV_IMAGE',
+  'audio-picker': 'COMFYTV_AUDIO',
   timeline:       'COMFYTV_TIMELINE',
 }
 

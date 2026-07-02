@@ -1527,5 +1527,24 @@
         "name": "视频"
       }
     }
+  },
+  "ComfyTV_AudioPickerStage": {
+    "display_name": "音乐选择器",
+    "inputs": {
+      "batch": {
+        "name": "批次"
+      },
+      "pool": {
+        "name": "池"
+      },
+      "selected_index": {
+        "name": "选中索引"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "音频"
+      }
+    }
   }
 }

@@ -59,7 +59,8 @@
       "close": "关闭",
       "loadAsset": "作为资产节点加载",
       "prev": "上一张",
-      "next": "下一张"
+      "next": "下一张",
+      "pick": "选用这条"
     },
     "preparingWorkflowDetail": "稍等 — 正在把工作流转换成 api JSON。稍后再点运行。"
   },
