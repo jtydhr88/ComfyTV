@@ -315,7 +315,7 @@ class TestWorkflowInfoRoute:
         kdir.mkdir(parents=True)
         (kdir / "x.json").write_text(json.dumps({"nodes": []}))
         (kdir / "x_preset.json").write_text(json.dumps({
-            "label": "X",
+            "label": "x",
             "inputs": {"3": {"seed": {"from": "upstream_image:annotated[1]", "required": True}}},
         }))
         monkeypatch.setattr(workflow_db.seed, "_WORKFLOWS_DIR", Path(wdir))
@@ -325,9 +325,9 @@ class TestWorkflowInfoRoute:
         assert resp.status == 200
         data = await resp.json()
         # Bound workflow appears
-        assert "X" in data.get("image", {})
+        assert "x" in data.get("image", {})
         # max_inputs.image should be 2 (idx 1 + 1)
-        assert data["image"]["X"]["max_inputs"]["image"] == 2
+        assert data["image"]["x"]["max_inputs"]["image"] == 2
 
 
 class TestWorkflowConfigRoutes:
@@ -356,7 +356,7 @@ class TestWorkflowConfigRoutes:
     async def test_state_known(self, client, tmp_path, monkeypatch):
         await self._seed_one(monkeypatch, tmp_path)
         resp = await client.get("/comfytv/workflows/state",
-                                params={"kind": "image", "label": "X"})
+                                params={"kind": "image", "label": "x"})
         assert resp.status == 200
         data = await resp.json()
         assert data["has_api"] is False
@@ -364,7 +364,7 @@ class TestWorkflowConfigRoutes:
     async def test_file_route(self, client, tmp_path, monkeypatch):
         await self._seed_one(monkeypatch, tmp_path)
         resp = await client.get("/comfytv/workflows/file",
-                                params={"kind": "image", "label": "X"})
+                                params={"kind": "image", "label": "x"})
         assert resp.status == 200
         assert "X-Workflow-Mtime" in resp.headers
 
@@ -380,10 +380,10 @@ class TestWorkflowConfigRoutes:
     async def test_get_config(self, client, tmp_path, monkeypatch):
         await self._seed_one(monkeypatch, tmp_path)
         resp = await client.get("/comfytv/workflows/config",
-                                params={"kind": "image", "label": "X"})
+                                params={"kind": "image", "label": "x"})
         assert resp.status == 200
         data = await resp.json()
-        assert data["label"] == "X"
+        assert data["label"] == "x"
         assert isinstance(data["bindings"], list)
 
     async def test_get_config_missing(self, client):
@@ -426,7 +426,7 @@ class TestWorkflowConfigRoutes:
         await self._seed_one(monkeypatch, tmp_path)
         # Fetch the workflow id
         resp = await client.get("/comfytv/workflows/config",
-                                params={"kind": "image", "label": "X"})
+                                params={"kind": "image", "label": "x"})
         wid = (await resp.json())["id"]
         resp = await client.post("/comfytv/workflows/config/binding", json={
             "workflow_id": wid, "node_id": "3", "input_name": "seed",
@@ -457,7 +457,7 @@ class TestWorkflowConfigRoutes:
             "inputs": {"3": {"seed": {"from": "option:seed"}}},
         })
         resp = await client.get("/comfytv/workflows/config",
-                                params={"kind": "image", "label": "X"})
+                                params={"kind": "image", "label": "x"})
         wid = (await resp.json())["id"]
         resp = await client.delete("/comfytv/workflows/config/binding", json={
             "workflow_id": wid, "node_id": "3", "input_name": "seed",
@@ -479,7 +479,7 @@ class TestWorkflowConfigRoutes:
     async def test_update_meta(self, client, tmp_path, monkeypatch):
         await self._seed_one(monkeypatch, tmp_path)
         resp = await client.get("/comfytv/workflows/config",
-                                params={"kind": "image", "label": "X"})
+                                params={"kind": "image", "label": "x"})
         wid = (await resp.json())["id"]
         resp = await client.post("/comfytv/workflows/config/meta", json={
             "workflow_id": wid,
@@ -510,7 +510,7 @@ class TestWorkflowConfigRoutes:
     async def test_set_api_json(self, client, tmp_path, monkeypatch):
         await self._seed_one(monkeypatch, tmp_path)
         resp = await client.post("/comfytv/workflows/api_json", json={
-            "kind": "image", "label": "X",
+            "kind": "image", "label": "x",
             "api_json": {"3": {"class_type": "KSampler"}},
             "file_mtime": 12345.6,
         })
@@ -524,14 +524,14 @@ class TestWorkflowConfigRoutes:
 
     async def test_set_api_json_bad_apijson_type(self, client):
         resp = await client.post("/comfytv/workflows/api_json", json={
-            "kind": "image", "label": "X", "api_json": "not dict",
+            "kind": "image", "label": "x", "api_json": "not dict",
             "file_mtime": 1.0,
         })
         assert resp.status == 400
 
     async def test_set_api_json_bad_mtime(self, client):
         resp = await client.post("/comfytv/workflows/api_json", json={
-            "kind": "image", "label": "X", "api_json": {}, "file_mtime": "x",
+            "kind": "image", "label": "x", "api_json": {}, "file_mtime": "x",
         })
         assert resp.status == 400
 

@@ -28,16 +28,16 @@ class TestLinkWorkflow:
         (native_dir / "my_flow.json").write_text(GUI, encoding="utf-8")
         res = wdb.link_workflow("image", "my_flow.json")
         assert res["link_type"] == db.LINK_TYPE_NATIVE
-        assert res["label"] == "My Flow"
+        assert res["label"] == "my_flow"
 
         rows = [r for r in wdb.list_workflows() if r["kind"] == "image"]
-        row = next(r for r in rows if r["label"] == "My Flow")
+        row = next(r for r in rows if r["label"] == "my_flow")
         assert row["link_type"] == db.LINK_TYPE_NATIVE
 
     def test_link_points_at_native_file_path(self, reset_db, native_dir):
         (native_dir / "a.json").write_text(GUI, encoding="utf-8")
         wdb.link_workflow("video", "a.json")
-        pair = wdb.read_workflow_file("video", "A")
+        pair = wdb.read_workflow_file("video", "a")
         assert pair is not None
         content, _ = pair
         assert json.loads(content) == json.loads(GUI)
@@ -80,7 +80,7 @@ class TestLinkWorkflow:
         wdb.link_workflow("image", "a.json")
         wdb.link_workflow("video", "a.json")
         labels = {(r["kind"], r["label"]) for r in wdb.list_workflows()}
-        assert ("image", "A") in labels and ("video", "A") in labels
+        assert ("image", "a") in labels and ("video", "a") in labels
 
 
 class TestUnlinkWorkflow:
@@ -92,7 +92,7 @@ class TestUnlinkWorkflow:
         out = wdb.unlink_workflow(wid)
         assert out and out["ok"]
         assert f.exists()
-        assert not any(r["label"] == "A" for r in wdb.list_workflows())
+        assert not any(r["label"] == "a" for r in wdb.list_workflows())
 
     def test_unlink_missing_returns_none(self, reset_db, native_dir):
         assert wdb.unlink_workflow(999999) is None
@@ -135,9 +135,9 @@ class TestLinkedMtimeSync:
         wdb.link_workflow("image", "a.json")
 
         assert wdb.set_api_json(
-            "image", "A", {"1": {"class_type": "X", "inputs": {}}}, f.stat().st_mtime
+            "image", "a", {"1": {"class_type": "X", "inputs": {}}}, f.stat().st_mtime
         )
-        st = wdb.get_workflow_state("image", "A")
+        st = wdb.get_workflow_state("image", "a")
         assert st and st["has_api"] is True
 
         time.sleep(0.01)
@@ -145,5 +145,5 @@ class TestLinkedMtimeSync:
         f.write_text(new, encoding="utf-8")
         os.utime(f, (f.stat().st_atime, f.stat().st_mtime + 5))
 
-        st2 = wdb.get_workflow_state("image", "A")
+        st2 = wdb.get_workflow_state("image", "a")
         assert st2 and st2["has_api"] is False

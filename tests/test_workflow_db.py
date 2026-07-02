@@ -9,21 +9,24 @@ import pytest
 from ComfyTV.runners import workflow_db as wdb
 
 
-# ─── _humanize ───────────────────────────────────────────────────────────────
+# ─── _label_from_stem ────────────────────────────────────────────────────────
 
-class TestHumanize:
-    def test_underscores_and_dashes(self):
-        assert wdb._humanize("flux_canny_edit") == "Flux Canny Edit"
-        assert wdb._humanize("flux-fill-outpaint") == "Flux Fill Outpaint"
+class TestLabelFromStem:
+    def test_preserves_case_and_format(self):
+        assert wdb._label_from_stem("Simple TVWorkflow - V7.3-4") == "Simple TVWorkflow - V7.3-4"
 
-    def test_mixed(self):
-        assert wdb._humanize("ace_step-v1-song") == "Ace Step V1 Song"
+    def test_underscores_and_dashes_kept_verbatim(self):
+        assert wdb._label_from_stem("flux_canny_edit") == "flux_canny_edit"
+        assert wdb._label_from_stem("flux-fill-outpaint") == "flux-fill-outpaint"
 
     def test_empty(self):
-        assert wdb._humanize("") == ""
+        assert wdb._label_from_stem("") == ""
 
     def test_single_word(self):
-        assert wdb._humanize("sd15") == "Sd15"
+        assert wdb._label_from_stem("sd15") == "sd15"
+
+    def test_strips_surrounding_whitespace(self):
+        assert wdb._label_from_stem("  My Workflow  ") == "My Workflow"
 
 
 # ─── _is_gui_format ──────────────────────────────────────────────────────────
@@ -401,7 +404,7 @@ class TestSeedAndCRUD:
         monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
         wdb.seed_workflows_from_disk(("image",))
         rows = wdb.list_workflows()
-        assert any(r["kind"] == "image" and r["label"] == "Sd15" for r in rows)
+        assert any(r["kind"] == "image" and r["label"] == "sd15" for r in rows)
 
     def test_seed_applies_preset_on_new_row(self, reset_db, tmp_path, monkeypatch):
         from pathlib import Path
@@ -456,8 +459,8 @@ class TestSeedAndCRUD:
                             json.dumps({"nodes": [{"id": 1}]}))
 
         labels = {(r["kind"], r["label"]) for r in wdb.list_workflows()}
-        assert ("image", "Fresh") in labels
-        assert ("video", "Wan") in labels  # untouched — targeted upsert, no prune
+        assert ("image", "fresh") in labels
+        assert ("video", "wan") in labels  # untouched — targeted upsert, no prune
 
     def test_import_workflow_rejects_non_gui(self, reset_db, tmp_path, monkeypatch):
         from pathlib import Path
@@ -581,7 +584,7 @@ class TestSeedAndCRUD:
         rows = [r for r in wdb.list_workflows() if r["kind"] == "image"]
         labels = sorted(r["label"] for r in rows)
         assert "Shared" in labels
-        assert "Second" in labels
+        assert "second" in labels
         assert labels.count("Shared") == 1
 
     def test_get_workflow_for_invoke_returns_none_when_missing(self, reset_db):
@@ -595,7 +598,7 @@ class TestSeedAndCRUD:
         monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
         wdb.seed_workflows_from_disk(("image",))
         with pytest.raises(RuntimeError, match="hasn't been prepared"):
-            wdb.get_workflow_for_invoke("image", "Sd15")
+            wdb.get_workflow_for_invoke("image", "sd15")
 
     def test_get_workflow_for_invoke_happy_path(self, reset_db, tmp_path, monkeypatch):
         from pathlib import Path
@@ -629,18 +632,18 @@ class TestSeedAndCRUD:
         self._make_workflow(wdir, "sd15", "image")
         monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
         wdb.seed_workflows_from_disk(("image",))
-        wid = wdb.get_workflow_config("image", "Sd15")["id"]
+        wid = wdb.get_workflow_config("image", "sd15")["id"]
 
         wdb.upsert_input_binding(wid, "3", "seed", "option:seed")
         wdb.upsert_input_binding(wid, "42", "text", "main_prompt")
 
         wdb.set_api_json(
-            "image", "Sd15",
+            "image", "sd15",
             {"3": {"class_type": "KSampler", "inputs": {"seed": 0}}},
             200.0,
         )
 
-        cfg = wdb.get_workflow_config("image", "Sd15")
+        cfg = wdb.get_workflow_config("image", "sd15")
         node_ids = {b["node_id"] for b in cfg["bindings"]}
         assert node_ids == {"3"}, "orphaned binding on node 42 should be pruned"
 
@@ -650,16 +653,16 @@ class TestSeedAndCRUD:
         self._make_workflow(wdir, "sd15", "image")
         monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
         wdb.seed_workflows_from_disk(("image",))
-        wid = wdb.get_workflow_config("image", "Sd15")["id"]
+        wid = wdb.get_workflow_config("image", "sd15")["id"]
 
         wdb.upsert_input_binding(wid, "3", "seed", "option:seed")
         # Same node id present → binding must survive a re-prep (e.g. value-only edit).
         wdb.set_api_json(
-            "image", "Sd15",
+            "image", "sd15",
             {"3": {"class_type": "KSampler", "inputs": {"seed": 5}}},
             300.0,
         )
-        cfg = wdb.get_workflow_config("image", "Sd15")
+        cfg = wdb.get_workflow_config("image", "sd15")
         assert {b["node_id"] for b in cfg["bindings"]} == {"3"}
 
     def test_upsert_then_delete_binding(self, reset_db, tmp_path, monkeypatch):
@@ -668,7 +671,7 @@ class TestSeedAndCRUD:
         self._make_workflow(wdir, "sd15", "image")
         monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
         wdb.seed_workflows_from_disk(("image",))
-        cfg = wdb.get_workflow_config("image", "Sd15")
+        cfg = wdb.get_workflow_config("image", "sd15")
         wid = cfg["id"]
 
         # insert
@@ -676,7 +679,7 @@ class TestSeedAndCRUD:
             wid, "3", "seed", "option:seed", default="random_int31",
             cast="int", required=True, error_msg="oops",
         )
-        cfg2 = wdb.get_workflow_config("image", "Sd15")
+        cfg2 = wdb.get_workflow_config("image", "sd15")
         b = cfg2["bindings"][0]
         assert b["from"] == "option:seed"
         assert b["required"] is True
@@ -685,14 +688,14 @@ class TestSeedAndCRUD:
 
         # update (same key) — different from_
         wdb.upsert_input_binding(wid, "3", "seed", "main_prompt")
-        cfg3 = wdb.get_workflow_config("image", "Sd15")
+        cfg3 = wdb.get_workflow_config("image", "sd15")
         b = cfg3["bindings"][0]
         assert b["from"] == "main_prompt"
         assert b["cast"] is None  # cleared
 
         # delete
         assert wdb.delete_input_binding(wid, "3", "seed")
-        cfg4 = wdb.get_workflow_config("image", "Sd15")
+        cfg4 = wdb.get_workflow_config("image", "sd15")
         assert cfg4["bindings"] == []
 
         # second delete: false
@@ -707,27 +710,27 @@ class TestSeedAndCRUD:
         self._make_workflow(wdir, "sd15", "image", preset={"description": "orig"})
         monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
         wdb.seed_workflows_from_disk(("image",))
-        cfg = wdb.get_workflow_config("image", "Sd15")
+        cfg = wdb.get_workflow_config("image", "sd15")
         wid = cfg["id"]
 
         # Update only description; sizing/result untouched.
         assert wdb.update_workflow_meta(wid, description="new desc")
-        cfg2 = wdb.get_workflow_config("image", "Sd15")
+        cfg2 = wdb.get_workflow_config("image", "sd15")
         assert cfg2["description"] == "new desc"
 
         # Clear it explicitly with None.
         wdb.update_workflow_meta(wid, description=None)
-        cfg3 = wdb.get_workflow_config("image", "Sd15")
+        cfg3 = wdb.get_workflow_config("image", "sd15")
         assert cfg3["description"] is None
 
         # Set sizing.
         wdb.update_workflow_meta(wid, sizing={"base": 1024, "snap": 16})
-        cfg4 = wdb.get_workflow_config("image", "Sd15")
+        cfg4 = wdb.get_workflow_config("image", "sd15")
         assert cfg4["sizing"] == {"base": 1024, "snap": 16}
 
         # Clear sizing with empty dict (treated as falsy → None).
         wdb.update_workflow_meta(wid, sizing={})
-        cfg5 = wdb.get_workflow_config("image", "Sd15")
+        cfg5 = wdb.get_workflow_config("image", "sd15")
         assert cfg5["sizing"] == {}
 
     def test_update_meta_missing_workflow(self, reset_db):
@@ -752,7 +755,7 @@ class TestSeedAndCRUD:
         self._make_workflow(wdir, "sd15", "image")
         monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
         wdb.seed_workflows_from_disk(("image",))
-        state = wdb.get_workflow_state("image", "Sd15")
+        state = wdb.get_workflow_state("image", "sd15")
         assert state is not None
         assert state["has_api"] is False
         assert state["file_exists"] is True
@@ -764,11 +767,11 @@ class TestSeedAndCRUD:
         self._make_workflow(wdir, "sd15", "image")
         monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
         wdb.seed_workflows_from_disk(("image",))
-        wdb.set_api_json("image", "Sd15", {"3": {}}, 1.0)
+        wdb.set_api_json("image", "sd15", {"3": {}}, 1.0)
         # Now the file gets re-touched; mtime changes.
         fpath = wdir / "image" / "sd15.json"
         fpath.write_text(json.dumps({"nodes": [{"id": 1}]}))  # bumps mtime
-        state = wdb.get_workflow_state("image", "Sd15")
+        state = wdb.get_workflow_state("image", "sd15")
         # has_api should now be False because mtime mismatch invalidated cache.
         assert state["has_api"] is False
 
@@ -790,13 +793,13 @@ class TestSeedAndCRUD:
 
         stale_api = {str(i): {"class_type": "X", "inputs": {}} for i in range(24, 30)}
         mtime = (kind_dir / "sd15.json").stat().st_mtime
-        wdb.set_api_json("image", "Sd15", stale_api, mtime)
+        wdb.set_api_json("image", "sd15", stale_api, mtime)
 
-        state = wdb.get_workflow_state("image", "Sd15")
+        state = wdb.get_workflow_state("image", "sd15")
         assert state is not None
         assert state["has_api"] is False
 
-        again = wdb.get_workflow_state("image", "Sd15")
+        again = wdb.get_workflow_state("image", "sd15")
         assert again["has_api"] is False
 
     def test_get_workflow_state_keeps_matching_api_json(
@@ -817,9 +820,9 @@ class TestSeedAndCRUD:
             "98:9": {"class_type": "VAELoader", "inputs": {}},
         }
         mtime = (kind_dir / "sd15.json").stat().st_mtime
-        wdb.set_api_json("image", "Sd15", good_api, mtime)
+        wdb.set_api_json("image", "sd15", good_api, mtime)
 
-        state = wdb.get_workflow_state("image", "Sd15")
+        state = wdb.get_workflow_state("image", "sd15")
         assert state["has_api"] is True
 
     def test_read_workflow_file_happy(self, reset_db, tmp_path, monkeypatch):
@@ -828,7 +831,7 @@ class TestSeedAndCRUD:
         self._make_workflow(wdir, "sd15", "image")
         monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
         wdb.seed_workflows_from_disk(("image",))
-        pair = wdb.read_workflow_file("image", "Sd15")
+        pair = wdb.read_workflow_file("image", "sd15")
         assert pair is not None
         content, mtime = pair
         assert json.loads(content) == {"nodes": []}
@@ -857,7 +860,7 @@ class TestPresetApplication:
         }))
         monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
         wdb.seed_workflows_from_disk(("image",))
-        cfg = wdb.get_workflow_config("image", "X")
+        cfg = wdb.get_workflow_config("image", "x")
         defaults = {b["input_name"]: b["default"] for b in cfg["bindings"]}
         assert defaults["int_default"] == "7"             # int → str
         assert defaults["list_default"] == "[1, 2, 3]"    # list → JSON str
@@ -878,7 +881,7 @@ class TestPresetApplication:
         }))
         monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
         wdb.seed_workflows_from_disk(("image",))
-        cfg = wdb.get_workflow_config("image", "X")
+        cfg = wdb.get_workflow_config("image", "x")
         assert len(cfg["bindings"]) == 1
         assert cfg["bindings"][0]["node_id"] == "6"
 
@@ -1054,48 +1057,48 @@ class TestProvidedApiSidecar:
         self._seed(monkeypatch, tmp_path, with_sidecar=True)
         rows = wdb.list_workflows()
         labels = [r["label"] for r in rows if r["kind"] == "image"]
-        assert "Byo" in labels
+        assert "byo" in labels
         assert all("api" not in l.lower() for l in labels)
         assert len(labels) == 1
 
     def test_state_uses_sidecar_directly(self, reset_db, tmp_path, monkeypatch):
         self._seed(monkeypatch, tmp_path, with_sidecar=True)
-        state = wdb.get_workflow_state("image", "Byo")
+        state = wdb.get_workflow_state("image", "byo")
         assert state["has_api"] is True
-        cfg = wdb.get_workflow_config("image", "Byo")
+        cfg = wdb.get_workflow_config("image", "byo")
         assert cfg["api_json"] == self._API
 
     def test_state_no_sidecar_has_no_api(self, reset_db, tmp_path, monkeypatch):
         self._seed(monkeypatch, tmp_path, with_sidecar=False)
-        state = wdb.get_workflow_state("image", "Byo")
+        state = wdb.get_workflow_state("image", "byo")
         assert state["has_api"] is False
 
     def test_sidecar_survives_gui_mtime_change(self, reset_db, tmp_path, monkeypatch):
         kdir = self._seed(monkeypatch, tmp_path, with_sidecar=True)
-        assert wdb.get_workflow_state("image", "Byo")["has_api"] is True
+        assert wdb.get_workflow_state("image", "byo")["has_api"] is True
         import os, time
         gui = kdir / "byo.json"
         os.utime(gui, (time.time() + 50, time.time() + 50))
-        state = wdb.get_workflow_state("image", "Byo")
+        state = wdb.get_workflow_state("image", "byo")
         assert state["has_api"] is True
 
     def test_sidecar_dropped_at_runtime_is_picked_up(self, reset_db, tmp_path, monkeypatch):
         kdir = self._seed(monkeypatch, tmp_path, with_sidecar=False)
-        assert wdb.get_workflow_state("image", "Byo")["has_api"] is False
+        assert wdb.get_workflow_state("image", "byo")["has_api"] is False
         (kdir / "byo.api.json").write_text(json.dumps(self._API), encoding="utf-8")
-        assert wdb.get_workflow_state("image", "Byo")["has_api"] is True
+        assert wdb.get_workflow_state("image", "byo")["has_api"] is True
 
     def test_sidecar_prunes_orphaned_bindings(self, reset_db, tmp_path, monkeypatch):
         self._seed(monkeypatch, tmp_path, with_sidecar=False)
-        cfg = wdb.get_workflow_config("image", "Byo")
+        cfg = wdb.get_workflow_config("image", "byo")
         wid = cfg["id"]
         wdb.upsert_input_binding(wid, "999", "text", "main_prompt")
         wdb.upsert_input_binding(wid, "57:3", "seed", "option:seed")
         from pathlib import Path
         Path(cfg["file_path"]).parent.joinpath("byo.api.json").write_text(
             json.dumps(self._API), encoding="utf-8")
-        wdb.get_workflow_state("image", "Byo")
-        cfg2 = wdb.get_workflow_config("image", "Byo")
+        wdb.get_workflow_state("image", "byo")
+        cfg2 = wdb.get_workflow_config("image", "byo")
         node_ids = {b["node_id"] for b in cfg2["bindings"]}
         assert "999" not in node_ids
         assert "57:3" in node_ids
@@ -1103,24 +1106,24 @@ class TestProvidedApiSidecar:
     def test_invalid_sidecar_is_ignored(self, reset_db, tmp_path, monkeypatch):
         kdir = self._seed(monkeypatch, tmp_path, with_sidecar=False)
         (kdir / "byo.api.json").write_text(json.dumps(self._GUI), encoding="utf-8")
-        state = wdb.get_workflow_state("image", "Byo")
+        state = wdb.get_workflow_state("image", "byo")
         assert state["has_api"] is False
 
     def test_save_api_sidecar_writes_and_adopts(self, reset_db, tmp_path, monkeypatch):
         kdir = self._seed(monkeypatch, tmp_path, with_sidecar=False)
-        res = wdb.save_api_sidecar("image", "Byo", json.dumps(self._API))
+        res = wdb.save_api_sidecar("image", "byo", json.dumps(self._API))
         assert res["ok"] is True
         assert res["node_count"] == len(self._API)
         assert res["sidecar"] == "byo.api.json"
         assert (kdir / "byo.api.json").exists()
-        cfg = wdb.get_workflow_config("image", "Byo")
+        cfg = wdb.get_workflow_config("image", "byo")
         assert cfg["has_api"] is True
         assert cfg["api_json"] == self._API
 
     def test_save_api_sidecar_rejects_non_api(self, reset_db, tmp_path, monkeypatch):
         self._seed(monkeypatch, tmp_path, with_sidecar=False)
         with pytest.raises(ValueError, match="API-format"):
-            wdb.save_api_sidecar("image", "Byo", json.dumps(self._GUI))
+            wdb.save_api_sidecar("image", "byo", json.dumps(self._GUI))
 
     def test_save_api_sidecar_unknown_workflow(self, reset_db, tmp_path, monkeypatch):
         self._seed(monkeypatch, tmp_path, with_sidecar=False)

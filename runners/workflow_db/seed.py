@@ -24,9 +24,8 @@ def _is_gui_format(content: str) -> bool:
     )
 
 
-def _humanize(stem: str) -> str:
-    parts = stem.replace("_", "-").split("-")
-    return " ".join(p.capitalize() for p in parts if p)
+def _label_from_stem(stem: str) -> str:
+    return stem.strip()
 
 
 def _read_preset(file_path: Path) -> dict:
@@ -133,7 +132,7 @@ def _upsert_workflow_row(s, kind: str, file_path: Path) -> db.Workflow:
     if row is None:
         row = db.Workflow(
             kind=kind,
-            label=_humanize(file_path.stem),
+            label=_label_from_stem(file_path.stem),
             file_path=str(file_path),
             order_=100,
         )
@@ -189,7 +188,7 @@ def reset_workflow_to_preset(workflow_id: int) -> Optional[dict]:
             db.WorkflowInputBinding.__table__.delete()
                 .where(db.WorkflowInputBinding.workflow_id == row.id)
         )
-        row.label = _humanize(file_path.stem)
+        row.label = _label_from_stem(file_path.stem)
         row.order_ = 100
         row.description = None
         row.result_type = None
@@ -231,8 +230,15 @@ def import_workflow(kind: str, filename: str, content: str) -> dict:
     path = kind_dir / f"{stem}.json"
     path.write_text(content, encoding="utf-8")
 
+    original = Path(filename or "").name
+    if original.lower().endswith(".json"):
+        original = original[:-5]
+    original_label = _label_from_stem(original)
+
     with db.get_session() as s:
         row = _upsert_workflow_row(s, kind, path)
+        if original_label:
+            row.label = original_label
         label = row.label
         s.commit()
 

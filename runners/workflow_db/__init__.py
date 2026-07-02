@@ -3,7 +3,7 @@ from .seed import (
     seed_workflows_from_disk,
     reset_workflow_to_preset,
     import_workflow,
-    _is_gui_format, _humanize, _read_preset, _safe_stem,
+    _is_gui_format, _label_from_stem, _read_preset, _safe_stem,
     _apply_preset_to_new_row, _upsert_workflow_row,
 )
 from .link import (

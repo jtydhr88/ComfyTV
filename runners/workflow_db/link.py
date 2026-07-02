@@ -5,7 +5,7 @@ from typing import Optional
 from sqlalchemy import select
 
 from ... import db
-from .seed import _humanize, _is_gui_format
+from .seed import _label_from_stem, _is_gui_format
 
 _log = logging.getLogger(__name__)
 
@@ -97,7 +97,7 @@ def link_workflow(kind: str, rel_path: str, label: Optional[str] = None) -> dict
             "not a GUI-format workflow (missing a top-level 'nodes' array)"
         )
 
-    lbl = (label or "").strip() or _humanize(path.stem)
+    lbl = (label or "").strip() or _label_from_stem(path.stem)
     abs_path = str(path)
     mtime = path.stat().st_mtime
 
