@@ -35,6 +35,19 @@ git clone https://github.com/jtydhr88/ComfyTV
 重启 ComfyUI。ComfyTV 的节点会出现在 Add-Node 菜单的 **`ComfyTV`** 分类下,
 再细分成几个子分类(Project / Input / Generate / Image / Panorama / Video / Audio / Compose / Bridge)。
 
+### ComfyUI Desktop / macOS / 多个 ComfyUI 实例
+
+如果你用的是 ComfyUI Desktop、在 macOS 上、或机器上装了不止一个 ComfyUI,上面那句相对路径的 `cd ComfyUI/custom_nodes` 很容易进错实例(典型症状:clone 成功了但 ComfyTV 死活不出现)。改成用**绝对路径**装进正在运行的那个实例:
+
+1. **确认正在运行的实例。** 看 ComfyUI 的启动日志,里面会打印它加载的根目录,例如 `/Users/你/Downloads/ComfyUI (1)/ComfyUI`,这个才是要安装的目标实例。
+2. **直接 clone 进该实例的 `custom_nodes`,并给路径加引号**(路径里有空格或括号时引号是必需的)。**写成一行**,避免行末多余的续行反斜杠 `\` 把命令拆散:
+   ```bash
+   git clone https://github.com/jtydhr88/ComfyTV.git "/Users/你/Downloads/ComfyUI (1)/ComfyUI/custom_nodes/ComfyTV"
+   ```
+   如果一定要换行,`\` 必须是这一行的最后一个字符、后面不能再有任何内容——比如把 `\` 误放在 `cd` 那行末尾,会把下一条命令悄悄接上去,导致 `git clone` 根本没独立执行。
+3. **检查目录结构。** `custom_nodes/ComfyTV/` 的第一层必须能看到 `__init__.py`;如果看到的是嵌套的 `ComfyTV/ComfyTV/…`,把里层那个文件夹往上提一层。
+4. **完整重启 ComfyUI 后端**(退出并重新打开 Desktop 应用,或停掉再重启服务——不是刷新浏览器)。成功时启动日志里会看到 ComfyTV 加载并注册节点。
+
 ---
 
 ## 用户指南

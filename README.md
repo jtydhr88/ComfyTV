@@ -33,6 +33,19 @@ git clone https://github.com/jtydhr88/ComfyTV
 
 Restart ComfyUI. ComfyTV nodes appear under the **`ComfyTV`** category in the Add-Node menu, grouped into sub-categories (Project / Input / Generate / Image / Panorama / Video / Audio / Compose / Bridge).
 
+### ComfyUI Desktop / macOS / multiple ComfyUI installs
+
+If you use ComfyUI Desktop, are on macOS, or have more than one ComfyUI on your machine, the relative `cd ComfyUI/custom_nodes` above can easily drop you into the wrong instance (a common symptom: the clone succeeds but ComfyTV never shows up). Install into the *running* instance by its absolute path instead:
+
+1. **Find the running instance.** Read the ComfyUI startup log — it prints the base path it loaded from, e.g. `/Users/you/Downloads/ComfyUI (1)/ComfyUI`. That is the instance to install into.
+2. **Clone straight into that instance's `custom_nodes`, quoting the path** (quotes are required if it contains spaces or parentheses). Keep it on **one line** so no stray line-continuation `\` splits it apart:
+   ```bash
+   git clone https://github.com/jtydhr88/ComfyTV.git "/Users/you/Downloads/ComfyUI (1)/ComfyUI/custom_nodes/ComfyTV"
+   ```
+   If you must wrap it across lines, the `\` has to be the very last character of the line with nothing after it — a stray `\` at the end of the `cd` line, for example, silently joins the next command so `git clone` never runs on its own.
+3. **Verify the layout.** The first level of `custom_nodes/ComfyTV/` must contain `__init__.py`. If you instead see a nested `ComfyTV/ComfyTV/…`, move the inner folder up one level.
+4. **Fully restart the ComfyUI backend** (quit and relaunch the Desktop app, or stop and restart the server — not just a browser refresh). On success the startup log shows ComfyTV loading and registering its nodes.
+
 ---
 
 ## User guides
