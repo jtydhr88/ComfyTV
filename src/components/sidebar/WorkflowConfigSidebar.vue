@@ -29,6 +29,30 @@
         </span>
       </div>
 
+      <section v-if="isLinked"
+               class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:py-1.5 ctv:px-2 ctv:rounded"
+               :class="linkBroken
+                 ? 'ctv:bg-destructive-background/10 ctv:border ctv:border-destructive-background/40'
+                 : 'ctv:bg-primary-background/[0.06] ctv:border ctv:border-primary-background/25'">
+        <div class="ctv:flex ctv:items-center ctv:gap-1.5">
+          <i :class="['pi', linkBroken ? 'pi-exclamation-triangle' : 'pi-link',
+                      'ctv:text-2xs', linkBroken ? 'ctv:text-destructive-background' : 'ctv:text-primary-foreground']" />
+          <span class="ctv:text-2xs ctv:font-semibold"
+                :class="linkBroken ? 'ctv:text-destructive-background' : 'ctv:text-base-foreground'">
+            {{ linkBroken ? $t('configSidebar.linkBroken') : $t('configSidebar.linkedSource') }}
+          </span>
+        </div>
+        <p class="ctv:m-0 ctv:text-3xs ctv:leading-relaxed ctv:text-muted-foreground ctv:break-all">
+          {{ linkBroken ? $t('configSidebar.linkBrokenHint') : $t('configSidebar.linkedSourceHint') }}
+        </p>
+        <button
+          :class="resetBtn"
+          :disabled="unlinkBusy"
+          @click="onUnlink"
+        ><i class="pi pi-link" /> {{ $t('configSidebar.unlink') }}</button>
+        <span v-if="unlinkError" class="ctv:text-3xs ctv:text-destructive-background">{{ unlinkError }}</span>
+      </section>
+
       <section v-if="config.gui_notes?.length"
                class="ctv:rounded ctv:overflow-hidden
                       ctv:bg-warning-background/[0.03] ctv:border ctv:border-warning-background/25">
@@ -207,6 +231,7 @@ import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
 import { useBindingWriter } from '@/composables/sidebar/useBindingWriter'
 import { useCollapsedFlag, useCollapsedNodeIds } from '@/composables/sidebar/useCollapsedState'
 import { useWorkflowConfig } from '@/composables/sidebar/useWorkflowConfig'
+import { LINK_TYPE_NATIVE } from '@/api'
 import {
   AUTO_RESULT_NODE,
   buildBindingOptions,
@@ -228,14 +253,19 @@ const {
   exportBusy, exportError,
   resetBusy,  resetError,
   uploadApiBusy, uploadApiError,
+  unlinkBusy, unlinkError,
   loadConfig,
   onExportPreset,
   onResetToPreset,
   onUploadApiSidecar,
+  onUnlink,
   postBinding,
   deleteBinding,
   postMeta,
 } = useWorkflowConfig(t)
+
+const isLinked   = computed(() => config.value?.link_type === LINK_TYPE_NATIVE)
+const linkBroken = computed(() => isLinked.value && config.value?.file_exists === false)
 
 const RESULT_TYPE_LABEL_KEY: Record<string, string> = {
   graph_output_first: 'configSidebar.resultType.text',

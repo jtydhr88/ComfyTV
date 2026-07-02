@@ -1,13 +1,15 @@
 {
   "dialog": {
     "confirm": "OK",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "close": "Close"
   },
   "workflow": {
     "uploadButton": "⬆ Upload workflow",
     "imported": "Imported \"{label}\"",
     "importFailed": "Workflow import failed",
-    "notJson": "That file isn't valid JSON"
+    "notJson": "That file isn't valid JSON",
+    "linkButton": "🔗 Link workflow"
   },
   "stage": {
     "run": "Run",
@@ -238,7 +240,14 @@
       "notes": "Workflow notes",
       "description": "Description",
       "result": "Result"
-    }
+    },
+    "linkedSource": "Linked from ComfyUI",
+    "linkedSourceHint": "This workflow lives in ComfyUI's own library. Edit it there and save — changes sync automatically.",
+    "linkBroken": "Link broken",
+    "linkBrokenHint": "The source workflow is missing from ComfyUI's library (moved, renamed, or deleted). Re-create it or unlink.",
+    "unlink": "Unlink",
+    "unlinkConfirm": "Unlink \"{label}\"? The ComfyUI workflow file is kept — only the ComfyTV reference is removed.",
+    "unlinkFailed": "Unlink failed: {detail}"
   },
   "project": {
     "label": "Current Project",
@@ -732,5 +741,22 @@
     "Audio": "Audio",
     "Input": "Input",
     "Bridge": "Bridge"
+  },
+  "workflowLink": {
+    "title": "Link a ComfyUI workflow",
+    "intro": "Link a workflow from ComfyUI's own library. Edit it normally in ComfyUI and save — ComfyTV picks up your changes automatically.",
+    "searchPlaceholder": "Search workflows…",
+    "loading": "Loading workflows…",
+    "empty": "No workflows found in ComfyUI's library.",
+    "loadFailed": "Couldn't list workflows: {detail}",
+    "link": "Link",
+    "linking": "Linking…",
+    "linkedBadge": "Linked",
+    "linkedToast": "Linked \"{label}\"",
+    "linkFailed": "Link failed",
+    "unlink": "Unlink",
+    "unlinking": "Unlinking…",
+    "unlinkedToast": "Unlinked \"{label}\"",
+    "unlinkFailed": "Unlink failed"
   }
 }

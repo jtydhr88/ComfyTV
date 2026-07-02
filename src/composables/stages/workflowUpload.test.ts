@@ -4,10 +4,14 @@ import { app } from '@/lib/comfyApp'
 
 const importWorkflow = vi.fn()
 const getStageMeta = vi.fn()
+const openLinkWorkflow = vi.fn()
 
 vi.mock('@/api', () => ({ importWorkflow: (...a: any[]) => importWorkflow(...a) }))
 vi.mock('@/composables/stages/stageMeta', () => ({
   getStageMeta: (...a: any[]) => getStageMeta(...a),
+}))
+vi.mock('@/composables/stages/openLinkWorkflow', () => ({
+  openLinkWorkflow: (...a: any[]) => openLinkWorkflow(...a),
 }))
 
 // imported after the mocks are declared
@@ -30,6 +34,7 @@ describe('addWorkflowUploadButton', () => {
   beforeEach(() => {
     importWorkflow.mockReset()
     getStageMeta.mockReset()
+    openLinkWorkflow.mockReset()
     ;(app as any).graph._nodes = []
   })
   afterEach(() => {
@@ -52,6 +57,47 @@ describe('addWorkflowUploadButton', () => {
     expect(names[0]).toBe('workflow')
     expect(node.widgets[1].__comfytvUpload).toBe(true)
     expect(node.widgets[1].serialize).toBe(false)
+  })
+
+  it('adds a link button right after the upload button', () => {
+    const node = makeNode()
+    const wf = node.addWidget('combo', 'workflow', 'A', null)
+    addWorkflowUploadButton(node, wf, 'image')
+    const upIdx = node.widgets.findIndex((w: any) => w.__comfytvUpload)
+    expect(node.widgets[upIdx + 1].__comfytvLink).toBe(true)
+    expect(node.widgets[upIdx + 1].serialize).toBe(false)
+  })
+
+  it('link button opens the native-workflow picker for this kind', () => {
+    const node = makeNode()
+    const wf = node.addWidget('combo', 'workflow', 'A', null)
+    addWorkflowUploadButton(node, wf, 'video')
+    const linkBtn = node.widgets.find((w: any) => w.__comfytvLink)
+    linkBtn.callback()
+    expect(openLinkWorkflow).toHaveBeenCalledWith('video', expect.any(Object))
+  })
+
+  it('linking registers the option and selects it', () => {
+    getStageMeta.mockReturnValue({ workflow_kind: 'image' })
+    const consumer: any = {
+      comfyClass: 'ComfyTV.ImageStage',
+      widgets: [{ name: 'workflow', options: { values: ['A'] } }],
+    }
+    ;(app as any).graph._nodes = [consumer]
+
+    const node = makeNode()
+    const wf = node.addWidget('combo', 'workflow', 'A', vi.fn())
+    addWorkflowUploadButton(node, wf, 'image')
+    const linkBtn = node.widgets.find((w: any) => w.__comfytvLink)
+    linkBtn.callback()
+
+    // invoke the onLinked callback the button passed to the picker
+    const onLinked = openLinkWorkflow.mock.calls[0][1].onLinked
+    onLinked({ label: 'LinkedWF' })
+
+    expect(wf.value).toBe('LinkedWF')
+    expect(wf.callback).toHaveBeenCalledWith('LinkedWF')
+    expect(consumer.widgets[0].options.values).toContain('LinkedWF')
   })
 
   it('does not add a second button if one already exists', () => {

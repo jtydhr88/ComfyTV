@@ -370,6 +370,8 @@ def get_workflow_config(kind: str, label: str) -> Optional[dict]:
             "label":       row.label,
             "file_path":   row.file_path,
             "file_mtime":  row.file_mtime,
+            "link_type":   getattr(row, "link_type", db.LINK_TYPE_MANAGED) or db.LINK_TYPE_MANAGED,
+            "file_exists": os.path.exists(row.file_path),
             "has_api":     bool(row.api_json),
             "api_json":    api_obj,
             "exposed_widgets": exposed,

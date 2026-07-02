@@ -1,19 +1,11 @@
 import { importWorkflow } from '@/api'
-import { getStageMeta } from '@/composables/stages/stageMeta'
+import { addOptionEverywhere } from '@/composables/stages/workflowCombo'
+import { openLinkWorkflow } from '@/composables/stages/openLinkWorkflow'
 import { app } from '@/lib/comfyApp'
 import { i18n } from '@/i18n'
 
 function toast(severity: string, summary: string, detail = '') {
   ;(app as any)?.extensionManager?.toast?.add?.({ severity, summary, detail, life: 5000 })
-}
-
-function addOptionEverywhere(kind: string, label: string) {
-  const nodes = (app as any)?.graph?._nodes ?? []
-  for (const n of nodes) {
-    if (getStageMeta(n?.comfyClass)?.workflow_kind !== kind) continue
-    const vals = n.widgets?.find((w: any) => w.name === 'workflow')?.options?.values
-    if (Array.isArray(vals) && !vals.includes(label)) vals.push(label)
-  }
 }
 
 async function doUpload(node: any, wfWidget: any, kind: string) {
@@ -59,13 +51,37 @@ export function addWorkflowUploadButton(node: any, wfWidget: any, kind: string):
   btn.__comfytvUpload = true
   btn.serialize = false
 
+  const linkBtn = node.addWidget(
+    'button',
+    i18n.global.t('workflow.linkButton'),
+    null,
+    () => {
+      openLinkWorkflow(kind, {
+        onLinked: ({ label }) => {
+          addOptionEverywhere(kind, label)
+          wfWidget.value = label
+          wfWidget.callback?.(label)
+          ;(app as any)?.graph?.setDirtyCanvas?.(true, true)
+        },
+      })
+    },
+  )
+  linkBtn.__comfytvLink = true
+  linkBtn.serialize = false
+
   const widgets = node.widgets
   if (Array.isArray(widgets)) {
-    const bi = widgets.indexOf(btn)
     const wi = widgets.indexOf(wfWidget)
+    const bi = widgets.indexOf(btn)
     if (bi > -1 && wi > -1 && bi !== wi + 1) {
       widgets.splice(bi, 1)
       widgets.splice(wi + 1, 0, btn)
+    }
+    const li = widgets.indexOf(linkBtn)
+    const bi2 = widgets.indexOf(btn)
+    if (li > -1 && bi2 > -1 && li !== bi2 + 1) {
+      widgets.splice(li, 1)
+      widgets.splice(bi2 + 1, 0, linkBtn)
     }
   }
 

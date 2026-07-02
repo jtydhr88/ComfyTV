@@ -2,8 +2,21 @@ import type { z } from 'zod'
 
 import { app } from '@/lib/comfyApp'
 
-import { ApiSidecarResultSchema, CapsPayloadSchema, ImportWorkflowResultSchema } from './schemas'
-import type { ApiSidecarResult, CapsPayload, ImportWorkflowResult } from './schemas'
+import {
+  ApiSidecarResultSchema,
+  CapsPayloadSchema,
+  ImportWorkflowResultSchema,
+  LinkWorkflowResultSchema,
+  ListNativeWorkflowsSchema,
+  UnlinkWorkflowResultSchema,
+} from './schemas'
+import type {
+  ApiSidecarResult,
+  CapsPayload,
+  ImportWorkflowResult,
+  LinkWorkflowResult,
+  NativeWorkflow,
+} from './schemas'
 
 export class ApiError extends Error {
   constructor(public path: string, public status: number, message: string) {
@@ -69,6 +82,24 @@ export function uploadApiSidecar(
   return apiSend('/comfytv/workflows/api_sidecar', 'POST', ApiSidecarResultSchema, {
     kind, label, content,
   })
+}
+
+export async function listNativeWorkflows(kind?: string): Promise<NativeWorkflow[]> {
+  const q = kind ? `?kind=${encodeURIComponent(kind)}` : ''
+  const res = await apiFetch(`/comfytv/workflows/native${q}`, ListNativeWorkflowsSchema)
+  return res.workflows
+}
+
+export function linkWorkflow(
+  kind: string, path: string, label?: string,
+): Promise<LinkWorkflowResult> {
+  return apiSend('/comfytv/workflows/link', 'POST', LinkWorkflowResultSchema, {
+    kind, path, label,
+  })
+}
+
+export function unlinkWorkflow(id: number): Promise<z.infer<typeof UnlinkWorkflowResultSchema>> {
+  return apiSend(`/comfytv/workflows/${id}/unlink`, 'POST', UnlinkWorkflowResultSchema)
 }
 
 export * from './schemas'

@@ -225,6 +225,7 @@ def list_workflows() -> list[dict]:
                 "label": r.label,
                 "order": r.order_,
                 "description": r.description,
+                "link_type": getattr(r, "link_type", db.LINK_TYPE_MANAGED) or db.LINK_TYPE_MANAGED,
             }
             for r in rows
         ]

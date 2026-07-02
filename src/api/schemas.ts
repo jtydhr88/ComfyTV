@@ -108,6 +108,39 @@ export const ApiSidecarResultSchema = z.object({
 })
 export type ApiSidecarResult = z.infer<typeof ApiSidecarResultSchema>
 
+export const LINK_TYPE_MANAGED = 0
+export const LINK_TYPE_NATIVE = 1
+
+export const NativeWorkflowSchema = z.object({
+  path: z.string(),
+  name: z.string(),
+  mtime: z.number(),
+  size: z.number(),
+  is_linked: z.boolean(),
+  linked_id: z.number().nullable().optional(),
+})
+export type NativeWorkflow = z.infer<typeof NativeWorkflowSchema>
+
+export const ListNativeWorkflowsSchema = z.object({
+  workflows: z.array(NativeWorkflowSchema),
+})
+
+export const LinkWorkflowResultSchema = z.object({
+  ok: z.boolean(),
+  kind: z.string(),
+  label: z.string(),
+  id: z.number(),
+  file_path: z.string().optional(),
+  link_type: z.number().optional(),
+})
+export type LinkWorkflowResult = z.infer<typeof LinkWorkflowResultSchema>
+
+export const UnlinkWorkflowResultSchema = z.object({
+  ok: z.boolean(),
+  kind: z.string().optional(),
+  label: z.string().optional(),
+})
+
 export const AssetCategorySchema = z.object({
   id:         z.number(),
   name:       z.string(),
@@ -189,6 +222,8 @@ export const WorkflowConfigSchema = z.object({
   id: z.number(),
   kind: z.string(),
   label: z.string(),
+  link_type: z.number().optional(),
+  file_exists: z.boolean().optional(),
   has_api: z.boolean(),
   description: z.string().nullable(),
   gui_notes: z.array(z.object({ type: z.string(), text: z.string() })),

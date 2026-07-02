@@ -33,6 +33,10 @@ def _now() -> datetime:
     return datetime.now(timezone.utc)
 
 
+LINK_TYPE_MANAGED = 0
+LINK_TYPE_NATIVE = 1
+
+
 class Project(Base):
     __tablename__ = "comfytv_projects"
 
@@ -51,6 +55,8 @@ class Workflow(Base):
     kind:         Mapped[str] = mapped_column(String, index=True)
     label:        Mapped[str] = mapped_column(String)
     file_path:    Mapped[str] = mapped_column(Text)
+    link_type:    Mapped[int] = mapped_column(Integer, default=LINK_TYPE_MANAGED,
+                                              server_default="0")
     file_mtime:   Mapped[Optional[float]] = mapped_column(Float, nullable=True)
     api_json:     Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     order_:       Mapped[int] = mapped_column("order", Integer, default=100)
@@ -244,6 +250,15 @@ def _migrate_additive_columns(engine) -> None:
                     "ON comfytv_outputs (stage_uid)"
                 ))
             logging.info("[ComfyTV] migrated: comfytv_outputs + stage_uid")
+
+        wf_cols = {c["name"] for c in insp.get_columns("comfytv_workflows")}
+        if "link_type" not in wf_cols:
+            with engine.begin() as conn:
+                conn.execute(text(
+                    "ALTER TABLE comfytv_workflows ADD COLUMN link_type INTEGER "
+                    "NOT NULL DEFAULT 0"
+                ))
+            logging.info("[ComfyTV] migrated: comfytv_workflows + link_type")
     except Exception as e:
         logging.warning("[ComfyTV] additive migration failed: %s", e)
 

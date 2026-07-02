@@ -87,3 +87,44 @@ describe('apiSend', () => {
     expect(init.headers).toBeUndefined()
   })
 })
+
+
+describe('workflow link api', () => {
+  beforeEach(() => vi.resetModules())
+
+  it('listNativeWorkflows returns the array and passes kind', async () => {
+    const fetchApi = vi.fn(async (_url: string, _init?: any) => json({
+      workflows: [{ path: 'a.json', name: 'a', mtime: 1, size: 2, is_linked: false, linked_id: null }],
+    }))
+    const { listNativeWorkflows } = await loadWithFetch(fetchApi)
+    const res = await listNativeWorkflows('image')
+    expect(res).toHaveLength(1)
+    expect(res[0]!.name).toBe('a')
+    expect(fetchApi.mock.calls[0]![0]).toContain('kind=image')
+  })
+
+  it('listNativeWorkflows omits the kind query when not given', async () => {
+    const fetchApi = vi.fn(async (_url: string, _init?: any) => json({ workflows: [] }))
+    const { listNativeWorkflows } = await loadWithFetch(fetchApi)
+    await listNativeWorkflows()
+    expect(fetchApi.mock.calls[0]![0]).toBe('/comfytv/workflows/native')
+  })
+
+  it('linkWorkflow posts kind/path/label', async () => {
+    const fetchApi = vi.fn(async (_url: string, _init?: any) => json({ ok: true, kind: 'image', label: 'A', id: 5 }))
+    const { linkWorkflow } = await loadWithFetch(fetchApi)
+    const res = await linkWorkflow('image', 'a.json', 'A')
+    expect(res.id).toBe(5)
+    const [url, init] = fetchApi.mock.calls[0]!
+    expect(url).toBe('/comfytv/workflows/link')
+    expect(JSON.parse(init.body)).toEqual({ kind: 'image', path: 'a.json', label: 'A' })
+  })
+
+  it('unlinkWorkflow posts to the unlink route', async () => {
+    const fetchApi = vi.fn(async (_url: string, _init?: any) => json({ ok: true, kind: 'image', label: 'A' }))
+    const { unlinkWorkflow } = await loadWithFetch(fetchApi)
+    const res = await unlinkWorkflow(5)
+    expect(res.ok).toBe(true)
+    expect(fetchApi.mock.calls[0]![0]).toBe('/comfytv/workflows/5/unlink')
+  })
+})

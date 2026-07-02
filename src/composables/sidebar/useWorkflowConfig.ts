@@ -1,9 +1,10 @@
 import { ref } from 'vue'
 
-import { apiFetch, apiSend, OkSchema, uploadApiSidecar, WorkflowConfigSchema } from '@/api'
+import { apiFetch, apiSend, OkSchema, unlinkWorkflow, uploadApiSidecar, WorkflowConfigSchema } from '@/api'
 import { askConfirm } from '@/composables/dialog/useConfirmDialog'
 import { invalidateWorkflowInfo } from '@/composables/stages/useWorkflowValidator'
 import { prepareWorkflow } from '@/composables/stages/useWorkflowPrep'
+import { removeOptionEverywhere } from '@/composables/stages/workflowCombo'
 import { app } from '@/lib/comfyApp'
 import { useSelectionStore } from '@/stores/selectionStore'
 import {
@@ -27,6 +28,9 @@ export function useWorkflowConfig(t: (key: string, args?: Record<string, unknown
 
   const uploadApiBusy  = ref(false)
   const uploadApiError = ref<string | null>(null)
+
+  const unlinkBusy  = ref(false)
+  const unlinkError = ref<string | null>(null)
 
   async function loadConfig(kind: string, label: string) {
     loadError.value = null
@@ -134,6 +138,30 @@ export function useWorkflowConfig(t: (key: string, args?: Record<string, unknown
     input.click()
   }
 
+  async function onUnlink() {
+    if (!config.value) return
+    const { kind, label, id } = config.value
+    const ok = await askConfirm({
+      title: t('configSidebar.unlink'),
+      message: t('configSidebar.unlinkConfirm', { label }),
+    })
+    if (!ok) return
+    unlinkBusy.value = true
+    unlinkError.value = null
+    try {
+      await unlinkWorkflow(id)
+      removeOptionEverywhere(kind, label)
+      invalidateWorkflowInfo()
+      selection.refreshFromCanvas()
+      config.value = null
+    } catch (e: any) {
+      const detail = String(e?.message || e || 'unlink failed')
+      unlinkError.value = t('configSidebar.unlinkFailed', { detail })
+    } finally {
+      unlinkBusy.value = false
+    }
+  }
+
   function notifyValidatorOfBindingChange() {
     invalidateWorkflowInfo()
     selection.bumpBindings()
@@ -186,10 +214,12 @@ export function useWorkflowConfig(t: (key: string, args?: Record<string, unknown
     exportBusy, exportError,
     resetBusy,  resetError,
     uploadApiBusy, uploadApiError,
+    unlinkBusy, unlinkError,
     loadConfig,
     onExportPreset,
     onResetToPreset,
     onUploadApiSidecar,
+    onUnlink,
     postBinding,
     deleteBinding,
     postMeta,

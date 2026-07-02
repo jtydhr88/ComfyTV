@@ -24,6 +24,8 @@ export interface ConfigPayload {
   id: number
   kind: string
   label: string
+  link_type?: number
+  file_exists?: boolean
   has_api: boolean
   description: string | null
   gui_notes: Array<{ type: string; text: string }>

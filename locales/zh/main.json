@@ -1,13 +1,15 @@
 {
   "dialog": {
     "confirm": "确定",
-    "cancel": "取消"
+    "cancel": "取消",
+    "close": "关闭"
   },
   "workflow": {
     "uploadButton": "⬆ 上传工作流",
     "imported": "已导入「{label}」",
     "importFailed": "工作流导入失败",
-    "notJson": "该文件不是合法 JSON"
+    "notJson": "该文件不是合法 JSON",
+    "linkButton": "🔗 链接工作流"
   },
   "stage": {
     "run": "运行",
@@ -238,7 +240,14 @@
       "notes": "工作流笔记",
       "description": "说明",
       "result": "结果输出"
-    }
+    },
+    "linkedSource": "链接自 ComfyUI",
+    "linkedSourceHint": "该工作流位于 ComfyUI 自带库中。在那里编辑并保存，修改会自动同步。",
+    "linkBroken": "链接已失效",
+    "linkBrokenHint": "ComfyUI 库中的源工作流已缺失（被移动、改名或删除）。请重新创建或解除链接。",
+    "unlink": "解除链接",
+    "unlinkConfirm": "解除「{label}」的链接？ComfyUI 里的工作流文件会保留，仅移除 ComfyTV 的引用。",
+    "unlinkFailed": "解除链接失败：{detail}"
   },
   "project": {
     "label": "当前项目",
@@ -732,5 +741,22 @@
     "Audio": "音频",
     "Input": "输入",
     "Bridge": "桥接"
+  },
+  "workflowLink": {
+    "title": "链接 ComfyUI 工作流",
+    "intro": "从 ComfyUI 自带的工作流库里链接一个工作流。在 ComfyUI 里正常编辑并保存，ComfyTV 会自动同步你的修改。",
+    "searchPlaceholder": "搜索工作流…",
+    "loading": "工作流加载中…",
+    "empty": "ComfyUI 工作流库里没有工作流。",
+    "loadFailed": "无法列出工作流：{detail}",
+    "link": "链接",
+    "linking": "链接中…",
+    "linkedBadge": "已链接",
+    "linkedToast": "已链接「{label}」",
+    "linkFailed": "链接失败",
+    "unlink": "解除",
+    "unlinking": "解除中…",
+    "unlinkedToast": "已解除「{label}」",
+    "unlinkFailed": "解除链接失败"
   }
 }

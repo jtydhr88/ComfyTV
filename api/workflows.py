@@ -119,6 +119,57 @@ async def workflow_import(request: web.Request) -> web.Response:
     return web.json_response({"ok": True, **result})
 
 
+@routes.get("/comfytv/workflows/native")
+async def workflow_list_native(request: web.Request) -> web.Response:
+    kind = request.query.get("kind") or None
+    try:
+        items = workflow_db.list_native_workflows(kind)
+    except Exception as e:  # pragma: no cover
+        return web.json_response({"error": str(e)}, status=500)
+    return web.json_response({"workflows": items})
+
+
+@routes.post("/comfytv/workflows/link")
+async def workflow_link(request: web.Request) -> web.Response:
+    try:
+        body = await request.json()
+    except Exception:
+        return web.json_response({"error": "json body required"}, status=400)
+
+    kind  = str(body.get("kind") or "")
+    path  = str(body.get("path") or "")
+    label = body.get("label")
+    if kind not in WORKFLOW_KINDS:
+        return web.json_response({"error": f"unknown workflow kind {kind!r}"}, status=400)
+    if not path:
+        return web.json_response({"error": "path required"}, status=400)
+
+    try:
+        result = workflow_db.link_workflow(kind, path, label)
+    except ValueError as e:
+        return web.json_response({"error": str(e)}, status=400)
+
+    refresh_registry()
+    return web.json_response({"ok": True, **result})
+
+
+@routes.post("/comfytv/workflows/{wid}/unlink")
+async def workflow_unlink(request: web.Request) -> web.Response:
+    try:
+        wid = int(request.match_info["wid"])
+    except (KeyError, ValueError):
+        return web.json_response({"error": "invalid workflow id"}, status=400)
+    try:
+        result = workflow_db.unlink_workflow(wid)
+    except ValueError as e:
+        return web.json_response({"error": str(e)}, status=400)
+    if result is None:
+        return web.json_response({"error": "workflow not found"}, status=404)
+
+    refresh_registry()
+    return web.json_response(result)
+
+
 @routes.post("/comfytv/workflows/config/binding")
 async def workflow_upsert_binding(request: web.Request) -> web.Response:
     try:
