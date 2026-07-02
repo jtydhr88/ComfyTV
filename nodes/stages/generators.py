@@ -12,6 +12,21 @@ _SPEECH_LANGUAGES = [
     "Italian", "Hindi", "Russian", "Arabic",
 ]
 
+_ACE_TIME_SIGNATURES = ['2', '3', '4', '6']
+_ACE_LANGUAGES = [
+    'ar', 'az', 'bg', 'bn', 'ca', 'cs', 'da', 'de', 'el', 'en', 'es', 'fa',
+    'fi', 'fr', 'he', 'hi', 'hr', 'ht', 'hu', 'id', 'is', 'it', 'ja', 'ko',
+    'la', 'lt', 'ms', 'ne', 'nl', 'no', 'pa', 'pl', 'pt', 'ro', 'ru', 'sa',
+    'sk', 'sr', 'sv', 'sw', 'ta', 'te', 'th', 'tl', 'tr', 'uk', 'ur', 'vi',
+    'yue', 'zh', 'unknown',
+]
+_ACE_KEYSCALES = [
+    f"{root} {quality}"
+    for quality in ["major", "minor"]
+    for root in ["C", "C#", "Db", "D", "D#", "Eb", "E", "F", "F#", "Gb",
+                 "G", "G#", "Ab", "A", "A#", "Bb", "B"]
+]
+
 
 class ProjectStage(io.ComfyNode):
 
@@ -234,6 +249,14 @@ class AudioStage(io.ComfyNode):
                 io.String.Input("lyrics", default="", multiline=True,
                                 extra_dict={"placeholder": "Leave empty for instrumental. Type lyrics for a vocal track."},
                                 tooltip="Optional lyrics — non-empty triggers vocal generation."),
+                io.Int.Input("bpm", default=120, min=10, max=300, step=1,
+                             tooltip="Tempo in beats per minute (ACE-Step 1.5)."),
+                io.Combo.Input("timesignature", options=_ACE_TIME_SIGNATURES, default='4',
+                               tooltip="Time signature — beats per bar (ACE-Step 1.5)."),
+                io.Combo.Input("keyscale", options=_ACE_KEYSCALES, default='C major',
+                               tooltip="Musical key and scale, e.g. 'C major' / 'A minor' (ACE-Step 1.5)."),
+                io.Combo.Input("language", options=_ACE_LANGUAGES, default='en',
+                               tooltip="Lyrics language code (ACE-Step 1.5)."),
                 _custom_params_input(),
             ],
             outputs=[COMFYTV_AUDIO.Output("audio")],
@@ -244,6 +267,7 @@ class AudioStage(io.ComfyNode):
     @classmethod
     async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                       workflow="", main_prompt="", duration_s=30.0, lyrics="",
+                      bpm=120, timesignature='4', keyscale='C major', language='en',
                       custom_params="{}"):
         return await run_stage_workflow(
             cls,
@@ -254,8 +278,12 @@ class AudioStage(io.ComfyNode):
             main_prompt=(main_prompt or '').strip(),
             upstream={},
             options={
-                'duration_s': float(duration_s or 30.0),
-                'lyrics':     (lyrics or '').strip(),
+                'duration_s':     float(duration_s or 30.0),
+                'lyrics':         (lyrics or '').strip(),
+                'bpm':            int(bpm or 120),
+                'timesignature':  str(timesignature or '4'),
+                'keyscale':       (keyscale or 'C major'),
+                'language':       (language or 'en'),
             },
             custom_params=custom_params,
         )

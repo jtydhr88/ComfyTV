@@ -251,6 +251,22 @@
       },
       "workflow": {
         "name": "Workflow"
+      },
+      "bpm": {
+        "name": "BPM",
+        "tooltip": "Tempo in beats per minute (ACE-Step 1.5)."
+      },
+      "timesignature": {
+        "name": "Time Signature",
+        "tooltip": "Time signature — beats per bar (ACE-Step 1.5)."
+      },
+      "keyscale": {
+        "name": "Key / Scale",
+        "tooltip": "Musical key and scale, e.g. 'C major' / 'A minor' (ACE-Step 1.5)."
+      },
+      "language": {
+        "name": "Language",
+        "tooltip": "Lyrics language code (ACE-Step 1.5)."
       }
     },
     "outputs": {

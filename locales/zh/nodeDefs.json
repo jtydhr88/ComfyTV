@@ -251,6 +251,22 @@
       },
       "workflow": {
         "name": "工作流"
+      },
+      "bpm": {
+        "name": "BPM",
+        "tooltip": "速度，每分钟节拍数（ACE-Step 1.5）。"
+      },
+      "timesignature": {
+        "name": "拍号",
+        "tooltip": "拍号——每小节的拍数（ACE-Step 1.5）。"
+      },
+      "keyscale": {
+        "name": "调式",
+        "tooltip": "调性与音阶，例如 'C major' / 'A minor'（ACE-Step 1.5）。"
+      },
+      "language": {
+        "name": "语言",
+        "tooltip": "歌词语言代码（ACE-Step 1.5）。"
       }
     },
     "outputs": {
