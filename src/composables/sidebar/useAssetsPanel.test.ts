@@ -27,10 +27,16 @@ vi.mock('@/composables/dialog/useTextInputDialog', () => ({
 vi.mock('@/composables/dialog/useConfirmDialog', () => ({
   askConfirm: vi.fn(async () => false),
 }))
+vi.mock('@/composables/stages/assetLoaderNode', () => ({
+  createAssetLoaderNode: vi.fn(),
+  canvasCenter: vi.fn(() => [0, 0]),
+}))
 
 import { uploadBlobNamed } from '@/utils/uploadCanvas'
 import { askText } from '@/composables/dialog/useTextInputDialog'
 import { askConfirm } from '@/composables/dialog/useConfirmDialog'
+import { createAssetLoaderNode } from '@/composables/stages/assetLoaderNode'
+import { useLightbox } from '@/composables/useLightbox'
 
 import { useAssetsPanel } from './useAssetsPanel'
 
@@ -48,6 +54,9 @@ function dragEvent(data?: string, files: File[] = [], types: string[] = []): Dra
 beforeEach(() => {
   vi.clearAllMocks()
   store.byId.mockReturnValue({ id: 5, category_ids: [1] })
+  store.listByCategory.mockReturnValue([])
+  // The lightbox is a module-level singleton; reset it between tests.
+  useLightbox().close()
 })
 
 describe('useAssetsPanel', () => {
@@ -240,5 +249,272 @@ describe('useAssetsPanel', () => {
     const p = useAssetsPanel(() => false)
     await p.addFiles([new File(['x'], 'a.txt', { type: 'text/plain' })])
     expect(store.create).not.toHaveBeenCalled()
+  })
+
+  it('assetTooltip shows the name, with dimensions when present', () => {
+    const p = useAssetsPanel(() => false)
+    expect(p.assetTooltip({ name: 'hero', width: 2, height: 3 } as any)).toBe('hero · 2×3')
+    expect(p.assetTooltip({ name: '' } as any)).toBe('—')
+  })
+
+  it('assetMeta returns dims for images and formatted size otherwise', () => {
+    const p = useAssetsPanel(() => false)
+    expect(p.assetMeta({ media_type: 'image', width: 2, height: 3 } as any)).toBe('2×3')
+    expect(p.assetMeta({ media_type: 'video', size_bytes: 500 } as any)).toBe('500 B')
+    expect(p.assetMeta({ media_type: 'video', size_bytes: 2048 } as any)).toBe('2.0 KB')
+    expect(p.assetMeta({ media_type: 'video', size_bytes: 2 * 1024 ** 2 } as any)).toBe('2.0 MB')
+    expect(p.assetMeta({ media_type: 'video', size_bytes: 2 * 1024 ** 3 } as any)).toBe('2.0 GB')
+    expect(p.assetMeta({ media_type: 'video' } as any)).toBe('')
+  })
+
+  it('openAssetMenu with the element anchor derives coords from the bounding rect', () => {
+    const p = useAssetsPanel(() => false)
+    const el = { getBoundingClientRect: () => ({ right: 300, bottom: 120 }) }
+    p.openAssetMenu({ id: 5 } as any, { currentTarget: el } as any, 'element')
+    expect(p.assetMenu.value?.assetId).toBe(5)
+    expect(p.assetMenuStyle.value).toHaveProperty('left')
+    expect(p.assetMenuStyle.value).toHaveProperty('top')
+  })
+
+  it('openAssetMenu defaults to the element anchor', () => {
+    const p = useAssetsPanel(() => false)
+    const el = { getBoundingClientRect: () => ({ right: 300, bottom: 120 }) }
+    p.openAssetMenu({ id: 9 } as any, { currentTarget: el } as any)
+    expect(p.assetMenu.value?.assetId).toBe(9)
+  })
+
+  it('closeAssetMenu clears the open menu', () => {
+    const p = useAssetsPanel(() => false)
+    p.openAssetMenu({ id: 5 } as any, { clientX: 10, clientY: 10 } as any, 'pointer')
+    expect(p.assetMenu.value).not.toBeNull()
+    p.closeAssetMenu()
+    expect(p.assetMenu.value).toBeNull()
+  })
+
+  it('closeTagEditor clears the tag editor', () => {
+    const p = useAssetsPanel(() => false)
+    p.openAssetMenu({ id: 5 } as any, { clientX: 10, clientY: 10 } as any, 'pointer')
+    p.menuEditTags()
+    expect(p.tagEditor.value).not.toBeNull()
+    expect(p.tagEditorStyle.value).toHaveProperty('left')
+    p.closeTagEditor()
+    expect(p.tagEditor.value).toBeNull()
+    expect(p.tagEditorStyle.value).toEqual({})
+  })
+
+  it('toggleTag is a no-op when no editor asset is resolved', () => {
+    const p = useAssetsPanel(() => false)
+    p.toggleTag(1)
+    expect(store.addTag).not.toHaveBeenCalled()
+    expect(store.removeTag).not.toHaveBeenCalled()
+  })
+
+  it('menuEditTags returns early when no menu is open', () => {
+    const p = useAssetsPanel(() => false)
+    p.menuEditTags()
+    expect(p.tagEditor.value).toBeNull()
+  })
+
+  it('menuLoadNode closes the menu and spawns a loader node', () => {
+    const p = useAssetsPanel(() => false)
+    p.openAssetMenu({ id: 5 } as any, { clientX: 10, clientY: 10 } as any, 'pointer')
+    p.menuLoadNode()
+    expect(p.assetMenu.value).toBeNull()
+    expect(createAssetLoaderNode).toHaveBeenCalled()
+  })
+
+  it('menuRenameAsset closes the menu and prompts for a new name', async () => {
+    const p = useAssetsPanel(() => false)
+    p.openAssetMenu({ id: 5 } as any, { clientX: 10, clientY: 10 } as any, 'pointer')
+    p.menuRenameAsset()
+    expect(p.assetMenu.value).toBeNull()
+    await Promise.resolve()
+    expect(askText).toHaveBeenCalled()
+  })
+
+  it('viewFullAsset opens the lightbox over visible images at the clicked index', () => {
+    store.listByCategory.mockReturnValue([
+      { id: 1, media_type: 'image', name: 'a', payload_url: '/a.png' },
+      { id: 2, media_type: 'video', name: 'v', payload_url: '/v.mp4' },
+      { id: 3, media_type: 'image', name: 'b', payload_url: '/b.png' },
+    ] as any)
+    const p = useAssetsPanel(() => false)
+    p.viewFullAsset({ id: 3, media_type: 'image' } as any)
+    const lb = useLightbox()
+    expect(lb.count.value).toBe(2)
+    expect(lb.index.value).toBe(1)
+    expect(lb.current.value?.url).toBe('/b.png')
+    expect(lb.current.value?.label).toBe('b')
+  })
+
+  it('viewFullAsset is a no-op for a non-image asset', () => {
+    store.listByCategory.mockReturnValue([
+      { id: 1, media_type: 'image', name: 'a', payload_url: '/a.png' },
+      { id: 2, media_type: 'video', name: 'v', payload_url: '/v.mp4' },
+    ] as any)
+    const p = useAssetsPanel(() => false)
+    p.viewFullAsset({ id: 2, media_type: 'video' } as any)
+    expect(useLightbox().count.value).toBe(0)
+  })
+
+  it('viewFullAsset is a no-op when the asset is not in the visible list', () => {
+    store.listByCategory.mockReturnValue([
+      { id: 1, media_type: 'image', name: 'a', payload_url: '/a.png' },
+    ] as any)
+    const p = useAssetsPanel(() => false)
+    p.viewFullAsset({ id: 99, media_type: 'image' } as any)
+    expect(useLightbox().count.value).toBe(0)
+  })
+
+  it('menuViewFull routes the current menu asset through the lightbox', () => {
+    store.listByCategory.mockReturnValue([
+      { id: 1, media_type: 'image', name: 'a', payload_url: '/a.png' },
+      { id: 3, media_type: 'image', name: 'b', payload_url: '/b.png' },
+    ] as any)
+    store.byId.mockReturnValue({ id: 3, media_type: 'image', name: 'b', payload_url: '/b.png' })
+    const p = useAssetsPanel(() => false)
+    p.openAssetMenu({ id: 3 } as any, { clientX: 5, clientY: 5 } as any, 'pointer')
+    p.menuViewFull()
+    expect(p.assetMenu.value).toBeNull()
+    const lb = useLightbox()
+    expect(lb.count.value).toBe(2)
+    expect(lb.index.value).toBe(1)
+  })
+
+  it('onPickFiles reads and resets the input, forwarding files to addFiles', () => {
+    const p = useAssetsPanel(() => false)
+    const input = { files: [new File(['x'], 'a.txt', { type: 'text/plain' })], value: 'C:\\fakepath\\a.txt' }
+    p.onPickFiles({ target: input } as any)
+    expect(input.value).toBe('')
+  })
+
+  it('addFiles records an error when the upload throws', async () => {
+    vi.mocked(uploadBlobNamed).mockRejectedValueOnce(new Error('boom'))
+    const p = useAssetsPanel(() => false)
+    await p.addFiles([new File(['x'], 'song.mp3', { type: 'audio/mpeg' })])
+    expect(p.uploadError.value).toBe('assets.uploadFailed')
+    expect(p.uploading.value).toBe(false)
+  })
+
+  it('addFiles stores null dimensions when image probing fails', async () => {
+    class FakeImgErr {
+      onload: any
+      onerror: any
+      naturalWidth = 0
+      naturalHeight = 0
+      set src(_v: string) { queueMicrotask(() => this.onerror?.()) }
+    }
+    vi.stubGlobal('Image', FakeImgErr as any)
+    ;(URL as any).createObjectURL = vi.fn(() => 'blob:x')
+    ;(URL as any).revokeObjectURL = vi.fn()
+
+    const p = useAssetsPanel(() => false)
+    await p.addFiles([new File(['x'], 'pic.png', { type: 'image/png' })])
+    expect(store.create).toHaveBeenCalledWith(expect.objectContaining({
+      media_type: 'image', width: null, height: null,
+    }))
+    vi.unstubAllGlobals()
+  })
+
+  it('addFiles stores null dimensions when video probing fails', async () => {
+    const spy = vi.spyOn(document, 'createElement').mockImplementation(((tag: string) => {
+      if (tag === 'video') {
+        return {
+          preload: '',
+          set src(_v: string) { queueMicrotask(() => (this as any).onerror?.()) },
+        } as any
+      }
+      return {} as any
+    }) as any)
+    ;(URL as any).createObjectURL = vi.fn(() => 'blob:x')
+    ;(URL as any).revokeObjectURL = vi.fn()
+
+    const p = useAssetsPanel(() => false)
+    await p.addFiles([new File(['x'], 'clip.mp4', { type: 'video/mp4' })])
+    expect(store.create).toHaveBeenCalledWith(expect.objectContaining({
+      media_type: 'video', width: null, height: null,
+    }))
+    spy.mockRestore()
+  })
+
+  it('onRenameCategory renames when a new name is given', async () => {
+    vi.mocked(askText).mockResolvedValueOnce('landscapes')
+    const p = useAssetsPanel(() => false)
+    await p.onRenameCategory(1, 'old')
+    expect(store.renameCategory).toHaveBeenCalledWith(1, 'landscapes')
+  })
+
+  it('onRenameCategory does nothing when unchanged or cancelled', async () => {
+    vi.mocked(askText).mockResolvedValueOnce('same')
+    const p = useAssetsPanel(() => false)
+    await p.onRenameCategory(1, 'same')
+    expect(store.renameCategory).not.toHaveBeenCalled()
+  })
+
+  it('onDeleteCategory resets the active filter when the removed category was active', async () => {
+    vi.mocked(askConfirm).mockResolvedValueOnce(true)
+    const p = useAssetsPanel(() => false)
+    p.activeFilter.value = 1
+    await p.onDeleteCategory(1)
+    expect(store.removeCategory).toHaveBeenCalledWith(1)
+    expect(p.activeFilter.value).toBe('all')
+  })
+
+  it('onRenameAsset renames when a new name is provided', async () => {
+    vi.mocked(askText).mockResolvedValueOnce('newname')
+    const p = useAssetsPanel(() => false)
+    await p.onRenameAsset({ id: 5, name: 'old' } as any)
+    expect(store.rename).toHaveBeenCalledWith(5, 'newname')
+  })
+
+  it('onRenameAsset does nothing when unchanged', async () => {
+    vi.mocked(askText).mockResolvedValueOnce('old')
+    const p = useAssetsPanel(() => false)
+    await p.onRenameAsset({ id: 5, name: 'old' } as any)
+    expect(store.rename).not.toHaveBeenCalled()
+  })
+
+  it('onDeleteAsset removes when the confirm is accepted', async () => {
+    vi.mocked(askConfirm).mockResolvedValueOnce(true)
+    const p = useAssetsPanel(() => false)
+    await p.onDeleteAsset({ id: 5 } as any)
+    expect(store.remove).toHaveBeenCalledWith(5)
+  })
+
+  it('onAssetDragStart sets the asset id on the drag payload', () => {
+    const p = useAssetsPanel(() => false)
+    const dt = { setData: vi.fn(), effectAllowed: '' }
+    p.onAssetDragStart({ id: 7 } as any, { dataTransfer: dt } as any)
+    expect(dt.setData).toHaveBeenCalledWith(ASSET_MIME, '7')
+    expect(dt.effectAllowed).toBe('copy')
+  })
+
+  it('onAssetDragStart is a no-op without a dataTransfer', () => {
+    const p = useAssetsPanel(() => false)
+    expect(() => p.onAssetDragStart({ id: 7 } as any, {} as any)).not.toThrow()
+  })
+
+  it('onChipDrop ignores a non-numeric asset payload', () => {
+    const p = useAssetsPanel(() => false)
+    p.onChipDrop(2, dragEvent('not-a-number'))
+    expect(store.addTag).not.toHaveBeenCalled()
+  })
+
+  it('onDragLeave decrements the file drag depth for external files', () => {
+    const p = useAssetsPanel(() => false)
+    p.onDragEnter(dragEvent(undefined, [], ['Files']))
+    expect(p.fileDragDepth.value).toBe(1)
+    p.onDragLeave(dragEvent(undefined, [], ['Files']))
+    expect(p.fileDragDepth.value).toBe(0)
+    p.onDragLeave(dragEvent(undefined, [], ['Files']))
+    expect(p.fileDragDepth.value).toBe(0)
+  })
+
+  it('onDrop of external files resets the depth and forwards them', () => {
+    const p = useAssetsPanel(() => false)
+    p.onDragEnter(dragEvent(undefined, [], ['Files']))
+    const file = new File(['x'], 'a.txt', { type: 'text/plain' })
+    p.onDrop(dragEvent(undefined, [file], ['Files']))
+    expect(p.fileDragDepth.value).toBe(0)
   })
 })

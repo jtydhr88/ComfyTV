@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 
-import { useStageStore, computePickedImageUrl, mergeImagePool, toImagePoolJson, removeImageFromPool, type StageState } from './stageStore'
+import { useStageStore, computePickedImageUrl, computePickedFromBatch, imagePoolCount, mergeImagePool, toImagePoolJson, removeImageFromPool, type StageState } from './stageStore'
 
 function freshState(overrides: Partial<StageState> = {}): StageState {
   return {
@@ -159,8 +159,55 @@ describe('stageStore.refreshStageInputs', () => {
   })
 })
 
+describe('stageStore.refreshStageInputs (output-slot resolution)', () => {
+  beforeEach(() => setActivePinia(createPinia()))
+
+  it('reads upstream from the outputs[] slot when populated', () => {
+    const store = useStageStore()
+    const up = {}
+    const upState = store.registerStage(up, 'image')
+    upState.outputs = ['slot0url']
+
+    const links = new Map([[1, { origin_id: 'u1', origin_slot: 0 }]])
+    const down: any = { inputs: [{ name: 'image', type: 'COMFYTV_IMAGE', link: 1 }] }
+    const state = freshState()
+    store.refreshStageInputs(down, state, {
+      graph: { links, getNodeById: () => up },
+    })
+    expect(state.inputs[0]).toEqual({
+      slot: 'image', type: 'COMFYTV_IMAGE', source: 'upstream', content: 'slot0url',
+    })
+  })
+})
+
 describe('stageStore.applyExecutedPayload', () => {
   beforeEach(() => setActivePinia(createPinia()))
+
+  it('stores picked into slot 1 and picked_index (grows an empty outputs array)', () => {
+    const store = useStageStore()
+    const state = freshState({ outputs: [] })
+    store.applyExecutedPayload(state, {
+      output: ['main'], picked: ['pickedurl'], picked_index: ['3'],
+    })
+    expect(state.outputs[0]).toBe('main')
+    expect(state.outputs[1]).toBe('pickedurl')
+    expect(state.pickedIndex).toBe(3)
+  })
+
+  it('coerces scalar picked to string and numeric picked_index', () => {
+    const store = useStageStore()
+    const state = freshState()
+    store.applyExecutedPayload(state, { output: 'm', picked: 42, picked_index: 2 })
+    expect(state.outputs[1]).toBe('42')
+    expect(state.pickedIndex).toBe(2)
+  })
+
+  it('ignores picked_index below 1', () => {
+    const store = useStageStore()
+    const state = freshState({ pickedIndex: 5 })
+    store.applyExecutedPayload(state, { output: ['m'], picked_index: ['0'] })
+    expect(state.pickedIndex).toBe(5)
+  })
 
   it('copies payload string into state.output', () => {
     const store = useStageStore()
@@ -406,5 +453,128 @@ describe('toImagePoolJson', () => {
     expect(parse(toImagePoolJson(''))).toEqual([])
     expect(parse(toImagePoolJson('   '))).toEqual([])
     expect(parse(toImagePoolJson('{}'))).toEqual([])
+  })
+})
+
+describe('stageStore.setPickerPool', () => {
+  beforeEach(() => setActivePinia(createPinia()))
+
+  it('stores the pool, mirrors it onto the widget, and bumps the tick', () => {
+    const store = useStageStore()
+    const w = { name: 'pool', value: '' }
+    const node = { widgets: [w] }
+    const state = freshState()
+    const before = store.stateTick
+    store.setPickerPool(node, state, '{"images":[]}')
+    expect(state.pool).toBe('{"images":[]}')
+    expect(w.value).toBe('{"images":[]}')
+    expect(store.stateTick).toBe(before + 1)
+  })
+
+  it('is a no-op when the pool is unchanged', () => {
+    const store = useStageStore()
+    const state = freshState({ pool: 'same' })
+    const before = store.stateTick
+    store.setPickerPool({}, state, 'same')
+    expect(store.stateTick).toBe(before)
+  })
+
+  it('tolerates a node without a pool widget', () => {
+    const store = useStageStore()
+    const state = freshState()
+    store.setPickerPool({ widgets: [] }, state, 'x')
+    expect(state.pool).toBe('x')
+  })
+})
+
+describe('stageStore.clearPickerPool', () => {
+  beforeEach(() => setActivePinia(createPinia()))
+
+  it('resets pool, pickedIndex, the selected_index widget, and slot 0', () => {
+    const store = useStageStore()
+    const poolW = { name: 'pool', value: 'stuff' }
+    const idxW = { name: 'selected_index', value: 9 }
+    const node = { widgets: [poolW, idxW] }
+    const state = freshState({ pool: 'stuff', pickedIndex: 4, outputs: ['x'], output: 'x' })
+    store.clearPickerPool(node, state)
+    expect(state.pool).toBe('')
+    expect(poolW.value).toBe('')
+    expect(state.pickedIndex).toBe(1)
+    expect(idxW.value).toBe(1)
+    expect(state.outputs[0]).toBeNull()
+    expect(state.output).toBeNull()
+  })
+
+  it('works without a selected_index widget', () => {
+    const store = useStageStore()
+    const state = freshState({ pickedIndex: 3 })
+    store.clearPickerPool({ widgets: [] }, state)
+    expect(state.pickedIndex).toBe(1)
+  })
+})
+
+describe('stageStore.setOutputSlot', () => {
+  beforeEach(() => setActivePinia(createPinia()))
+
+  it('grows outputs, sets slot 0 mirror on output, and bumps the tick', () => {
+    const store = useStageStore()
+    const state = freshState({ outputs: [] })
+    const before = store.stateTick
+    store.setOutputSlot(state, 0, 'v0')
+    expect(state.outputs[0]).toBe('v0')
+    expect(state.output).toBe('v0')
+    expect(store.stateTick).toBe(before + 1)
+  })
+
+  it('extends to a higher slot without touching output', () => {
+    const store = useStageStore()
+    const state = freshState()
+    store.setOutputSlot(state, 2, 'v2')
+    expect(state.outputs).toEqual([null, null, 'v2'])
+    expect(state.output).toBeNull()
+  })
+
+  it('is a no-op when the value is unchanged', () => {
+    const store = useStageStore()
+    const state = freshState({ outputs: ['same'] })
+    const before = store.stateTick
+    store.setOutputSlot(state, 0, 'same')
+    expect(store.stateTick).toBe(before)
+  })
+})
+
+describe('imagePoolCount', () => {
+  it('counts the images in a batch', () => {
+    expect(imagePoolCount(JSON.stringify({ images: [{}, {}] }))).toBe(2)
+  })
+
+  it('returns 0 for nullish or blank input', () => {
+    expect(imagePoolCount(null)).toBe(0)
+    expect(imagePoolCount(undefined)).toBe(0)
+    expect(imagePoolCount('')).toBe(0)
+  })
+
+  it('returns 0 when there is no images array', () => {
+    expect(imagePoolCount('{}')).toBe(0)
+  })
+
+  it('returns 0 on malformed JSON', () => {
+    expect(imagePoolCount('not json')).toBe(0)
+  })
+})
+
+describe('computePickedFromBatch', () => {
+  it('returns null for an empty batch', () => {
+    expect(computePickedFromBatch(null, 1)).toBeNull()
+    expect(computePickedFromBatch('', 1)).toBeNull()
+  })
+
+  it('returns null on malformed JSON', () => {
+    expect(computePickedFromBatch('not json', 1)).toBeNull()
+  })
+
+  it('matches by explicit index', () => {
+    const batch = JSON.stringify({ images: [{ index: '2', image_url: 'u2' }] })
+    expect(computePickedFromBatch(batch, 2)).toBe('u2')
   })
 })

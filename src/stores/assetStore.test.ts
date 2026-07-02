@@ -228,4 +228,144 @@ describe('assetStore', () => {
     expect(() => s.installWebSocketSync()).not.toThrow()
     ;(app as any).api = origApi
   })
+
+  it('hydrate dedups concurrent calls and no-ops once fetched', async () => {
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    mockHydrate(fetchApi, [category({ id: 2 })], [asset({ id: 3 })])
+    const s = useAssetStore()
+    const p1 = s.hydrate()
+    const p2 = s.hydrate() // in-flight branch reuses the same fetch
+    await Promise.all([p1, p2])
+    expect(s.assets.map(a => a.id)).toEqual([3])
+    expect(fetchApi).toHaveBeenCalledTimes(2)
+    await s.hydrate() // fetched branch is a no-op
+    expect(fetchApi).toHaveBeenCalledTimes(2)
+  })
+
+  it('refresh re-fetches even after a successful hydrate', async () => {
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    mockHydrate(fetchApi, [], [asset({ id: 1 })])
+    const s = useAssetStore()
+    await s.hydrate()
+    expect(fetchApi).toHaveBeenCalledTimes(2)
+    mockHydrate(fetchApi, [], [asset({ id: 2 })])
+    await s.refresh()
+    expect(s.assets.map(a => a.id)).toEqual([2])
+    expect(fetchApi).toHaveBeenCalledTimes(4)
+  })
+
+  it('byId and byPayloadUrl look up cached assets', async () => {
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    mockHydrate(fetchApi, [], [asset({ id: 4, payload_url: '/view?filename=z.png' })])
+    const s = useAssetStore()
+    await s.hydrate()
+    expect(s.byId(4)?.id).toBe(4)
+    expect(s.byId(999)).toBeUndefined()
+    expect(s.byPayloadUrl('/view?filename=z.png')?.id).toBe(4)
+    expect(s.byPayloadUrl('/nope')).toBeUndefined()
+  })
+
+  it('createCategory returns null for a blank name without calling the API', async () => {
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    const s = useAssetStore()
+    expect(await s.createCategory('   ')).toBeNull()
+    expect(fetchApi).not.toHaveBeenCalled()
+  })
+
+  it('renameCategory replaces the row and re-sorts by name', async () => {
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    mockHydrate(fetchApi, [
+      category({ id: 1, name: 'zeta' }), category({ id: 2, name: 'alpha' }),
+    ], [])
+    const s = useAssetStore()
+    await s.hydrate()
+    fetchApi.mockResolvedValueOnce(jsonResp({
+      ok: true, category: category({ id: 1, name: 'beta' }),
+    }))
+    const cat = await s.renameCategory(1, 'beta')
+    expect(cat?.name).toBe('beta')
+    expect(s.categories.map(c => c.name)).toEqual(['alpha', 'beta'])
+  })
+
+  it('renameCategory returns null for a blank name', async () => {
+    const s = useAssetStore()
+    expect(await s.renameCategory(1, '  ')).toBeNull()
+  })
+
+  it('renameCategory failure returns null and keeps state', async () => {
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    mockHydrate(fetchApi, [category({ id: 1, name: 'orig' })], [])
+    const s = useAssetStore()
+    await s.hydrate()
+    fetchApi.mockResolvedValueOnce(new Response('boom', { status: 500 }))
+    expect(await s.renameCategory(1, 'new')).toBeNull()
+    expect(s.categories.map(c => c.name)).toEqual(['orig'])
+  })
+
+  it('removeCategory failure returns false and keeps the tag on assets', async () => {
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    mockHydrate(fetchApi, [category({ id: 3 })], [asset({ id: 1, category_ids: [3] })])
+    const s = useAssetStore()
+    await s.hydrate()
+    fetchApi.mockResolvedValueOnce(new Response('boom', { status: 500 }))
+    expect(await s.removeCategory(3)).toBe(false)
+    expect(s.categories).toHaveLength(1)
+    expect(s.assets[0].category_ids).toEqual([3])
+  })
+
+  it('rename failure returns null and keeps the cached name', async () => {
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    mockHydrate(fetchApi, [], [asset({ id: 7, name: 'old' })])
+    const s = useAssetStore()
+    await s.hydrate()
+    fetchApi.mockResolvedValueOnce(new Response('x', { status: 500 }))
+    expect(await s.rename(7, 'new')).toBeNull()
+    expect(s.assets[0].name).toBe('old')
+  })
+
+  it('addTag failure returns null and leaves category_ids intact', async () => {
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    mockHydrate(fetchApi, [], [asset({ id: 7, category_ids: [] })])
+    const s = useAssetStore()
+    await s.hydrate()
+    fetchApi.mockResolvedValueOnce(new Response('x', { status: 500 }))
+    expect(await s.addTag(7, 4)).toBeNull()
+    expect(s.assets[0].category_ids).toEqual([])
+  })
+
+  it('removeTag failure returns null and leaves category_ids intact', async () => {
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    mockHydrate(fetchApi, [], [asset({ id: 7, category_ids: [4] })])
+    const s = useAssetStore()
+    await s.hydrate()
+    fetchApi.mockResolvedValueOnce(new Response('x', { status: 500 }))
+    expect(await s.removeTag(7, 4)).toBeNull()
+    expect(s.assets[0].category_ids).toEqual([4])
+  })
+
+  it('remove still drops the row from cache when the API call fails', async () => {
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    mockHydrate(fetchApi, [], [asset({ id: 1 }), asset({ id: 2 })])
+    const s = useAssetStore()
+    await s.hydrate()
+    fetchApi.mockResolvedValueOnce(new Response('x', { status: 500 }))
+    await s.remove(1)
+    expect(s.assets.map(a => a.id)).toEqual([2])
+  })
+
+  it('installWebSocketSync refreshes the cache when a comfytv-assets event fires', async () => {
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    mockHydrate(fetchApi, [], [asset({ id: 1 })])
+    const addEventListener = (app as any).api.addEventListener as ReturnType<typeof vi.fn>
+    addEventListener.mockClear()
+    const s = useAssetStore()
+    await s.hydrate()
+    s.installWebSocketSync()
+    const handler = addEventListener.mock.calls
+      .find(c => c[0] === 'comfytv-assets')?.[1] as (() => void) | undefined
+    expect(handler).toBeTypeOf('function')
+    mockHydrate(fetchApi, [], [asset({ id: 2 })])
+    handler!()
+    await vi.waitFor(() => expect(s.assets.map(a => a.id)).toEqual([2]))
+  })
 })

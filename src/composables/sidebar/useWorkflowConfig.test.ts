@@ -253,4 +253,217 @@ describe('useWorkflowConfig', () => {
     await onResetToPreset()
     expect(fetchApi).not.toHaveBeenCalled()
   })
+
+  it('onExportPreset is a no-op when nothing is selected / no config', async () => {
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    const { onExportPreset, exportError } = useWorkflowConfig(t)
+    await onExportPreset()
+    expect(fetchApi).not.toHaveBeenCalled()
+    expect(exportError.value).toBeNull()
+  })
+
+  it('onResetToPreset is a no-op when no config is loaded', async () => {
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    const { onResetToPreset } = useWorkflowConfig(t)
+    await onResetToPreset()
+    expect(askConfirm).not.toHaveBeenCalled()
+    expect(fetchApi).not.toHaveBeenCalled()
+  })
+
+  it('onUploadApiSidecar posts the file then reloads config on success', async () => {
+    const { useSelectionStore } = await import('@/stores/selectionStore')
+    ;(useSelectionStore() as any).selected = { workflowKind: 'image', workflowLabel: 'X' }
+
+    const configPayload = {
+      id: 12, kind: 'image', label: 'X',
+      has_api: true, description: null, gui_notes: [], exposed_widgets: [],
+    }
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    fetchApi.mockResolvedValueOnce(jsonResp({
+      ok: true, label: 'X', node_count: 4, sidecar: 'X.api.json',
+    }))
+    fetchApi.mockResolvedValueOnce(jsonResp(configPayload))
+
+    const realCE = document.createElement.bind(document)
+    let capturedInput: any = null
+    const ceSpy = vi.spyOn(document, 'createElement').mockImplementation((tag: any) => {
+      const el = realCE(tag)
+      if (tag === 'input') capturedInput = el
+      return el
+    })
+
+    const { onUploadApiSidecar, uploadApiBusy, uploadApiError, config } = useWorkflowConfig(t)
+    onUploadApiSidecar()
+    ceSpy.mockRestore()
+
+    expect(capturedInput).not.toBeNull()
+    const file = new File(['{"node":1}'], 'sidecar.json', { type: 'application/json' })
+    Object.defineProperty(capturedInput, 'files', { value: [file], configurable: true })
+    await capturedInput.onchange()
+
+    expect(fetchApi).toHaveBeenCalledTimes(2)
+    const [path, init] = fetchApi.mock.calls[0]
+    expect(path).toBe('/comfytv/workflows/api_sidecar')
+    expect(init.method).toBe('POST')
+    const body = JSON.parse(init.body as string)
+    expect(body.kind).toBe('image')
+    expect(body.label).toBe('X')
+    expect(body.content).toBe('{"node":1}')
+
+    expect(uploadApiError.value).toBeNull()
+    expect(uploadApiBusy.value).toBe(false)
+    expect(config.value).toEqual(configPayload)
+  })
+
+  it('onUploadApiSidecar surfaces an error for non-JSON files', async () => {
+    const { useSelectionStore } = await import('@/stores/selectionStore')
+    ;(useSelectionStore() as any).selected = { workflowKind: 'image', workflowLabel: 'X' }
+
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+
+    const realCE = document.createElement.bind(document)
+    let capturedInput: any = null
+    const ceSpy = vi.spyOn(document, 'createElement').mockImplementation((tag: any) => {
+      const el = realCE(tag)
+      if (tag === 'input') capturedInput = el
+      return el
+    })
+
+    const { onUploadApiSidecar, uploadApiError, uploadApiBusy } = useWorkflowConfig(t)
+    onUploadApiSidecar()
+    ceSpy.mockRestore()
+
+    const file = new File(['not json at all'], 'sidecar.json', { type: 'application/json' })
+    Object.defineProperty(capturedInput, 'files', { value: [file], configurable: true })
+    await capturedInput.onchange()
+
+    expect(fetchApi).not.toHaveBeenCalled()
+    expect(uploadApiBusy.value).toBe(false)
+    expect(uploadApiError.value).toContain('configSidebar.uploadApiFailed')
+  })
+
+  it('onUploadApiSidecar is a no-op with no selection', () => {
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    const ceSpy = vi.spyOn(document, 'createElement')
+    const { onUploadApiSidecar } = useWorkflowConfig(t)
+    onUploadApiSidecar()
+    expect(ceSpy).not.toHaveBeenCalled()
+    expect(fetchApi).not.toHaveBeenCalled()
+    ceSpy.mockRestore()
+  })
+
+  it('onUnlink unlinks the workflow and clears config on success', async () => {
+    const payload = {
+      id: 21, kind: 'image', label: 'X',
+      has_api: true, description: null, gui_notes: [], exposed_widgets: [],
+    }
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    fetchApi.mockResolvedValueOnce(jsonResp(payload))
+    fetchApi.mockResolvedValueOnce(jsonResp({ ok: true, kind: 'image', label: 'X' }))
+    vi.mocked(askConfirm).mockResolvedValueOnce(true)
+
+    const { loadConfig, onUnlink, config, unlinkError, unlinkBusy } = useWorkflowConfig(t)
+    await loadConfig('image', 'X')
+    await onUnlink()
+
+    const [path, init] = fetchApi.mock.calls[1]
+    expect(path).toBe('/comfytv/workflows/21/unlink')
+    expect(init.method).toBe('POST')
+    expect(config.value).toBeNull()
+    expect(unlinkError.value).toBeNull()
+    expect(unlinkBusy.value).toBe(false)
+  })
+
+  it('onUnlink bails when the user cancels the confirm', async () => {
+    const payload = {
+      id: 21, kind: 'image', label: 'X',
+      has_api: true, description: null, gui_notes: [], exposed_widgets: [],
+    }
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    fetchApi.mockResolvedValueOnce(jsonResp(payload))
+    vi.mocked(askConfirm).mockResolvedValueOnce(false)
+
+    const { loadConfig, onUnlink, config } = useWorkflowConfig(t)
+    await loadConfig('image', 'X')
+    fetchApi.mockClear()
+    await onUnlink()
+    expect(fetchApi).not.toHaveBeenCalled()
+    expect(config.value).toEqual(payload)
+  })
+
+  it('onUnlink surfaces an error and keeps config on failure', async () => {
+    const payload = {
+      id: 21, kind: 'image', label: 'X',
+      has_api: true, description: null, gui_notes: [], exposed_widgets: [],
+    }
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    fetchApi.mockResolvedValueOnce(jsonResp(payload))
+    fetchApi.mockResolvedValueOnce(jsonResp({ error: 'in use' }, 500))
+    vi.mocked(askConfirm).mockResolvedValueOnce(true)
+
+    const { loadConfig, onUnlink, config, unlinkError, unlinkBusy } = useWorkflowConfig(t)
+    await loadConfig('image', 'X')
+    await onUnlink()
+
+    expect(unlinkBusy.value).toBe(false)
+    expect(unlinkError.value).toContain('configSidebar.unlinkFailed')
+    expect(config.value).toEqual(payload)
+  })
+
+  it('onUnlink is a no-op when no config is loaded', async () => {
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    const { onUnlink } = useWorkflowConfig(t)
+    await onUnlink()
+    expect(askConfirm).not.toHaveBeenCalled()
+    expect(fetchApi).not.toHaveBeenCalled()
+  })
+
+  it('postMeta sends workflow_id + payload then reloads config', async () => {
+    const payloadV1 = {
+      id: 33, kind: 'image', label: 'X',
+      has_api: true, description: null, gui_notes: [], exposed_widgets: [],
+    }
+    const payloadV2 = { ...payloadV1, description: 'edited' }
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    fetchApi.mockResolvedValueOnce(jsonResp(payloadV1))
+    fetchApi.mockResolvedValueOnce(jsonResp({ ok: true }))
+    fetchApi.mockResolvedValueOnce(jsonResp(payloadV2))
+
+    const { loadConfig, postMeta, config } = useWorkflowConfig(t)
+    await loadConfig('image', 'X')
+    const { useSelectionStore } = await import('@/stores/selectionStore')
+    ;(useSelectionStore() as any).selected = { workflowKind: 'image', workflowLabel: 'X' }
+    await postMeta({ description: 'edited' })
+
+    const [path, init] = fetchApi.mock.calls[1]
+    expect(path).toBe('/comfytv/workflows/config/meta')
+    expect(init.method).toBe('POST')
+    const body = JSON.parse(init.body as string)
+    expect(body.workflow_id).toBe(33)
+    expect(body.description).toBe('edited')
+    expect(config.value?.description).toBe('edited')
+  })
+
+  it('postMeta is a no-op before a config is loaded', async () => {
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    const { postMeta } = useWorkflowConfig(t)
+    await postMeta({ description: 'x' })
+    expect(fetchApi).not.toHaveBeenCalled()
+  })
+
+  it('postMeta surfaces server error into loadError', async () => {
+    const payload = {
+      id: 33, kind: 'image', label: 'X',
+      has_api: true, description: null, gui_notes: [], exposed_widgets: [],
+    }
+    const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
+    fetchApi.mockResolvedValueOnce(jsonResp(payload))
+    fetchApi.mockResolvedValueOnce(jsonResp({ error: 'db locked' }, 500))
+
+    const { loadConfig, postMeta, loadError } = useWorkflowConfig(t)
+    await loadConfig('image', 'X')
+    await postMeta({ description: 'edited' })
+    expect(loadError.value).toContain('save failed')
+    expect(loadError.value).toContain('500')
+  })
 })
