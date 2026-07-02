@@ -116,15 +116,40 @@ describe('useAssetsPanel', () => {
     expect(store.create).not.toHaveBeenCalled()
   })
 
-  it('openTagEditor + toggleTag add/remove via the resolved asset', () => {
+  it('searchQuery narrows visibleAssets by name', () => {
+    store.listByCategory.mockReturnValue([
+      { id: 1, media_type: 'image', name: 'Hero portrait' },
+      { id: 2, media_type: 'image', name: 'Background' },
+    ] as any)
     const p = useAssetsPanel(() => false)
-    p.openTagEditor({ id: 5 } as any, { currentTarget: { getBoundingClientRect: () => ({ right: 200, bottom: 40 }) } } as any)
+    p.searchQuery.value = 'hero'
+    expect(p.visibleAssets.value.map((a: any) => a.id)).toEqual([1])
+    p.searchQuery.value = ''
+    expect(p.visibleAssets.value.length).toBe(2)
+  })
+
+  it('openAssetMenu resolves the asset; menuEditTags hands off to the tag editor', () => {
+    const p = useAssetsPanel(() => false)
+    p.openAssetMenu({ id: 5 } as any, { clientX: 100, clientY: 40 } as any, 'pointer')
+    expect(p.assetMenu.value?.assetId).toBe(5)
+    p.menuEditTags()
+    expect(p.assetMenu.value).toBeNull()
     expect(p.tagEditor.value?.assetId).toBe(5)
-    expect(p.editorHas(1)).toBe(true)   // asset has cat 1
-    p.toggleTag(1)                       // already has → remove
+    expect(p.editorHas(1)).toBe(true)
+    p.toggleTag(1)
     expect(store.removeTag).toHaveBeenCalledWith(5, 1)
-    p.toggleTag(2)                       // missing → add
+    p.toggleTag(2)
     expect(store.addTag).toHaveBeenCalledWith(5, 2)
+  })
+
+  it('menuDeleteAsset closes the menu and asks for confirmation', async () => {
+    vi.mocked(askConfirm).mockResolvedValueOnce(true)
+    const p = useAssetsPanel(() => false)
+    p.openAssetMenu({ id: 5 } as any, { clientX: 10, clientY: 10 } as any, 'pointer')
+    p.menuDeleteAsset()
+    expect(p.assetMenu.value).toBeNull()
+    await Promise.resolve()
+    expect(askConfirm).toHaveBeenCalled()
   })
 
   it('catName resolves the category label with a fallback', () => {

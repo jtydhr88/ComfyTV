@@ -84,6 +84,13 @@
     "uploading": "上传中 {done}/{total}…",
     "uploadFailed": "上传失败: {detail}",
     "dropHint": "松开把文件添加到资产库",
+    "search": "搜索资产",
+    "noResults": "没有匹配的资产。",
+    "view": {
+      "settings": "显示设置",
+      "list": "列表视图",
+      "grid": "网格视图"
+    },
     "media": {
       "all": "全部类型",
       "image": "图片",
@@ -106,7 +113,8 @@
       "delete": "从资产库移除",
       "deleteConfirm": "把这个资产从资产库移除？磁盘上的文件保留。",
       "tags": "编辑标签",
-      "loadNode": "作为节点添加到画布"
+      "loadNode": "作为节点添加到画布",
+      "more": "更多操作"
     },
     "tagPopover": {
       "empty": "还没有分类。",

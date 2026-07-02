@@ -1,3 +1,4 @@
+import { useStorage } from '@vueuse/core'
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
@@ -17,8 +18,19 @@ function stripExtension(filename: string): string {
 
 type AssetMediaType = 'image' | 'video' | 'audio'
 export type AssetMediaFilter = 'all' | AssetMediaType
+export type AssetViewMode = 'grid' | 'list'
 
 export const ASSET_MEDIA_FILTERS: AssetMediaFilter[] = ['all', 'image', 'video', 'audio']
+
+const ASSET_MENU_WIDTH = 192
+const TAG_EDITOR_WIDTH = 176
+
+function formatSize(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`
+  if (bytes < 1024 ** 2) return `${(bytes / 1024).toFixed(1)} KB`
+  if (bytes < 1024 ** 3) return `${(bytes / 1024 ** 2).toFixed(1)} MB`
+  return `${(bytes / 1024 ** 3).toFixed(1)} GB`
+}
 
 function mediaTypeOf(file: File): AssetMediaType | null {
   if (file.type.startsWith('image/')) return 'image'
@@ -72,6 +84,8 @@ export function useAssetsPanel(isActive: () => boolean | undefined) {
 
   const activeFilter = ref<AssetCategoryFilter>('all')
   const mediaFilter = ref<AssetMediaFilter>('all')
+  const viewMode = useStorage<AssetViewMode>('comfytv:assets:view-mode', 'grid')
+  const searchQuery = ref('')
 
   const uploading = ref(false)
   const uploadDone = ref(0)
@@ -81,11 +95,14 @@ export function useAssetsPanel(isActive: () => boolean | undefined) {
   const fileDragDepth = ref(0)
 
   const categoryAssets = computed(() => store.listByCategory(activeFilter.value))
-  const visibleAssets = computed(() =>
-    mediaFilter.value === 'all'
+  const visibleAssets = computed(() => {
+    let rows = mediaFilter.value === 'all'
       ? categoryAssets.value
-      : categoryAssets.value.filter(a => a.media_type === mediaFilter.value),
-  )
+      : categoryAssets.value.filter(a => a.media_type === mediaFilter.value)
+    const q = searchQuery.value.trim().toLowerCase()
+    if (q) rows = rows.filter(a => a.name.toLowerCase().includes(q))
+    return rows
+  })
 
   function mediaCount(type: AssetMediaFilter): number {
     return type === 'all'
@@ -110,11 +127,6 @@ export function useAssetsPanel(isActive: () => boolean | undefined) {
     return store.categories.find(c => c.id === id)?.name ?? `#${id}`
   }
 
-  function openTagEditor(asset: Asset, e: MouseEvent) {
-    const r = (e.currentTarget as HTMLElement).getBoundingClientRect()
-    tagEditor.value = { assetId: asset.id, x: Math.max(8, r.right - 176), y: r.bottom + 4 }
-  }
-
   function closeTagEditor() {
     tagEditor.value = null
   }
@@ -133,6 +145,73 @@ export function useAssetsPanel(isActive: () => boolean | undefined) {
   function assetTooltip(asset: Asset): string {
     const dims = asset.width && asset.height ? ` · ${asset.width}×${asset.height}` : ''
     return `${asset.name || '—'}${dims}`
+  }
+
+  function assetMeta(asset: Asset): string {
+    if (asset.media_type === 'image' && asset.width && asset.height)
+      return `${asset.width}×${asset.height}`
+    if (asset.size_bytes) return formatSize(asset.size_bytes)
+    return ''
+  }
+
+  const assetMenu = ref<{ assetId: number; x: number; y: number } | null>(null)
+  const menuAsset = computed(() =>
+    assetMenu.value ? store.byId(assetMenu.value.assetId) ?? null : null,
+  )
+  const assetMenuStyle = computed(() =>
+    assetMenu.value
+      ? { left: `${assetMenu.value.x}px`, top: `${assetMenu.value.y}px` }
+      : {},
+  )
+
+  function openAssetMenu(asset: Asset, e: MouseEvent, anchor: 'pointer' | 'element' = 'element') {
+    let x: number
+    let y: number
+    if (anchor === 'pointer') {
+      x = e.clientX
+      y = e.clientY
+    } else {
+      const r = (e.currentTarget as HTMLElement).getBoundingClientRect()
+      x = r.right - ASSET_MENU_WIDTH
+      y = r.bottom + 4
+    }
+    x = Math.min(Math.max(8, x), window.innerWidth - ASSET_MENU_WIDTH - 8)
+    y = Math.min(Math.max(8, y), window.innerHeight - 176)
+    assetMenu.value = { assetId: asset.id, x, y }
+  }
+
+  function closeAssetMenu() {
+    assetMenu.value = null
+  }
+
+  function menuLoadNode() {
+    const a = menuAsset.value
+    closeAssetMenu()
+    if (a) onLoadAssetNode(a)
+  }
+
+  function menuEditTags() {
+    const m = assetMenu.value
+    const a = menuAsset.value
+    closeAssetMenu()
+    if (!m || !a) return
+    tagEditor.value = {
+      assetId: a.id,
+      x: Math.min(Math.max(8, m.x), window.innerWidth - TAG_EDITOR_WIDTH - 8),
+      y: m.y,
+    }
+  }
+
+  function menuRenameAsset() {
+    const a = menuAsset.value
+    closeAssetMenu()
+    if (a) void onRenameAsset(a)
+  }
+
+  function menuDeleteAsset() {
+    const a = menuAsset.value
+    closeAssetMenu()
+    if (a) void onDeleteAsset(a)
   }
 
   function onPickFiles(e: Event) {
@@ -280,6 +359,8 @@ export function useAssetsPanel(isActive: () => boolean | undefined) {
     mediaFilter,
     mediaCount,
     mediaFilters: ASSET_MEDIA_FILTERS,
+    viewMode,
+    searchQuery,
     uploading,
     uploadDone,
     uploadTotal,
@@ -289,11 +370,19 @@ export function useAssetsPanel(isActive: () => boolean | undefined) {
     tagEditor,
     tagEditorStyle,
     catName,
-    openTagEditor,
     closeTagEditor,
     editorHas,
     toggleTag,
     assetTooltip,
+    assetMeta,
+    assetMenu,
+    assetMenuStyle,
+    openAssetMenu,
+    closeAssetMenu,
+    menuLoadNode,
+    menuEditTags,
+    menuRenameAsset,
+    menuDeleteAsset,
     onPickFiles,
     addFiles,
     onCreateCategory,

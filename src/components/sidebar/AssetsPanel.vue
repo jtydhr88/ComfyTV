@@ -29,6 +29,30 @@
       />
     </div>
 
+    <div class="ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-1.5 ctv:py-1.5 ctv:px-2.5 ctv:border-b ctv:border-border-subtle">
+      <div class="ctv:relative ctv:flex-1 ctv:min-w-0">
+        <IconSearch
+          class="ctv:absolute ctv:left-2 ctv:top-1/2 ctv:-translate-y-1/2 ctv:size-3.5
+                 ctv:text-muted-foreground ctv:pointer-events-none"
+        />
+        <input
+          v-model="searchQuery"
+          type="text"
+          :placeholder="$t('assets.search')"
+          class="ctv:w-full ctv:h-7 ctv:box-border ctv:pl-7 ctv:pr-2 ctv:rounded-lg ctv:text-xs ctv:[font-family:inherit]
+                 ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground
+                 ctv:placeholder:text-muted-foreground ctv:focus-visible:outline-none ctv:focus:border-border-default"
+        />
+      </div>
+      <button
+        :class="iconBtnClass"
+        :title="$t('assets.view.settings')"
+        @click="openSettingsMenu"
+      >
+        <IconSettings2 class="ctv:size-4" />
+      </button>
+    </div>
+
     <div class="ctv:shrink-0 ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1 ctv:py-1.5 ctv:px-2.5 ctv:border-b ctv:border-border-subtle">
       <button
         :class="chipClass(activeFilter === 'all')"
@@ -57,23 +81,23 @@
         <template v-if="activeFilter === cat.id">
           <span
             role="button"
-            class="ctv:ml-0.5 ctv:opacity-60 ctv:hover:opacity-100"
+            class="ctv:ml-0.5 ctv:inline-flex ctv:opacity-60 ctv:hover:opacity-100"
             :title="$t('assets.category.rename')"
             @click.stop="onRenameCategory(cat.id, cat.name)"
-          ><i class="pi pi-pencil" /></span>
+          ><IconPencil class="ctv:size-3" /></span>
           <span
             role="button"
-            class="ctv:opacity-60 ctv:hover:opacity-100 ctv:hover:text-destructive-background"
+            class="ctv:inline-flex ctv:opacity-60 ctv:hover:opacity-100 ctv:hover:text-destructive-background"
             :title="$t('assets.category.delete')"
             @click.stop="onDeleteCategory(cat.id)"
-          ><i class="pi pi-times" /></span>
+          ><IconX class="ctv:size-3" /></span>
         </template>
       </button>
       <button
         :class="chipClass(false)"
         :title="$t('assets.category.new')"
         @click="onCreateCategory"
-      ><i class="pi pi-plus" /></button>
+      ><IconPlus class="ctv:size-3" /></button>
     </div>
 
     <div class="ctv:shrink-0 ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1 ctv:py-1.5 ctv:px-2.5 ctv:border-b ctv:border-border-subtle">
@@ -93,91 +117,46 @@
                 ctv:bg-destructive-background/15 ctv:border ctv:border-destructive-background/50 ctv:text-destructive-background">
       <span class="ctv:flex-1">{{ uploadError }}</span>
       <button
-        class="ctv:bg-transparent ctv:border-none ctv:cursor-pointer ctv:text-inherit ctv:opacity-70 ctv:hover:opacity-100"
+        class="ctv:inline-flex ctv:bg-transparent ctv:border-none ctv:cursor-pointer ctv:text-inherit ctv:opacity-70 ctv:hover:opacity-100"
         @click="uploadError = null"
-      ><i class="pi pi-times" /></button>
+      ><IconX class="ctv:size-3.5" /></button>
     </div>
 
-    <div class="ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-2.5">
+    <div class="ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-1.5">
       <div v-if="visibleAssets.length === 0"
            class="ctv:py-5 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60">
-        {{ activeFilter === 'all' && mediaFilter === 'all' ? $t('assets.empty') : $t('assets.emptyCategory') }}
+        {{ emptyText }}
       </div>
 
-      <div v-else class="ctv:grid ctv:grid-cols-[repeat(auto-fill,minmax(88px,1fr))] ctv:gap-1.5">
-        <div
+      <div
+        v-else-if="viewMode === 'grid'"
+        class="ctv:grid ctv:grid-cols-[repeat(auto-fill,minmax(min(160px,42vw),1fr))] ctv:gap-1"
+      >
+        <AssetGridCard
           v-for="asset in visibleAssets"
           :key="asset.id"
-          class="ctv-asset-card ctv:group ctv:relative ctv:rounded-lg ctv:overflow-hidden ctv:cursor-grab
-                 ctv:bg-secondary-background ctv:border ctv:border-border-subtle
-                 ctv:hover:border-border-default"
-          draggable="true"
+          :asset="asset"
+          :meta="assetMeta(asset)"
+          :category-names="asset.category_ids.map(catName)"
+          :tooltip="assetTooltip(asset)"
           @dragstart="onAssetDragStart(asset, $event)"
-        >
-          <video
-            v-if="asset.media_type === 'video'"
-            :src="asset.payload_url"
-            :title="assetTooltip(asset)"
-            muted
-            playsinline
-            preload="metadata"
-            class="ctv:block ctv:w-full ctv:aspect-square ctv:object-cover ctv:bg-black"
-            @mouseenter="hoverPlay"
-            @mouseleave="hoverPause"
-          />
-          <div
-            v-else-if="asset.media_type === 'audio'"
-            :title="assetTooltip(asset)"
-            class="ctv:flex ctv:items-center ctv:justify-center ctv:w-full ctv:aspect-square ctv:text-2xl
-                   ctv:bg-secondary-background-hover ctv:text-muted-foreground"
-          ><i class="pi pi-volume-up" /></div>
-          <img
-            v-else
-            :src="asset.payload_url"
-            :alt="asset.name"
-            :title="assetTooltip(asset)"
-            loading="lazy"
-            class="ctv:block ctv:w-full ctv:aspect-square ctv:object-cover"
-          />
-          <span
-            v-if="asset.media_type === 'video' || asset.media_type === 'audio'"
-            class="ctv:absolute ctv:bottom-7 ctv:left-1 ctv:py-0 ctv:px-1 ctv:rounded ctv:text-3xs ctv:font-semibold
-                   ctv:bg-black/65 ctv:text-white/90 ctv:pointer-events-none"
-          ><i :class="['pi', asset.media_type === 'video' ? 'pi-play' : 'pi-volume-up']" /></span>
-          <div class="ctv:truncate ctv:py-0.5 ctv:px-1 ctv:text-2xs ctv:text-muted-foreground">
-            {{ asset.name || '—' }}
-          </div>
-          <div v-if="asset.category_ids.length"
-               class="ctv:flex ctv:flex-wrap ctv:gap-0.5 ctv:px-1 ctv:pb-1">
-            <span
-              v-for="cid in asset.category_ids"
-              :key="cid"
-              class="ctv:max-w-full ctv:truncate ctv:py-0 ctv:px-1 ctv:rounded ctv:text-3xs ctv:bg-base-foreground/10 ctv:text-muted-foreground"
-            >{{ catName(cid) }}</span>
-          </div>
-          <div class="ctv-asset-actions ctv:absolute ctv:top-1 ctv:right-1 ctv:flex ctv:gap-0.5">
-            <button
-              :class="cardBtnClass"
-              :title="$t('assets.card.loadNode')"
-              @click="onLoadAssetNode(asset)"
-            ><i class="pi pi-download" /></button>
-            <button
-              :class="cardBtnClass"
-              :title="$t('assets.card.tags')"
-              @click="openTagEditor(asset, $event)"
-            ><i class="pi pi-tag" /></button>
-            <button
-              :class="cardBtnClass"
-              :title="$t('assets.card.rename')"
-              @click="onRenameAsset(asset)"
-            ><i class="pi pi-pencil" /></button>
-            <button
-              :class="`${cardBtnClass} ctv:hover:text-destructive-background`"
-              :title="$t('assets.card.delete')"
-              @click="onDeleteAsset(asset)"
-            ><i class="pi pi-times" /></button>
-          </div>
-        </div>
+          @contextmenu.prevent.stop="openAssetMenu(asset, $event, 'pointer')"
+          @open-menu="openAssetMenu(asset, $event, 'element')"
+        />
+      </div>
+
+      <div v-else class="ctv:flex ctv:flex-col ctv:gap-1">
+        <AssetListItem
+          v-for="asset in visibleAssets"
+          :key="asset.id"
+          :asset="asset"
+          :meta="assetMeta(asset)"
+          :category-names="asset.category_ids.map(catName)"
+          :tooltip="assetTooltip(asset)"
+          @dragstart="onAssetDragStart(asset, $event)"
+          @contextmenu.prevent.stop="openAssetMenu(asset, $event, 'pointer')"
+          @open-menu="openAssetMenu(asset, $event, 'element')"
+        />
       </div>
     </div>
 
@@ -190,6 +169,66 @@
                    ctv:bg-interface-panel-surface ctv:text-base-foreground">
         {{ $t('assets.dropHint') }}
       </span>
+    </div>
+
+    <div
+      v-if="settingsMenu"
+      class="ctv:fixed ctv:inset-0 ctv:z-20"
+      @click="settingsMenu = null"
+      @contextmenu.prevent="settingsMenu = null"
+    >
+      <div
+        class="ctv:absolute ctv:w-44 ctv:p-1 ctv:rounded-lg ctv:shadow-md
+               ctv:bg-interface-menu-surface ctv:border ctv:border-interface-menu-stroke"
+        :style="{ left: `${settingsMenu.x}px`, top: `${settingsMenu.y}px` }"
+        @click.stop
+      >
+        <button :class="menuItemClass" @click="setViewMode('list')">
+          <IconTableOfContents class="ctv:size-4 ctv:shrink-0" />
+          <span class="ctv:flex-1 ctv:truncate">{{ $t('assets.view.list') }}</span>
+          <IconCheck class="ctv:size-4 ctv:shrink-0" :class="viewMode !== 'list' && 'ctv:opacity-0'" />
+        </button>
+        <button :class="menuItemClass" @click="setViewMode('grid')">
+          <IconLayoutGrid class="ctv:size-4 ctv:shrink-0" />
+          <span class="ctv:flex-1 ctv:truncate">{{ $t('assets.view.grid') }}</span>
+          <IconCheck class="ctv:size-4 ctv:shrink-0" :class="viewMode !== 'grid' && 'ctv:opacity-0'" />
+        </button>
+      </div>
+    </div>
+
+    <div
+      v-if="assetMenu"
+      class="ctv:fixed ctv:inset-0 ctv:z-20"
+      @click="closeAssetMenu()"
+      @contextmenu.prevent="closeAssetMenu()"
+    >
+      <div
+        class="ctv:absolute ctv:w-48 ctv:p-1 ctv:rounded-lg ctv:shadow-md
+               ctv:bg-interface-menu-surface ctv:border ctv:border-interface-menu-stroke"
+        :style="assetMenuStyle"
+        @click.stop
+      >
+        <button :class="menuItemClass" @click="menuLoadNode">
+          <IconDownload class="ctv:size-4 ctv:shrink-0" />
+          <span class="ctv:flex-1 ctv:truncate">{{ $t('assets.card.loadNode') }}</span>
+        </button>
+        <button :class="menuItemClass" @click="menuEditTags">
+          <IconTag class="ctv:size-4 ctv:shrink-0" />
+          <span class="ctv:flex-1 ctv:truncate">{{ $t('assets.card.tags') }}</span>
+        </button>
+        <button :class="menuItemClass" @click="menuRenameAsset">
+          <IconPencil class="ctv:size-4 ctv:shrink-0" />
+          <span class="ctv:flex-1 ctv:truncate">{{ $t('assets.card.rename') }}</span>
+        </button>
+        <div class="ctv:my-1 ctv:border-b ctv:border-border-subtle" />
+        <button
+          :class="`${menuItemClass} ctv:hover:text-destructive-background`"
+          @click="menuDeleteAsset"
+        >
+          <IconTrash2 class="ctv:size-4 ctv:shrink-0" />
+          <span class="ctv:flex-1 ctv:truncate">{{ $t('assets.card.delete') }}</span>
+        </button>
+      </div>
     </div>
 
     <div v-if="tagEditor" class="ctv:fixed ctv:inset-0 ctv:z-20" @click="closeTagEditor()">
@@ -211,7 +250,7 @@
                  ctv:hover:bg-secondary-background-hover"
           @click="toggleTag(cat.id)"
         >
-          <span class="ctv:w-3 ctv:inline-block ctv:text-primary-background"><i v-if="editorHas(cat.id)" class="pi pi-check" /></span>
+          <span class="ctv:w-3 ctv:inline-flex ctv:text-primary-background"><IconCheck v-if="editorHas(cat.id)" class="ctv:size-3" /></span>
           <span class="ctv:flex-1 ctv:truncate">{{ cat.name }}</span>
         </button>
       </div>
@@ -220,24 +259,32 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
-import { useAssetsPanel } from '@/composables/sidebar/useAssetsPanel'
+import IconCheck from '~icons/lucide/check'
+import IconDownload from '~icons/lucide/download'
+import IconLayoutGrid from '~icons/lucide/layout-grid'
+import IconPencil from '~icons/lucide/pencil'
+import IconPlus from '~icons/lucide/plus'
+import IconSearch from '~icons/lucide/search'
+import IconSettings2 from '~icons/lucide/settings-2'
+import IconTableOfContents from '~icons/lucide/table-of-contents'
+import IconTag from '~icons/lucide/tag'
+import IconTrash2 from '~icons/lucide/trash-2'
+import IconX from '~icons/lucide/x'
+
+import AssetGridCard from '@/components/sidebar/assets/AssetGridCard.vue'
+import AssetListItem from '@/components/sidebar/assets/AssetListItem.vue'
+import { type AssetViewMode, useAssetsPanel } from '@/composables/sidebar/useAssetsPanel'
 
 const props = defineProps<{
   active?: boolean
 }>()
 
-const filePicker = ref<HTMLInputElement | null>(null)
+const { t } = useI18n()
 
-function hoverPlay(e: MouseEvent) {
-  void (e.currentTarget as HTMLVideoElement).play().catch(() => {})
-}
-function hoverPause(e: MouseEvent) {
-  const v = e.currentTarget as HTMLVideoElement
-  v.pause()
-  v.currentTime = 0
-}
+const filePicker = ref<HTMLInputElement | null>(null)
 
 const {
   store,
@@ -245,6 +292,8 @@ const {
   mediaFilter,
   mediaCount,
   mediaFilters,
+  viewMode,
+  searchQuery,
   uploading,
   uploadDone,
   uploadTotal,
@@ -254,24 +303,52 @@ const {
   tagEditor,
   tagEditorStyle,
   catName,
-  openTagEditor,
   closeTagEditor,
   editorHas,
   toggleTag,
   assetTooltip,
+  assetMeta,
+  assetMenu,
+  assetMenuStyle,
+  openAssetMenu,
+  closeAssetMenu,
+  menuLoadNode,
+  menuEditTags,
+  menuRenameAsset,
+  menuDeleteAsset,
   onPickFiles,
   onCreateCategory,
   onRenameCategory,
   onDeleteCategory,
-  onRenameAsset,
-  onDeleteAsset,
-  onLoadAssetNode,
   onAssetDragStart,
   onChipDrop,
   onDragEnter,
   onDragLeave,
   onDrop,
 } = useAssetsPanel(() => props.active)
+
+const emptyText = computed(() => {
+  if (searchQuery.value.trim()) return t('assets.noResults')
+  return activeFilter.value === 'all' && mediaFilter.value === 'all'
+    ? t('assets.empty')
+    : t('assets.emptyCategory')
+})
+
+const SETTINGS_MENU_WIDTH = 176
+const settingsMenu = ref<{ x: number; y: number } | null>(null)
+
+function openSettingsMenu(e: MouseEvent) {
+  const r = (e.currentTarget as HTMLElement).getBoundingClientRect()
+  settingsMenu.value = {
+    x: Math.max(8, Math.min(r.right - SETTINGS_MENU_WIDTH, window.innerWidth - SETTINGS_MENU_WIDTH - 8)),
+    y: r.bottom + 4,
+  }
+}
+
+function setViewMode(mode: AssetViewMode) {
+  viewMode.value = mode
+  settingsMenu.value = null
+}
 
 function chipClass(active: boolean) {
   return [
@@ -293,29 +370,15 @@ const addBtnClass = [
   'ctv:text-secondary-foreground ctv:bg-secondary-background ctv:hover:bg-secondary-background-hover',
 ].join(' ')
 
-const cardBtnClass = [
-  'ctv:flex ctv:items-center ctv:justify-center ctv:size-5 ctv:cursor-pointer ctv:[font-family:inherit]',
-  'ctv:rounded-sm ctv:border ctv:border-border-default ctv:text-2xs',
-  'ctv:bg-interface-panel-surface/90 ctv:text-base-foreground ctv:hover:bg-secondary-background-hover',
+const iconBtnClass = [
+  'ctv:inline-flex ctv:items-center ctv:justify-center ctv:size-7 ctv:shrink-0 ctv:cursor-pointer ctv:appearance-none',
+  'ctv:rounded-lg ctv:border ctv:border-border-subtle ctv:bg-secondary-background ctv:text-base-foreground',
+  'ctv:hover:bg-secondary-background-hover ctv:transition-colors',
+].join(' ')
+
+const menuItemClass = [
+  'ctv:flex ctv:items-center ctv:gap-2 ctv:w-full ctv:px-2 ctv:py-1.5 ctv:rounded ctv:cursor-pointer ctv:text-left ctv:text-xs',
+  'ctv:[font-family:inherit] ctv:bg-transparent ctv:border-none ctv:text-base-foreground',
+  'ctv:hover:bg-interface-menu-component-surface-hovered',
 ].join(' ')
 </script>
-
-<style scoped>
-.ctv-asset-actions {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.15s ease;
-}
-.ctv-asset-card:hover .ctv-asset-actions,
-.ctv-asset-card:focus-within .ctv-asset-actions {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-@media (hover: none), (pointer: coarse) {
-  .ctv-asset-actions {
-    opacity: 1;
-    pointer-events: auto;
-  }
-}
-</style>

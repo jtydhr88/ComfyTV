@@ -84,6 +84,13 @@
     "uploading": "Uploading {done}/{total}…",
     "uploadFailed": "Upload failed: {detail}",
     "dropHint": "Drop files to add them to the library",
+    "search": "Search assets",
+    "noResults": "No assets match your search.",
+    "view": {
+      "settings": "Display settings",
+      "list": "List view",
+      "grid": "Grid view"
+    },
     "media": {
       "all": "All types",
       "image": "Images",
@@ -106,7 +113,8 @@
       "delete": "Remove from library",
       "deleteConfirm": "Remove this asset from the library? The file on disk stays.",
       "tags": "Edit tags",
-      "loadNode": "Add as node to canvas"
+      "loadNode": "Add as node to canvas",
+      "more": "More options"
     },
     "tagPopover": {
       "empty": "No categories yet.",
