@@ -155,7 +155,7 @@
           <div :class="imgActionsClass">
             <button type="button" :class="imgActionBtn"
                     :title="$t('stage.action.viewFull')"
-                    @click.stop="openViewer(img.image_url)"><i class="pi pi-window-maximize" /></button>
+                    @click.stop="openBatchViewer(i)"><i class="pi pi-window-maximize" /></button>
             <button type="button" :class="imgActionBtn"
                     :title="$t('stage.action.download')"
                     @click.stop="onDownload(img.image_url)"><i class="pi pi-download" /></button>
@@ -174,37 +174,6 @@
     </template>
 
     <div v-else :class="emptyClass">{{ $t('stage.empty.unsupported_type', { type }) }}</div>
-
-    <Teleport to="body">
-      <div
-        v-if="lightboxUrl"
-        class="ctv:fixed ctv:inset-0 ctv:z-[9999] ctv:flex ctv:items-center ctv:justify-center ctv:cursor-zoom-out ctv:bg-black/90"
-        role="dialog"
-        @click.self="lightboxUrl = null"
-        @wheel.prevent.stop
-      >
-        <div
-          ref="lightboxContainer"
-          class="ctv:inline-flex ctv:items-center ctv:justify-center ctv:touch-none ctv:select-none ctv:cursor-grab"
-          @click.stop
-        >
-          <img ref="lightboxImg" :src="lightboxUrl"
-               class="ctv:block ctv:max-w-[60vw] ctv:max-h-[60vh] ctv:object-contain ctv:cursor-[inherit]
-                      ctv:shadow-[0_8px_40px_rgb(0_0_0/0.6)]"
-               draggable="false"
-               :alt="lightboxUrl" />
-        </div>
-        <button
-          type="button"
-          class="ctv:absolute ctv:top-4 ctv:right-4 ctv:size-9 ctv:flex ctv:items-center ctv:justify-center ctv:text-sm ctv:leading-none
-                 ctv:rounded-full ctv:cursor-pointer
-                 ctv:bg-black/55 ctv:text-white ctv:border ctv:border-white/30
-                 ctv:hover:bg-black/85 ctv:hover:border-white/55"
-          :title="$t('stage.action.close')"
-          @click="lightboxUrl = null"
-        ><i class="pi pi-times" /></button>
-      </div>
-    </Teleport>
 
     <Teleport to="body">
       <div
@@ -264,6 +233,7 @@ import { computed, ref, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { askText } from '@/composables/dialog/useTextInputDialog'
 import { useImagePanZoom } from '@/composables/widgets/useImagePanZoom'
+import { openLightbox } from '@/composables/useLightbox'
 import { useOutputAssetTagging } from '@/composables/stages/useOutputAssetTagging'
 import {
   isBatchItemSelected,
@@ -305,12 +275,16 @@ async function onCreateCategory() {
 const zoomContainer = ref<HTMLElement | null>(null)
 const zoomImg = ref<HTMLImageElement | null>(null)
 
-const lightboxUrl = ref<string | null>(null)
-const lightboxContainer = ref<HTMLElement | null>(null)
-const lightboxImg = ref<HTMLImageElement | null>(null)
-
 function openViewer(url: string) {
-  if (url) lightboxUrl.value = url
+  if (url) openLightbox([{ url }], 0)
+}
+
+function openBatchViewer(i: number) {
+  const items = batchImages.value.map((b) => ({
+    url: b.image_url,
+    label: b.label || b.prompt || nameFromUrl(b.image_url),
+  }))
+  openLightbox(items, i)
 }
 
 async function onDownload(url: string) {
@@ -326,7 +300,6 @@ import { onBeforeUnmount, onMounted } from 'vue'
 function onKeydown(e: KeyboardEvent) {
   if (e.key !== 'Escape') return
   if (tagMenu.value) closeTagMenu()
-  else if (lightboxUrl.value) lightboxUrl.value = null
 }
 onMounted(() => window.addEventListener('keydown', onKeydown))
 onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown))
@@ -350,7 +323,6 @@ const props = defineProps<{
 }>()
 
 useImagePanZoom(zoomContainer, zoomImg, { resetKey: toRef(props, 'content') })
-useImagePanZoom(lightboxContainer, lightboxImg, { resetKey: lightboxUrl, minZoom: 0.2, maxZoom: 8 })
 
 const {
   hasContent,

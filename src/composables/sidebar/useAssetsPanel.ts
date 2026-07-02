@@ -3,6 +3,7 @@ import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import type { Asset } from '@/api/schemas'
+import { type LightboxItem, openLightbox } from '@/composables/useLightbox'
 import { ASSET_DRAG_MIME } from '@/composables/sidebar/assetCanvasDrop'
 import { canvasCenter, createAssetLoaderNode } from '@/composables/stages/assetLoaderNode'
 import { askConfirm } from '@/composables/dialog/useConfirmDialog'
@@ -213,6 +214,24 @@ export function useAssetsPanel(isActive: () => boolean | undefined) {
     if (a) void onDeleteAsset(a)
   }
 
+  function viewFullAsset(asset: Asset) {
+    if (asset.media_type !== 'image') return
+    const imgs = visibleAssets.value.filter((a) => a.media_type === 'image')
+    const idx = imgs.findIndex((a) => a.id === asset.id)
+    if (idx < 0) return
+    const items: LightboxItem[] = imgs.map((a) => ({
+      url: a.payload_url,
+      label: a.name,
+    }))
+    openLightbox(items, idx)
+  }
+
+  function menuViewFull() {
+    const a = menuAsset.value
+    closeAssetMenu()
+    if (a) viewFullAsset(a)
+  }
+
   function onPickFiles(e: Event) {
     const input = e.target as HTMLInputElement
     const files = Array.from(input.files ?? [])
@@ -378,12 +397,15 @@ export function useAssetsPanel(isActive: () => boolean | undefined) {
     assetMeta,
     assetMenu,
     assetMenuStyle,
+    menuAsset,
     openAssetMenu,
     closeAssetMenu,
     menuLoadNode,
     menuEditTags,
     menuRenameAsset,
     menuDeleteAsset,
+    menuViewFull,
+    viewFullAsset,
     onPickFiles,
     addFiles,
     onCreateCategory,

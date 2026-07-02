@@ -57,7 +57,9 @@
       "addTag": "存入资产库 / 打标签",
       "removeFromPicker": "从选择器移除",
       "close": "关闭",
-      "loadAsset": "作为资产节点加载"
+      "loadAsset": "作为资产节点加载",
+      "prev": "上一张",
+      "next": "下一张"
     },
     "preparingWorkflowDetail": "稍等 — 正在把工作流转换成 api JSON。稍后再点运行。"
   },

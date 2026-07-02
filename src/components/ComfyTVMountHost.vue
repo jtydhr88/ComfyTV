@@ -8,10 +8,12 @@
   </Teleport>
   <ExecutionStatusBar />
   <ComfyTVDialog />
+  <LightboxHost />
 </template>
 
 <script setup lang="ts">
 import ExecutionStatusBar from '@/components/ExecutionStatusBar.vue'
+import LightboxHost from '@/components/LightboxHost.vue'
 import ComfyTVDialog from '@/components/dialog/ComfyTVDialog.vue'
 import { mounts } from '@/composables/stages/widgetMounts'
 </script>

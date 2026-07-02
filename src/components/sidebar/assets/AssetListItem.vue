@@ -42,7 +42,17 @@
       >{{ secondary }}</span>
     </div>
 
-    <div class="ctv-asset-actions ctv:flex ctv:shrink-0 ctv:items-center">
+    <div class="ctv-asset-actions ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1">
+      <button
+        v-if="asset.media_type === 'image'"
+        class="ctv:flex ctv:size-6 ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:appearance-none
+               ctv:rounded-md ctv:border-none ctv:bg-secondary-background ctv:text-base-foreground
+               ctv:hover:bg-secondary-background-hover"
+        :title="$t('stage.action.viewFull')"
+        @click.stop="emit('view-full')"
+      >
+        <IconMaximize class="ctv:size-4" />
+      </button>
       <button
         class="ctv:flex ctv:size-6 ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:appearance-none
                ctv:rounded-md ctv:border-none ctv:bg-secondary-background ctv:text-base-foreground
@@ -60,6 +70,7 @@
 import { computed } from 'vue'
 
 import IconEllipsis from '~icons/lucide/ellipsis'
+import IconMaximize from '~icons/lucide/maximize-2'
 import IconVolume2 from '~icons/lucide/volume-2'
 
 import type { Asset } from '@/api/schemas'
@@ -73,6 +84,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   'open-menu': [e: MouseEvent]
+  'view-full': []
 }>()
 
 const secondary = computed(() =>

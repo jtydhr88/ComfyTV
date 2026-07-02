@@ -42,7 +42,7 @@
         <IconVolume2 v-else class="ctv:size-3" />
       </span>
 
-      <div class="ctv-asset-actions ctv:absolute ctv:top-2 ctv:left-2">
+      <div class="ctv-asset-actions ctv:absolute ctv:top-2 ctv:left-2 ctv:flex ctv:gap-1">
         <button
           class="ctv:flex ctv:size-6 ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:appearance-none
                  ctv:rounded-md ctv:border-none ctv:shadow-sm ctv:bg-white/90 ctv:text-black/80 ctv:hover:bg-white"
@@ -50,6 +50,15 @@
           @click.stop="emit('open-menu', $event)"
         >
           <IconEllipsis class="ctv:size-4" />
+        </button>
+        <button
+          v-if="asset.media_type === 'image'"
+          class="ctv:flex ctv:size-6 ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:appearance-none
+                 ctv:rounded-md ctv:border-none ctv:shadow-sm ctv:bg-white/90 ctv:text-black/80 ctv:hover:bg-white"
+          :title="$t('stage.action.viewFull')"
+          @click.stop="emit('view-full')"
+        >
+          <IconMaximize class="ctv:size-4" />
         </button>
       </div>
     </div>
@@ -73,6 +82,7 @@
 
 <script setup lang="ts">
 import IconEllipsis from '~icons/lucide/ellipsis'
+import IconMaximize from '~icons/lucide/maximize-2'
 import IconPlay from '~icons/lucide/play'
 import IconVolume2 from '~icons/lucide/volume-2'
 
@@ -87,6 +97,7 @@ defineProps<{
 
 const emit = defineEmits<{
   'open-menu': [e: MouseEvent]
+  'view-full': []
 }>()
 
 function hoverPlay(e: MouseEvent) {

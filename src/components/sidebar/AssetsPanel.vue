@@ -142,6 +142,7 @@
           @dragstart="onAssetDragStart(asset, $event)"
           @contextmenu.prevent.stop="openAssetMenu(asset, $event, 'pointer')"
           @open-menu="openAssetMenu(asset, $event, 'element')"
+          @view-full="viewFullAsset(asset)"
         />
       </div>
 
@@ -156,6 +157,7 @@
           @dragstart="onAssetDragStart(asset, $event)"
           @contextmenu.prevent.stop="openAssetMenu(asset, $event, 'pointer')"
           @open-menu="openAssetMenu(asset, $event, 'element')"
+          @view-full="viewFullAsset(asset)"
         />
       </div>
     </div>
@@ -208,6 +210,14 @@
         :style="assetMenuStyle"
         @click.stop
       >
+        <button
+          v-if="menuAsset?.media_type === 'image'"
+          :class="menuItemClass"
+          @click="menuViewFull"
+        >
+          <IconMaximize class="ctv:size-4 ctv:shrink-0" />
+          <span class="ctv:flex-1 ctv:truncate">{{ $t('stage.action.viewFull') }}</span>
+        </button>
         <button :class="menuItemClass" @click="menuLoadNode">
           <IconDownload class="ctv:size-4 ctv:shrink-0" />
           <span class="ctv:flex-1 ctv:truncate">{{ $t('assets.card.loadNode') }}</span>
@@ -265,6 +275,7 @@ import { useI18n } from 'vue-i18n'
 import IconCheck from '~icons/lucide/check'
 import IconDownload from '~icons/lucide/download'
 import IconLayoutGrid from '~icons/lucide/layout-grid'
+import IconMaximize from '~icons/lucide/maximize-2'
 import IconPencil from '~icons/lucide/pencil'
 import IconPlus from '~icons/lucide/plus'
 import IconSearch from '~icons/lucide/search'
@@ -310,12 +321,15 @@ const {
   assetMeta,
   assetMenu,
   assetMenuStyle,
+  menuAsset,
   openAssetMenu,
   closeAssetMenu,
   menuLoadNode,
   menuEditTags,
   menuRenameAsset,
   menuDeleteAsset,
+  menuViewFull,
+  viewFullAsset,
   onPickFiles,
   onCreateCategory,
   onRenameCategory,

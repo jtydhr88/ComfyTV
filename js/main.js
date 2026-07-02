@@ -1,4 +1,4 @@
-(function() {  "use strict";  try {    if (typeof document != "undefined") {      var elementStyle = document.createElement("style");      elementStyle.appendChild(document.createTextNode(`.ctv-asset-thumb[data-v-5ef522c4] {\r  transition: transform 0.2s ease;}.ctv-asset-card:hover .ctv-asset-thumb[data-v-5ef522c4] {\r  transform: scale(1.05);}.ctv-asset-actions[data-v-5ef522c4] {\r  opacity: 0;\r  pointer-events: none;\r  transition: opacity 0.15s ease;}.ctv-asset-card:hover .ctv-asset-actions[data-v-5ef522c4],\r.ctv-asset-card:focus-within .ctv-asset-actions[data-v-5ef522c4] {\r  opacity: 1;\r  pointer-events: auto;}@media (hover: none), (pointer: coarse) {.ctv-asset-actions[data-v-5ef522c4] {\r    opacity: 1;\r    pointer-events: auto;}.ctv-asset-card:hover .ctv-asset-thumb[data-v-5ef522c4] {\r    transform: none;}}\r.ctv-asset-actions[data-v-b7a81476] {\r  opacity: 0;\r  pointer-events: none;\r  transition: opacity 0.15s ease;}.ctv-asset-row:hover .ctv-asset-actions[data-v-b7a81476],\r.ctv-asset-row:focus-within .ctv-asset-actions[data-v-b7a81476] {\r  opacity: 1;\r  pointer-events: auto;}@media (hover: none), (pointer: coarse) {.ctv-asset-actions[data-v-b7a81476] {\r    opacity: 1;\r    pointer-events: auto;}}\r.ctv-num-root {\r  display: flex;\r  align-items: center;\r  width: 100%;\r  min-width: 0;\r  background: var(--secondary-background, rgba(255,255,255,0.04));\r  border-radius: 8px;\r  box-sizing: border-box;}.ctv-num-root .ctv-num-input,\r.ctv-num-root input {\r  appearance: none;\r  background: transparent;\r  border: none;\r  border-radius: 8px;\r  padding: 6px 12px;\r  color: var(--base-foreground, #ddd);\r  font-size: 12px;\r  font-family: inherit;\r  width: 100%;\r  min-width: 0;\r  flex: 1;\r  outline: none;\r  text-align: left;\r  box-sizing: border-box;}.ctv-num-root input::placeholder { color: var(--muted-foreground, #888);}.ctv-num-root:focus-within {\r  box-shadow: 0 0 0 1px var(--border-default, rgba(255,255,255,0.25));}.ctv-num-root input:disabled { opacity: 0.5; pointer-events: none;}.ctv-num-btn {\r  flex-shrink: 0;\r  appearance: none;\r  background: transparent;\r  border: none;\r  color: var(--muted-foreground, #888);\r  font-size: 13px;\r  line-height: 1;\r  width: 22px;\r  height: 100%;\r  min-height: 28px;\r  cursor: pointer;\r  user-select: none;\r  display: inline-flex;\r  align-items: center;\r  justify-content: center;}.ctv-num-btn:hover { color: var(--base-foreground, #ddd);}.ctv-num-btn[data-disabled] { opacity: 0.4; pointer-events: none;}\r.ctv-toggle {\r  display: inline-flex;\r  align-items: center;\r  flex-shrink: 0;\r  width: 32px;\r  height: 18px;\r  padding: 2px;\r  border: none;\r  border-radius: 9999px;\r  background: var(--secondary-background, rgba(255,255,255,0.12));\r  cursor: pointer;\r  transition: background 0.15s ease;}.ctv-toggle[data-state='checked'] {\r  background: var(--primary-background, rgba(78,168,255,0.6));}.ctv-toggle:disabled,\r.ctv-toggle[data-disabled] {\r  opacity: 0.5;\r  cursor: not-allowed;\r  pointer-events: none;}.ctv-toggle:focus-visible {\r  outline: none;\r  box-shadow: 0 0 0 1px var(--border-default, rgba(255,255,255,0.25));}.ctv-toggle-thumb {\r  display: block;\r  width: 14px;\r  height: 14px;\r  border-radius: 9999px;\r  background: #fff;\r  transition: transform 0.15s ease;\r  transform: translateX(0);\r  will-change: transform;\r  pointer-events: none;}.ctv-toggle[data-state='checked'] .ctv-toggle-thumb {\r  transform: translateX(14px);}\r.ctv-text-input,\r.ctv-text-input input,\r.ctv-text-input textarea {\r  appearance: none;\r  background: var(--secondary-background, rgba(255,255,255,0.04));\r  border: none;\r  border-radius: 8px;\r  padding: 6px 12px;\r  color: var(--base-foreground, #ddd);\r  font-size: 12px;\r  font-family: inherit;\r  width: 100%;\r  min-width: 0;\r  outline: none;\r  box-sizing: border-box;}.ctv-text-input::placeholder,\r.ctv-text-input input::placeholder,\r.ctv-text-input textarea::placeholder { color: var(--muted-foreground, #888);}.ctv-text-area { line-height: 1.4; resize: vertical; min-height: 48px; overflow: hidden;}.ctv-text-input:focus-visible,\r.ctv-text-input input:focus-visible,\r.ctv-text-input textarea:focus-visible {\r  box-shadow: 0 0 0 1px var(--border-default, rgba(255,255,255,0.25));}.ctv-text-input:disabled,\r.ctv-text-input input:disabled,\r.ctv-text-input textarea:disabled { opacity: 0.5; pointer-events: none;}\r.comfytv-asset-scroll {\r  scrollbar-width: thin;\r  scrollbar-color: rgba(255, 255, 255, 0.35) transparent;}.comfytv-asset-scroll::-webkit-scrollbar {\r  width: 10px;}.comfytv-asset-scroll::-webkit-scrollbar-track {\r  background: transparent;}.comfytv-asset-scroll::-webkit-scrollbar-thumb {\r  background-color: rgba(255, 255, 255, 0.35);\r  border-radius: 5px;\r  border: 2px solid transparent;\r  background-clip: content-box;}.comfytv-asset-scroll:hover::-webkit-scrollbar-thumb {\r  background-color: rgba(255, 255, 255, 0.55);}\r.tippy-box[data-animation=fade][data-state=hidden]{opacity:0}[data-tippy-root]{max-width:calc(100vw - 10px)}.tippy-box{position:relative;background-color:#333;color:#fff;border-radius:4px;font-size:14px;line-height:1.4;white-space:normal;outline:0;transition-property:transform,visibility,opacity}.tippy-box[data-placement^=top]>.tippy-arrow{bottom:0}.tippy-box[data-placement^=top]>.tippy-arrow:before{bottom:-7px;left:0;border-width:8px 8px 0;border-top-color:initial;transform-origin:center top}.tippy-box[data-placement^=bottom]>.tippy-arrow{top:0}.tippy-box[data-placement^=bottom]>.tippy-arrow:before{top:-7px;left:0;border-width:0 8px 8px;border-bottom-color:initial;transform-origin:center bottom}.tippy-box[data-placement^=left]>.tippy-arrow{right:0}.tippy-box[data-placement^=left]>.tippy-arrow:before{border-width:8px 0 8px 8px;border-left-color:initial;right:-7px;transform-origin:center left}.tippy-box[data-placement^=right]>.tippy-arrow{left:0}.tippy-box[data-placement^=right]>.tippy-arrow:before{left:-7px;border-width:8px 8px 8px 0;border-right-color:initial;transform-origin:center right}.tippy-box[data-inertia][data-state=visible]{transition-timing-function:cubic-bezier(.54,1.5,.38,1.11)}.tippy-arrow{width:16px;height:16px;color:#333}.tippy-arrow:before{content:"";position:absolute;border-color:transparent;border-style:solid}.tippy-content{position:relative;padding:5px 9px;z-index:1}.comfytv-prompt-prosemirror {\r  scrollbar-width: thin;\r  scrollbar-color: rgba(255, 255, 255, 0.35) transparent;}.comfytv-prompt-prosemirror::-webkit-scrollbar {\r  width: 10px;}.comfytv-prompt-prosemirror::-webkit-scrollbar-track {\r  background: transparent;}.comfytv-prompt-prosemirror::-webkit-scrollbar-thumb {\r  background-color: rgba(255, 255, 255, 0.35);\r  border-radius: 5px;\r  border: 2px solid transparent;\r  background-clip: content-box;}.comfytv-prompt-prosemirror:hover::-webkit-scrollbar-thumb {\r  background-color: rgba(255, 255, 255, 0.55);}.tippy-box[data-theme~='comfytv-transparent'] {\r  background: transparent;\r  box-shadow: none;}.tippy-box[data-theme~='comfytv-transparent'] > .tippy-content { padding: 0;}.tippy-box[data-theme~='comfytv-tooltip'] {\r  background: var(--interface-menu-surface, #1a1a1a);\r  border: 1px solid var(--border-default, #3a3a3a);\r  color: var(--base-foreground, #e0e0e0);\r  font-size: 11px;\r  line-height: 1.45;\r  border-radius: 4px;\r  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);}.tippy-box[data-theme~='comfytv-tooltip'] > .tippy-content {\r  padding: 6px 8px;\r  white-space: pre-wrap;\r  word-break: break-word;}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='top']    > .tippy-arrow::before { border-top-color: var(--border-default, #3a3a3a);}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='bottom'] > .tippy-arrow::before { border-bottom-color: var(--border-default, #3a3a3a);}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='left']   > .tippy-arrow::before { border-left-color: var(--border-default, #3a3a3a);}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='right']  > .tippy-arrow::before { border-right-color: var(--border-default, #3a3a3a);}\r.comfytv-prompt-editor[data-v-c864c210] p { margin: 0;}.comfytv-prompt-editor[data-v-c864c210] p.is-editor-empty:first-child::before {\r  content: attr(data-placeholder);\r  color: var(--muted-foreground, #888);\r  opacity: 0.65;\r  float: left;\r  height: 0;\r  pointer-events: none;}\r.ctv-slider-row {\r  display: flex;\r  align-items: center;\r  gap: 8px;\r  width: 100%;\r  min-width: 0;}.ctv-slider-root {\r  position: relative;\r  display: flex;\r  align-items: center;\r  flex: 1;\r  min-width: 0;\r  height: 18px;\r  user-select: none;\r  touch-action: none;}.ctv-slider-track {\r  position: relative;\r  flex: 1;\r  height: 4px;\r  border-radius: 9999px;\r  background: var(--secondary-background, rgba(255, 255, 255, 0.12));}.ctv-slider-range {\r  position: absolute;\r  height: 100%;\r  border-radius: 9999px;\r  background: var(--primary-background, #4a8cff);}.ctv-slider-thumb {\r  display: block;\r  width: 12px;\r  height: 12px;\r  border-radius: 9999px;\r  background: var(--base-foreground, #eee);\r  box-shadow: 0 1px 3px rgb(0 0 0 / 0.4);\r  cursor: grab;}.ctv-slider-thumb:active { cursor: grabbing;}.ctv-slider-thumb[data-disabled] { opacity: 0.5; pointer-events: none;}.ctv-slider-value {\r  flex-shrink: 0;\r  min-width: 32px;\r  text-align: right;\r  font-size: 11px;\r  font-variant-numeric: tabular-nums;\r  color: var(--base-foreground, #ddd);}\r.vp-text-scroll[data-v-bfd6c535] {\r  scrollbar-width: thin;\r  scrollbar-color: rgba(255, 255, 255, 0.35) transparent;}.vp-text-scroll[data-v-bfd6c535]::-webkit-scrollbar {\r  width: 10px;}.vp-text-scroll[data-v-bfd6c535]::-webkit-scrollbar-track {\r  background: transparent;}.vp-text-scroll[data-v-bfd6c535]::-webkit-scrollbar-thumb {\r  background-color: rgba(255, 255, 255, 0.35);\r  border-radius: 5px;\r  border: 2px solid transparent;\r  background-clip: content-box;}.vp-text-scroll[data-v-bfd6c535]:hover::-webkit-scrollbar-thumb {\r  background-color: rgba(255, 255, 255, 0.55);}.ctv-batch-grid[data-v-bfd6c535] {\r  display: grid;\r  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));\r  gap: 4px;\r  padding-top: 14px;\r  max-height: 320px;\r  overflow: auto;}.vp-img-actions[data-v-bfd6c535] {\r  opacity: 0;\r  pointer-events: none;\r  transition: opacity 0.15s ease;}.vp-img-host:hover .vp-img-actions[data-v-bfd6c535],\r.vp-img-host:focus-within .vp-img-actions[data-v-bfd6c535] {\r  opacity: 1;\r  pointer-events: auto;}@media (hover: none), (pointer: coarse) {.vp-img-actions[data-v-bfd6c535] {\r    opacity: 1;\r    pointer-events: auto;}}\r.ctv-input-tile:hover .ctv-tile-disconnect[data-v-2818cd4c] { display: inline-flex;}.ctv-picker-input.ctv-src-upstream         .ctv-src-tag[data-v-2818cd4c] { background: color-mix(in srgb, var(--primary-background) 22%, transparent); color: var(--primary-background);}.ctv-picker-input.ctv-src-upstream-pending .ctv-src-tag[data-v-2818cd4c] { background: color-mix(in srgb, var(--warning-background) 18%, transparent); color: var(--warning-background);}\r.ctv-camera-dropdown option[data-v-d255fcd1] {\r  background: var(--interface-menu-surface, #1a1a2e);\r  color: var(--base-foreground, #e0e0e0);}\r.ctv-crop-select[data-v-c1cb98bb] option {\r  background: var(--interface-menu-surface, #1a1a1f);\r  color: var(--base-foreground, #ddd);}.ctv-bound-input[data-v-c1cb98bb] { -moz-appearance: textfield;}.ctv-bound-input[data-v-c1cb98bb]::-webkit-inner-spin-button,\r.ctv-bound-input[data-v-c1cb98bb]::-webkit-outer-spin-button {\r  -webkit-appearance: none;}\r.ctv-gradient-row[data-v-5e3f6fea] {\r  display: flex;\r  align-items: center;\r  gap: 8px;\r  width: 100%;\r  min-width: 0;}.ctv-gradient-root[data-v-5e3f6fea] {\r  position: relative;\r  display: flex;\r  align-items: center;\r  flex: 1;\r  min-width: 0;\r  height: 18px;\r  user-select: none;\r  touch-action: none;}.ctv-gradient-track[data-v-5e3f6fea] {\r  position: relative;\r  flex: 1;\r  height: 10px;\r  border-radius: 9999px;\r  cursor: pointer;}.ctv-gradient-thumb[data-v-5e3f6fea] {\r  display: block;\r  width: 14px;\r  height: 14px;\r  border-radius: 9999px;\r  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);\r  outline: 1px solid rgba(0, 0, 0, 0.35);\r  cursor: grab;}.ctv-gradient-thumb[data-v-5e3f6fea]:active {\r  cursor: grabbing;}.ctv-gradient-thumb[data-disabled][data-v-5e3f6fea] {\r  opacity: 0.5;\r  pointer-events: none;}.ctv-gradient-value[data-v-5e3f6fea] {\r  flex-shrink: 0;\r  min-width: 32px;\r  text-align: right;\r  font-size: 11px;\r  font-variant-numeric: tabular-nums;\r  color: var(--base-foreground, #ddd);}\r.ctv-curve-editor[data-v-412edb45] {\r  aspect-ratio: 1 / 1;\r  width: 100%;\r  border-radius: 5px;\r  background: var(--secondary-background, rgba(255, 255, 255, 0.06));\r  color: var(--base-foreground, #fff);\r  cursor: crosshair;\r  touch-action: none;}.ctv-curve-disabled[data-v-412edb45] {\r  cursor: default;}.ctv-curve-point[data-v-412edb45] {\r  cursor: grab;}.ctv-curve-point[data-v-412edb45]:active {\r  cursor: grabbing;}\r.ctv-pano-select-wrap[data-v-0db49e33] {\r  position: relative;\r  display: inline-flex;\r  align-items: center;}.ctv-pano-caret[data-v-0db49e33] {\r  position: absolute;\r  right: 6px;\r  top: 50%;\r  transform: translateY(-50%);\r  font-size: 8px;\r  color: var(--muted-foreground, rgb(255 255 255 / 0.5));\r  pointer-events: none;}.ctv-pano-select[data-v-0db49e33] {\r  appearance: none;\r  background-color: var(--secondary-background, rgb(255 255 255 / 0.04));\r  color: var(--base-foreground, rgb(255 255 255 / 0.9));\r  border: 1px solid var(--border-subtle, rgb(255 255 255 / 0.15));\r  border-radius: 4px;\r  padding: 3px 18px 3px 6px;\r  font-size: 11px;\r  font-family: ui-monospace, SFMono-Regular, monospace;\r  cursor: pointer;\r  outline: none;\r  min-width: 70px;}.ctv-pano-select[data-v-0db49e33]:hover { border-color: var(--border-default, rgb(255 255 255 / 0.3));}.ctv-pano-select[data-v-0db49e33]:focus { border-color: var(--primary-background, rgb(78 168 255 / 0.6));}.ctv-pano-select option[data-v-0db49e33] { background: var(--interface-menu-surface, #1a1a2e); color: var(--base-foreground, #e0e0e0);}\r.ctv-pano-select-wrap[data-v-1c06d1c2] {\r  position: relative;\r  display: inline-flex;\r  align-items: center;}.ctv-pano-caret[data-v-1c06d1c2] {\r  position: absolute;\r  right: 6px;\r  top: 50%;\r  transform: translateY(-50%);\r  font-size: 8px;\r  color: var(--muted-foreground, rgb(255 255 255 / 0.5));\r  pointer-events: none;}.ctv-pano-select[data-v-1c06d1c2] {\r  appearance: none;\r  background-color: var(--secondary-background, rgb(255 255 255 / 0.04));\r  color: var(--base-foreground, rgb(255 255 255 / 0.9));\r  border: 1px solid var(--border-subtle, rgb(255 255 255 / 0.15));\r  border-radius: 4px;\r  padding: 3px 18px 3px 6px;\r  font-size: 11px;\r  font-family: ui-monospace, SFMono-Regular, monospace;\r  cursor: pointer;\r  outline: none;\r  min-width: 70px;}.ctv-pano-select[data-v-1c06d1c2]:hover { border-color: var(--border-default, rgb(255 255 255 / 0.3));}.ctv-pano-select[data-v-1c06d1c2]:focus { border-color: var(--primary-background, rgb(78 168 255 / 0.6));}.ctv-pano-select option[data-v-1c06d1c2] { background: var(--interface-menu-surface, #1a1a2e); color: var(--base-foreground, #e0e0e0);}\r.ctv-pad-area[data-v-05778c35] {\r  background-image:\r    linear-gradient(45deg, rgba(255,255,255,0.04) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.04) 75%),\r    linear-gradient(45deg, rgba(255,255,255,0.04) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.04) 75%);\r  background-size: 12px 12px;\r  background-position: 0 0, 6px 6px;\r  border: 1px dashed color-mix(in srgb, var(--primary-background, #4ea8ff) 45%, transparent);}.ctv-outpaint-handle[data-v-05778c35]::before {\r  content: '';\r  position: absolute;\r  background: color-mix(in srgb, var(--primary-background, #4ea8ff) 65%, transparent);\r  border-radius: 2px;}.ctv-handle-left[data-v-05778c35]::before,  .ctv-handle-right[data-v-05778c35]::before  { width: 3px; height: 100%;}.ctv-handle-top[data-v-05778c35]::before,   .ctv-handle-bottom[data-v-05778c35]::before { height: 3px; width: 100%;}.ctv-outpaint-handle[data-v-05778c35]:hover::before { background: var(--primary-background, #4ea8ff);}\r.ctv-entry-table th[data-v-603808ad],\r.ctv-entry-table td[data-v-603808ad] {\r  text-align: left;\r  padding: 6px 8px;\r  border-bottom: 1px solid var(--border-subtle, #2a2a2a);\r  vertical-align: top;}.ctv-entry-table th[data-v-603808ad] {\r  font-weight: 600;\r  color: var(--muted-foreground, #aaa);}\r/*! tailwindcss v4.3.0 | MIT License | https://tailwindcss.com */@layer properties {  @supports (((-webkit-hyphens: none)) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {    *, :before, :after, ::backdrop {      --tw-translate-x: 0;      --tw-translate-y: 0;      --tw-translate-z: 0;      --tw-border-style: solid;      --tw-gradient-position: initial;      --tw-gradient-from: #0000;      --tw-gradient-via: #0000;      --tw-gradient-to: #0000;      --tw-gradient-stops: initial;      --tw-gradient-via-stops: initial;      --tw-gradient-from-position: 0%;      --tw-gradient-via-position: 50%;      --tw-gradient-to-position: 100%;      --tw-leading: initial;      --tw-font-weight: initial;      --tw-tracking: initial;      --tw-shadow: 0 0 #0000;      --tw-shadow-color: initial;      --tw-shadow-alpha: 100%;      --tw-inset-shadow: 0 0 #0000;      --tw-inset-shadow-color: initial;      --tw-inset-shadow-alpha: 100%;      --tw-ring-color: initial;      --tw-ring-shadow: 0 0 #0000;      --tw-inset-ring-color: initial;      --tw-inset-ring-shadow: 0 0 #0000;      --tw-ring-inset: initial;      --tw-ring-offset-width: 0px;      --tw-ring-offset-color: #fff;      --tw-ring-offset-shadow: 0 0 #0000;      --tw-outline-style: solid;      --tw-backdrop-blur: initial;      --tw-backdrop-brightness: initial;      --tw-backdrop-contrast: initial;      --tw-backdrop-grayscale: initial;      --tw-backdrop-hue-rotate: initial;      --tw-backdrop-invert: initial;      --tw-backdrop-opacity: initial;      --tw-backdrop-saturate: initial;      --tw-backdrop-sepia: initial;      --tw-duration: initial;      --tw-ease: initial;      --tw-scale-x: 1;      --tw-scale-y: 1;      --tw-scale-z: 1;    }  }}@layer theme {  :root, :host {    --ctv-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",    monospace;    --ctv-color-gray-600: oklch(44.6% .03 256.802);    --ctv-color-black: #000;    --ctv-color-white: #fff;    --ctv-spacing: .25rem;    --ctv-container-md: 28rem;    --ctv-text-xs: .75rem;    --ctv-text-xs--line-height: calc(1 / .75);    --ctv-text-sm: .875rem;    --ctv-text-sm--line-height: calc(1.25 / .875);    --ctv-text-lg: 1.125rem;    --ctv-text-lg--line-height: calc(1.75 / 1.125);    --ctv-text-2xl: 1.5rem;    --ctv-text-2xl--line-height: calc(2 / 1.5);    --ctv-font-weight-medium: 500;    --ctv-font-weight-semibold: 600;    --ctv-font-weight-bold: 700;    --ctv-tracking-wide: .025em;    --ctv-tracking-wider: .05em;    --ctv-leading-tight: 1.25;    --ctv-leading-snug: 1.375;    --ctv-leading-relaxed: 1.625;    --ctv-radius-sm: .25rem;    --ctv-radius-md: .375rem;    --ctv-radius-lg: .5rem;    --ctv-ease-in: cubic-bezier(.4, 0, 1, 1);    --ctv-ease-out: cubic-bezier(0, 0, .2, 1);    --ctv-ease-in-out: cubic-bezier(.4, 0, .2, 1);    --ctv-animate-pulse: pulse 2s cubic-bezier(.4, 0, .6, 1) infinite;    --ctv-blur-sm: 8px;    --ctv-aspect-video: 16 / 9;    --ctv-default-transition-duration: .15s;    --ctv-default-transition-timing-function: cubic-bezier(.4, 0, .2, 1);    --ctv-text-2xs: .625rem;    --ctv-text-2xs--line-height: calc(1 / .625);    --ctv-text-3xs: .5625rem;    --ctv-text-3xs--line-height: calc(1 / .5625);  }}@layer utilities {  .ctv\\:pointer-events-none {    pointer-events: none;  }  .ctv\\:absolute {    position: absolute;  }  .ctv\\:fixed {    position: fixed;  }  .ctv\\:relative {    position: relative;  }  .ctv\\:sticky {    position: sticky;  }  .ctv\\:inset-0 {    inset: calc(var(--ctv-spacing) * 0);  }  .ctv\\:inset-x-0 {    inset-inline: calc(var(--ctv-spacing) * 0);  }  .ctv\\:-top-2 {    top: calc(var(--ctv-spacing) * -2);  }  .ctv\\:top-0 {    top: calc(var(--ctv-spacing) * 0);  }  .ctv\\:top-0\\.5 {    top: calc(var(--ctv-spacing) * .5);  }  .ctv\\:top-1 {    top: calc(var(--ctv-spacing) * 1);  }  .ctv\\:top-1\\/2 {    top: 50%;  }  .ctv\\:top-2 {    top: calc(var(--ctv-spacing) * 2);  }  .ctv\\:top-4 {    top: calc(var(--ctv-spacing) * 4);  }  .ctv\\:top-\\[3px\\] {    top: 3px;  }  .ctv\\:top-full {    top: 100%;  }  .ctv\\:right-0 {    right: calc(var(--ctv-spacing) * 0);  }  .ctv\\:right-0\\.5 {    right: calc(var(--ctv-spacing) * .5);  }  .ctv\\:right-1 {    right: calc(var(--ctv-spacing) * 1);  }  .ctv\\:right-2 {    right: calc(var(--ctv-spacing) * 2);  }  .ctv\\:right-4 {    right: calc(var(--ctv-spacing) * 4);  }  .ctv\\:right-\\[3px\\] {    right: 3px;  }  .ctv\\:right-\\[14px\\] {    right: 14px;  }  .ctv\\:bottom-0 {    bottom: calc(var(--ctv-spacing) * 0);  }  .ctv\\:bottom-0\\.5 {    bottom: calc(var(--ctv-spacing) * .5);  }  .ctv\\:bottom-1\\.5 {    bottom: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:bottom-2 {    bottom: calc(var(--ctv-spacing) * 2);  }  .ctv\\:bottom-4 {    bottom: calc(var(--ctv-spacing) * 4);  }  .ctv\\:bottom-px {    bottom: 1px;  }  .ctv\\:left-0 {    left: calc(var(--ctv-spacing) * 0);  }  .ctv\\:left-0\\.5 {    left: calc(var(--ctv-spacing) * .5);  }  .ctv\\:left-1\\.5 {    left: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:left-2 {    left: calc(var(--ctv-spacing) * 2);  }  .ctv\\:z-10 {    z-index: 10;  }  .ctv\\:z-20 {    z-index: 20;  }  .ctv\\:z-30 {    z-index: 30;  }  .ctv\\:z-3000 {    z-index: 3000;  }  .ctv\\:z-\\[1\\] {    z-index: 1;  }  .ctv\\:z-\\[2\\] {    z-index: 2;  }  .ctv\\:z-\\[3\\] {    z-index: 3;  }  .ctv\\:z-\\[5\\] {    z-index: 5;  }  .ctv\\:z-\\[6\\] {    z-index: 6;  }  .ctv\\:z-\\[7\\] {    z-index: 7;  }  .ctv\\:z-\\[9999\\] {    z-index: 9999;  }  .ctv\\:z-\\[10000\\] {    z-index: 10000;  }  .ctv\\:m-0 {    margin: calc(var(--ctv-spacing) * 0);  }  .ctv\\:m-0\\.5 {    margin: calc(var(--ctv-spacing) * .5);  }  .ctv\\:m-1 {    margin: calc(var(--ctv-spacing) * 1);  }  .ctv\\:-mx-1 {    margin-inline: calc(var(--ctv-spacing) * -1);  }  .ctv\\:-mx-2\\.5 {    margin-inline: calc(var(--ctv-spacing) * -2.5);  }  .ctv\\:mx-2\\.5 {    margin-inline: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:mx-auto {    margin-inline: auto;  }  .ctv\\:mx-px {    margin-inline: 1px;  }  .ctv\\:my-1 {    margin-block: calc(var(--ctv-spacing) * 1);  }  .ctv\\:my-1\\.5 {    margin-block: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:-mt-2 {    margin-top: calc(var(--ctv-spacing) * -2);  }  .ctv\\:mt-0\\.5 {    margin-top: calc(var(--ctv-spacing) * .5);  }  .ctv\\:mt-1 {    margin-top: calc(var(--ctv-spacing) * 1);  }  .ctv\\:mt-3\\.5 {    margin-top: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:mt-4 {    margin-top: calc(var(--ctv-spacing) * 4);  }  .ctv\\:mr-1 {    margin-right: calc(var(--ctv-spacing) * 1);  }  .ctv\\:-mb-px {    margin-bottom: -1px;  }  .ctv\\:mb-1 {    margin-bottom: calc(var(--ctv-spacing) * 1);  }  .ctv\\:mb-1\\.5 {    margin-bottom: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:mb-2 {    margin-bottom: calc(var(--ctv-spacing) * 2);  }  .ctv\\:mb-2\\.5 {    margin-bottom: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:mb-\\[3px\\] {    margin-bottom: 3px;  }  .ctv\\:-ml-px {    margin-left: -1px;  }  .ctv\\:ml-0\\.5 {    margin-left: calc(var(--ctv-spacing) * .5);  }  .ctv\\:ml-auto {    margin-left: auto;  }  .ctv\\:box-border {    box-sizing: border-box;  }  .ctv\\:box-content {    box-sizing: content-box;  }  .ctv\\:line-clamp-2 {    -webkit-line-clamp: 2;    -webkit-box-orient: vertical;    display: -webkit-box;    overflow: hidden;  }  .ctv\\:\\[display\\:-webkit-box\\] {    display: -webkit-box;  }  .ctv\\:block {    display: block;  }  .ctv\\:flex {    display: flex;  }  .ctv\\:grid {    display: grid;  }  .ctv\\:hidden {    display: none;  }  .ctv\\:inline-block {    display: inline-block;  }  .ctv\\:inline-flex {    display: inline-flex;  }  .ctv\\:aspect-square {    aspect-ratio: 1;  }  .ctv\\:aspect-video {    aspect-ratio: var(--ctv-aspect-video);  }  .ctv\\:size-2 {    width: calc(var(--ctv-spacing) * 2);    height: calc(var(--ctv-spacing) * 2);  }  .ctv\\:size-3 {    width: calc(var(--ctv-spacing) * 3);    height: calc(var(--ctv-spacing) * 3);  }  .ctv\\:size-3\\.5 {    width: calc(var(--ctv-spacing) * 3.5);    height: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:size-4 {    width: calc(var(--ctv-spacing) * 4);    height: calc(var(--ctv-spacing) * 4);  }  .ctv\\:size-5 {    width: calc(var(--ctv-spacing) * 5);    height: calc(var(--ctv-spacing) * 5);  }  .ctv\\:size-6 {    width: calc(var(--ctv-spacing) * 6);    height: calc(var(--ctv-spacing) * 6);  }  .ctv\\:size-7 {    width: calc(var(--ctv-spacing) * 7);    height: calc(var(--ctv-spacing) * 7);  }  .ctv\\:size-8 {    width: calc(var(--ctv-spacing) * 8);    height: calc(var(--ctv-spacing) * 8);  }  .ctv\\:size-9 {    width: calc(var(--ctv-spacing) * 9);    height: calc(var(--ctv-spacing) * 9);  }  .ctv\\:size-\\[22px\\] {    width: 22px;    height: 22px;  }  .ctv\\:size-full {    width: 100%;    height: 100%;  }  .ctv\\:h-1\\.5 {    height: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:h-4 {    height: calc(var(--ctv-spacing) * 4);  }  .ctv\\:h-5 {    height: calc(var(--ctv-spacing) * 5);  }  .ctv\\:h-6 {    height: calc(var(--ctv-spacing) * 6);  }  .ctv\\:h-7 {    height: calc(var(--ctv-spacing) * 7);  }  .ctv\\:h-8 {    height: calc(var(--ctv-spacing) * 8);  }  .ctv\\:h-9 {    height: calc(var(--ctv-spacing) * 9);  }  .ctv\\:h-10 {    height: calc(var(--ctv-spacing) * 10);  }  .ctv\\:h-11 {    height: calc(var(--ctv-spacing) * 11);  }  .ctv\\:h-80 {    height: calc(var(--ctv-spacing) * 80);  }  .ctv\\:h-\\[13px\\] {    height: 13px;  }  .ctv\\:h-\\[18px\\] {    height: 18px;  }  .ctv\\:h-\\[72px\\] {    height: 72px;  }  .ctv\\:h-\\[76px\\] {    height: 76px;  }  .ctv\\:h-\\[224px\\] {    height: 224px;  }  .ctv\\:h-\\[260px\\] {    height: 260px;  }  .ctv\\:h-\\[280px\\] {    height: 280px;  }  .ctv\\:h-\\[340px\\] {    height: 340px;  }  .ctv\\:h-\\[350px\\] {    height: 350px;  }  .ctv\\:h-full {    height: 100%;  }  .ctv\\:max-h-40 {    max-height: calc(var(--ctv-spacing) * 40);  }  .ctv\\:max-h-44 {    max-height: calc(var(--ctv-spacing) * 44);  }  .ctv\\:max-h-52 {    max-height: calc(var(--ctv-spacing) * 52);  }  .ctv\\:max-h-56 {    max-height: calc(var(--ctv-spacing) * 56);  }  .ctv\\:max-h-60 {    max-height: calc(var(--ctv-spacing) * 60);  }  .ctv\\:max-h-64 {    max-height: calc(var(--ctv-spacing) * 64);  }  .ctv\\:max-h-80 {    max-height: calc(var(--ctv-spacing) * 80);  }  .ctv\\:max-h-\\[46vh\\] {    max-height: 46vh;  }  .ctv\\:max-h-\\[60vh\\] {    max-height: 60vh;  }  .ctv\\:max-h-\\[360px\\] {    max-height: 360px;  }  .ctv\\:max-h-\\[calc\\(100vh-48px\\)\\] {    max-height: calc(100vh - 48px);  }  .ctv\\:max-h-full {    max-height: 100%;  }  .ctv\\:min-h-0 {    min-height: calc(var(--ctv-spacing) * 0);  }  .ctv\\:min-h-10 {    min-height: calc(var(--ctv-spacing) * 10);  }  .ctv\\:min-h-11 {    min-height: calc(var(--ctv-spacing) * 11);  }  .ctv\\:min-h-12 {    min-height: calc(var(--ctv-spacing) * 12);  }  .ctv\\:min-h-14 {    min-height: calc(var(--ctv-spacing) * 14);  }  .ctv\\:min-h-20 {    min-height: calc(var(--ctv-spacing) * 20);  }  .ctv\\:min-h-\\[22px\\] {    min-height: 22px;  }  .ctv\\:min-h-\\[116px\\] {    min-height: 116px;  }  .ctv\\:min-h-\\[160px\\] {    min-height: 160px;  }  .ctv\\:min-h-\\[280px\\] {    min-height: 280px;  }  .ctv\\:min-h-\\[320px\\] {    min-height: 320px;  }  .ctv\\:w-0\\.5 {    width: calc(var(--ctv-spacing) * .5);  }  .ctv\\:w-2 {    width: calc(var(--ctv-spacing) * 2);  }  .ctv\\:w-2\\.5 {    width: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:w-3 {    width: calc(var(--ctv-spacing) * 3);  }  .ctv\\:w-4 {    width: calc(var(--ctv-spacing) * 4);  }  .ctv\\:w-7 {    width: calc(var(--ctv-spacing) * 7);  }  .ctv\\:w-12 {    width: calc(var(--ctv-spacing) * 12);  }  .ctv\\:w-14 {    width: calc(var(--ctv-spacing) * 14);  }  .ctv\\:w-20 {    width: calc(var(--ctv-spacing) * 20);  }  .ctv\\:w-24 {    width: calc(var(--ctv-spacing) * 24);  }  .ctv\\:w-28 {    width: calc(var(--ctv-spacing) * 28);  }  .ctv\\:w-44 {    width: calc(var(--ctv-spacing) * 44);  }  .ctv\\:w-48 {    width: calc(var(--ctv-spacing) * 48);  }  .ctv\\:w-64 {    width: calc(var(--ctv-spacing) * 64);  }  .ctv\\:w-\\[38px\\] {    width: 38px;  }  .ctv\\:w-\\[76px\\] {    width: 76px;  }  .ctv\\:w-\\[140px\\] {    width: 140px;  }  .ctv\\:w-\\[180px\\] {    width: 180px;  }  .ctv\\:w-auto {    width: auto;  }  .ctv\\:w-full {    width: 100%;  }  .ctv\\:max-w-\\[60vw\\] {    max-width: 60vw;  }  .ctv\\:max-w-\\[90px\\] {    max-width: 90px;  }  .ctv\\:max-w-\\[360px\\] {    max-width: 360px;  }  .ctv\\:max-w-full {    max-width: 100%;  }  .ctv\\:max-w-md {    max-width: var(--ctv-container-md);  }  .ctv\\:min-w-0 {    min-width: calc(var(--ctv-spacing) * 0);  }  .ctv\\:min-w-2 {    min-width: calc(var(--ctv-spacing) * 2);  }  .ctv\\:min-w-6 {    min-width: calc(var(--ctv-spacing) * 6);  }  .ctv\\:min-w-8 {    min-width: calc(var(--ctv-spacing) * 8);  }  .ctv\\:min-w-9 {    min-width: calc(var(--ctv-spacing) * 9);  }  .ctv\\:min-w-64 {    min-width: calc(var(--ctv-spacing) * 64);  }  .ctv\\:min-w-\\[44px\\] {    min-width: 44px;  }  .ctv\\:min-w-\\[60px\\] {    min-width: 60px;  }  .ctv\\:min-w-\\[var\\(--reka-combobox-trigger-width\\)\\] {    min-width: var(--reka-combobox-trigger-width);  }  .ctv\\:flex-1 {    flex: 1;  }  .ctv\\:flex-auto {    flex: auto;  }  .ctv\\:shrink-0 {    flex-shrink: 0;  }  .ctv\\:border-collapse {    border-collapse: collapse;  }  .ctv\\:-translate-x-1\\/2 {    --tw-translate-x: calc(calc(1 / 2 * 100%) * -1);    translate: var(--tw-translate-x) var(--tw-translate-y);  }  .ctv\\:-translate-y-1\\/2 {    --tw-translate-y: calc(calc(1 / 2 * 100%) * -1);    translate: var(--tw-translate-x) var(--tw-translate-y);  }  .ctv\\:animate-pulse {    animation: var(--ctv-animate-pulse);  }  .ctv\\:cursor-\\[inherit\\] {    cursor: inherit;  }  .ctv\\:cursor-crosshair {    cursor: crosshair;  }  .ctv\\:cursor-default {    cursor: default;  }  .ctv\\:cursor-ew-resize {    cursor: ew-resize;  }  .ctv\\:cursor-grab {    cursor: grab;  }  .ctv\\:cursor-grabbing {    cursor: grabbing;  }  .ctv\\:cursor-move {    cursor: move;  }  .ctv\\:cursor-none {    cursor: none;  }  .ctv\\:cursor-not-allowed {    cursor: not-allowed;  }  .ctv\\:cursor-ns-resize {    cursor: ns-resize;  }  .ctv\\:cursor-pointer {    cursor: pointer;  }  .ctv\\:cursor-zoom-out {    cursor: zoom-out;  }  .ctv\\:touch-manipulation {    touch-action: manipulation;  }  .ctv\\:touch-none {    touch-action: none;  }  .ctv\\:resize-none {    resize: none;  }  .ctv\\:resize-y {    resize: vertical;  }  .ctv\\:list-none {    list-style-type: none;  }  .ctv\\:appearance-none {    appearance: none;  }  .ctv\\:grid-cols-2 {    grid-template-columns: repeat(2, minmax(0, 1fr));  }  .ctv\\:grid-cols-4 {    grid-template-columns: repeat(4, minmax(0, 1fr));  }  .ctv\\:grid-cols-\\[42px_1fr\\] {    grid-template-columns: 42px 1fr;  }  .ctv\\:grid-cols-\\[60px_1fr\\] {    grid-template-columns: 60px 1fr;  }  .ctv\\:grid-cols-\\[64px_1fr\\] {    grid-template-columns: 64px 1fr;  }  .ctv\\:grid-cols-\\[64px_1fr_48px\\] {    grid-template-columns: 64px 1fr 48px;  }  .ctv\\:grid-cols-\\[80px_1fr_36px\\] {    grid-template-columns: 80px 1fr 36px;  }  .ctv\\:grid-cols-\\[88px_1fr\\] {    grid-template-columns: 88px 1fr;  }  .ctv\\:grid-cols-\\[max-content_1fr\\] {    grid-template-columns: max-content 1fr;  }  .ctv\\:grid-cols-\\[repeat\\(auto-fill\\,minmax\\(64px\\,1fr\\)\\)\\] {    grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));  }  .ctv\\:grid-cols-\\[repeat\\(auto-fill\\,minmax\\(80px\\,1fr\\)\\)\\] {    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));  }  .ctv\\:grid-cols-\\[repeat\\(auto-fill\\,minmax\\(110px\\,1fr\\)\\)\\] {    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));  }  .ctv\\:grid-cols-\\[repeat\\(auto-fill\\,minmax\\(min\\(160px\\,42vw\\)\\,1fr\\)\\)\\] {    grid-template-columns: repeat(auto-fill, minmax(min(160px, 42vw), 1fr));  }  .ctv\\:flex-col {    flex-direction: column;  }  .ctv\\:flex-wrap {    flex-wrap: wrap;  }  .ctv\\:items-baseline {    align-items: baseline;  }  .ctv\\:items-center {    align-items: center;  }  .ctv\\:items-start {    align-items: flex-start;  }  .ctv\\:justify-around {    justify-content: space-around;  }  .ctv\\:justify-between {    justify-content: space-between;  }  .ctv\\:justify-center {    justify-content: center;  }  .ctv\\:justify-end {    justify-content: flex-end;  }  .ctv\\:gap-0\\.5 {    gap: calc(var(--ctv-spacing) * .5);  }  .ctv\\:gap-1 {    gap: calc(var(--ctv-spacing) * 1);  }  .ctv\\:gap-1\\.5 {    gap: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:gap-2 {    gap: calc(var(--ctv-spacing) * 2);  }  .ctv\\:gap-2\\.5 {    gap: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:gap-3 {    gap: calc(var(--ctv-spacing) * 3);  }  .ctv\\:gap-\\[3px\\] {    gap: 3px;  }  .ctv\\:gap-px {    gap: 1px;  }  .ctv\\:gap-x-2\\.5 {    column-gap: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:gap-y-\\[3px\\] {    row-gap: 3px;  }  .ctv\\:self-end {    align-self: flex-end;  }  .ctv\\:self-start {    align-self: flex-start;  }  .ctv\\:truncate {    text-overflow: ellipsis;    white-space: nowrap;    overflow: hidden;  }  .ctv\\:overflow-auto {    overflow: auto;  }  .ctv\\:overflow-hidden {    overflow: hidden;  }  .ctv\\:overflow-x-auto {    overflow-x: auto;  }  .ctv\\:overflow-y-auto {    overflow-y: auto;  }  .ctv\\:overflow-y-hidden {    overflow-y: hidden;  }  .ctv\\:overflow-y-scroll {    overflow-y: scroll;  }  .ctv\\:rounded {    border-radius: .25rem;  }  .ctv\\:rounded-full {    border-radius: 3.40282e38px;  }  .ctv\\:rounded-lg {    border-radius: var(--ctv-radius-lg);  }  .ctv\\:rounded-md {    border-radius: var(--ctv-radius-md);  }  .ctv\\:rounded-none {    border-radius: 0;  }  .ctv\\:rounded-sm {    border-radius: var(--ctv-radius-sm);  }  .ctv\\:rounded-t {    border-top-left-radius: .25rem;    border-top-right-radius: .25rem;  }  .ctv\\:border {    border-style: var(--tw-border-style);    border-width: 1px;  }  .ctv\\:border-0 {    border-style: var(--tw-border-style);    border-width: 0;  }  .ctv\\:border-2 {    border-style: var(--tw-border-style);    border-width: 2px;  }  .ctv\\:border-\\[2\\.5px\\] {    border-style: var(--tw-border-style);    border-width: 2.5px;  }  .ctv\\:border-t {    border-top-style: var(--tw-border-style);    border-top-width: 1px;  }  .ctv\\:border-b {    border-bottom-style: var(--tw-border-style);    border-bottom-width: 1px;  }  .ctv\\:border-b-0 {    border-bottom-style: var(--tw-border-style);    border-bottom-width: 0;  }  .ctv\\:border-l {    border-left-style: var(--tw-border-style);    border-left-width: 1px;  }  .ctv\\:border-l-2 {    border-left-style: var(--tw-border-style);    border-left-width: 2px;  }  .ctv\\:border-dashed {    --tw-border-style: dashed;    border-style: dashed;  }  .ctv\\:border-none {    --tw-border-style: none;    border-style: none;  }  .ctv\\:border-solid {    --tw-border-style: solid;    border-style: solid;  }  .ctv\\:border-\\[rgb\\(200_130_255\\/0\\.4\\)\\] {    border-color: #c882ff66;  }  .ctv\\:border-\\[rgb\\(233_61_130\\/0\\.3\\)\\] {    border-color: #e93d824d;  }  .ctv\\:border-\\[rgb\\(233_61_130\\/0\\.4\\)\\] {    border-color: #e93d8266;  }  .ctv\\:border-black\\/70 {    border-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-black\\/70 {      border-color: color-mix(in oklab, var(--ctv-color-black) 70%, transparent);    }  }  .ctv\\:border-border-default {    border-color: var(--border-default, #ffffff26);  }  .ctv\\:border-border-subtle {    border-color: var(--border-subtle, #ffffff14);  }  .ctv\\:border-destructive-background, .ctv\\:border-destructive-background\\/30 {    border-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-destructive-background\\/30 {      border-color: color-mix(in oklab, var(--destructive-background, #c0392b) 30%, transparent);    }  }  .ctv\\:border-destructive-background\\/40 {    border-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-destructive-background\\/40 {      border-color: color-mix(in oklab, var(--destructive-background, #c0392b) 40%, transparent);    }  }  .ctv\\:border-destructive-background\\/50 {    border-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-destructive-background\\/50 {      border-color: color-mix(in oklab, var(--destructive-background, #c0392b) 50%, transparent);    }  }  .ctv\\:border-destructive-background\\/55 {    border-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-destructive-background\\/55 {      border-color: color-mix(in oklab, var(--destructive-background, #c0392b) 55%, transparent);    }  }  .ctv\\:border-interface-menu-stroke {    border-color: var(--interface-menu-stroke, #ffffff1a);  }  .ctv\\:border-primary-background, .ctv\\:border-primary-background\\/25 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/25 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 25%, transparent);    }  }  .ctv\\:border-primary-background\\/30 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/30 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 30%, transparent);    }  }  .ctv\\:border-primary-background\\/40 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/40 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 40%, transparent);    }  }  .ctv\\:border-primary-background\\/45 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/45 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 45%, transparent);    }  }  .ctv\\:border-primary-background\\/50 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/50 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 50%, transparent);    }  }  .ctv\\:border-primary-background\\/60 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/60 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 60%, transparent);    }  }  .ctv\\:border-primary-background\\/70 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/70 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 70%, transparent);    }  }  .ctv\\:border-success-background\\/30 {    border-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-success-background\\/30 {      border-color: color-mix(in oklab, var(--success-background, #2e9e4f) 30%, transparent);    }  }  .ctv\\:border-success-background\\/50 {    border-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-success-background\\/50 {      border-color: color-mix(in oklab, var(--success-background, #2e9e4f) 50%, transparent);    }  }  .ctv\\:border-transparent {    border-color: #0000;  }  .ctv\\:border-warning-background\\/25 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/25 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 25%, transparent);    }  }  .ctv\\:border-warning-background\\/40 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/40 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 40%, transparent);    }  }  .ctv\\:border-warning-background\\/50 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/50 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 50%, transparent);    }  }  .ctv\\:border-warning-background\\/55 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/55 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 55%, transparent);    }  }  .ctv\\:border-warning-background\\/70 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/70 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 70%, transparent);    }  }  .ctv\\:border-white, .ctv\\:border-white\\/10 {    border-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-white\\/10 {      border-color: color-mix(in oklab, var(--ctv-color-white) 10%, transparent);    }  }  .ctv\\:border-white\\/15 {    border-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-white\\/15 {      border-color: color-mix(in oklab, var(--ctv-color-white) 15%, transparent);    }  }  .ctv\\:border-white\\/20 {    border-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-white\\/20 {      border-color: color-mix(in oklab, var(--ctv-color-white) 20%, transparent);    }  }  .ctv\\:border-white\\/30 {    border-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-white\\/30 {      border-color: color-mix(in oklab, var(--ctv-color-white) 30%, transparent);    }  }  .ctv\\:border-b-transparent {    border-bottom-color: #0000;  }  .ctv\\:border-b-warning-background\\/15 {    border-bottom-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-b-warning-background\\/15 {      border-bottom-color: color-mix(in oklab, var(--warning-background, #d39e00) 15%, transparent);    }  }  .ctv\\:bg-\\[rgb\\(78_168_255\\/0\\.25\\)\\] {    background-color: #4ea8ff40;  }  .ctv\\:bg-\\[rgb\\(120_200_120\\/0\\.25\\)\\] {    background-color: #78c87840;  }  .ctv\\:bg-\\[rgb\\(200_130_255\\/0\\.25\\)\\] {    background-color: #c882ff40;  }  .ctv\\:bg-\\[rgb\\(255_100_100\\/0\\.22\\)\\] {    background-color: #ff646438;  }  .ctv\\:bg-\\[rgb\\(255_140_200\\/0\\.25\\)\\] {    background-color: #ff8cc840;  }  .ctv\\:bg-\\[rgb\\(255_140_200\\/0\\.85\\)\\] {    background-color: #ff8cc8d9;  }  .ctv\\:bg-\\[rgb\\(255_171_64\\/0\\.25\\)\\] {    background-color: #ffab4040;  }  .ctv\\:bg-base-background {    background-color: var(--base-background, #1e1e1e);  }  .ctv\\:bg-base-foreground\\/5 {    background-color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-base-foreground\\/5 {      background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 5%, transparent);    }  }  .ctv\\:bg-base-foreground\\/10 {    background-color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-base-foreground\\/10 {      background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 10%, transparent);    }  }  .ctv\\:bg-base-foreground\\/\\[0\\.03\\] {    background-color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-base-foreground\\/\\[0\\.03\\] {      background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 3%, transparent);    }  }  .ctv\\:bg-black, .ctv\\:bg-black\\/20 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/20 {      background-color: color-mix(in oklab, var(--ctv-color-black) 20%, transparent);    }  }  .ctv\\:bg-black\\/30 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/30 {      background-color: color-mix(in oklab, var(--ctv-color-black) 30%, transparent);    }  }  .ctv\\:bg-black\\/50 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/50 {      background-color: color-mix(in oklab, var(--ctv-color-black) 50%, transparent);    }  }  .ctv\\:bg-black\\/55 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/55 {      background-color: color-mix(in oklab, var(--ctv-color-black) 55%, transparent);    }  }  .ctv\\:bg-black\\/60 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/60 {      background-color: color-mix(in oklab, var(--ctv-color-black) 60%, transparent);    }  }  .ctv\\:bg-black\\/65 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/65 {      background-color: color-mix(in oklab, var(--ctv-color-black) 65%, transparent);    }  }  .ctv\\:bg-black\\/70 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/70 {      background-color: color-mix(in oklab, var(--ctv-color-black) 70%, transparent);    }  }  .ctv\\:bg-black\\/80 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/80 {      background-color: color-mix(in oklab, var(--ctv-color-black) 80%, transparent);    }  }  .ctv\\:bg-black\\/90 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/90 {      background-color: color-mix(in oklab, var(--ctv-color-black) 90%, transparent);    }  }  .ctv\\:bg-destructive-background, .ctv\\:bg-destructive-background\\/10 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-destructive-background\\/10 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 10%, transparent);    }  }  .ctv\\:bg-destructive-background\\/15 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-destructive-background\\/15 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 15%, transparent);    }  }  .ctv\\:bg-destructive-background\\/30 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-destructive-background\\/30 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 30%, transparent);    }  }  .ctv\\:bg-destructive-background\\/70 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-destructive-background\\/70 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 70%, transparent);    }  }  .ctv\\:bg-interface-menu-component-surface-hovered {    background-color: var(--interface-menu-component-surface-hovered, #ffffff14);  }  .ctv\\:bg-interface-menu-component-surface-selected {    background-color: var(--interface-menu-component-surface-selected, #4ea8ff2e);  }  .ctv\\:bg-interface-menu-surface, .ctv\\:bg-interface-menu-surface\\/85 {    background-color: var(--interface-menu-surface, #232323);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-interface-menu-surface\\/85 {      background-color: color-mix(in oklab, var(--interface-menu-surface, #232323) 85%, transparent);    }  }  .ctv\\:bg-interface-panel-surface {    background-color: var(--interface-panel-surface, #1e1e1e);  }  .ctv\\:bg-primary-background, .ctv\\:bg-primary-background\\/5 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/5 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 5%, transparent);    }  }  .ctv\\:bg-primary-background\\/10 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/10 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 10%, transparent);    }  }  .ctv\\:bg-primary-background\\/15 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/15 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 15%, transparent);    }  }  .ctv\\:bg-primary-background\\/20 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/20 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 20%, transparent);    }  }  .ctv\\:bg-primary-background\\/25 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/25 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 25%, transparent);    }  }  .ctv\\:bg-primary-background\\/30 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/30 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 30%, transparent);    }  }  .ctv\\:bg-primary-background\\/85 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/85 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 85%, transparent);    }  }  .ctv\\:bg-primary-background\\/\\[0\\.06\\] {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/\\[0\\.06\\] {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 6%, transparent);    }  }  .ctv\\:bg-secondary-background {    background-color: var(--secondary-background, #ffffff0f);  }  .ctv\\:bg-secondary-background-hover {    background-color: var(--secondary-background-hover, #ffffff1a);  }  .ctv\\:bg-secondary-background-selected {    background-color: var(--secondary-background-selected, #4ea8ff33);  }  .ctv\\:bg-secondary-background\\/40 {    background-color: var(--secondary-background, #ffffff0f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-secondary-background\\/40 {      background-color: color-mix(in oklab, var(--secondary-background, #ffffff0f) 40%, transparent);    }  }  .ctv\\:bg-success-background\\/5 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-success-background\\/5 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 5%, transparent);    }  }  .ctv\\:bg-success-background\\/10 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-success-background\\/10 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 10%, transparent);    }  }  .ctv\\:bg-success-background\\/15 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-success-background\\/15 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 15%, transparent);    }  }  .ctv\\:bg-success-background\\/20 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-success-background\\/20 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 20%, transparent);    }  }  .ctv\\:bg-transparent {    background-color: #0000;  }  .ctv\\:bg-warning-background, .ctv\\:bg-warning-background\\/5 {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/5 {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 5%, transparent);    }  }  .ctv\\:bg-warning-background\\/10 {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/10 {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 10%, transparent);    }  }  .ctv\\:bg-warning-background\\/15 {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/15 {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 15%, transparent);    }  }  .ctv\\:bg-warning-background\\/30 {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/30 {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 30%, transparent);    }  }  .ctv\\:bg-warning-background\\/\\[0\\.03\\] {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/\\[0\\.03\\] {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 3%, transparent);    }  }  .ctv\\:bg-white, .ctv\\:bg-white\\/10 {    background-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-white\\/10 {      background-color: color-mix(in oklab, var(--ctv-color-white) 10%, transparent);    }  }  .ctv\\:bg-white\\/30 {    background-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-white\\/30 {      background-color: color-mix(in oklab, var(--ctv-color-white) 30%, transparent);    }  }  .ctv\\:bg-white\\/70 {    background-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-white\\/70 {      background-color: color-mix(in oklab, var(--ctv-color-white) 70%, transparent);    }  }  .ctv\\:bg-white\\/85 {    background-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-white\\/85 {      background-color: color-mix(in oklab, var(--ctv-color-white) 85%, transparent);    }  }  .ctv\\:bg-white\\/90 {    background-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-white\\/90 {      background-color: color-mix(in oklab, var(--ctv-color-white) 90%, transparent);    }  }  .ctv\\:bg-linear-to-b {    --tw-gradient-position: to bottom;  }  @supports (background-image: linear-gradient(in lab, red, red)) {    .ctv\\:bg-linear-to-b {      --tw-gradient-position: to bottom in oklab;    }  }  .ctv\\:bg-linear-to-b {    background-image: linear-gradient(var(--tw-gradient-stops));  }  .ctv\\:bg-linear-to-r {    --tw-gradient-position: to right;  }  @supports (background-image: linear-gradient(in lab, red, red)) {    .ctv\\:bg-linear-to-r {      --tw-gradient-position: to right in oklab;    }  }  .ctv\\:bg-linear-to-r {    background-image: linear-gradient(var(--tw-gradient-stops));  }  .ctv\\:from-primary-background\\/85 {    --tw-gradient-from: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:from-primary-background\\/85 {      --tw-gradient-from: color-mix(in oklab, var(--primary-background, #4ea8ff99) 85%, transparent);    }  }  .ctv\\:from-primary-background\\/85 {    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .ctv\\:from-transparent {    --tw-gradient-from: transparent;    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .ctv\\:to-black\\/75 {    --tw-gradient-to: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:to-black\\/75 {      --tw-gradient-to: color-mix(in oklab, var(--ctv-color-black) 75%, transparent);    }  }  .ctv\\:to-black\\/75 {    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .ctv\\:to-primary-background-hover\\/85 {    --tw-gradient-to: var(--primary-background-hover, #4ea8ffbf);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:to-primary-background-hover\\/85 {      --tw-gradient-to: color-mix(in oklab, var(--primary-background-hover, #4ea8ffbf) 85%, transparent);    }  }  .ctv\\:to-primary-background-hover\\/85 {    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .ctv\\:object-contain {    object-fit: contain;  }  .ctv\\:object-cover {    object-fit: cover;  }  .ctv\\:p-0 {    padding: calc(var(--ctv-spacing) * 0);  }  .ctv\\:p-0\\.5 {    padding: calc(var(--ctv-spacing) * .5);  }  .ctv\\:p-1 {    padding: calc(var(--ctv-spacing) * 1);  }  .ctv\\:p-1\\.5 {    padding: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:p-2 {    padding: calc(var(--ctv-spacing) * 2);  }  .ctv\\:p-2\\.5 {    padding: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:p-3 {    padding: calc(var(--ctv-spacing) * 3);  }  .ctv\\:p-3\\.5 {    padding: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:p-4 {    padding: calc(var(--ctv-spacing) * 4);  }  .ctv\\:p-6 {    padding: calc(var(--ctv-spacing) * 6);  }  .ctv\\:px-0\\.5 {    padding-inline: calc(var(--ctv-spacing) * .5);  }  .ctv\\:px-1 {    padding-inline: calc(var(--ctv-spacing) * 1);  }  .ctv\\:px-1\\.5 {    padding-inline: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:px-2 {    padding-inline: calc(var(--ctv-spacing) * 2);  }  .ctv\\:px-2\\.5 {    padding-inline: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:px-3 {    padding-inline: calc(var(--ctv-spacing) * 3);  }  .ctv\\:px-3\\.5 {    padding-inline: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:px-4 {    padding-inline: calc(var(--ctv-spacing) * 4);  }  .ctv\\:px-\\[3px\\] {    padding-inline: 3px;  }  .ctv\\:px-\\[5px\\] {    padding-inline: 5px;  }  .ctv\\:py-0 {    padding-block: calc(var(--ctv-spacing) * 0);  }  .ctv\\:py-0\\.5 {    padding-block: calc(var(--ctv-spacing) * .5);  }  .ctv\\:py-1 {    padding-block: calc(var(--ctv-spacing) * 1);  }  .ctv\\:py-1\\.5 {    padding-block: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:py-2 {    padding-block: calc(var(--ctv-spacing) * 2);  }  .ctv\\:py-2\\.5 {    padding-block: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:py-4 {    padding-block: calc(var(--ctv-spacing) * 4);  }  .ctv\\:py-5 {    padding-block: calc(var(--ctv-spacing) * 5);  }  .ctv\\:py-6 {    padding-block: calc(var(--ctv-spacing) * 6);  }  .ctv\\:py-\\[3px\\] {    padding-block: 3px;  }  .ctv\\:py-\\[5px\\] {    padding-block: 5px;  }  .ctv\\:py-px {    padding-block: 1px;  }  .ctv\\:pt-1 {    padding-top: calc(var(--ctv-spacing) * 1);  }  .ctv\\:pt-2 {    padding-top: calc(var(--ctv-spacing) * 2);  }  .ctv\\:pt-2\\.5 {    padding-top: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:pt-3\\.5 {    padding-top: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:pr-2 {    padding-right: calc(var(--ctv-spacing) * 2);  }  .ctv\\:pb-1 {    padding-bottom: calc(var(--ctv-spacing) * 1);  }  .ctv\\:pb-2 {    padding-bottom: calc(var(--ctv-spacing) * 2);  }  .ctv\\:pb-3\\.5 {    padding-bottom: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:pb-6 {    padding-bottom: calc(var(--ctv-spacing) * 6);  }  .ctv\\:pl-1\\.5 {    padding-left: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:pl-7 {    padding-left: calc(var(--ctv-spacing) * 7);  }  .ctv\\:text-center {    text-align: center;  }  .ctv\\:text-left {    text-align: left;  }  .ctv\\:text-right {    text-align: right;  }  .ctv\\:\\[font-family\\:inherit\\] {    font-family: inherit;  }  .ctv\\:font-mono {    font-family: var(--ctv-font-mono);  }  .ctv\\:text-2xl {    font-size: var(--ctv-text-2xl);    line-height: var(--tw-leading, var(--ctv-text-2xl--line-height));  }  .ctv\\:text-2xs {    font-size: var(--ctv-text-2xs);    line-height: var(--tw-leading, var(--ctv-text-2xs--line-height));  }  .ctv\\:text-3xs {    font-size: var(--ctv-text-3xs);    line-height: var(--tw-leading, var(--ctv-text-3xs--line-height));  }  .ctv\\:text-lg {    font-size: var(--ctv-text-lg);    line-height: var(--tw-leading, var(--ctv-text-lg--line-height));  }  .ctv\\:text-sm {    font-size: var(--ctv-text-sm);    line-height: var(--tw-leading, var(--ctv-text-sm--line-height));  }  .ctv\\:text-xs {    font-size: var(--ctv-text-xs);    line-height: var(--tw-leading, var(--ctv-text-xs--line-height));  }  .ctv\\:text-\\[8px\\] {    font-size: 8px;  }  .ctv\\:text-\\[10px\\] {    font-size: 10px;  }  .ctv\\:text-\\[11px\\] {    font-size: 11px;  }  .ctv\\:text-\\[13px\\] {    font-size: 13px;  }  .ctv\\:text-\\[22px\\] {    font-size: 22px;  }  .ctv\\:text-\\[28px\\] {    font-size: 28px;  }  .ctv\\:text-\\[32px\\] {    font-size: 32px;  }  .ctv\\:leading-\\[1\\.3\\] {    --tw-leading: 1.3;    line-height: 1.3;  }  .ctv\\:leading-none {    --tw-leading: 1;    line-height: 1;  }  .ctv\\:leading-relaxed {    --tw-leading: var(--ctv-leading-relaxed);    line-height: var(--ctv-leading-relaxed);  }  .ctv\\:leading-snug {    --tw-leading: var(--ctv-leading-snug);    line-height: var(--ctv-leading-snug);  }  .ctv\\:leading-tight {    --tw-leading: var(--ctv-leading-tight);    line-height: var(--ctv-leading-tight);  }  .ctv\\:font-bold {    --tw-font-weight: var(--ctv-font-weight-bold);    font-weight: var(--ctv-font-weight-bold);  }  .ctv\\:font-medium {    --tw-font-weight: var(--ctv-font-weight-medium);    font-weight: var(--ctv-font-weight-medium);  }  .ctv\\:font-semibold {    --tw-font-weight: var(--ctv-font-weight-semibold);    font-weight: var(--ctv-font-weight-semibold);  }  .ctv\\:tracking-wide {    --tw-tracking: var(--ctv-tracking-wide);    letter-spacing: var(--ctv-tracking-wide);  }  .ctv\\:tracking-wider {    --tw-tracking: var(--ctv-tracking-wider);    letter-spacing: var(--ctv-tracking-wider);  }  .ctv\\:break-words {    overflow-wrap: break-word;  }  .ctv\\:break-all {    word-break: break-all;  }  .ctv\\:text-ellipsis {    text-overflow: ellipsis;  }  .ctv\\:whitespace-normal {    white-space: normal;  }  .ctv\\:whitespace-nowrap {    white-space: nowrap;  }  .ctv\\:whitespace-pre-wrap {    white-space: pre-wrap;  }  .ctv\\:text-\\[\\#00FFD0\\] {    color: #00ffd0;  }  .ctv\\:text-\\[\\#9dd0ff\\] {    color: #9dd0ff;  }  .ctv\\:text-\\[\\#E93D82\\] {    color: #e93d82;  }  .ctv\\:text-\\[\\#FFB800\\] {    color: #ffb800;  }  .ctv\\:text-\\[\\#b5e3a5\\] {    color: #b5e3a5;  }  .ctv\\:text-\\[\\#d8b0ff\\] {    color: #d8b0ff;  }  .ctv\\:text-\\[\\#ffb0b0\\] {    color: #ffb0b0;  }  .ctv\\:text-\\[\\#ffb0d8\\] {    color: #ffb0d8;  }  .ctv\\:text-\\[\\#ffd089\\] {    color: #ffd089;  }  .ctv\\:text-base-foreground, .ctv\\:text-base-foreground\\/80 {    color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-base-foreground\\/80 {      color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 80%, transparent);    }  }  .ctv\\:text-black\\/80 {    color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-black\\/80 {      color: color-mix(in oklab, var(--ctv-color-black) 80%, transparent);    }  }  .ctv\\:text-destructive-background {    color: var(--destructive-background, #c0392b);  }  .ctv\\:text-gray-600 {    color: var(--ctv-color-gray-600);  }  .ctv\\:text-inherit {    color: inherit;  }  .ctv\\:text-muted-foreground, .ctv\\:text-muted-foreground\\/60 {    color: var(--muted-foreground, #888);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-muted-foreground\\/60 {      color: color-mix(in oklab, var(--muted-foreground, #888) 60%, transparent);    }  }  .ctv\\:text-muted-foreground\\/70 {    color: var(--muted-foreground, #888);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-muted-foreground\\/70 {      color: color-mix(in oklab, var(--muted-foreground, #888) 70%, transparent);    }  }  .ctv\\:text-muted-foreground\\/80 {    color: var(--muted-foreground, #888);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-muted-foreground\\/80 {      color: color-mix(in oklab, var(--muted-foreground, #888) 80%, transparent);    }  }  .ctv\\:text-primary-background {    color: var(--primary-background, #4ea8ff99);  }  .ctv\\:text-secondary-foreground {    color: var(--secondary-foreground, var(--base-foreground, #e0e0e0));  }  .ctv\\:text-success-background {    color: var(--success-background, #2e9e4f);  }  .ctv\\:text-warning-background, .ctv\\:text-warning-background\\/70 {    color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-warning-background\\/70 {      color: color-mix(in oklab, var(--warning-background, #d39e00) 70%, transparent);    }  }  .ctv\\:text-warning-background\\/75 {    color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-warning-background\\/75 {      color: color-mix(in oklab, var(--warning-background, #d39e00) 75%, transparent);    }  }  .ctv\\:text-white, .ctv\\:text-white\\/30 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/30 {      color: color-mix(in oklab, var(--ctv-color-white) 30%, transparent);    }  }  .ctv\\:text-white\\/35 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/35 {      color: color-mix(in oklab, var(--ctv-color-white) 35%, transparent);    }  }  .ctv\\:text-white\\/40 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/40 {      color: color-mix(in oklab, var(--ctv-color-white) 40%, transparent);    }  }  .ctv\\:text-white\\/50 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/50 {      color: color-mix(in oklab, var(--ctv-color-white) 50%, transparent);    }  }  .ctv\\:text-white\\/70 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/70 {      color: color-mix(in oklab, var(--ctv-color-white) 70%, transparent);    }  }  .ctv\\:text-white\\/85 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/85 {      color: color-mix(in oklab, var(--ctv-color-white) 85%, transparent);    }  }  .ctv\\:text-white\\/90 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/90 {      color: color-mix(in oklab, var(--ctv-color-white) 90%, transparent);    }  }  .ctv\\:uppercase {    text-transform: uppercase;  }  .ctv\\:italic {    font-style: italic;  }  .ctv\\:accent-\\[var\\(--primary-background\\)\\] {    accent-color: var(--primary-background);  }  .ctv\\:opacity-0 {    opacity: 0;  }  .ctv\\:opacity-50 {    opacity: .5;  }  .ctv\\:opacity-55 {    opacity: .55;  }  .ctv\\:opacity-60 {    opacity: .6;  }  .ctv\\:opacity-70 {    opacity: .7;  }  .ctv\\:opacity-75 {    opacity: .75;  }  .ctv\\:opacity-80 {    opacity: .8;  }  .ctv\\:opacity-100 {    opacity: 1;  }  .ctv\\:shadow {    --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, #0000001a), 0 1px 2px -1px var(--tw-shadow-color, #0000001a);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_0_1px_rgb\\(255_255_255\\/0\\.8\\)\\] {    --tw-shadow: 0 0 0 1px var(--tw-shadow-color, #fffc);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_0_1px_var\\(--primary-background\\)\\] {    --tw-shadow: 0 0 0 1px var(--tw-shadow-color, var(--primary-background));    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_0_9999px_rgb\\(0_0_0\\/0\\.5\\)\\] {    --tw-shadow: 0 0 0 9999px var(--tw-shadow-color, #00000080);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_2px_rgb\\(0_0_0\\/0\\.7\\)\\] {    --tw-shadow: 0 0 2px var(--tw-shadow-color, #000000b3);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_4px_rgb\\(0_0_0\\/0\\.6\\)\\] {    --tw-shadow: 0 0 4px var(--tw-shadow-color, #0009);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_8px_var\\(--primary-background\\)\\] {    --tw-shadow: 0 0 8px var(--tw-shadow-color, var(--primary-background));    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_1px_3px_rgb\\(0_0_0\\/0\\.5\\)\\] {    --tw-shadow: 0 1px 3px var(--tw-shadow-color, #00000080);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_1px_4px_rgb\\(0_0_0\\/0\\.5\\)\\] {    --tw-shadow: 0 1px 4px var(--tw-shadow-color, #00000080);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_8px_40px_rgb\\(0_0_0\\/0\\.6\\)\\] {    --tw-shadow: 0 8px 40px var(--tw-shadow-color, #0009);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_16px_48px_rgb\\(0_0_0\\/0\\.5\\)\\] {    --tw-shadow: 0 16px 48px var(--tw-shadow-color, #00000080);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-md {    --tw-shadow: 0 4px 6px -1px var(--tw-shadow-color, #0000001a), 0 2px 4px -2px var(--tw-shadow-color, #0000001a);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-sm {    --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, #0000001a), 0 1px 2px -1px var(--tw-shadow-color, #0000001a);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:ring-2 {    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:ring-\\[5px\\] {    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(5px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:ring-primary-background, .ctv\\:ring-primary-background\\/50 {    --tw-ring-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:ring-primary-background\\/50 {      --tw-ring-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 50%, transparent);    }  }  .ctv\\:outline, .ctv\\:outline-1 {    outline-style: var(--tw-outline-style);    outline-width: 1px;  }  .ctv\\:-outline-offset-1 {    outline-offset: calc(1px * -1);  }  .ctv\\:outline-destructive-background\\/55 {    outline-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:outline-destructive-background\\/55 {      outline-color: color-mix(in oklab, var(--destructive-background, #c0392b) 55%, transparent);    }  }  .ctv\\:outline-warning-background\\/50 {    outline-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:outline-warning-background\\/50 {      outline-color: color-mix(in oklab, var(--warning-background, #d39e00) 50%, transparent);    }  }  .ctv\\:outline-white\\/70 {    outline-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:outline-white\\/70 {      outline-color: color-mix(in oklab, var(--ctv-color-white) 70%, transparent);    }  }  .ctv\\:backdrop-blur {    --tw-backdrop-blur: blur(8px);    -webkit-backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );    backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );  }  .ctv\\:backdrop-blur-\\[2px\\] {    --tw-backdrop-blur: blur(2px);    -webkit-backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );    backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );  }  .ctv\\:backdrop-blur-sm {    --tw-backdrop-blur: blur(var(--ctv-blur-sm));    -webkit-backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );    backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );  }  .ctv\\:transition-\\[width\\] {    transition-property: width;    transition-timing-function: var(--tw-ease, var(--ctv-default-transition-timing-function));    transition-duration: var(--tw-duration, var(--ctv-default-transition-duration));  }  .ctv\\:transition-all {    transition-property: all;    transition-timing-function: var(--tw-ease, var(--ctv-default-transition-timing-function));    transition-duration: var(--tw-duration, var(--ctv-default-transition-duration));  }  .ctv\\:transition-colors {    transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;    transition-timing-function: var(--tw-ease, var(--ctv-default-transition-timing-function));    transition-duration: var(--tw-duration, var(--ctv-default-transition-duration));  }  .ctv\\:transition-opacity {    transition-property: opacity;    transition-timing-function: var(--tw-ease, var(--ctv-default-transition-timing-function));    transition-duration: var(--tw-duration, var(--ctv-default-transition-duration));  }  .ctv\\:duration-150 {    --tw-duration: .15s;    transition-duration: .15s;  }  .ctv\\:duration-200 {    --tw-duration: .2s;    transition-duration: .2s;  }  .ctv\\:ease-in {    --tw-ease: var(--ctv-ease-in);    transition-timing-function: var(--ctv-ease-in);  }  .ctv\\:ease-in-out {    --tw-ease: var(--ctv-ease-in-out);    transition-timing-function: var(--ctv-ease-in-out);  }  .ctv\\:ease-out {    --tw-ease: var(--ctv-ease-out);    transition-timing-function: var(--ctv-ease-out);  }  .ctv\\:will-change-transform {    will-change: transform;  }  .ctv\\:outline-none {    --tw-outline-style: none;    outline-style: none;  }  .ctv\\:select-none {    -webkit-user-select: none;    user-select: none;  }  .ctv\\:\\[-webkit-box-orient\\:vertical\\] {    -webkit-box-orient: vertical;  }  .ctv\\:\\[-webkit-line-clamp\\:5\\] {    -webkit-line-clamp: 5;  }  .ctv\\:ring-inset {    --tw-ring-inset: inset;  }  @media (hover: hover) {    .ctv\\:group-hover\\:flex:is(:where(.ctv\\:group):hover *) {      display: flex;    }    .ctv\\:group-hover\\:opacity-100:is(:where(.ctv\\:group):hover *) {      opacity: 1;    }  }  .ctv\\:placeholder\\:text-muted-foreground::placeholder {    color: var(--muted-foreground, #888);  }  @media (hover: hover) {    .ctv\\:hover\\:border-\\[\\#E93D82\\]:hover {      border-color: #e93d82;    }    .ctv\\:hover\\:border-border-default:hover {      border-color: var(--border-default, #ffffff26);    }    .ctv\\:hover\\:border-border-subtle:hover {      border-color: var(--border-subtle, #ffffff14);    }    .ctv\\:hover\\:border-destructive-background:hover {      border-color: var(--destructive-background, #c0392b);    }    .ctv\\:hover\\:border-primary-background:hover, .ctv\\:hover\\:border-primary-background\\/50:hover {      border-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:border-primary-background\\/50:hover {        border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 50%, transparent);      }    }    .ctv\\:hover\\:border-primary-background\\/60:hover {      border-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:border-primary-background\\/60:hover {        border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 60%, transparent);      }    }    .ctv\\:hover\\:border-primary-background\\/70:hover {      border-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:border-primary-background\\/70:hover {        border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 70%, transparent);      }    }    .ctv\\:hover\\:border-white\\/40:hover {      border-color: var(--ctv-color-white);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:border-white\\/40:hover {        border-color: color-mix(in oklab, var(--ctv-color-white) 40%, transparent);      }    }    .ctv\\:hover\\:border-white\\/55:hover {      border-color: var(--ctv-color-white);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:border-white\\/55:hover {        border-color: color-mix(in oklab, var(--ctv-color-white) 55%, transparent);      }    }    .ctv\\:hover\\:bg-\\[rgb\\(233_61_130\\/0\\.2\\)\\]:hover {      background-color: #e93d8233;    }    .ctv\\:hover\\:bg-base-foreground\\/5:hover {      background-color: var(--base-foreground, #e0e0e0);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-base-foreground\\/5:hover {        background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 5%, transparent);      }    }    .ctv\\:hover\\:bg-black\\/85:hover {      background-color: var(--ctv-color-black);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-black\\/85:hover {        background-color: color-mix(in oklab, var(--ctv-color-black) 85%, transparent);      }    }    .ctv\\:hover\\:bg-destructive-background:hover {      background-color: var(--destructive-background, #c0392b);    }    .ctv\\:hover\\:bg-destructive-background-hover:hover {      background-color: var(--destructive-background-hover, #d44637);    }    .ctv\\:hover\\:bg-destructive-background\\/10:hover {      background-color: var(--destructive-background, #c0392b);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-destructive-background\\/10:hover {        background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 10%, transparent);      }    }    .ctv\\:hover\\:bg-destructive-background\\/30:hover {      background-color: var(--destructive-background, #c0392b);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-destructive-background\\/30:hover {        background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 30%, transparent);      }    }    .ctv\\:hover\\:bg-destructive-background\\/80:hover {      background-color: var(--destructive-background, #c0392b);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-destructive-background\\/80:hover {        background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 80%, transparent);      }    }    .ctv\\:hover\\:bg-interface-menu-component-surface-hovered:hover {      background-color: var(--interface-menu-component-surface-hovered, #ffffff14);    }    .ctv\\:hover\\:bg-primary-background-hover:hover {      background-color: var(--primary-background-hover, #4ea8ffbf);    }    .ctv\\:hover\\:bg-primary-background\\/15:hover {      background-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-primary-background\\/15:hover {        background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 15%, transparent);      }    }    .ctv\\:hover\\:bg-primary-background\\/20:hover {      background-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-primary-background\\/20:hover {        background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 20%, transparent);      }    }    .ctv\\:hover\\:bg-primary-background\\/25:hover {      background-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-primary-background\\/25:hover {        background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 25%, transparent);      }    }    .ctv\\:hover\\:bg-primary-background\\/90:hover {      background-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-primary-background\\/90:hover {        background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 90%, transparent);      }    }    .ctv\\:hover\\:bg-secondary-background:hover {      background-color: var(--secondary-background, #ffffff0f);    }    .ctv\\:hover\\:bg-secondary-background-hover:hover, .ctv\\:hover\\:bg-secondary-background-hover\\/60:hover {      background-color: var(--secondary-background-hover, #ffffff1a);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-secondary-background-hover\\/60:hover {        background-color: color-mix(in oklab, var(--secondary-background-hover, #ffffff1a) 60%, transparent);      }    }    .ctv\\:hover\\:bg-warning-background\\/10:hover {      background-color: var(--warning-background, #d39e00);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-warning-background\\/10:hover {        background-color: color-mix(in oklab, var(--warning-background, #d39e00) 10%, transparent);      }    }    .ctv\\:hover\\:bg-white:hover, .ctv\\:hover\\:bg-white\\/30:hover {      background-color: var(--ctv-color-white);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-white\\/30:hover {        background-color: color-mix(in oklab, var(--ctv-color-white) 30%, transparent);      }    }    .ctv\\:hover\\:bg-white\\/90:hover {      background-color: var(--ctv-color-white);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-white\\/90:hover {        background-color: color-mix(in oklab, var(--ctv-color-white) 90%, transparent);      }    }    .ctv\\:hover\\:text-base-foreground:hover {      color: var(--base-foreground, #e0e0e0);    }    .ctv\\:hover\\:text-destructive-background:hover {      color: var(--destructive-background, #c0392b);    }    .ctv\\:hover\\:text-primary-background:hover {      color: var(--primary-background, #4ea8ff99);    }    .ctv\\:hover\\:text-warning-background:hover {      color: var(--warning-background, #d39e00);    }    .ctv\\:hover\\:text-white:hover {      color: var(--ctv-color-white);    }    .ctv\\:hover\\:opacity-90:hover {      opacity: .9;    }    .ctv\\:hover\\:opacity-100:hover {      opacity: 1;    }  }  .ctv\\:focus\\:border-\\[\\#00FFD0\\]:focus {    border-color: #00ffd0;  }  .ctv\\:focus\\:border-\\[\\#E93D82\\]:focus {    border-color: #e93d82;  }  .ctv\\:focus\\:border-\\[\\#FFB800\\]:focus {    border-color: #ffb800;  }  .ctv\\:focus\\:border-border-default:focus {    border-color: var(--border-default, #ffffff26);  }  .ctv\\:focus\\:border-node-component-border:focus {    border-color: var(--node-component-border, #fff3);  }  .ctv\\:focus\\:border-primary-background:focus, .ctv\\:focus\\:border-primary-background\\/50:focus {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:focus\\:border-primary-background\\/50:focus {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 50%, transparent);    }  }  .ctv\\:focus\\:bg-primary-background\\/10:focus {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:focus\\:bg-primary-background\\/10:focus {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 10%, transparent);    }  }  .ctv\\:focus\\:bg-secondary-background-hover:focus {    background-color: var(--secondary-background-hover, #ffffff1a);  }  .ctv\\:focus\\:outline:focus, .ctv\\:focus\\:outline-1:focus {    outline-style: var(--tw-outline-style);    outline-width: 1px;  }  .ctv\\:focus\\:outline-primary-background\\/50:focus {    outline-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:focus\\:outline-primary-background\\/50:focus {      outline-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 50%, transparent);    }  }  .ctv\\:focus\\:outline-none:focus {    --tw-outline-style: none;    outline-style: none;  }  .ctv\\:focus-visible\\:ring-1:focus-visible {    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:focus-visible\\:ring-border-default:focus-visible {    --tw-ring-color: var(--border-default, #ffffff26);  }  .ctv\\:focus-visible\\:outline-none:focus-visible {    --tw-outline-style: none;    outline-style: none;  }  .ctv\\:active\\:scale-95:active {    --tw-scale-x: 95%;    --tw-scale-y: 95%;    --tw-scale-z: 95%;    scale: var(--tw-scale-x) var(--tw-scale-y);  }  @media (hover: hover) {    .ctv\\:hover\\:enabled\\:bg-secondary-background-hover:hover:enabled {      background-color: var(--secondary-background-hover, #ffffff1a);    }  }  .ctv\\:disabled\\:pointer-events-none:disabled {    pointer-events: none;  }  .ctv\\:disabled\\:cursor-default:disabled {    cursor: default;  }  .ctv\\:disabled\\:cursor-not-allowed:disabled {    cursor: not-allowed;  }  .ctv\\:disabled\\:opacity-30:disabled {    opacity: .3;  }  .ctv\\:disabled\\:opacity-40:disabled {    opacity: .4;  }  .ctv\\:disabled\\:opacity-50:disabled {    opacity: .5;  }  .ctv\\:disabled\\:opacity-60:disabled {    opacity: .6;  }  @media (hover: hover) {    .ctv\\:disabled\\:hover\\:bg-secondary-background:disabled:hover {      background-color: var(--secondary-background, #ffffff0f);    }  }  .ctv\\:data-\\[highlighted\\]\\:bg-secondary-background-hover[data-highlighted] {    background-color: var(--secondary-background-hover, #ffffff1a);  }  .ctv\\:data-\\[state\\=checked\\]\\:bg-secondary-background-selected[data-state="checked"] {    background-color: var(--secondary-background-selected, #4ea8ff33);  }  @media (hover: hover) {    .ctv\\:data-\\[state\\=checked\\]\\:hover\\:bg-secondary-background-selected[data-state="checked"]:hover {      background-color: var(--secondary-background-selected, #4ea8ff33);    }  }  .ctv\\:data-\\[state\\=open\\]\\:border-node-component-border[data-state="open"] {    border-color: var(--node-component-border, #fff3);  }  .ctv\\:\\[\\&_\\+_\\&\\]\\:border-t + .ctv\\:\\[\\&_\\+_\\&\\]\\:border-t {    border-top-style: var(--tw-border-style);    border-top-width: 1px;  }  .ctv\\:\\[\\&_\\+_\\&\\]\\:border-solid + .ctv\\:\\[\\&_\\+_\\&\\]\\:border-solid {    --tw-border-style: solid;    border-style: solid;  }  .ctv\\:\\[\\&_\\+_\\&\\]\\:border-border-subtle + .ctv\\:\\[\\&_\\+_\\&\\]\\:border-border-subtle {    border-color: var(--border-subtle, #ffffff14);  }  .ctv\\:\\[\\&_\\+_\\&\\]\\:pt-1\\.5 + .ctv\\:\\[\\&_\\+_\\&\\]\\:pt-1\\.5 {    padding-top: calc(var(--ctv-spacing) * 1.5);  }}@property --tw-translate-x {  syntax: "*";  inherits: false;  initial-value: 0;}@property --tw-translate-y {  syntax: "*";  inherits: false;  initial-value: 0;}@property --tw-translate-z {  syntax: "*";  inherits: false;  initial-value: 0;}@property --tw-border-style {  syntax: "*";  inherits: false;  initial-value: solid;}@property --tw-gradient-position {  syntax: "*";  inherits: false}@property --tw-gradient-from {  syntax: "<color>";  inherits: false;  initial-value: #0000;}@property --tw-gradient-via {  syntax: "<color>";  inherits: false;  initial-value: #0000;}@property --tw-gradient-to {  syntax: "<color>";  inherits: false;  initial-value: #0000;}@property --tw-gradient-stops {  syntax: "*";  inherits: false}@property --tw-gradient-via-stops {  syntax: "*";  inherits: false}@property --tw-gradient-from-position {  syntax: "<length-percentage>";  inherits: false;  initial-value: 0%;}@property --tw-gradient-via-position {  syntax: "<length-percentage>";  inherits: false;  initial-value: 50%;}@property --tw-gradient-to-position {  syntax: "<length-percentage>";  inherits: false;  initial-value: 100%;}@property --tw-leading {  syntax: "*";  inherits: false}@property --tw-font-weight {  syntax: "*";  inherits: false}@property --tw-tracking {  syntax: "*";  inherits: false}@property --tw-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-shadow-color {  syntax: "*";  inherits: false}@property --tw-shadow-alpha {  syntax: "<percentage>";  inherits: false;  initial-value: 100%;}@property --tw-inset-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-inset-shadow-color {  syntax: "*";  inherits: false}@property --tw-inset-shadow-alpha {  syntax: "<percentage>";  inherits: false;  initial-value: 100%;}@property --tw-ring-color {  syntax: "*";  inherits: false}@property --tw-ring-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-inset-ring-color {  syntax: "*";  inherits: false}@property --tw-inset-ring-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-ring-inset {  syntax: "*";  inherits: false}@property --tw-ring-offset-width {  syntax: "<length>";  inherits: false;  initial-value: 0;}@property --tw-ring-offset-color {  syntax: "*";  inherits: false;  initial-value: #fff;}@property --tw-ring-offset-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-outline-style {  syntax: "*";  inherits: false;  initial-value: solid;}@property --tw-backdrop-blur {  syntax: "*";  inherits: false}@property --tw-backdrop-brightness {  syntax: "*";  inherits: false}@property --tw-backdrop-contrast {  syntax: "*";  inherits: false}@property --tw-backdrop-grayscale {  syntax: "*";  inherits: false}@property --tw-backdrop-hue-rotate {  syntax: "*";  inherits: false}@property --tw-backdrop-invert {  syntax: "*";  inherits: false}@property --tw-backdrop-opacity {  syntax: "*";  inherits: false}@property --tw-backdrop-saturate {  syntax: "*";  inherits: false}@property --tw-backdrop-sepia {  syntax: "*";  inherits: false}@property --tw-duration {  syntax: "*";  inherits: false}@property --tw-ease {  syntax: "*";  inherits: false}@property --tw-scale-x {  syntax: "*";  inherits: false;  initial-value: 1;}@property --tw-scale-y {  syntax: "*";  inherits: false;  initial-value: 1;}@property --tw-scale-z {  syntax: "*";  inherits: false;  initial-value: 1;}@keyframes pulse {  50% {    opacity: .5;  }}.comfytv-root, .comfytv-dialog {\r  --p-primary-color: #4ea8ff;\r  --p-primary-contrast-color: #fff;\r  --p-primary-hover-color: #66b6ff;\r  --p-primary-active-color: #3a96ee;\r\r  --p-surface-0:  #1e1e1e;\r  --p-surface-50: #232323;\r  --p-surface-100: #2a2a2a;\r  --p-surface-200: #333;\r  --p-surface-300: #3d3d3d;\r  --p-surface-400: #555;\r  --p-surface-500: #777;\r  --p-surface-600: #999;\r  --p-surface-700: #bbb;\r  --p-surface-800: #ddd;\r  --p-surface-900: #eee;\r  --p-surface-950: #f6f6f6;\r\r  --p-content-background: var(--p-surface-0);\r  --p-content-hover-background: var(--p-surface-100);\r  --p-content-border-color: var(--p-surface-300);\r  --p-content-border-radius: 4px;\r\r  --p-text-color: var(--p-surface-800);\r  --p-text-muted-color: var(--p-surface-600);\r\r  --p-mask-background: rgba(0, 0, 0, 0.55);\r\r  --p-focus-ring-width: 1px;\r  --p-focus-ring-style: solid;\r  --p-focus-ring-color: var(--p-primary-color);\r  --p-focus-ring-offset: 1px;\r}\r\r.comfytv-root {\r  font-size: 12px;\r  color: var(--p-text-color);\r}\r\r.comfytv-root .p-datatable {\r  font-size: 12px;\r  display: flex;\r  flex-direction: column;\r  height: 100%;\r  min-height: 0;\r  width: 100%;\r}\r.comfytv-root .p-datatable-table-container,\r.comfytv-root .p-datatable-wrapper {\r  flex: 1;\r  min-height: 0;\r  overflow: auto;\r}\r.comfytv-root .p-datatable-table {\r  border-collapse: separate;\r  border-spacing: 0;\r  table-layout: auto;\r}\r.comfytv-root .p-datatable-thead > tr > th {\r  background: var(--p-surface-100);\r  color: var(--p-text-color);\r  border-bottom: 1px solid var(--p-content-border-color);\r  padding: 6px 8px;\r  font-weight: 600;\r  text-align: left;\r}\r.comfytv-root .p-datatable-tbody > tr > td {\r  padding: 6px 8px;\r  border-bottom: 1px solid var(--p-content-border-color);\r  vertical-align: top;\r}\r.comfytv-root .p-datatable-tbody > tr.p-row-odd {\r  background: var(--p-surface-50);\r}\r.comfytv-root .p-datatable-tbody > tr:hover {\r  background: var(--p-content-hover-background);\r}\r.comfytv-root .p-datatable-frozen-column {\r  position: sticky;\r  left: 0;\r  z-index: 1;\r  background: inherit;\r}\r\r/* Select (dropdown) */\r.comfytv-root .p-select {\r  display: inline-flex;\r  align-items: center;\r  background: var(--p-surface-100);\r  border: 1px solid var(--p-content-border-color);\r  border-radius: 3px;\r  min-height: 22px;\r  cursor: pointer;\r  position: relative;\r}\r.comfytv-root .p-select:hover {\r  border-color: var(--p-surface-500);\r}\r.comfytv-root .p-select-focus {\r  border-color: var(--p-primary-color);\r}\r.comfytv-root .p-select-label {\r  padding: 2px 8px;\r  font-size: 11px;\r  color: var(--p-text-color);\r  flex: 1;\r  user-select: none;\r}\r.comfytv-root .p-select-dropdown {\r  padding: 0 6px;\r  color: var(--p-text-muted-color);\r}\r\r/* SelectButton (toggle group) */\r.comfytv-root .p-selectbutton {\r  display: inline-flex;\r  border: 1px solid var(--p-content-border-color);\r  border-radius: 3px;\r  overflow: hidden;\r}\r.comfytv-root .p-togglebutton {\r  background: var(--p-surface-100);\r  color: var(--p-text-muted-color);\r  border: none;\r  padding: 2px 10px;\r  font-size: 11px;\r  cursor: pointer;\r}\r.comfytv-root .p-togglebutton:hover {\r  background: var(--p-surface-200);\r  color: var(--p-text-color);\r}\r.comfytv-root .p-togglebutton-checked {\r  background: var(--p-primary-color);\r  color: var(--p-primary-contrast-color);\r}\r\r.comfytv-root .p-inputtext,\r.comfytv-root .cell-input,\r.comfytv-root .cell-textarea {\r  background: var(--p-surface-100);\r  border: 1px solid var(--p-primary-color);\r  color: var(--p-text-color);\r  font: inherit;\r  padding: 4px 6px;\r  border-radius: 3px;\r  width: 100%;\r  box-sizing: border-box;\r  outline: none;\r}\r.comfytv-root .cell-textarea {\r  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;\r  font-size: 11px;\r  line-height: 1.4;\r  resize: vertical;\r  min-height: 32px;\r}\r.comfytv-root .cell-select { width: 100%; }\r\r.comfytv-root .p-datatable-tbody > tr > td.p-editable-column { cursor: text; }\r.comfytv-root .p-datatable-tbody > tr > td.p-cell-editing {\r  padding: 2px !important;\r  background: rgba(78, 168, 255, 0.08);\r}\r\r.comfytv-dialog.p-dialog {\r  background: var(--p-surface-0);\r  border: 1px solid var(--p-content-border-color);\r  border-radius: 8px;\r  color: var(--p-text-color);\r  box-shadow: 0 24px 48px rgba(0,0,0,0.6);\r}\r.comfytv-dialog .p-dialog-header {\r  padding: 12px 16px;\r  border-bottom: 1px solid var(--p-content-border-color);\r  background: var(--p-surface-50);\r  border-radius: 8px 8px 0 0;\r  font-weight: 600;\r  display: flex;\r  justify-content: space-between;\r  align-items: center;\r}\r.comfytv-dialog .p-dialog-title {\r  font-size: 14px;\r}\r.comfytv-dialog .p-dialog-content {\r  padding: 16px;\r  background: var(--p-surface-0);\r  overflow: auto;\r}\r.comfytv-dialog .p-dialog-close-button {\r  background: transparent;\r  border: none;\r  color: var(--p-text-muted-color);\r  cursor: pointer;\r  font-size: 18px;\r  padding: 2px 6px;\r}\r.comfytv-dialog .p-dialog-close-button:hover {\r  color: var(--p-text-color);\r}\r\rbody > .p-blockui-mask.p-blockui-mask-document:empty,\rbody > .p-overlay-mask.p-blockui-mask-document.p-overlay-mask-leave:empty {\r  display: none !important;\r  pointer-events: none !important;\r}`));      document.head.appendChild(elementStyle);    }  } catch (e) {    console.error("vite-plugin-css-injected-by-js", e);  }})();
+(function() {  "use strict";  try {    if (typeof document != "undefined") {      var elementStyle = document.createElement("style");      elementStyle.appendChild(document.createTextNode(`.ctv-asset-thumb[data-v-5f355e66] {\r  transition: transform 0.2s ease;}.ctv-asset-card:hover .ctv-asset-thumb[data-v-5f355e66] {\r  transform: scale(1.05);}.ctv-asset-actions[data-v-5f355e66] {\r  opacity: 0;\r  pointer-events: none;\r  transition: opacity 0.15s ease;}.ctv-asset-card:hover .ctv-asset-actions[data-v-5f355e66],\r.ctv-asset-card:focus-within .ctv-asset-actions[data-v-5f355e66] {\r  opacity: 1;\r  pointer-events: auto;}@media (hover: none), (pointer: coarse) {.ctv-asset-actions[data-v-5f355e66] {\r    opacity: 1;\r    pointer-events: auto;}.ctv-asset-card:hover .ctv-asset-thumb[data-v-5f355e66] {\r    transform: none;}}\r.ctv-asset-actions[data-v-db216f25] {\r  opacity: 0;\r  pointer-events: none;\r  transition: opacity 0.15s ease;}.ctv-asset-row:hover .ctv-asset-actions[data-v-db216f25],\r.ctv-asset-row:focus-within .ctv-asset-actions[data-v-db216f25] {\r  opacity: 1;\r  pointer-events: auto;}@media (hover: none), (pointer: coarse) {.ctv-asset-actions[data-v-db216f25] {\r    opacity: 1;\r    pointer-events: auto;}}\r.ctv-num-root {\r  display: flex;\r  align-items: center;\r  width: 100%;\r  min-width: 0;\r  background: var(--secondary-background, rgba(255,255,255,0.04));\r  border-radius: 8px;\r  box-sizing: border-box;}.ctv-num-root .ctv-num-input,\r.ctv-num-root input {\r  appearance: none;\r  background: transparent;\r  border: none;\r  border-radius: 8px;\r  padding: 6px 12px;\r  color: var(--base-foreground, #ddd);\r  font-size: 12px;\r  font-family: inherit;\r  width: 100%;\r  min-width: 0;\r  flex: 1;\r  outline: none;\r  text-align: left;\r  box-sizing: border-box;}.ctv-num-root input::placeholder { color: var(--muted-foreground, #888);}.ctv-num-root:focus-within {\r  box-shadow: 0 0 0 1px var(--border-default, rgba(255,255,255,0.25));}.ctv-num-root input:disabled { opacity: 0.5; pointer-events: none;}.ctv-num-btn {\r  flex-shrink: 0;\r  appearance: none;\r  background: transparent;\r  border: none;\r  color: var(--muted-foreground, #888);\r  font-size: 13px;\r  line-height: 1;\r  width: 22px;\r  height: 100%;\r  min-height: 28px;\r  cursor: pointer;\r  user-select: none;\r  display: inline-flex;\r  align-items: center;\r  justify-content: center;}.ctv-num-btn:hover { color: var(--base-foreground, #ddd);}.ctv-num-btn[data-disabled] { opacity: 0.4; pointer-events: none;}\r.ctv-toggle {\r  display: inline-flex;\r  align-items: center;\r  flex-shrink: 0;\r  width: 32px;\r  height: 18px;\r  padding: 2px;\r  border: none;\r  border-radius: 9999px;\r  background: var(--secondary-background, rgba(255,255,255,0.12));\r  cursor: pointer;\r  transition: background 0.15s ease;}.ctv-toggle[data-state='checked'] {\r  background: var(--primary-background, rgba(78,168,255,0.6));}.ctv-toggle:disabled,\r.ctv-toggle[data-disabled] {\r  opacity: 0.5;\r  cursor: not-allowed;\r  pointer-events: none;}.ctv-toggle:focus-visible {\r  outline: none;\r  box-shadow: 0 0 0 1px var(--border-default, rgba(255,255,255,0.25));}.ctv-toggle-thumb {\r  display: block;\r  width: 14px;\r  height: 14px;\r  border-radius: 9999px;\r  background: #fff;\r  transition: transform 0.15s ease;\r  transform: translateX(0);\r  will-change: transform;\r  pointer-events: none;}.ctv-toggle[data-state='checked'] .ctv-toggle-thumb {\r  transform: translateX(14px);}\r.ctv-text-input,\r.ctv-text-input input,\r.ctv-text-input textarea {\r  appearance: none;\r  background: var(--secondary-background, rgba(255,255,255,0.04));\r  border: none;\r  border-radius: 8px;\r  padding: 6px 12px;\r  color: var(--base-foreground, #ddd);\r  font-size: 12px;\r  font-family: inherit;\r  width: 100%;\r  min-width: 0;\r  outline: none;\r  box-sizing: border-box;}.ctv-text-input::placeholder,\r.ctv-text-input input::placeholder,\r.ctv-text-input textarea::placeholder { color: var(--muted-foreground, #888);}.ctv-text-area { line-height: 1.4; resize: vertical; min-height: 48px; overflow: hidden;}.ctv-text-input:focus-visible,\r.ctv-text-input input:focus-visible,\r.ctv-text-input textarea:focus-visible {\r  box-shadow: 0 0 0 1px var(--border-default, rgba(255,255,255,0.25));}.ctv-text-input:disabled,\r.ctv-text-input input:disabled,\r.ctv-text-input textarea:disabled { opacity: 0.5; pointer-events: none;}\r.comfytv-asset-scroll {\r  scrollbar-width: thin;\r  scrollbar-color: rgba(255, 255, 255, 0.35) transparent;}.comfytv-asset-scroll::-webkit-scrollbar {\r  width: 10px;}.comfytv-asset-scroll::-webkit-scrollbar-track {\r  background: transparent;}.comfytv-asset-scroll::-webkit-scrollbar-thumb {\r  background-color: rgba(255, 255, 255, 0.35);\r  border-radius: 5px;\r  border: 2px solid transparent;\r  background-clip: content-box;}.comfytv-asset-scroll:hover::-webkit-scrollbar-thumb {\r  background-color: rgba(255, 255, 255, 0.55);}\r.tippy-box[data-animation=fade][data-state=hidden]{opacity:0}[data-tippy-root]{max-width:calc(100vw - 10px)}.tippy-box{position:relative;background-color:#333;color:#fff;border-radius:4px;font-size:14px;line-height:1.4;white-space:normal;outline:0;transition-property:transform,visibility,opacity}.tippy-box[data-placement^=top]>.tippy-arrow{bottom:0}.tippy-box[data-placement^=top]>.tippy-arrow:before{bottom:-7px;left:0;border-width:8px 8px 0;border-top-color:initial;transform-origin:center top}.tippy-box[data-placement^=bottom]>.tippy-arrow{top:0}.tippy-box[data-placement^=bottom]>.tippy-arrow:before{top:-7px;left:0;border-width:0 8px 8px;border-bottom-color:initial;transform-origin:center bottom}.tippy-box[data-placement^=left]>.tippy-arrow{right:0}.tippy-box[data-placement^=left]>.tippy-arrow:before{border-width:8px 0 8px 8px;border-left-color:initial;right:-7px;transform-origin:center left}.tippy-box[data-placement^=right]>.tippy-arrow{left:0}.tippy-box[data-placement^=right]>.tippy-arrow:before{left:-7px;border-width:8px 8px 8px 0;border-right-color:initial;transform-origin:center right}.tippy-box[data-inertia][data-state=visible]{transition-timing-function:cubic-bezier(.54,1.5,.38,1.11)}.tippy-arrow{width:16px;height:16px;color:#333}.tippy-arrow:before{content:"";position:absolute;border-color:transparent;border-style:solid}.tippy-content{position:relative;padding:5px 9px;z-index:1}.comfytv-prompt-prosemirror {\r  scrollbar-width: thin;\r  scrollbar-color: rgba(255, 255, 255, 0.35) transparent;}.comfytv-prompt-prosemirror::-webkit-scrollbar {\r  width: 10px;}.comfytv-prompt-prosemirror::-webkit-scrollbar-track {\r  background: transparent;}.comfytv-prompt-prosemirror::-webkit-scrollbar-thumb {\r  background-color: rgba(255, 255, 255, 0.35);\r  border-radius: 5px;\r  border: 2px solid transparent;\r  background-clip: content-box;}.comfytv-prompt-prosemirror:hover::-webkit-scrollbar-thumb {\r  background-color: rgba(255, 255, 255, 0.55);}.tippy-box[data-theme~='comfytv-transparent'] {\r  background: transparent;\r  box-shadow: none;}.tippy-box[data-theme~='comfytv-transparent'] > .tippy-content { padding: 0;}.tippy-box[data-theme~='comfytv-tooltip'] {\r  background: var(--interface-menu-surface, #1a1a1a);\r  border: 1px solid var(--border-default, #3a3a3a);\r  color: var(--base-foreground, #e0e0e0);\r  font-size: 11px;\r  line-height: 1.45;\r  border-radius: 4px;\r  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);}.tippy-box[data-theme~='comfytv-tooltip'] > .tippy-content {\r  padding: 6px 8px;\r  white-space: pre-wrap;\r  word-break: break-word;}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='top']    > .tippy-arrow::before { border-top-color: var(--border-default, #3a3a3a);}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='bottom'] > .tippy-arrow::before { border-bottom-color: var(--border-default, #3a3a3a);}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='left']   > .tippy-arrow::before { border-left-color: var(--border-default, #3a3a3a);}.tippy-box[data-theme~='comfytv-tooltip'][data-placement^='right']  > .tippy-arrow::before { border-right-color: var(--border-default, #3a3a3a);}\r.comfytv-prompt-editor[data-v-c864c210] p { margin: 0;}.comfytv-prompt-editor[data-v-c864c210] p.is-editor-empty:first-child::before {\r  content: attr(data-placeholder);\r  color: var(--muted-foreground, #888);\r  opacity: 0.65;\r  float: left;\r  height: 0;\r  pointer-events: none;}\r.ctv-slider-row {\r  display: flex;\r  align-items: center;\r  gap: 8px;\r  width: 100%;\r  min-width: 0;}.ctv-slider-root {\r  position: relative;\r  display: flex;\r  align-items: center;\r  flex: 1;\r  min-width: 0;\r  height: 18px;\r  user-select: none;\r  touch-action: none;}.ctv-slider-track {\r  position: relative;\r  flex: 1;\r  height: 4px;\r  border-radius: 9999px;\r  background: var(--secondary-background, rgba(255, 255, 255, 0.12));}.ctv-slider-range {\r  position: absolute;\r  height: 100%;\r  border-radius: 9999px;\r  background: var(--primary-background, #4a8cff);}.ctv-slider-thumb {\r  display: block;\r  width: 12px;\r  height: 12px;\r  border-radius: 9999px;\r  background: var(--base-foreground, #eee);\r  box-shadow: 0 1px 3px rgb(0 0 0 / 0.4);\r  cursor: grab;}.ctv-slider-thumb:active { cursor: grabbing;}.ctv-slider-thumb[data-disabled] { opacity: 0.5; pointer-events: none;}.ctv-slider-value {\r  flex-shrink: 0;\r  min-width: 32px;\r  text-align: right;\r  font-size: 11px;\r  font-variant-numeric: tabular-nums;\r  color: var(--base-foreground, #ddd);}\r.vp-text-scroll[data-v-e004f52f] {\r  scrollbar-width: thin;\r  scrollbar-color: rgba(255, 255, 255, 0.35) transparent;}.vp-text-scroll[data-v-e004f52f]::-webkit-scrollbar {\r  width: 10px;}.vp-text-scroll[data-v-e004f52f]::-webkit-scrollbar-track {\r  background: transparent;}.vp-text-scroll[data-v-e004f52f]::-webkit-scrollbar-thumb {\r  background-color: rgba(255, 255, 255, 0.35);\r  border-radius: 5px;\r  border: 2px solid transparent;\r  background-clip: content-box;}.vp-text-scroll[data-v-e004f52f]:hover::-webkit-scrollbar-thumb {\r  background-color: rgba(255, 255, 255, 0.55);}.ctv-batch-grid[data-v-e004f52f] {\r  display: grid;\r  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));\r  gap: 4px;\r  padding-top: 14px;\r  max-height: 320px;\r  overflow: auto;}.vp-img-actions[data-v-e004f52f] {\r  opacity: 0;\r  pointer-events: none;\r  transition: opacity 0.15s ease;}.vp-img-host:hover .vp-img-actions[data-v-e004f52f],\r.vp-img-host:focus-within .vp-img-actions[data-v-e004f52f] {\r  opacity: 1;\r  pointer-events: auto;}@media (hover: none), (pointer: coarse) {.vp-img-actions[data-v-e004f52f] {\r    opacity: 1;\r    pointer-events: auto;}}\r.ctv-input-tile:hover .ctv-tile-disconnect[data-v-2818cd4c] { display: inline-flex;}.ctv-picker-input.ctv-src-upstream         .ctv-src-tag[data-v-2818cd4c] { background: color-mix(in srgb, var(--primary-background) 22%, transparent); color: var(--primary-background);}.ctv-picker-input.ctv-src-upstream-pending .ctv-src-tag[data-v-2818cd4c] { background: color-mix(in srgb, var(--warning-background) 18%, transparent); color: var(--warning-background);}\r.ctv-camera-dropdown option[data-v-d255fcd1] {\r  background: var(--interface-menu-surface, #1a1a2e);\r  color: var(--base-foreground, #e0e0e0);}\r.ctv-crop-select[data-v-c1cb98bb] option {\r  background: var(--interface-menu-surface, #1a1a1f);\r  color: var(--base-foreground, #ddd);}.ctv-bound-input[data-v-c1cb98bb] { -moz-appearance: textfield;}.ctv-bound-input[data-v-c1cb98bb]::-webkit-inner-spin-button,\r.ctv-bound-input[data-v-c1cb98bb]::-webkit-outer-spin-button {\r  -webkit-appearance: none;}\r.ctv-gradient-row[data-v-5e3f6fea] {\r  display: flex;\r  align-items: center;\r  gap: 8px;\r  width: 100%;\r  min-width: 0;}.ctv-gradient-root[data-v-5e3f6fea] {\r  position: relative;\r  display: flex;\r  align-items: center;\r  flex: 1;\r  min-width: 0;\r  height: 18px;\r  user-select: none;\r  touch-action: none;}.ctv-gradient-track[data-v-5e3f6fea] {\r  position: relative;\r  flex: 1;\r  height: 10px;\r  border-radius: 9999px;\r  cursor: pointer;}.ctv-gradient-thumb[data-v-5e3f6fea] {\r  display: block;\r  width: 14px;\r  height: 14px;\r  border-radius: 9999px;\r  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);\r  outline: 1px solid rgba(0, 0, 0, 0.35);\r  cursor: grab;}.ctv-gradient-thumb[data-v-5e3f6fea]:active {\r  cursor: grabbing;}.ctv-gradient-thumb[data-disabled][data-v-5e3f6fea] {\r  opacity: 0.5;\r  pointer-events: none;}.ctv-gradient-value[data-v-5e3f6fea] {\r  flex-shrink: 0;\r  min-width: 32px;\r  text-align: right;\r  font-size: 11px;\r  font-variant-numeric: tabular-nums;\r  color: var(--base-foreground, #ddd);}\r.ctv-curve-editor[data-v-412edb45] {\r  aspect-ratio: 1 / 1;\r  width: 100%;\r  border-radius: 5px;\r  background: var(--secondary-background, rgba(255, 255, 255, 0.06));\r  color: var(--base-foreground, #fff);\r  cursor: crosshair;\r  touch-action: none;}.ctv-curve-disabled[data-v-412edb45] {\r  cursor: default;}.ctv-curve-point[data-v-412edb45] {\r  cursor: grab;}.ctv-curve-point[data-v-412edb45]:active {\r  cursor: grabbing;}\r.ctv-pano-select-wrap[data-v-0db49e33] {\r  position: relative;\r  display: inline-flex;\r  align-items: center;}.ctv-pano-caret[data-v-0db49e33] {\r  position: absolute;\r  right: 6px;\r  top: 50%;\r  transform: translateY(-50%);\r  font-size: 8px;\r  color: var(--muted-foreground, rgb(255 255 255 / 0.5));\r  pointer-events: none;}.ctv-pano-select[data-v-0db49e33] {\r  appearance: none;\r  background-color: var(--secondary-background, rgb(255 255 255 / 0.04));\r  color: var(--base-foreground, rgb(255 255 255 / 0.9));\r  border: 1px solid var(--border-subtle, rgb(255 255 255 / 0.15));\r  border-radius: 4px;\r  padding: 3px 18px 3px 6px;\r  font-size: 11px;\r  font-family: ui-monospace, SFMono-Regular, monospace;\r  cursor: pointer;\r  outline: none;\r  min-width: 70px;}.ctv-pano-select[data-v-0db49e33]:hover { border-color: var(--border-default, rgb(255 255 255 / 0.3));}.ctv-pano-select[data-v-0db49e33]:focus { border-color: var(--primary-background, rgb(78 168 255 / 0.6));}.ctv-pano-select option[data-v-0db49e33] { background: var(--interface-menu-surface, #1a1a2e); color: var(--base-foreground, #e0e0e0);}\r.ctv-pano-select-wrap[data-v-1c06d1c2] {\r  position: relative;\r  display: inline-flex;\r  align-items: center;}.ctv-pano-caret[data-v-1c06d1c2] {\r  position: absolute;\r  right: 6px;\r  top: 50%;\r  transform: translateY(-50%);\r  font-size: 8px;\r  color: var(--muted-foreground, rgb(255 255 255 / 0.5));\r  pointer-events: none;}.ctv-pano-select[data-v-1c06d1c2] {\r  appearance: none;\r  background-color: var(--secondary-background, rgb(255 255 255 / 0.04));\r  color: var(--base-foreground, rgb(255 255 255 / 0.9));\r  border: 1px solid var(--border-subtle, rgb(255 255 255 / 0.15));\r  border-radius: 4px;\r  padding: 3px 18px 3px 6px;\r  font-size: 11px;\r  font-family: ui-monospace, SFMono-Regular, monospace;\r  cursor: pointer;\r  outline: none;\r  min-width: 70px;}.ctv-pano-select[data-v-1c06d1c2]:hover { border-color: var(--border-default, rgb(255 255 255 / 0.3));}.ctv-pano-select[data-v-1c06d1c2]:focus { border-color: var(--primary-background, rgb(78 168 255 / 0.6));}.ctv-pano-select option[data-v-1c06d1c2] { background: var(--interface-menu-surface, #1a1a2e); color: var(--base-foreground, #e0e0e0);}\r.ctv-pad-area[data-v-05778c35] {\r  background-image:\r    linear-gradient(45deg, rgba(255,255,255,0.04) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.04) 75%),\r    linear-gradient(45deg, rgba(255,255,255,0.04) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.04) 75%);\r  background-size: 12px 12px;\r  background-position: 0 0, 6px 6px;\r  border: 1px dashed color-mix(in srgb, var(--primary-background, #4ea8ff) 45%, transparent);}.ctv-outpaint-handle[data-v-05778c35]::before {\r  content: '';\r  position: absolute;\r  background: color-mix(in srgb, var(--primary-background, #4ea8ff) 65%, transparent);\r  border-radius: 2px;}.ctv-handle-left[data-v-05778c35]::before,  .ctv-handle-right[data-v-05778c35]::before  { width: 3px; height: 100%;}.ctv-handle-top[data-v-05778c35]::before,   .ctv-handle-bottom[data-v-05778c35]::before { height: 3px; width: 100%;}.ctv-outpaint-handle[data-v-05778c35]:hover::before { background: var(--primary-background, #4ea8ff);}\r.ctv-entry-table th[data-v-603808ad],\r.ctv-entry-table td[data-v-603808ad] {\r  text-align: left;\r  padding: 6px 8px;\r  border-bottom: 1px solid var(--border-subtle, #2a2a2a);\r  vertical-align: top;}.ctv-entry-table th[data-v-603808ad] {\r  font-weight: 600;\r  color: var(--muted-foreground, #aaa);}\r/*! tailwindcss v4.3.0 | MIT License | https://tailwindcss.com */@layer properties {  @supports (((-webkit-hyphens: none)) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {    *, :before, :after, ::backdrop {      --tw-translate-x: 0;      --tw-translate-y: 0;      --tw-translate-z: 0;      --tw-border-style: solid;      --tw-gradient-position: initial;      --tw-gradient-from: #0000;      --tw-gradient-via: #0000;      --tw-gradient-to: #0000;      --tw-gradient-stops: initial;      --tw-gradient-via-stops: initial;      --tw-gradient-from-position: 0%;      --tw-gradient-via-position: 50%;      --tw-gradient-to-position: 100%;      --tw-leading: initial;      --tw-font-weight: initial;      --tw-tracking: initial;      --tw-ordinal: initial;      --tw-slashed-zero: initial;      --tw-numeric-figure: initial;      --tw-numeric-spacing: initial;      --tw-numeric-fraction: initial;      --tw-shadow: 0 0 #0000;      --tw-shadow-color: initial;      --tw-shadow-alpha: 100%;      --tw-inset-shadow: 0 0 #0000;      --tw-inset-shadow-color: initial;      --tw-inset-shadow-alpha: 100%;      --tw-ring-color: initial;      --tw-ring-shadow: 0 0 #0000;      --tw-inset-ring-color: initial;      --tw-inset-ring-shadow: 0 0 #0000;      --tw-ring-inset: initial;      --tw-ring-offset-width: 0px;      --tw-ring-offset-color: #fff;      --tw-ring-offset-shadow: 0 0 #0000;      --tw-outline-style: solid;      --tw-backdrop-blur: initial;      --tw-backdrop-brightness: initial;      --tw-backdrop-contrast: initial;      --tw-backdrop-grayscale: initial;      --tw-backdrop-hue-rotate: initial;      --tw-backdrop-invert: initial;      --tw-backdrop-opacity: initial;      --tw-backdrop-saturate: initial;      --tw-backdrop-sepia: initial;      --tw-duration: initial;      --tw-ease: initial;      --tw-scale-x: 1;      --tw-scale-y: 1;      --tw-scale-z: 1;    }  }}@layer theme {  :root, :host {    --ctv-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",    monospace;    --ctv-color-gray-600: oklch(44.6% .03 256.802);    --ctv-color-black: #000;    --ctv-color-white: #fff;    --ctv-spacing: .25rem;    --ctv-container-md: 28rem;    --ctv-text-xs: .75rem;    --ctv-text-xs--line-height: calc(1 / .75);    --ctv-text-sm: .875rem;    --ctv-text-sm--line-height: calc(1.25 / .875);    --ctv-text-lg: 1.125rem;    --ctv-text-lg--line-height: calc(1.75 / 1.125);    --ctv-text-2xl: 1.5rem;    --ctv-text-2xl--line-height: calc(2 / 1.5);    --ctv-font-weight-medium: 500;    --ctv-font-weight-semibold: 600;    --ctv-font-weight-bold: 700;    --ctv-tracking-wide: .025em;    --ctv-tracking-wider: .05em;    --ctv-leading-tight: 1.25;    --ctv-leading-snug: 1.375;    --ctv-leading-relaxed: 1.625;    --ctv-radius-sm: .25rem;    --ctv-radius-md: .375rem;    --ctv-radius-lg: .5rem;    --ctv-ease-in: cubic-bezier(.4, 0, 1, 1);    --ctv-ease-out: cubic-bezier(0, 0, .2, 1);    --ctv-ease-in-out: cubic-bezier(.4, 0, .2, 1);    --ctv-animate-pulse: pulse 2s cubic-bezier(.4, 0, .6, 1) infinite;    --ctv-blur-sm: 8px;    --ctv-aspect-video: 16 / 9;    --ctv-default-transition-duration: .15s;    --ctv-default-transition-timing-function: cubic-bezier(.4, 0, .2, 1);    --ctv-text-2xs: .625rem;    --ctv-text-2xs--line-height: calc(1 / .625);    --ctv-text-3xs: .5625rem;    --ctv-text-3xs--line-height: calc(1 / .5625);  }}@layer utilities {  .ctv\\:pointer-events-none {    pointer-events: none;  }  .ctv\\:absolute {    position: absolute;  }  .ctv\\:fixed {    position: fixed;  }  .ctv\\:relative {    position: relative;  }  .ctv\\:sticky {    position: sticky;  }  .ctv\\:inset-0 {    inset: calc(var(--ctv-spacing) * 0);  }  .ctv\\:inset-x-0 {    inset-inline: calc(var(--ctv-spacing) * 0);  }  .ctv\\:-top-2 {    top: calc(var(--ctv-spacing) * -2);  }  .ctv\\:top-0 {    top: calc(var(--ctv-spacing) * 0);  }  .ctv\\:top-0\\.5 {    top: calc(var(--ctv-spacing) * .5);  }  .ctv\\:top-1 {    top: calc(var(--ctv-spacing) * 1);  }  .ctv\\:top-1\\/2 {    top: 50%;  }  .ctv\\:top-2 {    top: calc(var(--ctv-spacing) * 2);  }  .ctv\\:top-4 {    top: calc(var(--ctv-spacing) * 4);  }  .ctv\\:top-\\[3px\\] {    top: 3px;  }  .ctv\\:top-full {    top: 100%;  }  .ctv\\:right-0 {    right: calc(var(--ctv-spacing) * 0);  }  .ctv\\:right-0\\.5 {    right: calc(var(--ctv-spacing) * .5);  }  .ctv\\:right-1 {    right: calc(var(--ctv-spacing) * 1);  }  .ctv\\:right-2 {    right: calc(var(--ctv-spacing) * 2);  }  .ctv\\:right-4 {    right: calc(var(--ctv-spacing) * 4);  }  .ctv\\:right-\\[3px\\] {    right: 3px;  }  .ctv\\:right-\\[14px\\] {    right: 14px;  }  .ctv\\:bottom-0 {    bottom: calc(var(--ctv-spacing) * 0);  }  .ctv\\:bottom-0\\.5 {    bottom: calc(var(--ctv-spacing) * .5);  }  .ctv\\:bottom-1\\.5 {    bottom: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:bottom-2 {    bottom: calc(var(--ctv-spacing) * 2);  }  .ctv\\:bottom-4 {    bottom: calc(var(--ctv-spacing) * 4);  }  .ctv\\:bottom-px {    bottom: 1px;  }  .ctv\\:left-0 {    left: calc(var(--ctv-spacing) * 0);  }  .ctv\\:left-0\\.5 {    left: calc(var(--ctv-spacing) * .5);  }  .ctv\\:left-1\\.5 {    left: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:left-1\\/2 {    left: 50%;  }  .ctv\\:left-2 {    left: calc(var(--ctv-spacing) * 2);  }  .ctv\\:left-4 {    left: calc(var(--ctv-spacing) * 4);  }  .ctv\\:z-10 {    z-index: 10;  }  .ctv\\:z-20 {    z-index: 20;  }  .ctv\\:z-30 {    z-index: 30;  }  .ctv\\:z-3000 {    z-index: 3000;  }  .ctv\\:z-\\[1\\] {    z-index: 1;  }  .ctv\\:z-\\[2\\] {    z-index: 2;  }  .ctv\\:z-\\[3\\] {    z-index: 3;  }  .ctv\\:z-\\[5\\] {    z-index: 5;  }  .ctv\\:z-\\[6\\] {    z-index: 6;  }  .ctv\\:z-\\[7\\] {    z-index: 7;  }  .ctv\\:z-\\[9999\\] {    z-index: 9999;  }  .ctv\\:z-\\[10000\\] {    z-index: 10000;  }  .ctv\\:m-0 {    margin: calc(var(--ctv-spacing) * 0);  }  .ctv\\:m-0\\.5 {    margin: calc(var(--ctv-spacing) * .5);  }  .ctv\\:m-1 {    margin: calc(var(--ctv-spacing) * 1);  }  .ctv\\:-mx-1 {    margin-inline: calc(var(--ctv-spacing) * -1);  }  .ctv\\:-mx-2\\.5 {    margin-inline: calc(var(--ctv-spacing) * -2.5);  }  .ctv\\:mx-2\\.5 {    margin-inline: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:mx-auto {    margin-inline: auto;  }  .ctv\\:mx-px {    margin-inline: 1px;  }  .ctv\\:my-1 {    margin-block: calc(var(--ctv-spacing) * 1);  }  .ctv\\:my-1\\.5 {    margin-block: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:-mt-2 {    margin-top: calc(var(--ctv-spacing) * -2);  }  .ctv\\:mt-0\\.5 {    margin-top: calc(var(--ctv-spacing) * .5);  }  .ctv\\:mt-1 {    margin-top: calc(var(--ctv-spacing) * 1);  }  .ctv\\:mt-3\\.5 {    margin-top: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:mt-4 {    margin-top: calc(var(--ctv-spacing) * 4);  }  .ctv\\:mr-1 {    margin-right: calc(var(--ctv-spacing) * 1);  }  .ctv\\:-mb-px {    margin-bottom: -1px;  }  .ctv\\:mb-1 {    margin-bottom: calc(var(--ctv-spacing) * 1);  }  .ctv\\:mb-1\\.5 {    margin-bottom: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:mb-2 {    margin-bottom: calc(var(--ctv-spacing) * 2);  }  .ctv\\:mb-2\\.5 {    margin-bottom: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:mb-\\[3px\\] {    margin-bottom: 3px;  }  .ctv\\:-ml-px {    margin-left: -1px;  }  .ctv\\:ml-0\\.5 {    margin-left: calc(var(--ctv-spacing) * .5);  }  .ctv\\:ml-auto {    margin-left: auto;  }  .ctv\\:box-border {    box-sizing: border-box;  }  .ctv\\:box-content {    box-sizing: content-box;  }  .ctv\\:line-clamp-2 {    -webkit-line-clamp: 2;    -webkit-box-orient: vertical;    display: -webkit-box;    overflow: hidden;  }  .ctv\\:\\[display\\:-webkit-box\\] {    display: -webkit-box;  }  .ctv\\:block {    display: block;  }  .ctv\\:flex {    display: flex;  }  .ctv\\:grid {    display: grid;  }  .ctv\\:hidden {    display: none;  }  .ctv\\:inline-block {    display: inline-block;  }  .ctv\\:inline-flex {    display: inline-flex;  }  .ctv\\:aspect-square {    aspect-ratio: 1;  }  .ctv\\:aspect-video {    aspect-ratio: var(--ctv-aspect-video);  }  .ctv\\:size-2 {    width: calc(var(--ctv-spacing) * 2);    height: calc(var(--ctv-spacing) * 2);  }  .ctv\\:size-3 {    width: calc(var(--ctv-spacing) * 3);    height: calc(var(--ctv-spacing) * 3);  }  .ctv\\:size-3\\.5 {    width: calc(var(--ctv-spacing) * 3.5);    height: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:size-4 {    width: calc(var(--ctv-spacing) * 4);    height: calc(var(--ctv-spacing) * 4);  }  .ctv\\:size-5 {    width: calc(var(--ctv-spacing) * 5);    height: calc(var(--ctv-spacing) * 5);  }  .ctv\\:size-6 {    width: calc(var(--ctv-spacing) * 6);    height: calc(var(--ctv-spacing) * 6);  }  .ctv\\:size-7 {    width: calc(var(--ctv-spacing) * 7);    height: calc(var(--ctv-spacing) * 7);  }  .ctv\\:size-8 {    width: calc(var(--ctv-spacing) * 8);    height: calc(var(--ctv-spacing) * 8);  }  .ctv\\:size-9 {    width: calc(var(--ctv-spacing) * 9);    height: calc(var(--ctv-spacing) * 9);  }  .ctv\\:size-10 {    width: calc(var(--ctv-spacing) * 10);    height: calc(var(--ctv-spacing) * 10);  }  .ctv\\:size-\\[22px\\] {    width: 22px;    height: 22px;  }  .ctv\\:size-full {    width: 100%;    height: 100%;  }  .ctv\\:h-1\\.5 {    height: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:h-4 {    height: calc(var(--ctv-spacing) * 4);  }  .ctv\\:h-5 {    height: calc(var(--ctv-spacing) * 5);  }  .ctv\\:h-6 {    height: calc(var(--ctv-spacing) * 6);  }  .ctv\\:h-7 {    height: calc(var(--ctv-spacing) * 7);  }  .ctv\\:h-8 {    height: calc(var(--ctv-spacing) * 8);  }  .ctv\\:h-9 {    height: calc(var(--ctv-spacing) * 9);  }  .ctv\\:h-10 {    height: calc(var(--ctv-spacing) * 10);  }  .ctv\\:h-11 {    height: calc(var(--ctv-spacing) * 11);  }  .ctv\\:h-80 {    height: calc(var(--ctv-spacing) * 80);  }  .ctv\\:h-\\[13px\\] {    height: 13px;  }  .ctv\\:h-\\[18px\\] {    height: 18px;  }  .ctv\\:h-\\[72px\\] {    height: 72px;  }  .ctv\\:h-\\[76px\\] {    height: 76px;  }  .ctv\\:h-\\[224px\\] {    height: 224px;  }  .ctv\\:h-\\[260px\\] {    height: 260px;  }  .ctv\\:h-\\[280px\\] {    height: 280px;  }  .ctv\\:h-\\[340px\\] {    height: 340px;  }  .ctv\\:h-\\[350px\\] {    height: 350px;  }  .ctv\\:h-full {    height: 100%;  }  .ctv\\:max-h-40 {    max-height: calc(var(--ctv-spacing) * 40);  }  .ctv\\:max-h-44 {    max-height: calc(var(--ctv-spacing) * 44);  }  .ctv\\:max-h-52 {    max-height: calc(var(--ctv-spacing) * 52);  }  .ctv\\:max-h-56 {    max-height: calc(var(--ctv-spacing) * 56);  }  .ctv\\:max-h-60 {    max-height: calc(var(--ctv-spacing) * 60);  }  .ctv\\:max-h-64 {    max-height: calc(var(--ctv-spacing) * 64);  }  .ctv\\:max-h-80 {    max-height: calc(var(--ctv-spacing) * 80);  }  .ctv\\:max-h-\\[46vh\\] {    max-height: 46vh;  }  .ctv\\:max-h-\\[60vh\\] {    max-height: 60vh;  }  .ctv\\:max-h-\\[360px\\] {    max-height: 360px;  }  .ctv\\:max-h-\\[calc\\(100vh-48px\\)\\] {    max-height: calc(100vh - 48px);  }  .ctv\\:max-h-full {    max-height: 100%;  }  .ctv\\:min-h-0 {    min-height: calc(var(--ctv-spacing) * 0);  }  .ctv\\:min-h-10 {    min-height: calc(var(--ctv-spacing) * 10);  }  .ctv\\:min-h-11 {    min-height: calc(var(--ctv-spacing) * 11);  }  .ctv\\:min-h-12 {    min-height: calc(var(--ctv-spacing) * 12);  }  .ctv\\:min-h-14 {    min-height: calc(var(--ctv-spacing) * 14);  }  .ctv\\:min-h-20 {    min-height: calc(var(--ctv-spacing) * 20);  }  .ctv\\:min-h-\\[22px\\] {    min-height: 22px;  }  .ctv\\:min-h-\\[116px\\] {    min-height: 116px;  }  .ctv\\:min-h-\\[160px\\] {    min-height: 160px;  }  .ctv\\:min-h-\\[280px\\] {    min-height: 280px;  }  .ctv\\:min-h-\\[320px\\] {    min-height: 320px;  }  .ctv\\:w-0\\.5 {    width: calc(var(--ctv-spacing) * .5);  }  .ctv\\:w-2 {    width: calc(var(--ctv-spacing) * 2);  }  .ctv\\:w-2\\.5 {    width: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:w-3 {    width: calc(var(--ctv-spacing) * 3);  }  .ctv\\:w-4 {    width: calc(var(--ctv-spacing) * 4);  }  .ctv\\:w-7 {    width: calc(var(--ctv-spacing) * 7);  }  .ctv\\:w-12 {    width: calc(var(--ctv-spacing) * 12);  }  .ctv\\:w-14 {    width: calc(var(--ctv-spacing) * 14);  }  .ctv\\:w-20 {    width: calc(var(--ctv-spacing) * 20);  }  .ctv\\:w-24 {    width: calc(var(--ctv-spacing) * 24);  }  .ctv\\:w-28 {    width: calc(var(--ctv-spacing) * 28);  }  .ctv\\:w-44 {    width: calc(var(--ctv-spacing) * 44);  }  .ctv\\:w-48 {    width: calc(var(--ctv-spacing) * 48);  }  .ctv\\:w-64 {    width: calc(var(--ctv-spacing) * 64);  }  .ctv\\:w-\\[38px\\] {    width: 38px;  }  .ctv\\:w-\\[76px\\] {    width: 76px;  }  .ctv\\:w-\\[140px\\] {    width: 140px;  }  .ctv\\:w-\\[180px\\] {    width: 180px;  }  .ctv\\:w-auto {    width: auto;  }  .ctv\\:w-full {    width: 100%;  }  .ctv\\:max-w-\\[60vw\\] {    max-width: 60vw;  }  .ctv\\:max-w-\\[70vw\\] {    max-width: 70vw;  }  .ctv\\:max-w-\\[90px\\] {    max-width: 90px;  }  .ctv\\:max-w-\\[360px\\] {    max-width: 360px;  }  .ctv\\:max-w-full {    max-width: 100%;  }  .ctv\\:max-w-md {    max-width: var(--ctv-container-md);  }  .ctv\\:min-w-0 {    min-width: calc(var(--ctv-spacing) * 0);  }  .ctv\\:min-w-2 {    min-width: calc(var(--ctv-spacing) * 2);  }  .ctv\\:min-w-6 {    min-width: calc(var(--ctv-spacing) * 6);  }  .ctv\\:min-w-8 {    min-width: calc(var(--ctv-spacing) * 8);  }  .ctv\\:min-w-9 {    min-width: calc(var(--ctv-spacing) * 9);  }  .ctv\\:min-w-64 {    min-width: calc(var(--ctv-spacing) * 64);  }  .ctv\\:min-w-\\[44px\\] {    min-width: 44px;  }  .ctv\\:min-w-\\[60px\\] {    min-width: 60px;  }  .ctv\\:min-w-\\[var\\(--reka-combobox-trigger-width\\)\\] {    min-width: var(--reka-combobox-trigger-width);  }  .ctv\\:flex-1 {    flex: 1;  }  .ctv\\:flex-auto {    flex: auto;  }  .ctv\\:shrink-0 {    flex-shrink: 0;  }  .ctv\\:border-collapse {    border-collapse: collapse;  }  .ctv\\:-translate-x-1\\/2 {    --tw-translate-x: calc(calc(1 / 2 * 100%) * -1);    translate: var(--tw-translate-x) var(--tw-translate-y);  }  .ctv\\:-translate-y-1\\/2 {    --tw-translate-y: calc(calc(1 / 2 * 100%) * -1);    translate: var(--tw-translate-x) var(--tw-translate-y);  }  .ctv\\:animate-pulse {    animation: var(--ctv-animate-pulse);  }  .ctv\\:cursor-\\[inherit\\] {    cursor: inherit;  }  .ctv\\:cursor-crosshair {    cursor: crosshair;  }  .ctv\\:cursor-default {    cursor: default;  }  .ctv\\:cursor-ew-resize {    cursor: ew-resize;  }  .ctv\\:cursor-grab {    cursor: grab;  }  .ctv\\:cursor-grabbing {    cursor: grabbing;  }  .ctv\\:cursor-move {    cursor: move;  }  .ctv\\:cursor-none {    cursor: none;  }  .ctv\\:cursor-not-allowed {    cursor: not-allowed;  }  .ctv\\:cursor-ns-resize {    cursor: ns-resize;  }  .ctv\\:cursor-pointer {    cursor: pointer;  }  .ctv\\:cursor-zoom-out {    cursor: zoom-out;  }  .ctv\\:touch-manipulation {    touch-action: manipulation;  }  .ctv\\:touch-none {    touch-action: none;  }  .ctv\\:resize-none {    resize: none;  }  .ctv\\:resize-y {    resize: vertical;  }  .ctv\\:list-none {    list-style-type: none;  }  .ctv\\:appearance-none {    appearance: none;  }  .ctv\\:grid-cols-2 {    grid-template-columns: repeat(2, minmax(0, 1fr));  }  .ctv\\:grid-cols-4 {    grid-template-columns: repeat(4, minmax(0, 1fr));  }  .ctv\\:grid-cols-\\[42px_1fr\\] {    grid-template-columns: 42px 1fr;  }  .ctv\\:grid-cols-\\[60px_1fr\\] {    grid-template-columns: 60px 1fr;  }  .ctv\\:grid-cols-\\[64px_1fr\\] {    grid-template-columns: 64px 1fr;  }  .ctv\\:grid-cols-\\[64px_1fr_48px\\] {    grid-template-columns: 64px 1fr 48px;  }  .ctv\\:grid-cols-\\[80px_1fr_36px\\] {    grid-template-columns: 80px 1fr 36px;  }  .ctv\\:grid-cols-\\[88px_1fr\\] {    grid-template-columns: 88px 1fr;  }  .ctv\\:grid-cols-\\[max-content_1fr\\] {    grid-template-columns: max-content 1fr;  }  .ctv\\:grid-cols-\\[repeat\\(auto-fill\\,minmax\\(64px\\,1fr\\)\\)\\] {    grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));  }  .ctv\\:grid-cols-\\[repeat\\(auto-fill\\,minmax\\(80px\\,1fr\\)\\)\\] {    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));  }  .ctv\\:grid-cols-\\[repeat\\(auto-fill\\,minmax\\(110px\\,1fr\\)\\)\\] {    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));  }  .ctv\\:grid-cols-\\[repeat\\(auto-fill\\,minmax\\(min\\(160px\\,42vw\\)\\,1fr\\)\\)\\] {    grid-template-columns: repeat(auto-fill, minmax(min(160px, 42vw), 1fr));  }  .ctv\\:flex-col {    flex-direction: column;  }  .ctv\\:flex-wrap {    flex-wrap: wrap;  }  .ctv\\:items-baseline {    align-items: baseline;  }  .ctv\\:items-center {    align-items: center;  }  .ctv\\:items-start {    align-items: flex-start;  }  .ctv\\:justify-around {    justify-content: space-around;  }  .ctv\\:justify-between {    justify-content: space-between;  }  .ctv\\:justify-center {    justify-content: center;  }  .ctv\\:justify-end {    justify-content: flex-end;  }  .ctv\\:gap-0\\.5 {    gap: calc(var(--ctv-spacing) * .5);  }  .ctv\\:gap-1 {    gap: calc(var(--ctv-spacing) * 1);  }  .ctv\\:gap-1\\.5 {    gap: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:gap-2 {    gap: calc(var(--ctv-spacing) * 2);  }  .ctv\\:gap-2\\.5 {    gap: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:gap-3 {    gap: calc(var(--ctv-spacing) * 3);  }  .ctv\\:gap-\\[3px\\] {    gap: 3px;  }  .ctv\\:gap-px {    gap: 1px;  }  .ctv\\:gap-x-2\\.5 {    column-gap: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:gap-y-\\[3px\\] {    row-gap: 3px;  }  .ctv\\:self-end {    align-self: flex-end;  }  .ctv\\:self-start {    align-self: flex-start;  }  .ctv\\:truncate {    text-overflow: ellipsis;    white-space: nowrap;    overflow: hidden;  }  .ctv\\:overflow-auto {    overflow: auto;  }  .ctv\\:overflow-hidden {    overflow: hidden;  }  .ctv\\:overflow-x-auto {    overflow-x: auto;  }  .ctv\\:overflow-y-auto {    overflow-y: auto;  }  .ctv\\:overflow-y-hidden {    overflow-y: hidden;  }  .ctv\\:overflow-y-scroll {    overflow-y: scroll;  }  .ctv\\:rounded {    border-radius: .25rem;  }  .ctv\\:rounded-full {    border-radius: 3.40282e38px;  }  .ctv\\:rounded-lg {    border-radius: var(--ctv-radius-lg);  }  .ctv\\:rounded-md {    border-radius: var(--ctv-radius-md);  }  .ctv\\:rounded-none {    border-radius: 0;  }  .ctv\\:rounded-sm {    border-radius: var(--ctv-radius-sm);  }  .ctv\\:rounded-t {    border-top-left-radius: .25rem;    border-top-right-radius: .25rem;  }  .ctv\\:border {    border-style: var(--tw-border-style);    border-width: 1px;  }  .ctv\\:border-0 {    border-style: var(--tw-border-style);    border-width: 0;  }  .ctv\\:border-2 {    border-style: var(--tw-border-style);    border-width: 2px;  }  .ctv\\:border-\\[2\\.5px\\] {    border-style: var(--tw-border-style);    border-width: 2.5px;  }  .ctv\\:border-t {    border-top-style: var(--tw-border-style);    border-top-width: 1px;  }  .ctv\\:border-b {    border-bottom-style: var(--tw-border-style);    border-bottom-width: 1px;  }  .ctv\\:border-b-0 {    border-bottom-style: var(--tw-border-style);    border-bottom-width: 0;  }  .ctv\\:border-l {    border-left-style: var(--tw-border-style);    border-left-width: 1px;  }  .ctv\\:border-l-2 {    border-left-style: var(--tw-border-style);    border-left-width: 2px;  }  .ctv\\:border-dashed {    --tw-border-style: dashed;    border-style: dashed;  }  .ctv\\:border-none {    --tw-border-style: none;    border-style: none;  }  .ctv\\:border-solid {    --tw-border-style: solid;    border-style: solid;  }  .ctv\\:border-\\[rgb\\(200_130_255\\/0\\.4\\)\\] {    border-color: #c882ff66;  }  .ctv\\:border-\\[rgb\\(233_61_130\\/0\\.3\\)\\] {    border-color: #e93d824d;  }  .ctv\\:border-\\[rgb\\(233_61_130\\/0\\.4\\)\\] {    border-color: #e93d8266;  }  .ctv\\:border-black\\/70 {    border-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-black\\/70 {      border-color: color-mix(in oklab, var(--ctv-color-black) 70%, transparent);    }  }  .ctv\\:border-border-default {    border-color: var(--border-default, #ffffff26);  }  .ctv\\:border-border-subtle {    border-color: var(--border-subtle, #ffffff14);  }  .ctv\\:border-destructive-background, .ctv\\:border-destructive-background\\/30 {    border-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-destructive-background\\/30 {      border-color: color-mix(in oklab, var(--destructive-background, #c0392b) 30%, transparent);    }  }  .ctv\\:border-destructive-background\\/40 {    border-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-destructive-background\\/40 {      border-color: color-mix(in oklab, var(--destructive-background, #c0392b) 40%, transparent);    }  }  .ctv\\:border-destructive-background\\/50 {    border-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-destructive-background\\/50 {      border-color: color-mix(in oklab, var(--destructive-background, #c0392b) 50%, transparent);    }  }  .ctv\\:border-destructive-background\\/55 {    border-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-destructive-background\\/55 {      border-color: color-mix(in oklab, var(--destructive-background, #c0392b) 55%, transparent);    }  }  .ctv\\:border-interface-menu-stroke {    border-color: var(--interface-menu-stroke, #ffffff1a);  }  .ctv\\:border-primary-background, .ctv\\:border-primary-background\\/25 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/25 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 25%, transparent);    }  }  .ctv\\:border-primary-background\\/30 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/30 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 30%, transparent);    }  }  .ctv\\:border-primary-background\\/40 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/40 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 40%, transparent);    }  }  .ctv\\:border-primary-background\\/45 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/45 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 45%, transparent);    }  }  .ctv\\:border-primary-background\\/50 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/50 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 50%, transparent);    }  }  .ctv\\:border-primary-background\\/60 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/60 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 60%, transparent);    }  }  .ctv\\:border-primary-background\\/70 {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-primary-background\\/70 {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 70%, transparent);    }  }  .ctv\\:border-success-background\\/30 {    border-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-success-background\\/30 {      border-color: color-mix(in oklab, var(--success-background, #2e9e4f) 30%, transparent);    }  }  .ctv\\:border-success-background\\/50 {    border-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-success-background\\/50 {      border-color: color-mix(in oklab, var(--success-background, #2e9e4f) 50%, transparent);    }  }  .ctv\\:border-transparent {    border-color: #0000;  }  .ctv\\:border-warning-background\\/25 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/25 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 25%, transparent);    }  }  .ctv\\:border-warning-background\\/40 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/40 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 40%, transparent);    }  }  .ctv\\:border-warning-background\\/50 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/50 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 50%, transparent);    }  }  .ctv\\:border-warning-background\\/55 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/55 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 55%, transparent);    }  }  .ctv\\:border-warning-background\\/70 {    border-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-warning-background\\/70 {      border-color: color-mix(in oklab, var(--warning-background, #d39e00) 70%, transparent);    }  }  .ctv\\:border-white, .ctv\\:border-white\\/10 {    border-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-white\\/10 {      border-color: color-mix(in oklab, var(--ctv-color-white) 10%, transparent);    }  }  .ctv\\:border-white\\/15 {    border-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-white\\/15 {      border-color: color-mix(in oklab, var(--ctv-color-white) 15%, transparent);    }  }  .ctv\\:border-white\\/20 {    border-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-white\\/20 {      border-color: color-mix(in oklab, var(--ctv-color-white) 20%, transparent);    }  }  .ctv\\:border-white\\/30 {    border-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-white\\/30 {      border-color: color-mix(in oklab, var(--ctv-color-white) 30%, transparent);    }  }  .ctv\\:border-b-transparent {    border-bottom-color: #0000;  }  .ctv\\:border-b-warning-background\\/15 {    border-bottom-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:border-b-warning-background\\/15 {      border-bottom-color: color-mix(in oklab, var(--warning-background, #d39e00) 15%, transparent);    }  }  .ctv\\:bg-\\[rgb\\(78_168_255\\/0\\.25\\)\\] {    background-color: #4ea8ff40;  }  .ctv\\:bg-\\[rgb\\(120_200_120\\/0\\.25\\)\\] {    background-color: #78c87840;  }  .ctv\\:bg-\\[rgb\\(200_130_255\\/0\\.25\\)\\] {    background-color: #c882ff40;  }  .ctv\\:bg-\\[rgb\\(255_100_100\\/0\\.22\\)\\] {    background-color: #ff646438;  }  .ctv\\:bg-\\[rgb\\(255_140_200\\/0\\.25\\)\\] {    background-color: #ff8cc840;  }  .ctv\\:bg-\\[rgb\\(255_140_200\\/0\\.85\\)\\] {    background-color: #ff8cc8d9;  }  .ctv\\:bg-\\[rgb\\(255_171_64\\/0\\.25\\)\\] {    background-color: #ffab4040;  }  .ctv\\:bg-base-background {    background-color: var(--base-background, #1e1e1e);  }  .ctv\\:bg-base-foreground\\/5 {    background-color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-base-foreground\\/5 {      background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 5%, transparent);    }  }  .ctv\\:bg-base-foreground\\/10 {    background-color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-base-foreground\\/10 {      background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 10%, transparent);    }  }  .ctv\\:bg-base-foreground\\/\\[0\\.03\\] {    background-color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-base-foreground\\/\\[0\\.03\\] {      background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 3%, transparent);    }  }  .ctv\\:bg-black, .ctv\\:bg-black\\/20 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/20 {      background-color: color-mix(in oklab, var(--ctv-color-black) 20%, transparent);    }  }  .ctv\\:bg-black\\/30 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/30 {      background-color: color-mix(in oklab, var(--ctv-color-black) 30%, transparent);    }  }  .ctv\\:bg-black\\/50 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/50 {      background-color: color-mix(in oklab, var(--ctv-color-black) 50%, transparent);    }  }  .ctv\\:bg-black\\/55 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/55 {      background-color: color-mix(in oklab, var(--ctv-color-black) 55%, transparent);    }  }  .ctv\\:bg-black\\/60 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/60 {      background-color: color-mix(in oklab, var(--ctv-color-black) 60%, transparent);    }  }  .ctv\\:bg-black\\/65 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/65 {      background-color: color-mix(in oklab, var(--ctv-color-black) 65%, transparent);    }  }  .ctv\\:bg-black\\/70 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/70 {      background-color: color-mix(in oklab, var(--ctv-color-black) 70%, transparent);    }  }  .ctv\\:bg-black\\/80 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/80 {      background-color: color-mix(in oklab, var(--ctv-color-black) 80%, transparent);    }  }  .ctv\\:bg-black\\/90 {    background-color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-black\\/90 {      background-color: color-mix(in oklab, var(--ctv-color-black) 90%, transparent);    }  }  .ctv\\:bg-destructive-background, .ctv\\:bg-destructive-background\\/10 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-destructive-background\\/10 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 10%, transparent);    }  }  .ctv\\:bg-destructive-background\\/15 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-destructive-background\\/15 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 15%, transparent);    }  }  .ctv\\:bg-destructive-background\\/30 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-destructive-background\\/30 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 30%, transparent);    }  }  .ctv\\:bg-destructive-background\\/70 {    background-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-destructive-background\\/70 {      background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 70%, transparent);    }  }  .ctv\\:bg-interface-menu-component-surface-hovered {    background-color: var(--interface-menu-component-surface-hovered, #ffffff14);  }  .ctv\\:bg-interface-menu-component-surface-selected {    background-color: var(--interface-menu-component-surface-selected, #4ea8ff2e);  }  .ctv\\:bg-interface-menu-surface, .ctv\\:bg-interface-menu-surface\\/85 {    background-color: var(--interface-menu-surface, #232323);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-interface-menu-surface\\/85 {      background-color: color-mix(in oklab, var(--interface-menu-surface, #232323) 85%, transparent);    }  }  .ctv\\:bg-interface-panel-surface {    background-color: var(--interface-panel-surface, #1e1e1e);  }  .ctv\\:bg-primary-background, .ctv\\:bg-primary-background\\/5 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/5 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 5%, transparent);    }  }  .ctv\\:bg-primary-background\\/10 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/10 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 10%, transparent);    }  }  .ctv\\:bg-primary-background\\/15 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/15 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 15%, transparent);    }  }  .ctv\\:bg-primary-background\\/20 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/20 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 20%, transparent);    }  }  .ctv\\:bg-primary-background\\/25 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/25 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 25%, transparent);    }  }  .ctv\\:bg-primary-background\\/30 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/30 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 30%, transparent);    }  }  .ctv\\:bg-primary-background\\/85 {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/85 {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 85%, transparent);    }  }  .ctv\\:bg-primary-background\\/\\[0\\.06\\] {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-primary-background\\/\\[0\\.06\\] {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 6%, transparent);    }  }  .ctv\\:bg-secondary-background {    background-color: var(--secondary-background, #ffffff0f);  }  .ctv\\:bg-secondary-background-hover {    background-color: var(--secondary-background-hover, #ffffff1a);  }  .ctv\\:bg-secondary-background-selected {    background-color: var(--secondary-background-selected, #4ea8ff33);  }  .ctv\\:bg-secondary-background\\/40 {    background-color: var(--secondary-background, #ffffff0f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-secondary-background\\/40 {      background-color: color-mix(in oklab, var(--secondary-background, #ffffff0f) 40%, transparent);    }  }  .ctv\\:bg-success-background\\/5 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-success-background\\/5 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 5%, transparent);    }  }  .ctv\\:bg-success-background\\/10 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-success-background\\/10 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 10%, transparent);    }  }  .ctv\\:bg-success-background\\/15 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-success-background\\/15 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 15%, transparent);    }  }  .ctv\\:bg-success-background\\/20 {    background-color: var(--success-background, #2e9e4f);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-success-background\\/20 {      background-color: color-mix(in oklab, var(--success-background, #2e9e4f) 20%, transparent);    }  }  .ctv\\:bg-transparent {    background-color: #0000;  }  .ctv\\:bg-warning-background, .ctv\\:bg-warning-background\\/5 {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/5 {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 5%, transparent);    }  }  .ctv\\:bg-warning-background\\/10 {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/10 {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 10%, transparent);    }  }  .ctv\\:bg-warning-background\\/15 {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/15 {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 15%, transparent);    }  }  .ctv\\:bg-warning-background\\/30 {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/30 {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 30%, transparent);    }  }  .ctv\\:bg-warning-background\\/\\[0\\.03\\] {    background-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-warning-background\\/\\[0\\.03\\] {      background-color: color-mix(in oklab, var(--warning-background, #d39e00) 3%, transparent);    }  }  .ctv\\:bg-white, .ctv\\:bg-white\\/10 {    background-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-white\\/10 {      background-color: color-mix(in oklab, var(--ctv-color-white) 10%, transparent);    }  }  .ctv\\:bg-white\\/30 {    background-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-white\\/30 {      background-color: color-mix(in oklab, var(--ctv-color-white) 30%, transparent);    }  }  .ctv\\:bg-white\\/70 {    background-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-white\\/70 {      background-color: color-mix(in oklab, var(--ctv-color-white) 70%, transparent);    }  }  .ctv\\:bg-white\\/85 {    background-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-white\\/85 {      background-color: color-mix(in oklab, var(--ctv-color-white) 85%, transparent);    }  }  .ctv\\:bg-white\\/90 {    background-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:bg-white\\/90 {      background-color: color-mix(in oklab, var(--ctv-color-white) 90%, transparent);    }  }  .ctv\\:bg-linear-to-b {    --tw-gradient-position: to bottom;  }  @supports (background-image: linear-gradient(in lab, red, red)) {    .ctv\\:bg-linear-to-b {      --tw-gradient-position: to bottom in oklab;    }  }  .ctv\\:bg-linear-to-b {    background-image: linear-gradient(var(--tw-gradient-stops));  }  .ctv\\:bg-linear-to-r {    --tw-gradient-position: to right;  }  @supports (background-image: linear-gradient(in lab, red, red)) {    .ctv\\:bg-linear-to-r {      --tw-gradient-position: to right in oklab;    }  }  .ctv\\:bg-linear-to-r {    background-image: linear-gradient(var(--tw-gradient-stops));  }  .ctv\\:from-primary-background\\/85 {    --tw-gradient-from: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:from-primary-background\\/85 {      --tw-gradient-from: color-mix(in oklab, var(--primary-background, #4ea8ff99) 85%, transparent);    }  }  .ctv\\:from-primary-background\\/85 {    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .ctv\\:from-transparent {    --tw-gradient-from: transparent;    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .ctv\\:to-black\\/75 {    --tw-gradient-to: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:to-black\\/75 {      --tw-gradient-to: color-mix(in oklab, var(--ctv-color-black) 75%, transparent);    }  }  .ctv\\:to-black\\/75 {    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .ctv\\:to-primary-background-hover\\/85 {    --tw-gradient-to: var(--primary-background-hover, #4ea8ffbf);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:to-primary-background-hover\\/85 {      --tw-gradient-to: color-mix(in oklab, var(--primary-background-hover, #4ea8ffbf) 85%, transparent);    }  }  .ctv\\:to-primary-background-hover\\/85 {    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));  }  .ctv\\:object-contain {    object-fit: contain;  }  .ctv\\:object-cover {    object-fit: cover;  }  .ctv\\:p-0 {    padding: calc(var(--ctv-spacing) * 0);  }  .ctv\\:p-0\\.5 {    padding: calc(var(--ctv-spacing) * .5);  }  .ctv\\:p-1 {    padding: calc(var(--ctv-spacing) * 1);  }  .ctv\\:p-1\\.5 {    padding: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:p-2 {    padding: calc(var(--ctv-spacing) * 2);  }  .ctv\\:p-2\\.5 {    padding: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:p-3 {    padding: calc(var(--ctv-spacing) * 3);  }  .ctv\\:p-3\\.5 {    padding: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:p-4 {    padding: calc(var(--ctv-spacing) * 4);  }  .ctv\\:p-6 {    padding: calc(var(--ctv-spacing) * 6);  }  .ctv\\:px-0\\.5 {    padding-inline: calc(var(--ctv-spacing) * .5);  }  .ctv\\:px-1 {    padding-inline: calc(var(--ctv-spacing) * 1);  }  .ctv\\:px-1\\.5 {    padding-inline: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:px-2 {    padding-inline: calc(var(--ctv-spacing) * 2);  }  .ctv\\:px-2\\.5 {    padding-inline: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:px-3 {    padding-inline: calc(var(--ctv-spacing) * 3);  }  .ctv\\:px-3\\.5 {    padding-inline: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:px-4 {    padding-inline: calc(var(--ctv-spacing) * 4);  }  .ctv\\:px-\\[3px\\] {    padding-inline: 3px;  }  .ctv\\:px-\\[5px\\] {    padding-inline: 5px;  }  .ctv\\:py-0 {    padding-block: calc(var(--ctv-spacing) * 0);  }  .ctv\\:py-0\\.5 {    padding-block: calc(var(--ctv-spacing) * .5);  }  .ctv\\:py-1 {    padding-block: calc(var(--ctv-spacing) * 1);  }  .ctv\\:py-1\\.5 {    padding-block: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:py-2 {    padding-block: calc(var(--ctv-spacing) * 2);  }  .ctv\\:py-2\\.5 {    padding-block: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:py-4 {    padding-block: calc(var(--ctv-spacing) * 4);  }  .ctv\\:py-5 {    padding-block: calc(var(--ctv-spacing) * 5);  }  .ctv\\:py-6 {    padding-block: calc(var(--ctv-spacing) * 6);  }  .ctv\\:py-\\[3px\\] {    padding-block: 3px;  }  .ctv\\:py-\\[5px\\] {    padding-block: 5px;  }  .ctv\\:py-px {    padding-block: 1px;  }  .ctv\\:pt-1 {    padding-top: calc(var(--ctv-spacing) * 1);  }  .ctv\\:pt-2 {    padding-top: calc(var(--ctv-spacing) * 2);  }  .ctv\\:pt-2\\.5 {    padding-top: calc(var(--ctv-spacing) * 2.5);  }  .ctv\\:pt-3\\.5 {    padding-top: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:pr-2 {    padding-right: calc(var(--ctv-spacing) * 2);  }  .ctv\\:pb-1 {    padding-bottom: calc(var(--ctv-spacing) * 1);  }  .ctv\\:pb-2 {    padding-bottom: calc(var(--ctv-spacing) * 2);  }  .ctv\\:pb-3\\.5 {    padding-bottom: calc(var(--ctv-spacing) * 3.5);  }  .ctv\\:pb-6 {    padding-bottom: calc(var(--ctv-spacing) * 6);  }  .ctv\\:pl-1\\.5 {    padding-left: calc(var(--ctv-spacing) * 1.5);  }  .ctv\\:pl-7 {    padding-left: calc(var(--ctv-spacing) * 7);  }  .ctv\\:text-center {    text-align: center;  }  .ctv\\:text-left {    text-align: left;  }  .ctv\\:text-right {    text-align: right;  }  .ctv\\:\\[font-family\\:inherit\\] {    font-family: inherit;  }  .ctv\\:font-mono {    font-family: var(--ctv-font-mono);  }  .ctv\\:text-2xl {    font-size: var(--ctv-text-2xl);    line-height: var(--tw-leading, var(--ctv-text-2xl--line-height));  }  .ctv\\:text-2xs {    font-size: var(--ctv-text-2xs);    line-height: var(--tw-leading, var(--ctv-text-2xs--line-height));  }  .ctv\\:text-3xs {    font-size: var(--ctv-text-3xs);    line-height: var(--tw-leading, var(--ctv-text-3xs--line-height));  }  .ctv\\:text-lg {    font-size: var(--ctv-text-lg);    line-height: var(--tw-leading, var(--ctv-text-lg--line-height));  }  .ctv\\:text-sm {    font-size: var(--ctv-text-sm);    line-height: var(--tw-leading, var(--ctv-text-sm--line-height));  }  .ctv\\:text-xs {    font-size: var(--ctv-text-xs);    line-height: var(--tw-leading, var(--ctv-text-xs--line-height));  }  .ctv\\:text-\\[8px\\] {    font-size: 8px;  }  .ctv\\:text-\\[10px\\] {    font-size: 10px;  }  .ctv\\:text-\\[11px\\] {    font-size: 11px;  }  .ctv\\:text-\\[13px\\] {    font-size: 13px;  }  .ctv\\:text-\\[22px\\] {    font-size: 22px;  }  .ctv\\:text-\\[28px\\] {    font-size: 28px;  }  .ctv\\:text-\\[32px\\] {    font-size: 32px;  }  .ctv\\:leading-\\[1\\.3\\] {    --tw-leading: 1.3;    line-height: 1.3;  }  .ctv\\:leading-none {    --tw-leading: 1;    line-height: 1;  }  .ctv\\:leading-relaxed {    --tw-leading: var(--ctv-leading-relaxed);    line-height: var(--ctv-leading-relaxed);  }  .ctv\\:leading-snug {    --tw-leading: var(--ctv-leading-snug);    line-height: var(--ctv-leading-snug);  }  .ctv\\:leading-tight {    --tw-leading: var(--ctv-leading-tight);    line-height: var(--ctv-leading-tight);  }  .ctv\\:font-bold {    --tw-font-weight: var(--ctv-font-weight-bold);    font-weight: var(--ctv-font-weight-bold);  }  .ctv\\:font-medium {    --tw-font-weight: var(--ctv-font-weight-medium);    font-weight: var(--ctv-font-weight-medium);  }  .ctv\\:font-semibold {    --tw-font-weight: var(--ctv-font-weight-semibold);    font-weight: var(--ctv-font-weight-semibold);  }  .ctv\\:tracking-wide {    --tw-tracking: var(--ctv-tracking-wide);    letter-spacing: var(--ctv-tracking-wide);  }  .ctv\\:tracking-wider {    --tw-tracking: var(--ctv-tracking-wider);    letter-spacing: var(--ctv-tracking-wider);  }  .ctv\\:break-words {    overflow-wrap: break-word;  }  .ctv\\:break-all {    word-break: break-all;  }  .ctv\\:text-ellipsis {    text-overflow: ellipsis;  }  .ctv\\:whitespace-normal {    white-space: normal;  }  .ctv\\:whitespace-nowrap {    white-space: nowrap;  }  .ctv\\:whitespace-pre-wrap {    white-space: pre-wrap;  }  .ctv\\:text-\\[\\#00FFD0\\] {    color: #00ffd0;  }  .ctv\\:text-\\[\\#9dd0ff\\] {    color: #9dd0ff;  }  .ctv\\:text-\\[\\#E93D82\\] {    color: #e93d82;  }  .ctv\\:text-\\[\\#FFB800\\] {    color: #ffb800;  }  .ctv\\:text-\\[\\#b5e3a5\\] {    color: #b5e3a5;  }  .ctv\\:text-\\[\\#d8b0ff\\] {    color: #d8b0ff;  }  .ctv\\:text-\\[\\#ffb0b0\\] {    color: #ffb0b0;  }  .ctv\\:text-\\[\\#ffb0d8\\] {    color: #ffb0d8;  }  .ctv\\:text-\\[\\#ffd089\\] {    color: #ffd089;  }  .ctv\\:text-base-foreground, .ctv\\:text-base-foreground\\/80 {    color: var(--base-foreground, #e0e0e0);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-base-foreground\\/80 {      color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 80%, transparent);    }  }  .ctv\\:text-black\\/80 {    color: var(--ctv-color-black);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-black\\/80 {      color: color-mix(in oklab, var(--ctv-color-black) 80%, transparent);    }  }  .ctv\\:text-destructive-background {    color: var(--destructive-background, #c0392b);  }  .ctv\\:text-gray-600 {    color: var(--ctv-color-gray-600);  }  .ctv\\:text-inherit {    color: inherit;  }  .ctv\\:text-muted-foreground, .ctv\\:text-muted-foreground\\/60 {    color: var(--muted-foreground, #888);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-muted-foreground\\/60 {      color: color-mix(in oklab, var(--muted-foreground, #888) 60%, transparent);    }  }  .ctv\\:text-muted-foreground\\/70 {    color: var(--muted-foreground, #888);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-muted-foreground\\/70 {      color: color-mix(in oklab, var(--muted-foreground, #888) 70%, transparent);    }  }  .ctv\\:text-muted-foreground\\/80 {    color: var(--muted-foreground, #888);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-muted-foreground\\/80 {      color: color-mix(in oklab, var(--muted-foreground, #888) 80%, transparent);    }  }  .ctv\\:text-primary-background {    color: var(--primary-background, #4ea8ff99);  }  .ctv\\:text-secondary-foreground {    color: var(--secondary-foreground, var(--base-foreground, #e0e0e0));  }  .ctv\\:text-success-background {    color: var(--success-background, #2e9e4f);  }  .ctv\\:text-warning-background, .ctv\\:text-warning-background\\/70 {    color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-warning-background\\/70 {      color: color-mix(in oklab, var(--warning-background, #d39e00) 70%, transparent);    }  }  .ctv\\:text-warning-background\\/75 {    color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-warning-background\\/75 {      color: color-mix(in oklab, var(--warning-background, #d39e00) 75%, transparent);    }  }  .ctv\\:text-white, .ctv\\:text-white\\/30 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/30 {      color: color-mix(in oklab, var(--ctv-color-white) 30%, transparent);    }  }  .ctv\\:text-white\\/35 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/35 {      color: color-mix(in oklab, var(--ctv-color-white) 35%, transparent);    }  }  .ctv\\:text-white\\/40 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/40 {      color: color-mix(in oklab, var(--ctv-color-white) 40%, transparent);    }  }  .ctv\\:text-white\\/50 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/50 {      color: color-mix(in oklab, var(--ctv-color-white) 50%, transparent);    }  }  .ctv\\:text-white\\/70 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/70 {      color: color-mix(in oklab, var(--ctv-color-white) 70%, transparent);    }  }  .ctv\\:text-white\\/85 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/85 {      color: color-mix(in oklab, var(--ctv-color-white) 85%, transparent);    }  }  .ctv\\:text-white\\/90 {    color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:text-white\\/90 {      color: color-mix(in oklab, var(--ctv-color-white) 90%, transparent);    }  }  .ctv\\:uppercase {    text-transform: uppercase;  }  .ctv\\:italic {    font-style: italic;  }  .ctv\\:tabular-nums {    --tw-numeric-spacing: tabular-nums;    font-variant-numeric: var(--tw-ordinal, ) var(--tw-slashed-zero, ) var(--tw-numeric-figure, ) var(--tw-numeric-spacing, ) var(--tw-numeric-fraction, );  }  .ctv\\:accent-\\[var\\(--primary-background\\)\\] {    accent-color: var(--primary-background);  }  .ctv\\:opacity-0 {    opacity: 0;  }  .ctv\\:opacity-50 {    opacity: .5;  }  .ctv\\:opacity-55 {    opacity: .55;  }  .ctv\\:opacity-60 {    opacity: .6;  }  .ctv\\:opacity-70 {    opacity: .7;  }  .ctv\\:opacity-75 {    opacity: .75;  }  .ctv\\:opacity-80 {    opacity: .8;  }  .ctv\\:opacity-100 {    opacity: 1;  }  .ctv\\:shadow {    --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, #0000001a), 0 1px 2px -1px var(--tw-shadow-color, #0000001a);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_0_1px_rgb\\(255_255_255\\/0\\.8\\)\\] {    --tw-shadow: 0 0 0 1px var(--tw-shadow-color, #fffc);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_0_1px_var\\(--primary-background\\)\\] {    --tw-shadow: 0 0 0 1px var(--tw-shadow-color, var(--primary-background));    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_0_9999px_rgb\\(0_0_0\\/0\\.5\\)\\] {    --tw-shadow: 0 0 0 9999px var(--tw-shadow-color, #00000080);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_2px_rgb\\(0_0_0\\/0\\.7\\)\\] {    --tw-shadow: 0 0 2px var(--tw-shadow-color, #000000b3);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_4px_rgb\\(0_0_0\\/0\\.6\\)\\] {    --tw-shadow: 0 0 4px var(--tw-shadow-color, #0009);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_0_8px_var\\(--primary-background\\)\\] {    --tw-shadow: 0 0 8px var(--tw-shadow-color, var(--primary-background));    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_1px_3px_rgb\\(0_0_0\\/0\\.5\\)\\] {    --tw-shadow: 0 1px 3px var(--tw-shadow-color, #00000080);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_1px_4px_rgb\\(0_0_0\\/0\\.5\\)\\] {    --tw-shadow: 0 1px 4px var(--tw-shadow-color, #00000080);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_8px_40px_rgb\\(0_0_0\\/0\\.6\\)\\] {    --tw-shadow: 0 8px 40px var(--tw-shadow-color, #0009);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-\\[0_16px_48px_rgb\\(0_0_0\\/0\\.5\\)\\] {    --tw-shadow: 0 16px 48px var(--tw-shadow-color, #00000080);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-md {    --tw-shadow: 0 4px 6px -1px var(--tw-shadow-color, #0000001a), 0 2px 4px -2px var(--tw-shadow-color, #0000001a);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:shadow-sm {    --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, #0000001a), 0 1px 2px -1px var(--tw-shadow-color, #0000001a);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:ring-2 {    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:ring-\\[5px\\] {    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(5px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:ring-primary-background, .ctv\\:ring-primary-background\\/50 {    --tw-ring-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:ring-primary-background\\/50 {      --tw-ring-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 50%, transparent);    }  }  .ctv\\:outline, .ctv\\:outline-1 {    outline-style: var(--tw-outline-style);    outline-width: 1px;  }  .ctv\\:-outline-offset-1 {    outline-offset: calc(1px * -1);  }  .ctv\\:outline-destructive-background\\/55 {    outline-color: var(--destructive-background, #c0392b);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:outline-destructive-background\\/55 {      outline-color: color-mix(in oklab, var(--destructive-background, #c0392b) 55%, transparent);    }  }  .ctv\\:outline-warning-background\\/50 {    outline-color: var(--warning-background, #d39e00);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:outline-warning-background\\/50 {      outline-color: color-mix(in oklab, var(--warning-background, #d39e00) 50%, transparent);    }  }  .ctv\\:outline-white\\/70 {    outline-color: var(--ctv-color-white);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:outline-white\\/70 {      outline-color: color-mix(in oklab, var(--ctv-color-white) 70%, transparent);    }  }  .ctv\\:backdrop-blur {    --tw-backdrop-blur: blur(8px);    -webkit-backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );    backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );  }  .ctv\\:backdrop-blur-\\[2px\\] {    --tw-backdrop-blur: blur(2px);    -webkit-backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );    backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );  }  .ctv\\:backdrop-blur-sm {    --tw-backdrop-blur: blur(var(--ctv-blur-sm));    -webkit-backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );    backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );  }  .ctv\\:transition-\\[width\\] {    transition-property: width;    transition-timing-function: var(--tw-ease, var(--ctv-default-transition-timing-function));    transition-duration: var(--tw-duration, var(--ctv-default-transition-duration));  }  .ctv\\:transition-all {    transition-property: all;    transition-timing-function: var(--tw-ease, var(--ctv-default-transition-timing-function));    transition-duration: var(--tw-duration, var(--ctv-default-transition-duration));  }  .ctv\\:transition-colors {    transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;    transition-timing-function: var(--tw-ease, var(--ctv-default-transition-timing-function));    transition-duration: var(--tw-duration, var(--ctv-default-transition-duration));  }  .ctv\\:transition-opacity {    transition-property: opacity;    transition-timing-function: var(--tw-ease, var(--ctv-default-transition-timing-function));    transition-duration: var(--tw-duration, var(--ctv-default-transition-duration));  }  .ctv\\:duration-150 {    --tw-duration: .15s;    transition-duration: .15s;  }  .ctv\\:duration-200 {    --tw-duration: .2s;    transition-duration: .2s;  }  .ctv\\:ease-in {    --tw-ease: var(--ctv-ease-in);    transition-timing-function: var(--ctv-ease-in);  }  .ctv\\:ease-in-out {    --tw-ease: var(--ctv-ease-in-out);    transition-timing-function: var(--ctv-ease-in-out);  }  .ctv\\:ease-out {    --tw-ease: var(--ctv-ease-out);    transition-timing-function: var(--ctv-ease-out);  }  .ctv\\:will-change-transform {    will-change: transform;  }  .ctv\\:outline-none {    --tw-outline-style: none;    outline-style: none;  }  .ctv\\:select-none {    -webkit-user-select: none;    user-select: none;  }  .ctv\\:\\[-webkit-box-orient\\:vertical\\] {    -webkit-box-orient: vertical;  }  .ctv\\:\\[-webkit-line-clamp\\:5\\] {    -webkit-line-clamp: 5;  }  .ctv\\:ring-inset {    --tw-ring-inset: inset;  }  @media (hover: hover) {    .ctv\\:group-hover\\:flex:is(:where(.ctv\\:group):hover *) {      display: flex;    }    .ctv\\:group-hover\\:opacity-100:is(:where(.ctv\\:group):hover *) {      opacity: 1;    }  }  .ctv\\:placeholder\\:text-muted-foreground::placeholder {    color: var(--muted-foreground, #888);  }  @media (hover: hover) {    .ctv\\:hover\\:border-\\[\\#E93D82\\]:hover {      border-color: #e93d82;    }    .ctv\\:hover\\:border-border-default:hover {      border-color: var(--border-default, #ffffff26);    }    .ctv\\:hover\\:border-border-subtle:hover {      border-color: var(--border-subtle, #ffffff14);    }    .ctv\\:hover\\:border-destructive-background:hover {      border-color: var(--destructive-background, #c0392b);    }    .ctv\\:hover\\:border-primary-background:hover, .ctv\\:hover\\:border-primary-background\\/50:hover {      border-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:border-primary-background\\/50:hover {        border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 50%, transparent);      }    }    .ctv\\:hover\\:border-primary-background\\/60:hover {      border-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:border-primary-background\\/60:hover {        border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 60%, transparent);      }    }    .ctv\\:hover\\:border-primary-background\\/70:hover {      border-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:border-primary-background\\/70:hover {        border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 70%, transparent);      }    }    .ctv\\:hover\\:border-white\\/40:hover {      border-color: var(--ctv-color-white);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:border-white\\/40:hover {        border-color: color-mix(in oklab, var(--ctv-color-white) 40%, transparent);      }    }    .ctv\\:hover\\:border-white\\/55:hover {      border-color: var(--ctv-color-white);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:border-white\\/55:hover {        border-color: color-mix(in oklab, var(--ctv-color-white) 55%, transparent);      }    }    .ctv\\:hover\\:bg-\\[rgb\\(233_61_130\\/0\\.2\\)\\]:hover {      background-color: #e93d8233;    }    .ctv\\:hover\\:bg-base-foreground\\/5:hover {      background-color: var(--base-foreground, #e0e0e0);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-base-foreground\\/5:hover {        background-color: color-mix(in oklab, var(--base-foreground, #e0e0e0) 5%, transparent);      }    }    .ctv\\:hover\\:bg-black\\/85:hover {      background-color: var(--ctv-color-black);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-black\\/85:hover {        background-color: color-mix(in oklab, var(--ctv-color-black) 85%, transparent);      }    }    .ctv\\:hover\\:bg-destructive-background:hover {      background-color: var(--destructive-background, #c0392b);    }    .ctv\\:hover\\:bg-destructive-background-hover:hover {      background-color: var(--destructive-background-hover, #d44637);    }    .ctv\\:hover\\:bg-destructive-background\\/10:hover {      background-color: var(--destructive-background, #c0392b);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-destructive-background\\/10:hover {        background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 10%, transparent);      }    }    .ctv\\:hover\\:bg-destructive-background\\/30:hover {      background-color: var(--destructive-background, #c0392b);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-destructive-background\\/30:hover {        background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 30%, transparent);      }    }    .ctv\\:hover\\:bg-destructive-background\\/80:hover {      background-color: var(--destructive-background, #c0392b);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-destructive-background\\/80:hover {        background-color: color-mix(in oklab, var(--destructive-background, #c0392b) 80%, transparent);      }    }    .ctv\\:hover\\:bg-interface-menu-component-surface-hovered:hover {      background-color: var(--interface-menu-component-surface-hovered, #ffffff14);    }    .ctv\\:hover\\:bg-primary-background-hover:hover {      background-color: var(--primary-background-hover, #4ea8ffbf);    }    .ctv\\:hover\\:bg-primary-background\\/15:hover {      background-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-primary-background\\/15:hover {        background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 15%, transparent);      }    }    .ctv\\:hover\\:bg-primary-background\\/20:hover {      background-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-primary-background\\/20:hover {        background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 20%, transparent);      }    }    .ctv\\:hover\\:bg-primary-background\\/25:hover {      background-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-primary-background\\/25:hover {        background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 25%, transparent);      }    }    .ctv\\:hover\\:bg-primary-background\\/90:hover {      background-color: var(--primary-background, #4ea8ff99);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-primary-background\\/90:hover {        background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 90%, transparent);      }    }    .ctv\\:hover\\:bg-secondary-background:hover {      background-color: var(--secondary-background, #ffffff0f);    }    .ctv\\:hover\\:bg-secondary-background-hover:hover, .ctv\\:hover\\:bg-secondary-background-hover\\/60:hover {      background-color: var(--secondary-background-hover, #ffffff1a);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-secondary-background-hover\\/60:hover {        background-color: color-mix(in oklab, var(--secondary-background-hover, #ffffff1a) 60%, transparent);      }    }    .ctv\\:hover\\:bg-warning-background\\/10:hover {      background-color: var(--warning-background, #d39e00);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-warning-background\\/10:hover {        background-color: color-mix(in oklab, var(--warning-background, #d39e00) 10%, transparent);      }    }    .ctv\\:hover\\:bg-white:hover, .ctv\\:hover\\:bg-white\\/30:hover {      background-color: var(--ctv-color-white);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-white\\/30:hover {        background-color: color-mix(in oklab, var(--ctv-color-white) 30%, transparent);      }    }    .ctv\\:hover\\:bg-white\\/90:hover {      background-color: var(--ctv-color-white);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:hover\\:bg-white\\/90:hover {        background-color: color-mix(in oklab, var(--ctv-color-white) 90%, transparent);      }    }    .ctv\\:hover\\:text-base-foreground:hover {      color: var(--base-foreground, #e0e0e0);    }    .ctv\\:hover\\:text-destructive-background:hover {      color: var(--destructive-background, #c0392b);    }    .ctv\\:hover\\:text-primary-background:hover {      color: var(--primary-background, #4ea8ff99);    }    .ctv\\:hover\\:text-warning-background:hover {      color: var(--warning-background, #d39e00);    }    .ctv\\:hover\\:text-white:hover {      color: var(--ctv-color-white);    }    .ctv\\:hover\\:opacity-90:hover {      opacity: .9;    }    .ctv\\:hover\\:opacity-100:hover {      opacity: 1;    }  }  .ctv\\:focus\\:border-\\[\\#00FFD0\\]:focus {    border-color: #00ffd0;  }  .ctv\\:focus\\:border-\\[\\#E93D82\\]:focus {    border-color: #e93d82;  }  .ctv\\:focus\\:border-\\[\\#FFB800\\]:focus {    border-color: #ffb800;  }  .ctv\\:focus\\:border-border-default:focus {    border-color: var(--border-default, #ffffff26);  }  .ctv\\:focus\\:border-node-component-border:focus {    border-color: var(--node-component-border, #fff3);  }  .ctv\\:focus\\:border-primary-background:focus, .ctv\\:focus\\:border-primary-background\\/50:focus {    border-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:focus\\:border-primary-background\\/50:focus {      border-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 50%, transparent);    }  }  .ctv\\:focus\\:bg-primary-background\\/10:focus {    background-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:focus\\:bg-primary-background\\/10:focus {      background-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 10%, transparent);    }  }  .ctv\\:focus\\:bg-secondary-background-hover:focus {    background-color: var(--secondary-background-hover, #ffffff1a);  }  .ctv\\:focus\\:outline:focus, .ctv\\:focus\\:outline-1:focus {    outline-style: var(--tw-outline-style);    outline-width: 1px;  }  .ctv\\:focus\\:outline-primary-background\\/50:focus {    outline-color: var(--primary-background, #4ea8ff99);  }  @supports (color: color-mix(in lab, red, red)) {    .ctv\\:focus\\:outline-primary-background\\/50:focus {      outline-color: color-mix(in oklab, var(--primary-background, #4ea8ff99) 50%, transparent);    }  }  .ctv\\:focus\\:outline-none:focus {    --tw-outline-style: none;    outline-style: none;  }  .ctv\\:focus-visible\\:ring-1:focus-visible {    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);  }  .ctv\\:focus-visible\\:ring-border-default:focus-visible {    --tw-ring-color: var(--border-default, #ffffff26);  }  .ctv\\:focus-visible\\:outline-none:focus-visible {    --tw-outline-style: none;    outline-style: none;  }  .ctv\\:active\\:scale-95:active {    --tw-scale-x: 95%;    --tw-scale-y: 95%;    --tw-scale-z: 95%;    scale: var(--tw-scale-x) var(--tw-scale-y);  }  @media (hover: hover) {    .ctv\\:hover\\:enabled\\:bg-secondary-background-hover:hover:enabled {      background-color: var(--secondary-background-hover, #ffffff1a);    }  }  .ctv\\:disabled\\:pointer-events-none:disabled {    pointer-events: none;  }  .ctv\\:disabled\\:cursor-default:disabled {    cursor: default;  }  .ctv\\:disabled\\:cursor-not-allowed:disabled {    cursor: not-allowed;  }  .ctv\\:disabled\\:opacity-30:disabled {    opacity: .3;  }  .ctv\\:disabled\\:opacity-40:disabled {    opacity: .4;  }  .ctv\\:disabled\\:opacity-50:disabled {    opacity: .5;  }  .ctv\\:disabled\\:opacity-60:disabled {    opacity: .6;  }  @media (hover: hover) {    .ctv\\:disabled\\:hover\\:border-white\\/30:disabled:hover {      border-color: var(--ctv-color-white);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:disabled\\:hover\\:border-white\\/30:disabled:hover {        border-color: color-mix(in oklab, var(--ctv-color-white) 30%, transparent);      }    }    .ctv\\:disabled\\:hover\\:bg-black\\/55:disabled:hover {      background-color: var(--ctv-color-black);    }    @supports (color: color-mix(in lab, red, red)) {      .ctv\\:disabled\\:hover\\:bg-black\\/55:disabled:hover {        background-color: color-mix(in oklab, var(--ctv-color-black) 55%, transparent);      }    }    .ctv\\:disabled\\:hover\\:bg-secondary-background:disabled:hover {      background-color: var(--secondary-background, #ffffff0f);    }  }  .ctv\\:data-\\[highlighted\\]\\:bg-secondary-background-hover[data-highlighted] {    background-color: var(--secondary-background-hover, #ffffff1a);  }  .ctv\\:data-\\[state\\=checked\\]\\:bg-secondary-background-selected[data-state="checked"] {    background-color: var(--secondary-background-selected, #4ea8ff33);  }  @media (hover: hover) {    .ctv\\:data-\\[state\\=checked\\]\\:hover\\:bg-secondary-background-selected[data-state="checked"]:hover {      background-color: var(--secondary-background-selected, #4ea8ff33);    }  }  .ctv\\:data-\\[state\\=open\\]\\:border-node-component-border[data-state="open"] {    border-color: var(--node-component-border, #fff3);  }  .ctv\\:\\[\\&_\\+_\\&\\]\\:border-t + .ctv\\:\\[\\&_\\+_\\&\\]\\:border-t {    border-top-style: var(--tw-border-style);    border-top-width: 1px;  }  .ctv\\:\\[\\&_\\+_\\&\\]\\:border-solid + .ctv\\:\\[\\&_\\+_\\&\\]\\:border-solid {    --tw-border-style: solid;    border-style: solid;  }  .ctv\\:\\[\\&_\\+_\\&\\]\\:border-border-subtle + .ctv\\:\\[\\&_\\+_\\&\\]\\:border-border-subtle {    border-color: var(--border-subtle, #ffffff14);  }  .ctv\\:\\[\\&_\\+_\\&\\]\\:pt-1\\.5 + .ctv\\:\\[\\&_\\+_\\&\\]\\:pt-1\\.5 {    padding-top: calc(var(--ctv-spacing) * 1.5);  }}@property --tw-translate-x {  syntax: "*";  inherits: false;  initial-value: 0;}@property --tw-translate-y {  syntax: "*";  inherits: false;  initial-value: 0;}@property --tw-translate-z {  syntax: "*";  inherits: false;  initial-value: 0;}@property --tw-border-style {  syntax: "*";  inherits: false;  initial-value: solid;}@property --tw-gradient-position {  syntax: "*";  inherits: false}@property --tw-gradient-from {  syntax: "<color>";  inherits: false;  initial-value: #0000;}@property --tw-gradient-via {  syntax: "<color>";  inherits: false;  initial-value: #0000;}@property --tw-gradient-to {  syntax: "<color>";  inherits: false;  initial-value: #0000;}@property --tw-gradient-stops {  syntax: "*";  inherits: false}@property --tw-gradient-via-stops {  syntax: "*";  inherits: false}@property --tw-gradient-from-position {  syntax: "<length-percentage>";  inherits: false;  initial-value: 0%;}@property --tw-gradient-via-position {  syntax: "<length-percentage>";  inherits: false;  initial-value: 50%;}@property --tw-gradient-to-position {  syntax: "<length-percentage>";  inherits: false;  initial-value: 100%;}@property --tw-leading {  syntax: "*";  inherits: false}@property --tw-font-weight {  syntax: "*";  inherits: false}@property --tw-tracking {  syntax: "*";  inherits: false}@property --tw-ordinal {  syntax: "*";  inherits: false}@property --tw-slashed-zero {  syntax: "*";  inherits: false}@property --tw-numeric-figure {  syntax: "*";  inherits: false}@property --tw-numeric-spacing {  syntax: "*";  inherits: false}@property --tw-numeric-fraction {  syntax: "*";  inherits: false}@property --tw-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-shadow-color {  syntax: "*";  inherits: false}@property --tw-shadow-alpha {  syntax: "<percentage>";  inherits: false;  initial-value: 100%;}@property --tw-inset-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-inset-shadow-color {  syntax: "*";  inherits: false}@property --tw-inset-shadow-alpha {  syntax: "<percentage>";  inherits: false;  initial-value: 100%;}@property --tw-ring-color {  syntax: "*";  inherits: false}@property --tw-ring-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-inset-ring-color {  syntax: "*";  inherits: false}@property --tw-inset-ring-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-ring-inset {  syntax: "*";  inherits: false}@property --tw-ring-offset-width {  syntax: "<length>";  inherits: false;  initial-value: 0;}@property --tw-ring-offset-color {  syntax: "*";  inherits: false;  initial-value: #fff;}@property --tw-ring-offset-shadow {  syntax: "*";  inherits: false;  initial-value: 0 0 #0000;}@property --tw-outline-style {  syntax: "*";  inherits: false;  initial-value: solid;}@property --tw-backdrop-blur {  syntax: "*";  inherits: false}@property --tw-backdrop-brightness {  syntax: "*";  inherits: false}@property --tw-backdrop-contrast {  syntax: "*";  inherits: false}@property --tw-backdrop-grayscale {  syntax: "*";  inherits: false}@property --tw-backdrop-hue-rotate {  syntax: "*";  inherits: false}@property --tw-backdrop-invert {  syntax: "*";  inherits: false}@property --tw-backdrop-opacity {  syntax: "*";  inherits: false}@property --tw-backdrop-saturate {  syntax: "*";  inherits: false}@property --tw-backdrop-sepia {  syntax: "*";  inherits: false}@property --tw-duration {  syntax: "*";  inherits: false}@property --tw-ease {  syntax: "*";  inherits: false}@property --tw-scale-x {  syntax: "*";  inherits: false;  initial-value: 1;}@property --tw-scale-y {  syntax: "*";  inherits: false;  initial-value: 1;}@property --tw-scale-z {  syntax: "*";  inherits: false;  initial-value: 1;}@keyframes pulse {  50% {    opacity: .5;  }}.comfytv-root, .comfytv-dialog {\r  --p-primary-color: #4ea8ff;\r  --p-primary-contrast-color: #fff;\r  --p-primary-hover-color: #66b6ff;\r  --p-primary-active-color: #3a96ee;\r\r  --p-surface-0:  #1e1e1e;\r  --p-surface-50: #232323;\r  --p-surface-100: #2a2a2a;\r  --p-surface-200: #333;\r  --p-surface-300: #3d3d3d;\r  --p-surface-400: #555;\r  --p-surface-500: #777;\r  --p-surface-600: #999;\r  --p-surface-700: #bbb;\r  --p-surface-800: #ddd;\r  --p-surface-900: #eee;\r  --p-surface-950: #f6f6f6;\r\r  --p-content-background: var(--p-surface-0);\r  --p-content-hover-background: var(--p-surface-100);\r  --p-content-border-color: var(--p-surface-300);\r  --p-content-border-radius: 4px;\r\r  --p-text-color: var(--p-surface-800);\r  --p-text-muted-color: var(--p-surface-600);\r\r  --p-mask-background: rgba(0, 0, 0, 0.55);\r\r  --p-focus-ring-width: 1px;\r  --p-focus-ring-style: solid;\r  --p-focus-ring-color: var(--p-primary-color);\r  --p-focus-ring-offset: 1px;\r}\r\r.comfytv-root {\r  font-size: 12px;\r  color: var(--p-text-color);\r}\r\r.comfytv-root .p-datatable {\r  font-size: 12px;\r  display: flex;\r  flex-direction: column;\r  height: 100%;\r  min-height: 0;\r  width: 100%;\r}\r.comfytv-root .p-datatable-table-container,\r.comfytv-root .p-datatable-wrapper {\r  flex: 1;\r  min-height: 0;\r  overflow: auto;\r}\r.comfytv-root .p-datatable-table {\r  border-collapse: separate;\r  border-spacing: 0;\r  table-layout: auto;\r}\r.comfytv-root .p-datatable-thead > tr > th {\r  background: var(--p-surface-100);\r  color: var(--p-text-color);\r  border-bottom: 1px solid var(--p-content-border-color);\r  padding: 6px 8px;\r  font-weight: 600;\r  text-align: left;\r}\r.comfytv-root .p-datatable-tbody > tr > td {\r  padding: 6px 8px;\r  border-bottom: 1px solid var(--p-content-border-color);\r  vertical-align: top;\r}\r.comfytv-root .p-datatable-tbody > tr.p-row-odd {\r  background: var(--p-surface-50);\r}\r.comfytv-root .p-datatable-tbody > tr:hover {\r  background: var(--p-content-hover-background);\r}\r.comfytv-root .p-datatable-frozen-column {\r  position: sticky;\r  left: 0;\r  z-index: 1;\r  background: inherit;\r}\r\r/* Select (dropdown) */\r.comfytv-root .p-select {\r  display: inline-flex;\r  align-items: center;\r  background: var(--p-surface-100);\r  border: 1px solid var(--p-content-border-color);\r  border-radius: 3px;\r  min-height: 22px;\r  cursor: pointer;\r  position: relative;\r}\r.comfytv-root .p-select:hover {\r  border-color: var(--p-surface-500);\r}\r.comfytv-root .p-select-focus {\r  border-color: var(--p-primary-color);\r}\r.comfytv-root .p-select-label {\r  padding: 2px 8px;\r  font-size: 11px;\r  color: var(--p-text-color);\r  flex: 1;\r  user-select: none;\r}\r.comfytv-root .p-select-dropdown {\r  padding: 0 6px;\r  color: var(--p-text-muted-color);\r}\r\r/* SelectButton (toggle group) */\r.comfytv-root .p-selectbutton {\r  display: inline-flex;\r  border: 1px solid var(--p-content-border-color);\r  border-radius: 3px;\r  overflow: hidden;\r}\r.comfytv-root .p-togglebutton {\r  background: var(--p-surface-100);\r  color: var(--p-text-muted-color);\r  border: none;\r  padding: 2px 10px;\r  font-size: 11px;\r  cursor: pointer;\r}\r.comfytv-root .p-togglebutton:hover {\r  background: var(--p-surface-200);\r  color: var(--p-text-color);\r}\r.comfytv-root .p-togglebutton-checked {\r  background: var(--p-primary-color);\r  color: var(--p-primary-contrast-color);\r}\r\r.comfytv-root .p-inputtext,\r.comfytv-root .cell-input,\r.comfytv-root .cell-textarea {\r  background: var(--p-surface-100);\r  border: 1px solid var(--p-primary-color);\r  color: var(--p-text-color);\r  font: inherit;\r  padding: 4px 6px;\r  border-radius: 3px;\r  width: 100%;\r  box-sizing: border-box;\r  outline: none;\r}\r.comfytv-root .cell-textarea {\r  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;\r  font-size: 11px;\r  line-height: 1.4;\r  resize: vertical;\r  min-height: 32px;\r}\r.comfytv-root .cell-select { width: 100%; }\r\r.comfytv-root .p-datatable-tbody > tr > td.p-editable-column { cursor: text; }\r.comfytv-root .p-datatable-tbody > tr > td.p-cell-editing {\r  padding: 2px !important;\r  background: rgba(78, 168, 255, 0.08);\r}\r\r.comfytv-dialog.p-dialog {\r  background: var(--p-surface-0);\r  border: 1px solid var(--p-content-border-color);\r  border-radius: 8px;\r  color: var(--p-text-color);\r  box-shadow: 0 24px 48px rgba(0,0,0,0.6);\r}\r.comfytv-dialog .p-dialog-header {\r  padding: 12px 16px;\r  border-bottom: 1px solid var(--p-content-border-color);\r  background: var(--p-surface-50);\r  border-radius: 8px 8px 0 0;\r  font-weight: 600;\r  display: flex;\r  justify-content: space-between;\r  align-items: center;\r}\r.comfytv-dialog .p-dialog-title {\r  font-size: 14px;\r}\r.comfytv-dialog .p-dialog-content {\r  padding: 16px;\r  background: var(--p-surface-0);\r  overflow: auto;\r}\r.comfytv-dialog .p-dialog-close-button {\r  background: transparent;\r  border: none;\r  color: var(--p-text-muted-color);\r  cursor: pointer;\r  font-size: 18px;\r  padding: 2px 6px;\r}\r.comfytv-dialog .p-dialog-close-button:hover {\r  color: var(--p-text-color);\r}\r\rbody > .p-blockui-mask.p-blockui-mask-document:empty,\rbody > .p-overlay-mask.p-blockui-mask-document.p-overlay-mask-leave:empty {\r  display: none !important;\r  pointer-events: none !important;\r}`));      document.head.appendChild(elementStyle);    }  } catch (e) {    console.error("vite-plugin-css-injected-by-js", e);  }})();
 var __defProp = Object.defineProperty;
 var __typeError = (msg) => {
   throw TypeError(msg);
@@ -2829,19 +2829,19 @@ function prepareAnchor(target, vnode, createText, insert, anchor = null) {
 const leaveCbKey = /* @__PURE__ */ Symbol("_leaveCb");
 const enterCbKey = /* @__PURE__ */ Symbol("_enterCb");
 function useTransitionState() {
-  const state = {
+  const state2 = {
     isMounted: false,
     isLeaving: false,
     isUnmounting: false,
     leavingVNodes: /* @__PURE__ */ new Map()
   };
   onMounted(() => {
-    state.isMounted = true;
+    state2.isMounted = true;
   });
   onBeforeUnmount(() => {
-    state.isUnmounting = true;
+    state2.isUnmounting = true;
   });
-  return state;
+  return state2;
 }
 const TransitionHookValidator = [Function, Array];
 const BaseTransitionPropsValidators = {
@@ -2873,7 +2873,7 @@ const BaseTransitionImpl = {
   props: BaseTransitionPropsValidators,
   setup(props, { slots }) {
     const instance = getCurrentInstance();
-    const state = useTransitionState();
+    const state2 = useTransitionState();
     return () => {
       const children = slots.default && getTransitionRawChildren(slots.default(), true);
       const child = children && children.length ? findNonCommentChild(children) : (
@@ -2886,7 +2886,7 @@ const BaseTransitionImpl = {
       }
       const rawProps = /* @__PURE__ */ toRaw(props);
       const { mode } = rawProps;
-      if (state.isLeaving) {
+      if (state2.isLeaving) {
         return emptyPlaceholder(child);
       }
       const innerChild = getInnerChild$1(child);
@@ -2896,7 +2896,7 @@ const BaseTransitionImpl = {
       let enterHooks = resolveTransitionHooks(
         innerChild,
         rawProps,
-        state,
+        state2,
         instance,
         // #11061, ensure enterHooks is fresh after clone
         (hooks) => enterHooks = hooks
@@ -2909,14 +2909,14 @@ const BaseTransitionImpl = {
         let leavingHooks = resolveTransitionHooks(
           oldInnerChild,
           rawProps,
-          state,
+          state2,
           instance
         );
         setTransitionHooks(oldInnerChild, leavingHooks);
         if (mode === "out-in" && innerChild.type !== Comment) {
-          state.isLeaving = true;
+          state2.isLeaving = true;
           leavingHooks.afterLeave = () => {
-            state.isLeaving = false;
+            state2.isLeaving = false;
             if (!(instance.job.flags & 8)) {
               instance.update();
             }
@@ -2927,7 +2927,7 @@ const BaseTransitionImpl = {
         } else if (mode === "in-out" && innerChild.type !== Comment) {
           leavingHooks.delayLeave = (el, earlyRemove, delayedLeave) => {
             const leavingVNodesCache = getLeavingNodesForType(
-              state,
+              state2,
               oldInnerChild
             );
             leavingVNodesCache[String(oldInnerChild.key)] = oldInnerChild;
@@ -2966,8 +2966,8 @@ function findNonCommentChild(children) {
   return child;
 }
 const BaseTransition = BaseTransitionImpl;
-function getLeavingNodesForType(state, vnode) {
-  const { leavingVNodes } = state;
+function getLeavingNodesForType(state2, vnode) {
+  const { leavingVNodes } = state2;
   let leavingVNodesCache = leavingVNodes.get(vnode.type);
   if (!leavingVNodesCache) {
     leavingVNodesCache = /* @__PURE__ */ Object.create(null);
@@ -2975,7 +2975,7 @@ function getLeavingNodesForType(state, vnode) {
   }
   return leavingVNodesCache;
 }
-function resolveTransitionHooks(vnode, props, state, instance, postClone) {
+function resolveTransitionHooks(vnode, props, state2, instance, postClone) {
   const {
     appear,
     mode,
@@ -2994,7 +2994,7 @@ function resolveTransitionHooks(vnode, props, state, instance, postClone) {
     onAppearCancelled
   } = props;
   const key = String(vnode.key);
-  const leavingVNodesCache = getLeavingNodesForType(state, vnode);
+  const leavingVNodesCache = getLeavingNodesForType(state2, vnode);
   const callHook2 = (hook, args) => {
     hook && callWithAsyncErrorHandling(
       hook,
@@ -3017,7 +3017,7 @@ function resolveTransitionHooks(vnode, props, state, instance, postClone) {
     persisted,
     beforeEnter(el) {
       let hook = onBeforeEnter;
-      if (!state.isMounted) {
+      if (!state2.isMounted) {
         if (appear) {
           hook = onBeforeAppear || onBeforeEnter;
         } else {
@@ -3041,7 +3041,7 @@ function resolveTransitionHooks(vnode, props, state, instance, postClone) {
       let hook = onEnter;
       let afterHook = onAfterEnter;
       let cancelHook = onEnterCancelled;
-      if (!state.isMounted) {
+      if (!state2.isMounted) {
         if (appear) {
           hook = onAppear || onEnter;
           afterHook = onAfterAppear || onAfterEnter;
@@ -3079,7 +3079,7 @@ function resolveTransitionHooks(vnode, props, state, instance, postClone) {
           /* cancelled */
         );
       }
-      if (state.isUnmounting) {
+      if (state2.isUnmounting) {
         return remove2();
       }
       callHook2(onBeforeLeave, [el]);
@@ -3110,7 +3110,7 @@ function resolveTransitionHooks(vnode, props, state, instance, postClone) {
       const hooks2 = resolveTransitionHooks(
         vnode2,
         props,
-        state,
+        state2,
         instance,
         postClone
       );
@@ -3579,7 +3579,7 @@ const publicPropertiesMap = (
     $watch: (i) => instanceWatch.bind(i)
   })
 );
-const hasSetupBinding = (state, key) => state !== EMPTY_OBJ && !state.__isScriptSetup && hasOwn$1(state, key);
+const hasSetupBinding = (state2, key) => state2 !== EMPTY_OBJ && !state2.__isScriptSetup && hasOwn$1(state2, key);
 const PublicInstanceProxyHandlers = {
   get({ _: instance }, key) {
     if (key === "__v_skip") {
@@ -7907,7 +7907,7 @@ let renderer$1;
 function ensureRenderer() {
   return renderer$1 || (renderer$1 = createRenderer(rendererOptions));
 }
-const render$i = ((...args) => {
+const render$j = ((...args) => {
   ensureRenderer().render(...args);
 });
 const createApp = ((...args) => {
@@ -7970,7 +7970,7 @@ var MutationType;
 })(MutationType || (MutationType = {}));
 function createPinia() {
   const scope = effectScope(true);
-  const state = scope.run(() => /* @__PURE__ */ ref({}));
+  const state2 = scope.run(() => /* @__PURE__ */ ref({}));
   let _p = [];
   let toBeInstalled = [];
   const pinia2 = markRaw({
@@ -7996,7 +7996,7 @@ function createPinia() {
     _a: null,
     _e: scope,
     _s: /* @__PURE__ */ new Map(),
-    state
+    state: state2
   });
   return pinia2;
 }
@@ -8052,12 +8052,12 @@ function isComputed(o) {
   return !!(/* @__PURE__ */ isRef(o) && o.effect);
 }
 function createOptionsStore(id, options, pinia2, hot) {
-  const { state, actions: actions2, getters } = options;
+  const { state: state2, actions: actions2, getters } = options;
   const initialState = pinia2.state.value[id];
   let store;
   function setup() {
     if (!initialState && true) {
-      pinia2.state.value[id] = state ? state() : {};
+      pinia2.state.value[id] = state2 ? state2() : {};
     }
     const localState = /* @__PURE__ */ toRefs(pinia2.state.value[id]);
     return assign$2(localState, actions2, Object.keys(getters || {}).reduce((computedGetters, name) => {
@@ -8115,8 +8115,8 @@ function createSetupStore($id, setup, options = {}, pinia2, hot, isOptionsStore)
     triggerSubscriptions(subscriptions, subscriptionMutation, pinia2.state.value[$id]);
   }
   const $reset = isOptionsStore ? function $reset2() {
-    const { state } = options;
-    const newState = state ? state() : {};
+    const { state: state2 } = options;
+    const newState = state2 ? state2() : {};
     this.$patch(($state) => {
       assign$2($state, newState);
     });
@@ -8185,13 +8185,13 @@ function createSetupStore($id, setup, options = {}, pinia2, hot, isOptionsStore)
     $reset,
     $subscribe(callback, options2 = {}) {
       const removeSubscription = addSubscription(subscriptions, callback, options2.detached, () => stopWatcher());
-      const stopWatcher = scope.run(() => watch(() => pinia2.state.value[$id], (state) => {
+      const stopWatcher = scope.run(() => watch(() => pinia2.state.value[$id], (state2) => {
         if (options2.flush === "sync" ? isSyncListening : isListening) {
           callback({
             storeId: $id,
             type: MutationType.direct,
             events: debuggerEvents
-          }, state);
+          }, state2);
         }
       }, assign$2({}, $subscribeOptions, options2)));
       return removeSubscription;
@@ -8225,9 +8225,9 @@ function createSetupStore($id, setup, options = {}, pinia2, hot, isOptionsStore)
   assign$2(/* @__PURE__ */ toRaw(store), setupStore);
   Object.defineProperty(store, "$state", {
     get: () => pinia2.state.value[$id],
-    set: (state) => {
+    set: (state2) => {
       $patch(($state) => {
-        assign$2($state, state);
+        assign$2($state, state2);
       });
     }
   });
@@ -8321,14 +8321,14 @@ function createEventHook() {
 // @__NO_SIDE_EFFECTS__
 function createGlobalState(stateFactory) {
   let initialized = false;
-  let state;
+  let state2;
   const scope = effectScope(true);
   return ((...args) => {
     if (!initialized) {
-      state = scope.run(() => stateFactory(...args));
+      state2 = scope.run(() => stateFactory(...args));
       initialized = true;
     }
-    return state;
+    return state2;
   });
 }
 const isClient = typeof window !== "undefined" && typeof document !== "undefined";
@@ -8429,13 +8429,13 @@ function getLifeCycleTarget(target) {
 function createSharedComposable(composable) {
   if (!isClient) return composable;
   let subscribers = 0;
-  let state;
+  let state2;
   let scope;
   const dispose = () => {
     subscribers -= 1;
     if (scope && subscribers <= 0) {
       scope.stop();
-      state = void 0;
+      state2 = void 0;
       scope = void 0;
     }
   };
@@ -8443,10 +8443,10 @@ function createSharedComposable(composable) {
     subscribers += 1;
     if (!scope) {
       scope = effectScope(true);
-      state = scope.run(() => composable(...args));
+      state2 = scope.run(() => composable(...args));
     }
     tryOnScopeDispose(dispose);
-    return state;
+    return state2;
   });
 }
 function toReactive(objectRef) {
@@ -14175,13 +14175,13 @@ if (__INTLIFY_PROD_DEVTOOLS__) {
   target.__INTLIFY__ = true;
   setDevToolsHook(target.__INTLIFY_DEVTOOLS_GLOBAL_HOOK__);
 }
-const _hoisted_1$11 = {
+const _hoisted_1$13 = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
-function render$h(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$11, [..._cache2[0] || (_cache2[0] = [
+function render$i(_ctx, _cache2) {
+  return openBlock(), createElementBlock("svg", _hoisted_1$13, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -14192,14 +14192,14 @@ function render$h(_ctx, _cache2) {
     }, null, -1)
   ])]);
 }
-const IconCheck = markRaw({ name: "lucide-check", render: render$h });
-const _hoisted_1$10 = {
+const IconCheck = markRaw({ name: "lucide-check", render: render$i });
+const _hoisted_1$12 = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
-function render$g(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$10, [..._cache2[0] || (_cache2[0] = [
+function render$h(_ctx, _cache2) {
+  return openBlock(), createElementBlock("svg", _hoisted_1$12, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -14212,25 +14212,43 @@ function render$g(_ctx, _cache2) {
     ], -1)
   ])]);
 }
-const IconDownload = markRaw({ name: "lucide-download", render: render$g });
-const _hoisted_1$$ = {
+const IconDownload = markRaw({ name: "lucide-download", render: render$h });
+const _hoisted_1$11 = {
+  viewBox: "0 0 24 24",
+  width: "1.2em",
+  height: "1.2em"
+};
+function render$g(_ctx, _cache2) {
+  return openBlock(), createElementBlock("svg", _hoisted_1$11, [..._cache2[0] || (_cache2[0] = [
+    createStaticVNode('<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="7" height="7" x="3" y="3" rx="1"></rect><rect width="7" height="7" x="14" y="3" rx="1"></rect><rect width="7" height="7" x="14" y="14" rx="1"></rect><rect width="7" height="7" x="3" y="14" rx="1"></rect></g>', 1)
+  ])]);
+}
+const IconLayoutGrid = markRaw({ name: "lucide-layout-grid", render: render$g });
+const _hoisted_1$10 = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$f(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$$, [..._cache2[0] || (_cache2[0] = [
-    createStaticVNode('<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="7" height="7" x="3" y="3" rx="1"></rect><rect width="7" height="7" x="14" y="3" rx="1"></rect><rect width="7" height="7" x="14" y="14" rx="1"></rect><rect width="7" height="7" x="3" y="14" rx="1"></rect></g>', 1)
+  return openBlock(), createElementBlock("svg", _hoisted_1$10, [..._cache2[0] || (_cache2[0] = [
+    createBaseVNode("path", {
+      fill: "none",
+      stroke: "currentColor",
+      "stroke-linecap": "round",
+      "stroke-linejoin": "round",
+      "stroke-width": "2",
+      d: "M15 3h6v6m0-6l-7 7M3 21l7-7m-1 7H3v-6"
+    }, null, -1)
   ])]);
 }
-const IconLayoutGrid = markRaw({ name: "lucide-layout-grid", render: render$f });
-const _hoisted_1$_ = {
+const IconMaximize = markRaw({ name: "lucide-maximize-2", render: render$f });
+const _hoisted_1$$ = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$e(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$_, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$$, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -14242,13 +14260,13 @@ function render$e(_ctx, _cache2) {
   ])]);
 }
 const IconPencil = markRaw({ name: "lucide-pencil", render: render$e });
-const _hoisted_1$Z = {
+const _hoisted_1$_ = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$d(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$Z, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$_, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -14260,13 +14278,13 @@ function render$d(_ctx, _cache2) {
   ])]);
 }
 const IconPlus = markRaw({ name: "lucide-plus", render: render$d });
-const _hoisted_1$Y = {
+const _hoisted_1$Z = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$c(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$Y, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$Z, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -14284,13 +14302,13 @@ function render$c(_ctx, _cache2) {
   ])]);
 }
 const IconSearch = markRaw({ name: "lucide-search", render: render$c });
-const _hoisted_1$X = {
+const _hoisted_1$Y = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$b(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$X, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$Y, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -14313,13 +14331,13 @@ function render$b(_ctx, _cache2) {
   ])]);
 }
 const IconSettings2 = markRaw({ name: "lucide-settings-2", render: render$b });
-const _hoisted_1$W = {
+const _hoisted_1$X = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$a(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$W, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$X, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -14331,13 +14349,13 @@ function render$a(_ctx, _cache2) {
   ])]);
 }
 const IconTableOfContents = markRaw({ name: "lucide-table-of-contents", render: render$a });
-const _hoisted_1$V = {
+const _hoisted_1$W = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$9(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$V, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$W, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -14356,13 +14374,13 @@ function render$9(_ctx, _cache2) {
   ])]);
 }
 const IconTag = markRaw({ name: "lucide-tag", render: render$9 });
-const _hoisted_1$U = {
+const _hoisted_1$V = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$8(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$U, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$V, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -14374,13 +14392,13 @@ function render$8(_ctx, _cache2) {
   ])]);
 }
 const IconTrash2 = markRaw({ name: "lucide-trash-2", render: render$8 });
-const _hoisted_1$T = {
+const _hoisted_1$U = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$7(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$T, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$U, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -14392,13 +14410,13 @@ function render$7(_ctx, _cache2) {
   ])]);
 }
 const IconX = markRaw({ name: "lucide-x", render: render$7 });
-const _hoisted_1$S = {
+const _hoisted_1$T = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$6(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$S, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$T, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -14425,13 +14443,13 @@ function render$6(_ctx, _cache2) {
   ])]);
 }
 const IconEllipsis = markRaw({ name: "lucide-ellipsis", render: render$6 });
-const _hoisted_1$R = {
+const _hoisted_1$S = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$5(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$R, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$S, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -14443,13 +14461,13 @@ function render$5(_ctx, _cache2) {
   ])]);
 }
 const IconPlay = markRaw({ name: "lucide-play", render: render$5 });
-const _hoisted_1$Q = {
+const _hoisted_1$R = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$4(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$Q, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$R, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -14461,31 +14479,32 @@ function render$4(_ctx, _cache2) {
   ])]);
 }
 const IconVolume2 = markRaw({ name: "lucide-volume-2", render: render$4 });
-const _hoisted_1$P = {
+const _hoisted_1$Q = {
   class: "ctv-asset-card ctv:relative ctv:flex ctv:flex-col ctv:gap-2 ctv:overflow-hidden ctv:rounded-lg ctv:p-2 ctv:cursor-grab ctv:select-none ctv:transition-colors ctv:duration-200 ctv:hover:bg-secondary-background-hover/60",
   draggable: "true"
 };
-const _hoisted_2$J = { class: "ctv:relative ctv:aspect-square ctv:overflow-hidden ctv:rounded-lg ctv:bg-secondary-background" };
-const _hoisted_3$F = ["src", "title"];
-const _hoisted_4$A = ["title"];
-const _hoisted_5$x = ["src", "alt", "title"];
-const _hoisted_6$w = {
+const _hoisted_2$K = { class: "ctv:relative ctv:aspect-square ctv:overflow-hidden ctv:rounded-lg ctv:bg-secondary-background" };
+const _hoisted_3$G = ["src", "title"];
+const _hoisted_4$B = ["title"];
+const _hoisted_5$y = ["src", "alt", "title"];
+const _hoisted_6$x = {
   key: 3,
   class: "ctv:absolute ctv:bottom-1.5 ctv:left-1.5 ctv:flex ctv:items-center ctv:justify-center ctv:size-5 ctv:rounded ctv:bg-black/65 ctv:text-white/90 ctv:pointer-events-none"
 };
-const _hoisted_7$t = { class: "ctv-asset-actions ctv:absolute ctv:top-2 ctv:left-2" };
+const _hoisted_7$u = { class: "ctv-asset-actions ctv:absolute ctv:top-2 ctv:left-2 ctv:flex ctv:gap-1" };
 const _hoisted_8$s = ["title"];
-const _hoisted_9$s = { class: "ctv:flex ctv:min-w-0 ctv:flex-col ctv:gap-1" };
-const _hoisted_10$q = ["title"];
-const _hoisted_11$m = {
+const _hoisted_9$s = ["title"];
+const _hoisted_10$r = { class: "ctv:flex ctv:min-w-0 ctv:flex-col ctv:gap-1" };
+const _hoisted_11$m = ["title"];
+const _hoisted_12$m = {
   key: 0,
   class: "ctv:text-2xs ctv:leading-none ctv:text-muted-foreground"
 };
-const _hoisted_12$m = {
+const _hoisted_13$i = {
   key: 1,
   class: "ctv:flex ctv:flex-wrap ctv:gap-0.5"
 };
-const _sfc_main$R = /* @__PURE__ */ defineComponent({
+const _sfc_main$S = /* @__PURE__ */ defineComponent({
   __name: "AssetGridCard",
   props: {
     asset: {},
@@ -14493,7 +14512,7 @@ const _sfc_main$R = /* @__PURE__ */ defineComponent({
     categoryNames: {},
     tooltip: {}
   },
-  emits: ["open-menu"],
+  emits: ["open-menu", "view-full"],
   setup(__props, { emit: __emit }) {
     const emit2 = __emit;
     function hoverPlay(e) {
@@ -14506,8 +14525,8 @@ const _sfc_main$R = /* @__PURE__ */ defineComponent({
       v.currentTime = 0;
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$P, [
-        createBaseVNode("div", _hoisted_2$J, [
+      return openBlock(), createElementBlock("div", _hoisted_1$Q, [
+        createBaseVNode("div", _hoisted_2$K, [
           __props.asset.media_type === "video" ? (openBlock(), createElementBlock("video", {
             key: 0,
             src: __props.asset.payload_url,
@@ -14518,21 +14537,21 @@ const _sfc_main$R = /* @__PURE__ */ defineComponent({
             class: "ctv-asset-thumb ctv:absolute ctv:inset-0 ctv:size-full ctv:object-cover ctv:bg-black",
             onMouseenter: hoverPlay,
             onMouseleave: hoverPause
-          }, null, 40, _hoisted_3$F)) : __props.asset.media_type === "audio" ? (openBlock(), createElementBlock("div", {
+          }, null, 40, _hoisted_3$G)) : __props.asset.media_type === "audio" ? (openBlock(), createElementBlock("div", {
             key: 1,
             title: __props.tooltip,
             class: "ctv:absolute ctv:inset-0 ctv:flex ctv:items-center ctv:justify-center ctv:text-muted-foreground"
           }, [
             createVNode(unref(IconVolume2), { class: "ctv:size-8" })
-          ], 8, _hoisted_4$A)) : (openBlock(), createElementBlock("img", {
+          ], 8, _hoisted_4$B)) : (openBlock(), createElementBlock("img", {
             key: 2,
             src: __props.asset.payload_url,
             alt: __props.asset.name,
             title: __props.tooltip,
             loading: "lazy",
             class: "ctv-asset-thumb ctv:absolute ctv:inset-0 ctv:size-full ctv:object-cover"
-          }, null, 8, _hoisted_5$x)),
-          __props.asset.media_type === "video" || __props.asset.media_type === "audio" ? (openBlock(), createElementBlock("span", _hoisted_6$w, [
+          }, null, 8, _hoisted_5$y)),
+          __props.asset.media_type === "video" || __props.asset.media_type === "audio" ? (openBlock(), createElementBlock("span", _hoisted_6$x, [
             __props.asset.media_type === "video" ? (openBlock(), createBlock(unref(IconPlay), {
               key: 0,
               class: "ctv:size-3"
@@ -14541,23 +14560,31 @@ const _sfc_main$R = /* @__PURE__ */ defineComponent({
               class: "ctv:size-3"
             }))
           ])) : createCommentVNode("", true),
-          createBaseVNode("div", _hoisted_7$t, [
+          createBaseVNode("div", _hoisted_7$u, [
             createBaseVNode("button", {
               class: "ctv:flex ctv:size-6 ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:appearance-none ctv:rounded-md ctv:border-none ctv:shadow-sm ctv:bg-white/90 ctv:text-black/80 ctv:hover:bg-white",
               title: _ctx.$t("assets.card.more"),
               onClick: _cache2[0] || (_cache2[0] = withModifiers(($event) => emit2("open-menu", $event), ["stop"]))
             }, [
               createVNode(unref(IconEllipsis), { class: "ctv:size-4" })
-            ], 8, _hoisted_8$s)
+            ], 8, _hoisted_8$s),
+            __props.asset.media_type === "image" ? (openBlock(), createElementBlock("button", {
+              key: 0,
+              class: "ctv:flex ctv:size-6 ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:appearance-none ctv:rounded-md ctv:border-none ctv:shadow-sm ctv:bg-white/90 ctv:text-black/80 ctv:hover:bg-white",
+              title: _ctx.$t("stage.action.viewFull"),
+              onClick: _cache2[1] || (_cache2[1] = withModifiers(($event) => emit2("view-full"), ["stop"]))
+            }, [
+              createVNode(unref(IconMaximize), { class: "ctv:size-4" })
+            ], 8, _hoisted_9$s)) : createCommentVNode("", true)
           ])
         ]),
-        createBaseVNode("div", _hoisted_9$s, [
+        createBaseVNode("div", _hoisted_10$r, [
           createBaseVNode("span", {
             class: "ctv:line-clamp-2 ctv:break-all ctv:text-xs ctv:leading-tight ctv:text-base-foreground",
             title: __props.tooltip
-          }, toDisplayString$1(__props.asset.name || "—"), 9, _hoisted_10$q),
-          __props.meta ? (openBlock(), createElementBlock("div", _hoisted_11$m, toDisplayString$1(__props.meta), 1)) : createCommentVNode("", true),
-          __props.categoryNames.length ? (openBlock(), createElementBlock("div", _hoisted_12$m, [
+          }, toDisplayString$1(__props.asset.name || "—"), 9, _hoisted_11$m),
+          __props.meta ? (openBlock(), createElementBlock("div", _hoisted_12$m, toDisplayString$1(__props.meta), 1)) : createCommentVNode("", true),
+          __props.categoryNames.length ? (openBlock(), createElementBlock("div", _hoisted_13$i, [
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(__props.categoryNames, (name) => {
               return openBlock(), createElementBlock("span", {
                 key: name,
@@ -14577,20 +14604,21 @@ const _export_sfc = (sfc, props) => {
   }
   return target;
 };
-const AssetGridCard = /* @__PURE__ */ _export_sfc(_sfc_main$R, [["__scopeId", "data-v-5ef522c4"]]);
-const _hoisted_1$O = {
+const AssetGridCard = /* @__PURE__ */ _export_sfc(_sfc_main$S, [["__scopeId", "data-v-5f355e66"]]);
+const _hoisted_1$P = {
   class: "ctv-asset-row ctv:relative ctv:flex ctv:items-center ctv:gap-2 ctv:overflow-hidden ctv:rounded-lg ctv:p-2 ctv:cursor-grab ctv:select-none ctv:transition-colors ctv:duration-200 ctv:hover:bg-secondary-background-hover/60",
   draggable: "true"
 };
-const _hoisted_2$I = { class: "ctv:relative ctv:flex ctv:size-8 ctv:shrink-0 ctv:items-center ctv:justify-center ctv:overflow-hidden ctv:rounded-sm ctv:bg-secondary-background" };
-const _hoisted_3$E = ["src"];
-const _hoisted_4$z = ["src", "alt"];
-const _hoisted_5$w = { class: "ctv:flex ctv:min-w-0 ctv:flex-1 ctv:flex-col ctv:gap-1" };
-const _hoisted_6$v = ["title"];
-const _hoisted_7$s = ["title"];
-const _hoisted_8$r = { class: "ctv-asset-actions ctv:flex ctv:shrink-0 ctv:items-center" };
+const _hoisted_2$J = { class: "ctv:relative ctv:flex ctv:size-8 ctv:shrink-0 ctv:items-center ctv:justify-center ctv:overflow-hidden ctv:rounded-sm ctv:bg-secondary-background" };
+const _hoisted_3$F = ["src"];
+const _hoisted_4$A = ["src", "alt"];
+const _hoisted_5$x = { class: "ctv:flex ctv:min-w-0 ctv:flex-1 ctv:flex-col ctv:gap-1" };
+const _hoisted_6$w = ["title"];
+const _hoisted_7$t = ["title"];
+const _hoisted_8$r = { class: "ctv-asset-actions ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1" };
 const _hoisted_9$r = ["title"];
-const _sfc_main$Q = /* @__PURE__ */ defineComponent({
+const _hoisted_10$q = ["title"];
+const _sfc_main$R = /* @__PURE__ */ defineComponent({
   __name: "AssetListItem",
   props: {
     asset: {},
@@ -14598,7 +14626,7 @@ const _sfc_main$Q = /* @__PURE__ */ defineComponent({
     categoryNames: {},
     tooltip: {}
   },
-  emits: ["open-menu"],
+  emits: ["open-menu", "view-full"],
   setup(__props, { emit: __emit }) {
     const props = __props;
     const emit2 = __emit;
@@ -14606,8 +14634,8 @@ const _sfc_main$Q = /* @__PURE__ */ defineComponent({
       () => [props.meta, props.categoryNames.join(", ")].filter(Boolean).join(" · ")
     );
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$O, [
-        createBaseVNode("div", _hoisted_2$I, [
+      return openBlock(), createElementBlock("div", _hoisted_1$P, [
+        createBaseVNode("div", _hoisted_2$J, [
           __props.asset.media_type === "video" ? (openBlock(), createElementBlock("video", {
             key: 0,
             src: __props.asset.payload_url,
@@ -14615,7 +14643,7 @@ const _sfc_main$Q = /* @__PURE__ */ defineComponent({
             playsinline: "",
             preload: "metadata",
             class: "ctv:size-full ctv:object-cover ctv:pointer-events-none"
-          }, null, 8, _hoisted_3$E)) : __props.asset.media_type === "audio" ? (openBlock(), createBlock(unref(IconVolume2), {
+          }, null, 8, _hoisted_3$F)) : __props.asset.media_type === "audio" ? (openBlock(), createBlock(unref(IconVolume2), {
             key: 1,
             class: "ctv:size-4 ctv:text-muted-foreground"
           })) : (openBlock(), createElementBlock("img", {
@@ -14624,33 +14652,87 @@ const _sfc_main$Q = /* @__PURE__ */ defineComponent({
             alt: __props.asset.name,
             loading: "lazy",
             class: "ctv:size-full ctv:object-cover"
-          }, null, 8, _hoisted_4$z))
+          }, null, 8, _hoisted_4$A))
         ]),
-        createBaseVNode("div", _hoisted_5$w, [
+        createBaseVNode("div", _hoisted_5$x, [
           createBaseVNode("span", {
             class: "ctv:block ctv:truncate ctv:text-xs ctv:leading-none ctv:text-base-foreground",
             title: __props.tooltip
-          }, toDisplayString$1(__props.asset.name || "—"), 9, _hoisted_6$v),
+          }, toDisplayString$1(__props.asset.name || "—"), 9, _hoisted_6$w),
           secondary.value ? (openBlock(), createElementBlock("span", {
             key: 0,
             class: "ctv:block ctv:truncate ctv:text-xs ctv:leading-none ctv:text-muted-foreground",
             title: secondary.value
-          }, toDisplayString$1(secondary.value), 9, _hoisted_7$s)) : createCommentVNode("", true)
+          }, toDisplayString$1(secondary.value), 9, _hoisted_7$t)) : createCommentVNode("", true)
         ]),
         createBaseVNode("div", _hoisted_8$r, [
+          __props.asset.media_type === "image" ? (openBlock(), createElementBlock("button", {
+            key: 0,
+            class: "ctv:flex ctv:size-6 ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:appearance-none ctv:rounded-md ctv:border-none ctv:bg-secondary-background ctv:text-base-foreground ctv:hover:bg-secondary-background-hover",
+            title: _ctx.$t("stage.action.viewFull"),
+            onClick: _cache2[0] || (_cache2[0] = withModifiers(($event) => emit2("view-full"), ["stop"]))
+          }, [
+            createVNode(unref(IconMaximize), { class: "ctv:size-4" })
+          ], 8, _hoisted_9$r)) : createCommentVNode("", true),
           createBaseVNode("button", {
             class: "ctv:flex ctv:size-6 ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:appearance-none ctv:rounded-md ctv:border-none ctv:bg-secondary-background ctv:text-base-foreground ctv:hover:bg-secondary-background-hover",
             title: _ctx.$t("assets.card.more"),
-            onClick: _cache2[0] || (_cache2[0] = withModifiers(($event) => emit2("open-menu", $event), ["stop"]))
+            onClick: _cache2[1] || (_cache2[1] = withModifiers(($event) => emit2("open-menu", $event), ["stop"]))
           }, [
             createVNode(unref(IconEllipsis), { class: "ctv:size-4" })
-          ], 8, _hoisted_9$r)
+          ], 8, _hoisted_10$q)
         ])
       ]);
     };
   }
 });
-const AssetListItem = /* @__PURE__ */ _export_sfc(_sfc_main$Q, [["__scopeId", "data-v-b7a81476"]]);
+const AssetListItem = /* @__PURE__ */ _export_sfc(_sfc_main$R, [["__scopeId", "data-v-db216f25"]]);
+const state = /* @__PURE__ */ reactive({
+  items: [],
+  index: -1
+});
+function openLightbox(items, startIndex = 0) {
+  const clean = items.filter((it) => !!it && !!it.url);
+  if (!clean.length) return;
+  state.items = clean;
+  state.index = Math.min(Math.max(startIndex, 0), clean.length - 1);
+}
+function useLightbox() {
+  const isOpen = computed(
+    () => state.index >= 0 && state.index < state.items.length
+  );
+  const current = computed(
+    () => isOpen.value ? state.items[state.index] : null
+  );
+  const count2 = computed(() => state.items.length);
+  const hasPrev = computed(() => isOpen.value && state.index > 0);
+  const hasNext = computed(
+    () => isOpen.value && state.index < state.items.length - 1
+  );
+  function close2() {
+    state.index = -1;
+    state.items = [];
+  }
+  function prev() {
+    if (hasPrev.value) state.index -= 1;
+  }
+  function next() {
+    if (hasNext.value) state.index += 1;
+  }
+  return {
+    state,
+    isOpen,
+    current,
+    count: count2,
+    hasPrev,
+    hasNext,
+    open: openLightbox,
+    close: close2,
+    prev,
+    next,
+    index: computed(() => state.index)
+  };
+}
 const app = app$1;
 const LOADER_CLASS_BY_MEDIA = {
   image: "ComfyTV.AssetImageLoaderStage",
@@ -19891,13 +19973,13 @@ function installAssetCanvasDrop(pinia2) {
   };
   tryInstall();
 }
-const _hoisted_1$N = { class: "ctv:flex ctv:flex-col ctv:gap-3" };
-const _hoisted_2$H = { class: "ctv:m-0 ctv:text-xs ctv:leading-relaxed ctv:text-base-foreground ctv:whitespace-pre-wrap" };
-const _hoisted_3$D = { class: "ctv:flex ctv:justify-end ctv:gap-2" };
+const _hoisted_1$O = { class: "ctv:flex ctv:flex-col ctv:gap-3" };
+const _hoisted_2$I = { class: "ctv:m-0 ctv:text-xs ctv:leading-relaxed ctv:text-base-foreground ctv:whitespace-pre-wrap" };
+const _hoisted_3$E = { class: "ctv:flex ctv:justify-end ctv:gap-2" };
 const btnGhost$2 = "ctv:appearance-none ctv:border-none ctv:cursor-pointer ctv:[font-family:inherit] ctv:focus-visible:outline-none ctv:h-7 ctv:px-3 ctv:rounded-sm ctv:text-xs ctv:bg-secondary-background ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground";
 const btnPrimary$2 = "ctv:appearance-none ctv:border-none ctv:cursor-pointer ctv:[font-family:inherit] ctv:focus-visible:outline-none ctv:h-7 ctv:px-3 ctv:rounded-sm ctv:text-xs ctv:font-medium ctv:bg-primary-background ctv:text-primary-foreground ctv:hover:opacity-90";
 const btnDanger = "ctv:appearance-none ctv:border-none ctv:cursor-pointer ctv:[font-family:inherit] ctv:focus-visible:outline-none ctv:h-7 ctv:px-3 ctv:rounded-sm ctv:text-xs ctv:font-medium ctv:bg-destructive-background ctv:text-white ctv:hover:opacity-90";
-const _sfc_main$P = /* @__PURE__ */ defineComponent({
+const _sfc_main$Q = /* @__PURE__ */ defineComponent({
   __name: "ConfirmDialog",
   props: {
     message: {},
@@ -19916,9 +19998,9 @@ const _sfc_main$P = /* @__PURE__ */ defineComponent({
     }
     onBeforeUnmount(() => resolve2(false));
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$N, [
-        createBaseVNode("p", _hoisted_2$H, toDisplayString$1(__props.message), 1),
-        createBaseVNode("div", _hoisted_3$D, [
+      return openBlock(), createElementBlock("div", _hoisted_1$O, [
+        createBaseVNode("p", _hoisted_2$I, toDisplayString$1(__props.message), 1),
+        createBaseVNode("div", _hoisted_3$E, [
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(btnGhost$2),
@@ -19970,7 +20052,7 @@ function askConfirm(opts) {
     dialog2.show({
       title: opts.title,
       width: opts.width ?? "420px",
-      component: markRaw(_sfc_main$P),
+      component: markRaw(_sfc_main$Q),
       props: {
         message: opts.message,
         confirmText: opts.confirmText,
@@ -19981,16 +20063,16 @@ function askConfirm(opts) {
     });
   });
 }
-const _hoisted_1$M = {
+const _hoisted_1$N = {
   key: 0,
   class: "ctv:text-xs ctv:text-muted-foreground"
 };
-const _hoisted_2$G = ["placeholder", "onKeydown"];
-const _hoisted_3$C = { class: "ctv:flex ctv:justify-end ctv:gap-2" };
-const _hoisted_4$y = ["disabled"];
+const _hoisted_2$H = ["placeholder", "onKeydown"];
+const _hoisted_3$D = { class: "ctv:flex ctv:justify-end ctv:gap-2" };
+const _hoisted_4$z = ["disabled"];
 const btnGhost$1 = "ctv:appearance-none ctv:border-none ctv:cursor-pointer ctv:[font-family:inherit] ctv:focus-visible:outline-none ctv:h-7 ctv:px-3 ctv:rounded-sm ctv:text-xs ctv:bg-secondary-background ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground";
 const btnPrimary$1 = "ctv:appearance-none ctv:border-none ctv:cursor-pointer ctv:[font-family:inherit] ctv:focus-visible:outline-none ctv:h-7 ctv:px-3 ctv:rounded-sm ctv:text-xs ctv:font-medium ctv:bg-primary-background ctv:text-primary-foreground ctv:hover:opacity-90 ctv:disabled:opacity-50 ctv:disabled:pointer-events-none";
-const _sfc_main$O = /* @__PURE__ */ defineComponent({
+const _sfc_main$P = /* @__PURE__ */ defineComponent({
   __name: "TextInputDialog",
   props: {
     label: {},
@@ -20029,7 +20111,7 @@ const _sfc_main$O = /* @__PURE__ */ defineComponent({
         class: "ctv:flex ctv:flex-col ctv:gap-3",
         onSubmit: withModifiers(confirm, ["prevent"])
       }, [
-        __props.label ? (openBlock(), createElementBlock("label", _hoisted_1$M, toDisplayString$1(__props.label), 1)) : createCommentVNode("", true),
+        __props.label ? (openBlock(), createElementBlock("label", _hoisted_1$N, toDisplayString$1(__props.label), 1)) : createCommentVNode("", true),
         withDirectives(createBaseVNode("input", {
           ref_key: "inputEl",
           ref: inputEl,
@@ -20038,10 +20120,10 @@ const _sfc_main$O = /* @__PURE__ */ defineComponent({
           placeholder: __props.placeholder,
           class: "ctv:appearance-none ctv:[font-family:inherit] ctv:focus-visible:outline-none ctv:w-full ctv:h-8 ctv:px-2.5 ctv:rounded-sm ctv:text-sm ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle ctv:focus:border-primary-background",
           onKeydown: withKeys(withModifiers(cancel, ["prevent"]), ["esc"])
-        }, null, 40, _hoisted_2$G), [
+        }, null, 40, _hoisted_2$H), [
           [vModelText, value.value]
         ]),
-        createBaseVNode("div", _hoisted_3$C, [
+        createBaseVNode("div", _hoisted_3$D, [
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(btnGhost$1),
@@ -20051,7 +20133,7 @@ const _sfc_main$O = /* @__PURE__ */ defineComponent({
             type: "submit",
             class: normalizeClass(btnPrimary$1),
             disabled: !value.value.trim()
-          }, toDisplayString$1(__props.confirmText || _ctx.$t("dialog.confirm")), 9, _hoisted_4$y)
+          }, toDisplayString$1(__props.confirmText || _ctx.$t("dialog.confirm")), 9, _hoisted_4$z)
         ])
       ], 32);
     };
@@ -20070,7 +20152,7 @@ function askText(opts) {
     dialog2.show({
       title: opts.title,
       width: opts.width ?? "420px",
-      component: markRaw(_sfc_main$O),
+      component: markRaw(_sfc_main$P),
       props: {
         label: opts.label,
         initialValue: opts.initialValue,
@@ -20274,6 +20356,22 @@ function useAssetsPanel(isActive2) {
     closeAssetMenu();
     if (a) void onDeleteAsset(a);
   }
+  function viewFullAsset(asset) {
+    if (asset.media_type !== "image") return;
+    const imgs = visibleAssets.value.filter((a) => a.media_type === "image");
+    const idx = imgs.findIndex((a) => a.id === asset.id);
+    if (idx < 0) return;
+    const items = imgs.map((a) => ({
+      url: a.payload_url,
+      label: a.name
+    }));
+    openLightbox(items, idx);
+  }
+  function menuViewFull() {
+    const a = menuAsset.value;
+    closeAssetMenu();
+    if (a) viewFullAsset(a);
+  }
   function onPickFiles(e) {
     const input = e.target;
     const files = Array.from(input.files ?? []);
@@ -20428,12 +20526,15 @@ function useAssetsPanel(isActive2) {
     assetMeta,
     assetMenu,
     assetMenuStyle,
+    menuAsset,
     openAssetMenu,
     closeAssetMenu,
     menuLoadNode,
     menuEditTags,
     menuRenameAsset,
     menuDeleteAsset,
+    menuViewFull,
+    viewFullAsset,
     onPickFiles,
     addFiles,
     onCreateCategory,
@@ -20449,13 +20550,13 @@ function useAssetsPanel(isActive2) {
     onDrop
   };
 }
-const _hoisted_1$L = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:py-1.5 ctv:px-2.5 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle" };
-const _hoisted_2$F = { class: "ctv:flex-1 ctv:font-semibold ctv:text-sm" };
-const _hoisted_3$B = ["disabled", "title"];
-const _hoisted_4$x = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-1.5 ctv:py-1.5 ctv:px-2.5 ctv:border-b ctv:border-border-subtle" };
-const _hoisted_5$v = { class: "ctv:relative ctv:flex-1 ctv:min-w-0" };
-const _hoisted_6$u = ["placeholder"];
-const _hoisted_7$r = ["title"];
+const _hoisted_1$M = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:py-1.5 ctv:px-2.5 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle" };
+const _hoisted_2$G = { class: "ctv:flex-1 ctv:font-semibold ctv:text-sm" };
+const _hoisted_3$C = ["disabled", "title"];
+const _hoisted_4$y = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-1.5 ctv:py-1.5 ctv:px-2.5 ctv:border-b ctv:border-border-subtle" };
+const _hoisted_5$w = { class: "ctv:relative ctv:flex-1 ctv:min-w-0" };
+const _hoisted_6$v = ["placeholder"];
+const _hoisted_7$s = ["title"];
 const _hoisted_8$q = { class: "ctv:shrink-0 ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1 ctv:py-1.5 ctv:px-2.5 ctv:border-b ctv:border-border-subtle" };
 const _hoisted_9$q = ["onDrop", "onClick"];
 const _hoisted_10$p = ["title", "onClick"];
@@ -20492,16 +20593,17 @@ const _hoisted_25$6 = { class: "ctv:flex-1 ctv:truncate" };
 const _hoisted_26$5 = { class: "ctv:flex-1 ctv:truncate" };
 const _hoisted_27$5 = { class: "ctv:flex-1 ctv:truncate" };
 const _hoisted_28$5 = { class: "ctv:flex-1 ctv:truncate" };
-const _hoisted_29$5 = {
+const _hoisted_29$5 = { class: "ctv:flex-1 ctv:truncate" };
+const _hoisted_30$4 = {
   key: 0,
   class: "ctv:py-2 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60 ctv:text-2xs"
 };
-const _hoisted_30$4 = ["onClick"];
-const _hoisted_31$4 = { class: "ctv:w-3 ctv:inline-flex ctv:text-primary-background" };
-const _hoisted_32$4 = { class: "ctv:flex-1 ctv:truncate" };
+const _hoisted_31$4 = ["onClick"];
+const _hoisted_32$4 = { class: "ctv:w-3 ctv:inline-flex ctv:text-primary-background" };
+const _hoisted_33$3 = { class: "ctv:flex-1 ctv:truncate" };
 const SETTINGS_MENU_WIDTH = 176;
 const chipCountClass$1 = "ctv:py-0 ctv:px-1 ctv:rounded-lg ctv:text-3xs ctv:bg-base-foreground/10";
-const _sfc_main$N = /* @__PURE__ */ defineComponent({
+const _sfc_main$O = /* @__PURE__ */ defineComponent({
   __name: "AssetsPanel",
   props: {
     active: { type: Boolean }
@@ -20534,12 +20636,15 @@ const _sfc_main$N = /* @__PURE__ */ defineComponent({
       assetMeta,
       assetMenu,
       assetMenuStyle,
+      menuAsset,
       openAssetMenu,
       closeAssetMenu,
       menuLoadNode,
       menuEditTags,
       menuRenameAsset,
       menuDeleteAsset,
+      menuViewFull,
+      viewFullAsset,
       onPickFiles,
       onCreateCategory,
       onRenameCategory,
@@ -20591,31 +20696,32 @@ const _sfc_main$N = /* @__PURE__ */ defineComponent({
       "ctv:hover:bg-interface-menu-component-surface-hovered"
     ].join(" ");
     return (_ctx, _cache2) => {
+      var _a2;
       return openBlock(), createElementBlock("div", {
         class: "ctv:relative ctv:flex ctv:flex-col ctv:size-full ctv:box-border ctv:overflow-hidden ctv:text-xs ctv:text-base-foreground",
-        onDragenter: _cache2[22] || (_cache2[22] = //@ts-ignore
+        onDragenter: _cache2[23] || (_cache2[23] = //@ts-ignore
         (...args) => unref(onDragEnter) && unref(onDragEnter)(...args)),
-        onDragover: _cache2[23] || (_cache2[23] = withModifiers(() => {
+        onDragover: _cache2[24] || (_cache2[24] = withModifiers(() => {
         }, ["prevent"])),
-        onDragleave: _cache2[24] || (_cache2[24] = //@ts-ignore
+        onDragleave: _cache2[25] || (_cache2[25] = //@ts-ignore
         (...args) => unref(onDragLeave) && unref(onDragLeave)(...args)),
-        onDrop: _cache2[25] || (_cache2[25] = withModifiers(
+        onDrop: _cache2[26] || (_cache2[26] = withModifiers(
           //@ts-ignore
           (...args) => unref(onDrop) && unref(onDrop)(...args),
           ["prevent"]
         ))
       }, [
-        createBaseVNode("div", _hoisted_1$L, [
-          createBaseVNode("span", _hoisted_2$F, toDisplayString$1(_ctx.$t("assets.title")), 1),
+        createBaseVNode("div", _hoisted_1$M, [
+          createBaseVNode("span", _hoisted_2$G, toDisplayString$1(_ctx.$t("assets.title")), 1),
           createBaseVNode("button", {
             class: normalizeClass(unref(addBtnClass)),
             disabled: unref(uploading),
             title: _ctx.$t("assets.addTooltip"),
             onClick: _cache2[0] || (_cache2[0] = ($event) => {
-              var _a2;
-              return (_a2 = filePicker.value) == null ? void 0 : _a2.click();
+              var _a3;
+              return (_a3 = filePicker.value) == null ? void 0 : _a3.click();
             })
-          }, toDisplayString$1(unref(uploading) ? _ctx.$t("assets.uploading", { done: unref(uploadDone), total: unref(uploadTotal) }) : `+ ${_ctx.$t("assets.add")}`), 11, _hoisted_3$B),
+          }, toDisplayString$1(unref(uploading) ? _ctx.$t("assets.uploading", { done: unref(uploadDone), total: unref(uploadTotal) }) : `+ ${_ctx.$t("assets.add")}`), 11, _hoisted_3$C),
           createBaseVNode("input", {
             ref_key: "filePicker",
             ref: filePicker,
@@ -20627,15 +20733,15 @@ const _sfc_main$N = /* @__PURE__ */ defineComponent({
             (...args) => unref(onPickFiles) && unref(onPickFiles)(...args))
           }, null, 544)
         ]),
-        createBaseVNode("div", _hoisted_4$x, [
-          createBaseVNode("div", _hoisted_5$v, [
+        createBaseVNode("div", _hoisted_4$y, [
+          createBaseVNode("div", _hoisted_5$w, [
             createVNode(unref(IconSearch), { class: "ctv:absolute ctv:left-2 ctv:top-1/2 ctv:-translate-y-1/2 ctv:size-3.5 ctv:text-muted-foreground ctv:pointer-events-none" }),
             withDirectives(createBaseVNode("input", {
               "onUpdate:modelValue": _cache2[2] || (_cache2[2] = ($event) => /* @__PURE__ */ isRef(searchQuery) ? searchQuery.value = $event : null),
               type: "text",
               placeholder: _ctx.$t("assets.search"),
               class: "ctv:w-full ctv:h-7 ctv:box-border ctv:pl-7 ctv:pr-2 ctv:rounded-lg ctv:text-xs ctv:[font-family:inherit] ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground ctv:placeholder:text-muted-foreground ctv:focus-visible:outline-none ctv:focus:border-border-default"
-            }, null, 8, _hoisted_6$u), [
+            }, null, 8, _hoisted_6$v), [
               [vModelText, unref(searchQuery)]
             ])
           ]),
@@ -20645,7 +20751,7 @@ const _sfc_main$N = /* @__PURE__ */ defineComponent({
             onClick: openSettingsMenu
           }, [
             createVNode(unref(IconSettings2), { class: "ctv:size-4" })
-          ], 10, _hoisted_7$r)
+          ], 10, _hoisted_7$s)
         ]),
         createBaseVNode("div", _hoisted_8$q, [
           createBaseVNode("button", {
@@ -20742,8 +20848,9 @@ const _sfc_main$N = /* @__PURE__ */ defineComponent({
                 tooltip: unref(assetTooltip)(asset),
                 onDragstart: ($event) => unref(onAssetDragStart)(asset, $event),
                 onContextmenu: withModifiers(($event) => unref(openAssetMenu)(asset, $event, "pointer"), ["prevent", "stop"]),
-                onOpenMenu: ($event) => unref(openAssetMenu)(asset, $event, "element")
-              }, null, 8, ["asset", "meta", "category-names", "tooltip", "onDragstart", "onContextmenu", "onOpenMenu"]);
+                onOpenMenu: ($event) => unref(openAssetMenu)(asset, $event, "element"),
+                onViewFull: ($event) => unref(viewFullAsset)(asset)
+              }, null, 8, ["asset", "meta", "category-names", "tooltip", "onDragstart", "onContextmenu", "onOpenMenu", "onViewFull"]);
             }), 128))
           ])) : (openBlock(), createElementBlock("div", _hoisted_20$9, [
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(visibleAssets), (asset) => {
@@ -20755,8 +20862,9 @@ const _sfc_main$N = /* @__PURE__ */ defineComponent({
                 tooltip: unref(assetTooltip)(asset),
                 onDragstart: ($event) => unref(onAssetDragStart)(asset, $event),
                 onContextmenu: withModifiers(($event) => unref(openAssetMenu)(asset, $event, "pointer"), ["prevent", "stop"]),
-                onOpenMenu: ($event) => unref(openAssetMenu)(asset, $event, "element")
-              }, null, 8, ["asset", "meta", "category-names", "tooltip", "onDragstart", "onContextmenu", "onOpenMenu"]);
+                onOpenMenu: ($event) => unref(openAssetMenu)(asset, $event, "element"),
+                onViewFull: ($event) => unref(viewFullAsset)(asset)
+              }, null, 8, ["asset", "meta", "category-names", "tooltip", "onDragstart", "onContextmenu", "onOpenMenu", "onViewFull"]);
             }), 128))
           ]))
         ]),
@@ -20800,76 +20908,85 @@ const _sfc_main$N = /* @__PURE__ */ defineComponent({
         unref(assetMenu) ? (openBlock(), createElementBlock("div", {
           key: 3,
           class: "ctv:fixed ctv:inset-0 ctv:z-20",
-          onClick: _cache2[18] || (_cache2[18] = ($event) => unref(closeAssetMenu)()),
-          onContextmenu: _cache2[19] || (_cache2[19] = withModifiers(($event) => unref(closeAssetMenu)(), ["prevent"]))
+          onClick: _cache2[19] || (_cache2[19] = ($event) => unref(closeAssetMenu)()),
+          onContextmenu: _cache2[20] || (_cache2[20] = withModifiers(($event) => unref(closeAssetMenu)(), ["prevent"]))
         }, [
           createBaseVNode("div", {
             class: "ctv:absolute ctv:w-48 ctv:p-1 ctv:rounded-lg ctv:shadow-md ctv:bg-interface-menu-surface ctv:border ctv:border-interface-menu-stroke",
             style: normalizeStyle(unref(assetMenuStyle)),
-            onClick: _cache2[17] || (_cache2[17] = withModifiers(() => {
+            onClick: _cache2[18] || (_cache2[18] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createBaseVNode("button", {
+            ((_a2 = unref(menuAsset)) == null ? void 0 : _a2.media_type) === "image" ? (openBlock(), createElementBlock("button", {
+              key: 0,
               class: normalizeClass(unref(menuItemClass)),
               onClick: _cache2[13] || (_cache2[13] = //@ts-ignore
-              (...args) => unref(menuLoadNode) && unref(menuLoadNode)(...args))
+              (...args) => unref(menuViewFull) && unref(menuViewFull)(...args))
             }, [
-              createVNode(unref(IconDownload), { class: "ctv:size-4 ctv:shrink-0" }),
-              createBaseVNode("span", _hoisted_25$6, toDisplayString$1(_ctx.$t("assets.card.loadNode")), 1)
-            ], 2),
+              createVNode(unref(IconMaximize), { class: "ctv:size-4 ctv:shrink-0" }),
+              createBaseVNode("span", _hoisted_25$6, toDisplayString$1(_ctx.$t("stage.action.viewFull")), 1)
+            ], 2)) : createCommentVNode("", true),
             createBaseVNode("button", {
               class: normalizeClass(unref(menuItemClass)),
               onClick: _cache2[14] || (_cache2[14] = //@ts-ignore
-              (...args) => unref(menuEditTags) && unref(menuEditTags)(...args))
+              (...args) => unref(menuLoadNode) && unref(menuLoadNode)(...args))
             }, [
-              createVNode(unref(IconTag), { class: "ctv:size-4 ctv:shrink-0" }),
-              createBaseVNode("span", _hoisted_26$5, toDisplayString$1(_ctx.$t("assets.card.tags")), 1)
+              createVNode(unref(IconDownload), { class: "ctv:size-4 ctv:shrink-0" }),
+              createBaseVNode("span", _hoisted_26$5, toDisplayString$1(_ctx.$t("assets.card.loadNode")), 1)
             ], 2),
             createBaseVNode("button", {
               class: normalizeClass(unref(menuItemClass)),
               onClick: _cache2[15] || (_cache2[15] = //@ts-ignore
+              (...args) => unref(menuEditTags) && unref(menuEditTags)(...args))
+            }, [
+              createVNode(unref(IconTag), { class: "ctv:size-4 ctv:shrink-0" }),
+              createBaseVNode("span", _hoisted_27$5, toDisplayString$1(_ctx.$t("assets.card.tags")), 1)
+            ], 2),
+            createBaseVNode("button", {
+              class: normalizeClass(unref(menuItemClass)),
+              onClick: _cache2[16] || (_cache2[16] = //@ts-ignore
               (...args) => unref(menuRenameAsset) && unref(menuRenameAsset)(...args))
             }, [
               createVNode(unref(IconPencil), { class: "ctv:size-4 ctv:shrink-0" }),
-              createBaseVNode("span", _hoisted_27$5, toDisplayString$1(_ctx.$t("assets.card.rename")), 1)
+              createBaseVNode("span", _hoisted_28$5, toDisplayString$1(_ctx.$t("assets.card.rename")), 1)
             ], 2),
-            _cache2[26] || (_cache2[26] = createBaseVNode("div", { class: "ctv:my-1 ctv:border-b ctv:border-border-subtle" }, null, -1)),
+            _cache2[27] || (_cache2[27] = createBaseVNode("div", { class: "ctv:my-1 ctv:border-b ctv:border-border-subtle" }, null, -1)),
             createBaseVNode("button", {
               class: normalizeClass(`${unref(menuItemClass)} ctv:hover:text-destructive-background`),
-              onClick: _cache2[16] || (_cache2[16] = //@ts-ignore
+              onClick: _cache2[17] || (_cache2[17] = //@ts-ignore
               (...args) => unref(menuDeleteAsset) && unref(menuDeleteAsset)(...args))
             }, [
               createVNode(unref(IconTrash2), { class: "ctv:size-4 ctv:shrink-0" }),
-              createBaseVNode("span", _hoisted_28$5, toDisplayString$1(_ctx.$t("assets.card.delete")), 1)
+              createBaseVNode("span", _hoisted_29$5, toDisplayString$1(_ctx.$t("assets.card.delete")), 1)
             ], 2)
           ], 4)
         ], 32)) : createCommentVNode("", true),
         unref(tagEditor) ? (openBlock(), createElementBlock("div", {
           key: 4,
           class: "ctv:fixed ctv:inset-0 ctv:z-20",
-          onClick: _cache2[21] || (_cache2[21] = ($event) => unref(closeTagEditor)())
+          onClick: _cache2[22] || (_cache2[22] = ($event) => unref(closeTagEditor)())
         }, [
           createBaseVNode("div", {
             class: "ctv:absolute ctv:w-44 ctv:max-h-64 ctv:overflow-y-auto ctv:p-1 ctv:rounded ctv:shadow-md ctv:bg-interface-menu-surface ctv:border ctv:border-border-default",
             style: normalizeStyle(unref(tagEditorStyle)),
-            onClick: _cache2[20] || (_cache2[20] = withModifiers(() => {
+            onClick: _cache2[21] || (_cache2[21] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            unref(store).categories.length === 0 ? (openBlock(), createElementBlock("div", _hoisted_29$5, toDisplayString$1(_ctx.$t("assets.tagPopover.empty")), 1)) : createCommentVNode("", true),
+            unref(store).categories.length === 0 ? (openBlock(), createElementBlock("div", _hoisted_30$4, toDisplayString$1(_ctx.$t("assets.tagPopover.empty")), 1)) : createCommentVNode("", true),
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(store).categories, (cat2) => {
               return openBlock(), createElementBlock("button", {
                 key: cat2.id,
                 class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:px-1.5 ctv:py-1 ctv:rounded-sm ctv:cursor-pointer ctv:text-left ctv:text-2xs ctv:[font-family:inherit] ctv:bg-transparent ctv:border-none ctv:text-base-foreground ctv:hover:bg-secondary-background-hover",
                 onClick: ($event) => unref(toggleTag)(cat2.id)
               }, [
-                createBaseVNode("span", _hoisted_31$4, [
+                createBaseVNode("span", _hoisted_32$4, [
                   unref(editorHas)(cat2.id) ? (openBlock(), createBlock(unref(IconCheck), {
                     key: 0,
                     class: "ctv:size-3"
                   })) : createCommentVNode("", true)
                 ]),
-                createBaseVNode("span", _hoisted_32$4, toDisplayString$1(cat2.name), 1)
-              ], 8, _hoisted_30$4);
+                createBaseVNode("span", _hoisted_33$3, toDisplayString$1(cat2.name), 1)
+              ], 8, _hoisted_31$4);
             }), 128))
           ], 4)
         ])) : createCommentVNode("", true)
@@ -21591,16 +21708,16 @@ function useSize(element) {
   };
 }
 function useStateMachine(initialState, machine) {
-  const state = /* @__PURE__ */ ref(initialState);
+  const state2 = /* @__PURE__ */ ref(initialState);
   function reducer(event) {
-    const nextState = machine[state.value][event];
-    return nextState ?? state.value;
+    const nextState = machine[state2.value][event];
+    return nextState ?? state2.value;
   }
   const dispatch = (event) => {
-    state.value = reducer(event);
+    state2.value = reducer(event);
   };
   return {
-    state,
+    state: state2,
     dispatch
   };
 }
@@ -21655,7 +21772,7 @@ function usePresence(present, node) {
   const initialState = present.value ? "mounted" : "unmounted";
   let timeoutId;
   const ownerWindow = ((_a2 = node.value) == null ? void 0 : _a2.ownerDocument.defaultView) ?? defaultWindow;
-  const { state, dispatch } = useStateMachine(initialState, {
+  const { state: state2, dispatch } = useStateMachine(initialState, {
     mounted: {
       UNMOUNT: "unmounted",
       ANIMATION_OUT: "unmountSuspended"
@@ -21706,7 +21823,7 @@ function usePresence(present, node) {
   const handleAnimationEnd = (event) => {
     const currentAnimationName = getAnimationName(node.value);
     const isCurrentAnimation = currentAnimationName.includes(CSS.escape(event.animationName));
-    const directionName = state.value === "mounted" ? "enter" : "leave";
+    const directionName = state2.value === "mounted" ? "enter" : "leave";
     if (event.target === node.value && isCurrentAnimation) {
       dispatchCustomEvent(`after-${directionName}`);
       dispatch("ANIMATION_END");
@@ -21738,15 +21855,15 @@ function usePresence(present, node) {
       oldNode == null ? void 0 : oldNode.removeEventListener("animationend", handleAnimationEnd);
     }
   }, { immediate: true });
-  const stateWatcher = watch(state, () => {
+  const stateWatcher = watch(state2, () => {
     const currentAnimationName = getAnimationName(node.value);
-    prevAnimationNameRef.value = state.value === "mounted" ? currentAnimationName : "none";
+    prevAnimationNameRef.value = state2.value === "mounted" ? currentAnimationName : "none";
   });
   onUnmounted(() => {
     watcher();
     stateWatcher();
   });
-  const isPresent = computed(() => ["mounted", "unmountSuspended"].includes(state.value));
+  const isPresent = computed(() => ["mounted", "unmountSuspended"].includes(state2.value));
   return { isPresent };
 }
 function getAnimationName(node) {
@@ -23513,7 +23630,7 @@ function computeCoordsFromPlacement(_ref, placement, rtl) {
   }
   return coords;
 }
-async function detectOverflow$1(state, options) {
+async function detectOverflow$1(state2, options) {
   var _await$platform$isEle;
   if (options === void 0) {
     options = {};
@@ -23525,14 +23642,14 @@ async function detectOverflow$1(state, options) {
     rects,
     elements,
     strategy
-  } = state;
+  } = state2;
   const {
     boundary = "clippingAncestors",
     rootBoundary = "viewport",
     elementContext = "floating",
     altBoundary = false,
     padding = 0
-  } = evaluate(options, state);
+  } = evaluate(options, state2);
   const paddingObject = getPaddingObject(padding);
   const altContext = elementContext === "floating" ? "reference" : "floating";
   const element = elements[altBoundary ? altContext : elementContext];
@@ -23660,7 +23777,7 @@ const computePosition$1 = async (reference2, floating, config2) => {
 const arrow$5 = (options) => ({
   name: "arrow",
   options,
-  async fn(state) {
+  async fn(state2) {
     const {
       x,
       y,
@@ -23669,11 +23786,11 @@ const arrow$5 = (options) => ({
       platform: platform2,
       elements,
       middlewareData
-    } = state;
+    } = state2;
     const {
       element,
       padding = 0
-    } = evaluate(options, state) || {};
+    } = evaluate(options, state2) || {};
     if (element == null) {
       return {};
     }
@@ -23726,7 +23843,7 @@ const flip$3 = function(options) {
   return {
     name: "flip",
     options,
-    async fn(state) {
+    async fn(state2) {
       var _middlewareData$arrow, _middlewareData$flip;
       const {
         placement,
@@ -23735,7 +23852,7 @@ const flip$3 = function(options) {
         initialPlacement,
         platform: platform2,
         elements
-      } = state;
+      } = state2;
       const {
         mainAxis: checkMainAxis = true,
         crossAxis: checkCrossAxis = true,
@@ -23744,7 +23861,7 @@ const flip$3 = function(options) {
         fallbackAxisSideDirection = "none",
         flipAlignment = true,
         ...detectOverflowOptions
-      } = evaluate(options, state);
+      } = evaluate(options, state2);
       if ((_middlewareData$arrow = middlewareData.arrow) != null && _middlewareData$arrow.alignmentOffset) {
         return {};
       }
@@ -23758,7 +23875,7 @@ const flip$3 = function(options) {
         fallbackPlacements.push(...getOppositeAxisPlacements(initialPlacement, flipAlignment, fallbackAxisSideDirection, rtl));
       }
       const placements2 = [initialPlacement, ...fallbackPlacements];
-      const overflow = await platform2.detectOverflow(state, detectOverflowOptions);
+      const overflow = await platform2.detectOverflow(state2, detectOverflowOptions);
       const overflows = [];
       let overflowsData = ((_middlewareData$flip = middlewareData.flip) == null ? void 0 : _middlewareData$flip.overflows) || [];
       if (checkMainAxis) {
@@ -23846,18 +23963,18 @@ const hide$3 = function(options) {
   return {
     name: "hide",
     options,
-    async fn(state) {
+    async fn(state2) {
       const {
         rects,
         platform: platform2
-      } = state;
+      } = state2;
       const {
         strategy = "referenceHidden",
         ...detectOverflowOptions
-      } = evaluate(options, state);
+      } = evaluate(options, state2);
       switch (strategy) {
         case "referenceHidden": {
-          const overflow = await platform2.detectOverflow(state, {
+          const overflow = await platform2.detectOverflow(state2, {
             ...detectOverflowOptions,
             elementContext: "reference"
           });
@@ -23870,7 +23987,7 @@ const hide$3 = function(options) {
           };
         }
         case "escaped": {
-          const overflow = await platform2.detectOverflow(state, {
+          const overflow = await platform2.detectOverflow(state2, {
             ...detectOverflowOptions,
             altBoundary: true
           });
@@ -23890,19 +24007,19 @@ const hide$3 = function(options) {
   };
 };
 const originSides = /* @__PURE__ */ new Set(["left", "top"]);
-async function convertValueToCoords(state, options) {
+async function convertValueToCoords(state2, options) {
   const {
     placement,
     platform: platform2,
     elements
-  } = state;
+  } = state2;
   const rtl = await (platform2.isRTL == null ? void 0 : platform2.isRTL(elements.floating));
   const side = getSide$1(placement);
   const alignment = getAlignment(placement);
   const isVertical = getSideAxis(placement) === "y";
   const mainAxisMulti = originSides.has(side) ? -1 : 1;
   const crossAxisMulti = rtl && isVertical ? -1 : 1;
-  const rawValue = evaluate(options, state);
+  const rawValue = evaluate(options, state2);
   let {
     mainAxis,
     crossAxis,
@@ -23934,15 +24051,15 @@ const offset$3 = function(options) {
   return {
     name: "offset",
     options,
-    async fn(state) {
+    async fn(state2) {
       var _middlewareData$offse, _middlewareData$arrow;
       const {
         x,
         y,
         placement,
         middlewareData
-      } = state;
-      const diffCoords = await convertValueToCoords(state, options);
+      } = state2;
+      const diffCoords = await convertValueToCoords(state2, options);
       if (placement === ((_middlewareData$offse = middlewareData.offset) == null ? void 0 : _middlewareData$offse.placement) && (_middlewareData$arrow = middlewareData.arrow) != null && _middlewareData$arrow.alignmentOffset) {
         return {};
       }
@@ -23964,13 +24081,13 @@ const shift$2 = function(options) {
   return {
     name: "shift",
     options,
-    async fn(state) {
+    async fn(state2) {
       const {
         x,
         y,
         placement,
         platform: platform2
-      } = state;
+      } = state2;
       const {
         mainAxis: checkMainAxis = true,
         crossAxis: checkCrossAxis = false,
@@ -23987,12 +24104,12 @@ const shift$2 = function(options) {
           }
         },
         ...detectOverflowOptions
-      } = evaluate(options, state);
+      } = evaluate(options, state2);
       const coords = {
         x,
         y
       };
-      const overflow = await platform2.detectOverflow(state, detectOverflowOptions);
+      const overflow = await platform2.detectOverflow(state2, detectOverflowOptions);
       const crossAxis = getSideAxis(getSide$1(placement));
       const mainAxis = getOppositeAxis(crossAxis);
       let mainAxisCoord = coords[mainAxis];
@@ -24012,7 +24129,7 @@ const shift$2 = function(options) {
         crossAxisCoord = clamp$1(min2, crossAxisCoord, max2);
       }
       const limitedCoords = limiter.fn({
-        ...state,
+        ...state2,
         [mainAxis]: mainAxisCoord,
         [crossAxis]: crossAxisCoord
       });
@@ -24036,19 +24153,19 @@ const limitShift$1 = function(options) {
   }
   return {
     options,
-    fn(state) {
+    fn(state2) {
       const {
         x,
         y,
         placement,
         rects,
         middlewareData
-      } = state;
+      } = state2;
       const {
         offset: offset2 = 0,
         mainAxis: checkMainAxis = true,
         crossAxis: checkCrossAxis = true
-      } = evaluate(options, state);
+      } = evaluate(options, state2);
       const coords = {
         x,
         y
@@ -24057,7 +24174,7 @@ const limitShift$1 = function(options) {
       const mainAxis = getOppositeAxis(crossAxis);
       let mainAxisCoord = coords[mainAxis];
       let crossAxisCoord = coords[crossAxis];
-      const rawOffset = evaluate(offset2, state);
+      const rawOffset = evaluate(offset2, state2);
       const computedOffset = typeof rawOffset === "number" ? {
         mainAxis: rawOffset,
         crossAxis: 0
@@ -24102,20 +24219,20 @@ const size$1 = function(options) {
   return {
     name: "size",
     options,
-    async fn(state) {
+    async fn(state2) {
       var _state$middlewareData, _state$middlewareData2;
       const {
         placement,
         rects,
         platform: platform2,
         elements
-      } = state;
+      } = state2;
       const {
         apply: apply2 = () => {
         },
         ...detectOverflowOptions
-      } = evaluate(options, state);
-      const overflow = await platform2.detectOverflow(state, detectOverflowOptions);
+      } = evaluate(options, state2);
+      const overflow = await platform2.detectOverflow(state2, detectOverflowOptions);
       const side = getSide$1(placement);
       const alignment = getAlignment(placement);
       const isYAxis = getSideAxis(placement) === "y";
@@ -24136,13 +24253,13 @@ const size$1 = function(options) {
       const maximumClippingWidth = width - overflow.left - overflow.right;
       const overflowAvailableHeight = min$1(height - overflow[heightSide], maximumClippingHeight);
       const overflowAvailableWidth = min$1(width - overflow[widthSide], maximumClippingWidth);
-      const noShift = !state.middlewareData.shift;
+      const noShift = !state2.middlewareData.shift;
       let availableHeight = overflowAvailableHeight;
       let availableWidth = overflowAvailableWidth;
-      if ((_state$middlewareData = state.middlewareData.shift) != null && _state$middlewareData.enabled.x) {
+      if ((_state$middlewareData = state2.middlewareData.shift) != null && _state$middlewareData.enabled.x) {
         availableWidth = maximumClippingWidth;
       }
-      if ((_state$middlewareData2 = state.middlewareData.shift) != null && _state$middlewareData2.enabled.y) {
+      if ((_state$middlewareData2 = state2.middlewareData.shift) != null && _state$middlewareData2.enabled.y) {
         availableHeight = maximumClippingHeight;
       }
       if (noShift && !alignment) {
@@ -24157,7 +24274,7 @@ const size$1 = function(options) {
         }
       }
       await apply2({
-        ...state,
+        ...state2,
         availableWidth,
         availableHeight
       });
@@ -28106,22 +28223,22 @@ var SwitchThumb_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ de
   }
 });
 var SwitchThumb_default = SwitchThumb_vue_vue_type_script_setup_true_lang_default;
-const _hoisted_1$K = ["disabled", "aria-expanded"];
-const _hoisted_2$E = { class: "ctv:truncate ctv:text-left" };
-const _hoisted_3$A = {
+const _hoisted_1$L = ["disabled", "aria-expanded"];
+const _hoisted_2$F = { class: "ctv:truncate ctv:text-left" };
+const _hoisted_3$B = {
   key: 0,
   class: "ctv:px-1 ctv:pb-2"
 };
-const _hoisted_4$w = {
+const _hoisted_4$x = {
   class: "ctv:max-h-60 ctv:overflow-y-auto",
   role: "presentation"
 };
-const _hoisted_5$u = { class: "ctv:truncate" };
-const _hoisted_6$t = {
+const _hoisted_5$v = { class: "ctv:truncate" };
+const _hoisted_6$u = {
   key: 0,
   class: "ctv:px-3 ctv:pb-2 ctv:text-xs ctv:text-muted-foreground"
 };
-const _sfc_main$M = /* @__PURE__ */ defineComponent({
+const _sfc_main$N = /* @__PURE__ */ defineComponent({
   __name: "ComfyTVSelect",
   props: {
     modelValue: {},
@@ -28182,9 +28299,9 @@ const _sfc_main$M = /* @__PURE__ */ defineComponent({
                     disabled: __props.disabled,
                     "aria-expanded": isOpen.value
                   }, [
-                    createBaseVNode("span", _hoisted_2$E, toDisplayString$1(display.value), 1),
+                    createBaseVNode("span", _hoisted_2$F, toDisplayString$1(display.value), 1),
                     _cache2[2] || (_cache2[2] = createBaseVNode("i", { class: "pi pi-chevron-down ctv:shrink-0 ctv:text-muted-foreground ctv:text-2xs" }, null, -1))
-                  ], 8, _hoisted_1$K)
+                  ], 8, _hoisted_1$L)
                 ]),
                 _: 1
               })
@@ -28200,7 +28317,7 @@ const _sfc_main$M = /* @__PURE__ */ defineComponent({
                 align: "start"
               }, {
                 default: withCtx(() => [
-                  filterable.value ? (openBlock(), createElementBlock("div", _hoisted_3$A, [
+                  filterable.value ? (openBlock(), createElementBlock("div", _hoisted_3$B, [
                     createVNode(unref(ComboboxInput_default), {
                       modelValue: query.value,
                       "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => query.value = $event),
@@ -28209,7 +28326,7 @@ const _sfc_main$M = /* @__PURE__ */ defineComponent({
                       class: "ctv:flex ctv:h-7 ctv:w-full ctv:min-w-0 ctv:appearance-none ctv:rounded-lg ctv:border-none ctv:bg-secondary-background ctv:px-3 ctv:py-1 ctv:text-xs ctv:text-base-foreground ctv:placeholder:text-muted-foreground ctv:focus-visible:ring-1 ctv:focus-visible:ring-border-default ctv:focus-visible:outline-none"
                     }, null, 8, ["modelValue", "placeholder"])
                   ])) : createCommentVNode("", true),
-                  createBaseVNode("div", _hoisted_4$w, [
+                  createBaseVNode("div", _hoisted_4$x, [
                     (openBlock(true), createElementBlock(Fragment$1, null, renderList(filteredOptions.value, (opt) => {
                       return openBlock(), createBlock(unref(ComboboxItem_default), {
                         key: opt.value,
@@ -28218,7 +28335,7 @@ const _sfc_main$M = /* @__PURE__ */ defineComponent({
                         class: "ctv:relative ctv:flex ctv:w-full ctv:cursor-pointer ctv:items-center ctv:justify-between ctv:select-none ctv:gap-3 ctv:rounded-sm ctv:px-2 ctv:py-2 ctv:text-xs ctv:outline-none ctv:hover:bg-secondary-background-hover ctv:data-[highlighted]:bg-secondary-background-hover ctv:data-[state=checked]:bg-secondary-background-selected ctv:data-[state=checked]:hover:bg-secondary-background-selected"
                       }, {
                         default: withCtx(() => [
-                          createBaseVNode("span", _hoisted_5$u, toDisplayString$1(opt.label), 1),
+                          createBaseVNode("span", _hoisted_5$v, toDisplayString$1(opt.label), 1),
                           createVNode(unref(ComboboxItemIndicator_default), { class: "ctv:flex ctv:shrink-0 ctv:items-center ctv:justify-center ctv:text-base-foreground" }, {
                             default: withCtx(() => [..._cache2[3] || (_cache2[3] = [
                               createBaseVNode("i", { class: "pi pi-check" }, null, -1)
@@ -28229,7 +28346,7 @@ const _sfc_main$M = /* @__PURE__ */ defineComponent({
                         _: 2
                       }, 1032, ["value", "text-value"]);
                     }), 128)),
-                    !filteredOptions.value.length ? (openBlock(), createElementBlock("div", _hoisted_6$t, " no matches ")) : createCommentVNode("", true)
+                    !filteredOptions.value.length ? (openBlock(), createElementBlock("div", _hoisted_6$u, " no matches ")) : createCommentVNode("", true)
                   ])
                 ]),
                 _: 1
@@ -28243,7 +28360,7 @@ const _sfc_main$M = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _sfc_main$L = /* @__PURE__ */ defineComponent({
+const _sfc_main$M = /* @__PURE__ */ defineComponent({
   __name: "ComfyTVNumber",
   props: {
     modelValue: {},
@@ -28304,7 +28421,7 @@ const _sfc_main$L = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _sfc_main$K = /* @__PURE__ */ defineComponent({
+const _sfc_main$L = /* @__PURE__ */ defineComponent({
   __name: "ComfyTVToggle",
   props: {
     modelValue: { type: [Boolean, null] },
@@ -28331,9 +28448,9 @@ const _sfc_main$K = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$J = ["value", "disabled", "rows", "placeholder"];
-const _hoisted_2$D = ["value", "disabled", "placeholder"];
-const _sfc_main$J = /* @__PURE__ */ defineComponent({
+const _hoisted_1$K = ["value", "disabled", "rows", "placeholder"];
+const _hoisted_2$E = ["value", "disabled", "placeholder"];
+const _sfc_main$K = /* @__PURE__ */ defineComponent({
   __name: "ComfyTVText",
   props: {
     modelValue: {},
@@ -28377,7 +28494,7 @@ const _sfc_main$J = /* @__PURE__ */ defineComponent({
         rows: __props.rows ?? 3,
         placeholder: __props.placeholder ?? "",
         onInput: onTextareaInput
-      }, null, 40, _hoisted_1$J)) : (openBlock(), createElementBlock("input", {
+      }, null, 40, _hoisted_1$K)) : (openBlock(), createElementBlock("input", {
         key: 1,
         class: "ctv-text-input",
         type: "text",
@@ -28385,12 +28502,12 @@ const _sfc_main$J = /* @__PURE__ */ defineComponent({
         disabled: __props.disabled,
         placeholder: __props.placeholder ?? "",
         onInput
-      }, null, 40, _hoisted_2$D));
+      }, null, 40, _hoisted_2$E));
     };
   }
 });
-const _hoisted_1$I = ["value", "title"];
-const _sfc_main$I = /* @__PURE__ */ defineComponent({
+const _hoisted_1$J = ["value", "title"];
+const _sfc_main$J = /* @__PURE__ */ defineComponent({
   __name: "ComfyTVWidget",
   props: {
     kind: {},
@@ -28422,14 +28539,14 @@ const _sfc_main$I = /* @__PURE__ */ defineComponent({
       () => props.multiline === true || stringValue.value.includes("\n")
     );
     return (_ctx, _cache2) => {
-      return __props.kind === "COMBO" ? (openBlock(), createBlock(_sfc_main$M, {
+      return __props.kind === "COMBO" ? (openBlock(), createBlock(_sfc_main$N, {
         key: 0,
         "model-value": __props.modelValue,
         options: __props.options ?? [],
         disabled: __props.disabled,
         placeholder: __props.placeholder,
         "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => emit2("update:modelValue", $event))
-      }, null, 8, ["model-value", "options", "disabled", "placeholder"])) : __props.kind === "INT" || __props.kind === "FLOAT" ? (openBlock(), createBlock(_sfc_main$L, {
+      }, null, 8, ["model-value", "options", "disabled", "placeholder"])) : __props.kind === "INT" || __props.kind === "FLOAT" ? (openBlock(), createBlock(_sfc_main$M, {
         key: 1,
         "model-value": numericValue.value,
         disabled: __props.disabled,
@@ -28438,12 +28555,12 @@ const _sfc_main$I = /* @__PURE__ */ defineComponent({
         step: __props.step ?? (__props.kind === "INT" ? 1 : 0.01),
         precision: __props.kind === "INT" ? 0 : __props.precision,
         "onUpdate:modelValue": _cache2[1] || (_cache2[1] = ($event) => emit2("update:modelValue", $event))
-      }, null, 8, ["model-value", "disabled", "min", "max", "step", "precision"])) : __props.kind === "BOOLEAN" ? (openBlock(), createBlock(_sfc_main$K, {
+      }, null, 8, ["model-value", "disabled", "min", "max", "step", "precision"])) : __props.kind === "BOOLEAN" ? (openBlock(), createBlock(_sfc_main$L, {
         key: 2,
         "model-value": boolValue.value,
         disabled: __props.disabled,
         "onUpdate:modelValue": _cache2[2] || (_cache2[2] = ($event) => emit2("update:modelValue", $event))
-      }, null, 8, ["model-value", "disabled"])) : __props.kind === "STRING" ? (openBlock(), createBlock(_sfc_main$J, {
+      }, null, 8, ["model-value", "disabled"])) : __props.kind === "STRING" ? (openBlock(), createBlock(_sfc_main$K, {
         key: 3,
         "model-value": stringValue.value,
         disabled: __props.disabled,
@@ -28456,7 +28573,7 @@ const _sfc_main$I = /* @__PURE__ */ defineComponent({
         value: String(__props.modelValue ?? ""),
         readonly: "",
         title: `Unsupported widget type: ${__props.kind}`
-      }, null, 8, _hoisted_1$I));
+      }, null, 8, _hoisted_1$J));
     };
   }
 });
@@ -29380,16 +29497,16 @@ function prepareWorkflow(kind, label) {
   const task = (async () => {
     _set(key, { busy: true, error: null });
     try {
-      const state = await apiFetch(
+      const state2 = await apiFetch(
         `/comfytv/workflows/state?kind=${encodeURIComponent(kind)}&label=${encodeURIComponent(label)}`,
         WorkflowStateSchema
       );
-      if (state.has_api) {
+      if (state2.has_api) {
         _set(key, { busy: false, ready: true });
         return;
       }
-      if (!state.file_exists) {
-        throw new Error(`workflow file missing on disk: ${state.file_path}`);
+      if (!state2.file_exists) {
+        throw new Error(`workflow file missing on disk: ${state2.file_path}`);
       }
       const fileResp = await app.api.fetchApi(
         `/comfytv/workflows/file?kind=${encodeURIComponent(kind)}&label=${encodeURIComponent(label)}`
@@ -29398,7 +29515,7 @@ function prepareWorkflow(kind, label) {
         throw new Error(`fetch file: ${fileResp.status} ${fileResp.statusText}`);
       }
       const mtimeHeader = fileResp.headers.get("X-Workflow-Mtime");
-      const fileMtime = mtimeHeader ? Number(mtimeHeader) : state.file_mtime ?? 0;
+      const fileMtime = mtimeHeader ? Number(mtimeHeader) : state2.file_mtime ?? 0;
       const guiJsonText = await fileResp.text();
       const guiJson = JSON.parse(guiJsonText);
       if (!guiJson || typeof guiJson !== "object" || !Array.isArray(guiJson.nodes)) {
@@ -29409,7 +29526,7 @@ function prepareWorkflow(kind, label) {
       const apiJson = await convertGuiToApiHeadless(guiJson);
       const nodeCount = apiJson && typeof apiJson === "object" && !Array.isArray(apiJson) ? Object.keys(apiJson).length : 0;
       if (nodeCount === 0) {
-        const sidecar = String(state.file_path || `${label}.json`).replace(/\.json$/i, ".api.json");
+        const sidecar = String(state2.file_path || `${label}.json`).replace(/\.json$/i, ".api.json");
         throw new Error(
           `Couldn't convert "${label}" to an API prompt: the GUI→API conversion ran but emitted nothing (0 nodes) — usually a subgraph that fails to expand in this ComfyUI setup. The workflow was NOT saved.
 
@@ -29882,19 +29999,19 @@ function buildBindingOptions(widgets, workflowKind) {
   }
   return out;
 }
-const _hoisted_1$H = { class: "ctv:flex ctv:flex-col ctv:size-full ctv:box-border ctv:overflow-auto ctv:text-xs ctv:pt-2 ctv:pb-6 ctv:px-2.5 ctv:text-base-foreground" };
-const _hoisted_2$C = { class: "ctv:sticky ctv:-top-2 ctv:z-[1] ctv:-mx-2.5 ctv:-mt-2 ctv:mb-2 ctv:py-1.5 ctv:px-2.5 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle" };
-const _hoisted_3$z = { class: "ctv:font-semibold ctv:text-sm" };
-const _hoisted_4$v = {
+const _hoisted_1$I = { class: "ctv:flex ctv:flex-col ctv:size-full ctv:box-border ctv:overflow-auto ctv:text-xs ctv:pt-2 ctv:pb-6 ctv:px-2.5 ctv:text-base-foreground" };
+const _hoisted_2$D = { class: "ctv:sticky ctv:-top-2 ctv:z-[1] ctv:-mx-2.5 ctv:-mt-2 ctv:mb-2 ctv:py-1.5 ctv:px-2.5 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle" };
+const _hoisted_3$A = { class: "ctv:font-semibold ctv:text-sm" };
+const _hoisted_4$w = {
   key: 2,
   class: "ctv:my-1.5 ctv:py-1.5 ctv:px-2 ctv:text-xs ctv:rounded ctv:bg-destructive-background/15 ctv:border ctv:border-destructive-background/50 ctv:text-destructive-background"
 };
-const _hoisted_5$t = {
+const _hoisted_5$u = {
   key: 3,
   class: "ctv:flex ctv:flex-col ctv:gap-3"
 };
-const _hoisted_6$s = { class: "ctv:flex ctv:flex-col ctv:gap-0.5 ctv:pt-1 ctv:pb-2 ctv:border-b ctv:border-border-subtle" };
-const _hoisted_7$q = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_6$t = { class: "ctv:flex ctv:flex-col ctv:gap-0.5 ctv:pt-1 ctv:pb-2 ctv:border-b ctv:border-border-subtle" };
+const _hoisted_7$r = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_8$p = { class: "ctv:text-xs ctv:font-semibold" };
 const _hoisted_9$p = {
   key: 0,
@@ -29960,8 +30077,8 @@ const _hoisted_41$1 = {
   class: "ctv:grid ctv:grid-cols-[42px_1fr] ctv:items-center ctv:gap-1.5"
 };
 const _hoisted_42$1 = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_43$1 = { class: "ctv:m-0 ctv:text-2xs ctv:italic ctv:text-muted-foreground/60" };
-const _hoisted_44$1 = { key: 5 };
+const _hoisted_43 = { class: "ctv:m-0 ctv:text-2xs ctv:italic ctv:text-muted-foreground/60" };
+const _hoisted_44 = { key: 5 };
 const _hoisted_45 = { class: "ctv:m-0 ctv:text-xs ctv:whitespace-pre-wrap ctv:text-muted-foreground" };
 const _hoisted_46 = { class: "ctv:mt-4 ctv:pt-2.5 ctv:pb-3.5 ctv:px-3 ctv:flex ctv:flex-col ctv:gap-1 ctv:border-t ctv:border-border-subtle" };
 const _hoisted_47 = ["disabled", "title"];
@@ -29976,7 +30093,7 @@ const _hoisted_50 = {
 };
 const emptyClass = "ctv:py-5 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-xs ctv:text-muted-foreground/60";
 const sectionHeading = "ctv:mt-1 ctv:mb-1.5 ctv:text-xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground";
-const _sfc_main$H = /* @__PURE__ */ defineComponent({
+const _sfc_main$I = /* @__PURE__ */ defineComponent({
   __name: "WorkflowConfigSidebar",
   setup(__props) {
     const { t: t2 } = useI18n();
@@ -30127,9 +30244,9 @@ const _sfc_main$H = /* @__PURE__ */ defineComponent({
     const resetBtn = COMFY_BTN_SM + " ctv:self-start ctv:bg-transparent ctv:text-muted-foreground ctv:hover:bg-warning-background/10 ctv:hover:text-warning-background";
     return (_ctx, _cache2) => {
       var _a2, _b2;
-      return openBlock(), createElementBlock("div", _hoisted_1$H, [
-        createBaseVNode("div", _hoisted_2$C, [
-          createBaseVNode("span", _hoisted_3$z, toDisplayString$1(_ctx.$t("configSidebar.title")), 1)
+      return openBlock(), createElementBlock("div", _hoisted_1$I, [
+        createBaseVNode("div", _hoisted_2$D, [
+          createBaseVNode("span", _hoisted_3$A, toDisplayString$1(_ctx.$t("configSidebar.title")), 1)
         ]),
         !selected.value ? (openBlock(), createElementBlock("div", {
           key: 0,
@@ -30137,9 +30254,9 @@ const _sfc_main$H = /* @__PURE__ */ defineComponent({
         }, toDisplayString$1(_ctx.$t("configSidebar.empty")), 1)) : !selected.value.workflowLabel ? (openBlock(), createElementBlock("div", {
           key: 1,
           class: normalizeClass(emptyClass)
-        }, toDisplayString$1(_ctx.$t("configSidebar.noWorkflowPicked")), 1)) : unref(loadError) ? (openBlock(), createElementBlock("div", _hoisted_4$v, toDisplayString$1(unref(loadError)), 1)) : unref(config2) ? (openBlock(), createElementBlock("div", _hoisted_5$t, [
-          createBaseVNode("div", _hoisted_6$s, [
-            createBaseVNode("span", _hoisted_7$q, toDisplayString$1(unref(config2).kind), 1),
+        }, toDisplayString$1(_ctx.$t("configSidebar.noWorkflowPicked")), 1)) : unref(loadError) ? (openBlock(), createElementBlock("div", _hoisted_4$w, toDisplayString$1(unref(loadError)), 1)) : unref(config2) ? (openBlock(), createElementBlock("div", _hoisted_5$u, [
+          createBaseVNode("div", _hoisted_6$t, [
+            createBaseVNode("span", _hoisted_7$r, toDisplayString$1(unref(config2).kind), 1),
             createBaseVNode("span", _hoisted_8$p, toDisplayString$1(unref(config2).label), 1),
             !unref(config2).has_api ? (openBlock(), createElementBlock("span", _hoisted_9$p, toDisplayString$1(_ctx.$t("configSidebar.pickWorkflowFirst")), 1)) : createCommentVNode("", true)
           ]),
@@ -30243,7 +30360,7 @@ const _sfc_main$H = /* @__PURE__ */ defineComponent({
                           createBaseVNode("div", _hoisted_28$4, [
                             createBaseVNode("span", _hoisted_29$4, "." + toDisplayString$1(w.widget_name), 1)
                           ]),
-                          createVNode(_sfc_main$I, {
+                          createVNode(_sfc_main$J, {
                             kind: w.widget_type,
                             "model-value": unref(effectiveValue)(w),
                             options: unref(comboOptions)(w),
@@ -30257,7 +30374,7 @@ const _sfc_main$H = /* @__PURE__ */ defineComponent({
                           }, null, 8, ["kind", "model-value", "options", "min", "max", "step", "precision", "multiline", "disabled", "onUpdate:modelValue"]),
                           createBaseVNode("div", _hoisted_30$3, [
                             createBaseVNode("span", _hoisted_31$3, toDisplayString$1(_ctx.$t("configSidebar.bindTo")), 1),
-                            createVNode(_sfc_main$M, {
+                            createVNode(_sfc_main$N, {
                               "model-value": unref(dropdownValueFor)(w),
                               options: bindingOptions.value,
                               "onUpdate:modelValue": ($event) => unref(onBindingChange)(w, $event)
@@ -30294,7 +30411,7 @@ const _sfc_main$H = /* @__PURE__ */ defineComponent({
             createBaseVNode("div", _hoisted_38$2, [
               createBaseVNode("div", _hoisted_39$2, [
                 createBaseVNode("span", _hoisted_40$1, toDisplayString$1(_ctx.$t("configSidebar.resultNode")), 1),
-                createVNode(_sfc_main$M, {
+                createVNode(_sfc_main$N, {
                   "model-value": resultNodeModel.value,
                   options: resultNodeOptions.value,
                   "onUpdate:modelValue": _cache2[3] || (_cache2[3] = ($event) => onResultNodeChange($event))
@@ -30302,16 +30419,16 @@ const _sfc_main$H = /* @__PURE__ */ defineComponent({
               ]),
               hasResultNode.value && resultTypeOptions.value.length > 1 ? (openBlock(), createElementBlock("div", _hoisted_41$1, [
                 createBaseVNode("span", _hoisted_42$1, toDisplayString$1(_ctx.$t("configSidebar.resultType.label")), 1),
-                createVNode(_sfc_main$M, {
+                createVNode(_sfc_main$N, {
                   "model-value": resultType.value,
                   options: resultTypeOptions.value,
                   "onUpdate:modelValue": _cache2[4] || (_cache2[4] = ($event) => onResultTypeChange($event))
                 }, null, 8, ["model-value", "options"])
               ])) : createCommentVNode("", true),
-              createBaseVNode("p", _hoisted_43$1, toDisplayString$1(hasResultNode.value ? _ctx.$t("configSidebar.resultHintSet") : _ctx.$t("configSidebar.resultHintAuto")), 1)
+              createBaseVNode("p", _hoisted_43, toDisplayString$1(hasResultNode.value ? _ctx.$t("configSidebar.resultHintSet") : _ctx.$t("configSidebar.resultHintAuto")), 1)
             ])
           ])) : createCommentVNode("", true),
-          unref(config2).description ? (openBlock(), createElementBlock("section", _hoisted_44$1, [
+          unref(config2).description ? (openBlock(), createElementBlock("section", _hoisted_44, [
             createBaseVNode("h3", {
               class: normalizeClass(sectionHeading)
             }, toDisplayString$1(_ctx.$t("configSidebar.section.description")), 1),
@@ -30436,13 +30553,13 @@ const useStageParamStore = /* @__PURE__ */ defineStore("stageParams", () => {
     installWebSocketSync
   };
 });
-const _hoisted_1$G = { class: "ctv:flex ctv:flex-col ctv:size-full ctv:overflow-hidden ctv:text-xs ctv:text-base-foreground" };
-const _hoisted_2$B = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:py-1.5 ctv:px-2.5 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle" };
-const _hoisted_3$y = { class: "ctv:flex-1 ctv:font-semibold ctv:text-sm" };
-const _hoisted_4$u = { class: "ctv:w-28" };
-const _hoisted_5$s = { class: "ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-2.5 ctv:flex ctv:flex-col ctv:gap-2.5" };
-const _hoisted_6$r = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2 ctv:rounded ctv:border ctv:border-border-subtle ctv:bg-secondary-background/40" };
-const _hoisted_7$p = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:opacity-60" };
+const _hoisted_1$H = { class: "ctv:flex ctv:flex-col ctv:size-full ctv:overflow-hidden ctv:text-xs ctv:text-base-foreground" };
+const _hoisted_2$C = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:py-1.5 ctv:px-2.5 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle" };
+const _hoisted_3$z = { class: "ctv:flex-1 ctv:font-semibold ctv:text-sm" };
+const _hoisted_4$v = { class: "ctv:w-28" };
+const _hoisted_5$t = { class: "ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-2.5 ctv:flex ctv:flex-col ctv:gap-2.5" };
+const _hoisted_6$s = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2 ctv:rounded ctv:border ctv:border-border-subtle ctv:bg-secondary-background/40" };
+const _hoisted_7$q = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:opacity-60" };
 const _hoisted_8$o = { class: "ctv:flex ctv:gap-1.5" };
 const _hoisted_9$o = { class: "ctv:flex-1" };
 const _hoisted_10$n = { class: "ctv:flex-1" };
@@ -30477,7 +30594,7 @@ const fieldRow = "ctv:flex ctv:flex-col ctv:gap-0.5";
 const fieldLabel = "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:opacity-55";
 const primaryBtn = "ctv:inline-flex ctv:items-center ctv:h-6 ctv:px-2.5 ctv:rounded-sm ctv:text-xs ctv:font-medium ctv:cursor-pointer ctv:border-none ctv:bg-primary-background ctv:text-base-foreground ctv:hover:bg-primary-background-hover";
 const deleteBtn = "ctv:shrink-0 ctv:flex ctv:items-center ctv:justify-center ctv:size-5 ctv:rounded-full ctv:cursor-pointer ctv:text-xs ctv:border-none ctv:bg-transparent ctv:text-destructive-background ctv:hover:bg-destructive-background/10";
-const _sfc_main$G = /* @__PURE__ */ defineComponent({
+const _sfc_main$H = /* @__PURE__ */ defineComponent({
   __name: "StageParamsPanel",
   props: {
     active: { type: Boolean }
@@ -30590,27 +30707,27 @@ const _sfc_main$G = /* @__PURE__ */ defineComponent({
     store.ensureHydrated();
     store.installWebSocketSync();
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$G, [
-        createBaseVNode("div", _hoisted_2$B, [
-          createBaseVNode("span", _hoisted_3$y, toDisplayString$1(_ctx.$t("stageParams.sidebar.title")), 1),
-          createBaseVNode("div", _hoisted_4$u, [
-            createVNode(_sfc_main$M, {
+      return openBlock(), createElementBlock("div", _hoisted_1$H, [
+        createBaseVNode("div", _hoisted_2$C, [
+          createBaseVNode("span", _hoisted_3$z, toDisplayString$1(_ctx.$t("stageParams.sidebar.title")), 1),
+          createBaseVNode("div", _hoisted_4$v, [
+            createVNode(_sfc_main$N, {
               "model-value": activeKind.value,
               options: unref(kindOptions),
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => activeKind.value = String($event))
             }, null, 8, ["model-value", "options"])
           ])
         ]),
-        createBaseVNode("div", _hoisted_5$s, [
-          createBaseVNode("div", _hoisted_6$r, [
-            createBaseVNode("div", _hoisted_7$p, toDisplayString$1(_ctx.$t("stageParams.sidebar.new")), 1),
+        createBaseVNode("div", _hoisted_5$t, [
+          createBaseVNode("div", _hoisted_6$s, [
+            createBaseVNode("div", _hoisted_7$q, toDisplayString$1(_ctx.$t("stageParams.sidebar.new")), 1),
             createBaseVNode("label", {
               class: normalizeClass(fieldRow)
             }, [
               createBaseVNode("span", {
                 class: normalizeClass(fieldLabel)
               }, toDisplayString$1(_ctx.$t("stageParams.sidebar.label")), 1),
-              createVNode(_sfc_main$J, {
+              createVNode(_sfc_main$K, {
                 "model-value": form.label,
                 placeholder: _ctx.$t("stageParams.sidebar.label"),
                 "onUpdate:modelValue": _cache2[1] || (_cache2[1] = ($event) => form.label = $event)
@@ -30622,7 +30739,7 @@ const _sfc_main$G = /* @__PURE__ */ defineComponent({
               createBaseVNode("span", {
                 class: normalizeClass(fieldLabel)
               }, toDisplayString$1(_ctx.$t("stageParams.sidebar.type")), 1),
-              createVNode(_sfc_main$M, {
+              createVNode(_sfc_main$N, {
                 "model-value": form.type,
                 options: unref(typeOptions),
                 "onUpdate:modelValue": _cache2[2] || (_cache2[2] = ($event) => form.type = String($event))
@@ -30635,7 +30752,7 @@ const _sfc_main$G = /* @__PURE__ */ defineComponent({
               createBaseVNode("span", {
                 class: normalizeClass(fieldLabel)
               }, toDisplayString$1(_ctx.$t("stageParams.sidebar.options")), 1),
-              createVNode(_sfc_main$J, {
+              createVNode(_sfc_main$K, {
                 "model-value": form.options,
                 placeholder: "a, b, c",
                 "onUpdate:modelValue": _cache2[3] || (_cache2[3] = ($event) => form.options = $event)
@@ -30647,7 +30764,7 @@ const _sfc_main$G = /* @__PURE__ */ defineComponent({
                   createBaseVNode("span", {
                     class: normalizeClass(fieldLabel)
                   }, toDisplayString$1(_ctx.$t("stageParams.sidebar.min")), 1),
-                  createVNode(_sfc_main$L, {
+                  createVNode(_sfc_main$M, {
                     "model-value": form.min,
                     "onUpdate:modelValue": _cache2[4] || (_cache2[4] = ($event) => form.min = $event)
                   }, null, 8, ["model-value"])
@@ -30656,7 +30773,7 @@ const _sfc_main$G = /* @__PURE__ */ defineComponent({
                   createBaseVNode("span", {
                     class: normalizeClass(fieldLabel)
                   }, toDisplayString$1(_ctx.$t("stageParams.sidebar.max")), 1),
-                  createVNode(_sfc_main$L, {
+                  createVNode(_sfc_main$M, {
                     "model-value": form.max,
                     "onUpdate:modelValue": _cache2[5] || (_cache2[5] = ($event) => form.max = $event)
                   }, null, 8, ["model-value"])
@@ -30665,7 +30782,7 @@ const _sfc_main$G = /* @__PURE__ */ defineComponent({
                   createBaseVNode("span", {
                     class: normalizeClass(fieldLabel)
                   }, toDisplayString$1(_ctx.$t("stageParams.sidebar.step")), 1),
-                  createVNode(_sfc_main$L, {
+                  createVNode(_sfc_main$M, {
                     "model-value": form.step,
                     "onUpdate:modelValue": _cache2[6] || (_cache2[6] = ($event) => form.step = $event)
                   }, null, 8, ["model-value"])
@@ -30680,7 +30797,7 @@ const _sfc_main$G = /* @__PURE__ */ defineComponent({
               createBaseVNode("span", {
                 class: normalizeClass(fieldLabel)
               }, toDisplayString$1(_ctx.$t("stageParams.sidebar.placeholder")), 1),
-              createVNode(_sfc_main$J, {
+              createVNode(_sfc_main$K, {
                 "model-value": form.placeholder,
                 "onUpdate:modelValue": _cache2[7] || (_cache2[7] = ($event) => form.placeholder = $event)
               }, null, 8, ["model-value"])
@@ -30691,20 +30808,20 @@ const _sfc_main$G = /* @__PURE__ */ defineComponent({
               createBaseVNode("span", {
                 class: normalizeClass(fieldLabel)
               }, toDisplayString$1(_ctx.$t("stageParams.sidebar.default")), 1),
-              form.type === "boolean" ? (openBlock(), createBlock(_sfc_main$K, {
+              form.type === "boolean" ? (openBlock(), createBlock(_sfc_main$L, {
                 key: 0,
                 "model-value": form.boolDefault,
                 "onUpdate:modelValue": _cache2[8] || (_cache2[8] = ($event) => form.boolDefault = $event)
-              }, null, 8, ["model-value"])) : form.type === "int" || form.type === "float" ? (openBlock(), createBlock(_sfc_main$L, {
+              }, null, 8, ["model-value"])) : form.type === "int" || form.type === "float" ? (openBlock(), createBlock(_sfc_main$M, {
                 key: 1,
                 "model-value": form.numDefault,
                 "onUpdate:modelValue": _cache2[9] || (_cache2[9] = ($event) => form.numDefault = $event)
-              }, null, 8, ["model-value"])) : form.type === "combo" ? (openBlock(), createBlock(_sfc_main$M, {
+              }, null, 8, ["model-value"])) : form.type === "combo" ? (openBlock(), createBlock(_sfc_main$N, {
                 key: 2,
                 "model-value": form.default,
                 options: comboDefaultOptions.value,
                 "onUpdate:modelValue": _cache2[10] || (_cache2[10] = ($event) => form.default = String($event))
-              }, null, 8, ["model-value", "options"])) : (openBlock(), createBlock(_sfc_main$J, {
+              }, null, 8, ["model-value", "options"])) : (openBlock(), createBlock(_sfc_main$K, {
                 key: 3,
                 "model-value": form.default,
                 "onUpdate:modelValue": _cache2[11] || (_cache2[11] = ($event) => form.default = $event)
@@ -30751,16 +30868,16 @@ const _sfc_main$G = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$F = { class: "ctv:flex ctv:flex-col ctv:size-full ctv:overflow-hidden ctv:text-base-foreground" };
-const _hoisted_2$A = {
+const _hoisted_1$G = { class: "ctv:flex ctv:flex-col ctv:size-full ctv:overflow-hidden ctv:text-base-foreground" };
+const _hoisted_2$B = {
   role: "tablist",
   class: "ctv:flex ctv:shrink-0 ctv:gap-1 ctv:p-1.5 ctv:border-b ctv:border-border-subtle ctv:bg-interface-panel-surface"
 };
-const _hoisted_3$x = ["aria-selected", "onClick"];
-const _hoisted_4$t = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
-const _hoisted_5$r = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
-const _hoisted_6$q = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
-const _sfc_main$F = /* @__PURE__ */ defineComponent({
+const _hoisted_3$y = ["aria-selected", "onClick"];
+const _hoisted_4$u = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
+const _hoisted_5$s = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
+const _hoisted_6$r = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
+const _sfc_main$G = /* @__PURE__ */ defineComponent({
   __name: "ComfyTVSidebar",
   setup(__props) {
     const TABS = [
@@ -30778,8 +30895,8 @@ const _sfc_main$F = /* @__PURE__ */ defineComponent({
       ].join(" ");
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$F, [
-        createBaseVNode("div", _hoisted_2$A, [
+      return openBlock(), createElementBlock("div", _hoisted_1$G, [
+        createBaseVNode("div", _hoisted_2$B, [
           (openBlock(), createElementBlock(Fragment$1, null, renderList(TABS, (tab) => {
             return createBaseVNode("button", {
               key: tab.id,
@@ -30787,23 +30904,23 @@ const _sfc_main$F = /* @__PURE__ */ defineComponent({
               "aria-selected": unref(activeTab) === tab.id,
               class: normalizeClass(tabClass(unref(activeTab) === tab.id)),
               onClick: ($event) => activeTab.value = tab.id
-            }, toDisplayString$1(_ctx.$t(tab.labelKey)), 11, _hoisted_3$x);
+            }, toDisplayString$1(_ctx.$t(tab.labelKey)), 11, _hoisted_3$y);
           }), 64))
         ]),
-        withDirectives(createBaseVNode("div", _hoisted_4$t, [
-          createVNode(_sfc_main$H)
+        withDirectives(createBaseVNode("div", _hoisted_4$u, [
+          createVNode(_sfc_main$I)
         ], 512), [
           [vShow, unref(activeTab) === "workflow"]
         ]),
-        withDirectives(createBaseVNode("div", _hoisted_5$r, [
-          createVNode(_sfc_main$N, {
+        withDirectives(createBaseVNode("div", _hoisted_5$s, [
+          createVNode(_sfc_main$O, {
             active: unref(activeTab) === "assets"
           }, null, 8, ["active"])
         ], 512), [
           [vShow, unref(activeTab) === "assets"]
         ]),
-        withDirectives(createBaseVNode("div", _hoisted_6$q, [
-          createVNode(_sfc_main$G, {
+        withDirectives(createBaseVNode("div", _hoisted_6$r, [
+          createVNode(_sfc_main$H, {
             active: unref(activeTab) === "params"
           }, null, 8, ["active"])
         ], 512), [
@@ -30815,7 +30932,7 @@ const _sfc_main$F = /* @__PURE__ */ defineComponent({
 });
 const dialog$1 = { "confirm": "OK", "cancel": "Cancel", "close": "Close" };
 const workflow$1 = { "uploadButton": "⬆ Upload workflow", "imported": 'Imported "{label}"', "importFailed": "Workflow import failed", "notJson": "That file isn't valid JSON", "linkButton": "🔗 Link workflow" };
-const stage$1 = { "run": "Run", "rerun": "Re-run", "running": "Running…", "cancel": "Cancel", "preparingWorkflow": "Preparing workflow…", "section": { "context": "Context", "pool": "Pool", "output": "Output ({type})", "actions": "Actions" }, "pool": { "clear": "Clear", "clearHint": "Empty the picker pool and reset the selection", "confirmClear": "Clear pool?", "confirm": "Yes", "cancel": "No" }, "empty": { "no_output": "no output yet", "generating": "generating…", "pending_upstream": "upstream pending", "unsupported_type": "unsupported type {type}" }, "source": { "upstream": "← upstream", "pending": "… waiting" }, "disconnect": "Disconnect", "starting": "starting…", "runByKind": { "text": "Generate Text", "image": "Generate Image", "image-batch": "Generate Images", "video": "Generate Video", "audio": "Generate Audio", "panorama": "Generate Panorama", "storyboard": "Generate Storyboard" }, "action": { "viewFull": "View full size", "download": "Download", "addTag": "Save to library / tag", "removeFromPicker": "Remove from picker", "close": "Close", "loadAsset": "Load as asset node" }, "preparingWorkflowDetail": "Hang on — converting workflow to api JSON. Try Run again in a moment." };
+const stage$1 = { "run": "Run", "rerun": "Re-run", "running": "Running…", "cancel": "Cancel", "preparingWorkflow": "Preparing workflow…", "section": { "context": "Context", "pool": "Pool", "output": "Output ({type})", "actions": "Actions" }, "pool": { "clear": "Clear", "clearHint": "Empty the picker pool and reset the selection", "confirmClear": "Clear pool?", "confirm": "Yes", "cancel": "No" }, "empty": { "no_output": "no output yet", "generating": "generating…", "pending_upstream": "upstream pending", "unsupported_type": "unsupported type {type}" }, "source": { "upstream": "← upstream", "pending": "… waiting" }, "disconnect": "Disconnect", "starting": "starting…", "runByKind": { "text": "Generate Text", "image": "Generate Image", "image-batch": "Generate Images", "video": "Generate Video", "audio": "Generate Audio", "panorama": "Generate Panorama", "storyboard": "Generate Storyboard" }, "action": { "viewFull": "View full size", "download": "Download", "addTag": "Save to library / tag", "removeFromPicker": "Remove from picker", "close": "Close", "loadAsset": "Load as asset node", "prev": "Previous", "next": "Next" }, "preparingWorkflowDetail": "Hang on — converting workflow to api JSON. Try Run again in a moment." };
 const error$1 = { "dismiss": "Dismiss", "cancelled": "Cancelled", "upstreamNotReady": "Upstream not ready", "upstreamNotReadyDetail": "Upstream not ready: {list}. Run those stage(s) first so they produce a snapshot, then Run this stage again.", "workerDied": "Backend stopped without sending a result. The prompt worker likely died (CUDA OOM during cleanup is the usual cause). Restart ComfyUI to recover." };
 const sidebar$1 = { "tab": { "workflow": "Workflow", "assets": "Assets", "params": "Params" } };
 const assets$1 = { "title": "Asset Library", "empty": "No assets yet — add images, video, or audio to reuse them across projects.", "emptyCategory": "No assets in this category yet.", "add": "Add media", "addTooltip": "Upload images, video, or audio into the library (or drag & drop them onto this panel)", "uploading": "Uploading {done}/{total}…", "uploadFailed": "Upload failed: {detail}", "dropHint": "Drop files to add them to the library", "search": "Search assets", "noResults": "No assets match your search.", "view": { "settings": "Display settings", "list": "List view", "grid": "Grid view" }, "media": { "all": "All types", "image": "Images", "video": "Video", "audio": "Audio" }, "category": { "all": "All", "none": "Uncategorized", "new": "New category", "newPrompt": "New category name:", "rename": "Rename category", "renamePrompt": "Category name:", "delete": "Delete category", "deleteConfirm": "Delete this category? It is removed from all assets; the assets and files on disk stay." }, "card": { "rename": "Rename", "renamePrompt": "Asset name:", "delete": "Remove from library", "deleteConfirm": "Remove this asset from the library? The file on disk stays.", "tags": "Edit tags", "loadNode": "Add as node to canvas", "more": "More options" }, "tagPopover": { "empty": "No categories yet.", "create": "New category" } };
@@ -30895,7 +31012,7 @@ const en = {
 };
 const dialog = { "confirm": "确定", "cancel": "取消", "close": "关闭" };
 const workflow = { "uploadButton": "⬆ 上传工作流", "imported": "已导入「{label}」", "importFailed": "工作流导入失败", "notJson": "该文件不是合法 JSON", "linkButton": "🔗 链接工作流" };
-const stage = { "run": "运行", "rerun": "重新运行", "running": "运行中…", "cancel": "取消", "preparingWorkflow": "准备工作流中…", "section": { "context": "上游输入", "pool": "图片池", "output": "输出 ({type})", "actions": "动作" }, "pool": { "clear": "清除", "clearHint": "清空图片池并重置选择", "confirmClear": "确认清空？", "confirm": "是", "cancel": "否" }, "empty": { "no_output": "暂无输出", "generating": "生成中…", "pending_upstream": "上游待运行", "unsupported_type": "不支持的类型 {type}" }, "source": { "upstream": "← 上游", "pending": "… 等待中" }, "disconnect": "断开此连接", "starting": "启动中…", "runByKind": { "text": "生成文本", "image": "生成图片", "image-batch": "生成图片", "video": "生成视频", "audio": "生成音频", "panorama": "生成全景图", "storyboard": "生成分镜" }, "action": { "viewFull": "查看大图", "download": "下载", "addTag": "存入资产库 / 打标签", "removeFromPicker": "从选择器移除", "close": "关闭", "loadAsset": "作为资产节点加载" }, "preparingWorkflowDetail": "稍等 — 正在把工作流转换成 api JSON。稍后再点运行。" };
+const stage = { "run": "运行", "rerun": "重新运行", "running": "运行中…", "cancel": "取消", "preparingWorkflow": "准备工作流中…", "section": { "context": "上游输入", "pool": "图片池", "output": "输出 ({type})", "actions": "动作" }, "pool": { "clear": "清除", "clearHint": "清空图片池并重置选择", "confirmClear": "确认清空？", "confirm": "是", "cancel": "否" }, "empty": { "no_output": "暂无输出", "generating": "生成中…", "pending_upstream": "上游待运行", "unsupported_type": "不支持的类型 {type}" }, "source": { "upstream": "← 上游", "pending": "… 等待中" }, "disconnect": "断开此连接", "starting": "启动中…", "runByKind": { "text": "生成文本", "image": "生成图片", "image-batch": "生成图片", "video": "生成视频", "audio": "生成音频", "panorama": "生成全景图", "storyboard": "生成分镜" }, "action": { "viewFull": "查看大图", "download": "下载", "addTag": "存入资产库 / 打标签", "removeFromPicker": "从选择器移除", "close": "关闭", "loadAsset": "作为资产节点加载", "prev": "上一张", "next": "下一张" }, "preparingWorkflowDetail": "稍等 — 正在把工作流转换成 api JSON。稍后再点运行。" };
 const error = { "dismiss": "清除", "cancelled": "已取消", "upstreamNotReady": "上游未就绪", "upstreamNotReadyDetail": "上游未就绪:{list}。请先运行这些 stage 生成快照,然后再运行此 stage。", "workerDied": "后端未返回结果就停止了。prompt worker 可能已崩溃(通常是清理阶段 CUDA OOM)。重启 ComfyUI 后恢复。" };
 const sidebar = { "tab": { "workflow": "工作流", "assets": "资产库", "params": "参数" } };
 const assets = { "title": "资产库", "empty": "还没有资产 —— 添加图片、视频或音频后可跨项目复用。", "emptyCategory": "这个分类下还没有资产。", "add": "添加素材", "addTooltip": "上传图片、视频或音频到资产库（也可以直接拖拽文件到这个面板）", "uploading": "上传中 {done}/{total}…", "uploadFailed": "上传失败: {detail}", "dropHint": "松开把文件添加到资产库", "search": "搜索资产", "noResults": "没有匹配的资产。", "view": { "settings": "显示设置", "list": "列表视图", "grid": "网格视图" }, "media": { "all": "全部类型", "image": "图片", "video": "视频", "audio": "音频" }, "category": { "all": "全部", "none": "未分类", "new": "新建分类", "newPrompt": "新分类名称：", "rename": "重命名分类", "renamePrompt": "分类名称：", "delete": "删除分类", "deleteConfirm": "删除这个分类？它会从所有资产上移除；资产和磁盘上的文件保留。" }, "card": { "rename": "重命名", "renamePrompt": "资产名称：", "delete": "从资产库移除", "deleteConfirm": "把这个资产从资产库移除？磁盘上的文件保留。", "tags": "编辑标签", "loadNode": "作为节点添加到画布", "more": "更多操作" }, "tagPopover": { "empty": "还没有分类。", "create": "新建分类" } };
@@ -31034,26 +31151,26 @@ function useAssetPicker(getAddedIds = () => [], mediaTypes = ["image"]) {
     ensureHydrated
   };
 }
-const _hoisted_1$E = { class: "ctv:flex ctv:gap-1.5 ctv:items-center" };
-const _hoisted_2$z = ["placeholder"];
-const _hoisted_3$w = { class: "ctv:w-24 ctv:shrink-0" };
-const _hoisted_4$s = { class: "comfytv-asset-scroll ctv:h-[224px] ctv:shrink-0 ctv:overflow-y-scroll" };
-const _hoisted_5$q = {
+const _hoisted_1$F = { class: "ctv:flex ctv:gap-1.5 ctv:items-center" };
+const _hoisted_2$A = ["placeholder"];
+const _hoisted_3$x = { class: "ctv:w-24 ctv:shrink-0" };
+const _hoisted_4$t = { class: "comfytv-asset-scroll ctv:h-[224px] ctv:shrink-0 ctv:overflow-y-scroll" };
+const _hoisted_5$r = {
   key: 0,
   class: "ctv:py-4 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60"
 };
-const _hoisted_6$p = {
+const _hoisted_6$q = {
   key: 1,
   class: "ctv:grid ctv:grid-cols-[repeat(auto-fill,minmax(64px,1fr))] ctv:gap-1"
 };
-const _hoisted_7$o = ["title", "onClick"];
+const _hoisted_7$p = ["title", "onClick"];
 const _hoisted_8$n = ["src", "alt"];
 const _hoisted_9$n = {
   key: 0,
   class: "ctv:absolute ctv:top-0.5 ctv:right-0.5 ctv:flex ctv:items-center ctv:justify-center ctv:size-4 ctv:rounded-full ctv:text-3xs ctv:leading-none ctv:bg-primary-background ctv:text-white"
 };
 const _hoisted_10$m = { class: "ctv:w-full ctv:truncate ctv:py-0.5 ctv:px-1 ctv:text-left ctv:text-3xs ctv:text-muted-foreground" };
-const _sfc_main$E = /* @__PURE__ */ defineComponent({
+const _sfc_main$F = /* @__PURE__ */ defineComponent({
   __name: "AssetPickerPopup",
   props: {
     addedIds: {}
@@ -31081,7 +31198,7 @@ const _sfc_main$E = /* @__PURE__ */ defineComponent({
         class: "ctv:w-full ctv:mt-1 ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2 ctv:rounded ctv:text-xs ctv:bg-interface-menu-surface ctv:text-base-foreground ctv:border ctv:border-border-default",
         onKeydown: _cache2[1] || (_cache2[1] = withKeys(withModifiers(($event) => _ctx.$emit("close"), ["stop"]), ["escape"]))
       }, [
-        createBaseVNode("div", _hoisted_1$E, [
+        createBaseVNode("div", _hoisted_1$F, [
           withDirectives(createBaseVNode("input", {
             ref_key: "searchEl",
             ref: searchEl,
@@ -31089,19 +31206,19 @@ const _sfc_main$E = /* @__PURE__ */ defineComponent({
             type: "text",
             placeholder: _ctx.$t("promptAssets.search"),
             class: "ctv:flex-1 ctv:min-w-0 ctv:py-1 ctv:px-1.5 ctv:rounded-sm ctv:outline-none ctv:box-border ctv:text-xs ctv:leading-snug ctv:[font-family:inherit] ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-default ctv:focus:border-primary-background"
-          }, null, 8, _hoisted_2$z), [
+          }, null, 8, _hoisted_2$A), [
             [vModelText, unref(query)]
           ]),
-          createBaseVNode("div", _hoisted_3$w, [
-            createVNode(_sfc_main$M, {
+          createBaseVNode("div", _hoisted_3$x, [
+            createVNode(_sfc_main$N, {
               "model-value": unref(filterValue),
               options: unref(categoryOptions),
               "onUpdate:modelValue": unref(setFilter)
             }, null, 8, ["model-value", "options", "onUpdate:modelValue"])
           ])
         ]),
-        createBaseVNode("div", _hoisted_4$s, [
-          unref(filtered).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_5$q, toDisplayString$1(_ctx.$t("promptAssets.empty")), 1)) : (openBlock(), createElementBlock("div", _hoisted_6$p, [
+        createBaseVNode("div", _hoisted_4$t, [
+          unref(filtered).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_5$r, toDisplayString$1(_ctx.$t("promptAssets.empty")), 1)) : (openBlock(), createElementBlock("div", _hoisted_6$q, [
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(filtered), (asset) => {
               return openBlock(), createElementBlock("button", {
                 key: asset.id,
@@ -31127,7 +31244,7 @@ const _sfc_main$E = /* @__PURE__ */ defineComponent({
                   createBaseVNode("i", { class: "pi pi-check" }, null, -1)
                 ])])) : createCommentVNode("", true),
                 createBaseVNode("span", _hoisted_10$m, toDisplayString$1(asset.name || "—"), 1)
-              ], 10, _hoisted_7$o);
+              ], 10, _hoisted_7$p);
             }), 128))
           ]))
         ])
@@ -31135,24 +31252,24 @@ const _sfc_main$E = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$D = { class: "ctv:py-1 ctv:px-2 ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_2$y = {
+const _hoisted_1$E = { class: "ctv:py-1 ctv:px-2 ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_2$z = {
   key: 0,
   class: "ctv:py-1.5 ctv:px-2 ctv:italic ctv:text-muted-foreground"
 };
-const _hoisted_3$v = {
+const _hoisted_3$w = {
   key: 1,
   class: "ctv:py-1.5 ctv:px-2 ctv:text-destructive-background"
 };
-const _hoisted_4$r = ["onClick"];
-const _hoisted_5$p = { class: "ctv:shrink-0 ctv:font-mono ctv:text-muted-foreground" };
-const _hoisted_6$o = { class: "ctv:flex-1 ctv:truncate ctv:text-left" };
-const _hoisted_7$n = {
+const _hoisted_4$s = ["onClick"];
+const _hoisted_5$q = { class: "ctv:shrink-0 ctv:font-mono ctv:text-muted-foreground" };
+const _hoisted_6$p = { class: "ctv:flex-1 ctv:truncate ctv:text-left" };
+const _hoisted_7$o = {
   key: 0,
   class: "ctv:py-1.5 ctv:px-2 ctv:italic ctv:text-muted-foreground ctv:whitespace-normal"
 };
 const badgeClass = "ctv:shrink-0 ctv:py-px ctv:px-1 ctv:rounded-sm ctv:text-3xs ctv:bg-warning-background/15 ctv:text-warning-background";
-const _sfc_main$D = /* @__PURE__ */ defineComponent({
+const _sfc_main$E = /* @__PURE__ */ defineComponent({
   __name: "MentionSlotPopover",
   props: {
     x: {},
@@ -31184,8 +31301,8 @@ const _sfc_main$D = /* @__PURE__ */ defineComponent({
         style: normalizeStyle({ left: `${__props.x}px`, top: `${__props.y}px` }),
         onKeydown: _cache2[0] || (_cache2[0] = withKeys(withModifiers(($event) => _ctx.$emit("close"), ["stop"]), ["escape"]))
       }, [
-        createBaseVNode("div", _hoisted_1$D, toDisplayString$1(_ctx.$t("promptAssets.slotTitle")), 1),
-        __props.loading ? (openBlock(), createElementBlock("div", _hoisted_2$y, toDisplayString$1(_ctx.$t("configSidebar.loading")), 1)) : __props.error ? (openBlock(), createElementBlock("div", _hoisted_3$v, toDisplayString$1(__props.error), 1)) : (openBlock(), createElementBlock(Fragment$1, { key: 2 }, [
+        createBaseVNode("div", _hoisted_1$E, toDisplayString$1(_ctx.$t("promptAssets.slotTitle")), 1),
+        __props.loading ? (openBlock(), createElementBlock("div", _hoisted_2$z, toDisplayString$1(_ctx.$t("configSidebar.loading")), 1)) : __props.error ? (openBlock(), createElementBlock("div", _hoisted_3$w, toDisplayString$1(__props.error), 1)) : (openBlock(), createElementBlock(Fragment$1, { key: 2 }, [
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(__props.options, (opt) => {
             return openBlock(), createElementBlock("button", {
               key: opt.slot,
@@ -31193,8 +31310,8 @@ const _sfc_main$D = /* @__PURE__ */ defineComponent({
               class: normalizeClass(rowClass2(__props.currentSlot === opt.slot)),
               onClick: ($event) => _ctx.$emit("pick", opt.slot)
             }, [
-              createBaseVNode("span", _hoisted_5$p, "#" + toDisplayString$1(opt.slot + 1), 1),
-              createBaseVNode("span", _hoisted_6$o, toDisplayString$1(opt.nodeTitles.join(" / ")), 1),
+              createBaseVNode("span", _hoisted_5$q, "#" + toDisplayString$1(opt.slot + 1), 1),
+              createBaseVNode("span", _hoisted_6$p, toDisplayString$1(opt.nodeTitles.join(" / ")), 1),
               __props.wiredSlots.includes(opt.slot) ? (openBlock(), createElementBlock("span", {
                 key: 0,
                 class: normalizeClass(badgeClass)
@@ -31202,9 +31319,9 @@ const _sfc_main$D = /* @__PURE__ */ defineComponent({
                 key: 1,
                 class: normalizeClass(badgeClass)
               }, toDisplayString$1(_ctx.$t("promptAssets.slotClaimed")), 1)) : createCommentVNode("", true)
-            ], 10, _hoisted_4$r);
+            ], 10, _hoisted_4$s);
           }), 128)),
-          __props.options.length === 0 ? (openBlock(), createElementBlock("div", _hoisted_7$n, toDisplayString$1(_ctx.$t("promptAssets.slotEmpty")), 1)) : createCommentVNode("", true)
+          __props.options.length === 0 ? (openBlock(), createElementBlock("div", _hoisted_7$o, toDisplayString$1(_ctx.$t("promptAssets.slotEmpty")), 1)) : createCommentVNode("", true)
         ], 64))
       ], 36);
     };
@@ -31352,16 +31469,16 @@ function useImageReferences(getNode, rootEl) {
     init
   };
 }
-const _hoisted_1$C = { class: "ctv:flex ctv:items-center ctv:gap-2" };
-const _hoisted_2$x = { class: "ctv:text-[11px] ctv:font-semibold" };
-const _hoisted_3$u = { class: "ctv:text-3xs ctv:text-muted-foreground ctv:font-mono" };
-const _hoisted_4$q = ["title"];
-const _hoisted_5$o = {
+const _hoisted_1$D = { class: "ctv:flex ctv:items-center ctv:gap-2" };
+const _hoisted_2$y = { class: "ctv:text-[11px] ctv:font-semibold" };
+const _hoisted_3$v = { class: "ctv:text-3xs ctv:text-muted-foreground ctv:font-mono" };
+const _hoisted_4$r = ["title"];
+const _hoisted_5$p = {
   key: 1,
   class: "ctv:flex ctv:flex-wrap ctv:gap-1.5"
 };
-const _hoisted_6$n = ["title", "onClick"];
-const _hoisted_7$m = ["src", "alt"];
+const _hoisted_6$o = ["title", "onClick"];
+const _hoisted_7$n = ["src", "alt"];
 const _hoisted_8$m = {
   key: 1,
   class: "ctv:flex ctv:items-center ctv:justify-center ctv:size-full ctv:p-1 ctv:text-center ctv:text-3xs ctv:italic ctv:text-muted-foreground/60"
@@ -31376,7 +31493,7 @@ const _hoisted_12$i = {
   key: 3,
   class: "ctv:flex ctv:flex-col ctv:gap-0.5 ctv:py-1 ctv:px-1.5 ctv:rounded ctv:text-2xs ctv:bg-warning-background/10 ctv:border ctv:border-warning-background/40 ctv:text-warning-background"
 };
-const _sfc_main$C = /* @__PURE__ */ defineComponent({
+const _sfc_main$D = /* @__PURE__ */ defineComponent({
   __name: "ImageReferences",
   props: {
     node: {}
@@ -31418,9 +31535,9 @@ const _sfc_main$C = /* @__PURE__ */ defineComponent({
         ref: rootEl,
         class: "ctv:relative ctv:flex ctv:flex-col ctv:gap-1"
       }, [
-        createBaseVNode("div", _hoisted_1$C, [
-          createBaseVNode("span", _hoisted_2$x, toDisplayString$1(_ctx.$t("imageRefs.title")), 1),
-          createBaseVNode("span", _hoisted_3$u, toDisplayString$1(unref(refs).length || ""), 1),
+        createBaseVNode("div", _hoisted_1$D, [
+          createBaseVNode("span", _hoisted_2$y, toDisplayString$1(_ctx.$t("imageRefs.title")), 1),
+          createBaseVNode("span", _hoisted_3$v, toDisplayString$1(unref(refs).length || ""), 1),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(["ctv:ml-auto", unref(plusBtnClass)]),
@@ -31430,15 +31547,15 @@ const _sfc_main$C = /* @__PURE__ */ defineComponent({
             createBaseVNode("i", {
               class: normalizeClass(["pi", unref(pickerOpen) ? "pi-times" : "pi-plus"])
             }, null, 2)
-          ], 10, _hoisted_4$q)
+          ], 10, _hoisted_4$r)
         ]),
-        unref(pickerOpen) ? (openBlock(), createBlock(_sfc_main$E, {
+        unref(pickerOpen) ? (openBlock(), createBlock(_sfc_main$F, {
           key: 0,
           "added-ids": unref(refs).map((r) => r.asset_id),
           onSelect: unref(onAddAsset),
           onClose: _cache2[1] || (_cache2[1] = ($event) => pickerOpen.value = false)
         }, null, 8, ["added-ids", "onSelect"])) : createCommentVNode("", true),
-        unref(refs).length ? (openBlock(), createElementBlock("div", _hoisted_5$o, [
+        unref(refs).length ? (openBlock(), createElementBlock("div", _hoisted_5$p, [
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(refs), (ref2, i) => {
             return openBlock(), createElementBlock("div", {
               key: ref2.asset_id,
@@ -31452,7 +31569,7 @@ const _sfc_main$C = /* @__PURE__ */ defineComponent({
                 alt: unref(assetOf)(ref2).name,
                 class: "ctv:block ctv:size-full ctv:object-cover",
                 draggable: "false"
-              }, null, 8, _hoisted_7$m)) : (openBlock(), createElementBlock("div", _hoisted_8$m, toDisplayString$1(_ctx.$t("promptAssets.missing", { id: ref2.asset_id })), 1)),
+              }, null, 8, _hoisted_7$n)) : (openBlock(), createElementBlock("div", _hoisted_8$m, toDisplayString$1(_ctx.$t("promptAssets.missing", { id: ref2.asset_id })), 1)),
               createBaseVNode("span", _hoisted_9$m, toDisplayString$1(`#${ref2.slot + 1}`), 1),
               createBaseVNode("button", {
                 type: "button",
@@ -31462,7 +31579,7 @@ const _sfc_main$C = /* @__PURE__ */ defineComponent({
               }, [..._cache2[2] || (_cache2[2] = [
                 createBaseVNode("i", { class: "pi pi-times" }, null, -1)
               ])], 10, _hoisted_10$l)
-            ], 8, _hoisted_6$n);
+            ], 8, _hoisted_6$o);
           }), 128))
         ])) : (openBlock(), createElementBlock("div", _hoisted_11$i, toDisplayString$1(_ctx.$t("imageRefs.empty")), 1)),
         unref(slotWarnings).length ? (openBlock(), createElementBlock("div", _hoisted_12$i, [
@@ -31473,7 +31590,7 @@ const _sfc_main$C = /* @__PURE__ */ defineComponent({
             ]);
           }), 128))
         ])) : createCommentVNode("", true),
-        unref(slotPicker) ? (openBlock(), createBlock(_sfc_main$D, {
+        unref(slotPicker) ? (openBlock(), createBlock(_sfc_main$E, {
           key: 4,
           x: unref(slotPicker).x,
           y: unref(slotPicker).y,
@@ -33469,19 +33586,19 @@ function dfa(nfa2) {
         });
       });
     });
-    let state = labeled[states.join(",")] = new ContentMatch(states.indexOf(nfa2.length - 1) > -1);
+    let state2 = labeled[states.join(",")] = new ContentMatch(states.indexOf(nfa2.length - 1) > -1);
     for (let i = 0; i < out.length; i++) {
       let states2 = out[i][1].sort(cmp);
-      state.next.push({ type: out[i][0], next: labeled[states2.join(",")] || explore(states2) });
+      state2.next.push({ type: out[i][0], next: labeled[states2.join(",")] || explore(states2) });
     }
-    return state;
+    return state2;
   }
 }
 function checkForDeadEnds(match, stream) {
   for (let i = 0, work = [match]; i < work.length; i++) {
-    let state = work[i], dead = !state.validEnd, nodes = [];
-    for (let j = 0; j < state.next.length; j++) {
-      let { type, next } = state.next[j];
+    let state2 = work[i], dead = !state2.validEnd, nodes = [];
+    for (let j = 0; j < state2.next.length; j++) {
+      let { type, next } = state2.next[j];
       nodes.push(type.name);
       if (dead && !(type.isText || type.hasRequiredAttrs()))
         dead = false;
@@ -37101,14 +37218,14 @@ class Transaction extends Transform {
   /**
   @internal
   */
-  constructor(state) {
-    super(state.doc);
+  constructor(state2) {
+    super(state2.doc);
     this.curSelectionFor = 0;
     this.updated = 0;
     this.meta = /* @__PURE__ */ Object.create(null);
     this.time = Date.now();
-    this.curSelection = state.selection;
-    this.storedMarks = state.storedMarks;
+    this.curSelection = state2.selection;
+    this.storedMarks = state2.storedMarks;
   }
   /**
   The transaction's current selection. This defaults to the editor
@@ -37314,8 +37431,8 @@ const baseFields = [
     init(config2) {
       return config2.storedMarks || null;
     },
-    apply(tr, _marks, _old, state) {
-      return state.selection.$cursor ? tr.storedMarks : null;
+    apply(tr, _marks, _old, state2) {
+      return state2.selection.$cursor ? tr.storedMarks : null;
     }
   }),
   new FieldDesc("scrollToSelection", {
@@ -37479,9 +37596,9 @@ class EditorState {
       for (let prop in pluginFields) {
         if (prop == "doc" || prop == "selection")
           throw new RangeError("The JSON fields `doc` and `selection` are reserved");
-        let plugin = pluginFields[prop], state = plugin.spec.state;
-        if (state && state.toJSON)
-          result[prop] = state.toJSON.call(plugin, this[plugin.key]);
+        let plugin = pluginFields[prop], state2 = plugin.spec.state;
+        if (state2 && state2.toJSON)
+          result[prop] = state2.toJSON.call(plugin, this[plugin.key]);
       }
     return result;
   }
@@ -37510,9 +37627,9 @@ class EditorState {
       } else {
         if (pluginFields)
           for (let prop in pluginFields) {
-            let plugin = pluginFields[prop], state = plugin.spec.state;
-            if (plugin.key == field.name && state && state.fromJSON && Object.prototype.hasOwnProperty.call(json, prop)) {
-              instance[field.name] = state.fromJSON.call(plugin, config2, json[prop], instance);
+            let plugin = pluginFields[prop], state2 = plugin.spec.state;
+            if (plugin.key == field.name && state2 && state2.fromJSON && Object.prototype.hasOwnProperty.call(json, prop)) {
+              instance[field.name] = state2.fromJSON.call(plugin, config2, json[prop], instance);
               return;
             }
           }
@@ -37547,8 +37664,8 @@ class Plugin {
   /**
   Extract the plugin's state field from an editor state.
   */
-  getState(state) {
-    return state[this.key];
+  getState(state2) {
+    return state2[this.key];
   }
 }
 const keys = /* @__PURE__ */ Object.create(null);
@@ -37569,31 +37686,31 @@ class PluginKey {
   Get the active plugin with this key, if any, from an editor
   state.
   */
-  get(state) {
-    return state.config.pluginsByKey[this.key];
+  get(state2) {
+    return state2.config.pluginsByKey[this.key];
   }
   /**
   Get the plugin's state from an editor state.
   */
-  getState(state) {
-    return state[this.key];
+  getState(state2) {
+    return state2[this.key];
   }
 }
-const deleteSelection$1 = (state, dispatch) => {
-  if (state.selection.empty)
+const deleteSelection$1 = (state2, dispatch) => {
+  if (state2.selection.empty)
     return false;
   if (dispatch)
-    dispatch(state.tr.deleteSelection().scrollIntoView());
+    dispatch(state2.tr.deleteSelection().scrollIntoView());
   return true;
 };
-function atBlockStart(state, view) {
-  let { $cursor } = state.selection;
-  if (!$cursor || (view ? !view.endOfTextblock("backward", state) : $cursor.parentOffset > 0))
+function atBlockStart(state2, view) {
+  let { $cursor } = state2.selection;
+  if (!$cursor || (view ? !view.endOfTextblock("backward", state2) : $cursor.parentOffset > 0))
     return null;
   return $cursor;
 }
-const joinBackward$1 = (state, dispatch, view) => {
-  let $cursor = atBlockStart(state, view);
+const joinBackward$1 = (state2, dispatch, view) => {
+  let $cursor = atBlockStart(state2, view);
   if (!$cursor)
     return false;
   let $cut = findCutBefore($cursor);
@@ -37602,18 +37719,18 @@ const joinBackward$1 = (state, dispatch, view) => {
     if (target == null)
       return false;
     if (dispatch)
-      dispatch(state.tr.lift(range, target).scrollIntoView());
+      dispatch(state2.tr.lift(range, target).scrollIntoView());
     return true;
   }
   let before = $cut.nodeBefore;
-  if (deleteBarrier(state, $cut, dispatch, -1))
+  if (deleteBarrier(state2, $cut, dispatch, -1))
     return true;
   if ($cursor.parent.content.size == 0 && (textblockAt(before, "end") || NodeSelection.isSelectable(before))) {
     for (let depth = $cursor.depth; ; depth--) {
-      let delStep = replaceStep(state.doc, $cursor.before(depth), $cursor.after(depth), Slice.empty);
+      let delStep = replaceStep(state2.doc, $cursor.before(depth), $cursor.after(depth), Slice.empty);
       if (delStep && delStep.slice.size < delStep.to - delStep.from) {
         if (dispatch) {
-          let tr = state.tr.step(delStep);
+          let tr = state2.tr.step(delStep);
           tr.setSelection(textblockAt(before, "end") ? Selection.findFrom(tr.doc.resolve(tr.mapping.map($cut.pos, -1)), -1) : NodeSelection.create(tr.doc, $cut.pos - before.nodeSize));
           dispatch(tr.scrollIntoView());
         }
@@ -37625,26 +37742,26 @@ const joinBackward$1 = (state, dispatch, view) => {
   }
   if (before.isAtom && $cut.depth == $cursor.depth - 1) {
     if (dispatch)
-      dispatch(state.tr.delete($cut.pos - before.nodeSize, $cut.pos).scrollIntoView());
+      dispatch(state2.tr.delete($cut.pos - before.nodeSize, $cut.pos).scrollIntoView());
     return true;
   }
   return false;
 };
-const joinTextblockBackward$1 = (state, dispatch, view) => {
-  let $cursor = atBlockStart(state, view);
+const joinTextblockBackward$1 = (state2, dispatch, view) => {
+  let $cursor = atBlockStart(state2, view);
   if (!$cursor)
     return false;
   let $cut = findCutBefore($cursor);
-  return $cut ? joinTextblocksAround(state, $cut, dispatch) : false;
+  return $cut ? joinTextblocksAround(state2, $cut, dispatch) : false;
 };
-const joinTextblockForward$1 = (state, dispatch, view) => {
-  let $cursor = atBlockEnd(state, view);
+const joinTextblockForward$1 = (state2, dispatch, view) => {
+  let $cursor = atBlockEnd(state2, view);
   if (!$cursor)
     return false;
   let $cut = findCutAfter($cursor);
-  return $cut ? joinTextblocksAround(state, $cut, dispatch) : false;
+  return $cut ? joinTextblocksAround(state2, $cut, dispatch) : false;
 };
-function joinTextblocksAround(state, $cut, dispatch) {
+function joinTextblocksAround(state2, $cut, dispatch) {
   let before = $cut.nodeBefore, beforeText = before, beforePos = $cut.pos - 1;
   for (; !beforeText.isTextblock; beforePos--) {
     if (beforeText.type.spec.isolating)
@@ -37663,11 +37780,11 @@ function joinTextblocksAround(state, $cut, dispatch) {
       return false;
     afterText = child;
   }
-  let step = replaceStep(state.doc, beforePos, afterPos, Slice.empty);
+  let step = replaceStep(state2.doc, beforePos, afterPos, Slice.empty);
   if (!step || step.from != beforePos || step instanceof ReplaceStep && step.slice.size >= afterPos - beforePos)
     return false;
   if (dispatch) {
-    let tr = state.tr.step(step);
+    let tr = state2.tr.step(step);
     tr.setSelection(TextSelection.create(tr.doc, beforePos));
     dispatch(tr.scrollIntoView());
   }
@@ -37682,12 +37799,12 @@ function textblockAt(node, side, only = false) {
   }
   return false;
 }
-const selectNodeBackward$1 = (state, dispatch, view) => {
-  let { $head, empty: empty2 } = state.selection, $cut = $head;
+const selectNodeBackward$1 = (state2, dispatch, view) => {
+  let { $head, empty: empty2 } = state2.selection, $cut = $head;
   if (!empty2)
     return false;
   if ($head.parent.isTextblock) {
-    if (view ? !view.endOfTextblock("backward", state) : $head.parentOffset > 0)
+    if (view ? !view.endOfTextblock("backward", state2) : $head.parentOffset > 0)
       return false;
     $cut = findCutBefore($head);
   }
@@ -37695,7 +37812,7 @@ const selectNodeBackward$1 = (state, dispatch, view) => {
   if (!node || !NodeSelection.isSelectable(node))
     return false;
   if (dispatch)
-    dispatch(state.tr.setSelection(NodeSelection.create(state.doc, $cut.pos - node.nodeSize)).scrollIntoView());
+    dispatch(state2.tr.setSelection(NodeSelection.create(state2.doc, $cut.pos - node.nodeSize)).scrollIntoView());
   return true;
 };
 function findCutBefore($pos) {
@@ -37708,27 +37825,27 @@ function findCutBefore($pos) {
     }
   return null;
 }
-function atBlockEnd(state, view) {
-  let { $cursor } = state.selection;
-  if (!$cursor || (view ? !view.endOfTextblock("forward", state) : $cursor.parentOffset < $cursor.parent.content.size))
+function atBlockEnd(state2, view) {
+  let { $cursor } = state2.selection;
+  if (!$cursor || (view ? !view.endOfTextblock("forward", state2) : $cursor.parentOffset < $cursor.parent.content.size))
     return null;
   return $cursor;
 }
-const joinForward$1 = (state, dispatch, view) => {
-  let $cursor = atBlockEnd(state, view);
+const joinForward$1 = (state2, dispatch, view) => {
+  let $cursor = atBlockEnd(state2, view);
   if (!$cursor)
     return false;
   let $cut = findCutAfter($cursor);
   if (!$cut)
     return false;
   let after = $cut.nodeAfter;
-  if (deleteBarrier(state, $cut, dispatch, 1))
+  if (deleteBarrier(state2, $cut, dispatch, 1))
     return true;
   if ($cursor.parent.content.size == 0 && (textblockAt(after, "start") || NodeSelection.isSelectable(after))) {
-    let delStep = replaceStep(state.doc, $cursor.before(), $cursor.after(), Slice.empty);
+    let delStep = replaceStep(state2.doc, $cursor.before(), $cursor.after(), Slice.empty);
     if (delStep && delStep.slice.size < delStep.to - delStep.from) {
       if (dispatch) {
-        let tr = state.tr.step(delStep);
+        let tr = state2.tr.step(delStep);
         tr.setSelection(textblockAt(after, "start") ? Selection.findFrom(tr.doc.resolve(tr.mapping.map($cut.pos)), 1) : NodeSelection.create(tr.doc, tr.mapping.map($cut.pos)));
         dispatch(tr.scrollIntoView());
       }
@@ -37737,17 +37854,17 @@ const joinForward$1 = (state, dispatch, view) => {
   }
   if (after.isAtom && $cut.depth == $cursor.depth - 1) {
     if (dispatch)
-      dispatch(state.tr.delete($cut.pos, $cut.pos + after.nodeSize).scrollIntoView());
+      dispatch(state2.tr.delete($cut.pos, $cut.pos + after.nodeSize).scrollIntoView());
     return true;
   }
   return false;
 };
-const selectNodeForward$1 = (state, dispatch, view) => {
-  let { $head, empty: empty2 } = state.selection, $cut = $head;
+const selectNodeForward$1 = (state2, dispatch, view) => {
+  let { $head, empty: empty2 } = state2.selection, $cut = $head;
   if (!empty2)
     return false;
   if ($head.parent.isTextblock) {
-    if (view ? !view.endOfTextblock("forward", state) : $head.parentOffset < $head.parent.content.size)
+    if (view ? !view.endOfTextblock("forward", state2) : $head.parentOffset < $head.parent.content.size)
       return false;
     $cut = findCutAfter($head);
   }
@@ -37755,7 +37872,7 @@ const selectNodeForward$1 = (state, dispatch, view) => {
   if (!node || !NodeSelection.isSelectable(node))
     return false;
   if (dispatch)
-    dispatch(state.tr.setSelection(NodeSelection.create(state.doc, $cut.pos)).scrollIntoView());
+    dispatch(state2.tr.setSelection(NodeSelection.create(state2.doc, $cut.pos)).scrollIntoView());
   return true;
 };
 function findCutAfter($pos) {
@@ -37769,55 +37886,55 @@ function findCutAfter($pos) {
     }
   return null;
 }
-const joinUp$1 = (state, dispatch) => {
-  let sel = state.selection, nodeSel = sel instanceof NodeSelection, point;
+const joinUp$1 = (state2, dispatch) => {
+  let sel = state2.selection, nodeSel = sel instanceof NodeSelection, point;
   if (nodeSel) {
-    if (sel.node.isTextblock || !canJoin(state.doc, sel.from))
+    if (sel.node.isTextblock || !canJoin(state2.doc, sel.from))
       return false;
     point = sel.from;
   } else {
-    point = joinPoint(state.doc, sel.from, -1);
+    point = joinPoint(state2.doc, sel.from, -1);
     if (point == null)
       return false;
   }
   if (dispatch) {
-    let tr = state.tr.join(point);
+    let tr = state2.tr.join(point);
     if (nodeSel)
-      tr.setSelection(NodeSelection.create(tr.doc, point - state.doc.resolve(point).nodeBefore.nodeSize));
+      tr.setSelection(NodeSelection.create(tr.doc, point - state2.doc.resolve(point).nodeBefore.nodeSize));
     dispatch(tr.scrollIntoView());
   }
   return true;
 };
-const joinDown$1 = (state, dispatch) => {
-  let sel = state.selection, point;
+const joinDown$1 = (state2, dispatch) => {
+  let sel = state2.selection, point;
   if (sel instanceof NodeSelection) {
-    if (sel.node.isTextblock || !canJoin(state.doc, sel.to))
+    if (sel.node.isTextblock || !canJoin(state2.doc, sel.to))
       return false;
     point = sel.to;
   } else {
-    point = joinPoint(state.doc, sel.to, 1);
+    point = joinPoint(state2.doc, sel.to, 1);
     if (point == null)
       return false;
   }
   if (dispatch)
-    dispatch(state.tr.join(point).scrollIntoView());
+    dispatch(state2.tr.join(point).scrollIntoView());
   return true;
 };
-const lift$1 = (state, dispatch) => {
-  let { $from, $to } = state.selection;
+const lift$1 = (state2, dispatch) => {
+  let { $from, $to } = state2.selection;
   let range = $from.blockRange($to), target = range && liftTarget(range);
   if (target == null)
     return false;
   if (dispatch)
-    dispatch(state.tr.lift(range, target).scrollIntoView());
+    dispatch(state2.tr.lift(range, target).scrollIntoView());
   return true;
 };
-const newlineInCode$1 = (state, dispatch) => {
-  let { $head, $anchor } = state.selection;
+const newlineInCode$1 = (state2, dispatch) => {
+  let { $head, $anchor } = state2.selection;
   if (!$head.parent.type.spec.code || !$head.sameParent($anchor))
     return false;
   if (dispatch)
-    dispatch(state.tr.insertText("\n").scrollIntoView());
+    dispatch(state2.tr.insertText("\n").scrollIntoView());
   return true;
 };
 function defaultBlockAt$1(match) {
@@ -37828,22 +37945,22 @@ function defaultBlockAt$1(match) {
   }
   return null;
 }
-const exitCode$1 = (state, dispatch) => {
-  let { $head, $anchor } = state.selection;
+const exitCode$1 = (state2, dispatch) => {
+  let { $head, $anchor } = state2.selection;
   if (!$head.parent.type.spec.code || !$head.sameParent($anchor))
     return false;
   let above = $head.node(-1), after = $head.indexAfter(-1), type = defaultBlockAt$1(above.contentMatchAt(after));
   if (!type || !above.canReplaceWith(after, after, type))
     return false;
   if (dispatch) {
-    let pos = $head.after(), tr = state.tr.replaceWith(pos, pos, type.createAndFill());
+    let pos = $head.after(), tr = state2.tr.replaceWith(pos, pos, type.createAndFill());
     tr.setSelection(Selection.near(tr.doc.resolve(pos), 1));
     dispatch(tr.scrollIntoView());
   }
   return true;
 };
-const createParagraphNear$1 = (state, dispatch) => {
-  let sel = state.selection, { $from, $to } = sel;
+const createParagraphNear$1 = (state2, dispatch) => {
+  let sel = state2.selection, { $from, $to } = sel;
   if (sel instanceof AllSelection || $from.parent.inlineContent || $to.parent.inlineContent)
     return false;
   let type = defaultBlockAt$1($to.parent.contentMatchAt($to.indexAfter()));
@@ -37851,21 +37968,21 @@ const createParagraphNear$1 = (state, dispatch) => {
     return false;
   if (dispatch) {
     let side = (!$from.parentOffset && $to.index() < $to.parent.childCount ? $from : $to).pos;
-    let tr = state.tr.insert(side, type.createAndFill());
+    let tr = state2.tr.insert(side, type.createAndFill());
     tr.setSelection(TextSelection.create(tr.doc, side + 1));
     dispatch(tr.scrollIntoView());
   }
   return true;
 };
-const liftEmptyBlock$1 = (state, dispatch) => {
-  let { $cursor } = state.selection;
+const liftEmptyBlock$1 = (state2, dispatch) => {
+  let { $cursor } = state2.selection;
   if (!$cursor || $cursor.parent.content.size)
     return false;
   if ($cursor.depth > 1 && $cursor.after() != $cursor.end(-1)) {
     let before = $cursor.before();
-    if (canSplit(state.doc, before)) {
+    if (canSplit(state2.doc, before)) {
       if (dispatch)
-        dispatch(state.tr.split(before).scrollIntoView());
+        dispatch(state2.tr.split(before).scrollIntoView());
       return true;
     }
   }
@@ -37873,17 +37990,17 @@ const liftEmptyBlock$1 = (state, dispatch) => {
   if (target == null)
     return false;
   if (dispatch)
-    dispatch(state.tr.lift(range, target).scrollIntoView());
+    dispatch(state2.tr.lift(range, target).scrollIntoView());
   return true;
 };
 function splitBlockAs(splitNode) {
-  return (state, dispatch) => {
-    let { $from, $to } = state.selection;
-    if (state.selection instanceof NodeSelection && state.selection.node.isBlock) {
-      if (!$from.parentOffset || !canSplit(state.doc, $from.pos))
+  return (state2, dispatch) => {
+    let { $from, $to } = state2.selection;
+    if (state2.selection instanceof NodeSelection && state2.selection.node.isBlock) {
+      if (!$from.parentOffset || !canSplit(state2.doc, $from.pos))
         return false;
       if (dispatch)
-        dispatch(state.tr.split($from.pos).scrollIntoView());
+        dispatch(state2.tr.split($from.pos).scrollIntoView());
       return true;
     }
     if (!$from.depth)
@@ -37905,8 +38022,8 @@ function splitBlockAs(splitNode) {
         types.unshift(null);
       }
     }
-    let tr = state.tr;
-    if (state.selection instanceof TextSelection || state.selection instanceof AllSelection)
+    let tr = state2.tr;
+    if (state2.selection instanceof TextSelection || state2.selection instanceof AllSelection)
       tr.deleteSelection();
     let splitPos = tr.mapping.map($from.pos);
     let can = canSplit(tr.doc, splitPos, types.length, types);
@@ -37928,35 +38045,35 @@ function splitBlockAs(splitNode) {
   };
 }
 const splitBlock$1 = splitBlockAs();
-const selectParentNode$1 = (state, dispatch) => {
-  let { $from, to } = state.selection, pos;
+const selectParentNode$1 = (state2, dispatch) => {
+  let { $from, to } = state2.selection, pos;
   let same = $from.sharedDepth(to);
   if (same == 0)
     return false;
   pos = $from.before(same);
   if (dispatch)
-    dispatch(state.tr.setSelection(NodeSelection.create(state.doc, pos)));
+    dispatch(state2.tr.setSelection(NodeSelection.create(state2.doc, pos)));
   return true;
 };
-function joinMaybeClear(state, $pos, dispatch) {
+function joinMaybeClear(state2, $pos, dispatch) {
   let before = $pos.nodeBefore, after = $pos.nodeAfter, index = $pos.index();
   if (!before || !after || !before.type.compatibleContent(after.type))
     return false;
   if (!before.content.size && $pos.parent.canReplace(index - 1, index)) {
     if (dispatch)
-      dispatch(state.tr.delete($pos.pos - before.nodeSize, $pos.pos).scrollIntoView());
+      dispatch(state2.tr.delete($pos.pos - before.nodeSize, $pos.pos).scrollIntoView());
     return true;
   }
-  if (!$pos.parent.canReplace(index, index + 1) || !(after.isTextblock || canJoin(state.doc, $pos.pos)))
+  if (!$pos.parent.canReplace(index, index + 1) || !(after.isTextblock || canJoin(state2.doc, $pos.pos)))
     return false;
   if (dispatch)
-    dispatch(state.tr.join($pos.pos).scrollIntoView());
+    dispatch(state2.tr.join($pos.pos).scrollIntoView());
   return true;
 }
-function deleteBarrier(state, $cut, dispatch, dir) {
+function deleteBarrier(state2, $cut, dispatch, dir) {
   let before = $cut.nodeBefore, after = $cut.nodeAfter, conn, match;
   let isolated = before.type.spec.isolating || after.type.spec.isolating;
-  if (!isolated && joinMaybeClear(state, $cut, dispatch))
+  if (!isolated && joinMaybeClear(state2, $cut, dispatch))
     return true;
   let canDelAfter = !isolated && $cut.parent.canReplace($cut.index(), $cut.index() + 1);
   if (canDelAfter && (conn = (match = before.contentMatchAt(before.childCount)).findWrapping(after.type)) && match.matchType(conn[0] || after.type).validEnd) {
@@ -37965,7 +38082,7 @@ function deleteBarrier(state, $cut, dispatch, dir) {
       for (let i = conn.length - 1; i >= 0; i--)
         wrap2 = Fragment.from(conn[i].create(null, wrap2));
       wrap2 = Fragment.from(before.copy(wrap2));
-      let tr = state.tr.step(new ReplaceAroundStep($cut.pos - 1, end2, $cut.pos, end2, new Slice(wrap2, 1, 0), conn.length, true));
+      let tr = state2.tr.step(new ReplaceAroundStep($cut.pos - 1, end2, $cut.pos, end2, new Slice(wrap2, 1, 0), conn.length, true));
       let $joinAt = tr.doc.resolve(end2 + 2 * conn.length);
       if ($joinAt.nodeAfter && $joinAt.nodeAfter.type == before.type && canJoin(tr.doc, $joinAt.pos))
         tr.join($joinAt.pos);
@@ -37977,7 +38094,7 @@ function deleteBarrier(state, $cut, dispatch, dir) {
   let range = selAfter && selAfter.$from.blockRange(selAfter.$to), target = range && liftTarget(range);
   if (target != null && target >= $cut.depth) {
     if (dispatch)
-      dispatch(state.tr.lift(range, target).scrollIntoView());
+      dispatch(state2.tr.lift(range, target).scrollIntoView());
     return true;
   }
   if (canDelAfter && textblockAt(after, "start", true) && textblockAt(before, "end")) {
@@ -37996,7 +38113,7 @@ function deleteBarrier(state, $cut, dispatch, dir) {
         let end2 = Fragment.empty;
         for (let i = wrap2.length - 1; i >= 0; i--)
           end2 = Fragment.from(wrap2[i].copy(end2));
-        let tr = state.tr.step(new ReplaceAroundStep($cut.pos - wrap2.length, $cut.pos + after.nodeSize, $cut.pos + afterDepth, $cut.pos + after.nodeSize - afterDepth, new Slice(end2, wrap2.length, 0), 0, true));
+        let tr = state2.tr.step(new ReplaceAroundStep($cut.pos - wrap2.length, $cut.pos + after.nodeSize, $cut.pos + afterDepth, $cut.pos + after.nodeSize - afterDepth, new Slice(end2, wrap2.length, 0), 0, true));
         dispatch(tr.scrollIntoView());
       }
       return true;
@@ -38005,8 +38122,8 @@ function deleteBarrier(state, $cut, dispatch, dir) {
   return false;
 }
 function selectTextblockSide(side) {
-  return function(state, dispatch) {
-    let sel = state.selection, $pos = side < 0 ? sel.$from : sel.$to;
+  return function(state2, dispatch) {
+    let sel = state2.selection, $pos = side < 0 ? sel.$from : sel.$to;
     let depth = $pos.depth;
     while ($pos.node(depth).isInline) {
       if (!depth)
@@ -38016,29 +38133,29 @@ function selectTextblockSide(side) {
     if (!$pos.node(depth).isTextblock)
       return false;
     if (dispatch)
-      dispatch(state.tr.setSelection(TextSelection.create(state.doc, side < 0 ? $pos.start(depth) : $pos.end(depth))));
+      dispatch(state2.tr.setSelection(TextSelection.create(state2.doc, side < 0 ? $pos.start(depth) : $pos.end(depth))));
     return true;
   };
 }
 const selectTextblockStart$1 = selectTextblockSide(-1);
 const selectTextblockEnd$1 = selectTextblockSide(1);
 function wrapIn$1(nodeType, attrs = null) {
-  return function(state, dispatch) {
-    let { $from, $to } = state.selection;
+  return function(state2, dispatch) {
+    let { $from, $to } = state2.selection;
     let range = $from.blockRange($to), wrapping = range && findWrapping(range, nodeType, attrs);
     if (!wrapping)
       return false;
     if (dispatch)
-      dispatch(state.tr.wrap(range, wrapping).scrollIntoView());
+      dispatch(state2.tr.wrap(range, wrapping).scrollIntoView());
     return true;
   };
 }
 function setBlockType(nodeType, attrs = null) {
-  return function(state, dispatch) {
+  return function(state2, dispatch) {
     let applicable = false;
-    for (let i = 0; i < state.selection.ranges.length && !applicable; i++) {
-      let { $from: { pos: from2 }, $to: { pos: to } } = state.selection.ranges[i];
-      state.doc.nodesBetween(from2, to, (node, pos) => {
+    for (let i = 0; i < state2.selection.ranges.length && !applicable; i++) {
+      let { $from: { pos: from2 }, $to: { pos: to } } = state2.selection.ranges[i];
+      state2.doc.nodesBetween(from2, to, (node, pos) => {
         if (applicable)
           return false;
         if (!node.isTextblock || node.hasMarkup(nodeType, attrs))
@@ -38046,7 +38163,7 @@ function setBlockType(nodeType, attrs = null) {
         if (node.type == nodeType) {
           applicable = true;
         } else {
-          let $pos = state.doc.resolve(pos), index = $pos.index();
+          let $pos = state2.doc.resolve(pos), index = $pos.index();
           applicable = $pos.parent.canReplaceWith(index, index + 1, nodeType);
         }
       });
@@ -38054,9 +38171,9 @@ function setBlockType(nodeType, attrs = null) {
     if (!applicable)
       return false;
     if (dispatch) {
-      let tr = state.tr;
-      for (let i = 0; i < state.selection.ranges.length; i++) {
-        let { $from: { pos: from2 }, $to: { pos: to } } = state.selection.ranges[i];
+      let tr = state2.tr;
+      for (let i = 0; i < state2.selection.ranges.length; i++) {
+        let { $from: { pos: from2 }, $to: { pos: to } } = state2.selection.ranges[i];
         tr.setBlockType(from2, to, nodeType, attrs);
       }
       dispatch(tr.scrollIntoView());
@@ -38065,9 +38182,9 @@ function setBlockType(nodeType, attrs = null) {
   };
 }
 function chainCommands(...commands) {
-  return function(state, dispatch, view) {
+  return function(state2, dispatch, view) {
     for (let i = 0; i < commands.length; i++)
-      if (commands[i](state, dispatch, view))
+      if (commands[i](state2, dispatch, view))
         return true;
     return false;
   };
@@ -38079,12 +38196,12 @@ chainCommands(deleteSelection$1, joinForward$1, selectNodeForward$1);
 });
 typeof navigator != "undefined" ? /Mac|iP(hone|[oa]d)/.test(navigator.platform) : typeof os != "undefined" && os.platform ? os.platform() == "darwin" : false;
 function wrapInList$1(listType, attrs = null) {
-  return function(state, dispatch) {
-    let { $from, $to } = state.selection;
+  return function(state2, dispatch) {
+    let { $from, $to } = state2.selection;
     let range = $from.blockRange($to);
     if (!range)
       return false;
-    let tr = dispatch ? state.tr : null;
+    let tr = dispatch ? state2.tr : null;
     if (!wrapRangeInList(tr, range, listType, attrs))
       return false;
     if (dispatch)
@@ -38131,21 +38248,21 @@ function doWrapInList(tr, range, wrappers, joinBefore, listType) {
   return tr;
 }
 function liftListItem$1(itemType) {
-  return function(state, dispatch) {
-    let { $from, $to } = state.selection;
+  return function(state2, dispatch) {
+    let { $from, $to } = state2.selection;
     let range = $from.blockRange($to, (node) => node.childCount > 0 && node.firstChild.type == itemType);
     if (!range)
       return false;
     if (!dispatch)
       return true;
     if ($from.node(range.depth - 1).type == itemType)
-      return liftToOuterList(state, dispatch, itemType, range);
+      return liftToOuterList(state2, dispatch, itemType, range);
     else
-      return liftOutOfList(state, dispatch, range);
+      return liftOutOfList(state2, dispatch, range);
   };
 }
-function liftToOuterList(state, dispatch, itemType, range) {
-  let tr = state.tr, end2 = range.end, endOfList = range.$to.end(range.depth);
+function liftToOuterList(state2, dispatch, itemType, range) {
+  let tr = state2.tr, end2 = range.end, endOfList = range.$to.end(range.depth);
   if (end2 < endOfList) {
     tr.step(new ReplaceAroundStep(end2 - 1, endOfList, end2, endOfList, new Slice(Fragment.from(itemType.create(null, range.parent.copy())), 1, 0), 1, true));
     range = new NodeRange(tr.doc.resolve(range.$from.pos), tr.doc.resolve(endOfList), range.depth);
@@ -38160,8 +38277,8 @@ function liftToOuterList(state, dispatch, itemType, range) {
   dispatch(tr.scrollIntoView());
   return true;
 }
-function liftOutOfList(state, dispatch, range) {
-  let tr = state.tr, list = range.parent;
+function liftOutOfList(state2, dispatch, range) {
+  let tr = state2.tr, list = range.parent;
   for (let pos = range.end, i = range.endIndex - 1, e = range.startIndex; i > e; i--) {
     pos -= list.child(i).nodeSize;
     tr.delete(pos - 1, pos + 1);
@@ -38179,8 +38296,8 @@ function liftOutOfList(state, dispatch, range) {
   return true;
 }
 function sinkListItem$1(itemType) {
-  return function(state, dispatch) {
-    let { $from, $to } = state.selection;
+  return function(state2, dispatch) {
+    let { $from, $to } = state2.selection;
     let range = $from.blockRange($to, (node) => node.childCount > 0 && node.firstChild.type == itemType);
     if (!range)
       return false;
@@ -38195,7 +38312,7 @@ function sinkListItem$1(itemType) {
       let inner = Fragment.from(nestedBefore ? itemType.create() : null);
       let slice2 = new Slice(Fragment.from(itemType.create(null, Fragment.from(parent.type.create(null, inner)))), nestedBefore ? 3 : 1, 0);
       let before = range.start, after = range.end;
-      dispatch(state.tr.step(new ReplaceAroundStep(before - (nestedBefore ? 3 : 1), after, before, after, slice2, 1, true)).scrollIntoView());
+      dispatch(state2.tr.step(new ReplaceAroundStep(before - (nestedBefore ? 3 : 1), after, before, after, slice2, 1, true)).scrollIntoView());
     }
     return true;
   };
@@ -38742,25 +38859,25 @@ function flattenH(rect, top2) {
   let y = top2 ? rect.top : rect.bottom;
   return { top: y, bottom: y, left: rect.left, right: rect.right };
 }
-function withFlushedState(view, state, f2) {
+function withFlushedState(view, state2, f2) {
   let viewState = view.state, active = view.root.activeElement;
-  if (viewState != state)
-    view.updateState(state);
+  if (viewState != state2)
+    view.updateState(state2);
   if (active != view.dom)
     view.focus();
   try {
     return f2();
   } finally {
-    if (viewState != state)
+    if (viewState != state2)
       view.updateState(viewState);
     if (active != view.dom && active)
       active.focus();
   }
 }
-function endOfTextblockVertical(view, state, dir) {
-  let sel = state.selection;
+function endOfTextblockVertical(view, state2, dir) {
+  let sel = state2.selection;
   let $pos = dir == "up" ? sel.$from : sel.$to;
-  return withFlushedState(view, state, () => {
+  return withFlushedState(view, state2, () => {
     let { node: dom } = view.docView.domFromPos($pos.pos, dir == "up" ? -1 : 1);
     for (; ; ) {
       let nearest = view.docView.nearestDesc(dom, true);
@@ -38791,8 +38908,8 @@ function endOfTextblockVertical(view, state, dir) {
   });
 }
 const maybeRTL = /[\u0590-\u08ac]/;
-function endOfTextblockHorizontal(view, state, dir) {
-  let { $head } = state.selection;
+function endOfTextblockHorizontal(view, state2, dir) {
+  let { $head } = state2.selection;
   if (!$head.parent.isTextblock)
     return false;
   let offset2 = $head.parentOffset, atStart = !offset2, atEnd = offset2 == $head.parent.content.size;
@@ -38801,7 +38918,7 @@ function endOfTextblockHorizontal(view, state, dir) {
     return $head.pos == $head.start() || $head.pos == $head.end();
   if (!maybeRTL.test($head.parent.textContent) || !sel.modify)
     return dir == "left" || dir == "backward" ? atStart : atEnd;
-  return withFlushedState(view, state, () => {
+  return withFlushedState(view, state2, () => {
     let { focusNode: oldNode, focusOffset: oldOff, anchorNode, anchorOffset } = view.domSelectionRange();
     let oldBidiLevel = sel.caretBidiLevel;
     sel.modify("move", dir, "character");
@@ -38822,12 +38939,12 @@ function endOfTextblockHorizontal(view, state, dir) {
 let cachedState = null;
 let cachedDir = null;
 let cachedResult = false;
-function endOfTextblock(view, state, dir) {
-  if (cachedState == state && cachedDir == dir)
+function endOfTextblock(view, state2, dir) {
+  if (cachedState == state2 && cachedDir == dir)
     return cachedResult;
-  cachedState = state;
+  cachedState = state2;
   cachedDir = dir;
-  return cachedResult = dir == "up" || dir == "down" ? endOfTextblockVertical(view, state, dir) : endOfTextblockHorizontal(view, state, dir);
+  return cachedResult = dir == "up" || dir == "down" ? endOfTextblockVertical(view, state2, dir) : endOfTextblockHorizontal(view, state2, dir);
 }
 const NOT_DIRTY = 0, CHILD_DIRTY = 1, CONTENT_DIRTY = 2, NODE_DIRTY = 3;
 class ViewDesc {
@@ -40357,10 +40474,10 @@ function anchorInRightPlace(view) {
   let domSel = view.domSelectionRange();
   return isEquivalentPosition(anchorDOM.node, anchorDOM.offset, domSel.anchorNode, domSel.anchorOffset);
 }
-function moveSelectionBlock(state, dir) {
-  let { $anchor, $head } = state.selection;
+function moveSelectionBlock(state2, dir) {
+  let { $anchor, $head } = state2.selection;
   let $side = dir > 0 ? $anchor.max($head) : $anchor.min($head);
-  let $start = !$side.parent.inlineContent ? $side : $side.depth ? state.doc.resolve(dir > 0 ? $side.after() : $side.before()) : null;
+  let $start = !$side.parent.inlineContent ? $side : $side.depth ? state2.doc.resolve(dir > 0 ? $side.after() : $side.before()) : null;
   return $start && Selection.findFrom($start, dir);
 }
 function apply(view, sel) {
@@ -40564,9 +40681,9 @@ function setSelFocus(view, node, offset2) {
     sel.extend(node, offset2);
   }
   view.domObserver.setCurSelection();
-  let { state } = view;
+  let { state: state2 } = view;
   setTimeout(() => {
-    if (view.state == state)
+    if (view.state == state2)
       selectionToDOM(view);
   }, 50);
 }
@@ -40631,9 +40748,9 @@ function stopNativeHorizontalDelete(view, dir) {
   }
   return false;
 }
-function switchEditable(view, node, state) {
+function switchEditable(view, node, state2) {
   view.domObserver.stop();
-  node.contentEditable = state;
+  node.contentEditable = state2;
   view.domObserver.start();
 }
 function safariDownArrowBug(view) {
@@ -41298,14 +41415,14 @@ const timeoutComposition = android ? 5e3 : -1;
 editHandlers.compositionstart = editHandlers.compositionupdate = (view) => {
   if (!view.composing) {
     view.domObserver.flush();
-    let { state } = view, $pos = state.selection.$to;
-    if (state.selection instanceof TextSelection && (state.storedMarks || !$pos.textOffset && $pos.parentOffset && $pos.nodeBefore.marks.some((m) => m.type.spec.inclusive === false) || chrome && windows$1 && selectionBeforeUneditable(view))) {
+    let { state: state2 } = view, $pos = state2.selection.$to;
+    if (state2.selection instanceof TextSelection && (state2.storedMarks || !$pos.textOffset && $pos.parentOffset && $pos.nodeBefore.marks.some((m) => m.type.spec.inclusive === false) || chrome && windows$1 && selectionBeforeUneditable(view))) {
       view.markCursor = view.state.storedMarks || $pos.marks();
       endComposition(view, true);
       view.markCursor = null;
     } else {
-      endComposition(view, !state.selection.empty);
-      if (gecko && state.selection.empty && $pos.parentOffset && !$pos.textOffset && $pos.nodeBefore.marks.length) {
+      endComposition(view, !state2.selection.empty);
+      if (gecko && state2.selection.empty && $pos.parentOffset && !$pos.textOffset && $pos.nodeBefore.marks.length) {
         let sel = view.domSelectionRange();
         for (let node = sel.focusNode, offset2 = sel.focusOffset; node && node.nodeType == 1 && offset2 != 0; ) {
           let before = offset2 < 0 ? node.lastChild : node.childNodes[offset2 - 1];
@@ -43010,18 +43127,18 @@ class EditorView {
   Update the editor's `state` prop, without touching any of the
   other props.
   */
-  updateState(state) {
-    this.updateStateInner(state, this._props);
+  updateState(state2) {
+    this.updateStateInner(state2, this._props);
   }
-  updateStateInner(state, prevProps) {
+  updateStateInner(state2, prevProps) {
     var _a2;
     let prev = this.state, redraw = false, updateSel = false;
-    if (state.storedMarks && this.composing) {
+    if (state2.storedMarks && this.composing) {
       clearComposition(this);
       updateSel = true;
     }
-    this.state = state;
-    let pluginsChanged = prev.plugins != state.plugins || this._props.plugins != prevProps.plugins;
+    this.state = state2;
+    let pluginsChanged = prev.plugins != state2.plugins || this._props.plugins != prevProps.plugins;
     if (pluginsChanged || this._props.plugins != prevProps.plugins || this._props.nodeViews != prevProps.nodeViews) {
       let nodeViews = buildNodeViews(this);
       if (changedNodeViews(nodeViews, this.nodeViews)) {
@@ -43035,22 +43152,22 @@ class EditorView {
     this.editable = getEditable(this);
     updateCursorWrapper(this);
     let innerDeco = viewDecorations(this), outerDeco = computeDocDeco(this);
-    let scroll = prev.plugins != state.plugins && !prev.doc.eq(state.doc) ? "reset" : state.scrollToSelection > prev.scrollToSelection ? "to selection" : "preserve";
-    let updateDoc = redraw || !this.docView.matchesNode(state.doc, outerDeco, innerDeco);
-    if (updateDoc || !state.selection.eq(prev.selection))
+    let scroll = prev.plugins != state2.plugins && !prev.doc.eq(state2.doc) ? "reset" : state2.scrollToSelection > prev.scrollToSelection ? "to selection" : "preserve";
+    let updateDoc = redraw || !this.docView.matchesNode(state2.doc, outerDeco, innerDeco);
+    if (updateDoc || !state2.selection.eq(prev.selection))
       updateSel = true;
     let oldScrollPos = scroll == "preserve" && updateSel && this.dom.style.overflowAnchor == null && storeScrollPos(this);
     if (updateSel) {
       this.domObserver.stop();
-      let forceSelUpdate = updateDoc && (ie$1 || chrome) && !this.composing && !prev.selection.empty && !state.selection.empty && selectionContextChanged(prev.selection, state.selection);
+      let forceSelUpdate = updateDoc && (ie$1 || chrome) && !this.composing && !prev.selection.empty && !state2.selection.empty && selectionContextChanged(prev.selection, state2.selection);
       if (updateDoc) {
         let chromeKludge = chrome ? this.trackWrites = this.domSelectionRange().focusNode : null;
         if (this.composing)
           this.input.compositionNode = findCompositionNode(this);
-        if (redraw || !this.docView.update(state.doc, outerDeco, innerDeco, this)) {
+        if (redraw || !this.docView.update(state2.doc, outerDeco, innerDeco, this)) {
           this.docView.updateOuterDeco(outerDeco);
           this.docView.destroy();
-          this.docView = docViewDesc(state.doc, outerDeco, innerDeco, this.dom, this);
+          this.docView = docViewDesc(state2.doc, outerDeco, innerDeco, this.dom, this);
         }
         if (chromeKludge && (!this.trackWrites || !this.dom.contains(this.trackWrites)))
           forceSelUpdate = true;
@@ -43058,13 +43175,13 @@ class EditorView {
       if (forceSelUpdate || !(this.input.mouseDown && this.domObserver.currentSelection.eq(this.domSelectionRange()) && anchorInRightPlace(this))) {
         selectionToDOM(this, forceSelUpdate);
       } else {
-        syncNodeSelection(this, state.selection);
+        syncNodeSelection(this, state2.selection);
         this.domObserver.setCurSelection();
       }
       this.domObserver.start();
     }
     this.updatePluginViews(prev);
-    if (((_a2 = this.dragging) === null || _a2 === void 0 ? void 0 : _a2.node) && !prev.doc.eq(state.doc))
+    if (((_a2 = this.dragging) === null || _a2 === void 0 ? void 0 : _a2.node) && !prev.doc.eq(state2.doc))
       this.updateDraggedNode(this.dragging, prev);
     if (scroll == "reset") {
       this.dom.scrollTop = 0;
@@ -43274,8 +43391,8 @@ class EditorView {
   to the view's current state by default, but it is possible to
   pass a different state.
   */
-  endOfTextblock(dir, state) {
-    return endOfTextblock(this, state || this.state, dir);
+  endOfTextblock(dir, state2) {
+    return endOfTextblock(this, state2 || this.state, dir);
   }
   /**
   Run the editor's paste logic with the given HTML string. The
@@ -43606,18 +43723,18 @@ var __export = (target, all) => {
     __defProp2(target, name, { get: all[name], enumerable: true });
 };
 function createChainableState(config2) {
-  const { state, transaction } = config2;
+  const { state: state2, transaction } = config2;
   let { selection } = transaction;
   let { doc: doc2 } = transaction;
   let { storedMarks } = transaction;
   return {
-    ...state,
-    apply: state.apply.bind(state),
-    applyTransaction: state.applyTransaction.bind(state),
-    plugins: state.plugins,
-    schema: state.schema,
-    reconfigure: state.reconfigure.bind(state),
-    toJSON: state.toJSON.bind(state),
+    ...state2,
+    apply: state2.apply.bind(state2),
+    applyTransaction: state2.applyTransaction.bind(state2),
+    plugins: state2.plugins,
+    schema: state2.schema,
+    reconfigure: state2.reconfigure.bind(state2),
+    toJSON: state2.toJSON.bind(state2),
     get storedMarks() {
       return storedMarks;
     },
@@ -43648,9 +43765,9 @@ var CommandManager = class {
     return this.customState || this.editor.state;
   }
   get commands() {
-    const { rawCommands, editor, state } = this;
+    const { rawCommands, editor, state: state2 } = this;
     const { view } = editor;
-    const { tr } = state;
+    const { tr } = state2;
     const props = this.buildProps(tr);
     return Object.fromEntries(
       Object.entries(rawCommands).map(([name, command2]) => {
@@ -43672,11 +43789,11 @@ var CommandManager = class {
     return () => this.createCan();
   }
   createChain(startTr, shouldDispatch = true) {
-    const { rawCommands, editor, state } = this;
+    const { rawCommands, editor, state: state2 } = this;
     const { view } = editor;
     const callbacks = [];
     const hasStartTransaction = !!startTr;
-    const tr = startTr || state.tr;
+    const tr = startTr || state2.tr;
     const run3 = () => {
       if (!hasStartTransaction && shouldDispatch && !tr.getMeta("preventDispatch") && !this.hasCustomState) {
         view.dispatch(tr);
@@ -43700,9 +43817,9 @@ var CommandManager = class {
     return chain;
   }
   createCan(startTr) {
-    const { rawCommands, state } = this;
+    const { rawCommands, state: state2 } = this;
     const dispatch = false;
-    const tr = startTr || state.tr;
+    const tr = startTr || state2.tr;
     const props = this.buildProps(tr, dispatch);
     const formattedCommands = Object.fromEntries(
       Object.entries(rawCommands).map(([name, command2]) => {
@@ -43715,14 +43832,14 @@ var CommandManager = class {
     };
   }
   buildProps(tr, shouldDispatch = true) {
-    const { rawCommands, editor, state } = this;
+    const { rawCommands, editor, state: state2 } = this;
     const { view } = editor;
     const props = {
       tr,
       editor,
       view,
       state: createChainableState({
-        state,
+        state: state2,
         transaction: tr
       }),
       dispatch: shouldDispatch ? () => void 0 : void 0,
@@ -43815,14 +43932,14 @@ var blur = () => ({ editor, view }) => {
 var clearContent = (emitUpdate = true) => ({ commands }) => {
   return commands.setContent("", { emitUpdate });
 };
-var clearNodes = () => ({ state, tr, dispatch }) => {
+var clearNodes = () => ({ state: state2, tr, dispatch }) => {
   const { selection } = tr;
   const { ranges } = selection;
   if (!dispatch) {
     return true;
   }
   ranges.forEach(({ $from, $to }) => {
-    state.doc.nodesBetween($from.pos, $to.pos, (node, pos) => {
+    state2.doc.nodesBetween($from.pos, $to.pos, (node, pos) => {
       if (node.type.isText) {
         return;
       }
@@ -43848,12 +43965,12 @@ var clearNodes = () => ({ state, tr, dispatch }) => {
 var command = (fn2) => (props) => {
   return fn2(props);
 };
-var createParagraphNear = () => ({ state, dispatch }) => {
-  return createParagraphNear$1(state, dispatch);
+var createParagraphNear = () => ({ state: state2, dispatch }) => {
+  return createParagraphNear$1(state2, dispatch);
 };
 var cut = (originRange, targetPos) => ({ editor, tr }) => {
-  const { state } = editor;
-  const contentSlice = state.doc.slice(originRange.from, originRange.to);
+  const { state: state2 } = editor;
+  const contentSlice = state2.doc.slice(originRange.from, originRange.to);
   tr.deleteRange(originRange.from, originRange.to);
   const newPos = tr.mapping.map(targetPos);
   tr.insert(newPos, contentSlice.content);
@@ -43891,8 +44008,8 @@ function getNodeType(nameOrType, schema) {
   }
   return nameOrType;
 }
-var deleteNode = (typeOrName) => ({ tr, state, dispatch }) => {
-  const type = getNodeType(typeOrName, state.schema);
+var deleteNode = (typeOrName) => ({ tr, state: state2, dispatch }) => {
+  const type = getNodeType(typeOrName, state2.schema);
   const $pos = tr.selection.$anchor;
   for (let depth = $pos.depth; depth > 0; depth -= 1) {
     const node = $pos.node(depth);
@@ -43939,23 +44056,23 @@ var expandSelectionForInlineText = ($from, $to, schema) => {
   const to = expandSelectionForSide($to, schema, "right");
   return { from: from2, to };
 };
-var deleteSelection = () => ({ state, dispatch }) => {
-  const { $from, $to } = state.selection;
-  if (state.selection.empty) {
+var deleteSelection = () => ({ state: state2, dispatch }) => {
+  const { $from, $to } = state2.selection;
+  if (state2.selection.empty) {
     return false;
   }
-  const { from: from2, to } = expandSelectionForInlineText($from, $to, state.schema);
+  const { from: from2, to } = expandSelectionForInlineText($from, $to, state2.schema);
   if (dispatch) {
-    state.tr.deleteRange(from2, to).scrollIntoView();
-    dispatch(state.tr);
+    state2.tr.deleteRange(from2, to).scrollIntoView();
+    dispatch(state2.tr);
   }
   return true;
 };
 var enter = () => ({ commands }) => {
   return commands.keyboardShortcut("Enter");
 };
-var exitCode = () => ({ state, dispatch }) => {
-  return exitCode$1(state, dispatch);
+var exitCode = () => ({ state: state2, dispatch }) => {
+  return exitCode$1(state2, dispatch);
 };
 function isRegExp(value) {
   return Object.prototype.toString.call(value) === "[object RegExp]";
@@ -44036,8 +44153,8 @@ function getMarkType(nameOrType, schema) {
   }
   return nameOrType;
 }
-var extendMarkRange = (typeOrName, attributes) => ({ tr, state, dispatch }) => {
-  const type = getMarkType(typeOrName, state.schema);
+var extendMarkRange = (typeOrName, attributes) => ({ tr, state: state2, dispatch }) => {
+  const type = getMarkType(typeOrName, state2.schema);
   const { doc: doc2, selection } = tr;
   const { $from, from: from2, to } = selection;
   if (dispatch) {
@@ -44386,21 +44503,21 @@ var insertContentAt = (position, value, options) => ({ tr, dispatch, editor }) =
   }
   return true;
 };
-var joinUp = () => ({ state, dispatch }) => {
-  return joinUp$1(state, dispatch);
+var joinUp = () => ({ state: state2, dispatch }) => {
+  return joinUp$1(state2, dispatch);
 };
-var joinDown = () => ({ state, dispatch }) => {
-  return joinDown$1(state, dispatch);
+var joinDown = () => ({ state: state2, dispatch }) => {
+  return joinDown$1(state2, dispatch);
 };
-var joinBackward = () => ({ state, dispatch }) => {
-  return joinBackward$1(state, dispatch);
+var joinBackward = () => ({ state: state2, dispatch }) => {
+  return joinBackward$1(state2, dispatch);
 };
-var joinForward = () => ({ state, dispatch }) => {
-  return joinForward$1(state, dispatch);
+var joinForward = () => ({ state: state2, dispatch }) => {
+  return joinForward$1(state2, dispatch);
 };
-var joinItemBackward = () => ({ state, dispatch, tr }) => {
+var joinItemBackward = () => ({ state: state2, dispatch, tr }) => {
   try {
-    const point = joinPoint(state.doc, state.selection.$from.pos, -1);
+    const point = joinPoint(state2.doc, state2.selection.$from.pos, -1);
     if (point === null || point === void 0) {
       return false;
     }
@@ -44413,9 +44530,9 @@ var joinItemBackward = () => ({ state, dispatch, tr }) => {
     return false;
   }
 };
-var joinItemForward = () => ({ state, dispatch, tr }) => {
+var joinItemForward = () => ({ state: state2, dispatch, tr }) => {
   try {
-    const point = joinPoint(state.doc, state.selection.$from.pos, 1);
+    const point = joinPoint(state2.doc, state2.selection.$from.pos, 1);
     if (point === null || point === void 0) {
       return false;
     }
@@ -44428,11 +44545,11 @@ var joinItemForward = () => ({ state, dispatch, tr }) => {
     return false;
   }
 };
-var joinTextblockBackward = () => ({ state, dispatch }) => {
-  return joinTextblockBackward$1(state, dispatch);
+var joinTextblockBackward = () => ({ state: state2, dispatch }) => {
+  return joinTextblockBackward$1(state2, dispatch);
 };
-var joinTextblockForward = () => ({ state, dispatch }) => {
-  return joinTextblockForward$1(state, dispatch);
+var joinTextblockForward = () => ({ state: state2, dispatch }) => {
+  return joinTextblockForward$1(state2, dispatch);
 };
 function isMacOS() {
   return typeof navigator !== "undefined" ? /Mac/.test(navigator.platform) : false;
@@ -44504,11 +44621,11 @@ var keyboardShortcut = (name) => ({ editor, view, tr, dispatch }) => {
   });
   return true;
 };
-function isNodeActive(state, typeOrName, attributes = {}) {
-  const { from: from2, to, empty: empty2 } = state.selection;
-  const type = typeOrName ? getNodeType(typeOrName, state.schema) : null;
+function isNodeActive(state2, typeOrName, attributes = {}) {
+  const { from: from2, to, empty: empty2 } = state2.selection;
+  const type = typeOrName ? getNodeType(typeOrName, state2.schema) : null;
   const nodeRanges = [];
-  state.doc.nodesBetween(from2, to, (node, pos) => {
+  state2.doc.nodesBetween(from2, to, (node, pos) => {
     if (node.isText) {
       return;
     }
@@ -44533,23 +44650,23 @@ function isNodeActive(state, typeOrName, attributes = {}) {
   const range = matchedNodeRanges.reduce((sum, nodeRange) => sum + nodeRange.to - nodeRange.from, 0);
   return range >= selectionRange;
 }
-var lift = (typeOrName, attributes = {}) => ({ state, dispatch }) => {
-  const type = getNodeType(typeOrName, state.schema);
-  const isActive2 = isNodeActive(state, type, attributes);
+var lift = (typeOrName, attributes = {}) => ({ state: state2, dispatch }) => {
+  const type = getNodeType(typeOrName, state2.schema);
+  const isActive2 = isNodeActive(state2, type, attributes);
   if (!isActive2) {
     return false;
   }
-  return lift$1(state, dispatch);
+  return lift$1(state2, dispatch);
 };
-var liftEmptyBlock = () => ({ state, dispatch }) => {
-  return liftEmptyBlock$1(state, dispatch);
+var liftEmptyBlock = () => ({ state: state2, dispatch }) => {
+  return liftEmptyBlock$1(state2, dispatch);
 };
-var liftListItem = (typeOrName) => ({ state, dispatch }) => {
-  const type = getNodeType(typeOrName, state.schema);
-  return liftListItem$1(type)(state, dispatch);
+var liftListItem = (typeOrName) => ({ state: state2, dispatch }) => {
+  const type = getNodeType(typeOrName, state2.schema);
+  return liftListItem$1(type)(state2, dispatch);
 };
-var newlineInCode = () => ({ state, dispatch }) => {
-  return newlineInCode$1(state, dispatch);
+var newlineInCode = () => ({ state: state2, dispatch }) => {
+  return newlineInCode$1(state2, dispatch);
 };
 function getSchemaTypeNameByName(name, schema) {
   if (schema.nodes[name]) {
@@ -44569,25 +44686,25 @@ function deleteProps(obj, propOrProps) {
     return newObj;
   }, {});
 }
-var resetAttributes = (typeOrName, attributes) => ({ tr, state, dispatch }) => {
+var resetAttributes = (typeOrName, attributes) => ({ tr, state: state2, dispatch }) => {
   let nodeType = null;
   let markType = null;
   const schemaType = getSchemaTypeNameByName(
     typeof typeOrName === "string" ? typeOrName : typeOrName.name,
-    state.schema
+    state2.schema
   );
   if (!schemaType) {
     return false;
   }
   if (schemaType === "node") {
-    nodeType = getNodeType(typeOrName, state.schema);
+    nodeType = getNodeType(typeOrName, state2.schema);
   }
   if (schemaType === "mark") {
-    markType = getMarkType(typeOrName, state.schema);
+    markType = getMarkType(typeOrName, state2.schema);
   }
   let canReset = false;
   tr.selection.ranges.forEach((range) => {
-    state.doc.nodesBetween(range.$from.pos, range.$to.pos, (node, pos) => {
+    state2.doc.nodesBetween(range.$from.pos, range.$to.pos, (node, pos) => {
       if (nodeType && nodeType === node.type) {
         canReset = true;
         if (dispatch) {
@@ -44625,20 +44742,20 @@ var selectAll = () => ({ tr, dispatch }) => {
   }
   return true;
 };
-var selectNodeBackward = () => ({ state, dispatch }) => {
-  return selectNodeBackward$1(state, dispatch);
+var selectNodeBackward = () => ({ state: state2, dispatch }) => {
+  return selectNodeBackward$1(state2, dispatch);
 };
-var selectNodeForward = () => ({ state, dispatch }) => {
-  return selectNodeForward$1(state, dispatch);
+var selectNodeForward = () => ({ state: state2, dispatch }) => {
+  return selectNodeForward$1(state2, dispatch);
 };
-var selectParentNode = () => ({ state, dispatch }) => {
-  return selectParentNode$1(state, dispatch);
+var selectParentNode = () => ({ state: state2, dispatch }) => {
+  return selectParentNode$1(state2, dispatch);
 };
-var selectTextblockEnd = () => ({ state, dispatch }) => {
-  return selectTextblockEnd$1(state, dispatch);
+var selectTextblockEnd = () => ({ state: state2, dispatch }) => {
+  return selectTextblockEnd$1(state2, dispatch);
 };
-var selectTextblockStart = () => ({ state, dispatch }) => {
-  return selectTextblockStart$1(state, dispatch);
+var selectTextblockStart = () => ({ state: state2, dispatch }) => {
+  return selectTextblockStart$1(state2, dispatch);
 };
 function createDocument(content, schema, parseOptions = {}, options = {}) {
   return createNodeFromContent(content, schema, {
@@ -44666,17 +44783,17 @@ var setContent$1 = (content, { errorOnInvalidContent, emitUpdate = true, parseOp
     errorOnInvalidContent: errorOnInvalidContent != null ? errorOnInvalidContent : editor.options.enableContentCheck
   });
 };
-function getMarkAttributes(state, typeOrName) {
-  const type = getMarkType(typeOrName, state.schema);
-  const { from: from2, to, empty: empty2 } = state.selection;
+function getMarkAttributes(state2, typeOrName) {
+  const type = getMarkType(typeOrName, state2.schema);
+  const { from: from2, to, empty: empty2 } = state2.selection;
   const marks = [];
   if (empty2) {
-    if (state.storedMarks) {
-      marks.push(...state.storedMarks);
+    if (state2.storedMarks) {
+      marks.push(...state2.storedMarks);
     }
-    marks.push(...state.selection.$head.marks());
+    marks.push(...state2.selection.$head.marks());
   } else {
-    state.doc.nodesBetween(from2, to, (node) => {
+    state2.doc.nodesBetween(from2, to, (node) => {
       marks.push(...node.marks);
     });
   }
@@ -45261,11 +45378,11 @@ function getTextSerializersFromSchema(schema) {
     Object.entries(schema.nodes).filter(([, node]) => node.spec.toText).map(([name, node]) => [name, node.spec.toText])
   );
 }
-function getNodeAttributes(state, typeOrName) {
-  const type = getNodeType(typeOrName, state.schema);
-  const { from: from2, to } = state.selection;
+function getNodeAttributes(state2, typeOrName) {
+  const type = getNodeType(typeOrName, state2.schema);
+  const { from: from2, to } = state2.selection;
   const nodes = [];
-  state.doc.nodesBetween(from2, to, (node2) => {
+  state2.doc.nodesBetween(from2, to, (node2) => {
     nodes.push(node2);
   });
   const node = nodes.reverse().find((nodeItem) => nodeItem.type.name === type.name);
@@ -45274,16 +45391,16 @@ function getNodeAttributes(state, typeOrName) {
   }
   return { ...node.attrs };
 }
-function getAttributes(state, typeOrName) {
+function getAttributes(state2, typeOrName) {
   const schemaType = getSchemaTypeNameByName(
     typeof typeOrName === "string" ? typeOrName : typeOrName.name,
-    state.schema
+    state2.schema
   );
   if (schemaType === "node") {
-    return getNodeAttributes(state, typeOrName);
+    return getNodeAttributes(state2, typeOrName);
   }
   if (schemaType === "mark") {
-    return getMarkAttributes(state, typeOrName);
+    return getMarkAttributes(state2, typeOrName);
   }
   return {};
 }
@@ -45373,11 +45490,11 @@ var getTextContentFromNodes = ($from, maxMatch = 500) => {
   );
   return textBefore;
 };
-function isMarkActive(state, typeOrName, attributes = {}) {
-  const { empty: empty2, ranges } = state.selection;
-  const type = typeOrName ? getMarkType(typeOrName, state.schema) : null;
+function isMarkActive(state2, typeOrName, attributes = {}) {
+  const { empty: empty2, ranges } = state2.selection;
+  const type = typeOrName ? getMarkType(typeOrName, state2.schema) : null;
   if (empty2) {
-    return !!(state.storedMarks || state.selection.$from.marks()).filter((mark) => {
+    return !!(state2.storedMarks || state2.selection.$from.marks()).filter((mark) => {
       if (!type) {
         return true;
       }
@@ -45389,7 +45506,7 @@ function isMarkActive(state, typeOrName, attributes = {}) {
   ranges.forEach(({ $from, $to }) => {
     const from2 = $from.pos;
     const to = $to.pos;
-    state.doc.nodesBetween(from2, to, (node, pos) => {
+    state2.doc.nodesBetween(from2, to, (node, pos) => {
       if (type && node.inlineContent && !node.type.allowsMarkType(type)) {
         return false;
       }
@@ -45427,16 +45544,16 @@ function isMarkActive(state, typeOrName, attributes = {}) {
   const range = matchedRange > 0 ? matchedRange + excludedRange : matchedRange;
   return range >= selectionRange;
 }
-function isActive(state, name, attributes = {}) {
+function isActive(state2, name, attributes = {}) {
   if (!name) {
-    return isNodeActive(state, null, attributes) || isMarkActive(state, null, attributes);
+    return isNodeActive(state2, null, attributes) || isMarkActive(state2, null, attributes);
   }
-  const schemaType = getSchemaTypeNameByName(name, state.schema);
+  const schemaType = getSchemaTypeNameByName(name, state2.schema);
   if (schemaType === "node") {
-    return isNodeActive(state, name, attributes);
+    return isNodeActive(state2, name, attributes);
   }
   if (schemaType === "mark") {
-    return isMarkActive(state, name, attributes);
+    return isMarkActive(state2, name, attributes);
   }
   return false;
 }
@@ -45534,7 +45651,7 @@ function getUpdatedPosition(position, transaction) {
 function createMappablePosition(position) {
   return new MappablePosition(position);
 }
-function canSetMark(state, tr, newMarkType) {
+function canSetMark(state2, tr, newMarkType) {
   var _a2;
   const { selection } = tr;
   let cursor = null;
@@ -45542,14 +45659,14 @@ function canSetMark(state, tr, newMarkType) {
     cursor = selection.$cursor;
   }
   if (cursor) {
-    const currentMarks = (_a2 = state.storedMarks) != null ? _a2 : cursor.marks();
+    const currentMarks = (_a2 = state2.storedMarks) != null ? _a2 : cursor.marks();
     const parentAllowsMarkType = cursor.parent.type.allowsMarkType(newMarkType);
     return parentAllowsMarkType && (!!newMarkType.isInSet(currentMarks) || !currentMarks.some((mark) => mark.type.excludes(newMarkType)));
   }
   const { ranges } = selection;
   return ranges.some(({ $from, $to }) => {
-    let someNodeSupportsMark = $from.depth === 0 ? state.doc.inlineContent && state.doc.type.allowsMarkType(newMarkType) : false;
-    state.doc.nodesBetween($from.pos, $to.pos, (node, _pos, parent) => {
+    let someNodeSupportsMark = $from.depth === 0 ? state2.doc.inlineContent && state2.doc.type.allowsMarkType(newMarkType) : false;
+    state2.doc.nodesBetween($from.pos, $to.pos, (node, _pos, parent) => {
       if (someNodeSupportsMark) {
         return false;
       }
@@ -45563,13 +45680,13 @@ function canSetMark(state, tr, newMarkType) {
     return someNodeSupportsMark;
   });
 }
-var setMark = (typeOrName, attributes = {}) => ({ tr, state, dispatch }) => {
+var setMark = (typeOrName, attributes = {}) => ({ tr, state: state2, dispatch }) => {
   const { selection } = tr;
   const { empty: empty2, ranges } = selection;
-  const type = getMarkType(typeOrName, state.schema);
+  const type = getMarkType(typeOrName, state2.schema);
   if (dispatch) {
     if (empty2) {
-      const oldAttributes = getMarkAttributes(state, type);
+      const oldAttributes = getMarkAttributes(state2, type);
       tr.addStoredMark(
         type.create({
           ...oldAttributes,
@@ -45580,7 +45697,7 @@ var setMark = (typeOrName, attributes = {}) => ({ tr, state, dispatch }) => {
       ranges.forEach((range) => {
         const from2 = range.$from.pos;
         const to = range.$to.pos;
-        state.doc.nodesBetween(from2, to, (node, pos) => {
+        state2.doc.nodesBetween(from2, to, (node, pos) => {
           const trimmedFrom = Math.max(pos, from2);
           const trimmedTo = Math.min(pos + node.nodeSize, to);
           const someHasMark = node.marks.find((mark) => mark.type === type);
@@ -45604,24 +45721,24 @@ var setMark = (typeOrName, attributes = {}) => ({ tr, state, dispatch }) => {
       });
     }
   }
-  return canSetMark(state, tr, type);
+  return canSetMark(state2, tr, type);
 };
 var setMeta = (key, value) => ({ tr }) => {
   tr.setMeta(key, value);
   return true;
 };
-var setNode = (typeOrName, attributes = {}) => ({ state, dispatch, chain }) => {
-  const type = getNodeType(typeOrName, state.schema);
+var setNode = (typeOrName, attributes = {}) => ({ state: state2, dispatch, chain }) => {
+  const type = getNodeType(typeOrName, state2.schema);
   let attributesToCopy;
-  if (state.selection.$anchor.sameParent(state.selection.$head)) {
-    attributesToCopy = state.selection.$anchor.parent.attrs;
+  if (state2.selection.$anchor.sameParent(state2.selection.$head)) {
+    attributesToCopy = state2.selection.$anchor.parent.attrs;
   }
   if (!type.isTextblock) {
     console.warn('[tiptap warn]: Currently "setNode()" only supports text block nodes.');
     return false;
   }
   return chain().command(({ commands }) => {
-    const canSetBlock = setBlockType(type, { ...attributesToCopy, ...attributes })(state);
+    const canSetBlock = setBlockType(type, { ...attributesToCopy, ...attributes })(state2);
     if (canSetBlock) {
       return true;
     }
@@ -45639,8 +45756,8 @@ var setNodeSelection = (position) => ({ tr, dispatch }) => {
   }
   return true;
 };
-var setTextDirection = (direction, position) => ({ tr, state, dispatch }) => {
-  const { selection } = state;
+var setTextDirection = (direction, position) => ({ tr, state: state2, dispatch }) => {
+  const { selection } = state2;
   let from2;
   let to;
   if (typeof position === "number") {
@@ -45679,18 +45796,18 @@ var setTextSelection = (position) => ({ tr, dispatch }) => {
   }
   return true;
 };
-var sinkListItem = (typeOrName) => ({ state, dispatch }) => {
-  const type = getNodeType(typeOrName, state.schema);
-  return sinkListItem$1(type)(state, dispatch);
+var sinkListItem = (typeOrName) => ({ state: state2, dispatch }) => {
+  const type = getNodeType(typeOrName, state2.schema);
+  return sinkListItem$1(type)(state2, dispatch);
 };
-function ensureMarks(state, splittableMarks) {
-  const marks = state.storedMarks || state.selection.$to.parentOffset && state.selection.$from.marks();
+function ensureMarks(state2, splittableMarks) {
+  const marks = state2.storedMarks || state2.selection.$to.parentOffset && state2.selection.$from.marks();
   if (marks) {
     const filteredMarks = marks.filter((mark) => splittableMarks == null ? void 0 : splittableMarks.includes(mark.type.name));
-    state.tr.ensureMarks(filteredMarks);
+    state2.tr.ensureMarks(filteredMarks);
   }
 }
-var splitBlock = ({ keepMarks = true } = {}) => ({ tr, state, dispatch, editor }) => {
+var splitBlock = ({ keepMarks = true } = {}) => ({ tr, state: state2, dispatch, editor }) => {
   const { selection, doc: doc2 } = tr;
   const { $from, $to } = selection;
   const extensionAttributes = editor.extensionManager.attributes;
@@ -45705,7 +45822,7 @@ var splitBlock = ({ keepMarks = true } = {}) => ({ tr, state, dispatch, editor }
     }
     if (dispatch) {
       if (keepMarks) {
-        ensureMarks(state, editor.extensionManager.splittableMarks);
+        ensureMarks(state2, editor.extensionManager.splittableMarks);
       }
       tr.split($from.pos).scrollIntoView();
     }
@@ -45747,17 +45864,17 @@ var splitBlock = ({ keepMarks = true } = {}) => ({ tr, state, dispatch, editor }
       }
     }
     if (keepMarks) {
-      ensureMarks(state, editor.extensionManager.splittableMarks);
+      ensureMarks(state2, editor.extensionManager.splittableMarks);
     }
     tr.scrollIntoView();
   }
   return can;
 };
-var splitListItem = (typeOrName, overrideAttrs = {}) => ({ tr, state, dispatch, editor }) => {
+var splitListItem = (typeOrName, overrideAttrs = {}) => ({ tr, state: state2, dispatch, editor }) => {
   var _a2;
-  const type = getNodeType(typeOrName, state.schema);
-  const { $from, $to } = state.selection;
-  const node = state.selection.node;
+  const type = getNodeType(typeOrName, state2.schema);
+  const { $from, $to } = state2.selection;
+  const node = state2.selection.node;
   if (node && node.isBlock || $from.depth < 2 || !$from.sameParent($to)) {
     return false;
   }
@@ -45822,7 +45939,7 @@ var splitListItem = (typeOrName, overrideAttrs = {}) => ({ tr, state, dispatch, 
     return false;
   }
   if (dispatch) {
-    const { selection, storedMarks } = state;
+    const { selection, storedMarks } = state2;
     const { splittableMarks } = editor.extensionManager;
     const marks = storedMarks || selection.$to.parentOffset && selection.$from.marks();
     tr.split($from.pos, 2, types).scrollIntoView();
@@ -45878,11 +45995,11 @@ function createInnerSelectionForWholeDocList(tr) {
   const $end = doc2.resolve(list.nodeSize - 1);
   return TextSelection.between($start, $end);
 }
-var toggleList = (listTypeOrName, itemTypeOrName, keepMarks, attributes = {}) => ({ editor, tr, state, dispatch, chain, commands, can }) => {
+var toggleList = (listTypeOrName, itemTypeOrName, keepMarks, attributes = {}) => ({ editor, tr, state: state2, dispatch, chain, commands, can }) => {
   const { extensions, splittableMarks } = editor.extensionManager;
-  const listType = getNodeType(listTypeOrName, state.schema);
-  const itemType = getNodeType(itemTypeOrName, state.schema);
-  const { selection, storedMarks } = state;
+  const listType = getNodeType(listTypeOrName, state2.schema);
+  const itemType = getNodeType(itemTypeOrName, state2.schema);
+  const { selection, storedMarks } = state2;
   const { $from, $to } = selection;
   const range = $from.blockRange($to);
   const marks = storedMarks || selection.$to.parentOffset && selection.$from.marks();
@@ -45890,8 +46007,8 @@ var toggleList = (listTypeOrName, itemTypeOrName, keepMarks, attributes = {}) =>
     return false;
   }
   const parentList = findParentNode((node) => isList(node.type.name, extensions))(selection);
-  const isAllSelection = selection.from === 0 && selection.to === state.doc.content.size;
-  const topLevelNodes = state.doc.content.content;
+  const isAllSelection = selection.from === 0 && selection.to === state2.doc.content.size;
+  const topLevelNodes = state2.doc.content.content;
   const soleTopLevelNode = topLevelNodes.length === 1 ? topLevelNodes[0] : null;
   const allSelectionList = isAllSelection && soleTopLevelNode && isList(soleTopLevelNode.type.name, extensions) ? {
     node: soleTopLevelNode,
@@ -45943,51 +46060,51 @@ var toggleList = (listTypeOrName, itemTypeOrName, keepMarks, attributes = {}) =>
     return commands.clearNodes();
   }).wrapInList(listType, attributes).command(() => joinListBackwards(tr, listType)).command(() => joinListForwards(tr, listType)).run();
 };
-var toggleMark = (typeOrName, attributes = {}, options = {}) => ({ state, commands }) => {
+var toggleMark = (typeOrName, attributes = {}, options = {}) => ({ state: state2, commands }) => {
   const { extendEmptyMarkRange = false } = options;
-  const type = getMarkType(typeOrName, state.schema);
-  const isActive2 = isMarkActive(state, type, attributes);
+  const type = getMarkType(typeOrName, state2.schema);
+  const isActive2 = isMarkActive(state2, type, attributes);
   if (isActive2) {
     return commands.unsetMark(type, { extendEmptyMarkRange });
   }
   return commands.setMark(type, attributes);
 };
-var toggleNode = (typeOrName, toggleTypeOrName, attributes = {}) => ({ state, commands }) => {
-  const type = getNodeType(typeOrName, state.schema);
-  const toggleType = getNodeType(toggleTypeOrName, state.schema);
-  const isActive2 = isNodeActive(state, type, attributes);
+var toggleNode = (typeOrName, toggleTypeOrName, attributes = {}) => ({ state: state2, commands }) => {
+  const type = getNodeType(typeOrName, state2.schema);
+  const toggleType = getNodeType(toggleTypeOrName, state2.schema);
+  const isActive2 = isNodeActive(state2, type, attributes);
   let attributesToCopy;
-  if (state.selection.$anchor.sameParent(state.selection.$head)) {
-    attributesToCopy = state.selection.$anchor.parent.attrs;
+  if (state2.selection.$anchor.sameParent(state2.selection.$head)) {
+    attributesToCopy = state2.selection.$anchor.parent.attrs;
   }
   if (isActive2) {
     return commands.setNode(toggleType, attributesToCopy);
   }
   return commands.setNode(type, { ...attributesToCopy, ...attributes });
 };
-var toggleWrap = (typeOrName, attributes = {}) => ({ state, commands }) => {
-  const type = getNodeType(typeOrName, state.schema);
-  const isActive2 = isNodeActive(state, type, attributes);
+var toggleWrap = (typeOrName, attributes = {}) => ({ state: state2, commands }) => {
+  const type = getNodeType(typeOrName, state2.schema);
+  const isActive2 = isNodeActive(state2, type, attributes);
   if (isActive2) {
     return commands.lift(type);
   }
   return commands.wrapIn(type, attributes);
 };
-var undoInputRule = () => ({ state, dispatch }) => {
-  const plugins = state.plugins;
+var undoInputRule = () => ({ state: state2, dispatch }) => {
+  const plugins = state2.plugins;
   for (let i = 0; i < plugins.length; i += 1) {
     const plugin = plugins[i];
     let undoable;
-    if (plugin.spec.isInputRules && (undoable = plugin.getState(state))) {
+    if (plugin.spec.isInputRules && (undoable = plugin.getState(state2))) {
       if (dispatch) {
-        const tr = state.tr;
+        const tr = state2.tr;
         const toUndo = undoable.transform;
         for (let j = toUndo.steps.length - 1; j >= 0; j -= 1) {
           tr.step(toUndo.steps[j].invert(toUndo.docs[j]));
         }
         if (undoable.text) {
           const marks = tr.doc.resolve(undoable.from).marks();
-          tr.replaceWith(undoable.from, undoable.to, state.schema.text(undoable.text, marks));
+          tr.replaceWith(undoable.from, undoable.to, state2.schema.text(undoable.text, marks));
         } else {
           tr.delete(undoable.from, undoable.to);
         }
@@ -46017,11 +46134,11 @@ var unsetAllMarks = (options = {}) => ({ tr, dispatch, editor }) => {
   }
   return true;
 };
-var unsetMark = (typeOrName, options = {}) => ({ tr, state, dispatch }) => {
+var unsetMark = (typeOrName, options = {}) => ({ tr, state: state2, dispatch }) => {
   var _a2;
   const { extendEmptyMarkRange = false } = options;
   const { selection } = tr;
-  const type = getMarkType(typeOrName, state.schema);
+  const type = getMarkType(typeOrName, state2.schema);
   const { $from, empty: empty2, ranges } = selection;
   if (!dispatch) {
     return true;
@@ -46043,8 +46160,8 @@ var unsetMark = (typeOrName, options = {}) => ({ tr, state, dispatch }) => {
   tr.removeStoredMark(type);
   return true;
 };
-var unsetTextDirection = (position) => ({ tr, state, dispatch }) => {
-  const { selection } = state;
+var unsetTextDirection = (position) => ({ tr, state: state2, dispatch }) => {
+  const { selection } = state2;
   let from2;
   let to;
   if (typeof position === "number") {
@@ -46069,21 +46186,21 @@ var unsetTextDirection = (position) => ({ tr, state, dispatch }) => {
   }
   return true;
 };
-var updateAttributes = (typeOrName, attributes = {}) => ({ tr, state, dispatch }) => {
+var updateAttributes = (typeOrName, attributes = {}) => ({ tr, state: state2, dispatch }) => {
   let nodeType = null;
   let markType = null;
   const schemaType = getSchemaTypeNameByName(
     typeof typeOrName === "string" ? typeOrName : typeOrName.name,
-    state.schema
+    state2.schema
   );
   if (!schemaType) {
     return false;
   }
   if (schemaType === "node") {
-    nodeType = getNodeType(typeOrName, state.schema);
+    nodeType = getNodeType(typeOrName, state2.schema);
   }
   if (schemaType === "mark") {
-    markType = getMarkType(typeOrName, state.schema);
+    markType = getMarkType(typeOrName, state2.schema);
   }
   let canUpdate = false;
   tr.selection.ranges.forEach((range) => {
@@ -46094,7 +46211,7 @@ var updateAttributes = (typeOrName, attributes = {}) => ({ tr, state, dispatch }
     let trimmedFrom;
     let trimmedTo;
     if (tr.selection.empty) {
-      state.doc.nodesBetween(from2, to, (node, pos) => {
+      state2.doc.nodesBetween(from2, to, (node, pos) => {
         if (nodeType && nodeType === node.type) {
           canUpdate = true;
           trimmedFrom = Math.max(pos, from2);
@@ -46104,7 +46221,7 @@ var updateAttributes = (typeOrName, attributes = {}) => ({ tr, state, dispatch }
         }
       });
     } else {
-      state.doc.nodesBetween(from2, to, (node, pos) => {
+      state2.doc.nodesBetween(from2, to, (node, pos) => {
         if (pos < from2 && nodeType && nodeType === node.type) {
           canUpdate = true;
           trimmedFrom = Math.max(pos, from2);
@@ -46169,13 +46286,13 @@ var updateAttributes = (typeOrName, attributes = {}) => ({ tr, state, dispatch }
   });
   return canUpdate;
 };
-var wrapIn = (typeOrName, attributes = {}) => ({ state, dispatch }) => {
-  const type = getNodeType(typeOrName, state.schema);
-  return wrapIn$1(type, attributes)(state, dispatch);
+var wrapIn = (typeOrName, attributes = {}) => ({ state: state2, dispatch }) => {
+  const type = getNodeType(typeOrName, state2.schema);
+  return wrapIn$1(type, attributes)(state2, dispatch);
 };
-var wrapInList = (typeOrName, attributes = {}) => ({ state, dispatch }) => {
-  const type = getNodeType(typeOrName, state.schema);
-  return wrapInList$1(type, attributes)(state, dispatch);
+var wrapInList = (typeOrName, attributes = {}) => ({ state: state2, dispatch }) => {
+  const type = getNodeType(typeOrName, state2.schema);
+  return wrapInList$1(type, attributes)(state2, dispatch);
 };
 var EventEmitter = class {
   constructor() {
@@ -46265,7 +46382,7 @@ function run(config2) {
       return;
     }
     const tr = view.state.tr;
-    const state = createChainableState({
+    const state2 = createChainableState({
       state: view.state,
       transaction: tr
     });
@@ -46275,10 +46392,10 @@ function run(config2) {
     };
     const { commands, chain, can } = new CommandManager({
       editor,
-      state
+      state: state2
     });
     const handler = rule.handler({
-      state,
+      state: state2,
       range,
       match,
       commands,
@@ -46308,7 +46425,7 @@ function inputRulesPlugin(props) {
       init() {
         return null;
       },
-      apply(tr, prev, state) {
+      apply(tr, prev, state2) {
         const stored = tr.getMeta(plugin);
         if (stored) {
           return stored;
@@ -46321,7 +46438,7 @@ function inputRulesPlugin(props) {
             if (typeof text === "string") {
               text = text;
             } else {
-              text = getHTMLFromFragment(Fragment.from(text), state.schema);
+              text = getHTMLFromFragment(Fragment.from(text), state2.schema);
             }
             const { from: from2 } = simulatedInputMeta;
             const to = from2 + text.length;
@@ -46537,13 +46654,13 @@ var pasteRuleMatcherHandler = (text, find, event) => {
   });
 };
 function run2(config2) {
-  const { editor, state, from: from2, to, rule, pasteEvent, dropEvent } = config2;
+  const { editor, state: state2, from: from2, to, rule, pasteEvent, dropEvent } = config2;
   const { commands, chain, can } = new CommandManager({
     editor,
-    state
+    state: state2
   });
   const handlers2 = [];
-  state.doc.nodesBetween(from2, to, (node, pos) => {
+  state2.doc.nodesBetween(from2, to, (node, pos) => {
     var _a2, _b2, _c, _d, _e;
     if (((_b2 = (_a2 = node.type) == null ? void 0 : _a2.spec) == null ? void 0 : _b2.code) || !(node.isText || node.isTextblock || node.isInline)) {
       return;
@@ -46563,11 +46680,11 @@ function run2(config2) {
       const start2 = resolvedFrom + match.index + 1;
       const end2 = start2 + match[0].length;
       const range = {
-        from: state.tr.mapping.map(start2),
-        to: state.tr.mapping.map(end2)
+        from: state2.tr.mapping.map(start2),
+        to: state2.tr.mapping.map(end2)
       };
       const handler = rule.handler({
-        state,
+        state: state2,
         range,
         match,
         commands,
@@ -46604,15 +46721,15 @@ function pasteRulesPlugin(props) {
     dropEvent = null;
   }
   const processEvent = ({
-    state,
+    state: state2,
     from: from2,
     to,
     rule,
     pasteEvt
   }) => {
-    const tr = state.tr;
+    const tr = state2.tr;
     const chainableState = createChainableState({
-      state,
+      state: state2,
       transaction: tr
     });
     const handler = run2({
@@ -46690,7 +46807,7 @@ function pasteRulesPlugin(props) {
           }
         }
       },
-      appendTransaction: (transactions, oldState, state) => {
+      appendTransaction: (transactions, oldState, state2) => {
         const transaction = transactions[0];
         const isPaste = transaction.getMeta("uiEvent") === "paste" && !isPastedFromProseMirror;
         const isDrop = transaction.getMeta("uiEvent") === "drop" && !isDroppedFromProseMirror;
@@ -46704,27 +46821,27 @@ function pasteRulesPlugin(props) {
           if (typeof text === "string") {
             text = text;
           } else {
-            text = getHTMLFromFragment(Fragment.from(text), state.schema);
+            text = getHTMLFromFragment(Fragment.from(text), state2.schema);
           }
           const { from: from22 } = simulatedPasteMeta;
           const to2 = from22 + text.length;
           const pasteEvt = createClipboardPasteEvent(text);
           return processEvent({
             rule,
-            state,
+            state: state2,
             from: from22,
             to: { b: to2 },
             pasteEvt
           });
         }
-        const from2 = oldState.doc.content.findDiffStart(state.doc.content);
-        const to = oldState.doc.content.findDiffEnd(state.doc.content);
+        const from2 = oldState.doc.content.findDiffStart(state2.doc.content);
+        const to = oldState.doc.content.findDiffEnd(state2.doc.content);
         if (!isNumber(from2) || !to || from2 === to.b) {
           return;
         }
         return processEvent({
           rule,
-          state,
+          state: state2,
           from: from2,
           to,
           pasteEvt: pasteEvent
@@ -47168,8 +47285,8 @@ var ClipboardTextSerializer = Extension.create({
         props: {
           clipboardTextSerializer: () => {
             const { editor } = this;
-            const { state, schema } = editor;
-            const { doc: doc2, selection } = state;
+            const { state: state2, schema } = editor;
+            const { doc: doc2, selection } = state2;
             const textSerializers = getTextSerializersFromSchema(schema);
             const { blockSeparator } = this.options;
             const options = {
@@ -47429,13 +47546,13 @@ var Keymap = Extension.create({
             return;
           }
           const tr = newState.tr;
-          const state = createChainableState({
+          const state2 = createChainableState({
             state: newState,
             transaction: tr
           });
           const { commands } = new CommandManager({
             editor: this.editor,
-            state
+            state: state2
           });
           commands.clearNodes();
           if (!tr.steps.length) {
@@ -48026,8 +48143,8 @@ var Editor$1 = class Editor extends EventEmitter {
     return new Proxy(
       {
         state: this.editorState,
-        updateState: (state) => {
-          this.editorState = state;
+        updateState: (state2) => {
+          this.editorState = state2;
         },
         dispatch: (tr) => {
           this.dispatchTransaction(tr);
@@ -48074,9 +48191,9 @@ var Editor$1 = class Editor extends EventEmitter {
    */
   registerPlugin(plugin, handlePlugins) {
     const plugins = isFunction(handlePlugins) ? handlePlugins(plugin, [...this.state.plugins]) : [...this.state.plugins, plugin];
-    const state = this.state.reconfigure({ plugins });
-    this.view.updateState(state);
-    return state;
+    const state2 = this.state.reconfigure({ plugins });
+    this.view.updateState(state2);
+    return state2;
   }
   /**
    * Unregister a ProseMirror plugin.
@@ -48097,11 +48214,11 @@ var Editor$1 = class Editor extends EventEmitter {
     if (prevPlugins.length === plugins.length) {
       return void 0;
     }
-    const state = this.state.reconfigure({
+    const state2 = this.state.reconfigure({
       plugins
     });
-    this.view.updateState(state);
-    return state;
+    this.view.updateState(state2);
+    return state2;
   }
   /**
    * Creates an extension manager.
@@ -48261,19 +48378,19 @@ var Editor$1 = class Editor extends EventEmitter {
       });
       return;
     }
-    const { state, transactions } = this.state.applyTransaction(transaction);
-    const selectionHasChanged = !this.state.selection.eq(state.selection);
+    const { state: state2, transactions } = this.state.applyTransaction(transaction);
+    const selectionHasChanged = !this.state.selection.eq(state2.selection);
     const rootTrWasApplied = transactions.includes(transaction);
     const prevState = this.state;
     this.emit("beforeTransaction", {
       editor: this,
       transaction,
-      nextState: state
+      nextState: state2
     });
     if (!rootTrWasApplied) {
       return;
     }
-    this.view.updateState(state);
+    this.view.updateState(state2);
     this.emit("transaction", {
       editor: this,
       transaction,
@@ -48304,7 +48421,7 @@ var Editor$1 = class Editor extends EventEmitter {
         transaction: mostRecentFocusTr
       });
     }
-    if (transaction.getMeta("preventUpdate") || !transactions.some((tr) => tr.docChanged) || prevState.doc.eq(state.doc)) {
+    if (transaction.getMeta("preventUpdate") || !transactions.some((tr) => tr.docChanged) || prevState.doc.eq(state2.doc)) {
       return;
     }
     this.emit("update", {
@@ -48881,8 +48998,8 @@ ${indentedChild}`;
   return output;
 }
 function updateMarkViewAttributes(checkMark, editor, attrs = {}) {
-  const { state } = editor;
-  const { doc: doc2, tr } = state;
+  const { state: state2 } = editor;
+  const { doc: doc2, tr } = state2;
   const thisMark = checkMark;
   doc2.descendants((node, pos) => {
     const from2 = tr.mapping.map(pos);
@@ -48980,11 +49097,11 @@ var HardBreak = Node3.create({
   },
   addCommands() {
     return {
-      setHardBreak: () => ({ commands, chain, state, editor }) => {
+      setHardBreak: () => ({ commands, chain, state: state2, editor }) => {
         return commands.first([
           () => commands.exitCode(),
           () => commands.command(() => {
-            const { selection, storedMarks } = state;
+            const { selection, storedMarks } = state2;
             if (selection.$from.parent.type.spec.isolating) {
               return false;
             }
@@ -49113,8 +49230,8 @@ function Suggestion({
       return getAnchorClientRect;
     }
     return () => {
-      const state = pluginKey.getState(editor.state);
-      const decorationId = state == null ? void 0 : state.decorationId;
+      const state2 = pluginKey.getState(editor.state);
+      const decorationId = state2 == null ? void 0 : state2.decorationId;
       const currentDecorationNode = view.dom.querySelector(`[data-decoration-id="${decorationId}"]`);
       return (currentDecorationNode == null ? void 0 : currentDecorationNode.getBoundingClientRect()) || null;
     };
@@ -49122,12 +49239,12 @@ function Suggestion({
   const shouldKeepDismissed = ({
     match,
     dismissedRange,
-    state,
+    state: state2,
     transaction
   }) => {
     if (shouldResetDismissed == null ? void 0 : shouldResetDismissed({
       editor,
-      state,
+      state: state2,
       range: dismissedRange,
       match,
       transaction,
@@ -49143,19 +49260,19 @@ function Suggestion({
   function dispatchExit(view, pluginKeyRef) {
     var _a2;
     try {
-      const state = pluginKey.getState(view.state);
-      const decorationNode = (state == null ? void 0 : state.decorationId) ? view.dom.querySelector(`[data-decoration-id="${state.decorationId}"]`) : null;
+      const state2 = pluginKey.getState(view.state);
+      const decorationNode = (state2 == null ? void 0 : state2.decorationId) ? view.dom.querySelector(`[data-decoration-id="${state2.decorationId}"]`) : null;
       const exitProps = {
         // @ts-ignore editor is available in closure
         editor,
-        range: (state == null ? void 0 : state.range) || { from: 0, to: 0 },
-        query: (state == null ? void 0 : state.query) || null,
-        text: (state == null ? void 0 : state.text) || null,
+        range: (state2 == null ? void 0 : state2.range) || { from: 0, to: 0 },
+        query: (state2 == null ? void 0 : state2.query) || null,
+        text: (state2 == null ? void 0 : state2.text) || null,
         items: [],
         command: (commandProps) => {
           return command2({
             editor,
-            range: (state == null ? void 0 : state.range) || { from: 0, to: 0 },
+            range: (state2 == null ? void 0 : state2.range) || { from: 0, to: 0 },
             props: commandProps
           });
         },
@@ -49186,20 +49303,20 @@ function Suggestion({
           if (!handleStart && !handleChange && !handleExit) {
             return;
           }
-          const state = handleExit && !handleStart ? prev : next;
+          const state2 = handleExit && !handleStart ? prev : next;
           const decorationNode = view.dom.querySelector(
-            `[data-decoration-id="${state.decorationId}"]`
+            `[data-decoration-id="${state2.decorationId}"]`
           );
           props = {
             editor,
-            range: state.range,
-            query: state.query,
-            text: state.text,
+            range: state2.range,
+            query: state2.query,
+            text: state2.text,
             items: [],
             command: (commandProps) => {
               return command2({
                 editor,
-                range: state.range,
+                range: state2.range,
                 props: commandProps
               });
             },
@@ -49215,7 +49332,7 @@ function Suggestion({
           if (handleChange || handleStart) {
             props.items = await items({
               editor,
-              query: state.query
+              query: state2.query
             });
           }
           if (handleExit) {
@@ -49240,7 +49357,7 @@ function Suggestion({
     state: {
       // Initialize the plugin's internal state.
       init() {
-        const state = {
+        const state2 = {
           active: false,
           range: {
             from: 0,
@@ -49251,10 +49368,10 @@ function Suggestion({
           composing: false,
           dismissedRange: null
         };
-        return state;
+        return state2;
       },
       // Apply changes to the plugin state from a view transaction.
-      apply(transaction, prev, _oldState, state) {
+      apply(transaction, prev, _oldState, state2) {
         const { isEditable } = editor;
         const { composing } = editor.view;
         const { selection } = transaction;
@@ -49292,7 +49409,7 @@ function Suggestion({
           const decorationId = `id_${Math.floor(Math.random() * 4294967295)}`;
           if (match && allow({
             editor,
-            state,
+            state: state2,
             range: match.range,
             isActive: prev.active
           }) && (!shouldShow || shouldShow({
@@ -49305,7 +49422,7 @@ function Suggestion({
             if (next.dismissedRange !== null && !shouldKeepDismissed({
               match,
               dismissedRange: next.dismissedRange,
-              state,
+              state: state2,
               transaction
             })) {
               next.dismissedRange = null;
@@ -49346,8 +49463,8 @@ function Suggestion({
           return false;
         }
         if (event.key === "Escape" || event.key === "Esc") {
-          const state = plugin.getState(view.state);
-          (_a2 = renderer2 == null ? void 0 : renderer2.onKeyDown) == null ? void 0 : _a2.call(renderer2, { view, event, range: state.range });
+          const state2 = plugin.getState(view.state);
+          (_a2 = renderer2 == null ? void 0 : renderer2.onKeyDown) == null ? void 0 : _a2.call(renderer2, { view, event, range: state2.range });
           dispatchExit(view, pluginKey);
           return true;
         }
@@ -49355,8 +49472,8 @@ function Suggestion({
         return handled;
       },
       // Setup decorator on the currently active suggestion.
-      decorations(state) {
-        const { active, range, decorationId, query } = plugin.getState(state);
+      decorations(state2) {
+        const { active, range, decorationId, query } = plugin.getState(state2);
         if (!active) {
           return null;
         }
@@ -49365,7 +49482,7 @@ function Suggestion({
         if (isEmpty) {
           classNames.push(decorationEmptyClass);
         }
-        return DecorationSet.create(state.doc, [
+        return DecorationSet.create(state2.doc, [
           Decoration.inline(range.from, range.to, {
             nodeName: decorationTag,
             class: classNames.join(" "),
@@ -49408,9 +49525,9 @@ function getSuggestionOptions({
       ]).run();
       (_c = (_b2 = editor.view.dom.ownerDocument.defaultView) == null ? void 0 : _b2.getSelection()) == null ? void 0 : _c.collapseToEnd();
     },
-    allow: ({ state, range }) => {
-      const $from = state.doc.resolve(range.from);
-      const type = state.schema.nodes[extensionName];
+    allow: ({ state: state2, range }) => {
+      const $from = state2.doc.resolve(range.from);
+      const type = state2.schema.nodes[extensionName];
       const allow = !!$from.parent.type.contentMatch.matchType(type);
       return allow;
     },
@@ -49583,16 +49700,16 @@ var Mention = Node3.create({
   },
   addKeyboardShortcuts() {
     return {
-      Backspace: () => this.editor.commands.command(({ tr, state }) => {
+      Backspace: () => this.editor.commands.command(({ tr, state: state2 }) => {
         let isMention = false;
-        const { selection } = state;
+        const { selection } = state2;
         const { empty: empty2, anchor } = selection;
         if (!empty2) {
           return false;
         }
         let mentionNode = new Node$1();
         let mentionPos = 0;
-        state.doc.nodesBetween(anchor - 1, anchor, (node, pos) => {
+        state2.doc.nodesBetween(anchor - 1, anchor, (node, pos) => {
           if (node.type.name === this.name) {
             isMention = true;
             mentionNode = node;
@@ -49965,20 +50082,20 @@ const handleKeyDown = keydownHandler({
 });
 function arrow$2(axis, dir) {
   const dirStr = axis == "vert" ? dir > 0 ? "down" : "up" : dir > 0 ? "right" : "left";
-  return function(state, dispatch, view) {
-    let sel = state.selection;
+  return function(state2, dispatch, view) {
+    let sel = state2.selection;
     let $start = dir > 0 ? sel.$to : sel.$from, mustMove = sel.empty;
     if (sel instanceof TextSelection) {
       if (!view.endOfTextblock(dirStr) || $start.depth == 0)
         return false;
       mustMove = false;
-      $start = state.doc.resolve(dir > 0 ? $start.after() : $start.before());
+      $start = state2.doc.resolve(dir > 0 ? $start.after() : $start.before());
     }
     let $found = GapCursor.findGapCursorFrom($start, dir, mustMove);
     if (!$found)
       return false;
     if (dispatch)
-      dispatch(state.tr.setSelection(new GapCursor($found)));
+      dispatch(state2.tr.setSelection(new GapCursor($found)));
     return true;
   };
 }
@@ -50009,12 +50126,12 @@ function beforeinput(view, event) {
   view.dispatch(tr);
   return false;
 }
-function drawGapCursor(state) {
-  if (!(state.selection instanceof GapCursor))
+function drawGapCursor(state2) {
+  if (!(state2.selection instanceof GapCursor))
     return null;
   let node = document.createElement("div");
   node.className = "ProseMirror-gapcursor";
-  return DecorationSet.create(state.doc, [Decoration.widget(state.selection.head, node, { key: "gapcursor" })]);
+  return DecorationSet.create(state2.doc, [Decoration.widget(state2.selection.head, node, { key: "gapcursor" })]);
 }
 var GOOD_LEAF_SIZE = 200;
 var RopeSequence = function RopeSequence2() {
@@ -50204,7 +50321,7 @@ class Branch {
   }
   // Pop the latest event off the branch's history and apply it
   // to a document transform.
-  popEvent(state, preserveItems) {
+  popEvent(state2, preserveItems) {
     if (this.eventCount == 0)
       return null;
     let end2 = this.items.length;
@@ -50220,7 +50337,7 @@ class Branch {
       remap = this.remapping(end2, this.items.length);
       mapFrom = remap.maps.length;
     }
-    let transform2 = state.tr;
+    let transform2 = state2.tr;
     let selection, remaining;
     let addAfter = [], addBefore = [];
     this.items.forEach((item, i) => {
@@ -50417,7 +50534,7 @@ class HistoryState {
   }
 }
 const DEPTH_OVERFLOW = 20;
-function applyTransaction(history2, state, tr, options) {
+function applyTransaction(history2, state2, tr, options) {
   let historyTr = tr.getMeta(historyKey), rebased;
   if (historyTr)
     return historyTr.historyState;
@@ -50428,14 +50545,14 @@ function applyTransaction(history2, state, tr, options) {
     return history2;
   } else if (appended && appended.getMeta(historyKey)) {
     if (appended.getMeta(historyKey).redo)
-      return new HistoryState(history2.done.addTransform(tr, void 0, options, mustPreserveItems(state)), history2.undone, rangesFor(tr.mapping.maps), history2.prevTime, history2.prevComposition);
+      return new HistoryState(history2.done.addTransform(tr, void 0, options, mustPreserveItems(state2)), history2.undone, rangesFor(tr.mapping.maps), history2.prevTime, history2.prevComposition);
     else
-      return new HistoryState(history2.done, history2.undone.addTransform(tr, void 0, options, mustPreserveItems(state)), null, history2.prevTime, history2.prevComposition);
+      return new HistoryState(history2.done, history2.undone.addTransform(tr, void 0, options, mustPreserveItems(state2)), null, history2.prevTime, history2.prevComposition);
   } else if (tr.getMeta("addToHistory") !== false && !(appended && appended.getMeta("addToHistory") === false)) {
     let composition = tr.getMeta("composition");
     let newGroup = history2.prevTime == 0 || !appended && history2.prevComposition != composition && (history2.prevTime < (tr.time || 0) - options.newGroupDelay || !isAdjacentTo(tr, history2.prevRanges));
     let prevRanges = appended ? mapRanges(history2.prevRanges, tr.mapping) : rangesFor(tr.mapping.maps);
-    return new HistoryState(history2.done.addTransform(tr, newGroup ? state.selection.getBookmark() : void 0, options, mustPreserveItems(state)), Branch.empty, prevRanges, tr.time, composition == null ? history2.prevComposition : composition);
+    return new HistoryState(history2.done.addTransform(tr, newGroup ? state2.selection.getBookmark() : void 0, options, mustPreserveItems(state2)), Branch.empty, prevRanges, tr.time, composition == null ? history2.prevComposition : composition);
   } else if (rebased = tr.getMeta("rebased")) {
     return new HistoryState(history2.done.rebased(tr, rebased), history2.undone.rebased(tr, rebased), mapRanges(history2.prevRanges, tr.mapping), history2.prevTime, history2.prevComposition);
   } else {
@@ -50472,20 +50589,20 @@ function mapRanges(ranges, mapping) {
   }
   return result;
 }
-function histTransaction(history2, state, redo2) {
-  let preserveItems = mustPreserveItems(state);
-  let histOptions = historyKey.get(state).spec.config;
-  let pop = (redo2 ? history2.undone : history2.done).popEvent(state, preserveItems);
+function histTransaction(history2, state2, redo2) {
+  let preserveItems = mustPreserveItems(state2);
+  let histOptions = historyKey.get(state2).spec.config;
+  let pop = (redo2 ? history2.undone : history2.done).popEvent(state2, preserveItems);
   if (!pop)
     return null;
   let selection = pop.selection.resolve(pop.transform.doc);
-  let added = (redo2 ? history2.done : history2.undone).addTransform(pop.transform, state.selection.getBookmark(), histOptions, preserveItems);
+  let added = (redo2 ? history2.done : history2.undone).addTransform(pop.transform, state2.selection.getBookmark(), histOptions, preserveItems);
   let newHist = new HistoryState(redo2 ? added : pop.remaining, redo2 ? pop.remaining : added, null, 0, -1);
   return pop.transform.setSelection(selection).setMeta(historyKey, { redo: redo2, historyState: newHist });
 }
 let cachedPreserveItems = false, cachedPreserveItemsPlugins = null;
-function mustPreserveItems(state) {
-  let plugins = state.plugins;
+function mustPreserveItems(state2) {
+  let plugins = state2.plugins;
   if (cachedPreserveItemsPlugins != plugins) {
     cachedPreserveItems = false;
     cachedPreserveItemsPlugins = plugins;
@@ -50510,8 +50627,8 @@ function history(config2 = {}) {
       init() {
         return new HistoryState(Branch.empty, Branch.empty, null, 0, -1);
       },
-      apply(tr, hist, state) {
-        return applyTransaction(hist, state, tr, config2);
+      apply(tr, hist, state2) {
+        return applyTransaction(hist, state2, tr, config2);
       }
     },
     config: config2,
@@ -50530,12 +50647,12 @@ function history(config2 = {}) {
   });
 }
 function buildCommand(redo2, scroll) {
-  return (state, dispatch) => {
-    let hist = historyKey.getState(state);
+  return (state2, dispatch) => {
+    let hist = historyKey.getState(state2);
     if (!hist || (redo2 ? hist.undone : hist.done).eventCount == 0)
       return false;
     if (dispatch) {
-      let tr = histTransaction(hist, state, redo2);
+      let tr = histTransaction(hist, state2, redo2);
       if (tr)
         dispatch(scroll ? tr.scrollIntoView() : tr);
     }
@@ -50606,12 +50723,12 @@ Extension.create({
           }
           initialEvaluationDone = true;
         },
-        filterTransaction: (transaction, state) => {
+        filterTransaction: (transaction, state2) => {
           const limit = this.options.limit;
           if (!transaction.docChanged || limit === 0 || limit === null || limit === void 0) {
             return true;
           }
-          const oldSize = this.storage.characters({ node: state.doc });
+          const oldSize = this.storage.characters({ node: state2.doc });
           const newSize = this.storage.characters({ node: transaction.doc });
           if (newSize <= limit) {
             return true;
@@ -51022,12 +51139,12 @@ Extension.create({
       new Plugin({
         key: new PluginKey("selection"),
         props: {
-          decorations(state) {
-            if (state.selection.empty || editor.isFocused || !editor.isEditable || isNodeSelection(state.selection) || editor.view.dragging) {
+          decorations(state2) {
+            if (state2.selection.empty || editor.isFocused || !editor.isEditable || isNodeSelection(state2.selection) || editor.view.dragging) {
               return null;
             }
-            return DecorationSet.create(state.doc, [
-              Decoration.inline(state.selection.from, state.selection.to, {
+            return DecorationSet.create(state2.doc, [
+              Decoration.inline(state2.selection.from, state2.selection.to, {
                 class: options.className
               })
             ]);
@@ -51060,9 +51177,9 @@ Extension.create({
     return [
       new Plugin({
         key: plugin,
-        appendTransaction: (transactions, __, state) => {
-          const { doc: doc2, tr, schema } = state;
-          const shouldInsertNodeAtEnd = plugin.getState(state);
+        appendTransaction: (transactions, __, state2) => {
+          const { doc: doc2, tr, schema } = state2;
+          const shouldInsertNodeAtEnd = plugin.getState(state2);
           const endPosition = doc2.content.size;
           const type = schema.nodes[defaultNode];
           if (transactions.some((transaction) => transaction.getMeta(skipTrailingNodeMeta))) {
@@ -51074,8 +51191,8 @@ Extension.create({
           return tr.insert(endPosition, type.create());
         },
         state: {
-          init: (_, state) => {
-            const lastNode = state.tr.doc.lastChild;
+          init: (_, state2) => {
+            const lastNode = state2.tr.doc.lastChild;
             return !nodeEqualsType({ node: lastNode, types: disabledNodes });
           },
           apply: (tr, value) => {
@@ -51103,11 +51220,11 @@ Extension.create({
   },
   addCommands() {
     return {
-      undo: () => ({ state, dispatch }) => {
-        return undo(state, dispatch);
+      undo: () => ({ state: state2, dispatch }) => {
+        return undo(state2, dispatch);
       },
-      redo: () => ({ state, dispatch }) => {
-        return redo(state, dispatch);
+      redo: () => ({ state: state2, dispatch }) => {
+        return redo(state2, dispatch);
       }
     };
   },
@@ -51291,11 +51408,11 @@ var VueRenderer = class {
       vNode.appContext = this.editor.appContext;
     }
     if (typeof document !== "undefined" && this.el) {
-      render$i(vNode, this.el);
+      render$j(vNode, this.el);
     }
     const destroy = () => {
       if (this.el) {
-        render$i(null, this.el);
+        render$j(null, this.el);
       }
       this.el = null;
       vNode = null;
@@ -51376,11 +51493,11 @@ function isShadowRoot(node) {
   return node instanceof OwnElement || node instanceof ShadowRoot;
 }
 function applyStyles(_ref) {
-  var state = _ref.state;
-  Object.keys(state.elements).forEach(function(name) {
-    var style2 = state.styles[name] || {};
-    var attributes = state.attributes[name] || {};
-    var element = state.elements[name];
+  var state2 = _ref.state;
+  Object.keys(state2.elements).forEach(function(name) {
+    var style2 = state2.styles[name] || {};
+    var attributes = state2.attributes[name] || {};
+    var element = state2.elements[name];
     if (!isHTMLElement(element) || !getNodeName(element)) {
       return;
     }
@@ -51396,10 +51513,10 @@ function applyStyles(_ref) {
   });
 }
 function effect$2(_ref2) {
-  var state = _ref2.state;
+  var state2 = _ref2.state;
   var initialStyles = {
     popper: {
-      position: state.options.strategy,
+      position: state2.options.strategy,
       left: "0",
       top: "0",
       margin: "0"
@@ -51409,16 +51526,16 @@ function effect$2(_ref2) {
     },
     reference: {}
   };
-  Object.assign(state.elements.popper.style, initialStyles.popper);
-  state.styles = initialStyles;
-  if (state.elements.arrow) {
-    Object.assign(state.elements.arrow.style, initialStyles.arrow);
+  Object.assign(state2.elements.popper.style, initialStyles.popper);
+  state2.styles = initialStyles;
+  if (state2.elements.arrow) {
+    Object.assign(state2.elements.arrow.style, initialStyles.arrow);
   }
   return function() {
-    Object.keys(state.elements).forEach(function(name) {
-      var element = state.elements[name];
-      var attributes = state.attributes[name] || {};
-      var styleProperties = Object.keys(state.styles.hasOwnProperty(name) ? state.styles[name] : initialStyles[name]);
+    Object.keys(state2.elements).forEach(function(name) {
+      var element = state2.elements[name];
+      var attributes = state2.attributes[name] || {};
+      var styleProperties = Object.keys(state2.styles.hasOwnProperty(name) ? state2.styles[name] : initialStyles[name]);
       var style2 = styleProperties.reduce(function(style3, property) {
         style3[property] = "";
         return style3;
@@ -51617,30 +51734,30 @@ function expandToHashMap(value, keys2) {
     return hashMap;
   }, {});
 }
-var toPaddingObject = function toPaddingObject2(padding, state) {
-  padding = typeof padding === "function" ? padding(Object.assign({}, state.rects, {
-    placement: state.placement
+var toPaddingObject = function toPaddingObject2(padding, state2) {
+  padding = typeof padding === "function" ? padding(Object.assign({}, state2.rects, {
+    placement: state2.placement
   })) : padding;
   return mergePaddingObject(typeof padding !== "number" ? padding : expandToHashMap(padding, basePlacements));
 };
 function arrow(_ref) {
   var _state$modifiersData$;
-  var state = _ref.state, name = _ref.name, options = _ref.options;
-  var arrowElement = state.elements.arrow;
-  var popperOffsets2 = state.modifiersData.popperOffsets;
-  var basePlacement = getBasePlacement$1(state.placement);
+  var state2 = _ref.state, name = _ref.name, options = _ref.options;
+  var arrowElement = state2.elements.arrow;
+  var popperOffsets2 = state2.modifiersData.popperOffsets;
+  var basePlacement = getBasePlacement$1(state2.placement);
   var axis = getMainAxisFromPlacement(basePlacement);
   var isVertical = [left, right].indexOf(basePlacement) >= 0;
   var len = isVertical ? "height" : "width";
   if (!arrowElement || !popperOffsets2) {
     return;
   }
-  var paddingObject = toPaddingObject(options.padding, state);
+  var paddingObject = toPaddingObject(options.padding, state2);
   var arrowRect = getLayoutRect(arrowElement);
   var minProp = axis === "y" ? top : left;
   var maxProp = axis === "y" ? bottom : right;
-  var endDiff = state.rects.reference[len] + state.rects.reference[axis] - popperOffsets2[axis] - state.rects.popper[len];
-  var startDiff = popperOffsets2[axis] - state.rects.reference[axis];
+  var endDiff = state2.rects.reference[len] + state2.rects.reference[axis] - popperOffsets2[axis] - state2.rects.popper[len];
+  var startDiff = popperOffsets2[axis] - state2.rects.reference[axis];
   var arrowOffsetParent = getOffsetParent(arrowElement);
   var clientSize = arrowOffsetParent ? axis === "y" ? arrowOffsetParent.clientHeight || 0 : arrowOffsetParent.clientWidth || 0 : 0;
   var centerToReference = endDiff / 2 - startDiff / 2;
@@ -51649,24 +51766,24 @@ function arrow(_ref) {
   var center = clientSize / 2 - arrowRect[len] / 2 + centerToReference;
   var offset2 = within(min2, center, max2);
   var axisProp = axis;
-  state.modifiersData[name] = (_state$modifiersData$ = {}, _state$modifiersData$[axisProp] = offset2, _state$modifiersData$.centerOffset = offset2 - center, _state$modifiersData$);
+  state2.modifiersData[name] = (_state$modifiersData$ = {}, _state$modifiersData$[axisProp] = offset2, _state$modifiersData$.centerOffset = offset2 - center, _state$modifiersData$);
 }
 function effect$1(_ref2) {
-  var state = _ref2.state, options = _ref2.options;
+  var state2 = _ref2.state, options = _ref2.options;
   var _options$element = options.element, arrowElement = _options$element === void 0 ? "[data-popper-arrow]" : _options$element;
   if (arrowElement == null) {
     return;
   }
   if (typeof arrowElement === "string") {
-    arrowElement = state.elements.popper.querySelector(arrowElement);
+    arrowElement = state2.elements.popper.querySelector(arrowElement);
     if (!arrowElement) {
       return;
     }
   }
-  if (!contains(state.elements.popper, arrowElement)) {
+  if (!contains(state2.elements.popper, arrowElement)) {
     return;
   }
-  state.elements.arrow = arrowElement;
+  state2.elements.arrow = arrowElement;
 }
 const arrow$1 = {
   name: "arrow",
@@ -51762,34 +51879,34 @@ function mapToStyles(_ref2) {
   return Object.assign({}, commonStyles, (_Object$assign2 = {}, _Object$assign2[sideY] = hasY ? y + "px" : "", _Object$assign2[sideX] = hasX ? x + "px" : "", _Object$assign2.transform = "", _Object$assign2));
 }
 function computeStyles(_ref5) {
-  var state = _ref5.state, options = _ref5.options;
+  var state2 = _ref5.state, options = _ref5.options;
   var _options$gpuAccelerat = options.gpuAcceleration, gpuAcceleration = _options$gpuAccelerat === void 0 ? true : _options$gpuAccelerat, _options$adaptive = options.adaptive, adaptive = _options$adaptive === void 0 ? true : _options$adaptive, _options$roundOffsets = options.roundOffsets, roundOffsets = _options$roundOffsets === void 0 ? true : _options$roundOffsets;
   var commonStyles = {
-    placement: getBasePlacement$1(state.placement),
-    variation: getVariation(state.placement),
-    popper: state.elements.popper,
-    popperRect: state.rects.popper,
+    placement: getBasePlacement$1(state2.placement),
+    variation: getVariation(state2.placement),
+    popper: state2.elements.popper,
+    popperRect: state2.rects.popper,
     gpuAcceleration,
-    isFixed: state.options.strategy === "fixed"
+    isFixed: state2.options.strategy === "fixed"
   };
-  if (state.modifiersData.popperOffsets != null) {
-    state.styles.popper = Object.assign({}, state.styles.popper, mapToStyles(Object.assign({}, commonStyles, {
-      offsets: state.modifiersData.popperOffsets,
-      position: state.options.strategy,
+  if (state2.modifiersData.popperOffsets != null) {
+    state2.styles.popper = Object.assign({}, state2.styles.popper, mapToStyles(Object.assign({}, commonStyles, {
+      offsets: state2.modifiersData.popperOffsets,
+      position: state2.options.strategy,
       adaptive,
       roundOffsets
     })));
   }
-  if (state.modifiersData.arrow != null) {
-    state.styles.arrow = Object.assign({}, state.styles.arrow, mapToStyles(Object.assign({}, commonStyles, {
-      offsets: state.modifiersData.arrow,
+  if (state2.modifiersData.arrow != null) {
+    state2.styles.arrow = Object.assign({}, state2.styles.arrow, mapToStyles(Object.assign({}, commonStyles, {
+      offsets: state2.modifiersData.arrow,
       position: "absolute",
       adaptive: false,
       roundOffsets
     })));
   }
-  state.attributes.popper = Object.assign({}, state.attributes.popper, {
-    "data-popper-placement": state.placement
+  state2.attributes.popper = Object.assign({}, state2.attributes.popper, {
+    "data-popper-placement": state2.placement
   });
 }
 const computeStyles$1 = {
@@ -51803,10 +51920,10 @@ var passive = {
   passive: true
 };
 function effect(_ref) {
-  var state = _ref.state, instance = _ref.instance, options = _ref.options;
+  var state2 = _ref.state, instance = _ref.instance, options = _ref.options;
   var _options$scroll = options.scroll, scroll = _options$scroll === void 0 ? true : _options$scroll, _options$resize = options.resize, resize = _options$resize === void 0 ? true : _options$resize;
-  var window2 = getWindow(state.elements.popper);
-  var scrollParents = [].concat(state.scrollParents.reference, state.scrollParents.popper);
+  var window2 = getWindow(state2.elements.popper);
+  var scrollParents = [].concat(state2.scrollParents.reference, state2.scrollParents.popper);
   if (scroll) {
     scrollParents.forEach(function(scrollParent) {
       scrollParent.addEventListener("scroll", instance.update, passive);
@@ -52042,17 +52159,17 @@ function computeOffsets(_ref) {
   }
   return offsets;
 }
-function detectOverflow(state, options) {
+function detectOverflow(state2, options) {
   if (options === void 0) {
     options = {};
   }
-  var _options = options, _options$placement = _options.placement, placement = _options$placement === void 0 ? state.placement : _options$placement, _options$strategy = _options.strategy, strategy = _options$strategy === void 0 ? state.strategy : _options$strategy, _options$boundary = _options.boundary, boundary = _options$boundary === void 0 ? clippingParents : _options$boundary, _options$rootBoundary = _options.rootBoundary, rootBoundary = _options$rootBoundary === void 0 ? viewport : _options$rootBoundary, _options$elementConte = _options.elementContext, elementContext = _options$elementConte === void 0 ? popper : _options$elementConte, _options$altBoundary = _options.altBoundary, altBoundary = _options$altBoundary === void 0 ? false : _options$altBoundary, _options$padding = _options.padding, padding = _options$padding === void 0 ? 0 : _options$padding;
+  var _options = options, _options$placement = _options.placement, placement = _options$placement === void 0 ? state2.placement : _options$placement, _options$strategy = _options.strategy, strategy = _options$strategy === void 0 ? state2.strategy : _options$strategy, _options$boundary = _options.boundary, boundary = _options$boundary === void 0 ? clippingParents : _options$boundary, _options$rootBoundary = _options.rootBoundary, rootBoundary = _options$rootBoundary === void 0 ? viewport : _options$rootBoundary, _options$elementConte = _options.elementContext, elementContext = _options$elementConte === void 0 ? popper : _options$elementConte, _options$altBoundary = _options.altBoundary, altBoundary = _options$altBoundary === void 0 ? false : _options$altBoundary, _options$padding = _options.padding, padding = _options$padding === void 0 ? 0 : _options$padding;
   var paddingObject = mergePaddingObject(typeof padding !== "number" ? padding : expandToHashMap(padding, basePlacements));
   var altContext = elementContext === popper ? reference : popper;
-  var popperRect = state.rects.popper;
-  var element = state.elements[altBoundary ? altContext : elementContext];
-  var clippingClientRect = getClippingRect(isElement$1(element) ? element : element.contextElement || getDocumentElement(state.elements.popper), boundary, rootBoundary, strategy);
-  var referenceClientRect = getBoundingClientRect(state.elements.reference);
+  var popperRect = state2.rects.popper;
+  var element = state2.elements[altBoundary ? altContext : elementContext];
+  var clippingClientRect = getClippingRect(isElement$1(element) ? element : element.contextElement || getDocumentElement(state2.elements.popper), boundary, rootBoundary, strategy);
+  var referenceClientRect = getBoundingClientRect(state2.elements.reference);
   var popperOffsets2 = computeOffsets({
     reference: referenceClientRect,
     element: popperRect,
@@ -52066,7 +52183,7 @@ function detectOverflow(state, options) {
     left: clippingClientRect.left - elementClientRect.left + paddingObject.left,
     right: elementClientRect.right - clippingClientRect.right + paddingObject.right
   };
-  var offsetData = state.modifiersData.offset;
+  var offsetData = state2.modifiersData.offset;
   if (elementContext === popper && offsetData) {
     var offset2 = offsetData[placement];
     Object.keys(overflowOffsets).forEach(function(key) {
@@ -52077,7 +52194,7 @@ function detectOverflow(state, options) {
   }
   return overflowOffsets;
 }
-function computeAutoPlacement(state, options) {
+function computeAutoPlacement(state2, options) {
   if (options === void 0) {
     options = {};
   }
@@ -52093,7 +52210,7 @@ function computeAutoPlacement(state, options) {
     allowedPlacements = placements$1;
   }
   var overflows = allowedPlacements.reduce(function(acc, placement2) {
-    acc[placement2] = detectOverflow(state, {
+    acc[placement2] = detectOverflow(state2, {
       placement: placement2,
       boundary,
       rootBoundary,
@@ -52113,17 +52230,17 @@ function getExpandedFallbackPlacements(placement) {
   return [getOppositeVariationPlacement(placement), oppositePlacement, getOppositeVariationPlacement(oppositePlacement)];
 }
 function flip(_ref) {
-  var state = _ref.state, options = _ref.options, name = _ref.name;
-  if (state.modifiersData[name]._skip) {
+  var state2 = _ref.state, options = _ref.options, name = _ref.name;
+  if (state2.modifiersData[name]._skip) {
     return;
   }
   var _options$mainAxis = options.mainAxis, checkMainAxis = _options$mainAxis === void 0 ? true : _options$mainAxis, _options$altAxis = options.altAxis, checkAltAxis = _options$altAxis === void 0 ? true : _options$altAxis, specifiedFallbackPlacements = options.fallbackPlacements, padding = options.padding, boundary = options.boundary, rootBoundary = options.rootBoundary, altBoundary = options.altBoundary, _options$flipVariatio = options.flipVariations, flipVariations = _options$flipVariatio === void 0 ? true : _options$flipVariatio, allowedAutoPlacements = options.allowedAutoPlacements;
-  var preferredPlacement = state.options.placement;
+  var preferredPlacement = state2.options.placement;
   var basePlacement = getBasePlacement$1(preferredPlacement);
   var isBasePlacement = basePlacement === preferredPlacement;
   var fallbackPlacements = specifiedFallbackPlacements || (isBasePlacement || !flipVariations ? [getOppositePlacement(preferredPlacement)] : getExpandedFallbackPlacements(preferredPlacement));
   var placements2 = [preferredPlacement].concat(fallbackPlacements).reduce(function(acc, placement2) {
-    return acc.concat(getBasePlacement$1(placement2) === auto ? computeAutoPlacement(state, {
+    return acc.concat(getBasePlacement$1(placement2) === auto ? computeAutoPlacement(state2, {
       placement: placement2,
       boundary,
       rootBoundary,
@@ -52132,8 +52249,8 @@ function flip(_ref) {
       allowedAutoPlacements
     }) : placement2);
   }, []);
-  var referenceRect = state.rects.reference;
-  var popperRect = state.rects.popper;
+  var referenceRect = state2.rects.reference;
+  var popperRect = state2.rects.popper;
   var checksMap = /* @__PURE__ */ new Map();
   var makeFallbackChecks = true;
   var firstFittingPlacement = placements2[0];
@@ -52143,7 +52260,7 @@ function flip(_ref) {
     var isStartVariation = getVariation(placement) === start;
     var isVertical = [top, bottom].indexOf(_basePlacement) >= 0;
     var len = isVertical ? "width" : "height";
-    var overflow = detectOverflow(state, {
+    var overflow = detectOverflow(state2, {
       placement,
       boundary,
       rootBoundary,
@@ -52192,10 +52309,10 @@ function flip(_ref) {
       if (_ret === "break") break;
     }
   }
-  if (state.placement !== firstFittingPlacement) {
-    state.modifiersData[name]._skip = true;
-    state.placement = firstFittingPlacement;
-    state.reset = true;
+  if (state2.placement !== firstFittingPlacement) {
+    state2.modifiersData[name]._skip = true;
+    state2.placement = firstFittingPlacement;
+    state2.reset = true;
   }
 }
 const flip$1 = {
@@ -52228,27 +52345,27 @@ function isAnySideFullyClipped(overflow) {
   });
 }
 function hide(_ref) {
-  var state = _ref.state, name = _ref.name;
-  var referenceRect = state.rects.reference;
-  var popperRect = state.rects.popper;
-  var preventedOffsets = state.modifiersData.preventOverflow;
-  var referenceOverflow = detectOverflow(state, {
+  var state2 = _ref.state, name = _ref.name;
+  var referenceRect = state2.rects.reference;
+  var popperRect = state2.rects.popper;
+  var preventedOffsets = state2.modifiersData.preventOverflow;
+  var referenceOverflow = detectOverflow(state2, {
     elementContext: "reference"
   });
-  var popperAltOverflow = detectOverflow(state, {
+  var popperAltOverflow = detectOverflow(state2, {
     altBoundary: true
   });
   var referenceClippingOffsets = getSideOffsets(referenceOverflow, referenceRect);
   var popperEscapeOffsets = getSideOffsets(popperAltOverflow, popperRect, preventedOffsets);
   var isReferenceHidden = isAnySideFullyClipped(referenceClippingOffsets);
   var hasPopperEscaped = isAnySideFullyClipped(popperEscapeOffsets);
-  state.modifiersData[name] = {
+  state2.modifiersData[name] = {
     referenceClippingOffsets,
     popperEscapeOffsets,
     isReferenceHidden,
     hasPopperEscaped
   };
-  state.attributes.popper = Object.assign({}, state.attributes.popper, {
+  state2.attributes.popper = Object.assign({}, state2.attributes.popper, {
     "data-popper-reference-hidden": isReferenceHidden,
     "data-popper-escaped": hasPopperEscaped
   });
@@ -52277,18 +52394,18 @@ function distanceAndSkiddingToXY(placement, rects, offset2) {
   };
 }
 function offset(_ref2) {
-  var state = _ref2.state, options = _ref2.options, name = _ref2.name;
+  var state2 = _ref2.state, options = _ref2.options, name = _ref2.name;
   var _options$offset = options.offset, offset2 = _options$offset === void 0 ? [0, 0] : _options$offset;
   var data = placements.reduce(function(acc, placement) {
-    acc[placement] = distanceAndSkiddingToXY(placement, state.rects, offset2);
+    acc[placement] = distanceAndSkiddingToXY(placement, state2.rects, offset2);
     return acc;
   }, {});
-  var _data$state$placement = data[state.placement], x = _data$state$placement.x, y = _data$state$placement.y;
-  if (state.modifiersData.popperOffsets != null) {
-    state.modifiersData.popperOffsets.x += x;
-    state.modifiersData.popperOffsets.y += y;
+  var _data$state$placement = data[state2.placement], x = _data$state$placement.x, y = _data$state$placement.y;
+  if (state2.modifiersData.popperOffsets != null) {
+    state2.modifiersData.popperOffsets.x += x;
+    state2.modifiersData.popperOffsets.y += y;
   }
-  state.modifiersData[name] = data;
+  state2.modifiersData[name] = data;
 }
 const offset$1 = {
   name: "offset",
@@ -52298,11 +52415,11 @@ const offset$1 = {
   fn: offset
 };
 function popperOffsets(_ref) {
-  var state = _ref.state, name = _ref.name;
-  state.modifiersData[name] = computeOffsets({
-    reference: state.rects.reference,
-    element: state.rects.popper,
-    placement: state.placement
+  var state2 = _ref.state, name = _ref.name;
+  state2.modifiersData[name] = computeOffsets({
+    reference: state2.rects.reference,
+    element: state2.rects.popper,
+    placement: state2.placement
   });
 }
 const popperOffsets$1 = {
@@ -52316,24 +52433,24 @@ function getAltAxis(axis) {
   return axis === "x" ? "y" : "x";
 }
 function preventOverflow(_ref) {
-  var state = _ref.state, options = _ref.options, name = _ref.name;
+  var state2 = _ref.state, options = _ref.options, name = _ref.name;
   var _options$mainAxis = options.mainAxis, checkMainAxis = _options$mainAxis === void 0 ? true : _options$mainAxis, _options$altAxis = options.altAxis, checkAltAxis = _options$altAxis === void 0 ? false : _options$altAxis, boundary = options.boundary, rootBoundary = options.rootBoundary, altBoundary = options.altBoundary, padding = options.padding, _options$tether = options.tether, tether = _options$tether === void 0 ? true : _options$tether, _options$tetherOffset = options.tetherOffset, tetherOffset = _options$tetherOffset === void 0 ? 0 : _options$tetherOffset;
-  var overflow = detectOverflow(state, {
+  var overflow = detectOverflow(state2, {
     boundary,
     rootBoundary,
     padding,
     altBoundary
   });
-  var basePlacement = getBasePlacement$1(state.placement);
-  var variation = getVariation(state.placement);
+  var basePlacement = getBasePlacement$1(state2.placement);
+  var variation = getVariation(state2.placement);
   var isBasePlacement = !variation;
   var mainAxis = getMainAxisFromPlacement(basePlacement);
   var altAxis = getAltAxis(mainAxis);
-  var popperOffsets2 = state.modifiersData.popperOffsets;
-  var referenceRect = state.rects.reference;
-  var popperRect = state.rects.popper;
-  var tetherOffsetValue = typeof tetherOffset === "function" ? tetherOffset(Object.assign({}, state.rects, {
-    placement: state.placement
+  var popperOffsets2 = state2.modifiersData.popperOffsets;
+  var referenceRect = state2.rects.reference;
+  var popperRect = state2.rects.popper;
+  var tetherOffsetValue = typeof tetherOffset === "function" ? tetherOffset(Object.assign({}, state2.rects, {
+    placement: state2.placement
   })) : tetherOffset;
   var normalizedTetherOffsetValue = typeof tetherOffsetValue === "number" ? {
     mainAxis: tetherOffsetValue,
@@ -52342,7 +52459,7 @@ function preventOverflow(_ref) {
     mainAxis: 0,
     altAxis: 0
   }, tetherOffsetValue);
-  var offsetModifierState = state.modifiersData.offset ? state.modifiersData.offset[state.placement] : null;
+  var offsetModifierState = state2.modifiersData.offset ? state2.modifiersData.offset[state2.placement] : null;
   var data = {
     x: 0,
     y: 0
@@ -52361,18 +52478,18 @@ function preventOverflow(_ref) {
     var additive = tether ? -popperRect[len] / 2 : 0;
     var minLen = variation === start ? referenceRect[len] : popperRect[len];
     var maxLen = variation === start ? -popperRect[len] : -referenceRect[len];
-    var arrowElement = state.elements.arrow;
+    var arrowElement = state2.elements.arrow;
     var arrowRect = tether && arrowElement ? getLayoutRect(arrowElement) : {
       width: 0,
       height: 0
     };
-    var arrowPaddingObject = state.modifiersData["arrow#persistent"] ? state.modifiersData["arrow#persistent"].padding : getFreshSideObject();
+    var arrowPaddingObject = state2.modifiersData["arrow#persistent"] ? state2.modifiersData["arrow#persistent"].padding : getFreshSideObject();
     var arrowPaddingMin = arrowPaddingObject[mainSide];
     var arrowPaddingMax = arrowPaddingObject[altSide];
     var arrowLen = within(0, referenceRect[len], arrowRect[len]);
     var minOffset = isBasePlacement ? referenceRect[len] / 2 - additive - arrowLen - arrowPaddingMin - normalizedTetherOffsetValue.mainAxis : minLen - arrowLen - arrowPaddingMin - normalizedTetherOffsetValue.mainAxis;
     var maxOffset = isBasePlacement ? -referenceRect[len] / 2 + additive + arrowLen + arrowPaddingMax + normalizedTetherOffsetValue.mainAxis : maxLen + arrowLen + arrowPaddingMax + normalizedTetherOffsetValue.mainAxis;
-    var arrowOffsetParent = state.elements.arrow && getOffsetParent(state.elements.arrow);
+    var arrowOffsetParent = state2.elements.arrow && getOffsetParent(state2.elements.arrow);
     var clientOffset = arrowOffsetParent ? mainAxis === "y" ? arrowOffsetParent.clientTop || 0 : arrowOffsetParent.clientLeft || 0 : 0;
     var offsetModifierValue = (_offsetModifierState$ = offsetModifierState == null ? void 0 : offsetModifierState[mainAxis]) != null ? _offsetModifierState$ : 0;
     var tetherMin = offset2 + minOffset - offsetModifierValue - clientOffset;
@@ -52397,7 +52514,7 @@ function preventOverflow(_ref) {
     popperOffsets2[altAxis] = _preventedOffset;
     data[altAxis] = _preventedOffset - _offset2;
   }
-  state.modifiersData[name] = data;
+  state2.modifiersData[name] = data;
 }
 const preventOverflow$1 = {
   name: "preventOverflow",
@@ -52545,7 +52662,7 @@ function popperGenerator(generatorOptions) {
     if (options === void 0) {
       options = defaultOptions;
     }
-    var state = {
+    var state2 = {
       placement: "bottom",
       orderedModifiers: [],
       options: Object.assign({}, DEFAULT_OPTIONS, defaultOptions),
@@ -52560,17 +52677,17 @@ function popperGenerator(generatorOptions) {
     var effectCleanupFns = [];
     var isDestroyed = false;
     var instance = {
-      state,
+      state: state2,
       setOptions: function setOptions(setOptionsAction) {
-        var options2 = typeof setOptionsAction === "function" ? setOptionsAction(state.options) : setOptionsAction;
+        var options2 = typeof setOptionsAction === "function" ? setOptionsAction(state2.options) : setOptionsAction;
         cleanupModifierEffects();
-        state.options = Object.assign({}, defaultOptions, state.options, options2);
-        state.scrollParents = {
+        state2.options = Object.assign({}, defaultOptions, state2.options, options2);
+        state2.scrollParents = {
           reference: isElement$1(reference2) ? listScrollParents(reference2) : reference2.contextElement ? listScrollParents(reference2.contextElement) : [],
           popper: listScrollParents(popper2)
         };
-        var orderedModifiers = orderModifiers(mergeByName([].concat(defaultModifiers2, state.options.modifiers)));
-        state.orderedModifiers = orderedModifiers.filter(function(m) {
+        var orderedModifiers = orderModifiers(mergeByName([].concat(defaultModifiers2, state2.options.modifiers)));
+        state2.orderedModifiers = orderedModifiers.filter(function(m) {
           return m.enabled;
         });
         runModifierEffects();
@@ -52585,33 +52702,33 @@ function popperGenerator(generatorOptions) {
         if (isDestroyed) {
           return;
         }
-        var _state$elements = state.elements, reference3 = _state$elements.reference, popper3 = _state$elements.popper;
+        var _state$elements = state2.elements, reference3 = _state$elements.reference, popper3 = _state$elements.popper;
         if (!areValidElements(reference3, popper3)) {
           return;
         }
-        state.rects = {
-          reference: getCompositeRect(reference3, getOffsetParent(popper3), state.options.strategy === "fixed"),
+        state2.rects = {
+          reference: getCompositeRect(reference3, getOffsetParent(popper3), state2.options.strategy === "fixed"),
           popper: getLayoutRect(popper3)
         };
-        state.reset = false;
-        state.placement = state.options.placement;
-        state.orderedModifiers.forEach(function(modifier) {
-          return state.modifiersData[modifier.name] = Object.assign({}, modifier.data);
+        state2.reset = false;
+        state2.placement = state2.options.placement;
+        state2.orderedModifiers.forEach(function(modifier) {
+          return state2.modifiersData[modifier.name] = Object.assign({}, modifier.data);
         });
-        for (var index = 0; index < state.orderedModifiers.length; index++) {
-          if (state.reset === true) {
-            state.reset = false;
+        for (var index = 0; index < state2.orderedModifiers.length; index++) {
+          if (state2.reset === true) {
+            state2.reset = false;
             index = -1;
             continue;
           }
-          var _state$orderedModifie = state.orderedModifiers[index], fn2 = _state$orderedModifie.fn, _state$orderedModifie2 = _state$orderedModifie.options, _options = _state$orderedModifie2 === void 0 ? {} : _state$orderedModifie2, name = _state$orderedModifie.name;
+          var _state$orderedModifie = state2.orderedModifiers[index], fn2 = _state$orderedModifie.fn, _state$orderedModifie2 = _state$orderedModifie.options, _options = _state$orderedModifie2 === void 0 ? {} : _state$orderedModifie2, name = _state$orderedModifie.name;
           if (typeof fn2 === "function") {
-            state = fn2({
-              state,
+            state2 = fn2({
+              state: state2,
               options: _options,
               name,
               instance
-            }) || state;
+            }) || state2;
           }
         }
       },
@@ -52620,7 +52737,7 @@ function popperGenerator(generatorOptions) {
       update: debounce$1(function() {
         return new Promise(function(resolve2) {
           instance.forceUpdate();
-          resolve2(state);
+          resolve2(state2);
         });
       }),
       destroy: function destroy() {
@@ -52631,17 +52748,17 @@ function popperGenerator(generatorOptions) {
     if (!areValidElements(reference2, popper2)) {
       return instance;
     }
-    instance.setOptions(options).then(function(state2) {
+    instance.setOptions(options).then(function(state3) {
       if (!isDestroyed && options.onFirstUpdate) {
-        options.onFirstUpdate(state2);
+        options.onFirstUpdate(state3);
       }
     });
     function runModifierEffects() {
-      state.orderedModifiers.forEach(function(_ref) {
+      state2.orderedModifiers.forEach(function(_ref) {
         var name = _ref.name, _ref$options = _ref.options, options2 = _ref$options === void 0 ? {} : _ref$options, effect3 = _ref.effect;
         if (typeof effect3 === "function") {
           var cleanupFn = effect3({
-            state,
+            state: state2,
             name,
             instance,
             options: options2
@@ -52776,10 +52893,10 @@ function setTransitionDuration(els, value) {
     }
   });
 }
-function setVisibilityState(els, state) {
+function setVisibilityState(els, state2) {
   els.forEach(function(el) {
     if (el) {
-      el.setAttribute("data-state", state);
+      el.setAttribute("data-state", state2);
     }
   });
 }
@@ -53108,7 +53225,7 @@ function createTippy(reference2, passedProps) {
   var id = idCounter++;
   var popperInstance = null;
   var plugins = unique(props.plugins);
-  var state = {
+  var state2 = {
     // Is the instance currently enabled?
     isEnabled: true,
     // Is the tippy currently showing and not transitioning out?
@@ -53127,7 +53244,7 @@ function createTippy(reference2, passedProps) {
     popper: div(),
     popperInstance,
     props,
-    state,
+    state: state2,
     plugins,
     // methods
     clearDelayTimeouts,
@@ -53425,11 +53542,11 @@ function createTippy(reference2, passedProps) {
     var popperTreeData = getNestedPopperTree().concat(popper2).map(function(popper22) {
       var _instance$popperInsta;
       var instance2 = popper22._tippy;
-      var state2 = (_instance$popperInsta = instance2.popperInstance) == null ? void 0 : _instance$popperInsta.state;
-      if (state2) {
+      var state22 = (_instance$popperInsta = instance2.popperInstance) == null ? void 0 : _instance$popperInsta.state;
+      if (state22) {
         return {
           popperRect: popper22.getBoundingClientRect(),
-          popperState: state2,
+          popperState: state22,
           props
         };
       }
@@ -53477,21 +53594,21 @@ function createTippy(reference2, passedProps) {
       phase: "beforeWrite",
       requires: ["computeStyles"],
       fn: function fn5(_ref2) {
-        var state2 = _ref2.state;
+        var state22 = _ref2.state;
         if (getIsDefaultRenderFn()) {
           var _getDefaultTemplateCh = getDefaultTemplateChildren(), box = _getDefaultTemplateCh.box;
           ["placement", "reference-hidden", "escaped"].forEach(function(attr) {
             if (attr === "placement") {
-              box.setAttribute("data-placement", state2.placement);
+              box.setAttribute("data-placement", state22.placement);
             } else {
-              if (state2.attributes.popper["data-popper-" + attr]) {
+              if (state22.attributes.popper["data-popper-" + attr]) {
                 box.setAttribute("data-" + attr, "");
               } else {
                 box.removeAttribute("data-" + attr);
               }
             }
           });
-          state2.attributes.popper = {};
+          state22.attributes.popper = {};
         }
       }
     };
@@ -53812,10 +53929,10 @@ tippy.setDefaultProps = setDefaultProps;
 tippy.currentInput = currentInput;
 Object.assign({}, applyStyles$1, {
   effect: function effect2(_ref) {
-    var state = _ref.state;
+    var state2 = _ref.state;
     var initialStyles = {
       popper: {
-        position: state.options.strategy,
+        position: state2.options.strategy,
         left: "0",
         top: "0",
         margin: "0"
@@ -53825,10 +53942,10 @@ Object.assign({}, applyStyles$1, {
       },
       reference: {}
     };
-    Object.assign(state.elements.popper.style, initialStyles.popper);
-    state.styles = initialStyles;
-    if (state.elements.arrow) {
-      Object.assign(state.elements.arrow.style, initialStyles.arrow);
+    Object.assign(state2.elements.popper.style, initialStyles.popper);
+    state2.styles = initialStyles;
+    if (state2.elements.arrow) {
+      Object.assign(state2.elements.arrow.style, initialStyles.arrow);
     }
   }
 });
@@ -54537,7 +54654,7 @@ const useStageStore = /* @__PURE__ */ defineStore("comfytv-stage", () => {
   const stages = /* @__PURE__ */ new WeakMap();
   const stateTick = /* @__PURE__ */ ref(0);
   function registerStage(node, kind, variant = "generator") {
-    const state = /* @__PURE__ */ reactive({
+    const state2 = /* @__PURE__ */ reactive({
       kind,
       variant,
       outputType: KIND_TO_TYPE[kind],
@@ -54547,8 +54664,8 @@ const useStageStore = /* @__PURE__ */ defineStore("comfytv-stage", () => {
       inputs: [],
       mainPrompt: ""
     });
-    stages.set(node, state);
-    return state;
+    stages.set(node, state2);
+    return state2;
   }
   function unregisterStage(node) {
     stages.delete(node);
@@ -54562,7 +54679,7 @@ const useStageStore = /* @__PURE__ */ defineStore("comfytv-stage", () => {
   function notifyDownstream() {
     bumpStateTick();
   }
-  function refreshStageInputs(node, state, app2) {
+  function refreshStageInputs(node, state2, app2) {
     var _a2, _b2, _c, _d, _e, _f;
     const out = [];
     const inputs = node.inputs || [];
@@ -54593,63 +54710,63 @@ const useStageStore = /* @__PURE__ */ defineStore("comfytv-stage", () => {
         out.push({ slot, type, source: "upstream-pending", content: null });
       }
     }
-    state.inputs = out;
+    state2.inputs = out;
   }
-  function applyExecutedPayload(state, msg) {
+  function applyExecutedPayload(state2, msg) {
     const payload = Array.isArray(msg == null ? void 0 : msg.output) ? msg.output[0] : msg == null ? void 0 : msg.output;
     const picked = Array.isArray(msg == null ? void 0 : msg.picked) ? msg.picked[0] : msg == null ? void 0 : msg.picked;
     const pickedIdxRaw = Array.isArray(msg == null ? void 0 : msg.picked_index) ? msg.picked_index[0] : msg == null ? void 0 : msg.picked_index;
     const outId = Array.isArray(msg == null ? void 0 : msg.output_id) ? msg.output_id[0] : msg == null ? void 0 : msg.output_id;
-    state.running = false;
-    state.progress = null;
-    state.error = null;
+    state2.running = false;
+    state2.progress = null;
+    state2.error = null;
     if (payload == null) return;
     const s = typeof payload === "string" ? payload : String(payload);
-    state.output = s;
-    while (state.outputs.length < 1) state.outputs.push(null);
-    state.outputs[0] = s;
+    state2.output = s;
+    while (state2.outputs.length < 1) state2.outputs.push(null);
+    state2.outputs[0] = s;
     if (picked !== void 0 && picked !== null) {
       const p2 = typeof picked === "string" ? picked : String(picked);
-      while (state.outputs.length < 2) state.outputs.push(null);
-      state.outputs[1] = p2;
+      while (state2.outputs.length < 2) state2.outputs.push(null);
+      state2.outputs[1] = p2;
     }
     if (pickedIdxRaw != null && pickedIdxRaw !== "") {
       const idx = Number(pickedIdxRaw);
-      if (Number.isFinite(idx) && idx >= 1) state.pickedIndex = idx;
+      if (Number.isFinite(idx) && idx >= 1) state2.pickedIndex = idx;
     }
-    state.outputId = outId != null && outId !== "" ? Number(outId) : null;
+    state2.outputId = outId != null && outId !== "" ? Number(outId) : null;
     bumpStateTick();
   }
-  function setPickerPool(node, state, poolJson) {
+  function setPickerPool(node, state2, poolJson) {
     var _a2;
-    if (state.pool === poolJson) return;
-    state.pool = poolJson;
+    if (state2.pool === poolJson) return;
+    state2.pool = poolJson;
     const w = (_a2 = node == null ? void 0 : node.widgets) == null ? void 0 : _a2.find((x) => x.name === "pool");
     if (w) w.value = poolJson;
     bumpStateTick();
   }
-  function clearPickerPool(node, state) {
+  function clearPickerPool(node, state2) {
     var _a2;
-    setPickerPool(node, state, "");
-    state.pickedIndex = 1;
+    setPickerPool(node, state2, "");
+    state2.pickedIndex = 1;
     const idx = (_a2 = node == null ? void 0 : node.widgets) == null ? void 0 : _a2.find((x) => x.name === "selected_index");
     if (idx) idx.value = 1;
-    setOutputSlot(state, 0, null);
+    setOutputSlot(state2, 0, null);
   }
-  function setOutputSlot(state, slot, value) {
-    while (state.outputs.length <= slot) state.outputs.push(null);
-    if (state.outputs[slot] === value) return;
-    state.outputs[slot] = value;
-    if (slot === 0) state.output = value;
+  function setOutputSlot(state2, slot, value) {
+    while (state2.outputs.length <= slot) state2.outputs.push(null);
+    if (state2.outputs[slot] === value) return;
+    state2.outputs[slot] = value;
+    if (slot === 0) state2.output = value;
     bumpStateTick();
   }
-  function applyExecutionError(state, error2) {
-    state.running = false;
-    state.progress = null;
-    state.error = error2;
+  function applyExecutionError(state2, error2) {
+    state2.running = false;
+    state2.progress = null;
+    state2.error = error2;
   }
-  function clearError(state) {
-    state.error = null;
+  function clearError(state2) {
+    state2.error = null;
   }
   return {
     stateTick,
@@ -54680,11 +54797,11 @@ function toImagePoolJson(content) {
   }
   return parsed && Array.isArray(parsed.images) ? s : empty2;
 }
-function computePickedImageUrl(state) {
+function computePickedImageUrl(state2) {
   var _a2;
-  const source = state.pool ? state.pool : (_a2 = state.inputs.find((i) => i.slot === "batch")) == null ? void 0 : _a2.content;
+  const source = state2.pool ? state2.pool : (_a2 = state2.inputs.find((i) => i.slot === "batch")) == null ? void 0 : _a2.content;
   if (!source) return null;
-  return computePickedFromBatch(toImagePoolJson(source), state.pickedIndex ?? 1);
+  return computePickedFromBatch(toImagePoolJson(source), state2.pickedIndex ?? 1);
 }
 function imagePoolCount(json) {
   if (!json) return 0;
@@ -54775,13 +54892,13 @@ function useCameraPrompt() {
     apertures: APERTURES
   };
 }
-const _hoisted_1$B = { class: "ctv:flex ctv:flex-col ctv:gap-2 ctv:mt-1 ctv:p-2 ctv:rounded ctv:text-xs ctv:bg-interface-menu-surface ctv:text-base-foreground ctv:border ctv:border-border-default" };
-const _hoisted_2$w = { class: "ctv:grid ctv:grid-cols-2 ctv:gap-1.5" };
-const _hoisted_3$t = { class: "ctv:flex ctv:flex-col ctv:gap-0.5" };
-const _hoisted_4$p = { class: "ctv:flex ctv:flex-col ctv:gap-0.5" };
-const _hoisted_5$n = { class: "ctv:flex ctv:flex-col ctv:gap-0.5" };
-const _hoisted_6$m = { class: "ctv:flex ctv:flex-col ctv:gap-0.5" };
-const _hoisted_7$l = {
+const _hoisted_1$C = { class: "ctv:flex ctv:flex-col ctv:gap-2 ctv:mt-1 ctv:p-2 ctv:rounded ctv:text-xs ctv:bg-interface-menu-surface ctv:text-base-foreground ctv:border ctv:border-border-default" };
+const _hoisted_2$x = { class: "ctv:grid ctv:grid-cols-2 ctv:gap-1.5" };
+const _hoisted_3$u = { class: "ctv:flex ctv:flex-col ctv:gap-0.5" };
+const _hoisted_4$q = { class: "ctv:flex ctv:flex-col ctv:gap-0.5" };
+const _hoisted_5$o = { class: "ctv:flex ctv:flex-col ctv:gap-0.5" };
+const _hoisted_6$n = { class: "ctv:flex ctv:flex-col ctv:gap-0.5" };
+const _hoisted_7$m = {
   key: 0,
   class: "ctv:py-1 ctv:px-1.5 ctv:rounded-sm ctv:text-2xs ctv:leading-snug ctv:font-mono ctv:bg-secondary-background ctv:text-muted-foreground ctv:break-words"
 };
@@ -54793,7 +54910,7 @@ const _hoisted_9$l = { class: "ctv:flex ctv:gap-1.5" };
 const _hoisted_10$k = ["disabled"];
 const labelClass$1 = "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground";
 const BTN_BASE$1 = "ctv:inline-flex ctv:items-center ctv:justify-center ctv:h-6 ctv:px-2.5 ctv:rounded-sm ctv:text-2xs ctv:font-medium ctv:cursor-pointer ctv:border ctv:[font-family:inherit] ctv:transition-colors";
-const _sfc_main$B = /* @__PURE__ */ defineComponent({
+const _sfc_main$C = /* @__PURE__ */ defineComponent({
   __name: "CameraPromptPanel",
   emits: ["insert"],
   setup(__props) {
@@ -54817,50 +54934,50 @@ const _sfc_main$B = /* @__PURE__ */ defineComponent({
     const insertBtnClass = BTN_BASE$1 + " ctv:bg-primary-background ctv:text-base-foreground ctv:border-transparent ctv:hover:bg-primary-background-hover ctv:disabled:opacity-40 ctv:disabled:cursor-not-allowed";
     const clearBtnClass = BTN_BASE$1 + " ctv:bg-secondary-background ctv:text-muted-foreground ctv:border-border-default ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground";
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$B, [
-        createBaseVNode("div", _hoisted_2$w, [
-          createBaseVNode("label", _hoisted_3$t, [
+      return openBlock(), createElementBlock("div", _hoisted_1$C, [
+        createBaseVNode("div", _hoisted_2$x, [
+          createBaseVNode("label", _hoisted_3$u, [
             createBaseVNode("span", {
               class: normalizeClass(labelClass$1)
             }, toDisplayString$1(_ctx.$t("cameraPrompt.camera")), 1),
-            createVNode(_sfc_main$M, {
+            createVNode(_sfc_main$N, {
               "model-value": unref(camera2),
               options: cameraOptions,
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => camera2.value = String($event))
             }, null, 8, ["model-value"])
           ]),
-          createBaseVNode("label", _hoisted_4$p, [
+          createBaseVNode("label", _hoisted_4$q, [
             createBaseVNode("span", {
               class: normalizeClass(labelClass$1)
             }, toDisplayString$1(_ctx.$t("cameraPrompt.lens")), 1),
-            createVNode(_sfc_main$M, {
+            createVNode(_sfc_main$N, {
               "model-value": unref(lens),
               options: lensOptions,
               "onUpdate:modelValue": _cache2[1] || (_cache2[1] = ($event) => lens.value = String($event))
             }, null, 8, ["model-value"])
           ]),
-          createBaseVNode("label", _hoisted_5$n, [
+          createBaseVNode("label", _hoisted_5$o, [
             createBaseVNode("span", {
               class: normalizeClass(labelClass$1)
             }, toDisplayString$1(_ctx.$t("cameraPrompt.focal")), 1),
-            createVNode(_sfc_main$M, {
+            createVNode(_sfc_main$N, {
               "model-value": unref(focal),
               options: focalOptions,
               "onUpdate:modelValue": _cache2[2] || (_cache2[2] = ($event) => focal.value = String($event))
             }, null, 8, ["model-value"])
           ]),
-          createBaseVNode("label", _hoisted_6$m, [
+          createBaseVNode("label", _hoisted_6$n, [
             createBaseVNode("span", {
               class: normalizeClass(labelClass$1)
             }, toDisplayString$1(_ctx.$t("cameraPrompt.aperture")), 1),
-            createVNode(_sfc_main$M, {
+            createVNode(_sfc_main$N, {
               "model-value": unref(aperture),
               options: apertureOptions,
               "onUpdate:modelValue": _cache2[3] || (_cache2[3] = ($event) => aperture.value = String($event))
             }, null, 8, ["model-value"])
           ])
         ]),
-        unref(compiled) ? (openBlock(), createElementBlock("div", _hoisted_7$l, toDisplayString$1(unref(compiled)), 1)) : (openBlock(), createElementBlock("div", _hoisted_8$l, toDisplayString$1(_ctx.$t("cameraPrompt.empty")), 1)),
+        unref(compiled) ? (openBlock(), createElementBlock("div", _hoisted_7$m, toDisplayString$1(unref(compiled)), 1)) : (openBlock(), createElementBlock("div", _hoisted_8$l, toDisplayString$1(_ctx.$t("cameraPrompt.empty")), 1)),
         createBaseVNode("div", _hoisted_9$l, [
           createBaseVNode("button", {
             type: "button",
@@ -54914,13 +55031,13 @@ function useListKeyboardNav(count2) {
   }
   return { activeIndex, moveUp, moveDown, reset, onKeyDown: onKeyDown2 };
 }
-const _hoisted_1$A = { class: "ctv:min-w-64 ctv:max-w-md ctv:max-h-60 ctv:overflow-y-auto ctv:rounded ctv:text-xs ctv:bg-interface-menu-surface ctv:text-base-foreground ctv:border ctv:border-border-default ctv:shadow-md" };
-const _hoisted_2$v = ["title", "onClick"];
-const _hoisted_3$s = { class: "ctv:font-mono ctv:text-base-foreground ctv:shrink-0" };
-const _hoisted_4$o = { class: "ctv:text-muted-foreground ctv:overflow-hidden ctv:text-ellipsis ctv:whitespace-nowrap" };
-const _hoisted_5$m = { class: "ctv:font-mono ctv:text-base-foreground ctv:shrink-0" };
-const _hoisted_6$l = { class: "ctv:text-muted-foreground ctv:overflow-hidden ctv:text-ellipsis ctv:whitespace-nowrap" };
-const _hoisted_7$k = {
+const _hoisted_1$B = { class: "ctv:min-w-64 ctv:max-w-md ctv:max-h-60 ctv:overflow-y-auto ctv:rounded ctv:text-xs ctv:bg-interface-menu-surface ctv:text-base-foreground ctv:border ctv:border-border-default ctv:shadow-md" };
+const _hoisted_2$w = ["title", "onClick"];
+const _hoisted_3$t = { class: "ctv:font-mono ctv:text-base-foreground ctv:shrink-0" };
+const _hoisted_4$p = { class: "ctv:text-muted-foreground ctv:overflow-hidden ctv:text-ellipsis ctv:whitespace-nowrap" };
+const _hoisted_5$n = { class: "ctv:font-mono ctv:text-base-foreground ctv:shrink-0" };
+const _hoisted_6$m = { class: "ctv:text-muted-foreground ctv:overflow-hidden ctv:text-ellipsis ctv:whitespace-nowrap" };
+const _hoisted_7$l = {
   key: 1,
   class: "ctv:py-1.5 ctv:px-2 ctv:italic ctv:text-xs ctv:text-muted-foreground"
 };
@@ -54930,7 +55047,7 @@ const _hoisted_10$j = ["placeholder"];
 const _hoisted_11$h = { class: "ctv:flex ctv:justify-end ctv:gap-1.5" };
 const _hoisted_12$h = ["disabled"];
 const ACTION_BTN_BASE = "ctv:relative ctv:inline-flex ctv:items-center ctv:justify-center ctv:gap-2 ctv:cursor-pointer ctv:touch-manipulation ctv:whitespace-nowrap ctv:appearance-none ctv:border-none ctv:transition-colors ctv:h-6 ctv:rounded-sm ctv:px-2 ctv:py-1 ctv:text-xs ctv:font-medium ctv:disabled:pointer-events-none ctv:disabled:opacity-50";
-const _sfc_main$A = /* @__PURE__ */ defineComponent({
+const _sfc_main$B = /* @__PURE__ */ defineComponent({
   __name: "MentionList",
   props: {
     items: {},
@@ -55018,7 +55135,7 @@ const _sfc_main$A = /* @__PURE__ */ defineComponent({
       return ACTION_BTN_BASE + ACTION_BTN_VARIANTS[variant];
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$A, [
+      return openBlock(), createElementBlock("div", _hoisted_1$B, [
         !creating.value ? (openBlock(), createElementBlock(Fragment$1, { key: 0 }, [
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(__props.items, (item, i) => {
             return openBlock(), createElementBlock("div", {
@@ -55033,9 +55150,9 @@ const _sfc_main$A = /* @__PURE__ */ defineComponent({
               }, ["prevent"])),
               onClick: ($event) => selectItem(i)
             }, [
-              createBaseVNode("span", _hoisted_3$s, "@" + toDisplayString$1(item.module.label), 1),
-              createBaseVNode("span", _hoisted_4$o, toDisplayString$1(item.module.body), 1)
-            ], 42, _hoisted_2$v);
+              createBaseVNode("span", _hoisted_3$t, "@" + toDisplayString$1(item.module.label), 1),
+              createBaseVNode("span", _hoisted_4$p, toDisplayString$1(item.module.body), 1)
+            ], 42, _hoisted_2$w);
           }), 128)),
           canCreate.value ? (openBlock(), createElementBlock("div", {
             key: 0,
@@ -55048,13 +55165,13 @@ const _sfc_main$A = /* @__PURE__ */ defineComponent({
             }, ["prevent"])),
             onClick: startCreate
           }, [
-            createBaseVNode("span", _hoisted_5$m, toDisplayString$1(_ctx.$t("mention.create")), 1),
-            createBaseVNode("span", _hoisted_6$l, [
+            createBaseVNode("span", _hoisted_5$n, toDisplayString$1(_ctx.$t("mention.create")), 1),
+            createBaseVNode("span", _hoisted_6$m, [
               createTextVNode(toDisplayString$1(_ctx.$t("mention.newFragment")) + " ", 1),
               createBaseVNode("code", null, "@" + toDisplayString$1(__props.query), 1)
             ])
           ], 34)) : createCommentVNode("", true),
-          __props.items.length === 0 && !canCreate.value ? (openBlock(), createElementBlock("div", _hoisted_7$k, toDisplayString$1(__props.query ? _ctx.$t("mention.invalidLabel") : _ctx.$t("mention.noEntries")), 1)) : createCommentVNode("", true)
+          __props.items.length === 0 && !canCreate.value ? (openBlock(), createElementBlock("div", _hoisted_7$l, toDisplayString$1(__props.query ? _ctx.$t("mention.invalidLabel") : _ctx.$t("mention.noEntries")), 1)) : createCommentVNode("", true)
         ], 64)) : (openBlock(), createElementBlock("div", {
           key: 1,
           class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2",
@@ -55092,13 +55209,13 @@ const _sfc_main$A = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$z = { class: "ctv:flex ctv:flex-col ctv:gap-2 ctv:mt-1 ctv:p-2 ctv:rounded ctv:text-xs ctv:bg-interface-menu-surface ctv:text-base-foreground ctv:border ctv:border-border-default" };
-const _hoisted_2$u = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_3$r = { class: "ctv:flex ctv:flex-wrap ctv:gap-1" };
-const _hoisted_4$n = ["title", "onClick"];
+const _hoisted_1$A = { class: "ctv:flex ctv:flex-col ctv:gap-2 ctv:mt-1 ctv:p-2 ctv:rounded ctv:text-xs ctv:bg-interface-menu-surface ctv:text-base-foreground ctv:border ctv:border-border-default" };
+const _hoisted_2$v = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_3$s = { class: "ctv:flex ctv:flex-wrap ctv:gap-1" };
+const _hoisted_4$o = ["title", "onClick"];
 const CHIP_BASE = "ctv:inline-flex ctv:items-center ctv:cursor-pointer ctv:[font-family:inherit] ctv:rounded-full ctv:border ctv:py-0.5 ctv:px-2 ctv:text-2xs ctv:transition-colors";
 const templateClass = "ctv:inline-flex ctv:items-center ctv:cursor-pointer ctv:[font-family:inherit] ctv:rounded ctv:border ctv:py-0.5 ctv:px-2 ctv:text-2xs ctv:transition-colors ctv:bg-secondary-background ctv:border-border-default ctv:text-base-foreground ctv:hover:bg-primary-background/20 ctv:hover:border-primary-background/50 ctv:hover:text-primary-background";
-const _sfc_main$z = /* @__PURE__ */ defineComponent({
+const _sfc_main$A = /* @__PURE__ */ defineComponent({
   __name: "PromptHelperPanel",
   props: {
     groups: {},
@@ -55110,14 +55227,14 @@ const _sfc_main$z = /* @__PURE__ */ defineComponent({
       return CHIP_BASE + (active ? " ctv:bg-primary-background/25 ctv:border-primary-background/60 ctv:text-primary-background" : " ctv:bg-secondary-background ctv:border-border-default ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground");
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$z, [
+      return openBlock(), createElementBlock("div", _hoisted_1$A, [
         (openBlock(true), createElementBlock(Fragment$1, null, renderList(__props.groups, (group) => {
           return openBlock(), createElementBlock("div", {
             key: group.key,
             class: "ctv:flex ctv:flex-col ctv:gap-1"
           }, [
-            createBaseVNode("span", _hoisted_2$u, toDisplayString$1(_ctx.$t(group.key)), 1),
-            createBaseVNode("div", _hoisted_3$r, [
+            createBaseVNode("span", _hoisted_2$v, toDisplayString$1(_ctx.$t(group.key)), 1),
+            createBaseVNode("div", _hoisted_3$s, [
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(group.modules, (m) => {
                 return openBlock(), createElementBlock("button", {
                   key: m.id,
@@ -55125,7 +55242,7 @@ const _sfc_main$z = /* @__PURE__ */ defineComponent({
                   class: normalizeClass(m.kind === "template" ? templateClass : chipClass(__props.isActive(m))),
                   title: m.body,
                   onClick: ($event) => _ctx.$emit("apply", m)
-                }, toDisplayString$1(m.labelKey ? _ctx.$t(m.labelKey) : m.label), 11, _hoisted_4$n);
+                }, toDisplayString$1(m.labelKey ? _ctx.$t(m.labelKey) : m.label), 11, _hoisted_4$o);
               }), 128))
             ])
           ]);
@@ -55134,12 +55251,12 @@ const _sfc_main$z = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$y = { class: "ctv:flex ctv:gap-1 ctv:mt-1" };
-const _hoisted_2$t = ["title"];
-const _hoisted_3$q = ["title"];
+const _hoisted_1$z = { class: "ctv:flex ctv:gap-1 ctv:mt-1" };
+const _hoisted_2$u = ["title"];
+const _hoisted_3$r = ["title"];
 const ENTRY_CHIP_CLASS = "mention-chip ctv:inline-block ctv:py-0 ctv:px-1 ctv:mx-px ctv:rounded ctv:font-medium ctv:whitespace-nowrap ctv:bg-primary-background/20 ctv:border ctv:border-primary-background/45 ctv:text-primary-background";
 const iconBtnClass = "ctv:inline-flex ctv:items-center ctv:justify-center ctv:size-5 ctv:cursor-pointer ctv:rounded-sm ctv:border ctv:text-2xs ctv:leading-none ctv:[font-family:inherit] ctv:transition-colors";
-const _sfc_main$y = /* @__PURE__ */ defineComponent({
+const _sfc_main$z = /* @__PURE__ */ defineComponent({
   __name: "MainPromptInput",
   props: {
     node: {}
@@ -55196,7 +55313,7 @@ const _sfc_main$y = /* @__PURE__ */ defineComponent({
             "data-mention-label": node.attrs.label,
             "data-mention-type": "entry"
           }, `@${node.attrs.label}`],
-          suggestion: useMentionSuggestion(projectId, _sfc_main$A)
+          suggestion: useMentionSuggestion(projectId, _sfc_main$B)
         })
       ],
       editorProps: {
@@ -55313,7 +55430,7 @@ const _sfc_main$y = /* @__PURE__ */ defineComponent({
           editor: unref(editor),
           class: "comfytv-prompt-editor"
         }, null, 8, ["editor"]),
-        createBaseVNode("div", _hoisted_1$y, [
+        createBaseVNode("div", _hoisted_1$z, [
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass([iconBtnClass, helperOpen.value ? "ctv:bg-primary-background/20 ctv:border-primary-background/50 ctv:text-primary-background" : "ctv:bg-secondary-background ctv:border-border-default ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground"]),
@@ -55321,7 +55438,7 @@ const _sfc_main$y = /* @__PURE__ */ defineComponent({
             onClick: _cache2[0] || (_cache2[0] = ($event) => helperOpen.value = !helperOpen.value)
           }, [..._cache2[2] || (_cache2[2] = [
             createBaseVNode("i", { class: "pi pi-sparkles" }, null, -1)
-          ])], 10, _hoisted_2$t),
+          ])], 10, _hoisted_2$u),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass([iconBtnClass, cameraOpen.value ? "ctv:bg-primary-background/20 ctv:border-primary-background/50 ctv:text-primary-background" : "ctv:bg-secondary-background ctv:border-border-default ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground"]),
@@ -55329,15 +55446,15 @@ const _sfc_main$y = /* @__PURE__ */ defineComponent({
             onClick: _cache2[1] || (_cache2[1] = ($event) => cameraOpen.value = !cameraOpen.value)
           }, [..._cache2[3] || (_cache2[3] = [
             createBaseVNode("i", { class: "pi pi-video" }, null, -1)
-          ])], 10, _hoisted_3$q)
+          ])], 10, _hoisted_3$r)
         ]),
-        helperOpen.value ? (openBlock(), createBlock(_sfc_main$z, {
+        helperOpen.value ? (openBlock(), createBlock(_sfc_main$A, {
           key: 0,
           groups: unref(helper).groups,
           "is-active": unref(helper).isActive,
           onApply: unref(helper).apply
         }, null, 8, ["groups", "is-active", "onApply"])) : createCommentVNode("", true),
-        cameraOpen.value ? (openBlock(), createBlock(_sfc_main$B, {
+        cameraOpen.value ? (openBlock(), createBlock(_sfc_main$C, {
           key: 1,
           onInsert: onCameraInsert
         })) : createCommentVNode("", true)
@@ -55345,25 +55462,25 @@ const _sfc_main$y = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const MainPromptInput = /* @__PURE__ */ _export_sfc(_sfc_main$y, [["__scopeId", "data-v-c864c210"]]);
-const _hoisted_1$x = {
+const MainPromptInput = /* @__PURE__ */ _export_sfc(_sfc_main$z, [["__scopeId", "data-v-c864c210"]]);
+const _hoisted_1$y = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$2(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$x, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$y, [..._cache2[0] || (_cache2[0] = [
     createStaticVNode('<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="6" cy="6" r="3"></circle><path d="M8.12 8.12L12 12m8-8L8.12 15.88"></path><circle cx="6" cy="18" r="3"></circle><path d="M14.8 14.8L20 20"></path></g>', 1)
   ])]);
 }
 const IconScissors = markRaw({ name: "lucide-scissors", render: render$2 });
-const _hoisted_1$w = {
+const _hoisted_1$x = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$w, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$x, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -55377,13 +55494,13 @@ function render$1(_ctx, _cache2) {
   ])]);
 }
 const IconCrop = markRaw({ name: "lucide-crop", render: render$1 });
-const _hoisted_1$v = {
+const _hoisted_1$w = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$v, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$w, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -55395,7 +55512,7 @@ function render(_ctx, _cache2) {
   ])]);
 }
 const IconPaintBucket = markRaw({ name: "lucide-paint-bucket", render });
-const _sfc_main$x = /* @__PURE__ */ defineComponent({
+const _sfc_main$y = /* @__PURE__ */ defineComponent({
   __name: "StageIcon",
   props: {
     name: {}
@@ -55417,9 +55534,9 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$u = { class: "ctv-slider-row" };
-const _hoisted_2$s = { class: "ctv-slider-value" };
-const _sfc_main$w = /* @__PURE__ */ defineComponent({
+const _hoisted_1$v = { class: "ctv-slider-row" };
+const _hoisted_2$t = { class: "ctv-slider-value" };
+const _sfc_main$x = /* @__PURE__ */ defineComponent({
   __name: "ComfyTVSlider",
   props: {
     modelValue: {},
@@ -55450,7 +55567,7 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
       if (typeof v === "number" && Number.isFinite(v)) emit2("commit", v);
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$u, [
+      return openBlock(), createElementBlock("div", _hoisted_1$v, [
         createVNode(unref(SliderRoot_default), {
           class: "ctv-slider-root",
           "model-value": [clamped.value],
@@ -55472,28 +55589,28 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
           ]),
           _: 1
         }, 8, ["model-value", "min", "max", "step", "disabled"]),
-        createBaseVNode("span", _hoisted_2$s, toDisplayString$1(display.value), 1)
+        createBaseVNode("span", _hoisted_2$t, toDisplayString$1(display.value), 1)
       ]);
     };
   }
 });
-const _hoisted_1$t = {
+const _hoisted_1$u = {
   key: 0,
   class: "ctv:flex ctv:flex-col ctv:gap-1"
 };
-const _hoisted_2$r = { class: "ctv:flex ctv:items-center ctv:gap-2" };
-const _hoisted_3$p = { class: "ctv:relative ctv:ml-auto" };
-const _hoisted_4$m = ["disabled", "title"];
-const _hoisted_5$l = ["onClick"];
-const _hoisted_6$k = { class: "ctv:flex-1 ctv:truncate" };
-const _hoisted_7$j = { class: "ctv:text-3xs ctv:opacity-50" };
+const _hoisted_2$s = { class: "ctv:flex ctv:items-center ctv:gap-2" };
+const _hoisted_3$q = { class: "ctv:relative ctv:ml-auto" };
+const _hoisted_4$n = ["disabled", "title"];
+const _hoisted_5$m = ["onClick"];
+const _hoisted_6$l = { class: "ctv:flex-1 ctv:truncate" };
+const _hoisted_7$k = { class: "ctv:text-3xs ctv:opacity-50" };
 const _hoisted_8$j = ["title"];
 const _hoisted_9$j = { class: "ctv:flex-1 ctv:min-w-0" };
 const _hoisted_10$i = ["title", "onClick"];
 const sectionLabel$1 = "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:opacity-60";
 const addBtn = "ctv:inline-flex ctv:items-center ctv:h-5 ctv:px-1.5 ctv:rounded-sm ctv:text-3xs ctv:font-semibold ctv:cursor-pointer ctv:border-none ctv:bg-secondary-background ctv:text-secondary-foreground ctv:hover:bg-secondary-background-hover ctv:disabled:opacity-40 ctv:disabled:pointer-events-none";
 const removeBtn = "ctv:shrink-0 ctv:flex ctv:items-center ctv:justify-center ctv:size-5 ctv:rounded-full ctv:cursor-pointer ctv:border-none ctv:bg-transparent ctv:text-destructive-background ctv:hover:bg-destructive-background/10";
-const _sfc_main$v = /* @__PURE__ */ defineComponent({
+const _sfc_main$w = /* @__PURE__ */ defineComponent({
   __name: "CustomParamsSection",
   props: {
     state: {},
@@ -55605,18 +55722,18 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
     });
     onBeforeUnmount(() => window.removeEventListener("click", closeMenu));
     return (_ctx, _cache2) => {
-      return hasWidget.value && (attached.value.length || available.value.length) ? (openBlock(), createElementBlock("section", _hoisted_1$t, [
-        createBaseVNode("div", _hoisted_2$r, [
+      return hasWidget.value && (attached.value.length || available.value.length) ? (openBlock(), createElementBlock("section", _hoisted_1$u, [
+        createBaseVNode("div", _hoisted_2$s, [
           createBaseVNode("div", {
             class: normalizeClass(sectionLabel$1)
           }, toDisplayString$1(_ctx.$t("stageParams.section")), 1),
-          createBaseVNode("div", _hoisted_3$p, [
+          createBaseVNode("div", _hoisted_3$q, [
             createBaseVNode("button", {
               class: normalizeClass(addBtn),
               disabled: !available.value.length,
               title: _ctx.$t("stageParams.addHint"),
               onClick: _cache2[0] || (_cache2[0] = withModifiers(($event) => menuOpen.value = !menuOpen.value, ["stop"]))
-            }, "+ " + toDisplayString$1(_ctx.$t("stageParams.add")), 9, _hoisted_4$m),
+            }, "+ " + toDisplayString$1(_ctx.$t("stageParams.add")), 9, _hoisted_4$n),
             menuOpen.value ? (openBlock(), createElementBlock("div", {
               key: 0,
               class: "ctv:absolute ctv:right-0 ctv:top-full ctv:mt-1 ctv:z-20 ctv:w-44 ctv:max-h-56 ctv:overflow-y-auto ctv:p-1 ctv:rounded ctv:shadow-md ctv:bg-interface-menu-surface ctv:border ctv:border-border-default",
@@ -55629,9 +55746,9 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
                   class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:px-1.5 ctv:py-1 ctv:rounded-sm ctv:cursor-pointer ctv:text-left ctv:text-2xs ctv:bg-transparent ctv:border-none ctv:text-base-foreground ctv:hover:bg-secondary-background-hover",
                   onClick: ($event) => attach(d)
                 }, [
-                  createBaseVNode("span", _hoisted_6$k, toDisplayString$1(d.label), 1),
-                  createBaseVNode("span", _hoisted_7$j, toDisplayString$1(d.type), 1)
-                ], 8, _hoisted_5$l);
+                  createBaseVNode("span", _hoisted_6$l, toDisplayString$1(d.label), 1),
+                  createBaseVNode("span", _hoisted_7$k, toDisplayString$1(d.type), 1)
+                ], 8, _hoisted_5$m);
               }), 128))
             ])) : createCommentVNode("", true)
           ])
@@ -55647,11 +55764,11 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
               title: defLabel(item.key)
             }, toDisplayString$1(defLabel(item.key)), 9, _hoisted_8$j),
             createBaseVNode("div", _hoisted_9$j, [
-              defType(item.key) === "boolean" ? (openBlock(), createBlock(_sfc_main$K, {
+              defType(item.key) === "boolean" ? (openBlock(), createBlock(_sfc_main$L, {
                 key: 0,
                 "model-value": Boolean(item.value),
                 "onUpdate:modelValue": ($event) => setVal(item.key, $event)
-              }, null, 8, ["model-value", "onUpdate:modelValue"])) : useSlider(item.key) ? (openBlock(), createBlock(_sfc_main$w, {
+              }, null, 8, ["model-value", "onUpdate:modelValue"])) : useSlider(item.key) ? (openBlock(), createBlock(_sfc_main$x, {
                 key: 1,
                 "model-value": numVal(item.value),
                 min: cfgNum(item.key, "min"),
@@ -55659,7 +55776,7 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
                 step: cfgNum(item.key, "step") ?? (defType(item.key) === "int" ? 1 : 0.1),
                 precision: defType(item.key) === "int" ? 0 : void 0,
                 "onUpdate:modelValue": ($event) => setVal(item.key, $event)
-              }, null, 8, ["model-value", "min", "max", "step", "precision", "onUpdate:modelValue"])) : defType(item.key) === "int" || defType(item.key) === "float" ? (openBlock(), createBlock(_sfc_main$L, {
+              }, null, 8, ["model-value", "min", "max", "step", "precision", "onUpdate:modelValue"])) : defType(item.key) === "int" || defType(item.key) === "float" ? (openBlock(), createBlock(_sfc_main$M, {
                 key: 2,
                 "model-value": numVal(item.value),
                 min: cfgNum(item.key, "min"),
@@ -55667,12 +55784,12 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
                 step: cfgNum(item.key, "step") ?? (defType(item.key) === "int" ? 1 : 0.1),
                 precision: defType(item.key) === "int" ? 0 : void 0,
                 "onUpdate:modelValue": ($event) => setVal(item.key, $event)
-              }, null, 8, ["model-value", "min", "max", "step", "precision", "onUpdate:modelValue"])) : defType(item.key) === "combo" ? (openBlock(), createBlock(_sfc_main$M, {
+              }, null, 8, ["model-value", "min", "max", "step", "precision", "onUpdate:modelValue"])) : defType(item.key) === "combo" ? (openBlock(), createBlock(_sfc_main$N, {
                 key: 3,
                 "model-value": item.value,
                 options: comboOptions(item.key),
                 "onUpdate:modelValue": ($event) => setVal(item.key, $event)
-              }, null, 8, ["model-value", "options", "onUpdate:modelValue"])) : (openBlock(), createBlock(_sfc_main$J, {
+              }, null, 8, ["model-value", "options", "onUpdate:modelValue"])) : (openBlock(), createBlock(_sfc_main$K, {
                 key: 4,
                 "model-value": item.value == null ? "" : String(item.value),
                 multiline: Boolean((_a2 = cfg(item.key)) == null ? void 0 : _a2.multiline),
@@ -55948,16 +56065,16 @@ function useValuePreview(getType2, getContent) {
     storyboardTotalSec
   };
 }
-const _hoisted_1$s = {
+const _hoisted_1$t = {
   key: 3,
   class: "ctv:relative ctv:flex-1 ctv:min-h-[160px]"
 };
-const _hoisted_2$q = { class: "vp-text-scroll ctv:absolute ctv:inset-0 ctv:m-0 ctv:py-0.5 ctv:px-1 ctv:overflow-y-auto ctv:whitespace-pre-wrap ctv:break-words ctv:text-[11px] ctv:leading-snug ctv:font-mono ctv:text-base-foreground" };
-const _hoisted_3$o = ["src", "alt"];
-const _hoisted_4$l = ["title"];
-const _hoisted_5$k = ["title"];
-const _hoisted_6$j = ["title"];
-const _hoisted_7$i = ["title"];
+const _hoisted_2$r = { class: "vp-text-scroll ctv:absolute ctv:inset-0 ctv:m-0 ctv:py-0.5 ctv:px-1 ctv:overflow-y-auto ctv:whitespace-pre-wrap ctv:break-words ctv:text-[11px] ctv:leading-snug ctv:font-mono ctv:text-base-foreground" };
+const _hoisted_3$p = ["src", "alt"];
+const _hoisted_4$m = ["title"];
+const _hoisted_5$l = ["title"];
+const _hoisted_6$k = ["title"];
+const _hoisted_7$j = ["title"];
 const _hoisted_8$i = ["src", "alt"];
 const _hoisted_9$i = ["src"];
 const _hoisted_10$h = ["src"];
@@ -56005,26 +56122,24 @@ const _hoisted_30$2 = ["title", "onClick"];
 const _hoisted_31$2 = ["title", "onClick"];
 const _hoisted_32$2 = ["title", "onClick"];
 const _hoisted_33$1 = ["title", "onClick"];
-const _hoisted_34$1 = ["src", "alt"];
-const _hoisted_35$1 = ["title"];
-const _hoisted_36$1 = { class: "ctv:w-3 ctv:inline-block ctv:text-primary-background" };
-const _hoisted_37$1 = {
+const _hoisted_34$1 = { class: "ctv:w-3 ctv:inline-block ctv:text-primary-background" };
+const _hoisted_35$1 = {
   key: 0,
   class: "pi pi-check"
 };
-const _hoisted_38$1 = { class: "ctv:flex-1 ctv:truncate ctv:italic ctv:text-muted-foreground" };
-const _hoisted_39$1 = ["onClick"];
-const _hoisted_40 = { class: "ctv:w-3 ctv:inline-block ctv:text-primary-background" };
+const _hoisted_36$1 = { class: "ctv:flex-1 ctv:truncate ctv:italic ctv:text-muted-foreground" };
+const _hoisted_37$1 = ["onClick"];
+const _hoisted_38$1 = { class: "ctv:w-3 ctv:inline-block ctv:text-primary-background" };
+const _hoisted_39$1 = {
+  key: 0,
+  class: "pi pi-check"
+};
+const _hoisted_40 = { class: "ctv:flex-1 ctv:truncate" };
 const _hoisted_41 = {
-  key: 0,
-  class: "pi pi-check"
-};
-const _hoisted_42 = { class: "ctv:flex-1 ctv:truncate" };
-const _hoisted_43 = {
   key: 0,
   class: "ctv:my-1 ctv:border-t ctv:border-border-subtle"
 };
-const _hoisted_44 = { class: "ctv:flex-1 ctv:truncate" };
+const _hoisted_42 = { class: "ctv:flex-1 ctv:truncate" };
 const compactSummary = "ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:size-full ctv:gap-0.5";
 const storyboardListClass = "ctv:flex ctv:flex-col ctv:gap-1 ctv:pt-3.5 ctv:max-h-56 ctv:overflow-auto";
 const shotRowClass = "ctv:flex ctv:items-baseline ctv:gap-1.5 ctv:py-[3px] ctv:px-[5px] ctv:text-[11px] ctv:rounded-sm ctv:bg-base-foreground/[0.03] ctv:border-l-2 ctv:border-[rgb(200_130_255/0.4)]";
@@ -56033,7 +56148,7 @@ const shotDurClass = "ctv:shrink-0 ctv:py-px ctv:px-1 ctv:text-2xs ctv:rounded-s
 const shotPromptClass = "ctv:flex-auto ctv:break-words ctv:text-base-foreground";
 const COMFY_BTN_BASE$1 = "ctv:relative ctv:inline-flex ctv:items-center ctv:justify-center ctv:gap-2 ctv:cursor-pointer ctv:touch-manipulation ctv:whitespace-nowrap ctv:appearance-none ctv:border-none ctv:transition-colors ctv:disabled:pointer-events-none ctv:disabled:opacity-50";
 const imgActionsClass = "vp-img-actions ctv:absolute ctv:top-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1";
-const _sfc_main$u = /* @__PURE__ */ defineComponent({
+const _sfc_main$v = /* @__PURE__ */ defineComponent({
   __name: "ValuePreview",
   props: {
     type: {},
@@ -56073,11 +56188,15 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
     }
     const zoomContainer = /* @__PURE__ */ ref(null);
     const zoomImg = /* @__PURE__ */ ref(null);
-    const lightboxUrl = /* @__PURE__ */ ref(null);
-    const lightboxContainer = /* @__PURE__ */ ref(null);
-    const lightboxImg = /* @__PURE__ */ ref(null);
     function openViewer(url) {
-      if (url) lightboxUrl.value = url;
+      if (url) openLightbox([{ url }], 0);
+    }
+    function openBatchViewer(i) {
+      const items = batchImages.value.map((b) => ({
+        url: b.image_url,
+        label: b.label || b.prompt || nameFromUrl(b.image_url)
+      }));
+      openLightbox(items, i);
     }
     async function onDownload(url) {
       if (!url) return;
@@ -56090,13 +56209,11 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
     function onKeydown(e) {
       if (e.key !== "Escape") return;
       if (tagMenu.value) closeTagMenu();
-      else if (lightboxUrl.value) lightboxUrl.value = null;
     }
     onMounted(() => window.addEventListener("keydown", onKeydown));
     onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
     const props = __props;
     useImagePanZoom(zoomContainer, zoomImg, { resetKey: /* @__PURE__ */ toRef$1(props, "content") });
-    useImagePanZoom(lightboxContainer, lightboxImg, { resetKey: lightboxUrl, minZoom: 0.2, maxZoom: 8 });
     const {
       hasContent,
       shortType,
@@ -56201,8 +56318,8 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
         }, toDisplayString$1(__props.emptyLabel), 3)) : __props.type === "COMFYTV_TEXT" && __props.compact ? (openBlock(), createElementBlock("pre", {
           key: 2,
           class: normalizeClass(textClass.value)
-        }, toDisplayString$1(__props.content), 3)) : __props.type === "COMFYTV_TEXT" ? (openBlock(), createElementBlock("div", _hoisted_1$s, [
-          createBaseVNode("pre", _hoisted_2$q, toDisplayString$1(__props.content), 1)
+        }, toDisplayString$1(__props.content), 3)) : __props.type === "COMFYTV_TEXT" ? (openBlock(), createElementBlock("div", _hoisted_1$t, [
+          createBaseVNode("pre", _hoisted_2$r, toDisplayString$1(__props.content), 1)
         ])) : (__props.type === "COMFYTV_IMAGE" || __props.type === "COMFYTV_PANORAMA") && !__props.compact ? (openBlock(), createElementBlock("div", {
           key: 4,
           ref_key: "zoomContainer",
@@ -56216,7 +56333,7 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
             class: "ctv:block ctv:size-full ctv:object-contain ctv:select-none",
             alt: String(__props.content),
             draggable: "false"
-          }, null, 8, _hoisted_3$o),
+          }, null, 8, _hoisted_3$p),
           createBaseVNode("div", {
             class: normalizeClass(imgActionsClass)
           }, [
@@ -56225,33 +56342,33 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
               class: normalizeClass(imgActionBtn),
               title: _ctx.$t("stage.action.viewFull"),
               onClick: _cache2[0] || (_cache2[0] = withModifiers(($event) => openViewer(String(__props.content)), ["stop"]))
-            }, [..._cache2[12] || (_cache2[12] = [
+            }, [..._cache2[8] || (_cache2[8] = [
               createBaseVNode("i", { class: "pi pi-window-maximize" }, null, -1)
-            ])], 8, _hoisted_4$l),
+            ])], 8, _hoisted_4$m),
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(imgActionBtn),
               title: _ctx.$t("stage.action.download"),
               onClick: _cache2[1] || (_cache2[1] = withModifiers(($event) => onDownload(String(__props.content)), ["stop"]))
-            }, [..._cache2[13] || (_cache2[13] = [
+            }, [..._cache2[9] || (_cache2[9] = [
               createBaseVNode("i", { class: "pi pi-download" }, null, -1)
-            ])], 8, _hoisted_5$k),
+            ])], 8, _hoisted_5$l),
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(tagActionBtn(String(__props.content))),
               title: _ctx.$t("stage.action.addTag"),
               onClick: _cache2[2] || (_cache2[2] = withModifiers(($event) => unref(openTagMenu)(String(__props.content), unref(nameFromUrl)(String(__props.content)), $event), ["stop"]))
-            }, [..._cache2[14] || (_cache2[14] = [
+            }, [..._cache2[10] || (_cache2[10] = [
               createBaseVNode("i", { class: "pi pi-tag" }, null, -1)
-            ])], 10, _hoisted_6$j),
+            ])], 10, _hoisted_6$k),
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(imgActionBtn),
               title: _ctx.$t("stage.action.loadAsset"),
               onClick: _cache2[3] || (_cache2[3] = withModifiers(($event) => onLoadAsset(String(__props.content), unref(nameFromUrl)(String(__props.content))), ["stop"]))
-            }, [..._cache2[15] || (_cache2[15] = [
+            }, [..._cache2[11] || (_cache2[11] = [
               createBaseVNode("i", { class: "pi pi-bookmark" }, null, -1)
-            ])], 8, _hoisted_7$i)
+            ])], 8, _hoisted_7$j)
           ])
         ], 512)) : __props.type === "COMFYTV_IMAGE" || __props.type === "COMFYTV_PANORAMA" ? (openBlock(), createElementBlock("img", {
           key: 5,
@@ -56270,7 +56387,7 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
           __props.compact ? (openBlock(), createElementBlock("div", {
             key: 0,
             class: normalizeClass(compactSummary)
-          }, [..._cache2[16] || (_cache2[16] = [
+          }, [..._cache2[12] || (_cache2[12] = [
             createBaseVNode("span", { class: "ctv:text-[22px] ctv:leading-none" }, [
               createBaseVNode("i", { class: "pi pi-volume-up" })
             ], -1)
@@ -56284,7 +56401,7 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
         ], 64)) : __props.type === "COMFYTV_STORYBOARD" ? (openBlock(), createElementBlock(Fragment$1, { key: 8 }, [
           __props.compact ? (openBlock(), createElementBlock("div", _hoisted_11$g, [
             createBaseVNode("div", _hoisted_12$g, [
-              _cache2[17] || (_cache2[17] = createBaseVNode("span", { class: "ctv:text-[11px] ctv:leading-none" }, [
+              _cache2[13] || (_cache2[13] = createBaseVNode("span", { class: "ctv:text-[11px] ctv:leading-none" }, [
                 createBaseVNode("i", { class: "pi pi-copy" })
               ], -1)),
               createBaseVNode("span", _hoisted_13$e, toDisplayString$1(unref(storyboardShots).length), 1),
@@ -56329,7 +56446,7 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
             key: 0,
             class: normalizeClass(compactSummary)
           }, [
-            _cache2[18] || (_cache2[18] = createBaseVNode("span", { class: "ctv:text-[22px] ctv:leading-none" }, [
+            _cache2[14] || (_cache2[14] = createBaseVNode("span", { class: "ctv:text-[22px] ctv:leading-none" }, [
               createBaseVNode("i", { class: "pi pi-video" })
             ], -1)),
             createBaseVNode("span", _hoisted_19$8, toDisplayString$1(unref(timelineSegs).length), 1)
@@ -56392,10 +56509,10 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
                   key: 0,
                   class: "ctv:absolute ctv:bottom-0.5 ctv:right-0.5 ctv:py-px ctv:px-1 ctv:text-3xs ctv:font-bold ctv:rounded-sm ctv:bg-primary-background/85 ctv:text-white",
                   title: _ctx.$t("valuePreview.fromUpstream")
-                }, [..._cache2[19] || (_cache2[19] = [
+                }, [..._cache2[15] || (_cache2[15] = [
                   createBaseVNode("i", { class: "pi pi-arrow-up" }, null, -1)
                 ])], 8, _hoisted_26$3)) : createCommentVNode("", true),
-                __props.clickMode === "pick" && isItemSelected(img, i) ? (openBlock(), createElementBlock("span", _hoisted_27$3, [..._cache2[20] || (_cache2[20] = [
+                __props.clickMode === "pick" && isItemSelected(img, i) ? (openBlock(), createElementBlock("span", _hoisted_27$3, [..._cache2[16] || (_cache2[16] = [
                   createBaseVNode("i", { class: "pi pi-check" }, null, -1)
                 ])])) : __props.clickMode === "pick" ? (openBlock(), createElementBlock("span", _hoisted_28$3, [
                   createBaseVNode("i", {
@@ -56409,8 +56526,8 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
                     type: "button",
                     class: normalizeClass(imgActionBtn),
                     title: _ctx.$t("stage.action.viewFull"),
-                    onClick: withModifiers(($event) => openViewer(img.image_url), ["stop"])
-                  }, [..._cache2[21] || (_cache2[21] = [
+                    onClick: withModifiers(($event) => openBatchViewer(i), ["stop"])
+                  }, [..._cache2[17] || (_cache2[17] = [
                     createBaseVNode("i", { class: "pi pi-window-maximize" }, null, -1)
                   ])], 8, _hoisted_29$3),
                   createBaseVNode("button", {
@@ -56418,7 +56535,7 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
                     class: normalizeClass(imgActionBtn),
                     title: _ctx.$t("stage.action.download"),
                     onClick: withModifiers(($event) => onDownload(img.image_url), ["stop"])
-                  }, [..._cache2[22] || (_cache2[22] = [
+                  }, [..._cache2[18] || (_cache2[18] = [
                     createBaseVNode("i", { class: "pi pi-download" }, null, -1)
                   ])], 8, _hoisted_30$2),
                   createBaseVNode("button", {
@@ -56426,7 +56543,7 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
                     class: normalizeClass(tagActionBtn(img.image_url)),
                     title: _ctx.$t("stage.action.addTag"),
                     onClick: withModifiers(($event) => unref(openTagMenu)(img.image_url, img.label || img.prompt || unref(nameFromUrl)(img.image_url), $event), ["stop"])
-                  }, [..._cache2[23] || (_cache2[23] = [
+                  }, [..._cache2[19] || (_cache2[19] = [
                     createBaseVNode("i", { class: "pi pi-tag" }, null, -1)
                   ])], 10, _hoisted_31$2),
                   createBaseVNode("button", {
@@ -56434,7 +56551,7 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
                     class: normalizeClass(imgActionBtn),
                     title: _ctx.$t("stage.action.loadAsset"),
                     onClick: withModifiers(($event) => onLoadAsset(img.image_url, img.label || img.prompt || unref(nameFromUrl)(img.image_url)), ["stop"])
-                  }, [..._cache2[24] || (_cache2[24] = [
+                  }, [..._cache2[20] || (_cache2[20] = [
                     createBaseVNode("i", { class: "pi pi-bookmark" }, null, -1)
                   ])], 8, _hoisted_32$2),
                   canRemoveItem(img, i) ? (openBlock(), createElementBlock("button", {
@@ -56443,7 +56560,7 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
                     class: normalizeClass(removeActionBtn),
                     title: _ctx.$t("stage.action.removeFromPicker"),
                     onClick: withModifiers(($event) => onItemRemove(img, i), ["stop"])
-                  }, [..._cache2[25] || (_cache2[25] = [
+                  }, [..._cache2[21] || (_cache2[21] = [
                     createBaseVNode("i", { class: "pi pi-times" }, null, -1)
                   ])], 8, _hoisted_33$1)) : createCommentVNode("", true)
                 ])
@@ -56455,69 +56572,34 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
           class: normalizeClass(emptyClass2.value)
         }, toDisplayString$1(_ctx.$t("stage.empty.unsupported_type", { type: __props.type })), 3)),
         (openBlock(), createBlock(Teleport, { to: "body" }, [
-          lightboxUrl.value ? (openBlock(), createElementBlock("div", {
-            key: 0,
-            class: "ctv:fixed ctv:inset-0 ctv:z-[9999] ctv:flex ctv:items-center ctv:justify-center ctv:cursor-zoom-out ctv:bg-black/90",
-            role: "dialog",
-            onClick: _cache2[6] || (_cache2[6] = withModifiers(($event) => lightboxUrl.value = null, ["self"])),
-            onWheel: _cache2[7] || (_cache2[7] = withModifiers(() => {
-            }, ["prevent", "stop"]))
-          }, [
-            createBaseVNode("div", {
-              ref_key: "lightboxContainer",
-              ref: lightboxContainer,
-              class: "ctv:inline-flex ctv:items-center ctv:justify-center ctv:touch-none ctv:select-none ctv:cursor-grab",
-              onClick: _cache2[4] || (_cache2[4] = withModifiers(() => {
-              }, ["stop"]))
-            }, [
-              createBaseVNode("img", {
-                ref_key: "lightboxImg",
-                ref: lightboxImg,
-                src: lightboxUrl.value,
-                class: "ctv:block ctv:max-w-[60vw] ctv:max-h-[60vh] ctv:object-contain ctv:cursor-[inherit] ctv:shadow-[0_8px_40px_rgb(0_0_0/0.6)]",
-                draggable: "false",
-                alt: lightboxUrl.value
-              }, null, 8, _hoisted_34$1)
-            ], 512),
-            createBaseVNode("button", {
-              type: "button",
-              class: "ctv:absolute ctv:top-4 ctv:right-4 ctv:size-9 ctv:flex ctv:items-center ctv:justify-center ctv:text-sm ctv:leading-none ctv:rounded-full ctv:cursor-pointer ctv:bg-black/55 ctv:text-white ctv:border ctv:border-white/30 ctv:hover:bg-black/85 ctv:hover:border-white/55",
-              title: _ctx.$t("stage.action.close"),
-              onClick: _cache2[5] || (_cache2[5] = ($event) => lightboxUrl.value = null)
-            }, [..._cache2[26] || (_cache2[26] = [
-              createBaseVNode("i", { class: "pi pi-times" }, null, -1)
-            ])], 8, _hoisted_35$1)
-          ], 32)) : createCommentVNode("", true)
-        ])),
-        (openBlock(), createBlock(Teleport, { to: "body" }, [
           unref(tagMenu) ? (openBlock(), createElementBlock("div", {
             key: 0,
             class: "ctv:fixed ctv:inset-0 ctv:z-[9999]",
-            onClick: _cache2[10] || (_cache2[10] = ($event) => tagMenu.value = null),
-            onWheel: _cache2[11] || (_cache2[11] = withModifiers(() => {
+            onClick: _cache2[6] || (_cache2[6] = ($event) => tagMenu.value = null),
+            onWheel: _cache2[7] || (_cache2[7] = withModifiers(() => {
             }, ["prevent", "stop"]))
           }, [
             createBaseVNode("div", {
               class: "ctv:absolute ctv:w-44 ctv:max-h-64 ctv:overflow-y-auto ctv:p-1 ctv:rounded ctv:shadow-md ctv:text-xs ctv:bg-interface-menu-surface ctv:border ctv:border-border-default",
               style: normalizeStyle(unref(tagMenuStyle)),
-              onClick: _cache2[9] || (_cache2[9] = withModifiers(() => {
+              onClick: _cache2[5] || (_cache2[5] = withModifiers(() => {
               }, ["stop"]))
             }, [
               createBaseVNode("button", {
                 type: "button",
                 class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:px-1.5 ctv:py-1 ctv:rounded-sm ctv:cursor-pointer ctv:text-left ctv:text-2xs ctv:bg-transparent ctv:border-none ctv:text-base-foreground ctv:hover:bg-secondary-background-hover",
-                onClick: _cache2[8] || (_cache2[8] = withModifiers(
+                onClick: _cache2[4] || (_cache2[4] = withModifiers(
                   //@ts-ignore
                   (...args) => unref(setUncategorized) && unref(setUncategorized)(...args),
                   ["stop"]
                 ))
               }, [
-                createBaseVNode("span", _hoisted_36$1, [
-                  unref(tagMenuIsUncategorized)() ? (openBlock(), createElementBlock("i", _hoisted_37$1)) : createCommentVNode("", true)
+                createBaseVNode("span", _hoisted_34$1, [
+                  unref(tagMenuIsUncategorized)() ? (openBlock(), createElementBlock("i", _hoisted_35$1)) : createCommentVNode("", true)
                 ]),
-                createBaseVNode("span", _hoisted_38$1, toDisplayString$1(_ctx.$t("assets.category.none")), 1)
+                createBaseVNode("span", _hoisted_36$1, toDisplayString$1(_ctx.$t("assets.category.none")), 1)
               ]),
-              _cache2[28] || (_cache2[28] = createBaseVNode("div", { class: "ctv:my-1 ctv:border-t ctv:border-border-subtle" }, null, -1)),
+              _cache2[23] || (_cache2[23] = createBaseVNode("div", { class: "ctv:my-1 ctv:border-t ctv:border-border-subtle" }, null, -1)),
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(categories), (cat2) => {
                 return openBlock(), createElementBlock("button", {
                   key: cat2.id,
@@ -56525,22 +56607,22 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
                   class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:px-1.5 ctv:py-1 ctv:rounded-sm ctv:cursor-pointer ctv:text-left ctv:text-2xs ctv:bg-transparent ctv:border-none ctv:text-base-foreground ctv:hover:bg-secondary-background-hover",
                   onClick: withModifiers(($event) => unref(toggleOutputTag)(cat2.id), ["stop"])
                 }, [
-                  createBaseVNode("span", _hoisted_40, [
-                    unref(tagMenuHas)(cat2.id) ? (openBlock(), createElementBlock("i", _hoisted_41)) : createCommentVNode("", true)
+                  createBaseVNode("span", _hoisted_38$1, [
+                    unref(tagMenuHas)(cat2.id) ? (openBlock(), createElementBlock("i", _hoisted_39$1)) : createCommentVNode("", true)
                   ]),
-                  createBaseVNode("span", _hoisted_42, toDisplayString$1(cat2.name), 1)
-                ], 8, _hoisted_39$1);
+                  createBaseVNode("span", _hoisted_40, toDisplayString$1(cat2.name), 1)
+                ], 8, _hoisted_37$1);
               }), 128)),
-              unref(categories).length ? (openBlock(), createElementBlock("div", _hoisted_43)) : createCommentVNode("", true),
+              unref(categories).length ? (openBlock(), createElementBlock("div", _hoisted_41)) : createCommentVNode("", true),
               createBaseVNode("button", {
                 type: "button",
                 class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:px-1.5 ctv:py-1 ctv:rounded-sm ctv:cursor-pointer ctv:text-left ctv:text-2xs ctv:bg-transparent ctv:border-none ctv:text-primary-background ctv:hover:bg-secondary-background-hover",
                 onClick: withModifiers(onCreateCategory, ["stop"])
               }, [
-                _cache2[27] || (_cache2[27] = createBaseVNode("span", { class: "ctv:w-3 ctv:inline-block" }, [
+                _cache2[22] || (_cache2[22] = createBaseVNode("span", { class: "ctv:w-3 ctv:inline-block" }, [
                   createBaseVNode("i", { class: "pi pi-plus" })
                 ], -1)),
-                createBaseVNode("span", _hoisted_44, toDisplayString$1(_ctx.$t("assets.tagPopover.create")), 1)
+                createBaseVNode("span", _hoisted_42, toDisplayString$1(_ctx.$t("assets.tagPopover.create")), 1)
               ])
             ], 4)
           ], 32)) : createCommentVNode("", true)
@@ -56549,7 +56631,7 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const ValuePreview = /* @__PURE__ */ _export_sfc(_sfc_main$u, [["__scopeId", "data-v-bfd6c535"]]);
+const ValuePreview = /* @__PURE__ */ _export_sfc(_sfc_main$v, [["__scopeId", "data-v-e004f52f"]]);
 const cat$2 = "imageVariant";
 const IMAGE_VARIANT_PRESETS = [
   {
@@ -56801,16 +56883,16 @@ function presetLabelKey(category, presetId) {
 function presetTooltipKey(category, presetId) {
   return `presets.${category}.${presetId}.tooltip`;
 }
-const _hoisted_1$r = { class: "ctv:flex ctv:items-center ctv:gap-2" };
-const _hoisted_2$p = { class: "ctv:text-[11px] ctv:font-semibold" };
-const _hoisted_3$n = { class: "ctv:text-3xs ctv:text-muted-foreground ctv:font-mono" };
-const _hoisted_4$k = {
+const _hoisted_1$s = { class: "ctv:flex ctv:items-center ctv:gap-2" };
+const _hoisted_2$q = { class: "ctv:text-[11px] ctv:font-semibold" };
+const _hoisted_3$o = { class: "ctv:text-3xs ctv:text-muted-foreground ctv:font-mono" };
+const _hoisted_4$l = {
   key: 0,
   class: "ctv-src-tag ctv:text-3xs ctv:py-px ctv:px-1.5 ctv:rounded-sm ctv:tracking-wide ctv:bg-base-foreground/5 ctv:text-muted-foreground"
 };
-const _hoisted_5$j = ["title"];
-const _hoisted_6$i = { class: "ctv:ml-auto ctv:text-3xs ctv:text-destructive-background ctv:font-semibold" };
-const _hoisted_7$h = {
+const _hoisted_5$k = ["title"];
+const _hoisted_6$j = { class: "ctv:ml-auto ctv:text-3xs ctv:text-destructive-background ctv:font-semibold" };
+const _hoisted_7$i = {
   key: 2,
   class: "ctv:flex ctv:flex-col ctv:gap-1"
 };
@@ -56852,7 +56934,7 @@ const sectionLabel = "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:opacity-6
 const COMFY_BTN_BASE = "ctv:relative ctv:inline-flex ctv:items-center ctv:justify-center ctv:gap-2 ctv:cursor-pointer ctv:touch-manipulation ctv:whitespace-nowrap ctv:appearance-none ctv:border-none ctv:transition-colors ctv:disabled:pointer-events-none ctv:disabled:opacity-50";
 const COMFY_SIZE_LG = " ctv:h-10 ctv:rounded-lg ctv:px-4 ctv:py-2 ctv:text-sm ctv:font-medium";
 const COMFY_SIZE_SM = " ctv:h-6 ctv:rounded-sm ctv:px-2 ctv:py-1 ctv:text-xs ctv:font-medium";
-const _sfc_main$t = /* @__PURE__ */ defineComponent({
+const _sfc_main$u = /* @__PURE__ */ defineComponent({
   __name: "StageCard",
   props: {
     state: {},
@@ -56947,7 +57029,7 @@ const _sfc_main$t = /* @__PURE__ */ defineComponent({
         class: normalizeClass(cardClass.value)
       }, [
         createVNode(MainPromptInput, { node: __props.node }, null, 8, ["node"]),
-        !__props.hideContext && __props.state.variant !== "loader" ? (openBlock(), createBlock(_sfc_main$C, {
+        !__props.hideContext && __props.state.variant !== "loader" ? (openBlock(), createBlock(_sfc_main$D, {
           key: 0,
           node: __props.node
         }, null, 8, ["node"])) : createCommentVNode("", true),
@@ -56955,18 +57037,18 @@ const _sfc_main$t = /* @__PURE__ */ defineComponent({
           key: 1,
           class: normalizeClass(["ctv-picker-input ctv:flex ctv:flex-col ctv:gap-1 ctv:py-1", `ctv-src-${unref(pickerSource)}`])
         }, [
-          createBaseVNode("div", _hoisted_1$r, [
-            createBaseVNode("span", _hoisted_2$p, toDisplayString$1(_ctx.$t("stage.section.pool")), 1),
-            createBaseVNode("span", _hoisted_3$n, toDisplayString$1(unref(poolCount)), 1),
-            unref(pickerSource) !== "empty" ? (openBlock(), createElementBlock("span", _hoisted_4$k, toDisplayString$1(sourceLabel(unref(pickerSource))), 1)) : createCommentVNode("", true),
+          createBaseVNode("div", _hoisted_1$s, [
+            createBaseVNode("span", _hoisted_2$q, toDisplayString$1(_ctx.$t("stage.section.pool")), 1),
+            createBaseVNode("span", _hoisted_3$o, toDisplayString$1(unref(poolCount)), 1),
+            unref(pickerSource) !== "empty" ? (openBlock(), createElementBlock("span", _hoisted_4$l, toDisplayString$1(sourceLabel(unref(pickerSource))), 1)) : createCommentVNode("", true),
             unref(poolCount) > 0 ? (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
               !unref(confirmingClear) ? (openBlock(), createElementBlock("button", {
                 key: 0,
                 class: normalizeClass(["ctv:ml-auto", clearBtn]),
                 title: _ctx.$t("stage.pool.clearHint"),
                 onClick: _cache2[0] || (_cache2[0] = ($event) => confirmingClear.value = true)
-              }, toDisplayString$1(_ctx.$t("stage.pool.clear")), 11, _hoisted_5$j)) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
-                createBaseVNode("span", _hoisted_6$i, toDisplayString$1(_ctx.$t("stage.pool.confirmClear")), 1),
+              }, toDisplayString$1(_ctx.$t("stage.pool.clear")), 11, _hoisted_5$k)) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
+                createBaseVNode("span", _hoisted_6$j, toDisplayString$1(_ctx.$t("stage.pool.confirmClear")), 1),
                 createBaseVNode("button", {
                   class: normalizeClass(clearConfirmBtn),
                   onClick: _cache2[1] || (_cache2[1] = //@ts-ignore
@@ -56992,7 +57074,7 @@ const _sfc_main$t = /* @__PURE__ */ defineComponent({
             onLoadAsset: onLoadAssetAction
           }, null, 8, ["content", "empty-label", "selected-index", "upstream-urls"])
         ], 2)) : createCommentVNode("", true),
-        !__props.hideContext && __props.state.variant !== "loader" && __props.state.kind !== "image-picker" && unref(connectedInputs).length > 0 ? (openBlock(), createElementBlock("section", _hoisted_7$h, [
+        !__props.hideContext && __props.state.variant !== "loader" && __props.state.kind !== "image-picker" && unref(connectedInputs).length > 0 ? (openBlock(), createElementBlock("section", _hoisted_7$i, [
           createBaseVNode("div", {
             class: normalizeClass(sectionLabel)
           }, toDisplayString$1(_ctx.$t("stage.section.context")), 1),
@@ -57055,7 +57137,7 @@ const _sfc_main$t = /* @__PURE__ */ defineComponent({
             createBaseVNode("i", { class: "pi pi-times" }, null, -1)
           ])], 8, _hoisted_13$d)
         ], 2)) : createCommentVNode("", true),
-        __props.node ? (openBlock(), createBlock(_sfc_main$v, {
+        __props.node ? (openBlock(), createBlock(_sfc_main$w, {
           key: 4,
           state: __props.state,
           node: __props.node
@@ -57117,7 +57199,7 @@ const _sfc_main$t = /* @__PURE__ */ defineComponent({
                 title: _ctx.$t(unref(actionTooltipKey)(__props.state.kind, a.id)),
                 onClick: ($event) => unref(onActionClick)(a)
               }, [
-                createVNode(_sfc_main$x, {
+                createVNode(_sfc_main$y, {
                   name: a.icon,
                   class: "ctv:text-xs"
                 }, null, 8, ["name"]),
@@ -57137,7 +57219,7 @@ const _sfc_main$t = /* @__PURE__ */ defineComponent({
                 title: _ctx.$t(unref(presetTooltipKey)(p2.category, p2.id)),
                 onClick: ($event) => unref(onPresetClick)(p2)
               }, [
-                createVNode(_sfc_main$x, {
+                createVNode(_sfc_main$y, {
                   name: p2.icon,
                   class: "ctv:shrink-0 ctv:text-xs"
                 }, null, 8, ["name"]),
@@ -57150,8 +57232,8 @@ const _sfc_main$t = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const StageCard = /* @__PURE__ */ _export_sfc(_sfc_main$t, [["__scopeId", "data-v-2818cd4c"]]);
-const _sfc_main$s = /* @__PURE__ */ defineComponent({
+const StageCard = /* @__PURE__ */ _export_sfc(_sfc_main$u, [["__scopeId", "data-v-2818cd4c"]]);
+const _sfc_main$t = /* @__PURE__ */ defineComponent({
   __name: "SceneCanvas",
   props: {
     initScene: { type: Function }
@@ -57214,13 +57296,13 @@ function findClosestDistanceOption(dist) {
   if (dist < 6) return 4;
   return 8;
 }
-const _hoisted_1$q = { class: "ctv:absolute ctv:bottom-2 ctv:left-2 ctv:right-2 ctv:z-10 ctv:flex ctv:flex-col ctv:gap-1 ctv:py-1.5 ctv:px-2.5 ctv:text-[11px] ctv:text-white/85 ctv:rounded-md ctv:backdrop-blur-sm ctv:bg-black/90 ctv:border ctv:border-[rgb(233_61_130/0.3)]" };
-const _hoisted_2$o = { class: "ctv:flex ctv:justify-around ctv:items-center" };
-const _hoisted_3$m = { class: "ctv:flex ctv:items-center ctv:gap-1" };
-const _hoisted_4$j = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:whitespace-nowrap ctv:text-[#E93D82]" };
-const _hoisted_5$i = ["value"];
-const _hoisted_6$h = ["value"];
-const _hoisted_7$g = { class: "ctv:flex ctv:items-center ctv:gap-1" };
+const _hoisted_1$r = { class: "ctv:absolute ctv:bottom-2 ctv:left-2 ctv:right-2 ctv:z-10 ctv:flex ctv:flex-col ctv:gap-1 ctv:py-1.5 ctv:px-2.5 ctv:text-[11px] ctv:text-white/85 ctv:rounded-md ctv:backdrop-blur-sm ctv:bg-black/90 ctv:border ctv:border-[rgb(233_61_130/0.3)]" };
+const _hoisted_2$p = { class: "ctv:flex ctv:justify-around ctv:items-center" };
+const _hoisted_3$n = { class: "ctv:flex ctv:items-center ctv:gap-1" };
+const _hoisted_4$k = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:whitespace-nowrap ctv:text-[#E93D82]" };
+const _hoisted_5$j = ["value"];
+const _hoisted_6$i = ["value"];
+const _hoisted_7$h = { class: "ctv:flex ctv:items-center ctv:gap-1" };
 const _hoisted_8$g = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:whitespace-nowrap ctv:text-[#00FFD0]" };
 const _hoisted_9$g = ["value"];
 const _hoisted_10$f = ["value"];
@@ -57234,7 +57316,7 @@ const _hoisted_17$8 = { class: "ctv:text-center ctv:text-[13px] ctv:font-semibol
 const _hoisted_18$6 = { class: "ctv:text-center ctv:text-[13px] ctv:font-semibold ctv:text-[#FFB800]" };
 const _hoisted_19$6 = ["title"];
 const DROPDOWN_BASE = "ctv-camera-dropdown ctv:min-w-0 ctv:max-w-[90px] ctv:py-0.5 ctv:px-1 ctv:text-3xs ctv:cursor-pointer ctv:rounded ctv:outline-none ctv:backdrop-blur-sm ctv:bg-black/90 ctv:text-white/85 ctv:border ctv:border-white/20 ctv:hover:border-white/40";
-const _sfc_main$r = /* @__PURE__ */ defineComponent({
+const _sfc_main$s = /* @__PURE__ */ defineComponent({
   __name: "CameraControlPanel",
   props: {
     azimuth: {},
@@ -57269,10 +57351,10 @@ const _sfc_main$r = /* @__PURE__ */ defineComponent({
       return `${DROPDOWN_BASE} ${DROPDOWN_FOCUS[channel]}`;
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$q, [
-        createBaseVNode("div", _hoisted_2$o, [
-          createBaseVNode("div", _hoisted_3$m, [
-            createBaseVNode("span", _hoisted_4$j, toDisplayString$1(_ctx.$t("camera.horizontal")), 1),
+      return openBlock(), createElementBlock("div", _hoisted_1$r, [
+        createBaseVNode("div", _hoisted_2$p, [
+          createBaseVNode("div", _hoisted_3$n, [
+            createBaseVNode("span", _hoisted_4$k, toDisplayString$1(_ctx.$t("camera.horizontal")), 1),
             createBaseVNode("select", {
               class: normalizeClass(dropdownClass("azimuth")),
               value: closestAzimuth.value,
@@ -57282,11 +57364,11 @@ const _sfc_main$r = /* @__PURE__ */ defineComponent({
                 return openBlock(), createElementBlock("option", {
                   key: opt.value,
                   value: opt.value
-                }, toDisplayString$1(_ctx.$t(`camera.azimuth.${opt.key}`)), 9, _hoisted_6$h);
+                }, toDisplayString$1(_ctx.$t(`camera.azimuth.${opt.key}`)), 9, _hoisted_6$i);
               }), 128))
-            ], 42, _hoisted_5$i)
+            ], 42, _hoisted_5$j)
           ]),
-          createBaseVNode("div", _hoisted_7$g, [
+          createBaseVNode("div", _hoisted_7$h, [
             createBaseVNode("span", _hoisted_8$g, toDisplayString$1(_ctx.$t("camera.vertical")), 1),
             createBaseVNode("select", {
               class: normalizeClass(dropdownClass("elevation")),
@@ -57331,7 +57413,7 @@ const _sfc_main$r = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const CameraControlPanel = /* @__PURE__ */ _export_sfc(_sfc_main$r, [["__scopeId", "data-v-d255fcd1"]]);
+const CameraControlPanel = /* @__PURE__ */ _export_sfc(_sfc_main$s, [["__scopeId", "data-v-d255fcd1"]]);
 /**
  * @license
  * Copyright 2010-2024 Three.js Authors
@@ -66123,7 +66205,7 @@ ShaderLib.physical = {
 const _rgb = { r: 0, b: 0, g: 0 };
 const _e1$1 = /* @__PURE__ */ new Euler();
 const _m1$1 = /* @__PURE__ */ new Matrix4();
-function WebGLBackground(renderer2, cubemaps, cubeuvmaps, state, objects, alpha, premultipliedAlpha) {
+function WebGLBackground(renderer2, cubemaps, cubeuvmaps, state2, objects, alpha, premultipliedAlpha) {
   const clearColor = new Color(0);
   let clearAlpha = alpha === true ? 0 : 1;
   let planeMesh;
@@ -66150,14 +66232,14 @@ function WebGLBackground(renderer2, cubemaps, cubeuvmaps, state, objects, alpha,
     }
     const environmentBlendMode = renderer2.xr.getEnvironmentBlendMode();
     if (environmentBlendMode === "additive") {
-      state.buffers.color.setClear(0, 0, 0, 1, premultipliedAlpha);
+      state2.buffers.color.setClear(0, 0, 0, 1, premultipliedAlpha);
     } else if (environmentBlendMode === "alpha-blend") {
-      state.buffers.color.setClear(0, 0, 0, 0, premultipliedAlpha);
+      state2.buffers.color.setClear(0, 0, 0, 0, premultipliedAlpha);
     }
     if (renderer2.autoClear || forceClear) {
-      state.buffers.depth.setTest(true);
-      state.buffers.depth.setMask(true);
-      state.buffers.color.setMask(true);
+      state2.buffers.depth.setTest(true);
+      state2.buffers.depth.setMask(true);
+      state2.buffers.color.setMask(true);
       renderer2.clear(renderer2.autoClearColor, renderer2.autoClearDepth, renderer2.autoClearStencil);
     }
   }
@@ -66254,7 +66336,7 @@ function WebGLBackground(renderer2, cubemaps, cubeuvmaps, state, objects, alpha,
   }
   function setClear(color, alpha2) {
     color.getRGB(_rgb, getUnlitUniformColorSpace(renderer2));
-    state.buffers.color.setClear(_rgb.r, _rgb.g, _rgb.b, alpha2, premultipliedAlpha);
+    state2.buffers.color.setClear(_rgb.r, _rgb.g, _rgb.b, alpha2, premultipliedAlpha);
   }
   return {
     getClearColor: function() {
@@ -66284,9 +66366,9 @@ function WebGLBindingStates(gl, attributes) {
   let forceUpdate = false;
   function setup(object2, material, program, geometry, index) {
     let updateBuffers = false;
-    const state = getBindingState(geometry, program, material);
-    if (currentState !== state) {
-      currentState = state;
+    const state2 = getBindingState(geometry, program, material);
+    if (currentState !== state2) {
+      currentState = state2;
       bindVertexArrayObject(currentState.object);
     }
     updateBuffers = needsUpdate(object2, geometry, program, index);
@@ -66323,12 +66405,12 @@ function WebGLBindingStates(gl, attributes) {
       stateMap = {};
       programMap[program.id] = stateMap;
     }
-    let state = stateMap[wireframe];
-    if (state === void 0) {
-      state = createBindingState(createVertexArrayObject());
-      stateMap[wireframe] = state;
+    let state2 = stateMap[wireframe];
+    if (state2 === void 0) {
+      state2 = createBindingState(createVertexArrayObject());
+      stateMap[wireframe] = state2;
     }
-    return state;
+    return state2;
   }
   function createBindingState(vao) {
     const newAttributes = [];
@@ -70163,7 +70245,7 @@ function shadowCastingAndTexturingLightsFirst(lightA, lightB) {
 function WebGLLights(extensions) {
   const cache2 = new UniformsCache();
   const shadowCache = ShadowUniformsCache();
-  const state = {
+  const state2 = {
     version: 0,
     hash: {
       directionalLength: -1,
@@ -70199,13 +70281,13 @@ function WebGLLights(extensions) {
     numSpotLightShadowsWithMaps: 0,
     numLightProbes: 0
   };
-  for (let i = 0; i < 9; i++) state.probe.push(new Vector3());
+  for (let i = 0; i < 9; i++) state2.probe.push(new Vector3());
   const vector3 = new Vector3();
   const matrix4 = new Matrix4();
   const matrix42 = new Matrix4();
   function setup(lights) {
     let r = 0, g = 0, b = 0;
-    for (let i = 0; i < 9; i++) state.probe[i].set(0, 0, 0);
+    for (let i = 0; i < 9; i++) state2.probe[i].set(0, 0, 0);
     let directionalLength = 0;
     let pointLength = 0;
     let spotLength = 0;
@@ -70230,7 +70312,7 @@ function WebGLLights(extensions) {
         b += color.b * intensity;
       } else if (light.isLightProbe) {
         for (let j = 0; j < 9; j++) {
-          state.probe[j].addScaledVector(light.sh.coefficients[j], intensity);
+          state2.probe[j].addScaledVector(light.sh.coefficients[j], intensity);
         }
         numLightProbes++;
       } else if (light.isDirectionalLight) {
@@ -70244,12 +70326,12 @@ function WebGLLights(extensions) {
           shadowUniforms.shadowNormalBias = shadow.normalBias;
           shadowUniforms.shadowRadius = shadow.radius;
           shadowUniforms.shadowMapSize = shadow.mapSize;
-          state.directionalShadow[directionalLength] = shadowUniforms;
-          state.directionalShadowMap[directionalLength] = shadowMap;
-          state.directionalShadowMatrix[directionalLength] = light.shadow.matrix;
+          state2.directionalShadow[directionalLength] = shadowUniforms;
+          state2.directionalShadowMap[directionalLength] = shadowMap;
+          state2.directionalShadowMatrix[directionalLength] = light.shadow.matrix;
           numDirectionalShadows++;
         }
-        state.directional[directionalLength] = uniforms;
+        state2.directional[directionalLength] = uniforms;
         directionalLength++;
       } else if (light.isSpotLight) {
         const uniforms = cache2.get(light);
@@ -70259,15 +70341,15 @@ function WebGLLights(extensions) {
         uniforms.coneCos = Math.cos(light.angle);
         uniforms.penumbraCos = Math.cos(light.angle * (1 - light.penumbra));
         uniforms.decay = light.decay;
-        state.spot[spotLength] = uniforms;
+        state2.spot[spotLength] = uniforms;
         const shadow = light.shadow;
         if (light.map) {
-          state.spotLightMap[numSpotMaps] = light.map;
+          state2.spotLightMap[numSpotMaps] = light.map;
           numSpotMaps++;
           shadow.updateMatrices(light);
           if (light.castShadow) numSpotShadowsWithMaps++;
         }
-        state.spotLightMatrix[spotLength] = shadow.matrix;
+        state2.spotLightMatrix[spotLength] = shadow.matrix;
         if (light.castShadow) {
           const shadowUniforms = shadowCache.get(light);
           shadowUniforms.shadowIntensity = shadow.intensity;
@@ -70275,8 +70357,8 @@ function WebGLLights(extensions) {
           shadowUniforms.shadowNormalBias = shadow.normalBias;
           shadowUniforms.shadowRadius = shadow.radius;
           shadowUniforms.shadowMapSize = shadow.mapSize;
-          state.spotShadow[spotLength] = shadowUniforms;
-          state.spotShadowMap[spotLength] = shadowMap;
+          state2.spotShadow[spotLength] = shadowUniforms;
+          state2.spotShadowMap[spotLength] = shadowMap;
           numSpotShadows++;
         }
         spotLength++;
@@ -70285,7 +70367,7 @@ function WebGLLights(extensions) {
         uniforms.color.copy(color).multiplyScalar(intensity);
         uniforms.halfWidth.set(light.width * 0.5, 0, 0);
         uniforms.halfHeight.set(0, light.height * 0.5, 0);
-        state.rectArea[rectAreaLength] = uniforms;
+        state2.rectArea[rectAreaLength] = uniforms;
         rectAreaLength++;
       } else if (light.isPointLight) {
         const uniforms = cache2.get(light);
@@ -70302,52 +70384,52 @@ function WebGLLights(extensions) {
           shadowUniforms.shadowMapSize = shadow.mapSize;
           shadowUniforms.shadowCameraNear = shadow.camera.near;
           shadowUniforms.shadowCameraFar = shadow.camera.far;
-          state.pointShadow[pointLength] = shadowUniforms;
-          state.pointShadowMap[pointLength] = shadowMap;
-          state.pointShadowMatrix[pointLength] = light.shadow.matrix;
+          state2.pointShadow[pointLength] = shadowUniforms;
+          state2.pointShadowMap[pointLength] = shadowMap;
+          state2.pointShadowMatrix[pointLength] = light.shadow.matrix;
           numPointShadows++;
         }
-        state.point[pointLength] = uniforms;
+        state2.point[pointLength] = uniforms;
         pointLength++;
       } else if (light.isHemisphereLight) {
         const uniforms = cache2.get(light);
         uniforms.skyColor.copy(light.color).multiplyScalar(intensity);
         uniforms.groundColor.copy(light.groundColor).multiplyScalar(intensity);
-        state.hemi[hemiLength] = uniforms;
+        state2.hemi[hemiLength] = uniforms;
         hemiLength++;
       }
     }
     if (rectAreaLength > 0) {
       if (extensions.has("OES_texture_float_linear") === true) {
-        state.rectAreaLTC1 = UniformsLib.LTC_FLOAT_1;
-        state.rectAreaLTC2 = UniformsLib.LTC_FLOAT_2;
+        state2.rectAreaLTC1 = UniformsLib.LTC_FLOAT_1;
+        state2.rectAreaLTC2 = UniformsLib.LTC_FLOAT_2;
       } else {
-        state.rectAreaLTC1 = UniformsLib.LTC_HALF_1;
-        state.rectAreaLTC2 = UniformsLib.LTC_HALF_2;
+        state2.rectAreaLTC1 = UniformsLib.LTC_HALF_1;
+        state2.rectAreaLTC2 = UniformsLib.LTC_HALF_2;
       }
     }
-    state.ambient[0] = r;
-    state.ambient[1] = g;
-    state.ambient[2] = b;
-    const hash2 = state.hash;
+    state2.ambient[0] = r;
+    state2.ambient[1] = g;
+    state2.ambient[2] = b;
+    const hash2 = state2.hash;
     if (hash2.directionalLength !== directionalLength || hash2.pointLength !== pointLength || hash2.spotLength !== spotLength || hash2.rectAreaLength !== rectAreaLength || hash2.hemiLength !== hemiLength || hash2.numDirectionalShadows !== numDirectionalShadows || hash2.numPointShadows !== numPointShadows || hash2.numSpotShadows !== numSpotShadows || hash2.numSpotMaps !== numSpotMaps || hash2.numLightProbes !== numLightProbes) {
-      state.directional.length = directionalLength;
-      state.spot.length = spotLength;
-      state.rectArea.length = rectAreaLength;
-      state.point.length = pointLength;
-      state.hemi.length = hemiLength;
-      state.directionalShadow.length = numDirectionalShadows;
-      state.directionalShadowMap.length = numDirectionalShadows;
-      state.pointShadow.length = numPointShadows;
-      state.pointShadowMap.length = numPointShadows;
-      state.spotShadow.length = numSpotShadows;
-      state.spotShadowMap.length = numSpotShadows;
-      state.directionalShadowMatrix.length = numDirectionalShadows;
-      state.pointShadowMatrix.length = numPointShadows;
-      state.spotLightMatrix.length = numSpotShadows + numSpotMaps - numSpotShadowsWithMaps;
-      state.spotLightMap.length = numSpotMaps;
-      state.numSpotLightShadowsWithMaps = numSpotShadowsWithMaps;
-      state.numLightProbes = numLightProbes;
+      state2.directional.length = directionalLength;
+      state2.spot.length = spotLength;
+      state2.rectArea.length = rectAreaLength;
+      state2.point.length = pointLength;
+      state2.hemi.length = hemiLength;
+      state2.directionalShadow.length = numDirectionalShadows;
+      state2.directionalShadowMap.length = numDirectionalShadows;
+      state2.pointShadow.length = numPointShadows;
+      state2.pointShadowMap.length = numPointShadows;
+      state2.spotShadow.length = numSpotShadows;
+      state2.spotShadowMap.length = numSpotShadows;
+      state2.directionalShadowMatrix.length = numDirectionalShadows;
+      state2.pointShadowMatrix.length = numPointShadows;
+      state2.spotLightMatrix.length = numSpotShadows + numSpotMaps - numSpotShadowsWithMaps;
+      state2.spotLightMap.length = numSpotMaps;
+      state2.numSpotLightShadowsWithMaps = numSpotShadowsWithMaps;
+      state2.numLightProbes = numLightProbes;
       hash2.directionalLength = directionalLength;
       hash2.pointLength = pointLength;
       hash2.spotLength = spotLength;
@@ -70358,7 +70440,7 @@ function WebGLLights(extensions) {
       hash2.numSpotShadows = numSpotShadows;
       hash2.numSpotMaps = numSpotMaps;
       hash2.numLightProbes = numLightProbes;
-      state.version = nextVersion++;
+      state2.version = nextVersion++;
     }
   }
   function setupView(lights, camera2) {
@@ -70371,14 +70453,14 @@ function WebGLLights(extensions) {
     for (let i = 0, l = lights.length; i < l; i++) {
       const light = lights[i];
       if (light.isDirectionalLight) {
-        const uniforms = state.directional[directionalLength];
+        const uniforms = state2.directional[directionalLength];
         uniforms.direction.setFromMatrixPosition(light.matrixWorld);
         vector3.setFromMatrixPosition(light.target.matrixWorld);
         uniforms.direction.sub(vector3);
         uniforms.direction.transformDirection(viewMatrix);
         directionalLength++;
       } else if (light.isSpotLight) {
-        const uniforms = state.spot[spotLength];
+        const uniforms = state2.spot[spotLength];
         uniforms.position.setFromMatrixPosition(light.matrixWorld);
         uniforms.position.applyMatrix4(viewMatrix);
         uniforms.direction.setFromMatrixPosition(light.matrixWorld);
@@ -70387,7 +70469,7 @@ function WebGLLights(extensions) {
         uniforms.direction.transformDirection(viewMatrix);
         spotLength++;
       } else if (light.isRectAreaLight) {
-        const uniforms = state.rectArea[rectAreaLength];
+        const uniforms = state2.rectArea[rectAreaLength];
         uniforms.position.setFromMatrixPosition(light.matrixWorld);
         uniforms.position.applyMatrix4(viewMatrix);
         matrix42.identity();
@@ -70400,12 +70482,12 @@ function WebGLLights(extensions) {
         uniforms.halfHeight.applyMatrix4(matrix42);
         rectAreaLength++;
       } else if (light.isPointLight) {
-        const uniforms = state.point[pointLength];
+        const uniforms = state2.point[pointLength];
         uniforms.position.setFromMatrixPosition(light.matrixWorld);
         uniforms.position.applyMatrix4(viewMatrix);
         pointLength++;
       } else if (light.isHemisphereLight) {
-        const uniforms = state.hemi[hemiLength];
+        const uniforms = state2.hemi[hemiLength];
         uniforms.direction.setFromMatrixPosition(light.matrixWorld);
         uniforms.direction.transformDirection(viewMatrix);
         hemiLength++;
@@ -70415,7 +70497,7 @@ function WebGLLights(extensions) {
   return {
     setup,
     setupView,
-    state
+    state: state2
   };
 }
 function WebGLRenderState(extensions) {
@@ -70423,7 +70505,7 @@ function WebGLRenderState(extensions) {
   const lightsArray = [];
   const shadowsArray = [];
   function init(camera2) {
-    state.camera = camera2;
+    state2.camera = camera2;
     lightsArray.length = 0;
     shadowsArray.length = 0;
   }
@@ -70439,7 +70521,7 @@ function WebGLRenderState(extensions) {
   function setupLightsView(camera2) {
     lights.setupView(lightsArray, camera2);
   }
-  const state = {
+  const state2 = {
     lightsArray,
     shadowsArray,
     camera: null,
@@ -70448,7 +70530,7 @@ function WebGLRenderState(extensions) {
   };
   return {
     init,
-    state,
+    state: state2,
     setupLights,
     setupLightsView,
     pushLight,
@@ -71631,7 +71713,7 @@ function getTextureTypeByteLength(type) {
   }
   throw new Error(`Unknown texture type ${type}.`);
 }
-function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, info) {
+function WebGLTextures(_gl, extensions, state2, properties, capabilities, utils, info) {
   const multisampledRTTExt = extensions.has("WEBGL_multisampled_render_to_texture") ? extensions.get("WEBGL_multisampled_render_to_texture") : null;
   const supportsInvalidateFramebuffer = typeof navigator === "undefined" ? false : /OculusBrowser/g.test(navigator.userAgent);
   const _imageDimensions = new Vector2();
@@ -71908,7 +71990,7 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
         return;
       }
     }
-    state.bindTexture(_gl.TEXTURE_2D, textureProperties.__webglTexture, _gl.TEXTURE0 + slot);
+    state2.bindTexture(_gl.TEXTURE_2D, textureProperties.__webglTexture, _gl.TEXTURE0 + slot);
   }
   function setTexture2DArray(texture, slot) {
     const textureProperties = properties.get(texture);
@@ -71916,7 +71998,7 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
       uploadTexture(textureProperties, texture, slot);
       return;
     }
-    state.bindTexture(_gl.TEXTURE_2D_ARRAY, textureProperties.__webglTexture, _gl.TEXTURE0 + slot);
+    state2.bindTexture(_gl.TEXTURE_2D_ARRAY, textureProperties.__webglTexture, _gl.TEXTURE0 + slot);
   }
   function setTexture3D(texture, slot) {
     const textureProperties = properties.get(texture);
@@ -71924,7 +72006,7 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
       uploadTexture(textureProperties, texture, slot);
       return;
     }
-    state.bindTexture(_gl.TEXTURE_3D, textureProperties.__webglTexture, _gl.TEXTURE0 + slot);
+    state2.bindTexture(_gl.TEXTURE_3D, textureProperties.__webglTexture, _gl.TEXTURE0 + slot);
   }
   function setTextureCube(texture, slot) {
     const textureProperties = properties.get(texture);
@@ -71932,7 +72014,7 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
       uploadCubeTexture(textureProperties, texture, slot);
       return;
     }
-    state.bindTexture(_gl.TEXTURE_CUBE_MAP, textureProperties.__webglTexture, _gl.TEXTURE0 + slot);
+    state2.bindTexture(_gl.TEXTURE_CUBE_MAP, textureProperties.__webglTexture, _gl.TEXTURE0 + slot);
   }
   const wrappingToGL = {
     [RepeatWrapping]: _gl.REPEAT,
@@ -72024,10 +72106,10 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
     if (texture.isData3DTexture) textureType = _gl.TEXTURE_3D;
     const forceUpload = initTexture(textureProperties, texture);
     const source = texture.source;
-    state.bindTexture(textureType, textureProperties.__webglTexture, _gl.TEXTURE0 + slot);
+    state2.bindTexture(textureType, textureProperties.__webglTexture, _gl.TEXTURE0 + slot);
     const sourceProperties = properties.get(source);
     if (source.version !== sourceProperties.__version || forceUpload === true) {
-      state.activeTexture(_gl.TEXTURE0 + slot);
+      state2.activeTexture(_gl.TEXTURE0 + slot);
       const workingPrimaries = ColorManagement.getPrimaries(ColorManagement.workingColorSpace);
       const texturePrimaries = texture.colorSpace === NoColorSpace ? null : ColorManagement.getPrimaries(texture.colorSpace);
       const unpackConversion = texture.colorSpace === NoColorSpace || workingPrimaries === texturePrimaries ? _gl.NONE : _gl.BROWSER_DEFAULT_WEBGL;
@@ -72051,43 +72133,43 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
         glInternalFormat = getInternalDepthFormat(texture.format === DepthStencilFormat, texture.type);
         if (allocateMemory) {
           if (useTexStorage) {
-            state.texStorage2D(_gl.TEXTURE_2D, 1, glInternalFormat, image.width, image.height);
+            state2.texStorage2D(_gl.TEXTURE_2D, 1, glInternalFormat, image.width, image.height);
           } else {
-            state.texImage2D(_gl.TEXTURE_2D, 0, glInternalFormat, image.width, image.height, 0, glFormat, glType, null);
+            state2.texImage2D(_gl.TEXTURE_2D, 0, glInternalFormat, image.width, image.height, 0, glFormat, glType, null);
           }
         }
       } else if (texture.isDataTexture) {
         if (mipmaps.length > 0) {
           if (useTexStorage && allocateMemory) {
-            state.texStorage2D(_gl.TEXTURE_2D, levels, glInternalFormat, mipmaps[0].width, mipmaps[0].height);
+            state2.texStorage2D(_gl.TEXTURE_2D, levels, glInternalFormat, mipmaps[0].width, mipmaps[0].height);
           }
           for (let i = 0, il = mipmaps.length; i < il; i++) {
             mipmap = mipmaps[i];
             if (useTexStorage) {
               if (dataReady) {
-                state.texSubImage2D(_gl.TEXTURE_2D, i, 0, 0, mipmap.width, mipmap.height, glFormat, glType, mipmap.data);
+                state2.texSubImage2D(_gl.TEXTURE_2D, i, 0, 0, mipmap.width, mipmap.height, glFormat, glType, mipmap.data);
               }
             } else {
-              state.texImage2D(_gl.TEXTURE_2D, i, glInternalFormat, mipmap.width, mipmap.height, 0, glFormat, glType, mipmap.data);
+              state2.texImage2D(_gl.TEXTURE_2D, i, glInternalFormat, mipmap.width, mipmap.height, 0, glFormat, glType, mipmap.data);
             }
           }
           texture.generateMipmaps = false;
         } else {
           if (useTexStorage) {
             if (allocateMemory) {
-              state.texStorage2D(_gl.TEXTURE_2D, levels, glInternalFormat, image.width, image.height);
+              state2.texStorage2D(_gl.TEXTURE_2D, levels, glInternalFormat, image.width, image.height);
             }
             if (dataReady) {
-              state.texSubImage2D(_gl.TEXTURE_2D, 0, 0, 0, image.width, image.height, glFormat, glType, image.data);
+              state2.texSubImage2D(_gl.TEXTURE_2D, 0, 0, 0, image.width, image.height, glFormat, glType, image.data);
             }
           } else {
-            state.texImage2D(_gl.TEXTURE_2D, 0, glInternalFormat, image.width, image.height, 0, glFormat, glType, image.data);
+            state2.texImage2D(_gl.TEXTURE_2D, 0, glInternalFormat, image.width, image.height, 0, glFormat, glType, image.data);
           }
         }
       } else if (texture.isCompressedTexture) {
         if (texture.isCompressedArrayTexture) {
           if (useTexStorage && allocateMemory) {
-            state.texStorage3D(_gl.TEXTURE_2D_ARRAY, levels, glInternalFormat, mipmaps[0].width, mipmaps[0].height, image.depth);
+            state2.texStorage3D(_gl.TEXTURE_2D_ARRAY, levels, glInternalFormat, mipmaps[0].width, mipmaps[0].height, image.depth);
           }
           for (let i = 0, il = mipmaps.length; i < il; i++) {
             mipmap = mipmaps[i];
@@ -72102,15 +72184,15 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
                           layerIndex * layerByteLength / mipmap.data.BYTES_PER_ELEMENT,
                           (layerIndex + 1) * layerByteLength / mipmap.data.BYTES_PER_ELEMENT
                         );
-                        state.compressedTexSubImage3D(_gl.TEXTURE_2D_ARRAY, i, 0, 0, layerIndex, mipmap.width, mipmap.height, 1, glFormat, layerData);
+                        state2.compressedTexSubImage3D(_gl.TEXTURE_2D_ARRAY, i, 0, 0, layerIndex, mipmap.width, mipmap.height, 1, glFormat, layerData);
                       }
                       texture.clearLayerUpdates();
                     } else {
-                      state.compressedTexSubImage3D(_gl.TEXTURE_2D_ARRAY, i, 0, 0, 0, mipmap.width, mipmap.height, image.depth, glFormat, mipmap.data);
+                      state2.compressedTexSubImage3D(_gl.TEXTURE_2D_ARRAY, i, 0, 0, 0, mipmap.width, mipmap.height, image.depth, glFormat, mipmap.data);
                     }
                   }
                 } else {
-                  state.compressedTexImage3D(_gl.TEXTURE_2D_ARRAY, i, glInternalFormat, mipmap.width, mipmap.height, image.depth, 0, mipmap.data, 0, 0);
+                  state2.compressedTexImage3D(_gl.TEXTURE_2D_ARRAY, i, glInternalFormat, mipmap.width, mipmap.height, image.depth, 0, mipmap.data, 0, 0);
                 }
               } else {
                 console.warn("THREE.WebGLRenderer: Attempt to load unsupported compressed texture format in .uploadTexture()");
@@ -72118,16 +72200,16 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
             } else {
               if (useTexStorage) {
                 if (dataReady) {
-                  state.texSubImage3D(_gl.TEXTURE_2D_ARRAY, i, 0, 0, 0, mipmap.width, mipmap.height, image.depth, glFormat, glType, mipmap.data);
+                  state2.texSubImage3D(_gl.TEXTURE_2D_ARRAY, i, 0, 0, 0, mipmap.width, mipmap.height, image.depth, glFormat, glType, mipmap.data);
                 }
               } else {
-                state.texImage3D(_gl.TEXTURE_2D_ARRAY, i, glInternalFormat, mipmap.width, mipmap.height, image.depth, 0, glFormat, glType, mipmap.data);
+                state2.texImage3D(_gl.TEXTURE_2D_ARRAY, i, glInternalFormat, mipmap.width, mipmap.height, image.depth, 0, glFormat, glType, mipmap.data);
               }
             }
           }
         } else {
           if (useTexStorage && allocateMemory) {
-            state.texStorage2D(_gl.TEXTURE_2D, levels, glInternalFormat, mipmaps[0].width, mipmaps[0].height);
+            state2.texStorage2D(_gl.TEXTURE_2D, levels, glInternalFormat, mipmaps[0].width, mipmaps[0].height);
           }
           for (let i = 0, il = mipmaps.length; i < il; i++) {
             mipmap = mipmaps[i];
@@ -72135,10 +72217,10 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
               if (glFormat !== null) {
                 if (useTexStorage) {
                   if (dataReady) {
-                    state.compressedTexSubImage2D(_gl.TEXTURE_2D, i, 0, 0, mipmap.width, mipmap.height, glFormat, mipmap.data);
+                    state2.compressedTexSubImage2D(_gl.TEXTURE_2D, i, 0, 0, mipmap.width, mipmap.height, glFormat, mipmap.data);
                   }
                 } else {
-                  state.compressedTexImage2D(_gl.TEXTURE_2D, i, glInternalFormat, mipmap.width, mipmap.height, 0, mipmap.data);
+                  state2.compressedTexImage2D(_gl.TEXTURE_2D, i, glInternalFormat, mipmap.width, mipmap.height, 0, mipmap.data);
                 }
               } else {
                 console.warn("THREE.WebGLRenderer: Attempt to load unsupported compressed texture format in .uploadTexture()");
@@ -72146,10 +72228,10 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
             } else {
               if (useTexStorage) {
                 if (dataReady) {
-                  state.texSubImage2D(_gl.TEXTURE_2D, i, 0, 0, mipmap.width, mipmap.height, glFormat, glType, mipmap.data);
+                  state2.texSubImage2D(_gl.TEXTURE_2D, i, 0, 0, mipmap.width, mipmap.height, glFormat, glType, mipmap.data);
                 }
               } else {
-                state.texImage2D(_gl.TEXTURE_2D, i, glInternalFormat, mipmap.width, mipmap.height, 0, glFormat, glType, mipmap.data);
+                state2.texImage2D(_gl.TEXTURE_2D, i, glInternalFormat, mipmap.width, mipmap.height, 0, glFormat, glType, mipmap.data);
               }
             }
           }
@@ -72157,7 +72239,7 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
       } else if (texture.isDataArrayTexture) {
         if (useTexStorage) {
           if (allocateMemory) {
-            state.texStorage3D(_gl.TEXTURE_2D_ARRAY, levels, glInternalFormat, image.width, image.height, image.depth);
+            state2.texStorage3D(_gl.TEXTURE_2D_ARRAY, levels, glInternalFormat, image.width, image.height, image.depth);
           }
           if (dataReady) {
             if (texture.layerUpdates.size > 0) {
@@ -72167,35 +72249,35 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
                   layerIndex * layerByteLength / image.data.BYTES_PER_ELEMENT,
                   (layerIndex + 1) * layerByteLength / image.data.BYTES_PER_ELEMENT
                 );
-                state.texSubImage3D(_gl.TEXTURE_2D_ARRAY, 0, 0, 0, layerIndex, image.width, image.height, 1, glFormat, glType, layerData);
+                state2.texSubImage3D(_gl.TEXTURE_2D_ARRAY, 0, 0, 0, layerIndex, image.width, image.height, 1, glFormat, glType, layerData);
               }
               texture.clearLayerUpdates();
             } else {
-              state.texSubImage3D(_gl.TEXTURE_2D_ARRAY, 0, 0, 0, 0, image.width, image.height, image.depth, glFormat, glType, image.data);
+              state2.texSubImage3D(_gl.TEXTURE_2D_ARRAY, 0, 0, 0, 0, image.width, image.height, image.depth, glFormat, glType, image.data);
             }
           }
         } else {
-          state.texImage3D(_gl.TEXTURE_2D_ARRAY, 0, glInternalFormat, image.width, image.height, image.depth, 0, glFormat, glType, image.data);
+          state2.texImage3D(_gl.TEXTURE_2D_ARRAY, 0, glInternalFormat, image.width, image.height, image.depth, 0, glFormat, glType, image.data);
         }
       } else if (texture.isData3DTexture) {
         if (useTexStorage) {
           if (allocateMemory) {
-            state.texStorage3D(_gl.TEXTURE_3D, levels, glInternalFormat, image.width, image.height, image.depth);
+            state2.texStorage3D(_gl.TEXTURE_3D, levels, glInternalFormat, image.width, image.height, image.depth);
           }
           if (dataReady) {
-            state.texSubImage3D(_gl.TEXTURE_3D, 0, 0, 0, 0, image.width, image.height, image.depth, glFormat, glType, image.data);
+            state2.texSubImage3D(_gl.TEXTURE_3D, 0, 0, 0, 0, image.width, image.height, image.depth, glFormat, glType, image.data);
           }
         } else {
-          state.texImage3D(_gl.TEXTURE_3D, 0, glInternalFormat, image.width, image.height, image.depth, 0, glFormat, glType, image.data);
+          state2.texImage3D(_gl.TEXTURE_3D, 0, glInternalFormat, image.width, image.height, image.depth, 0, glFormat, glType, image.data);
         }
       } else if (texture.isFramebufferTexture) {
         if (allocateMemory) {
           if (useTexStorage) {
-            state.texStorage2D(_gl.TEXTURE_2D, levels, glInternalFormat, image.width, image.height);
+            state2.texStorage2D(_gl.TEXTURE_2D, levels, glInternalFormat, image.width, image.height);
           } else {
             let width = image.width, height = image.height;
             for (let i = 0; i < levels; i++) {
-              state.texImage2D(_gl.TEXTURE_2D, i, glInternalFormat, width, height, 0, glFormat, glType, null);
+              state2.texImage2D(_gl.TEXTURE_2D, i, glInternalFormat, width, height, 0, glFormat, glType, null);
               width >>= 1;
               height >>= 1;
             }
@@ -72205,16 +72287,16 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
         if (mipmaps.length > 0) {
           if (useTexStorage && allocateMemory) {
             const dimensions = getDimensions2(mipmaps[0]);
-            state.texStorage2D(_gl.TEXTURE_2D, levels, glInternalFormat, dimensions.width, dimensions.height);
+            state2.texStorage2D(_gl.TEXTURE_2D, levels, glInternalFormat, dimensions.width, dimensions.height);
           }
           for (let i = 0, il = mipmaps.length; i < il; i++) {
             mipmap = mipmaps[i];
             if (useTexStorage) {
               if (dataReady) {
-                state.texSubImage2D(_gl.TEXTURE_2D, i, 0, 0, glFormat, glType, mipmap);
+                state2.texSubImage2D(_gl.TEXTURE_2D, i, 0, 0, glFormat, glType, mipmap);
               }
             } else {
-              state.texImage2D(_gl.TEXTURE_2D, i, glInternalFormat, glFormat, glType, mipmap);
+              state2.texImage2D(_gl.TEXTURE_2D, i, glInternalFormat, glFormat, glType, mipmap);
             }
           }
           texture.generateMipmaps = false;
@@ -72222,13 +72304,13 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
           if (useTexStorage) {
             if (allocateMemory) {
               const dimensions = getDimensions2(image);
-              state.texStorage2D(_gl.TEXTURE_2D, levels, glInternalFormat, dimensions.width, dimensions.height);
+              state2.texStorage2D(_gl.TEXTURE_2D, levels, glInternalFormat, dimensions.width, dimensions.height);
             }
             if (dataReady) {
-              state.texSubImage2D(_gl.TEXTURE_2D, 0, 0, 0, glFormat, glType, image);
+              state2.texSubImage2D(_gl.TEXTURE_2D, 0, 0, 0, glFormat, glType, image);
             }
           } else {
-            state.texImage2D(_gl.TEXTURE_2D, 0, glInternalFormat, glFormat, glType, image);
+            state2.texImage2D(_gl.TEXTURE_2D, 0, glInternalFormat, glFormat, glType, image);
           }
         }
       }
@@ -72244,10 +72326,10 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
     if (texture.image.length !== 6) return;
     const forceUpload = initTexture(textureProperties, texture);
     const source = texture.source;
-    state.bindTexture(_gl.TEXTURE_CUBE_MAP, textureProperties.__webglTexture, _gl.TEXTURE0 + slot);
+    state2.bindTexture(_gl.TEXTURE_CUBE_MAP, textureProperties.__webglTexture, _gl.TEXTURE0 + slot);
     const sourceProperties = properties.get(source);
     if (source.version !== sourceProperties.__version || forceUpload === true) {
-      state.activeTexture(_gl.TEXTURE0 + slot);
+      state2.activeTexture(_gl.TEXTURE0 + slot);
       const workingPrimaries = ColorManagement.getPrimaries(ColorManagement.workingColorSpace);
       const texturePrimaries = texture.colorSpace === NoColorSpace ? null : ColorManagement.getPrimaries(texture.colorSpace);
       const unpackConversion = texture.colorSpace === NoColorSpace || workingPrimaries === texturePrimaries ? _gl.NONE : _gl.BROWSER_DEFAULT_WEBGL;
@@ -72275,7 +72357,7 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
       let mipmaps;
       if (isCompressed) {
         if (useTexStorage && allocateMemory) {
-          state.texStorage2D(_gl.TEXTURE_CUBE_MAP, levels, glInternalFormat, image.width, image.height);
+          state2.texStorage2D(_gl.TEXTURE_CUBE_MAP, levels, glInternalFormat, image.width, image.height);
         }
         for (let i = 0; i < 6; i++) {
           mipmaps = cubeImage[i].mipmaps;
@@ -72285,10 +72367,10 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
               if (glFormat !== null) {
                 if (useTexStorage) {
                   if (dataReady) {
-                    state.compressedTexSubImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, j, 0, 0, mipmap.width, mipmap.height, glFormat, mipmap.data);
+                    state2.compressedTexSubImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, j, 0, 0, mipmap.width, mipmap.height, glFormat, mipmap.data);
                   }
                 } else {
-                  state.compressedTexImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, j, glInternalFormat, mipmap.width, mipmap.height, 0, mipmap.data);
+                  state2.compressedTexImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, j, glInternalFormat, mipmap.width, mipmap.height, 0, mipmap.data);
                 }
               } else {
                 console.warn("THREE.WebGLRenderer: Attempt to load unsupported compressed texture format in .setTextureCube()");
@@ -72296,10 +72378,10 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
             } else {
               if (useTexStorage) {
                 if (dataReady) {
-                  state.texSubImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, j, 0, 0, mipmap.width, mipmap.height, glFormat, glType, mipmap.data);
+                  state2.texSubImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, j, 0, 0, mipmap.width, mipmap.height, glFormat, glType, mipmap.data);
                 }
               } else {
-                state.texImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, j, glInternalFormat, mipmap.width, mipmap.height, 0, glFormat, glType, mipmap.data);
+                state2.texImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, j, glInternalFormat, mipmap.width, mipmap.height, 0, glFormat, glType, mipmap.data);
               }
             }
           }
@@ -72309,44 +72391,44 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
         if (useTexStorage && allocateMemory) {
           if (mipmaps.length > 0) levels++;
           const dimensions = getDimensions2(cubeImage[0]);
-          state.texStorage2D(_gl.TEXTURE_CUBE_MAP, levels, glInternalFormat, dimensions.width, dimensions.height);
+          state2.texStorage2D(_gl.TEXTURE_CUBE_MAP, levels, glInternalFormat, dimensions.width, dimensions.height);
         }
         for (let i = 0; i < 6; i++) {
           if (isDataTexture) {
             if (useTexStorage) {
               if (dataReady) {
-                state.texSubImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, 0, 0, cubeImage[i].width, cubeImage[i].height, glFormat, glType, cubeImage[i].data);
+                state2.texSubImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, 0, 0, cubeImage[i].width, cubeImage[i].height, glFormat, glType, cubeImage[i].data);
               }
             } else {
-              state.texImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, glInternalFormat, cubeImage[i].width, cubeImage[i].height, 0, glFormat, glType, cubeImage[i].data);
+              state2.texImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, glInternalFormat, cubeImage[i].width, cubeImage[i].height, 0, glFormat, glType, cubeImage[i].data);
             }
             for (let j = 0; j < mipmaps.length; j++) {
               const mipmap = mipmaps[j];
               const mipmapImage = mipmap.image[i].image;
               if (useTexStorage) {
                 if (dataReady) {
-                  state.texSubImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, j + 1, 0, 0, mipmapImage.width, mipmapImage.height, glFormat, glType, mipmapImage.data);
+                  state2.texSubImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, j + 1, 0, 0, mipmapImage.width, mipmapImage.height, glFormat, glType, mipmapImage.data);
                 }
               } else {
-                state.texImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, j + 1, glInternalFormat, mipmapImage.width, mipmapImage.height, 0, glFormat, glType, mipmapImage.data);
+                state2.texImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, j + 1, glInternalFormat, mipmapImage.width, mipmapImage.height, 0, glFormat, glType, mipmapImage.data);
               }
             }
           } else {
             if (useTexStorage) {
               if (dataReady) {
-                state.texSubImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, 0, 0, glFormat, glType, cubeImage[i]);
+                state2.texSubImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, 0, 0, glFormat, glType, cubeImage[i]);
               }
             } else {
-              state.texImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, glInternalFormat, glFormat, glType, cubeImage[i]);
+              state2.texImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, glInternalFormat, glFormat, glType, cubeImage[i]);
             }
             for (let j = 0; j < mipmaps.length; j++) {
               const mipmap = mipmaps[j];
               if (useTexStorage) {
                 if (dataReady) {
-                  state.texSubImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, j + 1, 0, 0, glFormat, glType, mipmap.image[i]);
+                  state2.texSubImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, j + 1, 0, 0, glFormat, glType, mipmap.image[i]);
                 }
               } else {
-                state.texImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, j + 1, glInternalFormat, glFormat, glType, mipmap.image[i]);
+                state2.texImage2D(_gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, j + 1, glInternalFormat, glFormat, glType, mipmap.image[i]);
               }
             }
           }
@@ -72371,18 +72453,18 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
       const width = Math.max(1, renderTarget.width >> level);
       const height = Math.max(1, renderTarget.height >> level);
       if (textureTarget === _gl.TEXTURE_3D || textureTarget === _gl.TEXTURE_2D_ARRAY) {
-        state.texImage3D(textureTarget, level, glInternalFormat, width, height, renderTarget.depth, 0, glFormat, glType, null);
+        state2.texImage3D(textureTarget, level, glInternalFormat, width, height, renderTarget.depth, 0, glFormat, glType, null);
       } else {
-        state.texImage2D(textureTarget, level, glInternalFormat, width, height, 0, glFormat, glType, null);
+        state2.texImage2D(textureTarget, level, glInternalFormat, width, height, 0, glFormat, glType, null);
       }
     }
-    state.bindFramebuffer(_gl.FRAMEBUFFER, framebuffer);
+    state2.bindFramebuffer(_gl.FRAMEBUFFER, framebuffer);
     if (useMultisampledRTT(renderTarget)) {
       multisampledRTTExt.framebufferTexture2DMultisampleEXT(_gl.FRAMEBUFFER, attachment, textureTarget, textureProperties.__webglTexture, 0, getRenderTargetSamples(renderTarget));
     } else if (textureTarget === _gl.TEXTURE_2D || textureTarget >= _gl.TEXTURE_CUBE_MAP_POSITIVE_X && textureTarget <= _gl.TEXTURE_CUBE_MAP_NEGATIVE_Z) {
       _gl.framebufferTexture2D(_gl.FRAMEBUFFER, attachment, textureTarget, textureProperties.__webglTexture, level);
     }
-    state.bindFramebuffer(_gl.FRAMEBUFFER, null);
+    state2.bindFramebuffer(_gl.FRAMEBUFFER, null);
   }
   function setupRenderBufferStorage(renderbuffer, renderTarget, isMultisample) {
     _gl.bindRenderbuffer(_gl.RENDERBUFFER, renderbuffer);
@@ -72423,7 +72505,7 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
   function setupDepthTexture(framebuffer, renderTarget) {
     const isCube = renderTarget && renderTarget.isWebGLCubeRenderTarget;
     if (isCube) throw new Error("Depth Texture with cube render targets is not supported");
-    state.bindFramebuffer(_gl.FRAMEBUFFER, framebuffer);
+    state2.bindFramebuffer(_gl.FRAMEBUFFER, framebuffer);
     if (!(renderTarget.depthTexture && renderTarget.depthTexture.isDepthTexture)) {
       throw new Error("renderTarget.depthTexture must be an instance of THREE.DepthTexture");
     }
@@ -72479,7 +72561,7 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
       if (isCube) {
         renderTargetProperties.__webglDepthbuffer = [];
         for (let i = 0; i < 6; i++) {
-          state.bindFramebuffer(_gl.FRAMEBUFFER, renderTargetProperties.__webglFramebuffer[i]);
+          state2.bindFramebuffer(_gl.FRAMEBUFFER, renderTargetProperties.__webglFramebuffer[i]);
           if (renderTargetProperties.__webglDepthbuffer[i] === void 0) {
             renderTargetProperties.__webglDepthbuffer[i] = _gl.createRenderbuffer();
             setupRenderBufferStorage(renderTargetProperties.__webglDepthbuffer[i], renderTarget, false);
@@ -72491,7 +72573,7 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
           }
         }
       } else {
-        state.bindFramebuffer(_gl.FRAMEBUFFER, renderTargetProperties.__webglFramebuffer);
+        state2.bindFramebuffer(_gl.FRAMEBUFFER, renderTargetProperties.__webglFramebuffer);
         if (renderTargetProperties.__webglDepthbuffer === void 0) {
           renderTargetProperties.__webglDepthbuffer = _gl.createRenderbuffer();
           setupRenderBufferStorage(renderTargetProperties.__webglDepthbuffer, renderTarget, false);
@@ -72503,7 +72585,7 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
         }
       }
     }
-    state.bindFramebuffer(_gl.FRAMEBUFFER, null);
+    state2.bindFramebuffer(_gl.FRAMEBUFFER, null);
   }
   function rebindTextures(renderTarget, colorTexture, depthTexture) {
     const renderTargetProperties = properties.get(renderTarget);
@@ -72562,7 +72644,7 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
       if (renderTarget.samples > 0 && useMultisampledRTT(renderTarget) === false) {
         renderTargetProperties.__webglMultisampledFramebuffer = _gl.createFramebuffer();
         renderTargetProperties.__webglColorRenderbuffer = [];
-        state.bindFramebuffer(_gl.FRAMEBUFFER, renderTargetProperties.__webglMultisampledFramebuffer);
+        state2.bindFramebuffer(_gl.FRAMEBUFFER, renderTargetProperties.__webglMultisampledFramebuffer);
         for (let i = 0; i < textures.length; i++) {
           const texture2 = textures[i];
           renderTargetProperties.__webglColorRenderbuffer[i] = _gl.createRenderbuffer();
@@ -72579,11 +72661,11 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
           renderTargetProperties.__webglDepthRenderbuffer = _gl.createRenderbuffer();
           setupRenderBufferStorage(renderTargetProperties.__webglDepthRenderbuffer, renderTarget, true);
         }
-        state.bindFramebuffer(_gl.FRAMEBUFFER, null);
+        state2.bindFramebuffer(_gl.FRAMEBUFFER, null);
       }
     }
     if (isCube) {
-      state.bindTexture(_gl.TEXTURE_CUBE_MAP, textureProperties.__webglTexture);
+      state2.bindTexture(_gl.TEXTURE_CUBE_MAP, textureProperties.__webglTexture);
       setTextureParameters(_gl.TEXTURE_CUBE_MAP, texture);
       for (let i = 0; i < 6; i++) {
         if (texture.mipmaps && texture.mipmaps.length > 0) {
@@ -72597,25 +72679,25 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
       if (textureNeedsGenerateMipmaps(texture)) {
         generateMipmap(_gl.TEXTURE_CUBE_MAP);
       }
-      state.unbindTexture();
+      state2.unbindTexture();
     } else if (isMultipleRenderTargets) {
       for (let i = 0, il = textures.length; i < il; i++) {
         const attachment = textures[i];
         const attachmentProperties = properties.get(attachment);
-        state.bindTexture(_gl.TEXTURE_2D, attachmentProperties.__webglTexture);
+        state2.bindTexture(_gl.TEXTURE_2D, attachmentProperties.__webglTexture);
         setTextureParameters(_gl.TEXTURE_2D, attachment);
         setupFrameBufferTexture(renderTargetProperties.__webglFramebuffer, renderTarget, attachment, _gl.COLOR_ATTACHMENT0 + i, _gl.TEXTURE_2D, 0);
         if (textureNeedsGenerateMipmaps(attachment)) {
           generateMipmap(_gl.TEXTURE_2D);
         }
       }
-      state.unbindTexture();
+      state2.unbindTexture();
     } else {
       let glTextureType = _gl.TEXTURE_2D;
       if (renderTarget.isWebGL3DRenderTarget || renderTarget.isWebGLArrayRenderTarget) {
         glTextureType = renderTarget.isWebGL3DRenderTarget ? _gl.TEXTURE_3D : _gl.TEXTURE_2D_ARRAY;
       }
-      state.bindTexture(glTextureType, textureProperties.__webglTexture);
+      state2.bindTexture(glTextureType, textureProperties.__webglTexture);
       setTextureParameters(glTextureType, texture);
       if (texture.mipmaps && texture.mipmaps.length > 0) {
         for (let level = 0; level < texture.mipmaps.length; level++) {
@@ -72627,7 +72709,7 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
       if (textureNeedsGenerateMipmaps(texture)) {
         generateMipmap(glTextureType);
       }
-      state.unbindTexture();
+      state2.unbindTexture();
     }
     if (renderTarget.depthBuffer) {
       setupDepthRenderbuffer(renderTarget);
@@ -72640,9 +72722,9 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
       if (textureNeedsGenerateMipmaps(texture)) {
         const targetType = getTargetType(renderTarget);
         const webglTexture = properties.get(texture).__webglTexture;
-        state.bindTexture(targetType, webglTexture);
+        state2.bindTexture(targetType, webglTexture);
         generateMipmap(targetType);
-        state.unbindTexture();
+        state2.unbindTexture();
       }
     }
   }
@@ -72660,14 +72742,14 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
         const isMultipleRenderTargets = textures.length > 1;
         if (isMultipleRenderTargets) {
           for (let i = 0; i < textures.length; i++) {
-            state.bindFramebuffer(_gl.FRAMEBUFFER, renderTargetProperties.__webglMultisampledFramebuffer);
+            state2.bindFramebuffer(_gl.FRAMEBUFFER, renderTargetProperties.__webglMultisampledFramebuffer);
             _gl.framebufferRenderbuffer(_gl.FRAMEBUFFER, _gl.COLOR_ATTACHMENT0 + i, _gl.RENDERBUFFER, null);
-            state.bindFramebuffer(_gl.FRAMEBUFFER, renderTargetProperties.__webglFramebuffer);
+            state2.bindFramebuffer(_gl.FRAMEBUFFER, renderTargetProperties.__webglFramebuffer);
             _gl.framebufferTexture2D(_gl.DRAW_FRAMEBUFFER, _gl.COLOR_ATTACHMENT0 + i, _gl.TEXTURE_2D, null, 0);
           }
         }
-        state.bindFramebuffer(_gl.READ_FRAMEBUFFER, renderTargetProperties.__webglMultisampledFramebuffer);
-        state.bindFramebuffer(_gl.DRAW_FRAMEBUFFER, renderTargetProperties.__webglFramebuffer);
+        state2.bindFramebuffer(_gl.READ_FRAMEBUFFER, renderTargetProperties.__webglMultisampledFramebuffer);
+        state2.bindFramebuffer(_gl.DRAW_FRAMEBUFFER, renderTargetProperties.__webglFramebuffer);
         for (let i = 0; i < textures.length; i++) {
           if (renderTarget.resolveDepthBuffer) {
             if (renderTarget.depthBuffer) mask |= _gl.DEPTH_BUFFER_BIT;
@@ -72691,18 +72773,18 @@ function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, 
             _gl.invalidateFramebuffer(_gl.READ_FRAMEBUFFER, invalidationArrayRead);
           }
         }
-        state.bindFramebuffer(_gl.READ_FRAMEBUFFER, null);
-        state.bindFramebuffer(_gl.DRAW_FRAMEBUFFER, null);
+        state2.bindFramebuffer(_gl.READ_FRAMEBUFFER, null);
+        state2.bindFramebuffer(_gl.DRAW_FRAMEBUFFER, null);
         if (isMultipleRenderTargets) {
           for (let i = 0; i < textures.length; i++) {
-            state.bindFramebuffer(_gl.FRAMEBUFFER, renderTargetProperties.__webglMultisampledFramebuffer);
+            state2.bindFramebuffer(_gl.FRAMEBUFFER, renderTargetProperties.__webglMultisampledFramebuffer);
             _gl.framebufferRenderbuffer(_gl.FRAMEBUFFER, _gl.COLOR_ATTACHMENT0 + i, _gl.RENDERBUFFER, renderTargetProperties.__webglColorRenderbuffer[i]);
             const webglTexture = properties.get(textures[i]).__webglTexture;
-            state.bindFramebuffer(_gl.FRAMEBUFFER, renderTargetProperties.__webglFramebuffer);
+            state2.bindFramebuffer(_gl.FRAMEBUFFER, renderTargetProperties.__webglFramebuffer);
             _gl.framebufferTexture2D(_gl.DRAW_FRAMEBUFFER, _gl.COLOR_ATTACHMENT0 + i, _gl.TEXTURE_2D, webglTexture, 0);
           }
         }
-        state.bindFramebuffer(_gl.DRAW_FRAMEBUFFER, renderTargetProperties.__webglMultisampledFramebuffer);
+        state2.bindFramebuffer(_gl.DRAW_FRAMEBUFFER, renderTargetProperties.__webglMultisampledFramebuffer);
       } else {
         if (renderTarget.depthBuffer && renderTarget.resolveDepthBuffer === false && supportsInvalidateFramebuffer) {
           const depthStyle = renderTarget.stencilBuffer ? _gl.DEPTH_STENCIL_ATTACHMENT : _gl.DEPTH_ATTACHMENT;
@@ -73923,14 +74005,14 @@ function WebGLMaterials(renderer2, properties) {
     refreshMaterialUniforms
   };
 }
-function WebGLUniformsGroups(gl, info, capabilities, state) {
+function WebGLUniformsGroups(gl, info, capabilities, state2) {
   let buffers = {};
   let updateList = {};
   let allocatedBindingPoints = [];
   const maxBindingPoints = gl.getParameter(gl.MAX_UNIFORM_BUFFER_BINDINGS);
   function bind2(uniformsGroup, program) {
     const webglProgram = program.program;
-    state.uniformBlockBinding(uniformsGroup, webglProgram);
+    state2.uniformBlockBinding(uniformsGroup, webglProgram);
   }
   function update(uniformsGroup, program) {
     let buffer = buffers[uniformsGroup.id];
@@ -73941,7 +74023,7 @@ function WebGLUniformsGroups(gl, info, capabilities, state) {
       uniformsGroup.addEventListener("dispose", onUniformsGroupsDispose);
     }
     const webglProgram = program.program;
-    state.updateUBOMapping(uniformsGroup, webglProgram);
+    state2.updateUBOMapping(uniformsGroup, webglProgram);
     const frame = info.render.frame;
     if (updateList[uniformsGroup.id] !== frame) {
       updateBufferData(uniformsGroup);
@@ -74245,7 +74327,7 @@ class WebGLRenderer {
       console.error("THREE.WebGLRenderer: " + error2.message);
       throw error2;
     }
-    let extensions, capabilities, state, info;
+    let extensions, capabilities, state2, info;
     let properties, textures, cubemaps, cubeuvmaps, attributes, geometries, objects;
     let programCache, materials, renderLists, renderStates, clipping, shadowMap;
     let background, morphtargets, bufferRenderer, indexedBufferRenderer;
@@ -74255,13 +74337,13 @@ class WebGLRenderer {
       extensions.init();
       utils = new WebGLUtils(_gl, extensions);
       capabilities = new WebGLCapabilities(_gl, extensions, parameters, utils);
-      state = new WebGLState(_gl, extensions);
+      state2 = new WebGLState(_gl, extensions);
       if (capabilities.reverseDepthBuffer && reverseDepthBuffer) {
-        state.buffers.depth.setReversed(true);
+        state2.buffers.depth.setReversed(true);
       }
       info = new WebGLInfo(_gl);
       properties = new WebGLProperties();
-      textures = new WebGLTextures(_gl, extensions, state, properties, capabilities, utils, info);
+      textures = new WebGLTextures(_gl, extensions, state2, properties, capabilities, utils, info);
       cubemaps = new WebGLCubeMaps(_this);
       cubeuvmaps = new WebGLCubeUVMaps(_this);
       attributes = new WebGLAttributes(_gl);
@@ -74274,9 +74356,9 @@ class WebGLRenderer {
       materials = new WebGLMaterials(_this, properties);
       renderLists = new WebGLRenderLists();
       renderStates = new WebGLRenderStates(extensions);
-      background = new WebGLBackground(_this, cubemaps, cubeuvmaps, state, objects, _alpha, premultipliedAlpha);
+      background = new WebGLBackground(_this, cubemaps, cubeuvmaps, state2, objects, _alpha, premultipliedAlpha);
       shadowMap = new WebGLShadowMap(_this, objects, capabilities);
-      uniformsGroups = new WebGLUniformsGroups(_gl, info, capabilities, state);
+      uniformsGroups = new WebGLUniformsGroups(_gl, info, capabilities, state2);
       bufferRenderer = new WebGLBufferRenderer(_gl, extensions, info);
       indexedBufferRenderer = new WebGLIndexedBufferRenderer(_gl, extensions, info);
       info.programs = programCache.programs;
@@ -74285,7 +74367,7 @@ class WebGLRenderer {
       _this.properties = properties;
       _this.renderLists = renderLists;
       _this.shadowMap = shadowMap;
-      _this.state = state;
+      _this.state = state2;
       _this.info = info;
     }
     initGLContext();
@@ -74354,7 +74436,7 @@ class WebGLRenderer {
       } else {
         _viewport.set(x, y, width, height);
       }
-      state.viewport(_currentViewport.copy(_viewport).multiplyScalar(_pixelRatio).round());
+      state2.viewport(_currentViewport.copy(_viewport).multiplyScalar(_pixelRatio).round());
     };
     this.getScissor = function(target) {
       return target.copy(_scissor);
@@ -74365,13 +74447,13 @@ class WebGLRenderer {
       } else {
         _scissor.set(x, y, width, height);
       }
-      state.scissor(_currentScissor.copy(_scissor).multiplyScalar(_pixelRatio).round());
+      state2.scissor(_currentScissor.copy(_scissor).multiplyScalar(_pixelRatio).round());
     };
     this.getScissorTest = function() {
       return _scissorTest;
     };
     this.setScissorTest = function(boolean2) {
-      state.setScissorTest(_scissorTest = boolean2);
+      state2.setScissorTest(_scissorTest = boolean2);
     };
     this.setOpaqueSort = function(method) {
       _opaqueSort = method;
@@ -74507,7 +74589,7 @@ class WebGLRenderer {
       if (scene === null) scene = _emptyScene;
       const frontFaceCW = object2.isMesh && object2.matrixWorld.determinant() < 0;
       const program = setProgram(camera2, scene, geometry, material, object2);
-      state.setMaterial(material, frontFaceCW);
+      state2.setMaterial(material, frontFaceCW);
       let index = geometry.index;
       let rangeFactor = 1;
       if (material.wireframe === true) {
@@ -74542,7 +74624,7 @@ class WebGLRenderer {
       }
       if (object2.isMesh) {
         if (material.wireframe === true) {
-          state.setLineWidth(material.wireframeLinewidth * getTargetPixelRatio());
+          state2.setLineWidth(material.wireframeLinewidth * getTargetPixelRatio());
           renderer2.setMode(_gl.LINES);
         } else {
           renderer2.setMode(_gl.TRIANGLES);
@@ -74550,7 +74632,7 @@ class WebGLRenderer {
       } else if (object2.isLine) {
         let lineWidth = material.linewidth;
         if (lineWidth === void 0) lineWidth = 1;
-        state.setLineWidth(lineWidth * getTargetPixelRatio());
+        state2.setLineWidth(lineWidth * getTargetPixelRatio());
         if (object2.isLineSegments) {
           renderer2.setMode(_gl.LINES);
         } else if (object2.isLineLoop) {
@@ -74846,14 +74928,14 @@ class WebGLRenderer {
       const transparentObjects = currentRenderList2.transparent;
       currentRenderState.setupLightsView(camera2);
       if (_clippingEnabled === true) clipping.setGlobalState(_this.clippingPlanes, camera2);
-      if (viewport2) state.viewport(_currentViewport.copy(viewport2));
+      if (viewport2) state2.viewport(_currentViewport.copy(viewport2));
       if (opaqueObjects.length > 0) renderObjects(opaqueObjects, scene, camera2);
       if (transmissiveObjects.length > 0) renderObjects(transmissiveObjects, scene, camera2);
       if (transparentObjects.length > 0) renderObjects(transparentObjects, scene, camera2);
-      state.buffers.depth.setTest(true);
-      state.buffers.depth.setMask(true);
-      state.buffers.color.setMask(true);
-      state.setPolygonOffset(false);
+      state2.buffers.depth.setTest(true);
+      state2.buffers.depth.setMask(true);
+      state2.buffers.color.setMask(true);
+      state2.setPolygonOffset(false);
     }
     function renderTransmissionPass(opaqueObjects, transmissiveObjects, scene, camera2) {
       const overrideMaterial = scene.isScene === true ? scene.overrideMaterial : null;
@@ -75130,7 +75212,7 @@ class WebGLRenderer {
       let refreshMaterial = false;
       let refreshLights = false;
       const p_uniforms = program.getUniforms(), m_uniforms = materialProperties.uniforms;
-      if (state.useProgram(program.program)) {
+      if (state2.useProgram(program.program)) {
         refreshProgram = true;
         refreshMaterial = true;
         refreshLights = true;
@@ -75140,7 +75222,7 @@ class WebGLRenderer {
         refreshMaterial = true;
       }
       if (refreshProgram || _currentCamera !== camera2) {
-        const reverseDepthBuffer2 = state.buffers.depth.getReversed();
+        const reverseDepthBuffer2 = state2.buffers.depth.getReversed();
         if (reverseDepthBuffer2) {
           _currentProjectionMatrix.copy(camera2.projectionMatrix);
           toNormalizedProjectionMatrix(_currentProjectionMatrix);
@@ -75288,7 +75370,7 @@ class WebGLRenderer {
       if (renderTarget) {
         const renderTargetProperties = properties.get(renderTarget);
         if (renderTargetProperties.__useDefaultFramebuffer !== void 0) {
-          state.bindFramebuffer(_gl.FRAMEBUFFER, null);
+          state2.bindFramebuffer(_gl.FRAMEBUFFER, null);
           useDefaultFramebuffer = false;
         } else if (renderTargetProperties.__webglFramebuffer === void 0) {
           textures.setupRenderTarget(renderTarget);
@@ -75332,13 +75414,13 @@ class WebGLRenderer {
         _currentScissor.copy(_scissor).multiplyScalar(_pixelRatio).floor();
         _currentScissorTest = _scissorTest;
       }
-      const framebufferBound = state.bindFramebuffer(_gl.FRAMEBUFFER, framebuffer);
+      const framebufferBound = state2.bindFramebuffer(_gl.FRAMEBUFFER, framebuffer);
       if (framebufferBound && useDefaultFramebuffer) {
-        state.drawBuffers(renderTarget, framebuffer);
+        state2.drawBuffers(renderTarget, framebuffer);
       }
-      state.viewport(_currentViewport);
-      state.scissor(_currentScissor);
-      state.setScissorTest(_currentScissorTest);
+      state2.viewport(_currentViewport);
+      state2.scissor(_currentScissor);
+      state2.setScissorTest(_currentScissorTest);
       if (isCube) {
         const textureProperties = properties.get(renderTarget.texture);
         _gl.framebufferTexture2D(_gl.FRAMEBUFFER, _gl.COLOR_ATTACHMENT0, _gl.TEXTURE_CUBE_MAP_POSITIVE_X + activeCubeFace, textureProperties.__webglTexture, activeMipmapLevel);
@@ -75359,7 +75441,7 @@ class WebGLRenderer {
         framebuffer = framebuffer[activeCubeFaceIndex];
       }
       if (framebuffer) {
-        state.bindFramebuffer(_gl.FRAMEBUFFER, framebuffer);
+        state2.bindFramebuffer(_gl.FRAMEBUFFER, framebuffer);
         try {
           const texture = renderTarget.texture;
           const textureFormat = texture.format;
@@ -75377,7 +75459,7 @@ class WebGLRenderer {
           }
         } finally {
           const framebuffer2 = _currentRenderTarget !== null ? properties.get(_currentRenderTarget).__webglFramebuffer : null;
-          state.bindFramebuffer(_gl.FRAMEBUFFER, framebuffer2);
+          state2.bindFramebuffer(_gl.FRAMEBUFFER, framebuffer2);
         }
       }
     };
@@ -75400,13 +75482,13 @@ class WebGLRenderer {
           throw new Error("THREE.WebGLRenderer.readRenderTargetPixelsAsync: renderTarget is not in UnsignedByteType or implementation defined type.");
         }
         if (x >= 0 && x <= renderTarget.width - width && (y >= 0 && y <= renderTarget.height - height)) {
-          state.bindFramebuffer(_gl.FRAMEBUFFER, framebuffer);
+          state2.bindFramebuffer(_gl.FRAMEBUFFER, framebuffer);
           const glBuffer = _gl.createBuffer();
           _gl.bindBuffer(_gl.PIXEL_PACK_BUFFER, glBuffer);
           _gl.bufferData(_gl.PIXEL_PACK_BUFFER, buffer.byteLength, _gl.STREAM_READ);
           _gl.readPixels(x, y, width, height, utils.convert(textureFormat), utils.convert(textureType), 0);
           const currFramebuffer = _currentRenderTarget !== null ? properties.get(_currentRenderTarget).__webglFramebuffer : null;
-          state.bindFramebuffer(_gl.FRAMEBUFFER, currFramebuffer);
+          state2.bindFramebuffer(_gl.FRAMEBUFFER, currFramebuffer);
           const sync = _gl.fenceSync(_gl.SYNC_GPU_COMMANDS_COMPLETE, 0);
           _gl.flush();
           await probeAsync(_gl, sync, 4);
@@ -75433,7 +75515,7 @@ class WebGLRenderer {
       const y = position !== null ? position.y : 0;
       textures.setTexture2D(texture, 0);
       _gl.copyTexSubImage2D(_gl.TEXTURE_2D, level, 0, 0, x, y, width, height);
-      state.unbindTexture();
+      state2.unbindTexture();
     };
     this.copyTextureToTexture = function(srcTexture, dstTexture, srcRegion = null, dstPosition = null, level = 0) {
       if (srcTexture.isTexture !== true) {
@@ -75504,8 +75586,8 @@ class WebGLRenderer {
         const dstTextureProperties = properties.get(dstTexture);
         const srcRenderTargetProperties = properties.get(srcTextureProperties.__renderTarget);
         const dstRenderTargetProperties = properties.get(dstTextureProperties.__renderTarget);
-        state.bindFramebuffer(_gl.READ_FRAMEBUFFER, srcRenderTargetProperties.__webglFramebuffer);
-        state.bindFramebuffer(_gl.DRAW_FRAMEBUFFER, dstRenderTargetProperties.__webglFramebuffer);
+        state2.bindFramebuffer(_gl.READ_FRAMEBUFFER, srcRenderTargetProperties.__webglFramebuffer);
+        state2.bindFramebuffer(_gl.DRAW_FRAMEBUFFER, dstRenderTargetProperties.__webglFramebuffer);
         for (let i = 0; i < depth2; i++) {
           if (isSrc3D) {
             _gl.framebufferTextureLayer(_gl.READ_FRAMEBUFFER, _gl.COLOR_ATTACHMENT0, properties.get(srcTexture).__webglTexture, level, minZ + i);
@@ -75521,8 +75603,8 @@ class WebGLRenderer {
             _gl.copyTexSubImage2D(glTarget, level, dstX, dstY, dstZ + i, minX, minY, width, height);
           }
         }
-        state.bindFramebuffer(_gl.READ_FRAMEBUFFER, null);
-        state.bindFramebuffer(_gl.DRAW_FRAMEBUFFER, null);
+        state2.bindFramebuffer(_gl.READ_FRAMEBUFFER, null);
+        state2.bindFramebuffer(_gl.DRAW_FRAMEBUFFER, null);
       } else {
         if (isDst3D) {
           if (srcTexture.isDataTexture || srcTexture.isData3DTexture) {
@@ -75550,7 +75632,7 @@ class WebGLRenderer {
       if (level === 0 && dstTexture.generateMipmaps) {
         _gl.generateMipmap(glTarget);
       }
-      state.unbindTexture();
+      state2.unbindTexture();
     };
     this.copyTextureToTexture3D = function(srcTexture, dstTexture, srcRegion = null, dstPosition = null, level = 0) {
       if (srcTexture.isTexture !== true) {
@@ -75579,13 +75661,13 @@ class WebGLRenderer {
       } else {
         textures.setTexture2D(texture, 0);
       }
-      state.unbindTexture();
+      state2.unbindTexture();
     };
     this.resetState = function() {
       _currentActiveCubeFace = 0;
       _currentActiveMipmapLevel = 0;
       _currentRenderTarget = null;
-      state.reset();
+      state2.reset();
       bindingStates.reset();
     };
     if (typeof __THREE_DEVTOOLS__ !== "undefined") {
@@ -78669,11 +78751,11 @@ function useCameraWidget(initialState = {}, onExternalStateChange) {
         elevation: elevation.value,
         distance: distance.value
       },
-      onStateChange: (state) => {
+      onStateChange: (state2) => {
         updatingFromWidget = true;
-        azimuth.value = state.azimuth;
-        elevation.value = state.elevation;
-        distance.value = state.distance;
+        azimuth.value = state2.azimuth;
+        elevation.value = state2.elevation;
+        distance.value = state2.distance;
         prompt.value = widget.generatePrompt();
         updatingFromWidget = false;
         notifyParent();
@@ -78692,12 +78774,12 @@ function useCameraWidget(initialState = {}, onExternalStateChange) {
       notifyParent();
     }
   }, { flush: "sync" });
-  function setState(state) {
+  function setState(state2) {
     updatingFromExternal = true;
-    if (state.azimuth !== void 0) azimuth.value = state.azimuth;
-    if (state.elevation !== void 0) elevation.value = state.elevation;
-    if (state.distance !== void 0) distance.value = state.distance;
-    widget == null ? void 0 : widget.setState(state);
+    if (state2.azimuth !== void 0) azimuth.value = state2.azimuth;
+    if (state2.elevation !== void 0) elevation.value = state2.elevation;
+    if (state2.distance !== void 0) distance.value = state2.distance;
+    widget == null ? void 0 : widget.setState(state2);
     if (widget) prompt.value = widget.generatePrompt();
     updatingFromExternal = false;
   }
@@ -78736,11 +78818,11 @@ function useCameraWidget(initialState = {}, onExternalStateChange) {
     cleanup
   };
 }
-const _hoisted_1$p = { class: "ctv:flex ctv:flex-col ctv:size-full" };
-const _hoisted_2$n = { class: "ctv:relative ctv:w-full ctv:h-[350px] ctv:shrink-0 ctv:rounded-lg ctv:overflow-hidden ctv:bg-black ctv:mb-1.5" };
-const _hoisted_3$l = { class: "ctv:absolute ctv:top-2 ctv:left-2 ctv:right-2 ctv:z-10 ctv:pointer-events-none ctv:bg-black/90 ctv:border ctv:border-[rgb(233_61_130/0.3)] ctv:rounded-md ctv:py-1.5 ctv:px-2.5 ctv:text-xs ctv:text-[#E93D82] ctv:font-mono ctv:leading-snug ctv:break-all ctv:backdrop-blur-sm" };
+const _hoisted_1$q = { class: "ctv:flex ctv:flex-col ctv:size-full" };
+const _hoisted_2$o = { class: "ctv:relative ctv:w-full ctv:h-[350px] ctv:shrink-0 ctv:rounded-lg ctv:overflow-hidden ctv:bg-black ctv:mb-1.5" };
+const _hoisted_3$m = { class: "ctv:absolute ctv:top-2 ctv:left-2 ctv:right-2 ctv:z-10 ctv:pointer-events-none ctv:bg-black/90 ctv:border ctv:border-[rgb(233_61_130/0.3)] ctv:rounded-md ctv:py-1.5 ctv:px-2.5 ctv:text-xs ctv:text-[#E93D82] ctv:font-mono ctv:leading-snug ctv:break-all ctv:backdrop-blur-sm" };
 const PROP_KEY$1 = "comfytv_multiangle_camera";
-const _sfc_main$q = /* @__PURE__ */ defineComponent({
+const _sfc_main$r = /* @__PURE__ */ defineComponent({
   __name: "MultiangleStageCard",
   props: {
     state: {},
@@ -78768,11 +78850,11 @@ const _sfc_main$q = /* @__PURE__ */ defineComponent({
         distance: readWidgetNum(props.node, "zoom", 5)
       };
     }
-    function writeProperties(state) {
+    function writeProperties(state2) {
       if (!props.node) return;
       if (!props.node.properties) props.node.properties = {};
       const existing = props.node.properties[PROP_KEY$1] ?? {};
-      props.node.properties[PROP_KEY$1] = { ...existing, ...state };
+      props.node.properties[PROP_KEY$1] = { ...existing, ...state2 };
     }
     const {
       azimuth,
@@ -78802,10 +78884,10 @@ const _sfc_main$q = /* @__PURE__ */ defineComponent({
       cleanup();
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$p, [
-        createBaseVNode("div", _hoisted_2$n, [
-          createVNode(_sfc_main$s, { "init-scene": unref(initScene) }, null, 8, ["init-scene"]),
-          createBaseVNode("div", _hoisted_3$l, toDisplayString$1(unref(prompt)), 1),
+      return openBlock(), createElementBlock("div", _hoisted_1$q, [
+        createBaseVNode("div", _hoisted_2$o, [
+          createVNode(_sfc_main$t, { "init-scene": unref(initScene) }, null, 8, ["init-scene"]),
+          createBaseVNode("div", _hoisted_3$m, toDisplayString$1(unref(prompt)), 1),
           createVNode(CameraControlPanel, {
             azimuth: unref(azimuth),
             elevation: unref(elevation),
@@ -79602,23 +79684,23 @@ function usePainter(options) {
     commitMask
   };
 }
-const _hoisted_1$o = ["src"];
-const _hoisted_2$m = {
+const _hoisted_1$p = ["src"];
+const _hoisted_2$n = {
   key: 0,
   class: "ctv:text-2xs ctv:text-center ctv:font-mono ctv:text-muted-foreground"
 };
-const _hoisted_3$k = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
-const _hoisted_4$i = { class: "ctv:flex ctv:gap-0.5 ctv:p-0.5 ctv:rounded ctv:bg-secondary-background" };
-const _hoisted_5$h = ["title", "onClick"];
-const _hoisted_6$g = ["value"];
-const _hoisted_7$f = ["value"];
+const _hoisted_3$l = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
+const _hoisted_4$j = { class: "ctv:flex ctv:gap-0.5 ctv:p-0.5 ctv:rounded ctv:bg-secondary-background" };
+const _hoisted_5$i = ["title", "onClick"];
+const _hoisted_6$h = ["value"];
+const _hoisted_7$g = ["value"];
 const _hoisted_8$f = ["value"];
 const _hoisted_9$f = ["value"];
 const SHELL_MAX_HEIGHT_PX = 360;
 const rowClass = "ctv:grid ctv:grid-cols-[64px_1fr_48px] ctv:items-center ctv:gap-1.5 ctv:text-[11px]";
 const labelClass = "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground";
 const valueClass = "ctv:text-right ctv:text-base-foreground";
-const _sfc_main$p = /* @__PURE__ */ defineComponent({
+const _sfc_main$q = /* @__PURE__ */ defineComponent({
   __name: "PainterCanvas",
   props: {
     node: {},
@@ -79711,7 +79793,7 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
             draggable: "false",
             onDragstart: _cache2[0] || (_cache2[0] = withModifiers(() => {
             }, ["prevent"]))
-          }, null, 40, _hoisted_1$o)) : createCommentVNode("", true),
+          }, null, 40, _hoisted_1$p)) : createCommentVNode("", true),
           createBaseVNode("canvas", {
             ref_key: "canvasEl",
             ref: canvasEl,
@@ -79736,15 +79818,15 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
             [vShow, unref(cursorVisible) && unref(tool) !== "fill"]
           ])
         ], 4),
-        __props.sourceImageUrl ? (openBlock(), createElementBlock("div", _hoisted_2$m, toDisplayString$1(unref(canvasWidth)) + " × " + toDisplayString$1(unref(canvasHeight)), 1)) : createCommentVNode("", true),
-        createBaseVNode("div", _hoisted_3$k, [
+        __props.sourceImageUrl ? (openBlock(), createElementBlock("div", _hoisted_2$n, toDisplayString$1(unref(canvasWidth)) + " × " + toDisplayString$1(unref(canvasHeight)), 1)) : createCommentVNode("", true),
+        createBaseVNode("div", _hoisted_3$l, [
           createBaseVNode("div", {
             class: normalizeClass(rowClass)
           }, [
             createBaseVNode("span", {
               class: normalizeClass(labelClass)
             }, toDisplayString$1(_ctx.$t("painter.tool")), 1),
-            createBaseVNode("div", _hoisted_4$i, [
+            createBaseVNode("div", _hoisted_4$j, [
               (openBlock(), createElementBlock(Fragment$1, null, renderList(TOOLS, (t2) => {
                 return createBaseVNode("button", {
                   key: t2.id,
@@ -79753,11 +79835,11 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
                   title: _ctx.$t(t2.i18n),
                   onClick: ($event) => tool.value = t2.id
                 }, [
-                  createVNode(_sfc_main$x, {
+                  createVNode(_sfc_main$y, {
                     name: t2.icon,
                     class: "ctv:mx-auto"
                   }, null, 8, ["name"])
-                ], 10, _hoisted_5$h);
+                ], 10, _hoisted_5$i);
               }), 64))
             ])
           ]),
@@ -79776,7 +79858,7 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
               class: "ctv:w-full",
               value: unref(brushSize),
               onInput: _cache2[6] || (_cache2[6] = (e) => brushSize.value = Number(e.target.value))
-            }, null, 40, _hoisted_6$g),
+            }, null, 40, _hoisted_6$h),
             createBaseVNode("span", {
               class: normalizeClass(valueClass)
             }, toDisplayString$1(unref(brushSize)), 1)
@@ -79793,7 +79875,7 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
                 class: "ctv:w-7 ctv:h-[18px] ctv:p-0 ctv:border-0 ctv:bg-transparent ctv:cursor-pointer",
                 value: unref(brushColorDisplay),
                 onInput: _cache2[7] || (_cache2[7] = (e) => brushColorDisplay.value = e.target.value)
-              }, null, 40, _hoisted_7$f),
+              }, null, 40, _hoisted_7$g),
               createBaseVNode("span", {
                 class: normalizeClass(`${valueClass} ctv:font-mono`)
               }, toDisplayString$1(unref(brushColorDisplay)), 3)
@@ -79852,8 +79934,8 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$n = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
-const _sfc_main$o = /* @__PURE__ */ defineComponent({
+const _hoisted_1$o = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
+const _sfc_main$p = /* @__PURE__ */ defineComponent({
   __name: "PainterStageCard",
   props: {
     state: {},
@@ -79877,8 +79959,8 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
       props.onRunRequest();
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$n, [
-        createVNode(_sfc_main$p, {
+      return openBlock(), createElementBlock("div", _hoisted_1$o, [
+        createVNode(_sfc_main$q, {
           ref_key: "painterRef",
           ref: painterRef,
           node: __props.node,
@@ -80336,26 +80418,26 @@ function useImageCrop(options) {
     handleResizeEnd
   };
 }
-const _hoisted_1$m = {
+const _hoisted_1$n = {
   key: 0,
   class: "ctv:h-full ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50"
 };
-const _hoisted_2$l = { class: "ctv:text-xs" };
-const _hoisted_3$j = ["src", "alt"];
-const _hoisted_4$h = {
+const _hoisted_2$m = { class: "ctv:text-xs" };
+const _hoisted_3$k = ["src", "alt"];
+const _hoisted_4$i = {
   key: 0,
   class: "ctv:absolute ctv:inset-0 ctv:z-10 ctv:flex ctv:items-center ctv:justify-center ctv:text-xs ctv:bg-black/90 ctv:text-white/85"
 };
-const _hoisted_5$g = ["onPointerdown"];
-const _hoisted_6$f = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
-const _hoisted_7$e = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
+const _hoisted_5$h = ["onPointerdown"];
+const _hoisted_6$g = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
+const _hoisted_7$f = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
 const _hoisted_8$e = { class: "ctv:min-w-9 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_9$e = ["value"];
 const _hoisted_10$e = ["title"];
 const _hoisted_11$d = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-[11px]" };
 const _hoisted_12$d = { class: "ctv:w-3 ctv:text-2xs ctv:text-muted-foreground" };
 const _hoisted_13$b = ["min", "value", "onChange"];
-const _sfc_main$n = /* @__PURE__ */ defineComponent({
+const _sfc_main$o = /* @__PURE__ */ defineComponent({
   __name: "CropCanvas",
   props: {
     sourceImageUrl: {},
@@ -80440,9 +80522,9 @@ const _sfc_main$n = /* @__PURE__ */ defineComponent({
           ref: containerEl,
           class: "ctv:relative ctv:w-full ctv:h-[340px] ctv:rounded-md ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle"
         }, [
-          !unref(imageUrl) ? (openBlock(), createElementBlock("div", _hoisted_1$m, [
+          !unref(imageUrl) ? (openBlock(), createElementBlock("div", _hoisted_1$n, [
             _cache2[13] || (_cache2[13] = createBaseVNode("i", { class: "pi pi-image ctv:text-[32px] ctv:opacity-60" }, null, -1)),
-            createBaseVNode("div", _hoisted_2$l, toDisplayString$1(_ctx.$t("imageCrop.noInputImage")), 1)
+            createBaseVNode("div", _hoisted_2$m, toDisplayString$1(_ctx.$t("imageCrop.noInputImage")), 1)
           ])) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
             createBaseVNode("img", {
               ref_key: "imageEl",
@@ -80457,8 +80539,8 @@ const _sfc_main$n = /* @__PURE__ */ defineComponent({
               (...args) => unref(handleImageError) && unref(handleImageError)(...args)),
               onDragstart: _cache2[2] || (_cache2[2] = withModifiers(() => {
               }, ["prevent"]))
-            }, null, 40, _hoisted_3$j),
-            unref(isLoading) ? (openBlock(), createElementBlock("div", _hoisted_4$h, toDisplayString$1(_ctx.$t("imageCrop.loading")), 1)) : createCommentVNode("", true),
+            }, null, 40, _hoisted_3$k),
+            unref(isLoading) ? (openBlock(), createElementBlock("div", _hoisted_4$i, toDisplayString$1(_ctx.$t("imageCrop.loading")), 1)) : createCommentVNode("", true),
             !unref(isLoading) ? (openBlock(), createElementBlock("div", {
               key: 1,
               class: "ctv:absolute ctv:box-content ctv:border-2 ctv:border-white ctv:cursor-move ctv:select-none ctv:shadow-[0_0_0_9999px_rgb(0_0_0/0.5)]",
@@ -80480,14 +80562,14 @@ const _sfc_main$n = /* @__PURE__ */ defineComponent({
                 (...args) => unref(handleResizeMove) && unref(handleResizeMove)(...args)),
                 onPointerup: _cache2[7] || (_cache2[7] = //@ts-ignore
                 (...args) => unref(handleResizeEnd) && unref(handleResizeEnd)(...args))
-              }, null, 46, _hoisted_5$g)), [
+              }, null, 46, _hoisted_5$h)), [
                 [vShow, !unref(isLoading)]
               ]);
             }), 128))
           ], 64))
         ], 512),
-        createBaseVNode("div", _hoisted_6$f, [
-          createBaseVNode("div", _hoisted_7$e, [
+        createBaseVNode("div", _hoisted_6$g, [
+          createBaseVNode("div", _hoisted_7$f, [
             createBaseVNode("span", _hoisted_8$e, toDisplayString$1(_ctx.$t("imageCrop.ratio")), 1),
             withDirectives(createBaseVNode("select", {
               "onUpdate:modelValue": _cache2[8] || (_cache2[8] = ($event) => /* @__PURE__ */ isRef(selectedRatio) ? selectedRatio.value = $event : null),
@@ -80539,11 +80621,11 @@ const _sfc_main$n = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const CropCanvas = /* @__PURE__ */ _export_sfc(_sfc_main$n, [["__scopeId", "data-v-c1cb98bb"]]);
+const CropCanvas = /* @__PURE__ */ _export_sfc(_sfc_main$o, [["__scopeId", "data-v-c1cb98bb"]]);
 function useTransformPipeline(options) {
   const {
     sourceImageUrl,
-    state,
+    state: state2,
     nodeId,
     compute,
     filenamePrefix = "comfytv-transform",
@@ -80600,7 +80682,7 @@ function useTransformPipeline(options) {
       const filename = `${filenamePrefix}-${nodeId}-${Date.now()}.png`;
       const viewUrl = await uploadBlob(blob, { subfolder, filename });
       if (mySeq !== computeSeq) return;
-      store.applyExecutedPayload(state, { output: [viewUrl] });
+      store.applyExecutedPayload(state2, { output: [viewUrl] });
     } catch (e) {
       console.error(`[ComfyTV/transform:${filenamePrefix}] compute failed`, e);
     } finally {
@@ -80618,25 +80700,25 @@ function useTransformPipeline(options) {
     requestRecompute
   };
 }
-const _hoisted_1$l = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
-const _hoisted_2$k = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_3$i = {
+const _hoisted_1$m = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
+const _hoisted_2$l = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_3$j = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_4$g = {
+const _hoisted_4$h = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_5$f = {
+const _hoisted_5$g = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_6$e = {
+const _hoisted_6$f = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
-const _sfc_main$m = /* @__PURE__ */ defineComponent({
+const _sfc_main$n = /* @__PURE__ */ defineComponent({
   __name: "CropStageCard",
   props: {
     state: {},
@@ -80714,14 +80796,14 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
       }
     }, { immediate: true });
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$l, [
+      return openBlock(), createElementBlock("div", _hoisted_1$m, [
         createVNode(CropCanvas, {
           "source-image-url": sourceImageUrl.value,
           bounds: bounds.value,
           "onUpdate:bounds": onBoundsUpdate
         }, null, 8, ["source-image-url", "bounds"]),
-        createBaseVNode("div", _hoisted_2$k, [
-          !sourceImageUrl.value ? (openBlock(), createElementBlock("span", _hoisted_3$i, toDisplayString$1(_ctx.$t("imageCrop.noInputImage")), 1)) : unref(computing) ? (openBlock(), createElementBlock("span", _hoisted_4$g, toDisplayString$1(_ctx.$t("imageCrop.applying")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_5$f, toDisplayString$1(_ctx.$t("imageCrop.applied")), 1)) : (openBlock(), createElementBlock("span", _hoisted_6$e, toDisplayString$1(_ctx.$t("imageCrop.adjustToApply")), 1))
+        createBaseVNode("div", _hoisted_2$l, [
+          !sourceImageUrl.value ? (openBlock(), createElementBlock("span", _hoisted_3$j, toDisplayString$1(_ctx.$t("imageCrop.noInputImage")), 1)) : unref(computing) ? (openBlock(), createElementBlock("span", _hoisted_4$h, toDisplayString$1(_ctx.$t("imageCrop.applying")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_5$g, toDisplayString$1(_ctx.$t("imageCrop.applied")), 1)) : (openBlock(), createElementBlock("span", _hoisted_6$f, toDisplayString$1(_ctx.$t("imageCrop.adjustToApply")), 1))
         ]),
         createVNode(StageCard, {
           state: __props.state,
@@ -80735,16 +80817,16 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$k = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
-const _hoisted_2$j = { class: "ctv:relative ctv:w-full ctv:h-[280px] ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle ctv:bg-black ctv:flex ctv:items-center ctv:justify-center" };
-const _hoisted_3$h = {
+const _hoisted_1$l = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
+const _hoisted_2$k = { class: "ctv:relative ctv:w-full ctv:h-[280px] ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle ctv:bg-black ctv:flex ctv:items-center ctv:justify-center" };
+const _hoisted_3$i = {
   key: 0,
   class: "ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50"
 };
-const _hoisted_4$f = { class: "ctv:text-xs" };
-const _hoisted_5$e = ["src"];
-const _hoisted_6$d = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_7$d = {
+const _hoisted_4$g = { class: "ctv:text-xs" };
+const _hoisted_5$f = ["src"];
+const _hoisted_6$e = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_7$e = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
@@ -80767,7 +80849,7 @@ const _hoisted_14$9 = ["value"];
 const _hoisted_15$9 = { class: "ctv:text-right ctv:text-base-foreground ctv:font-mono" };
 const _hoisted_16$8 = { class: "ctv:grid ctv:grid-cols-4 ctv:gap-1.5 ctv:text-xs" };
 const _hoisted_17$7 = ["onClick"];
-const _sfc_main$l = /* @__PURE__ */ defineComponent({
+const _sfc_main$m = /* @__PURE__ */ defineComponent({
   __name: "RotateStageCard",
   props: {
     state: {},
@@ -80831,11 +80913,11 @@ const _sfc_main$l = /* @__PURE__ */ defineComponent({
       return canvas;
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$k, [
-        createBaseVNode("div", _hoisted_2$j, [
-          !sourceImageUrl.value ? (openBlock(), createElementBlock("div", _hoisted_3$h, [
+      return openBlock(), createElementBlock("div", _hoisted_1$l, [
+        createBaseVNode("div", _hoisted_2$k, [
+          !sourceImageUrl.value ? (openBlock(), createElementBlock("div", _hoisted_3$i, [
             _cache2[2] || (_cache2[2] = createBaseVNode("i", { class: "pi pi-image ctv:text-[32px] ctv:opacity-60" }, null, -1)),
-            createBaseVNode("div", _hoisted_4$f, toDisplayString$1(_ctx.$t("imageCrop.noInputImage")), 1)
+            createBaseVNode("div", _hoisted_4$g, toDisplayString$1(_ctx.$t("imageCrop.noInputImage")), 1)
           ])) : (openBlock(), createElementBlock("img", {
             key: 1,
             src: sourceImageUrl.value,
@@ -80844,10 +80926,10 @@ const _sfc_main$l = /* @__PURE__ */ defineComponent({
             draggable: "false",
             onDragstart: _cache2[0] || (_cache2[0] = withModifiers(() => {
             }, ["prevent"]))
-          }, null, 44, _hoisted_5$e))
+          }, null, 44, _hoisted_5$f))
         ]),
-        createBaseVNode("div", _hoisted_6$d, [
-          !sourceImageUrl.value ? (openBlock(), createElementBlock("span", _hoisted_7$d, toDisplayString$1(_ctx.$t("imageCrop.noInputImage")), 1)) : unref(computing) ? (openBlock(), createElementBlock("span", _hoisted_8$d, toDisplayString$1(_ctx.$t("rotate.applying")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_9$d, toDisplayString$1(_ctx.$t("rotate.applied")), 1)) : (openBlock(), createElementBlock("span", _hoisted_10$d, toDisplayString$1(_ctx.$t("rotate.adjustToApply")), 1))
+        createBaseVNode("div", _hoisted_6$e, [
+          !sourceImageUrl.value ? (openBlock(), createElementBlock("span", _hoisted_7$e, toDisplayString$1(_ctx.$t("imageCrop.noInputImage")), 1)) : unref(computing) ? (openBlock(), createElementBlock("span", _hoisted_8$d, toDisplayString$1(_ctx.$t("rotate.applying")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_9$d, toDisplayString$1(_ctx.$t("rotate.applied")), 1)) : (openBlock(), createElementBlock("span", _hoisted_10$d, toDisplayString$1(_ctx.$t("rotate.adjustToApply")), 1))
         ]),
         createBaseVNode("div", _hoisted_11$c, [
           createBaseVNode("div", _hoisted_12$c, [
@@ -80886,16 +80968,16 @@ const _sfc_main$l = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$j = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
-const _hoisted_2$i = { class: "ctv:relative ctv:w-full ctv:h-[280px] ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle ctv:bg-black ctv:flex ctv:items-center ctv:justify-center" };
-const _hoisted_3$g = {
+const _hoisted_1$k = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
+const _hoisted_2$j = { class: "ctv:relative ctv:w-full ctv:h-[280px] ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle ctv:bg-black ctv:flex ctv:items-center ctv:justify-center" };
+const _hoisted_3$h = {
   key: 0,
   class: "ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50"
 };
-const _hoisted_4$e = { class: "ctv:text-xs" };
-const _hoisted_5$d = ["src"];
-const _hoisted_6$c = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5" };
-const _hoisted_7$c = {
+const _hoisted_4$f = { class: "ctv:text-xs" };
+const _hoisted_5$e = ["src"];
+const _hoisted_6$d = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5" };
+const _hoisted_7$d = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
@@ -80914,7 +80996,7 @@ const _hoisted_10$c = {
 const _hoisted_11$b = { class: "ctv:flex ctv:gap-1.5" };
 const _hoisted_12$b = ["title"];
 const _hoisted_13$9 = ["title"];
-const _sfc_main$k = /* @__PURE__ */ defineComponent({
+const _sfc_main$l = /* @__PURE__ */ defineComponent({
   __name: "MirrorStageCard",
   props: {
     state: {},
@@ -80982,11 +81064,11 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
       return canvas;
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$j, [
-        createBaseVNode("div", _hoisted_2$i, [
-          !sourceImageUrl.value ? (openBlock(), createElementBlock("div", _hoisted_3$g, [
+      return openBlock(), createElementBlock("div", _hoisted_1$k, [
+        createBaseVNode("div", _hoisted_2$j, [
+          !sourceImageUrl.value ? (openBlock(), createElementBlock("div", _hoisted_3$h, [
             _cache2[3] || (_cache2[3] = createBaseVNode("i", { class: "pi pi-image ctv:text-[32px] ctv:opacity-60" }, null, -1)),
-            createBaseVNode("div", _hoisted_4$e, toDisplayString$1(_ctx.$t("imageCrop.noInputImage")), 1)
+            createBaseVNode("div", _hoisted_4$f, toDisplayString$1(_ctx.$t("imageCrop.noInputImage")), 1)
           ])) : (openBlock(), createElementBlock("img", {
             key: 1,
             src: sourceImageUrl.value,
@@ -80995,10 +81077,10 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
             draggable: "false",
             onDragstart: _cache2[0] || (_cache2[0] = withModifiers(() => {
             }, ["prevent"]))
-          }, null, 44, _hoisted_5$d))
+          }, null, 44, _hoisted_5$e))
         ]),
-        createBaseVNode("div", _hoisted_6$c, [
-          !sourceImageUrl.value ? (openBlock(), createElementBlock("span", _hoisted_7$c, toDisplayString$1(_ctx.$t("imageCrop.noInputImage")), 1)) : unref(computing) ? (openBlock(), createElementBlock("span", _hoisted_8$c, toDisplayString$1(_ctx.$t("mirror.applying")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_9$c, toDisplayString$1(_ctx.$t("mirror.applied")), 1)) : (openBlock(), createElementBlock("span", _hoisted_10$c, toDisplayString$1(_ctx.$t("mirror.adjustToApply")), 1))
+        createBaseVNode("div", _hoisted_6$d, [
+          !sourceImageUrl.value ? (openBlock(), createElementBlock("span", _hoisted_7$d, toDisplayString$1(_ctx.$t("imageCrop.noInputImage")), 1)) : unref(computing) ? (openBlock(), createElementBlock("span", _hoisted_8$c, toDisplayString$1(_ctx.$t("mirror.applying")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_9$c, toDisplayString$1(_ctx.$t("mirror.applied")), 1)) : (openBlock(), createElementBlock("span", _hoisted_10$c, toDisplayString$1(_ctx.$t("mirror.adjustToApply")), 1))
         ]),
         createBaseVNode("div", _hoisted_11$b, [
           createBaseVNode("button", {
@@ -81032,9 +81114,9 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$i = { class: "ctv-gradient-row" };
-const _hoisted_2$h = { class: "ctv-gradient-value" };
-const _sfc_main$j = /* @__PURE__ */ defineComponent({
+const _hoisted_1$j = { class: "ctv-gradient-row" };
+const _hoisted_2$i = { class: "ctv-gradient-value" };
+const _sfc_main$k = /* @__PURE__ */ defineComponent({
   __name: "GradientSlider",
   props: {
     modelValue: {},
@@ -81098,7 +81180,7 @@ const _sfc_main$j = /* @__PURE__ */ defineComponent({
       if (typeof v === "number" && Number.isFinite(v)) emit2("commit", v);
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$i, [
+      return openBlock(), createElementBlock("div", _hoisted_1$j, [
         createVNode(unref(SliderRoot_default), {
           class: "ctv-gradient-root",
           "model-value": [clamped.value],
@@ -81122,12 +81204,12 @@ const _sfc_main$j = /* @__PURE__ */ defineComponent({
           ]),
           _: 1
         }, 8, ["model-value", "min", "max", "step", "disabled"]),
-        createBaseVNode("span", _hoisted_2$h, toDisplayString$1(display.value), 1)
+        createBaseVNode("span", _hoisted_2$i, toDisplayString$1(display.value), 1)
       ]);
     };
   }
 });
-const GradientSlider = /* @__PURE__ */ _export_sfc(_sfc_main$j, [["__scopeId", "data-v-5e3f6fea"]]);
+const GradientSlider = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["__scopeId", "data-v-5e3f6fea"]]);
 const CURVE_INTERPOLATIONS = ["monotone_cubic", "linear"];
 function identityCurve() {
   return { points: [[0, 0], [1, 1]], interpolation: "monotone_cubic" };
@@ -81349,11 +81431,11 @@ function useCurveEditor({
     startDrag
   };
 }
-const _hoisted_1$h = ["y1", "y2"];
-const _hoisted_2$g = ["x1", "x2"];
-const _hoisted_3$f = ["d", "stroke", "opacity"];
-const _hoisted_4$d = ["cx", "cy", "fill", "onPointerdown"];
-const _sfc_main$i = /* @__PURE__ */ defineComponent({
+const _hoisted_1$i = ["y1", "y2"];
+const _hoisted_2$h = ["x1", "x2"];
+const _hoisted_3$g = ["d", "stroke", "opacity"];
+const _hoisted_4$e = ["cx", "cy", "fill", "onPointerdown"];
+const _sfc_main$j = /* @__PURE__ */ defineComponent({
   __name: "CurveEditor",
   props: /* @__PURE__ */ mergeModels({
     curveColor: { default: "white" },
@@ -81396,7 +81478,7 @@ const _sfc_main$i = /* @__PURE__ */ defineComponent({
             stroke: "currentColor",
             "stroke-opacity": "0.1",
             "stroke-width": "0.003"
-          }, null, 8, _hoisted_1$h);
+          }, null, 8, _hoisted_1$i);
         }), 64)),
         (openBlock(), createElementBlock(Fragment$1, null, renderList([0.25, 0.5, 0.75], (v) => {
           return createBaseVNode("line", {
@@ -81408,7 +81490,7 @@ const _sfc_main$i = /* @__PURE__ */ defineComponent({
             stroke: "currentColor",
             "stroke-opacity": "0.1",
             "stroke-width": "0.003"
-          }, null, 8, _hoisted_2$g);
+          }, null, 8, _hoisted_2$h);
         }), 64)),
         _cache2[1] || (_cache2[1] = createBaseVNode("line", {
           x1: "0",
@@ -81426,7 +81508,7 @@ const _sfc_main$i = /* @__PURE__ */ defineComponent({
           "stroke-width": "0.008",
           "stroke-linecap": "round",
           opacity: __props.disabled ? 0.5 : 1
-        }, null, 8, _hoisted_3$f),
+        }, null, 8, _hoisted_3$g),
         !__props.disabled ? (openBlock(true), createElementBlock(Fragment$1, { key: 0 }, renderList(modelValue.value, (point, i) => {
           return openBlock(), createElementBlock("circle", {
             key: i,
@@ -81438,13 +81520,13 @@ const _sfc_main$i = /* @__PURE__ */ defineComponent({
             "stroke-width": "0.004",
             class: "ctv-curve-point",
             onPointerdown: withModifiers(($event) => unref(startDrag)(i, $event), ["stop"])
-          }, null, 40, _hoisted_4$d);
+          }, null, 40, _hoisted_4$e);
         }), 128)) : createCommentVNode("", true)
       ], 34);
     };
   }
 });
-const CurveEditor = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["__scopeId", "data-v-412edb45"]]);
+const CurveEditor = /* @__PURE__ */ _export_sfc(_sfc_main$j, [["__scopeId", "data-v-412edb45"]]);
 const brightnessContrast = "#version 300 es\r\nprecision highp float;\r\n\r\nuniform sampler2D u_image0;\r\nuniform float u_float0; // Brightness slider -100..100\r\nuniform float u_float1; // Contrast slider -100..100\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nconst float MID_GRAY = 0.18;  // 18% reflectance\r\n\r\n// sRGB gamma 2.2 approximation\r\nvec3 srgbToLinear(vec3 c) {\r\n    return pow(max(c, 0.0), vec3(2.2));\r\n}\r\n\r\nvec3 linearToSrgb(vec3 c) {\r\n    return pow(max(c, 0.0), vec3(1.0/2.2));\r\n}\r\n\r\nfloat mapBrightness(float b) {\r\n    return clamp(b / 100.0, -1.0, 1.0);\r\n}\r\n\r\nfloat mapContrast(float c) {\r\n    return clamp(c / 100.0 + 1.0, 0.0, 2.0);\r\n}\r\n\r\nvoid main() {\r\n    vec4 orig = texture(u_image0, v_texCoord);\r\n\r\n    float brightness = mapBrightness(u_float0);\r\n    float contrast   = mapContrast(u_float1);\r\n\r\n    vec3 lin = srgbToLinear(orig.rgb);\r\n\r\n    lin = (lin - MID_GRAY) * contrast + brightness + MID_GRAY;\r\n\r\n    // Convert back to sRGB\r\n    vec3 result = linearToSrgb(clamp(lin, 0.0, 1.0));\r\n\r\n    fragColor = vec4(result, orig.a);\r\n}\r\n";
 const colorAdjustment = "#version 300 es\r\nprecision highp float;\r\n\r\nuniform sampler2D u_image0;\r\nuniform float u_float0; // temperature (-100 to 100)\r\nuniform float u_float1; // tint (-100 to 100)\r\nuniform float u_float2; // vibrance (-100 to 100)\r\nuniform float u_float3; // saturation (-100 to 100)\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nconst float INPUT_SCALE = 0.01;\r\nconst float TEMP_TINT_PRIMARY = 0.3;\r\nconst float TEMP_TINT_SECONDARY = 0.15;\r\nconst float VIBRANCE_BOOST = 2.0;\r\nconst float SATURATION_BOOST = 2.0;\r\nconst float SKIN_PROTECTION = 0.5;\r\nconst float EPSILON = 0.001;\r\nconst vec3 LUMA_WEIGHTS = vec3(0.299, 0.587, 0.114);\r\n\r\nvoid main() {\r\n    vec4 tex = texture(u_image0, v_texCoord);\r\n    vec3 color = tex.rgb;\r\n    \r\n    // Scale inputs: -100/100 → -1/1\r\n    float temperature = u_float0 * INPUT_SCALE;\r\n    float tint = u_float1 * INPUT_SCALE;\r\n    float vibrance = u_float2 * INPUT_SCALE;\r\n    float saturation = u_float3 * INPUT_SCALE;\r\n    \r\n    // Temperature (warm/cool): positive = warm, negative = cool\r\n    color.r += temperature * TEMP_TINT_PRIMARY;\r\n    color.b -= temperature * TEMP_TINT_PRIMARY;\r\n    \r\n    // Tint (green/magenta): positive = green, negative = magenta\r\n    color.g += tint * TEMP_TINT_PRIMARY;\r\n    color.r -= tint * TEMP_TINT_SECONDARY;\r\n    color.b -= tint * TEMP_TINT_SECONDARY;\r\n    \r\n    // Single clamp after temperature/tint\r\n    color = clamp(color, 0.0, 1.0);\r\n    \r\n    // Vibrance with skin protection\r\n    if (vibrance != 0.0) {\r\n        float maxC = max(color.r, max(color.g, color.b));\r\n        float minC = min(color.r, min(color.g, color.b));\r\n        float sat = maxC - minC;\r\n        float gray = dot(color, LUMA_WEIGHTS);\r\n        \r\n        if (vibrance < 0.0) {\r\n            // Desaturate: -100 → gray\r\n            color = mix(vec3(gray), color, 1.0 + vibrance);\r\n        } else {\r\n            // Boost less saturated colors more\r\n            float vibranceAmt = vibrance * (1.0 - sat);\r\n            \r\n            // Branchless skin tone protection\r\n            float isWarmTone = step(color.b, color.g) * step(color.g, color.r);\r\n            float warmth = (color.r - color.b) / max(maxC, EPSILON);\r\n            float skinTone = isWarmTone * warmth * sat * (1.0 - sat);\r\n            vibranceAmt *= (1.0 - skinTone * SKIN_PROTECTION);\r\n            \r\n            color = mix(vec3(gray), color, 1.0 + vibranceAmt * VIBRANCE_BOOST);\r\n        }\r\n    }\r\n    \r\n    // Saturation\r\n    if (saturation != 0.0) {\r\n        float gray = dot(color, LUMA_WEIGHTS);\r\n        float satMix = saturation < 0.0\r\n            ? 1.0 + saturation                      // -100 → gray\r\n            : 1.0 + saturation * SATURATION_BOOST;  // +100 → 3x boost\r\n        color = mix(vec3(gray), color, satMix);\r\n    }\r\n    \r\n    fragColor = vec4(clamp(color, 0.0, 1.0), tex.a);\r\n}";
 const colorBalance = "#version 300 es\r\nprecision highp float;\r\n\r\nuniform sampler2D u_image0;\r\nuniform float u_float0;\r\nuniform float u_float1;\r\nuniform float u_float2;\r\nuniform float u_float3;\r\nuniform float u_float4;\r\nuniform float u_float5;\r\nuniform float u_float6;\r\nuniform float u_float7;\r\nuniform float u_float8;\r\nuniform bool u_bool0;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nvec3 rgb2hsl(vec3 c) {\r\n    float maxC = max(c.r, max(c.g, c.b));\r\n    float minC = min(c.r, min(c.g, c.b));\r\n    float l = (maxC + minC) * 0.5;\r\n    if (maxC == minC) return vec3(0.0, 0.0, l);\r\n    float d = maxC - minC;\r\n    float s = l > 0.5 ? d / (2.0 - maxC - minC) : d / (maxC + minC);\r\n    float h;\r\n    if (maxC == c.r) {\r\n        h = (c.g - c.b) / d + (c.g < c.b ? 6.0 : 0.0);\r\n    } else if (maxC == c.g) {\r\n        h = (c.b - c.r) / d + 2.0;\r\n    } else {\r\n        h = (c.r - c.g) / d + 4.0;\r\n    }\r\n    h /= 6.0;\r\n    return vec3(h, s, l);\r\n}\r\n\r\nfloat hue2rgb(float p, float q, float t) {\r\n    if (t < 0.0) t += 1.0;\r\n    if (t > 1.0) t -= 1.0;\r\n    if (t < 1.0 / 6.0) return p + (q - p) * 6.0 * t;\r\n    if (t < 1.0 / 2.0) return q;\r\n    if (t < 2.0 / 3.0) return p + (q - p) * (2.0 / 3.0 - t) * 6.0;\r\n    return p;\r\n}\r\n\r\nvec3 hsl2rgb(vec3 hsl) {\r\n    float h = hsl.x, s = hsl.y, l = hsl.z;\r\n    if (s == 0.0) return vec3(l);\r\n    float q = l < 0.5 ? l * (1.0 + s) : l + s - l * s;\r\n    float p = 2.0 * l - q;\r\n    return vec3(\r\n        hue2rgb(p, q, h + 1.0 / 3.0),\r\n        hue2rgb(p, q, h),\r\n        hue2rgb(p, q, h - 1.0 / 3.0)\r\n    );\r\n}\r\n\r\nvoid main() {\r\n    vec4 tex = texture(u_image0, v_texCoord);\r\n    vec3 color = tex.rgb;\r\n\r\n    vec3 shadows = vec3(u_float0, u_float1, u_float2) * 0.01;\r\n    vec3 midtones = vec3(u_float3, u_float4, u_float5) * 0.01;\r\n    vec3 highlights = vec3(u_float6, u_float7, u_float8) * 0.01;\r\n\r\n    float maxC = max(color.r, max(color.g, color.b));\r\n    float minC = min(color.r, min(color.g, color.b));\r\n    float lightness = (maxC + minC) * 0.5;\r\n\r\n    // GIMP weight curves: linear ramps with constants a=0.25, b=0.333, scale=0.7\r\n    const float a = 0.25;\r\n    const float b = 0.333;\r\n    const float scale = 0.7;\r\n\r\n    float sw = clamp((lightness - b) / -a + 0.5, 0.0, 1.0) * scale;\r\n    float mw = clamp((lightness - b) / a + 0.5, 0.0, 1.0) *\r\n               clamp((lightness + b - 1.0) / -a + 0.5, 0.0, 1.0) * scale;\r\n    float hw = clamp((lightness + b - 1.0) / a + 0.5, 0.0, 1.0) * scale;\r\n\r\n    color += sw * shadows + mw * midtones + hw * highlights;\r\n\r\n    if (u_bool0) {\r\n        vec3 hsl = rgb2hsl(clamp(color, 0.0, 1.0));\r\n        hsl.z = lightness;\r\n        color = hsl2rgb(hsl);\r\n    }\r\n\r\n    fragColor = vec4(clamp(color, 0.0, 1.0), tex.a);\r\n}\r\n";
@@ -82088,16 +82170,16 @@ class GradeRenderer {
     this.ready = false;
   }
 }
-const _hoisted_1$g = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
-const _hoisted_2$f = { class: "ctv:grid ctv:grid-cols-[64px_1fr] ctv:items-center ctv:gap-1.5 ctv:text-xs" };
-const _hoisted_3$e = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wider ctv:text-muted-foreground" };
-const _hoisted_4$c = { class: "ctv:relative ctv:w-full ctv:h-[260px] ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle ctv:bg-black ctv:flex ctv:items-center ctv:justify-center" };
-const _hoisted_5$c = {
+const _hoisted_1$h = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
+const _hoisted_2$g = { class: "ctv:grid ctv:grid-cols-[64px_1fr] ctv:items-center ctv:gap-1.5 ctv:text-xs" };
+const _hoisted_3$f = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wider ctv:text-muted-foreground" };
+const _hoisted_4$d = { class: "ctv:relative ctv:w-full ctv:h-[260px] ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle ctv:bg-black ctv:flex ctv:items-center ctv:justify-center" };
+const _hoisted_5$d = {
   key: 0,
   class: "ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50"
 };
-const _hoisted_6$b = { class: "ctv:text-xs" };
-const _hoisted_7$b = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_6$c = { class: "ctv:text-xs" };
+const _hoisted_7$c = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
 const _hoisted_8$b = {
   key: 0,
   class: "ctv:text-error-background"
@@ -82127,7 +82209,7 @@ const _hoisted_15$8 = ["onClick"];
 const _hoisted_16$7 = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
 const _hoisted_17$6 = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wider ctv:text-muted-foreground ctv:truncate" };
 const WIDGET = "grade_state";
-const _sfc_main$h = /* @__PURE__ */ defineComponent({
+const _sfc_main$i = /* @__PURE__ */ defineComponent({
   __name: "ColorGradeStageCard",
   props: {
     state: {},
@@ -82303,19 +82385,19 @@ const _sfc_main$h = /* @__PURE__ */ defineComponent({
       grade.dispose();
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$g, [
-        createBaseVNode("div", _hoisted_2$f, [
-          createBaseVNode("span", _hoisted_3$e, toDisplayString$1(_ctx.$t("colorGrade.effect")), 1),
-          createVNode(_sfc_main$M, {
+      return openBlock(), createElementBlock("div", _hoisted_1$h, [
+        createBaseVNode("div", _hoisted_2$g, [
+          createBaseVNode("span", _hoisted_3$f, toDisplayString$1(_ctx.$t("colorGrade.effect")), 1),
+          createVNode(_sfc_main$N, {
             "model-value": effectId.value,
             options: effectOptions.value,
             "onUpdate:modelValue": _cache2[0] || (_cache2[0] = (v) => onEffectChange(String(v)))
           }, null, 8, ["model-value", "options"])
         ]),
-        createBaseVNode("div", _hoisted_4$c, [
-          !sourceImageUrl.value ? (openBlock(), createElementBlock("div", _hoisted_5$c, [
+        createBaseVNode("div", _hoisted_4$d, [
+          !sourceImageUrl.value ? (openBlock(), createElementBlock("div", _hoisted_5$d, [
             _cache2[2] || (_cache2[2] = createBaseVNode("i", { class: "pi pi-image ctv:text-[32px] ctv:opacity-60" }, null, -1)),
-            createBaseVNode("div", _hoisted_6$b, toDisplayString$1(_ctx.$t("colorGrade.noInputImage")), 1)
+            createBaseVNode("div", _hoisted_6$c, toDisplayString$1(_ctx.$t("colorGrade.noInputImage")), 1)
           ])) : createCommentVNode("", true),
           withDirectives(createBaseVNode("canvas", {
             ref_key: "previewCanvas",
@@ -82325,7 +82407,7 @@ const _sfc_main$h = /* @__PURE__ */ defineComponent({
             [vShow, sourceImageUrl.value]
           ])
         ]),
-        createBaseVNode("div", _hoisted_7$b, [
+        createBaseVNode("div", _hoisted_7$c, [
           renderError.value ? (openBlock(), createElementBlock("span", _hoisted_8$b, toDisplayString$1(renderError.value), 1)) : !sourceImageUrl.value ? (openBlock(), createElementBlock("span", _hoisted_9$b, toDisplayString$1(_ctx.$t("colorGrade.noInputImage")), 1)) : unref(computing) ? (openBlock(), createElementBlock("span", _hoisted_10$b, toDisplayString$1(_ctx.$t("colorGrade.applying")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_11$a, toDisplayString$1(_ctx.$t("colorGrade.applied")), 1)) : (openBlock(), createElementBlock("span", _hoisted_12$a, toDisplayString$1(_ctx.$t("colorGrade.adjustToApply")), 1))
         ]),
         curveUniforms.value.length ? (openBlock(), createElementBlock("div", _hoisted_13$8, [
@@ -82360,12 +82442,12 @@ const _sfc_main$h = /* @__PURE__ */ defineComponent({
               class: "ctv:grid ctv:grid-cols-[88px_1fr] ctv:items-center ctv:gap-1.5 ctv:text-xs"
             }, [
               createBaseVNode("span", _hoisted_17$6, toDisplayString$1(_ctx.$t(u.labelKey)), 1),
-              u.options ? (openBlock(), createBlock(_sfc_main$M, {
+              u.options ? (openBlock(), createBlock(_sfc_main$N, {
                 key: 0,
                 "model-value": String(num(u.key)),
                 options: optionList(u),
                 "onUpdate:modelValue": (v) => setValueCommit(u.key, Number(v))
-              }, null, 8, ["model-value", "options", "onUpdate:modelValue"])) : u.kind === "bool" ? (openBlock(), createBlock(_sfc_main$K, {
+              }, null, 8, ["model-value", "options", "onUpdate:modelValue"])) : u.kind === "bool" ? (openBlock(), createBlock(_sfc_main$L, {
                 key: 1,
                 "model-value": bool(u.key),
                 "onUpdate:modelValue": (v) => setValueCommit(u.key, v)
@@ -82379,7 +82461,7 @@ const _sfc_main$h = /* @__PURE__ */ defineComponent({
                 precision: (u.step ?? 1) < 1 ? void 0 : 0,
                 "onUpdate:modelValue": (v) => setValueByKey(u.key, v),
                 onCommit: commitNow
-              }, null, 8, ["model-value", "stops", "min", "max", "step", "precision", "onUpdate:modelValue"])) : (openBlock(), createBlock(_sfc_main$w, {
+              }, null, 8, ["model-value", "stops", "min", "max", "step", "precision", "onUpdate:modelValue"])) : (openBlock(), createBlock(_sfc_main$x, {
                 key: 3,
                 "model-value": num(u.key),
                 min: u.min ?? 0,
@@ -85548,26 +85630,26 @@ async function capturePanoramaOffscreen(url, options) {
   geo.dispose();
   return out;
 }
-const _hoisted_1$f = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full" };
-const _hoisted_2$e = {
+const _hoisted_1$g = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full" };
+const _hoisted_2$f = {
   key: 0,
   class: "ctv:absolute ctv:inset-0 ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50 ctv:pointer-events-none"
 };
-const _hoisted_3$d = { class: "ctv:text-xs" };
-const _hoisted_4$b = {
+const _hoisted_3$e = { class: "ctv:text-xs" };
+const _hoisted_4$c = {
   key: 1,
   class: "ctv:absolute ctv:inset-0 ctv:flex ctv:items-center ctv:justify-center ctv:text-[11px] ctv:bg-destructive-background/30 ctv:text-destructive-background ctv:pointer-events-none"
 };
-const _hoisted_5$b = { class: "ctv:flex ctv:flex-wrap ctv:gap-1.5 ctv:items-center" };
-const _hoisted_6$a = ["disabled"];
-const _hoisted_7$a = { key: 0 };
+const _hoisted_5$c = { class: "ctv:flex ctv:flex-wrap ctv:gap-1.5 ctv:items-center" };
+const _hoisted_6$b = ["disabled"];
+const _hoisted_7$b = { key: 0 };
 const _hoisted_8$a = { key: 1 };
 const _hoisted_9$a = ["title"];
 const _hoisted_10$a = {
   key: 1,
   class: "ctv:text-2xs ctv:py-0.5 ctv:px-1.5 ctv:rounded-lg ctv:tracking-wide ctv:bg-primary-background/20 ctv:text-primary-background"
 };
-const _sfc_main$g = /* @__PURE__ */ defineComponent({
+const _sfc_main$h = /* @__PURE__ */ defineComponent({
   __name: "PanoramaCanvas",
   props: {
     panoramaUrl: {},
@@ -85625,21 +85707,21 @@ const _sfc_main$g = /* @__PURE__ */ defineComponent({
       emit2("manual-source-cleared");
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$f, [
+      return openBlock(), createElementBlock("div", _hoisted_1$g, [
         createBaseVNode("div", {
           ref_key: "containerEl",
           ref: containerEl,
           class: "ctv:relative ctv:w-full ctv:h-80 ctv:rounded-md ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle"
         }, [
-          !__props.panoramaUrl ? (openBlock(), createElementBlock("div", _hoisted_2$e, [
+          !__props.panoramaUrl ? (openBlock(), createElementBlock("div", _hoisted_2$f, [
             _cache2[1] || (_cache2[1] = createBaseVNode("div", { class: "ctv:text-[32px] ctv:opacity-60" }, [
               createBaseVNode("i", { class: "pi pi-globe" })
             ], -1)),
-            createBaseVNode("div", _hoisted_3$d, toDisplayString$1(_ctx.$t("panorama.empty")), 1)
+            createBaseVNode("div", _hoisted_3$e, toDisplayString$1(_ctx.$t("panorama.empty")), 1)
           ])) : createCommentVNode("", true),
-          loadError.value ? (openBlock(), createElementBlock("div", _hoisted_4$b, toDisplayString$1(_ctx.$t("panorama.loadError")), 1)) : createCommentVNode("", true)
+          loadError.value ? (openBlock(), createElementBlock("div", _hoisted_4$c, toDisplayString$1(_ctx.$t("panorama.loadError")), 1)) : createCommentVNode("", true)
         ], 512),
-        createBaseVNode("div", _hoisted_5$b, [
+        createBaseVNode("div", _hoisted_5$c, [
           createBaseVNode("input", {
             ref_key: "fileInputEl",
             ref: fileInputEl,
@@ -85657,11 +85739,11 @@ const _sfc_main$g = /* @__PURE__ */ defineComponent({
               return (_a2 = fileInputEl.value) == null ? void 0 : _a2.click();
             })
           }, [
-            uploading.value ? (openBlock(), createElementBlock("span", _hoisted_7$a, toDisplayString$1(_ctx.$t("panorama.uploading")), 1)) : (openBlock(), createElementBlock("span", _hoisted_8$a, [
+            uploading.value ? (openBlock(), createElementBlock("span", _hoisted_7$b, toDisplayString$1(_ctx.$t("panorama.uploading")), 1)) : (openBlock(), createElementBlock("span", _hoisted_8$a, [
               _cache2[2] || (_cache2[2] = createBaseVNode("i", { class: "pi pi-upload" }, null, -1)),
               createTextVNode(" " + toDisplayString$1(_ctx.$t("panorama.upload")), 1)
             ]))
-          ], 8, _hoisted_6$a),
+          ], 8, _hoisted_6$b),
           __props.manualSource ? (openBlock(), createElementBlock("button", {
             key: 0,
             type: "button",
@@ -85678,8 +85760,8 @@ const _sfc_main$g = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$e = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
-const _sfc_main$f = /* @__PURE__ */ defineComponent({
+const _hoisted_1$f = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
+const _sfc_main$g = /* @__PURE__ */ defineComponent({
   __name: "PanoramaStageCard",
   props: {
     state: {},
@@ -85737,8 +85819,8 @@ const _sfc_main$f = /* @__PURE__ */ defineComponent({
       { immediate: true }
     );
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$e, [
-        createVNode(_sfc_main$g, {
+      return openBlock(), createElementBlock("div", _hoisted_1$f, [
+        createVNode(_sfc_main$h, {
           "panorama-url": visibleUrl.value,
           "manual-source": manualSource.value,
           onManualSourceChanged,
@@ -85816,10 +85898,10 @@ function captureDimensions(aspect2, resolution) {
   };
 }
 const SCHEDULE_DELAY_MS$2 = 250;
-function useCurrentViewCapture(node, state, viewerHostEl, aspectRatio, resolution) {
+function useCurrentViewCapture(node, state2, viewerHostEl, aspectRatio, resolution) {
   const store = useStageStore();
   const panoramaUrl = computed(() => {
-    const inp = state.inputs.find((i) => i.slot === "panorama");
+    const inp = state2.inputs.find((i) => i.slot === "panorama");
     return inp && inp.source === "upstream" && inp.content ? inp.content : null;
   });
   const capturing = /* @__PURE__ */ ref(false);
@@ -85853,7 +85935,7 @@ function useCurrentViewCapture(node, state, viewerHostEl, aspectRatio, resolutio
         filename: `comfytv-pano-view-${nodeId}-${Date.now()}.png`
       });
       if (mySeq !== captureSeq) return;
-      store.applyExecutedPayload(state, { output: [viewUrl] });
+      store.applyExecutedPayload(state2, { output: [viewUrl] });
     } catch (e) {
       console.error("[ComfyTV/PanoramaCurrentView] capture failed", e);
     } finally {
@@ -85906,16 +85988,16 @@ function useCurrentViewCapture(node, state, viewerHostEl, aspectRatio, resolutio
     captureSize
   };
 }
-const _hoisted_1$d = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
-const _hoisted_2$d = { class: "ctv:flex ctv:items-center ctv:justify-center ctv:w-full" };
-const _hoisted_3$c = {
+const _hoisted_1$e = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
+const _hoisted_2$e = { class: "ctv:flex ctv:items-center ctv:justify-center ctv:w-full" };
+const _hoisted_3$d = {
   key: 0,
   class: "ctv:absolute ctv:inset-0 ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50 ctv:pointer-events-none"
 };
-const _hoisted_4$a = { class: "ctv:text-xs ctv:text-center ctv:px-3" };
-const _hoisted_5$a = { class: "ctv:flex ctv:items-center ctv:gap-2 ctv:flex-wrap" };
-const _hoisted_6$9 = { class: "ctv:flex ctv:items-center ctv:gap-1" };
-const _hoisted_7$9 = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_4$b = { class: "ctv:text-xs ctv:text-center ctv:px-3" };
+const _hoisted_5$b = { class: "ctv:flex ctv:items-center ctv:gap-2 ctv:flex-wrap" };
+const _hoisted_6$a = { class: "ctv:flex ctv:items-center ctv:gap-1" };
+const _hoisted_7$a = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_8$9 = { class: "ctv-pano-select-wrap" };
 const _hoisted_9$9 = ["value"];
 const _hoisted_10$9 = { class: "ctv:flex ctv:items-center ctv:gap-1" };
@@ -85941,7 +86023,7 @@ const _hoisted_19$5 = {
   class: "ctv:text-muted-foreground"
 };
 const VIEWER_HEIGHT_PX = 300;
-const _sfc_main$e = /* @__PURE__ */ defineComponent({
+const _sfc_main$f = /* @__PURE__ */ defineComponent({
   __name: "PanoramaCurrentViewStageCard",
   props: {
     state: {},
@@ -85971,23 +86053,23 @@ const _sfc_main$e = /* @__PURE__ */ defineComponent({
       };
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$d, [
-        createBaseVNode("div", _hoisted_2$d, [
+      return openBlock(), createElementBlock("div", _hoisted_1$e, [
+        createBaseVNode("div", _hoisted_2$e, [
           createBaseVNode("div", {
             ref_key: "viewerHostEl",
             ref: viewerHostEl,
             class: "ctv:relative ctv:max-w-full ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle ctv:bg-black",
             style: normalizeStyle(viewerStyle.value)
           }, [
-            !unref(panoramaUrl) ? (openBlock(), createElementBlock("div", _hoisted_3$c, [
+            !unref(panoramaUrl) ? (openBlock(), createElementBlock("div", _hoisted_3$d, [
               _cache2[2] || (_cache2[2] = createBaseVNode("i", { class: "pi pi-globe ctv:text-[32px] ctv:opacity-60" }, null, -1)),
-              createBaseVNode("div", _hoisted_4$a, toDisplayString$1(_ctx.$t("panoramaView.connectPanorama")), 1)
+              createBaseVNode("div", _hoisted_4$b, toDisplayString$1(_ctx.$t("panoramaView.connectPanorama")), 1)
             ])) : createCommentVNode("", true)
           ], 4)
         ]),
-        createBaseVNode("div", _hoisted_5$a, [
-          createBaseVNode("div", _hoisted_6$9, [
-            createBaseVNode("span", _hoisted_7$9, toDisplayString$1(_ctx.$t("panoramaView.aspect")), 1),
+        createBaseVNode("div", _hoisted_5$b, [
+          createBaseVNode("div", _hoisted_6$a, [
+            createBaseVNode("span", _hoisted_7$a, toDisplayString$1(_ctx.$t("panoramaView.aspect")), 1),
             createBaseVNode("span", _hoisted_8$9, [
               withDirectives(createBaseVNode("select", {
                 "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => aspectRatio.value = $event),
@@ -86043,14 +86125,14 @@ const _sfc_main$e = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const PanoramaCurrentViewStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["__scopeId", "data-v-0db49e33"]]);
+const PanoramaCurrentViewStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$f, [["__scopeId", "data-v-0db49e33"]]);
 const SCHEDULE_DELAY_MS$1 = 350;
 const MIN_VIEWS = 2;
 const MAX_VIEWS = 24;
-function useMultiViewCapture(node, state, viewCount, aspectRatio, resolution) {
+function useMultiViewCapture(node, state2, viewCount, aspectRatio, resolution) {
   const store = useStageStore();
   const panoramaUrl = computed(() => {
-    const inp = state.inputs.find((i) => i.slot === "panorama");
+    const inp = state2.inputs.find((i) => i.slot === "panorama");
     return inp && inp.source === "upstream" && inp.content ? inp.content : null;
   });
   const vcw = getWidget(node, "view_count");
@@ -86111,10 +86193,10 @@ function useMultiViewCapture(node, state, viewCount, aspectRatio, resolution) {
         captureProgress.value = i + 1;
       }
       if (mySeq !== captureSeq) return;
-      store.applyExecutedPayload(state, { output: [JSON.stringify({ images: items })] });
+      store.applyExecutedPayload(state2, { output: [JSON.stringify({ images: items })] });
     } catch (e) {
       console.error("[ComfyTV/PanoramaMultiView] capture failed", e);
-      store.applyExecutionError(state, {
+      store.applyExecutionError(state2, {
         message: String((e == null ? void 0 : e.message) || e || "panorama multi-view capture failed"),
         type: "PanoramaMultiViewCaptureFailed"
       });
@@ -86142,25 +86224,25 @@ function useMultiViewCapture(node, state, viewCount, aspectRatio, resolution) {
     captureSize
   };
 }
-const _hoisted_1$c = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
-const _hoisted_2$c = { class: "ctv:text-[11px] ctv:text-center ctv:py-1" };
-const _hoisted_3$b = {
+const _hoisted_1$d = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
+const _hoisted_2$d = { class: "ctv:text-[11px] ctv:text-center ctv:py-1" };
+const _hoisted_3$c = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_4$9 = {
+const _hoisted_4$a = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_5$9 = {
+const _hoisted_5$a = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_6$8 = {
+const _hoisted_6$9 = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_7$8 = { class: "ctv:flex ctv:items-center ctv:gap-2 ctv:flex-wrap" };
+const _hoisted_7$9 = { class: "ctv:flex ctv:items-center ctv:gap-2 ctv:flex-wrap" };
 const _hoisted_8$8 = { class: "ctv:flex ctv:items-center ctv:gap-1" };
 const _hoisted_9$8 = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_10$8 = { class: "ctv-pano-select-wrap" };
@@ -86174,7 +86256,7 @@ const _hoisted_17$4 = { class: "ctv:grid ctv:grid-cols-[80px_1fr_36px] ctv:items
 const _hoisted_18$4 = { class: "ctv:text-xs ctv:text-muted-foreground" };
 const _hoisted_19$4 = ["value", "disabled"];
 const _hoisted_20$4 = { class: "ctv:text-right ctv:text-xs ctv:font-mono ctv:text-base-foreground" };
-const _sfc_main$d = /* @__PURE__ */ defineComponent({
+const _sfc_main$e = /* @__PURE__ */ defineComponent({
   __name: "PanoramaMultiViewStageCard",
   props: {
     state: {},
@@ -86197,11 +86279,11 @@ const _sfc_main$d = /* @__PURE__ */ defineComponent({
       resolution
     );
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$c, [
-        createBaseVNode("div", _hoisted_2$c, [
-          !unref(panoramaUrl) ? (openBlock(), createElementBlock("span", _hoisted_3$b, toDisplayString$1(_ctx.$t("panoramaView.connectPanorama")), 1)) : unref(capturing) ? (openBlock(), createElementBlock("span", _hoisted_4$9, toDisplayString$1(_ctx.$t("panoramaView.capturingCount", { i: unref(captureProgress), n: viewCount.value })), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_5$9, toDisplayString$1(_ctx.$t("panoramaView.capturedN", { n: viewCount.value })), 1)) : (openBlock(), createElementBlock("span", _hoisted_6$8, toDisplayString$1(_ctx.$t("panoramaView.adjustCountToCapture")), 1))
+      return openBlock(), createElementBlock("div", _hoisted_1$d, [
+        createBaseVNode("div", _hoisted_2$d, [
+          !unref(panoramaUrl) ? (openBlock(), createElementBlock("span", _hoisted_3$c, toDisplayString$1(_ctx.$t("panoramaView.connectPanorama")), 1)) : unref(capturing) ? (openBlock(), createElementBlock("span", _hoisted_4$a, toDisplayString$1(_ctx.$t("panoramaView.capturingCount", { i: unref(captureProgress), n: viewCount.value })), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_5$a, toDisplayString$1(_ctx.$t("panoramaView.capturedN", { n: viewCount.value })), 1)) : (openBlock(), createElementBlock("span", _hoisted_6$9, toDisplayString$1(_ctx.$t("panoramaView.adjustCountToCapture")), 1))
         ]),
-        createBaseVNode("div", _hoisted_7$8, [
+        createBaseVNode("div", _hoisted_7$9, [
           createBaseVNode("div", _hoisted_8$8, [
             createBaseVNode("span", _hoisted_9$8, toDisplayString$1(_ctx.$t("panoramaView.aspect")), 1),
             createBaseVNode("span", _hoisted_10$8, [
@@ -86269,16 +86351,16 @@ const _sfc_main$d = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const PanoramaMultiViewStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["__scopeId", "data-v-1c06d1c2"]]);
-const _hoisted_1$b = ["src", "alt"];
-const _hoisted_2$b = ["src", "alt"];
-const _hoisted_3$a = { class: "ctv:absolute ctv:top-2 ctv:left-2 ctv:z-[7] ctv:py-0.5 ctv:px-1.5 ctv:rounded-lg ctv:bg-black/60 ctv:text-white/90 ctv:text-2xs ctv:tracking-wide ctv:pointer-events-none" };
-const _hoisted_4$8 = { class: "ctv:absolute ctv:top-2 ctv:right-2 ctv:z-[7] ctv:py-0.5 ctv:px-1.5 ctv:rounded-lg ctv:bg-black/60 ctv:text-white/90 ctv:text-2xs ctv:tracking-wide ctv:pointer-events-none" };
-const _hoisted_5$8 = {
+const PanoramaMultiViewStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["__scopeId", "data-v-1c06d1c2"]]);
+const _hoisted_1$c = ["src", "alt"];
+const _hoisted_2$c = ["src", "alt"];
+const _hoisted_3$b = { class: "ctv:absolute ctv:top-2 ctv:left-2 ctv:z-[7] ctv:py-0.5 ctv:px-1.5 ctv:rounded-lg ctv:bg-black/60 ctv:text-white/90 ctv:text-2xs ctv:tracking-wide ctv:pointer-events-none" };
+const _hoisted_4$9 = { class: "ctv:absolute ctv:top-2 ctv:right-2 ctv:z-[7] ctv:py-0.5 ctv:px-1.5 ctv:rounded-lg ctv:bg-black/60 ctv:text-white/90 ctv:text-2xs ctv:tracking-wide ctv:pointer-events-none" };
+const _hoisted_5$9 = {
   key: 1,
   class: "ctv:absolute ctv:inset-0 ctv:flex ctv:items-center ctv:justify-center ctv:px-4 ctv:text-center ctv:text-white/50 ctv:text-xs"
 };
-const _sfc_main$c = /* @__PURE__ */ defineComponent({
+const _sfc_main$d = /* @__PURE__ */ defineComponent({
   __name: "ImageCompare",
   props: {
     beforeImage: {},
@@ -86312,7 +86394,7 @@ const _sfc_main$c = /* @__PURE__ */ defineComponent({
             draggable: "false",
             onDragstart: _cache2[0] || (_cache2[0] = withModifiers(() => {
             }, ["prevent"]))
-          }, null, 40, _hoisted_1$b)) : createCommentVNode("", true),
+          }, null, 40, _hoisted_1$c)) : createCommentVNode("", true),
           __props.beforeImage ? (openBlock(), createElementBlock("img", {
             key: 1,
             src: __props.beforeImage,
@@ -86322,7 +86404,7 @@ const _sfc_main$c = /* @__PURE__ */ defineComponent({
             style: normalizeStyle(hasBoth.value ? { clipPath: `inset(0 ${100 - sliderPosition.value}% 0 0)` } : void 0),
             onDragstart: _cache2[1] || (_cache2[1] = withModifiers(() => {
             }, ["prevent"]))
-          }, null, 44, _hoisted_2$b)) : createCommentVNode("", true),
+          }, null, 44, _hoisted_2$c)) : createCommentVNode("", true),
           hasBoth.value ? (openBlock(), createElementBlock(Fragment$1, { key: 2 }, [
             createBaseVNode("div", {
               class: "ctv:absolute ctv:top-0 ctv:bottom-0 ctv:w-0.5 ctv:-ml-px ctv:z-[5] ctv:pointer-events-none ctv:bg-white/85 ctv:shadow-[0_0_4px_rgb(0_0_0/0.6)]",
@@ -86332,17 +86414,17 @@ const _sfc_main$c = /* @__PURE__ */ defineComponent({
               class: "ctv:absolute ctv:top-1/2 ctv:size-6 ctv:-translate-x-1/2 ctv:-translate-y-1/2 ctv:rounded-full ctv:border-2 ctv:border-white ctv:bg-white/30 ctv:backdrop-blur-[2px] ctv:shadow-[0_1px_4px_rgb(0_0_0/0.5)] ctv:pointer-events-none ctv:z-[6]",
               style: normalizeStyle({ left: `${sliderPosition.value}%` })
             }, null, 4),
-            createBaseVNode("span", _hoisted_3$a, toDisplayString$1(_ctx.$t("imageCompare.before")), 1),
-            createBaseVNode("span", _hoisted_4$8, toDisplayString$1(_ctx.$t("imageCompare.after")), 1)
+            createBaseVNode("span", _hoisted_3$b, toDisplayString$1(_ctx.$t("imageCompare.before")), 1),
+            createBaseVNode("span", _hoisted_4$9, toDisplayString$1(_ctx.$t("imageCompare.after")), 1)
           ], 64)) : createCommentVNode("", true)
-        ], 64)) : (openBlock(), createElementBlock("div", _hoisted_5$8, toDisplayString$1(_ctx.$t("imageCompare.noImages")), 1))
+        ], 64)) : (openBlock(), createElementBlock("div", _hoisted_5$9, toDisplayString$1(_ctx.$t("imageCompare.noImages")), 1))
       ], 544);
     };
   }
 });
-const _hoisted_1$a = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
-const _hoisted_2$a = { class: "ctv:shrink-0" };
-const _sfc_main$b = /* @__PURE__ */ defineComponent({
+const _hoisted_1$b = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
+const _hoisted_2$b = { class: "ctv:shrink-0" };
+const _sfc_main$c = /* @__PURE__ */ defineComponent({
   __name: "CompareStageCard",
   props: {
     state: {},
@@ -86362,13 +86444,13 @@ const _sfc_main$b = /* @__PURE__ */ defineComponent({
     const imageA = computed(() => resolvedInput("image_a"));
     const imageB = computed(() => resolvedInput("image_b"));
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$a, [
-        createVNode(_sfc_main$c, {
+      return openBlock(), createElementBlock("div", _hoisted_1$b, [
+        createVNode(_sfc_main$d, {
           class: "ctv:flex-1 ctv:min-h-0",
           "before-image": imageA.value,
           "after-image": imageB.value
         }, null, 8, ["before-image", "after-image"]),
-        createBaseVNode("div", _hoisted_2$a, [
+        createBaseVNode("div", _hoisted_2$b, [
           createVNode(StageCard, {
             state: __props.state,
             node: __props.node,
@@ -86383,19 +86465,19 @@ const _sfc_main$b = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$9 = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full ctv:p-2 ctv:box-border ctv:text-xs ctv:text-base-foreground" };
-const _hoisted_2$9 = { class: "ctv:shrink-0 ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1" };
-const _hoisted_3$9 = ["onClick"];
-const _hoisted_4$7 = { class: "ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:rounded-md ctv:border ctv:border-border-subtle ctv:bg-black/20 ctv:p-1.5" };
-const _hoisted_5$7 = {
+const _hoisted_1$a = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full ctv:p-2 ctv:box-border ctv:text-xs ctv:text-base-foreground" };
+const _hoisted_2$a = { class: "ctv:shrink-0 ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1" };
+const _hoisted_3$a = ["onClick"];
+const _hoisted_4$8 = { class: "ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:rounded-md ctv:border ctv:border-border-subtle ctv:bg-black/20 ctv:p-1.5" };
+const _hoisted_5$8 = {
   key: 0,
   class: "ctv:py-5 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60"
 };
-const _hoisted_6$7 = {
+const _hoisted_6$8 = {
   key: 1,
   class: "ctv:grid ctv:grid-cols-[repeat(auto-fill,minmax(80px,1fr))] ctv:gap-1.5"
 };
-const _hoisted_7$7 = ["title", "onClick"];
+const _hoisted_7$8 = ["title", "onClick"];
 const _hoisted_8$7 = ["src"];
 const _hoisted_9$7 = {
   key: 1,
@@ -86418,7 +86500,7 @@ const _hoisted_15$5 = {
 };
 const _hoisted_16$4 = { class: "ctv:shrink-0" };
 const chipCountClass = "ctv:py-0 ctv:px-1 ctv:rounded-lg ctv:text-3xs ctv:bg-base-foreground/10";
-const _sfc_main$a = /* @__PURE__ */ defineComponent({
+const _sfc_main$b = /* @__PURE__ */ defineComponent({
   __name: "AssetLoaderCard",
   props: {
     state: {},
@@ -86499,8 +86581,8 @@ const _sfc_main$a = /* @__PURE__ */ defineComponent({
       ].join(" ");
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$9, [
-        createBaseVNode("div", _hoisted_2$9, [
+      return openBlock(), createElementBlock("div", _hoisted_1$a, [
+        createBaseVNode("div", _hoisted_2$a, [
           createBaseVNode("button", {
             class: normalizeClass(chipClass(activeFilter.value === "all")),
             onClick: _cache2[0] || (_cache2[0] = ($event) => setFilter("all"))
@@ -86529,11 +86611,11 @@ const _sfc_main$a = /* @__PURE__ */ defineComponent({
               createBaseVNode("span", {
                 class: normalizeClass(chipCountClass)
               }, toDisplayString$1(mediaCount(cat2.id)), 1)
-            ], 10, _hoisted_3$9);
+            ], 10, _hoisted_3$a);
           }), 128))
         ]),
-        createBaseVNode("div", _hoisted_4$7, [
-          visibleAssets.value.length === 0 ? (openBlock(), createElementBlock("div", _hoisted_5$7, toDisplayString$1(activeFilter.value === "all" ? _ctx.$t("assetLoader.empty") : _ctx.$t("assets.emptyCategory")), 1)) : (openBlock(), createElementBlock("div", _hoisted_6$7, [
+        createBaseVNode("div", _hoisted_4$8, [
+          visibleAssets.value.length === 0 ? (openBlock(), createElementBlock("div", _hoisted_5$8, toDisplayString$1(activeFilter.value === "all" ? _ctx.$t("assetLoader.empty") : _ctx.$t("assets.emptyCategory")), 1)) : (openBlock(), createElementBlock("div", _hoisted_6$8, [
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(visibleAssets.value, (asset) => {
               return openBlock(), createElementBlock("button", {
                 key: asset.id,
@@ -86568,7 +86650,7 @@ const _sfc_main$a = /* @__PURE__ */ defineComponent({
                 asset.id === selectedId.value ? (openBlock(), createElementBlock("span", _hoisted_12$7, [..._cache2[3] || (_cache2[3] = [
                   createBaseVNode("i", { class: "pi pi-check" }, null, -1)
                 ])])) : createCommentVNode("", true)
-              ], 10, _hoisted_7$7);
+              ], 10, _hoisted_7$8);
             }), 128))
           ]))
         ]),
@@ -86595,11 +86677,11 @@ const SCHEDULE_DELAY_MS = 250;
 const MIN_GRID = 1;
 const MAX_GRID = 10;
 const MIN_BORDER = 0;
-function useGridSplit(node, state) {
+function useGridSplit(node, state2) {
   var _a2;
   const store = useStageStore();
   const sourceImageUrl = computed(() => {
-    const inp = state.inputs.find((i) => i.slot === "image");
+    const inp = state2.inputs.find((i) => i.slot === "image");
     return inp && inp.source === "upstream" && inp.content ? inp.content : null;
   });
   const rows = /* @__PURE__ */ ref(readWidgetNum(node, "rows", 2));
@@ -86728,7 +86810,7 @@ function useGridSplit(node, state) {
         }
       }
       if (mySeq !== seq) return;
-      store.applyExecutedPayload(state, { output: [JSON.stringify({ images: items })] });
+      store.applyExecutedPayload(state2, { output: [JSON.stringify({ images: items })] });
     } catch (e) {
       console.error("[ComfyTV/gridsplit] split failed", e);
     } finally {
@@ -86755,16 +86837,16 @@ function useGridSplit(node, state) {
     splitting
   };
 }
-const _hoisted_1$8 = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
-const _hoisted_2$8 = {
+const _hoisted_1$9 = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
+const _hoisted_2$9 = {
   key: 0,
   class: "ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50"
 };
-const _hoisted_3$8 = { class: "ctv:text-xs" };
-const _hoisted_4$6 = ["src"];
-const _hoisted_5$6 = { class: "ctv:absolute ctv:inset-0 ctv:pointer-events-none" };
-const _hoisted_6$6 = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5" };
-const _hoisted_7$6 = {
+const _hoisted_3$9 = { class: "ctv:text-xs" };
+const _hoisted_4$7 = ["src"];
+const _hoisted_5$7 = { class: "ctv:absolute ctv:inset-0 ctv:pointer-events-none" };
+const _hoisted_6$7 = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5" };
+const _hoisted_7$7 = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
@@ -86792,7 +86874,7 @@ const _hoisted_19$3 = ["checked"];
 const _hoisted_20$3 = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const BORDER_STEP = 2;
 const MIN_LINE_PX = 2;
-const _sfc_main$9 = /* @__PURE__ */ defineComponent({
+const _sfc_main$a = /* @__PURE__ */ defineComponent({
   __name: "GridSplitStageCard",
   props: {
     state: {},
@@ -86902,15 +86984,15 @@ const _sfc_main$9 = /* @__PURE__ */ defineComponent({
       }));
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$8, [
+      return openBlock(), createElementBlock("div", _hoisted_1$9, [
         createBaseVNode("div", {
           ref_key: "containerEl",
           ref: containerEl,
           class: "ctv:relative ctv:w-full ctv:h-[280px] ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle ctv:bg-black ctv:flex ctv:items-center ctv:justify-center"
         }, [
-          !unref(sourceImageUrl) ? (openBlock(), createElementBlock("div", _hoisted_2$8, [
+          !unref(sourceImageUrl) ? (openBlock(), createElementBlock("div", _hoisted_2$9, [
             _cache2[2] || (_cache2[2] = createBaseVNode("i", { class: "pi pi-th-large ctv:text-[32px] ctv:opacity-60" }, null, -1)),
-            createBaseVNode("div", _hoisted_3$8, toDisplayString$1(_ctx.$t("gridSplit.connectImage")), 1)
+            createBaseVNode("div", _hoisted_3$9, toDisplayString$1(_ctx.$t("gridSplit.connectImage")), 1)
           ])) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
             createBaseVNode("img", {
               ref_key: "imgEl",
@@ -86921,8 +87003,8 @@ const _sfc_main$9 = /* @__PURE__ */ defineComponent({
               onLoad: onImgLoad,
               onDragstart: _cache2[0] || (_cache2[0] = withModifiers(() => {
               }, ["prevent"]))
-            }, null, 40, _hoisted_4$6),
-            createBaseVNode("div", _hoisted_5$6, [
+            }, null, 40, _hoisted_4$7),
+            createBaseVNode("div", _hoisted_5$7, [
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(vBands.value, (style2, i) => {
                 return openBlock(), createElementBlock("div", {
                   key: `v${i}`,
@@ -86940,8 +87022,8 @@ const _sfc_main$9 = /* @__PURE__ */ defineComponent({
             ])
           ], 64))
         ], 512),
-        createBaseVNode("div", _hoisted_6$6, [
-          !unref(sourceImageUrl) ? (openBlock(), createElementBlock("span", _hoisted_7$6, toDisplayString$1(_ctx.$t("gridSplit.connectImage")), 1)) : unref(splitting) ? (openBlock(), createElementBlock("span", _hoisted_8$6, toDisplayString$1(_ctx.$t("gridSplit.splitting", { n: unref(rows) * unref(cols) })), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_9$6, toDisplayString$1(_ctx.$t("gridSplit.done", { n: unref(rows) * unref(cols) })), 1)) : (openBlock(), createElementBlock("span", _hoisted_10$6, toDisplayString$1(_ctx.$t("gridSplit.pickGrid")), 1))
+        createBaseVNode("div", _hoisted_6$7, [
+          !unref(sourceImageUrl) ? (openBlock(), createElementBlock("span", _hoisted_7$7, toDisplayString$1(_ctx.$t("gridSplit.connectImage")), 1)) : unref(splitting) ? (openBlock(), createElementBlock("span", _hoisted_8$6, toDisplayString$1(_ctx.$t("gridSplit.splitting", { n: unref(rows) * unref(cols) })), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_9$6, toDisplayString$1(_ctx.$t("gridSplit.done", { n: unref(rows) * unref(cols) })), 1)) : (openBlock(), createElementBlock("span", _hoisted_10$6, toDisplayString$1(_ctx.$t("gridSplit.pickGrid")), 1))
         ]),
         createBaseVNode("div", _hoisted_11$6, [
           (openBlock(), createElementBlock(Fragment$1, null, renderList(PRESETS, (p2) => {
@@ -87000,13 +87082,13 @@ const PPF = 3;
 function newId$1() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 }
-function useTimelineEditor(node, state, rootEl) {
+function useTimelineEditor(node, state2, rootEl) {
   const store = useStageStore();
   const keyframes = computed(
-    () => state.inputs.filter((i) => i.slot.startsWith("image") && i.source === "upstream" && i.content).map((i) => i.content)
+    () => state2.inputs.filter((i) => i.slot.startsWith("image") && i.source === "upstream" && i.content).map((i) => i.content)
   );
   const audioUrl = computed(() => {
-    const a = state.inputs.find((i) => i.slot === "audio");
+    const a = state2.inputs.find((i) => i.slot === "audio");
     return a && a.source === "upstream" && a.content ? a.content : null;
   });
   const frameRate = /* @__PURE__ */ ref(24);
@@ -87065,7 +87147,7 @@ function useTimelineEditor(node, state, rootEl) {
     const json = serialize2();
     writeWidget(node, "timeline_data", json);
     writeWidget(node, "frame_rate", frameRate.value);
-    store.applyExecutedPayload(state, { output: [json] });
+    store.applyExecutedPayload(state2, { output: [json] });
   }
   function restore() {
     const raw = readWidgetStr(node, "timeline_data", "");
@@ -87281,19 +87363,19 @@ function useTimelineEditor(node, state, rootEl) {
     onAudioResizePointerDown
   };
 }
-const _hoisted_1$7 = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
-const _hoisted_2$7 = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_3$7 = {
+const _hoisted_1$8 = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
+const _hoisted_2$8 = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_3$8 = {
   key: 0,
   class: "ctv:text-xs ctv:text-muted-foreground/60 ctv:p-1"
 };
-const _hoisted_4$5 = {
+const _hoisted_4$6 = {
   key: 1,
   class: "ctv:flex ctv:gap-1 ctv:flex-wrap"
 };
-const _hoisted_5$5 = ["title", "onClick"];
-const _hoisted_6$5 = ["src", "alt"];
-const _hoisted_7$5 = { class: "ctv:absolute ctv:bottom-px ctv:left-0.5 ctv:text-3xs ctv:py-0 ctv:px-0.5 ctv:rounded-sm ctv:bg-black/70 ctv:text-white/90" };
+const _hoisted_5$6 = ["title", "onClick"];
+const _hoisted_6$6 = ["src", "alt"];
+const _hoisted_7$6 = { class: "ctv:absolute ctv:bottom-px ctv:left-0.5 ctv:text-3xs ctv:py-0 ctv:px-0.5 ctv:rounded-sm ctv:bg-black/70 ctv:text-white/90" };
 const _hoisted_8$5 = { class: "ctv:shrink-0 ctv:overflow-x-auto ctv:overflow-y-hidden ctv:rounded-md ctv:border ctv:border-border-subtle ctv:bg-black" };
 const _hoisted_9$5 = { class: "ctv:relative ctv:h-4 ctv:border-b ctv:border-white/10" };
 const _hoisted_10$5 = { class: "ctv:text-[8px] ctv:text-white/40 ctv:ml-0.5" };
@@ -87328,7 +87410,7 @@ const _hoisted_29$1 = { class: "ctv:flex ctv:items-center ctv:gap-1" };
 const _hoisted_30$1 = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_31$1 = ["value"];
 const _hoisted_32$1 = { class: "ctv:ml-auto ctv:text-2xs ctv:font-mono ctv:text-muted-foreground" };
-const _sfc_main$8 = /* @__PURE__ */ defineComponent({
+const _sfc_main$9 = /* @__PURE__ */ defineComponent({
   __name: "DirectorTimelineStageCard",
   props: {
     state: {},
@@ -87372,9 +87454,9 @@ const _sfc_main$8 = /* @__PURE__ */ defineComponent({
         ref: rootEl,
         class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full"
       }, [
-        createBaseVNode("div", _hoisted_1$7, [
-          createBaseVNode("span", _hoisted_2$7, toDisplayString$1(_ctx.$t("timeline.keyframes")), 1),
-          unref(keyframes).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_3$7, toDisplayString$1(_ctx.$t("timeline.connectImages")), 1)) : (openBlock(), createElementBlock("div", _hoisted_4$5, [
+        createBaseVNode("div", _hoisted_1$8, [
+          createBaseVNode("span", _hoisted_2$8, toDisplayString$1(_ctx.$t("timeline.keyframes")), 1),
+          unref(keyframes).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_3$8, toDisplayString$1(_ctx.$t("timeline.connectImages")), 1)) : (openBlock(), createElementBlock("div", _hoisted_4$6, [
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(keyframes), (url, i) => {
               return openBlock(), createElementBlock("button", {
                 key: i,
@@ -87387,9 +87469,9 @@ const _sfc_main$8 = /* @__PURE__ */ defineComponent({
                   src: url,
                   alt: `#${i + 1}`,
                   class: "ctv:w-full ctv:h-full ctv:object-cover"
-                }, null, 8, _hoisted_6$5),
-                createBaseVNode("span", _hoisted_7$5, toDisplayString$1(i + 1), 1)
-              ], 8, _hoisted_5$5);
+                }, null, 8, _hoisted_6$6),
+                createBaseVNode("span", _hoisted_7$6, toDisplayString$1(i + 1), 1)
+              ], 8, _hoisted_5$6);
             }), 128))
           ]))
         ]),
@@ -87535,9 +87617,9 @@ function useChainCallback(originalCallback, ...callbacks) {
   };
 }
 const SIDES = ["left", "top", "right", "bottom"];
-function useOutpaintCanvas(node, state, canvasEl, rootEl) {
+function useOutpaintCanvas(node, state2, canvasEl, rootEl) {
   const sourceImageUrl = computed(() => {
-    const inp = state.inputs.find((i) => i.slot === "image");
+    const inp = state2.inputs.find((i) => i.slot === "image");
     if (!inp || inp.source !== "upstream" || !inp.content) return null;
     return inp.content;
   });
@@ -87688,22 +87770,22 @@ function useOutpaintCanvas(node, state, canvasEl, rootEl) {
     onHandlePointerDown
   };
 }
-const _hoisted_1$6 = {
+const _hoisted_1$7 = {
   key: 0,
   class: "ctv:flex ctv:flex-col ctv:items-center ctv:gap-1.5 ctv:text-white/50"
 };
-const _hoisted_2$6 = { class: "ctv:text-xs" };
-const _hoisted_3$6 = ["src"];
-const _hoisted_4$4 = ["onPointerdown"];
-const _hoisted_5$4 = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
-const _hoisted_6$4 = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-wrap" };
-const _hoisted_7$4 = { class: "ctv:text-3xs ctv:min-w-8 ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_2$7 = { class: "ctv:text-xs" };
+const _hoisted_3$7 = ["src"];
+const _hoisted_4$5 = ["onPointerdown"];
+const _hoisted_5$5 = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
+const _hoisted_6$5 = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-wrap" };
+const _hoisted_7$5 = { class: "ctv:text-3xs ctv:min-w-8 ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_8$4 = ["value", "disabled", "onChange"];
 const _hoisted_9$4 = ["disabled"];
 const _hoisted_10$4 = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-wrap" };
 const _hoisted_11$4 = { class: "ctv:text-2xs ctv:text-muted-foreground/60" };
 const _hoisted_12$4 = { class: "ctv:text-[11px] ctv:font-mono ctv:text-base-foreground" };
-const _sfc_main$7 = /* @__PURE__ */ defineComponent({
+const _sfc_main$8 = /* @__PURE__ */ defineComponent({
   __name: "OutpaintStageCard",
   props: {
     state: {},
@@ -87741,9 +87823,9 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
           ref: canvasEl,
           class: normalizeClass(["ctv:relative ctv:flex-auto ctv:min-h-[280px] ctv:bg-black ctv:rounded-md ctv:overflow-hidden ctv:select-none ctv:border ctv:border-border-subtle", { "ctv:flex ctv:items-center ctv:justify-center": !unref(sourceImageUrl) }])
         }, [
-          !unref(sourceImageUrl) ? (openBlock(), createElementBlock("div", _hoisted_1$6, [
+          !unref(sourceImageUrl) ? (openBlock(), createElementBlock("div", _hoisted_1$7, [
             _cache2[3] || (_cache2[3] = createBaseVNode("i", { class: "pi pi-arrows-alt ctv:text-[28px] ctv:opacity-60" }, null, -1)),
-            createBaseVNode("div", _hoisted_2$6, toDisplayString$1(_ctx.$t("outpaint.noInputImage")), 1)
+            createBaseVNode("div", _hoisted_2$7, toDisplayString$1(_ctx.$t("outpaint.noInputImage")), 1)
           ])) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
             createBaseVNode("div", {
               class: "ctv:absolute ctv-pad-area",
@@ -87758,7 +87840,7 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
               (...args) => unref(onSourceLoaded) && unref(onSourceLoaded)(...args)),
               onDragstart: _cache2[1] || (_cache2[1] = withModifiers(() => {
               }, ["prevent"]))
-            }, null, 44, _hoisted_3$6),
+            }, null, 44, _hoisted_3$7),
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(SIDES), (side) => {
               return openBlock(), createElementBlock("div", {
                 key: side,
@@ -87770,7 +87852,7 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
                 onPointerdown: ($event) => unref(onHandlePointerDown)($event, side)
               }, [..._cache2[4] || (_cache2[4] = [
                 createBaseVNode("span", { class: "ctv:absolute ctv:size-3 ctv:rounded-full ctv:bg-primary-background ctv:border-2 ctv:border-white ctv:shadow-[0_1px_4px_rgb(0_0_0/0.5)]" }, null, -1)
-              ])], 46, _hoisted_4$4);
+              ])], 46, _hoisted_4$5);
             }), 128)),
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(SIDES), (side) => {
               return openBlock(), createElementBlock("span", {
@@ -87781,14 +87863,14 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
             }), 128))
           ], 64))
         ], 2),
-        createBaseVNode("div", _hoisted_5$4, [
-          createBaseVNode("div", _hoisted_6$4, [
+        createBaseVNode("div", _hoisted_5$5, [
+          createBaseVNode("div", _hoisted_6$5, [
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(SIDES), (side) => {
               return openBlock(), createElementBlock("label", {
                 key: `in-${side}`,
                 class: "ctv:flex ctv:items-center ctv:gap-[3px] ctv:py-0.5 ctv:px-1 ctv:rounded-sm ctv:bg-secondary-background ctv:border ctv:border-border-subtle"
               }, [
-                createBaseVNode("span", _hoisted_7$4, toDisplayString$1(_ctx.$t(`outpaint.${side}`)), 1),
+                createBaseVNode("span", _hoisted_7$5, toDisplayString$1(_ctx.$t(`outpaint.${side}`)), 1),
                 createBaseVNode("input", {
                   type: "number",
                   min: "0",
@@ -87827,7 +87909,7 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const OutpaintStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["__scopeId", "data-v-05778c35"]]);
+const OutpaintStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["__scopeId", "data-v-05778c35"]]);
 function newId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 }
@@ -87852,7 +87934,7 @@ function blankShot(no) {
     motion_prompt: ""
   };
 }
-function useStoryboardShots(node, state) {
+function useStoryboardShots(node, state2) {
   const store = useStageStore();
   const shots = /* @__PURE__ */ ref([]);
   const uploadingId = /* @__PURE__ */ ref(null);
@@ -87886,7 +87968,7 @@ function useStoryboardShots(node, state) {
     const json = serialize2();
     lastWritten = json;
     writeWidget(node, "storyboard_data", json);
-    store.applyExecutedPayload(state, { output: [json] });
+    store.applyExecutedPayload(state2, { output: [json] });
   }
   function loadFromJson(raw) {
     if (!raw) return false;
@@ -87927,8 +88009,8 @@ function useStoryboardShots(node, state) {
       lastWritten = raw;
       return;
     }
-    if (state.output && loadFromJson(String(state.output))) {
-      lastWritten = String(state.output);
+    if (state2.output && loadFromJson(String(state2.output))) {
+      lastWritten = String(state2.output);
     }
   }
   function addShot() {
@@ -88050,7 +88132,7 @@ function useStoryboardShots(node, state) {
       restore();
     };
   }
-  watch(() => state.output, (out) => {
+  watch(() => state2.output, (out) => {
     if (!out || out === lastWritten) return;
     if (loadFromJson(String(out))) {
       lastWritten = String(out);
@@ -88073,19 +88155,19 @@ function useStoryboardShots(node, state) {
     onFilePicked
   };
 }
-const _hoisted_1$5 = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
-const _hoisted_2$5 = { class: "ctv:flex ctv:items-center ctv:gap-2" };
-const _hoisted_3$5 = { class: "ctv:text-[11px] ctv:font-semibold ctv:text-muted-foreground" };
-const _hoisted_4$3 = {
+const _hoisted_1$6 = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
+const _hoisted_2$6 = { class: "ctv:flex ctv:items-center ctv:gap-2" };
+const _hoisted_3$6 = { class: "ctv:text-[11px] ctv:font-semibold ctv:text-muted-foreground" };
+const _hoisted_4$4 = {
   key: 0,
   class: "ctv:text-[11px] ctv:text-muted-foreground/60 ctv:p-3 ctv:text-center"
 };
-const _hoisted_5$3 = {
+const _hoisted_5$4 = {
   key: 1,
   class: "ctv:flex ctv:flex-col ctv:gap-1.5"
 };
-const _hoisted_6$3 = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-wrap" };
-const _hoisted_7$3 = { class: "ctv:text-[13px] ctv:font-bold ctv:text-base-foreground" };
+const _hoisted_6$4 = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-wrap" };
+const _hoisted_7$4 = { class: "ctv:text-[13px] ctv:font-bold ctv:text-base-foreground" };
 const _hoisted_8$3 = { class: "ctv:flex ctv:items-center ctv:gap-0.5 ctv:text-2xs ctv:text-muted-foreground" };
 const _hoisted_9$3 = ["value", "onChange"];
 const _hoisted_10$3 = {
@@ -88134,7 +88216,7 @@ const _hoisted_37 = ["open"];
 const _hoisted_38 = { class: "ctv:cursor-pointer ctv:opacity-75 ctv:select-none ctv:pb-1 ctv:hover:opacity-100" };
 const _hoisted_39 = ["value", "onInput"];
 const META_INPUT_BASE = "ctv:w-full ctv:box-border ctv:py-0.5 ctv:px-1.5 ctv:text-2xs ctv:leading-snug ctv:rounded-sm ctv:[font-family:inherit] ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-transparent ctv:hover:border-border-subtle ctv:focus:outline-none ctv:focus:border-primary-background/50 ctv:focus:bg-secondary-background-hover";
-const _sfc_main$6 = /* @__PURE__ */ defineComponent({
+const _sfc_main$7 = /* @__PURE__ */ defineComponent({
   __name: "StoryboardStageCard",
   props: {
     state: {},
@@ -88182,9 +88264,9 @@ const _sfc_main$6 = /* @__PURE__ */ defineComponent({
       return `${META_INPUT_BASE}${ml}${m}`;
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$5, [
-        createBaseVNode("div", _hoisted_2$5, [
-          createBaseVNode("span", _hoisted_3$5, toDisplayString$1(_ctx.$t("storyboard.shots")) + " · " + toDisplayString$1(unref(shots).length), 1),
+      return openBlock(), createElementBlock("div", _hoisted_1$6, [
+        createBaseVNode("div", _hoisted_2$6, [
+          createBaseVNode("span", _hoisted_3$6, toDisplayString$1(_ctx.$t("storyboard.shots")) + " · " + toDisplayString$1(unref(shots).length), 1),
           createBaseVNode("button", {
             type: "button",
             class: "ctv:ml-auto ctv:py-0.5 ctv:px-2.5 ctv:text-[11px] ctv:rounded ctv:cursor-pointer ctv:bg-primary-background/15 ctv:border ctv:border-primary-background/40 ctv:text-primary-background ctv:hover:bg-primary-background/25",
@@ -88192,14 +88274,14 @@ const _sfc_main$6 = /* @__PURE__ */ defineComponent({
             (...args) => unref(addShot) && unref(addShot)(...args))
           }, "+ " + toDisplayString$1(_ctx.$t("storyboard.addShot")), 1)
         ]),
-        unref(shots).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_4$3, toDisplayString$1(_ctx.$t("storyboard.empty")), 1)) : (openBlock(), createElementBlock("div", _hoisted_5$3, [
+        unref(shots).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_4$4, toDisplayString$1(_ctx.$t("storyboard.empty")), 1)) : (openBlock(), createElementBlock("div", _hoisted_5$4, [
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(shots), (shot, idx) => {
             return openBlock(), createElementBlock("div", {
               key: shot.id,
               class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2 ctv:rounded-md ctv:border ctv:border-border-subtle ctv:bg-base-foreground/5"
             }, [
-              createBaseVNode("header", _hoisted_6$3, [
-                createBaseVNode("span", _hoisted_7$3, "#" + toDisplayString$1(idx + 1), 1),
+              createBaseVNode("header", _hoisted_6$4, [
+                createBaseVNode("span", _hoisted_7$4, "#" + toDisplayString$1(idx + 1), 1),
                 createBaseVNode("label", _hoisted_8$3, [
                   createBaseVNode("input", {
                     type: "number",
@@ -88373,16 +88455,16 @@ const _sfc_main$6 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$4 = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:py-1.5 ctv:px-2 ctv:size-full ctv:box-border ctv:text-xs ctv:text-base-foreground" };
-const _hoisted_2$4 = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:pb-1 ctv:font-semibold ctv:text-[11px] ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground ctv:border-b ctv:border-border-default" };
-const _hoisted_3$4 = { class: "ctv:flex ctv:items-center ctv:gap-1" };
-const _hoisted_4$2 = ["value"];
-const _hoisted_5$2 = ["value"];
-const _hoisted_6$2 = {
+const _hoisted_1$5 = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:py-1.5 ctv:px-2 ctv:size-full ctv:box-border ctv:text-xs ctv:text-base-foreground" };
+const _hoisted_2$5 = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:pb-1 ctv:font-semibold ctv:text-[11px] ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground ctv:border-b ctv:border-border-default" };
+const _hoisted_3$5 = { class: "ctv:flex ctv:items-center ctv:gap-1" };
+const _hoisted_4$3 = ["value"];
+const _hoisted_5$3 = ["value"];
+const _hoisted_6$3 = {
   key: 0,
   value: "default"
 };
-const _hoisted_7$2 = ["title"];
+const _hoisted_7$3 = ["title"];
 const _hoisted_8$2 = ["title"];
 const _hoisted_9$2 = { class: "ctv:flex ctv:items-center ctv:justify-between ctv:text-2xs ctv:text-muted-foreground/60" };
 const _hoisted_10$2 = { class: "ctv:font-mono ctv:break-all" };
@@ -88392,7 +88474,7 @@ const _hoisted_12$2 = {
   class: "ctv:text-2xs ctv:italic ctv:text-muted-foreground"
 };
 const ICON_BTN_BASE = "ctv:inline-flex ctv:items-center ctv:justify-center ctv:size-6 ctv:p-0 ctv:rounded-sm ctv:cursor-pointer ctv:text-[13px]";
-const _sfc_main$5 = /* @__PURE__ */ defineComponent({
+const _sfc_main$6 = /* @__PURE__ */ defineComponent({
   __name: "ProjectCard",
   setup(__props) {
     const store = useProjectStore();
@@ -88460,14 +88542,14 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent({
       return `${ICON_BTN_BASE} ${ICON_BTN_VARIANTS[variant]}`;
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$4, [
-        createBaseVNode("div", _hoisted_2$4, [
+      return openBlock(), createElementBlock("div", _hoisted_1$5, [
+        createBaseVNode("div", _hoisted_2$5, [
           _cache2[0] || (_cache2[0] = createBaseVNode("span", { class: "ctv:text-sm" }, [
             createBaseVNode("i", { class: "pi pi-folder" })
           ], -1)),
           createBaseVNode("span", null, toDisplayString$1(_ctx.$t("project.label")), 1)
         ]),
-        createBaseVNode("div", _hoisted_3$4, [
+        createBaseVNode("div", _hoisted_3$5, [
           createBaseVNode("select", {
             class: "ctv:flex-auto ctv:py-1 ctv:px-1.5 ctv:text-xs ctv:rounded-sm ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-default",
             value: unref(store).currentProjectId,
@@ -88477,10 +88559,10 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent({
               return openBlock(), createElementBlock("option", {
                 key: p2.id,
                 value: p2.id
-              }, toDisplayString$1(p2.name) + toDisplayString$1(p2.id === "default" ? "  " + _ctx.$t("project.shared_suffix") : ""), 9, _hoisted_5$2);
+              }, toDisplayString$1(p2.name) + toDisplayString$1(p2.id === "default" ? "  " + _ctx.$t("project.shared_suffix") : ""), 9, _hoisted_5$3);
             }), 128)),
-            !unref(store).projects.length ? (openBlock(), createElementBlock("option", _hoisted_6$2, "Default " + toDisplayString$1(_ctx.$t("project.shared_suffix")), 1)) : createCommentVNode("", true)
-          ], 40, _hoisted_4$2),
+            !unref(store).projects.length ? (openBlock(), createElementBlock("option", _hoisted_6$3, "Default " + toDisplayString$1(_ctx.$t("project.shared_suffix")), 1)) : createCommentVNode("", true)
+          ], 40, _hoisted_4$3),
           createBaseVNode("button", {
             class: normalizeClass(iconBtn()),
             type: "button",
@@ -88488,7 +88570,7 @@ const _sfc_main$5 = /* @__PURE__ */ defineComponent({
             onClick: onRefresh
           }, [..._cache2[1] || (_cache2[1] = [
             createBaseVNode("i", { class: "pi pi-refresh" }, null, -1)
-          ])], 10, _hoisted_7$2),
+          ])], 10, _hoisted_7$3),
           createBaseVNode("button", {
             class: normalizeClass(iconBtn("primary")),
             type: "button",
@@ -88661,33 +88743,147 @@ const useExecutionStore = /* @__PURE__ */ defineStore("comfytv-execution", () =>
     unregisterNodeHandlers
   };
 });
-const _hoisted_1$3 = {
+const _hoisted_1$4 = {
   key: 0,
   class: "ctv:fixed ctv:bottom-4 ctv:right-4 ctv:z-[9999] ctv:inline-flex ctv:items-center ctv:gap-2 ctv:py-1.5 ctv:px-3 ctv:rounded-full ctv:backdrop-blur ctv:pointer-events-none ctv:select-none ctv:bg-interface-menu-surface/85 ctv:border ctv:border-border-subtle ctv:text-base-foreground ctv:text-[11px] ctv:font-mono ctv:tracking-wide"
 };
-const _hoisted_2$3 = { class: "ctv:font-medium" };
-const _hoisted_3$3 = {
+const _hoisted_2$4 = { class: "ctv:font-medium" };
+const _hoisted_3$4 = {
   key: 0,
   class: "ctv:py-px ctv:px-1.5 ctv:rounded-lg ctv:bg-base-foreground/10 ctv:text-2xs ctv:font-semibold"
 };
-const _sfc_main$4 = /* @__PURE__ */ defineComponent({
+const _sfc_main$5 = /* @__PURE__ */ defineComponent({
   __name: "ExecutionStatusBar",
   setup(__props) {
     const store = useExecutionStore();
     return (_ctx, _cache2) => {
-      return unref(store).isBusy ? (openBlock(), createElementBlock("div", _hoisted_1$3, [
+      return unref(store).isBusy ? (openBlock(), createElementBlock("div", _hoisted_1$4, [
         createBaseVNode("span", {
           class: normalizeClass(["ctv:size-2 ctv:rounded-full", unref(store).currentNodeId ? "ctv:bg-primary-background ctv:shadow-[0_0_8px_var(--primary-background)] ctv:animate-pulse" : "ctv:bg-warning-background"])
         }, null, 2),
-        createBaseVNode("span", _hoisted_2$3, [
+        createBaseVNode("span", _hoisted_2$4, [
           unref(store).currentNodeId ? (openBlock(), createElementBlock(Fragment$1, { key: 0 }, [
             createTextVNode(toDisplayString$1(_ctx.$t("execution.running", { nodeId: unref(store).currentNodeId })), 1)
           ], 64)) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
             createTextVNode(toDisplayString$1(_ctx.$t("execution.queued")), 1)
           ], 64))
         ]),
-        unref(store).queueRemaining > 1 ? (openBlock(), createElementBlock("span", _hoisted_3$3, " +" + toDisplayString$1(unref(store).queueRemaining - 1), 1)) : createCommentVNode("", true)
+        unref(store).queueRemaining > 1 ? (openBlock(), createElementBlock("span", _hoisted_3$4, " +" + toDisplayString$1(unref(store).queueRemaining - 1), 1)) : createCommentVNode("", true)
       ])) : createCommentVNode("", true);
+    };
+  }
+});
+const _hoisted_1$3 = ["src", "alt"];
+const _hoisted_2$3 = ["disabled", "title"];
+const _hoisted_3$3 = ["disabled", "title"];
+const _hoisted_4$2 = {
+  key: 2,
+  class: "ctv:absolute ctv:bottom-4 ctv:left-1/2 ctv:-translate-x-1/2 ctv:flex ctv:items-center ctv:gap-2 ctv:max-w-[70vw] ctv:py-1 ctv:px-3 ctv:rounded-full ctv:text-xs ctv:leading-none ctv:bg-black/55 ctv:text-white ctv:border ctv:border-white/20"
+};
+const _hoisted_5$2 = {
+  key: 0,
+  class: "ctv:tabular-nums ctv:shrink-0"
+};
+const _hoisted_6$2 = {
+  key: 1,
+  class: "ctv:truncate"
+};
+const _hoisted_7$2 = ["title"];
+const _sfc_main$4 = /* @__PURE__ */ defineComponent({
+  __name: "LightboxHost",
+  setup(__props) {
+    const { isOpen, current, count: count2, index, hasPrev, hasNext, close: close2, prev, next } = useLightbox();
+    const container = /* @__PURE__ */ ref(null);
+    const img = /* @__PURE__ */ ref(null);
+    useImagePanZoom(container, img, {
+      resetKey: current,
+      minZoom: 0.2,
+      maxZoom: 8
+    });
+    function onKeydown(e) {
+      if (!isOpen.value) return;
+      if (e.key === "Escape") close2();
+      else if (e.key === "ArrowLeft") prev();
+      else if (e.key === "ArrowRight") next();
+    }
+    onMounted(() => window.addEventListener("keydown", onKeydown));
+    onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
+    return (_ctx, _cache2) => {
+      return openBlock(), createBlock(Teleport, { to: "body" }, [
+        unref(isOpen) && unref(current) ? (openBlock(), createElementBlock("div", {
+          key: 0,
+          class: "ctv:fixed ctv:inset-0 ctv:z-[9999] ctv:flex ctv:items-center ctv:justify-center ctv:cursor-zoom-out ctv:bg-black/90",
+          role: "dialog",
+          onClick: _cache2[4] || (_cache2[4] = withModifiers(
+            //@ts-ignore
+            (...args) => unref(close2) && unref(close2)(...args),
+            ["self"]
+          )),
+          onWheel: _cache2[5] || (_cache2[5] = withModifiers(() => {
+          }, ["prevent", "stop"]))
+        }, [
+          createBaseVNode("div", {
+            ref_key: "container",
+            ref: container,
+            class: "ctv:inline-flex ctv:items-center ctv:justify-center ctv:touch-none ctv:select-none ctv:cursor-grab",
+            onClick: _cache2[0] || (_cache2[0] = withModifiers(() => {
+            }, ["stop"]))
+          }, [
+            createBaseVNode("img", {
+              ref_key: "img",
+              ref: img,
+              src: unref(current).url,
+              class: "ctv:block ctv:max-w-[60vw] ctv:max-h-[60vh] ctv:object-contain ctv:cursor-[inherit] ctv:shadow-[0_8px_40px_rgb(0_0_0/0.6)]",
+              draggable: "false",
+              alt: unref(current).label || unref(current).url
+            }, null, 8, _hoisted_1$3)
+          ], 512),
+          unref(count2) > 1 ? (openBlock(), createElementBlock("button", {
+            key: 0,
+            type: "button",
+            class: "ctv:absolute ctv:left-4 ctv:top-1/2 ctv:-translate-y-1/2 ctv:size-10 ctv:flex ctv:items-center ctv:justify-center ctv:rounded-full ctv:bg-black/55 ctv:text-white ctv:border ctv:border-white/30 ctv:hover:bg-black/85 ctv:hover:border-white/55 ctv:cursor-pointer ctv:disabled:opacity-30 ctv:disabled:cursor-default ctv:disabled:hover:bg-black/55 ctv:disabled:hover:border-white/30",
+            disabled: !unref(hasPrev),
+            title: _ctx.$t("stage.action.prev"),
+            onClick: _cache2[1] || (_cache2[1] = withModifiers(
+              //@ts-ignore
+              (...args) => unref(prev) && unref(prev)(...args),
+              ["stop"]
+            ))
+          }, [..._cache2[6] || (_cache2[6] = [
+            createBaseVNode("i", { class: "pi pi-chevron-left" }, null, -1)
+          ])], 8, _hoisted_2$3)) : createCommentVNode("", true),
+          unref(count2) > 1 ? (openBlock(), createElementBlock("button", {
+            key: 1,
+            type: "button",
+            class: "ctv:absolute ctv:right-4 ctv:top-1/2 ctv:-translate-y-1/2 ctv:size-10 ctv:flex ctv:items-center ctv:justify-center ctv:rounded-full ctv:bg-black/55 ctv:text-white ctv:border ctv:border-white/30 ctv:hover:bg-black/85 ctv:hover:border-white/55 ctv:cursor-pointer ctv:disabled:opacity-30 ctv:disabled:cursor-default ctv:disabled:hover:bg-black/55 ctv:disabled:hover:border-white/30",
+            disabled: !unref(hasNext),
+            title: _ctx.$t("stage.action.next"),
+            onClick: _cache2[2] || (_cache2[2] = withModifiers(
+              //@ts-ignore
+              (...args) => unref(next) && unref(next)(...args),
+              ["stop"]
+            ))
+          }, [..._cache2[7] || (_cache2[7] = [
+            createBaseVNode("i", { class: "pi pi-chevron-right" }, null, -1)
+          ])], 8, _hoisted_3$3)) : createCommentVNode("", true),
+          unref(count2) > 1 || unref(current).label ? (openBlock(), createElementBlock("div", _hoisted_4$2, [
+            unref(count2) > 1 ? (openBlock(), createElementBlock("span", _hoisted_5$2, toDisplayString$1(unref(index) + 1) + " / " + toDisplayString$1(unref(count2)), 1)) : createCommentVNode("", true),
+            unref(current).label ? (openBlock(), createElementBlock("span", _hoisted_6$2, toDisplayString$1(unref(current).label), 1)) : createCommentVNode("", true)
+          ])) : createCommentVNode("", true),
+          createBaseVNode("button", {
+            type: "button",
+            class: "ctv:absolute ctv:top-4 ctv:right-4 ctv:size-9 ctv:flex ctv:items-center ctv:justify-center ctv:text-sm ctv:leading-none ctv:rounded-full ctv:cursor-pointer ctv:bg-black/55 ctv:text-white ctv:border ctv:border-white/30 ctv:hover:bg-black/85 ctv:hover:border-white/55",
+            title: _ctx.$t("stage.action.close"),
+            onClick: _cache2[3] || (_cache2[3] = withModifiers(
+              //@ts-ignore
+              (...args) => unref(close2) && unref(close2)(...args),
+              ["stop"]
+            ))
+          }, [..._cache2[8] || (_cache2[8] = [
+            createBaseVNode("i", { class: "pi pi-times" }, null, -1)
+          ])], 8, _hoisted_7$2)
+        ], 32)) : createCommentVNode("", true)
+      ]);
     };
   }
 });
@@ -88774,8 +88970,9 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
             (openBlock(), createBlock(resolveDynamicComponent(m.component), mergeProps({ ref_for: true }, m.props), null, 16))
           ], 8, ["to"]);
         }), 128)),
-        createVNode(_sfc_main$4),
-        createVNode(_sfc_main$3)
+        createVNode(_sfc_main$5),
+        createVNode(_sfc_main$3),
+        createVNode(_sfc_main$4)
       ], 64);
     };
   }
@@ -89318,8 +89515,8 @@ function wireAndSeed(srcNode, newNode, preset, srcSlot = 0) {
       setWidget(newNode, name, value);
     }
     if ("main_prompt" in preset.widgets) {
-      const state = store.getStage(newNode);
-      if (state) state.mainPrompt = String(preset.widgets.main_prompt ?? "");
+      const state2 = store.getStage(newNode);
+      if (state2) state2.mainPrompt = String(preset.widgets.main_prompt ?? "");
     }
   }
   stampLineage(srcNode, newNode);
@@ -89491,13 +89688,13 @@ function useStageNode(node, kind, variant = "generator") {
   var _a2, _b2, _c, _d, _e, _f;
   const store = useStageStore();
   const executionStore = useExecutionStore();
-  const state = store.registerStage(node, kind, variant);
+  const state2 = store.registerStage(node, kind, variant);
   if (variant === "generator") {
     const promptWidget = (_a2 = node.widgets) == null ? void 0 : _a2.find((w) => w.name === "main_prompt");
     if (promptWidget) {
-      state.mainPrompt = String(promptWidget.value ?? "");
+      state2.mainPrompt = String(promptWidget.value ?? "");
       promptWidget.callback = useChainCallback(promptWidget.callback, () => {
-        state.mainPrompt = String(promptWidget.value ?? "");
+        state2.mainPrompt = String(promptWidget.value ?? "");
       });
     }
     if (kind === "image-picker" || kind === "image-batch") {
@@ -89506,15 +89703,15 @@ function useStageNode(node, kind, variant = "generator") {
         const initial = Number(idxWidget.value);
         const safe = Number.isFinite(initial) && initial >= 1 ? Math.floor(initial) : 1;
         if (idxWidget.value !== safe) idxWidget.value = safe;
-        state.pickedIndex = safe;
+        state2.pickedIndex = safe;
         idxWidget.callback = useChainCallback(idxWidget.callback, () => {
-          state.pickedIndex = Number(idxWidget.value) || 1;
+          state2.pickedIndex = Number(idxWidget.value) || 1;
         });
       }
     }
     if (kind === "image-picker") {
       const poolWidget = (_c = node.widgets) == null ? void 0 : _c.find((w) => w.name === "pool");
-      state.pool = poolWidget ? String(poolWidget.value ?? "") || null : null;
+      state2.pool = poolWidget ? String(poolWidget.value ?? "") || null : null;
     }
   } else if (variant === "loader") {
     const widgetName = kind === "image" ? "image" : kind === "video" ? "video" : kind === "audio" ? "audio" : null;
@@ -89522,13 +89719,13 @@ function useStageNode(node, kind, variant = "generator") {
     if (uploadWidget) {
       const sync = () => {
         const v = String(uploadWidget.value ?? "");
-        store.setOutputSlot(state, 0, v ? inputFileUrl(v) : null);
+        store.setOutputSlot(state2, 0, v ? inputFileUrl(v) : null);
       };
       sync();
       uploadWidget.callback = useChainCallback(uploadWidget.callback, sync);
     }
   }
-  const refresh = () => store.refreshStageInputs(node, state, app);
+  const refresh = () => store.refreshStageInputs(node, state2, app);
   const reValidate = () => {
     const assetStore = useAssetStore();
     assetStore.hydrate().then(() => validateNode(node, kind, {
@@ -89558,7 +89755,7 @@ function useStageNode(node, kind, variant = "generator") {
     if (!label) return;
     _prepUnsub == null ? void 0 : _prepUnsub();
     _prepUnsub = subscribePrepState(workflowKind, label, (ps) => {
-      state.preparingWorkflow = ps.busy;
+      state2.preparingWorkflow = ps.busy;
     });
     void prepareWorkflow(workflowKind, label).catch(() => {
     });
@@ -89590,33 +89787,33 @@ function useStageNode(node, kind, variant = "generator") {
   );
   const stopPickerWatch = kind === "image-picker" ? watch(
     () => {
-      const inp = state.inputs.find((i) => i.slot === "batch");
-      return [(inp == null ? void 0 : inp.source) ?? "", (inp == null ? void 0 : inp.content) ?? "", state.pickedIndex ?? 0];
+      const inp = state2.inputs.find((i) => i.slot === "batch");
+      return [(inp == null ? void 0 : inp.source) ?? "", (inp == null ? void 0 : inp.content) ?? "", state2.pickedIndex ?? 0];
     },
     () => {
-      const inp = state.inputs.find((i) => i.slot === "batch");
+      const inp = state2.inputs.find((i) => i.slot === "batch");
       if (inp && inp.source === "upstream" && inp.content) {
-        const before = imagePoolCount(state.pool);
-        const merged = mergeImagePool(state.pool, toImagePoolJson(inp.content));
-        store.setPickerPool(node, state, merged);
+        const before = imagePoolCount(state2.pool);
+        const merged = mergeImagePool(state2.pool, toImagePoolJson(inp.content));
+        store.setPickerPool(node, state2, merged);
         const added = imagePoolCount(merged) - before;
         if (added > 0) {
-          state.pickedIndex = 1;
+          state2.pickedIndex = 1;
           setWidget(node, "selected_index", 1);
         }
       }
-      const after = state.pool ? computePickedImageUrl(state) : inp && inp.source === "empty" ? null : computePickedImageUrl(state);
-      if (after !== state.output) {
-        store.setOutputSlot(state, 0, after);
+      const after = state2.pool ? computePickedImageUrl(state2) : inp && inp.source === "empty" ? null : computePickedImageUrl(state2);
+      if (after !== state2.output) {
+        store.setOutputSlot(state2, 0, after);
       }
     },
     { immediate: true }
   ) : null;
   const onRunRequest = async () => {
     var _a3, _b3, _c2, _d2, _e2, _f3, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s, _t, _u, _v2;
-    if (state.running) return;
+    if (state2.running) return;
     if (variant === "loader") return;
-    if (state.preparingWorkflow) {
+    if (state2.preparingWorkflow) {
       (_c2 = (_b3 = (_a3 = app == null ? void 0 : app.extensionManager) == null ? void 0 : _a3.toast) == null ? void 0 : _b3.add) == null ? void 0 : _c2.call(_b3, {
         severity: "warn",
         summary: t("stage.preparingWorkflow"),
@@ -89631,7 +89828,7 @@ function useStageNode(node, kind, variant = "generator") {
     if (node.comfyClass === "ComfyTV.ImageStage" && !outputHasLinks(node, 0) && !outputHasLinks(node, 1)) {
       spawnConsumingNode(node, "ComfyTV.ImagePickerStage", "batch");
     }
-    state.running = true;
+    state2.running = true;
     try {
       const a = app;
       const isBridgeIn = typeof (node == null ? void 0 : node.comfyClass) === "string" && node.comfyClass.startsWith("ComfyTV.BridgeTo");
@@ -89675,7 +89872,7 @@ function useStageNode(node, kind, variant = "generator") {
           detail: msg,
           life: 6e3
         });
-        state.running = false;
+        state2.running = false;
         return;
       }
       const entries2 = useEntryStore();
@@ -89718,12 +89915,12 @@ function useStageNode(node, kind, variant = "generator") {
     } catch (e) {
       console.error("[ComfyTV/stage] queuePrompt failed", e);
       const err2 = extractRunError(e, node.id);
-      store.applyExecutionError(state, err2);
+      store.applyExecutionError(state2, err2);
       runningPromptId = null;
     }
   };
   const onCancelRequest = async () => {
-    if (!state.running) return;
+    if (!state2.running) return;
     try {
       const a = app;
       if (typeof a.api.interrupt === "function") {
@@ -89747,36 +89944,36 @@ function useStageNode(node, kind, variant = "generator") {
       return;
     }
     if (actionId === "clear-pool" && kind === "image-picker") {
-      store.clearPickerPool(node, state);
+      store.clearPickerPool(node, state2);
       return;
     }
     if (actionId === "remove-pool-item" && context2 && kind === "image-picker") {
       const removedIndex = Number(context2.index) || 0;
-      const merged = removeImageFromPool(state.pool, context2.imageUrl ?? "");
+      const merged = removeImageFromPool(state2.pool, context2.imageUrl ?? "");
       const count2 = imagePoolCount(merged);
       if (count2 === 0) {
-        store.clearPickerPool(node, state);
+        store.clearPickerPool(node, state2);
         return;
       }
-      store.setPickerPool(node, state, merged);
-      let idx = state.pickedIndex ?? 1;
+      store.setPickerPool(node, state2, merged);
+      let idx = state2.pickedIndex ?? 1;
       if (removedIndex && removedIndex < idx) idx -= 1;
       idx = Math.max(1, Math.min(count2, idx));
-      state.pickedIndex = idx;
+      state2.pickedIndex = idx;
       setWidget(node, "selected_index", idx);
-      const out = computePickedImageUrl(state);
-      if (out !== state.output) store.setOutputSlot(state, 0, out);
+      const out = computePickedImageUrl(state2);
+      if (out !== state2.output) store.setOutputSlot(state2, 0, out);
       return;
     }
     if (actionId === "pick-item" && context2 && (kind === "image-picker" || kind === "image-batch")) {
       const newIdx = Number(context2.index) || 1;
-      state.pickedIndex = newIdx;
+      state2.pickedIndex = newIdx;
       setWidget(node, "selected_index", newIdx);
       if (kind === "image-batch") {
-        const picked = computePickedFromBatch(state.output, newIdx);
-        store.setOutputSlot(state, 1, picked);
-        if (state.outputId != null && state.outputId > 0) {
-          void postPickedIndex(state.outputId, newIdx);
+        const picked = computePickedFromBatch(state2.output, newIdx);
+        store.setOutputSlot(state2, 1, picked);
+        if (state2.outputId != null && state2.outputId > 0) {
+          void postPickedIndex(state2.outputId, newIdx);
         }
       }
       return;
@@ -89794,8 +89991,8 @@ function useStageNode(node, kind, variant = "generator") {
   const onProgress = (d) => {
     if (!d) return;
     if (String(d.node) !== String(node.id)) return;
-    const prev = state.progress;
-    state.progress = {
+    const prev = state2.progress;
+    state2.progress = {
       value: Number(d.value) || 0,
       max: Math.max(1, Number(d.max) || 1),
       text: prev == null ? void 0 : prev.text
@@ -89804,8 +90001,8 @@ function useStageNode(node, kind, variant = "generator") {
   const onProgressText = (d) => {
     if (!d) return;
     if (String(d.nodeId ?? d.node) !== String(node.id)) return;
-    const prev = state.progress ?? { value: 0, max: 1 };
-    state.progress = { ...prev, text: String(d.text || "") };
+    const prev = state2.progress ?? { value: 0, max: 1 };
+    state2.progress = { ...prev, text: String(d.text || "") };
   };
   const onExecError = (d) => {
     if (!d) return;
@@ -89816,14 +90013,14 @@ function useStageNode(node, kind, variant = "generator") {
       type: rawType,
       traceback: Array.isArray(d.traceback) ? d.traceback.join("") : d.traceback || void 0
     };
-    store.applyExecutionError(state, err2);
+    store.applyExecutionError(state2, err2);
     runningPromptId = null;
     clearWatchdog();
     console.warn(`[ComfyTV/stage] execution_error on node ${node.id}:`, err2);
   };
   const onExecInterrupted = (d) => {
     if (!d) return;
-    store.applyExecutionError(state, {
+    store.applyExecutionError(state2, {
       message: t("error.cancelled"),
       type: "Cancelled"
     });
@@ -89836,20 +90033,20 @@ function useStageNode(node, kind, variant = "generator") {
     if (!runningPromptId || String(d.prompt_id) !== runningPromptId) return;
     runningPromptId = null;
     clearWatchdog();
-    if (state.running) state.running = false;
+    if (state2.running) state2.running = false;
   };
   const onStatus = (d) => {
     var _a3, _b3, _c2;
     const remaining = Number(((_b3 = (_a3 = d == null ? void 0 : d.status) == null ? void 0 : _a3.exec_info) == null ? void 0 : _b3.queue_remaining) ?? ((_c2 = d == null ? void 0 : d.exec_info) == null ? void 0 : _c2.queue_remaining));
     if (!Number.isFinite(remaining) || remaining !== 0) return;
-    if (!runningPromptId || !state.running) return;
+    if (!runningPromptId || !state2.running) return;
     if (watchdogTimer) return;
     const pid = runningPromptId;
     watchdogTimer = setTimeout(() => {
       watchdogTimer = null;
-      if (runningPromptId !== pid || !state.running) return;
+      if (runningPromptId !== pid || !state2.running) return;
       console.warn(`[ComfyTV/stage] watchdog firing on node ${node.id} — queue empty but no execution_success/error for prompt ${pid}`);
-      store.applyExecutionError(state, {
+      store.applyExecutionError(state2, {
         message: t("error.workerDied"),
         type: "WorkerDied"
       });
@@ -89879,7 +90076,7 @@ function useStageNode(node, kind, variant = "generator") {
     }
   );
   const stopTagWatch = watch(
-    () => state.outputId,
+    () => state2.outputId,
     (oid) => {
       if (oid && oid > 0) {
         void projectStore.tagOutputStageUid(Number(oid), ensureStageUid(node));
@@ -89890,21 +90087,21 @@ function useStageNode(node, kind, variant = "generator") {
     var _a3;
     const pj = latest.payload_json;
     const restored = latest.payload_url ? String(latest.payload_url) : typeof pj === "string" ? pj : pj != null ? JSON.stringify(pj) : "";
-    if (latest.id != null && state.outputId !== latest.id) {
-      state.outputId = Number(latest.id);
+    if (latest.id != null && state2.outputId !== latest.id) {
+      state2.outputId = Number(latest.id);
     }
-    if (restored && restored !== state.output) {
-      store.setOutputSlot(state, 0, restored);
+    if (restored && restored !== state2.output) {
+      store.setOutputSlot(state2, 0, restored);
     }
     if (kind === "image-batch" && restored) {
       const widget = (_a3 = node.widgets) == null ? void 0 : _a3.find((wi) => wi.name === "selected_index");
       const fromDb = Number(latest.picked_index);
       const fromWidget = Number(widget == null ? void 0 : widget.value);
       const idx = Number.isFinite(fromDb) && fromDb >= 1 ? Math.floor(fromDb) : Number.isFinite(fromWidget) && fromWidget >= 1 ? Math.floor(fromWidget) : 1;
-      state.pickedIndex = idx;
+      state2.pickedIndex = idx;
       if (widget && widget.value !== idx) widget.value = idx;
       const picked = computePickedFromBatch(restored, idx);
-      store.setOutputSlot(state, 1, picked ?? null);
+      store.setOutputSlot(state2, 1, picked ?? null);
     }
   }
   let adoptionTried = false;
@@ -89926,9 +90123,9 @@ function useStageNode(node, kind, variant = "generator") {
         );
       }
       if (!latest) {
-        if (state.output != null) {
-          store.setOutputSlot(state, 0, null);
-          if (state.outputs.length > 1) state.outputs[1] = null;
+        if (state2.output != null) {
+          store.setOutputSlot(state2, 0, null);
+          if (state2.outputs.length > 1) state2.outputs[1] = null;
         }
         return;
       }
@@ -89959,7 +90156,7 @@ function useStageNode(node, kind, variant = "generator") {
     _prepUnsub == null ? void 0 : _prepUnsub();
     store.unregisterStage(node);
   });
-  return { state, onRunRequest, onCancelRequest, onDisconnect, onAction };
+  return { state: state2, onRunRequest, onCancelRequest, onDisconnect, onAction };
 }
 const KIND_LABELS = {
   fragment: "Fragments"
@@ -90475,24 +90672,24 @@ let mountKeySeq = 0;
   hostApp.mount(host);
 })();
 const RICH_STAGE_CARDS = {
-  "ComfyTV.MultiangleStage": _sfc_main$q,
-  "ComfyTV.InpaintStage": _sfc_main$o,
-  "ComfyTV.EraseStage": _sfc_main$o,
-  "ComfyTV.CropStage": _sfc_main$m,
-  "ComfyTV.RotateStage": _sfc_main$l,
-  "ComfyTV.MirrorStage": _sfc_main$k,
-  "ComfyTV.ColorGradeStage": _sfc_main$h,
-  "ComfyTV.PanoramaStage": _sfc_main$f,
+  "ComfyTV.MultiangleStage": _sfc_main$r,
+  "ComfyTV.InpaintStage": _sfc_main$p,
+  "ComfyTV.EraseStage": _sfc_main$p,
+  "ComfyTV.CropStage": _sfc_main$n,
+  "ComfyTV.RotateStage": _sfc_main$m,
+  "ComfyTV.MirrorStage": _sfc_main$l,
+  "ComfyTV.ColorGradeStage": _sfc_main$i,
+  "ComfyTV.PanoramaStage": _sfc_main$g,
   "ComfyTV.PanoramaCurrentViewStage": PanoramaCurrentViewStageCard,
   "ComfyTV.PanoramaMultiViewStage": PanoramaMultiViewStageCard,
-  "ComfyTV.CompareStage": _sfc_main$b,
-  "ComfyTV.AssetImageLoaderStage": _sfc_main$a,
-  "ComfyTV.AssetVideoLoaderStage": _sfc_main$a,
-  "ComfyTV.AssetAudioLoaderStage": _sfc_main$a,
-  "ComfyTV.GridSplitStage": _sfc_main$9,
-  "ComfyTV.DirectorTimelineStage": _sfc_main$8,
+  "ComfyTV.CompareStage": _sfc_main$c,
+  "ComfyTV.AssetImageLoaderStage": _sfc_main$b,
+  "ComfyTV.AssetVideoLoaderStage": _sfc_main$b,
+  "ComfyTV.AssetAudioLoaderStage": _sfc_main$b,
+  "ComfyTV.GridSplitStage": _sfc_main$a,
+  "ComfyTV.DirectorTimelineStage": _sfc_main$9,
   "ComfyTV.OutpaintStage": OutpaintStageCard,
-  "ComfyTV.StoryboardStage": _sfc_main$6
+  "ComfyTV.StoryboardStage": _sfc_main$7
 };
 const RICH_STAGE_MIN_HEIGHTS = {
   "ComfyTV.MultiangleStage": 640,
@@ -90531,9 +90728,9 @@ function mountStage(node, kind, variant = "generator") {
     hideOnZoom: false,
     serialize: false
   });
-  const { state, onRunRequest, onCancelRequest, onDisconnect, onAction } = useStageNode(node, kind, variant);
+  const { state: state2, onRunRequest, onCancelRequest, onDisconnect, onAction } = useStageNode(node, kind, variant);
   const Card = RICH_STAGE_CARDS[node.comfyClass] ?? StageCard;
-  const props = { state, node, onRunRequest, onCancelRequest, onDisconnect, onAction };
+  const props = { state: state2, node, onRunRequest, onCancelRequest, onDisconnect, onAction };
   const mountKey = `stage-${mountKeySeq++}`;
   registerMount(mountKey, container, Card, props);
   node.onRemoved = useChainCallback(node.onRemoved, () => {
@@ -90557,7 +90754,7 @@ function mountProjectStage(node) {
     serialize: false
   });
   const mountKey = `project-${mountKeySeq++}`;
-  registerMount(mountKey, container, _sfc_main$5, {});
+  registerMount(mountKey, container, _sfc_main$6, {});
   const store = useProjectStore();
   const idWidget = getWidget(node, "project_id");
   const nameWidget = getWidget(node, "project_name");
@@ -90688,7 +90885,7 @@ const extension = {
           flexDirection: "column",
           overflow: "hidden"
         });
-        sidebarApp = createApp(_sfc_main$F);
+        sidebarApp = createApp(_sfc_main$G);
         sidebarApp.use(pinia);
         sidebarApp.use(i18n);
         sidebarApp.mount(container);
@@ -90708,9 +90905,9 @@ const extension = {
       proto.onExecuted,
       function(msg) {
         const store = useStageStore();
-        const state = store.getStage(this);
-        if (!state) return;
-        store.applyExecutedPayload(state, msg);
+        const state2 = store.getStage(this);
+        if (!state2) return;
+        store.applyExecutedPayload(state2, msg);
       }
     );
   },
