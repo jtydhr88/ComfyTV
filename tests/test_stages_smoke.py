@@ -61,7 +61,7 @@ class TestSchemaDefinitions:
         "AudioExtractVocalStage", "AudioExtractBgStage",
         "AudioVideoDemuxAudioStage", "AudioVideoDemuxVideoStage",
         # Pickers
-        "ImagePickerStage",
+        "ImagePickerStage", "AudioPickerStage", "VideoPickerStage",
     ])
     def test_define_schema(self, cls_name):
         classes = _import_all_stage_modules()
@@ -132,6 +132,22 @@ class TestRunnerlessStageExecute:
         out = ImagePickerStage.execute(project_id="default", selected_index=2,
                                        batch=batch)
         assert out.values[0] == "url2"
+
+    def test_video_picker_stage(self, reset_db):
+        from ComfyTV.nodes.stages.generators import VideoPickerStage
+        pool = json.dumps({"images": [
+            {"index": "1", "image_url": "clip1.mp4"},
+            {"index": "2", "image_url": "clip2.mp4"},
+        ]})
+        out = VideoPickerStage.execute(project_id="default", selected_index=2,
+                                       pool=pool)
+        assert out.values[0] == "clip2.mp4"
+
+    def test_audio_picker_stage_single_url_batch(self, reset_db):
+        from ComfyTV.nodes.stages.generators import AudioPickerStage
+        out = AudioPickerStage.execute(project_id="default", selected_index=1,
+                                       batch="/view?filename=track.mp3")
+        assert out.values[0] == "/view?filename=track.mp3"
 
     @pytest.mark.asyncio
     async def test_project_stage(self, reset_db):

@@ -43,6 +43,8 @@ const SHORT_TYPE: Record<string, string> = {
   COMFYTV_PANORAMA:   '360°',
   COMFYTV_STORYBOARD: 'BOARD',
   COMFYTV_IMAGES:     'BATCH',
+  COMFYTV_AUDIOS:     'AUDIO',
+  COMFYTV_VIDEOS:     'VID',
   COMFYTV_TIMELINE:   'TIMELINE',
 }
 
@@ -76,7 +78,7 @@ export function useValuePreview(
 
   const batchImages = computed<BatchImage[]>(() => {
     const t = getType()
-    if (t !== 'COMFYTV_IMAGES' && t !== 'COMFYTV_AUDIOS') return []
+    if (t !== 'COMFYTV_IMAGES' && t !== 'COMFYTV_AUDIOS' && t !== 'COMFYTV_VIDEOS') return []
     return parsePayloadList(t, getContent(), t, 'images')
   })
 

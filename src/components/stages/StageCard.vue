@@ -5,7 +5,7 @@
     <ImageReferences v-if="!hideContext && state.variant !== 'loader'" :node="node" />
 
     <section
-      v-if="(state.kind === 'image-picker' || state.kind === 'audio-picker') && !hideContext && (poolCount > 0 || connectedInputs.length > 0)"
+      v-if="isPicker && !hideContext && (poolCount > 0 || connectedInputs.length > 0)"
       class="ctv-picker-input ctv:flex ctv:flex-col ctv:gap-1 ctv:py-1"
       :class="`ctv-src-${pickerSource}`"
     >
@@ -32,7 +32,7 @@
         </template>
       </div>
       <ValuePreview
-        :type="state.kind === 'audio-picker' ? 'COMFYTV_AUDIOS' : 'COMFYTV_IMAGES'"
+        :type="poolPreviewType"
         :content="poolContent"
         :empty-label="pickerSource === 'upstream-pending' ? $t('stage.empty.pending_upstream') : $t('stage.empty.no_output')"
         :selected-index="state.pickedIndex"
@@ -45,7 +45,7 @@
       />
     </section>
 
-    <section v-if="!hideContext && state.variant !== 'loader' && state.kind !== 'image-picker' && state.kind !== 'audio-picker' && connectedInputs.length > 0"
+    <section v-if="!hideContext && state.variant !== 'loader' && !isPicker && connectedInputs.length > 0"
              class="ctv:flex ctv:flex-col ctv:gap-1">
       <div :class="sectionLabel">{{ $t('stage.section.context') }}</div>
 
@@ -107,7 +107,7 @@
     <CustomParamsSection v-if="node" :state="state" :node="node" />
 
     <button
-      v-if="state.variant !== 'loader' && state.variant !== 'transform' && state.kind !== 'image-picker' && state.kind !== 'audio-picker'"
+      v-if="state.variant !== 'loader' && state.variant !== 'transform' && !isPicker"
       :class="['run-btn', state.running && 'is-cancel', runBtnClass]"
       :disabled="!state.running && !canRun"
       @click="state.running ? onCancel() : onRun()"
@@ -131,7 +131,7 @@
       </span>
     </div>
 
-    <section v-if="!hideOutput && state.kind !== 'audio-picker'" class="output ctv:flex-1 ctv:min-h-0 ctv:flex ctv:flex-col ctv:gap-1">
+    <section v-if="!hideOutput && state.kind !== 'audio-picker' && state.kind !== 'video-picker'" class="output ctv:flex-1 ctv:min-h-0 ctv:flex ctv:flex-col ctv:gap-1">
       <div :class="sectionLabel">{{ $t('stage.section.output', { type: state.outputType }) }}</div>
 
       <ValuePreview
@@ -199,7 +199,7 @@ import {
   presetTooltipKey,
 } from '@/composables/stages/actionLabels'
 import type { LGraphNode } from '@/lib/comfyApp'
-import { useStageStore, type InputSource, type StageState, type ImagePickContext } from '@/stores/stageStore'
+import { isPoolPickerKind, useStageStore, type InputSource, type StageState, type ImagePickContext } from '@/stores/stageStore'
 
 const props = defineProps<{
   state: StageState
@@ -228,6 +228,14 @@ const {
   confirmingClear,
   onClearPool,
 } = useStageCard(() => props.state, props.onAction)
+
+const isPicker = computed(() => isPoolPickerKind(props.state.kind))
+
+const poolPreviewType = computed(() => {
+  if (props.state.kind === 'audio-picker') return 'COMFYTV_AUDIOS'
+  if (props.state.kind === 'video-picker') return 'COMFYTV_VIDEOS'
+  return 'COMFYTV_IMAGES'
+})
 
 const progressFallbackText = computed(() => {
   const p = props.state.progress

@@ -55,6 +55,7 @@ describe('ValuePreview — type-driven branches', () => {
     expect(events).toHaveLength(1)
     expect(events[0][0]).toEqual({
       index: '', imageUrl: '/view?filename=shot_01.png&type=output', label: 'shot_01',
+      mediaType: 'image',
     })
   })
 
@@ -68,7 +69,7 @@ describe('ValuePreview — type-driven branches', () => {
     await userEvent.click(screen.getByTitle(/load as asset node/i))
     const events = emitted('load-asset') as Array<[any]>
     expect(events).toHaveLength(1)
-    expect(events[0][0]).toEqual({ index: '', imageUrl: '/view?f=1.png', label: 'hero' })
+    expect(events[0][0]).toEqual({ index: '', imageUrl: '/view?f=1.png', label: 'hero', mediaType: 'image' })
   })
 
   it('IMAGE in compact mode hides the action toolbar', () => {

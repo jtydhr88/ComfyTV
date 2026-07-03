@@ -44,7 +44,7 @@ describe('useOutputAssetTagging', () => {
     const tag = useOutputAssetTagging()
     tag.openTagMenu('/a', 'pic', clickEvent(200, 80))
     expect(store.ensureHydrated).toHaveBeenCalled()
-    expect(tag.tagMenu.value).toEqual({ url: '/a', name: 'pic', x: 200, y: 84 })
+    expect(tag.tagMenu.value).toEqual({ url: '/a', name: 'pic', mediaType: 'image', x: 200, y: 84 })
     expect(tag.tagMenuStyle.value).toEqual({ left: '24px', top: '84px' })
   })
 
@@ -109,6 +109,24 @@ describe('useOutputAssetTagging', () => {
       name: 'pic', payload_url: '/a', media_type: 'image', category_ids: [],
     })
     expect(store.removeTag).not.toHaveBeenCalled()
+  })
+
+  it('saves an audio output with media_type audio (not image)', async () => {
+    const tag = useOutputAssetTagging()
+    tag.openTagMenu('/track.mp3', 'song', clickEvent(10, 10), 'audio')
+    await tag.setUncategorized()
+    expect(store.create).toHaveBeenCalledWith({
+      name: 'song', payload_url: '/track.mp3', media_type: 'audio', category_ids: [],
+    })
+  })
+
+  it('tags a not-yet-saved video output as media_type video', async () => {
+    const tag = useOutputAssetTagging()
+    tag.openTagMenu('/clip.mp4', 'clip', clickEvent(10, 10), 'video')
+    await tag.toggleOutputTag(1)
+    expect(store.create).toHaveBeenCalledWith({
+      name: 'clip', payload_url: '/clip.mp4', media_type: 'video', category_ids: [1],
+    })
   })
 
   it('setUncategorized strips every category from an already-saved output', async () => {

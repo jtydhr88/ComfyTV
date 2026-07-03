@@ -11,13 +11,22 @@ export type StageKind =
   | 'image-batch'
   | 'image-picker'
   | 'audio-picker'
+  | 'video-picker'
   | 'timeline'
+
+export const POOL_PICKER_KINDS = ['image-picker', 'audio-picker', 'video-picker'] as const
+export type PoolPickerKind = (typeof POOL_PICKER_KINDS)[number]
+
+export function isPoolPickerKind(kind: string): kind is PoolPickerKind {
+  return (POOL_PICKER_KINDS as readonly string[]).includes(kind)
+}
 
 export interface ImagePickContext {
   index: string
   label?: string
   prompt?: string
   imageUrl?: string
+  mediaType?: string
 }
 
 export type StageVariant = 'generator' | 'loader' | 'transform'
@@ -68,6 +77,7 @@ const KIND_TO_TYPE: Record<StageKind, TypedValueType> = {
   'image-batch':  'COMFYTV_IMAGES',
   'image-picker': 'COMFYTV_IMAGE',
   'audio-picker': 'COMFYTV_AUDIO',
+  'video-picker': 'COMFYTV_VIDEO',
   timeline:       'COMFYTV_TIMELINE',
 }
 

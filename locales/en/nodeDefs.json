@@ -1529,7 +1529,7 @@
     }
   },
   "ComfyTV_AudioPickerStage": {
-    "display_name": "Music Picker",
+    "display_name": "Audio Picker",
     "inputs": {
       "batch": {
         "name": "Batch"
@@ -1544,6 +1544,25 @@
     "outputs": {
       "0": {
         "name": "Audio"
+      }
+    }
+  },
+  "ComfyTV_VideoPickerStage": {
+    "display_name": "Video Picker",
+    "inputs": {
+      "batch": {
+        "name": "Batch"
+      },
+      "pool": {
+        "name": "Pool"
+      },
+      "selected_index": {
+        "name": "Selected index"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Video"
       }
     }
   }

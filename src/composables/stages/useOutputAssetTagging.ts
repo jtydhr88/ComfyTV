@@ -5,6 +5,7 @@ import { useAssetStore } from '@/stores/assetStore'
 interface TagMenuState {
   url: string
   name: string
+  mediaType: string
   x: number
   y: number
 }
@@ -40,11 +41,11 @@ export function useOutputAssetTagging() {
     return !!url && !!assetStore.byPayloadUrl(url)
   }
 
-  function openTagMenu(url: string, name: string, e: MouseEvent) {
+  function openTagMenu(url: string, name: string, e: MouseEvent, mediaType: string = 'image') {
     if (!url) return
     assetStore.ensureHydrated()
     const r = (e.currentTarget as HTMLElement).getBoundingClientRect()
-    tagMenu.value = { url, name, x: r.right, y: r.bottom + 4 }
+    tagMenu.value = { url, name, mediaType, x: r.right, y: r.bottom + 4 }
   }
 
   function closeTagMenu() {
@@ -69,7 +70,7 @@ export function useOutputAssetTagging() {
       await assetStore.create({
         name: tagMenu.value.name,
         payload_url: tagMenu.value.url,
-        media_type: 'image',
+        media_type: tagMenu.value.mediaType || 'image',
         category_ids: [],
       })
       return
@@ -88,7 +89,7 @@ export function useOutputAssetTagging() {
       await assetStore.create({
         name: tagMenu.value.name,
         payload_url: tagMenu.value.url,
-        media_type: 'image',
+        media_type: tagMenu.value.mediaType || 'image',
         category_ids: [catId],
       })
       return

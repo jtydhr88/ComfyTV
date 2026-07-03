@@ -32,7 +32,7 @@
                 @click.stop="onDownload(String(content))"><i class="pi pi-download" /></button>
         <button type="button" :class="tagActionBtn(String(content))"
                 :title="$t('stage.action.addTag')"
-                @click.stop="openTagMenu(String(content), nameFromUrl(String(content)), $event)"><i class="pi pi-tag" /></button>
+                @click.stop="openTagMenu(String(content), nameFromUrl(String(content)), $event, previewMediaType)"><i class="pi pi-tag" /></button>
         <button type="button" :class="imgActionBtn"
                 :title="$t('stage.action.loadAsset')"
                 @click.stop="onLoadAsset(String(content), nameFromUrl(String(content)))"><i class="pi pi-bookmark" /></button>
@@ -161,7 +161,7 @@
                     @click.stop="onDownload(img.image_url)"><i class="pi pi-download" /></button>
             <button type="button" :class="tagActionBtn(img.image_url)"
                     :title="$t('stage.action.addTag')"
-                    @click.stop="openTagMenu(img.image_url, img.label || img.prompt || nameFromUrl(img.image_url), $event)"><i class="pi pi-tag" /></button>
+                    @click.stop="openTagMenu(img.image_url, img.label || img.prompt || nameFromUrl(img.image_url), $event, previewMediaType)"><i class="pi pi-tag" /></button>
             <button type="button" :class="imgActionBtn"
                     :title="$t('stage.action.loadAsset')"
                     @click.stop="onLoadAsset(img.image_url, img.label || img.prompt || nameFromUrl(img.image_url))"><i class="pi pi-bookmark" /></button>
@@ -214,13 +214,67 @@
                     @click.stop="onDownload(track.image_url)"><i class="pi pi-download" /></button>
             <button type="button" :class="tagActionBtn(track.image_url)"
                     :title="$t('stage.action.addTag')"
-                    @click.stop="openTagMenu(track.image_url, track.label || track.prompt || nameFromUrl(track.image_url), $event)"><i class="pi pi-tag" /></button>
+                    @click.stop="openTagMenu(track.image_url, track.label || track.prompt || nameFromUrl(track.image_url), $event, previewMediaType)"><i class="pi pi-tag" /></button>
             <button type="button" :class="imgActionBtn"
                     :title="$t('stage.action.loadAsset')"
                     @click.stop="onLoadAsset(track.image_url, track.label || track.prompt || nameFromUrl(track.image_url))"><i class="pi pi-bookmark" /></button>
             <button v-if="canRemoveItem(track, i)" type="button" :class="removeActionBtn"
                     :title="$t('stage.action.removeFromPicker')"
                     @click.stop="onItemRemove(track, i)"><i class="pi pi-times" /></button>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <template v-else-if="type === 'COMFYTV_VIDEOS'">
+      <div v-if="compact" :class="compactSummary">
+        <span class="ctv:text-[22px] ctv:leading-none"><i class="pi pi-video" /></span>
+        <span v-if="batchImages.length" class="vp-compact-count-text ctv:text-sm ctv:font-bold ctv:text-[#d8b0ff]">{{ batchImages.length }}</span>
+      </div>
+      <div v-else class="ctv:flex ctv:flex-col ctv:gap-1">
+        <div v-if="batchImages.length === 0" :class="emptyClass">{{ emptyLabel || '…' }}</div>
+        <div
+          v-for="(clip, i) in batchImages"
+          :key="i"
+          :class="audioRowClass(isItemSelected(clip, i))"
+          :title="cellTooltip(clip, i)"
+        >
+          <div
+            class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:min-w-0"
+            :class="clickMode === 'pick' ? 'ctv:cursor-pointer' : undefined"
+            :role="clickMode === 'pick' ? 'button' : undefined"
+            :tabindex="clickMode === 'pick' ? 0 : undefined"
+            @click="clickMode === 'pick' ? onItemClick(clip, i) : undefined"
+            @keydown="clickMode === 'pick' ? onCellKey(clip, i, $event) : undefined"
+          >
+            <span v-if="clickMode === 'pick' && isItemSelected(clip, i)"
+                  class="ctv:shrink-0 ctv:flex ctv:items-center ctv:justify-center ctv:size-4 ctv:rounded-full
+                         ctv:text-3xs ctv:leading-none ctv:bg-primary-background ctv:text-white
+                         ctv:shadow-[0_1px_3px_rgb(0_0_0/0.5)]"><i class="pi pi-check" /></span>
+            <span v-if="removable && isUpstreamItem(clip)"
+                  class="ctv:shrink-0 ctv:flex ctv:items-center ctv:py-px ctv:px-1 ctv:text-3xs ctv:font-bold
+                         ctv:rounded-sm ctv:bg-primary-background/85 ctv:text-white"
+                  :title="$t('valuePreview.fromUpstream')"><i class="pi pi-arrow-up" /></span>
+            <span class="ctv:min-w-0 ctv:flex-1 ctv:truncate ctv:text-3xs ctv:font-bold ctv:text-[#ffb0d8]">
+              {{ clip.label ?? `#${clip.index ?? i + 1}` }}
+            </span>
+          </div>
+          <video :src="clip.image_url" class="ctv:block ctv:w-full ctv:max-h-32 ctv:rounded-sm ctv:bg-black"
+                 controls muted playsinline preload="metadata"
+                 @click.stop />
+          <div :class="imgActionsClass">
+            <button type="button" :class="imgActionBtn"
+                    :title="$t('stage.action.download')"
+                    @click.stop="onDownload(clip.image_url)"><i class="pi pi-download" /></button>
+            <button type="button" :class="tagActionBtn(clip.image_url)"
+                    :title="$t('stage.action.addTag')"
+                    @click.stop="openTagMenu(clip.image_url, clip.label || clip.prompt || nameFromUrl(clip.image_url), $event, previewMediaType)"><i class="pi pi-tag" /></button>
+            <button type="button" :class="imgActionBtn"
+                    :title="$t('stage.action.loadAsset')"
+                    @click.stop="onLoadAsset(clip.image_url, clip.label || clip.prompt || nameFromUrl(clip.image_url))"><i class="pi pi-bookmark" /></button>
+            <button v-if="canRemoveItem(clip, i)" type="button" :class="removeActionBtn"
+                    :title="$t('stage.action.removeFromPicker')"
+                    @click.stop="onItemRemove(clip, i)"><i class="pi pi-times" /></button>
           </div>
         </div>
       </div>
@@ -392,9 +446,22 @@ const emit = defineEmits<{
   (e: 'load-asset', payload: ItemClickPayload): void
 }>()
 
+const previewMediaType = computed<string>(() => {
+  switch (props.type) {
+    case 'COMFYTV_AUDIO':
+    case 'COMFYTV_AUDIOS':
+      return 'audio'
+    case 'COMFYTV_VIDEO':
+    case 'COMFYTV_VIDEOS':
+      return 'video'
+    default:
+      return 'image'
+  }
+})
+
 function onLoadAsset(url: string, label: string) {
   if (!url) return
-  emit('load-asset', { index: '', imageUrl: url, label })
+  emit('load-asset', { index: '', imageUrl: url, label, mediaType: previewMediaType.value })
 }
 
 function itemPayload(img: BatchImage, i: number): ItemClickPayload {
@@ -453,6 +520,8 @@ const TYPE_BADGE_COLORS: Record<string, string> = {
   COMFYTV_AUDIO:      'ctv:bg-[rgb(255_100_100/0.22)] ctv:text-[#ffb0b0]',
   COMFYTV_STORYBOARD: 'ctv:bg-[rgb(200_130_255/0.25)] ctv:text-[#d8b0ff]',
   COMFYTV_IMAGES:     'ctv:bg-[rgb(255_140_200/0.25)] ctv:text-[#ffb0d8]',
+  COMFYTV_AUDIOS:     'ctv:bg-[rgb(255_100_100/0.22)] ctv:text-[#ffb0b0]',
+  COMFYTV_VIDEOS:     'ctv:bg-[rgb(255_171_64/0.25)] ctv:text-[#ffd089]',
 }
 const typeBadgeClass = computed(() => {
   const palette = TYPE_BADGE_COLORS[props.type] ?? 'ctv:bg-white/10 ctv:text-white/70'

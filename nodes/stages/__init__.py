@@ -2,7 +2,7 @@ from ._common import *  # noqa: F401, F403
 
 from .generators import (
     ProjectStage, TextStage, ImageStage, VideoStage, AudioStage, SpeechStage,
-    ImagePickerStage, AudioPickerStage, ShotImagesStage, StoryboardStage,
+    ImagePickerStage, AudioPickerStage, VideoPickerStage, ShotImagesStage, StoryboardStage,
 )
 from .edits import (
     UpscaleStage, OutpaintStage, InpaintStage, ImageEditStage,
@@ -36,7 +36,7 @@ class ComfyTVExtension(ComfyExtension):
         return [
             ProjectStage,
             TextStage, ImageStage, VideoStage, AudioStage, SpeechStage,
-            ImagePickerStage, AudioPickerStage,
+            ImagePickerStage, AudioPickerStage, VideoPickerStage,
             PanoramaStage, PanoramaCurrentViewStage, PanoramaMultiViewStage,
             MultiangleStage, RelightStage, ImageVariationsStage,
             UpscaleStage, OutpaintStage, InpaintStage, ImageEditStage,
