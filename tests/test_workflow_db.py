@@ -841,6 +841,60 @@ class TestSeedAndCRUD:
         assert wdb.read_workflow_file("image", "Nope") is None
 
 
+class TestSeedAddedReporting:
+    def _write(self, wdir, kind: str, name: str) -> None:
+        kd = wdir / kind
+        kd.mkdir(parents=True, exist_ok=True)
+        (kd / f"{name}.json").write_text(json.dumps({"nodes": []}))
+
+    def test_first_population_reports_no_added(self, reset_db, tmp_path, monkeypatch):
+        from pathlib import Path
+        wdir = tmp_path / "workflows"
+        self._write(wdir, "image", "a")
+        monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
+        result = wdb.seed_workflows_from_disk(("image",))
+        assert result["added"] == []
+        assert result["total"] == 1
+        assert result["pruned"] == 0
+
+    def test_rescan_reports_new_files(self, reset_db, tmp_path, monkeypatch):
+        from pathlib import Path
+        wdir = tmp_path / "workflows"
+        self._write(wdir, "image", "a")
+        monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
+        wdb.seed_workflows_from_disk(("image",))
+
+        self._write(wdir, "image", "b")
+        self._write(wdir, "video", "c")
+        result = wdb.seed_workflows_from_disk(("image", "video"))
+        assert {(a["kind"], a["label"]) for a in result["added"]} \
+            == {("image", "b"), ("video", "c")}
+        assert result["total"] == 3
+
+    def test_rescan_reports_pruned(self, reset_db, tmp_path, monkeypatch):
+        from pathlib import Path
+        wdir = tmp_path / "workflows"
+        self._write(wdir, "image", "a")
+        self._write(wdir, "image", "b")
+        monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
+        wdb.seed_workflows_from_disk(("image",))
+
+        (wdir / "image" / "b.json").unlink()
+        result = wdb.seed_workflows_from_disk(("image",))
+        assert result["added"] == []
+        assert result["pruned"] == 1
+        assert result["total"] == 1
+
+    def test_unchanged_rescan_adds_nothing(self, reset_db, tmp_path, monkeypatch):
+        from pathlib import Path
+        wdir = tmp_path / "workflows"
+        self._write(wdir, "image", "a")
+        monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
+        wdb.seed_workflows_from_disk(("image",))
+        result = wdb.seed_workflows_from_disk(("image",))
+        assert result == {"added": [], "pruned": 0, "total": 1}
+
+
 class TestListWorkflowsOverview:
     def _seed_one(self, tmp_path, monkeypatch, name="sd15", kind="image",
                   content: str | None = None) -> None:
@@ -895,6 +949,24 @@ class TestListWorkflowsOverview:
         row = next(r for r in rows if r["label"] == "gone")
         assert row["file_exists"] is False
         assert row["gui_valid"] is None
+
+    def test_user_dropped_file_not_builtin(self, reset_db, tmp_path, monkeypatch):
+        self._seed_one(tmp_path, monkeypatch, "userwf", "image")
+        rows = wdb.list_workflows_overview("image")
+        row = next(r for r in rows if r["label"] == "userwf")
+        assert row["builtin"] is False
+
+    def test_git_tracked_file_marked_builtin(self, reset_db, tmp_path, monkeypatch):
+        self._seed_one(tmp_path, monkeypatch, "shipped", "image")
+        tracked_path = str(
+            (tmp_path / "workflows" / "image" / "shipped.json").resolve()
+        )
+        monkeypatch.setattr(
+            wdb.bindings, "_git_tracked_workflow_paths", lambda: {tracked_path}
+        )
+        rows = wdb.list_workflows_overview("image")
+        row = next(r for r in rows if r["label"] == "shipped")
+        assert row["builtin"] is True
 
 
 # ─── _apply_preset_to_new_row edge cases ─────────────────────────────────────

@@ -19584,6 +19584,7 @@ const DeleteAssetSchema = object({
 });
 const WorkflowOverviewSchema = object({
   id: number(),
+  builtin: boolean().optional(),
   kind: string(),
   label: string(),
   order: number(),
@@ -19595,9 +19596,20 @@ const WorkflowOverviewSchema = object({
   has_api: boolean(),
   gui_valid: boolean().nullable().optional()
 });
+const WorkflowRefSchema = object({
+  kind: string(),
+  label: string()
+});
 const ListWorkflowOverviewSchema = object({
   kinds: array(string()),
-  workflows: array(WorkflowOverviewSchema)
+  workflows: array(WorkflowOverviewSchema),
+  recent_added: array(WorkflowRefSchema).default([])
+});
+const RescanResultSchema = object({
+  ok: boolean(),
+  added: array(WorkflowRefSchema),
+  pruned: number(),
+  total: number()
 });
 const WorkflowStateSchema = object({
   has_api: boolean(),
@@ -19742,6 +19754,9 @@ function uploadApiSidecar(kind, label, content) {
 function listWorkflowOverview(kind) {
   const q = kind ? `?kind=${encodeURIComponent(kind)}` : "";
   return apiFetch(`/comfytv/workflows${q}`, ListWorkflowOverviewSchema);
+}
+function rescanWorkflows() {
+  return apiSend("/comfytv/workflows/rescan", "POST", RescanResultSchema);
 }
 async function listNativeWorkflows(kind) {
   const q = kind ? `?kind=${encodeURIComponent(kind)}` : "";
@@ -20589,9 +20604,9 @@ const _hoisted_15$g = {
   key: 0,
   class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:my-1.5 ctv:mx-2.5 ctv:py-1.5 ctv:px-2 ctv:text-xs ctv:rounded ctv:bg-destructive-background/15 ctv:border ctv:border-destructive-background/50 ctv:text-destructive-background"
 };
-const _hoisted_16$e = { class: "ctv:flex-1" };
-const _hoisted_17$d = { class: "ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-1.5" };
-const _hoisted_18$b = {
+const _hoisted_16$f = { class: "ctv:flex-1" };
+const _hoisted_17$e = { class: "ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-1.5" };
+const _hoisted_18$c = {
   key: 0,
   class: "ctv:py-5 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60"
 };
@@ -20850,7 +20865,7 @@ const _sfc_main$P = /* @__PURE__ */ defineComponent({
           }), 128))
         ]),
         unref(uploadError) ? (openBlock(), createElementBlock("div", _hoisted_15$g, [
-          createBaseVNode("span", _hoisted_16$e, toDisplayString$1(unref(uploadError)), 1),
+          createBaseVNode("span", _hoisted_16$f, toDisplayString$1(unref(uploadError)), 1),
           createBaseVNode("button", {
             class: "ctv:inline-flex ctv:bg-transparent ctv:border-none ctv:cursor-pointer ctv:text-inherit ctv:opacity-70 ctv:hover:opacity-100",
             onClick: _cache2[7] || (_cache2[7] = ($event) => uploadError.value = null)
@@ -20858,8 +20873,8 @@ const _sfc_main$P = /* @__PURE__ */ defineComponent({
             createVNode(unref(IconX), { class: "ctv:size-3.5" })
           ])
         ])) : createCommentVNode("", true),
-        createBaseVNode("div", _hoisted_17$d, [
-          unref(visibleAssets).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_18$b, toDisplayString$1(emptyText.value), 1)) : unref(viewMode) === "grid" ? (openBlock(), createElementBlock("div", _hoisted_19$b, [
+        createBaseVNode("div", _hoisted_17$e, [
+          unref(visibleAssets).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_18$c, toDisplayString$1(emptyText.value), 1)) : unref(viewMode) === "grid" ? (openBlock(), createElementBlock("div", _hoisted_19$b, [
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(visibleAssets), (asset) => {
               return openBlock(), createBlock(AssetGridCard, {
                 key: asset.id,
@@ -29481,6 +29496,13 @@ const _manager = new HeadlessConvertManager();
 function convertGuiToApiHeadless(guiJson, opts = {}) {
   return _manager.convert(guiJson, opts);
 }
+const WORKFLOW_API_GENERATED = "comfytv:workflow-api-generated";
+function emitWorkflowApiGenerated(kind, label) {
+  window.dispatchEvent(new CustomEvent(
+    WORKFLOW_API_GENERATED,
+    { detail: { kind, label } }
+  ));
+}
 const _state = /* @__PURE__ */ new Map();
 const _inflight = /* @__PURE__ */ new Map();
 const _listeners = /* @__PURE__ */ new Map();
@@ -29524,6 +29546,7 @@ function prepareWorkflow(kind, label) {
       );
       if (state2.has_api) {
         _set(key, { busy: false, ready: true });
+        emitWorkflowApiGenerated(kind, label);
         return;
       }
       if (!state2.file_exists) {
@@ -29566,6 +29589,7 @@ ComfyTV will use that API prompt directly and skip conversion.`
         file_mtime: fileMtime
       });
       _set(key, { busy: false, ready: true });
+      emitWorkflowApiGenerated(kind, label);
     } catch (e) {
       const msg = String((e == null ? void 0 : e.message) || e || "prepare failed");
       console.error(`[ComfyTV/workflow-prep] ${kind}/${label}:`, e);
@@ -29770,6 +29794,7 @@ function useWorkflowConfig(t2) {
           throw new Error(t2("configSidebar.uploadApiNotJson"));
         }
         const res = await uploadApiSidecar(sel.workflowKind, sel.workflowLabel, text);
+        emitWorkflowApiGenerated(sel.workflowKind, sel.workflowLabel);
         await loadConfig(sel.workflowKind, sel.workflowLabel);
         invalidateWorkflowInfo();
         (_d = (_c = (_b2 = app == null ? void 0 : app.extensionManager) == null ? void 0 : _b2.toast) == null ? void 0 : _c.add) == null ? void 0 : _d.call(_c, {
@@ -30050,9 +30075,9 @@ const _hoisted_14$f = {
   class: "ctv:rounded ctv:overflow-hidden ctv:bg-warning-background/[0.03] ctv:border ctv:border-warning-background/25"
 };
 const _hoisted_15$f = ["aria-expanded"];
-const _hoisted_16$d = { class: "ctv:flex-1 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:font-semibold ctv:text-warning-background" };
-const _hoisted_17$c = { class: "ctv:text-3xs ctv:font-mono ctv:py-px ctv:px-1.5 ctv:rounded-lg ctv:bg-warning-background/10 ctv:text-warning-background/70" };
-const _hoisted_18$a = {
+const _hoisted_16$e = { class: "ctv:flex-1 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:font-semibold ctv:text-warning-background" };
+const _hoisted_17$d = { class: "ctv:text-3xs ctv:font-mono ctv:py-px ctv:px-1.5 ctv:rounded-lg ctv:bg-warning-background/10 ctv:text-warning-background/70" };
+const _hoisted_18$b = {
   key: 0,
   class: "ctv:flex ctv:flex-col ctv:gap-1 ctv:py-1.5 ctv:px-2"
 };
@@ -30325,10 +30350,10 @@ const _sfc_main$J = /* @__PURE__ */ defineComponent({
               createBaseVNode("i", {
                 class: normalizeClass(["pi", unref(notesCollapsed) ? "pi-chevron-right" : "pi-chevron-down", "ctv:w-2.5 ctv:text-2xs ctv:text-warning-background/75"])
               }, null, 2),
-              createBaseVNode("span", _hoisted_16$d, toDisplayString$1(_ctx.$t("configSidebar.section.notes")), 1),
-              createBaseVNode("span", _hoisted_17$c, toDisplayString$1(unref(config2).gui_notes.length), 1)
+              createBaseVNode("span", _hoisted_16$e, toDisplayString$1(_ctx.$t("configSidebar.section.notes")), 1),
+              createBaseVNode("span", _hoisted_17$d, toDisplayString$1(unref(config2).gui_notes.length), 1)
             ], 10, _hoisted_15$f),
-            !unref(notesCollapsed) ? (openBlock(), createElementBlock("div", _hoisted_18$a, [
+            !unref(notesCollapsed) ? (openBlock(), createElementBlock("div", _hoisted_18$b, [
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(config2).gui_notes, (note, i) => {
                 return openBlock(), createElementBlock("div", {
                   key: i,
@@ -30488,30 +30513,34 @@ const _hoisted_1$I = { class: "ctv:flex ctv:flex-col ctv:gap-1.5" };
 const _hoisted_2$D = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
 const _hoisted_3$A = { class: "ctv:text-3xs ctv:font-mono ctv:py-px ctv:px-1.5 ctv:rounded-lg ctv:bg-base-foreground/5 ctv:text-muted-foreground" };
 const _hoisted_4$w = ["title", "disabled"];
-const _hoisted_5$u = ["disabled"];
-const _hoisted_6$t = {
+const _hoisted_5$u = ["title", "disabled"];
+const _hoisted_6$t = ["disabled"];
+const _hoisted_7$r = {
   key: 0,
   class: "ctv:py-1.5 ctv:px-2 ctv:text-xs ctv:rounded ctv:bg-destructive-background/15 ctv:border ctv:border-destructive-background/50 ctv:text-destructive-background"
 };
-const _hoisted_7$r = {
+const _hoisted_8$p = {
   key: 1,
   class: "ctv:py-3 ctv:text-center ctv:italic ctv:text-muted-foreground/60"
 };
-const _hoisted_8$p = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-wrap" };
-const _hoisted_9$p = { class: "ctv:font-semibold ctv:truncate" };
-const _hoisted_10$o = ["title"];
+const _hoisted_9$p = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-wrap" };
+const _hoisted_10$o = { class: "ctv:font-semibold ctv:truncate" };
 const _hoisted_11$k = ["title"];
 const _hoisted_12$k = ["title"];
 const _hoisted_13$g = ["title"];
 const _hoisted_14$e = ["title"];
 const _hoisted_15$e = ["title"];
+const _hoisted_16$d = ["title"];
+const _hoisted_17$c = ["title"];
+const _hoisted_18$a = ["title"];
 const badge = "ctv:inline-flex ctv:items-center ctv:gap-1 ctv:py-px ctv:px-1.5 ctv:rounded ctv:text-3xs ctv:whitespace-nowrap";
 const iconBtn = "ctv:shrink-0 ctv:flex ctv:items-center ctv:justify-center ctv:size-6 ctv:rounded-sm ctv:cursor-pointer ctv:text-xs ctv:border-none ctv:bg-transparent ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:disabled:pointer-events-none ctv:disabled:opacity-50";
 const importBtn = "ctv:inline-flex ctv:items-center ctv:gap-1 ctv:h-6 ctv:px-2 ctv:rounded-sm ctv:text-xs ctv:font-medium ctv:cursor-pointer ctv:border-none ctv:text-secondary-foreground ctv:bg-secondary-background ctv:hover:bg-secondary-background-hover ctv:disabled:pointer-events-none ctv:disabled:opacity-50";
 const _sfc_main$I = /* @__PURE__ */ defineComponent({
   __name: "StageWorkflowList",
   props: {
-    kind: {}
+    kind: {},
+    active: { type: Boolean }
   },
   emits: ["kinds"],
   setup(__props, { expose: __expose, emit: __emit }) {
@@ -30522,6 +30551,8 @@ const _sfc_main$I = /* @__PURE__ */ defineComponent({
     const loading2 = /* @__PURE__ */ ref(false);
     const loadError = /* @__PURE__ */ ref("");
     const importBusy = /* @__PURE__ */ ref(false);
+    const rescanBusy = /* @__PURE__ */ ref(false);
+    const recentAdded = /* @__PURE__ */ ref(/* @__PURE__ */ new Set());
     function toast2(severity, summary, detail = "") {
       var _a2, _b2, _c;
       (_c = (_b2 = (_a2 = app == null ? void 0 : app.extensionManager) == null ? void 0 : _a2.toast) == null ? void 0 : _b2.add) == null ? void 0 : _c.call(_b2, { severity, summary, detail, life: 5e3 });
@@ -30535,11 +30566,39 @@ const _sfc_main$I = /* @__PURE__ */ defineComponent({
       try {
         const res = await listWorkflowOverview(props.kind);
         rows.value = res.workflows;
+        recentAdded.value = new Set(
+          res.recent_added.filter((r) => r.kind === props.kind).map((r) => r.label)
+        );
         emit2("kinds", res.kinds);
       } catch (e) {
         loadError.value = String((e == null ? void 0 : e.message) || e);
       } finally {
         loading2.value = false;
+      }
+    }
+    async function onRescan() {
+      var _a2;
+      rescanBusy.value = true;
+      try {
+        const res = await rescanWorkflows();
+        for (const a of res.added) addOptionEverywhere(a.kind, a.label);
+        void ((_a2 = app == null ? void 0 : app.refreshComboInNodes) == null ? void 0 : _a2.call(app));
+        if (res.added.length) {
+          const names = res.added.slice(0, 5).map((a) => `${a.kind}/${a.label}`).join(", ");
+          const more = res.added.length > 5 ? ` +${res.added.length - 5}` : "";
+          toast2(
+            "success",
+            t2("stageManager.rescanFound", { n: res.added.length }),
+            names + more
+          );
+        } else {
+          toast2("info", t2("stageManager.rescanNone"), t2("stageManager.rescanNoneDetail"));
+        }
+        await reload();
+      } catch (e) {
+        toast2("error", t2("stageManager.rescanFailed"), String((e == null ? void 0 : e.message) || e));
+      } finally {
+        rescanBusy.value = false;
       }
     }
     function onImport() {
@@ -30574,9 +30633,20 @@ const _sfc_main$I = /* @__PURE__ */ defineComponent({
       document.body.appendChild(input);
       input.click();
     }
+    function onApiGenerated(e) {
+      const d = e.detail;
+      if (!d || d.kind !== props.kind) return;
+      const row = rows.value.find((r) => r.label === d.label);
+      if (row) row.has_api = true;
+    }
+    onMounted(() => window.addEventListener(WORKFLOW_API_GENERATED, onApiGenerated));
+    onBeforeUnmount(() => window.removeEventListener(WORKFLOW_API_GENERATED, onApiGenerated));
     watch(() => props.kind, () => {
       void reload();
     }, { immediate: true });
+    watch(() => props.active, (a, prev) => {
+      if (a && !prev) void reload();
+    });
     __expose({ reload });
     return (_ctx, _cache2) => {
       return openBlock(), createElementBlock("div", _hoisted_1$I, [
@@ -30595,59 +30665,80 @@ const _sfc_main$I = /* @__PURE__ */ defineComponent({
           ], 8, _hoisted_4$w),
           createBaseVNode("button", {
             class: normalizeClass(importBtn),
+            title: _ctx.$t("stageManager.rescanTooltip"),
+            disabled: rescanBusy.value,
+            onClick: onRescan
+          }, [
+            createBaseVNode("i", {
+              class: normalizeClass(["pi pi-sync", rescanBusy.value ? "pi-spin" : ""])
+            }, null, 2),
+            createTextVNode(" " + toDisplayString$1(_ctx.$t("stageManager.rescan")), 1)
+          ], 8, _hoisted_5$u),
+          createBaseVNode("button", {
+            class: normalizeClass(importBtn),
             disabled: importBusy.value,
             onClick: onImport
           }, [
             _cache2[0] || (_cache2[0] = createBaseVNode("i", { class: "pi pi-upload" }, null, -1)),
             createTextVNode(" " + toDisplayString$1(_ctx.$t("stageManager.import")), 1)
-          ], 8, _hoisted_5$u)
+          ], 8, _hoisted_6$t)
         ]),
-        loadError.value ? (openBlock(), createElementBlock("div", _hoisted_6$t, toDisplayString$1(loadError.value), 1)) : !loading2.value && rows.value.length === 0 ? (openBlock(), createElementBlock("div", _hoisted_7$r, toDisplayString$1(_ctx.$t("stageManager.emptyWorkflows")), 1)) : createCommentVNode("", true),
+        loadError.value ? (openBlock(), createElementBlock("div", _hoisted_7$r, toDisplayString$1(loadError.value), 1)) : !loading2.value && rows.value.length === 0 ? (openBlock(), createElementBlock("div", _hoisted_8$p, toDisplayString$1(_ctx.$t("stageManager.emptyWorkflows")), 1)) : createCommentVNode("", true),
         (openBlock(true), createElementBlock(Fragment$1, null, renderList(rows.value, (w) => {
           return openBlock(), createElementBlock("div", {
             key: w.id,
             class: "ctv:flex ctv:flex-col ctv:gap-0.5 ctv:py-1.5 ctv:px-2 ctv:rounded ctv:border ctv:border-border-subtle"
           }, [
-            createBaseVNode("div", _hoisted_8$p, [
-              createBaseVNode("span", _hoisted_9$p, toDisplayString$1(w.label), 1),
-              w.link_type === unref(LINK_TYPE_NATIVE) ? (openBlock(), createElementBlock("span", {
+            createBaseVNode("div", _hoisted_9$p, [
+              createBaseVNode("span", _hoisted_10$o, toDisplayString$1(w.label), 1),
+              recentAdded.value.has(w.label) ? (openBlock(), createElementBlock("span", {
                 key: 0,
+                class: normalizeClass([badge, "ctv:bg-success-background/15 ctv:text-success-background"]),
+                title: _ctx.$t("stageManager.badge.newHint")
+              }, toDisplayString$1(_ctx.$t("stageManager.badge.new")), 11, _hoisted_11$k)) : createCommentVNode("", true),
+              w.builtin ? (openBlock(), createElementBlock("span", {
+                key: 1,
+                class: normalizeClass([badge, "ctv:bg-base-foreground/10 ctv:text-muted-foreground"]),
+                title: _ctx.$t("stageManager.badge.builtinHint")
+              }, toDisplayString$1(_ctx.$t("stageManager.badge.builtin")), 11, _hoisted_12$k)) : createCommentVNode("", true),
+              w.link_type === unref(LINK_TYPE_NATIVE) ? (openBlock(), createElementBlock("span", {
+                key: 2,
                 class: normalizeClass([badge, "ctv:bg-primary-background/10 ctv:text-primary-foreground"]),
                 title: _ctx.$t("stageManager.badge.linkedHint")
               }, [
                 _cache2[2] || (_cache2[2] = createBaseVNode("i", { class: "pi pi-link ctv:text-3xs" }, null, -1)),
                 createTextVNode(" " + toDisplayString$1(_ctx.$t("stageManager.badge.linked")), 1)
-              ], 10, _hoisted_10$o)) : createCommentVNode("", true),
+              ], 10, _hoisted_13$g)) : createCommentVNode("", true),
               !w.file_exists ? (openBlock(), createElementBlock("span", {
-                key: 1,
+                key: 3,
                 class: normalizeClass([badge, "ctv:bg-destructive-background/15 ctv:text-destructive-background"]),
                 title: w.file_path
               }, [
                 _cache2[3] || (_cache2[3] = createBaseVNode("i", { class: "pi pi-exclamation-triangle ctv:text-3xs" }, null, -1)),
                 createTextVNode(" " + toDisplayString$1(_ctx.$t("stageManager.badge.fileMissing")), 1)
-              ], 10, _hoisted_11$k)) : w.gui_valid === false ? (openBlock(), createElementBlock("span", {
-                key: 2,
+              ], 10, _hoisted_14$e)) : w.gui_valid === false ? (openBlock(), createElementBlock("span", {
+                key: 4,
                 class: normalizeClass([badge, "ctv:bg-warning-background/15 ctv:text-warning-background"]),
                 title: _ctx.$t("stageManager.badge.notGuiHint")
               }, [
                 _cache2[4] || (_cache2[4] = createBaseVNode("i", { class: "pi pi-exclamation-triangle ctv:text-3xs" }, null, -1)),
                 createTextVNode(" " + toDisplayString$1(_ctx.$t("stageManager.badge.notGui")), 1)
-              ], 10, _hoisted_12$k)) : createCommentVNode("", true),
+              ], 10, _hoisted_15$e)) : createCommentVNode("", true),
               w.file_exists && w.gui_valid !== false && !w.has_api ? (openBlock(), createElementBlock("span", {
-                key: 3,
+                key: 5,
                 class: normalizeClass([badge, "ctv:bg-base-foreground/5 ctv:text-muted-foreground"]),
                 title: _ctx.$t("stageManager.badge.noApiHint")
-              }, toDisplayString$1(_ctx.$t("stageManager.badge.noApi")), 11, _hoisted_13$g)) : createCommentVNode("", true)
+              }, toDisplayString$1(_ctx.$t("stageManager.badge.noApi")), 11, _hoisted_16$d)) : createCommentVNode("", true)
             ]),
             createBaseVNode("div", {
               class: "ctv:text-3xs ctv:font-mono ctv:text-muted-foreground ctv:truncate",
               title: w.file_path
-            }, toDisplayString$1(fileName(w.file_path)), 9, _hoisted_14$e),
+            }, toDisplayString$1(fileName(w.file_path)), 9, _hoisted_17$c),
             w.description ? (openBlock(), createElementBlock("div", {
               key: 0,
               class: "ctv:text-3xs ctv:text-muted-foreground/80 ctv:truncate",
               title: w.description
-            }, toDisplayString$1(w.description), 9, _hoisted_15$e)) : createCommentVNode("", true)
+            }, toDisplayString$1(w.description), 9, _hoisted_18$a)) : createCommentVNode("", true)
           ]);
         }), 128))
       ]);
@@ -30937,9 +31028,10 @@ const _sfc_main$H = /* @__PURE__ */ defineComponent({
             ], 8, _hoisted_6$s),
             withDirectives(createVNode(_sfc_main$I, {
               kind: unref(activeKind),
+              active: __props.active,
               class: "ctv:mt-1.5",
               onKinds
-            }, null, 8, ["kind"]), [
+            }, null, 8, ["kind", "active"]), [
               [vShow, !unref(wfCollapsed)]
             ]),
             withDirectives(createBaseVNode("p", { class: "ctv:m-0 ctv:mt-1.5 ctv:text-3xs ctv:italic ctv:text-muted-foreground/60" }, toDisplayString$1(_ctx.$t("stageManager.hint")), 513), [
@@ -31178,7 +31270,7 @@ const workflow$1 = { "uploadButton": "⬆ Upload workflow", "imported": 'Importe
 const stage$1 = { "run": "Run", "rerun": "Re-run", "running": "Running…", "cancel": "Cancel", "preparingWorkflow": "Preparing workflow…", "section": { "context": "Context", "pool": "Pool", "output": "Output ({type})", "actions": "Actions" }, "pool": { "clear": "Clear", "clearHint": "Empty the picker pool and reset the selection", "confirmClear": "Clear pool?", "confirm": "Yes", "cancel": "No" }, "empty": { "no_output": "no output yet", "generating": "generating…", "pending_upstream": "upstream pending", "unsupported_type": "unsupported type {type}" }, "source": { "upstream": "← upstream", "pending": "… waiting" }, "disconnect": "Disconnect", "starting": "starting…", "runByKind": { "text": "Generate Text", "image": "Generate Image", "image-batch": "Generate Images", "video": "Generate Video", "audio": "Generate Audio", "panorama": "Generate Panorama", "storyboard": "Generate Storyboard" }, "action": { "viewFull": "View full size", "download": "Download", "addTag": "Save to library / tag", "removeFromPicker": "Remove from picker", "close": "Close", "loadAsset": "Load as asset node", "prev": "Previous", "next": "Next", "pick": "Select this track" }, "preparingWorkflowDetail": "Hang on — converting workflow to api JSON. Try Run again in a moment." };
 const error$1 = { "dismiss": "Dismiss", "cancelled": "Cancelled", "upstreamNotReady": "Upstream not ready", "upstreamNotReadyDetail": "Upstream not ready: {list}. Run those stage(s) first so they produce a snapshot, then Run this stage again.", "workerDied": "Backend stopped without sending a result. The prompt worker likely died (CUDA OOM during cleanup is the usual cause). Restart ComfyUI to recover." };
 const sidebar$1 = { "tab": { "workflow": "Workflow", "assets": "Assets", "params": "Stages" } };
-const stageManager$1 = { "title": "Stage Manager", "refresh": "Refresh list", "import": "Import", "section": { "workflows": "Workflows", "params": "Parameters" }, "emptyWorkflows": "No workflows registered for this stage yet — import one here, or drop a .json into ComfyTV/workflows/<kind>/ and restart ComfyUI.", "hint": "Workflows listed here are picked from the workflow dropdown on the matching stage node on the canvas.", "badge": { "linked": "linked", "linkedHint": "Linked from ComfyUI's native workflow folder (not managed by ComfyTV)", "fileMissing": "file missing", "notGui": "not GUI format", "notGuiHint": "Missing a top-level nodes array — open it in ComfyUI and re-save normally, not with Save (API Format)", "noApi": "API not generated", "noApiHint": "The API prompt is generated automatically the first time this workflow runs — normal for a freshly imported workflow." } };
+const stageManager$1 = { "title": "Stage Manager", "refresh": "Refresh list", "import": "Import", "rescan": "Rescan", "rescanTooltip": "Scan ComfyTV/workflows/ on disk for new, changed, or removed workflow files — no backend restart needed", "rescanFound": "Found {n} new workflow(s)", "rescanNone": "No new workflows found", "rescanNoneDetail": "Make sure the file is a .json inside ComfyTV/workflows/<kind>/ (preset and .api.json sidecars don't count).", "rescanFailed": "Rescan failed", "section": { "workflows": "Workflows", "params": "Parameters" }, "emptyWorkflows": "No workflows registered for this stage yet — import one here, or drop a .json into ComfyTV/workflows/<kind>/ and hit Rescan.", "hint": "Workflows listed here are picked from the workflow dropdown on the matching stage node on the canvas.", "badge": { "linked": "linked", "linkedHint": "Linked from ComfyUI's native workflow folder (not managed by ComfyTV)", "fileMissing": "file missing", "notGui": "not GUI format", "notGuiHint": "Missing a top-level nodes array — open it in ComfyUI and re-save normally, not with Save (API Format)", "noApi": "API not generated", "noApiHint": "The API prompt is generated automatically the first time this workflow runs — normal for a freshly imported workflow.", "new": "new", "newHint": "Discovered in the most recent scan (startup or rescan)", "builtin": "built-in", "builtinHint": "Ships with ComfyTV (tracked in git). Workflows without this badge were imported or dropped in by a user." } };
 const assets$1 = { "title": "Asset Library", "empty": "No assets yet — add images, video, or audio to reuse them across projects.", "emptyCategory": "No assets in this category yet.", "add": "Add media", "addTooltip": "Upload images, video, or audio into the library (or drag & drop them onto this panel)", "uploading": "Uploading {done}/{total}…", "uploadFailed": "Upload failed: {detail}", "dropHint": "Drop files to add them to the library", "search": "Search assets", "noResults": "No assets match your search.", "view": { "settings": "Display settings", "list": "List view", "grid": "Grid view" }, "media": { "all": "All types", "image": "Images", "video": "Video", "audio": "Audio" }, "category": { "all": "All", "none": "Uncategorized", "new": "New category", "newPrompt": "New category name:", "rename": "Rename category", "renamePrompt": "Category name:", "delete": "Delete category", "deleteConfirm": "Delete this category? It is removed from all assets; the assets and files on disk stay." }, "card": { "rename": "Rename", "renamePrompt": "Asset name:", "delete": "Remove from library", "deleteConfirm": "Remove this asset from the library? The file on disk stays.", "tags": "Edit tags", "loadNode": "Add as node to canvas", "more": "More options" }, "tagPopover": { "empty": "No categories yet.", "create": "New category" } };
 const assetLoader$1 = { "empty": "No matching assets in the library yet — add some in the Assets panel.", "pickHint": "Pick an asset from the library to use as this node's output.", "selected": "Selected: {name}" };
 const stageParams$1 = { "section": "Parameters", "add": "Add", "addHint": "Attach a parameter defined in the ComfyTV sidebar", "remove": "Detach from this node", "sidebar": { "title": "Stage Parameters", "kind": "Stage", "empty": "No parameters defined for this stage yet.", "new": "New parameter", "label": "Label", "type": "Type", "default": "Default", "options": "Options (comma-separated)", "min": "Min", "max": "Max", "step": "Step", "sliderHint": "Set both min & max to show a slider on the node (otherwise a number field).", "multiline": "Multiline", "placeholder": "Placeholder", "create": "Create", "cancel": "Cancel", "delete": "Delete", "deleteConfirm": "Delete this parameter? Workflows binding to it will lose the binding.", "system": "Built-in", "labelRequired": "Label is required" } };
@@ -31260,7 +31352,7 @@ const workflow = { "uploadButton": "⬆ 上传工作流", "imported": "已导入
 const stage = { "run": "运行", "rerun": "重新运行", "running": "运行中…", "cancel": "取消", "preparingWorkflow": "准备工作流中…", "section": { "context": "上游输入", "pool": "图片池", "output": "输出 ({type})", "actions": "动作" }, "pool": { "clear": "清除", "clearHint": "清空图片池并重置选择", "confirmClear": "确认清空？", "confirm": "是", "cancel": "否" }, "empty": { "no_output": "暂无输出", "generating": "生成中…", "pending_upstream": "上游待运行", "unsupported_type": "不支持的类型 {type}" }, "source": { "upstream": "← 上游", "pending": "… 等待中" }, "disconnect": "断开此连接", "starting": "启动中…", "runByKind": { "text": "生成文本", "image": "生成图片", "image-batch": "生成图片", "video": "生成视频", "audio": "生成音频", "panorama": "生成全景图", "storyboard": "生成分镜" }, "action": { "viewFull": "查看大图", "download": "下载", "addTag": "存入资产库 / 打标签", "removeFromPicker": "从选择器移除", "close": "关闭", "loadAsset": "作为资产节点加载", "prev": "上一张", "next": "下一张", "pick": "选用这条" }, "preparingWorkflowDetail": "稍等 — 正在把工作流转换成 api JSON。稍后再点运行。" };
 const error = { "dismiss": "清除", "cancelled": "已取消", "upstreamNotReady": "上游未就绪", "upstreamNotReadyDetail": "上游未就绪:{list}。请先运行这些 stage 生成快照,然后再运行此 stage。", "workerDied": "后端未返回结果就停止了。prompt worker 可能已崩溃(通常是清理阶段 CUDA OOM)。重启 ComfyUI 后恢复。" };
 const sidebar = { "tab": { "workflow": "工作流", "assets": "资产库", "params": "Stage 管理" } };
-const stageManager = { "title": "Stage 管理", "refresh": "刷新列表", "import": "导入", "section": { "workflows": "工作流", "params": "参数" }, "emptyWorkflows": "该 Stage 下还没有已注册的工作流 —— 点「导入」上传，或把 .json 放入 ComfyTV/workflows/对应类别目录后重启 ComfyUI。", "hint": "这里列出的工作流，在画布上对应 Stage 节点的 workflow 下拉框中选用。", "badge": { "linked": "外链", "linkedHint": "链接自 ComfyUI 原生工作流目录（不由 ComfyTV 管理）", "fileMissing": "文件丢失", "notGui": "非 GUI 格式", "notGuiHint": "缺少顶层 nodes 数组 —— 在 ComfyUI 中打开后用普通「保存」重新导出，不要用「保存（API 格式）」", "noApi": "API 未生成", "noApiHint": "首次运行该工作流时会自动生成 API prompt，新导入的工作流出现此标记属于正常。" } };
+const stageManager = { "title": "Stage 管理", "refresh": "刷新列表", "import": "导入", "rescan": "重新扫描", "rescanTooltip": "扫描磁盘上的 ComfyTV/workflows/ 目录，发现新增、变更或删除的工作流文件 —— 无需重启后端", "rescanFound": "发现 {n} 个新工作流", "rescanNone": "没有发现新工作流", "rescanNoneDetail": "请确认文件是 .json 且放在 ComfyTV/workflows/对应类别目录下（preset 和 .api.json 附属文件不算）。", "rescanFailed": "重新扫描失败", "section": { "workflows": "工作流", "params": "参数" }, "emptyWorkflows": "该 Stage 下还没有已注册的工作流 —— 点「导入」上传，或把 .json 放入 ComfyTV/workflows/对应类别目录后点「重新扫描」。", "hint": "这里列出的工作流，在画布上对应 Stage 节点的 workflow 下拉框中选用。", "badge": { "linked": "外链", "linkedHint": "链接自 ComfyUI 原生工作流目录（不由 ComfyTV 管理）", "fileMissing": "文件丢失", "notGui": "非 GUI 格式", "notGuiHint": "缺少顶层 nodes 数组 —— 在 ComfyUI 中打开后用普通「保存」重新导出，不要用「保存（API 格式）」", "noApi": "API 未生成", "noApiHint": "首次运行该工作流时会自动生成 API prompt，新导入的工作流出现此标记属于正常。", "new": "新", "newHint": "最近一次扫描（启动或重新扫描）新发现的工作流", "builtin": "内置", "builtinHint": "ComfyTV 自带的工作流（git 跟踪）。没有此标记的是用户导入或手动放入的。" } };
 const assets = { "title": "资产库", "empty": "还没有资产 —— 添加图片、视频或音频后可跨项目复用。", "emptyCategory": "这个分类下还没有资产。", "add": "添加素材", "addTooltip": "上传图片、视频或音频到资产库（也可以直接拖拽文件到这个面板）", "uploading": "上传中 {done}/{total}…", "uploadFailed": "上传失败: {detail}", "dropHint": "松开把文件添加到资产库", "search": "搜索资产", "noResults": "没有匹配的资产。", "view": { "settings": "显示设置", "list": "列表视图", "grid": "网格视图" }, "media": { "all": "全部类型", "image": "图片", "video": "视频", "audio": "音频" }, "category": { "all": "全部", "none": "未分类", "new": "新建分类", "newPrompt": "新分类名称：", "rename": "重命名分类", "renamePrompt": "分类名称：", "delete": "删除分类", "deleteConfirm": "删除这个分类？它会从所有资产上移除；资产和磁盘上的文件保留。" }, "card": { "rename": "重命名", "renamePrompt": "资产名称：", "delete": "从资产库移除", "deleteConfirm": "把这个资产从资产库移除？磁盘上的文件保留。", "tags": "编辑标签", "loadNode": "作为节点添加到画布", "more": "更多操作" }, "tagPopover": { "empty": "还没有分类。", "create": "新建分类" } };
 const assetLoader = { "empty": "资产库中还没有匹配的素材 —— 请先在资产面板中添加。", "pickHint": "从资产库中选择一个素材作为该节点的输出。", "selected": "已选择：{name}" };
 const stageParams = { "section": "参数", "add": "添加", "addHint": "挂载一个在 ComfyTV 侧栏中定义好的参数", "remove": "从该节点移除", "sidebar": { "title": "Stage 参数", "kind": "Stage", "empty": "这个 stage 还没有定义任何参数。", "new": "新建参数", "label": "名称", "type": "类型", "default": "默认值", "options": "选项（用逗号分隔）", "min": "最小值", "max": "最大值", "step": "步长", "sliderHint": "同时设置最小值和最大值即可在节点上显示滑块（否则是数字输入框）。", "multiline": "多行", "placeholder": "占位提示", "create": "创建", "cancel": "取消", "delete": "删除", "deleteConfirm": "删除这个参数？绑定到它的工作流将失去该绑定。", "system": "内置", "labelRequired": "名称不能为空" } };

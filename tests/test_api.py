@@ -330,6 +330,50 @@ class TestWorkflowInfoRoute:
         assert data["image"]["x"]["max_inputs"]["image"] == 2
 
 
+class TestWorkflowRescanRoute:
+    async def test_rescan_reports_added_and_overview_marks_recent(
+        self, client, tmp_path, monkeypatch,
+    ):
+        from pathlib import Path
+        from ComfyTV.runners import workflow_db
+        wdir = tmp_path / "workflows"
+        kdir = wdir / "image"
+        kdir.mkdir(parents=True)
+        (kdir / "first.json").write_text(json.dumps({"nodes": []}))
+        monkeypatch.setattr(workflow_db.seed, "_WORKFLOWS_DIR", Path(wdir))
+        workflow_db.seed_workflows_from_disk(("image",))  # initial population
+
+        (kdir / "second.json").write_text(json.dumps({"nodes": []}))
+        resp = await client.post("/comfytv/workflows/rescan")
+        assert resp.status == 200
+        data = await resp.json()
+        assert data["ok"] is True
+        assert {"kind": "image", "label": "second"} in data["added"]
+
+        resp2 = await client.get("/comfytv/workflows")
+        assert resp2.status == 200
+        overview = await resp2.json()
+        assert {"kind": "image", "label": "second"} in overview["recent_added"]
+        labels = {w["label"] for w in overview["workflows"] if w["kind"] == "image"}
+        assert {"first", "second"} <= labels
+
+    async def test_rescan_without_changes_adds_nothing(
+        self, client, tmp_path, monkeypatch,
+    ):
+        from pathlib import Path
+        from ComfyTV.runners import workflow_db
+        wdir = tmp_path / "workflows"
+        (wdir / "image").mkdir(parents=True)
+        (wdir / "image" / "a.json").write_text(json.dumps({"nodes": []}))
+        monkeypatch.setattr(workflow_db.seed, "_WORKFLOWS_DIR", Path(wdir))
+        workflow_db.seed_workflows_from_disk(("image",))
+
+        resp = await client.post("/comfytv/workflows/rescan")
+        assert resp.status == 200
+        data = await resp.json()
+        assert data["added"] == []
+
+
 class TestWorkflowConfigRoutes:
     async def _seed_one(self, monkeypatch, tmp_path,
                         preset=None, kind="image", name="x"):

@@ -121,7 +121,7 @@ def _apply_preset_to_new_row(s, row: db.Workflow, preset: dict) -> None:
             ))
 
 
-def _upsert_workflow_row(s, kind: str, file_path: Path) -> db.Workflow:
+def _upsert_workflow_row(s, kind: str, file_path: Path) -> tuple[db.Workflow, bool]:
     mtime = file_path.stat().st_mtime if file_path.exists() else None
 
     row = s.execute(
@@ -167,7 +167,7 @@ def _upsert_workflow_row(s, kind: str, file_path: Path) -> db.Workflow:
             _log.info("[ComfyTV/workflow_db] applied preset for new workflow %s/%s",
                       kind, row.label)
 
-    return row
+    return row, is_new_row
 
 
 def reset_workflow_to_preset(workflow_id: int) -> Optional[dict]:
@@ -236,7 +236,7 @@ def import_workflow(kind: str, filename: str, content: str) -> dict:
     original_label = _label_from_stem(original)
 
     with db.get_session() as s:
-        row = _upsert_workflow_row(s, kind, path)
+        row, _ = _upsert_workflow_row(s, kind, path)
         if original_label:
             row.label = original_label
         label = row.label
@@ -247,14 +247,19 @@ def import_workflow(kind: str, filename: str, content: str) -> dict:
     return {"kind": kind, "label": label, "file_path": str(path)}
 
 
-def seed_workflows_from_disk(kinds: tuple[str, ...]) -> None:
+def seed_workflows_from_disk(kinds: tuple[str, ...]) -> dict:
     db.init()
     if not _WORKFLOWS_DIR.exists():
-        return
+        return {"added": [], "pruned": 0, "total": 0}
 
     seen = 0
+    added: list[dict] = []
     found_paths: set[str] = set()
     with db.get_session() as s:
+        pre_populated = s.execute(
+            select(db.Workflow.id).limit(1)
+        ).first() is not None
+
         for kind in kinds:
             kind_dir = _WORKFLOWS_DIR / kind
             if not kind_dir.is_dir():
@@ -264,7 +269,9 @@ def seed_workflows_from_disk(kinds: tuple[str, ...]) -> None:
                     continue
                 if path.name.endswith(".api.json"):
                     continue
-                _upsert_workflow_row(s, kind, path)
+                row, is_new = _upsert_workflow_row(s, kind, path)
+                if is_new:
+                    added.append({"kind": kind, "label": row.label})
                 found_paths.add(str(path.resolve()))
                 seen += 1
 
@@ -283,5 +290,11 @@ def seed_workflows_from_disk(kinds: tuple[str, ...]) -> None:
             s.delete(row)
             pruned += 1
         s.commit()
-    _log.info("[ComfyTV/workflow_db] seeded %d workflows%s",
-              seen, f", pruned {pruned} orphan rows" if pruned else "")
+
+    if not pre_populated:
+        added = []
+    _log.info("[ComfyTV/workflow_db] seeded %d workflows%s%s",
+              seen,
+              f", {len(added)} new" if added else "",
+              f", pruned {pruned} orphan rows" if pruned else "")
+    return {"added": added, "pruned": pruned, "total": seen}

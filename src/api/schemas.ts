@@ -190,6 +190,7 @@ export const DeleteAssetSchema = z.object({
 
 export const WorkflowOverviewSchema = z.object({
   id: z.number(),
+  builtin: z.boolean().optional(),
   kind: z.string(),
   label: z.string(),
   order: z.number(),
@@ -203,11 +204,26 @@ export const WorkflowOverviewSchema = z.object({
 })
 export type WorkflowOverview = z.infer<typeof WorkflowOverviewSchema>
 
+export const WorkflowRefSchema = z.object({
+  kind: z.string(),
+  label: z.string(),
+})
+export type WorkflowRef = z.infer<typeof WorkflowRefSchema>
+
 export const ListWorkflowOverviewSchema = z.object({
   kinds: z.array(z.string()),
   workflows: z.array(WorkflowOverviewSchema),
+  recent_added: z.array(WorkflowRefSchema).default([]),
 })
 export type ListWorkflowOverview = z.infer<typeof ListWorkflowOverviewSchema>
+
+export const RescanResultSchema = z.object({
+  ok: z.boolean(),
+  added: z.array(WorkflowRefSchema),
+  pruned: z.number(),
+  total: z.number(),
+})
+export type RescanResult = z.infer<typeof RescanResultSchema>
 
 export const WorkflowStateSchema = z.object({
   has_api: z.boolean(),

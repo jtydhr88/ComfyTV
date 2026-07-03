@@ -12,7 +12,7 @@ class PanoramaStage(io.ComfyNode):
             inputs=[
                 *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=labels_for('panorama'),
-                               default=PANORAMA_WORKFLOWS[0] if PANORAMA_WORKFLOWS else "",
+                               default=default_for('panorama'),
                                tooltip="Which panorama generation workflow to invoke on Run. Leave at the default if you only want to upload an HDRI manually."),
                 _main_prompt_input(placeholder="Describe the panoramic scene (e.g. 'sunset over a mountain lake').", tooltip="Scene description for the equirectangular panorama. The workflow auto-prepends 'equirectangular 360 degree panorama, ' so just describe content."),
                 io.String.Input("manual_source", default="",

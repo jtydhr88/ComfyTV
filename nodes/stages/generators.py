@@ -65,7 +65,7 @@ class TextStage(io.ComfyNode):
             inputs=[
                 *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=labels_for('text') or [""],
-                               default=TEXT_WORKFLOWS[0] if TEXT_WORKFLOWS else "",
+                               default=default_for('text'),
                                tooltip="Which backend text workflow to invoke when Run is clicked. Placeholder for now."),
                 _main_prompt_input(tooltip="Primary prompt — the user's intent for this stage. Upstream text inputs are treated as additional context."),
                 io.Autogrow.Input("texts",  template=_text_template(8)),
@@ -112,7 +112,7 @@ class ImageStage(io.ComfyNode):
             inputs=[
                 *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=labels_for('image') or [""],
-                               default=IMAGE_WORKFLOWS[0] if IMAGE_WORKFLOWS else "",
+                               default=default_for('image'),
                                tooltip="Which backend image workflow to invoke when Run is clicked. Placeholder for now."),
                 io.Combo.Input("resolution", options=RESOLUTIONS, default="1K",
                                tooltip="Target output resolution tier (the short side, in px). Combined with the aspect ratio to compute (w, h)."),
@@ -173,7 +173,7 @@ class VideoStage(io.ComfyNode):
             inputs=[
                 *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=labels_for('video') or [""],
-                               default=VIDEO_WORKFLOWS[0] if VIDEO_WORKFLOWS else "",
+                               default=default_for('video'),
                                tooltip="Which backend video workflow to invoke when Run is clicked. Placeholder for now."),
                 io.Combo.Input("resolution", options=RESOLUTIONS, default="720P",
                                tooltip="Target output resolution tier (the short side, in px). Combined with the aspect ratio to compute (w, h)."),
@@ -240,7 +240,7 @@ class AudioStage(io.ComfyNode):
             inputs=[
                 *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=labels_for('audio'),
-                               default=AUDIO_WORKFLOWS[0] if AUDIO_WORKFLOWS else "",
+                               default=default_for('audio'),
                                tooltip="Audio generation backend."),
                 _main_prompt_input(placeholder="Tags / genre / mood / BPM (e.g. 'lo-fi, jazz piano, rainy, 90bpm')", ),
                 io.String.Input("lyrics", default="", multiline=True,
@@ -300,7 +300,7 @@ class SpeechStage(io.ComfyNode):
             inputs=[
                 *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=labels_for('speech'),
-                               default=SPEECH_WORKFLOWS[0] if SPEECH_WORKFLOWS else "",
+                               default=default_for('speech'),
                                tooltip="Text-to-speech backend."),
                 _main_prompt_input(placeholder="The text to speak — type the script / lines for the voice to read aloud."),
                 io.String.Input("voice", default="", multiline=False,
@@ -438,7 +438,7 @@ class ShotImagesStage(io.ComfyNode):
                 *_standard_stage_inputs(),
                 io.Combo.Input("workflow",
                                options=labels_for('shot-images') or [""],
-                               default=SHOT_IMAGES_WORKFLOWS[0] if SHOT_IMAGES_WORKFLOWS else "",
+                               default=default_for('shot-images'),
                                tooltip="Image-generation workflow to use for each shot."),
                 io.Combo.Input("resolution", options=RESOLUTIONS, default="1K",
                                tooltip="Target output resolution tier for every shot (the short side, in px)."),
@@ -542,7 +542,7 @@ class StoryboardStage(io.ComfyNode):
             inputs=[
                 *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=labels_for('storyboard') or [""],
-                               default=STORYBOARD_WORKFLOWS[0] if STORYBOARD_WORKFLOWS else "",
+                               default=default_for('storyboard'),
                                tooltip="LLM backend that produces the 16-field shot list."),
                 _main_prompt_input(placeholder="故事大纲 / Story premise — one to a few sentences describing the scene's beats.", tooltip="The story / scene premise the LLM expands into a shot list."),
                 io.Int.Input("total_duration_s", default=30, min=2, max=600, step=1,

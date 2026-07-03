@@ -14,7 +14,7 @@
           <i :class="['pi', wfCollapsed ? 'pi-chevron-right' : 'pi-chevron-down', 'ctv:w-2.5 ctv:text-2xs ctv:text-muted-foreground']" />
           <span class="ctv:flex-1 ctv:text-left">{{ $t('stageManager.section.workflows') }}</span>
         </button>
-        <StageWorkflowList v-show="!wfCollapsed" :kind="activeKind" class="ctv:mt-1.5" @kinds="onKinds" />
+        <StageWorkflowList v-show="!wfCollapsed" :kind="activeKind" :active="active" class="ctv:mt-1.5" @kinds="onKinds" />
         <p v-show="!wfCollapsed" class="ctv:m-0 ctv:mt-1.5 ctv:text-3xs ctv:italic ctv:text-muted-foreground/60">
           {{ $t('stageManager.hint') }}
         </p>

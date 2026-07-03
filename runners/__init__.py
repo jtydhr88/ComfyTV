@@ -49,14 +49,26 @@ RUNNER_REGISTRY = RunnerRegistry()
 _populate(RUNNER_REGISTRY)
 
 
-def seed_workflows() -> None:
+_LAST_SCAN_ADDED: list[dict] = []
+
+
+def seed_workflows() -> dict:
+    global _LAST_SCAN_ADDED
+    result: dict = {"added": [], "pruned": 0, "total": 0}
     try:
-        workflow_db.seed_workflows_from_disk(WORKFLOW_KINDS)
+        result = workflow_db.seed_workflows_from_disk(WORKFLOW_KINDS)
     except Exception as e:
         _log.exception(
             "[ComfyTV] workflow seed failed; continuing without seeded runners: %s", e
         )
     refresh_registry()
+    _LAST_SCAN_ADDED = list(result.get("added") or [])
+    return result
+
+
+def last_scan_added() -> list[dict]:
+    """Workflows newly discovered by the most recent seed (startup or rescan)."""
+    return list(_LAST_SCAN_ADDED)
 
 
 def refresh_registry() -> RunnerRegistry:
@@ -74,5 +86,6 @@ __all__ = [
     'OutputPayload',
     'WORKFLOW_KINDS',
     'seed_workflows',
+    'last_scan_added',
     'refresh_registry',
 ]

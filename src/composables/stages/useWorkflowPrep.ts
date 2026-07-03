@@ -1,6 +1,7 @@
 import { apiFetch, apiSend, OkSchema, WorkflowStateSchema } from '@/api'
 import { app } from '@/lib/comfyApp'
 import { convertGuiToApiHeadless } from '@/composables/stages/headlessConvert'
+import { emitWorkflowApiGenerated } from '@/utils/workflowEvents'
 
 interface PrepState {
   busy: boolean
@@ -52,6 +53,7 @@ export function prepareWorkflow(kind: string, label: string): Promise<void> {
 
       if (state.has_api) {
         _set(key, { busy: false, ready: true })
+        emitWorkflowApiGenerated(kind, label)
         return
       }
       if (!state.file_exists) {
@@ -101,6 +103,7 @@ export function prepareWorkflow(kind: string, label: string): Promise<void> {
       })
 
       _set(key, { busy: false, ready: true })
+      emitWorkflowApiGenerated(kind, label)
     } catch (e: any) {
       const msg = String(e?.message || e || 'prepare failed')
       console.error(`[ComfyTV/workflow-prep] ${kind}/${label}:`, e)

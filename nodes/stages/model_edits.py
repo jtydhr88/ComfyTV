@@ -12,7 +12,7 @@ class UpscaleStage(io.ComfyNode):
             inputs=[
                 *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=labels_for('upscale'),
-                               default=UPSCALE_WORKFLOWS[0] if UPSCALE_WORKFLOWS else "",
+                               default=default_for('upscale'),
                                tooltip="Which upscale workflow to run."),
                 io.Combo.Input("scale", options=["2x", "4x"], default="2x",
                                ),
@@ -52,7 +52,7 @@ class OutpaintStage(io.ComfyNode):
             inputs=[
                 *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=labels_for('outpaint'),
-                               default=OUTPAINT_WORKFLOWS[0] if OUTPAINT_WORKFLOWS else "",
+                               default=default_for('outpaint'),
                                tooltip="Which outpaint workflow to run."),
                 io.Int.Input("pad_left",   default=0, min=0, max=4096, step=1,
                              socketless=True, extra_dict={"hidden": True},
@@ -112,7 +112,7 @@ class InpaintStage(io.ComfyNode):
             inputs=[
                 *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=labels_for('inpaint'),
-                               default=INPAINT_WORKFLOWS[0] if INPAINT_WORKFLOWS else "",
+                               default=default_for('inpaint'),
                                tooltip="Which inpaint workflow to run."),
                 io.String.Input("mask_data", default="",
                                 socketless=True, extra_dict={"hidden": True},
@@ -153,7 +153,7 @@ class ImageEditStage(io.ComfyNode):
             inputs=[
                 *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=labels_for('image-edit'),
-                               default=IMAGE_EDIT_WORKFLOWS[0] if IMAGE_EDIT_WORKFLOWS else "",
+                               default=default_for('image-edit'),
                                tooltip="Which instruction-edit workflow to run."),
                 _main_prompt_input(placeholder="指令式描述要做什么:\"remove the bicycle\", \"change the dress to red\", \"replace the background with mountains\". Use imperative / action-based language; describe the change, not the whole scene.", ),
                 COMFYTV_IMAGE.Input("image", optional=True),
@@ -191,7 +191,7 @@ class EraseStage(io.ComfyNode):
             inputs=[
                 *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=labels_for('erase'),
-                               default=ERASE_WORKFLOWS[0] if ERASE_WORKFLOWS else "",
+                               default=default_for('erase'),
                                tooltip="Which erase backend to run."),
                 io.String.Input("mask_data", default="",
                                 socketless=True, extra_dict={"hidden": True},
@@ -231,7 +231,7 @@ class CutoutStage(io.ComfyNode):
             inputs=[
                 *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=labels_for('cutout'),
-                               default=CUTOUT_WORKFLOWS[0] if CUTOUT_WORKFLOWS else "",
+                               default=default_for('cutout'),
                                tooltip="Which segmentation backend to run."),
                 COMFYTV_IMAGE.Input("image", optional=True),
                 _custom_params_input(),
@@ -268,7 +268,7 @@ class RelightStage(io.ComfyNode):
             inputs=[
                 *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=labels_for('relight'),
-                               default=RELIGHT_WORKFLOWS[0] if RELIGHT_WORKFLOWS else "",
+                               default=default_for('relight'),
                                tooltip="Which relight backend to run. Pick the `(with reference)` variant when wiring a 2nd image as light reference."),
                 io.Int.Input("brightness", default=50, min=0, max=100, step=1,
                              display_mode=io.NumberDisplay.slider,
@@ -320,7 +320,7 @@ class MultiangleStage(io.ComfyNode):
             inputs=[
                 *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=labels_for('multiangle'),
-                               default=MULTIANGLE_WORKFLOWS[0] if MULTIANGLE_WORKFLOWS else "",
+                               default=default_for('multiangle'),
                                tooltip="Which multiangle workflow to run."),
                 io.Int.Input("horizontal_angle", default=0, min=0, max=360, step=1,
                              display_mode=io.NumberDisplay.slider,

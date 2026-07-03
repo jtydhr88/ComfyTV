@@ -11,6 +11,7 @@ import {
   downloadBlob,
   extractFilenameFromContentDisposition,
 } from '@/utils/download'
+import { emitWorkflowApiGenerated } from '@/utils/workflowEvents'
 
 import type { ConfigPayload } from './workflowConfigCatalog'
 
@@ -119,6 +120,7 @@ export function useWorkflowConfig(t: (key: string, args?: Record<string, unknown
         const text = await file.text()
         try { JSON.parse(text) } catch { throw new Error(t('configSidebar.uploadApiNotJson')) }
         const res = await uploadApiSidecar(sel.workflowKind, sel.workflowLabel, text)
+        emitWorkflowApiGenerated(sel.workflowKind, sel.workflowLabel)
         await loadConfig(sel.workflowKind, sel.workflowLabel)
         invalidateWorkflowInfo()
         ;(app as any)?.extensionManager?.toast?.add?.({

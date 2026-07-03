@@ -49,7 +49,7 @@ class TimelineVideoStage(io.ComfyNode):
             inputs=[
                 *_standard_stage_inputs(),
                 io.Combo.Input("workflow", options=labels_for('timeline'),
-                               default=TIMELINE_WORKFLOWS[0] if TIMELINE_WORKFLOWS else "",
+                               default=default_for('timeline'),
                                tooltip="Which multi-shot video backend renders the timeline. Placeholder for now."),
                 COMFYTV_TIMELINE.Input("timeline", optional=True),
             ],

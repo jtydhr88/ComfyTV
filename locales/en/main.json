@@ -82,11 +82,17 @@
     "title": "Stage Manager",
     "refresh": "Refresh list",
     "import": "Import",
+    "rescan": "Rescan",
+    "rescanTooltip": "Scan ComfyTV/workflows/ on disk for new, changed, or removed workflow files — no backend restart needed",
+    "rescanFound": "Found {n} new workflow(s)",
+    "rescanNone": "No new workflows found",
+    "rescanNoneDetail": "Make sure the file is a .json inside ComfyTV/workflows/<kind>/ (preset and .api.json sidecars don't count).",
+    "rescanFailed": "Rescan failed",
     "section": {
       "workflows": "Workflows",
       "params": "Parameters"
     },
-    "emptyWorkflows": "No workflows registered for this stage yet — import one here, or drop a .json into ComfyTV/workflows/<kind>/ and restart ComfyUI.",
+    "emptyWorkflows": "No workflows registered for this stage yet — import one here, or drop a .json into ComfyTV/workflows/<kind>/ and hit Rescan.",
     "hint": "Workflows listed here are picked from the workflow dropdown on the matching stage node on the canvas.",
     "badge": {
       "linked": "linked",
@@ -95,7 +101,11 @@
       "notGui": "not GUI format",
       "notGuiHint": "Missing a top-level nodes array — open it in ComfyUI and re-save normally, not with Save (API Format)",
       "noApi": "API not generated",
-      "noApiHint": "The API prompt is generated automatically the first time this workflow runs — normal for a freshly imported workflow."
+      "noApiHint": "The API prompt is generated automatically the first time this workflow runs — normal for a freshly imported workflow.",
+      "new": "new",
+      "newHint": "Discovered in the most recent scan (startup or rescan)",
+      "builtin": "built-in",
+      "builtinHint": "Ships with ComfyTV (tracked in git). Workflows without this badge were imported or dropped in by a user."
     }
   },
   "assets": {

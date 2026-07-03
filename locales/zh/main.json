@@ -82,11 +82,17 @@
     "title": "Stage 管理",
     "refresh": "刷新列表",
     "import": "导入",
+    "rescan": "重新扫描",
+    "rescanTooltip": "扫描磁盘上的 ComfyTV/workflows/ 目录，发现新增、变更或删除的工作流文件 —— 无需重启后端",
+    "rescanFound": "发现 {n} 个新工作流",
+    "rescanNone": "没有发现新工作流",
+    "rescanNoneDetail": "请确认文件是 .json 且放在 ComfyTV/workflows/对应类别目录下（preset 和 .api.json 附属文件不算）。",
+    "rescanFailed": "重新扫描失败",
     "section": {
       "workflows": "工作流",
       "params": "参数"
     },
-    "emptyWorkflows": "该 Stage 下还没有已注册的工作流 —— 点「导入」上传，或把 .json 放入 ComfyTV/workflows/对应类别目录后重启 ComfyUI。",
+    "emptyWorkflows": "该 Stage 下还没有已注册的工作流 —— 点「导入」上传，或把 .json 放入 ComfyTV/workflows/对应类别目录后点「重新扫描」。",
     "hint": "这里列出的工作流，在画布上对应 Stage 节点的 workflow 下拉框中选用。",
     "badge": {
       "linked": "外链",
@@ -95,7 +101,11 @@
       "notGui": "非 GUI 格式",
       "notGuiHint": "缺少顶层 nodes 数组 —— 在 ComfyUI 中打开后用普通「保存」重新导出，不要用「保存（API 格式）」",
       "noApi": "API 未生成",
-      "noApiHint": "首次运行该工作流时会自动生成 API prompt，新导入的工作流出现此标记属于正常。"
+      "noApiHint": "首次运行该工作流时会自动生成 API prompt，新导入的工作流出现此标记属于正常。",
+      "new": "新",
+      "newHint": "最近一次扫描（启动或重新扫描）新发现的工作流",
+      "builtin": "内置",
+      "builtinHint": "ComfyTV 自带的工作流（git 跟踪）。没有此标记的是用户导入或手动放入的。"
     }
   },
   "assets": {

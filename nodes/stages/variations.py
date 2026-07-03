@@ -32,7 +32,7 @@ class ImageVariationsStage(io.ComfyNode):
     async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                       workflow="", variant_count=3, main_prompt="", image="",
                       selected_index=1, custom_params="{}"):
-        kind = 'multiview' if workflow in (MULTIVIEW_WORKFLOWS or []) else 'sequence'
+        kind = 'multiview' if workflow in labels_for('multiview') else 'sequence'
         payload = await invoke_runner(
             custom_params=custom_params,
             kind=kind,

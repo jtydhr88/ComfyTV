@@ -8,6 +8,9 @@
       <button :class="iconBtn" :title="$t('stageManager.refresh')" :disabled="loading" @click="reload">
         <i :class="['pi pi-refresh', loading ? 'pi-spin' : '']" />
       </button>
+      <button :class="importBtn" :title="$t('stageManager.rescanTooltip')" :disabled="rescanBusy" @click="onRescan">
+        <i :class="['pi pi-sync', rescanBusy ? 'pi-spin' : '']" /> {{ $t('stageManager.rescan') }}
+      </button>
       <button :class="importBtn" :disabled="importBusy" @click="onImport">
         <i class="pi pi-upload" /> {{ $t('stageManager.import') }}
       </button>
@@ -31,6 +34,16 @@
     >
       <div class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-wrap">
         <span class="ctv:font-semibold ctv:truncate">{{ w.label }}</span>
+        <span v-if="recentAdded.has(w.label)"
+              :class="[badge, 'ctv:bg-success-background/15 ctv:text-success-background']"
+              :title="$t('stageManager.badge.newHint')">
+          {{ $t('stageManager.badge.new') }}
+        </span>
+        <span v-if="w.builtin"
+              :class="[badge, 'ctv:bg-base-foreground/10 ctv:text-muted-foreground']"
+              :title="$t('stageManager.badge.builtinHint')">
+          {{ $t('stageManager.badge.builtin') }}
+        </span>
         <span v-if="w.link_type === LINK_TYPE_NATIVE"
               :class="[badge, 'ctv:bg-primary-background/10 ctv:text-primary-foreground']"
               :title="$t('stageManager.badge.linkedHint')">
@@ -63,15 +76,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { importWorkflow, listWorkflowOverview, LINK_TYPE_NATIVE } from '@/api'
+import { importWorkflow, listWorkflowOverview, rescanWorkflows, LINK_TYPE_NATIVE } from '@/api'
 import type { WorkflowOverview } from '@/api'
 import { addOptionEverywhere } from '@/composables/stages/workflowCombo'
 import { app } from '@/lib/comfyApp'
+import { WORKFLOW_API_GENERATED } from '@/utils/workflowEvents'
+import type { WorkflowApiGeneratedDetail } from '@/utils/workflowEvents'
 
-const props = defineProps<{ kind: string }>()
+const props = defineProps<{ kind: string; active?: boolean }>()
 const emit = defineEmits<{ (e: 'kinds', kinds: string[]): void }>()
 
 const { t } = useI18n()
@@ -80,6 +95,8 @@ const rows = ref<WorkflowOverview[]>([])
 const loading = ref(false)
 const loadError = ref('')
 const importBusy = ref(false)
+const rescanBusy = ref(false)
+const recentAdded = ref<Set<string>>(new Set())
 
 function toast(severity: string, summary: string, detail = '') {
   ;(app as any)?.extensionManager?.toast?.add?.({ severity, summary, detail, life: 5000 })
@@ -95,11 +112,37 @@ async function reload() {
   try {
     const res = await listWorkflowOverview(props.kind)
     rows.value = res.workflows
+    recentAdded.value = new Set(
+      res.recent_added.filter(r => r.kind === props.kind).map(r => r.label),
+    )
     emit('kinds', res.kinds)
   } catch (e: any) {
     loadError.value = String(e?.message || e)
   } finally {
     loading.value = false
+  }
+}
+
+async function onRescan() {
+  rescanBusy.value = true
+  try {
+    const res = await rescanWorkflows()
+    for (const a of res.added) addOptionEverywhere(a.kind, a.label)
+    void (app as any)?.refreshComboInNodes?.()
+    if (res.added.length) {
+      const names = res.added.slice(0, 5).map(a => `${a.kind}/${a.label}`).join(', ')
+      const more = res.added.length > 5 ? ` +${res.added.length - 5}` : ''
+      toast('success',
+        t('stageManager.rescanFound', { n: res.added.length }),
+        names + more)
+    } else {
+      toast('info', t('stageManager.rescanNone'), t('stageManager.rescanNoneDetail'))
+    }
+    await reload()
+  } catch (e: any) {
+    toast('error', t('stageManager.rescanFailed'), String(e?.message || e))
+  } finally {
+    rescanBusy.value = false
   }
 }
 
@@ -133,7 +176,18 @@ function onImport() {
   input.click()
 }
 
+function onApiGenerated(e: Event) {
+  const d = (e as CustomEvent<WorkflowApiGeneratedDetail>).detail
+  if (!d || d.kind !== props.kind) return
+  const row = rows.value.find(r => r.label === d.label)
+  if (row) row.has_api = true
+}
+
+onMounted(() => window.addEventListener(WORKFLOW_API_GENERATED, onApiGenerated))
+onBeforeUnmount(() => window.removeEventListener(WORKFLOW_API_GENERATED, onApiGenerated))
+
 watch(() => props.kind, () => { void reload() }, { immediate: true })
+watch(() => props.active, (a, prev) => { if (a && !prev) void reload() })
 
 defineExpose({ reload })
 

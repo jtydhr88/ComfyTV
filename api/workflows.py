@@ -3,7 +3,9 @@ import re
 
 from aiohttp import web
 
-from ..runners import workflow_db, refresh_registry, WORKFLOW_KINDS
+from ..runners import (
+    workflow_db, refresh_registry, seed_workflows, last_scan_added, WORKFLOW_KINDS,
+)
 from ._common import routes
 
 
@@ -16,7 +18,14 @@ async def workflow_list_overview(request: web.Request) -> web.Response:
     return web.json_response({
         "kinds": list(WORKFLOW_KINDS),
         "workflows": items,
+        "recent_added": last_scan_added(),
     })
+
+
+@routes.post("/comfytv/workflows/rescan")
+async def workflow_rescan(_request: web.Request) -> web.Response:
+    result = seed_workflows()
+    return web.json_response({"ok": True, **result})
 
 
 @routes.get("/comfytv/workflows/state")

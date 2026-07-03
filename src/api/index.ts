@@ -9,6 +9,7 @@ import {
   LinkWorkflowResultSchema,
   ListNativeWorkflowsSchema,
   ListWorkflowOverviewSchema,
+  RescanResultSchema,
   UnlinkWorkflowResultSchema,
 } from './schemas'
 import type {
@@ -18,6 +19,7 @@ import type {
   LinkWorkflowResult,
   ListWorkflowOverview,
   NativeWorkflow,
+  RescanResult,
 } from './schemas'
 
 export class ApiError extends Error {
@@ -89,6 +91,10 @@ export function uploadApiSidecar(
 export function listWorkflowOverview(kind?: string): Promise<ListWorkflowOverview> {
   const q = kind ? `?kind=${encodeURIComponent(kind)}` : ''
   return apiFetch(`/comfytv/workflows${q}`, ListWorkflowOverviewSchema)
+}
+
+export function rescanWorkflows(): Promise<RescanResult> {
+  return apiSend('/comfytv/workflows/rescan', 'POST', RescanResultSchema)
 }
 
 export async function listNativeWorkflows(kind?: string): Promise<NativeWorkflow[]> {
