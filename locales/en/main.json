@@ -75,7 +75,27 @@
     "tab": {
       "workflow": "Workflow",
       "assets": "Assets",
-      "params": "Params"
+      "params": "Stages"
+    }
+  },
+  "stageManager": {
+    "title": "Stage Manager",
+    "refresh": "Refresh list",
+    "import": "Import",
+    "section": {
+      "workflows": "Workflows",
+      "params": "Parameters"
+    },
+    "emptyWorkflows": "No workflows registered for this stage yet — import one here, or drop a .json into ComfyTV/workflows/<kind>/ and restart ComfyUI.",
+    "hint": "Workflows listed here are picked from the workflow dropdown on the matching stage node on the canvas.",
+    "badge": {
+      "linked": "linked",
+      "linkedHint": "Linked from ComfyUI's native workflow folder (not managed by ComfyTV)",
+      "fileMissing": "file missing",
+      "notGui": "not GUI format",
+      "notGuiHint": "Missing a top-level nodes array — open it in ComfyUI and re-save normally, not with Save (API Format)",
+      "noApi": "API not generated",
+      "noApiHint": "The API prompt is generated automatically the first time this workflow runs — normal for a freshly imported workflow."
     }
   },
   "assets": {
@@ -217,7 +237,7 @@
   },
   "configSidebar": {
     "title": "Workflow Config",
-    "empty": "Select a stage node on the canvas to edit its workflow config.",
+    "empty": "Select a stage node on the canvas to edit its workflow config. Imported workflows are picked from the node's workflow dropdown — see the Stages tab for the full list.",
     "noWorkflowPicked": "This stage's workflow combo is empty — pick one first.",
     "loading": "Loading…",
     "noExposedWidgets": "This workflow has no editable widgets, or hasn't been prepared yet — pick it on any stage first so the browser can analyze it.",

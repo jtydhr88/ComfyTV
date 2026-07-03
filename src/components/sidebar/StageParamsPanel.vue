@@ -2,13 +2,30 @@
   <div class="ctv:flex ctv:flex-col ctv:size-full ctv:overflow-hidden ctv:text-xs ctv:text-base-foreground">
     <div class="ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:py-1.5 ctv:px-2.5
                 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle">
-      <span class="ctv:flex-1 ctv:font-semibold ctv:text-sm">{{ $t('stageParams.sidebar.title') }}</span>
+      <span class="ctv:flex-1 ctv:font-semibold ctv:text-sm">{{ $t('stageManager.title') }}</span>
       <div class="ctv:w-28">
         <ComfyTVSelect :model-value="activeKind" :options="kindOptions" @update:model-value="activeKind = String($event)" />
       </div>
     </div>
 
     <div class="ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-2.5 ctv:flex ctv:flex-col ctv:gap-2.5">
+      <section>
+        <button :class="sectionToggle" :aria-expanded="!wfCollapsed" @click="wfCollapsed = !wfCollapsed">
+          <i :class="['pi', wfCollapsed ? 'pi-chevron-right' : 'pi-chevron-down', 'ctv:w-2.5 ctv:text-2xs ctv:text-muted-foreground']" />
+          <span class="ctv:flex-1 ctv:text-left">{{ $t('stageManager.section.workflows') }}</span>
+        </button>
+        <StageWorkflowList v-show="!wfCollapsed" :kind="activeKind" class="ctv:mt-1.5" @kinds="onKinds" />
+        <p v-show="!wfCollapsed" class="ctv:m-0 ctv:mt-1.5 ctv:text-3xs ctv:italic ctv:text-muted-foreground/60">
+          {{ $t('stageManager.hint') }}
+        </p>
+      </section>
+
+      <section>
+        <button :class="sectionToggle" :aria-expanded="!paramsCollapsed" @click="paramsCollapsed = !paramsCollapsed">
+          <i :class="['pi', paramsCollapsed ? 'pi-chevron-right' : 'pi-chevron-down', 'ctv:w-2.5 ctv:text-2xs ctv:text-muted-foreground']" />
+          <span class="ctv:flex-1 ctv:text-left">{{ $t('stageManager.section.params') }}</span>
+        </button>
+      <div v-show="!paramsCollapsed" class="ctv:mt-1.5 ctv:flex ctv:flex-col ctv:gap-2.5">
       <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2 ctv:rounded ctv:border ctv:border-border-subtle ctv:bg-secondary-background/40">
         <div class="ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:opacity-60">{{ $t('stageParams.sidebar.new') }}</div>
 
@@ -91,6 +108,8 @@
           @click="onDelete(p)"
         ><i class="pi pi-times" /></button>
       </div>
+      </div>
+      </section>
     </div>
   </div>
 </template>
@@ -98,11 +117,13 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useStorage } from '@vueuse/core'
 
 import ComfyTVNumber from '@/components/widgets/ComfyTVNumber.vue'
 import ComfyTVText from '@/components/widgets/ComfyTVText.vue'
 import ComfyTVToggle from '@/components/widgets/ComfyTVToggle.vue'
 import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
+import StageWorkflowList from '@/components/sidebar/StageWorkflowList.vue'
 import { askConfirm } from '@/composables/dialog/useConfirmDialog'
 import { STAGE_PARAM_TYPES, type StageParam } from '@/api/schemas'
 import { useStageParamStore } from '@/stores/stageParamStore'
@@ -112,13 +133,24 @@ defineProps<{ active?: boolean }>()
 const { t } = useI18n()
 const store = useStageParamStore()
 
-const STAGE_PARAM_KINDS = [
+const FALLBACK_KINDS = [
   'text', 'image', 'video', 'audio', 'speech', 'panorama',
   'multiangle', 'relight', 'multiview',
   'upscale', 'outpaint', 'inpaint', 'image-edit', 'erase', 'cutout',
-] as const
-const kindOptions = STAGE_PARAM_KINDS.map(k => ({ value: k, label: k }))
-const activeKind = ref<string>(STAGE_PARAM_KINDS[0])
+]
+const backendKinds = ref<string[]>([])
+const kindOptions = computed(() =>
+  (backendKinds.value.length ? backendKinds.value : FALLBACK_KINDS)
+    .map(k => ({ value: k, label: k })),
+)
+const activeKind = useStorage<string>('comfytv:sidebar:stage-kind', FALLBACK_KINDS[0]!)
+
+function onKinds(kinds: string[]) {
+  backendKinds.value = kinds
+}
+
+const wfCollapsed     = useStorage('comfytv:sidebar:stage-workflows-collapsed', false)
+const paramsCollapsed = useStorage('comfytv:sidebar:stage-params-collapsed', false)
 
 const typeOptions = STAGE_PARAM_TYPES.map(tp => ({ value: tp, label: tp }))
 
@@ -209,6 +241,9 @@ async function onDelete(p: StageParam) {
 store.ensureHydrated()
 store.installWebSocketSync()
 
+const sectionToggle = 'ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:py-1 ctv:px-0 ctv:cursor-pointer ctv:[font-family:inherit]'
+  + ' ctv:bg-transparent ctv:border-none ctv:text-inherit ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:font-semibold ctv:text-muted-foreground'
+  + ' ctv:hover:text-base-foreground'
 const fieldRow = 'ctv:flex ctv:flex-col ctv:gap-0.5'
 const fieldLabel = 'ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:opacity-55'
 const primaryBtn = 'ctv:inline-flex ctv:items-center ctv:h-6 ctv:px-2.5 ctv:rounded-sm ctv:text-xs ctv:font-medium ctv:cursor-pointer'

@@ -188,6 +188,27 @@ export const DeleteAssetSchema = z.object({
   ok: z.literal(true),
 })
 
+export const WorkflowOverviewSchema = z.object({
+  id: z.number(),
+  kind: z.string(),
+  label: z.string(),
+  order: z.number(),
+  description: z.string().nullable().optional(),
+  link_type: z.number(),
+  file_path: z.string(),
+  file_exists: z.boolean(),
+  file_mtime: z.number().nullable().optional(),
+  has_api: z.boolean(),
+  gui_valid: z.boolean().nullable().optional(),
+})
+export type WorkflowOverview = z.infer<typeof WorkflowOverviewSchema>
+
+export const ListWorkflowOverviewSchema = z.object({
+  kinds: z.array(z.string()),
+  workflows: z.array(WorkflowOverviewSchema),
+})
+export type ListWorkflowOverview = z.infer<typeof ListWorkflowOverviewSchema>
+
 export const WorkflowStateSchema = z.object({
   has_api: z.boolean(),
   file_path: z.string(),

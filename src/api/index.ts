@@ -8,6 +8,7 @@ import {
   ImportWorkflowResultSchema,
   LinkWorkflowResultSchema,
   ListNativeWorkflowsSchema,
+  ListWorkflowOverviewSchema,
   UnlinkWorkflowResultSchema,
 } from './schemas'
 import type {
@@ -15,6 +16,7 @@ import type {
   CapsPayload,
   ImportWorkflowResult,
   LinkWorkflowResult,
+  ListWorkflowOverview,
   NativeWorkflow,
 } from './schemas'
 
@@ -82,6 +84,11 @@ export function uploadApiSidecar(
   return apiSend('/comfytv/workflows/api_sidecar', 'POST', ApiSidecarResultSchema, {
     kind, label, content,
   })
+}
+
+export function listWorkflowOverview(kind?: string): Promise<ListWorkflowOverview> {
+  const q = kind ? `?kind=${encodeURIComponent(kind)}` : ''
+  return apiFetch(`/comfytv/workflows${q}`, ListWorkflowOverviewSchema)
 }
 
 export async function listNativeWorkflows(kind?: string): Promise<NativeWorkflow[]> {

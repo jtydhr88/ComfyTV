@@ -231,6 +231,46 @@ def list_workflows() -> list[dict]:
         ]
 
 
+def _gui_valid_for(path: Path) -> Optional[bool]:
+    from .seed import _is_gui_format
+    if not path.exists():
+        return None
+    try:
+        return _is_gui_format(path.read_text(encoding="utf-8"))
+    except OSError:
+        return None
+
+
+def list_workflows_overview(kind: Optional[str] = None) -> list[dict]:
+    db.init()
+    with db.get_session() as s:
+        stmt = select(db.Workflow).order_by(
+            db.Workflow.kind, db.Workflow.order_, db.Workflow.label
+        )
+        if kind:
+            stmt = stmt.where(db.Workflow.kind == kind)
+        rows = s.execute(stmt).scalars().all()
+
+        out: list[dict] = []
+        for r in rows:
+            path = Path(r.file_path) if r.file_path else None
+            file_exists = bool(path and path.exists())
+            out.append({
+                "id":          r.id,
+                "kind":        r.kind,
+                "label":       r.label,
+                "order":       r.order_,
+                "description": r.description,
+                "link_type":   getattr(r, "link_type", db.LINK_TYPE_MANAGED) or db.LINK_TYPE_MANAGED,
+                "file_path":   r.file_path or "",
+                "file_exists": file_exists,
+                "file_mtime":  r.file_mtime,
+                "has_api":     bool(r.api_json),
+                "gui_valid":   _gui_valid_for(path) if path else None,
+            })
+        return out
+
+
 def get_workflow_state(kind: str, label: str) -> Optional[dict]:
     db.init()
     with db.get_session() as s:

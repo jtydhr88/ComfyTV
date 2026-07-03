@@ -841,6 +841,62 @@ class TestSeedAndCRUD:
         assert wdb.read_workflow_file("image", "Nope") is None
 
 
+class TestListWorkflowsOverview:
+    def _seed_one(self, tmp_path, monkeypatch, name="sd15", kind="image",
+                  content: str | None = None) -> None:
+        from pathlib import Path
+        wdir = tmp_path / "workflows"
+        kind_dir = wdir / kind
+        kind_dir.mkdir(parents=True, exist_ok=True)
+        (kind_dir / f"{name}.json").write_text(
+            content if content is not None else json.dumps({"nodes": []})
+        )
+        monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
+        wdb.seed_workflows_from_disk((kind,))
+
+    def test_fields_for_healthy_workflow(self, reset_db, tmp_path, monkeypatch):
+        self._seed_one(tmp_path, monkeypatch, "sd15", "image")
+        rows = wdb.list_workflows_overview()
+        row = next(r for r in rows if r["kind"] == "image" and r["label"] == "sd15")
+        assert row["file_exists"] is True
+        assert row["gui_valid"] is True
+        assert row["has_api"] is False
+        assert row["link_type"] == 0
+        assert row["file_path"].endswith("sd15.json")
+        assert isinstance(row["id"], int)
+        assert row["file_mtime"] is not None
+
+    def test_kind_filter(self, reset_db, tmp_path, monkeypatch):
+        from pathlib import Path
+        wdir = tmp_path / "workflows"
+        for kind, name in (("image", "a"), ("video", "b")):
+            kd = wdir / kind
+            kd.mkdir(parents=True, exist_ok=True)
+            (kd / f"{name}.json").write_text(json.dumps({"nodes": []}))
+        monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
+        wdb.seed_workflows_from_disk(("image", "video"))
+
+        rows = wdb.list_workflows_overview("video")
+        assert rows and all(r["kind"] == "video" for r in rows)
+
+    def test_non_gui_file_flagged_invalid(self, reset_db, tmp_path, monkeypatch):
+        api_format = json.dumps({"3": {"class_type": "KSampler", "inputs": {}}})
+        self._seed_one(tmp_path, monkeypatch, "apionly", "image", content=api_format)
+        rows = wdb.list_workflows_overview("image")
+        row = next(r for r in rows if r["label"] == "apionly")
+        assert row["file_exists"] is True
+        assert row["gui_valid"] is False
+
+    def test_missing_file_reported(self, reset_db, tmp_path, monkeypatch):
+        from pathlib import Path
+        self._seed_one(tmp_path, monkeypatch, "gone", "image")
+        (tmp_path / "workflows" / "image" / "gone.json").unlink()
+        rows = wdb.list_workflows_overview("image")
+        row = next(r for r in rows if r["label"] == "gone")
+        assert row["file_exists"] is False
+        assert row["gui_valid"] is None
+
+
 # ─── _apply_preset_to_new_row edge cases ─────────────────────────────────────
 
 class TestPresetApplication:

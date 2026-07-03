@@ -75,7 +75,27 @@
     "tab": {
       "workflow": "工作流",
       "assets": "资产库",
+      "params": "Stage 管理"
+    }
+  },
+  "stageManager": {
+    "title": "Stage 管理",
+    "refresh": "刷新列表",
+    "import": "导入",
+    "section": {
+      "workflows": "工作流",
       "params": "参数"
+    },
+    "emptyWorkflows": "该 Stage 下还没有已注册的工作流 —— 点「导入」上传，或把 .json 放入 ComfyTV/workflows/对应类别目录后重启 ComfyUI。",
+    "hint": "这里列出的工作流，在画布上对应 Stage 节点的 workflow 下拉框中选用。",
+    "badge": {
+      "linked": "外链",
+      "linkedHint": "链接自 ComfyUI 原生工作流目录（不由 ComfyTV 管理）",
+      "fileMissing": "文件丢失",
+      "notGui": "非 GUI 格式",
+      "notGuiHint": "缺少顶层 nodes 数组 —— 在 ComfyUI 中打开后用普通「保存」重新导出，不要用「保存（API 格式）」",
+      "noApi": "API 未生成",
+      "noApiHint": "首次运行该工作流时会自动生成 API prompt，新导入的工作流出现此标记属于正常。"
     }
   },
   "assets": {
@@ -217,7 +237,7 @@
   },
   "configSidebar": {
     "title": "工作流配置",
-    "empty": "在画布上选中某个 Stage 节点以编辑它的工作流配置。",
+    "empty": "在画布上选中某个 Stage 节点以编辑它的工作流配置。导入的工作流在节点的 workflow 下拉框中选用 —— 全部清单见「Stage 管理」页。",
     "noWorkflowPicked": "该 Stage 还没选工作流 —— 先在下拉里挑一个。",
     "loading": "加载中…",
     "noExposedWidgets": "这个工作流没有可编辑的 widget，或者还没准备过 —— 先在画布上任一 Stage 选中它，浏览器侧 graphToPrompt 跑一遍后才有 widget 元数据。",

@@ -7,6 +7,18 @@ from ..runners import workflow_db, refresh_registry, WORKFLOW_KINDS
 from ._common import routes
 
 
+@routes.get("/comfytv/workflows")
+async def workflow_list_overview(request: web.Request) -> web.Response:
+    kind = request.query.get("kind") or None
+    if kind and kind not in WORKFLOW_KINDS:
+        return web.json_response({"error": f"unknown workflow kind {kind!r}"}, status=400)
+    items = workflow_db.list_workflows_overview(kind)
+    return web.json_response({
+        "kinds": list(WORKFLOW_KINDS),
+        "workflows": items,
+    })
+
+
 @routes.get("/comfytv/workflows/state")
 async def workflow_state(request: web.Request) -> web.Response:
     kind  = request.query.get("kind") or ""
