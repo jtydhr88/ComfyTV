@@ -90370,6 +90370,7 @@ function useStageNode(node, kind, variant = "generator") {
         queueMicrotask(reValidate);
         queueMicrotask(triggerPrepForCurrentWorkflow);
         queueMicrotask(() => selectionStore.refreshFromCanvas());
+        queueMicrotask(() => selectionStore.bumpBindings());
       });
       if (workflowKind) addWorkflowUploadButton(node, wfWidget, workflowKind);
     }

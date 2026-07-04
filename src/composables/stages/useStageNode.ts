@@ -447,6 +447,7 @@ export function useStageNode(
         queueMicrotask(reValidate)
         queueMicrotask(triggerPrepForCurrentWorkflow)
         queueMicrotask(() => selectionStore.refreshFromCanvas())
+        queueMicrotask(() => selectionStore.bumpBindings())
       })
       if (workflowKind) addWorkflowUploadButton(node, wfWidget, workflowKind)
     }
