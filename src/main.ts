@@ -112,11 +112,35 @@ const RICH_STAGE_MIN_HEIGHTS: Record<string, number> = {
   'ComfyTV.OutpaintStage':            620,
 }
 
+const GENERIC_STAGE_MIN_HEIGHT = 380
+const TEXT_PREVIEW_WIDGET_NAME = '$$node-text-preview'
+const TEXT_PREVIEW_MAX_HEIGHT = 120
+
+function capTextPreviewWidget(w: any) {
+  if (w?.name !== TEXT_PREVIEW_WIDGET_NAME) return
+  if (w.options && !w.options.getMaxHeight) {
+    w.options.getMaxHeight = () => TEXT_PREVIEW_MAX_HEIGHT
+  }
+}
+
+function installTextPreviewCap(node: ComfyNode) {
+  node.widgets?.forEach(capTextPreviewWidget)
+  const anyNode = node as any
+  const orig = anyNode.addCustomWidget?.bind(node)
+  if (!orig) return
+  anyNode.addCustomWidget = (w: any) => {
+    const added = orig(w)
+    capTextPreviewWidget(added ?? w)
+    return added
+  }
+}
+
 function mountStage(node: ComfyNode, kind: StageKind, variant: StageVariant = 'generator') {
   const container = document.createElement('div')
   container.className = 'comfytv-root'
   const richMinHeight = RICH_STAGE_MIN_HEIGHTS[node.comfyClass]
   const floor = richMinHeight ?? 80
+  const lgMinHeight = richMinHeight ?? GENERIC_STAGE_MIN_HEIGHT
   Object.assign(container.style, {
     width: '100%', height: '100%',
     minHeight: `${floor}px`,
@@ -127,10 +151,12 @@ function mountStage(node: ComfyNode, kind: StageKind, variant: StageVariant = 'g
   })
 
   node.addDOMWidget('comfytv_stage', 'stage', container, {
-    getMinHeight: () => floor,
+    getMinHeight: () => lgMinHeight,
     hideOnZoom: false,
     serialize: false,
   })
+
+  installTextPreviewCap(node)
 
   const { state, onRunRequest, onCancelRequest, onDisconnect, onAction } = useStageNode(node, kind, variant)
 

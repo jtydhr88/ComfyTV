@@ -91311,11 +91311,33 @@ const RICH_STAGE_MIN_HEIGHTS = {
   "ComfyTV.GridSplitStage": 560,
   "ComfyTV.OutpaintStage": 620
 };
+const GENERIC_STAGE_MIN_HEIGHT = 380;
+const TEXT_PREVIEW_WIDGET_NAME = "$$node-text-preview";
+const TEXT_PREVIEW_MAX_HEIGHT = 120;
+function capTextPreviewWidget(w) {
+  if ((w == null ? void 0 : w.name) !== TEXT_PREVIEW_WIDGET_NAME) return;
+  if (w.options && !w.options.getMaxHeight) {
+    w.options.getMaxHeight = () => TEXT_PREVIEW_MAX_HEIGHT;
+  }
+}
+function installTextPreviewCap(node) {
+  var _a2, _b2;
+  (_a2 = node.widgets) == null ? void 0 : _a2.forEach(capTextPreviewWidget);
+  const anyNode = node;
+  const orig = (_b2 = anyNode.addCustomWidget) == null ? void 0 : _b2.bind(node);
+  if (!orig) return;
+  anyNode.addCustomWidget = (w) => {
+    const added = orig(w);
+    capTextPreviewWidget(added ?? w);
+    return added;
+  };
+}
 function mountStage(node, kind, variant = "generator") {
   const container = document.createElement("div");
   container.className = "comfytv-root";
   const richMinHeight = RICH_STAGE_MIN_HEIGHTS[node.comfyClass];
   const floor2 = richMinHeight ?? 80;
+  const lgMinHeight = richMinHeight ?? GENERIC_STAGE_MIN_HEIGHT;
   Object.assign(container.style, {
     width: "100%",
     height: "100%",
@@ -91326,10 +91348,11 @@ function mountStage(node, kind, variant = "generator") {
     fontSize: "12px"
   });
   node.addDOMWidget("comfytv_stage", "stage", container, {
-    getMinHeight: () => floor2,
+    getMinHeight: () => lgMinHeight,
     hideOnZoom: false,
     serialize: false
   });
+  installTextPreviewCap(node);
   const { state: state2, onRunRequest, onCancelRequest, onDisconnect, onAction } = useStageNode(node, kind, variant);
   const Card = RICH_STAGE_CARDS[node.comfyClass] ?? StageCard;
   const props = { state: state2, node, onRunRequest, onCancelRequest, onDisconnect, onAction };
