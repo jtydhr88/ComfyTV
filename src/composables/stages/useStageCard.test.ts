@@ -99,10 +99,10 @@ describe('useStageCard — action/preset menu', () => {
 })
 
 describe('useStageCard — run gating + inputs', () => {
-  it('canRun: false while preparing, true with a prompt or a connected input', () => {
+  it('canRun: false only while preparing, otherwise true even without a prompt', () => {
     expect(useStageCard(() => state({ preparingWorkflow: true, mainPrompt: 'x' }), vi.fn()).canRun.value).toBe(false)
     expect(useStageCard(() => state({ mainPrompt: '  hi ' }), vi.fn()).canRun.value).toBe(true)
-    expect(useStageCard(() => state({ mainPrompt: '   ' }), vi.fn()).canRun.value).toBe(false)
+    expect(useStageCard(() => state({ mainPrompt: '   ' }), vi.fn()).canRun.value).toBe(true)
     expect(useStageCard(() => state({ inputs: [{ slot: 'x', source: 'upstream' }] }), vi.fn()).canRun.value).toBe(true)
   })
 

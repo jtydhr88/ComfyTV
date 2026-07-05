@@ -44,10 +44,16 @@ const { default: StageCard } = await import('./StageCard.vue')
 describe('StageCard — base states', () => {
   beforeEach(() => vi.clearAllMocks())
 
-  it('renders a disabled run button when the stage has no prompt and no inputs', () => {
+  it('renders an enabled run button even when the stage has no prompt and no inputs', () => {
     renderCard(makeState())
     const btn = document.querySelector('.run-btn') as HTMLButtonElement
     expect(btn).toBeInTheDocument()
+    expect(btn).not.toBeDisabled()
+  })
+
+  it('disables the run button while the workflow is preparing', () => {
+    renderCard(makeState({ preparingWorkflow: true }))
+    const btn = document.querySelector('.run-btn') as HTMLButtonElement
     expect(btn).toBeDisabled()
   })
 

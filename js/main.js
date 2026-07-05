@@ -57407,8 +57407,7 @@ function useStageCard(getState, onAction) {
   const canRun = computed(() => {
     const s = getState();
     if (s.preparingWorkflow) return false;
-    const hasPrompt = !!(s.mainPrompt && s.mainPrompt.trim());
-    return hasPrompt || connectedInputs.value.length > 0;
+    return true;
   });
   const progressPercent = computed(() => progressPercentOf(getState().progress));
   const batchInput = computed(() => getState().inputs.find((i) => i.slot === "batch"));
