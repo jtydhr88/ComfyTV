@@ -29025,9 +29025,9 @@ function injectImageRefs(inputs, refs) {
   const seen = /* @__PURE__ */ new Set();
   for (const ref2 of refs) {
     if (seen.has(ref2.slot)) {
-      warnings.push(`reference slot #${ref2.slot + 1} pinned by two images — the later one wins`);
+      warnings.push(`reference slot #${ref2.slot} pinned by two images — the later one wins`);
     } else if (wired.has(ref2.slot)) {
-      warnings.push(`reference slot #${ref2.slot + 1} had an upstream connection — the pinned image overrides it`);
+      warnings.push(`reference slot #${ref2.slot} had an upstream connection — the pinned image overrides it`);
     }
     seen.add(ref2.slot);
   }
@@ -29150,7 +29150,7 @@ async function validateNode(node, _stageKind, opts = {}) {
       const missing = missingRequiredImageSlots(required2, wired, refCovered);
       const total = required2.length;
       for (const idx of missing) {
-        const msg = total === 1 ? `"${label}" requires an image — wire one into this slot or add an image reference.` : `"${label}" image slot #${idx + 1} has no source — wire one in or add an image reference (${total - missing.length}/${total} ready).`;
+        const msg = total === 1 ? `"${label}" requires an image — wire one into this slot or add an image reference.` : `"${label}" image slot #${idx} has no source — wire one in or add an image reference (${total - missing.length}/${total} ready).`;
         out[`images.image${idx}`] = { status: "required_but_missing", message: msg };
       }
     }
@@ -30033,7 +30033,7 @@ function buildBindingOptions(widgets, workflowKind) {
     for (let i = 0; i <= showUpTo; i++) {
       out.push({
         value: `upstream_${ukind}:${suffix}[${i}]`,
-        label: `${label} #${i + 1}`
+        label: `${label} #${i}`
       });
     }
     if (ukind === "image" && caps.option_keys.includes("option:mask_data")) {
@@ -31656,7 +31656,7 @@ const _sfc_main$G = /* @__PURE__ */ defineComponent({
               class: normalizeClass(rowClass2(__props.currentSlot === opt.slot)),
               onClick: ($event) => _ctx.$emit("pick", opt.slot)
             }, [
-              createBaseVNode("span", _hoisted_5$r, "#" + toDisplayString$1(opt.slot + 1), 1),
+              createBaseVNode("span", _hoisted_5$r, "#" + toDisplayString$1(opt.slot), 1),
               createBaseVNode("span", _hoisted_6$q, toDisplayString$1(opt.nodeTitles.join(" / ")), 1),
               __props.wiredSlots.includes(opt.slot) ? (openBlock(), createElementBlock("span", {
                 key: 0,
@@ -31689,7 +31689,7 @@ function useImageReferences(getNode, rootEl) {
     return assetChipLabel(assetOf(ref2), ref2.asset_id);
   }
   function tileTooltip(ref2) {
-    return `${assetLabel(ref2)} · ${t2("promptAssets.slotShort", { n: ref2.slot + 1 })}`;
+    return `${assetLabel(ref2)} · ${t2("promptAssets.slotShort", { n: ref2.slot })}`;
   }
   function nextFreeSlot() {
     const taken = /* @__PURE__ */ new Set([
@@ -31763,9 +31763,9 @@ function useImageReferences(getNode, rootEl) {
   function warningMessage(w) {
     switch (w.kind) {
       case "duplicate":
-        return t2("imageRefs.warnDuplicate", { n: w.slot + 1 });
+        return t2("imageRefs.warnDuplicate", { n: w.slot });
       case "override":
-        return t2("imageRefs.warnOverride", { n: w.slot + 1 });
+        return t2("imageRefs.warnOverride", { n: w.slot });
       case "overflow":
         return t2("imageRefs.warnOverflow", { count: w.count, total: w.total });
       case "noSlots":
@@ -31916,7 +31916,7 @@ const _sfc_main$F = /* @__PURE__ */ defineComponent({
                 class: "ctv:block ctv:size-full ctv:object-cover",
                 draggable: "false"
               }, null, 8, _hoisted_7$o)) : (openBlock(), createElementBlock("div", _hoisted_8$n, toDisplayString$1(_ctx.$t("promptAssets.missing", { id: ref2.asset_id })), 1)),
-              createBaseVNode("span", _hoisted_9$n, toDisplayString$1(`#${ref2.slot + 1}`), 1),
+              createBaseVNode("span", _hoisted_9$n, toDisplayString$1(`#${ref2.slot}`), 1),
               createBaseVNode("button", {
                 type: "button",
                 class: normalizeClass(unref(removeBtn2)),

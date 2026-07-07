@@ -139,7 +139,7 @@ export async function validateNode(
       for (const idx of missing) {
         const msg = total === 1
           ? `"${label}" requires an image — wire one into this slot or add an image reference.`
-          : `"${label}" image slot #${idx + 1} has no source — wire one in or add an image ` +
+          : `"${label}" image slot #${idx} has no source — wire one in or add an image ` +
             `reference (${total - missing.length}/${total} ready).`
         out[`images.image${idx}`] = { status: 'required_but_missing', message: msg }
       }

@@ -59,7 +59,7 @@ export function useImageReferences(
   }
 
   function tileTooltip(ref: ImageRef): string {
-    return `${assetLabel(ref)} · ${t('promptAssets.slotShort', { n: ref.slot + 1 })}`
+    return `${assetLabel(ref)} · ${t('promptAssets.slotShort', { n: ref.slot })}`
   }
 
   function nextFreeSlot(): number {
@@ -144,8 +144,8 @@ export function useImageReferences(
 
   function warningMessage(w: RefSlotWarning): string {
     switch (w.kind) {
-      case 'duplicate': return t('imageRefs.warnDuplicate', { n: w.slot + 1 })
-      case 'override':  return t('imageRefs.warnOverride', { n: w.slot + 1 })
+      case 'duplicate': return t('imageRefs.warnDuplicate', { n: w.slot })
+      case 'override':  return t('imageRefs.warnOverride', { n: w.slot })
       case 'overflow':  return t('imageRefs.warnOverflow', { count: w.count, total: w.total })
       case 'noSlots':   return t('imageRefs.warnNoSlots')
     }

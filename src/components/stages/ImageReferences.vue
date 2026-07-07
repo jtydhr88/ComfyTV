@@ -48,7 +48,7 @@
           class="ctv:absolute ctv:bottom-0 ctv:inset-x-0 ctv:py-0.5 ctv:px-1 ctv:text-3xs ctv:font-semibold
                  ctv:text-white/90 ctv:overflow-hidden ctv:whitespace-nowrap ctv:text-ellipsis ctv:pointer-events-none
                  ctv:bg-linear-to-b ctv:from-transparent ctv:to-black/75"
-        >{{ `#${ref.slot + 1}` }}</span>
+        >{{ `#${ref.slot}` }}</span>
         <button
           type="button"
           :class="removeBtn"

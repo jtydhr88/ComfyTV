@@ -230,7 +230,7 @@ describe('useImageReferences', () => {
     const ir = useImageReferences(() => node, rootElStub())
     ir.init()
     await vi.waitFor(
-      () => expect(ir.slotWarnings.value).toEqual(['imageRefs.warnDuplicate:{"n":1}']),
+      () => expect(ir.slotWarnings.value).toEqual(['imageRefs.warnDuplicate:{"n":0}']),
       { timeout: 2000 },
     )
   })

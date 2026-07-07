@@ -170,9 +170,9 @@ export function injectImageRefs(
   const seen = new Set<number>()
   for (const ref of refs) {
     if (seen.has(ref.slot)) {
-      warnings.push(`reference slot #${ref.slot + 1} pinned by two images — the later one wins`)
+      warnings.push(`reference slot #${ref.slot} pinned by two images — the later one wins`)
     } else if (wired.has(ref.slot)) {
-      warnings.push(`reference slot #${ref.slot + 1} had an upstream connection — the pinned image overrides it`)
+      warnings.push(`reference slot #${ref.slot} had an upstream connection — the pinned image overrides it`)
     }
     seen.add(ref.slot)
   }

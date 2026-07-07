@@ -26,7 +26,7 @@
         :class="rowClass(currentSlot === opt.slot)"
         @click="$emit('pick', opt.slot)"
       >
-        <span class="ctv:shrink-0 ctv:font-mono ctv:text-muted-foreground">#{{ opt.slot + 1 }}</span>
+        <span class="ctv:shrink-0 ctv:font-mono ctv:text-muted-foreground">#{{ opt.slot }}</span>
         <span class="ctv:flex-1 ctv:truncate ctv:text-left">{{ opt.nodeTitles.join(' / ') }}</span>
         <span v-if="wiredSlots.includes(opt.slot)" :class="badgeClass">
           {{ $t('promptAssets.slotWired') }}

@@ -216,7 +216,7 @@ export function buildBindingOptions(
     for (let i = 0; i <= showUpTo; i++) {
       out.push({
         value: `upstream_${ukind}:${suffix}[${i}]`,
-        label: `${label} #${i + 1}`,
+        label: `${label} #${i}`,
       })
     }
     if (ukind === 'image' && caps.option_keys.includes('option:mask_data')) {

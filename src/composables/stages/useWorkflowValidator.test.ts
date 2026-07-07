@@ -127,7 +127,7 @@ describe('validateNode', () => {
     })
     const w = await validateNode(node, 'image')
     expect(w['images.image1']?.status).toBe('required_but_missing')
-    expect(w['images.image1']?.message).toContain('slot #2')
+    expect(w['images.image1']?.message).toContain('slot #1')
     expect(w['images.image1']?.message).toContain('1/2')
     expect(w['images.image0']).toBeUndefined()
   })
