@@ -102,11 +102,9 @@ ACE-Step v1 是 ComfyUI 核心原生支持,不需要装额外的 custom node。
 
 ## Relight
 
-with-reference 和普通版用同一套模型。
-
 | 工作流 | 文件 | 目录 |
 |---|---|---|
-| **Qwen Edit 2509 Relight**(+ with-reference) | `qwen_image_edit_2509_fp8_e4m3fn.safetensors`、`Qwen-Image-Edit-2509-Lightning-4steps-V1.0-bf16.safetensors`、`Qwen-Image-Edit-2509-Relight.safetensors`、`qwen_2.5_vl_7b_fp8_scaled.safetensors`、`qwen_image_vae.safetensors` | `diffusion_models/`、`loras/`、`loras/`、`text_encoders/`、`vae/` |
+| **Flux2 Klein Relight** | `flux-2-klein-9b-nvfp4.safetensors`、`Sun_direction_LoRA_Flux_2_Klein_9b_v1.safetensors`、`qwen_3_8b_fp8mixed.safetensors`、`flux2-vae.safetensors` | `diffusion_models/`、`loras/`、`text_encoders/`、`vae/` |
 
 ---
 

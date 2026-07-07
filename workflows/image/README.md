@@ -25,8 +25,10 @@ To add your own workflow see [docs/custom-workflows.md](../../docs/custom-workfl
 - **Local SD1.5** (`local-sd15.json` + `_preset.json`) — vanilla SD1.5 text-to-image using `v1-5-pruned-emaonly.safetensors`. Tested working.
 - **Local SD1.5 I2I** (`local-sd15-i2i.json` + `_preset.json`) — same model, image-to-image via `VAEEncode + denoise<1.0`. Tested working.
 - **Image Ideogram4 T2I** (`image_ideogram4_t2i.json` + `_preset.json`) — Ideogram 4 + Qwen3-VL text encoder text-to-image. Tested working.
+- **Flux2 Klein Relight** (`flux2klein-relight.json` + `_preset.json`) — relight via Flux-2 Klein 9B + Sun-direction LoRA (4-step). images[0] = subject, images[1] = lighting reference (e.g. the Relight node's 3d-light render, or any image via Load Image from Asset). Output size follows the subject. The image-stage **Relight** action spawns this workflow pre-wired.
 
 ## Models referenced
 
 - `v1-5-pruned-emaonly.safetensors` — SD1.5 base (~4 GB)
 - Ideogram4: `ideogram4_fp8_scaled.safetensors`, `ideogram4_unconditional_fp8_scaled.safetensors`, `qwen3vl_8b_fp8_scaled.safetensors`, `flux2-vae.safetensors` (see [docs/models.md](../../docs/models.md))
+- Flux2 Klein Relight: `flux-2-klein-9b-nvfp4.safetensors` (diffusion_models), `Sun_direction_LoRA_Flux_2_Klein_9b_v1.safetensors` (loras), `qwen_3_8b_fp8mixed.safetensors` (clip), `flux2-vae.safetensors` (vae)

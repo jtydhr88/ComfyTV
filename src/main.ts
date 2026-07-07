@@ -5,6 +5,7 @@ import ComfyTVSidebar from '@/components/sidebar/ComfyTVSidebar.vue'
 import StageCard from '@/components/stages/StageCard.vue'
 import MultiangleStageCard from '@/components/stages/MultiangleStageCard.vue'
 import PainterStageCard from '@/components/stages/PainterStageCard.vue'
+import RelightStageCard from '@/components/stages/RelightStageCard.vue'
 import CropStageCard from '@/components/stages/CropStageCard.vue'
 import RotateStageCard from '@/components/stages/RotateStageCard.vue'
 import MirrorStageCard from '@/components/stages/MirrorStageCard.vue'
@@ -74,6 +75,7 @@ let mountKeySeq = 0
 
 const RICH_STAGE_CARDS: Record<string, any> = {
   'ComfyTV.MultiangleStage': MultiangleStageCard,
+  'ComfyTV.RelightStage':    RelightStageCard,
   'ComfyTV.InpaintStage':    PainterStageCard,
   'ComfyTV.EraseStage':      PainterStageCard,
   'ComfyTV.CropStage':       CropStageCard,
@@ -95,6 +97,7 @@ const RICH_STAGE_CARDS: Record<string, any> = {
 
 const RICH_STAGE_MIN_HEIGHTS: Record<string, number> = {
   'ComfyTV.MultiangleStage': 640,
+  'ComfyTV.RelightStage':    640,
   'ComfyTV.InpaintStage':    640,
   'ComfyTV.EraseStage':      640,
   'ComfyTV.CropStage':       620,

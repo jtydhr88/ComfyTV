@@ -18,14 +18,13 @@ workflows/
 | 文件夹 | 对应 Stage | 已测试的内置 | per-kind 文档 |
 |---|---|---|---|
 | `audio/`       | Audio Stage             | ACE-Step v1 Song | [README](audio/README.zh.md) |
-| `image/`       | Image Stage              | Local SD1.5 (文生 + 图生)、Image Ideogram4 T2I | [README](image/README.zh.md) |
+| `image/`       | Image Stage              | Local SD1.5 (文生 + 图生)、Image Ideogram4 T2I、Flux2 Klein Relight | [README](image/README.zh.md) |
 | `image-edit/`  | Image Edit              | Flux Canny Edit | [README](image-edit/README.zh.md) |
 | `inpaint/`     | Inpaint                 | Flux Fill Inpaint（子图）；Fooocus SDXL Inpaint *（需装插件）* | [README](inpaint/README.zh.md) |
 | `outpaint/`    | Outpaint                | Flux Fill Outpaint；Fooocus SDXL Outpaint *（需装插件）* | [README](outpaint/README.zh.md) |
 | `upscale/`     | Upscale                 | Ultrasharp 4x (GAN) | [README](upscale/README.zh.md) |
 | `cutout/`      | Cutout                  | BiRefNet（子图） | [README](cutout/README.zh.md) |
 | `erase/`       | Erase                   | LaMa Erase（Acly inpaint-nodes 插件 + big-lama.pt） | [README](erase/README.zh.md) |
-| `relight/`     | Relight                 | Qwen Edit 2509 Relight + (with reference) 变种 | [README](relight/README.zh.md) |
 | `multiangle/`  | Multiangle              | Qwen Edit 2511 Multiangle（fal Multiple-Angles LoRA） | [README](multiangle/README.zh.md) |
 | `multiview/`   | Image Variations（并行多角度） | Face 3-View、Product 3-View、Character 3-View、Multi-cam 9 | [README](multiview/README.zh.md) |
 | `sequence/`    | Image Variations（链式故事帧） | Story 4、Storyboard 25（Next-Scene LoRA） | [README](sequence/README.zh.md) |

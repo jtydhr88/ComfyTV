@@ -18,7 +18,7 @@ WORKFLOW_KINDS: tuple[str, ...] = (
     'text', 'image', 'shot-images', 'video', 'audio', 'speech',
     'storyboard', 'panorama', 'timeline',
     'upscale', 'outpaint', 'inpaint', 'erase', 'image-edit', 'multiangle',
-    'relight', 'cutout', 'multiview', 'sequence', 'audio-vocal', 'audio-bg',
+    'cutout', 'multiview', 'sequence', 'audio-vocal', 'audio-bg',
 )
 
 

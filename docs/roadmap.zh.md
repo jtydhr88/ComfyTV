@@ -18,7 +18,7 @@ ComfyTV 还是 pre-release 状态。
 | **Image Edit · Flux Canny Edit** | 提示词驱动的图像编辑。 |
 | **Inpaint · Flux Fill Inpaint** + **Fooocus SDXL Inpaint** | 蒙版驱动的重绘(蒙版画笔产出 mask)。 |
 | **Erase · LaMa Erase** | 无提示词抹除目标。需要装 `Acly/comfyui-inpaint-nodes` + `big-lama.pt`。 |
-| **Relight · Qwen Edit 2509 Relight**(含 with-reference 变体) | 亮度 / 颜色 / 轮廓光 widget 合成自然语言指令;with-reference 版本可以接参考图做光照迁移。 |
+| **Relight · Flux2 Klein Relight** | 纯前端 3D 灯光球节点在浏览器里渲染光照参考;Image Stage 工作流(Flux-2 Klein 9B + Sun-direction LoRA)把光照迁移到主体上。 |
 | **Cutout · BiRefNet Cutout** | 用 ComfyUI 内置 BiRefNet 抠图,输出带 alpha 的 PNG。 |
 | **Image Variations · Face 3-View / Product 3-View / Character 3-View / Multi-cam 9** | 单工作流多路并行 KSampler,共享模型 + base latent。Qwen-Image-Edit 2511 + Multiple-Angles LoRA + Lightning 4-step。 |
 | **Image Variations · Story 4 / Storyboard 25** | 单工作流 N 帧串行 , 第 N+1 帧用第 N 帧作输入。Qwen-Image-Edit 2509 + Next-Scene LoRA + Lightning 4-step。 |

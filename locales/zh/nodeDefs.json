@@ -984,40 +984,19 @@
   "ComfyTV_RelightStage": {
     "display_name": "打光",
     "inputs": {
-      "brightness": {
-        "tooltip": "亮度",
-        "name": "亮度"
-      },
-      "color": {
-        "tooltip": "灯光颜色",
-        "name": "颜色"
-      },
-      "rim_light": {
-        "tooltip": "轮廓光",
-        "name": "轮廓光"
-      },
-      "image0": {
-        "name": "图像 #0"
-      },
-      "image1": {
-        "name": "图像 #1"
-      },
-      "image2": {
-        "name": "图像 #2"
-      },
-      "image3": {
-        "name": "图像 #3"
-      },
-      "images": {
-        "name": "图像"
-      },
-      "workflow": {
-        "name": "工作流"
+      "main_prompt": {
+        "tooltip": "自由文本的光照描述,原样从 light_prompt 输出透传。",
+        "name": "提示词"
       }
     },
     "outputs": {
       "0": {
-        "name": "图像"
+        "name": "3D 灯光",
+        "tooltip": "灯光球场景渲染图(固定输出视角)。"
+      },
+      "1": {
+        "name": "灯光提示词",
+        "tooltip": "stage 提示词,原样透传。"
       }
     }
   },

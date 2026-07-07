@@ -1,55 +1,44 @@
-> Relight with brightness/color/rim controls or a reference image—▶ Run `workflows/relight/`.
+> Pure-frontend light source: 3D light-ball editor + prompt pass-through. No Run — feed its outputs into an Image Stage.
 
 ## What this node does
 
-**Relight** re-renders lighting while preserving subject identity/geometry. Sliders for **brightness**, **color**, **rim light**, optional **main_prompt**; or **with reference** workflow + 2nd image for light transfer.
+**Relight** is a light *source* node. It doesn't run any workflow itself; instead it produces two outputs for downstream stages:
 
-**Generative** (**▶ Run**). Complements **Color Grade** (instant GLSL).
+| Output | Type | Content |
+|---|---|---|
+| **3d light** (`light_render`) | `COMFYTV_IMAGE` | The 3D light-ball scene (clay sphere + your lights) rendered in the browser from a fixed studio view |
+| **light_prompt** | `COMFYTV_TEXT` | The node's prompt, passed through verbatim |
+
+The card hosts a 3D viewport where you place directional / point / spot lights (drag gizmos, color, intensity, cone angles), with one-click **lighting presets** (three-point, Rembrandt, butterfly, rim, side). Every edit re-renders and auto-uploads the reference PNG after ~1 s.
 
 ## When to use it
 
-- Flat product/portrait → cinematic light
-- Image Picker “cinematic lighting” preset
-- After **Cutout**
+- Click the **Relight** action on any image stage — it spawns this node plus an Image Stage preset to the **Flux2 Klein Relight** workflow, pre-wired: subject → `images[0]`, this node's **3d light** → `images[1]`.
+- To transfer lighting from a photo instead, wire a **Load Image from Asset** node into `images[1]`.
+- Wire **light_prompt** into any texts slot to reuse your lighting description.
 
 ## How it works
 
-- Server composes an English lighting instruction from widgets + prompt.
-- with-reference: **images[0]** subject, **images[1]** light reference.
-
-## Types
-
-`COMFYTV_IMAGE` — [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)
+- The light-ball render uses a fixed output view (camera (0,6,8), fov 35) so results are reproducible.
+- The render URL lives in a hidden widget; downstream image stages consume it as a normal upstream image.
+- The relight workflow itself lives in `workflows/image/flux2klein-relight.json` (Flux-2 Klein 9B + Sun-direction LoRA, 4-step).
 
 ## Parameters
 
-### workflow
+### main_prompt
 
-[README](https://github.com/jtydhr88/ComfyTV/blob/main/workflows/relight/README.md)
+Free-form lighting description, emitted verbatim on **light_prompt**.
 
-| Built-in | Notes |
-|---|---|
-| **Qwen Edit 2509 Relight** | Default |
-| **… (with reference)** | Needs 2nd image |
+### Light-ball editor
 
-[models.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.md)
-
-### brightness (0–100), color, rim_light, main_prompt
-
-Widget-driven relight; optional extra text.
-
-## Outputs
-
-| Output | Type |
-|---|---|
-| **image** | `COMFYTV_IMAGE` |
+Add/remove lights (chips), per-light type / color / intensity / range / cone angles, drag gizmos in the viewport, presets row, gizmo visibility, output-view reset, camera lock.
 
 ## Step by step
 
-1. Download Qwen Relight models/LoRAs.
-2. Wire subject; pick workflow.
-3. Tune widgets; **▶ Run**.
-4. For reference transfer: 2nd image + with-reference workflow.
+1. On an image stage, click **Relight** — the pair spawns pre-wired.
+2. Click a preset or place lights manually in the 3D viewport.
+3. (Optional) type a lighting description into the prompt.
+4. **▶ Run the Image Stage** (not this node) to get the relit image.
 
 ## Full guides (recommended reading)
 
@@ -69,17 +58,18 @@ Widget-driven relight; optional extra text.
 | **User guides index** | https://github.com/jtydhr88/ComfyTV/tree/main/docs |
 | **Built-in workflows** | https://github.com/jtydhr88/ComfyTV/tree/main/workflows |
 | **Model checklist** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/models.md |
-| **This node's workflow folder** | https://github.com/jtydhr88/ComfyTV/tree/main/workflows/relight |
-| **Workflow README** | https://github.com/jtydhr88/ComfyTV/blob/main/workflows/relight/README.md |
+| **Relight workflow folder** | https://github.com/jtydhr88/ComfyTV/tree/main/workflows/image |
+| **Workflow README** | https://github.com/jtydhr88/ComfyTV/blob/main/workflows/image/README.md |
 | **Custom workflows** | https://github.com/jtydhr88/ComfyTV/blob/main/docs/custom-workflows.md |
+
 ## FAQ
 
-**Q: vs Color Grade?**  
-A: Grade = instant; Relight = AI relight, Run + models.
+**Q: Why is there no Run button?**
+A: This node is a source, like the asset loaders — the downstream Image Stage runs the relight workflow.
 
-**Q: Reference ignored?**  
-A: Correct workflow variant + wired 2nd slot + re-Run.
+**Q: Nothing happens downstream?**
+A: Make sure the light ball has at least one light (or a reference is picked), so the wired output actually carries an image.
 
 ## Related nodes
 
-- **Color Grade**, **Cutout**, **Multiangle**, **Image Edit**
+- **Color Grade**, **Cutout**, **Multiangle**, **Image Edit**, **Load Image from Asset**

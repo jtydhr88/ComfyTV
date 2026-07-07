@@ -264,49 +264,42 @@ class RelightStage(io.ComfyNode):
         return io.Schema(
             node_id="ComfyTV.RelightStage",
             display_name="Relight",
-            category="ComfyTV/Image",
+            category="ComfyTV/Input",
             inputs=[
-                *_standard_stage_inputs(),
-                io.Combo.Input("workflow", options=labels_for('relight'),
-                               default=default_for('relight'),
-                               tooltip="Which relight backend to run. Pick the `(with reference)` variant when wiring a 2nd image as light reference."),
-                io.Int.Input("brightness", default=50, min=0, max=100, step=1,
-                             display_mode=io.NumberDisplay.slider,
-                             ),
-                io.Color.Input("color", default="#ffffff",
-                               ),
-                io.Boolean.Input("rim_light", default=False,
-                                 ),
-                _main_prompt_input(tooltip="Additional natural-language description of the desired lighting (appended to the auto-composed instruction)."),
-
-                io.Autogrow.Input("images", template=_image_template(4)),
-                _custom_params_input(),
+                _project_id_input(),
+                _parent_output_id_input(),
+                _main_prompt_input(tooltip="Free-form lighting description; emitted verbatim on the light_prompt output."),
+                io.String.Input("lights_data", default="[]",
+                                socketless=True, extra_dict={"hidden": True},
+                                tooltip="Internal — light-ball editor state (LightInfoEntry[] JSON)."),
+                io.String.Input("light_render_url", default="",
+                                socketless=True, extra_dict={"hidden": True},
+                                tooltip="Internal — /view URL of the auto-uploaded light-ball render."),
             ],
-            outputs=[COMFYTV_IMAGE.Output("image")],
+            outputs=[
+                COMFYTV_IMAGE.Output("light_render", display_name="3d light"),
+                COMFYTV_TEXT.Output("light_prompt"),
+            ],
             is_output_node=True,
             hidden=[io.Hidden.unique_id],
         )
 
     @classmethod
-    async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
-                      workflow="", brightness=50, color="#ffffff", rim_light=False,
-                      main_prompt="", images=None, custom_params="{}"):
-        upstream_images = _autogrow_values(images)
-
-        has_ref = len(upstream_images) >= 2
-        composed = _relight_prompt(brightness, color, rim_light, main_prompt,
-                                   has_reference=has_ref)
-        return await run_stage_workflow(
-            cls,
-            custom_params=custom_params,
-            kind='relight',
-            label=workflow,
+    def execute(cls, project_id="", parent_output_id=0, main_prompt="",
+                lights_data="[]", light_render_url=""):
+        _emit_progress(cls, 1, 1, text="done")
+        row_id = _persist(
+            cls=cls,
             project_id=project_id,
+            output_type='image',
+            payload_url=light_render_url or "",
+            params={'lights_data': lights_data or '[]'},
             parent_output_id=parent_output_id,
-            main_prompt=composed,
-            upstream={'images': upstream_images},
-            options={},
         )
+        ui: dict = {"output": [light_render_url or ""]}
+        if row_id is not None:
+            ui["output_id"] = [row_id]
+        return io.NodeOutput(light_render_url or "", main_prompt or "", ui=ui)
 
 
 class MultiangleStage(io.ComfyNode):

@@ -207,30 +207,24 @@ class TestEditStageExecute:
         data = json.loads(out.values[0])
         assert len(data["images"]) == 3
 
-    @pytest.mark.asyncio
-    async def test_relight(self, reset_db):
+    def test_relight_source(self, reset_db):
         from ComfyTV.nodes.stages.edits import RelightStage
-        out = await RelightStage.execute(
+        render = "/view?filename=r.png&subfolder=lightball&type=input"
+        out = RelightStage.execute(
             project_id="default",
-            images={"image0": "/view?filename=a.png"},
-            brightness=50, color="#ffffff", rim_light=False,
+            main_prompt="soft warm lighting",
+            lights_data='[{"type":"directional","color":"#ffffff","intensity":2,'
+                        '"position":{"x":2,"y":4,"z":2},"target":{"x":0,"y":0,"z":0}}]',
+            light_render_url=render,
         )
-        assert out.values[0]
+        assert out.values[0] == render
+        assert out.values[1] == "soft warm lighting"
 
-    @pytest.mark.asyncio
-    async def test_relight_with_reference(self, reset_db):
+    def test_relight_source_empty(self, reset_db):
         from ComfyTV.nodes.stages.edits import RelightStage
-        # Two images wired = subject + light reference; the with-reference
-        # variant should run.
-        out = await RelightStage.execute(
-            project_id="default",
-            images={
-                "image0": "/view?filename=subject.png",
-                "image1": "/view?filename=lightref.png",
-            },
-            brightness=50, color="#ffffff", rim_light=False,
-        )
-        assert out.values[0]
+        out = RelightStage.execute(project_id="default")
+        assert out.values[0] == ""
+        assert out.values[1] == ""
 
     @pytest.mark.asyncio
     async def test_multiangle(self, reset_db):

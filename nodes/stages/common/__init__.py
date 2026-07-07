@@ -35,7 +35,6 @@ from .invoke import (
 from .prompts import (
     _combine_prompt,
     _multiangle_prompt, _MULTIANGLE_AZIMUTHS,
-    _relight_prompt,
 )
 from .storyboard import (
     _storyboard_llm_prompt, _storyboard_regenerate_shot_prompt,
@@ -80,7 +79,7 @@ __all__ = [
     "labels_for", "default_for",
     "RESOLUTIONS", "ASPECT_RATIOS",
     "VIDEO_DURATION_MIN_S", "VIDEO_DURATION_MAX_S", "VIDEO_DURATION_DEFAULT_S",
-    "_multiangle_prompt", "_MULTIANGLE_AZIMUTHS", "_relight_prompt",
+    "_multiangle_prompt", "_MULTIANGLE_AZIMUTHS",
     "RUNNER_REGISTRY", "RunnerContext",
     "io", "ComfyExtension", "override",
     "json", "os", "hashlib", "Any", "folder_paths", "storage",

@@ -29,7 +29,7 @@ STAGE_META: dict[str, dict] = {
     'DirectorTimelineStage':        {'kind': 'timeline',    'variant': 'transform'},
     'TimelineVideoStage':           {'kind': 'video',        'workflow_kind': 'timeline'},
     'ImageVariationsStage':         {'kind': 'image-batch',  'workflow_kind': 'multiview'},
-    'RelightStage':                 {'kind': 'image',        'workflow_kind': 'relight'},
+    'RelightStage':                 {'kind': 'image',       'variant': 'loader'},
     'MultiangleStage':              {'kind': 'image',        'workflow_kind': 'multiangle'},
     'VideoExtractFrameStage':       {'kind': 'image'},
     'VideoClipStage':               {'kind': 'video'},

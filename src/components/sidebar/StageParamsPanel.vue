@@ -135,7 +135,7 @@ const store = useStageParamStore()
 
 const FALLBACK_KINDS = [
   'text', 'image', 'video', 'audio', 'speech', 'panorama',
-  'multiangle', 'relight', 'multiview',
+  'multiangle', 'multiview',
   'upscale', 'outpaint', 'inpaint', 'image-edit', 'erase', 'cutout',
 ]
 const backendKinds = ref<string[]>([])

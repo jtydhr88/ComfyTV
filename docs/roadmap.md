@@ -18,7 +18,7 @@ Legend: ✅ done · ⏳ pending.
 | **Image Edit · Flux Canny Edit** | Prompt-driven image editing. |
 | **Inpaint · Flux Fill Inpaint** + **Fooocus SDXL Inpaint** | Mask-driven regeneration (mask painter produces the mask). |
 | **Erase · LaMa Erase** | Promptless object removal. Requires `Acly/comfyui-inpaint-nodes` + `big-lama.pt`. |
-| **Relight · Qwen Edit 2509 Relight** (+ with-reference variant) | Brightness / color / rim-light widgets compose a natural-language instruction; the with-reference variant accepts a reference image for light transfer. |
+| **Relight · Flux2 Klein Relight** | A pure-frontend 3D light-ball node renders the lighting reference in the browser; the Image Stage workflow (Flux-2 Klein 9B + Sun-direction LoRA) transfers it onto the subject. |
 | **Cutout · BiRefNet Cutout** | Background removal via ComfyUI core's BiRefNet. Outputs PNG with real alpha. |
 | **Image Variations · Face 3-View / Product 3-View / Character 3-View / Multi-cam 9** | Single workflow, N parallel KSampler branches sharing the same model + base latent. Qwen-Image-Edit 2511 + Multiple-Angles LoRA + Lightning 4-step. |
 | **Image Variations · Story 4 / Storyboard 25** | Single workflow, N chained frames — frame N+1 takes frame N as input. Qwen-Image-Edit 2509 + Next-Scene LoRA + Lightning 4-step. |

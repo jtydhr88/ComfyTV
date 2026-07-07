@@ -209,6 +209,41 @@ function spawnConsumingNode(srcNode: any, targetClass: string, inputSlotName: st
   return newNode
 }
 
+const RELIGHT_WORKFLOW_LABEL = 'Flux2 Klein Relight'
+
+function spawnRelightPair(srcNode: any, srcSlot: number) {
+  const store = useStageStore()
+
+  const relight = createNodeAt('ComfyTV.RelightStage', posRightOf(srcNode))
+  if (!relight) return
+
+  const img = createNodeAt('ComfyTV.ImageStage', posRightOf(relight))
+  if (!img) return
+  setWidget(img, 'workflow', RELIGHT_WORKFLOW_LABEL)
+
+  const s0 = findFirstAutogrowSlot(img, 'images')
+  if (s0 >= 0) {
+    srcNode.connect(srcSlot, img, s0)
+  } else {
+    console.warn('[ComfyTV/relight] new ImageStage has no images autogrow slot')
+  }
+
+  const wireSecond = (attempt = 0) => {
+    const s1 = findNamedSlot(img, 'images.image1')
+    if (s1 >= 0) {
+      relight.connect(0, img, s1)
+      store.notifyDownstream()
+      return
+    }
+    if (attempt < 10) setTimeout(() => wireSecond(attempt + 1), 50)
+    else console.warn('[ComfyTV/relight] images.image1 never appeared on new ImageStage')
+  }
+  wireSecond()
+
+  stampLineage(srcNode, img)
+  store.notifyDownstream()
+}
+
 function spawnExtendVideo(srcNode: any) {
   const store = useStageStore()
   const extract = createNodeAt('ComfyTV.VideoExtractFrameStage', posRightOf(srcNode))
@@ -264,7 +299,7 @@ function makeImageActionHandlers(srcSlot: number): Record<string, SpawnHandler> 
   return {
     'panorama':   src => spawnConsumingNode(src, 'ComfyTV.PanoramaStage',   'image', srcSlot),
     'multiangle': src => spawnConsumingNode(src, 'ComfyTV.MultiangleStage', 'image', srcSlot),
-    'relight':    src => spawnConsumingNode(src, 'ComfyTV.RelightStage',    'image', srcSlot),
+    'relight':    src => spawnRelightPair(src, srcSlot),
     ...Object.fromEntries(
       IMAGE_VARIANT_PRESETS.map(p => [
         `preset:${p.id}`,

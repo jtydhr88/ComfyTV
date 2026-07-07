@@ -329,7 +329,7 @@
       },
       "relight": {
         "label": "Relight",
-        "tooltip": "Brightness / color / rim-light, or reference another image's lighting"
+        "tooltip": "Spawn a Relight light-source node plus an image stage preset to the relight workflow — place 3D lights or pick a reference image, then run the image stage"
       },
       "preset": {
         "label": "Presets",
@@ -717,6 +717,37 @@
       "mediumShot": "medium shot",
       "closeUp": "close-up"
     }
+  },
+  "relight": {
+    "presets": "Presets",
+    "preset": {
+      "threePoint": "Three-point",
+      "rembrandt": "Rembrandt",
+      "butterfly": "Butterfly",
+      "rim": "Rim / backlight",
+      "side": "Side light"
+    }
+  },
+  "lightBall": {
+    "directional": "Directional",
+    "point": "Point",
+    "spot": "Spot",
+    "addLight": "Add light",
+    "removeLight": "Remove light",
+    "noLights": "Add a light to get started.",
+    "color": "Color",
+    "intensity": "Intensity",
+    "range": "Range",
+    "innerCone": "Inner cone",
+    "outerCone": "Outer cone",
+    "showGizmos": "Show gizmos",
+    "hideGizmos": "Hide gizmos",
+    "transformNone": "None",
+    "transformPosition": "Light pos",
+    "transformTarget": "Target",
+    "outputView": "Output view",
+    "lockCamera": "Lock camera",
+    "unlockCamera": "Unlock camera"
   },
   "outpaint": {
     "left": "Left",

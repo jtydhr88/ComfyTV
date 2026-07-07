@@ -35,11 +35,12 @@ describe('IMAGE_VARIANT_PRESETS', () => {
     }
   })
 
-  it('relight preset seeds main_prompt + brightness', () => {
-    const relight = IMAGE_VARIANT_PRESETS.find(p => p.targetClass === 'ComfyTV.RelightStage')
-    expect(relight).toBeTruthy()
-    expect(relight!.widgets?.main_prompt).toBeTruthy()
-    expect(relight!.widgets?.brightness).toBeDefined()
+  it('cinematic-light preset is prompt-only on ImageEditStage', () => {
+    expect(IMAGE_VARIANT_PRESETS.some(p => p.targetClass === 'ComfyTV.RelightStage')).toBe(false)
+    const cinematic = IMAGE_VARIANT_PRESETS.find(p => p.id === 'cinematic-light')
+    expect(cinematic).toBeTruthy()
+    expect(cinematic!.targetClass).toBe('ComfyTV.ImageEditStage')
+    expect(cinematic!.widgets?.main_prompt).toBeTruthy()
   })
 
   it('frame-N presets target ImageEditStage', () => {

@@ -146,7 +146,7 @@
       />
     </section>
 
-    <section v-if="state.output && stageActions.length" class="ctv:flex ctv:flex-col ctv:gap-1">
+    <section v-if="!hideActions && state.output && stageActions.length" class="ctv:flex ctv:flex-col ctv:gap-1">
       <div :class="sectionLabel">{{ $t('stage.section.actions') }}</div>
       <div class="action-list ctv:flex ctv:flex-wrap ctv:gap-1.5">
         <button
@@ -210,6 +210,7 @@ const props = defineProps<{
   onAction: (actionId: string, context?: ImagePickContext) => void
   hideContext?: boolean
   hideOutput?: boolean
+  hideActions?: boolean
 }>()
 
 const {

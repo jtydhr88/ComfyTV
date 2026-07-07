@@ -984,40 +984,19 @@
   "ComfyTV_RelightStage": {
     "display_name": "Relight",
     "inputs": {
-      "brightness": {
-        "tooltip": "Light brightness (0=dark, 100=bright).",
-        "name": "Brightness"
-      },
-      "color": {
-        "tooltip": "Light color. Hex string; defaults to white.",
-        "name": "Color"
-      },
-      "rim_light": {
-        "tooltip": "Add a rim/back light to separate subject from background.",
-        "name": "Rim light"
-      },
-      "image0": {
-        "name": "Image #0"
-      },
-      "image1": {
-        "name": "Image #1"
-      },
-      "image2": {
-        "name": "Image #2"
-      },
-      "image3": {
-        "name": "Image #3"
-      },
-      "images": {
-        "name": "Images"
-      },
-      "workflow": {
-        "name": "Workflow"
+      "main_prompt": {
+        "tooltip": "Free-form lighting description; emitted verbatim on the light_prompt output.",
+        "name": "Prompt"
       }
     },
     "outputs": {
       "0": {
-        "name": "Image"
+        "name": "3D Light",
+        "tooltip": "Rendered light-ball scene (fixed output view)."
+      },
+      "1": {
+        "name": "Light Prompt",
+        "tooltip": "The stage prompt, passed through verbatim."
       }
     }
   },

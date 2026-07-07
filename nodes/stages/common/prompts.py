@@ -46,32 +46,3 @@ def _multiangle_prompt(horizontal: int, vertical: int, zoom: float,
     base = f"<sks> {az_kw} {el_kw} {dist_kw}"
     extra = (extra or "").strip()
     return f"{base}, {extra}" if extra else base
-
-
-def _relight_prompt(brightness: int, color: str, rim_light: bool,
-                    extra: str = "", has_reference: bool = False) -> str:
-
-    parts: list[str] = []
-    parts.append("transfer the lighting from the reference image onto the subject"
-                 if has_reference else "relight the image")
-
-    b = int(brightness if brightness is not None else 50)
-    if   b < 25: parts.append("with dim, low-light atmosphere")
-    elif b < 50: parts.append("with soft, muted lighting")
-    elif b < 75: parts.append("with bright, natural lighting")
-    else:        parts.append("with bright, high-key lighting")
-
-    color = (color or "#ffffff").strip().lower()
-    if color not in ("#ffffff", "#fff", ""):
-        parts.append(f"tinted with light color {color}")
-
-    if rim_light:
-        parts.append("with a subtle rim light separating the subject from the background")
-
-    extra = (extra or "").strip()
-    if extra:
-        parts.append(extra)
-
-    return (", ".join(parts) +
-            ". Preserve the subject's identity, geometry, and details; "
-            "only change lighting and shadows.")

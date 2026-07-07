@@ -13,6 +13,8 @@
 !erase/lama-erase_preset.json
 !image-edit/flux-canny-edit.json
 !image-edit/flux-canny-edit_preset.json
+!image/flux2klein-relight.json
+!image/flux2klein-relight_preset.json
 !image/image_ideogram4_t2i.json
 !image/image_ideogram4_t2i_preset.json
 !image/local-sd15-i2i.json
@@ -43,10 +45,6 @@
 !panorama/qwen-edit-2511-img2pano_preset.json
 !panorama/qwen-image-2512-360.json
 !panorama/qwen-image-2512-360_preset.json
-!relight/qwen-edit-2509-relight-with-ref.json
-!relight/qwen-edit-2509-relight-with-ref_preset.json
-!relight/qwen-edit-2509-relight.json
-!relight/qwen-edit-2509-relight_preset.json
 !sequence/qwen-next-scene-25.json
 !sequence/qwen-next-scene-25_preset.json
 !sequence/qwen-next-scene-4.json

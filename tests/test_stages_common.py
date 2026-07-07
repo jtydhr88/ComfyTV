@@ -361,51 +361,6 @@ class TestMultiangleprompt:
         assert "high-angle"  in c._multiangle_prompt(0, 60,  5)
 
 
-# ─── _relight_prompt ─────────────────────────────────────────────────────────
-
-class TestRelightPrompt:
-    def test_no_reference_low_brightness(self):
-        p = c._relight_prompt(20, "#ffffff", False)
-        assert "relight the image" in p
-        assert "dim, low-light" in p
-
-    def test_with_reference(self):
-        p = c._relight_prompt(50, "#ffffff", False, has_reference=True)
-        assert "transfer the lighting from the reference" in p
-
-    def test_brightness_buckets(self):
-        # <25 / 25-49 / 50-74 / >=75
-        assert "dim, low-light"      in c._relight_prompt(0,   "#fff", False)
-        assert "soft, muted"         in c._relight_prompt(40,  "#fff", False)
-        assert "bright, natural"     in c._relight_prompt(60,  "#fff", False)
-        assert "bright, high-key"    in c._relight_prompt(90,  "#fff", False)
-
-    def test_color_tint_skipped_for_white(self):
-        p = c._relight_prompt(50, "#ffffff", False)
-        assert "tinted" not in p
-
-    def test_color_tint_added(self):
-        p = c._relight_prompt(50, "#FF0000", False)
-        assert "tinted with light color #ff0000" in p
-
-    def test_rim_light(self):
-        p = c._relight_prompt(50, "#fff", True)
-        assert "rim light" in p
-
-    def test_extra_appended(self):
-        p = c._relight_prompt(50, "#fff", False, extra="cinematic mood")
-        assert "cinematic mood" in p
-
-    def test_default_color_handling(self):
-        p = c._relight_prompt(50, "", False)
-        assert "tinted" not in p
-
-    def test_none_brightness_defaults(self):
-        p = c._relight_prompt(None, "#fff", False)  # type: ignore[arg-type]
-        # None → 50 → "bright, natural" bucket
-        assert "bright, natural" in p
-
-
 # ─── _storyboard_llm_prompt ──────────────────────────────────────────────────
 
 class TestStoryboardLlmPrompt:

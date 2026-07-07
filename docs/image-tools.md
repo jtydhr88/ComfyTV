@@ -76,7 +76,7 @@ A 3D camera widget: drag the handles (or the scene) to pick a viewpoint — azim
 
 ## Relight
 
-Brightness / color / rim-light widgets + an optional natural-language description get composed into a single lighting instruction. Ships with `Qwen Edit 2509 Relight` (default, prompt-driven) and `Qwen Edit 2509 Relight (with reference)` — the with-reference variant takes a second image on the `light_reference` slot; the model transfers that reference's lighting style (direction, color, contrast) onto the subject while preserving identity / geometry.
+Clicking the **Relight** action spawns a pair: a pure-frontend **Relight** light-source node (a 3D light-ball editor — place directional / point / spot lights around a clay sphere, or click a lighting preset like three-point / Rembrandt / rim) plus an Image Stage preset to the `Flux2 Klein Relight` workflow (Flux-2 Klein 9B + Sun-direction LoRA). The light-ball scene renders in the browser and feeds the workflow as the lighting reference (`images[1]`); the model transfers that lighting onto the subject (`images[0]`) while preserving identity / geometry. Any image (e.g. via Load Image from Asset) can replace the light-ball render as the reference.
 
 ## Cutout
 

@@ -1,0 +1,48 @@
+{
+  "_comment": "Shipped ImageStage preset for relighting via Flux-2 Klein 9B + Sun-direction LoRA. LoadImage #25 = subject (also drives output size via GetImageSize #18), LoadImage #30 ('光源加载') = lighting reference — typically the Relight node's '3d light' (light-ball render), but any image works. Both go through VAEEncode → chained ReferenceLatent conditioning. Prompt → positive CLIPTextEncode #16, negative → #2, seed → RandomNoise #22.",
+
+  "label":       "Flux2 Klein Relight",
+  "order":       40,
+  "description": "Relight via Flux-2 Klein 9B + Sun-direction LoRA (4-step). Wire your subject into images[0] and a LIGHTING REFERENCE into images[1] — e.g. the Relight node's 3d-light render, or any reference photo whose lighting you want to transfer. Output size follows the subject image.",
+
+  "result": {
+    "type": "ui_save_url",
+    "node": "28"
+  },
+
+  "inputs": {
+    "25": {
+      "image": {
+        "from": "upstream_image:annotated[0]",
+        "required": true,
+        "error": "Relight needs a subject image — wire one into the stage's first image slot."
+      }
+    },
+    "30": {
+      "image": {
+        "from": "upstream_image:annotated[1]",
+        "required": true,
+        "error": "Relight needs a lighting reference in the 2nd image slot — wire the Relight node's '3d light' output (or any image) into it."
+      }
+    },
+    "16": {
+      "text": {
+        "from": "main_prompt",
+        "default": "match the sun direction from the reference"
+      }
+    },
+    "2": {
+      "text": {
+        "from": "option:negative",
+        "default": ""
+      }
+    },
+    "22": {
+      "noise_seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    }
+  }
+}

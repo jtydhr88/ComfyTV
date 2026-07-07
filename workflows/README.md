@@ -18,14 +18,13 @@ The folder name **is** the runner kind — each stage scans only its own folder 
 | Folder | Stage(s) | Tested baseline | Per-kind doc |
 |---|---|---|---|
 | `audio/`       | Audio Stage              | ACE-Step v1 Song | [README](audio/README.md) |
-| `image/`       | Image Stage              | Local SD1.5 (t2i + i2i), Image Ideogram4 T2I | [README](image/README.md) |
+| `image/`       | Image Stage              | Local SD1.5 (t2i + i2i), Image Ideogram4 T2I, Flux2 Klein Relight | [README](image/README.md) |
 | `image-edit/`  | Image Edit               | Flux Canny Edit | [README](image-edit/README.md) |
 | `inpaint/`     | Inpaint                  | Flux Fill Inpaint (subgraph); Fooocus SDXL Inpaint *(opt-in plugin)* | [README](inpaint/README.md) |
 | `outpaint/`    | Outpaint                 | Flux Fill Outpaint; Fooocus SDXL Outpaint *(opt-in plugin)* | [README](outpaint/README.md) |
 | `upscale/`     | Upscale                  | Ultrasharp 4x (GAN) | [README](upscale/README.md) |
 | `cutout/`      | Cutout                   | BiRefNet (subgraph) | [README](cutout/README.md) |
 | `erase/`       | Erase                    | LaMa Erase (Acly inpaint-nodes plugin + big-lama.pt) | [README](erase/README.md) |
-| `relight/`     | Relight                  | Qwen Edit 2509 Relight + (with reference) variant | [README](relight/README.md) |
 | `multiangle/`  | Multiangle               | Qwen Edit 2511 Multiangle (fal Multiple-Angles LoRA) | [README](multiangle/README.md) |
 | `multiview/`   | Image Variations (parallel) | Face 3-View, Product 3-View, Character 3-View, Multi-cam 9 | [README](multiview/README.md) |
 | `sequence/`    | Image Variations (chained) | Story 4, Storyboard 25 (Next-Scene LoRA) | [README](sequence/README.md) |

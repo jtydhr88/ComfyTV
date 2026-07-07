@@ -138,6 +138,8 @@ const editor = useEditor({
     const text = editor.getText({ blockSeparator: '\n' })
     promptText.value = text
     if (widget.value) writeWidget(props.node, 'main_prompt', text, { fireCallback: false })
+    const st = stageState.value
+    if (st && st.mainPrompt !== text) st.mainPrompt = text
   },
 })
 
@@ -155,6 +157,8 @@ function setContentFromText(text: string) {
 function applyPromptText(text: string) {
   setContentFromText(text)
   if (widget.value) writeWidget(props.node, 'main_prompt', text, { fireCallback: false })
+  const st = stageState.value
+  if (st && st.mainPrompt !== text) st.mainPrompt = text
 }
 
 const helperOpen = ref(false)

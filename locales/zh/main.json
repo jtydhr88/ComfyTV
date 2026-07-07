@@ -329,7 +329,7 @@
       },
       "relight": {
         "label": "打光",
-        "tooltip": "调亮度 / 颜色 / 轮廓光，或参考另一张图的灯光"
+        "tooltip": "生成一个打光光源节点 + 预选打光工作流的图像 stage —— 摆 3D 灯光或选参考图,然后运行图像 stage"
       },
       "preset": {
         "label": "预设",
@@ -717,6 +717,37 @@
       "mediumShot": "中景",
       "closeUp": "特写"
     }
+  },
+  "relight": {
+    "presets": "灯光预设",
+    "preset": {
+      "threePoint": "三点布光",
+      "rembrandt": "伦勃朗光",
+      "butterfly": "蝴蝶光",
+      "rim": "轮廓逆光",
+      "side": "侧光"
+    }
+  },
+  "lightBall": {
+    "directional": "定向光",
+    "point": "点光源",
+    "spot": "聚光灯",
+    "addLight": "添加灯光",
+    "removeLight": "删除灯光",
+    "noLights": "点 + 添加一盏灯开始打光。",
+    "color": "颜色",
+    "intensity": "强度",
+    "range": "范围",
+    "innerCone": "内锥角",
+    "outerCone": "外锥角",
+    "showGizmos": "显示手柄",
+    "hideGizmos": "隐藏手柄",
+    "transformNone": "无",
+    "transformPosition": "灯光位置",
+    "transformTarget": "目标点",
+    "outputView": "输出视角",
+    "lockCamera": "锁定相机",
+    "unlockCamera": "解锁相机"
   },
   "outpaint": {
     "left": "左",

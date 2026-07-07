@@ -33,8 +33,6 @@ CAPS_BY_KIND: dict[str, dict] = {
                            []),
     'cutout':        _caps(['image'],                      [],
                            []),
-    'relight':       _caps(['image'],                      ['option:seed', 'option:negative'],
-                           []),
     'multiangle':    _caps(['image'],                      ['option:seed'],
                            []),
     'image-edit':    _caps(['image'],                      ['option:seed'],

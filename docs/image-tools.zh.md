@@ -76,7 +76,7 @@
 
 ## 打光(Relight)
 
-亮度 / 颜色 / 轮廓光 widget + 可选的自然语言描述会合成成一条光照指令。内置 `Qwen Edit 2509 Relight`(默认,提示词驱动)和 `Qwen Edit 2509 Relight (with reference)` , with-reference 版本要再接一张图到 `light_reference` 槽,模型把参考图的光照风格(方向、颜色、对比)迁移到主体上,主体身份/几何保持不变。
+点**打光**按钮会生成一对节点:一个纯前端的 **Relight** 光源节点(3D 灯光球编辑器 , 围绕黏土球摆放 定向 / 点 / 聚光 灯,或一键套用三点布光 / 伦勃朗 / 轮廓逆光等预设),加一个预选 `Flux2 Klein Relight` 工作流(Flux-2 Klein 9B + Sun-direction LoRA)的 Image Stage。灯光球场景在浏览器里渲染后作为光照参考(`images[1]`)喂给工作流,模型把该光照迁移到主体(`images[0]`)上,身份/几何保持不变。参考位也可以换接任意图(如 Load Image from Asset)。
 
 ## 抠图(Cutout)
 
