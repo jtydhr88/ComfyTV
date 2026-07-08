@@ -87,6 +87,23 @@ describe('serializeNodeEntry', () => {
     expect('hidden' in entry.inputs).toBe(false)
   })
 
+  it('skips button widgets and direct serialize=false (e.g. workflow buttons)', async () => {
+    const node = {
+      comfyClass: 'ComfyTV.ImageStage',
+      graph: { links: new Map() },
+      widgets: [
+        { name: '⬆ Upload workflow', type: 'button', serialize: false, value: null },
+        { name: '🔗 Link workflow', type: 'button', serialize: false, value: null },
+        { name: 'steps', type: 'INT', value: 20 },
+      ],
+      inputs: [],
+    }
+    const entry = await serializeNodeEntry(node)
+    expect('⬆ Upload workflow' in entry.inputs).toBe(false)
+    expect('🔗 Link workflow' in entry.inputs).toBe(false)
+    expect(entry.inputs.steps).toBe(20)
+  })
+
   it('wraps array values, tagging curve type', async () => {
     const node = {
       comfyClass: 'X',

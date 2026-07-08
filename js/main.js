@@ -93842,7 +93842,8 @@ async function serializeNodeEntry(node) {
     for (let i = 0; i < node.widgets.length; i++) {
       const w = node.widgets[i];
       if (!(w == null ? void 0 : w.name)) continue;
-      if (((_a2 = w.options) == null ? void 0 : _a2.serialize) === false) continue;
+      if (w.type === "button") continue;
+      if (w.serialize === false || ((_a2 = w.options) == null ? void 0 : _a2.serialize) === false) continue;
       let value = typeof w.serializeValue === "function" ? await w.serializeValue(node, i) : w.value;
       const numericType = w.type === "number" || w.type === "INT" || w.type === "FLOAT" || w.type === "int" || w.type === "float";
       if (numericType && (value === "" || value == null || Number.isNaN(Number(value)))) {

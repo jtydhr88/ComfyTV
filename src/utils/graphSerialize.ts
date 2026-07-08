@@ -45,7 +45,8 @@ export async function serializeNodeEntry(node: any): Promise<{
     for (let i = 0; i < node.widgets.length; i++) {
       const w = node.widgets[i]
       if (!w?.name) continue
-      if (w.options?.serialize === false) continue
+      if (w.type === 'button') continue
+      if (w.serialize === false || w.options?.serialize === false) continue
       let value = typeof w.serializeValue === 'function'
         ? await w.serializeValue(node, i)
         : w.value
