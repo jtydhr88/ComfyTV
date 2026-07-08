@@ -1,9 +1,9 @@
 {
-  "_comment": "Shipped ImageStage preset for relighting via Flux-2 Klein 9B + Sun-direction LoRA. LoadImage #25 = subject (also drives output size via GetImageSize #18), LoadImage #30 ('光源加载') = lighting reference — typically the Relight node's '3d light' (light-ball render), but any image works. Both go through VAEEncode → chained ReferenceLatent conditioning. Prompt → positive CLIPTextEncode #16, negative → #2, seed → RandomNoise #22.",
+  "_comment": "Shipped ImageStage preset for relighting via Flux-2 Klein 9B + Sun-direction LoRA. The Relight action wires the subject into images[0] and the 3D light render into images[1]. LoadImage #25 = subject (and drives output size via GetImageSize #18); LoadImage #30 = lighting reference. Both go through VAEEncode → chained ReferenceLatent conditioning. Prompt → positive CLIPTextEncode #16, negative → #2, seed → RandomNoise #22.",
 
   "label":       "Flux2 Klein Relight",
   "order":       40,
-  "description": "Relight via Flux-2 Klein 9B + Sun-direction LoRA (4-step). Wire your subject into images[0] and a LIGHTING REFERENCE into images[1] — e.g. the Relight node's 3d-light render, or any reference photo whose lighting you want to transfer. Output size follows the subject image.",
+  "description": "Relight via Flux-2 Klein 9B + Sun-direction LoRA (4-step). The generated Relight pair supplies the subject in images[0] and a LIGHTING REFERENCE in images[1]. Output size follows the subject image.",
 
   "result": {
     "type": "ui_save_url",
@@ -22,13 +22,13 @@
       "image": {
         "from": "upstream_image:annotated[1]",
         "required": true,
-        "error": "Relight needs a lighting reference in the 2nd image slot — wire the Relight node's '3d light' output (or any image) into it."
+        "error": "Relight needs a lighting reference in the second image slot — wire the Relight node's '3d light' output (or any image) into it."
       }
     },
     "16": {
       "text": {
         "from": "main_prompt",
-        "default": "match the sun direction from the reference"
+        "default": "match the sun direction from the reference; preserve the exact subject identity, face, pose, clothing, body proportions, framing, and background composition; only change lighting, shadows, highlights, and contrast; no deformation"
       }
     },
     "2": {

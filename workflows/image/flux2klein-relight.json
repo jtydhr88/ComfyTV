@@ -488,7 +488,7 @@
     },
     {
       "id": 12,
-      "type": "UNETLoader",
+      "type": "UnetLoaderGGUF",
       "pos": [
         100,
         320
@@ -510,13 +510,12 @@
           ]
         }
       ],
-      "title": "UNET加载器",
+      "title": "Unet 加载器 (GGUF)",
       "properties": {
-        "Node name for S&R": "UNETLoader"
+        "Node name for S&R": "UnetLoaderGGUF"
       },
       "widgets_values": [
-        "flux-2-klein-9b-nvfp4.safetensors",
-        "default"
+        "Flux2-Klein-9B-True-V3-Q6_K.gguf"
       ]
     },
     {
@@ -836,7 +835,7 @@
         "Node name for S&R": "LoraLoaderModelOnly"
       },
       "widgets_values": [
-        "Sun_direction_LoRA_Flux_2_Klein_9b_v1.safetensors",
+        "Flux2Klein9B/Sun_direction_LoRA_Flux_2_Klein_9b_v1.safetensors",
         1
       ]
     },
