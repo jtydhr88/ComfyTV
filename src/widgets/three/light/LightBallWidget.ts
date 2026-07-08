@@ -15,6 +15,7 @@ import {
 } from './orbitDragMath'
 import { orbitAnglesFor, orbitPosition } from './lightTransform'
 import { lightTarget, type LightInfoEntry, type LightInfoType } from './types'
+import { guardOrbitControlsDragEnd } from '../orbitControlsGuard'
 
 export type LightTransformGizmoMode = 'none' | 'light-position' | 'target'
 
@@ -50,6 +51,7 @@ export class LightBallWidget {
   private readonly camera: THREE.PerspectiveCamera
   private readonly renderer: THREE.WebGLRenderer
   private readonly controls: OrbitControls
+  private disposeDragEndGuard?: () => void
   private readonly resizeObserver: ResizeObserver
 
   private readonly onLightsChange?: (lights: LightInfoEntry[]) => void
@@ -120,6 +122,7 @@ export class LightBallWidget {
     this.container.addEventListener('pointerenter', this.onContainerEnter)
 
     this.controls = new OrbitControls(this.camera, canvas)
+    this.disposeDragEndGuard = guardOrbitControlsDragEnd(this.controls, canvas)
     this.controls.target.set(
       OUTPUT_VIEW.target.x,
       OUTPUT_VIEW.target.y,
@@ -273,6 +276,7 @@ export class LightBallWidget {
     this.targetHandle.dispose()
     this.studio.detach()
     this.studio.dispose()
+    this.disposeDragEndGuard?.()
     this.controls.dispose()
     try {
       this.renderer.dispose()
