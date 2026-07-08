@@ -162,6 +162,39 @@ class StageParam(Base):
     updated_at:   Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
 
 
+class ComfyServer(Base):
+    __tablename__ = "comfytv_servers"
+
+    id:         Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    label:      Mapped[str] = mapped_column(String, unique=True)
+    host:       Mapped[str] = mapped_column(String)
+    port:       Mapped[int] = mapped_column(Integer, default=8188)
+    enabled:    Mapped[bool] = mapped_column(Boolean, default=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
+
+
+class RemoteJob(Base):
+    __tablename__ = "comfytv_remote_jobs"
+
+    id:               Mapped[str] = mapped_column(String, primary_key=True)
+    server_id:        Mapped[Optional[int]] = mapped_column(
+        Integer, ForeignKey("comfytv_servers.id", ondelete="SET NULL"), nullable=True
+    )
+    server_label:     Mapped[str] = mapped_column(String, default="")
+    project_id:       Mapped[str] = mapped_column(String, index=True)
+    stage_node_id:    Mapped[str] = mapped_column(String, index=True)
+    stage_uid:        Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    status:           Mapped[str] = mapped_column(String, default="queued", index=True)
+    remote_prompt_id: Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    error_text:       Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    output_id:        Mapped[Optional[int]] = mapped_column(
+        Integer, ForeignKey("comfytv_outputs.id", ondelete="SET NULL"), nullable=True
+    )
+    created_at:       Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
+    updated_at:       Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
+
+
 class AssetCategoryLink(Base):
     __tablename__ = "comfytv_asset_category_links"
 

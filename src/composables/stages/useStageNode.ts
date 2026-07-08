@@ -52,6 +52,8 @@ import {
 import { readImageRefs } from '@/composables/stages/imageRefs'
 import { extractRunError } from '@/utils/runError'
 import { postPickedIndex } from '@/composables/stages/stageApi'
+import { cancelRemoteJob, remoteRun } from '@/api'
+import { useServerStore } from '@/stores/serverStore'
 import { app } from '@/lib/comfyApp'
 
 const STAGE_CLASS_BY_KIND: Record<StageKind, string> = {
@@ -654,6 +656,23 @@ export function useStageNode(
           obj.main_prompt = entries.expand(pid, mp)
         }
       }
+      const serverStore = useServerStore()
+      const remoteServerId = serverStore.resolveSelection(
+        (node as any).properties?.comfytv_server,
+      )
+      if (remoteServerId != null && !isBridgeIn) {
+        const resp = await remoteRun({
+          server_id: remoteServerId,
+          prompt: pm.output,
+          target_node_id: targetId,
+          project_id: pid,
+          stage_uid: ensureStageUid(node),
+        })
+        runningJobId = resp.job_id
+        executionStore.registerRemoteJob(targetId, resp.job_id)
+        return
+      }
+
       ;(pm as any).__comfytvOwnRun = true
       const queueResp = await a.api.queuePrompt(0, pm, { partialExecutionTargets: [targetId] })
       runningPromptId = queueResp?.prompt_id ? String(queueResp.prompt_id) : null
@@ -662,11 +681,20 @@ export function useStageNode(
       const err = extractRunError(e, node.id)
       store.applyExecutionError(state, err)
       runningPromptId = null
+      runningJobId = null
     }
   }
 
   const onCancelRequest = async () => {
     if (!state.running) return
+    if (runningJobId) {
+      try {
+        await cancelRemoteJob(runningJobId)
+      } catch (e) {
+        console.error('[ComfyTV/stage] remote cancel failed', e)
+      }
+      return
+    }
     try {
       const a = app as any
       if (typeof a.api.interrupt === 'function') {
@@ -730,6 +758,7 @@ export function useStageNode(
   }
 
   let runningPromptId: string | null = null
+  let runningJobId: string | null = null
   let watchdogTimer: ReturnType<typeof setTimeout> | null = null
   const clearWatchdog = () => {
     if (watchdogTimer) { clearTimeout(watchdogTimer); watchdogTimer = null }
@@ -803,6 +832,25 @@ export function useStageNode(
     }, 3000)
   }
 
+  const onRemoteJob = (d: any) => {
+    if (!d) return
+    if (runningJobId && d.job_id && d.job_id !== runningJobId) return
+    runningJobId = null
+    if (d.status === 'done') {
+      store.applyExecutedPayload(state, d.ui || {})
+    } else if (d.status === 'cancelled') {
+      store.applyExecutionError(state, {
+        message: t('error.cancelled'),
+        type: 'Cancelled',
+      })
+    } else if (d.status === 'error') {
+      store.applyExecutionError(state, {
+        message: String(d.error || t('servers.job.failed')),
+        type: 'RemoteError',
+      })
+    }
+  }
+
   const nodeRunHandlers = {
     getNodeId: () => String(node.id),
     onProgress,
@@ -811,8 +859,25 @@ export function useStageNode(
     onInterrupted: onExecInterrupted,
     onSuccess: onExecSuccess,
     onStatus,
+    onRemoteJob,
   }
   executionStore.registerNodeHandlers(nodeRunHandlers)
+
+  if (variant !== 'loader' && !isPoolPickerKind(kind)) {
+    const attemptRemoteRestore = (tries = 0) => {
+      if (node.id != null && node.id >= 0) {
+        void executionStore.remoteJobForNode(String(node.id)).then((jobId) => {
+          if (jobId && !state.running) {
+            runningJobId = jobId
+            state.running = true
+          }
+        })
+      } else if (tries < 20) {
+        setTimeout(() => attemptRemoteRestore(tries + 1), 80)
+      }
+    }
+    queueMicrotask(() => attemptRemoteRestore())
+  }
 
   const projectStore = useProjectStore()
   const projectIdWidget = node.widgets?.find((w: any) => w.name === 'project_id')

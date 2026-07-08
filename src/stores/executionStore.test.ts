@@ -262,4 +262,66 @@ describe('executionStore.bindToApi', () => {
     api.fire('progress', { node: '10', value: 1, max: 2 })
     expect(seen).toHaveLength(1)
   })
+
+  it('comfytv-remote-job routes to the matching node handler', () => {
+    const store = useExecutionStore()
+    store.bindToApi(api)
+    const a: any[] = []
+    const b: any[] = []
+    store.registerNodeHandlers({ getNodeId: () => '1', onRemoteJob: d => a.push(d) })
+    store.registerNodeHandlers({ getNodeId: () => '2', onRemoteJob: d => b.push(d) })
+    api.fire('comfytv-remote-job', {
+      job_id: 'j1', node_id: '2', status: 'done', ui: { output: ['x'] },
+    })
+    expect(a).toHaveLength(0)
+    expect(b).toHaveLength(1)
+    expect(b[0].ui.output[0]).toBe('x')
+  })
+
+  it('terminal remote-job events clear tracking and node progress', () => {
+    const store = useExecutionStore()
+    store.bindToApi(api)
+    store.registerNodeHandlers({ getNodeId: () => '4', onProgress: () => {} })
+    store.registerRemoteJob('4', 'j4')
+    api.fire('progress', { node: '4', value: 1, max: 2 })
+    expect(store.remoteJobs.get('4')).toBe('j4')
+    api.fire('comfytv-remote-job', { job_id: 'j4', node_id: '4', status: 'error', error: 'boom' })
+    expect(store.remoteJobs.has('4')).toBe(false)
+    expect(store.progressForNode('4')).toBeUndefined()
+    expect(store.recentEvents[0]).toMatchObject({ kind: 'remote-error', label: 'boom' })
+  })
+
+  it('non-terminal remote-job events keep tracking', () => {
+    const store = useExecutionStore()
+    store.bindToApi(api)
+    store.registerRemoteJob('5', 'j5')
+    api.fire('comfytv-remote-job', { job_id: 'j5', node_id: '5', status: 'running' })
+    expect(store.remoteJobs.get('5')).toBe('j5')
+  })
+
+  it('comfytv-remote-progress feeds nodeProgress and handlers like native progress', () => {
+    const store = useExecutionStore()
+    store.bindToApi(api)
+    const progress: any[] = []
+    const texts: any[] = []
+    store.registerNodeHandlers({
+      getNodeId: () => '9',
+      onProgress: d => progress.push(d),
+      onProgressText: d => texts.push(d),
+    })
+    api.fire('comfytv-remote-progress', { node: '9', value: 3, max: 10 })
+    expect(store.progressForNode('9')).toMatchObject({ value: 3, max: 10 })
+    api.fire('comfytv-remote-progress', { node: '9', value: 10, max: 10, text: 'done' })
+    expect(store.progressForNode('9')).toMatchObject({ value: 10, max: 10, text: 'done' })
+    expect(progress).toHaveLength(2)
+    expect(texts).toHaveLength(1)
+    expect(texts[0]).toMatchObject({ nodeId: '9', text: 'done' })
+  })
+
+  it('comfytv-remote-progress for unregistered nodes is ignored', () => {
+    const store = useExecutionStore()
+    store.bindToApi(api)
+    api.fire('comfytv-remote-progress', { node: '77', value: 1, max: 2 })
+    expect(store.progressForNode('77')).toBeUndefined()
+  })
 })

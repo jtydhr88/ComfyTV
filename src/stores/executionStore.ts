@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { computed, reactive, ref } from 'vue'
 
+import { listRemoteJobs } from '@/api'
 import { t } from '@/i18n'
 
 export interface ExecutionEvent {
@@ -24,6 +25,7 @@ export interface NodeRunHandlers {
   onInterrupted?: (detail: any) => void
   onSuccess?: (detail: any) => void
   onStatus?: (detail: any) => void
+  onRemoteJob?: (detail: any) => void
 }
 
 const HISTORY_LIMIT = 30
@@ -36,6 +38,9 @@ export const useExecutionStore = defineStore('comfytv-execution', () => {
 
   const nodeProgress = reactive(new Map<string, NodeProgress>())
   const nodeHandlers = new Set<NodeRunHandlers>()
+
+  const remoteJobs = reactive(new Map<string, string>())
+  let remoteHydration: Promise<void> | null = null
 
   const isBusy = computed(() => currentNodeId.value != null || queueRemaining.value > 0)
 
@@ -64,6 +69,28 @@ export const useExecutionStore = defineStore('comfytv-execution', () => {
   function unregisterNodeHandlers(handlers: NodeRunHandlers): void {
     nodeHandlers.delete(handlers)
     nodeProgress.delete(handlers.getNodeId())
+  }
+
+  function registerRemoteJob(nodeId: string, jobId: string): void {
+    remoteJobs.set(String(nodeId), jobId)
+  }
+
+  function hydrateRemoteJobs(): Promise<void> {
+    if (!remoteHydration) {
+      remoteHydration = listRemoteJobs('running')
+        .then(({ jobs }) => {
+          for (const j of jobs) remoteJobs.set(String(j.stage_node_id), j.id)
+        })
+        .catch((e) => {
+          console.warn('[ComfyTV/execution] remote job hydrate failed', e)
+        })
+    }
+    return remoteHydration
+  }
+
+  async function remoteJobForNode(nodeId: string): Promise<string | undefined> {
+    await hydrateRemoteJobs()
+    return remoteJobs.get(String(nodeId))
   }
 
   function bindToApi(api: any): () => void {
@@ -143,8 +170,43 @@ export const useExecutionStore = defineStore('comfytv-execution', () => {
       const n = Array.isArray(d?.nodes) ? d.nodes.length : 0
       if (n > 0) pushEvent({ kind: 'cached', promptId: d?.prompt_id, label: `${n} cached` })
     }
+    const onRemoteProgress = (e: any) => {
+      const d = e?.detail
+      if (!d) return
+      const id = String(d.node)
+      const h = handlersForId(id)
+      if (!h) return
+      const prev = nodeProgress.get(id)
+      const next: NodeProgress = {
+        value: Number(d.value) || 0,
+        max: Math.max(1, Number(d.max) || 1),
+        text: d.text != null && d.text !== '' ? String(d.text) : prev?.text,
+      }
+      nodeProgress.set(id, next)
+      h.onProgress?.(d)
+      if (d.text != null && d.text !== '') {
+        h.onProgressText?.({ node: id, nodeId: id, text: String(d.text) })
+      }
+    }
+    const onRemoteJob = (e: any) => {
+      const d = e?.detail
+      if (!d?.node_id) return
+      const nodeId = String(d.node_id)
+      const status = String(d.status || '')
+      if (status === 'done' || status === 'error' || status === 'cancelled') {
+        remoteJobs.delete(nodeId)
+        nodeProgress.delete(nodeId)
+      }
+      pushEvent({
+        kind: `remote-${status}`,
+        label: status === 'error' ? String(d.error || 'remote run failed') : undefined,
+      })
+      handlersForId(nodeId)?.onRemoteJob?.(d)
+    }
 
     api.addEventListener('status', onStatus)
+    api.addEventListener('comfytv-remote-job', onRemoteJob)
+    api.addEventListener('comfytv-remote-progress', onRemoteProgress)
     api.addEventListener('execution_start', onExecutionStart)
     api.addEventListener('executing', onExecuting)
     api.addEventListener('execution_success', onExecutionSuccess)
@@ -156,6 +218,8 @@ export const useExecutionStore = defineStore('comfytv-execution', () => {
 
     return () => {
       api.removeEventListener('status', onStatus)
+      api.removeEventListener('comfytv-remote-job', onRemoteJob)
+      api.removeEventListener('comfytv-remote-progress', onRemoteProgress)
       api.removeEventListener('execution_start', onExecutionStart)
       api.removeEventListener('executing', onExecuting)
       api.removeEventListener('execution_success', onExecutionSuccess)
@@ -173,10 +237,14 @@ export const useExecutionStore = defineStore('comfytv-execution', () => {
     currentPromptId,
     recentEvents,
     nodeProgress,
+    remoteJobs,
     isBusy,
     bindToApi,
     progressForNode,
     registerNodeHandlers,
     unregisterNodeHandlers,
+    registerRemoteJob,
+    hydrateRemoteJobs,
+    remoteJobForNode,
   }
 })

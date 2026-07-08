@@ -75,7 +75,43 @@
     "tab": {
       "workflow": "工作流",
       "assets": "资产库",
-      "params": "Stage 管理"
+      "params": "Stage 管理",
+      "servers": "服务器"
+    }
+  },
+  "servers": {
+    "title": "ComfyUI 服务器",
+    "add": "添加",
+    "addTooltip": "登记局域网内的其他 ComfyUI 实例,让 stage 可以在它上面运行",
+    "empty": "还没有配置远程服务器,所有 stage 都在本机运行。添加服务器后,每个 stage 会出现服务器下拉框,可多机并行运行。",
+    "edit": "编辑",
+    "delete": "删除",
+    "deleteConfirm": "删除服务器「{label}」?指向它的 stage 会回退到本机运行。",
+    "enable": "启用",
+    "disable": "停用",
+    "local": "本机 (Local)",
+    "runOn": "运行于",
+    "form": {
+      "label": "名称",
+      "labelPlaceholder": "例如:楼上那台 4090",
+      "host": "主机 / IP",
+      "port": "端口",
+      "create": "添加服务器",
+      "save": "保存",
+      "cancel": "取消",
+      "saveFailed": "保存失败——名称是不是重复了?"
+    },
+    "test": {
+      "action": "测试连接",
+      "testing": "测试中…",
+      "ok": "连接成功",
+      "failed": "连接失败"
+    },
+    "job": {
+      "started": "正在 {label} 上运行",
+      "failed": "远程运行失败",
+      "cancelled": "远程运行已取消",
+      "fallbackLocal": "所选服务器已删除或停用——这个 stage 将在本机运行。"
     }
   },
   "stageManager": {

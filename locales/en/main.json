@@ -75,7 +75,43 @@
     "tab": {
       "workflow": "Workflow",
       "assets": "Assets",
-      "params": "Stages"
+      "params": "Stages",
+      "servers": "Servers"
+    }
+  },
+  "servers": {
+    "title": "ComfyUI Servers",
+    "add": "Add",
+    "addTooltip": "Register another ComfyUI instance on your network so stages can run on it",
+    "empty": "No remote servers configured. Stages run on this machine. Add a server to unlock the per-stage server dropdown and run stages on several machines in parallel.",
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleteConfirm": "Delete server \"{label}\"? Stages currently pointed at it will fall back to running locally.",
+    "enable": "Enable",
+    "disable": "Disable",
+    "local": "Local (this machine)",
+    "runOn": "Run on",
+    "form": {
+      "label": "Name",
+      "labelPlaceholder": "e.g. GPU rig upstairs",
+      "host": "Host / IP",
+      "port": "Port",
+      "create": "Add server",
+      "save": "Save",
+      "cancel": "Cancel",
+      "saveFailed": "Save failed — is the name already in use?"
+    },
+    "test": {
+      "action": "Test connection",
+      "testing": "Testing…",
+      "ok": "Connected",
+      "failed": "Connection failed"
+    },
+    "job": {
+      "started": "Running on {label}",
+      "failed": "Remote run failed",
+      "cancelled": "Remote run cancelled",
+      "fallbackLocal": "Selected server is gone or disabled — this stage will run locally."
     }
   },
   "stageManager": {

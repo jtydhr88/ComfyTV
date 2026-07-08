@@ -6,7 +6,10 @@ from typing import Any, Optional
 from sqlalchemy import desc, select
 
 from . import db
-from .db import Asset, AssetCategory, AssetCategoryLink, Entry, Output, Project, StageParam
+from .db import (
+    Asset, AssetCategory, AssetCategoryLink, ComfyServer, Entry, Output,
+    Project, RemoteJob, StageParam,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -732,3 +735,166 @@ def delete_stage_param(param_id: int) -> bool:
         s.delete(row)
         s.commit()
         return True
+
+
+def _server_to_dict(r: ComfyServer) -> dict:
+    return {
+        "id": r.id,
+        "label": r.label,
+        "host": r.host,
+        "port": int(r.port or 8188),
+        "enabled": bool(r.enabled),
+        "created_at": r.created_at.isoformat() if r.created_at else None,
+        "updated_at": r.updated_at.isoformat() if r.updated_at else None,
+    }
+
+
+def list_servers() -> list[dict]:
+    with db.get_session() as s:
+        rows = s.execute(select(ComfyServer).order_by(ComfyServer.id)).scalars().all()
+        return [_server_to_dict(r) for r in rows]
+
+
+def get_server(server_id: int) -> Optional[dict]:
+    with db.get_session() as s:
+        row = s.get(ComfyServer, server_id)
+        return _server_to_dict(row) if row else None
+
+
+def create_server(*, label: str, host: str, port: int) -> Optional[dict]:
+    label = (label or "").strip()
+    host = (host or "").strip()
+    if not label or not host:
+        return None
+    with db.get_session() as s:
+        exists = s.execute(
+            select(ComfyServer.id).where(ComfyServer.label == label)
+        ).scalar_one_or_none()
+        if exists is not None:
+            return None
+        row = ComfyServer(label=label, host=host, port=int(port or 8188))
+        s.add(row)
+        s.commit()
+        return _server_to_dict(row)
+
+
+def update_server(
+    server_id: int,
+    *,
+    label: Optional[str] = None,
+    host: Optional[str] = None,
+    port: Optional[int] = None,
+    enabled: Optional[bool] = None,
+) -> Optional[dict]:
+    with db.get_session() as s:
+        row = s.get(ComfyServer, server_id)
+        if row is None:
+            return None
+        if label is not None and label.strip():
+            clash = s.execute(
+                select(ComfyServer.id)
+                    .where(ComfyServer.label == label.strip())
+                    .where(ComfyServer.id != server_id)
+            ).scalar_one_or_none()
+            if clash is not None:
+                return None
+            row.label = label.strip()
+        if host is not None and host.strip():
+            row.host = host.strip()
+        if port is not None:
+            row.port = int(port)
+        if enabled is not None:
+            row.enabled = bool(enabled)
+        s.commit()
+        return _server_to_dict(row)
+
+
+def delete_server(server_id: int) -> bool:
+    with db.get_session() as s:
+        row = s.get(ComfyServer, server_id)
+        if row is None:
+            return False
+        s.delete(row)
+        s.commit()
+        return True
+
+
+def _remote_job_to_dict(j: RemoteJob) -> dict:
+    return {
+        "id": j.id,
+        "server_id": j.server_id,
+        "server_label": j.server_label or "",
+        "project_id": j.project_id,
+        "stage_node_id": j.stage_node_id,
+        "stage_uid": j.stage_uid,
+        "status": j.status,
+        "remote_prompt_id": j.remote_prompt_id,
+        "error_text": j.error_text,
+        "output_id": j.output_id,
+        "created_at": j.created_at.isoformat() if j.created_at else None,
+        "updated_at": j.updated_at.isoformat() if j.updated_at else None,
+    }
+
+
+def create_remote_job(
+    *,
+    job_id: str,
+    server_id: int,
+    server_label: str,
+    project_id: str,
+    stage_node_id: str,
+    stage_uid: Optional[str] = None,
+) -> dict:
+    with db.get_session() as s:
+        row = RemoteJob(
+            id=job_id,
+            server_id=server_id,
+            server_label=server_label or "",
+            project_id=project_id or "",
+            stage_node_id=str(stage_node_id),
+            stage_uid=stage_uid,
+            status="queued",
+        )
+        s.add(row)
+        s.commit()
+        return _remote_job_to_dict(row)
+
+
+def update_remote_job(
+    job_id: str,
+    *,
+    status: Optional[str] = None,
+    remote_prompt_id: Optional[str] = None,
+    error_text: Optional[str] = None,
+    output_id: Optional[int] = None,
+) -> Optional[dict]:
+    with db.get_session() as s:
+        row = s.get(RemoteJob, job_id)
+        if row is None:
+            return None
+        if status is not None:
+            row.status = status
+        if remote_prompt_id is not None:
+            row.remote_prompt_id = remote_prompt_id
+        if error_text is not None:
+            row.error_text = error_text
+        if output_id is not None:
+            row.output_id = int(output_id)
+        s.commit()
+        return _remote_job_to_dict(row)
+
+
+def get_remote_job(job_id: str) -> Optional[dict]:
+    with db.get_session() as s:
+        row = s.get(RemoteJob, job_id)
+        return _remote_job_to_dict(row) if row else None
+
+
+def list_remote_jobs(status: Optional[str] = None, limit: int = 100) -> list[dict]:
+    with db.get_session() as s:
+        q = select(RemoteJob)
+        if status:
+            q = q.where(RemoteJob.status == status)
+        q = q.order_by(desc(RemoteJob.created_at)).limit(limit)
+        rows = s.execute(q).scalars().all()
+        return [_remote_job_to_dict(j) for j in rows]

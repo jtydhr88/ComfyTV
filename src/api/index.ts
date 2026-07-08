@@ -8,8 +8,14 @@ import {
   ImportWorkflowResultSchema,
   LinkWorkflowResultSchema,
   ListNativeWorkflowsSchema,
+  ListRemoteJobsSchema,
+  ListServersSchema,
   ListWorkflowOverviewSchema,
+  MutateServerSchema,
+  OkSchema,
+  RemoteRunResultSchema,
   RescanResultSchema,
+  TestServerResultSchema,
   UnlinkWorkflowResultSchema,
 } from './schemas'
 import type {
@@ -20,6 +26,7 @@ import type {
   ListWorkflowOverview,
   NativeWorkflow,
   RescanResult,
+  TestServerResult,
 } from './schemas'
 
 export class ApiError extends Error {
@@ -113,6 +120,52 @@ export function linkWorkflow(
 
 export function unlinkWorkflow(id: number): Promise<z.infer<typeof UnlinkWorkflowResultSchema>> {
   return apiSend(`/comfytv/workflows/${id}/unlink`, 'POST', UnlinkWorkflowResultSchema)
+}
+
+export function listServers(): Promise<z.infer<typeof ListServersSchema>> {
+  return apiFetch('/comfytv/servers', ListServersSchema)
+}
+
+export function createServer(
+  input: { label: string; host: string; port: number },
+): Promise<z.infer<typeof MutateServerSchema>> {
+  return apiSend('/comfytv/servers', 'POST', MutateServerSchema, input)
+}
+
+export function updateServer(
+  id: number,
+  patch: Partial<{ label: string; host: string; port: number; enabled: boolean }>,
+): Promise<z.infer<typeof MutateServerSchema>> {
+  return apiSend(`/comfytv/servers/${id}`, 'PATCH', MutateServerSchema, patch)
+}
+
+export function deleteServer(id: number): Promise<z.infer<typeof OkSchema>> {
+  return apiSend(`/comfytv/servers/${id}`, 'DELETE', OkSchema)
+}
+
+export function testServer(
+  input: { host: string; port: number },
+): Promise<TestServerResult> {
+  return apiSend('/comfytv/servers/test', 'POST', TestServerResultSchema, input)
+}
+
+export function remoteRun(input: {
+  server_id: number
+  prompt: Record<string, unknown>
+  target_node_id: string
+  project_id: string
+  stage_uid?: string | null
+}): Promise<z.infer<typeof RemoteRunResultSchema>> {
+  return apiSend('/comfytv/remote_run', 'POST', RemoteRunResultSchema, input)
+}
+
+export function listRemoteJobs(status?: string): Promise<z.infer<typeof ListRemoteJobsSchema>> {
+  const q = status ? `?status=${encodeURIComponent(status)}` : ''
+  return apiFetch(`/comfytv/remote_jobs${q}`, ListRemoteJobsSchema)
+}
+
+export function cancelRemoteJob(jobId: string): Promise<z.infer<typeof OkSchema>> {
+  return apiSend(`/comfytv/remote_jobs/${encodeURIComponent(jobId)}/cancel`, 'POST', OkSchema)
 }
 
 export * from './schemas'

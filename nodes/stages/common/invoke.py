@@ -25,6 +25,36 @@ class StageEmptyOutput(StageError):
     """A real runner ran but returned an empty payload."""
 
 
+def _route_server(runner, server_id):
+    if server_id in (None, '', 'local'):
+        return runner
+
+    from ....runners.local_comfy import LocalComfyUIRunner
+    from ....runners.remote_comfy import CURRENT_JOB, RemoteComfyUIRunner
+    from .... import storage
+
+    if not isinstance(runner, LocalComfyUIRunner):
+        raise StageError(
+            f"runner {runner.id!r} is not a ComfyUI workflow runner — "
+            f"it can't run on a remote instance"
+        )
+    try:
+        server = storage.get_server(int(server_id))
+    except (TypeError, ValueError):
+        server = None
+    if server is None:
+        raise StageError(
+            f"remote server {server_id!r} not found — was it deleted? "
+            f"Pick another instance in the stage's server dropdown."
+        )
+    if not server.get('enabled', True):
+        raise StageError(
+            f"remote server {server['label']!r} is disabled — enable it in "
+            f"the Servers tab or pick another instance."
+        )
+    return RemoteComfyUIRunner(runner, server, CURRENT_JOB.get())
+
+
 def _standard_stage_inputs() -> list:
     return [
         _force_run_token(),
@@ -76,10 +106,13 @@ async def invoke_runner(
             f"workflow files, or re-open the workflow in the sidebar editor)"
         )
 
+    merged_options = _merge_custom_params(kind, custom_params, options)
+    runner = _route_server(runner, merged_options.pop('__server', None))
+
     ctx_kwargs: dict = {
         'kind': kind,
         'upstream': upstream if upstream is not None else {},
-        'options': _merge_custom_params(kind, custom_params, options),
+        'options': merged_options,
     }
     if main_prompt is not None:
         ctx_kwargs['main_prompt'] = main_prompt

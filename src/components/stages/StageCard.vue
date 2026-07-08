@@ -106,6 +106,19 @@
 
     <CustomParamsSection v-if="node" :state="state" :node="node" />
 
+    <div v-if="showServerSelect" class="ctv:flex ctv:items-center ctv:gap-1.5">
+      <span class="ctv:shrink-0 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:opacity-60">
+        {{ $t('servers.runOn') }}
+      </span>
+      <ComfyTVSelect
+        class="ctv:flex-1 ctv:min-w-0"
+        :model-value="serverSelection"
+        :options="serverOptions"
+        :disabled="state.running"
+        @update:model-value="onServerPick"
+      />
+    </div>
+
     <button
       v-if="state.variant !== 'loader' && state.variant !== 'transform' && !isPicker"
       :class="['run-btn', state.running && 'is-cancel', runBtnClass]"
@@ -183,12 +196,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 import ImageReferences from './ImageReferences.vue'
 import MainPromptInput from './MainPromptInput.vue'
 import StageIcon from '@/components/widgets/StageIcon.vue'
+import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
 import CustomParamsSection from './CustomParamsSection.vue'
+import { LOCAL_SERVER, useServerStore } from '@/stores/serverStore'
 import { t } from '@/i18n'
 import ValuePreview from './ValuePreview.vue'
 import { formatSlot, useStageCard } from '@/composables/stages/useStageCard'
@@ -231,6 +246,39 @@ const {
 } = useStageCard(() => props.state, props.onAction)
 
 const isPicker = computed(() => isPoolPickerKind(props.state.kind))
+
+const serverStore = useServerStore()
+void serverStore.load()
+
+const showServerSelect = computed(() =>
+  props.state.variant !== 'loader'
+  && props.state.variant !== 'transform'
+  && !isPicker.value
+  && !!props.node
+  && serverStore.hasRemotes)
+
+const serverOptions = computed(() => [
+  { value: LOCAL_SERVER, label: t('servers.local') },
+  ...serverStore.enabledServers.map(s => ({ value: String(s.id), label: s.label })),
+])
+
+const serverSelectionTick = ref(0)
+const serverSelection = computed(() => {
+  void serverSelectionTick.value
+  const raw = (props.node as any)?.properties?.comfytv_server
+  if (raw == null || raw === '' || raw === LOCAL_SERVER) return LOCAL_SERVER
+  const id = Number(raw)
+  const server = Number.isFinite(id) ? serverStore.byId(id) : undefined
+  return server?.enabled ? String(id) : LOCAL_SERVER
+})
+
+function onServerPick(v: string | number) {
+  const n = props.node as any
+  if (!n) return
+  n.properties = n.properties || {}
+  n.properties.comfytv_server = String(v)
+  serverSelectionTick.value++
+}
 
 const poolPreviewType = computed(() => {
   if (props.state.kind === 'audio-picker') return 'COMFYTV_AUDIOS'
