@@ -3,6 +3,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'
 import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js'
 import { getOffscreenRenderer } from './sharedRenderer'
+import { guardOrbitControlsDragEnd } from './orbitControlsGuard'
 
 
 export interface PanoramaViewerOptions {
@@ -43,6 +44,7 @@ export class PanoramaViewer {
   private camera: THREE.PerspectiveCamera
   private renderer: THREE.WebGLRenderer
   private controls: OrbitControls
+  private disposeDragEndGuard?: () => void
   private sphere: THREE.Mesh
   private material: THREE.MeshBasicMaterial
   private currentTexture: THREE.Texture | null = null
@@ -96,6 +98,10 @@ export class PanoramaViewer {
     this.scene.add(this.sphere)
 
     this.controls = new OrbitControls(this.camera, this.renderer.domElement)
+    this.disposeDragEndGuard = guardOrbitControlsDragEnd(
+      this.controls,
+      this.renderer.domElement
+    )
     this.controls.enableZoom = false
     this.controls.enablePan = false
     this.controls.rotateSpeed = -0.3
@@ -245,6 +251,7 @@ export class PanoramaViewer {
     if (this.onOrbitEnd) {
       this.controls.removeEventListener('end', this.onOrbitEnd)
     }
+    this.disposeDragEndGuard?.()
     this.controls.dispose()
     this.clearTexture()
     this.sphere.geometry.dispose()

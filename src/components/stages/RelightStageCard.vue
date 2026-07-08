@@ -2,8 +2,10 @@
   <div
     class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full ctv:text-xs ctv:text-base-foreground"
     @pointerdown.stop
+    @mousedown.stop
+    @contextmenu.stop.prevent
   >
-    <div class="ctv:relative ctv:w-full ctv:h-[280px] ctv:shrink-0 ctv:rounded-lg ctv:overflow-hidden ctv:bg-black">
+    <div class="ctv:relative ctv:w-full ctv:h-[calc(100%-360px)] ctv:min-h-[280px] ctv:shrink-0 ctv:rounded-lg ctv:overflow-hidden ctv:bg-black">
       <SceneCanvas :init-scene="initScene" />
     </div>
 
@@ -38,6 +40,7 @@
     />
 
     <StageCard
+      class="ctv:h-auto! ctv:shrink-0"
       :state="state"
       :node="node"
       :on-run-request="onRunRequest"
