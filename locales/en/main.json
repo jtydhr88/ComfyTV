@@ -112,6 +112,15 @@
       "failed": "Remote run failed",
       "cancelled": "Remote run cancelled",
       "fallbackLocal": "Selected server is gone or disabled — this stage will run locally."
+    },
+    "status": {
+      "online": "Online",
+      "offline": "Offline",
+      "unknown": "Checking…",
+      "idle": "Idle",
+      "queueShort": "Q {n}",
+      "queueDetail": "{running} running, {pending} pending",
+      "fromComfyTV": "{n} from ComfyTV"
     }
   },
   "stageManager": {

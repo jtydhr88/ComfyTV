@@ -196,7 +196,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onUnmounted, ref, watch } from 'vue'
 
 import ImageReferences from './ImageReferences.vue'
 import MainPromptInput from './MainPromptInput.vue'
@@ -257,10 +257,35 @@ const showServerSelect = computed(() =>
   && !!props.node
   && serverStore.hasRemotes)
 
+function remoteLabel(id: number, label: string): string {
+  const st = serverStore.statusFor(id)
+  if (!st) return label
+  if (!st.online) return `${label} · ${t('servers.status.offline')}`
+  const total = st.running + st.pending
+  return total > 0 ? `${label} · ${t('servers.status.queueShort', { n: total })}` : label
+}
+
 const serverOptions = computed(() => [
   { value: LOCAL_SERVER, label: t('servers.local') },
-  ...serverStore.enabledServers.map(s => ({ value: String(s.id), label: s.label })),
+  ...serverStore.enabledServers.map(s => ({
+    value: String(s.id),
+    label: remoteLabel(s.id, s.label),
+  })),
 ])
+
+let releaseStatus: (() => void) | null = null
+watch(showServerSelect, (on) => {
+  if (on && !releaseStatus) {
+    releaseStatus = serverStore.subscribeStatus()
+  } else if (!on && releaseStatus) {
+    releaseStatus()
+    releaseStatus = null
+  }
+}, { immediate: true })
+onUnmounted(() => {
+  releaseStatus?.()
+  releaseStatus = null
+})
 
 const serverSelectionTick = ref(0)
 const serverSelection = computed(() => {

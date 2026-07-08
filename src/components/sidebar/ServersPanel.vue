@@ -87,6 +87,17 @@
             </span>
           </div>
         </div>
+        <div
+          v-if="server.enabled"
+          class="ctv:flex ctv:items-center ctv:gap-1 ctv:shrink-0 ctv:mr-0.5"
+          :title="statusTitle(server)"
+        >
+          <span class="ctv:size-1.5 ctv:rounded-full" :class="statusDotClass(server)" />
+          <span
+            v-if="statusBadge(server)"
+            class="ctv:text-2xs ctv:tabular-nums ctv:text-muted-foreground"
+          >{{ statusBadge(server) }}</span>
+        </div>
         <button
           :class="iconBtnClass"
           :disabled="testingId === server.id"
@@ -119,7 +130,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import type { ComfyServer, TestServerResult } from '@/api'
@@ -226,7 +237,49 @@ async function onDelete(server: ComfyServer) {
   if (ok) await store.remove(server.id)
 }
 
-onMounted(() => { void store.load() })
+function statusDotClass(server: ComfyServer): string {
+  const st = store.statusFor(server.id)
+  if (!st) return 'ctv:bg-muted-foreground/40'
+  if (!st.online) return 'ctv:bg-destructive-background'
+  return st.running + st.pending > 0 ? 'ctv:bg-amber-400' : 'ctv:bg-emerald-400'
+}
+
+function statusBadge(server: ComfyServer): string {
+  const st = store.statusFor(server.id)
+  if (!st || !st.online) return ''
+  const total = st.running + st.pending
+  return total > 0 ? t('servers.status.queueShort', { n: total }) : ''
+}
+
+function statusTitle(server: ComfyServer): string {
+  const st = store.statusFor(server.id)
+  if (!st) return t('servers.status.unknown')
+  if (!st.online) {
+    return st.error
+      ? `${t('servers.status.offline')} — ${st.error}`
+      : t('servers.status.offline')
+  }
+  const total = st.running + st.pending
+  const parts = [
+    total > 0
+      ? t('servers.status.queueDetail', { running: st.running, pending: st.pending })
+      : t('servers.status.idle'),
+  ]
+  if (st.jobs) parts.push(t('servers.status.fromComfyTV', { n: st.jobs }))
+  return `${t('servers.status.online')} · ${parts.join(' · ')}`
+}
+
+let releaseStatus: (() => void) | null = null
+
+onMounted(() => {
+  void store.load()
+  releaseStatus = store.subscribeStatus()
+})
+
+onUnmounted(() => {
+  releaseStatus?.()
+  releaseStatus = null
+})
 
 const addBtnClass = 'ctv:shrink-0 ctv:inline-flex ctv:items-center ctv:gap-1 ctv:cursor-pointer ctv:[font-family:inherit] '
   + 'ctv:rounded-lg ctv:border-none ctv:px-2 ctv:py-1 ctv:text-xs '

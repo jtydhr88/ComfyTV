@@ -9,6 +9,7 @@ import {
   LinkWorkflowResultSchema,
   ListNativeWorkflowsSchema,
   ListRemoteJobsSchema,
+  ListServerStatusSchema,
   ListServersSchema,
   ListWorkflowOverviewSchema,
   MutateServerSchema,
@@ -124,6 +125,10 @@ export function unlinkWorkflow(id: number): Promise<z.infer<typeof UnlinkWorkflo
 
 export function listServers(): Promise<z.infer<typeof ListServersSchema>> {
   return apiFetch('/comfytv/servers', ListServersSchema)
+}
+
+export function listServerStatus(): Promise<z.infer<typeof ListServerStatusSchema>> {
+  return apiFetch('/comfytv/servers/status', ListServerStatusSchema)
 }
 
 export function createServer(

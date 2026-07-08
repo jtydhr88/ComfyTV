@@ -112,6 +112,15 @@
       "failed": "远程运行失败",
       "cancelled": "远程运行已取消",
       "fallbackLocal": "所选服务器已删除或停用——这个 stage 将在本机运行。"
+    },
+    "status": {
+      "online": "在线",
+      "offline": "离线",
+      "unknown": "检测中…",
+      "idle": "空闲",
+      "queueShort": "队列 {n}",
+      "queueDetail": "{running} 运行中,{pending} 排队",
+      "fromComfyTV": "其中 {n} 来自 ComfyTV"
     }
   },
   "stageManager": {

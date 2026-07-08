@@ -7,6 +7,7 @@ const apiMock = vi.hoisted(() => ({
   updateServer: vi.fn(),
   deleteServer: vi.fn(),
   testServer: vi.fn(),
+  listServerStatus: vi.fn(),
 }))
 
 vi.mock('@/api', () => apiMock)
@@ -72,12 +73,52 @@ describe('serverStore', () => {
     expect(await store.create({ label: 'x', host: 'h', port: 1 })).toBeNull()
   })
 
+  it('update returns null and remove returns false on api failure', async () => {
+    apiMock.updateServer.mockRejectedValue(new Error('nope'))
+    apiMock.deleteServer.mockRejectedValue(new Error('nope'))
+    const store = useServerStore()
+    expect(await store.update(3, { enabled: false })).toBeNull()
+    expect(await store.remove(3)).toBe(false)
+  })
+
   it('testConnection surfaces api errors as {ok:false}', async () => {
     apiMock.testServer.mockRejectedValue(new Error('unreachable'))
     const store = useServerStore()
     const res = await store.testConnection('h', 8188)
     expect(res.ok).toBe(false)
     expect(res.error).toContain('unreachable')
+  })
+
+  it('subscribeStatus polls immediately, shares one loop, and statusFor reads it', async () => {
+    apiMock.listServerStatus.mockResolvedValue({
+      statuses: [{ id: 3, online: true, running: 1, pending: 2, jobs: 0 }],
+    })
+    const store = useServerStore()
+    const off1 = store.subscribeStatus()
+    const off2 = store.subscribeStatus()
+    await vi.waitFor(() => expect(store.statusFor(3)?.pending).toBe(2))
+    expect(apiMock.listServerStatus).toHaveBeenCalledTimes(1)
+    off1()
+    off1()
+    off2()
+  })
+
+  it('pollStatus swallows api errors and leaves statuses empty', async () => {
+    apiMock.listServerStatus.mockRejectedValue(new Error('boom'))
+    const store = useServerStore()
+    await store.pollStatus()
+    expect(store.statusFor(3)).toBeUndefined()
+  })
+
+  it('subscribeStatus re-polls after being fully released', async () => {
+    apiMock.listServerStatus.mockResolvedValue({ statuses: [] })
+    const store = useServerStore()
+    const off = store.subscribeStatus()
+    await vi.waitFor(() => expect(apiMock.listServerStatus).toHaveBeenCalledTimes(1))
+    off()
+    const off2 = store.subscribeStatus()
+    await vi.waitFor(() => expect(apiMock.listServerStatus).toHaveBeenCalledTimes(2))
+    off2()
   })
 
   it('resolveSelection maps local/missing/disabled to null', async () => {

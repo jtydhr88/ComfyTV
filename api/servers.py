@@ -17,6 +17,7 @@ from ._common import routes
 _log = logging.getLogger(__name__)
 
 _TEST_TIMEOUT_S = 5
+_STATUS_TIMEOUT_S = 4
 
 ACTIVE_JOBS: dict[str, RemoteJobHandle] = {}
 
@@ -124,6 +125,59 @@ async def test_server(request: web.Request) -> web.Response:
         "os": system.get("os") or "",
         "devices": [d.get("name", "") for d in devices if isinstance(d, dict)],
     })
+
+
+async def _fetch_server_queue(session: aiohttp.ClientSession, server: dict) -> dict:
+    sid = server["id"]
+    url = f"http://{server['host']}:{server['port']}/queue"
+    try:
+        async with session.get(url) as resp:
+            if resp.status != 200:
+                return {"id": sid, "online": False, "running": 0,
+                        "pending": 0, "error": f"HTTP {resp.status}"}
+            data = await resp.json()
+    except (aiohttp.ClientError, asyncio.TimeoutError, ValueError) as e:
+        return {"id": sid, "online": False, "running": 0,
+                "pending": 0, "error": str(e) or type(e).__name__}
+    running = data.get("queue_running")
+    pending = data.get("queue_pending")
+    return {
+        "id": sid,
+        "online": True,
+        "running": len(running) if isinstance(running, list) else 0,
+        "pending": len(pending) if isinstance(pending, list) else 0,
+    }
+
+
+def _active_jobs_by_server() -> dict[int, int]:
+    tally: dict[int, int] = {}
+    try:
+        for status in ("queued", "running"):
+            for job in storage.list_remote_jobs(status=status):
+                sid = job.get("server_id")
+                if sid is not None and job["id"] in ACTIVE_JOBS:
+                    tally[int(sid)] = tally.get(int(sid), 0) + 1
+    except Exception:
+        _log.exception("[ComfyTV/servers] active-job tally failed")
+    return tally
+
+
+@routes.get("/comfytv/servers/status")
+async def servers_status(request: web.Request) -> web.Response:
+    servers = [s for s in storage.list_servers() if s.get("enabled", True)]
+    active = _active_jobs_by_server()
+
+    statuses: list[dict] = []
+    if servers:
+        timeout = aiohttp.ClientTimeout(total=_STATUS_TIMEOUT_S)
+        async with aiohttp.ClientSession(timeout=timeout) as session:
+            results = await asyncio.gather(
+                *(_fetch_server_queue(session, s) for s in servers)
+            )
+        for st in results:
+            st["jobs"] = active.get(st["id"], 0)
+            statuses.append(st)
+    return web.json_response({"statuses": statuses})
 
 
 _STAGE_CLASSES: dict[str, type] | None = None

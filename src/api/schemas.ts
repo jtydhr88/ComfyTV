@@ -342,6 +342,20 @@ export const MutateServerSchema = z.object({
   server: ComfyServerSchema,
 })
 
+export const ServerStatusSchema = z.object({
+  id:      z.number(),
+  online:  z.boolean(),
+  running: z.number(),
+  pending: z.number(),
+  jobs:    z.number().optional(),
+  error:   z.string().optional(),
+})
+export type ServerStatus = z.infer<typeof ServerStatusSchema>
+
+export const ListServerStatusSchema = z.object({
+  statuses: z.array(ServerStatusSchema),
+})
+
 export const TestServerResultSchema = z.object({
   ok: z.boolean(),
   version: z.string().optional(),

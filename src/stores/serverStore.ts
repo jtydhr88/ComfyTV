@@ -3,23 +3,63 @@ import { computed, ref } from 'vue'
 
 import {
   type ComfyServer,
+  type ServerStatus,
   type TestServerResult,
   createServer as apiCreateServer,
   deleteServer as apiDeleteServer,
   listServers as apiListServers,
+  listServerStatus as apiListServerStatus,
   testServer as apiTestServer,
   updateServer as apiUpdateServer,
 } from '@/api'
 
 export const LOCAL_SERVER = 'local'
+const STATUS_POLL_MS = 5000
 
 export const useServerStore = defineStore('servers', () => {
   const servers = ref<ComfyServer[]>([])
   const loaded = ref(false)
   const loading = ref(false)
 
+  const statuses = ref<Record<number, ServerStatus>>({})
+  let pollTimer: ReturnType<typeof setInterval> | null = null
+  let statusSubscribers = 0
+
   const enabledServers = computed(() => servers.value.filter(s => s.enabled))
   const hasRemotes = computed(() => enabledServers.value.length > 0)
+
+  function statusFor(id: number): ServerStatus | undefined {
+    return statuses.value[id]
+  }
+
+  async function pollStatus(): Promise<void> {
+    try {
+      const data = await apiListServerStatus()
+      const next: Record<number, ServerStatus> = {}
+      for (const st of data.statuses) next[st.id] = st
+      statuses.value = next
+    } catch (e) {
+      console.warn('[ComfyTV/servers] status poll failed', e)
+    }
+  }
+
+  function subscribeStatus(): () => void {
+    statusSubscribers++
+    if (statusSubscribers === 1) {
+      void pollStatus()
+      pollTimer = setInterval(() => { void pollStatus() }, STATUS_POLL_MS)
+    }
+    let released = false
+    return () => {
+      if (released) return
+      released = true
+      statusSubscribers = Math.max(0, statusSubscribers - 1)
+      if (statusSubscribers === 0 && pollTimer != null) {
+        clearInterval(pollTimer)
+        pollTimer = null
+      }
+    }
+  }
 
   async function load(force = false): Promise<void> {
     if (loading.value || (loaded.value && !force)) return
@@ -96,10 +136,14 @@ export const useServerStore = defineStore('servers', () => {
     servers,
     loaded,
     loading,
+    statuses,
     enabledServers,
     hasRemotes,
     load,
     byId,
+    statusFor,
+    pollStatus,
+    subscribeStatus,
     create,
     update,
     remove,
