@@ -22,7 +22,7 @@
       <input
         ref="filePicker"
         type="file"
-        accept="image/*,video/*,audio/*"
+        accept="image/*,video/*,audio/*,.glb,.gltf,.fbx"
         multiple
         class="ctv:hidden"
         @change="onPickFiles"
@@ -218,7 +218,11 @@
           <IconMaximize class="ctv:size-4 ctv:shrink-0" />
           <span class="ctv:flex-1 ctv:truncate">{{ $t('stage.action.viewFull') }}</span>
         </button>
-        <button :class="menuItemClass" @click="menuLoadNode">
+        <button
+          v-if="menuAsset?.media_type !== 'model'"
+          :class="menuItemClass"
+          @click="menuLoadNode"
+        >
           <IconDownload class="ctv:size-4 ctv:shrink-0" />
           <span class="ctv:flex-1 ctv:truncate">{{ $t('assets.card.loadNode') }}</span>
         </button>

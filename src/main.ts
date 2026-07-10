@@ -19,6 +19,7 @@ import GridSplitStageCard from '@/components/stages/GridSplitStageCard.vue'
 import DirectorTimelineStageCard from '@/components/stages/DirectorTimelineStageCard.vue'
 import OutpaintStageCard from '@/components/stages/OutpaintStageCard.vue'
 import StoryboardStageCard from '@/components/stages/StoryboardStageCard.vue'
+import Scene3DStageCard from '@/components/stages/Scene3DStageCard.vue'
 import ProjectCard from '@/components/stages/ProjectCard.vue'
 import ComfyTVMountHost from '@/components/ComfyTVMountHost.vue'
 import { registerMount, unregisterMount } from '@/composables/stages/widgetMounts'
@@ -93,6 +94,7 @@ const RICH_STAGE_CARDS: Record<string, any> = {
   'ComfyTV.DirectorTimelineStage':    DirectorTimelineStageCard,
   'ComfyTV.OutpaintStage':            OutpaintStageCard,
   'ComfyTV.StoryboardStage':          StoryboardStageCard,
+  'ComfyTV.Scene3DStage':             Scene3DStageCard,
 }
 
 const RICH_STAGE_MIN_HEIGHTS: Record<string, number> = {
@@ -113,6 +115,11 @@ const RICH_STAGE_MIN_HEIGHTS: Record<string, number> = {
   'ComfyTV.AssetAudioLoaderStage':    420,
   'ComfyTV.GridSplitStage':           560,
   'ComfyTV.OutpaintStage':            620,
+  'ComfyTV.Scene3DStage':             640,
+}
+
+const RICH_STAGE_MIN_WIDTHS: Record<string, number> = {
+  'ComfyTV.Scene3DStage': 960,
 }
 
 const GENERIC_STAGE_MIN_HEIGHT = 380
@@ -377,8 +384,9 @@ const extension: ComfyExtension = {
 
     const richMin = RICH_STAGE_MIN_HEIGHTS[node.comfyClass]
     const minH = richMin ?? 140
+    const minW = RICH_STAGE_MIN_WIDTHS[node.comfyClass] ?? 320
     const [w, h] = node.size
-    node.setSize([Math.max(w, 320), Math.max(h, minH)])
+    node.setSize([Math.max(w, minW), Math.max(h, minH)])
   },
 }
 

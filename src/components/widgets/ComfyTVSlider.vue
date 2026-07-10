@@ -15,7 +15,7 @@
       </SliderTrack>
       <SliderThumb class="ctv-slider-thumb" />
     </SliderRoot>
-    <span class="ctv-slider-value">{{ display }}</span>
+    <span v-if="!hideValue" class="ctv-slider-value">{{ display }}</span>
   </div>
 </template>
 
@@ -30,6 +30,7 @@ const props = defineProps<{
   step?: number
   precision?: number
   disabled?: boolean
+  hideValue?: boolean
 }>()
 const emit = defineEmits<{ 'update:modelValue': [v: number]; commit: [v: number] }>()
 

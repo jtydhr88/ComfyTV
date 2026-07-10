@@ -3,6 +3,7 @@
     v-model:open="isOpen"
     :model-value="modelValue"
     :disabled="disabled"
+    ignore-filter
     selection-behavior="replace"
     @update:model-value="onPick"
   >
@@ -38,6 +39,7 @@
         <div v-if="filterable" class="ctv:px-1 ctv:pb-2">
           <ComboboxInput
             v-model="query"
+            :display-value="() => ''"
             :placeholder="filterPlaceholder ?? 'Filter…'"
             auto-focus
             class="ctv:flex ctv:h-7 ctv:w-full ctv:min-w-0 ctv:appearance-none ctv:rounded-lg ctv:border-none

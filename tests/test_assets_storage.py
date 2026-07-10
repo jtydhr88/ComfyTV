@@ -55,7 +55,7 @@ class TestAssetCreate:
 
     def test_invalid_inputs_rejected(self, reset_db):
         from ComfyTV import storage
-        assert storage.create_asset(name="x", payload_url="/v", media_type="model") is None
+        assert storage.create_asset(name="x", payload_url="/v", media_type="bogus") is None
         assert storage.create_asset(name="x", payload_url="  ") is None
         assert storage.create_asset(name="x", payload_url="/v", category_ids=[9999]) is None
 

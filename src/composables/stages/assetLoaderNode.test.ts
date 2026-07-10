@@ -39,8 +39,9 @@ describe('assetLoaderClass', () => {
     expect(assetLoaderClass('audio')).toBe('ComfyTV.AssetAudioLoaderStage')
   })
 
-  it('falls back to the image loader for unknown media types', () => {
-    expect(assetLoaderClass('weird')).toBe('ComfyTV.AssetImageLoaderStage')
+  it('returns null for media types without a loader stage (e.g. model)', () => {
+    expect(assetLoaderClass('model')).toBeNull()
+    expect(assetLoaderClass('weird')).toBeNull()
   })
 })
 

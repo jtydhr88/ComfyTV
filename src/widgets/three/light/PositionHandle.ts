@@ -19,7 +19,13 @@ export class PositionHandle {
     camera: THREE.Camera,
     domElement: HTMLElement,
     private readonly onDraggingChange: DraggingChangeListener,
-    private readonly onChange: ChangeListener
+    private readonly onChange: ChangeListener,
+    options: {
+      getPointerNdc?: (
+        clientX: number,
+        clientY: number
+      ) => { x: number; y: number } | null
+    } = {}
   ) {
     this.proxy = new THREE.Object3D()
     this.proxy.name = `${name}Proxy`
@@ -33,8 +39,39 @@ export class PositionHandle {
     this.helper.visible = false
     this.controls.enabled = false
 
+    if (options.getPointerNdc) {
+      const getNdc = options.getPointerNdc
+      const controls = this.controls as unknown as {
+        _getPointer: (event: PointerEvent) => {
+          x: number
+          y: number
+          button: number
+        }
+      }
+      controls._getPointer = (event: PointerEvent) => {
+        const ndc = getNdc(event.clientX, event.clientY)
+        if (!ndc) return { x: 10, y: 10, button: event.button }
+        return { x: ndc.x, y: ndc.y, button: event.button }
+      }
+    }
+
     this.controls.addEventListener('dragging-changed', this.onDragging)
     this.controls.addEventListener('objectChange', this.onObjectChange)
+  }
+
+  updateCamera(camera: THREE.Camera): void {
+    this.controls.camera = camera
+  }
+
+  isInteracting(): boolean {
+    const controls = this.controls as unknown as {
+      axis?: string | null
+      dragging?: boolean
+    }
+    return (
+      this.helper.visible &&
+      (controls.axis != null || controls.dragging === true)
+    )
   }
 
   attach(scene: THREE.Scene): void {

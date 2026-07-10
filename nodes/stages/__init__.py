@@ -28,6 +28,7 @@ from .loaders import (
     ImageLoaderStage, VideoLoaderStage, AudioLoaderStage,
     AssetImageLoaderStage, AssetVideoLoaderStage, AssetAudioLoaderStage,
 )
+from .scene3d import Scene3DStage
 
 
 class ComfyTVExtension(ComfyExtension):
@@ -47,6 +48,7 @@ class ComfyTVExtension(ComfyExtension):
             AudioVideoDemuxAudioStage, AudioVideoDemuxVideoStage,
             ImageLoaderStage, VideoLoaderStage, AudioLoaderStage,
             AssetImageLoaderStage, AssetVideoLoaderStage, AssetAudioLoaderStage,
+            Scene3DStage,
             *_bridge_classes(),
         ]
 

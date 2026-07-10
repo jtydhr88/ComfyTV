@@ -7,8 +7,8 @@ const LOADER_CLASS_BY_MEDIA: Record<string, string> = {
   audio: 'ComfyTV.AssetAudioLoaderStage',
 }
 
-export function assetLoaderClass(mediaType: string): string {
-  return LOADER_CLASS_BY_MEDIA[mediaType] ?? LOADER_CLASS_BY_MEDIA.image
+export function assetLoaderClass(mediaType: string): string | null {
+  return LOADER_CLASS_BY_MEDIA[mediaType] ?? null
 }
 
 function setWidget(node: any, name: string, value: any) {
@@ -74,7 +74,9 @@ export function createAssetLoaderNode(
     console.error('[ComfyTV/asset-loader] LiteGraph.createNode not available')
     return null
   }
-  const node = win.LiteGraph.createNode(assetLoaderClass(asset.media_type))
+  const loaderClass = assetLoaderClass(asset.media_type)
+  if (!loaderClass) return null
+  const node = win.LiteGraph.createNode(loaderClass)
   if (!node) {
     console.error('[ComfyTV/asset-loader] createNode returned null for', asset.media_type)
     return null

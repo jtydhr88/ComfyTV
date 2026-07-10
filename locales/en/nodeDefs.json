@@ -1544,5 +1544,22 @@
         "name": "Video"
       }
     }
+  },
+  "ComfyTV_Scene3DStage": {
+    "display_name": "3D Scene",
+    "outputs": {
+      "0": {
+        "name": "Image",
+        "tooltip": "Last captured frame (selected channel)."
+      },
+      "1": {
+        "name": "Video",
+        "tooltip": "Last recorded clip (selected channel, webm)."
+      },
+      "2": {
+        "name": "Images",
+        "tooltip": "All captures from the last Capture — one per scene camera."
+      }
+    }
   }
 }

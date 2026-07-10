@@ -25,3 +25,5 @@ htmlcov/
 tests/_tmp_user/
 
 TESTING.md
+
+assets_src/

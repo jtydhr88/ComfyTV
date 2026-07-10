@@ -316,7 +316,7 @@ def update_output_picked_index(output_id: int, picked_index: int) -> Optional[di
         return _output_to_dict(out)
 
 
-ASSET_MEDIA_TYPES: tuple[str, ...] = ("image", "video", "audio")
+ASSET_MEDIA_TYPES: tuple[str, ...] = ("image", "video", "audio", "model")
 
 
 def _asset_category_to_dict(c: AssetCategory) -> dict:

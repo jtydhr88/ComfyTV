@@ -21,6 +21,10 @@
         v-else-if="asset.media_type === 'audio'"
         class="ctv:size-4 ctv:text-muted-foreground"
       />
+      <IconBox
+        v-else-if="asset.media_type === 'model'"
+        class="ctv:size-4 ctv:text-muted-foreground"
+      />
       <img
         v-else
         :src="asset.payload_url"
@@ -69,6 +73,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
+import IconBox from '~icons/lucide/box'
 import IconEllipsis from '~icons/lucide/ellipsis'
 import IconMaximize from '~icons/lucide/maximize-2'
 import IconVolume2 from '~icons/lucide/volume-2'

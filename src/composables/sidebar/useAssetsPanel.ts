@@ -16,11 +16,18 @@ function stripExtension(filename: string): string {
   return i > 0 ? filename.slice(0, i) : filename
 }
 
-type AssetMediaType = 'image' | 'video' | 'audio'
+type AssetMediaType = 'image' | 'video' | 'audio' | 'model'
 export type AssetMediaFilter = 'all' | AssetMediaType
 export type AssetViewMode = 'grid' | 'list'
 
-export const ASSET_MEDIA_FILTERS: AssetMediaFilter[] = ['all', 'image', 'video', 'audio']
+export const ASSET_MEDIA_FILTERS: AssetMediaFilter[] = ['all', 'image', 'video', 'audio', 'model']
+
+export const MODEL_FILE_EXTENSIONS = ['.glb', '.gltf', '.fbx'] as const
+
+function isModelFile(name: string): boolean {
+  const lower = name.toLowerCase()
+  return MODEL_FILE_EXTENSIONS.some((ext) => lower.endsWith(ext))
+}
 
 const ASSET_MENU_WIDTH = 192
 const TAG_EDITOR_WIDTH = 176
@@ -36,6 +43,7 @@ function mediaTypeOf(file: File): AssetMediaType | null {
   if (file.type.startsWith('image/')) return 'image'
   if (file.type.startsWith('video/')) return 'video'
   if (file.type.startsWith('audio/')) return 'audio'
+  if (isModelFile(file.name)) return 'model'
   return null
 }
 
