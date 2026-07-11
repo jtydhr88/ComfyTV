@@ -1,4 +1,6 @@
-import * as THREE from 'three'
+import type * as THREE from 'three'
+
+import { RendererView } from '@/widgets/three/RendererView'
 
 import { CameraManager } from './CameraManager'
 import { ControlsManager } from './ControlsManager'
@@ -8,27 +10,9 @@ import { SceneManager } from './SceneManager'
 import { ViewHelperManager } from './ViewHelperManager'
 import type { Viewport3dDeps } from './Viewport3d'
 
-function createRenderer(container: Element | HTMLElement): THREE.WebGLRenderer {
-  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true })
-  renderer.setSize(300, 300)
-  renderer.setClearColor(0x282828)
-  renderer.autoClear = false
-  renderer.outputColorSpace = THREE.SRGBColorSpace
-  const canvas = renderer.domElement
-  canvas.style.position = 'absolute'
-  canvas.style.top = '0'
-  canvas.style.left = '0'
-  canvas.style.width = '100%'
-  canvas.style.height = '100%'
-  canvas.style.outline = 'none'
-  container.appendChild(canvas)
-  return renderer
-}
-
-export function buildViewport3dDeps(
-  container: Element | HTMLElement
-): Viewport3dDeps {
-  const renderer = createRenderer(container)
+export function buildViewport3dDeps(container: HTMLElement): Viewport3dDeps {
+  const view = new RendererView(container)
+  const renderer = view.renderer
   const eventManager = new EventManager()
 
   let cameraManager: CameraManager
@@ -38,7 +22,7 @@ export function buildViewport3dDeps(
   const getControls = () => controlsManager.controls
 
   const sceneManager = new SceneManager(
-    renderer,
+    view,
     getActiveCamera,
     getControls,
     eventManager
@@ -46,7 +30,7 @@ export function buildViewport3dDeps(
 
   cameraManager = new CameraManager(renderer, eventManager)
   controlsManager = new ControlsManager(
-    renderer,
+    view.canvas,
     cameraManager.activeCamera,
     eventManager
   )
@@ -61,7 +45,7 @@ export function buildViewport3dDeps(
   )
 
   return {
-    renderer,
+    view,
     eventManager,
     sceneManager,
     cameraManager,

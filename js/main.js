@@ -4919,7 +4919,7 @@ const updateSlots = (instance, children, optimized) => {
   }
 };
 const queuePostRenderEffect = queueEffectWithSuspense;
-function createRenderer$1(options) {
+function createRenderer(options) {
   return baseCreateRenderer(options);
 }
 function baseCreateRenderer(options, createHydrationFns) {
@@ -7902,9 +7902,9 @@ const withKeys = (fn3, modifiers2) => {
   }));
 };
 const rendererOptions = /* @__PURE__ */ extend$1({ patchProp }, nodeOps);
-let renderer$1;
+let renderer;
 function ensureRenderer() {
-  return renderer$1 || (renderer$1 = createRenderer$1(rendererOptions));
+  return renderer || (renderer = createRenderer(rendererOptions));
 }
 const render$B = ((...args) => {
   ensureRenderer().render(...args);
@@ -93881,6 +93881,165 @@ class WebGLRenderer {
     gl.unpackColorSpace = ColorManagement._getUnpackColorSpace();
   }
 }
+function createRendererViewState() {
+  return {
+    toneMapping: NoToneMapping,
+    toneMappingExposure: 1,
+    outputColorSpace: SRGBColorSpace,
+    clearColor: new Color(0),
+    clearAlpha: 0
+  };
+}
+function applyRendererViewState(renderer2, state2) {
+  renderer2.toneMapping = state2.toneMapping;
+  renderer2.toneMappingExposure = state2.toneMappingExposure;
+  renderer2.outputColorSpace = state2.outputColorSpace;
+  renderer2.setClearColor(state2.clearColor, state2.clearAlpha);
+}
+let sharedRenderer = null;
+let viewCount = 0;
+function createSharedRenderer() {
+  const renderer2 = new WebGLRenderer({ alpha: true, antialias: true });
+  renderer2.setPixelRatio(1);
+  renderer2.setSize(300, 300);
+  renderer2.autoClear = false;
+  renderer2.outputColorSpace = SRGBColorSpace;
+  renderer2.shadowMap.enabled = true;
+  renderer2.shadowMap.type = PCFSoftShadowMap;
+  return renderer2;
+}
+function acquireSharedRenderer() {
+  sharedRenderer ?? (sharedRenderer = createSharedRenderer());
+  viewCount++;
+  const renderer2 = sharedRenderer;
+  let released = false;
+  return {
+    renderer: renderer2,
+    release() {
+      if (released) return;
+      released = true;
+      viewCount--;
+      if (viewCount > 0 || sharedRenderer !== renderer2) return;
+      sharedRenderer = null;
+      renderer2.forceContextLoss();
+      renderer2.domElement.dispatchEvent(
+        new Event("webglcontextlost", { bubbles: true, cancelable: true })
+      );
+      renderer2.dispose();
+    }
+  };
+}
+function ensureRendererSize(renderer2, width, height) {
+  const size2 = renderer2.getSize(new Vector2());
+  if (size2.width >= width && size2.height >= height) return;
+  renderer2.setSize(Math.max(size2.width, width), Math.max(size2.height, height));
+}
+function copyRendererRegion(renderer2, target, width, height) {
+  const source = renderer2.domElement;
+  const previousComposite = target.globalCompositeOperation;
+  target.globalCompositeOperation = "copy";
+  target.drawImage(
+    source,
+    0,
+    source.height - height,
+    width,
+    height,
+    0,
+    0,
+    width,
+    height
+  );
+  target.globalCompositeOperation = previousComposite;
+}
+class RendererView {
+  constructor(container) {
+    __publicField(this, "renderer");
+    __publicField(this, "canvas");
+    __publicField(this, "state", createRendererViewState());
+    __publicField(this, "width", 1);
+    __publicField(this, "height", 1);
+    __publicField(this, "context");
+    __publicField(this, "handle");
+    __publicField(this, "resizeObserver", null);
+    this.canvas = document.createElement("canvas");
+    this.canvas.style.position = "absolute";
+    this.canvas.style.inset = "0";
+    this.canvas.style.width = "100%";
+    this.canvas.style.height = "100%";
+    this.canvas.style.outline = "none";
+    const context2 = this.canvas.getContext("2d");
+    if (!context2) {
+      throw new Error("Failed to create 2D context for 3D view");
+    }
+    this.context = context2;
+    this.handle = acquireSharedRenderer();
+    this.renderer = this.handle.renderer;
+    container.appendChild(this.canvas);
+  }
+  setSize(width, height) {
+    this.width = Math.max(1, Math.round(width));
+    this.height = Math.max(1, Math.round(height));
+    if (this.canvas.width !== this.width) this.canvas.width = this.width;
+    if (this.canvas.height !== this.height) this.canvas.height = this.height;
+    ensureRendererSize(this.renderer, this.width, this.height);
+  }
+  beginRender() {
+    ensureRendererSize(this.renderer, this.width, this.height);
+    applyRendererViewState(this.renderer, this.state);
+  }
+  blit() {
+    copyRendererRegion(this.renderer, this.context, this.width, this.height);
+  }
+  /** Full-view clear + render + blit for single-scene views. */
+  renderScene(scene, camera2) {
+    this.beginRender();
+    const renderer2 = this.renderer;
+    renderer2.setViewport(0, 0, this.width, this.height);
+    renderer2.setScissor(0, 0, this.width, this.height);
+    renderer2.setScissorTest(true);
+    renderer2.clear();
+    renderer2.render(scene, camera2);
+    renderer2.setScissorTest(false);
+    this.blit();
+  }
+  /**
+   * Renders the scene at an explicit resolution (independent of the view
+   * size) and returns it as a standalone canvas. Used for snapshots and
+   * captures. Callers set the camera aspect for `width`/`height` themselves.
+   */
+  renderToCanvas(scene, camera2, width, height) {
+    const renderer2 = this.renderer;
+    ensureRendererSize(renderer2, width, height);
+    applyRendererViewState(renderer2, this.state);
+    renderer2.setViewport(0, 0, width, height);
+    renderer2.setScissor(0, 0, width, height);
+    renderer2.setScissorTest(true);
+    renderer2.clear();
+    renderer2.render(scene, camera2);
+    renderer2.setScissorTest(false);
+    const out = document.createElement("canvas");
+    out.width = width;
+    out.height = height;
+    const ctx = out.getContext("2d");
+    if (!ctx) throw new Error("2d context unavailable");
+    copyRendererRegion(renderer2, ctx, width, height);
+    return out;
+  }
+  observeResize(target, onResize) {
+    var _a2;
+    if (typeof ResizeObserver === "undefined") return;
+    (_a2 = this.resizeObserver) == null ? void 0 : _a2.disconnect();
+    this.resizeObserver = new ResizeObserver(() => onResize());
+    this.resizeObserver.observe(target);
+  }
+  dispose() {
+    var _a2;
+    (_a2 = this.resizeObserver) == null ? void 0 : _a2.disconnect();
+    this.resizeObserver = null;
+    this.canvas.remove();
+    this.handle.release();
+  }
+}
 class CameraWidget {
   constructor(options) {
     __publicField(this, "container");
@@ -93889,7 +94048,7 @@ class CameraWidget {
     __publicField(this, "scene");
     __publicField(this, "camera");
     __publicField(this, "previewCamera");
-    __publicField(this, "renderer");
+    __publicField(this, "view");
     __publicField(this, "activeCamera");
     __publicField(this, "cameraIndicator");
     __publicField(this, "camGlow");
@@ -93953,24 +94112,10 @@ class CameraWidget {
     this.camera.lookAt(0, 0.3, 0);
     this.previewCamera = new PerspectiveCamera(50, width / height, 0.1, 100);
     this.activeCamera = this.camera;
-    this.renderer = new WebGLRenderer({ antialias: true, alpha: true });
-    this.renderer.setSize(width, height, false);
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    this.renderer.outputColorSpace = SRGBColorSpace;
-    this.container.appendChild(this.renderer.domElement);
-    const canvas = this.renderer.domElement;
-    canvas.style.position = "absolute";
-    canvas.style.top = "0";
-    canvas.style.left = "0";
-    canvas.style.width = "100%";
-    canvas.style.height = "100%";
-    canvas.addEventListener("webglcontextlost", (e) => {
-      e.preventDefault();
-      console.warn("[ComfyTV/CameraWidget] WebGL context lost — awaiting restore");
-    }, false);
-    canvas.addEventListener("webglcontextrestored", () => {
-      console.warn("[ComfyTV/CameraWidget] WebGL context restored");
-    }, false);
+    this.view = new RendererView(this.container);
+    const scale = Math.min(window.devicePixelRatio, 2);
+    this.view.setSize(width * scale, height * scale);
+    this.view.state.clearAlpha = 1;
     const ambientLight = new AmbientLight(16777215, 0.4);
     this.scene.add(ambientLight);
     const mainLight = new DirectionalLight(16777215, 0.8);
@@ -94196,7 +94341,7 @@ class CameraWidget {
     this.glowRing.rotation.z += 5e-3;
   }
   bindEvents() {
-    const canvas = this.renderer.domElement;
+    const canvas = this.view.canvas;
     canvas.addEventListener("mousedown", this.onPointerDown.bind(this));
     canvas.addEventListener("mousemove", this.onPointerMove.bind(this));
     canvas.addEventListener("mouseup", this.onPointerUp.bind(this));
@@ -94217,7 +94362,7 @@ class CameraWidget {
     resizeObserver.observe(this.container);
   }
   getMousePos(event) {
-    const rect = this.renderer.domElement.getBoundingClientRect();
+    const rect = this.view.canvas.getBoundingClientRect();
     this.mouse.x = (event.clientX - rect.left) / rect.width * 2 - 1;
     this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
   }
@@ -94233,7 +94378,7 @@ class CameraWidget {
       this.orbitStartY = event.clientY;
       this.orbitStartAzimuth = this.liveAzimuth;
       this.orbitStartElevation = this.liveElevation;
-      this.renderer.domElement.style.cursor = "grabbing";
+      this.view.canvas.style.cursor = "grabbing";
       return;
     }
     this.raycaster.setFromCamera(this.mouse, this.camera);
@@ -94247,7 +94392,7 @@ class CameraWidget {
         this.isDragging = true;
         this.dragTarget = h2.name;
         this.setHandleScale(h2.mesh, h2.glow, 1.3);
-        this.renderer.domElement.style.cursor = "grabbing";
+        this.view.canvas.style.cursor = "grabbing";
         return;
       }
     }
@@ -94290,10 +94435,10 @@ class CameraWidget {
       }
       if (foundHover) {
         this.setHandleScale(foundHover.mesh, foundHover.glow, 1.15);
-        this.renderer.domElement.style.cursor = "grab";
+        this.view.canvas.style.cursor = "grab";
         this.hoveredHandle = foundHover;
       } else {
-        this.renderer.domElement.style.cursor = "default";
+        this.view.canvas.style.cursor = "default";
         this.hoveredHandle = null;
       }
       return;
@@ -94333,7 +94478,7 @@ class CameraWidget {
   onPointerUp() {
     if (this.isOrbitDragging) {
       this.isOrbitDragging = false;
-      this.renderer.domElement.style.cursor = this.useCameraView ? "grab" : "default";
+      this.view.canvas.style.cursor = this.useCameraView ? "grab" : "default";
       return;
     }
     if (this.isDragging) {
@@ -94346,7 +94491,7 @@ class CameraWidget {
     }
     this.isDragging = false;
     this.dragTarget = null;
-    this.renderer.domElement.style.cursor = "default";
+    this.view.canvas.style.cursor = "default";
   }
   onWheel(event) {
     if (!this.useCameraView) return;
@@ -94367,7 +94512,8 @@ class CameraWidget {
     this.camera.updateProjectionMatrix();
     this.previewCamera.aspect = w / h2;
     this.previewCamera.updateProjectionMatrix();
-    this.renderer.setSize(w, h2, false);
+    const scale = Math.min(window.devicePixelRatio, 2);
+    this.view.setSize(w * scale, h2 * scale);
   }
   animate() {
     this.animationId = requestAnimationFrame(() => this.animate());
@@ -94375,7 +94521,7 @@ class CameraWidget {
     const pulse = 1 + Math.sin(this.time * 2) * 0.03;
     this.camGlow.scale.setScalar(pulse);
     this.glowRing.rotation.z += 3e-3;
-    this.renderer.render(this.scene, this.activeCamera);
+    this.view.renderScene(this.scene, this.activeCamera);
   }
   notifyStateChange() {
     if (this.onStateChange) {
@@ -94476,7 +94622,7 @@ class CameraWidget {
       this.glowRing.visible = false;
       this.gridHelper.visible = false;
       this.imageFrame.visible = false;
-      this.renderer.domElement.style.cursor = "grab";
+      this.view.canvas.style.cursor = "grab";
     } else {
       this.activeCamera = this.camera;
       this.azimuthRing.visible = true;
@@ -94493,7 +94639,7 @@ class CameraWidget {
       this.glowRing.visible = true;
       this.gridHelper.visible = true;
       this.imageFrame.visible = true;
-      this.renderer.domElement.style.cursor = "default";
+      this.view.canvas.style.cursor = "default";
     }
   }
   updateImage(url) {
@@ -94545,7 +94691,7 @@ class CameraWidget {
       this.animationId = null;
     }
     try {
-      this.renderer.dispose();
+      this.view.dispose();
     } catch {
     }
     try {
@@ -98507,7 +98653,7 @@ class LightBallWidget {
     __publicField(this, "container");
     __publicField(this, "scene");
     __publicField(this, "camera");
-    __publicField(this, "renderer");
+    __publicField(this, "view");
     __publicField(this, "controls");
     __publicField(this, "disposeDragEndGuard");
     __publicField(this, "resizeObserver");
@@ -98598,26 +98744,11 @@ class LightBallWidget {
       OUTPUT_VIEW.position.y,
       OUTPUT_VIEW.position.z
     );
-    this.renderer = new WebGLRenderer({ antialias: true });
-    this.renderer.setSize(width, height, false);
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    this.renderer.outputColorSpace = SRGBColorSpace;
-    this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = PCFSoftShadowMap;
-    this.container.appendChild(this.renderer.domElement);
-    const canvas = this.renderer.domElement;
-    canvas.style.position = "absolute";
-    canvas.style.top = "0";
-    canvas.style.left = "0";
-    canvas.style.width = "100%";
-    canvas.style.height = "100%";
-    canvas.addEventListener("webglcontextlost", (e) => {
-      e.preventDefault();
-      console.warn("[ComfyTV/LightBall] WebGL context lost 鈥?awaiting restore");
-    }, false);
-    canvas.addEventListener("webglcontextrestored", () => {
-      console.warn("[ComfyTV/LightBall] WebGL context restored");
-    }, false);
+    this.view = new RendererView(this.container);
+    const scale = Math.min(window.devicePixelRatio, 2);
+    this.view.setSize(width * scale, height * scale);
+    this.view.state.clearAlpha = 1;
+    const canvas = this.view.canvas;
     this.container.setAttribute("data-capture-wheel", "true");
     if (!this.container.hasAttribute("tabindex")) {
       this.container.setAttribute("tabindex", "-1");
@@ -98722,20 +98853,9 @@ class LightBallWidget {
     this.orbitHandles.setVisible(false);
     this.positionHandle.setVisible(false);
     this.targetHandle.setVisible(false);
-    const prevSize = this.renderer.getSize(new Vector2());
-    const prevPixelRatio = this.renderer.getPixelRatio();
     try {
-      this.renderer.setPixelRatio(1);
-      this.renderer.setSize(size2, size2, false);
-      this.renderer.render(this.scene, cam);
-      const out = document.createElement("canvas");
-      out.width = size2;
-      out.height = size2;
-      out.getContext("2d").drawImage(this.renderer.domElement, 0, 0);
-      return out;
+      return this.view.renderToCanvas(this.scene, cam, size2, size2);
     } finally {
-      this.renderer.setPixelRatio(prevPixelRatio);
-      this.renderer.setSize(prevSize.x, prevSize.y, false);
       this.studio.setHelpersVisible(helpersWereOn);
       this.orbitHandles.setVisible(orbitWasVisible);
       this.positionHandle.setVisible(positionWasVisible);
@@ -98765,11 +98885,7 @@ class LightBallWidget {
     this.studio.dispose();
     (_a2 = this.disposeDragEndGuard) == null ? void 0 : _a2.call(this);
     this.controls.dispose();
-    try {
-      this.renderer.dispose();
-    } catch {
-    }
-    this.canvas.remove();
+    this.view.dispose();
   }
   get selectedLight() {
     return this.studio.getSelectedLight();
@@ -98800,7 +98916,7 @@ class LightBallWidget {
     this.targetHandle.setVisible(wantTarget);
   }
   get canvas() {
-    return this.renderer.domElement;
+    return this.view.canvas;
   }
   onResize() {
     const w = this.container.clientWidth;
@@ -98808,12 +98924,13 @@ class LightBallWidget {
     if (w === 0 || h2 === 0) return;
     this.camera.aspect = w / h2;
     this.camera.updateProjectionMatrix();
-    this.renderer.setSize(w, h2, false);
+    const scale = Math.min(window.devicePixelRatio, 2);
+    this.view.setSize(w * scale, h2 * scale);
   }
   animate() {
     this.animationId = requestAnimationFrame(() => this.animate());
     this.studio.updateHelpers();
-    this.renderer.render(this.scene, this.camera);
+    this.view.renderScene(this.scene, this.camera);
   }
   attachPointerHandlers() {
     const canvas = this.canvas;
@@ -104675,15 +104792,6 @@ class EXRLoader extends DataTextureLoader {
     return super.load(url, onLoadCallback, onProgress, onError);
   }
 }
-let renderer = null;
-function getOffscreenRenderer() {
-  if (!renderer) {
-    renderer = new WebGLRenderer({ antialias: true, alpha: false });
-    renderer.setPixelRatio(1);
-    renderer.outputColorSpace = SRGBColorSpace;
-  }
-  return renderer;
-}
 function getExt(url) {
   try {
     const u = new URL(url, window.location.origin);
@@ -104706,7 +104814,7 @@ class PanoramaViewer {
     __publicField(this, "container");
     __publicField(this, "scene");
     __publicField(this, "camera");
-    __publicField(this, "renderer");
+    __publicField(this, "view");
     __publicField(this, "controls");
     __publicField(this, "disposeDragEndGuard");
     __publicField(this, "sphere");
@@ -104717,7 +104825,7 @@ class PanoramaViewer {
     __publicField(this, "onOrbitEnd");
     __publicField(this, "animate", () => {
       this.controls.update();
-      this.renderer.render(this.scene, this.camera);
+      this.view.renderScene(this.scene, this.camera);
       this.animationId = requestAnimationFrame(this.animate);
     });
     this.container = options.container;
@@ -104728,39 +104836,19 @@ class PanoramaViewer {
     this.scene.background = new Color(657935);
     this.camera = new PerspectiveCamera(75, w / h2, 0.1, 2e3);
     this.camera.position.set(0, 0, 0.01);
-    this.renderer = new WebGLRenderer({ antialias: true });
-    this.renderer.setSize(w, h2, false);
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    this.renderer.outputColorSpace = SRGBColorSpace;
-    this.container.appendChild(this.renderer.domElement);
-    this.renderer.domElement.addEventListener(
-      "webglcontextlost",
-      (e) => {
-        e.preventDefault();
-        console.warn("[ComfyTV/PanoramaViewer] WebGL context lost — awaiting restore");
-      },
-      false
-    );
-    this.renderer.domElement.addEventListener(
-      "webglcontextrestored",
-      () => {
-        console.warn("[ComfyTV/PanoramaViewer] WebGL context restored");
-        if (this.currentTexture) {
-          this.material.map = this.currentTexture;
-          this.material.needsUpdate = true;
-        }
-      },
-      false
-    );
+    this.view = new RendererView(this.container);
+    const scale = Math.min(window.devicePixelRatio, 2);
+    this.view.setSize(w * scale, h2 * scale);
+    this.view.state.clearAlpha = 1;
     const geo = new SphereGeometry(500, 60, 40);
     geo.scale(-1, 1, 1);
     this.material = new MeshBasicMaterial({ side: FrontSide });
     this.sphere = new Mesh(geo, this.material);
     this.scene.add(this.sphere);
-    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+    this.controls = new OrbitControls(this.camera, this.view.canvas);
     this.disposeDragEndGuard = guardOrbitControlsDragEnd(
       this.controls,
-      this.renderer.domElement
+      this.view.canvas
     );
     this.controls.enableZoom = false;
     this.controls.enablePan = false;
@@ -104788,20 +104876,20 @@ class PanoramaViewer {
         texture = await new Promise((resolve2, reject) => {
           new RGBELoader().load(url, resolve2, void 0, reject);
         });
-        this.renderer.toneMapping = ACESFilmicToneMapping;
-        this.renderer.toneMappingExposure = 1;
+        this.view.state.toneMapping = ACESFilmicToneMapping;
+        this.view.state.toneMappingExposure = 1;
       } else if (ext === "exr") {
         texture = await new Promise((resolve2, reject) => {
           new EXRLoader().load(url, resolve2, void 0, reject);
         });
-        this.renderer.toneMapping = ACESFilmicToneMapping;
-        this.renderer.toneMappingExposure = 1;
+        this.view.state.toneMapping = ACESFilmicToneMapping;
+        this.view.state.toneMappingExposure = 1;
       } else {
         texture = await new Promise((resolve2, reject) => {
           new TextureLoader().load(url, resolve2, void 0, reject);
         });
         texture.colorSpace = SRGBColorSpace;
-        this.renderer.toneMapping = NoToneMapping;
+        this.view.state.toneMapping = NoToneMapping;
       }
     } catch (e) {
       console.error("[ComfyTV/PanoramaViewer] texture load failed", url, e);
@@ -104845,23 +104933,10 @@ class PanoramaViewer {
     this.controls.update();
   }
   captureCurrentView(width, height) {
-    const prevSize = new Vector2();
-    this.renderer.getSize(prevSize);
     const prevAspect = this.camera.aspect;
-    const prevPixelRatio = this.renderer.getPixelRatio();
-    this.renderer.setPixelRatio(1);
-    this.renderer.setSize(width, height, false);
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
-    this.renderer.render(this.scene, this.camera);
-    const out = document.createElement("canvas");
-    out.width = width;
-    out.height = height;
-    const ctx = out.getContext("2d");
-    if (!ctx) throw new Error("2d context unavailable");
-    ctx.drawImage(this.renderer.domElement, 0, 0);
-    this.renderer.setPixelRatio(prevPixelRatio);
-    this.renderer.setSize(prevSize.x, prevSize.y, false);
+    const out = this.view.renderToCanvas(this.scene, this.camera, width, height);
     this.camera.aspect = prevAspect;
     this.camera.updateProjectionMatrix();
     return out;
@@ -104880,7 +104955,8 @@ class PanoramaViewer {
     if (w === 0 || h2 === 0) return;
     this.camera.aspect = w / h2;
     this.camera.updateProjectionMatrix();
-    this.renderer.setSize(w, h2, false);
+    const scale = Math.min(window.devicePixelRatio, 2);
+    this.view.setSize(w * scale, h2 * scale);
   }
   dispose() {
     var _a2, _b2;
@@ -104898,10 +104974,7 @@ class PanoramaViewer {
     this.clearTexture();
     this.sphere.geometry.dispose();
     this.material.dispose();
-    this.renderer.dispose();
-    if (this.renderer.domElement.parentNode === this.container) {
-      this.container.removeChild(this.renderer.domElement);
-    }
+    this.view.dispose();
   }
 }
 async function capturePanoramaOffscreen(url, options) {
@@ -104941,21 +105014,33 @@ async function capturePanoramaOffscreen(url, options) {
     Math.sin(pitchRad),
     Math.cos(yawRad) * Math.cos(pitchRad)
   );
-  const renderer2 = getOffscreenRenderer();
-  renderer2.setSize(width, height, false);
-  renderer2.toneMapping = isHDR ? ACESFilmicToneMapping : NoToneMapping;
-  renderer2.toneMappingExposure = 1;
-  renderer2.render(scene, cam);
-  const out = document.createElement("canvas");
-  out.width = width;
-  out.height = height;
-  const ctx = out.getContext("2d");
-  if (!ctx) throw new Error("2d context unavailable");
-  ctx.drawImage(renderer2.domElement, 0, 0);
-  texture.dispose();
-  mat.dispose();
-  geo.dispose();
-  return out;
+  const handle = acquireSharedRenderer();
+  try {
+    const renderer2 = handle.renderer;
+    ensureRendererSize(renderer2, width, height);
+    renderer2.toneMapping = isHDR ? ACESFilmicToneMapping : NoToneMapping;
+    renderer2.toneMappingExposure = 1;
+    renderer2.outputColorSpace = SRGBColorSpace;
+    renderer2.setClearColor(0, 1);
+    renderer2.setViewport(0, 0, width, height);
+    renderer2.setScissor(0, 0, width, height);
+    renderer2.setScissorTest(true);
+    renderer2.clear();
+    renderer2.render(scene, cam);
+    renderer2.setScissorTest(false);
+    const out = document.createElement("canvas");
+    out.width = width;
+    out.height = height;
+    const ctx = out.getContext("2d");
+    if (!ctx) throw new Error("2d context unavailable");
+    copyRendererRegion(renderer2, ctx, width, height);
+    return out;
+  } finally {
+    texture.dispose();
+    mat.dispose();
+    geo.dispose();
+    handle.release();
+  }
 }
 const _hoisted_1$D = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full" };
 const _hoisted_2$o = {
@@ -105456,7 +105541,7 @@ const PanoramaCurrentViewStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$o, [[
 const SCHEDULE_DELAY_MS$1 = 350;
 const MIN_VIEWS = 2;
 const MAX_VIEWS = 24;
-function useMultiViewCapture(node, state2, viewCount, aspectRatio, resolution) {
+function useMultiViewCapture(node, state2, viewCount2, aspectRatio, resolution) {
   const store = useStageStore();
   const panoramaUrl = computed(() => {
     const inp = state2.inputs.find((i) => i.slot === "panorama");
@@ -105468,7 +105553,7 @@ function useMultiViewCapture(node, state2, viewCount, aspectRatio, resolution) {
     vcw.callback = (v) => {
       orig == null ? void 0 : orig.call(vcw, v);
       const n = Number(v);
-      if (Number.isFinite(n) && n !== viewCount.value) viewCount.value = n;
+      if (Number.isFinite(n) && n !== viewCount2.value) viewCount2.value = n;
     };
   }
   const captureSize = computed(() => captureDimensions(aspectRatio.value, resolution.value));
@@ -105486,7 +105571,7 @@ function useMultiViewCapture(node, state2, viewCount, aspectRatio, resolution) {
   }
   async function run3() {
     const url = panoramaUrl.value;
-    const n = Math.max(MIN_VIEWS, Math.min(MAX_VIEWS, Math.round(viewCount.value)));
+    const n = Math.max(MIN_VIEWS, Math.min(MAX_VIEWS, Math.round(viewCount2.value)));
     if (!url || n < MIN_VIEWS) return;
     const mySeq = ++captureSeq;
     capturing.value = true;
@@ -105531,7 +105616,7 @@ function useMultiViewCapture(node, state2, viewCount, aspectRatio, resolution) {
       if (mySeq === captureSeq) capturing.value = false;
     }
   }
-  watch(viewCount, (n) => {
+  watch(viewCount2, (n) => {
     writeWidget(node, "view_count", n);
     schedule();
   });
@@ -105595,20 +105680,20 @@ const _sfc_main$n = /* @__PURE__ */ defineComponent({
   },
   setup(__props) {
     const props = __props;
-    const viewCount = /* @__PURE__ */ ref(readWidgetNum(props.node, "view_count", 4));
+    const viewCount2 = /* @__PURE__ */ ref(readWidgetNum(props.node, "view_count", 4));
     const aspectRatio = /* @__PURE__ */ ref(readWidgetStr(props.node, "aspect_ratio", "16:9"));
     const resolution = /* @__PURE__ */ ref(readWidgetStr(props.node, "resolution", "1K"));
     const { panoramaUrl, capturing, captureProgress, captureSize } = useMultiViewCapture(
       props.node,
       props.state,
-      viewCount,
+      viewCount2,
       aspectRatio,
       resolution
     );
     return (_ctx, _cache2) => {
       return openBlock(), createElementBlock("div", _hoisted_1$A, [
         createBaseVNode("div", _hoisted_2$m, [
-          !unref(panoramaUrl) ? (openBlock(), createElementBlock("span", _hoisted_3$l, toDisplayString$1(_ctx.$t("panoramaView.connectPanorama")), 1)) : unref(capturing) ? (openBlock(), createElementBlock("span", _hoisted_4$j, toDisplayString$1(_ctx.$t("panoramaView.capturingCount", { i: unref(captureProgress), n: viewCount.value })), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_5$i, toDisplayString$1(_ctx.$t("panoramaView.capturedN", { n: viewCount.value })), 1)) : (openBlock(), createElementBlock("span", _hoisted_6$h, toDisplayString$1(_ctx.$t("panoramaView.adjustCountToCapture")), 1))
+          !unref(panoramaUrl) ? (openBlock(), createElementBlock("span", _hoisted_3$l, toDisplayString$1(_ctx.$t("panoramaView.connectPanorama")), 1)) : unref(capturing) ? (openBlock(), createElementBlock("span", _hoisted_4$j, toDisplayString$1(_ctx.$t("panoramaView.capturingCount", { i: unref(captureProgress), n: viewCount2.value })), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_5$i, toDisplayString$1(_ctx.$t("panoramaView.capturedN", { n: viewCount2.value })), 1)) : (openBlock(), createElementBlock("span", _hoisted_6$h, toDisplayString$1(_ctx.$t("panoramaView.adjustCountToCapture")), 1))
         ]),
         createBaseVNode("div", _hoisted_7$f, [
           createBaseVNode("div", _hoisted_8$e, [
@@ -105659,11 +105744,11 @@ const _sfc_main$n = /* @__PURE__ */ defineComponent({
             max: "24",
             step: "1",
             class: "ctv:w-full ctv:disabled:opacity-40",
-            value: viewCount.value,
+            value: viewCount2.value,
             disabled: !unref(panoramaUrl),
-            onInput: _cache2[2] || (_cache2[2] = (e) => viewCount.value = Number(e.target.value))
+            onInput: _cache2[2] || (_cache2[2] = (e) => viewCount2.value = Number(e.target.value))
           }, null, 40, _hoisted_19$6),
-          createBaseVNode("span", _hoisted_20$6, toDisplayString$1(viewCount.value), 1)
+          createBaseVNode("span", _hoisted_20$6, toDisplayString$1(viewCount2.value), 1)
         ]),
         createVNode(StageCard, {
           state: __props.state,
@@ -109108,21 +109193,18 @@ class ChannelRenderer {
     return this.viewport.getCaptureCamera();
   }
   prepareViewport(width, height) {
+    ensureRendererSize(this.renderer, width, height);
+    applyRendererViewState(this.renderer, this.viewport.viewState);
     this.renderer.setViewport(0, 0, width, height);
-    this.renderer.setScissorTest(false);
+    this.renderer.setScissor(0, 0, width, height);
+    this.renderer.setScissorTest(true);
   }
   renderColor(target, ctx) {
     this.prepareViewport(target.width, target.height);
     this.renderer.clear();
     this.viewport.sceneManager.renderBackground();
     this.renderer.render(this.scene, this.camera);
-    ctx.drawImage(
-      this.renderer.domElement,
-      0,
-      0,
-      target.width,
-      target.height
-    );
+    copyRendererRegion(this.renderer, ctx, target.width, target.height);
   }
   renderNormal(target, ctx) {
     this.normalMaterial ?? (this.normalMaterial = new MeshNormalMaterial({
@@ -109137,13 +109219,7 @@ class ChannelRenderer {
       this.renderer.setClearColor(new Color(0.5, 0.5, 1), 1);
       this.renderer.clear();
       this.renderer.render(this.scene, this.camera);
-      ctx.drawImage(
-        this.renderer.domElement,
-        0,
-        0,
-        target.width,
-        target.height
-      );
+      copyRendererRegion(this.renderer, ctx, target.width, target.height);
     } finally {
       this.scene.overrideMaterial = previousOverride;
       this.renderer.setClearColor(previousClearColor, previousClearAlpha);
@@ -111656,7 +111732,7 @@ async function fetchCameraPresetData(file) {
   return cached2;
 }
 class GizmoManager {
-  constructor(scene, renderer2, orbitControls, getActiveCamera, onTransformChange, getPointerNdc) {
+  constructor(scene, interactionElement, orbitControls, getActiveCamera, onTransformChange, getPointerNdc) {
     __publicField(this, "transformControls", null);
     __publicField(this, "targetObject", null);
     __publicField(this, "initialPosition", new Vector3());
@@ -111667,14 +111743,14 @@ class GizmoManager {
     __publicField(this, "activeCamera");
     __publicField(this, "mode", "translate");
     __publicField(this, "scene");
-    __publicField(this, "renderer");
+    __publicField(this, "interactionElement");
     __publicField(this, "orbitControls");
     __publicField(this, "onTransformChange");
     __publicField(this, "pivotProxy", new Object3D());
     __publicField(this, "pivotOffset", new Vector3());
     __publicField(this, "getPointerNdc");
     this.scene = scene;
-    this.renderer = renderer2;
+    this.interactionElement = interactionElement;
     this.orbitControls = orbitControls;
     this.activeCamera = getActiveCamera();
     this.onTransformChange = onTransformChange;
@@ -111685,7 +111761,7 @@ class GizmoManager {
     this.scene.add(this.pivotProxy);
     this.transformControls = new TransformControls(
       this.activeCamera,
-      this.renderer.domElement
+      this.interactionElement
     );
     this.transformControls.addEventListener("dragging-changed", (event) => {
       this.orbitControls.enabled = !event.value;
@@ -112271,18 +112347,18 @@ class CameraManager {
   }
 }
 class ControlsManager {
-  constructor(renderer2, camera2, eventManager) {
+  constructor(interactionElement, camera2, eventManager) {
     __publicField(this, "controls");
     __publicField(this, "eventManager");
     __publicField(this, "camera");
     __publicField(this, "disposeDragEndGuard");
     this.eventManager = eventManager;
     this.camera = camera2;
-    this.controls = new OrbitControls(camera2, renderer2.domElement);
+    this.controls = new OrbitControls(camera2, interactionElement);
     this.controls.enableDamping = true;
     this.disposeDragEndGuard = guardOrbitControlsDragEnd(
       this.controls,
-      renderer2.domElement
+      interactionElement
     );
   }
   init() {
@@ -112407,7 +112483,7 @@ class LightingManager {
   }
 }
 class SceneManager {
-  constructor(renderer2, getActiveCamera, _getControls, eventManager) {
+  constructor(view, getActiveCamera, _getControls, eventManager) {
     __publicField(this, "scene");
     __publicField(this, "gridHelper");
     __publicField(this, "backgroundScene");
@@ -112420,8 +112496,10 @@ class SceneManager {
     __publicField(this, "currentBackgroundColor", "#282828");
     __publicField(this, "eventManager");
     __publicField(this, "renderer");
+    __publicField(this, "view");
     __publicField(this, "getActiveCamera");
-    this.renderer = renderer2;
+    this.view = view;
+    this.renderer = view.renderer;
     this.eventManager = eventManager;
     this.scene = new Scene();
     this.scene.name = "MainScene";
@@ -112449,7 +112527,8 @@ class SceneManager {
     );
     this.backgroundMesh.position.set(0, 0, 0);
     this.backgroundScene.add(this.backgroundMesh);
-    this.renderer.setClearColor(0, 0);
+    this.view.state.clearColor.set(0);
+    this.view.state.clearAlpha = 0;
   }
   init() {
   }
@@ -112573,13 +112652,23 @@ class SceneManager {
       value: this.currentBackgroundType === "color" ? this.currentBackgroundColor : ""
     };
   }
+  readCaptureRegion(width, height) {
+    const out = document.createElement("canvas");
+    out.width = width;
+    out.height = height;
+    const ctx = out.getContext("2d");
+    if (!ctx) throw new Error("2d context unavailable");
+    copyRendererRegion(this.renderer, ctx, width, height);
+    return out.toDataURL("image/png");
+  }
   async captureScene(width, height) {
-    const originalSize = new Vector2();
-    this.renderer.getSize(originalSize);
-    const originalPixelRatio = this.renderer.getPixelRatio();
+    this.view.beginRender();
+    ensureRendererSize(this.renderer, width, height);
+    this.renderer.setViewport(0, 0, width, height);
+    this.renderer.setScissor(0, 0, width, height);
+    this.renderer.setScissorTest(true);
     const originalClearColor = this.renderer.getClearColor(new Color());
     const originalClearAlpha = this.renderer.getClearAlpha();
-    const originalOutputColorSpace = this.renderer.outputColorSpace;
     const activeCamera = this.getActiveCamera();
     const savedCameraParams = activeCamera instanceof PerspectiveCamera ? { type: "perspective", aspect: activeCamera.aspect } : {
       type: "orthographic",
@@ -112592,8 +112681,6 @@ class SceneManager {
     const tempMaterials = [];
     const gridVisible = this.gridHelper.visible;
     try {
-      this.renderer.setPixelRatio(1);
-      this.renderer.setSize(width, height);
       if (activeCamera instanceof PerspectiveCamera) {
         activeCamera.aspect = width / height;
         activeCamera.updateProjectionMatrix();
@@ -112618,11 +112705,11 @@ class SceneManager {
       this.renderer.clear();
       this.renderBackground();
       this.renderer.render(this.scene, activeCamera);
-      const sceneData = this.renderer.domElement.toDataURL("image/png");
+      const sceneData = this.readCaptureRegion(width, height);
       this.renderer.setClearColor(0, 0);
       this.renderer.clear();
       this.renderer.render(this.scene, activeCamera);
-      const maskData = this.renderer.domElement.toDataURL("image/png");
+      const maskData = this.readCaptureRegion(width, height);
       this.scene.traverse((child) => {
         if (child instanceof Mesh) {
           originalMaterials.set(child, child.material);
@@ -112639,9 +112726,7 @@ class SceneManager {
       this.renderer.setClearColor(0, 1);
       this.renderer.clear();
       this.renderer.render(this.scene, activeCamera);
-      const normalData = this.renderer.domElement.toDataURL("image/png");
-      this.renderer.setClearColor(16777215, 1);
-      this.renderer.clear();
+      const normalData = this.readCaptureRegion(width, height);
       return { scene: sceneData, mask: maskData, normal: normalData };
     } finally {
       this.scene.traverse((child) => {
@@ -112669,10 +112754,11 @@ class SceneManager {
         ortho.updateProjectionMatrix();
       }
       this.renderer.setClearColor(originalClearColor, originalClearAlpha);
-      this.renderer.setPixelRatio(originalPixelRatio);
-      this.renderer.setSize(originalSize.x, originalSize.y);
-      this.renderer.outputColorSpace = originalOutputColorSpace;
-      this.handleResize(originalSize.x, originalSize.y);
+      this.renderer.setScissorTest(false);
+      this.handleResize(
+        this.view.canvas.clientWidth,
+        this.view.canvas.clientHeight
+      );
     }
   }
   reset() {
@@ -112951,11 +113037,37 @@ class ViewHelperManager {
     __publicField(this, "getActiveCamera");
     __publicField(this, "getControls");
     __publicField(this, "eventManager");
+    __publicField(this, "helperCamera", new OrthographicCamera(
+      -2,
+      2,
+      2,
+      -2,
+      0,
+      4
+    ));
+    __publicField(this, "savedViewport", new Vector4());
     this.getActiveCamera = getActiveCamera;
     this.getControls = getControls;
     this.eventManager = eventManager;
+    this.helperCamera.position.set(0, 0, 2);
   }
   init() {
+  }
+  /**
+   * Renders the axis gizmo into the bottom-left `size`×`size` corner of the
+   * current drawing buffer. The stock ViewHelper.render positions itself off
+   * its DOM element, which does not exist for the shared offscreen renderer.
+   */
+  render(renderer2, size2) {
+    const helper = this.viewHelper;
+    if (!helper.isViewHelper) return;
+    helper.quaternion.copy(this.getActiveCamera().quaternion).invert();
+    helper.updateMatrixWorld();
+    renderer2.clearDepth();
+    renderer2.getViewport(this.savedViewport);
+    renderer2.setViewport(0, 0, size2, size2);
+    renderer2.render(helper, this.helperCamera);
+    renderer2.setViewport(this.savedViewport);
   }
   dispose() {
     if (this.viewHelper) {
@@ -113024,38 +113136,23 @@ class ViewHelperManager {
   reset() {
   }
 }
-function createRenderer(container) {
-  const renderer2 = new WebGLRenderer({ alpha: true, antialias: true });
-  renderer2.setSize(300, 300);
-  renderer2.setClearColor(2631720);
-  renderer2.autoClear = false;
-  renderer2.outputColorSpace = SRGBColorSpace;
-  const canvas = renderer2.domElement;
-  canvas.style.position = "absolute";
-  canvas.style.top = "0";
-  canvas.style.left = "0";
-  canvas.style.width = "100%";
-  canvas.style.height = "100%";
-  canvas.style.outline = "none";
-  container.appendChild(canvas);
-  return renderer2;
-}
 function buildViewport3dDeps(container) {
-  const renderer2 = createRenderer(container);
+  const view = new RendererView(container);
+  const renderer2 = view.renderer;
   const eventManager = new EventManager();
   let cameraManager;
   let controlsManager;
   const getActiveCamera = () => cameraManager.activeCamera;
   const getControls = () => controlsManager.controls;
   const sceneManager = new SceneManager(
-    renderer2,
+    view,
     getActiveCamera,
     getControls,
     eventManager
   );
   cameraManager = new CameraManager(renderer2, eventManager);
   controlsManager = new ControlsManager(
-    renderer2,
+    view.canvas,
     cameraManager.activeCamera,
     eventManager
   );
@@ -113068,7 +113165,7 @@ function buildViewport3dDeps(container) {
     eventManager
   );
   return {
-    renderer: renderer2,
+    view,
     eventManager,
     sceneManager,
     cameraManager,
@@ -120942,31 +121039,6 @@ function squaredDistance(a, b) {
 function exceedsClickThreshold(start2, end2, threshold) {
   return squaredDistance(start2, end2) > threshold * threshold;
 }
-class WebGLViewport {
-  constructor(renderer2) {
-    __publicField(this, "renderer");
-    __publicField(this, "resizeObserver", null);
-    this.renderer = renderer2;
-  }
-  observeResize(target, onResize) {
-    var _a2;
-    if (typeof ResizeObserver === "undefined") return;
-    (_a2 = this.resizeObserver) == null ? void 0 : _a2.disconnect();
-    this.resizeObserver = new ResizeObserver(() => onResize());
-    this.resizeObserver.observe(target);
-  }
-  disposeRenderer() {
-    var _a2;
-    (_a2 = this.resizeObserver) == null ? void 0 : _a2.disconnect();
-    this.resizeObserver = null;
-    this.renderer.forceContextLoss();
-    this.renderer.domElement.dispatchEvent(
-      new Event("webglcontextlost", { bubbles: true, cancelable: true })
-    );
-    this.renderer.dispose();
-    this.renderer.domElement.remove();
-  }
-}
 function attachContextMenuGuard(target, onMenu, { isDisabled = () => false, dragThreshold = 5 } = {}) {
   const abort = new AbortController();
   const { signal } = abort;
@@ -121058,9 +121130,10 @@ function computeLetterboxedViewport(container, targetAspectRatio) {
 function isLoad3dActive(flags) {
   return flags.mouseOnNode || flags.mouseOnScene || flags.mouseOnViewer || flags.recording || !flags.initialRenderDone || flags.animationPlaying;
 }
-class Viewport3d extends WebGLViewport {
+const VIEW_HELPER_SIZE = 128;
+class Viewport3d {
   constructor(container, deps, options = {}) {
-    super(deps.renderer);
+    __publicField(this, "view");
     __publicField(this, "clock");
     __publicField(this, "renderLoop", null);
     __publicField(this, "onContextMenuCallback");
@@ -121084,7 +121157,9 @@ class Viewport3d extends WebGLViewport {
     __publicField(this, "externalActiveCamera", null);
     __publicField(this, "overlay", null);
     __publicField(this, "initialRenderTimer", null);
+    __publicField(this, "viewPixelScale", 1);
     __publicField(this, "hasStarted", false);
+    this.view = deps.view;
     this.clock = new Clock();
     this.isViewerMode = options.isViewerMode || false;
     this.onContextMenuCallback = options.onContextMenu;
@@ -121109,7 +121184,16 @@ class Viewport3d extends WebGLViewport {
     this.STATUS_MOUSE_ON_SCENE = false;
     this.STATUS_MOUSE_ON_VIEWER = false;
     this.initContextMenu();
-    this.observeResize(container, () => this.handleResize());
+    this.view.observeResize(container, () => this.handleResize());
+  }
+  get renderer() {
+    return this.view.renderer;
+  }
+  get domElement() {
+    return this.view.canvas;
+  }
+  get viewState() {
+    return this.view.state;
   }
   start() {
     if (this.hasStarted) return;
@@ -121130,7 +121214,7 @@ class Viewport3d extends WebGLViewport {
   }
   initContextMenu() {
     this.disposeContextMenuGuard = attachContextMenuGuard(
-      this.renderer.domElement,
+      this.view.canvas,
       (event) => {
         var _a2;
         return (_a2 = this.onContextMenuCallback) == null ? void 0 : _a2.call(this, event);
@@ -121168,12 +121252,18 @@ class Viewport3d extends WebGLViewport {
   forceRender() {
     const delta = this.clock.getDelta();
     this.tickPerFrame(delta);
-    this.renderMainScene();
-    this.resetViewport();
-    if (this.viewHelperManager.viewHelper.render) {
-      this.viewHelperManager.viewHelper.render(this.renderer);
-    }
+    this.renderView();
     this.INITIAL_RENDER_DONE = true;
+  }
+  renderView() {
+    this.view.beginRender();
+    this.renderMainScene();
+    this.renderer.setScissorTest(false);
+    this.viewHelperManager.render(
+      this.renderer,
+      VIEW_HELPER_SIZE * this.viewPixelScale
+    );
+    this.view.blit();
   }
   tickPerFrame(delta) {
     var _a2, _b2;
@@ -121221,31 +121311,33 @@ class Viewport3d extends WebGLViewport {
     return this.overlay;
   }
   prepareMainViewport() {
-    const containerWidth = this.renderer.domElement.clientWidth;
-    const containerHeight = this.renderer.domElement.clientHeight;
+    const viewWidth = this.view.width;
+    const viewHeight = this.view.height;
     if (this.getDimensionsCallback) {
       const dims = this.getDimensionsCallback();
       if (dims) {
         this.applyTargetSize(dims.width, dims.height);
       }
     }
+    this.renderer.setViewport(0, 0, viewWidth, viewHeight);
+    this.renderer.setScissor(0, 0, viewWidth, viewHeight);
+    this.renderer.setScissorTest(true);
     if (this.shouldMaintainAspectRatio()) {
       const { offsetX, offsetY, width, height } = computeLetterboxedViewport(
-        { width: containerWidth, height: containerHeight },
+        { width: viewWidth, height: viewHeight },
         this.targetAspectRatio
       );
-      this.renderer.setViewport(0, 0, containerWidth, containerHeight);
-      this.renderer.setScissor(0, 0, containerWidth, containerHeight);
-      this.renderer.setScissorTest(true);
       this.renderer.setClearColor(657930);
       this.renderer.clear();
       this.renderer.setViewport(offsetX, offsetY, width, height);
       this.renderer.setScissor(offsetX, offsetY, width, height);
       this.cameraManager.updateAspectRatio(width / height);
     } else {
-      this.renderer.setViewport(0, 0, containerWidth, containerHeight);
-      this.renderer.setScissor(0, 0, containerWidth, containerHeight);
-      this.renderer.setScissorTest(true);
+      this.renderer.setClearColor(
+        this.view.state.clearColor,
+        this.view.state.clearAlpha
+      );
+      this.renderer.clear();
     }
   }
   renderMainScene() {
@@ -121254,7 +121346,7 @@ class Viewport3d extends WebGLViewport {
     this.renderer.render(this.sceneManager.scene, this.getRenderCamera());
   }
   clientPointToNdc(clientX, clientY) {
-    const canvas = this.renderer.domElement;
+    const canvas = this.view.canvas;
     const rect = canvas.getBoundingClientRect();
     if (rect.width <= 0 || rect.height <= 0) return null;
     const nx = (clientX - rect.left) / rect.width;
@@ -121273,23 +121365,12 @@ class Viewport3d extends WebGLViewport {
     if (lx < 0 || lx > 1 || ly < 0 || ly > 1) return null;
     return { x: lx * 2 - 1, y: -(ly * 2 - 1) };
   }
-  resetViewport() {
-    const width = this.renderer.domElement.clientWidth;
-    const height = this.renderer.domElement.clientHeight;
-    this.renderer.setViewport(0, 0, width, height);
-    this.renderer.setScissor(0, 0, width, height);
-    this.renderer.setScissorTest(false);
-  }
   startAnimation() {
     this.renderLoop = startRenderLoop({
       tick: () => {
         const delta = this.clock.getDelta();
         this.tickPerFrame(delta);
-        this.renderMainScene();
-        this.resetViewport();
-        if (this.viewHelperManager.viewHelper.render) {
-          this.viewHelperManager.viewHelper.render(this.renderer);
-        }
+        this.renderView();
       },
       isActive: () => this.isActive()
     });
@@ -121350,32 +121431,34 @@ class Viewport3d extends WebGLViewport {
     this.handleResize();
   }
   handleResize() {
-    var _a2, _b2, _c;
-    const parentElement = (_b2 = (_a2 = this.renderer) == null ? void 0 : _a2.domElement) == null ? void 0 : _b2.parentElement;
+    var _a2;
+    const parentElement = this.view.canvas.parentElement;
     if (!parentElement) {
       console.warn("Parent element not found");
       return;
     }
     const containerWidth = parentElement.clientWidth;
     const containerHeight = parentElement.clientHeight;
-    const zoomScale = ((_c = this.getZoomScaleCallback) == null ? void 0 : _c.call(this)) ?? 1;
-    this.renderer.setPixelRatio(Math.min(zoomScale, 3));
+    const zoomScale = ((_a2 = this.getZoomScaleCallback) == null ? void 0 : _a2.call(this)) ?? 1;
+    this.viewPixelScale = Math.min(zoomScale, 3);
     if (this.getDimensionsCallback) {
       const dims = this.getDimensionsCallback();
       if (dims) {
         this.applyTargetSize(dims.width, dims.height);
       }
     }
+    this.view.setSize(
+      containerWidth * this.viewPixelScale,
+      containerHeight * this.viewPixelScale
+    );
     if (this.shouldMaintainAspectRatio()) {
       const { width, height } = computeLetterboxedViewport(
         { width: containerWidth, height: containerHeight },
         this.targetAspectRatio
       );
-      this.renderer.setSize(containerWidth, containerHeight);
       this.cameraManager.handleResize(width, height);
       this.sceneManager.handleResize(width, height);
     } else {
-      this.renderer.setSize(containerWidth, containerHeight);
       this.cameraManager.handleResize(containerWidth, containerHeight);
       this.sceneManager.handleResize(containerWidth, containerHeight);
     }
@@ -121392,7 +121475,7 @@ class Viewport3d extends WebGLViewport {
     (_b2 = this.renderLoop) == null ? void 0 : _b2.stop();
     this.renderLoop = null;
     this.disposeManagers();
-    this.disposeRenderer();
+    this.view.dispose();
   }
   disposeManagers() {
     if (this.overlay) {
@@ -121739,8 +121822,8 @@ class Scene3dViewport extends Viewport3d {
       const ring = this.pickRingHandle(event);
       if (ring) {
         this.ringDrag = { type: ring, pointerId: event.pointerId };
-        this.renderer.domElement.setPointerCapture(event.pointerId);
-        this.renderer.domElement.style.cursor = "grabbing";
+        this.domElement.setPointerCapture(event.pointerId);
+        this.domElement.style.cursor = "grabbing";
         this.controlsManager.controls.enabled = false;
         this.pointerDownOnGizmo = true;
         this.pointerDownAt = null;
@@ -121753,7 +121836,7 @@ class Scene3dViewport extends Viewport3d {
       if (event.button !== 0) return;
       if (this.capturing) return;
       if (this.ringDrag && event.pointerId === this.ringDrag.pointerId) {
-        const canvas = this.renderer.domElement;
+        const canvas = this.domElement;
         if (canvas.hasPointerCapture(event.pointerId)) {
           canvas.releasePointerCapture(event.pointerId);
         }
@@ -121798,7 +121881,7 @@ class Scene3dViewport extends Viewport3d {
       if (ring) {
         this.setRingHovered(ring);
         this.setHovered(null);
-        this.renderer.domElement.style.cursor = "grab";
+        this.domElement.style.cursor = "grab";
         return;
       }
       this.setRingHovered(null);
@@ -121810,7 +121893,7 @@ class Scene3dViewport extends Viewport3d {
     });
     __publicField(this, "handlePointerCancel", (event) => {
       if (!this.ringDrag || event.pointerId !== this.ringDrag.pointerId) return;
-      const canvas = this.renderer.domElement;
+      const canvas = this.domElement;
       if (canvas.hasPointerCapture(event.pointerId)) {
         canvas.releasePointerCapture(event.pointerId);
       }
@@ -121827,7 +121910,7 @@ class Scene3dViewport extends Viewport3d {
     this.gizmoManager = deps.gizmoManager;
     this.events = events;
     this.gizmoManager.init();
-    const canvas = this.renderer.domElement;
+    const canvas = this.domElement;
     canvas.addEventListener("pointerdown", this.handlePointerDown);
     canvas.addEventListener("pointerup", this.handlePointerUp);
     canvas.addEventListener("pointermove", this.handlePointerMove);
@@ -122183,7 +122266,7 @@ class Scene3dViewport extends Viewport3d {
     );
   }
   renderRegionSize() {
-    const canvas = this.renderer.domElement;
+    const canvas = this.domElement;
     if (!this.shouldMaintainAspectRatio()) {
       return { clientWidth: canvas.clientWidth, clientHeight: canvas.clientHeight };
     }
@@ -122198,7 +122281,7 @@ class Scene3dViewport extends Viewport3d {
     this.hoveredRing = type;
     this.lightOrbitHandles.setHovered(type);
     if (!type && !this.ringDrag) {
-      this.renderer.domElement.style.cursor = "";
+      this.domElement.style.cursor = "";
     }
   }
   updateRingDrag(event) {
@@ -122291,7 +122374,7 @@ class Scene3dViewport extends Viewport3d {
   setHovered(id) {
     if (this.hoveredId === id) return;
     this.hoveredId = id;
-    this.renderer.domElement.style.cursor = id ? "pointer" : "";
+    this.domElement.style.cursor = id ? "pointer" : "";
     this.updateHoverBox();
   }
   updateHoverBox() {
@@ -122377,9 +122460,8 @@ class Scene3dViewport extends Viewport3d {
     if (!camera2) return;
     if (this.getRenderCamera() === camera2) return;
     const renderer2 = this.renderer;
-    const canvas = renderer2.domElement;
-    const cw = canvas.clientWidth;
-    const ch = canvas.clientHeight;
+    const cw = this.view.width;
+    const ch = this.view.height;
     if (cw < 120 || ch < 90) return;
     const aspect2 = this.targetAspectRatio ?? cw / ch;
     let pipWidth = Math.round(cw * 0.32);
@@ -122422,7 +122504,7 @@ class Scene3dViewport extends Viewport3d {
     this.lightTargetHandle.updateCamera(this.cameraManager.activeCamera);
   }
   remove() {
-    const canvas = this.renderer.domElement;
+    const canvas = this.domElement;
     canvas.removeEventListener("pointerdown", this.handlePointerDown);
     canvas.removeEventListener("pointerup", this.handlePointerUp);
     canvas.removeEventListener("pointermove", this.handlePointerMove);
@@ -122452,8 +122534,7 @@ class Scene3dViewport extends Viewport3d {
     super.prepareMainViewport();
     const render2 = this.getRenderCamera();
     if (render2 !== this.cameraManager.activeCamera && render2 instanceof PerspectiveCamera) {
-      const canvas = this.renderer.domElement;
-      const aspect2 = this.targetAspectRatio ?? canvas.clientWidth / Math.max(1, canvas.clientHeight);
+      const aspect2 = this.targetAspectRatio ?? this.view.width / Math.max(1, this.view.height);
       if (Math.abs(render2.aspect - aspect2) > 1e-6) {
         render2.aspect = aspect2;
         render2.updateProjectionMatrix();
@@ -122478,7 +122559,7 @@ function createScene3dViewport(container, events, options) {
   );
   const gizmoManager = new GizmoManager(
     deps.sceneManager.scene,
-    deps.renderer,
+    deps.view.canvas,
     deps.controlsManager.controls,
     () => deps.cameraManager.activeCamera,
     () => viewport2 == null ? void 0 : viewport2.commitGizmoTransform(),
@@ -122505,9 +122586,6 @@ async function withCaptureEnvironment(viewport2, width, height, fn3) {
   const renderer2 = viewport2.renderer;
   const sceneManager = viewport2.sceneManager;
   const previousCameraType = viewport2.getCurrentCameraType();
-  const previousSize = renderer2.getSize(new Vector2());
-  const previousPixelRatio = renderer2.getPixelRatio();
-  const previousScissorTest = false;
   const previousControlsEnabled = viewport2.controlsManager.controls.enabled;
   let previousAspect = null;
   let camera2 = null;
@@ -122521,9 +122599,6 @@ async function withCaptureEnvironment(viewport2, width, height, fn3) {
     viewport2.setEditorHelpersVisible(false);
     viewport2.gizmoManager.detach();
     viewport2.controlsManager.controls.enabled = false;
-    renderer2.setPixelRatio(1);
-    renderer2.setSize(width, height, false);
-    renderer2.setScissorTest(previousScissorTest);
     if (camera2 instanceof PerspectiveCamera) {
       camera2.aspect = width / height;
       camera2.updateProjectionMatrix();
@@ -122540,8 +122615,6 @@ async function withCaptureEnvironment(viewport2, width, height, fn3) {
     if (viewport2.getCurrentCameraType() !== previousCameraType) {
       viewport2.toggleCamera(previousCameraType);
     }
-    renderer2.setPixelRatio(previousPixelRatio);
-    renderer2.setSize(previousSize.x, previousSize.y, false);
     viewport2.capturing = false;
     viewport2.handleResize();
   }

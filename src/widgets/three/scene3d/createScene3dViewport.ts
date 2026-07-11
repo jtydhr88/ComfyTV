@@ -12,7 +12,7 @@ import { SceneCameraManager } from './SceneCameraManager'
 import { Scene3dViewport, type Scene3dViewportEvents } from './Scene3dViewport'
 
 export function createScene3dViewport(
-  container: Element | HTMLElement,
+  container: HTMLElement,
   events: Scene3dViewportEvents,
   options?: Load3DOptions
 ): Scene3dViewport {
@@ -33,7 +33,7 @@ export function createScene3dViewport(
   )
   const gizmoManager = new GizmoManager(
     deps.sceneManager.scene,
-    deps.renderer,
+    deps.view.canvas,
     deps.controlsManager.controls,
     () => deps.cameraManager.activeCamera,
     () => viewport?.commitGizmoTransform(),

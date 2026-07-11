@@ -15,18 +15,18 @@ export class ControlsManager implements ControlsManagerInterface {
   private disposeDragEndGuard: () => void
 
   constructor(
-    renderer: THREE.WebGLRenderer,
+    interactionElement: HTMLElement,
     camera: THREE.Camera,
     eventManager: EventManagerInterface
   ) {
     this.eventManager = eventManager
     this.camera = camera
 
-    this.controls = new OrbitControls(camera, renderer.domElement)
+    this.controls = new OrbitControls(camera, interactionElement)
     this.controls.enableDamping = true
     this.disposeDragEndGuard = guardOrbitControlsDragEnd(
       this.controls,
-      renderer.domElement
+      interactionElement
     )
   }
 

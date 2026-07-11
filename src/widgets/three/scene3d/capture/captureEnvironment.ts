@@ -18,9 +18,6 @@ export async function withCaptureEnvironment<T>(
   const sceneManager = viewport.sceneManager
 
   const previousCameraType = viewport.getCurrentCameraType()
-  const previousSize = renderer.getSize(new THREE.Vector2())
-  const previousPixelRatio = renderer.getPixelRatio()
-  const previousScissorTest = false
   const previousControlsEnabled = viewport.controlsManager.controls.enabled
 
   let previousAspect: number | null = null
@@ -38,9 +35,6 @@ export async function withCaptureEnvironment<T>(
     viewport.gizmoManager.detach()
     viewport.controlsManager.controls.enabled = false
 
-    renderer.setPixelRatio(1)
-    renderer.setSize(width, height, false)
-    renderer.setScissorTest(previousScissorTest)
     if (camera instanceof THREE.PerspectiveCamera) {
       camera.aspect = width / height
       camera.updateProjectionMatrix()
@@ -60,8 +54,6 @@ export async function withCaptureEnvironment<T>(
     if (viewport.getCurrentCameraType() !== previousCameraType) {
       viewport.toggleCamera(previousCameraType)
     }
-    renderer.setPixelRatio(previousPixelRatio)
-    renderer.setSize(previousSize.x, previousSize.y, false)
     viewport.capturing = false
     viewport.handleResize()
   }

@@ -15,6 +15,7 @@ import {
 } from './orbitDragMath'
 import { orbitAnglesFor, orbitPosition } from './lightTransform'
 import { lightTarget, type LightInfoEntry, type LightInfoType } from './types'
+import { RendererView } from '../RendererView'
 import { guardOrbitControlsDragEnd } from '../orbitControlsGuard'
 
 export type LightTransformGizmoMode = 'none' | 'light-position' | 'target'
@@ -49,7 +50,7 @@ export class LightBallWidget {
   private readonly container: HTMLElement
   private readonly scene: THREE.Scene
   private readonly camera: THREE.PerspectiveCamera
-  private readonly renderer: THREE.WebGLRenderer
+  private readonly view: RendererView
   private readonly controls: OrbitControls
   private disposeDragEndGuard?: () => void
   private readonly resizeObserver: ResizeObserver
@@ -91,28 +92,11 @@ export class LightBallWidget {
       OUTPUT_VIEW.position.z
     )
 
-    this.renderer = new THREE.WebGLRenderer({ antialias: true })
-    this.renderer.setSize(width, height, false)
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    this.renderer.outputColorSpace = THREE.SRGBColorSpace
-    this.renderer.shadowMap.enabled = true
-    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap
-    this.container.appendChild(this.renderer.domElement)
-
-    const canvas = this.renderer.domElement
-    canvas.style.position = 'absolute'
-    canvas.style.top = '0'
-    canvas.style.left = '0'
-    canvas.style.width = '100%'
-    canvas.style.height = '100%'
-
-    canvas.addEventListener('webglcontextlost', (e) => {
-      e.preventDefault()
-      console.warn('[ComfyTV/LightBall] WebGL context lost 鈥?awaiting restore')
-    }, false)
-    canvas.addEventListener('webglcontextrestored', () => {
-      console.warn('[ComfyTV/LightBall] WebGL context restored')
-    }, false)
+    this.view = new RendererView(this.container)
+    const scale = Math.min(window.devicePixelRatio, 2)
+    this.view.setSize(width * scale, height * scale)
+    this.view.state.clearAlpha = 1
+    const canvas = this.view.canvas
 
     this.container.setAttribute('data-capture-wheel', 'true')
     if (!this.container.hasAttribute('tabindex')) {
@@ -234,21 +218,9 @@ export class LightBallWidget {
     this.positionHandle.setVisible(false)
     this.targetHandle.setVisible(false)
 
-    const prevSize = this.renderer.getSize(new THREE.Vector2())
-    const prevPixelRatio = this.renderer.getPixelRatio()
     try {
-      this.renderer.setPixelRatio(1)
-      this.renderer.setSize(size, size, false)
-      this.renderer.render(this.scene, cam)
-
-      const out = document.createElement('canvas')
-      out.width = size
-      out.height = size
-      out.getContext('2d')!.drawImage(this.renderer.domElement, 0, 0)
-      return out
+      return this.view.renderToCanvas(this.scene, cam, size, size)
     } finally {
-      this.renderer.setPixelRatio(prevPixelRatio)
-      this.renderer.setSize(prevSize.x, prevSize.y, false)
       this.studio.setHelpersVisible(helpersWereOn)
       this.orbitHandles.setVisible(orbitWasVisible)
       this.positionHandle.setVisible(positionWasVisible)
@@ -278,11 +250,7 @@ export class LightBallWidget {
     this.studio.dispose()
     this.disposeDragEndGuard?.()
     this.controls.dispose()
-    try {
-      this.renderer.dispose()
-    } catch {
-    }
-    this.canvas.remove()
+    this.view.dispose()
   }
 
   private get selectedLight(): LightInfoEntry | null {
@@ -327,7 +295,7 @@ export class LightBallWidget {
   }
 
   private get canvas(): HTMLCanvasElement {
-    return this.renderer.domElement
+    return this.view.canvas
   }
 
   private onResize(): void {
@@ -336,13 +304,14 @@ export class LightBallWidget {
     if (w === 0 || h === 0) return
     this.camera.aspect = w / h
     this.camera.updateProjectionMatrix()
-    this.renderer.setSize(w, h, false)
+    const scale = Math.min(window.devicePixelRatio, 2)
+    this.view.setSize(w * scale, h * scale)
   }
 
   private animate(): void {
     this.animationId = requestAnimationFrame(() => this.animate())
     this.studio.updateHelpers()
-    this.renderer.render(this.scene, this.camera)
+    this.view.renderScene(this.scene, this.camera)
   }
 
   private attachPointerHandlers(): void {

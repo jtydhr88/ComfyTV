@@ -2,7 +2,12 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'
 import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js'
-import { getOffscreenRenderer } from './sharedRenderer'
+import { RendererView } from './RendererView'
+import {
+  acquireSharedRenderer,
+  copyRendererRegion,
+  ensureRendererSize
+} from './sharedWebGLRenderer'
 import { guardOrbitControlsDragEnd } from './orbitControlsGuard'
 
 
@@ -42,7 +47,7 @@ export class PanoramaViewer {
   private container: HTMLElement
   private scene: THREE.Scene
   private camera: THREE.PerspectiveCamera
-  private renderer: THREE.WebGLRenderer
+  private view: RendererView
   private controls: OrbitControls
   private disposeDragEndGuard?: () => void
   private sphere: THREE.Mesh
@@ -65,31 +70,10 @@ export class PanoramaViewer {
     this.camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 2000)
     this.camera.position.set(0, 0, 0.01)
 
-    this.renderer = new THREE.WebGLRenderer({ antialias: true })
-    this.renderer.setSize(w, h, false)
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    this.renderer.outputColorSpace = THREE.SRGBColorSpace
-    this.container.appendChild(this.renderer.domElement)
-
-    this.renderer.domElement.addEventListener(
-      'webglcontextlost',
-      (e) => {
-        e.preventDefault()
-        console.warn('[ComfyTV/PanoramaViewer] WebGL context lost — awaiting restore')
-      },
-      false,
-    )
-    this.renderer.domElement.addEventListener(
-      'webglcontextrestored',
-      () => {
-        console.warn('[ComfyTV/PanoramaViewer] WebGL context restored')
-        if (this.currentTexture) {
-          this.material.map = this.currentTexture
-          this.material.needsUpdate = true
-        }
-      },
-      false,
-    )
+    this.view = new RendererView(this.container)
+    const scale = Math.min(window.devicePixelRatio, 2)
+    this.view.setSize(w * scale, h * scale)
+    this.view.state.clearAlpha = 1
 
     const geo = new THREE.SphereGeometry(500, 60, 40)
     geo.scale(-1, 1, 1)
@@ -97,10 +81,10 @@ export class PanoramaViewer {
     this.sphere = new THREE.Mesh(geo, this.material)
     this.scene.add(this.sphere)
 
-    this.controls = new OrbitControls(this.camera, this.renderer.domElement)
+    this.controls = new OrbitControls(this.camera, this.view.canvas)
     this.disposeDragEndGuard = guardOrbitControlsDragEnd(
       this.controls,
-      this.renderer.domElement
+      this.view.canvas
     )
     this.controls.enableZoom = false
     this.controls.enablePan = false
@@ -131,20 +115,20 @@ export class PanoramaViewer {
         texture = await new Promise<THREE.Texture>((resolve, reject) => {
           new RGBELoader().load(url, resolve, undefined, reject)
         })
-        this.renderer.toneMapping = THREE.ACESFilmicToneMapping
-        this.renderer.toneMappingExposure = 1.0
+        this.view.state.toneMapping = THREE.ACESFilmicToneMapping
+        this.view.state.toneMappingExposure = 1.0
       } else if (ext === 'exr') {
         texture = await new Promise<THREE.Texture>((resolve, reject) => {
           new EXRLoader().load(url, resolve, undefined, reject)
         })
-        this.renderer.toneMapping = THREE.ACESFilmicToneMapping
-        this.renderer.toneMappingExposure = 1.0
+        this.view.state.toneMapping = THREE.ACESFilmicToneMapping
+        this.view.state.toneMappingExposure = 1.0
       } else {
         texture = await new Promise<THREE.Texture>((resolve, reject) => {
           new THREE.TextureLoader().load(url, resolve, undefined, reject)
         })
         texture.colorSpace = THREE.SRGBColorSpace
-        this.renderer.toneMapping = THREE.NoToneMapping
+        this.view.state.toneMapping = THREE.NoToneMapping
       }
     } catch (e) {
       console.error('[ComfyTV/PanoramaViewer] texture load failed', url, e)
@@ -192,26 +176,12 @@ export class PanoramaViewer {
   }
 
   captureCurrentView(width: number, height: number): HTMLCanvasElement {
-    const prevSize = new THREE.Vector2()
-    this.renderer.getSize(prevSize)
     const prevAspect = this.camera.aspect
-    const prevPixelRatio = this.renderer.getPixelRatio()
 
-    this.renderer.setPixelRatio(1)
-    this.renderer.setSize(width, height, false)
     this.camera.aspect = width / height
     this.camera.updateProjectionMatrix()
-    this.renderer.render(this.scene, this.camera)
+    const out = this.view.renderToCanvas(this.scene, this.camera, width, height)
 
-    const out = document.createElement('canvas')
-    out.width = width
-    out.height = height
-    const ctx = out.getContext('2d')
-    if (!ctx) throw new Error('2d context unavailable')
-    ctx.drawImage(this.renderer.domElement, 0, 0)
-
-    this.renderer.setPixelRatio(prevPixelRatio)
-    this.renderer.setSize(prevSize.x, prevSize.y, false)
     this.camera.aspect = prevAspect
     this.camera.updateProjectionMatrix()
     return out
@@ -232,12 +202,13 @@ export class PanoramaViewer {
     if (w === 0 || h === 0) return
     this.camera.aspect = w / h
     this.camera.updateProjectionMatrix()
-    this.renderer.setSize(w, h, false)
+    const scale = Math.min(window.devicePixelRatio, 2)
+    this.view.setSize(w * scale, h * scale)
   }
 
   private animate = () => {
     this.controls.update()
-    this.renderer.render(this.scene, this.camera)
+    this.view.renderScene(this.scene, this.camera)
     this.animationId = requestAnimationFrame(this.animate)
   }
 
@@ -256,10 +227,7 @@ export class PanoramaViewer {
     this.clearTexture()
     this.sphere.geometry.dispose()
     this.material.dispose()
-    this.renderer.dispose()
-    if (this.renderer.domElement.parentNode === this.container) {
-      this.container.removeChild(this.renderer.domElement)
-    }
+    this.view.dispose()
   }
 }
 
@@ -307,22 +275,34 @@ export async function capturePanoramaOffscreen(
     Math.cos(yawRad) * Math.cos(pitchRad),
   )
 
-  const renderer = getOffscreenRenderer()
-  renderer.setSize(width, height, false)
-  renderer.toneMapping = isHDR ? THREE.ACESFilmicToneMapping : THREE.NoToneMapping
-  renderer.toneMappingExposure = 1.0
-  renderer.render(scene, cam)
+  const handle = acquireSharedRenderer()
+  try {
+    const renderer = handle.renderer
+    ensureRendererSize(renderer, width, height)
+    renderer.toneMapping = isHDR
+      ? THREE.ACESFilmicToneMapping
+      : THREE.NoToneMapping
+    renderer.toneMappingExposure = 1.0
+    renderer.outputColorSpace = THREE.SRGBColorSpace
+    renderer.setClearColor(0x000000, 1)
+    renderer.setViewport(0, 0, width, height)
+    renderer.setScissor(0, 0, width, height)
+    renderer.setScissorTest(true)
+    renderer.clear()
+    renderer.render(scene, cam)
+    renderer.setScissorTest(false)
 
-  const out = document.createElement('canvas')
-  out.width = width
-  out.height = height
-  const ctx = out.getContext('2d')
-  if (!ctx) throw new Error('2d context unavailable')
-  ctx.drawImage(renderer.domElement, 0, 0)
-
-  texture.dispose()
-  mat.dispose()
-  geo.dispose()
-
-  return out
+    const out = document.createElement('canvas')
+    out.width = width
+    out.height = height
+    const ctx = out.getContext('2d')
+    if (!ctx) throw new Error('2d context unavailable')
+    copyRendererRegion(renderer, ctx, width, height)
+    return out
+  } finally {
+    texture.dispose()
+    mat.dispose()
+    geo.dispose()
+    handle.release()
+  }
 }

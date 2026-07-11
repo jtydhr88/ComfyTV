@@ -16,7 +16,7 @@ export class GizmoManager {
   private activeCamera: THREE.Camera
   private mode: GizmoMode = 'translate'
   private scene: THREE.Scene
-  private renderer: THREE.WebGLRenderer
+  private interactionElement: HTMLElement
   private orbitControls: OrbitControls
   private onTransformChange?: () => void
 
@@ -29,7 +29,7 @@ export class GizmoManager {
 
   constructor(
     scene: THREE.Scene,
-    renderer: THREE.WebGLRenderer,
+    interactionElement: HTMLElement,
     orbitControls: OrbitControls,
     getActiveCamera: () => THREE.Camera,
     onTransformChange?: () => void,
@@ -39,7 +39,7 @@ export class GizmoManager {
     ) => { x: number; y: number } | null
   ) {
     this.scene = scene
-    this.renderer = renderer
+    this.interactionElement = interactionElement
     this.orbitControls = orbitControls
     this.activeCamera = getActiveCamera()
     this.onTransformChange = onTransformChange
@@ -52,7 +52,7 @@ export class GizmoManager {
 
     this.transformControls = new TransformControls(
       this.activeCamera,
-      this.renderer.domElement
+      this.interactionElement
     )
 
     this.transformControls.addEventListener('dragging-changed', (event) => {

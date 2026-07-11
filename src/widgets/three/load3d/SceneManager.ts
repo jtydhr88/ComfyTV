@@ -1,6 +1,12 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
+import type { RendererView } from '@/widgets/three/RendererView'
+import {
+  copyRendererRegion,
+  ensureRendererSize
+} from '@/widgets/three/sharedWebGLRenderer'
+
 import {
   type BackgroundRenderModeType,
   type EventManagerInterface,
@@ -24,16 +30,18 @@ export class SceneManager implements SceneManagerInterface {
 
   private eventManager: EventManagerInterface
   private renderer: THREE.WebGLRenderer
+  private view: RendererView
 
   private getActiveCamera: () => THREE.Camera
 
   constructor(
-    renderer: THREE.WebGLRenderer,
+    view: RendererView,
     getActiveCamera: () => THREE.Camera,
     _getControls: () => OrbitControls,
     eventManager: EventManagerInterface
   ) {
-    this.renderer = renderer
+    this.view = view
+    this.renderer = view.renderer
     this.eventManager = eventManager
     this.scene = new THREE.Scene()
 
@@ -70,7 +78,8 @@ export class SceneManager implements SceneManagerInterface {
     this.backgroundMesh.position.set(0, 0, 0)
     this.backgroundScene.add(this.backgroundMesh)
 
-    this.renderer.setClearColor(0x000000, 0)
+    this.view.state.clearColor.set(0x000000)
+    this.view.state.clearAlpha = 0
   }
 
   init(): void {}
@@ -248,16 +257,28 @@ export class SceneManager implements SceneManagerInterface {
     }
   }
 
+  private readCaptureRegion(width: number, height: number): string {
+    const out = document.createElement('canvas')
+    out.width = width
+    out.height = height
+    const ctx = out.getContext('2d')
+    if (!ctx) throw new Error('2d context unavailable')
+    copyRendererRegion(this.renderer, ctx, width, height)
+    return out.toDataURL('image/png')
+  }
+
   async captureScene(
     width: number,
     height: number
   ): Promise<{ scene: string; mask: string; normal: string }> {
-    const originalSize = new THREE.Vector2()
-    this.renderer.getSize(originalSize)
-    const originalPixelRatio = this.renderer.getPixelRatio()
+    this.view.beginRender()
+    ensureRendererSize(this.renderer, width, height)
+    this.renderer.setViewport(0, 0, width, height)
+    this.renderer.setScissor(0, 0, width, height)
+    this.renderer.setScissorTest(true)
+
     const originalClearColor = this.renderer.getClearColor(new THREE.Color())
     const originalClearAlpha = this.renderer.getClearAlpha()
-    const originalOutputColorSpace = this.renderer.outputColorSpace
 
     const activeCamera = this.getActiveCamera()
     const savedCameraParams =
@@ -279,9 +300,6 @@ export class SceneManager implements SceneManagerInterface {
     const gridVisible = this.gridHelper.visible
 
     try {
-      this.renderer.setPixelRatio(1)
-      this.renderer.setSize(width, height)
-
       if (activeCamera instanceof THREE.PerspectiveCamera) {
         activeCamera.aspect = width / height
         activeCamera.updateProjectionMatrix()
@@ -315,12 +333,12 @@ export class SceneManager implements SceneManagerInterface {
       this.renderer.clear()
       this.renderBackground()
       this.renderer.render(this.scene, activeCamera)
-      const sceneData = this.renderer.domElement.toDataURL('image/png')
+      const sceneData = this.readCaptureRegion(width, height)
 
       this.renderer.setClearColor(0x000000, 0)
       this.renderer.clear()
       this.renderer.render(this.scene, activeCamera)
-      const maskData = this.renderer.domElement.toDataURL('image/png')
+      const maskData = this.readCaptureRegion(width, height)
 
       this.scene.traverse((child) => {
         if (child instanceof THREE.Mesh) {
@@ -341,10 +359,7 @@ export class SceneManager implements SceneManagerInterface {
       this.renderer.setClearColor(0x000000, 1)
       this.renderer.clear()
       this.renderer.render(this.scene, activeCamera)
-      const normalData = this.renderer.domElement.toDataURL('image/png')
-
-      this.renderer.setClearColor(0xffffff, 1)
-      this.renderer.clear()
+      const normalData = this.readCaptureRegion(width, height)
 
       return { scene: sceneData, mask: maskData, normal: normalData }
     } finally {
@@ -373,10 +388,11 @@ export class SceneManager implements SceneManagerInterface {
         ortho.updateProjectionMatrix()
       }
       this.renderer.setClearColor(originalClearColor, originalClearAlpha)
-      this.renderer.setPixelRatio(originalPixelRatio)
-      this.renderer.setSize(originalSize.x, originalSize.y)
-      this.renderer.outputColorSpace = originalOutputColorSpace
-      this.handleResize(originalSize.x, originalSize.y)
+      this.renderer.setScissorTest(false)
+      this.handleResize(
+        this.view.canvas.clientWidth,
+        this.view.canvas.clientHeight
+      )
     }
   }
 

@@ -1,5 +1,11 @@
 import * as THREE from 'three'
 
+import {
+  applyRendererViewState,
+  copyRendererRegion,
+  ensureRendererSize
+} from '@/widgets/three/sharedWebGLRenderer'
+
 import type { Scene3dViewport } from '../Scene3dViewport'
 import {
   drawPoseFrame,
@@ -95,8 +101,11 @@ export class ChannelRenderer {
   }
 
   private prepareViewport(width: number, height: number): void {
+    ensureRendererSize(this.renderer, width, height)
+    applyRendererViewState(this.renderer, this.viewport.viewState)
     this.renderer.setViewport(0, 0, width, height)
-    this.renderer.setScissorTest(false)
+    this.renderer.setScissor(0, 0, width, height)
+    this.renderer.setScissorTest(true)
   }
 
   private renderColor(
@@ -107,13 +116,7 @@ export class ChannelRenderer {
     this.renderer.clear()
     this.viewport.sceneManager.renderBackground()
     this.renderer.render(this.scene, this.camera)
-    ctx.drawImage(
-      this.renderer.domElement,
-      0,
-      0,
-      target.width,
-      target.height
-    )
+    copyRendererRegion(this.renderer, ctx, target.width, target.height)
   }
 
   private renderNormal(
@@ -132,13 +135,7 @@ export class ChannelRenderer {
       this.renderer.setClearColor(new THREE.Color(0.5, 0.5, 1.0), 1)
       this.renderer.clear()
       this.renderer.render(this.scene, this.camera)
-      ctx.drawImage(
-        this.renderer.domElement,
-        0,
-        0,
-        target.width,
-        target.height
-      )
+      copyRendererRegion(this.renderer, ctx, target.width, target.height)
     } finally {
       this.scene.overrideMaterial = previousOverride
       this.renderer.setClearColor(previousClearColor, previousClearAlpha)

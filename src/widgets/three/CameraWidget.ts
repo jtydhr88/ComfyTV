@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { RendererView } from './RendererView'
 import type { CameraState, CameraWidgetOptions } from './types'
 
 export class CameraWidget {
@@ -9,7 +10,7 @@ export class CameraWidget {
   private scene!: THREE.Scene
   private camera!: THREE.PerspectiveCamera
   private previewCamera!: THREE.PerspectiveCamera
-  private renderer!: THREE.WebGLRenderer
+  private view!: RendererView
   private activeCamera!: THREE.Camera
 
   private cameraIndicator!: THREE.Mesh
@@ -89,26 +90,10 @@ export class CameraWidget {
     this.previewCamera = new THREE.PerspectiveCamera(50, width / height, 0.1, 100)
     this.activeCamera = this.camera
 
-    this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
-    this.renderer.setSize(width, height, false)
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    this.renderer.outputColorSpace = THREE.SRGBColorSpace
-    this.container.appendChild(this.renderer.domElement)
-
-    const canvas = this.renderer.domElement
-    canvas.style.position = 'absolute'
-    canvas.style.top = '0'
-    canvas.style.left = '0'
-    canvas.style.width = '100%'
-    canvas.style.height = '100%'
-
-    canvas.addEventListener('webglcontextlost', (e) => {
-      e.preventDefault()
-      console.warn('[ComfyTV/CameraWidget] WebGL context lost — awaiting restore')
-    }, false)
-    canvas.addEventListener('webglcontextrestored', () => {
-      console.warn('[ComfyTV/CameraWidget] WebGL context restored')
-    }, false)
+    this.view = new RendererView(this.container)
+    const scale = Math.min(window.devicePixelRatio, 2)
+    this.view.setSize(width * scale, height * scale)
+    this.view.state.clearAlpha = 1
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.4)
     this.scene.add(ambientLight)
@@ -370,7 +355,7 @@ export class CameraWidget {
   }
 
   private bindEvents(): void {
-    const canvas = this.renderer.domElement
+    const canvas = this.view.canvas
 
     canvas.addEventListener('mousedown', this.onPointerDown.bind(this))
     canvas.addEventListener('mousemove', this.onPointerMove.bind(this))
@@ -398,7 +383,7 @@ export class CameraWidget {
   }
 
   private getMousePos(event: MouseEvent): void {
-    const rect = this.renderer.domElement.getBoundingClientRect()
+    const rect = this.view.canvas.getBoundingClientRect()
     this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
     this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1
   }
@@ -417,7 +402,7 @@ export class CameraWidget {
       this.orbitStartY = event.clientY
       this.orbitStartAzimuth = this.liveAzimuth
       this.orbitStartElevation = this.liveElevation
-      this.renderer.domElement.style.cursor = 'grabbing'
+      this.view.canvas.style.cursor = 'grabbing'
       return
     }
 
@@ -434,7 +419,7 @@ export class CameraWidget {
         this.isDragging = true
         this.dragTarget = h.name
         this.setHandleScale(h.mesh, h.glow, 1.3)
-        this.renderer.domElement.style.cursor = 'grabbing'
+        this.view.canvas.style.cursor = 'grabbing'
         return
       }
     }
@@ -488,10 +473,10 @@ export class CameraWidget {
 
       if (foundHover) {
         this.setHandleScale(foundHover.mesh, foundHover.glow, 1.15)
-        this.renderer.domElement.style.cursor = 'grab'
+        this.view.canvas.style.cursor = 'grab'
         this.hoveredHandle = foundHover
       } else {
-        this.renderer.domElement.style.cursor = 'default'
+        this.view.canvas.style.cursor = 'default'
         this.hoveredHandle = null
       }
       return
@@ -534,7 +519,7 @@ export class CameraWidget {
   private onPointerUp(): void {
     if (this.isOrbitDragging) {
       this.isOrbitDragging = false
-      this.renderer.domElement.style.cursor = this.useCameraView ? 'grab' : 'default'
+      this.view.canvas.style.cursor = this.useCameraView ? 'grab' : 'default'
       return
     }
 
@@ -549,7 +534,7 @@ export class CameraWidget {
 
     this.isDragging = false
     this.dragTarget = null
-    this.renderer.domElement.style.cursor = 'default'
+    this.view.canvas.style.cursor = 'default'
   }
 
   private onWheel(event: WheelEvent): void {
@@ -576,7 +561,8 @@ export class CameraWidget {
     this.camera.updateProjectionMatrix()
     this.previewCamera.aspect = w / h
     this.previewCamera.updateProjectionMatrix()
-    this.renderer.setSize(w, h, false)
+    const scale = Math.min(window.devicePixelRatio, 2)
+    this.view.setSize(w * scale, h * scale)
   }
 
   private animate(): void {
@@ -587,7 +573,7 @@ export class CameraWidget {
     this.camGlow.scale.setScalar(pulse)
     this.glowRing.rotation.z += 0.003
 
-    this.renderer.render(this.scene, this.activeCamera)
+    this.view.renderScene(this.scene, this.activeCamera)
   }
 
   private notifyStateChange(): void {
@@ -700,7 +686,7 @@ export class CameraWidget {
       this.glowRing.visible = false
       this.gridHelper.visible = false
       this.imageFrame.visible = false
-      this.renderer.domElement.style.cursor = 'grab'
+      this.view.canvas.style.cursor = 'grab'
     } else {
       this.activeCamera = this.camera
       this.azimuthRing.visible = true
@@ -717,7 +703,7 @@ export class CameraWidget {
       this.glowRing.visible = true
       this.gridHelper.visible = true
       this.imageFrame.visible = true
-      this.renderer.domElement.style.cursor = 'default'
+      this.view.canvas.style.cursor = 'default'
     }
   }
 
@@ -776,7 +762,7 @@ export class CameraWidget {
     }
 
     try {
-      this.renderer.dispose()
+      this.view.dispose()
     } catch {
     }
 

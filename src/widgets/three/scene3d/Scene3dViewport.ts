@@ -135,8 +135,8 @@ export class Scene3dViewport extends Viewport3d {
     const ring = this.pickRingHandle(event)
     if (ring) {
       this.ringDrag = { type: ring, pointerId: event.pointerId }
-      this.renderer.domElement.setPointerCapture(event.pointerId)
-      this.renderer.domElement.style.cursor = 'grabbing'
+      this.domElement.setPointerCapture(event.pointerId)
+      this.domElement.style.cursor = 'grabbing'
       this.controlsManager.controls.enabled = false
       this.pointerDownOnGizmo = true
       this.pointerDownAt = null
@@ -153,7 +153,7 @@ export class Scene3dViewport extends Viewport3d {
     if (this.capturing) return
 
     if (this.ringDrag && event.pointerId === this.ringDrag.pointerId) {
-      const canvas = this.renderer.domElement
+      const canvas = this.domElement
       if (canvas.hasPointerCapture(event.pointerId)) {
         canvas.releasePointerCapture(event.pointerId)
       }
@@ -206,7 +206,7 @@ export class Scene3dViewport extends Viewport3d {
     if (ring) {
       this.setRingHovered(ring)
       this.setHovered(null)
-      this.renderer.domElement.style.cursor = 'grab'
+      this.domElement.style.cursor = 'grab'
       return
     }
     this.setRingHovered(null)
@@ -220,7 +220,7 @@ export class Scene3dViewport extends Viewport3d {
 
   private readonly handlePointerCancel = (event: PointerEvent): void => {
     if (!this.ringDrag || event.pointerId !== this.ringDrag.pointerId) return
-    const canvas = this.renderer.domElement
+    const canvas = this.domElement
     if (canvas.hasPointerCapture(event.pointerId)) {
       canvas.releasePointerCapture(event.pointerId)
     }
@@ -230,7 +230,7 @@ export class Scene3dViewport extends Viewport3d {
   }
 
   constructor(
-    container: Element | HTMLElement,
+    container: HTMLElement,
     deps: Scene3dViewportDeps,
     events: Scene3dViewportEvents,
     options: Load3DOptions = {}
@@ -246,7 +246,7 @@ export class Scene3dViewport extends Viewport3d {
     this.events = events
 
     this.gizmoManager.init()
-    const canvas = this.renderer.domElement
+    const canvas = this.domElement
     canvas.addEventListener('pointerdown', this.handlePointerDown)
     canvas.addEventListener('pointerup', this.handlePointerUp)
     canvas.addEventListener('pointermove', this.handlePointerMove)
@@ -678,7 +678,7 @@ export class Scene3dViewport extends Viewport3d {
   }
 
   private renderRegionSize(): { clientWidth: number; clientHeight: number } {
-    const canvas = this.renderer.domElement
+    const canvas = this.domElement
     if (!this.shouldMaintainAspectRatio()) {
       return { clientWidth: canvas.clientWidth, clientHeight: canvas.clientHeight }
     }
@@ -694,7 +694,7 @@ export class Scene3dViewport extends Viewport3d {
     this.hoveredRing = type
     this.lightOrbitHandles.setHovered(type)
     if (!type && !this.ringDrag) {
-      this.renderer.domElement.style.cursor = ''
+      this.domElement.style.cursor = ''
     }
   }
 
@@ -793,7 +793,7 @@ export class Scene3dViewport extends Viewport3d {
   private setHovered(id: string | null): void {
     if (this.hoveredId === id) return
     this.hoveredId = id
-    this.renderer.domElement.style.cursor = id ? 'pointer' : ''
+    this.domElement.style.cursor = id ? 'pointer' : ''
     this.updateHoverBox()
   }
 
@@ -891,9 +891,8 @@ export class Scene3dViewport extends Viewport3d {
     if (this.getRenderCamera() === camera) return
 
     const renderer = this.renderer
-    const canvas = renderer.domElement
-    const cw = canvas.clientWidth
-    const ch = canvas.clientHeight
+    const cw = this.view.width
+    const ch = this.view.height
     if (cw < 120 || ch < 90) return
     const aspect = this.targetAspectRatio ?? cw / ch
     let pipWidth = Math.round(cw * 0.32)
@@ -940,7 +939,7 @@ export class Scene3dViewport extends Viewport3d {
   }
 
   override remove(): void {
-    const canvas = this.renderer.domElement
+    const canvas = this.domElement
     canvas.removeEventListener('pointerdown', this.handlePointerDown)
     canvas.removeEventListener('pointerup', this.handlePointerUp)
     canvas.removeEventListener('pointermove', this.handlePointerMove)
@@ -975,10 +974,9 @@ export class Scene3dViewport extends Viewport3d {
       render !== this.cameraManager.activeCamera &&
       render instanceof THREE.PerspectiveCamera
     ) {
-      const canvas = this.renderer.domElement
       const aspect =
         this.targetAspectRatio ??
-        canvas.clientWidth / Math.max(1, canvas.clientHeight)
+        this.view.width / Math.max(1, this.view.height)
       if (Math.abs(render.aspect - aspect) > 1e-6) {
         render.aspect = aspect
         render.updateProjectionMatrix()
