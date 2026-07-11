@@ -976,5 +976,12 @@
     "uploading": "Uploading…",
     "empty": "No 3D models in input/3d yet — upload one to get started.",
     "pickHint": "Select a 3D model…"
+  },
+  "loaderDrop": {
+    "mismatchTitle": "Wrong file type",
+    "typeMismatch": "This node only loads {kind}.",
+    "assetTypeMismatch": "This node loads {expected}, but the dropped asset is {actual}.",
+    "failedTitle": "ComfyTV upload",
+    "uploadFailed": "Upload failed: {detail}"
   }
 }

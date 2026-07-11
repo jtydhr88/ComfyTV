@@ -1,5 +1,11 @@
 <template>
-  <div :class="cardClass">
+  <div
+    :class="cardClass"
+    @dragenter="onCardDragEnter"
+    @dragover="onCardDragOver"
+    @dragleave="onCardDragLeave"
+    @drop="onCardDrop"
+  >
     <MainPromptInput :node="node" />
 
     <ImageReferences v-if="!hideContext && state.variant !== 'loader'" :node="node" />
@@ -215,6 +221,10 @@ import {
   presetTooltipKey,
 } from '@/composables/stages/actionLabels'
 import type { LGraphNode } from '@/lib/comfyApp'
+import { toastLoaderUploadFailed, useLoaderFileDrop } from '@/composables/stages/useLoaderFileDrop'
+import type { AssetMediaType } from '@/utils/mediaFileTypes'
+import { uploadBlobNamed } from '@/utils/uploadCanvas'
+import { getWidget, writeWidget } from '@/utils/widget'
 import { isPoolPickerKind, useStageStore, type InputSource, type StageState, type ImagePickContext } from '@/stores/stageStore'
 
 const props = defineProps<{
@@ -247,6 +257,43 @@ const {
 } = useStageCard(() => props.state, props.onAction)
 
 const isPicker = computed(() => isPoolPickerKind(props.state.kind))
+
+const PLAIN_LOADER_WIDGET: Record<string, { kind: AssetMediaType; widget: string }> = {
+  'ComfyTV.ImageLoaderStage': { kind: 'image', widget: 'image' },
+  'ComfyTV.VideoLoaderStage': { kind: 'video', widget: 'video' },
+  'ComfyTV.AudioLoaderStage': { kind: 'audio', widget: 'audio' },
+}
+
+const loaderDropCfg = computed(() =>
+  props.node ? PLAIN_LOADER_WIDGET[(props.node as any).comfyClass] ?? null : null,
+)
+
+const fileDrop = useLoaderFileDrop({
+  kind: () => loaderDropCfg.value?.kind ?? 'image',
+  onFiles: async (files) => {
+    const cfg = loaderDropCfg.value
+    if (!cfg || !props.node) return
+    try {
+      let last = ''
+      for (const f of files) {
+        const uploaded = await uploadBlobNamed(f, { subfolder: '', filename: f.name })
+        last = uploaded.name
+        const w = getWidget(props.node, cfg.widget) as any
+        const values = w?.options?.values
+        if (Array.isArray(values) && !values.includes(last)) values.push(last)
+      }
+      if (last) writeWidget(props.node, cfg.widget, last)
+    } catch (e) {
+      console.error('[ComfyTV/loader-drop] upload failed', e)
+      toastLoaderUploadFailed(e)
+    }
+  },
+})
+
+function onCardDragEnter(e: DragEvent) { if (loaderDropCfg.value) fileDrop.onDragEnter(e) }
+function onCardDragOver(e: DragEvent)  { if (loaderDropCfg.value) fileDrop.onDragOver(e) }
+function onCardDragLeave(e: DragEvent) { if (loaderDropCfg.value) fileDrop.onDragLeave(e) }
+function onCardDrop(e: DragEvent)      { if (loaderDropCfg.value) fileDrop.onDrop(e) }
 
 const serverStore = useServerStore()
 void serverStore.load()
@@ -357,6 +404,8 @@ function onDisconnect(slot: string) { props.onDisconnect(slot) }
 
 const cardClass = computed(() => {
   const base = 'ctv:flex ctv:flex-col ctv:gap-2 ctv:p-2 ctv:size-full ctv:box-border ctv:text-xs ctv:text-base-foreground'
+  if (fileDrop.dragActive.value)
+    return `${base} ctv:rounded ctv:outline ctv:outline-2 ctv:-outline-offset-2 ctv:outline-primary-background/70 ctv:bg-primary-background/5`
   if (!props.state.error) return base
   if (props.state.error.type === 'Cancelled')
     return `${base} ctv:rounded ctv:outline ctv:outline-1 ctv:-outline-offset-1 ctv:outline-warning-background/50`

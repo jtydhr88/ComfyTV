@@ -976,5 +976,12 @@
     "uploading": "上传中…",
     "empty": "input/3d 还没有 3D 模型——先上传一个吧。",
     "pickHint": "选择 3D 模型…"
+  },
+  "loaderDrop": {
+    "mismatchTitle": "文件类型不匹配",
+    "typeMismatch": "该节点只能加载{kind}。",
+    "assetTypeMismatch": "该节点加载{expected}，拖入的素材是{actual}。",
+    "failedTitle": "ComfyTV 上传",
+    "uploadFailed": "上传失败: {detail}"
   }
 }

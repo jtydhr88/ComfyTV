@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
 import { GLTFLoader, type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js'
 
 import { app } from '@/lib/comfyApp'
 import { decryptAsset, decryptAssetJson } from '@/utils/assetCipher'
@@ -157,6 +158,13 @@ export async function loadCustomModelAssets(
         return {
           template: normalizeModelScale(fbx),
           clips: fbx.animations ?? []
+        }
+      }
+      if (ext === '.obj') {
+        const obj = await new OBJLoader().loadAsync(assetUrl(url))
+        return {
+          template: normalizeModelScale(obj),
+          clips: []
         }
       }
       const gltf = await new GLTFLoader().loadAsync(assetUrl(url))

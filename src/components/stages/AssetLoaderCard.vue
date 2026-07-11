@@ -1,5 +1,15 @@
 <template>
-  <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full ctv:p-2 ctv:box-border ctv:text-xs ctv:text-base-foreground">
+  <div
+    :class="[
+      'ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full ctv:p-2 ctv:box-border ctv:text-xs ctv:text-base-foreground',
+      fileDrop.dragActive.value
+        && 'ctv:rounded ctv:outline ctv:outline-2 ctv:-outline-offset-2 ctv:outline-primary-background/70 ctv:bg-primary-background/5',
+    ]"
+    @dragenter="fileDrop.onDragEnter"
+    @dragover="fileDrop.onDragOver"
+    @dragleave="fileDrop.onDragLeave"
+    @drop="fileDrop.onDrop"
+  >
     <div class="ctv:shrink-0 ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1">
       <button :class="chipClass(activeFilter === 'all')" @click="setFilter('all')">
         {{ $t('assets.category.all') }}
@@ -112,6 +122,8 @@ import type { Asset } from '@/api/schemas'
 import type { LGraphNode } from '@/lib/comfyApp'
 import ModelThumb from '@/components/widgets/ModelThumb.vue'
 import StageCard from '@/components/stages/StageCard.vue'
+import { importAssetFiles } from '@/composables/sidebar/assetImport'
+import { toastLoaderUploadFailed, useLoaderFileDrop } from '@/composables/stages/useLoaderFileDrop'
 import { type AssetCategoryFilter, useAssetStore } from '@/stores/assetStore'
 import { useStageStore, type StageState } from '@/stores/stageStore'
 import { getWidget, readWidgetStr, writeWidget } from '@/utils/widget'
@@ -172,6 +184,23 @@ function selectAsset(asset: Asset) {
   writeWidget(props.node, 'asset_id', asset.id)
   stageStore.setOutputSlot(props.state, 0, asset.payload_url)
 }
+
+const fileDrop = useLoaderFileDrop({
+  kind: () => mediaType.value,
+  onAsset: selectAsset,
+  onFiles: async (files) => {
+    try {
+      const created = await importAssetFiles(files, {
+        categoryIds: typeof activeFilter.value === 'number' ? [activeFilter.value] : [],
+      })
+      const last = created[created.length - 1]
+      if (last) selectAsset(last)
+    } catch (e) {
+      console.error('[ComfyTV/asset-loader] drop import failed', e)
+      toastLoaderUploadFailed(e)
+    }
+  },
+})
 
 function hoverPlay(e: MouseEvent) {
   void (e.currentTarget as HTMLVideoElement).play().catch(() => {})

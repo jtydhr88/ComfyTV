@@ -13,7 +13,7 @@ def _list_input_files(content_kinds: list[str]) -> list[str]:
         return []
 
 
-_MODEL_FILE_SUFFIXES = ('.glb', '.gltf', '.fbx', '.spz', '.splat', '.ply', '.ksplat')
+_MODEL_FILE_SUFFIXES = ('.glb', '.gltf', '.fbx', '.obj', '.spz', '.splat', '.ply', '.ksplat')
 
 
 def _list_3d_input_files() -> list[str]:

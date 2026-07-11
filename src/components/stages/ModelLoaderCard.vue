@@ -1,5 +1,15 @@
 <template>
-  <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full ctv:p-2 ctv:box-border ctv:text-xs ctv:text-base-foreground">
+  <div
+    :class="[
+      'ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full ctv:p-2 ctv:box-border ctv:text-xs ctv:text-base-foreground',
+      fileDrop.dragActive.value
+        && 'ctv:rounded ctv:outline ctv:outline-2 ctv:-outline-offset-2 ctv:outline-primary-background/70 ctv:bg-primary-background/5',
+    ]"
+    @dragenter="fileDrop.onDragEnter"
+    @dragover="fileDrop.onDragOver"
+    @dragleave="fileDrop.onDragLeave"
+    @drop="fileDrop.onDrop"
+  >
     <button
       ref="triggerEl"
       type="button"
@@ -130,6 +140,7 @@ import type { LGraphNode } from '@/lib/comfyApp'
 import ModelThumb from '@/components/widgets/ModelThumb.vue'
 import StageCard from '@/components/stages/StageCard.vue'
 import type { StageState } from '@/stores/stageStore'
+import { toastLoaderUploadFailed, useLoaderFileDrop } from '@/composables/stages/useLoaderFileDrop'
 import { uploadBlobNamed } from '@/utils/uploadCanvas'
 import { getWidget, readWidgetStr, writeWidget } from '@/utils/widget'
 import { MODEL_FILE_EXTENSIONS } from '@/widgets/three/modelFormats'
@@ -202,16 +213,13 @@ function registerFile(path: string): void {
   if (Array.isArray(values) && !values.includes(path)) values.push(path)
 }
 
-async function onPickFiles(event: Event): Promise<void> {
-  const input = event.target as HTMLInputElement
-  const picked = Array.from(input.files ?? [])
-  input.value = ''
-  if (!picked.length || uploading.value) return
+async function uploadModelFiles(files: File[]): Promise<void> {
+  if (!files.length || uploading.value) return
   uploading.value = true
   uploadError.value = ''
   try {
     let lastPath = ''
-    for (const file of picked) {
+    for (const file of files) {
       const uploaded = await uploadBlobNamed(file, { subfolder: '3d', filename: file.name })
       lastPath = `3d/${uploaded.name}`
       registerFile(lastPath)
@@ -220,10 +228,23 @@ async function onPickFiles(event: Event): Promise<void> {
   } catch (e) {
     console.error('[ComfyTV/model-loader] upload failed', e)
     uploadError.value = String((e as Error)?.message ?? e)
+    toastLoaderUploadFailed(e)
   } finally {
     uploading.value = false
   }
 }
+
+async function onPickFiles(event: Event): Promise<void> {
+  const input = event.target as HTMLInputElement
+  const picked = Array.from(input.files ?? [])
+  input.value = ''
+  await uploadModelFiles(picked)
+}
+
+const fileDrop = useLoaderFileDrop({
+  kind: () => 'model',
+  onFiles: uploadModelFiles,
+})
 
 function onKeydown(e: KeyboardEvent): void {
   if (e.key === 'Escape' && menuOpen.value) menuOpen.value = false

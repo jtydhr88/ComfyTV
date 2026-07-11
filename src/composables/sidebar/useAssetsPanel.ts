@@ -5,30 +5,19 @@ import { useI18n } from 'vue-i18n'
 import type { Asset } from '@/api/schemas'
 import { type LightboxItem, openLightbox } from '@/composables/useLightbox'
 import { ASSET_DRAG_MIME } from '@/composables/sidebar/assetCanvasDrop'
+import { importAssetFiles } from '@/composables/sidebar/assetImport'
 import { canvasCenter, createAssetLoaderNode } from '@/composables/stages/assetLoaderNode'
 import { askConfirm } from '@/composables/dialog/useConfirmDialog'
 import { askText } from '@/composables/dialog/useTextInputDialog'
 import { type AssetCategoryFilter, useAssetStore } from '@/stores/assetStore'
-import { uploadBlobNamed } from '@/utils/uploadCanvas'
+import { type AssetMediaType, mediaTypeOf } from '@/utils/mediaFileTypes'
 
-function stripExtension(filename: string): string {
-  const i = filename.lastIndexOf('.')
-  return i > 0 ? filename.slice(0, i) : filename
-}
-
-type AssetMediaType = 'image' | 'video' | 'audio' | 'model'
 export type AssetMediaFilter = 'all' | AssetMediaType
 export type AssetViewMode = 'grid' | 'list'
 
 export const ASSET_MEDIA_FILTERS: AssetMediaFilter[] = ['all', 'image', 'video', 'audio', 'model']
 
 export { MODEL_FILE_EXTENSIONS } from '@/widgets/three/modelFormats'
-import { MODEL_FILE_EXTENSIONS } from '@/widgets/three/modelFormats'
-
-function isModelFile(name: string): boolean {
-  const lower = name.toLowerCase()
-  return MODEL_FILE_EXTENSIONS.some((ext) => lower.endsWith(ext))
-}
 
 const ASSET_MENU_WIDTH = 192
 const TAG_EDITOR_WIDTH = 176
@@ -38,53 +27,6 @@ function formatSize(bytes: number): string {
   if (bytes < 1024 ** 2) return `${(bytes / 1024).toFixed(1)} KB`
   if (bytes < 1024 ** 3) return `${(bytes / 1024 ** 2).toFixed(1)} MB`
   return `${(bytes / 1024 ** 3).toFixed(1)} GB`
-}
-
-function mediaTypeOf(file: File): AssetMediaType | null {
-  if (file.type.startsWith('image/')) return 'image'
-  if (file.type.startsWith('video/')) return 'video'
-  if (file.type.startsWith('audio/')) return 'audio'
-  if (isModelFile(file.name)) return 'model'
-  return null
-}
-
-function probeImageSize(file: File): Promise<{ width: number; height: number } | null> {
-  return new Promise((resolve) => {
-    const url = URL.createObjectURL(file)
-    const img = new Image()
-    img.onload = () => {
-      URL.revokeObjectURL(url)
-      resolve({ width: img.naturalWidth, height: img.naturalHeight })
-    }
-    img.onerror = () => {
-      URL.revokeObjectURL(url)
-      resolve(null)
-    }
-    img.src = url
-  })
-}
-
-function probeVideoSize(file: File): Promise<{ width: number; height: number } | null> {
-  return new Promise((resolve) => {
-    const url = URL.createObjectURL(file)
-    const video = document.createElement('video')
-    video.preload = 'metadata'
-    video.onloadedmetadata = () => {
-      URL.revokeObjectURL(url)
-      resolve({ width: video.videoWidth, height: video.videoHeight })
-    }
-    video.onerror = () => {
-      URL.revokeObjectURL(url)
-      resolve(null)
-    }
-    video.src = url
-  })
-}
-
-function probeMediaSize(file: File, kind: AssetMediaType): Promise<{ width: number; height: number } | null> {
-  if (kind === 'image') return probeImageSize(file)
-  if (kind === 'video') return probeVideoSize(file)
-  return Promise.resolve(null)
 }
 
 export function useAssetsPanel(isActive: () => boolean | undefined) {
@@ -249,35 +191,17 @@ export function useAssetsPanel(isActive: () => boolean | undefined) {
   }
 
   async function addFiles(files: File[]) {
-    const media = files
-      .map(f => ({ file: f, kind: mediaTypeOf(f) }))
-      .filter((m): m is { file: File; kind: AssetMediaType } => m.kind !== null)
-    if (media.length === 0 || uploading.value) return
+    const mediaCountTotal = files.filter(f => mediaTypeOf(f) !== null).length
+    if (mediaCountTotal === 0 || uploading.value) return
     uploading.value = true
     uploadDone.value = 0
-    uploadTotal.value = media.length
+    uploadTotal.value = mediaCountTotal
     uploadError.value = null
     try {
-      for (const { file, kind } of media) {
-        const dims = await probeMediaSize(file, kind)
-        const uploaded = await uploadBlobNamed(file, {
-          subfolder: 'comfytv/assets',
-          type: 'input',
-          filename: file.name,
-        })
-        await store.create({
-          name: stripExtension(file.name),
-          payload_url: uploaded.url,
-          media_type: kind,
-          category_ids: uploadCategoryIds.value,
-          mime_type: file.type || null,
-          width: dims?.width ?? null,
-          height: dims?.height ?? null,
-          size_bytes: file.size,
-          source: 'upload',
-        })
-        uploadDone.value += 1
-      }
+      await importAssetFiles(files, {
+        categoryIds: uploadCategoryIds.value,
+        onProgress: (done) => { uploadDone.value = done },
+      })
     } catch (e) {
       console.warn('[ComfyTV/assets] upload failed', e)
       uploadError.value = t('assets.uploadFailed', { detail: String(e) })

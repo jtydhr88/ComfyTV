@@ -6,7 +6,7 @@ export function loadSpark(): Promise<typeof import('@sparkjsdev/spark')> {
   return (sparkPromise ??= import('@sparkjsdev/spark'))
 }
 
-export const MESH_MODEL_EXTENSIONS = ['.glb', '.gltf', '.fbx'] as const
+export const MESH_MODEL_EXTENSIONS = ['.glb', '.gltf', '.fbx', '.obj'] as const
 export const SPLAT_MODEL_EXTENSIONS = ['.spz', '.splat', '.ksplat'] as const
 export const POINTCLOUD_MODEL_EXTENSIONS = ['.ply'] as const
 
