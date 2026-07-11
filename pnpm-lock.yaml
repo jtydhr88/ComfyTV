@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@sparkjsdev/spark':
+        specifier: ^2.1.0
+        version: 2.1.0(three@0.184.0)
       '@tiptap/core':
         specifier: ^3.26.0
         version: 3.26.0(@tiptap/pm@3.26.0)
@@ -549,6 +552,11 @@ packages:
     resolution: {integrity: sha512-X+zaP2x+j4RXGfbp/seSoRHWnPxzApilDszisZxbYH5C/jTxFhCtDNdPGZb9lJyYPs24wGxruPF7Y+sIXt9Gzw==}
     cpu: [x64]
     os: [win32]
+
+  '@sparkjsdev/spark@2.1.0':
+    resolution: {integrity: sha512-BRw+MuMzx0B3K8fDLQygt2OHEhYUV+41RX7btq9pZ3rCVrq42o57jW34VAIvC7JO/84DJh/1AutACV9ym6BfVg==}
+    peerDependencies:
+      three: '>=0.180.0'
 
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
@@ -2292,6 +2300,11 @@ snapshots:
 
   '@rollup/rollup-win32-x64-msvc@4.61.1':
     optional: true
+
+  '@sparkjsdev/spark@2.1.0(three@0.184.0)':
+    dependencies:
+      fflate: 0.8.3
+      three: 0.184.0
 
   '@standard-schema/spec@1.1.0': {}
 
