@@ -22,7 +22,8 @@ export type AssetViewMode = 'grid' | 'list'
 
 export const ASSET_MEDIA_FILTERS: AssetMediaFilter[] = ['all', 'image', 'video', 'audio', 'model']
 
-export const MODEL_FILE_EXTENSIONS = ['.glb', '.gltf', '.fbx'] as const
+export { MODEL_FILE_EXTENSIONS } from '@/widgets/three/modelFormats'
+import { MODEL_FILE_EXTENSIONS } from '@/widgets/three/modelFormats'
 
 function isModelFile(name: string): boolean {
   const lower = name.toLowerCase()

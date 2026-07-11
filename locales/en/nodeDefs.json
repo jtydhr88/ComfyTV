@@ -167,6 +167,15 @@
     },
     "VideoUpscaleStage": {
       "display_name": "Video Upscale"
+    },
+    "Model3DStage": {
+      "display_name": "3D Model Stage"
+    },
+    "ModelLoaderStage": {
+      "display_name": "Load 3D Model"
+    },
+    "AssetModelLoaderStage": {
+      "display_name": "Load 3D Model from Asset"
     }
   },
   "ComfyTV_AssetAudioLoaderStage": {
@@ -1559,6 +1568,59 @@
       "2": {
         "name": "Images",
         "tooltip": "All captures from the last Capture — one per scene camera."
+      }
+    }
+  },
+  "ComfyTV_Model3DStage": {
+    "display_name": "3D Model Stage",
+    "inputs": {
+      "workflow": {
+        "name": "Workflow"
+      },
+      "texts": {
+        "name": "Texts"
+      },
+      "images": {
+        "name": "Images"
+      },
+      "models": {
+        "name": "Models"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Model",
+        "tooltip": "Generated 3D model (GLB)."
+      },
+      "1": {
+        "name": "Image",
+        "tooltip": "Snapshot of the preview viewport — updates as you orbit."
+      }
+    }
+  },
+  "ComfyTV_ModelLoaderStage": {
+    "display_name": "Load 3D Model",
+    "inputs": {},
+    "outputs": {
+      "0": {
+        "name": "Model"
+      },
+      "1": {
+        "name": "Image",
+        "tooltip": "Snapshot of the preview viewport — updates as you orbit."
+      }
+    }
+  },
+  "ComfyTV_AssetModelLoaderStage": {
+    "display_name": "Load 3D Model from Asset",
+    "inputs": {},
+    "outputs": {
+      "0": {
+        "name": "Model"
+      },
+      "1": {
+        "name": "Image",
+        "tooltip": "Snapshot of the preview viewport — updates as you orbit."
       }
     }
   }

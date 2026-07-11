@@ -6,7 +6,7 @@ from typing import Any, Literal
 StageKind = Literal[
     'text', 'image', 'video', 'speech', 'storyboard', 'shot-images', 'shot-picker',
     'timeline', 'upscale', 'outpaint', 'inpaint', 'erase', 'image-edit', 'multiangle',
-    'cutout', 'multiview', 'sequence', 'audio-vocal', 'audio-bg',
+    'cutout', 'multiview', 'sequence', 'audio-vocal', 'audio-bg', 'model',
 ]
 
 

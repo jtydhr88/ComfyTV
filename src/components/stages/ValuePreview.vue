@@ -64,6 +64,35 @@
       />
     </template>
 
+    <template v-else-if="type === 'COMFYTV_MODEL'">
+      <div v-if="compact" class="ctv:size-full">
+        <ModelThumb :src="String(content)">
+          <i class="pi pi-box ctv:text-[22px]" />
+        </ModelThumb>
+      </div>
+      <div
+        v-else
+        class="vp-img-host ctv:group ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[220px] ctv:overflow-hidden ctv:rounded-sm"
+      >
+        <ModelPreview
+          ref="modelPreviewEl"
+          :src="String(content)"
+          @view-changed="scheduleModelCapture"
+        />
+        <div :class="imgActionsClass">
+          <button type="button" :class="imgActionBtn"
+                  :title="$t('stage.action.download')"
+                  @click.stop="onDownload(String(content))"><i class="pi pi-download" /></button>
+          <button type="button" :class="tagActionBtn(String(content))"
+                  :title="$t('stage.action.addTag')"
+                  @click.stop="openTagMenu(String(content), nameFromUrl(String(content)), $event, previewMediaType)"><i class="pi pi-tag" /></button>
+          <button type="button" :class="imgActionBtn"
+                  :title="$t('stage.action.loadAsset')"
+                  @click.stop="onLoadAsset(String(content), nameFromUrl(String(content)))"><i class="pi pi-bookmark" /></button>
+        </div>
+      </div>
+    </template>
+
     <template v-else-if="type === 'COMFYTV_STORYBOARD'">
       <div v-if="compact" class="ctv:flex ctv:flex-col ctv:gap-0.5 ctv:size-full ctv:py-[3px] ctv:px-1 ctv:box-border ctv:overflow-hidden">
         <div class="ctv:flex ctv:items-baseline ctv:gap-1 ctv:shrink-0">
@@ -338,7 +367,10 @@
 <script setup lang="ts">
 import { computed, ref, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
+import ModelPreview from './ModelPreview.vue'
+import ModelThumb from '@/components/widgets/ModelThumb.vue'
 import { askText } from '@/composables/dialog/useTextInputDialog'
+import { uploadCanvas } from '@/utils/uploadCanvas'
 import { useImagePanZoom } from '@/composables/widgets/useImagePanZoom'
 import { openLightbox } from '@/composables/useLightbox'
 import { useOutputAssetTagging } from '@/composables/stages/useOutputAssetTagging'
@@ -382,6 +414,37 @@ async function onCreateCategory() {
 const zoomContainer = ref<HTMLElement | null>(null)
 const zoomImg = ref<HTMLImageElement | null>(null)
 
+const MODEL_CAPTURE_SIZE = 1024
+const MODEL_CAPTURE_DELAY_MS = 250
+
+const modelPreviewEl = ref<InstanceType<typeof ModelPreview> | null>(null)
+let modelCaptureTimer: number | null = null
+let modelCaptureSeq = 0
+
+function scheduleModelCapture() {
+  if (modelCaptureTimer != null) window.clearTimeout(modelCaptureTimer)
+  modelCaptureTimer = window.setTimeout(() => {
+    modelCaptureTimer = null
+    void runModelCapture()
+  }, MODEL_CAPTURE_DELAY_MS)
+}
+
+async function runModelCapture() {
+  const canvas = modelPreviewEl.value?.captureCanvas(MODEL_CAPTURE_SIZE, MODEL_CAPTURE_SIZE)
+  if (!canvas) return
+  const mySeq = ++modelCaptureSeq
+  try {
+    const url = await uploadCanvas(canvas, {
+      subfolder: 'model3d-view',
+      filename: `comfytv-model-view-${Date.now()}.png`,
+    })
+    if (mySeq !== modelCaptureSeq) return
+    emit('capture-view', { index: '', imageUrl: url, mediaType: 'image' })
+  } catch (e) {
+    console.error('[ComfyTV/ModelPreview] capture upload failed', e)
+  }
+}
+
 function openViewer(url: string) {
   if (url) openLightbox([{ url }], 0)
 }
@@ -409,7 +472,10 @@ function onKeydown(e: KeyboardEvent) {
   if (tagMenu.value) closeTagMenu()
 }
 onMounted(() => window.addEventListener('keydown', onKeydown))
-onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown))
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', onKeydown)
+  if (modelCaptureTimer != null) window.clearTimeout(modelCaptureTimer)
+})
 
 const props = defineProps<{
   type:
@@ -444,6 +510,7 @@ const emit = defineEmits<{
   (e: 'item-click', payload: ItemClickPayload): void
   (e: 'item-remove', payload: ItemClickPayload): void
   (e: 'load-asset', payload: ItemClickPayload): void
+  (e: 'capture-view', payload: ItemClickPayload): void
 }>()
 
 const previewMediaType = computed<string>(() => {
@@ -454,6 +521,8 @@ const previewMediaType = computed<string>(() => {
     case 'COMFYTV_VIDEO':
     case 'COMFYTV_VIDEOS':
       return 'video'
+    case 'COMFYTV_MODEL':
+      return 'model'
     default:
       return 'image'
   }
@@ -522,6 +591,7 @@ const TYPE_BADGE_COLORS: Record<string, string> = {
   COMFYTV_IMAGES:     'ctv:bg-[rgb(255_140_200/0.25)] ctv:text-[#ffb0d8]',
   COMFYTV_AUDIOS:     'ctv:bg-[rgb(255_100_100/0.22)] ctv:text-[#ffb0b0]',
   COMFYTV_VIDEOS:     'ctv:bg-[rgb(255_171_64/0.25)] ctv:text-[#ffd089]',
+  COMFYTV_MODEL:      'ctv:bg-[rgb(100_220_200/0.25)] ctv:text-[#a5f0e0]',
 }
 const typeBadgeClass = computed(() => {
   const palette = TYPE_BADGE_COLORS[props.type] ?? 'ctv:bg-white/10 ctv:text-white/70'

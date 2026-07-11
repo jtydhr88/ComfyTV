@@ -43,9 +43,11 @@ class TestSchemaDefinitions:
     @pytest.mark.parametrize("cls_name", [
         # Loaders
         "ImageLoaderStage", "VideoLoaderStage",
+        "ModelLoaderStage", "AssetModelLoaderStage",
         # Generators
         "ProjectStage", "TextStage", "ImageStage", "VideoStage",
         "AudioStage", "SpeechStage", "ShotImagesStage", "StoryboardStage",
+        "Model3DStage",
         # Edits
         "UpscaleStage", "InpaintStage", "OutpaintStage", "EraseStage",
         "ImageEditStage", "ImageVariationsStage", "RelightStage",
@@ -95,6 +97,31 @@ class TestLoaderExecute:
         out = ImageLoaderStage.execute(project_id="default", image="")
         # Empty filename → "" payload
         assert out.values[0] == ""
+
+    def test_model_loader_execute(self, reset_db):
+        from ComfyTV.nodes.stages.loaders import ModelLoaderStage
+        out = ModelLoaderStage.execute(project_id="default", model="3d/robot.glb")
+        assert "filename=robot.glb" in out.values[0]
+        assert "subfolder=3d" in out.values[0]
+        assert "type=input" in out.values[0]
+
+    def test_asset_model_loader_execute(self, reset_db):
+        from ComfyTV.nodes.stages.loaders import AssetModelLoaderStage
+        out = AssetModelLoaderStage.execute(project_id="default",
+                                            asset_url="/view?filename=m.glb")
+        assert out.values[0] == "/view?filename=m.glb"
+
+    def test_list_3d_input_files(self, monkeypatch, tmp_path):
+        from ComfyTV.nodes.stages import loaders
+        import folder_paths
+        root = tmp_path / "3d" / "sub"
+        root.mkdir(parents=True)
+        (tmp_path / "3d" / "a.glb").write_text("x")
+        (root / "b.FBX").write_text("y")
+        (root / "c.txt").write_text("z")
+        monkeypatch.setattr(folder_paths, "get_input_directory", lambda: str(tmp_path))
+        files = loaders._list_3d_input_files()
+        assert files == ["3d/a.glb", "3d/sub/b.FBX"]
 
     def test_list_input_files_handles_missing_dir(self, monkeypatch):
         from ComfyTV.nodes.stages import loaders

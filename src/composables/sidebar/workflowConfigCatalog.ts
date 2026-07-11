@@ -124,7 +124,7 @@ import { reactive } from 'vue'
 
 import { fetchCaps } from '@/api'
 
-export type UpstreamKind = 'image' | 'video' | 'audio' | 'text'
+export type UpstreamKind = 'image' | 'video' | 'audio' | 'text' | 'model'
 
 export interface Caps {
   upstream_kinds: UpstreamKind[]
@@ -141,6 +141,7 @@ export const STAGE_COMPUTED_LABELS: Record<string, string> = {
 export const UPSTREAM_KIND_LABELS: Record<string, string> = {
   image: 'Upstream image', video: 'Upstream video',
   audio: 'Upstream audio', text:  'Upstream text',
+  model: 'Upstream 3D model',
 }
 
 interface CapsState {

@@ -167,6 +167,15 @@
     },
     "VideoUpscaleStage": {
       "display_name": "视频高清"
+    },
+    "Model3DStage": {
+      "display_name": "3D 模型阶段"
+    },
+    "ModelLoaderStage": {
+      "display_name": "加载 3D 模型"
+    },
+    "AssetModelLoaderStage": {
+      "display_name": "从资产加载 3D 模型"
     }
   },
   "ComfyTV_AssetAudioLoaderStage": {
@@ -1559,6 +1568,59 @@
       "2": {
         "name": "图像组",
         "tooltip": "最近一次截取的全部画面——每个场景相机一张。"
+      }
+    }
+  },
+  "ComfyTV_Model3DStage": {
+    "display_name": "3D 模型阶段",
+    "inputs": {
+      "workflow": {
+        "name": "工作流"
+      },
+      "texts": {
+        "name": "文本"
+      },
+      "images": {
+        "name": "图像"
+      },
+      "models": {
+        "name": "模型"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "模型",
+        "tooltip": "生成的 3D 模型（GLB）。"
+      },
+      "1": {
+        "name": "图像",
+        "tooltip": "预览视口的当前画面截图——旋转视角后自动更新。"
+      }
+    }
+  },
+  "ComfyTV_ModelLoaderStage": {
+    "display_name": "加载 3D 模型",
+    "inputs": {},
+    "outputs": {
+      "0": {
+        "name": "模型"
+      },
+      "1": {
+        "name": "图像",
+        "tooltip": "预览视口的当前画面截图——旋转视角后自动更新。"
+      }
+    }
+  },
+  "ComfyTV_AssetModelLoaderStage": {
+    "display_name": "从资产加载 3D 模型",
+    "inputs": {},
+    "outputs": {
+      "0": {
+        "name": "模型"
+      },
+      "1": {
+        "name": "图像",
+        "tooltip": "预览视口的当前画面截图——旋转视角后自动更新。"
       }
     }
   }

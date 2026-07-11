@@ -162,6 +162,59 @@ class ImageStage(io.ComfyNode):
                                 picked_payload=picked_url, picked_index=picked_idx)
 
 
+class Model3DStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.Model3DStage",
+            display_name="3D Model Stage",
+            category="ComfyTV/Generate",
+            inputs=[
+                *_standard_stage_inputs(),
+                io.Combo.Input("workflow", options=labels_for('model') or [""],
+                               default=default_for('model'),
+                               tooltip="Which backend 3D-generation workflow to invoke when Run is clicked. "
+                                       "The workflow must end in a SaveGLB (or compatible) node."),
+                _main_prompt_input(tooltip="Primary prompt — the user's intent for this stage. Upstream text inputs are treated as additional context."),
+                io.Autogrow.Input("texts",  template=_text_template(4)),
+                io.Autogrow.Input("images", template=_image_template(4)),
+                io.Autogrow.Input("models", template=_model_template(4)),
+                io.String.Input("captured_image", default="",
+                                socketless=True, extra_dict={"hidden": True},
+                                tooltip="Internal — /view? URL of the latest preview-viewport snapshot. "
+                                        "Written by the 3D preview in the node body; becomes the `image` output."),
+                _custom_params_input(),
+            ],
+            outputs=[COMFYTV_MODEL.Output("model"), COMFYTV_IMAGE.Output("image")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
+                      workflow="", main_prompt="", texts=None, images=None,
+                      models=None, captured_image="", custom_params="{}"):
+
+        text_vals = _autogrow_values(texts)
+        combined_prompt = _combine_prompt(main_prompt, text_vals)
+        payload = await invoke_runner(
+            kind='model',
+            label=workflow,
+            main_prompt=combined_prompt,
+            upstream={
+                'texts':  text_vals,
+                'images': _autogrow_values(images),
+                'models': _autogrow_values(models),
+            },
+            options={},
+            custom_params=custom_params,
+        )
+        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
+                                parent_output_id=parent_output_id,
+                                picked_payload="")
+
+
 class VideoStage(io.ComfyNode):
 
     @classmethod

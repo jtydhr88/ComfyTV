@@ -24,11 +24,19 @@ class TestComputeInputUsage:
     def test_empty_bindings(self):
         out = self._api()([])
         assert out["uses"]     == {"image": False, "video": False,
-                                   "audio": False, "text":  False}
+                                   "audio": False, "text":  False, "model": False}
         assert out["requires"] == {"image": False, "video": False,
-                                   "audio": False, "text":  False}
+                                   "audio": False, "text":  False, "model": False}
         assert out["max_inputs"] == {"image": 0, "video": 0,
-                                     "audio": 0, "text":  0}
+                                     "audio": 0, "text":  0, "model": 0}
+
+    def test_upstream_model_counts(self):
+        out = self._api()([
+            {"from": "upstream_model:annotated[0]", "required": True},
+        ])
+        assert out["uses"]["model"] is True
+        assert out["requires"]["model"] is True
+        assert out["max_inputs"]["model"] == 1
 
     def test_main_prompt_marks_text_unbounded(self):
         out = self._api()([{"from": "main_prompt", "required": False}])

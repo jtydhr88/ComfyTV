@@ -68,9 +68,10 @@ const STAGE_CLASS_BY_KIND: Record<StageKind, string> = {
   'audio-picker': 'ComfyTV.AudioPickerStage',
   'video-picker': 'ComfyTV.VideoPickerStage',
   timeline:       'ComfyTV.DirectorTimelineStage',
+  model:          'ComfyTV.Model3DStage',
 }
 
-const TARGET_GROUP_BY_KIND: Record<StageKind, 'texts' | 'images' | 'videos'> = {
+const TARGET_GROUP_BY_KIND: Record<StageKind, 'texts' | 'images' | 'videos' | 'models'> = {
   text:           'texts',
   image:          'images',
   video:          'videos',
@@ -82,6 +83,7 @@ const TARGET_GROUP_BY_KIND: Record<StageKind, 'texts' | 'images' | 'videos'> = {
   'audio-picker': 'videos',
   'video-picker': 'videos',
   timeline:       'images',
+  model:          'models',
 }
 
 function findFirstAutogrowSlot(node: any, groupPrefix: string): number {
@@ -426,6 +428,7 @@ export function useStageNode(
     const widgetName = kind === 'image' ? 'image'
                      : kind === 'video' ? 'video'
                      : kind === 'audio' ? 'audio'
+                     : kind === 'model' ? 'model'
                      : null
     const uploadWidget = widgetName
       ? node.widgets?.find((w: any) => w.name === widgetName)
@@ -717,6 +720,14 @@ export function useStageNode(
     if (actionId === 'load-asset') {
       const url = context?.imageUrl
       if (url) void spawnAssetImageLoader(node, url, context?.label, context?.mediaType || 'image')
+      return
+    }
+    if (actionId === 'model-capture-view') {
+      const url = context?.imageUrl
+      if (kind === 'model' && url) {
+        setWidget(node, 'captured_image', url)
+        store.setOutputSlot(state, 1, url)
+      }
       return
     }
     if (actionId === 'clear-pool' && isPoolPickerKind(kind)) {

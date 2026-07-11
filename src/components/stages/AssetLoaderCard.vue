@@ -55,6 +55,14 @@
             class="ctv:flex ctv:items-center ctv:justify-center ctv:w-full ctv:aspect-square ctv:text-2xl
                    ctv:bg-secondary-background-hover ctv:text-muted-foreground"
           ><i class="pi pi-volume-up" /></div>
+          <div
+            v-else-if="mediaType === 'model'"
+            class="ctv:relative ctv:w-full ctv:aspect-square ctv:bg-secondary-background-hover"
+          >
+            <ModelThumb :src="asset.payload_url" :alt="asset.name">
+              <i class="pi pi-box ctv:text-2xl" />
+            </ModelThumb>
+          </div>
           <img
             v-else
             :src="asset.payload_url"
@@ -91,7 +99,7 @@
         :on-disconnect="onDisconnect"
         :on-action="onAction"
         hide-context
-        hide-output
+        :hide-output="state.kind !== 'model'"
       />
     </div>
   </div>
@@ -102,6 +110,7 @@ import { computed, onMounted, ref } from 'vue'
 
 import type { Asset } from '@/api/schemas'
 import type { LGraphNode } from '@/lib/comfyApp'
+import ModelThumb from '@/components/widgets/ModelThumb.vue'
 import StageCard from '@/components/stages/StageCard.vue'
 import { type AssetCategoryFilter, useAssetStore } from '@/stores/assetStore'
 import { useStageStore, type StageState } from '@/stores/stageStore'
@@ -119,9 +128,10 @@ const props = defineProps<{
 const store = useAssetStore()
 const stageStore = useStageStore()
 
-const mediaType = computed<'image' | 'video' | 'audio'>(() =>
+const mediaType = computed<'image' | 'video' | 'audio' | 'model'>(() =>
   props.state.kind === 'video' ? 'video'
     : props.state.kind === 'audio' ? 'audio'
+    : props.state.kind === 'model' ? 'model'
     : 'image',
 )
 

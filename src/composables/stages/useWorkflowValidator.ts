@@ -21,7 +21,7 @@ export interface ValidateOpts {
   assetExists?: (id: number) => boolean
 }
 
-type Kind = 'image' | 'video' | 'audio' | 'text'
+type Kind = 'image' | 'video' | 'audio' | 'text' | 'model'
 
 interface UsageEntry {
   uses:       Record<Kind, boolean>
@@ -63,6 +63,7 @@ function slotKind(type: string | undefined | null): Kind | null {
     case 'COMFYTV_VIDEO':  return 'video'
     case 'COMFYTV_AUDIO':  return 'audio'
     case 'COMFYTV_TEXT':   return 'text'
+    case 'COMFYTV_MODEL':  return 'model'
     default: return null
   }
 }
@@ -103,7 +104,7 @@ export async function validateNode(
   const imageRefs = opts.imageRefs ?? readImageRefs(node)
   const assetExists = opts.assetExists ?? (() => true)
 
-  const wiredCount: Record<Kind, number> = { image: 0, video: 0, audio: 0, text: 0 }
+  const wiredCount: Record<Kind, number> = { image: 0, video: 0, audio: 0, text: 0, model: 0 }
   for (const inp of node?.inputs ?? []) {
     if (inp.link == null) continue
     const kind = slotKind(inp?.type)
@@ -147,8 +148,8 @@ export async function validateNode(
   }
 
   const otherKinds = nodeAcceptsAutogrowImages(node)
-    ? (['video', 'audio', 'text'] as const)
-    : (['image', 'video', 'audio', 'text'] as const)
+    ? (['video', 'audio', 'text', 'model'] as const)
+    : (['image', 'video', 'audio', 'text', 'model'] as const)
   for (const kind of otherKinds) {
     const needed = requiredSlotsOf(entry, kind).length
     if (needed === 0) continue

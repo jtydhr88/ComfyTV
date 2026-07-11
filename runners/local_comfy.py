@@ -14,10 +14,11 @@ from .base import Runner, RunnerContext
 _log = logging.getLogger(__name__)
 
 _UPSTREAM_PAT = re.compile(
-    r'^upstream_(image|video|audio|text):(annotated|value|masked)(?:\[(\d+)\])?$'
+    r'^upstream_(image|video|audio|text|model):(annotated|value|masked)(?:\[(\d+)\])?$'
 )
 _UPSTREAM_BUCKET_BY_KIND = {
     'image': 'images', 'video': 'videos', 'audio': 'audio', 'text': 'texts',
+    'model': 'models',
 }
 
 def _aspect_ratio_value(s: str) -> float:
@@ -256,6 +257,7 @@ def _auto_detect_result(workflow: dict, ctx_kind: str | None = None) -> dict:
         'SaveAudioOpus':     'ui_save_url',
         'SaveAudioAdvanced': 'ui_save_url',
         'VHS_VideoCombine':  'ui_save_url',
+        'SaveGLB':           'ui_save_url',
     }
     for node_id, node in workflow.items():
         if not isinstance(node, dict):
@@ -491,7 +493,7 @@ async def _run_subprompt(sub_prompt: dict, sub_prompt_id: str,
             )
         return executor
 
-_SAVE_UI_KEYS = ("images", "audio", "videos", "gifs", "video")
+_SAVE_UI_KEYS = ("images", "audio", "videos", "gifs", "video", "3d")
 
 
 def _save_files_from(save_out: dict) -> list[dict]:

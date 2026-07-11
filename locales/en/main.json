@@ -49,7 +49,8 @@
       "video": "Generate Video",
       "audio": "Generate Audio",
       "panorama": "Generate Panorama",
-      "storyboard": "Generate Storyboard"
+      "storyboard": "Generate Storyboard",
+      "model": "Generate 3D Model"
     },
     "action": {
       "viewFull": "View full size",
@@ -965,5 +966,15 @@
     "renameHint": "Double-click to rename",
     "hideObject": "Hide",
     "showObject": "Show"
+  },
+  "modelPreview": {
+    "loading": "Loading model…",
+    "loadFailed": "Failed to load model"
+  },
+  "modelLoader": {
+    "upload": "Upload",
+    "uploading": "Uploading…",
+    "empty": "No 3D models in input/3d yet — upload one to get started.",
+    "pickHint": "Select a 3D model…"
   }
 }

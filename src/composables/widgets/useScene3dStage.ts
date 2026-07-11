@@ -16,6 +16,7 @@ import type {
   TimelineDurationChange,
   TimelineTimeUpdate
 } from '@/widgets/three/load3d/TimelineController'
+import { isMeshModelUrl } from '@/widgets/three/modelFormats'
 import { fetchCameraPresetManifest } from '@/widgets/three/load3d/cameraPresetAssets'
 import type { CameraPresetManifestEntry } from '@/widgets/three/load3d/cameraPresetAssets'
 import type { CameraPresetTuning } from '@/widgets/three/load3d/interfaces'
@@ -162,7 +163,9 @@ export function useScene3dStage(
       state.value.models.find((model) => model.id === selectedId.value) ?? null
   )
   const modelAssets = computed(() =>
-    assetStore.assets.filter((asset) => asset.media_type === 'model')
+    assetStore.assets.filter(
+      (asset) => asset.media_type === 'model' && isMeshModelUrl(asset.payload_url)
+    )
   )
   const selectedCamera = computed<SceneCameraEntry | null>(
     () =>

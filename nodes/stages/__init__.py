@@ -3,6 +3,7 @@ from ._common import *  # noqa: F401, F403
 from .generators import (
     ProjectStage, TextStage, ImageStage, VideoStage, AudioStage, SpeechStage,
     ImagePickerStage, AudioPickerStage, VideoPickerStage, ShotImagesStage, StoryboardStage,
+    Model3DStage,
 )
 from .edits import (
     UpscaleStage, OutpaintStage, InpaintStage, ImageEditStage,
@@ -27,6 +28,7 @@ from .panorama import (
 from .loaders import (
     ImageLoaderStage, VideoLoaderStage, AudioLoaderStage,
     AssetImageLoaderStage, AssetVideoLoaderStage, AssetAudioLoaderStage,
+    ModelLoaderStage, AssetModelLoaderStage,
 )
 from .scene3d import Scene3DStage
 
@@ -48,6 +50,7 @@ class ComfyTVExtension(ComfyExtension):
             AudioVideoDemuxAudioStage, AudioVideoDemuxVideoStage,
             ImageLoaderStage, VideoLoaderStage, AudioLoaderStage,
             AssetImageLoaderStage, AssetVideoLoaderStage, AssetAudioLoaderStage,
+            Model3DStage, ModelLoaderStage, AssetModelLoaderStage,
             Scene3DStage,
             *_bridge_classes(),
         ]

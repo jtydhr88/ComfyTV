@@ -22,7 +22,7 @@
       <input
         ref="filePicker"
         type="file"
-        accept="image/*,video/*,audio/*,.glb,.gltf,.fbx"
+        :accept="fileAccept"
         multiple
         class="ctv:hidden"
         @change="onPickFiles"
@@ -291,7 +291,9 @@ import IconX from '~icons/lucide/x'
 
 import AssetGridCard from '@/components/sidebar/assets/AssetGridCard.vue'
 import AssetListItem from '@/components/sidebar/assets/AssetListItem.vue'
-import { type AssetViewMode, useAssetsPanel } from '@/composables/sidebar/useAssetsPanel'
+import { MODEL_FILE_EXTENSIONS, type AssetViewMode, useAssetsPanel } from '@/composables/sidebar/useAssetsPanel'
+
+const fileAccept = `image/*,video/*,audio/*,${MODEL_FILE_EXTENSIONS.join(',')}`
 
 const props = defineProps<{
   active?: boolean

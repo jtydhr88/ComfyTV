@@ -156,6 +156,7 @@
         :selected-index="state.kind === 'image-batch' ? state.pickedIndex : undefined"
         @item-click="onOutputItemClick"
         @load-asset="onLoadAssetAction"
+        @capture-view="onCaptureViewAction"
       />
     </section>
 
@@ -336,6 +337,10 @@ function onOutputItemClick(payload: ImagePickContext) {
 
 function onLoadAssetAction(payload: ImagePickContext) {
   props.onAction('load-asset', payload)
+}
+
+function onCaptureViewAction(payload: ImagePickContext) {
+  props.onAction('model-capture-view', payload)
 }
 
 function sourceLabel(s: InputSource): string {

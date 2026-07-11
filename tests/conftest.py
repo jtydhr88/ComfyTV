@@ -126,10 +126,10 @@ def _ensure_comfyui_stubs():
                 self.kw = kw
 
         _Combo.Input = _Input
-        _Custom.Output = _Input  # Custom("X").Output(...) used in outputs=[]
+        _Custom.Output = _Input
         _Custom.Input  = _Input
 
-        _UploadType = types.SimpleNamespace(image="image", video="video", audio="audio")
+        _UploadType = types.SimpleNamespace(image="image", video="video", audio="audio", model="model")
         _FolderType = types.SimpleNamespace(input="input", output="output", temp="temp")
         _Hidden     = types.SimpleNamespace(unique_id="unique_id")
         _NumDisplay = types.SimpleNamespace(slider="slider", number="number")

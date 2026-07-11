@@ -13,6 +13,25 @@ def _list_input_files(content_kinds: list[str]) -> list[str]:
         return []
 
 
+_MODEL_FILE_SUFFIXES = ('.glb', '.gltf', '.fbx', '.spz', '.splat', '.ply', '.ksplat')
+
+
+def _list_3d_input_files() -> list[str]:
+    try:
+        base = folder_paths.get_input_directory()
+        root = os.path.join(base, "3d")
+        os.makedirs(root, exist_ok=True)
+        out = []
+        for dirpath, _dirs, files in os.walk(root):
+            for f in files:
+                if f.lower().endswith(_MODEL_FILE_SUFFIXES):
+                    rel = os.path.relpath(os.path.join(dirpath, f), base)
+                    out.append(rel.replace('\\', '/'))
+        return sorted(out)
+    except Exception:
+        return []
+
+
 def _asset_loader_inputs() -> list:
     return [
         _project_id_input(),
@@ -132,6 +151,75 @@ class AssetAudioLoaderStage(io.ComfyNode):
     def execute(cls, project_id="", parent_output_id=0, asset_url="", asset_id=0, category="all"):
         return _stage_emit_auto(cls, project_id=project_id, payload_str=asset_url or "",
                                 parent_output_id=parent_output_id)
+
+
+def _captured_image_input():
+    return io.String.Input(
+        "captured_image",
+        default="",
+        socketless=True,
+        extra_dict={"hidden": True},
+        tooltip="Internal — /view? URL of the preview-viewport snapshot. Written by the "
+                "3D preview in the node body; becomes the `image` output.",
+    )
+
+
+class AssetModelLoaderStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.AssetModelLoaderStage",
+            display_name="Load 3D Model from Asset",
+            category="ComfyTV/Input",
+            inputs=[*_asset_loader_inputs(), _captured_image_input()],
+            outputs=[COMFYTV_MODEL.Output("model"), COMFYTV_IMAGE.Output("image")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, project_id="", parent_output_id=0, asset_url="", asset_id=0,
+                category="all", captured_image=""):
+        return _stage_emit_auto(cls, project_id=project_id, payload_str=asset_url or "",
+                                parent_output_id=parent_output_id,
+                                picked_payload=captured_image or "")
+
+
+class ModelLoaderStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.ModelLoaderStage",
+            display_name="Load 3D Model",
+            category="ComfyTV/Input",
+            inputs=[
+                _project_id_input(),
+                _parent_output_id_input(),
+                io.Combo.Input(
+                    "model",
+                    options=_list_3d_input_files(),
+                    optional=True,
+                    default="",
+                    socketless=True,
+                    extra_dict={"hidden": True},
+                    tooltip="Internal — input/3d-relative path of the picked model. Driven by the "
+                            "card's thumbnail dropdown; options carry the server-side file list.",
+                ),
+                _captured_image_input(),
+            ],
+            outputs=[COMFYTV_MODEL.Output("model"), COMFYTV_IMAGE.Output("image")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, project_id="", parent_output_id=0, model="", captured_image=""):
+        payload = _input_file_url(model)
+        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
+                                parent_output_id=parent_output_id,
+                                picked_payload=captured_image or "")
 
 
 class VideoLoaderStage(io.ComfyNode):

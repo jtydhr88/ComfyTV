@@ -27,9 +27,11 @@
       <div
         v-else-if="asset.media_type === 'model'"
         :title="tooltip"
-        class="ctv:absolute ctv:inset-0 ctv:flex ctv:items-center ctv:justify-center ctv:text-muted-foreground"
+        class="ctv:absolute ctv:inset-0"
       >
-        <IconBox class="ctv:size-8" />
+        <ModelThumb :src="asset.payload_url" :alt="asset.name">
+          <IconBox class="ctv:size-8" />
+        </ModelThumb>
       </div>
       <img
         v-else
@@ -95,6 +97,7 @@ import IconPlay from '~icons/lucide/play'
 import IconVolume2 from '~icons/lucide/volume-2'
 
 import type { Asset } from '@/api/schemas'
+import ModelThumb from '@/components/widgets/ModelThumb.vue'
 
 defineProps<{
   asset: Asset

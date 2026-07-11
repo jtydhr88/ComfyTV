@@ -49,7 +49,8 @@
       "video": "生成视频",
       "audio": "生成音频",
       "panorama": "生成全景图",
-      "storyboard": "生成分镜"
+      "storyboard": "生成分镜",
+      "model": "生成3D模型"
     },
     "action": {
       "viewFull": "查看大图",
@@ -965,5 +966,15 @@
     "renameHint": "双击重命名",
     "hideObject": "隐藏",
     "showObject": "显示"
+  },
+  "modelPreview": {
+    "loading": "模型加载中…",
+    "loadFailed": "模型加载失败"
+  },
+  "modelLoader": {
+    "upload": "上传",
+    "uploading": "上传中…",
+    "empty": "input/3d 还没有 3D 模型——先上传一个吧。",
+    "pickHint": "选择 3D 模型…"
   }
 }

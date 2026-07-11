@@ -10,6 +10,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@sparkjsdev/spark": "^2.1.0",
     "@tiptap/core": "^3.26.0",
     "@tiptap/extension-document": "^3.26.0",
     "@tiptap/extension-hard-break": "^3.26.0",

@@ -21,10 +21,13 @@
         v-else-if="asset.media_type === 'audio'"
         class="ctv:size-4 ctv:text-muted-foreground"
       />
-      <IconBox
+      <ModelThumb
         v-else-if="asset.media_type === 'model'"
-        class="ctv:size-4 ctv:text-muted-foreground"
-      />
+        :src="asset.payload_url"
+        :alt="asset.name"
+      >
+        <IconBox class="ctv:size-4" />
+      </ModelThumb>
       <img
         v-else
         :src="asset.payload_url"
@@ -79,6 +82,7 @@ import IconMaximize from '~icons/lucide/maximize-2'
 import IconVolume2 from '~icons/lucide/volume-2'
 
 import type { Asset } from '@/api/schemas'
+import ModelThumb from '@/components/widgets/ModelThumb.vue'
 
 const props = defineProps<{
   asset: Asset
