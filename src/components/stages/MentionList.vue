@@ -3,8 +3,12 @@
               ctv:bg-interface-menu-surface ctv:text-base-foreground
               ctv:border ctv:border-border-default ctv:shadow-md">
     <template v-if="!creating">
+      <div v-if="imageItems.length"
+           class="ctv:py-1 ctv:px-2 ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">
+        {{ $t('mention.imageSlots') }}
+      </div>
       <div
-        v-for="(item, i) in items"
+        v-for="(item, i) in imageItems"
         :key="itemKey(item)"
         :class="[
           'ctv:flex ctv:items-center ctv:gap-2 ctv:py-1 ctv:px-2 ctv:cursor-pointer',
@@ -14,6 +18,28 @@
         :title="itemTitle(item)"
         @mousedown.prevent
         @click="selectItem(i)"
+      >
+        <span
+          class="ctv:shrink-0 ctv:size-6 ctv:rounded-sm ctv:overflow-hidden ctv:bg-black/30 ctv:border"
+          :style="{ borderColor: item.color }"
+        >
+          <img v-if="item.url" :src="item.url" class="ctv:block ctv:size-full ctv:object-cover" draggable="false" />
+        </span>
+        <span class="ctv:font-mono ctv:shrink-0" :style="{ color: item.color }">@{{ $t('mention.imageChip', { n: item.slot }) }}</span>
+        <span class="ctv:ml-auto ctv:text-muted-foreground ctv:whitespace-nowrap">→ {{ $t('mention.imageExpand', { n: item.ordinal }) }}</span>
+      </div>
+      <div
+        v-for="(item, j) in snippetItems"
+        :key="itemKey(item)"
+        :class="[
+          'ctv:flex ctv:items-center ctv:gap-2 ctv:py-1 ctv:px-2 ctv:cursor-pointer',
+          'ctv:hover:bg-interface-menu-component-surface-hovered',
+          j === 0 && imageItems.length ? 'ctv:border-t ctv:border-border-subtle' : '',
+          imageItems.length + j === activeIndex ? 'ctv:bg-interface-menu-component-surface-selected' : '',
+        ]"
+        :title="itemTitle(item)"
+        @mousedown.prevent
+        @click="selectItem(imageItems.length + j)"
       >
         <span class="ctv:font-mono ctv:text-base-foreground ctv:shrink-0">@{{ item.module.label }}</span>
         <span class="ctv:text-muted-foreground ctv:overflow-hidden ctv:text-ellipsis ctv:whitespace-nowrap">{{ item.module.body }}</span>
@@ -68,7 +94,9 @@
 
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
+import { imageSlotLabel } from '@/composables/stages/imageSlotMentions'
 import type { MentionSuggestionItem } from '@/composables/stages/useMentionSuggestion'
 import { useListKeyboardNav } from '@/composables/useListKeyboardNav'
 import { useEntryStore } from '@/stores/entryStore'
@@ -78,7 +106,7 @@ import { LABEL_RE } from '@/utils/labelRegex'
 export interface MentionCommandAttrs {
   id: number | string
   label: string
-  mentionType?: 'entry'
+  mentionType?: 'entry' | 'imageSlot'
 }
 
 const props = defineProps<{
@@ -89,6 +117,14 @@ const props = defineProps<{
 
 const entryStore = useEntryStore()
 const projectStore = useProjectStore()
+const { t } = useI18n()
+
+const imageItems = computed(() =>
+  props.items.filter((it): it is Extract<MentionSuggestionItem, { type: 'imageSlot' }> =>
+    it.type === 'imageSlot'))
+const snippetItems = computed(() =>
+  props.items.filter((it): it is Extract<MentionSuggestionItem, { type: 'snippet' }> =>
+    it.type === 'snippet'))
 
 const canCreate = computed(() => !!props.query && LABEL_RE.test(props.query))
 
@@ -99,10 +135,16 @@ watch(() => props.items, nav.reset)
 watch(() => props.query, nav.reset)
 
 function itemKey(item: MentionSuggestionItem): string {
-  return item.module.id
+  return item.type === 'imageSlot' ? imageSlotLabel(item.slot) : item.module.id
 }
 
 function itemTitle(item: MentionSuggestionItem): string {
+  if (item.type === 'imageSlot') {
+    return t('mention.imageItemTitle', {
+      n: item.slot,
+      text: t('mention.imageExpand', { n: item.ordinal }),
+    })
+  }
   return item.module.body
 }
 
@@ -145,9 +187,15 @@ function onCreateKeydown(e: KeyboardEvent) {
 }
 
 function selectItem(index: number) {
-  if (index < props.items.length) {
-    const item = props.items[index]
+  const ordered = [...imageItems.value, ...snippetItems.value]
+  if (index < ordered.length) {
+    const item = ordered[index]
     if (!item) return
+    if (item.type === 'imageSlot') {
+      const label = imageSlotLabel(item.slot)
+      props.command({ id: label, label, mentionType: 'imageSlot' })
+      return
+    }
     const label = item.module.label ?? ''
     props.command({ id: label, label, mentionType: 'entry' })
   } else if (canCreate.value) {

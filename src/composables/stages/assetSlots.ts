@@ -73,7 +73,7 @@ export function fetchImageSlotOptionsCached(
 }
 
 
-const AUTOGROW_IMAGE_KEY_RE = /^images\.image(\d+)$/
+export const AUTOGROW_IMAGE_KEY_RE = /^images\.image(\d+)$/
 
 export interface ResolvedImageRef {
   id: number

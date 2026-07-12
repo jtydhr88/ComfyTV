@@ -27,7 +27,8 @@
         v-for="(ref, i) in refs"
         :key="ref.asset_id"
         class="ctv:group ctv:relative ctv:w-[76px] ctv:h-[76px] ctv:rounded-sm ctv:overflow-hidden ctv:cursor-pointer
-               ctv:bg-black/30 ctv:border ctv:border-border-default ctv:hover:border-primary-background/70"
+               ctv:bg-black/30 ctv:border"
+        :style="{ borderColor: slotColor(ref.slot) }"
         :title="tileTooltip(ref)"
         @click="openSlotPicker(i, $event)"
       >
@@ -46,8 +47,9 @@
         </div>
         <span
           class="ctv:absolute ctv:bottom-0 ctv:inset-x-0 ctv:py-0.5 ctv:px-1 ctv:text-3xs ctv:font-semibold
-                 ctv:text-white/90 ctv:overflow-hidden ctv:whitespace-nowrap ctv:text-ellipsis ctv:pointer-events-none
+                 ctv:overflow-hidden ctv:whitespace-nowrap ctv:text-ellipsis ctv:pointer-events-none
                  ctv:bg-linear-to-b ctv:from-transparent ctv:to-black/75"
+          :style="{ color: slotColor(ref.slot) }"
         >{{ `#${ref.slot}` }}</span>
         <button
           type="button"
@@ -90,6 +92,7 @@ import { onMounted, ref } from 'vue'
 
 import AssetPickerPopup from '@/components/stages/AssetPickerPopup.vue'
 import MentionSlotPopover from '@/components/stages/MentionSlotPopover.vue'
+import { slotColor } from '@/composables/stages/imageSlotMentions'
 import { useImageReferences } from '@/composables/stages/useImageReferences'
 import type { LGraphNode } from '@/lib/comfyApp'
 

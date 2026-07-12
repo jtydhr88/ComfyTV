@@ -61,10 +61,12 @@
           :key="inp.slot"
           :class="[
             'ctv-input-tile ctv:relative ctv:w-[76px] ctv:h-[76px] ctv:rounded-sm ctv:overflow-hidden ctv:bg-black/30 ctv:border',
-            inp.source === 'upstream'         ? 'ctv:border-primary-background/70'
+            tileSlotColor(inp)                ? ''
+              : inp.source === 'upstream'         ? 'ctv:border-primary-background/70'
               : inp.source === 'upstream-pending' ? 'ctv:border-warning-background/70'
               : 'ctv:border-border-default',
           ]"
+          :style="tileSlotColor(inp) ? { borderColor: tileSlotColor(inp)! } : undefined"
           :title="`${formatSlot(inp.slot)} — ${sourceLabel(inp.source)}`"
         >
           <ValuePreview
@@ -213,6 +215,7 @@ import CustomParamsSection from './CustomParamsSection.vue'
 import { LOCAL_SERVER, useServerStore } from '@/stores/serverStore'
 import { t } from '@/i18n'
 import ValuePreview from './ValuePreview.vue'
+import { imageInputSlotIndex, slotColor } from '@/composables/stages/imageSlotMentions'
 import { formatSlot, useStageCard } from '@/composables/stages/useStageCard'
 import {
   actionLabelKey,
@@ -396,6 +399,12 @@ function sourceLabel(s: InputSource): string {
     case 'upstream-pending': return t('stage.source.pending')
     default:                 return ''
   }
+}
+
+function tileSlotColor(inp: { slot: string; source: InputSource }): string | null {
+  if (inp.source !== 'upstream') return null
+  const idx = imageInputSlotIndex(inp.slot)
+  return idx == null ? null : slotColor(idx)
 }
 
 function onRun() { if (canRun.value) props.onRunRequest() }

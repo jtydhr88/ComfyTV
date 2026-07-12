@@ -820,7 +820,12 @@
     "invalidLabel": "Invalid label — start with a letter / underscore (Chinese is fine), then letters / digits / _ / -",
     "noEntries": "No entries yet — type a label to create one",
     "contentPlaceholder": "Content this {'@'}-token expands to. (For characters / other kinds, use the ComfyTV button → Entries dialog.)",
-    "save": "Save (Ctrl+Enter)"
+    "save": "Save (Ctrl+Enter)",
+    "imageSlots": "Connected images",
+    "imageChip": "image #{n}",
+    "imageExpand": "image {n}",
+    "imageItemTitle": "Slot #{n} — expands at run to \"{text}\" (by actual send order)",
+    "imageTooltipMissing": "Slot #{n} has no image right now — this token is dropped at run"
   },
   "entries": {
     "refHelpPre": "Reference any entry in a stage's prompt with",

@@ -50,6 +50,10 @@ import {
   type ResolvedImageRef,
 } from '@/composables/stages/assetSlots'
 import { readImageRefs } from '@/composables/stages/imageRefs'
+import {
+  expandImageTokens,
+  imageSendOrder,
+} from '@/composables/stages/imageSlotMentions'
 import { extractRunError } from '@/utils/runError'
 import { postPickedIndex } from '@/composables/stages/stageApi'
 import { cancelRemoteJob, remoteRun } from '@/api'
@@ -656,7 +660,17 @@ export function useStageNode(
 
         const mp = obj.main_prompt
         if (typeof mp === 'string' && mp.includes('@')) {
-          obj.main_prompt = entries.expand(pid, mp)
+          const graphNode = a.graph?.getNodeById?.(Number(nid))
+                         ?? a.graph?.getNodeById?.(String(nid))
+          const { text, missing } = expandImageTokens(
+            mp,
+            imageSendOrder(graphNode),
+            n => t('mention.imageExpand', { n }),
+          )
+          for (const s of missing) {
+            console.warn(`[ComfyTV/stage] node #${nid}: @image_${s} references an empty slot — dropped from prompt`)
+          }
+          obj.main_prompt = entries.expand(pid, text)
         }
       }
       const serverStore = useServerStore()

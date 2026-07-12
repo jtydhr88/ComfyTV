@@ -163,6 +163,7 @@ class _Resolver:
 
         if src == "main_prompt":
             value = (self.ctx.main_prompt or "").strip()
+            _log.info("[ComfyTV] %s: main_prompt = %r", where, value)
         elif src.startswith("option:"):
             key = src.split(":", 1)[1]
             v = self.ctx.options.get(key)

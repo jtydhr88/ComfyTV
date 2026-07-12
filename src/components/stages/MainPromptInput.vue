@@ -31,6 +31,7 @@
 
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, watch, computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import Document    from '@tiptap/extension-document'
 import HardBreak   from '@tiptap/extension-hard-break'
@@ -43,6 +44,11 @@ import { delegate as tippyDelegate } from 'tippy.js'
 import 'tippy.js/dist/tippy.css'
 
 import type { CameraSelection } from '@/composables/stages/cameraControlCatalog'
+import {
+  imageSendOrder,
+  imageSlotFromLabel,
+  slotColor,
+} from '@/composables/stages/imageSlotMentions'
 import { CAMERA_BUILDER } from '@/composables/stages/promptModules/builders'
 import { useMentionSuggestion } from '@/composables/stages/useMentionSuggestion'
 import { usePromptModules } from '@/composables/stages/usePromptModules'
@@ -58,6 +64,7 @@ import PromptHelperPanel from './PromptHelperPanel.vue'
 
 const props = defineProps<{ node?: LGraphNode }>()
 
+const { t } = useI18n()
 const entryStore = useEntryStore()
 const projectStore = useProjectStore()
 const stageStore = useStageStore()
@@ -75,6 +82,9 @@ const ENTRY_CHIP_CLASS = 'mention-chip '
   + 'ctv:inline-block ctv:py-0 ctv:px-1 ctv:mx-px ctv:rounded ctv:font-medium ctv:whitespace-nowrap '
   + 'ctv:bg-primary-background/20 ctv:border ctv:border-primary-background/45 '
   + 'ctv:text-primary-background'
+
+const IMAGE_CHIP_CLASS = 'mention-chip '
+  + 'ctv:inline-block ctv:py-0 ctv:px-1 ctv:mx-px ctv:rounded ctv:font-medium ctv:whitespace-nowrap ctv:border'
 
 const ENTRY_TOKEN_RE = /@([\p{L}_][\p{L}\p{N}_-]*)/gu
 
@@ -111,13 +121,26 @@ const editor = useEditor({
     }),
     Mention.configure({
       renderText: ({ node }) => `@${node.attrs.label}`,
-      renderHTML: ({ node }: any) => ['span', {
-        class: ENTRY_CHIP_CLASS,
-        'data-mention-id': String(node.attrs.id),
-        'data-mention-label': node.attrs.label,
-        'data-mention-type': 'entry',
-      }, `@${node.attrs.label}`],
-      suggestion: useMentionSuggestion(projectId, MentionList),
+      renderHTML: ({ node }: any) => {
+        const slot = imageSlotFromLabel(String(node.attrs.label ?? ''))
+        if (slot != null) {
+          const color = slotColor(slot)
+          return ['span', {
+            class: IMAGE_CHIP_CLASS,
+            style: `color:${color};border-color:${color}A6;background-color:${color}2E`,
+            'data-mention-id': String(node.attrs.id),
+            'data-mention-label': node.attrs.label,
+            'data-mention-type': 'imageSlot',
+          }, `@${t('mention.imageChip', { n: slot })}`]
+        }
+        return ['span', {
+          class: ENTRY_CHIP_CLASS,
+          'data-mention-id': String(node.attrs.id),
+          'data-mention-label': node.attrs.label,
+          'data-mention-type': 'entry',
+        }, `@${node.attrs.label}`]
+      },
+      suggestion: useMentionSuggestion(projectId, () => props.node, MentionList),
     }),
   ],
   editorProps: {
@@ -190,6 +213,16 @@ let chipTooltips: any = null
 function stopBubble(e: Event) { e.stopPropagation() }
 
 function entryTooltip(label: string): string {
+  const slot = imageSlotFromLabel(label)
+  if (slot != null) {
+    const order = imageSendOrder(props.node)
+    const pos = order.indexOf(slot)
+    if (pos < 0) return t('mention.imageTooltipMissing', { n: slot })
+    return t('mention.imageItemTitle', {
+      n: slot,
+      text: t('mention.imageExpand', { n: pos + 1 }),
+    })
+  }
   const matches = entryStore.list(projectId.value).filter(e => e.label === label)
   if (matches.length === 0) {
     return `@${label} — no matching entry (will stay literal at run)`

@@ -820,7 +820,12 @@
     "invalidLabel": "标签无效 — 以字母 / 下划线开头(支持中文),后跟字母 / 数字 / _ / -",
     "noEntries": "还没有条目 — 输入标签即可新建",
     "contentPlaceholder": "此 {'@'} 标记展开后的内容。(角色等其他类型请用 ComfyTV 按钮 → 条目对话框。)",
-    "save": "保存 (Ctrl+Enter)"
+    "save": "保存 (Ctrl+Enter)",
+    "imageSlots": "已连接的图片",
+    "imageChip": "图片#{n}",
+    "imageExpand": "图{n}",
+    "imageItemTitle": "槽位 #{n} —— 运行时展开为「{text}」(按实际发送顺序)",
+    "imageTooltipMissing": "槽位 #{n} 当前没有图片 —— 运行时此标记会被移除"
   },
   "entries": {
     "refHelpPre": "在 stage 提示词里用",
