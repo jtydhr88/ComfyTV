@@ -55503,7 +55503,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-D-do28FU.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-CgCUK2Wj.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -124365,13 +124365,16 @@ class Scene3dViewport extends Viewport3d {
     if (this.hoveredId && !this.getSceneObject(this.hoveredId)) {
       this.setHovered(null);
     }
-    this.animationDuration = state2.characters.length || state2.models.length ? Math.max(
+    const animatedModels = state2.models.filter(
+      (model) => model.animation.clip !== ""
+    );
+    this.animationDuration = state2.characters.length || animatedModels.length ? Math.max(
       sceneFallbackDuration(
         state2.characters,
         this.characterManager.clipDurations()
       ),
       sceneFallbackDuration(
-        state2.models.map((model) => ({
+        animatedModels.map((model) => ({
           model: model.url,
           animation: model.animation
         })),
@@ -127251,7 +127254,7 @@ function useScene3dStage(node, opts) {
     const characters = state2.value.characters.map(
       (entry, index) => toTrack(entry, viewport2.characterManager.getClipDuration(entry.id), index)
     );
-    const models = state2.value.models.map(
+    const models = state2.value.models.filter((entry) => entry.animation.clip !== "").map(
       (entry, index) => toTrack(
         entry,
         viewport2.customModelManager.getClipDuration(entry.id),
@@ -127780,7 +127783,7 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
         label: characterDisplayLabel(character),
         color: TRACK_COLORS[index % TRACK_COLORS.length]
       })),
-      ...state2.value.models.map((model, index) => ({
+      ...state2.value.models.filter((model) => model.animation.clip !== "").map((model, index) => ({
         id: model.id,
         label: model.name || model.id,
         color: TRACK_COLORS[(state2.value.characters.length + index) % TRACK_COLORS.length]
@@ -131107,4 +131110,4 @@ export {
   RawShaderMaterial as y,
   Raycaster as z
 };
-//# sourceMappingURL=main-DAiatN2n.mjs.map
+//# sourceMappingURL=main-BuBqQ_bM.mjs.map

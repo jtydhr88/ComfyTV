@@ -684,13 +684,15 @@ export function useScene3dStage(
     const characters = state.value.characters.map((entry, index) =>
       toTrack(entry, viewport!.characterManager.getClipDuration(entry.id), index)
     )
-    const models = state.value.models.map((entry, index) =>
-      toTrack(
-        entry,
-        viewport!.customModelManager.getClipDuration(entry.id),
-        characters.length + index
+    const models = state.value.models
+      .filter((entry) => entry.animation.clip !== '')
+      .map((entry, index) =>
+        toTrack(
+          entry,
+          viewport!.customModelManager.getClipDuration(entry.id),
+          characters.length + index
+        )
       )
-    )
     return { fps, cameras, characters: [...characters, ...models] }
   }
 

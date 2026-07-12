@@ -402,15 +402,18 @@ export class Scene3dViewport extends Viewport3d {
     if (this.hoveredId && !this.getSceneObject(this.hoveredId)) {
       this.setHovered(null)
     }
+    const animatedModels = state.models.filter(
+      (model) => model.animation.clip !== ''
+    )
     this.animationDuration =
-      state.characters.length || state.models.length
+      state.characters.length || animatedModels.length
         ? Math.max(
             sceneFallbackDuration(
               state.characters,
               this.characterManager.clipDurations()
             ),
             sceneFallbackDuration(
-              state.models.map((model) => ({
+              animatedModels.map((model) => ({
                 model: model.url,
                 animation: model.animation
               })),

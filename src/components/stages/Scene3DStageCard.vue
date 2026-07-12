@@ -668,14 +668,16 @@ const timelineLegend = computed(() => [
     label: characterDisplayLabel(character),
     color: TRACK_COLORS[index % TRACK_COLORS.length]
   })),
-  ...state.value.models.map((model, index) => ({
-    id: model.id,
-    label: model.name || model.id,
-    color:
-      TRACK_COLORS[
-        (state.value.characters.length + index) % TRACK_COLORS.length
-      ]
-  }))
+  ...state.value.models
+    .filter((model) => model.animation.clip !== '')
+    .map((model, index) => ({
+      id: model.id,
+      label: model.name || model.id,
+      color:
+        TRACK_COLORS[
+          (state.value.characters.length + index) % TRACK_COLORS.length
+        ]
+    }))
 ])
 
 function gizmoModeDisabled(mode: Scene3dGizmoMode): boolean {
