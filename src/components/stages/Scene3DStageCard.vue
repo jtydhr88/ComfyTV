@@ -35,6 +35,27 @@
 
         <button
           type="button"
+          :class="historyBtnClass"
+          :disabled="!canUndo"
+          :title="$t('scene3d.undo')"
+          @click="undo"
+        >
+          <IconUndo class="ctv:size-4" />
+        </button>
+        <button
+          type="button"
+          :class="historyBtnClass"
+          :disabled="!canRedo"
+          :title="$t('scene3d.redo')"
+          @click="redo"
+        >
+          <IconRedo class="ctv:size-4" />
+        </button>
+
+        <div class="ctv:h-5 ctv:w-px ctv:bg-border-subtle" />
+
+        <button
+          type="button"
           :class="actionBtnClass"
           :disabled="capturing || recording"
           @click="capture"
@@ -446,8 +467,10 @@ import IconVideo from '~icons/lucide/video'
 import IconLightbulb from '~icons/lucide/lightbulb'
 import IconMove3d from '~icons/lucide/move-3d'
 import IconPersonStanding from '~icons/lucide/person-standing'
+import IconRedo from '~icons/lucide/redo-2'
 import IconRotate3d from '~icons/lucide/rotate-3d'
 import IconScale3d from '~icons/lucide/scale-3d'
+import IconUndo from '~icons/lucide/undo-2'
 import IconX from '~icons/lucide/x'
 
 import type { LGraphNode } from '@/lib/comfyApp'
@@ -507,6 +530,10 @@ const {
   modelAssets,
   clipNamesForSelected,
   gizmoMode,
+  undo,
+  redo,
+  canUndo,
+  canRedo,
   selectObject,
   addCharacter,
   addPrimitive,
@@ -806,6 +833,11 @@ const iconToolBtnClass =
   'ctv:inline-flex ctv:size-7 ctv:shrink-0 ctv:cursor-pointer ctv:items-center ctv:justify-center ' +
   'ctv:rounded-lg ctv:border-0 ctv:bg-secondary-background ctv:text-muted-foreground ctv:transition-colors ' +
   'ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground'
+
+const historyBtnClass =
+  iconToolBtnClass +
+  ' ctv:disabled:cursor-not-allowed ctv:disabled:opacity-40 ' +
+  'ctv:disabled:hover:bg-secondary-background ctv:disabled:hover:text-muted-foreground'
 
 const groupHeaderClass =
   'ctv:flex ctv:items-center ctv:gap-1 ctv:pt-1 ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground'

@@ -884,6 +884,8 @@
     "unlinkFailed": "Unlink failed"
   },
   "scene3d": {
+    "undo": "Undo",
+    "redo": "Redo",
     "position": "Pos",
     "rotation": "Rot",
     "scale": "Scale",

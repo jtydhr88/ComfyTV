@@ -884,6 +884,8 @@
     "unlinkFailed": "解除链接失败"
   },
   "scene3d": {
+    "undo": "撤销",
+    "redo": "重做",
     "position": "位置",
     "rotation": "旋转",
     "scale": "缩放",

@@ -53,6 +53,8 @@ import {
   needsAutoFit
 } from '@/widgets/three/scene3d/modelFit'
 import type { Scene3dCharacterManifestEntry } from '@/widgets/three/scene3d/scene3dAssets'
+import { Scene3dHistory } from '@/widgets/three/scene3d/Scene3dHistory'
+import type { Scene3dHistorySnapshot } from '@/widgets/three/scene3d/Scene3dHistory'
 import { normalizeSceneValue } from '@/widgets/three/scene3d/sceneValue'
 import type {
   CharacterAnimationConfig,
@@ -118,6 +120,20 @@ export function useScene3dStage(
     normalizeSceneValue(readWidgetStr(node, SCENE_WIDGET, '{}'))
   )
   const selectedId = ref<string | null>(null)
+  const history = new Scene3dHistory()
+  const historyVersion = ref(0)
+  const canUndo = computed(() => {
+    void historyVersion.value
+    return history.canUndo()
+  })
+  const canRedo = computed(() => {
+    void historyVersion.value
+    return history.canRedo()
+  })
+  let lastCommitted: Scene3dHistorySnapshot = {
+    json: JSON.stringify(state.value),
+    selectedId: null
+  }
   const availableModels = ref<Scene3dCharacterManifestEntry[]>([])
   const clipNamesForSelected = ref<string[]>([])
   const gizmoMode = ref<Scene3dGizmoMode>('none')
@@ -350,14 +366,59 @@ export function useScene3dStage(
   )
 
 
-  function commit(next: Scene3DState): void {
+  function commit(next: Scene3DState, mergeKey?: string): void {
     state.value = normalizeSceneValue(next)
-    writeWidget(node, SCENE_WIDGET, JSON.stringify(state.value), {
+    const json = JSON.stringify(state.value)
+    if (json !== lastCommitted.json) {
+      history.record(lastCommitted, mergeKey)
+      historyVersion.value += 1
+      lastCommitted = { json, selectedId: selectedId.value }
+    }
+    writeWidget(node, SCENE_WIDGET, json, {
       fireCallback: false
     })
     ensureLookThroughValid()
     ensurePipCameraValid()
     pushStateToViewport()
+  }
+
+  function undo(): void {
+    const entry = history.undo(lastCommitted)
+    if (!entry) return
+    historyVersion.value += 1
+    restoreSnapshot(entry)
+  }
+
+  function redo(): void {
+    const entry = history.redo(lastCommitted)
+    if (!entry) return
+    historyVersion.value += 1
+    restoreSnapshot(entry)
+  }
+
+  function restoreSnapshot(entry: Scene3dHistorySnapshot): void {
+    state.value = normalizeSceneValue(entry.json)
+    const restoredId = idExists(state.value, entry.selectedId)
+      ? entry.selectedId
+      : firstSceneId(state.value)
+    selectedId.value = restoredId
+    writeEditorProps({ selectedId: restoredId })
+    lastCommitted = { json: JSON.stringify(state.value), selectedId: restoredId }
+    writeWidget(node, SCENE_WIDGET, lastCommitted.json, {
+      fireCallback: false
+    })
+    ensureLookThroughValid()
+    ensurePipCameraValid()
+    pushStateToViewport()
+  }
+
+  function resetHistoryBaseline(): void {
+    history.clear()
+    historyVersion.value += 1
+    lastCommitted = {
+      json: JSON.stringify(state.value),
+      selectedId: selectedId.value
+    }
   }
 
   function ensureLookThroughValid(): void {
@@ -371,6 +432,7 @@ export function useScene3dStage(
 
   onNodeConfigure(node, () => {
     loadFromNode()
+    resetHistoryBaseline()
     setLookThrough(null)
     if (viewport) {
       viewport.setPipCamera(pipCameraId.value)
@@ -388,6 +450,7 @@ export function useScene3dStage(
     if (!idExists(state.value, selectedId.value)) {
       selectedId.value = firstSceneId(state.value)
     }
+    resetHistoryBaseline()
     ensureLookThroughValid()
     ensurePipCameraValid()
     pushStateToViewport()
@@ -400,6 +463,7 @@ export function useScene3dStage(
     }
     if (selectedId.value === id) return
     selectedId.value = id
+    lastCommitted = { ...lastCommitted, selectedId: id }
     writeEditorProps({ selectedId: id })
     viewport?.setSelected(id)
   }
@@ -534,7 +598,7 @@ export function useScene3dStage(
     const entry = findLabelEntry(next, id)
     if (!entry) return
     entry.name = name.trim()
-    commit(next)
+    commit(next, `rename:${id}`)
   }
 
   function setObjectHidden(id: string, hidden: boolean): void {
@@ -573,13 +637,14 @@ export function useScene3dStage(
 
   function updateCameraById(
     id: string,
-    mutate: (camera: SceneCameraEntry) => void
+    mutate: (camera: SceneCameraEntry) => void,
+    mergeKey?: string
   ): void {
     const next = cloneScene(state.value)
     const camera = next.cameras.find((entry) => entry.id === id)
     if (!camera) return
     mutate(camera)
-    commit(next)
+    commit(next, mergeKey)
   }
 
   function bindCameraPreset(id: string, presetId: string | null): void {
@@ -600,17 +665,25 @@ export function useScene3dStage(
     id: string,
     tuning: Partial<CameraPresetTuning>
   ): void {
-    updateCameraById(id, (camera) => {
-      if (!camera.preset) return
-      camera.preset.tuning = { ...camera.preset.tuning, ...tuning }
-    })
+    updateCameraById(
+      id,
+      (camera) => {
+        if (!camera.preset) return
+        camera.preset.tuning = { ...camera.preset.tuning, ...tuning }
+      },
+      `camera:${id}:tuning:${patchMergeKey(tuning)}`
+    )
   }
 
   function setCameraFov(id: string, fov: number): void {
     if (!Number.isFinite(fov)) return
-    updateCameraById(id, (camera) => {
-      camera.fov = Math.min(Math.max(fov, 10), 140)
-    })
+    updateCameraById(
+      id,
+      (camera) => {
+        camera.fov = Math.min(Math.max(fov, 10), 140)
+      },
+      `camera:${id}:fov`
+    )
   }
 
   function setOutputCamera(id: string): void {
@@ -647,7 +720,7 @@ export function useScene3dStage(
       next.models.find((entry) => entry.id === id)
     if (!target) return
     target.animation = { ...target.animation, ...patch }
-    commit(next)
+    commit(next, `animation:${id}:${patchMergeKey(patch)}`)
   }
 
   function buildTimelineData(): TimelineTracksData | null {
@@ -697,9 +770,13 @@ export function useScene3dStage(
   }
 
   function setCameraSpeedById(id: string, speed: number): void {
-    updateCameraById(id, (camera) => {
-      if (camera.preset) camera.preset.speed = speed
-    })
+    updateCameraById(
+      id,
+      (camera) => {
+        if (camera.preset) camera.preset.speed = speed
+      },
+      `camera:${id}:speed`
+    )
   }
 
   function updateSelectedTransform(transform: CharacterTransform): void {
@@ -717,7 +794,7 @@ export function useScene3dStage(
     const primitive = next.primitives.find((entry) => entry.id === id)
     if (!primitive) return
     Object.assign(primitive, patch)
-    commit(next)
+    commit(next, `primitive:${id}:${patchMergeKey(patch)}`)
   }
 
   function updateSelectedLight(patch: Partial<SceneLightEntry>): void {
@@ -731,13 +808,17 @@ export function useScene3dStage(
     const index = next.lights.findIndex((entry) => entry.id === id)
     if (index < 0) return
     next.lights[index] = { ...next.lights[index], ...patch, id }
-    commit(next)
+    commit(next, `light:${id}:${patchMergeKey(patch)}`)
+  }
+
+  function patchMergeKey(patch: Record<string, unknown>): string {
+    return Object.keys(patch).sort().join(',')
   }
 
   function updateEnvironment(patch: Partial<SceneEnvironmentConfig>): void {
     const next = cloneScene(state.value)
     next.environment = { ...next.environment, ...patch }
-    commit(next)
+    commit(next, `environment:${patchMergeKey(patch)}`)
   }
 
   function setGizmoMode(mode: Scene3dGizmoMode): void {
@@ -747,11 +828,12 @@ export function useScene3dStage(
   }
 
   function commitTransform(id: string, transform: CharacterTransform): void {
+    const mergeKey = `transform:${id}`
     const next = cloneScene(state.value)
     const light = next.lights.find((entry) => entry.id === id)
     if (light) {
       light.position = { ...transform.position }
-      commit(next)
+      commit(next, mergeKey)
       return
     }
     const camera = next.cameras.find((entry) => entry.id === id)
@@ -761,7 +843,7 @@ export function useScene3dStage(
         quaternion: { ...transform.quaternion }
       }
       camera.preset = null
-      commit(next)
+      commit(next, mergeKey)
       return
     }
     const target =
@@ -770,7 +852,7 @@ export function useScene3dStage(
       next.models.find((entry) => entry.id === id)
     if (!target) return
     target.transform = transform
-    commit(next)
+    commit(next, mergeKey)
   }
 
 
@@ -834,14 +916,14 @@ export function useScene3dStage(
     if (fps === null || !Number.isFinite(fps)) return
     const next = cloneScene(state.value)
     next.output.fps = fps
-    commit(next)
+    commit(next, 'output:fps')
   }
 
   function setOutputFrameCount(frameCount: number | null): void {
     if (frameCount === null || !Number.isFinite(frameCount)) return
     const next = cloneScene(state.value)
     next.output.frameCount = frameCount
-    commit(next)
+    commit(next, 'output:frameCount')
   }
 
 
@@ -952,6 +1034,7 @@ export function useScene3dStage(
   }
 
   loadFromNode()
+  resetHistoryBaseline()
 
   return {
     initScene,
@@ -969,6 +1052,10 @@ export function useScene3dStage(
     modelAssets,
     clipNamesForSelected,
     gizmoMode,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
     selectObject,
     addCharacter,
     addPrimitive,

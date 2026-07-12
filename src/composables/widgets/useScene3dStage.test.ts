@@ -613,3 +613,105 @@ describe('useScene3dStage: node lifecycle', () => {
     expect(() => s.initScene(document.createElement('div'))).not.toThrow()
   })
 })
+
+describe('useScene3dStage: undo/redo history', () => {
+  it('undoes and redoes structural changes through state and widget', async () => {
+    const { node, s } = await withScene()
+    expect(s.canUndo.value).toBe(false)
+
+    s.addPrimitive('cube')
+    expect(s.canUndo.value).toBe(true)
+
+    s.undo()
+    expect(s.state.value.primitives).toHaveLength(0)
+    expect(JSON.parse(widgetVal(node, 'scene_state')).primitives).toHaveLength(0)
+    expect(s.canUndo.value).toBe(false)
+    expect(s.canRedo.value).toBe(true)
+
+    s.redo()
+    expect(s.state.value.primitives).toHaveLength(1)
+    expect(JSON.parse(widgetVal(node, 'scene_state')).primitives).toHaveLength(1)
+    expect(s.canRedo.value).toBe(false)
+  })
+
+  it('restores the deleted object and its selection on undo', async () => {
+    const { s } = await withScene()
+    s.addPrimitive('cube')
+    s.addPrimitive('sphere')
+    const sphereId = s.selectedId.value!
+
+    s.removeSelected()
+    expect(s.state.value.primitives).toHaveLength(1)
+
+    s.undo()
+    expect(s.state.value.primitives).toHaveLength(2)
+    expect(s.selectedId.value).toBe(sphereId)
+  })
+
+  it('merges rapid transform edits of one object into a single undo step', async () => {
+    const { s } = await withScene()
+    s.addPrimitive('cube')
+    const original = s.state.value.primitives[0].transform.position.x
+
+    s.updateSelectedTransform({
+      position: { x: 1, y: 0, z: 0 },
+      quaternion: { x: 0, y: 0, z: 0, w: 1 },
+      scale: { x: 1, y: 1, z: 1 }
+    })
+    s.updateSelectedTransform({
+      position: { x: 2, y: 0, z: 0 },
+      quaternion: { x: 0, y: 0, z: 0, w: 1 },
+      scale: { x: 1, y: 1, z: 1 }
+    })
+    expect(s.state.value.primitives[0].transform.position.x).toBe(2)
+
+    s.undo()
+    expect(s.state.value.primitives[0].transform.position.x).toBe(original)
+  })
+
+  it('does not merge edits of different objects', async () => {
+    const { s } = await withScene()
+    s.addPrimitive('cube')
+    s.addPrimitive('sphere')
+
+    s.undo()
+    expect(s.state.value.primitives).toHaveLength(1)
+    s.undo()
+    expect(s.state.value.primitives).toHaveLength(0)
+  })
+
+  it('clears the redo stack when a new change is committed', async () => {
+    const { s } = await withScene()
+    s.addPrimitive('cube')
+    s.undo()
+    expect(s.canRedo.value).toBe(true)
+
+    s.addLight('point')
+    expect(s.canRedo.value).toBe(false)
+  })
+
+  it('does not record no-op commits', async () => {
+    const { s } = await withScene()
+    s.addPrimitive('cube')
+    const id = s.selectedId.value!
+    s.renameObject(id, 'Box')
+    s.undo()
+    s.redo()
+    const before = s.canUndo.value
+
+    s.renameObject(id, 'Box')
+    expect(s.canUndo.value).toBe(before)
+    expect(s.canRedo.value).toBe(false)
+  })
+
+  it('clears history when the node is (re)configured', async () => {
+    const { node, s } = await withScene()
+    s.addPrimitive('cube')
+    expect(s.canUndo.value).toBe(true)
+
+    node.onConfigure({})
+    expect(s.canUndo.value).toBe(false)
+    expect(s.canRedo.value).toBe(false)
+  })
+
+})
