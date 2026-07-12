@@ -1,3 +1,4 @@
+import * as THREE from 'three'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { Scene3dViewportEvents } from '@/widgets/three/scene3d/Scene3dViewport'
@@ -13,13 +14,16 @@ vi.mock('@/stores/assetStore', () => ({
   useAssetStore: () => assetStoreState
 }))
 
+const loadCustomModelAssets = vi.hoisted(() => vi.fn())
 vi.mock('@/widgets/three/scene3d/scene3dAssets', () => ({
   fetchScene3dManifest: vi.fn(async () => [
     { id: 'human', name: 'Human' },
     { id: 'fox', name: 'Fox' }
   ]),
   getCharacterClipNames: vi.fn(async () => ['Walk', 'Run']),
-  getCustomModelClipNames: vi.fn(async () => ['Idle'])
+  getCustomModelClipNames: vi.fn(async () => ['Idle']),
+  loadCustomModelAssets: (...a: unknown[]) =>
+    loadCustomModelAssets(...(a as [string]))
 }))
 
 vi.mock('@/widgets/three/load3d/cameraPresetAssets', () => ({
@@ -150,7 +154,17 @@ async function withScene() {
 beforeEach(() => {
   vi.clearAllMocks()
   assetStoreState.assets = []
+  loadCustomModelAssets.mockResolvedValue({
+    template: new THREE.Group(),
+    clips: [{ name: 'Idle' }]
+  })
 })
+
+function templateOfSize(width: number, height: number, depth: number) {
+  const group = new THREE.Group()
+  group.add(new THREE.Mesh(new THREE.BoxGeometry(width, height, depth)))
+  return group
+}
 
 describe('useScene3dStage: setup + object add/remove', () => {
   it('starts empty and adds primitives, lights, cameras', async () => {
@@ -184,6 +198,59 @@ describe('useScene3dStage: setup + object add/remove', () => {
     await s.addModelFromAsset(assetStoreState.assets[0] as any)
     expect(s.state.value.models).toHaveLength(1)
     expect(s.state.value.models[0].animation.clip).toBe('Idle')
+  })
+
+  it('auto-fits oversized custom models on add, leaves sane sizes alone', async () => {
+    const { s } = await withScene()
+    assetStoreState.assets = [
+      { id: 1, name: 'City', media_type: 'model', payload_url: '/view/city.glb' },
+      { id: 2, name: 'Chair', media_type: 'model', payload_url: '/view/chair.glb' }
+    ]
+
+    loadCustomModelAssets.mockResolvedValue({
+      template: templateOfSize(40, 10, 20),
+      clips: []
+    })
+    await s.addModelFromAsset(assetStoreState.assets[0] as any)
+    const fitted = s.state.value.models[0]
+    expect(fitted.transform.scale.x).toBeCloseTo(2 / 40)
+    expect(fitted.transform.scale.y).toBeCloseTo(2 / 40)
+    expect(fitted.transform.position.y).toBeCloseTo(5 * (2 / 40))
+
+    loadCustomModelAssets.mockResolvedValue({
+      template: templateOfSize(1, 1, 1),
+      clips: []
+    })
+    await s.addModelFromAsset(assetStoreState.assets[1] as any)
+    expect(s.state.value.models[1].transform.scale.x).toBe(1)
+    expect(s.state.value.models[1].transform.position.y).toBe(0)
+  })
+
+  it('fits the selected custom model on demand', async () => {
+    const { s } = await withScene()
+    assetStoreState.assets = [
+      { id: 1, name: 'Chair', media_type: 'model', payload_url: '/view/chair.glb' }
+    ]
+    loadCustomModelAssets.mockResolvedValue({
+      template: templateOfSize(1, 4, 1),
+      clips: []
+    })
+    await s.addModelFromAsset(assetStoreState.assets[0] as any)
+    const id = s.state.value.models[0].id
+
+    s.updateSelectedTransform({
+      position: { x: 3, y: 2, z: 1 },
+      quaternion: { x: 0, y: 0.7, z: 0, w: 0.7 },
+      scale: { x: 9, y: 9, z: 9 }
+    })
+    await s.fitSelectedModel()
+
+    const model = s.state.value.models.find((entry) => entry.id === id)!
+    expect(model.transform.scale.x).toBeCloseTo(0.5)
+    expect(model.transform.position.x).toBeCloseTo(0)
+    expect(model.transform.position.y).toBeCloseTo(1)
+    expect(model.transform.position.z).toBeCloseTo(0)
+    expect(model.transform.quaternion).toEqual({ x: 0, y: 0, z: 0, w: 1 })
   })
 
   it('applies a light preset and removes the selected object', async () => {

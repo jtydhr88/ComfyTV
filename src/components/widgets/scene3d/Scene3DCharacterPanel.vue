@@ -46,10 +46,23 @@
       :transform="character.transform"
       @update-transform="emit('updateTransform', $event)"
     />
+    <div v-if="fittable" class="ctv:flex ctv:justify-end">
+      <button
+        type="button"
+        :class="chipBtnClass"
+        :title="$t('scene3d.fitToSceneHint')"
+        @click="emit('fit')"
+      >
+        <IconScaling class="ctv:mr-1 ctv:size-3" />
+        {{ $t('scene3d.fitToScene') }}
+      </button>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+
+import IconScaling from '~icons/lucide/scaling'
 
 import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
 import ComfyTVToggle from '@/components/widgets/ComfyTVToggle.vue'
@@ -63,17 +76,25 @@ const narrowFieldClass =
   'ctv:w-14 ctv:flex-none ctv:rounded-lg ctv:border-0 ctv:bg-secondary-background ' +
   'ctv:px-2 ctv:py-1 ctv:text-xs ctv:text-base-foreground ctv:outline-none ctv:[font-family:inherit]'
 
-const { character, clipNames } = defineProps<{
+const chipBtnClass =
+  'ctv:inline-flex ctv:items-center ctv:cursor-pointer ctv:[font-family:inherit] ' +
+  'ctv:rounded-lg ctv:border ctv:border-border-subtle ctv:bg-secondary-background ctv:px-2 ctv:py-0.5 ' +
+  'ctv:text-2xs ctv:text-muted-foreground ctv:transition-colors ' +
+  'ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground'
+
+const { character, clipNames, fittable } = defineProps<{
   character: {
     animation: CharacterAnimationConfig
     transform: CharacterTransform
   }
   clipNames: string[]
+  fittable?: boolean
 }>()
 
 const emit = defineEmits<{
   updateAnimation: [patch: Partial<CharacterAnimationConfig>]
   updateTransform: [transform: CharacterTransform]
+  fit: []
 }>()
 
 function onAnimationNumber(field: 'speed' | 'startOffset', event: Event) {

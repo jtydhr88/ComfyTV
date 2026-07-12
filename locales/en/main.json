@@ -913,6 +913,8 @@
     "preset_dramatic": "Dramatic",
     "preset_none": "No lights",
     "removeObject": "Remove selected",
+    "fitToScene": "Fit to scene",
+    "fitToSceneHint": "Rescale the model to scene size, center it and rest it on the ground",
     "noSelection": "Add a character, object or light to start.",
     "gizmoNone": "No gizmo",
     "gizmoTranslate": "Move",

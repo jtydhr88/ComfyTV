@@ -318,8 +318,10 @@
             v-else-if="selectedModel"
             :character="selectedModel"
             :clip-names="clipNamesForSelected"
+            fittable
             @update-animation="updateSelectedAnimation"
             @update-transform="updateSelectedTransform"
+            @fit="fitSelectedModel"
           />
           <Scene3DCameraPanel
             v-else-if="selectedCamera"
@@ -509,6 +511,7 @@ const {
   addCharacter,
   addPrimitive,
   addModelFromAsset,
+  fitSelectedModel,
   addLight,
   applyLightPreset,
   removeSelected,

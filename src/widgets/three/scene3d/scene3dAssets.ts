@@ -1,4 +1,4 @@
-import * as THREE from 'three'
+﻿import * as THREE from 'three'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
 import { GLTFLoader, type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js'
@@ -133,15 +133,9 @@ function modelUrlExtension(url: string): string {
   }
 }
 
-function normalizeModelScale(root: THREE.Group): THREE.Group {
-  const bounds = new THREE.Box3().setFromObject(root)
-  const size = new THREE.Vector3()
-  bounds.getSize(size)
-  const maxDim = Math.max(size.x, size.y, size.z)
-  if (!Number.isFinite(maxDim) || maxDim <= 20 || maxDim === 0) return root
+function wrapModelTemplate(root: THREE.Group): THREE.Group {
   const wrapper = new THREE.Group()
-  wrapper.name = '__model_scale_normalizer__'
-  wrapper.scale.setScalar(2 / maxDim)
+  wrapper.name = '__model_template_root__'
   wrapper.add(root)
   return wrapper
 }
@@ -156,20 +150,20 @@ export async function loadCustomModelAssets(
       if (ext === '.fbx') {
         const fbx = await new FBXLoader().loadAsync(assetUrl(url))
         return {
-          template: normalizeModelScale(fbx),
+          template: wrapModelTemplate(fbx),
           clips: fbx.animations ?? []
         }
       }
       if (ext === '.obj') {
         const obj = await new OBJLoader().loadAsync(assetUrl(url))
         return {
-          template: normalizeModelScale(obj),
+          template: wrapModelTemplate(obj),
           clips: []
         }
       }
       const gltf = await new GLTFLoader().loadAsync(assetUrl(url))
       return {
-        template: normalizeModelScale(gltf.scene),
+        template: wrapModelTemplate(gltf.scene),
         clips: gltf.animations ?? []
       }
     })()

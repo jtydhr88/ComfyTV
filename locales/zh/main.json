@@ -913,6 +913,8 @@
     "preset_dramatic": "戏剧化",
     "preset_none": "无灯光",
     "removeObject": "删除所选",
+    "fitToScene": "适配场景",
+    "fitToSceneHint": "将模型缩放到场景尺寸,居中并贴合地面",
     "noSelection": "添加角色、物体或灯光开始搭建场景。",
     "gizmoNone": "无操纵杆",
     "gizmoTranslate": "移动",

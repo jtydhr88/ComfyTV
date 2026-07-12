@@ -45,8 +45,13 @@ import type { Asset } from '@/api/schemas'
 import {
   fetchScene3dManifest,
   getCharacterClipNames,
-  getCustomModelClipNames
+  getCustomModelClipNames,
+  loadCustomModelAssets
 } from '@/widgets/three/scene3d/scene3dAssets'
+import {
+  computeModelFit,
+  needsAutoFit
+} from '@/widgets/three/scene3d/modelFit'
 import type { Scene3dCharacterManifestEntry } from '@/widgets/three/scene3d/scene3dAssets'
 import { normalizeSceneValue } from '@/widgets/three/scene3d/sceneValue'
 import type {
@@ -445,8 +450,10 @@ export function useScene3dStage(
       allIds()
     )
     try {
-      const clipNames = await getCustomModelClipNames(asset.payload_url)
-      model.animation.clip = clipNames[0] ?? ''
+      const assets = await loadCustomModelAssets(asset.payload_url)
+      model.animation.clip = assets.clips[0]?.name ?? ''
+      const fit = computeModelFit(assets.template)
+      if (fit && needsAutoFit(fit.maxDim)) model.transform = fit.transform
     } catch (error) {
       console.error('[ComfyTV/scene3d] failed to load model asset', error)
       toastError(t('scene3d.failedToLoadModelAsset'))
@@ -456,6 +463,19 @@ export function useScene3dStage(
     next.models.push(model)
     selectedId.value = model.id
     commit(next)
+  }
+
+  async function fitSelectedModel(): Promise<void> {
+    const model = selectedModel.value
+    if (!model) return
+    try {
+      const assets = await loadCustomModelAssets(model.url)
+      const fit = computeModelFit(assets.template)
+      if (fit) commitTransform(model.id, fit.transform)
+    } catch (error) {
+      console.error('[ComfyTV/scene3d] failed to fit model', error)
+      toastError(t('scene3d.failedToLoadModelAsset'))
+    }
   }
 
   function addLight(type: SceneLightType): void {
@@ -951,6 +971,7 @@ export function useScene3dStage(
     addCharacter,
     addPrimitive,
     addModelFromAsset,
+    fitSelectedModel,
     addLight,
     applyLightPreset,
     removeSelected,
