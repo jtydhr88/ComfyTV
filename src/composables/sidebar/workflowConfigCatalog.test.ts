@@ -27,9 +27,11 @@ vi.mock('@/api', () => ({
 import { fetchCaps } from '@/api'
 
 import {
+  ALL_GROUPS,
   AUTO_RESULT_NODE,
   buildBindingOptions,
   buildResultNodeOptions,
+  filterWidgetGroups,
   groupExposedWidgets,
   isResultNodeCandidate,
   loadCaps,
@@ -185,6 +187,59 @@ describe('groupExposedWidgets', () => {
     expect(groups).toHaveLength(2)
     expect(groups[0].nodes[0].widgets[0].widget_name).toBe('x')
     expect(groups[1].nodes[0].widgets[0].widget_name).toBe('y')
+  })
+})
+
+describe('filterWidgetGroups', () => {
+  const groups = groupExposedWidgets([
+    widget({ group_title: 'Sampling', node_id: '1', node_title: 'KSampler', node_type: 'KSampler', widget_name: 'seed' }),
+    widget({ group_title: 'Sampling', node_id: '1', node_title: 'KSampler', node_type: 'KSampler', widget_name: 'steps' }),
+    widget({ group_title: 'Prompt',   node_id: '2', node_title: '正向提示词', node_type: 'CLIPTextEncode', widget_name: 'text' }),
+    widget({ group_title: null,       node_id: '30', node_title: 'Load Image', node_type: 'LoadImage', widget_name: 'image' }),
+  ])
+
+  it('returns everything untouched for an empty query and ALL_GROUPS', () => {
+    expect(filterWidgetGroups(groups, '', ALL_GROUPS)).toEqual(groups)
+    expect(filterWidgetGroups(groups, '   ')).toEqual(groups)
+  })
+
+  it('restricts to the selected group by its key', () => {
+    const out = filterWidgetGroups(groups, '', 'Prompt')
+    expect(out).toHaveLength(1)
+    expect(out[0].nodes.map(n => n.node_id)).toEqual(['2'])
+  })
+
+  it('selects the null-title group via the empty-string key', () => {
+    const out = filterWidgetGroups(groups, '', '')
+    expect(out).toHaveLength(1)
+    expect(out[0].title).toBeNull()
+  })
+
+  it('matches node title, type, and id case-insensitively', () => {
+    expect(filterWidgetGroups(groups, 'ksamp').flatMap(g => g.nodes).map(n => n.node_id)).toEqual(['1'])
+    expect(filterWidgetGroups(groups, 'cliptext').flatMap(g => g.nodes).map(n => n.node_id)).toEqual(['2'])
+    expect(filterWidgetGroups(groups, '30').flatMap(g => g.nodes).map(n => n.node_id)).toEqual(['30'])
+    expect(filterWidgetGroups(groups, '提示词').flatMap(g => g.nodes).map(n => n.node_id)).toEqual(['2'])
+  })
+
+  it('matches widget names and keeps the whole node', () => {
+    const out = filterWidgetGroups(groups, 'steps')
+    expect(out.flatMap(g => g.nodes).map(n => n.node_id)).toEqual(['1'])
+    expect(out[0].nodes[0].widgets.map(w => w.widget_name)).toEqual(['seed', 'steps'])
+  })
+
+  it('drops groups left empty by the search', () => {
+    const out = filterWidgetGroups(groups, 'loadimage')
+    expect(out.map(g => g.title)).toEqual([null])
+  })
+
+  it('combines group filter and search', () => {
+    expect(filterWidgetGroups(groups, 'seed', 'Prompt')).toEqual([])
+    expect(filterWidgetGroups(groups, 'seed', 'Sampling')).toHaveLength(1)
+  })
+
+  it('returns empty for a query matching nothing', () => {
+    expect(filterWidgetGroups(groups, 'no-such-node')).toEqual([])
   })
 })
 

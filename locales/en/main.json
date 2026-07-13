@@ -338,7 +338,11 @@
     "linkBrokenHint": "The source workflow is missing from ComfyUI's library (moved, renamed, or deleted). Re-create it or unlink.",
     "unlink": "Unlink",
     "unlinkConfirm": "Unlink \"{label}\"? The ComfyUI workflow file is kept — only the ComfyTV reference is removed.",
-    "unlinkFailed": "Unlink failed: {detail}"
+    "unlinkFailed": "Unlink failed: {detail}",
+    "searchNodes": "Search nodes…",
+    "groupAll": "All",
+    "groupUngrouped": "Ungrouped",
+    "noMatchingNodes": "No nodes match the current filter."
   },
   "project": {
     "label": "Current Project",

@@ -338,7 +338,11 @@
     "linkBrokenHint": "ComfyUI 库中的源工作流已缺失（被移动、改名或删除）。请重新创建或解除链接。",
     "unlink": "解除链接",
     "unlinkConfirm": "解除「{label}」的链接？ComfyUI 里的工作流文件会保留，仅移除 ComfyTV 的引用。",
-    "unlinkFailed": "解除链接失败：{detail}"
+    "unlinkFailed": "解除链接失败：{detail}",
+    "searchNodes": "搜索节点…",
+    "groupAll": "全部",
+    "groupUngrouped": "未分组",
+    "noMatchingNodes": "没有匹配当前筛选的节点。"
   },
   "project": {
     "label": "当前项目",

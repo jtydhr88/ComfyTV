@@ -91,6 +91,37 @@ export interface WidgetGroup {
   nodes: NodeBlock[]
 }
 
+export const ALL_GROUPS = '__ALL__'
+
+export function groupKeyOf(group: WidgetGroup): string {
+  return group.title ?? ''
+}
+
+function nodeMatches(node: NodeBlock, q: string): boolean {
+  return (
+    node.node_title.toLowerCase().includes(q)
+    || node.node_type.toLowerCase().includes(q)
+    || node.node_id.toLowerCase().includes(q)
+    || node.widgets.some(w => w.widget_name.toLowerCase().includes(q))
+  )
+}
+
+export function filterWidgetGroups(
+  groups: WidgetGroup[],
+  query: string,
+  groupKey: string = ALL_GROUPS,
+): WidgetGroup[] {
+  let out = groups
+  if (groupKey !== ALL_GROUPS) out = out.filter(g => groupKeyOf(g) === groupKey)
+  const q = query.trim().toLowerCase()
+  if (q) {
+    out = out
+      .map(g => ({ title: g.title, nodes: g.nodes.filter(n => nodeMatches(n, q)) }))
+      .filter(g => g.nodes.length > 0)
+  }
+  return out
+}
+
 export function groupExposedWidgets(widgets: ExposedWidget[]): WidgetGroup[] {
   const groups: WidgetGroup[] = []
   const groupIdx = new Map<string, number>()

@@ -86,7 +86,47 @@
 
       <section v-if="config.exposed_widgets?.length">
         <h3 :class="sectionHeading">{{ $t('configSidebar.section.widgets') }}</h3>
-        <div v-for="(grp, gi) in groupedWidgets" :key="gi"
+
+        <div v-if="showNodeFilter" class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:mb-2.5">
+          <div class="ctv:relative">
+            <IconSearch
+              class="ctv:absolute ctv:left-2 ctv:top-1/2 ctv:-translate-y-1/2 ctv:size-3.5
+                     ctv:text-muted-foreground ctv:pointer-events-none"
+            />
+            <input
+              v-model="searchQuery"
+              type="text"
+              :placeholder="$t('configSidebar.searchNodes')"
+              class="ctv:w-full ctv:h-7 ctv:box-border ctv:pl-7 ctv:pr-2 ctv:rounded-lg ctv:text-xs ctv:[font-family:inherit]
+                     ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground
+                     ctv:placeholder:text-muted-foreground ctv:focus-visible:outline-none ctv:focus:border-border-default"
+            />
+          </div>
+          <div v-if="groupChips.length > 1" class="ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1">
+            <button
+              :class="chipClass(groupFilter === ALL_GROUPS)"
+              @click="groupFilter = ALL_GROUPS"
+            >
+              {{ $t('configSidebar.groupAll') }}
+              <span :class="chipCountClass">{{ totalNodeCount }}</span>
+            </button>
+            <button
+              v-for="chip in groupChips"
+              :key="chip.key"
+              :class="chipClass(groupFilter === chip.key)"
+              @click="groupFilter = groupFilter === chip.key ? ALL_GROUPS : chip.key"
+            >
+              {{ chip.label }}
+              <span :class="chipCountClass">{{ chip.count }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div v-if="!visibleGroups.length" :class="emptyClass">
+          {{ $t('configSidebar.noMatchingNodes') }}
+        </div>
+
+        <div v-for="(grp, gi) in visibleGroups" :key="gi"
              class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:mb-2.5">
           <div v-if="grp.title"
                class="ctv:py-1 ctv:text-3xs ctv:uppercase ctv:tracking-wide
@@ -101,10 +141,10 @@
                 'ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:py-1.5 ctv:px-2 ctv:text-left ctv:cursor-pointer ctv:text-inherit ctv:[font-family:inherit]',
                 'ctv:bg-transparent ctv:border-none ctv:hover:bg-secondary-background-hover',
               ]"
-              :aria-expanded="!isCollapsed(node.node_id)"
+              :aria-expanded="!isNodeCollapsed(node.node_id)"
               @click="toggleCollapsed(node.node_id)"
             >
-              <i :class="['pi', isCollapsed(node.node_id) ? 'pi-chevron-right' : 'pi-chevron-down', 'ctv:w-2.5 ctv:text-2xs ctv:text-muted-foreground']" />
+              <i :class="['pi', isNodeCollapsed(node.node_id) ? 'pi-chevron-right' : 'pi-chevron-down', 'ctv:w-2.5 ctv:text-2xs ctv:text-muted-foreground']" />
               <span class="ctv:text-xs ctv:font-semibold ctv:text-base-foreground">{{ node.node_title }}</span>
               <span v-if="node.node_title !== node.node_type"
                     class="ctv:text-2xs ctv:font-mono ctv:text-muted-foreground/60">
@@ -117,7 +157,7 @@
               </span>
             </button>
 
-            <div v-if="!isCollapsed(node.node_id)" class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2">
+            <div v-if="!isNodeCollapsed(node.node_id)" class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2">
               <div
                 v-for="w in node.widgets"
                 :key="`${w.node_id}/${w.widget_name}`"
@@ -223,8 +263,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+
+import IconSearch from '~icons/lucide/search'
 
 import ComfyTVWidget from '@/components/widgets/ComfyTVWidget.vue'
 import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
@@ -233,10 +275,13 @@ import { useCollapsedFlag, useCollapsedNodeIds } from '@/composables/sidebar/use
 import { useWorkflowConfig } from '@/composables/sidebar/useWorkflowConfig'
 import { LINK_TYPE_NATIVE } from '@/api'
 import {
+  ALL_GROUPS,
   AUTO_RESULT_NODE,
   buildBindingOptions,
   buildResultNodeOptions,
+  filterWidgetGroups,
   groupExposedWidgets,
+  groupKeyOf,
   loadCaps,
   resultTypesForKind,
   type NodeBlock,
@@ -322,6 +367,36 @@ const bindingOptions = computed(() =>
 
 const groupedWidgets = computed(() => groupExposedWidgets(config.value?.exposed_widgets ?? []))
 
+const searchQuery = ref('')
+const groupFilter = ref<string>(ALL_GROUPS)
+
+const totalNodeCount = computed(() =>
+  groupedWidgets.value.reduce((n, g) => n + g.nodes.length, 0),
+)
+const showNodeFilter = computed(() =>
+  totalNodeCount.value > 3 || groupedWidgets.value.length > 1,
+)
+const groupChips = computed(() =>
+  groupedWidgets.value.map(g => ({
+    key:   groupKeyOf(g),
+    label: g.title ?? t('configSidebar.groupUngrouped'),
+    count: g.nodes.length,
+  })),
+)
+const visibleGroups = computed(() =>
+  filterWidgetGroups(groupedWidgets.value, searchQuery.value, groupFilter.value),
+)
+
+watch(workflowId, () => {
+  searchQuery.value = ''
+  groupFilter.value = ALL_GROUPS
+})
+
+function isNodeCollapsed(nodeId: string): boolean {
+  if (searchQuery.value.trim()) return false
+  return isCollapsed(nodeId)
+}
+
 const {
   isStageBound,
   dropdownValueFor,
@@ -371,4 +446,16 @@ const exportBtn = COMFY_BTN_SM
 
 const resetBtn = COMFY_BTN_SM
   + ' ctv:self-start ctv:bg-transparent ctv:text-muted-foreground ctv:hover:bg-warning-background/10 ctv:hover:text-warning-background'
+
+function chipClass(active: boolean) {
+  return [
+    'ctv:inline-flex ctv:items-center ctv:gap-1 ctv:cursor-pointer ctv:[font-family:inherit]',
+    'ctv:rounded-lg ctv:border ctv:px-2 ctv:py-0.5 ctv:text-2xs ctv:transition-colors',
+    active
+      ? 'ctv:bg-secondary-background-selected ctv:border-primary-background/60 ctv:text-base-foreground'
+      : 'ctv:bg-secondary-background ctv:border-border-subtle ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground',
+  ].join(' ')
+}
+
+const chipCountClass = 'ctv:py-0 ctv:px-1 ctv:rounded-lg ctv:text-3xs ctv:bg-base-foreground/10'
 </script>
