@@ -55,6 +55,9 @@
     "action": {
       "viewFull": "查看大图",
       "download": "下载",
+      "copyText": "复制文本",
+      "renderMarkdown": "渲染 Markdown",
+      "showRawText": "显示原文",
       "addTag": "存入资产库 / 打标签",
       "removeFromPicker": "从选择器移除",
       "close": "关闭",

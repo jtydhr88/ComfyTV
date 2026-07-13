@@ -6,9 +6,32 @@
 
     <pre v-else-if="type === 'COMFYTV_TEXT' && compact" :class="textClass">{{ content }}</pre>
 
-    <div v-else-if="type === 'COMFYTV_TEXT'" class="ctv:relative ctv:flex-1 ctv:min-h-[160px]">
-      <pre class="vp-text-scroll ctv:absolute ctv:inset-0 ctv:m-0 ctv:py-0.5 ctv:px-1 ctv:overflow-y-auto
-                  ctv:whitespace-pre-wrap ctv:break-words ctv:text-[11px] ctv:leading-snug ctv:font-mono ctv:text-base-foreground">{{ content }}</pre>
+    <div v-else-if="type === 'COMFYTV_TEXT'" class="vp-img-host ctv:group ctv:relative ctv:flex-1 ctv:min-h-[160px]">
+      <div v-if="showTextMarkdown"
+           class="vp-text-scroll vp-md ctv:absolute ctv:inset-0 ctv:m-0 ctv:py-0.5 ctv:px-1 ctv:overflow-y-auto
+                  ctv:break-words ctv:text-xs ctv:leading-normal ctv:text-base-foreground
+                  ctv:select-text ctv:cursor-text"
+           @pointerdown.stop
+           @pointermove.stop
+           @pointerup.stop
+           v-html="renderedTextMarkdown" />
+      <pre v-else class="vp-text-scroll ctv:absolute ctv:inset-0 ctv:m-0 ctv:py-0.5 ctv:px-1 ctv:overflow-y-auto
+                  ctv:whitespace-pre-wrap ctv:break-words ctv:text-[11px] ctv:leading-snug ctv:font-mono ctv:text-base-foreground
+                  ctv:select-text ctv:cursor-text"
+           @pointerdown.stop
+           @pointermove.stop
+           @pointerup.stop>{{ content }}</pre>
+      <div :class="imgActionsClass">
+        <button type="button" :class="mdActionBtn"
+                :title="showTextMarkdown ? $t('stage.action.showRawText') : $t('stage.action.renderMarkdown')"
+                @click.stop="showTextMarkdown = !showTextMarkdown"><i class="pi pi-book" /></button>
+        <button type="button" :class="imgActionBtn"
+                :title="$t('stage.action.copyText')"
+                @click.stop="onCopyText"><i :class="textCopied ? 'pi pi-check' : 'pi pi-copy'" /></button>
+        <button type="button" :class="imgActionBtn"
+                :title="$t('stage.action.download')"
+                @click.stop="onDownloadText"><i class="pi pi-download" /></button>
+      </div>
     </div>
 
     <div
@@ -383,7 +406,8 @@ import type {
   BatchImage,
   ItemClickPayload,
 } from '@/types/payloads'
-import { downloadFile } from '@/utils/download'
+import { downloadBlob, downloadFile } from '@/utils/download'
+import { renderMarkdownToHtml } from '@/utils/markdown'
 
 const { t } = useI18n()
 
@@ -475,6 +499,7 @@ onMounted(() => window.addEventListener('keydown', onKeydown))
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', onKeydown)
   if (modelCaptureTimer != null) window.clearTimeout(modelCaptureTimer)
+  if (textCopiedTimer != null) window.clearTimeout(textCopiedTimer)
 })
 
 const props = defineProps<{
@@ -531,6 +556,48 @@ const previewMediaType = computed<string>(() => {
 function onLoadAsset(url: string, label: string) {
   if (!url) return
   emit('load-asset', { index: '', imageUrl: url, label, mediaType: previewMediaType.value })
+}
+
+const showTextMarkdown = ref(false)
+const renderedTextMarkdown = computed(() =>
+  showTextMarkdown.value ? renderMarkdownToHtml(String(props.content ?? '')) : ''
+)
+const mdActionBtn = computed(() => COMFY_BTN_BASE
+  + ' ctv:size-5 ctv:p-0 ctv:rounded-sm ctv:text-sm'
+  + (showTextMarkdown.value
+    ? ' ctv:bg-primary-background ctv:text-white ctv:hover:bg-primary-background/90'
+    : ' ctv:bg-white ctv:text-gray-600 ctv:hover:bg-white/90'))
+
+const textCopied = ref(false)
+let textCopiedTimer: number | null = null
+
+async function onCopyText() {
+  const text = String(props.content ?? '')
+  if (!text) return
+  try {
+    await navigator.clipboard.writeText(text)
+  } catch {
+    const ta = document.createElement('textarea')
+    ta.value = text
+    ta.style.position = 'fixed'
+    ta.style.opacity = '0'
+    document.body.appendChild(ta)
+    ta.select()
+    document.execCommand('copy')
+    ta.remove()
+  }
+  textCopied.value = true
+  if (textCopiedTimer != null) window.clearTimeout(textCopiedTimer)
+  textCopiedTimer = window.setTimeout(() => { textCopied.value = false }, 1500)
+}
+
+function onDownloadText() {
+  const text = String(props.content ?? '')
+  if (!text) return
+  downloadBlob(
+    `comfytv-text-${Date.now()}.txt`,
+    new Blob([text], { type: 'text/plain;charset=utf-8' }),
+  )
 }
 
 function itemPayload(img: BatchImage, i: number): ItemClickPayload {
@@ -693,6 +760,81 @@ function audioRowClass(selected: boolean) {
 }
 .vp-text-scroll:hover::-webkit-scrollbar-thumb {
   background-color: rgba(255, 255, 255, 0.55);
+}
+
+.vp-md :deep(h1),
+.vp-md :deep(h2),
+.vp-md :deep(h3),
+.vp-md :deep(h4),
+.vp-md :deep(h5),
+.vp-md :deep(h6) {
+  margin: 0.6em 0 0.3em;
+  font-weight: 700;
+  line-height: 1.25;
+}
+.vp-md :deep(h1) { font-size: 1.35em; }
+.vp-md :deep(h2) { font-size: 1.2em; }
+.vp-md :deep(h3) { font-size: 1.1em; }
+.vp-md :deep(h4),
+.vp-md :deep(h5),
+.vp-md :deep(h6) { font-size: 1em; }
+.vp-md :deep(p) {
+  margin: 0.35em 0;
+}
+.vp-md :deep(ul),
+.vp-md :deep(ol) {
+  margin: 0.35em 0;
+  padding-left: 1.4em;
+}
+.vp-md :deep(li) {
+  margin: 0.15em 0;
+}
+.vp-md :deep(code) {
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  font-family: monospace;
+  font-size: 0.92em;
+}
+.vp-md :deep(pre) {
+  margin: 0.4em 0;
+  padding: 0.5em;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.vp-md :deep(pre code) {
+  padding: 0;
+  background: none;
+}
+.vp-md :deep(blockquote) {
+  margin: 0.4em 0;
+  padding: 0.1em 0.8em;
+  border-left: 3px solid rgba(255, 255, 255, 0.25);
+  opacity: 0.85;
+}
+.vp-md :deep(a) {
+  color: #9dd0ff;
+  text-decoration: underline;
+}
+.vp-md :deep(table) {
+  margin: 0.4em 0;
+  border-collapse: collapse;
+}
+.vp-md :deep(th),
+.vp-md :deep(td) {
+  padding: 0.2em 0.5em;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.vp-md :deep(hr) {
+  margin: 0.6em 0;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+.vp-md :deep(img) {
+  max-width: 100%;
 }
 
 .ctv-batch-grid {

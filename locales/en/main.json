@@ -55,6 +55,9 @@
     "action": {
       "viewFull": "View full size",
       "download": "Download",
+      "copyText": "Copy text",
+      "renderMarkdown": "Render as Markdown",
+      "showRawText": "Show raw text",
       "addTag": "Save to library / tag",
       "removeFromPicker": "Remove from picker",
       "close": "Close",
