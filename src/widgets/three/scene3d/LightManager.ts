@@ -11,9 +11,24 @@ interface LightRuntime {
 }
 
 function createLight(type: SceneLightType): EditorLight {
-  if (type === 'directional') return new THREE.DirectionalLight()
-  if (type === 'point') return new THREE.PointLight()
-  return new THREE.SpotLight()
+  const light =
+    type === 'directional'
+      ? new THREE.DirectionalLight()
+      : type === 'point'
+        ? new THREE.PointLight()
+        : new THREE.SpotLight()
+  light.castShadow = true
+  light.shadow.mapSize.set(1024, 1024)
+  light.shadow.bias = -0.0001
+  light.shadow.normalBias = 0.02
+  if (light instanceof THREE.DirectionalLight) {
+    light.shadow.camera.left = -20
+    light.shadow.camera.right = 20
+    light.shadow.camera.top = 20
+    light.shadow.camera.bottom = -20
+    light.shadow.camera.far = 100
+  }
+  return light
 }
 
 export class Scene3dLightManager {

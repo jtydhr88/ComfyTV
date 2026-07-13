@@ -51,6 +51,12 @@ export class Scene3dCharacterManager {
         if (generation !== this.applyGeneration) return
         const root = cloneSkinned(assets.template)
         root.userData.sceneObjectId = entry.id
+        root.traverse((child) => {
+          if (child instanceof THREE.Mesh) {
+            child.castShadow = true
+            child.receiveShadow = true
+          }
+        })
         this.scene.add(root)
         runtime = {
           entry,

@@ -31,6 +31,7 @@ import {
 import { lightTarget } from '@/widgets/three/light/types'
 
 import { CheckerRoom } from './CheckerRoom'
+import { ReflectiveGridFloor } from './ReflectiveGridFloor'
 import type { Scene3dCharacterManager } from './CharacterManager'
 import type { Scene3dCustomModelManager } from './CustomModelManager'
 import type { Scene3dLightManager } from './LightManager'
@@ -111,6 +112,7 @@ export class Scene3dViewport extends Viewport3d {
 
   private environment: SceneEnvironmentConfig = createDefaultEnvironment()
   private readonly checkerRoom = new CheckerRoom()
+  private gridFloor!: ReflectiveGridFloor
   private outputCameraId = ''
   private captureCameraOverride: THREE.PerspectiveCamera | null = null
   private lookThroughCameraId: string | null = null
@@ -258,6 +260,13 @@ export class Scene3dViewport extends Viewport3d {
 
     this.checkerRoom.attach(this.sceneManager.scene)
 
+    this.sceneManager.scene.remove(this.sceneManager.gridHelper)
+    this.gridFloor = new ReflectiveGridFloor(
+      this.renderer.capabilities.getMaxAnisotropy()
+    )
+    this.gridFloor.attach(this.sceneManager.scene)
+    this.enableDefaultLightShadow()
+
     const getPointerNdc = (clientX: number, clientY: number) =>
       this.clientPointToNdc(clientX, clientY)
     this.lightOrbitHandles.attach(this.sceneManager.scene)
@@ -304,6 +313,23 @@ export class Scene3dViewport extends Viewport3d {
     })
 
     this.start()
+  }
+
+  private enableDefaultLightShadow(): void {
+    const mainLight = this.lightingManager.lights.find(
+      (light): light is THREE.DirectionalLight =>
+        light instanceof THREE.DirectionalLight
+    )
+    if (!mainLight) return
+    mainLight.castShadow = true
+    mainLight.shadow.mapSize.set(2048, 2048)
+    mainLight.shadow.camera.left = -20
+    mainLight.shadow.camera.right = 20
+    mainLight.shadow.camera.top = 20
+    mainLight.shadow.camera.bottom = -20
+    mainLight.shadow.camera.far = 100
+    mainLight.shadow.bias = -0.0001
+    mainLight.shadow.normalBias = 0.02
   }
 
   protected override tickPerFrame(delta: number): void {
@@ -527,7 +553,7 @@ export class Scene3dViewport extends Viewport3d {
 
   applyEnvironment(environment: SceneEnvironmentConfig): void {
     this.environment = { ...environment }
-    this.sceneManager.gridHelper.visible = environment.showGrid
+    this.gridFloor.setVisible(environment.showGrid)
     this.sceneManager.scene.background = environment.background
       ? new THREE.Color(environment.background)
       : null
@@ -814,7 +840,7 @@ export class Scene3dViewport extends Viewport3d {
 
 
   setEditorHelpersVisible(visible: boolean): void {
-    this.sceneManager.gridHelper.visible = visible && this.environment.showGrid
+    this.gridFloor.setVisible(visible && this.environment.showGrid)
     this.lightManager.setMarkersVisible(visible)
     this.sceneCameraManager.setHelpersVisible(visible)
     this.gizmoManager.setHelperVisible(visible)
@@ -955,6 +981,7 @@ export class Scene3dViewport extends Viewport3d {
     super.disposeManagers()
     this.customModelManager.dispose()
     this.checkerRoom.dispose()
+    this.gridFloor.dispose()
     this.lightOrbitHandles.dispose()
     this.lightPositionHandle.dispose()
     this.lightTargetHandle.dispose()

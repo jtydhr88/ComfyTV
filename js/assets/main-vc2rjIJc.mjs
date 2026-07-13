@@ -55503,7 +55503,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-CDig3HhD.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-C2ZpjXKP.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -121133,6 +121133,12 @@ class Scene3dCharacterManager {
         if (generation !== this.applyGeneration) return;
         const root = clone(assets2.template);
         root.userData.sceneObjectId = entry.id;
+        root.traverse((child) => {
+          if (child instanceof Mesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+          }
+        });
         this.scene.add(root);
         runtime = {
           entry,
@@ -121256,6 +121262,12 @@ class Scene3dCustomModelManager {
         if (generation !== this.applyGeneration) return;
         const root = clone(assets2.template);
         root.userData.sceneObjectId = entry.id;
+        root.traverse((child) => {
+          if (child instanceof Mesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+          }
+        });
         this.scene.add(root);
         runtime = {
           entry,
@@ -121353,9 +121365,19 @@ class Scene3dCustomModelManager {
   }
 }
 function createLight(type) {
-  if (type === "directional") return new DirectionalLight();
-  if (type === "point") return new PointLight();
-  return new SpotLight();
+  const light = type === "directional" ? new DirectionalLight() : type === "point" ? new PointLight() : new SpotLight();
+  light.castShadow = true;
+  light.shadow.mapSize.set(1024, 1024);
+  light.shadow.bias = -1e-4;
+  light.shadow.normalBias = 0.02;
+  if (light instanceof DirectionalLight) {
+    light.shadow.camera.left = -20;
+    light.shadow.camera.right = 20;
+    light.shadow.camera.top = 20;
+    light.shadow.camera.bottom = -20;
+    light.shadow.camera.far = 100;
+  }
+  return light;
 }
 class Scene3dLightManager {
   constructor(scene) {
@@ -121485,6 +121507,8 @@ class Scene3dPrimitiveManager {
           })
         );
         mesh.userData.sceneObjectId = entry.id;
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
         this.scene.add(mesh);
         runtime = { entry, mesh };
         this.runtimes.set(entry.id, runtime);
@@ -123976,6 +124000,315 @@ class CheckerRoom {
     this.group = group;
   }
 }
+class Reflector extends Mesh {
+  /**
+   * Constructs a new reflector.
+   *
+   * @param {BufferGeometry} geometry - The reflector's geometry.
+   * @param {Reflector~Options} [options] - The configuration options.
+   */
+  constructor(geometry, options = {}) {
+    super(geometry);
+    this.isReflector = true;
+    this.type = "Reflector";
+    this.forceUpdate = false;
+    this._reflectionCameras = /* @__PURE__ */ new WeakMap();
+    const scope = this;
+    const color = options.color !== void 0 ? new Color(options.color) : new Color(8355711);
+    const textureWidth = options.textureWidth || 512;
+    const textureHeight = options.textureHeight || 512;
+    const clipBias = options.clipBias || 0;
+    const shader = options.shader || Reflector.ReflectorShader;
+    const multisample = options.multisample !== void 0 ? options.multisample : 4;
+    const reflectorPlane = new Plane();
+    const normal = new Vector3();
+    const reflectorWorldPosition = new Vector3();
+    const cameraWorldPosition = new Vector3();
+    const rotationMatrix = new Matrix4();
+    const lookAtPosition = new Vector3(0, 0, -1);
+    const clipPlane = new Vector4();
+    const view = new Vector3();
+    const target = new Vector3();
+    const q = new Vector4();
+    const textureMatrix = new Matrix4();
+    const renderTarget = new WebGLRenderTarget(textureWidth, textureHeight, { samples: multisample, type: HalfFloatType });
+    const material = new ShaderMaterial({
+      name: shader.name !== void 0 ? shader.name : "unspecified",
+      uniforms: UniformsUtils.clone(shader.uniforms),
+      fragmentShader: shader.fragmentShader,
+      vertexShader: shader.vertexShader
+    });
+    material.uniforms["tDiffuse"].value = renderTarget.texture;
+    material.uniforms["color"].value = color;
+    material.uniforms["textureMatrix"].value = textureMatrix;
+    this.material = material;
+    this.onBeforeRender = function(renderer2, scene, camera2) {
+      const reflectionCamera = this._getReflectionCamera(camera2);
+      reflectorWorldPosition.setFromMatrixPosition(scope.matrixWorld);
+      cameraWorldPosition.setFromMatrixPosition(camera2.matrixWorld);
+      rotationMatrix.extractRotation(scope.matrixWorld);
+      normal.set(0, 0, 1);
+      normal.applyMatrix4(rotationMatrix);
+      view.subVectors(reflectorWorldPosition, cameraWorldPosition);
+      const isFacingAway = view.dot(normal) > 0;
+      if (isFacingAway === true && this.forceUpdate === false) return;
+      view.reflect(normal).negate();
+      view.add(reflectorWorldPosition);
+      rotationMatrix.extractRotation(camera2.matrixWorld);
+      lookAtPosition.set(0, 0, -1);
+      lookAtPosition.applyMatrix4(rotationMatrix);
+      lookAtPosition.add(cameraWorldPosition);
+      target.subVectors(reflectorWorldPosition, lookAtPosition);
+      target.reflect(normal).negate();
+      target.add(reflectorWorldPosition);
+      reflectionCamera.position.copy(view);
+      reflectionCamera.up.set(0, 1, 0);
+      reflectionCamera.up.applyMatrix4(rotationMatrix);
+      reflectionCamera.up.reflect(normal);
+      reflectionCamera.lookAt(target);
+      reflectionCamera.far = camera2.far;
+      reflectionCamera.updateMatrixWorld();
+      reflectionCamera.projectionMatrix.copy(camera2.projectionMatrix);
+      textureMatrix.set(
+        0.5,
+        0,
+        0,
+        0.5,
+        0,
+        0.5,
+        0,
+        0.5,
+        0,
+        0,
+        0.5,
+        0.5,
+        0,
+        0,
+        0,
+        1
+      );
+      textureMatrix.multiply(reflectionCamera.projectionMatrix);
+      textureMatrix.multiply(reflectionCamera.matrixWorldInverse);
+      textureMatrix.multiply(scope.matrixWorld);
+      reflectorPlane.setFromNormalAndCoplanarPoint(normal, reflectorWorldPosition);
+      reflectorPlane.applyMatrix4(reflectionCamera.matrixWorldInverse);
+      clipPlane.set(reflectorPlane.normal.x, reflectorPlane.normal.y, reflectorPlane.normal.z, reflectorPlane.constant);
+      const projectionMatrix = reflectionCamera.projectionMatrix;
+      if (reflectionCamera.isOrthographicCamera) {
+        q.x = (Math.sign(clipPlane.x) + projectionMatrix.elements[8]) / projectionMatrix.elements[0];
+        q.y = (Math.sign(clipPlane.y) + projectionMatrix.elements[9]) / projectionMatrix.elements[5];
+        q.z = -camera2.far;
+        q.w = 1;
+      } else {
+        q.x = (Math.sign(clipPlane.x) + projectionMatrix.elements[8]) / projectionMatrix.elements[0];
+        q.y = (Math.sign(clipPlane.y) + projectionMatrix.elements[9]) / projectionMatrix.elements[5];
+        q.z = -1;
+        q.w = (1 + projectionMatrix.elements[10]) / projectionMatrix.elements[14];
+      }
+      clipPlane.multiplyScalar(2 / clipPlane.dot(q));
+      projectionMatrix.elements[2] = clipPlane.x;
+      projectionMatrix.elements[6] = clipPlane.y;
+      if (reflectionCamera.isOrthographicCamera) {
+        projectionMatrix.elements[10] = clipPlane.z - clipBias;
+        projectionMatrix.elements[14] = clipPlane.w - 1;
+      } else {
+        projectionMatrix.elements[10] = clipPlane.z + 1 - clipBias;
+        projectionMatrix.elements[14] = clipPlane.w;
+      }
+      scope.visible = false;
+      const currentRenderTarget = renderer2.getRenderTarget();
+      const currentXrEnabled = renderer2.xr.enabled;
+      const currentShadowAutoUpdate = renderer2.shadowMap.autoUpdate;
+      renderer2.xr.enabled = false;
+      renderer2.shadowMap.autoUpdate = false;
+      renderer2.setRenderTarget(renderTarget);
+      renderer2.state.buffers.depth.setMask(true);
+      if (renderer2.autoClear === false) renderer2.clear();
+      renderer2.render(scene, reflectionCamera);
+      renderer2.xr.enabled = currentXrEnabled;
+      renderer2.shadowMap.autoUpdate = currentShadowAutoUpdate;
+      renderer2.setRenderTarget(currentRenderTarget);
+      const viewport2 = camera2.viewport;
+      if (viewport2 !== void 0) {
+        renderer2.state.viewport(viewport2);
+      }
+      scope.visible = true;
+      this.forceUpdate = false;
+    };
+    this.getRenderTarget = function() {
+      return renderTarget;
+    };
+    this.dispose = function() {
+      renderTarget.dispose();
+      scope.material.dispose();
+    };
+    this._getReflectionCamera = function(camera2) {
+      let reflectionCamera = this._reflectionCameras.get(camera2);
+      if (reflectionCamera === void 0) {
+        reflectionCamera = camera2.clone();
+        this._reflectionCameras.set(camera2, reflectionCamera);
+      }
+      return reflectionCamera;
+    };
+  }
+}
+Reflector.ReflectorShader = {
+  name: "ReflectorShader",
+  uniforms: {
+    "color": {
+      value: null
+    },
+    "tDiffuse": {
+      value: null
+    },
+    "textureMatrix": {
+      value: null
+    }
+  },
+  vertexShader: (
+    /* glsl */
+    `
+		uniform mat4 textureMatrix;
+		varying vec4 vUv;
+
+		#include <common>
+		#include <logdepthbuf_pars_vertex>
+
+		void main() {
+
+			vUv = textureMatrix * vec4( position, 1.0 );
+
+			gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+
+			#include <logdepthbuf_vertex>
+
+		}`
+  ),
+  fragmentShader: (
+    /* glsl */
+    `
+		uniform vec3 color;
+		uniform sampler2D tDiffuse;
+		varying vec4 vUv;
+
+		#include <logdepthbuf_pars_fragment>
+
+		float blendOverlay( float base, float blend ) {
+
+			return( base < 0.5 ? ( 2.0 * base * blend ) : ( 1.0 - 2.0 * ( 1.0 - base ) * ( 1.0 - blend ) ) );
+
+		}
+
+		vec3 blendOverlay( vec3 base, vec3 blend ) {
+
+			return vec3( blendOverlay( base.r, blend.r ), blendOverlay( base.g, blend.g ), blendOverlay( base.b, blend.b ) );
+
+		}
+
+		void main() {
+
+			#include <logdepthbuf_fragment>
+
+			vec4 base = texture2DProj( tDiffuse, vUv );
+			gl_FragColor = vec4( blendOverlay( base.rgb, color ), 1.0 );
+
+			#include <tonemapping_fragment>
+			#include <colorspace_fragment>
+
+		}`
+  )
+};
+const FLOOR_SIZE = 40;
+const CHECKER_DIVISIONS = 8;
+const CHECKER_LIGHT = "#3a3a41";
+const CHECKER_DARK = "#2d2d33";
+const REFLECTION_TINT = 3092276;
+const OVERLAY_OPACITY = 0.8;
+class ReflectiveGridFloor {
+  constructor(anisotropy = 1) {
+    __publicField(this, "group");
+    __publicField(this, "reflector");
+    __publicField(this, "overlay");
+    __publicField(this, "scene", null);
+    this.group = new Group();
+    this.group.name = "__reflective_grid_floor__";
+    this.reflector = new Reflector(
+      new PlaneGeometry(FLOOR_SIZE, FLOOR_SIZE),
+      {
+        clipBias: 3e-3,
+        textureWidth: 1024,
+        textureHeight: 1024,
+        color: REFLECTION_TINT
+      }
+    );
+    this.reflector.rotation.x = -Math.PI / 2;
+    this.group.add(this.reflector);
+    const texture = this.createCheckerTexture();
+    texture.repeat.set(
+      FLOOR_SIZE / CHECKER_DIVISIONS,
+      FLOOR_SIZE / CHECKER_DIVISIONS
+    );
+    texture.anisotropy = anisotropy;
+    this.overlay = new Mesh(
+      new PlaneGeometry(FLOOR_SIZE, FLOOR_SIZE),
+      new MeshStandardMaterial({
+        map: texture,
+        roughness: 0.95,
+        metalness: 0,
+        transparent: true,
+        opacity: OVERLAY_OPACITY,
+        polygonOffset: true,
+        polygonOffsetFactor: -4,
+        polygonOffsetUnits: -4
+      })
+    );
+    this.overlay.rotation.x = -Math.PI / 2;
+    this.overlay.position.y = 2e-3;
+    this.overlay.receiveShadow = true;
+    this.group.add(this.overlay);
+  }
+  attach(scene) {
+    this.scene = scene;
+    scene.add(this.group);
+  }
+  setVisible(visible) {
+    this.group.visible = visible;
+  }
+  get visible() {
+    return this.group.visible;
+  }
+  dispose() {
+    var _a2, _b2;
+    (_a2 = this.scene) == null ? void 0 : _a2.remove(this.group);
+    this.scene = null;
+    this.reflector.geometry.dispose();
+    this.reflector.dispose();
+    this.overlay.geometry.dispose();
+    (_b2 = this.overlay.material.map) == null ? void 0 : _b2.dispose();
+    this.overlay.material.dispose();
+  }
+  createCheckerTexture() {
+    const size2 = 512;
+    const canvas = document.createElement("canvas");
+    canvas.width = size2;
+    canvas.height = size2;
+    const ctx = canvas.getContext("2d");
+    if (ctx) {
+      const cell = size2 / CHECKER_DIVISIONS;
+      for (let r = 0; r < CHECKER_DIVISIONS; r++) {
+        for (let c2 = 0; c2 < CHECKER_DIVISIONS; c2++) {
+          ctx.fillStyle = (r + c2) % 2 === 0 ? CHECKER_LIGHT : CHECKER_DARK;
+          ctx.fillRect(c2 * cell, r * cell, cell, cell);
+        }
+      }
+    }
+    const texture = new CanvasTexture(canvas);
+    texture.wrapS = RepeatWrapping;
+    texture.wrapT = RepeatWrapping;
+    texture.colorSpace = SRGBColorSpace;
+    return texture;
+  }
+}
 const DEPTH_PREVIEW_VERTEX = `
 #include <common>
 #include <skinning_pars_vertex>
@@ -124165,6 +124498,7 @@ class Scene3dViewport extends Viewport3d {
     __publicField(this, "ringDrag", null);
     __publicField(this, "environment", createDefaultEnvironment());
     __publicField(this, "checkerRoom", new CheckerRoom());
+    __publicField(this, "gridFloor");
     __publicField(this, "outputCameraId", "");
     __publicField(this, "captureCameraOverride", null);
     __publicField(this, "lookThroughCameraId", null);
@@ -124283,6 +124617,12 @@ class Scene3dViewport extends Viewport3d {
     this.hoverBox.visible = false;
     this.sceneManager.scene.add(this.hoverBox);
     this.checkerRoom.attach(this.sceneManager.scene);
+    this.sceneManager.scene.remove(this.sceneManager.gridHelper);
+    this.gridFloor = new ReflectiveGridFloor(
+      this.renderer.capabilities.getMaxAnisotropy()
+    );
+    this.gridFloor.attach(this.sceneManager.scene);
+    this.enableDefaultLightShadow();
     const getPointerNdc = (clientX, clientY) => this.clientPointToNdc(clientX, clientY);
     this.lightOrbitHandles.attach(this.sceneManager.scene);
     this.lightPositionHandle = new PositionHandle(
@@ -124326,6 +124666,21 @@ class Scene3dViewport extends Viewport3d {
       this.forceRender();
     });
     this.start();
+  }
+  enableDefaultLightShadow() {
+    const mainLight = this.lightingManager.lights.find(
+      (light) => light instanceof DirectionalLight
+    );
+    if (!mainLight) return;
+    mainLight.castShadow = true;
+    mainLight.shadow.mapSize.set(2048, 2048);
+    mainLight.shadow.camera.left = -20;
+    mainLight.shadow.camera.right = 20;
+    mainLight.shadow.camera.top = 20;
+    mainLight.shadow.camera.bottom = -20;
+    mainLight.shadow.camera.far = 100;
+    mainLight.shadow.bias = -1e-4;
+    mainLight.shadow.normalBias = 0.02;
   }
   tickPerFrame(delta) {
     super.tickPerFrame(delta);
@@ -124504,7 +124859,7 @@ class Scene3dViewport extends Viewport3d {
   }
   applyEnvironment(environment) {
     this.environment = { ...environment };
-    this.sceneManager.gridHelper.visible = environment.showGrid;
+    this.gridFloor.setVisible(environment.showGrid);
     this.sceneManager.scene.background = environment.background ? new Color(environment.background) : null;
     this.refreshCheckerRoom();
   }
@@ -124754,7 +125109,7 @@ class Scene3dViewport extends Viewport3d {
     }
   }
   setEditorHelpersVisible(visible) {
-    this.sceneManager.gridHelper.visible = visible && this.environment.showGrid;
+    this.gridFloor.setVisible(visible && this.environment.showGrid);
     this.lightManager.setMarkersVisible(visible);
     this.sceneCameraManager.setHelpersVisible(visible);
     this.gizmoManager.setHelperVisible(visible);
@@ -124883,6 +125238,7 @@ class Scene3dViewport extends Viewport3d {
     super.disposeManagers();
     this.customModelManager.dispose();
     this.checkerRoom.dispose();
+    this.gridFloor.dispose();
     this.lightOrbitHandles.dispose();
     this.lightPositionHandle.dispose();
     this.lightTargetHandle.dispose();
@@ -131308,4 +131664,4 @@ export {
   RawShaderMaterial as y,
   Raycaster as z
 };
-//# sourceMappingURL=main-CYHi1ZQD.mjs.map
+//# sourceMappingURL=main-vc2rjIJc.mjs.map

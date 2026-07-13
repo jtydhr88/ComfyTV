@@ -41,6 +41,8 @@ export class Scene3dPrimitiveManager {
           })
         )
         mesh.userData.sceneObjectId = entry.id
+        mesh.castShadow = true
+        mesh.receiveShadow = true
         this.scene.add(mesh)
         runtime = { entry, mesh }
         this.runtimes.set(entry.id, runtime)
