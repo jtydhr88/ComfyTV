@@ -63,8 +63,9 @@ def _standard_stage_inputs() -> list:
     ]
 
 
-def _merge_custom_params(kind: str, custom_params, options: dict | None) -> dict:
-    merged: dict = {}
+def _merge_custom_params(kind: str, custom_params, options: dict | None,
+                         option_defaults: dict | None = None) -> dict:
+    merged: dict = dict(option_defaults) if option_defaults else {}
     try:
         from .... import storage
         for d in storage.list_stage_params(kind):
@@ -96,6 +97,7 @@ async def invoke_runner(
     upstream=None,
     options=None,
     custom_params=None,
+    option_defaults=None,
     progress=None,
 ):
     runner = RUNNER_REGISTRY.by_label(label, kind)
@@ -106,7 +108,7 @@ async def invoke_runner(
             f"workflow files, or re-open the workflow in the sidebar editor)"
         )
 
-    merged_options = _merge_custom_params(kind, custom_params, options)
+    merged_options = _merge_custom_params(kind, custom_params, options, option_defaults)
     runner = _route_server(runner, merged_options.pop('__server', None))
 
     ctx_kwargs: dict = {
@@ -147,6 +149,7 @@ async def run_stage_workflow(
     upstream=None,
     options=None,
     custom_params=None,
+    option_defaults=None,
     progress=None,
     transform=None,
     picked_payload=None,
@@ -161,6 +164,7 @@ async def run_stage_workflow(
         upstream=upstream,
         options=options,
         custom_params=custom_params,
+        option_defaults=option_defaults,
         progress=progress,
     )
 

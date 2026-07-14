@@ -29,6 +29,19 @@ class TestMergeCustomParams:
         from ComfyTV.nodes.stages.common.invoke import _merge_custom_params
         assert _merge_custom_params("audio", "not json", {"x": 1}) == {"x": 1}
 
+    def test_option_defaults_lose_to_everything(self, reset_db):
+        from ComfyTV import storage
+        from ComfyTV.nodes.stages.common.invoke import _merge_custom_params
+        defaults = {"max_length": 6144, "a": 1, "b": 2}
+        merged = _merge_custom_params("storyboard", None, None, defaults)
+        assert merged == defaults
+        storage.create_stage_param(kind="storyboard", label="a", type="int", default=10)
+        cp = '{"items":[{"key":"max_length","value":512}]}'
+        merged = _merge_custom_params("storyboard", cp, {"b": 20}, defaults)
+        assert merged["max_length"] == 512
+        assert merged["a"] == 10
+        assert merged["b"] == 20
+
 
 class TestCapsMerge:
     def test_custom_key_and_seeded_builtins_in_caps(self, reset_db):

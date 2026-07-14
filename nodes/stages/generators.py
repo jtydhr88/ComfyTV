@@ -559,10 +559,10 @@ class ShotImagesStage(io.ComfyNode):
             except (ValueError, TypeError):
                 shots = []
 
-        runner = RUNNER_REGISTRY.by_label(workflow, 'image')
+        runner = RUNNER_REGISTRY.by_label(workflow, 'shot-images')
         if runner is None:
             raise StageRunnerMissing(
-                f"no runner registered for image/{workflow!r} — was the workflow "
+                f"no runner registered for shot-images/{workflow!r} — was the workflow "
                 f"added or renamed after startup? (restart ComfyUI to pick up new "
                 f"workflow files, or re-open the workflow in the sidebar editor)"
             )
@@ -576,10 +576,11 @@ class ShotImagesStage(io.ComfyNode):
             _emit_progress(cls, i, len(shots),
                            text=f"shot {i + 1}/{len(shots)}: {prompt[:40]}")
             shot_payload = None
-            if runner is not None and prompt:
+            if prompt:
                 try:
-                    ctx = RunnerContext(
-                        kind='image',
+                    shot_payload = await invoke_runner(
+                        kind='shot-images',
+                        label=workflow,
                         main_prompt=prompt,
                         upstream={'texts': [], 'images': shared_refs},
                         options={
@@ -587,9 +588,9 @@ class ShotImagesStage(io.ComfyNode):
                             'aspect_ratio': aspect_ratio,
                             'batch_size':   1,
                         },
+                        custom_params=custom_params,
                     )
-                    shot_payload = await runner.invoke(ctx)
-                except NotImplementedError:
+                except StageNotImplemented:
                     shot_payload = None
                 except Exception as e:
                     _log.warning("[ComfyTV/shot-images] shot %s failed: %s", shot_no, e)
@@ -675,8 +676,9 @@ class StoryboardStage(io.ComfyNode):
             project_id=project_id,
             parent_output_id=parent_output_id,
             main_prompt=composed_prompt,
-            upstream={},
-            options={'max_length': 6144},
+            upstream={'texts': text_vals},
+            options={},
+            option_defaults={'max_length': 6144},
             transform=lambda raw: _shape_storyboard_from_llm(str(raw or '')),
         )
 
