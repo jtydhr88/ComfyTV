@@ -1,8 +1,10 @@
 <template>
   <div class="ctv:flex ctv:flex-col ctv:size-full ctv:overflow-hidden ctv:text-base-foreground">
     <div
+      ref="tabBar"
       role="tablist"
-      class="ctv:flex ctv:shrink-0 ctv:gap-1 ctv:p-1.5 ctv:border-b ctv:border-border-subtle ctv:bg-interface-panel-surface"
+      class="ctv-sidebar-tabbar ctv:flex ctv:shrink-0 ctv:gap-1 ctv:p-1.5 ctv:border-b ctv:border-border-subtle ctv:bg-interface-panel-surface ctv:overflow-x-auto"
+      @wheel="onTabWheel"
     >
       <button
         v-for="tab in TABS"
@@ -22,6 +24,9 @@
     <div v-show="activeTab === 'assets'" class="ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden">
       <AssetsPanel :active="activeTab === 'assets'" />
     </div>
+    <div v-show="activeTab === 'entries'" class="ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden">
+      <EntriesPanel :active="activeTab === 'entries'" />
+    </div>
     <div v-show="activeTab === 'params'" class="ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden">
       <StageParamsPanel :active="activeTab === 'params'" />
     </div>
@@ -32,27 +37,45 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, ref } from 'vue'
 import { useStorage } from '@vueuse/core'
 
 import AssetsPanel from '@/components/sidebar/AssetsPanel.vue'
+import EntriesPanel from '@/components/sidebar/EntriesPanel.vue'
 import ServersPanel from '@/components/sidebar/ServersPanel.vue'
 import WorkflowConfigSidebar from '@/components/sidebar/WorkflowConfigSidebar.vue'
 import StageParamsPanel from '@/components/sidebar/StageParamsPanel.vue'
 
-type SidebarTab = 'workflow' | 'assets' | 'params' | 'servers'
+type SidebarTab = 'workflow' | 'assets' | 'entries' | 'params' | 'servers'
 
 const TABS: Array<{ id: SidebarTab; labelKey: string }> = [
   { id: 'workflow', labelKey: 'sidebar.tab.workflow' },
   { id: 'assets',   labelKey: 'sidebar.tab.assets' },
+  { id: 'entries',  labelKey: 'sidebar.tab.entries' },
   { id: 'params',   labelKey: 'sidebar.tab.params' },
   { id: 'servers',  labelKey: 'sidebar.tab.servers' },
 ]
 
 const activeTab = useStorage<SidebarTab>('comfytv:sidebar:active-tab', 'workflow')
 
+const tabBar = ref<HTMLElement | null>(null)
+
+function onTabWheel(event: WheelEvent) {
+  const el = tabBar.value
+  if (!el || el.scrollWidth <= el.clientWidth) return
+  event.preventDefault()
+  el.scrollLeft += event.deltaX || event.deltaY
+}
+
+onMounted(() => {
+  tabBar.value
+    ?.querySelector('[aria-selected="true"]')
+    ?.scrollIntoView({ block: 'nearest', inline: 'nearest' })
+})
+
 function tabClass(active: boolean) {
   return [
-    'ctv:flex ctv:shrink-0 ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:[font-family:inherit]',
+    'ctv:flex ctv:shrink-0 ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:whitespace-nowrap ctv:[font-family:inherit]',
     'ctv:rounded-lg ctv:border-none ctv:px-2.5 ctv:py-1.5 ctv:text-xs ctv:transition-all ctv:duration-200',
     'ctv:focus-visible:outline-none',
     active
@@ -61,3 +84,12 @@ function tabClass(active: boolean) {
   ].join(' ')
 }
 </script>
+
+<style scoped>
+.ctv-sidebar-tabbar {
+  scrollbar-width: none;
+}
+.ctv-sidebar-tabbar::-webkit-scrollbar {
+  display: none;
+}
+</style>

@@ -79,6 +79,7 @@
     "tab": {
       "workflow": "Workflow",
       "assets": "Assets",
+      "entries": "Entries",
       "params": "Stages",
       "servers": "Servers"
     }
@@ -954,6 +955,16 @@
     "imageTooltipMissing": "Slot #{n} has no image right now — this token is dropped at run"
   },
   "entries": {
+    "title": "Entries",
+    "movedNotice": "Entry management has moved to the ComfyTV left sidebar — open the \"Entries\" tab there.",
+    "movedNoticeDeprecation": "This dialog will be removed in the next release.",
+    "import": "Import",
+    "importTooltip": "Import entries from a JSON backup — rows identical to an existing entry are skipped, everything else is added as new",
+    "export": "Export",
+    "exportTooltip": "Export all entries of this project as a JSON backup",
+    "exportEmpty": "No entries to export.",
+    "importResult": "Imported {added} new, skipped {dup} duplicate and {invalid} invalid.",
+    "importError": "Import failed: not a valid entries JSON file.",
     "refHelpPre": "Reference any entry in a stage's prompt with",
     "refHelpPost": "Unknown tokens stay literal.",
     "colLabel": "Label",

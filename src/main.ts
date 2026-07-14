@@ -274,7 +274,7 @@ const extension: ComfyExtension = {
         useDialogStore().show({
           title: i18n.global.t('menu.entriesTitle'),
           component: EntryManagerPanel,
-          width: '900px',
+          width: '480px',
         })
       },
     },

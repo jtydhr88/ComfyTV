@@ -79,6 +79,7 @@
     "tab": {
       "workflow": "工作流",
       "assets": "资产库",
+      "entries": "条目",
       "params": "Stage 管理",
       "servers": "服务器"
     }
@@ -954,6 +955,16 @@
     "imageTooltipMissing": "槽位 #{n} 当前没有图片 —— 运行时此标记会被移除"
   },
   "entries": {
+    "title": "条目",
+    "movedNotice": "条目管理已移到 ComfyTV 左侧边栏的「条目」tab。",
+    "movedNoticeDeprecation": "此弹窗将在下个版本移除。",
+    "import": "导入",
+    "importTooltip": "从 JSON 备份导入词条——与现有词条完全相同的跳过,其余一律新增",
+    "export": "导出",
+    "exportTooltip": "把当前项目的全部词条导出为 JSON 备份",
+    "exportEmpty": "没有可导出的词条。",
+    "importResult": "导入 {added} 条新词条,跳过 {dup} 条重复、{invalid} 条无效。",
+    "importError": "导入失败:不是有效的词条 JSON 文件。",
     "refHelpPre": "在 stage 提示词里用",
     "refHelpPost": "引用任意条目;未知标记保持原文。",
     "colLabel": "标签",
