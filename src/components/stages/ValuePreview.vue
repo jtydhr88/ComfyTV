@@ -68,6 +68,27 @@
       :alt="String(content)"
     />
 
+    <div
+      v-else-if="type === 'COMFYTV_VIDEO' && !compact"
+      class="vp-img-host ctv:group ctv:relative ctv:w-full"
+    >
+      <video
+        :src="String(content)"
+        :class="videoClass"
+        controls muted playsinline preload="metadata"
+      />
+      <div :class="imgActionsClass">
+        <button type="button" :class="imgActionBtn"
+                :title="$t('stage.action.download')"
+                @click.stop="onDownload(String(content))"><i class="pi pi-download" /></button>
+        <button type="button" :class="tagActionBtn(String(content))"
+                :title="$t('stage.action.addTag')"
+                @click.stop="openTagMenu(String(content), nameFromUrl(String(content)), $event, previewMediaType)"><i class="pi pi-tag" /></button>
+        <button type="button" :class="imgActionBtn"
+                :title="$t('stage.action.loadAsset')"
+                @click.stop="onLoadAsset(String(content), nameFromUrl(String(content)))"><i class="pi pi-bookmark" /></button>
+      </div>
+    </div>
     <video
       v-else-if="type === 'COMFYTV_VIDEO'"
       :src="String(content)"

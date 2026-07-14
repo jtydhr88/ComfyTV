@@ -525,6 +525,34 @@
         "label": "抽帧",
         "tooltip": "从视频抽一张图(首/末/中/任意秒数)"
       },
+      "split": {
+        "label": "分割",
+        "tooltip": "在切割点把视频一分为二 — 输出前段 A 和后段 B"
+      },
+      "speed": {
+        "label": "变速",
+        "tooltip": "加速 / 减速(0.25x–4x)或倒放"
+      },
+      "rotate": {
+        "label": "旋转 / 翻转",
+        "tooltip": "按 90° 旋转,或水平 / 垂直镜像"
+      },
+      "volume": {
+        "label": "音量",
+        "tooltip": "调整音量,可加淡入淡出"
+      },
+      "mux-audio": {
+        "label": "合成音轨",
+        "tooltip": "替换或混入新音轨(还需上游接一个音频)"
+      },
+      "concat": {
+        "label": "拼接",
+        "tooltip": "按顺序拼接多段视频 — 在新节点上继续接入更多片段"
+      },
+      "frames": {
+        "label": "批量抽帧",
+        "tooltip": "标记多个时间点,一次抽出一批图片"
+      },
       "hd": {
         "label": "高清",
         "tooltip": "提升分辨率"
@@ -554,6 +582,97 @@
   "shotCell": {
     "pick": "选择 {tag}",
     "refine": "微调 {tag}"
+  },
+  "videoTrim": {
+    "noInputVideo": "无输入视频 — 请上游连接一个视频",
+    "loading": "加载中…",
+    "loadError": "视频加载失败",
+    "playSelection": "播放选段",
+    "pause": "暂停",
+    "mute": "静音",
+    "unmute": "取消静音",
+    "start": "入点",
+    "end": "出点",
+    "reset": "重置",
+    "resetTooltip": "选中整段视频",
+    "trimming": "剪辑中…",
+    "trimmed": "剪辑完成 — 下游可直接使用",
+    "adjustThenRun": "拖动把手选择范围，然后 Run"
+  },
+  "videoConcat": {
+    "noInputs": "无输入视频 — 请上游连接视频",
+    "needTwo": "至少接入两个视频才能拼接",
+    "dragToReorder": "拖动方块调整拼接顺序",
+    "concatenating": "拼接中…",
+    "done": "拼接完成 — 下游可直接使用",
+    "readyToRun": "已排好 {n} 段 — 点 Run 拼接"
+  },
+  "videoSpeed": {
+    "speed": "速度",
+    "reverse": "倒放",
+    "reverseTip": "倒序播放整段视频（Run 时生效）",
+    "reverseNote": "倒放在 Run 时生效 — 预览仍为正向播放",
+    "processing": "处理中…",
+    "done": "变速完成 — 下游可直接使用",
+    "adjustThenRun": "选择速度（预览即时生效），然后 Run"
+  },
+  "videoRotate": {
+    "rotateLeft": "逆时针旋转 90°",
+    "rotateRight": "顺时针旋转 90°",
+    "flipH": "水平翻转",
+    "flipV": "垂直翻转",
+    "processing": "处理中…",
+    "done": "变换完成 — 下游可直接使用",
+    "adjustThenRun": "旋转 / 翻转（预览即时生效），然后 Run"
+  },
+  "videoSplit": {
+    "splitPoint": "切割点",
+    "splitting": "分割中…",
+    "done": "分割完成 — A、B 两段可供下游使用",
+    "adjustThenRun": "拖动把手确定切割点，然后 Run"
+  },
+  "videoVolume": {
+    "volume": "音量",
+    "fadeIn": "淡入",
+    "fadeOut": "淡出",
+    "previewCapNote": "预览最高 100% — 超出部分在 Run 时生效",
+    "processing": "处理中…",
+    "done": "音频已调整 — 下游可直接使用",
+    "adjustThenRun": "调整音量 / 淡入淡出（≤100% 可预览），然后 Run"
+  },
+  "videoMux": {
+    "audioTrack": "音频",
+    "noAudio": "无音频输入 — 请上游连接",
+    "replace": "替换",
+    "mix": "混合",
+    "offset": "偏移",
+    "needBoth": "需要同时接入视频和音频",
+    "processing": "合成中…",
+    "done": "音轨已合成 — 下游可直接使用",
+    "adjustThenRun": "选择替换/混合和偏移，然后 Run"
+  },
+  "videoFrames": {
+    "marks": "{n} 个标记",
+    "addMark": "在播放头打点",
+    "uniform": "均匀打点",
+    "clear": "清空",
+    "removeMarkTip": "移除 {t}s 处的标记",
+    "addFirst": "拖到目标帧打点，然后 Run",
+    "readyToRun": "已标记 {n} 帧 — 点 Run 抽取",
+    "processing": "抽取中…",
+    "done": "抽帧完成 — 下游可直接使用"
+  },
+  "videoResize": {
+    "source": "原尺寸",
+    "processing": "缩放中…",
+    "done": "缩放完成 — 下游可直接使用",
+    "adjustThenRun": "设定目标尺寸或选择预设，然后 Run"
+  },
+  "videoCrop": {
+    "play": "播放",
+    "cropping": "裁剪中…",
+    "cropped": "视频已裁剪 — 下游可直接使用",
+    "adjustThenRun": "拖动矩形框定裁剪区域，然后 Run"
   },
   "imageCrop": {
     "noInputImage": "无输入图像 — 请上游连接一张图",

@@ -144,11 +144,32 @@
     "VideoClipStage": {
       "display_name": "Video Clip"
     },
+    "VideoConcatStage": {
+      "display_name": "Video Concat"
+    },
     "VideoCropStage": {
       "display_name": "Video Crop"
     },
     "VideoExtractFrameStage": {
       "display_name": "Extract Frame"
+    },
+    "VideoFramesStage": {
+      "display_name": "Extract Frames"
+    },
+    "VideoSpeedStage": {
+      "display_name": "Video Speed"
+    },
+    "VideoRotateStage": {
+      "display_name": "Video Rotate"
+    },
+    "VideoSplitStage": {
+      "display_name": "Video Split"
+    },
+    "VideoVolumeStage": {
+      "display_name": "Video Volume"
+    },
+    "VideoMuxAudioStage": {
+      "display_name": "Mux Audio"
     },
     "VideoLoaderStage": {
       "display_name": "Load Video"
@@ -1292,6 +1313,36 @@
         "name": "Video"
       }
     },
+    "outputs": {
+      "0": {
+        "name": "Video"
+      }
+    }
+  },
+  "ComfyTV_VideoSpeedStage": {
+    "display_name": "Video Speed"
+  },
+  "ComfyTV_VideoRotateStage": {
+    "display_name": "Video Rotate"
+  },
+  "ComfyTV_VideoSplitStage": {
+    "display_name": "Video Split",
+    "outputs": {
+      "0": { "name": "Video A" },
+      "1": { "name": "Video B" }
+    }
+  },
+  "ComfyTV_VideoVolumeStage": {
+    "display_name": "Video Volume"
+  },
+  "ComfyTV_VideoMuxAudioStage": {
+    "display_name": "Mux Audio"
+  },
+  "ComfyTV_VideoFramesStage": {
+    "display_name": "Extract Frames"
+  },
+  "ComfyTV_VideoConcatStage": {
+    "display_name": "Video Concat",
     "outputs": {
       "0": {
         "name": "Video"

@@ -7,6 +7,16 @@ import MultiangleStageCard from '@/components/stages/MultiangleStageCard.vue'
 import PainterStageCard from '@/components/stages/PainterStageCard.vue'
 import RelightStageCard from '@/components/stages/RelightStageCard.vue'
 import CropStageCard from '@/components/stages/CropStageCard.vue'
+import VideoClipStageCard from '@/components/stages/VideoClipStageCard.vue'
+import VideoCropStageCard from '@/components/stages/VideoCropStageCard.vue'
+import VideoConcatStageCard from '@/components/stages/VideoConcatStageCard.vue'
+import VideoSpeedStageCard from '@/components/stages/VideoSpeedStageCard.vue'
+import VideoRotateStageCard from '@/components/stages/VideoRotateStageCard.vue'
+import VideoSplitStageCard from '@/components/stages/VideoSplitStageCard.vue'
+import VideoVolumeStageCard from '@/components/stages/VideoVolumeStageCard.vue'
+import VideoMuxAudioStageCard from '@/components/stages/VideoMuxAudioStageCard.vue'
+import VideoFramesStageCard from '@/components/stages/VideoFramesStageCard.vue'
+import VideoResizeStageCard from '@/components/stages/VideoResizeStageCard.vue'
 import RotateStageCard from '@/components/stages/RotateStageCard.vue'
 import MirrorStageCard from '@/components/stages/MirrorStageCard.vue'
 import ColorGradeStageCard from '@/components/stages/ColorGradeStageCard.vue'
@@ -81,6 +91,16 @@ const RICH_STAGE_CARDS: Record<string, any> = {
   'ComfyTV.InpaintStage':    PainterStageCard,
   'ComfyTV.EraseStage':      PainterStageCard,
   'ComfyTV.CropStage':       CropStageCard,
+  'ComfyTV.VideoClipStage':  VideoClipStageCard,
+  'ComfyTV.VideoCropStage':  VideoCropStageCard,
+  'ComfyTV.VideoConcatStage': VideoConcatStageCard,
+  'ComfyTV.VideoSpeedStage':  VideoSpeedStageCard,
+  'ComfyTV.VideoRotateStage': VideoRotateStageCard,
+  'ComfyTV.VideoSplitStage':  VideoSplitStageCard,
+  'ComfyTV.VideoVolumeStage': VideoVolumeStageCard,
+  'ComfyTV.VideoMuxAudioStage': VideoMuxAudioStageCard,
+  'ComfyTV.VideoFramesStage': VideoFramesStageCard,
+  'ComfyTV.VideoResizeStage': VideoResizeStageCard,
   'ComfyTV.RotateStage':     RotateStageCard,
   'ComfyTV.MirrorStage':     MirrorStageCard,
   'ComfyTV.ColorGradeStage': ColorGradeStageCard,
@@ -106,6 +126,16 @@ const RICH_STAGE_MIN_HEIGHTS: Record<string, number> = {
   'ComfyTV.InpaintStage':    640,
   'ComfyTV.EraseStage':      640,
   'ComfyTV.CropStage':       620,
+  'ComfyTV.VideoClipStage':  680,
+  'ComfyTV.VideoCropStage':  700,
+  'ComfyTV.VideoConcatStage': 560,
+  'ComfyTV.VideoSpeedStage':  620,
+  'ComfyTV.VideoRotateStage': 600,
+  'ComfyTV.VideoSplitStage':  680,
+  'ComfyTV.VideoVolumeStage': 620,
+  'ComfyTV.VideoMuxAudioStage': 620,
+  'ComfyTV.VideoFramesStage': 700,
+  'ComfyTV.VideoResizeStage': 620,
   'ComfyTV.RotateStage':     560,
   'ComfyTV.MirrorStage':     520,
   'ComfyTV.ColorGradeStage': 680,

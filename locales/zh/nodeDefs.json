@@ -144,11 +144,32 @@
     "VideoClipStage": {
       "display_name": "视频剪辑"
     },
+    "VideoConcatStage": {
+      "display_name": "视频拼接"
+    },
     "VideoCropStage": {
       "display_name": "视频裁剪"
     },
     "VideoExtractFrameStage": {
       "display_name": "抽帧"
+    },
+    "VideoFramesStage": {
+      "display_name": "批量抽帧"
+    },
+    "VideoSpeedStage": {
+      "display_name": "视频变速"
+    },
+    "VideoRotateStage": {
+      "display_name": "视频旋转"
+    },
+    "VideoSplitStage": {
+      "display_name": "视频分割"
+    },
+    "VideoVolumeStage": {
+      "display_name": "音量调整"
+    },
+    "VideoMuxAudioStage": {
+      "display_name": "合成音轨"
     },
     "VideoLoaderStage": {
       "display_name": "加载视频"
@@ -1292,6 +1313,36 @@
         "name": "视频"
       }
     },
+    "outputs": {
+      "0": {
+        "name": "视频"
+      }
+    }
+  },
+  "ComfyTV_VideoSpeedStage": {
+    "display_name": "视频变速"
+  },
+  "ComfyTV_VideoRotateStage": {
+    "display_name": "视频旋转"
+  },
+  "ComfyTV_VideoSplitStage": {
+    "display_name": "视频分割",
+    "outputs": {
+      "0": { "name": "前段 A" },
+      "1": { "name": "后段 B" }
+    }
+  },
+  "ComfyTV_VideoVolumeStage": {
+    "display_name": "音量调整"
+  },
+  "ComfyTV_VideoMuxAudioStage": {
+    "display_name": "合成音轨"
+  },
+  "ComfyTV_VideoFramesStage": {
+    "display_name": "批量抽帧"
+  },
+  "ComfyTV_VideoConcatStage": {
+    "display_name": "视频拼接",
     "outputs": {
       "0": {
         "name": "视频"

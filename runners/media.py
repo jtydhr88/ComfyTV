@@ -226,11 +226,13 @@ def _set_audio_stream_layout(out_stream, in_stream) -> None:
 
 def crop_video(view_url: str, x: int, y: int, w: int, h: int) -> str:
     import av
-    if w <= 0 or h <= 0:
-        raise RuntimeError(f"crop: invalid w/h ({w}x{h})")
     src = localize(view_url)
     out = fresh_output_path('.mp4')
     x, y, w, h = int(x), int(y), int(w), int(h)
+    w -= w % 2
+    h -= h % 2
+    if w <= 0 or h <= 0:
+        raise RuntimeError(f"crop: invalid w/h ({w}x{h})")
 
     with av.open(str(src)) as inp, av.open(str(out), 'w') as outp:
         in_v = inp.streams.video[0]
@@ -357,11 +359,418 @@ def silence_video(view_url: str) -> str:
     return path_to_view_url(out)
 
 
+_AUDIO_RATE = 44100
+_AAC_FRAME = 1024
+
+
+def _new_aac_stream(outp):
+    out_a = outp.add_stream('aac', rate=_AUDIO_RATE)
+    out_a.layout = 'stereo'
+    return out_a
+
+
+def _decode_audio_to_array(path):
+    import av
+    import numpy as np
+    chunks = []
+    with av.open(str(path)) as inp:
+        if not inp.streams.audio:
+            return np.zeros((2, 0), dtype=np.float32)
+        in_a = inp.streams.audio[0]
+        resampler = av.AudioResampler(format='fltp', layout='stereo', rate=_AUDIO_RATE)
+        for frame in inp.decode(in_a):
+            for rf in resampler.resample(frame):
+                chunks.append(rf.to_ndarray().astype(np.float32, copy=False))
+        for rf in resampler.resample(None):
+            chunks.append(rf.to_ndarray().astype(np.float32, copy=False))
+    return np.concatenate(chunks, axis=1) if chunks else np.zeros((2, 0), dtype=np.float32)
+
+
+def _encode_audio_array(outp, out_a, arr):
+    import av
+    import numpy as np
+    from fractions import Fraction
+    pos = 0
+    total = arr.shape[1]
+    while pos < total:
+        chunk = arr[:, pos:pos + _AAC_FRAME]
+        af = av.AudioFrame.from_ndarray(
+            np.ascontiguousarray(chunk), format='fltp', layout='stereo')
+        af.sample_rate = _AUDIO_RATE
+        af.pts = pos
+        af.time_base = Fraction(1, _AUDIO_RATE)
+        pos += chunk.shape[1]
+        for pkt in out_a.encode(af):
+            outp.mux(pkt)
+    for pkt in out_a.encode():
+        outp.mux(pkt)
+
+
+def speed_video(view_url: str, factor: float, reverse: bool = False) -> str:
+    import av
+    import numpy as np
+    from fractions import Fraction
+    factor = float(factor or 1.0)
+    if not (0.1 <= factor <= 10.0):
+        raise RuntimeError(f"speed: factor out of range ({factor})")
+    src = localize(view_url)
+    out = fresh_output_path('.mp4')
+    out_tb = Fraction(1, 90000)
+    max_reverse_frames = 3000
+
+    with av.open(str(src)) as inp, av.open(str(out), 'w') as outp:
+        in_v = inp.streams.video[0]
+        w = in_v.width - (in_v.width % 2)
+        h = in_v.height - (in_v.height % 2)
+        out_v = outp.add_stream('libx264', rate=in_v.average_rate or 24)
+        out_v.width = w
+        out_v.height = h
+        out_v.pix_fmt = 'yuv420p'
+        out_v.codec_context.time_base = out_tb
+        out_a = _new_aac_stream(outp) if inp.streams.audio else None
+
+        try:
+            frame_dur = 1.0 / float(in_v.average_rate)
+        except (TypeError, ZeroDivisionError):
+            frame_dur = 1.0 / 24.0
+        out_frame_dur = frame_dur / factor
+
+        buffered = []
+        prev_t = None
+        end_t = 0.0
+        for frame in inp.decode(in_v):
+            if frame.pts is not None and frame.time_base:
+                t = float(frame.pts * frame.time_base)
+            else:
+                t = (prev_t + frame_dur) if prev_t is not None else 0.0
+            prev_t = t
+            out_t = t / factor
+            end_t = max(end_t, out_t + out_frame_dur)
+            nf = frame.reformat(width=w, height=h, format='yuv420p')
+            if reverse:
+                buffered.append((out_t, nf))
+                if len(buffered) > max_reverse_frames:
+                    raise RuntimeError(
+                        f"reverse: clip too long (>{max_reverse_frames} frames) — trim it first"
+                    )
+            else:
+                nf.pts = int(round(out_t / out_tb))
+                nf.time_base = out_tb
+                for pkt in out_v.encode(nf):
+                    outp.mux(pkt)
+
+        if reverse:
+            for out_t, nf in reversed(buffered):
+                new_t = max(0.0, end_t - out_t - out_frame_dur)
+                nf.pts = int(round(new_t / out_tb))
+                nf.time_base = out_tb
+                for pkt in out_v.encode(nf):
+                    outp.mux(pkt)
+
+        for pkt in out_v.encode():
+            outp.mux(pkt)
+
+        if out_a is not None:
+            arr = _decode_audio_to_array(src)
+            if factor != 1.0 and arr.shape[1] > 1:
+                n_out = max(1, int(round(arr.shape[1] / factor)))
+                xi = np.linspace(0.0, arr.shape[1] - 1, n_out)
+                xp = np.arange(arr.shape[1])
+                arr = np.stack([np.interp(xi, xp, arr[c]) for c in range(2)]).astype(np.float32)
+            if reverse:
+                arr = np.ascontiguousarray(arr[:, ::-1])
+            _encode_audio_array(outp, out_a, arr)
+
+    return path_to_view_url(out)
+
+
+def transpose_video(view_url: str, rotate_deg: int = 0,
+                    flip_h: bool = False, flip_v: bool = False) -> str:
+    import av
+    import numpy as np
+    rot = int(rotate_deg) % 360
+    if rot not in (0, 90, 180, 270):
+        raise RuntimeError(f"transpose: rotate_deg must be a multiple of 90 ({rotate_deg})")
+    if rot == 0 and not flip_h and not flip_v:
+        raise RuntimeError("transpose: nothing to do — set a rotation or a flip")
+    src = localize(view_url)
+    out = fresh_output_path('.mp4')
+
+    with av.open(str(src)) as inp, av.open(str(out), 'w') as outp:
+        in_v = inp.streams.video[0]
+        sw, sh = in_v.width, in_v.height
+        w, h = (sh, sw) if rot in (90, 270) else (sw, sh)
+        w -= w % 2
+        h -= h % 2
+        out_v = outp.add_stream('libx264', rate=in_v.average_rate or 24)
+        out_v.width = w
+        out_v.height = h
+        out_v.pix_fmt = 'yuv420p'
+
+        in_a = inp.streams.audio[0] if inp.streams.audio else None
+        out_a = outp.add_stream_from_template(in_a) if in_a is not None else None
+
+        k = (-(rot // 90)) % 4
+        for packet in inp.demux():
+            if packet.stream is in_v:
+                for frame in packet.decode():
+                    arr = frame.to_ndarray(format='rgb24')
+                    if k:
+                        arr = np.rot90(arr, k=k)
+                    if flip_h:
+                        arr = arr[:, ::-1]
+                    if flip_v:
+                        arr = arr[::-1]
+                    arr = np.ascontiguousarray(arr[:h, :w])
+                    nf = av.VideoFrame.from_ndarray(arr, format='rgb24')
+                    nf.pts = frame.pts
+                    nf.time_base = frame.time_base
+                    for pkt in out_v.encode(nf):
+                        outp.mux(pkt)
+            elif out_a is not None and packet.stream is in_a:
+                if packet.dts is None:
+                    continue
+                packet.stream = out_a
+                outp.mux(packet)
+
+        for pkt in out_v.encode():
+            outp.mux(pkt)
+
+    return path_to_view_url(out)
+
+
+def adjust_volume(view_url: str, volume: float = 1.0,
+                  fade_in_s: float = 0.0, fade_out_s: float = 0.0) -> str:
+    import av
+    import numpy as np
+    src = localize(view_url)
+    arr = _decode_audio_to_array(src)
+    if arr.shape[1] == 0:
+        raise RuntimeError("adjust_volume: source has no audio track")
+    out = fresh_output_path('.mp4')
+
+    gain = min(max(float(volume or 0.0), 0.0), 8.0)
+    arr = arr * gain
+    n = arr.shape[1]
+    fi = int(min(max(float(fade_in_s or 0.0), 0.0) * _AUDIO_RATE, n))
+    fo = int(min(max(float(fade_out_s or 0.0), 0.0) * _AUDIO_RATE, n))
+    if fi > 0:
+        arr[:, :fi] *= np.linspace(0.0, 1.0, fi)
+    if fo > 0:
+        arr[:, n - fo:] *= np.linspace(1.0, 0.0, fo)
+    np.clip(arr, -1.0, 1.0, out=arr)
+
+    with av.open(str(src)) as inp, av.open(str(out), 'w') as outp:
+        in_v = inp.streams.video[0]
+        out_v = outp.add_stream_from_template(in_v)
+        out_a = _new_aac_stream(outp)
+        for packet in inp.demux(in_v):
+            if packet.dts is None:
+                continue
+            packet.stream = out_v
+            outp.mux(packet)
+        _encode_audio_array(outp, out_a, arr.astype(np.float32, copy=False))
+
+    return path_to_view_url(out)
+
+
+def mux_audio(video_url: str, audio_url: str,
+              mode: str = 'replace', offset_s: float = 0.0) -> str:
+    import av
+    import numpy as np
+    if mode not in ('replace', 'mix'):
+        raise RuntimeError(f"mux_audio: unknown mode {mode!r}")
+    vsrc = localize(video_url)
+    asrc = localize(audio_url)
+    dur = float(get_video_info(video_url).get('duration') or 0.0)
+    out = fresh_output_path('.mp4')
+
+    new = _decode_audio_to_array(asrc)
+    if new.shape[1] == 0:
+        raise RuntimeError("mux_audio: audio input has no decodable audio")
+    off = int(round(float(offset_s or 0.0) * _AUDIO_RATE))
+    if off > 0:
+        new = np.concatenate([np.zeros((2, off), dtype=np.float32), new], axis=1)
+    elif off < 0:
+        new = new[:, -off:]
+
+    target = int(round(dur * _AUDIO_RATE)) or new.shape[1]
+
+    def _fit(a):
+        if a.shape[1] > target:
+            return a[:, :target]
+        if a.shape[1] < target:
+            return np.concatenate(
+                [a, np.zeros((2, target - a.shape[1]), dtype=np.float32)], axis=1)
+        return a
+
+    new = _fit(new)
+    if mode == 'mix':
+        orig = _fit(_decode_audio_to_array(vsrc))
+        new = np.clip(orig + new, -1.0, 1.0)
+
+    with av.open(str(vsrc)) as inp, av.open(str(out), 'w') as outp:
+        in_v = inp.streams.video[0]
+        out_v = outp.add_stream_from_template(in_v)
+        out_a = _new_aac_stream(outp)
+        for packet in inp.demux(in_v):
+            if packet.dts is None:
+                continue
+            packet.stream = out_v
+            outp.mux(packet)
+        _encode_audio_array(outp, out_a, new.astype(np.float32, copy=False))
+
+    return path_to_view_url(out)
+
+
+def extract_frames_multi(view_url: str, times) -> str:
+    import json
+    ts = sorted({round(float(t), 3) for t in (times or [])
+                 if t is not None and float(t) >= 0})
+    if not ts:
+        raise RuntimeError("extract_frames: no timestamps given — add marks first")
+    if len(ts) > 48:
+        raise RuntimeError(f"extract_frames: too many marks ({len(ts)}), max 48")
+    images = []
+    for i, t in enumerate(ts):
+        url = extract_frame(view_url, t)
+        images.append({'index': i + 1, 'label': f"{t:.2f}s", 'image_url': url})
+    return json.dumps({'images': images})
+
+
+def concat_videos(view_urls: list, progress=None) -> str:
+    import av
+    import numpy as np
+    from fractions import Fraction
+
+    urls = [u for u in (view_urls or []) if (u or '').strip()]
+    if len(urls) < 2:
+        raise RuntimeError(f"concat: need at least 2 videos, got {len(urls)}")
+
+    srcs = [localize(u) for u in urls]
+
+    width = height = 0
+    rate = None
+    any_audio = False
+    for i, src in enumerate(srcs):
+        with av.open(str(src)) as probe:
+            if not probe.streams.video:
+                raise RuntimeError(f"concat: clip {i + 1} has no video stream")
+            v = probe.streams.video[0]
+            if i == 0:
+                width = v.width - (v.width % 2)
+                height = v.height - (v.height % 2)
+                rate = v.average_rate or 24
+            if probe.streams.audio:
+                any_audio = True
+    if width <= 0 or height <= 0:
+        raise RuntimeError(f"concat: first clip has invalid dimensions ({width}x{height})")
+
+    out = fresh_output_path('.mp4')
+    AUDIO_RATE = 44100
+    AAC_FRAME = 1024
+    out_tb = Fraction(1, 90000)
+
+    with av.open(str(out), 'w') as outp:
+        out_v = outp.add_stream('libx264', rate=rate)
+        out_v.width = width
+        out_v.height = height
+        out_v.pix_fmt = 'yuv420p'
+        out_v.codec_context.time_base = out_tb
+
+        out_a = None
+        if any_audio:
+            out_a = outp.add_stream('aac', rate=AUDIO_RATE)
+            out_a.layout = 'stereo'
+
+        samples_written = 0
+        pending = np.zeros((2, 0), dtype=np.float32)
+
+        def emit_audio(flush=False):
+            nonlocal pending, samples_written
+            while pending.shape[1] >= AAC_FRAME or (flush and pending.shape[1] > 0):
+                n = min(AAC_FRAME, pending.shape[1])
+                chunk, pending = pending[:, :n], pending[:, n:]
+                af = av.AudioFrame.from_ndarray(
+                    np.ascontiguousarray(chunk), format='fltp', layout='stereo')
+                af.sample_rate = AUDIO_RATE
+                af.pts = samples_written
+                af.time_base = Fraction(1, AUDIO_RATE)
+                samples_written += n
+                for pkt in out_a.encode(af):
+                    outp.mux(pkt)
+
+        offset = 0.0
+        for i, src in enumerate(srcs):
+            if progress is not None:
+                progress(i, len(srcs), f"clip {i + 1}/{len(srcs)}")
+            clip_audio = []
+            clip_end = 0.0
+            with av.open(str(src)) as inp:
+                in_v = inp.streams.video[0]
+                in_a = inp.streams.audio[0] if inp.streams.audio else None
+                try:
+                    frame_dur = 1.0 / float(in_v.average_rate)
+                except (TypeError, ZeroDivisionError):
+                    frame_dur = 1.0 / 24.0
+                resampler = None
+                if in_a is not None and out_a is not None:
+                    resampler = av.AudioResampler(format='fltp', layout='stereo', rate=AUDIO_RATE)
+
+                prev_t = None
+                for packet in inp.demux():
+                    if packet.stream is in_v:
+                        for frame in packet.decode():
+                            if frame.pts is not None and frame.time_base:
+                                t = float(frame.pts * frame.time_base)
+                            else:
+                                t = (prev_t + frame_dur) if prev_t is not None else 0.0
+                            prev_t = t
+                            clip_end = max(clip_end, t + frame_dur)
+                            nf = frame.reformat(width=width, height=height, format='yuv420p')
+                            nf.pts = int(round((offset + t) / out_tb))
+                            nf.time_base = out_tb
+                            for pkt in out_v.encode(nf):
+                                outp.mux(pkt)
+                    elif resampler is not None and packet.stream is in_a:
+                        for frame in packet.decode():
+                            for rf in resampler.resample(frame):
+                                clip_audio.append(rf.to_ndarray().astype(np.float32, copy=False))
+                if resampler is not None:
+                    for rf in resampler.resample(None):
+                        clip_audio.append(rf.to_ndarray().astype(np.float32, copy=False))
+
+            if out_a is not None:
+                target = int(round(clip_end * AUDIO_RATE))
+                got = (np.concatenate(clip_audio, axis=1)
+                       if clip_audio else np.zeros((2, 0), dtype=np.float32))
+                if got.shape[1] > target:
+                    got = got[:, :target]
+                elif got.shape[1] < target:
+                    got = np.concatenate(
+                        [got, np.zeros((2, target - got.shape[1]), dtype=np.float32)], axis=1)
+                pending = np.concatenate([pending, got], axis=1)
+                emit_audio()
+
+            offset += clip_end
+
+        if out_a is not None:
+            emit_audio(flush=True)
+            for pkt in out_a.encode():
+                outp.mux(pkt)
+        for pkt in out_v.encode():
+            outp.mux(pkt)
+
+    return path_to_view_url(out)
+
+
 __all__ = [
     'view_url_to_path', 'path_to_view_url',
     'localize', 'fresh_output_path',
     'get_video_info',
     'extract_frame',
-    'trim_video', 'crop_video', 'resize_video',
+    'trim_video', 'crop_video', 'resize_video', 'concat_videos',
+    'speed_video', 'transpose_video', 'adjust_volume', 'mux_audio',
+    'extract_frames_multi',
     'demux_audio', 'silence_video',
 ]

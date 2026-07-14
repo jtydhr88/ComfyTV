@@ -10,7 +10,10 @@ describe('VIDEO_CHANGE_PRESETS', () => {
     for (const p of VIDEO_CHANGE_PRESETS) expect(p.category).toBe('videoChange')
   })
   it('every preset wires video', () => {
-    for (const p of VIDEO_CHANGE_PRESETS) expect(p.inputSocket).toBe('video')
+    for (const p of VIDEO_CHANGE_PRESETS) {
+      if (p.inputAutogrowGroup) expect(p.inputAutogrowGroup).toBe('videos')
+      else expect(p.inputSocket).toBe('video')
+    }
   })
   it('demux uses multiTargetClasses', () => {
     const demux = VIDEO_CHANGE_PRESETS.find(p => p.id === 'demux')

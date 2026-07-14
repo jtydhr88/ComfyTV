@@ -525,6 +525,34 @@
         "label": "Extract Frame",
         "tooltip": "Pull a single frame out as an image (first / last / middle / custom seconds)"
       },
+      "split": {
+        "label": "Split",
+        "tooltip": "Cut the clip in two at a point — outputs part A and part B"
+      },
+      "speed": {
+        "label": "Speed",
+        "tooltip": "Speed up / slow down (0.25x–4x) or reverse playback"
+      },
+      "rotate": {
+        "label": "Rotate / Flip",
+        "tooltip": "Rotate by 90° steps and/or mirror horizontally / vertically"
+      },
+      "volume": {
+        "label": "Volume",
+        "tooltip": "Adjust audio gain with optional fade in / fade out"
+      },
+      "mux-audio": {
+        "label": "Mux Audio",
+        "tooltip": "Replace or mix in a new audio track (wire an audio upstream too)"
+      },
+      "concat": {
+        "label": "Concat",
+        "tooltip": "Join multiple videos in order — wire more clips into the new node"
+      },
+      "frames": {
+        "label": "Extract Frames",
+        "tooltip": "Mark multiple timestamps and pull them all out as an image batch"
+      },
       "hd": {
         "label": "HD",
         "tooltip": "Upscale"
@@ -554,6 +582,97 @@
   "shotCell": {
     "pick": "Pick {tag}",
     "refine": "Refine {tag}"
+  },
+  "videoTrim": {
+    "noInputVideo": "No input video — connect a video upstream",
+    "loading": "Loading…",
+    "loadError": "Failed to load video",
+    "playSelection": "Play selection",
+    "pause": "Pause",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "start": "In",
+    "end": "Out",
+    "reset": "Reset",
+    "resetTooltip": "Select the whole video",
+    "trimming": "Trimming…",
+    "trimmed": "Clip trimmed — ready for downstream",
+    "adjustThenRun": "Drag the handles to pick a range, then Run"
+  },
+  "videoConcat": {
+    "noInputs": "No input videos — connect videos upstream",
+    "needTwo": "Connect at least two videos to concat",
+    "dragToReorder": "Drag tiles to set the concat order",
+    "concatenating": "Concatenating…",
+    "done": "Videos concatenated — ready for downstream",
+    "readyToRun": "{n} clips in order — Run to concat"
+  },
+  "videoSpeed": {
+    "speed": "Speed",
+    "reverse": "Reverse",
+    "reverseTip": "Play the clip backwards (applied on Run)",
+    "reverseNote": "Reverse is applied on Run — preview plays forward",
+    "processing": "Processing…",
+    "done": "Speed applied — ready for downstream",
+    "adjustThenRun": "Pick a speed (preview plays at it), then Run"
+  },
+  "videoRotate": {
+    "rotateLeft": "Rotate 90° counter-clockwise",
+    "rotateRight": "Rotate 90° clockwise",
+    "flipH": "Flip horizontally",
+    "flipV": "Flip vertically",
+    "processing": "Processing…",
+    "done": "Transform applied — ready for downstream",
+    "adjustThenRun": "Rotate / flip (preview is live), then Run"
+  },
+  "videoSplit": {
+    "splitPoint": "Cut",
+    "splitting": "Splitting…",
+    "done": "Split done — A and B ready for downstream",
+    "adjustThenRun": "Drag the handle to place the cut, then Run"
+  },
+  "videoVolume": {
+    "volume": "Vol",
+    "fadeIn": "Fade in",
+    "fadeOut": "Fade out",
+    "previewCapNote": "Preview caps at 100% — extra gain is applied on Run",
+    "processing": "Processing…",
+    "done": "Audio adjusted — ready for downstream",
+    "adjustThenRun": "Set volume / fades (preview is live ≤100%), then Run"
+  },
+  "videoMux": {
+    "audioTrack": "Audio",
+    "noAudio": "No audio input — connect one upstream",
+    "replace": "Replace",
+    "mix": "Mix",
+    "offset": "Offset",
+    "needBoth": "Connect both a video and an audio upstream",
+    "processing": "Muxing…",
+    "done": "Audio muxed — ready for downstream",
+    "adjustThenRun": "Pick replace/mix and offset, then Run"
+  },
+  "videoFrames": {
+    "marks": "{n} marks",
+    "addMark": "Mark at playhead",
+    "uniform": "Uniform marks",
+    "clear": "Clear",
+    "removeMarkTip": "Remove mark at {t}s",
+    "addFirst": "Scrub to a frame and add marks, then Run",
+    "readyToRun": "{n} frames marked — Run to extract",
+    "processing": "Extracting…",
+    "done": "Frames extracted — ready for downstream"
+  },
+  "videoResize": {
+    "source": "Source",
+    "processing": "Resizing…",
+    "done": "Resized — ready for downstream",
+    "adjustThenRun": "Set target size or pick a preset, then Run"
+  },
+  "videoCrop": {
+    "play": "Play",
+    "cropping": "Cropping…",
+    "cropped": "Video cropped — ready for downstream",
+    "adjustThenRun": "Frame the crop rectangle, then Run"
   },
   "imageCrop": {
     "noInputImage": "No input image — connect an image upstream",

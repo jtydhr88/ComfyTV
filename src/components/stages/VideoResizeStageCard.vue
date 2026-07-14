@@ -1,0 +1,191 @@
+<template>
+  <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full">
+    <VideoPlayerLite
+      :source-video-url="sourceVideoUrl"
+      @meta="onMeta"
+    />
+
+    <div
+      class="ctv:flex ctv:flex-col ctv:gap-1"
+      @pointerdown.stop
+      @pointermove.stop
+      @pointerup.stop
+    >
+      <div class="ctv:flex ctv:items-center ctv:gap-1 ctv:text-[11px]">
+        <label class="ctv:flex-1 ctv:flex ctv:items-center ctv:gap-1 ctv:py-0.5 ctv:px-1 ctv:rounded
+                      ctv:bg-secondary-background ctv:border ctv:border-border-subtle">
+          <span class="ctv:w-3 ctv:text-2xs ctv:text-muted-foreground">W</span>
+          <input
+            type="number" min="-1" step="2"
+            class="ctv-num-input ctv:w-full ctv:border-0 ctv:outline-none ctv:bg-transparent ctv:text-[11px] ctv:font-mono ctv:text-base-foreground"
+            :value="width"
+            @change="(e) => setDim('width', (e.target as HTMLInputElement).value)"
+          />
+        </label>
+        <label class="ctv:flex-1 ctv:flex ctv:items-center ctv:gap-1 ctv:py-0.5 ctv:px-1 ctv:rounded
+                      ctv:bg-secondary-background ctv:border ctv:border-border-subtle">
+          <span class="ctv:w-3 ctv:text-2xs ctv:text-muted-foreground">H</span>
+          <input
+            type="number" min="-1" step="2"
+            class="ctv-num-input ctv:w-full ctv:border-0 ctv:outline-none ctv:bg-transparent ctv:text-[11px] ctv:font-mono ctv:text-base-foreground"
+            :value="height"
+            @change="(e) => setDim('height', (e.target as HTMLInputElement).value)"
+          />
+        </label>
+        <button
+          type="button"
+          :class="[
+            'ctv:w-7 ctv:h-6 ctv:text-xs ctv:rounded ctv:cursor-pointer ctv:border',
+            lockRatio
+              ? 'ctv:bg-secondary-background-selected ctv:border-primary-background ctv:text-primary-background'
+              : 'ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground',
+          ]"
+          :title="lockRatio ? $t('imageCrop.unlockRatio') : $t('imageCrop.lockRatio')"
+          @click="lockRatio = !lockRatio"
+        ><i :class="['pi', lockRatio ? 'pi-lock' : 'pi-lock-open']" /></button>
+      </div>
+
+      <div class="ctv:flex ctv:items-center ctv:gap-1">
+        <button
+          v-for="p in PRESETS"
+          :key="p.label"
+          type="button"
+          class="ctv:flex-1 ctv:py-0.5 ctv:text-2xs ctv:rounded ctv:cursor-pointer ctv:border ctv:transition-colors
+                 ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background
+                 ctv:disabled:opacity-40 ctv:disabled:cursor-default"
+          :disabled="srcW <= 0"
+          @click="applyPreset(p.short)"
+        >{{ p.label }}</button>
+        <button
+          type="button"
+          class="ctv:flex-1 ctv:py-0.5 ctv:text-2xs ctv:rounded ctv:cursor-pointer ctv:border ctv:transition-colors
+                 ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background
+                 ctv:disabled:opacity-40 ctv:disabled:cursor-default"
+          :disabled="srcW <= 0"
+          @click="applySource"
+        >{{ $t('videoResize.source') }}</button>
+      </div>
+
+      <div v-if="srcW > 0" class="ctv:text-3xs ctv:text-center ctv:font-mono ctv:text-muted-foreground">
+        {{ srcW }}×{{ srcH }} → {{ targetLabel }}
+      </div>
+    </div>
+
+    <div class="ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide">
+      <span v-if="!sourceVideoUrl" class="ctv:text-muted-foreground">{{ $t('videoTrim.noInputVideo') }}</span>
+      <span v-else-if="state.running" class="ctv:text-muted-foreground">{{ $t('videoResize.processing') }}</span>
+      <span v-else-if="state.output" class="ctv:text-success-background">{{ $t('videoResize.done') }}</span>
+      <span v-else class="ctv:text-muted-foreground">{{ $t('videoResize.adjustThenRun') }}</span>
+    </div>
+
+    <StageCard
+      :state="state"
+      :node="node"
+      :on-run-request="onRunRequest"
+      :on-cancel-request="onCancelRequest"
+      :on-disconnect="onDisconnect"
+      :on-action="onAction"
+    />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { computed, ref } from 'vue'
+import type { LGraphNode } from '@/lib/comfyApp'
+import type { StageState } from '@/stores/stageStore'
+import StageCard from '@/components/stages/StageCard.vue'
+import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
+import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
+import { evenDim, presetDims, resolveTarget } from '@/composables/stages/videoResizeMath'
+import { bindWidgetCallback, onNodeConfigure, readWidgetNum, writeWidget } from '@/utils/widget'
+
+const props = defineProps<{
+  state: StageState
+  onRunRequest: () => void
+  onCancelRequest: () => void
+  onDisconnect: (slot: string) => void
+  onAction: (id: string) => void
+  node: LGraphNode
+}>()
+
+const PRESETS = [
+  { label: '480p', short: 480 },
+  { label: '720p', short: 720 },
+  { label: '1080p', short: 1080 },
+]
+
+const sourceVideoUrl = computed(() => pickSourceImageUrl(props.state.inputs, 'video'))
+
+const width = ref(readWidgetNum(props.node, 'width', 1280))
+const height = ref(readWidgetNum(props.node, 'height', 720))
+const lockRatio = ref(true)
+
+const srcW = ref(0)
+const srcH = ref(0)
+function onMeta(v: { width: number; height: number }) {
+  srcW.value = v.width
+  srcH.value = v.height
+}
+
+function write() {
+  writeWidget(props.node, 'width', width.value)
+  writeWidget(props.node, 'height', height.value)
+}
+
+function setDim(which: 'width' | 'height', raw: string) {
+  const v = Number(raw)
+  if (!Number.isFinite(v)) return
+  const n = v <= 0 ? -1 : evenDim(v)
+  const ar = srcW.value > 0 && srcH.value > 0 ? srcW.value / srcH.value : 0
+  if (which === 'width') {
+    width.value = n
+    if (lockRatio.value && n > 0 && ar > 0) height.value = evenDim(n / ar)
+  } else {
+    height.value = n
+    if (lockRatio.value && n > 0 && ar > 0) width.value = evenDim(n * ar)
+  }
+  write()
+}
+
+function applyPreset(short: number) {
+  const dims = presetDims(short, srcW.value, srcH.value)
+  if (!dims) return
+  width.value = dims.width
+  height.value = dims.height
+  write()
+}
+
+function applySource() {
+  if (srcW.value <= 0 || srcH.value <= 0) return
+  width.value = evenDim(srcW.value)
+  height.value = evenDim(srcH.value)
+  write()
+}
+
+const targetLabel = computed(() => {
+  const t = resolveTarget(width.value, height.value, srcW.value, srcH.value)
+  return t ? `${t.width}×${t.height}` : '—'
+})
+
+bindWidgetCallback(props.node, 'width', (value) => {
+  const v = Number(value)
+  if (Number.isFinite(v) && v !== width.value) width.value = v
+})
+bindWidgetCallback(props.node, 'height', (value) => {
+  const v = Number(value)
+  if (Number.isFinite(v) && v !== height.value) height.value = v
+})
+
+onNodeConfigure(props.node, () => {
+  width.value = readWidgetNum(props.node, 'width', width.value)
+  height.value = readWidgetNum(props.node, 'height', height.value)
+})
+</script>
+
+<style scoped>
+.ctv-num-input { -moz-appearance: textfield; }
+.ctv-num-input::-webkit-inner-spin-button,
+.ctv-num-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+</style>

@@ -31,13 +31,19 @@ export const ASPECT_RATIOS = {
 } as const
 
 
+export type CropMediaElement = HTMLImageElement | HTMLVideoElement
+
+function mediaNaturalSize(el: CropMediaElement): { width: number; height: number } {
+  if (el instanceof HTMLVideoElement) return { width: el.videoWidth, height: el.videoHeight }
+  return { width: el.naturalWidth, height: el.naturalHeight }
+}
+
 interface UseImageCropOptions {
-  imageEl: Ref<HTMLImageElement | null>
+  imageEl: Ref<CropMediaElement | null>
   containerEl: Ref<HTMLDivElement | null>
   sourceImageUrl: Ref<string | null>
   modelValue: Ref<Bounds>
 }
-
 
 export function useImageCrop(options: UseImageCropOptions) {
   const { imageEl, containerEl, sourceImageUrl, modelValue } = options
@@ -136,8 +142,9 @@ export function useImageCrop(options: UseImageCropOptions) {
     const img = imageEl.value
     const container = containerEl.value
 
-    naturalWidth.value = img.naturalWidth
-    naturalHeight.value = img.naturalHeight
+    const size = mediaNaturalSize(img)
+    naturalWidth.value = size.width
+    naturalHeight.value = size.height
 
     if (naturalWidth.value <= 0 || naturalHeight.value <= 0) {
       scaleFactor.value = 1
