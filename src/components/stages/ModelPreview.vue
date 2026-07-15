@@ -154,8 +154,13 @@ function activeMaterialFor(key: string): THREE.Material | THREE.Material[] | und
   return originalMaterials.get(key)
 }
 
-function applyPartMaterials(): void {
+let appliedMaterialsSig = ''
+
+function applyPartMaterials(force = false): void {
   if (!partMeshes.size) return
+  const sig = JSON.stringify(props.partMaterials ?? {})
+  if (!force && sig === appliedMaterialsSig) return
+  appliedMaterialsSig = sig
   for (const [key, mesh] of partMeshes) {
     const params = props.partMaterials?.[key]
     if (params) {
@@ -328,7 +333,7 @@ async function loadModel(url: string): Promise<void> {
     modelDispose = loaded.dispose
     scene.add(loaded.root)
     collectParts(loaded.root)
-    applyPartMaterials()
+    applyPartMaterials(true)
     if (props.selectedPart) setHighlight(props.selectedPart)
     frameModel(loaded.root)
     loading.value = false
@@ -419,7 +424,13 @@ defineExpose({
     const captureCamera = camera.clone()
     captureCamera.aspect = width / height
     captureCamera.updateProjectionMatrix()
-    return view.renderToCanvas(scene, captureCamera, width, height)
+    const held = highlightKey
+    if (held) clearHighlight()
+    try {
+      return view.renderToCanvas(scene, captureCamera, width, height)
+    } finally {
+      if (held) setHighlight(held)
+    }
   },
 })
 </script>

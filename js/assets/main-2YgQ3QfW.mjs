@@ -55523,7 +55523,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-CAhpVX7s.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-Db-aFJbi.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -100815,9 +100815,13 @@ const _sfc_main$Z = /* @__PURE__ */ defineComponent({
       if (bound && ((_a3 = props.partMaterials) == null ? void 0 : _a3[key])) return bound;
       return originalMaterials.get(key);
     }
-    function applyPartMaterials() {
+    let appliedMaterialsSig = "";
+    function applyPartMaterials(force = false) {
       var _a3;
       if (!partMeshes.size) return;
+      const sig = JSON.stringify(props.partMaterials ?? {});
+      if (!force && sig === appliedMaterialsSig) return;
+      appliedMaterialsSig = sig;
       for (const [key, mesh] of partMeshes) {
         const params = (_a3 = props.partMaterials) == null ? void 0 : _a3[key];
         if (params) {
@@ -100973,7 +100977,7 @@ const _sfc_main$Z = /* @__PURE__ */ defineComponent({
         modelDispose = loaded.dispose;
         scene.add(loaded.root);
         collectParts(loaded.root);
-        applyPartMaterials();
+        applyPartMaterials(true);
         if (props.selectedPart) setHighlight(props.selectedPart);
         frameModel(loaded.root);
         loading2.value = false;
@@ -101053,7 +101057,13 @@ const _sfc_main$Z = /* @__PURE__ */ defineComponent({
         const captureCamera = camera2.clone();
         captureCamera.aspect = width / height;
         captureCamera.updateProjectionMatrix();
-        return view.renderToCanvas(scene, captureCamera, width, height);
+        const held = highlightKey;
+        if (held) clearHighlight();
+        try {
+          return view.renderToCanvas(scene, captureCamera, width, height);
+        } finally {
+          if (held) setHighlight(held);
+        }
       }
     });
     return (_ctx, _cache2) => {
@@ -138224,4 +138234,4 @@ export {
   Box3 as y,
   UnsignedShortType as z
 };
-//# sourceMappingURL=main-CLlULXrm.mjs.map
+//# sourceMappingURL=main-2YgQ3QfW.mjs.map
