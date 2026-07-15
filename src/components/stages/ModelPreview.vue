@@ -29,13 +29,20 @@ import { buildPointCloud, classifyModelBytes, loadSpark } from '@/widgets/three/
 import { guardOrbitControlsDragEnd } from '@/widgets/three/orbitControlsGuard'
 import { RendererView } from '@/widgets/three/RendererView'
 import { loadCustomModelAssets } from '@/widgets/three/scene3d/scene3dAssets'
+import { applyMaterialParams } from '@/widgets/material/three'
+import type { MaterialParams } from '@/widgets/material/types'
 
 const props = defineProps<{
   src: string
+  pickable?: boolean
+  partMaterials?: Record<string, MaterialParams | null>
+  selectedPart?: string | null
 }>()
 
 const emit = defineEmits<{
   (e: 'view-changed'): void
+  (e: 'parts-changed', keys: string[]): void
+  (e: 'part-pick', key: string | null): void
 }>()
 
 const hostEl = ref<HTMLDivElement | null>(null)
@@ -53,6 +60,12 @@ let sparkRenderer: THREE.Object3D | null = null
 let animationId: number | null = null
 let loadSeq = 0
 let thumbnailTimer: number | null = null
+
+const partMeshes = new Map<string, THREE.Mesh>()
+const originalMaterials = new Map<string, THREE.Material | THREE.Material[]>()
+const boundMaterials = new Map<string, THREE.MeshPhysicalMaterial>()
+let highlightKey: string | null = null
+let highlightClone: THREE.Material | null = null
 
 const THUMBNAIL_SIZE = 256
 const THUMBNAIL_DELAY_MS = 600
@@ -106,10 +119,119 @@ async function ensureSparkRenderer(): Promise<void> {
 }
 
 function disposeModelRoot(): void {
+  clearHighlight()
   if (modelRoot && scene) scene.remove(modelRoot)
   modelRoot = null
   modelDispose?.()
   modelDispose = null
+  partMeshes.clear()
+  originalMaterials.clear()
+  for (const mat of boundMaterials.values()) mat.dispose()
+  boundMaterials.clear()
+  emit('parts-changed', [])
+}
+
+function collectParts(root: THREE.Object3D): void {
+  partMeshes.clear()
+  originalMaterials.clear()
+  const counts = new Map<string, number>()
+  root.traverse((child) => {
+    if (!(child instanceof THREE.Mesh)) return
+    const base = child.name || 'mesh'
+    const n = (counts.get(base) ?? 0) + 1
+    counts.set(base, n)
+    const key = n === 1 ? base : `${base}#${n}`
+    partMeshes.set(key, child)
+    originalMaterials.set(key, child.material)
+    child.userData.comfytvPartKey = key
+  })
+  emit('parts-changed', [...partMeshes.keys()])
+}
+
+function activeMaterialFor(key: string): THREE.Material | THREE.Material[] | undefined {
+  const bound = boundMaterials.get(key)
+  if (bound && props.partMaterials?.[key]) return bound
+  return originalMaterials.get(key)
+}
+
+function applyPartMaterials(): void {
+  if (!partMeshes.size) return
+  for (const [key, mesh] of partMeshes) {
+    const params = props.partMaterials?.[key]
+    if (params) {
+      let mat = boundMaterials.get(key)
+      if (!mat) {
+        mat = new THREE.MeshPhysicalMaterial()
+        boundMaterials.set(key, mat)
+      }
+      applyMaterialParams(mat, params)
+      if (highlightKey !== key) mesh.material = mat
+    } else if (highlightKey !== key) {
+      const original = originalMaterials.get(key)
+      if (original) mesh.material = original
+    }
+  }
+  if (highlightKey) setHighlight(highlightKey)
+  emit('view-changed')
+}
+
+function clearHighlight(): void {
+  if (highlightKey) {
+    const mesh = partMeshes.get(highlightKey)
+    const active = activeMaterialFor(highlightKey)
+    if (mesh && active) mesh.material = active
+  }
+  highlightClone?.dispose()
+  highlightClone = null
+  highlightKey = null
+}
+
+function setHighlight(key: string | null): void {
+  clearHighlight()
+  if (!key) return
+  const mesh = partMeshes.get(key)
+  if (!mesh) return
+  const active = activeMaterialFor(key)
+  const base = Array.isArray(active) ? active[0] : active
+  if (!base) return
+  const clone = base.clone()
+  if ('emissive' in clone) {
+    (clone as THREE.MeshStandardMaterial).emissive.set(0x4ea8ff)
+    ;(clone as THREE.MeshStandardMaterial).emissiveIntensity = 0.45
+  } else {
+    clone.transparent = true
+    clone.opacity = 0.7
+  }
+  highlightKey = key
+  highlightClone = clone
+  mesh.material = clone
+}
+
+const PICK_DRAG_PX = 5
+let pickStart: { x: number; y: number } | null = null
+
+function onPickDown(e: PointerEvent): void {
+  if (!props.pickable || e.button !== 0) return
+  pickStart = { x: e.clientX, y: e.clientY }
+}
+
+function onPickUp(e: PointerEvent): void {
+  const start = pickStart
+  pickStart = null
+  if (!props.pickable || !start || !view || !camera || !modelRoot) return
+  if (Math.abs(e.clientX - start.x) >= PICK_DRAG_PX
+    || Math.abs(e.clientY - start.y) >= PICK_DRAG_PX) return
+  const rect = view.canvas.getBoundingClientRect()
+  if (!rect.width || !rect.height) return
+  const ndc = new THREE.Vector2(
+    ((e.clientX - rect.left) / rect.width) * 2 - 1,
+    -((e.clientY - rect.top) / rect.height) * 2 + 1,
+  )
+  const raycaster = new THREE.Raycaster()
+  raycaster.setFromCamera(ndc, camera)
+  const hits = raycaster.intersectObject(modelRoot, true)
+  const hit = hits.find((h) => h.object instanceof THREE.Mesh)
+  emit('part-pick', (hit?.object?.userData?.comfytvPartKey as string) ?? null)
 }
 
 function syncSize(): void {
@@ -205,6 +327,9 @@ async function loadModel(url: string): Promise<void> {
     modelRoot = loaded.root
     modelDispose = loaded.dispose
     scene.add(loaded.root)
+    collectParts(loaded.root)
+    applyPartMaterials()
+    if (props.selectedPart) setHighlight(props.selectedPart)
     frameModel(loaded.root)
     loading.value = false
     emit('view-changed')
@@ -248,6 +373,9 @@ onMounted(() => {
   disposeDragGuard = guardOrbitControlsDragEnd(controls, view.canvas)
   controls.addEventListener('end', () => emit('view-changed'))
 
+  view.canvas.addEventListener('pointerdown', onPickDown)
+  view.canvas.addEventListener('pointerup', onPickUp)
+
   syncSize()
   view.observeResize(hostEl.value, syncSize)
   animate()
@@ -257,12 +385,18 @@ onMounted(() => {
 
 watch(() => props.src, (url) => { void loadModel(url || '') })
 
+watch(() => props.partMaterials, () => applyPartMaterials(), { deep: true })
+
+watch(() => props.selectedPart, (key) => setHighlight(key ?? null))
+
 onBeforeUnmount(() => {
   loadSeq++
   if (thumbnailTimer != null) window.clearTimeout(thumbnailTimer)
   thumbnailTimer = null
   if (animationId != null) cancelAnimationFrame(animationId)
   animationId = null
+  view?.canvas.removeEventListener('pointerdown', onPickDown)
+  view?.canvas.removeEventListener('pointerup', onPickUp)
   disposeDragGuard?.()
   disposeDragGuard = null
   controls?.dispose()

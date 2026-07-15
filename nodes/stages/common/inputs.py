@@ -1,6 +1,8 @@
 from comfy_api.latest import io
 
-from .schema import COMFYTV_TEXT, COMFYTV_IMAGE, COMFYTV_VIDEO, COMFYTV_MODEL
+from .schema import (
+    COMFYTV_TEXT, COMFYTV_IMAGE, COMFYTV_VIDEO, COMFYTV_MODEL, COMFYTV_MATERIAL,
+)
 
 
 def _force_run_token() -> 'io.Int.Input':
@@ -97,6 +99,15 @@ def _model_template(max_n: int = 4) -> 'io.Autogrow.TemplatePrefix':
     return io.Autogrow.TemplatePrefix(
         COMFYTV_MODEL.Input("model", optional=True),
         prefix="model",
+        min=0,
+        max=max_n,
+    )
+
+
+def _material_template(max_n: int = 4) -> 'io.Autogrow.TemplatePrefix':
+    return io.Autogrow.TemplatePrefix(
+        COMFYTV_MATERIAL.Input("material", optional=True),
+        prefix="material",
         min=0,
         max=max_n,
     )

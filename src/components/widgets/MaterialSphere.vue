@@ -11,6 +11,7 @@ import * as THREE from 'three'
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js'
 
 import { RendererView } from '@/widgets/three/RendererView'
+import { applyMaterialParams } from '@/widgets/material/three'
 import type { MaterialParams } from '@/widgets/material/types'
 
 const props = defineProps<{
@@ -42,18 +43,7 @@ function ensureEnvTexture(renderer: THREE.WebGLRenderer): THREE.Texture {
 
 function applyParams(): void {
   if (!material) return
-  const p = props.params
-  material.color.set(p.color)
-  material.metalness = p.metalness
-  material.roughness = p.roughness
-  material.transmission = p.transmission
-  material.opacity = p.opacity
-  material.transparent = p.opacity < 1
-  material.clearcoat = p.clearcoat
-  material.clearcoatRoughness = p.clearcoatRoughness
-  material.ior = p.ior
-  material.emissive.set(p.emissive)
-  material.emissiveIntensity = p.emissiveIntensity
+  applyMaterialParams(material, props.params)
 }
 
 function renderNow(): void {

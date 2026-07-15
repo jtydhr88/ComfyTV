@@ -1124,6 +1124,12 @@
     "empty": "No 3D models in input/3d yet — upload one to get started.",
     "pickHint": "Select a 3D model…"
   },
+  "modelBinder": {
+    "noModel": "Pick or upload a model above first",
+    "pickHint": "Click the model to select a part, then click a material to bind it",
+    "selected": "Part: {part}",
+    "unbind": "Unbind"
+  },
   "splitPart": {
     "noInputImage": "Connect an image to annotate parts",
     "tool": {

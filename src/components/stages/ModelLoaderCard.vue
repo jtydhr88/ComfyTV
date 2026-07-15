@@ -34,6 +34,72 @@
       <i :class="['pi', menuOpen ? 'pi-chevron-up' : 'pi-chevron-down', 'ctv:shrink-0 ctv:text-3xs ctv:text-muted-foreground']" />
     </button>
 
+    <div class="ctv:relative ctv:w-full ctv:h-[280px] ctv:shrink-0 ctv:rounded-md ctv:overflow-hidden ctv:bg-black">
+      <ModelPreview
+        v-if="modelSrc"
+        ref="previewEl"
+        :src="modelSrc"
+        pickable
+        :part-materials="partMaterials"
+        :selected-part="selectedPart"
+        @parts-changed="onPartsChanged"
+        @part-pick="onPartPick"
+        @view-changed="scheduleCapture"
+      />
+      <div v-else
+           class="ctv:h-full ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50">
+        <IconBox class="ctv:size-8 ctv:opacity-60" />
+        <div class="ctv:text-xs">{{ $t('modelBinder.noModel') }}</div>
+      </div>
+    </div>
+
+    <div
+      v-if="modelSrc && materialSlots.length"
+      class="ctv:flex ctv:flex-col ctv:gap-1"
+      @pointerdown.stop
+      @mousedown.stop
+    >
+      <div class="ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1 ctv:text-2xs">
+        <span class="ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">
+          {{ selectedPart ? $t('modelBinder.selected', { part: selectedPart }) : $t('modelBinder.pickHint') }}
+        </span>
+        <template v-if="selectedPart">
+          <button
+            v-for="s in materialSlots"
+            :key="s.slot"
+            type="button"
+            :class="chipClass(bindings[selectedPart] === s.slot)"
+            :title="s.slot"
+            @click="bindSelected(s.slot)"
+          >
+            <span class="ctv:size-3 ctv:rounded-full" :style="{ background: s.color }" />
+            {{ s.label }}
+          </button>
+          <button
+            v-if="bindings[selectedPart]"
+            type="button"
+            :class="chipClass(false)"
+            @click="unbind(selectedPart)"
+          ><i class="pi pi-times" /> {{ $t('modelBinder.unbind') }}</button>
+        </template>
+      </div>
+      <div v-if="boundEntries.length" class="ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1">
+        <button
+          v-for="[part, slot] in boundEntries"
+          :key="part"
+          type="button"
+          :class="chipClass(part === selectedPart)"
+          :title="`${part} ← ${slot}`"
+          @click="selectedPart = part"
+        >
+          <span class="ctv:size-2 ctv:rounded-full" :style="{ background: slotColor(slot) }" />
+          <span class="ctv:max-w-24 ctv:truncate">{{ part }}</span>
+          <span class="ctv:text-muted-foreground ctv:hover:text-destructive-background"
+                @click.stop="unbind(part)"><i class="pi pi-times" /></span>
+        </button>
+      </div>
+    </div>
+
     <div class="ctv:flex-1 ctv:min-h-0">
       <StageCard
         :state="state"
@@ -43,6 +109,7 @@
         :on-disconnect="onDisconnect"
         :on-action="onAction"
         hide-context
+        hide-output
       />
     </div>
 
@@ -132,17 +199,19 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 import IconBox from '~icons/lucide/box'
 
 import type { LGraphNode } from '@/lib/comfyApp'
+import ModelPreview from '@/components/stages/ModelPreview.vue'
 import ModelThumb from '@/components/widgets/ModelThumb.vue'
 import StageCard from '@/components/stages/StageCard.vue'
 import type { StageState } from '@/stores/stageStore'
 import { toastLoaderUploadFailed, useLoaderFileDrop } from '@/composables/stages/useLoaderFileDrop'
-import { uploadBlobNamed } from '@/utils/uploadCanvas'
-import { getWidget, readWidgetStr, writeWidget } from '@/utils/widget'
+import { uploadBlobNamed, uploadCanvas } from '@/utils/uploadCanvas'
+import { getWidget, onNodeConfigure, readWidgetStr, writeWidget } from '@/utils/widget'
+import { parseMaterialState, type MaterialParams } from '@/widgets/material/types'
 import { MODEL_FILE_EXTENSIONS } from '@/widgets/three/modelFormats'
 
 const props = defineProps<{
@@ -150,7 +219,7 @@ const props = defineProps<{
   onRunRequest: () => void
   onCancelRequest: () => void
   onDisconnect: (slot: string) => void
-  onAction: (id: string) => void
+  onAction: (id: string, context?: { imageUrl?: string }) => void
   node: LGraphNode
 }>()
 
@@ -172,6 +241,142 @@ const filteredFiles = computed(() => {
   if (!q) return files.value
   return files.value.filter((f) => f.toLowerCase().includes(q))
 })
+
+function inputFileUrl(path: string): string {
+  if (!path) return ''
+  const slash = path.lastIndexOf('/')
+  const subfolder = slash >= 0 ? path.slice(0, slash) : ''
+  const name = slash >= 0 ? path.slice(slash + 1) : path
+  const params = new URLSearchParams({ filename: name, type: 'input' })
+  if (subfolder) params.set('subfolder', subfolder)
+  return `/view?${params.toString()}`
+}
+
+const modelSrc = computed(() => props.state.output || inputFileUrl(selected.value))
+
+const previewEl = ref<InstanceType<typeof ModelPreview> | null>(null)
+const partKeys = ref<string[]>([])
+const selectedPart = ref<string | null>(null)
+const bindings = ref<Record<string, string>>(
+  parseBindings(readWidgetStr(props.node, 'material_bindings', '')),
+)
+
+function parseBindings(json: string): Record<string, string> {
+  if (!json) return {}
+  try {
+    const data = JSON.parse(json)
+    if (!data || typeof data !== 'object' || Array.isArray(data)) return {}
+    const out: Record<string, string> = {}
+    for (const [k, v] of Object.entries(data)) {
+      if (typeof v === 'string' && v) out[k] = v
+    }
+    return out
+  } catch {
+    return {}
+  }
+}
+
+const materialSlots = computed(() => {
+  const out: { slot: string; label: string; color: string }[] = []
+  for (const inp of props.state.inputs) {
+    if (inp.type !== 'COMFYTV_MATERIAL' || inp.source !== 'upstream' || !inp.content) continue
+    out.push({
+      slot: inp.slot,
+      label: `M${out.length + 1}`,
+      color: parseMaterialState(inp.content).color,
+    })
+  }
+  return out
+})
+
+const partMaterials = computed<Record<string, MaterialParams | null>>(() => {
+  const bySlot = new Map<string, MaterialParams>()
+  for (const inp of props.state.inputs) {
+    if (inp.type === 'COMFYTV_MATERIAL' && inp.source === 'upstream' && inp.content) {
+      bySlot.set(inp.slot, parseMaterialState(inp.content))
+    }
+  }
+  const out: Record<string, MaterialParams | null> = {}
+  for (const [part, slot] of Object.entries(bindings.value)) {
+    out[part] = bySlot.get(slot) ?? null
+  }
+  return out
+})
+
+const boundEntries = computed(() => Object.entries(bindings.value))
+
+function slotColor(slot: string): string {
+  return materialSlots.value.find((s) => s.slot === slot)?.color ?? '#666'
+}
+
+function onPartsChanged(keys: string[]): void {
+  partKeys.value = keys
+  if (selectedPart.value && !keys.includes(selectedPart.value)) selectedPart.value = null
+}
+
+function onPartPick(key: string | null): void {
+  selectedPart.value = key
+}
+
+function bindSelected(slot: string): void {
+  if (!selectedPart.value) return
+  bindings.value = { ...bindings.value, [selectedPart.value]: slot }
+}
+
+function unbind(part: string): void {
+  const next = { ...bindings.value }
+  delete next[part]
+  bindings.value = next
+}
+
+watch(bindings, (v) => {
+  writeWidget(props.node, 'material_bindings',
+              Object.keys(v).length ? JSON.stringify(v) : '')
+}, { deep: true })
+
+onNodeConfigure(props.node, () => {
+  bindings.value = parseBindings(readWidgetStr(props.node, 'material_bindings', ''))
+  selectedPart.value = null
+})
+
+const CAPTURE_SIZE = 1024
+const CAPTURE_DELAY_MS = 700
+
+let captureTimer: number | null = null
+let captureSeq = 0
+
+function scheduleCapture(): void {
+  if (captureTimer != null) window.clearTimeout(captureTimer)
+  captureTimer = window.setTimeout(() => {
+    captureTimer = null
+    void runCapture()
+  }, CAPTURE_DELAY_MS)
+}
+
+async function runCapture(): Promise<void> {
+  const canvas = previewEl.value?.captureCanvas(CAPTURE_SIZE, CAPTURE_SIZE)
+  if (!canvas) return
+  const mySeq = ++captureSeq
+  try {
+    const url = await uploadCanvas(canvas, {
+      subfolder: 'model3d-view',
+      filename: `comfytv-model-view-${Date.now()}.png`,
+    })
+    if (mySeq !== captureSeq) return
+    props.onAction('model-capture-view', { imageUrl: url })
+  } catch (e) {
+    console.error('[ComfyTV/model-loader] capture upload failed', e)
+  }
+}
+
+function chipClass(selected: boolean): string {
+  return 'ctv:inline-flex ctv:items-center ctv:gap-1 ctv:cursor-pointer ctv:[font-family:inherit]'
+    + ' ctv:rounded-lg ctv:border ctv:px-1.5 ctv:py-0.5 ctv:text-2xs ctv:transition-colors'
+    + (selected
+      ? ' ctv:border-primary-background ctv:bg-primary-background/20 ctv:text-base-foreground'
+      : ' ctv:border-border-subtle ctv:bg-secondary-background ctv:text-muted-foreground'
+        + ' ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground')
+}
 
 function baseName(path: string): string {
   const slash = path.lastIndexOf('/')
@@ -267,6 +472,9 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', onKeydown)
+  captureSeq++
+  if (captureTimer != null) window.clearTimeout(captureTimer)
+  captureTimer = null
 })
 
 const uploadBtnClass =

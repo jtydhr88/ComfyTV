@@ -1124,6 +1124,12 @@
     "empty": "input/3d 还没有 3D 模型——先上传一个吧。",
     "pickHint": "选择 3D 模型…"
   },
+  "modelBinder": {
+    "noModel": "先在上方选择或上传一个模型",
+    "pickHint": "点击模型选中部件，再点材质完成绑定",
+    "selected": "部件：{part}",
+    "unbind": "解绑"
+  },
   "splitPart": {
     "noInputImage": "连接一张图片后即可标注部件",
     "tool": {

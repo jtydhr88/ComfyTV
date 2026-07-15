@@ -207,6 +207,15 @@ class ModelLoaderStage(io.ComfyNode):
                     tooltip="Internal — input/3d-relative path of the picked model. Driven by the "
                             "card's thumbnail dropdown; options carry the server-side file list.",
                 ),
+                io.Autogrow.Input("materials", template=_material_template(4)),
+                io.String.Input(
+                    "material_bindings",
+                    default="",
+                    socketless=True,
+                    extra_dict={"hidden": True},
+                    tooltip="Internal — JSON map of mesh-part key → material input slot, "
+                            "written by the part-binding UI in the node body.",
+                ),
                 _captured_image_input(),
             ],
             outputs=[COMFYTV_MODEL.Output("model"), COMFYTV_IMAGE.Output("image")],
@@ -215,9 +224,15 @@ class ModelLoaderStage(io.ComfyNode):
         )
 
     @classmethod
-    def execute(cls, project_id="", parent_output_id=0, model="", captured_image=""):
+    def execute(cls, project_id="", parent_output_id=0, model="", materials=None,
+                material_bindings="", captured_image=""):
         payload = _input_file_url(model)
+        params = None
+        if material_bindings and material_bindings not in ("{}", ""):
+            params = {'material_bindings': material_bindings,
+                      'materials': _autogrow_values(materials)}
         return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
+                                params=params,
                                 parent_output_id=parent_output_id,
                                 picked_payload=captured_image or "")
 

@@ -7,10 +7,20 @@ import type { StageState } from '@/stores/stageStore'
 
 const mocks = vi.hoisted(() => ({
   uploadBlobNamed: vi.fn(),
+  uploadCanvas: vi.fn(),
 }))
 
 vi.mock('@/utils/uploadCanvas', () => ({
   uploadBlobNamed: mocks.uploadBlobNamed,
+  uploadCanvas: mocks.uploadCanvas,
+}))
+
+vi.mock('@/components/stages/ModelPreview.vue', () => ({
+  default: {
+    name: 'ModelPreview',
+    props: ['src', 'pickable', 'partMaterials', 'selectedPart'],
+    template: '<div data-testid="model-preview-stub" :data-src="src" />',
+  },
 }))
 
 vi.mock('@/components/widgets/ModelThumb.vue', () => ({
@@ -97,6 +107,34 @@ describe('ModelLoaderCard', () => {
   it('shows the pick hint when nothing is selected', () => {
     renderCard()
     expect(screen.getByText('Select a 3D model…')).toBeInTheDocument()
+  })
+
+  it('renders bound part chips from the bindings widget and material inputs', async () => {
+    const node = makeNode({ value: '3d/saved.glb', values: [] })
+    node.widgets.push({
+      name: 'material_bindings',
+      type: 'text',
+      value: '{"body":"materials.material1.material"}',
+    })
+    const state = makeState()
+    state.inputs = [{
+      slot: 'materials.material1.material',
+      type: 'COMFYTV_MATERIAL',
+      source: 'upstream',
+      content: '{"version":1,"color":"#ff0000"}',
+    }]
+    renderWithPlugins(ModelLoaderCard, {
+      props: {
+        state,
+        node,
+        onRunRequest: vi.fn(),
+        onCancelRequest: vi.fn(),
+        onDisconnect: vi.fn(),
+        onAction: vi.fn(),
+      },
+    })
+    expect(await screen.findByTestId('model-preview-stub')).toBeInTheDocument()
+    expect(await screen.findByText('body')).toBeInTheDocument()
   })
 
   it('restores the saved selection and shows its basename', async () => {

@@ -152,7 +152,7 @@ const RICH_STAGE_MIN_HEIGHTS: Record<string, number> = {
   'ComfyTV.AssetAudioLoaderStage':    420,
   'ComfyTV.AssetModelLoaderStage':    620,
   'ComfyTV.Model3DStage':             560,
-  'ComfyTV.ModelLoaderStage':         420,
+  'ComfyTV.ModelLoaderStage':         760,
   'ComfyTV.GridSplitStage':           560,
   'ComfyTV.OutpaintStage':            620,
   'ComfyTV.Scene3DStage':             640,
