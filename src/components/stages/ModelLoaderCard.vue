@@ -9,6 +9,7 @@
     @dragover="fileDrop.onDragOver"
     @dragleave="fileDrop.onDragLeave"
     @drop="fileDrop.onDrop"
+    @contextmenu.stop.prevent
   >
     <button
       ref="triggerEl"
@@ -34,7 +35,7 @@
       <i :class="['pi', menuOpen ? 'pi-chevron-up' : 'pi-chevron-down', 'ctv:shrink-0 ctv:text-3xs ctv:text-muted-foreground']" />
     </button>
 
-    <div class="ctv:relative ctv:w-full ctv:h-[280px] ctv:shrink-0 ctv:rounded-md ctv:overflow-hidden ctv:bg-black">
+    <div class="ctv:group ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[280px] ctv:rounded-md ctv:overflow-hidden ctv:bg-black">
       <ModelPreview
         v-if="modelSrc"
         ref="previewEl"
@@ -50,6 +51,14 @@
            class="ctv:h-full ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50">
         <IconBox class="ctv:size-8 ctv:opacity-60" />
         <div class="ctv:text-xs">{{ $t('modelBinder.noModel') }}</div>
+      </div>
+      <div v-if="modelSrc" :class="previewActionsClass">
+        <button type="button" :class="previewActionBtn"
+                :title="$t('stage.action.download')"
+                @click.stop="onDownloadModel"><i class="pi pi-download" /></button>
+        <button type="button" :class="previewTagBtn"
+                :title="$t('stage.action.addTag')"
+                @click.stop="openTagMenu(modelSrc, nameFromUrl(modelSrc), $event, 'model')"><i class="pi pi-tag" /></button>
       </div>
     </div>
 
@@ -100,7 +109,7 @@
       </div>
     </div>
 
-    <div class="ctv:flex-1 ctv:min-h-0">
+    <div class="ctv:shrink-0">
       <StageCard
         :state="state"
         :node="node"
@@ -195,11 +204,63 @@
       class="ctv:hidden"
       @change="onPickFiles"
     />
+
+    <Teleport to="body">
+      <div
+        v-if="tagMenu"
+        class="ctv:fixed ctv:inset-0 ctv:z-[9999]"
+        @click="closeTagMenu"
+        @wheel.prevent.stop
+      >
+        <div
+          class="ctv:absolute ctv:w-44 ctv:max-h-64 ctv:overflow-y-auto ctv:p-1 ctv:rounded ctv:shadow-md ctv:text-xs
+                 ctv:bg-interface-menu-surface ctv:border ctv:border-border-default"
+          :style="tagMenuStyle"
+          @click.stop
+        >
+          <button
+            type="button"
+            class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:px-1.5 ctv:py-1 ctv:rounded-sm ctv:cursor-pointer
+                   ctv:text-left ctv:text-2xs ctv:bg-transparent ctv:border-none ctv:text-base-foreground
+                   ctv:hover:bg-secondary-background-hover"
+            @click.stop="setUncategorized"
+          >
+            <span class="ctv:w-3 ctv:inline-block ctv:text-primary-background"><i v-if="tagMenuIsUncategorized()" class="pi pi-check" /></span>
+            <span class="ctv:flex-1 ctv:truncate ctv:italic ctv:text-muted-foreground">{{ $t('assets.category.none') }}</span>
+          </button>
+          <div class="ctv:my-1 ctv:border-t ctv:border-border-subtle"></div>
+          <button
+            v-for="cat in categories"
+            :key="cat.id"
+            type="button"
+            class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:px-1.5 ctv:py-1 ctv:rounded-sm ctv:cursor-pointer
+                   ctv:text-left ctv:text-2xs ctv:bg-transparent ctv:border-none ctv:text-base-foreground
+                   ctv:hover:bg-secondary-background-hover"
+            @click.stop="toggleOutputTag(cat.id)"
+          >
+            <span class="ctv:w-3 ctv:inline-block ctv:text-primary-background"><i v-if="tagMenuHas(cat.id)" class="pi pi-check" /></span>
+            <span class="ctv:flex-1 ctv:truncate">{{ cat.name }}</span>
+          </button>
+          <div v-if="categories.length" class="ctv:my-1 ctv:border-t ctv:border-border-subtle"></div>
+          <button
+            type="button"
+            class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:px-1.5 ctv:py-1 ctv:rounded-sm ctv:cursor-pointer
+                   ctv:text-left ctv:text-2xs ctv:bg-transparent ctv:border-none ctv:text-primary-background
+                   ctv:hover:bg-secondary-background-hover"
+            @click.stop="onCreateCategory"
+          >
+            <span class="ctv:w-3 ctv:inline-block"><i class="pi pi-plus" /></span>
+            <span class="ctv:flex-1 ctv:truncate">{{ $t('assets.tagPopover.create') }}</span>
+          </button>
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import IconBox from '~icons/lucide/box'
 
@@ -208,11 +269,16 @@ import ModelPreview from '@/components/stages/ModelPreview.vue'
 import ModelThumb from '@/components/widgets/ModelThumb.vue'
 import StageCard from '@/components/stages/StageCard.vue'
 import type { StageState } from '@/stores/stageStore'
+import { askText } from '@/composables/dialog/useTextInputDialog'
 import { toastLoaderUploadFailed, useLoaderFileDrop } from '@/composables/stages/useLoaderFileDrop'
+import { useOutputAssetTagging } from '@/composables/stages/useOutputAssetTagging'
+import { downloadFile } from '@/utils/download'
 import { uploadBlobNamed, uploadCanvas } from '@/utils/uploadCanvas'
 import { getWidget, onNodeConfigure, readWidgetStr, writeWidget } from '@/utils/widget'
 import { parseMaterialState, type MaterialParams } from '@/widgets/material/types'
 import { MODEL_FILE_EXTENSIONS } from '@/widgets/three/modelFormats'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   state: StageState
@@ -253,6 +319,51 @@ function inputFileUrl(path: string): string {
 }
 
 const modelSrc = computed(() => props.state.output || inputFileUrl(selected.value))
+
+const {
+  tagMenu,
+  categories,
+  tagMenuStyle,
+  nameFromUrl,
+  isSaved,
+  openTagMenu,
+  closeTagMenu,
+  tagMenuHas,
+  tagMenuIsUncategorized,
+  setUncategorized,
+  toggleOutputTag,
+  createCategoryAndTag,
+} = useOutputAssetTagging()
+
+const PREVIEW_BTN_BASE =
+  'ctv:relative ctv:inline-flex ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:appearance-none'
+  + ' ctv:border-none ctv:transition-colors ctv:size-5 ctv:p-0 ctv:rounded-sm ctv:text-sm'
+const previewActionsClass =
+  'ctv:absolute ctv:top-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1 ctv:opacity-0'
+  + ' ctv:group-hover:opacity-100 ctv:transition-opacity'
+const previewActionBtn = PREVIEW_BTN_BASE + ' ctv:bg-white ctv:text-gray-600 ctv:hover:bg-white/90'
+const previewTagBtn = computed(() => PREVIEW_BTN_BASE
+  + (isSaved(modelSrc.value)
+    ? ' ctv:bg-primary-background ctv:text-white ctv:hover:bg-primary-background/90'
+    : ' ctv:bg-white ctv:text-gray-600 ctv:hover:bg-white/90'))
+
+async function onDownloadModel(): Promise<void> {
+  if (!modelSrc.value) return
+  try {
+    await downloadFile(modelSrc.value)
+  } catch (e) {
+    console.error('[ComfyTV/model-loader] download failed', e)
+  }
+}
+
+async function onCreateCategory(): Promise<void> {
+  const name = (await askText({
+    title: t('assets.category.new'),
+    label: t('assets.category.newPrompt'),
+  }))?.trim()
+  if (!name) return
+  await createCategoryAndTag(name)
+}
 
 const previewEl = ref<InstanceType<typeof ModelPreview> | null>(null)
 const partKeys = ref<string[]>([])
@@ -452,7 +563,9 @@ const fileDrop = useLoaderFileDrop({
 })
 
 function onKeydown(e: KeyboardEvent): void {
-  if (e.key === 'Escape' && menuOpen.value) menuOpen.value = false
+  if (e.key !== 'Escape') return
+  if (tagMenu.value) closeTagMenu()
+  else if (menuOpen.value) menuOpen.value = false
 }
 
 onMounted(() => {

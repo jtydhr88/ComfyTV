@@ -2,7 +2,9 @@
   <div
     ref="hostEl"
     data-capture-wheel="true"
-    class="ctv:relative ctv:w-full ctv:h-full ctv:min-h-[220px] ctv:overflow-hidden ctv:rounded-sm ctv:bg-black ctv:touch-none"
+    tabindex="-1"
+    @pointerenter="onHostEnter"
+    class="ctv:relative ctv:w-full ctv:h-full ctv:min-h-[220px] ctv:overflow-hidden ctv:rounded-sm ctv:bg-black ctv:touch-none ctv:outline-none"
   >
     <div
       v-if="loading || loadError"
@@ -237,6 +239,10 @@ function onPickUp(e: PointerEvent): void {
   const hits = raycaster.intersectObject(modelRoot, true)
   const hit = hits.find((h) => h.object instanceof THREE.Mesh)
   emit('part-pick', (hit?.object?.userData?.comfytvPartKey as string) ?? null)
+}
+
+function onHostEnter(): void {
+  hostEl.value?.focus({ preventScroll: true })
 }
 
 function syncSize(): void {
