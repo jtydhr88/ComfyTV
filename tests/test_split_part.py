@@ -2,6 +2,8 @@
 
 import json
 
+import pytest
+
 
 def _mod():
     from ComfyTV.nodes.stages import split_part
@@ -82,6 +84,11 @@ class TestPartInvocations:
 
 
 class TestMaskCleanup:
+    @pytest.fixture(autouse=True)
+    def _deps(self):
+        pytest.importorskip("numpy")
+        pytest.importorskip("scipy")
+
     def _mask(self):
         import numpy as np
         b = np.zeros((200, 200), dtype=bool)
@@ -106,6 +113,7 @@ class TestMaskCleanup:
         assert not m._cleanup_mask_array(b, min_px=64).any()
 
     def test_mask_cleanup_node(self):
+        pytest.importorskip("torch")
         import numpy as np
         import torch
         m = _mod()
