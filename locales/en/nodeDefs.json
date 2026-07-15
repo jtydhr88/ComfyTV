@@ -1334,8 +1334,12 @@
   "ComfyTV_VideoSplitStage": {
     "display_name": "Video Split",
     "outputs": {
-      "0": { "name": "Video A" },
-      "1": { "name": "Video B" }
+      "0": {
+        "name": "Video A"
+      },
+      "1": {
+        "name": "Video B"
+      }
     }
   },
   "ComfyTV_VideoVolumeStage": {
@@ -1625,6 +1629,19 @@
       "2": {
         "name": "Images",
         "tooltip": "All captures from the last Capture — one per scene camera."
+      }
+    }
+  },
+  "ComfyTV_LayerEditorStage": {
+    "display_name": "Layer Editor",
+    "outputs": {
+      "0": {
+        "name": "Image",
+        "tooltip": "Composited document (all visible layers)."
+      },
+      "1": {
+        "name": "Images",
+        "tooltip": "Per-layer renders from the last Capture - one per visible layer."
       }
     }
   },

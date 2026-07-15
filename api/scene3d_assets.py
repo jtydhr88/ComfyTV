@@ -9,6 +9,7 @@ _ASSETS_DIR = os.path.join(
 for _prefix, _sub in (
     ("/comfytv/scene3d", "scene3d"),
     ("/comfytv/camera_presets", "camera_presets"),
+    ("/comfytv/fonts", "fonts"),
 ):
     _path = os.path.join(_ASSETS_DIR, _sub)
     if os.path.isdir(_path):

@@ -1334,8 +1334,12 @@
   "ComfyTV_VideoSplitStage": {
     "display_name": "视频分割",
     "outputs": {
-      "0": { "name": "前段 A" },
-      "1": { "name": "后段 B" }
+      "0": {
+        "name": "前段 A"
+      },
+      "1": {
+        "name": "后段 B"
+      }
     }
   },
   "ComfyTV_VideoVolumeStage": {
@@ -1625,6 +1629,19 @@
       "2": {
         "name": "图像组",
         "tooltip": "最近一次截取的全部画面——每个场景相机一张。"
+      }
+    }
+  },
+  "ComfyTV_LayerEditorStage": {
+    "display_name": "图层编辑器",
+    "outputs": {
+      "0": {
+        "name": "图像",
+        "tooltip": "合成后的画面（所有可见图层）。"
+      },
+      "1": {
+        "name": "图像组",
+        "tooltip": "最近一次截取的逐层画面——每个可见图层一张。"
       }
     }
   },

@@ -33,6 +33,7 @@ from .loaders import (
     ModelLoaderStage, AssetModelLoaderStage,
 )
 from .scene3d import Scene3DStage
+from .layer_editor import LayerEditorStage
 from .material import MaterialStage
 from .split_part import SplitPartStage, MaskCleanup
 
@@ -58,6 +59,7 @@ class ComfyTVExtension(ComfyExtension):
             AssetImageLoaderStage, AssetVideoLoaderStage, AssetAudioLoaderStage,
             Model3DStage, ModelLoaderStage, AssetModelLoaderStage,
             Scene3DStage,
+            LayerEditorStage,
             MaterialStage,
             SplitPartStage, MaskCleanup,
             *_bridge_classes(),
