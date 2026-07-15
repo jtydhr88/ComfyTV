@@ -47,6 +47,7 @@ const SHORT_TYPE: Record<string, string> = {
   COMFYTV_VIDEOS:     'VID',
   COMFYTV_TIMELINE:   'TIMELINE',
   COMFYTV_MODEL:      '3D',
+  COMFYTV_MATERIAL:   'MAT',
 }
 
 export function shortTypeLabel(type: string): string {

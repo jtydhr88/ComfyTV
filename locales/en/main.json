@@ -50,7 +50,8 @@
       "audio": "Generate Audio",
       "panorama": "Generate Panorama",
       "storyboard": "Generate Storyboard",
-      "model": "Generate 3D Model"
+      "model": "Generate 3D Model",
+      "material": "Save Material"
     },
     "action": {
       "viewFull": "View full size",
@@ -1122,6 +1123,41 @@
     "uploading": "Uploading…",
     "empty": "No 3D models in input/3d yet — upload one to get started.",
     "pickHint": "Select a 3D model…"
+  },
+  "splitPart": {
+    "noInputImage": "Connect an image to annotate parts",
+    "tool": {
+      "point-pos": "+ point",
+      "point-neg": "− point",
+      "box": "Box"
+    },
+    "newGroup": "New part",
+    "clear": "Clear",
+    "chipBox": "Box {n}",
+    "chipPoints": "Part {n} ({count} pts)",
+    "hint": "Click to add points to the active part (right-click = exclude); drag with Box to mark a part per box. Or leave empty and type a concept for the text workflow."
+  },
+  "materialStage": {
+    "presets": "Presets",
+    "preset": {
+      "plasticGlossy": "Glossy plastic",
+      "plasticMatte": "Matte plastic",
+      "metalPolished": "Polished metal",
+      "metalBrushed": "Brushed metal",
+      "glassClear": "Clear glass",
+      "glassFrosted": "Frosted glass",
+      "rubber": "Rubber",
+      "ceramic": "Ceramic"
+    },
+    "color": "Color",
+    "param": {
+      "metalness": "Metalness",
+      "roughness": "Roughness",
+      "transmission": "Transmission",
+      "opacity": "Opacity",
+      "clearcoat": "Clearcoat",
+      "ior": "IOR"
+    }
   },
   "loaderDrop": {
     "mismatchTitle": "Wrong file type",

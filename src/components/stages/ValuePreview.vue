@@ -137,6 +137,20 @@
       </div>
     </template>
 
+    <template v-else-if="type === 'COMFYTV_MATERIAL'">
+      <div v-if="compact" class="ctv:flex ctv:items-center ctv:justify-center ctv:size-full">
+        <span class="ctv:size-10 ctv:rounded-full" :style="materialSwatchStyle" />
+      </div>
+      <div v-else class="ctv:flex ctv:items-center ctv:gap-2.5 ctv:pt-3.5 ctv:pb-1 ctv:px-1">
+        <span class="ctv:size-16 ctv:shrink-0 ctv:rounded-full" :style="materialSwatchStyle" />
+        <div class="ctv:flex ctv:flex-col ctv:gap-0.5 ctv:min-w-0 ctv:text-2xs ctv:font-mono ctv:text-muted-foreground">
+          <span class="ctv:text-base-foreground">{{ materialParams.color }}</span>
+          <span>M {{ materialParams.metalness.toFixed(2) }} · R {{ materialParams.roughness.toFixed(2) }}</span>
+          <span>T {{ materialParams.transmission.toFixed(2) }} · A {{ materialParams.opacity.toFixed(2) }}</span>
+        </div>
+      </div>
+    </template>
+
     <template v-else-if="type === 'COMFYTV_STORYBOARD'">
       <div v-if="compact" class="ctv:flex ctv:flex-col ctv:gap-0.5 ctv:size-full ctv:py-[3px] ctv:px-1 ctv:box-border ctv:overflow-hidden">
         <div class="ctv:flex ctv:items-baseline ctv:gap-1 ctv:shrink-0">
@@ -423,6 +437,7 @@ import {
   shotSummary,
   useValuePreview,
 } from '@/composables/stages/useValuePreview'
+import { parseMaterialState } from '@/widgets/material/types'
 import type {
   BatchImage,
   ItemClickPayload,
@@ -559,6 +574,18 @@ const emit = defineEmits<{
   (e: 'capture-view', payload: ItemClickPayload): void
 }>()
 
+const materialParams = computed(() => parseMaterialState(props.content))
+
+const materialSwatchStyle = computed(() => {
+  const p = materialParams.value
+  const alpha = p.transmission > 0 ? 0.55 : p.opacity
+  return {
+    background: `radial-gradient(circle at 35% 30%, rgb(255 255 255 / 0.85), ${p.color} 45%, color-mix(in srgb, ${p.color} 45%, black) 100%)`,
+    opacity: String(Math.max(0.35, alpha)),
+    boxShadow: 'inset 0 -4px 8px rgb(0 0 0 / 0.35)',
+  }
+})
+
 const previewMediaType = computed<string>(() => {
   switch (props.type) {
     case 'COMFYTV_AUDIO':
@@ -680,6 +707,7 @@ const TYPE_BADGE_COLORS: Record<string, string> = {
   COMFYTV_AUDIOS:     'ctv:bg-[rgb(255_100_100/0.22)] ctv:text-[#ffb0b0]',
   COMFYTV_VIDEOS:     'ctv:bg-[rgb(255_171_64/0.25)] ctv:text-[#ffd089]',
   COMFYTV_MODEL:      'ctv:bg-[rgb(100_220_200/0.25)] ctv:text-[#a5f0e0]',
+  COMFYTV_MATERIAL:   'ctv:bg-[rgb(210_180_100/0.25)] ctv:text-[#ecd9a0]',
 }
 const typeBadgeClass = computed(() => {
   const palette = TYPE_BADGE_COLORS[props.type] ?? 'ctv:bg-white/10 ctv:text-white/70'

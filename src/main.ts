@@ -31,6 +31,8 @@ import DirectorTimelineStageCard from '@/components/stages/DirectorTimelineStage
 import OutpaintStageCard from '@/components/stages/OutpaintStageCard.vue'
 import StoryboardStageCard from '@/components/stages/StoryboardStageCard.vue'
 import Scene3DStageCard from '@/components/stages/Scene3DStageCard.vue'
+import MaterialStageCard from '@/components/stages/MaterialStageCard.vue'
+import SplitPartStageCard from '@/components/stages/SplitPartStageCard.vue'
 import ProjectCard from '@/components/stages/ProjectCard.vue'
 import ComfyTVMountHost from '@/components/ComfyTVMountHost.vue'
 import { registerMount, unregisterMount } from '@/composables/stages/widgetMounts'
@@ -118,6 +120,8 @@ const RICH_STAGE_CARDS: Record<string, any> = {
   'ComfyTV.OutpaintStage':            OutpaintStageCard,
   'ComfyTV.StoryboardStage':          StoryboardStageCard,
   'ComfyTV.Scene3DStage':             Scene3DStageCard,
+  'ComfyTV.MaterialStage':            MaterialStageCard,
+  'ComfyTV.SplitPartStage':           SplitPartStageCard,
 }
 
 const RICH_STAGE_MIN_HEIGHTS: Record<string, number> = {
@@ -152,6 +156,8 @@ const RICH_STAGE_MIN_HEIGHTS: Record<string, number> = {
   'ComfyTV.GridSplitStage':           560,
   'ComfyTV.OutpaintStage':            620,
   'ComfyTV.Scene3DStage':             640,
+  'ComfyTV.MaterialStage':            600,
+  'ComfyTV.SplitPartStage':           720,
 }
 
 const RICH_STAGE_MIN_WIDTHS: Record<string, number> = {

@@ -73,6 +73,7 @@ const STAGE_CLASS_BY_KIND: Record<StageKind, string> = {
   'video-picker': 'ComfyTV.VideoPickerStage',
   timeline:       'ComfyTV.DirectorTimelineStage',
   model:          'ComfyTV.Model3DStage',
+  material:       'ComfyTV.MaterialStage',
 }
 
 const TARGET_GROUP_BY_KIND: Record<StageKind, 'texts' | 'images' | 'videos' | 'models'> = {
@@ -88,6 +89,7 @@ const TARGET_GROUP_BY_KIND: Record<StageKind, 'texts' | 'images' | 'videos' | 'm
   'video-picker': 'videos',
   timeline:       'images',
   model:          'models',
+  material:       'images',
 }
 
 function findFirstAutogrowSlot(node: any, groupPrefix: string): number {

@@ -20,11 +20,12 @@ def _import_all_stage_modules():
     """Import the stage modules and return the dict of all stage classes
     keyed by class name."""
     from ComfyTV.nodes.stages import generators, edits, loaders, panorama, \
-        timeline, video_audio, _common
+        timeline, video_audio, material, split_part, _common
     import inspect
 
     out: dict[str, type] = {}
-    for mod in (generators, edits, loaders, panorama, timeline, video_audio):
+    for mod in (generators, edits, loaders, panorama, timeline, video_audio,
+                material, split_part):
         for name, obj in inspect.getmembers(mod):
             if inspect.isclass(obj) and hasattr(obj, "define_schema") \
                     and obj.__module__ == mod.__name__:
@@ -66,6 +67,10 @@ class TestSchemaDefinitions:
         "AudioVideoDemuxAudioStage", "AudioVideoDemuxVideoStage",
         # Pickers
         "ImagePickerStage", "AudioPickerStage", "VideoPickerStage",
+        # Material
+        "MaterialStage",
+        # Split parts
+        "SplitPartStage",
     ])
     def test_define_schema(self, cls_name):
         classes = _import_all_stage_modules()
@@ -106,6 +111,20 @@ class TestLoaderExecute:
         assert "filename=robot.glb" in out.values[0]
         assert "subfolder=3d" in out.values[0]
         assert "type=input" in out.values[0]
+
+    def test_material_stage_execute(self, reset_db):
+        from ComfyTV.nodes.stages.material import MaterialStage
+        state = json.dumps({"version": 1, "color": "#e6b553", "metalness": 0.2,
+                            "roughness": 0.35})
+        out = MaterialStage.execute(project_id="default", material_state=state,
+                                    captured_image="/view?filename=ball.png")
+        assert out.values[0] == state
+        assert out.values[1] == "/view?filename=ball.png"
+
+    def test_material_stage_empty_state(self, reset_db):
+        from ComfyTV.nodes.stages.material import MaterialStage
+        out = MaterialStage.execute(project_id="default", material_state="")
+        assert out.values[0] == "{}"
 
     def test_asset_model_loader_execute(self, reset_db):
         from ComfyTV.nodes.stages.loaders import AssetModelLoaderStage

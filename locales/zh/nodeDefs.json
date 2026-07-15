@@ -96,6 +96,12 @@
     "InpaintStage": {
       "display_name": "重绘"
     },
+    "MaterialStage": {
+      "display_name": "材质球"
+    },
+    "SplitPartStage": {
+      "display_name": "部件分割"
+    },
     "MirrorStage": {
       "display_name": "镜像"
     },

@@ -50,7 +50,8 @@
       "audio": "生成音频",
       "panorama": "生成全景图",
       "storyboard": "生成分镜",
-      "model": "生成3D模型"
+      "model": "生成3D模型",
+      "material": "保存材质"
     },
     "action": {
       "viewFull": "查看大图",
@@ -1122,6 +1123,41 @@
     "uploading": "上传中…",
     "empty": "input/3d 还没有 3D 模型——先上传一个吧。",
     "pickHint": "选择 3D 模型…"
+  },
+  "splitPart": {
+    "noInputImage": "连接一张图片后即可标注部件",
+    "tool": {
+      "point-pos": "＋ 点",
+      "point-neg": "－ 点",
+      "box": "框选"
+    },
+    "newGroup": "新建部件",
+    "clear": "清空",
+    "chipBox": "框 {n}",
+    "chipPoints": "部件 {n}（{count} 点）",
+    "hint": "点击给当前部件加点（右键=排除点）；框选工具拖拽一个框即一个部件。也可以不标注，直接在提示词里输入概念走文本工作流。"
+  },
+  "materialStage": {
+    "presets": "预设",
+    "preset": {
+      "plasticGlossy": "亮面塑料",
+      "plasticMatte": "哑光塑料",
+      "metalPolished": "抛光金属",
+      "metalBrushed": "拉丝金属",
+      "glassClear": "透明玻璃",
+      "glassFrosted": "磨砂玻璃",
+      "rubber": "橡胶",
+      "ceramic": "陶瓷"
+    },
+    "color": "颜色",
+    "param": {
+      "metalness": "金属度",
+      "roughness": "粗糙度",
+      "transmission": "透射",
+      "opacity": "不透明度",
+      "clearcoat": "清漆",
+      "ior": "折射率"
+    }
   },
   "loaderDrop": {
     "mismatchTitle": "文件类型不匹配",

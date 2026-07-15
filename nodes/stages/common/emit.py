@@ -10,7 +10,7 @@ from .meta import STAGE_META, _KIND_TO_OUTPUT_TYPE
 from .progress import _emit_progress
 
 
-_JSON_PAYLOAD_TYPES = {'storyboard', 'images', 'timeline'}
+_JSON_PAYLOAD_TYPES = {'storyboard', 'images', 'timeline', 'material'}
 
 
 def _stage_name(cls) -> str:

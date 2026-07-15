@@ -96,6 +96,12 @@
     "InpaintStage": {
       "display_name": "Inpaint"
     },
+    "MaterialStage": {
+      "display_name": "Material"
+    },
+    "SplitPartStage": {
+      "display_name": "Split Parts"
+    },
     "MirrorStage": {
       "display_name": "Mirror"
     },

@@ -16,7 +16,7 @@ from .schema import (
     COMFYTV_SCHEMA_VERSION,
     COMFYTV_TEXT, COMFYTV_IMAGE, COMFYTV_VIDEO, COMFYTV_STORYBOARD,
     COMFYTV_IMAGES, COMFYTV_PANORAMA, COMFYTV_AUDIO, COMFYTV_TIMELINE,
-    COMFYTV_MODEL,
+    COMFYTV_MODEL, COMFYTV_MATERIAL,
 )
 from .inputs import (
     _force_run_token, _project_id_input, _parent_output_id_input,
@@ -60,7 +60,7 @@ __all__ = [
     "COMFYTV_SCHEMA_VERSION",
     "COMFYTV_TEXT", "COMFYTV_IMAGE", "COMFYTV_IMAGES", "COMFYTV_VIDEO",
     "COMFYTV_AUDIO", "COMFYTV_STORYBOARD", "COMFYTV_PANORAMA",
-    "COMFYTV_TIMELINE", "COMFYTV_MODEL",
+    "COMFYTV_TIMELINE", "COMFYTV_MODEL", "COMFYTV_MATERIAL",
     "STAGE_META", "_KIND_TO_OUTPUT_TYPE",
     "_VIDEO_SAMPLES", "_AUDIO_SAMPLES",
     "_force_run_token", "_project_id_input", "_parent_output_id_input",

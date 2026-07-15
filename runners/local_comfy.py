@@ -229,6 +229,7 @@ _BATCH_OUTPUT_KINDS = {
     'shot-images',
     'multiview',
     'sequence',
+    'split-part',
 }
 
 
@@ -450,6 +451,9 @@ async def _run_subprompt(sub_prompt: dict, sub_prompt_id: str,
         outer_node_id = getattr(server, 'last_node_id', None)
         orig_send_sync = server.send_sync
 
+        import comfy_execution.progress as _progress_mod
+        outer_registry = getattr(_progress_mod, 'global_progress_registry', None)
+
         def wrapped_send_sync(event, data, sid=None):
             if preview_meta_event is not None:
                 handled, payload = _filter_subprompt_preview(
@@ -487,6 +491,8 @@ async def _run_subprompt(sub_prompt: dict, sub_prompt_id: str,
         finally:
             server.send_sync = orig_send_sync
             server.client_id = outer_client_id
+            if outer_registry is not None:
+                _progress_mod.global_progress_registry = outer_registry
 
         if not executor.success:
             raise RuntimeError(

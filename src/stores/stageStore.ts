@@ -14,6 +14,7 @@ export type StageKind =
   | 'video-picker'
   | 'timeline'
   | 'model'
+  | 'material'
 
 export const POOL_PICKER_KINDS = ['image-picker', 'audio-picker', 'video-picker'] as const
 export type PoolPickerKind = (typeof POOL_PICKER_KINDS)[number]
@@ -42,6 +43,7 @@ export type TypedValueType =
   | 'COMFYTV_IMAGES'
   | 'COMFYTV_TIMELINE'
   | 'COMFYTV_MODEL'
+  | 'COMFYTV_MATERIAL'
 
 export type InputSource = 'upstream' | 'upstream-pending' | 'empty'
 
@@ -82,6 +84,7 @@ const KIND_TO_TYPE: Record<StageKind, TypedValueType> = {
   'video-picker': 'COMFYTV_VIDEO',
   timeline:       'COMFYTV_TIMELINE',
   model:          'COMFYTV_MODEL',
+  material:       'COMFYTV_MATERIAL',
 }
 
 export const useStageStore = defineStore('comfytv-stage', () => {
