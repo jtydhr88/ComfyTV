@@ -53,9 +53,13 @@
 
     <section v-if="!hideContext && state.variant !== 'loader' && !isPicker && connectedInputs.length > 0"
              class="ctv:flex ctv:flex-col ctv:gap-1">
-      <div :class="sectionLabel">{{ $t('stage.section.context') }}</div>
+      <button :class="contextToggle" :aria-expanded="!contextCollapsed" @click="contextCollapsed = !contextCollapsed">
+        <i :class="['pi', contextCollapsed ? 'pi-chevron-right' : 'pi-chevron-down', 'ctv:w-2.5 ctv:text-2xs ctv:text-muted-foreground']" />
+        <span :class="sectionLabel" class="ctv:mb-0">{{ $t('stage.section.context') }}</span>
+        <span class="ctv:text-3xs ctv:text-muted-foreground ctv:font-mono ctv:normal-case ctv:tracking-normal">{{ contextSummary }}</span>
+      </button>
 
-      <div class="ctv:flex ctv:flex-wrap ctv:gap-1.5">
+      <div v-show="!contextCollapsed" class="ctv:flex ctv:flex-wrap ctv:gap-1.5">
         <div
           v-for="inp in connectedInputs"
           :key="inp.slot"
@@ -169,8 +173,12 @@
     </section>
 
     <section v-if="!hideActions && state.output && stageActions.length" class="ctv:flex ctv:flex-col ctv:gap-1">
-      <div :class="sectionLabel">{{ $t('stage.section.actions') }}</div>
-      <div class="action-list ctv:flex ctv:flex-wrap ctv:gap-1.5">
+      <button :class="contextToggle" :aria-expanded="!actionsCollapsed" @click="actionsCollapsed = !actionsCollapsed">
+        <i :class="['pi', actionsCollapsed ? 'pi-chevron-right' : 'pi-chevron-down', 'ctv:w-2.5 ctv:text-2xs ctv:text-muted-foreground']" />
+        <span :class="sectionLabel" class="ctv:mb-0">{{ $t('stage.section.actions') }}</span>
+        <span class="ctv:text-3xs ctv:text-muted-foreground ctv:font-mono ctv:normal-case ctv:tracking-normal">{{ stageActions.length }}</span>
+      </button>
+      <div v-show="!actionsCollapsed" class="action-list ctv:flex ctv:flex-wrap ctv:gap-1.5">
         <button
           v-for="a in stageActions"
           :key="a.id"
@@ -186,6 +194,7 @@
       </div>
       <div
         v-if="openPresets.length"
+        v-show="!actionsCollapsed"
         class="ctv:grid ctv:gap-1 ctv:p-1 ctv:mt-0.5 ctv:rounded-sm ctv:grid-cols-[repeat(auto-fill,minmax(110px,1fr))]
                ctv:bg-primary-background/5 ctv:border ctv:border-dashed ctv:border-primary-background/30"
       >
@@ -216,6 +225,7 @@ import { LOCAL_SERVER, useServerStore } from '@/stores/serverStore'
 import { t } from '@/i18n'
 import ValuePreview from './ValuePreview.vue'
 import { imageInputSlotIndex, slotColor } from '@/composables/stages/imageSlotMentions'
+import { useActionsCollapsed, useContextCollapsed } from '@/composables/stages/useContextCollapsed'
 import { formatSlot, useStageCard } from '@/composables/stages/useStageCard'
 import {
   actionLabelKey,
@@ -260,6 +270,27 @@ const {
 } = useStageCard(() => props.state, props.onAction)
 
 const isPicker = computed(() => isPoolPickerKind(props.state.kind))
+
+const contextCollapsed = useContextCollapsed(() => (props.node as any)?.id ?? null)
+const actionsCollapsed = useActionsCollapsed(() => (props.node as any)?.id ?? null)
+
+function slotCategory(slot: string): string {
+  const dot = slot.indexOf('.')
+  const tail = dot < 0 ? slot : slot.slice(dot + 1)
+  const m = tail.match(/^([a-zA-Z_]+)\d*$/)
+  return m ? m[1] : tail
+}
+
+const contextSummary = computed(() => {
+  const counts = new Map<string, number>()
+  for (const inp of connectedInputs.value) {
+    const c = slotCategory(inp.slot)
+    counts.set(c, (counts.get(c) ?? 0) + 1)
+  }
+  return [...counts]
+    .map(([c, n]) => `${n} ${n === 1 ? c : `${c}s`}`)
+    .join(' · ')
+})
 
 const PLAIN_LOADER_WIDGET: Record<string, { kind: AssetMediaType; widget: string }> = {
   'ComfyTV.ImageLoaderStage': { kind: 'image', widget: 'image' },
@@ -422,6 +453,7 @@ const cardClass = computed(() => {
 })
 
 const sectionLabel = 'ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:opacity-60 ctv:mb-[3px]'
+const contextToggle = 'ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:py-0 ctv:px-0 ctv:bg-transparent ctv:border-0 ctv:cursor-pointer ctv:text-left ctv:[font-family:inherit]'
 
 const COMFY_BTN_BASE = 'ctv:relative ctv:inline-flex ctv:items-center ctv:justify-center ctv:gap-2 ctv:cursor-pointer'
   + ' ctv:touch-manipulation ctv:whitespace-nowrap ctv:appearance-none ctv:border-none ctv:transition-colors'
