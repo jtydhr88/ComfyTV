@@ -13,6 +13,8 @@
 !erase/lama-erase_preset.json
 !image-edit/flux-canny-edit.json
 !image-edit/flux-canny-edit_preset.json
+!image-edit/qwen-edit-2511.json
+!image-edit/qwen-edit-2511_preset.json
 !image/flux2klein-relight.json
 !image/flux2klein-relight_preset.json
 !image/image_ideogram4_t2i.json
@@ -23,10 +25,14 @@
 !image/local-sd15_preset.json
 !image/pose-transfer-sd15.json
 !image/pose-transfer-sd15_preset.json
+!image/qwen-product-shot.json
+!image/qwen-product-shot_preset.json
 !inpaint/flux-fill-inpaint.json
 !inpaint/flux-fill-inpaint_preset.json
 !inpaint/fooocus-sdxl-inpaint.json
 !inpaint/fooocus-sdxl-inpaint_preset.json
+!material-estimate/qwen3vl-estimate.json
+!material-estimate/qwen3vl-estimate_preset.json
 !multiangle/qwen-edit-2511-multiangle.json
 !multiangle/qwen-edit-2511-multiangle_preset.json
 !multiview/qwen-3view-character.json
@@ -53,6 +59,10 @@
 !shot-images/flux-schnell_preset.json
 !shot-images/local-z-image-turbo.json
 !shot-images/local-z-image-turbo_preset.json
+!split-part/sam3-prompt.json
+!split-part/sam3-prompt_preset.json
+!split-part/sam3-text.json
+!split-part/sam3-text_preset.json
 !storyboard/local-qwen3-storyboard.json
 !storyboard/local-qwen3-storyboard_preset.json
 !text/local-qwen3-4b.json

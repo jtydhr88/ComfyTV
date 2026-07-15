@@ -1,0 +1,19 @@
+{
+  "_comment": "Shipped preset for VLM material estimation via ComfyUI's native TextGenerate + Qwen3-VL 8B (core LLM support, no custom node packs). The PBR estimation prompt lives in the TextGenerate widget; MaterialStage extracts the first {...} JSON block from the generated text and merges it into the material editor. Verified on the Vectary buckle reference: frosted translucent cover → transmission 0.9 / #2e8b57, solid body → transmission 0 / #006633. gemma4_e4b was tested and rejected — it ignored the image (identical grey answers for different patches).",
+
+  "label":       "Qwen3-VL 8B Estimate",
+  "order":       10,
+  "description": "Estimate PBR material parameters from an image patch with Qwen3-VL 8B (ComfyUI built-in TextGenerate). Outputs a JSON string. Requires qwen3vl_8b_fp8_scaled.safetensors in models/clip or models/text_encoders.",
+
+  "result": { "type": "graph_output_first", "node": "7" },
+
+  "inputs": {
+    "2": {
+      "image": {
+        "from": "upstream_image:annotated[0]",
+        "required": true,
+        "error": "Material estimation needs an image — wire one into the stage's image input."
+      }
+    }
+  }
+}

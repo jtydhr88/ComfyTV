@@ -431,6 +431,12 @@
         "label": "生成分镜图",
         "tooltip": "派生一个 Shot Images 节点接到这个分镜板上 —— 按镜头列表逐个出图"
       }
+    },
+    "model": {
+      "product-shot": {
+        "label": "生成产品图",
+        "tooltip": "派生一个预选 Qwen Edit 2511 工作流的图像编辑 stage，接到当前 3D 截图上 —— 保留主体颜色和材质，把渲染图变成摄影棚产品照；提示词可改"
+      }
     }
   },
   "presets": {

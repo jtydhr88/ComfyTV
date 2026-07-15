@@ -1,0 +1,256 @@
+{
+  "id": "c0mfytv-qwen-edit-2511-0000000001",
+  "revision": 0,
+  "last_node_id": 13,
+  "last_link_id": 17,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "UNETLoader",
+      "pos": [-460, 40],
+      "size": [340, 82],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        { "name": "MODEL", "type": "MODEL", "links": [1] }
+      ],
+      "properties": { "Node name for S&R": "UNETLoader" },
+      "widgets_values": ["qwen_image_edit_2511_fp8mixed.safetensors", "default"]
+    },
+    {
+      "id": 2,
+      "type": "CLIPLoader",
+      "pos": [-460, 170],
+      "size": [340, 106],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        { "name": "CLIP", "type": "CLIP", "links": [2, 3] }
+      ],
+      "properties": { "Node name for S&R": "CLIPLoader" },
+      "widgets_values": ["qwen_2.5_vl_7b_fp8_scaled.safetensors", "qwen_image", "default"]
+    },
+    {
+      "id": 3,
+      "type": "VAELoader",
+      "pos": [-460, 320],
+      "size": [340, 58],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        { "name": "VAE", "type": "VAE", "links": [4, 5, 6, 7] }
+      ],
+      "properties": { "Node name for S&R": "VAELoader" },
+      "widgets_values": ["qwen_image_vae.safetensors"]
+    },
+    {
+      "id": 4,
+      "type": "LoraLoaderModelOnly",
+      "pos": [-80, 40],
+      "size": [340, 82],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        { "name": "model", "type": "MODEL", "link": 1 }
+      ],
+      "outputs": [
+        { "name": "MODEL", "type": "MODEL", "links": [8] }
+      ],
+      "properties": { "Node name for S&R": "LoraLoaderModelOnly" },
+      "widgets_values": ["Qwen-Image-Edit-2511-Lightning-4steps-V1.0-bf16.safetensors", 1.0]
+    },
+    {
+      "id": 5,
+      "type": "ModelSamplingAuraFlow",
+      "pos": [-80, 170],
+      "size": [340, 58],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        { "name": "model", "type": "MODEL", "link": 8 }
+      ],
+      "outputs": [
+        { "name": "MODEL", "type": "MODEL", "links": [9] }
+      ],
+      "properties": { "Node name for S&R": "ModelSamplingAuraFlow" },
+      "widgets_values": [3.1]
+    },
+    {
+      "id": 6,
+      "type": "LoadImage",
+      "pos": [-460, 430],
+      "size": [290, 340],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        { "name": "IMAGE", "type": "IMAGE", "links": [10] },
+        { "name": "MASK", "type": "MASK", "links": null }
+      ],
+      "properties": { "Node name for S&R": "LoadImage" },
+      "widgets_values": ["example.png", "image"]
+    },
+    {
+      "id": 7,
+      "type": "ImageScaleToTotalPixels",
+      "pos": [-120, 430],
+      "size": [300, 106],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        { "name": "image", "type": "IMAGE", "link": 10 }
+      ],
+      "outputs": [
+        { "name": "IMAGE", "type": "IMAGE", "links": [11, 12] }
+      ],
+      "properties": { "Node name for S&R": "ImageScaleToTotalPixels" },
+      "widgets_values": ["lanczos", 1.0, 8]
+    },
+    {
+      "id": 8,
+      "type": "VAEEncode",
+      "pos": [220, 430],
+      "size": [220, 60],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        { "name": "pixels", "type": "IMAGE", "link": 11 },
+        { "name": "vae", "type": "VAE", "link": 4 }
+      ],
+      "outputs": [
+        { "name": "LATENT", "type": "LATENT", "links": [13] }
+      ],
+      "properties": { "Node name for S&R": "VAEEncode" },
+      "widgets_values": []
+    },
+    {
+      "id": 9,
+      "type": "TextEncodeQwenImageEditPlus",
+      "pos": [300, 60],
+      "size": [380, 200],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        { "name": "clip", "type": "CLIP", "link": 2 },
+        { "name": "vae", "shape": 7, "type": "VAE", "link": 5 },
+        { "name": "image1", "shape": 7, "type": "IMAGE", "link": 12 },
+        { "name": "image2", "shape": 7, "type": "IMAGE", "link": null },
+        { "name": "image3", "shape": 7, "type": "IMAGE", "link": null }
+      ],
+      "outputs": [
+        { "name": "CONDITIONING", "type": "CONDITIONING", "links": [14] }
+      ],
+      "properties": { "Node name for S&R": "TextEncodeQwenImageEditPlus" },
+      "widgets_values": [""]
+    },
+    {
+      "id": 10,
+      "type": "TextEncodeQwenImageEditPlus",
+      "pos": [300, 320],
+      "size": [380, 160],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        { "name": "clip", "type": "CLIP", "link": 3 },
+        { "name": "vae", "shape": 7, "type": "VAE", "link": 6 },
+        { "name": "image1", "shape": 7, "type": "IMAGE", "link": null },
+        { "name": "image2", "shape": 7, "type": "IMAGE", "link": null },
+        { "name": "image3", "shape": 7, "type": "IMAGE", "link": null }
+      ],
+      "outputs": [
+        { "name": "CONDITIONING", "type": "CONDITIONING", "links": [15] }
+      ],
+      "properties": { "Node name for S&R": "TextEncodeQwenImageEditPlus" },
+      "widgets_values": [""]
+    },
+    {
+      "id": 11,
+      "type": "KSampler",
+      "pos": [740, 60],
+      "size": [320, 262],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        { "name": "model", "type": "MODEL", "link": 9 },
+        { "name": "positive", "type": "CONDITIONING", "link": 14 },
+        { "name": "negative", "type": "CONDITIONING", "link": 15 },
+        { "name": "latent_image", "type": "LATENT", "link": 13 }
+      ],
+      "outputs": [
+        { "name": "LATENT", "type": "LATENT", "links": [16] }
+      ],
+      "properties": { "Node name for S&R": "KSampler" },
+      "widgets_values": [0, "randomize", 4, 1.0, "euler", "simple", 1.0]
+    },
+    {
+      "id": 12,
+      "type": "VAEDecode",
+      "pos": [1100, 60],
+      "size": [220, 60],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        { "name": "samples", "type": "LATENT", "link": 16 },
+        { "name": "vae", "type": "VAE", "link": 7 }
+      ],
+      "outputs": [
+        { "name": "IMAGE", "type": "IMAGE", "links": [17] }
+      ],
+      "properties": { "Node name for S&R": "VAEDecode" },
+      "widgets_values": []
+    },
+    {
+      "id": 13,
+      "type": "SaveImage",
+      "pos": [1100, 180],
+      "size": [280, 300],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        { "name": "images", "type": "IMAGE", "link": 17 }
+      ],
+      "outputs": [],
+      "properties": { "Node name for S&R": "SaveImage" },
+      "widgets_values": ["comfytv-edit"]
+    }
+  ],
+  "links": [
+    [1, 1, 0, 4, 0, "MODEL"],
+    [2, 2, 0, 9, 0, "CLIP"],
+    [3, 2, 0, 10, 0, "CLIP"],
+    [4, 3, 0, 8, 1, "VAE"],
+    [5, 3, 0, 9, 1, "VAE"],
+    [6, 3, 0, 10, 1, "VAE"],
+    [7, 3, 0, 12, 1, "VAE"],
+    [8, 4, 0, 5, 0, "MODEL"],
+    [9, 5, 0, 11, 0, "MODEL"],
+    [10, 6, 0, 7, 0, "IMAGE"],
+    [11, 7, 0, 8, 0, "IMAGE"],
+    [12, 7, 0, 9, 2, "IMAGE"],
+    [13, 8, 0, 11, 3, "LATENT"],
+    [14, 9, 0, 11, 1, "CONDITIONING"],
+    [15, 10, 0, 11, 2, "CONDITIONING"],
+    [16, 11, 0, 12, 0, "LATENT"],
+    [17, 12, 0, 13, 0, "IMAGE"]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}

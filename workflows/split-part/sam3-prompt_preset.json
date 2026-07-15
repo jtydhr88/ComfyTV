@@ -1,0 +1,27 @@
+{
+  "_comment": "Shipped preset for SAM3 point/box segmentation. The stage sends one runner invocation per point-group (all points in a run refine ONE object) and a single invocation carrying every box (SAM3_Detect emits one mask per box). positive/negative_coords are JSON strings ([{\"x\":..,\"y\":..},..], source-image pixel coords); bboxes is a literal list of {x,y,width,height} dicts — the in-process nested executor skips validate_prompt, so literal injection on the BOUNDING_BOX input is fine. individual_masks=true keeps per-object masks; InvertMask is required because JoinImageWithAlpha writes alpha = 1 - mask.",
+
+  "label":       "SAM3 Points & Boxes",
+  "order":       10,
+  "description": "Segment parts with SAM3.1 point/box prompts. Upstream image → LoadImage; card annotations → SAM3_Detect coords/bboxes. Outputs one transparent-bg PNG per part (COMFYTV_IMAGES). Needs sam3.1_multiplex_fp16.safetensors in models/checkpoints.",
+
+  "result": {
+    "type": "ui_save_batch",
+    "node": "9"
+  },
+
+  "inputs": {
+    "2": {
+      "image": {
+        "from": "upstream_image:annotated[0]",
+        "required": true,
+        "error": "Split Parts needs an upstream image — wire one into the stage's image input."
+      }
+    },
+    "3": {
+      "positive_coords": { "from": "option:points_pos" },
+      "negative_coords": { "from": "option:points_neg" },
+      "bboxes":          { "from": "option:bboxes" }
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "_comment": "Shipped preset for Qwen-Image-Edit 2511 (Lightning 4-step) instruction editing. Unlike flux-canny-edit, the reference image conditions the model directly (TextEncodeQwenImageEditPlus reference latents + VAEEncode start latent), so the subject's colors and materials survive while the instruction changes background, lighting or adds elements. E2E-verified on a bound-material 3D viewport capture: 'turn into product photo on light-gray studio backdrop' kept the lavender body and produced clean studio lighting. The 3D-model-stage Product Shot action spawns this workflow with a seeded instruction prompt.",
+
+  "label":       "Qwen Edit 2511",
+  "order":       5,
+  "description": "Instruction-based editing via Qwen-Image-Edit 2511 + Lightning 4-step. Preserves the subject's colors and materials — describe the change (background, lighting, added elements), not the whole scene. Output size follows the input (~1MP).",
+
+  "result": {
+    "type": "ui_save_url",
+    "node": "13"
+  },
+
+  "inputs": {
+    "6": {
+      "image": {
+        "from": "upstream_image:annotated[0]",
+        "required": true,
+        "error": "Image edit needs an upstream image — wire one into the stage's image input."
+      }
+    },
+    "9": {
+      "prompt": {
+        "from": "main_prompt",
+        "required": true,
+        "error": "Describe the edit — e.g. 'turn this render into a product photo on a light-gray studio backdrop, keep the subject's colors and materials'."
+      }
+    },
+    "11": {
+      "seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    }
+  }
+}

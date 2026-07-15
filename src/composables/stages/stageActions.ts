@@ -37,4 +37,7 @@ export const ACTIONS_BY_KIND: Record<string, StageAction[]> = {
   storyboard: [
     { id: 'gen-shots', icon: 'pi pi-camera' },
   ],
+  model: [
+    { id: 'product-shot', icon: 'pi pi-camera' },
+  ],
 }

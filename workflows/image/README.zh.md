@@ -26,10 +26,12 @@
 - **Local SD1.5 I2I**(`local-sd15-i2i.json` + `_preset.json`) , 同一个模型走 i2i,`VAEEncode + denoise<1.0`。测试通过。
 - **Image Ideogram4 T2I**(`image_ideogram4_t2i.json` + `_preset.json`) , Ideogram 4 + Qwen3-VL 文本编码器文生图。测试通过。
 - **Flux2 Klein Relight**(`flux2klein-relight.json` + `_preset.json`) , Flux-2 Klein 9B + Sun-direction LoRA(4 步)重打光。images[0] = 主体图,images[1] = 灯光参考(如 Relight 节点的 3d light 渲染,或经 Load Image from Asset 接任意图)。输出尺寸跟随主体图。image stage 的**打光**按钮会自动生成并连好这个工作流。
+- **Qwen Product Shot (Canny)**(`qwen-product-shot.json` + `_preset.json`) , 结构锁定的**全重绘**:images[0] → Canny → Qwen-Image-2512 Fun ControlNet-Union + Lightning 4 步 LoRA。只保轮廓,颜色/材质由提示词决定,要显式描述。想保留参考图自身的颜色材质(比如绑好材质的 3D 截图),用图像编辑 stage 的 **Qwen Edit 2511** —— 3D 模型节点的**生成产品图**按钮就是接它。输出尺寸跟随参考图(约 1.6MP)。测试通过。
 
 ## 需要的模型
 
 - `v1-5-pruned-emaonly.safetensors` , SD1.5 base(~4 GB)
 - Ideogram4:`ideogram4_fp8_scaled.safetensors`、`ideogram4_unconditional_fp8_scaled.safetensors`、`qwen3vl_8b_fp8_scaled.safetensors`、`flux2-vae.safetensors`(详见 [docs/models.zh.md](../../docs/models.zh.md))
 - Flux2 Klein Relight:`flux-2-klein-9b-nvfp4.safetensors`(diffusion_models)、`Sun_direction_LoRA_Flux_2_Klein_9b_v1.safetensors`(loras)、`qwen_3_8b_fp8mixed.safetensors`(clip)、`flux2-vae.safetensors`(vae)
+- Qwen Product Shot:`qwen_image_2512_fp8_e4m3fn.safetensors`(diffusion_models)、`Qwen-Image-2512-Fun-Controlnet-Union-2602.safetensors`(controlnet)、`Qwen-Image-Lightning-4steps-V1.0.safetensors`(loras)、`qwen_2.5_vl_7b_fp8_scaled.safetensors`(clip)、`qwen_image_vae.safetensors`(vae)
 

@@ -431,6 +431,12 @@
         "label": "Generate Shot Images",
         "tooltip": "Spawn a Shot Images stage wired to this storyboard — iterates the shot list and renders one image per shot"
       }
+    },
+    "model": {
+      "product-shot": {
+        "label": "Product Shot",
+        "tooltip": "Spawn an image-edit stage preset to Qwen Edit 2511, wired to this 3D capture — keeps the subject's colors and materials while turning the render into a studio product photo; edit the prompt to taste"
+      }
     }
   },
   "presets": {

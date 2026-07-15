@@ -329,10 +329,28 @@ function makeImageActionHandlers(srcSlot: number): Record<string, SpawnHandler> 
 const imageActionHandlers      = makeImageActionHandlers(0)
 const imageBatchActionHandlers = makeImageActionHandlers(1)
 
+const PRODUCT_SHOT_PRESET: ImagePreset = {
+  id: 'product-shot',
+  icon: 'pi pi-camera',
+  category: 'imageVariant',
+  targetClass: 'ComfyTV.ImageEditStage',
+  inputSocket: 'image',
+  widgets: {
+    workflow: 'Qwen Edit 2511',
+    main_prompt: "Turn this 3D viewport render into a professional product "
+      + 'photograph on a clean light-gray studio backdrop with soft diffused '
+      + "lighting and a subtle ground reflection. Keep the subject's colors, "
+      + 'materials and pose exactly as they are.',
+  },
+}
+
 const SPAWN_HANDLERS: Partial<Record<StageKind, Record<string, SpawnHandler>>> = {
   image: imageActionHandlers,
   'image-picker': imageActionHandlers,
   'image-batch': imageBatchActionHandlers,
+  model: {
+    'product-shot': src => spawnImagePreset(src, PRODUCT_SHOT_PRESET, 1),
+  },
   video: {
     'extend': src => spawnExtendVideo(src),
     ...Object.fromEntries(

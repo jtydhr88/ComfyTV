@@ -22,11 +22,13 @@
 
 ## 当前内置
 
-- **Flux Canny Edit**(`flux-canny-edit.json` + `_preset.json`) , 把上游图作 Canny 边缘图,按提示词重画。测试通过。
+- **Flux Canny Edit**(`flux-canny-edit.json` + `_preset.json`) , 把上游图作 Canny 边缘图,按提示词重画。只保轮廓,颜色由提示词决定。测试通过。
+- **Qwen Edit 2511**(`qwen-edit-2511.json` + `_preset.json`) , Qwen-Image-Edit 2511 + Lightning 4 步指令编辑。保留主体颜色和材质,指令负责改背景/打光/加元素 —— 描述改动,不用描述整张图。3D 模型节点的**生成产品图**按钮会带默认"渲染图转产品照"指令生成这个工作流。测试通过。
 
 ## 需要的模型
 
 - `flux1-canny-dev_fp8.safetensors` , 放进 `models/diffusion_models/`
 - `clip_l.safetensors` + `t5xxl_fp16.safetensors` , 放进 `models/clip/`
 - `ae.safetensors` , 放进 `models/vae/`
+- Qwen Edit 2511:`qwen_image_edit_2511_fp8mixed.safetensors`(diffusion_models)、`Qwen-Image-Edit-2511-Lightning-4steps-V1.0-bf16.safetensors`(loras)、`qwen_2.5_vl_7b_fp8_scaled.safetensors`(clip)、`qwen_image_vae.safetensors`(vae)
 

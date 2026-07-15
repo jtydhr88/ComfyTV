@@ -1,0 +1,29 @@
+{
+  "_comment": "Shipped preset for SAM3 open-vocabulary text segmentation. main_prompt → CLIPTextEncode (the SAM3 checkpoint's own language backbone) → SAM3_Detect conditioning; every detected instance of the concept becomes its own mask (individual_masks=true). Kept as a SEPARATE workflow from sam3-prompt: an always-bound CLIPTextEncode with empty text would push garbage detections into the point/box path.",
+
+  "label":       "SAM3 Text Concept",
+  "order":       20,
+  "description": "Segment every instance of a text concept with SAM3.1 (e.g. 'strap' → one image per strap). Upstream image → LoadImage; stage prompt → CLIPTextEncode. Outputs one transparent-bg PNG per instance (COMFYTV_IMAGES). Needs sam3.1_multiplex_fp16.safetensors in models/checkpoints.",
+
+  "result": {
+    "type": "ui_save_batch",
+    "node": "9"
+  },
+
+  "inputs": {
+    "2": {
+      "image": {
+        "from": "upstream_image:annotated[0]",
+        "required": true,
+        "error": "Split Parts needs an upstream image — wire one into the stage's image input."
+      }
+    },
+    "6": {
+      "text": {
+        "from": "main_prompt",
+        "required": true,
+        "error": "The text workflow needs a concept prompt — type what to segment (e.g. 'strap')."
+      }
+    }
+  }
+}

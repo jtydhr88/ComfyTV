@@ -1,0 +1,43 @@
+{
+  "_comment": "Shipped preset for the 3D-render-to-product-shot flow (Vectary act 3). Copy of the locally-proven image_qwen_Image_2512_controlnet5-2 graph: control image -> Canny -> Qwen-Image-2512 Fun ControlNet-Union + Lightning 4-step LoRA. The subgraph instance is node 86, so inner nodes get '86:<id>' after browser-side expansion. Output size follows the control image (ResizeImageMaskNode to 1.6MP), so the stage's resolution/aspect combos are intentionally unbound. E2E-verified: untextured Vaporeon viewport capture -> glossy ceramic figurine product photo with the silhouette locked.",
+
+  "label":       "Qwen Product Shot (Canny)",
+  "order":       30,
+  "description": "Structure-locked FULL repaint: Canny edges from the reference image steer Qwen-Image-2512 (Fun ControlNet-Union + Lightning 4-step). Only the silhouette survives — colors and materials come from the prompt, so describe them explicitly. To keep the reference's colors/materials, use the image-edit stage's Qwen Edit 2511 instead. Output size follows the reference image.",
+
+  "result": {
+    "type": "ui_save_batch",
+    "node": "60"
+  },
+
+  "inputs": {
+    "121": {
+      "image": {
+        "from": "upstream_image:annotated[0]",
+        "required": true,
+        "error": "Product shot needs a reference image — wire a 3D capture (or any image) into the stage."
+      }
+    },
+    "86:81": {
+      "text": {
+        "from": "main_prompt",
+        "required": true,
+        "error": "Describe the finished shot — subject, material, lighting, backdrop (e.g. 'glossy blue ceramic figurine, studio product photography, soft light')."
+      }
+    },
+    "86:3": {
+      "seed": {
+        "from": "option:seed",
+        "default": "random_int31",
+        "cast": "int"
+      }
+    },
+    "86:58": {
+      "batch_size": {
+        "from": "option:batch_size",
+        "default": 1,
+        "cast": "int"
+      }
+    }
+  }
+}
