@@ -141,6 +141,14 @@ function syncOutputSlots(): void {
   stageStore.setOutputSlot(props.state, 0, json)
 }
 
+watch(() => props.state.output, (payload) => {
+  if (!payload) return
+  const incoming = parseMaterialState(payload)
+  if (serializeMaterialState(incoming) !== serializeMaterialState(params)) {
+    Object.assign(params, incoming)
+  }
+})
+
 const CAPTURE_SIZE = 512
 const CAPTURE_DELAY_MS = 700
 

@@ -51,7 +51,7 @@
       "panorama": "生成全景图",
       "storyboard": "生成分镜",
       "model": "生成3D模型",
-      "material": "保存材质"
+      "material": "生成材质"
     },
     "action": {
       "viewFull": "查看大图",
@@ -386,6 +386,10 @@
       "relight": {
         "label": "打光",
         "tooltip": "生成一个打光光源节点 + 预选打光工作流的图像 stage —— 摆 3D 灯光或选参考图,然后运行图像 stage"
+      },
+      "material": {
+        "label": "提取材质",
+        "tooltip": "生成一个接好线的材质球节点 —— Run 时用本地视觉模型从图片估计 PBR 参数（颜色/粗糙度/透明度…）"
       },
       "preset": {
         "label": "预设",

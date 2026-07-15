@@ -51,7 +51,7 @@
       "panorama": "Generate Panorama",
       "storyboard": "Generate Storyboard",
       "model": "Generate 3D Model",
-      "material": "Save Material"
+      "material": "Generate Material"
     },
     "action": {
       "viewFull": "View full size",
@@ -386,6 +386,10 @@
       "relight": {
         "label": "Relight",
         "tooltip": "Spawn a Relight light-source node plus an image stage preset to the relight workflow — place 3D lights or pick a reference image, then run the image stage"
+      },
+      "material": {
+        "label": "Material",
+        "tooltip": "Spawn a Material node wired to this image — Run estimates PBR parameters (color, roughness, transparency…) from the picture via a local VLM"
       },
       "preset": {
         "label": "Presets",

@@ -61,7 +61,7 @@ STAGE_META: dict[str, dict] = {
     'AssetVideoLoaderStage':        {'kind': 'video',       'variant': 'loader'},
     'AssetAudioLoaderStage':        {'kind': 'audio',       'variant': 'loader'},
     'Scene3DStage':                 {'kind': 'image',       'variant': 'loader'},
-    'MaterialStage':                {'kind': 'material',    'variant': 'loader'},
+    'MaterialStage':                {'kind': 'material',     'workflow_kind': 'material-estimate'},
     'Model3DStage':                 {'kind': 'model',        'workflow_kind': 'model'},
     'ModelLoaderStage':             {'kind': 'model',       'variant': 'loader'},
     'AssetModelLoaderStage':        {'kind': 'model',       'variant': 'loader'},

@@ -113,18 +113,31 @@ class TestLoaderExecute:
         assert "type=input" in out.values[0]
 
     def test_material_stage_execute(self, reset_db):
+        import asyncio
         from ComfyTV.nodes.stages.material import MaterialStage
         state = json.dumps({"version": 1, "color": "#e6b553", "metalness": 0.2,
                             "roughness": 0.35})
-        out = MaterialStage.execute(project_id="default", material_state=state,
-                                    captured_image="/view?filename=ball.png")
+        out = asyncio.run(MaterialStage.execute(
+            project_id="default", material_state=state,
+            captured_image="/view?filename=ball.png"))
         assert out.values[0] == state
         assert out.values[1] == "/view?filename=ball.png"
 
     def test_material_stage_empty_state(self, reset_db):
+        import asyncio
         from ComfyTV.nodes.stages.material import MaterialStage
-        out = MaterialStage.execute(project_id="default", material_state="")
+        out = asyncio.run(MaterialStage.execute(project_id="default",
+                                                material_state=""))
         assert out.values[0] == "{}"
+
+    def test_extract_material_json(self):
+        from ComfyTV.nodes.stages.material import _extract_material_json
+        assert _extract_material_json(
+            'Sure! ```json\n{"color": "#a1b2c3", "roughness": 0.3, "junk": 1}\n```'
+        ) == {"color": "#a1b2c3", "roughness": 0.3}
+        assert _extract_material_json("no json here") is None
+        assert _extract_material_json('{"unrelated": true}') is None
+        assert _extract_material_json("") is None
 
     def test_asset_model_loader_execute(self, reset_db):
         from ComfyTV.nodes.stages.loaders import AssetModelLoaderStage

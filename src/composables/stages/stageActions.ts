@@ -16,6 +16,7 @@ const imageActions: StageAction[] = [
   { id: 'panorama',   icon: 'pi pi-globe' },
   { id: 'multiangle', icon: 'pi pi-compass' },
   { id: 'relight',    icon: 'pi pi-lightbulb' },
+  { id: 'material',   icon: 'pi pi-palette' },
   { id: 'preset',     icon: 'pi pi-th-large', presets: IMAGE_VARIANT_PRESETS },
 ]
 
