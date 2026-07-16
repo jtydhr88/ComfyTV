@@ -191,6 +191,132 @@ describe('useTimelineEditor', () => {
     rootEl.value!.dispatchEvent(makePointer('pointerup', 130))
   })
 
+  it('restore warns and keeps defaults on corrupt timeline_data JSON', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const { segments, audioSeg, frameRate } = useTimelineEditor(
+      makeNode([makeWidget('timeline_data', '{not json')]), makeState(), ref(null),
+    )
+    expect(warn).toHaveBeenCalled()
+    expect(segments.value).toEqual([])
+    expect(audioSeg.value).toBeNull()
+    expect(frameRate.value).toBe(24)
+    warn.mockRestore()
+  })
+
+  it('restore fills defaults for sparse segment and audio rows', () => {
+    const raw = JSON.stringify({
+      frameRate: 12,
+      segments: [{}],
+      audioSegments: [{}],
+    })
+    const state = makeState([
+      { slot: 'audio', type: 'COMFYTV_AUDIO', source: 'upstream', content: '/aud' },
+    ])
+    const { segments, audioSeg, frameRate } = useTimelineEditor(
+      makeNode([makeWidget('timeline_data', raw)]), state, ref(null),
+    )
+    expect(frameRate.value).toBe(12)
+    expect(segments.value).toHaveLength(1)
+    expect(segments.value[0].id).toBeTruthy()
+    expect(segments.value[0].length).toBe(12)
+    expect(segments.value[0].prompt).toBe('')
+    expect(segments.value[0].imageUrl).toBeNull()
+    expect(segments.value[0].sourceIndex).toBeNull()
+    expect(audioSeg.value).toMatchObject({ start: 0, length: 12, trimStart: 0, audioUrl: '/aud' })
+  })
+
+  it('restore adopts a positive frame_rate widget value', () => {
+    const { frameRate } = useTimelineEditor(
+      makeNode([makeWidget('timeline_data', ''), makeWidget('frame_rate', 48)]),
+      makeState(), ref(null),
+    )
+    expect(frameRate.value).toBe(48)
+  })
+
+  it('updatePrompt writes through to the selected segment and the widget', () => {
+    const dataW = makeWidget('timeline_data', '')
+    const state = makeState([imageInput('image0', '/x')])
+    const { segments, addSegment, updatePrompt } = useTimelineEditor(
+      makeNode([dataW]), state, ref(null),
+    )
+    addSegment(0)
+    updatePrompt('a running dog')
+    expect(segments.value[0].prompt).toBe('a running dog')
+    expect(JSON.parse(dataW.value as string).segments[0].prompt).toBe('a running dog')
+  })
+
+  it('updatePrompt is a no-op without a selection', () => {
+    const dataW = makeWidget('timeline_data', '')
+    const { updatePrompt } = useTimelineEditor(makeNode([dataW]), makeState(), ref(null))
+    updatePrompt('ignored')
+    expect(dataW.value).toBe('')
+  })
+
+  it('addAudio is a no-op without an upstream audio input', () => {
+    const { audioSeg, addAudio } = useTimelineEditor(
+      makeNode([makeWidget('timeline_data', '')]), makeState(), ref(null),
+    )
+    addAudio()
+    expect(audioSeg.value).toBeNull()
+  })
+
+  it('wraps node.onConfigure to re-restore after graph configure', () => {
+    const orig = vi.fn()
+    const dataW = makeWidget('timeline_data', '')
+    const node = makeNode([dataW])
+    node.onConfigure = orig
+    const { segments } = useTimelineEditor(node, makeState(), ref(null))
+    expect(segments.value).toEqual([])
+
+    dataW.value = JSON.stringify({
+      frameRate: 24,
+      segments: [{ id: 'seg-1', length: 24, prompt: 'p', imageUrl: null }],
+    })
+    const info = { some: 'info' }
+    node.onConfigure(info)
+    expect(orig).toHaveBeenCalledWith(info)
+    expect(segments.value).toHaveLength(1)
+    expect(segments.value[0].id).toBe('seg-1')
+  })
+
+  it('segStyle reflects the drag preview position while dragging', () => {
+    const state = makeState([imageInput('image0', '/a'), imageInput('image1', '/b')])
+    const { segments, addSegment, setLength, segStyle, onSegPointerDown } = useTimelineEditor(
+      makeNode([makeWidget('timeline_data', '')]), state, ref(null),
+    )
+    addSegment(0); addSegment(1)
+    setLength(segments.value[0].id, 24)
+    setLength(segments.value[1].id, 10)
+    expect(segStyle(0)).toEqual({ left: '0px', width: '72px' })
+    expect(segStyle(1)).toEqual({ left: '72px', width: '30px' })
+
+    // rootEl is null: beginPointerDrag bails, but the drag preview state is set
+    onSegPointerDown(makePointer('pointerdown', 100), segments.value[0], 0)
+    expect(segStyle(0).left).toBe('0px')
+    expect(segStyle(1).left).toBe('72px')
+  })
+
+  it('ruler ticks land on frame-rate boundaries with second labels', () => {
+    const { ruler, setFrameRate } = useTimelineEditor(
+      makeNode([makeWidget('timeline_data', '')]), makeState(), ref(null),
+    )
+    setFrameRate(24)
+    const ticks = ruler.value
+    expect(ticks[0]).toEqual({ frame: 0, label: '0s' })
+    expect(ticks[1]).toEqual({ frame: 24, label: '1s' })
+  })
+
+  it('audio drag handlers are no-ops before addAudio', () => {
+    const rootEl = ref<HTMLElement | null>(pointerHostEl())
+    const { audioSeg, audioDrag, onAudioPointerDown, onAudioResizePointerDown } = useTimelineEditor(
+      makeNode([makeWidget('timeline_data', '')]), makeState(), rootEl,
+    )
+    onAudioPointerDown(makePointer('pointerdown', 10))
+    onAudioResizePointerDown(makePointer('pointerdown', 10))
+    expect(audioDrag.value).toBe(false)
+    expect(audioSeg.value).toBeNull()
+  })
+
   it('audio segment drag moves start in frames; resize extends length', () => {
     const state = makeState([
       imageInput('image0', '/img'),

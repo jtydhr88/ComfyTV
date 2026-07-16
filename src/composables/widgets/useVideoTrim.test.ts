@@ -198,7 +198,141 @@ describe('useVideoTrim drag interactions', () => {
   })
 })
 
+describe('useVideoTrim playhead loop', () => {
+  function captureRaf() {
+    let cb: FrameRequestCallback | null = null
+    const raf = vi.spyOn(window, 'requestAnimationFrame').mockImplementation((fn: FrameRequestCallback) => {
+      cb = fn
+      return 1
+    })
+    vi.spyOn(window, 'cancelAnimationFrame').mockImplementation(() => {})
+    return { raf, tick: () => { const fn = cb; cb = null; fn?.(0) } }
+  }
+
+  afterEach(() => vi.restoreAllMocks())
+
+  it('timeupdate events refresh currentTime when the raf loop is idle', async () => {
+    const { api, video } = await setupWithVideo()
+    video.currentTime = 3.5
+    video.dispatchEvent(new Event('timeupdate'))
+    expect(api.currentTime.value).toBe(3.5)
+  })
+
+  it('play starts the raf loop and keeps scheduling while playing', async () => {
+    const { raf, tick } = captureRaf()
+    const { api, video } = await setupWithVideo()
+    Object.defineProperty(video, 'paused', { value: false, configurable: true })
+    video.dispatchEvent(new Event('play'))
+    expect(raf).toHaveBeenCalledTimes(1)
+    video.currentTime = 2
+    tick()
+    expect(api.currentTime.value).toBe(2)
+    expect(raf).toHaveBeenCalledTimes(2)
+  })
+
+  it('raf loop stops rescheduling once the video is paused', async () => {
+    const { raf, tick } = captureRaf()
+    const { video } = await setupWithVideo()
+    Object.defineProperty(video, 'paused', { value: false, configurable: true })
+    video.dispatchEvent(new Event('play'))
+    Object.defineProperty(video, 'paused', { value: true, configurable: true })
+    tick()
+    expect(raf).toHaveBeenCalledTimes(1)
+  })
+
+  it('preview auto-pauses when the playhead reaches the selection end', async () => {
+    const { tick } = captureRaf()
+    const { api, video } = await setupWithVideo({ start: 2, end: 6 })
+    Object.defineProperty(video, 'paused', { value: false, configurable: true })
+    api.playSelection()
+    expect(api.previewing.value).toBe(true)
+    video.dispatchEvent(new Event('play'))
+    video.currentTime = 5.99
+    tick()
+    expect(video.pause).toHaveBeenCalled()
+    expect(api.previewing.value).toBe(false)
+  })
+
+  it('raf tick bails out when the video element vanishes', async () => {
+    const { raf, tick } = captureRaf()
+    const ctx = await setupWithVideo()
+    Object.defineProperty(ctx.video, 'paused', { value: false, configurable: true })
+    ctx.video.dispatchEvent(new Event('play'))
+    ctx.videoEl.value = null
+    expect(() => tick()).not.toThrow()
+    expect(raf).toHaveBeenCalledTimes(1)
+  })
+})
+
+function installFilmstripDom(opts: {
+  duration?: number
+  videoWidth?: number
+  videoHeight?: number
+} = {}) {
+  const origCreate = document.createElement.bind(document)
+  const created: HTMLVideoElement[] = []
+  vi.spyOn(document, 'createElement').mockImplementation(((tag: string) => {
+    if (String(tag).toLowerCase() === 'video') {
+      const v = origCreate('video') as HTMLVideoElement
+      Object.defineProperty(v, 'duration', { value: opts.duration ?? 2, configurable: true })
+      Object.defineProperty(v, 'videoWidth', { value: opts.videoWidth ?? 64, configurable: true })
+      Object.defineProperty(v, 'videoHeight', { value: opts.videoHeight ?? 36, configurable: true })
+      let ct = 0
+      Object.defineProperty(v, 'currentTime', {
+        get: () => ct,
+        set: (x: number) => {
+          ct = x
+          queueMicrotask(() => v.dispatchEvent(new Event('seeked')))
+        },
+        configurable: true,
+      })
+      v.load = vi.fn()
+      queueMicrotask(() => v.dispatchEvent(new Event('loadeddata')))
+      created.push(v)
+      return v
+    }
+    if (String(tag).toLowerCase() === 'canvas') {
+      return {
+        width: 0,
+        height: 0,
+        getContext: () => ({ drawImage: vi.fn() }),
+        toDataURL: () => 'data:image/jpeg;base64,frame',
+      } as unknown as HTMLCanvasElement
+    }
+    return origCreate(tag)
+  }) as any)
+  return { created }
+}
+
 describe('useVideoTrim filmstrip', () => {
+  afterEach(() => vi.restoreAllMocks())
+
+  it('renders THUMB_COUNT thumbnails from evenly spaced seeks', async () => {
+    const { created } = installFilmstripDom()
+    const { api } = setup({ start: 0, end: 0 }, '/view?filename=v.mp4')
+    await vi.waitFor(() => expect(api.thumbnails.value).toHaveLength(8))
+    expect(api.thumbnails.value.every(t => t.startsWith('data:image/jpeg'))).toBe(true)
+    // offscreen element is released afterwards
+    expect(created[0]!.load).toHaveBeenCalled()
+    expect(created[0]!.getAttribute('src')).toBeNull()
+  })
+
+  it('gives up without drawing when the video reports no dimensions', async () => {
+    const { created } = installFilmstripDom({ videoWidth: 0 })
+    const { api } = setup({ start: 0, end: 0 }, '/view?filename=v.mp4')
+    await vi.waitFor(() => expect(created[0]!.load).toHaveBeenCalled())
+    expect(api.thumbnails.value).toEqual([])
+  })
+
+  it('abandons a stale filmstrip build when the source url changes', async () => {
+    const { created } = installFilmstripDom()
+    const { api, sourceVideoUrl } = setup({ start: 0, end: 0 }, '/view?filename=v.mp4')
+    sourceVideoUrl.value = null // bumps filmstripSeq before loadeddata fires
+    await nextTick()
+    await vi.waitFor(() => expect(created[0]!.load).toHaveBeenCalled())
+    expect(api.thumbnails.value).toEqual([])
+  })
+
   it('fails gracefully when the offscreen video never loads, clears on url loss', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
     vi.useFakeTimers()

@@ -162,4 +162,65 @@ describe('projectStore', () => {
     const store = useProjectStore()
     expect(await store.fetchLatestOutput('p1', '42')).toBeNull()
   })
+
+  it('adoptOutputs posts stage identity and returns the adopted row', async () => {
+    mockSend.mockResolvedValueOnce({ output: { id: 9, project_id: 'p1' } })
+    const store = useProjectStore()
+    const row = await store.adoptOutputs('p1', '12', 'ComfyTVImageStage', 'uid-1', 'image')
+    expect(row).toEqual({ id: 9, project_id: 'p1' })
+    const [url, method, , body] = mockSend.mock.calls.at(-1)!
+    expect(url).toBe('/comfytv/projects/p1/outputs/adopt')
+    expect(method).toBe('POST')
+    expect(body).toEqual({
+      stage_node_id: '12',
+      stage_class: 'ComfyTVImageStage',
+      stage_uid: 'uid-1',
+      output_type: 'image',
+    })
+  })
+
+  it('adoptOutputs returns null when any identity arg is blank', async () => {
+    const store = useProjectStore()
+    expect(await store.adoptOutputs('', '12', 'C', 'u')).toBeNull()
+    expect(await store.adoptOutputs('p1', '', 'C', 'u')).toBeNull()
+    expect(await store.adoptOutputs('p1', '12', '', 'u')).toBeNull()
+    expect(await store.adoptOutputs('p1', '12', 'C', '')).toBeNull()
+    expect(mockSend).not.toHaveBeenCalled()
+  })
+
+  it('adoptOutputs returns null and warns on backend error', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    mockSend.mockRejectedValueOnce(new Error('boom'))
+    const store = useProjectStore()
+    expect(await store.adoptOutputs('p1', '12', 'C', 'u')).toBeNull()
+    expect(warn).toHaveBeenCalled()
+    warn.mockRestore()
+  })
+
+  it('tagOutputStageUid posts the stage uid for the output', async () => {
+    mockSend.mockResolvedValueOnce({ output: null })
+    const store = useProjectStore()
+    await store.tagOutputStageUid(3, 'uid-7')
+    const [url, method, , body] = mockSend.mock.calls.at(-1)!
+    expect(url).toBe('/comfytv/outputs/3/stage_uid')
+    expect(method).toBe('POST')
+    expect(body).toEqual({ stage_uid: 'uid-7' })
+  })
+
+  it('tagOutputStageUid skips invalid ids and blank uids', async () => {
+    const store = useProjectStore()
+    await store.tagOutputStageUid(0, 'uid')
+    await store.tagOutputStageUid(-1, 'uid')
+    await store.tagOutputStageUid(5, '')
+    expect(mockSend).not.toHaveBeenCalled()
+  })
+
+  it('tagOutputStageUid swallows backend errors', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    mockSend.mockRejectedValueOnce(new Error('boom'))
+    const store = useProjectStore()
+    await expect(store.tagOutputStageUid(3, 'uid')).resolves.toBeUndefined()
+    expect(warn).toHaveBeenCalled()
+    warn.mockRestore()
+  })
 })
