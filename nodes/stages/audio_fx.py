@@ -23,6 +23,32 @@ _LOUDNORM_FIELDS = ('input_i', 'input_tp', 'input_lra', 'input_thresh',
                     'target_offset')
 
 
+def _measure_astats(src: str):
+    try:
+        lines = analyze_audio(src, [('astats', None)])
+    except Exception:
+        return None
+    flat = []
+    for msg in lines:
+        flat.extend(str(msg).splitlines())
+    overall = []
+    seen = False
+    for line in flat:
+        if 'Overall' in line:
+            seen = True
+        elif seen:
+            overall.append(line)
+    out = {}
+    for key, label in (('peak_db', r'Peak level dB:\s*([-+0-9.]+)'),
+                       ('rms_db', r'RMS level dB:\s*([-+0-9.]+)')):
+        for line in overall or flat:
+            m = re.search(label, line)
+            if m:
+                out[key] = float(m.group(1))
+                break
+    return out if len(out) == 2 else None
+
+
 def _loudnorm_measure(src: str, base_args: str):
     try:
         lines = analyze_audio(
@@ -170,7 +196,8 @@ class AudioLoudnessStage(io.ComfyNode):
             category="ComfyTV/AudioFX",
             inputs=[
                 *_standard_stage_inputs(),
-                _hidden_combo("mode", ['ebu_r128', 'dynamic'], 'ebu_r128'),
+                _hidden_combo("mode", ['ebu_r128', 'dynamic', 'normalize'],
+                              'ebu_r128'),
                 _hidden_float("target_i", -16.0, -30.0, -10.0, step=0.5,
                               tooltip="integrated loudness target (LUFS)"),
                 _hidden_float("target_tp", -1.5, -3.0, 0.0, step=0.1,
@@ -178,6 +205,14 @@ class AudioLoudnessStage(io.ComfyNode):
                 _hidden_float("target_lra", 11.0, 1.0, 20.0, step=0.5),
                 _hidden_int("dyn_frame_ms", 500, 10, 8000),
                 _hidden_int("dyn_gauss", 31, 3, 301, "gaussian window (odd)"),
+                _hidden_float("peak_target_db", -1.0, -30.0, 0.0, step=0.1),
+                _hidden_combo("peak_mode", ['true_peak', 'sample'],
+                              'true_peak'),
+                io.Boolean.Input("use_rms", default=False, socketless=True,
+                                 extra_dict={"hidden": True}),
+                _hidden_float("rms_target_db", -9.0, -30.0, 0.0, step=0.5),
+                io.Boolean.Input("use_lufs", default=False, socketless=True,
+                                 extra_dict={"hidden": True}),
                 COMFYTV_AUDIO.Input("audio", optional=True),
                 COMFYTV_VIDEO.Input("video", optional=True),
             ],
@@ -189,9 +224,31 @@ class AudioLoudnessStage(io.ComfyNode):
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                 mode='ebu_r128', target_i=-16.0, target_tp=-1.5, target_lra=11.0,
-                dyn_frame_ms=500, dyn_gauss=31, audio="", video=""):
+                dyn_frame_ms=500, dyn_gauss=31, peak_target_db=-1.0,
+                peak_mode='true_peak', use_rms=False, rms_target_db=-9.0,
+                use_lufs=False, audio="", video=""):
         src = _pick_source(audio, video, "Audio Loudness")
-        if mode == 'ebu_r128':
+        if mode == 'normalize':
+            stats = _measure_astats(src)
+            loud = _loudnorm_measure(src, 'I=-16:TP=-1.5:LRA=11') \
+                if (peak_mode == 'true_peak' or use_lufs) else None
+            if stats is None:
+                raise RuntimeError("Audio Loudness: measurement failed.")
+            gains = []
+            target_pk = _f(peak_target_db, -30.0, 0.0, -1.0)
+            if peak_mode == 'true_peak' and loud is not None:
+                gains.append(target_pk - loud['input_tp'])
+            else:
+                gains.append(target_pk - stats['peak_db'])
+            if use_rms:
+                gains.append(_f(rms_target_db, -30.0, 0.0, -9.0)
+                             - stats['rms_db'])
+            if use_lufs and loud is not None:
+                gains.append(_f(target_i, -30.0, -10.0, -16.0)
+                             - loud['input_i'])
+            gain = min(gains)
+            spec = ('volume', f'{gain:.4f}dB')
+        elif mode == 'ebu_r128':
             base = (f'I={_f(target_i, -30, -10, -16)}'
                     f':TP={_f(target_tp, -3, 0, -1.5)}'
                     f':LRA={_f(target_lra, 1, 20, 11)}')

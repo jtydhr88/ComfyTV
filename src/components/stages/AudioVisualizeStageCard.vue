@@ -9,6 +9,8 @@
         :options="[
           { value: 'waveform', label: $t('afx.waveform') },
           { value: 'spectrum', label: $t('afx.spectrum') },
+          { value: 'waveform_pro', label: $t('afx.waveformPro') },
+          { value: 'spectrum_pro', label: $t('afx.spectrumPro') },
         ]"
       />
 
@@ -18,7 +20,7 @@
           {{ $t('afx.splitChannels') }}
         </label>
       </template>
-      <template v-else>
+      <template v-else-if="mode === 'spectrum'">
         <div class="ctv:max-h-20 ctv:overflow-y-auto">
           <FxChips v-model="color" :options="colorOptions" />
         </div>
@@ -26,6 +28,40 @@
           <input type="checkbox" v-model="legend" class="ctv:accent-primary-background" />
           {{ $t('afx.legend') }}
         </label>
+      </template>
+      <template v-else-if="mode === 'waveform_pro'">
+        <label class="ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs ctv:text-muted-foreground ctv:cursor-pointer">
+          <input type="checkbox" v-model="showRms" class="ctv:accent-primary-background" />
+          {{ $t('afx.rmsLayer') }}
+        </label>
+        <label class="ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs ctv:text-muted-foreground ctv:cursor-pointer">
+          <input type="checkbox" v-model="showClipping" class="ctv:accent-primary-background" />
+          {{ $t('afx.clipMarks') }}
+        </label>
+        <label class="ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs ctv:text-muted-foreground ctv:cursor-pointer">
+          <input type="checkbox" v-model="dbAxis" class="ctv:accent-primary-background" />
+          {{ $t('afx.dbAxis') }}
+        </label>
+      </template>
+      <template v-else>
+        <FxChips
+          v-model="proScale"
+          :options="[
+            { value: 'log', label: 'Log' },
+            { value: 'linear', label: 'Linear' },
+            { value: 'mel', label: 'Mel' },
+          ]"
+        />
+        <FxChips
+          v-model="proColormap"
+          :options="[
+            { value: 'roseus', label: 'Roseus' },
+            { value: 'gray', label: 'Gray' },
+          ]"
+        />
+        <FxSlider v-model="rangeDb" :label="$t('afx.rangeDb')" :min="20" :max="120" :step="1" :decimals="0" unit="dB" :reset-to="80" />
+        <FxSlider v-model="gainDb" :label="$t('afx.gainDb')" :min="0" :max="60" :step="1" :decimals="0" unit="dB" :reset-to="20" />
+        <FxSlider v-model="freqGain" :label="$t('afx.freqGain')" :min="-10" :max="10" :step="0.5" :reset-to="0" />
       </template>
     </div>
 
@@ -60,8 +96,9 @@ import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
 import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'
+import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
-import { useBoolWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
+import { useBoolWidget, useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
 
 const props = defineProps<{
   state: StageState
@@ -84,4 +121,12 @@ const mode = useStrWidget(props.node, 'mode', 'waveform')
 const splitChannels = useBoolWidget(props.node, 'split_channels', false)
 const color = useStrWidget(props.node, 'color', 'intensity')
 const legend = useBoolWidget(props.node, 'legend', true)
+const proScale = useStrWidget(props.node, 'pro_scale', 'log')
+const proColormap = useStrWidget(props.node, 'pro_colormap', 'roseus')
+const rangeDb = useNumWidget(props.node, 'range_db', 80)
+const gainDb = useNumWidget(props.node, 'gain_db', 20)
+const freqGain = useNumWidget(props.node, 'freq_gain', 0)
+const showRms = useBoolWidget(props.node, 'show_rms', true)
+const showClipping = useBoolWidget(props.node, 'show_clipping', true)
+const dbAxis = useBoolWidget(props.node, 'db_axis', false)
 </script>

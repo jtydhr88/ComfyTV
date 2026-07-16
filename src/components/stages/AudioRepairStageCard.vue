@@ -11,6 +11,7 @@
           { value: 'declip', label: $t('afx.declip') },
           { value: 'denorm', label: $t('afx.denorm') },
           { value: 'wavelet', label: $t('afx.wavelet') },
+          { value: 'hum', label: $t('afx.hum') },
         ]"
       />
 
@@ -30,6 +31,18 @@
         <FxSlider v-model="wtSigma" :label="$t('afx.sigma')" :min="0" :max="1" :step="0.001" :decimals="3" :reset-to="0.05" />
         <FxSlider v-model="wtPercent" :label="$t('afx.percent')" :min="0" :max="100" :step="1" :decimals="0" unit="%" :reset-to="85" />
         <FxSlider v-model="wtLevels" :label="$t('afx.levels')" :min="1" :max="12" :step="1" :decimals="0" :reset-to="10" />
+      </template>
+      <template v-else-if="method === 'hum'">
+        <FxChips
+          v-model="humPreset"
+          :options="[
+            { value: '50', label: '50 Hz' },
+            { value: '60', label: '60 Hz' },
+          ]"
+        />
+        <FxSlider v-model="humFreq" :label="$t('afx.freqHz')" :min="10" :max="2000" :step="1" :decimals="0" unit="Hz" :reset-to="50" />
+        <FxSlider v-model="humHarmonics" :label="$t('afx.harmonics')" :min="1" :max="16" :step="1" :decimals="0" :reset-to="8" />
+        <FxSlider v-model="humQ" :label="'Q'" :min="1" :max="100" :step="0.5" :reset-to="8" />
       </template>
     </div>
 
@@ -84,4 +97,12 @@ const dnLevel = useNumWidget(props.node, 'dn_level', -351)
 const wtSigma = useNumWidget(props.node, 'wt_sigma', 0)
 const wtPercent = useNumWidget(props.node, 'wt_percent', 85)
 const wtLevels = useNumWidget(props.node, 'wt_levels', 10)
+const humFreq = useNumWidget(props.node, 'hum_freq', 50)
+const humHarmonics = useNumWidget(props.node, 'hum_harmonics', 8)
+const humQ = useNumWidget(props.node, 'hum_q', 8)
+
+const humPreset = computed({
+  get: () => (Math.abs(humFreq.value - 60) < 1 ? '60' : '50'),
+  set: (v: string) => { humFreq.value = v === '60' ? 60 : 50 },
+})
 </script>

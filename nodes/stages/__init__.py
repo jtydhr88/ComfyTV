@@ -38,6 +38,8 @@ from .audio_pro import (
     AudioEchoStage, AudioModulationStage, AudioStereoStage,
     AudioTimePitchStage, AudioRepairStage, AudioSaturateStage,
     AudioCrossfadeStage, AudioAnalyzeStage, AudioVisualizeStage,
+    AudioMixStage, AudioSegmentExportStage, AudioConvolveStage,
+    AudioSweepStage, AudioDeconvolveStage,
 )
 from .video_pro import (
     VideoCompositeStage, VideoTransformStage, CornerPinStage,
@@ -101,6 +103,8 @@ class ComfyTVExtension(ComfyExtension):
             AudioEchoStage, AudioModulationStage, AudioStereoStage,
             AudioTimePitchStage, AudioRepairStage, AudioSaturateStage,
             AudioCrossfadeStage, AudioAnalyzeStage, AudioVisualizeStage,
+            AudioMixStage, AudioSegmentExportStage, AudioConvolveStage,
+            AudioSweepStage, AudioDeconvolveStage,
             VideoCompositeStage, VideoTransformStage, CornerPinStage,
             RotoMaskStage, MotionTrackStage, TitleStage, SubtitleStage,
             TimeRemapStage, SequenceStage, VideoStabilizeV2Stage, PaintStrokeStage,

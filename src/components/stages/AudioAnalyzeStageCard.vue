@@ -43,6 +43,25 @@
         <span class="ctv:text-muted-foreground">{{ row.label }}</span>
         <span class="ctv:font-mono">{{ row.value }}</span>
       </div>
+
+      <template v-if="platforms.length">
+        <div class="ctv:mt-1 ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">{{ $t('afx.compliance') }}</div>
+        <div
+          v-for="p in platforms"
+          :key="p.name"
+          class="ctv:flex ctv:justify-between ctv:gap-2"
+        >
+          <span class="ctv:text-muted-foreground">{{ p.name }}</span>
+          <span
+            class="ctv:font-mono"
+            :class="{
+              'ctv:text-success-background': p.verdict === 'ok',
+              'ctv:text-warning-background': p.verdict === 'quiet',
+              'ctv:text-destructive-background': p.verdict === 'over',
+            }"
+          >{{ p.verdict === 'ok' ? '✓' : p.verdict === 'quiet' ? '▽' : '✗' }} {{ p.target_lufs }} LUFS</span>
+        </div>
+      </template>
     </div>
 
     <div class="ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide">
@@ -100,8 +119,17 @@ const report = computed<Record<string, unknown> | null>(() => {
   }
 })
 
+interface PlatformRow { name: string, verdict: string, target_lufs: number }
+
+const platforms = computed<PlatformRow[]>(() => {
+  const r = report.value
+  return Array.isArray(r?.platforms) ? r.platforms as PlatformRow[] : []
+})
+
 const LABELS: Record<string, string> = {
   integrated_lufs: 'I (LUFS)',
+  momentary_max_lufs: 'Max M (LUFS)',
+  short_max_lufs: 'Max S (LUFS)',
   threshold_lufs: 'Threshold (LUFS)',
   lra_lu: 'LRA (LU)',
   lra_low_lufs: 'LRA low (LUFS)',

@@ -63,6 +63,16 @@
         :min="0" :max="1" :step="0.01"
         :reset-to="0.5"
       />
+
+      <CompressionViz
+        v-if="mode === 'compressor'"
+        :threshold-db="thresholdDb"
+        :ratio="ratio"
+        :knee-factor="knee"
+        :makeup-db="makeupDb"
+        :input-url="sourceVideoUrl"
+        :output-url="state.output"
+      />
     </div>
 
     <div class="ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide">
@@ -91,6 +101,7 @@ import StageCard from '@/components/stages/StageCard.vue'
 import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'
+import CompressionViz from '@/components/widgets/fx/CompressionViz.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
 import { useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
 

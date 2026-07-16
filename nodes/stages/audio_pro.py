@@ -2,7 +2,11 @@ from ._common import *  # noqa: F401, F403
 from ...runners.media_filter import (
     filter_audio, crossfade_audios, analyze_audio, audio_image, AFADE_CURVES,
 )
-from ...runners.audio_dsp import echo_feedback
+from ...runners.audio_dsp import (
+    echo_feedback, evaluate_loudness_compliance, mix_audios, segment_export,
+    render_waveform_image, render_spectrogram_image,
+    convolve_ir, ess_sweep, deconvolve_ir,
+)
 
 from .video_fx import _hidden_float, _hidden_int, _hidden_combo, _f  # noqa: F401
 from .audio_fx import _pick_source
@@ -302,7 +306,8 @@ class AudioRepairStage(io.ComfyNode):
             inputs=[
                 *_standard_stage_inputs(),
                 _hidden_combo("method",
-                              ['declick', 'declip', 'denorm', 'wavelet'],
+                              ['declick', 'declip', 'denorm', 'wavelet',
+                               'hum'],
                               'declick'),
                 _hidden_float("dk_window", 55.0, 10.0, 100.0),
                 _hidden_float("dk_threshold", 2.0, 1.0, 100.0),
@@ -313,6 +318,9 @@ class AudioRepairStage(io.ComfyNode):
                 _hidden_float("wt_sigma", 0.0, 0.0, 1.0, step=0.001),
                 _hidden_float("wt_percent", 85.0, 0.0, 100.0, step=1.0),
                 _hidden_int("wt_levels", 10, 1, 12),
+                _hidden_float("hum_freq", 50.0, 10.0, 2000.0, step=1.0),
+                _hidden_int("hum_harmonics", 8, 1, 16),
+                _hidden_float("hum_q", 8.0, 1.0, 100.0),
                 COMFYTV_AUDIO.Input("audio", optional=True),
                 COMFYTV_VIDEO.Input("video", optional=True),
             ],
@@ -326,8 +334,24 @@ class AudioRepairStage(io.ComfyNode):
                 method='declick', dk_window=55.0, dk_threshold=2.0,
                 dk_burst=2.0, dc_threshold=10.0, dc_hsize=1000,
                 dn_level=-351, wt_sigma=0.0, wt_percent=85.0, wt_levels=10,
+                hum_freq=50.0, hum_harmonics=8, hum_q=8.0,
                 audio="", video=""):
         src = _pick_source(audio, video, "Audio Repair")
+        if method == 'hum':
+            f0 = _f(hum_freq, 10.0, 2000.0, 50.0)
+            q = _f(hum_q, 1.0, 100.0, 8.0)
+            n = min(16, max(1, int(hum_harmonics or 8)))
+            specs = []
+            for i in range(1, n + 1):
+                fi = f0 * i
+                if fi >= _AUDIO_SR / 2.0 * 0.98:
+                    break
+                specs.append(('bandreject',
+                              f'f={fi}:width_type=q:w={q * i}'))
+            payload = filter_audio(src, specs)
+            return _stage_emit_auto(cls, project_id=project_id,
+                                    payload_str=payload,
+                                    parent_output_id=parent_output_id)
         if method == 'declick':
             spec = ('adeclick',
                     f'window={_f(dk_window, 10.0, 100.0, 55.0)}'
@@ -529,10 +553,23 @@ class AudioAnalyzeStage(io.ComfyNode):
         result = {'mode': mode}
         num = r'([-+]?[0-9]*\.?[0-9]+)'
         if mode == 'loudness':
+            m_max = s_max = None
+            for line in lines:
+                m = re.search(rf'M:\s*{num}\s+S:\s*{num}', line)
+                if m:
+                    mv, sv = float(m.group(1)), float(m.group(2))
+                    if m_max is None or mv > m_max:
+                        m_max = mv
+                    if s_max is None or sv > s_max:
+                        s_max = sv
             for i, line in enumerate(lines):
                 if 'Summary:' in line:
                     lines = lines[i + 1:]
                     break
+            if m_max is not None and m_max > -120.0:
+                result['momentary_max_lufs'] = m_max
+            if s_max is not None and s_max > -120.0:
+                result['short_max_lufs'] = s_max
             result.update(_parse_kv_lines(lines, {
                 'integrated_lufs': (rf'I:\s+{num}\s+LUFS', float),
                 'threshold_lufs': (rf'Threshold:\s+{num}\s+LUFS', float),
@@ -545,6 +582,9 @@ class AudioAnalyzeStage(io.ComfyNode):
                 raise RuntimeError(
                     "Audio Analyze: ebur128 produced no summary — "
                     "is the clip long enough (≥ 400 ms)?")
+            if 'peak_dbfs' in result:
+                result['platforms'] = evaluate_loudness_compliance(
+                    result['integrated_lufs'], result['peak_dbfs'])
         elif mode == 'volume':
             result.update(_parse_kv_lines(lines, {
                 'mean_volume_db': (rf'mean_volume:\s+{num}\s+dB', float),
@@ -610,13 +650,26 @@ class AudioVisualizeStage(io.ComfyNode):
             category="ComfyTV/AudioFX",
             inputs=[
                 *_standard_stage_inputs(),
-                _hidden_combo("mode", ['waveform', 'spectrum'], 'waveform'),
+                _hidden_combo("mode",
+                              ['waveform', 'spectrum', 'waveform_pro',
+                               'spectrum_pro'], 'waveform'),
                 _hidden_int("width", 1200, 240, 4096),
                 _hidden_int("height", 480, 120, 2048),
                 io.Boolean.Input("split_channels", default=False,
                                  socketless=True, extra_dict={"hidden": True}),
                 _hidden_combo("color", cls.SPECTRUM_COLORS, 'intensity'),
                 io.Boolean.Input("legend", default=True, socketless=True,
+                                 extra_dict={"hidden": True}),
+                _hidden_combo("pro_scale", ['log', 'linear', 'mel'], 'log'),
+                _hidden_combo("pro_colormap", ['roseus', 'gray'], 'roseus'),
+                _hidden_float("range_db", 80.0, 20.0, 120.0, step=1.0),
+                _hidden_float("gain_db", 20.0, 0.0, 60.0, step=1.0),
+                _hidden_float("freq_gain", 0.0, -10.0, 10.0, step=0.5),
+                io.Boolean.Input("show_rms", default=True, socketless=True,
+                                 extra_dict={"hidden": True}),
+                io.Boolean.Input("show_clipping", default=True,
+                                 socketless=True, extra_dict={"hidden": True}),
+                io.Boolean.Input("db_axis", default=False, socketless=True,
                                  extra_dict={"hidden": True}),
                 COMFYTV_AUDIO.Input("audio", optional=True),
                 COMFYTV_VIDEO.Input("video", optional=True),
@@ -629,11 +682,28 @@ class AudioVisualizeStage(io.ComfyNode):
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                 mode='waveform', width=1200, height=480, split_channels=False,
-                color='intensity', legend=True, audio="", video=""):
+                color='intensity', legend=True, pro_scale='log',
+                pro_colormap='roseus', range_db=80.0, gain_db=20.0,
+                freq_gain=0.0, show_rms=True, show_clipping=True,
+                db_axis=False, audio="", video=""):
         src = _pick_source(audio, video, "Audio Visualize")
         w = min(4096, max(240, int(width or 1200)))
         h = min(2048, max(120, int(height or 480)))
-        if mode == 'waveform':
+        if mode == 'waveform_pro':
+            payload = render_waveform_image(
+                src, width=w, height=h, show_rms=bool(show_rms),
+                show_clipping=bool(show_clipping), db_axis=bool(db_axis))
+        elif mode == 'spectrum_pro':
+            payload = render_spectrogram_image(
+                src, width=w, height=h,
+                scale=pro_scale if pro_scale in ('log', 'linear', 'mel')
+                else 'log',
+                colormap=pro_colormap if pro_colormap in ('roseus', 'gray')
+                else 'roseus',
+                range_db=_f(range_db, 20.0, 120.0, 80.0),
+                gain_db=_f(gain_db, 0.0, 60.0, 20.0),
+                freq_gain_dbpoct=_f(freq_gain, -10.0, 10.0, 0.0))
+        elif mode == 'waveform':
             payload = audio_image(
                 src, 'showwavespic',
                 f's={w}x{h}:split_channels={1 if split_channels else 0}')
@@ -644,5 +714,239 @@ class AudioVisualizeStage(io.ComfyNode):
                 f's={w}x{h}:color={c}:legend={1 if legend else 0}')
         else:
             raise RuntimeError(f"Audio Visualize: unknown mode {mode!r}")
+        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
+                                parent_output_id=parent_output_id)
+
+
+class AudioMixStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        per_input = []
+        for ch in ('a', 'b', 'c', 'd'):
+            per_input.append(_hidden_float(f"gain_{ch}", 0.0, -60.0, 12.0,
+                                           step=0.5))
+            per_input.append(_hidden_float(f"pan_{ch}", 0.0, -1.0, 1.0))
+        return io.Schema(
+            node_id="ComfyTV.AudioMixStage",
+            display_name="Audio Mix",
+            category="ComfyTV/AudioFX",
+            inputs=[
+                *_standard_stage_inputs(),
+                _hidden_combo("pan_law", ['audacity', 'constant_power'],
+                              'audacity'),
+                _hidden_combo("dither", ['none', 'tpdf', 'shaped'], 'none'),
+                *per_input,
+                COMFYTV_AUDIO.Input("audio_a", optional=True),
+                COMFYTV_AUDIO.Input("audio_b", optional=True),
+                COMFYTV_AUDIO.Input("audio_c", optional=True),
+                COMFYTV_AUDIO.Input("audio_d", optional=True),
+            ],
+            outputs=[COMFYTV_AUDIO.Output("audio")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
+                pan_law='audacity', dither='none',
+                gain_a=0.0, pan_a=0.0, gain_b=0.0, pan_b=0.0,
+                gain_c=0.0, pan_c=0.0, gain_d=0.0, pan_d=0.0,
+                audio_a="", audio_b="", audio_c="", audio_d=""):
+        sources = []
+        params = {
+            'a': (audio_a, gain_a, pan_a), 'b': (audio_b, gain_b, pan_b),
+            'c': (audio_c, gain_c, pan_c), 'd': (audio_d, gain_d, pan_d),
+        }
+        for ch in ('a', 'b', 'c', 'd'):
+            url, gain, pan = params[ch]
+            if (url or '').strip():
+                sources.append({'url': url,
+                                'gain_db': _f(gain, -60.0, 12.0, 0.0),
+                                'pan': _f(pan, -1.0, 1.0, 0.0)})
+        if not sources:
+            raise RuntimeError(
+                "Audio Mix needs at least one upstream audio — wire one in.")
+        law = pan_law if pan_law in ('audacity', 'constant_power') \
+            else 'audacity'
+        dth = dither if dither in ('none', 'tpdf', 'shaped') else 'none'
+        payload = mix_audios(sources, pan_law=law, dither=dth)
+        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
+                                parent_output_id=parent_output_id)
+
+
+class AudioSegmentExportStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.AudioSegmentExportStage",
+            display_name="Audio Split Export",
+            category="ComfyTV/AudioFX",
+            inputs=[
+                *_standard_stage_inputs(),
+                _hidden_combo("detect", ['silence', 'json'], 'silence'),
+                _hidden_float("threshold_db", -60.0, -90.0, -20.0, step=1.0),
+                _hidden_float("min_silence_s", 0.5, 0.01, 5.0),
+                _hidden_float("min_segment_s", 0.1, 0.01, 10.0),
+                _hidden_float("fade_ms", 1.45, 0.0, 500.0),
+                _hidden_combo("naming",
+                              ['num_and_prefix', 'num_and_name', 'name'],
+                              'num_and_prefix'),
+                io.String.Input("prefix", default="segment", multiline=False,
+                                socketless=True, extra_dict={"hidden": True}),
+                io.String.Input("segments", default="", multiline=False,
+                                socketless=True, extra_dict={"hidden": True},
+                                tooltip='JSON [{"start":s,"end":s}] for '
+                                        'detect=json'),
+                COMFYTV_AUDIO.Input("audio", optional=True),
+                COMFYTV_VIDEO.Input("video", optional=True),
+            ],
+            outputs=[COMFYTV_TEXT.Output("files")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
+                detect='silence', threshold_db=-60.0, min_silence_s=0.5,
+                min_segment_s=0.1, fade_ms=1.45, naming='num_and_prefix',
+                prefix='segment', segments="", audio="", video=""):
+        src = _pick_source(audio, video, "Audio Split Export")
+        seg_list = None
+        if detect == 'json':
+            try:
+                parsed = json.loads(segments or "[]")
+            except (ValueError, TypeError):
+                parsed = []
+            seg_list = [
+                {'start': float(s['start']), 'end': float(s['end'])}
+                for s in parsed
+                if isinstance(s, dict) and 'start' in s and 'end' in s
+            ]
+            if not seg_list:
+                raise RuntimeError(
+                    "Audio Split Export: detect=json needs a segments list.")
+        nm = naming if naming in ('num_and_prefix', 'num_and_name', 'name') \
+            else 'num_and_prefix'
+        result = segment_export(
+            src, segments=seg_list,
+            threshold_db=_f(threshold_db, -90.0, -20.0, -60.0),
+            min_silence_s=_f(min_silence_s, 0.01, 5.0, 0.5),
+            min_segment_s=_f(min_segment_s, 0.01, 10.0, 0.1),
+            fade_ms=_f(fade_ms, 0.0, 500.0, 1.45),
+            naming=nm, prefix=prefix or 'segment')
+        payload = json.dumps(result)
+        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
+                                parent_output_id=parent_output_id)
+
+
+class AudioConvolveStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.AudioConvolveStage",
+            display_name="Audio Convolve (IR)",
+            category="ComfyTV/AudioFX",
+            inputs=[
+                *_standard_stage_inputs(),
+                _hidden_float("wet", 1.0, 0.0, 2.0),
+                _hidden_float("dry", 0.0, 0.0, 2.0),
+                io.Boolean.Input("normalize", default=True, socketless=True,
+                                 extra_dict={"hidden": True}),
+                COMFYTV_AUDIO.Input("audio", optional=True),
+                COMFYTV_AUDIO.Input("ir", optional=True),
+                COMFYTV_VIDEO.Input("video", optional=True),
+            ],
+            outputs=[COMFYTV_AUDIO.Output("audio")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
+                wet=1.0, dry=0.0, normalize=True, audio="", ir="", video=""):
+        src = _pick_source(audio, video, "Audio Convolve")
+        if not (ir or '').strip():
+            raise RuntimeError(
+                "Audio Convolve needs an upstream impulse response — "
+                "wire an audio into the ir input.")
+        payload = convolve_ir(src, ir, wet=_f(wet, 0.0, 2.0, 1.0),
+                              dry=_f(dry, 0.0, 2.0, 0.0),
+                              normalize=bool(normalize))
+        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
+                                parent_output_id=parent_output_id)
+
+
+class AudioSweepStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.AudioSweepStage",
+            display_name="Audio Sweep (ESS)",
+            category="ComfyTV/AudioFX",
+            inputs=[
+                *_standard_stage_inputs(),
+                _hidden_float("duration_s", 5.0, 1.0, 30.0),
+                _hidden_float("fmin", 20.0, 10.0, 1000.0, step=1.0),
+                _hidden_float("fmax", 20000.0, 1000.0, 20000.0, step=10.0),
+                _hidden_float("amp", 0.5, 0.01, 1.0),
+                _hidden_float("tail_s", 5.0, 0.0, 10.0),
+            ],
+            outputs=[COMFYTV_AUDIO.Output("audio")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
+                duration_s=5.0, fmin=20.0, fmax=20000.0, amp=0.5, tail_s=5.0):
+        payload = ess_sweep(
+            duration_s=_f(duration_s, 1.0, 30.0, 5.0),
+            fmin=_f(fmin, 10.0, 1000.0, 20.0),
+            fmax=_f(fmax, 1000.0, 20000.0, 20000.0),
+            amp=_f(amp, 0.01, 1.0, 0.5),
+            tail_s=_f(tail_s, 0.0, 10.0, 5.0))
+        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
+                                parent_output_id=parent_output_id)
+
+
+class AudioDeconvolveStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.AudioDeconvolveStage",
+            display_name="Audio Deconvolve (IR)",
+            category="ComfyTV/AudioFX",
+            inputs=[
+                *_standard_stage_inputs(),
+                _hidden_float("duration_s", 5.0, 1.0, 30.0),
+                _hidden_float("fmin", 20.0, 10.0, 1000.0, step=1.0),
+                _hidden_float("fmax", 20000.0, 1000.0, 20000.0, step=10.0),
+                _hidden_float("amp", 0.5, 0.01, 1.0),
+                _hidden_float("ir_len_s", 2.0, 0.1, 10.0),
+                COMFYTV_AUDIO.Input("audio", optional=True),
+                COMFYTV_VIDEO.Input("video", optional=True),
+            ],
+            outputs=[COMFYTV_AUDIO.Output("audio")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
+                duration_s=5.0, fmin=20.0, fmax=20000.0, amp=0.5,
+                ir_len_s=2.0, audio="", video=""):
+        src = _pick_source(audio, video, "Audio Deconvolve")
+        payload = deconvolve_ir(
+            src,
+            duration_s=_f(duration_s, 1.0, 30.0, 5.0),
+            fmin=_f(fmin, 10.0, 1000.0, 20.0),
+            fmax=_f(fmax, 1000.0, 20000.0, 20000.0),
+            amp=_f(amp, 0.01, 1.0, 0.5),
+            ir_len_s=_f(ir_len_s, 0.1, 10.0, 2.0))
         return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
                                 parent_output_id=parent_output_id)

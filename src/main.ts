@@ -62,6 +62,11 @@ import AudioSaturateStageCard from '@/components/stages/AudioSaturateStageCard.v
 import AudioCrossfadeStageCard from '@/components/stages/AudioCrossfadeStageCard.vue'
 import AudioAnalyzeStageCard from '@/components/stages/AudioAnalyzeStageCard.vue'
 import AudioVisualizeStageCard from '@/components/stages/AudioVisualizeStageCard.vue'
+import AudioMixStageCard from '@/components/stages/AudioMixStageCard.vue'
+import AudioSegmentExportStageCard from '@/components/stages/AudioSegmentExportStageCard.vue'
+import AudioConvolveStageCard from '@/components/stages/AudioConvolveStageCard.vue'
+import AudioSweepStageCard from '@/components/stages/AudioSweepStageCard.vue'
+import AudioDeconvolveStageCard from '@/components/stages/AudioDeconvolveStageCard.vue'
 import VideoCompositeStageCard from '@/components/stages/VideoCompositeStageCard.vue'
 import VideoTransformStageCard from '@/components/stages/VideoTransformStageCard.vue'
 import CornerPinStageCard from '@/components/stages/CornerPinStageCard.vue'
@@ -213,6 +218,11 @@ const RICH_STAGE_CARDS: Record<string, any> = {
   'ComfyTV.AudioCrossfadeStage':      AudioCrossfadeStageCard,
   'ComfyTV.AudioAnalyzeStage':        AudioAnalyzeStageCard,
   'ComfyTV.AudioVisualizeStage':      AudioVisualizeStageCard,
+  'ComfyTV.AudioMixStage':            AudioMixStageCard,
+  'ComfyTV.AudioSegmentExportStage':  AudioSegmentExportStageCard,
+  'ComfyTV.AudioConvolveStage':       AudioConvolveStageCard,
+  'ComfyTV.AudioSweepStage':          AudioSweepStageCard,
+  'ComfyTV.AudioDeconvolveStage':     AudioDeconvolveStageCard,
   'ComfyTV.VideoCompositeStage':      VideoCompositeStageCard,
   'ComfyTV.VideoTransformStage':      VideoTransformStageCard,
   'ComfyTV.CornerPinStage':           CornerPinStageCard,
@@ -310,7 +320,12 @@ const RICH_STAGE_MIN_HEIGHTS: Record<string, number> = {
   'ComfyTV.AudioSaturateStage':       660,
   'ComfyTV.AudioCrossfadeStage':      720,
   'ComfyTV.AudioAnalyzeStage':        680,
-  'ComfyTV.AudioVisualizeStage':      680,
+  'ComfyTV.AudioVisualizeStage':      720,
+  'ComfyTV.AudioMixStage':            860,
+  'ComfyTV.AudioSegmentExportStage':  780,
+  'ComfyTV.AudioConvolveStage':       680,
+  'ComfyTV.AudioSweepStage':          560,
+  'ComfyTV.AudioDeconvolveStage':     660,
   'ComfyTV.VideoCompositeStage':      820,
   'ComfyTV.VideoTransformStage':      780,
   'ComfyTV.CornerPinStage':           640,

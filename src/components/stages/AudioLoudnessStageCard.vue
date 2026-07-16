@@ -9,6 +9,7 @@
         :options="[
           { value: 'ebu_r128', label: 'EBU R128' },
           { value: 'dynamic', label: 'Dynamic' },
+          { value: 'normalize', label: $t('afx.normalize') },
         ]"
       />
 
@@ -46,6 +47,44 @@
           :reset-to="31"
         />
       </template>
+      <template v-if="mode === 'normalize'">
+        <FxChips
+          v-model="peakMode"
+          :options="[
+            { value: 'true_peak', label: 'dBTP' },
+            { value: 'sample', label: 'dBFS' },
+          ]"
+        />
+        <FxSlider
+          v-model="peakTargetDb"
+          :label="$t('afx.peakTarget')"
+          :min="-30" :max="0" :step="0.1"
+          unit="dB" :reset-to="-1"
+        />
+        <label class="ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs ctv:text-muted-foreground ctv:cursor-pointer">
+          <input type="checkbox" v-model="useRms" class="ctv:accent-primary-background" />
+          {{ $t('afx.rmsConstraint') }}
+        </label>
+        <FxSlider
+          v-if="useRms"
+          v-model="rmsTargetDb"
+          :label="'RMS'"
+          :min="-30" :max="0" :step="0.5"
+          unit="dB" :reset-to="-9"
+        />
+        <label class="ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs ctv:text-muted-foreground ctv:cursor-pointer">
+          <input type="checkbox" v-model="useLufs" class="ctv:accent-primary-background" />
+          {{ $t('afx.lufsConstraint') }}
+        </label>
+        <FxSlider
+          v-if="useLufs"
+          v-model="targetI"
+          :label="$t('fx.targetI')"
+          :min="-30" :max="-10" :step="0.5"
+          :reset-to="-16"
+        />
+        <div class="ctv:text-2xs ctv:text-muted-foreground">{{ $t('afx.strictestNote') }}</div>
+      </template>
     </div>
 
     <div class="ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide">
@@ -75,7 +114,7 @@ import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
-import { useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
+import { useBoolWidget, useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
 
 const props = defineProps<{
   state: StageState
@@ -95,4 +134,9 @@ const targetTp = useNumWidget(props.node, 'target_tp', -1.5)
 const targetLra = useNumWidget(props.node, 'target_lra', 11)
 const dynFrameMs = useNumWidget(props.node, 'dyn_frame_ms', 500)
 const dynGauss = useNumWidget(props.node, 'dyn_gauss', 31)
+const peakMode = useStrWidget(props.node, 'peak_mode', 'true_peak')
+const peakTargetDb = useNumWidget(props.node, 'peak_target_db', -1)
+const useRms = useBoolWidget(props.node, 'use_rms', false)
+const rmsTargetDb = useNumWidget(props.node, 'rms_target_db', -9)
+const useLufs = useBoolWidget(props.node, 'use_lufs', false)
 </script>
