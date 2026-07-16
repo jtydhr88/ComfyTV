@@ -33,6 +33,12 @@
           :min="0.1" :max="5" :step="0.1"
           unit="s" :reset-to="0.5"
         />
+        <FxSlider
+          v-model="keepSilence"
+          :label="$t('afx.keepSilence')"
+          :min="0" :max="5" :step="0.1"
+          unit="s" :reset-to="0.5"
+        />
       </template>
     </div>
 
@@ -81,4 +87,5 @@ const method = useStrWidget(props.node, 'method', 'afftdn')
 const strength = useNumWidget(props.node, 'strength', 0.3)
 const silenceDb = useNumWidget(props.node, 'silence_db', -50)
 const minSilence = useNumWidget(props.node, 'min_silence_s', 0.5)
+const keepSilence = useNumWidget(props.node, 'keep_silence_s', 0.5)
 </script>

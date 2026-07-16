@@ -1576,6 +1576,9 @@
   },
   "afx": {
     "custom": "Custom",
+    "echoFeedback": "Feedback (Audacity)",
+    "echoFeedbackNote": "Infinite repeats, exact Audacity Echo structure",
+    "keepSilence": "Keep silence (s)",
     "echoMountains": "Mountains",
     "echoMountains2": "Two mountains",
     "echoDoubled": "Doubled",

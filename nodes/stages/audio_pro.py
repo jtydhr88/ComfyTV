@@ -2,6 +2,7 @@ from ._common import *  # noqa: F401, F403
 from ...runners.media_filter import (
     filter_audio, crossfade_audios, analyze_audio, audio_image, AFADE_CURVES,
 )
+from ...runners.audio_dsp import echo_feedback
 
 from .video_fx import _hidden_float, _hidden_int, _hidden_combo, _f  # noqa: F401
 from .audio_fx import _pick_source
@@ -29,7 +30,8 @@ class AudioEchoStage(io.ComfyNode):
             inputs=[
                 *_standard_stage_inputs(),
                 _hidden_combo("preset",
-                              ['custom'] + list(cls.PRESETS), 'mountains'),
+                              ['custom', 'feedback'] + list(cls.PRESETS),
+                              'mountains'),
                 _hidden_float("in_gain", 0.6, 0.0, 1.0),
                 _hidden_float("out_gain", 0.3, 0.0, 1.0),
                 _hidden_float("delay_ms", 1000.0, 1.0, 90000.0, step=1.0),
@@ -47,6 +49,13 @@ class AudioEchoStage(io.ComfyNode):
                 preset='mountains', in_gain=0.6, out_gain=0.3,
                 delay_ms=1000.0, decay=0.5, audio="", video=""):
         src = _pick_source(audio, video, "Audio Echo")
+        if preset == 'feedback':
+            payload = echo_feedback(
+                src, delay_s=_f(delay_ms, 1.0, 90000.0, 1000.0) / 1000.0,
+                decay=_f(decay, 0.01, 1.0, 0.5))
+            return _stage_emit_auto(cls, project_id=project_id,
+                                    payload_str=payload,
+                                    parent_output_id=parent_output_id)
         if preset in cls.PRESETS:
             args = cls.PRESETS[preset]
         else:
@@ -303,7 +312,7 @@ class AudioRepairStage(io.ComfyNode):
                 _hidden_int("dn_level", -351, -451, -90),
                 _hidden_float("wt_sigma", 0.0, 0.0, 1.0, step=0.001),
                 _hidden_float("wt_percent", 85.0, 0.0, 100.0, step=1.0),
-                _hidden_int("wt_levels", 10, 1, 13),
+                _hidden_int("wt_levels", 10, 1, 12),
                 COMFYTV_AUDIO.Input("audio", optional=True),
                 COMFYTV_VIDEO.Input("video", optional=True),
             ],
@@ -339,7 +348,7 @@ class AudioRepairStage(io.ComfyNode):
             spec = ('afwtdn',
                     f'sigma={sigma}'
                     f':percent={_f(wt_percent, 0.0, 100.0, 85.0)}'
-                    f':levels={min(13, max(1, int(wt_levels or 10)))}')
+                    f':levels={min(12, max(1, int(wt_levels or 10)))}')
         else:
             raise RuntimeError(f"Audio Repair: unknown method {method!r}")
         payload = filter_audio(src, [spec])

@@ -1576,6 +1576,9 @@
   },
   "afx": {
     "custom": "自定义",
+    "echoFeedback": "无限回声（Audacity）",
+    "echoFeedbackNote": "反馈式无限重复，与 Audacity Echo 结构一致",
+    "keepSilence": "保留静音 (s)",
     "echoMountains": "山谷回声",
     "echoMountains2": "双重山谷",
     "echoDoubled": "加倍声部",

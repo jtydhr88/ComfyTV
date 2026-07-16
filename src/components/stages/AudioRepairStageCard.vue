@@ -29,7 +29,7 @@
       <template v-else-if="method === 'wavelet'">
         <FxSlider v-model="wtSigma" :label="$t('afx.sigma')" :min="0" :max="1" :step="0.001" :decimals="3" :reset-to="0.05" />
         <FxSlider v-model="wtPercent" :label="$t('afx.percent')" :min="0" :max="100" :step="1" :decimals="0" unit="%" :reset-to="85" />
-        <FxSlider v-model="wtLevels" :label="$t('afx.levels')" :min="1" :max="13" :step="1" :decimals="0" :reset-to="10" />
+        <FxSlider v-model="wtLevels" :label="$t('afx.levels')" :min="1" :max="12" :step="1" :decimals="0" :reset-to="10" />
       </template>
     </div>
 

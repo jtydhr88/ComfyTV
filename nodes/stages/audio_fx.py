@@ -1,5 +1,7 @@
 from ._common import *  # noqa: F401, F403
-from ...runners.media_filter import filter_audio, has_filter
+from ...runners.media_filter import filter_audio, has_filter, analyze_audio
+
+import re
 
 from .video_fx import _hidden_float, _hidden_int, _hidden_combo, _f  # noqa: F401
 
@@ -15,6 +17,26 @@ def _pick_source(audio, video, label):
 
 def _db_to_linear(db: float) -> float:
     return 10.0 ** (float(db) / 20.0)
+
+
+_LOUDNORM_FIELDS = ('input_i', 'input_tp', 'input_lra', 'input_thresh',
+                    'target_offset')
+
+
+def _loudnorm_measure(src: str, base_args: str):
+    try:
+        lines = analyze_audio(
+            src, [('loudnorm', f'{base_args}:print_format=json')])
+    except Exception:
+        return None
+    joined = '\n'.join(str(m) for m in lines)
+    out = {}
+    for field in _LOUDNORM_FIELDS:
+        m = re.search(rf'"{field}"\s*:\s*"([-+0-9.]+)"', joined)
+        if not m:
+            return None
+        out[field] = float(m.group(1))
+    return out
 
 
 class AudioDynamicsStage(io.ComfyNode):
@@ -170,9 +192,21 @@ class AudioLoudnessStage(io.ComfyNode):
                 dyn_frame_ms=500, dyn_gauss=31, audio="", video=""):
         src = _pick_source(audio, video, "Audio Loudness")
         if mode == 'ebu_r128':
-            spec = ('loudnorm',
-                    f'I={_f(target_i, -30, -10, -16)}:TP={_f(target_tp, -3, 0, -1.5)}'
+            base = (f'I={_f(target_i, -30, -10, -16)}'
+                    f':TP={_f(target_tp, -3, 0, -1.5)}'
                     f':LRA={_f(target_lra, 1, 20, 11)}')
+            measured = _loudnorm_measure(src, base)
+            if measured:
+                spec = ('loudnorm',
+                        base
+                        + f':measured_I={measured["input_i"]}'
+                        f':measured_TP={measured["input_tp"]}'
+                        f':measured_LRA={measured["input_lra"]}'
+                        f':measured_thresh={measured["input_thresh"]}'
+                        f':offset={measured["target_offset"]}'
+                        f':linear=true')
+            else:
+                spec = ('loudnorm', base)
         else:
             g = min(301, max(3, int(dyn_gauss or 31)))
             g += (g + 1) % 2
@@ -196,6 +230,7 @@ class AudioDenoiseStage(io.ComfyNode):
                 _hidden_float("strength", 0.3, 0.0, 1.0),
                 _hidden_float("silence_db", -50.0, -80.0, -20.0, step=1.0),
                 _hidden_float("min_silence_s", 0.5, 0.1, 5.0, step=0.1),
+                _hidden_float("keep_silence_s", 0.5, 0.0, 5.0, step=0.1),
                 COMFYTV_AUDIO.Input("audio", optional=True),
                 COMFYTV_VIDEO.Input("video", optional=True),
             ],
@@ -207,7 +242,7 @@ class AudioDenoiseStage(io.ComfyNode):
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                 method='afftdn', strength=0.3, silence_db=-50.0, min_silence_s=0.5,
-                audio="", video=""):
+                keep_silence_s=0.5, audio="", video=""):
         src = _pick_source(audio, video, "Audio Denoise")
         s = _f(strength, 0.0, 1.0, 0.3)
         if method == 'afftdn':
@@ -217,9 +252,12 @@ class AudioDenoiseStage(io.ComfyNode):
         elif method == 'silenceremove':
             db = _f(silence_db, -80.0, -20.0, -50.0)
             dur = _f(min_silence_s, 0.1, 5.0, 0.5)
+            keep = _f(keep_silence_s, 0.0, 5.0, 0.5)
             spec = ('silenceremove',
                     f'start_periods=1:start_threshold={db}dB:start_duration={dur}'
-                    f':stop_periods=-1:stop_threshold={db}dB:stop_duration={dur}')
+                    f':start_silence={keep}'
+                    f':stop_periods=-1:stop_threshold={db}dB:stop_duration={dur}'
+                    f':stop_silence={keep}')
         else:
             raise RuntimeError(f"Audio Denoise: unknown method {method!r}")
         payload = filter_audio(src, [spec])

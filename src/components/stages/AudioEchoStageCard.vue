@@ -11,15 +11,19 @@
           { value: 'mountains2', label: $t('afx.echoMountains2') },
           { value: 'doubled', label: $t('afx.echoDoubled') },
           { value: 'robot', label: $t('afx.echoRobot') },
+          { value: 'feedback', label: $t('afx.echoFeedback') },
           { value: 'custom', label: $t('afx.custom') },
         ]"
       />
 
-      <template v-if="preset === 'custom'">
-        <FxSlider v-model="inGain" :label="$t('afx.inGain')" :min="0" :max="1" :step="0.01" :reset-to="0.6" />
-        <FxSlider v-model="outGain" :label="$t('afx.outGain')" :min="0" :max="1" :step="0.01" :reset-to="0.3" />
+      <template v-if="preset === 'custom' || preset === 'feedback'">
+        <template v-if="preset === 'custom'">
+          <FxSlider v-model="inGain" :label="$t('afx.inGain')" :min="0" :max="1" :step="0.01" :reset-to="0.6" />
+          <FxSlider v-model="outGain" :label="$t('afx.outGain')" :min="0" :max="1" :step="0.01" :reset-to="0.3" />
+        </template>
         <FxSlider v-model="delayMs" :label="$t('afx.delayMs')" :min="1" :max="5000" :step="1" :decimals="0" unit="ms" :reset-to="1000" />
         <FxSlider v-model="decay" :label="$t('afx.decay')" :min="0.01" :max="1" :step="0.01" :reset-to="0.5" />
+        <div v-if="preset === 'feedback'" class="ctv:text-2xs ctv:text-muted-foreground">{{ $t('afx.echoFeedbackNote') }}</div>
       </template>
     </div>
 

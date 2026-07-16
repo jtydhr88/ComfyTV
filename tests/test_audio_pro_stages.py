@@ -262,6 +262,61 @@ class TestVisualize:
         assert url
 
 
+class TestFeedbackEcho:
+    def test_matches_naive_recurrence(self):
+        from ComfyTV.runners.audio_dsp import feedback_echo_array
+        rng = np.random.default_rng(7)
+        x = (rng.standard_normal((2, 2000)) * 0.2).astype(np.float32)
+        n, decay = 300, 0.6
+        y = feedback_echo_array(x, n, decay)
+        ref = x.astype(np.float64, copy=True)
+        for i in range(n, ref.shape[1]):
+            ref[:, i] += decay * ref[:, i - n]
+        ref = np.clip(ref, -1.0, 1.0)
+        assert np.allclose(y, ref, atol=1e-5)
+
+    def test_zero_delay_rejected(self):
+        from ComfyTV.runners.audio_dsp import feedback_echo_array
+        with pytest.raises(RuntimeError, match="delay"):
+            feedback_echo_array(np.zeros((2, 100), dtype=np.float32), 0, 0.5)
+
+    def test_stage_feedback_preset(self, clip):
+        _classes()["AudioEchoStage"].execute(
+            project_id="p1", preset='feedback', delay_ms=200.0, decay=0.4,
+            video=clip)
+
+
+class TestRepairBoundaries:
+    def test_wavelet_max_levels(self, clip):
+        _classes()["AudioRepairStage"].execute(
+            project_id="p1", method='wavelet', wt_sigma=0.05, wt_levels=12,
+            video=clip)
+
+
+class TestLoudnessTwoPass:
+    def test_measure_fields(self, clip):
+        from ComfyTV.nodes.stages.audio_fx import _loudnorm_measure
+        measured = _loudnorm_measure(clip, 'I=-16:TP=-1.5:LRA=11')
+        assert measured is not None
+        for field in ('input_i', 'input_tp', 'input_lra', 'input_thresh',
+                      'target_offset'):
+            assert field in measured
+        assert -70.0 <= measured['input_i'] < 0.0
+
+    def test_stage_executes_linear(self, clip):
+        from ComfyTV.nodes.stages.audio_fx import AudioLoudnessStage
+        AudioLoudnessStage.execute(project_id="p1", mode='ebu_r128',
+                                   video=clip)
+
+
+class TestDenoiseKeepSilence:
+    def test_silenceremove_with_keep(self, clip):
+        from ComfyTV.nodes.stages.audio_fx import AudioDenoiseStage
+        AudioDenoiseStage.execute(
+            project_id="p1", method='silenceremove', silence_db=-50.0,
+            min_silence_s=0.5, keep_silence_s=0.3, video=clip)
+
+
 class TestNoInput:
     @pytest.mark.parametrize("cls_name", [
         "AudioEchoStage", "AudioModulationStage", "AudioStereoStage",
