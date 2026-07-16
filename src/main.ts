@@ -79,6 +79,20 @@ import HueCorrectStageCard from '@/components/stages/HueCorrectStageCard.vue'
 import GlowStageCard from '@/components/stages/GlowStageCard.vue'
 import GodRaysStageCard from '@/components/stages/GodRaysStageCard.vue'
 import PatternStageCard from '@/components/stages/PatternStageCard.vue'
+import PIKStageCard from '@/components/stages/PIKStageCard.vue'
+import KeyerStageCard from '@/components/stages/KeyerStageCard.vue'
+import DespillStageCard from '@/components/stages/DespillStageCard.vue'
+import ColorSuppressStageCard from '@/components/stages/ColorSuppressStageCard.vue'
+import KeyMixStageCard from '@/components/stages/KeyMixStageCard.vue'
+import MatteMonitorStageCard from '@/components/stages/MatteMonitorStageCard.vue'
+import MatteMorphStageCard from '@/components/stages/MatteMorphStageCard.vue'
+import FrameBlendStageCard from '@/components/stages/FrameBlendStageCard.vue'
+import ColorFXStageCard from '@/components/stages/ColorFXStageCard.vue'
+import KenBurnsStageCard from '@/components/stages/KenBurnsStageCard.vue'
+import OldFilmStageCard from '@/components/stages/OldFilmStageCard.vue'
+import AnnotateStageCard from '@/components/stages/AnnotateStageCard.vue'
+import AudioReactiveStageCard from '@/components/stages/AudioReactiveStageCard.vue'
+import AudioMeterStageCard from '@/components/stages/AudioMeterStageCard.vue'
 import ProjectCard from '@/components/stages/ProjectCard.vue'
 import ComfyTVMountHost from '@/components/ComfyTVMountHost.vue'
 import { registerMount, unregisterMount } from '@/composables/stages/widgetMounts'
@@ -216,6 +230,20 @@ const RICH_STAGE_CARDS: Record<string, any> = {
   'ComfyTV.GlowStage':                GlowStageCard,
   'ComfyTV.GodRaysStage':             GodRaysStageCard,
   'ComfyTV.PatternStage':             PatternStageCard,
+  'ComfyTV.PIKStage':                 PIKStageCard,
+  'ComfyTV.KeyerStage':               KeyerStageCard,
+  'ComfyTV.DespillStage':             DespillStageCard,
+  'ComfyTV.ColorSuppressStage':       ColorSuppressStageCard,
+  'ComfyTV.KeyMixStage':              KeyMixStageCard,
+  'ComfyTV.MatteMonitorStage':        MatteMonitorStageCard,
+  'ComfyTV.MatteMorphStage':          MatteMorphStageCard,
+  'ComfyTV.FrameBlendStage':          FrameBlendStageCard,
+  'ComfyTV.ColorFXStage':             ColorFXStageCard,
+  'ComfyTV.KenBurnsStage':            KenBurnsStageCard,
+  'ComfyTV.OldFilmStage':             OldFilmStageCard,
+  'ComfyTV.AnnotateStage':            AnnotateStageCard,
+  'ComfyTV.AudioReactiveStage':       AudioReactiveStageCard,
+  'ComfyTV.AudioMeterStage':          AudioMeterStageCard,
 }
 
 const RICH_STAGE_MIN_HEIGHTS: Record<string, number> = {
@@ -300,6 +328,20 @@ const RICH_STAGE_MIN_HEIGHTS: Record<string, number> = {
   'ComfyTV.GlowStage':                660,
   'ComfyTV.GodRaysStage':             700,
   'ComfyTV.PatternStage':             760,
+  'ComfyTV.PIKStage':                 860,
+  'ComfyTV.KeyerStage':               760,
+  'ComfyTV.DespillStage':             720,
+  'ComfyTV.ColorSuppressStage':       720,
+  'ComfyTV.KeyMixStage':              560,
+  'ComfyTV.MatteMonitorStage':        560,
+  'ComfyTV.MatteMorphStage':          600,
+  'ComfyTV.FrameBlendStage':          660,
+  'ComfyTV.ColorFXStage':             800,
+  'ComfyTV.KenBurnsStage':            800,
+  'ComfyTV.OldFilmStage':             820,
+  'ComfyTV.AnnotateStage':            700,
+  'ComfyTV.AudioReactiveStage':       660,
+  'ComfyTV.AudioMeterStage':          620,
 }
 
 const RICH_STAGE_MIN_WIDTHS: Record<string, number> = {

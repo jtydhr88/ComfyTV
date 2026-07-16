@@ -86,26 +86,65 @@ def _to_tensor(frame, device, alpha=False):
     return torch.from_numpy(arr).to(device).float() / 255.0
 
 
-def _from_tensor(t):
+DITHER_OUTPUT = True
+
+
+def dither_to_byte(t, starts=None):
+    import torch
+    v16 = (t.clamp(0, 1) * 65280.0).round().long()
+    h, w = v16.shape[0], v16.shape[1]
+    if starts is None:
+        starts = torch.randint(0, w, (h,), device=v16.device)
+    else:
+        starts = starts.to(v16.device).long().clamp(0, w - 1)
+    cum = v16.cumsum(dim=1)
+    zeros = torch.zeros_like(cum[:, :1])
+    cum_excl = torch.cat([zeros, cum[:, :-1]], dim=1)
+    s = starts.view(h, 1, 1)
+    xs = torch.arange(w, device=v16.device).view(1, w, 1)
+    cum_start = torch.gather(
+        cum_excl, 1, s.expand(h, 1, v16.shape[2]))
+    fwd_carry = (0x80 + (cum_excl - cum_start)) % 256
+    fwd = (fwd_carry + v16) >> 8
+    rev_cum = cum_start - cum_excl - v16
+    bwd_carry = (0x80 + rev_cum) % 256
+    bwd = (bwd_carry + v16) >> 8
+    out = torch.where(xs >= s, fwd, bwd)
+    return out.clamp(0, 255).byte()
+
+
+def _from_tensor(t, dither=None):
     import av
-    arr = (t.clamp(0, 1) * 255.0).round().byte().cpu().numpy()
-    fmt = 'rgba' if arr.shape[2] == 4 else 'rgb24'
+    if dither is None:
+        dither = DITHER_OUTPUT
+    if dither:
+        rgb = dither_to_byte(t[..., :3]).cpu().numpy()
+        if t.shape[2] == 4:
+            a = (t[..., 3:4].clamp(0, 1) * 255.0).round().byte().cpu().numpy()
+            arr = np.concatenate([rgb, a], axis=2)
+            fmt = 'rgba'
+        else:
+            arr = rgb
+            fmt = 'rgb24'
+    else:
+        arr = (t.clamp(0, 1) * 255.0).round().byte().cpu().numpy()
+        fmt = 'rgba' if arr.shape[2] == 4 else 'rgb24'
     return av.VideoFrame.from_ndarray(np.ascontiguousarray(arr), format=fmt)
 
 
 def torch_process_video(view_url: str, frame_fn, *, progress=None,
-                        alpha_in=False, out_fps=None) -> str:
+                        alpha_in=False, out_fps=None, out_alpha=False) -> str:
     import av
 
     src = localize(view_url)
     info = get_video_info(view_url)
-    out = fresh_output_path('.mp4')
+    out = fresh_output_path('.webm' if out_alpha else '.mp4')
     device = _device()
     total_est = max(1, int(info['duration'] * info['fps']))
 
     with av.open(str(src)) as inp, av.open(str(out), 'w') as outp:
         in_v = inp.streams.video[0]
-        in_a = inp.streams.audio[0] if inp.streams.audio else None
+        in_a = inp.streams.audio[0] if (inp.streams.audio and not out_alpha) else None
         out_a = outp.add_stream_from_template(in_a) if in_a is not None else None
 
         enc = None
@@ -116,13 +155,20 @@ def torch_process_video(view_url: str, frame_fn, *, progress=None,
             nonlocal enc
             if enc is None:
                 rate = out_fps or info['fps'] or 24
-                enc = outp.add_stream('libx264', rate=round(rate))
+                if out_alpha:
+                    enc = outp.add_stream('libvpx-vp9', rate=round(rate))
+                    enc.pix_fmt = 'yuva420p'
+                    enc.options = {'crf': '32', 'b': '0', 'row-mt': '1',
+                                   'cpu-used': '4', 'auto-alt-ref': '0'}
+                else:
+                    enc = outp.add_stream('libx264', rate=round(rate))
+                    enc.pix_fmt = 'yuv420p'
                 enc.width = tensor.shape[1] - (tensor.shape[1] % 2)
                 enc.height = tensor.shape[0] - (tensor.shape[0] % 2)
-                enc.pix_fmt = 'yuv420p'
                 enc.codec_context.time_base = _OUT_TB
-            nf = _from_tensor(tensor[:enc.height, :enc.width, :3])
-            nf = nf.reformat(format='yuv420p')
+            ch = 4 if out_alpha else 3
+            nf = _from_tensor(tensor[:enc.height, :enc.width, :ch])
+            nf = nf.reformat(format='yuva420p' if out_alpha else 'yuv420p')
             nf.pts = int(round(t / _OUT_TB))
             nf.time_base = _OUT_TB
             for pkt in enc.encode(nf):
@@ -157,9 +203,34 @@ def torch_process_video(view_url: str, frame_fn, *, progress=None,
     return path_to_view_url(out)
 
 
+def shutter_samples(t, motion_blur, shutter, shutter_type, shutter_offset,
+                    fps):
+    nb = int(math.floor(float(motion_blur or 0) * 10 + 0.5))
+    if nb < 1 or not shutter:
+        return [t]
+    span = float(shutter) / fps
+    if shutter_type == 'start':
+        t0, t1 = t, t + span
+    elif shutter_type == 'end':
+        t0, t1 = t - span, t
+    elif shutter_type == 'custom':
+        t0 = t + float(shutter_offset) / fps
+        t1 = t0 + span
+    else:
+        t0, t1 = t - span / 2.0, t + span / 2.0
+    step = span / nb
+    out = []
+    ts = t0
+    while ts <= t1 + step * 1e-6:
+        out.append(ts)
+        ts += step
+    return out
+
+
 def transform_video(view_url: str, *, translate_x=0.0, translate_y=0.0,
                     scale=1.0, rotation_deg=0.0, skew_x=0.0,
                     keyframes=None, motion_blur=0.0, shutter=0.5,
+                    shutter_type='centered', shutter_offset=0.0,
                     filter_mode='bilinear', progress=None) -> str:
     info = get_video_info(view_url)
     w, h = info['width'], info['height']
@@ -177,9 +248,6 @@ def transform_video(view_url: str, *, translate_x=0.0, translate_y=0.0,
     ks = curves_from(keyframes, 'scale', scale)
     kr = curves_from(keyframes, 'rotation', rotation_deg)
 
-    n_samples = max(1, int(round(float(motion_blur or 0) * 8)) + 1) \
-        if motion_blur else 1
-
     def mat_at(t):
         m = mat_transform_canonical(
             kx.value(t), -ky.value(t), max(1e-6, ks.value(t)),
@@ -191,15 +259,15 @@ def transform_video(view_url: str, *, translate_x=0.0, translate_y=0.0,
 
     def frame_fn(tensor, t):
         device = tensor.device
-        if n_samples == 1:
-            return _warp_frame(tensor, mat_at(t), device)
+        times = shutter_samples(t, motion_blur, shutter, shutter_type,
+                                shutter_offset, fps)
+        if len(times) == 1:
+            return _warp_frame(tensor, mat_at(times[0]), device)
         acc = None
-        span = shutter / fps
-        for i in range(n_samples):
-            dt = (i / (n_samples - 1) - 0.5) * span
-            wf = _warp_frame(tensor, mat_at(t + dt), device)
+        for ts in times:
+            wf = _warp_frame(tensor, mat_at(ts), device)
             acc = wf if acc is None else acc + wf
-        return acc / n_samples
+        return acc / len(times)
 
     return torch_process_video(view_url, frame_fn, progress=progress)
 

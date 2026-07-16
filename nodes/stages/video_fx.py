@@ -74,6 +74,8 @@ class VideoColorStage(io.ComfyNode):
                 _hidden_float("hue", 0.0, -180.0, 180.0, step=1.0),
                 _hidden_float("saturation", 0.0, -1.0, 1.0),
                 _hidden_float("vibrance", 0.0, -2.0, 2.0),
+                _hidden_float("blackpoint", 0.0, -0.5, 0.5, step=0.005),
+                _hidden_float("whitepoint", 1.0, 0.5, 2.0, step=0.005),
                 *wheel,
                 io.Boolean.Input("preserve_lightness", default=True,
                                  socketless=True, extra_dict={"hidden": True}),
@@ -88,6 +90,7 @@ class VideoColorStage(io.ComfyNode):
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                 exposure=0.0, black=0.0, temperature=6500, temp_mix=1.0,
                 hue=0.0, saturation=0.0, vibrance=0.0,
+                blackpoint=0.0, whitepoint=1.0,
                 shadows_r=0.0, shadows_g=0.0, shadows_b=0.0,
                 midtones_r=0.0, midtones_g=0.0, midtones_b=0.0,
                 highlights_r=0.0, highlights_g=0.0, highlights_b=0.0,
@@ -108,6 +111,12 @@ class VideoColorStage(io.ComfyNode):
         vibrance = _f(vibrance, -2, 2)
         if vibrance:
             specs.append(('vibrance', f'intensity={vibrance}'))
+        bp = _f(blackpoint, -0.5, 0.5, 0.0)
+        wp = _f(whitepoint, 0.5, 2.0, 1.0)
+        if bp or wp != 1.0:
+            wp = max(bp + 0.01, wp)
+            args = ':'.join(f'{c}imin={bp}:{c}imax={wp}' for c in 'rgb')
+            specs.append(('colorlevels', args))
         wheels = {
             'rs': _f(shadows_r, -1, 1), 'gs': _f(shadows_g, -1, 1), 'bs': _f(shadows_b, -1, 1),
             'rm': _f(midtones_r, -1, 1), 'gm': _f(midtones_g, -1, 1), 'bm': _f(midtones_b, -1, 1),
@@ -398,8 +407,12 @@ class VideoTransitionStage(io.ComfyNode):
                 _hidden_float("duration", 1.0, 0.1, 5.0, step=0.05),
                 _hidden_float("offset", 0.0, 0.0, 3600.0,
                               tooltip="seconds into clip A where the transition starts; 0 = auto (end of A)"),
+                _hidden_float("luma_softness", 0.1, 0.0, 1.0),
+                io.Boolean.Input("luma_invert", default=False,
+                                 socketless=True, extra_dict={"hidden": True}),
                 COMFYTV_VIDEO.Input("video_a", optional=True),
                 COMFYTV_VIDEO.Input("video_b", optional=True),
+                COMFYTV_IMAGE.Input("luma_image", optional=True),
             ],
             outputs=[COMFYTV_VIDEO.Output("video")],
             is_output_node=True,
@@ -409,15 +422,24 @@ class VideoTransitionStage(io.ComfyNode):
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                 transition='fade', duration=1.0, offset=0.0,
-                video_a="", video_b=""):
+                luma_softness=0.1, luma_invert=False,
+                video_a="", video_b="", luma_image=""):
         if not (video_a or '').strip() or not (video_b or '').strip():
             raise RuntimeError(
                 "Video Transition needs two upstream videos — wire video_a and video_b."
             )
-        payload = xfade_videos(video_a, video_b, transition=transition,
-                               duration=_f(duration, 0.1, 5.0, 1.0),
-                               offset=(_f(offset, 0.0, 3600.0) or None),
-                               progress=_progress_cb(cls))
+        if (luma_image or '').strip():
+            from ...runners.retro import luma_wipe_videos
+            payload = luma_wipe_videos(
+                video_a, video_b, luma_image,
+                duration=_f(duration, 0.1, 5.0, 1.0),
+                softness=_f(luma_softness, 0, 1, 0.1),
+                invert=bool(luma_invert), progress=_progress_cb(cls))
+        else:
+            payload = xfade_videos(video_a, video_b, transition=transition,
+                                   duration=_f(duration, 0.1, 5.0, 1.0),
+                                   offset=(_f(offset, 0.0, 3600.0) or None),
+                                   progress=_progress_cb(cls))
         return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
                                 parent_output_id=parent_output_id)
 

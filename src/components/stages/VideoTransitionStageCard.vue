@@ -31,6 +31,15 @@
         unit="s" :reset-to="0"
       />
       <div class="ctv:text-2xs ctv:text-muted-foreground">{{ $t('fx.offsetAuto') }}</div>
+
+      <template v-if="lumaWired">
+        <div class="ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">Luma wipe</div>
+        <FxSlider v-model="lumaSoftness" label="Softness" :min="0" :max="1" :step="0.01" :reset-to="0.1" />
+        <label class="ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs ctv:text-muted-foreground ctv:cursor-pointer">
+          <input type="checkbox" v-model="lumaInvert" class="ctv:accent-primary-background" />
+          Invert
+        </label>
+      </template>
     </div>
 
     <div class="ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide">
@@ -60,7 +69,7 @@ import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
-import { useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
+import { useBoolWidget, useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
 
 const props = defineProps<{
   state: StageState
@@ -95,4 +104,7 @@ const transitionOptions = TRANSITIONS.map((v) => ({ value: v, label: v }))
 const transition = useStrWidget(props.node, 'transition', 'fade')
 const duration = useNumWidget(props.node, 'duration', 1.0)
 const offset = useNumWidget(props.node, 'offset', 0)
+const lumaWired = computed(() => Boolean(pickSourceImageUrl(props.state.inputs, 'luma_image')))
+const lumaSoftness = useNumWidget(props.node, 'luma_softness', 0.1)
+const lumaInvert = useBoolWidget(props.node, 'luma_invert', false)
 </script>

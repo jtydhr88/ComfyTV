@@ -43,6 +43,17 @@
         <FxSlider v-model="noiseSpeed" label="Speed" :min="0" :max="10" :step="0.1" :reset-to="1" />
         <FxSlider v-model="seed" label="Seed" :min="0" :max="99999" :step="1" :decimals="0" :reset-to="7" />
       </template>
+
+      <FxSlider v-if="kind === 'checkerboard'" v-model="boxSize" label="Box size" :min="2" :max="1024" :step="2" :decimals="0" :reset-to="64" />
+      <FxSlider v-if="kind === 'colorbars'" v-model="barIntensity" label="Bar intensity (IRE)" :min="1" :max="100" :step="1" :decimals="0" :reset-to="75" />
+      <template v-if="kind === 'colorwheel'">
+        <FxSlider v-model="wheelGamma" label="Gamma" :min="0" :max="4" :step="0.05" :reset-to="0.45" />
+        <FxSlider v-model="wheelRotate" label="Rotate" :min="-180" :max="180" :step="1" :decimals="0" :reset-to="0" unit="°" />
+      </template>
+      <template v-if="kind === 'count'">
+        <FxChips v-model="countStyle" :options="COUNT_STYLES" />
+        <FxChips v-model="countDirection" :options="COUNT_DIRECTIONS" />
+      </template>
     </div>
 
     <div class="ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide">
@@ -85,6 +96,10 @@ const KINDS = [
   { value: 'radial', label: 'Radial' },
   { value: 'rectangle', label: 'Rectangle' },
   { value: 'noise', label: 'Noise' },
+  { value: 'checkerboard', label: 'Checker' },
+  { value: 'colorbars', label: 'SMPTE bars' },
+  { value: 'colorwheel', label: 'Color wheel' },
+  { value: 'count', label: 'Countdown' },
 ]
 
 const INTERPS = [
@@ -111,6 +126,21 @@ const noiseScale = useNumWidget(props.node, 'noise_scale', 64)
 const noiseOctaves = useNumWidget(props.node, 'noise_octaves', 4)
 const noiseSpeed = useNumWidget(props.node, 'noise_speed', 1)
 const seed = useNumWidget(props.node, 'seed', 7)
+const boxSize = useNumWidget(props.node, 'box_size', 64)
+const barIntensity = useNumWidget(props.node, 'bar_intensity', 75)
+const wheelGamma = useNumWidget(props.node, 'wheel_gamma', 0.45)
+const wheelRotate = useNumWidget(props.node, 'wheel_rotate', 0)
+const countStyle = useStrWidget(props.node, 'count_style', 'seconds')
+const countDirection = useStrWidget(props.node, 'count_direction', 'down')
+
+const COUNT_STYLES = [
+  { value: 'seconds', label: 'Seconds' },
+  { value: 'frames', label: 'Frames' },
+]
+const COUNT_DIRECTIONS = [
+  { value: 'down', label: 'Count down' },
+  { value: 'up', label: 'Count up' },
+]
 
 const previewEl = ref<HTMLCanvasElement>()
 

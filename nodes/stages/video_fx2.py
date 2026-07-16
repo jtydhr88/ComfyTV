@@ -289,6 +289,12 @@ class PatternStage(io.ComfyNode):
                 _hidden_int("noise_octaves", 4, 1, 8),
                 _hidden_float("noise_speed", 1.0, 0.0, 10.0),
                 _hidden_int("seed", 7, 0, 99999),
+                _hidden_int("box_size", 64, 2, 1024),
+                _hidden_float("bar_intensity", 75.0, 1.0, 100.0, step=1.0),
+                _hidden_float("wheel_gamma", 0.45, 0.0, 4.0),
+                _hidden_float("wheel_rotate", 0.0, -180.0, 180.0, step=1.0),
+                _hidden_combo("count_style", ['seconds', 'frames'], 'seconds'),
+                _hidden_combo("count_direction", ['down', 'up'], 'down'),
             ],
             outputs=[COMFYTV_VIDEO.Output("video")],
             is_output_node=True,
@@ -301,7 +307,10 @@ class PatternStage(io.ComfyNode):
                 color0="#000000", color1="#FFFFFF",
                 p0_x=0.0, p0_y=0.5, p1_x=1.0, p1_y=0.5,
                 interp='linear', softness=0.0,
-                noise_scale=64, noise_octaves=4, noise_speed=1.0, seed=7):
+                noise_scale=64, noise_octaves=4, noise_speed=1.0, seed=7,
+                box_size=64, bar_intensity=75.0, wheel_gamma=0.45,
+                wheel_rotate=0.0, count_style='seconds',
+                count_direction='down'):
         payload = generate_pattern_video(
             kind, width=int(width), height=int(height), fps=int(fps),
             duration=_f(duration, 0.5, 120, 5.0),
@@ -311,6 +320,11 @@ class PatternStage(io.ComfyNode):
             interp=interp, softness=_f(softness, 0, 1, 0.0),
             noise_scale=int(noise_scale), noise_octaves=int(noise_octaves),
             noise_speed=_f(noise_speed, 0, 10, 1.0), seed=int(seed or 0),
+            box_size=min(1024, max(2, int(box_size or 64))),
+            bar_intensity=_f(bar_intensity, 1, 100, 75.0),
+            wheel_gamma=_f(wheel_gamma, 0, 4, 0.45),
+            wheel_rotate=_f(wheel_rotate, -180, 180, 0.0),
+            count_style=count_style, count_direction=count_direction,
             progress=_progress_cb(cls))
         return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
                                 parent_output_id=parent_output_id)

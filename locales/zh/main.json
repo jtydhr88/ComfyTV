@@ -518,6 +518,10 @@
       "grid": {
         "label": "宫格切分",
         "tooltip": "按 R×C 切成多张（浏览器端）→ 图片批次"
+      },
+      "ken-burns": {
+        "label": "静帧推拉",
+        "tooltip": "静态图片动画缩放平移成视频"
       }
     },
     "videoChange": {
@@ -708,6 +712,58 @@
       "motion-track-solve": {
         "label": "跟踪求解",
         "tooltip": "多点跟踪解算 变换/四角定位"
+      },
+      "pik-keyer": {
+        "label": "PIK 抠像",
+        "tooltip": "基于 clean plate 的图像抠像（IBK 思路）"
+      },
+      "keyer": {
+        "label": "通用键控",
+        "tooltip": "亮度/颜色/屏幕三模式 + 软边包络"
+      },
+      "despill": {
+        "label": "去溢色",
+        "tooltip": "清除绿幕/蓝幕反射溢色"
+      },
+      "color-suppress": {
+        "label": "压色",
+        "tooltip": "按 R/G/B/C/M/Y 通道压制颜色并可出遮罩"
+      },
+      "key-mix": {
+        "label": "遮罩合成",
+        "tooltip": "用外部遮罩把 A 合到 B 上"
+      },
+      "matte-monitor": {
+        "label": "遮罩质检",
+        "tooltip": "把半透明 alpha 拉向 0.5 便于检查"
+      },
+      "matte-morph": {
+        "label": "遮罩形态学",
+        "tooltip": "腐蚀/膨胀/开/闭运算收拾遮罩边缘"
+      },
+      "frame-blend": {
+        "label": "帧混合",
+        "tooltip": "帧窗口混合或快门采样运动模糊"
+      },
+      "color-fx": {
+        "label": "调色扩展",
+        "tooltip": "九区二级调色/色差错位/伪彩/色彩量化"
+      },
+      "old-film": {
+        "label": "老电影",
+        "tooltip": "竖移抖动 + 亮度闪烁 + 随机划痕"
+      },
+      "annotate": {
+        "label": "标注",
+        "tooltip": "画框/网格/补边/无限滚动"
+      },
+      "audio-reactive": {
+        "label": "音频反应",
+        "tooltip": "频段能量包络 → 关键帧曲线"
+      },
+      "audio-meter": {
+        "label": "电平表叠加",
+        "tooltip": "把实时音量表烧录到画面上"
       }
     }
   },

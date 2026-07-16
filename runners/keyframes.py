@@ -1,5 +1,6 @@
 
 import json
+import math
 from bisect import bisect_right
 
 INTERP_TYPES = ('constant', 'linear', 'smooth', 'catmull-rom', 'cubic',
@@ -181,8 +182,9 @@ def auto_compute_derivatives(interp_prev, interp, interp_next,
 
 class KeyframeCurve:
 
-    def __init__(self, keys=None, extrapolate='linear'):
+    def __init__(self, keys=None, extrapolate='linear', periodic=False):
         self.extrapolate = extrapolate
+        self.periodic = bool(periodic)
         self.keys = []
         for k in keys or []:
             self.keys.append({
@@ -262,6 +264,13 @@ class KeyframeCurve:
             raise ValueError("empty curve")
         if n == 1:
             return self.keys[0]['v']
+        if self.periodic:
+            t0 = self.keys[0]['t']
+            period = self.keys[-1]['t'] - t0
+            if period > 0 and (t < t0 or t > t0 + period):
+                t = math.fmod(t - t0, period) + t0
+                if t < t0:
+                    t += period
         if t <= self.keys[0]['t']:
             if self.extrapolate == 'linear':
                 left, _ = self._derivs(0)

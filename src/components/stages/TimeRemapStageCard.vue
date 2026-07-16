@@ -8,9 +8,20 @@
       @pointermove.stop
       @pointerup.stop
     >
-      <FxSlider v-model="speed" label="Speed ×" :min="0.05" :max="8" :step="0.05" :reset-to="1" />
+      <FxChips v-model="mode" :options="MODES" />
+
+      <template v-if="mode === 'hold'">
+        <FxSlider v-model="holdFrame" label="Hold frame" :min="0" :max="10000" :step="1" :decimals="0" :reset-to="0" />
+        <FxSlider v-model="holdIncrement" label="Increment" :min="0" :max="1000" :step="1" :decimals="0" :reset-to="0" />
+        <div class="ctv:text-3xs ctv:text-muted-foreground ctv:tracking-wide">
+          0 = freeze on the frame · N = advance every N frames
+        </div>
+      </template>
+
+      <FxSlider v-if="mode === 'speed'" v-model="speed" label="Speed ×" :min="0.05" :max="8" :step="0.05" :reset-to="1" />
 
       <KeyframeTimeline
+        v-if="mode === 'speed'"
         :keys="keys"
         :duration="duration"
         :selected-index="selectedIndex"
@@ -21,7 +32,7 @@
         @select="onSelectKey"
       />
 
-      <div v-if="selectedIndex >= 0" class="ctv:flex ctv:items-center ctv:gap-1">
+      <div v-if="mode === 'speed' && selectedIndex >= 0" class="ctv:flex ctv:items-center ctv:gap-1">
         <button
           type="button"
           class="ctv:flex-1 ctv:py-0.5 ctv:px-1.5 ctv:text-2xs ctv:rounded ctv:cursor-pointer ctv:border ctv:transition-colors ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background"
@@ -34,8 +45,8 @@
         >{{ $t('fx.delKey') }}</button>
       </div>
 
-      <FxSlider v-model="smoothFps" label="Smooth fps" :min="0" :max="120" :step="1" :decimals="0" :reset-to="0" />
-      <div class="ctv:text-3xs ctv:text-muted-foreground ctv:tracking-wide">
+      <FxSlider v-if="mode === 'speed'" v-model="smoothFps" label="Smooth fps" :min="0" :max="120" :step="1" :decimals="0" :reset-to="0" />
+      <div v-if="mode === 'speed'" class="ctv:text-3xs ctv:text-muted-foreground ctv:tracking-wide">
         0 = off · >0 = optical-flow pre-interpolation (slow)
       </div>
     </div>
@@ -44,7 +55,7 @@
       <span v-if="!sourceVideoUrl" class="ctv:text-muted-foreground">{{ $t('videoTrim.noInputVideo') }}</span>
       <span v-else-if="state.running" class="ctv:text-muted-foreground">{{ $t('fx.processing') }}</span>
       <span v-else-if="state.output" class="ctv:text-success-background">{{ $t('fx.done') }}</span>
-      <span v-else-if="keys.length === 0" class="ctv:text-muted-foreground">Add speed keyframes on the timeline</span>
+      <span v-else-if="mode === 'speed' && keys.length === 0" class="ctv:text-muted-foreground">Add speed keyframes on the timeline</span>
       <span v-else class="ctv:text-muted-foreground">{{ $t('fx.adjustThenRun') }}</span>
     </div>
 
@@ -66,6 +77,7 @@ import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
 import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import FxSlider from '@/components/widgets/fx/FxSlider.vue'
+import FxChips from '@/components/widgets/fx/FxChips.vue'
 import KeyframeTimeline from '@/components/widgets/fx/KeyframeTimeline.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
 import { useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
@@ -88,6 +100,14 @@ type SpeedKey = {
 const sourceVideoUrl = computed(() => pickSourceImageUrl(props.state.inputs, 'video'))
 const speedKeysRaw = useStrWidget(props.node, 'speed_keys', '')
 const smoothFps = useNumWidget(props.node, 'smooth_fps', 0)
+const mode = useStrWidget(props.node, 'mode', 'speed')
+const holdFrame = useNumWidget(props.node, 'hold_frame', 0)
+const holdIncrement = useNumWidget(props.node, 'hold_increment', 0)
+
+const MODES = [
+  { value: 'speed', label: 'Speed ramp' },
+  { value: 'hold', label: 'Frame hold' },
+]
 
 const speed = ref(1)
 const duration = ref(0)

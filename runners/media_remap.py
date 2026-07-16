@@ -108,6 +108,65 @@ def time_remap(view_url: str, speed_keyframes, *, smooth_fps: int = 0,
     return path_to_view_url(out)
 
 
+def frame_hold(view_url: str, *, first_frame: int = 0, increment: int = 0,
+               progress=None) -> str:
+    import av
+    import math
+
+    src = localize(view_url)
+    info = get_video_info(view_url)
+    fps = info['fps'] or 24
+    n_out = max(1, int(info['duration'] * fps))
+    ff = max(0, int(first_frame))
+    inc = max(0, int(increment))
+    out = fresh_output_path('.mp4')
+
+    def _src_frame(i):
+        if inc == 0:
+            return ff
+        return ff + inc * int(math.floor((i - ff) / inc))
+
+    with av.open(str(src)) as inp, av.open(str(out), 'w') as outp:
+        in_v = inp.streams.video[0]
+        w = in_v.width - (in_v.width % 2)
+        h = in_v.height - (in_v.height % 2)
+        enc = outp.add_stream('libx264', rate=round(fps))
+        enc.width, enc.height = w, h
+        enc.pix_fmt = 'yuv420p'
+        enc.codec_context.time_base = _OUT_TB
+
+        decoder = inp.decode(in_v)
+        cur = None
+        cur_idx = -1
+
+        def _advance(target):
+            nonlocal cur, cur_idx
+            while cur_idx < target:
+                try:
+                    cur = next(decoder)
+                    cur_idx += 1
+                except StopIteration:
+                    break
+            return cur
+
+        for i in range(n_out):
+            si = max(0, min(_src_frame(i), n_out - 1))
+            f = _advance(si)
+            if f is None:
+                break
+            nf = f.reformat(width=w, height=h, format='yuv420p')
+            nf.pts = int(round(i / fps / _OUT_TB))
+            nf.time_base = _OUT_TB
+            for pkt in enc.encode(nf):
+                outp.mux(pkt)
+            if progress is not None and i % 30 == 0:
+                progress(i, n_out, "holding")
+        for pkt in enc.encode():
+            outp.mux(pkt)
+
+    return path_to_view_url(out)
+
+
 def render_sequence(segments, *, progress=None) -> str:
     segs = []
     for s in segments or []:
@@ -175,4 +234,5 @@ def render_sequence(segments, *, progress=None) -> str:
     return result
 
 
-__all__ = ['time_remap', 'render_sequence', 'SPEED_MIN', 'SPEED_MAX']
+__all__ = ['time_remap', 'frame_hold', 'render_sequence',
+           'SPEED_MIN', 'SPEED_MAX']

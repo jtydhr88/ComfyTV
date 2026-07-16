@@ -320,6 +320,48 @@
     },
     "PatternStage": {
       "display_name": "图形生成"
+    },
+    "PIKStage": {
+      "display_name": "PIK 抠像"
+    },
+    "KeyerStage": {
+      "display_name": "通用键控"
+    },
+    "DespillStage": {
+      "display_name": "去溢色"
+    },
+    "ColorSuppressStage": {
+      "display_name": "压色"
+    },
+    "KeyMixStage": {
+      "display_name": "遮罩合成"
+    },
+    "MatteMonitorStage": {
+      "display_name": "遮罩质检"
+    },
+    "MatteMorphStage": {
+      "display_name": "遮罩形态学"
+    },
+    "FrameBlendStage": {
+      "display_name": "帧混合"
+    },
+    "ColorFXStage": {
+      "display_name": "调色扩展"
+    },
+    "KenBurnsStage": {
+      "display_name": "静帧推拉"
+    },
+    "OldFilmStage": {
+      "display_name": "老电影"
+    },
+    "AnnotateStage": {
+      "display_name": "标注"
+    },
+    "AudioReactiveStage": {
+      "display_name": "音频反应"
+    },
+    "AudioMeterStage": {
+      "display_name": "电平表叠加"
     }
   },
   "ComfyTV_AssetAudioLoaderStage": {
@@ -1992,5 +2034,47 @@
   },
   "ComfyTV_PatternStage": {
     "display_name": "图形生成"
+  },
+  "ComfyTV_PIKStage": {
+    "display_name": "PIK 抠像"
+  },
+  "ComfyTV_KeyerStage": {
+    "display_name": "通用键控"
+  },
+  "ComfyTV_DespillStage": {
+    "display_name": "去溢色"
+  },
+  "ComfyTV_ColorSuppressStage": {
+    "display_name": "压色"
+  },
+  "ComfyTV_KeyMixStage": {
+    "display_name": "遮罩合成"
+  },
+  "ComfyTV_MatteMonitorStage": {
+    "display_name": "遮罩质检"
+  },
+  "ComfyTV_MatteMorphStage": {
+    "display_name": "遮罩形态学"
+  },
+  "ComfyTV_FrameBlendStage": {
+    "display_name": "帧混合"
+  },
+  "ComfyTV_ColorFXStage": {
+    "display_name": "调色扩展"
+  },
+  "ComfyTV_KenBurnsStage": {
+    "display_name": "静帧推拉"
+  },
+  "ComfyTV_OldFilmStage": {
+    "display_name": "老电影"
+  },
+  "ComfyTV_AnnotateStage": {
+    "display_name": "标注"
+  },
+  "ComfyTV_AudioReactiveStage": {
+    "display_name": "音频反应"
+  },
+  "ComfyTV_AudioMeterStage": {
+    "display_name": "电平表叠加"
   }
 }

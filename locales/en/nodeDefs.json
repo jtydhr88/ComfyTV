@@ -320,6 +320,48 @@
     },
     "PatternStage": {
       "display_name": "Pattern"
+    },
+    "PIKStage": {
+      "display_name": "PIK Keyer"
+    },
+    "KeyerStage": {
+      "display_name": "Keyer"
+    },
+    "DespillStage": {
+      "display_name": "Despill"
+    },
+    "ColorSuppressStage": {
+      "display_name": "Color Suppress"
+    },
+    "KeyMixStage": {
+      "display_name": "Key Mix"
+    },
+    "MatteMonitorStage": {
+      "display_name": "Matte Monitor"
+    },
+    "MatteMorphStage": {
+      "display_name": "Matte Morphology"
+    },
+    "FrameBlendStage": {
+      "display_name": "Frame Blend"
+    },
+    "ColorFXStage": {
+      "display_name": "Color FX"
+    },
+    "KenBurnsStage": {
+      "display_name": "Ken Burns"
+    },
+    "OldFilmStage": {
+      "display_name": "Old Film"
+    },
+    "AnnotateStage": {
+      "display_name": "Annotate"
+    },
+    "AudioReactiveStage": {
+      "display_name": "Audio Reactive"
+    },
+    "AudioMeterStage": {
+      "display_name": "Audio Meter Overlay"
     }
   },
   "ComfyTV_AssetAudioLoaderStage": {
@@ -1992,5 +2034,47 @@
   },
   "ComfyTV_PatternStage": {
     "display_name": "Pattern"
+  },
+  "ComfyTV_PIKStage": {
+    "display_name": "PIK Keyer"
+  },
+  "ComfyTV_KeyerStage": {
+    "display_name": "Keyer"
+  },
+  "ComfyTV_DespillStage": {
+    "display_name": "Despill"
+  },
+  "ComfyTV_ColorSuppressStage": {
+    "display_name": "Color Suppress"
+  },
+  "ComfyTV_KeyMixStage": {
+    "display_name": "Key Mix"
+  },
+  "ComfyTV_MatteMonitorStage": {
+    "display_name": "Matte Monitor"
+  },
+  "ComfyTV_MatteMorphStage": {
+    "display_name": "Matte Morphology"
+  },
+  "ComfyTV_FrameBlendStage": {
+    "display_name": "Frame Blend"
+  },
+  "ComfyTV_ColorFXStage": {
+    "display_name": "Color FX"
+  },
+  "ComfyTV_KenBurnsStage": {
+    "display_name": "Ken Burns"
+  },
+  "ComfyTV_OldFilmStage": {
+    "display_name": "Old Film"
+  },
+  "ComfyTV_AnnotateStage": {
+    "display_name": "Annotate"
+  },
+  "ComfyTV_AudioReactiveStage": {
+    "display_name": "Audio Reactive"
+  },
+  "ComfyTV_AudioMeterStage": {
+    "display_name": "Audio Meter Overlay"
   }
 }

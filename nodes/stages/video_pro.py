@@ -26,6 +26,9 @@ def _track_to_keyframes(track_raw, base_keys):
     track = _parse_json(track_raw, None)
     if not track:
         return base_keys
+    if isinstance(track, list):
+        keys = [k for k in track if isinstance(k, dict) and 't' in k]
+        return keys or base_keys
     if 'transform' in track:
         return [{'t': k['t'], 'x': k['x'], 'y': k['y'],
                  'rotation': k.get('rotation', 0.0),
@@ -117,6 +120,10 @@ class VideoTransformStage(io.ComfyNode):
                 _hidden_float("skew_x", 0.0, -2.0, 2.0),
                 _hidden_float("motion_blur", 0.0, 0.0, 4.0,
                               tooltip="0 = off; higher = more shutter samples"),
+                _hidden_float("shutter", 0.5, 0.0, 4.0, step=0.05),
+                _hidden_combo("shutter_type", ['centered', 'start', 'end',
+                                               'custom'], 'centered'),
+                _hidden_float("shutter_offset", 0.0, -4.0, 4.0, step=0.05),
                 _hidden_str("keyframes", "", "JSON [{t,x,y,scale,rotation,interp}]"),
                 COMFYTV_VIDEO.Input("video", optional=True),
                 COMFYTV_TEXT.Input("track", optional=True),
@@ -129,7 +136,8 @@ class VideoTransformStage(io.ComfyNode):
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                 pos_x=0.0, pos_y=0.0, scale=1.0, rotation=0.0, skew_x=0.0,
-                motion_blur=0.0, keyframes="", video="", track=""):
+                motion_blur=0.0, shutter=0.5, shutter_type='centered',
+                shutter_offset=0.0, keyframes="", video="", track=""):
         _need_video(video, "Video Transform")
         keys = _parse_json(keyframes, [])
         if (track or '').strip():
@@ -143,6 +151,8 @@ class VideoTransformStage(io.ComfyNode):
             scale=_f(scale, 0.01, 10, 1.0), rotation_deg=float(rotation or 0),
             skew_x=_f(skew_x, -2, 2, 0.0), keyframes=keys or None,
             motion_blur=_f(motion_blur, 0, 4, 0.0),
+            shutter=_f(shutter, 0, 4, 0.5), shutter_type=shutter_type,
+            shutter_offset=_f(shutter_offset, -4, 4, 0.0),
             progress=_progress_cb(cls))
         return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
                                 parent_output_id=parent_output_id)
@@ -317,6 +327,9 @@ class TitleStage(io.ComfyNode):
                 _hidden_float("t_start", 0.0, 0.0, 3600.0, step=0.05),
                 _hidden_float("t_end", -1.0, -1.0, 3600.0, step=0.05),
                 _hidden_float("fade_s", 0.0, 0.0, 10.0, step=0.1),
+                _hidden_combo("typewriter", ['off', 'char', 'word', 'line'],
+                              'off'),
+                _hidden_float("type_step", 0.1, 0.02, 2.0, step=0.01),
                 COMFYTV_VIDEO.Input("video", optional=True),
             ],
             outputs=[COMFYTV_VIDEO.Output("video")],
@@ -328,7 +341,8 @@ class TitleStage(io.ComfyNode):
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                 text="", font='', size=48, color="#FFFFFF", stroke=0,
                 stroke_color="#000000", anchor='bottom',
-                t_start=0.0, t_end=-1.0, fade_s=0.0, video=""):
+                t_start=0.0, t_end=-1.0, fade_s=0.0, typewriter='off',
+                type_step=0.1, video=""):
         _need_video(video, "Title")
         if not (text or '').strip():
             raise RuntimeError("Title: type some text first.")
@@ -337,7 +351,10 @@ class TitleStage(io.ComfyNode):
             color=color or '#FFFFFF', stroke=min(20, max(0, int(stroke or 0))),
             stroke_color=stroke_color or '#000000', anchor=anchor,
             t_start=_f(t_start, 0, 3600, 0.0), t_end=float(t_end or -1),
-            fade_s=_f(fade_s, 0, 10, 0.0), progress=_progress_cb(cls))
+            fade_s=_f(fade_s, 0, 10, 0.0),
+            typewriter='' if typewriter == 'off' else typewriter,
+            type_step=_f(type_step, 0.02, 2, 0.1),
+            progress=_progress_cb(cls))
         return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
                                 parent_output_id=parent_output_id)
 

@@ -518,6 +518,10 @@
       "grid": {
         "label": "Grid Split",
         "tooltip": "Slice into an R×C grid of tiles (browser-side) → image batch"
+      },
+      "ken-burns": {
+        "label": "Ken Burns",
+        "tooltip": "Animated zoom & pan into a video"
       }
     },
     "videoChange": {
@@ -708,6 +712,58 @@
       "motion-track-solve": {
         "label": "Track & Solve",
         "tooltip": "Multi-point track solved to Transform / Corner Pin"
+      },
+      "pik-keyer": {
+        "label": "PIK Keyer",
+        "tooltip": "Image-based greenscreen keying with a clean plate"
+      },
+      "keyer": {
+        "label": "Keyer",
+        "tooltip": "Luma / color / screen keyer with soft ramps"
+      },
+      "despill": {
+        "label": "Despill",
+        "tooltip": "Remove green/blue spill from keyed footage"
+      },
+      "color-suppress": {
+        "label": "Color Suppress",
+        "tooltip": "Suppress a color channel or its complement"
+      },
+      "key-mix": {
+        "label": "Key Mix",
+        "tooltip": "A over B through an external mask"
+      },
+      "matte-monitor": {
+        "label": "Matte Monitor",
+        "tooltip": "Stretch semi-transparent alpha for QC"
+      },
+      "matte-morph": {
+        "label": "Matte Morphology",
+        "tooltip": "Erode / dilate / open / close a matte"
+      },
+      "frame-blend": {
+        "label": "Frame Blend",
+        "tooltip": "Blend frame windows or shutter samples"
+      },
+      "color-fx": {
+        "label": "Color FX",
+        "tooltip": "Selective color, chroma shift, pseudocolor, quantize"
+      },
+      "old-film": {
+        "label": "Old Film",
+        "tooltip": "Jitter, flicker and scratch lines"
+      },
+      "annotate": {
+        "label": "Annotate",
+        "tooltip": "Boxes, grids, border fills and scrolling"
+      },
+      "audio-reactive": {
+        "label": "Audio Reactive",
+        "tooltip": "Band energy envelope → keyframe curves"
+      },
+      "audio-meter": {
+        "label": "Audio Meter",
+        "tooltip": "Burn a live volume meter onto the video"
       }
     }
   },

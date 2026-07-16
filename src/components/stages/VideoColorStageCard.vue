@@ -17,6 +17,8 @@
       <FxSlider v-model="hue" :label="$t('fx.hue')" :min="-180" :max="180" :step="1" :reset-to="0" :decimals="0" unit="°" />
       <FxSlider v-model="saturation" :label="$t('fx.saturation')" :min="-1" :max="1" :step="0.01" :reset-to="0" />
       <FxSlider v-model="vibrance" :label="$t('fx.vibrance')" :min="-2" :max="2" :step="0.01" :reset-to="0" />
+      <FxSlider v-model="blackpoint" label="Black point" :min="-0.5" :max="0.5" :step="0.005" :reset-to="0" />
+      <FxSlider v-model="whitepoint" label="White point" :min="0.5" :max="2" :step="0.005" :reset-to="1" />
 
       <div class="ctv:flex ctv:items-start ctv:justify-around ctv:gap-1 ctv:pt-1">
         <ColorWheel v-model="shadows" :label="$t('fx.shadows')" />
@@ -84,6 +86,8 @@ const temperature = useNumWidget(props.node, 'temperature', 6500)
 const hue = useNumWidget(props.node, 'hue', 0)
 const saturation = useNumWidget(props.node, 'saturation', 0)
 const vibrance = useNumWidget(props.node, 'vibrance', 0)
+const blackpoint = useNumWidget(props.node, 'blackpoint', 0)
+const whitepoint = useNumWidget(props.node, 'whitepoint', 1)
 const preserveLightness = useBoolWidget(props.node, 'preserve_lightness', true)
 
 function wheelModel(zone: 'shadows' | 'midtones' | 'highlights') {

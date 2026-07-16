@@ -49,6 +49,13 @@
       <FxSlider v-model="tEnd" :label="$t('fx.tEnd')" :min="-1" :max="3600" :step="0.05" />
       <div class="ctv:text-2xs ctv:text-muted-foreground">{{ $t('fx.tEndAuto') }}</div>
       <FxSlider v-model="fadeS" :label="$t('fx.fade')" :min="0" :max="10" :step="0.1" />
+
+      <div class="ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">Typewriter</div>
+      <FxChips v-model="typewriter" :options="TYPEWRITERS" />
+      <FxSlider v-if="typewriter !== 'off'" v-model="typeStep" label="Step" :min="0.02" :max="2" :step="0.01" :reset-to="0.1" unit="s" />
+      <div class="ctv:text-3xs ctv:text-muted-foreground ctv:tracking-wide">
+        Tokens: #timecode# #shorttimecode# #frame#
+      </div>
     </div>
 
     <div class="ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide">
@@ -121,4 +128,13 @@ const anchor = useStrWidget(props.node, 'anchor', 'bottom')
 const tStart = useNumWidget(props.node, 't_start', 0)
 const tEnd = useNumWidget(props.node, 't_end', -1)
 const fadeS = useNumWidget(props.node, 'fade_s', 0)
+const typewriter = useStrWidget(props.node, 'typewriter', 'off')
+const typeStep = useNumWidget(props.node, 'type_step', 0.1)
+
+const TYPEWRITERS = [
+  { value: 'off', label: 'Off' },
+  { value: 'char', label: 'Chars' },
+  { value: 'word', label: 'Words' },
+  { value: 'line', label: 'Lines' },
+]
 </script>

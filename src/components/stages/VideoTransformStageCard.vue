@@ -16,6 +16,11 @@
       <FxSlider v-model="rotation" :label="$t('fx.rotation')" :min="-360" :max="360" :step="0.5" :reset-to="0" unit="°" />
       <FxSlider v-model="skewX" :label="$t('fx.skew')" :min="-2" :max="2" :step="0.01" :reset-to="0" />
       <FxSlider v-model="motionBlur" :label="$t('fx.motionBlur')" :min="0" :max="4" :step="0.5" :reset-to="0" />
+      <template v-if="motionBlur > 0">
+        <FxSlider v-model="shutter" label="Shutter (frames)" :min="0" :max="4" :step="0.05" :reset-to="0.5" />
+        <FxChips v-model="shutterType" :options="SHUTTER_TYPES" />
+        <FxSlider v-if="shutterType === 'custom'" v-model="shutterOffset" label="Shutter offset" :min="-4" :max="4" :step="0.05" :reset-to="0" />
+      </template>
 
       <KeyframeTimeline
         :keys="keys"
@@ -67,6 +72,7 @@ import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
 import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import FxSlider from '@/components/widgets/fx/FxSlider.vue'
+import FxChips from '@/components/widgets/fx/FxChips.vue'
 import KeyframeTimeline from '@/components/widgets/fx/KeyframeTimeline.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
 import { useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
@@ -96,7 +102,12 @@ const scale = useNumWidget(props.node, 'scale', 1)
 const rotation = useNumWidget(props.node, 'rotation', 0)
 const skewX = useNumWidget(props.node, 'skew_x', 0)
 const motionBlur = useNumWidget(props.node, 'motion_blur', 0)
+const shutter = useNumWidget(props.node, 'shutter', 0.5)
+const shutterType = useStrWidget(props.node, 'shutter_type', 'centered')
+const shutterOffset = useNumWidget(props.node, 'shutter_offset', 0)
 const keyframesRaw = useStrWidget(props.node, 'keyframes', '')
+
+const SHUTTER_TYPES = ['centered', 'start', 'end', 'custom'].map(v => ({ value: v, label: v }))
 
 const duration = ref(0)
 const selectedIndex = ref(-1)

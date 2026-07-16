@@ -99,15 +99,74 @@ def _overlay_fn_factory(device):
     return overlay
 
 
+_TOKEN_RE = re.compile(r'#(timecode|frame|shorttimecode)#')
+
+
+def _resolve_tokens(text, t, fps):
+    def sub(m):
+        name = m.group(1)
+        total = int(round(t * fps))
+        if name == 'frame':
+            return str(total)
+        hh = int(t // 3600)
+        mm = int(t % 3600 // 60)
+        ss = int(t % 60)
+        ff = int(round((t - int(t)) * fps)) % max(1, int(round(fps)))
+        if name == 'shorttimecode':
+            return f'{mm:02d}:{ss:02d}'
+        return f'{hh:02d}:{mm:02d}:{ss:02d}:{ff:02d}'
+    return _TOKEN_RE.sub(sub, text)
+
+
+def _typewriter_slice(text, t, t_start, mode, step_s):
+    if mode not in ('char', 'word', 'line') or step_s <= 0:
+        return text
+    steps = max(0, int((t - t_start) / step_s))
+    if mode == 'char':
+        units = list(text)
+        return ''.join(units[:steps])
+    if mode == 'word':
+        parts = re.split(r'(\s+)', text)
+        words = [p for p in parts if p.strip()]
+        shown = min(steps, len(words))
+        count = 0
+        out = []
+        for p in parts:
+            if p.strip():
+                count += 1
+                if count > shown:
+                    break
+            out.append(p)
+        return ''.join(out)
+    lines = text.split('\n')
+    return '\n'.join(lines[:steps])
+
+
 def title_video(view_url: str, text: str, *, font='', size=48,
                 color='#FFFFFF', stroke=0, stroke_color='#000000',
                 anchor='bottom', t_start=0.0, t_end=-1.0,
-                fade_s=0.0, progress=None) -> str:
+                fade_s=0.0, typewriter='', type_step: float = 0.1,
+                progress=None) -> str:
+    from .media import get_video_info
+
     if not (text or '').strip():
         raise RuntimeError("title: empty text")
-    rgba = render_text_rgba(text, font=font, size=size, color=color,
-                            stroke=stroke, stroke_color=stroke_color)
+    dynamic = bool(_TOKEN_RE.search(text)) or typewriter in (
+        'char', 'word', 'line')
+    fps = get_video_info(view_url)['fps'] or 24 if dynamic else 24
     t_end = None if t_end is None else float(t_end)
+    cache = {}
+
+    def rgba_for(txt):
+        if txt not in cache:
+            if len(cache) > 512:
+                cache.clear()
+            cache[txt] = render_text_rgba(
+                txt, font=font, size=size, color=color,
+                stroke=stroke, stroke_color=stroke_color)
+        return cache[txt]
+
+    static_rgba = None if dynamic else rgba_for(text)
 
     def frame_fn(bg, t):
         end = t_end if (t_end is not None and t_end > 0) else 1e12
@@ -119,6 +178,15 @@ def title_video(view_url: str, text: str, *, font='', size=48,
             if end < 1e11:
                 op = min(op, (end - t) / fade_s)
             op = max(0.0, min(1.0, op))
+        if dynamic:
+            txt = _resolve_tokens(text, t, fps)
+            txt = _typewriter_slice(txt, t, t_start, typewriter,
+                                    float(type_step))
+            if not txt.strip():
+                return bg
+            rgba = rgba_for(txt)
+        else:
+            rgba = static_rgba
         overlay = _overlay_fn_factory(bg.device)
         x, y = _place(anchor, bg.shape[1], bg.shape[0],
                       rgba.shape[1], rgba.shape[0])

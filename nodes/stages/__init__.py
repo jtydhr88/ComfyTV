@@ -50,6 +50,14 @@ from .video_fx2 import (
     STMapStage, MaskPropagateStage, SubtitleGenStage,
     HueCorrectStage, GlowStage, GodRaysStage, PatternStage,
 )
+from .video_key import (
+    PIKStage, KeyerStage, DespillStage, ColorSuppressStage,
+    KeyMixStage, MatteMonitorStage, MatteMorphStage,
+)
+from .video_r3 import (
+    FrameBlendStage, ColorFXStage, KenBurnsStage, OldFilmStage,
+    AnnotateStage, AudioReactiveStage, AudioMeterStage,
+)
 from .panorama import (
     PanoramaStage, PanoramaCurrentViewStage, PanoramaMultiViewStage,
 )
@@ -98,6 +106,10 @@ class ComfyTVExtension(ComfyExtension):
             TimeRemapStage, SequenceStage, VideoStabilizeV2Stage, PaintStrokeStage,
             STMapStage, MaskPropagateStage, SubtitleGenStage,
             HueCorrectStage, GlowStage, GodRaysStage, PatternStage,
+            PIKStage, KeyerStage, DespillStage, ColorSuppressStage,
+            KeyMixStage, MatteMonitorStage, MatteMorphStage,
+            FrameBlendStage, ColorFXStage, KenBurnsStage, OldFilmStage,
+            AnnotateStage, AudioReactiveStage, AudioMeterStage,
             ImageLoaderStage, VideoLoaderStage, AudioLoaderStage,
             AssetImageLoaderStage, AssetVideoLoaderStage, AssetAudioLoaderStage,
             Model3DStage, ModelLoaderStage, AssetModelLoaderStage,

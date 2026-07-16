@@ -1,5 +1,5 @@
 from ._common import *  # noqa: F401, F403
-from ...runners.media_remap import time_remap, render_sequence
+from ...runners.media_remap import time_remap, frame_hold, render_sequence
 from ...runners.media_filter import XFADE_TRANSITIONS
 from ...runners.paint import paint_video
 from ...runners.stabilize import stabilize_video
@@ -21,10 +21,13 @@ class TimeRemapStage(io.ComfyNode):
             category="ComfyTV/Video",
             inputs=[
                 *_standard_stage_inputs(),
+                _hidden_combo("mode", ['speed', 'hold'], 'speed'),
                 _hidden_str("speed_keys", "",
                             "JSON [{t (output s), v (speed ×), interp}]"),
                 _hidden_int("smooth_fps", 0, 0, 120,
                             "0 = off; >0 pre-interpolates the source to this fps (slow)"),
+                _hidden_int("hold_frame", 0, 0, 100000),
+                _hidden_int("hold_increment", 0, 0, 1000),
                 COMFYTV_VIDEO.Input("video", optional=True),
             ],
             outputs=[COMFYTV_VIDEO.Output("video")],
@@ -34,17 +37,24 @@ class TimeRemapStage(io.ComfyNode):
 
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
-                speed_keys="", smooth_fps=0, video=""):
+                mode='speed', speed_keys="", smooth_fps=0, hold_frame=0,
+                hold_increment=0, video=""):
         _need_video(video, "Time Remap")
-        keys = _parse_json(speed_keys, [])
-        if not keys:
-            raise RuntimeError(
-                "Time Remap: add speed keyframes on the node first "
-                "(constant speed is what Video Speed is for)."
-            )
-        payload = time_remap(video, keys,
-                             smooth_fps=min(120, max(0, int(smooth_fps or 0))),
-                             progress=_progress_cb(cls))
+        if mode == 'hold':
+            payload = frame_hold(
+                video, first_frame=max(0, int(hold_frame or 0)),
+                increment=max(0, int(hold_increment or 0)),
+                progress=_progress_cb(cls))
+        else:
+            keys = _parse_json(speed_keys, [])
+            if not keys:
+                raise RuntimeError(
+                    "Time Remap: add speed keyframes on the node first "
+                    "(constant speed is what Video Speed is for)."
+                )
+            payload = time_remap(
+                video, keys, smooth_fps=min(120, max(0, int(smooth_fps or 0))),
+                progress=_progress_cb(cls))
         return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
                                 parent_output_id=parent_output_id)
 

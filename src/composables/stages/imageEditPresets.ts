@@ -13,4 +13,5 @@ export const IMAGE_EDIT_PRESETS: ImagePreset[] = [
   { id: 'mirror',   icon: 'pi pi-arrow-right-arrow-left', category: cat, targetClass: 'ComfyTV.MirrorStage',   inputSocket: 'image' },
   { id: 'colorGrade', icon: 'pi pi-palette',              category: cat, targetClass: 'ComfyTV.ColorGradeStage', inputSocket: 'image' },
   { id: 'grid',     icon: 'pi pi-th-large',               category: cat, targetClass: 'ComfyTV.GridSplitStage', inputSocket: 'image' },
+  { id: 'ken-burns', icon: 'pi pi-camera',                category: cat, targetClass: 'ComfyTV.KenBurnsStage',  inputSocket: 'image' },
 ]

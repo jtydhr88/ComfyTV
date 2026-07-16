@@ -14,6 +14,7 @@ describe('VIDEO_CHANGE_PRESETS', () => {
     const namedSlots: Record<string, string> = {
       transition: 'video_a',
       composite: 'background',
+      'key-mix': 'video_a',
     }
     for (const p of VIDEO_CHANGE_PRESETS) {
       if (p.inputAutogrowGroup) expect(p.inputAutogrowGroup).toBe('videos')
