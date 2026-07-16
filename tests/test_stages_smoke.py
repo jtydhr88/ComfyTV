@@ -432,11 +432,13 @@ class TestVideoAudioEditStageExecute:
         from ComfyTV.nodes.stages import video_audio
         captured = {}
         monkeypatch.setattr(video_audio, "speed_video",
-                            lambda url, factor, reverse: captured.update(
-                                url=url, factor=factor, reverse=reverse) or "/view?filename=o.mp4")
+                            lambda url, factor, reverse, pitch_compensate=True: captured.update(
+                                url=url, factor=factor, reverse=reverse,
+                                pitch_compensate=pitch_compensate) or "/view?filename=o.mp4")
         out = video_audio.VideoSpeedStage.execute(
             project_id="default", video="/view?filename=v.mp4", speed=2.0, reverse=True)
-        assert captured == {"url": "/view?filename=v.mp4", "factor": 2.0, "reverse": True}
+        assert captured == {"url": "/view?filename=v.mp4", "factor": 2.0,
+                            "reverse": True, "pitch_compensate": True}
         assert out.values[0]
 
     def test_video_speed_rejects_noop(self, reset_db):

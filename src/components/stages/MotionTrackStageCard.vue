@@ -10,6 +10,7 @@
         class="ctv:block ctv:size-full ctv:object-contain"
         @loadedmetadata="onMeta"
         @click="onVideoClick"
+        @dblclick="onVideoDblClick"
       />
       <canvas ref="overlayEl" class="ctv:absolute ctv:inset-0 ctv:size-full ctv:pointer-events-none" />
     </div>
@@ -22,6 +23,20 @@
       @pointermove.stop
       @pointerup.stop
     >
+      <div class="ctv:flex ctv:items-center ctv:justify-between ctv:gap-1">
+        <span class="ctv:text-2xs ctv:text-muted-foreground ctv:tracking-wide">{{ points.length }} points</span>
+        <button
+          type="button"
+          class="ctv:py-0.5 ctv:px-1.5 ctv:text-2xs ctv:rounded ctv:cursor-pointer ctv:border
+                 ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground
+                 ctv:hover:border-primary-background"
+          @click="clearPoints"
+        >Clear</button>
+      </div>
+
+      <FxChips v-model="solve" :options="SOLVES" />
+      <div v-if="solveHint" class="ctv:text-2xs ctv:text-muted-foreground">{{ solveHint }}</div>
+
       <FxSlider v-model="tStart" :label="$t('fx.tStart')" :min="0" :max="3600" :step="0.05" />
       <FxSlider v-model="tEnd" :label="$t('fx.tEnd')" :min="-1" :max="3600" :step="0.05" />
       <div class="ctv:text-2xs ctv:text-muted-foreground">{{ $t('fx.tEndAuto') }}</div>
@@ -53,8 +68,9 @@ import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
 import FxSlider from '@/components/widgets/fx/FxSlider.vue'
+import FxChips from '@/components/widgets/fx/FxChips.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
-import { useNumWidget } from '@/composables/widgets/useWidgetModel'
+import { useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
 
 const props = defineProps<{
   state: StageState
@@ -65,13 +81,51 @@ const props = defineProps<{
   node: LGraphNode
 }>()
 
+const SOLVES = [
+  { value: 'none', label: 'Raw' },
+  { value: 'translation', label: 'Move' },
+  { value: 'similarity', label: 'Move+Rot+Scale' },
+  { value: 'perspective', label: 'Perspective' },
+]
+
+type TrackPoint = { x: number; y: number }
+
 const sourceVideoUrl = computed(() => pickSourceImageUrl(props.state.inputs, 'video'))
+const pointsRaw = useStrWidget(props.node, 'points', '')
+const solve = useStrWidget(props.node, 'solve', 'none')
 const pointX = useNumWidget(props.node, 'point_x', 0)
 const pointY = useNumWidget(props.node, 'point_y', 0)
 const tStart = useNumWidget(props.node, 't_start', 0)
 const tEnd = useNumWidget(props.node, 't_end', -1)
 const pattern = useNumWidget(props.node, 'pattern', 16)
 const search = useNumWidget(props.node, 'search', 32)
+
+function parsePoints(raw: string): TrackPoint[] {
+  try {
+    const p = JSON.parse(raw || '[]')
+    if (Array.isArray(p)) {
+      return p
+        .map((q) => ({ x: Number(q?.x), y: Number(q?.y) }))
+        .filter((q) => Number.isFinite(q.x) && Number.isFinite(q.y))
+    }
+  } catch {}
+  return []
+}
+
+const points = computed({
+  get: () => parsePoints(pointsRaw.value),
+  set: (pts: TrackPoint[]) => {
+    pointsRaw.value = pts.length ? JSON.stringify(pts) : ''
+    pointX.value = pts.length ? pts[0].x : 0
+    pointY.value = pts.length ? pts[0].y : 0
+  },
+})
+
+const solveHint = computed(() => {
+  if (solve.value === 'perspective') return 'Needs 4+ points · feeds Corner Pin'
+  if (solve.value === 'similarity') return 'Needs 2+ points · feeds Transform/Composite'
+  return ''
+})
 
 const videoEl = ref<HTMLVideoElement | null>(null)
 const overlayEl = ref<HTMLCanvasElement | null>(null)
@@ -99,13 +153,37 @@ function fitMetrics() {
   return { s, offX: (boxW - dispW) / 2, offY: (boxH - dispH) / 2, boxW, boxH }
 }
 
+function hitPointIndex(e: MouseEvent): number {
+  const m = fitMetrics()
+  if (!m) return -1
+  const pts = points.value
+  for (let i = 0; i < pts.length; i++) {
+    const dx = m.offX + pts[i].x * m.s
+    const dy = m.offY + pts[i].y * m.s
+    if (Math.hypot(dx - e.offsetX, dy - e.offsetY) <= 12) return i
+  }
+  return -1
+}
+
 function onVideoClick(e: MouseEvent) {
   const m = fitMetrics()
   if (!m) return
-  const px = (e.offsetX - m.offX) / m.s
-  const py = (e.offsetY - m.offY) / m.s
-  pointX.value = Math.round(Math.min(videoW.value, Math.max(0, px)))
-  pointY.value = Math.round(Math.min(videoH.value, Math.max(0, py)))
+  if (hitPointIndex(e) >= 0) return
+  const px = Math.round(Math.min(videoW.value, Math.max(0, (e.offsetX - m.offX) / m.s)))
+  const py = Math.round(Math.min(videoH.value, Math.max(0, (e.offsetY - m.offY) / m.s)))
+  points.value = [...points.value, { x: px, y: py }]
+}
+
+function onVideoDblClick(e: MouseEvent) {
+  const idx = hitPointIndex(e)
+  if (idx < 0) return
+  const next = points.value.slice()
+  next.splice(idx, 1)
+  points.value = next
+}
+
+function clearPoints() {
+  points.value = []
 }
 
 function redraw() {
@@ -118,29 +196,36 @@ function redraw() {
   if (!ctx || !m) return
   ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-  const dx = m.offX + pointX.value * m.s
-  const dy = m.offY + pointY.value * m.s
+  points.value.forEach((p, i) => {
+    const dx = m.offX + p.x * m.s
+    const dy = m.offY + p.y * m.s
 
-  ctx.strokeStyle = '#4ade80'
-  ctx.lineWidth = 1
-  ctx.setLineDash([])
-  ctx.beginPath()
-  ctx.moveTo(dx - 8, dy)
-  ctx.lineTo(dx + 8, dy)
-  ctx.moveTo(dx, dy - 8)
-  ctx.lineTo(dx, dy + 8)
-  ctx.stroke()
+    ctx.strokeStyle = '#4ade80'
+    ctx.lineWidth = 1
+    ctx.setLineDash([])
+    ctx.beginPath()
+    ctx.moveTo(dx - 8, dy)
+    ctx.lineTo(dx + 8, dy)
+    ctx.moveTo(dx, dy - 8)
+    ctx.lineTo(dx, dy + 8)
+    ctx.stroke()
 
-  const pHalf = pattern.value * m.s
-  ctx.strokeStyle = '#4ade80'
-  ctx.strokeRect(dx - pHalf, dy - pHalf, pHalf * 2, pHalf * 2)
+    const pHalf = pattern.value * m.s
+    ctx.strokeRect(dx - pHalf, dy - pHalf, pHalf * 2, pHalf * 2)
 
-  const sHalf = search.value * m.s
-  ctx.strokeStyle = '#facc15'
-  ctx.setLineDash([4, 3])
-  ctx.strokeRect(dx - sHalf, dy - sHalf, sHalf * 2, sHalf * 2)
-  ctx.setLineDash([])
+    ctx.fillStyle = '#4ade80'
+    ctx.font = '10px monospace'
+    ctx.fillText(String(i + 1), dx + 5, dy - 5)
+
+    if (i === 0) {
+      const sHalf = search.value * m.s
+      ctx.strokeStyle = '#facc15'
+      ctx.setLineDash([4, 3])
+      ctx.strokeRect(dx - sHalf, dy - sHalf, sHalf * 2, sHalf * 2)
+      ctx.setLineDash([])
+    }
+  })
 }
 
-watch([pointX, pointY, pattern, search], redraw)
+watch([pointsRaw, pattern, search], redraw)
 </script>

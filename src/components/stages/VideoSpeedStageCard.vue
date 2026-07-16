@@ -43,6 +43,11 @@
           @click="setReverse(!reverse)"
         ><i class="pi pi-replay" /> {{ $t('videoSpeed.reverse') }}</button>
       </div>
+
+      <label class="ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs ctv:text-muted-foreground ctv:cursor-pointer">
+        <input type="checkbox" v-model="pitchCompensate" class="ctv:accent-primary-background" />
+        Keep pitch
+      </label>
     </div>
 
     <div class="ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide">
@@ -72,6 +77,7 @@ import StageCard from '@/components/stages/StageCard.vue'
 import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
 import { bindWidgetCallback, onNodeConfigure, readWidgetNum, writeWidget, getWidget } from '@/utils/widget'
+import { useBoolWidget } from '@/composables/widgets/useWidgetModel'
 
 const props = defineProps<{
   state: StageState
@@ -88,6 +94,7 @@ const sourceVideoUrl = computed(() => pickSourceImageUrl(props.state.inputs, 'vi
 
 const speed = ref(readWidgetNum(props.node, 'speed', 1))
 const reverse = ref(Boolean(getWidget(props.node, 'reverse')?.value))
+const pitchCompensate = useBoolWidget(props.node, 'pitch_compensate', true)
 
 function setSpeed(v: number) {
   if (!Number.isFinite(v)) return

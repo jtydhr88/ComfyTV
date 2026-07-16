@@ -97,12 +97,64 @@ def track_point(view_url: str, x: float, y: float, *,
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     src = localize(view_url)
     info = get_video_info(view_url)
+    result = json.loads(track_points(view_url, [{'x': x, 'y': y}],
+                                     t_start=t_start, t_end=t_end,
+                                     pattern_half=pattern_half,
+                                     search_radius=search_radius,
+                                     levels=levels, progress=progress))
+    tr = result['tracks'][0]
+    return json.dumps({'x': tr['x'], 'y': tr['y'],
+                       'confidence': tr['confidence'],
+                       'pattern_half': pattern_half, 'origin': [x, y]})
+
+
+def _track_pair(pyr_prev, pyr_next, prev_gray, g, cx, cy,
+                pattern_half, search_radius, levels):
+    scale = 2 ** (levels - 1)
+    px, py = cx / scale, cy / scale
+    half_c = max(3, pattern_half // scale)
+    tpl = _patch(pyr_prev[-1], px, py, half_c)
+    dx, dy = _sad_search(pyr_next[-1], tpl, px, py,
+                         max(2, search_radius // scale))
+    for lvl in range(levels - 1, -1, -1):
+        s = 2 ** lvl
+        lx, ly = cx / s, cy / s
+        rdx, rdy, ok = _klt_refine(
+            pyr_prev[lvl], pyr_next[lvl], lx, ly,
+            max(3, pattern_half // s), dx0=dx, dy0=dy)
+        if ok:
+            dx, dy = rdx, rdy
+        if lvl > 0:
+            dx *= 2
+            dy *= 2
+    tpl_full = _patch(prev_gray, cx, cy, pattern_half)
+    cand = _patch(g, cx + dx, cy + dy, pattern_half)
+    conf = max(0.0, _ncc(tpl_full, cand))
+    return dx, dy, conf
+
+
+def track_points(view_url: str, points, *,
+                 t_start: float = 0.0, t_end: float = -1.0,
+                 pattern_half: int = 12, search_radius: int = 24,
+                 levels: int = 3, progress=None) -> str:
+    import av
+    import torch
+
+    pts = [(float(p['x']), float(p['y'])) for p in points or []]
+    if not pts:
+        raise RuntimeError("track: no points given")
+
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    src = localize(view_url)
+    info = get_video_info(view_url)
     if t_end is None or t_end < 0:
         t_end = info['duration']
 
-    xs = [{'t': round(t_start, 3), 'v': float(x)}]
-    ys = [{'t': round(t_start, 3), 'v': float(y)}]
-    confidence = [{'t': round(t_start, 3), 'v': 1.0}]
+    t0 = round(t_start, 3)
+    tracks = [{'x': [{'t': t0, 'v': px}], 'y': [{'t': t0, 'v': py}],
+               'confidence': [{'t': t0, 'v': 1.0}], 'origin': [px, py]}
+              for px, py in pts]
+    cur = [list(p) for p in pts]
 
     with av.open(str(src)) as inp:
         vstream = inp.streams.video[0]
@@ -113,7 +165,6 @@ def track_point(view_url: str, x: float, y: float, *,
             except Exception:
                 pass
         prev_gray = None
-        cx, cy = float(x), float(y)
         n = 0
         total_est = max(1, int((t_end - t_start) * info['fps']))
         for frame in inp.decode(vstream):
@@ -131,45 +182,29 @@ def track_point(view_url: str, x: float, y: float, *,
                         pyr_prev[-1].unsqueeze(0).unsqueeze(0), 2)[0, 0])
                     pyr_next.append(torch.nn.functional.avg_pool2d(
                         pyr_next[-1].unsqueeze(0).unsqueeze(0), 2)[0, 0])
-
-                scale = 2 ** (levels - 1)
-                px, py = cx / scale, cy / scale
-                half_c = max(3, pattern_half // scale)
-                tpl = _patch(pyr_prev[-1], px, py, half_c)
-                sdx, sdy = _sad_search(pyr_next[-1], tpl, px, py,
-                                       max(2, search_radius // scale))
-                dx, dy = sdx, sdy
-                for lvl in range(levels - 1, -1, -1):
-                    s = 2 ** lvl
-                    lx, ly = cx / s, cy / s
-                    rdx, rdy, ok = _klt_refine(
-                        pyr_prev[lvl], pyr_next[lvl], lx, ly,
-                        max(3, pattern_half // s), dx0=dx, dy0=dy)
-                    if ok:
-                        dx, dy = rdx, rdy
-                    if lvl > 0:
-                        dx *= 2
-                        dy *= 2
-
-                tpl_full = _patch(prev_gray, cx, cy, pattern_half)
-                cand = _patch(g, cx + dx, cy + dy, pattern_half)
-                conf = max(0.0, _ncc(tpl_full, cand))
-                if conf >= MIN_CONFIDENCE:
-                    cx += dx
-                    cy += dy
                 h, w = g.shape
-                cx = float(min(max(cx, 0.0), w - 1))
-                cy = float(min(max(cy, 0.0), h - 1))
-                xs.append({'t': round(t, 3), 'v': round(cx, 2)})
-                ys.append({'t': round(t, 3), 'v': round(cy, 2)})
-                confidence.append({'t': round(t, 3), 'v': round(conf, 3)})
+                for pi, (cx, cy) in enumerate(cur):
+                    dx, dy, conf = _track_pair(
+                        pyr_prev, pyr_next, prev_gray, g, cx, cy,
+                        pattern_half, search_radius, levels)
+                    if conf >= MIN_CONFIDENCE:
+                        cx += dx
+                        cy += dy
+                    cx = float(min(max(cx, 0.0), w - 1))
+                    cy = float(min(max(cy, 0.0), h - 1))
+                    cur[pi] = [cx, cy]
+                    tracks[pi]['x'].append({'t': round(t, 3), 'v': round(cx, 2)})
+                    tracks[pi]['y'].append({'t': round(t, 3), 'v': round(cy, 2)})
+                    tracks[pi]['confidence'].append(
+                        {'t': round(t, 3), 'v': round(conf, 3)})
             prev_gray = g
             n += 1
             if progress is not None and n % 10 == 0:
                 progress(min(n, total_est), total_est, "tracking")
 
-    return json.dumps({'x': xs, 'y': ys, 'confidence': confidence,
-                       'pattern_half': pattern_half, 'origin': [x, y]})
+    return json.dumps({'tracks': tracks, 'width': info['width'],
+                       'height': info['height'],
+                       'pattern_half': pattern_half})
 
 
-__all__ = ['track_point']
+__all__ = ['track_point', 'track_points']

@@ -46,6 +46,10 @@ from .video_pro import (
 from .video_p2 import (
     TimeRemapStage, SequenceStage, VideoStabilizeV2Stage, PaintStrokeStage,
 )
+from .video_fx2 import (
+    STMapStage, MaskPropagateStage, SubtitleGenStage,
+    HueCorrectStage, GlowStage, GodRaysStage, PatternStage,
+)
 from .panorama import (
     PanoramaStage, PanoramaCurrentViewStage, PanoramaMultiViewStage,
 )
@@ -92,6 +96,8 @@ class ComfyTVExtension(ComfyExtension):
             VideoCompositeStage, VideoTransformStage, CornerPinStage,
             RotoMaskStage, MotionTrackStage, TitleStage, SubtitleStage,
             TimeRemapStage, SequenceStage, VideoStabilizeV2Stage, PaintStrokeStage,
+            STMapStage, MaskPropagateStage, SubtitleGenStage,
+            HueCorrectStage, GlowStage, GodRaysStage, PatternStage,
             ImageLoaderStage, VideoLoaderStage, AudioLoaderStage,
             AssetImageLoaderStage, AssetVideoLoaderStage, AssetAudioLoaderStage,
             Model3DStage, ModelLoaderStage, AssetModelLoaderStage,

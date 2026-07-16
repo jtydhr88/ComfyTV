@@ -47,4 +47,10 @@ export const VIDEO_CHANGE_PRESETS: ImagePreset[] = [
   { id: 'sequence',        icon: 'pi pi-list',       category: cat, targetClass: 'ComfyTV.SequenceStage',                 inputAutogrowGroup: 'videos' },
   { id: 'stabilize-pro',   icon: 'pi pi-shield',     category: cat, targetClass: 'ComfyTV.VideoStabilizeV2Stage',         inputSocket: 'video' },
   { id: 'paint',           icon: 'pi pi-pencil',     category: cat, targetClass: 'ComfyTV.PaintStrokeStage',              inputSocket: 'video' },
+  { id: 'uv-remap',        icon: 'pi pi-table',      category: cat, targetClass: 'ComfyTV.STMapStage',                    inputSocket: 'video' },
+  { id: 'mask-propagate',  icon: 'pi pi-forward',    category: cat, targetClass: 'ComfyTV.MaskPropagateStage',            inputSocket: 'video' },
+  { id: 'speech-to-text',  icon: 'pi pi-microphone', category: cat, targetClass: 'ComfyTV.SubtitleGenStage',              inputSocket: 'video' },
+  { id: 'hue-correct',     icon: 'pi pi-sliders-v',  category: cat, targetClass: 'ComfyTV.HueCorrectStage',               inputSocket: 'video' },
+  { id: 'glow',            icon: 'pi pi-sun',        category: cat, targetClass: 'ComfyTV.GlowStage',                     inputSocket: 'video' },
+  { id: 'god-rays',        icon: 'pi pi-bolt',       category: cat, targetClass: 'ComfyTV.GodRaysStage',                  inputSocket: 'video' },
 ]

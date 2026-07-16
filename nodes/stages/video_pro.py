@@ -4,7 +4,8 @@ from ...runners.media_torch import (
     transform_video, corner_pin_video, composite_videos,
 )
 from ...runners.roto import roto_mask_video
-from ...runners.tracker import track_point
+from ...runners.tracker import track_point, track_points
+from ...runners.track_solve import solve_track_transforms
 from ...runners.text_overlay import title_video, burn_subtitles, list_fonts
 
 from .video_fx import (  # noqa: F401
@@ -23,7 +24,14 @@ def _parse_json(raw, default):
 
 def _track_to_keyframes(track_raw, base_keys):
     track = _parse_json(track_raw, None)
-    if not track or 'x' not in track or 'y' not in track:
+    if not track:
+        return base_keys
+    if 'transform' in track:
+        return [{'t': k['t'], 'x': k['x'], 'y': k['y'],
+                 'rotation': k.get('rotation', 0.0),
+                 'scale': k.get('scale', 1.0), 'interp': 'linear'}
+                for k in track['transform']]
+    if 'x' not in track or 'y' not in track:
         return base_keys
     ox, oy = (track.get('origin') or [0, 0])[:2]
     keys = []
@@ -31,6 +39,13 @@ def _track_to_keyframes(track_raw, base_keys):
         keys.append({'t': kx['t'], 'x': kx['v'] - ox, 'y': -(ky['v'] - oy),
                      'interp': 'linear'})
     return keys
+
+
+def _track_to_corner_keys(track_raw):
+    track = _parse_json(track_raw, None)
+    if not track or 'corners' not in track:
+        return None
+    return [{'t': k['t'], 'corners': k['corners']} for k in track['corners']]
 
 
 class VideoCompositeStage(io.ComfyNode):
@@ -147,6 +162,7 @@ class CornerPinStage(io.ComfyNode):
                             "JSON [[x1,y1],[x2,y2],[x3,y3],[x4,y4]] TL,TR,BR,BL"),
                 _hidden_str("keyframes", "", "JSON [{t, corners}]"),
                 COMFYTV_VIDEO.Input("video", optional=True),
+                COMFYTV_TEXT.Input("track", optional=True),
             ],
             outputs=[COMFYTV_VIDEO.Output("video")],
             is_output_node=True,
@@ -155,10 +171,14 @@ class CornerPinStage(io.ComfyNode):
 
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
-                corners="", keyframes="", video=""):
+                corners="", keyframes="", video="", track=""):
         _need_video(video, "Corner Pin")
         pts = _parse_json(corners, None)
         keys = _parse_json(keyframes, [])
+        if (track or '').strip():
+            track_keys = _track_to_corner_keys(track)
+            if track_keys:
+                keys = track_keys
         if (not pts or len(pts) != 4) and not keys:
             raise RuntimeError(
                 "Corner Pin: drag the four corners on the node first."
@@ -217,8 +237,11 @@ class MotionTrackStage(io.ComfyNode):
             category="ComfyTV/Video",
             inputs=[
                 *_standard_stage_inputs(),
+                _hidden_str("points", "", "JSON [{x,y},...] track points"),
                 _hidden_float("point_x", 0.0, 0.0, 8192.0, step=1.0),
                 _hidden_float("point_y", 0.0, 0.0, 8192.0, step=1.0),
+                _hidden_combo("solve", ['none', 'translation', 'similarity',
+                                        'perspective'], 'none'),
                 _hidden_float("t_start", 0.0, 0.0, 3600.0, step=0.05),
                 _hidden_float("t_end", -1.0, -1.0, 3600.0, step=0.05),
                 _hidden_int("pattern", 12, 4, 64, "pattern half-size (px)"),
@@ -232,19 +255,41 @@ class MotionTrackStage(io.ComfyNode):
 
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
-                point_x=0.0, point_y=0.0, t_start=0.0, t_end=-1.0,
-                pattern=12, search=24, video=""):
+                points="", point_x=0.0, point_y=0.0, solve='none',
+                t_start=0.0, t_end=-1.0, pattern=12, search=24, video=""):
         _need_video(video, "Motion Track")
-        if float(point_x or 0) <= 0 and float(point_y or 0) <= 0:
+        pts = _parse_json(points, [])
+        if not pts and (float(point_x or 0) > 0 or float(point_y or 0) > 0):
+            pts = [{'x': float(point_x), 'y': float(point_y)}]
+        if not pts:
             raise RuntimeError(
-                "Motion Track: click a point to track on the node first."
+                "Motion Track: click at least one point on the node first."
             )
-        payload = track_point(
-            video, float(point_x), float(point_y),
+        result = json.loads(track_points(
+            video, pts,
             t_start=_f(t_start, 0, 3600, 0.0), t_end=float(t_end or -1),
             pattern_half=min(64, max(4, int(pattern or 12))),
             search_radius=min(128, max(8, int(search or 24))),
-            progress=_progress_cb(cls))
+            progress=_progress_cb(cls)))
+
+        first = result['tracks'][0]
+        result['x'] = first['x']
+        result['y'] = first['y']
+        result['confidence'] = first['confidence']
+        result['origin'] = first['origin']
+
+        if solve and solve != 'none':
+            solved = solve_track_transforms(
+                result['tracks'], model=solve,
+                w=result['width'], h=result['height'])
+            if solve == 'perspective':
+                result['corners'] = solved
+            else:
+                result['transform'] = [
+                    {'t': k['t'], 'x': k['x'], 'y': -k['y'],
+                     'rotation': -k['rotation'], 'scale': k['scale']}
+                    for k in solved]
+        payload = json.dumps(result)
         return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
                                 parent_output_id=parent_output_id)
 

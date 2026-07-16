@@ -73,6 +73,12 @@ import TimeRemapStageCard from '@/components/stages/TimeRemapStageCard.vue'
 import SequenceStageCard from '@/components/stages/SequenceStageCard.vue'
 import VideoStabilizeV2StageCard from '@/components/stages/VideoStabilizeV2StageCard.vue'
 import PaintStrokeStageCard from '@/components/stages/PaintStrokeStageCard.vue'
+import STMapStageCard from '@/components/stages/STMapStageCard.vue'
+import MaskPropagateStageCard from '@/components/stages/MaskPropagateStageCard.vue'
+import HueCorrectStageCard from '@/components/stages/HueCorrectStageCard.vue'
+import GlowStageCard from '@/components/stages/GlowStageCard.vue'
+import GodRaysStageCard from '@/components/stages/GodRaysStageCard.vue'
+import PatternStageCard from '@/components/stages/PatternStageCard.vue'
 import ProjectCard from '@/components/stages/ProjectCard.vue'
 import ComfyTVMountHost from '@/components/ComfyTVMountHost.vue'
 import { registerMount, unregisterMount } from '@/composables/stages/widgetMounts'
@@ -204,6 +210,12 @@ const RICH_STAGE_CARDS: Record<string, any> = {
   'ComfyTV.SequenceStage':            SequenceStageCard,
   'ComfyTV.VideoStabilizeV2Stage':    VideoStabilizeV2StageCard,
   'ComfyTV.PaintStrokeStage':         PaintStrokeStageCard,
+  'ComfyTV.STMapStage':               STMapStageCard,
+  'ComfyTV.MaskPropagateStage':       MaskPropagateStageCard,
+  'ComfyTV.HueCorrectStage':          HueCorrectStageCard,
+  'ComfyTV.GlowStage':                GlowStageCard,
+  'ComfyTV.GodRaysStage':             GodRaysStageCard,
+  'ComfyTV.PatternStage':             PatternStageCard,
 }
 
 const RICH_STAGE_MIN_HEIGHTS: Record<string, number> = {
@@ -282,6 +294,12 @@ const RICH_STAGE_MIN_HEIGHTS: Record<string, number> = {
   'ComfyTV.SequenceStage':            700,
   'ComfyTV.VideoStabilizeV2Stage':    620,
   'ComfyTV.PaintStrokeStage':         800,
+  'ComfyTV.STMapStage':               700,
+  'ComfyTV.MaskPropagateStage':       660,
+  'ComfyTV.HueCorrectStage':          760,
+  'ComfyTV.GlowStage':                660,
+  'ComfyTV.GodRaysStage':             700,
+  'ComfyTV.PatternStage':             760,
 }
 
 const RICH_STAGE_MIN_WIDTHS: Record<string, number> = {

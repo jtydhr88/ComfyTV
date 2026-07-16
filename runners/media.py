@@ -406,7 +406,8 @@ def _encode_audio_array(outp, out_a, arr):
         outp.mux(pkt)
 
 
-def speed_video(view_url: str, factor: float, reverse: bool = False) -> str:
+def speed_video(view_url: str, factor: float, reverse: bool = False,
+                pitch_compensate: bool = True) -> str:
     import av
     import numpy as np
     from fractions import Fraction
@@ -473,11 +474,23 @@ def speed_video(view_url: str, factor: float, reverse: bool = False) -> str:
         if out_a is not None:
             arr = _decode_audio_to_array(src)
             if factor != 1.0 and arr.shape[1] > 1:
-                n_out = max(1, int(round(arr.shape[1] / factor)))
-                xi = np.linspace(0.0, arr.shape[1] - 1, n_out)
-                xp = np.arange(arr.shape[1])
-                arr = np.stack([np.interp(xi, xp, arr[c]) for c in range(2)]).astype(np.float32)
+                if pitch_compensate:
+                    from .media_filter import process_audio_array, atempo_specs
+                    arr = process_audio_array(arr, atempo_specs(factor))
+                else:
+                    n_out = max(1, int(round(arr.shape[1] / factor)))
+                    xi = np.linspace(0.0, arr.shape[1] - 1, n_out)
+                    xp = np.arange(arr.shape[1])
+                    arr = np.stack([np.interp(xi, xp, arr[c]) for c in range(2)]).astype(np.float32)
             if reverse:
+                target = int(round(end_t * _AUDIO_RATE))
+                if target > 0:
+                    if arr.shape[1] > target:
+                        arr = arr[:, :target]
+                    elif arr.shape[1] < target:
+                        arr = np.concatenate(
+                            [arr, np.zeros((2, target - arr.shape[1]),
+                                           dtype=np.float32)], axis=1)
                 arr = np.ascontiguousarray(arr[:, ::-1])
             _encode_audio_array(outp, out_a, arr)
 

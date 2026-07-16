@@ -299,6 +299,27 @@
     },
     "PaintStrokeStage": {
       "display_name": "笔刷修补"
+    },
+    "STMapStage": {
+      "display_name": "UV 重映射"
+    },
+    "MaskPropagateStage": {
+      "display_name": "遮罩传播"
+    },
+    "SubtitleGenStage": {
+      "display_name": "语音转字幕"
+    },
+    "HueCorrectStage": {
+      "display_name": "色相校正"
+    },
+    "GlowStage": {
+      "display_name": "辉光"
+    },
+    "GodRaysStage": {
+      "display_name": "光芒"
+    },
+    "PatternStage": {
+      "display_name": "图形生成"
     }
   },
   "ComfyTV_AssetAudioLoaderStage": {
@@ -1950,5 +1971,26 @@
   },
   "ComfyTV_PaintStrokeStage": {
     "display_name": "笔刷修补"
+  },
+  "ComfyTV_STMapStage": {
+    "display_name": "UV 重映射"
+  },
+  "ComfyTV_MaskPropagateStage": {
+    "display_name": "遮罩传播"
+  },
+  "ComfyTV_SubtitleGenStage": {
+    "display_name": "语音转字幕"
+  },
+  "ComfyTV_HueCorrectStage": {
+    "display_name": "色相校正"
+  },
+  "ComfyTV_GlowStage": {
+    "display_name": "辉光"
+  },
+  "ComfyTV_GodRaysStage": {
+    "display_name": "光芒"
+  },
+  "ComfyTV_PatternStage": {
+    "display_name": "图形生成"
   }
 }

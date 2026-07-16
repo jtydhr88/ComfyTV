@@ -299,6 +299,27 @@
     },
     "PaintStrokeStage": {
       "display_name": "Paint Strokes"
+    },
+    "STMapStage": {
+      "display_name": "UV Remap"
+    },
+    "MaskPropagateStage": {
+      "display_name": "Mask Propagate"
+    },
+    "SubtitleGenStage": {
+      "display_name": "Subtitles · Speech-to-Text"
+    },
+    "HueCorrectStage": {
+      "display_name": "Hue Correct"
+    },
+    "GlowStage": {
+      "display_name": "Glow"
+    },
+    "GodRaysStage": {
+      "display_name": "God Rays"
+    },
+    "PatternStage": {
+      "display_name": "Pattern"
     }
   },
   "ComfyTV_AssetAudioLoaderStage": {
@@ -1950,5 +1971,26 @@
   },
   "ComfyTV_PaintStrokeStage": {
     "display_name": "Paint Strokes"
+  },
+  "ComfyTV_STMapStage": {
+    "display_name": "UV Remap"
+  },
+  "ComfyTV_MaskPropagateStage": {
+    "display_name": "Mask Propagate"
+  },
+  "ComfyTV_SubtitleGenStage": {
+    "display_name": "Subtitles · Speech-to-Text"
+  },
+  "ComfyTV_HueCorrectStage": {
+    "display_name": "Hue Correct"
+  },
+  "ComfyTV_GlowStage": {
+    "display_name": "Glow"
+  },
+  "ComfyTV_GodRaysStage": {
+    "display_name": "God Rays"
+  },
+  "ComfyTV_PatternStage": {
+    "display_name": "Pattern"
   }
 }

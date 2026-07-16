@@ -3,7 +3,7 @@ import math
 
 import numpy as np
 
-from .media import get_video_info
+from .media import get_video_info, localize
 from .media_torch import torch_process_video
 
 
@@ -77,9 +77,49 @@ def paint_video(view_url: str, strokes, *, t_start=0.0, t_end=-1.0,
             'dy': float(s.get('dy') or 0.0),
             'sigma': min(50.0, max(0.5, float(s.get('sigma') or 8.0))),
             'color': _hex_rgb(s.get('color')),
+            'time_offset': float(s.get('time_offset') or 0.0),
+            'time_absolute': float(s.get('time_absolute', -1.0)),
         })
     if not prepared:
         raise RuntimeError("paint: no strokes")
+
+    fps = info['fps'] or 24
+    max_back = max((-s['time_offset'] for s in prepared
+                    if s['mode'] == 'clone' and s['time_offset'] < 0
+                    and s['time_absolute'] < 0), default=0.0)
+    for s in prepared:
+        if s['mode'] == 'clone' and s['time_offset'] > 0 and s['time_absolute'] < 0:
+            raise RuntimeError(
+                "paint: positive clone time offsets aren't supported — "
+                "use an absolute source time instead"
+            )
+    history_len = int(max_back * fps * 1.5) + 4 if max_back > 0 else 0
+
+    abs_frames = {}
+    abs_times = sorted({s['time_absolute'] for s in prepared
+                        if s['mode'] == 'clone' and s['time_absolute'] >= 0})
+    if abs_times:
+        import av
+        src_path = localize(view_url)
+        with av.open(str(src_path)) as c:
+            vstream = c.streams.video[0]
+            for at in abs_times:
+                if vstream.time_base:
+                    try:
+                        c.seek(int(at / float(vstream.time_base)),
+                               stream=vstream, any_frame=False, backward=True)
+                    except Exception:
+                        pass
+                picked = None
+                for frame in c.decode(vstream):
+                    picked = frame
+                    if frame.pts is not None and vstream.time_base and \
+                            frame.pts * float(vstream.time_base) >= at:
+                        break
+                if picked is None:
+                    raise RuntimeError(f"paint: no frame at absolute time {at}")
+                arr = picked.to_ndarray(format='rgb24')
+                abs_frames[at] = arr
 
     masks_t = {}
 
@@ -107,17 +147,51 @@ def paint_video(view_url: str, strokes, *, t_start=0.0, t_end=-1.0,
         return c.squeeze(0).permute(1, 2, 0)
 
     end = float(t_end) if (t_end is not None and float(t_end) > 0) else 1e12
+    from collections import deque
+    history = deque(maxlen=max(1, history_len))
+    abs_tensors = {}
+
+    def _clone_source(s, img, t):
+        if s['time_absolute'] >= 0:
+            key = s['time_absolute']
+            if key not in abs_tensors:
+                abs_tensors[key] = torch.from_numpy(
+                    abs_frames[key].copy()).to(img.device).float() / 255.0
+            src = abs_tensors[key]
+            if src.shape[:2] != img.shape[:2]:
+                src = src[:img.shape[0], :img.shape[1]]
+            return src
+        if s['time_offset'] < 0:
+            target = t + s['time_offset']
+            best = None
+            for ht, harr in history:
+                if ht <= target + 1e-4:
+                    best = harr
+            if best is None and history:
+                best = history[0][1]
+            if best is not None:
+                return best.to(img.device).float() / 255.0
+        return img
+
+    def _shift(t_frame, dx, dy):
+        h, w = t_frame.shape[0], t_frame.shape[1]
+        ys = torch.clamp(
+            torch.arange(h, device=t_frame.device) - int(round(dy)), 0, h - 1)
+        xs = torch.clamp(
+            torch.arange(w, device=t_frame.device) - int(round(dx)), 0, w - 1)
+        return t_frame[ys][:, xs]
 
     def frame_fn(img, t):
+        if history_len > 0 and t <= end + max_back:
+            history.append((t, (img.clamp(0, 1) * 255).byte().cpu()))
         if t < t_start or t > end:
             return img
         out = img
         for s in prepared:
             m = _mask_for(s, img.device)
             if s['mode'] == 'clone':
-                src = torch.roll(out, shifts=(int(round(s['dy'])),
-                                              int(round(s['dx']))),
-                                 dims=(0, 1))
+                base = _clone_source(s, img, t)
+                src = _shift(base, s['dx'], s['dy'])
                 out = src * m + out * (1 - m)
             elif s['mode'] == 'blur':
                 out = _gauss_blur(out, s['sigma']) * m + out * (1 - m)

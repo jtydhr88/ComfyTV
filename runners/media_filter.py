@@ -253,6 +253,67 @@ def filter_video(view_url: str,
     return path_to_view_url(out)
 
 
+def process_audio_array(arr, audio_specs):
+    import av
+    import numpy as np
+
+    audio_specs = list(audio_specs or [])
+    require_filters(*[n for n, _ in audio_specs])
+    graph = av.filter.Graph()
+    src = graph.add_abuffer(format='fltp', layout='stereo',
+                            sample_rate=_AUDIO_RATE,
+                            time_base=Fraction(1, _AUDIO_RATE))
+    prev = src
+    for name, args in audio_specs:
+        f = graph.add(name, args) if args else graph.add(name)
+        prev.link_to(f)
+        prev = f
+    fmt = graph.add(
+        'aformat',
+        f'sample_fmts=fltp:sample_rates={_AUDIO_RATE}:channel_layouts=stereo')
+    prev.link_to(fmt)
+    sink = graph.add('abuffersink')
+    fmt.link_to(sink)
+    graph.configure()
+
+    chunks = []
+    pos = 0
+    total = arr.shape[1]
+    while pos < total:
+        n = min(_AAC_FRAME, total - pos)
+        af = av.AudioFrame.from_ndarray(
+            np.ascontiguousarray(arr[:, pos:pos + n].astype(np.float32)),
+            format='fltp', layout='stereo')
+        af.sample_rate = _AUDIO_RATE
+        af.pts = pos
+        af.time_base = Fraction(1, _AUDIO_RATE)
+        pos += n
+        src.push(af)
+        for f in _drain(sink):
+            chunks.append(f.to_ndarray().astype(np.float32, copy=False))
+    src.push(None)
+    for f in _drain(sink):
+        chunks.append(f.to_ndarray().astype(np.float32, copy=False))
+    if not chunks:
+        return np.zeros((2, 0), dtype=np.float32)
+    return np.concatenate(chunks, axis=1)
+
+
+def atempo_specs(factor: float):
+    if not factor or factor <= 0:
+        raise ValueError(f"atempo: factor must be positive ({factor})")
+    specs = []
+    remain = float(factor)
+    while remain > 2.0 + 1e-9:
+        specs.append(('atempo', '2.0'))
+        remain /= 2.0
+    while remain < 0.5 - 1e-9:
+        specs.append(('atempo', '0.5'))
+        remain /= 0.5
+    specs.append(('atempo', f'{remain:.6f}'))
+    return specs
+
+
 def filter_audio(view_url: str, audio_specs, out_codec: str = 'wav') -> str:
     import av
 
@@ -761,6 +822,7 @@ def audio_image(view_url: str, filter_name: str, args=None) -> str:
 __all__ = [
     'available_filters', 'has_filter', 'require_filters', 'has_encoder',
     'filter_video', 'filter_audio', 'chroma_key_video',
+    'process_audio_array', 'atempo_specs',
     'xfade_videos', 'XFADE_TRANSITIONS',
     'scene_detect', 'filter_frame_image',
     'crossfade_audios', 'analyze_audio', 'audio_image', 'AFADE_CURVES',

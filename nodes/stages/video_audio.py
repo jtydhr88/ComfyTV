@@ -193,6 +193,8 @@ class VideoSpeedStage(io.ComfyNode):
                                socketless=True, extra_dict={"hidden": True}),
                 io.Boolean.Input("reverse", default=False,
                                  socketless=True, extra_dict={"hidden": True}),
+                io.Boolean.Input("pitch_compensate", default=True,
+                                 socketless=True, extra_dict={"hidden": True}),
                 COMFYTV_VIDEO.Input("video", optional=True),
             ],
             outputs=[COMFYTV_VIDEO.Output("video")],
@@ -202,7 +204,7 @@ class VideoSpeedStage(io.ComfyNode):
 
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
-                speed=1.0, reverse=False, video=""):
+                speed=1.0, reverse=False, pitch_compensate=True, video=""):
         if not (video or '').strip():
             raise RuntimeError(
                 "Video Speed needs an upstream video — wire one into the video input."
@@ -211,7 +213,8 @@ class VideoSpeedStage(io.ComfyNode):
             raise RuntimeError(
                 "Video Speed: nothing to do — set a speed other than 1x or enable reverse."
             )
-        payload = speed_video(video, float(speed or 1.0), bool(reverse))
+        payload = speed_video(video, float(speed or 1.0), bool(reverse),
+                              pitch_compensate=bool(pitch_compensate))
         return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
                                 parent_output_id=parent_output_id)
 
