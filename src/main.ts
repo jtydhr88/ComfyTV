@@ -36,6 +36,34 @@ import Scene3DStageCard from '@/components/stages/Scene3DStageCard.vue'
 import LayerEditorStageCard from '@/components/stages/LayerEditorStageCard.vue'
 import MaterialStageCard from '@/components/stages/MaterialStageCard.vue'
 import SplitPartStageCard from '@/components/stages/SplitPartStageCard.vue'
+import VideoColorStageCard from '@/components/stages/VideoColorStageCard.vue'
+import VideoCurvesStageCard from '@/components/stages/VideoCurvesStageCard.vue'
+import VideoLUTStageCard from '@/components/stages/VideoLUTStageCard.vue'
+import VideoBlurSharpenStageCard from '@/components/stages/VideoBlurSharpenStageCard.vue'
+import VideoDenoiseStageCard from '@/components/stages/VideoDenoiseStageCard.vue'
+import VideoChromaKeyStageCard from '@/components/stages/VideoChromaKeyStageCard.vue'
+import VideoTransitionStageCard from '@/components/stages/VideoTransitionStageCard.vue'
+import VideoStabilizeStageCard from '@/components/stages/VideoStabilizeStageCard.vue'
+import SceneDetectStageCard from '@/components/stages/SceneDetectStageCard.vue'
+import VideoInterpolateStageCard from '@/components/stages/VideoInterpolateStageCard.vue'
+import VideoDeinterlaceStageCard from '@/components/stages/VideoDeinterlaceStageCard.vue'
+import VideoStylizeStageCard from '@/components/stages/VideoStylizeStageCard.vue'
+import VideoScopesStageCard from '@/components/stages/VideoScopesStageCard.vue'
+import AudioDynamicsStageCard from '@/components/stages/AudioDynamicsStageCard.vue'
+import AudioEQStageCard from '@/components/stages/AudioEQStageCard.vue'
+import AudioLoudnessStageCard from '@/components/stages/AudioLoudnessStageCard.vue'
+import AudioDenoiseStageCard from '@/components/stages/AudioDenoiseStageCard.vue'
+import VideoCompositeStageCard from '@/components/stages/VideoCompositeStageCard.vue'
+import VideoTransformStageCard from '@/components/stages/VideoTransformStageCard.vue'
+import CornerPinStageCard from '@/components/stages/CornerPinStageCard.vue'
+import RotoMaskStageCard from '@/components/stages/RotoMaskStageCard.vue'
+import MotionTrackStageCard from '@/components/stages/MotionTrackStageCard.vue'
+import TitleStageCard from '@/components/stages/TitleStageCard.vue'
+import SubtitleStageCard from '@/components/stages/SubtitleStageCard.vue'
+import TimeRemapStageCard from '@/components/stages/TimeRemapStageCard.vue'
+import SequenceStageCard from '@/components/stages/SequenceStageCard.vue'
+import VideoStabilizeV2StageCard from '@/components/stages/VideoStabilizeV2StageCard.vue'
+import PaintStrokeStageCard from '@/components/stages/PaintStrokeStageCard.vue'
 import ProjectCard from '@/components/stages/ProjectCard.vue'
 import ComfyTVMountHost from '@/components/ComfyTVMountHost.vue'
 import { registerMount, unregisterMount } from '@/composables/stages/widgetMounts'
@@ -130,6 +158,34 @@ const RICH_STAGE_CARDS: Record<string, any> = {
   'ComfyTV.LayerEditorStage':         LayerEditorStageCard,
   'ComfyTV.MaterialStage':            MaterialStageCard,
   'ComfyTV.SplitPartStage':           SplitPartStageCard,
+  'ComfyTV.VideoColorStage':          VideoColorStageCard,
+  'ComfyTV.VideoCurvesStage':         VideoCurvesStageCard,
+  'ComfyTV.VideoLUTStage':            VideoLUTStageCard,
+  'ComfyTV.VideoBlurSharpenStage':    VideoBlurSharpenStageCard,
+  'ComfyTV.VideoDenoiseStage':        VideoDenoiseStageCard,
+  'ComfyTV.VideoChromaKeyStage':      VideoChromaKeyStageCard,
+  'ComfyTV.VideoTransitionStage':     VideoTransitionStageCard,
+  'ComfyTV.VideoStabilizeStage':      VideoStabilizeStageCard,
+  'ComfyTV.SceneDetectStage':         SceneDetectStageCard,
+  'ComfyTV.VideoInterpolateStage':    VideoInterpolateStageCard,
+  'ComfyTV.VideoDeinterlaceStage':    VideoDeinterlaceStageCard,
+  'ComfyTV.VideoStylizeStage':        VideoStylizeStageCard,
+  'ComfyTV.VideoScopesStage':         VideoScopesStageCard,
+  'ComfyTV.AudioDynamicsStage':       AudioDynamicsStageCard,
+  'ComfyTV.AudioEQStage':             AudioEQStageCard,
+  'ComfyTV.AudioLoudnessStage':       AudioLoudnessStageCard,
+  'ComfyTV.AudioDenoiseStage':        AudioDenoiseStageCard,
+  'ComfyTV.VideoCompositeStage':      VideoCompositeStageCard,
+  'ComfyTV.VideoTransformStage':      VideoTransformStageCard,
+  'ComfyTV.CornerPinStage':           CornerPinStageCard,
+  'ComfyTV.RotoMaskStage':            RotoMaskStageCard,
+  'ComfyTV.MotionTrackStage':         MotionTrackStageCard,
+  'ComfyTV.TitleStage':               TitleStageCard,
+  'ComfyTV.SubtitleStage':            SubtitleStageCard,
+  'ComfyTV.TimeRemapStage':           TimeRemapStageCard,
+  'ComfyTV.SequenceStage':            SequenceStageCard,
+  'ComfyTV.VideoStabilizeV2Stage':    VideoStabilizeV2StageCard,
+  'ComfyTV.PaintStrokeStage':         PaintStrokeStageCard,
 }
 
 const RICH_STAGE_MIN_HEIGHTS: Record<string, number> = {
@@ -171,6 +227,34 @@ const RICH_STAGE_MIN_HEIGHTS: Record<string, number> = {
   'ComfyTV.LayerEditorStage':         680,
   'ComfyTV.MaterialStage':            600,
   'ComfyTV.SplitPartStage':           720,
+  'ComfyTV.VideoColorStage':          800,
+  'ComfyTV.VideoCurvesStage':         720,
+  'ComfyTV.VideoLUTStage':            620,
+  'ComfyTV.VideoBlurSharpenStage':    620,
+  'ComfyTV.VideoDenoiseStage':        600,
+  'ComfyTV.VideoChromaKeyStage':      740,
+  'ComfyTV.VideoTransitionStage':     740,
+  'ComfyTV.VideoStabilizeStage':      600,
+  'ComfyTV.SceneDetectStage':         660,
+  'ComfyTV.VideoInterpolateStage':    620,
+  'ComfyTV.VideoDeinterlaceStage':    580,
+  'ComfyTV.VideoStylizeStage':        620,
+  'ComfyTV.VideoScopesStage':         660,
+  'ComfyTV.AudioDynamicsStage':       700,
+  'ComfyTV.AudioEQStage':             720,
+  'ComfyTV.AudioLoudnessStage':       640,
+  'ComfyTV.AudioDenoiseStage':        620,
+  'ComfyTV.VideoCompositeStage':      820,
+  'ComfyTV.VideoTransformStage':      780,
+  'ComfyTV.CornerPinStage':           640,
+  'ComfyTV.RotoMaskStage':            700,
+  'ComfyTV.MotionTrackStage':         700,
+  'ComfyTV.TitleStage':               780,
+  'ComfyTV.SubtitleStage':            720,
+  'ComfyTV.TimeRemapStage':           700,
+  'ComfyTV.SequenceStage':            700,
+  'ComfyTV.VideoStabilizeV2Stage':    620,
+  'ComfyTV.PaintStrokeStage':         800,
 }
 
 const RICH_STAGE_MIN_WIDTHS: Record<string, number> = {

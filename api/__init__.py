@@ -8,5 +8,6 @@ from . import workflows  # noqa: F401
 from . import storyboard # noqa: F401
 from . import servers    # noqa: F401
 from . import scene3d_assets  # noqa: F401
+from . import video_fx    # noqa: F401
 
 from .stages import _compute_input_usage  # noqa: F401

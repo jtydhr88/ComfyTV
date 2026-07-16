@@ -24,6 +24,23 @@ from .video_audio import (
     AudioExtractVocalStage, AudioExtractBgStage,
     AudioVideoDemuxAudioStage, AudioVideoDemuxVideoStage,
 )
+from .video_fx import (
+    VideoColorStage, VideoCurvesStage, VideoLUTStage,
+    VideoBlurSharpenStage, VideoDenoiseStage, VideoChromaKeyStage,
+    VideoTransitionStage, VideoStabilizeStage, SceneDetectStage,
+    VideoInterpolateStage, VideoDeinterlaceStage, VideoStylizeStage,
+    VideoScopesStage,
+)
+from .audio_fx import (
+    AudioDynamicsStage, AudioEQStage, AudioLoudnessStage, AudioDenoiseStage,
+)
+from .video_pro import (
+    VideoCompositeStage, VideoTransformStage, CornerPinStage,
+    RotoMaskStage, MotionTrackStage, TitleStage, SubtitleStage,
+)
+from .video_p2 import (
+    TimeRemapStage, SequenceStage, VideoStabilizeV2Stage, PaintStrokeStage,
+)
 from .panorama import (
     PanoramaStage, PanoramaCurrentViewStage, PanoramaMultiViewStage,
 )
@@ -58,6 +75,15 @@ class ComfyTVExtension(ComfyExtension):
             VideoSpeedStage, VideoRotateStage, VideoSplitStage,
             VideoVolumeStage, VideoMuxAudioStage,
             AudioVideoDemuxAudioStage, AudioVideoDemuxVideoStage,
+            VideoColorStage, VideoCurvesStage, VideoLUTStage,
+            VideoBlurSharpenStage, VideoDenoiseStage, VideoChromaKeyStage,
+            VideoTransitionStage, VideoStabilizeStage, SceneDetectStage,
+            VideoInterpolateStage, VideoDeinterlaceStage, VideoStylizeStage,
+            VideoScopesStage,
+            AudioDynamicsStage, AudioEQStage, AudioLoudnessStage, AudioDenoiseStage,
+            VideoCompositeStage, VideoTransformStage, CornerPinStage,
+            RotoMaskStage, MotionTrackStage, TitleStage, SubtitleStage,
+            TimeRemapStage, SequenceStage, VideoStabilizeV2Stage, PaintStrokeStage,
             ImageLoaderStage, VideoLoaderStage, AudioLoaderStage,
             AssetImageLoaderStage, AssetVideoLoaderStage, AssetAudioLoaderStage,
             Model3DStage, ModelLoaderStage, AssetModelLoaderStage,

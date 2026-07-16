@@ -588,6 +588,98 @@
       "demux": {
         "label": "音视频分离",
         "tooltip": "同时产出音频轨和静默视频（双节点）"
+      },
+      "color": {
+        "label": "调色",
+        "tooltip": "曝光、色温、色相/饱和 + 三路色轮"
+      },
+      "curves": {
+        "label": "曲线",
+        "tooltip": "主通道/R/G/B 色调曲线"
+      },
+      "lut": {
+        "label": "LUT",
+        "tooltip": "套用 .cube 3D LUT"
+      },
+      "blur-sharpen": {
+        "label": "模糊/锐化",
+        "tooltip": "高斯/盒式/双边模糊或 USM 锐化"
+      },
+      "denoise": {
+        "label": "降噪",
+        "tooltip": "时空降噪 / 去色带"
+      },
+      "chroma-key": {
+        "label": "抠像",
+        "tooltip": "绿幕/蓝幕抠像 → 透明 WebM 或黑白遮罩"
+      },
+      "transition": {
+        "label": "转场",
+        "tooltip": "两段视频交叉转场（55 种 xfade）"
+      },
+      "stabilize": {
+        "label": "防抖",
+        "tooltip": "去除相机抖动（deshake）"
+      },
+      "scene-detect": {
+        "label": "场景检测",
+        "tooltip": "找出硬切点，每个场景一张缩略图"
+      },
+      "interpolate": {
+        "label": "补帧",
+        "tooltip": "光流升帧率或丝滑慢动作"
+      },
+      "stylize": {
+        "label": "风格化",
+        "tooltip": "晕影 / 颗粒 / 像素化 / 老电影"
+      },
+      "scopes": {
+        "label": "示波器",
+        "tooltip": "波形 / 矢量示波器 / 直方图"
+      },
+      "transform": {
+        "label": "变换",
+        "tooltip": "可打关键帧的移动/缩放/旋转 + 运动模糊"
+      },
+      "composite": {
+        "label": "合成",
+        "tooltip": "叠加另一段视频 — 39 种混合模式"
+      },
+      "corner-pin": {
+        "label": "四角定位",
+        "tooltip": "拖四角做透视贴合"
+      },
+      "roto-mask": {
+        "label": "Roto 遮罩",
+        "tooltip": "画 Bezier 形状 → 羽化遮罩视频"
+      },
+      "motion-track": {
+        "label": "运动跟踪",
+        "tooltip": "跟踪一个点，喂给变换/合成节点"
+      },
+      "title": {
+        "label": "标题",
+        "tooltip": "烧录带淡入淡出的样式标题"
+      },
+      "subtitles": {
+        "label": "字幕",
+        "tooltip": "把 SRT/VTT 字幕烧进画面"
+      },
+      "time-remap": {
+        "label": "时间重映射",
+        "tooltip": "一条曲线上的关键帧变速（慢放↔快进）"
+      },
+      "sequence": {
+        "label": "序列编排",
+        "tooltip": "多段排序 + 每段修剪 + 段间转场"
+      },
+      "stabilize-pro": {
+        "label": "专业防抖",
+        "tooltip": "vid.stab 级两阶段防抖"
+      },
+      "paint": {
+        "label": "笔刷修补",
+        "tooltip": "克隆/模糊/涂色笔刷修补"
       }
     }
   },
@@ -1337,5 +1429,121 @@
     "alignRight": "右对齐",
     "textPlaceholder": "输入文字…",
     "dropHint": "拖入图片以添加图层"
+  },
+  "fx": {
+    "processing": "处理中…",
+    "done": "完成 — 可供下游使用",
+    "adjustThenRun": "调整参数后点击 Run",
+    "needsTwoInputs": "需要接入两个视频（A 和 B）",
+    "needsAudioOrVideo": "需要接入音频或视频",
+    "previewNote": "预览为近似效果 — Run 后精确渲染",
+    "mode": "模式",
+    "method": "方法",
+    "effect": "效果",
+    "scope": "示波器",
+    "preset": "预设",
+    "transition": "转场",
+    "amount": "强度",
+    "size": "尺寸",
+    "strength": "力度",
+    "edgePreserve": "保边",
+    "exposure": "曝光",
+    "black": "黑位",
+    "temperature": "色温 (K)",
+    "tempMix": "色温混合",
+    "hue": "色相",
+    "saturation": "饱和度",
+    "vibrance": "自然饱和",
+    "shadows": "阴影",
+    "midtones": "中间调",
+    "highlights": "高光",
+    "preserveLightness": "保持明度",
+    "resetWheels": "重置色轮",
+    "master": "主通道",
+    "red": "红",
+    "green": "绿",
+    "blue": "蓝",
+    "resetCurve": "重置曲线",
+    "curveHint": "单击添加 · 拖动移动 · 右键删除",
+    "keyColor": "键色",
+    "pickFromVideo": "从画面取色",
+    "similarity": "相似度",
+    "blend": "边缘融合",
+    "despill": "去溢色",
+    "despillExpand": "溢色扩展",
+    "outAlpha": "透明通道 (WebM)",
+    "outMatte": "黑白遮罩",
+    "duration": "时长",
+    "offset": "起始位置",
+    "offsetAuto": "0 = 自动（A 末尾）",
+    "rangeX": "水平搜索",
+    "rangeY": "垂直搜索",
+    "edgeMode": "边缘填充",
+    "threshold": "阈值",
+    "minGap": "最小间隔",
+    "detectHint": "Run 扫描硬切点，每个场景输出一张缩略图",
+    "targetFps": "目标帧率",
+    "slowFactor": "慢放倍数",
+    "miMode": "补偿模式",
+    "rateFrame": "同帧率",
+    "rateField": "倍帧率",
+    "block": "块大小",
+    "atSeconds": "取帧时间 (s)",
+    "middle": "中点",
+    "thresholdDb": "阈值",
+    "ratio": "压缩比",
+    "attack": "启动",
+    "release": "释放",
+    "makeup": "增益补偿",
+    "knee": "拐点",
+    "intensity": "强度",
+    "eqHint": "双击空白添加频段 · 拖动调节 · 滚轮调 Q · 双击圆点删除",
+    "targetI": "目标响度 LUFS",
+    "targetTp": "真峰值",
+    "targetLra": "响度范围",
+    "frameLen": "帧长 (ms)",
+    "gaussWin": "高斯窗",
+    "silenceDb": "静音阈值 (dB)",
+    "minSilence": "最短静音 (s)",
+    "lutFile": "LUT 文件",
+    "upload": "上传",
+    "interp": "插值",
+    "noLuts": "暂无 LUT — 请上传 .cube 文件",
+    "refresh": "刷新",
+    "operator": "混合模式",
+    "opacity": "不透明度",
+    "position": "位置",
+    "scale": "缩放",
+    "rotation": "旋转",
+    "skew": "斜切",
+    "motionBlur": "运动模糊",
+    "keyframes": "关键帧",
+    "addKey": "打帧",
+    "delKey": "删帧",
+    "clearKeys": "清空",
+    "dragHint": "拖动画面移动 · 滚轮缩放",
+    "cornerHint": "拖动四个角点",
+    "rotoHint": "单击加点 · 拖动移动 · 双击点删除",
+    "trackHint": "在画面上单击设置跟踪点",
+    "needsBgFg": "需要接入背景和前景视频",
+    "foreground": "前景",
+    "background": "背景",
+    "text": "文本",
+    "fontLbl": "字体",
+    "fontSize": "字号",
+    "colorLbl": "颜色",
+    "strokeLbl": "描边",
+    "anchor": "锚点",
+    "tStart": "开始 (s)",
+    "tEnd": "结束 (s)",
+    "tEndAuto": "-1 = 到结尾",
+    "fade": "淡入淡出 (s)",
+    "subsPlaceholder": "在此粘贴 SRT / WebVTT 字幕…",
+    "cues": "条字幕",
+    "trackPoint": "跟踪点",
+    "pattern": "模板半径",
+    "searchR": "搜索半径",
+    "feather": "羽化",
+    "invert": "反转"
   }
 }

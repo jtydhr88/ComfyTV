@@ -215,6 +215,90 @@
     },
     "MeshBooleanStage": {
       "display_name": "网格布尔"
+    },
+    "VideoColorStage": {
+      "display_name": "视频调色"
+    },
+    "VideoCurvesStage": {
+      "display_name": "视频曲线"
+    },
+    "VideoLUTStage": {
+      "display_name": "视频 LUT"
+    },
+    "VideoBlurSharpenStage": {
+      "display_name": "模糊/锐化"
+    },
+    "VideoDenoiseStage": {
+      "display_name": "视频降噪"
+    },
+    "VideoChromaKeyStage": {
+      "display_name": "色度抠像"
+    },
+    "VideoTransitionStage": {
+      "display_name": "视频转场"
+    },
+    "VideoStabilizeStage": {
+      "display_name": "视频防抖"
+    },
+    "SceneDetectStage": {
+      "display_name": "场景检测"
+    },
+    "VideoInterpolateStage": {
+      "display_name": "光流补帧"
+    },
+    "VideoDeinterlaceStage": {
+      "display_name": "去隔行"
+    },
+    "VideoStylizeStage": {
+      "display_name": "视频风格化"
+    },
+    "VideoScopesStage": {
+      "display_name": "视频示波器"
+    },
+    "AudioDynamicsStage": {
+      "display_name": "音频动态"
+    },
+    "AudioEQStage": {
+      "display_name": "音频均衡器"
+    },
+    "AudioLoudnessStage": {
+      "display_name": "音频响度"
+    },
+    "AudioDenoiseStage": {
+      "display_name": "音频降噪"
+    },
+    "VideoCompositeStage": {
+      "display_name": "视频合成"
+    },
+    "VideoTransformStage": {
+      "display_name": "视频变换"
+    },
+    "CornerPinStage": {
+      "display_name": "四角定位"
+    },
+    "RotoMaskStage": {
+      "display_name": "Roto 遮罩"
+    },
+    "MotionTrackStage": {
+      "display_name": "运动跟踪"
+    },
+    "TitleStage": {
+      "display_name": "标题"
+    },
+    "SubtitleStage": {
+      "display_name": "字幕烧录"
+    },
+    "TimeRemapStage": {
+      "display_name": "时间重映射"
+    },
+    "SequenceStage": {
+      "display_name": "序列编排"
+    },
+    "VideoStabilizeV2Stage": {
+      "display_name": "专业防抖"
+    },
+    "PaintStrokeStage": {
+      "display_name": "笔刷修补"
     }
   },
   "ComfyTV_AssetAudioLoaderStage": {
@@ -1782,5 +1866,89 @@
         "tooltip": "视口截图；UV 展开操作时为 UV 图集。"
       }
     }
+  },
+  "ComfyTV_VideoColorStage": {
+    "display_name": "视频调色"
+  },
+  "ComfyTV_VideoCurvesStage": {
+    "display_name": "视频曲线"
+  },
+  "ComfyTV_VideoLUTStage": {
+    "display_name": "视频 LUT"
+  },
+  "ComfyTV_VideoBlurSharpenStage": {
+    "display_name": "模糊/锐化"
+  },
+  "ComfyTV_VideoDenoiseStage": {
+    "display_name": "视频降噪"
+  },
+  "ComfyTV_VideoChromaKeyStage": {
+    "display_name": "色度抠像"
+  },
+  "ComfyTV_VideoTransitionStage": {
+    "display_name": "视频转场"
+  },
+  "ComfyTV_VideoStabilizeStage": {
+    "display_name": "视频防抖"
+  },
+  "ComfyTV_SceneDetectStage": {
+    "display_name": "场景检测"
+  },
+  "ComfyTV_VideoInterpolateStage": {
+    "display_name": "光流补帧"
+  },
+  "ComfyTV_VideoDeinterlaceStage": {
+    "display_name": "去隔行"
+  },
+  "ComfyTV_VideoStylizeStage": {
+    "display_name": "视频风格化"
+  },
+  "ComfyTV_VideoScopesStage": {
+    "display_name": "视频示波器"
+  },
+  "ComfyTV_AudioDynamicsStage": {
+    "display_name": "音频动态"
+  },
+  "ComfyTV_AudioEQStage": {
+    "display_name": "音频均衡器"
+  },
+  "ComfyTV_AudioLoudnessStage": {
+    "display_name": "音频响度"
+  },
+  "ComfyTV_AudioDenoiseStage": {
+    "display_name": "音频降噪"
+  },
+  "ComfyTV_VideoCompositeStage": {
+    "display_name": "视频合成"
+  },
+  "ComfyTV_VideoTransformStage": {
+    "display_name": "视频变换"
+  },
+  "ComfyTV_CornerPinStage": {
+    "display_name": "四角定位"
+  },
+  "ComfyTV_RotoMaskStage": {
+    "display_name": "Roto 遮罩"
+  },
+  "ComfyTV_MotionTrackStage": {
+    "display_name": "运动跟踪"
+  },
+  "ComfyTV_TitleStage": {
+    "display_name": "标题"
+  },
+  "ComfyTV_SubtitleStage": {
+    "display_name": "字幕烧录"
+  },
+  "ComfyTV_TimeRemapStage": {
+    "display_name": "时间重映射"
+  },
+  "ComfyTV_SequenceStage": {
+    "display_name": "序列编排"
+  },
+  "ComfyTV_VideoStabilizeV2Stage": {
+    "display_name": "专业防抖"
+  },
+  "ComfyTV_PaintStrokeStage": {
+    "display_name": "笔刷修补"
   }
 }

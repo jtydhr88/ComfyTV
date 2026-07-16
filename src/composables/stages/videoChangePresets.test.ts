@@ -9,10 +9,15 @@ describe('VIDEO_CHANGE_PRESETS', () => {
   it('category is videoChange', () => {
     for (const p of VIDEO_CHANGE_PRESETS) expect(p.category).toBe('videoChange')
   })
-  it('every preset wires video', () => {
+  it('every preset wires a video input', () => {
+    // multi-input stages expose their primary clip under a named slot
+    const namedSlots: Record<string, string> = {
+      transition: 'video_a',
+      composite: 'background',
+    }
     for (const p of VIDEO_CHANGE_PRESETS) {
       if (p.inputAutogrowGroup) expect(p.inputAutogrowGroup).toBe('videos')
-      else expect(p.inputSocket).toBe('video')
+      else expect(p.inputSocket).toBe(namedSlots[p.id] ?? 'video')
     }
   })
   it('demux uses multiTargetClasses', () => {

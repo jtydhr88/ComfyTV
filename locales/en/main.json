@@ -588,6 +588,98 @@
       "demux": {
         "label": "Demux A/V",
         "tooltip": "Split into audio track + silent video (two nodes spawned)"
+      },
+      "color": {
+        "label": "Color",
+        "tooltip": "Grade: exposure, temperature, hue/sat and 3-way color wheels"
+      },
+      "curves": {
+        "label": "Curves",
+        "tooltip": "Master/R/G/B tone curves"
+      },
+      "lut": {
+        "label": "LUT",
+        "tooltip": "Apply a .cube 3D LUT"
+      },
+      "blur-sharpen": {
+        "label": "Blur / Sharpen",
+        "tooltip": "Gaussian/box/bilateral blur or unsharp-mask sharpen"
+      },
+      "denoise": {
+        "label": "Denoise",
+        "tooltip": "Spatio-temporal denoise / deband"
+      },
+      "chroma-key": {
+        "label": "Chroma Key",
+        "tooltip": "Green/blue-screen key → alpha WebM or b/w matte"
+      },
+      "transition": {
+        "label": "Transition",
+        "tooltip": "Cross-transition two clips (55 xfade patterns)"
+      },
+      "stabilize": {
+        "label": "Stabilize",
+        "tooltip": "Remove camera shake (deshake)"
+      },
+      "scene-detect": {
+        "label": "Scene Detect",
+        "tooltip": "Find hard cuts, one thumbnail per scene"
+      },
+      "interpolate": {
+        "label": "Interpolate",
+        "tooltip": "Optical-flow retime to higher fps or smooth slow-mo"
+      },
+      "stylize": {
+        "label": "Stylize",
+        "tooltip": "Vignette / grain / pixelize / sepia / old film"
+      },
+      "scopes": {
+        "label": "Scopes",
+        "tooltip": "Waveform / vectorscope / histogram of a frame"
+      },
+      "transform": {
+        "label": "Transform",
+        "tooltip": "Keyframable move/scale/rotate with motion blur"
+      },
+      "composite": {
+        "label": "Composite",
+        "tooltip": "Layer another clip on top — 39 blend modes"
+      },
+      "corner-pin": {
+        "label": "Corner Pin",
+        "tooltip": "Perspective-pin the frame by its four corners"
+      },
+      "roto-mask": {
+        "label": "Roto Mask",
+        "tooltip": "Draw a Bezier shape → feathered matte video"
+      },
+      "motion-track": {
+        "label": "Motion Track",
+        "tooltip": "Track a point; feed the track into Transform/Composite"
+      },
+      "title": {
+        "label": "Title",
+        "tooltip": "Burn a styled title with fades"
+      },
+      "subtitles": {
+        "label": "Subtitles",
+        "tooltip": "Burn SRT/VTT subtitles into the clip"
+      },
+      "time-remap": {
+        "label": "Time Remap",
+        "tooltip": "Keyframed speed ramps (slow-mo ↔ fast) on one curve"
+      },
+      "sequence": {
+        "label": "Sequence",
+        "tooltip": "Order clips with per-segment trim and transitions"
+      },
+      "stabilize-pro": {
+        "label": "Stabilize Pro",
+        "tooltip": "Two-pass vid.stab-grade stabilization"
+      },
+      "paint": {
+        "label": "Paint",
+        "tooltip": "Clone / blur / color brush repair strokes"
       }
     }
   },
@@ -1337,5 +1429,121 @@
     "alignRight": "Align right",
     "textPlaceholder": "Type something…",
     "dropHint": "Drop image to add a layer"
+  },
+  "fx": {
+    "processing": "Processing…",
+    "done": "Done — ready for downstream",
+    "adjustThenRun": "Adjust parameters, then Run",
+    "needsTwoInputs": "Wire two videos into A and B",
+    "needsAudioOrVideo": "Wire an audio or video input",
+    "previewNote": "Preview is approximate — Run renders precisely",
+    "mode": "Mode",
+    "method": "Method",
+    "effect": "Effect",
+    "scope": "Scope",
+    "preset": "Preset",
+    "transition": "Transition",
+    "amount": "Amount",
+    "size": "Size",
+    "strength": "Strength",
+    "edgePreserve": "Edge keep",
+    "exposure": "Exposure",
+    "black": "Black",
+    "temperature": "Temp (K)",
+    "tempMix": "Temp mix",
+    "hue": "Hue",
+    "saturation": "Saturation",
+    "vibrance": "Vibrance",
+    "shadows": "Shadows",
+    "midtones": "Midtones",
+    "highlights": "Highlights",
+    "preserveLightness": "Preserve lightness",
+    "resetWheels": "Reset wheels",
+    "master": "Master",
+    "red": "Red",
+    "green": "Green",
+    "blue": "Blue",
+    "resetCurve": "Reset curve",
+    "curveHint": "Click to add · drag to move · right-click deletes",
+    "keyColor": "Key color",
+    "pickFromVideo": "Pick from frame",
+    "similarity": "Similarity",
+    "blend": "Blend",
+    "despill": "Despill",
+    "despillExpand": "Despill expand",
+    "outAlpha": "Alpha (WebM)",
+    "outMatte": "B/W matte",
+    "duration": "Duration",
+    "offset": "Offset",
+    "offsetAuto": "0 = auto (end of A)",
+    "rangeX": "Range X",
+    "rangeY": "Range Y",
+    "edgeMode": "Edge fill",
+    "threshold": "Threshold",
+    "minGap": "Min gap",
+    "detectHint": "Run scans for hard cuts and outputs one thumbnail per scene",
+    "targetFps": "Target fps",
+    "slowFactor": "Slow ×",
+    "miMode": "Interp mode",
+    "rateFrame": "Same rate",
+    "rateField": "Double rate",
+    "block": "Block",
+    "atSeconds": "At (s)",
+    "middle": "middle",
+    "thresholdDb": "Threshold",
+    "ratio": "Ratio",
+    "attack": "Attack",
+    "release": "Release",
+    "makeup": "Makeup",
+    "knee": "Knee",
+    "intensity": "Intensity",
+    "eqHint": "Double-click adds a band · drag moves · wheel = Q · double-click a dot removes",
+    "targetI": "Target LUFS",
+    "targetTp": "True peak",
+    "targetLra": "LRA",
+    "frameLen": "Frame (ms)",
+    "gaussWin": "Gauss win",
+    "silenceDb": "Silence (dB)",
+    "minSilence": "Min silence (s)",
+    "lutFile": "LUT file",
+    "upload": "Upload",
+    "interp": "Interp",
+    "noLuts": "No LUTs yet — upload a .cube file",
+    "refresh": "Refresh",
+    "operator": "Blend mode",
+    "opacity": "Opacity",
+    "position": "Position",
+    "scale": "Scale",
+    "rotation": "Rotation",
+    "skew": "Skew",
+    "motionBlur": "Motion blur",
+    "keyframes": "Keyframes",
+    "addKey": "Add key",
+    "delKey": "Delete key",
+    "clearKeys": "Clear",
+    "dragHint": "Drag the frame to move · wheel to scale",
+    "cornerHint": "Drag the four corner handles",
+    "rotoHint": "Click adds a point · drag moves · double-click a point removes it",
+    "trackHint": "Click the frame to set the track point",
+    "needsBgFg": "Wire background and foreground videos",
+    "foreground": "Foreground",
+    "background": "Background",
+    "text": "Text",
+    "fontLbl": "Font",
+    "fontSize": "Size",
+    "colorLbl": "Color",
+    "strokeLbl": "Stroke",
+    "anchor": "Anchor",
+    "tStart": "Start (s)",
+    "tEnd": "End (s)",
+    "tEndAuto": "-1 = to the end",
+    "fade": "Fade (s)",
+    "subsPlaceholder": "Paste SRT / WebVTT cues here…",
+    "cues": "cues",
+    "trackPoint": "Track point",
+    "pattern": "Pattern",
+    "searchR": "Search",
+    "feather": "Feather",
+    "invert": "Invert"
   }
 }

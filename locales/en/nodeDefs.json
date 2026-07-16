@@ -215,6 +215,90 @@
     },
     "MeshBooleanStage": {
       "display_name": "Mesh Boolean"
+    },
+    "VideoColorStage": {
+      "display_name": "Video Color"
+    },
+    "VideoCurvesStage": {
+      "display_name": "Video Curves"
+    },
+    "VideoLUTStage": {
+      "display_name": "Video LUT"
+    },
+    "VideoBlurSharpenStage": {
+      "display_name": "Blur / Sharpen"
+    },
+    "VideoDenoiseStage": {
+      "display_name": "Video Denoise"
+    },
+    "VideoChromaKeyStage": {
+      "display_name": "Chroma Key"
+    },
+    "VideoTransitionStage": {
+      "display_name": "Video Transition"
+    },
+    "VideoStabilizeStage": {
+      "display_name": "Video Stabilize"
+    },
+    "SceneDetectStage": {
+      "display_name": "Scene Detect"
+    },
+    "VideoInterpolateStage": {
+      "display_name": "Frame Interpolate"
+    },
+    "VideoDeinterlaceStage": {
+      "display_name": "Deinterlace"
+    },
+    "VideoStylizeStage": {
+      "display_name": "Video Stylize"
+    },
+    "VideoScopesStage": {
+      "display_name": "Video Scopes"
+    },
+    "AudioDynamicsStage": {
+      "display_name": "Audio Dynamics"
+    },
+    "AudioEQStage": {
+      "display_name": "Audio EQ"
+    },
+    "AudioLoudnessStage": {
+      "display_name": "Audio Loudness"
+    },
+    "AudioDenoiseStage": {
+      "display_name": "Audio Denoise"
+    },
+    "VideoCompositeStage": {
+      "display_name": "Video Composite"
+    },
+    "VideoTransformStage": {
+      "display_name": "Video Transform"
+    },
+    "CornerPinStage": {
+      "display_name": "Corner Pin"
+    },
+    "RotoMaskStage": {
+      "display_name": "Roto Mask"
+    },
+    "MotionTrackStage": {
+      "display_name": "Motion Track"
+    },
+    "TitleStage": {
+      "display_name": "Title"
+    },
+    "SubtitleStage": {
+      "display_name": "Subtitles"
+    },
+    "TimeRemapStage": {
+      "display_name": "Time Remap"
+    },
+    "SequenceStage": {
+      "display_name": "Sequence"
+    },
+    "VideoStabilizeV2Stage": {
+      "display_name": "Stabilize Pro"
+    },
+    "PaintStrokeStage": {
+      "display_name": "Paint Strokes"
     }
   },
   "ComfyTV_AssetAudioLoaderStage": {
@@ -1782,5 +1866,89 @@
         "tooltip": "Viewport snapshot, or the UV atlas when the operation is unwrap."
       }
     }
+  },
+  "ComfyTV_VideoColorStage": {
+    "display_name": "Video Color"
+  },
+  "ComfyTV_VideoCurvesStage": {
+    "display_name": "Video Curves"
+  },
+  "ComfyTV_VideoLUTStage": {
+    "display_name": "Video LUT"
+  },
+  "ComfyTV_VideoBlurSharpenStage": {
+    "display_name": "Blur / Sharpen"
+  },
+  "ComfyTV_VideoDenoiseStage": {
+    "display_name": "Video Denoise"
+  },
+  "ComfyTV_VideoChromaKeyStage": {
+    "display_name": "Chroma Key"
+  },
+  "ComfyTV_VideoTransitionStage": {
+    "display_name": "Video Transition"
+  },
+  "ComfyTV_VideoStabilizeStage": {
+    "display_name": "Video Stabilize"
+  },
+  "ComfyTV_SceneDetectStage": {
+    "display_name": "Scene Detect"
+  },
+  "ComfyTV_VideoInterpolateStage": {
+    "display_name": "Frame Interpolate"
+  },
+  "ComfyTV_VideoDeinterlaceStage": {
+    "display_name": "Deinterlace"
+  },
+  "ComfyTV_VideoStylizeStage": {
+    "display_name": "Video Stylize"
+  },
+  "ComfyTV_VideoScopesStage": {
+    "display_name": "Video Scopes"
+  },
+  "ComfyTV_AudioDynamicsStage": {
+    "display_name": "Audio Dynamics"
+  },
+  "ComfyTV_AudioEQStage": {
+    "display_name": "Audio EQ"
+  },
+  "ComfyTV_AudioLoudnessStage": {
+    "display_name": "Audio Loudness"
+  },
+  "ComfyTV_AudioDenoiseStage": {
+    "display_name": "Audio Denoise"
+  },
+  "ComfyTV_VideoCompositeStage": {
+    "display_name": "Video Composite"
+  },
+  "ComfyTV_VideoTransformStage": {
+    "display_name": "Video Transform"
+  },
+  "ComfyTV_CornerPinStage": {
+    "display_name": "Corner Pin"
+  },
+  "ComfyTV_RotoMaskStage": {
+    "display_name": "Roto Mask"
+  },
+  "ComfyTV_MotionTrackStage": {
+    "display_name": "Motion Track"
+  },
+  "ComfyTV_TitleStage": {
+    "display_name": "Title"
+  },
+  "ComfyTV_SubtitleStage": {
+    "display_name": "Subtitles"
+  },
+  "ComfyTV_TimeRemapStage": {
+    "display_name": "Time Remap"
+  },
+  "ComfyTV_SequenceStage": {
+    "display_name": "Sequence"
+  },
+  "ComfyTV_VideoStabilizeV2Stage": {
+    "display_name": "Stabilize Pro"
+  },
+  "ComfyTV_PaintStrokeStage": {
+    "display_name": "Paint Strokes"
   }
 }
