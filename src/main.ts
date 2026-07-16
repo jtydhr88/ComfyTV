@@ -53,6 +53,15 @@ import AudioDynamicsStageCard from '@/components/stages/AudioDynamicsStageCard.v
 import AudioEQStageCard from '@/components/stages/AudioEQStageCard.vue'
 import AudioLoudnessStageCard from '@/components/stages/AudioLoudnessStageCard.vue'
 import AudioDenoiseStageCard from '@/components/stages/AudioDenoiseStageCard.vue'
+import AudioEchoStageCard from '@/components/stages/AudioEchoStageCard.vue'
+import AudioModulationStageCard from '@/components/stages/AudioModulationStageCard.vue'
+import AudioStereoStageCard from '@/components/stages/AudioStereoStageCard.vue'
+import AudioTimePitchStageCard from '@/components/stages/AudioTimePitchStageCard.vue'
+import AudioRepairStageCard from '@/components/stages/AudioRepairStageCard.vue'
+import AudioSaturateStageCard from '@/components/stages/AudioSaturateStageCard.vue'
+import AudioCrossfadeStageCard from '@/components/stages/AudioCrossfadeStageCard.vue'
+import AudioAnalyzeStageCard from '@/components/stages/AudioAnalyzeStageCard.vue'
+import AudioVisualizeStageCard from '@/components/stages/AudioVisualizeStageCard.vue'
 import VideoCompositeStageCard from '@/components/stages/VideoCompositeStageCard.vue'
 import VideoTransformStageCard from '@/components/stages/VideoTransformStageCard.vue'
 import CornerPinStageCard from '@/components/stages/CornerPinStageCard.vue'
@@ -175,6 +184,15 @@ const RICH_STAGE_CARDS: Record<string, any> = {
   'ComfyTV.AudioEQStage':             AudioEQStageCard,
   'ComfyTV.AudioLoudnessStage':       AudioLoudnessStageCard,
   'ComfyTV.AudioDenoiseStage':        AudioDenoiseStageCard,
+  'ComfyTV.AudioEchoStage':           AudioEchoStageCard,
+  'ComfyTV.AudioModulationStage':     AudioModulationStageCard,
+  'ComfyTV.AudioStereoStage':         AudioStereoStageCard,
+  'ComfyTV.AudioTimePitchStage':      AudioTimePitchStageCard,
+  'ComfyTV.AudioRepairStage':         AudioRepairStageCard,
+  'ComfyTV.AudioSaturateStage':       AudioSaturateStageCard,
+  'ComfyTV.AudioCrossfadeStage':      AudioCrossfadeStageCard,
+  'ComfyTV.AudioAnalyzeStage':        AudioAnalyzeStageCard,
+  'ComfyTV.AudioVisualizeStage':      AudioVisualizeStageCard,
   'ComfyTV.VideoCompositeStage':      VideoCompositeStageCard,
   'ComfyTV.VideoTransformStage':      VideoTransformStageCard,
   'ComfyTV.CornerPinStage':           CornerPinStageCard,
@@ -244,6 +262,15 @@ const RICH_STAGE_MIN_HEIGHTS: Record<string, number> = {
   'ComfyTV.AudioEQStage':             720,
   'ComfyTV.AudioLoudnessStage':       640,
   'ComfyTV.AudioDenoiseStage':        620,
+  'ComfyTV.AudioEchoStage':           620,
+  'ComfyTV.AudioModulationStage':     680,
+  'ComfyTV.AudioStereoStage':         660,
+  'ComfyTV.AudioTimePitchStage':      600,
+  'ComfyTV.AudioRepairStage':         640,
+  'ComfyTV.AudioSaturateStage':       660,
+  'ComfyTV.AudioCrossfadeStage':      720,
+  'ComfyTV.AudioAnalyzeStage':        680,
+  'ComfyTV.AudioVisualizeStage':      680,
   'ComfyTV.VideoCompositeStage':      820,
   'ComfyTV.VideoTransformStage':      780,
   'ComfyTV.CornerPinStage':           640,

@@ -607,9 +607,161 @@ def filter_frame_image(view_url: str, position, video_specs) -> str:
     return path_to_view_url(out_path)
 
 
+AFADE_CURVES = [
+    'tri', 'qsin', 'hsin', 'esin', 'log', 'ipar', 'qua', 'cub', 'squ', 'cbr',
+    'par', 'exp', 'iqsin', 'ihsin', 'dese', 'desi', 'losi', 'sinc', 'isinc',
+    'nofade',
+]
+
+
+def crossfade_audios(url_a: str, url_b: str, duration: float = 1.0,
+                     curve1: str = 'tri', curve2: str = 'tri',
+                     overlap: bool = True, out_codec: str = 'wav') -> str:
+    import av
+
+    require_filters('acrossfade', 'aformat')
+    if curve1 not in AFADE_CURVES:
+        raise RuntimeError(f"acrossfade: unknown curve {curve1!r}")
+    if curve2 not in AFADE_CURVES:
+        raise RuntimeError(f"acrossfade: unknown curve {curve2!r}")
+    duration = min(max(float(duration or 1.0), 0.01), 60.0)
+
+    src_a = localize(url_a)
+    src_b = localize(url_b)
+    if out_codec == 'mp3':
+        out = fresh_output_path('.mp3', subfolder='comfytv-audio')
+        codec, container = 'libmp3lame', 'mp3'
+    else:
+        out = fresh_output_path('.wav', subfolder='comfytv-audio')
+        codec, container = 'pcm_s16le', 'wav'
+
+    with av.open(str(src_a)) as ca, av.open(str(src_b)) as cb, \
+            av.open(str(out), 'w', format=container) as outp:
+        if not ca.streams.audio:
+            raise RuntimeError("acrossfade: input A has no audio stream")
+        if not cb.streams.audio:
+            raise RuntimeError("acrossfade: input B has no audio stream")
+        in_a = ca.streams.audio[0]
+        in_b = cb.streams.audio[0]
+
+        graph = av.filter.Graph()
+        buf_a = graph.add_abuffer(template=in_a)
+        buf_b = graph.add_abuffer(template=in_b)
+        xf = graph.add('acrossfade',
+                       f'd={duration}:c1={curve1}:c2={curve2}'
+                       f':o={1 if overlap else 0}')
+        buf_a.link_to(xf, 0, 0)
+        buf_b.link_to(xf, 0, 1)
+        fmt = graph.add(
+            'aformat',
+            f'sample_fmts=fltp:sample_rates={_AUDIO_RATE}:channel_layouts=stereo')
+        xf.link_to(fmt)
+        sink = graph.add('abuffersink')
+        fmt.link_to(sink)
+        graph.configure()
+
+        out_a = outp.add_stream(codec, rate=_AUDIO_RATE)
+        out_a.layout = 'stereo'
+        pts = 0
+
+        def _write(frame):
+            nonlocal pts
+            frame.pts = pts
+            frame.time_base = Fraction(1, _AUDIO_RATE)
+            pts += frame.samples
+            for pkt in out_a.encode(frame):
+                outp.mux(pkt)
+
+        for frame in ca.decode(in_a):
+            buf_a.push(frame)
+            for f in _drain(sink):
+                _write(f)
+        buf_a.push(None)
+        for frame in cb.decode(in_b):
+            buf_b.push(frame)
+            for f in _drain(sink):
+                _write(f)
+        buf_b.push(None)
+        for f in _drain(sink):
+            _write(f)
+        for pkt in out_a.encode():
+            outp.mux(pkt)
+
+    return path_to_view_url(out)
+
+
+def analyze_audio(view_url: str, audio_specs) -> list:
+    import gc
+
+    import av
+    import av.logging
+
+    audio_specs = list(audio_specs or [])
+    require_filters(*[n for n, _ in audio_specs])
+    src_path = localize(view_url)
+
+    prev_level = av.logging.get_level()
+    av.logging.set_level(av.logging.INFO)
+    try:
+        with av.logging.Capture(local=True) as logs:
+            with av.open(str(src_path)) as inp:
+                if not inp.streams.audio:
+                    raise RuntimeError(
+                        "analyze_audio: source has no audio stream")
+                in_a = inp.streams.audio[0]
+                graph = av.filter.Graph()
+                asrc, asink = _build_audio_graph(graph, in_a, audio_specs)
+                graph.configure()
+                for frame in inp.decode(in_a):
+                    asrc.push(frame)
+                    _drain(asink)
+                asrc.push(None)
+                _drain(asink)
+            del graph, asrc, asink
+            gc.collect()
+    finally:
+        av.logging.set_level(prev_level)
+
+    return [msg for _level, _name, msg in logs if msg]
+
+
+def audio_image(view_url: str, filter_name: str, args=None) -> str:
+    import av
+
+    require_filters(filter_name, 'format')
+    src_path = localize(view_url)
+    out = fresh_output_path('.png', subfolder='comfytv-audio')
+
+    with av.open(str(src_path)) as inp:
+        if not inp.streams.audio:
+            raise RuntimeError("audio_image: source has no audio stream")
+        in_a = inp.streams.audio[0]
+
+        graph = av.filter.Graph()
+        asrc = graph.add_abuffer(template=in_a)
+        f = graph.add(filter_name, args) if args else graph.add(filter_name)
+        asrc.link_to(f)
+        fmt = graph.add('format', 'rgb24')
+        f.link_to(fmt)
+        sink = graph.add('buffersink')
+        fmt.link_to(sink)
+        graph.configure()
+
+        for frame in inp.decode(in_a):
+            asrc.push(frame)
+        asrc.push(None)
+        outs = _drain(sink)
+        if not outs:
+            raise RuntimeError(f"audio_image: {filter_name} produced no frame")
+        outs[-1].to_image().save(str(out), 'PNG')
+
+    return path_to_view_url(out)
+
+
 __all__ = [
     'available_filters', 'has_filter', 'require_filters', 'has_encoder',
     'filter_video', 'filter_audio', 'chroma_key_video',
     'xfade_videos', 'XFADE_TRANSITIONS',
     'scene_detect', 'filter_frame_image',
+    'crossfade_audios', 'analyze_audio', 'audio_image', 'AFADE_CURVES',
 ]
