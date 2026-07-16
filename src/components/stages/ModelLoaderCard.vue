@@ -276,6 +276,7 @@ import { downloadFile } from '@/utils/download'
 import { uploadBlobNamed, uploadCanvas } from '@/utils/uploadCanvas'
 import { getWidget, onNodeConfigure, readWidgetStr, writeWidget } from '@/utils/widget'
 import { parseMaterialState, type MaterialParams } from '@/widgets/material/types'
+import { convertModelFileToGlb, isConvertibleModelFile } from '@/widgets/three/convertToGlb'
 import { MODEL_FILE_EXTENSIONS } from '@/widgets/three/modelFormats'
 
 const { t } = useI18n()
@@ -536,7 +537,8 @@ async function uploadModelFiles(files: File[]): Promise<void> {
   try {
     let lastPath = ''
     for (const file of files) {
-      const uploaded = await uploadBlobNamed(file, { subfolder: '3d', filename: file.name })
+      const toUpload = isConvertibleModelFile(file.name) ? await convertModelFileToGlb(file) : file
+      const uploaded = await uploadBlobNamed(toUpload, { subfolder: '3d', filename: toUpload.name })
       lastPath = `3d/${uploaded.name}`
       registerFile(lastPath)
     }

@@ -26,6 +26,8 @@ import PanoramaMultiViewStageCard from '@/components/stages/PanoramaMultiViewSta
 import CompareStageCard from '@/components/stages/CompareStageCard.vue'
 import AssetLoaderCard from '@/components/stages/AssetLoaderCard.vue'
 import ModelLoaderCard from '@/components/stages/ModelLoaderCard.vue'
+import MeshOpStageCard from '@/components/stages/MeshOpStageCard.vue'
+import MeshBooleanStageCard from '@/components/stages/MeshBooleanStageCard.vue'
 import GridSplitStageCard from '@/components/stages/GridSplitStageCard.vue'
 import DirectorTimelineStageCard from '@/components/stages/DirectorTimelineStageCard.vue'
 import OutpaintStageCard from '@/components/stages/OutpaintStageCard.vue'
@@ -116,6 +118,10 @@ const RICH_STAGE_CARDS: Record<string, any> = {
   'ComfyTV.AssetAudioLoaderStage':    AssetLoaderCard,
   'ComfyTV.AssetModelLoaderStage':    AssetLoaderCard,
   'ComfyTV.ModelLoaderStage':         ModelLoaderCard,
+  'ComfyTV.MeshOpStage':              MeshOpStageCard,
+  'ComfyTV.MeshBakeMapsStage':        MeshOpStageCard,
+  'ComfyTV.MeshPrimitiveStage':       MeshOpStageCard,
+  'ComfyTV.MeshBooleanStage':         MeshBooleanStageCard,
   'ComfyTV.GridSplitStage':           GridSplitStageCard,
   'ComfyTV.DirectorTimelineStage':    DirectorTimelineStageCard,
   'ComfyTV.OutpaintStage':            OutpaintStageCard,
@@ -155,6 +161,10 @@ const RICH_STAGE_MIN_HEIGHTS: Record<string, number> = {
   'ComfyTV.AssetModelLoaderStage':    620,
   'ComfyTV.Model3DStage':             560,
   'ComfyTV.ModelLoaderStage':         760,
+  'ComfyTV.MeshOpStage':              720,
+  'ComfyTV.MeshBakeMapsStage':        720,
+  'ComfyTV.MeshPrimitiveStage':       620,
+  'ComfyTV.MeshBooleanStage':         760,
   'ComfyTV.GridSplitStage':           560,
   'ComfyTV.OutpaintStage':            620,
   'ComfyTV.Scene3DStage':             640,

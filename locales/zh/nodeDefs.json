@@ -203,6 +203,18 @@
     },
     "AssetModelLoaderStage": {
       "display_name": "从资产加载 3D 模型"
+    },
+    "MeshOpStage": {
+      "display_name": "网格处理"
+    },
+    "MeshBakeMapsStage": {
+      "display_name": "网格烘焙贴图"
+    },
+    "MeshPrimitiveStage": {
+      "display_name": "网格基元"
+    },
+    "MeshBooleanStage": {
+      "display_name": "网格布尔"
     }
   },
   "ComfyTV_AssetAudioLoaderStage": {
@@ -1695,6 +1707,79 @@
       "1": {
         "name": "图像",
         "tooltip": "预览视口的当前画面截图——旋转视角后自动更新。"
+      }
+    }
+  },
+  "ComfyTV_MeshBakeMapsStage": {
+    "display_name": "网格烘焙贴图",
+    "inputs": {
+      "model": {
+        "name": "模型",
+        "tooltip": "已 UV 展开的低模，贴图烘焙到它的 UV 上。"
+      },
+      "high_poly": {
+        "name": "高模",
+        "tooltip": "细节来源的高模（低模减面前的原网格）。"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "模型"
+      },
+      "1": {
+        "name": "贴图",
+        "tooltip": "烘焙出的法线 / AO 贴图预览。"
+      }
+    }
+  },
+  "ComfyTV_MeshPrimitiveStage": {
+    "display_name": "网格基元",
+    "inputs": {},
+    "outputs": {
+      "0": {
+        "name": "模型"
+      },
+      "1": {
+        "name": "图像",
+        "tooltip": "预览视口的当前画面截图——旋转视角后自动更新。"
+      }
+    }
+  },
+  "ComfyTV_MeshBooleanStage": {
+    "display_name": "网格布尔",
+    "inputs": {
+      "model": {
+        "name": "模型 A"
+      },
+      "model_b": {
+        "name": "模型 B",
+        "tooltip": "差集运算会从模型 A 中减去此模型的体积。"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "模型"
+      },
+      "1": {
+        "name": "图像",
+        "tooltip": "预览视口的当前画面截图——旋转视角后自动更新。"
+      }
+    }
+  },
+  "ComfyTV_MeshOpStage": {
+    "display_name": "网格处理",
+    "inputs": {
+      "model": {
+        "name": "模型"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "模型"
+      },
+      "1": {
+        "name": "图像",
+        "tooltip": "视口截图；UV 展开操作时为 UV 图集。"
       }
     }
   }

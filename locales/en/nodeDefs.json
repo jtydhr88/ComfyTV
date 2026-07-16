@@ -203,6 +203,18 @@
     },
     "AssetModelLoaderStage": {
       "display_name": "Load 3D Model from Asset"
+    },
+    "MeshOpStage": {
+      "display_name": "Mesh Ops"
+    },
+    "MeshBakeMapsStage": {
+      "display_name": "Mesh Bake Maps"
+    },
+    "MeshPrimitiveStage": {
+      "display_name": "Mesh Primitive"
+    },
+    "MeshBooleanStage": {
+      "display_name": "Mesh Boolean"
     }
   },
   "ComfyTV_AssetAudioLoaderStage": {
@@ -1695,6 +1707,79 @@
       "1": {
         "name": "Image",
         "tooltip": "Snapshot of the preview viewport — updates as you orbit."
+      }
+    }
+  },
+  "ComfyTV_MeshBakeMapsStage": {
+    "display_name": "Mesh Bake Maps",
+    "inputs": {
+      "model": {
+        "name": "Model",
+        "tooltip": "UV-unwrapped low-poly to bake onto."
+      },
+      "high_poly": {
+        "name": "High Poly",
+        "tooltip": "High-poly source of the detail (the mesh the low-poly was decimated from)."
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Model"
+      },
+      "1": {
+        "name": "Maps",
+        "tooltip": "Preview of the baked normal / AO maps."
+      }
+    }
+  },
+  "ComfyTV_MeshPrimitiveStage": {
+    "display_name": "Mesh Primitive",
+    "inputs": {},
+    "outputs": {
+      "0": {
+        "name": "Model"
+      },
+      "1": {
+        "name": "Image",
+        "tooltip": "Snapshot of the preview viewport — updates as you orbit."
+      }
+    }
+  },
+  "ComfyTV_MeshBooleanStage": {
+    "display_name": "Mesh Boolean",
+    "inputs": {
+      "model": {
+        "name": "Model A"
+      },
+      "model_b": {
+        "name": "Model B",
+        "tooltip": "difference removes this model's volume from Model A."
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Model"
+      },
+      "1": {
+        "name": "Image",
+        "tooltip": "Snapshot of the preview viewport — updates as you orbit."
+      }
+    }
+  },
+  "ComfyTV_MeshOpStage": {
+    "display_name": "Mesh Ops",
+    "inputs": {
+      "model": {
+        "name": "Model"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Model"
+      },
+      "1": {
+        "name": "Image",
+        "tooltip": "Viewport snapshot, or the UV atlas when the operation is unwrap."
       }
     }
   }

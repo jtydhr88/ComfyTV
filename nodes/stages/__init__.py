@@ -32,6 +32,9 @@ from .loaders import (
     AssetImageLoaderStage, AssetVideoLoaderStage, AssetAudioLoaderStage,
     ModelLoaderStage, AssetModelLoaderStage,
 )
+from .geometry import (
+    MeshOpStage, MeshPrimitiveStage, MeshBooleanStage, MeshBakeMapsStage,
+)
 from .scene3d import Scene3DStage
 from .layer_editor import LayerEditorStage
 from .material import MaterialStage
@@ -58,6 +61,7 @@ class ComfyTVExtension(ComfyExtension):
             ImageLoaderStage, VideoLoaderStage, AudioLoaderStage,
             AssetImageLoaderStage, AssetVideoLoaderStage, AssetAudioLoaderStage,
             Model3DStage, ModelLoaderStage, AssetModelLoaderStage,
+            MeshOpStage, MeshPrimitiveStage, MeshBooleanStage, MeshBakeMapsStage,
             Scene3DStage,
             LayerEditorStage,
             MaterialStage,

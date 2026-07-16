@@ -66,7 +66,11 @@ jobs:
       - name: Install test deps
         run: |
           python -m pip install --upgrade pip
-          pip install pytest pytest-asyncio aiohttp sqlalchemy av pillow
+          pip install pytest pytest-asyncio pytest-cov aiohttp sqlalchemy av pillow numpy
 
-      - name: Run pytest
-        run: python -m pytest -q
+      - name: Run pytest (geometry coverage gate)
+        # The mesh3d algorithm tier importorskips torch and is skipped here (same
+        # pattern as the existing torch-gated tests); those files then stay out of
+        # the coverage report, so the CI gate covers the orchestration layer while
+        # a local torch run measures the full set with the same command.
+        run: python -m pytest -q --cov --cov-report=term-missing --cov-fail-under=80

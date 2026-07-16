@@ -157,7 +157,15 @@ def _ensure_comfyui_stubs():
         class _ComfyExtension:
             pass
 
+        class _AnyType:
+            def __init__(self, *a, **k):
+                pass
+
         latest.io = io
+        latest.IO = io
+        latest.Types = types.SimpleNamespace(
+            MESH=_AnyType, VOXEL=_AnyType, SPLAT=_AnyType, File3D=_AnyType,
+        )
         latest.ComfyExtension = _ComfyExtension
         comfy_api.latest = latest
 
@@ -182,11 +190,26 @@ def _ensure_comfyui_stubs():
         comfy_mod = _make_module("comfy")
         class _PB:
             def __init__(self, *a, **k): pass
+            def update(self, *a, **k): pass
             def update_absolute(self, *a, **k): pass
         utils_mod = _make_module("comfy.utils", ProgressBar=_PB)
+
+        def _cpu_device():
+            import torch
+            return torch.device("cpu")
+
+        def _raise_non_oom(e):
+            raise e
+
         mm_mod = _make_module(
             "comfy.model_management",
             throw_exception_if_processing_interrupted=lambda: None,
+            get_torch_device=_cpu_device,
+            intermediate_device=_cpu_device,
+            intermediate_dtype=lambda: __import__("torch").float32,
+            vae_offload_device=_cpu_device,
+            get_free_memory=lambda dev=None: 8 * 1024 ** 3,
+            raise_non_oom=_raise_non_oom,
         )
         comfy_mod.utils = utils_mod
         comfy_mod.model_management = mm_mod

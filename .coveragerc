@@ -1,0 +1,14 @@
+[run]
+relative_files = True
+include =
+    */ComfyTV/nodes/stages/geometry.py
+    */ComfyTV/runners/geometry.py
+    */ComfyTV/mesh3d/*
+
+omit =
+    */ComfyTV/mesh3d/postprocess/*
+    */ComfyTV/mesh3d/uv_unwrap/*
+    */ComfyTV/mesh3d/postprocess_ops.py
+
+[report]
+show_missing = True

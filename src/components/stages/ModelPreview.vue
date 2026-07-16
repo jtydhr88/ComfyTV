@@ -31,6 +31,7 @@ import { buildPointCloud, classifyModelBytes, loadSpark } from '@/widgets/three/
 import { guardOrbitControlsDragEnd } from '@/widgets/three/orbitControlsGuard'
 import { RendererView } from '@/widgets/three/RendererView'
 import { loadCustomModelAssets } from '@/widgets/three/scene3d/scene3dAssets'
+import { applyViewChannel, OVERLAY_FLAG, type ViewChannel } from '@/widgets/three/channelShading'
 import { applyMaterialParams } from '@/widgets/material/three'
 import type { MaterialParams } from '@/widgets/material/types'
 
@@ -39,12 +40,14 @@ const props = defineProps<{
   pickable?: boolean
   partMaterials?: Record<string, MaterialParams | null>
   selectedPart?: string | null
+  channel?: ViewChannel
 }>()
 
 const emit = defineEmits<{
   (e: 'view-changed'): void
   (e: 'parts-changed', keys: string[]): void
   (e: 'part-pick', key: string | null): void
+  (e: 'model-stats', stats: { vertices: number; triangles: number }): void
 }>()
 
 const hostEl = ref<HTMLDivElement | null>(null)
@@ -148,6 +151,16 @@ function collectParts(root: THREE.Object3D): void {
     child.userData.comfytvPartKey = key
   })
   emit('parts-changed', [...partMeshes.keys()])
+
+  let vertices = 0
+  let triangles = 0
+  for (const mesh of partMeshes.values()) {
+    const geo = mesh.geometry
+    if (!(geo instanceof THREE.BufferGeometry)) continue
+    vertices += geo.attributes.position?.count ?? 0
+    triangles += Math.floor((geo.index ? geo.index.count : geo.attributes.position?.count ?? 0) / 3)
+  }
+  emit('model-stats', { vertices, triangles })
 }
 
 function activeMaterialFor(key: string): THREE.Material | THREE.Material[] | undefined {
@@ -160,6 +173,7 @@ let appliedMaterialsSig = ''
 
 function applyPartMaterials(force = false): void {
   if (!partMeshes.size) return
+  if ((props.channel ?? 'material') !== 'material') return
   const sig = JSON.stringify(props.partMaterials ?? {})
   if (!force && sig === appliedMaterialsSig) return
   appliedMaterialsSig = sig
@@ -195,7 +209,7 @@ function clearHighlight(): void {
 
 function setHighlight(key: string | null): void {
   clearHighlight()
-  if (!key) return
+  if (!key || (props.channel ?? 'material') !== 'material') return
   const mesh = partMeshes.get(key)
   if (!mesh) return
   const active = activeMaterialFor(key)
@@ -237,7 +251,7 @@ function onPickUp(e: PointerEvent): void {
   const raycaster = new THREE.Raycaster()
   raycaster.setFromCamera(ndc, camera)
   const hits = raycaster.intersectObject(modelRoot, true)
-  const hit = hits.find((h) => h.object instanceof THREE.Mesh)
+  const hit = hits.find((h) => h.object instanceof THREE.Mesh && !h.object.userData[OVERLAY_FLAG])
   emit('part-pick', (hit?.object?.userData?.comfytvPartKey as string) ?? null)
 }
 
@@ -341,6 +355,9 @@ async function loadModel(url: string): Promise<void> {
     collectParts(loaded.root)
     applyPartMaterials(true)
     if (props.selectedPart) setHighlight(props.selectedPart)
+    if ((props.channel ?? 'material') !== 'material') {
+      applyViewChannel(loaded.root, props.channel as ViewChannel)
+    }
     frameModel(loaded.root)
     loading.value = false
     emit('view-changed')
@@ -399,6 +416,17 @@ watch(() => props.src, (url) => { void loadModel(url || '') })
 watch(() => props.partMaterials, () => applyPartMaterials(), { deep: true })
 
 watch(() => props.selectedPart, (key) => setHighlight(key ?? null))
+
+watch(() => props.channel, (ch) => {
+  if (!modelRoot) return
+  clearHighlight()
+  applyViewChannel(modelRoot, (ch ?? 'material') as ViewChannel)
+  if ((ch ?? 'material') === 'material') {
+    applyPartMaterials(true)
+    if (props.selectedPart) setHighlight(props.selectedPart)
+  }
+  emit('view-changed')
+})
 
 onBeforeUnmount(() => {
   loadSeq++
