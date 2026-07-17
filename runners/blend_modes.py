@@ -1,5 +1,14 @@
+from __future__ import annotations
 
-import torch
+
+class _LazyTorch:
+    def __getattr__(self, name):
+        import torch as _torch
+        globals()['torch'] = _torch
+        return getattr(_torch, name)
+
+
+torch = _LazyTorch()
 
 
 def _multiply(A, B, a, b):
