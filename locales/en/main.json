@@ -1316,6 +1316,34 @@
     "selected": "Part: {part}",
     "unbind": "Unbind"
   },
+  "meshPrimitive": {
+    "kind": {
+      "cube": "Cube",
+      "sphere": "Sphere",
+      "cylinder": "Cylinder",
+      "cone": "Cone",
+      "plane": "Plane",
+      "torus": "Torus"
+    },
+    "width": "Width",
+    "height": "Height",
+    "depth": "Depth",
+    "radius": "Radius",
+    "radiusTop": "Top radius",
+    "radiusBottom": "Bottom radius",
+    "tube": "Tube",
+    "widthSegments": "Width segments",
+    "heightSegments": "Height segments",
+    "depthSegments": "Depth segments",
+    "radialSegments": "Radial segments",
+    "tubularSegments": "Tubular segments",
+    "openEnded": "Open ended",
+    "phiStart": "Phi start",
+    "phiLength": "Phi length",
+    "thetaStart": "Theta start",
+    "thetaLength": "Theta length",
+    "arc": "Arc"
+  },
   "meshOps": {
     "operation": "Operation",
     "op": {

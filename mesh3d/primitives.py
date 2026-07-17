@@ -94,21 +94,27 @@ def make_box(width=1.0, height=1.0, depth=1.0, width_segments=1, height_segments
                  np.concatenate(uvs_l), np.concatenate(norms_l))
 
 
-def make_sphere(radius=0.5, width_segments=32, height_segments=16) -> MESH:
-    """three.js SphereGeometry (full sphere; pole rows keep degenerate-free index layout)."""
+def make_sphere(radius=0.5, width_segments=32, height_segments=16,
+                phi_start=0.0, phi_length=2.0 * math.pi,
+                theta_start=0.0, theta_length=math.pi) -> MESH:
     ws = max(3, int(width_segments))
     hs = max(2, int(height_segments))
+    theta_end = min(theta_start + theta_length, math.pi)
+    at_top_pole = theta_start <= 1e-9
+    at_bottom_pole = theta_end >= math.pi - 1e-9
 
     iy = np.arange(hs + 1, dtype=np.float32)[:, None]
     ix = np.arange(ws + 1, dtype=np.float32)[None, :]
     v = iy / hs
     u = ix / ws
-    theta = v * math.pi
-    phi = u * 2.0 * math.pi
+    theta = theta_start + v * theta_length
+    phi = phi_start + u * phi_length
 
     sin_theta = np.sin(theta)
-    sin_theta[0] = 0.0
-    sin_theta[-1] = 0.0
+    if at_top_pole:
+        sin_theta[0] = 0.0
+    if at_bottom_pole:
+        sin_theta[-1] = 0.0
     x = -radius * np.cos(phi) * sin_theta
     y = radius * np.cos(theta) * np.ones_like(phi)
     z = radius * np.sin(phi) * sin_theta
@@ -116,8 +122,10 @@ def make_sphere(radius=0.5, width_segments=32, height_segments=16) -> MESH:
     normals = verts / max(radius, 1e-12)
 
     u_offset = np.zeros((hs + 1, 1), dtype=np.float32)
-    u_offset[0] = 0.5 / ws
-    u_offset[hs] = -0.5 / ws
+    if at_top_pole:
+        u_offset[0] = 0.5 / ws
+    if at_bottom_pole:
+        u_offset[hs] = -0.5 / ws
     uvs = np.stack(np.broadcast_arrays(u + u_offset, 1.0 - v * np.ones_like(u)), axis=-1).reshape(-1, 2)
 
     grid = np.arange((hs + 1) * (ws + 1)).reshape(hs + 1, ws + 1)
@@ -127,16 +135,16 @@ def make_sphere(radius=0.5, width_segments=32, height_segments=16) -> MESH:
         b = grid[row, :-1]
         c = grid[row + 1, :-1]
         d = grid[row + 1, 1:]
-        if row != 0:
+        if row != 0 or not at_top_pole:
             faces.append(np.stack([a, b, d], axis=-1))
-        if row != hs - 1:
+        if row != hs - 1 or not at_bottom_pole:
             faces.append(np.stack([b, c, d], axis=-1))
     return _pack(verts, np.concatenate(faces).reshape(-1, 3), uvs, normals)
 
 
 def make_cylinder(radius_top=0.5, radius_bottom=0.5, height=1.0,
-                  radial_segments=32, height_segments=1) -> MESH:
-    """three.js CylinderGeometry (capped torso; cone = radius_top 0, ConeGeometry style)."""
+                  radial_segments=32, height_segments=1,
+                  open_ended=False, theta_start=0.0, theta_length=2.0 * math.pi) -> MESH:
     rs = max(3, int(radial_segments))
     hs = max(1, int(height_segments))
     half = height / 2
@@ -147,7 +155,7 @@ def make_cylinder(radius_top=0.5, radius_bottom=0.5, height=1.0,
 
     yy = np.arange(hs + 1, dtype=np.float32)[:, None] / hs
     xx = np.arange(rs + 1, dtype=np.float32)[None, :] / rs
-    theta = xx * 2.0 * math.pi
+    theta = theta_start + xx * theta_length
     sin_t, cos_t = np.sin(theta), np.cos(theta)
     row_r = yy * (radius_bottom - radius_top) + radius_top
 
@@ -184,7 +192,7 @@ def make_cylinder(radius_top=0.5, radius_bottom=0.5, height=1.0,
         index += rs
         center_end = index
 
-        t = (np.arange(rs + 1, dtype=np.float32) / rs) * 2.0 * math.pi
+        t = theta_start + (np.arange(rs + 1, dtype=np.float32) / rs) * theta_length
         ct, st = np.cos(t), np.sin(t)
         verts_l.append(np.stack([radius * st, np.full_like(st, half * sign), radius * ct], axis=-1))
         norms_l.append(np.tile(np.array([[0.0, sign, 0.0]], dtype=np.float32), (rs + 1, 1)))
@@ -199,9 +207,9 @@ def make_cylinder(radius_top=0.5, radius_bottom=0.5, height=1.0,
         else:
             faces_l.append(np.stack([ii + 1, ii, cc], axis=-1))
 
-    if radius_top > 0:
+    if not open_ended and radius_top > 0:
         cap(True)
-    if radius_bottom > 0:
+    if not open_ended and radius_bottom > 0:
         cap(False)
 
     return _pack(np.concatenate([v.reshape(-1, 3) for v in verts_l]),
@@ -210,15 +218,15 @@ def make_cylinder(radius_top=0.5, radius_bottom=0.5, height=1.0,
                  np.concatenate([n.reshape(-1, 3) for n in norms_l]))
 
 
-def make_torus(radius=0.5, tube=0.2, radial_segments=12, tubular_segments=48) -> MESH:
-    """three.js TorusGeometry (full ring)."""
+def make_torus(radius=0.5, tube=0.2, radial_segments=12, tubular_segments=48,
+               arc=2.0 * math.pi) -> MESH:
     rs = max(3, int(radial_segments))
     ts = max(3, int(tubular_segments))
 
     j = np.arange(rs + 1, dtype=np.float32)[:, None]
     i = np.arange(ts + 1, dtype=np.float32)[None, :]
     v = (j / rs) * 2.0 * math.pi
-    u = (i / ts) * 2.0 * math.pi
+    u = (i / ts) * arc
 
     x = (radius + tube * np.cos(v)) * np.cos(u)
     y = (radius + tube * np.cos(v)) * np.sin(u)
@@ -246,9 +254,44 @@ def make_torus(radius=0.5, tube=0.2, radial_segments=12, tubular_segments=48) ->
     return _pack(verts, faces, uvs, normals)
 
 
-def make_primitive(kind: str, size: float = 1.0, segments: int = 32) -> MESH:
-    """Dispatch by kind: cube / sphere / cylinder / cone / plane / torus."""
+def _make_from_recipe(kind: str, p: dict) -> MESH:
+    def f(key, default):
+        return float(p.get(key, default))
+
+    def i(key, default):
+        return int(p.get(key, default))
+
+    if kind == 'plane':
+        return make_plane(f('width', 1.0), f('height', 1.0),
+                          i('widthSegments', 1), i('heightSegments', 1))
+    if kind == 'cube':
+        return make_box(f('width', 1.0), f('height', 1.0), f('depth', 1.0),
+                        i('widthSegments', 1), i('heightSegments', 1), i('depthSegments', 1))
+    if kind == 'sphere':
+        return make_sphere(f('radius', 0.5), i('widthSegments', 32), i('heightSegments', 16),
+                           f('phiStart', 0.0), f('phiLength', 2.0 * math.pi),
+                           f('thetaStart', 0.0), f('thetaLength', math.pi))
+    if kind == 'cylinder':
+        return make_cylinder(f('radiusTop', 0.5), f('radiusBottom', 0.5), f('height', 1.0),
+                             i('radialSegments', 32), i('heightSegments', 1),
+                             bool(p.get('openEnded', False)),
+                             f('thetaStart', 0.0), f('thetaLength', 2.0 * math.pi))
+    if kind == 'cone':
+        return make_cylinder(0.0, f('radius', 0.5), f('height', 1.0),
+                             i('radialSegments', 32), i('heightSegments', 1),
+                             bool(p.get('openEnded', False)),
+                             f('thetaStart', 0.0), f('thetaLength', 2.0 * math.pi))
+    if kind == 'torus':
+        return make_torus(f('radius', 0.5), f('tube', 0.2),
+                          i('radialSegments', 12), i('tubularSegments', 48),
+                          f('arc', 2.0 * math.pi))
+    raise ValueError(f"unknown primitive '{kind}' (cube/sphere/cylinder/cone/plane/torus)")
+
+
+def make_primitive(kind: str = 'cube', size: float = 1.0, segments: int = 32, **params) -> MESH:
     kind = (kind or 'cube').lower()
+    if params:
+        return _make_from_recipe(kind, params)
     seg = max(1, int(segments))
     if kind == 'cube':
         s = max(1, seg // 8)

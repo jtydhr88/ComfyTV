@@ -27,6 +27,7 @@ import CompareStageCard from '@/components/stages/CompareStageCard.vue'
 import AssetLoaderCard from '@/components/stages/AssetLoaderCard.vue'
 import ModelLoaderCard from '@/components/stages/ModelLoaderCard.vue'
 import MeshOpStageCard from '@/components/stages/MeshOpStageCard.vue'
+import MeshPrimitiveStageCard from '@/components/stages/MeshPrimitiveStageCard.vue'
 import MeshBooleanStageCard from '@/components/stages/MeshBooleanStageCard.vue'
 import GridSplitStageCard from '@/components/stages/GridSplitStageCard.vue'
 import DirectorTimelineStageCard from '@/components/stages/DirectorTimelineStageCard.vue'
@@ -182,7 +183,7 @@ const RICH_STAGE_CARDS: Record<string, any> = {
   'ComfyTV.ModelLoaderStage':         ModelLoaderCard,
   'ComfyTV.MeshOpStage':              MeshOpStageCard,
   'ComfyTV.MeshBakeMapsStage':        MeshOpStageCard,
-  'ComfyTV.MeshPrimitiveStage':       MeshOpStageCard,
+  'ComfyTV.MeshPrimitiveStage':       MeshPrimitiveStageCard,
   'ComfyTV.MeshBooleanStage':         MeshBooleanStageCard,
   'ComfyTV.GridSplitStage':           GridSplitStageCard,
   'ComfyTV.DirectorTimelineStage':    DirectorTimelineStageCard,

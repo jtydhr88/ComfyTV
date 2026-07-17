@@ -5,6 +5,7 @@ import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js'
 
 import { app } from '@/lib/comfyApp'
 import { decryptAsset, decryptAssetJson } from '@/utils/assetCipher'
+import { buildPrimitiveMesh, parsePrimitiveRecipe } from '@/widgets/three/primitiveGeometry'
 
 export interface Scene3dCharacterManifestEntry {
   id: string
@@ -143,6 +144,12 @@ function wrapModelTemplate(root: THREE.Group): THREE.Group {
 export async function loadCustomModelAssets(
   url: string
 ): Promise<CharacterAssets> {
+  const prim = parsePrimitiveRecipe(url)
+  if (prim) {
+    const group = new THREE.Group()
+    group.add(buildPrimitiveMesh(prim.kind, prim.params))
+    return { template: wrapModelTemplate(group), clips: [] }
+  }
   let cached = customModelCache.get(url)
   if (!cached) {
     cached = (async () => {

@@ -1,3 +1,5 @@
+import math
+
 import pytest
 
 torch = pytest.importorskip("torch")
@@ -64,3 +66,58 @@ def test_size_scales_bbox():
 def test_unknown_kind_raises():
     with pytest.raises(ValueError):
         make_primitive('teapot')
+
+
+def test_open_ended_cylinder_drops_caps():
+    rs, h = 16, 1
+    closed = mesh_stats(make_cylinder(0.5, 0.5, 1.0, rs, h))['faces']
+    opened = make_cylinder(0.5, 0.5, 1.0, rs, h, open_ended=True)
+    assert mesh_stats(opened)['faces'] == rs * h * 2
+    assert closed == rs * h * 2 + rs * 2
+    v, f, _, _, _ = item(opened)
+    assert boundary_edge_count(v, f) > 0
+
+
+def test_partial_torus_is_open():
+    v, f, _, _, _ = item(make_torus(0.5, 0.2, 8, 16, arc=math.pi))
+    assert boundary_edge_count(v, f) > 0
+
+
+def test_partial_sphere_is_open_but_normals_stay_unit():
+    m = make_sphere(0.5, 16, 8, theta_start=0.0, theta_length=math.pi / 2)
+    v, f, _, _, n = item(m)
+    assert boundary_edge_count(v, f) > 0
+    assert torch.allclose(n.norm(dim=-1), torch.ones(n.shape[0]), atol=1e-4)
+    assert float(v[:, 1].min()) >= -1e-4
+
+
+def test_full_sphere_stays_closed_with_explicit_full_ranges():
+    m = make_sphere(0.5, 24, 12, phi_length=2 * math.pi, theta_length=math.pi)
+    v, f, _, _, _ = item(m)
+    assert boundary_edge_count(v, f) == 0
+
+
+def test_recipe_box_honours_per_axis_dims():
+    v, _, _, _, _ = item(make_primitive('cube', width=2.0, height=1.0, depth=0.5))
+    assert float(v[:, 0].max()) == pytest.approx(1.0)
+    assert float(v[:, 1].max()) == pytest.approx(0.5)
+    assert float(v[:, 2].max()) == pytest.approx(0.25)
+
+
+def test_recipe_matches_direct_builder_call():
+    recipe = make_primitive('cylinder', radiusTop=0.0, radiusBottom=1.0, height=2.0,
+                            radialSegments=16, heightSegments=1)
+    direct = make_cylinder(0.0, 1.0, 2.0, 16, 1)
+    assert mesh_stats(recipe)['faces'] == mesh_stats(direct)['faces']
+
+
+def test_recipe_cone_maps_radius_to_bottom():
+    cone = make_primitive('cone', radius=0.5, height=1.0, radialSegments=24)
+    v, _, _, _, _ = item(cone)
+    assert float(v[:, 1].max()) == pytest.approx(0.5)
+    assert float(v[:, 0].abs().max()) == pytest.approx(0.5, abs=1e-3)
+
+
+def test_recipe_unknown_kind_raises():
+    with pytest.raises(ValueError):
+        make_primitive('teapot', width=1.0)

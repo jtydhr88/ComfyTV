@@ -450,21 +450,45 @@ export function useStageNode(
       state.pool = poolWidget ? (String(poolWidget.value ?? '') || null) : null
     }
   } else if (variant === 'loader') {
-    const widgetName = kind === 'image' ? 'image'
-                     : kind === 'video' ? 'video'
-                     : kind === 'audio' ? 'audio'
-                     : kind === 'model' ? 'model'
-                     : null
-    const uploadWidget = widgetName
-      ? node.widgets?.find((w: any) => w.name === widgetName)
-      : null
-    if (uploadWidget) {
+    const recipeWidget = node.widgets?.find((w: any) => w.name === 'recipe')
+    if (recipeWidget) {
+      const kindWidget = node.widgets?.find((w: any) => w.name === 'kind')
       const sync = () => {
-        const v = String(uploadWidget.value ?? '')
-        store.setOutputSlot(state, 0, v ? inputFileUrl(v) : null)
+        const raw = String(recipeWidget.value ?? '').trim()
+        if (!raw) {
+          store.setOutputSlot(state, 0, null)
+          return
+        }
+        let params: Record<string, unknown> = {}
+        try {
+          const parsed = JSON.parse(raw)
+          if (parsed && typeof parsed === 'object') params = parsed as Record<string, unknown>
+        } catch {
+          params = {}
+        }
+        const kind = String(kindWidget?.value ?? 'cube')
+        store.setOutputSlot(state, 0, JSON.stringify({ __prim__: { kind, ...params } }))
       }
       sync()
-      uploadWidget.callback = useChainCallback(uploadWidget.callback, sync)
+      recipeWidget.callback = useChainCallback(recipeWidget.callback, sync)
+      if (kindWidget) kindWidget.callback = useChainCallback(kindWidget.callback, sync)
+    } else {
+      const widgetName = kind === 'image' ? 'image'
+                       : kind === 'video' ? 'video'
+                       : kind === 'audio' ? 'audio'
+                       : kind === 'model' ? 'model'
+                       : null
+      const uploadWidget = widgetName
+        ? node.widgets?.find((w: any) => w.name === widgetName)
+        : null
+      if (uploadWidget) {
+        const sync = () => {
+          const v = String(uploadWidget.value ?? '')
+          store.setOutputSlot(state, 0, v ? inputFileUrl(v) : null)
+        }
+        sync()
+        uploadWidget.callback = useChainCallback(uploadWidget.callback, sync)
+      }
     }
   }
 

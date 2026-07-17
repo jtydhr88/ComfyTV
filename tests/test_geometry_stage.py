@@ -35,7 +35,7 @@ def calls(monkeypatch):
     monkeypatch.setattr(geometry, "unwrap_model",
                         record("unwrap", extra=("/view?filename=atlas.png&type=output",
                                                 {"faces": 7})))
-    monkeypatch.setattr(geometry, "primitive_model", record("primitive"))
+    monkeypatch.setattr(geometry, "primitive_recipe", record("primitive"))
     monkeypatch.setattr(geometry, "boolean_model", record("boolean"))
     monkeypatch.setattr(geometry, "bake_maps_model",
                         record("bake", extra=("/view?filename=maps.png&type=output",
@@ -110,11 +110,17 @@ class TestMeshOpDispatch:
 
 class TestPrimitiveStage:
     def test_execute(self, reset_db, calls):
-        out = geometry.MeshPrimitiveStage.execute(project_id="default", kind="torus",
-                                                  size=2.0, segments=16)
+        out = geometry.MeshPrimitiveStage.execute(
+            project_id="default", kind="torus",
+            recipe='{"radius": 2.0, "tube": 0.5, "arc": 3.14}')
         assert calls["primitive"]["args"][0] == "torus"
-        assert calls["primitive"]["kwargs"] == {"size": 2.0, "segments": 16}
+        assert calls["primitive"]["args"][1] == {"radius": 2.0, "tube": 0.5, "arc": 3.14}
         assert "out.glb" in out.values[0]
+
+    def test_execute_bad_recipe_falls_back_to_empty_params(self, reset_db, calls):
+        geometry.MeshPrimitiveStage.execute(project_id="default", kind="cube",
+                                            recipe="not json")
+        assert calls["primitive"]["args"][1] == {}
 
 
 class TestBooleanStage:

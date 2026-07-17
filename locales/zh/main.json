@@ -1316,6 +1316,34 @@
     "selected": "部件：{part}",
     "unbind": "解绑"
   },
+  "meshPrimitive": {
+    "kind": {
+      "cube": "立方体",
+      "sphere": "球体",
+      "cylinder": "圆柱",
+      "cone": "圆锥",
+      "plane": "平面",
+      "torus": "圆环"
+    },
+    "width": "宽度",
+    "height": "高度",
+    "depth": "深度",
+    "radius": "半径",
+    "radiusTop": "顶部半径",
+    "radiusBottom": "底部半径",
+    "tube": "管径",
+    "widthSegments": "宽度细分",
+    "heightSegments": "高度细分",
+    "depthSegments": "深度细分",
+    "radialSegments": "径向细分",
+    "tubularSegments": "环向细分",
+    "openEnded": "开口(无端盖)",
+    "phiStart": "经度起点",
+    "phiLength": "经度跨度",
+    "thetaStart": "纬度起点",
+    "thetaLength": "纬度跨度",
+    "arc": "弧度"
+  },
   "meshOps": {
     "operation": "操作",
     "op": {

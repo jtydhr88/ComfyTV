@@ -131,7 +131,7 @@ STAGE_META: dict[str, dict] = {
     'AssetModelLoaderStage':        {'kind': 'model',       'variant': 'loader'},
     'MeshOpStage':                  {'kind': 'model'},
     'MeshBakeMapsStage':            {'kind': 'model'},
-    'MeshPrimitiveStage':           {'kind': 'model'},
+    'MeshPrimitiveStage':           {'kind': 'model',       'variant': 'loader'},
     'MeshBooleanStage':             {'kind': 'model'},
 }
 

@@ -34,6 +34,7 @@ import {
 import { buildPointCloud, classifyModelBytes, loadSpark } from '@/widgets/three/modelFormats'
 import { guardOrbitControlsDragEnd } from '@/widgets/three/orbitControlsGuard'
 import { RendererView } from '@/widgets/three/RendererView'
+import { buildPrimitiveMesh, parsePrimitiveRecipe } from '@/widgets/three/primitiveGeometry'
 import { loadCustomModelAssets } from '@/widgets/three/scene3d/scene3dAssets'
 import { applyViewChannel, type ViewChannel } from '@/widgets/three/channelShading'
 import type { MaterialParams } from '@/widgets/material/types'
@@ -137,6 +138,13 @@ interface LoadedModel {
 }
 
 async function loadModelObject(url: string): Promise<LoadedModel> {
+  const prim = parsePrimitiveRecipe(url)
+  if (prim) {
+    const group = new THREE.Group()
+    group.add(buildPrimitiveMesh(prim.kind, prim.params))
+    return { root: group, dispose: null }
+  }
+
   let bytes: ArrayBuffer | null = null
   const fetchBytes = async () => (bytes ??= await fetchModelBytes(url))
   const kind = await classifyModelBytes(url, fetchBytes)

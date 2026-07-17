@@ -61,14 +61,14 @@ describe('useMeshOp: variants', () => {
     expect(api.operation.value).toBe('remesh')
   })
 
-  it('uses static controls for primitive and bake variants', () => {
+  it('exposes no useMeshOp controls for the primitive (it has its own rich card now)', () => {
     const prim = useMeshOp(makeNode('ComfyTV.MeshPrimitiveStage'), makeState())
     expect(prim.isPrimitive).toBe(true)
     expect(prim.operation.value).toBe('')
-    expect(prim.visibleControls.value.map((c) => c.widget)).toEqual([
-      'kind', 'size', 'segments'
-    ])
+    expect(prim.visibleControls.value).toEqual([])
+  })
 
+  it('uses static controls for the bake variant', () => {
     const bake = useMeshOp(makeNode('ComfyTV.MeshBakeMapsStage'), makeState())
     expect(bake.isBake).toBe(true)
     expect(bake.hasMapsPanel.value).toBe(true)

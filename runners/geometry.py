@@ -9,12 +9,30 @@ _log = logging.getLogger(__name__)
 _SUBFOLDER = 'comfytv-3d'
 
 
-def load_model_mesh(view_url: str):
-    """Localize + parse a model view URL (GLB/glTF/OBJ/STL) into a MESH batch."""
+def _parse_primitive_recipe(payload: str):
+    import json
+    try:
+        spec = json.loads(payload)
+    except (ValueError, TypeError):
+        return None
+    prim = spec.get('__prim__') if isinstance(spec, dict) else None
+    if not isinstance(prim, dict):
+        return None
+    return {'kind': str(prim.get('kind', 'cube')).lower(),
+            'params': {k: v for k, v in prim.items() if k != 'kind'}}
+
+
+def load_model_mesh(model: str):
+    s = (model or '').strip()
+    if not s:
+        raise RuntimeError("no model to load")
+    if s.startswith('{'):
+        prim = _parse_primitive_recipe(s)
+        if prim is not None:
+            from ..mesh3d.primitives import make_primitive
+            return make_primitive(prim['kind'], **prim['params'])
     from ..mesh3d.io3d import load_mesh_bytes
-    if not (view_url or '').strip():
-        raise RuntimeError("no model URL to load")
-    src = localize(view_url)
+    src = localize(s)
     return load_mesh_bytes(src.read_bytes(), src.suffix)
 
 
@@ -168,12 +186,13 @@ def bake_maps_model(low_url: str, high_url: str, bake_normal: bool = True, bake_
     return payload, preview_url, stats
 
 
-def primitive_model(kind: str, size: float = 1.0, segments: int = 32):
-    """Generate a parametric primitive; returns (view_url, stats). Analytic normals kept."""
-    from ..mesh3d import ops
-    from ..mesh3d.primitives import make_primitive
-    mesh = make_primitive(kind, size=float(size), segments=int(segments))
-    return save_model_mesh(mesh), ops.mesh_stats(mesh)
+def primitive_recipe(kind: str, params: dict = None):
+    import json
+    kind = (kind or 'cube').lower()
+    params = {k: v for k, v in dict(params or {}).items() if k != 'kind'}
+    payload = json.dumps({'__prim__': {'kind': kind, **params}},
+                         separators=(',', ':'), sort_keys=True)
+    return payload, {'kind': kind, 'recipe': params}
 
 
 def boolean_model(url_a: str, url_b: str, op: str = 'union', resolution: int = 256,

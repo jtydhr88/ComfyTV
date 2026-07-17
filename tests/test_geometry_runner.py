@@ -4,6 +4,7 @@ error paths; the real algorithms are covered by the (torch-gated) mesh3d tier.""
 
 from __future__ import annotations
 
+import json
 import os
 import sys
 import types
@@ -147,10 +148,21 @@ def test_unwrap_model_can_skip_atlas(fake_mesh3d, model_url):
     assert "render_uv_atlas" not in fake_mesh3d
 
 
-def test_primitive_model(fake_mesh3d):
-    payload, stats = rg.primitive_model("torus", size=2.0, segments=12)
-    _out_path(payload, ".glb")
-    assert fake_mesh3d["make_primitive"][0]["args"][0] == "torus"
+def test_primitive_recipe_packages_payload():
+    payload, stats = rg.primitive_recipe("Torus", {"radius": 2.0, "arc": 3.14, "kind": "ignored"})
+    spec = json.loads(payload)
+    assert spec["__prim__"]["kind"] == "torus"
+    assert spec["__prim__"]["radius"] == 2.0
+    assert spec["__prim__"]["arc"] == 3.14
+    assert stats["kind"] == "torus"
+
+
+def test_load_model_mesh_resolves_recipe(fake_mesh3d):
+    payload, _ = rg.primitive_recipe("cone", {"radius": 0.5, "height": 2.0})
+    rg.load_model_mesh(payload)
+    call = fake_mesh3d["make_primitive"][0]
+    assert call["args"][0] == "cone"
+    assert call["kwargs"] == {"radius": 0.5, "height": 2.0}
 
 
 def test_boolean_model_forwards_transform(fake_mesh3d, model_url):

@@ -62,12 +62,6 @@ export const OP_PARAMS: Record<string, ControlDef[]> = {
 }
 
 export const NODE_CONTROLS: Record<string, ControlDef[]> = {
-  'ComfyTV.MeshPrimitiveStage': [
-    { widget: 'kind', labelKey: 'meshOps.primitiveKind', type: 'combo',
-      options: ['cube', 'sphere', 'cylinder', 'cone', 'plane', 'torus'] },
-    { widget: 'size', labelKey: 'meshOps.primitiveSize', type: 'float', min: 0.01, max: 100, step: 0.1 },
-    { widget: 'segments', labelKey: 'meshOps.segments', type: 'int', min: 1, max: 128, step: 1 },
-  ],
   'ComfyTV.MeshBakeMapsStage': [
     { widget: 'bake_normal', labelKey: 'meshOps.bakeNormal', type: 'bool' },
     { widget: 'bake_ao', labelKey: 'meshOps.bakeAo', type: 'bool' },

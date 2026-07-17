@@ -1,7 +1,7 @@
 from ._common import *  # noqa: F401, F403
 from ...runners.geometry import (
     bake_maps_model, boolean_model, decimate_model, export_model,
-    fill_holes_model, primitive_model, remesh_model, smooth_normals_model,
+    fill_holes_model, primitive_recipe, remesh_model, smooth_normals_model,
     subdivide_model, unwrap_model, weld_model,
 )
 from .loaders import _captured_image_input
@@ -150,15 +150,15 @@ class MeshPrimitiveStage(io.ComfyNode):
             display_name="Mesh Primitive",
             category="ComfyTV/3D",
             inputs=[
-                *_standard_stage_inputs(),
+                _project_id_input(),
+                _parent_output_id_input(),
                 io.Combo.Input("kind", options=['cube', 'sphere', 'cylinder', 'cone', 'plane', 'torus'],
                                default='cube', socketless=True, extra_dict={"hidden": True}),
-                io.Float.Input("size", default=1.0, min=0.01, max=100.0, step=0.1,
-                               socketless=True, extra_dict={"hidden": True},
-                               tooltip="Overall size (edge length / diameter / height)."),
-                io.Int.Input("segments", default=32, min=1, max=128,
-                             socketless=True, extra_dict={"hidden": True},
-                             tooltip="Tessellation density."),
+                io.String.Input("recipe", default="{}",
+                                socketless=True, extra_dict={"hidden": True},
+                                tooltip="Internal — three.js geometry.parameters JSON for the selected "
+                                        "kind (width/radiusTop/phiLength/arc/...); filled by the node body. "
+                                        "Downstream ops generate the mesh from this recipe."),
                 _captured_image_input(),
             ],
             outputs=[COMFYTV_MODEL.Output("model"), COMFYTV_IMAGE.Output("image")],
@@ -167,9 +167,16 @@ class MeshPrimitiveStage(io.ComfyNode):
         )
 
     @classmethod
-    def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
-                kind='cube', size=1.0, segments=32, captured_image=""):
-        payload, stats = primitive_model(kind, size=float(size), segments=int(segments))
+    def execute(cls, project_id="", parent_output_id=0,
+                kind='cube', recipe="{}", captured_image=""):
+        import json
+        try:
+            params = json.loads(recipe) if (recipe or '').strip() else {}
+        except (ValueError, TypeError):
+            params = {}
+        if not isinstance(params, dict):
+            params = {}
+        payload, stats = primitive_recipe(kind, params)
         return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
                                 params={'op': 'primitive', 'kind': kind, 'stats': stats},
                                 parent_output_id=parent_output_id,
