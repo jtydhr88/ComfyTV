@@ -101,6 +101,7 @@ def _bright_centroid(url):
 
 class TestScreenDirections:
     def test_translate_y_positive_moves_up(self):
+        pytest.importorskip("torch")
         import folder_paths
         from ComfyTV.runners import media
         from ComfyTV.runners.media_torch import transform_video
@@ -116,6 +117,7 @@ class TestScreenDirections:
 
     def test_rotation_positive_is_ccw(self):
         """+90°: a dot right of center must end ABOVE the center (CCW)."""
+        pytest.importorskip("torch")
         import folder_paths
         from ComfyTV.runners import media
         from ComfyTV.runners.media_torch import transform_video
@@ -150,6 +152,7 @@ class TestMergeMixSemantics:
         """Natron mix: out = lerp(B, multiply(A,B), 0.5).
         gray-0.5 fg × white bg = 0.5; lerp(1.0, 0.5, 0.5) = 0.75 (~191).
         The old premultiplied-attenuation gave ~0.25 (~64)."""
+        pytest.importorskip("torch")
         import folder_paths
         from ComfyTV.runners import media
         from ComfyTV.runners.media_torch import composite_videos
@@ -175,6 +178,7 @@ class TestTrackerConfidence:
     def test_confidence_reported_and_blank_holds(self):
         """A featureless black clip yields near-zero confidence and the
         track HOLDS its position instead of wandering."""
+        pytest.importorskip("torch")
         import json
         import folder_paths
         from ComfyTV.runners import media

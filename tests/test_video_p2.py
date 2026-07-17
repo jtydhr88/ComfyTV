@@ -128,6 +128,7 @@ class TestPaint:
         ])
 
     def test_no_strokes_rejected(self, clip_b):
+        pytest.importorskip("torch")
         from ComfyTV.runners.paint import paint_video
         with pytest.raises(RuntimeError, match="no strokes"):
             paint_video(clip_b, [])

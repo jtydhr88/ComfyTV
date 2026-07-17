@@ -431,6 +431,7 @@ class TestSegments:
 
 class TestConvolve:
     def test_delta_ir_is_identity(self):
+        pytest.importorskip("scipy")
         from ComfyTV.runners.audio_dsp import _write_wav, convolve_ir
         from ComfyTV.runners.media import _AUDIO_RATE, _decode_audio_to_array, localize
         t = np.arange(int(0.3 * _AUDIO_RATE)) / _AUDIO_RATE
@@ -452,6 +453,7 @@ class TestConvolve:
 
 class TestSweepDeconvolve:
     def test_roundtrip_gives_impulse(self, monkeypatch):
+        pytest.importorskip("scipy")
         from ComfyTV.runners.audio_dsp import deconvolve_ir, ess_sweep
         from ComfyTV.runners.media import _AUDIO_RATE, _decode_audio_to_array, localize
         sweep_url = ess_sweep(duration_s=1.0, fmin=20.0, fmax=8000.0,

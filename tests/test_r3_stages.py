@@ -40,6 +40,7 @@ def test_meta_registered():
 
 
 def test_extension_registers_all():
+    pytest.importorskip("torch")
     import asyncio
     from ComfyTV.nodes.stages import ComfyTVExtension
     nodes = asyncio.run(ComfyTVExtension().get_node_list())
