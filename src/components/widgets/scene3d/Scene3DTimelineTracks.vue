@@ -85,6 +85,11 @@ import IconZoomIn from '~icons/lucide/zoom-in'
 
 import ComfyTVSlider from '@/components/widgets/ComfyTVSlider.vue'
 import {
+  computeTotalFrames,
+  resolveContainerHeight,
+  zoomFromExp
+} from '@/composables/widgets/scene3dTimelineMath'
+import {
   Scene3dTimelineTracks,
   type TimelineTracksData
 } from '@/widgets/three/scene3d/timelineTracks'
@@ -134,24 +139,13 @@ const onTimelineScroll = (): void => {
   }
 }
 
-const totalFrames = computed(() => {
-  if (!props.data) return 0
-  const camEnd = Math.max(
-    0,
-    ...props.data.cameras.map((c) => c.sourceFrames / Math.max(0.1, c.speed))
-  )
-  const charEnd = Math.max(
-    0,
-    ...props.data.characters.map((c) => c.offsetFrames + c.displayFrames)
-  )
-  return Math.round(Math.max(camEnd, charEnd))
-})
+const totalFrames = computed(() => computeTotalFrames(props.data))
 
 const containerHeight = ref(80)
 
 function updateContainerHeight(): void {
   const desired = widget?.getDesiredHeight(MAX_VISIBLE_ROWS) ?? 0
-  containerHeight.value = desired > 0 ? desired : 80
+  containerHeight.value = resolveContainerHeight(desired)
   onTimelineScroll()
 }
 
@@ -191,7 +185,7 @@ watch(containerHeight, () => {
 })
 
 watch(zoomExp, (value) => {
-  widget?.setZoom(Math.pow(2, value))
+  widget?.setZoom(zoomFromExp(value))
 })
 
 function iconBtnClass(active: boolean) {

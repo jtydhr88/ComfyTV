@@ -89,8 +89,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-
 import ComfyTVNumber from '@/components/widgets/ComfyTVNumber.vue'
 import ComfyTVSlider from '@/components/widgets/ComfyTVSlider.vue'
 import ComfyTVText from '@/components/widgets/ComfyTVText.vue'
@@ -98,116 +96,30 @@ import ComfyTVToggle from '@/components/widgets/ComfyTVToggle.vue'
 import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
-import type { StageParam } from '@/api/schemas'
-import { getStageMeta } from '@/composables/stages/stageMeta'
-import { useStageParamStore } from '@/stores/stageParamStore'
-import { bindWidgetCallback, getWidget, readWidgetStr, writeWidget } from '@/utils/widget'
-
-interface ParamItem { key: string; value: unknown }
+import { useCustomParams } from '@/composables/stages/useCustomParams'
 
 const props = defineProps<{
   state: StageState
   node: LGraphNode
 }>()
 
-const store = useStageParamStore()
-const menuOpen = ref(false)
-const items = ref<ParamItem[]>([])
-
-const paramKind = computed(() => getStageMeta(props.node.comfyClass ?? '')?.workflow_kind || props.state.kind)
-const hasWidget = computed(() => !!getWidget(props.node, 'custom_params'))
-const defs = computed(() => store.forKind(paramKind.value).filter(d => d.origin !== 0))
-
-const attached = computed(() =>
-  items.value.filter(it => defs.value.some(d => d.key === it.key)),
-)
-const available = computed(() =>
-  defs.value.filter(d => !items.value.some(it => it.key === d.key)),
-)
-
-function defByKey(key: string): StageParam | undefined {
-  return defs.value.find(d => d.key === key)
-}
-function defLabel(key: string): string { return defByKey(key)?.label ?? key }
-function defType(key: string): string { return defByKey(key)?.type ?? 'string' }
-function cfg(key: string): Record<string, unknown> { return defByKey(key)?.config ?? {} }
-function cfgNum(key: string, k: string): number | undefined {
-  const v = cfg(key)[k]
-  return typeof v === 'number' ? v : undefined
-}
-function cfgStr(key: string, k: string): string | undefined {
-  const v = cfg(key)[k]
-  return typeof v === 'string' ? v : undefined
-}
-function numVal(v: unknown): number | null {
-  const n = Number(v)
-  return Number.isFinite(n) ? n : null
-}
-function useSlider(key: string): boolean {
-  return defType(key) === 'int'
-    && cfgNum(key, 'min') !== undefined
-    && cfgNum(key, 'max') !== undefined
-}
-function comboOptions(key: string): string[] {
-  const opts = cfg(key).options
-  return Array.isArray(opts) ? opts.map(o => String(o)) : []
-}
-
-function readItems(): ParamItem[] {
-  try {
-    const data = JSON.parse(readWidgetStr(props.node, 'custom_params', '{}'))
-    const arr = data?.items
-    return Array.isArray(arr)
-      ? arr.filter((x: any) => x && typeof x.key === 'string').map((x: any) => ({ key: x.key, value: x.value }))
-      : []
-  } catch {
-    return []
-  }
-}
-
-function persist() {
-  writeWidget(props.node, 'custom_params', JSON.stringify({ items: items.value }))
-}
-
-function defaultFor(d: StageParam): unknown {
-  if (d.default != null) return d.default
-  switch (d.type) {
-    case 'boolean': return false
-    case 'int':
-    case 'float':   return 0
-    case 'combo':   return comboOptions(d.key)[0] ?? ''
-    default:        return ''
-  }
-}
-
-function attach(d: StageParam) {
-  menuOpen.value = false
-  if (items.value.some(it => it.key === d.key)) return
-  items.value = [...items.value, { key: d.key, value: defaultFor(d) }]
-  persist()
-}
-
-function detach(key: string) {
-  items.value = items.value.filter(it => it.key !== key)
-  persist()
-}
-
-function setVal(key: string, value: unknown) {
-  items.value = items.value.map(it => (it.key === key ? { ...it, value } : it))
-  persist()
-}
-
-function closeMenu() { menuOpen.value = false }
-
-onMounted(async () => {
-  store.ensureHydrated()
-  store.installWebSocketSync()
-  await store.hydrate()
-  items.value = readItems()
-  bindWidgetCallback(props.node, 'custom_params', () => { items.value = readItems() })
-  window.addEventListener('click', closeMenu)
-})
-onBeforeUnmount(() => window.removeEventListener('click', closeMenu))
+const {
+  menuOpen,
+  hasWidget,
+  attached,
+  available,
+  defLabel,
+  defType,
+  cfg,
+  cfgNum,
+  cfgStr,
+  numVal,
+  useSlider,
+  comboOptions,
+  attach,
+  detach,
+  setVal,
+} = useCustomParams(props.node, () => props.state)
 
 const sectionLabel = 'ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:opacity-60'
 const addBtn = 'ctv:inline-flex ctv:items-center ctv:h-5 ctv:px-1.5 ctv:rounded-sm ctv:text-3xs ctv:font-semibold ctv:cursor-pointer'

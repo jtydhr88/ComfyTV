@@ -15,8 +15,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
-import { compressorTransferDb, envelopeDb, resampleEnvelope, transferCurvePoints } from '@/utils/audioViz'
+import { computed, onMounted, ref, watch } from 'vue'
+import { useAudioEnvelope } from '@/composables/widgets/fx/useAudioEnvelope'
+import { compressorTransferDb, resampleEnvelope, transferCurvePoints } from '@/utils/audioViz'
 
 const props = defineProps<{
   thresholdDb: number
@@ -33,7 +34,11 @@ const MIN_DB = -60
 
 const curveCanvas = ref<HTMLCanvasElement | null>(null)
 const historyCanvas = ref<HTMLCanvasElement | null>(null)
-const hasHistory = ref(false)
+
+const { hasHistory, reload } = useAudioEnvelope({
+  inputUrl: computed(() => props.inputUrl),
+  outputUrl: computed(() => props.outputUrl),
+})
 
 function xPix(db: number) { return ((db - MIN_DB) / -MIN_DB) * (W - 1) }
 function yPix(db: number) { return (1 - (db - MIN_DB) / -MIN_DB) * (H - 1) }
@@ -86,37 +91,15 @@ function drawCurve() {
   ctx.fill()
 }
 
-async function decodeEnvelope(url: string): Promise<Float32Array | null> {
-  try {
-    const buf = await (await fetch(url)).arrayBuffer()
-    const ac = new AudioContext()
-    try {
-      const audio = await ac.decodeAudioData(buf)
-      const mono = audio.getChannelData(0)
-      return envelopeDb(mono, audio.sampleRate, 10)
-    } finally {
-      void ac.close()
-    }
-  } catch {
-    return null
-  }
-}
-
 async function drawHistory() {
-  hasHistory.value = false
-  if (!props.inputUrl || !props.outputUrl) return
-  const [inEnv, outEnv] = await Promise.all([
-    decodeEnvelope(props.inputUrl),
-    decodeEnvelope(props.outputUrl),
-  ])
-  if (!inEnv || !outEnv) return
-  hasHistory.value = true
+  const envs = await reload()
+  if (!envs) return
   await new Promise(resolve => setTimeout(resolve))
   const ctx = historyCanvas.value?.getContext('2d')
   if (!ctx) return
 
-  const inR = resampleEnvelope(inEnv, W)
-  const outR = resampleEnvelope(outEnv, W)
+  const inR = resampleEnvelope(envs.input, W)
+  const outR = resampleEnvelope(envs.output, W)
   ctx.fillStyle = 'rgb(43,43,75)'
   ctx.fillRect(0, 0, W, H)
 

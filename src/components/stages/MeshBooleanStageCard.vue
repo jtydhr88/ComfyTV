@@ -82,7 +82,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { TransformControls } from 'three/examples/jsm/controls/TransformControls.js'
@@ -93,18 +93,23 @@ import IconBox from '~icons/lucide/box'
 import type { LGraphNode } from '@/lib/comfyApp'
 import StageCard from '@/components/stages/StageCard.vue'
 import type { StageState } from '@/stores/stageStore'
-import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
-import { uploadCanvas } from '@/utils/uploadCanvas'
-import { bindWidgetCallback, getWidget, onNodeConfigure, readWidgetStr, writeWidget } from '@/utils/widget'
+import {
+  BOOLEAN_CHANNELS as CHANNELS,
+  BOOLEAN_GIZMO_MODES as GIZMO_MODES,
+  BOOLEAN_OPERATIONS as OPERATIONS,
+  computeFrameFit,
+  useMeshBoolean,
+  type BooleanGizmoMode as GizmoMode
+} from '@/composables/stages/useMeshBoolean'
+import {
+  MODEL_VIEW_CAPTURE_SIZE,
+  useModelViewCapture
+} from '@/composables/stages/useModelViewCapture'
+import { onNodeConfigure } from '@/utils/widget'
 import { applyViewChannel, type ViewChannel } from '@/widgets/three/channelShading'
 import { guardOrbitControlsDragEnd } from '@/widgets/three/orbitControlsGuard'
 import { RendererView } from '@/widgets/three/RendererView'
 import { loadCustomModelAssets } from '@/widgets/three/scene3d/scene3dAssets'
-
-type GizmoMode = 'translate' | 'rotate' | 'scale'
-const GIZMO_MODES: GizmoMode[] = ['translate', 'rotate', 'scale']
-const OPERATIONS = ['union', 'difference', 'intersect']
-const CHANNELS: ViewChannel[] = ['material', 'clay', 'normal', 'wire']
 
 const props = defineProps<{
   state: StageState
@@ -117,34 +122,28 @@ const props = defineProps<{
 
 const hostEl = ref<HTMLDivElement | null>(null)
 const gizmoMode = ref<GizmoMode>('translate')
-const showResult = ref(true)
 const channel = ref<ViewChannel>('material')
+
+const {
+  operation,
+  resolution,
+  setOperation,
+  setResolution,
+  modelAUrl,
+  modelBUrl,
+  resultUrl,
+  showResult,
+  viewingResult,
+  readTransformWidget,
+  writeTransformWidget,
+  clearTransformWidget
+} = useMeshBoolean(props.node, props.state)
 
 function setChannel(ch: ViewChannel): void {
   channel.value = ch
   for (const g of [groupA, groupB, groupResult]) applyViewChannel(g, ch)
   scheduleCapture()
 }
-
-const operation = ref(readWidgetStr(props.node, 'operation', 'union'))
-const resolution = ref(Number((getWidget(props.node, 'resolution') as any)?.value ?? 256))
-
-function setOperation(v: string) {
-  operation.value = v
-  writeWidget(props.node, 'operation', v)
-}
-function setResolution(raw: string) {
-  const n = Math.max(32, Math.min(1024, Math.round(Number(raw) / 32) * 32))
-  resolution.value = n
-  writeWidget(props.node, 'resolution', n)
-}
-bindWidgetCallback(props.node, 'operation', (v) => { operation.value = String(v) })
-bindWidgetCallback(props.node, 'resolution', (v) => { resolution.value = Number(v) || 256 })
-
-const modelAUrl = computed(() => pickSourceImageUrl(props.state.inputs, 'model'))
-const modelBUrl = computed(() => pickSourceImageUrl(props.state.inputs, 'model_b'))
-const resultUrl = computed(() => props.state.output || null)
-const viewingResult = computed(() => Boolean(showResult.value && resultUrl.value))
 
 let view: RendererView | null = null
 let scene: THREE.Scene | null = null
@@ -170,30 +169,26 @@ function readTransform(): void {
   groupB.position.set(0, 0, 0)
   groupB.quaternion.identity()
   groupB.scale.set(1, 1, 1)
-  const raw = readWidgetStr(props.node, 'transform_b', '')
-  if (!raw) return
-  try {
-    const t = JSON.parse(raw)
-    if (Array.isArray(t.position)) groupB.position.fromArray(t.position)
-    if (Array.isArray(t.quaternion)) groupB.quaternion.fromArray(t.quaternion)
-    if (Array.isArray(t.scale)) groupB.scale.fromArray(t.scale)
-  } catch { /* keep identity */ }
+  const t = readTransformWidget()
+  if (!t) return
+  if (t.position) groupB.position.fromArray(t.position)
+  if (t.quaternion) groupB.quaternion.fromArray(t.quaternion)
+  if (t.scale) groupB.scale.fromArray(t.scale)
 }
 
 function writeTransform(): void {
-  const r5 = (n: number) => Math.round(n * 1e5) / 1e5
-  writeWidget(props.node, 'transform_b', JSON.stringify({
-    position: groupB.position.toArray().map(r5),
-    quaternion: groupB.quaternion.toArray().map(r5),
-    scale: groupB.scale.toArray().map(r5),
-  }))
+  writeTransformWidget({
+    position: groupB.position.toArray(),
+    quaternion: groupB.quaternion.toArray(),
+    scale: groupB.scale.toArray(),
+  })
 }
 
 function resetTransform(): void {
   groupB.position.set(0, 0, 0)
   groupB.quaternion.identity()
   groupB.scale.set(1, 1, 1)
-  writeWidget(props.node, 'transform_b', '')
+  clearTransformWidget()
   scheduleCapture()
 }
 
@@ -232,12 +227,10 @@ function frameCamera(): void {
   if (bounds.isEmpty()) return
   const center = bounds.getCenter(new THREE.Vector3())
   const size = bounds.getSize(new THREE.Vector3())
-  let maxDim = Math.max(size.x, size.y, size.z)
-  if (!Number.isFinite(maxDim) || maxDim <= 0) maxDim = 2
-  const dist = maxDim * 1.8
-  camera.position.set(center.x + dist * 0.7, center.y + dist * 0.55, center.z + dist * 0.7)
-  camera.near = Math.max(maxDim / 1000, 0.001)
-  camera.far = Math.max(maxDim * 100, 100)
+  const fit = computeFrameFit(center, size)
+  camera.position.set(fit.position.x, fit.position.y, fit.position.z)
+  camera.near = fit.near
+  camera.far = fit.far
   camera.updateProjectionMatrix()
   controls.target.copy(center)
   controls.update()
@@ -289,45 +282,26 @@ function animate(): void {
   view.renderScene(scene, camera)
 }
 
-const CAPTURE_SIZE = 1024
-const CAPTURE_DELAY_MS = 700
-let captureTimer: number | null = null
-let captureSeq = 0
-
-function scheduleCapture(): void {
-  if (captureTimer != null) window.clearTimeout(captureTimer)
-  captureTimer = window.setTimeout(() => {
-    captureTimer = null
-    void runCapture()
-  }, CAPTURE_DELAY_MS)
-}
-
-async function runCapture(): Promise<void> {
-  if (!view || !scene || !camera) return
+function renderCaptureCanvas(): HTMLCanvasElement | null {
+  if (!view || !scene || !camera) return null
   const captureCamera = camera.clone()
   captureCamera.aspect = 1
   captureCamera.updateProjectionMatrix()
   const heldGizmo = gizmoHelper?.visible ?? false
   if (gizmoHelper) gizmoHelper.visible = false
-  let canvas: HTMLCanvasElement | null = null
   try {
-    canvas = view.renderToCanvas(scene, captureCamera, CAPTURE_SIZE, CAPTURE_SIZE)
+    return view.renderToCanvas(scene, captureCamera, MODEL_VIEW_CAPTURE_SIZE, MODEL_VIEW_CAPTURE_SIZE)
   } finally {
     if (gizmoHelper) gizmoHelper.visible = heldGizmo
   }
-  if (!canvas) return
-  const mySeq = ++captureSeq
-  try {
-    const url = await uploadCanvas(canvas, {
-      subfolder: 'model3d-view',
-      filename: `comfytv-mesh-boolean-view-${Date.now()}.png`,
-    })
-    if (mySeq !== captureSeq) return
-    props.onAction('model-capture-view', { imageUrl: url })
-  } catch (e) {
-    console.error('[ComfyTV/mesh-boolean] capture upload failed', e)
-  }
 }
+
+const { scheduleCapture, cancelCapture } = useModelViewCapture({
+  getCanvas: renderCaptureCanvas,
+  filenamePrefix: 'comfytv-mesh-boolean-view',
+  logTag: 'mesh-boolean',
+  onCaptured: (url) => props.onAction('model-capture-view', { imageUrl: url }),
+})
 
 onMounted(() => {
   if (!hostEl.value) return
@@ -383,23 +357,18 @@ watch(modelAUrl, (url) => { loadSeqA++; void loadInto(groupA, url, () => loadSeq
 watch(modelBUrl, (url) => { loadSeqB++; void loadInto(groupB, url, () => loadSeqB, true, true); syncVisibility() })
 watch(resultUrl, (url) => {
   loadSeqR++
-  if (url) showResult.value = true
   void loadInto(groupResult, url, () => loadSeqR)
   syncVisibility()
 })
 watch(viewingResult, syncVisibility)
 
 onNodeConfigure(props.node, () => {
-  operation.value = readWidgetStr(props.node, 'operation', 'union')
-  resolution.value = Number((getWidget(props.node, 'resolution') as any)?.value ?? 256)
   readTransform()
 })
 
 onBeforeUnmount(() => {
   loadSeqA++; loadSeqB++; loadSeqR++
-  captureSeq++
-  if (captureTimer != null) window.clearTimeout(captureTimer)
-  captureTimer = null
+  cancelCapture()
   if (animationId != null) cancelAnimationFrame(animationId)
   animationId = null
   gizmo?.detach()

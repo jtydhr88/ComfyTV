@@ -259,7 +259,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import IconBox from '~icons/lucide/box'
@@ -270,13 +270,15 @@ import ModelThumb from '@/components/widgets/ModelThumb.vue'
 import StageCard from '@/components/stages/StageCard.vue'
 import type { StageState } from '@/stores/stageStore'
 import { askText } from '@/composables/dialog/useTextInputDialog'
-import { toastLoaderUploadFailed, useLoaderFileDrop } from '@/composables/stages/useLoaderFileDrop'
+import { useLoaderFileDrop } from '@/composables/stages/useLoaderFileDrop'
+import {
+  baseName,
+  CAPTURE_SIZE,
+  menuPanelStyle,
+  useModelLoader,
+} from '@/composables/stages/useModelLoader'
 import { useOutputAssetTagging } from '@/composables/stages/useOutputAssetTagging'
 import { downloadFile } from '@/utils/download'
-import { uploadBlobNamed, uploadCanvas } from '@/utils/uploadCanvas'
-import { getWidget, onNodeConfigure, readWidgetStr, writeWidget } from '@/utils/widget'
-import { parseMaterialState, type MaterialParams } from '@/widgets/material/types'
-import { convertModelFileToGlb, isConvertibleModelFile } from '@/widgets/three/convertToGlb'
 import { MODEL_FILE_EXTENSIONS } from '@/widgets/three/modelFormats'
 
 const { t } = useI18n()
@@ -295,31 +297,39 @@ const fileAccept = MODEL_FILE_EXTENSIONS.join(',')
 const triggerEl = ref<HTMLButtonElement | null>(null)
 const searchEl = ref<HTMLInputElement | null>(null)
 const filePicker = ref<HTMLInputElement | null>(null)
-const files = ref<string[]>([])
-const selected = ref('')
-const query = ref('')
-const uploading = ref(false)
-const uploadError = ref('')
+const previewEl = ref<InstanceType<typeof ModelPreview> | null>(null)
 const menuOpen = ref(false)
 const menuStyle = ref<Record<string, string>>({})
 
-const filteredFiles = computed(() => {
-  const q = query.value.trim().toLowerCase()
-  if (!q) return files.value
-  return files.value.filter((f) => f.toLowerCase().includes(q))
+const loader = useModelLoader(props.node, {
+  getState: () => props.state,
+  onAction: (id, context) => props.onAction(id, context),
+  captureCanvas: () => previewEl.value?.captureCanvas(CAPTURE_SIZE, CAPTURE_SIZE) ?? null,
+  onSelected: () => { menuOpen.value = false },
 })
 
-function inputFileUrl(path: string): string {
-  if (!path) return ''
-  const slash = path.lastIndexOf('/')
-  const subfolder = slash >= 0 ? path.slice(0, slash) : ''
-  const name = slash >= 0 ? path.slice(slash + 1) : path
-  const params = new URLSearchParams({ filename: name, type: 'input' })
-  if (subfolder) params.set('subfolder', subfolder)
-  return `/view?${params.toString()}`
-}
-
-const modelSrc = computed(() => props.state.output || inputFileUrl(selected.value))
+const {
+  selected,
+  query,
+  uploading,
+  uploadError,
+  filteredFiles,
+  modelSrc,
+  selectedPart,
+  bindings,
+  materialSlots,
+  partMaterials,
+  boundEntries,
+  slotColor,
+  onPartsChanged,
+  onPartPick,
+  bindSelected,
+  unbind,
+  onPick,
+  uploadModelFiles,
+  onPickFiles,
+  scheduleCapture,
+} = loader
 
 const {
   tagMenu,
@@ -366,121 +376,6 @@ async function onCreateCategory(): Promise<void> {
   await createCategoryAndTag(name)
 }
 
-const previewEl = ref<InstanceType<typeof ModelPreview> | null>(null)
-const partKeys = ref<string[]>([])
-const selectedPart = ref<string | null>(null)
-const bindings = ref<Record<string, string>>(
-  parseBindings(readWidgetStr(props.node, 'material_bindings', '')),
-)
-
-function parseBindings(json: string): Record<string, string> {
-  if (!json) return {}
-  try {
-    const data = JSON.parse(json)
-    if (!data || typeof data !== 'object' || Array.isArray(data)) return {}
-    const out: Record<string, string> = {}
-    for (const [k, v] of Object.entries(data)) {
-      if (typeof v === 'string' && v) out[k] = v
-    }
-    return out
-  } catch {
-    return {}
-  }
-}
-
-const materialSlots = computed(() => {
-  const out: { slot: string; label: string; color: string }[] = []
-  for (const inp of props.state.inputs) {
-    if (inp.type !== 'COMFYTV_MATERIAL' || inp.source !== 'upstream' || !inp.content) continue
-    out.push({
-      slot: inp.slot,
-      label: `M${out.length + 1}`,
-      color: parseMaterialState(inp.content).color,
-    })
-  }
-  return out
-})
-
-const partMaterials = computed<Record<string, MaterialParams | null>>(() => {
-  const bySlot = new Map<string, MaterialParams>()
-  for (const inp of props.state.inputs) {
-    if (inp.type === 'COMFYTV_MATERIAL' && inp.source === 'upstream' && inp.content) {
-      bySlot.set(inp.slot, parseMaterialState(inp.content))
-    }
-  }
-  const out: Record<string, MaterialParams | null> = {}
-  for (const [part, slot] of Object.entries(bindings.value)) {
-    out[part] = bySlot.get(slot) ?? null
-  }
-  return out
-})
-
-const boundEntries = computed(() => Object.entries(bindings.value))
-
-function slotColor(slot: string): string {
-  return materialSlots.value.find((s) => s.slot === slot)?.color ?? '#666'
-}
-
-function onPartsChanged(keys: string[]): void {
-  partKeys.value = keys
-  if (selectedPart.value && !keys.includes(selectedPart.value)) selectedPart.value = null
-}
-
-function onPartPick(key: string | null): void {
-  selectedPart.value = key
-}
-
-function bindSelected(slot: string): void {
-  if (!selectedPart.value) return
-  bindings.value = { ...bindings.value, [selectedPart.value]: slot }
-}
-
-function unbind(part: string): void {
-  const next = { ...bindings.value }
-  delete next[part]
-  bindings.value = next
-}
-
-watch(bindings, (v) => {
-  writeWidget(props.node, 'material_bindings',
-              Object.keys(v).length ? JSON.stringify(v) : '')
-}, { deep: true })
-
-onNodeConfigure(props.node, () => {
-  bindings.value = parseBindings(readWidgetStr(props.node, 'material_bindings', ''))
-  selectedPart.value = null
-})
-
-const CAPTURE_SIZE = 1024
-const CAPTURE_DELAY_MS = 700
-
-let captureTimer: number | null = null
-let captureSeq = 0
-
-function scheduleCapture(): void {
-  if (captureTimer != null) window.clearTimeout(captureTimer)
-  captureTimer = window.setTimeout(() => {
-    captureTimer = null
-    void runCapture()
-  }, CAPTURE_DELAY_MS)
-}
-
-async function runCapture(): Promise<void> {
-  const canvas = previewEl.value?.captureCanvas(CAPTURE_SIZE, CAPTURE_SIZE)
-  if (!canvas) return
-  const mySeq = ++captureSeq
-  try {
-    const url = await uploadCanvas(canvas, {
-      subfolder: 'model3d-view',
-      filename: `comfytv-model-view-${Date.now()}.png`,
-    })
-    if (mySeq !== captureSeq) return
-    props.onAction('model-capture-view', { imageUrl: url })
-  } catch (e) {
-    console.error('[ComfyTV/model-loader] capture upload failed', e)
-  }
-}
-
 function chipClass(selected: boolean): string {
   return 'ctv:inline-flex ctv:items-center ctv:gap-1 ctv:cursor-pointer ctv:[font-family:inherit]'
     + ' ctv:rounded-lg ctv:border ctv:px-1.5 ctv:py-0.5 ctv:text-2xs ctv:transition-colors'
@@ -490,11 +385,6 @@ function chipClass(selected: boolean): string {
         + ' ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground')
 }
 
-function baseName(path: string): string {
-  const slash = path.lastIndexOf('/')
-  return slash >= 0 ? path.slice(slash + 1) : path
-}
-
 function toggleMenu(): void {
   if (menuOpen.value) {
     menuOpen.value = false
@@ -502,61 +392,10 @@ function toggleMenu(): void {
   }
   const rect = triggerEl.value?.getBoundingClientRect()
   if (!rect) return
-  const panelWidth = 380
-  const left = Math.max(8, Math.min(rect.left, window.innerWidth - panelWidth - 8))
-  const top = Math.min(rect.bottom + 4, window.innerHeight - 380)
-  menuStyle.value = { left: `${left}px`, top: `${Math.max(8, top)}px` }
+  menuStyle.value = menuPanelStyle(rect, window.innerWidth, window.innerHeight)
   query.value = ''
   menuOpen.value = true
   void nextTick(() => searchEl.value?.focus())
-}
-
-function widgetOptionValues(): string[] {
-  const w = getWidget(props.node, 'model') as any
-  const values = w?.options?.values
-  return Array.isArray(values) ? values.filter((v: unknown) => typeof v === 'string' && v) : []
-}
-
-function onPick(file: string): void {
-  selected.value = file
-  menuOpen.value = false
-  writeWidget(props.node, 'model', file)
-}
-
-function registerFile(path: string): void {
-  if (!files.value.includes(path)) files.value = [...files.value, path].sort()
-  const w = getWidget(props.node, 'model') as any
-  const values = w?.options?.values
-  if (Array.isArray(values) && !values.includes(path)) values.push(path)
-}
-
-async function uploadModelFiles(files: File[]): Promise<void> {
-  if (!files.length || uploading.value) return
-  uploading.value = true
-  uploadError.value = ''
-  try {
-    let lastPath = ''
-    for (const file of files) {
-      const toUpload = isConvertibleModelFile(file.name) ? await convertModelFileToGlb(file) : file
-      const uploaded = await uploadBlobNamed(toUpload, { subfolder: '3d', filename: toUpload.name })
-      lastPath = `3d/${uploaded.name}`
-      registerFile(lastPath)
-    }
-    if (lastPath) onPick(lastPath)
-  } catch (e) {
-    console.error('[ComfyTV/model-loader] upload failed', e)
-    uploadError.value = String((e as Error)?.message ?? e)
-    toastLoaderUploadFailed(e)
-  } finally {
-    uploading.value = false
-  }
-}
-
-async function onPickFiles(event: Event): Promise<void> {
-  const input = event.target as HTMLInputElement
-  const picked = Array.from(input.files ?? [])
-  input.value = ''
-  await uploadModelFiles(picked)
 }
 
 const fileDrop = useLoaderFileDrop({
@@ -571,25 +410,13 @@ function onKeydown(e: KeyboardEvent): void {
 }
 
 onMounted(() => {
-  for (const w of (props.node as any).widgets ?? []) {
-    if (w.name === 'model' || w.type === 'button') w.hidden = true
-  }
-
-  files.value = [...widgetOptionValues()].sort()
-  const saved = readWidgetStr(props.node, 'model', '')
-  if (saved) {
-    selected.value = saved
-    if (!files.value.includes(saved)) files.value = [...files.value, saved].sort()
-  }
-
+  loader.init()
   window.addEventListener('keydown', onKeydown)
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', onKeydown)
-  captureSeq++
-  if (captureTimer != null) window.clearTimeout(captureTimer)
-  captureTimer = null
+  loader.teardown()
 })
 
 const uploadBtnClass =

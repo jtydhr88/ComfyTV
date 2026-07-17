@@ -17,7 +17,7 @@
       <div
         v-if="duration > 0"
         class="ctv:absolute ctv:inset-y-0 ctv:w-px ctv:bg-primary-background/70 ctv:pointer-events-none"
-        :style="{ left: `${(currentTime / duration) * 100}%` }"
+        :style="{ left: `${keyLeftPercent(currentTime, duration)}%` }"
       />
       <div
         v-for="(k, i) in keys"
@@ -26,7 +26,7 @@
         :class="i === selectedIndex
           ? 'ctv:bg-primary-background ctv:border-white'
           : 'ctv:bg-muted-foreground ctv:border-black/40 ctv:hover:bg-primary-background/70'"
-        :style="{ left: `${duration > 0 ? (k.t / duration) * 100 : 0}%` }"
+        :style="{ left: `${keyLeftPercent(k.t, duration)}%` }"
         @pointerdown.stop="onKeyDown(i, $event)"
         @dblclick.stop="$emit('remove', i)"
       />
@@ -36,6 +36,11 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import {
+  formatT,
+  keyLeftPercent,
+  useKeyframeTimeline,
+} from '@/composables/widgets/useKeyframeTimeline'
 
 const props = withDefaults(defineProps<{
   keys: { t: number }[]
@@ -54,48 +59,13 @@ const emit = defineEmits<{
 }>()
 
 const track = ref<HTMLDivElement | null>(null)
-const dragIdx = ref(-1)
 
-function timeAt(e: PointerEvent): number {
-  const el = track.value
-  if (!el || props.duration <= 0) return 0
-  const rect = el.getBoundingClientRect()
-  const f = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width))
-  return Math.round(f * props.duration * 100) / 100
-}
-
-function onTrackDown(e: PointerEvent) {
-  e.stopPropagation()
-  ;(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId)
-  const t = timeAt(e)
-  const near = props.keys.findIndex((k) =>
-    props.duration > 0 && Math.abs(k.t - t) / props.duration < 0.02)
-  if (near >= 0) {
-    emit('select', near)
-    dragIdx.value = near
-  } else {
-    emit('add', t)
-  }
-}
-
-function onKeyDown(i: number, e: PointerEvent) {
-  ;(track.value as HTMLElement)?.setPointerCapture(e.pointerId)
-  emit('select', i)
-  dragIdx.value = i
-}
-
-function onMove(e: PointerEvent) {
-  if (dragIdx.value < 0) return
-  e.stopPropagation()
-  emit('move', dragIdx.value, timeAt(e))
-}
-
-function onUp(e: PointerEvent) {
-  dragIdx.value = -1
-  e.stopPropagation()
-}
-
-function formatT(t: number): string {
-  return `${(t ?? 0).toFixed(2)}s`
-}
+const { onTrackDown, onKeyDown, onMove, onUp } = useKeyframeTimeline({
+  track,
+  getKeys: () => props.keys,
+  getDuration: () => props.duration,
+  onAdd: (t) => emit('add', t),
+  onMoveKey: (i, t) => emit('move', i, t),
+  onSelect: (i) => emit('select', i),
+})
 </script>

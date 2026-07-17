@@ -90,14 +90,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
 import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
-import { evenDim, presetDims, resolveTarget } from '@/composables/stages/videoResizeMath'
-import { bindWidgetCallback, onNodeConfigure, readWidgetNum, writeWidget } from '@/utils/widget'
+import { useVideoResize } from '@/composables/stages/useVideoResize'
 
 const props = defineProps<{
   state: StageState
@@ -116,70 +115,10 @@ const PRESETS = [
 
 const sourceVideoUrl = computed(() => pickSourceImageUrl(props.state.inputs, 'video'))
 
-const width = ref(readWidgetNum(props.node, 'width', 1280))
-const height = ref(readWidgetNum(props.node, 'height', 720))
-const lockRatio = ref(true)
-
-const srcW = ref(0)
-const srcH = ref(0)
-function onMeta(v: { width: number; height: number }) {
-  srcW.value = v.width
-  srcH.value = v.height
-}
-
-function write() {
-  writeWidget(props.node, 'width', width.value)
-  writeWidget(props.node, 'height', height.value)
-}
-
-function setDim(which: 'width' | 'height', raw: string) {
-  const v = Number(raw)
-  if (!Number.isFinite(v)) return
-  const n = v <= 0 ? -1 : evenDim(v)
-  const ar = srcW.value > 0 && srcH.value > 0 ? srcW.value / srcH.value : 0
-  if (which === 'width') {
-    width.value = n
-    if (lockRatio.value && n > 0 && ar > 0) height.value = evenDim(n / ar)
-  } else {
-    height.value = n
-    if (lockRatio.value && n > 0 && ar > 0) width.value = evenDim(n * ar)
-  }
-  write()
-}
-
-function applyPreset(short: number) {
-  const dims = presetDims(short, srcW.value, srcH.value)
-  if (!dims) return
-  width.value = dims.width
-  height.value = dims.height
-  write()
-}
-
-function applySource() {
-  if (srcW.value <= 0 || srcH.value <= 0) return
-  width.value = evenDim(srcW.value)
-  height.value = evenDim(srcH.value)
-  write()
-}
-
-const targetLabel = computed(() => {
-  const t = resolveTarget(width.value, height.value, srcW.value, srcH.value)
-  return t ? `${t.width}×${t.height}` : '—'
-})
-
-bindWidgetCallback(props.node, 'width', (value) => {
-  const v = Number(value)
-  if (Number.isFinite(v) && v !== width.value) width.value = v
-})
-bindWidgetCallback(props.node, 'height', (value) => {
-  const v = Number(value)
-  if (Number.isFinite(v) && v !== height.value) height.value = v
-})
-
-onNodeConfigure(props.node, () => {
-  width.value = readWidgetNum(props.node, 'width', width.value)
-  height.value = readWidgetNum(props.node, 'height', height.value)
-})
+const {
+  width, height, lockRatio, srcW, srcH,
+  onMeta, setDim, applyPreset, applySource, targetLabel,
+} = useVideoResize(props.node)
 </script>
 
 <style scoped>

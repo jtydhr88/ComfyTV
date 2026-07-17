@@ -214,19 +214,20 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onUnmounted, ref, watch } from 'vue'
+import { computed } from 'vue'
 
 import ImageReferences from './ImageReferences.vue'
 import MainPromptInput from './MainPromptInput.vue'
 import StageIcon from '@/components/widgets/StageIcon.vue'
 import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
 import CustomParamsSection from './CustomParamsSection.vue'
-import { LOCAL_SERVER, useServerStore } from '@/stores/serverStore'
 import { t } from '@/i18n'
 import ValuePreview from './ValuePreview.vue'
 import { imageInputSlotIndex, slotColor } from '@/composables/stages/imageSlotMentions'
 import { useActionsCollapsed, useContextCollapsed } from '@/composables/stages/useContextCollapsed'
-import { formatSlot, useStageCard } from '@/composables/stages/useStageCard'
+import { formatSlot, progressFallbackOf, useStageCard } from '@/composables/stages/useStageCard'
+import { useStageLoaderDrop } from '@/composables/stages/useStageLoaderDrop'
+import { useStageServerSelect } from '@/composables/stages/useStageServerSelect'
 import {
   actionLabelKey,
   actionTooltipKey,
@@ -234,10 +235,6 @@ import {
   presetTooltipKey,
 } from '@/composables/stages/actionLabels'
 import type { LGraphNode } from '@/lib/comfyApp'
-import { toastLoaderUploadFailed, useLoaderFileDrop } from '@/composables/stages/useLoaderFileDrop'
-import type { AssetMediaType } from '@/utils/mediaFileTypes'
-import { uploadBlobNamed } from '@/utils/uploadCanvas'
-import { getWidget, writeWidget } from '@/utils/widget'
 import { isPoolPickerKind, useStageStore, type InputSource, type StageState, type ImagePickContext } from '@/stores/stageStore'
 
 const props = defineProps<{
@@ -259,6 +256,8 @@ const {
   onActionClick,
   onPresetClick,
   connectedInputs,
+  contextSummary,
+  poolPreviewType,
   canRun,
   progressPercent,
   poolContent,
@@ -274,130 +273,23 @@ const isPicker = computed(() => isPoolPickerKind(props.state.kind))
 const contextCollapsed = useContextCollapsed(() => (props.node as any)?.id ?? null)
 const actionsCollapsed = useActionsCollapsed(() => (props.node as any)?.id ?? null)
 
-function slotCategory(slot: string): string {
-  const dot = slot.indexOf('.')
-  const tail = dot < 0 ? slot : slot.slice(dot + 1)
-  const m = tail.match(/^([a-zA-Z_]+)\d*$/)
-  return m ? m[1] : tail
-}
+const {
+  dragActive: loaderDragActive,
+  onCardDragEnter,
+  onCardDragOver,
+  onCardDragLeave,
+  onCardDrop,
+} = useStageLoaderDrop(() => props.node)
 
-const contextSummary = computed(() => {
-  const counts = new Map<string, number>()
-  for (const inp of connectedInputs.value) {
-    const c = slotCategory(inp.slot)
-    counts.set(c, (counts.get(c) ?? 0) + 1)
-  }
-  return [...counts]
-    .map(([c, n]) => `${n} ${n === 1 ? c : `${c}s`}`)
-    .join(' · ')
-})
+const {
+  showServerSelect,
+  serverOptions,
+  serverSelection,
+  onServerPick,
+} = useStageServerSelect(() => props.state, () => props.node)
 
-const PLAIN_LOADER_WIDGET: Record<string, { kind: AssetMediaType; widget: string }> = {
-  'ComfyTV.ImageLoaderStage': { kind: 'image', widget: 'image' },
-  'ComfyTV.VideoLoaderStage': { kind: 'video', widget: 'video' },
-  'ComfyTV.AudioLoaderStage': { kind: 'audio', widget: 'audio' },
-}
-
-const loaderDropCfg = computed(() =>
-  props.node ? PLAIN_LOADER_WIDGET[(props.node as any).comfyClass] ?? null : null,
-)
-
-const fileDrop = useLoaderFileDrop({
-  kind: () => loaderDropCfg.value?.kind ?? 'image',
-  onFiles: async (files) => {
-    const cfg = loaderDropCfg.value
-    if (!cfg || !props.node) return
-    try {
-      let last = ''
-      for (const f of files) {
-        const uploaded = await uploadBlobNamed(f, { subfolder: '', filename: f.name })
-        last = uploaded.name
-        const w = getWidget(props.node, cfg.widget) as any
-        const values = w?.options?.values
-        if (Array.isArray(values) && !values.includes(last)) values.push(last)
-      }
-      if (last) writeWidget(props.node, cfg.widget, last)
-    } catch (e) {
-      console.error('[ComfyTV/loader-drop] upload failed', e)
-      toastLoaderUploadFailed(e)
-    }
-  },
-})
-
-function onCardDragEnter(e: DragEvent) { if (loaderDropCfg.value) fileDrop.onDragEnter(e) }
-function onCardDragOver(e: DragEvent)  { if (loaderDropCfg.value) fileDrop.onDragOver(e) }
-function onCardDragLeave(e: DragEvent) { if (loaderDropCfg.value) fileDrop.onDragLeave(e) }
-function onCardDrop(e: DragEvent)      { if (loaderDropCfg.value) fileDrop.onDrop(e) }
-
-const serverStore = useServerStore()
-void serverStore.load()
-
-const showServerSelect = computed(() =>
-  props.state.variant !== 'loader'
-  && props.state.variant !== 'transform'
-  && !isPicker.value
-  && !!props.node
-  && serverStore.hasRemotes)
-
-function remoteLabel(id: number, label: string): string {
-  const st = serverStore.statusFor(id)
-  if (!st) return label
-  if (!st.online) return `${label} · ${t('servers.status.offline')}`
-  const total = st.running + st.pending
-  return total > 0 ? `${label} · ${t('servers.status.queueShort', { n: total })}` : label
-}
-
-const serverOptions = computed(() => [
-  { value: LOCAL_SERVER, label: t('servers.local') },
-  ...serverStore.enabledServers.map(s => ({
-    value: String(s.id),
-    label: remoteLabel(s.id, s.label),
-  })),
-])
-
-let releaseStatus: (() => void) | null = null
-watch(showServerSelect, (on) => {
-  if (on && !releaseStatus) {
-    releaseStatus = serverStore.subscribeStatus()
-  } else if (!on && releaseStatus) {
-    releaseStatus()
-    releaseStatus = null
-  }
-}, { immediate: true })
-onUnmounted(() => {
-  releaseStatus?.()
-  releaseStatus = null
-})
-
-const serverSelectionTick = ref(0)
-const serverSelection = computed(() => {
-  void serverSelectionTick.value
-  const raw = (props.node as any)?.properties?.comfytv_server
-  if (raw == null || raw === '' || raw === LOCAL_SERVER) return LOCAL_SERVER
-  const id = Number(raw)
-  const server = Number.isFinite(id) ? serverStore.byId(id) : undefined
-  return server?.enabled ? String(id) : LOCAL_SERVER
-})
-
-function onServerPick(v: string | number) {
-  const n = props.node as any
-  if (!n) return
-  n.properties = n.properties || {}
-  n.properties.comfytv_server = String(v)
-  serverSelectionTick.value++
-}
-
-const poolPreviewType = computed(() => {
-  if (props.state.kind === 'audio-picker') return 'COMFYTV_AUDIOS'
-  if (props.state.kind === 'video-picker') return 'COMFYTV_VIDEOS'
-  return 'COMFYTV_IMAGES'
-})
-
-const progressFallbackText = computed(() => {
-  const p = props.state.progress
-  if (!p) return t('stage.starting')
-  return `${p.value} / ${p.max}`
-})
+const progressFallbackText = computed(() =>
+  progressFallbackOf(props.state.progress) ?? t('stage.starting'))
 
 function onDismissError() {
   useStageStore().clearError(props.state)
@@ -444,7 +336,7 @@ function onDisconnect(slot: string) { props.onDisconnect(slot) }
 
 const cardClass = computed(() => {
   const base = 'ctv:flex ctv:flex-col ctv:gap-2 ctv:p-2 ctv:size-full ctv:box-border ctv:text-xs ctv:text-base-foreground'
-  if (fileDrop.dragActive.value)
+  if (loaderDragActive.value)
     return `${base} ctv:rounded ctv:outline ctv:outline-2 ctv:-outline-offset-2 ctv:outline-primary-background/70 ctv:bg-primary-background/5`
   if (!props.state.error) return base
   if (props.state.error.type === 'Cancelled')

@@ -263,7 +263,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import IconSearch from '~icons/lucide/search'
@@ -272,26 +272,21 @@ import ComfyTVWidget from '@/components/widgets/ComfyTVWidget.vue'
 import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
 import { useBindingWriter } from '@/composables/sidebar/useBindingWriter'
 import { useCollapsedFlag, useCollapsedNodeIds } from '@/composables/sidebar/useCollapsedState'
+import {
+  boundWidgetCount,
+  useNodeFilter,
+  useResultMeta,
+  useSelectionConfigSync,
+} from '@/composables/sidebar/useConfigSidebar'
 import { useWorkflowConfig } from '@/composables/sidebar/useWorkflowConfig'
 import { LINK_TYPE_NATIVE } from '@/api'
 import {
   ALL_GROUPS,
-  AUTO_RESULT_NODE,
   buildBindingOptions,
-  buildResultNodeOptions,
-  filterWidgetGroups,
-  groupExposedWidgets,
-  groupKeyOf,
-  loadCaps,
-  resultTypesForKind,
   type NodeBlock,
 } from '@/composables/sidebar/workflowConfigCatalog'
-import { useSelectionStore } from '@/stores/selectionStore'
 
 const { t } = useI18n()
-
-const selection = useSelectionStore()
-const selected  = computed(() => selection.selected)
 
 const {
   config, loadError,
@@ -309,49 +304,20 @@ const {
   postMeta,
 } = useWorkflowConfig(t)
 
+const { selected } = useSelectionConfigSync(config, loadConfig)
+
 const isLinked   = computed(() => config.value?.link_type === LINK_TYPE_NATIVE)
 const linkBroken = computed(() => isLinked.value && config.value?.file_exists === false)
 
-const RESULT_TYPE_LABEL_KEY: Record<string, string> = {
-  graph_output_first: 'configSidebar.resultType.text',
-  ui_save_url:        'configSidebar.resultType.file',
-  ui_save_batch:      'configSidebar.resultType.batch',
-}
-
-const selectedResultNode = computed(() => config.value?.result_node ?? '')
-const hasResultNode = computed(() => !!selectedResultNode.value)
-const resultNodeModel = computed(() => selectedResultNode.value || AUTO_RESULT_NODE)
-
-const allowedResultTypes = computed(() => resultTypesForKind(config.value?.kind))
-const defaultResultType = computed(() => allowedResultTypes.value[0])
-const resultType = computed(() => config.value?.result_type || defaultResultType.value)
-
-const resultNodeOptions = computed(() =>
-  buildResultNodeOptions(
-    config.value?.gui_nodes,
-    t('configSidebar.resultAutoDetect'),
-    config.value?.kind,
-    selectedResultNode.value,
-  ),
-)
-const resultTypeOptions = computed(() => {
-  const values = [...allowedResultTypes.value] as string[]
-  const cur = config.value?.result_type
-  if (cur && !values.includes(cur)) values.unshift(cur)
-  return values.map(v => ({ value: v, label: t(RESULT_TYPE_LABEL_KEY[v] ?? v) }))
-})
-
-function onResultNodeChange(nodeId: string) {
-  if (!nodeId || nodeId === AUTO_RESULT_NODE) {
-    void postMeta({ result_node: null, result_type: null })
-  } else {
-    void postMeta({ result_node: nodeId, result_type: resultType.value })
-  }
-}
-function onResultTypeChange(type: string) {
-  if (!selectedResultNode.value) return
-  void postMeta({ result_node: selectedResultNode.value, result_type: type })
-}
+const {
+  hasResultNode,
+  resultNodeModel,
+  resultType,
+  resultNodeOptions,
+  resultTypeOptions,
+  onResultNodeChange,
+  onResultTypeChange,
+} = useResultMeta(config, postMeta, t)
 
 const workflowId = computed(() => config.value?.id ?? null)
 const { isCollapsed, toggle: toggleCollapsed } = useCollapsedNodeIds(workflowId)
@@ -361,36 +327,18 @@ const { collapsed: notesCollapsed, toggle: toggleNotesCollapsed } =
 const bindingOptions = computed(() =>
   buildBindingOptions(
     config.value?.exposed_widgets ?? [],
-    selection.selected?.workflowKind,
+    selected.value?.workflowKind,
   ),
 )
 
-const groupedWidgets = computed(() => groupExposedWidgets(config.value?.exposed_widgets ?? []))
-
-const searchQuery = ref('')
-const groupFilter = ref<string>(ALL_GROUPS)
-
-const totalNodeCount = computed(() =>
-  groupedWidgets.value.reduce((n, g) => n + g.nodes.length, 0),
-)
-const showNodeFilter = computed(() =>
-  totalNodeCount.value > 3 || groupedWidgets.value.length > 1,
-)
-const groupChips = computed(() =>
-  groupedWidgets.value.map(g => ({
-    key:   groupKeyOf(g),
-    label: g.title ?? t('configSidebar.groupUngrouped'),
-    count: g.nodes.length,
-  })),
-)
-const visibleGroups = computed(() =>
-  filterWidgetGroups(groupedWidgets.value, searchQuery.value, groupFilter.value),
-)
-
-watch(workflowId, () => {
-  searchQuery.value = ''
-  groupFilter.value = ALL_GROUPS
-})
+const {
+  searchQuery,
+  groupFilter,
+  totalNodeCount,
+  showNodeFilter,
+  groupChips,
+  visibleGroups,
+} = useNodeFilter(config, workflowId, t)
 
 function isNodeCollapsed(nodeId: string): boolean {
   if (searchQuery.value.trim()) return false
@@ -408,28 +356,8 @@ const {
 } = useBindingWriter(postBinding, deleteBinding)
 
 function boundCountFor(node: NodeBlock): number {
-  return node.widgets.filter(w => isStageBound(w) || w.stage_binding?.startsWith('literal:')).length
+  return boundWidgetCount(node, isStageBound)
 }
-
-watch(
-  () => selection.selectedKey,
-  () => {
-    const sel = selection.selected
-    if (!sel || !sel.workflowLabel) { config.value = null; return }
-    void loadConfig(sel.workflowKind, sel.workflowLabel)
-  },
-  { immediate: true },
-)
-
-let _pollTimer: ReturnType<typeof setInterval> | null = null
-onMounted(() => {
-  void loadCaps()
-  selection.refreshFromCanvas()
-  _pollTimer = setInterval(() => selection.refreshFromCanvas(), 400)
-})
-onBeforeUnmount(() => {
-  if (_pollTimer) { clearInterval(_pollTimer); _pollTimer = null }
-})
 
 const emptyClass     = 'ctv:py-5 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-xs ctv:text-muted-foreground/60'
 const sectionHeading = 'ctv:mt-1 ctv:mb-1.5 ctv:text-xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground'

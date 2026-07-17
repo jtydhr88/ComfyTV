@@ -76,118 +76,32 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { computed } from 'vue'
 
-import { importWorkflow, listWorkflowOverview, rescanWorkflows, LINK_TYPE_NATIVE } from '@/api'
-import type { WorkflowOverview } from '@/api'
-import { addOptionEverywhere } from '@/composables/stages/workflowCombo'
-import { app } from '@/lib/comfyApp'
-import { WORKFLOW_API_GENERATED } from '@/utils/workflowEvents'
-import type { WorkflowApiGeneratedDetail } from '@/utils/workflowEvents'
+import { LINK_TYPE_NATIVE } from '@/api'
+import {
+  useStageWorkflowList,
+  workflowFileName as fileName,
+} from '@/composables/sidebar/useStageWorkflowList'
 
 const props = defineProps<{ kind: string; active?: boolean }>()
 const emit = defineEmits<{ (e: 'kinds', kinds: string[]): void }>()
 
-const { t } = useI18n()
-
-const rows = ref<WorkflowOverview[]>([])
-const loading = ref(false)
-const loadError = ref('')
-const importBusy = ref(false)
-const rescanBusy = ref(false)
-const recentAdded = ref<Set<string>>(new Set())
-
-function toast(severity: string, summary: string, detail = '') {
-  ;(app as any)?.extensionManager?.toast?.add?.({ severity, summary, detail, life: 5000 })
-}
-
-function fileName(path: string): string {
-  return path.split(/[\\/]/).pop() || path
-}
-
-async function reload() {
-  loading.value = true
-  loadError.value = ''
-  try {
-    const res = await listWorkflowOverview(props.kind)
-    rows.value = res.workflows
-    recentAdded.value = new Set(
-      res.recent_added.filter(r => r.kind === props.kind).map(r => r.label),
-    )
-    emit('kinds', res.kinds)
-  } catch (e: any) {
-    loadError.value = String(e?.message || e)
-  } finally {
-    loading.value = false
-  }
-}
-
-async function onRescan() {
-  rescanBusy.value = true
-  try {
-    const res = await rescanWorkflows()
-    for (const a of res.added) addOptionEverywhere(a.kind, a.label)
-    void (app as any)?.refreshComboInNodes?.()
-    if (res.added.length) {
-      const names = res.added.slice(0, 5).map(a => `${a.kind}/${a.label}`).join(', ')
-      const more = res.added.length > 5 ? ` +${res.added.length - 5}` : ''
-      toast('success',
-        t('stageManager.rescanFound', { n: res.added.length }),
-        names + more)
-    } else {
-      toast('info', t('stageManager.rescanNone'), t('stageManager.rescanNoneDetail'))
-    }
-    await reload()
-  } catch (e: any) {
-    toast('error', t('stageManager.rescanFailed'), String(e?.message || e))
-  } finally {
-    rescanBusy.value = false
-  }
-}
-
-function onImport() {
-  const input = document.createElement('input')
-  input.type = 'file'
-  input.accept = '.json,application/json'
-  input.style.display = 'none'
-  input.onchange = async () => {
-    const file = input.files?.[0]
-    input.remove()
-    if (!file) return
-    importBusy.value = true
-    try {
-      const text = await file.text()
-      try { JSON.parse(text) } catch {
-        toast('warn', t('workflow.importFailed'), t('workflow.notJson'))
-        return
-      }
-      const res = await importWorkflow(props.kind, file.name, text)
-      addOptionEverywhere(props.kind, res.label)
-      toast('success', t('workflow.imported', { label: res.label }))
-      await reload()
-    } catch (e: any) {
-      toast('error', t('workflow.importFailed'), String(e?.message || e))
-    } finally {
-      importBusy.value = false
-    }
-  }
-  document.body.appendChild(input)
-  input.click()
-}
-
-function onApiGenerated(e: Event) {
-  const d = (e as CustomEvent<WorkflowApiGeneratedDetail>).detail
-  if (!d || d.kind !== props.kind) return
-  const row = rows.value.find(r => r.label === d.label)
-  if (row) row.has_api = true
-}
-
-onMounted(() => window.addEventListener(WORKFLOW_API_GENERATED, onApiGenerated))
-onBeforeUnmount(() => window.removeEventListener(WORKFLOW_API_GENERATED, onApiGenerated))
-
-watch(() => props.kind, () => { void reload() }, { immediate: true })
-watch(() => props.active, (a, prev) => { if (a && !prev) void reload() })
+const {
+  rows,
+  loading,
+  loadError,
+  importBusy,
+  rescanBusy,
+  recentAdded,
+  reload,
+  onRescan,
+  onImport,
+} = useStageWorkflowList(
+  computed(() => props.kind),
+  () => props.active,
+  (kinds) => emit('kinds', kinds),
+)
 
 defineExpose({ reload })
 

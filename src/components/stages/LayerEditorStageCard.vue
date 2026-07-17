@@ -61,6 +61,7 @@ import LayerEditorCanvas from '@/components/widgets/LayerEditorCanvas.vue'
 import LayerEditorToolBar from '@/components/widgets/LayerEditorToolBar.vue'
 import LayerListPanel from '@/components/widgets/LayerListPanel.vue'
 import TextEditPopup from '@/components/widgets/TextEditPopup.vue'
+import { useLayerEditorHotkeys } from '@/composables/widgets/useLayerEditorHotkeys'
 import { useLayerEditorStage } from '@/composables/widgets/useLayerEditorStage'
 import { useStageStore, type StageState } from '@/stores/stageStore'
 import { onNodeConfigure, readWidgetStr } from '@/utils/widget'
@@ -100,52 +101,11 @@ async function toggleFullscreen(): Promise<void> {
   editor.fitView()
 }
 
-function isEditingText(e: KeyboardEvent): boolean {
-  const tag = (e.target as HTMLElement)?.tagName
-  return tag === 'INPUT' || tag === 'TEXTAREA' || (e.target as HTMLElement)?.isContentEditable
-}
-
-function onKeyDown(e: KeyboardEvent): void {
-  e.stopPropagation()
-  if (e.key === 'Escape' && fullscreen.value) {
-    void toggleFullscreen()
-    return
-  }
-  if (isEditingText(e)) return
-
-  if (e.code === 'Space') {
-    canvasEl.value?.setSpaceDown(true)
-    e.preventDefault()
-    return
-  }
-  const ctrl = e.ctrlKey || e.metaKey
-  if (ctrl && e.code === 'KeyZ') {
-    e.preventDefault()
-    if (e.shiftKey) editor.redo()
-    else editor.undo()
-    return
-  }
-  if (ctrl && e.code === 'KeyY') {
-    e.preventDefault()
-    editor.redo()
-    return
-  }
-  if ((e.key === 'Delete' || e.key === 'Backspace') && editor.activeId.value) {
-    e.preventDefault()
-    editor.removeLayer(editor.activeId.value)
-    return
-  }
-  const nudge = e.shiftKey ? 10 : 1
-  if (e.key === 'ArrowLeft') { e.preventDefault(); editor.nudgeActive(-nudge, 0) }
-  else if (e.key === 'ArrowRight') { e.preventDefault(); editor.nudgeActive(nudge, 0) }
-  else if (e.key === 'ArrowUp') { e.preventDefault(); editor.nudgeActive(0, -nudge) }
-  else if (e.key === 'ArrowDown') { e.preventDefault(); editor.nudgeActive(0, nudge) }
-}
-
-function onKeyUp(e: KeyboardEvent): void {
-  e.stopPropagation()
-  if (e.code === 'Space') canvasEl.value?.setSpaceDown(false)
-}
+const { onKeyDown, onKeyUp } = useLayerEditorHotkeys(editor, {
+  setSpaceDown: (v) => canvasEl.value?.setSpaceDown(v),
+  isFullscreen: () => fullscreen.value,
+  exitFullscreen: () => { void toggleFullscreen() },
+})
 
 const iconToolBtnClass =
   'ctv:inline-flex ctv:size-7 ctv:items-center ctv:justify-center ctv:rounded-md ctv:border-0 ' +

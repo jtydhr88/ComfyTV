@@ -5,14 +5,13 @@ import { nextTick, reactive } from 'vue'
 import type { ResolvedInput, StageState } from '@/stores/stageStore'
 import { useStageStore } from '@/stores/stageStore'
 
-import { useGridSplit } from './useGridSplit'
+import { displayedImageRect, dividerBands, dividerCenters, useGridSplit } from './useGridSplit'
 
 vi.mock('@/utils/uploadCanvas', () => ({
   uploadCanvas: vi.fn(async () => 'https://x/out.png'),
 }))
 import { uploadCanvas } from '@/utils/uploadCanvas'
 
-// --- global DOM stubs for the async run() path ---------------------------
 let imageCtorCount = 0
 
 class FakeImage {
@@ -169,7 +168,6 @@ describe('useGridSplit — state + widget bridging', () => {
     expect(cols.value).toBe(3)
     wBorder.callback?.(9)
     expect(border.value).toBe(9)
-    // negative from widget is clamped to MIN_BORDER
     wBorder.callback?.(-2)
     expect(border.value).toBe(0)
   })
@@ -214,7 +212,7 @@ describe('useGridSplit — async run()/schedule()', () => {
     const node = makeNode([makeWidget('rows', 2), makeWidget('cols', 3)])
     const state = makeState('/img.png')
 
-    useGridSplit(node, state) // immediate watch schedules a split
+    useGridSplit(node, state)
 
     await vi.advanceTimersByTimeAsync(300)
 
@@ -249,12 +247,12 @@ describe('useGridSplit — async run()/schedule()', () => {
     const node = makeNode([makeWidget('rows', 2), makeWidget('cols', 2)])
     const { setBorder } = useGridSplit(node, makeState('/same.png'))
 
-    await vi.advanceTimersByTimeAsync(300) // run 1 decodes the image
+    await vi.advanceTimersByTimeAsync(300)
     expect(imageCtorCount).toBe(1)
 
-    setBorder(1) // triggers another scheduled run with the same url
+    setBorder(1)
     await nextTick()
-    await vi.advanceTimersByTimeAsync(300) // run 2 reuses the cache
+    await vi.advanceTimersByTimeAsync(300)
 
     expect(imageCtorCount).toBe(1)
   })
@@ -314,5 +312,76 @@ describe('useGridSplit — async run()/schedule()', () => {
       HTMLCanvasElement.prototype.getContext = getCtx
       errSpy.mockRestore()
     }
+  })
+})
+
+describe('displayedImageRect', () => {
+  it('returns null for degenerate inputs', () => {
+    expect(displayedImageRect(0, 100, 200, 200)).toBeNull()
+    expect(displayedImageRect(100, 0, 200, 200)).toBeNull()
+    expect(displayedImageRect(100, 100, 0, 200)).toBeNull()
+    expect(displayedImageRect(100, 100, 200, 0)).toBeNull()
+  })
+
+  it('letterboxes a wide image', () => {
+    expect(displayedImageRect(400, 200, 200, 200))
+      .toEqual({ w: 200, h: 100, ox: 0, oy: 50, scale: 0.5 })
+  })
+
+  it('pillarboxes a tall image', () => {
+    expect(displayedImageRect(100, 200, 200, 200))
+      .toEqual({ w: 100, h: 200, ox: 50, oy: 0, scale: 1 })
+  })
+})
+
+describe('dividerCenters', () => {
+  it('places inner dividers between equal cells without border', () => {
+    expect(dividerCenters(2, 100, 0, false)).toEqual([50])
+    expect(dividerCenters(4, 100, 0, false)).toEqual([25, 50, 75])
+  })
+
+  it('accounts for border thickness between cells', () => {
+    expect(dividerCenters(2, 100, 10, false)).toEqual([50])
+    expect(dividerCenters(3, 96, 3, false)).toEqual([31.5, 64.5])
+  })
+
+  it('adds outer divider centers when outer border is on', () => {
+    const centers = dividerCenters(2, 100, 10, true)
+    expect(centers[0]).toBe(5)
+    expect(centers[centers.length - 1]).toBe(95)
+    expect(centers).toHaveLength(3)
+  })
+
+  it('skips outer centers when the border is zero', () => {
+    expect(dividerCenters(2, 100, 0, true)).toEqual([50])
+  })
+})
+
+describe('dividerBands', () => {
+  const d = { w: 200, h: 100, ox: 0, oy: 50, scale: 0.5 }
+
+  it('builds vertical band styles spanning the displayed height', () => {
+    const bands = dividerBands('v', d, 400, 2, 8, false)
+    expect(bands).toEqual([
+      { left: '98px', top: '50px', width: '4px', height: '100px' },
+    ])
+  })
+
+  it('builds horizontal band styles spanning the displayed width', () => {
+    const bands = dividerBands('h', d, 200, 2, 8, false)
+    expect(bands).toEqual([
+      { left: '0px', top: '98px', width: '200px', height: '4px' },
+    ])
+  })
+
+  it('enforces the minimum visible line thickness', () => {
+    const bands = dividerBands('v', d, 400, 2, 0, false)
+    expect(bands[0].width).toBe('2px')
+  })
+
+  it('clamps negative borders to zero', () => {
+    const bands = dividerBands('v', d, 400, 2, -10, false)
+    expect(bands).toHaveLength(1)
+    expect(bands[0].width).toBe('2px')
   })
 })

@@ -59,13 +59,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, watch } from 'vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
+import { rotatePreviewStyle, rotateToCanvas } from '@/composables/stages/imageOrientPreview'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
 import { useTransformPipeline } from '@/composables/widgets/useTransformPipeline'
-import { bindWidgetCallback, onNodeConfigure, readWidgetNum, writeWidget } from '@/utils/widget'
+import { useNumWidget } from '@/composables/widgets/useWidgetModel'
 
 const props = defineProps<{
   state: StageState
@@ -78,24 +79,11 @@ const props = defineProps<{
 
 const sourceImageUrl = computed(() => pickSourceImageUrl(props.state.inputs))
 
-const angle = ref<number>(readWidgetNum(props.node, 'angle', 0))
-
-bindWidgetCallback(props.node, 'angle', (v) => {
-  const n = Number(v)
-  if (n !== angle.value) angle.value = n
-})
-
-onNodeConfigure(props.node, () => {
-  const v = readWidgetNum(props.node, 'angle', angle.value)
-  if (Number.isFinite(v) && v !== angle.value) angle.value = v
-})
+const angle = useNumWidget(props.node, 'angle', 0)
 
 function snap(deg: number) { angle.value = deg }
 
-const previewStyle = computed(() => ({
-  transform: `rotate(${angle.value}deg)`,
-  transition: 'transform 80ms linear',
-}))
+const previewStyle = computed(() => rotatePreviewStyle(angle.value))
 
 const { computing, requestRecompute } = useTransformPipeline({
   sourceImageUrl,
@@ -103,36 +91,12 @@ const { computing, requestRecompute } = useTransformPipeline({
   nodeId: props.node?.id ?? 'unknown',
   filenamePrefix: 'comfytv-rotate',
   subfolder: 'transformer',
-  compute: (img) => rotateCanvas(img, angle.value),
+  compute: (img) => rotateToCanvas(img, angle.value),
 })
 
-watch(angle, (v) => {
-  writeWidget(props.node, 'angle', v)
-  requestRecompute()
-})
+watch(angle, () => requestRecompute())
 
 watch(sourceImageUrl, (url) => {
   if (url) requestRecompute()
 }, { immediate: true })
-
-function rotateCanvas(img: HTMLImageElement, deg: number): HTMLCanvasElement {
-  const w = img.naturalWidth
-  const h = img.naturalHeight
-  const rad = (deg * Math.PI) / 180
-  const cosT = Math.abs(Math.cos(rad))
-  const sinT = Math.abs(Math.sin(rad))
-  const newW = Math.max(1, Math.ceil(w * cosT + h * sinT))
-  const newH = Math.max(1, Math.ceil(w * sinT + h * cosT))
-
-  const canvas = document.createElement('canvas')
-  canvas.width = newW
-  canvas.height = newH
-  const ctx = canvas.getContext('2d')
-  if (!ctx) throw new Error('2d context unavailable')
-
-  ctx.translate(newW / 2, newH / 2)
-  ctx.rotate(rad)
-  ctx.drawImage(img, -w / 2, -h / 2)
-  return canvas
-}
 </script>

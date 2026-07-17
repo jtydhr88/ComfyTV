@@ -74,12 +74,13 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { ref } from 'vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
 import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'
+import { usePatternPreview } from '@/composables/stages/usePatternPreview'
 import { useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
 
 const props = defineProps<{
@@ -144,103 +145,12 @@ const COUNT_DIRECTIONS = [
 
 const previewEl = ref<HTMLCanvasElement>()
 
-function ease(t: number): number {
-  if (interp.value === 'smooth') return t * t * (3 - 2 * t)
-  if (interp.value === 'ease_in') return t * t
-  if (interp.value === 'ease_out') return 1 - (1 - t) * (1 - t)
-  return t
-}
-
-function mulberry32(a: number) {
-  return () => {
-    a |= 0
-    a = (a + 0x6d2b79f5) | 0
-    let t = Math.imul(a ^ (a >>> 15), 1 | a)
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
-  }
-}
-
-function hexToRgb(hex: string): [number, number, number] {
-  const n = parseInt(hex.replace('#', ''), 16)
-  return [(n >> 16) & 255, (n >> 8) & 255, n & 255]
-}
-
-function mixColors(a: [number, number, number], b: [number, number, number], t: number): string {
-  const r = Math.round(a[0] + (b[0] - a[0]) * t)
-  const g = Math.round(a[1] + (b[1] - a[1]) * t)
-  const bl = Math.round(a[2] + (b[2] - a[2]) * t)
-  return `rgb(${r},${g},${bl})`
-}
-
-function addEasedStops(grad: CanvasGradient) {
-  const c0 = hexToRgb(color0.value)
-  const c1 = hexToRgb(color1.value)
-  for (let i = 0; i <= 16; i++) {
-    const t = i / 16
-    grad.addColorStop(t, mixColors(c0, c1, ease(t)))
-  }
-}
-
-function draw() {
-  const canvas = previewEl.value
-  if (!canvas) return
-  const w = 320
-  const h = Math.max(16, Math.round((w * height.value) / Math.max(16, width.value)))
-  canvas.width = w
-  canvas.height = h
-  const ctx = canvas.getContext('2d')
-  if (!ctx) return
-  ctx.clearRect(0, 0, w, h)
-
-  const x0 = p0x.value * w
-  const y0 = p0y.value * h
-  const x1 = p1x.value * w
-  const y1 = p1y.value * h
-
-  if (kind.value === 'ramp') {
-    const grad = ctx.createLinearGradient(x0, y0, x1, y1)
-    addEasedStops(grad)
-    ctx.fillStyle = grad
-    ctx.fillRect(0, 0, w, h)
-  } else if (kind.value === 'radial') {
-    const r = Math.max(1, Math.hypot(x1 - x0, y1 - y0))
-    const grad = ctx.createRadialGradient(x0, y0, 0, x0, y0, r)
-    addEasedStops(grad)
-    ctx.fillStyle = grad
-    ctx.fillRect(0, 0, w, h)
-  } else if (kind.value === 'rectangle') {
-    ctx.fillStyle = color1.value
-    ctx.fillRect(0, 0, w, h)
-    ctx.save()
-    ctx.filter = softness.value > 0 ? `blur(${softness.value * 12}px)` : 'none'
-    ctx.fillStyle = color0.value
-    ctx.fillRect(Math.min(x0, x1), Math.min(y0, y1), Math.abs(x1 - x0), Math.abs(y1 - y0))
-    ctx.restore()
-  } else {
-    const c0 = hexToRgb(color0.value)
-    const c1 = hexToRgb(color1.value)
-    const octaves = Math.max(1, Math.round(noiseOctaves.value))
-    ctx.fillStyle = color0.value
-    ctx.fillRect(0, 0, w, h)
-    for (let o = 0; o < octaves; o++) {
-      const rng = mulberry32(Math.round(seed.value) + o * 1013)
-      const cell = Math.max(1, Math.round((w / Math.max(4, noiseScale.value)) * 8) >> o)
-      ctx.globalAlpha = 1 / (o + 1)
-      for (let y = 0; y < h; y += cell) {
-        for (let x = 0; x < w; x += cell) {
-          ctx.fillStyle = mixColors(c0, c1, rng())
-          ctx.fillRect(x, y, cell, cell)
-        }
-      }
-    }
-    ctx.globalAlpha = 1
-  }
-}
-
-watch(
-  [kind, width, height, color0, color1, p0x, p0y, p1x, p1y, interp, softness, noiseScale, noiseOctaves, noiseSpeed, seed],
-  draw,
-)
-onMounted(draw)
+usePatternPreview({
+  canvasEl: previewEl,
+  params: {
+    kind, width, height, color0, color1,
+    p0x, p0y, p1x, p1y,
+    interp, softness, noiseScale, noiseOctaves, noiseSpeed, seed,
+  },
+})
 </script>

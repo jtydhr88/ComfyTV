@@ -423,17 +423,26 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, toRef } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import ModelPreview from './ModelPreview.vue'
 import ModelThumb from '@/components/widgets/ModelThumb.vue'
 import { askText } from '@/composables/dialog/useTextInputDialog'
-import { uploadCanvas } from '@/utils/uploadCanvas'
 import { useImagePanZoom } from '@/composables/widgets/useImagePanZoom'
 import { openLightbox } from '@/composables/useLightbox'
+import { useModelViewCapture } from '@/composables/stages/useModelViewCapture'
 import { useOutputAssetTagging } from '@/composables/stages/useOutputAssetTagging'
+import { useTextOutputActions } from '@/composables/stages/useTextOutputActions'
 import {
+  batchItemPayload,
+  batchItemTag,
+  batchLightboxItems,
+  canRemoveBatchItem,
+  isActivationKey,
   isBatchItemSelected,
+  isUpstreamBatchItem,
+  materialSwatchStyleOf,
+  previewMediaTypeOf,
   shotSummary,
   useValuePreview,
 } from '@/composables/stages/useValuePreview'
@@ -442,7 +451,7 @@ import type {
   BatchImage,
   ItemClickPayload,
 } from '@/types/payloads'
-import { downloadBlob, downloadFile } from '@/utils/download'
+import { downloadFile } from '@/utils/download'
 import { renderMarkdownToHtml } from '@/utils/markdown'
 
 const { t } = useI18n()
@@ -478,43 +487,21 @@ const MODEL_CAPTURE_SIZE = 1024
 const MODEL_CAPTURE_DELAY_MS = 250
 
 const modelPreviewEl = ref<InstanceType<typeof ModelPreview> | null>(null)
-let modelCaptureTimer: number | null = null
-let modelCaptureSeq = 0
 
-function scheduleModelCapture() {
-  if (modelCaptureTimer != null) window.clearTimeout(modelCaptureTimer)
-  modelCaptureTimer = window.setTimeout(() => {
-    modelCaptureTimer = null
-    void runModelCapture()
-  }, MODEL_CAPTURE_DELAY_MS)
-}
-
-async function runModelCapture() {
-  const canvas = modelPreviewEl.value?.captureCanvas(MODEL_CAPTURE_SIZE, MODEL_CAPTURE_SIZE)
-  if (!canvas) return
-  const mySeq = ++modelCaptureSeq
-  try {
-    const url = await uploadCanvas(canvas, {
-      subfolder: 'model3d-view',
-      filename: `comfytv-model-view-${Date.now()}.png`,
-    })
-    if (mySeq !== modelCaptureSeq) return
-    emit('capture-view', { index: '', imageUrl: url, mediaType: 'image' })
-  } catch (e) {
-    console.error('[ComfyTV/ModelPreview] capture upload failed', e)
-  }
-}
+const { scheduleCapture: scheduleModelCapture, cancelCapture: cancelModelCapture } = useModelViewCapture({
+  getCanvas: () => modelPreviewEl.value?.captureCanvas(MODEL_CAPTURE_SIZE, MODEL_CAPTURE_SIZE),
+  filenamePrefix: 'comfytv-model-view',
+  logTag: 'ModelPreview',
+  delayMs: MODEL_CAPTURE_DELAY_MS,
+  onCaptured: (url) => emit('capture-view', { index: '', imageUrl: url, mediaType: 'image' }),
+})
 
 function openViewer(url: string) {
   if (url) openLightbox([{ url }], 0)
 }
 
 function openBatchViewer(i: number) {
-  const items = batchImages.value.map((b) => ({
-    url: b.image_url,
-    label: b.label || b.prompt || nameFromUrl(b.image_url),
-  }))
-  openLightbox(items, i)
+  openLightbox(batchLightboxItems(batchImages.value, nameFromUrl), i)
 }
 
 async function onDownload(url: string) {
@@ -526,7 +513,6 @@ async function onDownload(url: string) {
   }
 }
 
-import { onBeforeUnmount, onMounted } from 'vue'
 function onKeydown(e: KeyboardEvent) {
   if (e.key !== 'Escape') return
   if (tagMenu.value) closeTagMenu()
@@ -534,8 +520,7 @@ function onKeydown(e: KeyboardEvent) {
 onMounted(() => window.addEventListener('keydown', onKeydown))
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', onKeydown)
-  if (modelCaptureTimer != null) window.clearTimeout(modelCaptureTimer)
-  if (textCopiedTimer != null) window.clearTimeout(textCopiedTimer)
+  cancelModelCapture()
 })
 
 const props = defineProps<{
@@ -576,30 +561,9 @@ const emit = defineEmits<{
 
 const materialParams = computed(() => parseMaterialState(props.content))
 
-const materialSwatchStyle = computed(() => {
-  const p = materialParams.value
-  const alpha = p.transmission > 0 ? 0.55 : p.opacity
-  return {
-    background: `radial-gradient(circle at 35% 30%, rgb(255 255 255 / 0.85), ${p.color} 45%, color-mix(in srgb, ${p.color} 45%, black) 100%)`,
-    opacity: String(Math.max(0.35, alpha)),
-    boxShadow: 'inset 0 -4px 8px rgb(0 0 0 / 0.35)',
-  }
-})
+const materialSwatchStyle = computed(() => materialSwatchStyleOf(materialParams.value))
 
-const previewMediaType = computed<string>(() => {
-  switch (props.type) {
-    case 'COMFYTV_AUDIO':
-    case 'COMFYTV_AUDIOS':
-      return 'audio'
-    case 'COMFYTV_VIDEO':
-    case 'COMFYTV_VIDEOS':
-      return 'video'
-    case 'COMFYTV_MODEL':
-      return 'model'
-    default:
-      return 'image'
-  }
-})
+const previewMediaType = computed<string>(() => previewMediaTypeOf(props.type))
 
 function onLoadAsset(url: string, label: string) {
   if (!url) return
@@ -616,57 +580,22 @@ const mdActionBtn = computed(() => COMFY_BTN_BASE
     ? ' ctv:bg-primary-background ctv:text-white ctv:hover:bg-primary-background/90'
     : ' ctv:bg-white ctv:text-gray-600 ctv:hover:bg-white/90'))
 
-const textCopied = ref(false)
-let textCopiedTimer: number | null = null
-
-async function onCopyText() {
-  const text = String(props.content ?? '')
-  if (!text) return
-  try {
-    await navigator.clipboard.writeText(text)
-  } catch {
-    const ta = document.createElement('textarea')
-    ta.value = text
-    ta.style.position = 'fixed'
-    ta.style.opacity = '0'
-    document.body.appendChild(ta)
-    ta.select()
-    document.execCommand('copy')
-    ta.remove()
-  }
-  textCopied.value = true
-  if (textCopiedTimer != null) window.clearTimeout(textCopiedTimer)
-  textCopiedTimer = window.setTimeout(() => { textCopied.value = false }, 1500)
-}
-
-function onDownloadText() {
-  const text = String(props.content ?? '')
-  if (!text) return
-  downloadBlob(
-    `comfytv-text-${Date.now()}.txt`,
-    new Blob([text], { type: 'text/plain;charset=utf-8' }),
-  )
-}
-
-function itemPayload(img: BatchImage, i: number): ItemClickPayload {
-  return {
-    index: img.index ?? String(i + 1),
-    label: img.label,
-    prompt: img.prompt,
-    imageUrl: img.image_url,
-  }
-}
+const {
+  textCopied,
+  copyText: onCopyText,
+  downloadText: onDownloadText,
+} = useTextOutputActions(() => String(props.content ?? ''))
 
 function onItemClick(img: BatchImage, i: number) {
-  emit('item-click', itemPayload(img, i))
+  emit('item-click', batchItemPayload(img, i))
 }
 
 function onItemRemove(img: BatchImage, i: number) {
-  emit('item-remove', itemPayload(img, i))
+  emit('item-remove', batchItemPayload(img, i))
 }
 
 function onCellKey(img: BatchImage, i: number, e: KeyboardEvent) {
-  if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+  if (isActivationKey(e.key)) {
     e.preventDefault()
     onItemClick(img, i)
   }
@@ -679,15 +608,19 @@ function isItemSelected(img: BatchImage, i: number): boolean {
 }
 
 function isUpstreamItem(img: BatchImage): boolean {
-  return (props.upstreamUrls ?? []).includes(img.image_url)
+  return isUpstreamBatchItem(img, props.upstreamUrls)
 }
 
 function canRemoveItem(img: BatchImage, i: number): boolean {
-  return !!props.removable && !isItemSelected(img, i) && !isUpstreamItem(img)
+  return canRemoveBatchItem(img, i, {
+    removable: props.removable,
+    selectedIndex: props.selectedIndex,
+    upstreamUrls: props.upstreamUrls,
+  })
 }
 
 function cellTooltip(img: BatchImage, i: number): string {
-  const tag = img.label ?? `#${img.index ?? i + 1}`
+  const tag = batchItemTag(img, i)
   return props.clickMode === 'pick' ? t('shotCell.pick', { tag }) : t('shotCell.refine', { tag })
 }
 

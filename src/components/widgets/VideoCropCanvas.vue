@@ -142,8 +142,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { ASPECT_RATIOS, useImageCrop, type Bounds, type CropMediaElement } from '@/composables/widgets/useImageCrop'
+import { useVideoPlayback } from '@/composables/widgets/useVideoPlayback'
 import { formatTime } from '@/composables/widgets/useVideoTrim'
 
 const props = defineProps<{
@@ -158,12 +159,6 @@ const emit = defineEmits<{
 const videoEl = ref<HTMLVideoElement | null>(null)
 const containerEl = ref<HTMLDivElement | null>(null)
 const seekEl = ref<HTMLDivElement | null>(null)
-
-const muted = ref(true)
-const playing = ref(false)
-const duration = ref(0)
-const currentTime = ref(0)
-const loadError = ref(false)
 
 const boundsRef = ref<Bounds>({ ...props.bounds })
 watch(() => props.bounds, (v) => { boundsRef.value = { ...v } }, { deep: true })
@@ -196,72 +191,20 @@ const {
   modelValue: boundsRef,
 })
 
+const {
+  muted, playing, duration, currentTime, loadError, progressPct,
+  onLoadedMetadata, onTimeUpdate, onError,
+  togglePlay, onSeekStart, onSeekMove, onSeekEnd,
+} = useVideoPlayback({ videoEl, seekEl, sourceVideoUrl: sourceVideoUrlRef })
+
 function onVideoReady() {
-  duration.value = videoEl.value?.duration || 0
-  loadError.value = false
+  onLoadedMetadata()
   handleImageLoad()
 }
 function onVideoError() {
-  loadError.value = true
+  onError()
   handleImageError()
 }
-function onTimeUpdate() {
-  const v = videoEl.value
-  if (v) {
-    currentTime.value = v.currentTime
-    playing.value = !v.paused
-  }
-}
-
-watch(sourceVideoUrlRef, () => {
-  duration.value = 0
-  currentTime.value = 0
-  playing.value = false
-  loadError.value = false
-})
-
-function togglePlay() {
-  const v = videoEl.value
-  if (!v || duration.value <= 0) return
-  if (v.paused) {
-    void v.play().then(() => { playing.value = true }).catch(() => {})
-  } else {
-    v.pause()
-    playing.value = false
-  }
-}
-
-const progressPct = computed(() =>
-  duration.value > 0 ? Math.min(100, (currentTime.value / duration.value) * 100) : 0)
-
-const seeking = ref(false)
-function seekFromClientX(clientX: number) {
-  const el = seekEl.value
-  const v = videoEl.value
-  if (!el || !v || duration.value <= 0) return
-  const rect = el.getBoundingClientRect()
-  const frac = rect.width > 0 ? (clientX - rect.left) / rect.width : 0
-  v.currentTime = Math.min(Math.max(0, frac), 1) * duration.value
-  currentTime.value = v.currentTime
-}
-function onSeekStart(e: PointerEvent) {
-  if (duration.value <= 0) return
-  videoEl.value?.pause()
-  playing.value = false
-  seeking.value = true
-  ;(e.currentTarget as HTMLElement)?.setPointerCapture?.(e.pointerId)
-  seekFromClientX(e.clientX)
-}
-function onSeekMove(e: PointerEvent) {
-  if (seeking.value) seekFromClientX(e.clientX)
-}
-function onSeekEnd() {
-  seeking.value = false
-}
-
-onBeforeUnmount(() => {
-  videoEl.value?.pause()
-})
 
 const ratioKeys = Object.keys(ASPECT_RATIOS)
 

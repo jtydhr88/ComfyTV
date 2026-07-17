@@ -25,14 +25,17 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { clone as cloneSkinned } from 'three/examples/jsm/utils/SkeletonUtils.js'
 
-import { app } from '@/lib/comfyApp'
-import { persistModelThumbnail } from '@/api/nativeAssets'
+import {
+  fetchModelBytes,
+  urlFilename,
+  useModelPreview,
+  type ModelStats,
+} from '@/composables/stages/useModelPreview'
 import { buildPointCloud, classifyModelBytes, loadSpark } from '@/widgets/three/modelFormats'
 import { guardOrbitControlsDragEnd } from '@/widgets/three/orbitControlsGuard'
 import { RendererView } from '@/widgets/three/RendererView'
 import { loadCustomModelAssets } from '@/widgets/three/scene3d/scene3dAssets'
-import { applyViewChannel, OVERLAY_FLAG, type ViewChannel } from '@/widgets/three/channelShading'
-import { applyMaterialParams } from '@/widgets/material/three'
+import { applyViewChannel, type ViewChannel } from '@/widgets/three/channelShading'
 import type { MaterialParams } from '@/widgets/material/types'
 
 const props = defineProps<{
@@ -47,12 +50,10 @@ const emit = defineEmits<{
   (e: 'view-changed'): void
   (e: 'parts-changed', keys: string[]): void
   (e: 'part-pick', key: string | null): void
-  (e: 'model-stats', stats: { vertices: number; triangles: number }): void
+  (e: 'model-stats', stats: ModelStats): void
 }>()
 
 const hostEl = ref<HTMLDivElement | null>(null)
-const loading = ref(true)
-const loadError = ref(false)
 
 let view: RendererView | null = null
 let scene: THREE.Scene | null = null
@@ -63,57 +64,21 @@ let modelRoot: THREE.Object3D | null = null
 let modelDispose: (() => void) | null = null
 let sparkRenderer: THREE.Object3D | null = null
 let animationId: number | null = null
-let loadSeq = 0
-let thumbnailTimer: number | null = null
 
-const partMeshes = new Map<string, THREE.Mesh>()
-const originalMaterials = new Map<string, THREE.Material | THREE.Material[]>()
-const boundMaterials = new Map<string, THREE.MeshPhysicalMaterial>()
-let highlightKey: string | null = null
-let highlightClone: THREE.Material | null = null
+const mp = useModelPreview(props, emit, {
+  getCamera: () => camera,
+  getModelRoot: () => modelRoot,
+  getCanvasRect: () => view?.canvas.getBoundingClientRect() ?? null,
+  renderThumbnail: (size) => {
+    if (!view || !scene || !camera) return null
+    const captureCamera = camera.clone()
+    captureCamera.aspect = 1
+    captureCamera.updateProjectionMatrix()
+    return view.renderToCanvas(scene, captureCamera, size, size)
+  },
+})
 
-const THUMBNAIL_SIZE = 256
-const THUMBNAIL_DELAY_MS = 600
-
-function scheduleThumbnailPersist(url: string): void {
-  if (thumbnailTimer != null) window.clearTimeout(thumbnailTimer)
-  const mySeq = loadSeq
-  thumbnailTimer = window.setTimeout(() => {
-    thumbnailTimer = null
-    if (mySeq !== loadSeq || !view || !scene || !camera) return
-    try {
-      const captureCamera = camera.clone()
-      captureCamera.aspect = 1
-      captureCamera.updateProjectionMatrix()
-      const canvas = view.renderToCanvas(scene, captureCamera, THUMBNAIL_SIZE, THUMBNAIL_SIZE)
-      canvas.toBlob((blob) => {
-        if (blob) void persistModelThumbnail(url, blob)
-      }, 'image/png')
-    } catch (e) {
-      console.warn('[ComfyTV/ModelPreview] thumbnail capture failed', e)
-    }
-  }, THUMBNAIL_DELAY_MS)
-}
-
-function assetUrl(path: string): string {
-  const api = (app as any).api
-  return typeof api?.fileURL === 'function' ? api.fileURL(path) : path
-}
-
-function urlFilename(url: string): string {
-  try {
-    const params = new URL(url, window.location.origin).searchParams
-    return params.get('filename') ?? url.split('/').pop() ?? 'model'
-  } catch {
-    return 'model'
-  }
-}
-
-async function fetchModelBytes(url: string): Promise<ArrayBuffer> {
-  const resp = await fetch(assetUrl(url))
-  if (!resp.ok) throw new Error(`${url}: HTTP ${resp.status}`)
-  return resp.arrayBuffer()
-}
+const { loading, loadError } = mp
 
 async function ensureSparkRenderer(): Promise<void> {
   if (sparkRenderer || !scene || !view) return
@@ -124,135 +89,11 @@ async function ensureSparkRenderer(): Promise<void> {
 }
 
 function disposeModelRoot(): void {
-  clearHighlight()
   if (modelRoot && scene) scene.remove(modelRoot)
   modelRoot = null
   modelDispose?.()
   modelDispose = null
-  partMeshes.clear()
-  originalMaterials.clear()
-  for (const mat of boundMaterials.values()) mat.dispose()
-  boundMaterials.clear()
-  emit('parts-changed', [])
-}
-
-function collectParts(root: THREE.Object3D): void {
-  partMeshes.clear()
-  originalMaterials.clear()
-  const counts = new Map<string, number>()
-  root.traverse((child) => {
-    if (!(child instanceof THREE.Mesh)) return
-    const base = child.name || 'mesh'
-    const n = (counts.get(base) ?? 0) + 1
-    counts.set(base, n)
-    const key = n === 1 ? base : `${base}#${n}`
-    partMeshes.set(key, child)
-    originalMaterials.set(key, child.material)
-    child.userData.comfytvPartKey = key
-  })
-  emit('parts-changed', [...partMeshes.keys()])
-
-  let vertices = 0
-  let triangles = 0
-  for (const mesh of partMeshes.values()) {
-    const geo = mesh.geometry
-    if (!(geo instanceof THREE.BufferGeometry)) continue
-    vertices += geo.attributes.position?.count ?? 0
-    triangles += Math.floor((geo.index ? geo.index.count : geo.attributes.position?.count ?? 0) / 3)
-  }
-  emit('model-stats', { vertices, triangles })
-}
-
-function activeMaterialFor(key: string): THREE.Material | THREE.Material[] | undefined {
-  const bound = boundMaterials.get(key)
-  if (bound && props.partMaterials?.[key]) return bound
-  return originalMaterials.get(key)
-}
-
-let appliedMaterialsSig = ''
-
-function applyPartMaterials(force = false): void {
-  if (!partMeshes.size) return
-  if ((props.channel ?? 'material') !== 'material') return
-  const sig = JSON.stringify(props.partMaterials ?? {})
-  if (!force && sig === appliedMaterialsSig) return
-  appliedMaterialsSig = sig
-  for (const [key, mesh] of partMeshes) {
-    const params = props.partMaterials?.[key]
-    if (params) {
-      let mat = boundMaterials.get(key)
-      if (!mat) {
-        mat = new THREE.MeshPhysicalMaterial()
-        boundMaterials.set(key, mat)
-      }
-      applyMaterialParams(mat, params)
-      if (highlightKey !== key) mesh.material = mat
-    } else if (highlightKey !== key) {
-      const original = originalMaterials.get(key)
-      if (original) mesh.material = original
-    }
-  }
-  if (highlightKey) setHighlight(highlightKey)
-  emit('view-changed')
-}
-
-function clearHighlight(): void {
-  if (highlightKey) {
-    const mesh = partMeshes.get(highlightKey)
-    const active = activeMaterialFor(highlightKey)
-    if (mesh && active) mesh.material = active
-  }
-  highlightClone?.dispose()
-  highlightClone = null
-  highlightKey = null
-}
-
-function setHighlight(key: string | null): void {
-  clearHighlight()
-  if (!key || (props.channel ?? 'material') !== 'material') return
-  const mesh = partMeshes.get(key)
-  if (!mesh) return
-  const active = activeMaterialFor(key)
-  const base = Array.isArray(active) ? active[0] : active
-  if (!base) return
-  const clone = base.clone()
-  if ('emissive' in clone) {
-    (clone as THREE.MeshStandardMaterial).emissive.set(0x4ea8ff)
-    ;(clone as THREE.MeshStandardMaterial).emissiveIntensity = 0.45
-  } else {
-    clone.transparent = true
-    clone.opacity = 0.7
-  }
-  highlightKey = key
-  highlightClone = clone
-  mesh.material = clone
-}
-
-const PICK_DRAG_PX = 5
-let pickStart: { x: number; y: number } | null = null
-
-function onPickDown(e: PointerEvent): void {
-  if (!props.pickable || e.button !== 0) return
-  pickStart = { x: e.clientX, y: e.clientY }
-}
-
-function onPickUp(e: PointerEvent): void {
-  const start = pickStart
-  pickStart = null
-  if (!props.pickable || !start || !view || !camera || !modelRoot) return
-  if (Math.abs(e.clientX - start.x) >= PICK_DRAG_PX
-    || Math.abs(e.clientY - start.y) >= PICK_DRAG_PX) return
-  const rect = view.canvas.getBoundingClientRect()
-  if (!rect.width || !rect.height) return
-  const ndc = new THREE.Vector2(
-    ((e.clientX - rect.left) / rect.width) * 2 - 1,
-    -((e.clientY - rect.top) / rect.height) * 2 + 1,
-  )
-  const raycaster = new THREE.Raycaster()
-  raycaster.setFromCamera(ndc, camera)
-  const hits = raycaster.intersectObject(modelRoot, true)
-  const hit = hits.find((h) => h.object instanceof THREE.Mesh && !h.object.userData[OVERLAY_FLAG])
-  emit('part-pick', (hit?.object?.userData?.comfytvPartKey as string) ?? null)
+  mp.disposeParts()
 }
 
 function onHostEnter(): void {
@@ -334,7 +175,7 @@ async function loadModelObject(url: string): Promise<LoadedModel> {
 }
 
 async function loadModel(url: string): Promise<void> {
-  const mySeq = ++loadSeq
+  const mySeq = mp.beginLoad()
   disposeModelRoot()
   if (!url) {
     loading.value = false
@@ -345,26 +186,26 @@ async function loadModel(url: string): Promise<void> {
   loadError.value = false
   try {
     const loaded = await loadModelObject(url)
-    if (mySeq !== loadSeq || !scene) {
+    if (mp.isStale(mySeq) || !scene) {
       loaded.dispose?.()
       return
     }
     modelRoot = loaded.root
     modelDispose = loaded.dispose
     scene.add(loaded.root)
-    collectParts(loaded.root)
-    applyPartMaterials(true)
-    if (props.selectedPart) setHighlight(props.selectedPart)
+    mp.registerParts(loaded.root)
+    mp.applyPartMaterials(true)
+    if (props.selectedPart) mp.setHighlight(props.selectedPart)
     if ((props.channel ?? 'material') !== 'material') {
       applyViewChannel(loaded.root, props.channel as ViewChannel)
     }
     frameModel(loaded.root)
     loading.value = false
     emit('view-changed')
-    scheduleThumbnailPersist(url)
+    mp.scheduleThumbnailPersist(url)
   } catch (e) {
     console.error('[ComfyTV/ModelPreview] failed to load model', url, e)
-    if (mySeq !== loadSeq) return
+    if (mp.isStale(mySeq)) return
     loading.value = false
     loadError.value = true
   }
@@ -401,8 +242,8 @@ onMounted(() => {
   disposeDragGuard = guardOrbitControlsDragEnd(controls, view.canvas)
   controls.addEventListener('end', () => emit('view-changed'))
 
-  view.canvas.addEventListener('pointerdown', onPickDown)
-  view.canvas.addEventListener('pointerup', onPickUp)
+  view.canvas.addEventListener('pointerdown', mp.onPickDown)
+  view.canvas.addEventListener('pointerup', mp.onPickUp)
 
   syncSize()
   view.observeResize(hostEl.value, syncSize)
@@ -413,29 +254,23 @@ onMounted(() => {
 
 watch(() => props.src, (url) => { void loadModel(url || '') })
 
-watch(() => props.partMaterials, () => applyPartMaterials(), { deep: true })
-
-watch(() => props.selectedPart, (key) => setHighlight(key ?? null))
-
 watch(() => props.channel, (ch) => {
   if (!modelRoot) return
-  clearHighlight()
+  mp.clearHighlight()
   applyViewChannel(modelRoot, (ch ?? 'material') as ViewChannel)
   if ((ch ?? 'material') === 'material') {
-    applyPartMaterials(true)
-    if (props.selectedPart) setHighlight(props.selectedPart)
+    mp.applyPartMaterials(true)
+    if (props.selectedPart) mp.setHighlight(props.selectedPart)
   }
   emit('view-changed')
 })
 
 onBeforeUnmount(() => {
-  loadSeq++
-  if (thumbnailTimer != null) window.clearTimeout(thumbnailTimer)
-  thumbnailTimer = null
+  mp.teardown()
   if (animationId != null) cancelAnimationFrame(animationId)
   animationId = null
-  view?.canvas.removeEventListener('pointerdown', onPickDown)
-  view?.canvas.removeEventListener('pointerup', onPickUp)
+  view?.canvas.removeEventListener('pointerdown', mp.onPickDown)
+  view?.canvas.removeEventListener('pointerup', mp.onPickUp)
   disposeDragGuard?.()
   disposeDragGuard = null
   controls?.dispose()
@@ -458,12 +293,11 @@ defineExpose({
     const captureCamera = camera.clone()
     captureCamera.aspect = width / height
     captureCamera.updateProjectionMatrix()
-    const held = highlightKey
-    if (held) clearHighlight()
+    const restoreHighlight = mp.suspendHighlight()
     try {
       return view.renderToCanvas(scene, captureCamera, width, height)
     } finally {
-      if (held) setHighlight(held)
+      restoreHighlight()
     }
   },
 })

@@ -62,13 +62,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, watch } from 'vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
+import { mirrorPreviewStyle, mirrorToCanvas } from '@/composables/stages/imageOrientPreview'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
 import { useTransformPipeline } from '@/composables/widgets/useTransformPipeline'
-import { bindWidgetCallback, getWidget, onNodeConfigure, writeWidget } from '@/utils/widget'
+import { useBoolWidget } from '@/composables/widgets/useWidgetModel'
 
 const props = defineProps<{
   state: StageState
@@ -81,34 +82,10 @@ const props = defineProps<{
 
 const sourceImageUrl = computed(() => pickSourceImageUrl(props.state.inputs))
 
-function widgetValueBool(name: string, fallback = false): boolean {
-  const w = getWidget(props.node, name)
-  return w ? Boolean(w.value) : fallback
-}
+const flipH = useBoolWidget(props.node, 'flip_horizontal', false)
+const flipV = useBoolWidget(props.node, 'flip_vertical', false)
 
-const flipH = ref<boolean>(widgetValueBool('flip_horizontal', false))
-const flipV = ref<boolean>(widgetValueBool('flip_vertical', false))
-
-bindWidgetCallback(props.node, 'flip_horizontal', (v) => {
-  const b = Boolean(v)
-  if (b !== flipH.value) flipH.value = b
-})
-bindWidgetCallback(props.node, 'flip_vertical', (v) => {
-  const b = Boolean(v)
-  if (b !== flipV.value) flipV.value = b
-})
-
-onNodeConfigure(props.node, () => {
-  const h = widgetValueBool('flip_horizontal', flipH.value)
-  const v = widgetValueBool('flip_vertical', flipV.value)
-  if (h !== flipH.value) flipH.value = h
-  if (v !== flipV.value) flipV.value = v
-})
-
-const previewStyle = computed(() => ({
-  transform: `scale(${flipH.value ? -1 : 1}, ${flipV.value ? -1 : 1})`,
-  transition: 'transform 80ms linear',
-}))
+const previewStyle = computed(() => mirrorPreviewStyle(flipH.value, flipV.value))
 
 const { computing, requestRecompute } = useTransformPipeline({
   sourceImageUrl,
@@ -116,31 +93,12 @@ const { computing, requestRecompute } = useTransformPipeline({
   nodeId: props.node?.id ?? 'unknown',
   filenamePrefix: 'comfytv-mirror',
   subfolder: 'transformer',
-  compute: (img) => mirrorCanvas(img, flipH.value, flipV.value),
+  compute: (img) => mirrorToCanvas(img, flipH.value, flipV.value),
 })
 
-watch([flipH, flipV], ([h, v]) => {
-  writeWidget(props.node, 'flip_horizontal', h)
-  writeWidget(props.node, 'flip_vertical', v)
-  requestRecompute()
-})
+watch([flipH, flipV], () => requestRecompute())
 
 watch(sourceImageUrl, (url) => {
   if (url) requestRecompute()
 }, { immediate: true })
-
-
-function mirrorCanvas(img: HTMLImageElement, horizontal: boolean, vertical: boolean): HTMLCanvasElement {
-  const w = img.naturalWidth
-  const h = img.naturalHeight
-  const canvas = document.createElement('canvas')
-  canvas.width = w
-  canvas.height = h
-  const ctx = canvas.getContext('2d')
-  if (!ctx) throw new Error('2d context unavailable')
-  ctx.translate(horizontal ? w : 0, vertical ? h : 0)
-  ctx.scale(horizontal ? -1 : 1, vertical ? -1 : 1)
-  ctx.drawImage(img, 0, 0)
-  return canvas
-}
 </script>

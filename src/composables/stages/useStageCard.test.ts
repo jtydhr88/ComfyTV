@@ -10,7 +10,16 @@ vi.mock('@/composables/stages/stageActions', () => ({
   },
 }))
 
-import { formatSlot, parsePoolCount, progressPercentOf, useStageCard } from './useStageCard'
+import {
+  contextSummaryOf,
+  formatSlot,
+  parsePoolCount,
+  poolPreviewTypeOf,
+  progressFallbackOf,
+  progressPercentOf,
+  slotCategory,
+  useStageCard,
+} from './useStageCard'
 
 const PLAIN = { id: 'plain' } as any
 const WITH_PRESETS = { id: 'withpresets', presets: [{ id: 'p1' }, { id: 'p2' }] } as any
@@ -51,6 +60,38 @@ describe('progressPercentOf', () => {
     expect(progressPercentOf({ value: 9, max: 4 })).toBe(100)
     expect(progressPercentOf(null)).toBe(0)
     expect(progressPercentOf({ value: 1, max: 0 })).toBe(0)
+  })
+})
+
+describe('slotCategory / contextSummaryOf', () => {
+  it('strips namespace and trailing digits', () => {
+    expect(slotCategory('images.image0')).toBe('image')
+    expect(slotCategory('texts.text12')).toBe('text')
+    expect(slotCategory('plain')).toBe('plain')
+    expect(slotCategory('a.b-c')).toBe('b-c')
+  })
+
+  it('summarizes counts with naive pluralization', () => {
+    expect(contextSummaryOf(['images.image0', 'images.image1', 'texts.text0']))
+      .toBe('2 images · 1 text')
+    expect(contextSummaryOf([])).toBe('')
+  })
+})
+
+describe('poolPreviewTypeOf', () => {
+  it('maps picker kinds, defaults to images', () => {
+    expect(poolPreviewTypeOf('audio-picker')).toBe('COMFYTV_AUDIOS')
+    expect(poolPreviewTypeOf('video-picker')).toBe('COMFYTV_VIDEOS')
+    expect(poolPreviewTypeOf('image-picker')).toBe('COMFYTV_IMAGES')
+    expect(poolPreviewTypeOf('image')).toBe('COMFYTV_IMAGES')
+  })
+})
+
+describe('progressFallbackOf', () => {
+  it('formats value / max, null without progress', () => {
+    expect(progressFallbackOf({ value: 3, max: 10 })).toBe('3 / 10')
+    expect(progressFallbackOf(null)).toBeNull()
+    expect(progressFallbackOf(undefined)).toBeNull()
   })
 })
 
@@ -147,6 +188,16 @@ describe('useStageCard — run gating + inputs', () => {
       inputs: [{ slot: 'batch', source: 'empty', content: null }],
     }), vi.fn())
     expect(c.upstreamBatchUrls.value).toEqual([])
+  })
+
+  it('contextSummary and poolPreviewType derive from state', () => {
+    const c = useStageCard(() => state({ inputs: [
+      { slot: 'images.image0', source: 'upstream' },
+      { slot: 'images.image1', source: 'upstream-pending' },
+      { slot: 'texts.text0', source: 'empty' },
+    ] }), vi.fn())
+    expect(c.contextSummary.value).toBe('2 images')
+    expect(c.poolPreviewType.value).toBe('COMFYTV_IMAGES')
   })
 
   it('confirmingClear resets when the pool empties', async () => {

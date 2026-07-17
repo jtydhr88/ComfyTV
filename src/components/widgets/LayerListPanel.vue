@@ -192,7 +192,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import IconChevronDown from '~icons/lucide/chevron-down'
 import IconChevronUp from '~icons/lucide/chevron-up'
 import IconCircleDashed from '~icons/lucide/circle-dashed'
@@ -207,86 +207,32 @@ import IconType from '~icons/lucide/type'
 import IconUnlock from '~icons/lucide/unlock'
 import IconUpload from '~icons/lucide/upload'
 
-import type { Asset } from '@/api/schemas'
 import AssetPickerPopup from '@/components/stages/AssetPickerPopup.vue'
 import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
 import type { LayerEditorController } from '@/composables/widgets/useLayerEditorStage'
-import { t } from '@/i18n'
-import { BLEND_MODES, type BlendMode, type Layer } from '@/widgets/layerEditor/types'
+import { useLayerListPanel } from '@/composables/widgets/useLayerListPanel'
+import type { BlendMode } from '@/widgets/layerEditor/types'
 
 const props = defineProps<{
   editor: LayerEditorController
 }>()
 
 const editor = props.editor
-const pickerOpen = ref(false)
-const renamingId = ref<string | null>(null)
 const fileInput = ref<HTMLInputElement | null>(null)
 
-const reversedLayers = computed(() => [...editor.state.value.layers].reverse())
-const active = computed(() => editor.activeLayer.value)
-
-const BLEND_KEYS: Record<BlendMode, string> = {
-  'source-over': 'normal', multiply: 'multiply', screen: 'screen', overlay: 'overlay',
-  darken: 'darken', lighten: 'lighten', 'color-dodge': 'colorDodge', 'color-burn': 'colorBurn',
-  'hard-light': 'hardLight', 'soft-light': 'softLight', difference: 'difference', exclusion: 'exclusion',
-}
-
-const blendOptions = computed(() =>
-  BLEND_MODES.map((mode) => ({ label: t(`layerEditor.blend.${BLEND_KEYS[mode]}`), value: mode })),
-)
-
-function onAssetPicked(asset: Asset): void {
-  pickerOpen.value = false
-  void editor.addImageFromUrl(asset.payload_url, asset.name)
-}
-
-function onFilesPicked(e: Event): void {
-  const input = e.target as HTMLInputElement
-  for (const file of Array.from(input.files ?? [])) editor.addImageFromFile(file)
-  input.value = ''
-}
-
-function addText(): void {
-  const doc = editor.state.value
-  const id = editor.addTextLayerAt({ x: doc.width * 0.25, y: doc.height * 0.4 })
-  editor.editingTextId.value = id
-}
-
-function commitRename(id: string, e: Event): void {
-  if (renamingId.value !== id) return
-  renamingId.value = null
-  editor.renameLayer(id, (e.target as HTMLInputElement).value)
-}
-
-function onArtboardSize(e: Event, axis: 'w' | 'h'): void {
-  const v = Math.round(Number((e.target as HTMLInputElement).value))
-  if (!Number.isFinite(v)) return
-  const clamped = Math.min(4096, Math.max(64, v))
-  const doc = editor.state.value
-  editor.setArtboardSize(axis === 'w' ? clamped : doc.width, axis === 'h' ? clamped : doc.height)
-}
-
-function drawThumb(el: HTMLCanvasElement | null, layer: Layer): void {
-  if (!el) return
-  const ctx = el.getContext('2d')
-  if (!ctx) return
-  ctx.clearRect(0, 0, el.width, el.height)
-  if (layer.type === 'text') {
-    ctx.fillStyle = layer.color
-    ctx.font = 'bold 16px sans-serif'
-    ctx.textAlign = 'center'
-    ctx.textBaseline = 'middle'
-    ctx.fillText('T', el.width / 2, el.height / 2 + 1)
-    return
-  }
-  const entry = editor.content.get(layer.contentId)
-  if (!entry) return
-  const scale = Math.min(el.width / entry.width, el.height / entry.height)
-  const w = entry.width * scale
-  const h = entry.height * scale
-  ctx.drawImage(entry.canvas, (el.width - w) / 2, (el.height - h) / 2, w, h)
-}
+const {
+  pickerOpen,
+  renamingId,
+  reversedLayers,
+  active,
+  blendOptions,
+  onAssetPicked,
+  onFilesPicked,
+  addText,
+  commitRename,
+  onArtboardSize,
+  drawThumb,
+} = useLayerListPanel(editor)
 
 const groupHeaderClass =
   'ctv:flex ctv:items-center ctv:gap-1 ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground'

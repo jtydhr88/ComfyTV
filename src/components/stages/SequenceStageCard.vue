@@ -117,12 +117,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch } from 'vue'
+import { computed } from 'vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
-import { slotColor } from '@/composables/stages/imageSlotMentions'
-import { useStrWidget } from '@/composables/widgets/useWidgetModel'
+import { TRANSITIONS, useSequenceItems } from '@/composables/stages/useSequenceItems'
+import { videoClipsFromInputs } from '@/composables/stages/videoClipInputs'
 
 const props = defineProps<{
   state: StageState
@@ -133,102 +133,12 @@ const props = defineProps<{
   node: LGraphNode
 }>()
 
-const SLOT_RE = /^videos\.video(\d+)$/
-
-const TRANSITIONS = [
-  'cut',
-  'fade', 'dissolve',
-  'wipeleft', 'wiperight', 'wipeup', 'wipedown',
-  'slideleft', 'slideright',
-  'circleopen', 'circleclose',
-  'radial', 'pixelize', 'zoomin',
-]
-
-interface Segment {
-  slot: string
-  in_s: number
-  out_s: number
-  transition: string
-  trans_dur: number
-}
-
-interface Clip {
-  key: string
-  url: string
-  color: string
-}
-
-const clips = computed<Clip[]>(() =>
-  props.state.inputs
-    .filter(i => SLOT_RE.test(i.slot) && i.source === 'upstream' && i.content)
-    .map(i => {
-      const key = i.slot.split('.').pop()!
-      const slot = Number(SLOT_RE.exec(i.slot)![1])
-      return { key, url: i.content!, color: slotColor(slot) }
-    }))
-
+const clips = computed(() => videoClipsFromInputs(props.state.inputs))
 const clipBySlot = computed(() => new Map(clips.value.map(c => [c.key, c])))
 
-const segmentsRaw = useStrWidget(props.node, 'segments', '')
-
-function parseSegments(raw: string): Segment[] {
-  try {
-    const v = JSON.parse(raw || '[]')
-    if (!Array.isArray(v)) return []
-    return v.filter((s): s is Segment => !!s && typeof s.slot === 'string')
-  } catch {
-    return []
-  }
-}
-
-const rows = computed<Segment[]>(() => {
-  const connected = new Set(clips.value.map(c => c.key))
-  const kept = parseSegments(segmentsRaw.value).filter(s => connected.has(s.slot))
-  const known = new Set(kept.map(s => s.slot))
-  const added = clips.value
-    .filter(c => !known.has(c.key))
-    .map(c => ({ slot: c.key, in_s: 0, out_s: 0, transition: 'cut', trans_dur: 0.5 }))
-  return [...kept, ...added]
-})
-
-watch(rows, (v) => {
-  const s = v.length ? JSON.stringify(v) : ''
-  if (s !== segmentsRaw.value) segmentsRaw.value = s
-}, { immediate: true })
-
-function writeRows(next: Segment[]) {
-  segmentsRaw.value = next.length ? JSON.stringify(next) : ''
-}
-
-function moveRow(idx: number, dir: -1 | 1) {
-  const next = [...rows.value]
-  const j = idx + dir
-  if (idx < 0 || idx >= next.length || j < 0 || j >= next.length) return
-  ;[next[idx], next[j]] = [next[j], next[idx]]
-  writeRows(next)
-}
-
-function updateRow(idx: number, patch: Partial<Segment>) {
-  const cur = rows.value
-  if (idx < 0 || idx >= cur.length) return
-  writeRows(cur.map((s, i) => i === idx ? { ...s, ...patch } : s))
-}
-
-function onTimeInput(idx: number, field: 'in_s' | 'out_s', e: Event) {
-  const v = Number((e.target as HTMLInputElement).value)
-  if (!Number.isFinite(v)) return
-  updateRow(idx, { [field]: Math.min(3600, Math.max(0, v)) })
-}
-
-function onTransitionChange(idx: number, e: Event) {
-  updateRow(idx, { transition: (e.target as HTMLSelectElement).value })
-}
-
-function onDurInput(idx: number, e: Event) {
-  const v = Number((e.target as HTMLInputElement).value)
-  if (!Number.isFinite(v)) return
-  updateRow(idx, { trans_dur: Math.min(5, Math.max(0.1, v)) })
-}
+const {
+  rows, moveRow, onTimeInput, onTransitionChange, onDurInput,
+} = useSequenceItems(props.node, clips)
 </script>
 
 <style scoped>

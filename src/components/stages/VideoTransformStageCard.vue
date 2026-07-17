@@ -75,6 +75,7 @@ import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'
 import KeyframeTimeline from '@/components/widgets/fx/KeyframeTimeline.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
+import { useKeyframes } from '@/composables/widgets/useKeyframes'
 import { useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
 
 const props = defineProps<{
@@ -110,69 +111,38 @@ const keyframesRaw = useStrWidget(props.node, 'keyframes', '')
 const SHUTTER_TYPES = ['centered', 'start', 'end', 'custom'].map(v => ({ value: v, label: v }))
 
 const duration = ref(0)
-const selectedIndex = ref(-1)
 
-const keys = computed<TransformKey[]>({
-  get() {
-    try {
-      const v = JSON.parse(keyframesRaw.value || '[]')
-      return Array.isArray(v) ? v : []
-    } catch {
-      return []
-    }
-  },
-  set(v) {
-    keyframesRaw.value = v.length ? JSON.stringify(v) : ''
-  },
-})
-
-function onAddKey(t: number) {
-  const k: TransformKey = {
+const {
+  keys,
+  selected: selectedIndex,
+  addAt: onAddKey,
+  moveAt: onMoveKey,
+  removeAt: onRemoveKey,
+  select: onSelectKey,
+  updateSelected: writeSlidersToSelectedKey,
+} = useKeyframes<TransformKey>({
+  raw: keyframesRaw,
+  snapshot: (t) => ({
     t,
     x: posX.value,
     y: posY.value,
     scale: scale.value,
     rotation: rotation.value,
     interp: 'smooth',
-  }
-  const next = [...keys.value, k].sort((a, b) => a.t - b.t)
-  keys.value = next
-  selectedIndex.value = next.indexOf(k)
-}
-
-function onMoveKey(i: number, t: number) {
-  const cur = keys.value
-  if (i < 0 || i >= cur.length) return
-  const k = { ...cur[i], t }
-  const next = [...cur.filter((_, idx) => idx !== i), k].sort((a, b) => a.t - b.t)
-  keys.value = next
-  selectedIndex.value = next.indexOf(k)
-}
-
-function onRemoveKey(i: number) {
-  const cur = keys.value
-  if (i < 0 || i >= cur.length) return
-  keys.value = cur.filter((_, idx) => idx !== i)
-  selectedIndex.value = -1
-}
-
-function onSelectKey(i: number) {
-  const k = keys.value[i]
-  if (!k) return
-  selectedIndex.value = i
-  posX.value = k.x
-  posY.value = k.y
-  scale.value = k.scale
-  rotation.value = k.rotation
-}
-
-function writeSlidersToSelectedKey() {
-  const cur = keys.value
-  const i = selectedIndex.value
-  if (i < 0 || i >= cur.length) return
-  const next = cur.map((k, idx) => idx === i
-    ? { ...k, x: posX.value, y: posY.value, scale: scale.value, rotation: rotation.value }
-    : k)
-  keys.value = next
-}
+  }),
+  apply: (k) => {
+    posX.value = k.x
+    posY.value = k.y
+    scale.value = k.scale
+    rotation.value = k.rotation
+  },
+  update: (k) => ({
+    ...k,
+    x: posX.value,
+    y: posY.value,
+    scale: scale.value,
+    rotation: rotation.value,
+  }),
+  followMove: true,
+})
 </script>

@@ -80,6 +80,7 @@ import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'
 import KeyframeTimeline from '@/components/widgets/fx/KeyframeTimeline.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
+import { useKeyframes } from '@/composables/widgets/useKeyframes'
 import { useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
 
 const props = defineProps<{
@@ -111,56 +112,20 @@ const MODES = [
 
 const speed = ref(1)
 const duration = ref(0)
-const selectedIndex = ref(-1)
 
-const keys = computed<SpeedKey[]>({
-  get() {
-    try {
-      const v = JSON.parse(speedKeysRaw.value || '[]')
-      return Array.isArray(v) ? v : []
-    } catch {
-      return []
-    }
-  },
-  set(v) {
-    speedKeysRaw.value = v.length ? JSON.stringify(v) : ''
-  },
+const {
+  keys,
+  selected: selectedIndex,
+  addAt: onAddKey,
+  moveAt: onMoveKey,
+  removeAt: onRemoveKey,
+  select: onSelectKey,
+  updateSelected: writeSliderToSelectedKey,
+} = useKeyframes<SpeedKey>({
+  raw: speedKeysRaw,
+  snapshot: (t) => ({ t, v: speed.value, interp: 'smooth' }),
+  apply: (k) => { speed.value = k.v },
+  update: (k) => ({ ...k, v: speed.value }),
+  followMove: true,
 })
-
-function onAddKey(t: number) {
-  const k: SpeedKey = { t, v: speed.value, interp: 'smooth' }
-  const next = [...keys.value, k].sort((a, b) => a.t - b.t)
-  keys.value = next
-  selectedIndex.value = next.indexOf(k)
-}
-
-function onMoveKey(i: number, t: number) {
-  const cur = keys.value
-  if (i < 0 || i >= cur.length) return
-  const k = { ...cur[i], t }
-  const next = [...cur.filter((_, idx) => idx !== i), k].sort((a, b) => a.t - b.t)
-  keys.value = next
-  selectedIndex.value = next.indexOf(k)
-}
-
-function onRemoveKey(i: number) {
-  const cur = keys.value
-  if (i < 0 || i >= cur.length) return
-  keys.value = cur.filter((_, idx) => idx !== i)
-  selectedIndex.value = -1
-}
-
-function onSelectKey(i: number) {
-  const k = keys.value[i]
-  if (!k) return
-  selectedIndex.value = i
-  speed.value = k.v
-}
-
-function writeSliderToSelectedKey() {
-  const cur = keys.value
-  const i = selectedIndex.value
-  if (i < 0 || i >= cur.length) return
-  keys.value = cur.map((k, idx) => idx === i ? { ...k, v: speed.value } : k)
-}
 </script>

@@ -123,7 +123,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onUnmounted, reactive, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
@@ -132,22 +132,12 @@ import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
 import ComfyTVToggle from '@/components/widgets/ComfyTVToggle.vue'
 import GradientSlider from '@/components/widgets/GradientSlider.vue'
 import CurveEditor from '@/components/widgets/curve/CurveEditor.vue'
-import { identityCurve, type CurvePoint } from '@/components/widgets/curve/types'
-import { isCurveData } from '@/components/widgets/curve/curveUtils'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
+import { useColorGradeState } from '@/composables/stages/useColorGradeState'
+import { useGradePreview } from '@/composables/stages/useGradePreview'
 import { useTransformPipeline } from '@/composables/widgets/useTransformPipeline'
 import { useI18n } from 'vue-i18n'
-import { bindWidgetCallback, onNodeConfigure, readWidgetStr, writeWidget } from '@/utils/widget'
-import {
-  COLOR_GRADE_EFFECTS,
-  DEFAULT_EFFECT_ID,
-  cloneGradeValue,
-  defaultValues,
-  getEffect,
-  type ColorGradeEffect,
-  type GradeUniform,
-} from '@/widgets/glsl/effects'
-import { GradeRenderer, type GradeValues } from '@/widgets/glsl/renderGrade'
+import { COLOR_GRADE_EFFECTS, type GradeUniform } from '@/widgets/glsl/effects'
 
 const props = defineProps<{
   state: StageState
@@ -159,172 +149,47 @@ const props = defineProps<{
 }>()
 
 const { t } = useI18n()
-const WIDGET = 'grade_state'
 
 const sourceImageUrl = computed(() => pickSourceImageUrl(props.state.inputs))
 
-const effectId = ref<string>(DEFAULT_EFFECT_ID)
-const allValues = reactive<Record<string, GradeValues>>({})
-
-const effect = computed<ColorGradeEffect>(() => getEffect(effectId.value))
-const values = computed<GradeValues>(() => ensureEffect(effectId.value))
+const {
+  effectId,
+  effect,
+  values,
+  scalarUniforms,
+  curveUniforms,
+  num,
+  bool,
+  activeCurveKey,
+  activeCurveUniform,
+  activeCurvePoints,
+  resetActiveCurve,
+  setValueByKey,
+  setValueCommit,
+  commitNow,
+  onEffectChange,
+  resetEffect,
+} = useColorGradeState(props.node, {
+  onChange: () => renderPreview(),
+  onCommit: () => requestRecompute(),
+})
 
 const effectOptions = computed(() =>
   COLOR_GRADE_EFFECTS.map((e) => ({ value: e.id, label: t(e.labelKey) }))
 )
 
-const scalarUniforms = computed(() => effect.value.uniforms.filter((u) => u.kind !== 'curve'))
-const curveUniforms = computed(() => effect.value.uniforms.filter((u) => u.kind === 'curve'))
-
-function ensureEffect(id: string): GradeValues {
-  if (!allValues[id]) allValues[id] = defaultValues(getEffect(id))
-  return allValues[id]
-}
-
-function num(key: string): number {
-  const v = values.value[key]
-  return typeof v === 'number' ? v : 0
-}
-function bool(key: string): boolean {
-  return Boolean(values.value[key])
-}
 function optionList(u: GradeUniform) {
   return (u.options ?? []).map((o) => ({ value: String(o.value), label: t(o.labelKey) }))
 }
 
-const activeCurveKey = ref<string>('')
-const activeCurveUniform = computed(() => curveUniforms.value.find((u) => u.key === activeCurveKey.value) ?? null)
-
-watch(curveUniforms, (list) => {
-  if (!list.some((u) => u.key === activeCurveKey.value)) {
-    activeCurveKey.value = list[0]?.key ?? ''
-  }
-}, { immediate: true })
-
-const activeCurvePoints = computed<CurvePoint[]>({
-  get() {
-    const v = values.value[activeCurveKey.value]
-    return isCurveData(v) ? v.points : identityCurve().points
-  },
-  set(points) {
-    const key = activeCurveKey.value
-    const cur = values.value[key]
-    const interpolation = isCurveData(cur) ? cur.interpolation : 'monotone_cubic'
-    setValueByKey(key, { points, interpolation })
-  },
-})
-
-function resetActiveCurve() {
-  if (activeCurveKey.value) setValueCommit(activeCurveKey.value, identityCurve())
-}
-
-function serialize(): string {
-  return JSON.stringify({ effect: effectId.value, all: allValues })
-}
-
-function persist(): void {
-  writeWidget(props.node, WIDGET, serialize())
-}
-
-function loadFromWidget(): void {
-  const raw = readWidgetStr(props.node, WIDGET, '')
-  if (!raw) {
-    ensureEffect(effectId.value)
-    return
-  }
-  try {
-    const parsed = JSON.parse(raw) as { effect?: string; all?: Record<string, GradeValues> }
-    if (parsed.all && typeof parsed.all === 'object') {
-      for (const [id, vals] of Object.entries(parsed.all)) {
-        allValues[id] = { ...defaultValues(getEffect(id)), ...vals }
-      }
-    }
-    if (parsed.effect && getEffect(parsed.effect).id === parsed.effect) {
-      effectId.value = parsed.effect
-    }
-  } catch {
-    void 0
-  }
-  ensureEffect(effectId.value)
-}
-
-loadFromWidget()
-
-bindWidgetCallback(props.node, WIDGET, () => loadFromWidget())
-onNodeConfigure(props.node, () => loadFromWidget())
-
-function setValueByKey(key: string, v: GradeValues[string]): void {
-  ensureEffect(effectId.value)[key] = cloneGradeValue(v)
-  persist()
-  renderPreview()
-}
-
-function commitNow(): void {
-  requestRecompute()
-}
-
-function setValueCommit(key: string, v: GradeValues[string]): void {
-  setValueByKey(key, v)
-  commitNow()
-}
-
-function onEffectChange(id: string): void {
-  effectId.value = id
-  ensureEffect(id)
-  persist()
-  renderPreview()
-  commitNow()
-}
-
-function resetEffect(): void {
-  allValues[effectId.value] = defaultValues(effect.value)
-  persist()
-  renderPreview()
-  commitNow()
-}
-
 const previewCanvas = ref<HTMLCanvasElement | null>(null)
-const renderError = ref<string | null>(null)
-const grade = new GradeRenderer()
 
-let previewImg: HTMLImageElement | null = null
-let previewImgUrl: string | null = null
-let previewTimer: number | null = null
-
-function loadPreviewImage(url: string): Promise<HTMLImageElement> {
-  if (previewImg && previewImgUrl === url && previewImg.complete) {
-    return Promise.resolve(previewImg)
-  }
-  return new Promise((resolve, reject) => {
-    const img = new Image()
-    img.crossOrigin = 'anonymous'
-    img.onload = () => {
-      previewImg = img
-      previewImgUrl = url
-      resolve(img)
-    }
-    img.onerror = (e) => reject(e)
-    img.src = url
-  })
-}
-
-function renderPreview(): void {
-  if (previewTimer != null) window.clearTimeout(previewTimer)
-  previewTimer = window.setTimeout(() => {
-    previewTimer = null
-    const url = sourceImageUrl.value
-    const canvas = previewCanvas.value
-    if (!url || !canvas) return
-    void loadPreviewImage(url)
-      .then((img) => {
-        const ok = grade.renderToCanvas(img, effect.value, values.value, canvas)
-        renderError.value = ok ? null : grade.error
-      })
-      .catch(() => {
-        renderError.value = 'Failed to load image'
-      })
-  }, 30)
-}
+const { renderError, renderer, renderPreview } = useGradePreview({
+  sourceImageUrl,
+  canvasEl: previewCanvas,
+  effect,
+  values,
+})
 
 const { computing, requestRecompute } = useTransformPipeline({
   sourceImageUrl,
@@ -334,8 +199,8 @@ const { computing, requestRecompute } = useTransformPipeline({
   subfolder: 'colorgrade',
   compute: (img) => {
     const out = document.createElement('canvas')
-    const ok = grade.renderToCanvas(img, effect.value, values.value, out)
-    if (!ok) throw new Error(grade.error ?? 'Grade render failed')
+    const ok = renderer.renderToCanvas(img, effect.value, values.value, out)
+    if (!ok) throw new Error(renderer.error ?? 'Grade render failed')
     return out
   },
 })
@@ -346,9 +211,4 @@ watch(sourceImageUrl, (url) => {
     requestRecompute()
   }
 }, { immediate: true })
-
-onUnmounted(() => {
-  if (previewTimer != null) window.clearTimeout(previewTimer)
-  grade.dispose()
-})
 </script>

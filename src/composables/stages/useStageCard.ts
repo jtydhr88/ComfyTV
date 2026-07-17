@@ -34,6 +34,37 @@ export function progressPercentOf(
   return Math.max(0, Math.min(100, (progress.value / progress.max) * 100))
 }
 
+export function progressFallbackOf(
+  progress: { value: number; max: number } | null | undefined,
+): string | null {
+  if (!progress) return null
+  return `${progress.value} / ${progress.max}`
+}
+
+export function slotCategory(slot: string): string {
+  const dot = slot.indexOf('.')
+  const tail = dot < 0 ? slot : slot.slice(dot + 1)
+  const m = tail.match(/^([a-zA-Z_]+)\d*$/)
+  return m ? m[1] : tail
+}
+
+export function contextSummaryOf(slots: string[]): string {
+  const counts = new Map<string, number>()
+  for (const slot of slots) {
+    const c = slotCategory(slot)
+    counts.set(c, (counts.get(c) ?? 0) + 1)
+  }
+  return [...counts]
+    .map(([c, n]) => `${n} ${n === 1 ? c : `${c}s`}`)
+    .join(' · ')
+}
+
+export function poolPreviewTypeOf(kind: string): string {
+  if (kind === 'audio-picker') return 'COMFYTV_AUDIOS'
+  if (kind === 'video-picker') return 'COMFYTV_VIDEOS'
+  return 'COMFYTV_IMAGES'
+}
+
 export function useStageCard(
   getState: () => StageState,
   onAction: (actionId: string, context?: ImagePickContext) => void,
@@ -65,6 +96,11 @@ export function useStageCard(
     getState().inputs.filter(
       i => i.source === 'upstream' || i.source === 'upstream-pending',
     ))
+
+  const contextSummary = computed(() =>
+    contextSummaryOf(connectedInputs.value.map(i => i.slot)))
+
+  const poolPreviewType = computed(() => poolPreviewTypeOf(getState().kind))
 
   const canRun = computed(() => {
     const s = getState()
@@ -108,6 +144,8 @@ export function useStageCard(
     onActionClick,
     onPresetClick,
     connectedInputs,
+    contextSummary,
+    poolPreviewType,
     canRun,
     progressPercent,
     batchInput,

@@ -67,15 +67,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { ref } from 'vue'
 
-import { partColor, type Part, type PartBox } from '@/widgets/splitpart/types'
+import { usePartAnnotation } from '@/composables/widgets/usePartAnnotation'
+import type { Part, PartBox } from '@/widgets/splitpart/types'
 
 const props = defineProps<{
   sourceImageUrl: string | null
   parts: Part[]
   activePartId: number | null
-  /** 'point-pos' | 'point-neg' | 'box' */
   tool: string
 }>()
 
@@ -86,151 +86,22 @@ const emit = defineEmits<{
 
 const containerEl = ref<HTMLDivElement | null>(null)
 const imageEl = ref<HTMLImageElement | null>(null)
-const naturalW = ref(0)
-const naturalH = ref(0)
 
-function onImageLoad(): void {
-  naturalW.value = imageEl.value?.naturalWidth ?? 0
-  naturalH.value = imageEl.value?.naturalHeight ?? 0
-}
-
-function contentRect(): { left: number; top: number; scale: number } | null {
-  const host = containerEl.value
-  if (!host || !naturalW.value || !naturalH.value) return null
-  const cw = host.clientWidth
-  const ch = host.clientHeight
-  const scale = Math.min(cw / naturalW.value, ch / naturalH.value)
-  return {
-    left: (cw - naturalW.value * scale) / 2,
-    top: (ch - naturalH.value * scale) / 2,
-    scale,
-  }
-}
-
-function toNatural(e: PointerEvent): { x: number; y: number } | null {
-  const host = containerEl.value
-  const rect = host?.getBoundingClientRect()
-  const c = contentRect()
-  if (!host || !rect || !rect.width || !c || c.scale <= 0) return null
-  const zoom = rect.width / host.clientWidth
-  if (!Number.isFinite(zoom) || zoom <= 0) return null
-  const x = ((e.clientX - rect.left) / zoom - c.left) / c.scale
-  const y = ((e.clientY - rect.top) / zoom - c.top) / c.scale
-  if (x < 0 || y < 0 || x > naturalW.value || y > naturalH.value) return null
-  return { x, y }
-}
-
-function toDisplay(x: number, y: number): { x: number; y: number } | null {
-  const c = contentRect()
-  if (!c) return null
-  return { x: c.left + x * c.scale, y: c.top + y * c.scale }
-}
-
-const overlayTick = ref(0)
-
-let resizeObserver: ResizeObserver | null = null
-onMounted(() => {
-  if (typeof ResizeObserver === 'undefined' || !containerEl.value) return
-  resizeObserver = new ResizeObserver(() => overlayTick.value++)
-  resizeObserver.observe(containerEl.value)
+const {
+  draftBox,
+  boxOverlays,
+  pointOverlays,
+  onImageLoad,
+  onPointerDown,
+  onPointerMove,
+  onPointerUp,
+} = usePartAnnotation({
+  containerEl,
+  imageEl,
+  parts: () => props.parts,
+  activePartId: () => props.activePartId,
+  tool: () => props.tool,
+  onAddPoint: (p) => emit('add-point', p),
+  onAddBox: (b) => emit('add-box', b),
 })
-onBeforeUnmount(() => {
-  resizeObserver?.disconnect()
-  resizeObserver = null
-})
-
-const boxOverlays = computed(() => {
-  void overlayTick.value
-  const out: { id: number; x: number; y: number; w: number; h: number; color: string; active: boolean }[] = []
-  const c = contentRect()
-  if (!c) return out
-  for (const p of props.parts) {
-    if (p.kind !== 'box') continue
-    const tl = toDisplay(p.box.x, p.box.y)
-    if (!tl) continue
-    out.push({
-      id: p.id,
-      x: tl.x, y: tl.y,
-      w: p.box.w * c.scale, h: p.box.h * c.scale,
-      color: partColor(p.id),
-      active: p.id === props.activePartId,
-    })
-  }
-  return out
-})
-
-const pointOverlays = computed(() => {
-  void overlayTick.value
-  const out: { key: string; x: number; y: number; label: 0 | 1; color: string; active: boolean }[] = []
-  for (const p of props.parts) {
-    if (p.kind !== 'points') continue
-    p.points.forEach((q, i) => {
-      const d = toDisplay(q.x, q.y)
-      if (!d) return
-      out.push({
-        key: `${p.id}-${i}`,
-        x: d.x, y: d.y,
-        label: q.label,
-        color: partColor(p.id),
-        active: p.id === props.activePartId,
-      })
-    })
-  }
-  return out
-})
-
-const DRAG_THRESHOLD_PX = 5
-
-let dragStart: { x: number; y: number; nx: number; ny: number } | null = null
-const draftBox = ref<{ x: number; y: number; w: number; h: number } | null>(null)
-
-function onPointerDown(e: PointerEvent): void {
-  if (e.button !== 0 && e.button !== 2) return
-  const nat = toNatural(e)
-  if (!nat) return
-  ;(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId)
-  dragStart = { x: e.clientX, y: e.clientY, nx: nat.x, ny: nat.y }
-  draftBox.value = null
-}
-
-function onPointerMove(e: PointerEvent): void {
-  overlayTick.value++
-  if (!dragStart || props.tool !== 'box') return
-  if (Math.abs(e.clientX - dragStart.x) < DRAG_THRESHOLD_PX
-    && Math.abs(e.clientY - dragStart.y) < DRAG_THRESHOLD_PX) return
-  const nat = toNatural(e)
-  if (!nat) return
-  const x = Math.min(dragStart.nx, nat.x)
-  const y = Math.min(dragStart.ny, nat.y)
-  const w = Math.abs(nat.x - dragStart.nx)
-  const h = Math.abs(nat.y - dragStart.ny)
-  const tl = toDisplay(x, y)
-  const c = contentRect()
-  draftBox.value = tl && c ? { x: tl.x, y: tl.y, w: w * c.scale, h: h * c.scale } : null
-}
-
-function onPointerUp(e: PointerEvent): void {
-  const start = dragStart
-  dragStart = null
-  draftBox.value = null
-  if (!start) return
-  const nat = toNatural(e) ?? { x: start.nx, y: start.ny }
-  const moved = Math.abs(e.clientX - start.x) >= DRAG_THRESHOLD_PX
-    || Math.abs(e.clientY - start.y) >= DRAG_THRESHOLD_PX
-
-  if (props.tool === 'box' && moved) {
-    const box: PartBox = {
-      x: Math.min(start.nx, nat.x),
-      y: Math.min(start.ny, nat.y),
-      w: Math.abs(nat.x - start.nx),
-      h: Math.abs(nat.y - start.ny),
-    }
-    if (box.w >= 4 && box.h >= 4) emit('add-box', box)
-    return
-  }
-  if (moved) return
-
-  const label: 0 | 1 = e.button === 2 || props.tool === 'point-neg' ? 0 : 1
-  emit('add-point', { x: start.nx, y: start.ny, label })
-}
 </script>

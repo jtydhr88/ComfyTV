@@ -22,10 +22,10 @@
           class="ctv:block ctv:size-full ctv:object-contain ctv:cursor-pointer"
           playsinline preload="metadata"
           @loadedmetadata="onMeta"
-          @timeupdate="onTime"
-          @play="playing = true"
-          @pause="playing = false"
-          @error="loadError = true"
+          @timeupdate="onTimeUpdate"
+          @play="onPlay"
+          @pause="onPause"
+          @error="onError"
           @click="togglePlay"
         />
         <div v-if="loadError"
@@ -77,7 +77,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { useVideoPlayback } from '@/composables/widgets/useVideoPlayback'
 import { formatTime } from '@/composables/widgets/useVideoTrim'
 
 const props = withDefaults(defineProps<{
@@ -100,11 +101,18 @@ const videoEl = ref<HTMLVideoElement | null>(null)
 const boxEl = ref<HTMLDivElement | null>(null)
 const seekEl = ref<HTMLDivElement | null>(null)
 
-const muted = ref(props.defaultMuted)
-const playing = ref(false)
-const duration = ref(0)
-const currentTime = ref(0)
-const loadError = ref(false)
+const sourceVideoUrlRef = computed(() => props.sourceVideoUrl)
+
+const {
+  muted, playing, duration, currentTime, loadError, progressPct,
+  onLoadedMetadata, onTimeUpdate, onPlay, onPause, onError,
+  togglePlay, onSeekStart, onSeekMove, onSeekEnd,
+} = useVideoPlayback({
+  videoEl,
+  seekEl,
+  sourceVideoUrl: sourceVideoUrlRef,
+  initialMuted: props.defaultMuted,
+})
 
 function applyTuning() {
   const v = videoEl.value
@@ -117,60 +125,10 @@ watch(() => [props.playbackRate, props.volume], applyTuning)
 function onMeta() {
   const v = videoEl.value
   if (!v) return
-  duration.value = v.duration || 0
-  loadError.value = false
+  onLoadedMetadata()
   applyTuning()
   emit('meta', { width: v.videoWidth, height: v.videoHeight, duration: duration.value })
 }
-function onTime() {
-  const v = videoEl.value
-  if (v) currentTime.value = v.currentTime
-}
-
-watch(() => props.sourceVideoUrl, () => {
-  duration.value = 0
-  currentTime.value = 0
-  playing.value = false
-  loadError.value = false
-})
-
-function togglePlay() {
-  const v = videoEl.value
-  if (!v || duration.value <= 0) return
-  if (v.paused) void v.play().catch(() => {})
-  else v.pause()
-}
-
-const progressPct = computed(() =>
-  duration.value > 0 ? Math.min(100, (currentTime.value / duration.value) * 100) : 0)
-
-const seeking = ref(false)
-function seekFromClientX(clientX: number) {
-  const el = seekEl.value
-  const v = videoEl.value
-  if (!el || !v || duration.value <= 0) return
-  const rect = el.getBoundingClientRect()
-  const frac = rect.width > 0 ? (clientX - rect.left) / rect.width : 0
-  v.currentTime = Math.min(Math.max(0, frac), 1) * duration.value
-  currentTime.value = v.currentTime
-}
-function onSeekStart(e: PointerEvent) {
-  if (duration.value <= 0) return
-  videoEl.value?.pause()
-  seeking.value = true
-  ;(e.currentTarget as HTMLElement)?.setPointerCapture?.(e.pointerId)
-  seekFromClientX(e.clientX)
-}
-function onSeekMove(e: PointerEvent) {
-  if (seeking.value) seekFromClientX(e.clientX)
-}
-function onSeekEnd() {
-  seeking.value = false
-}
-
-onBeforeUnmount(() => {
-  videoEl.value?.pause()
-})
 
 defineExpose({ videoEl, boxEl, duration })
 </script>

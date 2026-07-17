@@ -130,13 +130,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, reactive, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
-
-import type { ComfyServer, TestServerResult } from '@/api'
+import type { ComfyServer } from '@/api'
 import ComfyTVText from '@/components/widgets/ComfyTVText.vue'
-import { askConfirm } from '@/composables/dialog/useConfirmDialog'
-import { useServerStore } from '@/stores/serverStore'
+import { useServersPanel, type ServerStatusKind } from '@/composables/sidebar/useServersPanel'
 
 import IconLoader from '~icons/lucide/loader-2'
 import IconPencil from '~icons/lucide/pencil'
@@ -144,142 +140,38 @@ import IconPlugZap from '~icons/lucide/plug-zap'
 import IconPower from '~icons/lucide/power'
 import IconTrash2 from '~icons/lucide/trash-2'
 
-const { t } = useI18n()
-const store = useServerStore()
+const {
+  store,
+  form,
+  formTest,
+  formError,
+  formValid,
+  testing,
+  saving,
+  testingId,
+  rowTests,
+  openForm,
+  closeForm,
+  onTestForm,
+  onTestRow,
+  onSave,
+  onToggle,
+  onDelete,
+  statusKind,
+  statusBadge,
+  statusTitle,
+} = useServersPanel()
 
-interface ServerForm {
-  id: number | null
-  label: string
-  host: string
-  port: string
-}
-
-const form = ref<ServerForm | null>(null)
-const formTest = ref<TestServerResult | null>(null)
-const formError = ref('')
-const testing = ref(false)
-const saving = ref(false)
-const testingId = ref<number | null>(null)
-const rowTests = reactive<Record<number, TestServerResult>>({})
-
-const formValid = computed(() => {
-  if (!form.value) return false
-  const port = Number(form.value.port)
-  return form.value.label.trim() !== ''
-    && form.value.host.trim() !== ''
-    && Number.isInteger(port) && port > 0 && port < 65536
-})
-
-function openForm(server?: ComfyServer) {
-  formTest.value = null
-  formError.value = ''
-  form.value = server
-    ? { id: server.id, label: server.label, host: server.host, port: String(server.port) }
-    : { id: null, label: '', host: '', port: '8188' }
-}
-
-function closeForm() {
-  form.value = null
-  formTest.value = null
-  formError.value = ''
-}
-
-async function onTestForm() {
-  if (!form.value || !formValid.value) return
-  testing.value = true
-  formTest.value = null
-  try {
-    formTest.value = await store.testConnection(form.value.host.trim(), Number(form.value.port))
-  } finally {
-    testing.value = false
-  }
-}
-
-async function onTestRow(server: ComfyServer) {
-  testingId.value = server.id
-  try {
-    rowTests[server.id] = await store.testConnection(server.host, server.port)
-  } finally {
-    testingId.value = null
-  }
-}
-
-async function onSave() {
-  if (!form.value || !formValid.value || saving.value) return
-  saving.value = true
-  formError.value = ''
-  try {
-    const payload = {
-      label: form.value.label.trim(),
-      host: form.value.host.trim(),
-      port: Number(form.value.port),
-    }
-    const result = form.value.id == null
-      ? await store.create(payload)
-      : await store.update(form.value.id, payload)
-    if (result) closeForm()
-    else formError.value = t('servers.form.saveFailed')
-  } finally {
-    saving.value = false
-  }
-}
-
-async function onToggle(server: ComfyServer) {
-  await store.update(server.id, { enabled: !server.enabled })
-}
-
-async function onDelete(server: ComfyServer) {
-  const ok = await askConfirm({
-    title: t('servers.delete'),
-    message: t('servers.deleteConfirm', { label: server.label }),
-    danger: true,
-  })
-  if (ok) await store.remove(server.id)
+const STATUS_DOT_CLASS: Record<ServerStatusKind, string> = {
+  unknown: 'ctv:bg-muted-foreground/40',
+  offline: 'ctv:bg-destructive-background',
+  busy:    'ctv:bg-amber-400',
+  idle:    'ctv:bg-emerald-400',
 }
 
 function statusDotClass(server: ComfyServer): string {
-  const st = store.statusFor(server.id)
-  if (!st) return 'ctv:bg-muted-foreground/40'
-  if (!st.online) return 'ctv:bg-destructive-background'
-  return st.running + st.pending > 0 ? 'ctv:bg-amber-400' : 'ctv:bg-emerald-400'
+  return STATUS_DOT_CLASS[statusKind(server)]
 }
-
-function statusBadge(server: ComfyServer): string {
-  const st = store.statusFor(server.id)
-  if (!st || !st.online) return ''
-  const total = st.running + st.pending
-  return total > 0 ? t('servers.status.queueShort', { n: total }) : ''
-}
-
-function statusTitle(server: ComfyServer): string {
-  const st = store.statusFor(server.id)
-  if (!st) return t('servers.status.unknown')
-  if (!st.online) {
-    return st.error
-      ? `${t('servers.status.offline')} — ${st.error}`
-      : t('servers.status.offline')
-  }
-  const total = st.running + st.pending
-  const parts = [
-    total > 0
-      ? t('servers.status.queueDetail', { running: st.running, pending: st.pending })
-      : t('servers.status.idle'),
-  ]
-  if (st.jobs) parts.push(t('servers.status.fromComfyTV', { n: st.jobs }))
-  return `${t('servers.status.online')} · ${parts.join(' · ')}`
-}
-
-let releaseStatus: (() => void) | null = null
-
-onMounted(() => {
-  void store.load()
-  releaseStatus = store.subscribeStatus()
-})
-
-onUnmounted(() => {
-  releaseStatus?.()
-  releaseStatus = null
-})
 
 const addBtnClass = 'ctv:shrink-0 ctv:inline-flex ctv:items-center ctv:gap-1 ctv:cursor-pointer ctv:[font-family:inherit] '
   + 'ctv:rounded-lg ctv:border-none ctv:px-2 ctv:py-1 ctv:text-xs '

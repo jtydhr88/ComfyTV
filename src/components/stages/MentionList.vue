@@ -93,21 +93,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, ref, watch } from 'vue'
+import { nextTick, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { imageSlotLabel } from '@/composables/stages/imageSlotMentions'
 import type { MentionSuggestionItem } from '@/composables/stages/useMentionSuggestion'
-import { useListKeyboardNav } from '@/composables/useListKeyboardNav'
-import { useEntryStore } from '@/stores/entryStore'
-import { useProjectStore } from '@/stores/projectStore'
-import { LABEL_RE } from '@/utils/labelRegex'
-
-export interface MentionCommandAttrs {
-  id: number | string
-  label: string
-  mentionType?: 'entry' | 'imageSlot'
-}
+import {
+  mentionItemKey as itemKey,
+  useMentionList,
+  type MentionCommandAttrs,
+} from '@/composables/stages/useMentionList'
 
 const props = defineProps<{
   items: MentionSuggestionItem[]
@@ -115,28 +109,30 @@ const props = defineProps<{
   query: string
 }>()
 
-const entryStore = useEntryStore()
-const projectStore = useProjectStore()
 const { t } = useI18n()
 
-const imageItems = computed(() =>
-  props.items.filter((it): it is Extract<MentionSuggestionItem, { type: 'imageSlot' }> =>
-    it.type === 'imageSlot'))
-const snippetItems = computed(() =>
-  props.items.filter((it): it is Extract<MentionSuggestionItem, { type: 'snippet' }> =>
-    it.type === 'snippet'))
+const createTa = ref<HTMLTextAreaElement | null>(null)
 
-const canCreate = computed(() => !!props.query && LABEL_RE.test(props.query))
-
-const nav = useListKeyboardNav(() => props.items.length + (canCreate.value ? 1 : 0))
-const activeIndex = nav.activeIndex
-
-watch(() => props.items, nav.reset)
-watch(() => props.query, nav.reset)
-
-function itemKey(item: MentionSuggestionItem): string {
-  return item.type === 'imageSlot' ? imageSlotLabel(item.slot) : item.module.id
-}
+const {
+  imageItems,
+  snippetItems,
+  canCreate,
+  activeIndex,
+  creating,
+  pendingLabel,
+  pendingContent,
+  startCreate,
+  cancelCreate,
+  saveCreate,
+  onCreateKeydown,
+  selectItem,
+  onKeyDown,
+} = useMentionList({
+  items: () => props.items,
+  query: () => props.query,
+  command: (attrs) => props.command(attrs),
+  focusCreate: () => { void nextTick(() => createTa.value?.focus()) },
+})
 
 function itemTitle(item: MentionSuggestionItem): string {
   if (item.type === 'imageSlot') {
@@ -148,65 +144,9 @@ function itemTitle(item: MentionSuggestionItem): string {
   return item.module.body
 }
 
-const creating = ref(false)
-const pendingLabel = ref('')
-const pendingContent = ref('')
-const createTa = ref<HTMLTextAreaElement | null>(null)
-
-function startCreate() {
-  pendingLabel.value = props.query
-  pendingContent.value = ''
-  creating.value = true
-  nextTick(() => createTa.value?.focus())
-}
-function cancelCreate() {
-  creating.value = false
-  pendingLabel.value = ''
-  pendingContent.value = ''
-}
-async function saveCreate() {
-  const content = pendingContent.value.trim()
-  if (!content) return
-  const row = await entryStore.upsert(projectStore.currentProjectId || '', {
-    kind: 'fragment',
-    label: pendingLabel.value,
-    content,
-  })
-  creating.value = false
-  pendingContent.value = ''
-  if (row) {
-    props.command({ id: row.id, label: row.label, mentionType: 'entry' })
-  }
-}
-function onCreateKeydown(e: KeyboardEvent) {
-  if (e.key === 'Escape') { cancelCreate(); return }
-  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-    e.preventDefault()
-    void saveCreate()
-  }
-}
-
-function selectItem(index: number) {
-  const ordered = [...imageItems.value, ...snippetItems.value]
-  if (index < ordered.length) {
-    const item = ordered[index]
-    if (!item) return
-    if (item.type === 'imageSlot') {
-      const label = imageSlotLabel(item.slot)
-      props.command({ id: label, label, mentionType: 'imageSlot' })
-      return
-    }
-    const label = item.module.label ?? ''
-    props.command({ id: label, label, mentionType: 'entry' })
-  } else if (canCreate.value) {
-    startCreate()
-  }
-}
-
 defineExpose({
   onKeyDown({ event }: { event: KeyboardEvent }): boolean {
-    if (creating.value) return event.key === 'Escape'
-    return nav.onKeyDown(event, selectItem)
+    return onKeyDown(event)
   },
 })
 

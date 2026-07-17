@@ -102,13 +102,12 @@ import { computed, ref } from 'vue'
 import { useElementSize } from '@vueuse/core'
 
 import StageCard from '@/components/stages/StageCard.vue'
-import { useGridSplit } from '@/composables/stages/useGridSplit'
+import { displayedImageRect, dividerBands, useGridSplit } from '@/composables/stages/useGridSplit'
 import { t } from '@/i18n'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 
 const BORDER_STEP = 2
-const MIN_LINE_PX = 2
 
 const PRESETS = [
   { label: '1×2', r: 1, c: 2 },
@@ -152,51 +151,18 @@ function onImgLoad() {
   natH.value = imgEl.value.naturalHeight
 }
 
-const displayed = computed(() => {
-  const nw = natW.value, nh = natH.value, cw = contW.value, ch = contH.value
-  if (nw <= 0 || nh <= 0 || cw <= 0 || ch <= 0) return null
-  const imageAspect = nw / nh
-  const containerAspect = cw / ch
-  let w: number, h: number
-  if (imageAspect > containerAspect) { w = cw; h = cw / imageAspect }
-  else { h = ch; w = ch * imageAspect }
-  return { w, h, ox: (cw - w) / 2, oy: (ch - h) / 2, scale: w / nw }
-})
-
-function dividerCenters(n: number, natSize: number, b: number, o: number): number[] {
-  const cell = (natSize - (n - 1 + 2 * o) * b) / n
-  const centers: number[] = []
-  if (o && b > 0) centers.push(b / 2)
-  for (let k = 1; k < n; k++) centers.push(o * b + k * cell + (k - 0.5) * b)
-  if (o && b > 0) centers.push(natSize - b / 2)
-  return centers
-}
+const displayed = computed(() =>
+  displayedImageRect(natW.value, natH.value, contW.value, contH.value))
 
 const vBands = computed(() => {
   const d = displayed.value
   if (!d) return []
-  const b = Math.max(0, border.value)
-  const o = outerBorder.value ? 1 : 0
-  const thick = Math.max(MIN_LINE_PX, b * d.scale)
-  return dividerCenters(cols.value, natW.value, b, o).map(centerNat => ({
-    left: `${d.ox + centerNat * d.scale - thick / 2}px`,
-    top: `${d.oy}px`,
-    width: `${thick}px`,
-    height: `${d.h}px`,
-  }))
+  return dividerBands('v', d, natW.value, cols.value, border.value, outerBorder.value)
 })
 
 const hBands = computed(() => {
   const d = displayed.value
   if (!d) return []
-  const b = Math.max(0, border.value)
-  const o = outerBorder.value ? 1 : 0
-  const thick = Math.max(MIN_LINE_PX, b * d.scale)
-  return dividerCenters(rows.value, natH.value, b, o).map(centerNat => ({
-    left: `${d.ox}px`,
-    top: `${d.oy + centerNat * d.scale - thick / 2}px`,
-    width: `${d.w}px`,
-    height: `${thick}px`,
-  }))
+  return dividerBands('h', d, natH.value, rows.value, border.value, outerBorder.value)
 })
 </script>

@@ -66,9 +66,9 @@ import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
 import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
-import EqGraph, { type EqBand } from '@/components/widgets/fx/EqGraph.vue'
+import EqGraph from '@/components/widgets/fx/EqGraph.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
-import { useStrWidget } from '@/composables/widgets/useWidgetModel'
+import { QUICK_BANDS, useEqBands } from '@/composables/stages/useEqBands'
 
 const props = defineProps<{
   state: StageState
@@ -83,34 +83,5 @@ const sourceUrl = computed(() =>
   pickSourceImageUrl(props.state.inputs, 'audio')
   || pickSourceImageUrl(props.state.inputs, 'video'))
 
-const bandsRaw = useStrWidget(props.node, 'bands', '')
-
-const bands = computed<EqBand[]>({
-  get: () => {
-    try {
-      const p = JSON.parse(bandsRaw.value || '[]')
-      return Array.isArray(p) ? p : []
-    } catch { return [] }
-  },
-  set: (v: EqBand[]) => {
-    bandsRaw.value = v.length ? JSON.stringify(v) : ''
-  },
-})
-
-const QUICK_BANDS: { label: string; band: EqBand }[] = [
-  { label: '+Peak', band: { type: 'peak', f: 1000, g: 3, q: 1 } },
-  { label: '+HPF', band: { type: 'highpass', f: 80, g: 0, q: 0.7 } },
-  { label: '+LPF', band: { type: 'lowpass', f: 12000, g: 0, q: 0.7 } },
-  { label: '+LoShelf', band: { type: 'lowshelf', f: 150, g: 3, q: 0.7 } },
-  { label: '+HiShelf', band: { type: 'highshelf', f: 8000, g: 3, q: 0.7 } },
-]
-
-function addBand(b: EqBand) {
-  bands.value = [...bands.value, { ...b }]
-}
-function removeBand(i: number) {
-  const next = bands.value.slice()
-  next.splice(i, 1)
-  bands.value = next
-}
+const { bands, addBand, removeBand } = useEqBands(props.node)
 </script>

@@ -55,7 +55,6 @@ beforeEach(() => {
   vi.clearAllMocks()
   store.byId.mockReturnValue({ id: 5, category_ids: [1] })
   store.listByCategory.mockReturnValue([])
-  // The lightbox is a module-level singleton; reset it between tests.
   useLightbox().close()
 })
 
@@ -516,5 +515,49 @@ describe('useAssetsPanel', () => {
     const file = new File(['x'], 'a.txt', { type: 'text/plain' })
     p.onDrop(dragEvent(undefined, [file], ['Files']))
     expect(p.fileDragDepth.value).toBe(0)
+  })
+
+  it('emptyText distinguishes search, category and global emptiness', () => {
+    const p = useAssetsPanel(() => false)
+    expect(p.emptyText.value).toBe('assets.empty')
+    p.activeFilter.value = 2
+    expect(p.emptyText.value).toBe('assets.emptyCategory')
+    p.activeFilter.value = 'all'
+    p.mediaFilter.value = 'video'
+    expect(p.emptyText.value).toBe('assets.emptyCategory')
+    p.searchQuery.value = 'hero'
+    expect(p.emptyText.value).toBe('assets.noResults')
+  })
+
+  it('openSettingsMenu anchors below the trigger and clamps to the viewport', () => {
+    const p = useAssetsPanel(() => false)
+    p.openSettingsMenu({
+      currentTarget: {
+        getBoundingClientRect: () => ({ right: 500, bottom: 40 }),
+      },
+    } as any)
+    expect(p.settingsMenu.value).toEqual({ x: 324, y: 44 })
+    p.openSettingsMenu({
+      currentTarget: {
+        getBoundingClientRect: () => ({ right: 20, bottom: 40 }),
+      },
+    } as any)
+    expect(p.settingsMenu.value!.x).toBe(8)
+    p.closeSettingsMenu()
+    expect(p.settingsMenu.value).toBeNull()
+  })
+
+  it('setViewMode persists the mode and closes the settings menu', () => {
+    const p = useAssetsPanel(() => false)
+    p.openSettingsMenu({
+      currentTarget: {
+        getBoundingClientRect: () => ({ right: 500, bottom: 40 }),
+      },
+    } as any)
+    p.setViewMode('list')
+    expect(p.viewMode.value).toBe('list')
+    expect(p.settingsMenu.value).toBeNull()
+    p.setViewMode('grid')
+    expect(p.viewMode.value).toBe('grid')
   })
 })

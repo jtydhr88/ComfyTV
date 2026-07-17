@@ -176,8 +176,8 @@
     <div
       v-if="settingsMenu"
       class="ctv:fixed ctv:inset-0 ctv:z-20"
-      @click="settingsMenu = null"
-      @contextmenu.prevent="settingsMenu = null"
+      @click="closeSettingsMenu()"
+      @contextmenu.prevent="closeSettingsMenu()"
     >
       <div
         class="ctv:absolute ctv:w-44 ctv:p-1 ctv:rounded-lg ctv:shadow-md
@@ -273,8 +273,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { ref } from 'vue'
 
 import IconCheck from '~icons/lucide/check'
 import IconDownload from '~icons/lucide/download'
@@ -291,15 +290,13 @@ import IconX from '~icons/lucide/x'
 
 import AssetGridCard from '@/components/sidebar/assets/AssetGridCard.vue'
 import AssetListItem from '@/components/sidebar/assets/AssetListItem.vue'
-import { MODEL_FILE_EXTENSIONS, type AssetViewMode, useAssetsPanel } from '@/composables/sidebar/useAssetsPanel'
+import { MODEL_FILE_EXTENSIONS, useAssetsPanel } from '@/composables/sidebar/useAssetsPanel'
 
 const fileAccept = `image/*,video/*,audio/*,${MODEL_FILE_EXTENSIONS.join(',')}`
 
 const props = defineProps<{
   active?: boolean
 }>()
-
-const { t } = useI18n()
 
 const filePicker = ref<HTMLInputElement | null>(null)
 
@@ -317,6 +314,11 @@ const {
   uploadError,
   fileDragDepth,
   visibleAssets,
+  emptyText,
+  settingsMenu,
+  openSettingsMenu,
+  closeSettingsMenu,
+  setViewMode,
   tagEditor,
   tagEditorStyle,
   catName,
@@ -346,29 +348,6 @@ const {
   onDragLeave,
   onDrop,
 } = useAssetsPanel(() => props.active)
-
-const emptyText = computed(() => {
-  if (searchQuery.value.trim()) return t('assets.noResults')
-  return activeFilter.value === 'all' && mediaFilter.value === 'all'
-    ? t('assets.empty')
-    : t('assets.emptyCategory')
-})
-
-const SETTINGS_MENU_WIDTH = 176
-const settingsMenu = ref<{ x: number; y: number } | null>(null)
-
-function openSettingsMenu(e: MouseEvent) {
-  const r = (e.currentTarget as HTMLElement).getBoundingClientRect()
-  settingsMenu.value = {
-    x: Math.max(8, Math.min(r.right - SETTINGS_MENU_WIDTH, window.innerWidth - SETTINGS_MENU_WIDTH - 8)),
-    y: r.bottom + 4,
-  }
-}
-
-function setViewMode(mode: AssetViewMode) {
-  viewMode.value = mode
-  settingsMenu.value = null
-}
 
 function chipClass(active: boolean) {
   return [

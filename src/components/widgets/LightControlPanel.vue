@@ -17,9 +17,9 @@
         :disabled="!option.enabled"
         :class="[actionClass(transformMode === option.value),
                  !option.enabled && 'ctv:cursor-not-allowed ctv:opacity-40']"
-        :title="option.label"
+        :title="$t(option.labelKey)"
         @click="$emit('set-transform-mode', option.value)"
-      >{{ option.label }}</button>
+      >{{ $t(option.labelKey) }}</button>
 
       <div class="ctv:flex-1" />
 
@@ -152,14 +152,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
-
 import {
-  lightPositionApplies,
-  targetApplies,
-  type LightTransformGizmoMode
-} from '@/widgets/three/light/LightBallWidget'
+  parseLightNumber,
+  useLightControlPanel,
+} from '@/composables/widgets/useLightControlPanel'
+import type { LightTransformGizmoMode } from '@/widgets/three/light/LightBallWidget'
 import {
   LIGHT_TYPES,
   type LightInfoEntry,
@@ -186,32 +183,7 @@ const emit = defineEmits<{
   'toggle-lock': []
 }>()
 
-const { t } = useI18n()
-
-const selectedLight = computed<LightInfoEntry | null>(
-  () => props.lights[props.selectedIndex] ?? null
-)
-
-const transformOptions = computed(() => [
-  {
-    value: 'none' as const,
-    label: t('lightBall.transformNone'),
-    enabled: true
-  },
-  {
-    value: 'light-position' as const,
-    label: t('lightBall.transformPosition'),
-    enabled:
-      selectedLight.value !== null &&
-      lightPositionApplies(selectedLight.value.type)
-  },
-  {
-    value: 'target' as const,
-    label: t('lightBall.transformTarget'),
-    enabled:
-      selectedLight.value !== null && targetApplies(selectedLight.value.type)
-  }
-])
+const { selectedLight, transformOptions } = useLightControlPanel(props)
 
 function actionClass(active: boolean) {
   return [
@@ -254,8 +226,8 @@ function onNumberInput(
   field: 'intensity' | 'range' | 'innerConeAngle' | 'outerConeAngle',
   event: Event
 ) {
-  const value = Number((event.target as HTMLInputElement).value)
-  if (!Number.isFinite(value)) return
+  const value = parseLightNumber((event.target as HTMLInputElement).value)
+  if (value === null) return
   emit('update', { [field]: value })
 }
 </script>

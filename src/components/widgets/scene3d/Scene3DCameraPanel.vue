@@ -108,8 +108,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
 import IconEye from '~icons/lucide/eye'
 import IconEyeOff from '~icons/lucide/eye-off'
 
@@ -117,6 +115,11 @@ import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
 import ComfyTVSlider from '@/components/widgets/ComfyTVSlider.vue'
 import ComfyTVToggle from '@/components/widgets/ComfyTVToggle.vue'
 import Scene3DTransformFields from '@/components/widgets/scene3d/Scene3DTransformFields.vue'
+import {
+  FREE_PRESET_VALUE,
+  OFFSET_AXES,
+  useScene3dCameraPanel
+} from '@/composables/widgets/useScene3dCameraPanel'
 import type { CameraPresetManifestEntry } from '@/widgets/three/load3d/cameraPresetAssets'
 import type { CameraPresetTuning } from '@/widgets/three/load3d/interfaces'
 import type {
@@ -138,94 +141,26 @@ const emit = defineEmits<{
   toggleView: []
 }>()
 
-const { t } = useI18n()
-
-const FREE_PRESET_VALUE = '__free__'
-
-const presetOptions = computed(() => [
-  { value: FREE_PRESET_VALUE, label: t('scene3d.freeCamera') },
-  ...presets.map((preset) => ({
-    value: preset.id,
-    label: `${preset.category} · ${preset.name}`
-  }))
-])
-
-const cameraTransform = computed<CharacterTransform>(() => ({
-  position: camera.transform.position,
-  quaternion: camera.transform.quaternion,
-  scale: { x: 1, y: 1, z: 1 }
-}))
-
-function onPresetChange(value: string | number) {
-  if (typeof value !== 'string') return
-  emit('bindPreset', value === FREE_PRESET_VALUE ? null : value)
-}
-
-const tuning = computed(() => camera.preset?.tuning ?? {})
-
-const OFFSET_AXES = ['x', 'y', 'z'] as const
-type OffsetAxis = (typeof OFFSET_AXES)[number]
+const {
+  presetOptions,
+  cameraTransform,
+  onPresetChange,
+  offsetValue,
+  onOffsetInput,
+  tuningSliders,
+  resetTuning
+} = useScene3dCameraPanel(
+  () => camera,
+  () => presets,
+  {
+    bindPreset: (presetId) => emit('bindPreset', presetId),
+    updateTuning: (tuning) => emit('updateTuning', tuning)
+  }
+)
 
 const offsetFieldClass =
   'ctv:w-full ctv:min-w-0 ctv:flex-1 ctv:rounded-lg ctv:border-0 ctv:bg-secondary-background ' +
   'ctv:px-2 ctv:py-1 ctv:text-xs ctv:text-base-foreground ctv:outline-none ctv:[font-family:inherit]'
-
-function offsetValue(axis: OffsetAxis): number {
-  const value = tuning.value.positionOffset?.[axis] ?? 0
-  return Math.round(value * 1000) / 1000
-}
-
-function onOffsetInput(axis: OffsetAxis, event: Event) {
-  const value = Number((event.target as HTMLInputElement).value)
-  if (!Number.isFinite(value)) return
-  const current = tuning.value.positionOffset ?? { x: 0, y: 0, z: 0 }
-  emit('updateTuning', {
-    positionOffset: { ...current, [axis]: value }
-  })
-}
-
-const tuningSliders = computed(() => [
-  {
-    key: 'fovScale',
-    label: t('scene3d.presetFovScale'),
-    value: tuning.value.fovScale ?? 1,
-    min: 0.5,
-    max: 2,
-    step: 0.05,
-    format: (v: number) => `${v.toFixed(2)}x`,
-    update: (v: number) => emit('updateTuning', { fovScale: v })
-  },
-  {
-    key: 'pathScale',
-    label: t('scene3d.presetPathScale'),
-    value: tuning.value.pathScale ?? 1,
-    min: 0.25,
-    max: 4,
-    step: 0.05,
-    format: (v: number) => `${v.toFixed(2)}x`,
-    update: (v: number) => emit('updateTuning', { pathScale: v })
-  },
-  {
-    key: 'yawDegrees',
-    label: t('scene3d.presetYaw'),
-    value: tuning.value.yawDegrees ?? 0,
-    min: -180,
-    max: 180,
-    step: 1,
-    format: (v: number) => `${Math.round(v)}°`,
-    update: (v: number) => emit('updateTuning', { yawDegrees: v })
-  },
-  {
-    key: 'rollDegrees',
-    label: t('scene3d.presetRoll'),
-    value: tuning.value.rollDegrees ?? 0,
-    min: -45,
-    max: 45,
-    step: 1,
-    format: (v: number) => `${Math.round(v)}°`,
-    update: (v: number) => emit('updateTuning', { rollDegrees: v })
-  }
-])
 
 function iconBtnClass(active: boolean) {
   return (
@@ -242,15 +177,4 @@ const chipBtnClass =
   'ctv:rounded-lg ctv:border ctv:border-border-subtle ctv:bg-secondary-background ctv:px-2 ctv:py-0.5 ' +
   'ctv:text-2xs ctv:text-muted-foreground ctv:transition-colors ' +
   'ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground'
-
-function resetTuning() {
-  emit('updateTuning', {
-    fovScale: 1,
-    pathScale: 1,
-    yawDegrees: 0,
-    rollDegrees: 0,
-    reverse: false,
-    positionOffset: { x: 0, y: 0, z: 0 }
-  })
-}
 </script>

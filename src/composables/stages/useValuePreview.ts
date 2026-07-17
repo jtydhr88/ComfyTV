@@ -1,6 +1,7 @@
 import { computed } from 'vue'
 
-import type { BatchImage, StoryboardShot, TimelineSeg } from '@/types/payloads'
+import type { BatchImage, ItemClickPayload, StoryboardShot, TimelineSeg } from '@/types/payloads'
+import type { MaterialParams } from '@/widgets/material/types'
 
 export function parsePayloadList<T>(
   type: string,
@@ -65,6 +66,74 @@ export function isBatchItemSelected(
 ): boolean {
   if (selectedIndex == null) return false
   return Number(batchItemIndex(img, i)) === Number(selectedIndex)
+}
+
+const PREVIEW_MEDIA_TYPES: Record<string, string> = {
+  COMFYTV_AUDIO:  'audio',
+  COMFYTV_AUDIOS: 'audio',
+  COMFYTV_VIDEO:  'video',
+  COMFYTV_VIDEOS: 'video',
+  COMFYTV_MODEL:  'model',
+}
+
+export function previewMediaTypeOf(type: string): string {
+  return PREVIEW_MEDIA_TYPES[type] ?? 'image'
+}
+
+export function batchItemTag(img: BatchImage, i: number): string {
+  return img.label ?? `#${img.index ?? i + 1}`
+}
+
+export function batchItemPayload(img: BatchImage, i: number): ItemClickPayload {
+  return {
+    index: img.index ?? String(i + 1),
+    label: img.label,
+    prompt: img.prompt,
+    imageUrl: img.image_url,
+  }
+}
+
+export function isActivationKey(key: string): boolean {
+  return key === 'Enter' || key === ' ' || key === 'Spacebar'
+}
+
+export function isUpstreamBatchItem(img: BatchImage, upstreamUrls?: string[]): boolean {
+  return (upstreamUrls ?? []).includes(img.image_url)
+}
+
+export function canRemoveBatchItem(
+  img: BatchImage,
+  i: number,
+  opts: {
+    removable?: boolean
+    selectedIndex?: string | number | null
+    upstreamUrls?: string[]
+  },
+): boolean {
+  return !!opts.removable
+    && !isBatchItemSelected(img, i, opts.selectedIndex)
+    && !isUpstreamBatchItem(img, opts.upstreamUrls)
+}
+
+export function batchLightboxItems(
+  images: BatchImage[],
+  fallbackName: (url: string) => string,
+): { url: string; label: string }[] {
+  return images.map((b) => ({
+    url: b.image_url,
+    label: b.label || b.prompt || fallbackName(b.image_url),
+  }))
+}
+
+export function materialSwatchStyleOf(
+  p: Pick<MaterialParams, 'color' | 'transmission' | 'opacity'>,
+): Record<string, string> {
+  const alpha = p.transmission > 0 ? 0.55 : p.opacity
+  return {
+    background: `radial-gradient(circle at 35% 30%, rgb(255 255 255 / 0.85), ${p.color} 45%, color-mix(in srgb, ${p.color} 45%, black) 100%)`,
+    opacity: String(Math.max(0.35, alpha)),
+    boxShadow: 'inset 0 -4px 8px rgb(0 0 0 / 0.35)',
+  }
 }
 
 export function useValuePreview(

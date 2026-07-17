@@ -5,8 +5,8 @@
       :parts="parts"
       :active-part-id="activePartId"
       :tool="tool"
-      @add-point="onAddPoint"
-      @add-box="onAddBox"
+      @add-point="addPoint"
+      @add-box="addBox"
     />
 
     <div
@@ -82,22 +82,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
-
 import type { LGraphNode } from '@/lib/comfyApp'
 import PartAnnotationCanvas from '@/components/widgets/PartAnnotationCanvas.vue'
 import StageCard from '@/components/stages/StageCard.vue'
-import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
+import { useSplitPartPrompts } from '@/composables/stages/useSplitPartPrompts'
 import type { StageState } from '@/stores/stageStore'
-import { onNodeConfigure, readWidgetStr, writeWidget } from '@/utils/widget'
-import {
-  nextPartId,
-  parsePartsData,
-  partColor,
-  serializePartsData,
-  type Part,
-  type PartBox,
-} from '@/widgets/splitpart/types'
+import { partColor } from '@/widgets/splitpart/types'
 
 const props = defineProps<{
   state: StageState
@@ -114,53 +104,17 @@ const TOOLS = [
   { id: 'box', icon: 'pi-stop' },
 ] as const
 
-const sourceImageUrl = computed(() => pickSourceImageUrl(props.state.inputs))
-
-const tool = ref<string>('point-pos')
-const parts = ref<Part[]>(parsePartsData(readWidgetStr(props.node, 'parts_data', '')))
-const activePartId = ref<number | null>(null)
-
-function onAddPoint(p: { x: number; y: number; label: 0 | 1 }): void {
-  const active = parts.value.find((q) => q.id === activePartId.value)
-  if (active && active.kind === 'points') {
-    active.points = [...active.points, p]
-    parts.value = [...parts.value]
-    return
-  }
-  const id = nextPartId(parts.value)
-  parts.value = [...parts.value, { id, kind: 'points', points: [p] }]
-  activePartId.value = id
-}
-
-function onAddBox(box: PartBox): void {
-  const id = nextPartId(parts.value)
-  parts.value = [...parts.value, { id, kind: 'box', box }]
-  activePartId.value = id
-}
-
-function startNewGroup(): void {
-  activePartId.value = null
-  if (tool.value === 'box') tool.value = 'point-pos'
-}
-
-function removePart(id: number): void {
-  parts.value = parts.value.filter((p) => p.id !== id)
-  if (activePartId.value === id) activePartId.value = null
-}
-
-function clearParts(): void {
-  parts.value = []
-  activePartId.value = null
-}
-
-watch(parts, (v) => {
-  writeWidget(props.node, 'parts_data', serializePartsData(v))
-}, { deep: true })
-
-onNodeConfigure(props.node, () => {
-  parts.value = parsePartsData(readWidgetStr(props.node, 'parts_data', ''))
-  activePartId.value = null
-})
+const {
+  sourceImageUrl,
+  tool,
+  parts,
+  activePartId,
+  addPoint,
+  addBox,
+  startNewGroup,
+  removePart,
+  clearParts,
+} = useSplitPartPrompts(props.node, props.state)
 
 function toolBtnClass(selected: boolean): string {
   return 'ctv:inline-flex ctv:items-center ctv:gap-1 ctv:cursor-pointer ctv:[font-family:inherit]'

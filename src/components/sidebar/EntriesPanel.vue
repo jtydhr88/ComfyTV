@@ -155,10 +155,10 @@ import {
   KIND_META_FIELDS,
 } from '@/composables/dialog/entryCatalog'
 import { useEntryEditor } from '@/composables/dialog/useEntryEditor'
+import { useEntryTransfer } from '@/composables/sidebar/useEntryTransfer'
 import { useProjectStore } from '@/stores/projectStore'
-import { ENTRY_KINDS, useEntryStore, type EntryKind } from '@/stores/entryStore'
+import { ENTRY_KINDS, type EntryKind } from '@/stores/entryStore'
 import { isValidLabel } from '@/utils/labelRegex'
-import { t } from '@/i18n'
 
 const props = defineProps<{ active?: boolean }>()
 
@@ -183,72 +183,16 @@ onMounted(kickHydrate)
 watch(() => props.active, (active) => { if (active) kickHydrate() })
 watch(projectId, kickHydrate)
 
-const entryStore = useEntryStore()
 const importPicker = ref<HTMLInputElement | null>(null)
-const ioStatus = ref('')
 
-function exportEntries() {
-  const rows = allRows.value.map(e => ({
-    kind: e.kind,
-    label: e.label,
-    content: e.content,
-    metadata: e.metadata,
-  }))
-  if (rows.length === 0) {
-    ioStatus.value = t('entries.exportEmpty')
-    return
-  }
-  const payload = {
-    comfytv_entries: 1,
-    project_id: projectId.value,
-    exported_at: new Date().toISOString(),
-    entries: rows,
-  }
-  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  const stamp = new Date().toISOString().slice(0, 10)
-  a.download = `comfytv-entries-${projectId.value}-${stamp}.json`
-  a.click()
-  URL.revokeObjectURL(url)
-  ioStatus.value = ''
-}
+const { ioStatus, exportEntries, importFromFile } = useEntryTransfer(projectId, allRows)
 
 async function onImportFile(ev: Event) {
   const input = ev.target as HTMLInputElement
   const file = input.files?.[0]
   input.value = ''
   if (!file) return
-  let rows: unknown
-  try {
-    const parsed = JSON.parse(await file.text())
-    rows = Array.isArray(parsed) ? parsed : parsed?.entries
-  } catch {
-    rows = null
-  }
-  if (!Array.isArray(rows)) {
-    ioStatus.value = t('entries.importError')
-    return
-  }
-  let added = 0, dup = 0, invalid = 0
-  for (const r of rows as any[]) {
-    const kind: EntryKind = (ENTRY_KINDS as readonly string[]).includes(r?.kind) ? r.kind : 'fragment'
-    const label = typeof r?.label === 'string' ? r.label : ''
-    const content = typeof r?.content === 'string' ? r.content : ''
-    if (!isValidLabel(label) || !content.trim()) { invalid++; continue }
-    const metadata = (r?.metadata && typeof r.metadata === 'object' && !Array.isArray(r.metadata))
-      ? r.metadata as Record<string, unknown>
-      : {}
-    const identical = allRows.value.some(e =>
-      e.kind === kind && e.label === label && e.content === content
-      && JSON.stringify(e.metadata) === JSON.stringify(metadata))
-    if (identical) { dup++; continue }
-    const saved = await entryStore.upsert(projectId.value, { kind, label, content, metadata })
-    if (!saved) { invalid++; continue }
-    added++
-  }
-  ioStatus.value = t('entries.importResult', { added, dup, invalid })
+  await importFromFile(file)
 }
 
 const cardClass = 'ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2 ctv:rounded ctv:border ctv:border-border-subtle ctv:bg-secondary-background/40'

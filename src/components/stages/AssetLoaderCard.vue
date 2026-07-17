@@ -116,17 +116,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
-
-import type { Asset } from '@/api/schemas'
 import type { LGraphNode } from '@/lib/comfyApp'
 import ModelThumb from '@/components/widgets/ModelThumb.vue'
 import StageCard from '@/components/stages/StageCard.vue'
-import { importAssetFiles } from '@/composables/sidebar/assetImport'
-import { toastLoaderUploadFailed, useLoaderFileDrop } from '@/composables/stages/useLoaderFileDrop'
-import { type AssetCategoryFilter, useAssetStore } from '@/stores/assetStore'
-import { useStageStore, type StageState } from '@/stores/stageStore'
-import { getWidget, readWidgetStr, writeWidget } from '@/utils/widget'
+import { assetTooltipOf as assetTooltip, useAssetLoaderCard } from '@/composables/stages/useAssetLoaderCard'
+import type { StageState } from '@/stores/stageStore'
 
 const props = defineProps<{
   state: StageState
@@ -137,70 +131,18 @@ const props = defineProps<{
   node: LGraphNode
 }>()
 
-const store = useAssetStore()
-const stageStore = useStageStore()
-
-const mediaType = computed<'image' | 'video' | 'audio' | 'model'>(() =>
-  props.state.kind === 'video' ? 'video'
-    : props.state.kind === 'audio' ? 'audio'
-    : props.state.kind === 'model' ? 'model'
-    : 'image',
-)
-
-const activeFilter = ref<AssetCategoryFilter>('all')
-const selectedId = ref<number | null>(null)
-
-const visibleAssets = computed(() =>
-  store.listByCategory(activeFilter.value).filter(a => a.media_type === mediaType.value),
-)
-
-function mediaCount(filter: AssetCategoryFilter): number {
-  return store.listByCategory(filter).filter(a => a.media_type === mediaType.value).length
-}
-
-const selectedAsset = computed(() =>
-  selectedId.value != null ? store.byId(selectedId.value) ?? null : null,
-)
-
-function assetTooltip(asset: Asset): string {
-  const dims = asset.width && asset.height ? ` · ${asset.width}×${asset.height}` : ''
-  return `${asset.name || '—'}${dims}`
-}
-
-function parseFilter(raw: string): AssetCategoryFilter {
-  if (raw === 'all' || raw === 'none') return raw
-  const n = Number(raw)
-  return Number.isFinite(n) && n > 0 ? n : 'all'
-}
-
-function setFilter(f: AssetCategoryFilter) {
-  activeFilter.value = f
-  writeWidget(props.node, 'category', String(f))
-}
-
-function selectAsset(asset: Asset) {
-  selectedId.value = asset.id
-  writeWidget(props.node, 'asset_url', asset.payload_url)
-  writeWidget(props.node, 'asset_id', asset.id)
-  stageStore.setOutputSlot(props.state, 0, asset.payload_url)
-}
-
-const fileDrop = useLoaderFileDrop({
-  kind: () => mediaType.value,
-  onAsset: selectAsset,
-  onFiles: async (files) => {
-    try {
-      const created = await importAssetFiles(files, {
-        categoryIds: typeof activeFilter.value === 'number' ? [activeFilter.value] : [],
-      })
-      const last = created[created.length - 1]
-      if (last) selectAsset(last)
-    } catch (e) {
-      console.error('[ComfyTV/asset-loader] drop import failed', e)
-      toastLoaderUploadFailed(e)
-    }
-  },
-})
+const {
+  store,
+  mediaType,
+  activeFilter,
+  selectedId,
+  visibleAssets,
+  mediaCount,
+  selectedAsset,
+  setFilter,
+  selectAsset,
+  fileDrop,
+} = useAssetLoaderCard(props.node, () => props.state)
 
 function hoverPlay(e: MouseEvent) {
   void (e.currentTarget as HTMLVideoElement).play().catch(() => {})
@@ -210,28 +152,6 @@ function hoverPause(e: MouseEvent) {
   v.pause()
   v.currentTime = 0
 }
-
-onMounted(async () => {
-  store.ensureHydrated()
-  store.installWebSocketSync()
-  await store.hydrate()
-
-  activeFilter.value = parseFilter(readWidgetStr(props.node, 'category', 'all'))
-
-  const savedId = Number(getWidget(props.node, 'asset_id')?.value)
-  const savedUrl = readWidgetStr(props.node, 'asset_url', '')
-  const match = Number.isFinite(savedId) && savedId > 0
-    ? store.byId(savedId)
-    : (savedUrl ? store.byPayloadUrl(savedUrl) : undefined)
-
-  if (match) {
-    selectedId.value = match.id
-    if (match.payload_url !== savedUrl) writeWidget(props.node, 'asset_url', match.payload_url)
-    stageStore.setOutputSlot(props.state, 0, match.payload_url)
-  } else if (savedUrl) {
-    stageStore.setOutputSlot(props.state, 0, savedUrl)
-  }
-})
 
 function chipClass(active: boolean) {
   return [

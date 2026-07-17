@@ -105,14 +105,12 @@
 
 <script setup lang="ts">
 
-import { computed, ref, watch } from 'vue'
-
-import type { SceneLightEntry, Vec3 } from '@/widgets/three/scene3d/types'
-
-const AXES = ['x', 'y', 'z'] as const
-type Axis = (typeof AXES)[number]
-const VECTOR_FIELDS = ['position', 'target'] as const
-type VectorField = (typeof VECTOR_FIELDS)[number]
+import {
+  LIGHT_AXES as AXES,
+  LIGHT_VECTOR_FIELDS as VECTOR_FIELDS,
+  useScene3dLightPanel
+} from '@/composables/widgets/useScene3dLightPanel'
+import type { SceneLightEntry } from '@/widgets/three/scene3d/types'
 
 const fieldClass =
   'ctv:w-full ctv:min-w-0 ctv:flex-1 ctv:rounded-lg ctv:border-0 ctv:bg-secondary-background ' +
@@ -140,46 +138,15 @@ const emit = defineEmits<{
   updateLight: [patch: Partial<SceneLightEntry>]
 }>()
 
-const activeVector = ref<VectorField>('position')
-
-watch(
-  () => light.target,
-  (target) => {
-    if (!target) activeVector.value = 'position'
-  }
+const {
+  activeVector,
+  activeValues,
+  round,
+  onColorInput,
+  onNumber,
+  onVectorInput
+} = useScene3dLightPanel(
+  () => light,
+  (patch) => emit('updateLight', patch)
 )
-
-const activeValues = computed(
-  (): Vec3 =>
-    (activeVector.value === 'position' ? light.position : light.target) ?? {
-      x: 0,
-      y: 0,
-      z: 0
-    }
-)
-
-function round(value: number): number {
-  return Math.round(value * 1000) / 1000
-}
-
-function onColorInput(event: Event) {
-  emit('updateLight', { color: (event.target as HTMLInputElement).value })
-}
-
-function onNumber(
-  field: 'intensity' | 'range' | 'innerConeAngle' | 'outerConeAngle',
-  event: Event
-) {
-  const value = Number((event.target as HTMLInputElement).value)
-  if (!Number.isFinite(value)) return
-  emit('updateLight', { [field]: value })
-}
-
-function onVectorInput(field: VectorField, axis: Axis, event: Event) {
-  const value = Number((event.target as HTMLInputElement).value)
-  if (!Number.isFinite(value)) return
-  const source = field === 'position' ? light.position : light.target
-  const vector = { ...(source ?? { x: 0, y: 0, z: 0 }), [axis]: value }
-  emit('updateLight', { [field]: vector })
-}
 </script>

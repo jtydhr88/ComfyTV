@@ -40,7 +40,7 @@
             ? 'ctv:bg-secondary-background-selected ctv:border-primary-background ctv:text-primary-background'
             : 'ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background'"
           :title="$t('videoSpeed.reverseTip')"
-          @click="setReverse(!reverse)"
+          @click="reverse = !reverse"
         ><i class="pi pi-replay" /> {{ $t('videoSpeed.reverse') }}</button>
       </div>
 
@@ -70,14 +70,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
 import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
-import { bindWidgetCallback, onNodeConfigure, readWidgetNum, writeWidget, getWidget } from '@/utils/widget'
-import { useBoolWidget } from '@/composables/widgets/useWidgetModel'
+import { useBoolWidget, useNumWidget } from '@/composables/widgets/useWidgetModel'
 
 const props = defineProps<{
   state: StageState
@@ -92,31 +91,12 @@ const SPEED_PRESETS = [0.25, 0.5, 1, 1.5, 2, 4]
 
 const sourceVideoUrl = computed(() => pickSourceImageUrl(props.state.inputs, 'video'))
 
-const speed = ref(readWidgetNum(props.node, 'speed', 1))
-const reverse = ref(Boolean(getWidget(props.node, 'reverse')?.value))
+const speed = useNumWidget(props.node, 'speed', 1)
+const reverse = useBoolWidget(props.node, 'reverse', false)
 const pitchCompensate = useBoolWidget(props.node, 'pitch_compensate', true)
 
 function setSpeed(v: number) {
   if (!Number.isFinite(v)) return
   speed.value = Math.min(4, Math.max(0.25, Math.round(v * 100) / 100))
-  writeWidget(props.node, 'speed', speed.value)
 }
-function setReverse(v: boolean) {
-  reverse.value = v
-  writeWidget(props.node, 'reverse', v)
-}
-
-bindWidgetCallback(props.node, 'speed', (value) => {
-  const v = Number(value)
-  if (Number.isFinite(v) && v !== speed.value) speed.value = v
-})
-bindWidgetCallback(props.node, 'reverse', (value) => {
-  const v = Boolean(value)
-  if (v !== reverse.value) reverse.value = v
-})
-
-onNodeConfigure(props.node, () => {
-  speed.value = readWidgetNum(props.node, 'speed', speed.value)
-  reverse.value = Boolean(getWidget(props.node, 'reverse')?.value)
-})
 </script>

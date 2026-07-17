@@ -50,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
@@ -58,6 +58,7 @@ import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'
 import CurvesCanvas from '@/components/widgets/fx/CurvesCanvas.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
+import { useCurveChannels } from '@/composables/stages/useCurveChannels'
 import { useStrWidget } from '@/composables/widgets/useWidgetModel'
 
 const props = defineProps<{
@@ -85,35 +86,6 @@ const CHANNELS = [
 
 const sourceVideoUrl = computed(() => pickSourceImageUrl(props.state.inputs, 'video'))
 const preset = useStrWidget(props.node, 'preset', 'none')
-const channel = ref('master')
 
-const widgets = {
-  master: useStrWidget(props.node, 'master_pts', ''),
-  red: useStrWidget(props.node, 'red_pts', ''),
-  green: useStrWidget(props.node, 'green_pts', ''),
-  blue: useStrWidget(props.node, 'blue_pts', ''),
-}
-
-function parseCurve(raw: string): [number, number][] {
-  try {
-    const p = JSON.parse(raw || '[]')
-    if (Array.isArray(p) && p.length >= 2) return p as [number, number][]
-  } catch {  }
-  return [[0, 0], [1, 1]]
-}
-
-const activeCurve = computed({
-  get: () => parseCurve(widgets[channel.value as keyof typeof widgets].value),
-  set: (pts: [number, number][]) => {
-    const w = widgets[channel.value as keyof typeof widgets]
-    const isIdentity = pts.length === 2
-      && pts[0][0] === 0 && pts[0][1] === 0 && pts[1][0] === 1 && pts[1][1] === 1
-    w.value = isIdentity ? '' : JSON.stringify(pts.map(([x, y]) =>
-      [Math.round(x * 1000) / 1000, Math.round(y * 1000) / 1000]))
-  },
-})
-
-function resetActive() {
-  widgets[channel.value as keyof typeof widgets].value = ''
-}
+const { channel, activeCurve, resetActive } = useCurveChannels(props.node)
 </script>

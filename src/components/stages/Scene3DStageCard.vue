@@ -453,8 +453,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { onBeforeUnmount, onMounted } from 'vue'
 import IconBan from '~icons/lucide/ban'
 import IconBox from '~icons/lucide/box'
 import IconCamera from '~icons/lucide/camera'
@@ -485,21 +484,16 @@ import Scene3DPrimitivePanel from '@/components/widgets/scene3d/Scene3DPrimitive
 import Scene3DTimelineTracks from '@/components/widgets/scene3d/Scene3DTimelineTracks.vue'
 import ComfyTVToggle from '@/components/widgets/ComfyTVToggle.vue'
 import { useScene3dStage } from '@/composables/widgets/useScene3dStage'
-import { useStageStore, type StageState } from '@/stores/stageStore'
-import { onNodeConfigure, readWidgetStr } from '@/utils/widget'
+import {
+  FREE_CAMERA_VALUE,
+  useScene3dFullscreen,
+  useScene3dOutputSlots,
+  useScene3dPanels
+} from '@/composables/widgets/useScene3dPanels'
+import type { StageState } from '@/stores/stageStore'
 import type { Scene3dGizmoMode } from '@/widgets/three/scene3d/Scene3dViewport'
-import type { LightPresetName } from '@/widgets/three/scene3d/lightPresets'
 import { LIGHT_PRESET_NAMES } from '@/widgets/three/scene3d/lightPresets'
-import type {
-  PrimitiveShape,
-  SceneCameraEntry,
-  SceneCharacterEntry,
-  SceneLightEntry,
-  SceneLightType,
-  ScenePrimitiveEntry
-} from '@/widgets/three/scene3d/types'
 import { LIGHT_TYPES, PRIMITIVE_SHAPES } from '@/widgets/three/scene3d/types'
-import { CAMERA_COLORS, TRACK_COLORS } from '@/widgets/three/scene3d/timelineTracks'
 
 const props = defineProps<{
   state: StageState
@@ -511,8 +505,13 @@ const props = defineProps<{
 }>()
 
 const stageState = props.state
-const stageStore = useStageStore()
-const { t } = useI18n()
+
+const { syncOutputSlots } = useScene3dOutputSlots(props.node, stageState)
+
+const scene3d = useScene3dStage(props.node, {
+  onCaptured: (url) => syncOutputSlots(url, undefined),
+  onRecorded: (url) => syncOutputSlots(undefined, url)
+})
 
 const {
   initScene,
@@ -535,12 +534,7 @@ const {
   canUndo,
   canRedo,
   selectObject,
-  addCharacter,
-  addPrimitive,
-  addModelFromAsset,
   fitSelectedModel,
-  addLight,
-  applyLightPreset,
   removeSelected,
   renameObject,
   toggleObjectHidden,
@@ -557,7 +551,6 @@ const {
   setCameraFov,
   setCameraSpeedById,
   outputCameraId,
-  setOutputCamera,
   lookThroughId,
   toggleLookThrough,
   pipCameraId,
@@ -568,14 +561,11 @@ const {
   handleTimelineTogglePlay,
   handleTimelineSeek,
   updateCharacterAnimationById,
-  buildTimelineData,
-  timelineDataVersion,
   outputWidth,
   outputHeight,
   channel,
   capturing,
   recording,
-  recordProgress,
   recordingSupported,
   hasRecordableDuration,
   setOutputSize,
@@ -584,10 +574,33 @@ const {
   setOutputFrameCount,
   capture,
   record
-} = useScene3dStage(props.node, {
-  onCaptured: (url) => syncOutputSlots(url, undefined),
-  onRecorded: (url) => syncOutputSlots(undefined, url)
-})
+} = scene3d
+
+const {
+  characterDisplayLabel,
+  primitiveDisplayLabel,
+  lightDisplayLabel,
+  cameraDisplayLabel,
+  characterColor,
+  modelColor,
+  cameraColor,
+  timelineData,
+  timelineLegend,
+  gizmoModeDisabled,
+  allGizmoDisabled,
+  gizmoDisabledHint,
+  outputCameraOptions,
+  onSetOutputCamera,
+  objectsSummary,
+  recordingLabel,
+  recordTitle,
+  onAddCharacter,
+  onAddModel,
+  onAddPrimitive,
+  onAddLight,
+  onApplyLightPreset,
+  onBackgroundInput
+} = useScene3dPanels(scene3d)
 
 const gizmoOptions = [
   { value: 'none' as Scene3dGizmoMode, labelKey: 'scene3d.gizmoNone', icon: IconBan },
@@ -596,29 +609,7 @@ const gizmoOptions = [
   { value: 'scale' as Scene3dGizmoMode, labelKey: 'scene3d.gizmoScale', icon: IconScale3d }
 ]
 
-const fullscreen = ref(false)
-
-function toggleFullscreen() {
-  fullscreen.value = !fullscreen.value
-}
-
-function onFullscreenKeydown(event: KeyboardEvent) {
-  if (event.key === 'Escape' && fullscreen.value) {
-    fullscreen.value = false
-    event.stopPropagation()
-  }
-}
-
-function syncOutputSlots(imageUrl?: string, videoUrl?: string) {
-  const image = imageUrl ?? readWidgetStr(props.node, 'captured_image', '')
-  const video = videoUrl ?? readWidgetStr(props.node, 'captured_video', '')
-  const images = readWidgetStr(props.node, 'captured_images', '')
-  stageStore.setOutputSlot(stageState, 0, image || null)
-  stageStore.setOutputSlot(stageState, 1, video || null)
-  stageStore.setOutputSlot(stageState, 2, images || null)
-}
-
-onNodeConfigure(props.node, () => syncOutputSlots())
+const { fullscreen, toggleFullscreen, onFullscreenKeydown } = useScene3dFullscreen()
 
 onMounted(() => {
   syncOutputSlots()
@@ -628,198 +619,6 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', onFullscreenKeydown, true)
   cleanup()
-})
-
-function modelLabel(model: string): string {
-  return (
-    availableModels.value.find((entry) => entry.id === model)?.name ?? model
-  )
-}
-
-function onAddCharacter(event: Event) {
-  const select = event.target as HTMLSelectElement
-  const model = select.value
-  select.value = ''
-  if (model) void addCharacter(model)
-}
-
-function onAddModel(event: Event) {
-  const select = event.target as HTMLSelectElement
-  const assetId = Number(select.value)
-  select.value = ''
-  const asset = modelAssets.value.find((entry) => entry.id === assetId)
-  if (asset) void addModelFromAsset(asset)
-}
-
-function onAddPrimitive(event: Event) {
-  const select = event.target as HTMLSelectElement
-  const shape = select.value as PrimitiveShape
-  select.value = ''
-  if (shape) addPrimitive(shape)
-}
-
-function onAddLight(event: Event) {
-  const select = event.target as HTMLSelectElement
-  const type = select.value as SceneLightType
-  select.value = ''
-  if (type) addLight(type)
-}
-
-function onApplyLightPreset(event: Event) {
-  const select = event.target as HTMLSelectElement
-  const preset = select.value as LightPresetName
-  select.value = ''
-  if (preset) applyLightPreset(preset)
-}
-
-const timelineData = computed(() => {
-  void timelineDataVersion.value
-  void state.value
-  return buildTimelineData()
-})
-
-const timelineLegend = computed(() => [
-  ...state.value.cameras.flatMap((camera, index) =>
-    camera.preset
-      ? [
-          {
-            id: camera.id,
-            label: cameraDisplayLabel(camera),
-            color: CAMERA_COLORS[index % CAMERA_COLORS.length]
-          }
-        ]
-      : []
-  ),
-  ...state.value.characters.map((character, index) => ({
-    id: character.id,
-    label: characterDisplayLabel(character),
-    color: TRACK_COLORS[index % TRACK_COLORS.length]
-  })),
-  ...state.value.models
-    .filter((model) => model.animation.clip !== '')
-    .map((model, index) => ({
-      id: model.id,
-      label: model.name || model.id,
-      color:
-        TRACK_COLORS[
-          (state.value.characters.length + index) % TRACK_COLORS.length
-        ]
-    }))
-])
-
-function gizmoModeDisabled(mode: Scene3dGizmoMode): boolean {
-  if (selectedLight.value) return true
-  if (selectedCamera.value) {
-    if (lookThroughId.value === selectedCamera.value.id) return true
-    if (mode === 'scale') return true
-    if (mode === 'rotate' && selectedCamera.value.preset) return true
-  }
-  return false
-}
-
-const allGizmoDisabled = computed(
-  () =>
-    !!selectedLight.value ||
-    (!!selectedCamera.value &&
-      lookThroughId.value === selectedCamera.value.id)
-)
-
-const gizmoDisabledHint = computed(() => {
-  if (selectedLight.value) return t('scene3d.lightGizmoHint')
-  if (
-    selectedCamera.value &&
-    lookThroughId.value === selectedCamera.value.id
-  ) {
-    return t('scene3d.lookThroughGizmoHint')
-  }
-  if (selectedCamera.value?.preset) return t('scene3d.cameraPresetGizmoHint')
-  return undefined
-})
-
-function characterColor(index: number): string {
-  return TRACK_COLORS[index % TRACK_COLORS.length]
-}
-
-function modelColor(index: number): string {
-  return TRACK_COLORS[
-    (state.value.characters.length + index) % TRACK_COLORS.length
-  ]
-}
-
-function cameraColor(index: number): string {
-  return CAMERA_COLORS[index % CAMERA_COLORS.length]
-}
-
-function cameraLabel(camera: SceneCameraEntry): string {
-  if (!camera.preset) return camera.id
-  const entry = cameraPresets.value.find(
-    (preset) => preset.id === camera.preset!.presetId
-  )
-  return `${camera.id} · ${entry?.name ?? camera.preset.presetId}`
-}
-
-function characterDisplayLabel(character: SceneCharacterEntry): string {
-  return character.name?.trim() || modelLabel(character.model)
-}
-
-function primitiveDisplayLabel(primitive: ScenePrimitiveEntry): string {
-  return primitive.name?.trim() || t(`scene3d.${primitive.shape}`)
-}
-
-function lightDisplayLabel(light: SceneLightEntry): string {
-  return light.name?.trim() || t(`scene3d.${light.type}`)
-}
-
-function cameraDisplayLabel(camera: SceneCameraEntry): string {
-  return camera.name?.trim() || cameraLabel(camera)
-}
-
-const FREE_CAMERA_VALUE = '__free__'
-
-const outputCameraOptions = computed(() => [
-  { value: FREE_CAMERA_VALUE, label: t('scene3d.freeCamera') },
-  ...state.value.cameras.map((camera) => ({
-    value: camera.id,
-    label: cameraLabel(camera)
-  }))
-])
-
-function onSetOutputCamera(id: string) {
-  setOutputCamera(id === FREE_CAMERA_VALUE ? '' : id)
-}
-
-const objectsSummary = computed(() => {
-  if (selectedCharacter.value) {
-    return characterDisplayLabel(selectedCharacter.value)
-  }
-  if (selectedPrimitive.value) {
-    return primitiveDisplayLabel(selectedPrimitive.value)
-  }
-  if (selectedLight.value) return lightDisplayLabel(selectedLight.value)
-  if (selectedModel.value) {
-    return selectedModel.value.name || selectedModel.value.id
-  }
-  if (selectedCamera.value) return cameraDisplayLabel(selectedCamera.value)
-  return t('scene3d.noSelection')
-})
-
-function onBackgroundInput(event: Event) {
-  updateEnvironment({ background: (event.target as HTMLInputElement).value })
-}
-
-const recordingLabel = computed(() => {
-  const progress = recordProgress.value
-  if (!progress) return t('scene3d.recording')
-  if (progress.status === 'rendering' && progress.frame !== undefined) {
-    return `${progress.frame + 1} / ${progress.totalFrames}`
-  }
-  return t('scene3d.recording')
-})
-
-const recordTitle = computed(() => {
-  if (!recordingSupported) return t('scene3d.webcodecsUnsupported')
-  if (!hasRecordableDuration.value) return t('scene3d.noDurationToRecord')
-  return t('scene3d.record')
 })
 
 const actionBtnClass =

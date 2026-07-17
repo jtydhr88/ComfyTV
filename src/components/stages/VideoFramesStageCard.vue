@@ -102,7 +102,7 @@
             type="number" min="2" max="48" step="1"
             class="ctv-num-input ctv:w-8 ctv:border-0 ctv:outline-none ctv:bg-transparent ctv:text-center ctv:text-[11px] ctv:font-mono ctv:text-base-foreground"
             :value="uniformN"
-            @change="(e) => { uniformN = Math.min(48, Math.max(2, Math.round(Number((e.target as HTMLInputElement).value) || 2))) }"
+            @change="(e) => setUniformN((e.target as HTMLInputElement).value)"
           />
         </label>
         <button
@@ -151,14 +151,14 @@ import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
 import { slotColor } from '@/composables/stages/imageSlotMentions'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
-import { MAX_MARKS, normalizeMarks, parseMarks, uniformMarks } from '@/composables/stages/videoFrameMarks'
+import { useFrameMarks } from '@/composables/stages/useFrameMarks'
+import { MAX_MARKS } from '@/composables/stages/videoFrameMarks'
 import {
   formatTime,
   THUMB_COUNT,
   useVideoTrim,
   type TrimRange,
 } from '@/composables/widgets/useVideoTrim'
-import { bindWidgetCallback, onNodeConfigure, readWidgetStr, writeWidget } from '@/utils/widget'
 
 const props = defineProps<{
   state: StageState
@@ -190,42 +190,10 @@ const {
 const playheadPct = computed(() =>
   duration.value > 0 ? Math.min(100, (currentTime.value / duration.value) * 100) : 0)
 
-
-const marks = ref<number[]>(parseMarks(readWidgetStr(props.node, 'marks', '')))
-const uniformN = ref(6)
-
-function writeMarks(v: number[]) {
-  marks.value = v
-  writeWidget(props.node, 'marks', JSON.stringify(v))
-}
-
-function addMarkAtPlayhead() {
-  if (duration.value <= 0) return
-  writeMarks(normalizeMarks([...marks.value, currentTime.value]))
-}
-
-function addUniform() {
-  if (duration.value <= 0) return
-  writeMarks(uniformMarks(uniformN.value, duration.value))
-}
-
-function removeMark(i: number) {
-  writeMarks(marks.value.filter((_, idx) => idx !== i))
-}
-
-function clearMarks() {
-  writeMarks([])
-}
-
-bindWidgetCallback(props.node, 'marks', (value) => {
-  const parsed = parseMarks(String(value ?? ''))
-  if (parsed.join() !== marks.value.join()) marks.value = parsed
-})
-
-onNodeConfigure(props.node, () => {
-  const restored = parseMarks(readWidgetStr(props.node, 'marks', ''))
-  if (restored.join() !== marks.value.join()) marks.value = restored
-})
+const {
+  marks, uniformN, setUniformN,
+  addMarkAtPlayhead, addUniform, removeMark, clearMarks,
+} = useFrameMarks(props.node, { duration, currentTime })
 </script>
 
 <style scoped>

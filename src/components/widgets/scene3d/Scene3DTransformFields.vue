@@ -34,19 +34,11 @@
 
 <script setup lang="ts">
 
-import { computed, ref } from 'vue'
-
 import {
-  eulerDegreesToQuat,
-  quatToEulerDegrees
-} from '@/widgets/three/scene3d/transformMath'
-import type { CharacterTransform, Vec3 } from '@/widgets/three/scene3d/types'
-import { cloneTransform } from '@/widgets/three/scene3d/types'
-
-const AXES = ['x', 'y', 'z'] as const
-type Axis = (typeof AXES)[number]
-const FIELDS = ['position', 'rotation', 'scale'] as const
-type TransformField = (typeof FIELDS)[number]
+  TRANSFORM_AXES as AXES,
+  useScene3dTransformFields
+} from '@/composables/widgets/useScene3dTransformFields'
+import type { CharacterTransform } from '@/widgets/three/scene3d/types'
 
 const fieldClass =
   'ctv:w-full ctv:min-w-0 ctv:flex-1 ctv:rounded-lg ctv:border-0 ctv:bg-secondary-background ' +
@@ -71,37 +63,10 @@ const emit = defineEmits<{
   updateTransform: [transform: CharacterTransform]
 }>()
 
-const fields = computed(() =>
-  hideScale ? FIELDS.filter((field) => field !== 'scale') : FIELDS
-)
-
-const activeField = ref<TransformField>('position')
-
-const activeRow = computed((): { values: Vec3; step: number } => {
-  if (activeField.value === 'position') {
-    return { values: transform.position, step: 0.1 }
-  }
-  if (activeField.value === 'rotation') {
-    return { values: quatToEulerDegrees(transform.quaternion), step: 1 }
-  }
-  return { values: transform.scale, step: 0.1 }
-})
-
-function round(value: number): number {
-  return Math.round(value * 1000) / 1000
-}
-
-function onTransformInput(field: TransformField, axis: Axis, event: Event) {
-  const value = Number((event.target as HTMLInputElement).value)
-  if (!Number.isFinite(value)) return
-  const next = cloneTransform(transform)
-  if (field === 'position' || field === 'scale') {
-    next[field][axis] = value
-  } else {
-    const degrees = quatToEulerDegrees(next.quaternion)
-    degrees[axis] = value
-    next.quaternion = eulerDegreesToQuat(degrees)
-  }
-  emit('updateTransform', next)
-}
+const { fields, activeField, activeRow, round, onTransformInput } =
+  useScene3dTransformFields(
+    () => transform,
+    () => hideScale,
+    (next) => emit('updateTransform', next)
+  )
 </script>

@@ -91,6 +91,7 @@ import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
+import { useAudioAnalysis } from '@/composables/stages/useAudioAnalysis'
 import { useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
 
 const props = defineProps<{
@@ -109,63 +110,5 @@ const mode = useStrWidget(props.node, 'mode', 'loudness')
 const silenceNoiseDb = useNumWidget(props.node, 'silence_noise_db', -60)
 const silenceDuration = useNumWidget(props.node, 'silence_duration', 2)
 
-const report = computed<Record<string, unknown> | null>(() => {
-  if (!props.state.output) return null
-  try {
-    const parsed = JSON.parse(props.state.output)
-    return typeof parsed === 'object' && parsed !== null ? parsed : null
-  } catch {
-    return null
-  }
-})
-
-interface PlatformRow { name: string, verdict: string, target_lufs: number }
-
-const platforms = computed<PlatformRow[]>(() => {
-  const r = report.value
-  return Array.isArray(r?.platforms) ? r.platforms as PlatformRow[] : []
-})
-
-const LABELS: Record<string, string> = {
-  integrated_lufs: 'I (LUFS)',
-  momentary_max_lufs: 'Max M (LUFS)',
-  short_max_lufs: 'Max S (LUFS)',
-  threshold_lufs: 'Threshold (LUFS)',
-  lra_lu: 'LRA (LU)',
-  lra_low_lufs: 'LRA low (LUFS)',
-  lra_high_lufs: 'LRA high (LUFS)',
-  peak_dbfs: 'Peak (dBFS)',
-  mean_volume_db: 'Mean (dB)',
-  max_volume_db: 'Max (dB)',
-  n_samples: 'Samples',
-  dc_offset: 'DC offset',
-  peak_level_db: 'Peak (dB)',
-  rms_level_db: 'RMS (dB)',
-  rms_peak_db: 'RMS peak (dB)',
-  flat_factor: 'Flat factor',
-  peak_count: 'Peak count',
-  count: 'Silences',
-}
-
-const reportRows = computed(() => {
-  const r = report.value
-  if (!r) return []
-  const rows: { label: string, value: string }[] = []
-  for (const [key, label] of Object.entries(LABELS)) {
-    const v = r[key]
-    if (v === undefined || v === null) continue
-    rows.push({ label, value: typeof v === 'number' ? String(Math.round(v * 100) / 100) : String(v) })
-  }
-  const segments = r.segments
-  if (Array.isArray(segments)) {
-    for (const [i, seg] of segments.slice(0, 12).entries()) {
-      const s = seg as { start?: number, end?: number }
-      rows.push({
-        label: `#${i + 1}`,
-        value: `${s.start?.toFixed?.(2) ?? '?'}s – ${s.end?.toFixed?.(2) ?? '…'}s`,
-      })
-    }
-  }
-  return rows
-})
+const { report, platforms, reportRows } = useAudioAnalysis(() => props.state.output)
 </script>

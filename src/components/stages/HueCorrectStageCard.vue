@@ -47,6 +47,7 @@ import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'
 import CurvesCanvas from '@/components/widgets/fx/CurvesCanvas.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
+import { useHueCorrectCurves } from '@/composables/stages/useHueCorrectCurves'
 import { useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
 
 const props = defineProps<{
@@ -82,38 +83,11 @@ const CHANNEL_COLORS: Record<string, string> = {
   hue: '#ffa726',
 }
 
-const DEFAULT_CURVE: [number, number][] = [[0, 1], [1, 1]]
-
 const sourceVideoUrl = computed(() => pickSourceImageUrl(props.state.inputs, 'video'))
 const curves = useStrWidget(props.node, 'curves', '')
 const satThrsh = useNumWidget(props.node, 'sat_thrsh', 0)
 const luminanceMix = useNumWidget(props.node, 'luminance_mix', 0)
 const channel = ref('sat')
 
-function parseCurves(raw: string): Record<string, [number, number][]> {
-  try {
-    const o = JSON.parse(raw || '{}')
-    if (o && typeof o === 'object' && !Array.isArray(o)) return o
-  } catch {}
-  return {}
-}
-
-const activeCurve = computed({
-  get: () => {
-    const c = parseCurves(curves.value)[channel.value]
-    if (Array.isArray(c) && c.length >= 2) return c
-    return DEFAULT_CURVE.map((p) => p.slice()) as [number, number][]
-  },
-  set: (pts: [number, number][]) => {
-    const obj = parseCurves(curves.value)
-    const rounded = pts.map(([x, y]) =>
-      [Math.round(x * 1000) / 1000, Math.round(y * 1000) / 1000] as [number, number])
-    const isDefault = rounded.length === 2
-      && rounded[0][0] === 0 && rounded[0][1] === 1
-      && rounded[1][0] === 1 && rounded[1][1] === 1
-    if (isDefault) delete obj[channel.value]
-    else obj[channel.value] = rounded
-    curves.value = Object.keys(obj).length ? JSON.stringify(obj) : ''
-  },
-})
+const { activeCurve } = useHueCorrectCurves({ curves, channel })
 </script>

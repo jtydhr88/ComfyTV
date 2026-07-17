@@ -71,13 +71,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
 import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
-import { useBoolWidget, useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
+import { useRotoMaskEditor } from '@/composables/stages/useRotoMaskEditor'
+import { useBoolWidget, useNumWidget } from '@/composables/widgets/useWidgetModel'
 
 const props = defineProps<{
   state: StageState
@@ -89,174 +90,12 @@ const props = defineProps<{
 }>()
 
 const sourceVideoUrl = computed(() => pickSourceImageUrl(props.state.inputs, 'video'))
-const shapeRaw = useStrWidget(props.node, 'shape_keys', '')
 const feather = useNumWidget(props.node, 'feather', 0)
 const invert = useBoolWidget(props.node, 'invert', false)
-const smooth = ref(true)
 
 const videoEl = ref<HTMLVideoElement | null>(null)
 const overlayEl = ref<HTMLCanvasElement | null>(null)
-const vw = ref(0)
-const vh = ref(0)
-const dragIdx = ref(-1)
 
-type Pt = { x: number; y: number }
-
-const verts = ref<Pt[]>([])
-
-function loadFromWidget() {
-  try {
-    const keys = JSON.parse(shapeRaw.value || '[]')
-    const pts = keys?.[0]?.points
-    if (Array.isArray(pts)) {
-      verts.value = pts.map((p: any) => ({ x: Number(p.x), y: Number(p.y) }))
-      return
-    }
-  } catch {  }
-  verts.value = []
-}
-loadFromWidget()
-
-function saveToWidget() {
-  if (verts.value.length < 3) {
-    shapeRaw.value = ''
-    return
-  }
-  const n = verts.value.length
-  const points = verts.value.map((p, i) => {
-    if (!smooth.value) {
-      return { x: p.x, y: p.y, lx: p.x, ly: p.y, rx: p.x, ry: p.y }
-    }
-    const prev = verts.value[(i - 1 + n) % n]
-    const next = verts.value[(i + 1) % n]
-    const tx = (next.x - prev.x) / 6
-    const ty = (next.y - prev.y) / 6
-    return {
-      x: p.x, y: p.y,
-      lx: p.x - tx, ly: p.y - ty,
-      rx: p.x + tx, ry: p.y + ty,
-    }
-  })
-  shapeRaw.value = JSON.stringify([{ t: 0, points }])
-}
-
-function fit() {
-  const box = overlayEl.value
-  if (!box || !vw.value) return { scale: 1, offX: 0, offY: 0 }
-  const scale = Math.min(box.clientWidth / vw.value, box.clientHeight / vh.value)
-  return {
-    scale,
-    offX: (box.clientWidth - vw.value * scale) / 2,
-    offY: (box.clientHeight - vh.value * scale) / 2,
-  }
-}
-
-function toVideo(e: MouseEvent): Pt {
-  const rect = overlayEl.value!.getBoundingClientRect()
-  const { scale, offX, offY } = fit()
-  return {
-    x: Math.min(vw.value, Math.max(0, (e.clientX - rect.left - offX) / scale)),
-    y: Math.min(vh.value, Math.max(0, (e.clientY - rect.top - offY) / scale)),
-  }
-}
-
-function draw() {
-  const c = overlayEl.value
-  const ctx = c?.getContext('2d')
-  if (!c || !ctx) return
-  if (c.width !== c.clientWidth) { c.width = c.clientWidth; c.height = c.clientHeight }
-  ctx.clearRect(0, 0, c.width, c.height)
-  const pts = verts.value
-  if (!pts.length) return
-  const { scale, offX, offY } = fit()
-  const disp = pts.map((p) => ({ x: p.x * scale + offX, y: p.y * scale + offY }))
-
-  if (disp.length >= 3) {
-    ctx.beginPath()
-    disp.forEach((p, i) => (i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y)))
-    ctx.closePath()
-    ctx.fillStyle = 'rgba(79,195,247,0.18)'
-    ctx.fill()
-    ctx.strokeStyle = '#4fc3f7'
-    ctx.lineWidth = 1.5
-    ctx.stroke()
-  } else if (disp.length === 2) {
-    ctx.beginPath()
-    ctx.moveTo(disp[0].x, disp[0].y)
-    ctx.lineTo(disp[1].x, disp[1].y)
-    ctx.strokeStyle = '#4fc3f7'
-    ctx.stroke()
-  }
-  disp.forEach((p, i) => {
-    ctx.beginPath()
-    ctx.arc(p.x, p.y, 5, 0, Math.PI * 2)
-    ctx.fillStyle = i === dragIdx.value ? '#ffb74d' : '#4fc3f7'
-    ctx.fill()
-    ctx.strokeStyle = '#000'
-    ctx.stroke()
-  })
-}
-
-function hit(e: MouseEvent): number {
-  const p = toVideo(e)
-  const { scale } = fit()
-  const r = 12 / scale
-  return verts.value.findIndex((v) => Math.hypot(v.x - p.x, v.y - p.y) < r)
-}
-
-function onMeta() {
-  const v = videoEl.value
-  if (!v) return
-  vw.value = v.videoWidth
-  vh.value = v.videoHeight
-  nextTick(draw)
-}
-
-function onDown(e: PointerEvent) {
-  e.stopPropagation()
-  ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
-  const idx = hit(e)
-  if (idx >= 0) {
-    dragIdx.value = idx
-  } else {
-    verts.value = [...verts.value, toVideo(e)]
-    dragIdx.value = verts.value.length - 1
-    saveToWidget()
-  }
-  draw()
-}
-
-function onMovePtr(e: PointerEvent) {
-  if (dragIdx.value < 0) return
-  e.stopPropagation()
-  const next = verts.value.slice()
-  next[dragIdx.value] = toVideo(e)
-  verts.value = next
-}
-
-function onUp(e: PointerEvent) {
-  if (dragIdx.value >= 0) saveToWidget()
-  dragIdx.value = -1
-  e.stopPropagation()
-  draw()
-}
-
-function onDbl(e: MouseEvent) {
-  const idx = hit(e)
-  if (idx >= 0) {
-    const next = verts.value.slice()
-    next.splice(idx, 1)
-    verts.value = next
-    saveToWidget()
-    draw()
-  }
-}
-
-function clearShape() {
-  verts.value = []
-  shapeRaw.value = ''
-  draw()
-}
-
-watch([verts, smooth], () => { saveToWidget(); nextTick(draw) }, { deep: true })
+const { smooth, onMeta, onDown, onMovePtr, onUp, onDbl, clearShape } =
+  useRotoMaskEditor({ node: props.node, videoEl, overlayEl })
 </script>

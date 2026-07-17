@@ -21,6 +21,7 @@ export { MODEL_FILE_EXTENSIONS } from '@/widgets/three/modelFormats'
 
 const ASSET_MENU_WIDTH = 192
 const TAG_EDITOR_WIDTH = 176
+const SETTINGS_MENU_WIDTH = 176
 
 function formatSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`
@@ -103,6 +104,32 @@ export function useAssetsPanel(isActive: () => boolean | undefined) {
       return `${asset.width}×${asset.height}`
     if (asset.size_bytes) return formatSize(asset.size_bytes)
     return ''
+  }
+
+  const emptyText = computed(() => {
+    if (searchQuery.value.trim()) return t('assets.noResults')
+    return activeFilter.value === 'all' && mediaFilter.value === 'all'
+      ? t('assets.empty')
+      : t('assets.emptyCategory')
+  })
+
+  const settingsMenu = ref<{ x: number; y: number } | null>(null)
+
+  function openSettingsMenu(e: MouseEvent) {
+    const r = (e.currentTarget as HTMLElement).getBoundingClientRect()
+    settingsMenu.value = {
+      x: Math.max(8, Math.min(r.right - SETTINGS_MENU_WIDTH, window.innerWidth - SETTINGS_MENU_WIDTH - 8)),
+      y: r.bottom + 4,
+    }
+  }
+
+  function closeSettingsMenu() {
+    settingsMenu.value = null
+  }
+
+  function setViewMode(mode: AssetViewMode) {
+    viewMode.value = mode
+    settingsMenu.value = null
   }
 
   const assetMenu = ref<{ assetId: number; x: number; y: number } | null>(null)
@@ -320,6 +347,11 @@ export function useAssetsPanel(isActive: () => boolean | undefined) {
     uploadError,
     fileDragDepth,
     visibleAssets,
+    emptyText,
+    settingsMenu,
+    openSettingsMenu,
+    closeSettingsMenu,
+    setViewMode,
     tagEditor,
     tagEditorStyle,
     catName,

@@ -94,7 +94,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, ref, watch } from 'vue'
+import { ref } from 'vue'
 import IconAlignCenter from '~icons/lucide/align-center'
 import IconAlignLeft from '~icons/lucide/align-left'
 import IconAlignRight from '~icons/lucide/align-right'
@@ -102,7 +102,7 @@ import IconX from '~icons/lucide/x'
 
 import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
 import type { LayerEditorController } from '@/composables/widgets/useLayerEditorStage'
-import type { FontRef, TextLayer } from '@/widgets/layerEditor/types'
+import { useTextEditPopup } from '@/composables/widgets/useTextEditPopup'
 
 const props = defineProps<{
   editor: LayerEditorController
@@ -111,56 +111,16 @@ const props = defineProps<{
 const editor = props.editor
 const textareaEl = ref<HTMLTextAreaElement | null>(null)
 
-const layer = computed<TextLayer | null>(() => {
-  const id = editor.editingTextId.value
-  const l = id ? editor.state.value.layers.find((x) => x.id === id) : null
-  return l?.type === 'text' ? l : null
-})
-
-watch(() => editor.editingTextId.value, async (id) => {
-  if (!id) return
-  await nextTick()
-  textareaEl.value?.focus()
-})
-
-function close(): void {
-  editor.editingTextId.value = null
-}
-
-function patch(p: Partial<TextLayer>): void {
-  const l = layer.value
-  if (l) editor.updateTextLayer(l.id, p)
-}
-
-function clampNum(e: Event, min: number, max: number): number {
-  const v = Number((e.target as HTMLInputElement).value)
-  return Math.min(max, Math.max(min, Number.isFinite(v) ? v : min))
-}
-
-const fontOptions = computed(() =>
-  editor.fontStore.builtins().map((b) => ({
-    label: b.name,
-    value: `builtin:${b.id}`,
-  })),
-)
-
-const fontValue = computed(() => {
-  const l = layer.value
-  if (!l) return ''
-  return l.fontRef.kind === 'builtin' ? `builtin:${l.fontRef.id}` : `url:${l.fontRef.url}`
-})
-
-const fontFailed = computed(() => {
-  const l = layer.value
-  return l ? editor.fontStore.hasFailed(l.fontRef) : false
-})
-
-function onFontChange(v: unknown): void {
-  const s = String(v ?? '')
-  if (!s.startsWith('builtin:')) return
-  const ref: FontRef = { kind: 'builtin', id: s.slice('builtin:'.length) }
-  patch({ fontRef: ref })
-}
+const {
+  layer,
+  close,
+  patch,
+  clampNum,
+  fontOptions,
+  fontValue,
+  fontFailed,
+  onFontChange,
+} = useTextEditPopup(editor, textareaEl)
 
 const ALIGNS = [
   { value: 'left' as const, labelKey: 'layerEditor.alignLeft', icon: IconAlignLeft },

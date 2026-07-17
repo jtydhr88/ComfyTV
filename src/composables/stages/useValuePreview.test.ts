@@ -3,8 +3,16 @@ import { ref } from 'vue'
 
 import {
   batchItemIndex,
+  batchItemPayload,
+  batchItemTag,
+  batchLightboxItems,
+  canRemoveBatchItem,
+  isActivationKey,
   isBatchItemSelected,
+  isUpstreamBatchItem,
+  materialSwatchStyleOf,
   parsePayloadList,
+  previewMediaTypeOf,
   shortTypeLabel,
   shotSummary,
   sumShotDurations,
@@ -78,6 +86,89 @@ describe('batchItemIndex / isBatchItemSelected', () => {
     expect(isBatchItemSelected({} as any, 2, 3)).toBe(true)
     expect(isBatchItemSelected({ index: 3 } as any, 0, 4)).toBe(false)
     expect(isBatchItemSelected({ index: 3 } as any, 0, null)).toBe(false)
+  })
+})
+
+describe('previewMediaTypeOf', () => {
+  it('maps audio/video/model types, defaults to image', () => {
+    expect(previewMediaTypeOf('COMFYTV_AUDIO')).toBe('audio')
+    expect(previewMediaTypeOf('COMFYTV_AUDIOS')).toBe('audio')
+    expect(previewMediaTypeOf('COMFYTV_VIDEO')).toBe('video')
+    expect(previewMediaTypeOf('COMFYTV_VIDEOS')).toBe('video')
+    expect(previewMediaTypeOf('COMFYTV_MODEL')).toBe('model')
+    expect(previewMediaTypeOf('COMFYTV_IMAGE')).toBe('image')
+    expect(previewMediaTypeOf('COMFYTV_TEXT')).toBe('image')
+  })
+})
+
+describe('batchItemTag / batchItemPayload', () => {
+  it('prefers label, falls back to indexed hash tag', () => {
+    expect(batchItemTag({ label: 'hero', image_url: '/x' } as any, 0)).toBe('hero')
+    expect(batchItemTag({ index: '7', image_url: '/x' } as any, 0)).toBe('#7')
+    expect(batchItemTag({ image_url: '/x' } as any, 2)).toBe('#3')
+  })
+
+  it('builds the click payload with a 1-based fallback index', () => {
+    expect(batchItemPayload({ index: '4', label: 'l', prompt: 'p', image_url: '/a' } as any, 0))
+      .toEqual({ index: '4', label: 'l', prompt: 'p', imageUrl: '/a' })
+    expect(batchItemPayload({ image_url: '/b' } as any, 2))
+      .toEqual({ index: '3', label: undefined, prompt: undefined, imageUrl: '/b' })
+  })
+})
+
+describe('isActivationKey', () => {
+  it('accepts Enter and Space variants only', () => {
+    expect(isActivationKey('Enter')).toBe(true)
+    expect(isActivationKey(' ')).toBe(true)
+    expect(isActivationKey('Spacebar')).toBe(true)
+    expect(isActivationKey('Escape')).toBe(false)
+    expect(isActivationKey('a')).toBe(false)
+  })
+})
+
+describe('isUpstreamBatchItem / canRemoveBatchItem', () => {
+  const img = { index: '1', image_url: '/a.png' } as any
+
+  it('detects upstream membership by url', () => {
+    expect(isUpstreamBatchItem(img, ['/a.png'])).toBe(true)
+    expect(isUpstreamBatchItem(img, ['/b.png'])).toBe(false)
+    expect(isUpstreamBatchItem(img, undefined)).toBe(false)
+  })
+
+  it('removable only when enabled, not selected and not upstream', () => {
+    expect(canRemoveBatchItem(img, 0, { removable: true })).toBe(true)
+    expect(canRemoveBatchItem(img, 0, {})).toBe(false)
+    expect(canRemoveBatchItem(img, 0, { removable: true, selectedIndex: 1 })).toBe(false)
+    expect(canRemoveBatchItem(img, 0, { removable: true, upstreamUrls: ['/a.png'] })).toBe(false)
+  })
+})
+
+describe('batchLightboxItems', () => {
+  it('labels fall back label → prompt → derived name', () => {
+    const items = batchLightboxItems([
+      { image_url: '/1', label: 'L' },
+      { image_url: '/2', prompt: 'P' },
+      { image_url: '/3' },
+    ] as any, url => `name:${url}`)
+    expect(items).toEqual([
+      { url: '/1', label: 'L' },
+      { url: '/2', label: 'P' },
+      { url: '/3', label: 'name:/3' },
+    ])
+  })
+})
+
+describe('materialSwatchStyleOf', () => {
+  it('uses opacity when opaque, floors at 0.35', () => {
+    const s = materialSwatchStyleOf({ color: '#ff0000', transmission: 0, opacity: 0.1 })
+    expect(s.opacity).toBe('0.35')
+    expect(s.background).toContain('#ff0000')
+    expect(s.boxShadow).toBe('inset 0 -4px 8px rgb(0 0 0 / 0.35)')
+  })
+
+  it('uses the 0.55 glass alpha when transmissive', () => {
+    const s = materialSwatchStyleOf({ color: '#00ff00', transmission: 1, opacity: 1 })
+    expect(s.opacity).toBe('0.55')
   })
 })
 

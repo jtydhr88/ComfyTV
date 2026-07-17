@@ -1,6 +1,7 @@
 import { computed, ref, watch } from 'vue'
 
 import type { LGraphNode } from '@/lib/comfyApp'
+import { computeFit } from '@/composables/widgets/useVideoViewport'
 import { useStageStore, type StageState } from '@/stores/stageStore'
 import { uploadCanvas } from '@/utils/uploadCanvas'
 import { getWidget, readWidgetNum, writeWidget } from '@/utils/widget'
@@ -9,6 +10,74 @@ const SCHEDULE_DELAY_MS = 250
 const MIN_GRID = 1
 const MAX_GRID = 10
 const MIN_BORDER = 0
+
+export const MIN_DIVIDER_PX = 2
+
+export interface DisplayedImage {
+  w: number
+  h: number
+  ox: number
+  oy: number
+  scale: number
+}
+
+export function displayedImageRect(
+  natW: number,
+  natH: number,
+  contW: number,
+  contH: number,
+): DisplayedImage | null {
+  if (natW <= 0 || natH <= 0 || contW <= 0 || contH <= 0) return null
+  const fit = computeFit(contW, contH, natW, natH)
+  return {
+    w: natW * fit.scale,
+    h: natH * fit.scale,
+    ox: fit.offX,
+    oy: fit.offY,
+    scale: fit.scale,
+  }
+}
+
+export function dividerCenters(
+  n: number,
+  natSize: number,
+  border: number,
+  outer: boolean,
+): number[] {
+  const o = outer ? 1 : 0
+  const cell = (natSize - (n - 1 + 2 * o) * border) / n
+  const centers: number[] = []
+  if (o && border > 0) centers.push(border / 2)
+  for (let k = 1; k < n; k++) centers.push(o * border + k * cell + (k - 0.5) * border)
+  if (o && border > 0) centers.push(natSize - border / 2)
+  return centers
+}
+
+export function dividerBands(
+  axis: 'v' | 'h',
+  d: DisplayedImage,
+  natSize: number,
+  count: number,
+  border: number,
+  outer: boolean,
+): Record<string, string>[] {
+  const b = Math.max(0, border)
+  const thick = Math.max(MIN_DIVIDER_PX, b * d.scale)
+  return dividerCenters(count, natSize, b, outer).map((centerNat) =>
+    axis === 'v'
+      ? {
+          left: `${d.ox + centerNat * d.scale - thick / 2}px`,
+          top: `${d.oy}px`,
+          width: `${thick}px`,
+          height: `${d.h}px`,
+        }
+      : {
+          left: `${d.ox}px`,
+          top: `${d.oy + centerNat * d.scale - thick / 2}px`,
+          width: `${d.w}px`,
+          height: `${thick}px`,
+        })
+}
 
 export function useGridSplit(node: LGraphNode, state: StageState) {
   const store = useStageStore()

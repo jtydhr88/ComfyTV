@@ -56,13 +56,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
 import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
+import { useLutLibrary } from '@/composables/stages/useLutLibrary'
 import { useStrWidget } from '@/composables/widgets/useWidgetModel'
 
 const props = defineProps<{
@@ -88,36 +89,7 @@ const sourceVideoUrl = computed(() => pickSourceImageUrl(props.state.inputs, 'vi
 const lutFile = useStrWidget(props.node, 'lut_file', '')
 const interp = useStrWidget(props.node, 'interp', 'tetrahedral')
 
-const luts = ref<string[]>([])
 const fileEl = ref<HTMLInputElement | null>(null)
 
-async function refreshLuts() {
-  try {
-    const res = await fetch('/comfytv/luts')
-    if (!res.ok) return
-    const data = await res.json() as { luts: string[] }
-    luts.value = data.luts ?? []
-    if (!lutFile.value && luts.value.length) lutFile.value = luts.value[0]
-  } catch {
-  }
-}
-
-async function onFilePicked(e: Event) {
-  const input = e.target as HTMLInputElement
-  const file = input.files?.[0]
-  if (!file) return
-  try {
-    const fd = new FormData()
-    fd.append('file', file)
-    const res = await fetch('/comfytv/luts', { method: 'POST', body: fd })
-    if (!res.ok) return
-    const data = await res.json() as { name: string }
-    await refreshLuts()
-    if (data.name) lutFile.value = data.name
-  } finally {
-    input.value = ''
-  }
-}
-
-onMounted(refreshLuts)
+const { luts, refreshLuts, onFilePicked } = useLutLibrary(lutFile)
 </script>
