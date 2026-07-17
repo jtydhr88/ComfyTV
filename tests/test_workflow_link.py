@@ -127,6 +127,27 @@ class TestListNativeWorkflows:
         assert by_name["a"]["is_linked"] is True
         assert by_name["b"]["is_linked"] is False
 
+    def test_skips_dotfiles_like_core_glob(self, reset_db, native_dir):
+        (native_dir / "a.json").write_text(GUI, encoding="utf-8")
+        (native_dir / ".index.json").write_text(
+            json.dumps({"favorites": ["workflows/a.json"]}), encoding="utf-8"
+        )
+        hidden = native_dir / ".trash"
+        hidden.mkdir()
+        (hidden / "old.json").write_text(GUI, encoding="utf-8")
+
+        items = wdb.list_native_workflows()
+        paths = {it["path"] for it in items}
+        assert paths == {"a.json"}
+
+    def test_lists_nested_paths(self, reset_db, native_dir):
+        sub = native_dir / "folder" / "sub"
+        sub.mkdir(parents=True)
+        (sub / "deep.json").write_text(GUI, encoding="utf-8")
+
+        items = wdb.list_native_workflows()
+        assert {it["path"] for it in items} == {"folder/sub/deep.json"}
+
 
 class TestLinkedMtimeSync:
     def test_native_edit_invalidates_api_json(self, reset_db, native_dir):

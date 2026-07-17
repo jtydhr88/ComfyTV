@@ -20,43 +20,79 @@
       <p v-else-if="error" class="ctv:text-xs ctv:text-destructive-foreground ctv:py-6 ctv:text-center">
         {{ error }}
       </p>
-      <p v-else-if="!filtered.length" class="ctv:text-xs ctv:text-muted-foreground ctv:py-6 ctv:text-center">
+      <p v-else-if="!rows.length" class="ctv:text-xs ctv:text-muted-foreground ctv:py-6 ctv:text-center">
         {{ $t('workflowLink.empty') }}
       </p>
 
-      <ul v-else class="ctv:list-none ctv:m-0 ctv:p-0 ctv:flex ctv:flex-col ctv:gap-1">
-        <li
-          v-for="wf in filtered"
-          :key="wf.path"
-          class="ctv:flex ctv:items-center ctv:gap-2 ctv:py-1.5 ctv:px-2 ctv:rounded-sm
-                 ctv:bg-secondary-background/40 ctv:hover:bg-secondary-background"
-        >
-          <div class="ctv:flex-1 ctv:min-w-0">
-            <div class="ctv:text-xs ctv:text-base-foreground ctv:truncate">{{ wf.name }}</div>
-            <div class="ctv:text-[10px] ctv:text-muted-foreground ctv:truncate">{{ wf.path }}</div>
+      <ul v-else class="ctv:list-none ctv:m-0 ctv:p-0 ctv:flex ctv:flex-col ctv:gap-px">
+        <li v-for="row in rows" :key="row.node.key">
+          <div
+            v-if="row.node.type === 'folder'"
+            class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:h-7 ctv:pr-2 ctv:rounded-sm
+                   ctv:cursor-pointer ctv:select-none ctv:text-xs ctv:text-base-foreground
+                   ctv:hover:bg-secondary-background"
+            :style="{ paddingLeft: `${8 + row.depth * 16}px` }"
+            @click="toggleFolder(row.node, $event)"
+          >
+            <IconChevronRight
+              class="ctv:w-3.5 ctv:h-3.5 ctv:shrink-0 ctv:text-muted-foreground ctv:transition-transform"
+              :class="isExpanded(row.node) ? 'ctv:rotate-90' : ''"
+            />
+            <IconFolderOpen
+              v-if="isExpanded(row.node)"
+              class="ctv:w-3.5 ctv:h-3.5 ctv:shrink-0 ctv:text-muted-foreground"
+            />
+            <IconFolder v-else class="ctv:w-3.5 ctv:h-3.5 ctv:shrink-0 ctv:text-muted-foreground" />
+            <span class="ctv:truncate">{{ row.node.label }}</span>
+            <span
+              class="ctv:text-[10px] ctv:leading-none ctv:px-1.5 ctv:py-0.5 ctv:rounded-full
+                     ctv:bg-secondary-background ctv:text-muted-foreground"
+            >
+              {{ row.node.leafCount }}
+            </span>
           </div>
-          <template v-if="wf.is_linked">
-            <span class="ctv:text-[10px] ctv:px-1.5 ctv:py-0.5 ctv:rounded ctv:bg-primary-background/20 ctv:text-primary-foreground">
+
+          <div
+            v-else
+            class="ctv:group ctv:flex ctv:items-center ctv:gap-1.5 ctv:h-7 ctv:pr-1.5 ctv:rounded-sm
+                   ctv:text-xs ctv:hover:bg-secondary-background"
+            :style="{ paddingLeft: `${8 + row.depth * 16 + 18}px` }"
+            :title="row.node.wf.path"
+          >
+            <IconFileJson class="ctv:w-3.5 ctv:h-3.5 ctv:shrink-0 ctv:text-muted-foreground" />
+            <span class="ctv:flex-1 ctv:min-w-0 ctv:truncate ctv:text-base-foreground">
+              {{ row.node.wf.name }}
+            </span>
+            <span
+              v-if="row.node.wf.is_linked"
+              class="ctv:text-[10px] ctv:px-1.5 ctv:py-0.5 ctv:rounded ctv:bg-primary-background/20 ctv:text-primary-foreground"
+            >
               {{ $t('workflowLink.linkedBadge') }}
             </span>
-            <button
-              type="button"
-              :class="btnGhost"
-              :disabled="busyPath === wf.path"
-              @click="onUnlink(wf)"
+            <span
+              class="ctv:flex ctv:gap-1 ctv:opacity-0 ctv:group-hover:opacity-100 ctv:transition-opacity"
+              :class="busyPath === row.node.wf.path ? 'ctv:opacity-100' : ''"
             >
-              {{ busyPath === wf.path ? $t('workflowLink.unlinking') : $t('workflowLink.unlink') }}
-            </button>
-          </template>
-          <button
-            v-else
-            type="button"
-            :class="btnPrimary"
-            :disabled="busyPath === wf.path"
-            @click="onLink(wf)"
-          >
-            {{ busyPath === wf.path ? $t('workflowLink.linking') : $t('workflowLink.link') }}
-          </button>
+              <button
+                v-if="row.node.wf.is_linked"
+                type="button"
+                :class="btnGhost"
+                :disabled="busyPath === row.node.wf.path"
+                @click="onUnlink(row.node.wf)"
+              >
+                {{ busyPath === row.node.wf.path ? $t('workflowLink.unlinking') : $t('workflowLink.unlink') }}
+              </button>
+              <button
+                v-else
+                type="button"
+                :class="btnPrimary"
+                :disabled="busyPath === row.node.wf.path"
+                @click="onLink(row.node.wf)"
+              >
+                {{ busyPath === row.node.wf.path ? $t('workflowLink.linking') : $t('workflowLink.link') }}
+              </button>
+            </span>
+          </div>
         </li>
       </ul>
     </div>
@@ -71,6 +107,10 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
+import IconChevronRight from '~icons/lucide/chevron-right'
+import IconFileJson from '~icons/lucide/file-json'
+import IconFolder from '~icons/lucide/folder'
+import IconFolderOpen from '~icons/lucide/folder-open'
 
 import { linkWorkflow, listNativeWorkflows, unlinkWorkflow } from '@/api'
 import type { NativeWorkflow } from '@/api'
@@ -90,6 +130,24 @@ const loading = ref(true)
 const error = ref<string | null>(null)
 const filter = ref('')
 const busyPath = ref<string | null>(null)
+const expandedKeys = ref(new Set<string>())
+
+interface LeafNode {
+  type: 'leaf'
+  key: string
+  wf: NativeWorkflow
+}
+interface FolderNode {
+  type: 'folder'
+  key: string
+  label: string
+  children: (FolderNode | LeafNode)[]
+  leafCount: number
+}
+interface Row {
+  node: FolderNode | LeafNode
+  depth: number
+}
 
 const filtered = computed(() => {
   const q = filter.value.trim().toLowerCase()
@@ -98,6 +156,87 @@ const filtered = computed(() => {
     (w) => w.name.toLowerCase().includes(q) || w.path.toLowerCase().includes(q),
   )
 })
+
+function buildTree(list: NativeWorkflow[]): FolderNode {
+  const root: FolderNode = { type: 'folder', key: 'root', label: '', children: [], leafCount: 0 }
+  const folders = new Map<string, FolderNode>([['root', root]])
+  for (const wf of list) {
+    const parts = wf.path.split('/')
+    let parent = root
+    for (let i = 0; i < parts.length - 1; i++) {
+      const key = `${parent.key}/${parts[i]}`
+      let node = folders.get(key)
+      if (!node) {
+        node = { type: 'folder', key, label: parts[i], children: [], leafCount: 0 }
+        folders.set(key, node)
+        parent.children.push(node)
+      }
+      parent = node
+    }
+    parent.children.push({ type: 'leaf', key: `${parent.key}/${parts[parts.length - 1]}`, wf })
+  }
+  sortFolder(root)
+  countLeaves(root)
+  return root
+}
+
+function sortFolder(node: FolderNode) {
+  const subFolders = node.children.filter((c): c is FolderNode => c.type === 'folder')
+  const leaves = node.children.filter((c): c is LeafNode => c.type === 'leaf')
+  subFolders.sort((a, b) => a.label.localeCompare(b.label))
+  leaves.sort((a, b) => a.wf.name.localeCompare(b.wf.name))
+  subFolders.forEach(sortFolder)
+  node.children = [...subFolders, ...leaves]
+}
+
+function countLeaves(node: FolderNode): number {
+  node.leafCount = node.children.reduce(
+    (n, c) => n + (c.type === 'leaf' ? 1 : countLeaves(c)),
+    0,
+  )
+  return node.leafCount
+}
+
+const tree = computed(() => buildTree(filtered.value))
+
+const rows = computed<Row[]>(() => {
+  const out: Row[] = []
+  const searching = filter.value.trim().length > 0
+  const walk = (folder: FolderNode, depth: number) => {
+    for (const child of folder.children) {
+      out.push({ node: child, depth })
+      if (child.type === 'folder' && (searching || expandedKeys.value.has(child.key))) {
+        walk(child, depth + 1)
+      }
+    }
+  }
+  walk(tree.value, 0)
+  return out
+})
+
+function isExpanded(node: FolderNode) {
+  return filter.value.trim().length > 0 || expandedKeys.value.has(node.key)
+}
+
+function setExpandedRecursive(node: FolderNode, open: boolean) {
+  if (open) expandedKeys.value.add(node.key)
+  else expandedKeys.value.delete(node.key)
+  for (const child of node.children) {
+    if (child.type === 'folder') setExpandedRecursive(child, open)
+  }
+}
+
+function toggleFolder(node: FolderNode, e: MouseEvent) {
+  const open = !expandedKeys.value.has(node.key)
+  if (e.ctrlKey) {
+    setExpandedRecursive(node, open)
+  } else if (open) {
+    expandedKeys.value.add(node.key)
+  } else {
+    expandedKeys.value.delete(node.key)
+  }
+  expandedKeys.value = new Set(expandedKeys.value)
+}
 
 function toast(severity: string, summary: string, detail = '') {
   ;(app as any)?.extensionManager?.toast?.add?.({ severity, summary, detail, life: 5000 })
@@ -150,11 +289,11 @@ async function onUnlink(wf: NativeWorkflow) {
 }
 
 const btnGhost = 'ctv:appearance-none ctv:border-none ctv:cursor-pointer ctv:[font-family:inherit] ' +
-  'ctv:focus-visible:outline-none ctv:h-7 ctv:px-3 ctv:rounded-sm ctv:text-xs ' +
+  'ctv:focus-visible:outline-none ctv:h-6 ctv:px-2.5 ctv:rounded-sm ctv:text-[11px] ' +
   'ctv:bg-secondary-background ctv:text-muted-foreground ' +
   'ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground'
 const btnPrimary = 'ctv:appearance-none ctv:border-none ctv:cursor-pointer ctv:[font-family:inherit] ' +
-  'ctv:focus-visible:outline-none ctv:h-7 ctv:px-3 ctv:rounded-sm ctv:text-xs ctv:font-medium ' +
+  'ctv:focus-visible:outline-none ctv:h-6 ctv:px-2.5 ctv:rounded-sm ctv:text-[11px] ctv:font-medium ' +
   'ctv:bg-primary-background ctv:text-primary-foreground ctv:hover:opacity-90 ' +
   'ctv:disabled:opacity-50 ctv:disabled:cursor-not-allowed'
 </script>

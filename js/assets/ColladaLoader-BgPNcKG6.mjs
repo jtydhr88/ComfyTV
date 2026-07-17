@@ -1,4 +1,4 @@
-import { D as DataTextureLoader, c as LinearMipmapLinearFilter, M as MathUtils, C as Color, d as ColorManagement, S as SRGBColorSpace, V as Vector3, e as Matrix4, Q as Quaternion, f as VectorKeyframeTrack, g as QuaternionKeyframeTrack, I as InterpolateDiscrete, h as InterpolateBezier, A as AnimationClip, i as MeshBasicMaterial, j as MeshLambertMaterial, k as MeshPhongMaterial, l as Vector2, m as DoubleSide, n as FrontSide, P as PerspectiveCamera, O as OrthographicCamera, o as AmbientLight, p as SpotLight, q as PointLight, r as DirectionalLight, B as BufferGeometry, b as Float32BufferAttribute, T as Triangle, s as ShapeUtils, t as Skeleton, u as Bone, G as Group, L as Loader, v as LineBasicMaterial, w as SkinnedMesh, x as Mesh, y as Line, z as LineSegments, R as RepeatWrapping, E as ClampToEdgeWrapping, H as LoaderUtils, F as FileLoader, J as Scene, K as TextureLoader } from "./main-CuX8jutR.mjs";
+import { D as DataTextureLoader, c as LinearMipmapLinearFilter, M as MathUtils, C as Color, d as ColorManagement, S as SRGBColorSpace, V as Vector3, e as Matrix4, Q as Quaternion, f as VectorKeyframeTrack, g as QuaternionKeyframeTrack, I as InterpolateDiscrete, h as InterpolateBezier, A as AnimationClip, i as MeshBasicMaterial, j as MeshLambertMaterial, k as MeshPhongMaterial, l as Vector2, m as DoubleSide, n as FrontSide, P as PerspectiveCamera, O as OrthographicCamera, o as AmbientLight, p as SpotLight, q as PointLight, r as DirectionalLight, B as BufferGeometry, b as Float32BufferAttribute, T as Triangle, s as ShapeUtils, t as Skeleton, u as Bone, G as Group, L as Loader, v as LineBasicMaterial, w as SkinnedMesh, x as Mesh, y as Line, z as LineSegments, R as RepeatWrapping, E as ClampToEdgeWrapping, H as LoaderUtils, F as FileLoader, J as Scene, K as TextureLoader } from "./main-BF7FniLs.mjs";
 class TGALoader extends DataTextureLoader {
   /**
    * Constructs a new TGA loader.
@@ -3273,4 +3273,4 @@ class ColladaLoader extends Loader {
 export {
   ColladaLoader
 };
-//# sourceMappingURL=ColladaLoader-BTFe4gFL.mjs.map
+//# sourceMappingURL=ColladaLoader-BgPNcKG6.mjs.map

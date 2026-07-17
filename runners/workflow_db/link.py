@@ -59,6 +59,9 @@ def list_native_workflows(kind: Optional[str] = None) -> list[dict]:
     for path in root.rglob("*.json"):
         if not path.is_file():
             continue
+        rel_parts = path.relative_to(root).parts
+        if any(part.startswith(".") for part in rel_parts):
+            continue
         if path.stem.endswith("_preset") or path.name.endswith(".api.json"):
             continue
         try:
