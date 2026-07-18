@@ -20,6 +20,7 @@ function makeNode(operation = 'union', resolution = 256, transform = '') {
     widgets: [
       makeWidget('operation', operation),
       makeWidget('resolution', resolution),
+      makeWidget('transform_a', ''),
       makeWidget('transform_b', transform)
     ],
     onConfigure: null as unknown
@@ -176,19 +177,34 @@ describe('useMeshBoolean', () => {
   it('round-trips the transform widget', () => {
     const node = makeNode()
     const api = useMeshBoolean(node, makeState())
-    expect(api.readTransformWidget()).toBeNull()
-    api.writeTransformWidget({
+    expect(api.readTransformWidget('b')).toBeNull()
+    api.writeTransformWidget('b', {
       position: [1, 2, 3],
       quaternion: [0, 0, 0, 1],
       scale: [1, 1, 1]
     })
-    expect(api.readTransformWidget()).toEqual({
+    expect(api.readTransformWidget('b')).toEqual({
       position: [1, 2, 3],
       quaternion: [0, 0, 0, 1],
       scale: [1, 1, 1]
     })
-    api.clearTransformWidget()
+    api.clearTransformWidget('b')
     expect(widgetVal(node, 'transform_b')).toBe('')
-    expect(api.readTransformWidget()).toBeNull()
+    expect(api.readTransformWidget('b')).toBeNull()
+  })
+
+  it('keeps per-target transforms independent', () => {
+    const node = makeNode()
+    const api = useMeshBoolean(node, makeState())
+    api.writeTransformWidget('a', {
+      position: [4, 5, 6],
+      quaternion: [0, 0, 0, 1],
+      scale: [2, 2, 2]
+    })
+    expect(widgetVal(node, 'transform_a')).toContain('"position":[4,5,6]')
+    expect(api.readTransformWidget('a')?.position).toEqual([4, 5, 6])
+    expect(api.readTransformWidget('b')).toBeNull()
+    api.clearTransformWidget('a')
+    expect(api.readTransformWidget('a')).toBeNull()
   })
 })

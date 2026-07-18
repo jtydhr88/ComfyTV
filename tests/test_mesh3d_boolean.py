@@ -38,6 +38,14 @@ def test_transform_b_equivalent_to_baked_verts():
     assert st_a['faces_out'] == st_b['faces_out']
 
 
+def test_transform_a_equivalent_to_baked_verts():
+    sphere0 = make_primitive('sphere', size=1.2, segments=16)
+    trs = {'position': [0.5, 0.5, 0.5], 'quaternion': [0, 0, 0, 1], 'scale': [1, 1, 1]}
+    a, st_a = ops.boolean(sphere0, CUBE, op='difference', resolution=RES, transform_a=trs)
+    b, st_b = ops.boolean(SPHERE, CUBE, op='difference', resolution=RES)
+    assert st_a['faces_out'] == st_b['faces_out']
+
+
 def test_disjoint_intersect_raises():
     far = offset(make_primitive('sphere', size=0.5, segments=12), 10.0, 0.0, 0.0)
     with pytest.raises(RuntimeError):

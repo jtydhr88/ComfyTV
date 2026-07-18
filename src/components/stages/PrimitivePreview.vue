@@ -15,9 +15,14 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 import { RendererView } from '@/widgets/three/RendererView'
 import { guardOrbitControlsDragEnd } from '@/widgets/three/orbitControlsGuard'
+import { applyViewChannel, type ViewChannel } from '@/widgets/three/channelShading'
 import { buildPrimitiveGeometry, type PrimKind } from '@/composables/stages/useMeshPrimitive'
 
-const props = defineProps<{ kind: PrimKind; params: Record<string, number | boolean> }>()
+const props = defineProps<{
+  kind: PrimKind
+  params: Record<string, number | boolean>
+  channel?: ViewChannel
+}>()
 const emit = defineEmits<{ (e: 'view-changed'): void }>()
 
 const hostEl = ref<HTMLDivElement | null>(null)
@@ -59,6 +64,9 @@ function rebuild(): void {
     })
     mesh = new THREE.Mesh(geom, mat)
     scene.add(mesh)
+  }
+  if ((props.channel ?? 'material') !== 'material') {
+    applyViewChannel(mesh, props.channel as ViewChannel)
   }
   emit('view-changed')
 }
@@ -104,6 +112,12 @@ onMounted(() => {
 watch(() => props.kind, () => rebuild())
 watch(() => props.params, () => rebuild(), { deep: true })
 
+watch(() => props.channel, (ch) => {
+  if (!mesh) return
+  applyViewChannel(mesh, (ch ?? 'material') as ViewChannel)
+  emit('view-changed')
+})
+
 onBeforeUnmount(() => {
   if (animationId != null) cancelAnimationFrame(animationId)
   animationId = null
@@ -112,6 +126,7 @@ onBeforeUnmount(() => {
   controls?.dispose()
   controls = null
   if (mesh) {
+    applyViewChannel(mesh, 'material')
     mesh.geometry.dispose()
     ;(mesh.material as THREE.Material).dispose()
     scene?.remove(mesh)

@@ -3,7 +3,7 @@
     class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full ctv:p-2 ctv:box-border ctv:text-xs ctv:text-base-foreground"
     @contextmenu.stop.prevent
   >
-    <div class="ctv:group ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[240px] ctv:rounded-md ctv:overflow-hidden ctv:bg-black">
+    <div class="ctv:group ctv:relative ctv:w-full ctv:h-[calc(100%-320px)] ctv:min-h-[240px] ctv:shrink-0 ctv:rounded-md ctv:overflow-hidden ctv:bg-black">
       <ModelPreview
         v-if="previewSrc"
         ref="previewEl"
@@ -50,20 +50,21 @@
       </div>
     </div>
 
-    <div
-      v-if="hasMapsPanel && mapsUrl"
-      class="ctv:relative ctv:w-full ctv:shrink-0 ctv:rounded-md ctv:overflow-hidden ctv:bg-black"
-    >
-      <img :src="assetUrl(mapsUrl)" :alt="mapsPanelLabel"
-           class="ctv:block ctv:w-full ctv:max-h-40 ctv:object-contain" />
-      <span class="ctv:absolute ctv:top-1 ctv:left-1 ctv:px-1.5 ctv:py-0.5 ctv:rounded-sm
-                   ctv:bg-black/60 ctv:text-3xs ctv:text-white/80 ctv:pointer-events-none">
-        {{ mapsPanelLabel }}
-      </span>
-    </div>
+    <div class="ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:flex ctv:flex-col ctv:gap-1.5">
+      <div
+        v-if="hasMapsPanel && mapsUrl"
+        class="ctv:relative ctv:w-full ctv:shrink-0 ctv:rounded-md ctv:overflow-hidden ctv:bg-black"
+      >
+        <img :src="assetUrl(mapsUrl)" :alt="mapsPanelLabel"
+             class="ctv:block ctv:w-full ctv:max-h-40 ctv:object-contain" />
+        <span class="ctv:absolute ctv:top-1 ctv:left-1 ctv:px-1.5 ctv:py-0.5 ctv:rounded-sm
+                     ctv:bg-black/60 ctv:text-3xs ctv:text-white/80 ctv:pointer-events-none">
+          {{ mapsPanelLabel }}
+        </span>
+      </div>
 
-    <div class="ctv:flex ctv:flex-col ctv:gap-1 ctv:shrink-0"
-         @pointerdown.stop @mousedown.stop>
+      <div class="ctv:flex ctv:flex-col ctv:gap-1 ctv:shrink-0"
+           @pointerdown.stop @mousedown.stop>
       <div v-if="isMeshOp" class="ctv:flex ctv:items-start ctv:gap-1.5">
         <span class="ctv:w-28 ctv:shrink-0 ctv:truncate ctv:text-2xs ctv:text-muted-foreground ctv:pt-0.5">
           {{ $t('meshOps.operation') }}</span>
@@ -118,6 +119,7 @@
           </template>
         </div>
       </template>
+      </div>
     </div>
 
     <div class="ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide ctv:shrink-0">

@@ -361,13 +361,15 @@ def apply_trs(verts: torch.Tensor, transform: dict) -> torch.Tensor:
 
 def boolean(mesh_a: MESH, mesh_b: MESH, op: str = 'union', resolution: int = 256,
             smooth_iters: int = 0, drop_small_components: float = 0.0,
-            transform_b: dict = None):
+            transform_a: dict = None, transform_b: dict = None):
     """CSG of two meshes (batch item 0 each) via the SDF narrow-band DC route."""
     from .boolean import boolean_narrow_band_dc
     va, fa, ca, _, _ = get_mesh_batch_item(mesh_a, 0)
     vb, fb, cb, _, _ = get_mesh_batch_item(mesh_b, 0)
     if fa.numel() == 0 or fb.numel() == 0:
         raise ValueError("boolean: both inputs need triangles")
+    if transform_a:
+        va = apply_trs(va, transform_a)
     if transform_b:
         vb = apply_trs(vb, transform_b)
     dev = comfy.model_management.get_torch_device()

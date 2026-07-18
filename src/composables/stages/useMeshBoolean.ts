@@ -11,6 +11,10 @@ export const BOOLEAN_GIZMO_MODES: BooleanGizmoMode[] = ['translate', 'rotate', '
 export const BOOLEAN_OPERATIONS = ['union', 'difference', 'intersect']
 export const BOOLEAN_CHANNELS: ViewChannel[] = ['material', 'clay', 'normal', 'wire']
 
+export type BooleanTarget = 'a' | 'b'
+export const BOOLEAN_TARGETS: BooleanTarget[] = ['a', 'b']
+const TRANSFORM_WIDGETS: Record<BooleanTarget, string> = { a: 'transform_a', b: 'transform_b' }
+
 export interface TransformArrays {
   position?: number[]
   quaternion?: number[]
@@ -109,20 +113,20 @@ export function useMeshBoolean(node: LGraphNode, stageState: StageState) {
     if (url) showResult.value = true
   })
 
-  function readTransformWidget(): TransformArrays | null {
-    return parseTransformB(readWidgetStr(node, 'transform_b', ''))
+  function readTransformWidget(target: BooleanTarget): TransformArrays | null {
+    return parseTransformB(readWidgetStr(node, TRANSFORM_WIDGETS[target], ''))
   }
 
-  function writeTransformWidget(t: {
+  function writeTransformWidget(target: BooleanTarget, t: {
     position: number[]
     quaternion: number[]
     scale: number[]
   }): void {
-    writeWidget(node, 'transform_b', serializeTransformB(t))
+    writeWidget(node, TRANSFORM_WIDGETS[target], serializeTransformB(t))
   }
 
-  function clearTransformWidget(): void {
-    writeWidget(node, 'transform_b', '')
+  function clearTransformWidget(target: BooleanTarget): void {
+    writeWidget(node, TRANSFORM_WIDGETS[target], '')
   }
 
   return {

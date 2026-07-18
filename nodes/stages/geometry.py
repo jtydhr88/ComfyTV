@@ -210,6 +210,10 @@ class MeshBooleanStage(io.ComfyNode):
                 COMFYTV_MODEL.Input("model", optional=True),
                 COMFYTV_MODEL.Input("model_b", optional=True),
                 _captured_image_input(),
+                io.String.Input("transform_a", default="", socketless=True,
+                                extra_dict={"hidden": True},
+                                tooltip="Internal — TRS of model A (position/quaternion/scale JSON) "
+                                        "set by the gizmo in the node body."),
             ],
             outputs=[COMFYTV_MODEL.Output("model"), COMFYTV_IMAGE.Output("image")],
             is_output_node=True,
@@ -218,23 +222,28 @@ class MeshBooleanStage(io.ComfyNode):
 
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
-                operation='union', resolution=256, smooth_iters=0, transform_b="",
+                operation='union', resolution=256, smooth_iters=0,
+                transform_a="", transform_b="",
                 model="", model_b="", captured_image=""):
         _require_model("Mesh Boolean", model)
         if not (model_b or '').strip():
             raise RuntimeError(
                 "Mesh Boolean needs a second model — wire one into the model_b input."
             )
-        trs = None
-        if (transform_b or '').strip():
+
+        def _parse_trs(raw):
+            if not (raw or '').strip():
+                return None
             try:
-                trs = json.loads(transform_b)
+                return json.loads(raw)
             except (ValueError, TypeError):
-                trs = None
+                return None
+
         payload, stats = boolean_model(model, model_b, op=operation,
                                        resolution=int(resolution),
                                        smooth_iters=int(smooth_iters),
-                                       transform_b=trs)
+                                       transform_a=_parse_trs(transform_a),
+                                       transform_b=_parse_trs(transform_b))
         return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
                                 params={'op': 'boolean', 'stats': stats},
                                 parent_output_id=parent_output_id,

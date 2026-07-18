@@ -1393,7 +1393,12 @@
     "subdivideIters": "细分次数",
     "runToGenerate": "设好参数后点击运行生成",
     "needTwoModels": "连接两个模型（A 和 B）后即可运算",
-    "placeThenRun": "拖动 gizmo 摆放模型 B，然后点击运行",
+    "placeThenRun": "选中 A 或 B，拖动 gizmo 摆放后点击运行",
+    "modelsConnected": "已接入 {n}/2",
+    "target": {
+      "a": "模型 A",
+      "b": "模型 B"
+    },
     "gizmo": {
       "translate": "移动",
       "rotate": "旋转",

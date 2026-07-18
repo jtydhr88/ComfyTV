@@ -125,20 +125,25 @@ class TestPrimitiveStage:
 
 class TestBooleanStage:
     def test_execute_passes_transform(self, reset_db, calls):
+        trs_a = {"position": [4, 5, 6], "quaternion": [0, 0, 0, 1], "scale": [2, 2, 2]}
         trs = {"position": [1, 2, 3], "quaternion": [0, 0, 0, 1], "scale": [1, 1, 1]}
         geometry.MeshBooleanStage.execute(project_id="default", operation="difference",
                                           model=MODEL_URL, model_b=MODEL_URL,
                                           resolution=128,
+                                          transform_a=json.dumps(trs_a),
                                           transform_b=json.dumps(trs))
         kw = calls["boolean"]["kwargs"]
         assert kw["op"] == "difference"
         assert kw["resolution"] == 128
+        assert kw["transform_a"] == trs_a
         assert kw["transform_b"] == trs
 
     def test_bad_transform_json_is_ignored(self, reset_db, calls):
         geometry.MeshBooleanStage.execute(project_id="default", operation="union",
                                           model=MODEL_URL, model_b=MODEL_URL,
+                                          transform_a="{not json",
                                           transform_b="{not json")
+        assert calls["boolean"]["kwargs"]["transform_a"] is None
         assert calls["boolean"]["kwargs"]["transform_b"] is None
 
     def test_missing_second_model_raises(self, reset_db, calls):

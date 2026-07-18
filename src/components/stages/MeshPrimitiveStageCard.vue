@@ -15,11 +15,23 @@
       </button>
     </div>
 
-    <div class="ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[240px] ctv:rounded-md ctv:overflow-hidden ctv:bg-black">
-      <PrimitivePreview ref="previewEl" :kind="kind" :params="params" @view-changed="scheduleCapture" />
+    <div class="ctv:relative ctv:w-full ctv:h-[calc(100%-340px)] ctv:min-h-[240px] ctv:shrink-0 ctv:rounded-md ctv:overflow-hidden ctv:bg-black">
+      <PrimitivePreview
+        ref="previewEl"
+        :kind="kind"
+        :params="params"
+        :channel="channel"
+        @view-changed="scheduleCapture"
+      />
+      <div class="ctv:absolute ctv:bottom-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1">
+        <button v-for="ch in PRIM_CHANNELS" :key="ch" type="button"
+                :class="chipClass(channel === ch)"
+                @click.stop="channel = ch">{{ $t(`meshOps.channel.${ch}`) }}</button>
+      </div>
     </div>
 
-    <div class="ctv:flex ctv:flex-col ctv:gap-1" @pointerdown.stop @mousedown.stop>
+    <div class="ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:flex ctv:flex-col ctv:gap-1"
+         @pointerdown.stop @mousedown.stop>
       <div v-for="def in controls" :key="def.key" class="ctv:flex ctv:items-center ctv:gap-1.5">
         <span
           class="ctv:w-24 ctv:shrink-0 ctv:truncate ctv:text-2xs ctv:text-muted-foreground"
@@ -72,6 +84,7 @@ import type { LGraphNode } from '@/lib/comfyApp'
 import StageCard from '@/components/stages/StageCard.vue'
 import PrimitivePreview from '@/components/stages/PrimitivePreview.vue'
 import type { StageState } from '@/stores/stageStore'
+import type { ViewChannel } from '@/widgets/three/channelShading'
 import {
   PRIM_KINDS,
   PRIM_PARAMS,
@@ -95,6 +108,18 @@ const { kind, params, setKind, setParam, scheduleCapture, cancelCapture } = useM
 })
 
 const controls = computed<ParamDef[]>(() => PRIM_PARAMS[kind.value])
+
+const PRIM_CHANNELS: ViewChannel[] = ['material', 'clay', 'normal', 'wire']
+const channel = ref<ViewChannel>('material')
+
+function chipClass(active: boolean): string {
+  return 'ctv:inline-flex ctv:items-center ctv:gap-1 ctv:cursor-pointer ctv:[font-family:inherit]'
+    + ' ctv:rounded-sm ctv:border ctv:px-1.5 ctv:py-0.5 ctv:text-2xs ctv:transition-colors'
+    + (active
+      ? ' ctv:border-primary-background ctv:bg-primary-background/20 ctv:text-base-foreground'
+      : ' ctv:border-border-subtle ctv:bg-secondary-background ctv:text-muted-foreground'
+        + ' ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground')
+}
 
 function kindBtnClass(active: boolean): string {
   return 'ctv:cursor-pointer ctv:rounded ctv:border ctv:px-2 ctv:py-1 ctv:text-2xs ctv:[font-family:inherit] ctv:transition-colors '

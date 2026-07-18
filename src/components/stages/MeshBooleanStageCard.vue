@@ -7,7 +7,7 @@
       ref="hostEl"
       data-capture-wheel="true"
       tabindex="-1"
-      class="ctv:group ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[280px] ctv:rounded-md ctv:overflow-hidden
+      class="ctv:group ctv:relative ctv:w-full ctv:h-[calc(100%-190px)] ctv:min-h-[280px] ctv:shrink-0 ctv:rounded-md ctv:overflow-hidden
              ctv:bg-black ctv:touch-none ctv:outline-none"
       @pointerenter="onHostEnter"
     >
@@ -18,22 +18,32 @@
         <div class="ctv:text-xs">{{ $t('meshOps.needTwoModels') }}</div>
       </div>
 
-      <div class="ctv:absolute ctv:top-1 ctv:left-1 ctv:z-10 ctv:flex ctv:gap-1">
-        <template v-if="!viewingResult">
-          <button v-for="m in GIZMO_MODES" :key="m" type="button"
-                  :class="chipClass(gizmoMode === m)"
-                  @click.stop="setGizmoMode(m)">{{ $t(`meshOps.gizmo.${m}`) }}</button>
-          <button type="button" :class="chipClass(false)"
-                  @click.stop="resetTransform">{{ $t('meshOps.gizmo.reset') }}</button>
-        </template>
-        <template v-if="resultUrl">
+      <div class="ctv:absolute ctv:top-1 ctv:left-1 ctv:z-10 ctv:flex ctv:flex-col ctv:items-start ctv:gap-1">
+        <div v-if="resultUrl" class="ctv:flex ctv:gap-1">
           <button type="button" :class="chipClass(!viewingResult)" @click.stop="showResult = false">
             {{ $t('meshOps.source') }}
           </button>
           <button type="button" :class="chipClass(viewingResult)" @click.stop="showResult = true">
             {{ $t('meshOps.result') }}
           </button>
-        </template>
+        </div>
+        <div v-if="!viewingResult" class="ctv:flex ctv:items-center ctv:gap-1">
+          <span class="ctv:px-1.5 ctv:py-0.5 ctv:rounded-sm ctv:bg-black/60 ctv:text-3xs ctv:text-white/80">
+            {{ $t('meshOps.modelsConnected', { n: connectedCount }) }}
+          </span>
+          <button v-for="tgt in TARGETS" :key="tgt" type="button"
+                  :class="chipClass(activeTarget === tgt, !targetUrl(tgt))"
+                  :disabled="!targetUrl(tgt)"
+                  @click.stop="setTarget(tgt)">{{ $t(`meshOps.target.${tgt}`) }}</button>
+        </div>
+        <div v-if="!viewingResult" class="ctv:flex ctv:items-center ctv:gap-1">
+          <button v-for="m in GIZMO_MODES" :key="m" type="button"
+                  :class="chipClass(gizmoMode === m)"
+                  @click.stop="setGizmoMode(m)">{{ $t(`meshOps.gizmo.${m}`) }}</button>
+          <span class="ctv:w-px ctv:h-4 ctv:bg-white/30"></span>
+          <button type="button" :class="chipClass(false)"
+                  @click.stop="resetTransform">{{ $t('meshOps.gizmo.reset') }}</button>
+        </div>
       </div>
 
       <div class="ctv:absolute ctv:bottom-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1">
@@ -82,7 +92,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { TransformControls } from 'three/examples/jsm/controls/TransformControls.js'
@@ -97,9 +107,11 @@ import {
   BOOLEAN_CHANNELS as CHANNELS,
   BOOLEAN_GIZMO_MODES as GIZMO_MODES,
   BOOLEAN_OPERATIONS as OPERATIONS,
+  BOOLEAN_TARGETS as TARGETS,
   computeFrameFit,
   useMeshBoolean,
-  type BooleanGizmoMode as GizmoMode
+  type BooleanGizmoMode as GizmoMode,
+  type BooleanTarget
 } from '@/composables/stages/useMeshBoolean'
 import {
   MODEL_VIEW_CAPTURE_SIZE,
@@ -165,31 +177,70 @@ function onHostEnter(): void {
   hostEl.value?.focus({ preventScroll: true })
 }
 
+const activeTarget = ref<BooleanTarget>('b')
+
+function targetGroup(t: BooleanTarget): THREE.Group {
+  return t === 'a' ? groupA : groupB
+}
+
+function targetUrl(t: BooleanTarget): string | null {
+  return t === 'a' ? modelAUrl.value : modelBUrl.value
+}
+
+const connectedCount = computed(() =>
+  Number(Boolean(modelAUrl.value)) + Number(Boolean(modelBUrl.value)))
+
 function readTransform(): void {
-  groupB.position.set(0, 0, 0)
-  groupB.quaternion.identity()
-  groupB.scale.set(1, 1, 1)
-  const t = readTransformWidget()
-  if (!t) return
-  if (t.position) groupB.position.fromArray(t.position)
-  if (t.quaternion) groupB.quaternion.fromArray(t.quaternion)
-  if (t.scale) groupB.scale.fromArray(t.scale)
+  for (const tgt of TARGETS) {
+    const g = targetGroup(tgt)
+    g.position.set(0, 0, 0)
+    g.quaternion.identity()
+    g.scale.set(1, 1, 1)
+    const t = readTransformWidget(tgt)
+    if (!t) continue
+    if (t.position) g.position.fromArray(t.position)
+    if (t.quaternion) g.quaternion.fromArray(t.quaternion)
+    if (t.scale) g.scale.fromArray(t.scale)
+  }
 }
 
 function writeTransform(): void {
-  writeTransformWidget({
-    position: groupB.position.toArray(),
-    quaternion: groupB.quaternion.toArray(),
-    scale: groupB.scale.toArray(),
+  const g = targetGroup(activeTarget.value)
+  writeTransformWidget(activeTarget.value, {
+    position: g.position.toArray(),
+    quaternion: g.quaternion.toArray(),
+    scale: g.scale.toArray(),
   })
 }
 
 function resetTransform(): void {
-  groupB.position.set(0, 0, 0)
-  groupB.quaternion.identity()
-  groupB.scale.set(1, 1, 1)
-  clearTransformWidget()
+  const g = targetGroup(activeTarget.value)
+  g.position.set(0, 0, 0)
+  g.quaternion.identity()
+  g.scale.set(1, 1, 1)
+  clearTransformWidget(activeTarget.value)
   scheduleCapture()
+}
+
+function attachGizmo(): void {
+  if (!gizmo) return
+  if (targetUrl(activeTarget.value)) gizmo.attach(targetGroup(activeTarget.value))
+  else gizmo.detach()
+}
+
+function setTarget(t: BooleanTarget): void {
+  if (!targetUrl(t) || t === activeTarget.value) return
+  activeTarget.value = t
+  attachGizmo()
+  if (gizmoHelper) gizmoHelper.visible = !viewingResult.value && Boolean(targetUrl(t))
+}
+
+function ensureValidTarget(): void {
+  if (!targetUrl(activeTarget.value)) {
+    const other: BooleanTarget = activeTarget.value === 'a' ? 'b' : 'a'
+    if (targetUrl(other)) activeTarget.value = other
+  }
+  attachGizmo()
 }
 
 function setGizmoMode(m: GizmoMode): void {
@@ -260,7 +311,7 @@ function syncVisibility(): void {
   groupA.visible = showSource
   groupB.visible = showSource
   groupResult.visible = !showSource
-  if (gizmoHelper) gizmoHelper.visible = showSource && Boolean(modelBUrl.value)
+  if (gizmoHelper) gizmoHelper.visible = showSource && Boolean(targetUrl(activeTarget.value))
   if (gizmo) gizmo.enabled = showSource
   frameCamera()
 }
@@ -340,7 +391,7 @@ onMounted(() => {
   gizmoHelper = gizmo.getHelper()
   gizmoHelper.renderOrder = 999
   scene.add(gizmoHelper)
-  gizmo.attach(groupB)
+  ensureValidTarget()
 
   readTransform()
   syncSize()
@@ -353,8 +404,18 @@ onMounted(() => {
   syncVisibility()
 })
 
-watch(modelAUrl, (url) => { loadSeqA++; void loadInto(groupA, url, () => loadSeqA, false, true); syncVisibility() })
-watch(modelBUrl, (url) => { loadSeqB++; void loadInto(groupB, url, () => loadSeqB, true, true); syncVisibility() })
+watch(modelAUrl, (url) => {
+  loadSeqA++
+  void loadInto(groupA, url, () => loadSeqA, false, true)
+  ensureValidTarget()
+  syncVisibility()
+})
+watch(modelBUrl, (url) => {
+  loadSeqB++
+  void loadInto(groupB, url, () => loadSeqB, true, true)
+  ensureValidTarget()
+  syncVisibility()
+})
 watch(resultUrl, (url) => {
   loadSeqR++
   void loadInto(groupResult, url, () => loadSeqR)
@@ -385,12 +446,13 @@ onBeforeUnmount(() => {
   camera = null
 })
 
-function chipClass(active: boolean): string {
+function chipClass(active: boolean, disabled = false): string {
   return 'ctv:inline-flex ctv:items-center ctv:gap-1 ctv:cursor-pointer ctv:[font-family:inherit]'
     + ' ctv:rounded-sm ctv:border ctv:px-1.5 ctv:py-0.5 ctv:text-2xs ctv:transition-colors'
     + (active
       ? ' ctv:border-primary-background ctv:bg-primary-background/20 ctv:text-base-foreground'
       : ' ctv:border-border-subtle ctv:bg-secondary-background ctv:text-muted-foreground'
         + ' ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground')
+    + (disabled ? ' ctv:opacity-40 ctv:cursor-not-allowed' : '')
 }
 </script>

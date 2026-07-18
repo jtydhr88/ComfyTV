@@ -1393,7 +1393,12 @@
     "subdivideIters": "Iterations",
     "runToGenerate": "Set parameters, then Run to generate",
     "needTwoModels": "Connect two models (A and B) to combine",
-    "placeThenRun": "Drag the gizmo to place model B, then Run",
+    "placeThenRun": "Pick A or B, drag the gizmo to place it, then Run",
+    "modelsConnected": "{n}/2 connected",
+    "target": {
+      "a": "Model A",
+      "b": "Model B"
+    },
     "gizmo": {
       "translate": "Move",
       "rotate": "Rotate",

@@ -166,12 +166,14 @@ def test_load_model_mesh_resolves_recipe(fake_mesh3d):
 
 
 def test_boolean_model_forwards_transform(fake_mesh3d, model_url):
+    trs_a = {"position": [0, 1, 0]}
     trs = {"position": [1, 0, 0]}
     payload, stats = rg.boolean_model(model_url, model_url, op="difference",
-                                      resolution=96, transform_b=trs)
+                                      resolution=96, transform_a=trs_a, transform_b=trs)
     _out_path(payload, ".glb")
     kw = fake_mesh3d["boolean"][0]["kwargs"]
     assert kw["op"] == "difference" and kw["transform_b"] == trs
+    assert kw["transform_a"] == trs_a
 
 
 @pytest.mark.parametrize("fmt,suffix,key", [

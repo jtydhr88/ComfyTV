@@ -196,12 +196,13 @@ def primitive_recipe(kind: str, params: dict = None):
 
 
 def boolean_model(url_a: str, url_b: str, op: str = 'union', resolution: int = 256,
-                  smooth_iters: int = 0, transform_b: dict = None):
+                  smooth_iters: int = 0, transform_a: dict = None, transform_b: dict = None):
     from ..mesh3d import ops
     mesh_a = load_model_mesh(url_a)
     mesh_b = load_model_mesh(url_b)
     out, stats = ops.boolean(mesh_a, mesh_b, op=op, resolution=int(resolution),
-                             smooth_iters=int(smooth_iters), transform_b=transform_b)
+                             smooth_iters=int(smooth_iters),
+                             transform_a=transform_a, transform_b=transform_b)
     out = ops.smooth_normals(out, crease_angle=180.0)
     return save_model_mesh(out), stats
 
