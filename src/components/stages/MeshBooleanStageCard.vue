@@ -46,6 +46,17 @@
         </div>
       </div>
 
+      <div v-if="viewingResult && resultUrl"
+           class="ctv:absolute ctv:top-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1 ctv:opacity-0
+                  ctv:group-hover:opacity-100 ctv:transition-opacity">
+        <button type="button" :class="downloadBtnClass"
+                :title="$t('stage.action.download')"
+                @click.stop="onDownloadResult"><i class="pi pi-download" /></button>
+        <button type="button" :class="tagBtnClass"
+                :title="$t('stage.action.addTag')"
+                @click.stop="tagMenuEl?.open(resultUrl, $event)"><i class="pi pi-tag" /></button>
+      </div>
+
       <div class="ctv:absolute ctv:bottom-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1">
         <button v-for="ch in CHANNELS" :key="ch" type="button"
                 :class="chipClass(channel === ch)"
@@ -88,6 +99,8 @@
         hide-output
       />
     </div>
+
+    <AssetTagMenu ref="tagMenuEl" />
   </div>
 </template>
 
@@ -101,6 +114,7 @@ import { clone as cloneSkinned } from 'three/examples/jsm/utils/SkeletonUtils.js
 import IconBox from '~icons/lucide/box'
 
 import type { LGraphNode } from '@/lib/comfyApp'
+import AssetTagMenu from '@/components/stages/AssetTagMenu.vue'
 import StageCard from '@/components/stages/StageCard.vue'
 import type { StageState } from '@/stores/stageStore'
 import {
@@ -118,6 +132,7 @@ import {
   useModelViewCapture
 } from '@/composables/stages/useModelViewCapture'
 import { onNodeConfigure } from '@/utils/widget'
+import { downloadFile } from '@/utils/download'
 import { applyViewChannel, type ViewChannel } from '@/widgets/three/channelShading'
 import { guardOrbitControlsDragEnd } from '@/widgets/three/orbitControlsGuard'
 import { RendererView } from '@/widgets/three/RendererView'
@@ -445,6 +460,26 @@ onBeforeUnmount(() => {
   scene = null
   camera = null
 })
+
+const PREVIEW_BTN_BASE =
+  'ctv:relative ctv:inline-flex ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:appearance-none'
+  + ' ctv:border-none ctv:transition-colors ctv:size-5 ctv:p-0 ctv:rounded-sm ctv:text-sm'
+const downloadBtnClass = PREVIEW_BTN_BASE + ' ctv:bg-white ctv:text-gray-600 ctv:hover:bg-white/90'
+
+const tagMenuEl = ref<InstanceType<typeof AssetTagMenu> | null>(null)
+const tagBtnClass = computed(() => PREVIEW_BTN_BASE
+  + (tagMenuEl.value?.isSaved(resultUrl.value ?? '')
+    ? ' ctv:bg-primary-background ctv:text-white ctv:hover:bg-primary-background/90'
+    : ' ctv:bg-white ctv:text-gray-600 ctv:hover:bg-white/90'))
+
+async function onDownloadResult(): Promise<void> {
+  if (!resultUrl.value) return
+  try {
+    await downloadFile(resultUrl.value)
+  } catch (e) {
+    console.error('[ComfyTV/mesh-boolean] download failed', e)
+  }
+}
 
 function chipClass(active: boolean, disabled = false): string {
   return 'ctv:inline-flex ctv:items-center ctv:gap-1 ctv:cursor-pointer ctv:[font-family:inherit]'

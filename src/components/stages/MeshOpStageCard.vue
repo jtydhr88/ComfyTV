@@ -34,6 +34,9 @@
         <button type="button" :class="downloadBtnClass"
                 :title="$t('stage.action.download')"
                 @click.stop="onDownloadModel"><i class="pi pi-download" /></button>
+        <button type="button" :class="tagBtnClass"
+                :title="$t('stage.action.addTag')"
+                @click.stop="tagMenuEl?.open(previewSrc, $event)"><i class="pi pi-tag" /></button>
       </div>
 
       <div v-if="statsLine"
@@ -140,6 +143,8 @@
         hide-output
       />
     </div>
+
+    <AssetTagMenu ref="tagMenuEl" />
   </div>
 </template>
 
@@ -150,6 +155,7 @@ import { useI18n } from 'vue-i18n'
 import IconBox from '~icons/lucide/box'
 
 import type { LGraphNode } from '@/lib/comfyApp'
+import AssetTagMenu from '@/components/stages/AssetTagMenu.vue'
 import ModelPreview from '@/components/stages/ModelPreview.vue'
 import StageCard from '@/components/stages/StageCard.vue'
 import type { StageState } from '@/stores/stageStore'
@@ -214,8 +220,14 @@ function chipClass(active: boolean): string {
         + ' ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground')
 }
 
-const downloadBtnClass =
+const PREVIEW_BTN_BASE =
   'ctv:relative ctv:inline-flex ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:appearance-none'
   + ' ctv:border-none ctv:transition-colors ctv:size-5 ctv:p-0 ctv:rounded-sm ctv:text-sm'
-  + ' ctv:bg-white ctv:text-gray-600 ctv:hover:bg-white/90'
+const downloadBtnClass = PREVIEW_BTN_BASE + ' ctv:bg-white ctv:text-gray-600 ctv:hover:bg-white/90'
+
+const tagMenuEl = ref<InstanceType<typeof AssetTagMenu> | null>(null)
+const tagBtnClass = computed(() => PREVIEW_BTN_BASE
+  + (tagMenuEl.value?.isSaved(previewSrc.value)
+    ? ' ctv:bg-primary-background ctv:text-white ctv:hover:bg-primary-background/90'
+    : ' ctv:bg-white ctv:text-gray-600 ctv:hover:bg-white/90'))
 </script>
