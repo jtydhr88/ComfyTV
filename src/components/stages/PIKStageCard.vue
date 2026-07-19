@@ -16,8 +16,8 @@
 
       <FxSlider v-model="redWeight" label="Red weight" :min="-1" :max="2" :step="0.01" :reset-to="0.5" />
       <FxSlider v-model="blueGreenWeight" label="B/G weight" :min="-1" :max="2" :step="0.01" :reset-to="0.5" />
-      <FxSlider v-model="clipBlack" label="Clip black" :min="0" :max="1" :step="0.01" :reset-to="0" />
-      <FxSlider v-model="clipWhite" label="Clip white" :min="0" :max="1" :step="0.01" :reset-to="1" />
+      <FxSlider v-model="clipBlack" label="Clip black" :min="0" :max="1" :step="0.01" :reset-to="0" :gradient="LUMA_STOPS" />
+      <FxSlider v-model="clipWhite" label="Clip white" :min="0" :max="1" :step="0.01" :reset-to="1" :gradient="LUMA_STOPS" />
 
       <label class="ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs ctv:text-muted-foreground ctv:cursor-pointer">
         <input type="checkbox" v-model="screenSubtraction" class="ctv:accent-primary-background" />
@@ -75,6 +75,7 @@ import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
 import { useBoolWidget, useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
+import { LUMA_STOPS } from '@/components/widgets/colorStops'
 
 const props = defineProps<{
   state: StageState

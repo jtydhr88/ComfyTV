@@ -116,9 +116,11 @@
       ><i class="pi pi-times" /></button>
     </div>
 
-    <CustomParamsSection v-if="node" :state="state" :node="node" />
+    <CustomParamsSection v-if="node && !hideRun" :state="state" :node="node" />
 
-    <div v-if="showServerSelect" class="ctv:flex ctv:items-center ctv:gap-1.5">
+    <StagePresetBar v-if="node && !hideRun" :node="node" />
+
+    <div v-if="showServerSelect && !hideRun" class="ctv:flex ctv:items-center ctv:gap-1.5">
       <span class="ctv:shrink-0 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:opacity-60">
         {{ $t('servers.runOn') }}
       </span>
@@ -132,7 +134,7 @@
     </div>
 
     <button
-      v-if="state.variant !== 'loader' && state.variant !== 'transform' && !isPicker"
+      v-if="!hideRun && state.variant !== 'loader' && state.variant !== 'transform' && !isPicker"
       :class="['run-btn', state.running && 'is-cancel', runBtnClass]"
       :disabled="!state.running && !canRun"
       @click="state.running ? onCancel() : onRun()"
@@ -221,6 +223,7 @@ import MainPromptInput from './MainPromptInput.vue'
 import StageIcon from '@/components/widgets/StageIcon.vue'
 import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
 import CustomParamsSection from './CustomParamsSection.vue'
+import StagePresetBar from './StagePresetBar.vue'
 import { t } from '@/i18n'
 import ValuePreview from './ValuePreview.vue'
 import { imageInputSlotIndex, slotColor } from '@/composables/stages/imageSlotMentions'
@@ -247,6 +250,7 @@ const props = defineProps<{
   hideContext?: boolean
   hideOutput?: boolean
   hideActions?: boolean
+  hideRun?: boolean
 }>()
 
 const {
@@ -335,7 +339,7 @@ function onCancel() { props.onCancelRequest() }
 function onDisconnect(slot: string) { props.onDisconnect(slot) }
 
 const cardClass = computed(() => {
-  const base = 'ctv:flex ctv:flex-col ctv:gap-2 ctv:p-2 ctv:size-full ctv:box-border ctv:text-xs ctv:text-base-foreground'
+  const base = 'ctv:flex ctv:flex-col ctv:gap-2 ctv:p-2 ctv:w-full ctv:h-full ctv:flex-1 ctv:box-border ctv:text-xs ctv:text-base-foreground'
   if (loaderDragActive.value)
     return `${base} ctv:rounded ctv:outline ctv:outline-2 ctv:-outline-offset-2 ctv:outline-primary-background/70 ctv:bg-primary-background/5`
   if (!props.state.error) return base

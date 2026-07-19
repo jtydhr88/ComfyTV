@@ -123,7 +123,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     content,
     overrides,
     getTextBitmap: (layer: TextLayer) =>
-      textCache.get(layer, fontStore.getFontSync(layer.fontRef)),
+      textCache.get(layer, fontStore.getFontSyncWithFallback(layer.fontRef)),
   }
 
   let rafId: number | null = null
@@ -263,7 +263,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
       let changed = false
       for (const layer of draft.layers) {
         if (layer.type !== 'text') continue
-        const font = fontStore.getFontSync(layer.fontRef)
+        const font = fontStore.getFontSyncWithFallback(layer.fontRef)
         if (!font) continue
         const m = measureText(layer, font)
         if (Math.abs(layer.transform.w - m.w) > 0.5 || Math.abs(layer.transform.h - m.h) > 0.5) {
@@ -595,7 +595,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     patchLayer(id, (l) => {
       if (l.type !== 'text') return
       Object.assign(l, patch)
-      const font = fontStore.getFontSync(l.fontRef)
+      const font = fontStore.getFontSyncWithFallback(l.fontRef)
       if (font) {
         const m = measureText(l, font)
         l.transform.w = m.w
@@ -662,7 +662,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
       if (nextLayer?.type === 'text' && curLayer?.type === 'text' && curLayer.transform.h > 0) {
         const scale = nextLayer.transform.h / curLayer.transform.h
         nextLayer.fontSize = Math.min(2048, Math.max(4, nextLayer.fontSize * scale))
-        const font = fontStore.getFontSync(nextLayer.fontRef)
+        const font = fontStore.getFontSyncWithFallback(nextLayer.fontRef)
         if (font) {
           const m = measureText(nextLayer, font)
           nextLayer.transform.w = m.w

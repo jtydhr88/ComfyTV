@@ -1,28 +1,15 @@
 <template>
   <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full">
-    <div
-      class="ctv:relative ctv:w-full ctv:h-[200px] ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle ctv-checker"
-      @pointerdown.stop @pointermove.stop @pointerup.stop
-    >
-      <div v-if="!sourceVideoUrl"
-           class="ctv:h-full ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50 ctv:bg-black">
-        <i class="pi pi-video ctv:text-[32px] ctv:opacity-60" />
-        <div class="ctv:text-xs">{{ $t('videoTrim.noInputVideo') }}</div>
-      </div>
-      <template v-else>
-        <video
-          ref="videoEl" :src="sourceVideoUrl" muted playsinline preload="auto" loop
-          class="ctv:hidden"
-          @loadeddata="startLoop"
-        />
+    <VideoPlayerLite ref="playerRef" :source-video-url="sourceVideoUrl">
+      <template #overlay>
         <canvas
           ref="canvasEl"
-          class="ctv:block ctv:size-full ctv:object-contain"
+          class="ctv:absolute ctv:inset-0 ctv:size-full ctv:object-contain ctv-checker"
           :class="picking ? 'ctv:cursor-crosshair' : 'ctv:cursor-pointer'"
           @click="onCanvasClick"
         />
       </template>
-    </div>
+    </VideoPlayerLite>
 
     <div
       class="ctv:flex ctv:flex-col ctv:gap-1"
@@ -44,19 +31,14 @@
             : 'ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background'"
           @click="picking = !picking"
         ><i class="pi pi-eye-dropper" /> {{ $t('fx.pickFromVideo') }}</button>
-        <button
-          type="button"
-          class="ctv:w-7 ctv:h-6 ctv:text-xs ctv:rounded ctv:cursor-pointer ctv:border
-                 ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background"
-          :title="playing ? $t('videoTrim.pause') : $t('videoCrop.play')"
-          @click="togglePlay"
-        ><i :class="['pi', playing ? 'pi-pause' : 'pi-play']" /></button>
       </div>
 
       <FxSlider v-model="similarity" :label="$t('fx.similarity')" :min="0.01" :max="1" :step="0.01" :reset-to="0.1" />
       <FxSlider v-model="blend" :label="$t('fx.blend')" :min="0" :max="1" :step="0.01" :reset-to="0.05" />
-      <FxSlider v-model="despillMix" :label="$t('fx.despill')" :min="0" :max="1" :step="0.01" :reset-to="0.5" />
-      <FxSlider v-model="despillExpand" :label="$t('fx.despillExpand')" :min="0" :max="1" :step="0.01" :reset-to="0" />
+      <div :class="output === 'matte' ? 'ctv:invisible' : ''" class="ctv:flex ctv:flex-col ctv:gap-1">
+        <FxSlider v-model="despillMix" :label="$t('fx.despill')" :min="0" :max="1" :step="0.01" :reset-to="0.5" />
+        <FxSlider v-model="despillExpand" :label="$t('fx.despillExpand')" :min="0" :max="1" :step="0.01" :reset-to="0" />
+      </div>
       <FxChips v-model="output" :options="OUTPUTS" />
     </div>
 
@@ -79,12 +61,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
 import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'
+import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
 import { useChromaKeyPicker } from '@/composables/stages/useChromaKeyPicker'
 import { useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
@@ -114,16 +97,25 @@ const despillMix = useNumWidget(props.node, 'despill_mix', 0.5)
 const despillExpand = useNumWidget(props.node, 'despill_expand', 0)
 const output = useStrWidget(props.node, 'output', 'alpha')
 
-const videoEl = ref<HTMLVideoElement | null>(null)
+const playerRef = ref<InstanceType<typeof VideoPlayerLite> | null>(null)
+const videoEl = computed<HTMLVideoElement | null>(() => playerRef.value?.videoEl ?? null)
 const canvasEl = ref<HTMLCanvasElement | null>(null)
 
-const { picking, playing, startLoop, togglePlay, onCanvasClick } = useChromaKeyPicker({
+const { picking, startLoop, onCanvasClick } = useChromaKeyPicker({
   videoEl,
   canvasEl,
+  nodeId: String(props.node.id),
   keyColor,
   similarity,
   blend,
+  despillMix,
+  despillExpand,
+  outputMode: output,
 })
+
+watch(videoEl, (v) => {
+  if (v) startLoop()
+}, { immediate: true })
 </script>
 
 <style scoped>

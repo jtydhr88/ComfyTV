@@ -4,6 +4,7 @@ import math
 import numpy as np
 
 from .media import localize, get_video_info
+from .media_filter import make_progress
 from .media_torch import torch_process_video, _warp_frame
 
 CONTRAST_THRESHOLD = 0.25
@@ -203,6 +204,7 @@ def stabilize_video(view_url: str, *, smoothing: int = 15,
         raise RuntimeError("stabilize: frame too small for measurement fields")
     max_fields = max(6, (min(15, max(1, int(accuracy))) * len(fields)) // 15)
     total_est = max(1, int(info['duration'] * info['fps']))
+    report_analyze = make_progress(progress, total_est, "analyze 1/2")
 
     rel = [(0.0, 0.0, 0.0)]
     with av.open(str(src)) as inp:
@@ -225,8 +227,7 @@ def stabilize_video(view_url: str, *, smoothing: int = 15,
                 rel.append(_motions_to_transform(motions, w, h, field_size))
             prev = g
             n += 1
-            if progress is not None and n % 10 == 0:
-                progress(min(n, total_est), total_est * 2, "detecting")
+            report_analyze(n)
 
     absolute = []
     acc = [0.0, 0.0, 0.0]
@@ -244,14 +245,13 @@ def stabilize_video(view_url: str, *, smoothing: int = 15,
 
     cx, cy = w / 2.0, h / 2.0
     mats = [_comp_matrix(tx, ty, al, zoom, cx, cy) for tx, ty, al in comps]
+    report_render = make_progress(progress, total_est, "render 2/2")
     idx = {'i': 0}
 
     def frame_fn(tensor, t):
         i = min(idx['i'], len(mats) - 1)
         idx['i'] += 1
-        if progress is not None and i % 15 == 0:
-            progress(min(total_est + i, total_est * 2), total_est * 2,
-                     "compensating")
+        report_render(min(idx['i'], total_est))
         return _warp_frame(tensor, mats[i], tensor.device)
 
     return torch_process_video(view_url, frame_fn)

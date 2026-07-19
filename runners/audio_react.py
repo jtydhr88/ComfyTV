@@ -4,7 +4,7 @@ import math
 import numpy as np
 
 from .media import localize, get_video_info, fresh_output_path, path_to_view_url
-from .media_filter import require_filters
+from .media_filter import require_filters, make_progress
 
 BANDS = {
     'bass': (20.0, 160.0),
@@ -147,6 +147,7 @@ def meter_overlay_video(view_url: str, *, meter_w: int = 400,
 
         n = 0
         total_est = max(1, int(info['duration'] * fps))
+        report = make_progress(progress, total_est, "meter")
 
         def _drain():
             nonlocal n
@@ -162,8 +163,7 @@ def meter_overlay_video(view_url: str, *, meter_w: int = 400,
                 for pkt in enc.encode(f):
                     outp.mux(pkt)
                 n += 1
-                if progress is not None and n % 30 == 0:
-                    progress(min(n, total_est), total_est, "meter")
+                report(n)
 
         for packet in inp.demux():
             if packet.dts is None:

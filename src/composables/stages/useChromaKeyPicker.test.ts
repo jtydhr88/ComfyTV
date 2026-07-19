@@ -10,6 +10,8 @@ import {
   rgbToHex,
   rgbToUv,
   useChromaKeyPicker,
+  applyDespill,
+  applyMatte,
 } from './useChromaKeyPicker'
 
 describe('color helpers', () => {
@@ -277,5 +279,109 @@ describe('useChromaKeyPicker', () => {
     caf.mockClear()
     wrapper.unmount()
     expect(caf).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('useChromaKeyPicker letterboxed canvas element', () => {
+  let wrappers: VueWrapper[] = []
+  afterEach(() => {
+    wrappers.forEach((w) => w.unmount())
+    wrappers = []
+    vi.restoreAllMocks()
+  })
+
+  function setupWide() {
+    const videoEl = ref<HTMLVideoElement | null>(makeVideo())
+    const tctx = makeCtx([12, 34, 56, 255])
+    const origCreate = document.createElement.bind(document)
+    vi.spyOn(document, 'createElement').mockImplementation(((tag: string) => {
+      if (String(tag).toLowerCase() === 'canvas') {
+        return { width: 0, height: 0, getContext: () => tctx } as unknown as HTMLCanvasElement
+      }
+      return origCreate(tag)
+    }) as typeof document.createElement)
+    const canvasEl = ref<HTMLCanvasElement | null>(makeCanvas(makeCtx(), 640, 180))
+    const keyColor = ref('#00FF00')
+    const api = (() => {
+      let a!: ReturnType<typeof useChromaKeyPicker>
+      const wrapper = mount(defineComponent({
+        setup() {
+          a = useChromaKeyPicker({
+            videoEl, canvasEl, keyColor,
+            similarity: ref(0.1), blend: ref(0.05),
+          })
+          return () => null
+        },
+      }))
+      wrappers.push(wrapper)
+      return a
+    })()
+    return { api, keyColor }
+  }
+
+  it('maps clicks through the object-contain offset', () => {
+    const { api, keyColor } = setupWide()
+    api.picking.value = true
+    api.onCanvasClick({ clientX: 160 + 10, clientY: 90 } as MouseEvent)
+    expect(keyColor.value).toBe('#0C2238')
+    expect(api.picking.value).toBe(false)
+  })
+
+  it('ignores clicks in the letterbox bars', () => {
+    const { api, keyColor } = setupWide()
+    api.picking.value = true
+    api.onCanvasClick({ clientX: 10, clientY: 90 } as MouseEvent)
+    expect(keyColor.value).toBe('#00FF00')
+    expect(api.picking.value).toBe(true)
+  })
+})
+
+describe('applyDespill', () => {
+  function px(...rgba: number[]): Uint8ClampedArray {
+    return new Uint8ClampedArray(rgba)
+  }
+
+  it('subtracts the green spill against a green key', () => {
+    const d = px(51, 204, 51, 255)
+    applyDespill(d, '#00FF00', 0.5, 0)
+    expect(d[0]).toBe(51)
+    expect(d[1]).toBe(51)
+    expect(d[2]).toBe(51)
+    expect(d[3]).toBe(255)
+  })
+
+  it('expand shrinks the neutral threshold', () => {
+    const a = px(51, 204, 51, 255)
+    const b = px(51, 204, 51, 255)
+    applyDespill(a, '#00FF00', 0.5, 0)
+    applyDespill(b, '#00FF00', 0.5, 1)
+    expect(b[1]).toBeLessThan(a[1])
+  })
+
+  it('is a no-op at mix 0', () => {
+    const d = px(51, 204, 51, 255)
+    applyDespill(d, '#00FF00', 0, 0)
+    expect(Array.from(d)).toEqual([51, 204, 51, 255])
+  })
+
+  it('blue key computes spill from the blue channel but still corrects green', () => {
+    const d = px(51, 51, 204, 255)
+    applyDespill(d, '#0000FF', 0.5, 0)
+    expect(d[2]).toBe(204)
+    expect(d[1]).toBeLessThan(51 + 1)
+  })
+
+  it('leaves spill-free pixels untouched', () => {
+    const d = px(200, 100, 90, 255)
+    applyDespill(d, '#00FF00', 0.5, 0)
+    expect(Array.from(d)).toEqual([200, 100, 90, 255])
+  })
+})
+
+describe('applyMatte', () => {
+  it('replaces rgb with the alpha value and makes pixels opaque', () => {
+    const d = new Uint8ClampedArray([10, 20, 30, 0, 200, 100, 50, 128])
+    applyMatte(d)
+    expect(Array.from(d)).toEqual([0, 0, 0, 255, 128, 128, 128, 255])
   })
 })

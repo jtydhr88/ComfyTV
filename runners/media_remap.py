@@ -5,7 +5,9 @@ from .media import (
     localize, fresh_output_path, path_to_view_url, get_video_info,
     trim_video, concat_videos,
 )
-from .media_filter import filter_video, xfade_videos, XFADE_TRANSITIONS
+from .media_filter import (
+    filter_video, xfade_videos, make_progress, XFADE_TRANSITIONS,
+)
 from .keyframes import KeyframeCurve
 
 _OUT_TB = Fraction(1, 90000)
@@ -59,6 +61,7 @@ def time_remap(view_url: str, speed_keyframes, *, smooth_fps: int = 0,
     curve = _speed_curve(speed_keyframes)
     out_dur = _output_duration(curve, info['duration'])
     n_out = max(1, int(out_dur * fps))
+    report = make_progress(progress, n_out, "remapping")
     out = fresh_output_path('.mp4')
 
     with av.open(str(src)) as inp, av.open(str(out), 'w') as outp:
@@ -100,8 +103,7 @@ def time_remap(view_url: str, speed_keyframes, *, smooth_fps: int = 0,
             nf.time_base = _OUT_TB
             for pkt in enc.encode(nf):
                 outp.mux(pkt)
-            if progress is not None and i % 30 == 0:
-                progress(i, n_out, "remapping")
+            report(i + 1)
         for pkt in enc.encode():
             outp.mux(pkt)
 
@@ -119,6 +121,7 @@ def frame_hold(view_url: str, *, first_frame: int = 0, increment: int = 0,
     n_out = max(1, int(info['duration'] * fps))
     ff = max(0, int(first_frame))
     inc = max(0, int(increment))
+    report = make_progress(progress, n_out, "holding")
     out = fresh_output_path('.mp4')
 
     def _src_frame(i):
@@ -159,8 +162,7 @@ def frame_hold(view_url: str, *, first_frame: int = 0, increment: int = 0,
             nf.time_base = _OUT_TB
             for pkt in enc.encode(nf):
                 outp.mux(pkt)
-            if progress is not None and i % 30 == 0:
-                progress(i, n_out, "holding")
+            report(i + 1)
         for pkt in enc.encode():
             outp.mux(pkt)
 
@@ -185,12 +187,12 @@ def render_sequence(segments, *, progress=None) -> str:
 
     total = len(segs) * 2
     step = 0
+    report = make_progress(progress, total, "sequence")
 
     def _tick(text):
         nonlocal step
         step += 1
-        if progress is not None:
-            progress(min(step, total), total, text)
+        report(min(step, total), text=text)
 
     clips = []
     for i, s in enumerate(segs):
@@ -202,7 +204,7 @@ def render_sequence(segments, *, progress=None) -> str:
             clips.append(s['url'])
         else:
             clips.append(trim_video(s['url'], s['in_s'], out_s))
-        _tick(f"trim {i + 1}/{len(segs)}")
+        _tick(f"segment {i + 1}/{len(segs)}")
 
     groups = [[clips[0]]]
     joins = []

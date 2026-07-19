@@ -8,6 +8,8 @@ const apiMock = vi.hoisted(() => ({
   deleteServer: vi.fn(),
   testServer: vi.fn(),
   listServerStatus: vi.fn(),
+  fetchLocalCapabilities: vi.fn(),
+  fetchRemoteCapabilities: vi.fn(),
 }))
 
 vi.mock('@/api', () => apiMock)
@@ -119,6 +121,76 @@ describe('serverStore', () => {
     const off2 = store.subscribeStatus()
     await vi.waitFor(() => expect(apiMock.listServerStatus).toHaveBeenCalledTimes(2))
     off2()
+  })
+
+  it('probeCapabilities probes the server origin and caches installed results', async () => {
+    apiMock.listServers.mockResolvedValue({ servers: [RIG] })
+    const caps = {
+      version: '1.8.0',
+      node_ids: ['ComfyTV.VideoLUTStage'],
+      resources: { lut: [], font: [] },
+      resource_fields: {},
+    }
+    apiMock.fetchRemoteCapabilities.mockResolvedValue({ installed: true, capabilities: caps })
+    const store = useServerStore()
+    await store.load()
+
+    const probe = await store.probeCapabilities(3)
+    expect(apiMock.fetchRemoteCapabilities).toHaveBeenCalledWith('http://192.168.1.20:8188')
+    expect(probe).toEqual({ installed: true, capabilities: caps })
+    expect(store.capabilityProbeFor(3)).toEqual(probe)
+
+    await store.probeCapabilities(3)
+    expect(apiMock.fetchRemoteCapabilities).toHaveBeenCalledTimes(1)
+
+    await store.probeCapabilities(3, true)
+    expect(apiMock.fetchRemoteCapabilities).toHaveBeenCalledTimes(2)
+  })
+
+  it('probeCapabilities re-probes after a failed probe', async () => {
+    apiMock.listServers.mockResolvedValue({ servers: [RIG] })
+    apiMock.fetchRemoteCapabilities.mockResolvedValue({ installed: false, error: 'HTTP 404' })
+    const store = useServerStore()
+    await store.load()
+
+    expect(await store.probeCapabilities(3)).toEqual({ installed: false, error: 'HTTP 404' })
+    await store.probeCapabilities(3)
+    expect(apiMock.fetchRemoteCapabilities).toHaveBeenCalledTimes(2)
+    expect(store.capabilityProbeFor(3)).toEqual({ installed: false, error: 'HTTP 404' })
+  })
+
+  it('probeCapabilities answers installed:false for unknown servers without fetching', async () => {
+    const store = useServerStore()
+    expect(await store.probeCapabilities(99)).toEqual({
+      installed: false, error: 'unknown server',
+    })
+    expect(apiMock.fetchRemoteCapabilities).not.toHaveBeenCalled()
+  })
+
+  it('loadLocalCapabilities fetches once and caches', async () => {
+    const caps = {
+      version: '1.8.0',
+      node_ids: [],
+      resources: { lut: [], font: [] },
+      resource_fields: {},
+    }
+    apiMock.fetchLocalCapabilities.mockResolvedValue(caps)
+    const store = useServerStore()
+    expect(await store.loadLocalCapabilities()).toEqual(caps)
+    expect(await store.loadLocalCapabilities()).toEqual(caps)
+    expect(apiMock.fetchLocalCapabilities).toHaveBeenCalledTimes(1)
+    expect(store.localCapabilities).toEqual(caps)
+  })
+
+  it('loadLocalCapabilities returns null on failure and retries next call', async () => {
+    apiMock.fetchLocalCapabilities.mockRejectedValueOnce(new Error('boom'))
+    apiMock.fetchLocalCapabilities.mockResolvedValueOnce({
+      version: 'x', node_ids: [], resources: {}, resource_fields: {},
+    })
+    const store = useServerStore()
+    expect(await store.loadLocalCapabilities()).toBeNull()
+    expect((await store.loadLocalCapabilities())?.version).toBe('x')
+    expect(apiMock.fetchLocalCapabilities).toHaveBeenCalledTimes(2)
   })
 
   it('resolveSelection maps local/missing/disabled to null', async () => {

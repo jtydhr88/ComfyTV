@@ -99,7 +99,7 @@ class TestMultiTrack:
     def test_two_points_and_solve(self):
         import folder_paths
         from ComfyTV.runners import media
-        from ComfyTV.nodes.stages.video_pro import MotionTrackStage
+        from ComfyTV.nodes.stages.video_masking import MotionTrackStage
         d = Path(folder_paths.get_output_directory()) / 's123-src'
         d.mkdir(parents=True, exist_ok=True)
         p = d / 'dots.mp4'
@@ -275,7 +275,7 @@ class TestMaskPropagate:
         assert last[60, 25] < 80
 
     def test_needs_mask(self, clip):
-        from ComfyTV.nodes.stages.video_fx2 import MaskPropagateStage
+        from ComfyTV.nodes.stages.video_masking import MaskPropagateStage
         with pytest.raises(RuntimeError, match="mask image"):
             MaskPropagateStage.execute(project_id='p1', video=clip)
 
@@ -284,7 +284,7 @@ class TestHueCorrect:
     def test_desaturate_band(self):
         import folder_paths
         from ComfyTV.runners import media
-        from ComfyTV.runners.fx_torch import hue_correct_video
+        from ComfyTV.runners.video_color_ops import hue_correct_video
         d = Path(folder_paths.get_output_directory()) / 's123-src'
         d.mkdir(parents=True, exist_ok=True)
         p = d / 'redgreen.mp4'
@@ -319,18 +319,18 @@ class TestHueCorrect:
         assert green_px[1] - green_px[0] > 80
 
     def test_no_curves_rejected(self, clip):
-        from ComfyTV.runners.fx_torch import hue_correct_video
+        from ComfyTV.runners.video_color_ops import hue_correct_video
         with pytest.raises(RuntimeError, match="no curves"):
             hue_correct_video(clip, "")
 
 
 class TestGlowGodRaysPattern:
     def test_glow(self, clip):
-        from ComfyTV.runners.fx_torch import glow_video
+        from ComfyTV.runners.video_stylize_ops import glow_video
         glow_video(clip, threshold=0.5, size=3, bloom_count=3)
 
     def test_god_rays(self, clip):
-        from ComfyTV.runners.fx_torch import god_rays_video
+        from ComfyTV.runners.video_stylize_ops import god_rays_video
         god_rays_video(clip, scale=1.5, steps=3, decay=0.4)
 
     @pytest.mark.parametrize("kind", ['ramp', 'radial', 'rectangle', 'noise'])
@@ -354,8 +354,8 @@ class TestNewStageDefs:
 
     @pytest.mark.parametrize("name", ALL)
     def test_schema(self, name):
-        from ComfyTV.nodes.stages import video_fx2
-        getattr(video_fx2, name).define_schema()
+        from ComfyTV.nodes import stages
+        getattr(stages, name).define_schema()
 
     def test_meta(self):
         from ComfyTV.nodes.stages.common.meta import STAGE_META

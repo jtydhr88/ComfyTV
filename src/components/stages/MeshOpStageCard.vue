@@ -53,7 +53,7 @@
       </div>
     </div>
 
-    <div class="ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:flex ctv:flex-col ctv:gap-1.5">
+    <div class="ctv-scroll-thin ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:flex ctv:flex-col ctv:gap-1.5" @wheel.stop>
       <div
         v-if="hasMapsPanel && mapsUrl"
         class="ctv:relative ctv:w-full ctv:shrink-0 ctv:rounded-md ctv:overflow-hidden ctv:bg-black"

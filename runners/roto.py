@@ -4,6 +4,7 @@ from fractions import Fraction
 import numpy as np
 
 from .media import localize, fresh_output_path, path_to_view_url, get_video_info
+from .media_filter import make_progress
 
 _OUT_TB = Fraction(1, 90000)
 
@@ -108,6 +109,7 @@ def roto_mask_video(ref_url: str, shape_keys, *, feather_px=0.0,
     fps = info['fps'] or 24
     n_frames = max(1, int(round(info['duration'] * fps)))
     animated = len({k.get('t', 0.0) for k in shape_keys}) > 1
+    report = make_progress(progress, n_frames, "rasterizing")
     out = fresh_output_path('.mp4')
 
     with av.open(str(out), 'w') as outp:
@@ -131,8 +133,7 @@ def roto_mask_video(ref_url: str, shape_keys, *, feather_px=0.0,
             frame.time_base = _OUT_TB
             for pkt in enc.encode(frame):
                 outp.mux(pkt)
-            if progress is not None and i % 30 == 0:
-                progress(i, n_frames, "rasterizing")
+            report(i + 1)
         for pkt in enc.encode():
             outp.mux(pkt)
 

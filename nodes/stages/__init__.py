@@ -15,7 +15,7 @@ from .edits import (
 from .timeline import (
     DirectorTimelineStage, TimelineVideoStage,
 )
-from .video_audio import (
+from .video_edit import (
     VideoExtractFrameStage, VideoFramesStage,
     VideoClipStage, VideoCropStage, VideoConcatStage, VideoResizeStage, VideoUpscaleStage,
     VideoSpeedStage, VideoRotateStage, VideoSplitStage,
@@ -24,42 +24,49 @@ from .video_audio import (
     AudioExtractVocalStage, AudioExtractBgStage,
     AudioVideoDemuxAudioStage, AudioVideoDemuxVideoStage,
 )
-from .video_fx import (
+from .video_color import (
     VideoColorStage, VideoCurvesStage, VideoLUTStage,
-    VideoBlurSharpenStage, VideoDenoiseStage, VideoChromaKeyStage,
-    VideoTransitionStage, VideoStabilizeStage, SceneDetectStage,
-    VideoInterpolateStage, VideoDeinterlaceStage, VideoStylizeStage,
-    VideoScopesStage,
+    HueCorrectStage, ColorFXStage,
 )
-from .audio_fx import (
+from .video_enhance import (
+    VideoBlurSharpenStage, VideoDenoiseStage, VideoInterpolateStage,
+    VideoDeinterlaceStage, VideoStabilizeStage, VideoStabilizeV2Stage,
+)
+from .video_keying import (
+    VideoChromaKeyStage, PIKStage, KeyerStage, DespillStage,
+    ColorSuppressStage, KeyMixStage, MatteMonitorStage, MatteMorphStage,
+)
+from .video_stylize import (
+    VideoStylizeStage, GlowStage, GodRaysStage, OldFilmStage, FrameBlendStage,
+)
+from .video_compose import (
+    VideoCompositeStage, VideoTransformStage, CornerPinStage, STMapStage,
+)
+from .video_masking import (
+    MotionTrackStage, RotoMaskStage, MaskPropagateStage, PaintStrokeStage,
+    AnnotateStage,
+)
+from .video_text import TitleStage, SubtitleStage, SubtitleGenStage
+from .video_timeline import VideoTransitionStage, TimeRemapStage, SequenceStage
+from .video_analysis import VideoScopesStage, SceneDetectStage
+from .video_generate import PatternStage, KenBurnsStage
+from .fx_chain import FXChainStage
+from .audio_process import (
     AudioDynamicsStage, AudioEQStage, AudioLoudnessStage, AudioDenoiseStage,
+    AudioRepairStage,
 )
-from .audio_pro import (
+from .audio_effects import (
     AudioEchoStage, AudioModulationStage, AudioStereoStage,
-    AudioTimePitchStage, AudioRepairStage, AudioSaturateStage,
-    AudioCrossfadeStage, AudioAnalyzeStage, AudioVisualizeStage,
-    AudioMixStage, AudioSegmentExportStage, AudioConvolveStage,
-    AudioSweepStage, AudioDeconvolveStage,
+    AudioTimePitchStage, AudioSaturateStage, AudioConvolveStage,
 )
-from .video_pro import (
-    VideoCompositeStage, VideoTransformStage, CornerPinStage,
-    RotoMaskStage, MotionTrackStage, TitleStage, SubtitleStage,
+from .audio_edit import (
+    AudioCrossfadeStage, AudioMixStage, AudioSegmentExportStage,
 )
-from .video_p2 import (
-    TimeRemapStage, SequenceStage, VideoStabilizeV2Stage, PaintStrokeStage,
+from .audio_measure import (
+    AudioAnalyzeStage, AudioVisualizeStage, AudioSweepStage,
+    AudioDeconvolveStage,
 )
-from .video_fx2 import (
-    STMapStage, MaskPropagateStage, SubtitleGenStage,
-    HueCorrectStage, GlowStage, GodRaysStage, PatternStage,
-)
-from .video_key import (
-    PIKStage, KeyerStage, DespillStage, ColorSuppressStage,
-    KeyMixStage, MatteMonitorStage, MatteMorphStage,
-)
-from .video_r3 import (
-    FrameBlendStage, ColorFXStage, KenBurnsStage, OldFilmStage,
-    AnnotateStage, AudioReactiveStage, AudioMeterStage,
-)
+from .audio_reactive import AudioReactiveStage, AudioMeterStage
 from .panorama import (
     PanoramaStage, PanoramaCurrentViewStage, PanoramaMultiViewStage,
 )
@@ -99,6 +106,7 @@ class ComfyTVExtension(ComfyExtension):
             VideoTransitionStage, VideoStabilizeStage, SceneDetectStage,
             VideoInterpolateStage, VideoDeinterlaceStage, VideoStylizeStage,
             VideoScopesStage,
+            FXChainStage,
             AudioDynamicsStage, AudioEQStage, AudioLoudnessStage, AudioDenoiseStage,
             AudioEchoStage, AudioModulationStage, AudioStereoStage,
             AudioTimePitchStage, AudioRepairStage, AudioSaturateStage,

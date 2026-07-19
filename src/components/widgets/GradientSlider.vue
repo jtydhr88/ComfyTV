@@ -24,7 +24,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { SliderRoot, SliderThumb, SliderTrack } from 'reka-ui'
-import type { ColorStop } from '@/components/widgets/colorStops'
+import {
+  interpolateStops,
+  stopsToGradient,
+  type ColorStop,
+} from '@/components/widgets/colorStops'
 
 const props = defineProps<{
   modelValue: number | null
@@ -49,33 +53,6 @@ const clamped = computed(() => {
 const display = computed(() =>
   props.precision === 0 ? String(Math.round(clamped.value)) : String(clamped.value)
 )
-
-function stopsToGradient(stops: ColorStop[]): string {
-  if (!stops.length) return 'transparent'
-  const colors = stops.map(
-    ({ offset, color: [r, g, b] }) => `rgb(${r},${g},${b}) ${offset * 100}%`
-  )
-  return `linear-gradient(to right, ${colors.join(', ')})`
-}
-
-function interpolateStops(stops: ColorStop[], t: number): string {
-  if (!stops.length) return 'transparent'
-  const c = Math.max(0, Math.min(1, t))
-  if (c <= stops[0].offset) {
-    const [r, g, b] = stops[0].color
-    return `rgb(${r},${g},${b})`
-  }
-  for (let i = 0; i < stops.length - 1; i++) {
-    const { offset: o1, color: [r1, g1, b1] } = stops[i]
-    const { offset: o2, color: [r2, g2, b2] } = stops[i + 1]
-    if (c >= o1 && c <= o2) {
-      const f = o2 === o1 ? 0 : (c - o1) / (o2 - o1)
-      return `rgb(${Math.round(r1 + (r2 - r1) * f)},${Math.round(g1 + (g2 - g1) * f)},${Math.round(b1 + (b2 - b1) * f)})`
-    }
-  }
-  const [r, g, b] = stops[stops.length - 1].color
-  return `rgb(${r},${g},${b})`
-}
 
 const gradient = computed(() => stopsToGradient(props.stops))
 const thumbColor = computed(() => {

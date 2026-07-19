@@ -1,12 +1,12 @@
 <template>
   <div
-    class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full"
+    class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:flex-1"
     @pointerdown.stop
     @pointermove.stop
     @pointerup.stop
   >
     <div ref="boxEl"
-         class="ctv:relative ctv:w-full ctv:h-[220px] ctv:rounded-md ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle">
+         class="ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[140px] ctv:rounded-md ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle">
       <div v-if="!sourceVideoUrl"
            class="ctv:h-full ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50">
         <i class="pi pi-video ctv:text-[32px] ctv:opacity-60" />
@@ -28,6 +28,7 @@
           @error="onError"
           @click="togglePlay"
         />
+        <slot name="overlay" />
         <div v-if="loadError"
              class="ctv:absolute ctv:inset-0 ctv:z-10 ctv:flex ctv:items-center ctv:justify-center ctv:text-xs
                     ctv:bg-black/80 ctv:text-destructive-background ctv:pointer-events-none">
@@ -36,7 +37,7 @@
       </template>
     </div>
 
-    <div class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]">
+    <div class="ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1.5 ctv:text-[11px]">
       <button
         type="button"
         class="ctv:flex ctv:items-center ctv:justify-center ctv:w-7 ctv:h-6 ctv:text-xs ctv:rounded ctv:cursor-pointer

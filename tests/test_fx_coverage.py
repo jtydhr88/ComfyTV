@@ -53,22 +53,24 @@ def cut_clip():
 
 
 def _vfx(name):
-    from ComfyTV.nodes.stages import video_fx
-    return getattr(video_fx, name)
+    from ComfyTV.nodes import stages
+    return getattr(stages, name)
 
 
 def _afx(name):
-    from ComfyTV.nodes.stages import audio_fx
-    return getattr(audio_fx, name)
+    from ComfyTV.nodes import stages
+    return getattr(stages, name)
 
 
 class TestColorBranches:
     def test_temperature_only(self, clip):
         _vfx('VideoColorStage').execute(project_id='p1', temperature=8000, video=clip)
 
-    def test_no_video(self):
-        with pytest.raises(RuntimeError, match="upstream video"):
-            _vfx('VideoColorStage').execute(project_id='p1', exposure=1.0)
+    def test_no_video_emits_spec_only(self):
+        import json
+        out = _vfx('VideoColorStage').execute(project_id='p1', exposure=1.0)
+        assert out.values[0] == ""
+        assert json.loads(out.values[1])['domain'] == 'video'
 
 
 class TestCurvesBranches:
@@ -81,6 +83,12 @@ class TestCurvesBranches:
         with pytest.raises(RuntimeError, match="no curve"):
             _vfx('VideoCurvesStage').execute(project_id='p1',
                                              master_pts='[[0.5,0.5]]', video=clip)
+
+    def test_points_collapsing_to_one_rejected(self, clip):
+        with pytest.raises(RuntimeError, match="no curve"):
+            _vfx('VideoCurvesStage').execute(project_id='p1',
+                                             master_pts='[[1.2,0.3],[1.5,0.9]]',
+                                             video=clip)
 
 
 class TestLUTBranches:
@@ -159,6 +167,23 @@ class TestChromaKeyBranches:
             _vfx('VideoChromaKeyStage').execute(project_id='p1',
                                                 key_color='#XY', video=clip)
 
+    def test_non_hex_color(self, clip):
+        with pytest.raises(RuntimeError, match="bad color"):
+            _vfx('VideoChromaKeyStage').execute(project_id='p1',
+                                                key_color='#GGHHII', video=clip)
+
+
+class TestAnnotateBranches:
+    def test_fillborders_oversized_clamped(self, clip):
+        from ComfyTV.nodes.stages import video_masking
+        video_masking.AnnotateStage.execute(project_id='p1', mode='fillborders',
+                                       border_px=512, video=clip)
+
+    def test_box_bad_color_falls_back(self, clip):
+        from ComfyTV.nodes.stages import video_masking
+        video_masking.AnnotateStage.execute(project_id='p1', mode='box',
+                                       color='not-a-color', video=clip)
+
 
 class TestTransitionBranches:
     def test_missing_inputs(self, clip):
@@ -175,6 +200,181 @@ class TestSceneDetectExecute:
         with pytest.raises(RuntimeError, match="no cuts"):
             _vfx('SceneDetectStage').execute(project_id='p1', threshold=1.0,
                                              video=clip)
+
+    def test_frames_payload_shape(self, cut_clip):
+        import json
+        out = _vfx('SceneDetectStage').execute(project_id='p1', threshold=0.3,
+                                               min_gap_s=0.5, video=cut_clip)
+        assert len(out.values) == 1
+        data = json.loads(out.values[0])
+        assert set(data) == {'images', 'cuts'}
+        assert len(data['images']) == len(data['cuts']) + 1
+
+    def test_clips_mode_matches_picker_contract(self, cut_clip):
+        import json
+        from ComfyTV.runners import media
+        out = _vfx('SceneDetectStage').execute(project_id='p1', threshold=0.3,
+                                               min_gap_s=0.5, output='clips',
+                                               video=cut_clip)
+        assert len(out.values) == 2
+        data = json.loads(out.values[0])
+        clips = data['clips']
+        assert len(clips) == len(data['cuts']) + 1
+        assert clips[0]['start'] == 0.0
+        for i, c in enumerate(clips):
+            assert c['index'] == i + 1
+            assert c['image_url'].startswith('/view?')
+            assert c['end'] > c['start']
+            assert c['label'] == f"{i + 1} · {c['start']:.2f}–{c['end']:.2f}s"
+            assert media.get_video_info(c['image_url'])['duration'] > 0
+        assert out.values[1] == clips[0]['image_url']
+        assert out.ui['picked'] == [clips[0]['image_url']]
+        assert out.ui['picked_index'] == [1]
+
+    def test_selected_index_picks_clip(self, cut_clip):
+        import json
+        out = _vfx('SceneDetectStage').execute(project_id='p1', threshold=0.3,
+                                               min_gap_s=0.5, output='clips',
+                                               selected_index=2, video=cut_clip)
+        clips = json.loads(out.values[0])['clips']
+        assert len(clips) >= 2
+        assert out.values[1] == clips[1]['image_url']
+        assert out.ui['picked_index'] == [2]
+
+    def test_selected_index_clamps_to_last(self, cut_clip):
+        import json
+        out = _vfx('SceneDetectStage').execute(project_id='p1', threshold=0.3,
+                                               min_gap_s=0.5, output='clips',
+                                               selected_index=99, video=cut_clip)
+        clips = json.loads(out.values[0])['clips']
+        assert out.values[1] == clips[-1]['image_url']
+        assert out.ui['picked_index'] == [len(clips)]
+        low = _vfx('SceneDetectStage').execute(project_id='p1', threshold=0.3,
+                                               min_gap_s=0.5, output='clips',
+                                               selected_index=0, video=cut_clip)
+        assert low.ui['picked_index'] == [1]
+
+    def test_reselect_hits_cache(self, cut_clip, monkeypatch):
+        from ComfyTV.nodes.stages import video_analysis
+        monkeypatch.setattr(video_analysis, '_SCENE_CACHE', {})
+        calls = {'scan': 0, 'trim': 0}
+        real_scan = video_analysis.scene_detect
+        real_trim = video_analysis.trim_video
+
+        def scan(*a, **k):
+            calls['scan'] += 1
+            return real_scan(*a, **k)
+
+        def trim(*a, **k):
+            calls['trim'] += 1
+            return real_trim(*a, **k)
+
+        monkeypatch.setattr(video_analysis, 'scene_detect', scan)
+        monkeypatch.setattr(video_analysis, 'trim_video', trim)
+        first = video_analysis.SceneDetectStage.execute(
+            project_id='p1', threshold=0.3, min_gap_s=0.5, output='clips',
+            selected_index=1, video=cut_clip)
+        after_first = dict(calls)
+        assert after_first['scan'] == 1
+        assert after_first['trim'] >= 1
+        second = video_analysis.SceneDetectStage.execute(
+            project_id='p1', threshold=0.3, min_gap_s=0.5, output='clips',
+            selected_index=2, video=cut_clip)
+        assert calls == after_first
+        assert second.values[0] == first.values[0]
+        assert second.values[1] != first.values[1]
+
+    def test_cache_recomputes_when_clip_file_missing(self, cut_clip, monkeypatch):
+        import json
+        from ComfyTV.nodes.stages import video_analysis
+        from ComfyTV.runners import media
+        monkeypatch.setattr(video_analysis, '_SCENE_CACHE', {})
+        calls = {'scan': 0}
+        real_scan = video_analysis.scene_detect
+
+        def scan(*a, **k):
+            calls['scan'] += 1
+            return real_scan(*a, **k)
+
+        monkeypatch.setattr(video_analysis, 'scene_detect', scan)
+        out = video_analysis.SceneDetectStage.execute(
+            project_id='p1', threshold=0.3, min_gap_s=0.5, output='clips',
+            video=cut_clip)
+        clips = json.loads(out.values[0])['clips']
+        media.view_url_to_path(clips[0]['image_url']).unlink()
+        video_analysis.SceneDetectStage.execute(
+            project_id='p1', threshold=0.3, min_gap_s=0.5, output='clips',
+            video=cut_clip)
+        assert calls['scan'] == 2
+
+    def test_precise_mode_frame_accurate(self, cut_clip, monkeypatch):
+        import json
+        from ComfyTV.nodes.stages import video_analysis
+        from ComfyTV.runners import media
+        monkeypatch.setattr(video_analysis, '_SCENE_CACHE', {})
+        out = video_analysis.SceneDetectStage.execute(
+            project_id='p1', threshold=0.3, min_gap_s=0.5, output='clips',
+            cut_mode='precise', video=cut_clip)
+        clips = json.loads(out.values[0])['clips']
+        assert len(clips) == 2
+        frame_s = 1.0 / 12.0
+        for c in clips:
+            info = media.get_video_info(c['image_url'])
+            expected = c['end'] - c['start']
+            assert abs(info['duration'] - expected) <= frame_s + 1e-6
+        means = []
+        for c in clips:
+            src = media.view_url_to_path(c['image_url'])
+            with av.open(str(src)) as inp:
+                frame = next(inp.decode(inp.streams.video[0]))
+                means.append(float(frame.to_ndarray(format='rgb24').mean()))
+        assert means[0] < 100
+        assert means[1] > 150
+
+    def test_clips_mode_no_cuts_rejected(self, clip):
+        with pytest.raises(RuntimeError, match="no cuts"):
+            _vfx('SceneDetectStage').execute(project_id='p1', threshold=1.0,
+                                             output='clips', video=clip)
+
+
+class TestTrimVideoPrecise:
+    def test_duration_and_audio(self, clip):
+        from ComfyTV.runners import media
+        url = media.trim_video_precise(clip, 0.1, 0.5)
+        info = media.get_video_info(url)
+        assert abs(info['duration'] - 0.4) <= (1.0 / 12.0) + 1e-6
+        assert info['has_audio']
+
+    def test_bad_range_rejected(self, clip):
+        from ComfyTV.runners import media
+        with pytest.raises(RuntimeError, match="must be >"):
+            media.trim_video_precise(clip, 1.0, 1.0)
+
+
+class TestSceneSegments:
+    def test_bounds_and_end(self):
+        from ComfyTV.nodes.stages.video_analysis import _scene_segments
+        assert _scene_segments([1.0, 2.5], 4.0) == \
+            [(0.0, 1.0), (1.0, 2.5), (2.5, 4.0)]
+
+    def test_end_extends_past_last_cut(self):
+        from ComfyTV.nodes.stages.video_analysis import _scene_segments
+        segs = _scene_segments([1.0], 0.0)
+        assert len(segs) == 2
+        assert segs[0] == (0.0, 1.0)
+        assert segs[1][1] == pytest.approx(1.05)
+
+    def test_capped_at_48(self):
+        from ComfyTV.nodes.stages.video_analysis import _scene_segments
+        segs = _scene_segments([float(i) for i in range(1, 60)], 120.0)
+        assert len(segs) == 48
+        assert segs[0] == (0.0, 1.0)
+        assert segs[-1] == (47.0, 48.0)
+
+    def test_degenerate_segment_dropped(self):
+        from ComfyTV.nodes.stages.video_analysis import _scene_segments
+        segs = _scene_segments([1.0, 1.0005], 2.0)
+        assert segs == [(0.0, 1.0), (1.0005, 2.0)]
 
 
 class TestInterpolateExecute:
@@ -239,9 +439,11 @@ class TestAudioDynamicsBranches:
             _afx('AudioDynamicsStage').execute(project_id='p1', mode='expander',
                                                video=clip)
 
-    def test_needs_source(self):
-        with pytest.raises(RuntimeError, match="upstream audio or video"):
-            _afx('AudioDynamicsStage').execute(project_id='p1')
+    def test_no_source_emits_spec_only(self):
+        import json
+        out = _afx('AudioDynamicsStage').execute(project_id='p1')
+        assert out.values[0] == ""
+        assert json.loads(out.values[1])['domain'] == 'audio'
 
 
 class TestAudioEQBranches:

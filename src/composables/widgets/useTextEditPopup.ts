@@ -1,5 +1,7 @@
-import { computed, nextTick, watch, type Ref } from 'vue'
+import { computed, nextTick, ref, watch, type Ref } from 'vue'
 
+import { listResources } from '@/api'
+import type { Resource } from '@/api'
 import type { LayerEditorController } from '@/composables/widgets/useLayerEditorStage'
 import type { FontRef, TextLayer } from '@/widgets/layerEditor/types'
 
@@ -13,8 +15,9 @@ export function fontRefToValue(ref: FontRef): string {
 
 export function parseFontValue(v: unknown): FontRef | null {
   const s = String(v ?? '')
-  if (!s.startsWith('builtin:')) return null
-  return { kind: 'builtin', id: s.slice('builtin:'.length) }
+  if (s.startsWith('builtin:')) return { kind: 'builtin', id: s.slice('builtin:'.length) }
+  if (s.startsWith('url:')) return { kind: 'url', url: s.slice('url:'.length) }
+  return null
 }
 
 export function useTextEditPopup(
@@ -46,12 +49,25 @@ export function useTextEditPopup(
     return clampNumber(Number((e.target as HTMLInputElement).value), min, max)
   }
 
-  const fontOptions = computed(() =>
-    editor.fontStore.builtins().map((b) => ({
+  const resourceFonts = ref<Resource[]>([])
+  void listResources('font')
+    .then((res) => {
+      resourceFonts.value = res.resources.filter((r) => !r.missing)
+    })
+    .catch(() => {
+      resourceFonts.value = []
+    })
+
+  const fontOptions = computed(() => [
+    ...editor.fontStore.builtins().map((b) => ({
       label: b.name,
       value: `builtin:${b.id}`,
     })),
-  )
+    ...resourceFonts.value.map((r) => ({
+      label: r.name,
+      value: `url:${r.url}`,
+    })),
+  ])
 
   const fontValue = computed(() => {
     const l = layer.value
@@ -64,8 +80,14 @@ export function useTextEditPopup(
   })
 
   function onFontChange(v: unknown): void {
-    const ref = parseFontValue(v)
-    if (ref) patch({ fontRef: ref })
+    const fontRef = parseFontValue(v)
+    if (!fontRef) return
+    if (fontRef.kind === 'url') {
+      const match = resourceFonts.value.find((r) => r.url === fontRef.url)
+      patch({ fontRef: match ? { ...fontRef, name: match.name } : fontRef })
+      return
+    }
+    patch({ fontRef })
   }
 
   return {

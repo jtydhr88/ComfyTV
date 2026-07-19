@@ -63,6 +63,7 @@ STAGE_META: dict[str, dict] = {
     'VideoDeinterlaceStage':        {'kind': 'video'},
     'VideoStylizeStage':            {'kind': 'video'},
     'VideoScopesStage':             {'kind': 'image'},
+    'FXChainStage':                 {'kind': 'video'},
     'AudioDynamicsStage':           {'kind': 'audio'},
     'AudioEQStage':                 {'kind': 'audio'},
     'AudioLoudnessStage':           {'kind': 'audio'},

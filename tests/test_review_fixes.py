@@ -167,19 +167,19 @@ class TestA5A6A7FilterParams:
     def test_estdif_mode_enum(self, clip):
         """estdif uses frame/field, not send_frame/send_field — used to
         raise EINVAL at graph init."""
-        from ComfyTV.nodes.stages.video_fx import VideoDeinterlaceStage
+        from ComfyTV.nodes.stages.video_enhance import VideoDeinterlaceStage
         VideoDeinterlaceStage.execute(project_id='p1', method='estdif',
                                       rate='field', video=clip)
 
     def test_deshake_rx_snapped_to_16(self, clip):
         """rx=24 used to raise AVERROR_PATCHWELCOME; it must snap to 32."""
-        from ComfyTV.nodes.stages.video_fx import VideoStabilizeStage
+        from ComfyTV.nodes.stages.video_enhance import VideoStabilizeStage
         VideoStabilizeStage.execute(project_id='p1', range_x=24, range_y=24,
                                     video=clip)
 
     def test_alimiter_attack_release_clamped(self, clip):
         """attack below 0.1 ms / release below 1 ms used to fail init."""
-        from ComfyTV.nodes.stages.audio_fx import AudioDynamicsStage
+        from ComfyTV.nodes.stages.audio_process import AudioDynamicsStage
         AudioDynamicsStage.execute(project_id='p1', mode='limiter',
                                    threshold_db=-3.0, attack_ms=0.01,
                                    release_ms=0.5, video=clip)

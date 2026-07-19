@@ -14,7 +14,7 @@
         >+ {{ $t('stageParams.add') }}</button>
         <div
           v-if="menuOpen"
-          class="ctv:absolute ctv:right-0 ctv:top-full ctv:mt-1 ctv:z-20 ctv:w-44 ctv:max-h-56 ctv:overflow-y-auto
+          @wheel.stop class="ctv-scroll-thin ctv:absolute ctv:right-0 ctv:top-full ctv:mt-1 ctv:z-20 ctv:w-44 ctv:max-h-56 ctv:overflow-y-auto
                  ctv:p-1 ctv:rounded ctv:shadow-md ctv:bg-interface-menu-surface ctv:border ctv:border-border-default"
           @click.stop
         >

@@ -1,4 +1,5 @@
 import { onBeforeUnmount, ref, type Ref } from 'vue'
+import { registerPreviewSource } from '@/composables/stages/previewBus'
 import { computeFit } from '@/composables/widgets/useVideoViewport'
 
 export const CHROMA_PREVIEW_W = 320
@@ -44,6 +45,38 @@ export function applyChromaKey(
   }
 }
 
+export function applyDespill(
+  d: Uint8ClampedArray,
+  keyHex: string,
+  mix: number,
+  expand: number,
+): void {
+  if (mix <= 0) return
+  const key = hexToRgb(keyHex)
+  const blueScreen = key[2] > key[1]
+  const m = Math.min(Math.max(mix, 0), 1)
+  const factor = (1 - m) * (1 - Math.min(Math.max(expand, 0), 1))
+  for (let i = 0; i < d.length; i += 4) {
+    const r = d[i] / 255
+    const g = d[i + 1] / 255
+    const b = d[i + 2] / 255
+    const spill = blueScreen
+      ? Math.max(b - (r * m + g * factor), 0)
+      : Math.max(g - (r * m + b * factor), 0)
+    d[i + 1] = Math.min(255, Math.max(0, Math.round((g - spill) * 255)))
+  }
+}
+
+export function applyMatte(d: Uint8ClampedArray): void {
+  for (let i = 0; i < d.length; i += 4) {
+    const a = d[i + 3]
+    d[i] = a
+    d[i + 1] = a
+    d[i + 2] = a
+    d[i + 3] = 255
+  }
+}
+
 export function frameFit(v: HTMLVideoElement): { dx: number; dy: number; dw: number; dh: number } {
   const mw = v.videoWidth || 16
   const mh = v.videoHeight || 9
@@ -54,14 +87,21 @@ export function frameFit(v: HTMLVideoElement): { dx: number; dy: number; dw: num
 export interface UseChromaKeyPickerOptions {
   videoEl: Ref<HTMLVideoElement | null>
   canvasEl: Ref<HTMLCanvasElement | null>
+  nodeId?: string
   keyColor: Ref<string>
   similarity: Ref<number>
   blend: Ref<number>
+  despillMix?: Ref<number>
+  despillExpand?: Ref<number>
+  outputMode?: Ref<string>
 }
 
 export function useChromaKeyPicker(opts: UseChromaKeyPickerOptions) {
   const picking = ref(false)
   const playing = ref(false)
+  const unregister = opts.nodeId != null
+    ? registerPreviewSource(opts.nodeId, () => opts.canvasEl.value)
+    : null
   let rafId = 0
 
   function renderFrame(): void {
@@ -79,6 +119,12 @@ export function useChromaKeyPicker(opts: UseChromaKeyPickerOptions) {
 
     const img = ctx.getImageData(0, 0, CHROMA_PREVIEW_W, CHROMA_PREVIEW_H)
     applyChromaKey(img.data, opts.keyColor.value, opts.similarity.value, opts.blend.value)
+    if (opts.outputMode?.value === 'matte') {
+      applyMatte(img.data)
+    } else {
+      applyDespill(img.data, opts.keyColor.value,
+                   opts.despillMix?.value ?? 0, opts.despillExpand?.value ?? 0)
+    }
     ctx.putImageData(img, 0, 0)
     rafId = requestAnimationFrame(renderFrame)
   }
@@ -107,14 +153,20 @@ export function useChromaKeyPicker(opts: UseChromaKeyPickerOptions) {
     const { dx, dy, dw, dh } = frameFit(v)
     tctx.drawImage(v, dx, dy, dw, dh)
     const rect = c.getBoundingClientRect()
-    const px = Math.floor((e.clientX - rect.left) * (CHROMA_PREVIEW_W / rect.width))
-    const py = Math.floor((e.clientY - rect.top) * (CHROMA_PREVIEW_H / rect.height))
+    if (!rect.width || !rect.height) return
+    const fit = computeFit(rect.width, rect.height, CHROMA_PREVIEW_W, CHROMA_PREVIEW_H)
+    const px = Math.floor((e.clientX - rect.left - fit.offX) / fit.scale)
+    const py = Math.floor((e.clientY - rect.top - fit.offY) / fit.scale)
+    if (px < 0 || py < 0 || px >= CHROMA_PREVIEW_W || py >= CHROMA_PREVIEW_H) return
     const p = tctx.getImageData(px, py, 1, 1).data
     opts.keyColor.value = rgbToHex(p[0], p[1], p[2])
     picking.value = false
   }
 
-  onBeforeUnmount(() => cancelAnimationFrame(rafId))
+  onBeforeUnmount(() => {
+    unregister?.()
+    cancelAnimationFrame(rafId)
+  })
 
   return { picking, playing, startLoop, togglePlay, onCanvasClick }
 }

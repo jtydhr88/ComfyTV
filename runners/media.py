@@ -212,6 +212,72 @@ def trim_video(view_url: str, start_s: float, end_s: float) -> str:
     return path_to_view_url(out)
 
 
+def trim_video_precise(view_url: str, start_s: float, end_s: float) -> str:
+    import av
+    import numpy as np
+    from fractions import Fraction
+    if end_s <= start_s:
+        raise RuntimeError(f"trim: end_s ({end_s}) must be > start_s ({start_s})")
+    src = localize(view_url)
+    out = fresh_output_path('.mp4')
+    out_tb = Fraction(1, 90000)
+    eps = 1e-3
+
+    with av.open(str(src)) as inp, av.open(str(out), 'w') as outp:
+        in_v = inp.streams.video[0]
+        w = in_v.width - (in_v.width % 2)
+        h = in_v.height - (in_v.height % 2)
+        out_v = outp.add_stream('libx264', rate=in_v.average_rate or 24,
+                                options={'crf': '20'})
+        out_v.width = w
+        out_v.height = h
+        out_v.pix_fmt = 'yuv420p'
+        out_v.codec_context.time_base = out_tb
+        out_a = _new_aac_stream(outp) if inp.streams.audio else None
+
+        if in_v.time_base:
+            try:
+                inp.seek(int(start_s / float(in_v.time_base)),
+                         stream=in_v, any_frame=False, backward=True)
+            except Exception:
+                pass
+
+        try:
+            frame_dur = 1.0 / float(in_v.average_rate)
+        except (TypeError, ZeroDivisionError):
+            frame_dur = 1.0 / 24.0
+
+        prev_t = None
+        for frame in inp.decode(in_v):
+            if frame.pts is not None and frame.time_base:
+                t = float(frame.pts * frame.time_base)
+            else:
+                t = (prev_t + frame_dur) if prev_t is not None else 0.0
+            prev_t = t
+            if t < start_s - eps:
+                continue
+            if t >= end_s - eps:
+                break
+            nf = frame.reformat(width=w, height=h, format='yuv420p')
+            nf.pts = int(round(max(0.0, t - start_s) / out_tb))
+            nf.time_base = out_tb
+            for pkt in out_v.encode(nf):
+                outp.mux(pkt)
+        for pkt in out_v.encode():
+            outp.mux(pkt)
+
+        if out_a is not None:
+            arr = _decode_audio_to_array(src)
+            a0 = max(0, int(round(start_s * _AUDIO_RATE)))
+            a1 = min(arr.shape[1], int(round(end_s * _AUDIO_RATE)))
+            if a1 > a0:
+                _encode_audio_array(
+                    outp, out_a,
+                    np.ascontiguousarray(arr[:, a0:a1]).astype(np.float32, copy=False))
+
+    return path_to_view_url(out)
+
+
 def _set_audio_stream_layout(out_stream, in_stream) -> None:
     try:
         out_stream.layout = in_stream.layout
@@ -782,7 +848,7 @@ __all__ = [
     'localize', 'fresh_output_path',
     'get_video_info',
     'extract_frame',
-    'trim_video', 'crop_video', 'resize_video', 'concat_videos',
+    'trim_video', 'trim_video_precise', 'crop_video', 'resize_video', 'concat_videos',
     'speed_video', 'transpose_video', 'adjust_volume', 'mux_audio',
     'extract_frames_multi',
     'demux_audio', 'silence_video',

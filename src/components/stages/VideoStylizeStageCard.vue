@@ -1,6 +1,14 @@
 <template>
   <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full">
-    <VideoPlayerLite :source-video-url="sourceVideoUrl" />
+    <VideoPlayerLite ref="playerRef" :source-video-url="sourceVideoUrl">
+      <template #overlay>
+        <canvas
+          v-show="supported"
+          ref="previewCanvas"
+          class="ctv:absolute ctv:inset-0 ctv:size-full ctv:object-contain ctv:pointer-events-none"
+        />
+      </template>
+    </VideoPlayerLite>
 
     <div
       class="ctv:flex ctv:flex-col ctv:gap-1"
@@ -32,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
@@ -40,6 +48,8 @@ import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
+import { useVideoStylizePreview } from '@/composables/stages/useVideoStylizePreview'
+import type { StylizeEffect, VideoStylizeParams } from '@/composables/stages/videoStylizeMath'
 import { useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
 
 const props = defineProps<{
@@ -67,4 +77,25 @@ const strength = useNumWidget(props.node, 'strength', 0.5)
 const block = useNumWidget(props.node, 'block', 8)
 
 const showStrength = computed(() => !['sepia', 'monochrome', 'pixelize'].includes(effect.value))
+
+const playerRef = ref<InstanceType<typeof VideoPlayerLite> | null>(null)
+const previewCanvas = ref<HTMLCanvasElement | null>(null)
+const previewVideoEl = computed<HTMLVideoElement | null>(
+  () => playerRef.value?.videoEl ?? null,
+)
+
+function previewParams(): Partial<VideoStylizeParams> {
+  return {
+    effect: effect.value as StylizeEffect,
+    strength: strength.value,
+    block: block.value,
+  }
+}
+
+const { supported } = useVideoStylizePreview({
+  videoEl: previewVideoEl,
+  canvasEl: previewCanvas,
+  nodeId: String(props.node.id),
+  params: previewParams,
+})
 </script>

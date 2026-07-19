@@ -141,6 +141,8 @@ def torch_process_video(view_url: str, frame_fn, *, progress=None,
     out = fresh_output_path('.webm' if out_alpha else '.mp4')
     device = _device()
     total_est = max(1, int(info['duration'] * info['fps']))
+    from .media_filter import make_progress
+    report_progress = make_progress(progress, total_est, "rendering")
 
     with av.open(str(src)) as inp, av.open(str(out), 'w') as outp:
         in_v = inp.streams.video[0]
@@ -186,8 +188,7 @@ def torch_process_video(view_url: str, frame_fn, *, progress=None,
                     result = frame_fn(tensor, t)
                     _encode(result, t)
                     n += 1
-                    if progress is not None and n % 15 == 0:
-                        progress(min(n, total_est), total_est, "rendering")
+                    report_progress(n)
             elif out_a is not None and packet.stream is in_a:
                 packet.stream = out_a
                 if enc is None:

@@ -82,6 +82,8 @@
       "assets": "资产库",
       "entries": "条目",
       "params": "Stage 管理",
+      "presets": "预设",
+      "resources": "资源",
       "servers": "服务器"
     }
   },
@@ -127,6 +129,21 @@
       "queueShort": "队列 {n}",
       "queueDetail": "{running} 运行中,{pending} 排队",
       "fromComfyTV": "其中 {n} 来自 ComfyTV"
+    },
+    "caps": {
+      "badge": "ComfyTV v{version}",
+      "comfyOnly": "仅 ComfyUI（未装 ComfyTV）",
+      "missingNodes": "缺 {n} 个节点",
+      "missingTitle": "远端缺少的节点——请升级远端 ComfyTV："
+    },
+    "preflight": {
+      "blockedTitle": "远程运行被拦截",
+      "warnTitle": "远端资源检查",
+      "runAnyway": "仍要运行",
+      "noComfyTV": "远端「{label}」未安装 ComfyTV——请先在远端安装，或改为本机运行。",
+      "missingNode": "远端「{label}」缺少节点 {node}——请升级远端 ComfyTV。",
+      "missingResource": "远端「{label}」缺少资源 {file}，仍要运行吗？",
+      "resourceMismatch": "资源 {file} 在远端「{label}」上内容不一致，仍要运行吗？"
     }
   },
   "stageManager": {
@@ -438,6 +455,43 @@
         "tooltip": "派生一个预选 Qwen Edit 2511 工作流的图像编辑 stage，接到当前 3D 截图上 —— 保留主体颜色和材质，把渲染图变成摄影棚产品照；提示词可改"
       }
     }
+  },
+  "stagePresets": {
+    "custom": "自定义",
+    "save": "保存预设",
+    "saveTitle": "保存预设",
+    "nameLabel": "预设名称",
+    "delete": "删除预设",
+    "deleteTitle": "删除预设",
+    "deleteConfirm": "删除预设“{name}”？",
+    "renameTitle": "重命名预设",
+    "reset": "恢复默认",
+    "builtin": "内置预设",
+    "saveFailed": "保存预设失败",
+    "nameReserved": "该名称已被内置预设占用",
+    "panel": {
+      "title": "Stage 预设",
+      "empty": "还没有预设。使用 stage 节点上的保存按钮创建。",
+      "rename": "重命名预设"
+    }
+  },
+  "resources": {
+    "panel": {
+      "title": "资源",
+      "empty": "还没有文件。上传后即可在 stage 中使用。"
+    },
+    "kind": {
+      "lut": "LUT",
+      "font": "字体"
+    },
+    "upload": "上传文件",
+    "rename": "重命名",
+    "renameTitle": "重命名资源",
+    "nameLabel": "显示名称",
+    "remove": "从库中移除",
+    "removeTitle": "移除资源",
+    "removeConfirm": "从库中移除“{name}”？文件将保留在磁盘上。",
+    "missing": "文件缺失"
   },
   "presets": {
     "imageVariant": {
@@ -764,6 +818,10 @@
       "audio-meter": {
         "label": "电平表叠加",
         "tooltip": "把实时音量表烧录到画面上"
+      },
+      "fx-chain": {
+        "label": "特效链",
+        "tooltip": "将多个特效串成一次渲染"
       }
     }
   },
@@ -1547,6 +1605,23 @@
     "textPlaceholder": "输入文字…",
     "dropHint": "拖入图片以添加图层"
   },
+  "fxChain": {
+    "title": "特效链",
+    "empty": "连接 FX 节点的 fx_spec 输出以构建特效链",
+    "moveUp": "上移",
+    "moveDown": "下移",
+    "unknown": "未知特效",
+    "domain": {
+      "video": "视频",
+      "audio": "音频"
+    }
+  },
+  "fxPreview": {
+    "run": "预览片段",
+    "stale": "参数已变 — 请重新预览",
+    "window": "真实滤镜预览 · {s} 秒",
+    "failed": "预览失败 — 请重试"
+  },
   "fx": {
     "processing": "处理中…",
     "done": "完成 — 可供下游使用",
@@ -1593,12 +1668,19 @@
     "duration": "时长",
     "offset": "起始位置",
     "offsetAuto": "0 = 自动（A 末尾）",
+    "lumaPreviewHint": "亮度擦除预览仅显示交叉淡化 — 运行后可见最终擦除效果",
     "rangeX": "水平搜索",
     "rangeY": "垂直搜索",
     "edgeMode": "边缘填充",
     "threshold": "阈值",
     "minGap": "最小间隔",
     "detectHint": "Run 扫描硬切点，每个场景输出一张缩略图",
+    "sceneFrames": "场景帧",
+    "sceneClips": "场景片段",
+    "sceneClipsHint": "Run 在每个切点拆条，输出逐场景片段——把 clips 输出接到视频挑选器",
+    "sceneClipPickHint": "点击选中片段——重新 Run 后 clips 输出即为所选片段",
+    "cutFast": "快速（关键帧）",
+    "cutPrecise": "精确（重编码）",
     "targetFps": "目标帧率",
     "slowFactor": "慢放倍数",
     "miMode": "补偿模式",
@@ -1626,6 +1708,7 @@
     "upload": "上传",
     "interp": "插值",
     "noLuts": "暂无 LUT — 请上传 .cube 文件",
+    "lutPreviewUnavailable": "实时预览仅支持 .cube 和 .3dl —— 该 LUT 将在运行时生效",
     "refresh": "刷新",
     "operator": "混合模式",
     "opacity": "不透明度",
@@ -1661,7 +1744,17 @@
     "pattern": "模板半径",
     "searchR": "搜索半径",
     "feather": "羽化",
-    "invert": "反转"
+    "invert": "反转",
+    "transitionGroup": {
+      "fade": "淡变",
+      "wipe": "擦除",
+      "slide": "滑动与平滑",
+      "shape": "形状开合",
+      "diagslice": "对角与切片",
+      "coverreveal": "覆盖与揭示",
+      "wind": "风蚀",
+      "fx": "特效"
+    }
   },
   "afx": {
     "custom": "自定义",
@@ -1774,5 +1867,9 @@
     "spectrum": "频谱图",
     "splitChannels": "分声道",
     "legend": "图例"
+  },
+  "scopes": {
+    "liveSampling": "实时采样上游预览",
+    "wireHint": "连接带实时预览的节点（调色/曲线/模糊/风格化/抠像）以启用实时示波"
   }
 }

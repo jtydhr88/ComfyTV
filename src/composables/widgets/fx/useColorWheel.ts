@@ -65,9 +65,13 @@ export function useColorWheel(opts: UseColorWheelOptions) {
     const c = canvasEl.value
     if (!c) return
     const rect = c.getBoundingClientRect()
-    const r = size.value / 2
-    const x = ((e.clientX - rect.left) - r) / (r - 6)
-    const y = ((e.clientY - rect.top) - r) / (r - 6)
+    if (!rect.width || !rect.height) return
+    const s = size.value
+    const r = s / 2
+    const cx = (e.clientX - rect.left) / rect.width * s
+    const cy = (e.clientY - rect.top) / rect.height * s
+    const x = (cx - r) / (r - 6)
+    const y = (cy - r) / (r - 6)
     onChange(puckToOffsets(x, y))
   }
 

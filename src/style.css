@@ -206,3 +206,23 @@ body > .p-overlay-mask.p-blockui-mask-document.p-overlay-mask-leave:empty {
   display: none !important;
   pointer-events: none !important;
 }
+
+.ctv-scroll-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.35) transparent;
+}
+.ctv-scroll-thin::-webkit-scrollbar {
+  width: 10px;
+}
+.ctv-scroll-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.ctv-scroll-thin::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.35);
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+.ctv-scroll-thin:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.55);
+}

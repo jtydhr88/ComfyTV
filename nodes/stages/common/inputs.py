@@ -2,6 +2,7 @@ from comfy_api.latest import io
 
 from .schema import (
     COMFYTV_TEXT, COMFYTV_IMAGE, COMFYTV_VIDEO, COMFYTV_MODEL, COMFYTV_MATERIAL,
+    COMFYTV_FXSPEC,
 )
 
 
@@ -108,6 +109,15 @@ def _material_template(max_n: int = 4) -> 'io.Autogrow.TemplatePrefix':
     return io.Autogrow.TemplatePrefix(
         COMFYTV_MATERIAL.Input("material", optional=True),
         prefix="material",
+        min=0,
+        max=max_n,
+    )
+
+
+def _fxspec_template(max_n: int = 6) -> 'io.Autogrow.TemplatePrefix':
+    return io.Autogrow.TemplatePrefix(
+        COMFYTV_FXSPEC.Input("fx_spec", optional=True),
+        prefix="fx_spec",
         min=0,
         max=max_n,
     )

@@ -385,7 +385,7 @@ class TestPatterns:
 class TestRetro:
     def test_old_film_changes_frames(self):
         from ComfyTV.runners import media
-        from ComfyTV.runners.retro import old_film_video
+        from ComfyTV.runners.video_stylize_ops import old_film_video
         d = _src_dir()
         p = d / 'clipav.mp4'
         if not p.exists():
@@ -400,7 +400,7 @@ class TestRetro:
     def test_luma_wipe_split(self):
         from PIL import Image
         from ComfyTV.runners import media
-        from ComfyTV.runners.retro import luma_wipe_videos
+        from ComfyTV.runners.video_timeline_ops import luma_wipe_videos
         d = _src_dir()
         a = d / 'solid_a.mp4'
         b = d / 'solid_b.mp4'
@@ -424,7 +424,7 @@ class TestRetro:
 class TestReviewFixes:
     def test_oldfilm_shift_direction(self):
         from ComfyTV.runners import media
-        from ComfyTV.runners.retro import old_film_video, _CRand
+        from ComfyTV.runners.video_stylize_ops import old_film_video, _CRand
         d = _src_dir()
         p = d / 'topwhite.mp4'
         if not p.exists():
@@ -459,7 +459,7 @@ class TestReviewFixes:
 
     def test_scratch_lines_drift_not_teleport(self):
         from ComfyTV.runners import media
-        from ComfyTV.runners.retro import old_film_video
+        from ComfyTV.runners.video_stylize_ops import old_film_video
         d = _src_dir()
         p = d / 'gray128.mp4'
         if not p.exists():

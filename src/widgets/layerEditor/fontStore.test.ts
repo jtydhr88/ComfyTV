@@ -265,3 +265,43 @@ describe('getFontSync', () => {
     expect(store.hasFailed({ kind: 'url', url: 'http://never.ttf' })).toBe(false)
   })
 })
+
+describe('getFontSyncWithFallback', () => {
+  it('falls back to the default builtin when a url font failed to load', async () => {
+    const font = typrFont('Regular')
+    parseMock.mockReturnValue([font])
+    fetchMock.mockImplementation(async (url) => {
+      if (url === MANIFEST_URL) return jsonResponse(MANIFEST)
+      if (url === 'http://fonts/missing.ttf') return fontResponse(false)
+      return fontResponse()
+    })
+    const store = await freshStore()
+    const ref: FontRef = { kind: 'url', url: 'http://fonts/missing.ttf' }
+
+    await expect(store.loadFont(ref)).rejects.toThrow()
+    await vi.waitFor(() => expect(store.hasFailed(ref)).toBe(true))
+
+    expect(store.getFontSyncWithFallback(ref)).toBeNull()
+    await store.loadFont({ kind: 'builtin', id: 'inter' })
+    expect(store.getFontSyncWithFallback(ref)).toBe(font)
+  })
+
+  it('returns the font itself when the ref loads fine', async () => {
+    const font = typrFont('Regular')
+    parseMock.mockReturnValue([font])
+    fetchMock.mockResolvedValue(fontResponse())
+    const store = await freshStore()
+    const ref: FontRef = { kind: 'url', url: 'http://fonts/x.ttf' }
+    await store.loadFont(ref)
+    expect(store.getFontSyncWithFallback(ref)).toBe(font)
+  })
+
+  it('does not fall back for pending or failed builtin refs', async () => {
+    fetchMock.mockResolvedValue(jsonResponse([]))
+    const store = await freshStore()
+    await expect(store.loadFont(builtinRef('inter'))).rejects.toThrow()
+    await vi.waitFor(() => expect(store.hasFailed(builtinRef('inter'))).toBe(true))
+    expect(store.getFontSyncWithFallback(builtinRef('inter'))).toBeNull()
+    expect(store.getFontSyncWithFallback({ kind: 'url', url: 'http://pending.ttf' })).toBeNull()
+  })
+})

@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 import uuid
 from typing import Any, Optional
 
@@ -8,7 +9,7 @@ from sqlalchemy import desc, select
 from . import db
 from .db import (
     Asset, AssetCategory, AssetCategoryLink, ComfyServer, Entry, Output,
-    Project, RemoteJob, StageParam,
+    Preset, Project, RemoteJob, Resource, StageParam,
 )
 
 logger = logging.getLogger(__name__)
@@ -731,6 +732,173 @@ def delete_stage_param(param_id: int) -> bool:
     with db.get_session() as s:
         row = s.get(StageParam, param_id)
         if row is None or row.origin == 0:
+            return False
+        s.delete(row)
+        s.commit()
+        return True
+
+
+def _preset_to_dict(p: Preset) -> dict:
+    try:
+        config = json.loads(p.config) if p.config else {}
+    except ValueError:
+        config = {}
+    return {
+        "id": p.id,
+        "kind": p.kind,
+        "name": p.name,
+        "config": config if isinstance(config, dict) else {},
+        "created_at": p.created_at.isoformat() if p.created_at else None,
+    }
+
+
+def list_presets(kind: Optional[str] = None) -> list[dict]:
+    with db.get_session() as s:
+        q = select(Preset)
+        if kind:
+            q = q.where(Preset.kind == kind)
+        rows = s.execute(q.order_by(Preset.name, Preset.id)).scalars().all()
+        return [_preset_to_dict(p) for p in rows]
+
+
+def save_preset(kind: str, name: str, config: dict) -> Optional[dict]:
+    kind = (kind or "").strip()
+    name = (name or "").strip()
+    if not kind or not name or not isinstance(config, dict):
+        return None
+    with db.get_session() as s:
+        row = s.execute(
+            select(Preset).where(Preset.kind == kind, Preset.name == name).limit(1)
+        ).scalar_one_or_none()
+        if row is None:
+            row = Preset(kind=kind, name=name, config=json.dumps(config))
+            s.add(row)
+        else:
+            row.config = json.dumps(config)
+        s.commit()
+        return _preset_to_dict(row)
+
+
+def update_preset(
+    preset_id: int,
+    *,
+    name: Optional[str] = None,
+    config: Optional[dict] = None,
+) -> Optional[dict]:
+    with db.get_session() as s:
+        row = s.get(Preset, preset_id)
+        if row is None:
+            return None
+        if name is not None:
+            name = name.strip()
+            if not name:
+                return None
+            clash = s.execute(
+                select(Preset.id)
+                    .where(Preset.kind == row.kind, Preset.name == name,
+                           Preset.id != preset_id)
+                    .limit(1)
+            ).scalar_one_or_none()
+            if clash is not None:
+                return None
+            row.name = name
+        if config is not None:
+            if not isinstance(config, dict):
+                return None
+            row.config = json.dumps(config)
+        s.commit()
+        return _preset_to_dict(row)
+
+
+def delete_preset(preset_id: int) -> bool:
+    with db.get_session() as s:
+        row = s.get(Preset, preset_id)
+        if row is None:
+            return False
+        s.delete(row)
+        s.commit()
+        return True
+
+
+def _resource_to_dict(r: Resource) -> dict:
+    return {
+        "id": r.id,
+        "kind": r.kind,
+        "name": r.name,
+        "filename": r.filename,
+        "subfolder": r.subfolder,
+        "size": r.size,
+        "sha256": r.sha256,
+        "created_at": r.created_at.isoformat() if r.created_at else None,
+    }
+
+
+def list_resources(kind: Optional[str] = None) -> list[dict]:
+    with db.get_session() as s:
+        q = select(Resource)
+        if kind:
+            q = q.where(Resource.kind == kind)
+        rows = s.execute(q.order_by(Resource.name, Resource.id)).scalars().all()
+        return [_resource_to_dict(r) for r in rows]
+
+
+def register_resource(
+    kind: str,
+    filename: str,
+    subfolder: str,
+    *,
+    name: Optional[str] = None,
+    size: Optional[int] = None,
+    sha256: Optional[str] = None,
+) -> Optional[dict]:
+    kind = (kind or "").strip()
+    filename = (filename or "").strip()
+    if not kind or not filename:
+        return None
+    with db.get_session() as s:
+        row = s.execute(
+            select(Resource)
+                .where(Resource.kind == kind, Resource.filename == filename)
+                .limit(1)
+        ).scalar_one_or_none()
+        if row is None:
+            row = Resource(
+                kind=kind,
+                name=(name or "").strip() or os.path.splitext(filename)[0],
+                filename=filename,
+                subfolder=subfolder or "",
+                size=size,
+                sha256=sha256,
+            )
+            s.add(row)
+        else:
+            if subfolder:
+                row.subfolder = subfolder
+            if size is not None:
+                row.size = size
+            if sha256 is not None:
+                row.sha256 = sha256
+        s.commit()
+        return _resource_to_dict(row)
+
+
+def rename_resource(resource_id: int, name: str) -> Optional[dict]:
+    name = (name or "").strip()
+    if not name:
+        return None
+    with db.get_session() as s:
+        row = s.get(Resource, resource_id)
+        if row is None:
+            return None
+        row.name = name
+        s.commit()
+        return _resource_to_dict(row)
+
+
+def unregister_resource(resource_id: int) -> bool:
+    with db.get_session() as s:
+        row = s.get(Resource, resource_id)
+        if row is None:
             return False
         s.delete(row)
         s.commit()

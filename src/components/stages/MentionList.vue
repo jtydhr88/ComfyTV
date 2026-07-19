@@ -1,5 +1,5 @@
 <template>
-  <div class="ctv:min-w-64 ctv:max-w-md ctv:max-h-60 ctv:overflow-y-auto ctv:rounded ctv:text-xs
+  <div @wheel.stop class="ctv-scroll-thin ctv:min-w-64 ctv:max-w-md ctv:max-h-60 ctv:overflow-y-auto ctv:rounded ctv:text-xs
               ctv:bg-interface-menu-surface ctv:text-base-foreground
               ctv:border ctv:border-border-default ctv:shadow-md">
     <template v-if="!creating">

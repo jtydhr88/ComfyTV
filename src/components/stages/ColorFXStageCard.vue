@@ -1,6 +1,6 @@
 <template>
   <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full">
-    <VideoPlayerLite :source-video-url="sourceVideoUrl" />
+    <VideoPlayerLite ref="playerRef" :source-video-url="sourceVideoUrl" />
 
     <div
       class="ctv:flex ctv:flex-col ctv:gap-1"
@@ -12,7 +12,7 @@
 
       <template v-if="mode === 'selectivecolor'">
         <FxChips v-model="scMethod" :options="METHODS" />
-        <FxSlider v-for="z in ZONES" :key="z.id" v-model="z.model.value" :label="z.label" :min="-1" :max="1" :step="0.01" :reset-to="0" />
+        <FxSlider v-for="z in ZONES" :key="z.id" v-model="z.model.value" :label="z.label" :min="-1" :max="1" :step="0.01" :reset-to="0" :gradient="z.gradient" />
       </template>
 
       <template v-else-if="mode === 'chromashift'">
@@ -38,6 +38,33 @@
       </template>
 
       <div v-else class="ctv:text-2xs ctv:text-muted-foreground">Gray-world auto white balance — no parameters.</div>
+
+      <div class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-2xs">
+        <button
+          type="button"
+          class="ctv:flex ctv:items-center ctv:gap-1 ctv:px-2 ctv:h-6 ctv:rounded ctv:cursor-pointer
+                 ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground
+                 ctv:hover:border-primary-background ctv:disabled:opacity-40 ctv:disabled:cursor-default"
+          :disabled="!sourceVideoUrl || preview.state.loading"
+          @click="preview.request()"
+        >
+          <i :class="['pi', preview.state.loading ? 'pi-spinner pi-spin' : 'pi-eye']" />
+          {{ $t('fxPreview.run') }}
+        </button>
+        <span v-if="preview.state.error" class="ctv:text-destructive-background ctv:truncate">
+          {{ $t('fxPreview.failed') }}
+        </span>
+        <span v-else-if="preview.state.stale" class="ctv:text-warning-background">
+          {{ $t('fxPreview.stale') }}
+        </span>
+        <span v-else-if="preview.state.url" class="ctv:text-muted-foreground">
+          {{ $t('fxPreview.window', { s: previewWindowLabel }) }}
+        </span>
+      </div>
+
+      <div v-if="preview.state.url" class="ctv:h-40 ctv:flex ctv:flex-col">
+        <VideoPlayerLite :source-video-url="preview.state.url" />
+      </div>
     </div>
 
     <div class="ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide">
@@ -59,7 +86,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
@@ -67,7 +94,9 @@ import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
+import { useFxClipPreview } from '@/composables/stages/useFxClipPreview'
 import { useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
+import { channelStops } from '@/components/widgets/colorStops'
 
 const props = defineProps<{
   state: StageState
@@ -108,6 +137,7 @@ const ZONES = ZONE_IDS.map(id => ({
   id,
   label: id[0].toUpperCase() + id.slice(1),
   model: useNumWidget(props.node, `sc_${id}`, 0),
+  gradient: channelStops(id),
 }))
 const shiftRh = useNumWidget(props.node, 'shift_rh', 0)
 const shiftRv = useNumWidget(props.node, 'shift_rv', 0)
@@ -119,4 +149,38 @@ const pseudoOpacity = useNumWidget(props.node, 'pseudo_opacity', 1)
 const elbgColors = useNumWidget(props.node, 'elbg_colors', 9)
 const elbgSteps = useNumWidget(props.node, 'elbg_steps', 1)
 const csTarget = useStrWidget(props.node, 'cs_target', 'bt709')
+
+const playerRef = ref<InstanceType<typeof VideoPlayerLite> | null>(null)
+
+function playhead(): number {
+  const player = playerRef.value
+  const el = player?.videoEl ?? null
+  if (el && Number.isFinite(el.currentTime)) return el.currentTime
+  const d = player?.duration ?? 0
+  return d > 0 ? d / 2 : 0
+}
+
+const preview = useFxClipPreview({
+  nodeId: 'ComfyTV.ColorFXStage',
+  getParams: () => ({
+    mode: mode.value,
+    sc_method: scMethod.value,
+    ...Object.fromEntries(ZONES.map(z => [`sc_${z.id}`, z.model.value])),
+    shift_rh: shiftRh.value,
+    shift_rv: shiftRv.value,
+    shift_bh: shiftBh.value,
+    shift_bv: shiftBv.value,
+    shift_edge: shiftEdge.value,
+    pseudo_preset: pseudoPreset.value,
+    pseudo_opacity: pseudoOpacity.value,
+    elbg_colors: elbgColors.value,
+    elbg_steps: elbgSteps.value,
+    cs_target: csTarget.value,
+  }),
+  getVideo: () => sourceVideoUrl.value,
+  getPlayhead: playhead,
+})
+
+const previewWindowLabel = computed(() =>
+  (preview.state.t1 - preview.state.t0).toFixed(1))
 </script>

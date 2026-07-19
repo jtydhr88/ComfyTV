@@ -48,6 +48,15 @@
           </template>
           <template v-else>✗ {{ formTest.error || $t('servers.test.failed') }}</template>
         </div>
+        <div
+          v-if="formCapsInfo"
+          class="ctv:py-1 ctv:px-1.5 ctv:rounded ctv:text-xs"
+          :class="formCapsInfo.kind === 'comfytv'
+            ? 'ctv:bg-emerald-500/10 ctv:text-emerald-400'
+            : 'ctv:bg-amber-400/10 ctv:text-amber-400'"
+        >
+          {{ formCapsInfo.label }}
+        </div>
 
         <div class="ctv:flex ctv:items-center ctv:gap-1.5">
           <button :class="chipBtnClass" :disabled="testing || !formValid" @click="onTestForm">
@@ -72,58 +81,90 @@
       <div
         v-for="server in store.servers"
         :key="server.id"
-        class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:py-1.5 ctv:px-2 ctv:rounded-lg
+        class="ctv:flex ctv:flex-col ctv:gap-1 ctv:py-1.5 ctv:px-2 ctv:rounded-lg
                ctv:bg-secondary-background ctv:border ctv:border-border-subtle"
         :class="{ 'ctv:opacity-50': !server.enabled }"
       >
-        <div class="ctv:flex-1 ctv:min-w-0">
-          <div class="ctv:font-semibold ctv:truncate">{{ server.label }}</div>
-          <div class="ctv:text-muted-foreground ctv:truncate">
-            {{ server.host }}:{{ server.port }}
-            <span v-if="rowTests[server.id]" :class="rowTests[server.id]!.ok ? 'ctv:text-emerald-400' : 'ctv:text-destructive-background'">
-              · {{ rowTests[server.id]!.ok
-                ? `✓ ${rowTests[server.id]!.version || $t('servers.test.ok')}`
-                : `✗ ${rowTests[server.id]!.error || $t('servers.test.failed')}` }}
-            </span>
+        <div class="ctv:flex ctv:items-center ctv:gap-1.5">
+          <div class="ctv:flex-1 ctv:min-w-0">
+            <div class="ctv:font-semibold ctv:truncate">{{ server.label }}</div>
+            <div class="ctv:text-muted-foreground ctv:truncate">
+              {{ server.host }}:{{ server.port }}
+              <span v-if="rowTests[server.id]" :class="rowTests[server.id]!.ok ? 'ctv:text-emerald-400' : 'ctv:text-destructive-background'">
+                · {{ rowTests[server.id]!.ok
+                  ? `✓ ${rowTests[server.id]!.version || $t('servers.test.ok')}`
+                  : `✗ ${rowTests[server.id]!.error || $t('servers.test.failed')}` }}
+              </span>
+            </div>
           </div>
+          <div
+            v-if="server.enabled"
+            class="ctv:flex ctv:items-center ctv:gap-1 ctv:shrink-0 ctv:mr-0.5"
+            :title="statusTitle(server)"
+          >
+            <span class="ctv:size-1.5 ctv:rounded-full" :class="statusDotClass(server)" />
+            <span
+              v-if="statusBadge(server)"
+              class="ctv:text-2xs ctv:tabular-nums ctv:text-muted-foreground"
+            >{{ statusBadge(server) }}</span>
+          </div>
+          <button
+            :class="iconBtnClass"
+            :disabled="testingId === server.id"
+            :title="$t('servers.test.action')"
+            @click="onTestRow(server)"
+          >
+            <IconLoader v-if="testingId === server.id" class="ctv:size-3.5 ctv:animate-spin" />
+            <IconPlugZap v-else class="ctv:size-3.5" />
+          </button>
+          <button
+            :class="iconBtnClass"
+            :title="server.enabled ? $t('servers.disable') : $t('servers.enable')"
+            @click="onToggle(server)"
+          >
+            <IconPower class="ctv:size-3.5" />
+          </button>
+          <button :class="iconBtnClass" :title="$t('servers.edit')" @click="openForm(server)">
+            <IconPencil class="ctv:size-3.5" />
+          </button>
+          <button
+            :class="[iconBtnClass, 'ctv:hover:text-destructive-background']"
+            :title="$t('servers.delete')"
+            @click="onDelete(server)"
+          >
+            <IconTrash2 class="ctv:size-3.5" />
+          </button>
         </div>
         <div
-          v-if="server.enabled"
-          class="ctv:flex ctv:items-center ctv:gap-1 ctv:shrink-0 ctv:mr-0.5"
-          :title="statusTitle(server)"
+          v-if="capsInfo(server)"
+          class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-wrap"
         >
-          <span class="ctv:size-1.5 ctv:rounded-full" :class="statusDotClass(server)" />
           <span
-            v-if="statusBadge(server)"
-            class="ctv:text-2xs ctv:tabular-nums ctv:text-muted-foreground"
-          >{{ statusBadge(server) }}</span>
+            class="ctv:inline-flex ctv:items-center ctv:rounded ctv:px-1.5 ctv:py-0.5 ctv:text-2xs"
+            :class="capsInfo(server)!.kind === 'comfytv'
+              ? 'ctv:bg-emerald-500/10 ctv:text-emerald-400'
+              : 'ctv:bg-amber-400/10 ctv:text-amber-400'"
+          >{{ capsInfo(server)!.label }}</span>
+          <button
+            v-if="capsInfo(server)!.missing.length"
+            class="ctv:inline-flex ctv:items-center ctv:cursor-pointer ctv:rounded ctv:border-none
+                   ctv:bg-amber-400/10 ctv:text-amber-400 ctv:px-1.5 ctv:py-0.5 ctv:text-2xs
+                   ctv:hover:brightness-110"
+            :title="$t('servers.caps.missingTitle') + '\n' + capsInfo(server)!.missing.join('\n')"
+            @click="toggleCapsExpand(server)"
+          >
+            {{ $t('servers.caps.missingNodes', { n: capsInfo(server)!.missing.length }) }}
+          </button>
         </div>
-        <button
-          :class="iconBtnClass"
-          :disabled="testingId === server.id"
-          :title="$t('servers.test.action')"
-          @click="onTestRow(server)"
+        <div
+          v-if="expandedCapsId === server.id && capsInfo(server)?.missing.length"
+          class="ctv:rounded ctv:bg-base-background/40 ctv:p-1.5 ctv:text-2xs ctv:text-muted-foreground"
         >
-          <IconLoader v-if="testingId === server.id" class="ctv:size-3.5 ctv:animate-spin" />
-          <IconPlugZap v-else class="ctv:size-3.5" />
-        </button>
-        <button
-          :class="iconBtnClass"
-          :title="server.enabled ? $t('servers.disable') : $t('servers.enable')"
-          @click="onToggle(server)"
-        >
-          <IconPower class="ctv:size-3.5" />
-        </button>
-        <button :class="iconBtnClass" :title="$t('servers.edit')" @click="openForm(server)">
-          <IconPencil class="ctv:size-3.5" />
-        </button>
-        <button
-          :class="[iconBtnClass, 'ctv:hover:text-destructive-background']"
-          :title="$t('servers.delete')"
-          @click="onDelete(server)"
-        >
-          <IconTrash2 class="ctv:size-3.5" />
-        </button>
+          <div class="ctv:mb-0.5">{{ $t('servers.caps.missingTitle') }}</div>
+          <div v-for="nodeId in capsInfo(server)!.missing" :key="nodeId" class="ctv:truncate">
+            {{ nodeId }}
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -144,12 +185,14 @@ const {
   store,
   form,
   formTest,
+  formCapsInfo,
   formError,
   formValid,
   testing,
   saving,
   testingId,
   rowTests,
+  expandedCapsId,
   openForm,
   closeForm,
   onTestForm,
@@ -160,6 +203,8 @@ const {
   statusKind,
   statusBadge,
   statusTitle,
+  capsInfo,
+  toggleCapsExpand,
 } = useServersPanel()
 
 const STATUS_DOT_CLASS: Record<ServerStatusKind, string> = {

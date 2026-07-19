@@ -249,8 +249,8 @@ def clip():
 
 
 def _cls(name):
-    from ComfyTV.nodes.stages import video_pro
-    return getattr(video_pro, name)
+    from ComfyTV.nodes import stages
+    return getattr(stages, name)
 
 
 class TestExecute:

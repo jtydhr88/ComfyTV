@@ -1,20 +1,39 @@
-import { describe, it, expect, vi, afterEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { defineComponent, ref, type Ref } from 'vue'
 import { mount, flushPromises, type VueWrapper } from '@vue/test-utils'
+
+const listResources = vi.fn()
+const uploadResource = vi.fn()
+vi.mock('@/api', () => ({
+  listResources: (...a: any[]) => listResources(...a),
+  uploadResource: (...a: any[]) => uploadResource(...a),
+}))
+
 import { useLutLibrary } from './useLutLibrary'
 
-const fetchMock = vi.fn()
-vi.stubGlobal('fetch', fetchMock)
-
-function jsonRes(body: unknown, ok = true) {
-  return { ok, json: async () => body }
+function lutRow(filename: string, missing = false) {
+  return {
+    id: 1,
+    kind: 'lut',
+    name: filename.replace(/\.\w+$/, ''),
+    filename,
+    subfolder: 'comfytv-luts',
+    size: 10,
+    sha256: null,
+    created_at: null,
+    url: `/view?filename=${filename}&subfolder=comfytv-luts&type=input`,
+    missing,
+  }
 }
 
 let wrappers: VueWrapper[] = []
+beforeEach(() => {
+  vi.clearAllMocks()
+  listResources.mockResolvedValue({ resources: [] })
+})
 afterEach(() => {
   wrappers.forEach(w => w.unmount())
   wrappers = []
-  fetchMock.mockReset()
 })
 
 function setup(initial = '') {
@@ -42,81 +61,80 @@ function pickEvent(file: File | null): { e: Event; input: HTMLInputElement } {
 }
 
 describe('useLutLibrary', () => {
-  it('loads the list on mount and selects the first LUT when none chosen', async () => {
-    fetchMock.mockResolvedValue(jsonRes({ luts: ['a.cube', 'b.cube'] }))
+  it('loads lut resources on mount and selects the first when none chosen', async () => {
+    listResources.mockResolvedValue({ resources: [lutRow('b.cube'), lutRow('a.cube')] })
     const { api, lutFile } = setup()
     await flushPromises()
-    expect(fetchMock).toHaveBeenCalledWith('/comfytv/luts')
+    expect(listResources).toHaveBeenCalledWith('lut')
     expect(api.luts.value).toEqual(['a.cube', 'b.cube'])
     expect(lutFile.value).toBe('a.cube')
   })
 
   it('keeps the current selection when one exists', async () => {
-    fetchMock.mockResolvedValue(jsonRes({ luts: ['a.cube', 'b.cube'] }))
+    listResources.mockResolvedValue({ resources: [lutRow('a.cube'), lutRow('b.cube')] })
     const { lutFile } = setup('b.cube')
     await flushPromises()
     expect(lutFile.value).toBe('b.cube')
   })
 
-  it('leaves the list untouched on a non-ok response', async () => {
-    fetchMock.mockResolvedValue(jsonRes({}, false))
+  it('excludes resources whose file is missing on disk', async () => {
+    listResources.mockResolvedValue({ resources: [
+      lutRow('gone.cube', true),
+      lutRow('here.cube'),
+    ] })
+    const { api, lutFile } = setup()
+    await flushPromises()
+    expect(api.luts.value).toEqual(['here.cube'])
+    expect(lutFile.value).toBe('here.cube')
+  })
+
+  it('tolerates list failures', async () => {
+    listResources.mockRejectedValue(new Error('offline'))
     const { api, lutFile } = setup()
     await flushPromises()
     expect(api.luts.value).toEqual([])
     expect(lutFile.value).toBe('')
-  })
 
-  it('tolerates a missing luts field and network errors', async () => {
-    fetchMock.mockResolvedValueOnce(jsonRes({}))
-    const { api } = setup()
-    await flushPromises()
-    expect(api.luts.value).toEqual([])
-
-    fetchMock.mockRejectedValueOnce(new Error('offline'))
     await api.refreshLuts()
     expect(api.luts.value).toEqual([])
   })
 
   it('uploads a picked file, refreshes, and selects it', async () => {
-    fetchMock.mockResolvedValue(jsonRes({ luts: [] }))
     const { api, lutFile } = setup()
     await flushPromises()
 
-    fetchMock.mockReset()
-    fetchMock
-      .mockResolvedValueOnce(jsonRes({ name: 'new.cube' }))
-      .mockResolvedValueOnce(jsonRes({ luts: ['new.cube'] }))
-    const { e, input } = pickEvent(new File(['x'], 'new.cube'))
+    uploadResource.mockResolvedValue({ ok: true, resource: lutRow('new.cube') })
+    listResources.mockResolvedValue({ resources: [lutRow('new.cube')] })
+    const file = new File(['x'], 'new.cube')
+    const { e, input } = pickEvent(file)
     await api.onFilePicked(e)
 
-    expect(fetchMock).toHaveBeenNthCalledWith(1, '/comfytv/luts',
-      expect.objectContaining({ method: 'POST' }))
+    expect(uploadResource).toHaveBeenCalledWith('lut', file)
     expect(api.luts.value).toEqual(['new.cube'])
     expect(lutFile.value).toBe('new.cube')
     expect(input.value).toBe('')
   })
 
   it('resets the input even when the upload fails', async () => {
-    fetchMock.mockResolvedValue(jsonRes({ luts: [] }))
     const { api, lutFile } = setup()
     await flushPromises()
 
-    fetchMock.mockReset()
-    fetchMock.mockResolvedValueOnce(jsonRes({}, false))
-    const { e } = pickEvent(new File(['x'], 'bad.cube'))
+    listResources.mockClear()
+    uploadResource.mockRejectedValue(new Error('bad extension'))
+    const { e, input } = pickEvent(new File(['x'], 'bad.cube'))
     await api.onFilePicked(e)
     expect(lutFile.value).toBe('')
-    expect(fetchMock).toHaveBeenCalledTimes(1)
+    expect(listResources).not.toHaveBeenCalled()
+    expect(input.value).toBe('')
   })
 
   it('does nothing when no file is picked', async () => {
-    fetchMock.mockResolvedValue(jsonRes({ luts: [] }))
     const { api } = setup()
     await flushPromises()
 
-    fetchMock.mockReset()
+    uploadResource.mockClear()
     const { e } = pickEvent(null)
     await api.onFilePicked(e)
-    expect(fetchMock).not.toHaveBeenCalled()
+    expect(uploadResource).not.toHaveBeenCalled()
   })
 })

@@ -40,5 +40,5 @@ export function useCurveChannels(node: LGraphNode) {
     widgets[channel.value as keyof typeof widgets].value = ''
   }
 
-  return { channel, activeCurve, resetActive }
+  return { channel, activeCurve, resetActive, widgets }
 }

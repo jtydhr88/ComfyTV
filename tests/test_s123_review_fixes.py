@@ -19,15 +19,15 @@ class TestA1SubtitleGenWiring:
 
     def test_audio_bucket_key(self, monkeypatch):
         import asyncio
-        from ComfyTV.nodes.stages import video_fx2
+        from ComfyTV.nodes.stages import video_text
         captured = {}
 
         async def fake_run(cls, **kw):
             captured.update(kw)
             return None
 
-        monkeypatch.setattr(video_fx2, 'run_stage_workflow', fake_run)
-        asyncio.run(video_fx2.SubtitleGenStage.execute(
+        monkeypatch.setattr(video_text, 'run_stage_workflow', fake_run)
+        asyncio.run(video_text.SubtitleGenStage.execute(
             project_id='p1', audio='/view?filename=a.wav&type=output'))
         assert 'audio' in captured['upstream']
         assert 'audios' not in captured['upstream']
@@ -87,7 +87,7 @@ class TestA3GodRaysDecay:
     def test_rays_decay_with_distance(self):
         import folder_paths
         from ComfyTV.runners import media
-        from ComfyTV.runners.fx_torch import god_rays_video
+        from ComfyTV.runners.video_stylize_ops import god_rays_video
         d = Path(folder_paths.get_output_directory()) / 'rfx-src'
         d.mkdir(parents=True, exist_ok=True)
         p = d / 'dot_center.mp4'

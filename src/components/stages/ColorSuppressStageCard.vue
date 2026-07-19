@@ -8,12 +8,12 @@
       @pointermove.stop
       @pointerup.stop
     >
-      <FxSlider v-model="red" label="Red" :min="0" :max="1" :step="0.01" :reset-to="0" />
-      <FxSlider v-model="green" label="Green" :min="0" :max="1" :step="0.01" :reset-to="0" />
-      <FxSlider v-model="blue" label="Blue" :min="0" :max="1" :step="0.01" :reset-to="0" />
-      <FxSlider v-model="cyan" label="Cyan" :min="0" :max="1" :step="0.01" :reset-to="0" />
-      <FxSlider v-model="magenta" label="Magenta" :min="0" :max="1" :step="0.01" :reset-to="0" />
-      <FxSlider v-model="yellow" label="Yellow" :min="0" :max="1" :step="0.01" :reset-to="0" />
+      <FxSlider v-model="red" label="Red" :min="0" :max="1" :step="0.01" :reset-to="0" :gradient="CHANNEL_STOPS.red" />
+      <FxSlider v-model="green" label="Green" :min="0" :max="1" :step="0.01" :reset-to="0" :gradient="CHANNEL_STOPS.green" />
+      <FxSlider v-model="blue" label="Blue" :min="0" :max="1" :step="0.01" :reset-to="0" :gradient="CHANNEL_STOPS.blue" />
+      <FxSlider v-model="cyan" label="Cyan" :min="0" :max="1" :step="0.01" :reset-to="0" :gradient="CHANNEL_STOPS.cyan" />
+      <FxSlider v-model="magenta" label="Magenta" :min="0" :max="1" :step="0.01" :reset-to="0" :gradient="CHANNEL_STOPS.magenta" />
+      <FxSlider v-model="yellow" label="Yellow" :min="0" :max="1" :step="0.01" :reset-to="0" :gradient="CHANNEL_STOPS.yellow" />
       <label class="ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs ctv:text-muted-foreground ctv:cursor-pointer">
         <input type="checkbox" v-model="preserveLuma" class="ctv:accent-primary-background" />
         Preserve luminance
@@ -49,6 +49,7 @@ import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
 import { useBoolWidget, useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
+import { CHANNEL_STOPS } from '@/components/widgets/colorStops'
 
 const props = defineProps<{
   state: StageState

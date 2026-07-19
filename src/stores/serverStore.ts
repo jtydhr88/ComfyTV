@@ -2,11 +2,15 @@ import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
 import {
+  type Capabilities,
   type ComfyServer,
+  type RemoteCapabilityProbe,
   type ServerStatus,
   type TestServerResult,
   createServer as apiCreateServer,
   deleteServer as apiDeleteServer,
+  fetchLocalCapabilities as apiFetchLocalCapabilities,
+  fetchRemoteCapabilities as apiFetchRemoteCapabilities,
   listServers as apiListServers,
   listServerStatus as apiListServerStatus,
   testServer as apiTestServer,
@@ -15,6 +19,12 @@ import {
 
 export const LOCAL_SERVER = 'local'
 const STATUS_POLL_MS = 5000
+const CAPS_TTL_MS = 60_000
+
+interface CapabilityProbeEntry {
+  probe: RemoteCapabilityProbe
+  fetchedAt: number
+}
 
 export const useServerStore = defineStore('servers', () => {
   const servers = ref<ComfyServer[]>([])
@@ -124,6 +134,44 @@ export const useServerStore = defineStore('servers', () => {
     }
   }
 
+  const capabilityProbes = ref<Record<number, CapabilityProbeEntry>>({})
+  const localCapabilities = ref<Capabilities | null>(null)
+  let localCapsPromise: Promise<Capabilities | null> | null = null
+
+  function capabilityProbeFor(id: number): RemoteCapabilityProbe | undefined {
+    return capabilityProbes.value[id]?.probe
+  }
+
+  async function loadLocalCapabilities(): Promise<Capabilities | null> {
+    if (localCapabilities.value) return localCapabilities.value
+    if (!localCapsPromise) {
+      localCapsPromise = apiFetchLocalCapabilities()
+        .then((caps) => {
+          localCapabilities.value = caps
+          return caps
+        })
+        .catch((e) => {
+          console.warn('[ComfyTV/servers] local capabilities fetch failed', e)
+          localCapsPromise = null
+          return null
+        })
+    }
+    return localCapsPromise
+  }
+
+  async function probeCapabilities(id: number, force = false): Promise<RemoteCapabilityProbe> {
+    const cached = capabilityProbes.value[id]
+    if (!force && cached && cached.probe.installed
+        && Date.now() - cached.fetchedAt < CAPS_TTL_MS) {
+      return cached.probe
+    }
+    const server = byId(id)
+    if (!server) return { installed: false, error: 'unknown server' }
+    const probe = await apiFetchRemoteCapabilities(`http://${server.host}:${server.port}`)
+    capabilityProbes.value = { ...capabilityProbes.value, [id]: { probe, fetchedAt: Date.now() } }
+    return probe
+  }
+
   function resolveSelection(value: unknown): number | null {
     if (value == null || value === '' || value === LOCAL_SERVER) return null
     const id = Number(value)
@@ -148,6 +196,11 @@ export const useServerStore = defineStore('servers', () => {
     update,
     remove,
     testConnection,
+    capabilityProbes,
+    localCapabilities,
+    capabilityProbeFor,
+    loadLocalCapabilities,
+    probeCapabilities,
     resolveSelection,
   }
 })

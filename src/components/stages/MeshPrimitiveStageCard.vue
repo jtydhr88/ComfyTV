@@ -30,7 +30,7 @@
       </div>
     </div>
 
-    <div class="ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:flex ctv:flex-col ctv:gap-1"
+    <div class="ctv-scroll-thin ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:flex ctv:flex-col ctv:gap-1" @wheel.stop
          @pointerdown.stop @mousedown.stop>
       <div v-for="def in controls" :key="def.key" class="ctv:flex ctv:items-center ctv:gap-1.5">
         <span

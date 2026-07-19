@@ -336,10 +336,7 @@ export function useGLSLRenderer(config: GLSLRendererConfig = DEFAULT_CONFIG) {
     curveTextures[index] = texture
   }
 
-  function bindInputImage(
-    index: number,
-    image: HTMLImageElement | ImageBitmap
-  ): void {
+  function bindInputImage(index: number, image: TexImageSource): void {
     if (disposed || !gl) return
     if (index < 0 || index >= maxInputs) {
       throw new Error(

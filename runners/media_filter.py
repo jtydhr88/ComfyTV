@@ -92,6 +92,34 @@ def _drain(sink):
     return out
 
 
+def make_progress(progress, total: int, label: str, min_interval: float = 0.3):
+    if progress is None:
+        return lambda value, text=None: None
+    import time as _time
+    state = {'last': 0.0, 'start': _time.monotonic()}
+
+    def report(value, text=None):
+        now = _time.monotonic()
+        done = value >= total
+        if not done and now - state['last'] < min_interval:
+            return
+        state['last'] = now
+        v = min(value, total)
+        parts = [text or label]
+        if total > 0:
+            parts.append(f"{int(v * 100 / total)}%")
+        elapsed = now - state['start']
+        if elapsed > 1.0 and 0 < v < total:
+            rate = v / elapsed
+            if rate > 0:
+                eta = (total - v) / rate
+                m, s = divmod(int(eta + 0.5), 60)
+                parts.append(f"{rate:.1f} fps · {m}:{s:02d}")
+        progress(v, total, ' · '.join(parts))
+
+    return report
+
+
 def _frame_time(frame, fallback_tb):
     tb = frame.time_base or fallback_tb
     if frame.pts is None or tb is None or abs(frame.pts) >= (1 << 61):
@@ -109,11 +137,21 @@ def filter_video(view_url: str,
                  pix_fmt='yuv420p',
                  vcodec_options=None,
                  keep_audio=True,
-                 progress=None) -> str:
+                 progress=None,
+                 start=None,
+                 end=None) -> str:
     import av
 
     video_specs = list(video_specs or [])
     audio_specs = list(audio_specs or [])
+    windowed = start is not None or end is not None
+    win_start = max(0.0, float(start)) if start is not None else 0.0
+    win_end = float(end) if end is not None else None
+    if win_end is not None and win_end <= win_start:
+        raise RuntimeError(f"filter_video: bad window [{win_start}, {win_end}]")
+    win_len = (win_end - win_start) if win_end is not None else None
+    if windowed and not video_specs:
+        video_specs = [('null', None)]
     require_filters(*[n for n, _ in video_specs + audio_specs])
     if not video_specs and not audio_specs:
         raise RuntimeError("filter_video: no filters given")
@@ -122,12 +160,23 @@ def filter_video(view_url: str,
     info = get_video_info(view_url)
     out = fresh_output_path(out_ext)
     total_est = max(1, int(info['duration'] * info['fps']))
+    if win_len is not None:
+        total_est = max(1, min(total_est, int(win_len * info['fps']) + 1))
+    report_progress = make_progress(progress, total_est, "filtering")
 
     with av.open(str(src_path)) as inp, av.open(str(out), 'w') as outp:
         in_v = inp.streams.video[0] if inp.streams.video else None
-        in_a = inp.streams.audio[0] if (keep_audio and inp.streams.audio) else None
+        in_a = inp.streams.audio[0] if (
+            keep_audio and inp.streams.audio and (audio_specs or not windowed)
+        ) else None
         if in_v is None:
             raise RuntimeError("filter_video: source has no video stream")
+        if win_start > 0 and in_v.time_base:
+            try:
+                inp.seek(int(win_start / float(in_v.time_base)),
+                         stream=in_v, any_frame=False, backward=True)
+            except Exception:
+                pass
 
         vgraph = vsrc = vsink = None
         out_v = None
@@ -174,6 +223,12 @@ def filter_video(view_url: str,
             t = _frame_time(frame, in_v.time_base)
             if t is None:
                 return
+            if windowed:
+                if t < win_start - 1e-6:
+                    return
+                t -= win_start
+                if win_len is not None and t > win_len + 1e-6:
+                    return
             if frame.width != enc_v.width or frame.height != enc_v.height:
                 frame = frame.reformat(width=enc_v.width, height=enc_v.height,
                                        format=pix_fmt)
@@ -205,24 +260,45 @@ def filter_video(view_url: str,
                 pending_chunks = [arr[:, pos:]]
 
         n_in = 0
+        video_done = False
+        audio_done = agraph is None
         for packet in inp.demux():
             if packet.dts is None:
                 continue
+            if windowed and video_done and audio_done:
+                break
             if packet.stream is in_v:
                 if vgraph is not None:
+                    if video_done:
+                        continue
                     for frame in packet.decode():
+                        t = _frame_time(frame, in_v.time_base)
+                        if windowed and t is not None:
+                            if t < win_start:
+                                continue
+                            if win_end is not None and t > win_end:
+                                video_done = True
+                                break
                         vsrc.push(frame)
                         for f in _drain(vsink):
                             _encode_filtered(f)
                         n_in += 1
-                        if progress is not None and n_in % 30 == 0:
-                            progress(min(n_in, total_est), total_est, "filtering")
+                        report_progress(n_in)
                 else:
                     packet.stream = out_v
                     outp.mux(packet)
             elif in_a is not None and packet.stream is in_a:
                 if agraph is not None:
+                    if audio_done:
+                        continue
                     for frame in packet.decode():
+                        t = _frame_time(frame, in_a.time_base)
+                        if windowed and t is not None:
+                            if t < win_start:
+                                continue
+                            if win_end is not None and t >= win_end:
+                                audio_done = True
+                                break
                         asrc.push(frame)
                         for f in _drain(asink):
                             pending_chunks.append(
@@ -314,7 +390,8 @@ def atempo_specs(factor: float):
     return specs
 
 
-def filter_audio(view_url: str, audio_specs, out_codec: str = 'wav') -> str:
+def filter_audio(view_url: str, audio_specs, out_codec: str = 'wav',
+                 progress=None, label: str = 'audio') -> str:
     import av
 
     audio_specs = list(audio_specs or [])
@@ -350,15 +427,28 @@ def filter_audio(view_url: str, audio_specs, out_codec: str = 'wav') -> str:
                 for pkt in out_a.encode(frame):
                     outp.mux(pkt)
 
+            report = None
+            total_est = 1
+            n_dec = 0
             for frame in inp.decode(in_a):
+                n_dec += 1
+                if report is None:
+                    dur = float(inp.duration) / av.time_base \
+                        if inp.duration else 0.0
+                    total_est = max(1, int(dur * (in_a.rate or _AUDIO_RATE)
+                                           / max(1, frame.samples)))
+                    report = make_progress(progress, total_est, label)
                 asrc.push(frame)
                 for f in _drain(asink):
                     _write(f)
+                report(min(n_dec, total_est - 1))
             asrc.push(None)
             for f in _drain(asink):
                 _write(f)
             for pkt in out_a.encode():
                 outp.mux(pkt)
+            if report is not None:
+                report(total_est)
 
     return path_to_view_url(out)
 
@@ -377,23 +467,28 @@ def chroma_key_video(view_url: str, key_color: str = '#00FF00',
                      despill_mix: float = 0.5, despill_expand: float = 0.0,
                      mode: str = 'alpha', progress=None) -> str:
     color = (key_color or '#00FF00').strip().lstrip('#')
-    if len(color) != 6:
+    try:
+        if len(color) != 6:
+            raise ValueError(color)
+        r, g, b = (int(color[i:i + 2], 16) for i in (0, 2, 4))
+    except ValueError:
         raise RuntimeError(f"chroma key: bad color {key_color!r}")
-    r, g, b = (int(color[i:i + 2], 16) for i in (0, 2, 4))
 
     specs = [('chromakey',
               f'color=0x{color}:similarity={min(max(float(similarity), 0.01), 1.0)}'
               f':blend={min(max(float(blend), 0.0), 1.0)}')]
+
+    if mode == 'matte':
+        require_filters('alphaextract')
+        specs.append(('format', 'pix_fmts=yuva444p'))
+        specs.append(('alphaextract', None))
+        return filter_video(view_url, specs, keep_audio=False, progress=progress)
+
     if float(despill_mix or 0) > 0 and (g >= b or b > g):
         despill_type = 'green' if g >= b else 'blue'
         specs.append(('despill',
                       f'type={despill_type}:mix={min(max(float(despill_mix), 0.0), 1.0)}'
                       f':expand={min(max(float(despill_expand), 0.0), 1.0)}'))
-
-    if mode == 'matte':
-        require_filters('alphaextract')
-        specs.append(('alphaextract', None))
-        return filter_video(view_url, specs, keep_audio=False, progress=progress)
 
     if not has_encoder('libvpx-vp9'):
         raise RuntimeError(
@@ -452,6 +547,7 @@ def xfade_videos(url_a: str, url_b: str, transition: str = 'fade',
     src_b = localize(url_b)
     out = fresh_output_path('.mp4')
     total_est = max(1, int((dur_a + dur_b) * fps))
+    report_progress = make_progress(progress, total_est, "transition")
 
     with av.open(str(src_a)) as ca, av.open(str(src_b)) as cb, \
             av.open(str(out), 'w') as outp:
@@ -509,8 +605,7 @@ def xfade_videos(url_a: str, url_b: str, transition: str = 'fade',
                 for pkt in out_v.encode(f):
                     outp.mux(pkt)
                 n_out += 1
-                if progress is not None and n_out % 30 == 0:
-                    progress(min(n_out, total_est), total_est, "transition")
+                report_progress(n_out)
 
         while not (a_done and b_done):
             if not a_done:
@@ -580,6 +675,7 @@ def scene_detect(view_url: str, threshold: float = 0.4,
     src_path = localize(view_url)
     info = get_video_info(view_url)
     total_est = max(1, int(info['duration'] * info['fps']))
+    report_progress = make_progress(progress, total_est, "scanning")
 
     cuts: list = []
     with av.open(str(src_path)) as inp:
@@ -597,8 +693,7 @@ def scene_detect(view_url: str, threshold: float = 0.4,
         for frame in inp.decode(in_v):
             buf.push(frame)
             n += 1
-            if progress is not None and n % 60 == 0:
-                progress(min(n, total_est), total_est, "scanning")
+            report_progress(n)
             for f in _drain(sink):
                 t = _frame_time(f, in_v.time_base)
                 if t is not None and t - last >= max(0.0, float(min_gap_s or 0.0)):

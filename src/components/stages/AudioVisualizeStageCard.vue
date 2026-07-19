@@ -21,7 +21,7 @@
         </label>
       </template>
       <template v-else-if="mode === 'spectrum'">
-        <div class="ctv:max-h-20 ctv:overflow-y-auto">
+        <div class="ctv-scroll-thin ctv:max-h-20 ctv:overflow-y-auto" @wheel.stop>
           <FxChips v-model="color" :options="colorOptions" />
         </div>
         <label class="ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs ctv:text-muted-foreground ctv:cursor-pointer">

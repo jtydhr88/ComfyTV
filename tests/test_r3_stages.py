@@ -1,5 +1,5 @@
 """Schema + execute wiring tests for the roadmap-3 stages
-(video_key / video_r3) and the upgraded stages."""
+(video_keying / video_stylize / etc.) and the upgraded stages."""
 import inspect
 
 import pytest
@@ -16,9 +16,13 @@ NEW_CLASSES = [
 
 
 def _classes():
-    from ComfyTV.nodes.stages import video_key, video_r3
+    from ComfyTV.nodes.stages import (
+        video_keying, video_stylize, video_color, video_generate,
+        video_masking, audio_reactive,
+    )
     out = {}
-    for mod in (video_key, video_r3):
+    for mod in (video_keying, video_stylize, video_color, video_generate,
+                video_masking, audio_reactive):
         for name, obj in inspect.getmembers(mod):
             if inspect.isclass(obj) and hasattr(obj, "define_schema") \
                     and obj.__module__ == mod.__name__:
@@ -50,7 +54,7 @@ def test_extension_registers_all():
 
 
 def test_pik_passes_args(monkeypatch):
-    from ComfyTV.nodes.stages import video_key
+    from ComfyTV.nodes.stages import video_keying
     captured = {}
 
     def fake(url, **kw):
@@ -58,10 +62,10 @@ def test_pik_passes_args(monkeypatch):
         captured.update(kw)
         return 'out.mp4'
 
-    monkeypatch.setattr(video_key, 'pik_video', fake)
-    monkeypatch.setattr(video_key, '_stage_emit_auto',
+    monkeypatch.setattr(video_keying, 'pik_video', fake)
+    monkeypatch.setattr(video_keying, '_stage_emit_auto',
                         lambda cls, **kw: {'payload': kw['payload_str']})
-    video_key.PIKStage.execute(
+    video_keying.PIKStage.execute(
         project_id='p', video='/view?filename=a.mp4&type=output',
         clean_plate='/view?filename=c.png&type=output', screen='blue',
         red_weight=0.7, output='matte')
@@ -72,25 +76,25 @@ def test_pik_passes_args(monkeypatch):
 
 
 def test_keymix_needs_mask():
-    from ComfyTV.nodes.stages import video_key
+    from ComfyTV.nodes.stages import video_keying
     with pytest.raises(RuntimeError, match="mask"):
-        video_key.KeyMixStage.execute(
+        video_keying.KeyMixStage.execute(
             project_id='p', video_a='/view?a', video_b='/view?b')
 
 
 def test_frame_blend_dispatch(monkeypatch):
-    from ComfyTV.nodes.stages import video_r3
+    from ComfyTV.nodes.stages import video_stylize
     calls = {}
-    monkeypatch.setattr(video_r3, 'frame_blend_video',
+    monkeypatch.setattr(video_stylize, 'frame_blend_video',
                         lambda url, **kw: calls.setdefault('window', kw) or 'o')
-    monkeypatch.setattr(video_r3, 'time_blur_video',
+    monkeypatch.setattr(video_stylize, 'time_blur_video',
                         lambda url, **kw: calls.setdefault('shutter', kw) or 'o')
-    monkeypatch.setattr(video_r3, '_stage_emit_auto',
+    monkeypatch.setattr(video_stylize, '_stage_emit_auto',
                         lambda cls, **kw: {})
-    video_r3.FrameBlendStage.execute(project_id='p', video='/view?v',
+    video_stylize.FrameBlendStage.execute(project_id='p', video='/view?v',
                                      mode='window', frame_min=-3,
                                      operation='max')
-    video_r3.FrameBlendStage.execute(project_id='p', video='/view?v',
+    video_stylize.FrameBlendStage.execute(project_id='p', video='/view?v',
                                      mode='shutter', shutter=1.0,
                                      divisions=4)
     assert calls['window']['frame_min'] == -3
@@ -99,13 +103,13 @@ def test_frame_blend_dispatch(monkeypatch):
 
 
 def test_colorfx_spec_building(monkeypatch):
-    from ComfyTV.nodes.stages import video_r3
+    from ComfyTV.nodes.stages import video_color
     captured = {}
-    monkeypatch.setattr(video_r3, 'filter_video',
+    monkeypatch.setattr(video_color, 'filter_video',
                         lambda url, specs, **kw: captured.setdefault(
                             'specs', specs) or 'o')
-    monkeypatch.setattr(video_r3, '_stage_emit_auto', lambda cls, **kw: {})
-    video_r3.ColorFXStage.execute(project_id='p', video='/view?v',
+    monkeypatch.setattr(video_color, '_stage_emit_auto', lambda cls, **kw: {})
+    video_color.ColorFXStage.execute(project_id='p', video='/view?v',
                                   mode='selectivecolor', sc_reds=0.4,
                                   sc_blues=-0.2)
     name, args = captured['specs'][0]
@@ -113,25 +117,25 @@ def test_colorfx_spec_building(monkeypatch):
     assert 'reds=0.4' in args and 'blues=-0.2' in args
 
     captured.clear()
-    video_r3.ColorFXStage.execute(project_id='p', video='/view?v',
+    video_color.ColorFXStage.execute(project_id='p', video='/view?v',
                                   mode='chromashift', shift_rh=4)
     name, args = captured['specs'][0]
     assert name == 'chromashift'
     assert 'crh=4' in args
 
     with pytest.raises(RuntimeError, match="zero"):
-        video_r3.ColorFXStage.execute(project_id='p', video='/view?v',
+        video_color.ColorFXStage.execute(project_id='p', video='/view?v',
                                       mode='chromashift')
 
 
 def test_annotate_spec_building(monkeypatch):
-    from ComfyTV.nodes.stages import video_r3
+    from ComfyTV.nodes.stages import video_masking
     captured = {}
-    monkeypatch.setattr(video_r3, 'filter_video',
+    monkeypatch.setattr(video_masking, 'filter_video',
                         lambda url, specs, **kw: captured.setdefault(
                             'specs', specs) or 'o')
-    monkeypatch.setattr(video_r3, '_stage_emit_auto', lambda cls, **kw: {})
-    video_r3.AnnotateStage.execute(project_id='p', video='/view?v',
+    monkeypatch.setattr(video_masking, '_stage_emit_auto', lambda cls, **kw: {})
+    video_masking.AnnotateStage.execute(project_id='p', video='/view?v',
                                    mode='grid', w=0.25, h=0.25)
     name, args = captured['specs'][0]
     assert name == 'drawgrid'
@@ -139,12 +143,12 @@ def test_annotate_spec_building(monkeypatch):
 
 
 def test_time_remap_hold(monkeypatch):
-    from ComfyTV.nodes.stages import video_p2
+    from ComfyTV.nodes.stages import video_timeline
     captured = {}
-    monkeypatch.setattr(video_p2, 'frame_hold',
+    monkeypatch.setattr(video_timeline, 'frame_hold',
                         lambda url, **kw: captured.update(kw) or 'o')
-    monkeypatch.setattr(video_p2, '_stage_emit_auto', lambda cls, **kw: {})
-    video_p2.TimeRemapStage.execute(project_id='p', video='/view?v',
+    monkeypatch.setattr(video_timeline, '_stage_emit_auto', lambda cls, **kw: {})
+    video_timeline.TimeRemapStage.execute(project_id='p', video='/view?v',
                                     mode='hold', hold_frame=12,
                                     hold_increment=6)
     assert captured['first_frame'] == 12
@@ -152,14 +156,14 @@ def test_time_remap_hold(monkeypatch):
 
 
 def test_transition_luma_dispatch(monkeypatch):
-    from ComfyTV.nodes.stages import video_fx
-    from ComfyTV.runners import retro
+    from ComfyTV.nodes.stages import video_timeline
+    from ComfyTV.runners import video_timeline_ops
     captured = {}
-    monkeypatch.setattr(retro, 'luma_wipe_videos',
+    monkeypatch.setattr(video_timeline_ops, 'luma_wipe_videos',
                         lambda a, b, lm, **kw: captured.update(
                             {'luma': lm, **kw}) or 'o')
-    monkeypatch.setattr(video_fx, '_stage_emit_auto', lambda cls, **kw: {})
-    video_fx.VideoTransitionStage.execute(
+    monkeypatch.setattr(video_timeline, '_stage_emit_auto', lambda cls, **kw: {})
+    video_timeline.VideoTransitionStage.execute(
         project_id='p', video_a='/view?a', video_b='/view?b',
         luma_image='/view?l.png', duration=0.8, luma_softness=0.2)
     assert captured['luma'] == '/view?l.png'
@@ -167,12 +171,12 @@ def test_transition_luma_dispatch(monkeypatch):
 
 
 def test_transform_shutter_passthrough(monkeypatch):
-    from ComfyTV.nodes.stages import video_pro
+    from ComfyTV.nodes.stages import video_compose
     captured = {}
-    monkeypatch.setattr(video_pro, 'transform_video',
+    monkeypatch.setattr(video_compose, 'transform_video',
                         lambda url, **kw: captured.update(kw) or 'o')
-    monkeypatch.setattr(video_pro, '_stage_emit_auto', lambda cls, **kw: {})
-    video_pro.VideoTransformStage.execute(
+    monkeypatch.setattr(video_compose, '_stage_emit_auto', lambda cls, **kw: {})
+    video_compose.VideoTransformStage.execute(
         project_id='p', video='/view?v', pos_x=10, motion_blur=1.0,
         shutter=1.5, shutter_type='start')
     assert captured['motion_blur'] == pytest.approx(1.0)
@@ -181,25 +185,25 @@ def test_transform_shutter_passthrough(monkeypatch):
 
 
 def test_pattern_new_kinds_passthrough(monkeypatch):
-    from ComfyTV.nodes.stages import video_fx2
+    from ComfyTV.nodes.stages import video_generate
     captured = {}
-    monkeypatch.setattr(video_fx2, 'generate_pattern_video',
+    monkeypatch.setattr(video_generate, 'generate_pattern_video',
                         lambda kind, **kw: captured.update(
                             {'kind': kind, **kw}) or 'o')
-    monkeypatch.setattr(video_fx2, '_stage_emit_auto', lambda cls, **kw: {})
-    video_fx2.PatternStage.execute(project_id='p', kind='checkerboard',
+    monkeypatch.setattr(video_generate, '_stage_emit_auto', lambda cls, **kw: {})
+    video_generate.PatternStage.execute(project_id='p', kind='checkerboard',
                                    box_size=48)
     assert captured['kind'] == 'checkerboard'
     assert captured['box_size'] == 48
 
 
 def test_title_typewriter_passthrough(monkeypatch):
-    from ComfyTV.nodes.stages import video_pro
+    from ComfyTV.nodes.stages import video_text
     captured = {}
-    monkeypatch.setattr(video_pro, 'title_video',
+    monkeypatch.setattr(video_text, 'title_video',
                         lambda url, text, **kw: captured.update(kw) or 'o')
-    monkeypatch.setattr(video_pro, '_stage_emit_auto', lambda cls, **kw: {})
-    video_pro.TitleStage.execute(project_id='p', video='/view?v',
+    monkeypatch.setattr(video_text, '_stage_emit_auto', lambda cls, **kw: {})
+    video_text.TitleStage.execute(project_id='p', video='/view?v',
                                  text='hi', typewriter='char',
                                  type_step=0.2)
     assert captured['typewriter'] == 'char'

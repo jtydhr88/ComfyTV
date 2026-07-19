@@ -30,7 +30,7 @@
       </button>
     </div>
 
-    <div class="ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:rounded-md ctv:border ctv:border-border-subtle ctv:bg-black/20 ctv:p-1.5">
+    <div class="ctv-scroll-thin ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:rounded-md ctv:border ctv:border-border-subtle ctv:bg-black/20 ctv:p-1.5" @wheel.stop>
       <div v-if="visibleAssets.length === 0"
            class="ctv:py-5 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60">
         {{ activeFilter === 'all' ? $t('assetLoader.empty') : $t('assets.emptyCategory') }}

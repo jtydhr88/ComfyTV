@@ -10,14 +10,19 @@
         : 'ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background'"
       :title="opt.title ?? opt.label"
       @click="$emit('update:modelValue', opt.value)"
-    >{{ opt.label }}</button>
+    ><span v-if="opt.icon" class="ctv:inline-flex ctv:items-center ctv:justify-center ctv:gap-1 ctv:align-middle">
+      <component :is="opt.icon" class="ctv:size-3 ctv:shrink-0" />
+      <span>{{ opt.label }}</span>
+    </span><template v-else>{{ opt.label }}</template></button>
   </div>
 </template>
 
 <script setup lang="ts">
+import type { Component } from 'vue'
+
 defineProps<{
   modelValue: string
-  options: { value: string; label: string; title?: string }[]
+  options: { value: string; label: string; title?: string; icon?: Component }[]
 }>()
 defineEmits<{ 'update:modelValue': [v: string] }>()
 </script>

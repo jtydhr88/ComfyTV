@@ -1,6 +1,14 @@
 <template>
   <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full">
-    <VideoPlayerLite :source-video-url="sourceVideoUrl" />
+    <VideoPlayerLite ref="playerRef" :source-video-url="sourceVideoUrl">
+      <template #overlay>
+        <canvas
+          v-show="supported"
+          ref="previewCanvas"
+          class="ctv:absolute ctv:inset-0 ctv:size-full ctv:object-contain ctv:pointer-events-none"
+        />
+      </template>
+    </VideoPlayerLite>
 
     <div
       class="ctv:flex ctv:flex-col ctv:gap-1"
@@ -10,17 +18,8 @@
     >
       <FxChips v-model="channel" :options="CHANNELS" />
       <CurvesCanvas v-model="activeCurve" :color="CHANNEL_COLORS[channel]" />
-      <div class="ctv:text-2xs ctv:text-center ctv:text-muted-foreground">{{ $t('fx.curveHint') }}</div>
-
       <div class="ctv:flex ctv:items-center ctv:gap-1">
-        <span class="ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">{{ $t('fx.preset') }}</span>
-        <select
-          v-model="preset"
-          class="ctv:flex-1 ctv:py-0.5 ctv:px-1 ctv:text-[11px] ctv:rounded ctv:bg-secondary-background
-                 ctv:border ctv:border-border-subtle ctv:text-base-foreground"
-        >
-          <option v-for="p in PRESETS" :key="p" :value="p">{{ p }}</option>
-        </select>
+        <div class="ctv:flex-1 ctv:text-2xs ctv:text-center ctv:text-muted-foreground">{{ $t('fx.curveHint') }}</div>
         <button
           type="button"
           class="ctv:py-0.5 ctv:px-1.5 ctv:text-2xs ctv:rounded ctv:cursor-pointer ctv:border
@@ -50,7 +49,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
@@ -59,6 +58,8 @@ import FxChips from '@/components/widgets/fx/FxChips.vue'
 import CurvesCanvas from '@/components/widgets/fx/CurvesCanvas.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
 import { useCurveChannels } from '@/composables/stages/useCurveChannels'
+import { useVideoCurvesPreview } from '@/composables/stages/useVideoCurvesPreview'
+import type { VideoCurvesParams } from '@/composables/stages/videoCurvesMath'
 import { useStrWidget } from '@/composables/widgets/useWidgetModel'
 
 const props = defineProps<{
@@ -69,10 +70,6 @@ const props = defineProps<{
   onAction: (id: string) => void
   node: LGraphNode
 }>()
-
-const PRESETS = ['none', 'color_negative', 'cross_process', 'darker',
-  'increase_contrast', 'lighter', 'linear_contrast', 'medium_contrast',
-  'negative', 'strong_contrast', 'vintage']
 
 const CHANNEL_COLORS: Record<string, string> = {
   master: '#e0e0e0', red: '#ef5350', green: '#66bb6a', blue: '#42a5f5',
@@ -87,5 +84,28 @@ const CHANNELS = [
 const sourceVideoUrl = computed(() => pickSourceImageUrl(props.state.inputs, 'video'))
 const preset = useStrWidget(props.node, 'preset', 'none')
 
-const { channel, activeCurve, resetActive } = useCurveChannels(props.node)
+const { channel, activeCurve, resetActive, widgets } = useCurveChannels(props.node)
+
+const playerRef = ref<InstanceType<typeof VideoPlayerLite> | null>(null)
+const previewCanvas = ref<HTMLCanvasElement | null>(null)
+const previewVideoEl = computed<HTMLVideoElement | null>(
+  () => playerRef.value?.videoEl ?? null,
+)
+
+function previewParams(): Partial<VideoCurvesParams> {
+  return {
+    preset: preset.value,
+    master: widgets.master.value,
+    red: widgets.red.value,
+    green: widgets.green.value,
+    blue: widgets.blue.value,
+  }
+}
+
+const { supported } = useVideoCurvesPreview({
+  videoEl: previewVideoEl,
+  canvasEl: previewCanvas,
+  nodeId: String(props.node.id),
+  params: previewParams,
+})
 </script>

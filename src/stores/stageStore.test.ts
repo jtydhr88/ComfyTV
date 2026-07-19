@@ -577,4 +577,12 @@ describe('computePickedFromBatch', () => {
     const batch = JSON.stringify({ images: [{ index: '2', image_url: 'u2' }] })
     expect(computePickedFromBatch(batch, 2)).toBe('u2')
   })
+
+  it('prefers the clips list when present', () => {
+    const batch = JSON.stringify({
+      images: [{ index: 1, image_url: 'frame1.png' }, { index: 2, image_url: 'frame2.png' }],
+      clips: [{ index: 1, image_url: 'clip1.mp4' }, { index: 2, image_url: 'clip2.mp4' }],
+    })
+    expect(computePickedFromBatch(batch, 2)).toBe('clip2.mp4')
+  })
 })

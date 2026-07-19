@@ -1,4 +1,4 @@
-"""Schema + execute smoke tests for the Lane A FX stages (video_fx/audio_fx)."""
+"""Schema + execute smoke tests for the Lane A FX stages."""
 from pathlib import Path
 
 import pytest
@@ -20,10 +20,14 @@ ALL_FX_CLASSES = [
 
 
 def _classes():
-    from ComfyTV.nodes.stages import video_fx, audio_fx
+    from ComfyTV.nodes.stages import (
+        video_color, video_enhance, video_keying, video_stylize,
+        video_timeline, video_analysis, audio_process,
+    )
     import inspect
     out = {}
-    for mod in (video_fx, audio_fx):
+    for mod in (video_color, video_enhance, video_keying, video_stylize,
+                video_timeline, video_analysis, audio_process):
         for name, obj in inspect.getmembers(mod):
             if inspect.isclass(obj) and hasattr(obj, "define_schema") \
                     and obj.__module__ == mod.__name__:
@@ -34,7 +38,7 @@ def _classes():
 @pytest.mark.parametrize("cls_name", ALL_FX_CLASSES)
 def test_define_schema(cls_name):
     classes = _classes()
-    assert cls_name in classes, f"{cls_name} missing from video_fx/audio_fx"
+    assert cls_name in classes, f"{cls_name} missing from the FX stage modules"
     classes[cls_name].define_schema()
 
 
@@ -79,10 +83,25 @@ class TestExecute:
         with pytest.raises(RuntimeError, match="neutral"):
             cls.execute(project_id="p1", video=clip)
 
+    def test_color_whitepoint_above_one(self, clip):
+        cls = _classes()["VideoColorStage"]
+        cls.execute(project_id="p1", whitepoint=1.5, video=clip)
+        cls.execute(project_id="p1", whitepoint=2.0, blackpoint=-0.2, video=clip)
+
+    def test_color_temperature_clamped(self, clip):
+        cls = _classes()["VideoColorStage"]
+        cls.execute(project_id="p1", temperature=500, video=clip)
+        cls.execute(project_id="p1", temperature=99999, video=clip)
+
     def test_curves_preset_and_points(self, clip):
         cls = _classes()["VideoCurvesStage"]
         cls.execute(project_id="p1", preset='vintage',
                     master_pts='[[0,0],[0.5,0.6],[1,1]]', video=clip)
+
+    def test_curves_duplicate_x_deduped(self, clip):
+        cls = _classes()["VideoCurvesStage"]
+        cls.execute(project_id="p1",
+                    master_pts='[[0.5,0.2],[0.5,0.8],[1,1]]', video=clip)
 
     def test_blur(self, clip):
         cls = _classes()["VideoBlurSharpenStage"]
@@ -99,6 +118,11 @@ class TestExecute:
     def test_chromakey_matte(self, clip):
         cls = _classes()["VideoChromaKeyStage"]
         cls.execute(project_id="p1", key_color='#00FF00', output='matte', video=clip)
+
+    def test_chromakey_matte_without_despill(self, clip):
+        cls = _classes()["VideoChromaKeyStage"]
+        cls.execute(project_id="p1", key_color='#00FF00', output='matte',
+                    despill_mix=0.0, video=clip)
 
     def test_transition(self, clip, clip2):
         cls = _classes()["VideoTransitionStage"]
@@ -141,7 +165,11 @@ class TestExecute:
         cls = _classes()["AudioDenoiseStage"]
         cls.execute(project_id="p1", method='afftdn', strength=0.5, video=clip)
 
-    def test_needs_input(self):
+    def test_no_video_emits_spec_only(self):
+        import json
         cls = _classes()["VideoColorStage"]
-        with pytest.raises(RuntimeError, match="upstream video"):
-            cls.execute(project_id="p1", exposure=1.0, video="")
+        out = cls.execute(project_id="p1", exposure=1.0, video="")
+        assert out.values[0] == ""
+        data = json.loads(out.values[1])
+        assert data["kind"] == "ComfyTV.VideoColorStage"
+        assert data["specs"][0][0] == "exposure"

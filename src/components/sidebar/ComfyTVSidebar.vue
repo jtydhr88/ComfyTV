@@ -30,6 +30,12 @@
     <div v-show="activeTab === 'params'" class="ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden">
       <StageParamsPanel :active="activeTab === 'params'" />
     </div>
+    <div v-show="activeTab === 'presets'" class="ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden">
+      <PresetsPanel :active="activeTab === 'presets'" />
+    </div>
+    <div v-show="activeTab === 'resources'" class="ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden">
+      <ResourcesPanel :active="activeTab === 'resources'" />
+    </div>
     <div v-show="activeTab === 'servers'" class="ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden">
       <ServersPanel />
     </div>
@@ -42,18 +48,22 @@ import { useStorage } from '@vueuse/core'
 
 import AssetsPanel from '@/components/sidebar/AssetsPanel.vue'
 import EntriesPanel from '@/components/sidebar/EntriesPanel.vue'
+import PresetsPanel from '@/components/sidebar/PresetsPanel.vue'
+import ResourcesPanel from '@/components/sidebar/ResourcesPanel.vue'
 import ServersPanel from '@/components/sidebar/ServersPanel.vue'
 import WorkflowConfigSidebar from '@/components/sidebar/WorkflowConfigSidebar.vue'
 import StageParamsPanel from '@/components/sidebar/StageParamsPanel.vue'
 
-type SidebarTab = 'workflow' | 'assets' | 'entries' | 'params' | 'servers'
+type SidebarTab = 'workflow' | 'assets' | 'entries' | 'params' | 'presets' | 'resources' | 'servers'
 
 const TABS: Array<{ id: SidebarTab; labelKey: string }> = [
-  { id: 'workflow', labelKey: 'sidebar.tab.workflow' },
-  { id: 'assets',   labelKey: 'sidebar.tab.assets' },
-  { id: 'entries',  labelKey: 'sidebar.tab.entries' },
-  { id: 'params',   labelKey: 'sidebar.tab.params' },
-  { id: 'servers',  labelKey: 'sidebar.tab.servers' },
+  { id: 'workflow',  labelKey: 'sidebar.tab.workflow' },
+  { id: 'assets',    labelKey: 'sidebar.tab.assets' },
+  { id: 'entries',   labelKey: 'sidebar.tab.entries' },
+  { id: 'params',    labelKey: 'sidebar.tab.params' },
+  { id: 'presets',   labelKey: 'sidebar.tab.presets' },
+  { id: 'resources', labelKey: 'sidebar.tab.resources' },
+  { id: 'servers',   labelKey: 'sidebar.tab.servers' },
 ]
 
 const activeTab = useStorage<SidebarTab>('comfytv:sidebar:active-tab', 'workflow')

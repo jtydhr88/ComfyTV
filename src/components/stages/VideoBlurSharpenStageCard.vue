@@ -1,6 +1,14 @@
 <template>
   <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full">
-    <VideoPlayerLite :source-video-url="sourceVideoUrl" />
+    <VideoPlayerLite ref="playerRef" :source-video-url="sourceVideoUrl">
+      <template #overlay>
+        <canvas
+          v-show="supported"
+          ref="previewCanvas"
+          class="ctv:absolute ctv:inset-0 ctv:size-full ctv:object-contain ctv:pointer-events-none"
+        />
+      </template>
+    </VideoPlayerLite>
 
     <div
       class="ctv:flex ctv:flex-col ctv:gap-1"
@@ -18,7 +26,7 @@
       <span v-if="!sourceVideoUrl" class="ctv:text-muted-foreground">{{ $t('videoTrim.noInputVideo') }}</span>
       <span v-else-if="state.running" class="ctv:text-muted-foreground">{{ $t('fx.processing') }}</span>
       <span v-else-if="state.output" class="ctv:text-success-background">{{ $t('fx.done') }}</span>
-      <span v-else class="ctv:text-muted-foreground">{{ $t('fx.adjustThenRun') }}</span>
+      <span v-else class="ctv:text-muted-foreground">{{ $t('fx.previewNote') }}</span>
     </div>
 
     <StageCard
@@ -33,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
@@ -41,6 +49,8 @@ import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
+import { useVideoBlurPreview } from '@/composables/stages/useVideoBlurPreview'
+import type { VideoBlurMode, VideoBlurParams } from '@/composables/stages/videoBlurMath'
 import { useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
 
 const props = defineProps<{
@@ -64,4 +74,26 @@ const mode = useStrWidget(props.node, 'mode', 'gaussian')
 const amount = useNumWidget(props.node, 'amount', 2)
 const size = useNumWidget(props.node, 'size', 5)
 const edgePreserve = useNumWidget(props.node, 'edge_preserve', 0.1)
+
+const playerRef = ref<InstanceType<typeof VideoPlayerLite> | null>(null)
+const previewCanvas = ref<HTMLCanvasElement | null>(null)
+const previewVideoEl = computed<HTMLVideoElement | null>(
+  () => playerRef.value?.videoEl ?? null,
+)
+
+function previewParams(): Partial<VideoBlurParams> {
+  return {
+    mode: mode.value as VideoBlurMode,
+    amount: amount.value,
+    size: size.value,
+    edgePreserve: edgePreserve.value,
+  }
+}
+
+const { supported } = useVideoBlurPreview({
+  videoEl: previewVideoEl,
+  canvasEl: previewCanvas,
+  nodeId: String(props.node.id),
+  params: previewParams,
+})
 </script>

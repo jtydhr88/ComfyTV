@@ -1,4 +1,5 @@
 from .media import localize, get_video_info, fresh_output_path, path_to_view_url
+from .media_filter import make_progress
 from .media_torch import _device, _from_tensor, _OUT_TB
 
 FRAME_BLEND_OPS = ('average', 'min', 'max', 'sum', 'product')
@@ -15,6 +16,7 @@ def _windowed_process(view_url: str, back: int, fwd: int, emit_fn,
     out = fresh_output_path('.mp4')
     device = _device()
     total_est = max(1, int(info['duration'] * info['fps']))
+    report = make_progress(progress, total_est, "rendering")
 
     buf = []
     first = 0
@@ -57,8 +59,7 @@ def _windowed_process(view_url: str, back: int, fwd: int, emit_fn,
                              first + len(buf) - 1, device)
             _encode(result, t)
             emitted += 1
-            if progress is not None and emitted % 15 == 0:
-                progress(min(emitted, total_est), total_est, "rendering")
+            report(emitted)
             while first < center - back + 1 and len(buf) > 1:
                 buf.pop(0)
                 first += 1

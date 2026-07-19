@@ -65,8 +65,8 @@
       </div>
 
       <div class="ctv:flex ctv:gap-1">
-        <FxSlider v-model="tStart" :label="$t('fx.tStart')" :min="0" :max="3600" :step="0.05" class="ctv:flex-1" />
-        <FxSlider v-model="tEnd" :label="$t('fx.tEnd')" :min="-1" :max="3600" :step="0.05" class="ctv:flex-1" />
+        <FxSlider v-model="tStart" :label="$t('fx.tStart')" :min="0" :max="tMax" :step="0.05" class="ctv:flex-1" />
+        <FxSlider v-model="tEnd" :label="$t('fx.tEnd')" :min="-1" :max="tMax" :step="0.05" class="ctv:flex-1" />
       </div>
     </div>
 
@@ -122,7 +122,11 @@ const videoEl = ref<HTMLVideoElement | null>(null)
 const overlayEl = ref<HTMLCanvasElement | null>(null)
 
 const {
-  strokes, mode, radius, hardness, sigma, dx, dy, color,
+  duration, strokes, mode, radius, hardness, sigma, dx, dy, color,
   onMeta, onDown, onMovePtr, onUp, undoStroke, clearStrokes,
 } = usePaintStrokeEditor({ node: props.node, videoEl, overlayEl })
+const tMax = computed(() => {
+  const d = duration.value
+  return d > 0 ? Math.max(0.1, Math.round(d * 10) / 10) : 3600
+})
 </script>

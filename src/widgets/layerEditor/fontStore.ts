@@ -10,6 +10,8 @@ export interface BuiltinFontInfo {
 
 const MANIFEST_URL = '/comfytv/fonts/manifest.json'
 
+export const DEFAULT_FONT_REF: FontRef = { kind: 'builtin', id: 'inter' }
+
 function fontKey(ref: FontRef): string {
   return ref.kind === 'builtin' ? `builtin:${ref.id}` : ref.url
 }
@@ -96,6 +98,15 @@ class FontStore {
     if (cached) return cached
     if (!this.failed.has(key)) {
       void this.loadFont(ref).catch(() => undefined)
+    }
+    return null
+  }
+
+  getFontSyncWithFallback(ref: FontRef): TyprFont | null {
+    const font = this.getFontSync(ref)
+    if (font) return font
+    if (ref.kind === 'url' && this.failed.has(fontKey(ref))) {
+      return this.getFontSync(DEFAULT_FONT_REF)
     }
     return null
   }

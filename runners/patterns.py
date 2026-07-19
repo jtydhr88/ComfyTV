@@ -4,6 +4,7 @@ from fractions import Fraction
 import numpy as np
 
 from .media import fresh_output_path, path_to_view_url
+from .media_filter import make_progress
 
 _OUT_TB = Fraction(1, 90000)
 
@@ -205,6 +206,7 @@ def ken_burns_video(image_url: str, *, width: int = 1280, height: int = 720,
     arr = torch.from_numpy(
         np.asarray(src, dtype=np.float32) / 255.0).permute(2, 0, 1).unsqueeze(0)
     ih, iw = arr.shape[2], arr.shape[3]
+    report = make_progress(progress, n, "ken burns")
 
     out = fresh_output_path('.mp4')
     with av.open(str(out), 'w') as outp:
@@ -238,8 +240,7 @@ def ken_burns_video(image_url: str, *, width: int = 1280, height: int = 720,
             frame.time_base = _OUT_TB
             for pkt in enc.encode(frame):
                 outp.mux(pkt)
-            if progress is not None and i % 30 == 0:
-                progress(i, n, "ken burns")
+            report(i + 1)
         for pkt in enc.encode():
             outp.mux(pkt)
 
@@ -301,6 +302,7 @@ def generate_pattern_video(kind: str, *, width: int = 1280, height: int = 720,
         inside_y = np.clip(np.minimum(ys - y0, y1_ - ys) / s, 0, 1)
         static = 1.0 - inside_x * inside_y
 
+    report = make_progress(progress, n, "generating")
     out = fresh_output_path('.mp4')
     with av.open(str(out), 'w') as outp:
         enc = outp.add_stream('libx264', rate=fps)
@@ -337,8 +339,7 @@ def generate_pattern_video(kind: str, *, width: int = 1280, height: int = 720,
             frame.time_base = _OUT_TB
             for pkt in enc.encode(frame):
                 outp.mux(pkt)
-            if progress is not None and i % 30 == 0:
-                progress(i, n, "generating")
+            report(i + 1)
         for pkt in enc.encode():
             outp.mux(pkt)
 

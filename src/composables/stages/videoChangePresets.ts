@@ -66,4 +66,5 @@ export const VIDEO_CHANGE_PRESETS: ImagePreset[] = [
   { id: 'annotate',        icon: 'pi pi-pencil',     category: cat, targetClass: 'ComfyTV.AnnotateStage',                 inputSocket: 'video' },
   { id: 'audio-reactive',  icon: 'pi pi-wave-pulse', category: cat, targetClass: 'ComfyTV.AudioReactiveStage',            inputSocket: 'video' },
   { id: 'audio-meter',     icon: 'pi pi-chart-bar',  category: cat, targetClass: 'ComfyTV.AudioMeterStage',               inputSocket: 'video' },
+  { id: 'fx-chain',        icon: 'pi pi-sitemap',    category: cat, targetClass: 'ComfyTV.FXChainStage',                  inputSocket: 'video' },
 ]

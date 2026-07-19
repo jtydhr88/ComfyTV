@@ -1,6 +1,6 @@
 <template>
   <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full">
-    <VideoPlayerLite :source-video-url="sourceVideoUrl" />
+    <VideoPlayerLite ref="playerRef" :source-video-url="sourceVideoUrl" />
 
     <div
       class="ctv:flex ctv:flex-col ctv:gap-1"
@@ -45,8 +45,8 @@
       <FxChips v-model="anchor" :options="ANCHORS_BOTTOM" />
       <FxChips v-model="anchor" :options="ANCHORS_CENTER" />
 
-      <FxSlider v-model="tStart" :label="$t('fx.tStart')" :min="0" :max="3600" :step="0.05" />
-      <FxSlider v-model="tEnd" :label="$t('fx.tEnd')" :min="-1" :max="3600" :step="0.05" />
+      <FxSlider v-model="tStart" :label="$t('fx.tStart')" :min="0" :max="tMax" :step="0.05" />
+      <FxSlider v-model="tEnd" :label="$t('fx.tEnd')" :min="-1" :max="tMax" :step="0.05" />
       <div class="ctv:text-2xs ctv:text-muted-foreground">{{ $t('fx.tEndAuto') }}</div>
       <FxSlider v-model="fadeS" :label="$t('fx.fade')" :min="0" :max="10" :step="0.1" />
 
@@ -77,7 +77,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
@@ -118,6 +118,12 @@ const ANCHORS_CENTER = [
 ]
 
 const sourceVideoUrl = computed(() => pickSourceImageUrl(props.state.inputs, 'video'))
+
+const playerRef = ref<InstanceType<typeof VideoPlayerLite> | null>(null)
+const tMax = computed(() => {
+  const d = playerRef.value?.duration ?? 0
+  return d > 0 ? Math.max(0.1, Math.round(d * 10) / 10) : 3600
+})
 const text = useStrWidget(props.node, 'text', '')
 const font = useStrWidget(props.node, 'font', 'Inter-Regular')
 const size = useNumWidget(props.node, 'size', 48)

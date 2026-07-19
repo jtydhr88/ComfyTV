@@ -1,5 +1,10 @@
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { nextTick, ref } from 'vue'
+
+const listResources = vi.fn()
+vi.mock('@/api', () => ({
+  listResources: (...a: any[]) => listResources(...a),
+}))
 
 import type { LayerEditorController } from './useLayerEditorStage'
 import {
@@ -8,6 +13,31 @@ import {
   parseFontValue,
   useTextEditPopup,
 } from './useTextEditPopup'
+
+function fontResource(id: number, name: string, extra: Record<string, unknown> = {}) {
+  return {
+    id,
+    kind: 'font',
+    name,
+    filename: `${name}.ttf`,
+    subfolder: 'comfytv-fonts',
+    size: 10,
+    sha256: null,
+    created_at: null,
+    url: `/view?filename=${name}.ttf&subfolder=comfytv-fonts&type=input`,
+    missing: false,
+    ...extra,
+  }
+}
+
+function flush(): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, 0))
+}
+
+beforeEach(() => {
+  vi.clearAllMocks()
+  listResources.mockResolvedValue({ resources: [] })
+})
 
 function makeEditor() {
   const textLayer = {
@@ -47,11 +77,12 @@ describe('font value codec', () => {
     expect(fontRefToValue({ kind: 'url', url: 'http://x/f.ttf' } as never)).toBe('url:http://x/f.ttf')
   })
 
-  it('parses only builtin values', () => {
+  it('parses builtin and url values and rejects anything else', () => {
     expect(parseFontValue('builtin:serif')).toEqual({ kind: 'builtin', id: 'serif' })
-    expect(parseFontValue('url:http://x')).toBeNull()
+    expect(parseFontValue('url:http://x')).toEqual({ kind: 'url', url: 'http://x' })
     expect(parseFontValue(null)).toBeNull()
     expect(parseFontValue(42)).toBeNull()
+    expect(parseFontValue('nope')).toBeNull()
   })
 })
 
@@ -93,9 +124,37 @@ describe('useTextEditPopup', () => {
     expect(api.clampNum(e, 4, 2048)).toBe(2048)
   })
 
-  it('builds font options from the builtin list', () => {
+  it('builds font options from the builtin list', async () => {
     const { editor } = makeEditor()
     const api = useTextEditPopup(editor, ref(null))
+    await flush()
+    expect(api.fontOptions.value).toEqual([
+      { label: 'Sans', value: 'builtin:sans' },
+      { label: 'Serif', value: 'builtin:serif' },
+    ])
+  })
+
+  it('appends non-missing resource fonts to the options', async () => {
+    listResources.mockResolvedValue({ resources: [
+      fontResource(1, 'CoolFont'),
+      fontResource(2, 'GoneFont', { missing: true }),
+    ] })
+    const { editor } = makeEditor()
+    const api = useTextEditPopup(editor, ref(null))
+    await flush()
+    expect(listResources).toHaveBeenCalledWith('font')
+    expect(api.fontOptions.value).toEqual([
+      { label: 'Sans', value: 'builtin:sans' },
+      { label: 'Serif', value: 'builtin:serif' },
+      { label: 'CoolFont', value: 'url:/view?filename=CoolFont.ttf&subfolder=comfytv-fonts&type=input' },
+    ])
+  })
+
+  it('keeps only builtin options when the resource list fails', async () => {
+    listResources.mockRejectedValue(new Error('offline'))
+    const { editor } = makeEditor()
+    const api = useTextEditPopup(editor, ref(null))
+    await flush()
     expect(api.fontOptions.value).toEqual([
       { label: 'Sans', value: 'builtin:sans' },
       { label: 'Serif', value: 'builtin:serif' },
@@ -113,16 +172,32 @@ describe('useTextEditPopup', () => {
     expect(api.fontFailed.value).toBe(true)
   })
 
-  it('applies builtin font changes and ignores others', () => {
+  it('applies builtin and url font changes and ignores malformed values', async () => {
+    listResources.mockResolvedValue({ resources: [fontResource(1, 'CoolFont')] })
     const { editor, raw } = makeEditor()
     raw.editingTextId.value = 't1'
     const api = useTextEditPopup(editor, ref(null))
+    await flush()
     api.onFontChange('builtin:serif')
     expect(raw.updateTextLayer).toHaveBeenCalledWith('t1', {
       fontRef: { kind: 'builtin', id: 'serif' },
     })
     raw.updateTextLayer.mockClear()
-    api.onFontChange('url:http://x')
+    api.onFontChange('url:/view?filename=CoolFont.ttf&subfolder=comfytv-fonts&type=input')
+    expect(raw.updateTextLayer).toHaveBeenCalledWith('t1', {
+      fontRef: {
+        kind: 'url',
+        url: '/view?filename=CoolFont.ttf&subfolder=comfytv-fonts&type=input',
+        name: 'CoolFont',
+      },
+    })
+    raw.updateTextLayer.mockClear()
+    api.onFontChange('url:http://unknown/f.ttf')
+    expect(raw.updateTextLayer).toHaveBeenCalledWith('t1', {
+      fontRef: { kind: 'url', url: 'http://unknown/f.ttf' },
+    })
+    raw.updateTextLayer.mockClear()
+    api.onFontChange('nope')
     expect(raw.updateTextLayer).not.toHaveBeenCalled()
   })
 

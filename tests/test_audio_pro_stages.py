@@ -19,19 +19,22 @@ ALL_AUDIO_PRO_CLASSES = [
 def _classes():
     import inspect
 
-    from ComfyTV.nodes.stages import audio_pro
+    from ComfyTV.nodes.stages import (
+        audio_effects, audio_process, audio_edit, audio_measure,
+    )
     out = {}
-    for name, obj in inspect.getmembers(audio_pro):
-        if inspect.isclass(obj) and hasattr(obj, "define_schema") \
-                and obj.__module__ == audio_pro.__name__:
-            out[name] = obj
+    for mod in (audio_effects, audio_process, audio_edit, audio_measure):
+        for name, obj in inspect.getmembers(mod):
+            if inspect.isclass(obj) and hasattr(obj, "define_schema") \
+                    and obj.__module__ == mod.__name__:
+                out[name] = obj
     return out
 
 
 @pytest.mark.parametrize("cls_name", ALL_AUDIO_PRO_CLASSES)
 def test_define_schema(cls_name):
     classes = _classes()
-    assert cls_name in classes, f"{cls_name} missing from audio_pro"
+    assert cls_name in classes, f"{cls_name} missing from audio stages"
     classes[cls_name].define_schema()
 
 
@@ -90,6 +93,10 @@ class TestModulation:
     def test_chorus_presets(self, clip, preset):
         _classes()["AudioModulationStage"].execute(
             project_id="p1", mode='chorus', chorus_preset=preset, video=clip)
+
+    def test_phaser_zero_delay(self, clip):
+        _classes()["AudioModulationStage"].execute(
+            project_id="p1", mode='phaser', ph_delay=0.0, video=clip)
 
 
 class TestStereo:
@@ -188,14 +195,14 @@ class TestAnalyzeStage:
     def _payload(self, monkeypatch, cls, **kw):
         import json
 
-        from ComfyTV.nodes.stages import audio_pro
+        from ComfyTV.nodes.stages import audio_measure
         captured = {}
 
         def _fake_emit(_cls, *, project_id, payload_str, **kwargs):
             captured['payload'] = payload_str
             return None
 
-        monkeypatch.setattr(audio_pro, '_stage_emit_auto', _fake_emit)
+        monkeypatch.setattr(audio_measure, '_stage_emit_auto', _fake_emit)
         cls.execute(project_id="p1", **kw)
         return json.loads(captured['payload'])
 
@@ -233,14 +240,14 @@ class TestAnalyzeStage:
 
 class TestVisualize:
     def _payload(self, monkeypatch, **kw):
-        from ComfyTV.nodes.stages import audio_pro
+        from ComfyTV.nodes.stages import audio_measure
         captured = {}
 
         def _fake_emit(_cls, *, project_id, payload_str, **kwargs):
             captured['payload'] = payload_str
             return None
 
-        monkeypatch.setattr(audio_pro, '_stage_emit_auto', _fake_emit)
+        monkeypatch.setattr(audio_measure, '_stage_emit_auto', _fake_emit)
         _classes()["AudioVisualizeStage"].execute(project_id="p1", **kw)
         return captured['payload']
 
@@ -297,7 +304,7 @@ class TestRepairBoundaries:
 
 class TestLoudnessTwoPass:
     def test_measure_fields(self, clip):
-        from ComfyTV.nodes.stages.audio_fx import _loudnorm_measure
+        from ComfyTV.nodes.stages.audio_process import _loudnorm_measure
         measured = _loudnorm_measure(clip, 'I=-16:TP=-1.5:LRA=11')
         assert measured is not None
         for field in ('input_i', 'input_tp', 'input_lra', 'input_thresh',
@@ -306,14 +313,14 @@ class TestLoudnessTwoPass:
         assert -70.0 <= measured['input_i'] < 0.0
 
     def test_stage_executes_linear(self, clip):
-        from ComfyTV.nodes.stages.audio_fx import AudioLoudnessStage
+        from ComfyTV.nodes.stages.audio_process import AudioLoudnessStage
         AudioLoudnessStage.execute(project_id="p1", mode='ebu_r128',
                                    video=clip)
 
 
 class TestDenoiseKeepSilence:
     def test_silenceremove_with_keep(self, clip):
-        from ComfyTV.nodes.stages.audio_fx import AudioDenoiseStage
+        from ComfyTV.nodes.stages.audio_process import AudioDenoiseStage
         AudioDenoiseStage.execute(
             project_id="p1", method='silenceremove', silence_db=-50.0,
             min_silence_s=0.5, keep_silence_s=0.3, video=clip)
@@ -408,14 +415,14 @@ class TestSegments:
     def test_stage_json_mode(self, clip, monkeypatch):
         import json as _json
 
-        from ComfyTV.nodes.stages import audio_pro
+        from ComfyTV.nodes.stages import audio_edit
         captured = {}
 
         def _fake_emit(_cls, *, project_id, payload_str, **kwargs):
             captured['payload'] = payload_str
             return None
 
-        monkeypatch.setattr(audio_pro, '_stage_emit_auto', _fake_emit)
+        monkeypatch.setattr(audio_edit, '_stage_emit_auto', _fake_emit)
         _classes()["AudioSegmentExportStage"].execute(
             project_id="p1", detect='json',
             segments='[{"start":0.0,"end":0.5},{"start":0.7,"end":1.2}]',
@@ -469,14 +476,14 @@ class TestSweepDeconvolve:
         assert tail_energy / total_energy < 0.05
 
     def test_sweep_stage(self, monkeypatch):
-        from ComfyTV.nodes.stages import audio_pro
+        from ComfyTV.nodes.stages import audio_measure
         captured = {}
 
         def _fake_emit(_cls, *, project_id, payload_str, **kwargs):
             captured['payload'] = payload_str
             return None
 
-        monkeypatch.setattr(audio_pro, '_stage_emit_auto', _fake_emit)
+        monkeypatch.setattr(audio_measure, '_stage_emit_auto', _fake_emit)
         _classes()["AudioSweepStage"].execute(project_id="p1", duration_s=1.0,
                                               tail_s=0.2)
         assert captured['payload']
@@ -484,14 +491,14 @@ class TestSweepDeconvolve:
 
 class TestVisualizePro:
     def _payload(self, monkeypatch, **kw):
-        from ComfyTV.nodes.stages import audio_pro
+        from ComfyTV.nodes.stages import audio_measure
         captured = {}
 
         def _fake_emit(_cls, *, project_id, payload_str, **kwargs):
             captured['payload'] = payload_str
             return None
 
-        monkeypatch.setattr(audio_pro, '_stage_emit_auto', _fake_emit)
+        monkeypatch.setattr(audio_measure, '_stage_emit_auto', _fake_emit)
         _classes()["AudioVisualizeStage"].execute(project_id="p1", **kw)
         return captured['payload']
 
@@ -545,14 +552,14 @@ class TestCompliance:
     def test_analyze_includes_platforms(self, clip, monkeypatch):
         import json as _json
 
-        from ComfyTV.nodes.stages import audio_pro
+        from ComfyTV.nodes.stages import audio_measure
         captured = {}
 
         def _fake_emit(_cls, *, project_id, payload_str, **kwargs):
             captured['payload'] = payload_str
             return None
 
-        monkeypatch.setattr(audio_pro, '_stage_emit_auto', _fake_emit)
+        monkeypatch.setattr(audio_measure, '_stage_emit_auto', _fake_emit)
         _classes()["AudioAnalyzeStage"].execute(project_id="p1",
                                                 mode='loudness', video=clip)
         data = _json.loads(captured['payload'])
@@ -563,7 +570,7 @@ class TestCompliance:
 
 class TestLoudnessNormalize:
     def test_sample_peak_target(self, clip, monkeypatch):
-        from ComfyTV.nodes.stages import audio_fx
+        from ComfyTV.nodes.stages import audio_process
         from ComfyTV.runners.media_filter import analyze_audio
         captured = {}
 
@@ -571,8 +578,8 @@ class TestLoudnessNormalize:
             captured['payload'] = payload_str
             return None
 
-        monkeypatch.setattr(audio_fx, '_stage_emit_auto', _fake_emit)
-        audio_fx.AudioLoudnessStage.execute(
+        monkeypatch.setattr(audio_process, '_stage_emit_auto', _fake_emit)
+        audio_process.AudioLoudnessStage.execute(
             project_id="p1", mode='normalize', peak_mode='sample',
             peak_target_db=-3.0, video=clip)
         lines = analyze_audio(captured['payload'], [('volumedetect', None)])
@@ -582,7 +589,7 @@ class TestLoudnessNormalize:
         assert m and abs(float(m.group(1)) - (-3.0)) < 0.6
 
     def test_multi_constraint_takes_strictest(self, clip):
-        from ComfyTV.nodes.stages.audio_fx import AudioLoudnessStage
+        from ComfyTV.nodes.stages.audio_process import AudioLoudnessStage
         AudioLoudnessStage.execute(
             project_id="p1", mode='normalize', peak_mode='true_peak',
             peak_target_db=-1.0, use_rms=True, rms_target_db=-20.0,
@@ -591,10 +598,23 @@ class TestLoudnessNormalize:
 
 class TestNoInput:
     @pytest.mark.parametrize("cls_name", [
-        "AudioEchoStage", "AudioModulationStage", "AudioStereoStage",
-        "AudioTimePitchStage", "AudioRepairStage", "AudioSaturateStage",
-        "AudioAnalyzeStage", "AudioVisualizeStage",
+        "AudioEchoStage", "AudioAnalyzeStage", "AudioVisualizeStage",
     ])
     def test_missing_input_rejected(self, cls_name):
         with pytest.raises(RuntimeError, match="upstream"):
             _classes()[cls_name].execute(project_id="p1")
+
+    @pytest.mark.parametrize("cls_name,kwargs", [
+        ("AudioModulationStage", {}),
+        ("AudioStereoStage", {}),
+        ("AudioTimePitchStage", {"mode": "reverse"}),
+        ("AudioRepairStage", {}),
+        ("AudioSaturateStage", {}),
+    ])
+    def test_missing_input_emits_spec_only(self, cls_name, kwargs):
+        import json as _json
+        out = _classes()[cls_name].execute(project_id="p1", **kwargs)
+        assert out.values[0] == ""
+        data = _json.loads(out.values[1])
+        assert data["domain"] == "audio"
+        assert data["specs"]

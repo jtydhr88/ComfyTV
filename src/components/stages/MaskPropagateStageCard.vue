@@ -1,6 +1,6 @@
 <template>
   <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full">
-    <VideoPlayerLite :source-video-url="sourceVideoUrl" />
+    <VideoPlayerLite ref="playerRef" :source-video-url="sourceVideoUrl" />
 
     <div
       class="ctv:flex ctv:flex-col ctv:gap-1"
@@ -11,7 +11,7 @@
       <img v-if="maskUrl" :src="maskUrl" class="ctv:w-full ctv:max-h-24 ctv:object-contain ctv:rounded ctv:border ctv:border-border-subtle">
 
       <FxChips v-model="model" :options="MODELS" />
-      <FxSlider v-model="tRef" label="Ref time (s)" :min="0" :max="3600" :step="0.05" :reset-to="0" />
+      <FxSlider v-model="tRef" label="Ref time (s)" :min="0" :max="tMax" :step="0.05" :reset-to="0" />
       <FxSlider v-model="maxPoints" label="Max points" :min="4" :max="64" :step="1" :decimals="0" :reset-to="24" />
 
       <label class="ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs ctv:text-muted-foreground ctv:cursor-pointer">
@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
@@ -66,6 +66,12 @@ const MODELS = [
 ]
 
 const sourceVideoUrl = computed(() => pickSourceImageUrl(props.state.inputs, 'video'))
+
+const playerRef = ref<InstanceType<typeof VideoPlayerLite> | null>(null)
+const tMax = computed(() => {
+  const d = playerRef.value?.duration ?? 0
+  return d > 0 ? Math.max(0.1, Math.round(d * 10) / 10) : 3600
+})
 const maskUrl = computed(() => pickSourceImageUrl(props.state.inputs, 'mask'))
 const model = useStrWidget(props.node, 'model', 'translation')
 const tRef = useNumWidget(props.node, 't_ref', 0)

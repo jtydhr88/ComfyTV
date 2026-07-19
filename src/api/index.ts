@@ -4,24 +4,34 @@ import { app } from '@/lib/comfyApp'
 
 import {
   ApiSidecarResultSchema,
+  CapabilitiesSchema,
   CapsPayloadSchema,
+  FxClipPreviewSchema,
   ImportWorkflowResultSchema,
   LinkWorkflowResultSchema,
   ListNativeWorkflowsSchema,
   ListRemoteJobsSchema,
+  ListResourcesSchema,
   ListServerStatusSchema,
   ListServersSchema,
+  ListStagePresetsSchema,
   ListWorkflowOverviewSchema,
+  MutateResourceSchema,
   MutateServerSchema,
+  MutateStagePresetSchema,
   OkSchema,
   RemoteRunResultSchema,
   RescanResultSchema,
+  StageDefaultsSchema,
   TestServerResultSchema,
   UnlinkWorkflowResultSchema,
 } from './schemas'
 import type {
   ApiSidecarResult,
+  Capabilities,
   CapsPayload,
+  RemoteCapabilityProbe,
+  FxClipPreviewResult,
   ImportWorkflowResult,
   LinkWorkflowResult,
   ListWorkflowOverview,
@@ -154,6 +164,82 @@ export function testServer(
   return apiSend('/comfytv/servers/test', 'POST', TestServerResultSchema, input)
 }
 
+export function fetchLocalCapabilities(): Promise<Capabilities> {
+  return apiFetch('/comfytv/capabilities', CapabilitiesSchema)
+}
+
+export const REMOTE_PROBE_TIMEOUT_MS = 4000
+
+export async function fetchRemoteCapabilities(baseUrl: string): Promise<RemoteCapabilityProbe> {
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), REMOTE_PROBE_TIMEOUT_MS)
+  try {
+    const resp = await fetch(`${baseUrl.replace(/\/+$/, '')}/comfytv/capabilities`, {
+      signal: controller.signal,
+    })
+    if (!resp.ok) return { installed: false, error: `HTTP ${resp.status}` }
+    const parsed = CapabilitiesSchema.safeParse(await resp.json())
+    if (!parsed.success) return { installed: false, error: 'unrecognized capabilities payload' }
+    return { installed: true, capabilities: parsed.data }
+  } catch (e) {
+    return { installed: false, error: e instanceof Error ? e.message : String(e) }
+  } finally {
+    clearTimeout(timer)
+  }
+}
+
+export function listResources(kind?: string): Promise<z.infer<typeof ListResourcesSchema>> {
+  const q = kind ? `?kind=${encodeURIComponent(kind)}` : ''
+  return apiFetch(`/comfytv/resources${q}`, ListResourcesSchema)
+}
+
+export function uploadResource(
+  kind: string, file: File,
+): Promise<z.infer<typeof MutateResourceSchema>> {
+  const fd = new FormData()
+  fd.append('kind', kind)
+  fd.append('file', file)
+  return apiFetch('/comfytv/resources', MutateResourceSchema, { method: 'POST', body: fd })
+}
+
+export function renameResource(
+  id: number, name: string,
+): Promise<z.infer<typeof MutateResourceSchema>> {
+  return apiSend(`/comfytv/resources/${id}`, 'PATCH', MutateResourceSchema, { name })
+}
+
+export function deleteResource(id: number): Promise<z.infer<typeof OkSchema>> {
+  return apiSend(`/comfytv/resources/${id}`, 'DELETE', OkSchema)
+}
+
+export function listStagePresets(kind?: string): Promise<z.infer<typeof ListStagePresetsSchema>> {
+  const query = kind ? `?kind=${encodeURIComponent(kind)}` : ''
+  return apiFetch(`/comfytv/presets${query}`, ListStagePresetsSchema)
+}
+
+export function saveStagePreset(
+  input: { kind: string; name: string; config: Record<string, unknown> },
+): Promise<z.infer<typeof MutateStagePresetSchema>> {
+  return apiSend('/comfytv/presets', 'POST', MutateStagePresetSchema, input)
+}
+
+export function updateStagePreset(
+  id: number,
+  patch: Partial<{ name: string; config: Record<string, unknown> }>,
+): Promise<z.infer<typeof MutateStagePresetSchema>> {
+  return apiSend(`/comfytv/presets/${id}`, 'PATCH', MutateStagePresetSchema, patch)
+}
+
+export function deleteStagePreset(id: number): Promise<z.infer<typeof OkSchema>> {
+  return apiSend(`/comfytv/presets/${id}`, 'DELETE', OkSchema)
+}
+
+export function fetchStageDefaults(
+  nodeId: string,
+): Promise<z.infer<typeof StageDefaultsSchema>> {
+  return apiFetch(`/comfytv/stage_defaults?node_id=${encodeURIComponent(nodeId)}`, StageDefaultsSchema)
+}
+
 export function remoteRun(input: {
   server_id: number
   prompt: Record<string, unknown>
@@ -171,6 +257,22 @@ export function listRemoteJobs(status?: string): Promise<z.infer<typeof ListRemo
 
 export function cancelRemoteJob(jobId: string): Promise<z.infer<typeof OkSchema>> {
   return apiSend(`/comfytv/remote_jobs/${encodeURIComponent(jobId)}/cancel`, 'POST', OkSchema)
+}
+
+export function fxClipPreview(
+  nodeId: string,
+  params: Record<string, unknown>,
+  video: string,
+  t: number,
+  window?: number,
+): Promise<FxClipPreviewResult> {
+  return apiSend('/comfytv/fx_preview', 'POST', FxClipPreviewSchema, {
+    node_id: nodeId,
+    params,
+    video,
+    t,
+    ...(window !== undefined ? { window } : {}),
+  })
 }
 
 export * from './schemas'

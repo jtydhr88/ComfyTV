@@ -345,6 +345,9 @@
     "FrameBlendStage": {
       "display_name": "Frame Blend"
     },
+    "FXChainStage": {
+      "display_name": "FX Chain"
+    },
     "ColorFXStage": {
       "display_name": "Color FX"
     },
@@ -2058,6 +2061,9 @@
   },
   "ComfyTV_FrameBlendStage": {
     "display_name": "Frame Blend"
+  },
+  "ComfyTV_FXChainStage": {
+    "display_name": "FX Chain"
   },
   "ComfyTV_ColorFXStage": {
     "display_name": "Color FX"

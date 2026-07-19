@@ -82,6 +82,8 @@
       "assets": "Assets",
       "entries": "Entries",
       "params": "Stages",
+      "presets": "Presets",
+      "resources": "Resources",
       "servers": "Servers"
     }
   },
@@ -127,6 +129,21 @@
       "queueShort": "Q {n}",
       "queueDetail": "{running} running, {pending} pending",
       "fromComfyTV": "{n} from ComfyTV"
+    },
+    "caps": {
+      "badge": "ComfyTV v{version}",
+      "comfyOnly": "ComfyUI only — ComfyTV not installed",
+      "missingNodes": "{n} nodes missing",
+      "missingTitle": "Nodes missing on this remote — upgrade its ComfyTV:"
+    },
+    "preflight": {
+      "blockedTitle": "Remote run blocked",
+      "warnTitle": "Remote resource check",
+      "runAnyway": "Run anyway",
+      "noComfyTV": "Remote \"{label}\" doesn't have ComfyTV installed — install ComfyTV there or run locally.",
+      "missingNode": "Remote \"{label}\" is missing node {node} — upgrade its ComfyTV.",
+      "missingResource": "Remote \"{label}\" is missing resource {file} — run anyway?",
+      "resourceMismatch": "Resource {file} has different content on remote \"{label}\" — run anyway?"
     }
   },
   "stageManager": {
@@ -438,6 +455,43 @@
         "tooltip": "Spawn an image-edit stage preset to Qwen Edit 2511, wired to this 3D capture — keeps the subject's colors and materials while turning the render into a studio product photo; edit the prompt to taste"
       }
     }
+  },
+  "stagePresets": {
+    "custom": "Custom",
+    "save": "Save preset",
+    "saveTitle": "Save preset",
+    "nameLabel": "Preset name",
+    "delete": "Delete preset",
+    "deleteTitle": "Delete preset",
+    "deleteConfirm": "Delete preset \"{name}\"?",
+    "renameTitle": "Rename preset",
+    "reset": "Reset to defaults",
+    "builtin": "Built-in preset",
+    "saveFailed": "Failed to save preset",
+    "nameReserved": "This name is reserved by a built-in preset",
+    "panel": {
+      "title": "Stage Presets",
+      "empty": "No presets yet. Use the save button on a stage node to create one.",
+      "rename": "Rename preset"
+    }
+  },
+  "resources": {
+    "panel": {
+      "title": "Resources",
+      "empty": "No files yet. Upload one to use it in stages."
+    },
+    "kind": {
+      "lut": "LUTs",
+      "font": "Fonts"
+    },
+    "upload": "Upload file",
+    "rename": "Rename",
+    "renameTitle": "Rename resource",
+    "nameLabel": "Display name",
+    "remove": "Remove from library",
+    "removeTitle": "Remove resource",
+    "removeConfirm": "Remove \"{name}\" from the library? The file stays on disk.",
+    "missing": "Missing"
   },
   "presets": {
     "imageVariant": {
@@ -764,6 +818,10 @@
       "audio-meter": {
         "label": "Audio Meter",
         "tooltip": "Burn a live volume meter onto the video"
+      },
+      "fx-chain": {
+        "label": "FX Chain",
+        "tooltip": "Chain multiple FX specs into one render pass"
       }
     }
   },
@@ -1547,6 +1605,23 @@
     "textPlaceholder": "Type something…",
     "dropHint": "Drop image to add a layer"
   },
+  "fxChain": {
+    "title": "FX Chain",
+    "empty": "Connect fx_spec outputs from FX nodes to build a chain",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "unknown": "Unknown FX",
+    "domain": {
+      "video": "Video",
+      "audio": "Audio"
+    }
+  },
+  "fxPreview": {
+    "run": "Preview clip",
+    "stale": "Params changed — preview again",
+    "window": "Real-filter preview · {s}s",
+    "failed": "Preview failed — try again"
+  },
   "fx": {
     "processing": "Processing…",
     "done": "Done — ready for downstream",
@@ -1593,12 +1668,19 @@
     "duration": "Duration",
     "offset": "Offset",
     "offsetAuto": "0 = auto (end of A)",
+    "lumaPreviewHint": "Luma wipe preview shows a crossfade — run to see the final wipe",
     "rangeX": "Range X",
     "rangeY": "Range Y",
     "edgeMode": "Edge fill",
     "threshold": "Threshold",
     "minGap": "Min gap",
     "detectHint": "Run scans for hard cuts and outputs one thumbnail per scene",
+    "sceneFrames": "Scene frames",
+    "sceneClips": "Scene clips",
+    "sceneClipsHint": "Run splits the video at each cut into per-scene clips — wire the clips output into a Video Picker",
+    "sceneClipPickHint": "Click a clip to select it — re-run and the clips output becomes that clip",
+    "cutFast": "Fast (keyframe)",
+    "cutPrecise": "Precise (re-encode)",
     "targetFps": "Target fps",
     "slowFactor": "Slow ×",
     "miMode": "Interp mode",
@@ -1626,6 +1708,7 @@
     "upload": "Upload",
     "interp": "Interp",
     "noLuts": "No LUTs yet — upload a .cube file",
+    "lutPreviewUnavailable": "Live preview supports .cube and .3dl only — this LUT is applied on run",
     "refresh": "Refresh",
     "operator": "Blend mode",
     "opacity": "Opacity",
@@ -1661,7 +1744,17 @@
     "pattern": "Pattern",
     "searchR": "Search",
     "feather": "Feather",
-    "invert": "Invert"
+    "invert": "Invert",
+    "transitionGroup": {
+      "fade": "Fade",
+      "wipe": "Wipe",
+      "slide": "Slide & Smooth",
+      "shape": "Shapes",
+      "diagslice": "Diagonal & Slice",
+      "coverreveal": "Cover & Reveal",
+      "wind": "Wind",
+      "fx": "FX"
+    }
   },
   "afx": {
     "custom": "Custom",
@@ -1774,5 +1867,9 @@
     "spectrum": "Spectrum",
     "splitChannels": "Split channels",
     "legend": "Legend"
+  },
+  "scopes": {
+    "liveSampling": "Sampling the upstream preview live",
+    "wireHint": "Wire a live-preview node (Color / Curves / Blur / Stylize / Chroma Key) for live scopes"
   }
 }

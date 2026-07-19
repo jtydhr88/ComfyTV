@@ -16,7 +16,7 @@
       />
 
       <template v-if="mode === 'softclip'">
-        <div class="ctv:max-h-20 ctv:overflow-y-auto">
+        <div class="ctv-scroll-thin ctv:max-h-20 ctv:overflow-y-auto" @wheel.stop>
           <FxChips v-model="scType" :options="softclipTypes" />
         </div>
         <FxSlider v-model="scThreshold" :label="$t('fx.threshold')" :min="0.01" :max="1" :step="0.01" :reset-to="1" />

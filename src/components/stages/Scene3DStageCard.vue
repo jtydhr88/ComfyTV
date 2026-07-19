@@ -91,7 +91,7 @@
 
       <div class="ctv:flex ctv:min-h-0 ctv:flex-1 ctv:gap-1">
 
-        <div class="ctv:flex ctv:w-44 ctv:shrink-0 ctv:flex-col ctv:gap-1 ctv:overflow-y-auto ctv:rounded-lg ctv:bg-node-background ctv:p-1.5">
+        <div class="ctv-scroll-thin ctv:flex ctv:w-44 ctv:shrink-0 ctv:flex-col ctv:gap-1 ctv:overflow-y-auto ctv:rounded-lg ctv:bg-node-background ctv:p-1.5" @wheel.stop>
 
           <div :class="groupHeaderClass">
             <span class="ctv:flex-1">{{ $t('scene3d.addCharacter') }}</span>
@@ -315,7 +315,7 @@
         </div>
 
         
-        <div class="ctv:flex ctv:w-64 ctv:shrink-0 ctv:flex-col ctv:gap-1.5 ctv:overflow-y-auto ctv:rounded-lg ctv:bg-node-background ctv:p-1.5">
+        <div class="ctv-scroll-thin ctv:flex ctv:w-64 ctv:shrink-0 ctv:flex-col ctv:gap-1.5 ctv:overflow-y-auto ctv:rounded-lg ctv:bg-node-background ctv:p-1.5" @wheel.stop>
           <span :class="inspectorHeaderClass">{{ objectsSummary }}</span>
           <Scene3DCharacterPanel
             v-if="selectedCharacter"
@@ -437,7 +437,7 @@
 
       
       <StageCard
-        class="ctv:h-auto! ctv:shrink-0"
+        class="ctv:h-auto! ctv:grow-0 ctv:shrink-0"
         :state="stageState"
         :node="node"
         :on-run-request="onRunRequest"

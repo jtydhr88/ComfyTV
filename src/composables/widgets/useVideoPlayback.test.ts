@@ -195,7 +195,7 @@ describe('useVideoPlayback seeking', () => {
     const { api, videoEl } = setup({ duration: 10 })
     api.onLoadedMetadata()
     api.onSeekMove(pointerEvt(50))
-    expect(videoEl.value!.currentTime).toBe(0)
+    expect(videoEl.value!.currentTime).toBe(0.001)
     api.onSeekStart(pointerEvt(10))
     api.onSeekMove(pointerEvt(50))
     expect(videoEl.value!.currentTime).toBe(5)

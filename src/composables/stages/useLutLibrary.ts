@@ -1,14 +1,17 @@
 import { onMounted, ref, type Ref } from 'vue'
 
+import { listResources, uploadResource } from '@/api'
+
 export function useLutLibrary(lutFile: Ref<string>) {
   const luts = ref<string[]>([])
+  const lutUrls = ref<Record<string, string>>({})
 
   async function refreshLuts(): Promise<void> {
     try {
-      const res = await fetch('/comfytv/luts')
-      if (!res.ok) return
-      const data = await res.json() as { luts: string[] }
-      luts.value = data.luts ?? []
+      const rows = (await listResources('lut')).resources
+      const present = rows.filter((r) => !r.missing)
+      luts.value = present.map((r) => r.filename).sort()
+      lutUrls.value = Object.fromEntries(present.map((r) => [r.filename, r.url]))
       if (!lutFile.value && luts.value.length) lutFile.value = luts.value[0]
     } catch {
     }
@@ -19,13 +22,10 @@ export function useLutLibrary(lutFile: Ref<string>) {
     const file = input.files?.[0]
     if (!file) return
     try {
-      const fd = new FormData()
-      fd.append('file', file)
-      const res = await fetch('/comfytv/luts', { method: 'POST', body: fd })
-      if (!res.ok) return
-      const data = await res.json() as { name: string }
+      const { resource } = await uploadResource('lut', file)
       await refreshLuts()
-      if (data.name) lutFile.value = data.name
+      if (resource.filename) lutFile.value = resource.filename
+    } catch {
     } finally {
       input.value = ''
     }
@@ -33,5 +33,5 @@ export function useLutLibrary(lutFile: Ref<string>) {
 
   onMounted(refreshLuts)
 
-  return { luts, refreshLuts, onFilePicked }
+  return { luts, lutUrls, refreshLuts, onFilePicked }
 }

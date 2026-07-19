@@ -139,6 +139,7 @@ export function useMotionTrackEditor(opts: {
   watch([pointsRaw, pattern, search], redraw)
 
   return {
+    duration: viewport.duration,
     points,
     solve,
     solveHint,

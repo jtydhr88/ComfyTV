@@ -5,6 +5,7 @@ from .media import (
     localize, fresh_output_path, path_to_view_url,
     _decode_audio_to_array, _AUDIO_RATE,
 )
+from .media_filter import make_progress
 from .roseus_lut import ROSEUS_LUT
 
 
@@ -231,7 +232,7 @@ def segment_export(view_url: str, segments: list | None = None,
                    threshold_db: float = -60.0, min_silence_s: float = 0.5,
                    min_segment_s: float = 0.1, fade_ms: float = 1.45,
                    naming: str = 'num_and_prefix', prefix: str = 'segment',
-                   out_codec: str = 'wav') -> dict:
+                   out_codec: str = 'wav', progress=None) -> dict:
     import numpy as np
 
     arr = _decode_audio_to_array(localize(view_url))
@@ -246,6 +247,7 @@ def segment_export(view_url: str, segments: list | None = None,
             "segment export: no segments found — lower the threshold.")
 
     fade = max(0, int(round(float(fade_ms) * _AUDIO_RATE / 1000.0)))
+    report = make_progress(progress, len(segments), "segments")
     files = []
     for i, seg in enumerate(segments):
         a = max(0, int(round(float(seg['start']) * _AUDIO_RATE)))
@@ -263,6 +265,7 @@ def segment_export(view_url: str, segments: list | None = None,
                          metadata={'title': name, 'track': i + 1})
         files.append({'index': i, 'name': name, 'url': url,
                       'start': seg['start'], 'end': seg['end']})
+        report(i + 1, text=f"segment {i + 1}/{len(segments)}")
     if not files:
         raise RuntimeError("segment export: no non-empty segments")
     return {'files': files, 'count': len(files)}
@@ -391,7 +394,7 @@ def render_spectrogram_image(view_url: str, width: int = 1200,
 
 def convolve_ir(view_url: str, ir_url: str, wet: float = 1.0,
                 dry: float = 0.0, normalize: bool = True,
-                out_codec: str = 'wav') -> str:
+                out_codec: str = 'wav', progress=None) -> str:
     import numpy as np
     from scipy.signal import fftconvolve
 
@@ -403,9 +406,11 @@ def convolve_ir(view_url: str, ir_url: str, wet: float = 1.0,
         raise RuntimeError("convolve: IR has no audio")
 
     total = x.shape[1] + ir.shape[1] - 1
+    report = make_progress(progress, 2, "convolve")
     out = np.zeros((2, total), dtype=np.float32)
     for c in range(2):
         out[c] = fftconvolve(x[c], ir[c], mode='full').astype(np.float32)
+        report(c + 1, text=f"convolve {c + 1}/2")
     out *= float(wet)
     if float(dry):
         out[:, :x.shape[1]] += float(dry) * x

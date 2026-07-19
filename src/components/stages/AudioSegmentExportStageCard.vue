@@ -38,7 +38,7 @@
 
     <div
       v-if="files.length"
-      class="ctv:flex ctv:flex-col ctv:gap-0.5 ctv:rounded ctv:border ctv:border-border-subtle ctv:p-1.5 ctv:text-2xs ctv:max-h-32 ctv:overflow-y-auto"
+      class="ctv-scroll-thin ctv:flex ctv:flex-col ctv:gap-0.5 ctv:rounded ctv:border ctv:border-border-subtle ctv:p-1.5 ctv:text-2xs ctv:max-h-32 ctv:overflow-y-auto" @wheel.stop
       @pointerdown.stop
     >
       <div v-for="f in files" :key="f.index" class="ctv:flex ctv:justify-between ctv:gap-2">

@@ -8,14 +8,14 @@
 
     <div v-else-if="type === 'COMFYTV_TEXT'" class="vp-img-host ctv:group ctv:relative ctv:flex-1 ctv:min-h-[160px]">
       <div v-if="showTextMarkdown"
-           class="vp-text-scroll vp-md ctv:absolute ctv:inset-0 ctv:m-0 ctv:py-0.5 ctv:px-1 ctv:overflow-y-auto
+           @wheel.stop class="vp-text-scroll vp-md ctv:absolute ctv:inset-0 ctv:m-0 ctv:py-0.5 ctv:px-1 ctv:overflow-y-auto
                   ctv:break-words ctv:text-xs ctv:leading-normal ctv:text-base-foreground
                   ctv:select-text ctv:cursor-text"
            @pointerdown.stop
            @pointermove.stop
            @pointerup.stop
            v-html="renderedTextMarkdown" />
-      <pre v-else class="vp-text-scroll ctv:absolute ctv:inset-0 ctv:m-0 ctv:py-0.5 ctv:px-1 ctv:overflow-y-auto
+      <pre v-else @wheel.stop class="vp-text-scroll ctv:absolute ctv:inset-0 ctv:m-0 ctv:py-0.5 ctv:px-1 ctv:overflow-y-auto
                   ctv:whitespace-pre-wrap ctv:break-words ctv:text-[11px] ctv:leading-snug ctv:font-mono ctv:text-base-foreground
                   ctv:select-text ctv:cursor-text"
            @pointerdown.stop
@@ -147,6 +147,27 @@
           <span class="ctv:text-base-foreground">{{ materialParams.color }}</span>
           <span>M {{ materialParams.metalness.toFixed(2) }} · R {{ materialParams.roughness.toFixed(2) }}</span>
           <span>T {{ materialParams.transmission.toFixed(2) }} · A {{ materialParams.opacity.toFixed(2) }}</span>
+        </div>
+      </div>
+    </template>
+
+    <template v-else-if="type === 'COMFYTV_FXSPEC'">
+      <div v-if="compact" :class="compactSummary">
+        <span class="ctv:text-[22px] ctv:leading-none ctv:text-[#b8c4ff]"><i class="pi pi-bolt" /></span>
+        <span class="ctv:max-w-full ctv:px-1 ctv:truncate ctv:text-3xs ctv:font-bold ctv:text-[#b8c4ff]">
+          {{ fxSpecInfo ? fxSpecInfo.label : '…' }}
+        </span>
+      </div>
+      <div v-else class="ctv:flex ctv:items-center ctv:gap-2 ctv:pt-3.5 ctv:pb-1 ctv:px-1">
+        <span class="ctv:shrink-0 ctv:flex ctv:items-center ctv:justify-center ctv:size-8 ctv:rounded-sm
+                     ctv:bg-[rgb(120_140_255/0.18)] ctv:text-[#b8c4ff]"><i class="pi pi-bolt" /></span>
+        <div class="ctv:flex ctv:flex-col ctv:gap-0.5 ctv:min-w-0">
+          <span class="ctv:truncate ctv:text-[11px] ctv:font-semibold ctv:text-base-foreground">
+            {{ fxSpecInfo ? fxSpecInfo.label : $t('fxChain.unknown') }}
+          </span>
+          <span v-if="fxSpecInfo" class="ctv:text-3xs ctv:font-mono ctv:text-muted-foreground">
+            {{ $t(`fxChain.domain.${fxSpecInfo.domain}`) }} · {{ fxSpecInfo.specCount }}
+          </span>
         </div>
       </div>
     </template>
@@ -446,6 +467,7 @@ import {
   shotSummary,
   useValuePreview,
 } from '@/composables/stages/useValuePreview'
+import { parseFxSpec } from '@/composables/stages/useFxChain'
 import { parseMaterialState } from '@/widgets/material/types'
 import type {
   BatchImage,
@@ -561,6 +583,9 @@ const emit = defineEmits<{
 
 const materialParams = computed(() => parseMaterialState(props.content))
 
+const fxSpecInfo = computed(() =>
+  props.type === 'COMFYTV_FXSPEC' ? parseFxSpec(props.content) : null)
+
 const materialSwatchStyle = computed(() => materialSwatchStyleOf(materialParams.value))
 
 const previewMediaType = computed<string>(() => previewMediaTypeOf(props.type))
@@ -641,6 +666,7 @@ const TYPE_BADGE_COLORS: Record<string, string> = {
   COMFYTV_VIDEOS:     'ctv:bg-[rgb(255_171_64/0.25)] ctv:text-[#ffd089]',
   COMFYTV_MODEL:      'ctv:bg-[rgb(100_220_200/0.25)] ctv:text-[#a5f0e0]',
   COMFYTV_MATERIAL:   'ctv:bg-[rgb(210_180_100/0.25)] ctv:text-[#ecd9a0]',
+  COMFYTV_FXSPEC:     'ctv:bg-[rgb(120_140_255/0.25)] ctv:text-[#b8c4ff]',
 }
 const typeBadgeClass = computed(() => {
   const palette = TYPE_BADGE_COLORS[props.type] ?? 'ctv:bg-white/10 ctv:text-white/70'
@@ -664,11 +690,15 @@ const imgClass = computed(() =>
     : 'ctv:block ctv:w-full ctv:max-h-40 ctv:object-contain ctv:rounded-sm'
 )
 
-const videoClass = computed(() =>
-  props.compact
-    ? 'ctv:block ctv:size-full ctv:object-cover ctv:bg-black'
-    : 'ctv:block ctv:w-full ctv:max-h-52 ctv:rounded-sm ctv:bg-black'
-)
+const videoHasAlpha = computed(() =>
+  String(props.content ?? '').split('?')[0].toLowerCase().endsWith('.webm'))
+
+const videoClass = computed(() => {
+  const bg = videoHasAlpha.value ? 'ctv-checker' : 'ctv:bg-black'
+  return props.compact
+    ? `ctv:block ctv:size-full ctv:object-cover ${bg}`
+    : `ctv:block ctv:w-full ctv:max-h-52 ctv:rounded-sm ${bg}`
+})
 
 const compactSummary = 'ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:size-full ctv:gap-0.5'
 
@@ -724,6 +754,14 @@ function audioRowClass(selected: boolean) {
 </script>
 
 <style scoped>
+.ctv-checker {
+  background-image:
+    linear-gradient(45deg, #333 25%, transparent 25%, transparent 75%, #333 75%),
+    linear-gradient(45deg, #333 25%, #222 25%, #222 75%, #333 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 8px 8px;
+}
+
 .vp-text-scroll {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.35) transparent;

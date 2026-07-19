@@ -77,6 +77,7 @@ export function usePaintStrokeEditor(opts: {
 
   const strokesRaw = useStrWidget(node, 'strokes', '')
   const viewport = useVideoViewport({ videoEl, overlayEl })
+  const duration = viewport.duration
   const { vw } = viewport
 
   const mode = ref('clone')
@@ -193,6 +194,7 @@ export function usePaintStrokeEditor(opts: {
   watch([strokes, vw], () => nextTick(draw), { deep: true })
 
   return {
+    duration,
     strokes,
     drawing,
     mode,

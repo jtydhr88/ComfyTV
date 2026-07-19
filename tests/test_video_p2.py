@@ -135,8 +135,8 @@ class TestPaint:
 
 
 def _cls(name):
-    from ComfyTV.nodes.stages import video_p2
-    return getattr(video_p2, name)
+    from ComfyTV.nodes import stages
+    return getattr(stages, name)
 
 
 class TestStageExecute:

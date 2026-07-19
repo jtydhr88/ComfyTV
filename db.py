@@ -162,6 +162,31 @@ class StageParam(Base):
     updated_at:   Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
 
 
+class Preset(Base):
+    __tablename__ = "comfytv_presets"
+    __table_args__ = (UniqueConstraint("kind", "name", name="uq_preset_kind_name"),)
+
+    id:         Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    kind:       Mapped[str] = mapped_column(String, index=True)
+    name:       Mapped[str] = mapped_column(String)
+    config:     Mapped[str] = mapped_column(Text, default="{}")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
+
+
+class Resource(Base):
+    __tablename__ = "comfytv_resources"
+    __table_args__ = (UniqueConstraint("kind", "filename", name="uq_resource_kind_filename"),)
+
+    id:         Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    kind:       Mapped[str] = mapped_column(String, index=True)
+    name:       Mapped[str] = mapped_column(String, default="")
+    filename:   Mapped[str] = mapped_column(String)
+    subfolder:  Mapped[str] = mapped_column(String, default="")
+    size:       Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    sha256:     Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
+
+
 class ComfyServer(Base):
     __tablename__ = "comfytv_servers"
 

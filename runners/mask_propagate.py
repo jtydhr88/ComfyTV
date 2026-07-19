@@ -4,6 +4,7 @@ import math
 import numpy as np
 
 from .media import localize, fresh_output_path, path_to_view_url, get_video_info
+from .media_filter import make_progress
 from .media_torch import _warp_frame
 from .track_solve import solve_robust
 from .tracker import track_points
@@ -134,6 +135,7 @@ def propagate_mask_video(view_url: str, mask_url: str, *, t_ref: float = 0.0,
             k += 1
 
         last_m = None
+        report = make_progress(progress, len(times), "propagating")
         for i, t in enumerate(times):
             cur = np.array([[tr['x'][i]['v'], tr['y'][i]['v']] for tr in tracks])
             conf = np.array([tr['confidence'][i]['v'] for tr in tracks])
@@ -159,8 +161,7 @@ def propagate_mask_video(view_url: str, mask_url: str, *, t_ref: float = 0.0,
 
             warped = _warp_frame(mask_t, np.linalg.inv(M), device)
             _emit(warped[..., 0].clamp(0, 1), t)
-            if progress is not None and i % 30 == 0:
-                progress(i, len(times), "propagating")
+            report(i + 1)
         for pkt in enc.encode():
             outp.mux(pkt)
 

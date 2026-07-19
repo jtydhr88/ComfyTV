@@ -8,7 +8,7 @@
       @pointermove.stop
       @pointerup.stop
     >
-      <div class="ctv:flex ctv:flex-col ctv:gap-1 ctv:max-h-44 ctv:overflow-y-auto">
+      <div class="ctv-scroll-thin ctv:flex ctv:flex-col ctv:gap-1 ctv:max-h-44 ctv:overflow-y-auto" @wheel.stop>
         <div v-for="(cue, i) in cues" :key="i" class="ctv:flex ctv:items-center ctv:gap-1">
           <input
             type="number"

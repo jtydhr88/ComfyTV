@@ -11,10 +11,10 @@
       <FxChips v-model="screen" :options="SCREENS" />
       <FxSlider v-model="spillMix" label="Spillmap mix" :min="0" :max="1" :step="0.01" :reset-to="0.5" />
       <FxSlider v-model="expand" label="Expand" :min="0" :max="1" :step="0.01" :reset-to="0" />
-      <FxSlider v-model="redScale" label="Red scale" :min="-2" :max="2" :step="0.01" :reset-to="0" />
-      <FxSlider v-model="greenScale" label="Green scale" :min="-2" :max="2" :step="0.01" :reset-to="-1" />
-      <FxSlider v-model="blueScale" label="Blue scale" :min="-2" :max="2" :step="0.01" :reset-to="0" />
-      <FxSlider v-model="brightness" label="Brightness" :min="-1" :max="1" :step="0.01" :reset-to="0" />
+      <FxSlider v-model="redScale" label="Red scale" :min="-2" :max="2" :step="0.01" :reset-to="0" :gradient="CHANNEL_STOPS.red" />
+      <FxSlider v-model="greenScale" label="Green scale" :min="-2" :max="2" :step="0.01" :reset-to="-1" :gradient="CHANNEL_STOPS.green" />
+      <FxSlider v-model="blueScale" label="Blue scale" :min="-2" :max="2" :step="0.01" :reset-to="0" :gradient="CHANNEL_STOPS.blue" />
+      <FxSlider v-model="brightness" label="Brightness" :min="-1" :max="1" :step="0.01" :reset-to="0" :gradient="LUMA_STOPS" />
       <label class="ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs ctv:text-muted-foreground ctv:cursor-pointer">
         <input type="checkbox" v-model="outputSpillmap" class="ctv:accent-primary-background" />
         Output spillmap
@@ -49,6 +49,7 @@ import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
 import { useBoolWidget, useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
+import { CHANNEL_STOPS, LUMA_STOPS } from '@/components/widgets/colorStops'
 
 const props = defineProps<{
   state: StageState

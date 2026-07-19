@@ -128,6 +128,19 @@ describe('useVideoViewport', () => {
     expect(pt[1]).toBeCloseTo(180)
   })
 
+  it('compensates for LiteGraph canvas zoom on the bounding rect', () => {
+    const { vp, overlayEl } = setup()
+    vp.onLoadedMetadata()
+    overlayEl.value!.getBoundingClientRect = () => ({
+      left: 0, top: 0, width: 640, height: 360,
+      right: 640, bottom: 360, x: 0, y: 0,
+      toJSON: () => ({}),
+    }) as DOMRect
+    const pt = vp.toVideo({ clientX: 320, clientY: 180 } as PointerEvent)
+    expect(pt[0]).toBeCloseTo(320)
+    expect(pt[1]).toBeCloseTo(180)
+  })
+
   it('syncCanvasSize resizes backing store to client size and clears', () => {
     const { vp, overlayEl } = setup()
     const clearRect = vi.fn()

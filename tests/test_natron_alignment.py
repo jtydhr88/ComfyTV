@@ -229,7 +229,7 @@ class TestTrackerConfidence:
 
 class TestTrackYNegation:
     def test_track_offsets_flip_y(self):
-        from ComfyTV.nodes.stages.video_pro import _track_to_keyframes
+        from ComfyTV.nodes.stages.video_compose import _track_to_keyframes
         import json
         track = json.dumps({
             'origin': [100, 50],

@@ -49,7 +49,8 @@ def _persist(
 
 
 def _stage_emit_auto(cls, *, project_id, payload_str, params=None, emit_ui: bool = True,
-                     parent_output_id=None, picked_payload=None, picked_index=None):
+                     parent_output_id=None, picked_payload=None, picked_index=None,
+                     extra_outputs=None):
     meta = STAGE_META.get(_stage_name(cls))
     if meta is None:
         logging.warning(
@@ -63,7 +64,8 @@ def _stage_emit_auto(cls, *, project_id, payload_str, params=None, emit_ui: bool
     return _stage_emit(cls, project_id=project_id, output_type=output_type,
                        payload_str=payload_str, params=params, emit_ui=emit_ui,
                        parent_output_id=parent_output_id,
-                       picked_payload=picked_payload, picked_index=picked_index)
+                       picked_payload=picked_payload, picked_index=picked_index,
+                       extra_outputs=extra_outputs)
 
 
 def _stage_emit(
@@ -77,6 +79,7 @@ def _stage_emit(
     parent_output_id=None,
     picked_payload=None,
     picked_index=None,
+    extra_outputs=None,
 ):
     is_json = output_type in _JSON_PAYLOAD_TYPES
 
@@ -97,6 +100,7 @@ def _stage_emit(
         picked_index=picked_index,
     )
     has_pick = picked_payload is not None
+    extras = tuple(extra_outputs or ())
     if emit_ui:
         ui_data: dict = {"output": [payload_str]}
         if has_pick:
@@ -106,11 +110,11 @@ def _stage_emit(
         if row_id is not None:
             ui_data["output_id"] = [row_id]
         if has_pick:
-            return io.NodeOutput(payload_str, picked_payload, ui=ui_data)
-        return io.NodeOutput(payload_str, ui=ui_data)
+            return io.NodeOutput(payload_str, picked_payload, *extras, ui=ui_data)
+        return io.NodeOutput(payload_str, *extras, ui=ui_data)
     if has_pick:
-        return io.NodeOutput(payload_str, picked_payload)
-    return io.NodeOutput(payload_str)
+        return io.NodeOutput(payload_str, picked_payload, *extras)
+    return io.NodeOutput(payload_str, *extras)
 
 
 def _input_file_url(filename: str) -> str:

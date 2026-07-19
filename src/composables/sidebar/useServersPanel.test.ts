@@ -4,13 +4,17 @@ import { createApp, defineComponent, h } from 'vue'
 const release = vi.fn()
 const store = {
   servers: [] as any[],
+  localCapabilities: null as any,
   statusFor: vi.fn(),
   load: vi.fn(async () => {}),
+  loadLocalCapabilities: vi.fn(async () => null),
   subscribeStatus: vi.fn(() => release),
   create: vi.fn(async (p: any) => ({ id: 1, enabled: true, ...p })),
   update: vi.fn(async (id: number, p: any) => ({ id, ...p })),
   remove: vi.fn(async () => true),
   testConnection: vi.fn(async () => ({ ok: true, version: 'v1' })),
+  capabilityProbeFor: vi.fn(),
+  probeCapabilities: vi.fn(async () => ({ installed: false, error: 'x' })),
 }
 vi.mock('@/stores/serverStore', () => ({ useServerStore: () => store }))
 
@@ -21,12 +25,36 @@ vi.mock('vue-i18n', () => ({
   }),
 }))
 
+vi.mock('@/i18n', () => ({
+  t: (key: string, args?: Record<string, unknown>) =>
+    args ? `${key}:${JSON.stringify(args)}` : key,
+}))
+
+const fetchRemoteCapabilities = vi.fn(
+  async (..._a: any[]): Promise<any> => ({ installed: false, error: 'x' }))
+vi.mock('@/api', () => ({
+  fetchRemoteCapabilities: (...a: any[]) => fetchRemoteCapabilities(...a),
+}))
+
 const askConfirm = vi.fn(async (..._a: unknown[]) => true)
 vi.mock('@/composables/dialog/useConfirmDialog', () => ({
   askConfirm: (...a: any[]) => askConfirm(...a),
 }))
 
 import { useServersPanel } from './useServersPanel'
+
+function probeInstalled(over: Record<string, unknown> = {}) {
+  return {
+    installed: true as const,
+    capabilities: {
+      version: '1.8.0',
+      node_ids: ['A', 'B'],
+      resources: { lut: [], font: [] },
+      resource_fields: {},
+      ...over,
+    },
+  }
+}
 
 function server(over: Record<string, unknown> = {}) {
   return { id: 7, label: 'Box', host: '10.0.0.2', port: 8188, enabled: true, ...over } as any
@@ -174,6 +202,78 @@ describe('useServersPanel', () => {
     expect(p.statusBadge(server())).toBe('')
     store.statusFor.mockReturnValueOnce({ online: false, running: 5, pending: 0 })
     expect(p.statusBadge(server())).toBe('')
+  })
+
+  it('mount kicks off the local capabilities fetch', () => {
+    withSetup(() => useServersPanel())
+    expect(store.loadLocalCapabilities).toHaveBeenCalled()
+  })
+
+  it('onTestRow force-probes remote capabilities', async () => {
+    const p = withSetup(() => useServersPanel())
+    await p.onTestRow(server())
+    expect(store.probeCapabilities).toHaveBeenCalledWith(7, true)
+  })
+
+  it('onTestForm probes the drafted origin directly', async () => {
+    const p = withSetup(() => useServersPanel())
+    p.openForm()
+    p.form.value!.label = 'A'
+    p.form.value!.host = ' 10.0.0.2 '
+    fetchRemoteCapabilities.mockResolvedValueOnce(probeInstalled())
+    await p.onTestForm()
+    expect(fetchRemoteCapabilities).toHaveBeenCalledWith('http://10.0.0.2:8188')
+    expect(p.formCaps.value).toEqual(probeInstalled())
+    expect(p.formCapsInfo.value).toEqual({
+      kind: 'comfytv',
+      label: 'servers.caps.badge:{"version":"1.8.0"}',
+      missing: [],
+    })
+    p.closeForm()
+    expect(p.formCaps.value).toBeNull()
+  })
+
+  it('capsInfo is null before any probe', () => {
+    const p = withSetup(() => useServersPanel())
+    store.capabilityProbeFor.mockReturnValue(undefined)
+    expect(p.capsInfo(server())).toBeNull()
+  })
+
+  it('capsInfo reports ComfyUI-only after a failed probe with a good ping', () => {
+    const p = withSetup(() => useServersPanel())
+    store.capabilityProbeFor.mockReturnValue({ installed: false, error: 'HTTP 404' })
+    store.statusFor.mockReturnValue(undefined)
+    expect(p.capsInfo(server())).toBeNull()
+    p.rowTests[7] = { ok: true }
+    expect(p.capsInfo(server())).toEqual({
+      kind: 'comfyOnly',
+      label: 'servers.caps.comfyOnly',
+      missing: [],
+    })
+    p.rowTests[7] = { ok: false }
+    store.statusFor.mockReturnValue({ online: true, running: 0, pending: 0 })
+    expect(p.capsInfo(server())!.kind).toBe('comfyOnly')
+  })
+
+  it('capsInfo reports the remote version and the local-vs-remote node diff', () => {
+    const p = withSetup(() => useServersPanel())
+    store.localCapabilities = probeInstalled({ node_ids: ['A', 'B', 'C'] }).capabilities
+    store.capabilityProbeFor.mockReturnValue(probeInstalled({ node_ids: ['A'] }))
+    expect(p.capsInfo(server())).toEqual({
+      kind: 'comfytv',
+      label: 'servers.caps.badge:{"version":"1.8.0"}',
+      missing: ['B', 'C'],
+    })
+    store.localCapabilities = null
+  })
+
+  it('toggleCapsExpand flips the expanded row', () => {
+    const p = withSetup(() => useServersPanel())
+    expect(p.expandedCapsId.value).toBeNull()
+    p.toggleCapsExpand(server())
+    expect(p.expandedCapsId.value).toBe(7)
+    p.toggleCapsExpand(server())
+    expect(p.expandedCapsId.value).toBeNull()
   })
 
   it('statusTitle composes offline, idle and busy descriptions', () => {

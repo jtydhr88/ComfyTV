@@ -16,14 +16,15 @@ from .schema import (
     COMFYTV_SCHEMA_VERSION,
     COMFYTV_TEXT, COMFYTV_IMAGE, COMFYTV_VIDEO, COMFYTV_STORYBOARD,
     COMFYTV_IMAGES, COMFYTV_PANORAMA, COMFYTV_AUDIO, COMFYTV_TIMELINE,
-    COMFYTV_MODEL, COMFYTV_MATERIAL,
+    COMFYTV_MODEL, COMFYTV_MATERIAL, COMFYTV_FXSPEC,
 )
 from .inputs import (
     _force_run_token, _project_id_input, _parent_output_id_input,
     _selected_index_input, _main_prompt_input, _custom_params_input,
     _text_template, _image_template, _video_template, _model_template,
-    _material_template,
+    _material_template, _fxspec_template,
 )
+from .fx_spec import build_fx_spec, _fx_spec_only, parse_fx_spec
 from .meta import STAGE_META, _KIND_TO_OUTPUT_TYPE  # noqa: F401 (re-export)
 from .progress import _emit_progress, _fake_run_ticks
 from .emit import (
@@ -55,19 +56,24 @@ from .constants import (
     RESOLUTIONS, ASPECT_RATIOS,
     VIDEO_DURATION_MIN_S, VIDEO_DURATION_MAX_S, VIDEO_DURATION_DEFAULT_S,
 )
+from .fx_helpers import (  # noqa: F401
+    _need_video, _progress_cb, _f, _parse_json, _pick_source, _AUDIO_SR,
+    _hidden_float, _hidden_int, _hidden_str, _hidden_combo,
+)
 
 
 __all__ = [
     "COMFYTV_SCHEMA_VERSION",
     "COMFYTV_TEXT", "COMFYTV_IMAGE", "COMFYTV_IMAGES", "COMFYTV_VIDEO",
     "COMFYTV_AUDIO", "COMFYTV_STORYBOARD", "COMFYTV_PANORAMA",
-    "COMFYTV_TIMELINE", "COMFYTV_MODEL", "COMFYTV_MATERIAL",
+    "COMFYTV_TIMELINE", "COMFYTV_MODEL", "COMFYTV_MATERIAL", "COMFYTV_FXSPEC",
     "STAGE_META", "_KIND_TO_OUTPUT_TYPE",
     "_VIDEO_SAMPLES", "_AUDIO_SAMPLES",
     "_force_run_token", "_project_id_input", "_parent_output_id_input",
     "_selected_index_input", "_main_prompt_input", "_custom_params_input",
     "_text_template", "_image_template", "_video_template", "_model_template",
-    "_material_template",
+    "_material_template", "_fxspec_template",
+    "build_fx_spec", "_fx_spec_only", "parse_fx_spec",
     "_emit_progress", "_fake_run_ticks", "_persist", "_stage_emit_auto",
     "_stage_emit", "_input_file_url", "_pick_image_from_batch",
     "run_stage_workflow", "invoke_runner", "_standard_stage_inputs",

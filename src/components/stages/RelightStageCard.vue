@@ -40,7 +40,7 @@
     />
 
     <StageCard
-      class="ctv:h-auto! ctv:shrink-0"
+      class="ctv:h-auto! ctv:grow-0 ctv:shrink-0"
       :state="state"
       :node="node"
       :on-run-request="onRunRequest"

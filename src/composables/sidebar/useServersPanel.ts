@@ -1,8 +1,10 @@
 import { computed, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import type { ComfyServer, TestServerResult } from '@/api'
+import type { ComfyServer, RemoteCapabilityProbe, TestServerResult } from '@/api'
+import { fetchRemoteCapabilities } from '@/api'
 import { askConfirm } from '@/composables/dialog/useConfirmDialog'
+import { missingNodeIds } from '@/composables/stages/useRemotePreflight'
 import { useServerStore } from '@/stores/serverStore'
 
 export interface ServerForm {
@@ -14,17 +16,25 @@ export interface ServerForm {
 
 export type ServerStatusKind = 'unknown' | 'offline' | 'busy' | 'idle'
 
+export interface ServerCapsInfo {
+  kind: 'comfytv' | 'comfyOnly'
+  label: string
+  missing: string[]
+}
+
 export function useServersPanel() {
   const { t } = useI18n()
   const store = useServerStore()
 
   const form = ref<ServerForm | null>(null)
   const formTest = ref<TestServerResult | null>(null)
+  const formCaps = ref<RemoteCapabilityProbe | null>(null)
   const formError = ref('')
   const testing = ref(false)
   const saving = ref(false)
   const testingId = ref<number | null>(null)
   const rowTests = reactive<Record<number, TestServerResult>>({})
+  const expandedCapsId = ref<number | null>(null)
 
   const formValid = computed(() => {
     if (!form.value) return false
@@ -36,6 +46,7 @@ export function useServersPanel() {
 
   function openForm(server?: ComfyServer) {
     formTest.value = null
+    formCaps.value = null
     formError.value = ''
     form.value = server
       ? { id: server.id, label: server.label, host: server.host, port: String(server.port) }
@@ -45,6 +56,7 @@ export function useServersPanel() {
   function closeForm() {
     form.value = null
     formTest.value = null
+    formCaps.value = null
     formError.value = ''
   }
 
@@ -52,8 +64,12 @@ export function useServersPanel() {
     if (!form.value || !formValid.value) return
     testing.value = true
     formTest.value = null
+    formCaps.value = null
     try {
-      formTest.value = await store.testConnection(form.value.host.trim(), Number(form.value.port))
+      const host = form.value.host.trim()
+      const port = Number(form.value.port)
+      formTest.value = await store.testConnection(host, port)
+      formCaps.value = await fetchRemoteCapabilities(`http://${host}:${port}`)
     } finally {
       testing.value = false
     }
@@ -63,6 +79,7 @@ export function useServersPanel() {
     testingId.value = server.id
     try {
       rowTests[server.id] = await store.testConnection(server.host, server.port)
+      await store.probeCapabilities(server.id, true)
     } finally {
       testingId.value = null
     }
@@ -133,10 +150,41 @@ export function useServersPanel() {
     return `${t('servers.status.online')} · ${parts.join(' · ')}`
   }
 
+  function capsFromProbe(
+    probe: RemoteCapabilityProbe | null | undefined,
+    pingOk: boolean,
+  ): ServerCapsInfo | null {
+    if (!probe) return null
+    if (!probe.installed) {
+      return pingOk
+        ? { kind: 'comfyOnly', label: t('servers.caps.comfyOnly'), missing: [] }
+        : null
+    }
+    return {
+      kind: 'comfytv',
+      label: t('servers.caps.badge', { version: probe.capabilities.version }),
+      missing: missingNodeIds(store.localCapabilities, probe),
+    }
+  }
+
+  function capsInfo(server: ComfyServer): ServerCapsInfo | null {
+    const pingOk = rowTests[server.id]?.ok === true
+      || store.statusFor(server.id)?.online === true
+    return capsFromProbe(store.capabilityProbeFor(server.id), pingOk)
+  }
+
+  const formCapsInfo = computed(() =>
+    capsFromProbe(formCaps.value, formTest.value?.ok === true))
+
+  function toggleCapsExpand(server: ComfyServer) {
+    expandedCapsId.value = expandedCapsId.value === server.id ? null : server.id
+  }
+
   let releaseStatus: (() => void) | null = null
 
   onMounted(() => {
     void store.load()
+    void store.loadLocalCapabilities()
     releaseStatus = store.subscribeStatus()
   })
 
@@ -149,12 +197,15 @@ export function useServersPanel() {
     store,
     form,
     formTest,
+    formCaps,
+    formCapsInfo,
     formError,
     formValid,
     testing,
     saving,
     testingId,
     rowTests,
+    expandedCapsId,
     openForm,
     closeForm,
     onTestForm,
@@ -165,5 +216,7 @@ export function useServersPanel() {
     statusKind,
     statusBadge,
     statusTitle,
+    capsInfo,
+    toggleCapsExpand,
   }
 }

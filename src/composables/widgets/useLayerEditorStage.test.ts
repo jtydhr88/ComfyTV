@@ -13,6 +13,7 @@ const fontState = vi.hoisted(() => ({
 vi.mock('@/widgets/layerEditor/fontStore', () => ({
   getFontStore: () => ({
     getFontSync: () => fontState.font,
+    getFontSyncWithFallback: () => fontState.font,
     onFontReady: (cb: () => void) => {
       fontState.readyCbs.add(cb)
       return () => fontState.readyCbs.delete(cb)

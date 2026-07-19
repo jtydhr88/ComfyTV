@@ -21,11 +21,11 @@
       />
 
       <span class="ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">{{ $t('afx.curveOutA') }}</span>
-      <div class="ctv:max-h-20 ctv:overflow-y-auto">
+      <div class="ctv-scroll-thin ctv:max-h-20 ctv:overflow-y-auto" @wheel.stop>
         <FxChips v-model="curve1" :options="curveOptions" />
       </div>
       <span class="ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">{{ $t('afx.curveInB') }}</span>
-      <div class="ctv:max-h-20 ctv:overflow-y-auto">
+      <div class="ctv-scroll-thin ctv:max-h-20 ctv:overflow-y-auto" @wheel.stop>
         <FxChips v-model="curve2" :options="curveOptions" />
       </div>
 

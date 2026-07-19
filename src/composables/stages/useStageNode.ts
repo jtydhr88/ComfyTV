@@ -57,6 +57,7 @@ import {
 import { extractRunError } from '@/utils/runError'
 import { postPickedIndex } from '@/composables/stages/stageApi'
 import { cancelRemoteJob, remoteRun } from '@/api'
+import { useRemotePreflight } from '@/composables/stages/useRemotePreflight'
 import { useServerStore } from '@/stores/serverStore'
 import { app } from '@/lib/comfyApp'
 
@@ -723,6 +724,16 @@ export function useStageNode(
         (node as any).properties?.comfytv_server,
       )
       if (remoteServerId != null && !isBridgeIn) {
+        const { ensureRemotePreflight } = useRemotePreflight()
+        const cleared = await ensureRemotePreflight(
+          remoteServerId,
+          String(node.comfyClass || ''),
+          (myInputs ?? {}) as Record<string, unknown>,
+        )
+        if (!cleared) {
+          state.running = false
+          return
+        }
         const resp = await remoteRun({
           server_id: remoteServerId,
           prompt: pm.output,

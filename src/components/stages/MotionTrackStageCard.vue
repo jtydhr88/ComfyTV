@@ -37,8 +37,8 @@
       <FxChips v-model="solve" :options="SOLVES" />
       <div v-if="solveHint" class="ctv:text-2xs ctv:text-muted-foreground">{{ solveHint }}</div>
 
-      <FxSlider v-model="tStart" :label="$t('fx.tStart')" :min="0" :max="3600" :step="0.05" />
-      <FxSlider v-model="tEnd" :label="$t('fx.tEnd')" :min="-1" :max="3600" :step="0.05" />
+      <FxSlider v-model="tStart" :label="$t('fx.tStart')" :min="0" :max="tMax" :step="0.05" />
+      <FxSlider v-model="tEnd" :label="$t('fx.tEnd')" :min="-1" :max="tMax" :step="0.05" />
       <div class="ctv:text-2xs ctv:text-muted-foreground">{{ $t('fx.tEndAuto') }}</div>
       <FxSlider v-model="pattern" :label="$t('fx.pattern')" :min="4" :max="64" :step="1" :decimals="0" />
       <FxSlider v-model="search" :label="$t('fx.searchR')" :min="8" :max="128" :step="1" :decimals="0" />
@@ -97,7 +97,11 @@ const videoEl = ref<HTMLVideoElement | null>(null)
 const overlayEl = ref<HTMLCanvasElement | null>(null)
 
 const {
-  points, solve, solveHint, pattern, search,
+  duration, points, solve, solveHint, pattern, search,
   onMeta, onVideoClick, onVideoDblClick, clearPoints,
 } = useMotionTrackEditor({ node: props.node, videoEl, overlayEl })
+const tMax = computed(() => {
+  const d = duration.value
+  return d > 0 ? Math.max(0.1, Math.round(d * 10) / 10) : 3600
+})
 </script>

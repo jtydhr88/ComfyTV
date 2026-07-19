@@ -1,14 +1,26 @@
-import { screen } from '@testing-library/vue'
+import { screen, waitFor } from '@testing-library/vue'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { defineComponent, h } from 'vue'
 
 import { renderWithPlugins } from '@/__tests__/renderHelpers'
+import { clearStageDefaultsCache } from '@/composables/stages/useStagePresets'
 import type { StageState } from '@/stores/stageStore'
 
 vi.mock('./MainPromptInput.vue', () => ({
   default: defineComponent({ render: () => h('div', { class: 'stub-main-prompt' }) }),
 }))
+
+const fetchStageDefaults = vi.fn()
+const listStagePresets = vi.fn()
+vi.mock('@/api', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/api')>()
+  return {
+    ...actual,
+    fetchStageDefaults: (...a: unknown[]) => fetchStageDefaults(...a),
+    listStagePresets: (...a: unknown[]) => listStagePresets(...a),
+  }
+})
 
 function makeState(over: Partial<StageState> = {}): StageState {
   return {
@@ -42,7 +54,12 @@ function renderCard(state: StageState, extraProps: Record<string, unknown> = {})
 const { default: StageCard } = await import('./StageCard.vue')
 
 describe('StageCard — base states', () => {
-  beforeEach(() => vi.clearAllMocks())
+  beforeEach(() => {
+    vi.clearAllMocks()
+    clearStageDefaultsCache()
+    fetchStageDefaults.mockResolvedValue({ defaults: {} })
+    listStagePresets.mockResolvedValue({ presets: [] })
+  })
 
   it('renders an enabled run button even when the stage has no prompt and no inputs', () => {
     renderCard(makeState())
@@ -153,5 +170,51 @@ describe('StageCard — base states', () => {
   it('hideOutput=true suppresses the output section', () => {
     const { container } = renderCard(makeState({ output: 'foo' }), { hideOutput: true })
     expect(container.querySelector('.output')).toBeNull()
+  })
+})
+
+describe('StageCard — preset bar', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    clearStageDefaultsCache()
+    fetchStageDefaults.mockResolvedValue({ defaults: {} })
+    listStagePresets.mockResolvedValue({ presets: [] })
+  })
+
+  it('renders the preset bar for nodes with hidden config widgets', async () => {
+    fetchStageDefaults.mockResolvedValue({ defaults: { exposure: 0, temperature: 6500 } })
+    listStagePresets.mockResolvedValue({ presets: [
+      { id: 1, kind: 'ComfyTV.VideoColorStage', name: 'warm', config: { exposure: 0.5 }, created_at: null },
+    ] })
+    const { container } = renderCard(makeState(), {
+      node: {
+        comfyClass: 'ComfyTV.VideoColorStage',
+        widgets: [{ name: 'exposure', value: 0 }, { name: 'temperature', value: 6500 }],
+      },
+    })
+    await waitFor(() => {
+      expect(container.querySelector('.ctv-preset-bar')).toBeInTheDocument()
+    })
+    expect(fetchStageDefaults).toHaveBeenCalledWith('ComfyTV.VideoColorStage')
+    expect(container.querySelector('.ctv-preset-save')).toBeInTheDocument()
+    expect(container.querySelector('.ctv-preset-reset')).toBeInTheDocument()
+    expect(container.querySelector('.ctv-preset-delete')).toBeNull()
+    expect(container.querySelector('.ctv-preset-bar')!.textContent).toContain('Custom')
+  })
+
+  it('hides the preset bar when the node type has no config widgets', async () => {
+    const { container } = renderCard(makeState(), {
+      node: { comfyClass: 'ComfyTV.ImagePickerStage', widgets: [] },
+    })
+    await waitFor(() => {
+      expect(fetchStageDefaults).toHaveBeenCalledWith('ComfyTV.ImagePickerStage')
+    })
+    expect(container.querySelector('.ctv-preset-bar')).toBeNull()
+  })
+
+  it('hides the preset bar when there is no node', () => {
+    const { container } = renderCard(makeState(), { node: undefined })
+    expect(container.querySelector('.ctv-preset-bar')).toBeNull()
+    expect(fetchStageDefaults).not.toHaveBeenCalled()
   })
 })

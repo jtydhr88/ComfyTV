@@ -73,10 +73,14 @@ export function useVideoViewport(opts: {
   function toVideo(e: PointerEvent): Pt {
     const box = overlayEl.value
     if (!box) return [0, 0]
+    const rect = box.getBoundingClientRect()
+    const zoom = rect.width > 0 && box.clientWidth > 0
+      ? rect.width / box.clientWidth
+      : 1
     return clientToMedia(
-      e.clientX,
-      e.clientY,
-      box.getBoundingClientRect(),
+      rect.left + (e.clientX - rect.left) / zoom,
+      rect.top + (e.clientY - rect.top) / zoom,
+      rect,
       fit(),
       vw.value,
       vh.value,

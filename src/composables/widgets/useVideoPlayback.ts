@@ -21,8 +21,16 @@ export function useVideoPlayback(opts: UseVideoPlaybackOptions) {
     duration.value > 0 ? Math.min(100, (currentTime.value / duration.value) * 100) : 0)
 
   function onLoadedMetadata() {
-    duration.value = videoEl.value?.duration || 0
+    const v = videoEl.value
+    duration.value = v?.duration || 0
     loadError.value = false
+    if (v && v.paused && v.currentTime === 0) {
+      try {
+        v.currentTime = 0.001
+      } catch {
+        void 0
+      }
+    }
   }
 
   function onTimeUpdate() {

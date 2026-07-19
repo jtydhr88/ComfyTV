@@ -4,6 +4,7 @@ import json
 import numpy as np
 
 from .media import localize, get_video_info
+from .media_filter import make_progress
 
 
 def _gray(frame, device):
@@ -167,6 +168,7 @@ def track_points(view_url: str, points, *,
         prev_gray = None
         n = 0
         total_est = max(1, int((t_end - t_start) * info['fps']))
+        report = make_progress(progress, total_est, "tracking")
         for frame in inp.decode(vstream):
             t = float(frame.pts * frame.time_base) if frame.pts is not None else 0.0
             if t < t_start - 1e-4:
@@ -199,8 +201,7 @@ def track_points(view_url: str, points, *,
                         {'t': round(t, 3), 'v': round(conf, 3)})
             prev_gray = g
             n += 1
-            if progress is not None and n % 10 == 0:
-                progress(min(n, total_est), total_est, "tracking")
+            report(n)
 
     return json.dumps({'tracks': tracks, 'width': info['width'],
                        'height': info['height'],

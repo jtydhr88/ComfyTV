@@ -27,7 +27,7 @@
         ><i class="pi pi-trash" /></button>
       </div>
 
-      <div v-if="bands.length" class="ctv:flex ctv:flex-col ctv:gap-0.5 ctv:max-h-20 ctv:overflow-y-auto">
+      <div v-if="bands.length" class="ctv-scroll-thin ctv:flex ctv:flex-col ctv:gap-0.5 ctv:max-h-20 ctv:overflow-y-auto" @wheel.stop>
         <div
           v-for="(b, i) in bands" :key="i"
           class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-2xs ctv:font-mono ctv:text-muted-foreground"

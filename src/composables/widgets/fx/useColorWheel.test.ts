@@ -112,3 +112,26 @@ describe('useColorWheel interaction', () => {
     expect(onChange).toHaveBeenCalledTimes(2)
   })
 })
+
+describe('useColorWheel under canvas zoom', () => {
+  it('maps pointer positions through a scaled bounding rect', () => {
+    const { ctx } = stubCtx()
+    const c = makeCanvas(ctx, 156)
+    const canvasEl = ref<HTMLCanvasElement | null>(c)
+    const modelValue = ref<RgbOffsets>({ r: 0, g: 0, b: 0 })
+    const onChange = vi.fn()
+    let api!: ReturnType<typeof useColorWheel>
+    const wrapper = mount(defineComponent({
+      setup() {
+        api = useColorWheel({ canvasEl, modelValue, size: ref(78), onChange })
+        return () => null
+      },
+    }))
+    wrappers.push(wrapper)
+    api.onDown(pointerEvt(78, 78))
+    const v = onChange.mock.calls[0][0] as RgbOffsets
+    expect(v.r).toBeCloseTo(0)
+    expect(v.g).toBeCloseTo(0)
+    expect(v.b).toBeCloseTo(0)
+  })
+})

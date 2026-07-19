@@ -44,6 +44,7 @@ export type TypedValueType =
   | 'COMFYTV_TIMELINE'
   | 'COMFYTV_MODEL'
   | 'COMFYTV_MATERIAL'
+  | 'COMFYTV_FXSPEC'
 
 export type InputSource = 'upstream' | 'upstream-pending' | 'empty'
 
@@ -326,7 +327,8 @@ export function computePickedFromBatch(batch: string | null | undefined, wantIdx
   try {
     const parsed = JSON.parse(String(batch))
     const images: Array<{ index?: string; image_url?: string }> =
-      Array.isArray(parsed?.images) ? parsed.images : []
+      Array.isArray(parsed?.clips) ? parsed.clips
+        : Array.isArray(parsed?.images) ? parsed.images : []
     const match = images.find(im => Number(im.index) === wantIdx)
       ?? images[wantIdx - 1]
     return match?.image_url ?? null

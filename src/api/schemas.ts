@@ -323,6 +323,56 @@ export const MutateStageParamSchema = z.object({
   param: StageParamSchema,
 })
 
+export const RESOURCE_KINDS = ['lut', 'font'] as const
+export type ResourceKind = (typeof RESOURCE_KINDS)[number]
+
+export const ResourceSchema = z.object({
+  id:         z.number(),
+  kind:       z.string(),
+  name:       z.string(),
+  filename:   z.string(),
+  subfolder:  z.string(),
+  size:       z.number().nullable().optional(),
+  sha256:     z.string().nullable().optional(),
+  created_at: z.string().nullable().optional(),
+  url:        z.string(),
+  missing:    z.boolean().default(false),
+})
+export type Resource = z.infer<typeof ResourceSchema>
+
+export const ListResourcesSchema = z.object({
+  resources: z.array(ResourceSchema),
+})
+
+export const MutateResourceSchema = z.object({
+  ok: z.literal(true),
+  resource: ResourceSchema,
+})
+
+export const StagePresetSchema = z.object({
+  id:         z.union([z.number(), z.string()]),
+  kind:       z.string(),
+  name:       z.string(),
+  config:     z.record(z.string(), z.unknown()).default({}),
+  builtin:    z.boolean().default(false),
+  created_at: z.string().nullable().optional(),
+})
+export type StagePreset = z.infer<typeof StagePresetSchema>
+
+export const ListStagePresetsSchema = z.object({
+  presets: z.array(StagePresetSchema),
+})
+
+export const MutateStagePresetSchema = z.object({
+  ok: z.literal(true),
+  preset: StagePresetSchema,
+})
+
+export const StageDefaultsSchema = z.object({
+  defaults: z.record(z.string(), z.unknown()),
+})
+export type StageDefaultsResponse = z.infer<typeof StageDefaultsSchema>
+
 export const ComfyServerSchema = z.object({
   id:         z.number(),
   label:      z.string(),
@@ -365,6 +415,24 @@ export const TestServerResultSchema = z.object({
 })
 export type TestServerResult = z.infer<typeof TestServerResultSchema>
 
+export const CapabilityResourceSchema = z.object({
+  filename: z.string(),
+  sha256: z.string().nullable().optional(),
+})
+export type CapabilityResource = z.infer<typeof CapabilityResourceSchema>
+
+export const CapabilitiesSchema = z.object({
+  version: z.string(),
+  node_ids: z.array(z.string()),
+  resources: z.record(z.string(), z.array(CapabilityResourceSchema)),
+  resource_fields: z.record(z.string(), z.record(z.string(), z.string())).default({}),
+})
+export type Capabilities = z.infer<typeof CapabilitiesSchema>
+
+export type RemoteCapabilityProbe =
+  | { installed: false; error: string }
+  | { installed: true; capabilities: Capabilities }
+
 export const RemoteJobSchema = z.object({
   id:               z.string(),
   server_id:        z.number().nullable().optional(),
@@ -388,6 +456,13 @@ export const ListRemoteJobsSchema = z.object({
 export const RemoteRunResultSchema = z.object({
   job_id: z.string(),
 })
+
+export const FxClipPreviewSchema = z.object({
+  url: z.string(),
+  t0: z.number(),
+  t1: z.number(),
+})
+export type FxClipPreviewResult = z.infer<typeof FxClipPreviewSchema>
 
 export const ExecutedPayloadSchema = z.object({
   output: z.union([z.string(), z.array(z.unknown())]).optional(),

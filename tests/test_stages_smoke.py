@@ -20,11 +20,11 @@ def _import_all_stage_modules():
     """Import the stage modules and return the dict of all stage classes
     keyed by class name."""
     from ComfyTV.nodes.stages import generators, edits, loaders, panorama, \
-        timeline, video_audio, material, split_part, _common
+        timeline, video_edit, material, split_part, _common
     import inspect
 
     out: dict[str, type] = {}
-    for mod in (generators, edits, loaders, panorama, timeline, video_audio,
+    for mod in (generators, edits, loaders, panorama, timeline, video_edit,
                 material, split_part):
         for name, obj in inspect.getmembers(mod):
             if inspect.isclass(obj) and hasattr(obj, "define_schema") \
@@ -386,7 +386,7 @@ class TestVideoAudioEditStageExecute:
 
     @pytest.mark.skip(reason="needs a real on-disk video file; not stubbed in tests")
     def test_video_clip(self, reset_db):
-        from ComfyTV.nodes.stages.video_audio import VideoClipStage
+        from ComfyTV.nodes.stages.video_edit import VideoClipStage
         out = VideoClipStage.execute(
             project_id="default", video="/view?filename=v.mp4",
             start_s=0.0, end_s=5.0,
@@ -394,7 +394,7 @@ class TestVideoAudioEditStageExecute:
         assert out.values[0]
 
     def test_video_concat_needs_two_videos(self, reset_db):
-        from ComfyTV.nodes.stages.video_audio import VideoConcatStage
+        from ComfyTV.nodes.stages.video_edit import VideoConcatStage
         with pytest.raises(RuntimeError, match="at least two"):
             VideoConcatStage.execute(project_id="default", videos=None)
         with pytest.raises(RuntimeError, match="at least two"):
@@ -404,15 +404,15 @@ class TestVideoAudioEditStageExecute:
             )
 
     def test_video_concat_respects_clip_order(self, reset_db, monkeypatch):
-        from ComfyTV.nodes.stages import video_audio
+        from ComfyTV.nodes.stages import video_edit
         captured = {}
 
         def fake_concat(urls, progress=None):
             captured['urls'] = list(urls)
             return "/view?filename=out.mp4"
 
-        monkeypatch.setattr(video_audio, "concat_videos", fake_concat)
-        out = video_audio.VideoConcatStage.execute(
+        monkeypatch.setattr(video_edit, "concat_videos", fake_concat)
+        out = video_edit.VideoConcatStage.execute(
             project_id="default",
             clip_order='["videos.video2", "videos.video0"]',
             videos={
@@ -429,112 +429,112 @@ class TestVideoAudioEditStageExecute:
         assert out.values[0]
 
     def test_video_speed_passes_args(self, reset_db, monkeypatch):
-        from ComfyTV.nodes.stages import video_audio
+        from ComfyTV.nodes.stages import video_edit
         captured = {}
-        monkeypatch.setattr(video_audio, "speed_video",
+        monkeypatch.setattr(video_edit, "speed_video",
                             lambda url, factor, reverse, pitch_compensate=True: captured.update(
                                 url=url, factor=factor, reverse=reverse,
                                 pitch_compensate=pitch_compensate) or "/view?filename=o.mp4")
-        out = video_audio.VideoSpeedStage.execute(
+        out = video_edit.VideoSpeedStage.execute(
             project_id="default", video="/view?filename=v.mp4", speed=2.0, reverse=True)
         assert captured == {"url": "/view?filename=v.mp4", "factor": 2.0,
                             "reverse": True, "pitch_compensate": True}
         assert out.values[0]
 
     def test_video_speed_rejects_noop(self, reset_db):
-        from ComfyTV.nodes.stages.video_audio import VideoSpeedStage
+        from ComfyTV.nodes.stages.video_edit import VideoSpeedStage
         with pytest.raises(RuntimeError, match="nothing to do"):
             VideoSpeedStage.execute(
                 project_id="default", video="/view?filename=v.mp4", speed=1.0, reverse=False)
 
     def test_video_speed_needs_video(self, reset_db):
-        from ComfyTV.nodes.stages.video_audio import VideoSpeedStage
+        from ComfyTV.nodes.stages.video_edit import VideoSpeedStage
         with pytest.raises(RuntimeError, match="upstream video"):
             VideoSpeedStage.execute(project_id="default", speed=2.0)
 
     def test_video_rotate_passes_args(self, reset_db, monkeypatch):
-        from ComfyTV.nodes.stages import video_audio
+        from ComfyTV.nodes.stages import video_edit
         captured = {}
-        monkeypatch.setattr(video_audio, "transpose_video",
+        monkeypatch.setattr(video_edit, "transpose_video",
                             lambda url, deg, fh, fv: captured.update(
                                 deg=deg, fh=fh, fv=fv) or "/view?filename=o.mp4")
-        video_audio.VideoRotateStage.execute(
+        video_edit.VideoRotateStage.execute(
             project_id="default", video="/view?filename=v.mp4",
             rotate_deg=90, flip_h=True, flip_v=False)
         assert captured == {"deg": 90, "fh": True, "fv": False}
 
     def test_video_split_emits_both_parts(self, reset_db, monkeypatch):
-        from ComfyTV.nodes.stages import video_audio
-        monkeypatch.setattr(video_audio, "get_video_info", lambda url: {"duration": 10.0})
+        from ComfyTV.nodes.stages import video_edit
+        monkeypatch.setattr(video_edit, "get_video_info", lambda url: {"duration": 10.0})
         calls = []
-        monkeypatch.setattr(video_audio, "trim_video",
+        monkeypatch.setattr(video_edit, "trim_video",
                             lambda url, s, e: calls.append((s, e)) or f"/view?filename=p{len(calls)}.mp4")
-        out = video_audio.VideoSplitStage.execute(
+        out = video_edit.VideoSplitStage.execute(
             project_id="default", video="/view?filename=v.mp4", split_s=4.0)
         assert calls == [(0.0, 4.0), (4.0, 10.0)]
         assert out.values[0] == "/view?filename=p1.mp4"
         assert out.values[1] == "/view?filename=p2.mp4"
 
     def test_video_split_rejects_out_of_range(self, reset_db, monkeypatch):
-        from ComfyTV.nodes.stages import video_audio
-        monkeypatch.setattr(video_audio, "get_video_info", lambda url: {"duration": 10.0})
+        from ComfyTV.nodes.stages import video_edit
+        monkeypatch.setattr(video_edit, "get_video_info", lambda url: {"duration": 10.0})
         with pytest.raises(RuntimeError, match="inside the clip"):
-            video_audio.VideoSplitStage.execute(
+            video_edit.VideoSplitStage.execute(
                 project_id="default", video="/view?filename=v.mp4", split_s=0.0)
         with pytest.raises(RuntimeError, match="inside the clip"):
-            video_audio.VideoSplitStage.execute(
+            video_edit.VideoSplitStage.execute(
                 project_id="default", video="/view?filename=v.mp4", split_s=10.0)
 
     def test_video_volume_passes_args(self, reset_db, monkeypatch):
-        from ComfyTV.nodes.stages import video_audio
+        from ComfyTV.nodes.stages import video_edit
         captured = {}
-        monkeypatch.setattr(video_audio, "adjust_volume",
+        monkeypatch.setattr(video_edit, "adjust_volume",
                             lambda url, vol, fi, fo: captured.update(
                                 vol=vol, fi=fi, fo=fo) or "/view?filename=o.mp4")
-        video_audio.VideoVolumeStage.execute(
+        video_edit.VideoVolumeStage.execute(
             project_id="default", video="/view?filename=v.mp4",
             volume=0.5, fade_in_s=1.0, fade_out_s=2.0)
         assert captured == {"vol": 0.5, "fi": 1.0, "fo": 2.0}
 
     def test_video_mux_audio_passes_args(self, reset_db, monkeypatch):
-        from ComfyTV.nodes.stages import video_audio
+        from ComfyTV.nodes.stages import video_edit
         captured = {}
-        monkeypatch.setattr(video_audio, "mux_audio",
+        monkeypatch.setattr(video_edit, "mux_audio",
                             lambda v, a, mode, offset_s: captured.update(
                                 v=v, a=a, mode=mode, offset=offset_s) or "/view?filename=o.mp4")
-        video_audio.VideoMuxAudioStage.execute(
+        video_edit.VideoMuxAudioStage.execute(
             project_id="default", video="/view?filename=v.mp4",
             audio="/view?filename=a.wav", mode="mix", offset_s=0.5)
         assert captured == {"v": "/view?filename=v.mp4", "a": "/view?filename=a.wav",
                             "mode": "mix", "offset": 0.5}
 
     def test_video_mux_audio_needs_both(self, reset_db):
-        from ComfyTV.nodes.stages.video_audio import VideoMuxAudioStage
+        from ComfyTV.nodes.stages.video_edit import VideoMuxAudioStage
         with pytest.raises(RuntimeError, match="both"):
             VideoMuxAudioStage.execute(project_id="default", video="/view?filename=v.mp4")
         with pytest.raises(RuntimeError, match="both"):
             VideoMuxAudioStage.execute(project_id="default", audio="/view?filename=a.wav")
 
     def test_video_frames_parses_marks(self, reset_db, monkeypatch):
-        from ComfyTV.nodes.stages import video_audio
+        from ComfyTV.nodes.stages import video_edit
         captured = {}
-        monkeypatch.setattr(video_audio, "extract_frames_multi",
+        monkeypatch.setattr(video_edit, "extract_frames_multi",
                             lambda url, times: captured.update(times=times) or '{"images": []}')
-        video_audio.VideoFramesStage.execute(
+        video_edit.VideoFramesStage.execute(
             project_id="default", video="/view?filename=v.mp4", marks="[1.0, 3.5]")
         assert captured == {"times": [1.0, 3.5]}
 
     def test_video_frames_bad_marks_fall_through(self, reset_db, monkeypatch):
-        from ComfyTV.nodes.stages import video_audio
+        from ComfyTV.nodes.stages import video_edit
         captured = {}
-        monkeypatch.setattr(video_audio, "extract_frames_multi",
+        monkeypatch.setattr(video_edit, "extract_frames_multi",
                             lambda url, times: captured.update(times=times) or '{"images": []}')
-        video_audio.VideoFramesStage.execute(
+        video_edit.VideoFramesStage.execute(
             project_id="default", video="/view?filename=v.mp4", marks="not json")
         assert captured == {"times": []}
 
     def test_video_upscale_not_implemented(self, reset_db):
-        from ComfyTV.nodes.stages.video_audio import VideoUpscaleStage
+        from ComfyTV.nodes.stages.video_edit import VideoUpscaleStage
         from ComfyTV.nodes.stages.common import StageNotImplemented
         with pytest.raises(StageNotImplemented):
             VideoUpscaleStage.execute(
@@ -542,7 +542,7 @@ class TestVideoAudioEditStageExecute:
             )
 
     def test_subtitle_smart_erase_not_implemented(self, reset_db):
-        from ComfyTV.nodes.stages.video_audio import VideoSubtitleSmartEraseStage
+        from ComfyTV.nodes.stages.video_edit import VideoSubtitleSmartEraseStage
         from ComfyTV.nodes.stages.common import StageNotImplemented
         with pytest.raises(StageNotImplemented):
             VideoSubtitleSmartEraseStage.execute(
@@ -550,7 +550,7 @@ class TestVideoAudioEditStageExecute:
             )
 
     def test_subtitle_select_erase_not_implemented(self, reset_db):
-        from ComfyTV.nodes.stages.video_audio import VideoSubtitleSelectEraseStage
+        from ComfyTV.nodes.stages.video_edit import VideoSubtitleSelectEraseStage
         from ComfyTV.nodes.stages.common import StageNotImplemented
         with pytest.raises(StageNotImplemented):
             VideoSubtitleSelectEraseStage.execute(
@@ -561,7 +561,7 @@ class TestVideoAudioEditStageExecute:
     @pytest.mark.skip(reason="requires workflow runner; stage raises on empty workflow")
     @pytest.mark.asyncio
     async def test_audio_extract_vocal(self, reset_db):
-        from ComfyTV.nodes.stages.video_audio import AudioExtractVocalStage
+        from ComfyTV.nodes.stages.video_edit import AudioExtractVocalStage
         out = await AudioExtractVocalStage.execute(
             project_id="default", video="/view?filename=v.mp4",
         )
@@ -570,7 +570,7 @@ class TestVideoAudioEditStageExecute:
     @pytest.mark.skip(reason="requires workflow runner; stage raises on empty workflow")
     @pytest.mark.asyncio
     async def test_audio_extract_bg(self, reset_db):
-        from ComfyTV.nodes.stages.video_audio import AudioExtractBgStage
+        from ComfyTV.nodes.stages.video_edit import AudioExtractBgStage
         out = await AudioExtractBgStage.execute(
             project_id="default", video="/view?filename=v.mp4",
         )
@@ -578,7 +578,7 @@ class TestVideoAudioEditStageExecute:
 
     @pytest.mark.skip(reason="needs a real on-disk video file; not stubbed in tests")
     def test_demux_audio(self, reset_db):
-        from ComfyTV.nodes.stages.video_audio import AudioVideoDemuxAudioStage
+        from ComfyTV.nodes.stages.video_edit import AudioVideoDemuxAudioStage
         out = AudioVideoDemuxAudioStage.execute(
             project_id="default", video="/view?filename=v.mp4",
         )
@@ -586,7 +586,7 @@ class TestVideoAudioEditStageExecute:
 
     @pytest.mark.skip(reason="needs a real on-disk video file; not stubbed in tests")
     def test_demux_video(self, reset_db):
-        from ComfyTV.nodes.stages.video_audio import AudioVideoDemuxVideoStage
+        from ComfyTV.nodes.stages.video_edit import AudioVideoDemuxVideoStage
         out = AudioVideoDemuxVideoStage.execute(
             project_id="default", video="/view?filename=v.mp4",
         )
