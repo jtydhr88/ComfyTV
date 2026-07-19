@@ -135,7 +135,10 @@ class ComfyTVExtension(ComfyExtension):
 
 
 def _bridge_classes() -> list:
-    from ..bridges import ALL_BRIDGES
+    try:
+        from ..bridges import ALL_BRIDGES
+    except ImportError:
+        return []
     return ALL_BRIDGES
 
 
