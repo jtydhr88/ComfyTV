@@ -7,7 +7,7 @@ from aiohttp import web
 from .. import storage
 from ._common import routes, broadcast_asset_event
 
-MEDIA_SUBFOLDER = "comfytv-media"
+MEDIA_SUBFOLDER = "comfytv/media"
 MEDIA_SETTLE_SECONDS = 10.0
 MEDIA_EXTS = {
     "video": {".mp4", ".mov", ".mkv", ".webm", ".m4v", ".avi"},

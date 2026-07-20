@@ -8,7 +8,7 @@ from aiohttp import web
 from .. import storage
 from ._common import routes
 
-RESOURCE_KIND_DIRS = {'lut': 'comfytv-luts', 'font': 'comfytv-fonts'}
+RESOURCE_KIND_DIRS = {'lut': 'comfytv/luts', 'font': 'comfytv/fonts'}
 RESOURCE_KIND_EXTS = {
     'lut': {'.cube', '.3dl', '.dat', '.m3d', '.csp'},
     'font': {'.ttf', '.otf', '.woff', '.woff2'},

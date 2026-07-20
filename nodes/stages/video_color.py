@@ -176,7 +176,7 @@ class VideoCurvesStage(io.ComfyNode):
 def _lut_dir():
     import folder_paths
     from pathlib import Path
-    d = Path(folder_paths.get_input_directory()) / 'comfytv-luts'
+    d = Path(folder_paths.get_input_directory()) / 'comfytv' / 'luts'
     d.mkdir(parents=True, exist_ok=True)
     return d
 
@@ -197,7 +197,7 @@ class VideoLUTStage(io.ComfyNode):
             category="ComfyTV/VideoFX",
             inputs=[
                 *_standard_stage_inputs(),
-                _hidden_str("lut_file", "", "file name inside input/comfytv-luts"),
+                _hidden_str("lut_file", "", "file name inside input/comfytv/luts"),
                 _hidden_combo("interp", ['tetrahedral', 'trilinear', 'nearest',
                                          'pyramid', 'prism'], 'tetrahedral'),
                 COMFYTV_VIDEO.Input("video", optional=True),
@@ -215,7 +215,7 @@ class VideoLUTStage(io.ComfyNode):
             raise RuntimeError("Video LUT: pick or upload a LUT file first.")
         path = _lut_dir() / name
         if not path.exists():
-            raise RuntimeError(f"Video LUT: {name!r} not found in input/comfytv-luts.")
+            raise RuntimeError(f"Video LUT: {name!r} not found in input/comfytv/luts.")
         esc = str(path).replace('\\', '/').replace(':', r'\:')
         if path.suffix.lower() == '.png':
             raise RuntimeError("Video LUT: Hald .png LUTs need a second input — "

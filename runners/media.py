@@ -64,7 +64,7 @@ def _ensure_subdir(base: Path, sub: str) -> Path:
     return out
 
 
-def fresh_output_path(suffix: str, subfolder: str = 'comfytv-video') -> Path:
+def fresh_output_path(suffix: str, subfolder: str = 'comfytv/video') -> Path:
     base = Path(folder_paths.get_output_directory())
     out_dir = _ensure_subdir(base, subfolder)
     return out_dir / f"{uuid.uuid4().hex[:12]}{suffix}"
@@ -77,7 +77,7 @@ def localize(view_url: str) -> Path:
 
     if isinstance(view_url, str) and (view_url.startswith('http://') or view_url.startswith('https://')):
         suffix = Path(urllib.parse.urlparse(view_url).path).suffix or '.mp4'
-        dl_dir = _ensure_subdir(Path(folder_paths.get_temp_directory()), 'comfytv-dl')
+        dl_dir = _ensure_subdir(Path(folder_paths.get_temp_directory()), 'comfytv/dl')
         dest = dl_dir / f"{uuid.uuid4().hex[:12]}{suffix}"
         try:
             urllib.request.urlretrieve(view_url, dest)
@@ -144,7 +144,7 @@ def extract_frame(view_url: str, position: Union[str, float, int] = 'last') -> s
     src = localize(view_url)
     info = get_video_info(view_url)
     target_s = _resolve_position(position, info['duration'])
-    out_path = fresh_output_path('.png', subfolder='comfytv-frames')
+    out_path = fresh_output_path('.png', subfolder='comfytv/frames')
 
     with av.open(str(src)) as c:
         vstream = c.streams.video[0]
@@ -375,11 +375,11 @@ def demux_audio(view_url: str, codec: str = 'wav') -> str:
         raise RuntimeError(f"demux_audio: source has no audio stream ({src.name})")
 
     if codec == 'mp3':
-        out = fresh_output_path('.mp3', subfolder='comfytv-audio')
+        out = fresh_output_path('.mp3', subfolder='comfytv/audio')
         target_codec = 'libmp3lame'
         container = 'mp3'
     else:
-        out = fresh_output_path('.wav', subfolder='comfytv-audio')
+        out = fresh_output_path('.wav', subfolder='comfytv/audio')
         target_codec = 'pcm_s16le'
         container = 'wav'
 

@@ -76,7 +76,7 @@ class TestCapabilitiesEndpoint:
 
     async def test_missing_files_are_excluded(self, client, input_dir):
         await _upload_lut(client, "gone.cube")
-        (input_dir / "comfytv-luts" / "gone.cube").unlink()
+        (input_dir / "comfytv/luts" / "gone.cube").unlink()
         data = await _caps(client)
         assert data["resources"]["lut"] == []
 

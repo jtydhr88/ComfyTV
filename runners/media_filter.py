@@ -416,10 +416,10 @@ def filter_audio(view_url: str, audio_specs, out_codec: str = 'wav',
     src_path = localize(view_url)
 
     if out_codec == 'mp3':
-        out = fresh_output_path('.mp3', subfolder='comfytv-audio')
+        out = fresh_output_path('.mp3', subfolder='comfytv/audio')
         codec, container = 'libmp3lame', 'mp3'
     else:
-        out = fresh_output_path('.wav', subfolder='comfytv-audio')
+        out = fresh_output_path('.wav', subfolder='comfytv/audio')
         codec, container = 'pcm_s16le', 'wav'
 
     with av.open(str(src_path)) as inp:
@@ -738,7 +738,7 @@ def filter_frame_image(view_url: str, position, video_specs) -> str:
     src_path = localize(view_url)
     info = get_video_info(view_url)
     target_s = _resolve_position(position, info['duration'])
-    out_path = fresh_output_path('.png', subfolder='comfytv-frames')
+    out_path = fresh_output_path('.png', subfolder='comfytv/frames')
 
     with av.open(str(src_path)) as c:
         in_v = c.streams.video[0]
@@ -802,10 +802,10 @@ def crossfade_audios(url_a: str, url_b: str, duration: float = 1.0,
     src_a = localize(url_a)
     src_b = localize(url_b)
     if out_codec == 'mp3':
-        out = fresh_output_path('.mp3', subfolder='comfytv-audio')
+        out = fresh_output_path('.mp3', subfolder='comfytv/audio')
         codec, container = 'libmp3lame', 'mp3'
     else:
-        out = fresh_output_path('.wav', subfolder='comfytv-audio')
+        out = fresh_output_path('.wav', subfolder='comfytv/audio')
         codec, container = 'pcm_s16le', 'wav'
 
     with av.open(str(src_a)) as ca, av.open(str(src_b)) as cb, \
@@ -903,7 +903,7 @@ def audio_image(view_url: str, filter_name: str, args=None) -> str:
 
     require_filters(filter_name, 'format')
     src_path = localize(view_url)
-    out = fresh_output_path('.png', subfolder='comfytv-audio')
+    out = fresh_output_path('.png', subfolder='comfytv/audio')
 
     with av.open(str(src_path)) as inp:
         if not inp.streams.audio:

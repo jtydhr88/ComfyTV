@@ -26,8 +26,8 @@ _POLL_INTERVAL_S = 2.0
 
 _ANNOTATED_RE = re.compile(r"^(.+?) \[(input|output|temp)\]$")
 
-_REMOTE_UPLOAD_SUBFOLDER = "comfytv-upload"
-_REMOTE_RESULT_SUBFOLDER = "comfytv-remote"
+_REMOTE_UPLOAD_SUBFOLDER = "comfytv/upload"
+_REMOTE_RESULT_SUBFOLDER = "comfytv/remote"
 
 
 class JobCancelled(RuntimeError):

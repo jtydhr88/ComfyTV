@@ -14,10 +14,10 @@ def _write_wav(arr, out_codec: str = 'wav', metadata: dict | None = None) -> str
     import numpy as np
 
     if out_codec == 'mp3':
-        out = fresh_output_path('.mp3', subfolder='comfytv-audio')
+        out = fresh_output_path('.mp3', subfolder='comfytv/audio')
         codec, container = 'libmp3lame', 'mp3'
     else:
-        out = fresh_output_path('.wav', subfolder='comfytv-audio')
+        out = fresh_output_path('.wav', subfolder='comfytv/audio')
         codec, container = 'pcm_s16le', 'wav'
 
     with av.open(str(out), 'w', format=container) as outp:
@@ -325,7 +325,7 @@ def render_waveform_image(view_url: str, width: int = 1200, height: int = 480,
         if show_clipping and clip_cols[x]:
             img[:, x] = (255, 40, 40)
 
-    out = fresh_output_path('.png', subfolder='comfytv-audio')
+    out = fresh_output_path('.png', subfolder='comfytv/audio')
     Image.fromarray(img, 'RGB').save(str(out), 'PNG')
     return path_to_view_url(out)
 
@@ -387,7 +387,7 @@ def render_spectrogram_image(view_url: str, width: int = 1200,
         pad[:, :] = lut[0]
         img = np.concatenate([img, pad], axis=1)
 
-    out = fresh_output_path('.png', subfolder='comfytv-audio')
+    out = fresh_output_path('.png', subfolder='comfytv/audio')
     Image.fromarray(img, 'RGB').save(str(out), 'PNG')
     return path_to_view_url(out)
 

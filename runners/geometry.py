@@ -6,7 +6,7 @@ from .media import fresh_output_path, localize, path_to_view_url
 
 _log = logging.getLogger(__name__)
 
-_SUBFOLDER = 'comfytv-3d'
+_SUBFOLDER = 'comfytv/3d'
 
 
 def _parse_primitive_recipe(payload: str):

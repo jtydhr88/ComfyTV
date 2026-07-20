@@ -15,7 +15,7 @@ PROXY_PROFILE = '1280-crf23'
 PROXY_MAX_EDGE = 1280
 PROXY_TRIGGER_BYTES = 150 * 1024 * 1024
 PROXY_TRIGGER_EDGE = 1920
-PROXY_SUBFOLDER = 'comfytv-proxies'
+PROXY_SUBFOLDER = 'comfytv/proxies'
 
 _progress: dict = {}
 _original: set = set()

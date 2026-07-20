@@ -25,7 +25,7 @@ def clip():
 @pytest.fixture()
 def lut_file():
     import folder_paths
-    d = Path(folder_paths.get_input_directory()) / 'comfytv-luts'
+    d = Path(folder_paths.get_input_directory()) / 'comfytv/luts'
     d.mkdir(parents=True, exist_ok=True)
     cube = d / 'identity.cube'
     if not cube.exists():
