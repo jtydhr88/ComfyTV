@@ -8,12 +8,14 @@ const PROXY_NODE_CLASS = 'ComfyTV.MakeProxyStage'
 const readyCache = new Map<string, string>()
 const originalCache = new Set<string>()
 const requestedUrls = reactive(new Set<string>())
+const autoChecked = new Set<string>()
 let promptSeq = 0
 
 export function clearProxyCaches(): void {
   readyCache.clear()
   originalCache.clear()
   requestedUrls.clear()
+  autoChecked.clear()
 }
 
 async function queueProxyPrompt(url: string): Promise<void> {
@@ -38,6 +40,20 @@ export async function requestProxyBuild(
     return
   }
   requestedUrls.add(url)
+}
+
+export async function autoProxyOutput(url: string): Promise<void> {
+  if (!url || !url.includes('/view')) return
+  if (autoChecked.has(url) || requestedUrls.has(url)
+      || readyCache.has(url) || originalCache.has(url)) return
+  autoChecked.add(url)
+  let res
+  try {
+    res = await proxyEnsure(url)
+  } catch {
+    return
+  }
+  if (res.status === 'candidate') await requestProxyBuild(url)
 }
 
 export function useProxiedVideoUrl(source: Ref<string | null>) {

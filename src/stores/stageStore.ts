@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { reactive, ref } from 'vue'
+import { autoProxyOutput } from '@/composables/widgets/useProxiedVideoUrl'
 
 export type StageKind =
   | 'text'
@@ -178,6 +179,10 @@ export const useStageStore = defineStore('comfytv-stage', () => {
     state.output = s
     while (state.outputs.length < 1) state.outputs.push(null)
     state.outputs[0] = s
+    if (state.outputType === 'COMFYTV_VIDEO' && !isPoolPickerKind(state.kind)
+        && state.variant !== 'loader') {
+      void autoProxyOutput(s)
+    }
     if (picked !== undefined && picked !== null) {
       const p = typeof picked === 'string' ? picked : String(picked)
       while (state.outputs.length < 2) state.outputs.push(null)

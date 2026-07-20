@@ -17,6 +17,7 @@ vi.mock('@/lib/comfyApp', () => ({
 }))
 
 import {
+  autoProxyOutput,
   clearProxyCaches,
   requestProxyBuild,
   useProxiedVideoUrl,
@@ -205,6 +206,26 @@ describe('useProxiedVideoUrl', () => {
     expect(a.api.url.value).toBeNull()
     expect(b.api.url.value).toBe('blob:abc123')
     expect(proxyEnsure).not.toHaveBeenCalled()
+  })
+
+  it('autoProxyOutput builds candidates without asking', async () => {
+    proxyEnsure
+      .mockResolvedValueOnce({ status: 'candidate' })
+      .mockResolvedValueOnce({ status: 'pending', pct: 0 })
+    await autoProxyOutput(SRC)
+    expect(proxyEnsure).toHaveBeenNthCalledWith(1, SRC)
+    expect(proxyEnsure).toHaveBeenNthCalledWith(2, SRC, { create: true, retry: false })
+    expect(queuePrompt).toHaveBeenCalledTimes(1)
+  })
+
+  it('autoProxyOutput leaves small outputs alone and checks each url once', async () => {
+    proxyEnsure.mockResolvedValue({ status: 'original' })
+    await autoProxyOutput(SRC)
+    await autoProxyOutput(SRC)
+    expect(proxyEnsure).toHaveBeenCalledTimes(1)
+    expect(queuePrompt).not.toHaveBeenCalled()
+    await autoProxyOutput('blob:nope')
+    expect(proxyEnsure).toHaveBeenCalledTimes(1)
   })
 
   it('stops polling on unmount', async () => {

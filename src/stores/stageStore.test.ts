@@ -1,5 +1,10 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
+
+const autoProxyOutput = vi.fn(async () => {})
+vi.mock('@/composables/widgets/useProxiedVideoUrl', () => ({
+  autoProxyOutput: (...a: unknown[]) => (autoProxyOutput as (...x: unknown[]) => unknown)(...a),
+}))
 
 import { useStageStore, computePickedImageUrl, computePickedFromBatch, imagePoolCount, mergeImagePool, toImagePoolJson, removeImageFromPool, type StageState } from './stageStore'
 
@@ -181,7 +186,31 @@ describe('stageStore.refreshStageInputs (output-slot resolution)', () => {
 })
 
 describe('stageStore.applyExecutedPayload', () => {
-  beforeEach(() => setActivePinia(createPinia()))
+  beforeEach(() => {
+    setActivePinia(createPinia())
+    autoProxyOutput.mockClear()
+  })
+
+  it('auto-requests a proxy for video outputs', () => {
+    const store = useStageStore()
+    const state = freshState({ kind: 'video', outputType: 'COMFYTV_VIDEO' })
+    store.applyExecutedPayload(state, { output: ['/view?filename=out.mp4'] })
+    expect(autoProxyOutput).toHaveBeenCalledWith('/view?filename=out.mp4')
+  })
+
+  it('does not auto-proxy pickers, loaders or non-video outputs', () => {
+    const store = useStageStore()
+    store.applyExecutedPayload(
+      freshState({ kind: 'video-picker', outputType: 'COMFYTV_VIDEO' }),
+      { output: ['/view?filename=out.mp4'] })
+    store.applyExecutedPayload(
+      freshState({ kind: 'video', outputType: 'COMFYTV_VIDEO', variant: 'loader' }),
+      { output: ['/view?filename=out.mp4'] })
+    store.applyExecutedPayload(
+      freshState(),
+      { output: ['/view?filename=out.png'] })
+    expect(autoProxyOutput).not.toHaveBeenCalled()
+  })
 
   it('stores picked into slot 1 and picked_index (grows an empty outputs array)', () => {
     const store = useStageStore()
