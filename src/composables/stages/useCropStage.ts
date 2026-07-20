@@ -63,7 +63,7 @@ export function useCropStage(node: LGraphNode, state: StageState) {
     state,
     nodeId: node?.id ?? 'unknown',
     filenamePrefix: 'comfytv-crop',
-    subfolder: 'cropper',
+    subfolder: 'comfytv/cropper',
     compute: (img) => cropToCanvas(img, bounds.value),
   })
 

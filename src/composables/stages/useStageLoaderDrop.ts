@@ -28,7 +28,7 @@ export async function uploadLoaderFiles(
 ): Promise<void> {
   let last = ''
   for (const f of files) {
-    const uploaded = await uploadBlobNamed(f, { subfolder: '', filename: f.name })
+    const uploaded = await uploadBlobNamed(f, { subfolder: 'comfytv/uploads', filename: f.name })
     last = uploaded.name
     const w = getWidget(node, widgetName) as any
     const values = w?.options?.values

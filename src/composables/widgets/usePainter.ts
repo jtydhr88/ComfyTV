@@ -585,7 +585,7 @@ export function usePainter(options: UsePainterOptions) {
 
     let uploaded
     try {
-      uploaded = await uploadBlobNamed(blob, { subfolder: 'painter', filename })
+      uploaded = await uploadBlobNamed(blob, { subfolder: 'comfytv/painter', filename })
     } catch (e) {
       console.error('[ComfyTV/painter] mask upload failed', e)
       return ''

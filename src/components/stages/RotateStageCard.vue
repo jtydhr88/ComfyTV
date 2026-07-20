@@ -90,7 +90,7 @@ const { computing, requestRecompute } = useTransformPipeline({
   state: props.state,
   nodeId: props.node?.id ?? 'unknown',
   filenamePrefix: 'comfytv-rotate',
-  subfolder: 'transformer',
+  subfolder: 'comfytv/transformer',
   compute: (img) => rotateToCanvas(img, angle.value),
 })
 

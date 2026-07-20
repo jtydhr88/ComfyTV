@@ -233,16 +233,16 @@ describe('useModelLoader', () => {
   })
 
   it('uploads files into input/3d, registers and selects the last one', async () => {
-    mocks.uploadBlobNamed.mockResolvedValue({ name: 'new.glb', subfolder: '3d', type: 'input', url: '/u' })
+    mocks.uploadBlobNamed.mockResolvedValue({ name: 'new.glb', subfolder: 'comfytv/3d', type: 'input', url: '/u' })
     const { loader, node } = makeLoader()
     loader.init()
     const file = new File(['glb'], 'new.glb')
     await loader.uploadModelFiles([file])
-    expect(mocks.uploadBlobNamed).toHaveBeenCalledWith(file, { subfolder: '3d', filename: 'new.glb' })
-    expect(loader.selected.value).toBe('3d/new.glb')
-    expect(loader.files.value).toContain('3d/new.glb')
+    expect(mocks.uploadBlobNamed).toHaveBeenCalledWith(file, { subfolder: 'comfytv/3d', filename: 'new.glb' })
+    expect(loader.selected.value).toBe('comfytv/3d/new.glb')
+    expect(loader.files.value).toContain('comfytv/3d/new.glb')
     const w = node.widgets.find((x: FakeWidget) => x.name === 'model')
-    expect(w.options.values).toContain('3d/new.glb')
+    expect(w.options.values).toContain('comfytv/3d/new.glb')
     expect(loader.uploading.value).toBe(false)
   })
 
@@ -250,12 +250,12 @@ describe('useModelLoader', () => {
     mocks.isConvertibleModelFile.mockReturnValue(true)
     const converted = new File(['glb'], 'mesh.glb')
     mocks.convertModelFileToGlb.mockResolvedValue(converted)
-    mocks.uploadBlobNamed.mockResolvedValue({ name: 'mesh.glb', subfolder: '3d', type: 'input', url: '/u' })
+    mocks.uploadBlobNamed.mockResolvedValue({ name: 'mesh.glb', subfolder: 'comfytv/3d', type: 'input', url: '/u' })
     const { loader } = makeLoader()
     const source = new File(['obj'], 'mesh.obj')
     await loader.uploadModelFiles([source])
     expect(mocks.convertModelFileToGlb).toHaveBeenCalledWith(source)
-    expect(mocks.uploadBlobNamed).toHaveBeenCalledWith(converted, { subfolder: '3d', filename: 'mesh.glb' })
+    expect(mocks.uploadBlobNamed).toHaveBeenCalledWith(converted, { subfolder: 'comfytv/3d', filename: 'mesh.glb' })
   })
 
   it('surfaces upload failures and toasts', async () => {
@@ -313,7 +313,7 @@ describe('useModelLoader', () => {
     expect(mocks.uploadCanvas).not.toHaveBeenCalled()
     await vi.advanceTimersByTimeAsync(1)
     expect(mocks.uploadCanvas).toHaveBeenCalledTimes(1)
-    expect(mocks.uploadCanvas.mock.calls[0][1]).toMatchObject({ subfolder: 'model3d-view' })
+    expect(mocks.uploadCanvas.mock.calls[0][1]).toMatchObject({ subfolder: 'comfytv/model3d-view' })
     expect(onAction).toHaveBeenCalledWith('model-capture-view', { imageUrl: '/view?filename=cap.png' })
   })
 

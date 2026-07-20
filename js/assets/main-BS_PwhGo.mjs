@@ -55963,7 +55963,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-BNXKa5lP.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-DWg7Joef.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -103777,7 +103777,7 @@ function useModelViewCapture(opts) {
     const mySeq = ++captureSeq;
     try {
       const url = await uploadCanvas(canvas, {
-        subfolder: "model3d-view",
+        subfolder: "comfytv/model3d-view",
         filename: `${opts.filenamePrefix}-${Date.now()}.png`
       });
       if (mySeq !== captureSeq) return;
@@ -108415,7 +108415,7 @@ async function uploadLoaderFiles(node, widgetName, files) {
   var _a3;
   let last = "";
   for (const f2 of files) {
-    const uploaded = await uploadBlobNamed(f2, { subfolder: "", filename: f2.name });
+    const uploaded = await uploadBlobNamed(f2, { subfolder: "comfytv/uploads", filename: f2.name });
     last = uploaded.name;
     const w2 = getWidget(node, widgetName);
     const values = (_a3 = w2 == null ? void 0 : w2.options) == null ? void 0 : _a3.values;
@@ -110722,7 +110722,7 @@ function usePainter(options) {
     const filename = `comfytv-painter-${nodeId}-${Date.now()}.png`;
     let uploaded;
     try {
-      uploaded = await uploadBlobNamed(blob, { subfolder: "painter", filename });
+      uploaded = await uploadBlobNamed(blob, { subfolder: "comfytv/painter", filename });
     } catch (e) {
       console.error("[ComfyTV/painter] mask upload failed", e);
       return "";
@@ -113628,7 +113628,7 @@ function useLightBall(node, opts) {
       if (!blob) return;
       const nodeId = String((node == null ? void 0 : node.id) ?? "unknown");
       const uploaded = await uploadBlobNamed(blob, {
-        subfolder: "lightball",
+        subfolder: "comfytv/lightball",
         filename: `comfytv-lightball-${nodeId}-${Date.now()}.png`
       });
       writeWidget(node, RENDER_WIDGET, uploaded.url, { fireCallback: false });
@@ -114649,7 +114649,7 @@ function useCropStage(node, state2) {
     state: state2,
     nodeId: (node == null ? void 0 : node.id) ?? "unknown",
     filenamePrefix: "comfytv-crop",
-    subfolder: "cropper",
+    subfolder: "comfytv/cropper",
     compute: (img) => cropToCanvas(img, bounds.value)
   });
   watch(bounds, (v2) => {
@@ -118091,7 +118091,7 @@ const _sfc_main$1Q = /* @__PURE__ */ defineComponent({
       state: props.state,
       nodeId: ((_a3 = props.node) == null ? void 0 : _a3.id) ?? "unknown",
       filenamePrefix: "comfytv-rotate",
-      subfolder: "transformer",
+      subfolder: "comfytv/transformer",
       compute: (img) => rotateToCanvas(img, angle.value)
     });
     watch(angle, () => requestRecompute());
@@ -118204,7 +118204,7 @@ const _sfc_main$1P = /* @__PURE__ */ defineComponent({
       state: props.state,
       nodeId: ((_a3 = props.node) == null ? void 0 : _a3.id) ?? "unknown",
       filenamePrefix: "comfytv-mirror",
-      subfolder: "transformer",
+      subfolder: "comfytv/transformer",
       compute: (img) => mirrorToCanvas(img, flipH.value, flipV.value)
     });
     watch([flipH, flipV], () => requestRecompute());
@@ -119645,7 +119645,7 @@ const _sfc_main$1M = /* @__PURE__ */ defineComponent({
       state: props.state,
       nodeId: ((_a3 = props.node) == null ? void 0 : _a3.id) ?? "unknown",
       filenamePrefix: "comfytv-grade",
-      subfolder: "colorgrade",
+      subfolder: "comfytv/colorgrade",
       compute: (img) => {
         const out = document.createElement("canvas");
         const ok = renderer2.renderToCanvas(img, effect3.value, values.value, out);
@@ -122306,7 +122306,7 @@ const _sfc_main$1L = /* @__PURE__ */ defineComponent({
       uploading.value = true;
       loadError.value = false;
       try {
-        const viewUrl = await uploadBlob(file, { subfolder: "panorama", filename: file.name });
+        const viewUrl = await uploadBlob(file, { subfolder: "comfytv/panorama", filename: file.name });
         emit2("manual-source-changed", viewUrl);
       } catch (e2) {
         console.error("[ComfyTV/panorama] upload failed", e2);
@@ -122543,7 +122543,7 @@ function useCurrentViewCapture(node, state2, viewerHostEl, aspectRatio, resoluti
       if (mySeq !== captureSeq) return;
       const nodeId = String((node == null ? void 0 : node.id) ?? "unknown");
       const viewUrl = await uploadCanvas(canvas, {
-        subfolder: "panorama-view",
+        subfolder: "comfytv/panorama-view",
         filename: `comfytv-pano-view-${nodeId}-${Date.now()}.png`
       });
       if (mySeq !== captureSeq) return;
@@ -122793,7 +122793,7 @@ function useMultiViewCapture(node, state2, viewCount2, aspectRatio, resolution) 
         if (mySeq !== captureSeq) return;
         const nodeId = String((node == null ? void 0 : node.id) ?? "unknown");
         const imageUrl = await uploadCanvas(canvas, {
-          subfolder: "panorama-view",
+          subfolder: "comfytv/panorama-view",
           filename: `comfytv-pano-multi-${nodeId}-${Date.now()}-${i}.png`
         });
         if (mySeq !== captureSeq) return;
@@ -125384,7 +125384,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-DBxdbVh9.mjs");
+    const { STLLoader } = await import("./STLLoader-Bb6FKwuq.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -125392,7 +125392,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-DMR22q6X.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-2Kd0upby.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -125547,8 +125547,8 @@ function useModelLoader(node, opts) {
       let lastPath = "";
       for (const file of picked) {
         const toUpload = isConvertibleModelFile(file.name) ? await convertModelFileToGlb(file) : file;
-        const uploaded = await uploadBlobNamed(toUpload, { subfolder: "3d", filename: toUpload.name });
-        lastPath = `3d/${uploaded.name}`;
+        const uploaded = await uploadBlobNamed(toUpload, { subfolder: "comfytv/3d", filename: toUpload.name });
+        lastPath = uploaded.subfolder ? `${uploaded.subfolder}/${uploaded.name}` : uploaded.name;
         registerFile(lastPath);
       }
       if (lastPath) onPick(lastPath);
@@ -125581,7 +125581,7 @@ function useModelLoader(node, opts) {
     const mySeq = ++captureSeq;
     try {
       const url = await uploadCanvas(canvas, {
-        subfolder: "model3d-view",
+        subfolder: "comfytv/model3d-view",
         filename: `comfytv-model-view-${Date.now()}.png`
       });
       if (mySeq !== captureSeq) return;
@@ -128027,7 +128027,7 @@ function useGridSplit(node, state2) {
           if (!ctx) throw new Error("2d context unavailable");
           ctx.drawImage(img, o * b2 + col * (cellW + b2), o * b2 + row * (cellH + b2), cellW, cellH, 0, 0, cellW, cellH);
           const imageUrl = await uploadCanvas(canvas, {
-            subfolder: "gridsplit",
+            subfolder: "comfytv/gridsplit",
             filename: `comfytv-grid-${nodeId}-${Date.now()}-${n}.png`
           });
           if (mySeq !== seq) return;
@@ -129306,7 +129306,7 @@ function useStoryboardShots(node, state2) {
     if (!file || !shotId) return;
     uploadingId.value = shotId;
     try {
-      const url = await uploadBlob(file, { subfolder: "storyboard", filename: file.name });
+      const url = await uploadBlob(file, { subfolder: "comfytv/storyboard", filename: file.name });
       setImage(shotId, url);
     } catch (err2) {
       console.error("[ComfyTV/storyboard] ref upload failed", err2);
@@ -141882,7 +141882,7 @@ function useScene3dStage(node, opts) {
       for (const shot of shots) {
         const label = shot.cameraId ?? "view";
         const uploaded = await uploadBlobNamed(shot.blob, {
-          subfolder: "scene3d",
+          subfolder: "comfytv/scene3d",
           filename: `comfytv-scene3d-${String((node == null ? void 0 : node.id) ?? "unknown")}-${stamp}-${label}.png`
         });
         uploads.push({ label, url: uploaded.url });
@@ -141944,7 +141944,7 @@ function useScene3dStage(node, opts) {
         }
       });
       const uploaded = await uploadBlobNamed(blob, {
-        subfolder: "scene3d",
+        subfolder: "comfytv/scene3d",
         filename: `comfytv-scene3d-${String((node == null ? void 0 : node.id) ?? "unknown")}-${Date.now()}.webm`
       });
       capturedVideoUrl.value = uploaded.url;
@@ -148864,7 +148864,7 @@ function useLayerEditorStage(node, opts) {
           );
           if (!blob) continue;
           const uploaded = await uploadBlobNamed(blob, {
-            subfolder: "layer-editor",
+            subfolder: "comfytv/layer-editor",
             filename: `comfytv-layer-${String((node == null ? void 0 : node.id) ?? "unknown")}-${target.contentId}.png`
           });
           url = uploaded.url;
@@ -148914,7 +148914,7 @@ function useLayerEditorStage(node, opts) {
     try {
       const canvas = exportComposited(state2.value, renderDeps, "white");
       const url = await uploadCanvas(canvas, {
-        subfolder: "layer-editor",
+        subfolder: "comfytv/layer-editor",
         filename: `comfytv-layer-${String((node == null ? void 0 : node.id) ?? "unknown")}-composite-${Date.now()}.png`
       });
       if (mySeq !== captureSeq) return;
@@ -148935,7 +148935,7 @@ function useLayerEditorStage(node, opts) {
       const nodeId = String((node == null ? void 0 : node.id) ?? "unknown");
       const composite = exportComposited(doc2, renderDeps, "white");
       const compositeUrl = await uploadCanvas(composite, {
-        subfolder: "layer-editor",
+        subfolder: "comfytv/layer-editor",
         filename: `comfytv-layer-${nodeId}-composite-${stamp}.png`
       });
       captureSeq += 1;
@@ -148949,7 +148949,7 @@ function useLayerEditorStage(node, opts) {
         if (!layer.visible) continue;
         const alone = exportLayerAlone(doc2, layer, renderDeps);
         const url = await uploadCanvas(alone, {
-          subfolder: "layer-editor",
+          subfolder: "comfytv/layer-editor",
           filename: `comfytv-layer-${nodeId}-${layer.id}-${stamp}.png`
         });
         uploads.push({ label: layer.name, url });
@@ -149668,7 +149668,7 @@ function useMaterialStage(node, opts) {
     const mySeq = ++captureSeq;
     try {
       const url = await uploadCanvas(canvas, {
-        subfolder: "material",
+        subfolder: "comfytv/material",
         filename: `comfytv-material-${Date.now()}.png`
       });
       if (mySeq !== captureSeq) return;
@@ -170140,4 +170140,4 @@ export {
   Box3 as y,
   UnsignedShortType as z
 };
-//# sourceMappingURL=main-BV14oSHQ.mjs.map
+//# sourceMappingURL=main-BS_PwhGo.mjs.map

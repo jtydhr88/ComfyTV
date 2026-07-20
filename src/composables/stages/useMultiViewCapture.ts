@@ -76,7 +76,7 @@ export function useMultiViewCapture(
 
         const nodeId = String(node?.id ?? 'unknown')
         const imageUrl = await uploadCanvas(canvas, {
-          subfolder: 'panorama-view',
+          subfolder: 'comfytv/panorama-view',
           filename: `comfytv-pano-multi-${nodeId}-${Date.now()}-${i}.png`,
         })
         if (mySeq !== captureSeq) return

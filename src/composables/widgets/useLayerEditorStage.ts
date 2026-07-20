@@ -321,7 +321,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
           )
           if (!blob) continue
           const uploaded = await uploadBlobNamed(blob, {
-            subfolder: 'layer-editor',
+            subfolder: 'comfytv/layer-editor',
             filename: `comfytv-layer-${String(node?.id ?? 'unknown')}-${target.contentId}.png`,
           })
           url = uploaded.url
@@ -375,7 +375,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     try {
       const canvas = exportComposited(state.value, renderDeps, 'white')
       const url = await uploadCanvas(canvas, {
-        subfolder: 'layer-editor',
+        subfolder: 'comfytv/layer-editor',
         filename: `comfytv-layer-${String(node?.id ?? 'unknown')}-composite-${Date.now()}.png`,
       })
       if (mySeq !== captureSeq) return
@@ -396,7 +396,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
 
       const composite = exportComposited(doc, renderDeps, 'white')
       const compositeUrl = await uploadCanvas(composite, {
-        subfolder: 'layer-editor',
+        subfolder: 'comfytv/layer-editor',
         filename: `comfytv-layer-${nodeId}-composite-${stamp}.png`,
       })
       captureSeq += 1
@@ -411,7 +411,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
         if (!layer.visible) continue
         const alone = exportLayerAlone(doc, layer, renderDeps)
         const url = await uploadCanvas(alone, {
-          subfolder: 'layer-editor',
+          subfolder: 'comfytv/layer-editor',
           filename: `comfytv-layer-${nodeId}-${layer.id}-${stamp}.png`,
         })
         uploads.push({ label: layer.name, url })

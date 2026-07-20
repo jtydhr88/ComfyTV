@@ -92,7 +92,7 @@ const { computing, requestRecompute } = useTransformPipeline({
   state: props.state,
   nodeId: props.node?.id ?? 'unknown',
   filenamePrefix: 'comfytv-mirror',
-  subfolder: 'transformer',
+  subfolder: 'comfytv/transformer',
   compute: (img) => mirrorToCanvas(img, flipH.value, flipV.value),
 })
 

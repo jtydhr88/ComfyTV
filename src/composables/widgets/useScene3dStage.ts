@@ -952,7 +952,7 @@ export function useScene3dStage(
       for (const shot of shots) {
         const label = shot.cameraId ?? 'view'
         const uploaded = await uploadBlobNamed(shot.blob, {
-          subfolder: 'scene3d',
+          subfolder: 'comfytv/scene3d',
           filename: `comfytv-scene3d-${String(node?.id ?? 'unknown')}-${stamp}-${label}.png`
         })
         uploads.push({ label, url: uploaded.url })
@@ -1018,7 +1018,7 @@ export function useScene3dStage(
         }
       })
       const uploaded = await uploadBlobNamed(blob, {
-        subfolder: 'scene3d',
+        subfolder: 'comfytv/scene3d',
         filename: `comfytv-scene3d-${String(node?.id ?? 'unknown')}-${Date.now()}.webm`
       })
       capturedVideoUrl.value = uploaded.url

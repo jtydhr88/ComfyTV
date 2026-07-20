@@ -196,7 +196,7 @@ const { computing, requestRecompute } = useTransformPipeline({
   state: props.state,
   nodeId: props.node?.id ?? 'unknown',
   filenamePrefix: 'comfytv-grade',
-  subfolder: 'colorgrade',
+  subfolder: 'comfytv/colorgrade',
   compute: (img) => {
     const out = document.createElement('canvas')
     const ok = renderer.renderToCanvas(img, effect.value, values.value, out)

@@ -223,7 +223,7 @@ export function useStoryboardShots(node: LGraphNode, state: StageState) {
 
     uploadingId.value = shotId
     try {
-      const url = await uploadBlob(file, { subfolder: 'storyboard', filename: file.name })
+      const url = await uploadBlob(file, { subfolder: 'comfytv/storyboard', filename: file.name })
       setImage(shotId, url)
     } catch (err) {
       console.error('[ComfyTV/storyboard] ref upload failed', err)

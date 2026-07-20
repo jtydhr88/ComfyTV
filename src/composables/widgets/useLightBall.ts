@@ -178,7 +178,7 @@ export function useLightBall(node: LGraphNode, opts?: UseLightBallOptions) {
 
       const nodeId = String(node?.id ?? 'unknown')
       const uploaded = await uploadBlobNamed(blob, {
-        subfolder: 'lightball',
+        subfolder: 'comfytv/lightball',
         filename: `comfytv-lightball-${nodeId}-${Date.now()}.png`
       })
       writeWidget(node, RENDER_WIDGET, uploaded.url, { fireCallback: false })

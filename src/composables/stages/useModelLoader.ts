@@ -185,8 +185,10 @@ export function useModelLoader(node: LGraphNode, opts: UseModelLoaderOptions) {
       let lastPath = ''
       for (const file of picked) {
         const toUpload = isConvertibleModelFile(file.name) ? await convertModelFileToGlb(file) : file
-        const uploaded = await uploadBlobNamed(toUpload, { subfolder: '3d', filename: toUpload.name })
-        lastPath = `3d/${uploaded.name}`
+        const uploaded = await uploadBlobNamed(toUpload, { subfolder: 'comfytv/3d', filename: toUpload.name })
+        lastPath = uploaded.subfolder
+          ? `${uploaded.subfolder}/${uploaded.name}`
+          : uploaded.name
         registerFile(lastPath)
       }
       if (lastPath) onPick(lastPath)
@@ -223,7 +225,7 @@ export function useModelLoader(node: LGraphNode, opts: UseModelLoaderOptions) {
     const mySeq = ++captureSeq
     try {
       const url = await uploadCanvas(canvas, {
-        subfolder: 'model3d-view',
+        subfolder: 'comfytv/model3d-view',
         filename: `comfytv-model-view-${Date.now()}.png`,
       })
       if (mySeq !== captureSeq) return

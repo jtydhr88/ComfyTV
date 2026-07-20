@@ -108,7 +108,7 @@ async function onFilePicked(e: Event) {
   uploading.value = true
   loadError.value = false
   try {
-    const viewUrl = await uploadBlob(file, { subfolder: 'panorama', filename: file.name })
+    const viewUrl = await uploadBlob(file, { subfolder: 'comfytv/panorama', filename: file.name })
     emit('manual-source-changed', viewUrl)
   } catch (e) {
     console.error('[ComfyTV/panorama] upload failed', e)

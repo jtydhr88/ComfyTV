@@ -628,7 +628,7 @@ describe('useLayerEditorStage: uploads', () => {
     await vi.advanceTimersByTimeAsync(800)
     const after = s.state.value.layers[0] as any
     expect(after.url).toContain('/view?filename=up.png')
-    expect(after.url).toContain('subfolder=layer-editor')
+    expect(after.url).toContain('subfolder=comfytv%2Flayer-editor')
     expect(after.mask?.url).toContain('/view?filename=up.png')
     expect((s.state.value.layers[1] as any).url).toContain('/view?filename=up.png')
     expect(s.content.get(after.contentId)?.uploadedUrl).toContain('up.png')

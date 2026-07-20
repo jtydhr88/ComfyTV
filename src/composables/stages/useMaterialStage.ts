@@ -87,7 +87,7 @@ export function useMaterialStage(node: LGraphNode, opts: UseMaterialStageOptions
     const mySeq = ++captureSeq
     try {
       const url = await uploadCanvas(canvas, {
-        subfolder: 'material',
+        subfolder: 'comfytv/material',
         filename: `comfytv-material-${Date.now()}.png`,
       })
       if (mySeq !== captureSeq) return

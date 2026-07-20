@@ -61,7 +61,7 @@ describe('uploadLoaderFiles', () => {
     ]
     await uploadLoaderFiles(node, 'image', files)
     expect(uploadBlobNamed).toHaveBeenCalledTimes(2)
-    expect(uploadBlobNamed.mock.calls[0][1]).toEqual({ subfolder: '', filename: 'a.png' })
+    expect(uploadBlobNamed.mock.calls[0][1]).toEqual({ subfolder: 'comfytv/uploads', filename: 'a.png' })
     expect(node.widgets[0].options.values).toEqual(['existing.png', 'a.png'])
     expect(node.widgets[0].value).toBe('existing.png')
   })

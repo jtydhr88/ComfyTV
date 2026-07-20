@@ -238,7 +238,7 @@ describe('useStoryboardShots', () => {
     const fakeEvent = { target: { files: [file], value: 'src.png' } } as unknown as Event
     await onFilePicked(fakeEvent)
     expect(shots.value[0].image_url).toBe(
-      '/view?filename=uploaded.png&subfolder=storyboard&type=input',
+      '/view?filename=uploaded.png&subfolder=comfytv%2Fstoryboard&type=input',
     )
   })
 

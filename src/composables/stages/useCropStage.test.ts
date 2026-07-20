@@ -172,7 +172,7 @@ describe('useCropStage', () => {
     expect(pipelineState.lastOptions).toMatchObject({
       nodeId: 5,
       filenamePrefix: 'comfytv-crop',
-      subfolder: 'cropper',
+      subfolder: 'comfytv/cropper',
     })
   })
 })

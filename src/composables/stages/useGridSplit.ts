@@ -194,7 +194,7 @@ export function useGridSplit(node: LGraphNode, state: StageState) {
           ctx.drawImage(img, o * b + col * (cellW + b), o * b + row * (cellH + b), cellW, cellH, 0, 0, cellW, cellH)
 
           const imageUrl = await uploadCanvas(canvas, {
-            subfolder: 'gridsplit',
+            subfolder: 'comfytv/gridsplit',
             filename: `comfytv-grid-${nodeId}-${Date.now()}-${n}.png`,
           })
           if (mySeq !== seq) return

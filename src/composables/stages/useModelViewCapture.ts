@@ -31,7 +31,7 @@ export function useModelViewCapture(opts: ModelViewCaptureOptions) {
     const mySeq = ++captureSeq
     try {
       const url = await uploadCanvas(canvas, {
-        subfolder: 'model3d-view',
+        subfolder: 'comfytv/model3d-view',
         filename: `${opts.filenamePrefix}-${Date.now()}.png`,
       })
       if (mySeq !== captureSeq) return

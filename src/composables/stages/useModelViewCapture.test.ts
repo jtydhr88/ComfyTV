@@ -52,7 +52,7 @@ describe('useModelViewCapture', () => {
     api.scheduleCapture()
     await vi.advanceTimersByTimeAsync(MODEL_VIEW_CAPTURE_DELAY_MS + 10)
     const opts = uploadCanvas.mock.calls[0][1] as { subfolder: string; filename: string }
-    expect(opts.subfolder).toBe('model3d-view')
+    expect(opts.subfolder).toBe('comfytv/model3d-view')
     expect(opts.filename).toMatch(/^comfytv-test-view-\d+\.png$/)
   })
 

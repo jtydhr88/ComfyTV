@@ -56,7 +56,7 @@ export function useCurrentViewCapture(
 
       const nodeId = String(node?.id ?? 'unknown')
       const viewUrl = await uploadCanvas(canvas, {
-        subfolder: 'panorama-view',
+        subfolder: 'comfytv/panorama-view',
         filename: `comfytv-pano-view-${nodeId}-${Date.now()}.png`,
       })
       if (mySeq !== captureSeq) return

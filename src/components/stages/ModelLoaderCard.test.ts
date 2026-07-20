@@ -172,7 +172,7 @@ describe('ModelLoaderCard', () => {
 
   it('uploads picked files into input/3d, registers and selects them', async () => {
     mocks.uploadBlobNamed.mockResolvedValue({
-      name: 'new.glb', subfolder: '3d', type: 'input', url: '/view?filename=new.glb&subfolder=3d&type=input',
+      name: 'new.glb', subfolder: 'comfytv/3d', type: 'input', url: '/view?filename=new.glb&subfolder=comfytv%2F3d&type=input',
     })
     const { node, baseElement } = renderCard()
     await userEvent.click(screen.getByText('Select a 3D model…'))
@@ -183,11 +183,11 @@ describe('ModelLoaderCard', () => {
 
     await waitFor(() => {
       const w = node.widgets.find((x: FakeWidget) => x.name === 'model')
-      expect(w.value).toBe('3d/new.glb')
+      expect(w.value).toBe('comfytv/3d/new.glb')
     })
-    expect(mocks.uploadBlobNamed).toHaveBeenCalledWith(file, { subfolder: '3d', filename: 'new.glb' })
+    expect(mocks.uploadBlobNamed).toHaveBeenCalledWith(file, { subfolder: 'comfytv/3d', filename: 'new.glb' })
     const w = node.widgets.find((x: FakeWidget) => x.name === 'model')
-    expect(w.options.values).toContain('3d/new.glb')
+    expect(w.options.values).toContain('comfytv/3d/new.glb')
   })
 
   it('surfaces upload failures', async () => {

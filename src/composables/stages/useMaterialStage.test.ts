@@ -136,7 +136,7 @@ describe('useMaterialStage', () => {
     expect(mocks.uploadCanvas).not.toHaveBeenCalled()
     await vi.advanceTimersByTimeAsync(1)
     expect(mocks.uploadCanvas).toHaveBeenCalledTimes(1)
-    expect(mocks.uploadCanvas.mock.calls[0][1]).toMatchObject({ subfolder: 'material' })
+    expect(mocks.uploadCanvas.mock.calls[0][1]).toMatchObject({ subfolder: 'comfytv/material' })
     expect(widget(node, 'captured_image').value).toBe('/view?filename=mat.png')
     expect(mocks.setOutputSlot).toHaveBeenCalledWith(state, 1, '/view?filename=mat.png')
   })
