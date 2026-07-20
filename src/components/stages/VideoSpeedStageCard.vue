@@ -1,9 +1,11 @@
 <template>
-  <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full">
-    <VideoPlayerLite
-      :source-video-url="sourceVideoUrl"
-      :playback-rate="speed"
-    />
+  <FxCardShell :node="node">
+    <template #player>
+      <VideoPlayerLite
+        :source-video-url="sourceVideoUrl"
+        :playback-rate="speed"
+      />
+    </template>
 
     <div
       class="ctv:flex ctv:flex-col ctv:gap-1"
@@ -66,7 +68,7 @@
       :on-disconnect="onDisconnect"
       :on-action="onAction"
     />
-  </div>
+  </FxCardShell>
 </template>
 
 <script setup lang="ts">
@@ -74,6 +76,7 @@ import { computed } from 'vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
+import FxCardShell from '@/components/stages/FxCardShell.vue'
 import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
 import { useBoolWidget, useNumWidget } from '@/composables/widgets/useWidgetModel'

@@ -187,6 +187,8 @@
     "dropHint": "Drop files to add them to the library",
     "search": "Search assets",
     "noResults": "No assets match your search.",
+    "scanFolder": "Scan media folder",
+    "scanFolderHint": "Drop large files into this folder — they are adopted on scan without uploading",
     "view": {
       "settings": "Display settings",
       "list": "List view",
@@ -216,6 +218,7 @@
       "deleteConfirm": "Remove this asset from the library? The file on disk stays.",
       "tags": "Edit tags",
       "loadNode": "Add as node to canvas",
+      "makeProxy": "Generate preview proxy",
       "more": "More options"
     },
     "tagPopover": {
@@ -1626,6 +1629,10 @@
     "processing": "Processing…",
     "done": "Done — ready for downstream",
     "adjustThenRun": "Adjust parameters, then Run",
+    "fullscreen": "Full size",
+    "exitFullscreen": "Exit full size",
+    "makeProxy": "PROXY?",
+    "makeProxyHint": "Large source — generate a lightweight proxy for smooth preview (Run still uses the original)",
     "needsTwoInputs": "Wire two videos into A and B",
     "needsAudioOrVideo": "Wire an audio or video input",
     "previewNote": "Preview is approximate — Run renders precisely",

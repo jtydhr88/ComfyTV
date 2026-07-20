@@ -9,7 +9,7 @@
       class="ctv:relative ctv:flex ctv:size-8 ctv:shrink-0 ctv:items-center ctv:justify-center ctv:overflow-hidden
              ctv:rounded-sm ctv:bg-secondary-background"
     >
-      <video
+      <ProxiedVideo
         v-if="asset.media_type === 'video'"
         :src="asset.payload_url"
         muted
@@ -77,6 +77,7 @@
 import { computed } from 'vue'
 
 import IconBox from '~icons/lucide/box'
+import ProxiedVideo from '@/components/widgets/ProxiedVideo.vue'
 import IconEllipsis from '~icons/lucide/ellipsis'
 import IconMaximize from '~icons/lucide/maximize-2'
 import IconVolume2 from '~icons/lucide/volume-2'

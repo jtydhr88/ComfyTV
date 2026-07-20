@@ -1,6 +1,8 @@
 <template>
-  <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full">
-    <VideoPlayerLite ref="playerRef" :source-video-url="sourceVideoUrl" />
+  <FxCardShell :node="node">
+    <template #player>
+      <VideoPlayerLite ref="playerRef" :source-video-url="sourceVideoUrl" />
+    </template>
 
     <div
       class="ctv:flex ctv:flex-col ctv:gap-1"
@@ -10,34 +12,39 @@
     >
       <FxChips v-model="mode" :options="MODES" />
 
-      <template v-if="mode === 'selectivecolor'">
-        <FxChips v-model="scMethod" :options="METHODS" />
-        <FxSlider v-for="z in ZONES" :key="z.id" v-model="z.model.value" :label="z.label" :min="-1" :max="1" :step="0.01" :reset-to="0" :gradient="z.gradient" />
-      </template>
+      <div
+        class="ctv:h-56 ctv:shrink-0 ctv:overflow-y-auto ctv-scroll-thin ctv:flex ctv:flex-col ctv:gap-1"
+        @wheel.stop
+      >
+        <template v-if="mode === 'selectivecolor'">
+          <FxChips v-model="scMethod" :options="METHODS" />
+          <FxSlider v-for="z in ZONES" :key="z.id" v-model="z.model.value" :label="z.label" :min="-1" :max="1" :step="0.01" :reset-to="0" :gradient="z.gradient" />
+        </template>
 
-      <template v-else-if="mode === 'chromashift'">
-        <FxSlider v-model="shiftRh" label="Red H" :min="-255" :max="255" :step="1" :decimals="0" :reset-to="0" />
-        <FxSlider v-model="shiftRv" label="Red V" :min="-255" :max="255" :step="1" :decimals="0" :reset-to="0" />
-        <FxSlider v-model="shiftBh" label="Blue H" :min="-255" :max="255" :step="1" :decimals="0" :reset-to="0" />
-        <FxSlider v-model="shiftBv" label="Blue V" :min="-255" :max="255" :step="1" :decimals="0" :reset-to="0" />
-        <FxChips v-model="shiftEdge" :options="EDGES" />
-      </template>
+        <template v-else-if="mode === 'chromashift'">
+          <FxSlider v-model="shiftRh" label="Red H" :min="-255" :max="255" :step="1" :decimals="0" :reset-to="0" />
+          <FxSlider v-model="shiftRv" label="Red V" :min="-255" :max="255" :step="1" :decimals="0" :reset-to="0" />
+          <FxSlider v-model="shiftBh" label="Blue H" :min="-255" :max="255" :step="1" :decimals="0" :reset-to="0" />
+          <FxSlider v-model="shiftBv" label="Blue V" :min="-255" :max="255" :step="1" :decimals="0" :reset-to="0" />
+          <FxChips v-model="shiftEdge" :options="EDGES" />
+        </template>
 
-      <template v-else-if="mode === 'pseudocolor'">
-        <FxChips v-model="pseudoPreset" :options="PRESETS" />
-        <FxSlider v-model="pseudoOpacity" label="Opacity" :min="0" :max="1" :step="0.01" :reset-to="1" />
-      </template>
+        <template v-else-if="mode === 'pseudocolor'">
+          <FxChips v-model="pseudoPreset" :options="PRESETS" />
+          <FxSlider v-model="pseudoOpacity" label="Opacity" :min="0" :max="1" :step="0.01" :reset-to="1" />
+        </template>
 
-      <template v-else-if="mode === 'elbg'">
-        <FxSlider v-model="elbgColors" label="Colors" :min="1" :max="50" :step="1" :decimals="0" :reset-to="9" />
-        <FxSlider v-model="elbgSteps" label="Steps" :min="1" :max="10" :step="1" :decimals="0" :reset-to="1" />
-      </template>
+        <template v-else-if="mode === 'elbg'">
+          <FxSlider v-model="elbgColors" label="Colors" :min="1" :max="50" :step="1" :decimals="0" :reset-to="9" />
+          <FxSlider v-model="elbgSteps" label="Steps" :min="1" :max="10" :step="1" :decimals="0" :reset-to="1" />
+        </template>
 
-      <template v-else-if="mode === 'colorspace'">
-        <FxChips v-model="csTarget" :options="CS_TARGETS" />
-      </template>
+        <template v-else-if="mode === 'colorspace'">
+          <FxChips v-model="csTarget" :options="CS_TARGETS" />
+        </template>
 
-      <div v-else class="ctv:text-2xs ctv:text-muted-foreground">Gray-world auto white balance — no parameters.</div>
+        <div v-else class="ctv:text-2xs ctv:text-muted-foreground">Gray-world auto white balance — no parameters.</div>
+      </div>
 
       <div class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-2xs">
         <button
@@ -82,7 +89,7 @@
       :on-disconnect="onDisconnect"
       :on-action="onAction"
     />
-  </div>
+  </FxCardShell>
 </template>
 
 <script setup lang="ts">
@@ -90,6 +97,7 @@ import { computed, ref } from 'vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
+import FxCardShell from '@/components/stages/FxCardShell.vue'
 import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'

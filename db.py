@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 from typing import Optional
 
 from sqlalchemy import (
+    BigInteger,
     Boolean,
     DateTime,
     Float,
@@ -185,6 +186,25 @@ class Resource(Base):
     size:       Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     sha256:     Mapped[Optional[str]] = mapped_column(String, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
+
+
+class ProxyMedia(Base):
+    __tablename__ = "comfytv_proxies"
+    __table_args__ = (UniqueConstraint("src_path", "profile", name="uq_proxy_src_profile"),)
+
+    id:           Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    src_path:     Mapped[str] = mapped_column(Text, index=True)
+    src_url:      Mapped[str] = mapped_column(Text, default="")
+    src_size:     Mapped[int] = mapped_column(BigInteger, default=0)
+    src_mtime_ns: Mapped[int] = mapped_column(BigInteger, default=0)
+    profile:      Mapped[str] = mapped_column(String, default="")
+    status:       Mapped[str] = mapped_column(String, default="pending", index=True)
+    proxy_path:   Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    width:        Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    height:       Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    error:        Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    created_at:   Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
+    updated_at:   Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
 
 
 class ComfyServer(Base):

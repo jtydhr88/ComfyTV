@@ -1,6 +1,16 @@
 <template>
-  <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full">
-    <VideoPlayerLite :source-video-url="sourceVideoUrl" />
+  <FxCardShell :node="node">
+    <template #player>
+      <VideoPlayerLite ref="playerRef" :source-video-url="sourceVideoUrl">
+        <template #overlay>
+          <canvas
+            v-show="supported"
+            ref="previewCanvas"
+            class="ctv:absolute ctv:inset-0 ctv:size-full ctv:object-contain ctv:pointer-events-none ctv-checker"
+          />
+        </template>
+      </VideoPlayerLite>
+    </template>
 
     <div
       class="ctv:flex ctv:flex-col ctv:gap-1"
@@ -44,18 +54,21 @@
       :on-disconnect="onDisconnect"
       :on-action="onAction"
     />
-  </div>
+  </FxCardShell>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
+import FxCardShell from '@/components/stages/FxCardShell.vue'
 import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
+import { useFxVideoPreview } from '@/composables/stages/useFxVideoPreview'
+import { VideoKeyerRenderer } from '@/widgets/glsl/keyingRenderers'
 import { useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
 
 const props = defineProps<{
@@ -91,4 +104,37 @@ const softnessUpper = useNumWidget(props.node, 'softness_upper', 0.5)
 const despill = useNumWidget(props.node, 'despill', 1)
 const despillAngle = useNumWidget(props.node, 'despill_angle', 120)
 const output = useStrWidget(props.node, 'output', 'matte')
+
+const playerRef = ref<InstanceType<typeof VideoPlayerLite> | null>(null)
+const videoEl = computed<HTMLVideoElement | null>(() => playerRef.value?.videoEl ?? null)
+const previewCanvas = ref<HTMLCanvasElement | null>(null)
+
+const { supported } = useFxVideoPreview({
+  videoEl,
+  canvasEl: previewCanvas,
+  nodeId: String(props.node.id),
+  params: () => ({
+    mode: mode.value,
+    keyColor: keyColor.value,
+    softnessLower: softnessLower.value,
+    toleranceLower: toleranceLower.value,
+    center: center.value,
+    toleranceUpper: toleranceUpper.value,
+    softnessUpper: softnessUpper.value,
+    despill: despill.value,
+    despillAngle: despillAngle.value,
+    output: output.value,
+  }),
+  createRenderer: () => new VideoKeyerRenderer(),
+})
 </script>
+
+<style scoped>
+.ctv-checker {
+  background-image:
+    linear-gradient(45deg, #333 25%, transparent 25%, transparent 75%, #333 75%),
+    linear-gradient(45deg, #333 25%, #222 25%, #222 75%, #333 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 8px 8px;
+}
+</style>

@@ -30,12 +30,78 @@ def _sample_lut(lut, coord):
     return lut[lo] * (1 - f) + lut[hi] * f
 
 
-def hue_correct_video(view_url: str, curves_raw: str, *,
-                      sat_thrsh: float = 0.0, luminance_mix: float = 0.0,
-                      progress=None) -> str:
+HUE_LUT_DEFAULTS = (('sat', 1.0), ('lum', 1.0),
+                    ('red', 1.0), ('green', 1.0), ('blue', 1.0),
+                    ('r_sup', 1.0), ('g_sup', 1.0), ('b_sup', 1.0),
+                    ('hue', 1.0))
+
+
+def build_hue_luts(curves, device='cpu'):
+    return {name: _curve_lut(curves.get(name), default, device=device)
+            for name, default in HUE_LUT_DEFAULTS}
+
+
+def hue_correct_frame(img, luts, sat_thrsh=0.0, luminance_mix=0.0):
     import torch
     import kornia.color
 
+    rgb = img.permute(2, 0, 1).unsqueeze(0).clamp(0, 1)
+    hsv = kornia.color.rgb_to_hsv(rgb)
+    h0 = (hsv[0, 0] / (2 * math.pi)).clamp(0, 1)
+    hx = h0 * 6 + 1
+    hx = torch.where(hx > 6, hx - 6, hx) / 6.0
+    s = hsv[0, 1]
+    lum_in = (img[..., 0] * LUMA_R + img[..., 1] * LUMA_G
+              + img[..., 2] * LUMA_B)
+
+    hue_shift = _sample_lut(luts['hue'], hx)
+    if (hue_shift - 1.0).abs().max() > 1e-6:
+        h1 = h0 + (hue_shift - 1.0) / 2.0
+        h1 = h1 - h1.floor()
+        hsv2 = hsv.clone()
+        hsv2[0, 0] = h1 * 2 * math.pi
+        rgb = kornia.color.hsv_to_rgb(hsv2)
+    out = rgb[0].permute(1, 2, 0)
+
+    for ch, other1, other2, key in ((0, 1, 2, 'r_sup'),
+                                    (1, 0, 2, 'g_sup'),
+                                    (2, 0, 1, 'b_sup')):
+        sup = _sample_lut(luts[key], hx)
+        mn = torch.minimum(out[..., other1], out[..., other2])
+        c = out[..., ch]
+        out[..., ch] = torch.where(c > mn, mn + sup * (c - mn), c)
+
+    lum_gain = _sample_lut(luts['lum'], hx)
+    gains = [_sample_lut(luts[k], hx) * lum_gain
+             for k in ('red', 'green', 'blue')]
+    thr = max(0.0, min(1.0, float(sat_thrsh)))
+    for ch, gain in enumerate(gains):
+        c = out[..., ch]
+        if thr > 0:
+            factor = torch.where(
+                s > thr, (thr + (s - thr) * gain) / s.clamp(min=1e-6),
+                torch.ones_like(gain))
+            out[..., ch] = c * factor
+        else:
+            out[..., ch] = c * gain
+
+    sat_gain = _sample_lut(luts['sat'], hx)
+    l_sat = (out[..., 0] * LUMA_R + out[..., 1] * LUMA_G
+             + out[..., 2] * LUMA_B).unsqueeze(-1)
+    out = l_sat * (1 - sat_gain.unsqueeze(-1)) + out * sat_gain.unsqueeze(-1)
+
+    mixv = max(0.0, min(1.0, float(luminance_mix)))
+    if mixv > 0:
+        lum_out = (out[..., 0] * LUMA_R + out[..., 1] * LUMA_G
+                   + out[..., 2] * LUMA_B).clamp(min=1e-6)
+        f = 1 + mixv * (lum_in / lum_out - 1)
+        out = out * f.unsqueeze(-1)
+    return out.clamp(0, 1)
+
+
+def hue_correct_video(view_url: str, curves_raw: str, *,
+                      sat_thrsh: float = 0.0, luminance_mix: float = 0.0,
+                      progress=None) -> str:
     try:
         curves = json.loads(curves_raw) if (curves_raw or '').strip() else {}
     except (ValueError, TypeError):
@@ -47,69 +113,12 @@ def hue_correct_video(view_url: str, curves_raw: str, *,
     luts = {}
 
     def frame_fn(img, t):
-        device = img.device
         if not luts:
-            for name, default in (('sat', 1.0), ('lum', 1.0),
-                                  ('red', 1.0), ('green', 1.0), ('blue', 1.0),
-                                  ('r_sup', 1.0), ('g_sup', 1.0), ('b_sup', 1.0),
-                                  ('hue', 1.0)):
-                luts[name] = _curve_lut(curves.get(name), default,
-                                        device=device)
-        rgb = img.permute(2, 0, 1).unsqueeze(0).clamp(0, 1)
-        hsv = kornia.color.rgb_to_hsv(rgb)
-        h0 = (hsv[0, 0] / (2 * math.pi)).clamp(0, 1)
-        hx = h0 * 6 + 1
-        hx = torch.where(hx > 6, hx - 6, hx) / 6.0
-        s = hsv[0, 1]
-        lum_in = (img[..., 0] * LUMA_R + img[..., 1] * LUMA_G
-                  + img[..., 2] * LUMA_B)
-
-        hue_shift = _sample_lut(luts['hue'], hx)
-        if (hue_shift - 1.0).abs().max() > 1e-6:
-            h1 = h0 + (hue_shift - 1.0) / 2.0
-            h1 = h1 - h1.floor()
-            hsv2 = hsv.clone()
-            hsv2[0, 0] = h1 * 2 * math.pi
-            rgb = kornia.color.hsv_to_rgb(hsv2)
-        out = rgb[0].permute(1, 2, 0)
-
-        r, g, b = out[..., 0], out[..., 1], out[..., 2]
-        for ch, other1, other2, key in ((0, 1, 2, 'r_sup'),
-                                        (1, 0, 2, 'g_sup'),
-                                        (2, 0, 1, 'b_sup')):
-            sup = _sample_lut(luts[key], hx)
-            mn = torch.minimum(out[..., other1], out[..., other2])
-            c = out[..., ch]
-            out[..., ch] = torch.where(c > mn, mn + sup * (c - mn), c)
-
-        lum_gain = _sample_lut(luts['lum'], hx)
-        gains = [_sample_lut(luts[k], hx) * lum_gain
-                 for k in ('red', 'green', 'blue')]
-        thr = max(0.0, min(1.0, float(sat_thrsh)))
-        for ch, gain in enumerate(gains):
-            c = out[..., ch]
-            if thr > 0:
-                factor = torch.where(
-                    s > thr, (thr + (s - thr) * gain) / s.clamp(min=1e-6),
-                    torch.ones_like(gain))
-                out[..., ch] = c * factor
-            else:
-                out[..., ch] = c * gain
-
-        sat_gain = _sample_lut(luts['sat'], hx)
-        l_sat = (out[..., 0] * LUMA_R + out[..., 1] * LUMA_G
-                 + out[..., 2] * LUMA_B).unsqueeze(-1)
-        out = l_sat * (1 - sat_gain.unsqueeze(-1)) + out * sat_gain.unsqueeze(-1)
-
-        mixv = max(0.0, min(1.0, float(luminance_mix)))
-        if mixv > 0:
-            lum_out = (out[..., 0] * LUMA_R + out[..., 1] * LUMA_G
-                       + out[..., 2] * LUMA_B).clamp(min=1e-6)
-            f = 1 + mixv * (lum_in / lum_out - 1)
-            out = out * f.unsqueeze(-1)
-        return out.clamp(0, 1)
+            luts.update(build_hue_luts(curves, device=img.device))
+        return hue_correct_frame(img, luts, sat_thrsh=sat_thrsh,
+                                 luminance_mix=luminance_mix)
 
     return torch_process_video(view_url, frame_fn, progress=progress)
 
 
-__all__ = ['hue_correct_video']
+__all__ = ['hue_correct_video', 'build_hue_luts', 'hue_correct_frame']

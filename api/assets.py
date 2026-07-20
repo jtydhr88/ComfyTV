@@ -1,7 +1,89 @@
+import time
+import urllib.parse
+from pathlib import Path
+
 from aiohttp import web
 
 from .. import storage
 from ._common import routes, broadcast_asset_event
+
+MEDIA_SUBFOLDER = "comfytv-media"
+MEDIA_SETTLE_SECONDS = 10.0
+MEDIA_EXTS = {
+    "video": {".mp4", ".mov", ".mkv", ".webm", ".m4v", ".avi"},
+    "image": {".png", ".jpg", ".jpeg", ".webp", ".gif", ".bmp"},
+    "audio": {".mp3", ".wav", ".flac", ".ogg", ".m4a", ".aac", ".opus"},
+}
+
+
+def media_dir() -> Path:
+    import folder_paths
+    d = Path(folder_paths.get_input_directory()) / MEDIA_SUBFOLDER
+    d.mkdir(parents=True, exist_ok=True)
+    return d
+
+
+def _media_type_of(path: Path) -> str | None:
+    ext = path.suffix.lower()
+    for media_type, exts in MEDIA_EXTS.items():
+        if ext in exts:
+            return media_type
+    return None
+
+
+def _media_view_url(rel: Path) -> str:
+    parts = rel.parts
+    subfolder = "/".join((MEDIA_SUBFOLDER,) + parts[:-1])
+    qs = urllib.parse.urlencode({
+        "filename": parts[-1], "subfolder": subfolder, "type": "input",
+    })
+    return f"/view?{qs}"
+
+
+def adopt_media_folder() -> list[dict]:
+    root = media_dir()
+    known = storage.asset_payload_urls()
+    now = time.time()
+    adopted: list[dict] = []
+    for p in sorted(root.rglob("*")):
+        if not p.is_file():
+            continue
+        media_type = _media_type_of(p)
+        if media_type is None:
+            continue
+        st = p.stat()
+        if now - st.st_mtime < MEDIA_SETTLE_SECONDS:
+            continue
+        url = _media_view_url(p.relative_to(root))
+        if url in known:
+            continue
+        row = storage.create_asset(
+            name=p.stem,
+            payload_url=url,
+            media_type=media_type,
+            size_bytes=st.st_size,
+            source="folder",
+        )
+        if row is not None:
+            adopted.append(row)
+    return adopted
+
+
+@routes.post("/comfytv/assets/adopt")
+async def adopt_assets(request: web.Request) -> web.Response:
+    import asyncio
+    try:
+        adopted = await asyncio.get_running_loop().run_in_executor(
+            None, adopt_media_folder)
+    except Exception as e:
+        return web.json_response({"error": str(e)}, status=500)
+    for row in adopted:
+        broadcast_asset_event("create", {"asset": row})
+    return web.json_response({
+        "ok": True,
+        "adopted": len(adopted),
+        "dir": str(media_dir()),
+    })
 
 
 def _int_list(value) -> tuple[bool, list[int] | None]:

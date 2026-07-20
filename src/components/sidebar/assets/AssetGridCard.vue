@@ -8,7 +8,7 @@
     <div class="ctv:relative ctv:aspect-square ctv:overflow-hidden ctv:rounded-lg ctv:bg-secondary-background">
       <video
         v-if="asset.media_type === 'video'"
-        :src="asset.payload_url"
+        :src="proxiedUrl ?? undefined"
         :title="tooltip"
         muted
         playsinline
@@ -51,6 +51,27 @@
         <IconVolume2 v-else class="ctv:size-3" />
       </span>
 
+      <span
+        v-if="isProxy"
+        class="ctv:absolute ctv:bottom-1.5 ctv:right-1.5 ctv:px-1 ctv:py-px ctv:rounded-sm ctv:text-3xs ctv:font-semibold ctv:tracking-wide
+               ctv:bg-black/65 ctv:text-warning-background ctv:pointer-events-none"
+      >PROXY</span>
+      <span
+        v-else-if="building"
+        class="ctv:absolute ctv:bottom-1.5 ctv:right-1.5 ctv:px-1 ctv:py-px ctv:rounded-sm ctv:text-3xs ctv:font-semibold ctv:tracking-wide
+               ctv:bg-black/65 ctv:text-muted-foreground ctv:pointer-events-none"
+      >PROXY {{ pct }}%</span>
+      <button
+        v-else-if="canProxy"
+        type="button"
+        class="ctv:absolute ctv:bottom-1.5 ctv:right-1.5 ctv:px-1 ctv:py-px ctv:rounded-sm ctv:text-3xs ctv:font-semibold ctv:tracking-wide
+               ctv:cursor-pointer ctv:border ctv:border-warning-background/60 ctv:bg-black/65 ctv:text-warning-background
+               ctv:hover:bg-warning-background/25"
+        :title="$t('fx.makeProxyHint')"
+        @click.stop="requestProxy"
+        @pointerdown.stop
+      >{{ $t('fx.makeProxy') }}</button>
+
       <div class="ctv-asset-actions ctv:absolute ctv:top-2 ctv:left-2 ctv:flex ctv:gap-1">
         <button
           class="ctv:flex ctv:size-6 ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:appearance-none
@@ -90,6 +111,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import IconBox from '~icons/lucide/box'
 import IconEllipsis from '~icons/lucide/ellipsis'
 import IconMaximize from '~icons/lucide/maximize-2'
@@ -98,13 +120,20 @@ import IconVolume2 from '~icons/lucide/volume-2'
 
 import type { Asset } from '@/api/schemas'
 import ModelThumb from '@/components/widgets/ModelThumb.vue'
+import { useProxiedVideoUrl } from '@/composables/widgets/useProxiedVideoUrl'
 
-defineProps<{
+const props = defineProps<{
   asset: Asset
   meta: string
   categoryNames: string[]
   tooltip: string
 }>()
+
+const videoSrc = computed(() =>
+  props.asset.media_type === 'video' ? props.asset.payload_url : null)
+const {
+  url: proxiedUrl, isProxy, canProxy, building, pct, requestProxy,
+} = useProxiedVideoUrl(videoSrc)
 
 const emit = defineEmits<{
   'open-menu': [e: MouseEvent]

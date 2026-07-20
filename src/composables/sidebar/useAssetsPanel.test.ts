@@ -6,6 +6,7 @@ const store = {
   listByCategory: vi.fn(() => []),
   ensureHydrated: vi.fn(),
   installWebSocketSync: vi.fn(),
+  refresh: vi.fn(async () => {}),
   createCategory: vi.fn(async () => ({ id: 3, name: 'new' })),
   renameCategory: vi.fn(),
   removeCategory: vi.fn(async () => true),
@@ -15,6 +16,13 @@ const store = {
   removeTag: vi.fn(),
   create: vi.fn(async () => ({ id: 1 })),
 }
+
+const adoptAssetsMock = vi.fn(async () => ({ ok: true, adopted: 0, dir: 'D:/in/comfytv-media' }))
+const proxyEnsureMock = vi.fn(async () => ({ status: 'pending', pct: 0 }))
+vi.mock('@/api', () => ({
+  adoptAssets: () => adoptAssetsMock(),
+  proxyEnsure: (...a: unknown[]) => (proxyEnsureMock as any)(...a),
+}))
 
 vi.mock('@/stores/assetStore', () => ({ useAssetStore: () => store }))
 vi.mock('vue-i18n', () => ({ useI18n: () => ({ t: (k: string) => k }) }))
@@ -63,6 +71,26 @@ describe('useAssetsPanel', () => {
     useAssetsPanel(() => true)
     expect(store.ensureHydrated).toHaveBeenCalled()
     expect(store.installWebSocketSync).toHaveBeenCalled()
+    expect(adoptAssetsMock).toHaveBeenCalled()
+  })
+
+  it('scans the media folder and refreshes only when something was adopted', async () => {
+    const panel = useAssetsPanel(() => false)
+    adoptAssetsMock.mockResolvedValueOnce({ ok: true, adopted: 0, dir: 'D:/in/comfytv-media' })
+    await panel.scanMediaFolder()
+    expect(panel.mediaDir.value).toBe('D:/in/comfytv-media')
+    expect(store.refresh).not.toHaveBeenCalled()
+
+    adoptAssetsMock.mockResolvedValueOnce({ ok: true, adopted: 3, dir: 'D:/in/comfytv-media' })
+    await panel.scanMediaFolder()
+    expect(store.refresh).toHaveBeenCalledTimes(1)
+  })
+
+  it('survives a failing scan', async () => {
+    const panel = useAssetsPanel(() => false)
+    adoptAssetsMock.mockRejectedValueOnce(new Error('offline'))
+    await panel.scanMediaFolder()
+    expect(panel.scanning.value).toBe(false)
   })
 
   it('does not hydrate while inactive', () => {

@@ -62,6 +62,7 @@ EXPECTED_NODE_IDS = [
     'ComfyTV.KeyMixStage',
     'ComfyTV.KeyerStage',
     'ComfyTV.LayerEditorStage',
+    'ComfyTV.MakeProxyStage',
     'ComfyTV.MaskCleanup',
     'ComfyTV.MaskPropagateStage',
     'ComfyTV.MaterialStage',

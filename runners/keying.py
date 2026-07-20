@@ -126,29 +126,43 @@ def despill_video(view_url: str, *, screen: str = 'green',
 
     if screen not in ('green', 'blue'):
         raise RuntimeError(f"despill: unknown screen {screen!r}")
-    mixv = max(0.0, min(1.0, float(spill_mix)))
-    exp = max(0.0, min(1.0, float(expand)))
 
     def frame_fn(img, t):
-        r, g, b = img[..., 0], img[..., 1], img[..., 2]
-        if screen == 'green':
-            spill = (g - (r * mixv + b * (1 - mixv)) * (1 - exp)).clamp(min=0)
-        else:
-            spill = (b - (r * mixv + g * (1 - mixv)) * (1 - exp)).clamp(min=0)
-        out = torch.stack([
-            r + spill * float(red_scale) + float(brightness) * spill,
-            g + spill * float(green_scale) + float(brightness) * spill,
-            b + spill * float(blue_scale) + float(brightness) * spill,
-        ], dim=-1)
-        if clamp_black:
-            out = out.clamp(min=0)
-        if clamp_white:
-            out = out.clamp(max=1)
-        if output_spillmap:
-            return spill.unsqueeze(-1).expand_as(out).clamp(0, 1)
-        return out
+        return despill_math(img, screen=screen, spill_mix=spill_mix,
+                            expand=expand, red_scale=red_scale,
+                            green_scale=green_scale, blue_scale=blue_scale,
+                            brightness=brightness, clamp_black=clamp_black,
+                            clamp_white=clamp_white,
+                            output_spillmap=output_spillmap)
 
     return torch_process_video(view_url, frame_fn, progress=progress)
+
+
+def despill_math(img, *, screen='green', spill_mix=0.5, expand=0.0,
+                 red_scale=0.0, green_scale=-1.0, blue_scale=0.0,
+                 brightness=0.0, clamp_black=True, clamp_white=False,
+                 output_spillmap=False):
+    import torch
+
+    mixv = max(0.0, min(1.0, float(spill_mix)))
+    exp = max(0.0, min(1.0, float(expand)))
+    r, g, b = img[..., 0], img[..., 1], img[..., 2]
+    if screen == 'green':
+        spill = (g - (r * mixv + b * (1 - mixv)) * (1 - exp)).clamp(min=0)
+    else:
+        spill = (b - (r * mixv + g * (1 - mixv)) * (1 - exp)).clamp(min=0)
+    out = torch.stack([
+        r + spill * float(red_scale) + float(brightness) * spill,
+        g + spill * float(green_scale) + float(brightness) * spill,
+        b + spill * float(blue_scale) + float(brightness) * spill,
+    ], dim=-1)
+    if clamp_black:
+        out = out.clamp(min=0)
+    if clamp_white:
+        out = out.clamp(max=1)
+    if output_spillmap:
+        return spill.unsqueeze(-1).expand_as(out).clamp(0, 1)
+    return out
 
 
 def color_suppress_video(view_url: str, *, red: float = 0.0,
@@ -163,66 +177,78 @@ def color_suppress_video(view_url: str, *, red: float = 0.0,
         raise RuntimeError(f"color suppress: unknown output {output!r}")
 
     def frame_fn(img, t):
-        r = img[..., 0].clone()
-        g = img[..., 1].clone()
-        b = img[..., 2].clone()
-        modified = torch.zeros_like(r)
-        luma1 = _luma(img, luminance_math) if preserve_luma else None
-
-        if yellow != 0.0:
-            cond = (b < g) & (b < r)
-            d1 = (g - b) * float(yellow)
-            d2 = (r - b) * float(yellow)
-            d = torch.where(d1 > d2, d2, d1)
-            g = torch.where(cond, g - d, g)
-            r = torch.where(cond, r - d, r)
-            modified = modified + torch.where(cond, d.abs(),
-                                              torch.zeros_like(d))
-        if magenta != 0.0:
-            cond = (g < b) & (g < r)
-            d1 = (b - g) * float(magenta)
-            d2 = (r - g) * float(magenta)
-            d = torch.where(d1 > d2, d2, d1)
-            b = torch.where(cond, b - d, b)
-            r = torch.where(cond, r - d, r)
-            modified = modified + torch.where(cond, d.abs(),
-                                              torch.zeros_like(d))
-        if cyan != 0.0:
-            cond = (r < g) & (r < b)
-            d1 = (g - r) * float(cyan)
-            d2 = (b - r) * float(cyan)
-            d = torch.where(d1 > d2, d2, d1)
-            g = torch.where(cond, g - d, g)
-            b = torch.where(cond, b - d, b)
-            modified = modified + torch.where(cond, d.abs(),
-                                              torch.zeros_like(d))
-        if red != 0.0:
-            cond = (r > g) & (r > b)
-            d = (r - torch.maximum(g, b)) * float(red)
-            r = torch.where(cond, r - d, r)
-            modified = modified + torch.where(cond, d.abs(),
-                                              torch.zeros_like(d))
-        if green != 0.0:
-            cond = (g > b) & (g > r)
-            d = (g - torch.maximum(b, r)) * float(green)
-            g = torch.where(cond, g - d, g)
-            modified = modified + torch.where(cond, d.abs(),
-                                              torch.zeros_like(d))
-        if blue != 0.0:
-            cond = (b > g) & (b > r)
-            d = (b - torch.maximum(g, r)) * float(blue)
-            b = torch.where(cond, b - d, b)
-            modified = modified + torch.where(cond, d.abs(),
-                                              torch.zeros_like(d))
-
-        out = torch.stack([r, g, b], dim=-1)
-        if output == 'matte':
-            return modified.unsqueeze(-1).expand_as(out).clamp(0, 1)
-        if preserve_luma:
-            out = out + (luma1 - _luma(out, luminance_math)).unsqueeze(-1)
-        return out.clamp(0, 1)
+        return color_suppress_math(img, red=red, green=green, blue=blue,
+                                   cyan=cyan, magenta=magenta, yellow=yellow,
+                                   preserve_luma=preserve_luma,
+                                   luminance_math=luminance_math,
+                                   output=output)
 
     return torch_process_video(view_url, frame_fn, progress=progress)
+
+
+def color_suppress_math(img, *, red=0.0, green=0.0, blue=0.0, cyan=0.0,
+                        magenta=0.0, yellow=0.0, preserve_luma=False,
+                        luminance_math='rec709', output='image'):
+    import torch
+
+    r = img[..., 0].clone()
+    g = img[..., 1].clone()
+    b = img[..., 2].clone()
+    modified = torch.zeros_like(r)
+    luma1 = _luma(img, luminance_math) if preserve_luma else None
+
+    if yellow != 0.0:
+        cond = (b < g) & (b < r)
+        d1 = (g - b) * float(yellow)
+        d2 = (r - b) * float(yellow)
+        d = torch.where(d1 > d2, d2, d1)
+        g = torch.where(cond, g - d, g)
+        r = torch.where(cond, r - d, r)
+        modified = modified + torch.where(cond, d.abs(),
+                                          torch.zeros_like(d))
+    if magenta != 0.0:
+        cond = (g < b) & (g < r)
+        d1 = (b - g) * float(magenta)
+        d2 = (r - g) * float(magenta)
+        d = torch.where(d1 > d2, d2, d1)
+        b = torch.where(cond, b - d, b)
+        r = torch.where(cond, r - d, r)
+        modified = modified + torch.where(cond, d.abs(),
+                                          torch.zeros_like(d))
+    if cyan != 0.0:
+        cond = (r < g) & (r < b)
+        d1 = (g - r) * float(cyan)
+        d2 = (b - r) * float(cyan)
+        d = torch.where(d1 > d2, d2, d1)
+        g = torch.where(cond, g - d, g)
+        b = torch.where(cond, b - d, b)
+        modified = modified + torch.where(cond, d.abs(),
+                                          torch.zeros_like(d))
+    if red != 0.0:
+        cond = (r > g) & (r > b)
+        d = (r - torch.maximum(g, b)) * float(red)
+        r = torch.where(cond, r - d, r)
+        modified = modified + torch.where(cond, d.abs(),
+                                          torch.zeros_like(d))
+    if green != 0.0:
+        cond = (g > b) & (g > r)
+        d = (g - torch.maximum(b, r)) * float(green)
+        g = torch.where(cond, g - d, g)
+        modified = modified + torch.where(cond, d.abs(),
+                                          torch.zeros_like(d))
+    if blue != 0.0:
+        cond = (b > g) & (b > r)
+        d = (b - torch.maximum(g, r)) * float(blue)
+        b = torch.where(cond, b - d, b)
+        modified = modified + torch.where(cond, d.abs(),
+                                          torch.zeros_like(d))
+
+    out = torch.stack([r, g, b], dim=-1)
+    if output == 'matte':
+        return modified.unsqueeze(-1).expand_as(out).clamp(0, 1)
+    if preserve_luma:
+        out = out + (luma1 - _luma(out, luminance_math)).unsqueeze(-1)
+    return out.clamp(0, 1)
 
 
 def keymix_videos(a_url: str, b_url: str, mask_url: str, *,
@@ -325,43 +351,17 @@ def keyer_video(view_url: str, *, mode: str = 'luminance',
     if output == 'composite' and not (bg_url or '').strip():
         raise RuntimeError("keyer: composite output needs a background input")
 
-    kc = _parse_color(key_color, default=(0.0, 0.0, 0.0))
-    kc_sum = sum(kc)
-    kc_norm2 = sum(v * v for v in kc)
-    tol_u = 1.0 if mode == 'screen' else float(tolerance_upper)
-    soft_u = 1.0 if mode == 'screen' else float(softness_upper)
-    soft_l = float(softness_lower)
-    tol_l = float(tolerance_lower)
-    ctr = float(center)
-    desp = max(0.0, min(2.0, float(despill))) if mode in ('screen', 'none') else 0.0
-    closing = math.tan((90 - 0.5 * max(0.0, min(180.0, float(despill_angle))))
-                       * math.pi / 180.0)
+    p = keyer_params(mode=mode, key_color=key_color,
+                     luminance_math=luminance_math,
+                     softness_lower=softness_lower,
+                     tolerance_lower=tolerance_lower, center=center,
+                     tolerance_upper=tolerance_upper,
+                     softness_upper=softness_upper, despill=despill,
+                     despill_angle=despill_angle)
 
     in_mask = _SideSource(in_mask_url) if (in_mask_url or '').strip() else None
     out_mask = _SideSource(out_mask_url) if (out_mask_url or '').strip() else None
     bg = _SideSource(bg_url) if (bg_url or '').strip() else None
-
-    def _key_bg(kfg):
-        ones = torch.ones_like(kfg)
-        zeros = torch.zeros_like(kfg)
-        a_pt = ctr + tol_l + soft_l
-        b_pt = ctr + tol_l
-        c_pt = ctr + tol_u
-        d_pt = ctr + tol_u + soft_u
-        out = torch.where(kfg < a_pt, zeros, ones)
-        if soft_l < 0:
-            ramp = (kfg - a_pt) / -soft_l
-            out = torch.where((kfg >= a_pt) & (kfg < b_pt), ramp, out)
-        out = torch.where((kfg >= b_pt) & (kfg <= c_pt), ones, out)
-        if soft_u > 0:
-            ramp = (d_pt - kfg) / soft_u
-            out = torch.where((kfg > c_pt) & (kfg < d_pt), ramp, out)
-        out = torch.where(kfg >= d_pt, zeros, out)
-        if b_pt <= 0:
-            out = torch.where(kfg <= 0, ones, out)
-        if c_pt >= 1:
-            out = torch.where(kfg >= 1, ones, out)
-        return out.clamp(0, 1)
 
     def _mask_at(src, t, device, hw):
         mk = src.at(t, device, hw)
@@ -371,58 +371,12 @@ def keyer_video(view_url: str, *, mode: str = 'luminance',
     def frame_fn(img, t):
         device = img.device
         hw = (img.shape[0], img.shape[1])
-        fg = img[..., :3]
-        r, g, b = fg[..., 0], fg[..., 1], fg[..., 2]
-
-        scalar = r * kc[0] + g * kc[1] + b * kc[2]
-        if mode == 'luminance':
-            kfg = _luma(fg, luminance_math)
-            d = None
-        elif mode == 'color':
-            kfg = (_luma(fg, luminance_math) if kc_sum == 0
-                   else scalar / kc_sum)
-            d = None
-        else:
-            norm2 = r * r + g * g + b * b
-            proj2 = (scalar * scalar / kc_norm2) if kc_norm2 > 0 else 0.0
-            d = (norm2 - proj2).clamp(min=0).sqrt()
-            kfg = (_luma(fg, luminance_math) if kc_sum == 0
-                   else scalar / kc_sum) - d
-
-        if mode == 'none':
-            kbg = torch.ones_like(r)
-        else:
-            kbg = _key_bg(kfg)
-
-        if in_mask is not None:
-            im = _mask_at(in_mask, t, device, hw)
-            kbg = torch.where((im > 0) & (kbg > 1 - im), 1 - im, kbg)
-        if out_mask is not None:
-            om = _mask_at(out_mask, t, device, hw)
-            kbg = torch.where((om > 0) & (kbg < om), om, kbg)
-
-        out = fg
-        if desp > 0 and mode in ('screen', 'none') and kc_norm2 > 0:
-            kc_norm = math.sqrt(kc_norm2)
-            along = scalar / kc_norm
-            cone = d * closing
-            maxdesp = kbg * min(desp, 1.0) + (1 - kbg) * max(0.0, desp - 1.0)
-            shift = maxdesp * torch.maximum(
-                torch.full_like(along, kc_norm), along - cone)
-            shift = torch.minimum(shift, along - cone)
-            apply = (along > cone) & (shift > 0)
-            shift = torch.where(apply, shift, torch.zeros_like(shift))
-            out = torch.stack([
-                out[..., 0] - shift * kc[0] / kc_norm,
-                out[..., 1] - shift * kc[1] / kc_norm,
-                out[..., 2] - shift * kc[2] / kc_norm,
-            ], dim=-1)
-
-        alpha = (1 - kbg).clamp(0, 1)
-        pre = (out * alpha.unsqueeze(-1)).clamp(0, 1)
+        im = _mask_at(in_mask, t, device, hw) if in_mask is not None else None
+        om = _mask_at(out_mask, t, device, hw) if out_mask is not None else None
+        pre, alpha = keyer_math(img, p, in_mask_t=im, out_mask_t=om)
         if output == 'composite':
             bgt = bg.at(t, device, hw)[..., :3]
-            return (pre + bgt * kbg.unsqueeze(-1)).clamp(0, 1)
+            return (pre + bgt * (1 - alpha).unsqueeze(-1)).clamp(0, 1)
         return _matte_out(pre, alpha, output)
 
     try:
@@ -433,6 +387,116 @@ def keyer_video(view_url: str, *, mode: str = 'luminance',
         for s in (in_mask, out_mask, bg):
             if s is not None:
                 s.close()
+
+
+def keyer_params(*, mode='luminance', key_color='#000000',
+                 luminance_math='rec709', softness_lower=-0.5,
+                 tolerance_lower=0.0, center=1.0, tolerance_upper=0.0,
+                 softness_upper=0.5, despill=1.0, despill_angle=120.0):
+    import math
+
+    kc = _parse_color(key_color, default=(0.0, 0.0, 0.0))
+    return {
+        'mode': mode,
+        'luminance_math': luminance_math,
+        'kc': kc,
+        'kc_sum': sum(kc),
+        'kc_norm2': sum(v * v for v in kc),
+        'tol_u': 1.0 if mode == 'screen' else float(tolerance_upper),
+        'soft_u': 1.0 if mode == 'screen' else float(softness_upper),
+        'soft_l': float(softness_lower),
+        'tol_l': float(tolerance_lower),
+        'ctr': float(center),
+        'desp': (max(0.0, min(2.0, float(despill)))
+                 if mode in ('screen', 'none') else 0.0),
+        'closing': math.tan(
+            (90 - 0.5 * max(0.0, min(180.0, float(despill_angle))))
+            * math.pi / 180.0),
+    }
+
+
+def _keyer_key_bg(kfg, p):
+    import torch
+
+    ones = torch.ones_like(kfg)
+    zeros = torch.zeros_like(kfg)
+    a_pt = p['ctr'] + p['tol_l'] + p['soft_l']
+    b_pt = p['ctr'] + p['tol_l']
+    c_pt = p['ctr'] + p['tol_u']
+    d_pt = p['ctr'] + p['tol_u'] + p['soft_u']
+    out = torch.where(kfg < a_pt, zeros, ones)
+    if p['soft_l'] < 0:
+        ramp = (kfg - a_pt) / -p['soft_l']
+        out = torch.where((kfg >= a_pt) & (kfg < b_pt), ramp, out)
+    out = torch.where((kfg >= b_pt) & (kfg <= c_pt), ones, out)
+    if p['soft_u'] > 0:
+        ramp = (d_pt - kfg) / p['soft_u']
+        out = torch.where((kfg > c_pt) & (kfg < d_pt), ramp, out)
+    out = torch.where(kfg >= d_pt, zeros, out)
+    if b_pt <= 0:
+        out = torch.where(kfg <= 0, ones, out)
+    if c_pt >= 1:
+        out = torch.where(kfg >= 1, ones, out)
+    return out.clamp(0, 1)
+
+
+def keyer_math(img, p, in_mask_t=None, out_mask_t=None):
+    import math
+    import torch
+
+    mode = p['mode']
+    kc = p['kc']
+    fg = img[..., :3]
+    r, g, b = fg[..., 0], fg[..., 1], fg[..., 2]
+
+    scalar = r * kc[0] + g * kc[1] + b * kc[2]
+    if mode == 'luminance':
+        kfg = _luma(fg, p['luminance_math'])
+        d = None
+    elif mode == 'color':
+        kfg = (_luma(fg, p['luminance_math']) if p['kc_sum'] == 0
+               else scalar / p['kc_sum'])
+        d = None
+    else:
+        norm2 = r * r + g * g + b * b
+        proj2 = (scalar * scalar / p['kc_norm2']) if p['kc_norm2'] > 0 else 0.0
+        d = (norm2 - proj2).clamp(min=0).sqrt()
+        kfg = (_luma(fg, p['luminance_math']) if p['kc_sum'] == 0
+               else scalar / p['kc_sum']) - d
+
+    if mode == 'none':
+        kbg = torch.ones_like(r)
+    else:
+        kbg = _keyer_key_bg(kfg, p)
+
+    if in_mask_t is not None:
+        kbg = torch.where((in_mask_t > 0) & (kbg > 1 - in_mask_t),
+                          1 - in_mask_t, kbg)
+    if out_mask_t is not None:
+        kbg = torch.where((out_mask_t > 0) & (kbg < out_mask_t),
+                          out_mask_t, kbg)
+
+    out = fg
+    if p['desp'] > 0 and mode in ('screen', 'none') and p['kc_norm2'] > 0:
+        kc_norm = math.sqrt(p['kc_norm2'])
+        along = scalar / kc_norm
+        cone = d * p['closing']
+        maxdesp = (kbg * min(p['desp'], 1.0)
+                   + (1 - kbg) * max(0.0, p['desp'] - 1.0))
+        shift = maxdesp * torch.maximum(
+            torch.full_like(along, kc_norm), along - cone)
+        shift = torch.minimum(shift, along - cone)
+        apply = (along > cone) & (shift > 0)
+        shift = torch.where(apply, shift, torch.zeros_like(shift))
+        out = torch.stack([
+            out[..., 0] - shift * kc[0] / kc_norm,
+            out[..., 1] - shift * kc[1] / kc_norm,
+            out[..., 2] - shift * kc[2] / kc_norm,
+        ], dim=-1)
+
+    alpha = (1 - kbg).clamp(0, 1)
+    pre = (out * alpha.unsqueeze(-1)).clamp(0, 1)
+    return pre, alpha
 
 
 def pik_video(view_url: str, *, screen: str = 'green',
@@ -456,33 +520,20 @@ def pik_video(view_url: str, *, screen: str = 'green',
     if output == 'composite' and not (bg_url or '').strip():
         raise RuntimeError("pik: composite output needs a background input")
 
-    ab = [max(1e-4, v) for v in _parse_color(alpha_bias, (0.5, 0.5, 0.5))]
-    lum_ab = _luma_f(ab)
-    ab = [v / lum_ab for v in ab]
-    db_raw = ab if use_alpha_bias_for_despill else [
-        max(1e-4, v) for v in _parse_color(despill_bias, (0.5, 0.5, 0.5))]
-    db = list(ab) if use_alpha_bias_for_despill else [v / lum_ab for v in db_raw]
-
-    pick = _parse_color(pick_color, (0.0, 1.0, 0.0))
-    if screen == 'pick':
-        screen_kind = 'green' if pick[1] / ab[1] > pick[2] / ab[2] else 'blue'
-        const_c = [pick[i] / ab[i] for i in range(3)]
-        use_pick = True
-    else:
-        screen_kind = screen
-        const_c = [pick[i] / ab[i] for i in range(3)]
-        use_pick = False
-
-    rw = float(red_weight)
-    gbw = float(blue_green_weight)
-    clip_min = max(0.0, min(1.0, float(clip_black)))
-    clip_max = max(clip_min + 1e-4, min(1.0, float(clip_white)))
-    rep_col = _parse_color(replace_color, (0.5, 0.5, 0.5))
+    p = pik_params(screen=screen, pick_color=pick_color,
+                   red_weight=red_weight,
+                   blue_green_weight=blue_green_weight,
+                   alpha_bias=alpha_bias, despill_bias=despill_bias,
+                   use_alpha_bias_for_despill=use_alpha_bias_for_despill,
+                   screen_subtraction=screen_subtraction,
+                   clamp_alpha=clamp_alpha, clip_black=clip_black,
+                   clip_white=clip_white, replace_mode=replace_mode,
+                   replace_color=replace_color)
+    ab = p['ab']
+    use_pick = screen == 'pick'
 
     plate = (_SideSource(clean_plate_url)
              if (clean_plate_url or '').strip() and not use_pick else None)
-    if plate is None and not use_pick and screen != 'pick':
-        use_pick = True
     in_mask = _SideSource(in_mask_url) if (in_mask_url or '').strip() else None
     out_mask = _SideSource(out_mask_url) if (out_mask_url or '').strip() else None
     bg = _SideSource(bg_url) if (bg_url or '').strip() else None
@@ -496,86 +547,17 @@ def pik_video(view_url: str, *, screen: str = 'green',
         device = img.device
         hw = (img.shape[0], img.shape[1])
         fg = img[..., :3]
-        pfg = torch.stack([fg[..., i] / ab[i] for i in range(3)], dim=-1)
 
         if plate is not None:
             cp = plate.at(t, device, hw)[..., :3]
             c = torch.stack([cp[..., i] / ab[i] for i in range(3)], dim=-1)
         else:
-            c = torch.tensor(const_c, dtype=torch.float32,
+            c = torch.tensor(p['const_c'], dtype=torch.float32,
                              device=device).expand_as(fg)
 
-        if screen_kind == 'green':
-            pfg_key = pfg[..., 1] - pfg[..., 0] * rw - pfg[..., 2] * gbw
-            c_key = c[..., 1] - c[..., 0] * rw - c[..., 2] * gbw
-            c_prim = c[..., 1]
-        else:
-            pfg_key = pfg[..., 2] - pfg[..., 0] * rw - pfg[..., 1] * gbw
-            c_key = c[..., 2] - c[..., 0] * rw - c[..., 1] * gbw
-            c_prim = c[..., 2]
-
-        alpha = 1 - pfg_key / torch.where(c_key <= 0,
-                                          torch.ones_like(c_key), c_key)
-        ones = torch.ones_like(alpha)
-        alpha = torch.where((c_prim <= 0) | (pfg_key <= 0) | (c_key <= 0),
-                            ones, alpha)
-
-        if screen_subtraction:
-            sub = torch.stack([
-                (fg[..., i] + c[..., i] * db[i] * (alpha - 1)).clamp(min=0)
-                for i in range(3)], dim=-1)
-            out = torch.where(alpha.unsqueeze(-1) >= 1, fg, sub)
-        else:
-            out = fg
-
-        if clamp_alpha:
-            alpha = alpha.clamp(0, 1)
-
-        clipped = ((alpha - clip_min) / (clip_max - clip_min)).clamp(0, 1)
-        clipped = torch.where(alpha <= clip_min, torch.zeros_like(alpha),
-                              clipped)
-        clipped = torch.where(alpha >= clip_max, ones, clipped)
-        down = clipped < alpha
-        up = clipped > alpha
-        safe = torch.where(alpha > 0, alpha, ones)
-        out = torch.where(down.unsqueeze(-1), out * (clipped / safe).unsqueeze(-1), out)
-        if replace_mode != 'none':
-            diff = torch.where(up, clipped - alpha, torch.zeros_like(alpha))
-            if replace_mode == 'source':
-                out = out + fg * diff.unsqueeze(-1)
-            elif replace_mode == 'hard':
-                out = out + torch.tensor(rep_col, dtype=torch.float32,
-                                         device=device) * diff.unsqueeze(-1)
-            else:
-                out = out + (torch.tensor(rep_col, dtype=torch.float32,
-                                          device=device)
-                             * (diff * _luma(fg)).unsqueeze(-1))
-        alpha = clipped
-
-        if in_mask is not None:
-            im = _mask_at(in_mask, t, device, hw)
-            imdiff = (im - alpha).clamp(min=0)
-            if replace_mode == 'source':
-                out = out + fg * imdiff.unsqueeze(-1)
-            elif replace_mode == 'hard':
-                out = out + torch.tensor(rep_col, dtype=torch.float32,
-                                         device=device) * imdiff.unsqueeze(-1)
-            elif replace_mode == 'soft':
-                out = out + (torch.tensor(rep_col, dtype=torch.float32,
-                                          device=device)
-                             * (imdiff * _luma(fg)).unsqueeze(-1))
-            alpha = torch.maximum(alpha, im)
-        if out_mask is not None:
-            om = _mask_at(out_mask, t, device, hw)
-            lim = 1 - om
-            over = alpha > lim
-            safe = torch.where(alpha > 0, alpha, ones)
-            out = torch.where(over.unsqueeze(-1),
-                              out * (lim / safe).unsqueeze(-1), out)
-            alpha = torch.where(over, lim, alpha)
-
-        if not screen_subtraction:
-            out = out * alpha.unsqueeze(-1)
+        im = _mask_at(in_mask, t, device, hw) if in_mask is not None else None
+        om = _mask_at(out_mask, t, device, hw) if out_mask is not None else None
+        out, alpha = pik_math(img, p, c, in_mask_t=im, out_mask_t=om)
 
         if output == 'composite':
             bgt = bg.at(t, device, hw)[..., :3]
@@ -592,7 +574,134 @@ def pik_video(view_url: str, *, screen: str = 'green',
                 s.close()
 
 
+def pik_params(*, screen='green', pick_color='#00FF00', red_weight=0.5,
+               blue_green_weight=0.5, alpha_bias='#808080',
+               despill_bias='#808080', use_alpha_bias_for_despill=True,
+               screen_subtraction=True, clamp_alpha=True, clip_black=0.0,
+               clip_white=1.0, replace_mode='soft',
+               replace_color='#808080'):
+    ab = [max(1e-4, v) for v in _parse_color(alpha_bias, (0.5, 0.5, 0.5))]
+    lum_ab = _luma_f(ab)
+    ab = [v / lum_ab for v in ab]
+    db_raw = ab if use_alpha_bias_for_despill else [
+        max(1e-4, v) for v in _parse_color(despill_bias, (0.5, 0.5, 0.5))]
+    db = (list(ab) if use_alpha_bias_for_despill
+          else [v / lum_ab for v in db_raw])
+
+    pick = _parse_color(pick_color, (0.0, 1.0, 0.0))
+    if screen == 'pick':
+        screen_kind = 'green' if pick[1] / ab[1] > pick[2] / ab[2] else 'blue'
+    else:
+        screen_kind = screen
+
+    clip_min = max(0.0, min(1.0, float(clip_black)))
+    return {
+        'ab': ab,
+        'db': db,
+        'const_c': [pick[i] / ab[i] for i in range(3)],
+        'screen_kind': screen_kind,
+        'rw': float(red_weight),
+        'gbw': float(blue_green_weight),
+        'screen_subtraction': bool(screen_subtraction),
+        'clamp_alpha': bool(clamp_alpha),
+        'clip_min': clip_min,
+        'clip_max': max(clip_min + 1e-4, min(1.0, float(clip_white))),
+        'replace_mode': replace_mode,
+        'rep_col': _parse_color(replace_color, (0.5, 0.5, 0.5)),
+    }
+
+
+def pik_math(img, p, c, in_mask_t=None, out_mask_t=None):
+    import torch
+
+    ab = p['ab']
+    db = p['db']
+    rw = p['rw']
+    gbw = p['gbw']
+    replace_mode = p['replace_mode']
+    rep_col = p['rep_col']
+    device = img.device
+    fg = img[..., :3]
+    pfg = torch.stack([fg[..., i] / ab[i] for i in range(3)], dim=-1)
+
+    if p['screen_kind'] == 'green':
+        pfg_key = pfg[..., 1] - pfg[..., 0] * rw - pfg[..., 2] * gbw
+        c_key = c[..., 1] - c[..., 0] * rw - c[..., 2] * gbw
+        c_prim = c[..., 1]
+    else:
+        pfg_key = pfg[..., 2] - pfg[..., 0] * rw - pfg[..., 1] * gbw
+        c_key = c[..., 2] - c[..., 0] * rw - c[..., 1] * gbw
+        c_prim = c[..., 2]
+
+    alpha = 1 - pfg_key / torch.where(c_key <= 0,
+                                      torch.ones_like(c_key), c_key)
+    ones = torch.ones_like(alpha)
+    alpha = torch.where((c_prim <= 0) | (pfg_key <= 0) | (c_key <= 0),
+                        ones, alpha)
+
+    if p['screen_subtraction']:
+        sub = torch.stack([
+            (fg[..., i] + c[..., i] * db[i] * (alpha - 1)).clamp(min=0)
+            for i in range(3)], dim=-1)
+        out = torch.where(alpha.unsqueeze(-1) >= 1, fg, sub)
+    else:
+        out = fg
+
+    if p['clamp_alpha']:
+        alpha = alpha.clamp(0, 1)
+
+    clipped = ((alpha - p['clip_min'])
+               / (p['clip_max'] - p['clip_min'])).clamp(0, 1)
+    clipped = torch.where(alpha <= p['clip_min'], torch.zeros_like(alpha),
+                          clipped)
+    clipped = torch.where(alpha >= p['clip_max'], ones, clipped)
+    down = clipped < alpha
+    up = clipped > alpha
+    safe = torch.where(alpha > 0, alpha, ones)
+    out = torch.where(down.unsqueeze(-1),
+                      out * (clipped / safe).unsqueeze(-1), out)
+    if replace_mode != 'none':
+        diff = torch.where(up, clipped - alpha, torch.zeros_like(alpha))
+        if replace_mode == 'source':
+            out = out + fg * diff.unsqueeze(-1)
+        elif replace_mode == 'hard':
+            out = out + torch.tensor(rep_col, dtype=torch.float32,
+                                     device=device) * diff.unsqueeze(-1)
+        else:
+            out = out + (torch.tensor(rep_col, dtype=torch.float32,
+                                      device=device)
+                         * (diff * _luma(fg)).unsqueeze(-1))
+    alpha = clipped
+
+    if in_mask_t is not None:
+        imdiff = (in_mask_t - alpha).clamp(min=0)
+        if replace_mode == 'source':
+            out = out + fg * imdiff.unsqueeze(-1)
+        elif replace_mode == 'hard':
+            out = out + torch.tensor(rep_col, dtype=torch.float32,
+                                     device=device) * imdiff.unsqueeze(-1)
+        elif replace_mode == 'soft':
+            out = out + (torch.tensor(rep_col, dtype=torch.float32,
+                                      device=device)
+                         * (imdiff * _luma(fg)).unsqueeze(-1))
+        alpha = torch.maximum(alpha, in_mask_t)
+    if out_mask_t is not None:
+        lim = 1 - out_mask_t
+        over = alpha > lim
+        safe = torch.where(alpha > 0, alpha, ones)
+        out = torch.where(over.unsqueeze(-1),
+                          out * (lim / safe).unsqueeze(-1), out)
+        alpha = torch.where(over, lim, alpha)
+
+    if not p['screen_subtraction']:
+        out = out * alpha.unsqueeze(-1)
+
+    return out, alpha
+
+
 __all__ = [
     'despill_video', 'color_suppress_video', 'keymix_videos',
     'matte_monitor_video', 'morphology_video', 'keyer_video', 'pik_video',
+    'despill_math', 'color_suppress_math',
+    'keyer_params', 'keyer_math', 'pik_params', 'pik_math',
 ]

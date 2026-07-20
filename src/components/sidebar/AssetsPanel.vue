@@ -195,6 +195,16 @@
           <span class="ctv:flex-1 ctv:truncate">{{ $t('assets.view.grid') }}</span>
           <IconCheck class="ctv:size-4 ctv:shrink-0" :class="viewMode !== 'grid' && 'ctv:opacity-0'" />
         </button>
+        <div class="ctv:my-1 ctv:h-px ctv:bg-interface-menu-stroke" />
+        <button :class="menuItemClass" :disabled="scanning" :title="mediaDir" @click="menuScanFolder">
+          <IconFolderSearch class="ctv:size-4 ctv:shrink-0" />
+          <span class="ctv:flex-1 ctv:truncate">{{ $t('assets.scanFolder') }}</span>
+        </button>
+        <div
+          v-if="mediaDir"
+          class="ctv:px-2 ctv:pb-1 ctv:text-3xs ctv:text-muted-foreground ctv:break-all ctv:select-text"
+          :title="$t('assets.scanFolderHint')"
+        >{{ mediaDir }}</div>
       </div>
     </div>
 
@@ -225,6 +235,14 @@
         >
           <IconDownload class="ctv:size-4 ctv:shrink-0" />
           <span class="ctv:flex-1 ctv:truncate">{{ $t('assets.card.loadNode') }}</span>
+        </button>
+        <button
+          v-if="menuAsset?.media_type === 'video'"
+          :class="menuItemClass"
+          @click="menuMakeProxy"
+        >
+          <IconClapperboard class="ctv:size-4 ctv:shrink-0" />
+          <span class="ctv:flex-1 ctv:truncate">{{ $t('assets.card.makeProxy') }}</span>
         </button>
         <button :class="menuItemClass" @click="menuEditTags">
           <IconTag class="ctv:size-4 ctv:shrink-0" />
@@ -277,6 +295,8 @@ import { ref } from 'vue'
 
 import IconCheck from '~icons/lucide/check'
 import IconDownload from '~icons/lucide/download'
+import IconClapperboard from '~icons/lucide/clapperboard'
+import IconFolderSearch from '~icons/lucide/folder-search'
 import IconLayoutGrid from '~icons/lucide/layout-grid'
 import IconMaximize from '~icons/lucide/maximize-2'
 import IconPencil from '~icons/lucide/pencil'
@@ -319,6 +339,9 @@ const {
   openSettingsMenu,
   closeSettingsMenu,
   setViewMode,
+  mediaDir,
+  scanning,
+  menuScanFolder,
   tagEditor,
   tagEditorStyle,
   catName,
@@ -333,6 +356,7 @@ const {
   openAssetMenu,
   closeAssetMenu,
   menuLoadNode,
+  menuMakeProxy,
   menuEditTags,
   menuRenameAsset,
   menuDeleteAsset,

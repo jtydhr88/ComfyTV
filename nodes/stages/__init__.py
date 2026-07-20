@@ -23,6 +23,7 @@ from .video_edit import (
     VideoSubtitleSmartEraseStage, VideoSubtitleSelectEraseStage,
     AudioExtractVocalStage, AudioExtractBgStage,
     AudioVideoDemuxAudioStage, AudioVideoDemuxVideoStage,
+    MakeProxyStage,
 )
 from .video_color import (
     VideoColorStage, VideoCurvesStage, VideoLUTStage,
@@ -99,7 +100,7 @@ class ComfyTVExtension(ComfyExtension):
             VideoExtractFrameStage, VideoFramesStage,
             VideoClipStage, VideoCropStage, VideoConcatStage, VideoResizeStage,
             VideoSpeedStage, VideoRotateStage, VideoSplitStage,
-            VideoVolumeStage, VideoMuxAudioStage,
+            VideoVolumeStage, VideoMuxAudioStage, MakeProxyStage,
             AudioVideoDemuxAudioStage, AudioVideoDemuxVideoStage,
             VideoColorStage, VideoCurvesStage, VideoLUTStage,
             VideoBlurSharpenStage, VideoDenoiseStage, VideoChromaKeyStage,

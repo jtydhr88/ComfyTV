@@ -1,4 +1,5 @@
 from ._common import *  # noqa: F401, F403
+from .common.fx_helpers import _progress_cb  # noqa: F401
 from ...runners.media import (
     extract_frame, trim_video, crop_video, resize_video, concat_videos,
     speed_video, transpose_video, adjust_volume, mux_audio, extract_frames_multi,
@@ -651,3 +652,30 @@ class AudioVideoDemuxVideoStage(io.ComfyNode):
                                 parent_output_id=parent_output_id)
 
 
+
+
+class MakeProxyStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.MakeProxyStage",
+            display_name="Make Proxy",
+            category="ComfyTV/Video",
+            inputs=[
+                io.String.Input("video", default="",
+                                tooltip="Source /view URL to build a preview "
+                                        "proxy for."),
+            ],
+            outputs=[COMFYTV_VIDEO.Output("proxy")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, video=""):
+        from ...runners.proxy import build_proxy
+        if not (video or '').strip():
+            raise RuntimeError("Make Proxy needs a source video URL.")
+        url = build_proxy(video, progress=_progress_cb(cls))
+        return io.NodeOutput(url)

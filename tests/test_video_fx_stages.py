@@ -165,6 +165,25 @@ class TestExecute:
         cls = _classes()["AudioDenoiseStage"]
         cls.execute(project_id="p1", method='afftdn', strength=0.5, video=clip)
 
+    def test_colorfx_selectivecolor(self, clip):
+        cls = _classes()["ColorFXStage"]
+        cls.execute(project_id="p1", mode='selectivecolor', sc_reds=0.5,
+                    video=clip)
+
+    def test_colorfx_colorspace_untagged_input(self, clip):
+        cls = _classes()["ColorFXStage"]
+        for target in ('bt709', 'bt601-6-625', 'bt2020', 'smpte170m'):
+            cls.execute(project_id="p1", mode='colorspace', cs_target=target,
+                        video=clip)
+
+    def test_colorfx_remaining_modes(self, clip):
+        cls = _classes()["ColorFXStage"]
+        for kw in ({'mode': 'chromashift', 'shift_rh': 6.0},
+                   {'mode': 'pseudocolor', 'pseudo_preset': 'turbo'},
+                   {'mode': 'elbg', 'elbg_colors': 4},
+                   {'mode': 'grayworld'}):
+            cls.execute(project_id="p1", video=clip, **kw)
+
     def test_no_video_emits_spec_only(self):
         import json
         cls = _classes()["VideoColorStage"]

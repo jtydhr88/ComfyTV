@@ -2,7 +2,9 @@ import { useStorage } from '@vueuse/core'
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
+import { adoptAssets } from '@/api'
 import type { Asset } from '@/api/schemas'
+import { requestProxyBuild } from '@/composables/widgets/useProxiedVideoUrl'
 import { type LightboxItem, openLightbox } from '@/composables/useLightbox'
 import { ASSET_DRAG_MIME } from '@/composables/sidebar/assetCanvasDrop'
 import { importAssetFiles } from '@/composables/sidebar/assetImport'
@@ -192,6 +194,12 @@ export function useAssetsPanel(isActive: () => boolean | undefined) {
     if (a) void onDeleteAsset(a)
   }
 
+  function menuMakeProxy() {
+    const a = menuAsset.value
+    closeAssetMenu()
+    if (a?.media_type === 'video') void requestProxyBuild(a.payload_url)
+  }
+
   function viewFullAsset(asset: Asset) {
     if (asset.media_type !== 'image') return
     const imgs = visibleAssets.value.filter((a) => a.media_type === 'image')
@@ -326,10 +334,33 @@ export function useAssetsPanel(isActive: () => boolean | undefined) {
     }
   }
 
+  const mediaDir = ref('')
+  const scanning = ref(false)
+
+  async function scanMediaFolder(): Promise<void> {
+    if (scanning.value) return
+    scanning.value = true
+    try {
+      const res = await adoptAssets()
+      mediaDir.value = res.dir
+      if (res.adopted > 0) await store.refresh()
+    } catch (e) {
+      console.warn('[ComfyTV/assets] media folder scan failed', e)
+    } finally {
+      scanning.value = false
+    }
+  }
+
+  function menuScanFolder() {
+    settingsMenu.value = null
+    void scanMediaFolder()
+  }
+
   watch(isActive, (active) => {
     if (active) {
       store.ensureHydrated()
       store.installWebSocketSync()
+      void scanMediaFolder()
     }
   }, { immediate: true })
 
@@ -352,6 +383,10 @@ export function useAssetsPanel(isActive: () => boolean | undefined) {
     openSettingsMenu,
     closeSettingsMenu,
     setViewMode,
+    mediaDir,
+    scanning,
+    scanMediaFolder,
+    menuScanFolder,
     tagEditor,
     tagEditorStyle,
     catName,
@@ -366,6 +401,7 @@ export function useAssetsPanel(isActive: () => boolean | undefined) {
     openAssetMenu,
     closeAssetMenu,
     menuLoadNode,
+    menuMakeProxy,
     menuEditTags,
     menuRenameAsset,
     menuDeleteAsset,

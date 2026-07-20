@@ -7,7 +7,7 @@
     @pointermove="onMove"
     @pointerup="onUp"
     @pointercancel="onUp"
-    @contextmenu.prevent="onRightClick"
+    @contextmenu.stop.prevent="onRightClick"
   />
 </template>
 

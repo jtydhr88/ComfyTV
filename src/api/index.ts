@@ -3,6 +3,7 @@ import type { z } from 'zod'
 import { app } from '@/lib/comfyApp'
 
 import {
+  AdoptAssetsSchema,
   ApiSidecarResultSchema,
   CapabilitiesSchema,
   CapsPayloadSchema,
@@ -20,6 +21,7 @@ import {
   MutateServerSchema,
   MutateStagePresetSchema,
   OkSchema,
+  ProxyEnsureSchema,
   RemoteRunResultSchema,
   RescanResultSchema,
   StageDefaultsSchema,
@@ -27,6 +29,7 @@ import {
   UnlinkWorkflowResultSchema,
 } from './schemas'
 import type {
+  AdoptAssetsResult,
   ApiSidecarResult,
   Capabilities,
   CapsPayload,
@@ -36,6 +39,7 @@ import type {
   LinkWorkflowResult,
   ListWorkflowOverview,
   NativeWorkflow,
+  ProxyEnsureResult,
   RescanResult,
   TestServerResult,
 } from './schemas'
@@ -257,6 +261,21 @@ export function listRemoteJobs(status?: string): Promise<z.infer<typeof ListRemo
 
 export function cancelRemoteJob(jobId: string): Promise<z.infer<typeof OkSchema>> {
   return apiSend(`/comfytv/remote_jobs/${encodeURIComponent(jobId)}/cancel`, 'POST', OkSchema)
+}
+
+export function adoptAssets(): Promise<AdoptAssetsResult> {
+  return apiSend('/comfytv/assets/adopt', 'POST', AdoptAssetsSchema)
+}
+
+export function proxyEnsure(
+  url: string,
+  opts: { create?: boolean; retry?: boolean } = {},
+): Promise<ProxyEnsureResult> {
+  return apiSend('/comfytv/proxy/ensure', 'POST', ProxyEnsureSchema, {
+    url,
+    ...(opts.create ? { create: true } : {}),
+    ...(opts.retry ? { retry: true } : {}),
+  })
 }
 
 export function fxClipPreview(

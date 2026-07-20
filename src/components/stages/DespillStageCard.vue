@@ -1,6 +1,16 @@
 <template>
-  <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full">
-    <VideoPlayerLite :source-video-url="sourceVideoUrl" />
+  <FxCardShell :node="node">
+    <template #player>
+      <VideoPlayerLite ref="playerRef" :source-video-url="sourceVideoUrl">
+        <template #overlay>
+          <canvas
+            v-show="supported"
+            ref="previewCanvas"
+            class="ctv:absolute ctv:inset-0 ctv:size-full ctv:object-contain ctv:pointer-events-none"
+          />
+        </template>
+      </VideoPlayerLite>
+    </template>
 
     <div
       class="ctv:flex ctv:flex-col ctv:gap-1"
@@ -36,18 +46,21 @@
       :on-disconnect="onDisconnect"
       :on-action="onAction"
     />
-  </div>
+  </FxCardShell>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
+import FxCardShell from '@/components/stages/FxCardShell.vue'
 import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
+import { useFxVideoPreview } from '@/composables/stages/useFxVideoPreview'
+import { VideoDespillRenderer } from '@/widgets/glsl/keyingRenderers'
 import { useBoolWidget, useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
 import { CHANNEL_STOPS, LUMA_STOPS } from '@/components/widgets/colorStops'
 
@@ -74,4 +87,25 @@ const greenScale = useNumWidget(props.node, 'green_scale', -1)
 const blueScale = useNumWidget(props.node, 'blue_scale', 0)
 const brightness = useNumWidget(props.node, 'brightness', 0)
 const outputSpillmap = useBoolWidget(props.node, 'output_spillmap', false)
+
+const playerRef = ref<InstanceType<typeof VideoPlayerLite> | null>(null)
+const videoEl = computed<HTMLVideoElement | null>(() => playerRef.value?.videoEl ?? null)
+const previewCanvas = ref<HTMLCanvasElement | null>(null)
+
+const { supported } = useFxVideoPreview({
+  videoEl,
+  canvasEl: previewCanvas,
+  nodeId: String(props.node.id),
+  params: () => ({
+    screen: screen.value,
+    spillMix: spillMix.value,
+    expand: expand.value,
+    redScale: redScale.value,
+    greenScale: greenScale.value,
+    blueScale: blueScale.value,
+    brightness: brightness.value,
+    outputSpillmap: outputSpillmap.value,
+  }),
+  createRenderer: () => new VideoDespillRenderer(),
+})
 </script>

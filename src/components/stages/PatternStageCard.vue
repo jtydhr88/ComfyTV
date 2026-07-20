@@ -1,5 +1,5 @@
 <template>
-  <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full">
+  <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" @contextmenu.stop.prevent>
     <canvas
       ref="previewEl"
       class="ctv:w-full ctv:h-40 ctv:rounded ctv:border ctv:border-border-subtle ctv:bg-secondary-background"

@@ -72,7 +72,7 @@
       v-else-if="type === 'COMFYTV_VIDEO' && !compact"
       class="vp-img-host ctv:group ctv:relative ctv:w-full"
     >
-      <video
+      <ProxiedVideo
         :src="String(content)"
         :class="videoClass"
         controls muted playsinline preload="metadata"
@@ -89,7 +89,7 @@
                 @click.stop="onLoadAsset(String(content), nameFromUrl(String(content)))"><i class="pi pi-bookmark" /></button>
       </div>
     </div>
-    <video
+    <ProxiedVideo
       v-else-if="type === 'COMFYTV_VIDEO'"
       :src="String(content)"
       :class="videoClass"
@@ -367,7 +367,7 @@
               {{ clip.label ?? `#${clip.index ?? i + 1}` }}
             </span>
           </div>
-          <video :src="clip.image_url" class="ctv:block ctv:w-full ctv:max-h-32 ctv:rounded-sm ctv:bg-black"
+          <ProxiedVideo :src="clip.image_url" class="ctv:block ctv:w-full ctv:max-h-32 ctv:rounded-sm ctv:bg-black"
                  controls muted playsinline preload="metadata"
                  @click.stop />
           <div :class="imgActionsClass">
@@ -448,6 +448,7 @@ import { computed, onBeforeUnmount, onMounted, ref, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import ModelPreview from './ModelPreview.vue'
 import ModelThumb from '@/components/widgets/ModelThumb.vue'
+import ProxiedVideo from '@/components/widgets/ProxiedVideo.vue'
 import { askText } from '@/composables/dialog/useTextInputDialog'
 import { useImagePanZoom } from '@/composables/widgets/useImagePanZoom'
 import { openLightbox } from '@/composables/useLightbox'

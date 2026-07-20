@@ -127,6 +127,20 @@ def _frame_time(frame, fallback_tb):
     return float(frame.pts * tb)
 
 
+_COLOR_UNSPECIFIED = 2
+_COLOR_BT709 = 1
+
+
+def _tag_unspecified_color(frame):
+    if frame.colorspace == _COLOR_UNSPECIFIED:
+        frame.colorspace = _COLOR_BT709
+    if frame.color_primaries == _COLOR_UNSPECIFIED:
+        frame.color_primaries = _COLOR_BT709
+    if frame.color_trc == _COLOR_UNSPECIFIED:
+        frame.color_trc = _COLOR_BT709
+    return frame
+
+
 def filter_video(view_url: str,
                  video_specs=None,
                  audio_specs=None,
@@ -155,6 +169,7 @@ def filter_video(view_url: str,
     require_filters(*[n for n, _ in video_specs + audio_specs])
     if not video_specs and not audio_specs:
         raise RuntimeError("filter_video: no filters given")
+    needs_color_tags = any(n == 'colorspace' for n, _ in video_specs)
 
     src_path = localize(view_url)
     info = get_video_info(view_url)
@@ -279,6 +294,8 @@ def filter_video(view_url: str,
                             if win_end is not None and t > win_end:
                                 video_done = True
                                 break
+                        if needs_color_tags:
+                            _tag_unspecified_color(frame)
                         vsrc.push(frame)
                         for f in _drain(vsink):
                             _encode_filtered(f)

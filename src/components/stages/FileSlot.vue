@@ -31,7 +31,7 @@
         class="ctv:block ctv:w-full ctv:max-h-44 ctv:object-contain ctv:cursor-pointer ctv:bg-black"
         @click="open"
       />
-      <video
+      <ProxiedVideo
         v-else-if="kind === 'video'"
         :src="value"
         class="ctv:block ctv:w-full ctv:max-h-44 ctv:object-contain ctv:cursor-pointer ctv:bg-black"
@@ -59,6 +59,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import ProxiedVideo from '@/components/widgets/ProxiedVideo.vue'
 
 import { useFileDrop } from '@/composables/stages/useFileDrop'
 

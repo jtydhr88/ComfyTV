@@ -187,6 +187,8 @@
     "dropHint": "松开把文件添加到资产库",
     "search": "搜索资产",
     "noResults": "没有匹配的资产。",
+    "scanFolder": "扫描素材文件夹",
+    "scanFolderHint": "大文件直接放进这个文件夹,扫描时自动收录,无需上传",
     "view": {
       "settings": "显示设置",
       "list": "列表视图",
@@ -216,6 +218,7 @@
       "deleteConfirm": "把这个资产从资产库移除？磁盘上的文件保留。",
       "tags": "编辑标签",
       "loadNode": "作为节点添加到画布",
+      "makeProxy": "生成预览代理",
       "more": "更多操作"
     },
     "tagPopover": {
@@ -1626,6 +1629,10 @@
     "processing": "处理中…",
     "done": "完成 — 可供下游使用",
     "adjustThenRun": "调整参数后点击 Run",
+    "fullscreen": "全屏编辑",
+    "exitFullscreen": "退出全屏",
+    "makeProxy": "PROXY?",
+    "makeProxyHint": "源文件较大——生成轻量代理让预览流畅（运行仍使用原片）",
     "needsTwoInputs": "需要接入两个视频（A 和 B）",
     "needsAudioOrVideo": "需要接入音频或视频",
     "previewNote": "预览为近似效果 — Run 后精确渲染",

@@ -464,6 +464,23 @@ export const FxClipPreviewSchema = z.object({
 })
 export type FxClipPreviewResult = z.infer<typeof FxClipPreviewSchema>
 
+export const AdoptAssetsSchema = z.object({
+  ok: z.boolean(),
+  adopted: z.number(),
+  dir: z.string(),
+})
+export type AdoptAssetsResult = z.infer<typeof AdoptAssetsSchema>
+
+export const ProxyEnsureSchema = z.object({
+  status: z.enum(['original', 'candidate', 'pending', 'running', 'ready', 'failed']),
+  proxy_url: z.string().optional(),
+  width: z.number().nullable().optional(),
+  height: z.number().nullable().optional(),
+  pct: z.number().optional(),
+  error: z.string().optional(),
+})
+export type ProxyEnsureResult = z.infer<typeof ProxyEnsureSchema>
+
 export const ExecutedPayloadSchema = z.object({
   output: z.union([z.string(), z.array(z.unknown())]).optional(),
   picked: z.union([z.string(), z.array(z.unknown())]).optional(),

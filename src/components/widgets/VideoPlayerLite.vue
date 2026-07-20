@@ -16,7 +16,7 @@
       <template v-else>
         <video
           ref="videoEl"
-          :src="sourceVideoUrl"
+          :src="effectiveUrl ?? undefined"
           :muted="muted"
           :style="videoStyle"
           class="ctv:block ctv:size-full ctv:object-contain ctv:cursor-pointer"
@@ -28,6 +28,25 @@
           @error="onError"
           @click="togglePlay"
         />
+        <span
+          v-if="isProxy"
+          class="ctv:absolute ctv:top-1 ctv:left-1 ctv:z-10 ctv:px-1 ctv:py-px ctv:rounded-sm ctv:text-3xs ctv:font-semibold ctv:tracking-wide
+                 ctv:bg-black/60 ctv:text-warning-background ctv:pointer-events-none"
+        >PROXY</span>
+        <span
+          v-else-if="building"
+          class="ctv:absolute ctv:top-1 ctv:left-1 ctv:z-10 ctv:px-1 ctv:py-px ctv:rounded-sm ctv:text-3xs ctv:font-semibold ctv:tracking-wide
+                 ctv:bg-black/60 ctv:text-muted-foreground ctv:pointer-events-none"
+        >PROXY {{ pct }}%</span>
+        <button
+          v-else-if="canProxy"
+          type="button"
+          class="ctv:absolute ctv:top-1 ctv:left-1 ctv:z-10 ctv:px-1 ctv:py-px ctv:rounded-sm ctv:text-3xs ctv:font-semibold ctv:tracking-wide
+                 ctv:cursor-pointer ctv:border ctv:border-warning-background/60 ctv:bg-black/60 ctv:text-warning-background
+                 ctv:hover:bg-warning-background/25"
+          :title="$t('fx.makeProxyHint')"
+          @click.stop="requestProxy"
+        >{{ $t('fx.makeProxy') }}</button>
         <slot name="overlay" />
         <div v-if="loadError"
              class="ctv:absolute ctv:inset-0 ctv:z-10 ctv:flex ctv:items-center ctv:justify-center ctv:text-xs
@@ -79,6 +98,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import { useProxiedVideoUrl } from '@/composables/widgets/useProxiedVideoUrl'
 import { useVideoPlayback } from '@/composables/widgets/useVideoPlayback'
 import { formatTime } from '@/composables/widgets/useVideoTrim'
 
@@ -103,6 +123,19 @@ const boxEl = ref<HTMLDivElement | null>(null)
 const seekEl = ref<HTMLDivElement | null>(null)
 
 const sourceVideoUrlRef = computed(() => props.sourceVideoUrl)
+const {
+  url: effectiveUrl, isProxy, canProxy, building, pct, requestProxy,
+} = useProxiedVideoUrl(sourceVideoUrlRef)
+
+let carryTime: number | null = null
+watch(isProxy, (now, was) => {
+  if (now && !was) {
+    const v = videoEl.value
+    carryTime = v && Number.isFinite(v.currentTime) && v.currentTime > 0
+      ? v.currentTime
+      : null
+  }
+})
 
 const {
   muted, playing, duration, currentTime, loadError, progressPct,
@@ -111,7 +144,7 @@ const {
 } = useVideoPlayback({
   videoEl,
   seekEl,
-  sourceVideoUrl: sourceVideoUrlRef,
+  sourceVideoUrl: effectiveUrl,
   initialMuted: props.defaultMuted,
 })
 
@@ -128,6 +161,10 @@ function onMeta() {
   if (!v) return
   onLoadedMetadata()
   applyTuning()
+  if (carryTime != null) {
+    if (carryTime < (v.duration || Infinity)) v.currentTime = carryTime
+    carryTime = null
+  }
   emit('meta', { width: v.videoWidth, height: v.videoHeight, duration: duration.value })
 }
 

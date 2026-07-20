@@ -8,6 +8,8 @@
   >
     <MainPromptInput :node="node" />
 
+    <StagePresetBar v-if="node && !hideRun" :node="node" />
+
     <ImageReferences v-if="!hideContext && state.variant !== 'loader'" :node="node" />
 
     <section
@@ -117,8 +119,6 @@
     </div>
 
     <CustomParamsSection v-if="node && !hideRun" :state="state" :node="node" />
-
-    <StagePresetBar v-if="node && !hideRun" :node="node" />
 
     <div v-if="showServerSelect && !hideRun" class="ctv:flex ctv:items-center ctv:gap-1.5">
       <span class="ctv:shrink-0 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:opacity-60">

@@ -50,7 +50,7 @@
           :title="assetTooltip(asset)"
           @click="selectAsset(asset)"
         >
-          <video
+          <ProxiedVideo
             v-if="mediaType === 'video'"
             :src="asset.payload_url"
             muted
@@ -118,6 +118,7 @@
 <script setup lang="ts">
 import type { LGraphNode } from '@/lib/comfyApp'
 import ModelThumb from '@/components/widgets/ModelThumb.vue'
+import ProxiedVideo from '@/components/widgets/ProxiedVideo.vue'
 import StageCard from '@/components/stages/StageCard.vue'
 import { assetTooltipOf as assetTooltip, useAssetLoaderCard } from '@/composables/stages/useAssetLoaderCard'
 import type { StageState } from '@/stores/stageStore'
