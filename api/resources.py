@@ -56,6 +56,16 @@ def adopt_kind(kind: str) -> None:
         )
 
 
+def resource_file(kind: str, filename: str) -> Path | None:
+    for row in storage.list_resources(kind):
+        if row['filename'] == filename:
+            p = _input_dir() / row['subfolder'] / row['filename']
+            if p.is_file():
+                return p
+    p = resource_dir(kind) / filename
+    return p if p.is_file() else None
+
+
 def decorate(row: dict) -> dict:
     path = _input_dir() / row['subfolder'] / row['filename']
     return {

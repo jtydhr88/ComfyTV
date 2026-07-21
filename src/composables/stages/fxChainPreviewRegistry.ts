@@ -114,8 +114,7 @@ export class ChainBlitRenderer implements ChainRendererLike {
 
 function lutViewUrl(name: string): string {
   if (!name) return ''
-  return `/view?filename=${encodeURIComponent(name)}`
-    + `&subfolder=${encodeURIComponent('comfytv/luts')}&type=input`
+  return `/comfytv/luts/${encodeURIComponent(name)}`
 }
 
 export const CHAIN_PREVIEW_STAGES: Record<string, ChainStageDef> = {

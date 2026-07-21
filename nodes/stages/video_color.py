@@ -179,18 +179,9 @@ class VideoCurvesStage(io.ComfyNode):
         return _fx_passthrough(video, fx_spec)
 
 
-def _lut_dir():
-    import folder_paths
-    from pathlib import Path
-    d = Path(folder_paths.get_input_directory()) / 'comfytv' / 'luts'
-    d.mkdir(parents=True, exist_ok=True)
-    return d
-
-
-def list_lut_files() -> list:
-    exts = {'.cube', '.3dl', '.dat', '.m3d', '.csp', '.png'}
-    return sorted(p.name for p in _lut_dir().iterdir()
-                  if p.suffix.lower() in exts) if _lut_dir().exists() else []
+def _lut_path(name):
+    from ...api.resources import resource_file
+    return resource_file('lut', name)
 
 
 class VideoLUTStage(io.ComfyNode):
@@ -203,7 +194,7 @@ class VideoLUTStage(io.ComfyNode):
             category="ComfyTV/VideoFX",
             inputs=[
                 *_standard_stage_inputs(),
-                _hidden_str("lut_file", "", "file name inside input/comfytv/luts"),
+                _hidden_str("lut_file", "", "file name from the LUT library"),
                 _hidden_combo("interp", ['tetrahedral', 'trilinear', 'nearest',
                                          'pyramid', 'prism'], 'tetrahedral'),
                 COMFYTV_VIDEO.Input("video", optional=True),
@@ -219,9 +210,9 @@ class VideoLUTStage(io.ComfyNode):
         name = os.path.basename((lut_file or '').strip())
         if not name:
             return _fx_identity(video)
-        path = _lut_dir() / name
-        if not path.exists():
-            raise RuntimeError(f"Video LUT: {name!r} not found in input/comfytv/luts.")
+        path = _lut_path(name)
+        if path is None:
+            raise RuntimeError(f"Video LUT: {name!r} not found in the LUT library.")
         esc = str(path).replace('\\', '/').replace(':', r'\:')
         if path.suffix.lower() == '.png':
             raise RuntimeError("Video LUT: Hald .png LUTs need a second input — "

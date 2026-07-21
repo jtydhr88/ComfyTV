@@ -55963,7 +55963,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-DPfuphfn.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-2PG2KnqZ.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -106356,7 +106356,7 @@ class VideoPikRenderer extends FxPreviewRenderer {
     });
   }
 }
-const videoTransformFrag = "#version 300 es\nprecision highp float;\n\nuniform sampler2D u_image0;\nuniform vec2 u_resolution;\nuniform float u_float0;\nuniform float u_float1;\nuniform float u_float2;\nuniform float u_float3;\nuniform float u_float4;\nuniform float u_float5;\n\nin vec2 v_texCoord;\nout vec4 fragColor;\n\nvoid main() {\n    float w = u_resolution.x;\n    float h = u_resolution.y;\n    float px = v_texCoord.x * (w - 1.0);\n    float py = (1.0 - v_texCoord.y) * (h - 1.0);\n    float sx = u_float0 * px + u_float1 * py + u_float2;\n    float sy = u_float3 * px + u_float4 * py + u_float5;\n    if (sx < 0.0 || sy < 0.0 || sx > w - 1.0 || sy > h - 1.0) {\n        fragColor = vec4(0.0, 0.0, 0.0, 1.0);\n        return;\n    }\n    vec2 uv = vec2((sx + 0.5) / w, 1.0 - (sy + 0.5) / h);\n    fragColor = vec4(texture(u_image0, uv).rgb, 1.0);\n}\n";
+const videoTransformFrag = "#version 300 es\r\nprecision highp float;\r\n\r\nuniform sampler2D u_image0;\r\nuniform vec2 u_resolution;\r\nuniform float u_float0;\r\nuniform float u_float1;\r\nuniform float u_float2;\r\nuniform float u_float3;\r\nuniform float u_float4;\r\nuniform float u_float5;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nvoid main() {\r\n    float w = u_resolution.x;\r\n    float h = u_resolution.y;\r\n    float px = v_texCoord.x * (w - 1.0);\r\n    float py = (1.0 - v_texCoord.y) * (h - 1.0);\r\n    float sx = u_float0 * px + u_float1 * py + u_float2;\r\n    float sy = u_float3 * px + u_float4 * py + u_float5;\r\n    if (sx < 0.0 || sy < 0.0 || sx > w - 1.0 || sy > h - 1.0) {\r\n        fragColor = vec4(0.0, 0.0, 0.0, 1.0);\r\n        return;\r\n    }\r\n    vec2 uv = vec2((sx + 0.5) / w, 1.0 - (sy + 0.5) / h);\r\n    fragColor = vec4(texture(u_image0, uv).rgb, 1.0);\r\n}\r\n";
 function matMul(a, b2) {
   const out = new Array(9).fill(0);
   for (let r = 0; r < 3; r++) {
@@ -106558,7 +106558,7 @@ class ChainBlitRenderer {
 }
 function lutViewUrl(name) {
   if (!name) return "";
-  return `/view?filename=${encodeURIComponent(name)}&subfolder=${encodeURIComponent("comfytv/luts")}&type=input`;
+  return `/comfytv/luts/${encodeURIComponent(name)}`;
 }
 const CHAIN_PREVIEW_STAGES = {
   "ComfyTV.VideoColorStage": {
@@ -127797,7 +127797,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-CfvPp2D3.mjs");
+    const { STLLoader } = await import("./STLLoader-R0Kx8gRj.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -127805,7 +127805,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-BU5WZppG.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-DKPqz48M.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -165184,7 +165184,7 @@ const _sfc_main$l = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const PIKStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["__scopeId", "data-v-947bf2ec"]]);
+const PIKStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["__scopeId", "data-v-ada0536a"]]);
 const _hoisted_1$m = {
   key: 0,
   class: "ctv:flex ctv:items-center ctv:gap-2 ctv:text-2xs ctv:text-muted-foreground"
@@ -165404,7 +165404,7 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const KeyerStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["__scopeId", "data-v-c7d1d8fd"]]);
+const KeyerStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["__scopeId", "data-v-24f370b9"]]);
 const _hoisted_1$l = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs ctv:text-muted-foreground ctv:cursor-pointer" };
 const _hoisted_2$i = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
 const _hoisted_3$i = {
@@ -170259,4 +170259,4 @@ export {
   Box3 as y,
   UnsignedShortType as z
 };
-//# sourceMappingURL=main-CqQmalPg.mjs.map
+//# sourceMappingURL=main-E4blGWV4.mjs.map

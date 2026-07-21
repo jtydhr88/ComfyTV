@@ -116,6 +116,26 @@ class TestLUTBranches:
         _vfx('VideoLUTStage').execute(project_id='p1',
                                       lut_file='identity.cube', video=clip)
 
+    def test_adopted_lut_in_legacy_dir_resolves(self, clip):
+        import folder_paths
+        from ComfyTV import storage
+        from ComfyTV.nodes.stages.common import unpack_fx_video
+        d = Path(folder_paths.get_input_directory()) / 'comfytv-luts'
+        d.mkdir(parents=True, exist_ok=True)
+        cube = d / 'legacy.cube'
+        lines = ['LUT_3D_SIZE 2']
+        for b in (0.0, 1.0):
+            for g in (0.0, 1.0):
+                for r in (0.0, 1.0):
+                    lines.append(f'{r:.1f} {g:.1f} {b:.1f}')
+        cube.write_text('\n'.join(lines) + '\n', encoding='utf-8')
+        storage.register_resource('lut', 'legacy.cube', 'comfytv-luts',
+                                  size=cube.stat().st_size, sha256='t')
+        out = _vfx('VideoLUTStage').execute(project_id='p1',
+                                            lut_file='legacy.cube', video=clip)
+        _url, entries = unpack_fx_video(out.values[0])
+        assert 'comfytv-luts' in entries[-1]['specs'][0][1]
+
 
 class TestBlurBranches:
     def test_box(self, clip):
@@ -517,6 +537,32 @@ class TestLutRoutes:
         assert (await resp.json())['name'] == 'route_test.cube'
         resp = await client.get('/comfytv/luts')
         assert 'route_test.cube' in (await resp.json())['luts']
+
+    async def test_serve_lut_file_by_name(self, client):
+        fd = FormData()
+        fd.add_field('file', b'LUT_3D_SIZE 2\n', filename='serve_test.cube')
+        resp = await client.post('/comfytv/luts', data=fd)
+        assert resp.status == 200
+        resp = await client.get('/comfytv/luts/serve_test.cube')
+        assert resp.status == 200
+        assert (await resp.read()).startswith(b'LUT_3D_SIZE')
+
+    async def test_serve_lut_from_legacy_subfolder(self, client):
+        import folder_paths
+        from ComfyTV import storage
+        d = Path(folder_paths.get_input_directory()) / 'comfytv-luts'
+        d.mkdir(parents=True, exist_ok=True)
+        (d / 'route_legacy.cube').write_text('LUT_3D_SIZE 2\n',
+                                            encoding='utf-8')
+        storage.register_resource('lut', 'route_legacy.cube', 'comfytv-luts',
+                                  size=14, sha256='t2')
+        resp = await client.get('/comfytv/luts/route_legacy.cube')
+        assert resp.status == 200
+        assert (await resp.read()).startswith(b'LUT_3D_SIZE')
+
+    async def test_serve_lut_missing_404(self, client):
+        resp = await client.get('/comfytv/luts/definitely-missing.cube')
+        assert resp.status == 404
 
     async def test_upload_bad_extension(self, client):
         fd = FormData()
