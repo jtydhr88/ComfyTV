@@ -262,7 +262,7 @@ class TestCompositeMaskedImage:
         mask = self._write_mask(fs)
 
         annotated = lc._composite_masked_image(url, mask)
-        assert annotated.startswith("painter/comfytv-masked-")
+        assert annotated.startswith("comfytv/painter/comfytv-masked-")
         assert annotated.endswith(".png [input]")
 
         saved = Image.open(fs / "input" / annotated[: -len(" [input]")])

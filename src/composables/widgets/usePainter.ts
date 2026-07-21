@@ -591,7 +591,8 @@ export function usePainter(options: UsePainterOptions) {
       return ''
     }
 
-    const annotated = `painter/${uploaded.name} [input]`
+    const sub = uploaded.subfolder ? `${uploaded.subfolder}/` : ''
+    const annotated = `${sub}${uploaded.name} [input]`
     writeMaskWidget(annotated)
     isDirty.value = false
     return annotated

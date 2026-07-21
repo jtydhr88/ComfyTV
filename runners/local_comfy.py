@@ -103,11 +103,11 @@ def _composite_masked_image(image_url: str, mask_annotated: str) -> str:
         alpha = alpha.resize(rgb.size, Image.Resampling.BILINEAR)
     rgb.putalpha(alpha)
 
-    out_dir = Path(folder_paths.get_input_directory()) / "painter"
+    out_dir = Path(folder_paths.get_input_directory()) / "comfytv" / "painter"
     out_dir.mkdir(parents=True, exist_ok=True)
     name = f"comfytv-masked-{uuid.uuid4().hex[:8]}.png"
     rgb.save(out_dir / name, format="PNG", compress_level=4)
-    return f"painter/{name} [input]"
+    return f"comfytv/painter/{name} [input]"
 
 
 def _cast(value: Any, cast: str | None) -> Any:
