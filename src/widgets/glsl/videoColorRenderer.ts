@@ -7,6 +7,10 @@ import {
   type Rgb,
   type VideoColorParams,
 } from '@/composables/stages/videoColorMath'
+import {
+  fxSourceSize,
+  type FxPreviewSource,
+} from '@/widgets/glsl/fxPreviewSource'
 
 const MIN_SAMPLE_W = 48
 const MIN_SAMPLE_H = 27
@@ -30,7 +34,7 @@ export class VideoColorRenderer {
   }
 
   private sampleFrameMin(
-    video: HTMLVideoElement,
+    video: FxPreviewSource,
     params: Partial<VideoColorParams>,
   ): Rgb {
     if (!levelsNeedsFrameMin(params)) return [0, 0, 0]
@@ -54,12 +58,11 @@ export class VideoColorRenderer {
   }
 
   renderToCanvas(
-    video: HTMLVideoElement,
+    video: FxPreviewSource,
     params: Partial<VideoColorParams>,
     target: HTMLCanvasElement,
   ): boolean {
-    const w = Math.max(2, video.videoWidth)
-    const h = Math.max(2, video.videoHeight)
+    const { w, h } = fxSourceSize(video)
 
     try {
       if (!this.ready) {

@@ -72,6 +72,8 @@ def time_remap(view_url: str, speed_keyframes, *, smooth_fps: int = 0,
         enc.width, enc.height = w, h
         enc.pix_fmt = 'yuv420p'
         enc.codec_context.time_base = _OUT_TB
+        from .media_filter import copy_color_tags
+        copy_color_tags(in_v.codec_context, enc.codec_context)
 
         decoder = inp.decode(in_v)
         cur_frame = None
@@ -137,6 +139,8 @@ def frame_hold(view_url: str, *, first_frame: int = 0, increment: int = 0,
         enc.width, enc.height = w, h
         enc.pix_fmt = 'yuv420p'
         enc.codec_context.time_base = _OUT_TB
+        from .media_filter import copy_color_tags
+        copy_color_tags(in_v.codec_context, enc.codec_context)
 
         decoder = inp.decode(in_v)
         cur = None

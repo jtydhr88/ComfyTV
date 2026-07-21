@@ -66,35 +66,35 @@ class TestColorBranches:
     def test_temperature_only(self, clip):
         _vfx('VideoColorStage').execute(project_id='p1', temperature=8000, video=clip)
 
-    def test_no_video_emits_spec_only(self):
-        import json
-        out = _vfx('VideoColorStage').execute(project_id='p1', exposure=1.0)
-        assert out.values[0] == ""
-        assert json.loads(out.values[1])['domain'] == 'video'
+    def test_no_video_rejected(self):
+        with pytest.raises(RuntimeError, match="upstream video"):
+            _vfx('VideoColorStage').execute(project_id='p1', exposure=1.0)
 
 
 class TestCurvesBranches:
-    def test_bad_points_json_rejected(self, clip):
-        with pytest.raises(RuntimeError, match="no curve"):
-            _vfx('VideoCurvesStage').execute(project_id='p1',
-                                             master_pts='not json', video=clip)
+    def test_bad_points_json_is_identity(self, clip):
+        out = _vfx('VideoCurvesStage').execute(project_id='p1',
+                                               master_pts='not json',
+                                               video=clip)
+        assert out.values[0] == clip
 
-    def test_single_point_ignored(self, clip):
-        with pytest.raises(RuntimeError, match="no curve"):
-            _vfx('VideoCurvesStage').execute(project_id='p1',
-                                             master_pts='[[0.5,0.5]]', video=clip)
+    def test_single_point_is_identity(self, clip):
+        out = _vfx('VideoCurvesStage').execute(project_id='p1',
+                                               master_pts='[[0.5,0.5]]',
+                                               video=clip)
+        assert out.values[0] == clip
 
-    def test_points_collapsing_to_one_rejected(self, clip):
-        with pytest.raises(RuntimeError, match="no curve"):
-            _vfx('VideoCurvesStage').execute(project_id='p1',
-                                             master_pts='[[1.2,0.3],[1.5,0.9]]',
-                                             video=clip)
+    def test_points_collapsing_to_one_is_identity(self, clip):
+        out = _vfx('VideoCurvesStage').execute(project_id='p1',
+                                               master_pts='[[1.2,0.3],[1.5,0.9]]',
+                                               video=clip)
+        assert out.values[0] == clip
 
 
 class TestLUTBranches:
-    def test_no_file(self, clip):
-        with pytest.raises(RuntimeError, match="pick or upload"):
-            _vfx('VideoLUTStage').execute(project_id='p1', video=clip)
+    def test_no_file_is_identity(self, clip):
+        out = _vfx('VideoLUTStage').execute(project_id='p1', video=clip)
+        assert out.values[0] == clip
 
     def test_missing_file(self, clip):
         with pytest.raises(RuntimeError, match="not found"):

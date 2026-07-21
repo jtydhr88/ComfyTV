@@ -1,9 +1,9 @@
 import { useGLSLRenderer } from '@/widgets/glsl/useGLSLRenderer'
-import videoCurvesFrag from '@/widgets/glsl/shaders/videoCurves.frag?raw'
+import videoTransformFrag from '@/widgets/glsl/shaders/videoTransform.frag?raw'
 import {
-  buildCurvesLuts,
-  type VideoCurvesParams,
-} from '@/composables/stages/videoCurvesMath'
+  transformInverse,
+  type VideoTransformParams,
+} from '@/composables/stages/videoTransformMath'
 import {
   fxSourceSize,
   type FxPreviewSource,
@@ -11,44 +11,24 @@ import {
 
 const RENDER_CONFIG = {
   maxInputs: 1,
-  maxFloatUniforms: 1,
+  maxFloatUniforms: 6,
   maxIntUniforms: 1,
   maxBoolUniforms: 1,
-  maxCurves: 3,
+  maxCurves: 0,
 }
 
-export class VideoCurvesRenderer {
+export class VideoTransformRenderer {
   private renderer = useGLSLRenderer(RENDER_CONFIG)
   private ready = false
   private _error: string | null = null
-  private lutKey: string | null = null
 
   get error(): string | null {
     return this._error
   }
 
-  private uploadLuts(params: Partial<VideoCurvesParams>): void {
-    const key = JSON.stringify([
-      params.preset ?? 'none',
-      params.master ?? '',
-      params.red ?? '',
-      params.green ?? '',
-      params.blue ?? '',
-    ])
-    if (key === this.lutKey) return
-    const luts = buildCurvesLuts(params)
-    const channels = [luts.red, luts.green, luts.blue]
-    channels.forEach((lut, i) => {
-      const data = new Float32Array(256)
-      for (let j = 0; j < 256; j++) data[j] = lut[j] / 255
-      this.renderer.bindCurveTexture(i, data)
-    })
-    this.lutKey = key
-  }
-
   renderToCanvas(
     video: FxPreviewSource,
-    params: Partial<VideoCurvesParams>,
+    params: Partial<VideoTransformParams>,
     target: HTMLCanvasElement,
   ): boolean {
     const { w, h } = fxSourceSize(video)
@@ -62,7 +42,7 @@ export class VideoCurvesRenderer {
         this.ready = true
       }
 
-      const compiled = this.renderer.compileFragment(videoCurvesFrag)
+      const compiled = this.renderer.compileFragment(videoTransformFrag)
       if (!compiled.success) {
         this._error = compiled.log || 'Shader compilation failed'
         return false
@@ -71,7 +51,9 @@ export class VideoCurvesRenderer {
 
       this.renderer.setResolution(w, h)
       this.renderer.bindInputImage(0, video)
-      this.uploadLuts(params)
+      const inv = transformInverse(params, w, h)
+      const coeffs = inv ?? [1, 0, 0, 0, 1, 0, 0, 0, 1]
+      for (let i = 0; i < 6; i++) this.renderer.setFloatUniform(i, coeffs[i])
 
       this.renderer.render()
 
@@ -102,6 +84,5 @@ export class VideoCurvesRenderer {
   dispose(): void {
     this.renderer.dispose()
     this.ready = false
-    this.lutKey = null
   }
 }

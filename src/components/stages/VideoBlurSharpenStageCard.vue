@@ -34,6 +34,7 @@
     <StageCard
       :state="state"
       :node="node"
+      hide-run-button
       :on-run-request="onRunRequest"
       :on-cancel-request="onCancelRequest"
       :on-disconnect="onDisconnect"
@@ -52,7 +53,8 @@ import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
-import { useVideoBlurPreview } from '@/composables/stages/useVideoBlurPreview'
+import { useChainedFxPreview } from '@/composables/stages/useChainedFxPreview'
+import { VideoBlurRenderer } from '@/widgets/glsl/videoBlurRenderer'
 import type { VideoBlurMode, VideoBlurParams } from '@/composables/stages/videoBlurMath'
 import { useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
 
@@ -93,10 +95,12 @@ function previewParams(): Partial<VideoBlurParams> {
   }
 }
 
-const { supported } = useVideoBlurPreview({
+const { supported } = useChainedFxPreview({
   videoEl: previewVideoEl,
   canvasEl: previewCanvas,
   nodeId: String(props.node.id),
+  node: props.node,
+  createRenderer: () => new VideoBlurRenderer(),
   params: previewParams,
 })
 </script>

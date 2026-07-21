@@ -1610,14 +1610,8 @@
   },
   "fxChain": {
     "title": "FX Chain",
-    "empty": "Connect fx_spec outputs from FX nodes to build a chain",
-    "moveUp": "Move up",
-    "moveDown": "Move down",
-    "unknown": "Unknown FX",
-    "domain": {
-      "video": "Video",
-      "audio": "Audio"
-    }
+    "empty": "Chain FX nodes along the video wire into this node",
+    "noPreview": "no live preview"
   },
   "fxPreview": {
     "run": "Preview clip",
@@ -1631,6 +1625,7 @@
     "adjustThenRun": "Adjust parameters, then Run",
     "fullscreen": "Full size",
     "exitFullscreen": "Exit full size",
+    "chainMode": "Adjust freely — an FX Chain node downstream renders once",
     "makeProxy": "PROXY?",
     "makeProxyHint": "Large source — generate a lightweight proxy for smooth preview (Run still uses the original)",
     "needsTwoInputs": "Wire two videos into A and B",

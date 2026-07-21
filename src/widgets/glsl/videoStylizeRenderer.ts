@@ -7,6 +7,10 @@ import {
   stylizeUsesTemporalNoise,
   type VideoStylizeParams,
 } from '@/composables/stages/videoStylizeMath'
+import {
+  fxSourceSize,
+  type FxPreviewSource,
+} from '@/widgets/glsl/fxPreviewSource'
 
 const RENDER_CONFIG = {
   maxInputs: 2,
@@ -40,12 +44,11 @@ export class VideoStylizeRenderer {
   }
 
   renderToCanvas(
-    video: HTMLVideoElement,
+    video: FxPreviewSource,
     params: Partial<VideoStylizeParams>,
     target: HTMLCanvasElement,
   ): boolean {
-    const w = Math.max(2, video.videoWidth)
-    const h = Math.max(2, video.videoHeight)
+    const { w, h } = fxSourceSize(video)
 
     try {
       if (!this.ready) {

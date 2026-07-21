@@ -70,7 +70,22 @@ def fresh_output_path(suffix: str, subfolder: str = 'comfytv/video') -> Path:
     return out_dir / f"{uuid.uuid4().hex[:12]}{suffix}"
 
 
+def _strip_fx_envelope(view_url):
+    if not isinstance(view_url, str) or not view_url.lstrip().startswith('{'):
+        return view_url
+    import json
+    try:
+        data = json.loads(view_url)
+    except (ValueError, TypeError):
+        return view_url
+    inner = data.get('__fxvideo__') if isinstance(data, dict) else None
+    if isinstance(inner, dict) and inner.get('url'):
+        return str(inner['url'])
+    return view_url
+
+
 def localize(view_url: str) -> Path:
+    view_url = _strip_fx_envelope(view_url)
     p = view_url_to_path(view_url)
     if p is not None:
         return p
@@ -233,6 +248,8 @@ def trim_video_precise(view_url: str, start_s: float, end_s: float) -> str:
         out_v.height = h
         out_v.pix_fmt = 'yuv420p'
         out_v.codec_context.time_base = out_tb
+        from .media_filter import copy_color_tags
+        copy_color_tags(in_v.codec_context, out_v.codec_context)
         out_a = _new_aac_stream(outp) if inp.streams.audio else None
 
         if in_v.time_base:
@@ -306,6 +323,8 @@ def crop_video(view_url: str, x: int, y: int, w: int, h: int) -> str:
         out_v.width = w
         out_v.height = h
         out_v.pix_fmt = 'yuv420p'
+        from .media_filter import tag_bt709
+        tag_bt709(out_v.codec_context)
 
         in_a = inp.streams.audio[0] if inp.streams.audio else None
         out_a = outp.add_stream_from_template(in_a) if in_a is not None else None
@@ -315,6 +334,8 @@ def crop_video(view_url: str, x: int, y: int, w: int, h: int) -> str:
                 for frame in packet.decode():
                     img = frame.to_image().crop((x, y, x + w, y + h))
                     new_frame = av.VideoFrame.from_image(img)
+                    new_frame = new_frame.reformat(format='yuv420p',
+                                                   dst_colorspace='ITU709')
                     new_frame.pts = frame.pts
                     new_frame.time_base = frame.time_base
                     for pkt in out_v.encode(new_frame):
@@ -345,6 +366,8 @@ def resize_video(view_url: str, w: int, h: int) -> str:
         out_v.width = w
         out_v.height = h
         out_v.pix_fmt = 'yuv420p'
+        from .media_filter import copy_color_tags
+        copy_color_tags(in_v.codec_context, out_v.codec_context)
 
         in_a = inp.streams.audio[0] if inp.streams.audio else None
         out_a = outp.add_stream_from_template(in_a) if in_a is not None else None
@@ -494,6 +517,8 @@ def speed_video(view_url: str, factor: float, reverse: bool = False,
         out_v.height = h
         out_v.pix_fmt = 'yuv420p'
         out_v.codec_context.time_base = out_tb
+        from .media_filter import copy_color_tags
+        copy_color_tags(in_v.codec_context, out_v.codec_context)
         out_a = _new_aac_stream(outp) if inp.streams.audio else None
 
         try:
@@ -585,6 +610,8 @@ def transpose_video(view_url: str, rotate_deg: int = 0,
         out_v.width = w
         out_v.height = h
         out_v.pix_fmt = 'yuv420p'
+        from .media_filter import tag_bt709
+        tag_bt709(out_v.codec_context)
 
         in_a = inp.streams.audio[0] if inp.streams.audio else None
         out_a = outp.add_stream_from_template(in_a) if in_a is not None else None
@@ -602,6 +629,8 @@ def transpose_video(view_url: str, rotate_deg: int = 0,
                         arr = arr[::-1]
                     arr = np.ascontiguousarray(arr[:h, :w])
                     nf = av.VideoFrame.from_ndarray(arr, format='rgb24')
+                    nf = nf.reformat(format='yuv420p',
+                                     dst_colorspace='ITU709')
                     nf.pts = frame.pts
                     nf.time_base = frame.time_base
                     for pkt in out_v.encode(nf):
@@ -788,6 +817,10 @@ def concat_videos(view_urls: list, progress=None) -> str:
             with av.open(str(src)) as inp:
                 in_v = inp.streams.video[0]
                 in_a = inp.streams.audio[0] if inp.streams.audio else None
+                if i == 0:
+                    from .media_filter import copy_color_tags
+                    copy_color_tags(in_v.codec_context,
+                                    out_v.codec_context)
                 try:
                     frame_dur = 1.0 / float(in_v.average_rate)
                 except (TypeError, ZeroDivisionError):

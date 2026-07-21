@@ -1,7 +1,15 @@
 <template>
   <FxCardShell :node="node">
     <template #player>
-      <VideoPlayerLite :source-video-url="sourceVideoUrl" @meta="(m) => duration = m.duration" />
+      <VideoPlayerLite ref="playerRef" :source-video-url="sourceVideoUrl" @meta="(m) => duration = m.duration">
+        <template #overlay>
+          <canvas
+            v-show="supported"
+            ref="previewCanvas"
+            class="ctv:absolute ctv:inset-0 ctv:size-full ctv:object-contain ctv:pointer-events-none"
+          />
+        </template>
+      </VideoPlayerLite>
     </template>
 
     <div class="ctv:text-2xs ctv:text-muted-foreground ctv:tracking-wide">{{ $t('fx.dragHint') }}</div>
@@ -53,12 +61,13 @@
       <span v-if="!sourceVideoUrl" class="ctv:text-muted-foreground">{{ $t('videoTrim.noInputVideo') }}</span>
       <span v-else-if="state.running" class="ctv:text-muted-foreground">{{ $t('fx.processing') }}</span>
       <span v-else-if="state.output" class="ctv:text-success-background">{{ $t('fx.done') }}</span>
-      <span v-else class="ctv:text-muted-foreground">{{ $t('fx.adjustThenRun') }}</span>
+      <span v-else class="ctv:text-muted-foreground">{{ $t(hasSideInputs ? 'fx.adjustThenRun' : 'fx.chainMode') }}</span>
     </div>
 
     <StageCard
       :state="state"
       :node="node"
+      :hide-run-button="!hasSideInputs"
       :on-run-request="onRunRequest"
       :on-cancel-request="onCancelRequest"
       :on-disconnect="onDisconnect"
@@ -78,6 +87,8 @@ import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'
 import KeyframeTimeline from '@/components/widgets/fx/KeyframeTimeline.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
+import { useChainedFxPreview } from '@/composables/stages/useChainedFxPreview'
+import { VideoTransformRenderer } from '@/widgets/glsl/videoTransformRenderer'
 import { useKeyframes } from '@/composables/widgets/useKeyframes'
 import { useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
 
@@ -100,6 +111,8 @@ type TransformKey = {
 }
 
 const sourceVideoUrl = computed(() => pickSourceImageUrl(props.state.inputs, 'video'))
+const hasSideInputs = computed(() =>
+  props.state.inputs.some((i) => i.slot === 'track' && i.source !== 'empty'))
 const posX = useNumWidget(props.node, 'pos_x', 0)
 const posY = useNumWidget(props.node, 'pos_y', 0)
 const scale = useNumWidget(props.node, 'scale', 1)
@@ -147,5 +160,24 @@ const {
     rotation: rotation.value,
   }),
   followMove: true,
+})
+
+const playerRef = ref<InstanceType<typeof VideoPlayerLite> | null>(null)
+const videoEl = computed<HTMLVideoElement | null>(() => playerRef.value?.videoEl ?? null)
+const previewCanvas = ref<HTMLCanvasElement | null>(null)
+
+const { supported } = useChainedFxPreview({
+  videoEl,
+  canvasEl: previewCanvas,
+  nodeId: String(props.node.id),
+  node: props.node,
+  params: () => ({
+    posX: posX.value,
+    posY: posY.value,
+    scale: scale.value,
+    rotation: rotation.value,
+    skewX: skewX.value,
+  }),
+  createRenderer: () => new VideoTransformRenderer(),
 })
 </script>

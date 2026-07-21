@@ -27,12 +27,13 @@
       <span v-if="!sourceVideoUrl" class="ctv:text-muted-foreground">{{ $t('videoTrim.noInputVideo') }}</span>
       <span v-else-if="state.running" class="ctv:text-muted-foreground">{{ $t('fx.processing') }}</span>
       <span v-else-if="state.output" class="ctv:text-success-background">{{ $t('fx.done') }}</span>
-      <span v-else class="ctv:text-muted-foreground">{{ $t('fx.adjustThenRun') }}</span>
+      <span v-else class="ctv:text-muted-foreground">{{ $t('fx.chainMode') }}</span>
     </div>
 
     <StageCard
       :state="state"
       :node="node"
+      hide-run-button
       :on-run-request="onRunRequest"
       :on-cancel-request="onCancelRequest"
       :on-disconnect="onDisconnect"
@@ -51,7 +52,8 @@ import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
-import { useVideoStylizePreview } from '@/composables/stages/useVideoStylizePreview'
+import { useChainedFxPreview } from '@/composables/stages/useChainedFxPreview'
+import { VideoStylizeRenderer } from '@/widgets/glsl/videoStylizeRenderer'
 import type { StylizeEffect, VideoStylizeParams } from '@/composables/stages/videoStylizeMath'
 import { useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
 
@@ -95,10 +97,12 @@ function previewParams(): Partial<VideoStylizeParams> {
   }
 }
 
-const { supported } = useVideoStylizePreview({
+const { supported } = useChainedFxPreview({
   videoEl: previewVideoEl,
   canvasEl: previewCanvas,
   nodeId: String(props.node.id),
+  node: props.node,
+  createRenderer: () => new VideoStylizeRenderer(),
   params: previewParams,
 })
 </script>

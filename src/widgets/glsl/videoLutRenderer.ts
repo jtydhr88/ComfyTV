@@ -3,6 +3,10 @@ import {
   resolvePreviewInterp,
   type ParsedLut,
 } from '@/composables/stages/videoLutMath'
+import {
+  fxSourceSize,
+  type FxPreviewSource,
+} from '@/widgets/glsl/fxPreviewSource'
 
 export interface VideoLutRenderParams {
   lut: ParsedLut | null
@@ -137,12 +141,11 @@ export class VideoLutRenderer {
   }
 
   renderToCanvas(
-    video: HTMLVideoElement,
+    video: FxPreviewSource,
     params: VideoLutRenderParams,
     target: HTMLCanvasElement,
   ): boolean {
-    const w = Math.max(2, video.videoWidth)
-    const h = Math.max(2, video.videoHeight)
+    const { w, h } = fxSourceSize(video)
 
     try {
       if (!this.ready) {

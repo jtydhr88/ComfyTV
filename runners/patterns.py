@@ -214,6 +214,8 @@ def ken_burns_video(image_url: str, *, width: int = 1280, height: int = 720,
         enc.width, enc.height = w, h
         enc.pix_fmt = 'yuv420p'
         enc.codec_context.time_base = _OUT_TB
+        from .media_filter import tag_bt709
+        tag_bt709(enc.codec_context)
         for i in range(n):
             t = i / fps
             f = _shape_t(min(1.0, i / max(1, n - 1)), interp)
@@ -235,7 +237,7 @@ def ken_burns_video(image_url: str, *, width: int = 1280, height: int = 720,
                    * 255).byte().numpy()
             frame = av.VideoFrame.from_ndarray(
                 np.ascontiguousarray(rgb), format='rgb24')
-            frame = frame.reformat(format='yuv420p')
+            frame = frame.reformat(format='yuv420p', dst_colorspace='ITU709')
             frame.pts = int(round(t / _OUT_TB))
             frame.time_base = _OUT_TB
             for pkt in enc.encode(frame):
@@ -309,6 +311,8 @@ def generate_pattern_video(kind: str, *, width: int = 1280, height: int = 720,
         enc.width, enc.height = w, h
         enc.pix_fmt = 'yuv420p'
         enc.codec_context.time_base = _OUT_TB
+        from .media_filter import tag_bt709
+        tag_bt709(enc.codec_context)
         cached = None
         for i in range(n):
             t = i / fps
@@ -334,7 +338,7 @@ def generate_pattern_video(kind: str, *, width: int = 1280, height: int = 720,
                     ((c0 * (1 - mix) + c1 * mix) * 255).astype(np.uint8))
                 cached = rgb
             frame = av.VideoFrame.from_ndarray(rgb, format='rgb24')
-            frame = frame.reformat(format='yuv420p')
+            frame = frame.reformat(format='yuv420p', dst_colorspace='ITU709')
             frame.pts = int(round(t / _OUT_TB))
             frame.time_base = _OUT_TB
             for pkt in enc.encode(frame):

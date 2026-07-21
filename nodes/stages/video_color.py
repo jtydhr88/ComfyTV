@@ -1,6 +1,4 @@
 from ._common import *  # noqa: F401, F403
-from ...runners.media_filter import filter_video
-from ...runners.video_color_ops import hue_correct_video
 
 from .common.fx_helpers import (  # noqa: F401
     _need_video, _progress_cb, _f,
@@ -36,7 +34,7 @@ class VideoColorStage(io.ComfyNode):
                                  socketless=True, extra_dict={"hidden": True}),
                 COMFYTV_VIDEO.Input("video", optional=True),
             ],
-            outputs=[COMFYTV_VIDEO.Output("video"), COMFYTV_FXSPEC.Output("fx_spec")],
+            outputs=[COMFYTV_VIDEO.Output("video")],
             is_output_node=True,
             hidden=[io.Hidden.unique_id],
         )
@@ -87,15 +85,23 @@ class VideoColorStage(io.ComfyNode):
                 args += ':pl=1'
             specs.append(('colorbalance', args))
         if not specs:
-            raise RuntimeError("Video Color: everything is at neutral — adjust something first.")
-        fx_spec = build_fx_spec("ComfyTV.VideoColorStage", "Video Color",
-                                "video", specs)
-        if not (video or '').strip():
-            return _fx_spec_only(fx_spec)
-        payload = filter_video(video, specs, progress=_progress_cb(cls))
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id,
-                                extra_outputs=(fx_spec,))
+            return _fx_identity(video)
+        fx_spec = build_fx_spec(
+            "ComfyTV.VideoColorStage", "Video Color", "video", specs,
+            params={
+                'exposure': exposure, 'black': black,
+                'temperature': temperature, 'temp_mix': temp_mix,
+                'hue': hue, 'saturation': saturation, 'vibrance': vibrance,
+                'blackpoint': bp, 'whitepoint': wp,
+                'shadows_r': wheels['rs'], 'shadows_g': wheels['gs'],
+                'shadows_b': wheels['bs'],
+                'midtones_r': wheels['rm'], 'midtones_g': wheels['gm'],
+                'midtones_b': wheels['bm'],
+                'highlights_r': wheels['rh'], 'highlights_g': wheels['gh'],
+                'highlights_b': wheels['bh'],
+                'preserve_lightness': bool(preserve_lightness),
+            })
+        return _fx_passthrough(video, fx_spec)
 
 
 CURVES_PRESETS = ['none', 'color_negative', 'cross_process', 'darker',
@@ -143,7 +149,7 @@ class VideoCurvesStage(io.ComfyNode):
                 _hidden_str("blue_pts", ""),
                 COMFYTV_VIDEO.Input("video", optional=True),
             ],
-            outputs=[COMFYTV_VIDEO.Output("video"), COMFYTV_FXSPEC.Output("fx_spec")],
+            outputs=[COMFYTV_VIDEO.Output("video")],
             is_output_node=True,
             hidden=[io.Hidden.unique_id],
         )
@@ -161,16 +167,16 @@ class VideoCurvesStage(io.ComfyNode):
             if arg:
                 parts.append(f'{key}={arg}')
         if not parts:
-            raise RuntimeError("Video Curves: no curve set — bend a curve or pick a preset.")
+            return _fx_identity(video)
         specs = [('curves', ':'.join(parts))]
-        fx_spec = build_fx_spec("ComfyTV.VideoCurvesStage", "Video Curves",
-                                "video", specs)
-        if not (video or '').strip():
-            return _fx_spec_only(fx_spec)
-        payload = filter_video(video, specs, progress=_progress_cb(cls))
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id,
-                                extra_outputs=(fx_spec,))
+        fx_spec = build_fx_spec(
+            "ComfyTV.VideoCurvesStage", "Video Curves", "video", specs,
+            params={
+                'preset': preset, 'master_pts': master_pts,
+                'red_pts': red_pts, 'green_pts': green_pts,
+                'blue_pts': blue_pts,
+            })
+        return _fx_passthrough(video, fx_spec)
 
 
 def _lut_dir():
@@ -202,7 +208,7 @@ class VideoLUTStage(io.ComfyNode):
                                          'pyramid', 'prism'], 'tetrahedral'),
                 COMFYTV_VIDEO.Input("video", optional=True),
             ],
-            outputs=[COMFYTV_VIDEO.Output("video"), COMFYTV_FXSPEC.Output("fx_spec")],
+            outputs=[COMFYTV_VIDEO.Output("video")],
             is_output_node=True,
             hidden=[io.Hidden.unique_id],
         )
@@ -212,7 +218,7 @@ class VideoLUTStage(io.ComfyNode):
                 lut_file="", interp='tetrahedral', video=""):
         name = os.path.basename((lut_file or '').strip())
         if not name:
-            raise RuntimeError("Video LUT: pick or upload a LUT file first.")
+            return _fx_identity(video)
         path = _lut_dir() / name
         if not path.exists():
             raise RuntimeError(f"Video LUT: {name!r} not found in input/comfytv/luts.")
@@ -221,14 +227,10 @@ class VideoLUTStage(io.ComfyNode):
             raise RuntimeError("Video LUT: Hald .png LUTs need a second input — "
                                "convert to .cube, or use lut3d-compatible formats.")
         specs = [('lut3d', f"file={esc}:interp={interp}")]
-        fx_spec = build_fx_spec("ComfyTV.VideoLUTStage", "Video LUT",
-                                "video", specs)
-        if not (video or '').strip():
-            return _fx_spec_only(fx_spec)
-        payload = filter_video(video, specs, progress=_progress_cb(cls))
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id,
-                                extra_outputs=(fx_spec,))
+        fx_spec = build_fx_spec(
+            "ComfyTV.VideoLUTStage", "Video LUT", "video", specs,
+            params={'lut_file': name, 'interp': interp})
+        return _fx_passthrough(video, fx_spec)
 
 
 class HueCorrectStage(io.ComfyNode):
@@ -256,13 +258,18 @@ class HueCorrectStage(io.ComfyNode):
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                 curves="", sat_thrsh=0.0, luminance_mix=0.0, video=""):
-        _need_video(video, "Hue Correct")
-        payload = hue_correct_video(
-            video, curves, sat_thrsh=_f(sat_thrsh, 0, 1, 0.0),
-            luminance_mix=_f(luminance_mix, 0, 1, 0.0),
-            progress=_progress_cb(cls))
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        try:
+            parsed = json.loads(curves) if (curves or '').strip() else {}
+        except (ValueError, TypeError):
+            parsed = {}
+        if not isinstance(parsed, dict) or not any(
+                isinstance(v, list) and len(v) >= 2 for v in parsed.values()):
+            return _fx_identity(video)
+        fx_spec = build_torch_fx_spec(
+            "ComfyTV.HueCorrectStage", "Hue Correct", "video", "hue_correct",
+            {'curves': parsed, 'sat_thrsh': _f(sat_thrsh, 0, 1, 0.0),
+             'luminance_mix': _f(luminance_mix, 0, 1, 0.0)})
+        return _fx_passthrough(video, fx_spec)
 
 
 COLORFX_MODES = ['selectivecolor', 'chromashift', 'pseudocolor', 'elbg',
@@ -302,7 +309,7 @@ class ColorFXStage(io.ComfyNode):
                 _hidden_combo("cs_target", COLORSPACE_TARGETS, 'bt709'),
                 COMFYTV_VIDEO.Input("video", optional=True),
             ],
-            outputs=[COMFYTV_VIDEO.Output("video"), COMFYTV_FXSPEC.Output("fx_spec")],
+            outputs=[COMFYTV_VIDEO.Output("video")],
             is_output_node=True,
             hidden=[io.Hidden.unique_id],
         )
@@ -323,8 +330,7 @@ class ColorFXStage(io.ComfyNode):
                     any_zone = True
                     parts.append(f'{z}={v}')
             if not any_zone:
-                raise RuntimeError(
-                    "Color FX: all selective-color zones are zero — adjust one.")
+                return _fx_identity(video)
             specs = [('selectivecolor', ':'.join(parts))]
         elif mode == 'chromashift':
             rh = _f(shift_rh, -255, 255, 0.0)
@@ -332,7 +338,7 @@ class ColorFXStage(io.ComfyNode):
             bh = _f(shift_bh, -255, 255, 0.0)
             bv = _f(shift_bv, -255, 255, 0.0)
             if not any((rh, rv, bh, bv)):
-                raise RuntimeError("Color FX: all chroma shifts are zero.")
+                return _fx_identity(video)
             edge = 0 if shift_edge == 'smear' else 1
             specs = [('chromashift',
                       f'crh={int(rh)}:crv={int(rv)}:cbh={int(bh)}'
@@ -353,11 +359,17 @@ class ColorFXStage(io.ComfyNode):
             specs = [('grayworld', None)]
         else:
             raise RuntimeError(f"Color FX: unknown mode {mode!r}")
-        fx_spec = build_fx_spec("ComfyTV.ColorFXStage", "Color FX",
-                                "video", specs)
-        if not (video or '').strip():
-            return _fx_spec_only(fx_spec)
-        payload = filter_video(video, specs, progress=_progress_cb(cls))
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id,
-                                extra_outputs=(fx_spec,))
+        fx_spec = build_fx_spec(
+            "ComfyTV.ColorFXStage", "Color FX", "video", specs,
+            params={
+                'mode': mode, 'sc_method': sc_method,
+                **{f'sc_{z}': _f(kwargs.get(f'sc_{z}', 0.0), -1, 1, 0.0)
+                   for z in SELECTIVE_ZONES},
+                'shift_rh': shift_rh, 'shift_rv': shift_rv,
+                'shift_bh': shift_bh, 'shift_bv': shift_bv,
+                'shift_edge': shift_edge, 'pseudo_preset': pseudo_preset,
+                'pseudo_opacity': pseudo_opacity,
+                'elbg_colors': elbg_colors, 'elbg_steps': elbg_steps,
+                'cs_target': cs_target,
+            })
+        return _fx_passthrough(video, fx_spec)

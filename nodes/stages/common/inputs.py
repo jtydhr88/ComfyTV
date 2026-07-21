@@ -113,11 +113,3 @@ def _material_template(max_n: int = 4) -> 'io.Autogrow.TemplatePrefix':
         max=max_n,
     )
 
-
-def _fxspec_template(max_n: int = 6) -> 'io.Autogrow.TemplatePrefix':
-    return io.Autogrow.TemplatePrefix(
-        COMFYTV_FXSPEC.Input("fx_spec", optional=True),
-        prefix="fx_spec",
-        min=0,
-        max=max_n,
-    )

@@ -120,7 +120,7 @@
 
     <CustomParamsSection v-if="node && !hideRun" :state="state" :node="node" />
 
-    <div v-if="showServerSelect && !hideRun" class="ctv:flex ctv:items-center ctv:gap-1.5">
+    <div v-if="showServerSelect && !hideRun && !hideRunButton" class="ctv:flex ctv:items-center ctv:gap-1.5">
       <span class="ctv:shrink-0 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:opacity-60">
         {{ $t('servers.runOn') }}
       </span>
@@ -134,7 +134,7 @@
     </div>
 
     <button
-      v-if="!hideRun && state.variant !== 'loader' && state.variant !== 'transform' && !isPicker"
+      v-if="!hideRun && !hideRunButton && state.variant !== 'loader' && state.variant !== 'transform' && !isPicker"
       :class="['run-btn', state.running && 'is-cancel', runBtnClass]"
       :disabled="!state.running && !canRun"
       @click="state.running ? onCancel() : onRun()"
@@ -158,7 +158,7 @@
       </span>
     </div>
 
-    <section v-if="!hideOutput && state.kind !== 'audio-picker' && state.kind !== 'video-picker'" class="output ctv:flex-1 ctv:min-h-0 ctv:flex ctv:flex-col ctv:gap-1">
+    <section v-if="!hideOutput && !hideRunButton && state.kind !== 'audio-picker' && state.kind !== 'video-picker'" class="output ctv:flex-1 ctv:min-h-0 ctv:flex ctv:flex-col ctv:gap-1">
       <div :class="sectionLabel">{{ $t('stage.section.output', { type: state.outputType }) }}</div>
 
       <ValuePreview
@@ -174,7 +174,7 @@
       />
     </section>
 
-    <section v-if="!hideActions && state.output && stageActions.length" class="ctv:flex ctv:flex-col ctv:gap-1">
+    <section v-if="!hideActions && !hideRunButton && state.output && stageActions.length" class="ctv:flex ctv:flex-col ctv:gap-1">
       <button :class="contextToggle" :aria-expanded="!actionsCollapsed" @click="actionsCollapsed = !actionsCollapsed">
         <i :class="['pi', actionsCollapsed ? 'pi-chevron-right' : 'pi-chevron-down', 'ctv:w-2.5 ctv:text-2xs ctv:text-muted-foreground']" />
         <span :class="sectionLabel" class="ctv:mb-0">{{ $t('stage.section.actions') }}</span>
@@ -251,6 +251,7 @@ const props = defineProps<{
   hideOutput?: boolean
   hideActions?: boolean
   hideRun?: boolean
+  hideRunButton?: boolean
 }>()
 
 const {

@@ -38,8 +38,10 @@ def _windowed_process(view_url: str, back: int, fwd: int, emit_fn,
                 enc.height = tensor.shape[0] - (tensor.shape[0] % 2)
                 enc.pix_fmt = 'yuv420p'
                 enc.codec_context.time_base = _OUT_TB
+                from .media_filter import tag_bt709
+                tag_bt709(enc.codec_context)
             nf = _from_tensor(tensor[:enc.height, :enc.width, :3])
-            nf = nf.reformat(format='yuv420p')
+            nf = nf.reformat(format='yuv420p', dst_colorspace='ITU709')
             nf.pts = int(round(t / _OUT_TB))
             nf.time_base = _OUT_TB
             for pkt in enc.encode(nf):

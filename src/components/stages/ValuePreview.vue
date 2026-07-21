@@ -165,8 +165,8 @@
           <span class="ctv:truncate ctv:text-[11px] ctv:font-semibold ctv:text-base-foreground">
             {{ fxSpecInfo ? fxSpecInfo.label : $t('fxChain.unknown') }}
           </span>
-          <span v-if="fxSpecInfo" class="ctv:text-3xs ctv:font-mono ctv:text-muted-foreground">
-            {{ $t(`fxChain.domain.${fxSpecInfo.domain}`) }} · {{ fxSpecInfo.specCount }}
+          <span v-if="fxSpecInfo && fxSpecInfo.count > 1" class="ctv:text-3xs ctv:font-mono ctv:text-muted-foreground">
+            ×{{ fxSpecInfo.count }}
           </span>
         </div>
       </div>

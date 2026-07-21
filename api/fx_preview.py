@@ -35,14 +35,21 @@ def _node_output_args(out) -> tuple:
     return ()
 
 
-def _spec_from_stage(node_id: str, stage_cls, params: dict) -> dict:
-    from ..nodes.stages.common.fx_spec import parse_fx_spec
+def _spec_from_stage(node_id: str, stage_cls, params: dict,
+                     video: str) -> dict:
+    from ..nodes.stages.common.fx_spec import parse_fx_spec, unpack_fx_video
     kwargs = _filtered_exec_kwargs(stage_cls, params)
-    out = stage_cls.execute(video="", project_id="", **kwargs)
+    out = stage_cls.execute(video=video, project_id="", **kwargs)
     args = _node_output_args(out)
-    if len(args) < 2 or not isinstance(args[1], str):
-        raise RuntimeError("stage did not return an fx_spec output")
-    return parse_fx_spec(args[1], node_id)
+    if args and isinstance(args[0], str):
+        _url, entries = unpack_fx_video(args[0])
+        if entries:
+            entry = entries[-1]
+            return {'domain': entry.get('domain', 'video'),
+                    'specs': entry.get('specs', [])}
+    if len(args) >= 2 and isinstance(args[1], str) and args[1].strip():
+        return parse_fx_spec(args[1], node_id)
+    raise RuntimeError("stage did not return an fx spec")
 
 
 def _render_preview(video: str, data: dict, t: float, window: float) -> dict:
@@ -102,7 +109,7 @@ async def fx_preview(request: web.Request) -> web.Response:
         return web.json_response(
             {'error': f'unknown node_id {node_id!r}'}, status=404)
     try:
-        data = _spec_from_stage(node_id, stage_cls, params)
+        data = _spec_from_stage(node_id, stage_cls, params, video)
     except Exception as e:
         return web.json_response(
             {'error': f'{node_id} does not support clip preview: {e}'},

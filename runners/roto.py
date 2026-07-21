@@ -117,6 +117,8 @@ def roto_mask_video(ref_url: str, shape_keys, *, feather_px=0.0,
         enc.width, enc.height = w, h
         enc.pix_fmt = 'yuv420p'
         enc.codec_context.time_base = _OUT_TB
+        from .media_filter import tag_bt709
+        tag_bt709(enc.codec_context)
 
         cached = None
         for i in range(n_frames):
@@ -128,7 +130,7 @@ def roto_mask_video(ref_url: str, shape_keys, *, feather_px=0.0,
                 cached = np.ascontiguousarray(
                     np.repeat((m * 255).astype(np.uint8)[..., None], 3, axis=2))
             frame = av.VideoFrame.from_ndarray(cached, format='rgb24')
-            frame = frame.reformat(format='yuv420p')
+            frame = frame.reformat(format='yuv420p', dst_colorspace='ITU709')
             frame.pts = int(round(t / _OUT_TB))
             frame.time_base = _OUT_TB
             for pkt in enc.encode(frame):

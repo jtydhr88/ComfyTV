@@ -34,7 +34,7 @@ class VideoStylizeStage(io.ComfyNode):
                 _hidden_int("block", 8, 2, 64, "pixelize block size"),
                 COMFYTV_VIDEO.Input("video", optional=True),
             ],
-            outputs=[COMFYTV_VIDEO.Output("video"), COMFYTV_FXSPEC.Output("fx_spec")],
+            outputs=[COMFYTV_VIDEO.Output("video")],
             is_output_node=True,
             hidden=[io.Hidden.unique_id],
         )
@@ -64,14 +64,11 @@ class VideoStylizeStage(io.ComfyNode):
             ]
         else:
             raise RuntimeError(f"Video Stylize: unknown effect {effect!r}")
-        fx_spec = build_fx_spec("ComfyTV.VideoStylizeStage", "Video Stylize",
-                                "video", specs)
-        if not (video or '').strip():
-            return _fx_spec_only(fx_spec)
-        payload = filter_video(video, specs, progress=_progress_cb(cls))
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id,
-                                extra_outputs=(fx_spec,))
+        fx_spec = build_fx_spec(
+            "ComfyTV.VideoStylizeStage", "Video Stylize", "video", specs,
+            params={'effect': effect, 'strength': s,
+                    'block': min(64, max(2, int(block or 8)))})
+        return _fx_passthrough(video, fx_spec)
 
 
 class GlowStage(io.ComfyNode):
@@ -101,16 +98,14 @@ class GlowStage(io.ComfyNode):
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                 threshold=0.7, size=4.0, bloom_ratio=2.0, bloom_count=5,
                 gain=1.0, mix=1.0, video=""):
-        _need_video(video, "Glow")
-        payload = glow_video(
-            video, threshold=_f(threshold, 0, 0.99, 0.7),
-            size=_f(size, 0.5, 50, 4.0),
-            bloom_ratio=_f(bloom_ratio, 1.1, 4, 2.0),
-            bloom_count=min(8, max(1, int(bloom_count or 5))),
-            gain=_f(gain, 0, 8, 1.0), mix=_f(mix, 0, 1, 1.0),
-            progress=_progress_cb(cls))
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        fx_spec = build_torch_fx_spec(
+            "ComfyTV.GlowStage", "Glow", "video", "glow",
+            {'threshold': _f(threshold, 0, 0.99, 0.7),
+             'size': _f(size, 0.5, 50, 4.0),
+             'bloom_ratio': _f(bloom_ratio, 1.1, 4, 2.0),
+             'bloom_count': min(8, max(1, int(bloom_count or 5))),
+             'gain': _f(gain, 0, 8, 1.0), 'mix': _f(mix, 0, 1, 1.0)})
+        return _fx_passthrough(video, fx_spec)
 
 
 class GodRaysStage(io.ComfyNode):
@@ -143,16 +138,16 @@ class GodRaysStage(io.ComfyNode):
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                 translate_x=0.0, translate_y=0.0, scale=1.4, rotate_deg=0.0,
                 steps=5, decay=0.3, max_mode=False, mix=1.0, video=""):
-        _need_video(video, "God Rays")
-        payload = god_rays_video(
-            video, translate_x=float(translate_x or 0),
-            translate_y=float(translate_y or 0),
-            scale=_f(scale, 0.2, 4, 1.4), rotate_deg=float(rotate_deg or 0),
-            steps=min(7, max(1, int(steps or 5))),
-            decay=_f(decay, 0.001, 1, 0.3), max_mode=bool(max_mode),
-            mix=_f(mix, 0, 1, 1.0), progress=_progress_cb(cls))
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        fx_spec = build_torch_fx_spec(
+            "ComfyTV.GodRaysStage", "God Rays", "video", "god_rays",
+            {'translate_x': float(translate_x or 0),
+             'translate_y': float(translate_y or 0),
+             'scale': _f(scale, 0.2, 4, 1.4),
+             'rotate_deg': float(rotate_deg or 0),
+             'steps': min(7, max(1, int(steps or 5))),
+             'decay': _f(decay, 0.001, 1, 0.3),
+             'max_mode': bool(max_mode), 'mix': _f(mix, 0, 1, 1.0)})
+        return _fx_passthrough(video, fx_spec)
 
 
 class OldFilmStage(io.ComfyNode):
@@ -190,23 +185,21 @@ class OldFilmStage(io.ComfyNode):
                 brightness_every=70, develop_up=60, develop_down=20,
                 develop_duration=70, lines_num=5, line_width=2,
                 lines_darker=40, lines_lighter=40, video=""):
-        _need_video(video, "Old Film")
-        payload = old_film_video(
-            video, delta=min(400, max(0, int(delta))),
-            every=min(100, max(0, int(every))),
-            brightness_up=min(100, max(0, int(brightness_up))),
-            brightness_down=min(100, max(0, int(brightness_down))),
-            brightness_every=min(100, max(0, int(brightness_every))),
-            develop_up=min(100, max(0, int(develop_up))),
-            develop_down=min(100, max(0, int(develop_down))),
-            develop_duration=min(10000, max(0, int(develop_duration))),
-            lines_num=min(100, max(0, int(lines_num))),
-            line_width=min(100, max(0, int(line_width))),
-            lines_darker=min(100, max(0, int(lines_darker))),
-            lines_lighter=min(100, max(0, int(lines_lighter))),
-            progress=_progress_cb(cls))
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        fx_spec = build_torch_fx_spec(
+            "ComfyTV.OldFilmStage", "Old Film", "video", "old_film",
+            {'delta': min(400, max(0, int(delta))),
+             'every': min(100, max(0, int(every))),
+             'brightness_up': min(100, max(0, int(brightness_up))),
+             'brightness_down': min(100, max(0, int(brightness_down))),
+             'brightness_every': min(100, max(0, int(brightness_every))),
+             'develop_up': min(100, max(0, int(develop_up))),
+             'develop_down': min(100, max(0, int(develop_down))),
+             'develop_duration': min(10000, max(0, int(develop_duration))),
+             'lines_num': min(100, max(0, int(lines_num))),
+             'line_width': min(100, max(0, int(line_width))),
+             'lines_darker': min(100, max(0, int(lines_darker))),
+             'lines_lighter': min(100, max(0, int(lines_lighter)))})
+        return _fx_passthrough(video, fx_spec)
 
 
 class FrameBlendStage(io.ComfyNode):

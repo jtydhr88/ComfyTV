@@ -4,6 +4,10 @@ import {
   computeVideoBlurUniforms,
   type VideoBlurParams,
 } from '@/composables/stages/videoBlurMath'
+import {
+  fxSourceSize,
+  type FxPreviewSource,
+} from '@/widgets/glsl/fxPreviewSource'
 
 const RENDER_CONFIG = {
   maxInputs: 2,
@@ -23,12 +27,11 @@ export class VideoBlurRenderer {
   }
 
   renderToCanvas(
-    video: HTMLVideoElement,
+    video: FxPreviewSource,
     params: Partial<VideoBlurParams>,
     target: HTMLCanvasElement,
   ): boolean {
-    const w = Math.max(2, video.videoWidth)
-    const h = Math.max(2, video.videoHeight)
+    const { w, h } = fxSourceSize(video)
 
     try {
       if (!this.ready) {

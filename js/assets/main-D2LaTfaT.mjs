@@ -15,9 +15,9 @@ import { app as app$1 } from "../../../scripts/app.js";
 * @license MIT
 **/
 // @__NO_SIDE_EFFECTS__
-function makeMap(str) {
+function makeMap(str2) {
   const map2 = /* @__PURE__ */ Object.create(null);
-  for (const key of str.split(",")) map2[key] = 1;
+  for (const key of str2.split(",")) map2[key] = 1;
   return (val) => val in map2;
 }
 const EMPTY_OBJ = {};
@@ -61,27 +61,27 @@ const isReservedProp = /* @__PURE__ */ makeMap(
 );
 const cacheStringFunction = (fn3) => {
   const cache2 = /* @__PURE__ */ Object.create(null);
-  return ((str) => {
-    const hit = cache2[str];
-    return hit || (cache2[str] = fn3(str));
+  return ((str2) => {
+    const hit = cache2[str2];
+    return hit || (cache2[str2] = fn3(str2));
   });
 };
 const camelizeRE = /-\w/g;
 const camelize = cacheStringFunction(
-  (str) => {
-    return str.replace(camelizeRE, (c2) => c2.slice(1).toUpperCase());
+  (str2) => {
+    return str2.replace(camelizeRE, (c2) => c2.slice(1).toUpperCase());
   }
 );
 const hyphenateRE = /\B([A-Z])/g;
 const hyphenate = cacheStringFunction(
-  (str) => str.replace(hyphenateRE, "-$1").toLowerCase()
+  (str2) => str2.replace(hyphenateRE, "-$1").toLowerCase()
 );
-const capitalize$1 = cacheStringFunction((str) => {
-  return str.charAt(0).toUpperCase() + str.slice(1);
+const capitalize$1 = cacheStringFunction((str2) => {
+  return str2.charAt(0).toUpperCase() + str2.slice(1);
 });
 const toHandlerKey = cacheStringFunction(
-  (str) => {
-    const s = str ? `on${capitalize$1(str)}` : ``;
+  (str2) => {
+    const s = str2 ? `on${capitalize$1(str2)}` : ``;
     return s;
   }
 );
@@ -6909,7 +6909,7 @@ function getComponentPublicInstance(instance) {
   }
 }
 const classifyRE = /(?:^|[-_])\w/g;
-const classify = (str) => str.replace(classifyRE, (c2) => c2.toUpperCase()).replace(/[-_]/g, "");
+const classify = (str2) => str2.replace(classifyRE, (c2) => c2.toUpperCase()).replace(/[-_]/g, "");
 function getComponentName(Component, includeInferred = true) {
   return isFunction$2(Component) ? Component.displayName || Component.name : Component.name || includeInferred && Component.__name;
 }
@@ -9897,8 +9897,8 @@ function mergeDefs(...defs) {
   }
   return Object.defineProperties({}, mergedDescriptors);
 }
-function esc(str) {
-  return JSON.stringify(str);
+function esc(str2) {
+  return JSON.stringify(str2);
 }
 function slugify(input) {
   return input.toLowerCase().trim().replace(/[^\w\s-]/g, "").replace(/[\s_-]+/g, "-").replace(/^-+|-+$/g, "");
@@ -9952,8 +9952,8 @@ function shallowClone(o) {
   return o;
 }
 const propertyKeyTypes = /* @__PURE__ */ new Set(["string", "number", "symbol"]);
-function escapeRegex(str) {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+function escapeRegex(str2) {
+  return str2.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 function clone$2(inst, def2, params) {
   const cl = new inst._zod.constr(def2 ?? inst._zod.def);
@@ -15063,17 +15063,17 @@ const _hoisted_7$1G = {
   key: 4,
   class: "ctv:absolute ctv:bottom-1.5 ctv:left-1.5 ctv:flex ctv:items-center ctv:justify-center ctv:size-5 ctv:rounded ctv:bg-black/65 ctv:text-white/90 ctv:pointer-events-none"
 };
-const _hoisted_8$1q = {
+const _hoisted_8$1p = {
   key: 5,
   class: "ctv:absolute ctv:bottom-1.5 ctv:right-1.5 ctv:px-1 ctv:py-px ctv:rounded-sm ctv:text-3xs ctv:font-semibold ctv:tracking-wide ctv:bg-black/65 ctv:text-warning-background ctv:pointer-events-none"
 };
-const _hoisted_9$1k = {
+const _hoisted_9$1j = {
   key: 6,
   class: "ctv:absolute ctv:bottom-1.5 ctv:right-1.5 ctv:px-1 ctv:py-px ctv:rounded-sm ctv:text-3xs ctv:font-semibold ctv:tracking-wide ctv:bg-black/65 ctv:text-muted-foreground ctv:pointer-events-none"
 };
-const _hoisted_10$18 = ["title"];
-const _hoisted_11$10 = { class: "ctv-asset-actions ctv:absolute ctv:top-2 ctv:left-2 ctv:flex ctv:gap-1" };
-const _hoisted_12$U = ["title"];
+const _hoisted_10$17 = ["title"];
+const _hoisted_11$$ = { class: "ctv-asset-actions ctv:absolute ctv:top-2 ctv:left-2 ctv:flex ctv:gap-1" };
+const _hoisted_12$T = ["title"];
 const _hoisted_13$N = ["title"];
 const _hoisted_14$I = { class: "ctv:flex ctv:min-w-0 ctv:flex-col ctv:gap-1" };
 const _hoisted_15$C = ["title"];
@@ -15165,7 +15165,7 @@ const _sfc_main$2J = /* @__PURE__ */ defineComponent({
               class: "ctv:size-3"
             }))
           ])) : createCommentVNode("", true),
-          unref(isProxy2) ? (openBlock(), createElementBlock("span", _hoisted_8$1q, "PROXY")) : unref(building) ? (openBlock(), createElementBlock("span", _hoisted_9$1k, "PROXY " + toDisplayString$1(unref(pct)) + "%", 1)) : unref(canProxy) ? (openBlock(), createElementBlock("button", {
+          unref(isProxy2) ? (openBlock(), createElementBlock("span", _hoisted_8$1p, "PROXY")) : unref(building) ? (openBlock(), createElementBlock("span", _hoisted_9$1j, "PROXY " + toDisplayString$1(unref(pct)) + "%", 1)) : unref(canProxy) ? (openBlock(), createElementBlock("button", {
             key: 7,
             type: "button",
             class: "ctv:absolute ctv:bottom-1.5 ctv:right-1.5 ctv:px-1 ctv:py-px ctv:rounded-sm ctv:text-3xs ctv:font-semibold ctv:tracking-wide ctv:cursor-pointer ctv:border ctv:border-warning-background/60 ctv:bg-black/65 ctv:text-warning-background ctv:hover:bg-warning-background/25",
@@ -15177,15 +15177,15 @@ const _sfc_main$2J = /* @__PURE__ */ defineComponent({
             )),
             onPointerdown: _cache2[1] || (_cache2[1] = withModifiers(() => {
             }, ["stop"]))
-          }, toDisplayString$1(_ctx.$t("fx.makeProxy")), 41, _hoisted_10$18)) : createCommentVNode("", true),
-          createBaseVNode("div", _hoisted_11$10, [
+          }, toDisplayString$1(_ctx.$t("fx.makeProxy")), 41, _hoisted_10$17)) : createCommentVNode("", true),
+          createBaseVNode("div", _hoisted_11$$, [
             createBaseVNode("button", {
               class: "ctv:flex ctv:size-6 ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:appearance-none ctv:rounded-md ctv:border-none ctv:shadow-sm ctv:bg-white/90 ctv:text-black/80 ctv:hover:bg-white",
               title: _ctx.$t("assets.card.more"),
               onClick: _cache2[2] || (_cache2[2] = withModifiers(($event) => emit2("open-menu", $event), ["stop"]))
             }, [
               createVNode(unref(IconEllipsis), { class: "ctv:size-4" })
-            ], 8, _hoisted_12$U),
+            ], 8, _hoisted_12$T),
             __props.asset.media_type === "image" ? (openBlock(), createElementBlock("button", {
               key: 0,
               class: "ctv:flex ctv:size-6 ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:appearance-none ctv:rounded-md ctv:border-none ctv:shadow-sm ctv:bg-white/90 ctv:text-black/80 ctv:hover:bg-white",
@@ -15249,8 +15249,8 @@ const _hoisted_4$2d = { class: "ctv:flex ctv:min-w-0 ctv:flex-1 ctv:flex-col ctv
 const _hoisted_5$27 = ["title"];
 const _hoisted_6$1Z = ["title"];
 const _hoisted_7$1F = { class: "ctv-asset-actions ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1" };
-const _hoisted_8$1p = ["title"];
-const _hoisted_9$1j = ["title"];
+const _hoisted_8$1o = ["title"];
+const _hoisted_9$1i = ["title"];
 const _sfc_main$2H = /* @__PURE__ */ defineComponent({
   __name: "AssetListItem",
   props: {
@@ -15315,14 +15315,14 @@ const _sfc_main$2H = /* @__PURE__ */ defineComponent({
             onClick: _cache2[0] || (_cache2[0] = withModifiers(($event) => emit2("view-full"), ["stop"]))
           }, [
             createVNode(unref(IconMaximize$1), { class: "ctv:size-4" })
-          ], 8, _hoisted_8$1p)) : createCommentVNode("", true),
+          ], 8, _hoisted_8$1o)) : createCommentVNode("", true),
           createBaseVNode("button", {
             class: "ctv:flex ctv:size-6 ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:appearance-none ctv:rounded-md ctv:border-none ctv:bg-secondary-background ctv:text-base-foreground ctv:hover:bg-secondary-background-hover",
             title: _ctx.$t("assets.card.more"),
             onClick: _cache2[1] || (_cache2[1] = withModifiers(($event) => emit2("open-menu", $event), ["stop"]))
           }, [
             createVNode(unref(IconEllipsis), { class: "ctv:size-4" })
-          ], 8, _hoisted_9$1j)
+          ], 8, _hoisted_9$1i)
         ])
       ]);
     };
@@ -15405,7 +15405,7 @@ const toDisplayString = (val) => {
   return val == null ? "" : isArray(val) || isPlainObject$2(val) && val.toString === objectToString$1 ? JSON.stringify(val, null, 2) : String(val);
 };
 function join$2(items, separator = "") {
-  return items.reduce((str, item, index) => index === 0 ? str + item : str + separator + item, "");
+  return items.reduce((str2, item, index) => index === 0 ? str2 + item : str2 + separator + item, "");
 }
 function incrementer(code) {
   let current = code;
@@ -15462,7 +15462,7 @@ const assign = Object.assign;
 const isString = (val) => typeof val === "string";
 const isObject = (val) => val !== null && typeof val === "object";
 function join$1(items, separator = "") {
-  return items.reduce((str, item, index) => index === 0 ? str + item : str + separator + item, "");
+  return items.reduce((str2, item, index) => index === 0 ? str2 + item : str2 + separator + item, "");
 }
 const CompileWarnCodes = {
   USE_MODULO_SYNTAX: 1,
@@ -15546,8 +15546,8 @@ const CHAR_CR = "\r";
 const CHAR_LF = "\n";
 const CHAR_LS = String.fromCharCode(8232);
 const CHAR_PS = String.fromCharCode(8233);
-function createScanner(str) {
-  const _buf = str;
+function createScanner(str2) {
+  const _buf = str2;
   let _index = 0;
   let _line = 1;
   let _column = 1;
@@ -17321,10 +17321,10 @@ const literalValueRE = /^\s?(?:true|false|-?[\d.]+|'[^']*'|"[^"]*")\s?$/;
 function isLiteral(exp) {
   return literalValueRE.test(exp);
 }
-function stripQuotes(str) {
-  const a = str.charCodeAt(0);
-  const b2 = str.charCodeAt(str.length - 1);
-  return a === b2 && (a === 34 || a === 39) ? str.slice(1, -1) : str;
+function stripQuotes(str2) {
+  const a = str2.charCodeAt(0);
+  const b2 = str2.charCodeAt(str2.length - 1);
+  return a === b2 && (a === 34 || a === 39) ? str2.slice(1, -1) : str2;
 }
 function getPathCharType(ch) {
   if (ch === void 0 || ch === null) {
@@ -17521,7 +17521,7 @@ function resolveValue(obj, path) {
   }
   return last;
 }
-const DEFAULT_MODIFIER = (str) => str;
+const DEFAULT_MODIFIER = (str2) => str2;
 const DEFAULT_MESSAGE = (ctx) => "";
 const DEFAULT_MESSAGE_DATA_TYPE = "text";
 const DEFAULT_NORMALIZE = (values) => values.length === 0 ? "" : join$2(values);
@@ -17785,7 +17785,7 @@ const VERSION$2 = "9.14.5";
 const NOT_REOSLVED = -1;
 const DEFAULT_LOCALE = "en-US";
 const MISSING_RESOLVE_VALUE = "";
-const capitalize = (str) => `${str.charAt(0).toLocaleUpperCase()}${str.substr(1)}`;
+const capitalize = (str2) => `${str2.charAt(0).toLocaleUpperCase()}${str2.substr(1)}`;
 function getDefaultLinkedModifiers() {
   return {
     upper: (val, type) => {
@@ -23874,9 +23874,9 @@ const _Matrix3 = class _Matrix3 {
    * @param {number} cy - Center y of rotation
    * @return {Matrix3} A reference to this matrix.
    */
-  setUvTransform(tx, ty, sx, sy, rotation, cx, cy) {
-    const c2 = Math.cos(rotation);
-    const s = Math.sin(rotation);
+  setUvTransform(tx, ty, sx, sy, rotation2, cx, cy) {
+    const c2 = Math.cos(rotation2);
+    const s = Math.sin(rotation2);
     this.set(
       sx * c2,
       sx * s,
@@ -27223,16 +27223,16 @@ class Object3D extends EventDispatcher {
     this.children = [];
     this.up = Object3D.DEFAULT_UP.clone();
     const position = new Vector3();
-    const rotation = new Euler();
+    const rotation2 = new Euler();
     const quaternion2 = new Quaternion();
     const scale = new Vector3(1, 1, 1);
     function onRotationChange() {
-      quaternion2.setFromEuler(rotation, false);
+      quaternion2.setFromEuler(rotation2, false);
     }
     function onQuaternionChange() {
-      rotation.setFromQuaternion(quaternion2, void 0, false);
+      rotation2.setFromQuaternion(quaternion2, void 0, false);
     }
-    rotation._onChange(onRotationChange);
+    rotation2._onChange(onRotationChange);
     quaternion2._onChange(onQuaternionChange);
     Object.defineProperties(this, {
       /**
@@ -27257,7 +27257,7 @@ class Object3D extends EventDispatcher {
       rotation: {
         configurable: true,
         enumerable: true,
-        value: rotation
+        value: rotation2
       },
       /**
        * Represents the object's local rotation as Quaternions.
@@ -32736,11 +32736,11 @@ class Sprite extends Object3D {
     if (raycaster.camera.isPerspectiveCamera && this.material.sizeAttenuation === false) {
       _worldScale.multiplyScalar(-_mvPosition.z);
     }
-    const rotation = this.material.rotation;
+    const rotation2 = this.material.rotation;
     let sin, cos;
-    if (rotation !== 0) {
-      cos = Math.cos(rotation);
-      sin = Math.sin(rotation);
+    if (rotation2 !== 0) {
+      cos = Math.cos(rotation2);
+      sin = Math.sin(rotation2);
     }
     const center = this.center;
     transformVertex(_vA$1.set(-0.5, -0.5, 0), _mvPosition, center, _worldScale, sin, cos);
@@ -55963,7 +55963,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-DWg7Joef.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-CjvtRe47.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -56705,11 +56705,11 @@ const _hoisted_4$2b = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-1
 const _hoisted_5$26 = { class: "ctv:relative ctv:flex-1 ctv:min-w-0" };
 const _hoisted_6$1Y = ["placeholder"];
 const _hoisted_7$1E = ["title"];
-const _hoisted_8$1o = { class: "ctv:shrink-0 ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1 ctv:py-1.5 ctv:px-2.5 ctv:border-b ctv:border-border-subtle" };
-const _hoisted_9$1i = ["onDrop", "onClick"];
-const _hoisted_10$17 = ["title", "onClick"];
-const _hoisted_11$$ = ["title", "onClick"];
-const _hoisted_12$T = ["title"];
+const _hoisted_8$1n = { class: "ctv:shrink-0 ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1 ctv:py-1.5 ctv:px-2.5 ctv:border-b ctv:border-border-subtle" };
+const _hoisted_9$1h = ["onDrop", "onClick"];
+const _hoisted_10$16 = ["title", "onClick"];
+const _hoisted_11$_ = ["title", "onClick"];
+const _hoisted_12$S = ["title"];
 const _hoisted_13$M = { class: "ctv:shrink-0 ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1 ctv:py-1.5 ctv:px-2.5 ctv:border-b ctv:border-border-subtle" };
 const _hoisted_14$H = ["onClick"];
 const _hoisted_15$B = {
@@ -56898,7 +56898,7 @@ const _sfc_main$2E = /* @__PURE__ */ defineComponent({
             createVNode(unref(IconSettings2), { class: "ctv:size-4" })
           ], 10, _hoisted_7$1E)
         ]),
-        createBaseVNode("div", _hoisted_8$1o, [
+        createBaseVNode("div", _hoisted_8$1n, [
           createBaseVNode("button", {
             class: normalizeClass(chipClass2(unref(activeFilter) === "all")),
             onClick: _cache2[4] || (_cache2[4] = ($event) => activeFilter.value = "all")
@@ -56938,7 +56938,7 @@ const _sfc_main$2E = /* @__PURE__ */ defineComponent({
                   onClick: withModifiers(($event) => unref(onRenameCategory)(cat2.id, cat2.name), ["stop"])
                 }, [
                   createVNode(unref(IconPencil), { class: "ctv:size-3" })
-                ], 8, _hoisted_10$17),
+                ], 8, _hoisted_10$16),
                 createBaseVNode("span", {
                   role: "button",
                   class: "ctv:inline-flex ctv:opacity-60 ctv:hover:opacity-100 ctv:hover:text-destructive-background",
@@ -56946,9 +56946,9 @@ const _sfc_main$2E = /* @__PURE__ */ defineComponent({
                   onClick: withModifiers(($event) => unref(onDeleteCategory)(cat2.id), ["stop"])
                 }, [
                   createVNode(unref(IconX), { class: "ctv:size-3" })
-                ], 8, _hoisted_11$$)
+                ], 8, _hoisted_11$_)
               ], 64)) : createCommentVNode("", true)
-            ], 42, _hoisted_9$1i);
+            ], 42, _hoisted_9$1h);
           }), 128)),
           createBaseVNode("button", {
             class: normalizeClass(chipClass2(false)),
@@ -56957,7 +56957,7 @@ const _sfc_main$2E = /* @__PURE__ */ defineComponent({
             (...args) => unref(onCreateCategory) && unref(onCreateCategory)(...args))
           }, [
             createVNode(unref(IconPlus), { class: "ctv:size-3" })
-          ], 10, _hoisted_12$T)
+          ], 10, _hoisted_12$S)
         ]),
         createBaseVNode("div", _hoisted_13$M, [
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(mediaFilters), (m2) => {
@@ -57344,9 +57344,9 @@ const splitPart$1 = { "noInputImage": "Connect an image to annotate parts", "too
 const materialStage$1 = { "presets": "Presets", "preset": { "plasticGlossy": "Glossy plastic", "plasticMatte": "Matte plastic", "metalPolished": "Polished metal", "metalBrushed": "Brushed metal", "glassClear": "Clear glass", "glassFrosted": "Frosted glass", "rubber": "Rubber", "ceramic": "Ceramic" }, "color": "Color", "param": { "metalness": "Metalness", "roughness": "Roughness", "transmission": "Transmission", "opacity": "Opacity", "clearcoat": "Clearcoat", "ior": "IOR" } };
 const loaderDrop$1 = { "mismatchTitle": "Wrong file type", "typeMismatch": "This node only loads {kind}.", "assetTypeMismatch": "This node loads {expected}, but the dropped asset is {actual}.", "failedTitle": "ComfyTV upload", "uploadFailed": "Upload failed: {detail}" };
 const layerEditor$1 = { "undo": "Undo", "redo": "Redo", "capture": "Capture", "captureHint": "Upload composite + one image per visible layer", "captureFailed": "Capture failed", "uploadFailed": "Layer upload failed", "loadImageFailed": "Failed to load image", "loadFontFailed": "Failed to load font", "fitView": "Fit view", "fullscreen": "Fullscreen", "exitFullscreen": "Exit fullscreen", "close": "Close", "toolSelect": "Select", "toolBrush": "Brush", "toolEraser": "Eraser", "toolText": "Text", "brushSize": "Size", "brushOpacity": "Opacity", "brushHardness": "Hardness", "brushColor": "Color", "targetContent": "Layer", "targetMask": "Mask", "layers": "Layers", "addFromLibrary": "Add image from asset library", "addFromFile": "Add image from file", "addTextLayer": "Add text layer", "noLayers": "No layers yet — drop an image here", "hideLayer": "Hide layer", "showLayer": "Show layer", "lockLayer": "Lock layer", "unlockLayer": "Unlock layer", "moveUp": "Move up", "moveDown": "Move down", "duplicateLayer": "Duplicate layer", "deleteLayer": "Delete layer", "addMask": "Add mask", "deleteMask": "Delete mask", "enableMask": "Enable mask", "disableMask": "Disable mask", "opacity": "Opacity", "blendMode": "Blend", "sectionCanvas": "Canvas", "sectionText": "Text", "blend": { "normal": "Normal", "multiply": "Multiply", "screen": "Screen", "overlay": "Overlay", "darken": "Darken", "lighten": "Lighten", "colorDodge": "Color Dodge", "colorBurn": "Color Burn", "hardLight": "Hard Light", "softLight": "Soft Light", "difference": "Difference", "exclusion": "Exclusion" }, "font": "Font", "fontSize": "Size", "textColor": "Color", "letterSpacing": "Spacing", "lineHeight": "Leading", "align": "Align", "alignLeft": "Align left", "alignCenter": "Align center", "alignRight": "Align right", "textPlaceholder": "Type something…", "dropHint": "Drop image to add a layer" };
-const fxChain$1 = { "title": "FX Chain", "empty": "Connect fx_spec outputs from FX nodes to build a chain", "moveUp": "Move up", "moveDown": "Move down", "unknown": "Unknown FX", "domain": { "video": "Video", "audio": "Audio" } };
+const fxChain$1 = { "title": "FX Chain", "empty": "Chain FX nodes along the video wire into this node", "noPreview": "no live preview" };
 const fxPreview$1 = { "run": "Preview clip", "stale": "Params changed — preview again", "window": "Real-filter preview · {s}s", "failed": "Preview failed — try again" };
-const fx$1 = { "processing": "Processing…", "done": "Done — ready for downstream", "adjustThenRun": "Adjust parameters, then Run", "fullscreen": "Full size", "exitFullscreen": "Exit full size", "makeProxy": "PROXY?", "makeProxyHint": "Large source — generate a lightweight proxy for smooth preview (Run still uses the original)", "needsTwoInputs": "Wire two videos into A and B", "needsAudioOrVideo": "Wire an audio or video input", "previewNote": "Preview is approximate — Run renders precisely", "mode": "Mode", "method": "Method", "effect": "Effect", "scope": "Scope", "preset": "Preset", "transition": "Transition", "amount": "Amount", "size": "Size", "strength": "Strength", "edgePreserve": "Edge keep", "exposure": "Exposure", "black": "Black", "temperature": "Temp (K)", "tempMix": "Temp mix", "hue": "Hue", "saturation": "Saturation", "vibrance": "Vibrance", "shadows": "Shadows", "midtones": "Midtones", "highlights": "Highlights", "preserveLightness": "Preserve lightness", "resetWheels": "Reset wheels", "master": "Master", "red": "Red", "green": "Green", "blue": "Blue", "resetCurve": "Reset curve", "curveHint": "Click to add · drag to move · right-click deletes", "keyColor": "Key color", "pickFromVideo": "Pick from frame", "similarity": "Similarity", "blend": "Blend", "despill": "Despill", "despillExpand": "Despill expand", "outAlpha": "Alpha (WebM)", "outMatte": "B/W matte", "duration": "Duration", "offset": "Offset", "offsetAuto": "0 = auto (end of A)", "lumaPreviewHint": "Luma wipe preview shows a crossfade — run to see the final wipe", "rangeX": "Range X", "rangeY": "Range Y", "edgeMode": "Edge fill", "threshold": "Threshold", "minGap": "Min gap", "detectHint": "Run scans for hard cuts and outputs one thumbnail per scene", "sceneFrames": "Scene frames", "sceneClips": "Scene clips", "sceneClipsHint": "Run splits the video at each cut into per-scene clips — wire the clips output into a Video Picker", "sceneClipPickHint": "Click a clip to select it — re-run and the clips output becomes that clip", "cutFast": "Fast (keyframe)", "cutPrecise": "Precise (re-encode)", "targetFps": "Target fps", "slowFactor": "Slow ×", "miMode": "Interp mode", "rateFrame": "Same rate", "rateField": "Double rate", "block": "Block", "atSeconds": "At (s)", "middle": "middle", "thresholdDb": "Threshold", "ratio": "Ratio", "attack": "Attack", "release": "Release", "makeup": "Makeup", "knee": "Knee", "intensity": "Intensity", "eqHint": "Double-click adds a band · drag moves · wheel = Q · double-click a dot removes", "targetI": "Target LUFS", "targetTp": "True peak", "targetLra": "LRA", "frameLen": "Frame (ms)", "gaussWin": "Gauss win", "silenceDb": "Silence (dB)", "minSilence": "Min silence (s)", "lutFile": "LUT file", "upload": "Upload", "interp": "Interp", "noLuts": "No LUTs yet — upload a .cube file", "lutPreviewUnavailable": "Live preview supports .cube and .3dl only — this LUT is applied on run", "refresh": "Refresh", "operator": "Blend mode", "opacity": "Opacity", "position": "Position", "scale": "Scale", "rotation": "Rotation", "skew": "Skew", "motionBlur": "Motion blur", "keyframes": "Keyframes", "addKey": "Add key", "delKey": "Delete key", "clearKeys": "Clear", "dragHint": "Drag the frame to move · wheel to scale", "cornerHint": "Drag the four corner handles", "rotoHint": "Click adds a point · drag moves · double-click a point removes it", "trackHint": "Click the frame to set the track point", "needsBgFg": "Wire background and foreground videos", "foreground": "Foreground", "background": "Background", "text": "Text", "fontLbl": "Font", "fontSize": "Size", "colorLbl": "Color", "strokeLbl": "Stroke", "anchor": "Anchor", "tStart": "Start (s)", "tEnd": "End (s)", "tEndAuto": "-1 = to the end", "fade": "Fade (s)", "subsPlaceholder": "Paste SRT / WebVTT cues here…", "cues": "cues", "trackPoint": "Track point", "pattern": "Pattern", "searchR": "Search", "feather": "Feather", "invert": "Invert", "transitionGroup": { "fade": "Fade", "wipe": "Wipe", "slide": "Slide & Smooth", "shape": "Shapes", "diagslice": "Diagonal & Slice", "coverreveal": "Cover & Reveal", "wind": "Wind", "fx": "FX" } };
+const fx$1 = { "processing": "Processing…", "done": "Done — ready for downstream", "adjustThenRun": "Adjust parameters, then Run", "fullscreen": "Full size", "exitFullscreen": "Exit full size", "chainMode": "Adjust freely — an FX Chain node downstream renders once", "makeProxy": "PROXY?", "makeProxyHint": "Large source — generate a lightweight proxy for smooth preview (Run still uses the original)", "needsTwoInputs": "Wire two videos into A and B", "needsAudioOrVideo": "Wire an audio or video input", "previewNote": "Preview is approximate — Run renders precisely", "mode": "Mode", "method": "Method", "effect": "Effect", "scope": "Scope", "preset": "Preset", "transition": "Transition", "amount": "Amount", "size": "Size", "strength": "Strength", "edgePreserve": "Edge keep", "exposure": "Exposure", "black": "Black", "temperature": "Temp (K)", "tempMix": "Temp mix", "hue": "Hue", "saturation": "Saturation", "vibrance": "Vibrance", "shadows": "Shadows", "midtones": "Midtones", "highlights": "Highlights", "preserveLightness": "Preserve lightness", "resetWheels": "Reset wheels", "master": "Master", "red": "Red", "green": "Green", "blue": "Blue", "resetCurve": "Reset curve", "curveHint": "Click to add · drag to move · right-click deletes", "keyColor": "Key color", "pickFromVideo": "Pick from frame", "similarity": "Similarity", "blend": "Blend", "despill": "Despill", "despillExpand": "Despill expand", "outAlpha": "Alpha (WebM)", "outMatte": "B/W matte", "duration": "Duration", "offset": "Offset", "offsetAuto": "0 = auto (end of A)", "lumaPreviewHint": "Luma wipe preview shows a crossfade — run to see the final wipe", "rangeX": "Range X", "rangeY": "Range Y", "edgeMode": "Edge fill", "threshold": "Threshold", "minGap": "Min gap", "detectHint": "Run scans for hard cuts and outputs one thumbnail per scene", "sceneFrames": "Scene frames", "sceneClips": "Scene clips", "sceneClipsHint": "Run splits the video at each cut into per-scene clips — wire the clips output into a Video Picker", "sceneClipPickHint": "Click a clip to select it — re-run and the clips output becomes that clip", "cutFast": "Fast (keyframe)", "cutPrecise": "Precise (re-encode)", "targetFps": "Target fps", "slowFactor": "Slow ×", "miMode": "Interp mode", "rateFrame": "Same rate", "rateField": "Double rate", "block": "Block", "atSeconds": "At (s)", "middle": "middle", "thresholdDb": "Threshold", "ratio": "Ratio", "attack": "Attack", "release": "Release", "makeup": "Makeup", "knee": "Knee", "intensity": "Intensity", "eqHint": "Double-click adds a band · drag moves · wheel = Q · double-click a dot removes", "targetI": "Target LUFS", "targetTp": "True peak", "targetLra": "LRA", "frameLen": "Frame (ms)", "gaussWin": "Gauss win", "silenceDb": "Silence (dB)", "minSilence": "Min silence (s)", "lutFile": "LUT file", "upload": "Upload", "interp": "Interp", "noLuts": "No LUTs yet — upload a .cube file", "lutPreviewUnavailable": "Live preview supports .cube and .3dl only — this LUT is applied on run", "refresh": "Refresh", "operator": "Blend mode", "opacity": "Opacity", "position": "Position", "scale": "Scale", "rotation": "Rotation", "skew": "Skew", "motionBlur": "Motion blur", "keyframes": "Keyframes", "addKey": "Add key", "delKey": "Delete key", "clearKeys": "Clear", "dragHint": "Drag the frame to move · wheel to scale", "cornerHint": "Drag the four corner handles", "rotoHint": "Click adds a point · drag moves · double-click a point removes it", "trackHint": "Click the frame to set the track point", "needsBgFg": "Wire background and foreground videos", "foreground": "Foreground", "background": "Background", "text": "Text", "fontLbl": "Font", "fontSize": "Size", "colorLbl": "Color", "strokeLbl": "Stroke", "anchor": "Anchor", "tStart": "Start (s)", "tEnd": "End (s)", "tEndAuto": "-1 = to the end", "fade": "Fade (s)", "subsPlaceholder": "Paste SRT / WebVTT cues here…", "cues": "cues", "trackPoint": "Track point", "pattern": "Pattern", "searchR": "Search", "feather": "Feather", "invert": "Invert", "transitionGroup": { "fade": "Fade", "wipe": "Wipe", "slide": "Slide & Smooth", "shape": "Shapes", "diagslice": "Diagonal & Slice", "coverreveal": "Cover & Reveal", "wind": "Wind", "fx": "FX" } };
 const afx$1 = { "custom": "Custom", "compliance": "Platform compliance", "hum": "De-hum", "harmonics": "Harmonics", "waveformPro": "Waveform+", "spectrumPro": "Spectrum+", "rmsLayer": "RMS layer", "clipMarks": "Mark clipping", "dbAxis": "dB axis", "rangeDb": "Range", "gainDb": "Gain", "freqGain": "Freq gain (dB/oct)", "normalize": "Normalize", "peakTarget": "Peak target", "rmsConstraint": "RMS constraint", "lufsConstraint": "LUFS constraint", "strictestNote": "The strictest constraint wins (constant gain)", "gain": "Gain", "pan": "Pan", "panLaw": "Pan law", "panLawLinear": "Linear (Audacity)", "panLawPower": "Const. power (Ardour)", "dither": "Dither", "detect": "Detect", "bySilence": "By silence", "byJson": "Manual JSON", "minSegment": "Min segment", "edgeFade": "Edge fade", "namingLbl": "Naming", "prefixPh": "File name prefix…", "filesOut": "files exported", "sourceLbl": "Source", "wet": "Wet", "dryLbl": "Dry", "normalizePeak": "Normalize peak", "needsSrcAndIr": "Wire a source audio and an IR audio", "sweepHint": "Generates a Farina ESS sweep — play it in a room, record the response, then use Deconvolve", "fminLbl": "From", "fmaxLbl": "To", "ampLbl": "Amplitude", "tailLbl": "Tail silence", "deconvHint": "Feed the recorded sweep response; parameters must match the Sweep node", "irLen": "IR length", "echoFeedback": "Feedback (Audacity)", "echoFeedbackNote": "Infinite repeats, exact Audacity Echo structure", "keepSilence": "Keep silence (s)", "echoMountains": "Mountains", "echoMountains2": "Two mountains", "echoDoubled": "Doubled", "echoRobot": "Robot", "inGain": "In gain", "outGain": "Out gain", "delayMs": "Delay", "decay": "Decay", "rateHz": "Rate", "depth": "Depth", "regen": "Feedback", "width": "Width", "triangular": "Triangular", "sinusoidal": "Sinusoidal", "chorusSingle": "Single", "chorusDouble": "Double", "chorusTriple": "Triple", "widen": "Widen", "balance": "Balance", "mono": "Mono", "swap": "Swap L/R", "feedback": "Feedback", "drymix": "Dry mix", "range": "Range", "sideGain": "Side gain", "leftDelay": "L delay", "rightDelay": "R delay", "speed": "Speed", "pitch": "Pitch", "reverse": "Reverse", "tempo": "Tempo", "semitones": "Semitones", "speedNote": "atempo keeps pitch while changing speed", "pitchNote": "Pitch shift keeps duration (resample + atempo)", "declick": "De-click", "declip": "De-clip", "denorm": "Denormals", "wavelet": "Wavelet NR", "window": "Window", "burst": "Burst", "hsize": "History", "levelDb": "Level", "sigma": "Sigma", "percent": "Percent", "levels": "Levels", "clipLevel": "Clip", "adaptive": "Adaptive", "bits": "Bits", "mix": "Mix", "drive": "Drive", "freqHz": "Freq", "curveOutA": "Fade-out curve (A)", "curveInB": "Fade-in curve (B)", "overlap": "Overlap (B starts under A's fade)", "needsTwoAudio": "Wire two audio (or video) inputs into A and B", "loudness": "Loudness", "volume": "Volume", "stats": "Stats", "silence": "Silence", "analyzeHint": "Run measures the audio and prints a report", "waveform": "Waveform", "spectrum": "Spectrum", "splitChannels": "Split channels", "legend": "Legend" };
 const scopes$1 = { "liveSampling": "Sampling the upstream preview live", "wireHint": "Wire a live-preview node (Color / Curves / Blur / Stylize / Chroma Key) for live scopes" };
 const en = {
@@ -57486,9 +57486,9 @@ const splitPart = { "noInputImage": "连接一张图片后即可标注部件", "
 const materialStage = { "presets": "预设", "preset": { "plasticGlossy": "亮面塑料", "plasticMatte": "哑光塑料", "metalPolished": "抛光金属", "metalBrushed": "拉丝金属", "glassClear": "透明玻璃", "glassFrosted": "磨砂玻璃", "rubber": "橡胶", "ceramic": "陶瓷" }, "color": "颜色", "param": { "metalness": "金属度", "roughness": "粗糙度", "transmission": "透射", "opacity": "不透明度", "clearcoat": "清漆", "ior": "折射率" } };
 const loaderDrop = { "mismatchTitle": "文件类型不匹配", "typeMismatch": "该节点只能加载{kind}。", "assetTypeMismatch": "该节点加载{expected}，拖入的素材是{actual}。", "failedTitle": "ComfyTV 上传", "uploadFailed": "上传失败: {detail}" };
 const layerEditor = { "undo": "撤销", "redo": "重做", "capture": "截取", "captureHint": "上传合成图 + 每个可见图层一张", "captureFailed": "截取失败", "uploadFailed": "图层上传失败", "loadImageFailed": "图片加载失败", "loadFontFailed": "字体加载失败", "fitView": "适配视图", "fullscreen": "全屏", "exitFullscreen": "退出全屏", "close": "关闭", "toolSelect": "选择", "toolBrush": "画笔", "toolEraser": "橡皮", "toolText": "文字", "brushSize": "大小", "brushOpacity": "不透明度", "brushHardness": "硬度", "brushColor": "颜色", "targetContent": "图层", "targetMask": "蒙版", "layers": "图层", "addFromLibrary": "从资产库添加图片", "addFromFile": "从文件添加图片", "addTextLayer": "添加文字图层", "noLayers": "还没有图层——拖张图片进来", "hideLayer": "隐藏图层", "showLayer": "显示图层", "lockLayer": "锁定图层", "unlockLayer": "解锁图层", "moveUp": "上移", "moveDown": "下移", "duplicateLayer": "复制图层", "deleteLayer": "删除图层", "addMask": "添加蒙版", "deleteMask": "删除蒙版", "enableMask": "启用蒙版", "disableMask": "停用蒙版", "opacity": "不透明度", "blendMode": "混合", "sectionCanvas": "画布", "sectionText": "文字", "blend": { "normal": "正常", "multiply": "正片叠底", "screen": "滤色", "overlay": "叠加", "darken": "变暗", "lighten": "变亮", "colorDodge": "颜色减淡", "colorBurn": "颜色加深", "hardLight": "强光", "softLight": "柔光", "difference": "差值", "exclusion": "排除" }, "font": "字体", "fontSize": "字号", "textColor": "颜色", "letterSpacing": "字距", "lineHeight": "行距", "align": "对齐", "alignLeft": "左对齐", "alignCenter": "居中", "alignRight": "右对齐", "textPlaceholder": "输入文字…", "dropHint": "拖入图片以添加图层" };
-const fxChain = { "title": "特效链", "empty": "连接 FX 节点的 fx_spec 输出以构建特效链", "moveUp": "上移", "moveDown": "下移", "unknown": "未知特效", "domain": { "video": "视频", "audio": "音频" } };
+const fxChain = { "title": "特效链", "empty": "沿 video 线把 FX 节点串联接入本节点即可成链", "noPreview": "无实时预览" };
 const fxPreview = { "run": "预览片段", "stale": "参数已变 — 请重新预览", "window": "真实滤镜预览 · {s} 秒", "failed": "预览失败 — 请重试" };
-const fx = { "processing": "处理中…", "done": "完成 — 可供下游使用", "adjustThenRun": "调整参数后点击 Run", "fullscreen": "全屏编辑", "exitFullscreen": "退出全屏", "makeProxy": "PROXY?", "makeProxyHint": "源文件较大——生成轻量代理让预览流畅（运行仍使用原片）", "needsTwoInputs": "需要接入两个视频（A 和 B）", "needsAudioOrVideo": "需要接入音频或视频", "previewNote": "预览为近似效果 — Run 后精确渲染", "mode": "模式", "method": "方法", "effect": "效果", "scope": "示波器", "preset": "预设", "transition": "转场", "amount": "强度", "size": "尺寸", "strength": "力度", "edgePreserve": "保边", "exposure": "曝光", "black": "黑位", "temperature": "色温 (K)", "tempMix": "色温混合", "hue": "色相", "saturation": "饱和度", "vibrance": "自然饱和", "shadows": "阴影", "midtones": "中间调", "highlights": "高光", "preserveLightness": "保持明度", "resetWheels": "重置色轮", "master": "主通道", "red": "红", "green": "绿", "blue": "蓝", "resetCurve": "重置曲线", "curveHint": "单击添加 · 拖动移动 · 右键删除", "keyColor": "键色", "pickFromVideo": "从画面取色", "similarity": "相似度", "blend": "边缘融合", "despill": "去溢色", "despillExpand": "溢色扩展", "outAlpha": "透明通道 (WebM)", "outMatte": "黑白遮罩", "duration": "时长", "offset": "起始位置", "offsetAuto": "0 = 自动（A 末尾）", "lumaPreviewHint": "亮度擦除预览仅显示交叉淡化 — 运行后可见最终擦除效果", "rangeX": "水平搜索", "rangeY": "垂直搜索", "edgeMode": "边缘填充", "threshold": "阈值", "minGap": "最小间隔", "detectHint": "Run 扫描硬切点，每个场景输出一张缩略图", "sceneFrames": "场景帧", "sceneClips": "场景片段", "sceneClipsHint": "Run 在每个切点拆条，输出逐场景片段——把 clips 输出接到视频挑选器", "sceneClipPickHint": "点击选中片段——重新 Run 后 clips 输出即为所选片段", "cutFast": "快速（关键帧）", "cutPrecise": "精确（重编码）", "targetFps": "目标帧率", "slowFactor": "慢放倍数", "miMode": "补偿模式", "rateFrame": "同帧率", "rateField": "倍帧率", "block": "块大小", "atSeconds": "取帧时间 (s)", "middle": "中点", "thresholdDb": "阈值", "ratio": "压缩比", "attack": "启动", "release": "释放", "makeup": "增益补偿", "knee": "拐点", "intensity": "强度", "eqHint": "双击空白添加频段 · 拖动调节 · 滚轮调 Q · 双击圆点删除", "targetI": "目标响度 LUFS", "targetTp": "真峰值", "targetLra": "响度范围", "frameLen": "帧长 (ms)", "gaussWin": "高斯窗", "silenceDb": "静音阈值 (dB)", "minSilence": "最短静音 (s)", "lutFile": "LUT 文件", "upload": "上传", "interp": "插值", "noLuts": "暂无 LUT — 请上传 .cube 文件", "lutPreviewUnavailable": "实时预览仅支持 .cube 和 .3dl —— 该 LUT 将在运行时生效", "refresh": "刷新", "operator": "混合模式", "opacity": "不透明度", "position": "位置", "scale": "缩放", "rotation": "旋转", "skew": "斜切", "motionBlur": "运动模糊", "keyframes": "关键帧", "addKey": "打帧", "delKey": "删帧", "clearKeys": "清空", "dragHint": "拖动画面移动 · 滚轮缩放", "cornerHint": "拖动四个角点", "rotoHint": "单击加点 · 拖动移动 · 双击点删除", "trackHint": "在画面上单击设置跟踪点", "needsBgFg": "需要接入背景和前景视频", "foreground": "前景", "background": "背景", "text": "文本", "fontLbl": "字体", "fontSize": "字号", "colorLbl": "颜色", "strokeLbl": "描边", "anchor": "锚点", "tStart": "开始 (s)", "tEnd": "结束 (s)", "tEndAuto": "-1 = 到结尾", "fade": "淡入淡出 (s)", "subsPlaceholder": "在此粘贴 SRT / WebVTT 字幕…", "cues": "条字幕", "trackPoint": "跟踪点", "pattern": "模板半径", "searchR": "搜索半径", "feather": "羽化", "invert": "反转", "transitionGroup": { "fade": "淡变", "wipe": "擦除", "slide": "滑动与平滑", "shape": "形状开合", "diagslice": "对角与切片", "coverreveal": "覆盖与揭示", "wind": "风蚀", "fx": "特效" } };
+const fx = { "processing": "处理中…", "done": "完成 — 可供下游使用", "adjustThenRun": "调整参数后点击 Run", "fullscreen": "全屏编辑", "exitFullscreen": "退出全屏", "chainMode": "自由调整——由下游 FX Chain 节点一次渲染", "makeProxy": "PROXY?", "makeProxyHint": "源文件较大——生成轻量代理让预览流畅（运行仍使用原片）", "needsTwoInputs": "需要接入两个视频（A 和 B）", "needsAudioOrVideo": "需要接入音频或视频", "previewNote": "预览为近似效果 — Run 后精确渲染", "mode": "模式", "method": "方法", "effect": "效果", "scope": "示波器", "preset": "预设", "transition": "转场", "amount": "强度", "size": "尺寸", "strength": "力度", "edgePreserve": "保边", "exposure": "曝光", "black": "黑位", "temperature": "色温 (K)", "tempMix": "色温混合", "hue": "色相", "saturation": "饱和度", "vibrance": "自然饱和", "shadows": "阴影", "midtones": "中间调", "highlights": "高光", "preserveLightness": "保持明度", "resetWheels": "重置色轮", "master": "主通道", "red": "红", "green": "绿", "blue": "蓝", "resetCurve": "重置曲线", "curveHint": "单击添加 · 拖动移动 · 右键删除", "keyColor": "键色", "pickFromVideo": "从画面取色", "similarity": "相似度", "blend": "边缘融合", "despill": "去溢色", "despillExpand": "溢色扩展", "outAlpha": "透明通道 (WebM)", "outMatte": "黑白遮罩", "duration": "时长", "offset": "起始位置", "offsetAuto": "0 = 自动（A 末尾）", "lumaPreviewHint": "亮度擦除预览仅显示交叉淡化 — 运行后可见最终擦除效果", "rangeX": "水平搜索", "rangeY": "垂直搜索", "edgeMode": "边缘填充", "threshold": "阈值", "minGap": "最小间隔", "detectHint": "Run 扫描硬切点，每个场景输出一张缩略图", "sceneFrames": "场景帧", "sceneClips": "场景片段", "sceneClipsHint": "Run 在每个切点拆条，输出逐场景片段——把 clips 输出接到视频挑选器", "sceneClipPickHint": "点击选中片段——重新 Run 后 clips 输出即为所选片段", "cutFast": "快速（关键帧）", "cutPrecise": "精确（重编码）", "targetFps": "目标帧率", "slowFactor": "慢放倍数", "miMode": "补偿模式", "rateFrame": "同帧率", "rateField": "倍帧率", "block": "块大小", "atSeconds": "取帧时间 (s)", "middle": "中点", "thresholdDb": "阈值", "ratio": "压缩比", "attack": "启动", "release": "释放", "makeup": "增益补偿", "knee": "拐点", "intensity": "强度", "eqHint": "双击空白添加频段 · 拖动调节 · 滚轮调 Q · 双击圆点删除", "targetI": "目标响度 LUFS", "targetTp": "真峰值", "targetLra": "响度范围", "frameLen": "帧长 (ms)", "gaussWin": "高斯窗", "silenceDb": "静音阈值 (dB)", "minSilence": "最短静音 (s)", "lutFile": "LUT 文件", "upload": "上传", "interp": "插值", "noLuts": "暂无 LUT — 请上传 .cube 文件", "lutPreviewUnavailable": "实时预览仅支持 .cube 和 .3dl —— 该 LUT 将在运行时生效", "refresh": "刷新", "operator": "混合模式", "opacity": "不透明度", "position": "位置", "scale": "缩放", "rotation": "旋转", "skew": "斜切", "motionBlur": "运动模糊", "keyframes": "关键帧", "addKey": "打帧", "delKey": "删帧", "clearKeys": "清空", "dragHint": "拖动画面移动 · 滚轮缩放", "cornerHint": "拖动四个角点", "rotoHint": "单击加点 · 拖动移动 · 双击点删除", "trackHint": "在画面上单击设置跟踪点", "needsBgFg": "需要接入背景和前景视频", "foreground": "前景", "background": "背景", "text": "文本", "fontLbl": "字体", "fontSize": "字号", "colorLbl": "颜色", "strokeLbl": "描边", "anchor": "锚点", "tStart": "开始 (s)", "tEnd": "结束 (s)", "tEndAuto": "-1 = 到结尾", "fade": "淡入淡出 (s)", "subsPlaceholder": "在此粘贴 SRT / WebVTT 字幕…", "cues": "条字幕", "trackPoint": "跟踪点", "pattern": "模板半径", "searchR": "搜索半径", "feather": "羽化", "invert": "反转", "transitionGroup": { "fade": "淡变", "wipe": "擦除", "slide": "滑动与平滑", "shape": "形状开合", "diagslice": "对角与切片", "coverreveal": "覆盖与揭示", "wind": "风蚀", "fx": "特效" } };
 const afx = { "custom": "自定义", "compliance": "平台合规", "hum": "去电流声", "harmonics": "谐波数", "waveformPro": "波形+", "spectrumPro": "频谱+", "rmsLayer": "RMS 内层", "clipMarks": "标记削波", "dbAxis": "dB 纵轴", "rangeDb": "动态范围", "gainDb": "增益", "freqGain": "频率增益 (dB/oct)", "normalize": "归一化", "peakTarget": "峰值目标", "rmsConstraint": "RMS 约束", "lufsConstraint": "LUFS 约束", "strictestNote": "取最严格的约束（恒定增益）", "gain": "增益", "pan": "声像", "panLaw": "声像定律", "panLawLinear": "线性（Audacity）", "panLawPower": "等功率（Ardour）", "dither": "抖动", "detect": "检测方式", "bySilence": "按静音", "byJson": "手动 JSON", "minSegment": "最短片段", "edgeFade": "边缘淡化", "namingLbl": "命名", "prefixPh": "文件名前缀…", "filesOut": "个文件已导出", "sourceLbl": "源", "wet": "湿声", "dryLbl": "干声", "normalizePeak": "峰值归一", "needsSrcAndIr": "接入源音频和 IR 音频", "sweepHint": "生成 Farina ESS 扫频——在房间播放并录下响应，再用反卷积节点", "fminLbl": "起始", "fmaxLbl": "结束", "ampLbl": "幅度", "tailLbl": "尾部静音", "deconvHint": "输入录到的扫频响应；参数须与扫频节点一致", "irLen": "IR 长度", "echoFeedback": "无限回声（Audacity）", "echoFeedbackNote": "反馈式无限重复，与 Audacity Echo 结构一致", "keepSilence": "保留静音 (s)", "echoMountains": "山谷回声", "echoMountains2": "双重山谷", "echoDoubled": "加倍声部", "echoRobot": "机器人", "inGain": "输入增益", "outGain": "输出增益", "delayMs": "延迟", "decay": "衰减", "rateHz": "速率", "depth": "深度", "regen": "反馈", "width": "宽度", "triangular": "三角波", "sinusoidal": "正弦波", "chorusSingle": "单声部", "chorusDouble": "双声部", "chorusTriple": "三声部", "widen": "加宽", "balance": "平衡", "mono": "并成单声道", "swap": "交换左右", "feedback": "反馈", "drymix": "干声比例", "range": "范围", "sideGain": "侧声增益", "leftDelay": "左延迟", "rightDelay": "右延迟", "speed": "变速", "pitch": "变调", "reverse": "倒放", "tempo": "速度", "semitones": "半音", "speedNote": "atempo 变速不变调", "pitchNote": "变调不变时长（重采样 + atempo）", "declick": "去咔嗒", "declip": "去削波", "denorm": "去非规格化", "wavelet": "小波降噪", "window": "窗口", "burst": "突发", "hsize": "历史长度", "levelDb": "电平", "sigma": "Sigma", "percent": "百分比", "levels": "层数", "clipLevel": "削波电平", "adaptive": "自适应", "bits": "位深", "mix": "混合", "drive": "驱动", "freqHz": "频率", "curveOutA": "淡出曲线（A）", "curveInB": "淡入曲线（B）", "overlap": "重叠（B 在 A 淡出时进入）", "needsTwoAudio": "把两路音频（或视频）接入 A 和 B", "loudness": "响度", "volume": "音量", "stats": "统计", "silence": "静音", "analyzeHint": "点 Run 测量音频并输出报告", "waveform": "波形图", "spectrum": "频谱图", "splitChannels": "分声道", "legend": "图例" };
 const scopes = { "liveSampling": "实时采样上游预览", "wireHint": "连接带实时预览的节点（调色/曲线/模糊/风格化/抠像）以启用实时示波" };
 const zh = {
@@ -57920,14 +57920,14 @@ const _hoisted_6$1X = {
   class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:my-1.5 ctv:mx-2.5 ctv:py-1.5 ctv:px-2 ctv:text-xs ctv:rounded ctv:bg-secondary-background ctv:border ctv:border-border-subtle"
 };
 const _hoisted_7$1D = { class: "ctv:flex-1" };
-const _hoisted_8$1n = { class: "ctv:shrink-0 ctv:m-0 ctv:py-1.5 ctv:px-2.5 ctv:text-[11px] ctv:text-muted-foreground ctv:border-b ctv:border-border-subtle" };
-const _hoisted_9$1h = {
+const _hoisted_8$1m = { class: "ctv:shrink-0 ctv:m-0 ctv:py-1.5 ctv:px-2.5 ctv:text-[11px] ctv:text-muted-foreground ctv:border-b ctv:border-border-subtle" };
+const _hoisted_9$1g = {
   key: 1,
   class: "ctv:shrink-0 ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1 ctv:py-1.5 ctv:px-2.5 ctv:border-b ctv:border-border-subtle"
 };
-const _hoisted_10$16 = ["onClick"];
-const _hoisted_11$_ = { class: "ctv:py-0 ctv:px-1.5 ctv:rounded-lg ctv:text-2xs ctv:bg-base-foreground/10" };
-const _hoisted_12$S = { class: "comfytv-entries-scroll ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-2.5 ctv:flex ctv:flex-col ctv:gap-2" };
+const _hoisted_10$15 = ["onClick"];
+const _hoisted_11$Z = { class: "ctv:py-0 ctv:px-1.5 ctv:rounded-lg ctv:text-2xs ctv:bg-base-foreground/10" };
+const _hoisted_12$R = { class: "comfytv-entries-scroll ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-2.5 ctv:flex ctv:flex-col ctv:gap-2" };
 const _hoisted_13$L = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
 const _hoisted_14$G = ["onUpdate:modelValue", "onBlur", "onKeydown"];
 const _hoisted_15$A = ["title", "onClick"];
@@ -58060,12 +58060,12 @@ const _sfc_main$2D = /* @__PURE__ */ defineComponent({
             createBaseVNode("i", { class: "pi pi-times ctv:text-2xs" }, null, -1)
           ])])
         ])) : createCommentVNode("", true),
-        createBaseVNode("p", _hoisted_8$1n, [
+        createBaseVNode("p", _hoisted_8$1m, [
           createTextVNode(toDisplayString$1(_ctx.$t("entries.refHelpPre")) + " ", 1),
           _cache2[15] || (_cache2[15] = createBaseVNode("code", { class: "ctv:py-0 ctv:px-1 ctv:rounded-sm ctv:font-mono ctv:bg-primary-background/20 ctv:border ctv:border-primary-background/45 ctv:text-primary-background" }, "@label", -1)),
           createTextVNode(" " + toDisplayString$1(_ctx.$t("entries.refHelpPost")), 1)
         ]),
-        unref(ENTRY_KINDS).length > 1 ? (openBlock(), createElementBlock("div", _hoisted_9$1h, [
+        unref(ENTRY_KINDS).length > 1 ? (openBlock(), createElementBlock("div", _hoisted_9$1g, [
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(ENTRY_KINDS), (k2) => {
             var _a3;
             return openBlock(), createElementBlock("button", {
@@ -58074,11 +58074,11 @@ const _sfc_main$2D = /* @__PURE__ */ defineComponent({
               onClick: ($event) => activeKind.value = k2
             }, [
               createTextVNode(toDisplayString$1(unref(KIND_LABELS)[k2]) + " ", 1),
-              createBaseVNode("span", _hoisted_11$_, toDisplayString$1(((_a3 = unref(rowsByKind)[k2]) == null ? void 0 : _a3.length) ?? 0), 1)
-            ], 10, _hoisted_10$16);
+              createBaseVNode("span", _hoisted_11$Z, toDisplayString$1(((_a3 = unref(rowsByKind)[k2]) == null ? void 0 : _a3.length) ?? 0), 1)
+            ], 10, _hoisted_10$15);
           }), 128))
         ])) : createCommentVNode("", true),
-        createBaseVNode("div", _hoisted_12$S, [
+        createBaseVNode("div", _hoisted_12$R, [
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(activeRows), (entry) => {
             return openBlock(), createElementBlock("div", {
               key: entry.id,
@@ -59077,11 +59077,11 @@ const _hoisted_5$24 = {
 };
 const _hoisted_6$1W = ["aria-expanded", "onClick"];
 const _hoisted_7$1C = { class: "ctv:flex-1 ctv:text-left ctv:truncate" };
-const _hoisted_8$1m = { class: "ctv:text-2xs ctv:tabular-nums ctv:text-muted-foreground" };
-const _hoisted_9$1g = { class: "ctv:mt-1.5 ctv:flex ctv:flex-col ctv:gap-1" };
-const _hoisted_10$15 = { class: "ctv:flex-1 ctv:min-w-0 ctv:truncate ctv:font-semibold" };
-const _hoisted_11$Z = ["title"];
-const _hoisted_12$R = ["title", "onClick"];
+const _hoisted_8$1l = { class: "ctv:text-2xs ctv:tabular-nums ctv:text-muted-foreground" };
+const _hoisted_9$1f = { class: "ctv:mt-1.5 ctv:flex ctv:flex-col ctv:gap-1" };
+const _hoisted_10$14 = { class: "ctv:flex-1 ctv:min-w-0 ctv:truncate ctv:font-semibold" };
+const _hoisted_11$Y = ["title"];
+const _hoisted_12$Q = ["title", "onClick"];
 const _hoisted_13$K = ["title", "onClick"];
 const sectionToggle$2 = "ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:py-1 ctv:px-0 ctv:cursor-pointer ctv:[font-family:inherit] ctv:bg-transparent ctv:border-none ctv:text-inherit ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:font-semibold ctv:text-muted-foreground ctv:hover:text-base-foreground";
 const iconBtnClass$3 = "ctv:inline-flex ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:shrink-0 ctv:rounded-md ctv:border-none ctv:bg-transparent ctv:p-1 ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground ctv:disabled:opacity-50 ctv:disabled:pointer-events-none";
@@ -59113,29 +59113,29 @@ const _sfc_main$2C = /* @__PURE__ */ defineComponent({
                   class: normalizeClass(["pi", unref(isCollapsed)(group.kind) ? "pi-chevron-right" : "pi-chevron-down", "ctv:w-2.5 ctv:text-2xs ctv:text-muted-foreground"])
                 }, null, 2),
                 createBaseVNode("span", _hoisted_7$1C, toDisplayString$1(group.label), 1),
-                createBaseVNode("span", _hoisted_8$1m, toDisplayString$1(group.presets.length), 1)
+                createBaseVNode("span", _hoisted_8$1l, toDisplayString$1(group.presets.length), 1)
               ], 8, _hoisted_6$1W),
-              withDirectives(createBaseVNode("div", _hoisted_9$1g, [
+              withDirectives(createBaseVNode("div", _hoisted_9$1f, [
                 (openBlock(true), createElementBlock(Fragment$1, null, renderList(group.presets, (p2) => {
                   return openBlock(), createElementBlock("div", {
                     key: p2.id,
                     class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:py-1.5 ctv:px-2 ctv:rounded-lg ctv:bg-secondary-background ctv:border ctv:border-border-subtle"
                   }, [
-                    createBaseVNode("span", _hoisted_10$15, toDisplayString$1(p2.name), 1),
+                    createBaseVNode("span", _hoisted_10$14, toDisplayString$1(p2.name), 1),
                     p2.builtin ? (openBlock(), createElementBlock("span", {
                       key: 0,
                       class: "ctv:inline-flex ctv:items-center ctv:justify-center ctv:shrink-0 ctv:p-1 ctv:text-muted-foreground",
                       title: _ctx.$t("stagePresets.builtin")
                     }, [
                       createVNode(unref(IconLock), { class: "ctv:size-3.5" })
-                    ], 8, _hoisted_11$Z)) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
+                    ], 8, _hoisted_11$Y)) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
                       createBaseVNode("button", {
                         class: normalizeClass(iconBtnClass$3),
                         title: _ctx.$t("stagePresets.panel.rename"),
                         onClick: ($event) => unref(onRename)(p2)
                       }, [
                         createVNode(unref(IconPencil), { class: "ctv:size-3.5" })
-                      ], 8, _hoisted_12$R),
+                      ], 8, _hoisted_12$Q),
                       createBaseVNode("button", {
                         class: normalizeClass([iconBtnClass$3, "ctv:hover:text-destructive-background"]),
                         title: _ctx.$t("stagePresets.delete"),
@@ -59280,11 +59280,11 @@ const _hoisted_4$28 = { class: "ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p
 const _hoisted_5$23 = { class: "ctv:flex ctv:items-center ctv:gap-1" };
 const _hoisted_6$1V = ["aria-expanded", "onClick"];
 const _hoisted_7$1B = { class: "ctv:flex-1 ctv:text-left ctv:truncate" };
-const _hoisted_8$1l = { class: "ctv:text-2xs ctv:tabular-nums ctv:text-muted-foreground" };
-const _hoisted_9$1f = ["title", "onClick"];
-const _hoisted_10$14 = ["accept", "onChange"];
-const _hoisted_11$Y = { class: "ctv:mt-1.5 ctv:flex ctv:flex-col ctv:gap-1" };
-const _hoisted_12$Q = {
+const _hoisted_8$1k = { class: "ctv:text-2xs ctv:tabular-nums ctv:text-muted-foreground" };
+const _hoisted_9$1e = ["title", "onClick"];
+const _hoisted_10$13 = ["accept", "onChange"];
+const _hoisted_11$X = { class: "ctv:mt-1.5 ctv:flex ctv:flex-col ctv:gap-1" };
+const _hoisted_12$P = {
   key: 0,
   class: "ctv:py-2 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60"
 };
@@ -59334,7 +59334,7 @@ const _sfc_main$2B = /* @__PURE__ */ defineComponent({
                     class: normalizeClass(["pi", unref(isCollapsed)(group.kind) ? "pi-chevron-right" : "pi-chevron-down", "ctv:w-2.5 ctv:text-2xs ctv:text-muted-foreground"])
                   }, null, 2),
                   createBaseVNode("span", _hoisted_7$1B, toDisplayString$1(group.label), 1),
-                  createBaseVNode("span", _hoisted_8$1l, toDisplayString$1(group.resources.length), 1)
+                  createBaseVNode("span", _hoisted_8$1k, toDisplayString$1(group.resources.length), 1)
                 ], 8, _hoisted_6$1V),
                 createBaseVNode("button", {
                   class: normalizeClass(iconBtnClass$2),
@@ -59345,7 +59345,7 @@ const _sfc_main$2B = /* @__PURE__ */ defineComponent({
                   }
                 }, [
                   createVNode(unref(IconUpload), { class: "ctv:size-3.5" })
-                ], 8, _hoisted_9$1f),
+                ], 8, _hoisted_9$1e),
                 createBaseVNode("input", {
                   ref_for: true,
                   ref: (el) => setFileInput(group.kind, el),
@@ -59353,10 +59353,10 @@ const _sfc_main$2B = /* @__PURE__ */ defineComponent({
                   accept: group.accept,
                   class: "ctv:hidden",
                   onChange: (e) => unref(onUpload)(group.kind, e)
-                }, null, 40, _hoisted_10$14)
+                }, null, 40, _hoisted_10$13)
               ]),
-              withDirectives(createBaseVNode("div", _hoisted_11$Y, [
-                group.resources.length === 0 ? (openBlock(), createElementBlock("div", _hoisted_12$Q, toDisplayString$1(_ctx.$t("resources.panel.empty")), 1)) : createCommentVNode("", true),
+              withDirectives(createBaseVNode("div", _hoisted_11$X, [
+                group.resources.length === 0 ? (openBlock(), createElementBlock("div", _hoisted_12$P, toDisplayString$1(_ctx.$t("resources.panel.empty")), 1)) : createCommentVNode("", true),
                 (openBlock(true), createElementBlock(Fragment$1, null, renderList(group.resources, (r) => {
                   return openBlock(), createElementBlock("div", {
                     key: r.id,
@@ -59929,11 +59929,11 @@ const _hoisted_6$1U = {
   class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2 ctv:rounded-lg ctv:bg-secondary-background ctv:border ctv:border-border-default"
 };
 const _hoisted_7$1A = { class: "ctv:flex ctv:flex-col ctv:gap-0.5" };
-const _hoisted_8$1k = { class: "ctv:text-muted-foreground" };
-const _hoisted_9$1e = { class: "ctv:flex ctv:gap-1.5" };
-const _hoisted_10$13 = { class: "ctv:flex-1 ctv:flex ctv:flex-col ctv:gap-0.5 ctv:min-w-0" };
-const _hoisted_11$X = { class: "ctv:text-muted-foreground" };
-const _hoisted_12$P = { class: "ctv:w-20 ctv:flex ctv:flex-col ctv:gap-0.5" };
+const _hoisted_8$1j = { class: "ctv:text-muted-foreground" };
+const _hoisted_9$1d = { class: "ctv:flex ctv:gap-1.5" };
+const _hoisted_10$12 = { class: "ctv:flex-1 ctv:flex ctv:flex-col ctv:gap-0.5 ctv:min-w-0" };
+const _hoisted_11$W = { class: "ctv:text-muted-foreground" };
+const _hoisted_12$O = { class: "ctv:w-20 ctv:flex ctv:flex-col ctv:gap-0.5" };
 const _hoisted_13$I = { class: "ctv:text-muted-foreground" };
 const _hoisted_14$E = { class: "ctv:opacity-75" };
 const _hoisted_15$y = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
@@ -60024,23 +60024,23 @@ const _sfc_main$2z = /* @__PURE__ */ defineComponent({
         createBaseVNode("div", _hoisted_5$22, [
           unref(form) ? (openBlock(), createElementBlock("div", _hoisted_6$1U, [
             createBaseVNode("label", _hoisted_7$1A, [
-              createBaseVNode("span", _hoisted_8$1k, toDisplayString$1(_ctx.$t("servers.form.label")), 1),
+              createBaseVNode("span", _hoisted_8$1j, toDisplayString$1(_ctx.$t("servers.form.label")), 1),
               createVNode(_sfc_main$2A, {
                 modelValue: unref(form).label,
                 "onUpdate:modelValue": _cache2[1] || (_cache2[1] = ($event) => unref(form).label = $event),
                 placeholder: _ctx.$t("servers.form.labelPlaceholder")
               }, null, 8, ["modelValue", "placeholder"])
             ]),
-            createBaseVNode("div", _hoisted_9$1e, [
-              createBaseVNode("label", _hoisted_10$13, [
-                createBaseVNode("span", _hoisted_11$X, toDisplayString$1(_ctx.$t("servers.form.host")), 1),
+            createBaseVNode("div", _hoisted_9$1d, [
+              createBaseVNode("label", _hoisted_10$12, [
+                createBaseVNode("span", _hoisted_11$W, toDisplayString$1(_ctx.$t("servers.form.host")), 1),
                 createVNode(_sfc_main$2A, {
                   modelValue: unref(form).host,
                   "onUpdate:modelValue": _cache2[2] || (_cache2[2] = ($event) => unref(form).host = $event),
                   placeholder: "192.168.1.20"
                 }, null, 8, ["modelValue"])
               ]),
-              createBaseVNode("label", _hoisted_12$P, [
+              createBaseVNode("label", _hoisted_12$O, [
                 createBaseVNode("span", _hoisted_13$I, toDisplayString$1(_ctx.$t("servers.form.port")), 1),
                 createVNode(_sfc_main$2A, {
                   modelValue: unref(form).port,
@@ -66708,9 +66708,9 @@ function $eb76cf4feb040f77$var$getSymbols(locale, formatter, intlOptions, origin
     noNumeralUnits
   };
 }
-function $eb76cf4feb040f77$var$replaceAll(str, find, replace2) {
-  if (str.replaceAll) return str.replaceAll(find, replace2);
-  return str.split(find).join(replace2);
+function $eb76cf4feb040f77$var$replaceAll(str2, find, replace2) {
+  if (str2.replaceAll) return str2.replaceAll(find, replace2);
+  return str2.split(find).join(replace2);
 }
 function $eb76cf4feb040f77$var$escapeRegex(string2) {
   return string2.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -69199,14 +69199,14 @@ const _hoisted_5$20 = {
 };
 const _hoisted_6$1S = { class: "ctv:flex ctv:flex-col ctv:gap-0.5 ctv:pt-1 ctv:pb-2 ctv:border-b ctv:border-border-subtle" };
 const _hoisted_7$1z = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_8$1j = { class: "ctv:text-xs ctv:font-semibold" };
-const _hoisted_9$1d = {
+const _hoisted_8$1i = { class: "ctv:text-xs ctv:font-semibold" };
+const _hoisted_9$1c = {
   key: 0,
   class: "ctv:mt-1 ctv:text-2xs ctv:italic ctv:text-warning-background"
 };
-const _hoisted_10$12 = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
-const _hoisted_11$W = { class: "ctv:m-0 ctv:text-3xs ctv:leading-relaxed ctv:text-muted-foreground ctv:break-all" };
-const _hoisted_12$O = ["disabled"];
+const _hoisted_10$11 = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
+const _hoisted_11$V = { class: "ctv:m-0 ctv:text-3xs ctv:leading-relaxed ctv:text-muted-foreground ctv:break-all" };
+const _hoisted_12$N = ["disabled"];
 const _hoisted_13$H = {
   key: 0,
   class: "ctv:text-3xs ctv:text-destructive-background"
@@ -69403,14 +69403,14 @@ const _sfc_main$2u = /* @__PURE__ */ defineComponent({
         }, toDisplayString$1(_ctx.$t("configSidebar.noWorkflowPicked")), 1)) : unref(loadError) ? (openBlock(), createElementBlock("div", _hoisted_4$25, toDisplayString$1(unref(loadError)), 1)) : unref(config2) ? (openBlock(), createElementBlock("div", _hoisted_5$20, [
           createBaseVNode("div", _hoisted_6$1S, [
             createBaseVNode("span", _hoisted_7$1z, toDisplayString$1(unref(config2).kind), 1),
-            createBaseVNode("span", _hoisted_8$1j, toDisplayString$1(unref(config2).label), 1),
-            !unref(config2).has_api ? (openBlock(), createElementBlock("span", _hoisted_9$1d, toDisplayString$1(_ctx.$t("configSidebar.pickWorkflowFirst")), 1)) : createCommentVNode("", true)
+            createBaseVNode("span", _hoisted_8$1i, toDisplayString$1(unref(config2).label), 1),
+            !unref(config2).has_api ? (openBlock(), createElementBlock("span", _hoisted_9$1c, toDisplayString$1(_ctx.$t("configSidebar.pickWorkflowFirst")), 1)) : createCommentVNode("", true)
           ]),
           isLinked.value ? (openBlock(), createElementBlock("section", {
             key: 0,
             class: normalizeClass(["ctv:flex ctv:flex-col ctv:gap-1.5 ctv:py-1.5 ctv:px-2 ctv:rounded", linkBroken.value ? "ctv:bg-destructive-background/10 ctv:border ctv:border-destructive-background/40" : "ctv:bg-primary-background/[0.06] ctv:border ctv:border-primary-background/25"])
           }, [
-            createBaseVNode("div", _hoisted_10$12, [
+            createBaseVNode("div", _hoisted_10$11, [
               createBaseVNode("i", {
                 class: normalizeClass([
                   "pi",
@@ -69423,7 +69423,7 @@ const _sfc_main$2u = /* @__PURE__ */ defineComponent({
                 class: normalizeClass(["ctv:text-2xs ctv:font-semibold", linkBroken.value ? "ctv:text-destructive-background" : "ctv:text-base-foreground"])
               }, toDisplayString$1(linkBroken.value ? _ctx.$t("configSidebar.linkBroken") : _ctx.$t("configSidebar.linkedSource")), 3)
             ]),
-            createBaseVNode("p", _hoisted_11$W, toDisplayString$1(linkBroken.value ? _ctx.$t("configSidebar.linkBrokenHint") : _ctx.$t("configSidebar.linkedSourceHint")), 1),
+            createBaseVNode("p", _hoisted_11$V, toDisplayString$1(linkBroken.value ? _ctx.$t("configSidebar.linkBrokenHint") : _ctx.$t("configSidebar.linkedSourceHint")), 1),
             createBaseVNode("button", {
               class: normalizeClass(resetBtn),
               disabled: unref(unlinkBusy),
@@ -69432,7 +69432,7 @@ const _sfc_main$2u = /* @__PURE__ */ defineComponent({
             }, [
               _cache2[9] || (_cache2[9] = createBaseVNode("i", { class: "pi pi-link" }, null, -1)),
               createTextVNode(" " + toDisplayString$1(_ctx.$t("configSidebar.unlink")), 1)
-            ], 8, _hoisted_12$O),
+            ], 8, _hoisted_12$N),
             unref(unlinkError) ? (openBlock(), createElementBlock("span", _hoisted_13$H, toDisplayString$1(unref(unlinkError)), 1)) : createCommentVNode("", true)
           ], 2)) : createCommentVNode("", true),
           ((_a3 = unref(config2).gui_notes) == null ? void 0 : _a3.length) ? (openBlock(), createElementBlock("section", _hoisted_14$D, [
@@ -69777,14 +69777,14 @@ const _hoisted_7$1y = {
   key: 0,
   class: "ctv:py-1.5 ctv:px-2 ctv:text-xs ctv:rounded ctv:bg-destructive-background/15 ctv:border ctv:border-destructive-background/50 ctv:text-destructive-background"
 };
-const _hoisted_8$1i = {
+const _hoisted_8$1h = {
   key: 1,
   class: "ctv:py-3 ctv:text-center ctv:italic ctv:text-muted-foreground/60"
 };
-const _hoisted_9$1c = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-wrap" };
-const _hoisted_10$11 = { class: "ctv:font-semibold ctv:truncate" };
-const _hoisted_11$V = ["title"];
-const _hoisted_12$N = ["title"];
+const _hoisted_9$1b = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-wrap" };
+const _hoisted_10$10 = { class: "ctv:font-semibold ctv:truncate" };
+const _hoisted_11$U = ["title"];
+const _hoisted_12$M = ["title"];
 const _hoisted_13$G = ["title"];
 const _hoisted_14$C = ["title"];
 const _hoisted_15$w = ["title"];
@@ -69858,24 +69858,24 @@ const _sfc_main$2t = /* @__PURE__ */ defineComponent({
             createTextVNode(" " + toDisplayString$1(_ctx.$t("stageManager.import")), 1)
           ], 8, _hoisted_6$1R)
         ]),
-        unref(loadError) ? (openBlock(), createElementBlock("div", _hoisted_7$1y, toDisplayString$1(unref(loadError)), 1)) : !unref(loading2) && unref(rows).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_8$1i, toDisplayString$1(_ctx.$t("stageManager.emptyWorkflows")), 1)) : createCommentVNode("", true),
+        unref(loadError) ? (openBlock(), createElementBlock("div", _hoisted_7$1y, toDisplayString$1(unref(loadError)), 1)) : !unref(loading2) && unref(rows).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_8$1h, toDisplayString$1(_ctx.$t("stageManager.emptyWorkflows")), 1)) : createCommentVNode("", true),
         (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(rows), (w2) => {
           return openBlock(), createElementBlock("div", {
             key: w2.id,
             class: "ctv:flex ctv:flex-col ctv:gap-0.5 ctv:py-1.5 ctv:px-2 ctv:rounded ctv:border ctv:border-border-subtle"
           }, [
-            createBaseVNode("div", _hoisted_9$1c, [
-              createBaseVNode("span", _hoisted_10$11, toDisplayString$1(w2.label), 1),
+            createBaseVNode("div", _hoisted_9$1b, [
+              createBaseVNode("span", _hoisted_10$10, toDisplayString$1(w2.label), 1),
               unref(recentAdded).has(w2.label) ? (openBlock(), createElementBlock("span", {
                 key: 0,
                 class: normalizeClass([badge, "ctv:bg-success-background/15 ctv:text-success-background"]),
                 title: _ctx.$t("stageManager.badge.newHint")
-              }, toDisplayString$1(_ctx.$t("stageManager.badge.new")), 11, _hoisted_11$V)) : createCommentVNode("", true),
+              }, toDisplayString$1(_ctx.$t("stageManager.badge.new")), 11, _hoisted_11$U)) : createCommentVNode("", true),
               w2.builtin ? (openBlock(), createElementBlock("span", {
                 key: 1,
                 class: normalizeClass([badge, "ctv:bg-base-foreground/10 ctv:text-muted-foreground"]),
                 title: _ctx.$t("stageManager.badge.builtinHint")
-              }, toDisplayString$1(_ctx.$t("stageManager.badge.builtin")), 11, _hoisted_12$N)) : createCommentVNode("", true),
+              }, toDisplayString$1(_ctx.$t("stageManager.badge.builtin")), 11, _hoisted_12$M)) : createCommentVNode("", true),
               w2.link_type === unref(LINK_TYPE_NATIVE) ? (openBlock(), createElementBlock("span", {
                 key: 2,
                 class: normalizeClass([badge, "ctv:bg-primary-background/10 ctv:text-primary-foreground"]),
@@ -70142,11 +70142,11 @@ const _hoisted_4$23 = { class: "ctv:w-28" };
 const _hoisted_5$1_ = { class: "ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-2.5 ctv:flex ctv:flex-col ctv:gap-2.5" };
 const _hoisted_6$1Q = ["aria-expanded"];
 const _hoisted_7$1x = { class: "ctv:flex-1 ctv:text-left" };
-const _hoisted_8$1h = ["aria-expanded"];
-const _hoisted_9$1b = { class: "ctv:flex-1 ctv:text-left" };
-const _hoisted_10$10 = { class: "ctv:mt-1.5 ctv:flex ctv:flex-col ctv:gap-2.5" };
-const _hoisted_11$U = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2 ctv:rounded ctv:border ctv:border-border-subtle ctv:bg-secondary-background/40" };
-const _hoisted_12$M = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:opacity-60" };
+const _hoisted_8$1g = ["aria-expanded"];
+const _hoisted_9$1a = { class: "ctv:flex-1 ctv:text-left" };
+const _hoisted_10$$ = { class: "ctv:mt-1.5 ctv:flex ctv:flex-col ctv:gap-2.5" };
+const _hoisted_11$T = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2 ctv:rounded ctv:border ctv:border-border-subtle ctv:bg-secondary-background/40" };
+const _hoisted_12$L = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:opacity-60" };
 const _hoisted_13$F = { class: "ctv:flex ctv:gap-1.5" };
 const _hoisted_14$B = { class: "ctv:flex-1" };
 const _hoisted_15$v = { class: "ctv:flex-1" };
@@ -70245,11 +70245,11 @@ const _sfc_main$2s = /* @__PURE__ */ defineComponent({
               createBaseVNode("i", {
                 class: normalizeClass(["pi", unref(paramsCollapsed) ? "pi-chevron-right" : "pi-chevron-down", "ctv:w-2.5 ctv:text-2xs ctv:text-muted-foreground"])
               }, null, 2),
-              createBaseVNode("span", _hoisted_9$1b, toDisplayString$1(_ctx.$t("stageManager.section.params")), 1)
-            ], 8, _hoisted_8$1h),
-            withDirectives(createBaseVNode("div", _hoisted_10$10, [
-              createBaseVNode("div", _hoisted_11$U, [
-                createBaseVNode("div", _hoisted_12$M, toDisplayString$1(_ctx.$t("stageParams.sidebar.new")), 1),
+              createBaseVNode("span", _hoisted_9$1a, toDisplayString$1(_ctx.$t("stageManager.section.params")), 1)
+            ], 8, _hoisted_8$1g),
+            withDirectives(createBaseVNode("div", _hoisted_10$$, [
+              createBaseVNode("div", _hoisted_11$T, [
+                createBaseVNode("div", _hoisted_12$L, toDisplayString$1(_ctx.$t("stageParams.sidebar.new")), 1),
                 createBaseVNode("label", {
                   class: normalizeClass(fieldRow)
                 }, [
@@ -70409,8 +70409,8 @@ const _hoisted_4$22 = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv
 const _hoisted_5$1Z = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
 const _hoisted_6$1P = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
 const _hoisted_7$1w = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
-const _hoisted_8$1g = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
-const _hoisted_9$1a = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
+const _hoisted_8$1f = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
+const _hoisted_9$19 = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
 const _sfc_main$2r = /* @__PURE__ */ defineComponent({
   __name: "ComfyTVSidebar",
   setup(__props) {
@@ -70495,14 +70495,14 @@ const _sfc_main$2r = /* @__PURE__ */ defineComponent({
         ], 512), [
           [vShow, unref(activeTab) === "presets"]
         ]),
-        withDirectives(createBaseVNode("div", _hoisted_8$1g, [
+        withDirectives(createBaseVNode("div", _hoisted_8$1f, [
           createVNode(_sfc_main$2B, {
             active: unref(activeTab) === "resources"
           }, null, 8, ["active"])
         ], 512), [
           [vShow, unref(activeTab) === "resources"]
         ]),
-        withDirectives(createBaseVNode("div", _hoisted_9$1a, [
+        withDirectives(createBaseVNode("div", _hoisted_9$19, [
           createVNode(_sfc_main$2z)
         ], 512), [
           [vShow, unref(activeTab) === "servers"]
@@ -70565,12 +70565,12 @@ const _hoisted_6$1O = {
   class: "ctv:grid ctv:grid-cols-[repeat(auto-fill,minmax(64px,1fr))] ctv:gap-1"
 };
 const _hoisted_7$1v = ["title", "onClick"];
-const _hoisted_8$1f = ["src", "alt"];
-const _hoisted_9$19 = {
+const _hoisted_8$1e = ["src", "alt"];
+const _hoisted_9$18 = {
   key: 0,
   class: "ctv:absolute ctv:top-0.5 ctv:right-0.5 ctv:flex ctv:items-center ctv:justify-center ctv:size-4 ctv:rounded-full ctv:text-3xs ctv:leading-none ctv:bg-primary-background ctv:text-white"
 };
-const _hoisted_10$$ = { class: "ctv:w-full ctv:truncate ctv:py-0.5 ctv:px-1 ctv:text-left ctv:text-3xs ctv:text-muted-foreground" };
+const _hoisted_10$_ = { class: "ctv:w-full ctv:truncate ctv:py-0.5 ctv:px-1 ctv:text-left ctv:text-3xs ctv:text-muted-foreground" };
 const _sfc_main$2q = /* @__PURE__ */ defineComponent({
   __name: "AssetPickerPopup",
   props: {
@@ -70640,11 +70640,11 @@ const _sfc_main$2q = /* @__PURE__ */ defineComponent({
                     "ctv:block ctv:w-full ctv:aspect-square ctv:object-cover",
                     unref(isAdded)(asset.id) ? "ctv:opacity-55" : ""
                   ])
-                }, null, 10, _hoisted_8$1f),
-                unref(isAdded)(asset.id) ? (openBlock(), createElementBlock("span", _hoisted_9$19, [..._cache2[2] || (_cache2[2] = [
+                }, null, 10, _hoisted_8$1e),
+                unref(isAdded)(asset.id) ? (openBlock(), createElementBlock("span", _hoisted_9$18, [..._cache2[2] || (_cache2[2] = [
                   createBaseVNode("i", { class: "pi pi-check" }, null, -1)
                 ])])) : createCommentVNode("", true),
-                createBaseVNode("span", _hoisted_10$$, toDisplayString$1(asset.name || "—"), 1)
+                createBaseVNode("span", _hoisted_10$_, toDisplayString$1(asset.name || "—"), 1)
               ], 10, _hoisted_7$1v);
             }), 128))
           ]))
@@ -70924,16 +70924,16 @@ const _hoisted_5$1W = {
 };
 const _hoisted_6$1M = ["title", "onClick"];
 const _hoisted_7$1t = ["src", "alt"];
-const _hoisted_8$1e = {
+const _hoisted_8$1d = {
   key: 1,
   class: "ctv:flex ctv:items-center ctv:justify-center ctv:size-full ctv:p-1 ctv:text-center ctv:text-3xs ctv:italic ctv:text-muted-foreground/60"
 };
-const _hoisted_9$18 = ["title", "onClick"];
-const _hoisted_10$_ = {
+const _hoisted_9$17 = ["title", "onClick"];
+const _hoisted_10$Z = {
   key: 2,
   class: "ctv:text-2xs ctv:italic ctv:text-muted-foreground/60"
 };
-const _hoisted_11$T = {
+const _hoisted_11$S = {
   key: 3,
   class: "ctv:flex ctv:flex-col ctv:gap-0.5 ctv:py-1 ctv:px-1.5 ctv:rounded ctv:text-2xs ctv:bg-warning-background/10 ctv:border ctv:border-warning-background/40 ctv:text-warning-background"
 };
@@ -71014,7 +71014,7 @@ const _sfc_main$2o = /* @__PURE__ */ defineComponent({
                 alt: unref(assetOf)(ref2).name,
                 class: "ctv:block ctv:size-full ctv:object-cover",
                 draggable: "false"
-              }, null, 8, _hoisted_7$1t)) : (openBlock(), createElementBlock("div", _hoisted_8$1e, toDisplayString$1(_ctx.$t("promptAssets.missing", { id: ref2.asset_id })), 1)),
+              }, null, 8, _hoisted_7$1t)) : (openBlock(), createElementBlock("div", _hoisted_8$1d, toDisplayString$1(_ctx.$t("promptAssets.missing", { id: ref2.asset_id })), 1)),
               createBaseVNode("span", {
                 class: "ctv:absolute ctv:bottom-0 ctv:inset-x-0 ctv:py-0.5 ctv:px-1 ctv:text-3xs ctv:font-semibold ctv:overflow-hidden ctv:whitespace-nowrap ctv:text-ellipsis ctv:pointer-events-none ctv:bg-linear-to-b ctv:from-transparent ctv:to-black/75",
                 style: normalizeStyle({ color: unref(slotColor)(ref2.slot) })
@@ -71026,11 +71026,11 @@ const _sfc_main$2o = /* @__PURE__ */ defineComponent({
                 onClick: withModifiers(($event) => unref(removeRef)(i), ["stop"])
               }, [..._cache2[2] || (_cache2[2] = [
                 createBaseVNode("i", { class: "pi pi-times" }, null, -1)
-              ])], 10, _hoisted_9$18)
+              ])], 10, _hoisted_9$17)
             ], 12, _hoisted_6$1M);
           }), 128))
-        ])) : (openBlock(), createElementBlock("div", _hoisted_10$_, toDisplayString$1(_ctx.$t("imageRefs.empty")), 1)),
-        unref(slotWarnings).length ? (openBlock(), createElementBlock("div", _hoisted_11$T, [
+        ])) : (openBlock(), createElementBlock("div", _hoisted_10$Z, toDisplayString$1(_ctx.$t("imageRefs.empty")), 1)),
+        unref(slotWarnings).length ? (openBlock(), createElementBlock("div", _hoisted_11$S, [
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(slotWarnings), (w2, i) => {
             return openBlock(), createElementBlock("div", { key: i }, [
               _cache2[3] || (_cache2[3] = createBaseVNode("i", { class: "pi pi-exclamation-triangle" }, null, -1)),
@@ -72105,10 +72105,10 @@ class ResolvedPos {
   @internal
   */
   toString() {
-    let str = "";
+    let str2 = "";
     for (let i = 1; i <= this.depth; i++)
-      str += (str ? "/" : "") + this.node(i).type.name + "_" + this.index(i - 1);
-    return str + ":" + this.parentOffset;
+      str2 += (str2 ? "/" : "") + this.node(i).type.name + "_" + this.index(i - 1);
+    return str2 + ":" + this.parentOffset;
   }
   /**
   @internal
@@ -72650,10 +72650,10 @@ class TextNode extends Node$1 {
     return base2;
   }
 }
-function wrapMarks(marks, str) {
+function wrapMarks(marks, str2) {
   for (let i = marks.length - 1; i >= 0; i--)
-    str = marks[i].type.name + "(" + str + ")";
-  return str;
+    str2 = marks[i].type.name + "(" + str2 + ")";
+  return str2;
 }
 class ContentMatch {
   /**
@@ -72845,8 +72845,8 @@ class TokenStream {
   eat(tok) {
     return this.next == tok && (this.pos++ || true);
   }
-  err(str) {
-    throw new SyntaxError(str + " (in content expression '" + this.string + "')");
+  err(str2) {
+    throw new SyntaxError(str2 + " (in content expression '" + this.string + "')");
   }
 }
 function parseExpr(stream) {
@@ -79694,21 +79694,21 @@ function findTextInFragment(frag, text2, from2, to) {
     pos += child.nodeSize;
     if (!child.isText)
       continue;
-    let str = child.text;
+    let str2 = child.text;
     while (i < frag.childCount) {
       let next = frag.child(i++);
       pos += next.nodeSize;
       if (!next.isText)
         break;
-      str += next.text;
+      str2 += next.text;
     }
     if (pos >= from2) {
-      if (pos >= to && str.slice(to - text2.length - childStart, to - childStart) == text2)
+      if (pos >= to && str2.slice(to - text2.length - childStart, to - childStart) == text2)
         return to - text2.length;
-      let found2 = childStart < to ? str.lastIndexOf(text2, to - childStart - 1) : -1;
+      let found2 = childStart < to ? str2.lastIndexOf(text2, to - childStart - 1) : -1;
       if (found2 >= 0 && found2 + text2.length + childStart >= from2)
         return childStart + found2;
-      if (from2 == to && str.length >= to + text2.length - childStart && str.slice(to - childStart, to - childStart + text2.length) == text2)
+      if (from2 == to && str2.length >= to + text2.length - childStart && str2.slice(to - childStart, to - childStart + text2.length) == text2)
         return to;
     }
   }
@@ -82471,10 +82471,10 @@ function findDiff(a, b2, pos, preferredPos, preferredSide) {
   }
   return { start: start2, endA, endB };
 }
-function isSurrogatePair(str) {
-  if (str.length != 2)
+function isSurrogatePair(str2) {
+  if (str2.length != 2)
     return false;
-  let a = str.charCodeAt(0), b2 = str.charCodeAt(1);
+  let a = str2.charCodeAt(0), b2 = str2.charCodeAt(1);
   return a >= 56320 && a <= 57343 && b2 >= 55296 && b2 <= 56319;
 }
 class EditorView {
@@ -92331,8 +92331,8 @@ function getValueAtIndexOrReturn(value, index, defaultValue) {
   return value;
 }
 function isType(value, type) {
-  var str = {}.toString.call(value);
-  return str.indexOf("[object") === 0 && str.indexOf(type + "]") > -1;
+  var str2 = {}.toString.call(value);
+  return str2.indexOf("[object") === 0 && str2.indexOf(type + "]") > -1;
 }
 function invokeWithArgsOrReturn(value, args) {
   return typeof value === "function" ? value.apply(void 0, args) : value;
@@ -93738,6 +93738,26 @@ const POOL_PICKER_KINDS = ["image-picker", "audio-picker", "video-picker"];
 function isPoolPickerKind(kind) {
   return POOL_PICKER_KINDS.includes(kind);
 }
+const FX_PASSTHROUGH_CLASSES = /* @__PURE__ */ new Set([
+  "ComfyTV.VideoColorStage",
+  "ComfyTV.VideoCurvesStage",
+  "ComfyTV.VideoLUTStage",
+  "ComfyTV.ColorFXStage",
+  "ComfyTV.VideoBlurSharpenStage",
+  "ComfyTV.VideoDenoiseStage",
+  "ComfyTV.VideoDeinterlaceStage",
+  "ComfyTV.VideoStylizeStage",
+  "ComfyTV.HueCorrectStage",
+  "ComfyTV.DespillStage",
+  "ComfyTV.ColorSuppressStage",
+  "ComfyTV.KeyerStage",
+  "ComfyTV.PIKStage",
+  "ComfyTV.MatteMorphStage",
+  "ComfyTV.GlowStage",
+  "ComfyTV.GodRaysStage",
+  "ComfyTV.OldFilmStage",
+  "ComfyTV.VideoTransformStage"
+]);
 const KIND_TO_TYPE = {
   text: "COMFYTV_TEXT",
   image: "COMFYTV_IMAGE",
@@ -93782,8 +93802,27 @@ const useStageStore = /* @__PURE__ */ defineStore("comfytv-stage", () => {
   function notifyDownstream() {
     bumpStateTick();
   }
-  function refreshStageInputs(node, state2, app2) {
+  function resolveUpstreamValue(app2, linkId, depth = 0) {
     var _a3, _b2, _c, _d, _e2, _f;
+    if (linkId == null || depth > 16) return null;
+    const linksMap = (_a3 = app2 == null ? void 0 : app2.graph) == null ? void 0 : _a3.links;
+    const link = linksMap && typeof linksMap.get === "function" ? linksMap.get(linkId) : (linksMap == null ? void 0 : linksMap[linkId]) ?? ((_c = (_b2 = app2 == null ? void 0 : app2.graph) == null ? void 0 : _b2.getLink) == null ? void 0 : _c.call(_b2, linkId));
+    const srcNode = link ? (_e2 = (_d = app2 == null ? void 0 : app2.graph) == null ? void 0 : _d.getNodeById) == null ? void 0 : _e2.call(_d, link.origin_id) : null;
+    const srcState = srcNode ? stages.get(srcNode) : null;
+    const srcSlot = Number(link == null ? void 0 : link.origin_slot) || 0;
+    if (srcState) {
+      const slotted = (_f = srcState.outputs) == null ? void 0 : _f[srcSlot];
+      if (slotted != null && String(slotted).length > 0) return String(slotted);
+      if (srcSlot === 0 && srcState.output) return String(srcState.output);
+    }
+    const cls = String((srcNode == null ? void 0 : srcNode.comfyClass) ?? (srcNode == null ? void 0 : srcNode.type) ?? "");
+    if (srcNode && srcSlot === 0 && FX_PASSTHROUGH_CLASSES.has(cls)) {
+      const vin = (srcNode.inputs || []).find((i) => (i == null ? void 0 : i.name) === "video");
+      if ((vin == null ? void 0 : vin.link) != null) return resolveUpstreamValue(app2, vin.link, depth + 1);
+    }
+    return null;
+  }
+  function refreshStageInputs(node, state2, app2) {
     const out = [];
     const inputs = node.inputs || [];
     for (const inp of inputs) {
@@ -93793,22 +93832,9 @@ const useStageStore = /* @__PURE__ */ defineStore("comfytv-stage", () => {
         out.push({ slot, type, source: "empty", content: null });
         continue;
       }
-      const linksMap = (_a3 = app2 == null ? void 0 : app2.graph) == null ? void 0 : _a3.links;
-      const link = linksMap && typeof linksMap.get === "function" ? linksMap.get(inp.link) : (linksMap == null ? void 0 : linksMap[inp.link]) ?? ((_c = (_b2 = app2 == null ? void 0 : app2.graph) == null ? void 0 : _b2.getLink) == null ? void 0 : _c.call(_b2, inp.link));
-      const srcNode = link ? (_e2 = (_d = app2 == null ? void 0 : app2.graph) == null ? void 0 : _d.getNodeById) == null ? void 0 : _e2.call(_d, link.origin_id) : null;
-      const srcState = srcNode ? stages.get(srcNode) : null;
-      const srcSlot = Number(link == null ? void 0 : link.origin_slot) || 0;
-      let upstream = null;
-      if (srcState) {
-        const slotted = (_f = srcState.outputs) == null ? void 0 : _f[srcSlot];
-        if (slotted != null) {
-          upstream = slotted;
-        } else if (srcSlot === 0 && srcState.output) {
-          upstream = srcState.output;
-        }
-      }
-      if (upstream != null && String(upstream).length > 0) {
-        out.push({ slot, type, source: "upstream", content: String(upstream) });
+      const upstream = resolveUpstreamValue(app2, inp.link);
+      if (upstream != null) {
+        out.push({ slot, type, source: "upstream", content: upstream });
       } else {
         out.push({ slot, type, source: "upstream-pending", content: null });
       }
@@ -93828,7 +93854,7 @@ const useStageStore = /* @__PURE__ */ defineStore("comfytv-stage", () => {
     state2.output = s;
     while (state2.outputs.length < 1) state2.outputs.push(null);
     state2.outputs[0] = s;
-    if (state2.outputType === "COMFYTV_VIDEO" && !isPoolPickerKind(state2.kind) && state2.variant !== "loader") {
+    if (state2.outputType === "COMFYTV_VIDEO" && !isPoolPickerKind(state2.kind) && state2.variant !== "loader" && !state2.inputs.some((i) => i.content === s)) {
       void autoProxyOutput(s);
     }
     if (picked !== void 0 && picked !== null) {
@@ -94384,12 +94410,12 @@ const _hoisted_7$1s = {
   key: 0,
   class: "ctv:py-1 ctv:px-1.5 ctv:rounded-sm ctv:text-2xs ctv:leading-snug ctv:font-mono ctv:bg-secondary-background ctv:text-muted-foreground ctv:break-words"
 };
-const _hoisted_8$1d = {
+const _hoisted_8$1c = {
   key: 1,
   class: "ctv:text-2xs ctv:italic ctv:text-muted-foreground/60"
 };
-const _hoisted_9$17 = { class: "ctv:flex ctv:gap-1.5" };
-const _hoisted_10$Z = ["disabled"];
+const _hoisted_9$16 = { class: "ctv:flex ctv:gap-1.5" };
+const _hoisted_10$Y = ["disabled"];
 const labelClass$2 = "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground";
 const BTN_BASE$1 = "ctv:inline-flex ctv:items-center ctv:justify-center ctv:h-6 ctv:px-2.5 ctv:rounded-sm ctv:text-2xs ctv:font-medium ctv:cursor-pointer ctv:border ctv:[font-family:inherit] ctv:transition-colors";
 const _sfc_main$2n = /* @__PURE__ */ defineComponent({
@@ -94459,14 +94485,14 @@ const _sfc_main$2n = /* @__PURE__ */ defineComponent({
             }, null, 8, ["model-value"])
           ])
         ]),
-        unref(compiled) ? (openBlock(), createElementBlock("div", _hoisted_7$1s, toDisplayString$1(unref(compiled)), 1)) : (openBlock(), createElementBlock("div", _hoisted_8$1d, toDisplayString$1(_ctx.$t("cameraPrompt.empty")), 1)),
-        createBaseVNode("div", _hoisted_9$17, [
+        unref(compiled) ? (openBlock(), createElementBlock("div", _hoisted_7$1s, toDisplayString$1(unref(compiled)), 1)) : (openBlock(), createElementBlock("div", _hoisted_8$1c, toDisplayString$1(_ctx.$t("cameraPrompt.empty")), 1)),
+        createBaseVNode("div", _hoisted_9$16, [
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(insertBtnClass),
             disabled: !unref(compiled),
             onClick: _cache2[4] || (_cache2[4] = ($event) => _ctx.$emit("insert", { camera: unref(camera2), lens: unref(lens), focal: unref(focal), aperture: unref(aperture) }))
-          }, toDisplayString$1(_ctx.$t("cameraPrompt.insert")), 9, _hoisted_10$Z),
+          }, toDisplayString$1(_ctx.$t("cameraPrompt.insert")), 9, _hoisted_10$Y),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(clearBtnClass),
@@ -94484,10 +94510,10 @@ function wrapIndex(current, count2, delta) {
 }
 function useListKeyboardNav(count2) {
   const activeIndex = /* @__PURE__ */ ref(0);
-  function moveUp2() {
+  function moveUp() {
     activeIndex.value = wrapIndex(activeIndex.value, count2(), -1);
   }
-  function moveDown2() {
+  function moveDown() {
     activeIndex.value = wrapIndex(activeIndex.value, count2(), 1);
   }
   function reset() {
@@ -94496,10 +94522,10 @@ function useListKeyboardNav(count2) {
   function onKeyDown2(event, onSelect) {
     switch (event.key) {
       case "ArrowUp":
-        moveUp2();
+        moveUp();
         return true;
       case "ArrowDown":
-        moveDown2();
+        moveDown();
         return true;
       case "Enter":
       case "Tab":
@@ -94511,7 +94537,7 @@ function useListKeyboardNav(count2) {
         return false;
     }
   }
-  return { activeIndex, moveUp: moveUp2, moveDown: moveDown2, reset, onKeyDown: onKeyDown2 };
+  return { activeIndex, moveUp, moveDown, reset, onKeyDown: onKeyDown2 };
 }
 function mentionItemKey(item) {
   return item.type === "imageSlot" ? imageSlotLabel(item.slot) : item.module.id;
@@ -94611,14 +94637,14 @@ const _hoisted_4$1Z = { class: "ctv:ml-auto ctv:text-muted-foreground ctv:whites
 const _hoisted_5$1U = ["title", "onClick"];
 const _hoisted_6$1K = { class: "ctv:font-mono ctv:text-base-foreground ctv:shrink-0" };
 const _hoisted_7$1r = { class: "ctv:text-muted-foreground ctv:overflow-hidden ctv:text-ellipsis ctv:whitespace-nowrap" };
-const _hoisted_8$1c = { class: "ctv:font-mono ctv:text-base-foreground ctv:shrink-0" };
-const _hoisted_9$16 = { class: "ctv:text-muted-foreground ctv:overflow-hidden ctv:text-ellipsis ctv:whitespace-nowrap" };
-const _hoisted_10$Y = {
+const _hoisted_8$1b = { class: "ctv:font-mono ctv:text-base-foreground ctv:shrink-0" };
+const _hoisted_9$15 = { class: "ctv:text-muted-foreground ctv:overflow-hidden ctv:text-ellipsis ctv:whitespace-nowrap" };
+const _hoisted_10$X = {
   key: 2,
   class: "ctv:py-1.5 ctv:px-2 ctv:italic ctv:text-xs ctv:text-muted-foreground"
 };
-const _hoisted_11$S = { class: "ctv:text-xs ctv:text-muted-foreground" };
-const _hoisted_12$L = { class: "ctv:text-base-foreground ctv:font-mono" };
+const _hoisted_11$R = { class: "ctv:text-xs ctv:text-muted-foreground" };
+const _hoisted_12$K = { class: "ctv:text-base-foreground ctv:font-mono" };
 const _hoisted_13$E = ["placeholder"];
 const _hoisted_14$A = { class: "ctv:flex ctv:justify-end ctv:gap-1.5" };
 const _hoisted_15$u = ["disabled"];
@@ -94749,22 +94775,22 @@ const _sfc_main$2m = /* @__PURE__ */ defineComponent({
             onClick: _cache2[3] || (_cache2[3] = //@ts-ignore
             (...args) => unref(startCreate) && unref(startCreate)(...args))
           }, [
-            createBaseVNode("span", _hoisted_8$1c, toDisplayString$1(_ctx.$t("mention.create")), 1),
-            createBaseVNode("span", _hoisted_9$16, [
+            createBaseVNode("span", _hoisted_8$1b, toDisplayString$1(_ctx.$t("mention.create")), 1),
+            createBaseVNode("span", _hoisted_9$15, [
               createTextVNode(toDisplayString$1(_ctx.$t("mention.newFragment")) + " ", 1),
               createBaseVNode("code", null, "@" + toDisplayString$1(__props.query), 1)
             ])
           ], 34)) : createCommentVNode("", true),
-          __props.items.length === 0 && !unref(canCreate) ? (openBlock(), createElementBlock("div", _hoisted_10$Y, toDisplayString$1(__props.query ? _ctx.$t("mention.invalidLabel") : _ctx.$t("mention.noEntries")), 1)) : createCommentVNode("", true)
+          __props.items.length === 0 && !unref(canCreate) ? (openBlock(), createElementBlock("div", _hoisted_10$X, toDisplayString$1(__props.query ? _ctx.$t("mention.invalidLabel") : _ctx.$t("mention.noEntries")), 1)) : createCommentVNode("", true)
         ], 64)) : (openBlock(), createElementBlock("div", {
           key: 1,
           class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2",
           onMousedown: _cache2[8] || (_cache2[8] = withModifiers(() => {
           }, ["stop"]))
         }, [
-          createBaseVNode("div", _hoisted_11$S, [
+          createBaseVNode("div", _hoisted_11$R, [
             createTextVNode(toDisplayString$1(_ctx.$t("mention.createFragment")) + " ", 1),
-            createBaseVNode("code", _hoisted_12$L, "@" + toDisplayString$1(unref(pendingLabel)), 1)
+            createBaseVNode("code", _hoisted_12$K, "@" + toDisplayString$1(unref(pendingLabel)), 1)
           ]),
           withDirectives(createBaseVNode("textarea", {
             ref_key: "createTa",
@@ -95182,9 +95208,9 @@ const _hoisted_4$1X = ["disabled", "title"];
 const _hoisted_5$1T = ["onClick"];
 const _hoisted_6$1J = { class: "ctv:flex-1 ctv:truncate" };
 const _hoisted_7$1q = { class: "ctv:text-3xs ctv:opacity-50" };
-const _hoisted_8$1b = ["title"];
-const _hoisted_9$15 = { class: "ctv:flex-1 ctv:min-w-0" };
-const _hoisted_10$X = ["title", "onClick"];
+const _hoisted_8$1a = ["title"];
+const _hoisted_9$14 = { class: "ctv:flex-1 ctv:min-w-0" };
+const _hoisted_10$W = ["title", "onClick"];
 const sectionLabel$2 = "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:opacity-60";
 const addBtn = "ctv:inline-flex ctv:items-center ctv:h-5 ctv:px-1.5 ctv:rounded-sm ctv:text-3xs ctv:font-semibold ctv:cursor-pointer ctv:border-none ctv:bg-secondary-background ctv:text-secondary-foreground ctv:hover:bg-secondary-background-hover ctv:disabled:opacity-40 ctv:disabled:pointer-events-none";
 const removeBtn = "ctv:shrink-0 ctv:flex ctv:items-center ctv:justify-center ctv:size-5 ctv:rounded-full ctv:cursor-pointer ctv:border-none ctv:bg-transparent ctv:text-destructive-background ctv:hover:bg-destructive-background/10";
@@ -95256,8 +95282,8 @@ const _sfc_main$2h = /* @__PURE__ */ defineComponent({
             createBaseVNode("span", {
               class: "ctv:shrink-0 ctv:w-20 ctv:truncate ctv:text-[11px] ctv:text-muted-foreground",
               title: unref(defLabel)(item.key)
-            }, toDisplayString$1(unref(defLabel)(item.key)), 9, _hoisted_8$1b),
-            createBaseVNode("div", _hoisted_9$15, [
+            }, toDisplayString$1(unref(defLabel)(item.key)), 9, _hoisted_8$1a),
+            createBaseVNode("div", _hoisted_9$14, [
               unref(defType)(item.key) === "boolean" ? (openBlock(), createBlock(_sfc_main$2w, {
                 key: 0,
                 "model-value": Boolean(item.value),
@@ -95295,7 +95321,7 @@ const _sfc_main$2h = /* @__PURE__ */ defineComponent({
               class: normalizeClass(removeBtn),
               title: _ctx.$t("stageParams.remove"),
               onClick: ($event) => unref(detach)(item.key)
-            }, "−", 8, _hoisted_10$X)
+            }, "−", 8, _hoisted_10$W)
           ]);
         }), 128))
       ])) : createCommentVNode("", true);
@@ -104041,153 +104067,2915 @@ function useValuePreview(getType2, getContent) {
     storyboardTotalSec
   };
 }
-function parseOrder$1(raw, connectedCount) {
+const sources = /* @__PURE__ */ new Map();
+const previewBusRevision = /* @__PURE__ */ ref(0);
+function registerPreviewSource(nodeId, getCanvas2) {
+  sources.set(nodeId, getCanvas2);
+  previewBusRevision.value++;
+  let active = true;
+  return () => {
+    if (!active) return;
+    active = false;
+    if (sources.get(nodeId) === getCanvas2) {
+      sources.delete(nodeId);
+      previewBusRevision.value++;
+    }
+  };
+}
+function getPreviewSource(nodeId) {
+  return sources.get(nodeId) ?? null;
+}
+function detectPassCount(source) {
+  const match = source.match(/#pragma\s+passes\s+(\d+)/);
+  if (match) return Math.max(1, parseInt(match[1], 10));
+  return 1;
+}
+const VERTEX_SHADER_SOURCE$1 = `#version 300 es
+out vec2 v_texCoord;
+void main() {
+    vec2 verts[3] = vec2[](vec2(-1, -1), vec2(3, -1), vec2(-1, 3));
+    v_texCoord = verts[gl_VertexID] * 0.5 + 0.5;
+    gl_Position = vec4(verts[gl_VertexID], 0, 1);
+}
+`;
+const MAX_PASSES = 32;
+const DEFAULT_CONFIG = {
+  maxInputs: 5,
+  maxFloatUniforms: 20,
+  maxIntUniforms: 20,
+  maxBoolUniforms: 10,
+  maxCurves: 4
+};
+function compileShader(gl, type, source) {
+  const shader = gl.createShader(type);
+  if (!shader) throw new Error("Failed to create shader");
+  gl.shaderSource(shader, source);
+  gl.compileShader(shader);
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    const log2 = gl.getShaderInfoLog(shader) ?? "Compilation failed";
+    gl.deleteShader(shader);
+    throw new Error(log2);
+  }
+  return shader;
+}
+function useGLSLRenderer(config2 = DEFAULT_CONFIG) {
+  const {
+    maxInputs,
+    maxFloatUniforms,
+    maxIntUniforms,
+    maxBoolUniforms,
+    maxCurves
+  } = config2;
+  const uniformNames = [
+    "u_resolution",
+    "u_pass",
+    ...Array.from({ length: maxInputs }, (_2, i) => `u_image${i}`),
+    ...Array.from({ length: maxFloatUniforms }, (_2, i) => `u_float${i}`),
+    ...Array.from({ length: maxIntUniforms }, (_2, i) => `u_int${i}`),
+    ...Array.from({ length: maxBoolUniforms }, (_2, i) => `u_bool${i}`),
+    ...Array.from({ length: maxCurves }, (_2, i) => `u_curve${i}`)
+  ];
+  let canvas = null;
+  let gl = null;
+  let vertexShader = null;
+  let program = null;
+  let fragmentShader = null;
+  let pingPongFBOs = null;
+  let pingPongTextures = null;
+  let fallbackTexture = null;
+  const inputTextures = Array.from({
+    length: maxInputs
+  }).fill(null);
+  const curveTextures = Array.from({
+    length: maxCurves
+  }).fill(null);
+  const uniformLocations = /* @__PURE__ */ new Map();
+  let passCount = 1;
+  let disposed = false;
+  let lastCompiledSource = null;
+  function initPingPongFBOs(ctx, width, height) {
+    const fbos = [];
+    const textures = [];
+    try {
+      for (let i = 0; i < 2; i++) {
+        const tex = ctx.createTexture();
+        if (!tex) throw new Error("Failed to create ping-pong texture");
+        ctx.bindTexture(ctx.TEXTURE_2D, tex);
+        ctx.texImage2D(
+          ctx.TEXTURE_2D,
+          0,
+          ctx.RGBA16F,
+          width,
+          height,
+          0,
+          ctx.RGBA,
+          ctx.HALF_FLOAT,
+          null
+        );
+        ctx.texParameteri(ctx.TEXTURE_2D, ctx.TEXTURE_MIN_FILTER, ctx.LINEAR);
+        ctx.texParameteri(ctx.TEXTURE_2D, ctx.TEXTURE_MAG_FILTER, ctx.LINEAR);
+        ctx.texParameteri(ctx.TEXTURE_2D, ctx.TEXTURE_WRAP_S, ctx.CLAMP_TO_EDGE);
+        ctx.texParameteri(ctx.TEXTURE_2D, ctx.TEXTURE_WRAP_T, ctx.CLAMP_TO_EDGE);
+        const fbo = ctx.createFramebuffer();
+        if (!fbo) throw new Error("Failed to create ping-pong framebuffer");
+        ctx.bindFramebuffer(ctx.FRAMEBUFFER, fbo);
+        ctx.framebufferTexture2D(
+          ctx.FRAMEBUFFER,
+          ctx.COLOR_ATTACHMENT0,
+          ctx.TEXTURE_2D,
+          tex,
+          0
+        );
+        const status = ctx.checkFramebufferStatus(ctx.FRAMEBUFFER);
+        if (status !== ctx.FRAMEBUFFER_COMPLETE)
+          throw new Error(`Ping-pong framebuffer incomplete: ${status}`);
+        fbos.push(fbo);
+        textures.push(tex);
+      }
+    } catch (error2) {
+      for (const fbo of fbos) ctx.deleteFramebuffer(fbo);
+      for (const tex of textures) ctx.deleteTexture(tex);
+      ctx.bindFramebuffer(ctx.FRAMEBUFFER, null);
+      ctx.bindTexture(ctx.TEXTURE_2D, null);
+      throw error2;
+    }
+    ctx.bindFramebuffer(ctx.FRAMEBUFFER, null);
+    ctx.bindTexture(ctx.TEXTURE_2D, null);
+    pingPongFBOs = fbos;
+    pingPongTextures = textures;
+  }
+  function destroyPingPongFBOs() {
+    if (!gl) return;
+    if (pingPongFBOs) {
+      for (const fbo of pingPongFBOs) gl.deleteFramebuffer(fbo);
+      pingPongFBOs = null;
+    }
+    if (pingPongTextures) {
+      for (const tex of pingPongTextures) gl.deleteTexture(tex);
+      pingPongTextures = null;
+    }
+  }
+  function cacheUniformLocations() {
+    if (!program || !gl) return;
+    for (const name of uniformNames) {
+      uniformLocations.set(name, gl.getUniformLocation(program, name));
+    }
+  }
+  function getFallbackTexture() {
+    if (!gl) throw new Error("Renderer not initialized");
+    if (!fallbackTexture) {
+      const tex = gl.createTexture();
+      if (!tex) throw new Error("Failed to create fallback texture");
+      fallbackTexture = tex;
+      gl.bindTexture(gl.TEXTURE_2D, fallbackTexture);
+      gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,
+        gl.RGBA,
+        1,
+        1,
+        0,
+        gl.RGBA,
+        gl.UNSIGNED_BYTE,
+        new Uint8Array([0, 0, 0, 255])
+      );
+    }
+    return fallbackTexture;
+  }
+  function init(width, height) {
+    if (disposed) return false;
+    try {
+      canvas = new OffscreenCanvas(width, height);
+      const ctx = canvas.getContext("webgl2", {
+        alpha: true,
+        premultipliedAlpha: false,
+        preserveDrawingBuffer: true
+      });
+      if (!ctx) return false;
+      gl = ctx;
+      if (!gl.getExtension("EXT_color_buffer_float")) return false;
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+      vertexShader = compileShader(gl, gl.VERTEX_SHADER, VERTEX_SHADER_SOURCE$1);
+      initPingPongFBOs(gl, width, height);
+      return true;
+    } catch {
+      dispose();
+      return false;
+    }
+  }
+  function compileFragment(source) {
+    if (disposed || !gl) return { success: false, log: "Engine disposed" };
+    passCount = Math.min(detectPassCount(source), MAX_PASSES);
+    if (source === lastCompiledSource && program) {
+      return { success: true, log: "" };
+    }
+    lastCompiledSource = source;
+    if (fragmentShader) {
+      gl.deleteShader(fragmentShader);
+      fragmentShader = null;
+    }
+    if (program) {
+      gl.deleteProgram(program);
+      program = null;
+    }
+    uniformLocations.clear();
+    try {
+      fragmentShader = compileShader(gl, gl.FRAGMENT_SHADER, source);
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      return { success: false, log: msg };
+    }
+    const prog = gl.createProgram();
+    if (!prog) return { success: false, log: "Failed to create program" };
+    gl.attachShader(prog, vertexShader);
+    gl.attachShader(prog, fragmentShader);
+    gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+      const log2 = gl.getProgramInfoLog(prog) ?? "Link failed";
+      gl.deleteProgram(prog);
+      return { success: false, log: log2 };
+    }
+    program = prog;
+    cacheUniformLocations();
+    return { success: true, log: "" };
+  }
+  function setResolution(width, height) {
+    if (disposed || !gl || !canvas) return;
+    if (canvas.width !== width || canvas.height !== height) {
+      canvas.width = width;
+      canvas.height = height;
+      gl.viewport(0, 0, width, height);
+      destroyPingPongFBOs();
+      initPingPongFBOs(gl, width, height);
+    }
+  }
+  function setFloatUniform(index, value) {
+    if (disposed || !program || !gl) return;
+    const loc = uniformLocations.get(`u_float${index}`);
+    if (loc != null) {
+      gl.useProgram(program);
+      gl.uniform1f(loc, value);
+    }
+  }
+  function setIntUniform(index, value) {
+    if (disposed || !program || !gl) return;
+    const loc = uniformLocations.get(`u_int${index}`);
+    if (loc != null) {
+      gl.useProgram(program);
+      gl.uniform1i(loc, value);
+    }
+  }
+  function setBoolUniform(index, value) {
+    if (disposed || !program || !gl) return;
+    const loc = uniformLocations.get(`u_bool${index}`);
+    if (loc != null) {
+      gl.useProgram(program);
+      gl.uniform1i(loc, value ? 1 : 0);
+    }
+  }
+  function bindCurveTexture(index, lut2) {
+    if (disposed || !gl) return;
+    if (index < 0 || index >= maxCurves) return;
+    if (curveTextures[index]) {
+      gl.deleteTexture(curveTextures[index]);
+      curveTextures[index] = null;
+    }
+    const texture = gl.createTexture();
+    if (!texture) return;
+    const unit = maxInputs + index;
+    gl.activeTexture(gl.TEXTURE0 + unit);
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+    gl.texImage2D(
+      gl.TEXTURE_2D,
+      0,
+      gl.R16F,
+      lut2.length,
+      1,
+      0,
+      gl.RED,
+      gl.FLOAT,
+      lut2
+    );
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    curveTextures[index] = texture;
+  }
+  function bindInputImage(index, image) {
+    if (disposed || !gl) return;
+    if (index < 0 || index >= maxInputs) {
+      throw new Error(
+        `Input index ${index} out of range (max ${maxInputs - 1})`
+      );
+    }
+    if (inputTextures[index]) {
+      gl.deleteTexture(inputTextures[index]);
+      inputTextures[index] = null;
+    }
+    const texture = gl.createTexture();
+    if (!texture) return;
+    gl.activeTexture(gl.TEXTURE0 + index);
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+    inputTextures[index] = texture;
+  }
+  function render2() {
+    if (disposed || !program || !pingPongFBOs || !gl || !canvas) return;
+    gl.useProgram(program);
+    gl.disable(gl.BLEND);
+    const resLoc = uniformLocations.get("u_resolution");
+    if (resLoc != null) {
+      gl.uniform2f(resLoc, canvas.width, canvas.height);
+    }
+    for (let i = 0; i < maxInputs; i++) {
+      const loc = uniformLocations.get(`u_image${i}`);
+      if (loc != null) {
+        gl.activeTexture(gl.TEXTURE0 + i);
+        gl.bindTexture(gl.TEXTURE_2D, inputTextures[i] ?? getFallbackTexture());
+        gl.uniform1i(loc, i);
+      }
+    }
+    for (let i = 0; i < maxCurves; i++) {
+      const loc = uniformLocations.get(`u_curve${i}`);
+      if (loc != null && curveTextures[i]) {
+        const unit = maxInputs + i;
+        gl.activeTexture(gl.TEXTURE0 + unit);
+        gl.bindTexture(gl.TEXTURE_2D, curveTextures[i]);
+        gl.uniform1i(loc, unit);
+      }
+    }
+    for (let pass = 0; pass < passCount; pass++) {
+      const passLoc = uniformLocations.get("u_pass");
+      if (passLoc != null) gl.uniform1i(passLoc, pass);
+      const isLastPass = pass === passCount - 1;
+      const writeIdx = pass % 2;
+      if (isLastPass) {
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.drawBuffers([gl.BACK]);
+      } else {
+        gl.bindFramebuffer(gl.FRAMEBUFFER, pingPongFBOs[writeIdx]);
+        gl.drawBuffers([gl.COLOR_ATTACHMENT0]);
+      }
+      if (pass > 0) {
+        const sourceTexture = pingPongTextures[(pass - 1) % 2];
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, sourceTexture);
+      }
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    }
+  }
+  function readPixels() {
+    if (!gl || !canvas) throw new Error("Renderer not initialized");
+    const w2 = canvas.width;
+    const h2 = canvas.height;
+    const pixels = new Uint8ClampedArray(w2 * h2 * 4);
+    gl.pixelStorei(gl.PACK_ROW_LENGTH, 0);
+    gl.readPixels(0, 0, w2, h2, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+    return new ImageData(pixels, w2, h2);
+  }
+  async function toBlob() {
+    if (!canvas) throw new Error("Renderer not initialized");
+    return canvas.convertToBlob({ type: "image/webp", quality: 0.92 });
+  }
+  function getCanvas2() {
+    return canvas;
+  }
+  function dispose() {
+    if (disposed) return;
+    disposed = true;
+    if (!gl) return;
+    for (const tex of inputTextures) {
+      if (tex) gl.deleteTexture(tex);
+    }
+    inputTextures.fill(null);
+    for (const tex of curveTextures) {
+      if (tex) gl.deleteTexture(tex);
+    }
+    curveTextures.fill(null);
+    if (fallbackTexture) {
+      gl.deleteTexture(fallbackTexture);
+      fallbackTexture = null;
+    }
+    destroyPingPongFBOs();
+    if (fragmentShader) {
+      gl.deleteShader(fragmentShader);
+      fragmentShader = null;
+    }
+    if (vertexShader) {
+      gl.deleteShader(vertexShader);
+      vertexShader = null;
+    }
+    if (program) {
+      gl.deleteProgram(program);
+      program = null;
+    }
+    uniformLocations.clear();
+    const ext = gl.getExtension("WEBGL_lose_context");
+    ext == null ? void 0 : ext.loseContext();
+  }
+  return {
+    init,
+    compileFragment,
+    setResolution,
+    setFloatUniform,
+    setIntUniform,
+    setBoolUniform,
+    bindCurveTexture,
+    bindInputImage,
+    render: render2,
+    readPixels,
+    toBlob,
+    getCanvas: getCanvas2,
+    dispose
+  };
+}
+const videoColorFrag = "#version 300 es\r\nprecision highp float;\r\n\r\nuniform sampler2D u_image0;\r\n\r\nuniform float u_float0;\r\nuniform float u_float1;\r\nuniform float u_float2;\r\nuniform float u_float3;\r\nuniform float u_float4;\r\nuniform float u_float5;\r\nuniform float u_float6;\r\nuniform float u_float7;\r\nuniform float u_float8;\r\nuniform float u_float9;\r\nuniform float u_float10;\r\nuniform float u_float11;\r\nuniform float u_float12;\r\nuniform float u_float13;\r\nuniform float u_float14;\r\nuniform float u_float15;\r\nuniform float u_float16;\r\nuniform float u_float17;\r\nuniform float u_float18;\r\nuniform float u_float19;\r\nuniform float u_float20;\r\nuniform float u_float21;\r\nuniform float u_float22;\r\nuniform float u_float23;\r\nuniform float u_float24;\r\nuniform float u_float25;\r\nuniform float u_float26;\r\nuniform float u_float27;\r\nuniform float u_float28;\r\nuniform float u_float29;\r\nuniform float u_float30;\r\n\r\nuniform bool u_bool0;\r\nuniform bool u_bool1;\r\nuniform bool u_bool2;\r\nuniform bool u_bool3;\r\nuniform bool u_bool4;\r\nuniform bool u_bool5;\r\nuniform bool u_bool6;\r\nuniform bool u_bool7;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nconst float ENTRY_SCALE = 65280.0 / 65535.0;\r\n\r\nvec3 quantTrunc(vec3 v) {\r\n    return clamp(floor(v * 255.0), 0.0, 255.0) / 255.0;\r\n}\r\n\r\nvec3 quantRound(vec3 v) {\r\n    return floor(clamp(v, 0.0, 1.0) * 255.0 + 0.5) / 255.0;\r\n}\r\n\r\nvec3 floatExit8(vec3 v) {\r\n    vec3 v16 = floor(clamp(v, 0.0, 1.0) * 65535.0 + 0.5);\r\n    return min(floor((v16 + 128.0) / 256.0), 255.0) / 255.0;\r\n}\r\n\r\nfloat fastDiv255(float x) {\r\n    return floor((x + 128.0) * 257.0 / 65536.0);\r\n}\r\n\r\nvec3 hueSat(vec3 c) {\r\n    float r = floor(c.r * 255.0 + 0.5);\r\n    float g = floor(c.g * 255.0 + 0.5);\r\n    float b = floor(c.b * 255.0 + 0.5);\r\n    float f = 0.0;\r\n    f = max(f, r - max(g, b));\r\n    f = max(f, min(r, g) - b);\r\n    f = max(f, g - max(r, b));\r\n    f = max(f, min(g, b) - r);\r\n    f = max(f, b - max(r, g));\r\n    f = max(f, min(r, b) - g);\r\n    f = min(f, 255.0);\r\n    float tr = floor((r * u_float6 + g * u_float9 + b * u_float12) / 65536.0);\r\n    float tg = floor((r * u_float7 + g * u_float10 + b * u_float13) / 65536.0);\r\n    float tb = floor((r * u_float8 + g * u_float11 + b * u_float14) / 65536.0);\r\n    vec3 o = vec3(\r\n        r + fastDiv255((tr - r) * f),\r\n        g + fastDiv255((tg - g) * f),\r\n        b + fastDiv255((tb - b) * f));\r\n    return clamp(o, 0.0, 255.0) / 255.0;\r\n}\r\n\r\nvec3 vibrance(vec3 c) {\r\n    float intensity = u_float15;\r\n    float sat = max(c.r, max(c.g, c.b)) - min(c.r, min(c.g, c.b));\r\n    float luma = c.g * 0.715158 + c.r * 0.212656 + c.b * 0.072186;\r\n    float s = intensity > 0.0 ? 1.0 : -1.0;\r\n    float k = 1.0 + intensity * (1.0 + s * sat);\r\n    return quantTrunc(vec3(luma) + (c - vec3(luma)) * k);\r\n}\r\n\r\nfloat getComponent(float v, float l, float s, float m, float h) {\r\n    const float a = 4.0;\r\n    const float b = 0.333;\r\n    const float sc = 0.7;\r\n    float sw = s * clamp((b - l) * a + 0.5, 0.0, 1.0) * sc;\r\n    float mw = m * clamp((l - b) * a + 0.5, 0.0, 1.0)\r\n             * clamp((1.0 - l - b) * a + 0.5, 0.0, 1.0) * sc;\r\n    float hw = h * clamp((l + b - 1.0) * a + 0.5, 0.0, 1.0) * sc;\r\n    return clamp(v + sw + mw + hw, 0.0, 1.0);\r\n}\r\n\r\nfloat hfun(float n, float h, float s, float l) {\r\n    float a = s * min(l, 1.0 - l);\r\n    float k = mod(n + h / 30.0, 12.0);\r\n    return clamp(l - a * max(min(min(k - 3.0, 9.0 - k), 1.0), -1.0), 0.0, 1.0);\r\n}\r\n\r\nvec3 preservel(vec3 c, float l) {\r\n    float mx = max(c.r, max(c.g, c.b));\r\n    float mn = min(c.r, min(c.g, c.b));\r\n    float hl = l * 0.5;\r\n    float h;\r\n    if (c.r == c.g && c.g == c.b) h = 0.0;\r\n    else if (mx == c.r) h = 60.0 * ((c.g - c.b) / (mx - mn));\r\n    else if (mx == c.g) h = 60.0 * (2.0 + (c.b - c.r) / (mx - mn));\r\n    else h = 60.0 * (4.0 + (c.r - c.g) / (mx - mn));\r\n    if (h < 0.0) h += 360.0;\r\n    float s = (mx == 1.0 || mn == 0.0)\r\n        ? 0.0\r\n        : (mx - mn) / (1.0 - abs(2.0 * hl - 1.0));\r\n    return vec3(hfun(0.0, h, s, hl), hfun(8.0, h, s, hl), hfun(4.0, h, s, hl));\r\n}\r\n\r\nvec3 colorBalance(vec3 c) {\r\n    float l = max(c.r, max(c.g, c.b)) + min(c.r, min(c.g, c.b));\r\n    vec3 o = vec3(\r\n        getComponent(c.r, l, u_float22, u_float25, u_float28),\r\n        getComponent(c.g, l, u_float23, u_float26, u_float29),\r\n        getComponent(c.b, l, u_float24, u_float27, u_float30));\r\n    if (u_bool6) o = preservel(o, l);\r\n    return quantRound(o);\r\n}\r\n\r\nvoid main() {\r\n    vec4 tex = texture(u_image0, v_texCoord);\r\n    vec3 c = tex.rgb;\r\n    bool inFloat = false;\r\n\r\n    if (u_bool0) {\r\n        c = (c * ENTRY_SCALE - vec3(u_float0)) * u_float1;\r\n        inFloat = true;\r\n        if (u_bool1) c = mix(c, c * vec3(u_float2, u_float3, u_float4), u_float5);\r\n    } else if (u_bool1) {\r\n        c = mix(c, c * vec3(u_float2, u_float3, u_float4), u_float5);\r\n        c = quantTrunc(c);\r\n    }\r\n\r\n    if (inFloat && !u_bool7) {\r\n        c = floatExit8(c);\r\n        inFloat = false;\r\n    }\r\n\r\n    if (u_bool2) c = hueSat(c);\r\n    if (u_bool3) c = vibrance(c);\r\n\r\n    if (u_bool4) {\r\n        vec3 lo = vec3(u_float16, u_float17, u_float18);\r\n        vec3 k = vec3(u_float19, u_float20, u_float21);\r\n        c = (c - lo) * k;\r\n        if (!inFloat) c = quantTrunc(c);\r\n    }\r\n\r\n    if (u_bool5) {\r\n        if (inFloat) {\r\n            c = floatExit8(c);\r\n            inFloat = false;\r\n        }\r\n        c = colorBalance(c);\r\n    }\r\n\r\n    if (inFloat) c = floatExit8(c);\r\n\r\n    fragColor = vec4(clamp(c, 0.0, 1.0), tex.a);\r\n}\r\n";
+function clampF(v2, lo, hi, def2 = 0) {
+  const x2 = Number.isFinite(v2) ? v2 : def2;
+  return Math.min(hi, Math.max(lo, x2));
+}
+function clamp01$2(v2) {
+  return Math.min(1, Math.max(0, v2));
+}
+function quantTrunc(v2) {
+  return Math.min(255, Math.max(0, Math.trunc(v2 * 255))) / 255;
+}
+function lerpf(v0, v1, f2) {
+  return v0 + (v1 - v0) * f2;
+}
+function ffsign(v2) {
+  return v2 > 0 ? 1 : -1;
+}
+function normalizeVideoColorParams(p2) {
+  const wheel = (w2) => [
+    clampF((w2 == null ? void 0 : w2[0]) ?? 0, -1, 1),
+    clampF((w2 == null ? void 0 : w2[1]) ?? 0, -1, 1),
+    clampF((w2 == null ? void 0 : w2[2]) ?? 0, -1, 1)
+  ];
+  const bp = clampF(p2.blackpoint ?? 0, -0.5, 0.5);
+  const wp = clampF(p2.whitepoint ?? 1, 0.5, 2);
+  return {
+    exposure: clampF(p2.exposure ?? 0, -3, 3),
+    black: clampF(p2.black ?? 0, -0.1, 0.1),
+    temperature: Math.min(4e4, Math.max(1e3, Math.trunc(p2.temperature || 6500))),
+    tempMix: clampF(p2.tempMix ?? 1, 0, 1, 1),
+    hue: clampF(p2.hue ?? 0, -180, 180),
+    saturation: clampF(p2.saturation ?? 0, -1, 1),
+    vibrance: clampF(p2.vibrance ?? 0, -2, 2),
+    blackpoint: bp,
+    whitepoint: wp,
+    shadows: wheel(p2.shadows),
+    midtones: wheel(p2.midtones),
+    highlights: wheel(p2.highlights),
+    preserveLightness: p2.preserveLightness ?? true
+  };
+}
+function activeVideoColorFilters(p2) {
+  return {
+    exposure: p2.exposure !== 0 || p2.black !== 0,
+    temperature: p2.temperature !== 6500,
+    hueSaturation: p2.hue !== 0 || p2.saturation !== 0,
+    vibrance: p2.vibrance !== 0,
+    levels: p2.blackpoint !== 0 || p2.whitepoint !== 1,
+    balance: [...p2.shadows, ...p2.midtones, ...p2.highlights].some((v2) => v2 !== 0)
+  };
+}
+function exposureScale(exposure, black) {
+  const diff = Math.abs(Math.pow(2, -exposure) - black);
+  return 1 / (diff > 0 ? diff : 1 / 1024);
+}
+function applyExposure(rgb, exposure, black) {
+  const scale = exposureScale(exposure, black);
+  return [
+    (rgb[0] - black) * scale,
+    (rgb[1] - black) * scale,
+    (rgb[2] - black) * scale
+  ];
+}
+function kelvinToRgb(k2) {
+  const kelvin = k2 / 100;
+  let r;
+  let g2;
+  let b2;
+  if (kelvin <= 66) {
+    r = 1;
+    g2 = clamp01$2(0.3900815787690196 * Math.log(kelvin) - 0.6318414437886275);
+  } else {
+    const t2 = Math.max(kelvin - 60, 0);
+    r = clamp01$2(1.292936186062745 * Math.pow(t2, -0.1332047592));
+    g2 = clamp01$2(1.1298908608952942 * Math.pow(t2, -0.0755148492));
+  }
+  if (kelvin >= 66) b2 = 1;
+  else if (kelvin <= 19) b2 = 0;
+  else b2 = clamp01$2(0.543206789110196 * Math.log(kelvin - 10) - 1.19625408914);
+  return [r, g2, b2];
+}
+function applyColorTemperature(rgb, kelvin, mix) {
+  const color = kelvinToRgb(kelvin);
+  return [
+    lerpf(rgb[0], rgb[0] * color[0], mix),
+    lerpf(rgb[1], rgb[1] * color[1], mix),
+    lerpf(rgb[2], rgb[2] * color[2], mix)
+  ];
+}
+function identityMatrix() {
+  return Array.from({ length: 4 }, (_2, y2) => Array.from({ length: 4 }, (_22, x2) => y2 === x2 ? 1 : 0));
+}
+function matrixMultiply(a, b2, c2) {
+  const temp = Array.from({ length: 4 }, () => [0, 0, 0, 0]);
+  for (let y2 = 0; y2 < 4; y2++) {
+    for (let x2 = 0; x2 < 4; x2++) {
+      temp[y2][x2] = b2[y2][0] * a[0][x2] + b2[y2][1] * a[1][x2] + b2[y2][2] * a[2][x2] + b2[y2][3] * a[3][x2];
+    }
+  }
+  for (let y2 = 0; y2 < 4; y2++) {
+    for (let x2 = 0; x2 < 4; x2++) c2[y2][x2] = temp[y2][x2];
+  }
+}
+function saturationMatrix(matrix, saturation, rlw, glw, blw) {
+  const s = 1 - saturation;
+  const m2 = [
+    [s * rlw + saturation, s * rlw, s * rlw, 0],
+    [s * glw, s * glw + saturation, s * glw, 0],
+    [s * blw, s * blw, s * blw + saturation, 0],
+    [0, 0, 0, 1]
+  ];
+  matrixMultiply(m2, matrix, matrix);
+}
+function xRotateMatrix(matrix, rs, rc) {
+  const m2 = [
+    [1, 0, 0, 0],
+    [0, rc, rs, 0],
+    [0, -rs, rc, 0],
+    [0, 0, 0, 1]
+  ];
+  matrixMultiply(m2, matrix, matrix);
+}
+function yRotateMatrix(matrix, rs, rc) {
+  const m2 = [
+    [rc, 0, -rs, 0],
+    [0, 1, 0, 0],
+    [rs, 0, rc, 0],
+    [0, 0, 0, 1]
+  ];
+  matrixMultiply(m2, matrix, matrix);
+}
+function zRotateMatrix(matrix, rs, rc) {
+  const m2 = [
+    [rc, rs, 0, 0],
+    [-rs, rc, 0, 0],
+    [0, 0, 1, 0],
+    [0, 0, 0, 1]
+  ];
+  matrixMultiply(m2, matrix, matrix);
+}
+function shueRotateMatrix(matrix, rotation2) {
+  let mag = Math.SQRT2;
+  const xrs = 1 / mag;
+  const xrc = 1 / mag;
+  xRotateMatrix(matrix, xrs, xrc);
+  mag = Math.sqrt(3);
+  const yrs = -1 / mag;
+  const yrc = Math.SQRT2 / mag;
+  yRotateMatrix(matrix, yrs, yrc);
+  const zrs = Math.sin(rotation2 * Math.PI / 180);
+  const zrc = Math.cos(rotation2 * Math.PI / 180);
+  zRotateMatrix(matrix, zrs, zrc);
+  yRotateMatrix(matrix, -yrs, yrc);
+  xRotateMatrix(matrix, -xrs, xrc);
+}
+function hueSaturationMatrix(hue, saturation) {
+  const matrix = identityMatrix();
+  saturationMatrix(matrix, 1 + saturation, 0.333, 0.334, 0.333);
+  shueRotateMatrix(matrix, hue);
+  return [
+    matrix[0][0],
+    matrix[0][1],
+    matrix[0][2],
+    matrix[1][0],
+    matrix[1][1],
+    matrix[1][2],
+    matrix[2][0],
+    matrix[2][1],
+    matrix[2][2]
+  ];
+}
+function fastDiv255(x2) {
+  return (x2 + 128) * 257 >> 16;
+}
+function applyHueSaturation(rgb, matrix) {
+  const r = Math.round(clamp01$2(rgb[0]) * 255);
+  const g2 = Math.round(clamp01$2(rgb[1]) * 255);
+  const b2 = Math.round(clamp01$2(rgb[2]) * 255);
+  const m2 = matrix.map((v2) => Math.round(v2 * 65536));
+  let f2 = 0;
+  f2 = Math.max(f2, r - Math.max(g2, b2));
+  f2 = Math.max(f2, Math.min(r, g2) - b2);
+  f2 = Math.max(f2, g2 - Math.max(r, b2));
+  f2 = Math.max(f2, Math.min(g2, b2) - r);
+  f2 = Math.max(f2, b2 - Math.max(r, g2));
+  f2 = Math.max(f2, Math.min(r, b2) - g2);
+  f2 = Math.min(f2, 255);
+  const tr = Math.floor((r * m2[0] + g2 * m2[3] + b2 * m2[6]) / 65536);
+  const tg = Math.floor((r * m2[1] + g2 * m2[4] + b2 * m2[7]) / 65536);
+  const tb = Math.floor((r * m2[2] + g2 * m2[5] + b2 * m2[8]) / 65536);
+  const or = r + fastDiv255((tr - r) * f2);
+  const og = g2 + fastDiv255((tg - g2) * f2);
+  const ob = b2 + fastDiv255((tb - b2) * f2);
+  return [
+    Math.min(255, Math.max(0, or)) / 255,
+    Math.min(255, Math.max(0, og)) / 255,
+    Math.min(255, Math.max(0, ob)) / 255
+  ];
+}
+function applyVibrance(rgb, intensity2) {
+  const [r, g2, b2] = rgb;
+  const sat = Math.max(r, g2, b2) - Math.min(r, g2, b2);
+  const luma = g2 * 0.715158 + r * 0.212656 + b2 * 0.072186;
+  const c2 = 1 + intensity2 * (1 + ffsign(intensity2) * sat);
+  return [
+    quantTrunc(lerpf(luma, r, c2)),
+    quantTrunc(lerpf(luma, g2, c2)),
+    quantTrunc(lerpf(luma, b2, c2))
+  ];
+}
+function colorLevelsFor(blackpoint, whitepoint, frameMin = [0, 0, 0]) {
+  const bp = blackpoint;
+  const wp = Math.max(bp + 0.01, whitepoint);
+  const imax = Math.round(Math.min(wp, 1) * 255) / 255;
+  const omax = Math.round((wp > 1 ? (1 - bp) / (wp - bp) : 1) * 255) / 255;
+  const iminFixed = Math.round(bp * 255) / 255;
+  const imin = bp < 0 ? [...frameMin] : [iminFixed, iminFixed, iminFixed];
+  return {
+    imin,
+    coeff: [
+      omax / (imax - imin[0]),
+      omax / (imax - imin[1]),
+      omax / (imax - imin[2])
+    ]
+  };
+}
+function computeVideoColorUniforms(raw, frameMin = [0, 0, 0]) {
+  const p2 = normalizeVideoColorParams(raw);
+  const active = activeVideoColorFilters(p2);
+  const levels = levelsRunsInFloat(active) ? colorLevelsForFloat(p2.blackpoint, p2.whitepoint, frameMin) : colorLevelsFor(p2.blackpoint, p2.whitepoint, frameMin);
+  return {
+    active,
+    black: p2.black,
+    scale: exposureScale(p2.exposure, p2.black),
+    tempColor: kelvinToRgb(p2.temperature),
+    tempMix: p2.tempMix,
+    hsMatrix: hueSaturationMatrix(p2.hue, p2.saturation),
+    vibrance: p2.vibrance,
+    levelsMin: levels.imin,
+    levelsCoeff: levels.coeff,
+    shadows: p2.shadows,
+    midtones: p2.midtones,
+    highlights: p2.highlights,
+    preserveLightness: p2.preserveLightness,
+    floatLevels: levelsRunsInFloat(active)
+  };
+}
+function levelsNeedsFrameMin(raw) {
+  const p2 = normalizeVideoColorParams(raw);
+  return activeVideoColorFilters(p2).levels && p2.blackpoint < 0;
+}
+function levelsRunsInFloat(active) {
+  return active.exposure && !active.hueSaturation && !active.vibrance;
+}
+const FLOAT_ENTRY_SCALE = 65280 / 65535;
+function floatExit8(v2) {
+  const v16 = Math.round(clamp01$2(v2) * 65535);
+  return Math.min(255, v16 + 128 >> 8) / 255;
+}
+function colorLevelsForFloat(blackpoint, whitepoint, frameMin = [0, 0, 0]) {
+  const bp = blackpoint;
+  const wp = Math.max(bp + 0.01, whitepoint);
+  const imax = Math.min(wp, 1);
+  const omax = wp > 1 ? (1 - bp) / (wp - bp) : 1;
+  const imin = bp < 0 ? [...frameMin] : [bp, bp, bp];
+  return {
+    imin,
+    coeff: [
+      omax / (imax - imin[0]),
+      omax / (imax - imin[1]),
+      omax / (imax - imin[2])
+    ]
+  };
+}
+function frameMinOf(pixels) {
+  const min2 = [1, 1, 1];
+  for (const px2 of pixels) {
+    min2[0] = Math.min(min2[0], px2[0]);
+    min2[1] = Math.min(min2[1], px2[1]);
+    min2[2] = Math.min(min2[2], px2[2]);
+  }
+  return min2;
+}
+function planPipeline(raw) {
+  const p2 = normalizeVideoColorParams(raw);
+  const active = activeVideoColorFilters(p2);
+  return {
+    p: p2,
+    active,
+    matrix: active.hueSaturation ? hueSaturationMatrix(p2.hue, p2.saturation) : null,
+    floatLevels: levelsRunsInFloat(active)
+  };
+}
+function runPreLevels(rgb, plan) {
+  const { p: p2, active, matrix, floatLevels } = plan;
+  let c2 = [rgb[0], rgb[1], rgb[2]];
+  let inFloat = false;
+  if (active.exposure) {
+    c2 = [c2[0] * FLOAT_ENTRY_SCALE, c2[1] * FLOAT_ENTRY_SCALE, c2[2] * FLOAT_ENTRY_SCALE];
+    c2 = applyExposure(c2, p2.exposure, p2.black);
+    inFloat = true;
+    if (active.temperature) c2 = applyColorTemperature(c2, p2.temperature, p2.tempMix);
+  } else if (active.temperature) {
+    c2 = applyColorTemperature(c2, p2.temperature, p2.tempMix);
+    c2 = [quantTrunc(c2[0]), quantTrunc(c2[1]), quantTrunc(c2[2])];
+  }
+  if (inFloat && !floatLevels) {
+    c2 = [floatExit8(c2[0]), floatExit8(c2[1]), floatExit8(c2[2])];
+    inFloat = false;
+  }
+  if (matrix) c2 = applyHueSaturation(c2, matrix);
+  if (active.vibrance) c2 = applyVibrance(c2, p2.vibrance);
+  return { c: c2, float: inFloat };
+}
+function videoColorFrameMin(pixels, raw) {
+  if (!levelsNeedsFrameMin(raw)) return [0, 0, 0];
+  const plan = planPipeline(raw);
+  return frameMinOf(pixels.map((px2) => runPreLevels(px2, plan).c));
+}
+function fxSourceSize(src) {
+  const v2 = src;
+  if (typeof v2.videoWidth === "number" && v2.videoWidth > 0) {
+    return { w: Math.max(2, v2.videoWidth), h: Math.max(2, v2.videoHeight) };
+  }
+  const c2 = src;
+  return { w: Math.max(2, c2.width || 0), h: Math.max(2, c2.height || 0) };
+}
+const MIN_SAMPLE_W = 48;
+const MIN_SAMPLE_H = 27;
+const RENDER_CONFIG$6 = {
+  maxInputs: 1,
+  maxFloatUniforms: 31,
+  maxIntUniforms: 1,
+  maxBoolUniforms: 8,
+  maxCurves: 1
+};
+class VideoColorRenderer {
+  constructor() {
+    __publicField(this, "renderer", useGLSLRenderer(RENDER_CONFIG$6));
+    __publicField(this, "ready", false);
+    __publicField(this, "_error", null);
+    __publicField(this, "minCanvas", null);
+  }
+  get error() {
+    return this._error;
+  }
+  sampleFrameMin(video, params) {
+    if (!levelsNeedsFrameMin(params)) return [0, 0, 0];
+    try {
+      this.minCanvas ?? (this.minCanvas = document.createElement("canvas"));
+      const c2 = this.minCanvas;
+      c2.width = MIN_SAMPLE_W;
+      c2.height = MIN_SAMPLE_H;
+      const ctx = c2.getContext("2d", { willReadFrequently: true });
+      if (!ctx) return [0, 0, 0];
+      ctx.drawImage(video, 0, 0, MIN_SAMPLE_W, MIN_SAMPLE_H);
+      const data = ctx.getImageData(0, 0, MIN_SAMPLE_W, MIN_SAMPLE_H).data;
+      const pixels = [];
+      for (let i = 0; i < data.length; i += 4) {
+        pixels.push([data[i] / 255, data[i + 1] / 255, data[i + 2] / 255]);
+      }
+      return videoColorFrameMin(pixels, params);
+    } catch {
+      return [0, 0, 0];
+    }
+  }
+  renderToCanvas(video, params, target) {
+    const { w: w2, h: h2 } = fxSourceSize(video);
+    try {
+      if (!this.ready) {
+        if (!this.renderer.init(w2, h2)) {
+          this._error = "WebGL2 not available";
+          return false;
+        }
+        this.ready = true;
+      }
+      const compiled = this.renderer.compileFragment(videoColorFrag);
+      if (!compiled.success) {
+        this._error = compiled.log || "Shader compilation failed";
+        return false;
+      }
+      this._error = null;
+      this.renderer.setResolution(w2, h2);
+      this.renderer.bindInputImage(0, video);
+      const u = computeVideoColorUniforms(params, this.sampleFrameMin(video, params));
+      const floats = [
+        u.black,
+        u.scale,
+        u.tempColor[0],
+        u.tempColor[1],
+        u.tempColor[2],
+        u.tempMix,
+        ...u.hsMatrix.map((v2) => Math.round(v2 * 65536)),
+        u.vibrance,
+        u.levelsMin[0],
+        u.levelsMin[1],
+        u.levelsMin[2],
+        u.levelsCoeff[0],
+        u.levelsCoeff[1],
+        u.levelsCoeff[2],
+        u.shadows[0],
+        u.shadows[1],
+        u.shadows[2],
+        u.midtones[0],
+        u.midtones[1],
+        u.midtones[2],
+        u.highlights[0],
+        u.highlights[1],
+        u.highlights[2]
+      ];
+      floats.forEach((v2, i) => this.renderer.setFloatUniform(i, v2));
+      const bools = [
+        u.active.exposure,
+        u.active.temperature,
+        u.active.hueSaturation,
+        u.active.vibrance,
+        u.active.levels,
+        u.active.balance,
+        u.preserveLightness,
+        u.floatLevels
+      ];
+      bools.forEach((v2, i) => this.renderer.setBoolUniform(i, v2));
+      this.renderer.render();
+      const off = this.renderer.getCanvas();
+      if (!off) {
+        this._error = "Renderer produced no output";
+        return false;
+      }
+      target.width = w2;
+      target.height = h2;
+      const ctx = target.getContext("2d");
+      if (!ctx) {
+        this._error = "2D context unavailable";
+        return false;
+      }
+      ctx.clearRect(0, 0, w2, h2);
+      ctx.drawImage(off, 0, 0);
+      return true;
+    } catch (e) {
+      this._error = e instanceof Error ? e.message : "Render failed";
+      this.renderer.dispose();
+      this.ready = false;
+      return false;
+    }
+  }
+  dispose() {
+    this.renderer.dispose();
+    this.ready = false;
+    this.minCanvas = null;
+  }
+}
+const videoCurvesFrag = "#version 300 es\r\nprecision highp float;\r\n\r\nuniform sampler2D u_image0;\r\nuniform sampler2D u_curve0;\r\nuniform sampler2D u_curve1;\r\nuniform sampler2D u_curve2;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nfloat mapChannel(sampler2D lut, float v) {\r\n    int idx = int(floor(clamp(v, 0.0, 1.0) * 255.0 + 0.5));\r\n    return texelFetch(lut, ivec2(idx, 0), 0).r;\r\n}\r\n\r\nvoid main() {\r\n    vec4 tex = texture(u_image0, v_texCoord);\r\n    fragColor = vec4(\r\n        mapChannel(u_curve0, tex.r),\r\n        mapChannel(u_curve1, tex.g),\r\n        mapChannel(u_curve2, tex.b),\r\n        tex.a);\r\n}\r\n";
+const VIDEO_CURVES_PRESETS = {
+  color_negative: {
+    red: [[0.129, 1], [0.466, 0.498], [0.725, 0]],
+    green: [[0.109, 1], [0.301, 0.498], [0.517, 0]],
+    blue: [[0.098, 1], [0.235, 0.498], [0.423, 0]]
+  },
+  cross_process: {
+    red: [[0, 0], [0.25, 0.156], [0.501, 0.501], [0.686, 0.745], [1, 1]],
+    green: [[0, 0], [0.25, 0.188], [0.38, 0.501], [0.745, 0.815], [1, 0.815]],
+    blue: [[0, 0], [0.231, 0.094], [0.709, 0.874], [1, 1]]
+  },
+  darker: { master: [[0, 0], [0.5, 0.4], [1, 1]] },
+  increase_contrast: {
+    master: [[0, 0], [0.149, 0.066], [0.831, 0.905], [0.905, 0.98], [1, 1]]
+  },
+  lighter: { master: [[0, 0], [0.4, 0.5], [1, 1]] },
+  linear_contrast: { master: [[0, 0], [0.305, 0.286], [0.694, 0.713], [1, 1]] },
+  medium_contrast: { master: [[0, 0], [0.286, 0.219], [0.639, 0.643], [1, 1]] },
+  negative: { master: [[0, 1], [1, 0]] },
+  strong_contrast: {
+    master: [[0, 0], [0.301, 0.196], [0.592, 0.6], [0.686, 0.737], [1, 1]]
+  },
+  vintage: {
+    red: [[0, 0.11], [0.42, 0.51], [1, 0.95]],
+    green: [[0, 0], [0.5, 0.48], [1, 1]],
+    blue: [[0, 0.22], [0.49, 0.44], [1, 0.8]]
+  }
+};
+[
+  "none",
+  ...Object.keys(VIDEO_CURVES_PRESETS)
+];
+const LUT_SIZE$1 = 256;
+const SCALE = LUT_SIZE$1 - 1;
+function clamp01$1(v2) {
+  return Math.min(1, Math.max(0, v2));
+}
+function quant4(v2) {
+  return Math.round(v2 * 1e4) / 1e4;
+}
+function clipTrunc(v2) {
+  return Math.min(255, Math.max(0, Math.trunc(v2)));
+}
+function sanitizeCurvePoints(raw) {
+  if (!(raw || "").trim()) return null;
+  let parsed;
   try {
-    const v2 = JSON.parse(raw);
-    if (!Array.isArray(v2)) return [];
-    const out = [];
-    for (const item of v2) {
-      const n = Number(item);
-      if (!Number.isInteger(n) || n < 1 || n > connectedCount) continue;
-      if (!out.includes(n)) out.push(n);
-    }
-    return out;
-  } catch {
-    return [];
-  }
-}
-function normalizeOrder(order2, connectedCount) {
-  const seen = /* @__PURE__ */ new Set();
-  const out = [];
-  for (const n of order2) {
-    if (!Number.isInteger(n) || n < 1 || n > connectedCount || seen.has(n)) continue;
-    seen.add(n);
-    out.push(n);
-  }
-  for (let n = 1; n <= connectedCount; n++) {
-    if (!seen.has(n)) out.push(n);
-  }
-  return out;
-}
-function isNaturalOrder(order2) {
-  return order2.every((n, i) => n === i + 1);
-}
-function swap(order2, a, b2) {
-  if (a < 0 || b2 < 0 || a >= order2.length || b2 >= order2.length) return [...order2];
-  const next = [...order2];
-  [next[a], next[b2]] = [next[b2], next[a]];
-  return next;
-}
-function moveUp(order2, index) {
-  return swap(order2, index, index - 1);
-}
-function moveDown(order2, index) {
-  return swap(order2, index, index + 1);
-}
-function serializeOrder(order2) {
-  return isNaturalOrder(order2) ? "" : JSON.stringify(order2);
-}
-function useNumWidget(node, name, fallback) {
-  const local = /* @__PURE__ */ ref(readWidgetNum(node, name, fallback));
-  bindWidgetCallback(node, name, (value) => {
-    const v2 = Number(value);
-    if (Number.isFinite(v2) && v2 !== local.value) local.value = v2;
-  });
-  onNodeConfigure(node, () => {
-    local.value = readWidgetNum(node, name, local.value);
-  });
-  return computed({
-    get: () => local.value,
-    set: (v2) => {
-      if (!Number.isFinite(v2)) return;
-      local.value = v2;
-      writeWidget(node, name, v2);
-    }
-  });
-}
-function useStrWidget(node, name, fallback) {
-  const local = /* @__PURE__ */ ref(readWidgetStr(node, name, fallback));
-  bindWidgetCallback(node, name, (value) => {
-    const v2 = String(value ?? "");
-    if (v2 !== local.value) local.value = v2;
-  });
-  onNodeConfigure(node, () => {
-    local.value = readWidgetStr(node, name, local.value);
-  });
-  return computed({
-    get: () => local.value,
-    set: (v2) => {
-      local.value = v2;
-      writeWidget(node, name, v2);
-    }
-  });
-}
-function useBoolWidget(node, name, fallback) {
-  var _a3;
-  const local = /* @__PURE__ */ ref(Boolean(((_a3 = getWidget(node, name)) == null ? void 0 : _a3.value) ?? fallback));
-  bindWidgetCallback(node, name, (value) => {
-    const v2 = Boolean(value);
-    if (v2 !== local.value) local.value = v2;
-  });
-  onNodeConfigure(node, () => {
-    var _a4;
-    local.value = Boolean(((_a4 = getWidget(node, name)) == null ? void 0 : _a4.value) ?? local.value);
-  });
-  return computed({
-    get: () => local.value,
-    set: (v2) => {
-      local.value = v2;
-      writeWidget(node, name, v2);
-    }
-  });
-}
-function parseFxSpec(content) {
-  if (!content) return null;
-  try {
-    const v2 = JSON.parse(String(content));
-    if (!v2 || typeof v2 !== "object" || Array.isArray(v2)) return null;
-    const kind = typeof v2.kind === "string" ? v2.kind : "";
-    const label = typeof v2.label === "string" && v2.label ? v2.label : kind;
-    if (!label) return null;
-    return {
-      kind,
-      label,
-      domain: v2.domain === "audio" ? "audio" : "video",
-      specCount: Array.isArray(v2.specs) ? v2.specs.length : 0
-    };
+    parsed = JSON.parse(raw);
   } catch {
     return null;
   }
+  if (!Array.isArray(parsed)) return null;
+  const dedup = /* @__PURE__ */ new Map();
+  for (const p2 of parsed) {
+    if (!Array.isArray(p2) || p2.length < 2) continue;
+    const x2 = Number(p2[0]);
+    const y2 = Number(p2[1]);
+    if (!Number.isFinite(x2) || !Number.isFinite(y2)) continue;
+    dedup.set(quant4(clamp01$1(x2)), quant4(clamp01$1(y2)));
+  }
+  if (dedup.size < 2) return null;
+  return [...dedup.entries()].sort((a, b2) => a[0] - b2[0]).map(([x2, y2]) => [x2, y2]);
 }
-function fxChainRowsFromInputs(inputs) {
+function resolveCurveChannels(p2) {
+  const preset2 = VIDEO_CURVES_PRESETS[p2.preset ?? ""] ?? {};
+  const pick2 = (raw, fromPreset) => sanitizeCurvePoints(raw ?? "") ?? fromPreset ?? null;
+  return {
+    red: pick2(p2.red, preset2.red),
+    green: pick2(p2.green, preset2.green),
+    blue: pick2(p2.blue, preset2.blue),
+    master: pick2(p2.master, preset2.master)
+  };
+}
+function usablePoints(pts) {
+  if (!pts) return null;
   const out = [];
-  for (const inp of inputs) {
-    if (inp.type !== "COMFYTV_FXSPEC" || inp.source === "empty") continue;
-    const ordinal = out.length + 1;
-    const spec = parseFxSpec(inp.content);
-    out.push(spec ? { slot: inp.slot, ordinal, known: true, kind: spec.kind, label: spec.label, domain: spec.domain } : { slot: inp.slot, ordinal, known: false, kind: "", label: "", domain: "video" });
+  let lastIdx = -1;
+  for (const pt2 of pts) {
+    const idx = Math.trunc(pt2[0] * SCALE);
+    if (out.length > 0 && idx <= lastIdx) continue;
+    out.push(pt2);
+    lastIdx = idx;
   }
   return out;
 }
-function useFxChain(node, getState) {
-  const orderRaw = useStrWidget(node, "chain_order", "");
-  const rows = computed(() => fxChainRowsFromInputs(getState().inputs));
-  const order2 = computed(() => normalizeOrder(parseOrder$1(orderRaw.value, rows.value.length), rows.value.length));
-  const orderedRows = computed(() => {
-    const byOrdinal = new Map(rows.value.map((r) => [r.ordinal, r]));
-    return order2.value.map((n) => byOrdinal.get(n)).filter((r) => !!r);
+function interpolateNatural(points) {
+  const y2 = new Uint8Array(LUT_SIZE$1);
+  const n = (points == null ? void 0 : points.length) ?? 0;
+  if (!points || n === 0) {
+    for (let i = 0; i < LUT_SIZE$1; i++) y2[i] = i;
+    return y2;
+  }
+  if (n === 1) {
+    y2.fill(clipTrunc(points[0][1] * SCALE));
+    return y2;
+  }
+  const h2 = new Float64Array(n - 1);
+  for (let i = 0; i < n - 1; i++) h2[i] = points[i + 1][0] - points[i][0];
+  const r = new Float64Array(n);
+  for (let i = 1; i < n - 1; i++) {
+    const yp = points[i - 1][1];
+    const yc = points[i][1];
+    const yn2 = points[i + 1][1];
+    r[i] = 6 * ((yn2 - yc) / h2[i] - (yc - yp) / h2[i - 1]);
+  }
+  const bd = new Float64Array(n);
+  const md = new Float64Array(n);
+  const ad = new Float64Array(n);
+  md[0] = 1;
+  md[n - 1] = 1;
+  for (let i = 1; i < n - 1; i++) {
+    bd[i] = h2[i - 1];
+    md[i] = 2 * (h2[i - 1] + h2[i]);
+    ad[i] = h2[i];
+  }
+  for (let i = 1; i < n; i++) {
+    const den = md[i] - bd[i] * ad[i - 1];
+    const k2 = den ? 1 / den : 1;
+    ad[i] *= k2;
+    r[i] = (r[i] - bd[i] * r[i - 1]) * k2;
+  }
+  for (let i = n - 2; i >= 0; i--) r[i] = r[i] - ad[i] * r[i + 1];
+  for (let i = 0; i < Math.trunc(points[0][0] * SCALE); i++) {
+    y2[i] = clipTrunc(points[0][1] * SCALE);
+  }
+  for (let i = 0; i < n - 1; i++) {
+    const yc = points[i][1];
+    const yn2 = points[i + 1][1];
+    const a = yc;
+    const b2 = (yn2 - yc) / h2[i] - h2[i] * r[i] / 2 - h2[i] * (r[i + 1] - r[i]) / 6;
+    const c2 = r[i] / 2;
+    const d2 = (r[i + 1] - r[i]) / (6 * h2[i]);
+    const xStart = Math.trunc(points[i][0] * SCALE);
+    const xEnd = Math.trunc(points[i + 1][0] * SCALE);
+    for (let x2 = xStart; x2 <= xEnd; x2++) {
+      const xx = (x2 - xStart) / SCALE;
+      const yy = a + b2 * xx + c2 * xx * xx + d2 * xx * xx * xx;
+      y2[x2] = clipTrunc(yy * SCALE);
+    }
+  }
+  for (let i = Math.trunc(points[n - 1][0] * SCALE); i < LUT_SIZE$1; i++) {
+    y2[i] = clipTrunc(points[n - 1][1] * SCALE);
+  }
+  return y2;
+}
+function buildCurvesLuts(p2) {
+  const ch = resolveCurveChannels(p2);
+  const red = interpolateNatural(usablePoints(ch.red));
+  const green = interpolateNatural(usablePoints(ch.green));
+  const blue = interpolateNatural(usablePoints(ch.blue));
+  const master = usablePoints(ch.master);
+  if (master) {
+    const m2 = interpolateNatural(master);
+    for (const lut2 of [red, green, blue]) {
+      for (let i = 0; i < LUT_SIZE$1; i++) lut2[i] = m2[lut2[i]];
+    }
+  }
+  return { red, green, blue };
+}
+const RENDER_CONFIG$5 = {
+  maxInputs: 1,
+  maxFloatUniforms: 1,
+  maxIntUniforms: 1,
+  maxBoolUniforms: 1,
+  maxCurves: 3
+};
+class VideoCurvesRenderer {
+  constructor() {
+    __publicField(this, "renderer", useGLSLRenderer(RENDER_CONFIG$5));
+    __publicField(this, "ready", false);
+    __publicField(this, "_error", null);
+    __publicField(this, "lutKey", null);
+  }
+  get error() {
+    return this._error;
+  }
+  uploadLuts(params) {
+    const key = JSON.stringify([
+      params.preset ?? "none",
+      params.master ?? "",
+      params.red ?? "",
+      params.green ?? "",
+      params.blue ?? ""
+    ]);
+    if (key === this.lutKey) return;
+    const luts = buildCurvesLuts(params);
+    const channels = [luts.red, luts.green, luts.blue];
+    channels.forEach((lut2, i) => {
+      const data = new Float32Array(256);
+      for (let j2 = 0; j2 < 256; j2++) data[j2] = lut2[j2] / 255;
+      this.renderer.bindCurveTexture(i, data);
+    });
+    this.lutKey = key;
+  }
+  renderToCanvas(video, params, target) {
+    const { w: w2, h: h2 } = fxSourceSize(video);
+    try {
+      if (!this.ready) {
+        if (!this.renderer.init(w2, h2)) {
+          this._error = "WebGL2 not available";
+          return false;
+        }
+        this.ready = true;
+      }
+      const compiled = this.renderer.compileFragment(videoCurvesFrag);
+      if (!compiled.success) {
+        this._error = compiled.log || "Shader compilation failed";
+        return false;
+      }
+      this._error = null;
+      this.renderer.setResolution(w2, h2);
+      this.renderer.bindInputImage(0, video);
+      this.uploadLuts(params);
+      this.renderer.render();
+      const off = this.renderer.getCanvas();
+      if (!off) {
+        this._error = "Renderer produced no output";
+        return false;
+      }
+      target.width = w2;
+      target.height = h2;
+      const ctx = target.getContext("2d");
+      if (!ctx) {
+        this._error = "2D context unavailable";
+        return false;
+      }
+      ctx.clearRect(0, 0, w2, h2);
+      ctx.drawImage(off, 0, 0);
+      return true;
+    } catch (e) {
+      this._error = e instanceof Error ? e.message : "Render failed";
+      this.renderer.dispose();
+      this.ready = false;
+      return false;
+    }
+  }
+  dispose() {
+    this.renderer.dispose();
+    this.ready = false;
+    this.lutKey = null;
+  }
+}
+const videoBlurFrag = "#version 300 es\r\nprecision highp float;\r\n\r\n#pragma passes 2\r\n\r\nuniform sampler2D u_image0;\r\nuniform sampler2D u_image1;\r\nuniform vec2 u_resolution;\r\nuniform int u_pass;\r\nuniform int u_int0;\r\nuniform int u_int1;\r\nuniform float u_float0;\r\nuniform float u_float1;\r\nuniform float u_float2;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nconst vec3 LUMA = vec3(0.299, 0.587, 0.114);\r\n\r\nvec4 separableBlur(vec2 stepv) {\r\n    vec4 c = texture(u_image0, v_texCoord);\r\n    vec3 acc = c.rgb;\r\n    float wsum = 1.0;\r\n    float w = 1.0;\r\n    for (int i = 1; i <= u_int1; i++) {\r\n        if (u_int0 == 0) w *= u_float0;\r\n        vec2 o = stepv * float(i);\r\n        acc += w * (texture(u_image0, v_texCoord + o).rgb\r\n                  + texture(u_image0, v_texCoord - o).rgb);\r\n        wsum += 2.0 * w;\r\n    }\r\n    return vec4(acc / wsum, c.a);\r\n}\r\n\r\nvec4 bilateralH(vec2 stepv) {\r\n    vec3 c = texture(u_image0, v_texCoord).rgb;\r\n    float lum0 = dot(c, LUMA);\r\n    vec3 accV = 2.0 * c;\r\n    float accF = 2.0;\r\n    float prodA = 1.0;\r\n    float prodB = 1.0;\r\n    float prevA = lum0;\r\n    float prevB = lum0;\r\n    for (int i = 1; i <= u_int1; i++) {\r\n        vec2 o = stepv * float(i);\r\n        vec3 a = texture(u_image0, v_texCoord + o).rgb;\r\n        vec3 b = texture(u_image0, v_texCoord - o).rgb;\r\n        float la = dot(a, LUMA);\r\n        float lb = dot(b, LUMA);\r\n        prodA *= u_float0 * exp(-abs(la - prevA) * u_float1);\r\n        prodB *= u_float0 * exp(-abs(lb - prevB) * u_float1);\r\n        prevA = la;\r\n        prevB = lb;\r\n        accV += prodA * a + prodB * b;\r\n        accF += prodA + prodB;\r\n    }\r\n    return vec4(accV, accF);\r\n}\r\n\r\nvec4 bilateralV(vec2 stepv) {\r\n    vec4 tf = texture(u_image0, v_texCoord);\r\n    float lum0 = dot(texture(u_image1, v_texCoord).rgb, LUMA);\r\n    vec3 accV = 2.0 * tf.rgb;\r\n    float accF = 2.0 * tf.a;\r\n    float prodA = 1.0;\r\n    float prodB = 1.0;\r\n    float prevA = lum0;\r\n    float prevB = lum0;\r\n    for (int i = 1; i <= u_int1; i++) {\r\n        vec2 o = stepv * float(i);\r\n        vec4 a = texture(u_image0, v_texCoord + o);\r\n        vec4 b = texture(u_image0, v_texCoord - o);\r\n        float la = dot(texture(u_image1, v_texCoord + o).rgb, LUMA);\r\n        float lb = dot(texture(u_image1, v_texCoord - o).rgb, LUMA);\r\n        prodA *= u_float0 * exp(-abs(la - prevA) * u_float1);\r\n        prodB *= u_float0 * exp(-abs(lb - prevB) * u_float1);\r\n        prevA = la;\r\n        prevB = lb;\r\n        accV += prodA * a.rgb + prodB * b.rgb;\r\n        accF += prodA * a.a + prodB * b.a;\r\n    }\r\n    return vec4(clamp(accV / accF, 0.0, 1.0), 1.0);\r\n}\r\n\r\nfloat binomialLuma(vec2 stepv, bool fromRed) {\r\n    int s = u_int1;\r\n    float w = 1.0;\r\n    for (int k = 1; k <= s; k++) {\r\n        w *= (2.0 * float(k) - 1.0) / (2.0 * float(k));\r\n    }\r\n    vec4 c0 = texture(u_image0, v_texCoord);\r\n    float acc = w * (fromRed ? c0.r : dot(c0.rgb, LUMA));\r\n    for (int i = 0; i < s; i++) {\r\n        w = w * float(s - i) / float(s + i + 1);\r\n        vec2 o = stepv * float(i + 1);\r\n        vec4 a = texture(u_image0, v_texCoord + o);\r\n        vec4 b = texture(u_image0, v_texCoord - o);\r\n        float va = fromRed ? a.r : dot(a.rgb, LUMA);\r\n        float vb = fromRed ? b.r : dot(b.rgb, LUMA);\r\n        acc += w * (va + vb);\r\n    }\r\n    return acc;\r\n}\r\n\r\nvec4 sharpenCombine(vec2 stepv) {\r\n    float blurY = binomialLuma(stepv, true);\r\n    vec4 orig = texture(u_image1, v_texCoord);\r\n    float y = dot(orig.rgb, LUMA);\r\n    vec3 c = orig.rgb + vec3((y - blurY) * u_float2);\r\n    return vec4(clamp(c, 0.0, 1.0), orig.a);\r\n}\r\n\r\nvoid main() {\r\n    vec2 texel = 1.0 / u_resolution;\r\n    vec2 stepv = u_pass == 0 ? vec2(texel.x, 0.0) : vec2(0.0, texel.y);\r\n    if (u_int0 == 2) {\r\n        fragColor = u_pass == 0 ? bilateralH(stepv) : bilateralV(stepv);\r\n    } else if (u_int0 == 3) {\r\n        fragColor = u_pass == 0\r\n            ? vec4(vec3(binomialLuma(stepv, false)), 1.0)\r\n            : sharpenCombine(stepv);\r\n    } else {\r\n        fragColor = separableBlur(stepv);\r\n    }\r\n}\r\n";
+const MAX_BLUR_RADIUS = 64;
+const MAX_BILATERAL_RADIUS = 64;
+const TAIL_EPS = 1e-3;
+const MODE_INDEX = {
+  gaussian: 0,
+  box: 1,
+  bilateral: 2,
+  sharpen: 3
+};
+function fin$1(v2, lo, hi, dflt) {
+  const n = typeof v2 === "number" ? v2 : Number(v2);
+  if (!Number.isFinite(n)) return dflt;
+  return Math.min(hi, Math.max(lo, n));
+}
+function sanitizeVideoBlurParams(p2) {
+  const mode = p2.mode === "box" || p2.mode === "bilateral" || p2.mode === "sharpen" ? p2.mode : "gaussian";
+  let size2 = Math.trunc(fin$1(p2.size, 0, 99, 5)) || 5;
+  size2 += (size2 + 1) % 2;
+  size2 = Math.min(13, Math.max(3, size2));
+  return {
+    mode,
+    amount: fin$1(p2.amount, 0, 20, 2),
+    size: size2,
+    edgePreserve: fin$1(p2.edgePreserve, 0.01, 1, 0.1)
+  };
+}
+function gblurNu(sigma) {
+  if (sigma <= 0) return 0;
+  const lambda = sigma * sigma / 2;
+  return (1 + 2 * lambda - Math.sqrt(1 + 4 * lambda)) / (2 * lambda);
+}
+function decayRadius(decay, cap) {
+  if (decay <= 0) return 0;
+  if (decay >= 1) return cap;
+  return Math.min(cap, Math.max(1, Math.ceil(Math.log(TAIL_EPS) / Math.log(decay))));
+}
+function bilateralSpatialDecay(sigmaS) {
+  if (sigmaS <= 0) return 0;
+  return Math.exp(-Math.SQRT2 / sigmaS);
+}
+function computeVideoBlurUniforms(p2) {
+  const s = sanitizeVideoBlurParams(p2);
+  if (s.mode === "gaussian") {
+    const nu = gblurNu(s.amount);
+    return {
+      mode: MODE_INDEX.gaussian,
+      radius: decayRadius(nu, MAX_BLUR_RADIUS),
+      decay: nu,
+      invSigmaR: 0,
+      sharpenAmount: 0
+    };
+  }
+  if (s.mode === "box") {
+    return {
+      mode: MODE_INDEX.box,
+      radius: Math.max(1, Math.trunc(s.amount)),
+      decay: 0,
+      invSigmaR: 0,
+      sharpenAmount: 0
+    };
+  }
+  if (s.mode === "bilateral") {
+    const sigmaS = Math.max(0.1, s.amount);
+    const decay = bilateralSpatialDecay(sigmaS);
+    return {
+      mode: MODE_INDEX.bilateral,
+      radius: decayRadius(decay, MAX_BILATERAL_RADIUS),
+      decay,
+      invSigmaR: 1 / s.edgePreserve,
+      sharpenAmount: 0
+    };
+  }
+  const amount = fin$1(s.amount, 0, 5, 1);
+  return {
+    mode: MODE_INDEX.sharpen,
+    radius: (s.size - 1) / 2,
+    decay: 0,
+    invSigmaR: 0,
+    sharpenAmount: Math.trunc(amount * 65536) / 65536
+  };
+}
+const RENDER_CONFIG$4 = {
+  maxInputs: 2,
+  maxFloatUniforms: 3,
+  maxIntUniforms: 2,
+  maxBoolUniforms: 0,
+  maxCurves: 0
+};
+class VideoBlurRenderer {
+  constructor() {
+    __publicField(this, "renderer", useGLSLRenderer(RENDER_CONFIG$4));
+    __publicField(this, "ready", false);
+    __publicField(this, "_error", null);
+  }
+  get error() {
+    return this._error;
+  }
+  renderToCanvas(video, params, target) {
+    const { w: w2, h: h2 } = fxSourceSize(video);
+    try {
+      if (!this.ready) {
+        if (!this.renderer.init(w2, h2)) {
+          this._error = "WebGL2 not available";
+          return false;
+        }
+        this.ready = true;
+      }
+      const compiled = this.renderer.compileFragment(videoBlurFrag);
+      if (!compiled.success) {
+        this._error = compiled.log || "Shader compilation failed";
+        return false;
+      }
+      this._error = null;
+      this.renderer.setResolution(w2, h2);
+      this.renderer.bindInputImage(0, video);
+      const u = computeVideoBlurUniforms(params);
+      if (u.mode === 2 || u.mode === 3) {
+        this.renderer.bindInputImage(1, video);
+      }
+      this.renderer.setIntUniform(0, u.mode);
+      this.renderer.setIntUniform(1, u.radius);
+      this.renderer.setFloatUniform(0, u.decay);
+      this.renderer.setFloatUniform(1, u.invSigmaR);
+      this.renderer.setFloatUniform(2, u.sharpenAmount);
+      this.renderer.render();
+      const off = this.renderer.getCanvas();
+      if (!off) {
+        this._error = "Renderer produced no output";
+        return false;
+      }
+      target.width = w2;
+      target.height = h2;
+      const ctx = target.getContext("2d");
+      if (!ctx) {
+        this._error = "2D context unavailable";
+        return false;
+      }
+      ctx.clearRect(0, 0, w2, h2);
+      ctx.drawImage(off, 0, 0);
+      return true;
+    } catch (e) {
+      this._error = e instanceof Error ? e.message : "Render failed";
+      this.renderer.dispose();
+      this.ready = false;
+      return false;
+    }
+  }
+  dispose() {
+    this.renderer.dispose();
+    this.ready = false;
+  }
+}
+const videoStylizeFrag = "#version 300 es\r\nprecision highp float;\r\n\r\n#pragma passes 3\r\n\r\nuniform sampler2D u_image0;\r\nuniform sampler2D u_image1;\r\nuniform sampler2D u_curve0;\r\nuniform sampler2D u_curve1;\r\nuniform sampler2D u_curve2;\r\nuniform vec2 u_resolution;\r\nuniform int u_pass;\r\nuniform int u_int0;\r\nuniform int u_int1;\r\nuniform int u_int2;\r\nuniform int u_int3;\r\nuniform float u_float0;\r\nuniform float u_float1;\r\nuniform float u_float2;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nvec3 bytes(vec3 c) {\r\n    return floor(c * 255.0 + 0.5);\r\n}\r\n\r\nvec3 rgbToYuv(vec3 c) {\r\n    return vec3(\r\n        16.0 + 65.481 * c.r + 128.553 * c.g + 24.966 * c.b,\r\n        128.0 - 37.797 * c.r - 74.203 * c.g + 112.0 * c.b,\r\n        128.0 + 112.0 * c.r - 93.786 * c.g - 18.214 * c.b);\r\n}\r\n\r\nvec3 yuvToRgb(vec3 yuv) {\r\n    float y = (yuv.x - 16.0) / 219.0;\r\n    float pb = (yuv.y - 128.0) / 224.0;\r\n    float pr = (yuv.z - 128.0) / 224.0;\r\n    return clamp(vec3(\r\n        y + 1.402 * pr,\r\n        y - 0.344136 * pb - 0.714136 * pr,\r\n        y + 1.772 * pb), 0.0, 1.0);\r\n}\r\n\r\nfloat vigFactor(vec2 px) {\r\n    vec2 hc = u_resolution * 0.5;\r\n    vec2 d = trunc(px - hc);\r\n    float dnorm = length(d) / length(hc);\r\n    if (dnorm > 1.0) return 0.0;\r\n    float c = cos(clamp(u_float0, 0.0, 1.5707964) * dnorm);\r\n    return (c * c) * (c * c);\r\n}\r\n\r\nfloat hash01(ivec2 p, int frame, int plane) {\r\n    uint h = uint(p.x) * 374761393u + uint(p.y) * 668265263u\r\n        + uint(frame) * 2246822519u + uint(plane) * 3266489917u;\r\n    h ^= h >> 16;\r\n    h *= 2654435761u;\r\n    h ^= h >> 13;\r\n    h *= 2246822519u;\r\n    h ^= h >> 16;\r\n    return float(h) * (1.0 / 4294967296.0);\r\n}\r\n\r\nfloat noiseOff(ivec2 p, int plane) {\r\n    float s = float(u_int2);\r\n    return floor(hash01(p, u_int3, plane) * s) - float(u_int2 / 2);\r\n}\r\n\r\nvec3 applyVignette(vec3 c, ivec2 px) {\r\n    float f = vigFactor(vec2(px));\r\n    vec3 yuv = rgbToYuv(c);\r\n    return yuvToRgb(vec3(\r\n        clamp(floor(yuv.x * f), 0.0, 255.0),\r\n        clamp(floor(f * (yuv.y - 127.0) + 127.0), 0.0, 255.0),\r\n        clamp(floor(f * (yuv.z - 127.0) + 127.0), 0.0, 255.0)));\r\n}\r\n\r\nvec3 applyGrain(vec3 c, ivec2 px) {\r\n    vec3 yuv = rgbToYuv(c);\r\n    yuv.x = clamp(yuv.x + noiseOff(px, 0), 0.0, 255.0);\r\n    yuv.y = clamp(yuv.y + noiseOff(px, 1), 0.0, 255.0);\r\n    yuv.z = clamp(yuv.z + noiseOff(px, 2), 0.0, 255.0);\r\n    return yuvToRgb(yuv);\r\n}\r\n\r\nvec3 applySepia(vec3 c) {\r\n    vec3 b = bytes(c);\r\n    vec3 mixed = vec3(\r\n        floor(b.r * 0.393 + 0.5) + floor(b.g * 0.769 + 0.5) + floor(b.b * 0.189 + 0.5),\r\n        floor(b.r * 0.349 + 0.5) + floor(b.g * 0.686 + 0.5) + floor(b.b * 0.168 + 0.5),\r\n        floor(b.r * 0.272 + 0.5) + floor(b.g * 0.534 + 0.5) + floor(b.b * 0.131 + 0.5));\r\n    return clamp(mixed, 0.0, 255.0) / 255.0;\r\n}\r\n\r\nvec3 applyMonochrome(vec3 c) {\r\n    vec3 yuv = rgbToYuv(c);\r\n    float y = yuv.x / 255.0;\r\n    float u = yuv.y / 255.0 - 0.5;\r\n    float v = yuv.z / 255.0 - 0.5;\r\n    float ny = exp(-clamp(u * u + v * v, 0.0, 1.0));\r\n    float y2 = clamp(floor(ny * y * 255.0 + 0.5), 0.0, 255.0);\r\n    return yuvToRgb(vec3(y2, 128.0, 128.0));\r\n}\r\n\r\nfloat curveAt(sampler2D lut, float b) {\r\n    int idx = int(clamp(b, 0.0, 255.0));\r\n    return texelFetch(lut, ivec2(idx, 0), 0).r * 255.0;\r\n}\r\n\r\nvec3 applyOldFilm(vec3 c, ivec2 px) {\r\n    vec3 b = bytes(c);\r\n    b = vec3(curveAt(u_curve0, b.r), curveAt(u_curve1, b.g), curveAt(u_curve2, b.b));\r\n    b.r = clamp(b.r + noiseOff(px, 0), 0.0, 255.0);\r\n    b.g = clamp(b.g + noiseOff(px, 1), 0.0, 255.0);\r\n    b.b = clamp(b.b + noiseOff(px, 2), 0.0, 255.0);\r\n    float f = vigFactor(vec2(px));\r\n    return clamp(floor(b * f), 0.0, 255.0) / 255.0;\r\n}\r\n\r\nvec4 pixelizeRows(ivec2 t) {\r\n    int w = int(u_resolution.x);\r\n    int b = max(1, u_int1);\r\n    int bx = (t.x / b) * b;\r\n    int bw = min(b, w - bx);\r\n    vec3 acc = vec3(0.0);\r\n    for (int i = 0; i < 64; i++) {\r\n        if (i >= bw) break;\r\n        acc += texelFetch(u_image0, ivec2(bx + i, t.y), 0).rgb;\r\n    }\r\n    return vec4(acc / float(bw), 1.0);\r\n}\r\n\r\nvec4 pixelizeCols(ivec2 t) {\r\n    int h = int(u_resolution.y);\r\n    int b = max(1, u_int1);\r\n    int vy = h - 1 - t.y;\r\n    int vby = (vy / b) * b;\r\n    int bh = min(b, h - vby);\r\n    vec3 acc = vec3(0.0);\r\n    for (int j = 0; j < 64; j++) {\r\n        if (j >= bh) break;\r\n        acc += texelFetch(u_image0, ivec2(t.x, h - 1 - (vby + j)), 0).rgb;\r\n    }\r\n    return vec4(acc / float(bh), 1.0);\r\n}\r\n\r\nvec4 edgeGaussian(ivec2 t) {\r\n    int w = int(u_resolution.x);\r\n    int h = int(u_resolution.y);\r\n    vec3 src = bytes(texelFetch(u_image0, t, 0).rgb);\r\n    if (t.x < 2 || t.x >= w - 2 || t.y < 2 || t.y >= h - 2) {\r\n        return vec4(src, 255.0);\r\n    }\r\n    float k[25] = float[25](\r\n        2.0, 4.0, 5.0, 4.0, 2.0,\r\n        4.0, 9.0, 12.0, 9.0, 4.0,\r\n        5.0, 12.0, 15.0, 12.0, 5.0,\r\n        4.0, 9.0, 12.0, 9.0, 4.0,\r\n        2.0, 4.0, 5.0, 4.0, 2.0);\r\n    vec3 acc = vec3(0.0);\r\n    for (int dy = -2; dy <= 2; dy++) {\r\n        for (int dx = -2; dx <= 2; dx++) {\r\n            acc += k[(dy + 2) * 5 + dx + 2]\r\n                * bytes(texelFetch(u_image0, t + ivec2(dx, dy), 0).rgb);\r\n        }\r\n    }\r\n    return vec4(floor(acc / 159.0 + 1e-3), 255.0);\r\n}\r\n\r\nvoid sobelAt(ivec2 t, out vec3 gx, out vec3 gy) {\r\n    vec3 a = texelFetch(u_image0, t + ivec2(-1, -1), 0).rgb;\r\n    vec3 b = texelFetch(u_image0, t + ivec2(0, -1), 0).rgb;\r\n    vec3 c = texelFetch(u_image0, t + ivec2(1, -1), 0).rgb;\r\n    vec3 d = texelFetch(u_image0, t + ivec2(-1, 0), 0).rgb;\r\n    vec3 f = texelFetch(u_image0, t + ivec2(1, 0), 0).rgb;\r\n    vec3 g = texelFetch(u_image0, t + ivec2(-1, 1), 0).rgb;\r\n    vec3 hh = texelFetch(u_image0, t + ivec2(0, 1), 0).rgb;\r\n    vec3 i = texelFetch(u_image0, t + ivec2(1, 1), 0).rgb;\r\n    gx = -a + c - 2.0 * d + 2.0 * f - g + i;\r\n    gy = -a + g - 2.0 * b + 2.0 * hh - c + i;\r\n}\r\n\r\nvec3 sobelMagAt(ivec2 t, int w, int h) {\r\n    if (t.x < 1 || t.x >= w - 1 || t.y < 1 || t.y >= h - 1) return vec3(0.0);\r\n    vec3 gx;\r\n    vec3 gy;\r\n    sobelAt(t, gx, gy);\r\n    return abs(gx) + abs(gy);\r\n}\r\n\r\nint dirClass(float gxf, float gyf) {\r\n    int gx = int(gxf);\r\n    int gy = int(gyf);\r\n    if (gx != 0) {\r\n        if (gx < 0) {\r\n            gx = -gx;\r\n            gy = -gy;\r\n        }\r\n        int gy16 = gy * 65536;\r\n        int tanPi8 = 27146 * gx;\r\n        int tan3Pi8 = 158218 * gx;\r\n        if (gy16 > -tan3Pi8 && gy16 < -tanPi8) return 0;\r\n        if (gy16 > -tanPi8 && gy16 < tanPi8) return 2;\r\n        if (gy16 > tanPi8 && gy16 < tan3Pi8) return 1;\r\n    }\r\n    return 3;\r\n}\r\n\r\nvec4 edgeSobelNms(ivec2 t) {\r\n    int w = int(u_resolution.x);\r\n    int h = int(u_resolution.y);\r\n    if (t.x < 1 || t.x >= w - 1 || t.y < 1 || t.y >= h - 1) {\r\n        return vec4(0.0, 0.0, 0.0, 255.0);\r\n    }\r\n    vec3 gx;\r\n    vec3 gy;\r\n    sobelAt(t, gx, gy);\r\n    vec3 mag = abs(gx) + abs(gy);\r\n    vec3 res = vec3(0.0);\r\n    for (int ch = 0; ch < 3; ch++) {\r\n        int dir = dirClass(gx[ch], gy[ch]);\r\n        ivec2 o1 = dir == 0 ? ivec2(-1, 1)\r\n            : dir == 1 ? ivec2(-1, -1)\r\n            : dir == 2 ? ivec2(-1, 0)\r\n            : ivec2(0, -1);\r\n        ivec2 o2 = -o1;\r\n        float m1 = sobelMagAt(t + o1, w, h)[ch];\r\n        float m2 = sobelMagAt(t + o2, w, h)[ch];\r\n        if (mag[ch] > m1 && mag[ch] > m2) res[ch] = min(mag[ch], 255.0);\r\n    }\r\n    return vec4(res, 255.0);\r\n}\r\n\r\nvec4 edgeThreshold(ivec2 t) {\r\n    int w = int(u_resolution.x);\r\n    int h = int(u_resolution.y);\r\n    vec3 nms = texelFetch(u_image0, t, 0).rgb;\r\n    vec3 orig = bytes(texture(u_image1, v_texCoord).rgb);\r\n    bool interior = t.x > 0 && t.x < w - 1 && t.y > 0 && t.y < h - 1;\r\n    vec3 maxN = vec3(0.0);\r\n    if (interior) {\r\n        for (int dy = -1; dy <= 1; dy++) {\r\n            for (int dx = -1; dx <= 1; dx++) {\r\n                if (dx == 0 && dy == 0) continue;\r\n                maxN = max(maxN, texelFetch(u_image0, t + ivec2(dx, dy), 0).rgb);\r\n            }\r\n        }\r\n    }\r\n    vec3 res;\r\n    for (int ch = 0; ch < 3; ch++) {\r\n        float v = nms[ch];\r\n        float kept = 0.0;\r\n        if (v > u_float2) kept = v;\r\n        else if (interior && v > u_float1 && maxN[ch] > u_float2) kept = v;\r\n        res[ch] = floor((kept + orig[ch]) * 0.5);\r\n    }\r\n    return vec4(res / 255.0, 1.0);\r\n}\r\n\r\nvoid main() {\r\n    ivec2 t = ivec2(gl_FragCoord.xy);\r\n    ivec2 vp = ivec2(t.x, int(u_resolution.y) - 1 - t.y);\r\n    if (u_int0 == 2) {\r\n        if (u_pass == 0) fragColor = pixelizeRows(t);\r\n        else if (u_pass == 1) fragColor = pixelizeCols(t);\r\n        else fragColor = vec4(texelFetch(u_image0, t, 0).rgb, 1.0);\r\n        return;\r\n    }\r\n    if (u_int0 == 3) {\r\n        if (u_pass == 0) fragColor = edgeGaussian(t);\r\n        else if (u_pass == 1) fragColor = edgeSobelNms(t);\r\n        else fragColor = edgeThreshold(t);\r\n        return;\r\n    }\r\n    if (u_pass < 2) {\r\n        fragColor = vec4(0.0);\r\n        return;\r\n    }\r\n    vec4 tex = texture(u_image1, v_texCoord);\r\n    vec3 c = tex.rgb;\r\n    if (u_int0 == 0) c = applyVignette(c, vp);\r\n    else if (u_int0 == 1) c = applyGrain(c, vp);\r\n    else if (u_int0 == 4) c = applySepia(c);\r\n    else if (u_int0 == 5) c = applyMonochrome(c);\r\n    else if (u_int0 == 6) c = applyOldFilm(c, vp);\r\n    fragColor = vec4(c, tex.a);\r\n}\r\n";
+const STYLIZE_EFFECTS = [
+  "vignette",
+  "grain",
+  "pixelize",
+  "edge",
+  "sepia",
+  "monochrome",
+  "old_film"
+];
+const EFFECT_INDEX = {
+  vignette: 0,
+  grain: 1,
+  pixelize: 2,
+  edge: 3,
+  sepia: 4,
+  monochrome: 5,
+  old_film: 6
+};
+function fin(v2, lo, hi, dflt) {
+  const n = typeof v2 === "number" ? v2 : Number(v2);
+  if (!Number.isFinite(n)) return dflt;
+  return Math.min(hi, Math.max(lo, n));
+}
+function sanitizeVideoStylizeParams(p2) {
+  const effect3 = p2.effect && STYLIZE_EFFECTS.includes(p2.effect) ? p2.effect : "vignette";
+  const rawBlock = typeof p2.block === "number" ? p2.block : Number(p2.block);
+  const block = Number.isFinite(rawBlock) && Math.trunc(rawBlock) ? Math.trunc(rawBlock) : 8;
+  return {
+    effect: effect3,
+    strength: fin(p2.strength, 0, 1, 0.5),
+    block: Math.min(64, Math.max(2, block))
+  };
+}
+function fmt(v2, digits) {
+  return Number.parseFloat(v2.toFixed(digits));
+}
+function vignetteAngle(s) {
+  return fmt(Math.max(0.05, s * 1.5), 4);
+}
+function oldFilmVignetteAngle(s) {
+  return fmt(Math.max(0.05, s * 1.2), 4);
+}
+function grainStrength(s) {
+  return Math.max(1, Math.trunc(s * 40));
+}
+function oldFilmGrainStrength(s) {
+  return Math.max(1, Math.trunc(s * 30));
+}
+function edgeThresholds(s) {
+  return {
+    low: fmt(Math.max(0.02, s * 0.3), 3),
+    high: fmt(Math.max(0.05, s * 0.6), 3)
+  };
+}
+function edgeThresholdU8(t2) {
+  return Math.trunc(t2 * 255 + 0.5);
+}
+function oldFilmLuts() {
+  return buildCurvesLuts({ preset: "vintage" });
+}
+function computeStylizeUniforms(raw) {
+  const p2 = sanitizeVideoStylizeParams(raw);
+  const s = p2.strength;
+  const { low, high } = edgeThresholds(s);
+  return {
+    effect: EFFECT_INDEX[p2.effect],
+    angle: p2.effect === "old_film" ? oldFilmVignetteAngle(s) : vignetteAngle(s),
+    grain: p2.effect === "old_film" ? oldFilmGrainStrength(s) : grainStrength(s),
+    block: p2.block,
+    edgeLow: edgeThresholdU8(low),
+    edgeHigh: edgeThresholdU8(high)
+  };
+}
+function stylizeUsesCurves(raw) {
+  return sanitizeVideoStylizeParams(raw).effect === "old_film";
+}
+function stylizeUsesTemporalNoise(raw) {
+  const effect3 = sanitizeVideoStylizeParams(raw).effect;
+  return effect3 === "grain" || effect3 === "old_film";
+}
+const RENDER_CONFIG$3 = {
+  maxInputs: 2,
+  maxFloatUniforms: 3,
+  maxIntUniforms: 4,
+  maxBoolUniforms: 0,
+  maxCurves: 3
+};
+class VideoStylizeRenderer {
+  constructor() {
+    __publicField(this, "renderer", useGLSLRenderer(RENDER_CONFIG$3));
+    __publicField(this, "ready", false);
+    __publicField(this, "_error", null);
+    __publicField(this, "lutsUploaded", false);
+    __publicField(this, "frame", 0);
+  }
+  get error() {
+    return this._error;
+  }
+  uploadLuts() {
+    if (this.lutsUploaded) return;
+    const luts = oldFilmLuts();
+    const channels = [luts.red, luts.green, luts.blue];
+    channels.forEach((lut2, i) => {
+      const data = new Float32Array(256);
+      for (let j2 = 0; j2 < 256; j2++) data[j2] = lut2[j2] / 255;
+      this.renderer.bindCurveTexture(i, data);
+    });
+    this.lutsUploaded = true;
+  }
+  renderToCanvas(video, params, target) {
+    const { w: w2, h: h2 } = fxSourceSize(video);
+    try {
+      if (!this.ready) {
+        if (!this.renderer.init(w2, h2)) {
+          this._error = "WebGL2 not available";
+          return false;
+        }
+        this.ready = true;
+      }
+      const compiled = this.renderer.compileFragment(videoStylizeFrag);
+      if (!compiled.success) {
+        this._error = compiled.log || "Shader compilation failed";
+        return false;
+      }
+      this._error = null;
+      this.renderer.setResolution(w2, h2);
+      this.renderer.bindInputImage(0, video);
+      this.renderer.bindInputImage(1, video);
+      if (stylizeUsesCurves(params)) this.uploadLuts();
+      const u = computeStylizeUniforms(params);
+      if (stylizeUsesTemporalNoise(params)) this.frame = (this.frame + 1) % 1e5;
+      this.renderer.setIntUniform(0, u.effect);
+      this.renderer.setIntUniform(1, u.block);
+      this.renderer.setIntUniform(2, u.grain);
+      this.renderer.setIntUniform(3, this.frame);
+      this.renderer.setFloatUniform(0, u.angle);
+      this.renderer.setFloatUniform(1, u.edgeLow);
+      this.renderer.setFloatUniform(2, u.edgeHigh);
+      this.renderer.render();
+      const off = this.renderer.getCanvas();
+      if (!off) {
+        this._error = "Renderer produced no output";
+        return false;
+      }
+      target.width = w2;
+      target.height = h2;
+      const ctx = target.getContext("2d");
+      if (!ctx) {
+        this._error = "2D context unavailable";
+        return false;
+      }
+      ctx.clearRect(0, 0, w2, h2);
+      ctx.drawImage(off, 0, 0);
+      return true;
+    } catch (e) {
+      this._error = e instanceof Error ? e.message : "Render failed";
+      this.renderer.dispose();
+      this.ready = false;
+      return false;
+    }
+  }
+  dispose() {
+    this.renderer.dispose();
+    this.ready = false;
+    this.lutsUploaded = false;
+  }
+}
+const videoLutFrag = "#version 300 es\r\nprecision highp float;\r\nprecision highp int;\r\nprecision highp sampler3D;\r\n\r\nuniform sampler2D u_image0;\r\nuniform sampler3D u_lut;\r\nuniform int u_hasLut;\r\nuniform int u_interp;\r\nuniform int u_lutMax;\r\nuniform vec3 u_scale;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nvec3 fetchLut(int r, int g, int b) {\r\n    return texelFetch(u_lut, ivec3(b, g, r), 0).rgb;\r\n}\r\n\r\nvec3 lutNearest(vec3 s) {\r\n    ivec3 n = ivec3(s + 0.5);\r\n    return fetchLut(n.r, n.g, n.b);\r\n}\r\n\r\nvec3 lutTrilinear(vec3 s) {\r\n    ivec3 p = ivec3(s);\r\n    ivec3 n = min(p + 1, ivec3(u_lutMax));\r\n    vec3 d = s - vec3(p);\r\n    vec3 c000 = fetchLut(p.r, p.g, p.b);\r\n    vec3 c001 = fetchLut(p.r, p.g, n.b);\r\n    vec3 c010 = fetchLut(p.r, n.g, p.b);\r\n    vec3 c011 = fetchLut(p.r, n.g, n.b);\r\n    vec3 c100 = fetchLut(n.r, p.g, p.b);\r\n    vec3 c101 = fetchLut(n.r, p.g, n.b);\r\n    vec3 c110 = fetchLut(n.r, n.g, p.b);\r\n    vec3 c111 = fetchLut(n.r, n.g, n.b);\r\n    vec3 c00 = mix(c000, c100, d.r);\r\n    vec3 c10 = mix(c010, c110, d.r);\r\n    vec3 c01 = mix(c001, c101, d.r);\r\n    vec3 c11 = mix(c011, c111, d.r);\r\n    vec3 c0 = mix(c00, c10, d.g);\r\n    vec3 c1 = mix(c01, c11, d.g);\r\n    return mix(c0, c1, d.b);\r\n}\r\n\r\nvec3 lutTetrahedral(vec3 s) {\r\n    ivec3 p = ivec3(s);\r\n    ivec3 n = min(p + 1, ivec3(u_lutMax));\r\n    vec3 d = s - vec3(p);\r\n    vec3 c000 = fetchLut(p.r, p.g, p.b);\r\n    vec3 c111 = fetchLut(n.r, n.g, n.b);\r\n    if (d.r > d.g) {\r\n        if (d.g > d.b) {\r\n            vec3 c100 = fetchLut(n.r, p.g, p.b);\r\n            vec3 c110 = fetchLut(n.r, n.g, p.b);\r\n            return (1.0 - d.r) * c000 + (d.r - d.g) * c100 + (d.g - d.b) * c110 + d.b * c111;\r\n        } else if (d.r > d.b) {\r\n            vec3 c100 = fetchLut(n.r, p.g, p.b);\r\n            vec3 c101 = fetchLut(n.r, p.g, n.b);\r\n            return (1.0 - d.r) * c000 + (d.r - d.b) * c100 + (d.b - d.g) * c101 + d.g * c111;\r\n        } else {\r\n            vec3 c001 = fetchLut(p.r, p.g, n.b);\r\n            vec3 c101 = fetchLut(n.r, p.g, n.b);\r\n            return (1.0 - d.b) * c000 + (d.b - d.r) * c001 + (d.r - d.g) * c101 + d.g * c111;\r\n        }\r\n    } else {\r\n        if (d.b > d.g) {\r\n            vec3 c001 = fetchLut(p.r, p.g, n.b);\r\n            vec3 c011 = fetchLut(p.r, n.g, n.b);\r\n            return (1.0 - d.b) * c000 + (d.b - d.g) * c001 + (d.g - d.r) * c011 + d.r * c111;\r\n        } else if (d.b > d.r) {\r\n            vec3 c010 = fetchLut(p.r, n.g, p.b);\r\n            vec3 c011 = fetchLut(p.r, n.g, n.b);\r\n            return (1.0 - d.g) * c000 + (d.g - d.b) * c010 + (d.b - d.r) * c011 + d.r * c111;\r\n        } else {\r\n            vec3 c010 = fetchLut(p.r, n.g, p.b);\r\n            vec3 c110 = fetchLut(n.r, n.g, p.b);\r\n            return (1.0 - d.g) * c000 + (d.g - d.r) * c010 + (d.r - d.b) * c110 + d.b * c111;\r\n        }\r\n    }\r\n}\r\n\r\nvoid main() {\r\n    vec4 tex = texture(u_image0, v_texCoord);\r\n    if (u_hasLut == 0) {\r\n        fragColor = tex;\r\n        return;\r\n    }\r\n    vec3 s = clamp(tex.rgb * u_scale, vec3(0.0), vec3(float(u_lutMax)));\r\n    vec3 c;\r\n    if (u_interp == 0) {\r\n        c = lutNearest(s);\r\n    } else if (u_interp == 1) {\r\n        c = lutTrilinear(s);\r\n    } else {\r\n        c = lutTetrahedral(s);\r\n    }\r\n    c = floor(clamp(c, 0.0, 1.0) * 255.0) / 255.0;\r\n    fragColor = vec4(c, tex.a);\r\n}\r\n";
+const PREVIEWABLE_LUT_EXTENSIONS = [".cube", ".3dl"];
+const MAX_LEVEL = 256;
+const THREEDL_SIZE = 17;
+const THREEDL_SCALE = 16 * 16 * 16;
+function clipf(v2, lo, hi) {
+  return Math.min(hi, Math.max(lo, v2));
+}
+function isSkipLine(line) {
+  const t2 = line.trimStart();
+  return t2 === "" || t2.startsWith("#");
+}
+function parseTriple(line) {
+  const parts = line.trim().split(/\s+/);
+  if (parts.length < 3) return null;
+  const r = Number(parts[0]);
+  const g2 = Number(parts[1]);
+  const b2 = Number(parts[2]);
+  if (!Number.isFinite(r) || !Number.isFinite(g2) || !Number.isFinite(b2)) return null;
+  return [r, g2, b2];
+}
+function domainScale(min2, max2) {
+  return [
+    Math.fround(clipf(1 / (max2[0] - min2[0]), 0, 1)),
+    Math.fround(clipf(1 / (max2[1] - min2[1]), 0, 1)),
+    Math.fround(clipf(1 / (max2[2] - min2[2]), 0, 1))
+  ];
+}
+function parseCubeLut(text2) {
+  const lines = text2.split(/\r?\n/);
+  let pos = 0;
+  let size2 = 0;
+  while (pos < lines.length) {
+    const line = lines[pos++];
+    if (line.startsWith("LUT_3D_SIZE")) {
+      size2 = parseInt(line.slice(11), 10);
+      break;
+    }
+  }
+  if (!Number.isFinite(size2) || size2 < 2 || size2 > MAX_LEVEL) return null;
+  const size22 = size2 * size2;
+  const data = new Float32Array(size2 * size22 * 3);
+  const min2 = [0, 0, 0];
+  const max2 = [1, 1, 1];
+  for (let k2 = 0; k2 < size2; k2++) {
+    for (let j2 = 0; j2 < size2; j2++) {
+      for (let i = 0; i < size2; i++) {
+        let line = null;
+        while (pos < lines.length) {
+          const candidate = lines[pos++];
+          if (candidate.startsWith("DOMAIN_")) {
+            const target = candidate.startsWith("DOMAIN_MIN ") ? min2 : candidate.startsWith("DOMAIN_MAX ") ? max2 : null;
+            if (!target) return null;
+            const vals2 = parseTriple(candidate.slice(11));
+            if (!vals2) return null;
+            target[0] = vals2[0];
+            target[1] = vals2[1];
+            target[2] = vals2[2];
+            continue;
+          }
+          if (candidate.startsWith("TITLE")) continue;
+          if (isSkipLine(candidate)) continue;
+          line = candidate;
+          break;
+        }
+        if (line == null) return null;
+        const vals = parseTriple(line);
+        if (!vals) return null;
+        const base2 = (i * size22 + j2 * size2 + k2) * 3;
+        data[base2] = vals[0];
+        data[base2 + 1] = vals[1];
+        data[base2 + 2] = vals[2];
+      }
+    }
+  }
+  return { size: size2, data, scale: domainScale(min2, max2) };
+}
+function parse3dlLut(text2) {
+  const lines = text2.split(/\r?\n/).filter((l3) => !isSkipLine(l3));
+  const size2 = THREEDL_SIZE;
+  const size22 = size2 * size2;
+  if (lines.length < 1 + size2 * size22) return null;
+  const data = new Float32Array(size2 * size22 * 3);
+  let pos = 1;
+  for (let k2 = 0; k2 < size2; k2++) {
+    for (let j2 = 0; j2 < size2; j2++) {
+      for (let i = 0; i < size2; i++) {
+        const vals = parseTriple(lines[pos++]);
+        if (!vals || !vals.every(Number.isInteger)) return null;
+        const base2 = (k2 * size22 + j2 * size2 + i) * 3;
+        data[base2] = vals[0] / THREEDL_SCALE;
+        data[base2 + 1] = vals[1] / THREEDL_SCALE;
+        data[base2 + 2] = vals[2] / THREEDL_SCALE;
+      }
+    }
+  }
+  return { size: size2, data, scale: [1, 1, 1] };
+}
+function lutFileExtension(filename) {
+  const m2 = /\.[^.]+$/.exec(filename.trim().toLowerCase());
+  return m2 ? m2[0] : "";
+}
+function isPreviewableLutFile(filename) {
+  return PREVIEWABLE_LUT_EXTENSIONS.includes(lutFileExtension(filename));
+}
+function parseLutText(filename, text2) {
+  const ext = lutFileExtension(filename);
+  if (ext === ".cube") return parseCubeLut(text2);
+  if (ext === ".3dl") return parse3dlLut(text2);
+  return null;
+}
+function resolvePreviewInterp(interp) {
+  if (interp === "nearest" || interp === "trilinear") return interp;
+  return "tetrahedral";
+}
+const VERTEX_SHADER_SOURCE = `#version 300 es
+out vec2 v_texCoord;
+void main() {
+    vec2 verts[3] = vec2[](vec2(-1, -1), vec2(3, -1), vec2(-1, 3));
+    v_texCoord = verts[gl_VertexID] * 0.5 + 0.5;
+    gl_Position = vec4(verts[gl_VertexID], 0, 1);
+}
+`;
+const INTERP_INDEX = { nearest: 0, trilinear: 1, tetrahedral: 2 };
+const UNIFORM_NAMES = [
+  "u_image0",
+  "u_lut",
+  "u_hasLut",
+  "u_interp",
+  "u_lutMax",
+  "u_scale"
+];
+function compile(gl, type, source) {
+  const shader = gl.createShader(type);
+  if (!shader) throw new Error("Failed to create shader");
+  gl.shaderSource(shader, source);
+  gl.compileShader(shader);
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    const log2 = gl.getShaderInfoLog(shader) ?? "Shader compilation failed";
+    gl.deleteShader(shader);
+    throw new Error(log2);
+  }
+  return shader;
+}
+class VideoLutRenderer {
+  constructor() {
+    __publicField(this, "canvas", null);
+    __publicField(this, "gl", null);
+    __publicField(this, "program", null);
+    __publicField(this, "videoTexture", null);
+    __publicField(this, "lutTexture", null);
+    __publicField(this, "uploadedLut", null);
+    __publicField(this, "uniforms", /* @__PURE__ */ new Map());
+    __publicField(this, "ready", false);
+    __publicField(this, "_error", null);
+  }
+  get error() {
+    return this._error;
+  }
+  init(width, height) {
+    this.canvas = new OffscreenCanvas(width, height);
+    const gl = this.canvas.getContext("webgl2", {
+      alpha: true,
+      premultipliedAlpha: false,
+      preserveDrawingBuffer: true
+    });
+    if (!gl) {
+      this._error = "WebGL2 not available";
+      return false;
+    }
+    this.gl = gl;
+    const vs = compile(gl, gl.VERTEX_SHADER, VERTEX_SHADER_SOURCE);
+    const fs = compile(gl, gl.FRAGMENT_SHADER, videoLutFrag);
+    const program = gl.createProgram();
+    if (!program) {
+      this._error = "Failed to create program";
+      return false;
+    }
+    gl.attachShader(program, vs);
+    gl.attachShader(program, fs);
+    gl.linkProgram(program);
+    gl.deleteShader(vs);
+    gl.deleteShader(fs);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      this._error = gl.getProgramInfoLog(program) ?? "Program link failed";
+      gl.deleteProgram(program);
+      return false;
+    }
+    this.program = program;
+    for (const name of UNIFORM_NAMES) {
+      this.uniforms.set(name, gl.getUniformLocation(program, name));
+    }
+    this.videoTexture = gl.createTexture();
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, this.videoTexture);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    this.lutTexture = gl.createTexture();
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_3D, this.lutTexture);
+    gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+    gl.texImage3D(
+      gl.TEXTURE_3D,
+      0,
+      gl.RGB32F,
+      1,
+      1,
+      1,
+      0,
+      gl.RGB,
+      gl.FLOAT,
+      new Float32Array([0, 0, 0])
+    );
+    return true;
+  }
+  uploadLut(lut2) {
+    const gl = this.gl;
+    if (!gl || lut2 === this.uploadedLut) return;
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_3D, this.lutTexture);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+    gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+    if (lut2) {
+      gl.texImage3D(
+        gl.TEXTURE_3D,
+        0,
+        gl.RGB32F,
+        lut2.size,
+        lut2.size,
+        lut2.size,
+        0,
+        gl.RGB,
+        gl.FLOAT,
+        lut2.data
+      );
+    } else {
+      gl.texImage3D(
+        gl.TEXTURE_3D,
+        0,
+        gl.RGB32F,
+        1,
+        1,
+        1,
+        0,
+        gl.RGB,
+        gl.FLOAT,
+        new Float32Array([0, 0, 0])
+      );
+    }
+    this.uploadedLut = lut2;
+  }
+  renderToCanvas(video, params, target) {
+    const { w: w2, h: h2 } = fxSourceSize(video);
+    try {
+      if (!this.ready) {
+        if (!this.init(w2, h2)) return false;
+        this.ready = true;
+      }
+      const gl = this.gl;
+      const canvas = this.canvas;
+      if (!gl || !canvas || !this.program) return false;
+      this._error = null;
+      if (canvas.width !== w2 || canvas.height !== h2) {
+        canvas.width = w2;
+        canvas.height = h2;
+      }
+      gl.viewport(0, 0, w2, h2);
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, this.videoTexture);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, video);
+      this.uploadLut(params.lut);
+      gl.useProgram(this.program);
+      gl.disable(gl.BLEND);
+      const u = (name) => this.uniforms.get(name) ?? null;
+      gl.uniform1i(u("u_image0"), 0);
+      gl.uniform1i(u("u_lut"), 1);
+      const lut2 = params.lut;
+      gl.uniform1i(u("u_hasLut"), lut2 ? 1 : 0);
+      gl.uniform1i(u("u_interp"), INTERP_INDEX[resolvePreviewInterp(params.interp)]);
+      const lutMax = lut2 ? lut2.size - 1 : 1;
+      gl.uniform1i(u("u_lutMax"), lutMax);
+      const scale = lut2 ? lut2.scale : [1, 1, 1];
+      gl.uniform3f(
+        u("u_scale"),
+        scale[0] * lutMax,
+        scale[1] * lutMax,
+        scale[2] * lutMax
+      );
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+      target.width = w2;
+      target.height = h2;
+      const ctx = target.getContext("2d");
+      if (!ctx) {
+        this._error = "2D context unavailable";
+        return false;
+      }
+      ctx.clearRect(0, 0, w2, h2);
+      ctx.drawImage(canvas, 0, 0);
+      return true;
+    } catch (e) {
+      this._error = e instanceof Error ? e.message : "Render failed";
+      this.dispose();
+      return false;
+    }
+  }
+  dispose() {
+    var _a3;
+    const gl = this.gl;
+    if (gl) {
+      if (this.videoTexture) gl.deleteTexture(this.videoTexture);
+      if (this.lutTexture) gl.deleteTexture(this.lutTexture);
+      if (this.program) gl.deleteProgram(this.program);
+      (_a3 = gl.getExtension("WEBGL_lose_context")) == null ? void 0 : _a3.loseContext();
+    }
+    this.videoTexture = null;
+    this.lutTexture = null;
+    this.program = null;
+    this.gl = null;
+    this.canvas = null;
+    this.uploadedLut = null;
+    this.uniforms.clear();
+    this.ready = false;
+  }
+}
+const videoHueCorrectFrag = "#version 300 es\r\nprecision highp float;\r\n\r\nuniform sampler2D u_image0;\r\nuniform sampler2D u_curve0;\r\nuniform sampler2D u_curve1;\r\nuniform sampler2D u_curve2;\r\nuniform sampler2D u_curve3;\r\nuniform sampler2D u_curve4;\r\nuniform sampler2D u_curve5;\r\nuniform sampler2D u_curve6;\r\nuniform sampler2D u_curve7;\r\nuniform sampler2D u_curve8;\r\nuniform float u_float0;\r\nuniform float u_float1;\r\nuniform bool u_bool0;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nconst vec3 LUMA = vec3(0.2126, 0.7152, 0.0722);\r\nconst float EPS = 1e-8;\r\n\r\nfloat sampleLut(sampler2D lut, float coord) {\r\n    float idx = clamp(coord, 0.0, 1.0) * 255.0;\r\n    int lo = int(floor(idx));\r\n    int hi = min(lo + 1, 255);\r\n    float f = idx - float(lo);\r\n    return mix(texelFetch(lut, ivec2(lo, 0), 0).r,\r\n               texelFetch(lut, ivec2(hi, 0), 0).r, f);\r\n}\r\n\r\nvec3 rgbToHsv(vec3 c) {\r\n    float maxc = c.r;\r\n    int argmax = 0;\r\n    if (c.g > maxc) { maxc = c.g; argmax = 1; }\r\n    if (c.b > maxc) { maxc = c.b; argmax = 2; }\r\n    float minc = min(c.r, min(c.g, c.b));\r\n    float deltac = maxc - minc;\r\n    float s = deltac / (maxc + EPS);\r\n    float dc = deltac == 0.0 ? 1.0 : deltac;\r\n    vec3 comp = vec3(maxc) - c;\r\n    float h;\r\n    if (argmax == 0) h = comp.b - comp.g;\r\n    else if (argmax == 1) h = comp.r - comp.b + 2.0 * dc;\r\n    else h = comp.g - comp.r + 4.0 * dc;\r\n    h = fract(h / dc / 6.0);\r\n    return vec3(h, s, maxc);\r\n}\r\n\r\nvec3 hsvToRgb(vec3 hsv) {\r\n    float h6 = fract(hsv.x) * 6.0;\r\n    float hi = floor(h6);\r\n    float f = h6 - hi;\r\n    float v = hsv.z;\r\n    float s = hsv.y;\r\n    float p = v * (1.0 - s);\r\n    float q = v * (1.0 - f * s);\r\n    float t = v * (1.0 - (1.0 - f) * s);\r\n    int i = int(hi) % 6;\r\n    if (i == 0) return vec3(v, t, p);\r\n    if (i == 1) return vec3(q, v, p);\r\n    if (i == 2) return vec3(p, v, t);\r\n    if (i == 3) return vec3(p, q, v);\r\n    if (i == 4) return vec3(t, p, v);\r\n    return vec3(v, p, q);\r\n}\r\n\r\nvoid main() {\r\n    vec4 tex = texture(u_image0, v_texCoord);\r\n    vec3 src = clamp(tex.rgb, 0.0, 1.0);\r\n    vec3 hsv = rgbToHsv(src);\r\n    float h0 = hsv.x;\r\n    float s = hsv.y;\r\n    float hx = h0 * 6.0 + 1.0;\r\n    hx = (hx > 6.0 ? hx - 6.0 : hx) / 6.0;\r\n    float lumIn = dot(tex.rgb, LUMA);\r\n\r\n    vec3 outc = src;\r\n    if (u_bool0) {\r\n        float hueShift = sampleLut(u_curve8, hx);\r\n        float h1 = fract(h0 + (hueShift - 1.0) / 2.0);\r\n        outc = hsvToRgb(vec3(h1, s, hsv.z));\r\n    }\r\n\r\n    float rSup = sampleLut(u_curve5, hx);\r\n    float mn = min(outc.g, outc.b);\r\n    if (outc.r > mn) outc.r = mn + rSup * (outc.r - mn);\r\n    float gSup = sampleLut(u_curve6, hx);\r\n    mn = min(outc.r, outc.b);\r\n    if (outc.g > mn) outc.g = mn + gSup * (outc.g - mn);\r\n    float bSup = sampleLut(u_curve7, hx);\r\n    mn = min(outc.r, outc.g);\r\n    if (outc.b > mn) outc.b = mn + bSup * (outc.b - mn);\r\n\r\n    float lumGain = sampleLut(u_curve1, hx);\r\n    vec3 gains = vec3(sampleLut(u_curve2, hx),\r\n                      sampleLut(u_curve3, hx),\r\n                      sampleLut(u_curve4, hx)) * lumGain;\r\n    float thr = clamp(u_float0, 0.0, 1.0);\r\n    if (thr > 0.0) {\r\n        vec3 factor = s > thr\r\n            ? (thr + (s - thr) * gains) / max(s, 1e-6)\r\n            : vec3(1.0);\r\n        outc *= factor;\r\n    } else {\r\n        outc *= gains;\r\n    }\r\n\r\n    float satGain = sampleLut(u_curve0, hx);\r\n    float lSat = dot(outc, LUMA);\r\n    outc = mix(vec3(lSat), outc, satGain);\r\n\r\n    float mixv = clamp(u_float1, 0.0, 1.0);\r\n    if (mixv > 0.0) {\r\n        float lumOut = max(dot(outc, LUMA), 1e-6);\r\n        outc *= 1.0 + mixv * (lumIn / lumOut - 1.0);\r\n    }\r\n\r\n    fragColor = vec4(clamp(outc, 0.0, 1.0), tex.a);\r\n}\r\n";
+const HUE_CHANNELS = [
+  "sat",
+  "lum",
+  "red",
+  "green",
+  "blue",
+  "r_sup",
+  "g_sup",
+  "b_sup",
+  "hue"
+];
+const LUT_SIZE = 256;
+const NONE = "none";
+function hermiteToCubic(p0, p0pr, p3pl, p3) {
+  return [
+    p0,
+    p0pr,
+    3 * (p3 - p0) - 2 * p0pr - p3pl,
+    -2 * (p3 - p0) + p0pr + p3pl
+  ];
+}
+function cubicEval(c0, c1, c2, c3, t2) {
+  const t22 = t2 * t2;
+  return c0 + c1 * t2 + c2 * t22 + c3 * t22 * t2;
+}
+function autoDerivs(interpPrevIn, interpIn, interpNextIn, tprevIn, vprev, tcur, vcur, tnextIn, vnext, vprevDerivRight, vnextDerivLeft) {
+  let interp = interpIn;
+  let tprev = tprevIn;
+  let tnext = tnextIn;
+  const q0 = vprev;
+  const q3 = vcur;
+  const p0 = vcur;
+  const p3 = vnext;
+  if (interpPrevIn === NONE) tprev = tcur - 1;
+  if (interpNextIn === NONE) tnext = tcur + 1;
+  const p3pl = vnextDerivLeft * (tnext - tcur);
+  let p0pr = 0;
+  let q3pl = 0;
+  if (interpPrevIn === NONE && interpNextIn === NONE) return [0, 0];
+  if (interpPrevIn === NONE || interpNextIn === NONE) interp = "linear";
+  if (interp === "linear") {
+    if (interpNextIn === NONE) p0pr = 0;
+    else if (interpNextIn === "linear") p0pr = -p0 + p3;
+    else p0pr = -1.5 * p0 + 1.5 * p3 - p3pl / 2;
+    if (interpPrevIn === NONE) q3pl = 0;
+    else if (interpPrevIn === "linear") q3pl = -q0 + p0;
+    else q3pl = -1.5 * q0 - vprevDerivRight * (tcur - tprev) / 2 + 1.5 * p0;
+  } else {
+    if (vprev > vcur && vcur < vnext || vprev < vcur && vcur > vnext) {
+      p0pr = 0;
+      q3pl = 0;
+    } else {
+      const deriv = (vnext - vprev) / (tnext - tprev);
+      p0pr = deriv * (tnext - tcur);
+      q3pl = deriv * (tcur - tprev);
+      let p1 = p0 + p0pr / 3;
+      let q2 = q3 - q3pl / 3;
+      const prevMax = Math.max(vprev, vcur);
+      const prevMin = Math.min(vprev, vcur);
+      if (q2 < prevMin || q2 > prevMax) {
+        const q2new = Math.max(prevMin, Math.min(q2, prevMax));
+        p1 = p0 + (p1 - p0) * (q3 - q2new) / (q3 - q2);
+        q2 = q2new;
+      }
+      const nextMax = Math.max(vcur, vnext);
+      const nextMin = Math.min(vcur, vnext);
+      if (p1 < nextMin || p1 > nextMax) {
+        const p1new = Math.max(nextMin, Math.min(p1, nextMax));
+        q2 = q3 - (q3 - q2) * (p1new - p0) / (p1 - p0);
+        p1 = p1new;
+      }
+      p0pr = 3 * (p1 - p0);
+      q3pl = 3 * (q3 - q2);
+    }
+  }
+  return [q3pl / (tcur - tprev), p0pr / (tnext - tcur)];
+}
+function keyDerivs(keys2, i, depth) {
+  const n = keys2.length;
+  const k2 = keys2[i];
+  const prev = i > 0 ? keys2[i - 1] : null;
+  const next = i < n - 1 ? keys2[i + 1] : null;
+  let interpPrev = prev ? "smooth" : NONE;
+  let interpNext = next ? "smooth" : NONE;
+  if (prev && i - 1 === 0) interpPrev = "linear";
+  if (next && i + 1 === n - 1) interpNext = "linear";
+  const tprev = prev ? prev.t : k2.t - 1;
+  const vprev = prev ? prev.v : k2.v;
+  const tnext = next ? next.t : k2.t + 1;
+  const vnext = next ? next.v : k2.v;
+  let vprevDr = 0;
+  let vnextDl = 0;
+  if (depth > 0) {
+    if (prev) vprevDr = keyDerivs(keys2, i - 1, depth - 1)[1];
+    if (next) vnextDl = keyDerivs(keys2, i + 1, depth - 1)[0];
+  }
+  return autoDerivs(
+    interpPrev,
+    "smooth",
+    interpNext,
+    tprev,
+    vprev,
+    k2.t,
+    k2.v,
+    tnext,
+    vnext,
+    vprevDr,
+    vnextDl
+  );
+}
+function smoothCurveValue(keys2, t2) {
+  const n = keys2.length;
+  if (n === 0) return NaN;
+  if (n === 1) return keys2[0].v;
+  if (t2 <= keys2[0].t) return keys2[0].v;
+  if (t2 >= keys2[n - 1].t) return keys2[n - 1].v;
+  let i = 0;
+  while (i + 1 < n && keys2[i + 1].t <= t2) i++;
+  i = Math.min(i, n - 2);
+  const cur = keys2[i];
+  const nxt = keys2[i + 1];
+  const curRight = keyDerivs(keys2, i, 1)[1];
+  const nxtLeft = keyDerivs(keys2, i + 1, 1)[0];
+  const dt2 = nxt.t - cur.t;
+  const [c0, c1, c2, c3] = hermiteToCubic(
+    cur.v,
+    curRight * dt2,
+    nxtLeft * dt2,
+    nxt.v
+  );
+  return cubicEval(c0, c1, c2, c3, (t2 - cur.t) / dt2);
+}
+function bakeHueLut(points, defaultValue) {
+  const lut2 = new Float32Array(LUT_SIZE);
+  if (!Array.isArray(points) || points.length < 2) {
+    lut2.fill(defaultValue);
+    return lut2;
+  }
+  const keys2 = points.map((p2) => ({ t: Number(p2[0]), v: Number(p2[1]) })).sort((a, b2) => a.t - b2.t || a.v - b2.v);
+  for (let i = 0; i < LUT_SIZE; i++) {
+    lut2[i] = smoothCurveValue(keys2, i / (LUT_SIZE - 1));
+  }
+  return lut2;
+}
+function parseHueCurves(raw) {
+  try {
+    const o = JSON.parse(raw || "{}");
+    if (o && typeof o === "object" && !Array.isArray(o)) {
+      return o;
+    }
+  } catch {
+  }
+  return {};
+}
+function buildHueCorrectLuts(curvesRaw) {
+  const curves = parseHueCurves(curvesRaw);
+  const out = {};
+  for (const ch of HUE_CHANNELS) {
+    out[ch] = bakeHueLut(curves[ch], 1);
+  }
+  return out;
+}
+function lutDeviates(lut2) {
+  for (let i = 0; i < lut2.length; i++) {
+    if (Math.abs(lut2[i] - 1) > 1e-6) return true;
+  }
+  return false;
+}
+const RENDER_CONFIG$2 = {
+  maxInputs: 1,
+  maxFloatUniforms: 2,
+  maxIntUniforms: 1,
+  maxBoolUniforms: 1,
+  maxCurves: 9
+};
+class VideoHueCorrectRenderer {
+  constructor() {
+    __publicField(this, "renderer", useGLSLRenderer(RENDER_CONFIG$2));
+    __publicField(this, "ready", false);
+    __publicField(this, "_error", null);
+    __publicField(this, "lutKey", null);
+    __publicField(this, "hueActive", false);
+  }
+  get error() {
+    return this._error;
+  }
+  uploadLuts(curves) {
+    if (curves === this.lutKey) return;
+    const luts = buildHueCorrectLuts(curves);
+    HUE_CHANNELS.forEach((ch, i) => {
+      this.renderer.bindCurveTexture(i, luts[ch]);
+    });
+    this.hueActive = lutDeviates(luts.hue);
+    this.lutKey = curves;
+  }
+  renderToCanvas(video, params, target) {
+    const { w: w2, h: h2 } = fxSourceSize(video);
+    try {
+      if (!this.ready) {
+        if (!this.renderer.init(w2, h2)) {
+          this._error = "WebGL2 not available";
+          return false;
+        }
+        this.ready = true;
+      }
+      const compiled = this.renderer.compileFragment(videoHueCorrectFrag);
+      if (!compiled.success) {
+        this._error = compiled.log || "Shader compilation failed";
+        return false;
+      }
+      this._error = null;
+      this.renderer.setResolution(w2, h2);
+      this.renderer.bindInputImage(0, video);
+      this.uploadLuts(params.curves ?? "");
+      this.renderer.setFloatUniform(0, params.satThrsh ?? 0);
+      this.renderer.setFloatUniform(1, params.luminanceMix ?? 0);
+      this.renderer.setBoolUniform(0, this.hueActive);
+      this.renderer.render();
+      const off = this.renderer.getCanvas();
+      if (!off) {
+        this._error = "Renderer produced no output";
+        return false;
+      }
+      target.width = w2;
+      target.height = h2;
+      const ctx = target.getContext("2d");
+      if (!ctx) {
+        this._error = "2D context unavailable";
+        return false;
+      }
+      ctx.clearRect(0, 0, w2, h2);
+      ctx.drawImage(off, 0, 0);
+      return true;
+    } catch (e) {
+      this._error = e instanceof Error ? e.message : "Render failed";
+      this.renderer.dispose();
+      this.ready = false;
+      return false;
+    }
+  }
+  dispose() {
+    this.renderer.dispose();
+    this.ready = false;
+    this.lutKey = null;
+  }
+}
+class FxPreviewRenderer {
+  constructor(frag, config2, applyParams) {
+    __publicField(this, "renderer");
+    __publicField(this, "ready", false);
+    __publicField(this, "_error", null);
+    this.frag = frag;
+    this.applyParams = applyParams;
+    this.renderer = useGLSLRenderer(config2);
+  }
+  get error() {
+    return this._error;
+  }
+  renderToCanvas(video, params, target) {
+    const { w: w2, h: h2 } = fxSourceSize(video);
+    try {
+      if (!this.ready) {
+        if (!this.renderer.init(w2, h2)) {
+          this._error = "WebGL2 not available";
+          return false;
+        }
+        this.ready = true;
+      }
+      const compiled = this.renderer.compileFragment(this.frag);
+      if (!compiled.success) {
+        this._error = compiled.log || "Shader compilation failed";
+        return false;
+      }
+      this._error = null;
+      this.renderer.setResolution(w2, h2);
+      this.renderer.bindInputImage(0, video);
+      this.applyParams(this.renderer, params);
+      this.renderer.render();
+      const off = this.renderer.getCanvas();
+      if (!off) {
+        this._error = "Renderer produced no output";
+        return false;
+      }
+      target.width = w2;
+      target.height = h2;
+      const ctx = target.getContext("2d");
+      if (!ctx) {
+        this._error = "2D context unavailable";
+        return false;
+      }
+      ctx.clearRect(0, 0, w2, h2);
+      ctx.drawImage(off, 0, 0);
+      return true;
+    } catch (e) {
+      this._error = e instanceof Error ? e.message : "Render failed";
+      this.renderer.dispose();
+      this.ready = false;
+      return false;
+    }
+  }
+  dispose() {
+    this.renderer.dispose();
+    this.ready = false;
+  }
+}
+const despillFrag = "#version 300 es\r\nprecision highp float;\r\n\r\nuniform sampler2D u_image0;\r\nuniform float u_float0;\r\nuniform float u_float1;\r\nuniform float u_float2;\r\nuniform float u_float3;\r\nuniform float u_float4;\r\nuniform float u_float5;\r\nuniform bool u_bool0;\r\nuniform bool u_bool1;\r\nuniform bool u_bool2;\r\nuniform bool u_bool3;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nvoid main() {\r\n    vec4 tex = texture(u_image0, v_texCoord);\r\n    float r = tex.r;\r\n    float g = tex.g;\r\n    float b = tex.b;\r\n    float mixv = clamp(u_float0, 0.0, 1.0);\r\n    float expandv = clamp(u_float1, 0.0, 1.0);\r\n    float spill = u_bool0\r\n        ? max(0.0, b - (r * mixv + g * (1.0 - mixv)) * (1.0 - expandv))\r\n        : max(0.0, g - (r * mixv + b * (1.0 - mixv)) * (1.0 - expandv));\r\n    vec3 outc = vec3(\r\n        r + spill * u_float2 + u_float5 * spill,\r\n        g + spill * u_float3 + u_float5 * spill,\r\n        b + spill * u_float4 + u_float5 * spill);\r\n    if (u_bool1) outc = max(outc, 0.0);\r\n    if (u_bool2) outc = min(outc, 1.0);\r\n    if (u_bool3) outc = vec3(clamp(spill, 0.0, 1.0));\r\n    fragColor = vec4(outc, tex.a);\r\n}\r\n";
+const colorSuppressFrag = "#version 300 es\r\nprecision highp float;\r\n\r\nuniform sampler2D u_image0;\r\nuniform float u_float0;\r\nuniform float u_float1;\r\nuniform float u_float2;\r\nuniform float u_float3;\r\nuniform float u_float4;\r\nuniform float u_float5;\r\nuniform bool u_bool0;\r\nuniform bool u_bool1;\r\nuniform int u_int0;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nfloat lumaOf(vec3 c, int mode) {\r\n    if (mode == 3) return (c.r + c.g + c.b) / 3.0;\r\n    if (mode == 4) return max(c.r, max(c.g, c.b));\r\n    if (mode == 1) return dot(c, vec3(0.2627, 0.6780, 0.0593));\r\n    if (mode == 2) return dot(c, vec3(0.2989, 0.5866, 0.1145));\r\n    return dot(c, vec3(0.2126, 0.7152, 0.0722));\r\n}\r\n\r\nvoid main() {\r\n    vec4 tex = texture(u_image0, v_texCoord);\r\n    float r = tex.r;\r\n    float g = tex.g;\r\n    float b = tex.b;\r\n    float modified = 0.0;\r\n    float luma1 = lumaOf(tex.rgb, u_int0);\r\n\r\n    if (u_float5 != 0.0 && b < g && b < r) {\r\n        float d = min((g - b) * u_float5, (r - b) * u_float5);\r\n        g -= d;\r\n        r -= d;\r\n        modified += abs(d);\r\n    }\r\n    if (u_float4 != 0.0 && g < b && g < r) {\r\n        float d = min((b - g) * u_float4, (r - g) * u_float4);\r\n        b -= d;\r\n        r -= d;\r\n        modified += abs(d);\r\n    }\r\n    if (u_float3 != 0.0 && r < g && r < b) {\r\n        float d = min((g - r) * u_float3, (b - r) * u_float3);\r\n        g -= d;\r\n        b -= d;\r\n        modified += abs(d);\r\n    }\r\n    if (u_float0 != 0.0 && r > g && r > b) {\r\n        float d = (r - max(g, b)) * u_float0;\r\n        r -= d;\r\n        modified += abs(d);\r\n    }\r\n    if (u_float1 != 0.0 && g > b && g > r) {\r\n        float d = (g - max(b, r)) * u_float1;\r\n        g -= d;\r\n        modified += abs(d);\r\n    }\r\n    if (u_float2 != 0.0 && b > g && b > r) {\r\n        float d = (b - max(g, r)) * u_float2;\r\n        b -= d;\r\n        modified += abs(d);\r\n    }\r\n\r\n    if (u_bool1) {\r\n        fragColor = vec4(vec3(clamp(modified, 0.0, 1.0)), tex.a);\r\n        return;\r\n    }\r\n    vec3 outc = vec3(r, g, b);\r\n    if (u_bool0) outc += luma1 - lumaOf(outc, u_int0);\r\n    fragColor = vec4(clamp(outc, 0.0, 1.0), tex.a);\r\n}\r\n";
+const keyerFrag = "#version 300 es\r\nprecision highp float;\r\n\r\nuniform sampler2D u_image0;\r\nuniform float u_float0;\r\nuniform float u_float1;\r\nuniform float u_float2;\r\nuniform float u_float3;\r\nuniform float u_float4;\r\nuniform float u_float5;\r\nuniform float u_float6;\r\nuniform float u_float7;\r\nuniform float u_float8;\r\nuniform float u_float9;\r\nuniform float u_float10;\r\nuniform float u_float11;\r\nuniform int u_int0;\r\nuniform int u_int1;\r\nuniform int u_int2;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nfloat lumaOf(vec3 c, int mode) {\r\n    if (mode == 3) return (c.r + c.g + c.b) / 3.0;\r\n    if (mode == 4) return max(c.r, max(c.g, c.b));\r\n    if (mode == 1) return dot(c, vec3(0.2627, 0.6780, 0.0593));\r\n    if (mode == 2) return dot(c, vec3(0.2989, 0.5866, 0.1145));\r\n    return dot(c, vec3(0.2126, 0.7152, 0.0722));\r\n}\r\n\r\nfloat keyBg(float kfg, float softL, float tolL, float ctr, float tolU,\r\n            float softU) {\r\n    float aPt = ctr + tolL + softL;\r\n    float bPt = ctr + tolL;\r\n    float cPt = ctr + tolU;\r\n    float dPt = ctr + tolU + softU;\r\n    float k = kfg < aPt ? 0.0 : 1.0;\r\n    if (softL < 0.0 && kfg >= aPt && kfg < bPt) k = (kfg - aPt) / -softL;\r\n    if (kfg >= bPt && kfg <= cPt) k = 1.0;\r\n    if (softU > 0.0 && kfg > cPt && kfg < dPt) k = (dPt - kfg) / softU;\r\n    if (kfg >= dPt) k = 0.0;\r\n    if (bPt <= 0.0 && kfg <= 0.0) k = 1.0;\r\n    if (cPt >= 1.0 && kfg >= 1.0) k = 1.0;\r\n    return clamp(k, 0.0, 1.0);\r\n}\r\n\r\nvoid main() {\r\n    vec4 tex = texture(u_image0, v_texCoord);\r\n    vec3 fg = tex.rgb;\r\n    vec3 kc = vec3(u_float0, u_float1, u_float2);\r\n    float kcSum = u_float3;\r\n    float kcNorm2 = u_float4;\r\n    float softL = u_float5;\r\n    float tolL = u_float6;\r\n    float ctr = u_float7;\r\n    float tolU = u_float8;\r\n    float softU = u_float9;\r\n    float desp = u_float10;\r\n    float closing = u_float11;\r\n\r\n    float scalar = dot(fg, kc);\r\n    float kfg;\r\n    float dist = 0.0;\r\n    if (u_int0 == 0) {\r\n        kfg = lumaOf(fg, u_int1);\r\n    } else if (u_int0 == 1) {\r\n        kfg = kcSum == 0.0 ? lumaOf(fg, u_int1) : scalar / kcSum;\r\n    } else {\r\n        float norm2 = dot(fg, fg);\r\n        float proj2 = kcNorm2 > 0.0 ? scalar * scalar / kcNorm2 : 0.0;\r\n        dist = sqrt(max(0.0, norm2 - proj2));\r\n        kfg = (kcSum == 0.0 ? lumaOf(fg, u_int1) : scalar / kcSum) - dist;\r\n    }\r\n\r\n    float kbg = u_int0 == 3\r\n        ? 1.0\r\n        : keyBg(kfg, softL, tolL, ctr, tolU, softU);\r\n\r\n    vec3 outc = fg;\r\n    if (desp > 0.0 && (u_int0 == 2 || u_int0 == 3) && kcNorm2 > 0.0) {\r\n        float kcNorm = sqrt(kcNorm2);\r\n        float along = scalar / kcNorm;\r\n        float cone = dist * closing;\r\n        float maxdesp = kbg * min(desp, 1.0)\r\n            + (1.0 - kbg) * max(0.0, desp - 1.0);\r\n        float shift = maxdesp * max(kcNorm, along - cone);\r\n        shift = min(shift, along - cone);\r\n        if (!(along > cone && shift > 0.0)) shift = 0.0;\r\n        outc -= shift * kc / kcNorm;\r\n    }\r\n\r\n    float alpha = clamp(1.0 - kbg, 0.0, 1.0);\r\n    vec3 pre = clamp(outc * alpha, 0.0, 1.0);\r\n\r\n    if (u_int2 == 0) fragColor = vec4(vec3(alpha), 1.0);\r\n    else if (u_int2 == 1) fragColor = vec4(pre, 1.0);\r\n    else fragColor = vec4(pre, alpha);\r\n}\r\n";
+const pikFrag = "#version 300 es\r\nprecision highp float;\r\n\r\nuniform sampler2D u_image0;\r\nuniform float u_float0;\r\nuniform float u_float1;\r\nuniform float u_float2;\r\nuniform float u_float3;\r\nuniform float u_float4;\r\nuniform float u_float5;\r\nuniform float u_float6;\r\nuniform float u_float7;\r\nuniform float u_float8;\r\nuniform float u_float9;\r\nuniform float u_float10;\r\nuniform float u_float11;\r\nuniform float u_float12;\r\nuniform float u_float13;\r\nuniform float u_float14;\r\nuniform float u_float15;\r\nuniform int u_int0;\r\nuniform int u_int1;\r\nuniform int u_int2;\r\nuniform bool u_bool0;\r\nuniform bool u_bool1;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nvoid main() {\r\n    vec4 tex = texture(u_image0, v_texCoord);\r\n    vec3 fg = tex.rgb;\r\n    vec3 ab = vec3(u_float0, u_float1, u_float2);\r\n    vec3 db = vec3(u_float3, u_float4, u_float5);\r\n    vec3 c = vec3(u_float6, u_float7, u_float8);\r\n    float rw = u_float9;\r\n    float gbw = u_float10;\r\n    float clipMin = u_float11;\r\n    float clipMax = u_float12;\r\n    vec3 repCol = vec3(u_float13, u_float14, u_float15);\r\n\r\n    vec3 pfg = fg / ab;\r\n    float pfgKey;\r\n    float cKey;\r\n    float cPrim;\r\n    if (u_int0 == 0) {\r\n        pfgKey = pfg.g - pfg.r * rw - pfg.b * gbw;\r\n        cKey = c.g - c.r * rw - c.b * gbw;\r\n        cPrim = c.g;\r\n    } else {\r\n        pfgKey = pfg.b - pfg.r * rw - pfg.g * gbw;\r\n        cKey = c.b - c.r * rw - c.g * gbw;\r\n        cPrim = c.b;\r\n    }\r\n\r\n    float alpha = 1.0 - pfgKey / (cKey <= 0.0 ? 1.0 : cKey);\r\n    if (cPrim <= 0.0 || pfgKey <= 0.0 || cKey <= 0.0) alpha = 1.0;\r\n\r\n    vec3 outc;\r\n    if (u_bool0) {\r\n        outc = alpha >= 1.0 ? fg : max(fg + c * db * (alpha - 1.0), 0.0);\r\n    } else {\r\n        outc = fg;\r\n    }\r\n\r\n    if (u_bool1) alpha = clamp(alpha, 0.0, 1.0);\r\n\r\n    float clipped = clamp((alpha - clipMin) / (clipMax - clipMin), 0.0, 1.0);\r\n    if (alpha <= clipMin) clipped = 0.0;\r\n    if (alpha >= clipMax) clipped = 1.0;\r\n    float safe = alpha > 0.0 ? alpha : 1.0;\r\n    if (clipped < alpha) outc *= clipped / safe;\r\n    if (u_int1 != 0 && clipped > alpha) {\r\n        float diff = clipped - alpha;\r\n        if (u_int1 == 1) outc += fg * diff;\r\n        else if (u_int1 == 2) outc += repCol * diff;\r\n        else outc += repCol * diff\r\n            * dot(fg, vec3(0.2126, 0.7152, 0.0722));\r\n    }\r\n    alpha = clipped;\r\n\r\n    if (!u_bool0) outc *= alpha;\r\n\r\n    if (u_int2 == 0) fragColor = vec4(vec3(alpha), 1.0);\r\n    else if (u_int2 == 1) fragColor = vec4(clamp(outc, 0.0, 1.0), 1.0);\r\n    else fragColor = vec4(clamp(outc, 0.0, 1.0), alpha);\r\n}\r\n";
+const KEYING_LUMA_WEIGHTS = {
+  rec709: [0.2126, 0.7152, 0.0722],
+  rec2020: [0.2627, 0.678, 0.0593],
+  ccir601: [0.2989, 0.5866, 0.1145]
+};
+function keyingLuma(rgb, mathMode = "rec709") {
+  if (mathMode === "average") return (rgb[0] + rgb[1] + rgb[2]) / 3;
+  if (mathMode === "max") return Math.max(rgb[0], rgb[1], rgb[2]);
+  const w2 = KEYING_LUMA_WEIGHTS[mathMode] ?? KEYING_LUMA_WEIGHTS.rec709;
+  return rgb[0] * w2[0] + rgb[1] * w2[1] + rgb[2] * w2[2];
+}
+function parseKeyColor(s, fallback) {
+  const hex = (s ?? "").trim().replace(/^#/, "");
+  if (hex.length !== 6 || !/^[0-9a-fA-F]{6}$/.test(hex)) {
+    return [...fallback];
+  }
+  return [
+    parseInt(hex.slice(0, 2), 16) / 255,
+    parseInt(hex.slice(2, 4), 16) / 255,
+    parseInt(hex.slice(4, 6), 16) / 255
+  ];
+}
+const clamp$3 = (v2, lo, hi) => Math.min(hi, Math.max(lo, v2));
+function deriveKeyer(p2) {
+  const mode = p2.mode ?? "luminance";
+  const kc = parseKeyColor(p2.keyColor, [0, 0, 0]);
+  return {
+    mode,
+    lumaMath: p2.luminanceMath ?? "rec709",
+    kc,
+    kcSum: kc[0] + kc[1] + kc[2],
+    kcNorm2: kc[0] * kc[0] + kc[1] * kc[1] + kc[2] * kc[2],
+    tolU: mode === "screen" ? 1 : p2.toleranceUpper ?? 0,
+    softU: mode === "screen" ? 1 : p2.softnessUpper ?? 0.5,
+    softL: p2.softnessLower ?? -0.5,
+    tolL: p2.toleranceLower ?? 0,
+    ctr: p2.center ?? 1,
+    desp: mode === "screen" || mode === "none" ? clamp$3(p2.despill ?? 1, 0, 2) : 0,
+    closing: Math.tan(
+      (90 - 0.5 * clamp$3(p2.despillAngle ?? 120, 0, 180)) * Math.PI / 180
+    )
+  };
+}
+function derivePik(p2) {
+  const abRaw = parseKeyColor(p2.alphaBias, [0.5, 0.5, 0.5]).map((v2) => Math.max(1e-4, v2));
+  const lumAb = keyingLuma(abRaw);
+  const ab = abRaw.map((v2) => v2 / lumAb);
+  const useAb = p2.useAlphaBias ?? true;
+  const db = useAb ? [...ab] : parseKeyColor(p2.despillBias, [0.5, 0.5, 0.5]).map((v2) => Math.max(1e-4, v2) / lumAb);
+  const pick2 = parseKeyColor(p2.pickColor, [0, 1, 0]);
+  const screen = p2.screen ?? "green";
+  const screenKind = screen === "pick" ? pick2[1] / ab[1] > pick2[2] / ab[2] ? "green" : "blue" : screen;
+  const clipMin = clamp$3(p2.clipBlack ?? 0, 0, 1);
+  return {
+    ab,
+    db,
+    constC: [pick2[0] / ab[0], pick2[1] / ab[1], pick2[2] / ab[2]],
+    screenKind,
+    rw: p2.redWeight ?? 0.5,
+    gbw: p2.blueGreenWeight ?? 0.5,
+    screenSubtraction: p2.screenSubtraction ?? true,
+    clampAlpha: p2.clampAlpha ?? true,
+    clipMin,
+    clipMax: Math.max(clipMin + 1e-4, Math.min(1, p2.clipWhite ?? 1)),
+    replaceMode: p2.replaceMode ?? "soft",
+    repCol: parseKeyColor(p2.replaceColor, [0.5, 0.5, 0.5])
+  };
+}
+const LUMA_MODE = {
+  rec709: 0,
+  rec2020: 1,
+  ccir601: 2,
+  average: 3,
+  max: 4
+};
+const KEYER_MODE = {
+  luminance: 0,
+  color: 1,
+  screen: 2,
+  none: 3
+};
+const REPLACE_MODE = {
+  none: 0,
+  source: 1,
+  hard: 2,
+  soft: 3
+};
+const OUT_MODE = {
+  matte: 0,
+  premult: 1,
+  alpha: 2,
+  composite: 2
+};
+class VideoDespillRenderer extends FxPreviewRenderer {
+  constructor() {
+    super(despillFrag, {
+      maxInputs: 1,
+      maxFloatUniforms: 6,
+      maxIntUniforms: 1,
+      maxBoolUniforms: 4,
+      maxCurves: 0
+    }, (r, p2) => {
+      r.setFloatUniform(0, p2.spillMix ?? 0.5);
+      r.setFloatUniform(1, p2.expand ?? 0);
+      r.setFloatUniform(2, p2.redScale ?? 0);
+      r.setFloatUniform(3, p2.greenScale ?? -1);
+      r.setFloatUniform(4, p2.blueScale ?? 0);
+      r.setFloatUniform(5, p2.brightness ?? 0);
+      r.setBoolUniform(0, p2.screen === "blue");
+      r.setBoolUniform(1, p2.clampBlack ?? true);
+      r.setBoolUniform(2, p2.clampWhite ?? false);
+      r.setBoolUniform(3, p2.outputSpillmap ?? false);
+    });
+  }
+}
+class VideoColorSuppressRenderer extends FxPreviewRenderer {
+  constructor() {
+    super(colorSuppressFrag, {
+      maxInputs: 1,
+      maxFloatUniforms: 6,
+      maxIntUniforms: 1,
+      maxBoolUniforms: 2,
+      maxCurves: 0
+    }, (r, p2) => {
+      r.setFloatUniform(0, p2.red ?? 0);
+      r.setFloatUniform(1, p2.green ?? 0);
+      r.setFloatUniform(2, p2.blue ?? 0);
+      r.setFloatUniform(3, p2.cyan ?? 0);
+      r.setFloatUniform(4, p2.magenta ?? 0);
+      r.setFloatUniform(5, p2.yellow ?? 0);
+      r.setBoolUniform(0, p2.preserveLuma ?? false);
+      r.setBoolUniform(1, p2.output === "matte");
+      r.setIntUniform(0, LUMA_MODE[p2.luminanceMath ?? "rec709"] ?? 0);
+    });
+  }
+}
+class VideoKeyerRenderer extends FxPreviewRenderer {
+  constructor() {
+    super(keyerFrag, {
+      maxInputs: 1,
+      maxFloatUniforms: 12,
+      maxIntUniforms: 3,
+      maxBoolUniforms: 1,
+      maxCurves: 0
+    }, (r, p2) => {
+      const d2 = deriveKeyer(p2);
+      r.setFloatUniform(0, d2.kc[0]);
+      r.setFloatUniform(1, d2.kc[1]);
+      r.setFloatUniform(2, d2.kc[2]);
+      r.setFloatUniform(3, d2.kcSum);
+      r.setFloatUniform(4, d2.kcNorm2);
+      r.setFloatUniform(5, d2.softL);
+      r.setFloatUniform(6, d2.tolL);
+      r.setFloatUniform(7, d2.ctr);
+      r.setFloatUniform(8, d2.tolU);
+      r.setFloatUniform(9, d2.softU);
+      r.setFloatUniform(10, d2.desp);
+      r.setFloatUniform(11, d2.closing);
+      r.setIntUniform(0, KEYER_MODE[d2.mode] ?? 0);
+      r.setIntUniform(1, LUMA_MODE[d2.lumaMath] ?? 0);
+      r.setIntUniform(2, OUT_MODE[p2.output ?? "matte"] ?? 0);
+    });
+  }
+}
+class VideoPikRenderer extends FxPreviewRenderer {
+  constructor() {
+    super(pikFrag, {
+      maxInputs: 1,
+      maxFloatUniforms: 16,
+      maxIntUniforms: 3,
+      maxBoolUniforms: 2,
+      maxCurves: 0
+    }, (r, p2) => {
+      const d2 = derivePik(p2);
+      r.setFloatUniform(0, d2.ab[0]);
+      r.setFloatUniform(1, d2.ab[1]);
+      r.setFloatUniform(2, d2.ab[2]);
+      r.setFloatUniform(3, d2.db[0]);
+      r.setFloatUniform(4, d2.db[1]);
+      r.setFloatUniform(5, d2.db[2]);
+      r.setFloatUniform(6, d2.constC[0]);
+      r.setFloatUniform(7, d2.constC[1]);
+      r.setFloatUniform(8, d2.constC[2]);
+      r.setFloatUniform(9, d2.rw);
+      r.setFloatUniform(10, d2.gbw);
+      r.setFloatUniform(11, d2.clipMin);
+      r.setFloatUniform(12, d2.clipMax);
+      r.setFloatUniform(13, d2.repCol[0]);
+      r.setFloatUniform(14, d2.repCol[1]);
+      r.setFloatUniform(15, d2.repCol[2]);
+      r.setIntUniform(0, d2.screenKind === "blue" ? 1 : 0);
+      r.setIntUniform(1, REPLACE_MODE[d2.replaceMode] ?? 3);
+      r.setIntUniform(2, OUT_MODE[p2.output ?? "alpha"] ?? 2);
+      r.setBoolUniform(0, d2.screenSubtraction);
+      r.setBoolUniform(1, d2.clampAlpha);
+    });
+  }
+}
+const videoTransformFrag = "#version 300 es\nprecision highp float;\n\nuniform sampler2D u_image0;\nuniform vec2 u_resolution;\nuniform float u_float0;\nuniform float u_float1;\nuniform float u_float2;\nuniform float u_float3;\nuniform float u_float4;\nuniform float u_float5;\n\nin vec2 v_texCoord;\nout vec4 fragColor;\n\nvoid main() {\n    float w = u_resolution.x;\n    float h = u_resolution.y;\n    float px = v_texCoord.x * (w - 1.0);\n    float py = (1.0 - v_texCoord.y) * (h - 1.0);\n    float sx = u_float0 * px + u_float1 * py + u_float2;\n    float sy = u_float3 * px + u_float4 * py + u_float5;\n    if (sx < 0.0 || sy < 0.0 || sx > w - 1.0 || sy > h - 1.0) {\n        fragColor = vec4(0.0, 0.0, 0.0, 1.0);\n        return;\n    }\n    vec2 uv = vec2((sx + 0.5) / w, 1.0 - (sy + 0.5) / h);\n    fragColor = vec4(texture(u_image0, uv).rgb, 1.0);\n}\n";
+function matMul(a, b2) {
+  const out = new Array(9).fill(0);
+  for (let r = 0; r < 3; r++) {
+    for (let c2 = 0; c2 < 3; c2++) {
+      out[r * 3 + c2] = a[r * 3] * b2[c2] + a[r * 3 + 1] * b2[3 + c2] + a[r * 3 + 2] * b2[6 + c2];
+    }
+  }
+  return out;
+}
+function translation(x2, y2) {
+  return [1, 0, x2, 0, 1, y2, 0, 0, 1];
+}
+function rotation(rads) {
+  const c2 = Math.cos(rads);
+  const s = Math.sin(rads);
+  return [c2, s, 0, -s, c2, 0, 0, 0, 1];
+}
+function scaleMat(sx, sy) {
+  return [sx, 0, 0, 0, sy, 0, 0, 0, 1];
+}
+function skewXY(skewX, skewY) {
+  return [1 + skewX * skewY, skewX, 0, skewY, 1, 0, 0, 0, 1];
+}
+function transformCanonical(tx, ty, sx, sy, skewX, skewY, rads, cx, cy) {
+  return matMul(
+    matMul(
+      matMul(
+        matMul(
+          matMul(translation(cx, cy), translation(tx, ty)),
+          rotation(-rads)
+        ),
+        skewXY(skewX, skewY)
+      ),
+      scaleMat(sx, sy)
+    ),
+    translation(-cx, -cy)
+  );
+}
+function invertAffine(m2) {
+  const [a, b2, c2, d2, e, f2] = [m2[0], m2[1], m2[2], m2[3], m2[4], m2[5]];
+  const det = a * e - b2 * d2;
+  if (Math.abs(det) < 1e-12) return null;
+  const ia = e / det;
+  const ib = -b2 / det;
+  const id = -d2 / det;
+  const ie2 = a / det;
+  return [
+    ia,
+    ib,
+    -(ia * c2 + ib * f2),
+    id,
+    ie2,
+    -(id * c2 + ie2 * f2),
+    0,
+    0,
+    1
+  ];
+}
+function transformInverse(p2, width, height) {
+  const s = Math.max(1e-6, p2.scale ?? 1);
+  const m2 = transformCanonical(
+    p2.posX ?? 0,
+    -(p2.posY ?? 0),
+    s,
+    s,
+    -(p2.skewX ?? 0),
+    0,
+    -((p2.rotation ?? 0) * Math.PI) / 180,
+    width / 2,
+    height / 2
+  );
+  return invertAffine(m2);
+}
+const RENDER_CONFIG$1 = {
+  maxInputs: 1,
+  maxFloatUniforms: 6,
+  maxIntUniforms: 1,
+  maxBoolUniforms: 1,
+  maxCurves: 0
+};
+class VideoTransformRenderer {
+  constructor() {
+    __publicField(this, "renderer", useGLSLRenderer(RENDER_CONFIG$1));
+    __publicField(this, "ready", false);
+    __publicField(this, "_error", null);
+  }
+  get error() {
+    return this._error;
+  }
+  renderToCanvas(video, params, target) {
+    const { w: w2, h: h2 } = fxSourceSize(video);
+    try {
+      if (!this.ready) {
+        if (!this.renderer.init(w2, h2)) {
+          this._error = "WebGL2 not available";
+          return false;
+        }
+        this.ready = true;
+      }
+      const compiled = this.renderer.compileFragment(videoTransformFrag);
+      if (!compiled.success) {
+        this._error = compiled.log || "Shader compilation failed";
+        return false;
+      }
+      this._error = null;
+      this.renderer.setResolution(w2, h2);
+      this.renderer.bindInputImage(0, video);
+      const inv = transformInverse(params, w2, h2);
+      const coeffs = inv ?? [1, 0, 0, 0, 1, 0, 0, 0, 1];
+      for (let i = 0; i < 6; i++) this.renderer.setFloatUniform(i, coeffs[i]);
+      this.renderer.render();
+      const off = this.renderer.getCanvas();
+      if (!off) {
+        this._error = "Renderer produced no output";
+        return false;
+      }
+      target.width = w2;
+      target.height = h2;
+      const ctx = target.getContext("2d");
+      if (!ctx) {
+        this._error = "2D context unavailable";
+        return false;
+      }
+      ctx.clearRect(0, 0, w2, h2);
+      ctx.drawImage(off, 0, 0);
+      return true;
+    } catch (e) {
+      this._error = e instanceof Error ? e.message : "Render failed";
+      this.renderer.dispose();
+      this.ready = false;
+      return false;
+    }
+  }
+  dispose() {
+    this.renderer.dispose();
+    this.ready = false;
+  }
+}
+function widgetValue(node, name, def2) {
+  const widgets = (node == null ? void 0 : node.widgets) ?? [];
+  const found2 = widgets.find((x2) => (x2 == null ? void 0 : x2.name) === name);
+  return (found2 == null ? void 0 : found2.value) ?? def2;
+}
+function num$2(node, name, def2) {
+  const v2 = Number(widgetValue(node, name, def2));
+  return Number.isFinite(v2) ? v2 : def2;
+}
+function str(node, name, def2) {
+  const v2 = widgetValue(node, name, def2);
+  return typeof v2 === "string" ? v2 : def2;
+}
+function bool(node, name, def2) {
+  return Boolean(widgetValue(node, name, def2));
+}
+const lutTextCache = /* @__PURE__ */ new Map();
+class ChainLutRenderer {
+  constructor() {
+    __publicField(this, "inner", new VideoLutRenderer());
+    __publicField(this, "fetching", /* @__PURE__ */ new Set());
+  }
+  renderToCanvas(src, params, target) {
+    const lutFile = String(params.lutFile ?? "");
+    const lutUrl = String(params.lutUrl ?? "");
+    const interp = String(params.interp ?? "tetrahedral");
+    let lut2 = null;
+    if (lutUrl && lutFile && isPreviewableLutFile(lutFile)) {
+      if (lutTextCache.has(lutUrl)) {
+        lut2 = lutTextCache.get(lutUrl) ?? null;
+      } else if (!this.fetching.has(lutUrl)) {
+        this.fetching.add(lutUrl);
+        void fetch(lutUrl).then((res) => res.ok ? res.text() : Promise.reject(res.status)).then((text2) => lutTextCache.set(lutUrl, parseLutText(lutFile, text2))).catch(() => lutTextCache.set(lutUrl, null));
+      }
+    }
+    return this.inner.renderToCanvas(
+      src,
+      { lut: lut2, interp },
+      target
+    );
+  }
+  dispose() {
+    this.inner.dispose();
+  }
+}
+class ChainBlitRenderer {
+  renderToCanvas(src, _params, target) {
+    const { w: w2, h: h2 } = fxSourceSize(src);
+    if (target.width !== w2 || target.height !== h2) {
+      target.width = w2;
+      target.height = h2;
+    }
+    const ctx = target.getContext("2d");
+    if (!ctx) return false;
+    ctx.clearRect(0, 0, w2, h2);
+    ctx.drawImage(src, 0, 0, w2, h2);
+    return true;
+  }
+  dispose() {
+  }
+}
+function lutViewUrl(name) {
+  if (!name) return "";
+  return `/view?filename=${encodeURIComponent(name)}&subfolder=${encodeURIComponent("comfytv/luts")}&type=input`;
+}
+const CHAIN_PREVIEW_STAGES = {
+  "ComfyTV.VideoColorStage": {
+    create: () => new VideoColorRenderer(),
+    paramsOf: (n) => ({
+      exposure: num$2(n, "exposure", 0),
+      black: num$2(n, "black", 0),
+      temperature: num$2(n, "temperature", 6500),
+      tempMix: num$2(n, "temp_mix", 1),
+      hue: num$2(n, "hue", 0),
+      saturation: num$2(n, "saturation", 0),
+      vibrance: num$2(n, "vibrance", 0),
+      blackpoint: num$2(n, "blackpoint", 0),
+      whitepoint: num$2(n, "whitepoint", 1),
+      shadows: [
+        num$2(n, "shadows_r", 0),
+        num$2(n, "shadows_g", 0),
+        num$2(n, "shadows_b", 0)
+      ],
+      midtones: [
+        num$2(n, "midtones_r", 0),
+        num$2(n, "midtones_g", 0),
+        num$2(n, "midtones_b", 0)
+      ],
+      highlights: [
+        num$2(n, "highlights_r", 0),
+        num$2(n, "highlights_g", 0),
+        num$2(n, "highlights_b", 0)
+      ],
+      preserveLightness: bool(n, "preserve_lightness", true)
+    })
+  },
+  "ComfyTV.VideoCurvesStage": {
+    create: () => new VideoCurvesRenderer(),
+    paramsOf: (n) => ({
+      preset: str(n, "preset", "none"),
+      master: str(n, "master_pts", ""),
+      red: str(n, "red_pts", ""),
+      green: str(n, "green_pts", ""),
+      blue: str(n, "blue_pts", "")
+    })
+  },
+  "ComfyTV.VideoLUTStage": {
+    create: () => new ChainLutRenderer(),
+    paramsOf: (n) => {
+      const file = str(n, "lut_file", "");
+      return {
+        lutFile: file,
+        lutUrl: lutViewUrl(file),
+        interp: str(n, "interp", "tetrahedral")
+      };
+    }
+  },
+  "ComfyTV.VideoBlurSharpenStage": {
+    create: () => new VideoBlurRenderer(),
+    paramsOf: (n) => ({
+      mode: str(n, "mode", "gaussian"),
+      amount: num$2(n, "amount", 2),
+      size: num$2(n, "size", 5),
+      edgePreserve: num$2(n, "edge_preserve", 0.1)
+    })
+  },
+  "ComfyTV.VideoStylizeStage": {
+    create: () => new VideoStylizeRenderer(),
+    paramsOf: (n) => ({
+      effect: str(n, "effect", "vignette"),
+      strength: num$2(n, "strength", 0.5),
+      block: num$2(n, "block", 8)
+    })
+  },
+  "ComfyTV.HueCorrectStage": {
+    create: () => new VideoHueCorrectRenderer(),
+    paramsOf: (n) => ({
+      curves: str(n, "curves", ""),
+      satThrsh: num$2(n, "sat_thrsh", 0),
+      luminanceMix: num$2(n, "luminance_mix", 0)
+    })
+  },
+  "ComfyTV.DespillStage": {
+    create: () => new VideoDespillRenderer(),
+    paramsOf: (n) => ({
+      screen: str(n, "screen", "green"),
+      spillMix: num$2(n, "spill_mix", 0.5),
+      expand: num$2(n, "expand", 0),
+      redScale: num$2(n, "red_scale", 0),
+      greenScale: num$2(n, "green_scale", -1),
+      blueScale: num$2(n, "blue_scale", 0),
+      brightness: num$2(n, "brightness", 0),
+      outputSpillmap: bool(n, "output_spillmap", false)
+    })
+  },
+  "ComfyTV.ColorSuppressStage": {
+    create: () => new VideoColorSuppressRenderer(),
+    paramsOf: (n) => ({
+      red: num$2(n, "red", 0),
+      green: num$2(n, "green", 0),
+      blue: num$2(n, "blue", 0),
+      cyan: num$2(n, "cyan", 0),
+      magenta: num$2(n, "magenta", 0),
+      yellow: num$2(n, "yellow", 0),
+      preserveLuma: bool(n, "preserve_luma", false),
+      output: str(n, "output", "image")
+    })
+  },
+  "ComfyTV.KeyerStage": {
+    create: () => new VideoKeyerRenderer(),
+    paramsOf: (n) => ({
+      mode: str(n, "mode", "luminance"),
+      keyColor: str(n, "key_color", "#000000"),
+      softnessLower: num$2(n, "softness_lower", -0.5),
+      toleranceLower: num$2(n, "tolerance_lower", 0),
+      center: num$2(n, "center", 1),
+      toleranceUpper: num$2(n, "tolerance_upper", 0),
+      softnessUpper: num$2(n, "softness_upper", 0.5),
+      despill: num$2(n, "despill", 1),
+      despillAngle: num$2(n, "despill_angle", 120),
+      output: str(n, "output", "matte")
+    })
+  },
+  "ComfyTV.VideoTransformStage": {
+    create: () => new VideoTransformRenderer(),
+    paramsOf: (n) => ({
+      posX: num$2(n, "pos_x", 0),
+      posY: num$2(n, "pos_y", 0),
+      scale: num$2(n, "scale", 1),
+      rotation: num$2(n, "rotation", 0),
+      skewX: num$2(n, "skew_x", 0)
+    })
+  },
+  "ComfyTV.PIKStage": {
+    create: () => new VideoPikRenderer(),
+    paramsOf: (n) => ({
+      screen: str(n, "screen", "green"),
+      pickColor: str(n, "pick_color", "#00FF00"),
+      redWeight: num$2(n, "red_weight", 0.5),
+      blueGreenWeight: num$2(n, "blue_green_weight", 0.5),
+      alphaBias: str(n, "alpha_bias", "#808080"),
+      despillBias: str(n, "despill_bias", "#808080"),
+      useAlphaBias: bool(n, "use_alpha_bias", true),
+      screenSubtraction: bool(n, "screen_subtraction", true),
+      clipBlack: num$2(n, "clip_black", 0),
+      clipWhite: num$2(n, "clip_white", 1),
+      replaceMode: str(n, "replace_mode", "soft"),
+      replaceColor: str(n, "replace_color", "#808080"),
+      output: str(n, "output", "alpha")
+    })
+  }
+};
+const PAUSED_REFRESH_MS = 500;
+const MAX_CHAIN_DEPTH = 16;
+const SIDE_SLOTS = {
+  "ComfyTV.KeyerStage": ["in_mask", "out_mask", "bg_video"],
+  "ComfyTV.PIKStage": [
+    "clean_plate_video",
+    "clean_plate",
+    "in_mask",
+    "out_mask",
+    "bg_video"
+  ],
+  "ComfyTV.VideoTransformStage": ["track"]
+};
+function nodeClass(node) {
+  const n = node;
+  return String((n == null ? void 0 : n.comfyClass) ?? (n == null ? void 0 : n.type) ?? "");
+}
+function isChainable(node) {
+  const cls = nodeClass(node);
+  if (!FX_PASSTHROUGH_CLASSES.has(cls)) return false;
+  const sides2 = SIDE_SLOTS[cls];
+  if (!sides2) return true;
+  const inputs = (node == null ? void 0 : node.inputs) ?? [];
+  return !inputs.some((i) => sides2.includes(String(i == null ? void 0 : i.name)) && (i == null ? void 0 : i.link) != null);
+}
+function upstreamVideoNode(node, graphApp) {
+  var _a3, _b2;
+  const inputs = (node == null ? void 0 : node.inputs) ?? [];
+  const vin = inputs.find((i) => (i == null ? void 0 : i.name) === "video");
+  if ((vin == null ? void 0 : vin.link) == null) return null;
+  const graph = graphApp == null ? void 0 : graphApp.graph;
+  const linksMap = graph == null ? void 0 : graph.links;
+  const link = linksMap && typeof linksMap.get === "function" ? linksMap.get(vin.link) : (linksMap == null ? void 0 : linksMap[vin.link]) ?? ((_a3 = graph == null ? void 0 : graph.getLink) == null ? void 0 : _a3.call(graph, vin.link));
+  return link ? ((_b2 = graph == null ? void 0 : graph.getNodeById) == null ? void 0 : _b2.call(graph, link.origin_id)) ?? null : null;
+}
+function collectUpstreamFxStack(node, graphApp = app) {
+  const stack2 = [];
+  let cur = upstreamVideoNode(node, graphApp);
+  let depth = 0;
+  while (cur && depth < MAX_CHAIN_DEPTH && isChainable(cur)) {
+    stack2.unshift(cur);
+    cur = upstreamVideoNode(cur, graphApp);
+    depth++;
+  }
+  return stack2;
+}
+function createChainCompositor(node, graphApp = app) {
+  const stackEntries = /* @__PURE__ */ new Map();
+  function syncStack() {
+    const nodes = collectUpstreamFxStack(node, graphApp);
+    const alive = new Set(nodes);
+    for (const [key, entry] of stackEntries) {
+      if (!alive.has(key)) {
+        entry.renderer.dispose();
+        stackEntries.delete(key);
+      }
+    }
+    const out = [];
+    for (const n of nodes) {
+      const cls = nodeClass(n);
+      const def2 = CHAIN_PREVIEW_STAGES[cls];
+      if (!def2) continue;
+      let entry = stackEntries.get(n);
+      if (entry == null || entry.cls !== cls) {
+        entry == null ? void 0 : entry.renderer.dispose();
+        entry = {
+          node: n,
+          cls,
+          renderer: def2.create(),
+          canvas: document.createElement("canvas")
+        };
+        stackEntries.set(n, entry);
+      }
+      out.push(entry);
+    }
+    return out;
+  }
+  let lastStackDebugAt = 0;
+  function render2(src) {
+    let cur = src;
+    const stack2 = syncStack();
+    if (stack2.length && Date.now() - lastStackDebugAt > 2e3) {
+      lastStackDebugAt = Date.now();
+      console.debug("[ComfyTV/fx-preview] stack " + JSON.stringify(stack2.map((e) => {
+        var _a3;
+        return {
+          cls: e.cls,
+          params: (_a3 = CHAIN_PREVIEW_STAGES[e.cls]) == null ? void 0 : _a3.paramsOf(e.node)
+        };
+      }), null, 1));
+    }
+    for (const entry of stack2) {
+      const def2 = CHAIN_PREVIEW_STAGES[entry.cls];
+      if (!def2) continue;
+      if (!entry.renderer.renderToCanvas(
+        cur,
+        def2.paramsOf(entry.node),
+        entry.canvas
+      )) {
+        return null;
+      }
+      cur = entry.canvas;
+    }
+    return cur;
+  }
+  function dispose() {
+    for (const entry of stackEntries.values()) entry.renderer.dispose();
+    stackEntries.clear();
+  }
+  return { render: render2, dispose };
+}
+function debugMeanOf(src) {
+  const c2 = document.createElement("canvas");
+  c2.width = 80;
+  c2.height = 45;
+  const ctx = c2.getContext("2d", { willReadFrequently: true });
+  if (!ctx) return "n/a";
+  ctx.drawImage(src, 0, 0, 80, 45);
+  const d2 = ctx.getImageData(0, 0, 80, 45).data;
+  let r = 0;
+  let g2 = 0;
+  let b2 = 0;
+  const n = d2.length / 4;
+  for (let i = 0; i < d2.length; i += 4) {
+    r += d2[i];
+    g2 += d2[i + 1];
+    b2 += d2[i + 2];
+  }
+  return `[${(r / n).toFixed(1)}, ${(g2 / n).toFixed(1)}, ${(b2 / n).toFixed(1)}]`;
+}
+function useChainedFxPreview(opts) {
+  const supported = /* @__PURE__ */ ref(true);
+  const unregister = opts.nodeId != null ? registerPreviewSource(opts.nodeId, () => opts.canvasEl.value) : null;
+  let ownRenderer = null;
+  const compositor = createChainCompositor(opts.node, opts.graphApp ?? app);
+  let rafId = 0;
+  let idleTimer = null;
+  let attached = null;
+  let lastDebugAt = 0;
+  function renderOnce() {
+    if (!supported.value) return;
+    const v2 = opts.videoEl.value;
+    const target = opts.canvasEl.value;
+    if (!v2 || !target || v2.readyState < 2) return;
+    ownRenderer ?? (ownRenderer = opts.createRenderer());
+    const src = compositor.render(v2);
+    if (src == null) {
+      supported.value = false;
+      stopLoop();
+      return;
+    }
+    if (!ownRenderer.renderToCanvas(
+      src,
+      opts.params(),
+      target
+    )) {
+      supported.value = false;
+      stopLoop();
+      return;
+    }
+    if (Date.now() - lastDebugAt > 1e3) {
+      lastDebugAt = Date.now();
+      console.debug(`[ComfyTV/fx-preview] t=${v2.currentTime.toFixed(2)}s src mean=${debugMeanOf(v2)} composited mean=${debugMeanOf(target)}`);
+    }
+  }
+  function loop() {
+    renderOnce();
+    if (supported.value) rafId = requestAnimationFrame(loop);
+  }
+  function startLoop() {
+    stopLoop();
+    if (!supported.value) return;
+    rafId = requestAnimationFrame(loop);
+  }
+  function stopLoop() {
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = 0;
+  }
+  function startIdleRefresh() {
+    stopIdleRefresh();
+    idleTimer = setInterval(() => {
+      if (attached && attached.paused) renderOnce();
+    }, PAUSED_REFRESH_MS);
+  }
+  function stopIdleRefresh() {
+    if (idleTimer != null) clearInterval(idleTimer);
+    idleTimer = null;
+  }
+  const onPlay = () => startLoop();
+  const onStop = () => {
+    stopLoop();
+    renderOnce();
+  };
+  const onFrame = () => renderOnce();
+  function detach() {
+    if (!attached) return;
+    attached.removeEventListener("play", onPlay);
+    attached.removeEventListener("pause", onStop);
+    attached.removeEventListener("ended", onStop);
+    attached.removeEventListener("seeked", onFrame);
+    attached.removeEventListener("loadeddata", onFrame);
+    attached = null;
+  }
+  watch(opts.videoEl, (v2) => {
+    detach();
+    stopLoop();
+    stopIdleRefresh();
+    if (!v2) return;
+    attached = v2;
+    v2.addEventListener("play", onPlay);
+    v2.addEventListener("pause", onStop);
+    v2.addEventListener("ended", onStop);
+    v2.addEventListener("seeked", onFrame);
+    v2.addEventListener("loadeddata", onFrame);
+    startIdleRefresh();
+    if (v2.paused) renderOnce();
+    else startLoop();
+  }, { immediate: true });
+  watch(() => opts.params(), () => renderOnce());
+  onBeforeUnmount(() => {
+    unregister == null ? void 0 : unregister();
+    detach();
+    stopLoop();
+    stopIdleRefresh();
+    ownRenderer == null ? void 0 : ownRenderer.dispose();
+    ownRenderer = null;
+    compositor.dispose();
   });
-  function write2(next) {
-    orderRaw.value = serializeOrder(next);
+  return { supported, renderOnce, startLoop, stopLoop };
+}
+function entryLabel(e) {
+  if (!e || typeof e !== "object" || Array.isArray(e)) return null;
+  const v2 = e;
+  const label = typeof v2.label === "string" && v2.label ? v2.label : typeof v2.kind === "string" ? v2.kind : "";
+  return label || null;
+}
+function parseFxSpec(content) {
+  if (!content) return null;
+  let data;
+  try {
+    data = JSON.parse(String(content));
+  } catch {
+    return null;
   }
-  function onMoveUp(index) {
-    write2(moveUp(order2.value, index));
-  }
-  function onMoveDown(index) {
-    write2(moveDown(order2.value, index));
-  }
-  const orderedSummary = computed(() => orderedRows.value.map((r) => r.known ? r.label : "?").join(" → "));
-  return { rows, order: order2, orderedRows, onMoveUp, onMoveDown, orderedSummary };
+  if (!data || typeof data !== "object" || Array.isArray(data)) return null;
+  const chain = data.chain;
+  const entries2 = Array.isArray(chain) ? chain : [data];
+  const labels = entries2.map(entryLabel);
+  if (!labels.length || labels.some((l3) => l3 == null)) return null;
+  return { label: labels.join(" → "), count: entries2.length };
+}
+function fxChainRowsOf(chainNode, graphApp = app) {
+  return collectUpstreamFxStack(chainNode, graphApp).map((n, i) => {
+    const cls = String((n == null ? void 0 : n.comfyClass) ?? (n == null ? void 0 : n.type) ?? "");
+    return {
+      ordinal: i + 1,
+      kind: cls,
+      label: String((n == null ? void 0 : n.title) ?? cls),
+      preview: cls in CHAIN_PREVIEW_STAGES
+    };
+  });
+}
+function useFxChain(node, getState) {
+  const rows = computed(() => {
+    void getState().inputs;
+    return fxChainRowsOf(node);
+  });
+  const summary = computed(() => rows.value.map((r) => r.label).join(" → "));
+  return { rows, summary };
 }
 const DEFAULT_MATERIAL = {
   version: 1,
@@ -104223,7 +107011,7 @@ const MATERIAL_PRESETS = [
   { key: "rubber", params: preset({ roughness: 0.95 }) },
   { key: "ceramic", params: preset({ roughness: 0.2, clearcoat: 1, clearcoatRoughness: 0.05 }) }
 ];
-const clamp01$2 = (v2, fallback) => {
+const clamp01 = (v2, fallback) => {
   const n = Number(v2);
   return Number.isFinite(n) ? Math.min(1, Math.max(0, n)) : fallback;
 };
@@ -104236,15 +107024,15 @@ function normalizeMaterial(raw) {
   return {
     version: 1,
     color: asHex(src.color, d2.color),
-    metalness: clamp01$2(src.metalness, d2.metalness),
-    roughness: clamp01$2(src.roughness, d2.roughness),
-    transmission: clamp01$2(src.transmission, d2.transmission),
-    opacity: clamp01$2(src.opacity, d2.opacity),
-    clearcoat: clamp01$2(src.clearcoat, d2.clearcoat),
-    clearcoatRoughness: clamp01$2(src.clearcoatRoughness, d2.clearcoatRoughness),
+    metalness: clamp01(src.metalness, d2.metalness),
+    roughness: clamp01(src.roughness, d2.roughness),
+    transmission: clamp01(src.transmission, d2.transmission),
+    opacity: clamp01(src.opacity, d2.opacity),
+    clearcoat: clamp01(src.clearcoat, d2.clearcoat),
+    clearcoatRoughness: clamp01(src.clearcoatRoughness, d2.clearcoatRoughness),
     ior: Number.isFinite(ior) ? Math.min(2.333, Math.max(1, ior)) : d2.ior,
     emissive: asHex(src.emissive, d2.emissive),
-    emissiveIntensity: clamp01$2(src.emissiveIntensity, d2.emissiveIntensity)
+    emissiveIntensity: clamp01(src.emissiveIntensity, d2.emissiveIntensity)
   };
 }
 function parseMaterialState(json) {
@@ -106959,11 +109747,11 @@ const _hoisted_4$1W = ["title"];
 const _hoisted_5$1S = ["title"];
 const _hoisted_6$1I = ["src", "alt"];
 const _hoisted_7$1p = ["title"];
-const _hoisted_8$1a = ["title"];
-const _hoisted_9$14 = ["title"];
-const _hoisted_10$W = ["title"];
-const _hoisted_11$R = ["src", "alt"];
-const _hoisted_12$K = {
+const _hoisted_8$19 = ["title"];
+const _hoisted_9$13 = ["title"];
+const _hoisted_10$V = ["title"];
+const _hoisted_11$Q = ["src", "alt"];
+const _hoisted_12$J = {
   key: 6,
   class: "vp-img-host ctv:group ctv:relative ctv:w-full"
 };
@@ -107415,7 +110203,7 @@ const _sfc_main$2e = /* @__PURE__ */ defineComponent({
               onClick: _cache2[12] || (_cache2[12] = withModifiers(($event) => onDownload(String(__props.content)), ["stop"]))
             }, [..._cache2[30] || (_cache2[30] = [
               createBaseVNode("i", { class: "pi pi-download" }, null, -1)
-            ])], 8, _hoisted_8$1a),
+            ])], 8, _hoisted_8$19),
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(tagActionBtn(String(__props.content))),
@@ -107423,7 +110211,7 @@ const _sfc_main$2e = /* @__PURE__ */ defineComponent({
               onClick: _cache2[13] || (_cache2[13] = withModifiers(($event) => unref(openTagMenu)(String(__props.content), unref(nameFromUrl)(String(__props.content)), $event, previewMediaType.value), ["stop"]))
             }, [..._cache2[31] || (_cache2[31] = [
               createBaseVNode("i", { class: "pi pi-tag" }, null, -1)
-            ])], 10, _hoisted_9$14),
+            ])], 10, _hoisted_9$13),
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(imgActionBtn),
@@ -107431,14 +110219,14 @@ const _sfc_main$2e = /* @__PURE__ */ defineComponent({
               onClick: _cache2[14] || (_cache2[14] = withModifiers(($event) => onLoadAsset(String(__props.content), unref(nameFromUrl)(String(__props.content))), ["stop"]))
             }, [..._cache2[32] || (_cache2[32] = [
               createBaseVNode("i", { class: "pi pi-bookmark" }, null, -1)
-            ])], 8, _hoisted_10$W)
+            ])], 8, _hoisted_10$V)
           ])
         ], 512)) : __props.type === "COMFYTV_IMAGE" || __props.type === "COMFYTV_PANORAMA" ? (openBlock(), createElementBlock("img", {
           key: 5,
           src: String(__props.content),
           class: normalizeClass(imgClass.value),
           alt: String(__props.content)
-        }, null, 10, _hoisted_11$R)) : __props.type === "COMFYTV_VIDEO" && !__props.compact ? (openBlock(), createElementBlock("div", _hoisted_12$K, [
+        }, null, 10, _hoisted_11$Q)) : __props.type === "COMFYTV_VIDEO" && !__props.compact ? (openBlock(), createElementBlock("div", _hoisted_12$J, [
           createVNode(_sfc_main$2I, {
             src: String(__props.content),
             class: normalizeClass(videoClass.value),
@@ -107576,7 +110364,7 @@ const _sfc_main$2e = /* @__PURE__ */ defineComponent({
             ], -1)),
             createBaseVNode("div", _hoisted_28$7, [
               createBaseVNode("span", _hoisted_29$6, toDisplayString$1(fxSpecInfo.value ? fxSpecInfo.value.label : _ctx.$t("fxChain.unknown")), 1),
-              fxSpecInfo.value ? (openBlock(), createElementBlock("span", _hoisted_30$6, toDisplayString$1(_ctx.$t(`fxChain.domain.${fxSpecInfo.value.domain}`)) + " · " + toDisplayString$1(fxSpecInfo.value.specCount), 1)) : createCommentVNode("", true)
+              fxSpecInfo.value && fxSpecInfo.value.count > 1 ? (openBlock(), createElementBlock("span", _hoisted_30$6, " ×" + toDisplayString$1(fxSpecInfo.value.count), 1)) : createCommentVNode("", true)
             ])
           ]))
         ], 64)) : __props.type === "COMFYTV_STORYBOARD" ? (openBlock(), createElementBlock(Fragment$1, { key: 12 }, [
@@ -107988,7 +110776,7 @@ const _sfc_main$2e = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const ValuePreview = /* @__PURE__ */ _export_sfc(_sfc_main$2e, [["__scopeId", "data-v-55e35c01"]]);
+const ValuePreview = /* @__PURE__ */ _export_sfc(_sfc_main$2e, [["__scopeId", "data-v-75d33a9e"]]);
 function makeCollapsed(storageKey) {
   const expanded = useStorage(storageKey, []);
   return (getNodeId) => computed({
@@ -108545,11 +111333,11 @@ const _hoisted_7$1o = {
   key: 3,
   class: "ctv:flex ctv:flex-col ctv:gap-1"
 };
-const _hoisted_8$19 = ["aria-expanded"];
-const _hoisted_9$13 = { class: "ctv:text-3xs ctv:text-muted-foreground ctv:font-mono ctv:normal-case ctv:tracking-normal" };
-const _hoisted_10$V = { class: "ctv:flex ctv:flex-wrap ctv:gap-1.5" };
-const _hoisted_11$Q = ["title"];
-const _hoisted_12$J = { class: "ctv:absolute ctv:bottom-0 ctv:inset-x-0 ctv:py-0.5 ctv:px-1 ctv:text-3xs ctv:font-semibold ctv:tracking-wide ctv:text-white/90 ctv:overflow-hidden ctv:whitespace-nowrap ctv:text-ellipsis ctv:pointer-events-none ctv:bg-linear-to-b ctv:from-transparent ctv:to-black/75" };
+const _hoisted_8$18 = ["aria-expanded"];
+const _hoisted_9$12 = { class: "ctv:text-3xs ctv:text-muted-foreground ctv:font-mono ctv:normal-case ctv:tracking-normal" };
+const _hoisted_10$U = { class: "ctv:flex ctv:flex-wrap ctv:gap-1.5" };
+const _hoisted_11$P = ["title"];
+const _hoisted_12$I = { class: "ctv:absolute ctv:bottom-0 ctv:inset-x-0 ctv:py-0.5 ctv:px-1 ctv:text-3xs ctv:font-semibold ctv:tracking-wide ctv:text-white/90 ctv:overflow-hidden ctv:whitespace-nowrap ctv:text-ellipsis ctv:pointer-events-none ctv:bg-linear-to-b ctv:from-transparent ctv:to-black/75" };
 const _hoisted_13$C = ["title", "onClick"];
 const _hoisted_14$y = ["title"];
 const _hoisted_15$s = ["title"];
@@ -108605,7 +111393,8 @@ const _sfc_main$2d = /* @__PURE__ */ defineComponent({
     hideContext: { type: Boolean },
     hideOutput: { type: Boolean },
     hideActions: { type: Boolean },
-    hideRun: { type: Boolean }
+    hideRun: { type: Boolean },
+    hideRunButton: { type: Boolean }
   },
   setup(__props) {
     const props = __props;
@@ -108789,9 +111578,9 @@ const _sfc_main$2d = /* @__PURE__ */ defineComponent({
             createBaseVNode("span", {
               class: normalizeClass([sectionLabel$1, "ctv:mb-0"])
             }, toDisplayString$1(_ctx.$t("stage.section.context")), 1),
-            createBaseVNode("span", _hoisted_9$13, toDisplayString$1(unref(contextSummary)), 1)
-          ], 8, _hoisted_8$19),
-          withDirectives(createBaseVNode("div", _hoisted_10$V, [
+            createBaseVNode("span", _hoisted_9$12, toDisplayString$1(unref(contextSummary)), 1)
+          ], 8, _hoisted_8$18),
+          withDirectives(createBaseVNode("div", _hoisted_10$U, [
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(connectedInputs), (inp) => {
               return openBlock(), createElementBlock("div", {
                 key: inp.slot,
@@ -108808,7 +111597,7 @@ const _sfc_main$2d = /* @__PURE__ */ defineComponent({
                   content: inp.content,
                   "empty-label": inp.source === "upstream-pending" ? "…" : ""
                 }, null, 8, ["type", "content", "empty-label"]),
-                createBaseVNode("span", _hoisted_12$J, toDisplayString$1(unref(formatSlot)(inp.slot)), 1),
+                createBaseVNode("span", _hoisted_12$I, toDisplayString$1(unref(formatSlot)(inp.slot)), 1),
                 createBaseVNode("button", {
                   class: normalizeClass(["ctv-tile-disconnect ctv:absolute ctv:top-0.5 ctv:right-0.5 ctv:hidden", tileDisconnectBtn]),
                   title: _ctx.$t("stage.disconnect"),
@@ -108816,7 +111605,7 @@ const _sfc_main$2d = /* @__PURE__ */ defineComponent({
                 }, [..._cache2[10] || (_cache2[10] = [
                   createBaseVNode("i", { class: "pi pi-times" }, null, -1)
                 ])], 10, _hoisted_13$C)
-              ], 14, _hoisted_11$Q);
+              ], 14, _hoisted_11$P);
             }), 128))
           ], 512), [
             [vShow, !unref(contextCollapsed)]
@@ -108858,7 +111647,7 @@ const _sfc_main$2d = /* @__PURE__ */ defineComponent({
           state: __props.state,
           node: __props.node
         }, null, 8, ["state", "node"])) : createCommentVNode("", true),
-        unref(showServerSelect) && !__props.hideRun ? (openBlock(), createElementBlock("div", _hoisted_16$o, [
+        unref(showServerSelect) && !__props.hideRun && !__props.hideRunButton ? (openBlock(), createElementBlock("div", _hoisted_16$o, [
           createBaseVNode("span", _hoisted_17$m, toDisplayString$1(_ctx.$t("servers.runOn")), 1),
           createVNode(_sfc_main$2y, {
             class: "ctv:flex-1 ctv:min-w-0",
@@ -108868,7 +111657,7 @@ const _sfc_main$2d = /* @__PURE__ */ defineComponent({
             "onUpdate:modelValue": unref(onServerPick)
           }, null, 8, ["model-value", "options", "disabled", "onUpdate:modelValue"])
         ])) : createCommentVNode("", true),
-        !__props.hideRun && __props.state.variant !== "loader" && __props.state.variant !== "transform" && !isPicker.value ? (openBlock(), createElementBlock("button", {
+        !__props.hideRun && !__props.hideRunButton && __props.state.variant !== "loader" && __props.state.variant !== "transform" && !isPicker.value ? (openBlock(), createElementBlock("button", {
           key: 7,
           class: normalizeClass(["run-btn", __props.state.running && "is-cancel", runBtnClass.value]),
           disabled: !__props.state.running && !unref(canRun),
@@ -108897,7 +111686,7 @@ const _sfc_main$2d = /* @__PURE__ */ defineComponent({
           ]),
           createBaseVNode("span", _hoisted_25$a, toDisplayString$1(((_a3 = __props.state.progress) == null ? void 0 : _a3.text) || progressFallbackText.value), 1)
         ])) : createCommentVNode("", true),
-        !__props.hideOutput && __props.state.kind !== "audio-picker" && __props.state.kind !== "video-picker" ? (openBlock(), createElementBlock("section", _hoisted_26$8, [
+        !__props.hideOutput && !__props.hideRunButton && __props.state.kind !== "audio-picker" && __props.state.kind !== "video-picker" ? (openBlock(), createElementBlock("section", _hoisted_26$8, [
           createBaseVNode("div", {
             class: normalizeClass(sectionLabel$1)
           }, toDisplayString$1(_ctx.$t("stage.section.output", { type: __props.state.outputType })), 1),
@@ -108913,7 +111702,7 @@ const _sfc_main$2d = /* @__PURE__ */ defineComponent({
             onCaptureView: onCaptureViewAction
           }, null, 8, ["type", "content", "empty-label", "click-mode", "selected-index"])
         ])) : createCommentVNode("", true),
-        !__props.hideActions && __props.state.output && unref(stageActions).length ? (openBlock(), createElementBlock("section", _hoisted_27$8, [
+        !__props.hideActions && !__props.hideRunButton && __props.state.output && unref(stageActions).length ? (openBlock(), createElementBlock("section", _hoisted_27$8, [
           createBaseVNode("button", {
             class: normalizeClass(contextToggle),
             "aria-expanded": !unref(actionsCollapsed),
@@ -108973,7 +111762,7 @@ const _sfc_main$2d = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const StageCard = /* @__PURE__ */ _export_sfc(_sfc_main$2d, [["__scopeId", "data-v-f4bcd58d"]]);
+const StageCard = /* @__PURE__ */ _export_sfc(_sfc_main$2d, [["__scopeId", "data-v-fd04059c"]]);
 const _sfc_main$2c = /* @__PURE__ */ defineComponent({
   __name: "SceneCanvas",
   props: {
@@ -109044,11 +111833,11 @@ const _hoisted_4$1U = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv
 const _hoisted_5$1Q = ["value"];
 const _hoisted_6$1G = ["value"];
 const _hoisted_7$1n = { class: "ctv:flex ctv:items-center ctv:gap-1" };
-const _hoisted_8$18 = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:whitespace-nowrap ctv:text-[#00FFD0]" };
-const _hoisted_9$12 = ["value"];
-const _hoisted_10$U = ["value"];
-const _hoisted_11$P = { class: "ctv:flex ctv:items-center ctv:gap-1" };
-const _hoisted_12$I = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:whitespace-nowrap ctv:text-[#FFB800]" };
+const _hoisted_8$17 = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:whitespace-nowrap ctv:text-[#00FFD0]" };
+const _hoisted_9$11 = ["value"];
+const _hoisted_10$T = ["value"];
+const _hoisted_11$O = { class: "ctv:flex ctv:items-center ctv:gap-1" };
+const _hoisted_12$H = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:whitespace-nowrap ctv:text-[#FFB800]" };
 const _hoisted_13$B = ["value"];
 const _hoisted_14$x = ["value"];
 const _hoisted_15$r = { class: "ctv:flex ctv:justify-around ctv:items-center" };
@@ -109110,7 +111899,7 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
             ], 42, _hoisted_5$1Q)
           ]),
           createBaseVNode("div", _hoisted_7$1n, [
-            createBaseVNode("span", _hoisted_8$18, toDisplayString$1(_ctx.$t("camera.vertical")), 1),
+            createBaseVNode("span", _hoisted_8$17, toDisplayString$1(_ctx.$t("camera.vertical")), 1),
             createBaseVNode("select", {
               class: normalizeClass(dropdownClass("elevation")),
               value: closestElevation.value,
@@ -109120,12 +111909,12 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
                 return openBlock(), createElementBlock("option", {
                   key: opt.value,
                   value: opt.value
-                }, toDisplayString$1(_ctx.$t(`camera.elevation.${opt.key}`)), 9, _hoisted_10$U);
+                }, toDisplayString$1(_ctx.$t(`camera.elevation.${opt.key}`)), 9, _hoisted_10$T);
               }), 128))
-            ], 42, _hoisted_9$12)
+            ], 42, _hoisted_9$11)
           ]),
-          createBaseVNode("div", _hoisted_11$P, [
-            createBaseVNode("span", _hoisted_12$I, toDisplayString$1(_ctx.$t("camera.zoom")), 1),
+          createBaseVNode("div", _hoisted_11$O, [
+            createBaseVNode("span", _hoisted_12$H, toDisplayString$1(_ctx.$t("camera.zoom")), 1),
             createBaseVNode("select", {
               class: normalizeClass(dropdownClass("distance")),
               value: closestDistance.value,
@@ -110783,8 +113572,8 @@ const _hoisted_4$1T = { class: "ctv:flex ctv:gap-0.5 ctv:p-0.5 ctv:rounded ctv:b
 const _hoisted_5$1P = ["title", "onClick"];
 const _hoisted_6$1F = ["value"];
 const _hoisted_7$1m = ["value"];
-const _hoisted_8$17 = ["value"];
-const _hoisted_9$11 = ["value"];
+const _hoisted_8$16 = ["value"];
+const _hoisted_9$10 = ["value"];
 const SHELL_MAX_HEIGHT_PX = 360;
 const rowClass = "ctv:grid ctv:grid-cols-[64px_1fr_48px] ctv:items-center ctv:gap-1.5 ctv:text-[11px]";
 const labelClass$1 = "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground";
@@ -110983,7 +113772,7 @@ const _sfc_main$29 = /* @__PURE__ */ defineComponent({
                 class: "ctv:w-full",
                 value: brushOpacityPercent.value,
                 onInput: _cache2[8] || (_cache2[8] = (e) => brushOpacityPercent.value = Number(e.target.value))
-              }, null, 40, _hoisted_8$17),
+              }, null, 40, _hoisted_8$16),
               createBaseVNode("span", {
                 class: normalizeClass(valueClass)
               }, toDisplayString$1(brushOpacityPercent.value) + "%", 1)
@@ -111004,7 +113793,7 @@ const _sfc_main$29 = /* @__PURE__ */ defineComponent({
               class: "ctv:w-full",
               value: brushHardnessPercent.value,
               onInput: _cache2[9] || (_cache2[9] = (e) => brushHardnessPercent.value = Number(e.target.value))
-            }, null, 40, _hoisted_9$11),
+            }, null, 40, _hoisted_9$10),
             createBaseVNode("span", {
               class: normalizeClass(valueClass)
             }, toDisplayString$1(brushHardnessPercent.value) + "%", 1)
@@ -112377,7 +115166,7 @@ class TransformControlsGizmo extends Object3D {
         for (let i = gizmoMap[name].length; i--; ) {
           const object2 = gizmoMap[name][i][0].clone();
           const position = gizmoMap[name][i][1];
-          const rotation = gizmoMap[name][i][2];
+          const rotation2 = gizmoMap[name][i][2];
           const scale = gizmoMap[name][i][3];
           const tag = gizmoMap[name][i][4];
           object2.name = name;
@@ -112385,8 +115174,8 @@ class TransformControlsGizmo extends Object3D {
           if (position) {
             object2.position.set(position[0], position[1], position[2]);
           }
-          if (rotation) {
-            object2.rotation.set(rotation[0], rotation[1], rotation[2]);
+          if (rotation2) {
+            object2.rotation.set(rotation2[0], rotation2[1], rotation2[2]);
           }
           if (scale) {
             object2.scale.set(scale[0], scale[1], scale[2]);
@@ -112783,7 +115572,7 @@ const MIN_DISTANCE = 0.5;
 const MAX_DISTANCE = 100;
 const MIN_PITCH = -89;
 const MAX_PITCH = 89;
-const clamp$3 = (v2, lo, hi) => Math.max(lo, Math.min(hi, v2));
+const clamp$2 = (v2, lo, hi) => Math.max(lo, Math.min(hi, v2));
 function pointToYawAngle(point, target) {
   return Math.atan2(point.x - target.x, point.z - target.z) * RAD2DEG;
 }
@@ -112794,7 +115583,7 @@ function pointToPitchAngle(point, target, yawDeg) {
   const dz = point.z - target.z;
   const horizontal = dx * Math.sin(y2) + dz * Math.cos(y2);
   const raw = Math.atan2(dy, horizontal) * RAD2DEG;
-  return clamp$3(raw, MIN_PITCH, MAX_PITCH);
+  return clamp$2(raw, MIN_PITCH, MAX_PITCH);
 }
 function pointToDistance(point, target, yawDeg, pitchDeg) {
   const y2 = yawDeg * DEG2RAD;
@@ -112806,7 +115595,7 @@ function pointToDistance(point, target, yawDeg, pitchDeg) {
   const dy = point.y - target.y;
   const dz = point.z - target.z;
   const projection = dx * dirX + dy * dirY + dz * dirZ;
-  return clamp$3(projection, MIN_DISTANCE, MAX_DISTANCE);
+  return clamp$2(projection, MIN_DISTANCE, MAX_DISTANCE);
 }
 const OUTPUT_VIEW = {
   position: { x: 0, y: 6, z: 8 },
@@ -113225,14 +116014,14 @@ const _hoisted_4$1S = ["disabled", "title", "onClick"];
 const _hoisted_5$1O = ["title"];
 const _hoisted_6$1E = ["title"];
 const _hoisted_7$1l = { class: "ctv:flex ctv:h-8 ctv:items-center ctv:gap-1 ctv:overflow-x-auto ctv:px-1" };
-const _hoisted_8$16 = ["title", "onClick"];
-const _hoisted_9$10 = ["title"];
-const _hoisted_10$T = ["title"];
-const _hoisted_11$O = {
+const _hoisted_8$15 = ["title", "onClick"];
+const _hoisted_9$$ = ["title"];
+const _hoisted_10$S = ["title"];
+const _hoisted_11$N = {
   key: 0,
   class: "ctv:flex ctv:flex-col ctv:gap-2 ctv:rounded-md ctv:bg-black/40 ctv:border ctv:border-white/10 ctv:p-2"
 };
-const _hoisted_12$H = { class: "ctv:flex ctv:h-7 ctv:items-center ctv:gap-1 ctv:rounded ctv:bg-black/60 ctv:p-0.5" };
+const _hoisted_12$G = { class: "ctv:flex ctv:h-7 ctv:items-center ctv:gap-1 ctv:rounded ctv:bg-black/60 ctv:p-0.5" };
 const _hoisted_13$A = ["onClick"];
 const _hoisted_14$w = { class: "ctv:flex ctv:items-center ctv:gap-3" };
 const _hoisted_15$q = { class: "ctv:flex ctv:items-center ctv:gap-2" };
@@ -113353,24 +116142,24 @@ const _sfc_main$27 = /* @__PURE__ */ defineComponent({
                 style: normalizeStyle({ backgroundColor: light.color })
               }, null, 4),
               createTextVNode(" " + toDisplayString$1(String(index + 1).padStart(2, "0")), 1)
-            ], 10, _hoisted_8$16);
+            ], 10, _hoisted_8$15);
           }), 128)),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(actionClass(false)),
             title: _ctx.$t("lightBall.addLight"),
             onClick: _cache2[3] || (_cache2[3] = ($event) => _ctx.$emit("add", "directional"))
-          }, "+", 10, _hoisted_9$10),
+          }, "+", 10, _hoisted_9$$),
           unref(selectedLight) ? (openBlock(), createElementBlock("button", {
             key: 0,
             type: "button",
             class: normalizeClass(actionClass(false)),
             title: _ctx.$t("lightBall.removeLight"),
             onClick: _cache2[4] || (_cache2[4] = ($event) => _ctx.$emit("remove"))
-          }, "×", 10, _hoisted_10$T)) : createCommentVNode("", true)
+          }, "×", 10, _hoisted_10$S)) : createCommentVNode("", true)
         ]),
-        unref(selectedLight) ? (openBlock(), createElementBlock("div", _hoisted_11$O, [
-          createBaseVNode("div", _hoisted_12$H, [
+        unref(selectedLight) ? (openBlock(), createElementBlock("div", _hoisted_11$N, [
+          createBaseVNode("div", _hoisted_12$G, [
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(LIGHT_TYPES$1), (type) => {
               return openBlock(), createElementBlock("button", {
                 key: type,
@@ -114338,11 +117127,11 @@ const _hoisted_4$1Q = {
 const _hoisted_5$1N = ["onPointerdown"];
 const _hoisted_6$1D = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
 const _hoisted_7$1k = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
-const _hoisted_8$15 = { class: "ctv:min-w-9 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_9$$ = ["value"];
-const _hoisted_10$S = ["title"];
-const _hoisted_11$N = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-[11px]" };
-const _hoisted_12$G = { class: "ctv:w-3 ctv:text-2xs ctv:text-muted-foreground" };
+const _hoisted_8$14 = { class: "ctv:min-w-9 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_9$_ = ["value"];
+const _hoisted_10$R = ["title"];
+const _hoisted_11$M = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-[11px]" };
+const _hoisted_12$F = { class: "ctv:w-3 ctv:text-2xs ctv:text-muted-foreground" };
 const _hoisted_13$z = ["min", "value", "onChange"];
 const _sfc_main$25 = /* @__PURE__ */ defineComponent({
   __name: "CropCanvas",
@@ -114477,7 +117266,7 @@ const _sfc_main$25 = /* @__PURE__ */ defineComponent({
         ], 512),
         createBaseVNode("div", _hoisted_6$1D, [
           createBaseVNode("div", _hoisted_7$1k, [
-            createBaseVNode("span", _hoisted_8$15, toDisplayString$1(_ctx.$t("imageCrop.ratio")), 1),
+            createBaseVNode("span", _hoisted_8$14, toDisplayString$1(_ctx.$t("imageCrop.ratio")), 1),
             withDirectives(createBaseVNode("select", {
               "onUpdate:modelValue": _cache2[8] || (_cache2[8] = ($event) => /* @__PURE__ */ isRef(selectedRatio) ? selectedRatio.value = $event : null),
               class: "ctv-crop-select ctv:shrink-0 ctv:py-[3px] ctv:px-1.5 ctv:text-[11px] ctv:rounded ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle"
@@ -114486,7 +117275,7 @@ const _sfc_main$25 = /* @__PURE__ */ defineComponent({
                 return openBlock(), createElementBlock("option", {
                   key,
                   value: key
-                }, toDisplayString$1(key === "custom" ? _ctx.$t("imageCrop.custom") : key), 9, _hoisted_9$$);
+                }, toDisplayString$1(key === "custom" ? _ctx.$t("imageCrop.custom") : key), 9, _hoisted_9$_);
               }), 128))
             ], 512), [
               [vModelSelect, unref(selectedRatio)]
@@ -114503,15 +117292,15 @@ const _sfc_main$25 = /* @__PURE__ */ defineComponent({
               createBaseVNode("i", {
                 class: normalizeClass(["pi", unref(isLockEnabled) ? "pi-lock" : "pi-lock-open"])
               }, null, 2)
-            ], 10, _hoisted_10$S)
+            ], 10, _hoisted_10$R)
           ]),
-          createBaseVNode("div", _hoisted_11$N, [
+          createBaseVNode("div", _hoisted_11$M, [
             (openBlock(), createElementBlock(Fragment$1, null, renderList(BOUND_FIELDS, (b2) => {
               return createBaseVNode("label", {
                 key: b2.label,
                 class: "ctv:flex-1 ctv:flex ctv:items-center ctv:gap-1 ctv:py-0.5 ctv:px-1 ctv:rounded ctv:bg-secondary-background ctv:border ctv:border-border-subtle"
               }, [
-                createBaseVNode("span", _hoisted_12$G, toDisplayString$1(b2.label), 1),
+                createBaseVNode("span", _hoisted_12$F, toDisplayString$1(b2.label), 1),
                 createBaseVNode("input", {
                   type: "number",
                   min: b2.min,
@@ -115029,14 +117818,14 @@ const _hoisted_6$1B = {
   class: "ctv:absolute ctv:inset-0 ctv:z-10 ctv:flex ctv:items-center ctv:justify-center ctv:text-xs ctv:bg-black/80 ctv:text-destructive-background ctv:pointer-events-none"
 };
 const _hoisted_7$1j = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
-const _hoisted_8$14 = ["disabled", "title"];
-const _hoisted_9$_ = ["title"];
-const _hoisted_10$R = { class: "ctv:font-mono ctv:text-muted-foreground" };
-const _hoisted_11$M = {
+const _hoisted_8$13 = ["disabled", "title"];
+const _hoisted_9$Z = ["title"];
+const _hoisted_10$Q = { class: "ctv:font-mono ctv:text-muted-foreground" };
+const _hoisted_11$L = {
   key: 0,
   class: "ctv:ml-auto ctv:font-mono ctv:text-base-foreground"
 };
-const _hoisted_12$F = {
+const _hoisted_12$E = {
   key: 1,
   class: "ctv:ml-auto ctv:font-mono ctv:text-base-foreground"
 };
@@ -115157,7 +117946,7 @@ const _sfc_main$23 = /* @__PURE__ */ defineComponent({
             createBaseVNode("i", {
               class: normalizeClass(["pi", unref(previewing) ? "pi-pause" : "pi-play"])
             }, null, 2)
-          ], 8, _hoisted_8$14),
+          ], 8, _hoisted_8$13),
           createBaseVNode("button", {
             type: "button",
             class: "ctv:flex ctv:items-center ctv:justify-center ctv:w-7 ctv:h-6 ctv:text-xs ctv:rounded ctv:cursor-pointer ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background",
@@ -115167,14 +117956,14 @@ const _sfc_main$23 = /* @__PURE__ */ defineComponent({
             createBaseVNode("i", {
               class: normalizeClass(["pi", muted.value ? "pi-volume-off" : "pi-volume-up"])
             }, null, 2)
-          ], 8, _hoisted_9$_),
-          createBaseVNode("span", _hoisted_10$R, toDisplayString$1(unref(formatTime)(unref(currentTime))) + " / " + toDisplayString$1(unref(formatTime)(unref(duration2))), 1),
-          isSplit.value ? (openBlock(), createElementBlock("span", _hoisted_11$M, [
+          ], 8, _hoisted_9$Z),
+          createBaseVNode("span", _hoisted_10$Q, toDisplayString$1(unref(formatTime)(unref(currentTime))) + " / " + toDisplayString$1(unref(formatTime)(unref(duration2))), 1),
+          isSplit.value ? (openBlock(), createElementBlock("span", _hoisted_11$L, [
             _cache2[21] || (_cache2[21] = createBaseVNode("span", { class: "ctv:text-primary-background ctv:font-bold" }, "A", -1)),
             createTextVNode(" " + toDisplayString$1(unref(selStart).toFixed(1)) + "s · ", 1),
             _cache2[22] || (_cache2[22] = createBaseVNode("span", { class: "ctv:text-[#ffd089] ctv:font-bold" }, "B", -1)),
             createTextVNode(" " + toDisplayString$1(Math.max(0, unref(duration2) - unref(selStart)).toFixed(1)) + "s ", 1)
-          ])) : (openBlock(), createElementBlock("span", _hoisted_12$F, [
+          ])) : (openBlock(), createElementBlock("span", _hoisted_12$E, [
             createTextVNode(toDisplayString$1(unref(formatTime)(unref(selStart))) + " – " + toDisplayString$1(unref(formatTime)(unref(selEnd))) + " ", 1),
             createBaseVNode("span", _hoisted_13$y, "(" + toDisplayString$1(unref(selDuration).toFixed(1)) + "s)", 1)
           ]))
@@ -115500,11 +118289,11 @@ const _hoisted_5$1J = {
 };
 const _hoisted_6$1z = ["onPointerdown"];
 const _hoisted_7$1i = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
-const _hoisted_8$13 = ["disabled", "title"];
-const _hoisted_9$Z = ["title"];
-const _hoisted_10$Q = { class: "ctv:shrink-0 ctv:font-mono ctv:text-muted-foreground" };
-const _hoisted_11$L = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
-const _hoisted_12$E = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
+const _hoisted_8$12 = ["disabled", "title"];
+const _hoisted_9$Y = ["title"];
+const _hoisted_10$P = { class: "ctv:shrink-0 ctv:font-mono ctv:text-muted-foreground" };
+const _hoisted_11$K = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
+const _hoisted_12$D = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
 const _hoisted_13$x = { class: "ctv:min-w-9 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_14$u = ["value"];
 const _hoisted_15$o = ["title"];
@@ -115676,7 +118465,7 @@ const _sfc_main$21 = /* @__PURE__ */ defineComponent({
             createBaseVNode("i", {
               class: normalizeClass(["pi", unref(playing) ? "pi-pause" : "pi-play"])
             }, null, 2)
-          ], 8, _hoisted_8$13),
+          ], 8, _hoisted_8$12),
           createBaseVNode("button", {
             type: "button",
             class: "ctv:flex ctv:items-center ctv:justify-center ctv:w-7 ctv:h-6 ctv:text-xs ctv:rounded ctv:cursor-pointer ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background",
@@ -115686,7 +118475,7 @@ const _sfc_main$21 = /* @__PURE__ */ defineComponent({
             createBaseVNode("i", {
               class: normalizeClass(["pi", unref(muted) ? "pi-volume-off" : "pi-volume-up"])
             }, null, 2)
-          ], 8, _hoisted_9$Z),
+          ], 8, _hoisted_9$Y),
           createBaseVNode("div", {
             ref_key: "seekEl",
             ref: seekEl,
@@ -115705,10 +118494,10 @@ const _sfc_main$21 = /* @__PURE__ */ defineComponent({
               style: normalizeStyle({ width: `${unref(progressPct)}%` })
             }, null, 4)
           ], 34),
-          createBaseVNode("span", _hoisted_10$Q, toDisplayString$1(unref(formatTime)(unref(currentTime))) + " / " + toDisplayString$1(unref(formatTime)(unref(duration2))), 1)
+          createBaseVNode("span", _hoisted_10$P, toDisplayString$1(unref(formatTime)(unref(currentTime))) + " / " + toDisplayString$1(unref(formatTime)(unref(duration2))), 1)
         ]),
-        createBaseVNode("div", _hoisted_11$L, [
-          createBaseVNode("div", _hoisted_12$E, [
+        createBaseVNode("div", _hoisted_11$K, [
+          createBaseVNode("div", _hoisted_12$D, [
             createBaseVNode("span", _hoisted_13$x, toDisplayString$1(_ctx.$t("imageCrop.ratio")), 1),
             withDirectives(createBaseVNode("select", {
               "onUpdate:modelValue": _cache2[12] || (_cache2[12] = ($event) => /* @__PURE__ */ isRef(selectedRatio) ? selectedRatio.value = $event : null),
@@ -115978,23 +118767,23 @@ const _hoisted_6$1x = {
   class: "ctv:text-3xs ctv:text-center ctv:text-muted-foreground ctv:tracking-wide"
 };
 const _hoisted_7$1h = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_8$12 = {
+const _hoisted_8$11 = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_9$Y = {
+const _hoisted_9$X = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_10$P = {
+const _hoisted_10$O = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_11$K = {
+const _hoisted_11$J = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_12$D = ["src"];
+const _hoisted_12$C = ["src"];
 const _sfc_main$1$ = /* @__PURE__ */ defineComponent({
   __name: "VideoConcatStageCard",
   props: {
@@ -116076,7 +118865,7 @@ const _sfc_main$1$ = /* @__PURE__ */ defineComponent({
           clips.value.length > 1 ? (openBlock(), createElementBlock("div", _hoisted_6$1x, toDisplayString$1(_ctx.$t("videoConcat.dragToReorder")), 1)) : createCommentVNode("", true)
         ], 32),
         createBaseVNode("div", _hoisted_7$1h, [
-          clips.value.length < 2 ? (openBlock(), createElementBlock("span", _hoisted_8$12, toDisplayString$1(_ctx.$t("videoConcat.needTwo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_9$Y, toDisplayString$1(_ctx.$t("videoConcat.concatenating")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_10$P, toDisplayString$1(_ctx.$t("videoConcat.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_11$K, toDisplayString$1(_ctx.$t("videoConcat.readyToRun", { n: clips.value.length })), 1))
+          clips.value.length < 2 ? (openBlock(), createElementBlock("span", _hoisted_8$11, toDisplayString$1(_ctx.$t("videoConcat.needTwo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_9$X, toDisplayString$1(_ctx.$t("videoConcat.concatenating")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_10$O, toDisplayString$1(_ctx.$t("videoConcat.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_11$J, toDisplayString$1(_ctx.$t("videoConcat.readyToRun", { n: clips.value.length })), 1))
         ]),
         createVNode(StageCard, {
           state: __props.state,
@@ -116104,7 +118893,7 @@ const _sfc_main$1$ = /* @__PURE__ */ defineComponent({
               muted: "",
               playsinline: "",
               preload: "metadata"
-            }, null, 8, _hoisted_12$D),
+            }, null, 8, _hoisted_12$C),
             createBaseVNode("span", {
               class: "ctv:absolute ctv:top-0.5 ctv:left-0.5 ctv:py-px ctv:px-1.5 ctv:text-3xs ctv:font-bold ctv:rounded ctv:text-black",
               style: normalizeStyle({ background: unref(dragClip).color })
@@ -116133,24 +118922,6 @@ function render$1f(_ctx, _cache2) {
   ])]);
 }
 const IconMinimize = markRaw({ name: "lucide-minimize-2", render: render$1f });
-const sources = /* @__PURE__ */ new Map();
-const previewBusRevision = /* @__PURE__ */ ref(0);
-function registerPreviewSource(nodeId, getCanvas2) {
-  sources.set(nodeId, getCanvas2);
-  previewBusRevision.value++;
-  let active = true;
-  return () => {
-    if (!active) return;
-    active = false;
-    if (sources.get(nodeId) === getCanvas2) {
-      sources.delete(nodeId);
-      previewBusRevision.value++;
-    }
-  };
-}
-function getPreviewSource(nodeId) {
-  return sources.get(nodeId) ?? null;
-}
 const SCOPE_BINS = 256;
 function clampByte(v2) {
   const r = Math.round(v2);
@@ -116608,10 +119379,10 @@ const _hoisted_7$1g = {
   key: 3,
   class: "ctv:absolute ctv:inset-0 ctv:z-10 ctv:flex ctv:items-center ctv:justify-center ctv:text-xs ctv:bg-black/80 ctv:text-destructive-background ctv:pointer-events-none"
 };
-const _hoisted_8$11 = { class: "ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
-const _hoisted_9$X = ["disabled", "title"];
-const _hoisted_10$O = ["title"];
-const _hoisted_11$J = { class: "ctv:shrink-0 ctv:font-mono ctv:text-muted-foreground" };
+const _hoisted_8$10 = { class: "ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
+const _hoisted_9$W = ["disabled", "title"];
+const _hoisted_10$N = ["title"];
+const _hoisted_11$I = { class: "ctv:shrink-0 ctv:font-mono ctv:text-muted-foreground" };
 const _sfc_main$1Y = /* @__PURE__ */ defineComponent({
   __name: "VideoPlayerLite",
   props: {
@@ -116740,7 +119511,7 @@ const _sfc_main$1Y = /* @__PURE__ */ defineComponent({
             unref(loadError) ? (openBlock(), createElementBlock("div", _hoisted_7$1g, toDisplayString$1(_ctx.$t("videoTrim.loadError")), 1)) : createCommentVNode("", true)
           ], 64))
         ], 512),
-        createBaseVNode("div", _hoisted_8$11, [
+        createBaseVNode("div", _hoisted_8$10, [
           createBaseVNode("button", {
             type: "button",
             class: "ctv:flex ctv:items-center ctv:justify-center ctv:w-7 ctv:h-6 ctv:text-xs ctv:rounded ctv:cursor-pointer ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background ctv:disabled:opacity-40 ctv:disabled:cursor-default",
@@ -116752,7 +119523,7 @@ const _sfc_main$1Y = /* @__PURE__ */ defineComponent({
             createBaseVNode("i", {
               class: normalizeClass(["pi", unref(playing) ? "pi-pause" : "pi-play"])
             }, null, 2)
-          ], 8, _hoisted_9$X),
+          ], 8, _hoisted_9$W),
           createBaseVNode("button", {
             type: "button",
             class: "ctv:flex ctv:items-center ctv:justify-center ctv:w-7 ctv:h-6 ctv:text-xs ctv:rounded ctv:cursor-pointer ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background",
@@ -116762,7 +119533,7 @@ const _sfc_main$1Y = /* @__PURE__ */ defineComponent({
             createBaseVNode("i", {
               class: normalizeClass(["pi", unref(muted) ? "pi-volume-off" : "pi-volume-up"])
             }, null, 2)
-          ], 8, _hoisted_10$O),
+          ], 8, _hoisted_10$N),
           createBaseVNode("div", {
             ref_key: "seekEl",
             ref: seekEl,
@@ -116781,12 +119552,66 @@ const _sfc_main$1Y = /* @__PURE__ */ defineComponent({
               style: normalizeStyle({ width: `${unref(progressPct)}%` })
             }, null, 4)
           ], 34),
-          createBaseVNode("span", _hoisted_11$J, toDisplayString$1(unref(formatTime)(unref(currentTime))) + " / " + toDisplayString$1(unref(formatTime)(unref(duration2))), 1)
+          createBaseVNode("span", _hoisted_11$I, toDisplayString$1(unref(formatTime)(unref(currentTime))) + " / " + toDisplayString$1(unref(formatTime)(unref(duration2))), 1)
         ])
       ], 32);
     };
   }
 });
+function useNumWidget(node, name, fallback) {
+  const local = /* @__PURE__ */ ref(readWidgetNum(node, name, fallback));
+  bindWidgetCallback(node, name, (value) => {
+    const v2 = Number(value);
+    if (Number.isFinite(v2) && v2 !== local.value) local.value = v2;
+  });
+  onNodeConfigure(node, () => {
+    local.value = readWidgetNum(node, name, local.value);
+  });
+  return computed({
+    get: () => local.value,
+    set: (v2) => {
+      if (!Number.isFinite(v2)) return;
+      local.value = v2;
+      writeWidget(node, name, v2);
+    }
+  });
+}
+function useStrWidget(node, name, fallback) {
+  const local = /* @__PURE__ */ ref(readWidgetStr(node, name, fallback));
+  bindWidgetCallback(node, name, (value) => {
+    const v2 = String(value ?? "");
+    if (v2 !== local.value) local.value = v2;
+  });
+  onNodeConfigure(node, () => {
+    local.value = readWidgetStr(node, name, local.value);
+  });
+  return computed({
+    get: () => local.value,
+    set: (v2) => {
+      local.value = v2;
+      writeWidget(node, name, v2);
+    }
+  });
+}
+function useBoolWidget(node, name, fallback) {
+  var _a3;
+  const local = /* @__PURE__ */ ref(Boolean(((_a3 = getWidget(node, name)) == null ? void 0 : _a3.value) ?? fallback));
+  bindWidgetCallback(node, name, (value) => {
+    const v2 = Boolean(value);
+    if (v2 !== local.value) local.value = v2;
+  });
+  onNodeConfigure(node, () => {
+    var _a4;
+    local.value = Boolean(((_a4 = getWidget(node, name)) == null ? void 0 : _a4.value) ?? local.value);
+  });
+  return computed({
+    get: () => local.value,
+    set: (v2) => {
+      local.value = v2;
+      writeWidget(node, name, v2);
+    }
+  });
+}
 const _hoisted_1$37 = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
 const _hoisted_2$1P = { class: "ctv:min-w-9 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_3$1N = ["value"];
@@ -116794,17 +119619,17 @@ const _hoisted_4$1H = { class: "ctv:w-11 ctv:text-right ctv:font-mono ctv:font-b
 const _hoisted_5$1E = { class: "ctv:flex ctv:items-center ctv:gap-1" };
 const _hoisted_6$1u = ["onClick"];
 const _hoisted_7$1f = ["title"];
-const _hoisted_8$10 = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs ctv:text-muted-foreground ctv:cursor-pointer" };
-const _hoisted_9$W = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_10$N = {
+const _hoisted_8$$ = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs ctv:text-muted-foreground ctv:cursor-pointer" };
+const _hoisted_9$V = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_10$M = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_11$I = {
+const _hoisted_11$H = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_12$C = {
+const _hoisted_12$B = {
   key: 2,
   class: "ctv:text-success-background"
 };
@@ -116887,7 +119712,7 @@ const _sfc_main$1X = /* @__PURE__ */ defineComponent({
                 createTextVNode(" " + toDisplayString$1(_ctx.$t("videoSpeed.reverse")), 1)
               ], 10, _hoisted_7$1f)
             ]),
-            createBaseVNode("label", _hoisted_8$10, [
+            createBaseVNode("label", _hoisted_8$$, [
               withDirectives(createBaseVNode("input", {
                 type: "checkbox",
                 "onUpdate:modelValue": _cache2[2] || (_cache2[2] = ($event) => /* @__PURE__ */ isRef(pitchCompensate) ? pitchCompensate.value = $event : null),
@@ -116898,8 +119723,8 @@ const _sfc_main$1X = /* @__PURE__ */ defineComponent({
               _cache2[7] || (_cache2[7] = createTextVNode(" Keep pitch ", -1))
             ])
           ], 32),
-          createBaseVNode("div", _hoisted_9$W, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_10$N, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_11$I, toDisplayString$1(_ctx.$t("videoSpeed.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_12$C, toDisplayString$1(_ctx.$t("videoSpeed.done")), 1)) : unref(reverse) ? (openBlock(), createElementBlock("span", _hoisted_13$w, toDisplayString$1(_ctx.$t("videoSpeed.reverseNote")), 1)) : (openBlock(), createElementBlock("span", _hoisted_14$t, toDisplayString$1(_ctx.$t("videoSpeed.adjustThenRun")), 1))
+          createBaseVNode("div", _hoisted_9$V, [
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_10$M, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_11$H, toDisplayString$1(_ctx.$t("videoSpeed.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_12$B, toDisplayString$1(_ctx.$t("videoSpeed.done")), 1)) : unref(reverse) ? (openBlock(), createElementBlock("span", _hoisted_13$w, toDisplayString$1(_ctx.$t("videoSpeed.reverseNote")), 1)) : (openBlock(), createElementBlock("span", _hoisted_14$t, toDisplayString$1(_ctx.$t("videoSpeed.adjustThenRun")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
@@ -116975,15 +119800,15 @@ const _hoisted_7$1e = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_8$$ = {
+const _hoisted_8$_ = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_9$V = {
+const _hoisted_9$U = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_10$M = {
+const _hoisted_10$L = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
@@ -117073,7 +119898,7 @@ const _sfc_main$1W = /* @__PURE__ */ defineComponent({
             createBaseVNode("span", _hoisted_5$1D, toDisplayString$1(unref(rotateDeg)) + "°", 1)
           ], 32),
           createBaseVNode("div", _hoisted_6$1t, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_7$1e, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_8$$, toDisplayString$1(_ctx.$t("videoRotate.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_9$V, toDisplayString$1(_ctx.$t("videoRotate.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_10$M, toDisplayString$1(_ctx.$t("videoRotate.adjustThenRun")), 1))
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_7$1e, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_8$_, toDisplayString$1(_ctx.$t("videoRotate.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_9$U, toDisplayString$1(_ctx.$t("videoRotate.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_10$L, toDisplayString$1(_ctx.$t("videoRotate.adjustThenRun")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
@@ -117172,11 +119997,11 @@ const _hoisted_4$1E = ["value"];
 const _hoisted_5$1B = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-[11px]" };
 const _hoisted_6$1r = { class: "ctv:flex-1 ctv:flex ctv:items-center ctv:gap-1 ctv:py-0.5 ctv:px-1 ctv:rounded ctv:bg-secondary-background ctv:border ctv:border-border-subtle" };
 const _hoisted_7$1d = { class: "ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground" };
-const _hoisted_8$_ = ["value"];
-const _hoisted_9$U = { class: "ctv:flex-1 ctv:flex ctv:items-center ctv:gap-1 ctv:py-0.5 ctv:px-1 ctv:rounded ctv:bg-secondary-background ctv:border ctv:border-border-subtle" };
-const _hoisted_10$L = { class: "ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground" };
-const _hoisted_11$H = ["value"];
-const _hoisted_12$B = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_8$Z = ["value"];
+const _hoisted_9$T = { class: "ctv:flex-1 ctv:flex ctv:items-center ctv:gap-1 ctv:py-0.5 ctv:px-1 ctv:rounded ctv:bg-secondary-background ctv:border ctv:border-border-subtle" };
+const _hoisted_10$K = { class: "ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground" };
+const _hoisted_11$G = ["value"];
+const _hoisted_12$A = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
 const _hoisted_13$v = {
   key: 0,
   class: "ctv:text-muted-foreground"
@@ -117295,11 +120120,11 @@ const _sfc_main$1U = /* @__PURE__ */ defineComponent({
                   class: "ctv-num-input ctv:w-full ctv:border-0 ctv:outline-none ctv:bg-transparent ctv:text-[11px] ctv:font-mono ctv:text-base-foreground",
                   value: fadeIn.value,
                   onChange: _cache2[2] || (_cache2[2] = (e) => setFade("fade_in_s", e.target.value))
-                }, null, 40, _hoisted_8$_),
+                }, null, 40, _hoisted_8$Z),
                 _cache2[8] || (_cache2[8] = createBaseVNode("span", { class: "ctv:text-2xs ctv:text-muted-foreground" }, "s", -1))
               ]),
-              createBaseVNode("label", _hoisted_9$U, [
-                createBaseVNode("span", _hoisted_10$L, toDisplayString$1(_ctx.$t("videoVolume.fadeOut")), 1),
+              createBaseVNode("label", _hoisted_9$T, [
+                createBaseVNode("span", _hoisted_10$K, toDisplayString$1(_ctx.$t("videoVolume.fadeOut")), 1),
                 createBaseVNode("input", {
                   type: "number",
                   min: "0",
@@ -117308,12 +120133,12 @@ const _sfc_main$1U = /* @__PURE__ */ defineComponent({
                   class: "ctv-num-input ctv:w-full ctv:border-0 ctv:outline-none ctv:bg-transparent ctv:text-[11px] ctv:font-mono ctv:text-base-foreground",
                   value: fadeOut.value,
                   onChange: _cache2[3] || (_cache2[3] = (e) => setFade("fade_out_s", e.target.value))
-                }, null, 40, _hoisted_11$H),
+                }, null, 40, _hoisted_11$G),
                 _cache2[9] || (_cache2[9] = createBaseVNode("span", { class: "ctv:text-2xs ctv:text-muted-foreground" }, "s", -1))
               ])
             ])
           ], 32),
-          createBaseVNode("div", _hoisted_12$B, [
+          createBaseVNode("div", _hoisted_12$A, [
             !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_13$v, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_14$s, toDisplayString$1(_ctx.$t("videoVolume.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_15$n, toDisplayString$1(_ctx.$t("videoVolume.done")), 1)) : volume.value > 1 ? (openBlock(), createElementBlock("span", _hoisted_16$j, toDisplayString$1(_ctx.$t("videoVolume.previewCapNote")), 1)) : (openBlock(), createElementBlock("span", _hoisted_17$h, toDisplayString$1(_ctx.$t("videoVolume.adjustThenRun")), 1))
           ]),
           createVNode(StageCard, {
@@ -117341,14 +120166,14 @@ const _hoisted_4$1D = {
 const _hoisted_5$1A = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-[11px]" };
 const _hoisted_6$1q = ["onClick"];
 const _hoisted_7$1c = { class: "ctv:flex-1 ctv:flex ctv:items-center ctv:gap-1 ctv:py-0.5 ctv:px-1 ctv:rounded ctv:bg-secondary-background ctv:border ctv:border-border-subtle" };
-const _hoisted_8$Z = { class: "ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground" };
-const _hoisted_9$T = ["value"];
-const _hoisted_10$K = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_11$G = {
+const _hoisted_8$Y = { class: "ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground" };
+const _hoisted_9$S = ["value"];
+const _hoisted_10$J = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_11$F = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_12$A = {
+const _hoisted_12$z = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
@@ -117436,7 +120261,7 @@ const _sfc_main$1T = /* @__PURE__ */ defineComponent({
                 }, toDisplayString$1(_ctx.$t(`videoMux.${m2}`)), 11, _hoisted_6$1q);
               }), 64)),
               createBaseVNode("label", _hoisted_7$1c, [
-                createBaseVNode("span", _hoisted_8$Z, toDisplayString$1(_ctx.$t("videoMux.offset")), 1),
+                createBaseVNode("span", _hoisted_8$Y, toDisplayString$1(_ctx.$t("videoMux.offset")), 1),
                 createBaseVNode("input", {
                   type: "number",
                   min: "-600",
@@ -117445,13 +120270,13 @@ const _sfc_main$1T = /* @__PURE__ */ defineComponent({
                   class: "ctv-num-input ctv:w-full ctv:border-0 ctv:outline-none ctv:bg-transparent ctv:text-[11px] ctv:font-mono ctv:text-base-foreground",
                   value: offset2.value,
                   onChange: _cache2[0] || (_cache2[0] = (e) => setOffset(e.target.value))
-                }, null, 40, _hoisted_9$T),
+                }, null, 40, _hoisted_9$S),
                 _cache2[4] || (_cache2[4] = createBaseVNode("span", { class: "ctv:text-2xs ctv:text-muted-foreground" }, "s", -1))
               ])
             ])
           ], 32),
-          createBaseVNode("div", _hoisted_10$K, [
-            !sourceVideoUrl.value || !sourceAudioUrl.value ? (openBlock(), createElementBlock("span", _hoisted_11$G, toDisplayString$1(_ctx.$t("videoMux.needBoth")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_12$A, toDisplayString$1(_ctx.$t("videoMux.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_13$u, toDisplayString$1(_ctx.$t("videoMux.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_14$r, toDisplayString$1(_ctx.$t("videoMux.adjustThenRun")), 1))
+          createBaseVNode("div", _hoisted_10$J, [
+            !sourceVideoUrl.value || !sourceAudioUrl.value ? (openBlock(), createElementBlock("span", _hoisted_11$F, toDisplayString$1(_ctx.$t("videoMux.needBoth")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_12$z, toDisplayString$1(_ctx.$t("videoMux.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_13$u, toDisplayString$1(_ctx.$t("videoMux.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_14$r, toDisplayString$1(_ctx.$t("videoMux.adjustThenRun")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
@@ -117547,11 +120372,11 @@ const _hoisted_6$1p = {
   class: "ctv:absolute ctv:inset-0 ctv:z-10 ctv:flex ctv:items-center ctv:justify-center ctv:text-xs ctv:bg-black/80 ctv:text-white/85 ctv:pointer-events-none"
 };
 const _hoisted_7$1b = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
-const _hoisted_8$Y = ["disabled", "title"];
-const _hoisted_9$S = { class: "ctv:font-mono ctv:text-muted-foreground" };
-const _hoisted_10$J = { class: "ctv:ml-auto ctv:font-mono ctv:font-bold ctv:text-primary-background" };
-const _hoisted_11$F = { class: "ctv:absolute ctv:inset-0 ctv:flex ctv:pointer-events-none ctv:overflow-hidden ctv:rounded" };
-const _hoisted_12$z = ["src"];
+const _hoisted_8$X = ["disabled", "title"];
+const _hoisted_9$R = { class: "ctv:font-mono ctv:text-muted-foreground" };
+const _hoisted_10$I = { class: "ctv:ml-auto ctv:font-mono ctv:font-bold ctv:text-primary-background" };
+const _hoisted_11$E = { class: "ctv:absolute ctv:inset-0 ctv:flex ctv:pointer-events-none ctv:overflow-hidden ctv:rounded" };
+const _hoisted_12$y = ["src"];
 const _hoisted_13$t = ["title", "onClick"];
 const _hoisted_14$q = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-[11px]" };
 const _hoisted_15$m = ["disabled"];
@@ -117664,9 +120489,9 @@ const _sfc_main$1S = /* @__PURE__ */ defineComponent({
               createBaseVNode("i", {
                 class: normalizeClass(["pi", unref(previewing) ? "pi-pause" : "pi-play"])
               }, null, 2)
-            ], 8, _hoisted_8$Y),
-            createBaseVNode("span", _hoisted_9$S, toDisplayString$1(unref(formatTime)(unref(currentTime))) + " / " + toDisplayString$1(unref(formatTime)(unref(duration2))), 1),
-            createBaseVNode("span", _hoisted_10$J, toDisplayString$1(_ctx.$t("videoFrames.marks", { n: unref(marks).length })), 1)
+            ], 8, _hoisted_8$X),
+            createBaseVNode("span", _hoisted_9$R, toDisplayString$1(unref(formatTime)(unref(currentTime))) + " / " + toDisplayString$1(unref(formatTime)(unref(duration2))), 1),
+            createBaseVNode("span", _hoisted_10$I, toDisplayString$1(_ctx.$t("videoFrames.marks", { n: unref(marks).length })), 1)
           ]),
           createBaseVNode("div", {
             ref_key: "trackEl",
@@ -117680,7 +120505,7 @@ const _sfc_main$1S = /* @__PURE__ */ defineComponent({
             onPointercancel: _cache2[6] || (_cache2[6] = //@ts-ignore
             (...args) => unref(onDragEnd) && unref(onDragEnd)(...args))
           }, [
-            createBaseVNode("div", _hoisted_11$F, [
+            createBaseVNode("div", _hoisted_11$E, [
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(thumbnails), (thumb, i) => {
                 return openBlock(), createElementBlock("img", {
                   key: i,
@@ -117688,7 +120513,7 @@ const _sfc_main$1S = /* @__PURE__ */ defineComponent({
                   class: "ctv:h-full ctv:object-cover ctv:min-w-0",
                   style: normalizeStyle({ width: `${100 / unref(THUMB_COUNT)}%` }),
                   draggable: "false"
-                }, null, 12, _hoisted_12$z);
+                }, null, 12, _hoisted_12$y);
               }), 128))
             ]),
             unref(duration2) > 0 ? (openBlock(), createElementBlock(Fragment$1, { key: 0 }, [
@@ -117839,14 +120664,14 @@ const _hoisted_4$1B = { class: "ctv:flex-1 ctv:flex ctv:items-center ctv:gap-1 c
 const _hoisted_5$1y = ["value"];
 const _hoisted_6$1o = ["title"];
 const _hoisted_7$1a = { class: "ctv:flex ctv:items-center ctv:gap-1" };
-const _hoisted_8$X = ["disabled", "onClick"];
-const _hoisted_9$R = ["disabled"];
-const _hoisted_10$I = {
+const _hoisted_8$W = ["disabled", "onClick"];
+const _hoisted_9$Q = ["disabled"];
+const _hoisted_10$H = {
   key: 0,
   class: "ctv:text-3xs ctv:text-center ctv:font-mono ctv:text-muted-foreground"
 };
-const _hoisted_11$E = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_12$y = {
+const _hoisted_11$D = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_12$x = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
@@ -117955,7 +120780,7 @@ const _sfc_main$1R = /* @__PURE__ */ defineComponent({
                   class: "ctv:flex-1 ctv:py-0.5 ctv:text-2xs ctv:rounded ctv:cursor-pointer ctv:border ctv:transition-colors ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background ctv:disabled:opacity-40 ctv:disabled:cursor-default",
                   disabled: unref(srcW) <= 0,
                   onClick: ($event) => unref(applyPreset)(p2.short)
-                }, toDisplayString$1(p2.label), 9, _hoisted_8$X);
+                }, toDisplayString$1(p2.label), 9, _hoisted_8$W);
               }), 64)),
               createBaseVNode("button", {
                 type: "button",
@@ -117963,12 +120788,12 @@ const _sfc_main$1R = /* @__PURE__ */ defineComponent({
                 disabled: unref(srcW) <= 0,
                 onClick: _cache2[3] || (_cache2[3] = //@ts-ignore
                 (...args) => unref(applySource) && unref(applySource)(...args))
-              }, toDisplayString$1(_ctx.$t("videoResize.source")), 9, _hoisted_9$R)
+              }, toDisplayString$1(_ctx.$t("videoResize.source")), 9, _hoisted_9$Q)
             ]),
-            unref(srcW) > 0 ? (openBlock(), createElementBlock("div", _hoisted_10$I, toDisplayString$1(unref(srcW)) + "×" + toDisplayString$1(unref(srcH)) + " → " + toDisplayString$1(unref(targetLabel)), 1)) : createCommentVNode("", true)
+            unref(srcW) > 0 ? (openBlock(), createElementBlock("div", _hoisted_10$H, toDisplayString$1(unref(srcW)) + "×" + toDisplayString$1(unref(srcH)) + " → " + toDisplayString$1(unref(targetLabel)), 1)) : createCommentVNode("", true)
           ], 32),
-          createBaseVNode("div", _hoisted_11$E, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_12$y, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_13$s, toDisplayString$1(_ctx.$t("videoResize.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_14$p, toDisplayString$1(_ctx.$t("videoResize.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_15$l, toDisplayString$1(_ctx.$t("videoResize.adjustThenRun")), 1))
+          createBaseVNode("div", _hoisted_11$D, [
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_12$x, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_13$s, toDisplayString$1(_ctx.$t("videoResize.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_14$p, toDisplayString$1(_ctx.$t("videoResize.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_15$l, toDisplayString$1(_ctx.$t("videoResize.adjustThenRun")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
@@ -118048,20 +120873,20 @@ const _hoisted_7$19 = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_8$W = {
+const _hoisted_8$V = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_9$Q = {
+const _hoisted_9$P = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_10$H = {
+const _hoisted_10$G = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_11$D = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
-const _hoisted_12$x = { class: "ctv:grid ctv:grid-cols-[64px_1fr_48px] ctv:items-center ctv:gap-1.5 ctv:text-xs" };
+const _hoisted_11$C = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
+const _hoisted_12$w = { class: "ctv:grid ctv:grid-cols-[64px_1fr_48px] ctv:items-center ctv:gap-1.5 ctv:text-xs" };
 const _hoisted_13$r = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wider ctv:text-muted-foreground" };
 const _hoisted_14$o = ["value"];
 const _hoisted_15$k = { class: "ctv:text-right ctv:text-base-foreground ctv:font-mono" };
@@ -118115,10 +120940,10 @@ const _sfc_main$1Q = /* @__PURE__ */ defineComponent({
           }, null, 44, _hoisted_5$1x))
         ]),
         createBaseVNode("div", _hoisted_6$1n, [
-          !sourceImageUrl.value ? (openBlock(), createElementBlock("span", _hoisted_7$19, toDisplayString$1(_ctx.$t("imageCrop.noInputImage")), 1)) : unref(computing) ? (openBlock(), createElementBlock("span", _hoisted_8$W, toDisplayString$1(_ctx.$t("rotate.applying")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_9$Q, toDisplayString$1(_ctx.$t("rotate.applied")), 1)) : (openBlock(), createElementBlock("span", _hoisted_10$H, toDisplayString$1(_ctx.$t("rotate.adjustToApply")), 1))
+          !sourceImageUrl.value ? (openBlock(), createElementBlock("span", _hoisted_7$19, toDisplayString$1(_ctx.$t("imageCrop.noInputImage")), 1)) : unref(computing) ? (openBlock(), createElementBlock("span", _hoisted_8$V, toDisplayString$1(_ctx.$t("rotate.applying")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_9$P, toDisplayString$1(_ctx.$t("rotate.applied")), 1)) : (openBlock(), createElementBlock("span", _hoisted_10$G, toDisplayString$1(_ctx.$t("rotate.adjustToApply")), 1))
         ]),
-        createBaseVNode("div", _hoisted_11$D, [
-          createBaseVNode("div", _hoisted_12$x, [
+        createBaseVNode("div", _hoisted_11$C, [
+          createBaseVNode("div", _hoisted_12$w, [
             createBaseVNode("span", _hoisted_13$r, toDisplayString$1(_ctx.$t("rotate.angle")), 1),
             createBaseVNode("input", {
               type: "range",
@@ -118167,20 +120992,20 @@ const _hoisted_7$18 = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_8$V = {
+const _hoisted_8$U = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_9$P = {
+const _hoisted_9$O = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_10$G = {
+const _hoisted_10$F = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_11$C = { class: "ctv:flex ctv:gap-1.5" };
-const _hoisted_12$w = ["title"];
+const _hoisted_11$B = { class: "ctv:flex ctv:gap-1.5" };
+const _hoisted_12$v = ["title"];
 const _hoisted_13$q = ["title"];
 const _sfc_main$1P = /* @__PURE__ */ defineComponent({
   __name: "MirrorStageCard",
@@ -118228,9 +121053,9 @@ const _sfc_main$1P = /* @__PURE__ */ defineComponent({
           }, null, 44, _hoisted_5$1w))
         ]),
         createBaseVNode("div", _hoisted_6$1m, [
-          !sourceImageUrl.value ? (openBlock(), createElementBlock("span", _hoisted_7$18, toDisplayString$1(_ctx.$t("imageCrop.noInputImage")), 1)) : unref(computing) ? (openBlock(), createElementBlock("span", _hoisted_8$V, toDisplayString$1(_ctx.$t("mirror.applying")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_9$P, toDisplayString$1(_ctx.$t("mirror.applied")), 1)) : (openBlock(), createElementBlock("span", _hoisted_10$G, toDisplayString$1(_ctx.$t("mirror.adjustToApply")), 1))
+          !sourceImageUrl.value ? (openBlock(), createElementBlock("span", _hoisted_7$18, toDisplayString$1(_ctx.$t("imageCrop.noInputImage")), 1)) : unref(computing) ? (openBlock(), createElementBlock("span", _hoisted_8$U, toDisplayString$1(_ctx.$t("mirror.applying")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_9$O, toDisplayString$1(_ctx.$t("mirror.applied")), 1)) : (openBlock(), createElementBlock("span", _hoisted_10$F, toDisplayString$1(_ctx.$t("mirror.adjustToApply")), 1))
         ]),
-        createBaseVNode("div", _hoisted_11$C, [
+        createBaseVNode("div", _hoisted_11$B, [
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(["ctv:flex-1 ctv:flex ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:py-1.5 ctv:px-2.5 ctv:rounded ctv:text-xs ctv:border ctv:cursor-pointer", unref(flipH) ? "ctv:bg-secondary-background-selected ctv:border-primary-background ctv:text-primary-background ctv:font-semibold" : "ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:bg-secondary-background-hover"]),
@@ -118239,7 +121064,7 @@ const _sfc_main$1P = /* @__PURE__ */ defineComponent({
           }, [
             _cache2[4] || (_cache2[4] = createBaseVNode("i", { class: "pi pi-arrow-right-arrow-left ctv:text-sm ctv:leading-none" }, null, -1)),
             createTextVNode(" " + toDisplayString$1(_ctx.$t("mirror.horizontal")), 1)
-          ], 10, _hoisted_12$w),
+          ], 10, _hoisted_12$v),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(["ctv:flex-1 ctv:flex ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:py-1.5 ctv:px-2.5 ctv:rounded ctv:text-xs ctv:border ctv:cursor-pointer", unref(flipV) ? "ctv:bg-secondary-background-selected ctv:border-primary-background ctv:text-primary-background ctv:font-semibold" : "ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:bg-secondary-background-hover"]),
@@ -118930,7 +121755,7 @@ function useColorGradeState(node, opts = {}) {
     const v2 = values.value[key];
     return typeof v2 === "number" ? v2 : 0;
   }
-  function bool(key) {
+  function bool2(key) {
     return Boolean(values.value[key]);
   }
   const activeCurveKey = /* @__PURE__ */ ref("");
@@ -119013,7 +121838,7 @@ function useColorGradeState(node, opts = {}) {
     scalarUniforms,
     curveUniforms,
     num: num2,
-    bool,
+    bool: bool2,
     activeCurveKey,
     activeCurveUniform,
     activeCurvePoints,
@@ -119025,419 +121850,6 @@ function useColorGradeState(node, opts = {}) {
     commitNow,
     onEffectChange,
     resetEffect
-  };
-}
-function detectPassCount(source) {
-  const match = source.match(/#pragma\s+passes\s+(\d+)/);
-  if (match) return Math.max(1, parseInt(match[1], 10));
-  return 1;
-}
-const VERTEX_SHADER_SOURCE$1 = `#version 300 es
-out vec2 v_texCoord;
-void main() {
-    vec2 verts[3] = vec2[](vec2(-1, -1), vec2(3, -1), vec2(-1, 3));
-    v_texCoord = verts[gl_VertexID] * 0.5 + 0.5;
-    gl_Position = vec4(verts[gl_VertexID], 0, 1);
-}
-`;
-const MAX_PASSES = 32;
-const DEFAULT_CONFIG = {
-  maxInputs: 5,
-  maxFloatUniforms: 20,
-  maxIntUniforms: 20,
-  maxBoolUniforms: 10,
-  maxCurves: 4
-};
-function compileShader(gl, type, source) {
-  const shader = gl.createShader(type);
-  if (!shader) throw new Error("Failed to create shader");
-  gl.shaderSource(shader, source);
-  gl.compileShader(shader);
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    const log2 = gl.getShaderInfoLog(shader) ?? "Compilation failed";
-    gl.deleteShader(shader);
-    throw new Error(log2);
-  }
-  return shader;
-}
-function useGLSLRenderer(config2 = DEFAULT_CONFIG) {
-  const {
-    maxInputs,
-    maxFloatUniforms,
-    maxIntUniforms,
-    maxBoolUniforms,
-    maxCurves
-  } = config2;
-  const uniformNames = [
-    "u_resolution",
-    "u_pass",
-    ...Array.from({ length: maxInputs }, (_2, i) => `u_image${i}`),
-    ...Array.from({ length: maxFloatUniforms }, (_2, i) => `u_float${i}`),
-    ...Array.from({ length: maxIntUniforms }, (_2, i) => `u_int${i}`),
-    ...Array.from({ length: maxBoolUniforms }, (_2, i) => `u_bool${i}`),
-    ...Array.from({ length: maxCurves }, (_2, i) => `u_curve${i}`)
-  ];
-  let canvas = null;
-  let gl = null;
-  let vertexShader = null;
-  let program = null;
-  let fragmentShader = null;
-  let pingPongFBOs = null;
-  let pingPongTextures = null;
-  let fallbackTexture = null;
-  const inputTextures = Array.from({
-    length: maxInputs
-  }).fill(null);
-  const curveTextures = Array.from({
-    length: maxCurves
-  }).fill(null);
-  const uniformLocations = /* @__PURE__ */ new Map();
-  let passCount = 1;
-  let disposed = false;
-  let lastCompiledSource = null;
-  function initPingPongFBOs(ctx, width, height) {
-    const fbos = [];
-    const textures = [];
-    try {
-      for (let i = 0; i < 2; i++) {
-        const tex = ctx.createTexture();
-        if (!tex) throw new Error("Failed to create ping-pong texture");
-        ctx.bindTexture(ctx.TEXTURE_2D, tex);
-        ctx.texImage2D(
-          ctx.TEXTURE_2D,
-          0,
-          ctx.RGBA16F,
-          width,
-          height,
-          0,
-          ctx.RGBA,
-          ctx.HALF_FLOAT,
-          null
-        );
-        ctx.texParameteri(ctx.TEXTURE_2D, ctx.TEXTURE_MIN_FILTER, ctx.LINEAR);
-        ctx.texParameteri(ctx.TEXTURE_2D, ctx.TEXTURE_MAG_FILTER, ctx.LINEAR);
-        ctx.texParameteri(ctx.TEXTURE_2D, ctx.TEXTURE_WRAP_S, ctx.CLAMP_TO_EDGE);
-        ctx.texParameteri(ctx.TEXTURE_2D, ctx.TEXTURE_WRAP_T, ctx.CLAMP_TO_EDGE);
-        const fbo = ctx.createFramebuffer();
-        if (!fbo) throw new Error("Failed to create ping-pong framebuffer");
-        ctx.bindFramebuffer(ctx.FRAMEBUFFER, fbo);
-        ctx.framebufferTexture2D(
-          ctx.FRAMEBUFFER,
-          ctx.COLOR_ATTACHMENT0,
-          ctx.TEXTURE_2D,
-          tex,
-          0
-        );
-        const status = ctx.checkFramebufferStatus(ctx.FRAMEBUFFER);
-        if (status !== ctx.FRAMEBUFFER_COMPLETE)
-          throw new Error(`Ping-pong framebuffer incomplete: ${status}`);
-        fbos.push(fbo);
-        textures.push(tex);
-      }
-    } catch (error2) {
-      for (const fbo of fbos) ctx.deleteFramebuffer(fbo);
-      for (const tex of textures) ctx.deleteTexture(tex);
-      ctx.bindFramebuffer(ctx.FRAMEBUFFER, null);
-      ctx.bindTexture(ctx.TEXTURE_2D, null);
-      throw error2;
-    }
-    ctx.bindFramebuffer(ctx.FRAMEBUFFER, null);
-    ctx.bindTexture(ctx.TEXTURE_2D, null);
-    pingPongFBOs = fbos;
-    pingPongTextures = textures;
-  }
-  function destroyPingPongFBOs() {
-    if (!gl) return;
-    if (pingPongFBOs) {
-      for (const fbo of pingPongFBOs) gl.deleteFramebuffer(fbo);
-      pingPongFBOs = null;
-    }
-    if (pingPongTextures) {
-      for (const tex of pingPongTextures) gl.deleteTexture(tex);
-      pingPongTextures = null;
-    }
-  }
-  function cacheUniformLocations() {
-    if (!program || !gl) return;
-    for (const name of uniformNames) {
-      uniformLocations.set(name, gl.getUniformLocation(program, name));
-    }
-  }
-  function getFallbackTexture() {
-    if (!gl) throw new Error("Renderer not initialized");
-    if (!fallbackTexture) {
-      const tex = gl.createTexture();
-      if (!tex) throw new Error("Failed to create fallback texture");
-      fallbackTexture = tex;
-      gl.bindTexture(gl.TEXTURE_2D, fallbackTexture);
-      gl.texImage2D(
-        gl.TEXTURE_2D,
-        0,
-        gl.RGBA,
-        1,
-        1,
-        0,
-        gl.RGBA,
-        gl.UNSIGNED_BYTE,
-        new Uint8Array([0, 0, 0, 255])
-      );
-    }
-    return fallbackTexture;
-  }
-  function init(width, height) {
-    if (disposed) return false;
-    try {
-      canvas = new OffscreenCanvas(width, height);
-      const ctx = canvas.getContext("webgl2", {
-        alpha: true,
-        premultipliedAlpha: false,
-        preserveDrawingBuffer: true
-      });
-      if (!ctx) return false;
-      gl = ctx;
-      if (!gl.getExtension("EXT_color_buffer_float")) return false;
-      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-      vertexShader = compileShader(gl, gl.VERTEX_SHADER, VERTEX_SHADER_SOURCE$1);
-      initPingPongFBOs(gl, width, height);
-      return true;
-    } catch {
-      dispose();
-      return false;
-    }
-  }
-  function compileFragment(source) {
-    if (disposed || !gl) return { success: false, log: "Engine disposed" };
-    passCount = Math.min(detectPassCount(source), MAX_PASSES);
-    if (source === lastCompiledSource && program) {
-      return { success: true, log: "" };
-    }
-    lastCompiledSource = source;
-    if (fragmentShader) {
-      gl.deleteShader(fragmentShader);
-      fragmentShader = null;
-    }
-    if (program) {
-      gl.deleteProgram(program);
-      program = null;
-    }
-    uniformLocations.clear();
-    try {
-      fragmentShader = compileShader(gl, gl.FRAGMENT_SHADER, source);
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : String(e);
-      return { success: false, log: msg };
-    }
-    const prog = gl.createProgram();
-    if (!prog) return { success: false, log: "Failed to create program" };
-    gl.attachShader(prog, vertexShader);
-    gl.attachShader(prog, fragmentShader);
-    gl.linkProgram(prog);
-    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
-      const log2 = gl.getProgramInfoLog(prog) ?? "Link failed";
-      gl.deleteProgram(prog);
-      return { success: false, log: log2 };
-    }
-    program = prog;
-    cacheUniformLocations();
-    return { success: true, log: "" };
-  }
-  function setResolution(width, height) {
-    if (disposed || !gl || !canvas) return;
-    if (canvas.width !== width || canvas.height !== height) {
-      canvas.width = width;
-      canvas.height = height;
-      gl.viewport(0, 0, width, height);
-      destroyPingPongFBOs();
-      initPingPongFBOs(gl, width, height);
-    }
-  }
-  function setFloatUniform(index, value) {
-    if (disposed || !program || !gl) return;
-    const loc = uniformLocations.get(`u_float${index}`);
-    if (loc != null) {
-      gl.useProgram(program);
-      gl.uniform1f(loc, value);
-    }
-  }
-  function setIntUniform(index, value) {
-    if (disposed || !program || !gl) return;
-    const loc = uniformLocations.get(`u_int${index}`);
-    if (loc != null) {
-      gl.useProgram(program);
-      gl.uniform1i(loc, value);
-    }
-  }
-  function setBoolUniform(index, value) {
-    if (disposed || !program || !gl) return;
-    const loc = uniformLocations.get(`u_bool${index}`);
-    if (loc != null) {
-      gl.useProgram(program);
-      gl.uniform1i(loc, value ? 1 : 0);
-    }
-  }
-  function bindCurveTexture(index, lut2) {
-    if (disposed || !gl) return;
-    if (index < 0 || index >= maxCurves) return;
-    if (curveTextures[index]) {
-      gl.deleteTexture(curveTextures[index]);
-      curveTextures[index] = null;
-    }
-    const texture = gl.createTexture();
-    if (!texture) return;
-    const unit = maxInputs + index;
-    gl.activeTexture(gl.TEXTURE0 + unit);
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
-    gl.texImage2D(
-      gl.TEXTURE_2D,
-      0,
-      gl.R16F,
-      lut2.length,
-      1,
-      0,
-      gl.RED,
-      gl.FLOAT,
-      lut2
-    );
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    curveTextures[index] = texture;
-  }
-  function bindInputImage(index, image) {
-    if (disposed || !gl) return;
-    if (index < 0 || index >= maxInputs) {
-      throw new Error(
-        `Input index ${index} out of range (max ${maxInputs - 1})`
-      );
-    }
-    if (inputTextures[index]) {
-      gl.deleteTexture(inputTextures[index]);
-      inputTextures[index] = null;
-    }
-    const texture = gl.createTexture();
-    if (!texture) return;
-    gl.activeTexture(gl.TEXTURE0 + index);
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-    inputTextures[index] = texture;
-  }
-  function render2() {
-    if (disposed || !program || !pingPongFBOs || !gl || !canvas) return;
-    gl.useProgram(program);
-    gl.disable(gl.BLEND);
-    const resLoc = uniformLocations.get("u_resolution");
-    if (resLoc != null) {
-      gl.uniform2f(resLoc, canvas.width, canvas.height);
-    }
-    for (let i = 0; i < maxInputs; i++) {
-      const loc = uniformLocations.get(`u_image${i}`);
-      if (loc != null) {
-        gl.activeTexture(gl.TEXTURE0 + i);
-        gl.bindTexture(gl.TEXTURE_2D, inputTextures[i] ?? getFallbackTexture());
-        gl.uniform1i(loc, i);
-      }
-    }
-    for (let i = 0; i < maxCurves; i++) {
-      const loc = uniformLocations.get(`u_curve${i}`);
-      if (loc != null && curveTextures[i]) {
-        const unit = maxInputs + i;
-        gl.activeTexture(gl.TEXTURE0 + unit);
-        gl.bindTexture(gl.TEXTURE_2D, curveTextures[i]);
-        gl.uniform1i(loc, unit);
-      }
-    }
-    for (let pass = 0; pass < passCount; pass++) {
-      const passLoc = uniformLocations.get("u_pass");
-      if (passLoc != null) gl.uniform1i(passLoc, pass);
-      const isLastPass = pass === passCount - 1;
-      const writeIdx = pass % 2;
-      if (isLastPass) {
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.drawBuffers([gl.BACK]);
-      } else {
-        gl.bindFramebuffer(gl.FRAMEBUFFER, pingPongFBOs[writeIdx]);
-        gl.drawBuffers([gl.COLOR_ATTACHMENT0]);
-      }
-      if (pass > 0) {
-        const sourceTexture = pingPongTextures[(pass - 1) % 2];
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, sourceTexture);
-      }
-      gl.clearColor(0, 0, 0, 0);
-      gl.clear(gl.COLOR_BUFFER_BIT);
-      gl.drawArrays(gl.TRIANGLES, 0, 3);
-    }
-  }
-  function readPixels() {
-    if (!gl || !canvas) throw new Error("Renderer not initialized");
-    const w2 = canvas.width;
-    const h2 = canvas.height;
-    const pixels = new Uint8ClampedArray(w2 * h2 * 4);
-    gl.pixelStorei(gl.PACK_ROW_LENGTH, 0);
-    gl.readPixels(0, 0, w2, h2, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
-    return new ImageData(pixels, w2, h2);
-  }
-  async function toBlob() {
-    if (!canvas) throw new Error("Renderer not initialized");
-    return canvas.convertToBlob({ type: "image/webp", quality: 0.92 });
-  }
-  function getCanvas2() {
-    return canvas;
-  }
-  function dispose() {
-    if (disposed) return;
-    disposed = true;
-    if (!gl) return;
-    for (const tex of inputTextures) {
-      if (tex) gl.deleteTexture(tex);
-    }
-    inputTextures.fill(null);
-    for (const tex of curveTextures) {
-      if (tex) gl.deleteTexture(tex);
-    }
-    curveTextures.fill(null);
-    if (fallbackTexture) {
-      gl.deleteTexture(fallbackTexture);
-      fallbackTexture = null;
-    }
-    destroyPingPongFBOs();
-    if (fragmentShader) {
-      gl.deleteShader(fragmentShader);
-      fragmentShader = null;
-    }
-    if (vertexShader) {
-      gl.deleteShader(vertexShader);
-      vertexShader = null;
-    }
-    if (program) {
-      gl.deleteProgram(program);
-      program = null;
-    }
-    uniformLocations.clear();
-    const ext = gl.getExtension("WEBGL_lose_context");
-    ext == null ? void 0 : ext.loseContext();
-  }
-  return {
-    init,
-    compileFragment,
-    setResolution,
-    setFloatUniform,
-    setIntUniform,
-    setBoolUniform,
-    bindCurveTexture,
-    bindInputImage,
-    render: render2,
-    readPixels,
-    toBlob,
-    getCanvas: getCanvas2,
-    dispose
   };
 }
 class GradeRenderer {
@@ -119567,23 +121979,23 @@ const _hoisted_7$17 = {
   key: 0,
   class: "ctv:text-error-background"
 };
-const _hoisted_8$U = {
+const _hoisted_8$T = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_9$O = {
+const _hoisted_9$N = {
   key: 2,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_10$F = {
+const _hoisted_10$E = {
   key: 3,
   class: "ctv:text-success-background"
 };
-const _hoisted_11$B = {
+const _hoisted_11$A = {
   key: 4,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_12$v = {
+const _hoisted_12$u = {
   key: 0,
   class: "ctv:flex ctv:flex-col ctv:gap-1"
 };
@@ -119613,7 +122025,7 @@ const _sfc_main$1M = /* @__PURE__ */ defineComponent({
       scalarUniforms,
       curveUniforms,
       num: num2,
-      bool,
+      bool: bool2,
       activeCurveKey,
       activeCurveUniform,
       activeCurvePoints,
@@ -119687,9 +122099,9 @@ const _sfc_main$1M = /* @__PURE__ */ defineComponent({
           ])
         ]),
         createBaseVNode("div", _hoisted_6$1l, [
-          unref(renderError) ? (openBlock(), createElementBlock("span", _hoisted_7$17, toDisplayString$1(unref(renderError)), 1)) : !sourceImageUrl.value ? (openBlock(), createElementBlock("span", _hoisted_8$U, toDisplayString$1(_ctx.$t("colorGrade.noInputImage")), 1)) : unref(computing) ? (openBlock(), createElementBlock("span", _hoisted_9$O, toDisplayString$1(_ctx.$t("colorGrade.applying")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_10$F, toDisplayString$1(_ctx.$t("colorGrade.applied")), 1)) : (openBlock(), createElementBlock("span", _hoisted_11$B, toDisplayString$1(_ctx.$t("colorGrade.adjustToApply")), 1))
+          unref(renderError) ? (openBlock(), createElementBlock("span", _hoisted_7$17, toDisplayString$1(unref(renderError)), 1)) : !sourceImageUrl.value ? (openBlock(), createElementBlock("span", _hoisted_8$T, toDisplayString$1(_ctx.$t("colorGrade.noInputImage")), 1)) : unref(computing) ? (openBlock(), createElementBlock("span", _hoisted_9$N, toDisplayString$1(_ctx.$t("colorGrade.applying")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_10$E, toDisplayString$1(_ctx.$t("colorGrade.applied")), 1)) : (openBlock(), createElementBlock("span", _hoisted_11$A, toDisplayString$1(_ctx.$t("colorGrade.adjustToApply")), 1))
         ]),
-        unref(curveUniforms).length ? (openBlock(), createElementBlock("div", _hoisted_12$v, [
+        unref(curveUniforms).length ? (openBlock(), createElementBlock("div", _hoisted_12$u, [
           createBaseVNode("div", _hoisted_13$p, [
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(curveUniforms), (cu) => {
               return openBlock(), createElementBlock("button", {
@@ -119729,7 +122141,7 @@ const _sfc_main$1M = /* @__PURE__ */ defineComponent({
                 "onUpdate:modelValue": (v2) => unref(setValueCommit)(u.key, Number(v2))
               }, null, 8, ["model-value", "options", "onUpdate:modelValue"])) : u.kind === "bool" ? (openBlock(), createBlock(_sfc_main$2w, {
                 key: 1,
-                "model-value": unref(bool)(u.key),
+                "model-value": unref(bool2)(u.key),
                 "onUpdate:modelValue": (v2) => unref(setValueCommit)(u.key, v2)
               }, null, 8, ["model-value", "onUpdate:modelValue"])) : u.gradient ? (openBlock(), createBlock(GradientSlider, {
                 key: 2,
@@ -122255,9 +124667,9 @@ const _hoisted_4$1w = {
 const _hoisted_5$1u = { class: "ctv:flex ctv:flex-wrap ctv:gap-1.5 ctv:items-center" };
 const _hoisted_6$1k = ["disabled"];
 const _hoisted_7$16 = { key: 0 };
-const _hoisted_8$T = { key: 1 };
-const _hoisted_9$N = ["title"];
-const _hoisted_10$E = {
+const _hoisted_8$S = { key: 1 };
+const _hoisted_9$M = ["title"];
+const _hoisted_10$D = {
   key: 1,
   class: "ctv:text-2xs ctv:py-0.5 ctv:px-1.5 ctv:rounded-lg ctv:tracking-wide ctv:bg-primary-background/20 ctv:text-primary-background"
 };
@@ -122351,7 +124763,7 @@ const _sfc_main$1L = /* @__PURE__ */ defineComponent({
               return (_a3 = fileInputEl.value) == null ? void 0 : _a3.click();
             })
           }, [
-            uploading.value ? (openBlock(), createElementBlock("span", _hoisted_7$16, toDisplayString$1(_ctx.$t("panorama.uploading")), 1)) : (openBlock(), createElementBlock("span", _hoisted_8$T, [
+            uploading.value ? (openBlock(), createElementBlock("span", _hoisted_7$16, toDisplayString$1(_ctx.$t("panorama.uploading")), 1)) : (openBlock(), createElementBlock("span", _hoisted_8$S, [
               _cache2[2] || (_cache2[2] = createBaseVNode("i", { class: "pi pi-upload" }, null, -1)),
               createTextVNode(" " + toDisplayString$1(_ctx.$t("panorama.upload")), 1)
             ]))
@@ -122365,8 +124777,8 @@ const _sfc_main$1L = /* @__PURE__ */ defineComponent({
           }, [
             _cache2[3] || (_cache2[3] = createBaseVNode("i", { class: "pi pi-times" }, null, -1)),
             createTextVNode(" " + toDisplayString$1(_ctx.$t("panorama.clearUpload")), 1)
-          ], 8, _hoisted_9$N)) : createCommentVNode("", true),
-          __props.manualSource ? (openBlock(), createElementBlock("span", _hoisted_10$E, toDisplayString$1(_ctx.$t("panorama.manualSourceBadge")), 1)) : createCommentVNode("", true)
+          ], 8, _hoisted_9$M)) : createCommentVNode("", true),
+          __props.manualSource ? (openBlock(), createElementBlock("span", _hoisted_10$D, toDisplayString$1(_ctx.$t("panorama.manualSourceBadge")), 1)) : createCommentVNode("", true)
         ])
       ]);
     };
@@ -122610,11 +125022,11 @@ const _hoisted_4$1v = { class: "ctv:text-xs ctv:text-center ctv:px-3" };
 const _hoisted_5$1t = { class: "ctv:flex ctv:items-center ctv:gap-2 ctv:flex-wrap" };
 const _hoisted_6$1j = { class: "ctv:flex ctv:items-center ctv:gap-1" };
 const _hoisted_7$15 = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_8$S = { class: "ctv-pano-select-wrap" };
-const _hoisted_9$M = ["value"];
-const _hoisted_10$D = { class: "ctv:flex ctv:items-center ctv:gap-1" };
-const _hoisted_11$A = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_12$u = { class: "ctv-pano-select-wrap" };
+const _hoisted_8$R = { class: "ctv-pano-select-wrap" };
+const _hoisted_9$L = ["value"];
+const _hoisted_10$C = { class: "ctv:flex ctv:items-center ctv:gap-1" };
+const _hoisted_11$z = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_12$t = { class: "ctv-pano-select-wrap" };
 const _hoisted_13$o = ["value"];
 const _hoisted_14$m = { class: "ctv:ml-auto ctv:text-2xs ctv:font-mono ctv:text-muted-foreground" };
 const _hoisted_15$i = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5" };
@@ -122682,7 +125094,7 @@ const _sfc_main$1J = /* @__PURE__ */ defineComponent({
         createBaseVNode("div", _hoisted_5$1t, [
           createBaseVNode("div", _hoisted_6$1j, [
             createBaseVNode("span", _hoisted_7$15, toDisplayString$1(_ctx.$t("panoramaView.aspect")), 1),
-            createBaseVNode("span", _hoisted_8$S, [
+            createBaseVNode("span", _hoisted_8$R, [
               withDirectives(createBaseVNode("select", {
                 "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => aspectRatio.value = $event),
                 class: "ctv-pano-select"
@@ -122691,7 +125103,7 @@ const _sfc_main$1J = /* @__PURE__ */ defineComponent({
                   return openBlock(), createElementBlock("option", {
                     key: opt,
                     value: opt
-                  }, toDisplayString$1(opt), 9, _hoisted_9$M);
+                  }, toDisplayString$1(opt), 9, _hoisted_9$L);
                 }), 128))
               ], 512), [
                 [vModelSelect, aspectRatio.value]
@@ -122699,9 +125111,9 @@ const _sfc_main$1J = /* @__PURE__ */ defineComponent({
               _cache2[3] || (_cache2[3] = createBaseVNode("i", { class: "pi pi-chevron-down ctv-pano-caret" }, null, -1))
             ])
           ]),
-          createBaseVNode("div", _hoisted_10$D, [
-            createBaseVNode("span", _hoisted_11$A, toDisplayString$1(_ctx.$t("panoramaView.resolution")), 1),
-            createBaseVNode("span", _hoisted_12$u, [
+          createBaseVNode("div", _hoisted_10$C, [
+            createBaseVNode("span", _hoisted_11$z, toDisplayString$1(_ctx.$t("panoramaView.resolution")), 1),
+            createBaseVNode("span", _hoisted_12$t, [
               withDirectives(createBaseVNode("select", {
                 "onUpdate:modelValue": _cache2[1] || (_cache2[1] = ($event) => resolution.value = $event),
                 class: "ctv-pano-select"
@@ -122855,11 +125267,11 @@ const _hoisted_6$1i = {
   class: "ctv:text-muted-foreground"
 };
 const _hoisted_7$14 = { class: "ctv:flex ctv:items-center ctv:gap-2 ctv:flex-wrap" };
-const _hoisted_8$R = { class: "ctv:flex ctv:items-center ctv:gap-1" };
-const _hoisted_9$L = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_10$C = { class: "ctv-pano-select-wrap" };
-const _hoisted_11$z = ["value"];
-const _hoisted_12$t = { class: "ctv:flex ctv:items-center ctv:gap-1" };
+const _hoisted_8$Q = { class: "ctv:flex ctv:items-center ctv:gap-1" };
+const _hoisted_9$K = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_10$B = { class: "ctv-pano-select-wrap" };
+const _hoisted_11$y = ["value"];
+const _hoisted_12$s = { class: "ctv:flex ctv:items-center ctv:gap-1" };
 const _hoisted_13$n = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_14$l = { class: "ctv-pano-select-wrap" };
 const _hoisted_15$h = ["value"];
@@ -122896,9 +125308,9 @@ const _sfc_main$1I = /* @__PURE__ */ defineComponent({
           !unref(panoramaUrl) ? (openBlock(), createElementBlock("span", _hoisted_3$1A, toDisplayString$1(_ctx.$t("panoramaView.connectPanorama")), 1)) : unref(capturing) ? (openBlock(), createElementBlock("span", _hoisted_4$1u, toDisplayString$1(_ctx.$t("panoramaView.capturingCount", { i: unref(captureProgress), n: viewCount2.value })), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_5$1s, toDisplayString$1(_ctx.$t("panoramaView.capturedN", { n: viewCount2.value })), 1)) : (openBlock(), createElementBlock("span", _hoisted_6$1i, toDisplayString$1(_ctx.$t("panoramaView.adjustCountToCapture")), 1))
         ]),
         createBaseVNode("div", _hoisted_7$14, [
-          createBaseVNode("div", _hoisted_8$R, [
-            createBaseVNode("span", _hoisted_9$L, toDisplayString$1(_ctx.$t("panoramaView.aspect")), 1),
-            createBaseVNode("span", _hoisted_10$C, [
+          createBaseVNode("div", _hoisted_8$Q, [
+            createBaseVNode("span", _hoisted_9$K, toDisplayString$1(_ctx.$t("panoramaView.aspect")), 1),
+            createBaseVNode("span", _hoisted_10$B, [
               withDirectives(createBaseVNode("select", {
                 "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => aspectRatio.value = $event),
                 class: "ctv-pano-select"
@@ -122907,7 +125319,7 @@ const _sfc_main$1I = /* @__PURE__ */ defineComponent({
                   return openBlock(), createElementBlock("option", {
                     key: opt,
                     value: opt
-                  }, toDisplayString$1(opt), 9, _hoisted_11$z);
+                  }, toDisplayString$1(opt), 9, _hoisted_11$y);
                 }), 128))
               ], 512), [
                 [vModelSelect, aspectRatio.value]
@@ -122915,7 +125327,7 @@ const _sfc_main$1I = /* @__PURE__ */ defineComponent({
               _cache2[3] || (_cache2[3] = createBaseVNode("i", { class: "pi pi-chevron-down ctv-pano-caret" }, null, -1))
             ])
           ]),
-          createBaseVNode("div", _hoisted_12$t, [
+          createBaseVNode("div", _hoisted_12$s, [
             createBaseVNode("span", _hoisted_13$n, toDisplayString$1(_ctx.$t("panoramaView.resolution")), 1),
             createBaseVNode("span", _hoisted_14$l, [
               withDirectives(createBaseVNode("select", {
@@ -123175,14 +125587,14 @@ const _hoisted_7$13 = {
   key: 2,
   class: "ctv:relative ctv:w-full ctv:aspect-square ctv:bg-secondary-background-hover"
 };
-const _hoisted_8$Q = ["src", "alt"];
-const _hoisted_9$K = { class: "ctv:truncate ctv:py-0.5 ctv:px-1 ctv:text-2xs ctv:text-left ctv:text-muted-foreground" };
-const _hoisted_10$B = {
+const _hoisted_8$P = ["src", "alt"];
+const _hoisted_9$J = { class: "ctv:truncate ctv:py-0.5 ctv:px-1 ctv:text-2xs ctv:text-left ctv:text-muted-foreground" };
+const _hoisted_10$A = {
   key: 4,
   class: "ctv:absolute ctv:top-1 ctv:right-1 ctv:flex ctv:items-center ctv:justify-center ctv:size-4 ctv:rounded-full ctv:bg-primary-background ctv:text-base-foreground ctv:text-3xs ctv:font-bold ctv:shadow"
 };
-const _hoisted_11$y = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:text-2xs ctv:text-muted-foreground" };
-const _hoisted_12$s = {
+const _hoisted_11$x = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:text-2xs ctv:text-muted-foreground" };
+const _hoisted_12$r = {
   key: 0,
   class: "ctv:flex-1 ctv:truncate ctv:text-success-background"
 };
@@ -123324,17 +125736,17 @@ const _sfc_main$1F = /* @__PURE__ */ defineComponent({
                   loading: "lazy",
                   class: "ctv:block ctv:w-full ctv:aspect-square ctv:object-cover",
                   draggable: "false"
-                }, null, 8, _hoisted_8$Q)),
-                createBaseVNode("div", _hoisted_9$K, toDisplayString$1(asset.name || "—"), 1),
-                asset.id === unref(selectedId) ? (openBlock(), createElementBlock("span", _hoisted_10$B, [..._cache2[9] || (_cache2[9] = [
+                }, null, 8, _hoisted_8$P)),
+                createBaseVNode("div", _hoisted_9$J, toDisplayString$1(asset.name || "—"), 1),
+                asset.id === unref(selectedId) ? (openBlock(), createElementBlock("span", _hoisted_10$A, [..._cache2[9] || (_cache2[9] = [
                   createBaseVNode("i", { class: "pi pi-check" }, null, -1)
                 ])])) : createCommentVNode("", true)
               ], 10, _hoisted_5$1q);
             }), 128))
           ]))
         ], 32),
-        createBaseVNode("div", _hoisted_11$y, [
-          unref(selectedAsset) ? (openBlock(), createElementBlock("span", _hoisted_12$s, toDisplayString$1(_ctx.$t("assetLoader.selected", { name: unref(selectedAsset).name || "—" })), 1)) : (openBlock(), createElementBlock("span", _hoisted_13$m, toDisplayString$1(_ctx.$t("assetLoader.pickHint")), 1))
+        createBaseVNode("div", _hoisted_11$x, [
+          unref(selectedAsset) ? (openBlock(), createElementBlock("span", _hoisted_12$r, toDisplayString$1(_ctx.$t("assetLoader.selected", { name: unref(selectedAsset).name || "—" })), 1)) : (openBlock(), createElementBlock("span", _hoisted_13$m, toDisplayString$1(_ctx.$t("assetLoader.pickHint")), 1))
         ]),
         createBaseVNode("div", _hoisted_14$k, [
           createVNode(StageCard, {
@@ -124677,11 +127089,11 @@ class GLTFWriter {
     }
     const nodeDef = {};
     if (options.trs) {
-      const rotation = object2.quaternion.toArray();
+      const rotation2 = object2.quaternion.toArray();
       const position = object2.position.toArray();
       const scale = object2.scale.toArray();
-      if (!equalArray(rotation, [0, 0, 0, 1])) {
-        nodeDef.rotation = rotation;
+      if (!equalArray(rotation2, [0, 0, 0, 1])) {
+        nodeDef.rotation = rotation2;
       }
       if (!equalArray(position, [0, 0, 0])) {
         nodeDef.translation = position;
@@ -124735,15 +127147,15 @@ class GLTFWriter {
     const nodeMap = this.nodeMap;
     const pivot = object2.pivot;
     const containerDef = {};
-    const rotation = object2.quaternion.toArray();
+    const rotation2 = object2.quaternion.toArray();
     const position = [
       object2.position.x + pivot.x,
       object2.position.y + pivot.y,
       object2.position.z + pivot.z
     ];
     const scale = object2.scale.toArray();
-    if (!equalArray(rotation, [0, 0, 0, 1])) {
-      containerDef.rotation = rotation;
+    if (!equalArray(rotation2, [0, 0, 0, 1])) {
+      containerDef.rotation = rotation2;
     }
     if (!equalArray(position, [0, 0, 0])) {
       containerDef.translation = position;
@@ -125384,7 +127796,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-Bb6FKwuq.mjs");
+    const { STLLoader } = await import("./STLLoader-CwGwRota.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -125392,7 +127804,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-2Kd0upby.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-DyCKcPCI.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -125647,14 +128059,14 @@ const _hoisted_4$1r = {
 const _hoisted_5$1p = { class: "ctv:text-xs" };
 const _hoisted_6$1g = ["title"];
 const _hoisted_7$12 = ["title"];
-const _hoisted_8$P = { class: "ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1 ctv:text-2xs" };
-const _hoisted_9$J = { class: "ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_10$A = ["title", "onClick"];
-const _hoisted_11$x = {
+const _hoisted_8$O = { class: "ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1 ctv:text-2xs" };
+const _hoisted_9$I = { class: "ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_10$z = ["title", "onClick"];
+const _hoisted_11$w = {
   key: 0,
   class: "ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1"
 };
-const _hoisted_12$r = ["title", "onClick"];
+const _hoisted_12$q = ["title", "onClick"];
 const _hoisted_13$l = { class: "ctv:max-w-24 ctv:truncate" };
 const _hoisted_14$j = ["onClick"];
 const _hoisted_15$g = { class: "ctv:shrink-0" };
@@ -125916,8 +128328,8 @@ const _sfc_main$1E = /* @__PURE__ */ defineComponent({
           onMousedown: _cache2[3] || (_cache2[3] = withModifiers(() => {
           }, ["stop"]))
         }, [
-          createBaseVNode("div", _hoisted_8$P, [
-            createBaseVNode("span", _hoisted_9$J, toDisplayString$1(unref(selectedPart) ? _ctx.$t("modelBinder.selected", { part: unref(selectedPart) }) : _ctx.$t("modelBinder.pickHint")), 1),
+          createBaseVNode("div", _hoisted_8$O, [
+            createBaseVNode("span", _hoisted_9$I, toDisplayString$1(unref(selectedPart) ? _ctx.$t("modelBinder.selected", { part: unref(selectedPart) }) : _ctx.$t("modelBinder.pickHint")), 1),
             unref(selectedPart) ? (openBlock(), createElementBlock(Fragment$1, { key: 0 }, [
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(materialSlots), (s) => {
                 return openBlock(), createElementBlock("button", {
@@ -125932,7 +128344,7 @@ const _sfc_main$1E = /* @__PURE__ */ defineComponent({
                     style: normalizeStyle({ background: s.color })
                   }, null, 4),
                   createTextVNode(" " + toDisplayString$1(s.label), 1)
-                ], 10, _hoisted_10$A);
+                ], 10, _hoisted_10$z);
               }), 128)),
               unref(bindings)[unref(selectedPart)] ? (openBlock(), createElementBlock("button", {
                 key: 0,
@@ -125945,7 +128357,7 @@ const _sfc_main$1E = /* @__PURE__ */ defineComponent({
               ], 2)) : createCommentVNode("", true)
             ], 64)) : createCommentVNode("", true)
           ]),
-          unref(boundEntries).length ? (openBlock(), createElementBlock("div", _hoisted_11$x, [
+          unref(boundEntries).length ? (openBlock(), createElementBlock("div", _hoisted_11$w, [
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(boundEntries), ([part, slot]) => {
               return openBlock(), createElementBlock("button", {
                 key: part,
@@ -125965,7 +128377,7 @@ const _sfc_main$1E = /* @__PURE__ */ defineComponent({
                 }, [..._cache2[22] || (_cache2[22] = [
                   createBaseVNode("i", { class: "pi pi-times" }, null, -1)
                 ])], 8, _hoisted_14$j)
-              ], 10, _hoisted_12$r);
+              ], 10, _hoisted_12$q);
             }), 128))
           ])) : createCommentVNode("", true)
         ], 32)) : createCommentVNode("", true),
@@ -126139,11 +128551,11 @@ const _hoisted_6$1f = {
   class: "pi pi-check"
 };
 const _hoisted_7$11 = { class: "ctv:flex-1 ctv:truncate" };
-const _hoisted_8$O = {
+const _hoisted_8$N = {
   key: 0,
   class: "ctv:my-1 ctv:border-t ctv:border-border-subtle"
 };
-const _hoisted_9$I = { class: "ctv:flex-1 ctv:truncate" };
+const _hoisted_9$H = { class: "ctv:flex-1 ctv:truncate" };
 const _sfc_main$1D = /* @__PURE__ */ defineComponent({
   __name: "AssetTagMenu",
   setup(__props, { expose: __expose }) {
@@ -126224,7 +128636,7 @@ const _sfc_main$1D = /* @__PURE__ */ defineComponent({
                 createBaseVNode("span", _hoisted_7$11, toDisplayString$1(cat2.name), 1)
               ], 8, _hoisted_4$1q);
             }), 128)),
-            unref(categories).length ? (openBlock(), createElementBlock("div", _hoisted_8$O)) : createCommentVNode("", true),
+            unref(categories).length ? (openBlock(), createElementBlock("div", _hoisted_8$N)) : createCommentVNode("", true),
             createBaseVNode("button", {
               type: "button",
               class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:px-1.5 ctv:py-1 ctv:rounded-sm ctv:cursor-pointer ctv:text-left ctv:text-2xs ctv:bg-transparent ctv:border-none ctv:text-primary-background ctv:hover:bg-secondary-background-hover",
@@ -126233,7 +128645,7 @@ const _sfc_main$1D = /* @__PURE__ */ defineComponent({
               _cache2[4] || (_cache2[4] = createBaseVNode("span", { class: "ctv:w-3 ctv:inline-block" }, [
                 createBaseVNode("i", { class: "pi pi-plus" })
               ], -1)),
-              createBaseVNode("span", _hoisted_9$I, toDisplayString$1(_ctx.$t("assets.tagPopover.create")), 1)
+              createBaseVNode("span", _hoisted_9$H, toDisplayString$1(_ctx.$t("assets.tagPopover.create")), 1)
             ])
           ], 4)
         ], 32)) : createCommentVNode("", true)
@@ -126500,20 +128912,20 @@ const _hoisted_5$1n = {
 };
 const _hoisted_6$1e = ["title"];
 const _hoisted_7$10 = ["title"];
-const _hoisted_8$N = {
+const _hoisted_8$M = {
   key: 4,
   class: "ctv:absolute ctv:bottom-1 ctv:left-1 ctv:z-10 ctv:px-1.5 ctv:py-0.5 ctv:rounded-sm ctv:bg-black/60 ctv:text-3xs ctv:font-mono ctv:text-white/80 ctv:pointer-events-none"
 };
-const _hoisted_9$H = {
+const _hoisted_9$G = {
   key: 5,
   class: "ctv:absolute ctv:bottom-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1"
 };
-const _hoisted_10$z = ["onClick"];
-const _hoisted_11$w = {
+const _hoisted_10$y = ["onClick"];
+const _hoisted_11$v = {
   key: 0,
   class: "ctv:relative ctv:w-full ctv:shrink-0 ctv:rounded-md ctv:overflow-hidden ctv:bg-black"
 };
-const _hoisted_12$q = ["src", "alt"];
+const _hoisted_12$p = ["src", "alt"];
 const _hoisted_13$k = { class: "ctv:absolute ctv:top-1 ctv:left-1 ctv:px-1.5 ctv:py-0.5 ctv:rounded-sm ctv:bg-black/60 ctv:text-3xs ctv:text-white/80 ctv:pointer-events-none" };
 const _hoisted_14$i = {
   key: 0,
@@ -126658,15 +129070,15 @@ const _sfc_main$1C = /* @__PURE__ */ defineComponent({
               createBaseVNode("i", { class: "pi pi-tag" }, null, -1)
             ])], 10, _hoisted_7$10)
           ])) : createCommentVNode("", true),
-          unref(statsLine) ? (openBlock(), createElementBlock("div", _hoisted_8$N, toDisplayString$1(unref(statsLine)), 1)) : createCommentVNode("", true),
-          unref(previewSrc) ? (openBlock(), createElementBlock("div", _hoisted_9$H, [
+          unref(statsLine) ? (openBlock(), createElementBlock("div", _hoisted_8$M, toDisplayString$1(unref(statsLine)), 1)) : createCommentVNode("", true),
+          unref(previewSrc) ? (openBlock(), createElementBlock("div", _hoisted_9$G, [
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(channels), (ch) => {
               return openBlock(), createElementBlock("button", {
                 key: ch,
                 type: "button",
                 class: normalizeClass(chipClass2(unref(channel) === ch)),
                 onClick: withModifiers(($event) => channel.value = ch, ["stop"])
-              }, toDisplayString$1(_ctx.$t(`meshOps.channel.${ch}`)), 11, _hoisted_10$z);
+              }, toDisplayString$1(_ctx.$t(`meshOps.channel.${ch}`)), 11, _hoisted_10$y);
             }), 128))
           ])) : createCommentVNode("", true)
         ]),
@@ -126675,12 +129087,12 @@ const _sfc_main$1C = /* @__PURE__ */ defineComponent({
           onWheel: _cache2[6] || (_cache2[6] = withModifiers(() => {
           }, ["stop"]))
         }, [
-          unref(hasMapsPanel) && unref(mapsUrl) ? (openBlock(), createElementBlock("div", _hoisted_11$w, [
+          unref(hasMapsPanel) && unref(mapsUrl) ? (openBlock(), createElementBlock("div", _hoisted_11$v, [
             createBaseVNode("img", {
               src: unref(assetUrl2)(unref(mapsUrl)),
               alt: mapsPanelLabel.value,
               class: "ctv:block ctv:w-full ctv:max-h-40 ctv:object-contain"
-            }, null, 8, _hoisted_12$q),
+            }, null, 8, _hoisted_12$p),
             createBaseVNode("span", _hoisted_13$k, toDisplayString$1(mapsPanelLabel.value), 1)
           ])) : createCommentVNode("", true),
           createBaseVNode("div", {
@@ -127044,8 +129456,8 @@ const _hoisted_4$1o = ["onClick"];
 const _hoisted_5$1m = ["title"];
 const _hoisted_6$1d = ["checked", "onChange"];
 const _hoisted_7$$ = ["min", "max", "step", "value", "onInput"];
-const _hoisted_8$M = { class: "ctv:w-10 ctv:shrink-0 ctv:text-right ctv:text-2xs ctv:tabular-nums" };
-const _hoisted_9$G = { class: "ctv:shrink-0" };
+const _hoisted_8$L = { class: "ctv:w-10 ctv:shrink-0 ctv:text-right ctv:text-2xs ctv:tabular-nums" };
+const _hoisted_9$F = { class: "ctv:shrink-0" };
 const _sfc_main$1A = /* @__PURE__ */ defineComponent({
   __name: "MeshPrimitiveStageCard",
   props: {
@@ -127156,12 +129568,12 @@ const _sfc_main$1A = /* @__PURE__ */ defineComponent({
                   value: Number(unref(params)[def2.key]),
                   onInput: ($event) => unref(setParam)(def2, Number($event.target.value))
                 }, null, 40, _hoisted_7$$),
-                createBaseVNode("span", _hoisted_8$M, toDisplayString$1(fmt2(unref(params)[def2.key])), 1)
+                createBaseVNode("span", _hoisted_8$L, toDisplayString$1(fmt2(unref(params)[def2.key])), 1)
               ], 64))
             ]);
           }), 128))
         ], 32),
-        createBaseVNode("div", _hoisted_9$G, [
+        createBaseVNode("div", _hoisted_9$F, [
           createVNode(StageCard, {
             state: __props.state,
             node: __props.node,
@@ -127292,17 +129704,17 @@ const _hoisted_5$1l = {
 };
 const _hoisted_6$1c = { class: "ctv:px-1.5 ctv:py-0.5 ctv:rounded-sm ctv:bg-black/60 ctv:text-3xs ctv:text-white/80" };
 const _hoisted_7$_ = ["disabled", "onClick"];
-const _hoisted_8$L = {
+const _hoisted_8$K = {
   key: 2,
   class: "ctv:flex ctv:items-center ctv:gap-1"
 };
-const _hoisted_9$F = ["onClick"];
-const _hoisted_10$y = {
+const _hoisted_9$E = ["onClick"];
+const _hoisted_10$x = {
   key: 1,
   class: "ctv:absolute ctv:top-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1 ctv:opacity-0 ctv:group-hover:opacity-100 ctv:transition-opacity"
 };
-const _hoisted_11$v = ["title"];
-const _hoisted_12$p = ["title"];
+const _hoisted_11$u = ["title"];
+const _hoisted_12$o = ["title"];
 const _hoisted_13$j = { class: "ctv:absolute ctv:bottom-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1" };
 const _hoisted_14$h = ["onClick"];
 const _hoisted_15$e = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
@@ -127679,14 +130091,14 @@ const _sfc_main$1z = /* @__PURE__ */ defineComponent({
                 }, toDisplayString$1(_ctx.$t(`meshOps.target.${tgt}`)), 11, _hoisted_7$_);
               }), 128))
             ])) : createCommentVNode("", true),
-            !unref(viewingResult) ? (openBlock(), createElementBlock("div", _hoisted_8$L, [
+            !unref(viewingResult) ? (openBlock(), createElementBlock("div", _hoisted_8$K, [
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(BOOLEAN_GIZMO_MODES), (m2) => {
                 return openBlock(), createElementBlock("button", {
                   key: m2,
                   type: "button",
                   class: normalizeClass(chipClass2(gizmoMode.value === m2)),
                   onClick: withModifiers(($event) => setGizmoMode(m2), ["stop"])
-                }, toDisplayString$1(_ctx.$t(`meshOps.gizmo.${m2}`)), 11, _hoisted_9$F);
+                }, toDisplayString$1(_ctx.$t(`meshOps.gizmo.${m2}`)), 11, _hoisted_9$E);
               }), 128)),
               _cache2[7] || (_cache2[7] = createBaseVNode("span", { class: "ctv:w-px ctv:h-4 ctv:bg-white/30" }, null, -1)),
               createBaseVNode("button", {
@@ -127696,7 +130108,7 @@ const _sfc_main$1z = /* @__PURE__ */ defineComponent({
               }, toDisplayString$1(_ctx.$t("meshOps.gizmo.reset")), 3)
             ])) : createCommentVNode("", true)
           ]),
-          unref(viewingResult) && unref(resultUrl) ? (openBlock(), createElementBlock("div", _hoisted_10$y, [
+          unref(viewingResult) && unref(resultUrl) ? (openBlock(), createElementBlock("div", _hoisted_10$x, [
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(downloadBtnClass),
@@ -127704,7 +130116,7 @@ const _sfc_main$1z = /* @__PURE__ */ defineComponent({
               onClick: withModifiers(onDownloadResult, ["stop"])
             }, [..._cache2[8] || (_cache2[8] = [
               createBaseVNode("i", { class: "pi pi-download" }, null, -1)
-            ])], 8, _hoisted_11$v),
+            ])], 8, _hoisted_11$u),
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(tagBtnClass.value),
@@ -127715,7 +130127,7 @@ const _sfc_main$1z = /* @__PURE__ */ defineComponent({
               }, ["stop"]))
             }, [..._cache2[9] || (_cache2[9] = [
               createBaseVNode("i", { class: "pi pi-tag" }, null, -1)
-            ])], 10, _hoisted_12$p)
+            ])], 10, _hoisted_12$o)
           ])) : createCommentVNode("", true),
           createBaseVNode("div", _hoisted_13$j, [
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(BOOLEAN_CHANNELS), (ch) => {
@@ -128079,20 +130491,20 @@ const _hoisted_7$Z = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_8$K = {
+const _hoisted_8$J = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_9$E = {
+const _hoisted_9$D = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_10$x = {
+const _hoisted_10$w = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_11$u = { class: "ctv:flex ctv:gap-1 ctv:flex-wrap" };
-const _hoisted_12$o = ["onClick"];
+const _hoisted_11$t = { class: "ctv:flex ctv:gap-1 ctv:flex-wrap" };
+const _hoisted_12$n = ["onClick"];
 const _hoisted_13$i = { class: "ctv:flex ctv:gap-2" };
 const _hoisted_14$g = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_15$d = ["onClick"];
@@ -128213,16 +130625,16 @@ const _sfc_main$1y = /* @__PURE__ */ defineComponent({
           ], 64))
         ], 512),
         createBaseVNode("div", _hoisted_6$1b, [
-          !unref(sourceImageUrl) ? (openBlock(), createElementBlock("span", _hoisted_7$Z, toDisplayString$1(_ctx.$t("gridSplit.connectImage")), 1)) : unref(splitting) ? (openBlock(), createElementBlock("span", _hoisted_8$K, toDisplayString$1(_ctx.$t("gridSplit.splitting", { n: unref(rows) * unref(cols) })), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_9$E, toDisplayString$1(_ctx.$t("gridSplit.done", { n: unref(rows) * unref(cols) })), 1)) : (openBlock(), createElementBlock("span", _hoisted_10$x, toDisplayString$1(_ctx.$t("gridSplit.pickGrid")), 1))
+          !unref(sourceImageUrl) ? (openBlock(), createElementBlock("span", _hoisted_7$Z, toDisplayString$1(_ctx.$t("gridSplit.connectImage")), 1)) : unref(splitting) ? (openBlock(), createElementBlock("span", _hoisted_8$J, toDisplayString$1(_ctx.$t("gridSplit.splitting", { n: unref(rows) * unref(cols) })), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_9$D, toDisplayString$1(_ctx.$t("gridSplit.done", { n: unref(rows) * unref(cols) })), 1)) : (openBlock(), createElementBlock("span", _hoisted_10$w, toDisplayString$1(_ctx.$t("gridSplit.pickGrid")), 1))
         ]),
-        createBaseVNode("div", _hoisted_11$u, [
+        createBaseVNode("div", _hoisted_11$t, [
           (openBlock(), createElementBlock(Fragment$1, null, renderList(PRESETS2, (p2) => {
             return createBaseVNode("button", {
               key: p2.label,
               type: "button",
               class: normalizeClass(["ctv:flex-1 ctv:min-w-[44px] ctv:py-1 ctv:px-1.5 ctv:rounded ctv:text-xs ctv:font-mono ctv:cursor-pointer ctv:border", unref(rows) === p2.r && unref(cols) === p2.c ? "ctv:bg-secondary-background-selected ctv:border-primary-background ctv:text-primary-background ctv:font-semibold" : "ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:bg-secondary-background-hover"]),
               onClick: ($event) => unref(setGrid)(p2.r, p2.c)
-            }, toDisplayString$1(p2.label), 11, _hoisted_12$o);
+            }, toDisplayString$1(p2.label), 11, _hoisted_12$n);
           }), 64))
         ]),
         createBaseVNode("div", _hoisted_13$i, [
@@ -128566,11 +130978,11 @@ const _hoisted_4$1l = {
 const _hoisted_5$1j = ["title", "onClick"];
 const _hoisted_6$1a = ["src", "alt"];
 const _hoisted_7$Y = { class: "ctv:absolute ctv:bottom-px ctv:left-0.5 ctv:text-3xs ctv:py-0 ctv:px-0.5 ctv:rounded-sm ctv:bg-black/70 ctv:text-white/90" };
-const _hoisted_8$J = { class: "ctv:shrink-0 ctv:overflow-x-auto ctv:overflow-y-hidden ctv:rounded-md ctv:border ctv:border-border-subtle ctv:bg-black" };
-const _hoisted_9$D = { class: "ctv:relative ctv:h-4 ctv:border-b ctv:border-white/10" };
-const _hoisted_10$w = { class: "ctv:text-[8px] ctv:text-white/40 ctv:ml-0.5" };
-const _hoisted_11$t = { class: "ctv:relative ctv:h-11 ctv:m-1 ctv:rounded ctv:bg-primary-background/5" };
-const _hoisted_12$n = ["onPointerdown"];
+const _hoisted_8$I = { class: "ctv:shrink-0 ctv:overflow-x-auto ctv:overflow-y-hidden ctv:rounded-md ctv:border ctv:border-border-subtle ctv:bg-black" };
+const _hoisted_9$C = { class: "ctv:relative ctv:h-4 ctv:border-b ctv:border-white/10" };
+const _hoisted_10$v = { class: "ctv:text-[8px] ctv:text-white/40 ctv:ml-0.5" };
+const _hoisted_11$s = { class: "ctv:relative ctv:h-11 ctv:m-1 ctv:rounded ctv:bg-primary-background/5" };
+const _hoisted_12$m = ["onPointerdown"];
 const _hoisted_13$h = ["src"];
 const _hoisted_14$f = { class: "ctv:absolute ctv:bottom-px ctv:right-[14px] ctv:text-3xs ctv:py-0 ctv:px-0.5 ctv:rounded-sm ctv:bg-black/60 ctv:text-white ctv:pointer-events-none" };
 const _hoisted_15$c = ["onPointerdown"];
@@ -128665,23 +131077,23 @@ const _sfc_main$1x = /* @__PURE__ */ defineComponent({
             }), 128))
           ]))
         ]),
-        createBaseVNode("div", _hoisted_8$J, [
+        createBaseVNode("div", _hoisted_8$I, [
           createBaseVNode("div", {
             class: "ctv:relative ctv:min-h-[116px]",
             style: normalizeStyle({ width: `${unref(trackWidthPx)}px` })
           }, [
-            createBaseVNode("div", _hoisted_9$D, [
+            createBaseVNode("div", _hoisted_9$C, [
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(ruler), (tick) => {
                 return openBlock(), createElementBlock("div", {
                   key: tick.frame,
                   class: "ctv:absolute ctv:top-0 ctv:h-4 ctv:border-l ctv:border-white/15",
                   style: normalizeStyle({ left: `${tick.frame * unref(PPF)}px` })
                 }, [
-                  createBaseVNode("span", _hoisted_10$w, toDisplayString$1(tick.label), 1)
+                  createBaseVNode("span", _hoisted_10$v, toDisplayString$1(tick.label), 1)
                 ], 4);
               }), 128))
             ]),
-            createBaseVNode("div", _hoisted_11$t, [
+            createBaseVNode("div", _hoisted_11$s, [
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(segments), (seg, idx) => {
                 var _a3;
                 return openBlock(), createElementBlock("div", {
@@ -128704,7 +131116,7 @@ const _sfc_main$1x = /* @__PURE__ */ defineComponent({
                     class: "ctv:absolute ctv:top-0 ctv:right-0 ctv:w-2 ctv:h-full ctv:cursor-ew-resize ctv:bg-white/10 ctv:hover:bg-white/30",
                     onPointerdown: withModifiers(($event) => unref(onResizePointerDown)($event, seg), ["stop"])
                   }, null, 40, _hoisted_15$c)
-                ], 46, _hoisted_12$n);
+                ], 46, _hoisted_12$m);
               }), 128)),
               unref(segments).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_16$9, toDisplayString$1(_ctx.$t("timeline.clickKeyframe")), 1)) : createCommentVNode("", true)
             ]),
@@ -128970,11 +131382,11 @@ const _hoisted_4$1k = ["onPointerdown"];
 const _hoisted_5$1i = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
 const _hoisted_6$19 = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-wrap" };
 const _hoisted_7$X = { class: "ctv:text-3xs ctv:min-w-8 ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_8$I = ["value", "disabled", "onChange"];
-const _hoisted_9$C = ["disabled"];
-const _hoisted_10$v = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-wrap" };
-const _hoisted_11$s = { class: "ctv:text-2xs ctv:text-muted-foreground/60" };
-const _hoisted_12$m = { class: "ctv:text-[11px] ctv:font-mono ctv:text-base-foreground" };
+const _hoisted_8$H = ["value", "disabled", "onChange"];
+const _hoisted_9$B = ["disabled"];
+const _hoisted_10$u = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-wrap" };
+const _hoisted_11$r = { class: "ctv:text-2xs ctv:text-muted-foreground/60" };
+const _hoisted_12$l = { class: "ctv:text-[11px] ctv:font-mono ctv:text-base-foreground" };
 const _sfc_main$1w = /* @__PURE__ */ defineComponent({
   __name: "OutpaintStageCard",
   props: {
@@ -129070,7 +131482,7 @@ const _sfc_main$1w = /* @__PURE__ */ defineComponent({
                   value: unref(pad)[side],
                   disabled: !unref(sourceImageUrl),
                   onChange: (e) => unref(setPad)(side, Number(e.target.value))
-                }, null, 40, _hoisted_8$I)
+                }, null, 40, _hoisted_8$H)
               ]);
             }), 128)),
             createBaseVNode("button", {
@@ -129079,11 +131491,11 @@ const _sfc_main$1w = /* @__PURE__ */ defineComponent({
               disabled: !unref(sourceImageUrl),
               onClick: _cache2[2] || (_cache2[2] = //@ts-ignore
               (...args) => unref(resetAll) && unref(resetAll)(...args))
-            }, toDisplayString$1(_ctx.$t("outpaint.reset")), 9, _hoisted_9$C)
+            }, toDisplayString$1(_ctx.$t("outpaint.reset")), 9, _hoisted_9$B)
           ]),
-          createBaseVNode("div", _hoisted_10$v, [
-            createBaseVNode("span", _hoisted_11$s, toDisplayString$1(_ctx.$t("outpaint.output")) + ":", 1),
-            createBaseVNode("span", _hoisted_12$m, toDisplayString$1(unref(outDims)), 1)
+          createBaseVNode("div", _hoisted_10$u, [
+            createBaseVNode("span", _hoisted_11$r, toDisplayString$1(_ctx.$t("outpaint.output")) + ":", 1),
+            createBaseVNode("span", _hoisted_12$l, toDisplayString$1(unref(outDims)), 1)
           ])
         ]),
         createVNode(StageCard, {
@@ -129358,17 +131770,17 @@ const _hoisted_5$1h = {
 };
 const _hoisted_6$18 = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-wrap" };
 const _hoisted_7$W = { class: "ctv:text-[13px] ctv:font-bold ctv:text-base-foreground" };
-const _hoisted_8$H = { class: "ctv:flex ctv:items-center ctv:gap-0.5 ctv:text-2xs ctv:text-muted-foreground" };
-const _hoisted_9$B = ["value", "onChange"];
-const _hoisted_10$u = {
+const _hoisted_8$G = { class: "ctv:flex ctv:items-center ctv:gap-0.5 ctv:text-2xs ctv:text-muted-foreground" };
+const _hoisted_9$A = ["value", "onChange"];
+const _hoisted_10$t = {
   key: 0,
   class: "ctv:py-px ctv:px-1.5 ctv:rounded-sm ctv:text-2xs ctv:bg-secondary-background ctv:text-base-foreground"
 };
-const _hoisted_11$r = {
+const _hoisted_11$q = {
   key: 1,
   class: "ctv:py-px ctv:px-1.5 ctv:rounded-sm ctv:text-2xs ctv:bg-success-background/15 ctv:text-success-background"
 };
-const _hoisted_12$l = { class: "ctv:flex ctv:flex-col ctv:gap-px ctv:ml-auto" };
+const _hoisted_12$k = { class: "ctv:flex ctv:flex-col ctv:gap-px ctv:ml-auto" };
 const _hoisted_13$g = ["disabled", "onClick", "title"];
 const _hoisted_14$e = ["disabled", "onClick", "title"];
 const _hoisted_15$b = ["disabled", "title", "onClick"];
@@ -129472,7 +131884,7 @@ const _sfc_main$1v = /* @__PURE__ */ defineComponent({
             }, [
               createBaseVNode("header", _hoisted_6$18, [
                 createBaseVNode("span", _hoisted_7$W, "#" + toDisplayString$1(idx + 1), 1),
-                createBaseVNode("label", _hoisted_8$H, [
+                createBaseVNode("label", _hoisted_8$G, [
                   createBaseVNode("input", {
                     type: "number",
                     min: "1",
@@ -129481,12 +131893,12 @@ const _sfc_main$1v = /* @__PURE__ */ defineComponent({
                     value: shot.duration,
                     class: "ctv:w-[38px] ctv:py-0.5 ctv:px-1 ctv:rounded-sm ctv:text-[11px] ctv:font-mono ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle",
                     onChange: (e) => unref(setDuration)(shot.id, Number(e.target.value))
-                  }, null, 40, _hoisted_9$B),
+                  }, null, 40, _hoisted_9$A),
                   _cache2[2] || (_cache2[2] = createBaseVNode("span", null, "s", -1))
                 ]),
-                shot.shot_size ? (openBlock(), createElementBlock("span", _hoisted_10$u, toDisplayString$1(shot.shot_size), 1)) : createCommentVNode("", true),
-                shot.character && shot.character !== "无" ? (openBlock(), createElementBlock("span", _hoisted_11$r, toDisplayString$1(shot.character), 1)) : createCommentVNode("", true),
-                createBaseVNode("div", _hoisted_12$l, [
+                shot.shot_size ? (openBlock(), createElementBlock("span", _hoisted_10$t, toDisplayString$1(shot.shot_size), 1)) : createCommentVNode("", true),
+                shot.character && shot.character !== "无" ? (openBlock(), createElementBlock("span", _hoisted_11$q, toDisplayString$1(shot.character), 1)) : createCommentVNode("", true),
+                createBaseVNode("div", _hoisted_12$k, [
                   createBaseVNode("button", {
                     type: "button",
                     class: normalizeClass(unref(moveBtn)),
@@ -130323,11 +132735,11 @@ const _hoisted_4$1h = ["aria-pressed", "title"];
 const _hoisted_5$1f = { class: "ctv:w-20 ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground" };
 const _hoisted_6$16 = { class: "ctv:w-12 ctv:shrink-0 ctv:text-right ctv:text-2xs ctv:text-muted-foreground" };
 const _hoisted_7$V = { class: "ctv:flex ctv:items-center ctv:gap-2" };
-const _hoisted_8$G = { class: "ctv:w-20 ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground" };
-const _hoisted_9$A = { class: "ctv:text-2xs ctv:uppercase ctv:text-muted-foreground" };
-const _hoisted_10$t = ["value", "onChange"];
-const _hoisted_11$q = { class: "ctv:flex ctv:items-center ctv:gap-2" };
-const _hoisted_12$k = { class: "ctv:w-20 ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground" };
+const _hoisted_8$F = { class: "ctv:w-20 ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground" };
+const _hoisted_9$z = { class: "ctv:text-2xs ctv:uppercase ctv:text-muted-foreground" };
+const _hoisted_10$s = ["value", "onChange"];
+const _hoisted_11$p = { class: "ctv:flex ctv:items-center ctv:gap-2" };
+const _hoisted_12$j = { class: "ctv:w-20 ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground" };
 const _hoisted_13$f = { class: "ctv:flex ctv:items-center ctv:gap-2" };
 const _hoisted_14$d = { class: "ctv:w-20 ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground" };
 const _hoisted_15$a = { class: "ctv:w-12 ctv:shrink-0 ctv:text-right ctv:text-2xs ctv:text-muted-foreground" };
@@ -130410,25 +132822,25 @@ const _sfc_main$1t = /* @__PURE__ */ defineComponent({
             ]);
           }), 128)),
           createBaseVNode("div", _hoisted_7$V, [
-            createBaseVNode("span", _hoisted_8$G, toDisplayString$1(_ctx.$t("scene3d.presetOffset")), 1),
+            createBaseVNode("span", _hoisted_8$F, toDisplayString$1(_ctx.$t("scene3d.presetOffset")), 1),
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(OFFSET_AXES), (axis) => {
               return openBlock(), createElementBlock("label", {
                 key: axis,
                 class: "ctv:flex ctv:flex-1 ctv:min-w-0 ctv:items-center ctv:gap-1"
               }, [
-                createBaseVNode("span", _hoisted_9$A, toDisplayString$1(axis), 1),
+                createBaseVNode("span", _hoisted_9$z, toDisplayString$1(axis), 1),
                 createBaseVNode("input", {
                   type: "number",
                   step: "0.1",
                   value: unref(offsetValue)(axis),
                   class: normalizeClass(offsetFieldClass),
                   onChange: ($event) => unref(onOffsetInput)(axis, $event)
-                }, null, 40, _hoisted_10$t)
+                }, null, 40, _hoisted_10$s)
               ]);
             }), 128))
           ]),
-          createBaseVNode("div", _hoisted_11$q, [
-            createBaseVNode("span", _hoisted_12$k, toDisplayString$1(_ctx.$t("scene3d.presetReverse")), 1),
+          createBaseVNode("div", _hoisted_11$p, [
+            createBaseVNode("span", _hoisted_12$j, toDisplayString$1(_ctx.$t("scene3d.presetReverse")), 1),
             createVNode(_sfc_main$2w, {
               "model-value": __props.camera.preset.tuning.reverse ?? false,
               "onUpdate:modelValue": _cache2[1] || (_cache2[1] = (v2) => emit2("updateTuning", { reverse: v2 }))
@@ -130491,11 +132903,11 @@ const _hoisted_4$1g = { class: "ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-
 const _hoisted_5$1e = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
 const _hoisted_6$15 = { class: "ctv:text-muted-foreground" };
 const _hoisted_7$U = ["value"];
-const _hoisted_8$F = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
-const _hoisted_9$z = { class: "ctv:text-muted-foreground" };
-const _hoisted_10$s = ["value"];
-const _hoisted_11$p = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
-const _hoisted_12$j = { class: "ctv:text-muted-foreground" };
+const _hoisted_8$E = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
+const _hoisted_9$y = { class: "ctv:text-muted-foreground" };
+const _hoisted_10$r = ["value"];
+const _hoisted_11$o = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
+const _hoisted_12$i = { class: "ctv:text-muted-foreground" };
 const _hoisted_13$e = {
   key: 0,
   class: "ctv:flex ctv:justify-end"
@@ -130541,18 +132953,18 @@ const _sfc_main$1s = /* @__PURE__ */ defineComponent({
               onChange: _cache2[1] || (_cache2[1] = ($event) => onAnimationNumber("speed", $event))
             }, null, 40, _hoisted_7$U)
           ]),
-          createBaseVNode("label", _hoisted_8$F, [
-            createBaseVNode("span", _hoisted_9$z, toDisplayString$1(_ctx.$t("scene3d.startOffset")), 1),
+          createBaseVNode("label", _hoisted_8$E, [
+            createBaseVNode("span", _hoisted_9$y, toDisplayString$1(_ctx.$t("scene3d.startOffset")), 1),
             createBaseVNode("input", {
               type: "number",
               step: "0.1",
               value: __props.character.animation.startOffset,
               class: normalizeClass(narrowFieldClass$1),
               onChange: _cache2[2] || (_cache2[2] = ($event) => onAnimationNumber("startOffset", $event))
-            }, null, 40, _hoisted_10$s)
+            }, null, 40, _hoisted_10$r)
           ]),
-          createBaseVNode("label", _hoisted_11$p, [
-            createBaseVNode("span", _hoisted_12$j, toDisplayString$1(_ctx.$t("scene3d.loop")), 1),
+          createBaseVNode("label", _hoisted_11$o, [
+            createBaseVNode("span", _hoisted_12$i, toDisplayString$1(_ctx.$t("scene3d.loop")), 1),
             createVNode(_sfc_main$2w, {
               "model-value": __props.character.animation.loop,
               "onUpdate:modelValue": _cache2[3] || (_cache2[3] = (v2) => emit2("updateAnimation", { loop: v2 }))
@@ -130629,14 +133041,14 @@ const _hoisted_4$1f = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
 const _hoisted_5$1d = { class: "ctv:text-muted-foreground" };
 const _hoisted_6$14 = ["value"];
 const _hoisted_7$T = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
-const _hoisted_8$E = { class: "ctv:text-muted-foreground" };
-const _hoisted_9$y = ["value"];
-const _hoisted_10$r = {
+const _hoisted_8$D = { class: "ctv:text-muted-foreground" };
+const _hoisted_9$x = ["value"];
+const _hoisted_10$q = {
   key: 0,
   class: "ctv:flex ctv:items-center ctv:gap-1.5"
 };
-const _hoisted_11$o = { class: "ctv:text-muted-foreground" };
-const _hoisted_12$i = ["value"];
+const _hoisted_11$n = { class: "ctv:text-muted-foreground" };
+const _hoisted_12$h = ["value"];
 const _hoisted_13$d = { class: "ctv:flex ctv:items-center ctv:gap-2" };
 const _hoisted_14$b = {
   key: 0,
@@ -130698,7 +133110,7 @@ const _sfc_main$1r = /* @__PURE__ */ defineComponent({
             }, null, 40, _hoisted_6$14)
           ]),
           createBaseVNode("label", _hoisted_7$T, [
-            createBaseVNode("span", _hoisted_8$E, toDisplayString$1(_ctx.$t("scene3d.intensity")), 1),
+            createBaseVNode("span", _hoisted_8$D, toDisplayString$1(_ctx.$t("scene3d.intensity")), 1),
             createBaseVNode("input", {
               type: "number",
               min: "0",
@@ -130706,10 +133118,10 @@ const _sfc_main$1r = /* @__PURE__ */ defineComponent({
               value: __props.light.intensity,
               class: normalizeClass(narrowFieldClass),
               onChange: _cache2[1] || (_cache2[1] = ($event) => unref(onNumber)("intensity", $event))
-            }, null, 40, _hoisted_9$y)
+            }, null, 40, _hoisted_9$x)
           ]),
-          __props.light.type !== "directional" ? (openBlock(), createElementBlock("label", _hoisted_10$r, [
-            createBaseVNode("span", _hoisted_11$o, toDisplayString$1(_ctx.$t("scene3d.range")), 1),
+          __props.light.type !== "directional" ? (openBlock(), createElementBlock("label", _hoisted_10$q, [
+            createBaseVNode("span", _hoisted_11$n, toDisplayString$1(_ctx.$t("scene3d.range")), 1),
             createBaseVNode("input", {
               type: "number",
               min: "0",
@@ -130717,7 +133129,7 @@ const _sfc_main$1r = /* @__PURE__ */ defineComponent({
               value: __props.light.range ?? 0,
               class: normalizeClass(narrowFieldClass),
               onChange: _cache2[2] || (_cache2[2] = ($event) => unref(onNumber)("range", $event))
-            }, null, 40, _hoisted_12$i)
+            }, null, 40, _hoisted_12$h)
           ])) : createCommentVNode("", true)
         ]),
         createBaseVNode("div", _hoisted_13$d, [
@@ -131233,14 +133645,14 @@ const _hoisted_4$1d = { class: "ctv:shrink-0 ctv:text-muted-foreground" };
 const _hoisted_5$1c = { class: "ctv:flex ctv:flex-1 ctv:items-center ctv:gap-1.5" };
 const _hoisted_6$13 = { class: "ctv:shrink-0 ctv:text-muted-foreground" };
 const _hoisted_7$S = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
-const _hoisted_8$D = { class: "ctv:shrink-0 ctv:text-muted-foreground" };
-const _hoisted_9$x = {
+const _hoisted_8$C = { class: "ctv:shrink-0 ctv:text-muted-foreground" };
+const _hoisted_9$w = {
   key: 0,
   class: "ctv:flex ctv:items-center ctv:gap-1.5"
 };
-const _hoisted_10$q = { class: "ctv:shrink-0 ctv:text-muted-foreground" };
-const _hoisted_11$n = { class: "ctv:flex ctv:items-center ctv:gap-2" };
-const _hoisted_12$h = { class: "ctv:flex ctv:flex-1 ctv:items-center ctv:gap-1.5" };
+const _hoisted_10$p = { class: "ctv:shrink-0 ctv:text-muted-foreground" };
+const _hoisted_11$m = { class: "ctv:flex ctv:items-center ctv:gap-2" };
+const _hoisted_12$g = { class: "ctv:flex ctv:flex-1 ctv:items-center ctv:gap-1.5" };
 const _hoisted_13$c = { class: "ctv:shrink-0 ctv:text-muted-foreground" };
 const _hoisted_14$a = { class: "ctv:flex ctv:flex-1 ctv:items-center ctv:gap-1.5" };
 const _hoisted_15$8 = { class: "ctv:shrink-0 ctv:text-muted-foreground" };
@@ -131296,7 +133708,7 @@ const _sfc_main$1p = /* @__PURE__ */ defineComponent({
           ])
         ]),
         createBaseVNode("label", _hoisted_7$S, [
-          createBaseVNode("span", _hoisted_8$D, toDisplayString$1(_ctx.$t("scene3d.channel")), 1),
+          createBaseVNode("span", _hoisted_8$C, toDisplayString$1(_ctx.$t("scene3d.channel")), 1),
           createVNode(_sfc_main$2y, {
             class: "ctv:flex-1 ctv:min-w-0",
             "model-value": __props.channel,
@@ -131304,8 +133716,8 @@ const _sfc_main$1p = /* @__PURE__ */ defineComponent({
             "onUpdate:modelValue": _cache2[2] || (_cache2[2] = (v2) => emit2("setChannel", String(v2)))
           }, null, 8, ["model-value", "options"])
         ]),
-        __props.cameras.length > 1 ? (openBlock(), createElementBlock("label", _hoisted_9$x, [
-          createBaseVNode("span", _hoisted_10$q, toDisplayString$1(_ctx.$t("scene3d.outputCamera")), 1),
+        __props.cameras.length > 1 ? (openBlock(), createElementBlock("label", _hoisted_9$w, [
+          createBaseVNode("span", _hoisted_10$p, toDisplayString$1(_ctx.$t("scene3d.outputCamera")), 1),
           createVNode(_sfc_main$2y, {
             class: "ctv:flex-1 ctv:min-w-0",
             "model-value": __props.cameraId,
@@ -131313,8 +133725,8 @@ const _sfc_main$1p = /* @__PURE__ */ defineComponent({
             "onUpdate:modelValue": _cache2[3] || (_cache2[3] = (v2) => emit2("setCamera", String(v2)))
           }, null, 8, ["model-value", "options"])
         ])) : createCommentVNode("", true),
-        createBaseVNode("div", _hoisted_11$n, [
-          createBaseVNode("label", _hoisted_12$h, [
+        createBaseVNode("div", _hoisted_11$m, [
+          createBaseVNode("label", _hoisted_12$g, [
             createBaseVNode("span", _hoisted_13$c, toDisplayString$1(_ctx.$t("scene3d.fps")), 1),
             createVNode(_sfc_main$2x, {
               class: "ctv:flex-1 ctv:min-w-0",
@@ -133360,7 +135772,7 @@ const _hoisted_4$1b = ["aria-label", "title"];
 const _hoisted_5$1a = { class: "ctv:min-w-14 ctv:text-2xs ctv:text-muted-foreground" };
 const _hoisted_6$11 = { class: "ctv:flex ctv:w-full" };
 const _hoisted_7$R = ["title", "onClick"];
-const _hoisted_8$C = { class: "ctv:truncate" };
+const _hoisted_8$B = { class: "ctv:truncate" };
 const MAX_VISIBLE_ROWS = 4;
 const HEADER_HEIGHT = 22;
 const ROW_STRIDE = 24;
@@ -133511,7 +135923,7 @@ const _sfc_main$1n = /* @__PURE__ */ defineComponent({
                     class: "ctv:size-2 ctv:shrink-0 ctv:rounded-full",
                     style: normalizeStyle({ backgroundColor: entry.color })
                   }, null, 4),
-                  createBaseVNode("span", _hoisted_8$C, toDisplayString$1(entry.label), 1)
+                  createBaseVNode("span", _hoisted_8$B, toDisplayString$1(entry.label), 1)
                 ], 14, _hoisted_7$R);
               }), 128))
             ], 512)
@@ -133758,10 +136170,10 @@ class GizmoManager {
     this.syncProxyFromTarget(this.targetObject);
     (_a3 = this.onTransformChange) == null ? void 0 : _a3.call(this);
   }
-  applyTransform(position, rotation, scale) {
+  applyTransform(position, rotation2, scale) {
     if (!this.targetObject) return;
     this.targetObject.position.set(position.x, position.y, position.z);
-    this.targetObject.rotation.set(rotation.x, rotation.y, rotation.z);
+    this.targetObject.rotation.set(rotation2.x, rotation2.y, rotation2.z);
     if (scale) {
       this.targetObject.scale.set(scale.x, scale.y, scale.z);
     }
@@ -134045,7 +136457,7 @@ class CameraManager {
     var _a3;
     const oldCamera = this.activeCamera;
     const position = oldCamera.position.clone();
-    const rotation = oldCamera.rotation.clone();
+    const rotation2 = oldCamera.rotation.clone();
     const target = ((_a3 = this.controls) == null ? void 0 : _a3.target.clone()) || new Vector3();
     const oldZoom = oldCamera instanceof OrthographicCamera ? oldCamera.zoom : oldCamera.zoom;
     if (!cameraType) {
@@ -134057,7 +136469,7 @@ class CameraManager {
       }
     }
     this.activeCamera.position.copy(position);
-    this.activeCamera.rotation.copy(rotation);
+    this.activeCamera.rotation.copy(rotation2);
     if (this.activeCamera instanceof OrthographicCamera) {
       this.activeCamera.zoom = oldZoom;
       this.activeCamera.updateProjectionMatrix();
@@ -139615,8 +142027,8 @@ writeUnsignedInt_fn = function(value, width = measureUnsignedInt(value)) {
   this.write(__privateGet2(this, _helper).subarray(0, pos));
 };
 _writeString = /* @__PURE__ */ new WeakSet();
-writeString_fn = function(str) {
-  this.write(new Uint8Array(str.split("").map((x2) => x2.charCodeAt(0))));
+writeString_fn = function(str2) {
+  this.write(new Uint8Array(str2.split("").map((x2) => x2.charCodeAt(0))));
 };
 var _target, _buffer, _bytes, _ensureSize, ensureSize_fn;
 var ArrayBufferTargetWriter = class extends Writer {
@@ -140921,7 +143333,7 @@ function toFinite(value, fallback) {
   const num2 = typeof value === "string" ? Number(value) : value;
   return typeof num2 === "number" && Number.isFinite(num2) ? num2 : fallback;
 }
-function clamp$2(value, min2, max2) {
+function clamp$1(value, min2, max2) {
   return Math.min(Math.max(value, min2), max2);
 }
 function toVec3(value, fallback) {
@@ -140948,7 +143360,7 @@ function toAnimation(value) {
   const source = value ?? {};
   return {
     clip: typeof source.clip === "string" ? source.clip : "",
-    speed: clamp$2(toFinite(source.speed, 1), 0.01, 100),
+    speed: clamp$1(toFinite(source.speed, 1), 0.01, 100),
     loop: source.loop === void 0 ? true : Boolean(source.loop),
     startOffset: toFinite(source.startOffset, 0)
   };
@@ -140960,9 +143372,9 @@ function toTransform(value) {
     position: toVec3(source.position, 0),
     quaternion: toUnitQuat(source.quaternion),
     scale: {
-      x: clamp$2(scale.x, 1e-3, 1e3),
-      y: clamp$2(scale.y, 1e-3, 1e3),
-      z: clamp$2(scale.z, 1e-3, 1e3)
+      x: clamp$1(scale.x, 1e-3, 1e3),
+      y: clamp$1(scale.y, 1e-3, 1e3),
+      z: clamp$1(scale.z, 1e-3, 1e3)
     }
   };
 }
@@ -141044,8 +143456,8 @@ function toLight(value, index, takenIds) {
     light.range = Math.max(toFinite(source.range, 0), 0);
   }
   if (type === "spot") {
-    light.innerConeAngle = clamp$2(toFinite(source.innerConeAngle, 30), 0, 89);
-    light.outerConeAngle = clamp$2(
+    light.innerConeAngle = clamp$1(toFinite(source.innerConeAngle, 30), 0, 89);
+    light.outerConeAngle = clamp$1(
       toFinite(source.outerConeAngle, 45),
       light.innerConeAngle,
       90
@@ -141087,7 +143499,7 @@ function toCameraConfig(value) {
     presetId: typeof source.presetId === "string" ? source.presetId : "",
     file,
     tuning: toTuning(source.tuning),
-    speed: clamp$2(toFinite(source.speed, 1), 0.1, 10)
+    speed: clamp$1(toFinite(source.speed, 1), 0.1, 10)
   };
 }
 function toSceneCamera(value, index, takenIds) {
@@ -141097,7 +143509,7 @@ function toSceneCamera(value, index, takenIds) {
   return {
     id: claimId(source, "cam", index, takenIds),
     ...labelFields(source),
-    fov: clamp$2(toFinite(source.fov, 50), 10, 140),
+    fov: clamp$1(toFinite(source.fov, 50), 10, 140),
     transform: {
       position: toVec3(transform2.position, 0),
       quaternion: toUnitQuat(transform2.quaternion)
@@ -141168,8 +143580,8 @@ function normalizeSceneValue(value) {
     cameras,
     environment: toEnvironment(record2.environment),
     output: {
-      fps: clamp$2(toFinite(output.fps, 24), 1, 120),
-      frameCount: clamp$2(Math.round(toFinite(output.frameCount, 0)), 0, 1e4),
+      fps: clamp$1(toFinite(output.fps, 24), 1, 120),
+      frameCount: clamp$1(Math.round(toFinite(output.frameCount, 0)), 0, 1e4),
       cameraId
     }
   };
@@ -142275,11 +144687,11 @@ const _hoisted_4$1a = ["disabled", "title"];
 const _hoisted_5$19 = ["disabled", "title"];
 const _hoisted_6$10 = ["disabled"];
 const _hoisted_7$Q = ["disabled", "title"];
-const _hoisted_8$B = ["title"];
-const _hoisted_9$w = { class: "ctv:flex ctv:min-h-0 ctv:flex-1 ctv:gap-1" };
-const _hoisted_10$p = { class: "ctv:flex-1" };
-const _hoisted_11$m = ["aria-label"];
-const _hoisted_12$g = ["value"];
+const _hoisted_8$A = ["title"];
+const _hoisted_9$v = { class: "ctv:flex ctv:min-h-0 ctv:flex-1 ctv:gap-1" };
+const _hoisted_10$o = { class: "ctv:flex-1" };
+const _hoisted_11$l = ["aria-label"];
+const _hoisted_12$f = ["value"];
 const _hoisted_13$b = { class: "ctv:flex-1" };
 const _hoisted_14$9 = ["aria-label"];
 const _hoisted_15$7 = ["value"];
@@ -142549,9 +144961,9 @@ const _sfc_main$1m = /* @__PURE__ */ defineComponent({
                 key: 1,
                 class: "ctv:size-4"
               }))
-            ], 8, _hoisted_8$B)
+            ], 8, _hoisted_8$A)
           ]),
-          createBaseVNode("div", _hoisted_9$w, [
+          createBaseVNode("div", _hoisted_9$v, [
             createBaseVNode("div", {
               class: "ctv-scroll-thin ctv:flex ctv:w-44 ctv:shrink-0 ctv:flex-col ctv:gap-1 ctv:overflow-y-auto ctv:rounded-lg ctv:bg-node-background ctv:p-1.5",
               onWheel: _cache2[11] || (_cache2[11] = withModifiers(() => {
@@ -142560,7 +144972,7 @@ const _sfc_main$1m = /* @__PURE__ */ defineComponent({
               createBaseVNode("div", {
                 class: normalizeClass(groupHeaderClass$1)
               }, [
-                createBaseVNode("span", _hoisted_10$p, toDisplayString$1(_ctx.$t("scene3d.addCharacter")), 1),
+                createBaseVNode("span", _hoisted_10$o, toDisplayString$1(_ctx.$t("scene3d.addCharacter")), 1),
                 unref(availableModels).length > 0 ? (openBlock(), createElementBlock("select", {
                   key: 0,
                   value: "",
@@ -142577,9 +144989,9 @@ const _sfc_main$1m = /* @__PURE__ */ defineComponent({
                     return openBlock(), createElementBlock("option", {
                       key: model.id,
                       value: model.id
-                    }, toDisplayString$1(model.name), 9, _hoisted_12$g);
+                    }, toDisplayString$1(model.name), 9, _hoisted_12$f);
                   }), 128))
-                ], 40, _hoisted_11$m)) : createCommentVNode("", true)
+                ], 40, _hoisted_11$l)) : createCommentVNode("", true)
               ]),
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(state2).characters, (character, index) => {
                 return openBlock(), createBlock(_sfc_main$1q, {
@@ -143346,7 +145758,7 @@ const _hoisted_4$19 = ["aria-pressed", "title", "onClick"];
 const _hoisted_5$18 = ["disabled", "title"];
 const _hoisted_6$$ = ["disabled", "title"];
 const _hoisted_7$P = ["disabled", "title"];
-const _hoisted_8$A = ["title"];
+const _hoisted_8$z = ["title"];
 const historyBtnClass = "ctv:inline-flex ctv:size-7 ctv:items-center ctv:justify-center ctv:rounded-md ctv:border-0 ctv:bg-transparent ctv:text-muted-foreground ctv:cursor-pointer ctv:transition-colors ctv:hover:bg-secondary-background ctv:hover:text-base-foreground ctv:disabled:opacity-30 ctv:disabled:cursor-default ctv:disabled:hover:bg-transparent";
 const actionBtnClass = "ctv:inline-flex ctv:h-7 ctv:items-center ctv:gap-1 ctv:rounded-lg ctv:border ctv:border-border-subtle ctv:bg-secondary-background ctv:px-2 ctv:text-2xs ctv:text-base-foreground ctv:cursor-pointer ctv:[font-family:inherit] ctv:transition-colors ctv:hover:bg-secondary-background-hover ctv:disabled:opacity-40 ctv:disabled:cursor-default";
 const _sfc_main$1k = /* @__PURE__ */ defineComponent({
@@ -143433,7 +145845,7 @@ const _sfc_main$1k = /* @__PURE__ */ defineComponent({
             (...args) => unref(editor).fitView && unref(editor).fitView(...args))
           }, [
             createVNode(unref(IconScan), { class: "ctv:size-3.5" })
-          ], 8, _hoisted_8$A),
+          ], 8, _hoisted_8$z),
           _cache2[6] || (_cache2[6] = createBaseVNode("div", { class: "ctv:flex-1" }, null, -1)),
           renderSlot(_ctx.$slots, "trailing")
         ])
@@ -143708,11 +146120,11 @@ const _hoisted_6$_ = {
   class: "ctv:py-3 ctv:text-center ctv:text-2xs ctv:italic ctv:text-muted-foreground/60"
 };
 const _hoisted_7$O = ["onClick", "onDblclick"];
-const _hoisted_8$z = ["value", "onKeydown", "onBlur"];
-const _hoisted_9$v = ["title"];
-const _hoisted_10$o = ["title", "onClick"];
-const _hoisted_11$l = ["title", "onClick"];
-const _hoisted_12$f = ["title", "onClick"];
+const _hoisted_8$y = ["value", "onKeydown", "onBlur"];
+const _hoisted_9$u = ["title"];
+const _hoisted_10$n = ["title", "onClick"];
+const _hoisted_11$k = ["title", "onClick"];
+const _hoisted_12$e = ["title", "onClick"];
 const _hoisted_13$a = {
   key: 2,
   class: "ctv:mt-0.5 ctv:flex ctv:items-center ctv:gap-0.5"
@@ -143840,7 +146252,7 @@ const _sfc_main$1j = /* @__PURE__ */ defineComponent({
               ],
               onBlur: ($event) => unref(commitRename)(layer.id, $event),
               onVnodeMounted: _cache2[7] || (_cache2[7] = ({ el }) => el.select())
-            }, null, 40, _hoisted_8$z)) : (openBlock(), createElementBlock("span", {
+            }, null, 40, _hoisted_8$y)) : (openBlock(), createElementBlock("span", {
               key: 1,
               class: "ctv:min-w-0 ctv:flex-1 ctv:truncate ctv:text-2xs",
               title: layer.name
@@ -143850,7 +146262,7 @@ const _sfc_main$1j = /* @__PURE__ */ defineComponent({
                 class: "ctv:mr-0.5 ctv:inline ctv:size-3 ctv:align-[-2px] ctv:text-muted-foreground"
               })) : createCommentVNode("", true),
               createTextVNode(" " + toDisplayString$1(layer.name), 1)
-            ], 8, _hoisted_9$v)),
+            ], 8, _hoisted_9$u)),
             layer.mask ? (openBlock(), createElementBlock("button", {
               key: 2,
               type: "button",
@@ -143859,7 +146271,7 @@ const _sfc_main$1j = /* @__PURE__ */ defineComponent({
               onClick: withModifiers(($event) => unref(editor).toggleMaskEnabled(layer.id), ["stop"])
             }, [
               createVNode(unref(IconCircleDashed), { class: "ctv:size-3.5" })
-            ], 10, _hoisted_10$o)) : createCommentVNode("", true),
+            ], 10, _hoisted_10$n)) : createCommentVNode("", true),
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(miniBtnClass$1),
@@ -143873,7 +146285,7 @@ const _sfc_main$1j = /* @__PURE__ */ defineComponent({
                 key: 1,
                 class: "ctv:size-3.5 ctv:opacity-50"
               }))
-            ], 8, _hoisted_11$l),
+            ], 8, _hoisted_11$k),
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(miniBtnClass$1),
@@ -143887,7 +146299,7 @@ const _sfc_main$1j = /* @__PURE__ */ defineComponent({
                 key: 1,
                 class: "ctv:size-3.5 ctv:opacity-50"
               }))
-            ], 8, _hoisted_12$f)
+            ], 8, _hoisted_12$e)
           ], 42, _hoisted_7$O);
         }), 128)),
         unref(active) ? (openBlock(), createElementBlock("div", _hoisted_13$a, [
@@ -144145,11 +146557,11 @@ const _hoisted_7$N = {
   key: 0,
   class: "ctv:text-2xs ctv:text-red-400"
 };
-const _hoisted_8$y = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
-const _hoisted_9$u = ["value"];
-const _hoisted_10$n = ["value"];
-const _hoisted_11$k = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
-const _hoisted_12$e = ["value"];
+const _hoisted_8$x = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
+const _hoisted_9$t = ["value"];
+const _hoisted_10$m = ["value"];
+const _hoisted_11$j = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
+const _hoisted_12$d = ["value"];
 const _hoisted_13$9 = ["value"];
 const _hoisted_14$7 = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
 const _hoisted_15$5 = { class: "ctv:flex ctv:gap-0.5 ctv:rounded ctv:bg-secondary-background ctv:p-0.5" };
@@ -144237,7 +146649,7 @@ const _sfc_main$1i = /* @__PURE__ */ defineComponent({
           ])
         ]),
         unref(fontFailed) ? (openBlock(), createElementBlock("div", _hoisted_7$N, toDisplayString$1(_ctx.$t("layerEditor.loadFontFailed")), 1)) : createCommentVNode("", true),
-        createBaseVNode("div", _hoisted_8$y, [
+        createBaseVNode("div", _hoisted_8$x, [
           createBaseVNode("span", {
             class: normalizeClass(labelClass)
           }, toDisplayString$1(_ctx.$t("layerEditor.fontSize")), 1),
@@ -144249,7 +146661,7 @@ const _sfc_main$1i = /* @__PURE__ */ defineComponent({
             class: normalizeClass(numInputClass),
             value: Math.round(unref(layer).fontSize),
             onChange: _cache2[2] || (_cache2[2] = (e) => unref(patch)({ fontSize: unref(clampNum)(e, 4, 2048) }))
-          }, null, 40, _hoisted_9$u),
+          }, null, 40, _hoisted_9$t),
           createBaseVNode("span", {
             class: normalizeClass(labelClass)
           }, toDisplayString$1(_ctx.$t("layerEditor.textColor")), 1),
@@ -144258,9 +146670,9 @@ const _sfc_main$1i = /* @__PURE__ */ defineComponent({
             class: "ctv:h-5 ctv:w-7 ctv:cursor-pointer ctv:rounded ctv:border-0 ctv:bg-transparent ctv:p-0",
             value: unref(layer).color,
             onInput: _cache2[3] || (_cache2[3] = (e) => unref(patch)({ color: e.target.value }))
-          }, null, 40, _hoisted_10$n)
+          }, null, 40, _hoisted_10$m)
         ]),
-        createBaseVNode("div", _hoisted_11$k, [
+        createBaseVNode("div", _hoisted_11$j, [
           createBaseVNode("span", {
             class: normalizeClass(labelClass)
           }, toDisplayString$1(_ctx.$t("layerEditor.letterSpacing")), 1),
@@ -144272,7 +146684,7 @@ const _sfc_main$1i = /* @__PURE__ */ defineComponent({
             class: normalizeClass(numInputClass),
             value: unref(layer).letterSpacing,
             onChange: _cache2[4] || (_cache2[4] = (e) => unref(patch)({ letterSpacing: unref(clampNum)(e, -50, 200) }))
-          }, null, 40, _hoisted_12$e),
+          }, null, 40, _hoisted_12$d),
           createBaseVNode("span", {
             class: normalizeClass(labelClass)
           }, toDisplayString$1(_ctx.$t("layerEditor.lineHeight")), 1),
@@ -144371,7 +146783,7 @@ let nextId = 1;
 function generateId(prefix = "layer") {
   return `${prefix}-${Date.now().toString(36)}-${(nextId++).toString(36)}`;
 }
-function clamp$1(v2, min2, max2) {
+function clamp(v2, min2, max2) {
   return Math.min(max2, Math.max(min2, v2));
 }
 function num$1(v2, fallback) {
@@ -144418,7 +146830,7 @@ function normalizeLayer(raw) {
     name: typeof l3.name === "string" ? l3.name : "Layer",
     visible: l3.visible !== false,
     locked: l3.locked === true,
-    opacity: clamp$1(num$1(l3.opacity, 1), 0, 1),
+    opacity: clamp(num$1(l3.opacity, 1), 0, 1),
     blendMode: normalizeBlendMode(l3.blendMode),
     transform: normalizeTransform(l3.transform),
     mask: normalizeMask(l3.mask)
@@ -144429,10 +146841,10 @@ function normalizeLayer(raw) {
       type: "text",
       text: typeof l3.text === "string" ? l3.text : "",
       fontRef: normalizeFontRef(l3.fontRef),
-      fontSize: clamp$1(num$1(l3.fontSize, 64), 4, 2048),
+      fontSize: clamp(num$1(l3.fontSize, 64), 4, 2048),
       color: typeof l3.color === "string" && l3.color ? l3.color : "#ffffff",
       letterSpacing: num$1(l3.letterSpacing, 0),
-      lineHeight: clamp$1(num$1(l3.lineHeight, 1.2), 0.5, 4),
+      lineHeight: clamp(num$1(l3.lineHeight, 1.2), 0.5, 4),
       align: l3.align === "center" || l3.align === "right" ? l3.align : "left"
     };
     return layer2;
@@ -144461,8 +146873,8 @@ function normalizeLayerState(raw) {
   const layers = Array.isArray(v2.layers) ? v2.layers.map(normalizeLayer).filter((l3) => l3 !== null) : [];
   return {
     version: 1,
-    width: Math.round(clamp$1(num$1(v2.width, 1024), MIN_ARTBOARD, MAX_ARTBOARD)),
-    height: Math.round(clamp$1(num$1(v2.height, 1024), MIN_ARTBOARD, MAX_ARTBOARD)),
+    width: Math.round(clamp(num$1(v2.width, 1024), MIN_ARTBOARD, MAX_ARTBOARD)),
+    height: Math.round(clamp(num$1(v2.height, 1024), MIN_ARTBOARD, MAX_ARTBOARD)),
     layers
   };
 }
@@ -146018,28 +148430,28 @@ Typr["T"].name = {
       var noffset = rU(data, offset2);
       offset2 += 2;
       var soff = ooo + noffset;
-      var str;
-      if (platformID == 0) str = bin.readUnicode(data, soff, slen / 2);
-      else if (platformID == 3 && encodingID == 0) str = bin.readUnicode(data, soff, slen / 2);
-      else if (platformID == 1 && encodingID == 25) str = bin.readUnicode(data, soff, slen / 2);
-      else if (encodingID == 0) str = bin.readASCII(data, soff, slen);
-      else if (encodingID == 1) str = bin.readUnicode(data, soff, slen / 2);
-      else if (encodingID == 3) str = bin.readUnicode(data, soff, slen / 2);
-      else if (encodingID == 4) str = bin.readUnicode(data, soff, slen / 2);
-      else if (encodingID == 5) str = bin.readUnicode(data, soff, slen / 2);
-      else if (encodingID == 10) str = bin.readUnicode(data, soff, slen / 2);
+      var str2;
+      if (platformID == 0) str2 = bin.readUnicode(data, soff, slen / 2);
+      else if (platformID == 3 && encodingID == 0) str2 = bin.readUnicode(data, soff, slen / 2);
+      else if (platformID == 1 && encodingID == 25) str2 = bin.readUnicode(data, soff, slen / 2);
+      else if (encodingID == 0) str2 = bin.readASCII(data, soff, slen);
+      else if (encodingID == 1) str2 = bin.readUnicode(data, soff, slen / 2);
+      else if (encodingID == 3) str2 = bin.readUnicode(data, soff, slen / 2);
+      else if (encodingID == 4) str2 = bin.readUnicode(data, soff, slen / 2);
+      else if (encodingID == 5) str2 = bin.readUnicode(data, soff, slen / 2);
+      else if (encodingID == 10) str2 = bin.readUnicode(data, soff, slen / 2);
       else if (platformID == 1) {
-        str = bin.readASCII(data, soff, slen);
+        str2 = bin.readASCII(data, soff, slen);
         console.log("reading unknown MAC encoding " + encodingID + " as ASCII");
       } else {
         console.log("unknown encoding " + encodingID + ", platformID: " + platformID);
-        str = bin.readASCII(data, soff, slen);
+        str2 = bin.readASCII(data, soff, slen);
       }
       var tid = "p" + platformID + "," + languageID.toString(16);
       if (obj[tid] == null) obj[tid] = {};
       var name = names[nameID];
-      if (name) obj[tid][name] = str;
-      obj[tid]["_" + nameID] = str;
+      if (name) obj[tid][name] = str2;
+      obj[tid]["_" + nameID] = str2;
       obj[tid]["_lang"] = languageID;
     }
     var out = Typr["T"].name.selectOne(obj), ff = "fontFamily";
@@ -146666,7 +149078,7 @@ Typr["U"] = (function() {
     }
     return [0, 0, 0, 0];
   }
-  function shape(font, str, prm) {
+  function shape(font, str2, prm) {
     if (prm == null) prm = {};
     prm["ltr"];
     prm["fts"];
@@ -146677,8 +149089,8 @@ Typr["U"] = (function() {
       axs = _normalizeAxis(font, axs);
     }
     var gls = [];
-    for (var i2 = 0; i2 < str.length; i2++) {
-      var cc = str.codePointAt(i2);
+    for (var i2 = 0; i2 < str2.length; i2++) {
+      var cc = str2.codePointAt(i2);
       if (cc > 65535) i2++;
       gls.push(codeToGlyph(font, cc));
     }
@@ -146816,9 +149228,9 @@ Typr["U"] = (function() {
           boff += 4;
           bmp = new Uint8Array(CBDT.buffer, CBDT.byteOffset + boff, len);
         }
-        var str = "";
-        for (var i2 = 0; i2 < len; i2++) str += String.fromCharCode(bmp[i2]);
-        cmd = font["__tmp"]["g" + gid] = "data:image/png;base64," + btoa(str);
+        var str2 = "";
+        for (var i2 = 0; i2 < len; i2++) str2 += String.fromCharCode(bmp[i2]);
+        cmd = font["__tmp"]["g" + gid] = "data:image/png;base64," + btoa(str2);
       }
       path.cmds.push(cmd);
       var upe = font["head"]["unitsPerEm"] * 1.15;
@@ -147591,7 +150003,7 @@ Typr["U"] = (function() {
           return result;
         };
         var te2;
-        return function(fnt, str, prm) {
+        return function(fnt, str2, prm) {
           var fdata = fnt["_data"], fn3 = fnt["name"]["postScriptName"];
           var ltr = prm["ltr"], fts = prm["fts"], axs = prm["axs"];
           if (fnt["fvar"] && axs == null) axs = fnt["fvar"][1][fnt["_vindex"]][2];
@@ -147619,7 +150031,7 @@ Typr["U"] = (function() {
           }
           if (te2 == null) te2 = new window["TextEncoder"]("utf8");
           var buffer = exp["hb_buffer_create"]();
-          var bytes = te2["encode"](str);
+          var bytes = te2["encode"](str2);
           var len = bytes.length, strp = exp["malloc"](len);
           heapu8.set(bytes, strp);
           exp["hb_buffer_add_utf8"](buffer, strp, len, 0, len);
@@ -147661,7 +150073,7 @@ Typr["U"] = (function() {
           for (var i2 = 1; i2 < arr.length; i2++) {
             var gl = arr[i2], cl = gl["cl"];
             while (true) {
-              var cpt = str.codePointAt(ci), cln = codeLength(cpt);
+              var cpt = str2.codePointAt(ci), cln = codeLength(cpt);
               if (bi + cln <= cl) {
                 bi += cln;
                 ci += cpt <= 65535 ? 1 : 2;
@@ -148048,17 +150460,17 @@ function rotateTransform(start2, startPt, curPt, snap15 = false) {
   const c2 = layerCenter(start2);
   const a0 = Math.atan2(startPt.y - c2.y, startPt.x - c2.x);
   const a1 = Math.atan2(curPt.y - c2.y, curPt.x - c2.x);
-  let rotation = start2.rotation + (a1 - a0);
-  if (snap15) rotation = Math.round(rotation / SNAP_STEP) * SNAP_STEP;
-  while (rotation > Math.PI) rotation -= Math.PI * 2;
-  while (rotation <= -Math.PI) rotation += Math.PI * 2;
-  return { ...start2, rotation };
+  let rotation2 = start2.rotation + (a1 - a0);
+  if (snap15) rotation2 = Math.round(rotation2 / SNAP_STEP) * SNAP_STEP;
+  while (rotation2 > Math.PI) rotation2 -= Math.PI * 2;
+  while (rotation2 <= -Math.PI) rotation2 += Math.PI * 2;
+  return { ...start2, rotation: rotation2 };
 }
 const RESIZE_CURSORS = ["ew-resize", "nwse-resize", "ns-resize", "nesw-resize"];
-function cursorForHandle(handle, rotation) {
+function cursorForHandle(handle, rotation2) {
   if (handle === "rotate") return "grab";
   const d2 = HANDLE_DIRS[handle];
-  const angle = Math.atan2(d2.hy, d2.hx) + rotation;
+  const angle = Math.atan2(d2.hy, d2.hx) + rotation2;
   const sector = (Math.round(angle / (Math.PI / 4)) % 4 + 4) % 4;
   return RESIZE_CURSORS[sector];
 }
@@ -149708,8 +152120,8 @@ const _hoisted_4$16 = ["onClick"];
 const _hoisted_5$15 = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
 const _hoisted_6$Y = ["value"];
 const _hoisted_7$M = ["value"];
-const _hoisted_8$x = ["min", "max", "step", "value", "onInput"];
-const _hoisted_9$t = { class: "ctv:w-9 ctv:text-right ctv:text-2xs ctv:font-mono ctv:text-muted-foreground" };
+const _hoisted_8$w = ["min", "max", "step", "value", "onInput"];
+const _hoisted_9$s = { class: "ctv:w-9 ctv:text-right ctv:text-2xs ctv:font-mono ctv:text-muted-foreground" };
 const paramLabelClass = "ctv:w-20 ctv:shrink-0 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground";
 const presetChipClass = "ctv:inline-flex ctv:items-center ctv:cursor-pointer ctv:[font-family:inherit] ctv:rounded-lg ctv:border ctv:border-border-subtle ctv:bg-secondary-background ctv:px-2 ctv:py-0.5 ctv:text-2xs ctv:text-muted-foreground ctv:transition-colors ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground";
 const _sfc_main$1f = /* @__PURE__ */ defineComponent({
@@ -149813,8 +152225,8 @@ const _sfc_main$1f = /* @__PURE__ */ defineComponent({
                 class: "ctv:flex-1 ctv:accent-primary-background ctv:cursor-pointer",
                 value: unref(params)[s.key],
                 onInput: (e) => unref(setParam)(s.key, Number(e.target.value))
-              }, null, 40, _hoisted_8$x),
-              createBaseVNode("span", _hoisted_9$t, toDisplayString$1(unref(params)[s.key].toFixed(2)), 1)
+              }, null, 40, _hoisted_8$w),
+              createBaseVNode("span", _hoisted_9$s, toDisplayString$1(unref(params)[s.key].toFixed(2)), 1)
             ]);
           }), 128))
         ], 32),
@@ -150635,518 +153047,6 @@ function colorPreviewStyle(v2) {
   if (parts.length) style2.filter = parts.join(" ");
   return style2;
 }
-const videoColorFrag = "#version 300 es\r\nprecision highp float;\r\n\r\nuniform sampler2D u_image0;\r\n\r\nuniform float u_float0;\r\nuniform float u_float1;\r\nuniform float u_float2;\r\nuniform float u_float3;\r\nuniform float u_float4;\r\nuniform float u_float5;\r\nuniform float u_float6;\r\nuniform float u_float7;\r\nuniform float u_float8;\r\nuniform float u_float9;\r\nuniform float u_float10;\r\nuniform float u_float11;\r\nuniform float u_float12;\r\nuniform float u_float13;\r\nuniform float u_float14;\r\nuniform float u_float15;\r\nuniform float u_float16;\r\nuniform float u_float17;\r\nuniform float u_float18;\r\nuniform float u_float19;\r\nuniform float u_float20;\r\nuniform float u_float21;\r\nuniform float u_float22;\r\nuniform float u_float23;\r\nuniform float u_float24;\r\nuniform float u_float25;\r\nuniform float u_float26;\r\nuniform float u_float27;\r\nuniform float u_float28;\r\nuniform float u_float29;\r\nuniform float u_float30;\r\n\r\nuniform bool u_bool0;\r\nuniform bool u_bool1;\r\nuniform bool u_bool2;\r\nuniform bool u_bool3;\r\nuniform bool u_bool4;\r\nuniform bool u_bool5;\r\nuniform bool u_bool6;\r\nuniform bool u_bool7;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nconst float ENTRY_SCALE = 65280.0 / 65535.0;\r\n\r\nvec3 quantTrunc(vec3 v) {\r\n    return clamp(floor(v * 255.0), 0.0, 255.0) / 255.0;\r\n}\r\n\r\nvec3 quantRound(vec3 v) {\r\n    return floor(clamp(v, 0.0, 1.0) * 255.0 + 0.5) / 255.0;\r\n}\r\n\r\nvec3 floatExit8(vec3 v) {\r\n    vec3 v16 = floor(clamp(v, 0.0, 1.0) * 65535.0 + 0.5);\r\n    return min(floor((v16 + 128.0) / 256.0), 255.0) / 255.0;\r\n}\r\n\r\nfloat fastDiv255(float x) {\r\n    return floor((x + 128.0) * 257.0 / 65536.0);\r\n}\r\n\r\nvec3 hueSat(vec3 c) {\r\n    float r = floor(c.r * 255.0 + 0.5);\r\n    float g = floor(c.g * 255.0 + 0.5);\r\n    float b = floor(c.b * 255.0 + 0.5);\r\n    float f = 0.0;\r\n    f = max(f, r - max(g, b));\r\n    f = max(f, min(r, g) - b);\r\n    f = max(f, g - max(r, b));\r\n    f = max(f, min(g, b) - r);\r\n    f = max(f, b - max(r, g));\r\n    f = max(f, min(r, b) - g);\r\n    f = min(f, 255.0);\r\n    float tr = floor((r * u_float6 + g * u_float9 + b * u_float12) / 65536.0);\r\n    float tg = floor((r * u_float7 + g * u_float10 + b * u_float13) / 65536.0);\r\n    float tb = floor((r * u_float8 + g * u_float11 + b * u_float14) / 65536.0);\r\n    vec3 o = vec3(\r\n        r + fastDiv255((tr - r) * f),\r\n        g + fastDiv255((tg - g) * f),\r\n        b + fastDiv255((tb - b) * f));\r\n    return clamp(o, 0.0, 255.0) / 255.0;\r\n}\r\n\r\nvec3 vibrance(vec3 c) {\r\n    float intensity = u_float15;\r\n    float sat = max(c.r, max(c.g, c.b)) - min(c.r, min(c.g, c.b));\r\n    float luma = c.g * 0.715158 + c.r * 0.212656 + c.b * 0.072186;\r\n    float s = intensity > 0.0 ? 1.0 : -1.0;\r\n    float k = 1.0 + intensity * (1.0 + s * sat);\r\n    return quantTrunc(vec3(luma) + (c - vec3(luma)) * k);\r\n}\r\n\r\nfloat getComponent(float v, float l, float s, float m, float h) {\r\n    const float a = 4.0;\r\n    const float b = 0.333;\r\n    const float sc = 0.7;\r\n    float sw = s * clamp((b - l) * a + 0.5, 0.0, 1.0) * sc;\r\n    float mw = m * clamp((l - b) * a + 0.5, 0.0, 1.0)\r\n             * clamp((1.0 - l - b) * a + 0.5, 0.0, 1.0) * sc;\r\n    float hw = h * clamp((l + b - 1.0) * a + 0.5, 0.0, 1.0) * sc;\r\n    return clamp(v + sw + mw + hw, 0.0, 1.0);\r\n}\r\n\r\nfloat hfun(float n, float h, float s, float l) {\r\n    float a = s * min(l, 1.0 - l);\r\n    float k = mod(n + h / 30.0, 12.0);\r\n    return clamp(l - a * max(min(min(k - 3.0, 9.0 - k), 1.0), -1.0), 0.0, 1.0);\r\n}\r\n\r\nvec3 preservel(vec3 c, float l) {\r\n    float mx = max(c.r, max(c.g, c.b));\r\n    float mn = min(c.r, min(c.g, c.b));\r\n    float hl = l * 0.5;\r\n    float h;\r\n    if (c.r == c.g && c.g == c.b) h = 0.0;\r\n    else if (mx == c.r) h = 60.0 * ((c.g - c.b) / (mx - mn));\r\n    else if (mx == c.g) h = 60.0 * (2.0 + (c.b - c.r) / (mx - mn));\r\n    else h = 60.0 * (4.0 + (c.r - c.g) / (mx - mn));\r\n    if (h < 0.0) h += 360.0;\r\n    float s = (mx == 1.0 || mn == 0.0)\r\n        ? 0.0\r\n        : (mx - mn) / (1.0 - abs(2.0 * hl - 1.0));\r\n    return vec3(hfun(0.0, h, s, hl), hfun(8.0, h, s, hl), hfun(4.0, h, s, hl));\r\n}\r\n\r\nvec3 colorBalance(vec3 c) {\r\n    float l = max(c.r, max(c.g, c.b)) + min(c.r, min(c.g, c.b));\r\n    vec3 o = vec3(\r\n        getComponent(c.r, l, u_float22, u_float25, u_float28),\r\n        getComponent(c.g, l, u_float23, u_float26, u_float29),\r\n        getComponent(c.b, l, u_float24, u_float27, u_float30));\r\n    if (u_bool6) o = preservel(o, l);\r\n    return quantRound(o);\r\n}\r\n\r\nvoid main() {\r\n    vec4 tex = texture(u_image0, v_texCoord);\r\n    vec3 c = tex.rgb;\r\n    bool inFloat = false;\r\n\r\n    if (u_bool0) {\r\n        c = (c * ENTRY_SCALE - vec3(u_float0)) * u_float1;\r\n        inFloat = true;\r\n        if (u_bool1) c = mix(c, c * vec3(u_float2, u_float3, u_float4), u_float5);\r\n    } else if (u_bool1) {\r\n        c = mix(c, c * vec3(u_float2, u_float3, u_float4), u_float5);\r\n        c = quantTrunc(c);\r\n    }\r\n\r\n    if (inFloat && !u_bool7) {\r\n        c = floatExit8(c);\r\n        inFloat = false;\r\n    }\r\n\r\n    if (u_bool2) c = hueSat(c);\r\n    if (u_bool3) c = vibrance(c);\r\n\r\n    if (u_bool4) {\r\n        vec3 lo = vec3(u_float16, u_float17, u_float18);\r\n        vec3 k = vec3(u_float19, u_float20, u_float21);\r\n        c = (c - lo) * k;\r\n        if (!inFloat) c = quantTrunc(c);\r\n    }\r\n\r\n    if (u_bool5) {\r\n        if (inFloat) {\r\n            c = floatExit8(c);\r\n            inFloat = false;\r\n        }\r\n        c = colorBalance(c);\r\n    }\r\n\r\n    if (inFloat) c = floatExit8(c);\r\n\r\n    fragColor = vec4(clamp(c, 0.0, 1.0), tex.a);\r\n}\r\n";
-function clampF(v2, lo, hi, def2 = 0) {
-  const x2 = Number.isFinite(v2) ? v2 : def2;
-  return Math.min(hi, Math.max(lo, x2));
-}
-function clamp01$1(v2) {
-  return Math.min(1, Math.max(0, v2));
-}
-function quantTrunc(v2) {
-  return Math.min(255, Math.max(0, Math.trunc(v2 * 255))) / 255;
-}
-function lerpf(v0, v1, f2) {
-  return v0 + (v1 - v0) * f2;
-}
-function ffsign(v2) {
-  return v2 > 0 ? 1 : -1;
-}
-function normalizeVideoColorParams(p2) {
-  const wheel = (w2) => [
-    clampF((w2 == null ? void 0 : w2[0]) ?? 0, -1, 1),
-    clampF((w2 == null ? void 0 : w2[1]) ?? 0, -1, 1),
-    clampF((w2 == null ? void 0 : w2[2]) ?? 0, -1, 1)
-  ];
-  const bp = clampF(p2.blackpoint ?? 0, -0.5, 0.5);
-  const wp = clampF(p2.whitepoint ?? 1, 0.5, 2);
-  return {
-    exposure: clampF(p2.exposure ?? 0, -3, 3),
-    black: clampF(p2.black ?? 0, -0.1, 0.1),
-    temperature: Math.min(4e4, Math.max(1e3, Math.trunc(p2.temperature || 6500))),
-    tempMix: clampF(p2.tempMix ?? 1, 0, 1, 1),
-    hue: clampF(p2.hue ?? 0, -180, 180),
-    saturation: clampF(p2.saturation ?? 0, -1, 1),
-    vibrance: clampF(p2.vibrance ?? 0, -2, 2),
-    blackpoint: bp,
-    whitepoint: wp,
-    shadows: wheel(p2.shadows),
-    midtones: wheel(p2.midtones),
-    highlights: wheel(p2.highlights),
-    preserveLightness: p2.preserveLightness ?? true
-  };
-}
-function activeVideoColorFilters(p2) {
-  return {
-    exposure: p2.exposure !== 0 || p2.black !== 0,
-    temperature: p2.temperature !== 6500,
-    hueSaturation: p2.hue !== 0 || p2.saturation !== 0,
-    vibrance: p2.vibrance !== 0,
-    levels: p2.blackpoint !== 0 || p2.whitepoint !== 1,
-    balance: [...p2.shadows, ...p2.midtones, ...p2.highlights].some((v2) => v2 !== 0)
-  };
-}
-function exposureScale(exposure, black) {
-  const diff = Math.abs(Math.pow(2, -exposure) - black);
-  return 1 / (diff > 0 ? diff : 1 / 1024);
-}
-function applyExposure(rgb, exposure, black) {
-  const scale = exposureScale(exposure, black);
-  return [
-    (rgb[0] - black) * scale,
-    (rgb[1] - black) * scale,
-    (rgb[2] - black) * scale
-  ];
-}
-function kelvinToRgb(k2) {
-  const kelvin = k2 / 100;
-  let r;
-  let g2;
-  let b2;
-  if (kelvin <= 66) {
-    r = 1;
-    g2 = clamp01$1(0.3900815787690196 * Math.log(kelvin) - 0.6318414437886275);
-  } else {
-    const t2 = Math.max(kelvin - 60, 0);
-    r = clamp01$1(1.292936186062745 * Math.pow(t2, -0.1332047592));
-    g2 = clamp01$1(1.1298908608952942 * Math.pow(t2, -0.0755148492));
-  }
-  if (kelvin >= 66) b2 = 1;
-  else if (kelvin <= 19) b2 = 0;
-  else b2 = clamp01$1(0.543206789110196 * Math.log(kelvin - 10) - 1.19625408914);
-  return [r, g2, b2];
-}
-function applyColorTemperature(rgb, kelvin, mix) {
-  const color = kelvinToRgb(kelvin);
-  return [
-    lerpf(rgb[0], rgb[0] * color[0], mix),
-    lerpf(rgb[1], rgb[1] * color[1], mix),
-    lerpf(rgb[2], rgb[2] * color[2], mix)
-  ];
-}
-function identityMatrix() {
-  return Array.from({ length: 4 }, (_2, y2) => Array.from({ length: 4 }, (_22, x2) => y2 === x2 ? 1 : 0));
-}
-function matrixMultiply(a, b2, c2) {
-  const temp = Array.from({ length: 4 }, () => [0, 0, 0, 0]);
-  for (let y2 = 0; y2 < 4; y2++) {
-    for (let x2 = 0; x2 < 4; x2++) {
-      temp[y2][x2] = b2[y2][0] * a[0][x2] + b2[y2][1] * a[1][x2] + b2[y2][2] * a[2][x2] + b2[y2][3] * a[3][x2];
-    }
-  }
-  for (let y2 = 0; y2 < 4; y2++) {
-    for (let x2 = 0; x2 < 4; x2++) c2[y2][x2] = temp[y2][x2];
-  }
-}
-function saturationMatrix(matrix, saturation, rlw, glw, blw) {
-  const s = 1 - saturation;
-  const m2 = [
-    [s * rlw + saturation, s * rlw, s * rlw, 0],
-    [s * glw, s * glw + saturation, s * glw, 0],
-    [s * blw, s * blw, s * blw + saturation, 0],
-    [0, 0, 0, 1]
-  ];
-  matrixMultiply(m2, matrix, matrix);
-}
-function xRotateMatrix(matrix, rs, rc) {
-  const m2 = [
-    [1, 0, 0, 0],
-    [0, rc, rs, 0],
-    [0, -rs, rc, 0],
-    [0, 0, 0, 1]
-  ];
-  matrixMultiply(m2, matrix, matrix);
-}
-function yRotateMatrix(matrix, rs, rc) {
-  const m2 = [
-    [rc, 0, -rs, 0],
-    [0, 1, 0, 0],
-    [rs, 0, rc, 0],
-    [0, 0, 0, 1]
-  ];
-  matrixMultiply(m2, matrix, matrix);
-}
-function zRotateMatrix(matrix, rs, rc) {
-  const m2 = [
-    [rc, rs, 0, 0],
-    [-rs, rc, 0, 0],
-    [0, 0, 1, 0],
-    [0, 0, 0, 1]
-  ];
-  matrixMultiply(m2, matrix, matrix);
-}
-function shueRotateMatrix(matrix, rotation) {
-  let mag = Math.SQRT2;
-  const xrs = 1 / mag;
-  const xrc = 1 / mag;
-  xRotateMatrix(matrix, xrs, xrc);
-  mag = Math.sqrt(3);
-  const yrs = -1 / mag;
-  const yrc = Math.SQRT2 / mag;
-  yRotateMatrix(matrix, yrs, yrc);
-  const zrs = Math.sin(rotation * Math.PI / 180);
-  const zrc = Math.cos(rotation * Math.PI / 180);
-  zRotateMatrix(matrix, zrs, zrc);
-  yRotateMatrix(matrix, -yrs, yrc);
-  xRotateMatrix(matrix, -xrs, xrc);
-}
-function hueSaturationMatrix(hue, saturation) {
-  const matrix = identityMatrix();
-  saturationMatrix(matrix, 1 + saturation, 0.333, 0.334, 0.333);
-  shueRotateMatrix(matrix, hue);
-  return [
-    matrix[0][0],
-    matrix[0][1],
-    matrix[0][2],
-    matrix[1][0],
-    matrix[1][1],
-    matrix[1][2],
-    matrix[2][0],
-    matrix[2][1],
-    matrix[2][2]
-  ];
-}
-function fastDiv255(x2) {
-  return (x2 + 128) * 257 >> 16;
-}
-function applyHueSaturation(rgb, matrix) {
-  const r = Math.round(clamp01$1(rgb[0]) * 255);
-  const g2 = Math.round(clamp01$1(rgb[1]) * 255);
-  const b2 = Math.round(clamp01$1(rgb[2]) * 255);
-  const m2 = matrix.map((v2) => Math.round(v2 * 65536));
-  let f2 = 0;
-  f2 = Math.max(f2, r - Math.max(g2, b2));
-  f2 = Math.max(f2, Math.min(r, g2) - b2);
-  f2 = Math.max(f2, g2 - Math.max(r, b2));
-  f2 = Math.max(f2, Math.min(g2, b2) - r);
-  f2 = Math.max(f2, b2 - Math.max(r, g2));
-  f2 = Math.max(f2, Math.min(r, b2) - g2);
-  f2 = Math.min(f2, 255);
-  const tr = Math.floor((r * m2[0] + g2 * m2[3] + b2 * m2[6]) / 65536);
-  const tg = Math.floor((r * m2[1] + g2 * m2[4] + b2 * m2[7]) / 65536);
-  const tb = Math.floor((r * m2[2] + g2 * m2[5] + b2 * m2[8]) / 65536);
-  const or = r + fastDiv255((tr - r) * f2);
-  const og = g2 + fastDiv255((tg - g2) * f2);
-  const ob = b2 + fastDiv255((tb - b2) * f2);
-  return [
-    Math.min(255, Math.max(0, or)) / 255,
-    Math.min(255, Math.max(0, og)) / 255,
-    Math.min(255, Math.max(0, ob)) / 255
-  ];
-}
-function applyVibrance(rgb, intensity2) {
-  const [r, g2, b2] = rgb;
-  const sat = Math.max(r, g2, b2) - Math.min(r, g2, b2);
-  const luma = g2 * 0.715158 + r * 0.212656 + b2 * 0.072186;
-  const c2 = 1 + intensity2 * (1 + ffsign(intensity2) * sat);
-  return [
-    quantTrunc(lerpf(luma, r, c2)),
-    quantTrunc(lerpf(luma, g2, c2)),
-    quantTrunc(lerpf(luma, b2, c2))
-  ];
-}
-function colorLevelsFor(blackpoint, whitepoint, frameMin = [0, 0, 0]) {
-  const bp = blackpoint;
-  const wp = Math.max(bp + 0.01, whitepoint);
-  const imax = Math.round(Math.min(wp, 1) * 255) / 255;
-  const omax = Math.round((wp > 1 ? (1 - bp) / (wp - bp) : 1) * 255) / 255;
-  const iminFixed = Math.round(bp * 255) / 255;
-  const imin = bp < 0 ? [...frameMin] : [iminFixed, iminFixed, iminFixed];
-  return {
-    imin,
-    coeff: [
-      omax / (imax - imin[0]),
-      omax / (imax - imin[1]),
-      omax / (imax - imin[2])
-    ]
-  };
-}
-function computeVideoColorUniforms(raw, frameMin = [0, 0, 0]) {
-  const p2 = normalizeVideoColorParams(raw);
-  const active = activeVideoColorFilters(p2);
-  const levels = levelsRunsInFloat(active) ? colorLevelsForFloat(p2.blackpoint, p2.whitepoint, frameMin) : colorLevelsFor(p2.blackpoint, p2.whitepoint, frameMin);
-  return {
-    active,
-    black: p2.black,
-    scale: exposureScale(p2.exposure, p2.black),
-    tempColor: kelvinToRgb(p2.temperature),
-    tempMix: p2.tempMix,
-    hsMatrix: hueSaturationMatrix(p2.hue, p2.saturation),
-    vibrance: p2.vibrance,
-    levelsMin: levels.imin,
-    levelsCoeff: levels.coeff,
-    shadows: p2.shadows,
-    midtones: p2.midtones,
-    highlights: p2.highlights,
-    preserveLightness: p2.preserveLightness,
-    floatLevels: levelsRunsInFloat(active)
-  };
-}
-function levelsNeedsFrameMin(raw) {
-  const p2 = normalizeVideoColorParams(raw);
-  return activeVideoColorFilters(p2).levels && p2.blackpoint < 0;
-}
-function levelsRunsInFloat(active) {
-  return active.exposure && !active.hueSaturation && !active.vibrance;
-}
-const FLOAT_ENTRY_SCALE = 65280 / 65535;
-function floatExit8(v2) {
-  const v16 = Math.round(clamp01$1(v2) * 65535);
-  return Math.min(255, v16 + 128 >> 8) / 255;
-}
-function colorLevelsForFloat(blackpoint, whitepoint, frameMin = [0, 0, 0]) {
-  const bp = blackpoint;
-  const wp = Math.max(bp + 0.01, whitepoint);
-  const imax = Math.min(wp, 1);
-  const omax = wp > 1 ? (1 - bp) / (wp - bp) : 1;
-  const imin = bp < 0 ? [...frameMin] : [bp, bp, bp];
-  return {
-    imin,
-    coeff: [
-      omax / (imax - imin[0]),
-      omax / (imax - imin[1]),
-      omax / (imax - imin[2])
-    ]
-  };
-}
-function frameMinOf(pixels) {
-  const min2 = [1, 1, 1];
-  for (const px2 of pixels) {
-    min2[0] = Math.min(min2[0], px2[0]);
-    min2[1] = Math.min(min2[1], px2[1]);
-    min2[2] = Math.min(min2[2], px2[2]);
-  }
-  return min2;
-}
-function planPipeline(raw) {
-  const p2 = normalizeVideoColorParams(raw);
-  const active = activeVideoColorFilters(p2);
-  return {
-    p: p2,
-    active,
-    matrix: active.hueSaturation ? hueSaturationMatrix(p2.hue, p2.saturation) : null,
-    floatLevels: levelsRunsInFloat(active)
-  };
-}
-function runPreLevels(rgb, plan) {
-  const { p: p2, active, matrix, floatLevels } = plan;
-  let c2 = [rgb[0], rgb[1], rgb[2]];
-  let inFloat = false;
-  if (active.exposure) {
-    c2 = [c2[0] * FLOAT_ENTRY_SCALE, c2[1] * FLOAT_ENTRY_SCALE, c2[2] * FLOAT_ENTRY_SCALE];
-    c2 = applyExposure(c2, p2.exposure, p2.black);
-    inFloat = true;
-    if (active.temperature) c2 = applyColorTemperature(c2, p2.temperature, p2.tempMix);
-  } else if (active.temperature) {
-    c2 = applyColorTemperature(c2, p2.temperature, p2.tempMix);
-    c2 = [quantTrunc(c2[0]), quantTrunc(c2[1]), quantTrunc(c2[2])];
-  }
-  if (inFloat && !floatLevels) {
-    c2 = [floatExit8(c2[0]), floatExit8(c2[1]), floatExit8(c2[2])];
-    inFloat = false;
-  }
-  if (matrix) c2 = applyHueSaturation(c2, matrix);
-  if (active.vibrance) c2 = applyVibrance(c2, p2.vibrance);
-  return { c: c2, float: inFloat };
-}
-function videoColorFrameMin(pixels, raw) {
-  if (!levelsNeedsFrameMin(raw)) return [0, 0, 0];
-  const plan = planPipeline(raw);
-  return frameMinOf(pixels.map((px2) => runPreLevels(px2, plan).c));
-}
-const MIN_SAMPLE_W = 48;
-const MIN_SAMPLE_H = 27;
-const RENDER_CONFIG$5 = {
-  maxInputs: 1,
-  maxFloatUniforms: 31,
-  maxIntUniforms: 1,
-  maxBoolUniforms: 8,
-  maxCurves: 1
-};
-class VideoColorRenderer {
-  constructor() {
-    __publicField(this, "renderer", useGLSLRenderer(RENDER_CONFIG$5));
-    __publicField(this, "ready", false);
-    __publicField(this, "_error", null);
-    __publicField(this, "minCanvas", null);
-  }
-  get error() {
-    return this._error;
-  }
-  sampleFrameMin(video, params) {
-    if (!levelsNeedsFrameMin(params)) return [0, 0, 0];
-    try {
-      this.minCanvas ?? (this.minCanvas = document.createElement("canvas"));
-      const c2 = this.minCanvas;
-      c2.width = MIN_SAMPLE_W;
-      c2.height = MIN_SAMPLE_H;
-      const ctx = c2.getContext("2d", { willReadFrequently: true });
-      if (!ctx) return [0, 0, 0];
-      ctx.drawImage(video, 0, 0, MIN_SAMPLE_W, MIN_SAMPLE_H);
-      const data = ctx.getImageData(0, 0, MIN_SAMPLE_W, MIN_SAMPLE_H).data;
-      const pixels = [];
-      for (let i = 0; i < data.length; i += 4) {
-        pixels.push([data[i] / 255, data[i + 1] / 255, data[i + 2] / 255]);
-      }
-      return videoColorFrameMin(pixels, params);
-    } catch {
-      return [0, 0, 0];
-    }
-  }
-  renderToCanvas(video, params, target) {
-    const w2 = Math.max(2, video.videoWidth);
-    const h2 = Math.max(2, video.videoHeight);
-    try {
-      if (!this.ready) {
-        if (!this.renderer.init(w2, h2)) {
-          this._error = "WebGL2 not available";
-          return false;
-        }
-        this.ready = true;
-      }
-      const compiled = this.renderer.compileFragment(videoColorFrag);
-      if (!compiled.success) {
-        this._error = compiled.log || "Shader compilation failed";
-        return false;
-      }
-      this._error = null;
-      this.renderer.setResolution(w2, h2);
-      this.renderer.bindInputImage(0, video);
-      const u = computeVideoColorUniforms(params, this.sampleFrameMin(video, params));
-      const floats = [
-        u.black,
-        u.scale,
-        u.tempColor[0],
-        u.tempColor[1],
-        u.tempColor[2],
-        u.tempMix,
-        ...u.hsMatrix.map((v2) => Math.round(v2 * 65536)),
-        u.vibrance,
-        u.levelsMin[0],
-        u.levelsMin[1],
-        u.levelsMin[2],
-        u.levelsCoeff[0],
-        u.levelsCoeff[1],
-        u.levelsCoeff[2],
-        u.shadows[0],
-        u.shadows[1],
-        u.shadows[2],
-        u.midtones[0],
-        u.midtones[1],
-        u.midtones[2],
-        u.highlights[0],
-        u.highlights[1],
-        u.highlights[2]
-      ];
-      floats.forEach((v2, i) => this.renderer.setFloatUniform(i, v2));
-      const bools = [
-        u.active.exposure,
-        u.active.temperature,
-        u.active.hueSaturation,
-        u.active.vibrance,
-        u.active.levels,
-        u.active.balance,
-        u.preserveLightness,
-        u.floatLevels
-      ];
-      bools.forEach((v2, i) => this.renderer.setBoolUniform(i, v2));
-      this.renderer.render();
-      const off = this.renderer.getCanvas();
-      if (!off) {
-        this._error = "Renderer produced no output";
-        return false;
-      }
-      target.width = w2;
-      target.height = h2;
-      const ctx = target.getContext("2d");
-      if (!ctx) {
-        this._error = "2D context unavailable";
-        return false;
-      }
-      ctx.clearRect(0, 0, w2, h2);
-      ctx.drawImage(off, 0, 0);
-      return true;
-    } catch (e) {
-      this._error = e instanceof Error ? e.message : "Render failed";
-      this.renderer.dispose();
-      this.ready = false;
-      return false;
-    }
-  }
-  dispose() {
-    this.renderer.dispose();
-    this.ready = false;
-    this.minCanvas = null;
-  }
-}
-function useVideoColorPreview(opts) {
-  const supported = /* @__PURE__ */ ref(true);
-  const unregister = opts.nodeId != null ? registerPreviewSource(opts.nodeId, () => opts.canvasEl.value) : null;
-  let renderer2 = null;
-  let rafId = 0;
-  let attached = null;
-  function renderOnce() {
-    if (!supported.value) return;
-    const v2 = opts.videoEl.value;
-    const c2 = opts.canvasEl.value;
-    if (!v2 || !c2 || v2.readyState < 2) return;
-    renderer2 ?? (renderer2 = (opts.createRenderer ?? (() => new VideoColorRenderer()))());
-    if (!renderer2.renderToCanvas(v2, opts.params(), c2)) {
-      supported.value = false;
-      stopLoop();
-    }
-  }
-  function loop() {
-    renderOnce();
-    if (supported.value) rafId = requestAnimationFrame(loop);
-  }
-  function startLoop() {
-    stopLoop();
-    if (!supported.value) return;
-    rafId = requestAnimationFrame(loop);
-  }
-  function stopLoop() {
-    if (rafId) cancelAnimationFrame(rafId);
-    rafId = 0;
-  }
-  const onPlay = () => startLoop();
-  const onStop = () => {
-    stopLoop();
-    renderOnce();
-  };
-  const onFrame = () => renderOnce();
-  function detach() {
-    if (!attached) return;
-    attached.removeEventListener("play", onPlay);
-    attached.removeEventListener("pause", onStop);
-    attached.removeEventListener("ended", onStop);
-    attached.removeEventListener("seeked", onFrame);
-    attached.removeEventListener("loadeddata", onFrame);
-    attached = null;
-  }
-  watch(opts.videoEl, (v2) => {
-    detach();
-    stopLoop();
-    if (!v2) return;
-    attached = v2;
-    v2.addEventListener("play", onPlay);
-    v2.addEventListener("pause", onStop);
-    v2.addEventListener("ended", onStop);
-    v2.addEventListener("seeked", onFrame);
-    v2.addEventListener("loadeddata", onFrame);
-    if (v2.paused) renderOnce();
-    else startLoop();
-  }, { immediate: true });
-  watch(() => opts.params(), () => renderOnce());
-  onBeforeUnmount(() => {
-    unregister == null ? void 0 : unregister();
-    detach();
-    stopLoop();
-    renderer2 == null ? void 0 : renderer2.dispose();
-    renderer2 = null;
-  });
-  return { supported, renderOnce, startLoop, stopLoop };
-}
 const _hoisted_1$1X = { class: "ctv:flex ctv:items-start ctv:justify-around ctv:gap-1 ctv:pt-1" };
 const _hoisted_2$16 = { class: "ctv:flex ctv:items-center ctv:justify-between ctv:gap-1 ctv:text-2xs" };
 const _hoisted_3$16 = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-muted-foreground ctv:cursor-pointer" };
@@ -151163,7 +153063,7 @@ const _hoisted_7$K = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_8$w = {
+const _hoisted_8$v = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
@@ -151239,10 +153139,12 @@ const _sfc_main$1a = /* @__PURE__ */ defineComponent({
         preserveLightness: preserveLightness.value
       };
     }
-    const { supported } = useVideoColorPreview({
+    const { supported } = useChainedFxPreview({
       videoEl: previewVideoEl,
       canvasEl: previewCanvas,
       nodeId: String(props.node.id),
+      node: props.node,
+      createRenderer: () => new VideoColorRenderer(),
       params: previewParams
     });
     const previewStyle = computed(() => supported.value ? {} : colorPreviewStyle({
@@ -151402,11 +153304,12 @@ const _sfc_main$1a = /* @__PURE__ */ defineComponent({
             ])
           ], 32),
           createBaseVNode("div", _hoisted_4$12, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_5$12, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_6$W, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_7$K, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_8$w, toDisplayString$1(_ctx.$t("fx.previewNote")), 1))
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_5$12, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_6$W, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_7$K, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_8$v, toDisplayString$1(_ctx.$t("fx.previewNote")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
             node: __props.node,
+            "hide-run-button": "",
             "on-run-request": __props.onRunRequest,
             "on-cancel-request": __props.onCancelRequest,
             "on-disconnect": __props.onDisconnect,
@@ -151703,318 +153606,6 @@ function useCurveChannels(node) {
   }
   return { channel, activeCurve, resetActive, widgets };
 }
-const videoCurvesFrag = "#version 300 es\r\nprecision highp float;\r\n\r\nuniform sampler2D u_image0;\r\nuniform sampler2D u_curve0;\r\nuniform sampler2D u_curve1;\r\nuniform sampler2D u_curve2;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nfloat mapChannel(sampler2D lut, float v) {\r\n    int idx = int(floor(clamp(v, 0.0, 1.0) * 255.0 + 0.5));\r\n    return texelFetch(lut, ivec2(idx, 0), 0).r;\r\n}\r\n\r\nvoid main() {\r\n    vec4 tex = texture(u_image0, v_texCoord);\r\n    fragColor = vec4(\r\n        mapChannel(u_curve0, tex.r),\r\n        mapChannel(u_curve1, tex.g),\r\n        mapChannel(u_curve2, tex.b),\r\n        tex.a);\r\n}\r\n";
-const VIDEO_CURVES_PRESETS = {
-  color_negative: {
-    red: [[0.129, 1], [0.466, 0.498], [0.725, 0]],
-    green: [[0.109, 1], [0.301, 0.498], [0.517, 0]],
-    blue: [[0.098, 1], [0.235, 0.498], [0.423, 0]]
-  },
-  cross_process: {
-    red: [[0, 0], [0.25, 0.156], [0.501, 0.501], [0.686, 0.745], [1, 1]],
-    green: [[0, 0], [0.25, 0.188], [0.38, 0.501], [0.745, 0.815], [1, 0.815]],
-    blue: [[0, 0], [0.231, 0.094], [0.709, 0.874], [1, 1]]
-  },
-  darker: { master: [[0, 0], [0.5, 0.4], [1, 1]] },
-  increase_contrast: {
-    master: [[0, 0], [0.149, 0.066], [0.831, 0.905], [0.905, 0.98], [1, 1]]
-  },
-  lighter: { master: [[0, 0], [0.4, 0.5], [1, 1]] },
-  linear_contrast: { master: [[0, 0], [0.305, 0.286], [0.694, 0.713], [1, 1]] },
-  medium_contrast: { master: [[0, 0], [0.286, 0.219], [0.639, 0.643], [1, 1]] },
-  negative: { master: [[0, 1], [1, 0]] },
-  strong_contrast: {
-    master: [[0, 0], [0.301, 0.196], [0.592, 0.6], [0.686, 0.737], [1, 1]]
-  },
-  vintage: {
-    red: [[0, 0.11], [0.42, 0.51], [1, 0.95]],
-    green: [[0, 0], [0.5, 0.48], [1, 1]],
-    blue: [[0, 0.22], [0.49, 0.44], [1, 0.8]]
-  }
-};
-[
-  "none",
-  ...Object.keys(VIDEO_CURVES_PRESETS)
-];
-const LUT_SIZE$1 = 256;
-const SCALE = LUT_SIZE$1 - 1;
-function clamp01(v2) {
-  return Math.min(1, Math.max(0, v2));
-}
-function quant4(v2) {
-  return Math.round(v2 * 1e4) / 1e4;
-}
-function clipTrunc(v2) {
-  return Math.min(255, Math.max(0, Math.trunc(v2)));
-}
-function sanitizeCurvePoints(raw) {
-  if (!(raw || "").trim()) return null;
-  let parsed;
-  try {
-    parsed = JSON.parse(raw);
-  } catch {
-    return null;
-  }
-  if (!Array.isArray(parsed)) return null;
-  const dedup = /* @__PURE__ */ new Map();
-  for (const p2 of parsed) {
-    if (!Array.isArray(p2) || p2.length < 2) continue;
-    const x2 = Number(p2[0]);
-    const y2 = Number(p2[1]);
-    if (!Number.isFinite(x2) || !Number.isFinite(y2)) continue;
-    dedup.set(quant4(clamp01(x2)), quant4(clamp01(y2)));
-  }
-  if (dedup.size < 2) return null;
-  return [...dedup.entries()].sort((a, b2) => a[0] - b2[0]).map(([x2, y2]) => [x2, y2]);
-}
-function resolveCurveChannels(p2) {
-  const preset2 = VIDEO_CURVES_PRESETS[p2.preset ?? ""] ?? {};
-  const pick2 = (raw, fromPreset) => sanitizeCurvePoints(raw ?? "") ?? fromPreset ?? null;
-  return {
-    red: pick2(p2.red, preset2.red),
-    green: pick2(p2.green, preset2.green),
-    blue: pick2(p2.blue, preset2.blue),
-    master: pick2(p2.master, preset2.master)
-  };
-}
-function usablePoints(pts) {
-  if (!pts) return null;
-  const out = [];
-  let lastIdx = -1;
-  for (const pt2 of pts) {
-    const idx = Math.trunc(pt2[0] * SCALE);
-    if (out.length > 0 && idx <= lastIdx) continue;
-    out.push(pt2);
-    lastIdx = idx;
-  }
-  return out;
-}
-function interpolateNatural(points) {
-  const y2 = new Uint8Array(LUT_SIZE$1);
-  const n = (points == null ? void 0 : points.length) ?? 0;
-  if (!points || n === 0) {
-    for (let i = 0; i < LUT_SIZE$1; i++) y2[i] = i;
-    return y2;
-  }
-  if (n === 1) {
-    y2.fill(clipTrunc(points[0][1] * SCALE));
-    return y2;
-  }
-  const h2 = new Float64Array(n - 1);
-  for (let i = 0; i < n - 1; i++) h2[i] = points[i + 1][0] - points[i][0];
-  const r = new Float64Array(n);
-  for (let i = 1; i < n - 1; i++) {
-    const yp = points[i - 1][1];
-    const yc = points[i][1];
-    const yn2 = points[i + 1][1];
-    r[i] = 6 * ((yn2 - yc) / h2[i] - (yc - yp) / h2[i - 1]);
-  }
-  const bd = new Float64Array(n);
-  const md = new Float64Array(n);
-  const ad = new Float64Array(n);
-  md[0] = 1;
-  md[n - 1] = 1;
-  for (let i = 1; i < n - 1; i++) {
-    bd[i] = h2[i - 1];
-    md[i] = 2 * (h2[i - 1] + h2[i]);
-    ad[i] = h2[i];
-  }
-  for (let i = 1; i < n; i++) {
-    const den = md[i] - bd[i] * ad[i - 1];
-    const k2 = den ? 1 / den : 1;
-    ad[i] *= k2;
-    r[i] = (r[i] - bd[i] * r[i - 1]) * k2;
-  }
-  for (let i = n - 2; i >= 0; i--) r[i] = r[i] - ad[i] * r[i + 1];
-  for (let i = 0; i < Math.trunc(points[0][0] * SCALE); i++) {
-    y2[i] = clipTrunc(points[0][1] * SCALE);
-  }
-  for (let i = 0; i < n - 1; i++) {
-    const yc = points[i][1];
-    const yn2 = points[i + 1][1];
-    const a = yc;
-    const b2 = (yn2 - yc) / h2[i] - h2[i] * r[i] / 2 - h2[i] * (r[i + 1] - r[i]) / 6;
-    const c2 = r[i] / 2;
-    const d2 = (r[i + 1] - r[i]) / (6 * h2[i]);
-    const xStart = Math.trunc(points[i][0] * SCALE);
-    const xEnd = Math.trunc(points[i + 1][0] * SCALE);
-    for (let x2 = xStart; x2 <= xEnd; x2++) {
-      const xx = (x2 - xStart) / SCALE;
-      const yy = a + b2 * xx + c2 * xx * xx + d2 * xx * xx * xx;
-      y2[x2] = clipTrunc(yy * SCALE);
-    }
-  }
-  for (let i = Math.trunc(points[n - 1][0] * SCALE); i < LUT_SIZE$1; i++) {
-    y2[i] = clipTrunc(points[n - 1][1] * SCALE);
-  }
-  return y2;
-}
-function buildCurvesLuts(p2) {
-  const ch = resolveCurveChannels(p2);
-  const red = interpolateNatural(usablePoints(ch.red));
-  const green = interpolateNatural(usablePoints(ch.green));
-  const blue = interpolateNatural(usablePoints(ch.blue));
-  const master = usablePoints(ch.master);
-  if (master) {
-    const m2 = interpolateNatural(master);
-    for (const lut2 of [red, green, blue]) {
-      for (let i = 0; i < LUT_SIZE$1; i++) lut2[i] = m2[lut2[i]];
-    }
-  }
-  return { red, green, blue };
-}
-const RENDER_CONFIG$4 = {
-  maxInputs: 1,
-  maxFloatUniforms: 1,
-  maxIntUniforms: 1,
-  maxBoolUniforms: 1,
-  maxCurves: 3
-};
-class VideoCurvesRenderer {
-  constructor() {
-    __publicField(this, "renderer", useGLSLRenderer(RENDER_CONFIG$4));
-    __publicField(this, "ready", false);
-    __publicField(this, "_error", null);
-    __publicField(this, "lutKey", null);
-  }
-  get error() {
-    return this._error;
-  }
-  uploadLuts(params) {
-    const key = JSON.stringify([
-      params.preset ?? "none",
-      params.master ?? "",
-      params.red ?? "",
-      params.green ?? "",
-      params.blue ?? ""
-    ]);
-    if (key === this.lutKey) return;
-    const luts = buildCurvesLuts(params);
-    const channels = [luts.red, luts.green, luts.blue];
-    channels.forEach((lut2, i) => {
-      const data = new Float32Array(256);
-      for (let j2 = 0; j2 < 256; j2++) data[j2] = lut2[j2] / 255;
-      this.renderer.bindCurveTexture(i, data);
-    });
-    this.lutKey = key;
-  }
-  renderToCanvas(video, params, target) {
-    const w2 = Math.max(2, video.videoWidth);
-    const h2 = Math.max(2, video.videoHeight);
-    try {
-      if (!this.ready) {
-        if (!this.renderer.init(w2, h2)) {
-          this._error = "WebGL2 not available";
-          return false;
-        }
-        this.ready = true;
-      }
-      const compiled = this.renderer.compileFragment(videoCurvesFrag);
-      if (!compiled.success) {
-        this._error = compiled.log || "Shader compilation failed";
-        return false;
-      }
-      this._error = null;
-      this.renderer.setResolution(w2, h2);
-      this.renderer.bindInputImage(0, video);
-      this.uploadLuts(params);
-      this.renderer.render();
-      const off = this.renderer.getCanvas();
-      if (!off) {
-        this._error = "Renderer produced no output";
-        return false;
-      }
-      target.width = w2;
-      target.height = h2;
-      const ctx = target.getContext("2d");
-      if (!ctx) {
-        this._error = "2D context unavailable";
-        return false;
-      }
-      ctx.clearRect(0, 0, w2, h2);
-      ctx.drawImage(off, 0, 0);
-      return true;
-    } catch (e) {
-      this._error = e instanceof Error ? e.message : "Render failed";
-      this.renderer.dispose();
-      this.ready = false;
-      return false;
-    }
-  }
-  dispose() {
-    this.renderer.dispose();
-    this.ready = false;
-    this.lutKey = null;
-  }
-}
-function useVideoCurvesPreview(opts) {
-  const supported = /* @__PURE__ */ ref(true);
-  const unregister = opts.nodeId != null ? registerPreviewSource(opts.nodeId, () => opts.canvasEl.value) : null;
-  let renderer2 = null;
-  let rafId = 0;
-  let attached = null;
-  function renderOnce() {
-    if (!supported.value) return;
-    const v2 = opts.videoEl.value;
-    const c2 = opts.canvasEl.value;
-    if (!v2 || !c2 || v2.readyState < 2) return;
-    renderer2 ?? (renderer2 = (opts.createRenderer ?? (() => new VideoCurvesRenderer()))());
-    if (!renderer2.renderToCanvas(v2, opts.params(), c2)) {
-      supported.value = false;
-      stopLoop();
-    }
-  }
-  function loop() {
-    renderOnce();
-    if (supported.value) rafId = requestAnimationFrame(loop);
-  }
-  function startLoop() {
-    stopLoop();
-    if (!supported.value) return;
-    rafId = requestAnimationFrame(loop);
-  }
-  function stopLoop() {
-    if (rafId) cancelAnimationFrame(rafId);
-    rafId = 0;
-  }
-  const onPlay = () => startLoop();
-  const onStop = () => {
-    stopLoop();
-    renderOnce();
-  };
-  const onFrame = () => renderOnce();
-  function detach() {
-    if (!attached) return;
-    attached.removeEventListener("play", onPlay);
-    attached.removeEventListener("pause", onStop);
-    attached.removeEventListener("ended", onStop);
-    attached.removeEventListener("seeked", onFrame);
-    attached.removeEventListener("loadeddata", onFrame);
-    attached = null;
-  }
-  watch(opts.videoEl, (v2) => {
-    detach();
-    stopLoop();
-    if (!v2) return;
-    attached = v2;
-    v2.addEventListener("play", onPlay);
-    v2.addEventListener("pause", onStop);
-    v2.addEventListener("ended", onStop);
-    v2.addEventListener("seeked", onFrame);
-    v2.addEventListener("loadeddata", onFrame);
-    if (v2.paused) renderOnce();
-    else startLoop();
-  }, { immediate: true });
-  watch(() => opts.params(), () => renderOnce());
-  onBeforeUnmount(() => {
-    unregister == null ? void 0 : unregister();
-    detach();
-    stopLoop();
-    renderer2 == null ? void 0 : renderer2.dispose();
-    renderer2 = null;
-  });
-  return { supported, renderOnce, startLoop, stopLoop };
-}
 const _hoisted_1$1U = { class: "ctv:flex ctv:items-center ctv:gap-1" };
 const _hoisted_2$14 = { class: "ctv:flex-1 ctv:text-2xs ctv:text-center ctv:text-muted-foreground" };
 const _hoisted_3$14 = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
@@ -152078,10 +153669,12 @@ const _sfc_main$17 = /* @__PURE__ */ defineComponent({
         blue: widgets.blue.value
       };
     }
-    const { supported } = useVideoCurvesPreview({
+    const { supported } = useChainedFxPreview({
       videoEl: previewVideoEl,
       canvasEl: previewCanvas,
       nodeId: String(props.node.id),
+      node: props.node,
+      createRenderer: () => new VideoCurvesRenderer(),
       params: previewParams
     });
     return (_ctx, _cache2) => {
@@ -152135,11 +153728,12 @@ const _sfc_main$17 = /* @__PURE__ */ defineComponent({
             ])
           ], 32),
           createBaseVNode("div", _hoisted_3$14, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_4$11, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_5$11, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_6$V, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_7$J, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_4$11, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_5$11, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_6$V, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_7$J, toDisplayString$1(_ctx.$t("fx.chainMode")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
             node: __props.node,
+            "hide-run-button": "",
             "on-run-request": __props.onRunRequest,
             "on-cancel-request": __props.onCancelRequest,
             "on-disconnect": __props.onDisconnect,
@@ -152181,467 +153775,6 @@ function useLutLibrary(lutFile) {
   onMounted(refreshLuts);
   return { luts, lutUrls, refreshLuts, onFilePicked };
 }
-const PREVIEWABLE_LUT_EXTENSIONS = [".cube", ".3dl"];
-const MAX_LEVEL = 256;
-const THREEDL_SIZE = 17;
-const THREEDL_SCALE = 16 * 16 * 16;
-function clipf(v2, lo, hi) {
-  return Math.min(hi, Math.max(lo, v2));
-}
-function isSkipLine(line) {
-  const t2 = line.trimStart();
-  return t2 === "" || t2.startsWith("#");
-}
-function parseTriple(line) {
-  const parts = line.trim().split(/\s+/);
-  if (parts.length < 3) return null;
-  const r = Number(parts[0]);
-  const g2 = Number(parts[1]);
-  const b2 = Number(parts[2]);
-  if (!Number.isFinite(r) || !Number.isFinite(g2) || !Number.isFinite(b2)) return null;
-  return [r, g2, b2];
-}
-function domainScale(min2, max2) {
-  return [
-    Math.fround(clipf(1 / (max2[0] - min2[0]), 0, 1)),
-    Math.fround(clipf(1 / (max2[1] - min2[1]), 0, 1)),
-    Math.fround(clipf(1 / (max2[2] - min2[2]), 0, 1))
-  ];
-}
-function parseCubeLut(text2) {
-  const lines = text2.split(/\r?\n/);
-  let pos = 0;
-  let size2 = 0;
-  while (pos < lines.length) {
-    const line = lines[pos++];
-    if (line.startsWith("LUT_3D_SIZE")) {
-      size2 = parseInt(line.slice(11), 10);
-      break;
-    }
-  }
-  if (!Number.isFinite(size2) || size2 < 2 || size2 > MAX_LEVEL) return null;
-  const size22 = size2 * size2;
-  const data = new Float32Array(size2 * size22 * 3);
-  const min2 = [0, 0, 0];
-  const max2 = [1, 1, 1];
-  for (let k2 = 0; k2 < size2; k2++) {
-    for (let j2 = 0; j2 < size2; j2++) {
-      for (let i = 0; i < size2; i++) {
-        let line = null;
-        while (pos < lines.length) {
-          const candidate = lines[pos++];
-          if (candidate.startsWith("DOMAIN_")) {
-            const target = candidate.startsWith("DOMAIN_MIN ") ? min2 : candidate.startsWith("DOMAIN_MAX ") ? max2 : null;
-            if (!target) return null;
-            const vals2 = parseTriple(candidate.slice(11));
-            if (!vals2) return null;
-            target[0] = vals2[0];
-            target[1] = vals2[1];
-            target[2] = vals2[2];
-            continue;
-          }
-          if (candidate.startsWith("TITLE")) continue;
-          if (isSkipLine(candidate)) continue;
-          line = candidate;
-          break;
-        }
-        if (line == null) return null;
-        const vals = parseTriple(line);
-        if (!vals) return null;
-        const base2 = (i * size22 + j2 * size2 + k2) * 3;
-        data[base2] = vals[0];
-        data[base2 + 1] = vals[1];
-        data[base2 + 2] = vals[2];
-      }
-    }
-  }
-  return { size: size2, data, scale: domainScale(min2, max2) };
-}
-function parse3dlLut(text2) {
-  const lines = text2.split(/\r?\n/).filter((l3) => !isSkipLine(l3));
-  const size2 = THREEDL_SIZE;
-  const size22 = size2 * size2;
-  if (lines.length < 1 + size2 * size22) return null;
-  const data = new Float32Array(size2 * size22 * 3);
-  let pos = 1;
-  for (let k2 = 0; k2 < size2; k2++) {
-    for (let j2 = 0; j2 < size2; j2++) {
-      for (let i = 0; i < size2; i++) {
-        const vals = parseTriple(lines[pos++]);
-        if (!vals || !vals.every(Number.isInteger)) return null;
-        const base2 = (k2 * size22 + j2 * size2 + i) * 3;
-        data[base2] = vals[0] / THREEDL_SCALE;
-        data[base2 + 1] = vals[1] / THREEDL_SCALE;
-        data[base2 + 2] = vals[2] / THREEDL_SCALE;
-      }
-    }
-  }
-  return { size: size2, data, scale: [1, 1, 1] };
-}
-function lutFileExtension(filename) {
-  const m2 = /\.[^.]+$/.exec(filename.trim().toLowerCase());
-  return m2 ? m2[0] : "";
-}
-function isPreviewableLutFile(filename) {
-  return PREVIEWABLE_LUT_EXTENSIONS.includes(lutFileExtension(filename));
-}
-function parseLutText(filename, text2) {
-  const ext = lutFileExtension(filename);
-  if (ext === ".cube") return parseCubeLut(text2);
-  if (ext === ".3dl") return parse3dlLut(text2);
-  return null;
-}
-function resolvePreviewInterp(interp) {
-  if (interp === "nearest" || interp === "trilinear") return interp;
-  return "tetrahedral";
-}
-const videoLutFrag = "#version 300 es\r\nprecision highp float;\r\nprecision highp int;\r\nprecision highp sampler3D;\r\n\r\nuniform sampler2D u_image0;\r\nuniform sampler3D u_lut;\r\nuniform int u_hasLut;\r\nuniform int u_interp;\r\nuniform int u_lutMax;\r\nuniform vec3 u_scale;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nvec3 fetchLut(int r, int g, int b) {\r\n    return texelFetch(u_lut, ivec3(b, g, r), 0).rgb;\r\n}\r\n\r\nvec3 lutNearest(vec3 s) {\r\n    ivec3 n = ivec3(s + 0.5);\r\n    return fetchLut(n.r, n.g, n.b);\r\n}\r\n\r\nvec3 lutTrilinear(vec3 s) {\r\n    ivec3 p = ivec3(s);\r\n    ivec3 n = min(p + 1, ivec3(u_lutMax));\r\n    vec3 d = s - vec3(p);\r\n    vec3 c000 = fetchLut(p.r, p.g, p.b);\r\n    vec3 c001 = fetchLut(p.r, p.g, n.b);\r\n    vec3 c010 = fetchLut(p.r, n.g, p.b);\r\n    vec3 c011 = fetchLut(p.r, n.g, n.b);\r\n    vec3 c100 = fetchLut(n.r, p.g, p.b);\r\n    vec3 c101 = fetchLut(n.r, p.g, n.b);\r\n    vec3 c110 = fetchLut(n.r, n.g, p.b);\r\n    vec3 c111 = fetchLut(n.r, n.g, n.b);\r\n    vec3 c00 = mix(c000, c100, d.r);\r\n    vec3 c10 = mix(c010, c110, d.r);\r\n    vec3 c01 = mix(c001, c101, d.r);\r\n    vec3 c11 = mix(c011, c111, d.r);\r\n    vec3 c0 = mix(c00, c10, d.g);\r\n    vec3 c1 = mix(c01, c11, d.g);\r\n    return mix(c0, c1, d.b);\r\n}\r\n\r\nvec3 lutTetrahedral(vec3 s) {\r\n    ivec3 p = ivec3(s);\r\n    ivec3 n = min(p + 1, ivec3(u_lutMax));\r\n    vec3 d = s - vec3(p);\r\n    vec3 c000 = fetchLut(p.r, p.g, p.b);\r\n    vec3 c111 = fetchLut(n.r, n.g, n.b);\r\n    if (d.r > d.g) {\r\n        if (d.g > d.b) {\r\n            vec3 c100 = fetchLut(n.r, p.g, p.b);\r\n            vec3 c110 = fetchLut(n.r, n.g, p.b);\r\n            return (1.0 - d.r) * c000 + (d.r - d.g) * c100 + (d.g - d.b) * c110 + d.b * c111;\r\n        } else if (d.r > d.b) {\r\n            vec3 c100 = fetchLut(n.r, p.g, p.b);\r\n            vec3 c101 = fetchLut(n.r, p.g, n.b);\r\n            return (1.0 - d.r) * c000 + (d.r - d.b) * c100 + (d.b - d.g) * c101 + d.g * c111;\r\n        } else {\r\n            vec3 c001 = fetchLut(p.r, p.g, n.b);\r\n            vec3 c101 = fetchLut(n.r, p.g, n.b);\r\n            return (1.0 - d.b) * c000 + (d.b - d.r) * c001 + (d.r - d.g) * c101 + d.g * c111;\r\n        }\r\n    } else {\r\n        if (d.b > d.g) {\r\n            vec3 c001 = fetchLut(p.r, p.g, n.b);\r\n            vec3 c011 = fetchLut(p.r, n.g, n.b);\r\n            return (1.0 - d.b) * c000 + (d.b - d.g) * c001 + (d.g - d.r) * c011 + d.r * c111;\r\n        } else if (d.b > d.r) {\r\n            vec3 c010 = fetchLut(p.r, n.g, p.b);\r\n            vec3 c011 = fetchLut(p.r, n.g, n.b);\r\n            return (1.0 - d.g) * c000 + (d.g - d.b) * c010 + (d.b - d.r) * c011 + d.r * c111;\r\n        } else {\r\n            vec3 c010 = fetchLut(p.r, n.g, p.b);\r\n            vec3 c110 = fetchLut(n.r, n.g, p.b);\r\n            return (1.0 - d.g) * c000 + (d.g - d.r) * c010 + (d.r - d.b) * c110 + d.b * c111;\r\n        }\r\n    }\r\n}\r\n\r\nvoid main() {\r\n    vec4 tex = texture(u_image0, v_texCoord);\r\n    if (u_hasLut == 0) {\r\n        fragColor = tex;\r\n        return;\r\n    }\r\n    vec3 s = clamp(tex.rgb * u_scale, vec3(0.0), vec3(float(u_lutMax)));\r\n    vec3 c;\r\n    if (u_interp == 0) {\r\n        c = lutNearest(s);\r\n    } else if (u_interp == 1) {\r\n        c = lutTrilinear(s);\r\n    } else {\r\n        c = lutTetrahedral(s);\r\n    }\r\n    c = floor(clamp(c, 0.0, 1.0) * 255.0) / 255.0;\r\n    fragColor = vec4(c, tex.a);\r\n}\r\n";
-const VERTEX_SHADER_SOURCE = `#version 300 es
-out vec2 v_texCoord;
-void main() {
-    vec2 verts[3] = vec2[](vec2(-1, -1), vec2(3, -1), vec2(-1, 3));
-    v_texCoord = verts[gl_VertexID] * 0.5 + 0.5;
-    gl_Position = vec4(verts[gl_VertexID], 0, 1);
-}
-`;
-const INTERP_INDEX = { nearest: 0, trilinear: 1, tetrahedral: 2 };
-const UNIFORM_NAMES = [
-  "u_image0",
-  "u_lut",
-  "u_hasLut",
-  "u_interp",
-  "u_lutMax",
-  "u_scale"
-];
-function compile(gl, type, source) {
-  const shader = gl.createShader(type);
-  if (!shader) throw new Error("Failed to create shader");
-  gl.shaderSource(shader, source);
-  gl.compileShader(shader);
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    const log2 = gl.getShaderInfoLog(shader) ?? "Shader compilation failed";
-    gl.deleteShader(shader);
-    throw new Error(log2);
-  }
-  return shader;
-}
-class VideoLutRenderer {
-  constructor() {
-    __publicField(this, "canvas", null);
-    __publicField(this, "gl", null);
-    __publicField(this, "program", null);
-    __publicField(this, "videoTexture", null);
-    __publicField(this, "lutTexture", null);
-    __publicField(this, "uploadedLut", null);
-    __publicField(this, "uniforms", /* @__PURE__ */ new Map());
-    __publicField(this, "ready", false);
-    __publicField(this, "_error", null);
-  }
-  get error() {
-    return this._error;
-  }
-  init(width, height) {
-    this.canvas = new OffscreenCanvas(width, height);
-    const gl = this.canvas.getContext("webgl2", {
-      alpha: true,
-      premultipliedAlpha: false,
-      preserveDrawingBuffer: true
-    });
-    if (!gl) {
-      this._error = "WebGL2 not available";
-      return false;
-    }
-    this.gl = gl;
-    const vs = compile(gl, gl.VERTEX_SHADER, VERTEX_SHADER_SOURCE);
-    const fs = compile(gl, gl.FRAGMENT_SHADER, videoLutFrag);
-    const program = gl.createProgram();
-    if (!program) {
-      this._error = "Failed to create program";
-      return false;
-    }
-    gl.attachShader(program, vs);
-    gl.attachShader(program, fs);
-    gl.linkProgram(program);
-    gl.deleteShader(vs);
-    gl.deleteShader(fs);
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-      this._error = gl.getProgramInfoLog(program) ?? "Program link failed";
-      gl.deleteProgram(program);
-      return false;
-    }
-    this.program = program;
-    for (const name of UNIFORM_NAMES) {
-      this.uniforms.set(name, gl.getUniformLocation(program, name));
-    }
-    this.videoTexture = gl.createTexture();
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, this.videoTexture);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    this.lutTexture = gl.createTexture();
-    gl.activeTexture(gl.TEXTURE1);
-    gl.bindTexture(gl.TEXTURE_3D, this.lutTexture);
-    gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-    gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
-    gl.texImage3D(
-      gl.TEXTURE_3D,
-      0,
-      gl.RGB32F,
-      1,
-      1,
-      1,
-      0,
-      gl.RGB,
-      gl.FLOAT,
-      new Float32Array([0, 0, 0])
-    );
-    return true;
-  }
-  uploadLut(lut2) {
-    const gl = this.gl;
-    if (!gl || lut2 === this.uploadedLut) return;
-    gl.activeTexture(gl.TEXTURE1);
-    gl.bindTexture(gl.TEXTURE_3D, this.lutTexture);
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
-    gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
-    if (lut2) {
-      gl.texImage3D(
-        gl.TEXTURE_3D,
-        0,
-        gl.RGB32F,
-        lut2.size,
-        lut2.size,
-        lut2.size,
-        0,
-        gl.RGB,
-        gl.FLOAT,
-        lut2.data
-      );
-    } else {
-      gl.texImage3D(
-        gl.TEXTURE_3D,
-        0,
-        gl.RGB32F,
-        1,
-        1,
-        1,
-        0,
-        gl.RGB,
-        gl.FLOAT,
-        new Float32Array([0, 0, 0])
-      );
-    }
-    this.uploadedLut = lut2;
-  }
-  renderToCanvas(video, params, target) {
-    const w2 = Math.max(2, video.videoWidth);
-    const h2 = Math.max(2, video.videoHeight);
-    try {
-      if (!this.ready) {
-        if (!this.init(w2, h2)) return false;
-        this.ready = true;
-      }
-      const gl = this.gl;
-      const canvas = this.canvas;
-      if (!gl || !canvas || !this.program) return false;
-      this._error = null;
-      if (canvas.width !== w2 || canvas.height !== h2) {
-        canvas.width = w2;
-        canvas.height = h2;
-      }
-      gl.viewport(0, 0, w2, h2);
-      gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, this.videoTexture);
-      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, video);
-      this.uploadLut(params.lut);
-      gl.useProgram(this.program);
-      gl.disable(gl.BLEND);
-      const u = (name) => this.uniforms.get(name) ?? null;
-      gl.uniform1i(u("u_image0"), 0);
-      gl.uniform1i(u("u_lut"), 1);
-      const lut2 = params.lut;
-      gl.uniform1i(u("u_hasLut"), lut2 ? 1 : 0);
-      gl.uniform1i(u("u_interp"), INTERP_INDEX[resolvePreviewInterp(params.interp)]);
-      const lutMax = lut2 ? lut2.size - 1 : 1;
-      gl.uniform1i(u("u_lutMax"), lutMax);
-      const scale = lut2 ? lut2.scale : [1, 1, 1];
-      gl.uniform3f(
-        u("u_scale"),
-        scale[0] * lutMax,
-        scale[1] * lutMax,
-        scale[2] * lutMax
-      );
-      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-      gl.clearColor(0, 0, 0, 0);
-      gl.clear(gl.COLOR_BUFFER_BIT);
-      gl.drawArrays(gl.TRIANGLES, 0, 3);
-      target.width = w2;
-      target.height = h2;
-      const ctx = target.getContext("2d");
-      if (!ctx) {
-        this._error = "2D context unavailable";
-        return false;
-      }
-      ctx.clearRect(0, 0, w2, h2);
-      ctx.drawImage(canvas, 0, 0);
-      return true;
-    } catch (e) {
-      this._error = e instanceof Error ? e.message : "Render failed";
-      this.dispose();
-      return false;
-    }
-  }
-  dispose() {
-    var _a3;
-    const gl = this.gl;
-    if (gl) {
-      if (this.videoTexture) gl.deleteTexture(this.videoTexture);
-      if (this.lutTexture) gl.deleteTexture(this.lutTexture);
-      if (this.program) gl.deleteProgram(this.program);
-      (_a3 = gl.getExtension("WEBGL_lose_context")) == null ? void 0 : _a3.loseContext();
-    }
-    this.videoTexture = null;
-    this.lutTexture = null;
-    this.program = null;
-    this.gl = null;
-    this.canvas = null;
-    this.uploadedLut = null;
-    this.uniforms.clear();
-    this.ready = false;
-  }
-}
-async function defaultFetchText(url) {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`LUT fetch failed: ${res.status}`);
-  return res.text();
-}
-function useVideoLutPreview(opts) {
-  const supported = /* @__PURE__ */ ref(true);
-  const lutReady = /* @__PURE__ */ ref(false);
-  const lutUnsupported = /* @__PURE__ */ ref(false);
-  const unregister = opts.nodeId != null ? registerPreviewSource(opts.nodeId, () => opts.canvasEl.value) : null;
-  const lutCache = /* @__PURE__ */ new Map();
-  let currentLut = null;
-  let loadToken = 0;
-  let renderer2 = null;
-  let rafId = 0;
-  let attached = null;
-  function renderOnce() {
-    if (!supported.value) return;
-    const v2 = opts.videoEl.value;
-    const c2 = opts.canvasEl.value;
-    if (!v2 || !c2 || v2.readyState < 2) return;
-    renderer2 ?? (renderer2 = (opts.createRenderer ?? (() => new VideoLutRenderer()))());
-    const p2 = opts.params();
-    if (!renderer2.renderToCanvas(v2, { lut: currentLut, interp: p2.interp }, c2)) {
-      supported.value = false;
-      stopLoop();
-    }
-  }
-  function applyLoaded(lut2, file) {
-    currentLut = lut2;
-    lutReady.value = lut2 != null;
-    lutUnsupported.value = lut2 == null && !!file;
-    renderOnce();
-  }
-  async function loadLut() {
-    const { lutFile, lutUrl } = opts.params();
-    const token = ++loadToken;
-    if (!lutUrl || !lutFile) {
-      applyLoaded(null, "");
-      return;
-    }
-    if (!isPreviewableLutFile(lutFile)) {
-      applyLoaded(null, lutFile);
-      return;
-    }
-    if (lutCache.has(lutUrl)) {
-      applyLoaded(lutCache.get(lutUrl) ?? null, lutFile);
-      return;
-    }
-    let lut2 = null;
-    let fetched = false;
-    try {
-      const text2 = await (opts.fetchText ?? defaultFetchText)(lutUrl);
-      fetched = true;
-      lut2 = parseLutText(lutFile, text2);
-    } catch {
-    }
-    if (token !== loadToken) return;
-    if (fetched) lutCache.set(lutUrl, lut2);
-    currentLut = lut2;
-    lutReady.value = lut2 != null;
-    lutUnsupported.value = fetched && lut2 == null;
-    renderOnce();
-  }
-  function loop() {
-    renderOnce();
-    if (supported.value) rafId = requestAnimationFrame(loop);
-  }
-  function startLoop() {
-    stopLoop();
-    if (!supported.value) return;
-    rafId = requestAnimationFrame(loop);
-  }
-  function stopLoop() {
-    if (rafId) cancelAnimationFrame(rafId);
-    rafId = 0;
-  }
-  const onPlay = () => startLoop();
-  const onStop = () => {
-    stopLoop();
-    renderOnce();
-  };
-  const onFrame = () => renderOnce();
-  function detach() {
-    if (!attached) return;
-    attached.removeEventListener("play", onPlay);
-    attached.removeEventListener("pause", onStop);
-    attached.removeEventListener("ended", onStop);
-    attached.removeEventListener("seeked", onFrame);
-    attached.removeEventListener("loadeddata", onFrame);
-    attached = null;
-  }
-  watch(opts.videoEl, (v2) => {
-    detach();
-    stopLoop();
-    if (!v2) return;
-    attached = v2;
-    v2.addEventListener("play", onPlay);
-    v2.addEventListener("pause", onStop);
-    v2.addEventListener("ended", onStop);
-    v2.addEventListener("seeked", onFrame);
-    v2.addEventListener("loadeddata", onFrame);
-    if (v2.paused) renderOnce();
-    else startLoop();
-  }, { immediate: true });
-  watch(
-    () => {
-      const p2 = opts.params();
-      return [p2.lutFile, p2.lutUrl];
-    },
-    () => {
-      void loadLut();
-    },
-    { immediate: true }
-  );
-  watch(() => opts.params().interp, () => renderOnce());
-  onBeforeUnmount(() => {
-    unregister == null ? void 0 : unregister();
-    detach();
-    stopLoop();
-    renderer2 == null ? void 0 : renderer2.dispose();
-    renderer2 = null;
-  });
-  return { supported, lutReady, lutUnsupported, renderOnce, startLoop, stopLoop };
-}
 const _hoisted_1$1T = ["value"];
 const _hoisted_2$13 = {
   key: 1,
@@ -152655,19 +153788,19 @@ const _hoisted_7$I = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_8$v = {
+const _hoisted_8$u = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_9$s = {
+const _hoisted_9$r = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_10$m = {
+const _hoisted_10$l = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_11$j = {
+const _hoisted_11$i = {
   key: 4,
   class: "ctv:text-muted-foreground"
 };
@@ -152704,16 +153837,20 @@ const _sfc_main$16 = /* @__PURE__ */ defineComponent({
         return ((_a3 = playerRef.value) == null ? void 0 : _a3.videoEl) ?? null;
       }
     );
-    const { supported, lutReady, lutUnsupported } = useVideoLutPreview({
+    const { supported } = useChainedFxPreview({
       videoEl: previewVideoEl,
       canvasEl: previewCanvas,
       nodeId: String(props.node.id),
+      node: props.node,
       params: () => ({
         lutFile: lutFile.value,
         lutUrl: lutUrls.value[lutFile.value] ?? "",
         interp: interp.value
-      })
+      }),
+      createRenderer: () => new ChainLutRenderer()
     });
+    const lutReady = computed(() => !!lutFile.value && isPreviewableLutFile(lutFile.value));
+    const lutUnsupported = computed(() => !!lutFile.value && !isPreviewableLutFile(lutFile.value));
     return (_ctx, _cache2) => {
       return openBlock(), createBlock(_sfc_main$1Z, { node: __props.node }, {
         player: withCtx(() => [
@@ -152728,7 +153865,7 @@ const _sfc_main$16 = /* @__PURE__ */ defineComponent({
                 ref: previewCanvas,
                 class: "ctv:absolute ctv:inset-0 ctv:size-full ctv:object-contain ctv:pointer-events-none"
               }, null, 512), [
-                [vShow, unref(supported) && unref(lutReady)]
+                [vShow, unref(supported) && lutReady.value]
               ])
             ]),
             _: 1
@@ -152797,11 +153934,12 @@ const _sfc_main$16 = /* @__PURE__ */ defineComponent({
             }, null, 8, ["modelValue"])
           ], 32),
           createBaseVNode("div", _hoisted_6$U, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_7$I, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_8$v, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_9$s, toDisplayString$1(_ctx.$t("fx.done")), 1)) : unref(lutUnsupported) ? (openBlock(), createElementBlock("span", _hoisted_10$m, toDisplayString$1(_ctx.$t("fx.lutPreviewUnavailable")), 1)) : (openBlock(), createElementBlock("span", _hoisted_11$j, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_7$I, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_8$u, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_9$r, toDisplayString$1(_ctx.$t("fx.done")), 1)) : lutUnsupported.value ? (openBlock(), createElementBlock("span", _hoisted_10$l, toDisplayString$1(_ctx.$t("fx.lutPreviewUnavailable")), 1)) : (openBlock(), createElementBlock("span", _hoisted_11$i, toDisplayString$1(_ctx.$t("fx.chainMode")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
             node: __props.node,
+            "hide-run-button": "",
             "on-run-request": __props.onRunRequest,
             "on-cancel-request": __props.onCancelRequest,
             "on-disconnect": __props.onDisconnect,
@@ -152813,228 +153951,6 @@ const _sfc_main$16 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const videoBlurFrag = "#version 300 es\r\nprecision highp float;\r\n\r\n#pragma passes 2\r\n\r\nuniform sampler2D u_image0;\r\nuniform sampler2D u_image1;\r\nuniform vec2 u_resolution;\r\nuniform int u_pass;\r\nuniform int u_int0;\r\nuniform int u_int1;\r\nuniform float u_float0;\r\nuniform float u_float1;\r\nuniform float u_float2;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nconst vec3 LUMA = vec3(0.299, 0.587, 0.114);\r\n\r\nvec4 separableBlur(vec2 stepv) {\r\n    vec4 c = texture(u_image0, v_texCoord);\r\n    vec3 acc = c.rgb;\r\n    float wsum = 1.0;\r\n    float w = 1.0;\r\n    for (int i = 1; i <= u_int1; i++) {\r\n        if (u_int0 == 0) w *= u_float0;\r\n        vec2 o = stepv * float(i);\r\n        acc += w * (texture(u_image0, v_texCoord + o).rgb\r\n                  + texture(u_image0, v_texCoord - o).rgb);\r\n        wsum += 2.0 * w;\r\n    }\r\n    return vec4(acc / wsum, c.a);\r\n}\r\n\r\nvec4 bilateralH(vec2 stepv) {\r\n    vec3 c = texture(u_image0, v_texCoord).rgb;\r\n    float lum0 = dot(c, LUMA);\r\n    vec3 accV = 2.0 * c;\r\n    float accF = 2.0;\r\n    float prodA = 1.0;\r\n    float prodB = 1.0;\r\n    float prevA = lum0;\r\n    float prevB = lum0;\r\n    for (int i = 1; i <= u_int1; i++) {\r\n        vec2 o = stepv * float(i);\r\n        vec3 a = texture(u_image0, v_texCoord + o).rgb;\r\n        vec3 b = texture(u_image0, v_texCoord - o).rgb;\r\n        float la = dot(a, LUMA);\r\n        float lb = dot(b, LUMA);\r\n        prodA *= u_float0 * exp(-abs(la - prevA) * u_float1);\r\n        prodB *= u_float0 * exp(-abs(lb - prevB) * u_float1);\r\n        prevA = la;\r\n        prevB = lb;\r\n        accV += prodA * a + prodB * b;\r\n        accF += prodA + prodB;\r\n    }\r\n    return vec4(accV, accF);\r\n}\r\n\r\nvec4 bilateralV(vec2 stepv) {\r\n    vec4 tf = texture(u_image0, v_texCoord);\r\n    float lum0 = dot(texture(u_image1, v_texCoord).rgb, LUMA);\r\n    vec3 accV = 2.0 * tf.rgb;\r\n    float accF = 2.0 * tf.a;\r\n    float prodA = 1.0;\r\n    float prodB = 1.0;\r\n    float prevA = lum0;\r\n    float prevB = lum0;\r\n    for (int i = 1; i <= u_int1; i++) {\r\n        vec2 o = stepv * float(i);\r\n        vec4 a = texture(u_image0, v_texCoord + o);\r\n        vec4 b = texture(u_image0, v_texCoord - o);\r\n        float la = dot(texture(u_image1, v_texCoord + o).rgb, LUMA);\r\n        float lb = dot(texture(u_image1, v_texCoord - o).rgb, LUMA);\r\n        prodA *= u_float0 * exp(-abs(la - prevA) * u_float1);\r\n        prodB *= u_float0 * exp(-abs(lb - prevB) * u_float1);\r\n        prevA = la;\r\n        prevB = lb;\r\n        accV += prodA * a.rgb + prodB * b.rgb;\r\n        accF += prodA * a.a + prodB * b.a;\r\n    }\r\n    return vec4(clamp(accV / accF, 0.0, 1.0), 1.0);\r\n}\r\n\r\nfloat binomialLuma(vec2 stepv, bool fromRed) {\r\n    int s = u_int1;\r\n    float w = 1.0;\r\n    for (int k = 1; k <= s; k++) {\r\n        w *= (2.0 * float(k) - 1.0) / (2.0 * float(k));\r\n    }\r\n    vec4 c0 = texture(u_image0, v_texCoord);\r\n    float acc = w * (fromRed ? c0.r : dot(c0.rgb, LUMA));\r\n    for (int i = 0; i < s; i++) {\r\n        w = w * float(s - i) / float(s + i + 1);\r\n        vec2 o = stepv * float(i + 1);\r\n        vec4 a = texture(u_image0, v_texCoord + o);\r\n        vec4 b = texture(u_image0, v_texCoord - o);\r\n        float va = fromRed ? a.r : dot(a.rgb, LUMA);\r\n        float vb = fromRed ? b.r : dot(b.rgb, LUMA);\r\n        acc += w * (va + vb);\r\n    }\r\n    return acc;\r\n}\r\n\r\nvec4 sharpenCombine(vec2 stepv) {\r\n    float blurY = binomialLuma(stepv, true);\r\n    vec4 orig = texture(u_image1, v_texCoord);\r\n    float y = dot(orig.rgb, LUMA);\r\n    vec3 c = orig.rgb + vec3((y - blurY) * u_float2);\r\n    return vec4(clamp(c, 0.0, 1.0), orig.a);\r\n}\r\n\r\nvoid main() {\r\n    vec2 texel = 1.0 / u_resolution;\r\n    vec2 stepv = u_pass == 0 ? vec2(texel.x, 0.0) : vec2(0.0, texel.y);\r\n    if (u_int0 == 2) {\r\n        fragColor = u_pass == 0 ? bilateralH(stepv) : bilateralV(stepv);\r\n    } else if (u_int0 == 3) {\r\n        fragColor = u_pass == 0\r\n            ? vec4(vec3(binomialLuma(stepv, false)), 1.0)\r\n            : sharpenCombine(stepv);\r\n    } else {\r\n        fragColor = separableBlur(stepv);\r\n    }\r\n}\r\n";
-const MAX_BLUR_RADIUS = 64;
-const MAX_BILATERAL_RADIUS = 64;
-const TAIL_EPS = 1e-3;
-const MODE_INDEX = {
-  gaussian: 0,
-  box: 1,
-  bilateral: 2,
-  sharpen: 3
-};
-function fin$1(v2, lo, hi, dflt) {
-  const n = typeof v2 === "number" ? v2 : Number(v2);
-  if (!Number.isFinite(n)) return dflt;
-  return Math.min(hi, Math.max(lo, n));
-}
-function sanitizeVideoBlurParams(p2) {
-  const mode = p2.mode === "box" || p2.mode === "bilateral" || p2.mode === "sharpen" ? p2.mode : "gaussian";
-  let size2 = Math.trunc(fin$1(p2.size, 0, 99, 5)) || 5;
-  size2 += (size2 + 1) % 2;
-  size2 = Math.min(13, Math.max(3, size2));
-  return {
-    mode,
-    amount: fin$1(p2.amount, 0, 20, 2),
-    size: size2,
-    edgePreserve: fin$1(p2.edgePreserve, 0.01, 1, 0.1)
-  };
-}
-function gblurNu(sigma) {
-  if (sigma <= 0) return 0;
-  const lambda = sigma * sigma / 2;
-  return (1 + 2 * lambda - Math.sqrt(1 + 4 * lambda)) / (2 * lambda);
-}
-function decayRadius(decay, cap) {
-  if (decay <= 0) return 0;
-  if (decay >= 1) return cap;
-  return Math.min(cap, Math.max(1, Math.ceil(Math.log(TAIL_EPS) / Math.log(decay))));
-}
-function bilateralSpatialDecay(sigmaS) {
-  if (sigmaS <= 0) return 0;
-  return Math.exp(-Math.SQRT2 / sigmaS);
-}
-function computeVideoBlurUniforms(p2) {
-  const s = sanitizeVideoBlurParams(p2);
-  if (s.mode === "gaussian") {
-    const nu = gblurNu(s.amount);
-    return {
-      mode: MODE_INDEX.gaussian,
-      radius: decayRadius(nu, MAX_BLUR_RADIUS),
-      decay: nu,
-      invSigmaR: 0,
-      sharpenAmount: 0
-    };
-  }
-  if (s.mode === "box") {
-    return {
-      mode: MODE_INDEX.box,
-      radius: Math.max(1, Math.trunc(s.amount)),
-      decay: 0,
-      invSigmaR: 0,
-      sharpenAmount: 0
-    };
-  }
-  if (s.mode === "bilateral") {
-    const sigmaS = Math.max(0.1, s.amount);
-    const decay = bilateralSpatialDecay(sigmaS);
-    return {
-      mode: MODE_INDEX.bilateral,
-      radius: decayRadius(decay, MAX_BILATERAL_RADIUS),
-      decay,
-      invSigmaR: 1 / s.edgePreserve,
-      sharpenAmount: 0
-    };
-  }
-  const amount = fin$1(s.amount, 0, 5, 1);
-  return {
-    mode: MODE_INDEX.sharpen,
-    radius: (s.size - 1) / 2,
-    decay: 0,
-    invSigmaR: 0,
-    sharpenAmount: Math.trunc(amount * 65536) / 65536
-  };
-}
-const RENDER_CONFIG$3 = {
-  maxInputs: 2,
-  maxFloatUniforms: 3,
-  maxIntUniforms: 2,
-  maxBoolUniforms: 0,
-  maxCurves: 0
-};
-class VideoBlurRenderer {
-  constructor() {
-    __publicField(this, "renderer", useGLSLRenderer(RENDER_CONFIG$3));
-    __publicField(this, "ready", false);
-    __publicField(this, "_error", null);
-  }
-  get error() {
-    return this._error;
-  }
-  renderToCanvas(video, params, target) {
-    const w2 = Math.max(2, video.videoWidth);
-    const h2 = Math.max(2, video.videoHeight);
-    try {
-      if (!this.ready) {
-        if (!this.renderer.init(w2, h2)) {
-          this._error = "WebGL2 not available";
-          return false;
-        }
-        this.ready = true;
-      }
-      const compiled = this.renderer.compileFragment(videoBlurFrag);
-      if (!compiled.success) {
-        this._error = compiled.log || "Shader compilation failed";
-        return false;
-      }
-      this._error = null;
-      this.renderer.setResolution(w2, h2);
-      this.renderer.bindInputImage(0, video);
-      const u = computeVideoBlurUniforms(params);
-      if (u.mode === 2 || u.mode === 3) {
-        this.renderer.bindInputImage(1, video);
-      }
-      this.renderer.setIntUniform(0, u.mode);
-      this.renderer.setIntUniform(1, u.radius);
-      this.renderer.setFloatUniform(0, u.decay);
-      this.renderer.setFloatUniform(1, u.invSigmaR);
-      this.renderer.setFloatUniform(2, u.sharpenAmount);
-      this.renderer.render();
-      const off = this.renderer.getCanvas();
-      if (!off) {
-        this._error = "Renderer produced no output";
-        return false;
-      }
-      target.width = w2;
-      target.height = h2;
-      const ctx = target.getContext("2d");
-      if (!ctx) {
-        this._error = "2D context unavailable";
-        return false;
-      }
-      ctx.clearRect(0, 0, w2, h2);
-      ctx.drawImage(off, 0, 0);
-      return true;
-    } catch (e) {
-      this._error = e instanceof Error ? e.message : "Render failed";
-      this.renderer.dispose();
-      this.ready = false;
-      return false;
-    }
-  }
-  dispose() {
-    this.renderer.dispose();
-    this.ready = false;
-  }
-}
-function useVideoBlurPreview(opts) {
-  const supported = /* @__PURE__ */ ref(true);
-  const unregister = opts.nodeId != null ? registerPreviewSource(opts.nodeId, () => opts.canvasEl.value) : null;
-  let renderer2 = null;
-  let rafId = 0;
-  let attached = null;
-  function renderOnce() {
-    if (!supported.value) return;
-    const v2 = opts.videoEl.value;
-    const c2 = opts.canvasEl.value;
-    if (!v2 || !c2 || v2.readyState < 2) return;
-    renderer2 ?? (renderer2 = (opts.createRenderer ?? (() => new VideoBlurRenderer()))());
-    if (!renderer2.renderToCanvas(v2, opts.params(), c2)) {
-      supported.value = false;
-      stopLoop();
-    }
-  }
-  function loop() {
-    renderOnce();
-    if (supported.value) rafId = requestAnimationFrame(loop);
-  }
-  function startLoop() {
-    stopLoop();
-    if (!supported.value) return;
-    rafId = requestAnimationFrame(loop);
-  }
-  function stopLoop() {
-    if (rafId) cancelAnimationFrame(rafId);
-    rafId = 0;
-  }
-  const onPlay = () => startLoop();
-  const onStop = () => {
-    stopLoop();
-    renderOnce();
-  };
-  const onFrame = () => renderOnce();
-  function detach() {
-    if (!attached) return;
-    attached.removeEventListener("play", onPlay);
-    attached.removeEventListener("pause", onStop);
-    attached.removeEventListener("ended", onStop);
-    attached.removeEventListener("seeked", onFrame);
-    attached.removeEventListener("loadeddata", onFrame);
-    attached = null;
-  }
-  watch(opts.videoEl, (v2) => {
-    detach();
-    stopLoop();
-    if (!v2) return;
-    attached = v2;
-    v2.addEventListener("play", onPlay);
-    v2.addEventListener("pause", onStop);
-    v2.addEventListener("ended", onStop);
-    v2.addEventListener("seeked", onFrame);
-    v2.addEventListener("loadeddata", onFrame);
-    if (v2.paused) renderOnce();
-    else startLoop();
-  }, { immediate: true });
-  watch(() => opts.params(), () => renderOnce());
-  onBeforeUnmount(() => {
-    unregister == null ? void 0 : unregister();
-    detach();
-    stopLoop();
-    renderer2 == null ? void 0 : renderer2.dispose();
-    renderer2 = null;
-  });
-  return { supported, renderOnce, startLoop, stopLoop };
-}
 const _hoisted_1$1S = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
 const _hoisted_2$12 = {
   key: 0,
@@ -153091,10 +154007,12 @@ const _sfc_main$15 = /* @__PURE__ */ defineComponent({
         edgePreserve: edgePreserve.value
       };
     }
-    const { supported } = useVideoBlurPreview({
+    const { supported } = useChainedFxPreview({
       videoEl: previewVideoEl,
       canvasEl: previewCanvas,
       nodeId: String(props.node.id),
+      node: props.node,
+      createRenderer: () => new VideoBlurRenderer(),
       params: previewParams
     });
     return (_ctx, _cache2) => {
@@ -153169,6 +154087,7 @@ const _sfc_main$15 = /* @__PURE__ */ defineComponent({
           createVNode(StageCard, {
             state: __props.state,
             node: __props.node,
+            "hide-run-button": "",
             "on-run-request": __props.onRunRequest,
             "on-cancel-request": __props.onCancelRequest,
             "on-disconnect": __props.onDisconnect,
@@ -153240,19 +154159,19 @@ const _hoisted_6$T = {
   class: "ctv:h-40 ctv:flex ctv:flex-col"
 };
 const _hoisted_7$H = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_8$u = {
+const _hoisted_8$t = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_9$r = {
+const _hoisted_9$q = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_10$l = {
+const _hoisted_10$k = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_11$i = {
+const _hoisted_11$h = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
@@ -153347,11 +154266,12 @@ const _sfc_main$14 = /* @__PURE__ */ defineComponent({
             ])) : createCommentVNode("", true)
           ], 32),
           createBaseVNode("div", _hoisted_7$H, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_8$u, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_9$r, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_10$l, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_11$i, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_8$t, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_9$q, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_10$k, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_11$h, toDisplayString$1(_ctx.$t("fx.chainMode")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
             node: __props.node,
+            "hide-run-button": "",
             "on-run-request": __props.onRunRequest,
             "on-cancel-request": __props.onCancelRequest,
             "on-disconnect": __props.onDisconnect,
@@ -153419,9 +154339,13 @@ function applyMatte(d2) {
     d2[i + 3] = 255;
   }
 }
-function frameFit(v2) {
-  const mw = v2.videoWidth || 16;
-  const mh = v2.videoHeight || 9;
+function frameFit(src) {
+  const v2 = src;
+  const isVideo = typeof v2.videoWidth === "number";
+  const w2 = isVideo ? v2.videoWidth : src.width;
+  const h2 = isVideo ? v2.videoHeight : src.height;
+  const mw = w2 || 16;
+  const mh = h2 || 9;
   const f2 = computeFit(CHROMA_PREVIEW_W, CHROMA_PREVIEW_H, mw, mh);
   return { dx: f2.offX, dy: f2.offY, dw: mw * f2.scale, dh: mh * f2.scale };
 }
@@ -153429,7 +154353,14 @@ function useChromaKeyPicker(opts) {
   const picking = /* @__PURE__ */ ref(false);
   const playing = /* @__PURE__ */ ref(false);
   const unregister = opts.nodeId != null ? registerPreviewSource(opts.nodeId, () => opts.canvasEl.value) : null;
+  const compositor = opts.node != null ? createChainCompositor(opts.node) : null;
   let rafId = 0;
+  function composedSource() {
+    const v2 = opts.videoEl.value;
+    if (!v2 || v2.readyState < 2) return null;
+    if (compositor == null) return v2;
+    return compositor.render(v2) ?? v2;
+  }
   function renderFrame() {
     var _a3, _b2, _c;
     const v2 = opts.videoEl.value;
@@ -153444,8 +154375,9 @@ function useChromaKeyPicker(opts) {
       c2.height = CHROMA_PREVIEW_H;
     }
     ctx.clearRect(0, 0, CHROMA_PREVIEW_W, CHROMA_PREVIEW_H);
-    const { dx, dy, dw, dh } = frameFit(v2);
-    ctx.drawImage(v2, dx, dy, dw, dh);
+    const src = composedSource() ?? v2;
+    const { dx, dy, dw, dh } = frameFit(src);
+    ctx.drawImage(src, dx, dy, dw, dh);
     const img = ctx.getImageData(0, 0, CHROMA_PREVIEW_W, CHROMA_PREVIEW_H);
     applyChromaKey(img.data, opts.keyColor.value, opts.similarity.value, opts.blend.value);
     if (((_a3 = opts.outputMode) == null ? void 0 : _a3.value) === "matte") {
@@ -153484,12 +154416,13 @@ function useChromaKeyPicker(opts) {
     const c2 = opts.canvasEl.value;
     const v2 = opts.videoEl.value;
     if (!c2 || !v2 || v2.readyState < 2) return;
+    const src = composedSource() ?? v2;
     const tmp3 = document.createElement("canvas");
     tmp3.width = CHROMA_PREVIEW_W;
     tmp3.height = CHROMA_PREVIEW_H;
     const tctx = tmp3.getContext("2d");
-    const { dx, dy, dw, dh } = frameFit(v2);
-    tctx.drawImage(v2, dx, dy, dw, dh);
+    const { dx, dy, dw, dh } = frameFit(src);
+    tctx.drawImage(src, dx, dy, dw, dh);
     const rect = c2.getBoundingClientRect();
     if (!rect.width || !rect.height) return;
     const fit = computeFit(rect.width, rect.height, CHROMA_PREVIEW_W, CHROMA_PREVIEW_H);
@@ -153503,6 +154436,7 @@ function useChromaKeyPicker(opts) {
   onBeforeUnmount(() => {
     unregister == null ? void 0 : unregister();
     cancelAnimationFrame(rafId);
+    compositor == null ? void 0 : compositor.dispose();
   });
   return { picking, playing, startLoop, togglePlay, onCanvasClick };
 }
@@ -153519,11 +154453,11 @@ const _hoisted_7$G = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_8$t = {
+const _hoisted_8$s = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_9$q = {
+const _hoisted_9$p = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
@@ -153561,6 +154495,7 @@ const _sfc_main$13 = /* @__PURE__ */ defineComponent({
       videoEl,
       canvasEl,
       nodeId: String(props.node.id),
+      node: props.node,
       keyColor,
       similarity,
       blend,
@@ -153666,7 +154601,7 @@ const _sfc_main$13 = /* @__PURE__ */ defineComponent({
             }, null, 8, ["modelValue", "options"])
           ], 32),
           createBaseVNode("div", _hoisted_5$Z, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_6$S, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_7$G, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_8$t, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_9$q, toDisplayString$1(_ctx.$t("fx.previewNote")), 1))
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_6$S, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_7$G, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_8$s, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_9$p, toDisplayString$1(_ctx.$t("fx.previewNote")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
@@ -153682,7 +154617,7 @@ const _sfc_main$13 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const VideoChromaKeyStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$13, [["__scopeId", "data-v-bff53a52"]]);
+const VideoChromaKeyStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$13, [["__scopeId", "data-v-bf86999a"]]);
 const _hoisted_1$1P = {
   viewBox: "0 0 24 24",
   width: "1.2em",
@@ -154830,7 +155765,7 @@ function timelineToSeeks(t2, window2, timeline2) {
   return { p: 1, aTime: offset2 + duration2, bTime: tc - lead, aActive: false, bActive: true };
 }
 const videoTransitionFrag = "#version 300 es\r\nprecision highp float;\r\n\r\nuniform sampler2D u_image0;\r\nuniform sampler2D u_image1;\r\nuniform vec2 u_resolution;\r\nuniform float u_float0;\r\nuniform int u_int0;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nconst float PI = 3.14159265358979;\r\n\r\nvec4 srcA(vec2 p) {\r\n    return texture(u_image0, vec2((p.x + 0.5) / u_resolution.x, 1.0 - (p.y + 0.5) / u_resolution.y));\r\n}\r\n\r\nvec4 srcB(vec2 p) {\r\n    return texture(u_image1, vec2((p.x + 0.5) / u_resolution.x, 1.0 - (p.y + 0.5) / u_resolution.y));\r\n}\r\n\r\nvec4 cmix(vec4 a, vec4 b, float m) {\r\n    return mix(b, a, m);\r\n}\r\n\r\nfloat frand(float x, float y) {\r\n    float r = sin(x * 12.9898 + y * 78.233) * 43758.545;\r\n    return r - floor(r);\r\n}\r\n\r\nvec4 fadeMeta(vec4 a, vec4 b, vec4 bg0, vec4 bg1, float P) {\r\n    return cmix(cmix(a, bg0, smoothstep(0.8, 1.0, P)),\r\n                cmix(bg1, b, smoothstep(0.2, 1.0, P)), P);\r\n}\r\n\r\nvoid main() {\r\n    float w = u_resolution.x;\r\n    float h = u_resolution.y;\r\n    float P = clamp(u_float0, 0.0, 1.0);\r\n    int m = u_int0;\r\n    float xi = floor(v_texCoord.x * w);\r\n    float yi = floor((1.0 - v_texCoord.y) * h);\r\n    vec2 p0 = vec2(xi, yi);\r\n    vec4 A = texture(u_image0, v_texCoord);\r\n    vec4 B = texture(u_image1, v_texCoord);\r\n    vec4 outc = A;\r\n\r\n    if (m == 0) {\r\n        outc = cmix(A, B, P);\r\n    } else if (m == 1) {\r\n        float smoothv = frand(xi, yi) * 2.0 + P * 2.0 - 1.5;\r\n        outc = smoothv >= 0.5 ? A : B;\r\n    } else if (m == 2) {\r\n        outc = fadeMeta(A, B, vec4(0.0, 0.0, 0.0, 1.0), vec4(0.0, 0.0, 0.0, 1.0), P);\r\n    } else if (m == 3) {\r\n        outc = fadeMeta(A, B, vec4(1.0), vec4(1.0), P);\r\n    } else if (m == 4) {\r\n        vec4 g0 = vec4(vec3(dot(A.rgb, vec3(1.0 / 3.0))), A.a);\r\n        vec4 g1 = vec4(vec3(dot(B.rgb, vec3(1.0 / 3.0))), B.a);\r\n        outc = fadeMeta(A, B, g0, g1, P);\r\n    } else if (m == 5) {\r\n        vec4 e = pow(vec4(P), vec4(1.0) + log(vec4(1.0) + abs(A - B)));\r\n        outc = A * e + B * (vec4(1.0) - e);\r\n    } else if (m == 6) {\r\n        vec4 e = pow(vec4(P), vec4(1.0) + log(vec4(2.0) - abs(A - B)));\r\n        outc = A * e + B * (vec4(1.0) - e);\r\n    } else if (m == 7) {\r\n        outc = xi > floor(w * P) ? B : A;\r\n    } else if (m == 8) {\r\n        outc = xi > floor(w * (1.0 - P)) ? A : B;\r\n    } else if (m == 9) {\r\n        outc = yi > floor(h * P) ? B : A;\r\n    } else if (m == 10) {\r\n        outc = yi > floor(h * (1.0 - P)) ? A : B;\r\n    } else if (m == 11) {\r\n        outc = (yi <= floor(h * P) && xi <= floor(w * P)) ? A : B;\r\n    } else if (m == 12) {\r\n        outc = (yi <= floor(h * P) && xi > floor(w * (1.0 - P))) ? A : B;\r\n    } else if (m == 13) {\r\n        outc = (yi > floor(h * (1.0 - P)) && xi <= floor(w * P)) ? A : B;\r\n    } else if (m == 14) {\r\n        outc = (yi > floor(h * (1.0 - P)) && xi > floor(w * (1.0 - P))) ? A : B;\r\n    } else if (m == 15 || m == 16) {\r\n        float z = (m == 15 ? -P : P) * w;\r\n        float zx = floor(z) + xi;\r\n        vec2 s = vec2(mod(zx, w), yi);\r\n        outc = (zx >= 0.0 && zx < w) ? srcB(s) : srcA(s);\r\n    } else if (m == 17 || m == 18) {\r\n        float z = (m == 17 ? -P : P) * h;\r\n        float zy = floor(z) + yi;\r\n        vec2 s = vec2(xi, mod(zy, h));\r\n        outc = (zy >= 0.0 && zy < h) ? srcB(s) : srcA(s);\r\n    } else if (m == 19) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + xi / w - P * 2.0));\r\n    } else if (m == 20) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + (w - 1.0 - xi) / w - P * 2.0));\r\n    } else if (m == 21) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + yi / h - P * 2.0));\r\n    } else if (m == 22) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + (h - 1.0 - yi) / h - P * 2.0));\r\n    } else if (m == 23) {\r\n        float z = pow(2.0 * abs(P - 0.5), 3.0) * length(vec2(w, h) * 0.5);\r\n        float dist = length(p0 - vec2(w, h) * 0.5);\r\n        outc = z < dist ? vec4(0.0, 0.0, 0.0, 1.0) : (P < 0.5 ? B : A);\r\n    } else if (m == 24) {\r\n        bool inside = abs(xi - w * 0.5) < abs(P - 0.5) * w\r\n                   && abs(yi - h * 0.5) < abs(P - 0.5) * h;\r\n        outc = inside ? (P < 0.5 ? B : A) : vec4(0.0, 0.0, 0.0, 1.0);\r\n    } else if (m == 25) {\r\n        float z = length(vec2(w, h) * 0.5);\r\n        float smoothv = length(p0 - vec2(w, h) * 0.5) / z + (P - 0.5) * 3.0;\r\n        outc = cmix(A, B, smoothstep(0.0, 1.0, smoothv));\r\n    } else if (m == 26) {\r\n        float z = length(vec2(w, h) * 0.5);\r\n        float smoothv = length(p0 - vec2(w, h) * 0.5) / z + (0.5 - P) * 3.0;\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, smoothv));\r\n    } else if (m == 27) {\r\n        float w2 = w * 0.5;\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 2.0 - abs((xi - w2) / w2) - P * 2.0));\r\n    } else if (m == 28) {\r\n        float w2 = w * 0.5;\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + abs((xi - w2) / w2) - P * 2.0));\r\n    } else if (m == 29) {\r\n        float h2 = h * 0.5;\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 2.0 - abs((yi - h2) / h2) - P * 2.0));\r\n    } else if (m == 30) {\r\n        float h2 = h * 0.5;\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + abs((yi - h2) / h2) - P * 2.0));\r\n    } else if (m == 31) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + xi / w * yi / h - P * 2.0));\r\n    } else if (m == 32) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + (w - 1.0 - xi) / w * yi / h - P * 2.0));\r\n    } else if (m == 33) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + xi / w * (h - 1.0 - yi) / h - P * 2.0));\r\n    } else if (m == 34) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + (w - 1.0 - xi) / w * (h - 1.0 - yi) / h - P * 2.0));\r\n    } else if (m >= 35 && m <= 38) {\r\n        float c = m == 35 ? xi / w\r\n                : m == 36 ? (w - 1.0 - xi) / w\r\n                : m == 37 ? yi / h\r\n                : (h - 1.0 - yi) / h;\r\n        float smoothv = smoothstep(-0.5, 0.0, c - P * 1.5);\r\n        float ss = smoothv <= fract(10.0 * c) ? 0.0 : 1.0;\r\n        outc = mix(A, B, ss);\r\n    } else if (m >= 39 && m <= 42) {\r\n        float c = m == 39 ? 1.0 - xi / w\r\n                : m == 40 ? xi / w\r\n                : m == 41 ? 1.0 - yi / h\r\n                : yi / h;\r\n        float r = (m <= 40) ? frand(0.0, yi) : frand(xi, 0.0);\r\n        float ss = 1.0 - smoothstep(-0.2, 0.0, c * 0.8 + 0.2 * r - (1.0 - P) * 1.2);\r\n        outc = mix(A, B, ss);\r\n    } else if (m == 43 || m == 44) {\r\n        float z = (m == 43 ? -P : P) * w;\r\n        float zx = floor(z) + xi;\r\n        outc = (zx >= 0.0 && zx < w) ? srcB(vec2(mod(zx, w), yi)) : A;\r\n    } else if (m == 45 || m == 46) {\r\n        float z = (m == 45 ? -P : P) * h;\r\n        float zy = floor(z) + yi;\r\n        outc = (zy >= 0.0 && zy < h) ? srcB(vec2(xi, mod(zy, h))) : A;\r\n    } else if (m == 47 || m == 48) {\r\n        float z = (m == 47 ? -P : P) * w;\r\n        float zx = floor(z) + xi;\r\n        outc = (zx >= 0.0 && zx < w) ? B : srcA(vec2(mod(zx, w), yi));\r\n    } else if (m == 49 || m == 50) {\r\n        float z = (m == 49 ? -P : P) * h;\r\n        float zy = floor(z) + yi;\r\n        outc = (zy >= 0.0 && zy < h) ? B : srcA(vec2(xi, mod(zy, h)));\r\n    } else if (m == 51) {\r\n        float z = 0.5 + (yi / h - 0.5) / max(P, 0.001);\r\n        outc = (P <= 0.001 || z < 0.0 || z > 1.0) ? B : srcA(vec2(xi, floor(z * (h - 1.0) + 0.5)));\r\n    } else if (m == 52) {\r\n        float z = 0.5 + (xi / w - 0.5) / max(P, 0.001);\r\n        outc = (P <= 0.001 || z < 0.0 || z > 1.0) ? B : srcA(vec2(floor(z * (w - 1.0) + 0.5), yi));\r\n    } else if (m == 53) {\r\n        float zf = smoothstep(0.5, 1.0, P);\r\n        vec2 uv = vec2(xi / w, yi / h);\r\n        uv = vec2(0.5) + (uv - vec2(0.5)) * zf;\r\n        vec2 s = ceil(uv * (vec2(w, h) - 1.0));\r\n        outc = mix(B, srcA(s), smoothstep(0.0, 0.5, P));\r\n    } else if (m == 54) {\r\n        vec3 d = A.rgb - B.rgb;\r\n        float flag = sqrt(dot(d, d)) <= P ? 1.0 : 0.0;\r\n        outc = mix(B, cmix(A, B, flag), P);\r\n    } else if (m == 55) {\r\n        float d = min(P, 1.0 - P);\r\n        float dist = ceil(d * 50.0) / 50.0;\r\n        float sq = 2.0 * dist * min(w, h) / 20.0;\r\n        vec2 s = dist > 0.0\r\n            ? min((floor(p0 / sq) + 0.5) * sq, vec2(w, h) - 1.0)\r\n            : p0;\r\n        outc = cmix(srcA(s), srcB(s), P);\r\n    } else if (m == 56) {\r\n        vec2 rd = vec2(xi - w * 0.5, yi - h * 0.5);\r\n        if (rd == vec2(0.0)) rd = vec2(0.0, 1.0);\r\n        float smoothv = atan(rd.x, rd.y) - (P - 0.5) * (PI * 2.5);\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, smoothv));\r\n    } else if (m == 57) {\r\n        float prog = P <= 0.5 ? P * 2.0 : (1.0 - P) * 2.0;\r\n        float size = 1.0 + floor(w * 0.5) * prog;\r\n        const int TAPS = 24;\r\n        float stride = size / float(TAPS);\r\n        vec4 sum0 = vec4(0.0);\r\n        vec4 sum1 = vec4(0.0);\r\n        for (int k = 0; k < TAPS; k++) {\r\n            float sx = min(xi + (float(k) + 0.5) * stride, w - 1.0);\r\n            vec2 s = vec2(sx, yi);\r\n            sum0 += srcA(s);\r\n            sum1 += srcB(s);\r\n        }\r\n        outc = cmix(sum0 / float(TAPS), sum1 / float(TAPS), P);\r\n    }\r\n\r\n    fragColor = vec4(outc.rgb, 1.0);\r\n}\r\n";
-const RENDER_CONFIG$2 = {
+const RENDER_CONFIG = {
   maxInputs: 2,
   maxFloatUniforms: 1,
   maxIntUniforms: 1,
@@ -154839,7 +155774,7 @@ const RENDER_CONFIG$2 = {
 };
 class VideoTransitionRenderer {
   constructor() {
-    __publicField(this, "renderer", useGLSLRenderer(RENDER_CONFIG$2));
+    __publicField(this, "renderer", useGLSLRenderer(RENDER_CONFIG));
     __publicField(this, "ready", false);
     __publicField(this, "_error", null);
   }
@@ -155126,11 +156061,11 @@ const _hoisted_7$F = {
   key: 0,
   class: "ctv:text-2xs ctv:text-muted-foreground"
 };
-const _hoisted_8$s = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_9$p = ["onClick"];
-const _hoisted_10$k = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_11$h = { class: "ctv:text-3xs ctv:font-mono ctv:text-muted-foreground" };
-const _hoisted_12$d = {
+const _hoisted_8$r = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_9$o = ["onClick"];
+const _hoisted_10$j = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_11$g = { class: "ctv:text-3xs ctv:font-mono ctv:text-muted-foreground" };
+const _hoisted_12$c = {
   key: 0,
   class: "ctv:ml-auto ctv:text-2xs ctv:text-primary-background ctv:font-mono"
 };
@@ -155348,7 +156283,7 @@ const _sfc_main$12 = /* @__PURE__ */ defineComponent({
           }, ["stop"]))
         }, [
           !lumaWired.value ? (openBlock(), createElementBlock(Fragment$1, { key: 0 }, [
-            createBaseVNode("span", _hoisted_8$s, toDisplayString$1(_ctx.$t("fx.transition")), 1),
+            createBaseVNode("span", _hoisted_8$r, toDisplayString$1(_ctx.$t("fx.transition")), 1),
             createBaseVNode("div", {
               class: "ctv-scroll-thin ctv:h-56 ctv:shrink-0 ctv:overflow-y-auto ctv:flex ctv:flex-col ctv:gap-0.5",
               onWheel: _cache2[8] || (_cache2[8] = withModifiers(() => {
@@ -155367,10 +156302,10 @@ const _sfc_main$12 = /* @__PURE__ */ defineComponent({
                     createBaseVNode("i", {
                       class: normalizeClass(["pi", expandedGroups.value.has(grp.id) ? "pi-chevron-down" : "pi-chevron-right", "ctv:w-2.5 ctv:text-2xs ctv:text-muted-foreground"])
                     }, null, 2),
-                    createBaseVNode("span", _hoisted_10$k, toDisplayString$1(_ctx.$t(`fx.transitionGroup.${grp.id}`)), 1),
-                    createBaseVNode("span", _hoisted_11$h, toDisplayString$1(grp.names.length), 1),
-                    !expandedGroups.value.has(grp.id) && grp.names.includes(unref(transition)) ? (openBlock(), createElementBlock("span", _hoisted_12$d, toDisplayString$1(unref(transition)), 1)) : createCommentVNode("", true)
-                  ], 8, _hoisted_9$p),
+                    createBaseVNode("span", _hoisted_10$j, toDisplayString$1(_ctx.$t(`fx.transitionGroup.${grp.id}`)), 1),
+                    createBaseVNode("span", _hoisted_11$g, toDisplayString$1(grp.names.length), 1),
+                    !expandedGroups.value.has(grp.id) && grp.names.includes(unref(transition)) ? (openBlock(), createElementBlock("span", _hoisted_12$c, toDisplayString$1(unref(transition)), 1)) : createCommentVNode("", true)
+                  ], 8, _hoisted_9$o),
                   withDirectives(createBaseVNode("div", _hoisted_13$8, [
                     (openBlock(true), createElementBlock(Fragment$1, null, renderList(grp.names, (name) => {
                       return openBlock(), createElementBlock("button", {
@@ -155561,15 +156496,15 @@ const _hoisted_7$E = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_8$r = {
+const _hoisted_8$q = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_9$o = {
+const _hoisted_9$n = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_10$j = {
+const _hoisted_10$i = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
@@ -155712,7 +156647,7 @@ const _sfc_main$10 = /* @__PURE__ */ defineComponent({
             createBaseVNode("div", _hoisted_5$W, toDisplayString$1(_ctx.$t("fx.sceneClipPickHint")), 1)
           ], 32)) : createCommentVNode("", true),
           createBaseVNode("div", _hoisted_6$P, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_7$E, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_8$r, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_9$o, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_10$j, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_7$E, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_8$q, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_9$n, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_10$i, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
@@ -155857,19 +156792,19 @@ const _hoisted_6$N = {
   class: "ctv:h-40 ctv:flex ctv:flex-col"
 };
 const _hoisted_7$C = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_8$q = {
+const _hoisted_8$p = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_9$n = {
+const _hoisted_9$m = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_10$i = {
+const _hoisted_10$h = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_11$g = {
+const _hoisted_11$f = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
@@ -155965,11 +156900,12 @@ const _sfc_main$_ = /* @__PURE__ */ defineComponent({
             ])) : createCommentVNode("", true)
           ], 32),
           createBaseVNode("div", _hoisted_7$C, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_8$q, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_9$n, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_10$i, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_11$g, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_8$p, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_9$m, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_10$h, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_11$f, toDisplayString$1(_ctx.$t("fx.chainMode")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
             node: __props.node,
+            "hide-run-button": "",
             "on-run-request": __props.onRunRequest,
             "on-cancel-request": __props.onCancelRequest,
             "on-disconnect": __props.onDisconnect,
@@ -155981,243 +156917,6 @@ const _sfc_main$_ = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const videoStylizeFrag = "#version 300 es\r\nprecision highp float;\r\n\r\n#pragma passes 3\r\n\r\nuniform sampler2D u_image0;\r\nuniform sampler2D u_image1;\r\nuniform sampler2D u_curve0;\r\nuniform sampler2D u_curve1;\r\nuniform sampler2D u_curve2;\r\nuniform vec2 u_resolution;\r\nuniform int u_pass;\r\nuniform int u_int0;\r\nuniform int u_int1;\r\nuniform int u_int2;\r\nuniform int u_int3;\r\nuniform float u_float0;\r\nuniform float u_float1;\r\nuniform float u_float2;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nvec3 bytes(vec3 c) {\r\n    return floor(c * 255.0 + 0.5);\r\n}\r\n\r\nvec3 rgbToYuv(vec3 c) {\r\n    return vec3(\r\n        16.0 + 65.481 * c.r + 128.553 * c.g + 24.966 * c.b,\r\n        128.0 - 37.797 * c.r - 74.203 * c.g + 112.0 * c.b,\r\n        128.0 + 112.0 * c.r - 93.786 * c.g - 18.214 * c.b);\r\n}\r\n\r\nvec3 yuvToRgb(vec3 yuv) {\r\n    float y = (yuv.x - 16.0) / 219.0;\r\n    float pb = (yuv.y - 128.0) / 224.0;\r\n    float pr = (yuv.z - 128.0) / 224.0;\r\n    return clamp(vec3(\r\n        y + 1.402 * pr,\r\n        y - 0.344136 * pb - 0.714136 * pr,\r\n        y + 1.772 * pb), 0.0, 1.0);\r\n}\r\n\r\nfloat vigFactor(vec2 px) {\r\n    vec2 hc = u_resolution * 0.5;\r\n    vec2 d = trunc(px - hc);\r\n    float dnorm = length(d) / length(hc);\r\n    if (dnorm > 1.0) return 0.0;\r\n    float c = cos(clamp(u_float0, 0.0, 1.5707964) * dnorm);\r\n    return (c * c) * (c * c);\r\n}\r\n\r\nfloat hash01(ivec2 p, int frame, int plane) {\r\n    uint h = uint(p.x) * 374761393u + uint(p.y) * 668265263u\r\n        + uint(frame) * 2246822519u + uint(plane) * 3266489917u;\r\n    h ^= h >> 16;\r\n    h *= 2654435761u;\r\n    h ^= h >> 13;\r\n    h *= 2246822519u;\r\n    h ^= h >> 16;\r\n    return float(h) * (1.0 / 4294967296.0);\r\n}\r\n\r\nfloat noiseOff(ivec2 p, int plane) {\r\n    float s = float(u_int2);\r\n    return floor(hash01(p, u_int3, plane) * s) - float(u_int2 / 2);\r\n}\r\n\r\nvec3 applyVignette(vec3 c, ivec2 px) {\r\n    float f = vigFactor(vec2(px));\r\n    vec3 yuv = rgbToYuv(c);\r\n    return yuvToRgb(vec3(\r\n        clamp(floor(yuv.x * f), 0.0, 255.0),\r\n        clamp(floor(f * (yuv.y - 127.0) + 127.0), 0.0, 255.0),\r\n        clamp(floor(f * (yuv.z - 127.0) + 127.0), 0.0, 255.0)));\r\n}\r\n\r\nvec3 applyGrain(vec3 c, ivec2 px) {\r\n    vec3 yuv = rgbToYuv(c);\r\n    yuv.x = clamp(yuv.x + noiseOff(px, 0), 0.0, 255.0);\r\n    yuv.y = clamp(yuv.y + noiseOff(px, 1), 0.0, 255.0);\r\n    yuv.z = clamp(yuv.z + noiseOff(px, 2), 0.0, 255.0);\r\n    return yuvToRgb(yuv);\r\n}\r\n\r\nvec3 applySepia(vec3 c) {\r\n    vec3 b = bytes(c);\r\n    vec3 mixed = vec3(\r\n        floor(b.r * 0.393 + 0.5) + floor(b.g * 0.769 + 0.5) + floor(b.b * 0.189 + 0.5),\r\n        floor(b.r * 0.349 + 0.5) + floor(b.g * 0.686 + 0.5) + floor(b.b * 0.168 + 0.5),\r\n        floor(b.r * 0.272 + 0.5) + floor(b.g * 0.534 + 0.5) + floor(b.b * 0.131 + 0.5));\r\n    return clamp(mixed, 0.0, 255.0) / 255.0;\r\n}\r\n\r\nvec3 applyMonochrome(vec3 c) {\r\n    vec3 yuv = rgbToYuv(c);\r\n    float y = yuv.x / 255.0;\r\n    float u = yuv.y / 255.0 - 0.5;\r\n    float v = yuv.z / 255.0 - 0.5;\r\n    float ny = exp(-clamp(u * u + v * v, 0.0, 1.0));\r\n    float y2 = clamp(floor(ny * y * 255.0 + 0.5), 0.0, 255.0);\r\n    return yuvToRgb(vec3(y2, 128.0, 128.0));\r\n}\r\n\r\nfloat curveAt(sampler2D lut, float b) {\r\n    int idx = int(clamp(b, 0.0, 255.0));\r\n    return texelFetch(lut, ivec2(idx, 0), 0).r * 255.0;\r\n}\r\n\r\nvec3 applyOldFilm(vec3 c, ivec2 px) {\r\n    vec3 b = bytes(c);\r\n    b = vec3(curveAt(u_curve0, b.r), curveAt(u_curve1, b.g), curveAt(u_curve2, b.b));\r\n    b.r = clamp(b.r + noiseOff(px, 0), 0.0, 255.0);\r\n    b.g = clamp(b.g + noiseOff(px, 1), 0.0, 255.0);\r\n    b.b = clamp(b.b + noiseOff(px, 2), 0.0, 255.0);\r\n    float f = vigFactor(vec2(px));\r\n    return clamp(floor(b * f), 0.0, 255.0) / 255.0;\r\n}\r\n\r\nvec4 pixelizeRows(ivec2 t) {\r\n    int w = int(u_resolution.x);\r\n    int b = max(1, u_int1);\r\n    int bx = (t.x / b) * b;\r\n    int bw = min(b, w - bx);\r\n    vec3 acc = vec3(0.0);\r\n    for (int i = 0; i < 64; i++) {\r\n        if (i >= bw) break;\r\n        acc += texelFetch(u_image0, ivec2(bx + i, t.y), 0).rgb;\r\n    }\r\n    return vec4(acc / float(bw), 1.0);\r\n}\r\n\r\nvec4 pixelizeCols(ivec2 t) {\r\n    int h = int(u_resolution.y);\r\n    int b = max(1, u_int1);\r\n    int vy = h - 1 - t.y;\r\n    int vby = (vy / b) * b;\r\n    int bh = min(b, h - vby);\r\n    vec3 acc = vec3(0.0);\r\n    for (int j = 0; j < 64; j++) {\r\n        if (j >= bh) break;\r\n        acc += texelFetch(u_image0, ivec2(t.x, h - 1 - (vby + j)), 0).rgb;\r\n    }\r\n    return vec4(acc / float(bh), 1.0);\r\n}\r\n\r\nvec4 edgeGaussian(ivec2 t) {\r\n    int w = int(u_resolution.x);\r\n    int h = int(u_resolution.y);\r\n    vec3 src = bytes(texelFetch(u_image0, t, 0).rgb);\r\n    if (t.x < 2 || t.x >= w - 2 || t.y < 2 || t.y >= h - 2) {\r\n        return vec4(src, 255.0);\r\n    }\r\n    float k[25] = float[25](\r\n        2.0, 4.0, 5.0, 4.0, 2.0,\r\n        4.0, 9.0, 12.0, 9.0, 4.0,\r\n        5.0, 12.0, 15.0, 12.0, 5.0,\r\n        4.0, 9.0, 12.0, 9.0, 4.0,\r\n        2.0, 4.0, 5.0, 4.0, 2.0);\r\n    vec3 acc = vec3(0.0);\r\n    for (int dy = -2; dy <= 2; dy++) {\r\n        for (int dx = -2; dx <= 2; dx++) {\r\n            acc += k[(dy + 2) * 5 + dx + 2]\r\n                * bytes(texelFetch(u_image0, t + ivec2(dx, dy), 0).rgb);\r\n        }\r\n    }\r\n    return vec4(floor(acc / 159.0 + 1e-3), 255.0);\r\n}\r\n\r\nvoid sobelAt(ivec2 t, out vec3 gx, out vec3 gy) {\r\n    vec3 a = texelFetch(u_image0, t + ivec2(-1, -1), 0).rgb;\r\n    vec3 b = texelFetch(u_image0, t + ivec2(0, -1), 0).rgb;\r\n    vec3 c = texelFetch(u_image0, t + ivec2(1, -1), 0).rgb;\r\n    vec3 d = texelFetch(u_image0, t + ivec2(-1, 0), 0).rgb;\r\n    vec3 f = texelFetch(u_image0, t + ivec2(1, 0), 0).rgb;\r\n    vec3 g = texelFetch(u_image0, t + ivec2(-1, 1), 0).rgb;\r\n    vec3 hh = texelFetch(u_image0, t + ivec2(0, 1), 0).rgb;\r\n    vec3 i = texelFetch(u_image0, t + ivec2(1, 1), 0).rgb;\r\n    gx = -a + c - 2.0 * d + 2.0 * f - g + i;\r\n    gy = -a + g - 2.0 * b + 2.0 * hh - c + i;\r\n}\r\n\r\nvec3 sobelMagAt(ivec2 t, int w, int h) {\r\n    if (t.x < 1 || t.x >= w - 1 || t.y < 1 || t.y >= h - 1) return vec3(0.0);\r\n    vec3 gx;\r\n    vec3 gy;\r\n    sobelAt(t, gx, gy);\r\n    return abs(gx) + abs(gy);\r\n}\r\n\r\nint dirClass(float gxf, float gyf) {\r\n    int gx = int(gxf);\r\n    int gy = int(gyf);\r\n    if (gx != 0) {\r\n        if (gx < 0) {\r\n            gx = -gx;\r\n            gy = -gy;\r\n        }\r\n        int gy16 = gy * 65536;\r\n        int tanPi8 = 27146 * gx;\r\n        int tan3Pi8 = 158218 * gx;\r\n        if (gy16 > -tan3Pi8 && gy16 < -tanPi8) return 0;\r\n        if (gy16 > -tanPi8 && gy16 < tanPi8) return 2;\r\n        if (gy16 > tanPi8 && gy16 < tan3Pi8) return 1;\r\n    }\r\n    return 3;\r\n}\r\n\r\nvec4 edgeSobelNms(ivec2 t) {\r\n    int w = int(u_resolution.x);\r\n    int h = int(u_resolution.y);\r\n    if (t.x < 1 || t.x >= w - 1 || t.y < 1 || t.y >= h - 1) {\r\n        return vec4(0.0, 0.0, 0.0, 255.0);\r\n    }\r\n    vec3 gx;\r\n    vec3 gy;\r\n    sobelAt(t, gx, gy);\r\n    vec3 mag = abs(gx) + abs(gy);\r\n    vec3 res = vec3(0.0);\r\n    for (int ch = 0; ch < 3; ch++) {\r\n        int dir = dirClass(gx[ch], gy[ch]);\r\n        ivec2 o1 = dir == 0 ? ivec2(-1, 1)\r\n            : dir == 1 ? ivec2(-1, -1)\r\n            : dir == 2 ? ivec2(-1, 0)\r\n            : ivec2(0, -1);\r\n        ivec2 o2 = -o1;\r\n        float m1 = sobelMagAt(t + o1, w, h)[ch];\r\n        float m2 = sobelMagAt(t + o2, w, h)[ch];\r\n        if (mag[ch] > m1 && mag[ch] > m2) res[ch] = min(mag[ch], 255.0);\r\n    }\r\n    return vec4(res, 255.0);\r\n}\r\n\r\nvec4 edgeThreshold(ivec2 t) {\r\n    int w = int(u_resolution.x);\r\n    int h = int(u_resolution.y);\r\n    vec3 nms = texelFetch(u_image0, t, 0).rgb;\r\n    vec3 orig = bytes(texture(u_image1, v_texCoord).rgb);\r\n    bool interior = t.x > 0 && t.x < w - 1 && t.y > 0 && t.y < h - 1;\r\n    vec3 maxN = vec3(0.0);\r\n    if (interior) {\r\n        for (int dy = -1; dy <= 1; dy++) {\r\n            for (int dx = -1; dx <= 1; dx++) {\r\n                if (dx == 0 && dy == 0) continue;\r\n                maxN = max(maxN, texelFetch(u_image0, t + ivec2(dx, dy), 0).rgb);\r\n            }\r\n        }\r\n    }\r\n    vec3 res;\r\n    for (int ch = 0; ch < 3; ch++) {\r\n        float v = nms[ch];\r\n        float kept = 0.0;\r\n        if (v > u_float2) kept = v;\r\n        else if (interior && v > u_float1 && maxN[ch] > u_float2) kept = v;\r\n        res[ch] = floor((kept + orig[ch]) * 0.5);\r\n    }\r\n    return vec4(res / 255.0, 1.0);\r\n}\r\n\r\nvoid main() {\r\n    ivec2 t = ivec2(gl_FragCoord.xy);\r\n    ivec2 vp = ivec2(t.x, int(u_resolution.y) - 1 - t.y);\r\n    if (u_int0 == 2) {\r\n        if (u_pass == 0) fragColor = pixelizeRows(t);\r\n        else if (u_pass == 1) fragColor = pixelizeCols(t);\r\n        else fragColor = vec4(texelFetch(u_image0, t, 0).rgb, 1.0);\r\n        return;\r\n    }\r\n    if (u_int0 == 3) {\r\n        if (u_pass == 0) fragColor = edgeGaussian(t);\r\n        else if (u_pass == 1) fragColor = edgeSobelNms(t);\r\n        else fragColor = edgeThreshold(t);\r\n        return;\r\n    }\r\n    if (u_pass < 2) {\r\n        fragColor = vec4(0.0);\r\n        return;\r\n    }\r\n    vec4 tex = texture(u_image1, v_texCoord);\r\n    vec3 c = tex.rgb;\r\n    if (u_int0 == 0) c = applyVignette(c, vp);\r\n    else if (u_int0 == 1) c = applyGrain(c, vp);\r\n    else if (u_int0 == 4) c = applySepia(c);\r\n    else if (u_int0 == 5) c = applyMonochrome(c);\r\n    else if (u_int0 == 6) c = applyOldFilm(c, vp);\r\n    fragColor = vec4(c, tex.a);\r\n}\r\n";
-const STYLIZE_EFFECTS = [
-  "vignette",
-  "grain",
-  "pixelize",
-  "edge",
-  "sepia",
-  "monochrome",
-  "old_film"
-];
-const EFFECT_INDEX = {
-  vignette: 0,
-  grain: 1,
-  pixelize: 2,
-  edge: 3,
-  sepia: 4,
-  monochrome: 5,
-  old_film: 6
-};
-function fin(v2, lo, hi, dflt) {
-  const n = typeof v2 === "number" ? v2 : Number(v2);
-  if (!Number.isFinite(n)) return dflt;
-  return Math.min(hi, Math.max(lo, n));
-}
-function sanitizeVideoStylizeParams(p2) {
-  const effect3 = p2.effect && STYLIZE_EFFECTS.includes(p2.effect) ? p2.effect : "vignette";
-  const rawBlock = typeof p2.block === "number" ? p2.block : Number(p2.block);
-  const block = Number.isFinite(rawBlock) && Math.trunc(rawBlock) ? Math.trunc(rawBlock) : 8;
-  return {
-    effect: effect3,
-    strength: fin(p2.strength, 0, 1, 0.5),
-    block: Math.min(64, Math.max(2, block))
-  };
-}
-function fmt(v2, digits) {
-  return Number.parseFloat(v2.toFixed(digits));
-}
-function vignetteAngle(s) {
-  return fmt(Math.max(0.05, s * 1.5), 4);
-}
-function oldFilmVignetteAngle(s) {
-  return fmt(Math.max(0.05, s * 1.2), 4);
-}
-function grainStrength(s) {
-  return Math.max(1, Math.trunc(s * 40));
-}
-function oldFilmGrainStrength(s) {
-  return Math.max(1, Math.trunc(s * 30));
-}
-function edgeThresholds(s) {
-  return {
-    low: fmt(Math.max(0.02, s * 0.3), 3),
-    high: fmt(Math.max(0.05, s * 0.6), 3)
-  };
-}
-function edgeThresholdU8(t2) {
-  return Math.trunc(t2 * 255 + 0.5);
-}
-function oldFilmLuts() {
-  return buildCurvesLuts({ preset: "vintage" });
-}
-function computeStylizeUniforms(raw) {
-  const p2 = sanitizeVideoStylizeParams(raw);
-  const s = p2.strength;
-  const { low, high } = edgeThresholds(s);
-  return {
-    effect: EFFECT_INDEX[p2.effect],
-    angle: p2.effect === "old_film" ? oldFilmVignetteAngle(s) : vignetteAngle(s),
-    grain: p2.effect === "old_film" ? oldFilmGrainStrength(s) : grainStrength(s),
-    block: p2.block,
-    edgeLow: edgeThresholdU8(low),
-    edgeHigh: edgeThresholdU8(high)
-  };
-}
-function stylizeUsesCurves(raw) {
-  return sanitizeVideoStylizeParams(raw).effect === "old_film";
-}
-function stylizeUsesTemporalNoise(raw) {
-  const effect3 = sanitizeVideoStylizeParams(raw).effect;
-  return effect3 === "grain" || effect3 === "old_film";
-}
-const RENDER_CONFIG$1 = {
-  maxInputs: 2,
-  maxFloatUniforms: 3,
-  maxIntUniforms: 4,
-  maxBoolUniforms: 0,
-  maxCurves: 3
-};
-class VideoStylizeRenderer {
-  constructor() {
-    __publicField(this, "renderer", useGLSLRenderer(RENDER_CONFIG$1));
-    __publicField(this, "ready", false);
-    __publicField(this, "_error", null);
-    __publicField(this, "lutsUploaded", false);
-    __publicField(this, "frame", 0);
-  }
-  get error() {
-    return this._error;
-  }
-  uploadLuts() {
-    if (this.lutsUploaded) return;
-    const luts = oldFilmLuts();
-    const channels = [luts.red, luts.green, luts.blue];
-    channels.forEach((lut2, i) => {
-      const data = new Float32Array(256);
-      for (let j2 = 0; j2 < 256; j2++) data[j2] = lut2[j2] / 255;
-      this.renderer.bindCurveTexture(i, data);
-    });
-    this.lutsUploaded = true;
-  }
-  renderToCanvas(video, params, target) {
-    const w2 = Math.max(2, video.videoWidth);
-    const h2 = Math.max(2, video.videoHeight);
-    try {
-      if (!this.ready) {
-        if (!this.renderer.init(w2, h2)) {
-          this._error = "WebGL2 not available";
-          return false;
-        }
-        this.ready = true;
-      }
-      const compiled = this.renderer.compileFragment(videoStylizeFrag);
-      if (!compiled.success) {
-        this._error = compiled.log || "Shader compilation failed";
-        return false;
-      }
-      this._error = null;
-      this.renderer.setResolution(w2, h2);
-      this.renderer.bindInputImage(0, video);
-      this.renderer.bindInputImage(1, video);
-      if (stylizeUsesCurves(params)) this.uploadLuts();
-      const u = computeStylizeUniforms(params);
-      if (stylizeUsesTemporalNoise(params)) this.frame = (this.frame + 1) % 1e5;
-      this.renderer.setIntUniform(0, u.effect);
-      this.renderer.setIntUniform(1, u.block);
-      this.renderer.setIntUniform(2, u.grain);
-      this.renderer.setIntUniform(3, this.frame);
-      this.renderer.setFloatUniform(0, u.angle);
-      this.renderer.setFloatUniform(1, u.edgeLow);
-      this.renderer.setFloatUniform(2, u.edgeHigh);
-      this.renderer.render();
-      const off = this.renderer.getCanvas();
-      if (!off) {
-        this._error = "Renderer produced no output";
-        return false;
-      }
-      target.width = w2;
-      target.height = h2;
-      const ctx = target.getContext("2d");
-      if (!ctx) {
-        this._error = "2D context unavailable";
-        return false;
-      }
-      ctx.clearRect(0, 0, w2, h2);
-      ctx.drawImage(off, 0, 0);
-      return true;
-    } catch (e) {
-      this._error = e instanceof Error ? e.message : "Render failed";
-      this.renderer.dispose();
-      this.ready = false;
-      return false;
-    }
-  }
-  dispose() {
-    this.renderer.dispose();
-    this.ready = false;
-    this.lutsUploaded = false;
-  }
-}
-function useVideoStylizePreview(opts) {
-  const supported = /* @__PURE__ */ ref(true);
-  const unregister = opts.nodeId != null ? registerPreviewSource(opts.nodeId, () => opts.canvasEl.value) : null;
-  let renderer2 = null;
-  let rafId = 0;
-  let attached = null;
-  function renderOnce() {
-    if (!supported.value) return;
-    const v2 = opts.videoEl.value;
-    const c2 = opts.canvasEl.value;
-    if (!v2 || !c2 || v2.readyState < 2) return;
-    renderer2 ?? (renderer2 = (opts.createRenderer ?? (() => new VideoStylizeRenderer()))());
-    if (!renderer2.renderToCanvas(v2, opts.params(), c2)) {
-      supported.value = false;
-      stopLoop();
-    }
-  }
-  function loop() {
-    renderOnce();
-    if (supported.value) rafId = requestAnimationFrame(loop);
-  }
-  function startLoop() {
-    stopLoop();
-    if (!supported.value) return;
-    rafId = requestAnimationFrame(loop);
-  }
-  function stopLoop() {
-    if (rafId) cancelAnimationFrame(rafId);
-    rafId = 0;
-  }
-  const onPlay = () => startLoop();
-  const onStop = () => {
-    stopLoop();
-    renderOnce();
-  };
-  const onFrame = () => renderOnce();
-  function detach() {
-    if (!attached) return;
-    attached.removeEventListener("play", onPlay);
-    attached.removeEventListener("pause", onStop);
-    attached.removeEventListener("ended", onStop);
-    attached.removeEventListener("seeked", onFrame);
-    attached.removeEventListener("loadeddata", onFrame);
-    attached = null;
-  }
-  watch(opts.videoEl, (v2) => {
-    detach();
-    stopLoop();
-    if (!v2) return;
-    attached = v2;
-    v2.addEventListener("play", onPlay);
-    v2.addEventListener("pause", onStop);
-    v2.addEventListener("ended", onStop);
-    v2.addEventListener("seeked", onFrame);
-    v2.addEventListener("loadeddata", onFrame);
-    if (v2.paused) renderOnce();
-    else startLoop();
-  }, { immediate: true });
-  watch(() => opts.params(), () => renderOnce());
-  onBeforeUnmount(() => {
-    unregister == null ? void 0 : unregister();
-    detach();
-    stopLoop();
-    renderer2 == null ? void 0 : renderer2.dispose();
-    renderer2 = null;
-  });
-  return { supported, renderOnce, startLoop, stopLoop };
-}
 const _hoisted_1$$ = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
 const _hoisted_2$W = {
   key: 0,
@@ -156276,10 +156975,12 @@ const _sfc_main$Z = /* @__PURE__ */ defineComponent({
         block: block.value
       };
     }
-    const { supported } = useVideoStylizePreview({
+    const { supported } = useChainedFxPreview({
       videoEl: previewVideoEl,
       canvasEl: previewCanvas,
       nodeId: String(props.node.id),
+      node: props.node,
+      createRenderer: () => new VideoStylizeRenderer(),
       params: previewParams
     });
     return (_ctx, _cache2) => {
@@ -156340,11 +157041,12 @@ const _sfc_main$Z = /* @__PURE__ */ defineComponent({
             }, null, 8, ["modelValue", "label"])) : createCommentVNode("", true)
           ], 32),
           createBaseVNode("div", _hoisted_1$$, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_2$W, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_3$W, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_4$T, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_5$T, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_2$W, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_3$W, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_4$T, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_5$T, toDisplayString$1(_ctx.$t("fx.chainMode")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
             node: __props.node,
+            "hide-run-button": "",
             "on-run-request": __props.onRunRequest,
             "on-cancel-request": __props.onCancelRequest,
             "on-disconnect": __props.onDisconnect,
@@ -156372,15 +157074,15 @@ const _hoisted_7$B = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_8$p = {
+const _hoisted_8$o = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_9$m = {
+const _hoisted_9$l = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_10$h = {
+const _hoisted_10$g = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
@@ -156474,7 +157176,7 @@ const _sfc_main$Y = /* @__PURE__ */ defineComponent({
           class: "ctv:w-full ctv:rounded ctv:border ctv:border-border-subtle"
         }, null, 8, _hoisted_5$S)) : createCommentVNode("", true),
         !unref(live) ? (openBlock(), createElementBlock("div", _hoisted_6$M, [
-          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_7$B, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_8$p, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_9$m, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_10$h, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_7$B, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_8$o, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_9$l, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_10$g, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
         ])) : createCommentVNode("", true),
         createVNode(StageCard, {
           state: __props.state,
@@ -157147,17 +157849,17 @@ const _hoisted_4$Q = { class: "ctv:w-14" };
 const _hoisted_5$Q = { class: "ctv:w-12 ctv:text-right" };
 const _hoisted_6$K = { class: "ctv:w-12 ctv:text-right" };
 const _hoisted_7$A = { class: "ctv:w-10 ctv:text-right" };
-const _hoisted_8$o = ["onClick"];
-const _hoisted_9$l = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_10$g = {
+const _hoisted_8$n = ["onClick"];
+const _hoisted_9$k = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_10$f = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_11$f = {
+const _hoisted_11$e = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_12$c = {
+const _hoisted_12$b = {
   key: 2,
   class: "ctv:text-success-background"
 };
@@ -157241,13 +157943,13 @@ const _sfc_main$U = /* @__PURE__ */ defineComponent({
                   onClick: ($event) => unref(removeBand)(i)
                 }, [..._cache2[8] || (_cache2[8] = [
                   createBaseVNode("i", { class: "pi pi-times" }, null, -1)
-                ])], 8, _hoisted_8$o)
+                ])], 8, _hoisted_8$n)
               ]);
             }), 128))
           ], 32)) : createCommentVNode("", true)
         ], 32),
-        createBaseVNode("div", _hoisted_9$l, [
-          !sourceUrl.value ? (openBlock(), createElementBlock("span", _hoisted_10$g, toDisplayString$1(_ctx.$t("fx.needsAudioOrVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_11$f, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_12$c, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_13$7, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+        createBaseVNode("div", _hoisted_9$k, [
+          !sourceUrl.value ? (openBlock(), createElementBlock("span", _hoisted_10$f, toDisplayString$1(_ctx.$t("fx.needsAudioOrVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_11$e, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_12$b, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_13$7, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
         ]),
         createVNode(StageCard, {
           state: __props.state,
@@ -157271,15 +157973,15 @@ const _hoisted_7$z = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_8$n = {
+const _hoisted_8$m = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_9$k = {
+const _hoisted_9$j = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_10$f = {
+const _hoisted_10$e = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
@@ -157447,7 +158149,7 @@ const _sfc_main$T = /* @__PURE__ */ defineComponent({
           ], 64)) : createCommentVNode("", true)
         ], 32),
         createBaseVNode("div", _hoisted_6$J, [
-          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_7$z, toDisplayString$1(_ctx.$t("fx.needsAudioOrVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_8$n, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_9$k, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_10$f, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_7$z, toDisplayString$1(_ctx.$t("fx.needsAudioOrVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_8$m, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_9$j, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_10$e, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
         ]),
         createVNode(StageCard, {
           state: __props.state,
@@ -157600,7 +158302,7 @@ const _hoisted_7$x = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_8$m = {
+const _hoisted_8$l = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
@@ -157695,7 +158397,7 @@ const _sfc_main$R = /* @__PURE__ */ defineComponent({
           ], 64)) : createCommentVNode("", true)
         ], 32),
         createBaseVNode("div", _hoisted_4$N, [
-          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_5$N, toDisplayString$1(_ctx.$t("fx.needsAudioOrVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_6$H, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_7$x, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_8$m, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_5$N, toDisplayString$1(_ctx.$t("fx.needsAudioOrVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_6$H, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_7$x, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_8$l, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
         ]),
         createVNode(StageCard, {
           state: __props.state,
@@ -158175,11 +158877,11 @@ const _hoisted_7$u = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_8$l = {
+const _hoisted_8$k = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_9$j = {
+const _hoisted_9$i = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
@@ -158249,7 +158951,7 @@ const _sfc_main$O = /* @__PURE__ */ defineComponent({
           unref(mode) === "pitch" ? (openBlock(), createElementBlock("div", _hoisted_4$K, toDisplayString$1(_ctx.$t("afx.pitchNote")), 1)) : createCommentVNode("", true)
         ], 32),
         createBaseVNode("div", _hoisted_5$K, [
-          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_6$E, toDisplayString$1(_ctx.$t("fx.needsAudioOrVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_7$u, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_8$l, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_9$j, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_6$E, toDisplayString$1(_ctx.$t("fx.needsAudioOrVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_7$u, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_8$k, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_9$i, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
         ]),
         createVNode(StageCard, {
           state: __props.state,
@@ -158710,11 +159412,11 @@ const _hoisted_7$r = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_8$k = {
+const _hoisted_8$j = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_9$i = {
+const _hoisted_9$h = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
@@ -158838,7 +159540,7 @@ const _sfc_main$L = /* @__PURE__ */ defineComponent({
           ])
         ], 32),
         createBaseVNode("div", _hoisted_5$H, [
-          !srcA.value || !srcB.value ? (openBlock(), createElementBlock("span", _hoisted_6$B, toDisplayString$1(_ctx.$t("afx.needsTwoAudio")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_7$r, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_8$k, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_9$i, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+          !srcA.value || !srcB.value ? (openBlock(), createElementBlock("span", _hoisted_6$B, toDisplayString$1(_ctx.$t("afx.needsTwoAudio")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_7$r, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_8$j, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_9$h, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
         ]),
         createVNode(StageCard, {
           state: __props.state,
@@ -158919,19 +159621,19 @@ const _hoisted_4$G = { class: "ctv:font-mono" };
 const _hoisted_5$G = { class: "ctv:mt-1 ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_6$A = { class: "ctv:text-muted-foreground" };
 const _hoisted_7$q = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_8$j = {
+const _hoisted_8$i = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_9$h = {
+const _hoisted_9$g = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_10$e = {
+const _hoisted_10$d = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_11$e = {
+const _hoisted_11$d = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
@@ -159037,7 +159739,7 @@ const _sfc_main$K = /* @__PURE__ */ defineComponent({
           ], 64)) : createCommentVNode("", true)
         ], 32)) : createCommentVNode("", true),
         createBaseVNode("div", _hoisted_7$q, [
-          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_8$j, toDisplayString$1(_ctx.$t("fx.needsAudioOrVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_9$h, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_10$e, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_11$e, toDisplayString$1(_ctx.$t("afx.analyzeHint")), 1))
+          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_8$i, toDisplayString$1(_ctx.$t("fx.needsAudioOrVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_9$g, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_10$d, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_11$d, toDisplayString$1(_ctx.$t("afx.analyzeHint")), 1))
         ]),
         createVNode(StageCard, {
           state: __props.state,
@@ -159061,17 +159763,17 @@ const _hoisted_4$F = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs 
 const _hoisted_5$F = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs ctv:text-muted-foreground ctv:cursor-pointer" };
 const _hoisted_6$z = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs ctv:text-muted-foreground ctv:cursor-pointer" };
 const _hoisted_7$p = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs ctv:text-muted-foreground ctv:cursor-pointer" };
-const _hoisted_8$i = ["src"];
-const _hoisted_9$g = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_10$d = {
+const _hoisted_8$h = ["src"];
+const _hoisted_9$f = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_10$c = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_11$d = {
+const _hoisted_11$c = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_12$b = {
+const _hoisted_12$a = {
   key: 2,
   class: "ctv:text-success-background"
 };
@@ -159264,9 +159966,9 @@ const _sfc_main$J = /* @__PURE__ */ defineComponent({
           key: 0,
           src: __props.state.output,
           class: "ctv:w-full ctv:rounded ctv:border ctv:border-border-subtle"
-        }, null, 8, _hoisted_8$i)) : createCommentVNode("", true),
-        createBaseVNode("div", _hoisted_9$g, [
-          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_10$d, toDisplayString$1(_ctx.$t("fx.needsAudioOrVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_11$d, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_12$b, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_13$6, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+        }, null, 8, _hoisted_8$h)) : createCommentVNode("", true),
+        createBaseVNode("div", _hoisted_9$f, [
+          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_10$c, toDisplayString$1(_ctx.$t("fx.needsAudioOrVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_11$c, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_12$a, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_13$6, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
         ]),
         createVNode(StageCard, {
           state: __props.state,
@@ -159293,11 +159995,11 @@ const _hoisted_7$o = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_8$h = {
+const _hoisted_8$g = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_9$f = {
+const _hoisted_9$e = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
@@ -159403,7 +160105,7 @@ const _sfc_main$I = /* @__PURE__ */ defineComponent({
           }, null, 8, ["modelValue"])
         ], 32),
         createBaseVNode("div", _hoisted_5$E, [
-          !connected.value.length ? (openBlock(), createElementBlock("span", _hoisted_6$y, toDisplayString$1(_ctx.$t("fx.needsAudioOrVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_7$o, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_8$h, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_9$f, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+          !connected.value.length ? (openBlock(), createElementBlock("span", _hoisted_6$y, toDisplayString$1(_ctx.$t("fx.needsAudioOrVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_7$o, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_8$g, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_9$e, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
         ]),
         createVNode(StageCard, {
           state: __props.state,
@@ -159424,19 +160126,19 @@ const _hoisted_4$D = ["placeholder"];
 const _hoisted_5$D = { class: "ctv:text-muted-foreground ctv:truncate" };
 const _hoisted_6$x = { class: "ctv:font-mono ctv:shrink-0" };
 const _hoisted_7$n = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_8$g = {
+const _hoisted_8$f = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_9$e = {
+const _hoisted_9$d = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_10$c = {
+const _hoisted_10$b = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_11$c = {
+const _hoisted_11$b = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
@@ -159575,7 +160277,7 @@ const _sfc_main$H = /* @__PURE__ */ defineComponent({
           }), 128))
         ], 32)) : createCommentVNode("", true),
         createBaseVNode("div", _hoisted_7$n, [
-          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_8$g, toDisplayString$1(_ctx.$t("fx.needsAudioOrVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_9$e, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : files.value.length ? (openBlock(), createElementBlock("span", _hoisted_10$c, toDisplayString$1(files.value.length) + " " + toDisplayString$1(_ctx.$t("afx.filesOut")), 1)) : (openBlock(), createElementBlock("span", _hoisted_11$c, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_8$f, toDisplayString$1(_ctx.$t("fx.needsAudioOrVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_9$d, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : files.value.length ? (openBlock(), createElementBlock("span", _hoisted_10$b, toDisplayString$1(files.value.length) + " " + toDisplayString$1(_ctx.$t("afx.filesOut")), 1)) : (openBlock(), createElementBlock("span", _hoisted_11$b, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
         ]),
         createVNode(StageCard, {
           state: __props.state,
@@ -160068,7 +160770,7 @@ function wheelScale(current, deltaY) {
   );
 }
 function useCompositeOverlay(opts) {
-  const { videoEl, overlayEl, posX, posY, scale, rotation } = opts;
+  const { videoEl, overlayEl, posX, posY, scale, rotation: rotation2 } = opts;
   const vp = useVideoViewport({ videoEl, overlayEl });
   const { vw, vh, duration: duration2, currentTime } = vp;
   const dragging = /* @__PURE__ */ ref(false);
@@ -160083,7 +160785,7 @@ function useCompositeOverlay(opts) {
     const hh = vh.value * scale.value * s / 2;
     ctx.save();
     ctx.translate(cx, cy);
-    ctx.rotate(-rotation.value * Math.PI / 180);
+    ctx.rotate(-rotation2.value * Math.PI / 180);
     ctx.strokeStyle = "#ffb74d";
     ctx.lineWidth = 1.5;
     ctx.setLineDash([5, 4]);
@@ -160124,7 +160826,7 @@ function useCompositeOverlay(opts) {
   function onWheel(e) {
     scale.value = wheelScale(scale.value, e.deltaY);
   }
-  watch([posX, posY, scale, rotation, vw], () => nextTick(draw));
+  watch([posX, posY, scale, rotation2, vw], () => nextTick(draw));
   return {
     vw,
     vh,
@@ -160217,17 +160919,17 @@ const _hoisted_4$y = { class: "ctv:text-2xs ctv:text-muted-foreground" };
 const _hoisted_5$y = { class: "ctv:flex ctv:items-center ctv:gap-1" };
 const _hoisted_6$t = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_7$k = ["label"];
-const _hoisted_8$f = ["value"];
-const _hoisted_9$d = {
+const _hoisted_8$e = ["value"];
+const _hoisted_9$c = {
   key: 0,
   class: "ctv:flex ctv:items-center ctv:gap-1"
 };
-const _hoisted_10$b = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_11$b = {
+const _hoisted_10$a = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_11$a = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_12$a = {
+const _hoisted_12$9 = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
@@ -160265,7 +160967,7 @@ const _sfc_main$C = /* @__PURE__ */ defineComponent({
     const posX = useNumWidget(props.node, "pos_x", 0);
     const posY = useNumWidget(props.node, "pos_y", 0);
     const scale = useNumWidget(props.node, "scale", 1);
-    const rotation = useNumWidget(props.node, "rotation", 0);
+    const rotation2 = useNumWidget(props.node, "rotation", 0);
     const keyframesRaw = useStrWidget(props.node, "keyframes", "");
     const {
       keys: keys2,
@@ -160282,7 +160984,7 @@ const _sfc_main$C = /* @__PURE__ */ defineComponent({
         x: posX.value,
         y: posY.value,
         scale: scale.value,
-        rotation: rotation.value,
+        rotation: rotation2.value,
         opacity: opacity.value,
         interp: "smooth"
       }),
@@ -160290,7 +160992,7 @@ const _sfc_main$C = /* @__PURE__ */ defineComponent({
         posX.value = k2.x;
         posY.value = k2.y;
         scale.value = k2.scale;
-        rotation.value = k2.rotation;
+        rotation2.value = k2.rotation;
         opacity.value = k2.opacity;
       }
     });
@@ -160306,7 +161008,7 @@ const _sfc_main$C = /* @__PURE__ */ defineComponent({
       onMovePtr,
       onUp,
       onWheel
-    } = useCompositeOverlay({ videoEl, overlayEl, posX, posY, scale, rotation });
+    } = useCompositeOverlay({ videoEl, overlayEl, posX, posY, scale, rotation: rotation2 });
     return (_ctx, _cache2) => {
       return openBlock(), createElementBlock("div", {
         class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full",
@@ -160384,7 +161086,7 @@ const _sfc_main$C = /* @__PURE__ */ defineComponent({
                     return openBlock(), createElementBlock("option", {
                       key: op,
                       value: op
-                    }, toDisplayString$1(op), 9, _hoisted_8$f);
+                    }, toDisplayString$1(op), 9, _hoisted_8$e);
                   }), 128))
                 ], 8, _hoisted_7$k);
               }), 64))
@@ -160411,8 +161113,8 @@ const _sfc_main$C = /* @__PURE__ */ defineComponent({
             "reset-to": 1
           }, null, 8, ["modelValue", "label"]),
           createVNode(FxSlider, {
-            modelValue: unref(rotation),
-            "onUpdate:modelValue": _cache2[13] || (_cache2[13] = ($event) => /* @__PURE__ */ isRef(rotation) ? rotation.value = $event : null),
+            modelValue: unref(rotation2),
+            "onUpdate:modelValue": _cache2[13] || (_cache2[13] = ($event) => /* @__PURE__ */ isRef(rotation2) ? rotation2.value = $event : null),
             label: _ctx.$t("fx.rotation"),
             min: -360,
             max: 360,
@@ -160431,7 +161133,7 @@ const _sfc_main$C = /* @__PURE__ */ defineComponent({
             onRemove: unref(removeKey),
             onSelect: unref(selectKey)
           }, null, 8, ["keys", "duration", "current-time", "selected-index", "label", "onAdd", "onMove", "onRemove", "onSelect"]),
-          unref(selectedKey) >= 0 ? (openBlock(), createElementBlock("div", _hoisted_9$d, [
+          unref(selectedKey) >= 0 ? (openBlock(), createElementBlock("div", _hoisted_9$c, [
             createBaseVNode("button", {
               type: "button",
               class: "ctv:flex-1 ctv:py-0.5 ctv:px-1.5 ctv:text-2xs ctv:rounded ctv:cursor-pointer ctv:border ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background",
@@ -160451,8 +161153,8 @@ const _sfc_main$C = /* @__PURE__ */ defineComponent({
             ])
           ])) : createCommentVNode("", true)
         ], 32),
-        createBaseVNode("div", _hoisted_10$b, [
-          !bgUrl.value || !fgUrl.value ? (openBlock(), createElementBlock("span", _hoisted_11$b, toDisplayString$1(_ctx.$t("fx.needsBgFg")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_12$a, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_13$5, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_14$5, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+        createBaseVNode("div", _hoisted_10$a, [
+          !bgUrl.value || !fgUrl.value ? (openBlock(), createElementBlock("span", _hoisted_11$a, toDisplayString$1(_ctx.$t("fx.needsBgFg")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_12$9, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_13$5, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_14$5, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
         ]),
         createVNode(StageCard, {
           state: __props.state,
@@ -160501,10 +161203,11 @@ const _sfc_main$B = /* @__PURE__ */ defineComponent({
   setup(__props) {
     const props = __props;
     const sourceVideoUrl = computed(() => pickSourceImageUrl(props.state.inputs, "video"));
+    const hasSideInputs = computed(() => props.state.inputs.some((i) => i.slot === "track" && i.source !== "empty"));
     const posX = useNumWidget(props.node, "pos_x", 0);
     const posY = useNumWidget(props.node, "pos_y", 0);
     const scale = useNumWidget(props.node, "scale", 1);
-    const rotation = useNumWidget(props.node, "rotation", 0);
+    const rotation2 = useNumWidget(props.node, "rotation", 0);
     const skewX = useNumWidget(props.node, "skew_x", 0);
     const motionBlur = useNumWidget(props.node, "motion_blur", 0);
     const shutter = useNumWidget(props.node, "shutter", 0.5);
@@ -160528,31 +161231,64 @@ const _sfc_main$B = /* @__PURE__ */ defineComponent({
         x: posX.value,
         y: posY.value,
         scale: scale.value,
-        rotation: rotation.value,
+        rotation: rotation2.value,
         interp: "smooth"
       }),
       apply: (k2) => {
         posX.value = k2.x;
         posY.value = k2.y;
         scale.value = k2.scale;
-        rotation.value = k2.rotation;
+        rotation2.value = k2.rotation;
       },
       update: (k2) => ({
         ...k2,
         x: posX.value,
         y: posY.value,
         scale: scale.value,
-        rotation: rotation.value
+        rotation: rotation2.value
       }),
       followMove: true
+    });
+    const playerRef = /* @__PURE__ */ ref(null);
+    const videoEl = computed(() => {
+      var _a3;
+      return ((_a3 = playerRef.value) == null ? void 0 : _a3.videoEl) ?? null;
+    });
+    const previewCanvas = /* @__PURE__ */ ref(null);
+    const { supported } = useChainedFxPreview({
+      videoEl,
+      canvasEl: previewCanvas,
+      nodeId: String(props.node.id),
+      node: props.node,
+      params: () => ({
+        posX: posX.value,
+        posY: posY.value,
+        scale: scale.value,
+        rotation: rotation2.value,
+        skewX: skewX.value
+      }),
+      createRenderer: () => new VideoTransformRenderer()
     });
     return (_ctx, _cache2) => {
       return openBlock(), createBlock(_sfc_main$1Z, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(_sfc_main$1Y, {
+            ref_key: "playerRef",
+            ref: playerRef,
             "source-video-url": sourceVideoUrl.value,
             onMeta: _cache2[0] || (_cache2[0] = (m2) => duration2.value = m2.duration)
-          }, null, 8, ["source-video-url"])
+          }, {
+            overlay: withCtx(() => [
+              withDirectives(createBaseVNode("canvas", {
+                ref_key: "previewCanvas",
+                ref: previewCanvas,
+                class: "ctv:absolute ctv:inset-0 ctv:size-full ctv:object-contain ctv:pointer-events-none"
+              }, null, 512), [
+                [vShow, unref(supported)]
+              ])
+            ]),
+            _: 1
+          }, 8, ["source-video-url"])
         ]),
         default: withCtx(() => [
           createBaseVNode("div", _hoisted_1$D, toDisplayString$1(_ctx.$t("fx.dragHint")), 1),
@@ -160595,8 +161331,8 @@ const _sfc_main$B = /* @__PURE__ */ defineComponent({
               "reset-to": 1
             }, null, 8, ["modelValue", "label"]),
             createVNode(FxSlider, {
-              modelValue: unref(rotation),
-              "onUpdate:modelValue": _cache2[4] || (_cache2[4] = ($event) => /* @__PURE__ */ isRef(rotation) ? rotation.value = $event : null),
+              modelValue: unref(rotation2),
+              "onUpdate:modelValue": _cache2[4] || (_cache2[4] = ($event) => /* @__PURE__ */ isRef(rotation2) ? rotation2.value = $event : null),
               label: _ctx.$t("fx.rotation"),
               min: -360,
               max: 360,
@@ -160673,16 +161409,17 @@ const _sfc_main$B = /* @__PURE__ */ defineComponent({
             ])) : createCommentVNode("", true)
           ], 32),
           createBaseVNode("div", _hoisted_3$A, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_4$x, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_5$x, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_6$s, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_7$j, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_4$x, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_5$x, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_6$s, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_7$j, toDisplayString$1(_ctx.$t(hasSideInputs.value ? "fx.adjustThenRun" : "fx.chainMode")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
             node: __props.node,
+            "hide-run-button": !hasSideInputs.value,
             "on-run-request": __props.onRunRequest,
             "on-cancel-request": __props.onCancelRequest,
             "on-disconnect": __props.onDisconnect,
             "on-action": __props.onAction
-          }, null, 8, ["state", "node", "on-run-request", "on-cancel-request", "on-disconnect", "on-action"])
+          }, null, 8, ["state", "node", "hide-run-button", "on-run-request", "on-cancel-request", "on-disconnect", "on-action"])
         ]),
         _: 1
       }, 8, ["node"]);
@@ -160814,11 +161551,11 @@ const _hoisted_7$i = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_8$e = {
+const _hoisted_8$d = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_9$c = {
+const _hoisted_9$b = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
@@ -160903,7 +161640,7 @@ const _sfc_main$A = /* @__PURE__ */ defineComponent({
           }, toDisplayString$1(_ctx.$t("fx.clearKeys")), 1)
         ], 32),
         createBaseVNode("div", _hoisted_5$w, [
-          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_6$r, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_7$i, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_8$e, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_9$c, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_6$r, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_7$i, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_8$d, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_9$b, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
         ]),
         createVNode(StageCard, {
           state: __props.state,
@@ -161085,20 +161822,20 @@ const _hoisted_4$v = { class: "ctv:text-2xs ctv:text-muted-foreground" };
 const _hoisted_5$v = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
 const _hoisted_6$q = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs ctv:text-muted-foreground ctv:cursor-pointer" };
 const _hoisted_7$h = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs ctv:text-muted-foreground ctv:cursor-pointer" };
-const _hoisted_8$d = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_9$b = {
+const _hoisted_8$c = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_9$a = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_10$a = {
+const _hoisted_10$9 = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_11$a = {
+const _hoisted_11$9 = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_12$9 = {
+const _hoisted_12$8 = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
@@ -161219,8 +161956,8 @@ const _sfc_main$z = /* @__PURE__ */ defineComponent({
             ])
           ])
         ], 32),
-        createBaseVNode("div", _hoisted_8$d, [
-          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_9$b, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_10$a, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_11$a, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_12$9, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+        createBaseVNode("div", _hoisted_8$c, [
+          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_9$a, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_10$9, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_11$9, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_12$8, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
         ]),
         createVNode(StageCard, {
           state: __props.state,
@@ -161359,20 +162096,20 @@ const _hoisted_6$p = {
   class: "ctv:text-2xs ctv:text-muted-foreground"
 };
 const _hoisted_7$g = { class: "ctv:text-2xs ctv:text-muted-foreground" };
-const _hoisted_8$c = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_9$a = {
+const _hoisted_8$b = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_9$9 = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_10$9 = {
+const _hoisted_10$8 = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_11$9 = {
+const _hoisted_11$8 = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_12$8 = {
+const _hoisted_12$7 = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
@@ -161504,8 +162241,8 @@ const _sfc_main$y = /* @__PURE__ */ defineComponent({
             decimals: 0
           }, null, 8, ["modelValue", "label"])
         ], 32),
-        createBaseVNode("div", _hoisted_8$c, [
-          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_9$a, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_10$9, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_11$9, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_12$8, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+        createBaseVNode("div", _hoisted_8$b, [
+          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_9$9, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_10$8, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_11$8, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_12$7, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
         ]),
         createVNode(StageCard, {
           state: __props.state,
@@ -161526,14 +162263,14 @@ const _hoisted_4$t = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
 const _hoisted_5$t = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_6$o = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
 const _hoisted_7$f = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_8$b = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_9$9 = { class: "ctv:text-2xs ctv:text-muted-foreground" };
-const _hoisted_10$8 = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_11$8 = {
+const _hoisted_8$a = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_9$8 = { class: "ctv:text-2xs ctv:text-muted-foreground" };
+const _hoisted_10$7 = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_11$7 = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_12$7 = {
+const _hoisted_12$6 = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
@@ -161674,7 +162411,7 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
               step: 1,
               decimals: 0
             }, null, 8, ["modelValue", "label"]),
-            createBaseVNode("div", _hoisted_8$b, toDisplayString$1(_ctx.$t("fx.anchor")), 1),
+            createBaseVNode("div", _hoisted_8$a, toDisplayString$1(_ctx.$t("fx.anchor")), 1),
             createVNode(_sfc_main$19, {
               modelValue: unref(anchor),
               "onUpdate:modelValue": _cache2[6] || (_cache2[6] = ($event) => /* @__PURE__ */ isRef(anchor) ? anchor.value = $event : null),
@@ -161706,7 +162443,7 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
               max: tMax.value,
               step: 0.05
             }, null, 8, ["modelValue", "label", "max"]),
-            createBaseVNode("div", _hoisted_9$9, toDisplayString$1(_ctx.$t("fx.tEndAuto")), 1),
+            createBaseVNode("div", _hoisted_9$8, toDisplayString$1(_ctx.$t("fx.tEndAuto")), 1),
             createVNode(FxSlider, {
               modelValue: unref(fadeS),
               "onUpdate:modelValue": _cache2[11] || (_cache2[11] = ($event) => /* @__PURE__ */ isRef(fadeS) ? fadeS.value = $event : null),
@@ -161734,8 +162471,8 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
             }, null, 8, ["modelValue"])) : createCommentVNode("", true),
             _cache2[18] || (_cache2[18] = createBaseVNode("div", { class: "ctv:text-3xs ctv:text-muted-foreground ctv:tracking-wide" }, " Tokens: #timecode# #shorttimecode# #frame# ", -1))
           ], 32),
-          createBaseVNode("div", _hoisted_10$8, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_11$8, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_12$7, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_13$4, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_14$4, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+          createBaseVNode("div", _hoisted_10$7, [
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_11$7, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_12$6, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_13$4, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_14$4, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
@@ -161820,11 +162557,11 @@ const _hoisted_4$s = ["onClick"];
 const _hoisted_5$s = { class: "ctv:text-2xs ctv:text-muted-foreground ctv:tracking-wide" };
 const _hoisted_6$n = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
 const _hoisted_7$e = ["placeholder"];
-const _hoisted_8$a = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_9$8 = { class: "ctv:flex ctv:items-center ctv:gap-3 ctv:text-[11px]" };
-const _hoisted_10$7 = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
-const _hoisted_11$7 = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_12$6 = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_8$9 = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_9$7 = { class: "ctv:flex ctv:items-center ctv:gap-3 ctv:text-[11px]" };
+const _hoisted_10$6 = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
+const _hoisted_11$6 = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_12$5 = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_13$3 = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
 const _hoisted_14$3 = {
   key: 0,
@@ -161947,7 +162684,7 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
                 [vModelText, unref(subs)]
               ])
             ]),
-            createBaseVNode("div", _hoisted_8$a, toDisplayString$1(_ctx.$t("fx.fontLbl")), 1),
+            createBaseVNode("div", _hoisted_8$9, toDisplayString$1(_ctx.$t("fx.fontLbl")), 1),
             createVNode(_sfc_main$19, {
               modelValue: unref(font),
               "onUpdate:modelValue": _cache2[3] || (_cache2[3] = ($event) => /* @__PURE__ */ isRef(font) ? font.value = $event : null),
@@ -161962,9 +162699,9 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
               step: 1,
               decimals: 0
             }, null, 8, ["modelValue", "label"]),
-            createBaseVNode("div", _hoisted_9$8, [
-              createBaseVNode("label", _hoisted_10$7, [
-                createBaseVNode("span", _hoisted_11$7, toDisplayString$1(_ctx.$t("fx.colorLbl")), 1),
+            createBaseVNode("div", _hoisted_9$7, [
+              createBaseVNode("label", _hoisted_10$6, [
+                createBaseVNode("span", _hoisted_11$6, toDisplayString$1(_ctx.$t("fx.colorLbl")), 1),
                 withDirectives(createBaseVNode("input", {
                   "onUpdate:modelValue": _cache2[5] || (_cache2[5] = ($event) => /* @__PURE__ */ isRef(color) ? color.value = $event : null),
                   type: "color",
@@ -161983,7 +162720,7 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
               step: 1,
               decimals: 0
             }, null, 8, ["modelValue", "label"]),
-            createBaseVNode("div", _hoisted_12$6, toDisplayString$1(_ctx.$t("fx.anchor")), 1),
+            createBaseVNode("div", _hoisted_12$5, toDisplayString$1(_ctx.$t("fx.anchor")), 1),
             createVNode(_sfc_main$19, {
               modelValue: unref(anchor),
               "onUpdate:modelValue": _cache2[7] || (_cache2[7] = ($event) => /* @__PURE__ */ isRef(anchor) ? anchor.value = $event : null),
@@ -162032,7 +162769,7 @@ const _hoisted_7$d = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_8$9 = {
+const _hoisted_8$8 = {
   key: 4,
   class: "ctv:text-muted-foreground"
 };
@@ -162171,7 +162908,7 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
             unref(mode) === "speed" ? (openBlock(), createElementBlock("div", _hoisted_2$u, " 0 = off · >0 = optical-flow pre-interpolation (slow) ")) : createCommentVNode("", true)
           ], 32),
           createBaseVNode("div", _hoisted_3$u, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_4$r, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_5$r, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_6$m, toDisplayString$1(_ctx.$t("fx.done")), 1)) : unref(mode) === "speed" && unref(keys2).length === 0 ? (openBlock(), createElementBlock("span", _hoisted_7$d, "Add speed keyframes on the timeline")) : (openBlock(), createElementBlock("span", _hoisted_8$9, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_4$r, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_5$r, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_6$m, toDisplayString$1(_ctx.$t("fx.done")), 1)) : unref(mode) === "speed" && unref(keys2).length === 0 ? (openBlock(), createElementBlock("span", _hoisted_7$d, "Add speed keyframes on the timeline")) : (openBlock(), createElementBlock("span", _hoisted_8$8, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
@@ -162269,11 +163006,11 @@ const _hoisted_4$q = ["src"];
 const _hoisted_5$q = { class: "ctv:flex ctv:flex-col ctv:gap-0.5 ctv:shrink-0" };
 const _hoisted_6$l = ["disabled", "onClick"];
 const _hoisted_7$c = ["disabled", "onClick"];
-const _hoisted_8$8 = { class: "ctv:flex ctv:flex-col ctv:gap-0.5 ctv:flex-1 ctv:min-w-0" };
-const _hoisted_9$7 = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-3xs ctv:text-muted-foreground" };
-const _hoisted_10$6 = { class: "ctv:shrink-0" };
-const _hoisted_11$6 = ["value", "onChange"];
-const _hoisted_12$5 = { class: "ctv:shrink-0" };
+const _hoisted_8$7 = { class: "ctv:flex ctv:flex-col ctv:gap-0.5 ctv:flex-1 ctv:min-w-0" };
+const _hoisted_9$6 = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-3xs ctv:text-muted-foreground" };
+const _hoisted_10$5 = { class: "ctv:shrink-0" };
+const _hoisted_11$5 = ["value", "onChange"];
+const _hoisted_12$4 = { class: "ctv:shrink-0" };
 const _hoisted_13$2 = ["value", "onChange"];
 const _hoisted_14$2 = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-3xs ctv:text-muted-foreground" };
 const _hoisted_15$2 = ["value", "disabled", "title", "onChange"];
@@ -162375,9 +163112,9 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
                     createBaseVNode("i", { class: "pi pi-chevron-down ctv:text-[9px]" }, null, -1)
                   ])], 8, _hoisted_7$c)
                 ]),
-                createBaseVNode("div", _hoisted_8$8, [
-                  createBaseVNode("div", _hoisted_9$7, [
-                    createBaseVNode("span", _hoisted_10$6, toDisplayString$1(_ctx.$t("fx.tStart")), 1),
+                createBaseVNode("div", _hoisted_8$7, [
+                  createBaseVNode("div", _hoisted_9$6, [
+                    createBaseVNode("span", _hoisted_10$5, toDisplayString$1(_ctx.$t("fx.tStart")), 1),
                     createBaseVNode("input", {
                       type: "number",
                       min: "0",
@@ -162387,8 +163124,8 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
                       value: seg.in_s,
                       title: "In (s) · 0 = clip start",
                       onChange: ($event) => unref(onTimeInput)(idx, "in_s", $event)
-                    }, null, 40, _hoisted_11$6),
-                    createBaseVNode("span", _hoisted_12$5, toDisplayString$1(_ctx.$t("fx.tEnd")), 1),
+                    }, null, 40, _hoisted_11$5),
+                    createBaseVNode("span", _hoisted_12$4, toDisplayString$1(_ctx.$t("fx.tEnd")), 1),
                     createBaseVNode("input", {
                       type: "number",
                       min: "0",
@@ -162736,11 +163473,11 @@ const _hoisted_5$o = {
 };
 const _hoisted_6$j = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_7$b = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs ctv:text-muted-foreground" };
-const _hoisted_8$7 = ["disabled"];
-const _hoisted_9$6 = ["disabled"];
-const _hoisted_10$5 = { class: "ctv:flex ctv:gap-1" };
-const _hoisted_11$5 = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_12$4 = {
+const _hoisted_8$6 = ["disabled"];
+const _hoisted_9$5 = ["disabled"];
+const _hoisted_10$4 = { class: "ctv:flex ctv:gap-1" };
+const _hoisted_11$4 = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_12$3 = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
@@ -162931,7 +163668,7 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
               (...args) => unref(undoStroke) && unref(undoStroke)(...args))
             }, [..._cache2[24] || (_cache2[24] = [
               createBaseVNode("i", { class: "pi pi-undo" }, null, -1)
-            ])], 8, _hoisted_8$7),
+            ])], 8, _hoisted_8$6),
             createBaseVNode("button", {
               type: "button",
               class: "ctv:py-0.5 ctv:px-1.5 ctv:text-2xs ctv:rounded ctv:cursor-pointer ctv:border ctv:bg-secondary-background ctv:border-border-subtle ctv:text-destructive-background ctv:hover:border-destructive-background ctv:disabled:opacity-40",
@@ -162940,9 +163677,9 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
               (...args) => unref(clearStrokes) && unref(clearStrokes)(...args))
             }, [..._cache2[25] || (_cache2[25] = [
               createBaseVNode("i", { class: "pi pi-trash" }, null, -1)
-            ])], 8, _hoisted_9$6)
+            ])], 8, _hoisted_9$5)
           ]),
-          createBaseVNode("div", _hoisted_10$5, [
+          createBaseVNode("div", _hoisted_10$4, [
             createVNode(FxSlider, {
               modelValue: unref(tStart),
               "onUpdate:modelValue": _cache2[17] || (_cache2[17] = ($event) => /* @__PURE__ */ isRef(tStart) ? tStart.value = $event : null),
@@ -162963,8 +163700,8 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
             }, null, 8, ["modelValue", "label", "max"])
           ])
         ], 32),
-        createBaseVNode("div", _hoisted_11$5, [
-          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_12$4, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_13$1, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_14$1, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_15$1, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+        createBaseVNode("div", _hoisted_11$4, [
+          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_12$3, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_13$1, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_14$1, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_15$1, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
         ]),
         createVNode(StageCard, {
           state: __props.state,
@@ -163150,7 +163887,7 @@ const _hoisted_7$9 = {
   key: 3,
   class: "ctv:text-success-background"
 };
-const _hoisted_8$6 = {
+const _hoisted_8$5 = {
   key: 4,
   class: "ctv:text-muted-foreground"
 };
@@ -163243,7 +163980,7 @@ const _sfc_main$q = /* @__PURE__ */ defineComponent({
             ])
           ], 32),
           createBaseVNode("div", _hoisted_3$p, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_4$m, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : !maskUrl.value ? (openBlock(), createElementBlock("span", _hoisted_5$m, "Wire a first-frame mask (Split Part / SAM output works)")) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_6$h, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_7$9, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_8$6, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_4$m, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : !maskUrl.value ? (openBlock(), createElementBlock("span", _hoisted_5$m, "Wire a first-frame mask (Split Part / SAM output works)")) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_6$h, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_7$9, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_8$5, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
@@ -163285,322 +164022,6 @@ function useHueCorrectCurves(opts) {
     }
   });
   return { activeCurve };
-}
-const videoHueCorrectFrag = "#version 300 es\r\nprecision highp float;\r\n\r\nuniform sampler2D u_image0;\r\nuniform sampler2D u_curve0;\r\nuniform sampler2D u_curve1;\r\nuniform sampler2D u_curve2;\r\nuniform sampler2D u_curve3;\r\nuniform sampler2D u_curve4;\r\nuniform sampler2D u_curve5;\r\nuniform sampler2D u_curve6;\r\nuniform sampler2D u_curve7;\r\nuniform sampler2D u_curve8;\r\nuniform float u_float0;\r\nuniform float u_float1;\r\nuniform bool u_bool0;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nconst vec3 LUMA = vec3(0.2126, 0.7152, 0.0722);\r\nconst float EPS = 1e-8;\r\n\r\nfloat sampleLut(sampler2D lut, float coord) {\r\n    float idx = clamp(coord, 0.0, 1.0) * 255.0;\r\n    int lo = int(floor(idx));\r\n    int hi = min(lo + 1, 255);\r\n    float f = idx - float(lo);\r\n    return mix(texelFetch(lut, ivec2(lo, 0), 0).r,\r\n               texelFetch(lut, ivec2(hi, 0), 0).r, f);\r\n}\r\n\r\nvec3 rgbToHsv(vec3 c) {\r\n    float maxc = c.r;\r\n    int argmax = 0;\r\n    if (c.g > maxc) { maxc = c.g; argmax = 1; }\r\n    if (c.b > maxc) { maxc = c.b; argmax = 2; }\r\n    float minc = min(c.r, min(c.g, c.b));\r\n    float deltac = maxc - minc;\r\n    float s = deltac / (maxc + EPS);\r\n    float dc = deltac == 0.0 ? 1.0 : deltac;\r\n    vec3 comp = vec3(maxc) - c;\r\n    float h;\r\n    if (argmax == 0) h = comp.b - comp.g;\r\n    else if (argmax == 1) h = comp.r - comp.b + 2.0 * dc;\r\n    else h = comp.g - comp.r + 4.0 * dc;\r\n    h = fract(h / dc / 6.0);\r\n    return vec3(h, s, maxc);\r\n}\r\n\r\nvec3 hsvToRgb(vec3 hsv) {\r\n    float h6 = fract(hsv.x) * 6.0;\r\n    float hi = floor(h6);\r\n    float f = h6 - hi;\r\n    float v = hsv.z;\r\n    float s = hsv.y;\r\n    float p = v * (1.0 - s);\r\n    float q = v * (1.0 - f * s);\r\n    float t = v * (1.0 - (1.0 - f) * s);\r\n    int i = int(hi) % 6;\r\n    if (i == 0) return vec3(v, t, p);\r\n    if (i == 1) return vec3(q, v, p);\r\n    if (i == 2) return vec3(p, v, t);\r\n    if (i == 3) return vec3(p, q, v);\r\n    if (i == 4) return vec3(t, p, v);\r\n    return vec3(v, p, q);\r\n}\r\n\r\nvoid main() {\r\n    vec4 tex = texture(u_image0, v_texCoord);\r\n    vec3 src = clamp(tex.rgb, 0.0, 1.0);\r\n    vec3 hsv = rgbToHsv(src);\r\n    float h0 = hsv.x;\r\n    float s = hsv.y;\r\n    float hx = h0 * 6.0 + 1.0;\r\n    hx = (hx > 6.0 ? hx - 6.0 : hx) / 6.0;\r\n    float lumIn = dot(tex.rgb, LUMA);\r\n\r\n    vec3 outc = src;\r\n    if (u_bool0) {\r\n        float hueShift = sampleLut(u_curve8, hx);\r\n        float h1 = fract(h0 + (hueShift - 1.0) / 2.0);\r\n        outc = hsvToRgb(vec3(h1, s, hsv.z));\r\n    }\r\n\r\n    float rSup = sampleLut(u_curve5, hx);\r\n    float mn = min(outc.g, outc.b);\r\n    if (outc.r > mn) outc.r = mn + rSup * (outc.r - mn);\r\n    float gSup = sampleLut(u_curve6, hx);\r\n    mn = min(outc.r, outc.b);\r\n    if (outc.g > mn) outc.g = mn + gSup * (outc.g - mn);\r\n    float bSup = sampleLut(u_curve7, hx);\r\n    mn = min(outc.r, outc.g);\r\n    if (outc.b > mn) outc.b = mn + bSup * (outc.b - mn);\r\n\r\n    float lumGain = sampleLut(u_curve1, hx);\r\n    vec3 gains = vec3(sampleLut(u_curve2, hx),\r\n                      sampleLut(u_curve3, hx),\r\n                      sampleLut(u_curve4, hx)) * lumGain;\r\n    float thr = clamp(u_float0, 0.0, 1.0);\r\n    if (thr > 0.0) {\r\n        vec3 factor = s > thr\r\n            ? (thr + (s - thr) * gains) / max(s, 1e-6)\r\n            : vec3(1.0);\r\n        outc *= factor;\r\n    } else {\r\n        outc *= gains;\r\n    }\r\n\r\n    float satGain = sampleLut(u_curve0, hx);\r\n    float lSat = dot(outc, LUMA);\r\n    outc = mix(vec3(lSat), outc, satGain);\r\n\r\n    float mixv = clamp(u_float1, 0.0, 1.0);\r\n    if (mixv > 0.0) {\r\n        float lumOut = max(dot(outc, LUMA), 1e-6);\r\n        outc *= 1.0 + mixv * (lumIn / lumOut - 1.0);\r\n    }\r\n\r\n    fragColor = vec4(clamp(outc, 0.0, 1.0), tex.a);\r\n}\r\n";
-const HUE_CHANNELS = [
-  "sat",
-  "lum",
-  "red",
-  "green",
-  "blue",
-  "r_sup",
-  "g_sup",
-  "b_sup",
-  "hue"
-];
-const LUT_SIZE = 256;
-const NONE = "none";
-function hermiteToCubic(p0, p0pr, p3pl, p3) {
-  return [
-    p0,
-    p0pr,
-    3 * (p3 - p0) - 2 * p0pr - p3pl,
-    -2 * (p3 - p0) + p0pr + p3pl
-  ];
-}
-function cubicEval(c0, c1, c2, c3, t2) {
-  const t22 = t2 * t2;
-  return c0 + c1 * t2 + c2 * t22 + c3 * t22 * t2;
-}
-function autoDerivs(interpPrevIn, interpIn, interpNextIn, tprevIn, vprev, tcur, vcur, tnextIn, vnext, vprevDerivRight, vnextDerivLeft) {
-  let interp = interpIn;
-  let tprev = tprevIn;
-  let tnext = tnextIn;
-  const q0 = vprev;
-  const q3 = vcur;
-  const p0 = vcur;
-  const p3 = vnext;
-  if (interpPrevIn === NONE) tprev = tcur - 1;
-  if (interpNextIn === NONE) tnext = tcur + 1;
-  const p3pl = vnextDerivLeft * (tnext - tcur);
-  let p0pr = 0;
-  let q3pl = 0;
-  if (interpPrevIn === NONE && interpNextIn === NONE) return [0, 0];
-  if (interpPrevIn === NONE || interpNextIn === NONE) interp = "linear";
-  if (interp === "linear") {
-    if (interpNextIn === NONE) p0pr = 0;
-    else if (interpNextIn === "linear") p0pr = -p0 + p3;
-    else p0pr = -1.5 * p0 + 1.5 * p3 - p3pl / 2;
-    if (interpPrevIn === NONE) q3pl = 0;
-    else if (interpPrevIn === "linear") q3pl = -q0 + p0;
-    else q3pl = -1.5 * q0 - vprevDerivRight * (tcur - tprev) / 2 + 1.5 * p0;
-  } else {
-    if (vprev > vcur && vcur < vnext || vprev < vcur && vcur > vnext) {
-      p0pr = 0;
-      q3pl = 0;
-    } else {
-      const deriv = (vnext - vprev) / (tnext - tprev);
-      p0pr = deriv * (tnext - tcur);
-      q3pl = deriv * (tcur - tprev);
-      let p1 = p0 + p0pr / 3;
-      let q2 = q3 - q3pl / 3;
-      const prevMax = Math.max(vprev, vcur);
-      const prevMin = Math.min(vprev, vcur);
-      if (q2 < prevMin || q2 > prevMax) {
-        const q2new = Math.max(prevMin, Math.min(q2, prevMax));
-        p1 = p0 + (p1 - p0) * (q3 - q2new) / (q3 - q2);
-        q2 = q2new;
-      }
-      const nextMax = Math.max(vcur, vnext);
-      const nextMin = Math.min(vcur, vnext);
-      if (p1 < nextMin || p1 > nextMax) {
-        const p1new = Math.max(nextMin, Math.min(p1, nextMax));
-        q2 = q3 - (q3 - q2) * (p1new - p0) / (p1 - p0);
-        p1 = p1new;
-      }
-      p0pr = 3 * (p1 - p0);
-      q3pl = 3 * (q3 - q2);
-    }
-  }
-  return [q3pl / (tcur - tprev), p0pr / (tnext - tcur)];
-}
-function keyDerivs(keys2, i, depth) {
-  const n = keys2.length;
-  const k2 = keys2[i];
-  const prev = i > 0 ? keys2[i - 1] : null;
-  const next = i < n - 1 ? keys2[i + 1] : null;
-  let interpPrev = prev ? "smooth" : NONE;
-  let interpNext = next ? "smooth" : NONE;
-  if (prev && i - 1 === 0) interpPrev = "linear";
-  if (next && i + 1 === n - 1) interpNext = "linear";
-  const tprev = prev ? prev.t : k2.t - 1;
-  const vprev = prev ? prev.v : k2.v;
-  const tnext = next ? next.t : k2.t + 1;
-  const vnext = next ? next.v : k2.v;
-  let vprevDr = 0;
-  let vnextDl = 0;
-  if (depth > 0) {
-    if (prev) vprevDr = keyDerivs(keys2, i - 1, depth - 1)[1];
-    if (next) vnextDl = keyDerivs(keys2, i + 1, depth - 1)[0];
-  }
-  return autoDerivs(
-    interpPrev,
-    "smooth",
-    interpNext,
-    tprev,
-    vprev,
-    k2.t,
-    k2.v,
-    tnext,
-    vnext,
-    vprevDr,
-    vnextDl
-  );
-}
-function smoothCurveValue(keys2, t2) {
-  const n = keys2.length;
-  if (n === 0) return NaN;
-  if (n === 1) return keys2[0].v;
-  if (t2 <= keys2[0].t) return keys2[0].v;
-  if (t2 >= keys2[n - 1].t) return keys2[n - 1].v;
-  let i = 0;
-  while (i + 1 < n && keys2[i + 1].t <= t2) i++;
-  i = Math.min(i, n - 2);
-  const cur = keys2[i];
-  const nxt = keys2[i + 1];
-  const curRight = keyDerivs(keys2, i, 1)[1];
-  const nxtLeft = keyDerivs(keys2, i + 1, 1)[0];
-  const dt2 = nxt.t - cur.t;
-  const [c0, c1, c2, c3] = hermiteToCubic(
-    cur.v,
-    curRight * dt2,
-    nxtLeft * dt2,
-    nxt.v
-  );
-  return cubicEval(c0, c1, c2, c3, (t2 - cur.t) / dt2);
-}
-function bakeHueLut(points, defaultValue) {
-  const lut2 = new Float32Array(LUT_SIZE);
-  if (!Array.isArray(points) || points.length < 2) {
-    lut2.fill(defaultValue);
-    return lut2;
-  }
-  const keys2 = points.map((p2) => ({ t: Number(p2[0]), v: Number(p2[1]) })).sort((a, b2) => a.t - b2.t || a.v - b2.v);
-  for (let i = 0; i < LUT_SIZE; i++) {
-    lut2[i] = smoothCurveValue(keys2, i / (LUT_SIZE - 1));
-  }
-  return lut2;
-}
-function parseHueCurves(raw) {
-  try {
-    const o = JSON.parse(raw || "{}");
-    if (o && typeof o === "object" && !Array.isArray(o)) {
-      return o;
-    }
-  } catch {
-  }
-  return {};
-}
-function buildHueCorrectLuts(curvesRaw) {
-  const curves = parseHueCurves(curvesRaw);
-  const out = {};
-  for (const ch of HUE_CHANNELS) {
-    out[ch] = bakeHueLut(curves[ch], 1);
-  }
-  return out;
-}
-function lutDeviates(lut2) {
-  for (let i = 0; i < lut2.length; i++) {
-    if (Math.abs(lut2[i] - 1) > 1e-6) return true;
-  }
-  return false;
-}
-const RENDER_CONFIG = {
-  maxInputs: 1,
-  maxFloatUniforms: 2,
-  maxIntUniforms: 1,
-  maxBoolUniforms: 1,
-  maxCurves: 9
-};
-class VideoHueCorrectRenderer {
-  constructor() {
-    __publicField(this, "renderer", useGLSLRenderer(RENDER_CONFIG));
-    __publicField(this, "ready", false);
-    __publicField(this, "_error", null);
-    __publicField(this, "lutKey", null);
-    __publicField(this, "hueActive", false);
-  }
-  get error() {
-    return this._error;
-  }
-  uploadLuts(curves) {
-    if (curves === this.lutKey) return;
-    const luts = buildHueCorrectLuts(curves);
-    HUE_CHANNELS.forEach((ch, i) => {
-      this.renderer.bindCurveTexture(i, luts[ch]);
-    });
-    this.hueActive = lutDeviates(luts.hue);
-    this.lutKey = curves;
-  }
-  renderToCanvas(video, params, target) {
-    const w2 = Math.max(2, video.videoWidth);
-    const h2 = Math.max(2, video.videoHeight);
-    try {
-      if (!this.ready) {
-        if (!this.renderer.init(w2, h2)) {
-          this._error = "WebGL2 not available";
-          return false;
-        }
-        this.ready = true;
-      }
-      const compiled = this.renderer.compileFragment(videoHueCorrectFrag);
-      if (!compiled.success) {
-        this._error = compiled.log || "Shader compilation failed";
-        return false;
-      }
-      this._error = null;
-      this.renderer.setResolution(w2, h2);
-      this.renderer.bindInputImage(0, video);
-      this.uploadLuts(params.curves ?? "");
-      this.renderer.setFloatUniform(0, params.satThrsh ?? 0);
-      this.renderer.setFloatUniform(1, params.luminanceMix ?? 0);
-      this.renderer.setBoolUniform(0, this.hueActive);
-      this.renderer.render();
-      const off = this.renderer.getCanvas();
-      if (!off) {
-        this._error = "Renderer produced no output";
-        return false;
-      }
-      target.width = w2;
-      target.height = h2;
-      const ctx = target.getContext("2d");
-      if (!ctx) {
-        this._error = "2D context unavailable";
-        return false;
-      }
-      ctx.clearRect(0, 0, w2, h2);
-      ctx.drawImage(off, 0, 0);
-      return true;
-    } catch (e) {
-      this._error = e instanceof Error ? e.message : "Render failed";
-      this.renderer.dispose();
-      this.ready = false;
-      return false;
-    }
-  }
-  dispose() {
-    this.renderer.dispose();
-    this.ready = false;
-    this.lutKey = null;
-  }
-}
-function useVideoHueCorrectPreview(opts) {
-  const supported = /* @__PURE__ */ ref(true);
-  const unregister = opts.nodeId != null ? registerPreviewSource(opts.nodeId, () => opts.canvasEl.value) : null;
-  let renderer2 = null;
-  let rafId = 0;
-  let attached = null;
-  function renderOnce() {
-    if (!supported.value) return;
-    const v2 = opts.videoEl.value;
-    const c2 = opts.canvasEl.value;
-    if (!v2 || !c2 || v2.readyState < 2) return;
-    renderer2 ?? (renderer2 = (opts.createRenderer ?? (() => new VideoHueCorrectRenderer()))());
-    if (!renderer2.renderToCanvas(v2, opts.params(), c2)) {
-      supported.value = false;
-      stopLoop();
-    }
-  }
-  function loop() {
-    renderOnce();
-    if (supported.value) rafId = requestAnimationFrame(loop);
-  }
-  function startLoop() {
-    stopLoop();
-    if (!supported.value) return;
-    rafId = requestAnimationFrame(loop);
-  }
-  function stopLoop() {
-    if (rafId) cancelAnimationFrame(rafId);
-    rafId = 0;
-  }
-  const onPlay = () => startLoop();
-  const onStop = () => {
-    stopLoop();
-    renderOnce();
-  };
-  const onFrame = () => renderOnce();
-  function detach() {
-    if (!attached) return;
-    attached.removeEventListener("play", onPlay);
-    attached.removeEventListener("pause", onStop);
-    attached.removeEventListener("ended", onStop);
-    attached.removeEventListener("seeked", onFrame);
-    attached.removeEventListener("loadeddata", onFrame);
-    attached = null;
-  }
-  watch(opts.videoEl, (v2) => {
-    detach();
-    stopLoop();
-    if (!v2) return;
-    attached = v2;
-    v2.addEventListener("play", onPlay);
-    v2.addEventListener("pause", onStop);
-    v2.addEventListener("ended", onStop);
-    v2.addEventListener("seeked", onFrame);
-    v2.addEventListener("loadeddata", onFrame);
-    if (v2.paused) renderOnce();
-    else startLoop();
-  }, { immediate: true });
-  watch(() => opts.params(), () => renderOnce());
-  onBeforeUnmount(() => {
-    unregister == null ? void 0 : unregister();
-    detach();
-    stopLoop();
-    renderer2 == null ? void 0 : renderer2.dispose();
-    renderer2 = null;
-  });
-  return { supported, renderOnce, startLoop, stopLoop };
 }
 const _hoisted_1$r = { class: "ctv:text-2xs ctv:text-center ctv:text-muted-foreground" };
 const _hoisted_2$o = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
@@ -163666,15 +164087,17 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
       return ((_a3 = playerRef.value) == null ? void 0 : _a3.videoEl) ?? null;
     });
     const previewCanvas = /* @__PURE__ */ ref(null);
-    const { supported } = useVideoHueCorrectPreview({
+    const { supported } = useChainedFxPreview({
       videoEl,
       canvasEl: previewCanvas,
       nodeId: String(props.node.id),
+      node: props.node,
       params: () => ({
         curves: curves.value,
         satThrsh: satThrsh.value,
         luminanceMix: luminanceMix.value
-      })
+      }),
+      createRenderer: () => new VideoHueCorrectRenderer()
     });
     return (_ctx, _cache2) => {
       const _component_FxSlider = resolveComponent("FxSlider");
@@ -163740,11 +164163,12 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
             }, null, 8, ["modelValue"])
           ], 32),
           createBaseVNode("div", _hoisted_2$o, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_3$o, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_4$l, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_5$l, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_6$g, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_3$o, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_4$l, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_5$l, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_6$g, toDisplayString$1(_ctx.$t("fx.chainMode")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
             node: __props.node,
+            "hide-run-button": "",
             "on-run-request": __props.onRunRequest,
             "on-cancel-request": __props.onCancelRequest,
             "on-disconnect": __props.onDisconnect,
@@ -163864,11 +164288,12 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
             }, null, 8, ["modelValue"])
           ], 32),
           createBaseVNode("div", _hoisted_1$q, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_2$n, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_3$n, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_4$k, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_5$k, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_2$n, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_3$n, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_4$k, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_5$k, toDisplayString$1(_ctx.$t("fx.chainMode")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
             node: __props.node,
+            "hide-run-button": "",
             "on-run-request": __props.onRunRequest,
             "on-cancel-request": __props.onCancelRequest,
             "on-disconnect": __props.onDisconnect,
@@ -164013,11 +164438,12 @@ const _sfc_main$n = /* @__PURE__ */ defineComponent({
             ])
           ], 32),
           createBaseVNode("div", _hoisted_2$m, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_3$m, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_4$j, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_5$j, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_6$f, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_3$m, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_4$j, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_5$j, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_6$f, toDisplayString$1(_ctx.$t("fx.chainMode")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
             node: __props.node,
+            "hide-run-button": "",
             "on-run-request": __props.onRunRequest,
             "on-cancel-request": __props.onCancelRequest,
             "on-disconnect": __props.onDisconnect,
@@ -164491,336 +164917,6 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
     };
   }
 });
-function useFxVideoPreview(opts) {
-  const supported = /* @__PURE__ */ ref(true);
-  const unregister = opts.nodeId != null ? registerPreviewSource(opts.nodeId, () => opts.canvasEl.value) : null;
-  let renderer2 = null;
-  let rafId = 0;
-  let attached = null;
-  function renderOnce() {
-    if (!supported.value) return;
-    const v2 = opts.videoEl.value;
-    const c2 = opts.canvasEl.value;
-    if (!v2 || !c2 || v2.readyState < 2) return;
-    renderer2 ?? (renderer2 = opts.createRenderer());
-    if (!renderer2.renderToCanvas(v2, opts.params(), c2)) {
-      supported.value = false;
-      stopLoop();
-    }
-  }
-  function loop() {
-    renderOnce();
-    if (supported.value) rafId = requestAnimationFrame(loop);
-  }
-  function startLoop() {
-    stopLoop();
-    if (!supported.value) return;
-    rafId = requestAnimationFrame(loop);
-  }
-  function stopLoop() {
-    if (rafId) cancelAnimationFrame(rafId);
-    rafId = 0;
-  }
-  const onPlay = () => startLoop();
-  const onStop = () => {
-    stopLoop();
-    renderOnce();
-  };
-  const onFrame = () => renderOnce();
-  function detach() {
-    if (!attached) return;
-    attached.removeEventListener("play", onPlay);
-    attached.removeEventListener("pause", onStop);
-    attached.removeEventListener("ended", onStop);
-    attached.removeEventListener("seeked", onFrame);
-    attached.removeEventListener("loadeddata", onFrame);
-    attached = null;
-  }
-  watch(opts.videoEl, (v2) => {
-    detach();
-    stopLoop();
-    if (!v2) return;
-    attached = v2;
-    v2.addEventListener("play", onPlay);
-    v2.addEventListener("pause", onStop);
-    v2.addEventListener("ended", onStop);
-    v2.addEventListener("seeked", onFrame);
-    v2.addEventListener("loadeddata", onFrame);
-    if (v2.paused) renderOnce();
-    else startLoop();
-  }, { immediate: true });
-  watch(() => opts.params(), () => renderOnce());
-  onBeforeUnmount(() => {
-    unregister == null ? void 0 : unregister();
-    detach();
-    stopLoop();
-    renderer2 == null ? void 0 : renderer2.dispose();
-    renderer2 = null;
-  });
-  return { supported, renderOnce, startLoop, stopLoop };
-}
-class FxPreviewRenderer {
-  constructor(frag, config2, applyParams) {
-    __publicField(this, "renderer");
-    __publicField(this, "ready", false);
-    __publicField(this, "_error", null);
-    this.frag = frag;
-    this.applyParams = applyParams;
-    this.renderer = useGLSLRenderer(config2);
-  }
-  get error() {
-    return this._error;
-  }
-  renderToCanvas(video, params, target) {
-    const w2 = Math.max(2, video.videoWidth);
-    const h2 = Math.max(2, video.videoHeight);
-    try {
-      if (!this.ready) {
-        if (!this.renderer.init(w2, h2)) {
-          this._error = "WebGL2 not available";
-          return false;
-        }
-        this.ready = true;
-      }
-      const compiled = this.renderer.compileFragment(this.frag);
-      if (!compiled.success) {
-        this._error = compiled.log || "Shader compilation failed";
-        return false;
-      }
-      this._error = null;
-      this.renderer.setResolution(w2, h2);
-      this.renderer.bindInputImage(0, video);
-      this.applyParams(this.renderer, params);
-      this.renderer.render();
-      const off = this.renderer.getCanvas();
-      if (!off) {
-        this._error = "Renderer produced no output";
-        return false;
-      }
-      target.width = w2;
-      target.height = h2;
-      const ctx = target.getContext("2d");
-      if (!ctx) {
-        this._error = "2D context unavailable";
-        return false;
-      }
-      ctx.clearRect(0, 0, w2, h2);
-      ctx.drawImage(off, 0, 0);
-      return true;
-    } catch (e) {
-      this._error = e instanceof Error ? e.message : "Render failed";
-      this.renderer.dispose();
-      this.ready = false;
-      return false;
-    }
-  }
-  dispose() {
-    this.renderer.dispose();
-    this.ready = false;
-  }
-}
-const despillFrag = "#version 300 es\r\nprecision highp float;\r\n\r\nuniform sampler2D u_image0;\r\nuniform float u_float0;\r\nuniform float u_float1;\r\nuniform float u_float2;\r\nuniform float u_float3;\r\nuniform float u_float4;\r\nuniform float u_float5;\r\nuniform bool u_bool0;\r\nuniform bool u_bool1;\r\nuniform bool u_bool2;\r\nuniform bool u_bool3;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nvoid main() {\r\n    vec4 tex = texture(u_image0, v_texCoord);\r\n    float r = tex.r;\r\n    float g = tex.g;\r\n    float b = tex.b;\r\n    float mixv = clamp(u_float0, 0.0, 1.0);\r\n    float expandv = clamp(u_float1, 0.0, 1.0);\r\n    float spill = u_bool0\r\n        ? max(0.0, b - (r * mixv + g * (1.0 - mixv)) * (1.0 - expandv))\r\n        : max(0.0, g - (r * mixv + b * (1.0 - mixv)) * (1.0 - expandv));\r\n    vec3 outc = vec3(\r\n        r + spill * u_float2 + u_float5 * spill,\r\n        g + spill * u_float3 + u_float5 * spill,\r\n        b + spill * u_float4 + u_float5 * spill);\r\n    if (u_bool1) outc = max(outc, 0.0);\r\n    if (u_bool2) outc = min(outc, 1.0);\r\n    if (u_bool3) outc = vec3(clamp(spill, 0.0, 1.0));\r\n    fragColor = vec4(outc, tex.a);\r\n}\r\n";
-const colorSuppressFrag = "#version 300 es\r\nprecision highp float;\r\n\r\nuniform sampler2D u_image0;\r\nuniform float u_float0;\r\nuniform float u_float1;\r\nuniform float u_float2;\r\nuniform float u_float3;\r\nuniform float u_float4;\r\nuniform float u_float5;\r\nuniform bool u_bool0;\r\nuniform bool u_bool1;\r\nuniform int u_int0;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nfloat lumaOf(vec3 c, int mode) {\r\n    if (mode == 3) return (c.r + c.g + c.b) / 3.0;\r\n    if (mode == 4) return max(c.r, max(c.g, c.b));\r\n    if (mode == 1) return dot(c, vec3(0.2627, 0.6780, 0.0593));\r\n    if (mode == 2) return dot(c, vec3(0.2989, 0.5866, 0.1145));\r\n    return dot(c, vec3(0.2126, 0.7152, 0.0722));\r\n}\r\n\r\nvoid main() {\r\n    vec4 tex = texture(u_image0, v_texCoord);\r\n    float r = tex.r;\r\n    float g = tex.g;\r\n    float b = tex.b;\r\n    float modified = 0.0;\r\n    float luma1 = lumaOf(tex.rgb, u_int0);\r\n\r\n    if (u_float5 != 0.0 && b < g && b < r) {\r\n        float d = min((g - b) * u_float5, (r - b) * u_float5);\r\n        g -= d;\r\n        r -= d;\r\n        modified += abs(d);\r\n    }\r\n    if (u_float4 != 0.0 && g < b && g < r) {\r\n        float d = min((b - g) * u_float4, (r - g) * u_float4);\r\n        b -= d;\r\n        r -= d;\r\n        modified += abs(d);\r\n    }\r\n    if (u_float3 != 0.0 && r < g && r < b) {\r\n        float d = min((g - r) * u_float3, (b - r) * u_float3);\r\n        g -= d;\r\n        b -= d;\r\n        modified += abs(d);\r\n    }\r\n    if (u_float0 != 0.0 && r > g && r > b) {\r\n        float d = (r - max(g, b)) * u_float0;\r\n        r -= d;\r\n        modified += abs(d);\r\n    }\r\n    if (u_float1 != 0.0 && g > b && g > r) {\r\n        float d = (g - max(b, r)) * u_float1;\r\n        g -= d;\r\n        modified += abs(d);\r\n    }\r\n    if (u_float2 != 0.0 && b > g && b > r) {\r\n        float d = (b - max(g, r)) * u_float2;\r\n        b -= d;\r\n        modified += abs(d);\r\n    }\r\n\r\n    if (u_bool1) {\r\n        fragColor = vec4(vec3(clamp(modified, 0.0, 1.0)), tex.a);\r\n        return;\r\n    }\r\n    vec3 outc = vec3(r, g, b);\r\n    if (u_bool0) outc += luma1 - lumaOf(outc, u_int0);\r\n    fragColor = vec4(clamp(outc, 0.0, 1.0), tex.a);\r\n}\r\n";
-const keyerFrag = "#version 300 es\r\nprecision highp float;\r\n\r\nuniform sampler2D u_image0;\r\nuniform float u_float0;\r\nuniform float u_float1;\r\nuniform float u_float2;\r\nuniform float u_float3;\r\nuniform float u_float4;\r\nuniform float u_float5;\r\nuniform float u_float6;\r\nuniform float u_float7;\r\nuniform float u_float8;\r\nuniform float u_float9;\r\nuniform float u_float10;\r\nuniform float u_float11;\r\nuniform int u_int0;\r\nuniform int u_int1;\r\nuniform int u_int2;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nfloat lumaOf(vec3 c, int mode) {\r\n    if (mode == 3) return (c.r + c.g + c.b) / 3.0;\r\n    if (mode == 4) return max(c.r, max(c.g, c.b));\r\n    if (mode == 1) return dot(c, vec3(0.2627, 0.6780, 0.0593));\r\n    if (mode == 2) return dot(c, vec3(0.2989, 0.5866, 0.1145));\r\n    return dot(c, vec3(0.2126, 0.7152, 0.0722));\r\n}\r\n\r\nfloat keyBg(float kfg, float softL, float tolL, float ctr, float tolU,\r\n            float softU) {\r\n    float aPt = ctr + tolL + softL;\r\n    float bPt = ctr + tolL;\r\n    float cPt = ctr + tolU;\r\n    float dPt = ctr + tolU + softU;\r\n    float k = kfg < aPt ? 0.0 : 1.0;\r\n    if (softL < 0.0 && kfg >= aPt && kfg < bPt) k = (kfg - aPt) / -softL;\r\n    if (kfg >= bPt && kfg <= cPt) k = 1.0;\r\n    if (softU > 0.0 && kfg > cPt && kfg < dPt) k = (dPt - kfg) / softU;\r\n    if (kfg >= dPt) k = 0.0;\r\n    if (bPt <= 0.0 && kfg <= 0.0) k = 1.0;\r\n    if (cPt >= 1.0 && kfg >= 1.0) k = 1.0;\r\n    return clamp(k, 0.0, 1.0);\r\n}\r\n\r\nvoid main() {\r\n    vec4 tex = texture(u_image0, v_texCoord);\r\n    vec3 fg = tex.rgb;\r\n    vec3 kc = vec3(u_float0, u_float1, u_float2);\r\n    float kcSum = u_float3;\r\n    float kcNorm2 = u_float4;\r\n    float softL = u_float5;\r\n    float tolL = u_float6;\r\n    float ctr = u_float7;\r\n    float tolU = u_float8;\r\n    float softU = u_float9;\r\n    float desp = u_float10;\r\n    float closing = u_float11;\r\n\r\n    float scalar = dot(fg, kc);\r\n    float kfg;\r\n    float dist = 0.0;\r\n    if (u_int0 == 0) {\r\n        kfg = lumaOf(fg, u_int1);\r\n    } else if (u_int0 == 1) {\r\n        kfg = kcSum == 0.0 ? lumaOf(fg, u_int1) : scalar / kcSum;\r\n    } else {\r\n        float norm2 = dot(fg, fg);\r\n        float proj2 = kcNorm2 > 0.0 ? scalar * scalar / kcNorm2 : 0.0;\r\n        dist = sqrt(max(0.0, norm2 - proj2));\r\n        kfg = (kcSum == 0.0 ? lumaOf(fg, u_int1) : scalar / kcSum) - dist;\r\n    }\r\n\r\n    float kbg = u_int0 == 3\r\n        ? 1.0\r\n        : keyBg(kfg, softL, tolL, ctr, tolU, softU);\r\n\r\n    vec3 outc = fg;\r\n    if (desp > 0.0 && (u_int0 == 2 || u_int0 == 3) && kcNorm2 > 0.0) {\r\n        float kcNorm = sqrt(kcNorm2);\r\n        float along = scalar / kcNorm;\r\n        float cone = dist * closing;\r\n        float maxdesp = kbg * min(desp, 1.0)\r\n            + (1.0 - kbg) * max(0.0, desp - 1.0);\r\n        float shift = maxdesp * max(kcNorm, along - cone);\r\n        shift = min(shift, along - cone);\r\n        if (!(along > cone && shift > 0.0)) shift = 0.0;\r\n        outc -= shift * kc / kcNorm;\r\n    }\r\n\r\n    float alpha = clamp(1.0 - kbg, 0.0, 1.0);\r\n    vec3 pre = clamp(outc * alpha, 0.0, 1.0);\r\n\r\n    if (u_int2 == 0) fragColor = vec4(vec3(alpha), 1.0);\r\n    else if (u_int2 == 1) fragColor = vec4(pre, 1.0);\r\n    else fragColor = vec4(pre, alpha);\r\n}\r\n";
-const pikFrag = "#version 300 es\r\nprecision highp float;\r\n\r\nuniform sampler2D u_image0;\r\nuniform float u_float0;\r\nuniform float u_float1;\r\nuniform float u_float2;\r\nuniform float u_float3;\r\nuniform float u_float4;\r\nuniform float u_float5;\r\nuniform float u_float6;\r\nuniform float u_float7;\r\nuniform float u_float8;\r\nuniform float u_float9;\r\nuniform float u_float10;\r\nuniform float u_float11;\r\nuniform float u_float12;\r\nuniform float u_float13;\r\nuniform float u_float14;\r\nuniform float u_float15;\r\nuniform int u_int0;\r\nuniform int u_int1;\r\nuniform int u_int2;\r\nuniform bool u_bool0;\r\nuniform bool u_bool1;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nvoid main() {\r\n    vec4 tex = texture(u_image0, v_texCoord);\r\n    vec3 fg = tex.rgb;\r\n    vec3 ab = vec3(u_float0, u_float1, u_float2);\r\n    vec3 db = vec3(u_float3, u_float4, u_float5);\r\n    vec3 c = vec3(u_float6, u_float7, u_float8);\r\n    float rw = u_float9;\r\n    float gbw = u_float10;\r\n    float clipMin = u_float11;\r\n    float clipMax = u_float12;\r\n    vec3 repCol = vec3(u_float13, u_float14, u_float15);\r\n\r\n    vec3 pfg = fg / ab;\r\n    float pfgKey;\r\n    float cKey;\r\n    float cPrim;\r\n    if (u_int0 == 0) {\r\n        pfgKey = pfg.g - pfg.r * rw - pfg.b * gbw;\r\n        cKey = c.g - c.r * rw - c.b * gbw;\r\n        cPrim = c.g;\r\n    } else {\r\n        pfgKey = pfg.b - pfg.r * rw - pfg.g * gbw;\r\n        cKey = c.b - c.r * rw - c.g * gbw;\r\n        cPrim = c.b;\r\n    }\r\n\r\n    float alpha = 1.0 - pfgKey / (cKey <= 0.0 ? 1.0 : cKey);\r\n    if (cPrim <= 0.0 || pfgKey <= 0.0 || cKey <= 0.0) alpha = 1.0;\r\n\r\n    vec3 outc;\r\n    if (u_bool0) {\r\n        outc = alpha >= 1.0 ? fg : max(fg + c * db * (alpha - 1.0), 0.0);\r\n    } else {\r\n        outc = fg;\r\n    }\r\n\r\n    if (u_bool1) alpha = clamp(alpha, 0.0, 1.0);\r\n\r\n    float clipped = clamp((alpha - clipMin) / (clipMax - clipMin), 0.0, 1.0);\r\n    if (alpha <= clipMin) clipped = 0.0;\r\n    if (alpha >= clipMax) clipped = 1.0;\r\n    float safe = alpha > 0.0 ? alpha : 1.0;\r\n    if (clipped < alpha) outc *= clipped / safe;\r\n    if (u_int1 != 0 && clipped > alpha) {\r\n        float diff = clipped - alpha;\r\n        if (u_int1 == 1) outc += fg * diff;\r\n        else if (u_int1 == 2) outc += repCol * diff;\r\n        else outc += repCol * diff\r\n            * dot(fg, vec3(0.2126, 0.7152, 0.0722));\r\n    }\r\n    alpha = clipped;\r\n\r\n    if (!u_bool0) outc *= alpha;\r\n\r\n    if (u_int2 == 0) fragColor = vec4(vec3(alpha), 1.0);\r\n    else if (u_int2 == 1) fragColor = vec4(clamp(outc, 0.0, 1.0), 1.0);\r\n    else fragColor = vec4(clamp(outc, 0.0, 1.0), alpha);\r\n}\r\n";
-const KEYING_LUMA_WEIGHTS = {
-  rec709: [0.2126, 0.7152, 0.0722],
-  rec2020: [0.2627, 0.678, 0.0593],
-  ccir601: [0.2989, 0.5866, 0.1145]
-};
-function keyingLuma(rgb, mathMode = "rec709") {
-  if (mathMode === "average") return (rgb[0] + rgb[1] + rgb[2]) / 3;
-  if (mathMode === "max") return Math.max(rgb[0], rgb[1], rgb[2]);
-  const w2 = KEYING_LUMA_WEIGHTS[mathMode] ?? KEYING_LUMA_WEIGHTS.rec709;
-  return rgb[0] * w2[0] + rgb[1] * w2[1] + rgb[2] * w2[2];
-}
-function parseKeyColor(s, fallback) {
-  const hex = (s ?? "").trim().replace(/^#/, "");
-  if (hex.length !== 6 || !/^[0-9a-fA-F]{6}$/.test(hex)) {
-    return [...fallback];
-  }
-  return [
-    parseInt(hex.slice(0, 2), 16) / 255,
-    parseInt(hex.slice(2, 4), 16) / 255,
-    parseInt(hex.slice(4, 6), 16) / 255
-  ];
-}
-const clamp = (v2, lo, hi) => Math.min(hi, Math.max(lo, v2));
-function deriveKeyer(p2) {
-  const mode = p2.mode ?? "luminance";
-  const kc = parseKeyColor(p2.keyColor, [0, 0, 0]);
-  return {
-    mode,
-    lumaMath: p2.luminanceMath ?? "rec709",
-    kc,
-    kcSum: kc[0] + kc[1] + kc[2],
-    kcNorm2: kc[0] * kc[0] + kc[1] * kc[1] + kc[2] * kc[2],
-    tolU: mode === "screen" ? 1 : p2.toleranceUpper ?? 0,
-    softU: mode === "screen" ? 1 : p2.softnessUpper ?? 0.5,
-    softL: p2.softnessLower ?? -0.5,
-    tolL: p2.toleranceLower ?? 0,
-    ctr: p2.center ?? 1,
-    desp: mode === "screen" || mode === "none" ? clamp(p2.despill ?? 1, 0, 2) : 0,
-    closing: Math.tan(
-      (90 - 0.5 * clamp(p2.despillAngle ?? 120, 0, 180)) * Math.PI / 180
-    )
-  };
-}
-function derivePik(p2) {
-  const abRaw = parseKeyColor(p2.alphaBias, [0.5, 0.5, 0.5]).map((v2) => Math.max(1e-4, v2));
-  const lumAb = keyingLuma(abRaw);
-  const ab = abRaw.map((v2) => v2 / lumAb);
-  const useAb = p2.useAlphaBias ?? true;
-  const db = useAb ? [...ab] : parseKeyColor(p2.despillBias, [0.5, 0.5, 0.5]).map((v2) => Math.max(1e-4, v2) / lumAb);
-  const pick2 = parseKeyColor(p2.pickColor, [0, 1, 0]);
-  const screen = p2.screen ?? "green";
-  const screenKind = screen === "pick" ? pick2[1] / ab[1] > pick2[2] / ab[2] ? "green" : "blue" : screen;
-  const clipMin = clamp(p2.clipBlack ?? 0, 0, 1);
-  return {
-    ab,
-    db,
-    constC: [pick2[0] / ab[0], pick2[1] / ab[1], pick2[2] / ab[2]],
-    screenKind,
-    rw: p2.redWeight ?? 0.5,
-    gbw: p2.blueGreenWeight ?? 0.5,
-    screenSubtraction: p2.screenSubtraction ?? true,
-    clampAlpha: p2.clampAlpha ?? true,
-    clipMin,
-    clipMax: Math.max(clipMin + 1e-4, Math.min(1, p2.clipWhite ?? 1)),
-    replaceMode: p2.replaceMode ?? "soft",
-    repCol: parseKeyColor(p2.replaceColor, [0.5, 0.5, 0.5])
-  };
-}
-const LUMA_MODE = {
-  rec709: 0,
-  rec2020: 1,
-  ccir601: 2,
-  average: 3,
-  max: 4
-};
-const KEYER_MODE = {
-  luminance: 0,
-  color: 1,
-  screen: 2,
-  none: 3
-};
-const REPLACE_MODE = {
-  none: 0,
-  source: 1,
-  hard: 2,
-  soft: 3
-};
-const OUT_MODE = {
-  matte: 0,
-  premult: 1,
-  alpha: 2,
-  composite: 2
-};
-class VideoDespillRenderer extends FxPreviewRenderer {
-  constructor() {
-    super(despillFrag, {
-      maxInputs: 1,
-      maxFloatUniforms: 6,
-      maxIntUniforms: 1,
-      maxBoolUniforms: 4,
-      maxCurves: 0
-    }, (r, p2) => {
-      r.setFloatUniform(0, p2.spillMix ?? 0.5);
-      r.setFloatUniform(1, p2.expand ?? 0);
-      r.setFloatUniform(2, p2.redScale ?? 0);
-      r.setFloatUniform(3, p2.greenScale ?? -1);
-      r.setFloatUniform(4, p2.blueScale ?? 0);
-      r.setFloatUniform(5, p2.brightness ?? 0);
-      r.setBoolUniform(0, p2.screen === "blue");
-      r.setBoolUniform(1, p2.clampBlack ?? true);
-      r.setBoolUniform(2, p2.clampWhite ?? false);
-      r.setBoolUniform(3, p2.outputSpillmap ?? false);
-    });
-  }
-}
-class VideoColorSuppressRenderer extends FxPreviewRenderer {
-  constructor() {
-    super(colorSuppressFrag, {
-      maxInputs: 1,
-      maxFloatUniforms: 6,
-      maxIntUniforms: 1,
-      maxBoolUniforms: 2,
-      maxCurves: 0
-    }, (r, p2) => {
-      r.setFloatUniform(0, p2.red ?? 0);
-      r.setFloatUniform(1, p2.green ?? 0);
-      r.setFloatUniform(2, p2.blue ?? 0);
-      r.setFloatUniform(3, p2.cyan ?? 0);
-      r.setFloatUniform(4, p2.magenta ?? 0);
-      r.setFloatUniform(5, p2.yellow ?? 0);
-      r.setBoolUniform(0, p2.preserveLuma ?? false);
-      r.setBoolUniform(1, p2.output === "matte");
-      r.setIntUniform(0, LUMA_MODE[p2.luminanceMath ?? "rec709"] ?? 0);
-    });
-  }
-}
-class VideoKeyerRenderer extends FxPreviewRenderer {
-  constructor() {
-    super(keyerFrag, {
-      maxInputs: 1,
-      maxFloatUniforms: 12,
-      maxIntUniforms: 3,
-      maxBoolUniforms: 1,
-      maxCurves: 0
-    }, (r, p2) => {
-      const d2 = deriveKeyer(p2);
-      r.setFloatUniform(0, d2.kc[0]);
-      r.setFloatUniform(1, d2.kc[1]);
-      r.setFloatUniform(2, d2.kc[2]);
-      r.setFloatUniform(3, d2.kcSum);
-      r.setFloatUniform(4, d2.kcNorm2);
-      r.setFloatUniform(5, d2.softL);
-      r.setFloatUniform(6, d2.tolL);
-      r.setFloatUniform(7, d2.ctr);
-      r.setFloatUniform(8, d2.tolU);
-      r.setFloatUniform(9, d2.softU);
-      r.setFloatUniform(10, d2.desp);
-      r.setFloatUniform(11, d2.closing);
-      r.setIntUniform(0, KEYER_MODE[d2.mode] ?? 0);
-      r.setIntUniform(1, LUMA_MODE[d2.lumaMath] ?? 0);
-      r.setIntUniform(2, OUT_MODE[p2.output ?? "matte"] ?? 0);
-    });
-  }
-}
-class VideoPikRenderer extends FxPreviewRenderer {
-  constructor() {
-    super(pikFrag, {
-      maxInputs: 1,
-      maxFloatUniforms: 16,
-      maxIntUniforms: 3,
-      maxBoolUniforms: 2,
-      maxCurves: 0
-    }, (r, p2) => {
-      const d2 = derivePik(p2);
-      r.setFloatUniform(0, d2.ab[0]);
-      r.setFloatUniform(1, d2.ab[1]);
-      r.setFloatUniform(2, d2.ab[2]);
-      r.setFloatUniform(3, d2.db[0]);
-      r.setFloatUniform(4, d2.db[1]);
-      r.setFloatUniform(5, d2.db[2]);
-      r.setFloatUniform(6, d2.constC[0]);
-      r.setFloatUniform(7, d2.constC[1]);
-      r.setFloatUniform(8, d2.constC[2]);
-      r.setFloatUniform(9, d2.rw);
-      r.setFloatUniform(10, d2.gbw);
-      r.setFloatUniform(11, d2.clipMin);
-      r.setFloatUniform(12, d2.clipMax);
-      r.setFloatUniform(13, d2.repCol[0]);
-      r.setFloatUniform(14, d2.repCol[1]);
-      r.setFloatUniform(15, d2.repCol[2]);
-      r.setIntUniform(0, d2.screenKind === "blue" ? 1 : 0);
-      r.setIntUniform(1, REPLACE_MODE[d2.replaceMode] ?? 3);
-      r.setIntUniform(2, OUT_MODE[p2.output ?? "alpha"] ?? 2);
-      r.setBoolUniform(0, d2.screenSubtraction);
-      r.setBoolUniform(1, d2.clampAlpha);
-    });
-  }
-}
 const _hoisted_1$n = {
   key: 0,
   class: "ctv:flex ctv:items-center ctv:gap-2 ctv:text-2xs ctv:text-muted-foreground"
@@ -164837,24 +164933,20 @@ const _hoisted_6$d = {
   class: "ctv:flex ctv:items-center ctv:gap-2 ctv:text-2xs ctv:text-muted-foreground"
 };
 const _hoisted_7$7 = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_8$5 = {
+const _hoisted_8$4 = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_9$5 = {
+const _hoisted_9$4 = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_10$4 = {
+const _hoisted_10$3 = {
   key: 2,
-  class: "ctv:text-muted-foreground"
-};
-const _hoisted_11$4 = {
-  key: 3,
   class: "ctv:text-success-background"
 };
-const _hoisted_12$3 = {
-  key: 4,
+const _hoisted_11$3 = {
+  key: 3,
   class: "ctv:text-muted-foreground"
 };
 const _sfc_main$l = /* @__PURE__ */ defineComponent({
@@ -164887,7 +164979,7 @@ const _sfc_main$l = /* @__PURE__ */ defineComponent({
       { value: "composite", label: "Comp" }
     ];
     const sourceVideoUrl = computed(() => pickSourceImageUrl(props.state.inputs, "video"));
-    const plateWired = computed(() => Boolean(pickSourceImageUrl(props.state.inputs, "clean_plate_video") || pickSourceImageUrl(props.state.inputs, "clean_plate")));
+    const hasSideInputs = computed(() => props.state.inputs.some((i) => ["clean_plate_video", "clean_plate", "in_mask", "out_mask", "bg_video"].includes(i.slot) && i.source !== "empty"));
     const screen = useStrWidget(props.node, "screen", "green");
     const pickColor = useStrWidget(props.node, "pick_color", "#00FF00");
     const redWeight = useNumWidget(props.node, "red_weight", 0.5);
@@ -164907,10 +164999,11 @@ const _sfc_main$l = /* @__PURE__ */ defineComponent({
       return ((_a3 = playerRef.value) == null ? void 0 : _a3.videoEl) ?? null;
     });
     const previewCanvas = /* @__PURE__ */ ref(null);
-    const { supported } = useFxVideoPreview({
+    const { supported } = useChainedFxPreview({
       videoEl,
       canvasEl: previewCanvas,
       nodeId: String(props.node.id),
+      node: props.node,
       params: () => ({
         screen: screen.value,
         pickColor: pickColor.value,
@@ -165073,23 +165166,24 @@ const _sfc_main$l = /* @__PURE__ */ defineComponent({
             }, null, 8, ["modelValue"])
           ], 32),
           createBaseVNode("div", _hoisted_7$7, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_8$5, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : !plateWired.value && unref(screen) !== "pick" ? (openBlock(), createElementBlock("span", _hoisted_9$5, "Wire a clean plate (or use Pick)")) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_10$4, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_11$4, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_12$3, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_8$4, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_9$4, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_10$3, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_11$3, toDisplayString$1(_ctx.$t(hasSideInputs.value ? "fx.adjustThenRun" : "fx.chainMode")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
             node: __props.node,
+            "hide-run-button": !hasSideInputs.value,
             "on-run-request": __props.onRunRequest,
             "on-cancel-request": __props.onCancelRequest,
             "on-disconnect": __props.onDisconnect,
             "on-action": __props.onAction
-          }, null, 8, ["state", "node", "on-run-request", "on-cancel-request", "on-disconnect", "on-action"])
+          }, null, 8, ["state", "node", "hide-run-button", "on-run-request", "on-cancel-request", "on-disconnect", "on-action"])
         ]),
         _: 1
       }, 8, ["node"]);
     };
   }
 });
-const PIKStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["__scopeId", "data-v-f7673239"]]);
+const PIKStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["__scopeId", "data-v-947bf2ec"]]);
 const _hoisted_1$m = {
   key: 0,
   class: "ctv:flex ctv:items-center ctv:gap-2 ctv:text-2xs ctv:text-muted-foreground"
@@ -165136,6 +165230,7 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
       { value: "composite", label: "Comp" }
     ];
     const sourceVideoUrl = computed(() => pickSourceImageUrl(props.state.inputs, "video"));
+    const hasSideInputs = computed(() => props.state.inputs.some((i) => ["in_mask", "out_mask", "bg_video"].includes(i.slot) && i.source !== "empty"));
     const mode = useStrWidget(props.node, "mode", "luminance");
     const keyColor = useStrWidget(props.node, "key_color", "#000000");
     const softnessLower = useNumWidget(props.node, "softness_lower", -0.5);
@@ -165152,10 +165247,11 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
       return ((_a3 = playerRef.value) == null ? void 0 : _a3.videoEl) ?? null;
     });
     const previewCanvas = /* @__PURE__ */ ref(null);
-    const { supported } = useFxVideoPreview({
+    const { supported } = useChainedFxPreview({
       videoEl,
       canvasEl: previewCanvas,
       nodeId: String(props.node.id),
+      node: props.node,
       params: () => ({
         mode: mode.value,
         keyColor: keyColor.value,
@@ -165290,23 +165386,24 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
             }, null, 8, ["modelValue"])
           ], 32),
           createBaseVNode("div", _hoisted_2$j, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_3$j, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_4$g, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_5$g, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_6$c, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_3$j, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_4$g, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_5$g, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_6$c, toDisplayString$1(_ctx.$t(hasSideInputs.value ? "fx.adjustThenRun" : "fx.chainMode")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
             node: __props.node,
+            "hide-run-button": !hasSideInputs.value,
             "on-run-request": __props.onRunRequest,
             "on-cancel-request": __props.onCancelRequest,
             "on-disconnect": __props.onDisconnect,
             "on-action": __props.onAction
-          }, null, 8, ["state", "node", "on-run-request", "on-cancel-request", "on-disconnect", "on-action"])
+          }, null, 8, ["state", "node", "hide-run-button", "on-run-request", "on-cancel-request", "on-disconnect", "on-action"])
         ]),
         _: 1
       }, 8, ["node"]);
     };
   }
 });
-const KeyerStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["__scopeId", "data-v-eb501c28"]]);
+const KeyerStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["__scopeId", "data-v-c7d1d8fd"]]);
 const _hoisted_1$l = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs ctv:text-muted-foreground ctv:cursor-pointer" };
 const _hoisted_2$i = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
 const _hoisted_3$i = {
@@ -165356,10 +165453,11 @@ const _sfc_main$j = /* @__PURE__ */ defineComponent({
       return ((_a3 = playerRef.value) == null ? void 0 : _a3.videoEl) ?? null;
     });
     const previewCanvas = /* @__PURE__ */ ref(null);
-    const { supported } = useFxVideoPreview({
+    const { supported } = useChainedFxPreview({
       videoEl,
       canvasEl: previewCanvas,
       nodeId: String(props.node.id),
+      node: props.node,
       params: () => ({
         screen: screen.value,
         spillMix: spillMix.value,
@@ -165477,11 +165575,12 @@ const _sfc_main$j = /* @__PURE__ */ defineComponent({
             ])
           ], 32),
           createBaseVNode("div", _hoisted_2$i, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_3$i, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_4$f, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_5$f, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_6$b, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_3$i, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_4$f, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_5$f, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_6$b, toDisplayString$1(_ctx.$t("fx.chainMode")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
             node: __props.node,
+            "hide-run-button": "",
             "on-run-request": __props.onRunRequest,
             "on-cancel-request": __props.onCancelRequest,
             "on-disconnect": __props.onDisconnect,
@@ -165542,10 +165641,11 @@ const _sfc_main$i = /* @__PURE__ */ defineComponent({
       return ((_a3 = playerRef.value) == null ? void 0 : _a3.videoEl) ?? null;
     });
     const previewCanvas = /* @__PURE__ */ ref(null);
-    const { supported } = useFxVideoPreview({
+    const { supported } = useChainedFxPreview({
       videoEl,
       canvasEl: previewCanvas,
       nodeId: String(props.node.id),
+      node: props.node,
       params: () => ({
         red: red.value,
         green: green.value,
@@ -165665,11 +165765,12 @@ const _sfc_main$i = /* @__PURE__ */ defineComponent({
             }, null, 8, ["modelValue"])
           ], 32),
           createBaseVNode("div", _hoisted_2$h, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_3$h, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_4$e, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_5$e, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_6$a, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_3$h, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_4$e, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_5$e, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_6$a, toDisplayString$1(_ctx.$t("fx.chainMode")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
             node: __props.node,
+            "hide-run-button": "",
             "on-run-request": __props.onRunRequest,
             "on-cancel-request": __props.onCancelRequest,
             "on-disconnect": __props.onDisconnect,
@@ -165927,11 +166028,12 @@ const _sfc_main$f = /* @__PURE__ */ defineComponent({
             }, null, 8, ["modelValue"])
           ], 32),
           createBaseVNode("div", _hoisted_1$h, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_2$e, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_3$e, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_4$b, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_5$b, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_2$e, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_3$e, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_4$b, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_5$b, toDisplayString$1(_ctx.$t("fx.chainMode")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
             node: __props.node,
+            "hide-run-button": "",
             "on-run-request": __props.onRunRequest,
             "on-cancel-request": __props.onCancelRequest,
             "on-disconnect": __props.onDisconnect,
@@ -166130,16 +166232,16 @@ const _hoisted_7$5 = {
   key: 0,
   class: "ctv:h-40 ctv:flex ctv:flex-col"
 };
-const _hoisted_8$4 = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_9$4 = {
+const _hoisted_8$3 = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_9$3 = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_10$3 = {
+const _hoisted_10$2 = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_11$3 = {
+const _hoisted_11$2 = {
   key: 2,
   class: "ctv:text-success-background"
 };
@@ -166397,12 +166499,13 @@ const _sfc_main$d = /* @__PURE__ */ defineComponent({
               }, null, 8, ["source-video-url"])
             ])) : createCommentVNode("", true)
           ], 32),
-          createBaseVNode("div", _hoisted_8$4, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_9$4, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_10$3, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_11$3, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_12$2, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+          createBaseVNode("div", _hoisted_8$3, [
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_9$3, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_10$2, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_11$2, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_12$2, toDisplayString$1(_ctx.$t("fx.chainMode")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
             node: __props.node,
+            "hide-run-button": "",
             "on-run-request": __props.onRunRequest,
             "on-cancel-request": __props.onCancelRequest,
             "on-disconnect": __props.onDisconnect,
@@ -166430,11 +166533,11 @@ const _hoisted_7$4 = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_8$3 = {
+const _hoisted_8$2 = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_9$3 = {
+const _hoisted_9$2 = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
@@ -166582,7 +166685,7 @@ const _sfc_main$c = /* @__PURE__ */ defineComponent({
           }, null, 8, ["modelValue", "options"])
         ], 32),
         createBaseVNode("div", _hoisted_5$8, [
-          !sourceImageUrl.value ? (openBlock(), createElementBlock("span", _hoisted_6$7, "Wire an image input")) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_7$4, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_8$3, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_9$3, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+          !sourceImageUrl.value ? (openBlock(), createElementBlock("span", _hoisted_6$7, "Wire an image input")) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_7$4, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_8$2, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_9$2, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
         ]),
         createVNode(StageCard, {
           state: __props.state,
@@ -166775,11 +166878,12 @@ const _sfc_main$b = /* @__PURE__ */ defineComponent({
             }, null, 8, ["modelValue"])
           ], 32),
           createBaseVNode("div", _hoisted_1$d, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_2$a, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_3$a, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_4$7, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_5$7, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_2$a, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_3$a, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_4$7, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_5$7, toDisplayString$1(_ctx.$t("fx.chainMode")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
             node: __props.node,
+            "hide-run-button": "",
             "on-run-request": __props.onRunRequest,
             "on-cancel-request": __props.onCancelRequest,
             "on-disconnect": __props.onDisconnect,
@@ -167249,23 +167353,22 @@ const _sfc_main$8 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$9 = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
-const _hoisted_2$6 = {
+const _hoisted_1$9 = {
   key: 0,
   class: "ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:h-24 ctv:rounded-md ctv:bg-black/40 ctv:border ctv:border-dashed ctv:border-border-subtle ctv:text-white/50"
 };
-const _hoisted_3$6 = { class: "ctv:text-xs ctv:text-center ctv:px-2" };
-const _hoisted_4$3 = {
+const _hoisted_2$6 = { class: "ctv:text-xs ctv:text-center ctv:px-2" };
+const _hoisted_3$6 = {
   key: 1,
   class: "ctv:flex ctv:flex-col ctv:gap-1"
 };
-const _hoisted_5$3 = { class: "ctv:shrink-0 ctv:w-4 ctv:text-center ctv:text-2xs ctv:font-bold ctv:font-mono ctv:text-[#b8c4ff]" };
-const _hoisted_6$3 = { class: "ctv:flex ctv:flex-col ctv:gap-0.5 ctv:shrink-0" };
-const _hoisted_7$3 = ["disabled", "title", "onClick"];
-const _hoisted_8$2 = ["disabled", "title", "onClick"];
-const _hoisted_9$2 = ["title"];
-const _hoisted_10$2 = { class: "ctv:shrink-0 ctv:text-3xs ctv:font-mono ctv:text-muted-foreground" };
-const _hoisted_11$2 = ["title"];
+const _hoisted_4$3 = { class: "ctv:shrink-0 ctv:w-4 ctv:text-center ctv:text-2xs ctv:font-bold ctv:font-mono ctv:text-[#b8c4ff]" };
+const _hoisted_5$3 = ["title"];
+const _hoisted_6$3 = {
+  key: 0,
+  class: "ctv:shrink-0 ctv:py-px ctv:px-1.5 ctv:text-3xs ctv:tracking-wide ctv:rounded-sm ctv:bg-base-foreground/10 ctv:text-muted-foreground"
+};
+const _hoisted_7$3 = ["title"];
 const sectionLabel = "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:opacity-60";
 const _sfc_main$7 = /* @__PURE__ */ defineComponent({
   __name: "FXChainStageCard",
@@ -167279,81 +167382,93 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
   },
   setup(__props) {
     const props = __props;
-    const { orderedRows, onMoveUp, onMoveDown, orderedSummary } = useFxChain(props.node, () => props.state);
+    const { rows, summary } = useFxChain(props.node, () => props.state);
+    const sourceVideoUrl = computed(() => pickSourceImageUrl(props.state.inputs, "video"));
+    const playerRef = /* @__PURE__ */ ref(null);
+    const videoEl = computed(() => {
+      var _a3;
+      return ((_a3 = playerRef.value) == null ? void 0 : _a3.videoEl) ?? null;
+    });
+    const previewCanvas = /* @__PURE__ */ ref(null);
+    const { supported } = useChainedFxPreview({
+      videoEl,
+      canvasEl: previewCanvas,
+      nodeId: String(props.node.id),
+      node: props.node,
+      params: () => ({}),
+      createRenderer: () => new ChainBlitRenderer()
+    });
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$9, [
-        createBaseVNode("div", {
-          class: "ctv:flex ctv:flex-col ctv:gap-1",
-          onPointerdown: _cache2[0] || (_cache2[0] = withModifiers(() => {
-          }, ["stop"])),
-          onPointermove: _cache2[1] || (_cache2[1] = withModifiers(() => {
-          }, ["stop"])),
-          onPointerup: _cache2[2] || (_cache2[2] = withModifiers(() => {
-          }, ["stop"]))
-        }, [
+      return openBlock(), createBlock(_sfc_main$1Z, { node: __props.node }, {
+        player: withCtx(() => [
+          createVNode(_sfc_main$1Y, {
+            ref_key: "playerRef",
+            ref: playerRef,
+            "source-video-url": sourceVideoUrl.value
+          }, {
+            overlay: withCtx(() => [
+              withDirectives(createBaseVNode("canvas", {
+                ref_key: "previewCanvas",
+                ref: previewCanvas,
+                class: "ctv:absolute ctv:inset-0 ctv:size-full ctv:object-contain ctv:pointer-events-none"
+              }, null, 512), [
+                [vShow, unref(supported)]
+              ])
+            ]),
+            _: 1
+          }, 8, ["source-video-url"])
+        ]),
+        default: withCtx(() => [
           createBaseVNode("div", {
-            class: normalizeClass(sectionLabel)
-          }, toDisplayString$1(_ctx.$t("fxChain.title")), 1),
-          unref(orderedRows).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_2$6, [
-            _cache2[3] || (_cache2[3] = createBaseVNode("i", { class: "pi pi-bolt ctv:text-[24px] ctv:opacity-60" }, null, -1)),
-            createBaseVNode("div", _hoisted_3$6, toDisplayString$1(_ctx.$t("fxChain.empty")), 1)
-          ])) : (openBlock(), createElementBlock("div", _hoisted_4$3, [
-            (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(orderedRows), (row, idx) => {
-              return openBlock(), createElementBlock("div", {
-                key: row.slot,
-                class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:p-1 ctv:rounded-md ctv:bg-black/40 ctv:border ctv:border-border-subtle"
-              }, [
-                createBaseVNode("span", _hoisted_5$3, toDisplayString$1(idx + 1), 1),
-                createBaseVNode("div", _hoisted_6$3, [
-                  createBaseVNode("button", {
-                    type: "button",
-                    class: "ctv-fxc-btn",
-                    disabled: idx === 0,
-                    title: _ctx.$t("fxChain.moveUp"),
-                    onClick: ($event) => unref(onMoveUp)(idx)
-                  }, [..._cache2[4] || (_cache2[4] = [
-                    createBaseVNode("i", { class: "pi pi-chevron-up ctv:text-[9px]" }, null, -1)
-                  ])], 8, _hoisted_7$3),
-                  createBaseVNode("button", {
-                    type: "button",
-                    class: "ctv-fxc-btn",
-                    disabled: idx === unref(orderedRows).length - 1,
-                    title: _ctx.$t("fxChain.moveDown"),
-                    onClick: ($event) => unref(onMoveDown)(idx)
-                  }, [..._cache2[5] || (_cache2[5] = [
-                    createBaseVNode("i", { class: "pi pi-chevron-down ctv:text-[9px]" }, null, -1)
-                  ])], 8, _hoisted_8$2)
-                ]),
-                createBaseVNode("span", {
-                  class: normalizeClass(["ctv:flex-1 ctv:min-w-0 ctv:truncate ctv:text-[11px] ctv:font-semibold", row.known ? "ctv:text-base-foreground" : "ctv:italic ctv:text-muted-foreground"]),
-                  title: row.known ? row.kind : unref(formatSlot)(row.slot)
-                }, toDisplayString$1(row.known ? row.label : _ctx.$t("fxChain.unknown")), 11, _hoisted_9$2),
-                createBaseVNode("span", {
-                  class: normalizeClass(["ctv:shrink-0 ctv:py-px ctv:px-1.5 ctv:text-3xs ctv:font-bold ctv:tracking-wide ctv:rounded-sm", row.domain === "audio" ? "ctv:bg-[rgb(255_100_100/0.22)] ctv:text-[#ffb0b0]" : "ctv:bg-[rgb(255_171_64/0.25)] ctv:text-[#ffd089]"])
-                }, toDisplayString$1(_ctx.$t(`fxChain.domain.${row.domain}`)), 3),
-                createBaseVNode("span", _hoisted_10$2, toDisplayString$1(unref(formatSlot)(row.slot)), 1)
-              ]);
-            }), 128))
-          ])),
-          unref(orderedRows).length > 1 ? (openBlock(), createElementBlock("div", {
-            key: 2,
-            class: "ctv:text-3xs ctv:text-center ctv:text-muted-foreground ctv:tracking-wide ctv:truncate",
-            title: unref(orderedSummary)
-          }, toDisplayString$1(unref(orderedSummary)), 9, _hoisted_11$2)) : createCommentVNode("", true)
-        ], 32),
-        createVNode(StageCard, {
-          state: __props.state,
-          node: __props.node,
-          "on-run-request": __props.onRunRequest,
-          "on-cancel-request": __props.onCancelRequest,
-          "on-disconnect": __props.onDisconnect,
-          "on-action": __props.onAction
-        }, null, 8, ["state", "node", "on-run-request", "on-cancel-request", "on-disconnect", "on-action"])
-      ]);
+            class: "ctv:flex ctv:flex-col ctv:gap-1",
+            onPointerdown: _cache2[0] || (_cache2[0] = withModifiers(() => {
+            }, ["stop"])),
+            onPointermove: _cache2[1] || (_cache2[1] = withModifiers(() => {
+            }, ["stop"])),
+            onPointerup: _cache2[2] || (_cache2[2] = withModifiers(() => {
+            }, ["stop"]))
+          }, [
+            createBaseVNode("div", {
+              class: normalizeClass(sectionLabel)
+            }, toDisplayString$1(_ctx.$t("fxChain.title")), 1),
+            unref(rows).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_1$9, [
+              _cache2[3] || (_cache2[3] = createBaseVNode("i", { class: "pi pi-bolt ctv:text-[24px] ctv:opacity-60" }, null, -1)),
+              createBaseVNode("div", _hoisted_2$6, toDisplayString$1(_ctx.$t("fxChain.empty")), 1)
+            ])) : (openBlock(), createElementBlock("div", _hoisted_3$6, [
+              (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(rows), (row) => {
+                return openBlock(), createElementBlock("div", {
+                  key: row.ordinal,
+                  class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:p-1 ctv:rounded-md ctv:bg-black/40 ctv:border ctv:border-border-subtle"
+                }, [
+                  createBaseVNode("span", _hoisted_4$3, toDisplayString$1(row.ordinal), 1),
+                  createBaseVNode("span", {
+                    class: "ctv:flex-1 ctv:min-w-0 ctv:truncate ctv:text-[11px] ctv:font-semibold ctv:text-base-foreground",
+                    title: row.kind
+                  }, toDisplayString$1(row.label), 9, _hoisted_5$3),
+                  !row.preview ? (openBlock(), createElementBlock("span", _hoisted_6$3, toDisplayString$1(_ctx.$t("fxChain.noPreview")), 1)) : createCommentVNode("", true)
+                ]);
+              }), 128))
+            ])),
+            unref(rows).length > 1 ? (openBlock(), createElementBlock("div", {
+              key: 2,
+              class: "ctv:text-3xs ctv:text-center ctv:text-muted-foreground ctv:tracking-wide ctv:truncate",
+              title: unref(summary)
+            }, toDisplayString$1(unref(summary)), 9, _hoisted_7$3)) : createCommentVNode("", true)
+          ], 32),
+          createVNode(StageCard, {
+            state: __props.state,
+            node: __props.node,
+            "on-run-request": __props.onRunRequest,
+            "on-cancel-request": __props.onCancelRequest,
+            "on-disconnect": __props.onDisconnect,
+            "on-action": __props.onAction
+          }, null, 8, ["state", "node", "on-run-request", "on-cancel-request", "on-disconnect", "on-action"])
+        ]),
+        _: 1
+      }, 8, ["node"]);
     };
   }
 });
-const FXChainStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["__scopeId", "data-v-66ae1a61"]]);
 const _hoisted_1$8 = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:py-1.5 ctv:px-2 ctv:size-full ctv:box-border ctv:text-xs ctv:text-base-foreground" };
 const _hoisted_2$5 = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:pb-1 ctv:font-semibold ctv:text-[11px] ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground ctv:border-b ctv:border-border-default" };
 const _hoisted_3$5 = { class: "ctv:flex ctv:items-center ctv:gap-1" };
@@ -168432,7 +168547,6 @@ function collectReachableNodeIds(app2, target) {
   const reachable = /* @__PURE__ */ new Set();
   reachable.add(target.id);
   const isBridgeIn = typeof (target == null ? void 0 : target.comfyClass) === "string" && target.comfyClass.startsWith("ComfyTV.BridgeTo");
-  if (!isBridgeIn) return reachable;
   const linksMap = (_a3 = app2 == null ? void 0 : app2.graph) == null ? void 0 : _a3.links;
   const getLink = (linkId) => {
     var _a4, _b3;
@@ -168448,10 +168562,10 @@ function collectReachableNodeIds(app2, target) {
       const srcId = link == null ? void 0 : link.origin_id;
       if (srcId == null) continue;
       const srcNode = (_c = (_b2 = app2 == null ? void 0 : app2.graph) == null ? void 0 : _b2.getNodeById) == null ? void 0 : _c.call(_b2, srcId);
-      if (srcNode && !reachable.has(srcNode.id)) {
-        reachable.add(srcNode.id);
-        queue2.push(srcNode);
-      }
+      if (!srcNode || reachable.has(srcNode.id)) continue;
+      if (!isBridgeIn && !isChainable(srcNode)) continue;
+      reachable.add(srcNode.id);
+      queue2.push(srcNode);
     }
   }
   return reachable;
@@ -169040,7 +169154,7 @@ function useStageNode(node, kind, variant = "generator") {
     { immediate: true }
   ) : null;
   const onRunRequest = async () => {
-    var _a4, _b3, _c2, _d2, _e3, _f3, _g2, _h2, _i, _j, _k, _l, _m2, _n2, _o, _p, _q, _r, _s, _t, _u, _v4, _w, _x2, _y2, _z2, _A;
+    var _a4, _b3, _c2, _d2, _e3, _f3, _g2, _h2, _i, _j, _k, _l, _m2, _n2, _o, _p, _q, _r, _s, _t, _u, _v4, _w, _x2, _y2, _z2, _A, _B, _C, _D;
     if (state2.running) return;
     if (variant === "loader") return;
     if (state2.preparingWorkflow) {
@@ -169064,20 +169178,23 @@ function useStageNode(node, kind, variant = "generator") {
       const isBridgeIn = typeof (node == null ? void 0 : node.comfyClass) === "string" && node.comfyClass.startsWith("ComfyTV.BridgeTo");
       const pm = isBridgeIn ? await a.graphToPrompt() : await buildScopedPrompt(a, collectReachableNodeIds(a, node));
       const targetId = String(node.id);
-      const myInputs = (_f3 = (_e3 = pm == null ? void 0 : pm.output) == null ? void 0 : _e3[targetId]) == null ? void 0 : _f3.inputs;
       const missingUpstream = [];
-      if (myInputs) {
-        for (const key of Object.keys(myInputs)) {
-          const val = myInputs[key];
+      const promptNodeIds = isBridgeIn ? [targetId] : Object.keys((pm == null ? void 0 : pm.output) ?? {});
+      for (const nid of promptNodeIds) {
+        const nodeInputs = (_f3 = (_e3 = pm == null ? void 0 : pm.output) == null ? void 0 : _e3[nid]) == null ? void 0 : _f3.inputs;
+        if (!nodeInputs) continue;
+        for (const key of Object.keys(nodeInputs)) {
+          const val = nodeInputs[key];
           if (!Array.isArray(val) || val.length !== 2) continue;
           const upstreamId = val[0];
+          if (!isBridgeIn && ((_g2 = pm == null ? void 0 : pm.output) == null ? void 0 : _g2[String(upstreamId)])) continue;
           const upstreamSlot = Number(val[1]) || 0;
-          const upstreamNode = ((_h2 = (_g2 = a.graph) == null ? void 0 : _g2.getNodeById) == null ? void 0 : _h2.call(_g2, Number(upstreamId))) ?? ((_j = (_i = a.graph) == null ? void 0 : _i.getNodeById) == null ? void 0 : _j.call(_i, String(upstreamId)));
+          const upstreamNode = ((_i = (_h2 = a.graph) == null ? void 0 : _h2.getNodeById) == null ? void 0 : _i.call(_h2, Number(upstreamId))) ?? ((_k = (_j = a.graph) == null ? void 0 : _j.getNodeById) == null ? void 0 : _k.call(_j, String(upstreamId)));
           if (!upstreamNode) continue;
           const upstreamState = store2.getStage(upstreamNode);
           let snapshot;
           if (upstreamState) {
-            const slotted = (_k = upstreamState.outputs) == null ? void 0 : _k[upstreamSlot];
+            const slotted = (_l = upstreamState.outputs) == null ? void 0 : _l[upstreamSlot];
             if (slotted != null) {
               snapshot = slotted;
             } else if (upstreamSlot === 0 && upstreamState.output) {
@@ -169085,18 +169202,19 @@ function useStageNode(node, kind, variant = "generator") {
             }
           }
           if (snapshot != null && snapshot !== "") {
-            myInputs[key] = snapshot;
+            nodeInputs[key] = snapshot;
           } else if (!isBridgeIn) {
             const upstreamLabel = upstreamNode.title || upstreamNode.comfyClass || `#${upstreamId}`;
             missingUpstream.push(`${upstreamLabel} (#${upstreamId})`);
           }
         }
       }
+      console.debug(`[ComfyTV/run] scoped prompt for #${targetId} ` + JSON.stringify((pm == null ? void 0 : pm.output) ?? {}, null, 1));
       if (missingUpstream.length > 0) {
         const list = [...new Set(missingUpstream)].join(", ");
         const msg = t("error.upstreamNotReadyDetail", { list });
         console.warn(`[ComfyTV/stage] ${msg}`);
-        (_n2 = (_m2 = (_l = app == null ? void 0 : app.extensionManager) == null ? void 0 : _l.toast) == null ? void 0 : _m2.add) == null ? void 0 : _n2.call(_m2, {
+        (_o = (_n2 = (_m2 = app == null ? void 0 : app.extensionManager) == null ? void 0 : _m2.toast) == null ? void 0 : _n2.add) == null ? void 0 : _o.call(_n2, {
           severity: "warn",
           summary: t("error.upstreamNotReady"),
           detail: msg,
@@ -169110,7 +169228,7 @@ function useStageNode(node, kind, variant = "generator") {
       const pid = useProjectStore().currentProjectId || "";
       const refsByNode = /* @__PURE__ */ new Map();
       for (const nid of Object.keys((pm == null ? void 0 : pm.output) ?? {})) {
-        const gn2 = ((_p = (_o = a.graph) == null ? void 0 : _o.getNodeById) == null ? void 0 : _p.call(_o, Number(nid))) ?? ((_r = (_q = a.graph) == null ? void 0 : _q.getNodeById) == null ? void 0 : _r.call(_q, String(nid)));
+        const gn2 = ((_q = (_p = a.graph) == null ? void 0 : _p.getNodeById) == null ? void 0 : _q.call(_p, Number(nid))) ?? ((_s = (_r = a.graph) == null ? void 0 : _r.getNodeById) == null ? void 0 : _s.call(_r, String(nid)));
         const refs = readImageRefs(gn2);
         if (refs.length) refsByNode.set(String(nid), refs);
       }
@@ -169120,7 +169238,7 @@ function useStageNode(node, kind, variant = "generator") {
         if (!obj) continue;
         const refs = refsByNode.get(String(nid));
         if (refs == null ? void 0 : refs.length) {
-          const graphNode = ((_t = (_s = a.graph) == null ? void 0 : _s.getNodeById) == null ? void 0 : _t.call(_s, Number(nid))) ?? ((_v4 = (_u = a.graph) == null ? void 0 : _u.getNodeById) == null ? void 0 : _v4.call(_u, String(nid)));
+          const graphNode = ((_u = (_t = a.graph) == null ? void 0 : _t.getNodeById) == null ? void 0 : _u.call(_t, Number(nid))) ?? ((_w = (_v4 = a.graph) == null ? void 0 : _v4.getNodeById) == null ? void 0 : _w.call(_v4, String(nid)));
           if (nodeAcceptsAutogrowImages(graphNode)) {
             const resolved = [];
             for (const r of refs) {
@@ -169135,7 +169253,7 @@ function useStageNode(node, kind, variant = "generator") {
         }
         const mp = obj.main_prompt;
         if (typeof mp === "string" && mp.includes("@")) {
-          const graphNode = ((_x2 = (_w = a.graph) == null ? void 0 : _w.getNodeById) == null ? void 0 : _x2.call(_w, Number(nid))) ?? ((_z2 = (_y2 = a.graph) == null ? void 0 : _y2.getNodeById) == null ? void 0 : _z2.call(_y2, String(nid)));
+          const graphNode = ((_y2 = (_x2 = a.graph) == null ? void 0 : _x2.getNodeById) == null ? void 0 : _y2.call(_x2, Number(nid))) ?? ((_A = (_z2 = a.graph) == null ? void 0 : _z2.getNodeById) == null ? void 0 : _A.call(_z2, String(nid)));
           const { text: text2, missing } = expandImageTokens(
             mp,
             imageSendOrder(graphNode),
@@ -169149,14 +169267,14 @@ function useStageNode(node, kind, variant = "generator") {
       }
       const serverStore = useServerStore();
       const remoteServerId = serverStore.resolveSelection(
-        (_A = node.properties) == null ? void 0 : _A.comfytv_server
+        (_B = node.properties) == null ? void 0 : _B.comfytv_server
       );
       if (remoteServerId != null && !isBridgeIn) {
         const { ensureRemotePreflight } = useRemotePreflight();
         const cleared = await ensureRemotePreflight(
           remoteServerId,
           String(node.comfyClass || ""),
-          myInputs ?? {}
+          ((_D = (_C = pm == null ? void 0 : pm.output) == null ? void 0 : _C[targetId]) == null ? void 0 : _D.inputs) ?? {}
         );
         if (!cleared) {
           state2.running = false;
@@ -169692,7 +169810,7 @@ const RICH_STAGE_CARDS = {
   "ComfyTV.AnnotateStage": _sfc_main$a,
   "ComfyTV.AudioReactiveStage": _sfc_main$9,
   "ComfyTV.AudioMeterStage": _sfc_main$8,
-  "ComfyTV.FXChainStage": FXChainStageCard
+  "ComfyTV.FXChainStage": _sfc_main$7
 };
 const RICH_STAGE_MIN_HEIGHTS = {
   "ComfyTV.MultiangleStage": 640,
@@ -170140,4 +170258,4 @@ export {
   Box3 as y,
   UnsignedShortType as z
 };
-//# sourceMappingURL=main-BS_PwhGo.mjs.map
+//# sourceMappingURL=main-D2LaTfaT.mjs.map

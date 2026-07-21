@@ -22,9 +22,13 @@ from .inputs import (
     _force_run_token, _project_id_input, _parent_output_id_input,
     _selected_index_input, _main_prompt_input, _custom_params_input,
     _text_template, _image_template, _video_template, _model_template,
-    _material_template, _fxspec_template,
+    _material_template,
 )
-from .fx_spec import build_fx_spec, _fx_spec_only, parse_fx_spec
+from .fx_spec import (
+    build_fx_spec, build_torch_fx_spec, _fx_spec_only, _fx_passthrough,
+    _fx_identity, pack_fx_video, unpack_fx_video, fx_video_url, bake_fx_video,
+    parse_fx_chain, parse_fx_spec,
+)
 from .meta import STAGE_META, _KIND_TO_OUTPUT_TYPE  # noqa: F401 (re-export)
 from .progress import _emit_progress, _fake_run_ticks
 from .emit import (
@@ -72,8 +76,11 @@ __all__ = [
     "_force_run_token", "_project_id_input", "_parent_output_id_input",
     "_selected_index_input", "_main_prompt_input", "_custom_params_input",
     "_text_template", "_image_template", "_video_template", "_model_template",
-    "_material_template", "_fxspec_template",
-    "build_fx_spec", "_fx_spec_only", "parse_fx_spec",
+    "_material_template",
+    "build_fx_spec", "build_torch_fx_spec", "_fx_spec_only", "_fx_passthrough",
+    "_fx_identity", "pack_fx_video", "unpack_fx_video", "fx_video_url",
+    "bake_fx_video",
+    "parse_fx_chain", "parse_fx_spec",
     "_emit_progress", "_fake_run_ticks", "_persist", "_stage_emit_auto",
     "_stage_emit", "_input_file_url", "_pick_image_from_batch",
     "run_stage_workflow", "invoke_runner", "_standard_stage_inputs",

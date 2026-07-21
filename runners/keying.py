@@ -298,13 +298,10 @@ def matte_monitor_video(view_url: str, *, slope: float = 0.5,
                                progress=progress)
 
 
-def morphology_video(view_url: str, *, op: str = 'erode',
-                     size_x: int = 1, size_y: int = 1,
-                     progress=None) -> str:
+def morphology_math(img, *, op: str = 'erode', size_x: int = 1,
+                    size_y: int = 1):
     import torch
 
-    if op not in ('erode', 'dilate', 'open', 'close'):
-        raise RuntimeError(f"morphology: unknown op {op!r}")
     sx = max(0, min(64, int(size_x)))
     sy = max(0, min(64, int(size_y)))
     kx, ky = sx * 2 + 1, sy * 2 + 1
@@ -318,16 +315,25 @@ def morphology_video(view_url: str, *, op: str = 'erode',
             c = -torch.nn.functional.max_pool2d(-c, (ky, kx), stride=1)
         return c.squeeze(0).permute(1, 2, 0)
 
+    if sx == 0 and sy == 0:
+        return img
+    if op == 'erode':
+        return _minmax(img, False)
+    if op == 'dilate':
+        return _minmax(img, True)
+    if op == 'open':
+        return _minmax(_minmax(img, False), True)
+    return _minmax(_minmax(img, True), False)
+
+
+def morphology_video(view_url: str, *, op: str = 'erode',
+                     size_x: int = 1, size_y: int = 1,
+                     progress=None) -> str:
+    if op not in ('erode', 'dilate', 'open', 'close'):
+        raise RuntimeError(f"morphology: unknown op {op!r}")
+
     def frame_fn(img, t):
-        if sx == 0 and sy == 0:
-            return img
-        if op == 'erode':
-            return _minmax(img, False)
-        if op == 'dilate':
-            return _minmax(img, True)
-        if op == 'open':
-            return _minmax(_minmax(img, False), True)
-        return _minmax(_minmax(img, True), False)
+        return morphology_math(img, op=op, size_x=size_x, size_y=size_y)
 
     return torch_process_video(view_url, frame_fn, progress=progress)
 
@@ -702,6 +708,6 @@ def pik_math(img, p, c, in_mask_t=None, out_mask_t=None):
 __all__ = [
     'despill_video', 'color_suppress_video', 'keymix_videos',
     'matte_monitor_video', 'morphology_video', 'keyer_video', 'pik_video',
-    'despill_math', 'color_suppress_math',
+    'despill_math', 'color_suppress_math', 'morphology_math',
     'keyer_params', 'keyer_math', 'pik_params', 'pik_math',
 ]

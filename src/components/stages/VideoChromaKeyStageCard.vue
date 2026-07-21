@@ -108,6 +108,7 @@ const { picking, startLoop, onCanvasClick } = useChromaKeyPicker({
   videoEl,
   canvasEl,
   nodeId: String(props.node.id),
+  node: props.node,
   keyColor,
   similarity,
   blend,

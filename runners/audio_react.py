@@ -126,6 +126,8 @@ def meter_overlay_video(view_url: str, *, meter_w: int = 400,
         enc = outp.add_stream('libx264', rate=round(fps))
         enc.width, enc.height = w, h
         enc.pix_fmt = 'yuv420p'
+        from .media_filter import tag_bt709
+        tag_bt709(enc.codec_context)
         out_a = outp.add_stream_from_template(in_a)
 
         graph = av.filter.Graph()
@@ -135,13 +137,15 @@ def meter_overlay_video(view_url: str, *, meter_w: int = 400,
                         f'rate={round(fps)}:w={mw}:h={mh}:f=0.6:t=0:v=0')
         fmt = graph.add('format', 'rgba')
         ov = graph.add('overlay', f'x={pos[0]}:y={pos[1]}:eval=frame')
+        mat = graph.add('scale', 'out_color_matrix=bt709')
         ofmt = graph.add('format', 'yuv420p')
         sink = graph.add('buffersink')
         vin.link_to(ov, 0, 0)
         ain.link_to(vol, 0, 0)
         vol.link_to(fmt, 0, 0)
         fmt.link_to(ov, 0, 1)
-        ov.link_to(ofmt, 0, 0)
+        ov.link_to(mat, 0, 0)
+        mat.link_to(ofmt, 0, 0)
         ofmt.link_to(sink, 0, 0)
         graph.configure()
 

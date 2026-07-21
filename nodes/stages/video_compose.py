@@ -127,14 +127,30 @@ class VideoTransformStage(io.ComfyNode):
                 pos_x=0.0, pos_y=0.0, scale=1.0, rotation=0.0, skew_x=0.0,
                 motion_blur=0.0, shutter=0.5, shutter_type='centered',
                 shutter_offset=0.0, keyframes="", video="", track=""):
-        _need_video(video, "Video Transform")
         keys = _parse_json(keyframes, [])
         if (track or '').strip():
             keys = _track_to_keyframes(track, keys)
-        if not keys and float(pos_x or 0) == 0 and float(pos_y or 0) == 0 \
-                and float(scale or 1) == 1 and float(rotation or 0) == 0 \
-                and float(skew_x or 0) == 0:
-            raise RuntimeError("Video Transform: everything at identity — move something first.")
+        identity = not keys and float(pos_x or 0) == 0 \
+            and float(pos_y or 0) == 0 and float(scale or 1) == 1 \
+            and float(rotation or 0) == 0 and float(skew_x or 0) == 0
+        if not (track or '').strip():
+            if identity:
+                return _fx_identity(video)
+            fx_spec = build_torch_fx_spec(
+                "ComfyTV.VideoTransformStage", "Video Transform", "video",
+                "transform",
+                {'pos_x': float(pos_x or 0), 'pos_y': float(pos_y or 0),
+                 'scale': _f(scale, 0.01, 10, 1.0),
+                 'rotation': float(rotation or 0),
+                 'skew_x': _f(skew_x, -2, 2, 0.0),
+                 'keyframes': keys or [],
+                 'motion_blur': _f(motion_blur, 0, 4, 0.0),
+                 'shutter': _f(shutter, 0, 4, 0.5),
+                 'shutter_type': shutter_type,
+                 'shutter_offset': _f(shutter_offset, -4, 4, 0.0)})
+            return _fx_passthrough(video, fx_spec)
+        _need_video(video, "Video Transform")
+        video = bake_fx_video(video, progress=_progress_cb(cls))
         payload = transform_video(
             video, translate_x=float(pos_x or 0), translate_y=float(pos_y or 0),
             scale=_f(scale, 0.01, 10, 1.0), rotation_deg=float(rotation or 0),

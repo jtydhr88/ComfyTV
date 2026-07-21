@@ -73,6 +73,27 @@ export interface StageState {
    preparingWorkflow?: boolean
 }
 
+export const FX_PASSTHROUGH_CLASSES = new Set([
+  'ComfyTV.VideoColorStage',
+  'ComfyTV.VideoCurvesStage',
+  'ComfyTV.VideoLUTStage',
+  'ComfyTV.ColorFXStage',
+  'ComfyTV.VideoBlurSharpenStage',
+  'ComfyTV.VideoDenoiseStage',
+  'ComfyTV.VideoDeinterlaceStage',
+  'ComfyTV.VideoStylizeStage',
+  'ComfyTV.HueCorrectStage',
+  'ComfyTV.DespillStage',
+  'ComfyTV.ColorSuppressStage',
+  'ComfyTV.KeyerStage',
+  'ComfyTV.PIKStage',
+  'ComfyTV.MatteMorphStage',
+  'ComfyTV.GlowStage',
+  'ComfyTV.GodRaysStage',
+  'ComfyTV.OldFilmStage',
+  'ComfyTV.VideoTransformStage',
+])
+
 const KIND_TO_TYPE: Record<StageKind, TypedValueType> = {
   text:           'COMFYTV_TEXT',
   image:          'COMFYTV_IMAGE',
@@ -128,6 +149,28 @@ export const useStageStore = defineStore('comfytv-stage', () => {
     bumpStateTick()
   }
 
+  function resolveUpstreamValue(app: any, linkId: unknown, depth = 0): string | null {
+    if (linkId == null || depth > 16) return null
+    const linksMap: any = app?.graph?.links
+    const link = (linksMap && typeof linksMap.get === 'function')
+      ? linksMap.get(linkId)
+      : (linksMap?.[linkId as any] ?? app?.graph?.getLink?.(linkId))
+    const srcNode = link ? app?.graph?.getNodeById?.(link.origin_id) : null
+    const srcState = srcNode ? stages.get(srcNode) : null
+    const srcSlot = Number(link?.origin_slot) || 0
+    if (srcState) {
+      const slotted = srcState.outputs?.[srcSlot]
+      if (slotted != null && String(slotted).length > 0) return String(slotted)
+      if (srcSlot === 0 && srcState.output) return String(srcState.output)
+    }
+    const cls = String(srcNode?.comfyClass ?? srcNode?.type ?? '')
+    if (srcNode && srcSlot === 0 && FX_PASSTHROUGH_CLASSES.has(cls)) {
+      const vin = (srcNode.inputs || []).find((i: any) => i?.name === 'video')
+      if (vin?.link != null) return resolveUpstreamValue(app, vin.link, depth + 1)
+    }
+    return null
+  }
+
   function refreshStageInputs(node: any, state: StageState, app: any) {
     const out: ResolvedInput[] = []
     const inputs = node.inputs || []
@@ -140,25 +183,9 @@ export const useStageStore = defineStore('comfytv-stage', () => {
         continue
       }
 
-      const linksMap: any = app?.graph?.links
-      const link = (linksMap && typeof linksMap.get === 'function')
-        ? linksMap.get(inp.link)
-        : (linksMap?.[inp.link] ?? app?.graph?.getLink?.(inp.link))
-      const srcNode = link ? app?.graph?.getNodeById?.(link.origin_id) : null
-      const srcState = srcNode ? stages.get(srcNode) : null
-      const srcSlot = Number(link?.origin_slot) || 0
-      let upstream: string | null = null
-      if (srcState) {
-        const slotted = srcState.outputs?.[srcSlot]
-        if (slotted != null) {
-          upstream = slotted
-        } else if (srcSlot === 0 && srcState.output) {
-          upstream = srcState.output
-        }
-      }
-
-      if (upstream != null && String(upstream).length > 0) {
-        out.push({ slot, type, source: 'upstream', content: String(upstream) })
+      const upstream = resolveUpstreamValue(app, inp.link)
+      if (upstream != null) {
+        out.push({ slot, type, source: 'upstream', content: upstream })
       } else {
         out.push({ slot, type, source: 'upstream-pending', content: null })
       }
@@ -180,7 +207,8 @@ export const useStageStore = defineStore('comfytv-stage', () => {
     while (state.outputs.length < 1) state.outputs.push(null)
     state.outputs[0] = s
     if (state.outputType === 'COMFYTV_VIDEO' && !isPoolPickerKind(state.kind)
-        && state.variant !== 'loader') {
+        && state.variant !== 'loader'
+        && !state.inputs.some((i) => i.content === s)) {
       void autoProxyOutput(s)
     }
     if (picked !== undefined && picked !== null) {

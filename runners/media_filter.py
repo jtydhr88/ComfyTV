@@ -47,6 +47,20 @@ def _spec_str(specs) -> str:
     return ','.join(n if not a else f"{n}={a}" for n, a in (specs or []))
 
 
+def tag_bt709(codec_context):
+    codec_context.colorspace = 1
+    codec_context.color_primaries = 1
+    codec_context.color_trc = 1
+
+
+def copy_color_tags(src_cc, dst_cc):
+    for attr, unspecified in (('colorspace', 2), ('color_primaries', 2),
+                              ('color_trc', 2), ('color_range', 0)):
+        val = getattr(src_cc, attr, None)
+        if val is not None and val != unspecified:
+            setattr(dst_cc, attr, val)
+
+
 def _build_video_graph(graph, in_v, specs, pix_fmt='yuv420p'):
     src = graph.add_buffer(template=in_v)
     prev = src
@@ -54,8 +68,10 @@ def _build_video_graph(graph, in_v, specs, pix_fmt='yuv420p'):
         f = graph.add(name, args) if args else graph.add(name)
         prev.link_to(f)
         prev = f
+    mat = graph.add('scale', 'out_color_matrix=bt709')
+    prev.link_to(mat)
     fmt = graph.add('format', pix_fmt)
-    prev.link_to(fmt)
+    mat.link_to(fmt)
     sink = graph.add('buffersink')
     fmt.link_to(sink)
     return src, sink
@@ -235,6 +251,7 @@ def filter_video(view_url: str,
                 enc_v.height = frame.height - (frame.height % 2)
                 enc_v.pix_fmt = pix_fmt
                 enc_v.codec_context.time_base = _OUT_TB
+                tag_bt709(enc_v.codec_context)
             t = _frame_time(frame, in_v.time_base)
             if t is None:
                 return
@@ -600,6 +617,7 @@ def xfade_videos(url_a: str, url_b: str, transition: str = 'fade',
         out_v.width, out_v.height = w, h
         out_v.pix_fmt = 'yuv420p'
         out_v.codec_context.time_base = _OUT_TB
+        copy_color_tags(va.codec_context, out_v.codec_context)
 
         has_audio = bool(ca.streams.audio) or bool(cb.streams.audio)
         out_a = _new_aac_stream(outp) if has_audio else None

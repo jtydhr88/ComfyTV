@@ -102,30 +102,30 @@ def test_frame_blend_dispatch(monkeypatch):
     assert calls['shutter']['divisions'] == 4
 
 
-def test_colorfx_spec_building(monkeypatch):
+def test_colorfx_spec_building():
     from ComfyTV.nodes.stages import video_color
-    captured = {}
-    monkeypatch.setattr(video_color, 'filter_video',
-                        lambda url, specs, **kw: captured.setdefault(
-                            'specs', specs) or 'o')
-    monkeypatch.setattr(video_color, '_stage_emit_auto', lambda cls, **kw: {})
-    video_color.ColorFXStage.execute(project_id='p', video='/view?v',
-                                  mode='selectivecolor', sc_reds=0.4,
-                                  sc_blues=-0.2)
-    name, args = captured['specs'][0]
+    from ComfyTV.nodes.stages.common import unpack_fx_video
+
+    def specs_of(out):
+        return unpack_fx_video(out.values[0])[1][-1]['specs']
+
+    out = video_color.ColorFXStage.execute(project_id='p', video='/view?v',
+                                           mode='selectivecolor', sc_reds=0.4,
+                                           sc_blues=-0.2)
+    assert unpack_fx_video(out.values[0])[0] == '/view?v'
+    name, args = specs_of(out)[0]
     assert name == 'selectivecolor'
     assert 'reds=0.4' in args and 'blues=-0.2' in args
 
-    captured.clear()
-    video_color.ColorFXStage.execute(project_id='p', video='/view?v',
-                                  mode='chromashift', shift_rh=4)
-    name, args = captured['specs'][0]
+    out = video_color.ColorFXStage.execute(project_id='p', video='/view?v',
+                                           mode='chromashift', shift_rh=4)
+    name, args = specs_of(out)[0]
     assert name == 'chromashift'
     assert 'crh=4' in args
 
-    with pytest.raises(RuntimeError, match="zero"):
-        video_color.ColorFXStage.execute(project_id='p', video='/view?v',
-                                      mode='chromashift')
+    out = video_color.ColorFXStage.execute(project_id='p', video='/view?v',
+                                           mode='chromashift')
+    assert out.values[0] == '/view?v'
 
 
 def test_annotate_spec_building(monkeypatch):
@@ -176,9 +176,10 @@ def test_transform_shutter_passthrough(monkeypatch):
     monkeypatch.setattr(video_compose, 'transform_video',
                         lambda url, **kw: captured.update(kw) or 'o')
     monkeypatch.setattr(video_compose, '_stage_emit_auto', lambda cls, **kw: {})
+    track = '[{"t": 0.0, "x": 10.0, "y": 0.0, "interp": "linear"}]'
     video_compose.VideoTransformStage.execute(
         project_id='p', video='/view?v', pos_x=10, motion_blur=1.0,
-        shutter=1.5, shutter_type='start')
+        shutter=1.5, shutter_type='start', track=track)
     assert captured['motion_blur'] == pytest.approx(1.0)
     assert captured['shutter'] == pytest.approx(1.5)
     assert captured['shutter_type'] == 'start'

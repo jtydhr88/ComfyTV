@@ -34,12 +34,13 @@
       <span v-if="!sourceVideoUrl" class="ctv:text-muted-foreground">{{ $t('videoTrim.noInputVideo') }}</span>
       <span v-else-if="state.running" class="ctv:text-muted-foreground">{{ $t('fx.processing') }}</span>
       <span v-else-if="state.output" class="ctv:text-success-background">{{ $t('fx.done') }}</span>
-      <span v-else class="ctv:text-muted-foreground">{{ $t('fx.adjustThenRun') }}</span>
+      <span v-else class="ctv:text-muted-foreground">{{ $t('fx.chainMode') }}</span>
     </div>
 
     <StageCard
       :state="state"
       :node="node"
+      hide-run-button
       :on-run-request="onRunRequest"
       :on-cancel-request="onCancelRequest"
       :on-disconnect="onDisconnect"
@@ -59,7 +60,8 @@ import FxChips from '@/components/widgets/fx/FxChips.vue'
 import CurvesCanvas from '@/components/widgets/fx/CurvesCanvas.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
 import { useHueCorrectCurves } from '@/composables/stages/useHueCorrectCurves'
-import { useVideoHueCorrectPreview } from '@/composables/stages/useVideoHueCorrectPreview'
+import { useChainedFxPreview } from '@/composables/stages/useChainedFxPreview'
+import { VideoHueCorrectRenderer } from '@/widgets/glsl/videoHueCorrectRenderer'
 import { useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
 
 const props = defineProps<{
@@ -107,14 +109,16 @@ const playerRef = ref<InstanceType<typeof VideoPlayerLite> | null>(null)
 const videoEl = computed<HTMLVideoElement | null>(() => playerRef.value?.videoEl ?? null)
 const previewCanvas = ref<HTMLCanvasElement | null>(null)
 
-const { supported } = useVideoHueCorrectPreview({
+const { supported } = useChainedFxPreview({
   videoEl,
   canvasEl: previewCanvas,
   nodeId: String(props.node.id),
+  node: props.node,
   params: () => ({
     curves: curves.value,
     satThrsh: satThrsh.value,
     luminanceMix: luminanceMix.value,
   }),
+  createRenderer: () => new VideoHueCorrectRenderer(),
 })
 </script>

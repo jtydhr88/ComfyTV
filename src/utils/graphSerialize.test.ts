@@ -27,6 +27,32 @@ describe('collectReachableNodeIds', () => {
     expect([...reachable]).toEqual([3])
   })
 
+  it('includes the chainable fx upstream for non-bridge targets', () => {
+    const src = { id: 1, comfyClass: 'ComfyTV.VideoLoaderStage', inputs: [] }
+    const fx1 = { id: 2, comfyClass: 'ComfyTV.VideoCurvesStage', inputs: [{ name: 'video', link: 10 }] }
+    const fx2 = { id: 3, comfyClass: 'ComfyTV.VideoColorStage', inputs: [{ name: 'video', link: 20 }] }
+    const target = { id: 4, comfyClass: 'ComfyTV.FXChainStage', inputs: [{ name: 'video', link: 30 }] }
+    const graph = makeGraph([src, fx1, fx2, target])
+    graph.links.set(30, { origin_id: 3 })
+    graph.links.set(20, { origin_id: 2 })
+    graph.links.set(10, { origin_id: 1 })
+    const reachable = collectReachableNodeIds({ graph }, target)
+    expect([...reachable].sort()).toEqual([2, 3, 4])
+  })
+
+  it('does not cross a keyer whose side inputs are wired (renders locally)', () => {
+    const keyer = {
+      id: 2,
+      comfyClass: 'ComfyTV.KeyerStage',
+      inputs: [{ name: 'video', link: null }, { name: 'in_mask', link: 7 }],
+    }
+    const target = { id: 3, comfyClass: 'ComfyTV.FXChainStage', inputs: [{ name: 'video', link: 30 }] }
+    const graph = makeGraph([keyer, target])
+    graph.links.set(30, { origin_id: 2 })
+    const reachable = collectReachableNodeIds({ graph }, target)
+    expect([...reachable]).toEqual([3])
+  })
+
   it('walks upstream links for BridgeTo nodes', () => {
     const src = { id: 1, comfyClass: 'X', inputs: [] }
     const mid = { id: 2, comfyClass: 'Y', inputs: [{ link: 10 }] }

@@ -61,6 +61,7 @@
     <StageCard
       :state="state"
       :node="node"
+      hide-run-button
       :on-run-request="onRunRequest"
       :on-cancel-request="onCancelRequest"
       :on-disconnect="onDisconnect"
@@ -80,7 +81,8 @@ import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import ColorWheel from '@/components/widgets/fx/ColorWheel.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
 import { colorPreviewStyle } from '@/composables/stages/videoColorPreview'
-import { useVideoColorPreview } from '@/composables/stages/useVideoColorPreview'
+import { useChainedFxPreview } from '@/composables/stages/useChainedFxPreview'
+import { VideoColorRenderer } from '@/widgets/glsl/videoColorRenderer'
 import type { Rgb, VideoColorParams } from '@/composables/stages/videoColorMath'
 import { useBoolWidget, useNumWidget } from '@/composables/widgets/useWidgetModel'
 import { LUMA_STOPS, SAT_STOPS, HUE_STOPS, TEMP_KELVIN_STOPS } from '@/components/widgets/colorStops'
@@ -158,10 +160,12 @@ function previewParams(): Partial<VideoColorParams> {
   }
 }
 
-const { supported } = useVideoColorPreview({
+const { supported } = useChainedFxPreview({
   videoEl: previewVideoEl,
   canvasEl: previewCanvas,
   nodeId: String(props.node.id),
+  node: props.node,
+  createRenderer: () => new VideoColorRenderer(),
   params: previewParams,
 })
 

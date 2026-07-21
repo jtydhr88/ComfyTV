@@ -168,9 +168,12 @@ def torch_process_video(view_url: str, frame_fn, *, progress=None,
                 enc.width = tensor.shape[1] - (tensor.shape[1] % 2)
                 enc.height = tensor.shape[0] - (tensor.shape[0] % 2)
                 enc.codec_context.time_base = _OUT_TB
+                from .media_filter import tag_bt709
+                tag_bt709(enc.codec_context)
             ch = 4 if out_alpha else 3
             nf = _from_tensor(tensor[:enc.height, :enc.width, :ch])
-            nf = nf.reformat(format='yuva420p' if out_alpha else 'yuv420p')
+            nf = nf.reformat(format='yuva420p' if out_alpha else 'yuv420p',
+                             dst_colorspace='ITU709')
             nf.pts = int(round(t / _OUT_TB))
             nf.time_base = _OUT_TB
             for pkt in enc.encode(nf):
@@ -228,14 +231,12 @@ def shutter_samples(t, motion_blur, shutter, shutter_type, shutter_offset,
     return out
 
 
-def transform_video(view_url: str, *, translate_x=0.0, translate_y=0.0,
-                    scale=1.0, rotation_deg=0.0, skew_x=0.0,
-                    keyframes=None, motion_blur=0.0, shutter=0.5,
-                    shutter_type='centered', shutter_offset=0.0,
-                    filter_mode='bilinear', progress=None) -> str:
-    info = get_video_info(view_url)
-    w, h = info['width'], info['height']
-    cx, cy = w / 2.0, h / 2.0
+def build_transform_frame_fn(width, height, fps, *, translate_x=0.0,
+                             translate_y=0.0, scale=1.0, rotation_deg=0.0,
+                             skew_x=0.0, keyframes=None, motion_blur=0.0,
+                             shutter=0.5, shutter_type='centered',
+                             shutter_offset=0.0):
+    cx, cy = width / 2.0, height / 2.0
 
     def curves_from(keys, field, default):
         if not keys:
@@ -256,8 +257,6 @@ def transform_video(view_url: str, *, translate_x=0.0, translate_y=0.0,
             -math.radians(kr.value(t)), cx, cy)
         return np.linalg.inv(m)
 
-    fps = info['fps'] or 24
-
     def frame_fn(tensor, t):
         device = tensor.device
         times = shutter_samples(t, motion_blur, shutter, shutter_type,
@@ -270,6 +269,21 @@ def transform_video(view_url: str, *, translate_x=0.0, translate_y=0.0,
             acc = wf if acc is None else acc + wf
         return acc / len(times)
 
+    return frame_fn
+
+
+def transform_video(view_url: str, *, translate_x=0.0, translate_y=0.0,
+                    scale=1.0, rotation_deg=0.0, skew_x=0.0,
+                    keyframes=None, motion_blur=0.0, shutter=0.5,
+                    shutter_type='centered', shutter_offset=0.0,
+                    filter_mode='bilinear', progress=None) -> str:
+    info = get_video_info(view_url)
+    frame_fn = build_transform_frame_fn(
+        info['width'], info['height'], info['fps'] or 24,
+        translate_x=translate_x, translate_y=translate_y, scale=scale,
+        rotation_deg=rotation_deg, skew_x=skew_x, keyframes=keyframes,
+        motion_blur=motion_blur, shutter=shutter, shutter_type=shutter_type,
+        shutter_offset=shutter_offset)
     return torch_process_video(view_url, frame_fn, progress=progress)
 
 

@@ -625,13 +625,16 @@ export function useStageNode(
         : await buildScopedPrompt(a, collectReachableNodeIds(a, node))
 
       const targetId = String(node.id)
-      const myInputs = pm?.output?.[targetId]?.inputs
       const missingUpstream: string[] = []
-      if (myInputs) {
-        for (const key of Object.keys(myInputs)) {
-          const val = myInputs[key]
+      const promptNodeIds = isBridgeIn ? [targetId] : Object.keys(pm?.output ?? {})
+      for (const nid of promptNodeIds) {
+        const nodeInputs = pm?.output?.[nid]?.inputs
+        if (!nodeInputs) continue
+        for (const key of Object.keys(nodeInputs)) {
+          const val = nodeInputs[key]
           if (!Array.isArray(val) || val.length !== 2) continue
           const upstreamId = val[0]
+          if (!isBridgeIn && pm?.output?.[String(upstreamId)]) continue
           const upstreamSlot = Number(val[1]) || 0
           const upstreamNode = a.graph?.getNodeById?.(Number(upstreamId))
                             ?? a.graph?.getNodeById?.(String(upstreamId))
@@ -647,7 +650,7 @@ export function useStageNode(
             }
           }
           if (snapshot != null && snapshot !== '') {
-            myInputs[key] = snapshot
+            nodeInputs[key] = snapshot
           } else if (!isBridgeIn) {
             const upstreamLabel = upstreamNode.title
                                   || upstreamNode.comfyClass
@@ -656,6 +659,9 @@ export function useStageNode(
           }
         }
       }
+
+      console.debug(`[ComfyTV/run] scoped prompt for #${targetId} `
+                    + JSON.stringify(pm?.output ?? {}, null, 1))
 
       if (missingUpstream.length > 0) {
         const list = [...new Set(missingUpstream)].join(', ')
@@ -728,7 +734,7 @@ export function useStageNode(
         const cleared = await ensureRemotePreflight(
           remoteServerId,
           String(node.comfyClass || ''),
-          (myInputs ?? {}) as Record<string, unknown>,
+          (pm?.output?.[targetId]?.inputs ?? {}) as Record<string, unknown>,
         )
         if (!cleared) {
           state.running = false

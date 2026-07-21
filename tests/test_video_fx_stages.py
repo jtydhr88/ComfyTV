@@ -78,10 +78,11 @@ class TestExecute:
         cls.execute(project_id="p1", exposure=0.5, saturation=0.3,
                     shadows_r=0.1, video=clip)
 
-    def test_color_neutral_rejected(self, clip):
+    def test_color_neutral_is_identity(self, clip):
         cls = _classes()["VideoColorStage"]
-        with pytest.raises(RuntimeError, match="neutral"):
-            cls.execute(project_id="p1", video=clip)
+        out = cls.execute(project_id="p1", video=clip)
+        assert out.values[0] == clip
+        assert out.ui == {'output': [clip]}
 
     def test_color_whitepoint_above_one(self, clip):
         cls = _classes()["VideoColorStage"]
@@ -184,11 +185,7 @@ class TestExecute:
                    {'mode': 'grayworld'}):
             cls.execute(project_id="p1", video=clip, **kw)
 
-    def test_no_video_emits_spec_only(self):
-        import json
+    def test_no_video_rejected(self):
         cls = _classes()["VideoColorStage"]
-        out = cls.execute(project_id="p1", exposure=1.0, video="")
-        assert out.values[0] == ""
-        data = json.loads(out.values[1])
-        assert data["kind"] == "ComfyTV.VideoColorStage"
-        assert data["specs"][0][0] == "exposure"
+        with pytest.raises(RuntimeError, match="upstream video"):
+            cls.execute(project_id="p1", exposure=1.0, video="")

@@ -1610,14 +1610,8 @@
   },
   "fxChain": {
     "title": "特效链",
-    "empty": "连接 FX 节点的 fx_spec 输出以构建特效链",
-    "moveUp": "上移",
-    "moveDown": "下移",
-    "unknown": "未知特效",
-    "domain": {
-      "video": "视频",
-      "audio": "音频"
-    }
+    "empty": "沿 video 线把 FX 节点串联接入本节点即可成链",
+    "noPreview": "无实时预览"
   },
   "fxPreview": {
     "run": "预览片段",
@@ -1631,6 +1625,7 @@
     "adjustThenRun": "调整参数后点击 Run",
     "fullscreen": "全屏编辑",
     "exitFullscreen": "退出全屏",
+    "chainMode": "自由调整——由下游 FX Chain 节点一次渲染",
     "makeProxy": "PROXY?",
     "makeProxyHint": "源文件较大——生成轻量代理让预览流畅（运行仍使用原片）",
     "needsTwoInputs": "需要接入两个视频（A 和 B）",

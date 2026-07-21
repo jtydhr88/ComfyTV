@@ -78,12 +78,13 @@
       <span v-if="!sourceVideoUrl" class="ctv:text-muted-foreground">{{ $t('videoTrim.noInputVideo') }}</span>
       <span v-else-if="state.running" class="ctv:text-muted-foreground">{{ $t('fx.processing') }}</span>
       <span v-else-if="state.output" class="ctv:text-success-background">{{ $t('fx.done') }}</span>
-      <span v-else class="ctv:text-muted-foreground">{{ $t('fx.adjustThenRun') }}</span>
+      <span v-else class="ctv:text-muted-foreground">{{ $t('fx.chainMode') }}</span>
     </div>
 
     <StageCard
       :state="state"
       :node="node"
+      hide-run-button
       :on-run-request="onRunRequest"
       :on-cancel-request="onCancelRequest"
       :on-disconnect="onDisconnect"

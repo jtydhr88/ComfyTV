@@ -115,6 +115,8 @@ def propagate_mask_video(view_url: str, mask_url: str, *, t_ref: float = 0.0,
         enc.width, enc.height = w, h
         enc.pix_fmt = 'yuv420p'
         enc.codec_context.time_base = _OUT_TB
+        from .media_filter import tag_bt709
+        tag_bt709(enc.codec_context)
 
         def _emit(frame_np, t):
             if invert:
@@ -122,7 +124,7 @@ def propagate_mask_video(view_url: str, mask_url: str, *, t_ref: float = 0.0,
             arr = (frame_np * 255).byte().cpu().numpy()
             rgb = np.ascontiguousarray(np.repeat(arr[..., None], 3, axis=2))
             frame = av.VideoFrame.from_ndarray(rgb, format='rgb24')
-            frame = frame.reformat(format='yuv420p')
+            frame = frame.reformat(format='yuv420p', dst_colorspace='ITU709')
             frame.pts = int(round(t / _OUT_TB))
             frame.time_base = _OUT_TB
             for pkt in enc.encode(frame):

@@ -36,12 +36,13 @@
       <span v-if="!sourceVideoUrl" class="ctv:text-muted-foreground">{{ $t('videoTrim.noInputVideo') }}</span>
       <span v-else-if="state.running" class="ctv:text-muted-foreground">{{ $t('fx.processing') }}</span>
       <span v-else-if="state.output" class="ctv:text-success-background">{{ $t('fx.done') }}</span>
-      <span v-else class="ctv:text-muted-foreground">{{ $t('fx.adjustThenRun') }}</span>
+      <span v-else class="ctv:text-muted-foreground">{{ $t('fx.chainMode') }}</span>
     </div>
 
     <StageCard
       :state="state"
       :node="node"
+      hide-run-button
       :on-run-request="onRunRequest"
       :on-cancel-request="onCancelRequest"
       :on-disconnect="onDisconnect"
@@ -61,7 +62,8 @@ import FxChips from '@/components/widgets/fx/FxChips.vue'
 import CurvesCanvas from '@/components/widgets/fx/CurvesCanvas.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
 import { useCurveChannels } from '@/composables/stages/useCurveChannels'
-import { useVideoCurvesPreview } from '@/composables/stages/useVideoCurvesPreview'
+import { useChainedFxPreview } from '@/composables/stages/useChainedFxPreview'
+import { VideoCurvesRenderer } from '@/widgets/glsl/videoCurvesRenderer'
 import type { VideoCurvesParams } from '@/composables/stages/videoCurvesMath'
 import { useStrWidget } from '@/composables/widgets/useWidgetModel'
 
@@ -105,10 +107,12 @@ function previewParams(): Partial<VideoCurvesParams> {
   }
 }
 
-const { supported } = useVideoCurvesPreview({
+const { supported } = useChainedFxPreview({
   videoEl: previewVideoEl,
   canvasEl: previewCanvas,
   nodeId: String(props.node.id),
+  node: props.node,
+  createRenderer: () => new VideoCurvesRenderer(),
   params: previewParams,
 })
 </script>

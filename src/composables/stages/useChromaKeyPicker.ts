@@ -1,6 +1,11 @@
 import { onBeforeUnmount, ref, type Ref } from 'vue'
 import { registerPreviewSource } from '@/composables/stages/previewBus'
+import {
+  createChainCompositor,
+  type ChainCompositor,
+} from '@/composables/stages/useChainedFxPreview'
 import { computeFit } from '@/composables/widgets/useVideoViewport'
+import type { FxPreviewSource } from '@/widgets/glsl/fxPreviewSource'
 
 export const CHROMA_PREVIEW_W = 320
 export const CHROMA_PREVIEW_H = 180
@@ -77,9 +82,13 @@ export function applyMatte(d: Uint8ClampedArray): void {
   }
 }
 
-export function frameFit(v: HTMLVideoElement): { dx: number; dy: number; dw: number; dh: number } {
-  const mw = v.videoWidth || 16
-  const mh = v.videoHeight || 9
+export function frameFit(src: FxPreviewSource): { dx: number; dy: number; dw: number; dh: number } {
+  const v = src as HTMLVideoElement
+  const isVideo = typeof v.videoWidth === 'number'
+  const w = isVideo ? v.videoWidth : (src as HTMLCanvasElement).width
+  const h = isVideo ? v.videoHeight : (src as HTMLCanvasElement).height
+  const mw = w || 16
+  const mh = h || 9
   const f = computeFit(CHROMA_PREVIEW_W, CHROMA_PREVIEW_H, mw, mh)
   return { dx: f.offX, dy: f.offY, dw: mw * f.scale, dh: mh * f.scale }
 }
@@ -88,6 +97,7 @@ export interface UseChromaKeyPickerOptions {
   videoEl: Ref<HTMLVideoElement | null>
   canvasEl: Ref<HTMLCanvasElement | null>
   nodeId?: string
+  node?: unknown
   keyColor: Ref<string>
   similarity: Ref<number>
   blend: Ref<number>
@@ -102,7 +112,17 @@ export function useChromaKeyPicker(opts: UseChromaKeyPickerOptions) {
   const unregister = opts.nodeId != null
     ? registerPreviewSource(opts.nodeId, () => opts.canvasEl.value)
     : null
+  const compositor: ChainCompositor | null = opts.node != null
+    ? createChainCompositor(opts.node)
+    : null
   let rafId = 0
+
+  function composedSource(): FxPreviewSource | null {
+    const v = opts.videoEl.value
+    if (!v || v.readyState < 2) return null
+    if (compositor == null) return v
+    return compositor.render(v) ?? v
+  }
 
   function renderFrame(): void {
     const v = opts.videoEl.value
@@ -114,8 +134,9 @@ export function useChromaKeyPicker(opts: UseChromaKeyPickerOptions) {
     }
     if (c.width !== CHROMA_PREVIEW_W) { c.width = CHROMA_PREVIEW_W; c.height = CHROMA_PREVIEW_H }
     ctx.clearRect(0, 0, CHROMA_PREVIEW_W, CHROMA_PREVIEW_H)
-    const { dx, dy, dw, dh } = frameFit(v)
-    ctx.drawImage(v, dx, dy, dw, dh)
+    const src = composedSource() ?? v
+    const { dx, dy, dw, dh } = frameFit(src)
+    ctx.drawImage(src as CanvasImageSource, dx, dy, dw, dh)
 
     const img = ctx.getImageData(0, 0, CHROMA_PREVIEW_W, CHROMA_PREVIEW_H)
     applyChromaKey(img.data, opts.keyColor.value, opts.similarity.value, opts.blend.value)
@@ -146,12 +167,13 @@ export function useChromaKeyPicker(opts: UseChromaKeyPickerOptions) {
     const c = opts.canvasEl.value
     const v = opts.videoEl.value
     if (!c || !v || v.readyState < 2) return
+    const src = composedSource() ?? v
     const tmp = document.createElement('canvas')
     tmp.width = CHROMA_PREVIEW_W
     tmp.height = CHROMA_PREVIEW_H
     const tctx = tmp.getContext('2d')!
-    const { dx, dy, dw, dh } = frameFit(v)
-    tctx.drawImage(v, dx, dy, dw, dh)
+    const { dx, dy, dw, dh } = frameFit(src)
+    tctx.drawImage(src as CanvasImageSource, dx, dy, dw, dh)
     const rect = c.getBoundingClientRect()
     if (!rect.width || !rect.height) return
     const fit = computeFit(rect.width, rect.height, CHROMA_PREVIEW_W, CHROMA_PREVIEW_H)
@@ -166,6 +188,7 @@ export function useChromaKeyPicker(opts: UseChromaKeyPickerOptions) {
   onBeforeUnmount(() => {
     unregister?.()
     cancelAnimationFrame(rafId)
+    compositor?.dispose()
   })
 
   return { picking, playing, startLoop, togglePlay, onCanvasClick }

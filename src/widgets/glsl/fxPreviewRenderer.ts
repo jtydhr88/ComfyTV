@@ -2,6 +2,10 @@ import {
   useGLSLRenderer,
   type GLSLRendererConfig,
 } from '@/widgets/glsl/useGLSLRenderer'
+import {
+  fxSourceSize,
+  type FxPreviewSource,
+} from '@/widgets/glsl/fxPreviewSource'
 
 export type GLSLRendererHandle = ReturnType<typeof useGLSLRenderer>
 
@@ -26,12 +30,11 @@ export class FxPreviewRenderer<TParams> {
   }
 
   renderToCanvas(
-    video: HTMLVideoElement,
+    video: FxPreviewSource,
     params: Partial<TParams>,
     target: HTMLCanvasElement,
   ): boolean {
-    const w = Math.max(2, video.videoWidth)
-    const h = Math.max(2, video.videoHeight)
+    const { w, h } = fxSourceSize(video)
 
     try {
       if (!this.ready) {

@@ -27,14 +27,15 @@ class VideoBlurSharpenStage(io.ComfyNode):
                               tooltip="bilateral sigmaR — lower keeps edges harder"),
                 COMFYTV_VIDEO.Input("video", optional=True),
             ],
-            outputs=[COMFYTV_VIDEO.Output("video"), COMFYTV_FXSPEC.Output("fx_spec")],
+            outputs=[COMFYTV_VIDEO.Output("video")],
             is_output_node=True,
             hidden=[io.Hidden.unique_id],
         )
 
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
-                mode='gaussian', amount=2.0, size=5, edge_preserve=0.1, video=""):
+                mode='gaussian', amount=2.0, size=5, edge_preserve=0.1,
+                video=""):
         amount = _f(amount, 0.0, 20.0, 2.0)
         size = int(size or 5)
         size += (size + 1) % 2
@@ -53,14 +54,11 @@ class VideoBlurSharpenStage(io.ComfyNode):
                     f'luma_msize_x={size}:luma_msize_y={size}:luma_amount={_f(amount, 0.0, 5.0, 1.0)}')
         else:
             raise RuntimeError(f"Blur / Sharpen: unknown mode {mode!r}")
-        fx_spec = build_fx_spec("ComfyTV.VideoBlurSharpenStage", "Blur / Sharpen",
-                                "video", [spec])
-        if not (video or '').strip():
-            return _fx_spec_only(fx_spec)
-        payload = filter_video(video, [spec], progress=_progress_cb(cls))
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id,
-                                extra_outputs=(fx_spec,))
+        fx_spec = build_fx_spec(
+            "ComfyTV.VideoBlurSharpenStage", "Blur / Sharpen", "video", [spec],
+            params={'mode': mode, 'amount': amount, 'size': size,
+                    'edge_preserve': _f(edge_preserve, 0.01, 1.0, 0.1)})
+        return _fx_passthrough(video, fx_spec)
 
 
 class VideoDenoiseStage(io.ComfyNode):
@@ -79,7 +77,7 @@ class VideoDenoiseStage(io.ComfyNode):
                 _hidden_float("strength", 0.3, 0.0, 1.0),
                 COMFYTV_VIDEO.Input("video", optional=True),
             ],
-            outputs=[COMFYTV_VIDEO.Output("video"), COMFYTV_FXSPEC.Output("fx_spec")],
+            outputs=[COMFYTV_VIDEO.Output("video")],
             is_output_node=True,
             hidden=[io.Hidden.unique_id],
         )
@@ -105,14 +103,10 @@ class VideoDenoiseStage(io.ComfyNode):
             spec = ('gradfun', f'strength={0.51 + s * 10.0:.2f}:radius=16')
         else:
             raise RuntimeError(f"Video Denoise: unknown method {method!r}")
-        fx_spec = build_fx_spec("ComfyTV.VideoDenoiseStage", "Video Denoise",
-                                "video", [spec])
-        if not (video or '').strip():
-            return _fx_spec_only(fx_spec)
-        payload = filter_video(video, [spec], progress=_progress_cb(cls))
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id,
-                                extra_outputs=(fx_spec,))
+        fx_spec = build_fx_spec(
+            "ComfyTV.VideoDenoiseStage", "Video Denoise", "video", [spec],
+            params={'method': method, 'strength': s})
+        return _fx_passthrough(video, fx_spec)
 
 
 class VideoInterpolateStage(io.ComfyNode):
@@ -181,7 +175,7 @@ class VideoDeinterlaceStage(io.ComfyNode):
                               "field doubles the output frame rate"),
                 COMFYTV_VIDEO.Input("video", optional=True),
             ],
-            outputs=[COMFYTV_VIDEO.Output("video"), COMFYTV_FXSPEC.Output("fx_spec")],
+            outputs=[COMFYTV_VIDEO.Output("video")],
             is_output_node=True,
             hidden=[io.Hidden.unique_id],
         )
@@ -197,17 +191,12 @@ class VideoDeinterlaceStage(io.ComfyNode):
             spec = ('w3fdif', None)
         else:
             raise RuntimeError(f"Deinterlace: unknown method {method!r}")
-        fx_spec = build_fx_spec("ComfyTV.VideoDeinterlaceStage", "Deinterlace",
-                                "video", [spec])
-        if not (video or '').strip():
-            return _fx_spec_only(fx_spec)
-        info = get_video_info(video)
-        out_fps = info['fps'] * 2 if (rate == 'field' or method == 'w3fdif') else info['fps']
-        payload = filter_video(video, [spec], out_fps=out_fps,
-                               progress=_progress_cb(cls))
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id,
-                                extra_outputs=(fx_spec,))
+        doubles = rate == 'field' or method == 'w3fdif'
+        fx_spec = build_fx_spec(
+            "ComfyTV.VideoDeinterlaceStage", "Deinterlace", "video", [spec],
+            params={'method': method, 'rate': rate},
+            out_fps_mult=2 if doubles else None)
+        return _fx_passthrough(video, fx_spec)
 
 
 class VideoStabilizeStage(io.ComfyNode):

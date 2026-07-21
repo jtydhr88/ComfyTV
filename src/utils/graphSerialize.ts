@@ -1,3 +1,5 @@
+import { isChainable } from '@/composables/stages/useChainedFxPreview'
+
 const LG_MODE_NEVER = 2
 const LG_MODE_BYPASS = 4
 
@@ -7,7 +9,6 @@ export function collectReachableNodeIds(app: any, target: any): Set<number> {
 
   const isBridgeIn = typeof target?.comfyClass === 'string'
                      && target.comfyClass.startsWith('ComfyTV.BridgeTo')
-  if (!isBridgeIn) return reachable
 
   const linksMap: any = app?.graph?.links
   const getLink = (linkId: number) =>
@@ -25,10 +26,10 @@ export function collectReachableNodeIds(app: any, target: any): Set<number> {
       const srcId = link?.origin_id
       if (srcId == null) continue
       const srcNode = app?.graph?.getNodeById?.(srcId)
-      if (srcNode && !reachable.has(srcNode.id)) {
-        reachable.add(srcNode.id)
-        queue.push(srcNode)
-      }
+      if (!srcNode || reachable.has(srcNode.id)) continue
+      if (!isBridgeIn && !isChainable(srcNode)) continue
+      reachable.add(srcNode.id)
+      queue.push(srcNode)
     }
   }
   return reachable

@@ -97,8 +97,27 @@ class PIKStage(io.ComfyNode):
                 replace_mode='soft', replace_color="#808080",
                 output='alpha', video="", clean_plate_video="",
                 clean_plate="", in_mask="", out_mask="", bg_video=""):
-        _need_video(video, "PIK Keyer")
         plate = (clean_plate_video or '').strip() or (clean_plate or '').strip()
+        sides = plate or any((s or '').strip()
+                             for s in (in_mask, out_mask, bg_video))
+        if not sides:
+            fx_spec = build_torch_fx_spec(
+                "ComfyTV.PIKStage", "PIK Keyer", "video", "pik",
+                {'screen': screen, 'pick_color': pick_color or '#00FF00',
+                 'red_weight': _f(red_weight, -1, 2, 0.5),
+                 'blue_green_weight': _f(blue_green_weight, -1, 2, 0.5),
+                 'alpha_bias': alpha_bias or '#808080',
+                 'despill_bias': despill_bias or '#808080',
+                 'use_alpha_bias': bool(use_alpha_bias),
+                 'screen_subtraction': bool(screen_subtraction),
+                 'clip_black': _f(clip_black, 0, 1, 0.0),
+                 'clip_white': _f(clip_white, 0, 1, 1.0),
+                 'replace_mode': replace_mode,
+                 'replace_color': replace_color or '#808080',
+                 'output': output})
+            return _fx_passthrough(video, fx_spec)
+        _need_video(video, "PIK Keyer")
+        video = bake_fx_video(video, progress=_progress_cb(cls))
         payload = pik_video(
             video, screen=screen, pick_color=pick_color or '#00FF00',
             clean_plate_url=plate,
@@ -156,7 +175,22 @@ class KeyerStage(io.ComfyNode):
                 softness_upper=0.5, despill=1.0, despill_angle=120.0,
                 output='matte', video="", in_mask="", out_mask="",
                 bg_video=""):
+        sides = any((s or '').strip() for s in (in_mask, out_mask, bg_video))
+        if not sides:
+            fx_spec = build_torch_fx_spec(
+                "ComfyTV.KeyerStage", "Keyer", "video", "keyer",
+                {'mode': mode, 'key_color': key_color or '#000000',
+                 'softness_lower': _f(softness_lower, -1, 0, -0.5),
+                 'tolerance_lower': _f(tolerance_lower, -1, 0, 0.0),
+                 'center': _f(center, 0, 1, 1.0),
+                 'tolerance_upper': _f(tolerance_upper, 0, 1, 0.0),
+                 'softness_upper': _f(softness_upper, 0, 1, 0.5),
+                 'despill': _f(despill, 0, 2, 1.0),
+                 'despill_angle': _f(despill_angle, 0, 180, 120.0),
+                 'output': output})
+            return _fx_passthrough(video, fx_spec)
         _need_video(video, "Keyer")
+        video = bake_fx_video(video, progress=_progress_cb(cls))
         payload = keyer_video(
             video, mode=mode, key_color=key_color or '#000000',
             softness_lower=_f(softness_lower, -1, 0, -0.5),
@@ -204,18 +238,16 @@ class DespillStage(io.ComfyNode):
                 screen='green', spill_mix=0.5, expand=0.0, red_scale=0.0,
                 green_scale=-1.0, blue_scale=0.0, brightness=0.0,
                 output_spillmap=False, video=""):
-        _need_video(video, "Despill")
-        payload = despill_video(
-            video, screen=screen, spill_mix=_f(spill_mix, 0, 1, 0.5),
-            expand=_f(expand, 0, 1, 0.0),
-            red_scale=_f(red_scale, -2, 2, 0.0),
-            green_scale=_f(green_scale, -2, 2, -1.0),
-            blue_scale=_f(blue_scale, -2, 2, 0.0),
-            brightness=_f(brightness, -1, 1, 0.0),
-            output_spillmap=bool(output_spillmap),
-            progress=_progress_cb(cls))
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        fx_spec = build_torch_fx_spec(
+            "ComfyTV.DespillStage", "Despill", "video", "despill",
+            {'screen': screen, 'spill_mix': _f(spill_mix, 0, 1, 0.5),
+             'expand': _f(expand, 0, 1, 0.0),
+             'red_scale': _f(red_scale, -2, 2, 0.0),
+             'green_scale': _f(green_scale, -2, 2, -1.0),
+             'blue_scale': _f(blue_scale, -2, 2, 0.0),
+             'brightness': _f(brightness, -1, 1, 0.0),
+             'output_spillmap': bool(output_spillmap)})
+        return _fx_passthrough(video, fx_spec)
 
 
 class ColorSuppressStage(io.ComfyNode):
@@ -248,18 +280,16 @@ class ColorSuppressStage(io.ComfyNode):
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                 red=0.0, green=0.0, blue=0.0, cyan=0.0, magenta=0.0,
                 yellow=0.0, preserve_luma=False, output='image', video=""):
-        _need_video(video, "Color Suppress")
         vals = {k: _f(v, 0, 1, 0.0) for k, v in
                 (('red', red), ('green', green), ('blue', blue),
                  ('cyan', cyan), ('magenta', magenta), ('yellow', yellow))}
         if not any(vals.values()):
-            raise RuntimeError(
-                "Color Suppress: all amounts are zero — raise one first.")
-        payload = color_suppress_video(
-            video, preserve_luma=bool(preserve_luma), output=output,
-            progress=_progress_cb(cls), **vals)
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+            return _fx_identity(video)
+        fx_spec = build_torch_fx_spec(
+            "ComfyTV.ColorSuppressStage", "Color Suppress", "video",
+            "color_suppress",
+            {**vals, 'preserve_luma': bool(preserve_luma), 'output': output})
+        return _fx_passthrough(video, fx_spec)
 
 
 class KeyMixStage(io.ComfyNode):
@@ -355,10 +385,11 @@ class MatteMorphStage(io.ComfyNode):
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                 op='erode', size_x=1, size_y=1, video=""):
-        _need_video(video, "Matte Morphology")
-        payload = morphology_video(
-            video, op=op, size_x=min(64, max(0, int(size_x or 0))),
-            size_y=min(64, max(0, int(size_y or 0))),
-            progress=_progress_cb(cls))
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        if op not in ('erode', 'dilate', 'open', 'close'):
+            raise RuntimeError(f"Matte Morphology: unknown op {op!r}")
+        fx_spec = build_torch_fx_spec(
+            "ComfyTV.MatteMorphStage", "Matte Morphology", "video",
+            "matte_morph",
+            {'op': op, 'size_x': min(64, max(0, int(size_x or 0))),
+             'size_y': min(64, max(0, int(size_y or 0)))})
+        return _fx_passthrough(video, fx_spec)

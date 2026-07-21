@@ -52,12 +52,13 @@
       <span v-else-if="state.running" class="ctv:text-muted-foreground">{{ $t('fx.processing') }}</span>
       <span v-else-if="state.output" class="ctv:text-success-background">{{ $t('fx.done') }}</span>
       <span v-else-if="lutUnsupported" class="ctv:text-muted-foreground">{{ $t('fx.lutPreviewUnavailable') }}</span>
-      <span v-else class="ctv:text-muted-foreground">{{ $t('fx.adjustThenRun') }}</span>
+      <span v-else class="ctv:text-muted-foreground">{{ $t('fx.chainMode') }}</span>
     </div>
 
     <StageCard
       :state="state"
       :node="node"
+      hide-run-button
       :on-run-request="onRunRequest"
       :on-cancel-request="onCancelRequest"
       :on-disconnect="onDisconnect"
@@ -76,7 +77,9 @@ import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
 import { useLutLibrary } from '@/composables/stages/useLutLibrary'
-import { useVideoLutPreview } from '@/composables/stages/useVideoLutPreview'
+import { useChainedFxPreview } from '@/composables/stages/useChainedFxPreview'
+import { ChainLutRenderer } from '@/composables/stages/fxChainPreviewRegistry'
+import { isPreviewableLutFile } from '@/composables/stages/videoLutMath'
 import { useStrWidget } from '@/composables/widgets/useWidgetModel'
 
 const props = defineProps<{
@@ -112,14 +115,21 @@ const previewVideoEl = computed<HTMLVideoElement | null>(
   () => playerRef.value?.videoEl ?? null,
 )
 
-const { supported, lutReady, lutUnsupported } = useVideoLutPreview({
+const { supported } = useChainedFxPreview({
   videoEl: previewVideoEl,
   canvasEl: previewCanvas,
   nodeId: String(props.node.id),
+  node: props.node,
   params: () => ({
     lutFile: lutFile.value,
     lutUrl: lutUrls.value[lutFile.value] ?? '',
     interp: interp.value,
   }),
+  createRenderer: () => new ChainLutRenderer(),
 })
+
+const lutReady = computed(() =>
+  !!lutFile.value && isPreviewableLutFile(lutFile.value))
+const lutUnsupported = computed(() =>
+  !!lutFile.value && !isPreviewableLutFile(lutFile.value))
 </script>

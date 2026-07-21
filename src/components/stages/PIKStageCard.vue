@@ -58,15 +58,15 @@
 
     <div class="ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide">
       <span v-if="!sourceVideoUrl" class="ctv:text-muted-foreground">{{ $t('videoTrim.noInputVideo') }}</span>
-      <span v-else-if="!plateWired && screen !== 'pick'" class="ctv:text-muted-foreground">Wire a clean plate (or use Pick)</span>
       <span v-else-if="state.running" class="ctv:text-muted-foreground">{{ $t('fx.processing') }}</span>
       <span v-else-if="state.output" class="ctv:text-success-background">{{ $t('fx.done') }}</span>
-      <span v-else class="ctv:text-muted-foreground">{{ $t('fx.adjustThenRun') }}</span>
+      <span v-else class="ctv:text-muted-foreground">{{ $t(hasSideInputs ? 'fx.adjustThenRun' : 'fx.chainMode') }}</span>
     </div>
 
     <StageCard
       :state="state"
       :node="node"
+      :hide-run-button="!hasSideInputs"
       :on-run-request="onRunRequest"
       :on-cancel-request="onCancelRequest"
       :on-disconnect="onDisconnect"
@@ -85,7 +85,7 @@ import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
-import { useFxVideoPreview } from '@/composables/stages/useFxVideoPreview'
+import { useChainedFxPreview } from '@/composables/stages/useChainedFxPreview'
 import { VideoPikRenderer } from '@/widgets/glsl/keyingRenderers'
 import { useBoolWidget, useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
 import { LUMA_STOPS } from '@/components/widgets/colorStops'
@@ -118,8 +118,11 @@ const OUTPUTS = [
 ]
 
 const sourceVideoUrl = computed(() => pickSourceImageUrl(props.state.inputs, 'video'))
-const plateWired = computed(() =>
-  Boolean(pickSourceImageUrl(props.state.inputs, 'clean_plate_video') || pickSourceImageUrl(props.state.inputs, 'clean_plate')))
+const hasSideInputs = computed(() =>
+  props.state.inputs.some((i) =>
+    ['clean_plate_video', 'clean_plate', 'in_mask', 'out_mask', 'bg_video']
+      .includes(i.slot)
+    && i.source !== 'empty'))
 const screen = useStrWidget(props.node, 'screen', 'green')
 const pickColor = useStrWidget(props.node, 'pick_color', '#00FF00')
 const redWeight = useNumWidget(props.node, 'red_weight', 0.5)
@@ -138,10 +141,11 @@ const playerRef = ref<InstanceType<typeof VideoPlayerLite> | null>(null)
 const videoEl = computed<HTMLVideoElement | null>(() => playerRef.value?.videoEl ?? null)
 const previewCanvas = ref<HTMLCanvasElement | null>(null)
 
-const { supported } = useFxVideoPreview({
+const { supported } = useChainedFxPreview({
   videoEl,
   canvasEl: previewCanvas,
   nodeId: String(props.node.id),
+  node: props.node,
   params: () => ({
     screen: screen.value,
     pickColor: pickColor.value,
