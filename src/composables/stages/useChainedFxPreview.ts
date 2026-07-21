@@ -5,34 +5,18 @@ import {
   CHAIN_PREVIEW_STAGES,
   type ChainRendererLike,
 } from '@/composables/stages/fxChainPreviewRegistry'
-import { FX_PASSTHROUGH_CLASSES } from '@/stores/stageStore'
+import { isChainableFx } from '@/stores/stageStore'
 import type { FxPreviewSource } from '@/widgets/glsl/fxPreviewSource'
 
 const PAUSED_REFRESH_MS = 500
 const MAX_CHAIN_DEPTH = 16
-
-const SIDE_SLOTS: Record<string, string[]> = {
-  'ComfyTV.KeyerStage': ['in_mask', 'out_mask', 'bg_video'],
-  'ComfyTV.PIKStage': ['clean_plate_video', 'clean_plate', 'in_mask',
-    'out_mask', 'bg_video'],
-  'ComfyTV.VideoTransformStage': ['track'],
-}
 
 function nodeClass(node: unknown): string {
   const n = node as { comfyClass?: unknown; type?: unknown }
   return String(n?.comfyClass ?? n?.type ?? '')
 }
 
-export function isChainable(node: unknown): boolean {
-  const cls = nodeClass(node)
-  if (!FX_PASSTHROUGH_CLASSES.has(cls)) return false
-  const sides = SIDE_SLOTS[cls]
-  if (!sides) return true
-  const inputs = (node as { inputs?: { name?: string; link?: unknown }[] })
-    ?.inputs ?? []
-  return !inputs.some((i) => sides.includes(String(i?.name))
-    && i?.link != null)
-}
+export const isChainable = isChainableFx
 
 function upstreamVideoNode(node: unknown, graphApp: unknown): unknown {
   const inputs = (node as { inputs?: { name?: string; link?: unknown }[] })

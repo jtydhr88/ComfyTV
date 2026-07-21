@@ -185,6 +185,77 @@ describe('stageStore.refreshStageInputs (output-slot resolution)', () => {
   })
 })
 
+describe('stageStore.refreshStageInputs (fx passthrough resolution)', () => {
+  beforeEach(() => setActivePinia(createPinia()))
+
+  it('walks through a chainable fx node even when it has a stale echo output', () => {
+    const store = useStageStore()
+    const loader = {}
+    const loaderState = store.registerStage(loader, 'video', 'loader')
+    loaderState.output = '/view?filename=new.mp4'
+
+    const fx: any = {
+      comfyClass: 'ComfyTV.VideoColorStage',
+      inputs: [{ name: 'video', type: 'COMFYTV_VIDEO', link: 1 }],
+    }
+    const fxState = store.registerStage(fx, 'video')
+    fxState.output = '/view?filename=old-echo.mp4'
+    fxState.outputs = ['/view?filename=old-echo.mp4']
+
+    const links = new Map([
+      [1, { origin_id: 'loader', origin_slot: 0 }],
+      [2, { origin_id: 'fx', origin_slot: 0 }],
+    ])
+    const byId: Record<string, unknown> = { loader, fx }
+    const down: any = { inputs: [{ name: 'video', type: 'COMFYTV_VIDEO', link: 2 }] }
+    const state = freshState()
+    store.refreshStageInputs(down, state, {
+      graph: { links, getNodeById: (id: string) => byId[id] ?? null },
+    })
+    expect(state.inputs[0].content).toBe('/view?filename=new.mp4')
+  })
+
+  it('uses the recorded output of a keyer whose side inputs are wired (baked)', () => {
+    const store = useStageStore()
+    const keyer: any = {
+      comfyClass: 'ComfyTV.KeyerStage',
+      inputs: [
+        { name: 'video', type: 'COMFYTV_VIDEO', link: 1 },
+        { name: 'in_mask', type: 'COMFYTV_IMAGE', link: 7 },
+      ],
+    }
+    const keyerState = store.registerStage(keyer, 'video')
+    keyerState.output = '/view?filename=rendered.mp4'
+    keyerState.outputs = ['/view?filename=rendered.mp4']
+
+    const links = new Map([[2, { origin_id: 'keyer', origin_slot: 0 }]])
+    const down: any = { inputs: [{ name: 'video', type: 'COMFYTV_VIDEO', link: 2 }] }
+    const state = freshState()
+    store.refreshStageInputs(down, state, {
+      graph: { links, getNodeById: () => keyer },
+    })
+    expect(state.inputs[0].content).toBe('/view?filename=rendered.mp4')
+  })
+
+  it('marks pending when a chainable fx node has no upstream video', () => {
+    const store = useStageStore()
+    const fx: any = {
+      comfyClass: 'ComfyTV.VideoColorStage',
+      inputs: [{ name: 'video', type: 'COMFYTV_VIDEO', link: null }],
+    }
+    const fxState = store.registerStage(fx, 'video')
+    fxState.output = '/view?filename=old-echo.mp4'
+
+    const links = new Map([[2, { origin_id: 'fx', origin_slot: 0 }]])
+    const down: any = { inputs: [{ name: 'video', type: 'COMFYTV_VIDEO', link: 2 }] }
+    const state = freshState()
+    store.refreshStageInputs(down, state, {
+      graph: { links, getNodeById: () => fx },
+    })
+    expect(state.inputs[0].source).toBe('upstream-pending')
+  })
+})
+
 describe('stageStore.applyExecutedPayload', () => {
   beforeEach(() => {
     setActivePinia(createPinia())

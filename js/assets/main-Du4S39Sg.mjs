@@ -55963,7 +55963,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-2PG2KnqZ.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-Tqbo4JBE.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -93758,6 +93758,25 @@ const FX_PASSTHROUGH_CLASSES = /* @__PURE__ */ new Set([
   "ComfyTV.OldFilmStage",
   "ComfyTV.VideoTransformStage"
 ]);
+const FX_SIDE_SLOTS = {
+  "ComfyTV.KeyerStage": ["in_mask", "out_mask", "bg_video"],
+  "ComfyTV.PIKStage": [
+    "clean_plate_video",
+    "clean_plate",
+    "in_mask",
+    "out_mask",
+    "bg_video"
+  ],
+  "ComfyTV.VideoTransformStage": ["track"]
+};
+function isChainableFx(node) {
+  const n = node;
+  const cls = String((n == null ? void 0 : n.comfyClass) ?? (n == null ? void 0 : n.type) ?? "");
+  if (!FX_PASSTHROUGH_CLASSES.has(cls)) return false;
+  const sides2 = FX_SIDE_SLOTS[cls];
+  if (!sides2) return true;
+  return !((n == null ? void 0 : n.inputs) ?? []).some((i) => sides2.includes(String(i == null ? void 0 : i.name)) && (i == null ? void 0 : i.link) != null);
+}
 const KIND_TO_TYPE = {
   text: "COMFYTV_TEXT",
   image: "COMFYTV_IMAGE",
@@ -93810,15 +93829,15 @@ const useStageStore = /* @__PURE__ */ defineStore("comfytv-stage", () => {
     const srcNode = link ? (_e2 = (_d = app2 == null ? void 0 : app2.graph) == null ? void 0 : _d.getNodeById) == null ? void 0 : _e2.call(_d, link.origin_id) : null;
     const srcState = srcNode ? stages.get(srcNode) : null;
     const srcSlot = Number(link == null ? void 0 : link.origin_slot) || 0;
+    if (srcNode && srcSlot === 0 && isChainableFx(srcNode)) {
+      const vin = (srcNode.inputs || []).find((i) => (i == null ? void 0 : i.name) === "video");
+      if ((vin == null ? void 0 : vin.link) != null) return resolveUpstreamValue(app2, vin.link, depth + 1);
+      return null;
+    }
     if (srcState) {
       const slotted = (_f = srcState.outputs) == null ? void 0 : _f[srcSlot];
       if (slotted != null && String(slotted).length > 0) return String(slotted);
       if (srcSlot === 0 && srcState.output) return String(srcState.output);
-    }
-    const cls = String((srcNode == null ? void 0 : srcNode.comfyClass) ?? (srcNode == null ? void 0 : srcNode.type) ?? "");
-    if (srcNode && srcSlot === 0 && FX_PASSTHROUGH_CLASSES.has(cls)) {
-      const vin = (srcNode.inputs || []).find((i) => (i == null ? void 0 : i.name) === "video");
-      if ((vin == null ? void 0 : vin.link) != null) return resolveUpstreamValue(app2, vin.link, depth + 1);
     }
     return null;
   }
@@ -106709,29 +106728,11 @@ const CHAIN_PREVIEW_STAGES = {
 };
 const PAUSED_REFRESH_MS = 500;
 const MAX_CHAIN_DEPTH = 16;
-const SIDE_SLOTS = {
-  "ComfyTV.KeyerStage": ["in_mask", "out_mask", "bg_video"],
-  "ComfyTV.PIKStage": [
-    "clean_plate_video",
-    "clean_plate",
-    "in_mask",
-    "out_mask",
-    "bg_video"
-  ],
-  "ComfyTV.VideoTransformStage": ["track"]
-};
 function nodeClass(node) {
   const n = node;
   return String((n == null ? void 0 : n.comfyClass) ?? (n == null ? void 0 : n.type) ?? "");
 }
-function isChainable(node) {
-  const cls = nodeClass(node);
-  if (!FX_PASSTHROUGH_CLASSES.has(cls)) return false;
-  const sides2 = SIDE_SLOTS[cls];
-  if (!sides2) return true;
-  const inputs = (node == null ? void 0 : node.inputs) ?? [];
-  return !inputs.some((i) => sides2.includes(String(i == null ? void 0 : i.name)) && (i == null ? void 0 : i.link) != null);
-}
+const isChainable = isChainableFx;
 function upstreamVideoNode(node, graphApp) {
   var _a3, _b2;
   const inputs = (node == null ? void 0 : node.inputs) ?? [];
@@ -127797,7 +127798,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-R0Kx8gRj.mjs");
+    const { STLLoader } = await import("./STLLoader-CJOZHUFA.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -127805,7 +127806,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-DKPqz48M.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-x0K_SPtT.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -170259,4 +170260,4 @@ export {
   Box3 as y,
   UnsignedShortType as z
 };
-//# sourceMappingURL=main-E4blGWV4.mjs.map
+//# sourceMappingURL=main-Du4S39Sg.mjs.map

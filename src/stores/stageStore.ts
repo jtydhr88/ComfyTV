@@ -94,6 +94,27 @@ export const FX_PASSTHROUGH_CLASSES = new Set([
   'ComfyTV.VideoTransformStage',
 ])
 
+export const FX_SIDE_SLOTS: Record<string, string[]> = {
+  'ComfyTV.KeyerStage': ['in_mask', 'out_mask', 'bg_video'],
+  'ComfyTV.PIKStage': ['clean_plate_video', 'clean_plate', 'in_mask',
+    'out_mask', 'bg_video'],
+  'ComfyTV.VideoTransformStage': ['track'],
+}
+
+export function isChainableFx(node: unknown): boolean {
+  const n = node as {
+    comfyClass?: unknown
+    type?: unknown
+    inputs?: { name?: string; link?: unknown }[]
+  }
+  const cls = String(n?.comfyClass ?? n?.type ?? '')
+  if (!FX_PASSTHROUGH_CLASSES.has(cls)) return false
+  const sides = FX_SIDE_SLOTS[cls]
+  if (!sides) return true
+  return !(n?.inputs ?? []).some((i) => sides.includes(String(i?.name))
+    && i?.link != null)
+}
+
 const KIND_TO_TYPE: Record<StageKind, TypedValueType> = {
   text:           'COMFYTV_TEXT',
   image:          'COMFYTV_IMAGE',
@@ -158,15 +179,15 @@ export const useStageStore = defineStore('comfytv-stage', () => {
     const srcNode = link ? app?.graph?.getNodeById?.(link.origin_id) : null
     const srcState = srcNode ? stages.get(srcNode) : null
     const srcSlot = Number(link?.origin_slot) || 0
+    if (srcNode && srcSlot === 0 && isChainableFx(srcNode)) {
+      const vin = (srcNode.inputs || []).find((i: any) => i?.name === 'video')
+      if (vin?.link != null) return resolveUpstreamValue(app, vin.link, depth + 1)
+      return null
+    }
     if (srcState) {
       const slotted = srcState.outputs?.[srcSlot]
       if (slotted != null && String(slotted).length > 0) return String(slotted)
       if (srcSlot === 0 && srcState.output) return String(srcState.output)
-    }
-    const cls = String(srcNode?.comfyClass ?? srcNode?.type ?? '')
-    if (srcNode && srcSlot === 0 && FX_PASSTHROUGH_CLASSES.has(cls)) {
-      const vin = (srcNode.inputs || []).find((i: any) => i?.name === 'video')
-      if (vin?.link != null) return resolveUpstreamValue(app, vin.link, depth + 1)
     }
     return null
   }
