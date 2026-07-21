@@ -64,6 +64,18 @@
       >
         {{ summary }}
       </div>
+
+      <div :class="sectionLabel">{{ $t('fxChain.delivery') }}</div>
+      <div :class="rowLabel">{{ $t('fxChain.dSize') }}</div>
+      <FxChips v-model="outSize" :options="SIZES" />
+      <div :class="rowLabel">{{ $t('fxChain.dFps') }}</div>
+      <FxChips v-model="outFps" :options="FPS_OPTS" />
+      <div :class="rowLabel">{{ $t('fxChain.dCodec') }}</div>
+      <FxChips v-model="outCodec" :options="CODECS" />
+      <div :class="rowLabel">{{ $t('fxChain.dQuality') }}</div>
+      <FxChips v-model="outQuality" :options="QUALITIES" />
+      <div :class="rowLabel">{{ $t('fxChain.dColorspace') }}</div>
+      <FxChips v-model="outColorspace" :options="CS_TARGETS" />
     </div>
 
     <StageCard
@@ -79,12 +91,15 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
 import FxCardShell from '@/components/stages/FxCardShell.vue'
 import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
+import FxChips from '@/components/widgets/fx/FxChips.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
+import { useStrWidget } from '@/composables/widgets/useWidgetModel'
 import { useChainedFxPreview } from '@/composables/stages/useChainedFxPreview'
 import { ChainBlitRenderer } from '@/composables/stages/fxChainPreviewRegistry'
 import { useFxChain } from '@/composables/stages/useFxChain'
@@ -99,6 +114,31 @@ const props = defineProps<{
 }>()
 
 const { rows, summary } = useFxChain(props.node, () => props.state)
+
+const { t } = useI18n()
+const src = () => ({ value: 'source', label: t('fxChain.sourceOpt') })
+const CS_TARGETS = ['bt709', 'bt601-6-625', 'bt2020', 'smpte170m']
+  .map(v => ({ value: v, label: v }))
+const SIZES = computed(() => [src(),
+  ...['2160', '1440', '1080', '720', '540', '480']
+    .map(v => ({ value: v, label: `${v}p` }))])
+const FPS_OPTS = computed(() => [src(),
+  ...['24', '25', '30', '50', '60'].map(v => ({ value: v, label: v }))])
+const CODECS = [
+  { value: 'h264', label: 'H.264' },
+  { value: 'hevc', label: 'HEVC' },
+  { value: 'prores', label: 'ProRes' },
+]
+const QUALITIES = computed(() => [
+  { value: 'draft', label: t('fxChain.qDraft') },
+  { value: 'standard', label: t('fxChain.qStandard') },
+  { value: 'high', label: t('fxChain.qHigh') },
+])
+const outColorspace = useStrWidget(props.node, 'out_colorspace', 'bt709')
+const outSize = useStrWidget(props.node, 'out_size', 'source')
+const outFps = useStrWidget(props.node, 'out_fps', 'source')
+const outCodec = useStrWidget(props.node, 'out_codec', 'h264')
+const outQuality = useStrWidget(props.node, 'out_quality', 'standard')
 
 const sourceVideoUrl = computed(() => pickSourceImageUrl(props.state.inputs, 'video'))
 const playerRef = ref<InstanceType<typeof VideoPlayerLite> | null>(null)
@@ -115,4 +155,5 @@ const { supported } = useChainedFxPreview({
 })
 
 const sectionLabel = 'ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:opacity-60'
+const rowLabel = 'ctv:text-3xs ctv:tracking-wide ctv:opacity-50'
 </script>

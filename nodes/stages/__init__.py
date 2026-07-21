@@ -27,7 +27,7 @@ from .video_edit import (
 )
 from .video_color import (
     VideoColorStage, VideoCurvesStage, VideoLUTStage,
-    HueCorrectStage, ColorFXStage,
+    HueCorrectStage, SelectiveColorStage, GrayWorldStage,
 )
 from .video_enhance import (
     VideoBlurSharpenStage, VideoDenoiseStage, VideoInterpolateStage,
@@ -39,6 +39,7 @@ from .video_keying import (
 )
 from .video_stylize import (
     VideoStylizeStage, GlowStage, GodRaysStage, OldFilmStage, FrameBlendStage,
+    ChromaShiftStage, PseudocolorStage, PosterizeStage,
 )
 from .video_compose import (
     VideoCompositeStage, VideoTransformStage, CornerPinStage, STMapStage,
@@ -121,7 +122,9 @@ class ComfyTVExtension(ComfyExtension):
             HueCorrectStage, GlowStage, GodRaysStage, PatternStage,
             PIKStage, KeyerStage, DespillStage, ColorSuppressStage,
             KeyMixStage, MatteMonitorStage, MatteMorphStage,
-            FrameBlendStage, ColorFXStage, KenBurnsStage, OldFilmStage,
+            FrameBlendStage, KenBurnsStage, OldFilmStage,
+            SelectiveColorStage, ChromaShiftStage, PseudocolorStage,
+            PosterizeStage, GrayWorldStage,
             AnnotateStage, AudioReactiveStage, AudioMeterStage,
             ImageLoaderStage, VideoLoaderStage, AudioLoaderStage,
             AssetImageLoaderStage, AssetVideoLoaderStage, AssetAudioLoaderStage,

@@ -1,4 +1,4 @@
-import { createApp } from 'vue'
+﻿import { createApp } from 'vue'
 import { createPinia, getActivePinia, setActivePinia } from 'pinia'
 
 import ComfyTVSidebar from '@/components/sidebar/ComfyTVSidebar.vue'
@@ -93,7 +93,11 @@ import KeyMixStageCard from '@/components/stages/KeyMixStageCard.vue'
 import MatteMonitorStageCard from '@/components/stages/MatteMonitorStageCard.vue'
 import MatteMorphStageCard from '@/components/stages/MatteMorphStageCard.vue'
 import FrameBlendStageCard from '@/components/stages/FrameBlendStageCard.vue'
-import ColorFXStageCard from '@/components/stages/ColorFXStageCard.vue'
+import SelectiveColorStageCard from '@/components/stages/SelectiveColorStageCard.vue'
+import ChromaShiftStageCard from '@/components/stages/ChromaShiftStageCard.vue'
+import PseudocolorStageCard from '@/components/stages/PseudocolorStageCard.vue'
+import PosterizeStageCard from '@/components/stages/PosterizeStageCard.vue'
+import GrayWorldStageCard from '@/components/stages/GrayWorldStageCard.vue'
 import KenBurnsStageCard from '@/components/stages/KenBurnsStageCard.vue'
 import OldFilmStageCard from '@/components/stages/OldFilmStageCard.vue'
 import AnnotateStageCard from '@/components/stages/AnnotateStageCard.vue'
@@ -250,7 +254,11 @@ const RICH_STAGE_CARDS: Record<string, any> = {
   'ComfyTV.MatteMonitorStage':        MatteMonitorStageCard,
   'ComfyTV.MatteMorphStage':          MatteMorphStageCard,
   'ComfyTV.FrameBlendStage':          FrameBlendStageCard,
-  'ComfyTV.ColorFXStage':             ColorFXStageCard,
+  'ComfyTV.SelectiveColorStage':      SelectiveColorStageCard,
+  'ComfyTV.ChromaShiftStage':         ChromaShiftStageCard,
+  'ComfyTV.PseudocolorStage':         PseudocolorStageCard,
+  'ComfyTV.PosterizeStage':           PosterizeStageCard,
+  'ComfyTV.GrayWorldStage':           GrayWorldStageCard,
   'ComfyTV.KenBurnsStage':            KenBurnsStageCard,
   'ComfyTV.OldFilmStage':             OldFilmStageCard,
   'ComfyTV.AnnotateStage':            AnnotateStageCard,
@@ -354,7 +362,11 @@ const RICH_STAGE_MIN_HEIGHTS: Record<string, number> = {
   'ComfyTV.MatteMonitorStage':        560,
   'ComfyTV.MatteMorphStage':          640,
   'ComfyTV.FrameBlendStage':          700,
-  'ComfyTV.ColorFXStage':             840,
+  'ComfyTV.SelectiveColorStage':      840,
+  'ComfyTV.ChromaShiftStage':         720,
+  'ComfyTV.PseudocolorStage':         760,
+  'ComfyTV.PosterizeStage':           680,
+  'ComfyTV.GrayWorldStage':           640,
   'ComfyTV.KenBurnsStage':            840,
   'ComfyTV.OldFilmStage':             860,
   'ComfyTV.AnnotateStage':            700,
@@ -492,7 +504,7 @@ const extension: ComfyExtension = {
 
   setup() {
     if (isHeadlessConvertMode()) {
-      console.info('[ComfyTV] headless convert mode — UI init skipped')
+      console.info('[ComfyTV] headless convert mode 鈥?UI init skipped')
       runHeadlessConvertWorker()
       return
     }

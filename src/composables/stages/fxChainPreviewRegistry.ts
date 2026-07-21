@@ -11,6 +11,10 @@ import {
   VideoPikRenderer,
 } from '@/widgets/glsl/keyingRenderers'
 import { VideoTransformRenderer } from '@/widgets/glsl/videoTransformRenderer'
+import { VideoSelectiveColorRenderer } from '@/widgets/glsl/videoSelectiveColorRenderer'
+import { VideoChromaShiftRenderer } from '@/widgets/glsl/videoChromaShiftRenderer'
+import { VideoPseudocolorRenderer } from '@/widgets/glsl/videoPseudocolorRenderer'
+import { SELECTIVE_ZONE_IDS } from '@/composables/stages/videoSelectiveColorMath'
 import {
   isPreviewableLutFile,
   parseLutText,
@@ -225,6 +229,34 @@ export const CHAIN_PREVIEW_STAGES: Record<string, ChainStageDef> = {
       despill: num(n, 'despill', 1),
       despillAngle: num(n, 'despill_angle', 120),
       output: str(n, 'output', 'matte'),
+    }),
+  },
+  'ComfyTV.SelectiveColorStage': {
+    create: () =>
+      new VideoSelectiveColorRenderer() as unknown as ChainRendererLike,
+    paramsOf: (n) => ({
+      scMethod: str(n, 'sc_method', 'absolute'),
+      zones: Object.fromEntries(
+        SELECTIVE_ZONE_IDS.map((z) => [z, num(n, `sc_${z}`, 0)])),
+    }),
+  },
+  'ComfyTV.ChromaShiftStage': {
+    create: () =>
+      new VideoChromaShiftRenderer() as unknown as ChainRendererLike,
+    paramsOf: (n) => ({
+      shiftRh: num(n, 'shift_rh', 0),
+      shiftRv: num(n, 'shift_rv', 0),
+      shiftBh: num(n, 'shift_bh', 0),
+      shiftBv: num(n, 'shift_bv', 0),
+      shiftEdge: str(n, 'shift_edge', 'smear'),
+    }),
+  },
+  'ComfyTV.PseudocolorStage': {
+    create: () =>
+      new VideoPseudocolorRenderer() as unknown as ChainRendererLike,
+    paramsOf: (n) => ({
+      preset: str(n, 'pseudo_preset', 'viridis'),
+      opacity: num(n, 'pseudo_opacity', 1),
     }),
   },
   'ComfyTV.VideoTransformStage': {

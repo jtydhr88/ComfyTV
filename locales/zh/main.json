@@ -802,9 +802,29 @@
         "label": "帧混合",
         "tooltip": "帧窗口混合或快门采样运动模糊"
       },
-      "color-fx": {
-        "label": "调色扩展",
-        "tooltip": "九区二级调色/色差错位/伪彩/色彩量化"
+      "selective-color": {
+        "label": "可选颜色",
+        "tooltip": "九色域二级调色"
+      },
+      "chroma-shift": {
+        "label": "色度错位",
+        "tooltip": "红蓝通道错位色散"
+      },
+      "pseudocolor": {
+        "label": "伪彩色",
+        "tooltip": "伪彩色调色板映射"
+      },
+      "posterize": {
+        "label": "海报化",
+        "tooltip": "ELBG 聚类色彩量化"
+      },
+      "colorspace": {
+        "label": "色彩空间",
+        "tooltip": "bt601/bt709/bt2020 互转"
+      },
+      "gray-world": {
+        "label": "自动白平衡",
+        "tooltip": "灰世界自动白平衡"
       },
       "old-film": {
         "label": "老电影",
@@ -1611,7 +1631,17 @@
   "fxChain": {
     "title": "特效链",
     "empty": "沿 video 线把 FX 节点串联接入本节点即可成链",
-    "noPreview": "无实时预览"
+    "noPreview": "无实时预览",
+    "delivery": "交付出片",
+    "dColorspace": "色彩空间",
+    "dSize": "分辨率(短边)",
+    "dFps": "帧率",
+    "dCodec": "编码",
+    "dQuality": "质量",
+    "sourceOpt": "原始",
+    "qDraft": "草稿",
+    "qStandard": "标准",
+    "qHigh": "高"
   },
   "fxPreview": {
     "run": "预览片段",

@@ -348,8 +348,20 @@
     "FXChainStage": {
       "display_name": "特效链"
     },
-    "ColorFXStage": {
-      "display_name": "调色扩展"
+    "SelectiveColorStage": {
+      "display_name": "可选颜色"
+    },
+    "ChromaShiftStage": {
+      "display_name": "色度错位"
+    },
+    "PseudocolorStage": {
+      "display_name": "伪彩色"
+    },
+    "PosterizeStage": {
+      "display_name": "海报化"
+    },
+    "GrayWorldStage": {
+      "display_name": "自动白平衡"
     },
     "KenBurnsStage": {
       "display_name": "静帧推拉"
@@ -2065,8 +2077,20 @@
   "ComfyTV_FXChainStage": {
     "display_name": "特效链"
   },
-  "ComfyTV_ColorFXStage": {
-    "display_name": "调色扩展"
+  "ComfyTV_SelectiveColorStage": {
+    "display_name": "可选颜色"
+  },
+  "ComfyTV_ChromaShiftStage": {
+    "display_name": "色度错位"
+  },
+  "ComfyTV_PseudocolorStage": {
+    "display_name": "伪彩色"
+  },
+  "ComfyTV_PosterizeStage": {
+    "display_name": "海报化"
+  },
+  "ComfyTV_GrayWorldStage": {
+    "display_name": "自动白平衡"
   },
   "ComfyTV_KenBurnsStage": {
     "display_name": "静帧推拉"

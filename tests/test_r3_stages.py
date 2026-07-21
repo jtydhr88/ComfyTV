@@ -10,7 +10,9 @@ np = pytest.importorskip("numpy")
 NEW_CLASSES = [
     "PIKStage", "KeyerStage", "DespillStage", "ColorSuppressStage",
     "KeyMixStage", "MatteMonitorStage", "MatteMorphStage",
-    "FrameBlendStage", "ColorFXStage", "KenBurnsStage", "OldFilmStage",
+    "FrameBlendStage", "KenBurnsStage", "OldFilmStage",
+    "SelectiveColorStage", "ChromaShiftStage", "PseudocolorStage",
+    "PosterizeStage", "GrayWorldStage",
     "AnnotateStage", "AudioReactiveStage", "AudioMeterStage",
 ]
 
@@ -102,29 +104,28 @@ def test_frame_blend_dispatch(monkeypatch):
     assert calls['shutter']['divisions'] == 4
 
 
-def test_colorfx_spec_building():
-    from ComfyTV.nodes.stages import video_color
+def test_split_colorfx_spec_building():
+    from ComfyTV.nodes.stages import video_color, video_stylize
     from ComfyTV.nodes.stages.common import unpack_fx_video
 
     def specs_of(out):
         return unpack_fx_video(out.values[0])[1][-1]['specs']
 
-    out = video_color.ColorFXStage.execute(project_id='p', video='/view?v',
-                                           mode='selectivecolor', sc_reds=0.4,
-                                           sc_blues=-0.2)
+    out = video_color.SelectiveColorStage.execute(
+        project_id='p', video='/view?v', sc_reds=0.4, sc_blues=-0.2)
     assert unpack_fx_video(out.values[0])[0] == '/view?v'
     name, args = specs_of(out)[0]
     assert name == 'selectivecolor'
     assert 'reds=0.4' in args and 'blues=-0.2' in args
 
-    out = video_color.ColorFXStage.execute(project_id='p', video='/view?v',
-                                           mode='chromashift', shift_rh=4)
+    out = video_stylize.ChromaShiftStage.execute(
+        project_id='p', video='/view?v', shift_rh=4)
     name, args = specs_of(out)[0]
     assert name == 'chromashift'
     assert 'crh=4' in args
 
-    out = video_color.ColorFXStage.execute(project_id='p', video='/view?v',
-                                           mode='chromashift')
+    out = video_stylize.ChromaShiftStage.execute(project_id='p',
+                                                 video='/view?v')
     assert out.values[0] == '/view?v'
 
 

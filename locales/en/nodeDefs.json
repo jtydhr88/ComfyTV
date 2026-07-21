@@ -348,8 +348,20 @@
     "FXChainStage": {
       "display_name": "FX Chain"
     },
-    "ColorFXStage": {
-      "display_name": "Color FX"
+    "SelectiveColorStage": {
+      "display_name": "Selective Color"
+    },
+    "ChromaShiftStage": {
+      "display_name": "Chroma Shift"
+    },
+    "PseudocolorStage": {
+      "display_name": "Pseudocolor"
+    },
+    "PosterizeStage": {
+      "display_name": "Posterize"
+    },
+    "GrayWorldStage": {
+      "display_name": "Auto White Balance"
     },
     "KenBurnsStage": {
       "display_name": "Ken Burns"
@@ -2065,8 +2077,20 @@
   "ComfyTV_FXChainStage": {
     "display_name": "FX Chain"
   },
-  "ComfyTV_ColorFXStage": {
-    "display_name": "Color FX"
+  "ComfyTV_SelectiveColorStage": {
+    "display_name": "Selective Color"
+  },
+  "ComfyTV_ChromaShiftStage": {
+    "display_name": "Chroma Shift"
+  },
+  "ComfyTV_PseudocolorStage": {
+    "display_name": "Pseudocolor"
+  },
+  "ComfyTV_PosterizeStage": {
+    "display_name": "Posterize"
+  },
+  "ComfyTV_GrayWorldStage": {
+    "display_name": "Auto White Balance"
   },
   "ComfyTV_KenBurnsStage": {
     "display_name": "Ken Burns"

@@ -802,9 +802,29 @@
         "label": "Frame Blend",
         "tooltip": "Blend frame windows or shutter samples"
       },
-      "color-fx": {
-        "label": "Color FX",
-        "tooltip": "Selective color, chroma shift, pseudocolor, quantize"
+      "selective-color": {
+        "label": "Selective Color",
+        "tooltip": "Nine-zone secondary color correction"
+      },
+      "chroma-shift": {
+        "label": "Chroma Shift",
+        "tooltip": "Red/blue channel offset fringing"
+      },
+      "pseudocolor": {
+        "label": "Pseudocolor",
+        "tooltip": "False-color palette mapping"
+      },
+      "posterize": {
+        "label": "Posterize",
+        "tooltip": "Color quantization via ELBG clustering"
+      },
+      "colorspace": {
+        "label": "Colorspace",
+        "tooltip": "Convert between bt601/bt709/bt2020"
+      },
+      "gray-world": {
+        "label": "Auto WB",
+        "tooltip": "Gray-world automatic white balance"
       },
       "old-film": {
         "label": "Old Film",
@@ -1611,7 +1631,17 @@
   "fxChain": {
     "title": "FX Chain",
     "empty": "Chain FX nodes along the video wire into this node",
-    "noPreview": "no live preview"
+    "noPreview": "no live preview",
+    "delivery": "Delivery",
+    "dColorspace": "Colorspace",
+    "dSize": "Resolution (short side)",
+    "dFps": "Frame rate",
+    "dCodec": "Codec",
+    "dQuality": "Quality",
+    "sourceOpt": "Source",
+    "qDraft": "Draft",
+    "qStandard": "Standard",
+    "qHigh": "High"
   },
   "fxPreview": {
     "run": "Preview clip",

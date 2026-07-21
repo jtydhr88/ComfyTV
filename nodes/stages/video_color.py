@@ -263,41 +263,23 @@ class HueCorrectStage(io.ComfyNode):
         return _fx_passthrough(video, fx_spec)
 
 
-COLORFX_MODES = ['selectivecolor', 'chromashift', 'pseudocolor', 'elbg',
-                 'colorspace', 'grayworld']
-PSEUDOCOLOR_PRESETS = ['magma', 'inferno', 'plasma', 'viridis', 'turbo',
-                       'cividis', 'range1', 'range2', 'shadows', 'highlights',
-                       'solar', 'nominal', 'preferred', 'total', 'spectral',
-                       'cool', 'heat', 'fiery', 'blues', 'green', 'helix']
 SELECTIVE_ZONES = ['reds', 'yellows', 'greens', 'cyans', 'blues', 'magentas',
                    'whites', 'neutrals', 'blacks']
-COLORSPACE_TARGETS = ['bt709', 'bt601-6-625', 'bt2020', 'smpte170m']
 
 
-class ColorFXStage(io.ComfyNode):
+class SelectiveColorStage(io.ComfyNode):
 
     @classmethod
     def define_schema(cls):
         zones = [_hidden_float(f"sc_{z}", 0.0, -1.0, 1.0) for z in SELECTIVE_ZONES]
         return io.Schema(
-            node_id="ComfyTV.ColorFXStage",
-            display_name="Color FX",
+            node_id="ComfyTV.SelectiveColorStage",
+            display_name="Selective Color",
             category="ComfyTV/VideoFX",
             inputs=[
                 *_standard_stage_inputs(),
-                _hidden_combo("mode", COLORFX_MODES, 'selectivecolor'),
                 _hidden_combo("sc_method", ['absolute', 'relative'], 'absolute'),
                 *zones,
-                _hidden_float("shift_rh", 0.0, -255.0, 255.0, step=1.0),
-                _hidden_float("shift_rv", 0.0, -255.0, 255.0, step=1.0),
-                _hidden_float("shift_bh", 0.0, -255.0, 255.0, step=1.0),
-                _hidden_float("shift_bv", 0.0, -255.0, 255.0, step=1.0),
-                _hidden_combo("shift_edge", ['smear', 'wrap'], 'smear'),
-                _hidden_combo("pseudo_preset", PSEUDOCOLOR_PRESETS, 'viridis'),
-                _hidden_float("pseudo_opacity", 1.0, 0.0, 1.0),
-                _hidden_int("elbg_colors", 9, 1, 50),
-                _hidden_int("elbg_steps", 1, 1, 10),
-                _hidden_combo("cs_target", COLORSPACE_TARGETS, 'bt709'),
                 COMFYTV_VIDEO.Input("video", optional=True),
             ],
             outputs=[COMFYTV_VIDEO.Output("video")],
@@ -307,60 +289,46 @@ class ColorFXStage(io.ComfyNode):
 
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
-                mode='selectivecolor', sc_method='absolute',
-                shift_rh=0.0, shift_rv=0.0, shift_bh=0.0, shift_bv=0.0,
-                shift_edge='smear', pseudo_preset='viridis',
-                pseudo_opacity=1.0, elbg_colors=9, elbg_steps=1,
-                cs_target='bt709', video="", **kwargs):
-        if mode == 'selectivecolor':
-            parts = [f'correction_method={sc_method}']
-            any_zone = False
-            for z in SELECTIVE_ZONES:
-                v = _f(kwargs.get(f'sc_{z}', 0.0), -1, 1, 0.0)
-                if v:
-                    any_zone = True
-                    parts.append(f'{z}={v}')
-            if not any_zone:
-                return _fx_identity(video)
-            specs = [('selectivecolor', ':'.join(parts))]
-        elif mode == 'chromashift':
-            rh = _f(shift_rh, -255, 255, 0.0)
-            rv = _f(shift_rv, -255, 255, 0.0)
-            bh = _f(shift_bh, -255, 255, 0.0)
-            bv = _f(shift_bv, -255, 255, 0.0)
-            if not any((rh, rv, bh, bv)):
-                return _fx_identity(video)
-            edge = 0 if shift_edge == 'smear' else 1
-            specs = [('chromashift',
-                      f'crh={int(rh)}:crv={int(rv)}:cbh={int(bh)}'
-                      f':cbv={int(bv)}:edge={edge}')]
-        elif mode == 'pseudocolor':
-            p = pseudo_preset if pseudo_preset in PSEUDOCOLOR_PRESETS \
-                else 'viridis'
-            specs = [('pseudocolor',
-                      f'preset={p}:opacity={_f(pseudo_opacity, 0, 1, 1.0)}')]
-        elif mode == 'elbg':
-            specs = [('elbg',
-                      f'codebook_length={min(50, max(1, int(elbg_colors)))}'
-                      f':nb_steps={min(10, max(1, int(elbg_steps)))}')]
-        elif mode == 'colorspace':
-            t = cs_target if cs_target in COLORSPACE_TARGETS else 'bt709'
-            specs = [('colorspace', f'all={t}:format=yuv420p')]
-        elif mode == 'grayworld':
-            specs = [('grayworld', None)]
-        else:
-            raise RuntimeError(f"Color FX: unknown mode {mode!r}")
+                sc_method='absolute', video="", **kwargs):
+        parts = [f'correction_method={sc_method}']
+        any_zone = False
+        for z in SELECTIVE_ZONES:
+            v = _f(kwargs.get(f'sc_{z}', 0.0), -1, 1, 0.0)
+            if v:
+                any_zone = True
+                parts.append(f'{z}={v}')
+        if not any_zone:
+            return _fx_identity(video)
         fx_spec = build_fx_spec(
-            "ComfyTV.ColorFXStage", "Color FX", "video", specs,
-            params={
-                'mode': mode, 'sc_method': sc_method,
-                **{f'sc_{z}': _f(kwargs.get(f'sc_{z}', 0.0), -1, 1, 0.0)
-                   for z in SELECTIVE_ZONES},
-                'shift_rh': shift_rh, 'shift_rv': shift_rv,
-                'shift_bh': shift_bh, 'shift_bv': shift_bv,
-                'shift_edge': shift_edge, 'pseudo_preset': pseudo_preset,
-                'pseudo_opacity': pseudo_opacity,
-                'elbg_colors': elbg_colors, 'elbg_steps': elbg_steps,
-                'cs_target': cs_target,
-            })
+            "ComfyTV.SelectiveColorStage", "Selective Color", "video",
+            [('selectivecolor', ':'.join(parts))],
+            params={'sc_method': sc_method,
+                    **{f'sc_{z}': _f(kwargs.get(f'sc_{z}', 0.0), -1, 1, 0.0)
+                       for z in SELECTIVE_ZONES}})
+        return _fx_passthrough(video, fx_spec)
+
+
+class GrayWorldStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.GrayWorldStage",
+            display_name="Auto White Balance",
+            category="ComfyTV/VideoFX",
+            inputs=[
+                *_standard_stage_inputs(),
+                COMFYTV_VIDEO.Input("video", optional=True),
+            ],
+            outputs=[COMFYTV_VIDEO.Output("video")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
+                video=""):
+        fx_spec = build_fx_spec(
+            "ComfyTV.GrayWorldStage", "Auto White Balance", "video",
+            [('grayworld', None)], params={})
         return _fx_passthrough(video, fx_spec)

@@ -33,14 +33,16 @@ PRESET_FIELDS: dict[str, tuple[str, ...]] = {
     "ComfyTV.VideoScopesStage": ("scope",),
     "ComfyTV.ColorGradeStage": ("grade_state",),
     "ComfyTV.HueCorrectStage": ("curves", "sat_thrsh", "luminance_mix"),
-    "ComfyTV.ColorFXStage": (
-        "mode", "sc_method",
+    "ComfyTV.SelectiveColorStage": (
+        "sc_method",
         "sc_reds", "sc_yellows", "sc_greens", "sc_cyans", "sc_blues",
         "sc_magentas", "sc_whites", "sc_neutrals", "sc_blacks",
-        "shift_rh", "shift_rv", "shift_bh", "shift_bv", "shift_edge",
-        "pseudo_preset", "pseudo_opacity", "elbg_colors", "elbg_steps",
-        "cs_target",
     ),
+    "ComfyTV.ChromaShiftStage": (
+        "shift_rh", "shift_rv", "shift_bh", "shift_bv", "shift_edge",
+    ),
+    "ComfyTV.PseudocolorStage": ("pseudo_preset", "pseudo_opacity"),
+    "ComfyTV.PosterizeStage": ("elbg_colors", "elbg_steps"),
     "ComfyTV.GlowStage": (
         "threshold", "size", "bloom_ratio", "bloom_count", "gain", "mix",
     ),

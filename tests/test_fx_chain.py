@@ -66,6 +66,107 @@ def _frames_mean(view_url, n=12):
     return sum(vals) / len(vals)
 
 
+def _stream_tags(view_url):
+    from ComfyTV.runners.media import localize
+    with av.open(str(localize(view_url))) as c:
+        cc = c.streams.video[0].codec_context
+        return int(cc.colorspace), int(cc.color_primaries)
+
+
+class TestDeliveryColorspace:
+    def test_avfilter_tail_converts_and_tags(self, clip):
+        out = _chain().execute(project_id='p1', out_colorspace='bt2020',
+                               video=_darker(clip))
+        url = out.values[0]
+        assert url.startswith('/view?')
+        assert _stream_tags(url) == (9, 9)
+        assert _frames_mean(url) > 0
+
+    def test_torch_tail_gets_extra_pass(self, clip):
+        from ComfyTV.nodes.stages.video_keying import ColorSuppressStage
+        v = ColorSuppressStage.execute(project_id='p1', green=1.0,
+                                       video=clip).values[0]
+        out = _chain().execute(project_id='p1', out_colorspace='bt601-6-625',
+                               video=v)
+        assert _stream_tags(out.values[0])[0] == 5
+
+    def test_default_stays_bt709(self, clip):
+        out = _chain().execute(project_id='p1', video=_darker(clip))
+        assert _stream_tags(out.values[0]) == (1, 1)
+
+    def test_unknown_target_falls_back_to_bt709(self, clip):
+        out = _chain().execute(project_id='p1', out_colorspace='nope',
+                               video=_darker(clip))
+        assert _stream_tags(out.values[0]) == (1, 1)
+
+
+def _vcodec_name(view_url):
+    from ComfyTV.runners.media import localize
+    with av.open(str(localize(view_url))) as c:
+        return c.streams.video[0].codec_context.name
+
+
+class TestDeliveryParams:
+    def test_size_short_side(self, clip):
+        from ComfyTV.runners.fx_chain_exec import run_fx_chain
+        from ComfyTV.runners.media import get_video_info
+        _url, entries = _unpack(_darker(clip))
+        out = run_fx_chain(clip, entries, delivery={'size': 120})
+        info = get_video_info(out)
+        assert (info['width'], info['height']) == (160, 120)
+
+    def test_fps_conversion(self, clip):
+        from ComfyTV.runners.fx_chain_exec import run_fx_chain
+        from ComfyTV.runners.media import get_video_info
+        _url, entries = _unpack(_darker(clip))
+        out = run_fx_chain(clip, entries, delivery={'fps': 12})
+        info = get_video_info(out)
+        assert info['fps'] == pytest.approx(12, abs=0.5)
+        assert info['duration'] == pytest.approx(1.5, abs=0.2)
+
+    def test_hevc_codec(self, clip):
+        out = _chain().execute(project_id='p1', out_codec='hevc',
+                               video=_darker(clip))
+        assert _vcodec_name(out.values[0]) == 'hevc'
+        assert _stream_tags(out.values[0]) == (1, 1)
+
+    def test_prores_mov(self, clip):
+        from ComfyTV.runners.media import localize
+        out = _chain().execute(project_id='p1', out_codec='prores',
+                               video=_darker(clip))
+        url = out.values[0]
+        assert str(localize(url)).endswith('.mov')
+        assert _vcodec_name(url) == 'prores'
+        with av.open(str(localize(url))) as c:
+            first = next(c.decode(c.streams.video[0]))
+            assert first.format.name == 'yuv422p10le'
+
+    def test_torch_tail_gets_delivery(self, clip):
+        from ComfyTV.nodes.stages.video_keying import ColorSuppressStage
+        from ComfyTV.runners.fx_chain_exec import run_fx_chain
+        from ComfyTV.runners.media import get_video_info
+        v = ColorSuppressStage.execute(project_id='p1', green=1.0,
+                                       video=clip).values[0]
+        _url, entries = _unpack(v)
+        out = run_fx_chain(clip, entries, delivery={'size': 120,
+                                                    'codec': 'hevc'})
+        assert get_video_info(out)['height'] == 120
+        assert _vcodec_name(out) == 'hevc'
+
+    def test_draft_quality_renders(self, clip):
+        out = _chain().execute(project_id='p1', out_quality='draft',
+                               out_size='480', video=_darker(clip))
+        from ComfyTV.runners.media import get_video_info
+        assert get_video_info(out.values[0])['height'] == 480
+
+    def test_default_delivery_unchanged(self, clip):
+        from ComfyTV.runners.media import get_video_info
+        out = _chain().execute(project_id='p1', video=_darker(clip))
+        info = get_video_info(out.values[0])
+        assert (info['width'], info['height']) == (320, 240)
+        assert _vcodec_name(out.values[0]) == 'h264'
+
+
 class TestEnvelope:
     def test_fx_stage_requires_video(self):
         from ComfyTV.nodes.stages.video_color import VideoCurvesStage
@@ -349,7 +450,10 @@ VIDEO_ELIGIBLE = [
                                             "strength": 0.3}),
     ("video_enhance", "VideoDeinterlaceStage", {"method": "bwdif"}),
     ("video_stylize", "VideoStylizeStage", {"effect": "vignette", "strength": 0.5}),
-    ("video_color", "ColorFXStage", {"mode": "chromashift", "shift_rh": 4.0}),
+    ("video_stylize", "ChromaShiftStage", {"shift_rh": 4.0}),
+    ("video_color", "SelectiveColorStage", {"sc_reds": 0.4}),
+    ("video_stylize", "PseudocolorStage", {"pseudo_preset": "turbo"}),
+    ("video_color", "GrayWorldStage", {}),
     ("video_color", "HueCorrectStage",
      {"curves": '{"sat": [[0.0, 0.5], [1.0, 0.5]]}'}),
     ("video_keying", "DespillStage", {"screen": "green"}),

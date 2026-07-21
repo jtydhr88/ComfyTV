@@ -157,6 +157,27 @@ class TestFxPreviewEndpoint:
         assert diff > 1.0
 
 
+class TestColorspaceFilter:
+    def test_scale_then_colorspace_renders(self, clip_av):
+        from ComfyTV.runners import media, media_filter as mf
+        out = mf.filter_video(
+            clip_av,
+            [('scale', "w='min(640,iw)':h='min(640,ih)':"
+                       "force_original_aspect_ratio=decrease:"
+                       "force_divisible_by=2"),
+             ('colorspace', 'all=bt2020:format=yuv420p')],
+            start=0.0, end=0.8, keep_audio=False)
+        assert media.get_video_info(out)['duration'] > 0.3
+
+    def test_patch_respects_explicit_input_space(self):
+        from ComfyTV.runners.media_filter import _patch_colorspace_specs
+        specs = [('colorspace', 'iall=bt601-6-625:all=bt709')]
+        assert _patch_colorspace_specs(specs, None) == specs
+        patched = _patch_colorspace_specs(
+            [('colorspace', 'all=bt2020')], None)
+        assert patched == [('colorspace', 'iall=bt709:all=bt2020')]
+
+
 class TestFilterVideoWindow:
     def test_window_trims_and_rebases(self, clip_av):
         from ComfyTV.runners import media, media_filter as mf

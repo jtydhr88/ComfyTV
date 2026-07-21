@@ -61,14 +61,44 @@ def copy_color_tags(src_cc, dst_cc):
             setattr(dst_cc, attr, val)
 
 
-def _build_video_graph(graph, in_v, specs, pix_fmt='yuv420p'):
+_CS_FILTER_NAMES = {1: 'bt709', 5: 'bt470bg', 6: 'smpte170m',
+                    7: 'smpte240m', 9: 'bt2020', 10: 'bt2020'}
+_CS_FILTER_FORMATS = {'yuv420p', 'yuv420p10', 'yuv420p12',
+                      'yuv422p', 'yuv422p10', 'yuv422p12',
+                      'yuv444p', 'yuv444p10', 'yuv444p12'}
+
+
+def _patch_colorspace_specs(specs, in_v):
+    src_cs = getattr(getattr(in_v, 'codec_context', None), 'colorspace', None)
+    iall = _CS_FILTER_NAMES.get(src_cs, 'bt709')
+    out = []
+    for name, args in specs:
+        if name == 'colorspace' and 'iall=' not in (args or '') \
+                and 'ispace=' not in (args or ''):
+            args = f"iall={iall}:{args}" if args else f"iall={iall}"
+        out.append((name, args))
+    return out
+
+
+def _build_video_graph(graph, in_v, specs, pix_fmt='yuv420p',
+                       out_colorspace='bt709'):
+    specs = list(specs)
+    delivery = out_colorspace or 'bt709'
+    if 'yuva' in pix_fmt:
+        delivery = 'bt709'
+    if delivery != 'bt709':
+        base = pix_fmt[:-2] if pix_fmt.endswith('le') else pix_fmt
+        if base not in _CS_FILTER_FORMATS:
+            base = 'yuv420p'
+        specs.append(('colorspace', f'all={delivery}:format={base}'))
+    specs = _patch_colorspace_specs(specs, in_v)
     src = graph.add_buffer(template=in_v)
     prev = src
     for name, args in specs:
         f = graph.add(name, args) if args else graph.add(name)
         prev.link_to(f)
         prev = f
-    if 'yuva' not in pix_fmt:
+    if 'yuva' not in pix_fmt and delivery == 'bt709':
         mat = graph.add('scale', 'out_color_matrix=bt709')
         prev.link_to(mat)
         prev = mat
@@ -159,6 +189,17 @@ def _tag_unspecified_color(frame):
     return frame
 
 
+def _tag_from_frame(codec_context, frame):
+    tagged = False
+    for attr in ('colorspace', 'color_primaries', 'color_trc'):
+        val = getattr(frame, attr, None)
+        if val is not None and val != _COLOR_UNSPECIFIED:
+            setattr(codec_context, attr, val)
+            tagged = True
+    if not tagged:
+        tag_bt709(codec_context)
+
+
 def filter_video(view_url: str,
                  video_specs=None,
                  audio_specs=None,
@@ -169,6 +210,7 @@ def filter_video(view_url: str,
                  pix_fmt='yuv420p',
                  vcodec_options=None,
                  keep_audio=True,
+                 out_colorspace='bt709',
                  progress=None,
                  start=None,
                  end=None) -> str:
@@ -187,7 +229,11 @@ def filter_video(view_url: str,
     require_filters(*[n for n, _ in video_specs + audio_specs])
     if not video_specs and not audio_specs:
         raise RuntimeError("filter_video: no filters given")
-    needs_color_tags = any(n == 'colorspace' for n, _ in video_specs)
+    delivery = out_colorspace or 'bt709'
+    if delivery != 'bt709':
+        require_filters('colorspace')
+    needs_color_tags = delivery != 'bt709' \
+        or any(n == 'colorspace' for n, _ in video_specs)
 
     src_path = localize(view_url)
     info = get_video_info(view_url)
@@ -215,7 +261,8 @@ def filter_video(view_url: str,
         out_v = None
         if video_specs:
             vgraph = av.filter.Graph()
-            vsrc, vsink = _build_video_graph(vgraph, in_v, video_specs, pix_fmt)
+            vsrc, vsink = _build_video_graph(vgraph, in_v, video_specs,
+                                             pix_fmt, delivery)
             vgraph.configure()
         else:
             out_v = outp.add_stream_from_template(in_v)
@@ -254,7 +301,10 @@ def filter_video(view_url: str,
                 enc_v.pix_fmt = pix_fmt
                 enc_v.codec_context.time_base = _OUT_TB
                 if 'yuva' not in pix_fmt:
-                    tag_bt709(enc_v.codec_context)
+                    if delivery != 'bt709':
+                        _tag_from_frame(enc_v.codec_context, frame)
+                    else:
+                        tag_bt709(enc_v.codec_context)
             t = _frame_time(frame, in_v.time_base)
             if t is None:
                 return

@@ -263,6 +263,74 @@ def _torch_frame_fn(entries, ctx=None):
     return frame_fn
 
 
+DELIVERY_CODECS = {
+    'h264': {'vcodec': 'libx264', 'ext': '.mp4', 'pix_fmt': 'yuv420p',
+             'quality': {'draft': {'crf': '28', 'preset': 'veryfast'},
+                         'standard': None,
+                         'high': {'crf': '16', 'preset': 'slow'}}},
+    'hevc': {'vcodec': 'libx265', 'ext': '.mp4', 'pix_fmt': 'yuv420p',
+             'quality': {'draft': {'crf': '30', 'preset': 'fast'},
+                         'standard': None,
+                         'high': {'crf': '20', 'preset': 'slow'}}},
+    'prores': {'vcodec': 'prores_ks', 'ext': '.mov',
+               'pix_fmt': 'yuv422p10le',
+               'quality': {'draft': {'profile': '0'},
+                           'standard': {'profile': '2'},
+                           'high': {'profile': '3'}}},
+}
+
+
+DELIVERY_COLORSPACES = {'bt709', 'bt601-6-625', 'bt2020', 'smpte170m'}
+
+
+def _delivery_norm(delivery):
+    d = dict(delivery or {})
+
+    def _num(key):
+        try:
+            v = float(d.get(key) or 0)
+        except (TypeError, ValueError):
+            return 0
+        return v if v > 0 else 0
+
+    codec = d.get('codec')
+    quality = d.get('quality')
+    cs = d.get('colorspace')
+    return {
+        'colorspace': cs if cs in DELIVERY_COLORSPACES else 'bt709',
+        'size': int(_num('size')),
+        'fps': _num('fps'),
+        'codec': codec if codec in DELIVERY_CODECS else 'h264',
+        'quality': quality if quality in ('draft', 'standard', 'high')
+        else 'standard',
+    }
+
+
+def _delivery_active(d):
+    return (d['colorspace'] != 'bt709' or d['size'] > 0 or d['fps'] > 0
+            or d['codec'] != 'h264' or d['quality'] != 'standard')
+
+
+def _delivery_specs(d):
+    specs = []
+    if d['fps'] > 0:
+        specs.append(('fps', f"fps={d['fps']:g}"))
+    if d['size'] > 0:
+        s = d['size'] - d['size'] % 2
+        specs.append(('scale',
+                      f"w='if(gt(iw,ih),-2,{s})':h='if(gt(iw,ih),{s},-2)'"))
+    return specs
+
+
+def _delivery_encode_kwargs(d):
+    c = DELIVERY_CODECS[d['codec']]
+    opts = c['quality'][d['quality']]
+    return {'vcodec': c['vcodec'], 'out_ext': c['ext'],
+            'pix_fmt': c['pix_fmt'],
+            'vcodec_options': dict(opts) if opts else None,
+            'out_colorspace': d['colorspace']}
+
+
 def _segment_progress(progress, index, count):
     if progress is None or count <= 1:
         return progress
@@ -273,9 +341,11 @@ def _segment_progress(progress, index, count):
     return cb
 
 
-def run_fx_chain(view_url: str, entries, progress=None) -> str:
-    _log.info('[ComfyTV/fx-chain] render %d entries from %s',
-              len(entries), view_url)
+def run_fx_chain(view_url: str, entries, progress=None,
+                 delivery=None) -> str:
+    d = _delivery_norm(delivery)
+    _log.info('[ComfyTV/fx-chain] render %d entries from %s (delivery=%s)',
+              len(entries), view_url, json.dumps(d))
     for e in entries:
         _log.info('[ComfyTV/fx-chain]   %s engine=%s op=%s specs=%s params=%s',
                   e.get('kind'), e.get('engine', 'avfilter'), e.get('op'),
@@ -300,6 +370,7 @@ def run_fx_chain(view_url: str, entries, progress=None) -> str:
     cur = view_url
     for i, (engine, group) in enumerate(segments):
         last = i == count - 1
+        last_video = i == len(segments) - 1
         seg_progress = _segment_progress(progress, i, count)
         if engine == 'avfilter':
             specs = []
@@ -315,19 +386,31 @@ def run_fx_chain(view_url: str, entries, progress=None) -> str:
             if fps_mult != 1:
                 out_fps = get_video_info(cur)['fps'] * fps_mult
             opts = None if last else {'crf': '10', 'preset': 'veryfast'}
+            kwargs = {'vcodec_options': opts}
+            if last_video:
+                specs.extend(_delivery_specs(d))
+                if d['fps'] > 0:
+                    out_fps = d['fps']
+                kwargs = _delivery_encode_kwargs(d)
             _log.info('[ComfyTV/fx-chain] segment %d/%d avfilter specs=%s '
                       'out_fps=%s', i + 1, count, json.dumps(specs)[:600],
                       out_fps)
             cur = filter_video(cur, specs, out_fps=out_fps,
-                               vcodec_options=opts, progress=seg_progress)
+                               progress=seg_progress, **kwargs)
         else:
             ctx = {'info': get_video_info(cur)}
             _log.info('[ComfyTV/fx-chain] segment %d/%d torch ops=%s',
                       i + 1, count, [e.get('op') for e in group])
             cur = torch_process_video(cur, _torch_frame_fn(group, ctx),
                                       progress=seg_progress)
+    if _delivery_active(d) and (not segments or segments[-1][0] == 'torch'):
+        _log.info('[ComfyTV/fx-chain] delivery pass %s', json.dumps(d))
+        cur = filter_video(cur, _delivery_specs(d) or [('null', None)],
+                           out_fps=d['fps'] or None,
+                           **_delivery_encode_kwargs(d))
     if audio_specs:
         cur = filter_video(cur, None, audio_specs,
+                           out_ext=DELIVERY_CODECS[d['codec']]['ext'],
                            progress=_segment_progress(progress, count - 1,
                                                       count))
     return cur

@@ -202,6 +202,119 @@ class OldFilmStage(io.ComfyNode):
         return _fx_passthrough(video, fx_spec)
 
 
+PSEUDOCOLOR_PRESETS = ['magma', 'inferno', 'plasma', 'viridis', 'turbo',
+                       'cividis', 'range1', 'range2', 'shadows', 'highlights',
+                       'solar', 'nominal', 'preferred', 'total', 'spectral',
+                       'cool', 'heat', 'fiery', 'blues', 'green', 'helix']
+
+
+class ChromaShiftStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.ChromaShiftStage",
+            display_name="Chroma Shift",
+            category="ComfyTV/VideoFX",
+            inputs=[
+                *_standard_stage_inputs(),
+                _hidden_float("shift_rh", 0.0, -255.0, 255.0, step=1.0),
+                _hidden_float("shift_rv", 0.0, -255.0, 255.0, step=1.0),
+                _hidden_float("shift_bh", 0.0, -255.0, 255.0, step=1.0),
+                _hidden_float("shift_bv", 0.0, -255.0, 255.0, step=1.0),
+                _hidden_combo("shift_edge", ['smear', 'wrap'], 'smear'),
+                COMFYTV_VIDEO.Input("video", optional=True),
+            ],
+            outputs=[COMFYTV_VIDEO.Output("video")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
+                shift_rh=0.0, shift_rv=0.0, shift_bh=0.0, shift_bv=0.0,
+                shift_edge='smear', video=""):
+        rh = _f(shift_rh, -255, 255, 0.0)
+        rv = _f(shift_rv, -255, 255, 0.0)
+        bh = _f(shift_bh, -255, 255, 0.0)
+        bv = _f(shift_bv, -255, 255, 0.0)
+        if not any((rh, rv, bh, bv)):
+            return _fx_identity(video)
+        edge = 0 if shift_edge == 'smear' else 1
+        fx_spec = build_fx_spec(
+            "ComfyTV.ChromaShiftStage", "Chroma Shift", "video",
+            [('chromashift',
+              f'crh={int(rh)}:crv={int(rv)}:cbh={int(bh)}'
+              f':cbv={int(bv)}:edge={edge}')],
+            params={'shift_rh': rh, 'shift_rv': rv, 'shift_bh': bh,
+                    'shift_bv': bv, 'shift_edge': shift_edge})
+        return _fx_passthrough(video, fx_spec)
+
+
+class PseudocolorStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.PseudocolorStage",
+            display_name="Pseudocolor",
+            category="ComfyTV/VideoFX",
+            inputs=[
+                *_standard_stage_inputs(),
+                _hidden_combo("pseudo_preset", PSEUDOCOLOR_PRESETS, 'viridis'),
+                _hidden_float("pseudo_opacity", 1.0, 0.0, 1.0),
+                COMFYTV_VIDEO.Input("video", optional=True),
+            ],
+            outputs=[COMFYTV_VIDEO.Output("video")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
+                pseudo_preset='viridis', pseudo_opacity=1.0, video=""):
+        p = pseudo_preset if pseudo_preset in PSEUDOCOLOR_PRESETS else 'viridis'
+        fx_spec = build_fx_spec(
+            "ComfyTV.PseudocolorStage", "Pseudocolor", "video",
+            [('pseudocolor',
+              f'preset={p}:opacity={_f(pseudo_opacity, 0, 1, 1.0)}')],
+            params={'pseudo_preset': p,
+                    'pseudo_opacity': _f(pseudo_opacity, 0, 1, 1.0)})
+        return _fx_passthrough(video, fx_spec)
+
+
+class PosterizeStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.PosterizeStage",
+            display_name="Posterize",
+            category="ComfyTV/VideoFX",
+            inputs=[
+                *_standard_stage_inputs(),
+                _hidden_int("elbg_colors", 9, 1, 50),
+                _hidden_int("elbg_steps", 1, 1, 10),
+                COMFYTV_VIDEO.Input("video", optional=True),
+            ],
+            outputs=[COMFYTV_VIDEO.Output("video")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
+                elbg_colors=9, elbg_steps=1, video=""):
+        fx_spec = build_fx_spec(
+            "ComfyTV.PosterizeStage", "Posterize", "video",
+            [('elbg',
+              f'codebook_length={min(50, max(1, int(elbg_colors)))}'
+              f':nb_steps={min(10, max(1, int(elbg_steps)))}')],
+            params={'elbg_colors': min(50, max(1, int(elbg_colors))),
+                    'elbg_steps': min(10, max(1, int(elbg_steps)))})
+        return _fx_passthrough(video, fx_spec)
+
+
 class FrameBlendStage(io.ComfyNode):
 
     @classmethod
