@@ -4,41 +4,32 @@ import { app, type LGraphNode } from '@/lib/comfyApp'
 import { t } from '@/i18n'
 import { uploadBlobNamed, uploadCanvas } from '@/utils/uploadCanvas'
 import { onNodeConfigure, readWidgetStr, writeWidget } from '@/utils/widget'
-import { ContentStore } from '@/widgets/layerEditor/ContentStore'
 import { getFontStore } from '@/widgets/layerEditor/fontStore'
-import { LayerHistory, type LayerHistorySnapshot } from '@/widgets/layerEditor/LayerHistory'
-import { alphaMaskToLuminance, createOpaqueMask, luminanceToAlphaMask } from '@/widgets/layerEditor/maskUtils'
 import { createPanZoom } from '@/widgets/layerEditor/panZoom'
+import { measureText, type TextStyle } from '@/widgets/layerEditor/textRender'
+import type { BlendMode, Layer, LayerEditorState, TextLayer, ToolHandler, ToolId } from '@/widgets/layerEditor/types'
 import {
-  exportComposited,
-  exportLayerAlone,
-  renderMain,
-  renderOverlay,
-  type RenderDeps,
-} from '@/widgets/layerEditor/renderer'
-import {
-  cloneState,
-  contentIdsInJson,
-  createRasterLayer,
-  createTextLayer,
+  Dirty,
+  LAYER_MODES,
+  PropCommand,
+  createEditor,
+  createWebGLCompositor,
+  defaultMode,
+  findNode,
   generateId,
-  normalizeLayerState,
-} from '@/widgets/layerEditor/stateSerde'
-import { measureText, TextRenderCache } from '@/widgets/layerEditor/textRender'
-import {
-  createPaintTool,
-  createSelectTool,
-  createTextTool,
-  type ToolContext,
-  type ToolHandler,
-} from '@/widgets/layerEditor/tools'
-import type {
-  BlendMode,
-  Layer,
-  LayerEditorState,
-  TextLayer,
-  ToolId,
-} from '@/widgets/layerEditor/types'
+  getNodeKind,
+  insideBox,
+  pendingUploads,
+  rasterKind,
+  registerBuiltinKinds,
+  registerBuiltinTools,
+  textKind,
+  type BlendFn,
+  type CanvasItem,
+  type RasterData,
+  type SceneNode,
+  type TextData,
+} from '@/widgets/layerEditor/engine'
 
 const STATE_WIDGET = 'layer_state'
 const WIDTH_WIDGET = 'width'
@@ -48,8 +39,62 @@ const IMAGES_WIDGET = 'captured_images'
 
 const UPLOAD_DEBOUNCE_MS = 800
 const CAPTURE_DEBOUNCE_MS = 700
-const CONTENT_BYTE_BUDGET = 256 * 1024 * 1024
 const MAX_CONTENT_DIM = 4096
+const SUBFOLDER = 'comfytv/layer-editor'
+
+const V1_BLENDS = new Set<string>([
+  'source-over', 'multiply', 'screen', 'overlay', 'darken', 'lighten',
+  'color-dodge', 'color-burn', 'hard-light', 'soft-light', 'difference', 'exclusion',
+])
+const engineToV1Blend = (b: BlendFn): BlendMode => {
+  const m = b === 'normal' ? 'source-over' : b
+  return (V1_BLENDS.has(m) ? m : 'source-over') as BlendMode
+}
+const v1ToEngineBlend = (m: BlendMode): BlendFn => {
+  const b = m === 'source-over' ? 'normal' : m
+  return (b in LAYER_MODES ? b : 'normal') as BlendFn
+}
+
+function migrateState(raw: string): unknown {
+  let obj: unknown
+  try {
+    obj = JSON.parse(raw || '{}')
+  } catch {
+    return {}
+  }
+  if (!obj || typeof obj !== 'object') return {}
+  const o = obj as Record<string, unknown>
+  if (!Array.isArray(o.layers)) return obj
+
+  const migrateMask = (m: unknown) => {
+    const v = m as { contentId?: string; url?: string; enabled?: boolean } | undefined
+    if (!v?.contentId) return undefined
+    return { id: generateId('mask'), role: 'mask', contentId: v.contentId, url: v.url, enabled: v.enabled !== false }
+  }
+  const children = (o.layers as Array<Record<string, unknown>>).map((l) => {
+    const base = {
+      id: l.id,
+      name: l.name,
+      visible: l.visible !== false,
+      opacity: l.opacity,
+      mode: defaultMode(v1ToEngineBlend((l.blendMode as BlendMode) ?? 'source-over')),
+      transform: l.transform,
+      locks: { content: l.locked === true, position: false, visibility: false },
+      mask: migrateMask(l.mask),
+    }
+    if (l.type === 'text') {
+      return {
+        ...base, kind: 'text', text: l.text, fontRef: l.fontRef, fontSize: l.fontSize,
+        color: l.color, letterSpacing: l.letterSpacing, lineHeight: l.lineHeight, align: l.align,
+      }
+    }
+    return {
+      ...base, kind: 'raster', contentId: l.contentId, url: l.url,
+      naturalWidth: l.naturalWidth, naturalHeight: l.naturalHeight,
+    }
+  })
+  return { width: o.width, height: o.height, root: { kind: 'group', children } }
+}
 
 export interface UseLayerEditorStageOptions {
   onCaptured?: (url: string) => void
@@ -57,12 +102,7 @@ export interface UseLayerEditorStageOptions {
 }
 
 function toastError(detail: string): void {
-  ;(app as any)?.extensionManager?.toast?.add?.({
-    severity: 'error',
-    summary: 'ComfyTV',
-    detail,
-    life: 5000,
-  })
+  ;(app as any)?.extensionManager?.toast?.add?.({ severity: 'error', summary: 'ComfyTV', detail, life: 5000 })
 }
 
 function loadImageElement(url: string): Promise<HTMLImageElement> {
@@ -75,13 +115,24 @@ function loadImageElement(url: string): Promise<HTMLImageElement> {
   })
 }
 
+function newCanvas(w: number, h: number): HTMLCanvasElement {
+  const c = document.createElement('canvas')
+  c.width = w
+  c.height = h
+  return c
+}
+function canvasToBlob(c: HTMLCanvasElement): Promise<Blob> {
+  return new Promise((res, rej) => c.toBlob((b) => (b ? res(b) : rej(new Error('toBlob null'))), 'image/png'))
+}
+const clamp01 = (v: number) => Math.max(0, Math.min(1, v))
+
 export type LayerEditorController = ReturnType<typeof useLayerEditorStage>
 
 export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStageOptions) {
-  const state = ref<LayerEditorState>(
-    normalizeLayerState(readWidgetStr(node, STATE_WIDGET, '{}')),
-  )
-  const activeId = ref<string | null>(null)
+  registerBuiltinKinds()
+  registerBuiltinTools()
+
+  const version = ref(0)
   const tool = ref<ToolId>('select')
   const brushSize = ref(40)
   const brushOpacity = ref(1)
@@ -90,647 +141,469 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
   const paintTarget = ref<'content' | 'mask'>('content')
   const editingTextId = ref<string | null>(null)
   const capturing = ref(false)
-  const historyVersion = ref(0)
+  const capturedImageUrl = shallowRef<string>(readWidgetStr(node, IMAGE_WIDGET, ''))
+  const activeId = ref<string | null>(null)
+  const glOk = ref(true)
 
-  const content = new ContentStore()
-  const history = new LayerHistory()
-  const textCache = new TextRenderCache()
   const fontStore = getFontStore()
-  const overrides = new Map<string, HTMLCanvasElement>()
 
-  let lastCommitted: LayerHistorySnapshot = {
-    json: JSON.stringify(state.value),
-    selectedId: null,
-  }
+  const compositor = createWebGLCompositor()
+  glOk.value = compositor.init({ width: 1024, height: 1024 })
+  const editor = createEditor({ compositor, onChange })
 
-  const activeLayer = computed<Layer | null>(
-    () => state.value.layers.find((l) => l.id === activeId.value) ?? null,
-  )
-  const selectedIds = computed(() => new Set(activeId.value ? [activeId.value] : []))
-  const canUndo = computed(() => historyVersion.value >= 0 && history.canUndo())
-  const canRedo = computed(() => historyVersion.value >= 0 && history.canRedo())
+  let lastPersisted: string | null = null
 
   let mainCanvas: HTMLCanvasElement | null = null
   let overlayCanvas: HTMLCanvasElement | null = null
   let viewportEl: HTMLElement | null = null
   let containerEl: HTMLElement | null = null
-
   const panZoom = createPanZoom(() =>
-    viewportEl && containerEl ? { viewport: viewportEl, container: containerEl } : null,
+    viewportEl && containerEl ? { viewport: viewportEl, container: containerEl } : null
   )
 
-  const renderDeps: RenderDeps = {
-    content,
-    overrides,
-    getTextBitmap: (layer: TextLayer) =>
-      textCache.get(layer, fontStore.getFontSyncWithFallback(layer.fontRef)),
+  function nodeToLayer(n: SceneNode): Layer {
+    const base = {
+      id: n.id, name: n.name, visible: n.visible, locked: n.locks.content,
+      opacity: n.opacity, blendMode: engineToV1Blend(n.mode.blend),
+      transform: { ...n.transform },
+      mask: n.mask ? { contentId: n.mask.contentId, url: n.mask.url, enabled: n.mask.enabled } : undefined,
+    }
+    if (n.kind === 'text') {
+      const tx = n as TextData
+      return { ...base, type: 'text', text: tx.text, fontRef: tx.fontRef, fontSize: tx.fontSize, color: tx.color, letterSpacing: tx.letterSpacing, lineHeight: tx.lineHeight, align: tx.align } as TextLayer
+    }
+    const r = n as RasterData
+    return { ...base, type: 'raster', contentId: r.contentId ?? '', url: r.url, naturalWidth: r.naturalWidth ?? Math.round(n.transform.w), naturalHeight: r.naturalHeight ?? Math.round(n.transform.h) } as Layer
   }
+  function toV1State(): LayerEditorState {
+    const d = editor.document()
+    return { version: 1, width: d.width, height: d.height, layers: d.root.children.map(nodeToLayer) }
+  }
+
+  const state = shallowRef<LayerEditorState>(toV1State())
+  const activeLayer = computed<Layer | null>(() => state.value.layers.find((l) => l.id === activeId.value) ?? null)
+  const selectedIds = computed(() => new Set(activeId.value ? [activeId.value] : []))
+  const canUndo = computed(() => version.value >= 0 && editor.history.canUndo())
+  const canRedo = computed(() => version.value >= 0 && editor.history.canRedo())
+
+  const content = editor.content
+  const engineNode = (id: string): SceneNode | null => findNode(editor.document().root, id)?.node ?? null
 
   let rafId: number | null = null
-
-  function renderNow(): void {
-    rafId = null
-    if (!mainCanvas || !overlayCanvas) return
-    const { width, height } = state.value
-    if (mainCanvas.width !== width || mainCanvas.height !== height) {
-      mainCanvas.width = width
-      mainCanvas.height = height
+  function present(): void {
+    if (!mainCanvas) return
+    const { width, height } = editor.document()
+    if (mainCanvas.width !== width) mainCanvas.width = width
+    if (mainCanvas.height !== height) mainCanvas.height = height
+    const ctx = mainCanvas.getContext('2d')
+    if (!ctx) return
+    ctx.clearRect(0, 0, width, height)
+    if (glOk.value) {
+      editor.setZoom(Math.max(0.01, panZoom.zoom()))
+      editor.render()
+      ctx.putImageData(compositor.readback(), 0, 0)
     }
-    if (overlayCanvas.width !== width || overlayCanvas.height !== height) {
-      overlayCanvas.width = width
-      overlayCanvas.height = height
-    }
-    renderMain(mainCanvas.getContext('2d')!, state.value, renderDeps)
-    renderOverlay(
-      overlayCanvas.getContext('2d')!,
-      state.value,
-      { activeId: activeId.value, selectedIds: selectedIds.value },
-      Math.max(0.01, panZoom.zoom()),
-    )
   }
-
+  function drawOverlayCanvas(): void {
+    if (!overlayCanvas) return
+    const { width, height } = editor.document()
+    if (overlayCanvas.width !== width) overlayCanvas.width = width
+    if (overlayCanvas.height !== height) overlayCanvas.height = height
+    editor.buildOverlay()
+    const ctx = overlayCanvas.getContext('2d')
+    if (!ctx) return
+    ctx.clearRect(0, 0, width, height)
+    const z = Math.max(0.01, panZoom.zoom())
+    ctx.lineWidth = 1 / z
+    ctx.strokeStyle = '#3b82f6'
+    ctx.fillStyle = '#ffffff'
+    const hs = 4 / z
+    for (const item of editor.overlay.items) drawItem(ctx, item, hs)
+  }
+  function drawItem(ctx: CanvasRenderingContext2D, item: CanvasItem, hs: number): void {
+    switch (item.type) {
+      case 'handle':
+        ctx.beginPath()
+        if (item.shape === 'circle') ctx.arc(item.pos.x, item.pos.y, hs, 0, Math.PI * 2)
+        else ctx.rect(item.pos.x - hs, item.pos.y - hs, hs * 2, hs * 2)
+        ctx.fill()
+        ctx.stroke()
+        break
+      case 'line':
+        ctx.beginPath(); ctx.moveTo(item.a.x, item.a.y); ctx.lineTo(item.b.x, item.b.y); ctx.stroke()
+        break
+      case 'polyline':
+        ctx.beginPath()
+        item.points.forEach((p, i) => (i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)))
+        if (item.closed) ctx.closePath()
+        ctx.stroke()
+        break
+      case 'arc':
+        ctx.beginPath(); ctx.arc(item.center.x, item.center.y, item.radius, 0, Math.PI * 2); ctx.stroke()
+        break
+      case 'rect':
+        ctx.strokeRect(item.rect.x, item.rect.y, item.rect.w, item.rect.h)
+        break
+      case 'preview':
+        ctx.drawImage(item.canvas, item.rect.x, item.rect.y, item.rect.w, item.rect.h)
+        break
+    }
+  }
   function requestRender(): void {
-    if (rafId == null) rafId = requestAnimationFrame(renderNow)
+    if (rafId == null) rafId = requestAnimationFrame(() => { rafId = null; present(); drawOverlayCanvas() })
   }
 
-  function setElements(els: {
-    viewport: HTMLElement
-    container: HTMLElement
-    main: HTMLCanvasElement
-    overlay: HTMLCanvasElement
-  }): void {
+  function setElements(els: { viewport: HTMLElement; container: HTMLElement; main: HTMLCanvasElement; overlay: HTMLCanvasElement }): void {
     viewportEl = els.viewport
     containerEl = els.container
     mainCanvas = els.main
     overlayCanvas = els.overlay
     fitView()
   }
-
   function fitView(): void {
-    panZoom.fit(state.value.width, state.value.height)
+    panZoom.fit(editor.document().width, editor.document().height)
     requestRender()
   }
 
-  const idsByJson = new Map<string, string[]>()
-
-  function liveContentIds(): Set<string> {
-    const jsons = [lastCommitted.json, ...history.allJson()]
-    const live = new Set<string>()
-    for (const json of jsons) {
-      let ids = idsByJson.get(json)
-      if (!ids) {
-        ids = contentIdsInJson(json)
-        idsByJson.set(json, ids)
-      }
-      for (const id of ids) live.add(id)
-    }
-    if (idsByJson.size > jsons.length * 2) {
-      const keep = new Set(jsons)
-      for (const key of idsByJson.keys()) {
-        if (!keep.has(key)) idsByJson.delete(key)
-      }
-    }
-    return live
-  }
-
-  function collectGarbage(): void {
-    content.collectGarbage(liveContentIds())
-    while (content.totalBytes() > CONTENT_BYTE_BUDGET && history.dropOldest(5) > 0) {
-      content.collectGarbage(liveContentIds())
-    }
-  }
-
-  function commit(next: LayerEditorState, mergeKey?: string): void {
-    state.value = normalizeLayerState(JSON.stringify(next))
-    const json = JSON.stringify(state.value)
-    if (json !== lastCommitted.json) {
-      history.record(lastCommitted, mergeKey)
-      historyVersion.value += 1
-      lastCommitted = { json, selectedId: activeId.value }
-    }
+  function persistRaw(json: string): void {
+    lastPersisted = json
     writeWidget(node, STATE_WIDGET, json, { fireCallback: false })
-    writeWidget(node, WIDTH_WIDGET, state.value.width, { fireCallback: false })
-    writeWidget(node, HEIGHT_WIDGET, state.value.height, { fireCallback: false })
-    collectGarbage()
-    scheduleUpload()
-    scheduleCapture()
-    requestRender()
+    writeWidget(node, WIDTH_WIDGET, editor.document().width, { fireCallback: false })
+    writeWidget(node, HEIGHT_WIDGET, editor.document().height, { fireCallback: false })
   }
-  function silentPatch(mutate: (draft: LayerEditorState) => boolean): void {
-    const draft = cloneState(state.value)
-    if (!mutate(draft)) return
-    state.value = draft
-    lastCommitted = { json: JSON.stringify(draft), selectedId: lastCommitted.selectedId }
-    writeWidget(node, STATE_WIDGET, lastCommitted.json, { fireCallback: false })
-    requestRender()
+  function persist(): void {
+    persistRaw(JSON.stringify(editor.serialize()))
   }
-
-  function restoreSnapshot(entry: LayerHistorySnapshot): void {
-    state.value = normalizeLayerState(entry.json)
-    const restoredId =
-      entry.selectedId && state.value.layers.some((l) => l.id === entry.selectedId)
-        ? entry.selectedId
-        : null
-    activeId.value = restoredId
-    lastCommitted = { json: JSON.stringify(state.value), selectedId: restoredId }
-    writeWidget(node, STATE_WIDGET, lastCommitted.json, { fireCallback: false })
-    scheduleUpload()
-    scheduleCapture()
-    requestRender()
-  }
-
-  function undo(): void {
-    const entry = history.undo(lastCommitted)
-    if (!entry) return
-    historyVersion.value += 1
-    restoreSnapshot(entry)
-  }
-
-  function redo(): void {
-    const entry = history.redo(lastCommitted)
-    if (!entry) return
-    historyVersion.value += 1
-    restoreSnapshot(entry)
-  }
-
-  function resetHistoryBaseline(): void {
-    history.clear()
-    historyVersion.value += 1
-    lastCommitted = { json: JSON.stringify(state.value), selectedId: activeId.value }
-  }
-  function syncTextMetrics(): void {
-    silentPatch((draft) => {
-      let changed = false
-      for (const layer of draft.layers) {
-        if (layer.type !== 'text') continue
-        const font = fontStore.getFontSyncWithFallback(layer.fontRef)
-        if (!font) continue
-        const m = measureText(layer, font)
-        if (Math.abs(layer.transform.w - m.w) > 0.5 || Math.abs(layer.transform.h - m.h) > 0.5) {
-          layer.transform.w = m.w
-          layer.transform.h = m.h
-          changed = true
-        }
-      }
-      return changed
-    })
-  }
-
-  const unsubscribeFontReady = fontStore.onFontReady(() => {
-    syncTextMetrics()
-    scheduleCapture()
-    requestRender()
-  })
 
   let uploadTimer: number | null = null
   let uploading = false
   let uploadAgain = false
-
   function scheduleUpload(): void {
     if (uploadTimer != null) window.clearTimeout(uploadTimer)
-    uploadTimer = window.setTimeout(() => {
-      uploadTimer = null
-      void uploadDirty()
-    }, UPLOAD_DEBOUNCE_MS)
+    uploadTimer = window.setTimeout(uploadDirty, UPLOAD_DEBOUNCE_MS)
   }
-
   async function uploadDirty(): Promise<void> {
-    if (uploading) {
-      uploadAgain = true
-      return
-    }
+    if (uploading) { uploadAgain = true; return }
     uploading = true
     try {
-      const targets: Array<{ contentId: string; isMask: boolean }> = []
-      for (const layer of state.value.layers) {
-        if (layer.type === 'raster' && !layer.url) {
-          targets.push({ contentId: layer.contentId, isMask: false })
-        }
-        if (layer.mask && !layer.mask.url) {
-          targets.push({ contentId: layer.mask.contentId, isMask: true })
-        }
+      const jobs = pendingUploads(editor.document(), content)
+      for (const job of jobs) {
+        const blob = await canvasToBlob(job.canvas)
+        const res = await uploadBlobNamed(blob, { subfolder: SUBFOLDER, filename: `comfytv-layer-${node.id}-${job.contentId}.png` })
+        job.commitUrl(res.url)
+        content.markUploaded(job.contentId, res.url)
       }
-      for (const target of targets) {
-        const entry = content.get(target.contentId)
-        if (!entry) continue
-        let url = entry.uploadedUrl
-        if (!url) {
-          const canvas = target.isMask ? alphaMaskToLuminance(entry.canvas) : entry.canvas
-          const blob = await new Promise<Blob | null>((resolve) =>
-            canvas.toBlob(resolve, 'image/png'),
-          )
-          if (!blob) continue
-          const uploaded = await uploadBlobNamed(blob, {
-            subfolder: 'comfytv/layer-editor',
-            filename: `comfytv-layer-${String(node?.id ?? 'unknown')}-${target.contentId}.png`,
-          })
-          url = uploaded.url
-          content.markUploaded(target.contentId, url)
-        }
-        const finalUrl = url
-        silentPatch((draft) => {
-          let changed = false
-          for (const layer of draft.layers) {
-            if (!target.isMask && layer.type === 'raster'
-              && layer.contentId === target.contentId && layer.url !== finalUrl) {
-              layer.url = finalUrl
-              changed = true
-            }
-            if (target.isMask && layer.mask
-              && layer.mask.contentId === target.contentId && layer.mask.url !== finalUrl) {
-              layer.mask.url = finalUrl
-              changed = true
-            }
-          }
-          return changed
-        })
-      }
-    } catch (e) {
-      console.error('[ComfyTV/layerEditor] content upload failed', e)
+      if (jobs.length) persist()
+    } catch {
       toastError(t('layerEditor.uploadFailed'))
     } finally {
       uploading = false
-      if (uploadAgain) {
-        uploadAgain = false
-        scheduleUpload()
-      }
+      if (uploadAgain) { uploadAgain = false; scheduleUpload() }
     }
+  }
+
+  function flattenComposite(): HTMLCanvasElement {
+    const img = compositor.readback()
+    const tmp = newCanvas(img.width, img.height)
+    tmp.getContext('2d')!.putImageData(img, 0, 0)
+    const out = newCanvas(img.width, img.height)
+    const g = out.getContext('2d')!
+    g.fillStyle = '#ffffff'
+    g.fillRect(0, 0, img.width, img.height)
+    g.drawImage(tmp, 0, 0)
+    return out
   }
 
   let captureTimer: number | null = null
   let captureSeq = 0
-  const capturedImageUrl = shallowRef<string>(readWidgetStr(node, IMAGE_WIDGET, ''))
-
   function scheduleCapture(): void {
     if (captureTimer != null) window.clearTimeout(captureTimer)
-    captureTimer = window.setTimeout(() => {
-      captureTimer = null
-      void runCapture()
-    }, CAPTURE_DEBOUNCE_MS)
+    captureTimer = window.setTimeout(runCapture, CAPTURE_DEBOUNCE_MS)
   }
-
   async function runCapture(): Promise<void> {
-    if (state.value.layers.length === 0) return
-    const mySeq = ++captureSeq
+    if (!glOk.value) return
+    const seq = ++captureSeq
     try {
-      const canvas = exportComposited(state.value, renderDeps, 'white')
-      const url = await uploadCanvas(canvas, {
-        subfolder: 'comfytv/layer-editor',
-        filename: `comfytv-layer-${String(node?.id ?? 'unknown')}-composite-${Date.now()}.png`,
-      })
-      if (mySeq !== captureSeq) return
+      editor.render()
+      const url = await uploadCanvas(flattenComposite(), { subfolder: SUBFOLDER, filenamePrefix: `comfytv-cap-${node.id}` })
+      if (seq !== captureSeq) return
       capturedImageUrl.value = url
       writeWidget(node, IMAGE_WIDGET, url, { fireCallback: false })
       opts?.onCaptured?.(url)
-    } catch (e) {
-      console.error('[ComfyTV/layerEditor] capture failed', e)
+    } catch {
+      toastError(t('layerEditor.captureFailed'))
     }
   }
+
   async function captureBatch(): Promise<void> {
-    if (capturing.value) return
+    if (!glOk.value) return
     capturing.value = true
     try {
-      const doc = state.value
-      const stamp = Date.now()
-      const nodeId = String(node?.id ?? 'unknown')
-
-      const composite = exportComposited(doc, renderDeps, 'white')
-      const compositeUrl = await uploadCanvas(composite, {
-        subfolder: 'comfytv/layer-editor',
-        filename: `comfytv-layer-${nodeId}-composite-${stamp}.png`,
-      })
-      captureSeq += 1
+      editor.render()
+      const compositeUrl = await uploadCanvas(flattenComposite(), { subfolder: SUBFOLDER, filenamePrefix: `comfytv-cap-${node.id}` })
       capturedImageUrl.value = compositeUrl
       writeWidget(node, IMAGE_WIDGET, compositeUrl, { fireCallback: false })
       opts?.onCaptured?.(compositeUrl)
 
-      const uploads: Array<{ label: string; url: string }> = [
-        { label: 'composite', url: compositeUrl },
-      ]
-      for (const layer of doc.layers) {
-        if (!layer.visible) continue
-        const alone = exportLayerAlone(doc, layer, renderDeps)
-        const url = await uploadCanvas(alone, {
-          subfolder: 'comfytv/layer-editor',
-          filename: `comfytv-layer-${nodeId}-${layer.id}-${stamp}.png`,
-        })
-        uploads.push({ label: layer.name, url })
+      const children = editor.document().root.children
+      const saved = children.map((n) => n.visible)
+      const images: Array<{ index: number; label: string; image_url: string }> = [{ index: 1, label: 'composite', image_url: compositeUrl }]
+      let idx = 2
+      for (let i = 0; i < children.length; i++) {
+        if (!saved[i]) continue
+        children.forEach((n, j) => (n.visible = j === i))
+        editor.render()
+        const url = await uploadCanvas(flattenComposite(), { subfolder: SUBFOLDER, filenamePrefix: `comfytv-layer-${node.id}` })
+        images.push({ index: idx++, label: children[i].name, image_url: url })
       }
-      const batch = JSON.stringify({
-        images: uploads.map((u, index) => ({
-          index: String(index + 1),
-          label: u.label,
-          image_url: u.url,
-        })),
-      })
-      writeWidget(node, IMAGES_WIDGET, batch, { fireCallback: false })
-      opts?.onBatchCaptured?.(batch)
-    } catch (e) {
-      console.error('[ComfyTV/layerEditor] batch capture failed', e)
+      children.forEach((n, j) => (n.visible = saved[j]))
+      editor.render()
+      const json = JSON.stringify({ images })
+      writeWidget(node, IMAGES_WIDGET, json, { fireCallback: false })
+      opts?.onBatchCaptured?.(json)
+    } catch {
       toastError(t('layerEditor.captureFailed'))
     } finally {
       capturing.value = false
+      requestRender()
     }
+  }
+
+  function onChange(): void {
+    version.value += 1
+    activeId.value = editor.activeNodeId()
+    state.value = toV1State()
+    requestRender()
+    if (lastPersisted === null) return
+    const json = JSON.stringify(editor.serialize())
+    if (json === lastPersisted) return
+    persistRaw(json)
+    scheduleUpload()
+    scheduleCapture()
+  }
+
+  function editProp<T>(label: string, dirty: number, get: () => T, set: (v: T) => void, value: T, mergeKey?: string): void {
+    const before = get()
+    if (before === value) return
+    set(value)
+    editor.history.push(new PropCommand(label, dirty, get, set, before, value, mergeKey))
+    editor.invalidate()
   }
 
   function setActiveLayer(id: string | null): void {
-    activeId.value = id
-    requestRender()
+    editor.setActiveNode(id)
+  }
+  function undo(): void { editor.undo() }
+  function redo(): void { editor.redo() }
+
+  function setOpacity(id: string, v: number): void {
+    const n = engineNode(id); if (!n) return
+    editProp('Opacity', Dirty.META, () => n.opacity, (x) => (n.opacity = x), clamp01(v), `opacity:${id}`)
+  }
+  function setBlendMode(id: string, v: BlendMode): void {
+    const n = engineNode(id); if (!n) return
+    editProp('Blend', Dirty.DRAWABLE, () => n.mode, (m) => (n.mode = m), defaultMode(v1ToEngineBlend(v)), `blend:${id}`)
+  }
+  function toggleVisible(id: string): void {
+    const n = engineNode(id); if (!n) return
+    editProp('Visibility', Dirty.META, () => n.visible, (x) => (n.visible = x), !n.visible)
+  }
+  function toggleLock(id: string): void {
+    const n = engineNode(id); if (!n) return
+    editProp('Lock', Dirty.META, () => n.locks.content, (x) => (n.locks.content = x), !n.locks.content)
+  }
+  function renameLayer(id: string, name: string): void {
+    const n = engineNode(id); if (!n) return
+    editProp('Rename', Dirty.META, () => n.name, (x) => (n.name = x), name.trim() || 'Layer')
   }
 
-  function fitTransformForImage(w: number, h: number) {
-    const doc = state.value
-    let lw = w
-    let lh = h
-    const maxDim = Math.max(doc.width, doc.height)
-    if (lw > maxDim || lh > maxDim) {
-      const ratio = Math.min(maxDim / lw, maxDim / lh)
-      lw = Math.round(lw * ratio)
-      lh = Math.round(lh * ratio)
-    }
-    return {
-      x: (doc.width - lw) / 2,
-      y: (doc.height - lh) / 2,
-      w: lw,
-      h: lh,
-      rotation: 0,
-    }
+  function moveLayer(id: string, dir: 1 | -1): void {
+    const loc = findNode(editor.document().root, id)
+    if (loc) editor.reorder(id, loc.index + dir)
   }
-
-  function contentCanvasFromImage(img: HTMLImageElement): HTMLCanvasElement {
-    let w = img.naturalWidth
-    let h = img.naturalHeight
-    if (w > MAX_CONTENT_DIM || h > MAX_CONTENT_DIM) {
-      const ratio = Math.min(MAX_CONTENT_DIM / w, MAX_CONTENT_DIM / h)
-      w = Math.max(1, Math.round(w * ratio))
-      h = Math.max(1, Math.round(h * ratio))
-    }
-    const c = document.createElement('canvas')
-    c.width = w
-    c.height = h
-    c.getContext('2d')!.drawImage(img, 0, 0, w, h)
-    return c
+  function removeLayer(id: string): void {
+    editor.setActiveNode(id)
+    editor.removeActive()
   }
-
-  function addImageLayerFromElement(
-    img: HTMLImageElement,
-    name: string,
-    sourceUrl?: string,
-  ): void {
-    const canvas = contentCanvasFromImage(img)
-    const keepUrl =
-      sourceUrl && canvas.width === img.naturalWidth && canvas.height === img.naturalHeight
-        ? sourceUrl
-        : undefined
-    const contentId = content.register(canvas, { uploadedUrl: keepUrl })
-    const layer = createRasterLayer({
-      contentId,
-      name,
-      naturalWidth: canvas.width,
-      naturalHeight: canvas.height,
-      transform: fitTransformForImage(canvas.width, canvas.height),
-      url: keepUrl,
-    })
-    const next = cloneState(state.value)
-    next.layers.push(layer)
-    commit(next)
-    setActiveLayer(layer.id)
+  function duplicateLayer(id: string): void {
+    const loc = findNode(editor.document().root, id)
+    if (!loc) return
+    const kind = getNodeKind(loc.node.kind)
+    const copy = kind.normalize(kind.serialize(loc.node)) as SceneNode
+    copy.id = generateId(loc.node.kind)
+    copy.transform = { ...copy.transform, x: copy.transform.x + 16, y: copy.transform.y + 16 }
+    editor.addNode(copy, loc.index + 1)
   }
 
   async function addImageFromUrl(url: string, name: string): Promise<void> {
     try {
       const img = await loadImageElement(url)
-      addImageLayerFromElement(img, name, url)
-    } catch (e) {
-      console.error('[ComfyTV/layerEditor] failed to load image', e)
+      const scale = Math.min(1, MAX_CONTENT_DIM / Math.max(img.width, img.height))
+      const nw = Math.max(1, Math.round(img.width * scale))
+      const nh = Math.max(1, Math.round(img.height * scale))
+      const c = newCanvas(nw, nh)
+      c.getContext('2d')!.drawImage(img, 0, 0, nw, nh)
+      const cid = content.register(c, scale === 1 ? { uploadedUrl: url } : undefined)
+      const d = editor.document()
+      editor.addNode(rasterKind.create({
+        name, contentId: cid, url: scale === 1 ? url : undefined, naturalWidth: nw, naturalHeight: nh,
+        transform: { x: (d.width - nw) / 2, y: (d.height - nh) / 2, w: nw, h: nh, rotation: 0 },
+      }))
+    } catch {
       toastError(t('layerEditor.loadImageFailed'))
     }
   }
-
   function addImageFromFile(file: File): void {
     const reader = new FileReader()
-    reader.onload = () => {
-      const img = new Image()
-      img.onload = () => addImageLayerFromElement(img, file.name)
-      img.onerror = () => toastError(t('layerEditor.loadImageFailed'))
-      img.src = reader.result as string
-    }
+    reader.onload = () => void addImageFromUrl(String(reader.result), file.name.replace(/\.[^.]+$/, ''))
     reader.readAsDataURL(file)
   }
-
-  function removeLayer(id: string): void {
-    const next = cloneState(state.value)
-    const idx = next.layers.findIndex((l) => l.id === id)
-    if (idx === -1) return
-    next.layers.splice(idx, 1)
-    textCache.drop(id)
-    commit(next)
-    if (activeId.value === id) {
-      setActiveLayer(next.layers[Math.min(idx, next.layers.length - 1)]?.id ?? null)
-    }
-  }
-
-  function moveLayer(id: string, dir: 1 | -1): void {
-    const next = cloneState(state.value)
-    const idx = next.layers.findIndex((l) => l.id === id)
-    const target = idx + dir
-    if (idx === -1 || target < 0 || target >= next.layers.length) return
-    ;[next.layers[idx], next.layers[target]] = [next.layers[target], next.layers[idx]]
-    commit(next)
-  }
-
-  function duplicateLayer(id: string): void {
-    const src = state.value.layers.find((l) => l.id === id)
-    if (!src) return
-    const next = cloneState(state.value)
-    const idx = next.layers.findIndex((l) => l.id === id)
-    const copy = JSON.parse(JSON.stringify(src)) as Layer
-    copy.id = generateId()
-    copy.name = `${src.name} copy`
-    copy.transform.x += 16
-    copy.transform.y += 16
-    next.layers.splice(idx + 1, 0, copy)
-    commit(next)
-    setActiveLayer(copy.id)
-  }
-
-  function patchLayer(id: string, mutate: (layer: Layer) => void, mergeKey?: string): void {
-    const next = cloneState(state.value)
-    const layer = next.layers.find((l) => l.id === id)
-    if (!layer) return
-    mutate(layer)
-    commit(next, mergeKey)
-  }
-
-  const setOpacity = (id: string, v: number) =>
-    patchLayer(id, (l) => { l.opacity = Math.min(1, Math.max(0, v)) }, `opacity:${id}`)
-  const setBlendMode = (id: string, v: BlendMode) =>
-    patchLayer(id, (l) => { l.blendMode = v })
-  const toggleVisible = (id: string) =>
-    patchLayer(id, (l) => { l.visible = !l.visible })
-  const toggleLock = (id: string) =>
-    patchLayer(id, (l) => { l.locked = !l.locked })
-  const renameLayer = (id: string, name: string) =>
-    patchLayer(id, (l) => { l.name = name.trim() || l.name })
-
-  function addMask(id: string): void {
-    const layer = state.value.layers.find((l) => l.id === id)
-    if (!layer || layer.mask) return
-    const w = layer.type === 'raster' ? layer.naturalWidth : Math.max(1, Math.round(layer.transform.w))
-    const h = layer.type === 'raster' ? layer.naturalHeight : Math.max(1, Math.round(layer.transform.h))
-    const contentId = content.register(createOpaqueMask(w, h))
-    patchLayer(id, (l) => { l.mask = { contentId, enabled: true } })
-    paintTarget.value = 'mask'
-  }
-
-  function removeMask(id: string): void {
-    patchLayer(id, (l) => { delete l.mask })
-    if (paintTarget.value === 'mask') paintTarget.value = 'content'
-  }
-
-  const toggleMaskEnabled = (id: string) =>
-    patchLayer(id, (l) => { if (l.mask) l.mask.enabled = !l.mask.enabled })
-
-  function updateTextLayer(id: string, patch: Partial<TextLayer>): void {
-    patchLayer(id, (l) => {
-      if (l.type !== 'text') return
-      Object.assign(l, patch)
-      const font = fontStore.getFontSyncWithFallback(l.fontRef)
-      if (font) {
-        const m = measureText(l, font)
-        l.transform.w = m.w
-        l.transform.h = m.h
-      }
-    }, `text:${id}`)
-  }
-
   function addTextLayerAt(at: { x: number; y: number }): string {
-    const next = cloneState(state.value)
-    const layer = createTextLayer({ text: '', at })
-    next.layers.push(layer)
-    commit(next)
-    setActiveLayer(layer.id)
+    const layer = textKind.create({ text: '', transform: { x: at.x, y: at.y, w: 200, h: 64, rotation: 0 } })
+    editor.addNode(layer)
     return layer.id
   }
 
   function setArtboardSize(w: number, h: number): void {
-    const next = cloneState(state.value)
-    next.width = w
-    next.height = h
-    commit(next)
+    const d = editor.document()
+    const before = { w: d.width, h: d.height }
+    if (before.w === w && before.h === h) return
+    const apply = (v: { w: number; h: number }): void => {
+      d.width = v.w
+      d.height = v.h
+      if (glOk.value) compositor.resize(v.w, v.h)
+    }
+    apply({ w, h })
+    editor.history.push(
+      new PropCommand('Artboard', Dirty.STRUCTURE, () => ({ w: d.width, h: d.height }), apply, before, { w, h })
+    )
+    editor.invalidate()
     fitView()
   }
-
   function nudgeActive(dx: number, dy: number): void {
-    const id = activeId.value
-    if (!id) return
-    patchLayer(id, (l) => {
-      l.transform.x += dx
-      l.transform.y += dy
-    }, `nudge:${id}`)
+    const id = activeId.value; if (!id) return
+    const n = engineNode(id); if (!n) return
+    editProp('Move', Dirty.META, () => ({ ...n.transform }), (tf) => (n.transform = tf), { ...n.transform, x: n.transform.x + dx, y: n.transform.y + dy }, `nudge:${id}`)
   }
 
-  const toolCtx: ToolContext = {
-    getState: () => state.value,
-    getActiveId: () => activeId.value,
-    setActiveLayer,
-    content,
-    zoom: () => Math.max(0.01, panZoom.zoom()),
-    commit: commitFromTool,
-    requestRender,
-    brush: () => ({
-      size: brushSize.value,
-      opacity: brushOpacity.value,
-      hardness: brushHardness.value,
-      color: brushColor.value,
-    }),
-    brushTool: () => (tool.value === 'eraser' ? 'eraser' : 'brush'),
-    paintTarget: () => paintTarget.value,
-    setOverride: (key, canvas) => {
-      if (canvas) overrides.set(key, canvas)
-      else overrides.delete(key)
-    },
-    openTextEditor: (layerId) => {
-      editingTextId.value = layerId
-    },
+  function styleOf(n: TextData): TextStyle {
+    return { id: n.id, text: n.text, fontRef: n.fontRef, fontSize: n.fontSize, color: n.color, letterSpacing: n.letterSpacing, lineHeight: n.lineHeight, align: n.align }
   }
-  function commitFromTool(next: LayerEditorState, mergeKey?: string): void {
-    if (mergeKey?.startsWith('resize:')) {
-      const id = mergeKey.slice('resize:'.length)
-      const nextLayer = next.layers.find((l) => l.id === id)
-      const curLayer = state.value.layers.find((l) => l.id === id)
-      if (nextLayer?.type === 'text' && curLayer?.type === 'text' && curLayer.transform.h > 0) {
-        const scale = nextLayer.transform.h / curLayer.transform.h
-        nextLayer.fontSize = Math.min(2048, Math.max(4, nextLayer.fontSize * scale))
-        const font = fontStore.getFontSyncWithFallback(nextLayer.fontRef)
-        if (font) {
-          const m = measureText(nextLayer, font)
-          nextLayer.transform.w = m.w
-          nextLayer.transform.h = m.h
-        }
-      }
+  const TEXT_FIELDS = ['text', 'fontRef', 'fontSize', 'color', 'letterSpacing', 'lineHeight', 'align', 'transform'] as const
+  function snapshotText(n: TextData): Record<string, unknown> {
+    const s: Record<string, unknown> = {}
+    for (const k of TEXT_FIELDS) s[k] = k === 'transform' ? { ...n.transform } : (n as any)[k]
+    return s
+  }
+  function updateTextLayer(id: string, patch: Partial<TextLayer>): void {
+    const n = engineNode(id) as TextData | null
+    if (!n || n.kind !== 'text') return
+    const before = snapshotText(n)
+    Object.assign(n, patch)
+    const font = fontStore.getFontSyncWithFallback(n.fontRef)
+    if (font) {
+      const m = measureText(styleOf(n), font)
+      n.transform = { ...n.transform, w: m.w, h: m.h }
     }
-    commit(next, mergeKey)
+    const after = snapshotText(n)
+    editor.history.push(
+      new PropCommand('Text', Dirty.DRAWABLE, () => snapshotText(n), (v) => Object.assign(n, v), before, after, `text:${id}`)
+    )
+    editor.invalidate()
   }
 
-  const toolHandlers: Record<ToolId, ToolHandler> = {
-    select: createSelectTool(toolCtx),
-    brush: createPaintTool(toolCtx),
-    eraser: createPaintTool(toolCtx),
-    text: createTextTool(toolCtx),
+  function whiteMask(w: number, h: number): HTMLCanvasElement {
+    const c = newCanvas(w, h)
+    const g = c.getContext('2d')!
+    g.fillStyle = '#ffffff'
+    g.fillRect(0, 0, w, h)
+    return c
+  }
+  function addMask(id: string): void {
+    const n = engineNode(id); if (!n || n.mask) return
+    const w = n.kind === 'raster' ? (n as RasterData).naturalWidth : Math.max(1, Math.round(n.transform.w))
+    const h = n.kind === 'raster' ? (n as RasterData).naturalHeight : Math.max(1, Math.round(n.transform.h))
+    const cid = content.register(whiteMask(w, h))
+    editProp('Add Mask', Dirty.CHANNEL, () => n.mask, (m) => (n.mask = m), { id: generateId('mask'), role: 'mask', contentId: cid, enabled: true })
+    paintTarget.value = 'mask'
+  }
+  function removeMask(id: string): void {
+    const n = engineNode(id); if (!n || !n.mask) return
+    editProp('Delete Mask', Dirty.CHANNEL, () => n.mask, (m) => (n.mask = m), undefined)
+    paintTarget.value = 'content'
+  }
+  function toggleMaskEnabled(id: string): void {
+    const n = engineNode(id); if (!n || !n.mask) return
+    const mask = n.mask
+    editProp('Toggle Mask', Dirty.CHANNEL, () => mask.enabled, (x) => (mask.enabled = x), !mask.enabled)
   }
 
+  function syncEngineTool(): void {
+    editor.setBrush({ size: brushSize.value, hardness: brushHardness.value, opacity: brushOpacity.value, flow: 1, color: brushColor.value, spacing: 0.1 })
+    let id: string = tool.value
+    if (tool.value === 'brush') id = paintTarget.value === 'mask' ? 'mask-brush' : 'brush'
+    else if (tool.value === 'eraser') id = paintTarget.value === 'mask' ? 'mask-eraser' : 'eraser'
+    if (editor.activeToolId() !== id) editor.setTool(id)
+  }
+  const textToolHandler: ToolHandler = {
+    onPointerDown: (_e, pt) => {
+      const hit = [...editor.document().root.children].reverse().find((n) => n.kind === 'text' && insideBox(n.transform, pt))
+      const id = hit ? hit.id : addTextLayerAt(pt)
+      editor.setActiveNode(id)
+      editingTextId.value = id
+      return true
+    },
+    onPointerMove: () => {},
+    onPointerUp: () => {},
+    cursorFor: () => 'text',
+  }
+  const engineToolHandler: ToolHandler = {
+    onPointerDown: (e, pt) => {
+      syncEngineTool()
+      editor.pointerDown(e, pt)
+      return true
+    },
+    onPointerMove: (e, pt) => editor.pointerMove(e, pt),
+    onPointerUp: (e, pt) => editor.pointerUp(e, pt),
+    cursorFor: () => (tool.value === 'select' ? 'default' : 'crosshair'),
+  }
   function activeToolHandler(): ToolHandler {
-    return toolHandlers[tool.value]
+    return tool.value === 'text' ? textToolHandler : engineToolHandler
   }
 
-  async function hydrateContent(): Promise<void> {
-    const jobs: Array<Promise<void>> = []
-    for (const layer of state.value.layers) {
-      if (layer.type === 'raster' && layer.url && !content.has(layer.contentId)) {
-        const { contentId, url, naturalWidth, naturalHeight } = layer
-        jobs.push(
-          loadImageElement(url).then((img) => {
-            const c = document.createElement('canvas')
-            c.width = naturalWidth
-            c.height = naturalHeight
-            c.getContext('2d')!.drawImage(img, 0, 0, naturalWidth, naturalHeight)
-            content.register(c, { id: contentId, uploadedUrl: url })
-            requestRender()
-          }).catch((e) => console.warn('[ComfyTV/layerEditor] layer hydrate failed', e)),
-        )
-      }
-      if (layer.mask?.url && !content.has(layer.mask.contentId)) {
-        const maskRef = layer.mask
-        const w = layer.type === 'raster' ? layer.naturalWidth : Math.max(1, Math.round(layer.transform.w))
-        const h = layer.type === 'raster' ? layer.naturalHeight : Math.max(1, Math.round(layer.transform.h))
-        jobs.push(
-          loadImageElement(maskRef.url!).then((img) => {
-            const mask = luminanceToAlphaMask(img, w, h)
-            content.register(mask, { id: maskRef.contentId, uploadedUrl: maskRef.url })
-            requestRender()
-          }).catch((e) => console.warn('[ComfyTV/layerEditor] mask hydrate failed', e)),
-        )
-      }
+  function loadUrlToCanvas(url: string): Promise<HTMLCanvasElement> {
+    return loadImageElement(url).then((img) => {
+      const c = newCanvas(img.width, img.height)
+      c.getContext('2d')!.drawImage(img, 0, 0)
+      return c
+    })
+  }
+  async function hydrate(): Promise<void> {
+    try {
+      await editor.hydrate(loadUrlToCanvas)
+    } catch (e) {
+      console.warn('[ComfyTV/layerEditor] hydrate failed', e)
     }
-    await Promise.all(jobs)
   }
-
+  function loadDocument(): void {
+    lastPersisted = null
+    editor.loadJSON(migrateState(readWidgetStr(node, STATE_WIDGET, '{}')))
+    lastPersisted = JSON.stringify(editor.serialize())
+    if (glOk.value) compositor.resize(editor.document().width, editor.document().height)
+  }
   function loadFromNode(): void {
-    state.value = normalizeLayerState(readWidgetStr(node, STATE_WIDGET, '{}'))
-    activeId.value = null
+    loadDocument()
     editingTextId.value = null
     capturedImageUrl.value = readWidgetStr(node, IMAGE_WIDGET, '')
-    textCache.clear()
-    resetHistoryBaseline()
-    void hydrateContent()
+    void hydrate()
     fitView()
-    requestRender()
   }
 
+  loadDocument()
+
   onNodeConfigure(node, loadFromNode)
-  void hydrateContent()
-  resetHistoryBaseline()
+  void hydrate()
+  const unsubscribeFontReady = fontStore.onFontReady(() => editor.invalidate())
 
   onBeforeUnmount(() => {
     unsubscribeFontReady()
@@ -738,6 +611,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     if (uploadTimer != null) window.clearTimeout(uploadTimer)
     if (captureTimer != null) window.clearTimeout(captureTimer)
     captureSeq += 1
+    compositor.dispose()
   })
 
   return {

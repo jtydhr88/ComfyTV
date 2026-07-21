@@ -68,3 +68,11 @@ export interface LayerEditorState {
 export type HandleId = 'nw' | 'n' | 'ne' | 'e' | 'se' | 's' | 'sw' | 'w' | 'rotate'
 
 export type ToolId = 'select' | 'brush' | 'eraser' | 'text'
+
+
+export interface ToolHandler {
+  onPointerDown: (e: PointerEvent, pt: Point) => boolean
+  onPointerMove: (e: PointerEvent, pt: Point) => void
+  onPointerUp: (e: PointerEvent, pt: Point) => void
+  cursorFor: (pt: Point) => string
+}

@@ -119,24 +119,24 @@ describe('adjustedBrush', () => {
 })
 
 describe('brushCursorDiameterPx / brushGradientCss', () => {
-  it('scales the effective brush diameter by zoom', () => {
-    expect(brushCursorDiameterPx(40, 1, 1)).toBe(40)
-    expect(brushCursorDiameterPx(40, 1, 2)).toBe(80)
-    expect(brushCursorDiameterPx(40, 0, 1)).toBe(60)
+  it('cursor diameter is exactly the nominal size × zoom (engine paints within size)', () => {
+    expect(brushCursorDiameterPx(40, 1)).toBe(40)
+    expect(brushCursorDiameterPx(40, 2)).toBe(80)
+    expect(brushCursorDiameterPx(40, 0.5)).toBe(20)
   })
 
   it('returns a flat color at full hardness', () => {
-    expect(brushGradientCss({ r: 255, g: 0, b: 0 }, 1, 40, 1)).toBe('rgba(255, 0, 0, 0.5)')
+    expect(brushGradientCss({ r: 255, g: 0, b: 0 }, 1, 1)).toBe('rgba(255, 0, 0, 0.5)')
   })
 
-  it('returns a radial gradient for soft brushes', () => {
-    const css = brushGradientCss({ r: 10, g: 20, b: 30 }, 1, 40, 0.5)
+  it('returns a radial gradient sampling the engine falloff for soft brushes', () => {
+    const css = brushGradientCss({ r: 10, g: 20, b: 30 }, 1, 0.5)
     expect(css).toContain('radial-gradient(circle, rgba(10, 20, 30, 0.5) 0%')
     expect(css).toContain('rgba(10, 20, 30, 0) 100%)')
   })
 
   it('floors the visible alpha for very transparent brushes', () => {
-    expect(brushGradientCss({ r: 0, g: 0, b: 0 }, 0, 40, 1)).toBe('rgba(0, 0, 0, 0.075)')
+    expect(brushGradientCss({ r: 0, g: 0, b: 0 }, 0, 1)).toBe('rgba(0, 0, 0, 0.075)')
   })
 })
 

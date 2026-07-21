@@ -65,10 +65,72 @@
       <slot name="trailing" />
     </div>
 
+    <div v-if="isPaintTool" class="ctv:flex ctv:h-7 ctv:items-center ctv:gap-3 ctv:text-2xs ctv:text-muted-foreground">
+      <div class="ctv:flex ctv:h-6 ctv:items-center ctv:gap-0.5 ctv:rounded-lg ctv:bg-secondary-background ctv:p-0.5">
+        <button
+          v-for="target in PAINT_TARGETS"
+          :key="target.id"
+          type="button"
+          :class="toolBtnClass(editor.paintTarget.value === target.id)"
+          :aria-pressed="editor.paintTarget.value === target.id"
+          @click="editor.paintTarget.value = target.id"
+        >
+          {{ $t(target.labelKey) }}
+        </button>
+      </div>
+
+      <label class="ctv:flex ctv:items-center ctv:gap-1">
+        {{ $t('layerEditor.brushSize') }}
+        <input
+          v-model.number="editor.brushSize.value"
+          type="range"
+          min="2"
+          max="400"
+          step="1"
+          class="ctv:w-20"
+        />
+        <span class="ctv:w-7 ctv:text-right">{{ editor.brushSize.value }}</span>
+      </label>
+
+      <label class="ctv:flex ctv:items-center ctv:gap-1">
+        {{ $t('layerEditor.brushHardness') }}
+        <input
+          v-model.number="editor.brushHardness.value"
+          type="range"
+          min="0"
+          max="1"
+          step="0.01"
+          class="ctv:w-16"
+        />
+      </label>
+
+      <label class="ctv:flex ctv:items-center ctv:gap-1">
+        {{ $t('layerEditor.brushOpacity') }}
+        <input
+          v-model.number="editor.brushOpacity.value"
+          type="range"
+          min="0"
+          max="1"
+          step="0.01"
+          class="ctv:w-16"
+        />
+      </label>
+
+      <label v-if="showBrushColor" class="ctv:flex ctv:items-center ctv:gap-1">
+        {{ $t('layerEditor.brushColor') }}
+        <input
+          v-model="editor.brushColor.value"
+          type="color"
+          class="ctv:size-6 ctv:cursor-pointer ctv:rounded ctv:border ctv:border-border-subtle ctv:bg-transparent ctv:p-0"
+        />
+      </label>
+    </div>
+
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import IconCamera from '~icons/lucide/camera'
 import IconLoader from '~icons/lucide/loader-2'
 import IconMousePointer from '~icons/lucide/mouse-pointer-2'
@@ -90,6 +152,16 @@ const TOOL_OPTIONS: Array<{ id: ToolId; labelKey: string; icon: unknown }> = [
   { id: 'select', labelKey: 'layerEditor.toolSelect', icon: IconMousePointer },
   { id: 'text', labelKey: 'layerEditor.toolText', icon: IconType },
 ]
+
+const PAINT_TARGETS: Array<{ id: 'content' | 'mask'; labelKey: string }> = [
+  { id: 'content', labelKey: 'layerEditor.targetContent' },
+  { id: 'mask', labelKey: 'layerEditor.targetMask' },
+]
+
+const isPaintTool = computed(() => editor.tool.value === 'brush' || editor.tool.value === 'eraser')
+const showBrushColor = computed(
+  () => editor.tool.value === 'brush' && editor.paintTarget.value === 'content'
+)
 
 function toolBtnClass(active: boolean): string {
   return [

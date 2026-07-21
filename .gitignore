@@ -30,3 +30,8 @@ assets_src/
 
 # internal research notes, never committed
 research/
+
+# e2e harness build output + playwright artifacts
+e2e/dist/
+test-results/
+playwright-report/

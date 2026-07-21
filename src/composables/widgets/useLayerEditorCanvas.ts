@@ -1,7 +1,7 @@
 import { computed, onBeforeUnmount, ref, type Ref } from 'vue'
 
 import type { LayerEditorController } from '@/composables/widgets/useLayerEditorStage'
-import { getEffectiveBrushSize, getEffectiveHardness } from '@/widgets/painter/brushUtils'
+import { brushProfile } from '@/widgets/layerEditor/engine'
 import { hexToRgb } from '@/widgets/painter/types'
 
 export const ADJUST_DEAD_ZONE = 5
@@ -32,29 +32,24 @@ export function adjustedBrush(
   }
 }
 
-export function brushCursorDiameterPx(size: number, hardness: number, zoom: number): number {
-  const radius = size / 2
-  const effectiveRadius = getEffectiveBrushSize(radius, hardness)
-  return effectiveRadius * 2 * Math.max(0.01, zoom)
+
+export function brushCursorDiameterPx(size: number, zoom: number): number {
+  return size * Math.max(0.01, zoom)
 }
+
 
 export function brushGradientCss(
   rgb: { r: number; g: number; b: number },
   opacity: number,
-  size: number,
   hardness: number,
 ): string {
   const alpha = 0.5 * Math.max(0.15, opacity)
-  const radius = size / 2
-  const effectiveRadius = getEffectiveBrushSize(radius, hardness)
-  const effectiveHardness = getEffectiveHardness(radius, hardness, effectiveRadius)
-  const base = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`
-  if (effectiveHardness >= 1) return base
-  const midStop = effectiveHardness * 100
-  const fadeMidStop = midStop + (100 - midStop) * 0.5
-  return `radial-gradient(circle, ${base} 0%, ${base} ${midStop}%, ` +
-    `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha * 0.25}) ${fadeMidStop}%, ` +
-    `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0) 100%)`
+  if (hardness >= 0.999) return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`
+  const stops = [0, 0.3, 0.5, 0.65, 0.8, 0.9, 1].map((r) => {
+    const a = Number((alpha * brushProfile(r, hardness)).toFixed(3))
+    return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${a}) ${Math.round(r * 100)}%`
+  })
+  return `radial-gradient(circle, ${stops.join(', ')})`
 }
 
 export function useLayerEditorCanvas(
@@ -199,16 +194,11 @@ export function useLayerEditorCanvas(
     () => (hovering.value || adjusting.value != null) && isPaintTool.value && !spaceDown.value,
   )
 
-  const activeHardness = computed(
-    () => (editor.tool.value === 'eraser' ? 1 : editor.brushHardness.value),
-  )
+
+  const activeHardness = computed(() => editor.brushHardness.value)
 
   const brushCursorStyle = computed(() => {
-    const d = brushCursorDiameterPx(
-      editor.brushSize.value,
-      activeHardness.value,
-      editor.panZoom.zoom(),
-    )
+    const d = brushCursorDiameterPx(editor.brushSize.value, editor.panZoom.zoom())
     const pos = adjusting.value ? { x: adjusting.value.x0, y: adjusting.value.y0 } : cursorPos.value
     return {
       width: `${d}px`,
@@ -222,12 +212,7 @@ export function useLayerEditorCanvas(
     const rgb = target === 'mask' || editor.tool.value === 'eraser'
       ? { r: 255, g: 255, b: 255 }
       : hexToRgb(editor.brushColor.value)
-    return brushGradientCss(
-      rgb,
-      editor.brushOpacity.value,
-      editor.brushSize.value,
-      activeHardness.value,
-    )
+    return brushGradientCss(rgb, editor.brushOpacity.value, activeHardness.value)
   })
 
   onBeforeUnmount(() => {

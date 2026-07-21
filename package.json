@@ -41,6 +41,7 @@
     "@comfyorg/comfyui-frontend-types": "^1.35.4",
     "@iconify-json/lucide": "^1.2.115",
     "@pinia/testing": "^1.0.3",
+    "@playwright/test": "^1.61.1",
     "@tailwindcss/vite": "^4.3.0",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/user-event": "^14.6.1",
@@ -65,6 +66,8 @@
     "typecheck": "vue-tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "e2e:build": "vite build --config vite.harness.config.mts",
+    "e2e": "npm run e2e:build && playwright test"
   }
 }
