@@ -25,6 +25,12 @@ export function pendingUploads(doc: Document, content: ContentStore): UploadJob[
       if (e) jobs.push({ contentId: m.contentId, channel: 'mask', canvas: e.canvas, commitUrl: (u) => (m.url = u) })
     }
   })
+  for (const ch of doc.channels) {
+    if (ch.contentId && !ch.url) {
+      const e = content.get(ch.contentId)
+      if (e) jobs.push({ contentId: ch.contentId, channel: 'mask', canvas: e.canvas, commitUrl: (u) => (ch.url = u) })
+    }
+  }
   return jobs
 }
 

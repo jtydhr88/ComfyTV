@@ -27,6 +27,7 @@
       </LayerEditorToolBar>
 
       <div class="ctv:flex ctv:min-h-0 ctv:flex-1 ctv:gap-1">
+        <LayerEditorToolStrip :editor="editor" />
         <div class="ctv:relative ctv:min-w-0 ctv:flex-1">
           <LayerEditorCanvas ref="canvasEl" :editor="editor" />
           <TextEditPopup :editor="editor" />
@@ -59,6 +60,7 @@ import type { LGraphNode } from '@/lib/comfyApp'
 import StageCard from '@/components/stages/StageCard.vue'
 import LayerEditorCanvas from '@/components/widgets/LayerEditorCanvas.vue'
 import LayerEditorToolBar from '@/components/widgets/LayerEditorToolBar.vue'
+import LayerEditorToolStrip from '@/components/widgets/LayerEditorToolStrip.vue'
 import LayerListPanel from '@/components/widgets/LayerListPanel.vue'
 import TextEditPopup from '@/components/widgets/TextEditPopup.vue'
 import { useLayerEditorHotkeys } from '@/composables/widgets/useLayerEditorHotkeys'

@@ -32,7 +32,7 @@ export function defaultControl(): ToolControl {
 export type CanvasItem =
   | { type: 'handle'; pos: Vec2; shape: 'square' | 'circle' | 'diamond'; id?: string }
   | { type: 'line'; a: Vec2; b: Vec2 }
-  | { type: 'rect'; rect: Rect; rotation?: number }
+  | { type: 'rect'; rect: Rect; rotation?: number; ants?: boolean }
   | { type: 'polyline'; points: Vec2[]; closed?: boolean }
   | { type: 'arc'; center: Vec2; radius: number }
   | { type: 'preview'; canvas: HTMLCanvasElement; rect: Rect }
@@ -64,6 +64,10 @@ export interface ToolContext {
   createPaintCore(id: string): PaintCore
 
   setPaintPreview(key: string, canvas: HTMLCanvasElement | null): void
+  selection: {
+    setRect(rect: Rect): void
+    none(): void
+  }
   zoom(): number
   requestRender(): void
 

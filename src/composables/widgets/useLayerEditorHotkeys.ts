@@ -18,6 +18,18 @@ export function useLayerEditorHotkeys(
 ) {
   function onKeyDown(e: KeyboardEvent): void {
     e.stopPropagation()
+    if (editor.floating.value && !isTextEditingTarget(e.target)) {
+      if (e.key === 'Enter') {
+        e.preventDefault()
+        editor.anchorFloating()
+        return
+      }
+      if (e.key === 'Escape' || e.key === 'Delete' || e.key === 'Backspace') {
+        e.preventDefault()
+        editor.cancelFloating()
+        return
+      }
+    }
     if (e.key === 'Escape' && opts.isFullscreen()) {
       opts.exitFullscreen()
       return
@@ -30,6 +42,21 @@ export function useLayerEditorHotkeys(
       return
     }
     const ctrl = e.ctrlKey || e.metaKey
+    if (ctrl && e.code === 'KeyA') {
+      e.preventDefault()
+      editor.selectAll()
+      return
+    }
+    if (ctrl && e.code === 'KeyD') {
+      e.preventDefault()
+      editor.selectNone()
+      return
+    }
+    if (ctrl && e.shiftKey && e.code === 'KeyI') {
+      e.preventDefault()
+      editor.invertSelection()
+      return
+    }
     if (ctrl && e.code === 'KeyZ') {
       e.preventDefault()
       if (e.shiftKey) editor.redo()

@@ -2,11 +2,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import Typr, { type TyprFont } from '@/vendor/typr'
 
-import { measureText, renderTextToCanvas, TextRenderCache } from './textRender'
-import type { TextLayer } from './types'
+import { measureText, renderTextToCanvas, TextRenderCache, type TextStyle } from './textRender'
 
-// Deterministic Typr stub: every glyph advances 500 font units; the space
-// glyph (gid 32) produces an empty path so the skip-branch is exercised.
 vi.mock('@/vendor/typr', () => {
   const shape = vi.fn((_font: unknown, str: string) =>
     [...str].map((ch, i) => ({ g: ch.charCodeAt(0), cl: i, dx: 0, dy: 0, ax: 500, ay: 0 })),
@@ -58,22 +55,14 @@ function opsOf(ctx: MockCtx, name: string): Op[] {
   return ctx.ops.filter((o) => o.op === name)
 }
 
-// unitsPerEm 1000, fontSize 100 -> scale 0.1; ascender 80px, descender 20px.
 const font: TyprFont = {
   head: { unitsPerEm: 1000, xMin: 0, yMin: 0, xMax: 0, yMax: 0 },
   hhea: { ascender: 800, descender: -200, lineGap: 0 },
 }
 
-function layer(extra: Partial<TextLayer> = {}): TextLayer {
+function layer(extra: Partial<TextStyle> = {}): TextStyle {
   return {
     id: 'txt-1',
-    type: 'text',
-    name: 'txt',
-    visible: true,
-    locked: false,
-    opacity: 1,
-    blendMode: 'source-over',
-    transform: { x: 0, y: 0, w: 100, h: 100, rotation: 0 },
     text: 'AB',
     fontRef: { kind: 'builtin', id: 'inter' },
     fontSize: 100,
@@ -87,7 +76,6 @@ function layer(extra: Partial<TextLayer> = {}): TextLayer {
 
 describe('measureText', () => {
   it('measures a single line with padding, ascender and descender', () => {
-    // width: 2 glyphs * 50px + 2 * pad(25); height: asc 80 + desc 20 + 2 * 25
     expect(measureText(layer(), font)).toEqual({ w: 150, h: 150 })
   })
 
@@ -96,7 +84,6 @@ describe('measureText', () => {
   })
 
   it('uses the widest line and per-line advance for multi-line text', () => {
-    // widths 50 and 150 -> w = 150 + 50; h = 1 * 120 + 80 + 20 + 50
     expect(measureText(layer({ text: 'A\nABA' }), font)).toEqual({ w: 200, h: 270 })
   })
 
@@ -114,7 +101,6 @@ describe('renderTextToCanvas', () => {
     expect(ctx.fillStyle).toBe('#123456')
     const translates = opsOf(ctx, 'translate')
     expect(translates).toHaveLength(2)
-    // first glyph pen at pad=25, baseline = pad + asc = 105
     expect(translates[0].args).toEqual([25, 105])
     expect(translates[1].args).toEqual([75, 105])
     expect(opsOf(ctx, 'scale')[0].args).toEqual([0.1, -0.1])
@@ -128,7 +114,6 @@ describe('renderTextToCanvas', () => {
     const translates = opsOf(ctx, 'translate')
     expect(translates).toHaveLength(2)
     expect(translates[0].args).toEqual([25, 105])
-    // the space still advanced the pen: 25 + 2 * 50
     expect(translates[1].args).toEqual([125, 105])
   })
 
@@ -137,7 +122,6 @@ describe('renderTextToCanvas', () => {
     const ctx = ctxOf(canvas)
     const translates = opsOf(ctx, 'translate')
     expect(translates).toHaveLength(3)
-    // line 2: penX = 25 + (100 - 50) * 1, baseline = 25 + 80 + 120
     expect(translates[2].args).toEqual([75, 225])
   })
 
@@ -162,7 +146,6 @@ describe('TextRenderCache', () => {
 
     const changed = cache.get(layer({ text: 'AC' }), font)
     expect(changed).not.toBe(first)
-    // and the new result is cached in turn
     expect(cache.get(layer({ text: 'AC' }), font)).toBe(changed)
   })
 

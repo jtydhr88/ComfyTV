@@ -6,6 +6,8 @@ export const Dirty = {
   CHANNEL: 1 << 4,
 } as const
 
+export const DIRTY_ALL = ~0
+
 export type Direction = 'undo' | 'redo'
 
 export interface Command {
@@ -16,6 +18,7 @@ export interface Command {
   sizeBytes(): number
 
   tryMerge?(prev: Command): boolean
+  contentRefs?(): string[]
 }
 
 export class CommandGroup implements Command {
@@ -33,6 +36,10 @@ export class CommandGroup implements Command {
 
   sizeBytes(): number {
     return this.children.reduce((n, c) => n + c.sizeBytes(), 0)
+  }
+
+  contentRefs(): string[] {
+    return this.children.flatMap((c) => c.contentRefs?.() ?? [])
   }
 
   get empty(): boolean {
@@ -131,10 +138,21 @@ export class History {
     this.groupStack = []
     this.dirtyCount = 0
     this.cleanReachable = true
+    this.emit(DIRTY_ALL)
   }
 
   canRedo(): boolean {
     return this.redoStack.length > 0
+  }
+
+  contentRefs(): Set<string> {
+    const refs = new Set<string>()
+    for (const stack of [this.undoStack, this.redoStack, this.groupStack]) {
+      for (const cmd of stack) {
+        for (const id of cmd.contentRefs?.() ?? []) refs.add(id)
+      }
+    }
+    return refs
   }
 
   dirty(): boolean {

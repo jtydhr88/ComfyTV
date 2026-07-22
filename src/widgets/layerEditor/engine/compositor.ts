@@ -5,22 +5,33 @@ export interface NodeTexture {
   source: WebGLTexture | HTMLCanvasElement | ImageBitmap | OffscreenCanvas
   rect: Rect
   linear: boolean
+  key?: string
 }
 
-export interface CompositeInput {
+export interface LayerInput {
   texture: NodeTexture
   mode: EffectiveMode
   opacity: number
   mask?: NodeTexture
 }
 
+export interface AdjustmentInput {
+  adjust: { op: number; params: number[] }
+  opacity: number
+  mask?: NodeTexture
+}
+
+export type CompositeInput = LayerInput | AdjustmentInput
+
 export interface CompositorInit {
   width: number
   height: number
+  onContextRestored?: () => void
 }
 
 export interface Compositor {
   init(opts: CompositorInit): boolean
+  beginFrame?(): void
   resize(width: number, height: number): void
 
   composite(inputs: CompositeInput[], target?: FBOHandle | null, region?: Rect): void

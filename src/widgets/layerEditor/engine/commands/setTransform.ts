@@ -23,11 +23,4 @@ export class SetTransformCommand implements Command {
     return 80
   }
 
-  tryMerge(prev: Command): boolean {
-    if (prev instanceof SetTransformCommand && prev.slot === this.slot) {
-      prev.after = this.after
-      return true
-    }
-    return false
-  }
 }

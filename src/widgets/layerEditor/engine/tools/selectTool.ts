@@ -1,14 +1,15 @@
 import { SetTransformCommand } from '../commands/setTransform'
 import { findNode } from '../document'
-import { Dirty } from '../history'
+import { CommandGroup, Dirty } from '../history'
 import type { SceneNode, Transform, Vec2 } from '../node'
+import { getNodeKind } from '../nodeKind'
 import { defaultControl, type Overlay, type Tool, type ToolContext, type ToolControl, type ToolDef } from '../tool'
+import { addTransformBox } from './overlayBox'
 import {
   angleTo,
   applyMove,
   applyResize,
   applyRotate,
-  handlePos,
   hitHandle,
   insideBox,
   type HandleId,
@@ -19,8 +20,6 @@ type Session =
   | { mode: 'move'; start: Vec2; before: Transform }
   | { mode: 'resize'; handle: HandleId; before: Transform }
   | { mode: 'rotate'; before: Transform; grab: number }
-
-const HANDLES: HandleId[] = ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w']
 
 class SelectTool implements Tool {
   readonly control: ToolControl
@@ -46,7 +45,7 @@ class SelectTool implements Tool {
 
   onButtonPress(_e: PointerEvent, pt: Vec2): void {
     const node = this.activeNode()
-    if (node) {
+    if (node && !node.locks.position) {
       const h = hitHandle(node.transform, pt, this.tol())
       if (h === 'rotate') {
         this.active = node
@@ -64,9 +63,19 @@ class SelectTool implements Tool {
         return
       }
     }
+    if (node?.locks.position && insideBox(node.transform, pt)) {
+      this.active = null
+      this.session = { mode: 'idle' }
+      return
+    }
     const picked = this.pick(pt)
     if (picked) {
       this.ctx.setActiveNode(picked.id)
+      if (picked.locks.position) {
+        this.active = null
+        this.session = { mode: 'idle' }
+        return
+      }
       this.active = picked
       this.session = { mode: 'move', start: pt, before: { ...picked.transform } }
     } else {
@@ -99,7 +108,19 @@ class SelectTool implements Tool {
         before.w !== after.w ||
         before.h !== after.h ||
         before.rotation !== after.rotation
-      if (changed) this.ctx.history.push(new SetTransformCommand(this.session.mode, this.active, before, after))
+      if (changed) {
+        const transformCmd = new SetTransformCommand(this.session.mode, this.active, before, after)
+        const extra =
+          getNodeKind(this.active.kind).onTransformCommitted?.(this.active, before, { content: this.ctx.content }) ?? null
+        if (extra) {
+          const group = new CommandGroup(this.session.mode)
+          group.children.push(transformCmd, extra)
+          this.ctx.history.push(group)
+        } else {
+          this.ctx.history.push(transformCmd)
+        }
+        this.ctx.requestRender()
+      }
     }
     this.session = { mode: 'idle' }
   }
@@ -115,12 +136,7 @@ class SelectTool implements Tool {
   drawOverlay(overlay: Overlay): void {
     const node = this.activeNode()
     if (!node) return
-    const t = node.transform
-    const corners: HandleId[] = ['nw', 'ne', 'se', 'sw']
-    overlay.add({ type: 'polyline', points: corners.map((h) => handlePos(t, h)), closed: true })
-    overlay.add({ type: 'line', a: handlePos(t, 'n'), b: handlePos(t, 'rotate') })
-    for (const h of HANDLES) overlay.add({ type: 'handle', pos: handlePos(t, h), shape: 'square', id: h })
-    overlay.add({ type: 'handle', pos: handlePos(t, 'rotate'), shape: 'circle', id: 'rotate' })
+    addTransformBox(overlay, node.transform)
   }
 
   private pick(pt: Vec2): SceneNode | null {

@@ -42,13 +42,16 @@ beforeEach(() => {
 function makeEditor() {
   const textLayer = {
     id: 't1',
-    type: 'text',
+    kind: 'text',
     fontRef: { kind: 'builtin', id: 'sans' },
     fontSize: 32,
   }
-  const rasterLayer = { id: 'r1', type: 'raster' }
+  const rasterLayer = { id: 'r1', kind: 'raster' }
   const editor = {
-    state: ref({ width: 512, height: 512, layers: [textLayer, rasterLayer] }),
+    layers: ref([
+      { node: textLayer, depth: 0, parentId: undefined },
+      { node: rasterLayer, depth: 0, parentId: undefined },
+    ]),
     editingTextId: ref<string | null>(null),
     updateTextLayer: vi.fn(),
     fontStore: {

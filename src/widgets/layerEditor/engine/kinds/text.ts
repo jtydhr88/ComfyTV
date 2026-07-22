@@ -1,11 +1,12 @@
 import { getFontStore } from '../../fontStore'
-import { TextRenderCache, type TextStyle } from '../../textRender'
+import { measureText, TextRenderCache, type TextStyle } from '../../textRender'
+import { PropCommand } from '../commands/prop'
+import { Dirty, type Command } from '../history'
 import { defaultMode } from '../mode'
 import type { NodeKind, RenderNodeCtx } from '../nodeKind'
 import type { NodeTexture } from '../compositor'
 import type { FontRef, Rect, TextData, Transform, Vec2 } from '../node'
 import { generateId } from '../id'
-import { placeBitmap } from '../render/place'
 
 const textCache = new TextRenderCache()
 
@@ -20,6 +21,19 @@ function styleOf(node: TextData): TextStyle {
     lineHeight: node.lineHeight,
     align: node.align,
   }
+}
+
+export function textBitmap(node: TextData): HTMLCanvasElement | null {
+  const font = getFontStore().getFontSyncWithFallback(node.fontRef)
+  return textCache.get(styleOf(node), font)
+}
+
+function styleStamp(node: TextData): string {
+  const fontKey = node.fontRef.kind === 'builtin' ? node.fontRef.id : node.fontRef.url
+  return [
+    'text', node.text, fontKey, node.fontSize, node.color,
+    node.letterSpacing, node.lineHeight, node.align,
+  ].join('|')
 }
 
 function fillTextFallback(node: TextData, region: Rect): HTMLCanvasElement | null {
@@ -133,8 +147,7 @@ export const textKind: NodeKind<TextData> = {
     const font = getFontStore().getFontSyncWithFallback(node.fontRef)
     const bitmap = textCache.get(styleOf(node), font)
     if (bitmap) {
-      const placed = placeBitmap(bitmap, node.transform, ctx.region.w, ctx.region.h)
-      return placed ? { source: placed, rect: ctx.region, linear: false } : null
+      return ctx.placed(`content:${node.id}`, styleStamp(node), bitmap, node.transform)
     }
     const canvas = fillTextFallback(node, ctx.region)
     return canvas ? { source: canvas, rect: ctx.region, linear: false } : null
@@ -151,5 +164,24 @@ export const textKind: NodeKind<TextData> = {
   hitTest(node: TextData, pt: Vec2): boolean {
     const b = this.bbox(node)
     return pt.x >= b.x && pt.x <= b.x + b.w && pt.y >= b.y && pt.y <= b.y + b.h
+  },
+
+  onTransformCommitted(node: TextData, before: Transform, _deps: { content: unknown }): Command | null {
+    if (before.h <= 0) return null
+    const scale = node.transform.h / before.h
+    if (Math.abs(scale - 1) < 1e-6) return null
+    const snapshot = () => ({ fontSize: node.fontSize, transform: { ...node.transform } })
+    const restore = (v: { fontSize: number; transform: Transform }) => {
+      node.fontSize = v.fontSize
+      node.transform = { ...v.transform }
+    }
+    const prev = snapshot()
+    node.fontSize = Math.max(4, Math.min(2048, node.fontSize * scale))
+    const font = getFontStore().getFontSyncWithFallback(node.fontRef)
+    if (font) {
+      const m = measureText(styleOf(node), font)
+      node.transform = { ...node.transform, w: m.w, h: m.h }
+    }
+    return new PropCommand('Text Resize', Dirty.DRAWABLE, snapshot, restore, prev, snapshot())
   },
 }

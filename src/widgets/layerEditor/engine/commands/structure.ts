@@ -1,5 +1,11 @@
 import { Dirty, type Command, type Direction } from '../history'
 import type { GroupData, SceneNode } from '../node'
+import { getNodeKind, hasNodeKind } from '../nodeKind'
+
+function nodeContentRefs(node: SceneNode): string[] {
+  if (!hasNodeKind(node.kind)) return []
+  return getNodeKind(node.kind).contentIds(node)
+}
 
 function insert(parent: GroupData, node: SceneNode, index: number): void {
   parent.children.splice(Math.max(0, Math.min(index, parent.children.length)), 0, node)
@@ -25,6 +31,9 @@ export class AddNodeCommand implements Command {
   sizeBytes(): number {
     return 128
   }
+  contentRefs(): string[] {
+    return nodeContentRefs(this.node)
+  }
 }
 
 export class RemoveNodeCommand implements Command {
@@ -41,6 +50,9 @@ export class RemoveNodeCommand implements Command {
   }
   sizeBytes(): number {
     return 128
+  }
+  contentRefs(): string[] {
+    return nodeContentRefs(this.node)
   }
 }
 

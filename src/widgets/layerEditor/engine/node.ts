@@ -47,6 +47,7 @@ export interface ChannelData {
   url?: string
   enabled: boolean
   color?: string
+  bounds?: Rect
 }
 
 export interface EffectRef {
@@ -67,6 +68,7 @@ export interface RasterData extends DrawableData {
   url?: string
   naturalWidth: number
   naturalHeight: number
+  lockAlpha?: boolean
 }
 
 export type FontRef =
@@ -98,7 +100,18 @@ export interface GroupData extends DrawableData {
   passThrough: boolean
 }
 
-export type SceneNode = RasterData | TextData | VectorData | GroupData
+export interface AdjustmentData extends DrawableData {
+  kind: 'adjustment'
+  op: string
+  params: Record<string, number>
+}
+
+export interface FillData extends DrawableData {
+  kind: 'fill'
+  fill: import('./fill').FillSpec
+}
+
+export type SceneNode = RasterData | TextData | VectorData | GroupData | AdjustmentData | FillData
 
 export function isDrawable(node: NodeBase): node is DrawableData {
   return node.kind !== 'path'

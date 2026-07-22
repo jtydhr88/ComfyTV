@@ -26,6 +26,45 @@ export function makeToLocal(transform: Transform, naturalW: number, naturalH: nu
   }
 }
 
+export function rasterizeSelectionToLocal(
+  selCanvas: HTMLCanvasElement,
+  transform: Transform,
+  bmpW: number,
+  bmpH: number
+): Float32Array | null {
+  const c = document.createElement('canvas')
+  c.width = bmpW
+  c.height = bmpH
+  const g = c.getContext('2d')
+  if (!g) return null
+  const sx = bmpW / (transform.w || 1)
+  const sy = bmpH / (transform.h || 1)
+  g.scale(sx, sy)
+  g.translate(transform.w / 2, transform.h / 2)
+  g.rotate(-transform.rotation)
+  g.translate(-(transform.x + transform.w / 2), -(transform.y + transform.h / 2))
+  g.drawImage(selCanvas, 0, 0)
+  const data = g.getImageData(0, 0, bmpW, bmpH).data
+  const out = new Float32Array(bmpW * bmpH)
+  for (let p = 0; p < out.length; p++) out[p] = data[p * 4] / 255
+  return out
+}
+
+function resolveSelection(
+  doc: Document,
+  content: ContentStore,
+  transform: Transform,
+  bmpW: number,
+  bmpH: number
+): Float32Array | null {
+  if (!doc.selectionId) return null
+  const channel = doc.channels.find((ch) => ch.id === doc.selectionId)
+  if (!channel || !channel.enabled) return null
+  const entry = content.get(channel.contentId)
+  if (!entry) return null
+  return rasterizeSelectionToLocal(entry.canvas, transform, bmpW, bmpH)
+}
+
 export function resolvePaintTarget(
   doc: Document,
   content: ContentStore,
@@ -36,19 +75,25 @@ export function resolvePaintTarget(
   const loc = findNode(doc.root, activeId)
   if (!loc) return null
   const node = loc.node
+  if (node.locks.content) return null
 
   if (channel === 'mask') {
     if (!node.mask) return null
     const entry = content.get(node.mask.contentId)
     if (!entry) return null
+    const tf =
+      node.transform.w > 0 && node.transform.h > 0
+        ? node.transform
+        : { x: 0, y: 0, w: entry.width, h: entry.height, rotation: 0 }
     return {
       drawable: node,
       channel: 'mask',
       bitmap: entry.canvas,
       slot: node.mask,
       content,
-      toLocal: makeToLocal(node.transform, entry.width, entry.height),
-      scale: displayScale(node.transform, entry.width, entry.height),
+      toLocal: makeToLocal(tf, entry.width, entry.height),
+      selection: resolveSelection(doc, content, tf, entry.width, entry.height),
+      scale: displayScale(tf, entry.width, entry.height),
     }
   }
 
@@ -63,6 +108,8 @@ export function resolvePaintTarget(
     slot: raster,
     content,
     toLocal: makeToLocal(raster.transform, raster.naturalWidth, raster.naturalHeight),
+    selection: resolveSelection(doc, content, raster.transform, raster.naturalWidth, raster.naturalHeight),
+    lockAlpha: raster.lockAlpha === true,
     scale: displayScale(raster.transform, raster.naturalWidth, raster.naturalHeight),
   }
 }

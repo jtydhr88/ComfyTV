@@ -1,4 +1,4 @@
-import { computed, onBeforeUnmount, ref, shallowRef } from 'vue'
+import { computed, onBeforeUnmount, ref, shallowRef, watch } from 'vue'
 
 import { app, type LGraphNode } from '@/lib/comfyApp'
 import { t } from '@/i18n'
@@ -7,9 +7,16 @@ import { onNodeConfigure, readWidgetStr, writeWidget } from '@/utils/widget'
 import { getFontStore } from '@/widgets/layerEditor/fontStore'
 import { createPanZoom } from '@/widgets/layerEditor/panZoom'
 import { measureText, type TextStyle } from '@/widgets/layerEditor/textRender'
-import type { BlendMode, Layer, LayerEditorState, TextLayer, ToolHandler, ToolId } from '@/widgets/layerEditor/types'
+import type { LayerRow, ToolHandler, ToolId } from '@/widgets/layerEditor/types'
 import {
+  adjustmentKind,
+  clonePath,
+  cloneFillSpec,
+  defaultParams,
+  deriveVectorTransform,
   Dirty,
+  fillKind,
+  normalizeFillSpec,
   LAYER_MODES,
   PropCommand,
   createEditor,
@@ -24,11 +31,23 @@ import {
   registerBuiltinKinds,
   registerBuiltinTools,
   textKind,
+  transformPath,
   type BlendFn,
   type CanvasItem,
+  type AdjustmentData,
+  type AdjustmentOp,
+  type FillData,
+  type FillSpec,
+  type FillStyle,
+  type GroupData,
+  type PathData,
   type RasterData,
   type SceneNode,
+  type ShapeKind,
+  type StrokeStyle,
   type TextData,
+  type Transform,
+  type VectorData,
 } from '@/widgets/layerEditor/engine'
 
 const STATE_WIDGET = 'layer_state'
@@ -42,17 +61,9 @@ const CAPTURE_DEBOUNCE_MS = 700
 const MAX_CONTENT_DIM = 4096
 const SUBFOLDER = 'comfytv/layer-editor'
 
-const V1_BLENDS = new Set<string>([
-  'source-over', 'multiply', 'screen', 'overlay', 'darken', 'lighten',
-  'color-dodge', 'color-burn', 'hard-light', 'soft-light', 'difference', 'exclusion',
-])
-const engineToV1Blend = (b: BlendFn): BlendMode => {
-  const m = b === 'normal' ? 'source-over' : b
-  return (V1_BLENDS.has(m) ? m : 'source-over') as BlendMode
-}
-const v1ToEngineBlend = (m: BlendMode): BlendFn => {
+const legacyBlend = (m: unknown): BlendFn => {
   const b = m === 'source-over' ? 'normal' : m
-  return (b in LAYER_MODES ? b : 'normal') as BlendFn
+  return typeof b === 'string' && b in LAYER_MODES ? (b as BlendFn) : 'normal'
 }
 
 function migrateState(raw: string): unknown {
@@ -77,7 +88,7 @@ function migrateState(raw: string): unknown {
       name: l.name,
       visible: l.visible !== false,
       opacity: l.opacity,
-      mode: defaultMode(v1ToEngineBlend((l.blendMode as BlendMode) ?? 'source-over')),
+      mode: defaultMode(legacyBlend(l.blendMode)),
       transform: l.transform,
       locks: { content: l.locked === true, position: false, visibility: false },
       mask: migrateMask(l.mask),
@@ -139,6 +150,13 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
   const brushHardness = ref(1)
   const brushColor = ref('#ff4444')
   const paintTarget = ref<'content' | 'mask'>('content')
+  const shapeKind = ref<ShapeKind>('rect')
+  const shapeFillEnabled = ref(true)
+  const shapeFillColor = ref('#3b82f6')
+  const shapeStrokeEnabled = ref(false)
+  const shapeStrokeColor = ref('#ffffff')
+  const shapeStrokeWidth = ref(4)
+  const shapeCombine = ref(false)
   const editingTextId = ref<string | null>(null)
   const capturing = ref(false)
   const capturedImageUrl = shallowRef<string>(readWidgetStr(node, IMAGE_WIDGET, ''))
@@ -147,9 +165,15 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
 
   const fontStore = getFontStore()
 
+  let onContextRestored: (() => void) | null = null
   const compositor = createWebGLCompositor()
-  glOk.value = compositor.init({ width: 1024, height: 1024 })
+  glOk.value = compositor.init({
+    width: 1024,
+    height: 1024,
+    onContextRestored: () => onContextRestored?.(),
+  })
   const editor = createEditor({ compositor, onChange })
+  onContextRestored = () => editor.invalidate()
 
   let lastPersisted: string | null = null
 
@@ -161,27 +185,31 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     viewportEl && containerEl ? { viewport: viewportEl, container: containerEl } : null
   )
 
-  function nodeToLayer(n: SceneNode): Layer {
-    const base = {
-      id: n.id, name: n.name, visible: n.visible, locked: n.locks.content,
-      opacity: n.opacity, blendMode: engineToV1Blend(n.mode.blend),
-      transform: { ...n.transform },
-      mask: n.mask ? { contentId: n.mask.contentId, url: n.mask.url, enabled: n.mask.enabled } : undefined,
+  function flattenRows(nodes: SceneNode[], depth: number, parentId: string | undefined, out: LayerRow[]): void {
+    for (const n of nodes) {
+      out.push({ node: n, depth, parentId })
+      if (n.kind === 'group') flattenRows((n as GroupData).children, depth + 1, n.id, out)
     }
-    if (n.kind === 'text') {
-      const tx = n as TextData
-      return { ...base, type: 'text', text: tx.text, fontRef: tx.fontRef, fontSize: tx.fontSize, color: tx.color, letterSpacing: tx.letterSpacing, lineHeight: tx.lineHeight, align: tx.align } as TextLayer
-    }
-    const r = n as RasterData
-    return { ...base, type: 'raster', contentId: r.contentId ?? '', url: r.url, naturalWidth: r.naturalWidth ?? Math.round(n.transform.w), naturalHeight: r.naturalHeight ?? Math.round(n.transform.h) } as Layer
   }
-  function toV1State(): LayerEditorState {
+  const layers = computed<LayerRow[]>(() => {
+    void version.value
+    const out: LayerRow[] = []
+    flattenRows(editor.document().root.children, 0, undefined, out)
+    return out
+  })
+  const canvasSize = computed(() => {
+    void version.value
     const d = editor.document()
-    return { version: 1, width: d.width, height: d.height, layers: d.root.children.map(nodeToLayer) }
-  }
-
-  const state = shallowRef<LayerEditorState>(toV1State())
-  const activeLayer = computed<Layer | null>(() => state.value.layers.find((l) => l.id === activeId.value) ?? null)
+    return { width: d.width, height: d.height }
+  })
+  const activeNode = computed<SceneNode | null>(() => {
+    void version.value
+    return activeId.value ? engineNode(activeId.value) : null
+  })
+  const floating = computed(() => {
+    void version.value
+    return editor.floating()
+  })
   const selectedIds = computed(() => new Set(activeId.value ? [activeId.value] : []))
   const canUndo = computed(() => version.value >= 0 && editor.history.canUndo())
   const canRedo = computed(() => version.value >= 0 && editor.history.canRedo())
@@ -242,7 +270,17 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
         ctx.beginPath(); ctx.arc(item.center.x, item.center.y, item.radius, 0, Math.PI * 2); ctx.stroke()
         break
       case 'rect':
-        ctx.strokeRect(item.rect.x, item.rect.y, item.rect.w, item.rect.h)
+        if (item.ants) {
+          ctx.save()
+          ctx.strokeStyle = '#000000'
+          ctx.strokeRect(item.rect.x, item.rect.y, item.rect.w, item.rect.h)
+          ctx.strokeStyle = '#ffffff'
+          ctx.setLineDash([hs, hs])
+          ctx.strokeRect(item.rect.x, item.rect.y, item.rect.w, item.rect.h)
+          ctx.restore()
+        } else {
+          ctx.strokeRect(item.rect.x, item.rect.y, item.rect.w, item.rect.h)
+        }
         break
       case 'preview':
         ctx.drawImage(item.canvas, item.rect.x, item.rect.y, item.rect.w, item.rect.h)
@@ -288,6 +326,11 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     try {
       const jobs = pendingUploads(editor.document(), content)
       for (const job of jobs) {
+        const existing = content.get(job.contentId)?.uploadedUrl
+        if (existing) {
+          job.commitUrl(existing)
+          continue
+        }
         const blob = await canvasToBlob(job.canvas)
         const res = await uploadBlobNamed(blob, { subfolder: SUBFOLDER, filename: `comfytv-layer-${node.id}-${job.contentId}.png` })
         job.commitUrl(res.url)
@@ -321,7 +364,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     captureTimer = window.setTimeout(runCapture, CAPTURE_DEBOUNCE_MS)
   }
   async function runCapture(): Promise<void> {
-    if (!glOk.value) return
+    if (!glOk.value || capturing.value) return
     const seq = ++captureSeq
     try {
       editor.render()
@@ -349,15 +392,18 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
       const saved = children.map((n) => n.visible)
       const images: Array<{ index: number; label: string; image_url: string }> = [{ index: 1, label: 'composite', image_url: compositeUrl }]
       let idx = 2
-      for (let i = 0; i < children.length; i++) {
-        if (!saved[i]) continue
-        children.forEach((n, j) => (n.visible = j === i))
+      try {
+        for (let i = 0; i < children.length; i++) {
+          if (!saved[i] || children[i].kind === 'adjustment') continue
+          children.forEach((n, j) => (n.visible = j === i))
+          editor.render()
+          const url = await uploadCanvas(flattenComposite(), { subfolder: SUBFOLDER, filenamePrefix: `comfytv-layer-${node.id}` })
+          images.push({ index: idx++, label: children[i].name, image_url: url })
+        }
+      } finally {
+        children.forEach((n, j) => (n.visible = saved[j]))
         editor.render()
-        const url = await uploadCanvas(flattenComposite(), { subfolder: SUBFOLDER, filenamePrefix: `comfytv-layer-${node.id}` })
-        images.push({ index: idx++, label: children[i].name, image_url: url })
       }
-      children.forEach((n, j) => (n.visible = saved[j]))
-      editor.render()
       const json = JSON.stringify({ images })
       writeWidget(node, IMAGES_WIDGET, json, { fireCallback: false })
       opts?.onBatchCaptured?.(json)
@@ -372,8 +418,8 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
   function onChange(): void {
     version.value += 1
     activeId.value = editor.activeNodeId()
-    state.value = toV1State()
     requestRender()
+    if (capturing.value) return
     if (lastPersisted === null) return
     const json = JSON.stringify(editor.serialize())
     if (json === lastPersisted) return
@@ -400,9 +446,9 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     const n = engineNode(id); if (!n) return
     editProp('Opacity', Dirty.META, () => n.opacity, (x) => (n.opacity = x), clamp01(v), `opacity:${id}`)
   }
-  function setBlendMode(id: string, v: BlendMode): void {
+  function setBlendMode(id: string, v: BlendFn): void {
     const n = engineNode(id); if (!n) return
-    editProp('Blend', Dirty.DRAWABLE, () => n.mode, (m) => (n.mode = m), defaultMode(v1ToEngineBlend(v)), `blend:${id}`)
+    editProp('Blend', Dirty.DRAWABLE, () => n.mode, (m) => (n.mode = m), defaultMode(v in LAYER_MODES ? v : 'normal'), `blend:${id}`)
   }
   function toggleVisible(id: string): void {
     const n = engineNode(id); if (!n) return
@@ -418,21 +464,51 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
   }
 
   function moveLayer(id: string, dir: 1 | -1): void {
-    const loc = findNode(editor.document().root, id)
-    if (loc) editor.reorder(id, loc.index + dir)
+    editor.moveNode(id, dir)
   }
   function removeLayer(id: string): void {
     editor.setActiveNode(id)
     editor.removeActive()
+  }
+  function regenIds(n: SceneNode): void {
+    n.id = generateId(n.kind)
+    if (n.kind === 'group') for (const c of (n as GroupData).children) regenIds(c)
   }
   function duplicateLayer(id: string): void {
     const loc = findNode(editor.document().root, id)
     if (!loc) return
     const kind = getNodeKind(loc.node.kind)
     const copy = kind.normalize(kind.serialize(loc.node)) as SceneNode
-    copy.id = generateId(loc.node.kind)
-    copy.transform = { ...copy.transform, x: copy.transform.x + 16, y: copy.transform.y + 16 }
-    editor.addNode(copy, loc.index + 1)
+    regenIds(copy)
+    if (copy.kind === 'vector') {
+      const v = copy as VectorData
+      v.path = transformPath(v.path, (p) => ({ x: p.x + 16, y: p.y + 16 }))
+      v.transform = deriveVectorTransform(v.path, v.stroke?.width ?? 0)
+    } else if (copy.kind !== 'group') {
+      copy.transform = { ...copy.transform, x: copy.transform.x + 16, y: copy.transform.y + 16 }
+    }
+    editor.addNode(copy, loc.index + 1, loc.parent.id)
+  }
+  function groupActiveLayer(): void {
+    editor.groupActive()
+  }
+  function ungroupActiveLayer(): void {
+    editor.ungroupActive()
+  }
+  function moveLayerRelative(id: string, targetId: string | null, pos: 'above' | 'below' | 'into'): void {
+    if (id === targetId) return
+    if (targetId === null) {
+      editor.moveNodeTo(id, undefined, 0)
+      return
+    }
+    const tloc = findNode(editor.document().root, targetId)
+    if (!tloc) return
+    if (pos === 'into' && tloc.node.kind === 'group') {
+      editor.moveNodeTo(id, targetId, (tloc.node as GroupData).children.length)
+      return
+    }
+    const parentId = tloc.parent.id === 'root' ? undefined : tloc.parent.id
+    editor.moveNodeTo(id, parentId, pos === 'above' ? tloc.index + 1 : tloc.index)
   }
 
   async function addImageFromUrl(url: string, name: string): Promise<void> {
@@ -445,13 +521,128 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
       c.getContext('2d')!.drawImage(img, 0, 0, nw, nh)
       const cid = content.register(c, scale === 1 ? { uploadedUrl: url } : undefined)
       const d = editor.document()
-      editor.addNode(rasterKind.create({
-        name, contentId: cid, url: scale === 1 ? url : undefined, naturalWidth: nw, naturalHeight: nh,
-        transform: { x: (d.width - nw) / 2, y: (d.height - nh) / 2, w: nw, h: nh, rotation: 0 },
-      }))
+      const hasRaster = d.root.children.some((n) => n.kind === 'raster')
+      if (!hasRaster) {
+        editor.addNode(rasterKind.create({
+          name, contentId: cid, url: scale === 1 ? url : undefined, naturalWidth: nw, naturalHeight: nh,
+          transform: { x: (d.width - nw) / 2, y: (d.height - nh) / 2, w: nw, h: nh, rotation: 0 },
+        }))
+        return
+      }
+      editor.startFloating(cid, nw, nh, name)
     } catch {
       toastError(t('layerEditor.loadImageFailed'))
     }
+  }
+
+  function addEmptyLayer(): void {
+    const d = editor.document()
+    const c = newCanvas(d.width, d.height)
+    c.getContext('2d')?.clearRect(0, 0, d.width, d.height)
+    const cid = content.register(c)
+    const count = d.root.children.length + 1
+    editor.addNode(rasterKind.create({
+      name: `Layer ${count}`, contentId: cid, naturalWidth: d.width, naturalHeight: d.height,
+      transform: { x: 0, y: 0, w: d.width, h: d.height, rotation: 0 },
+    }))
+  }
+
+  function anchorFloating(target?: 'active' | 'new'): void {
+    editor.anchorFloating(target)
+  }
+  function cancelFloating(): void {
+    editor.cancelFloating()
+  }
+  function mergeDown(id: string): void {
+    editor.mergeDown(id)
+  }
+  function flattenImage(): void {
+    editor.flattenImage()
+  }
+  function cropToContent(id: string): void {
+    editor.cropToContent(id)
+  }
+  function layerToCanvasSize(id: string): void {
+    editor.layerToCanvasSize(id)
+  }
+  function toggleLockAlpha(id: string): void {
+    const n = engineNode(id)
+    if (!n || n.kind !== 'raster') return
+    const r = n as RasterData
+    editProp('Lock Alpha', Dirty.META, () => r.lockAlpha === true, (v) => (r.lockAlpha = v), !(r.lockAlpha === true))
+  }
+  function addAdjustmentLayer(op: AdjustmentOp = 'brightness-contrast'): void {
+    editor.addNode(adjustmentKind.create({ op, params: defaultParams(op) }))
+  }
+  function addFillLayer(spec?: FillSpec): void {
+    editor.addNode(fillKind.create(spec ? { fill: spec } : {}), 0)
+  }
+  function updateFillLayer(id: string, spec: FillSpec): void {
+    const n = engineNode(id)
+    if (!n || n.kind !== 'fill') return
+    const f = n as FillData
+    const snapshot = () => ({ fill: cloneFillSpec(f.fill) })
+    const restore = (v: { fill: FillSpec }) => {
+      f.fill = cloneFillSpec(v.fill)
+    }
+    const before = snapshot()
+    f.fill = normalizeFillSpec(spec)
+    editor.history.push(
+      new PropCommand('Fill', Dirty.DRAWABLE, snapshot, restore, before, snapshot(), `fill:${id}`)
+    )
+    editor.invalidate()
+  }
+  function updateAdjustment(id: string, patch: { op?: string; params?: Record<string, number> }): void {
+    const n = engineNode(id)
+    if (!n || n.kind !== 'adjustment') return
+    const adj = n as AdjustmentData
+    const snapshot = () => ({ op: adj.op, params: { ...adj.params } })
+    const restore = (v: { op: string; params: Record<string, number> }) => {
+      adj.op = v.op
+      adj.params = { ...v.params }
+    }
+    const before = snapshot()
+    if (patch.op && patch.op !== adj.op) {
+      adj.op = patch.op
+      adj.params = defaultParams(patch.op as AdjustmentOp)
+    }
+    if (patch.params) adj.params = { ...adj.params, ...patch.params }
+    editor.history.push(
+      new PropCommand('Adjustment', Dirty.DRAWABLE, snapshot, restore, before, snapshot(), `adjust:${id}`)
+    )
+    editor.invalidate()
+  }
+  function updateVectorStyle(id: string, patch: { fill?: FillStyle | null; stroke?: StrokeStyle | null }): void {
+    const n = engineNode(id)
+    if (!n || n.kind !== 'vector') return
+    const v = n as VectorData
+    const snapshot = () => ({
+      fill: v.fill ? { ...v.fill } : undefined,
+      stroke: v.stroke ? { ...v.stroke } : undefined,
+      transform: { ...v.transform },
+    })
+    const restore = (s: { fill?: FillStyle; stroke?: StrokeStyle; transform: Transform }) => {
+      v.fill = s.fill ? { ...s.fill } : undefined
+      v.stroke = s.stroke ? { ...s.stroke } : undefined
+      v.transform = { ...s.transform }
+    }
+    const before = snapshot()
+    if (patch.fill !== undefined) v.fill = patch.fill ? { ...patch.fill } : undefined
+    if (patch.stroke !== undefined) v.stroke = patch.stroke ? { ...patch.stroke } : undefined
+    v.transform = deriveVectorTransform(v.path, v.stroke?.width ?? 0)
+    editor.history.push(
+      new PropCommand('Shape Style', Dirty.DRAWABLE, snapshot, restore, before, snapshot(), `vector:${id}`)
+    )
+    editor.invalidate()
+  }
+  function selectAll(): void {
+    editor.selectAll()
+  }
+  function selectNone(): void {
+    editor.selectNone()
+  }
+  function invertSelection(): void {
+    editor.invertSelection()
   }
   function addImageFromFile(file: File): void {
     const reader = new FileReader()
@@ -482,7 +673,21 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
   }
   function nudgeActive(dx: number, dy: number): void {
     const id = activeId.value; if (!id) return
-    const n = engineNode(id); if (!n) return
+    const n = engineNode(id); if (!n || n.locks.position) return
+    if (n.kind === 'vector') {
+      const v = n as VectorData
+      const snapshot = () => ({ path: clonePath(v.path), transform: { ...v.transform } })
+      const restore = (s: { path: PathData; transform: Transform }) => {
+        v.path = clonePath(s.path)
+        v.transform = { ...s.transform }
+      }
+      const before = snapshot()
+      v.path = transformPath(v.path, (p) => ({ x: p.x + dx, y: p.y + dy }))
+      v.transform = deriveVectorTransform(v.path, v.stroke?.width ?? 0)
+      editor.history.push(new PropCommand('Move', Dirty.DRAWABLE, snapshot, restore, before, snapshot(), `nudge:${id}`))
+      editor.invalidate()
+      return
+    }
     editProp('Move', Dirty.META, () => ({ ...n.transform }), (tf) => (n.transform = tf), { ...n.transform, x: n.transform.x + dx, y: n.transform.y + dy }, `nudge:${id}`)
   }
 
@@ -495,7 +700,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     for (const k of TEXT_FIELDS) s[k] = k === 'transform' ? { ...n.transform } : (n as any)[k]
     return s
   }
-  function updateTextLayer(id: string, patch: Partial<TextLayer>): void {
+  function updateTextLayer(id: string, patch: Partial<TextData>): void {
     const n = engineNode(id) as TextData | null
     if (!n || n.kind !== 'text') return
     const before = snapshotText(n)
@@ -521,8 +726,10 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
   }
   function addMask(id: string): void {
     const n = engineNode(id); if (!n || n.mask) return
-    const w = n.kind === 'raster' ? (n as RasterData).naturalWidth : Math.max(1, Math.round(n.transform.w))
-    const h = n.kind === 'raster' ? (n as RasterData).naturalHeight : Math.max(1, Math.round(n.transform.h))
+    const d = editor.document()
+    const docSized = n.kind === 'adjustment' || n.kind === 'fill' || n.kind === 'group'
+    const w = n.kind === 'raster' ? (n as RasterData).naturalWidth : docSized ? d.width : Math.max(1, Math.round(n.transform.w))
+    const h = n.kind === 'raster' ? (n as RasterData).naturalHeight : docSized ? d.height : Math.max(1, Math.round(n.transform.h))
     const cid = content.register(whiteMask(w, h))
     editProp('Add Mask', Dirty.CHANNEL, () => n.mask, (m) => (n.mask = m), { id: generateId('mask'), role: 'mask', contentId: cid, enabled: true })
     paintTarget.value = 'mask'
@@ -540,11 +747,25 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
 
   function syncEngineTool(): void {
     editor.setBrush({ size: brushSize.value, hardness: brushHardness.value, opacity: brushOpacity.value, flow: 1, color: brushColor.value, spacing: 0.1 })
+    editor.setShapeOptions({
+      shape: shapeKind.value,
+      fill: shapeFillEnabled.value ? { color: shapeFillColor.value } : null,
+      stroke: shapeStrokeEnabled.value || shapeKind.value === 'line'
+        ? { color: shapeStrokeColor.value, width: Math.max(1, shapeStrokeWidth.value), cap: 'butt', join: 'miter' }
+        : null,
+      combine: shapeCombine.value,
+    })
     let id: string = tool.value
     if (tool.value === 'brush') id = paintTarget.value === 'mask' ? 'mask-brush' : 'brush'
     else if (tool.value === 'eraser') id = paintTarget.value === 'mask' ? 'mask-eraser' : 'eraser'
+    else if (tool.value === 'text') id = 'select'
     if (editor.activeToolId() !== id) editor.setTool(id)
   }
+  watch(
+    [tool, paintTarget, brushSize, brushHardness, brushOpacity, brushColor,
+     shapeKind, shapeFillEnabled, shapeFillColor, shapeStrokeEnabled, shapeStrokeColor, shapeStrokeWidth, shapeCombine],
+    syncEngineTool
+  )
   const textToolHandler: ToolHandler = {
     onPointerDown: (_e, pt) => {
       const hit = [...editor.document().root.children].reverse().find((n) => n.kind === 'text' && insideBox(n.transform, pt))
@@ -568,6 +789,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     cursorFor: () => (tool.value === 'select' ? 'default' : 'crosshair'),
   }
   function activeToolHandler(): ToolHandler {
+    if (editor.floating()) return engineToolHandler
     return tool.value === 'text' ? textToolHandler : engineToolHandler
   }
 
@@ -615,19 +837,26 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
   })
 
   return {
-    state, activeId, activeLayer, selectedIds,
+    layers, canvasSize, activeId, activeNode, selectedIds,
     tool, brushSize, brushOpacity, brushHardness, brushColor, paintTarget,
+    shapeKind, shapeFillEnabled, shapeFillColor, shapeStrokeEnabled, shapeStrokeColor, shapeStrokeWidth, shapeCombine,
     editingTextId, capturing, capturedImageUrl,
     canUndo, canRedo,
     panZoom, setElements, fitView, requestRender,
     activeToolHandler,
     undo, redo,
     addImageFromUrl, addImageFromFile, addTextLayerAt,
-    removeLayer, moveLayer, duplicateLayer,
+    removeLayer, moveLayer, moveLayerRelative, duplicateLayer,
+    groupActiveLayer, ungroupActiveLayer,
     setActiveLayer, setOpacity, setBlendMode, toggleVisible, toggleLock, renameLayer,
     addMask, removeMask, toggleMaskEnabled, updateTextLayer,
     setArtboardSize, nudgeActive,
     captureBatch,
+    addEmptyLayer, floating, anchorFloating, cancelFloating,
+    mergeDown, flattenImage, cropToContent, layerToCanvasSize, toggleLockAlpha,
+    selectAll, selectNone, invertSelection,
+    addAdjustmentLayer, updateAdjustment, updateVectorStyle,
+    addFillLayer, updateFillLayer,
     content, fontStore,
   }
 }

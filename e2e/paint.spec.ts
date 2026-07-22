@@ -20,6 +20,8 @@ interface PaintResults {
   afterRedo?: Probe
   afterErase?: Probe
   roundTripChildren?: number
+  selInside?: Px
+  selOutside?: Px
 }
 
 test.beforeAll(() => {
@@ -60,4 +62,8 @@ test('paint path: brush stroke, undo/redo, eraser through the full editor stack'
   expect(e.corner[3], `erase corner ${JSON.stringify(e.corner)}`).toBeGreaterThan(240)
 
   expect(res.roundTripChildren).toBe(1)
+
+  expect(res.selInside![3], `inside selection painted ${JSON.stringify(res.selInside)}`).toBeGreaterThan(200)
+  expect(res.selInside![0]).toBeGreaterThan(200)
+  expect(res.selOutside![3], `outside selection clean ${JSON.stringify(res.selOutside)}`).toBeLessThan(10)
 })

@@ -1,6 +1,7 @@
-import type { NodeBase, Rect, Vec2 } from './node'
+import type { NodeBase, Rect, Transform, Vec2 } from './node'
 import type { Compositor, NodeTexture } from './compositor'
 import type { ContentStore } from './content'
+import type { Command } from './history'
 
 export interface HydrateDeps {
   content: ContentStore
@@ -12,6 +13,13 @@ export interface RenderNodeCtx {
   content: ContentStore
 
   renderChild(node: NodeBase, region: Rect): NodeTexture | null
+  placed(
+    cacheKey: string,
+    contentStamp: string,
+    bitmap: HTMLCanvasElement | ImageBitmap | OffscreenCanvas,
+    transform: Transform,
+    linear?: boolean
+  ): NodeTexture | null
   region: Rect
   devicePixelRatio: number
 }
@@ -41,6 +49,8 @@ export interface NodeKind<T extends NodeBase = NodeBase> {
   thumbnail(node: T, deps: ThumbnailDeps): HTMLCanvasElement | null
 
   hitTest?(node: T, pt: Vec2): boolean
+
+  onTransformCommitted?(node: T, before: Transform, deps: { content: ContentStore }): Command | null
 }
 
 const registry = new Map<string, NodeKind>()

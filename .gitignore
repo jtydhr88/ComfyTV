@@ -35,3 +35,4 @@ research/
 e2e/dist/
 test-results/
 playwright-report/
+e2e/ui-screenshot.png

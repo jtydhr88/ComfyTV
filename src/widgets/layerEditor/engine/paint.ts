@@ -33,9 +33,11 @@ export interface PaintTarget {
   drawable: DrawableData
   channel: 'content' | 'mask'
   bitmap: HTMLCanvasElement
-  slot: { contentId: string }
+  slot: { contentId: string; url?: string }
   content: ContentStore
   toLocal(pt: Vec2): Vec2
+  selection?: Float32Array | null
+  lockAlpha?: boolean
 
   scale: number
 }

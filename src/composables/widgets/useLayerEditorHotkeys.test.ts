@@ -7,10 +7,13 @@ import { isTextEditingTarget, useLayerEditorHotkeys } from './useLayerEditorHotk
 function makeEditor() {
   return {
     activeId: ref<string | null>('layer-1'),
+    floating: ref<unknown>(null),
     undo: vi.fn(),
     redo: vi.fn(),
     removeLayer: vi.fn(),
     nudgeActive: vi.fn(),
+    anchorFloating: vi.fn(),
+    cancelFloating: vi.fn(),
   }
 }
 

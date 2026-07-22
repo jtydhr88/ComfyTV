@@ -16,6 +16,7 @@ interface Results {
   modes?: ModeResult[]
   alpha?: { got: number[]; expected: number[]; maxDiff: number }
   orientation?: { upper: number[]; lower: number[]; topIsGreen: boolean; bottomIsRed: boolean }
+  resize?: { width: number; height: number; corner: number[]; ok: boolean }
 }
 
 const TOL = 4
@@ -48,4 +49,6 @@ test('WebGL compositor matches the GIMP-exact CPU reference', async ({ page }) =
 
   expect(res.orientation!.topIsGreen, `upper ${JSON.stringify(res.orientation!.upper)}`).toBe(true)
   expect(res.orientation!.bottomIsRed, `lower ${JSON.stringify(res.orientation!.lower)}`).toBe(true)
+
+  expect(res.resize!.ok, `resize readback ${JSON.stringify(res.resize)}`).toBe(true)
 })

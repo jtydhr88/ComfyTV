@@ -1,7 +1,7 @@
 <template>
   <div
     ref="viewportRef"
-    class="ctv:relative ctv:size-full ctv:min-h-0 ctv:overflow-hidden ctv:rounded-lg ctv:bg-black/60"
+    class="ctv:relative ctv:size-full ctv:min-h-0 ctv:overflow-hidden ctv:rounded-md ctv:border ctv:border-[#161616] ctv:bg-[#1e1e1e]"
     :style="{ cursor: viewportCursor }"
     @pointerdown="onPointerDown"
     @pointermove="onPointerMove"
@@ -39,6 +39,23 @@
              ctv:bg-primary-background/10 ctv:text-sm ctv:text-primary-background"
     >
       {{ $t('layerEditor.dropHint') }}
+    </div>
+
+    <div
+      v-if="editor.floating.value"
+      class="ctv:absolute ctv:top-2 ctv:left-1/2 ctv:z-20 ctv:flex ctv:-translate-x-1/2 ctv:items-center ctv:gap-1
+             ctv:rounded-lg ctv:border ctv:border-border-subtle ctv:bg-base-background/95 ctv:p-1 ctv:text-2xs ctv:shadow-lg"
+      @pointerdown.stop
+    >
+      <button type="button" :class="floatBtnClass" @click="editor.anchorFloating('active')">
+        {{ $t('layerEditor.anchor') }}
+      </button>
+      <button type="button" :class="floatBtnClass" @click="editor.anchorFloating('new')">
+        {{ $t('layerEditor.anchorAsNewLayer') }}
+      </button>
+      <button type="button" :class="floatBtnClass" @click="editor.cancelFloating()">
+        {{ $t('layerEditor.cancelFloating') }}
+      </button>
     </div>
   </div>
 </template>
@@ -78,6 +95,11 @@ const {
 } = useLayerEditorCanvas(editor, viewportRef)
 
 defineExpose({ setSpaceDown })
+
+const floatBtnClass =
+  'ctv:inline-flex ctv:h-6 ctv:items-center ctv:rounded-md ctv:border-0 ctv:bg-secondary-background ' +
+  'ctv:px-2 ctv:text-2xs ctv:text-base-foreground ctv:cursor-pointer ctv:[font-family:inherit] ' +
+  'ctv:transition-colors ctv:hover:bg-secondary-background-hover'
 
 const drop = useLoaderFileDrop({
   kind: () => 'image',

@@ -3,7 +3,8 @@ import { computed, nextTick, ref, watch, type Ref } from 'vue'
 import { listResources } from '@/api'
 import type { Resource } from '@/api'
 import type { LayerEditorController } from '@/composables/widgets/useLayerEditorStage'
-import type { FontRef, TextLayer } from '@/widgets/layerEditor/types'
+import type { TextData } from '@/widgets/layerEditor/engine'
+import type { FontRef } from '@/widgets/layerEditor/types'
 
 export function clampNumber(v: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, Number.isFinite(v) ? v : min))
@@ -24,10 +25,10 @@ export function useTextEditPopup(
   editor: LayerEditorController,
   textareaEl: Ref<HTMLTextAreaElement | null>,
 ) {
-  const layer = computed<TextLayer | null>(() => {
+  const layer = computed<TextData | null>(() => {
     const id = editor.editingTextId.value
-    const l = id ? editor.state.value.layers.find((x) => x.id === id) : null
-    return l?.type === 'text' ? l : null
+    const row = id ? editor.layers.value.find((x) => x.node.id === id) : null
+    return row?.node.kind === 'text' ? (row.node as TextData) : null
   })
 
   watch(() => editor.editingTextId.value, async (id) => {
@@ -40,7 +41,7 @@ export function useTextEditPopup(
     editor.editingTextId.value = null
   }
 
-  function patch(p: Partial<TextLayer>): void {
+  function patch(p: Partial<TextData>): void {
     const l = layer.value
     if (l) editor.updateTextLayer(l.id, p)
   }

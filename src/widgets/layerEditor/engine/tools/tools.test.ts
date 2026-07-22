@@ -1,9 +1,10 @@
-import { describe, expect, it, vi } from 'vitest'
+import { beforeAll, describe, expect, it, vi } from 'vitest'
 
 import type { Compositor } from '../compositor'
 import type { Document } from '../document'
 import { History } from '../history'
 import { DefaultContentStore } from '../impl/contentStore'
+import { registerBuiltinKinds } from '../kinds'
 import { rasterKind } from '../kinds/raster'
 import type { GroupData, RasterData } from '../node'
 import type { PaintCore } from '../paint'
@@ -11,6 +12,8 @@ import { defaultMode } from '../mode'
 import type { Overlay, ToolContext } from '../tool'
 import { makePaintToolDef } from './paintTool'
 import { makeSelectToolDef } from './selectTool'
+
+beforeAll(() => registerBuiltinKinds())
 
 function root(children: RasterData[]): GroupData {
   return {
@@ -60,6 +63,7 @@ function harness(doc: Document, content: DefaultContentStore, createPaintCore: (
       if (canvas) previews.set(key, canvas)
       else previews.delete(key)
     },
+    selection: { setRect: vi.fn(), none: vi.fn() },
     zoom: () => 1,
     requestRender: vi.fn(),
     options: <T,>() => ({}) as T,

@@ -1,9 +1,12 @@
 import { describe, expect, it } from 'vitest'
 
+import { DefaultContentStore } from '../impl/contentStore'
+import { getPaintCore } from '../paint'
 import { brushProfile } from './brushProfile'
 import { compositeStroke } from './blendStroke'
 import { CoverageBuffer } from './coverage'
 import { stepStroke } from './interpolate'
+import { registerBuiltinPaintCores } from './paintCore'
 
 describe('brushProfile (GIMP generated brush)', () => {
   it('is 1 at the centre and 0 at the edge for any hardness', () => {
@@ -105,5 +108,93 @@ describe('compositeStroke — apply once at stroke opacity', () => {
     })
     expect(out[3]).toBe(0)
     expect([out[0], out[1], out[2]]).toEqual([10, 20, 30])
+  })
+
+  it('selection coverage clips the stroke (GIMP aux2 semantics)', () => {
+    const base = new Uint8ClampedArray(8)
+    const out = compositeStroke(base, Float32Array.of(1, 1), {
+      mode: 'brush',
+      channel: 'content',
+      color: [255, 0, 0],
+      opacity: 1,
+    }, Float32Array.of(0, 1))
+    expect(out[3]).toBe(0)
+    expect(out[7]).toBe(255)
+  })
+
+  it('lockAlpha: brush recolors but never changes alpha (GIMP lock_alpha)', () => {
+    const base = Uint8ClampedArray.of(0, 0, 255, 128, 0, 0, 255, 0)
+    const out = compositeStroke(base, Float32Array.of(1, 1), {
+      mode: 'brush',
+      channel: 'content',
+      color: [255, 0, 0],
+      opacity: 1,
+      lockAlpha: true,
+    })
+    expect(out[0]).toBe(255)
+    expect(out[3]).toBe(128)
+    expect(out[7]).toBe(0)
+  })
+
+  it('lockAlpha: eraser is a no-op on alpha', () => {
+    const base = Uint8ClampedArray.of(10, 20, 30, 200)
+    const out = compositeStroke(base, Float32Array.of(1), {
+      mode: 'eraser',
+      channel: 'content',
+      color: [0, 0, 0],
+      opacity: 1,
+      lockAlpha: true,
+    })
+    expect(out[3]).toBe(200)
+  })
+
+  it('selection clips the eraser too', () => {
+    const base = Uint8ClampedArray.of(10, 20, 30, 255, 10, 20, 30, 255)
+    const out = compositeStroke(base, Float32Array.of(1, 1), {
+      mode: 'eraser',
+      channel: 'content',
+      color: [0, 0, 0],
+      opacity: 1,
+    }, Float32Array.of(0, 1))
+    expect(out[3]).toBe(255)
+    expect(out[7]).toBe(0)
+  })
+})
+
+describe('paint stroke lifecycle (url dirtiness for re-upload)', () => {
+  it('finish clears the slot url and undo restores it', () => {
+    registerBuiltinPaintCores()
+    const content = new DefaultContentStore()
+    const bitmap = document.createElement('canvas')
+    bitmap.width = 8
+    bitmap.height = 8
+    const beforeId = content.register(bitmap, { uploadedUrl: 'http://x/old.png' })
+    const slot = { contentId: beforeId, url: 'http://x/old.png' }
+    const core = getPaintCore('brush').create()
+    core.start(
+      {
+        drawable: {} as never,
+        channel: 'content',
+        bitmap,
+        slot,
+        content,
+        toLocal: (pt) => pt,
+        selection: null,
+        scale: 1,
+      },
+      { size: 4, hardness: 1, spacing: 0.1, opacity: 1, flow: 1, color: '#ff0000' },
+      { x: 4, y: 4, pressure: 1, time: 0 }
+    )
+    const cmd = core.finish()
+    expect(cmd).not.toBeNull()
+    expect(slot.contentId).not.toBe(beforeId)
+    expect(slot.url).toBeUndefined()
+    expect(cmd!.contentRefs?.()).toContain(beforeId)
+
+    cmd!.apply('undo')
+    expect(slot.contentId).toBe(beforeId)
+    expect(slot.url).toBe('http://x/old.png')
+    cmd!.apply('redo')
+    expect(slot.url).toBeUndefined()
   })
 })

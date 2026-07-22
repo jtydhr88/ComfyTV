@@ -3,7 +3,7 @@ import type { Command } from '../history'
 import type { Vec2 } from '../node'
 import type { BrushParams, CoordSample, PaintCore, PaintCoreDef, PaintTarget } from '../paint'
 import { registerPaintCore } from '../paint'
-import { compositeStroke, type StrokeParams } from './blendStroke'
+import { compositeStroke, compositeStrokeRect, type StrokeParams } from './blendStroke'
 import { CoverageBuffer } from './coverage'
 import { stepStroke } from './interpolate'
 
@@ -20,11 +20,13 @@ class BasePaintCore implements PaintCore {
   private cov!: CoverageBuffer
   private base = new Uint8ClampedArray(0)
   private previewCanvas: HTMLCanvasElement | null = null
+  private previewData: ImageData | null = null
   private w = 0
   private h = 0
   private carry = 0
   private last: Vec2 = { x: 0, y: 0 }
   private beforeId = ''
+  private beforeUrl: string | undefined
   private painted = false
   private scale = 1
 
@@ -43,6 +45,7 @@ class BasePaintCore implements PaintCore {
     this.carry = 0
     this.painted = false
     this.beforeId = target.slot.contentId
+    this.beforeUrl = target.slot.url
     this.scale = target.scale > 0 ? target.scale : 1
 
     const ctx = target.bitmap.getContext('2d')
@@ -53,6 +56,7 @@ class BasePaintCore implements PaintCore {
     this.previewCanvas = document.createElement('canvas')
     this.previewCanvas.width = this.w
     this.previewCanvas.height = this.h
+    this.previewData = null
 
     this.last = target.toLocal({ x: first.x, y: first.y })
     this.stamp(this.last)
@@ -80,21 +84,40 @@ class BasePaintCore implements PaintCore {
       channel: this.target.channel,
       color: hexToRgb(this.params.color),
       opacity: this.params.opacity,
+      lockAlpha: this.target.lockAlpha === true,
     }
-  }
-
-  private paintInto(canvas: HTMLCanvasElement): void {
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-    const bytes = compositeStroke(this.base, this.cov.data, this.strokeParams())
-    const img = ctx.createImageData(this.w, this.h)
-    img.data.set(bytes)
-    ctx.putImageData(img, 0, 0)
   }
 
   preview(): HTMLCanvasElement | null {
     if (!this.previewCanvas) return null
-    this.paintInto(this.previewCanvas)
+    const ctx = this.previewCanvas.getContext('2d')
+    if (!ctx) return this.previewCanvas
+    const rect = this.cov.dirty
+    if (!this.previewData) {
+      const img = ctx.createImageData(this.w, this.h)
+      img.data.set(this.base)
+      this.previewData = img
+    }
+    if (rect) {
+      compositeStrokeRect(
+        this.previewData.data,
+        this.base,
+        this.cov.data,
+        this.strokeParams(),
+        this.w,
+        rect,
+        this.target.selection
+      )
+      ctx.putImageData(
+        this.previewData,
+        0,
+        0,
+        rect.x0,
+        rect.y0,
+        rect.x1 - rect.x0 + 1,
+        rect.y1 - rect.y0 + 1
+      )
+    }
     return this.previewCanvas
   }
 
@@ -103,15 +126,30 @@ class BasePaintCore implements PaintCore {
     const final = document.createElement('canvas')
     final.width = this.w
     final.height = this.h
-    this.paintInto(final)
+    const ctx = final.getContext('2d')
+    if (ctx) {
+      const bytes = compositeStroke(this.base, this.cov.data, this.strokeParams(), this.target.selection)
+      const img = ctx.createImageData(this.w, this.h)
+      img.data.set(bytes)
+      ctx.putImageData(img, 0, 0)
+    }
     const afterId = this.target.content.register(final)
     this.target.slot.contentId = afterId
-    return new SetContentCommand(this.label, this.target.slot, this.beforeId, afterId, this.target.content)
+    this.target.slot.url = undefined
+    return new SetContentCommand(
+      this.label,
+      this.target.slot,
+      this.beforeId,
+      afterId,
+      this.target.content,
+      this.beforeUrl
+    )
   }
 
   cancel(): void {
     this.painted = false
     this.previewCanvas = null
+    this.previewData = null
   }
 }
 
