@@ -32,6 +32,8 @@ export interface ChainRendererLike {
     target: HTMLCanvasElement,
   ): boolean
   dispose(): void
+  isLost?(): boolean
+  readonly error?: string | null
 }
 
 export interface ChainStageDef {
@@ -88,6 +90,14 @@ export class ChainLutRenderer implements ChainRendererLike {
     }
     return this.inner.renderToCanvas(
       src, { lut, interp } as never, target)
+  }
+
+  isLost(): boolean {
+    return this.inner.isLost()
+  }
+
+  get error(): string | null {
+    return this.inner.error
   }
 
   dispose(): void {

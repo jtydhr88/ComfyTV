@@ -1,11 +1,8 @@
 import json
-import logging
 
 from .media import get_video_info
 from .media_filter import filter_video
 from .media_torch import torch_process_video
-
-_log = logging.getLogger(__name__)
 
 
 def _parse_curves(raw):
@@ -344,13 +341,6 @@ def _segment_progress(progress, index, count):
 def run_fx_chain(view_url: str, entries, progress=None,
                  delivery=None) -> str:
     d = _delivery_norm(delivery)
-    _log.info('[ComfyTV/fx-chain] render %d entries from %s (delivery=%s)',
-              len(entries), view_url, json.dumps(d))
-    for e in entries:
-        _log.info('[ComfyTV/fx-chain]   %s engine=%s op=%s specs=%s params=%s',
-                  e.get('kind'), e.get('engine', 'avfilter'), e.get('op'),
-                  json.dumps(e.get('specs'))[:400],
-                  json.dumps(e.get('params', {}))[:400])
     video_entries = [e for e in entries if e['domain'] == 'video']
     audio_specs = [tuple(s) for e in entries if e['domain'] == 'audio'
                    for s in e['specs']]
@@ -392,19 +382,13 @@ def run_fx_chain(view_url: str, entries, progress=None,
                 if d['fps'] > 0:
                     out_fps = d['fps']
                 kwargs = _delivery_encode_kwargs(d)
-            _log.info('[ComfyTV/fx-chain] segment %d/%d avfilter specs=%s '
-                      'out_fps=%s', i + 1, count, json.dumps(specs)[:600],
-                      out_fps)
             cur = filter_video(cur, specs, out_fps=out_fps,
                                progress=seg_progress, **kwargs)
         else:
             ctx = {'info': get_video_info(cur)}
-            _log.info('[ComfyTV/fx-chain] segment %d/%d torch ops=%s',
-                      i + 1, count, [e.get('op') for e in group])
             cur = torch_process_video(cur, _torch_frame_fn(group, ctx),
                                       progress=seg_progress)
     if _delivery_active(d) and (not segments or segments[-1][0] == 'torch'):
-        _log.info('[ComfyTV/fx-chain] delivery pass %s', json.dumps(d))
         cur = filter_video(cur, _delivery_specs(d) or [('null', None)],
                            out_fps=d['fps'] or None,
                            **_delivery_encode_kwargs(d))

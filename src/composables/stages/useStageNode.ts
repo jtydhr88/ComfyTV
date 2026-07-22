@@ -661,9 +661,6 @@ export function useStageNode(
         }
       }
 
-      console.debug(`[ComfyTV/run] scoped prompt for #${targetId} `
-                    + JSON.stringify(pm?.output ?? {}, null, 1))
-
       if (missingUpstream.length > 0) {
         const list = [...new Set(missingUpstream)].join(', ')
         const msg = t('error.upstreamNotReadyDetail', { list })

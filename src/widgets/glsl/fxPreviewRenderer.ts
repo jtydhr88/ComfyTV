@@ -29,6 +29,10 @@ export class FxPreviewRenderer<TParams> {
     return this._error
   }
 
+  isLost(): boolean {
+    return this.ready && this.renderer.isContextLost()
+  }
+
   renderToCanvas(
     video: FxPreviewSource,
     params: Partial<TParams>,

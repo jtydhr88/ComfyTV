@@ -55,6 +55,7 @@ interface StackEntry {
 
 export interface ChainCompositor {
   render(src: FxPreviewSource): FxPreviewSource | null
+  lostClasses(): string[]
   dispose(): void
 }
 
@@ -94,24 +95,16 @@ export function createChainCompositor(
     return out
   }
 
-  let lastStackDebugAt = 0
-
   function render(src: FxPreviewSource): FxPreviewSource | null {
     let cur = src
     const stack = syncStack()
-    if (stack.length && Date.now() - lastStackDebugAt > 2000) {
-      lastStackDebugAt = Date.now()
-      console.debug('[ComfyTV/fx-preview] stack '
-        + JSON.stringify(stack.map((e) => ({
-            cls: e.cls,
-            params: CHAIN_PREVIEW_STAGES[e.cls]?.paramsOf(e.node),
-          })), null, 1))
-    }
     for (const entry of stack) {
       const def = CHAIN_PREVIEW_STAGES[entry.cls]
       if (!def) continue
       if (!entry.renderer.renderToCanvas(cur, def.paramsOf(entry.node),
                                          entry.canvas)) {
+        console.warn(`[ComfyTV/fx-preview] upstream ${entry.cls} render failed: `
+          + (entry.renderer.error ?? 'unknown'))
         return null
       }
       cur = entry.canvas
@@ -119,32 +112,20 @@ export function createChainCompositor(
     return cur
   }
 
+  function lostClasses(): string[] {
+    const out: string[] = []
+    for (const entry of stackEntries.values()) {
+      if (entry.renderer.isLost?.()) out.push(entry.cls)
+    }
+    return out
+  }
+
   function dispose(): void {
     for (const entry of stackEntries.values()) entry.renderer.dispose()
     stackEntries.clear()
   }
 
-  return { render, dispose }
-}
-
-function debugMeanOf(src: CanvasImageSource): string {
-  const c = document.createElement('canvas')
-  c.width = 80
-  c.height = 45
-  const ctx = c.getContext('2d', { willReadFrequently: true })
-  if (!ctx) return 'n/a'
-  ctx.drawImage(src, 0, 0, 80, 45)
-  const d = ctx.getImageData(0, 0, 80, 45).data
-  let r = 0
-  let g = 0
-  let b = 0
-  const n = d.length / 4
-  for (let i = 0; i < d.length; i += 4) {
-    r += d[i]
-    g += d[i + 1]
-    b += d[i + 2]
-  }
-  return `[${(r / n).toFixed(1)}, ${(g / n).toFixed(1)}, ${(b / n).toFixed(1)}]`
+  return { render, lostClasses, dispose }
 }
 
 export interface UseChainedFxPreviewOptions<TParams> {
@@ -169,7 +150,22 @@ export function useChainedFxPreview<TParams>(
   let rafId = 0
   let idleTimer: ReturnType<typeof setInterval> | null = null
   let attached: HTMLVideoElement | null = null
-  let lastDebugAt = 0
+  let lastHealthAt = 0
+
+  function ownClass(): string {
+    return nodeClass(opts.node)
+  }
+
+  function healthCheck(): void {
+    if (Date.now() - lastHealthAt < 3000) return
+    lastHealthAt = Date.now()
+    const lost = compositor.lostClasses()
+    if (ownRenderer?.isLost?.()) lost.push(`${ownClass()} (own)`)
+    if (lost.length) {
+      console.warn(`[ComfyTV/fx-preview] ${ownClass()} preview is STALE — `
+        + `lost GL contexts in its chain: ${lost.join(', ')}`)
+    }
+  }
 
   function renderOnce(): void {
     if (!supported.value) return
@@ -180,21 +176,21 @@ export function useChainedFxPreview<TParams>(
 
     const src = compositor.render(v)
     if (src == null) {
+      console.warn(`[ComfyTV/fx-preview] ${ownClass()}: upstream chain failed — `
+        + 'preview disabled for this card')
       supported.value = false
       stopLoop()
       return
     }
     if (!ownRenderer.renderToCanvas(
         src, opts.params() as Record<string, unknown>, target)) {
+      console.warn(`[ComfyTV/fx-preview] ${ownClass()}: own render failed: `
+        + `${ownRenderer.error ?? 'unknown'} — preview disabled for this card`)
       supported.value = false
       stopLoop()
       return
     }
-    if (Date.now() - lastDebugAt > 1000) {
-      lastDebugAt = Date.now()
-      console.debug(`[ComfyTV/fx-preview] t=${v.currentTime.toFixed(2)}s `
-        + `src mean=${debugMeanOf(v)} composited mean=${debugMeanOf(target)}`)
-    }
+    healthCheck()
   }
 
   function loop(): void {

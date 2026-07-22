@@ -18008,7 +18008,7 @@ const compileToFunction = /* @__NO_SIDE_EFFECTS__ */ (message, context2) => {
     return !detectError ? compileCache[cacheKey] = msg : msg;
   }
 };
-function compile$2(message, context2) {
+function compile$1(message, context2) {
   if (__INTLIFY_JIT_COMPILATION__ && !__INTLIFY_DROP_MESSAGE_COMPILER__ && isString$1(message)) {
     isBoolean(context2.warnHtmlMessage) ? context2.warnHtmlMessage : true;
     const onCacheKey = context2.onCacheKey || defaultOnCacheKey;
@@ -20320,7 +20320,7 @@ function injectGlobalFields(app2, composer) {
   initFeatureFlags();
 }
 if (__INTLIFY_JIT_COMPILATION__) {
-  registerMessageCompiler(compile$2);
+  registerMessageCompiler(compile$1);
 } else {
   registerMessageCompiler(compileToFunction);
 }
@@ -46888,23 +46888,23 @@ function WebGLInfo(gl) {
     points: 0,
     lines: 0
   };
-  function update(count2, mode, instanceCount) {
+  function update(count2, mode, instanceCount2) {
     render2.calls++;
     switch (mode) {
       case gl.TRIANGLES:
-        render2.triangles += instanceCount * (count2 / 3);
+        render2.triangles += instanceCount2 * (count2 / 3);
         break;
       case gl.LINES:
-        render2.lines += instanceCount * (count2 / 2);
+        render2.lines += instanceCount2 * (count2 / 2);
         break;
       case gl.LINE_STRIP:
-        render2.lines += instanceCount * (count2 - 1);
+        render2.lines += instanceCount2 * (count2 - 1);
         break;
       case gl.LINE_LOOP:
-        render2.lines += instanceCount * count2;
+        render2.lines += instanceCount2 * count2;
         break;
       case gl.POINTS:
-        render2.points += instanceCount * count2;
+        render2.points += instanceCount2 * count2;
         break;
       default:
         error$2("WebGLInfo: Unknown draw mode:", mode);
@@ -54350,8 +54350,8 @@ class WebGLRenderer {
         renderer2.renderInstances(drawStart, drawCount, object2.count);
       } else if (geometry.isInstancedBufferGeometry) {
         const maxInstanceCount = geometry._maxInstanceCount !== void 0 ? geometry._maxInstanceCount : Infinity;
-        const instanceCount = Math.min(geometry.instanceCount, maxInstanceCount);
-        renderer2.renderInstances(drawStart, drawCount, instanceCount);
+        const instanceCount2 = Math.min(geometry.instanceCount, maxInstanceCount);
+        renderer2.renderInstances(drawStart, drawCount, instanceCount2);
       } else {
         renderer2.render(drawStart, drawCount);
       }
@@ -55947,7 +55947,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-CkUKWNUg.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-D3Y_hkdh.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -75834,11 +75834,11 @@ function replaceRangeWith(tr, from2, to, node) {
 function deleteRange$1(tr, from2, to) {
   let $from = tr.doc.resolve(from2), $to = tr.doc.resolve(to);
   if ($from.parent.isTextblock && $to.parent.isTextblock && $from.start() != $to.start() && $from.parentOffset == 0 && $to.parentOffset == 0) {
-    let shared = $from.sharedDepth(to), isolated = false;
-    for (let d2 = $from.depth; d2 > shared; d2--)
+    let shared2 = $from.sharedDepth(to), isolated = false;
+    for (let d2 = $from.depth; d2 > shared2; d2--)
       if ($from.node(d2).type.spec.isolating)
         isolated = true;
-    for (let d2 = $to.depth; d2 > shared; d2--)
+    for (let d2 = $to.depth; d2 > shared2; d2--)
       if ($to.node(d2).type.spec.isolating)
         isolated = true;
     if (!isolated) {
@@ -82340,9 +82340,9 @@ function readDOMChange(view, from2, to, typeOver, addedNodes) {
     return;
   }
   let $before = view.state.doc.resolve(from2);
-  let shared = $before.sharedDepth(to);
-  from2 = $before.before(shared + 1);
-  to = view.state.doc.resolve(to).after(shared + 1);
+  let shared2 = $before.sharedDepth(to);
+  from2 = $before.before(shared2 + 1);
+  to = view.state.doc.resolve(to).after(shared2 + 1);
   let sel = view.state.selection;
   let parse2 = parseBetween(view, from2, to);
   let doc2 = view.state.doc, compare2 = doc2.slice(parse2.from, parse2.to);
@@ -104618,7 +104618,7 @@ function detectPassCount(source) {
   if (match) return Math.max(1, parseInt(match[1], 10));
   return 1;
 }
-const VERTEX_SHADER_SOURCE$1 = `#version 300 es
+const VERTEX_SHADER_SOURCE = `#version 300 es
 out vec2 v_texCoord;
 void main() {
     vec2 verts[3] = vec2[](vec2(-1, -1), vec2(3, -1), vec2(-1, 3));
@@ -104634,6 +104634,9 @@ const DEFAULT_CONFIG = {
   maxBoolUniforms: 10,
   maxCurves: 4
 };
+let shared = null;
+let sharedSeq = 0;
+let instanceCount = 0;
 function compileShader(gl, type, source) {
   const shader = gl.createShader(type);
   if (!shader) throw new Error("Failed to create shader");
@@ -104646,30 +104649,101 @@ function compileShader(gl, type, source) {
   }
   return shader;
 }
+function createShared() {
+  try {
+    const canvas = typeof OffscreenCanvas !== "undefined" ? new OffscreenCanvas(8, 8) : document.createElement("canvas");
+    const gl = canvas.getContext("webgl2", {
+      alpha: true,
+      premultipliedAlpha: false,
+      preserveDrawingBuffer: true
+    });
+    if (!gl) return null;
+    if (!gl.getExtension("EXT_color_buffer_float")) return null;
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    const vertexShader = compileShader(gl, gl.VERTEX_SHADER, VERTEX_SHADER_SOURCE);
+    const s = {
+      id: ++sharedSeq,
+      canvas,
+      gl,
+      vertexShader,
+      programs: /* @__PURE__ */ new Map(),
+      lost: false
+    };
+    canvas.addEventListener("webglcontextlost", () => {
+      s.lost = true;
+      console.warn(`[ComfyTV/glsl] shared context #${s.id} lost — rebuilding on next render`);
+    });
+    console.debug(`[ComfyTV/glsl] shared context #${s.id} created (instances=${instanceCount})`);
+    return s;
+  } catch {
+    return null;
+  }
+}
+function healthyShared() {
+  if (shared && (shared.lost || shared.gl.isContextLost())) shared = null;
+  shared ?? (shared = createShared());
+  return shared;
+}
+function releaseSharedIfIdle() {
+  var _a3;
+  if (instanceCount > 0 || !shared) return;
+  const s = shared;
+  shared = null;
+  if (!s.lost && !s.gl.isContextLost()) {
+    for (const entry of s.programs.values()) s.gl.deleteProgram(entry.program);
+    s.gl.deleteShader(s.vertexShader);
+    (_a3 = s.gl.getExtension("WEBGL_lose_context")) == null ? void 0 : _a3.loseContext();
+  }
+  console.debug(`[ComfyTV/glsl] shared context #${s.id} released`);
+}
+function acquireSharedGL() {
+  return healthyShared();
+}
+function trackSharedInstance() {
+  instanceCount++;
+  let done = false;
+  return () => {
+    if (done) return;
+    done = true;
+    instanceCount--;
+    releaseSharedIfIdle();
+  };
+}
+function getSharedProgram(s, source) {
+  const cached2 = s.programs.get(source);
+  if (cached2) return cached2;
+  const gl = s.gl;
+  const fs = compileShader(gl, gl.FRAGMENT_SHADER, source);
+  const prog = gl.createProgram();
+  if (!prog) {
+    gl.deleteShader(fs);
+    throw new Error("Failed to create program");
+  }
+  gl.attachShader(prog, s.vertexShader);
+  gl.attachShader(prog, fs);
+  gl.linkProgram(prog);
+  gl.deleteShader(fs);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+    const log2 = gl.getProgramInfoLog(prog) ?? "Link failed";
+    gl.deleteProgram(prog);
+    throw new Error(log2);
+  }
+  const entry = {
+    program: prog,
+    passCount: Math.min(detectPassCount(source), MAX_PASSES),
+    uniforms: /* @__PURE__ */ new Map()
+  };
+  s.programs.set(source, entry);
+  return entry;
+}
 function useGLSLRenderer(config2 = DEFAULT_CONFIG) {
-  const {
-    maxInputs,
-    maxFloatUniforms,
-    maxIntUniforms,
-    maxBoolUniforms,
-    maxCurves
-  } = config2;
-  const uniformNames = [
-    "u_resolution",
-    "u_pass",
-    ...Array.from({ length: maxInputs }, (_2, i) => `u_image${i}`),
-    ...Array.from({ length: maxFloatUniforms }, (_2, i) => `u_float${i}`),
-    ...Array.from({ length: maxIntUniforms }, (_2, i) => `u_int${i}`),
-    ...Array.from({ length: maxBoolUniforms }, (_2, i) => `u_bool${i}`),
-    ...Array.from({ length: maxCurves }, (_2, i) => `u_curve${i}`)
-  ];
-  let canvas = null;
-  let gl = null;
-  let vertexShader = null;
+  const { maxInputs, maxCurves } = config2;
+  let ref2 = null;
+  let width = 0;
+  let height = 0;
   let program = null;
-  let fragmentShader = null;
-  let pingPongFBOs = null;
-  let pingPongTextures = null;
+  let lastSource = null;
+  let pingPong = null;
   let fallbackTexture = null;
   const inputTextures = Array.from({
     length: maxInputs
@@ -104677,338 +104751,315 @@ function useGLSLRenderer(config2 = DEFAULT_CONFIG) {
   const curveTextures = Array.from({
     length: maxCurves
   }).fill(null);
-  const uniformLocations = /* @__PURE__ */ new Map();
-  let passCount = 1;
+  const curveData = Array.from({
+    length: maxCurves
+  }).fill(null);
   let disposed = false;
-  let lastCompiledSource = null;
-  function initPingPongFBOs(ctx, width, height) {
-    const fbos = [];
-    const textures = [];
-    try {
-      for (let i = 0; i < 2; i++) {
-        const tex = ctx.createTexture();
-        if (!tex) throw new Error("Failed to create ping-pong texture");
-        ctx.bindTexture(ctx.TEXTURE_2D, tex);
-        ctx.texImage2D(
-          ctx.TEXTURE_2D,
-          0,
-          ctx.RGBA16F,
-          width,
-          height,
-          0,
-          ctx.RGBA,
-          ctx.HALF_FLOAT,
-          null
-        );
-        ctx.texParameteri(ctx.TEXTURE_2D, ctx.TEXTURE_MIN_FILTER, ctx.LINEAR);
-        ctx.texParameteri(ctx.TEXTURE_2D, ctx.TEXTURE_MAG_FILTER, ctx.LINEAR);
-        ctx.texParameteri(ctx.TEXTURE_2D, ctx.TEXTURE_WRAP_S, ctx.CLAMP_TO_EDGE);
-        ctx.texParameteri(ctx.TEXTURE_2D, ctx.TEXTURE_WRAP_T, ctx.CLAMP_TO_EDGE);
-        const fbo = ctx.createFramebuffer();
-        if (!fbo) throw new Error("Failed to create ping-pong framebuffer");
-        ctx.bindFramebuffer(ctx.FRAMEBUFFER, fbo);
-        ctx.framebufferTexture2D(
-          ctx.FRAMEBUFFER,
-          ctx.COLOR_ATTACHMENT0,
-          ctx.TEXTURE_2D,
-          tex,
-          0
-        );
-        const status = ctx.checkFramebufferStatus(ctx.FRAMEBUFFER);
-        if (status !== ctx.FRAMEBUFFER_COMPLETE)
-          throw new Error(`Ping-pong framebuffer incomplete: ${status}`);
-        fbos.push(fbo);
-        textures.push(tex);
+  instanceCount++;
+  function resetLocalHandles() {
+    pingPong = null;
+    fallbackTexture = null;
+    inputTextures.fill(null);
+    curveTextures.fill(null);
+    program = null;
+  }
+  function makeTarget(s, w2, h2) {
+    const g2 = s.gl;
+    const tex = g2.createTexture();
+    if (!tex) throw new Error("Failed to create ping-pong texture");
+    g2.bindTexture(g2.TEXTURE_2D, tex);
+    g2.texImage2D(g2.TEXTURE_2D, 0, g2.RGBA16F, w2, h2, 0, g2.RGBA, g2.HALF_FLOAT, null);
+    g2.texParameteri(g2.TEXTURE_2D, g2.TEXTURE_MIN_FILTER, g2.LINEAR);
+    g2.texParameteri(g2.TEXTURE_2D, g2.TEXTURE_MAG_FILTER, g2.LINEAR);
+    g2.texParameteri(g2.TEXTURE_2D, g2.TEXTURE_WRAP_S, g2.CLAMP_TO_EDGE);
+    g2.texParameteri(g2.TEXTURE_2D, g2.TEXTURE_WRAP_T, g2.CLAMP_TO_EDGE);
+    const fbo = g2.createFramebuffer();
+    if (!fbo) throw new Error("Failed to create ping-pong framebuffer");
+    g2.bindFramebuffer(g2.FRAMEBUFFER, fbo);
+    g2.framebufferTexture2D(g2.FRAMEBUFFER, g2.COLOR_ATTACHMENT0, g2.TEXTURE_2D, tex, 0);
+    const status = g2.checkFramebufferStatus(g2.FRAMEBUFFER);
+    g2.bindFramebuffer(g2.FRAMEBUFFER, null);
+    g2.bindTexture(g2.TEXTURE_2D, null);
+    if (status !== g2.FRAMEBUFFER_COMPLETE) {
+      throw new Error(`Ping-pong framebuffer incomplete: ${status}`);
+    }
+    return { fbo, tex };
+  }
+  function destroyPingPong(s) {
+    if (!pingPong) return;
+    for (const t2 of pingPong) {
+      s.gl.deleteFramebuffer(t2.fbo);
+      s.gl.deleteTexture(t2.tex);
+    }
+    pingPong = null;
+  }
+  function uploadCurve(s, index, lut2) {
+    const g2 = s.gl;
+    if (curveTextures[index]) g2.deleteTexture(curveTextures[index]);
+    curveTextures[index] = null;
+    const texture = g2.createTexture();
+    if (!texture) return;
+    const unit = maxInputs + index;
+    g2.activeTexture(g2.TEXTURE0 + unit);
+    g2.bindTexture(g2.TEXTURE_2D, texture);
+    g2.pixelStorei(g2.UNPACK_FLIP_Y_WEBGL, false);
+    g2.texImage2D(g2.TEXTURE_2D, 0, g2.R16F, lut2.length, 1, 0, g2.RED, g2.FLOAT, lut2);
+    g2.pixelStorei(g2.UNPACK_FLIP_Y_WEBGL, true);
+    g2.texParameteri(g2.TEXTURE_2D, g2.TEXTURE_MIN_FILTER, g2.LINEAR);
+    g2.texParameteri(g2.TEXTURE_2D, g2.TEXTURE_MAG_FILTER, g2.LINEAR);
+    g2.texParameteri(g2.TEXTURE_2D, g2.TEXTURE_WRAP_S, g2.CLAMP_TO_EDGE);
+    g2.texParameteri(g2.TEXTURE_2D, g2.TEXTURE_WRAP_T, g2.CLAMP_TO_EDGE);
+    curveTextures[index] = texture;
+  }
+  function live() {
+    if (disposed) return null;
+    const s = healthyShared();
+    if (!s) return null;
+    if (ref2 !== s) {
+      resetLocalHandles();
+      ref2 = s;
+      try {
+        if (lastSource) program = getSharedProgram(s, lastSource);
+        for (let i = 0; i < maxCurves; i++) {
+          const data = curveData[i];
+          if (data) uploadCurve(s, i, data);
+        }
+      } catch {
+        program = null;
       }
-    } catch (error2) {
-      for (const fbo of fbos) ctx.deleteFramebuffer(fbo);
-      for (const tex of textures) ctx.deleteTexture(tex);
-      ctx.bindFramebuffer(ctx.FRAMEBUFFER, null);
-      ctx.bindTexture(ctx.TEXTURE_2D, null);
-      throw error2;
     }
-    ctx.bindFramebuffer(ctx.FRAMEBUFFER, null);
-    ctx.bindTexture(ctx.TEXTURE_2D, null);
-    pingPongFBOs = fbos;
-    pingPongTextures = textures;
+    return s;
   }
-  function destroyPingPongFBOs() {
-    if (!gl) return;
-    if (pingPongFBOs) {
-      for (const fbo of pingPongFBOs) gl.deleteFramebuffer(fbo);
-      pingPongFBOs = null;
-    }
-    if (pingPongTextures) {
-      for (const tex of pingPongTextures) gl.deleteTexture(tex);
-      pingPongTextures = null;
-    }
-  }
-  function cacheUniformLocations() {
-    if (!program || !gl) return;
-    for (const name of uniformNames) {
-      uniformLocations.set(name, gl.getUniformLocation(program, name));
-    }
-  }
-  function getFallbackTexture() {
-    if (!gl) throw new Error("Renderer not initialized");
-    if (!fallbackTexture) {
-      const tex = gl.createTexture();
-      if (!tex) throw new Error("Failed to create fallback texture");
-      fallbackTexture = tex;
-      gl.bindTexture(gl.TEXTURE_2D, fallbackTexture);
-      gl.texImage2D(
-        gl.TEXTURE_2D,
-        0,
-        gl.RGBA,
-        1,
-        1,
-        0,
-        gl.RGBA,
-        gl.UNSIGNED_BYTE,
-        new Uint8Array([0, 0, 0, 255])
-      );
-    }
-    return fallbackTexture;
-  }
-  function init(width, height) {
-    if (disposed) return false;
+  function ensureTargets(s) {
+    if (pingPong) return true;
+    if (!width || !height) return false;
     try {
-      canvas = new OffscreenCanvas(width, height);
-      const ctx = canvas.getContext("webgl2", {
-        alpha: true,
-        premultipliedAlpha: false,
-        preserveDrawingBuffer: true
-      });
-      if (!ctx) return false;
-      gl = ctx;
-      if (!gl.getExtension("EXT_color_buffer_float")) return false;
-      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-      vertexShader = compileShader(gl, gl.VERTEX_SHADER, VERTEX_SHADER_SOURCE$1);
-      initPingPongFBOs(gl, width, height);
+      pingPong = [makeTarget(s, width, height), makeTarget(s, width, height)];
       return true;
     } catch {
-      dispose();
+      pingPong = null;
       return false;
     }
   }
-  function compileFragment(source) {
-    if (disposed || !gl) return { success: false, log: "Engine disposed" };
-    passCount = Math.min(detectPassCount(source), MAX_PASSES);
-    if (source === lastCompiledSource && program) {
-      return { success: true, log: "" };
+  function loc(s, name) {
+    if (!program) return null;
+    let l3 = program.uniforms.get(name);
+    if (l3 === void 0) {
+      l3 = s.gl.getUniformLocation(program.program, name);
+      program.uniforms.set(name, l3);
     }
-    lastCompiledSource = source;
-    if (fragmentShader) {
-      gl.deleteShader(fragmentShader);
-      fragmentShader = null;
-    }
-    if (program) {
-      gl.deleteProgram(program);
-      program = null;
-    }
-    uniformLocations.clear();
-    try {
-      fragmentShader = compileShader(gl, gl.FRAGMENT_SHADER, source);
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : String(e);
-      return { success: false, log: msg };
-    }
-    const prog = gl.createProgram();
-    if (!prog) return { success: false, log: "Failed to create program" };
-    gl.attachShader(prog, vertexShader);
-    gl.attachShader(prog, fragmentShader);
-    gl.linkProgram(prog);
-    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
-      const log2 = gl.getProgramInfoLog(prog) ?? "Link failed";
-      gl.deleteProgram(prog);
-      return { success: false, log: log2 };
-    }
-    program = prog;
-    cacheUniformLocations();
-    return { success: true, log: "" };
+    return l3;
   }
-  function setResolution(width, height) {
-    if (disposed || !gl || !canvas) return;
-    if (canvas.width !== width || canvas.height !== height) {
-      canvas.width = width;
-      canvas.height = height;
-      gl.viewport(0, 0, width, height);
-      destroyPingPongFBOs();
-      initPingPongFBOs(gl, width, height);
-    }
-  }
-  function setFloatUniform(index, value) {
-    if (disposed || !program || !gl) return;
-    const loc = uniformLocations.get(`u_float${index}`);
-    if (loc != null) {
-      gl.useProgram(program);
-      gl.uniform1f(loc, value);
-    }
-  }
-  function setIntUniform(index, value) {
-    if (disposed || !program || !gl) return;
-    const loc = uniformLocations.get(`u_int${index}`);
-    if (loc != null) {
-      gl.useProgram(program);
-      gl.uniform1i(loc, value);
-    }
-  }
-  function setBoolUniform(index, value) {
-    if (disposed || !program || !gl) return;
-    const loc = uniformLocations.get(`u_bool${index}`);
-    if (loc != null) {
-      gl.useProgram(program);
-      gl.uniform1i(loc, value ? 1 : 0);
-    }
-  }
-  function bindCurveTexture(index, lut2) {
-    if (disposed || !gl) return;
-    if (index < 0 || index >= maxCurves) return;
-    if (curveTextures[index]) {
-      gl.deleteTexture(curveTextures[index]);
-      curveTextures[index] = null;
-    }
-    const texture = gl.createTexture();
-    if (!texture) return;
-    const unit = maxInputs + index;
-    gl.activeTexture(gl.TEXTURE0 + unit);
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
-    gl.texImage2D(
-      gl.TEXTURE_2D,
+  function getFallback(s) {
+    if (fallbackTexture) return fallbackTexture;
+    const g2 = s.gl;
+    const tex = g2.createTexture();
+    if (!tex) throw new Error("Failed to create fallback texture");
+    fallbackTexture = tex;
+    g2.bindTexture(g2.TEXTURE_2D, fallbackTexture);
+    g2.texImage2D(
+      g2.TEXTURE_2D,
       0,
-      gl.R16F,
-      lut2.length,
+      g2.RGBA,
+      1,
       1,
       0,
-      gl.RED,
-      gl.FLOAT,
-      lut2
+      g2.RGBA,
+      g2.UNSIGNED_BYTE,
+      new Uint8Array([0, 0, 0, 255])
     );
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    curveTextures[index] = texture;
+    return fallbackTexture;
+  }
+  function init(w2, h2) {
+    if (disposed) return false;
+    width = w2;
+    height = h2;
+    const s = live();
+    if (!s) return false;
+    return ensureTargets(s);
+  }
+  function compileFragment(source) {
+    const s = live();
+    if (!s) return { success: false, log: "WebGL2 unavailable" };
+    if (lastSource === source && program) return { success: true, log: "" };
+    try {
+      program = getSharedProgram(s, source);
+      lastSource = source;
+      return { success: true, log: "" };
+    } catch (e) {
+      program = null;
+      lastSource = null;
+      return { success: false, log: e instanceof Error ? e.message : String(e) };
+    }
+  }
+  function setResolution(w2, h2) {
+    if (disposed || w2 === width && h2 === height) return;
+    width = w2;
+    height = h2;
+    const s = live();
+    if (s) destroyPingPong(s);
+    pingPong = null;
+  }
+  function setFloatUniform(index, value) {
+    const s = live();
+    if (!s || !program) return;
+    s.gl.useProgram(program.program);
+    const l3 = loc(s, `u_float${index}`);
+    if (l3 != null) s.gl.uniform1f(l3, value);
+  }
+  function setIntUniform(index, value) {
+    const s = live();
+    if (!s || !program) return;
+    s.gl.useProgram(program.program);
+    const l3 = loc(s, `u_int${index}`);
+    if (l3 != null) s.gl.uniform1i(l3, value);
+  }
+  function setBoolUniform(index, value) {
+    const s = live();
+    if (!s || !program) return;
+    s.gl.useProgram(program.program);
+    const l3 = loc(s, `u_bool${index}`);
+    if (l3 != null) s.gl.uniform1i(l3, value ? 1 : 0);
+  }
+  function bindCurveTexture(index, lut2) {
+    if (index < 0 || index >= maxCurves) return;
+    curveData[index] = lut2;
+    const s = live();
+    if (!s) return;
+    uploadCurve(s, index, lut2);
   }
   function bindInputImage(index, image) {
-    if (disposed || !gl) return;
+    const s = live();
+    if (!s) return;
     if (index < 0 || index >= maxInputs) {
-      throw new Error(
-        `Input index ${index} out of range (max ${maxInputs - 1})`
-      );
+      throw new Error(`Input index ${index} out of range (max ${maxInputs - 1})`);
     }
-    if (inputTextures[index]) {
-      gl.deleteTexture(inputTextures[index]);
-      inputTextures[index] = null;
-    }
-    const texture = gl.createTexture();
+    const g2 = s.gl;
+    if (inputTextures[index]) g2.deleteTexture(inputTextures[index]);
+    inputTextures[index] = null;
+    const texture = g2.createTexture();
     if (!texture) return;
-    gl.activeTexture(gl.TEXTURE0 + index);
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+    g2.activeTexture(g2.TEXTURE0 + index);
+    g2.bindTexture(g2.TEXTURE_2D, texture);
+    g2.texParameteri(g2.TEXTURE_2D, g2.TEXTURE_WRAP_S, g2.CLAMP_TO_EDGE);
+    g2.texParameteri(g2.TEXTURE_2D, g2.TEXTURE_WRAP_T, g2.CLAMP_TO_EDGE);
+    g2.texParameteri(g2.TEXTURE_2D, g2.TEXTURE_MIN_FILTER, g2.LINEAR);
+    g2.texParameteri(g2.TEXTURE_2D, g2.TEXTURE_MAG_FILTER, g2.LINEAR);
+    g2.texImage2D(g2.TEXTURE_2D, 0, g2.RGBA, g2.RGBA, g2.UNSIGNED_BYTE, image);
     inputTextures[index] = texture;
   }
   function render2() {
-    if (disposed || !program || !pingPongFBOs || !gl || !canvas) return;
-    gl.useProgram(program);
-    gl.disable(gl.BLEND);
-    const resLoc = uniformLocations.get("u_resolution");
-    if (resLoc != null) {
-      gl.uniform2f(resLoc, canvas.width, canvas.height);
-    }
+    const s = live();
+    if (!s || !program) return;
+    if (!ensureTargets(s)) return;
+    const g2 = s.gl;
+    const canvas = s.canvas;
+    const cw = Math.max(canvas.width, width);
+    const ch = Math.max(canvas.height, height);
+    if (canvas.width !== cw) canvas.width = cw;
+    if (canvas.height !== ch) canvas.height = ch;
+    g2.useProgram(program.program);
+    g2.disable(g2.BLEND);
+    const resLoc = loc(s, "u_resolution");
+    if (resLoc != null) g2.uniform2f(resLoc, width, height);
     for (let i = 0; i < maxInputs; i++) {
-      const loc = uniformLocations.get(`u_image${i}`);
-      if (loc != null) {
-        gl.activeTexture(gl.TEXTURE0 + i);
-        gl.bindTexture(gl.TEXTURE_2D, inputTextures[i] ?? getFallbackTexture());
-        gl.uniform1i(loc, i);
+      const l3 = loc(s, `u_image${i}`);
+      if (l3 != null) {
+        g2.activeTexture(g2.TEXTURE0 + i);
+        g2.bindTexture(g2.TEXTURE_2D, inputTextures[i] ?? getFallback(s));
+        g2.uniform1i(l3, i);
       }
     }
     for (let i = 0; i < maxCurves; i++) {
-      const loc = uniformLocations.get(`u_curve${i}`);
-      if (loc != null && curveTextures[i]) {
+      const l3 = loc(s, `u_curve${i}`);
+      if (l3 != null && curveTextures[i]) {
         const unit = maxInputs + i;
-        gl.activeTexture(gl.TEXTURE0 + unit);
-        gl.bindTexture(gl.TEXTURE_2D, curveTextures[i]);
-        gl.uniform1i(loc, unit);
+        g2.activeTexture(g2.TEXTURE0 + unit);
+        g2.bindTexture(g2.TEXTURE_2D, curveTextures[i]);
+        g2.uniform1i(l3, unit);
       }
     }
+    const passCount = program.passCount;
     for (let pass = 0; pass < passCount; pass++) {
-      const passLoc = uniformLocations.get("u_pass");
-      if (passLoc != null) gl.uniform1i(passLoc, pass);
+      const passLoc = loc(s, "u_pass");
+      if (passLoc != null) g2.uniform1i(passLoc, pass);
       const isLastPass = pass === passCount - 1;
       const writeIdx = pass % 2;
       if (isLastPass) {
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.drawBuffers([gl.BACK]);
+        g2.bindFramebuffer(g2.FRAMEBUFFER, null);
+        g2.drawBuffers([g2.BACK]);
+        g2.viewport(0, canvas.height - height, width, height);
       } else {
-        gl.bindFramebuffer(gl.FRAMEBUFFER, pingPongFBOs[writeIdx]);
-        gl.drawBuffers([gl.COLOR_ATTACHMENT0]);
+        g2.bindFramebuffer(g2.FRAMEBUFFER, pingPong[writeIdx].fbo);
+        g2.drawBuffers([g2.COLOR_ATTACHMENT0]);
+        g2.viewport(0, 0, width, height);
       }
       if (pass > 0) {
-        const sourceTexture = pingPongTextures[(pass - 1) % 2];
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, sourceTexture);
+        g2.activeTexture(g2.TEXTURE0);
+        g2.bindTexture(g2.TEXTURE_2D, pingPong[(pass - 1) % 2].tex);
       }
-      gl.clearColor(0, 0, 0, 0);
-      gl.clear(gl.COLOR_BUFFER_BIT);
-      gl.drawArrays(gl.TRIANGLES, 0, 3);
+      g2.clearColor(0, 0, 0, 0);
+      g2.clear(g2.COLOR_BUFFER_BIT);
+      g2.drawArrays(g2.TRIANGLES, 0, 3);
     }
   }
   function readPixels() {
-    if (!gl || !canvas) throw new Error("Renderer not initialized");
-    const w2 = canvas.width;
-    const h2 = canvas.height;
-    const pixels = new Uint8ClampedArray(w2 * h2 * 4);
-    gl.pixelStorei(gl.PACK_ROW_LENGTH, 0);
-    gl.readPixels(0, 0, w2, h2, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
-    return new ImageData(pixels, w2, h2);
+    const s = live();
+    if (!s) throw new Error("Renderer not initialized");
+    const g2 = s.gl;
+    const pixels = new Uint8ClampedArray(width * height * 4);
+    g2.bindFramebuffer(g2.FRAMEBUFFER, null);
+    g2.pixelStorei(g2.PACK_ROW_LENGTH, 0);
+    g2.readPixels(
+      0,
+      s.canvas.height - height,
+      width,
+      height,
+      g2.RGBA,
+      g2.UNSIGNED_BYTE,
+      pixels
+    );
+    return new ImageData(pixels, width, height);
   }
   async function toBlob() {
-    if (!canvas) throw new Error("Renderer not initialized");
-    return canvas.convertToBlob({ type: "image/webp", quality: 0.92 });
+    const data = readPixels();
+    const c2 = document.createElement("canvas");
+    c2.width = data.width;
+    c2.height = data.height;
+    const ctx = c2.getContext("2d");
+    if (!ctx) throw new Error("2D context unavailable");
+    ctx.putImageData(data, 0, 0);
+    return await new Promise((res, rej) => c2.toBlob(
+      (b2) => b2 ? res(b2) : rej(new Error("toBlob failed")),
+      "image/webp",
+      0.92
+    ));
   }
   function getCanvas2() {
-    return canvas;
+    return (ref2 == null ? void 0 : ref2.canvas) ?? null;
+  }
+  function isContextLost() {
+    if (disposed || !ref2) return false;
+    return ref2.lost || ref2.gl.isContextLost();
   }
   function dispose() {
     if (disposed) return;
     disposed = true;
-    if (!gl) return;
-    for (const tex of inputTextures) {
-      if (tex) gl.deleteTexture(tex);
+    instanceCount--;
+    const s = ref2;
+    ref2 = null;
+    if (s && !s.lost && !s.gl.isContextLost()) {
+      for (const tex of inputTextures) {
+        if (tex) s.gl.deleteTexture(tex);
+      }
+      for (const tex of curveTextures) {
+        if (tex) s.gl.deleteTexture(tex);
+      }
+      if (fallbackTexture) s.gl.deleteTexture(fallbackTexture);
+      destroyPingPong(s);
     }
-    inputTextures.fill(null);
-    for (const tex of curveTextures) {
-      if (tex) gl.deleteTexture(tex);
-    }
-    curveTextures.fill(null);
-    if (fallbackTexture) {
-      gl.deleteTexture(fallbackTexture);
-      fallbackTexture = null;
-    }
-    destroyPingPongFBOs();
-    if (fragmentShader) {
-      gl.deleteShader(fragmentShader);
-      fragmentShader = null;
-    }
-    if (vertexShader) {
-      gl.deleteShader(vertexShader);
-      vertexShader = null;
-    }
-    if (program) {
-      gl.deleteProgram(program);
-      program = null;
-    }
-    uniformLocations.clear();
-    const ext = gl.getExtension("WEBGL_lose_context");
-    ext == null ? void 0 : ext.loseContext();
+    resetLocalHandles();
+    releaseSharedIfIdle();
   }
   return {
     init,
@@ -105023,6 +105074,7 @@ function useGLSLRenderer(config2 = DEFAULT_CONFIG) {
     readPixels,
     toBlob,
     getCanvas: getCanvas2,
+    isContextLost,
     dispose
   };
 }
@@ -105357,9 +105409,6 @@ const MIN_SAMPLE_W = 48;
 const MIN_SAMPLE_H = 27;
 const RENDER_CONFIG$6 = {
   maxInputs: 1,
-  maxFloatUniforms: 31,
-  maxIntUniforms: 1,
-  maxBoolUniforms: 8,
   maxCurves: 1
 };
 class VideoColorRenderer {
@@ -105639,9 +105688,6 @@ function buildCurvesLuts(p2) {
 }
 const RENDER_CONFIG$5 = {
   maxInputs: 1,
-  maxFloatUniforms: 1,
-  maxIntUniforms: 1,
-  maxBoolUniforms: 1,
   maxCurves: 3
 };
 class VideoCurvesRenderer {
@@ -105804,9 +105850,6 @@ function computeVideoBlurUniforms(p2) {
 }
 const RENDER_CONFIG$4 = {
   maxInputs: 2,
-  maxFloatUniforms: 3,
-  maxIntUniforms: 2,
-  maxBoolUniforms: 0,
   maxCurves: 0
 };
 class VideoBlurRenderer {
@@ -105956,9 +105999,6 @@ function stylizeUsesTemporalNoise(raw) {
 }
 const RENDER_CONFIG$3 = {
   maxInputs: 2,
-  maxFloatUniforms: 3,
-  maxIntUniforms: 4,
-  maxBoolUniforms: 0,
   maxCurves: 3
 };
 class VideoStylizeRenderer {
@@ -106156,116 +106196,83 @@ function resolvePreviewInterp(interp) {
   if (interp === "nearest" || interp === "trilinear") return interp;
   return "tetrahedral";
 }
-const VERTEX_SHADER_SOURCE = `#version 300 es
-out vec2 v_texCoord;
-void main() {
-    vec2 verts[3] = vec2[](vec2(-1, -1), vec2(3, -1), vec2(-1, 3));
-    v_texCoord = verts[gl_VertexID] * 0.5 + 0.5;
-    gl_Position = vec4(verts[gl_VertexID], 0, 1);
-}
-`;
 const INTERP_INDEX = { nearest: 0, trilinear: 1, tetrahedral: 2 };
-const UNIFORM_NAMES = [
-  "u_image0",
-  "u_lut",
-  "u_hasLut",
-  "u_interp",
-  "u_lutMax",
-  "u_scale"
-];
-function compile$1(gl, type, source) {
-  const shader = gl.createShader(type);
-  if (!shader) throw new Error("Failed to create shader");
-  gl.shaderSource(shader, source);
-  gl.compileShader(shader);
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    const log2 = gl.getShaderInfoLog(shader) ?? "Shader compilation failed";
-    gl.deleteShader(shader);
-    throw new Error(log2);
-  }
-  return shader;
-}
 class VideoLutRenderer {
   constructor() {
-    __publicField(this, "canvas", null);
-    __publicField(this, "gl", null);
+    __publicField(this, "ref", null);
     __publicField(this, "program", null);
     __publicField(this, "videoTexture", null);
     __publicField(this, "lutTexture", null);
     __publicField(this, "uploadedLut", null);
-    __publicField(this, "uniforms", /* @__PURE__ */ new Map());
-    __publicField(this, "ready", false);
     __publicField(this, "_error", null);
+    __publicField(this, "disposed", false);
+    __publicField(this, "untrack", trackSharedInstance());
   }
   get error() {
     return this._error;
   }
-  init(width, height) {
-    this.canvas = new OffscreenCanvas(width, height);
-    const gl = this.canvas.getContext("webgl2", {
-      alpha: true,
-      premultipliedAlpha: false,
-      preserveDrawingBuffer: true
-    });
-    if (!gl) {
-      this._error = "WebGL2 not available";
-      return false;
-    }
-    this.gl = gl;
-    const vs = compile$1(gl, gl.VERTEX_SHADER, VERTEX_SHADER_SOURCE);
-    const fs = compile$1(gl, gl.FRAGMENT_SHADER, videoLutFrag);
-    const program = gl.createProgram();
-    if (!program) {
-      this._error = "Failed to create program";
-      return false;
-    }
-    gl.attachShader(program, vs);
-    gl.attachShader(program, fs);
-    gl.linkProgram(program);
-    gl.deleteShader(vs);
-    gl.deleteShader(fs);
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-      this._error = gl.getProgramInfoLog(program) ?? "Program link failed";
-      gl.deleteProgram(program);
-      return false;
-    }
-    this.program = program;
-    for (const name of UNIFORM_NAMES) {
-      this.uniforms.set(name, gl.getUniformLocation(program, name));
-    }
-    this.videoTexture = gl.createTexture();
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, this.videoTexture);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    this.lutTexture = gl.createTexture();
-    gl.activeTexture(gl.TEXTURE1);
-    gl.bindTexture(gl.TEXTURE_3D, this.lutTexture);
-    gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-    gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
-    gl.texImage3D(
-      gl.TEXTURE_3D,
-      0,
-      gl.RGB32F,
-      1,
-      1,
-      1,
-      0,
-      gl.RGB,
-      gl.FLOAT,
-      new Float32Array([0, 0, 0])
-    );
-    return true;
+  isLost() {
+    if (this.disposed || !this.ref) return false;
+    return this.ref.lost || this.ref.gl.isContextLost();
   }
-  uploadLut(lut2) {
-    const gl = this.gl;
-    if (!gl || lut2 === this.uploadedLut) return;
+  live() {
+    if (this.disposed) return null;
+    const s = acquireSharedGL();
+    if (!s) return null;
+    if (this.ref !== s) {
+      this.ref = s;
+      this.videoTexture = null;
+      this.lutTexture = null;
+      this.uploadedLut = null;
+      this.program = getSharedProgram(s, videoLutFrag);
+      this.videoTexture = s.gl.createTexture();
+      const gl = s.gl;
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, this.videoTexture);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      this.lutTexture = gl.createTexture();
+      gl.activeTexture(gl.TEXTURE1);
+      gl.bindTexture(gl.TEXTURE_3D, this.lutTexture);
+      gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+      gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+      gl.texImage3D(
+        gl.TEXTURE_3D,
+        0,
+        gl.RGB32F,
+        1,
+        1,
+        1,
+        0,
+        gl.RGB,
+        gl.FLOAT,
+        new Float32Array([0, 0, 0])
+      );
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    }
+    return s;
+  }
+  loc(name) {
+    const s = this.ref;
+    const p2 = this.program;
+    if (!s || !p2) return null;
+    let l3 = p2.uniforms.get(name);
+    if (l3 === void 0) {
+      l3 = s.gl.getUniformLocation(p2.program, name);
+      p2.uniforms.set(name, l3);
+    }
+    return l3;
+  }
+  uploadLut(s, lut2) {
+    if (lut2 === this.uploadedLut) return;
+    const gl = s.gl;
     gl.activeTexture(gl.TEXTURE1);
     gl.bindTexture(gl.TEXTURE_3D, this.lutTexture);
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
@@ -106297,47 +106304,50 @@ class VideoLutRenderer {
         new Float32Array([0, 0, 0])
       );
     }
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
     this.uploadedLut = lut2;
   }
   renderToCanvas(video, params, target) {
     const { w: w2, h: h2 } = fxSourceSize(video);
     try {
-      if (!this.ready) {
-        if (!this.init(w2, h2)) return false;
-        this.ready = true;
+      const s = this.live();
+      if (!s || !this.program) {
+        this._error = "WebGL2 not available";
+        return false;
       }
-      const gl = this.gl;
-      const canvas = this.canvas;
-      if (!gl || !canvas || !this.program) return false;
       this._error = null;
-      if (canvas.width !== w2 || canvas.height !== h2) {
-        canvas.width = w2;
-        canvas.height = h2;
-      }
-      gl.viewport(0, 0, w2, h2);
+      const gl = s.gl;
+      const canvas = s.canvas;
+      const cw = Math.max(canvas.width, w2);
+      const ch = Math.max(canvas.height, h2);
+      if (canvas.width !== cw) canvas.width = cw;
+      if (canvas.height !== ch) canvas.height = ch;
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, this.videoTexture);
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, video);
-      this.uploadLut(params.lut);
-      gl.useProgram(this.program);
+      this.uploadLut(s, params.lut);
+      gl.useProgram(this.program.program);
       gl.disable(gl.BLEND);
-      const u = (name) => this.uniforms.get(name) ?? null;
-      gl.uniform1i(u("u_image0"), 0);
-      gl.uniform1i(u("u_lut"), 1);
+      gl.uniform1i(this.loc("u_image0"), 0);
+      gl.uniform1i(this.loc("u_lut"), 1);
       const lut2 = params.lut;
-      gl.uniform1i(u("u_hasLut"), lut2 ? 1 : 0);
-      gl.uniform1i(u("u_interp"), INTERP_INDEX[resolvePreviewInterp(params.interp)]);
+      gl.uniform1i(this.loc("u_hasLut"), lut2 ? 1 : 0);
+      gl.uniform1i(
+        this.loc("u_interp"),
+        INTERP_INDEX[resolvePreviewInterp(params.interp)]
+      );
       const lutMax = lut2 ? lut2.size - 1 : 1;
-      gl.uniform1i(u("u_lutMax"), lutMax);
+      gl.uniform1i(this.loc("u_lutMax"), lutMax);
       const scale = lut2 ? lut2.scale : [1, 1, 1];
       gl.uniform3f(
-        u("u_scale"),
+        this.loc("u_scale"),
         scale[0] * lutMax,
         scale[1] * lutMax,
         scale[2] * lutMax
       );
       gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      gl.viewport(0, canvas.height - h2, w2, h2);
       gl.clearColor(0, 0, 0, 0);
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
@@ -106353,27 +106363,26 @@ class VideoLutRenderer {
       return true;
     } catch (e) {
       this._error = e instanceof Error ? e.message : "Render failed";
-      this.dispose();
+      this.ref = null;
+      this.program = null;
+      this.uploadedLut = null;
       return false;
     }
   }
   dispose() {
-    var _a3;
-    const gl = this.gl;
-    if (gl) {
-      if (this.videoTexture) gl.deleteTexture(this.videoTexture);
-      if (this.lutTexture) gl.deleteTexture(this.lutTexture);
-      if (this.program) gl.deleteProgram(this.program);
-      (_a3 = gl.getExtension("WEBGL_lose_context")) == null ? void 0 : _a3.loseContext();
+    if (this.disposed) return;
+    this.disposed = true;
+    const s = this.ref;
+    if (s && !s.lost && !s.gl.isContextLost()) {
+      if (this.videoTexture) s.gl.deleteTexture(this.videoTexture);
+      if (this.lutTexture) s.gl.deleteTexture(this.lutTexture);
     }
     this.videoTexture = null;
     this.lutTexture = null;
     this.program = null;
-    this.gl = null;
-    this.canvas = null;
+    this.ref = null;
     this.uploadedLut = null;
-    this.uniforms.clear();
-    this.ready = false;
+    this.untrack();
   }
 }
 const videoHueCorrectFrag = "#version 300 es\r\nprecision highp float;\r\n\r\nuniform sampler2D u_image0;\r\nuniform sampler2D u_curve0;\r\nuniform sampler2D u_curve1;\r\nuniform sampler2D u_curve2;\r\nuniform sampler2D u_curve3;\r\nuniform sampler2D u_curve4;\r\nuniform sampler2D u_curve5;\r\nuniform sampler2D u_curve6;\r\nuniform sampler2D u_curve7;\r\nuniform sampler2D u_curve8;\r\nuniform float u_float0;\r\nuniform float u_float1;\r\nuniform bool u_bool0;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nconst vec3 LUMA = vec3(0.2126, 0.7152, 0.0722);\r\nconst float EPS = 1e-8;\r\n\r\nfloat sampleLut(sampler2D lut, float coord) {\r\n    float idx = clamp(coord, 0.0, 1.0) * 255.0;\r\n    int lo = int(floor(idx));\r\n    int hi = min(lo + 1, 255);\r\n    float f = idx - float(lo);\r\n    return mix(texelFetch(lut, ivec2(lo, 0), 0).r,\r\n               texelFetch(lut, ivec2(hi, 0), 0).r, f);\r\n}\r\n\r\nvec3 rgbToHsv(vec3 c) {\r\n    float maxc = c.r;\r\n    int argmax = 0;\r\n    if (c.g > maxc) { maxc = c.g; argmax = 1; }\r\n    if (c.b > maxc) { maxc = c.b; argmax = 2; }\r\n    float minc = min(c.r, min(c.g, c.b));\r\n    float deltac = maxc - minc;\r\n    float s = deltac / (maxc + EPS);\r\n    float dc = deltac == 0.0 ? 1.0 : deltac;\r\n    vec3 comp = vec3(maxc) - c;\r\n    float h;\r\n    if (argmax == 0) h = comp.b - comp.g;\r\n    else if (argmax == 1) h = comp.r - comp.b + 2.0 * dc;\r\n    else h = comp.g - comp.r + 4.0 * dc;\r\n    h = fract(h / dc / 6.0);\r\n    return vec3(h, s, maxc);\r\n}\r\n\r\nvec3 hsvToRgb(vec3 hsv) {\r\n    float h6 = fract(hsv.x) * 6.0;\r\n    float hi = floor(h6);\r\n    float f = h6 - hi;\r\n    float v = hsv.z;\r\n    float s = hsv.y;\r\n    float p = v * (1.0 - s);\r\n    float q = v * (1.0 - f * s);\r\n    float t = v * (1.0 - (1.0 - f) * s);\r\n    int i = int(hi) % 6;\r\n    if (i == 0) return vec3(v, t, p);\r\n    if (i == 1) return vec3(q, v, p);\r\n    if (i == 2) return vec3(p, v, t);\r\n    if (i == 3) return vec3(p, q, v);\r\n    if (i == 4) return vec3(t, p, v);\r\n    return vec3(v, p, q);\r\n}\r\n\r\nvoid main() {\r\n    vec4 tex = texture(u_image0, v_texCoord);\r\n    vec3 src = clamp(tex.rgb, 0.0, 1.0);\r\n    vec3 hsv = rgbToHsv(src);\r\n    float h0 = hsv.x;\r\n    float s = hsv.y;\r\n    float hx = h0 * 6.0 + 1.0;\r\n    hx = (hx > 6.0 ? hx - 6.0 : hx) / 6.0;\r\n    float lumIn = dot(tex.rgb, LUMA);\r\n\r\n    vec3 outc = src;\r\n    if (u_bool0) {\r\n        float hueShift = sampleLut(u_curve8, hx);\r\n        float h1 = fract(h0 + (hueShift - 1.0) / 2.0);\r\n        outc = hsvToRgb(vec3(h1, s, hsv.z));\r\n    }\r\n\r\n    float rSup = sampleLut(u_curve5, hx);\r\n    float mn = min(outc.g, outc.b);\r\n    if (outc.r > mn) outc.r = mn + rSup * (outc.r - mn);\r\n    float gSup = sampleLut(u_curve6, hx);\r\n    mn = min(outc.r, outc.b);\r\n    if (outc.g > mn) outc.g = mn + gSup * (outc.g - mn);\r\n    float bSup = sampleLut(u_curve7, hx);\r\n    mn = min(outc.r, outc.g);\r\n    if (outc.b > mn) outc.b = mn + bSup * (outc.b - mn);\r\n\r\n    float lumGain = sampleLut(u_curve1, hx);\r\n    vec3 gains = vec3(sampleLut(u_curve2, hx),\r\n                      sampleLut(u_curve3, hx),\r\n                      sampleLut(u_curve4, hx)) * lumGain;\r\n    float thr = clamp(u_float0, 0.0, 1.0);\r\n    if (thr > 0.0) {\r\n        vec3 factor = s > thr\r\n            ? (thr + (s - thr) * gains) / max(s, 1e-6)\r\n            : vec3(1.0);\r\n        outc *= factor;\r\n    } else {\r\n        outc *= gains;\r\n    }\r\n\r\n    float satGain = sampleLut(u_curve0, hx);\r\n    float lSat = dot(outc, LUMA);\r\n    outc = mix(vec3(lSat), outc, satGain);\r\n\r\n    float mixv = clamp(u_float1, 0.0, 1.0);\r\n    if (mixv > 0.0) {\r\n        float lumOut = max(dot(outc, LUMA), 1e-6);\r\n        outc *= 1.0 + mixv * (lumIn / lumOut - 1.0);\r\n    }\r\n\r\n    fragColor = vec4(clamp(outc, 0.0, 1.0), tex.a);\r\n}\r\n";
@@ -106547,9 +106556,6 @@ function lutDeviates(lut2) {
 }
 const RENDER_CONFIG$2 = {
   maxInputs: 1,
-  maxFloatUniforms: 2,
-  maxIntUniforms: 1,
-  maxBoolUniforms: 1,
   maxCurves: 9
 };
 class VideoHueCorrectRenderer {
@@ -106634,6 +106640,9 @@ class FxPreviewRenderer {
   }
   get error() {
     return this._error;
+  }
+  isLost() {
+    return this.ready && this.renderer.isContextLost();
   }
   renderToCanvas(video, params, target) {
     const { w: w2, h: h2 } = fxSourceSize(video);
@@ -106960,9 +106969,6 @@ function transformInverse(p2, width, height) {
 }
 const RENDER_CONFIG$1 = {
   maxInputs: 1,
-  maxFloatUniforms: 6,
-  maxIntUniforms: 1,
-  maxBoolUniforms: 1,
   maxCurves: 0
 };
 class VideoTransformRenderer {
@@ -107023,7 +107029,7 @@ class VideoTransformRenderer {
     this.ready = false;
   }
 }
-const selectiveColorFrag = "#version 300 es\nprecision highp float;\n\nuniform sampler2D u_image0;\nuniform float u_float0;\nuniform float u_float1;\nuniform float u_float2;\nuniform float u_float3;\nuniform float u_float4;\nuniform float u_float5;\nuniform float u_float6;\nuniform float u_float7;\nuniform float u_float8;\nuniform bool u_bool0;\n\nin vec2 v_texCoord;\nout vec4 fragColor;\n\nfloat compAdjust(float scale, float value, float adjust) {\n    float lo = -value;\n    float hi = 1.0 - value;\n    float res = -adjust;\n    if (u_bool0) res *= hi;\n    return floor(clamp(res, lo, hi) * scale + 0.5);\n}\n\nvoid main() {\n    vec4 tex = texture(u_image0, v_texCoord);\n    float r = floor(tex.r * 255.0 + 0.5);\n    float g = floor(tex.g * 255.0 + 0.5);\n    float b = floor(tex.b * 255.0 + 0.5);\n    float minC = min(r, min(g, b));\n    float maxC = max(r, max(g, b));\n    float mid = r + g + b - minC - maxC;\n    float rnorm = r / 255.0;\n    float adjR = 0.0;\n    float s;\n\n    if (u_float0 != 0.0 && r == maxC) {\n        s = maxC - mid;\n        if (s > 0.0) adjR += compAdjust(s, rnorm, u_float0);\n    }\n    if (u_float1 != 0.0 && b == minC) {\n        s = mid - minC;\n        if (s > 0.0) adjR += compAdjust(s, rnorm, u_float1);\n    }\n    if (u_float2 != 0.0 && g == maxC) {\n        s = maxC - mid;\n        if (s > 0.0) adjR += compAdjust(s, rnorm, u_float2);\n    }\n    if (u_float3 != 0.0 && r == minC) {\n        s = mid - minC;\n        if (s > 0.0) adjR += compAdjust(s, rnorm, u_float3);\n    }\n    if (u_float4 != 0.0 && b == maxC) {\n        s = maxC - mid;\n        if (s > 0.0) adjR += compAdjust(s, rnorm, u_float4);\n    }\n    if (u_float5 != 0.0 && g == minC) {\n        s = mid - minC;\n        if (s > 0.0) adjR += compAdjust(s, rnorm, u_float5);\n    }\n    if (u_float6 != 0.0 && r > 128.0 && g > 128.0 && b > 128.0) {\n        s = minC * 2.0 - 255.0;\n        if (s > 0.0) adjR += compAdjust(s, rnorm, u_float6);\n    }\n    if (u_float7 != 0.0 && (r + g + b) > 0.0\n        && !(r == 255.0 && g == 255.0 && b == 255.0)) {\n        s = floor((510.0 - (abs(maxC * 2.0 - 255.0)\n                            + abs(minC * 2.0 - 255.0)) + 1.0) / 2.0);\n        if (s > 0.0) adjR += compAdjust(s, rnorm, u_float7);\n    }\n    if (u_float8 != 0.0 && r < 128.0 && g < 128.0 && b < 128.0) {\n        s = 255.0 - maxC * 2.0;\n        if (s > 0.0) adjR += compAdjust(s, rnorm, u_float8);\n    }\n\n    fragColor = vec4(clamp(r + adjR, 0.0, 255.0) / 255.0, tex.g, tex.b, tex.a);\n}\n";
+const selectiveColorFrag = "#version 300 es\r\nprecision highp float;\r\n\r\nuniform sampler2D u_image0;\r\nuniform float u_float0;\r\nuniform float u_float1;\r\nuniform float u_float2;\r\nuniform float u_float3;\r\nuniform float u_float4;\r\nuniform float u_float5;\r\nuniform float u_float6;\r\nuniform float u_float7;\r\nuniform float u_float8;\r\nuniform bool u_bool0;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nfloat compAdjust(float scale, float value, float adjust) {\r\n    float lo = -value;\r\n    float hi = 1.0 - value;\r\n    float res = -adjust;\r\n    if (u_bool0) res *= hi;\r\n    return floor(clamp(res, lo, hi) * scale + 0.5);\r\n}\r\n\r\nvoid main() {\r\n    vec4 tex = texture(u_image0, v_texCoord);\r\n    float r = floor(tex.r * 255.0 + 0.5);\r\n    float g = floor(tex.g * 255.0 + 0.5);\r\n    float b = floor(tex.b * 255.0 + 0.5);\r\n    float minC = min(r, min(g, b));\r\n    float maxC = max(r, max(g, b));\r\n    float mid = r + g + b - minC - maxC;\r\n    float rnorm = r / 255.0;\r\n    float adjR = 0.0;\r\n    float s;\r\n\r\n    if (u_float0 != 0.0 && r == maxC) {\r\n        s = maxC - mid;\r\n        if (s > 0.0) adjR += compAdjust(s, rnorm, u_float0);\r\n    }\r\n    if (u_float1 != 0.0 && b == minC) {\r\n        s = mid - minC;\r\n        if (s > 0.0) adjR += compAdjust(s, rnorm, u_float1);\r\n    }\r\n    if (u_float2 != 0.0 && g == maxC) {\r\n        s = maxC - mid;\r\n        if (s > 0.0) adjR += compAdjust(s, rnorm, u_float2);\r\n    }\r\n    if (u_float3 != 0.0 && r == minC) {\r\n        s = mid - minC;\r\n        if (s > 0.0) adjR += compAdjust(s, rnorm, u_float3);\r\n    }\r\n    if (u_float4 != 0.0 && b == maxC) {\r\n        s = maxC - mid;\r\n        if (s > 0.0) adjR += compAdjust(s, rnorm, u_float4);\r\n    }\r\n    if (u_float5 != 0.0 && g == minC) {\r\n        s = mid - minC;\r\n        if (s > 0.0) adjR += compAdjust(s, rnorm, u_float5);\r\n    }\r\n    if (u_float6 != 0.0 && r > 128.0 && g > 128.0 && b > 128.0) {\r\n        s = minC * 2.0 - 255.0;\r\n        if (s > 0.0) adjR += compAdjust(s, rnorm, u_float6);\r\n    }\r\n    if (u_float7 != 0.0 && (r + g + b) > 0.0\r\n        && !(r == 255.0 && g == 255.0 && b == 255.0)) {\r\n        s = floor((510.0 - (abs(maxC * 2.0 - 255.0)\r\n                            + abs(minC * 2.0 - 255.0)) + 1.0) / 2.0);\r\n        if (s > 0.0) adjR += compAdjust(s, rnorm, u_float7);\r\n    }\r\n    if (u_float8 != 0.0 && r < 128.0 && g < 128.0 && b < 128.0) {\r\n        s = 255.0 - maxC * 2.0;\r\n        if (s > 0.0) adjR += compAdjust(s, rnorm, u_float8);\r\n    }\r\n\r\n    fragColor = vec4(clamp(r + adjR, 0.0, 255.0) / 255.0, tex.g, tex.b, tex.a);\r\n}\r\n";
 const SELECTIVE_ZONE_IDS = [
   "reds",
   "yellows",
@@ -107052,7 +107058,7 @@ class VideoSelectiveColorRenderer extends FxPreviewRenderer {
     });
   }
 }
-const chromaShiftFrag = "#version 300 es\nprecision highp float;\n\nuniform sampler2D u_image0;\nuniform vec2 u_resolution;\nuniform float u_float0;\nuniform float u_float1;\nuniform float u_float2;\nuniform float u_float3;\nuniform bool u_bool0;\n\nin vec2 v_texCoord;\nout vec4 fragColor;\n\nvec2 shiftCoord(vec2 offLuma) {\n    vec2 px = v_texCoord * u_resolution;\n    vec2 s = vec2(px.x - offLuma.x, px.y + offLuma.y);\n    if (u_bool0) {\n        s = mod(mod(s, u_resolution) + u_resolution, u_resolution);\n    } else {\n        s = clamp(s, vec2(0.5), u_resolution - 0.5);\n    }\n    return s / u_resolution;\n}\n\nvoid main() {\n    vec4 tex = texture(u_image0, v_texCoord);\n    vec3 self = floor(tex.rgb * 255.0 + 0.5);\n    vec2 rUv = shiftCoord(vec2(u_float0, u_float1) * 2.0);\n    vec2 bUv = shiftCoord(vec2(u_float2, u_float3) * 2.0);\n    vec3 rs = floor(texture(u_image0, rUv).rgb * 255.0 + 0.5);\n    vec3 bs = floor(texture(u_image0, bUv).rgb * 255.0 + 0.5);\n    float y = dot(self, vec3(0.299, 0.587, 0.114));\n    float cb = dot(bs, vec3(-0.168736, -0.331264, 0.5)) + 128.0;\n    float cr = dot(rs, vec3(0.5, -0.418688, -0.081312)) + 128.0;\n    vec3 outc = vec3(\n        y + 1.402 * (cr - 128.0),\n        y - 0.344136 * (cb - 128.0) - 0.714136 * (cr - 128.0),\n        y + 1.772 * (cb - 128.0));\n    fragColor = vec4(clamp(floor(outc + 0.5), 0.0, 255.0) / 255.0, tex.a);\n}\n";
+const chromaShiftFrag = "#version 300 es\r\nprecision highp float;\r\n\r\nuniform sampler2D u_image0;\r\nuniform vec2 u_resolution;\r\nuniform float u_float0;\r\nuniform float u_float1;\r\nuniform float u_float2;\r\nuniform float u_float3;\r\nuniform bool u_bool0;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nvec2 shiftCoord(vec2 offLuma) {\r\n    vec2 px = v_texCoord * u_resolution;\r\n    vec2 s = vec2(px.x - offLuma.x, px.y + offLuma.y);\r\n    if (u_bool0) {\r\n        s = mod(mod(s, u_resolution) + u_resolution, u_resolution);\r\n    } else {\r\n        s = clamp(s, vec2(0.5), u_resolution - 0.5);\r\n    }\r\n    return s / u_resolution;\r\n}\r\n\r\nvoid main() {\r\n    vec4 tex = texture(u_image0, v_texCoord);\r\n    vec3 self = floor(tex.rgb * 255.0 + 0.5);\r\n    vec2 rUv = shiftCoord(vec2(u_float0, u_float1) * 2.0);\r\n    vec2 bUv = shiftCoord(vec2(u_float2, u_float3) * 2.0);\r\n    vec3 rs = floor(texture(u_image0, rUv).rgb * 255.0 + 0.5);\r\n    vec3 bs = floor(texture(u_image0, bUv).rgb * 255.0 + 0.5);\r\n    float y = dot(self, vec3(0.299, 0.587, 0.114));\r\n    float cb = dot(bs, vec3(-0.168736, -0.331264, 0.5)) + 128.0;\r\n    float cr = dot(rs, vec3(0.5, -0.418688, -0.081312)) + 128.0;\r\n    vec3 outc = vec3(\r\n        y + 1.402 * (cr - 128.0),\r\n        y - 0.344136 * (cb - 128.0) - 0.714136 * (cr - 128.0),\r\n        y + 1.772 * (cb - 128.0));\r\n    fragColor = vec4(clamp(floor(outc + 0.5), 0.0, 255.0) / 255.0, tex.a);\r\n}\r\n";
 class VideoChromaShiftRenderer extends FxPreviewRenderer {
   constructor() {
     super(chromaShiftFrag, {
@@ -107070,7 +107076,7 @@ class VideoChromaShiftRenderer extends FxPreviewRenderer {
     });
   }
 }
-const pseudocolorFrag = "#version 300 es\nprecision highp float;\n\nuniform sampler2D u_image0;\nuniform sampler2D u_curve0;\nuniform sampler2D u_curve1;\nuniform sampler2D u_curve2;\nuniform float u_float0;\n\nin vec2 v_texCoord;\nout vec4 fragColor;\n\nvoid main() {\n    vec4 tex = texture(u_image0, v_texCoord);\n    vec3 rgb = floor(tex.rgb * 255.0 + 0.5);\n    float l = dot(rgb, vec3(0.299, 0.587, 0.114));\n    float yLim = floor(16.0 + l * 219.0 / 255.0 + 0.5);\n    float idx = clamp(floor((yLim - 16.0) * 255.0 / 219.0 + 0.5), 0.0, 255.0);\n    float u = (idx + 0.5) / 256.0;\n    vec3 pal = vec3(\n        texture(u_curve0, vec2(u, 0.5)).r,\n        texture(u_curve1, vec2(u, 0.5)).r,\n        texture(u_curve2, vec2(u, 0.5)).r) * 255.0;\n    vec3 outc = clamp(floor(mix(rgb, pal, u_float0) + 0.5), 0.0, 255.0);\n    fragColor = vec4(outc / 255.0, tex.a);\n}\n";
+const pseudocolorFrag = "#version 300 es\r\nprecision highp float;\r\n\r\nuniform sampler2D u_image0;\r\nuniform sampler2D u_curve0;\r\nuniform sampler2D u_curve1;\r\nuniform sampler2D u_curve2;\r\nuniform float u_float0;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nvoid main() {\r\n    vec4 tex = texture(u_image0, v_texCoord);\r\n    vec3 rgb = floor(tex.rgb * 255.0 + 0.5);\r\n    float l = dot(rgb, vec3(0.299, 0.587, 0.114));\r\n    float yLim = floor(16.0 + l * 219.0 / 255.0 + 0.5);\r\n    float idx = clamp(floor((yLim - 16.0) * 255.0 / 219.0 + 0.5), 0.0, 255.0);\r\n    float u = (idx + 0.5) / 256.0;\r\n    vec3 pal = vec3(\r\n        texture(u_curve0, vec2(u, 0.5)).r,\r\n        texture(u_curve1, vec2(u, 0.5)).r,\r\n        texture(u_curve2, vec2(u, 0.5)).r) * 255.0;\r\n    vec3 outc = clamp(floor(mix(rgb, pal, u_float0) + 0.5), 0.0, 255.0);\r\n    fragColor = vec4(outc / 255.0, tex.a);\r\n}\r\n";
 const magma = [[-11.77, -8.47, 13.19], [-10.61, -7.3, 14.35], [-9.01, -8.51, 16.37], [-7.85, -7.73, 19.55], [-7.85, -7.73, 19.55], [-7.85, -8.12, 21.57], [-5.09, -8.16, 24.75], [-5.09, -8.56, 26.77], [-3.92, -7.78, 29.95], [-2.33, -8.99, 31.96], [-1.16, -7.82, 33.13], [-1.16, -7.82, 33.13], [0.43, -9.03, 35.15], [0.43, -9.42, 37.16], [3.19, -9.46, 40.34], [3.19, -9.85, 42.36], [5.95, -9.89, 45.54], [5.95, -10.29, 47.56], [5.95, -10.29, 47.56], [8.71, -9.93, 48.73], [10.31, -11.14, 50.74], [11.47, -10.37, 53.92], [13.07, -11.57, 55.94], [14.23, -10.8, 59.12], [15.83, -11.61, 59.12], [15.83, -11.61, 59.12], [15.83, -12, 61.14], [18.59, -12.04, 64.32], [18.59, -12.04, 64.32], [21.35, -12.08, 67.5], [22.95, -13.29, 69.52], [24.11, -12.12, 70.68], [24.11, -12.12, 70.68], [25.71, -13.33, 72.7], [26.87, -12.16, 73.87], [28.47, -13.37, 75.88], [29.63, -12.2, 77.05], [31.23, -13.41, 79.07], [32.39, -12.24, 80.23], [35.15, -12.28, 83.41], [35.15, -12.28, 83.41], [36.75, -13.1, 83.41], [37.91, -11.93, 84.58], [39.51, -13.14, 86.59], [40.67, -11.97, 87.76], [42.27, -12.79, 87.76], [43.43, -12.01, 90.94], [43.43, -12.01, 90.94], [45.03, -12.83, 90.94], [46.19, -11.66, 92.1], [48.95, -11.31, 93.27], [48.95, -11.31, 93.27], [51.72, -10.96, 94.43], [51.72, -11.35, 96.45], [51.72, -11.35, 96.45], [54.48, -11, 97.61], [55.64, -9.84, 98.78], [55.64, -9.84, 98.78], [58.4, -9.48, 99.94], [58.4, -9.48, 99.94], [61.16, -9.13, 101.11], [61.16, -9.13, 101.11], [62.33, -7.97, 102.27], [63.92, -8.78, 102.27], [65.09, -7.62, 103.44], [67.85, -7.27, 104.6], [67.85, -7.27, 104.6], [70.61, -6.52, 103.75], [70.61, -6.52, 103.75], [70.61, -6.52, 103.75], [73.37, -6.17, 104.91], [74.53, -5.01, 106.08], [76.13, -5.82, 106.08], [77.29, -4.66, 107.24], [78.46, -3.1, 106.39], [78.46, -3.1, 106.39], [80.05, -3.91, 106.39], [81.22, -2.75, 107.55], [82.81, -3.56, 107.55], [83.98, -2, 106.7], [86.74, -1.65, 107.86], [86.74, -1.65, 107.86], [86.74, -1.65, 107.86], [89.5, -0.91, 107.01], [90.66, 0.25, 108.17], [92.26, -0.56, 108.17], [93.42, 1, 107.32], [95.02, 0.18, 107.32], [96.18, 1.35, 108.49], [96.18, 1.35, 108.49], [98.94, 2.09, 107.63], [98.94, 2.09, 107.63], [101.7, 2.84, 106.78], [101.7, 2.84, 106.78], [104.46, 3.19, 107.95], [105.63, 4.74, 107.09], [105.63, 4.74, 107.09], [107.22, 3.93, 107.09], [109.98, 4.67, 106.24], [109.98, 4.67, 106.24], [112.75, 5.42, 105.39], [113.91, 6.58, 106.55], [115.51, 6.16, 104.53], [115.51, 6.16, 104.53], [116.67, 7.32, 105.7], [118.27, 6.9, 103.68], [119.43, 8.07, 104.85], [122.19, 8.81, 103.99], [122.19, 8.81, 103.99], [124.95, 9.55, 103.14], [124.95, 9.55, 103.14], [126.55, 8.74, 103.14], [127.71, 10.3, 102.29], [130.47, 10.65, 103.45], [130.47, 11.04, 101.43], [133.23, 11.39, 102.6], [133.23, 11.78, 100.58], [133.23, 11.78, 100.58], [135.99, 12.13, 101.75], [137.16, 13.69, 100.89], [138.75, 13.27, 98.88], [139.92, 14.43, 100.04], [142.68, 15.18, 99.19], [144.27, 14.36, 99.19], [144.27, 14.36, 99.19], [145.44, 15.92, 98.33], [147.03, 15.5, 96.32], [148.2, 16.66, 97.48], [150.96, 17.41, 96.63], [150.96, 17.41, 96.63], [153.72, 18.15, 95.78], [154.88, 19.71, 94.92], [154.88, 19.71, 94.92], [156.48, 18.89, 94.92], [157.64, 20.45, 94.07], [158.81, 22, 93.22], [160.4, 21.19, 93.22], [161.57, 22.75, 92.36], [164.33, 23.49, 91.51], [164.33, 23.49, 91.51], [164.33, 23.49, 91.51], [167.09, 24.23, 90.66], [168.25, 25.79, 89.81], [169.42, 26.95, 90.97], [171.01, 26.53, 88.95], [172.18, 28.09, 88.1], [172.18, 28.09, 88.1], [173.34, 29.25, 89.26], [176.1, 30, 88.41], [176.1, 30.39, 86.39], [177.27, 31.95, 85.54], [180.03, 32.3, 86.71], [181.19, 33.85, 85.85], [181.19, 33.85, 85.85], [182.36, 35.41, 85], [182.36, 35.8, 82.98], [185.12, 36.15, 84.15], [186.28, 37.71, 83.29], [187.45, 39.26, 82.44], [188.61, 40.43, 83.61], [188.61, 40.43, 83.61], [189.78, 41.98, 82.75], [190.94, 43.54, 81.9], [190.94, 43.93, 79.88], [192.1, 45.1, 81.05], [194.86, 45.84, 80.19], [196.03, 47.4, 79.34], [196.03, 47.4, 79.34], [197.19, 48.95, 78.49], [198.36, 50.12, 79.65], [199.52, 51.67, 78.8], [199.09, 54.04, 77.95], [200.26, 55.6, 77.09], [201.42, 56.76, 78.26], [201.42, 56.76, 78.26], [202.58, 58.32, 77.41], [203.75, 59.88, 76.55], [204.91, 61.43, 75.7], [206.08, 62.6, 76.86], [205.65, 64.96, 76.01], [207.97, 67.69, 76.32], [207.97, 67.69, 76.32], [209.14, 68.85, 77.49], [210.3, 70.41, 76.64], [209.87, 72.78, 75.78], [211.04, 74.33, 74.93], [212.2, 75.5, 76.09], [211.77, 77.86, 75.24], [211.77, 77.86, 75.24], [212.93, 79.42, 74.39], [215.26, 81.75, 76.72], [214.83, 84.12, 75.86], [215.99, 85.28, 77.03], [215.56, 87.65, 76.18], [216.73, 89.21, 75.32], [216.73, 89.21, 75.32], [217.46, 92.35, 77.65], [218.62, 93.91, 76.8], [218.19, 95.88, 77.96], [219.36, 97.44, 77.11], [220.09, 100.97, 77.42], [219.66, 102.95, 78.59], [219.66, 102.95, 78.59], [220.82, 104.51, 77.73], [220.39, 106.48, 78.9], [221.12, 110.02, 79.21], [222.29, 111.18, 80.37], [221.86, 113.55, 79.52], [221.42, 115.53, 80.68], [221.42, 115.53, 80.68], [223.75, 117.86, 83.01], [223.32, 120.23, 82.16], [222.89, 122.2, 83.33], [223.62, 125.35, 85.65], [224.79, 126.9, 84.8], [224.36, 128.88, 85.97], [225.09, 132.02, 88.29], [225.09, 132.02, 88.29], [224.66, 134.39, 87.44], [225.82, 135.55, 88.61], [225.39, 137.53, 89.77], [226.12, 140.67, 92.1], [225.69, 142.65, 93.26], [225.26, 145.02, 92.41], [225.26, 145.02, 92.41], [225.99, 148.16, 94.74], [227.16, 149.33, 95.9], [226.72, 151.3, 97.07], [226.29, 153.28, 98.23], [227.03, 156.42, 100.56], [226.59, 158.4, 101.73], [226.59, 158.4, 101.73], [226.16, 160.38, 102.89], [226.89, 163.52, 105.22], [228.06, 164.68, 106.38], [227.63, 166.66, 107.55], [227.2, 168.25, 110.73], [227.93, 171.39, 113.06], [227.93, 171.39, 113.06], [227.5, 173.37, 114.22], [227.07, 175.34, 115.39], [228.23, 176.51, 116.55], [227.8, 178.48, 117.72], [228.53, 181.23, 122.06], [228.1, 183.21, 123.23], [228.1, 183.21, 123.23], [227.67, 185.19, 124.39], [227.24, 187.17, 125.55], [228.4, 187.94, 128.74], [229.13, 191.08, 131.07], [228.7, 193.06, 132.23], [228.27, 195.04, 133.39], [228.27, 195.04, 133.39], [227.84, 196.62, 136.58], [227.41, 198.6, 137.74], [228.57, 199.76, 138.9]];
 const inferno = [[-9.75, -11.65, 14.04], [-8.15, -12.85, 16.06], [-6.99, -12.08, 19.24], [-6.99, -12.47, 21.25], [-6.99, -12.47, 21.25], [-4.23, -12.51, 24.44], [-4.23, -12.9, 26.45], [-1.47, -12.94, 29.64], [-1.47, -13.34, 31.65], [1.29, -13.38, 34.83], [1.29, -13.38, 34.83], [1.29, -13.38, 34.83], [4.06, -13.42, 38.02], [4.06, -13.81, 40.03], [5.65, -15.01, 42.05], [6.82, -14.24, 45.23], [8.41, -15.44, 47.25], [9.58, -14.28, 48.41], [9.58, -14.28, 48.41], [11.17, -15.48, 50.43], [12.34, -14.71, 53.61], [13.93, -15.92, 55.63], [16.69, -15.57, 56.79], [16.69, -15.96, 58.81], [19.45, -16, 61.99], [19.45, -16, 61.99], [21.05, -16.81, 61.99], [21.05, -17.2, 64.01], [23.81, -16.85, 65.17], [23.81, -17.24, 67.19], [26.57, -16.89, 68.36], [28.17, -17.7, 68.36], [28.17, -17.7, 68.36], [29.33, -16.93, 71.54], [30.93, -17.74, 71.54], [33.69, -17.78, 74.72], [33.69, -17.78, 74.72], [36.45, -17.43, 75.88], [36.45, -17.43, 75.88], [39.21, -17.08, 77.05], [39.21, -17.08, 77.05], [40.8, -18.29, 79.07], [41.97, -17.12, 80.23], [43.56, -17.94, 80.23], [44.73, -16.77, 81.39], [47.49, -16.42, 82.56], [49.09, -17.23, 82.56], [49.09, -17.23, 82.56], [50.25, -16.07, 83.72], [51.85, -16.88, 83.72], [53.01, -15.72, 84.89], [54.61, -16.53, 84.89], [57.37, -16.18, 86.05], [57.37, -15.79, 84.03], [57.37, -15.79, 84.03], [60.13, -15.44, 85.2], [60.13, -15.44, 85.2], [62.89, -15.08, 86.36], [64.05, -13.92, 87.53], [65.65, -14.34, 85.51], [66.81, -13.18, 86.67], [66.81, -13.18, 86.67], [68.41, -13.99, 86.67], [71.17, -13.64, 87.84], [72.33, -12.08, 86.99], [73.93, -12.89, 86.99], [75.09, -11.73, 88.15], [76.69, -12.15, 86.13], [76.69, -12.15, 86.13], [77.85, -10.99, 87.3], [80.61, -10.24, 86.44], [80.61, -10.24, 86.44], [83.37, -9.89, 87.61], [83.37, -9.5, 85.59], [86.13, -9.15, 86.76], [86.13, -9.15, 86.76], [87.3, -7.59, 85.9], [88.9, -8.41, 85.9], [90.06, -6.85, 85.05], [91.66, -7.66, 85.05], [92.82, -6.11, 84.2], [95.58, -5.76, 85.36], [95.58, -5.76, 85.36], [95.58, -5.36, 83.35], [98.34, -5.01, 84.51], [99.51, -3.46, 83.66], [101.1, -4.27, 83.66], [102.27, -2.71, 82.8], [105.03, -2.36, 83.97], [105.03, -2.36, 83.97], [105.03, -1.97, 81.95], [107.79, -1.62, 83.12], [107.79, -1.23, 81.1], [108.95, -0.06, 82.26], [111.71, 0.68, 81.41], [111.71, 0.68, 81.41], [111.71, 0.68, 81.41], [114.47, 1.42, 80.56], [115.64, 2.98, 79.7], [117.23, 2.17, 79.7], [118.4, 3.72, 78.85], [121.16, 4.08, 80.02], [121.16, 4.47, 78], [121.16, 4.47, 78], [122.32, 6.02, 77.15], [125.08, 6.37, 78.31], [125.08, 6.77, 76.29], [127.84, 7.12, 77.46], [129.01, 8.67, 76.6], [130.6, 8.25, 74.59], [130.6, 8.25, 74.59], [131.77, 9.42, 75.75], [132.93, 10.97, 74.9], [134.53, 10.55, 72.88], [135.69, 11.72, 74.05], [138.45, 12.46, 73.19], [138.45, 12.85, 71.18], [138.45, 12.85, 71.18], [139.62, 14.02, 72.34], [142.38, 14.76, 71.49], [142.38, 15.15, 69.47], [145.14, 15.89, 68.62], [146.3, 17.06, 69.78], [146.3, 17.45, 67.76], [146.3, 17.45, 67.76], [149.06, 18.19, 66.91], [150.23, 19.75, 66.06], [151.39, 20.91, 67.22], [152.99, 20.49, 65.21], [154.15, 22.05, 64.35], [156.91, 22.79, 63.5], [156.91, 23.18, 61.48], [156.91, 23.18, 61.48], [158.08, 24.35, 62.65], [160.84, 25.09, 61.79], [162, 26.65, 60.94], [162, 27.04, 58.92], [163.17, 28.59, 58.07], [165.93, 29.34, 57.22], [165.93, 29.34, 57.22], [167.09, 30.89, 56.37], [167.09, 31.29, 54.35], [169.85, 31.64, 55.51], [171.01, 33.19, 54.66], [172.18, 34.75, 53.81], [173.34, 36.31, 52.95], [173.34, 36.31, 52.95], [173.34, 36.7, 50.94], [176.1, 37.44, 50.08], [177.27, 39, 49.23], [178.43, 40.55, 48.38], [179.6, 42.11, 47.53], [179.6, 42.5, 45.51], [179.6, 42.5, 45.51], [182.36, 43.24, 44.66], [183.52, 45.19, 41.79], [184.69, 46.75, 40.93], [185.85, 48.3, 40.08], [187.02, 49.86, 39.23], [188.18, 51.42, 38.37], [188.18, 51.42, 38.37], [188.18, 51.81, 36.36], [189.34, 53.36, 35.5], [190.51, 54.92, 34.65], [191.67, 56.48, 33.8], [192.84, 58.42, 30.93], [194, 59.98, 30.08], [194, 59.98, 30.08], [195.17, 61.54, 29.22], [196.33, 63.09, 28.37], [197.49, 64.65, 27.52], [198.66, 66.21, 26.66], [199.82, 68.15, 23.79], [200.99, 69.71, 22.94], [200.99, 69.71, 22.94], [202.15, 71.27, 22.09], [203.32, 72.82, 21.24], [204.48, 74.38, 20.38], [205.65, 76.33, 17.51], [205.21, 78.7, 16.66], [206.38, 80.25, 15.81], [206.38, 80.25, 15.81], [207.54, 81.81, 14.95], [208.71, 83.36, 14.1], [208.28, 86.12, 11.23], [209.44, 87.68, 10.38], [210.6, 89.24, 9.53], [210.17, 91.61, 8.67], [210.17, 91.61, 8.67], [211.34, 93.16, 7.82], [212.5, 94.72, 6.97], [212.07, 97.09, 6.11], [213.23, 99.04, 3.24], [214.4, 100.59, 2.39], [215.13, 104.12, 2.7], [215.13, 104.12, 2.7], [216.3, 105.68, 1.85], [215.86, 108.05, 1], [217.03, 109.61, 0.14], [216.6, 111.98, -0.71], [217.76, 113.53, -1.56], [217.33, 115.9, -2.41], [217.33, 115.9, -2.41], [219.66, 118.62, -2.1], [219.23, 120.6, -0.94], [218.79, 122.97, -1.79], [219.96, 124.52, -2.64], [219.53, 126.89, -3.5], [220.26, 130.43, -3.19], [220.26, 130.43, -3.19], [221.42, 131.59, -2.02], [220.99, 133.96, -2.87], [220.56, 136.33, -3.73], [220.13, 138.31, -2.56], [222.46, 141.03, -2.25], [222.03, 143, -1.09], [221.6, 145.37, -1.94], [221.6, 145.37, -1.94], [221.16, 147.35, -0.78], [221.9, 150.88, -0.46], [223.06, 152.05, 0.7], [222.63, 154.03, 1.86], [222.2, 156, 3.03], [222.93, 159.54, 3.34], [222.93, 159.54, 3.34], [222.5, 161.51, 4.51], [222.07, 163.49, 5.67], [222.8, 166.63, 8], [222.37, 168.61, 9.16], [221.94, 170.59, 10.33], [221.5, 172.17, 13.51], [221.5, 172.17, 13.51], [222.24, 175.32, 15.84], [221.81, 177.29, 17], [221.37, 179.27, 18.17], [220.94, 180.86, 21.35], [221.68, 184, 23.68], [221.24, 185.58, 26.86], [221.24, 185.58, 26.86], [220.81, 187.56, 28.02], [221.54, 190.31, 32.37], [221.11, 191.9, 35.55], [220.68, 193.87, 36.71], [220.25, 195.46, 39.9], [220.98, 198.21, 44.24], [220.98, 198.21, 44.24], [220.55, 199.79, 47.42], [220.12, 201.38, 50.61], [220.85, 204.13, 54.95], [220.42, 205.72, 58.13], [219.99, 207.3, 61.31], [219.56, 208.89, 64.5], [219.56, 208.89, 64.5], [220.29, 211.64, 68.84], [219.86, 213.22, 72.02], [219.43, 214.81, 75.21]];
 const plasma = [[26.14, -25.49, 123.99], [27.73, -26.3, 123.99], [29.33, -27.12, 123.99], [30.93, -27.93, 123.99], [30.93, -27.93, 123.99], [32.52, -29.14, 126], [35.28, -28.78, 127.17], [35.28, -28.78, 127.17], [36.88, -29.99, 129.18], [38.48, -30.8, 129.18], [40.07, -31.61, 129.18], [40.07, -31.61, 129.18], [41.67, -32.82, 131.2], [43.26, -33.63, 131.2], [44.86, -34.45, 131.2], [46.02, -33.28, 132.37], [47.62, -34.49, 134.38], [49.22, -35.3, 134.38], [49.22, -35.3, 134.38], [50.81, -36.11, 134.38], [52.41, -36.92, 134.38], [54, -37.74, 134.38], [55.17, -36.96, 137.57], [56.76, -37.78, 137.57], [58.36, -38.59, 137.57], [58.36, -38.59, 137.57], [59.52, -37.43, 138.73], [61.12, -38.24, 138.73], [62.72, -39.05, 138.73], [62.72, -39.05, 138.73], [65.48, -38.7, 139.89], [67.07, -39.51, 139.89], [67.07, -39.51, 139.89], [67.07, -39.51, 139.89], [69.83, -39.16, 141.06], [71.43, -39.98, 141.06], [71.43, -39.98, 141.06], [74.19, -39.62, 142.22], [75.79, -40.44, 142.22], [75.79, -40.05, 140.21], [75.79, -40.05, 140.21], [77.38, -40.86, 140.21], [80.14, -40.51, 141.37], [80.14, -40.51, 141.37], [82.9, -40.16, 142.53], [82.9, -39.76, 140.52], [85.66, -39.41, 141.68], [85.66, -39.41, 141.68], [85.66, -39.41, 141.68], [88.42, -38.67, 140.83], [88.42, -38.67, 140.83], [91.18, -38.32, 141.99], [91.18, -37.93, 139.98], [93.94, -37.57, 141.14], [93.94, -37.57, 141.14], [95.11, -36.02, 140.29], [96.7, -36.83, 140.29], [97.87, -35.67, 141.45], [99.03, -34.11, 140.6], [100.63, -34.92, 140.6], [101.79, -33.37, 139.75], [101.79, -33.37, 139.75], [104.55, -32.62, 138.89], [104.55, -32.62, 138.89], [105.72, -31.07, 138.04], [108.48, -30.72, 139.2], [108.48, -30.32, 137.19], [109.64, -28.77, 136.33], [109.64, -28.77, 136.33], [112.4, -28.42, 137.5], [113.57, -26.86, 136.65], [113.57, -26.47, 134.63], [114.73, -25.3, 135.79], [117.49, -24.56, 134.94], [118.66, -23.01, 134.09], [118.66, -23.01, 134.09], [118.66, -23.01, 134.09], [119.82, -21.45, 133.23], [122.58, -20.71, 132.38], [123.75, -19.15, 131.53], [124.91, -17.99, 132.69], [126.08, -16.43, 131.84], [126.08, -16.43, 131.84], [126.08, -16.04, 129.82], [128.84, -15.29, 128.97], [130, -13.74, 128.12], [131.16, -12.57, 129.28], [132.33, -11.02, 128.43], [133.49, -9.46, 127.58], [133.49, -9.46, 127.58], [134.66, -7.91, 126.72], [136.25, -8.33, 124.71], [137.42, -6.77, 123.85], [138.58, -5.21, 123], [139.75, -4.05, 124.16], [140.91, -2.49, 123.31], [140.91, -2.49, 123.31], [142.08, -0.94, 122.46], [143.24, 0.62, 121.61], [143.24, 1.01, 119.59], [144.4, 2.57, 118.74], [145.57, 4.12, 117.88], [148.33, 4.87, 117.03], [148.33, 4.87, 117.03], [149.49, 6.42, 116.18], [150.66, 7.59, 117.34], [151.82, 9.14, 116.49], [152.99, 10.7, 115.64], [152.99, 11.09, 113.62], [154.15, 12.65, 112.77], [154.15, 12.65, 112.77], [155.32, 14.2, 111.91], [156.48, 15.76, 111.06], [157.64, 17.31, 110.21], [158.81, 18.87, 109.35], [159.97, 20.43, 108.5], [159.97, 20.43, 108.5], [159.97, 20.43, 108.5], [161.14, 21.98, 107.65], [162.3, 23.54, 106.8], [163.47, 25.1, 105.94], [164.63, 26.65, 105.09], [165.8, 28.21, 104.24], [166.96, 29.76, 103.38], [166.96, 29.76, 103.38], [166.96, 30.16, 101.37], [168.12, 31.71, 100.51], [169.29, 33.27, 99.66], [170.45, 34.82, 98.81], [171.62, 35.99, 99.97], [172.78, 37.54, 99.12], [172.78, 37.94, 97.1], [172.78, 37.94, 97.1], [173.95, 39.49, 96.25], [175.11, 41.05, 95.4], [176.27, 42.6, 94.54], [177.44, 44.16, 93.69], [178.6, 45.72, 92.84], [178.6, 46.11, 90.82], [178.6, 46.11, 90.82], [179.77, 47.27, 91.99], [180.93, 48.83, 91.13], [182.1, 50.39, 90.28], [183.26, 51.94, 89.43], [183.26, 52.33, 87.41], [184.43, 53.89, 86.56], [184.43, 53.89, 86.56], [183.99, 56.26, 85.7], [185.16, 57.81, 84.85], [186.32, 58.98, 86.02], [186.32, 59.37, 84], [187.49, 60.93, 83.15], [188.65, 62.48, 82.29], [188.65, 62.48, 82.29], [189.82, 64.04, 81.44], [190.98, 65.6, 80.59], [190.98, 65.99, 78.57], [192.14, 67.54, 77.72], [193.31, 68.71, 78.88], [194.47, 70.26, 78.03], [194.47, 70.26, 78.03], [195.64, 71.82, 77.18], [194.04, 73.02, 75.16], [195.21, 74.58, 74.31], [196.37, 76.14, 73.45], [197.53, 77.69, 72.6], [198.7, 78.86, 73.76], [198.7, 78.86, 73.76], [198.7, 79.25, 71.75], [199.86, 80.81, 70.89], [201.03, 82.36, 70.04], [200.6, 84.73, 69.19], [201.76, 86.29, 68.34], [201.76, 86.68, 66.32], [201.76, 86.68, 66.32], [202.92, 87.84, 67.48], [204.09, 89.4, 66.63], [205.25, 90.96, 65.78], [204.82, 93.32, 64.92], [204.82, 93.72, 62.91], [205.99, 95.27, 62.05], [205.99, 95.27, 62.05], [207.15, 96.83, 61.2], [208.32, 98.38, 60.35], [209.48, 99.55, 61.51], [209.05, 101.92, 60.66], [209.05, 102.31, 58.64], [210.21, 103.87, 57.79], [210.21, 103.87, 57.79], [211.38, 105.42, 56.94], [210.95, 107.79, 56.08], [212.11, 109.35, 55.23], [213.27, 110.51, 56.4], [213.27, 110.9, 54.38], [212.84, 113.27, 53.53], [212.84, 113.27, 53.53], [214.01, 114.83, 52.67], [215.17, 116.38, 51.82], [216.34, 117.94, 50.97], [215.9, 120.31, 50.11], [217.07, 121.87, 49.26], [217.07, 121.87, 49.26], [217.07, 121.87, 49.26], [216.64, 124.24, 48.41], [217.8, 125.79, 47.56], [218.97, 127.35, 46.7], [218.53, 129.72, 45.85], [219.7, 131.27, 45], [220.86, 132.83, 44.15], [220.86, 132.83, 44.15], [220.43, 135.2, 43.29], [220.43, 135.59, 41.27], [221.6, 136.75, 42.44], [221.16, 139.12, 41.59], [222.33, 140.68, 40.73], [221.9, 143.05, 39.88], [223.06, 144.6, 39.03], [223.06, 144.6, 39.03], [222.63, 146.97, 38.18], [223.79, 148.53, 37.32], [223.36, 150.51, 38.49], [224.53, 152.06, 37.63], [224.53, 152.46, 35.62], [224.09, 154.82, 34.76], [224.09, 154.82, 34.76], [223.66, 157.19, 33.91], [224.83, 158.75, 33.06], [224.4, 161.12, 32.21], [225.56, 162.28, 33.37], [225.13, 164.65, 32.52], [226.29, 166.21, 31.66], [226.29, 166.21, 31.66], [225.86, 168.58, 30.81], [227.03, 170.13, 29.96], [226.59, 172.5, 29.11], [226.16, 174.48, 30.27], [226.16, 174.87, 28.25], [225.73, 177.24, 27.4], [225.73, 177.24, 27.4], [225.3, 179.61, 26.55], [226.46, 181.17, 25.69], [226.03, 183.14, 26.86], [225.6, 185.51, 26.01], [226.76, 187.07, 25.15], [226.33, 189.05, 26.32], [226.33, 189.05, 26.32], [225.9, 191.42, 25.46], [227.07, 192.97, 24.61], [226.63, 195.34, 23.76], [226.2, 197.32, 24.92], [225.77, 199.69, 24.07], [224.17, 200.89, 22.05], [224.17, 200.89, 22.05], [225.34, 202.06, 23.22], [224.91, 204.43, 22.36], [224.48, 206.79, 21.51]];
@@ -107177,6 +107183,12 @@ class ChainLutRenderer {
       { lut: lut2, interp },
       target
     );
+  }
+  isLost() {
+    return this.inner.isLost();
+  }
+  get error() {
+    return this.inner.error;
   }
   dispose() {
     this.inner.dispose();
@@ -107434,20 +107446,9 @@ function createChainCompositor(node, graphApp = app) {
     }
     return out;
   }
-  let lastStackDebugAt = 0;
   function render2(src) {
     let cur = src;
     const stack2 = syncStack();
-    if (stack2.length && Date.now() - lastStackDebugAt > 2e3) {
-      lastStackDebugAt = Date.now();
-      console.debug("[ComfyTV/fx-preview] stack " + JSON.stringify(stack2.map((e) => {
-        var _a3;
-        return {
-          cls: e.cls,
-          params: (_a3 = CHAIN_PREVIEW_STAGES[e.cls]) == null ? void 0 : _a3.paramsOf(e.node)
-        };
-      }), null, 1));
-    }
     for (const entry of stack2) {
       const def2 = CHAIN_PREVIEW_STAGES[entry.cls];
       if (!def2) continue;
@@ -107456,36 +107457,26 @@ function createChainCompositor(node, graphApp = app) {
         def2.paramsOf(entry.node),
         entry.canvas
       )) {
+        console.warn(`[ComfyTV/fx-preview] upstream ${entry.cls} render failed: ` + (entry.renderer.error ?? "unknown"));
         return null;
       }
       cur = entry.canvas;
     }
     return cur;
   }
+  function lostClasses() {
+    var _a3, _b2;
+    const out = [];
+    for (const entry of stackEntries.values()) {
+      if ((_b2 = (_a3 = entry.renderer).isLost) == null ? void 0 : _b2.call(_a3)) out.push(entry.cls);
+    }
+    return out;
+  }
   function dispose() {
     for (const entry of stackEntries.values()) entry.renderer.dispose();
     stackEntries.clear();
   }
-  return { render: render2, dispose };
-}
-function debugMeanOf(src) {
-  const c2 = document.createElement("canvas");
-  c2.width = 80;
-  c2.height = 45;
-  const ctx = c2.getContext("2d", { willReadFrequently: true });
-  if (!ctx) return "n/a";
-  ctx.drawImage(src, 0, 0, 80, 45);
-  const d2 = ctx.getImageData(0, 0, 80, 45).data;
-  let r = 0;
-  let g2 = 0;
-  let b2 = 0;
-  const n = d2.length / 4;
-  for (let i = 0; i < d2.length; i += 4) {
-    r += d2[i];
-    g2 += d2[i + 1];
-    b2 += d2[i + 2];
-  }
-  return `[${(r / n).toFixed(1)}, ${(g2 / n).toFixed(1)}, ${(b2 / n).toFixed(1)}]`;
+  return { render: render2, lostClasses, dispose };
 }
 function useChainedFxPreview(opts) {
   const supported = /* @__PURE__ */ ref(true);
@@ -107495,7 +107486,20 @@ function useChainedFxPreview(opts) {
   let rafId = 0;
   let idleTimer = null;
   let attached = null;
-  let lastDebugAt = 0;
+  let lastHealthAt = 0;
+  function ownClass() {
+    return nodeClass(opts.node);
+  }
+  function healthCheck() {
+    var _a3;
+    if (Date.now() - lastHealthAt < 3e3) return;
+    lastHealthAt = Date.now();
+    const lost = compositor.lostClasses();
+    if ((_a3 = ownRenderer == null ? void 0 : ownRenderer.isLost) == null ? void 0 : _a3.call(ownRenderer)) lost.push(`${ownClass()} (own)`);
+    if (lost.length) {
+      console.warn(`[ComfyTV/fx-preview] ${ownClass()} preview is STALE — lost GL contexts in its chain: ${lost.join(", ")}`);
+    }
+  }
   function renderOnce() {
     if (!supported.value) return;
     const v2 = opts.videoEl.value;
@@ -107504,6 +107508,7 @@ function useChainedFxPreview(opts) {
     ownRenderer ?? (ownRenderer = opts.createRenderer());
     const src = compositor.render(v2);
     if (src == null) {
+      console.warn(`[ComfyTV/fx-preview] ${ownClass()}: upstream chain failed — preview disabled for this card`);
       supported.value = false;
       stopLoop();
       return;
@@ -107513,14 +107518,12 @@ function useChainedFxPreview(opts) {
       opts.params(),
       target
     )) {
+      console.warn(`[ComfyTV/fx-preview] ${ownClass()}: own render failed: ${ownRenderer.error ?? "unknown"} — preview disabled for this card`);
       supported.value = false;
       stopLoop();
       return;
     }
-    if (Date.now() - lastDebugAt > 1e3) {
-      lastDebugAt = Date.now();
-      console.debug(`[ComfyTV/fx-preview] t=${v2.currentTime.toFixed(2)}s src mean=${debugMeanOf(v2)} composited mean=${debugMeanOf(target)}`);
-    }
+    healthCheck();
   }
   function loop() {
     renderOnce();
@@ -128453,7 +128456,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-DvPu7jrH.mjs");
+    const { STLLoader } = await import("./STLLoader-BsXXoDMM.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -128461,7 +128464,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-lu3OIrvd.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-BnVCFLX_.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -157555,9 +157558,6 @@ function timelineToSeeks(t2, window2, timeline2) {
 const videoTransitionFrag = "#version 300 es\r\nprecision highp float;\r\n\r\nuniform sampler2D u_image0;\r\nuniform sampler2D u_image1;\r\nuniform vec2 u_resolution;\r\nuniform float u_float0;\r\nuniform int u_int0;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nconst float PI = 3.14159265358979;\r\n\r\nvec4 srcA(vec2 p) {\r\n    return texture(u_image0, vec2((p.x + 0.5) / u_resolution.x, 1.0 - (p.y + 0.5) / u_resolution.y));\r\n}\r\n\r\nvec4 srcB(vec2 p) {\r\n    return texture(u_image1, vec2((p.x + 0.5) / u_resolution.x, 1.0 - (p.y + 0.5) / u_resolution.y));\r\n}\r\n\r\nvec4 cmix(vec4 a, vec4 b, float m) {\r\n    return mix(b, a, m);\r\n}\r\n\r\nfloat frand(float x, float y) {\r\n    float r = sin(x * 12.9898 + y * 78.233) * 43758.545;\r\n    return r - floor(r);\r\n}\r\n\r\nvec4 fadeMeta(vec4 a, vec4 b, vec4 bg0, vec4 bg1, float P) {\r\n    return cmix(cmix(a, bg0, smoothstep(0.8, 1.0, P)),\r\n                cmix(bg1, b, smoothstep(0.2, 1.0, P)), P);\r\n}\r\n\r\nvoid main() {\r\n    float w = u_resolution.x;\r\n    float h = u_resolution.y;\r\n    float P = clamp(u_float0, 0.0, 1.0);\r\n    int m = u_int0;\r\n    float xi = floor(v_texCoord.x * w);\r\n    float yi = floor((1.0 - v_texCoord.y) * h);\r\n    vec2 p0 = vec2(xi, yi);\r\n    vec4 A = texture(u_image0, v_texCoord);\r\n    vec4 B = texture(u_image1, v_texCoord);\r\n    vec4 outc = A;\r\n\r\n    if (m == 0) {\r\n        outc = cmix(A, B, P);\r\n    } else if (m == 1) {\r\n        float smoothv = frand(xi, yi) * 2.0 + P * 2.0 - 1.5;\r\n        outc = smoothv >= 0.5 ? A : B;\r\n    } else if (m == 2) {\r\n        outc = fadeMeta(A, B, vec4(0.0, 0.0, 0.0, 1.0), vec4(0.0, 0.0, 0.0, 1.0), P);\r\n    } else if (m == 3) {\r\n        outc = fadeMeta(A, B, vec4(1.0), vec4(1.0), P);\r\n    } else if (m == 4) {\r\n        vec4 g0 = vec4(vec3(dot(A.rgb, vec3(1.0 / 3.0))), A.a);\r\n        vec4 g1 = vec4(vec3(dot(B.rgb, vec3(1.0 / 3.0))), B.a);\r\n        outc = fadeMeta(A, B, g0, g1, P);\r\n    } else if (m == 5) {\r\n        vec4 e = pow(vec4(P), vec4(1.0) + log(vec4(1.0) + abs(A - B)));\r\n        outc = A * e + B * (vec4(1.0) - e);\r\n    } else if (m == 6) {\r\n        vec4 e = pow(vec4(P), vec4(1.0) + log(vec4(2.0) - abs(A - B)));\r\n        outc = A * e + B * (vec4(1.0) - e);\r\n    } else if (m == 7) {\r\n        outc = xi > floor(w * P) ? B : A;\r\n    } else if (m == 8) {\r\n        outc = xi > floor(w * (1.0 - P)) ? A : B;\r\n    } else if (m == 9) {\r\n        outc = yi > floor(h * P) ? B : A;\r\n    } else if (m == 10) {\r\n        outc = yi > floor(h * (1.0 - P)) ? A : B;\r\n    } else if (m == 11) {\r\n        outc = (yi <= floor(h * P) && xi <= floor(w * P)) ? A : B;\r\n    } else if (m == 12) {\r\n        outc = (yi <= floor(h * P) && xi > floor(w * (1.0 - P))) ? A : B;\r\n    } else if (m == 13) {\r\n        outc = (yi > floor(h * (1.0 - P)) && xi <= floor(w * P)) ? A : B;\r\n    } else if (m == 14) {\r\n        outc = (yi > floor(h * (1.0 - P)) && xi > floor(w * (1.0 - P))) ? A : B;\r\n    } else if (m == 15 || m == 16) {\r\n        float z = (m == 15 ? -P : P) * w;\r\n        float zx = floor(z) + xi;\r\n        vec2 s = vec2(mod(zx, w), yi);\r\n        outc = (zx >= 0.0 && zx < w) ? srcB(s) : srcA(s);\r\n    } else if (m == 17 || m == 18) {\r\n        float z = (m == 17 ? -P : P) * h;\r\n        float zy = floor(z) + yi;\r\n        vec2 s = vec2(xi, mod(zy, h));\r\n        outc = (zy >= 0.0 && zy < h) ? srcB(s) : srcA(s);\r\n    } else if (m == 19) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + xi / w - P * 2.0));\r\n    } else if (m == 20) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + (w - 1.0 - xi) / w - P * 2.0));\r\n    } else if (m == 21) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + yi / h - P * 2.0));\r\n    } else if (m == 22) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + (h - 1.0 - yi) / h - P * 2.0));\r\n    } else if (m == 23) {\r\n        float z = pow(2.0 * abs(P - 0.5), 3.0) * length(vec2(w, h) * 0.5);\r\n        float dist = length(p0 - vec2(w, h) * 0.5);\r\n        outc = z < dist ? vec4(0.0, 0.0, 0.0, 1.0) : (P < 0.5 ? B : A);\r\n    } else if (m == 24) {\r\n        bool inside = abs(xi - w * 0.5) < abs(P - 0.5) * w\r\n                   && abs(yi - h * 0.5) < abs(P - 0.5) * h;\r\n        outc = inside ? (P < 0.5 ? B : A) : vec4(0.0, 0.0, 0.0, 1.0);\r\n    } else if (m == 25) {\r\n        float z = length(vec2(w, h) * 0.5);\r\n        float smoothv = length(p0 - vec2(w, h) * 0.5) / z + (P - 0.5) * 3.0;\r\n        outc = cmix(A, B, smoothstep(0.0, 1.0, smoothv));\r\n    } else if (m == 26) {\r\n        float z = length(vec2(w, h) * 0.5);\r\n        float smoothv = length(p0 - vec2(w, h) * 0.5) / z + (0.5 - P) * 3.0;\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, smoothv));\r\n    } else if (m == 27) {\r\n        float w2 = w * 0.5;\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 2.0 - abs((xi - w2) / w2) - P * 2.0));\r\n    } else if (m == 28) {\r\n        float w2 = w * 0.5;\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + abs((xi - w2) / w2) - P * 2.0));\r\n    } else if (m == 29) {\r\n        float h2 = h * 0.5;\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 2.0 - abs((yi - h2) / h2) - P * 2.0));\r\n    } else if (m == 30) {\r\n        float h2 = h * 0.5;\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + abs((yi - h2) / h2) - P * 2.0));\r\n    } else if (m == 31) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + xi / w * yi / h - P * 2.0));\r\n    } else if (m == 32) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + (w - 1.0 - xi) / w * yi / h - P * 2.0));\r\n    } else if (m == 33) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + xi / w * (h - 1.0 - yi) / h - P * 2.0));\r\n    } else if (m == 34) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + (w - 1.0 - xi) / w * (h - 1.0 - yi) / h - P * 2.0));\r\n    } else if (m >= 35 && m <= 38) {\r\n        float c = m == 35 ? xi / w\r\n                : m == 36 ? (w - 1.0 - xi) / w\r\n                : m == 37 ? yi / h\r\n                : (h - 1.0 - yi) / h;\r\n        float smoothv = smoothstep(-0.5, 0.0, c - P * 1.5);\r\n        float ss = smoothv <= fract(10.0 * c) ? 0.0 : 1.0;\r\n        outc = mix(A, B, ss);\r\n    } else if (m >= 39 && m <= 42) {\r\n        float c = m == 39 ? 1.0 - xi / w\r\n                : m == 40 ? xi / w\r\n                : m == 41 ? 1.0 - yi / h\r\n                : yi / h;\r\n        float r = (m <= 40) ? frand(0.0, yi) : frand(xi, 0.0);\r\n        float ss = 1.0 - smoothstep(-0.2, 0.0, c * 0.8 + 0.2 * r - (1.0 - P) * 1.2);\r\n        outc = mix(A, B, ss);\r\n    } else if (m == 43 || m == 44) {\r\n        float z = (m == 43 ? -P : P) * w;\r\n        float zx = floor(z) + xi;\r\n        outc = (zx >= 0.0 && zx < w) ? srcB(vec2(mod(zx, w), yi)) : A;\r\n    } else if (m == 45 || m == 46) {\r\n        float z = (m == 45 ? -P : P) * h;\r\n        float zy = floor(z) + yi;\r\n        outc = (zy >= 0.0 && zy < h) ? srcB(vec2(xi, mod(zy, h))) : A;\r\n    } else if (m == 47 || m == 48) {\r\n        float z = (m == 47 ? -P : P) * w;\r\n        float zx = floor(z) + xi;\r\n        outc = (zx >= 0.0 && zx < w) ? B : srcA(vec2(mod(zx, w), yi));\r\n    } else if (m == 49 || m == 50) {\r\n        float z = (m == 49 ? -P : P) * h;\r\n        float zy = floor(z) + yi;\r\n        outc = (zy >= 0.0 && zy < h) ? B : srcA(vec2(xi, mod(zy, h)));\r\n    } else if (m == 51) {\r\n        float z = 0.5 + (yi / h - 0.5) / max(P, 0.001);\r\n        outc = (P <= 0.001 || z < 0.0 || z > 1.0) ? B : srcA(vec2(xi, floor(z * (h - 1.0) + 0.5)));\r\n    } else if (m == 52) {\r\n        float z = 0.5 + (xi / w - 0.5) / max(P, 0.001);\r\n        outc = (P <= 0.001 || z < 0.0 || z > 1.0) ? B : srcA(vec2(floor(z * (w - 1.0) + 0.5), yi));\r\n    } else if (m == 53) {\r\n        float zf = smoothstep(0.5, 1.0, P);\r\n        vec2 uv = vec2(xi / w, yi / h);\r\n        uv = vec2(0.5) + (uv - vec2(0.5)) * zf;\r\n        vec2 s = ceil(uv * (vec2(w, h) - 1.0));\r\n        outc = mix(B, srcA(s), smoothstep(0.0, 0.5, P));\r\n    } else if (m == 54) {\r\n        vec3 d = A.rgb - B.rgb;\r\n        float flag = sqrt(dot(d, d)) <= P ? 1.0 : 0.0;\r\n        outc = mix(B, cmix(A, B, flag), P);\r\n    } else if (m == 55) {\r\n        float d = min(P, 1.0 - P);\r\n        float dist = ceil(d * 50.0) / 50.0;\r\n        float sq = 2.0 * dist * min(w, h) / 20.0;\r\n        vec2 s = dist > 0.0\r\n            ? min((floor(p0 / sq) + 0.5) * sq, vec2(w, h) - 1.0)\r\n            : p0;\r\n        outc = cmix(srcA(s), srcB(s), P);\r\n    } else if (m == 56) {\r\n        vec2 rd = vec2(xi - w * 0.5, yi - h * 0.5);\r\n        if (rd == vec2(0.0)) rd = vec2(0.0, 1.0);\r\n        float smoothv = atan(rd.x, rd.y) - (P - 0.5) * (PI * 2.5);\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, smoothv));\r\n    } else if (m == 57) {\r\n        float prog = P <= 0.5 ? P * 2.0 : (1.0 - P) * 2.0;\r\n        float size = 1.0 + floor(w * 0.5) * prog;\r\n        const int TAPS = 24;\r\n        float stride = size / float(TAPS);\r\n        vec4 sum0 = vec4(0.0);\r\n        vec4 sum1 = vec4(0.0);\r\n        for (int k = 0; k < TAPS; k++) {\r\n            float sx = min(xi + (float(k) + 0.5) * stride, w - 1.0);\r\n            vec2 s = vec2(sx, yi);\r\n            sum0 += srcA(s);\r\n            sum1 += srcB(s);\r\n        }\r\n        outc = cmix(sum0 / float(TAPS), sum1 / float(TAPS), P);\r\n    }\r\n\r\n    fragColor = vec4(outc.rgb, 1.0);\r\n}\r\n";
 const RENDER_CONFIG = {
   maxInputs: 2,
-  maxFloatUniforms: 1,
-  maxIntUniforms: 1,
-  maxBoolUniforms: 0,
   maxCurves: 0
 };
 class VideoTransitionRenderer {
@@ -171389,7 +171389,6 @@ function useStageNode(node, kind, variant = "generator") {
           }
         }
       }
-      console.debug(`[ComfyTV/run] scoped prompt for #${targetId} ` + JSON.stringify((pm == null ? void 0 : pm.output) ?? {}, null, 1));
       if (missingUpstream.length > 0) {
         const list = [...new Set(missingUpstream)].join(", ");
         const msg = t("error.upstreamNotReadyDetail", { list });
@@ -172446,4 +172445,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-DDr1ZtzS.mjs.map
+//# sourceMappingURL=main-BphHgAkx.mjs.map

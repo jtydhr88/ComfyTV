@@ -32,6 +32,25 @@ interface CompileResult {
   log: string
 }
 
+export interface ProgramEntry {
+  program: WebGLProgram
+  passCount: number
+  uniforms: Map<string, WebGLUniformLocation | null>
+}
+
+export interface SharedGL {
+  id: number
+  canvas: OffscreenCanvas | HTMLCanvasElement
+  gl: WebGL2RenderingContext
+  vertexShader: WebGLShader
+  programs: Map<string, ProgramEntry>
+  lost: boolean
+}
+
+let shared: SharedGL | null = null
+let sharedSeq = 0
+let instanceCount = 0
+
 function compileShader(
   gl: WebGL2RenderingContext,
   type: GLenum,
@@ -51,32 +70,117 @@ function compileShader(
   return shader
 }
 
+function createShared(): SharedGL | null {
+  try {
+    const canvas =
+      typeof OffscreenCanvas !== 'undefined'
+        ? new OffscreenCanvas(8, 8)
+        : document.createElement('canvas')
+    const gl = canvas.getContext('webgl2', {
+      alpha: true,
+      premultipliedAlpha: false,
+      preserveDrawingBuffer: true
+    }) as WebGL2RenderingContext | null
+    if (!gl) return null
+    if (!gl.getExtension('EXT_color_buffer_float')) return null
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true)
+    const vertexShader = compileShader(gl, gl.VERTEX_SHADER, VERTEX_SHADER_SOURCE)
+    const s: SharedGL = {
+      id: ++sharedSeq,
+      canvas,
+      gl,
+      vertexShader,
+      programs: new Map(),
+      lost: false
+    }
+    canvas.addEventListener('webglcontextlost', () => {
+      s.lost = true
+      console.warn(`[ComfyTV/glsl] shared context #${s.id} lost — `
+        + 'rebuilding on next render')
+    })
+    console.debug(`[ComfyTV/glsl] shared context #${s.id} created `
+      + `(instances=${instanceCount})`)
+    return s
+  } catch {
+    return null
+  }
+}
+
+function healthyShared(): SharedGL | null {
+  if (shared && (shared.lost || shared.gl.isContextLost())) shared = null
+  shared ??= createShared()
+  return shared
+}
+
+function releaseSharedIfIdle(): void {
+  if (instanceCount > 0 || !shared) return
+  const s = shared
+  shared = null
+  if (!s.lost && !s.gl.isContextLost()) {
+    for (const entry of s.programs.values()) s.gl.deleteProgram(entry.program)
+    s.gl.deleteShader(s.vertexShader)
+    s.gl.getExtension('WEBGL_lose_context')?.loseContext()
+  }
+  console.debug(`[ComfyTV/glsl] shared context #${s.id} released`)
+}
+
+export function acquireSharedGL(): SharedGL | null {
+  return healthyShared()
+}
+
+export function trackSharedInstance(): () => void {
+  instanceCount++
+  let done = false
+  return () => {
+    if (done) return
+    done = true
+    instanceCount--
+    releaseSharedIfIdle()
+  }
+}
+
+export function getSharedProgram(s: SharedGL, source: string): ProgramEntry {
+  const cached = s.programs.get(source)
+  if (cached) return cached
+  const gl = s.gl
+  const fs = compileShader(gl, gl.FRAGMENT_SHADER, source)
+  const prog = gl.createProgram()
+  if (!prog) {
+    gl.deleteShader(fs)
+    throw new Error('Failed to create program')
+  }
+  gl.attachShader(prog, s.vertexShader)
+  gl.attachShader(prog, fs)
+  gl.linkProgram(prog)
+  gl.deleteShader(fs)
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+    const log = gl.getProgramInfoLog(prog) ?? 'Link failed'
+    gl.deleteProgram(prog)
+    throw new Error(log)
+  }
+  const entry: ProgramEntry = {
+    program: prog,
+    passCount: Math.min(detectPassCount(source), MAX_PASSES),
+    uniforms: new Map()
+  }
+  s.programs.set(source, entry)
+  return entry
+}
+
+interface Target {
+  fbo: WebGLFramebuffer
+  tex: WebGLTexture
+}
+
 export function useGLSLRenderer(config: GLSLRendererConfig = DEFAULT_CONFIG) {
-  const {
-    maxInputs,
-    maxFloatUniforms,
-    maxIntUniforms,
-    maxBoolUniforms,
-    maxCurves
-  } = config
+  const { maxInputs, maxCurves } = config
 
-  const uniformNames = [
-    'u_resolution',
-    'u_pass',
-    ...Array.from({ length: maxInputs }, (_, i) => `u_image${i}`),
-    ...Array.from({ length: maxFloatUniforms }, (_, i) => `u_float${i}`),
-    ...Array.from({ length: maxIntUniforms }, (_, i) => `u_int${i}`),
-    ...Array.from({ length: maxBoolUniforms }, (_, i) => `u_bool${i}`),
-    ...Array.from({ length: maxCurves }, (_, i) => `u_curve${i}`)
-  ]
-
-  let canvas: OffscreenCanvas | null = null
-  let gl: WebGL2RenderingContext | null = null
-  let vertexShader: WebGLShader | null = null
-  let program: WebGLProgram | null = null
-  let fragmentShader: WebGLShader | null = null
-  let pingPongFBOs: [WebGLFramebuffer, WebGLFramebuffer] | null = null
-  let pingPongTextures: [WebGLTexture, WebGLTexture] | null = null
+  let ref: SharedGL | null = null
+  let width = 0
+  let height = 0
+  let program: ProgramEntry | null = null
+  let lastSource: string | null = null
+  let pingPong: [Target, Target] | null = null
   let fallbackTexture: WebGLTexture | null = null
   const inputTextures: (WebGLTexture | null)[] = Array.from<null>({
     length: maxInputs
@@ -84,403 +188,331 @@ export function useGLSLRenderer(config: GLSLRendererConfig = DEFAULT_CONFIG) {
   const curveTextures: (WebGLTexture | null)[] = Array.from<null>({
     length: maxCurves
   }).fill(null)
-  const uniformLocations = new Map<string, WebGLUniformLocation | null>()
-  let passCount = 1
+  const curveData: (Float32Array | null)[] = Array.from<null>({
+    length: maxCurves
+  }).fill(null)
   let disposed = false
-  let lastCompiledSource: string | null = null
 
-  function initPingPongFBOs(
-    ctx: WebGL2RenderingContext,
-    width: number,
-    height: number
-  ): void {
-    const fbos: WebGLFramebuffer[] = []
-    const textures: WebGLTexture[] = []
+  instanceCount++
 
-    try {
-      for (let i = 0; i < 2; i++) {
-        const tex = ctx.createTexture()
-        if (!tex) throw new Error('Failed to create ping-pong texture')
-        ctx.bindTexture(ctx.TEXTURE_2D, tex)
-        ctx.texImage2D(
-          ctx.TEXTURE_2D,
-          0,
-          ctx.RGBA16F,
-          width,
-          height,
-          0,
-          ctx.RGBA,
-          ctx.HALF_FLOAT,
-          null
-        )
-        ctx.texParameteri(ctx.TEXTURE_2D, ctx.TEXTURE_MIN_FILTER, ctx.LINEAR)
-        ctx.texParameteri(ctx.TEXTURE_2D, ctx.TEXTURE_MAG_FILTER, ctx.LINEAR)
-        ctx.texParameteri(ctx.TEXTURE_2D, ctx.TEXTURE_WRAP_S, ctx.CLAMP_TO_EDGE)
-        ctx.texParameteri(ctx.TEXTURE_2D, ctx.TEXTURE_WRAP_T, ctx.CLAMP_TO_EDGE)
+  function resetLocalHandles(): void {
+    pingPong = null
+    fallbackTexture = null
+    inputTextures.fill(null)
+    curveTextures.fill(null)
+    program = null
+  }
 
-        const fbo = ctx.createFramebuffer()
-        if (!fbo) throw new Error('Failed to create ping-pong framebuffer')
-        ctx.bindFramebuffer(ctx.FRAMEBUFFER, fbo)
-        ctx.framebufferTexture2D(
-          ctx.FRAMEBUFFER,
-          ctx.COLOR_ATTACHMENT0,
-          ctx.TEXTURE_2D,
-          tex,
-          0
-        )
-        const status = ctx.checkFramebufferStatus(ctx.FRAMEBUFFER)
-        if (status !== ctx.FRAMEBUFFER_COMPLETE)
-          throw new Error(`Ping-pong framebuffer incomplete: ${status}`)
+  function makeTarget(s: SharedGL, w: number, h: number): Target {
+    const g = s.gl
+    const tex = g.createTexture()
+    if (!tex) throw new Error('Failed to create ping-pong texture')
+    g.bindTexture(g.TEXTURE_2D, tex)
+    g.texImage2D(g.TEXTURE_2D, 0, g.RGBA16F, w, h, 0, g.RGBA, g.HALF_FLOAT, null)
+    g.texParameteri(g.TEXTURE_2D, g.TEXTURE_MIN_FILTER, g.LINEAR)
+    g.texParameteri(g.TEXTURE_2D, g.TEXTURE_MAG_FILTER, g.LINEAR)
+    g.texParameteri(g.TEXTURE_2D, g.TEXTURE_WRAP_S, g.CLAMP_TO_EDGE)
+    g.texParameteri(g.TEXTURE_2D, g.TEXTURE_WRAP_T, g.CLAMP_TO_EDGE)
+    const fbo = g.createFramebuffer()
+    if (!fbo) throw new Error('Failed to create ping-pong framebuffer')
+    g.bindFramebuffer(g.FRAMEBUFFER, fbo)
+    g.framebufferTexture2D(g.FRAMEBUFFER, g.COLOR_ATTACHMENT0, g.TEXTURE_2D, tex, 0)
+    const status = g.checkFramebufferStatus(g.FRAMEBUFFER)
+    g.bindFramebuffer(g.FRAMEBUFFER, null)
+    g.bindTexture(g.TEXTURE_2D, null)
+    if (status !== g.FRAMEBUFFER_COMPLETE) {
+      throw new Error(`Ping-pong framebuffer incomplete: ${status}`)
+    }
+    return { fbo, tex }
+  }
 
-        fbos.push(fbo)
-        textures.push(tex)
+  function destroyPingPong(s: SharedGL): void {
+    if (!pingPong) return
+    for (const t of pingPong) {
+      s.gl.deleteFramebuffer(t.fbo)
+      s.gl.deleteTexture(t.tex)
+    }
+    pingPong = null
+  }
+
+  function uploadCurve(s: SharedGL, index: number, lut: Float32Array): void {
+    const g = s.gl
+    if (curveTextures[index]) g.deleteTexture(curveTextures[index])
+    curveTextures[index] = null
+    const texture = g.createTexture()
+    if (!texture) return
+    const unit = maxInputs + index
+    g.activeTexture(g.TEXTURE0 + unit)
+    g.bindTexture(g.TEXTURE_2D, texture)
+    g.pixelStorei(g.UNPACK_FLIP_Y_WEBGL, false)
+    g.texImage2D(g.TEXTURE_2D, 0, g.R16F, lut.length, 1, 0, g.RED, g.FLOAT, lut)
+    g.pixelStorei(g.UNPACK_FLIP_Y_WEBGL, true)
+    g.texParameteri(g.TEXTURE_2D, g.TEXTURE_MIN_FILTER, g.LINEAR)
+    g.texParameteri(g.TEXTURE_2D, g.TEXTURE_MAG_FILTER, g.LINEAR)
+    g.texParameteri(g.TEXTURE_2D, g.TEXTURE_WRAP_S, g.CLAMP_TO_EDGE)
+    g.texParameteri(g.TEXTURE_2D, g.TEXTURE_WRAP_T, g.CLAMP_TO_EDGE)
+    curveTextures[index] = texture
+  }
+
+  function live(): SharedGL | null {
+    if (disposed) return null
+    const s = healthyShared()
+    if (!s) return null
+    if (ref !== s) {
+      resetLocalHandles()
+      ref = s
+      try {
+        if (lastSource) program = getSharedProgram(s, lastSource)
+        for (let i = 0; i < maxCurves; i++) {
+          const data = curveData[i]
+          if (data) uploadCurve(s, i, data)
+        }
+      } catch {
+        program = null
       }
-    } catch (error) {
-      for (const fbo of fbos) ctx.deleteFramebuffer(fbo)
-      for (const tex of textures) ctx.deleteTexture(tex)
-      ctx.bindFramebuffer(ctx.FRAMEBUFFER, null)
-      ctx.bindTexture(ctx.TEXTURE_2D, null)
-      throw error
     }
-
-    ctx.bindFramebuffer(ctx.FRAMEBUFFER, null)
-    ctx.bindTexture(ctx.TEXTURE_2D, null)
-
-    pingPongFBOs = fbos as [WebGLFramebuffer, WebGLFramebuffer]
-    pingPongTextures = textures as [WebGLTexture, WebGLTexture]
+    return s
   }
 
-  function destroyPingPongFBOs(): void {
-    if (!gl) return
-    if (pingPongFBOs) {
-      for (const fbo of pingPongFBOs) gl.deleteFramebuffer(fbo)
-      pingPongFBOs = null
-    }
-    if (pingPongTextures) {
-      for (const tex of pingPongTextures) gl.deleteTexture(tex)
-      pingPongTextures = null
-    }
-  }
-
-  function cacheUniformLocations(): void {
-    if (!program || !gl) return
-    for (const name of uniformNames) {
-      uniformLocations.set(name, gl.getUniformLocation(program, name))
-    }
-  }
-
-  function getFallbackTexture(): WebGLTexture {
-    if (!gl) throw new Error('Renderer not initialized')
-    if (!fallbackTexture) {
-      const tex = gl.createTexture()
-      if (!tex) throw new Error('Failed to create fallback texture')
-      fallbackTexture = tex
-      gl.bindTexture(gl.TEXTURE_2D, fallbackTexture)
-      gl.texImage2D(
-        gl.TEXTURE_2D,
-        0,
-        gl.RGBA,
-        1,
-        1,
-        0,
-        gl.RGBA,
-        gl.UNSIGNED_BYTE,
-        new Uint8Array([0, 0, 0, 255])
-      )
-    }
-    return fallbackTexture
-  }
-
-  function init(width: number, height: number): boolean {
-    if (disposed) return false
-
+  function ensureTargets(s: SharedGL): boolean {
+    if (pingPong) return true
+    if (!width || !height) return false
     try {
-      canvas = new OffscreenCanvas(width, height)
-      const ctx = canvas.getContext('webgl2', {
-        alpha: true,
-        premultipliedAlpha: false,
-        preserveDrawingBuffer: true
-      })
-      if (!ctx) return false
-
-      gl = ctx
-
-      if (!gl.getExtension('EXT_color_buffer_float')) return false
-
-      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true)
-      vertexShader = compileShader(gl, gl.VERTEX_SHADER, VERTEX_SHADER_SOURCE)
-      initPingPongFBOs(gl, width, height)
+      pingPong = [makeTarget(s, width, height), makeTarget(s, width, height)]
       return true
     } catch {
-      dispose()
+      pingPong = null
       return false
     }
   }
 
-  function compileFragment(source: string): CompileResult {
-    if (disposed || !gl) return { success: false, log: 'Engine disposed' }
-
-    passCount = Math.min(detectPassCount(source), MAX_PASSES)
-
-    if (source === lastCompiledSource && program) {
-      return { success: true, log: '' }
+  function loc(s: SharedGL, name: string): WebGLUniformLocation | null {
+    if (!program) return null
+    let l = program.uniforms.get(name)
+    if (l === undefined) {
+      l = s.gl.getUniformLocation(program.program, name)
+      program.uniforms.set(name, l)
     }
-    lastCompiledSource = source
-
-    if (fragmentShader) {
-      gl.deleteShader(fragmentShader)
-      fragmentShader = null
-    }
-    if (program) {
-      gl.deleteProgram(program)
-      program = null
-    }
-    uniformLocations.clear()
-
-    try {
-      fragmentShader = compileShader(gl, gl.FRAGMENT_SHADER, source)
-    } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : String(e)
-      return { success: false, log: msg }
-    }
-
-    const prog = gl.createProgram()
-    if (!prog) return { success: false, log: 'Failed to create program' }
-
-    gl.attachShader(prog, vertexShader!)
-    gl.attachShader(prog, fragmentShader)
-    gl.linkProgram(prog)
-
-    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
-      const log = gl.getProgramInfoLog(prog) ?? 'Link failed'
-      gl.deleteProgram(prog)
-      return { success: false, log }
-    }
-
-    program = prog
-    cacheUniformLocations()
-    return { success: true, log: '' }
+    return l
   }
 
-  function setResolution(width: number, height: number): void {
-    if (disposed || !gl || !canvas) return
-    if (canvas.width !== width || canvas.height !== height) {
-      canvas.width = width
-      canvas.height = height
-      gl.viewport(0, 0, width, height)
-      destroyPingPongFBOs()
-      initPingPongFBOs(gl, width, height)
+  function getFallback(s: SharedGL): WebGLTexture {
+    if (fallbackTexture) return fallbackTexture
+    const g = s.gl
+    const tex = g.createTexture()
+    if (!tex) throw new Error('Failed to create fallback texture')
+    fallbackTexture = tex
+    g.bindTexture(g.TEXTURE_2D, fallbackTexture)
+    g.texImage2D(
+      g.TEXTURE_2D, 0, g.RGBA, 1, 1, 0, g.RGBA, g.UNSIGNED_BYTE,
+      new Uint8Array([0, 0, 0, 255])
+    )
+    return fallbackTexture
+  }
+
+  function init(w: number, h: number): boolean {
+    if (disposed) return false
+    width = w
+    height = h
+    const s = live()
+    if (!s) return false
+    return ensureTargets(s)
+  }
+
+  function compileFragment(source: string): CompileResult {
+    const s = live()
+    if (!s) return { success: false, log: 'WebGL2 unavailable' }
+    if (lastSource === source && program) return { success: true, log: '' }
+    try {
+      program = getSharedProgram(s, source)
+      lastSource = source
+      return { success: true, log: '' }
+    } catch (e: unknown) {
+      program = null
+      lastSource = null
+      return { success: false, log: e instanceof Error ? e.message : String(e) }
     }
+  }
+
+  function setResolution(w: number, h: number): void {
+    if (disposed || (w === width && h === height)) return
+    width = w
+    height = h
+    const s = live()
+    if (s) destroyPingPong(s)
+    pingPong = null
   }
 
   function setFloatUniform(index: number, value: number): void {
-    if (disposed || !program || !gl) return
-    const loc = uniformLocations.get(`u_float${index}`)
-    if (loc != null) {
-      gl.useProgram(program)
-      gl.uniform1f(loc, value)
-    }
+    const s = live()
+    if (!s || !program) return
+    s.gl.useProgram(program.program)
+    const l = loc(s, `u_float${index}`)
+    if (l != null) s.gl.uniform1f(l, value)
   }
 
   function setIntUniform(index: number, value: number): void {
-    if (disposed || !program || !gl) return
-    const loc = uniformLocations.get(`u_int${index}`)
-    if (loc != null) {
-      gl.useProgram(program)
-      gl.uniform1i(loc, value)
-    }
+    const s = live()
+    if (!s || !program) return
+    s.gl.useProgram(program.program)
+    const l = loc(s, `u_int${index}`)
+    if (l != null) s.gl.uniform1i(l, value)
   }
 
   function setBoolUniform(index: number, value: boolean): void {
-    if (disposed || !program || !gl) return
-    const loc = uniformLocations.get(`u_bool${index}`)
-    if (loc != null) {
-      gl.useProgram(program)
-      gl.uniform1i(loc, value ? 1 : 0)
-    }
+    const s = live()
+    if (!s || !program) return
+    s.gl.useProgram(program.program)
+    const l = loc(s, `u_bool${index}`)
+    if (l != null) s.gl.uniform1i(l, value ? 1 : 0)
   }
 
   function bindCurveTexture(index: number, lut: Float32Array): void {
-    if (disposed || !gl) return
     if (index < 0 || index >= maxCurves) return
-
-    if (curveTextures[index]) {
-      gl.deleteTexture(curveTextures[index])
-      curveTextures[index] = null
-    }
-
-    const texture = gl.createTexture()
-    if (!texture) return
-
-    const unit = maxInputs + index
-    gl.activeTexture(gl.TEXTURE0 + unit)
-    gl.bindTexture(gl.TEXTURE_2D, texture)
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false)
-    gl.texImage2D(
-      gl.TEXTURE_2D,
-      0,
-      gl.R16F,
-      lut.length,
-      1,
-      0,
-      gl.RED,
-      gl.FLOAT,
-      lut
-    )
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true)
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
-
-    curveTextures[index] = texture
+    curveData[index] = lut
+    const s = live()
+    if (!s) return
+    uploadCurve(s, index, lut)
   }
 
   function bindInputImage(index: number, image: TexImageSource): void {
-    if (disposed || !gl) return
+    const s = live()
+    if (!s) return
     if (index < 0 || index >= maxInputs) {
-      throw new Error(
-        `Input index ${index} out of range (max ${maxInputs - 1})`
-      )
+      throw new Error(`Input index ${index} out of range (max ${maxInputs - 1})`)
     }
-
-    if (inputTextures[index]) {
-      gl.deleteTexture(inputTextures[index])
-      inputTextures[index] = null
-    }
-
-    const texture = gl.createTexture()
+    const g = s.gl
+    if (inputTextures[index]) g.deleteTexture(inputTextures[index])
+    inputTextures[index] = null
+    const texture = g.createTexture()
     if (!texture) return
-
-    gl.activeTexture(gl.TEXTURE0 + index)
-    gl.bindTexture(gl.TEXTURE_2D, texture)
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image)
-
+    g.activeTexture(g.TEXTURE0 + index)
+    g.bindTexture(g.TEXTURE_2D, texture)
+    g.texParameteri(g.TEXTURE_2D, g.TEXTURE_WRAP_S, g.CLAMP_TO_EDGE)
+    g.texParameteri(g.TEXTURE_2D, g.TEXTURE_WRAP_T, g.CLAMP_TO_EDGE)
+    g.texParameteri(g.TEXTURE_2D, g.TEXTURE_MIN_FILTER, g.LINEAR)
+    g.texParameteri(g.TEXTURE_2D, g.TEXTURE_MAG_FILTER, g.LINEAR)
+    g.texImage2D(g.TEXTURE_2D, 0, g.RGBA, g.RGBA, g.UNSIGNED_BYTE, image)
     inputTextures[index] = texture
   }
 
   function render(): void {
-    if (disposed || !program || !pingPongFBOs || !gl || !canvas) return
+    const s = live()
+    if (!s || !program) return
+    if (!ensureTargets(s)) return
+    const g = s.gl
+    const canvas = s.canvas
+    const cw = Math.max(canvas.width, width)
+    const ch = Math.max(canvas.height, height)
+    if (canvas.width !== cw) canvas.width = cw
+    if (canvas.height !== ch) canvas.height = ch
 
-    gl.useProgram(program)
-    gl.disable(gl.BLEND)
+    g.useProgram(program.program)
+    g.disable(g.BLEND)
 
-    const resLoc = uniformLocations.get('u_resolution')
-    if (resLoc != null) {
-      gl.uniform2f(resLoc, canvas.width, canvas.height)
-    }
+    const resLoc = loc(s, 'u_resolution')
+    if (resLoc != null) g.uniform2f(resLoc, width, height)
 
     for (let i = 0; i < maxInputs; i++) {
-      const loc = uniformLocations.get(`u_image${i}`)
-      if (loc != null) {
-        gl.activeTexture(gl.TEXTURE0 + i)
-        gl.bindTexture(gl.TEXTURE_2D, inputTextures[i] ?? getFallbackTexture())
-        gl.uniform1i(loc, i)
+      const l = loc(s, `u_image${i}`)
+      if (l != null) {
+        g.activeTexture(g.TEXTURE0 + i)
+        g.bindTexture(g.TEXTURE_2D, inputTextures[i] ?? getFallback(s))
+        g.uniform1i(l, i)
       }
     }
 
     for (let i = 0; i < maxCurves; i++) {
-      const loc = uniformLocations.get(`u_curve${i}`)
-      if (loc != null && curveTextures[i]) {
+      const l = loc(s, `u_curve${i}`)
+      if (l != null && curveTextures[i]) {
         const unit = maxInputs + i
-        gl.activeTexture(gl.TEXTURE0 + unit)
-        gl.bindTexture(gl.TEXTURE_2D, curveTextures[i])
-        gl.uniform1i(loc, unit)
+        g.activeTexture(g.TEXTURE0 + unit)
+        g.bindTexture(g.TEXTURE_2D, curveTextures[i])
+        g.uniform1i(l, unit)
       }
     }
 
+    const passCount = program.passCount
     for (let pass = 0; pass < passCount; pass++) {
-      const passLoc = uniformLocations.get('u_pass')
-      if (passLoc != null) gl.uniform1i(passLoc, pass)
+      const passLoc = loc(s, 'u_pass')
+      if (passLoc != null) g.uniform1i(passLoc, pass)
 
       const isLastPass = pass === passCount - 1
       const writeIdx = pass % 2
 
       if (isLastPass) {
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null)
-        gl.drawBuffers([gl.BACK])
+        g.bindFramebuffer(g.FRAMEBUFFER, null)
+        g.drawBuffers([g.BACK])
+        g.viewport(0, canvas.height - height, width, height)
       } else {
-        gl.bindFramebuffer(gl.FRAMEBUFFER, pingPongFBOs[writeIdx])
-        gl.drawBuffers([gl.COLOR_ATTACHMENT0])
+        g.bindFramebuffer(g.FRAMEBUFFER, pingPong![writeIdx].fbo)
+        g.drawBuffers([g.COLOR_ATTACHMENT0])
+        g.viewport(0, 0, width, height)
       }
 
       if (pass > 0) {
-        const sourceTexture = pingPongTextures![(pass - 1) % 2]
-        gl.activeTexture(gl.TEXTURE0)
-        gl.bindTexture(gl.TEXTURE_2D, sourceTexture)
+        g.activeTexture(g.TEXTURE0)
+        g.bindTexture(g.TEXTURE_2D, pingPong![(pass - 1) % 2].tex)
       }
 
-      gl.clearColor(0, 0, 0, 0)
-      gl.clear(gl.COLOR_BUFFER_BIT)
-      gl.drawArrays(gl.TRIANGLES, 0, 3)
+      g.clearColor(0, 0, 0, 0)
+      g.clear(g.COLOR_BUFFER_BIT)
+      g.drawArrays(g.TRIANGLES, 0, 3)
     }
   }
 
   function readPixels(): ImageData {
-    if (!gl || !canvas) throw new Error('Renderer not initialized')
-    const w = canvas.width
-    const h = canvas.height
-    const pixels = new Uint8ClampedArray(w * h * 4)
-
-    gl.pixelStorei(gl.PACK_ROW_LENGTH, 0)
-    gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, pixels)
-
-    return new ImageData(pixels, w, h)
+    const s = live()
+    if (!s) throw new Error('Renderer not initialized')
+    const g = s.gl
+    const pixels = new Uint8ClampedArray(width * height * 4)
+    g.bindFramebuffer(g.FRAMEBUFFER, null)
+    g.pixelStorei(g.PACK_ROW_LENGTH, 0)
+    g.readPixels(0, s.canvas.height - height, width, height, g.RGBA,
+                 g.UNSIGNED_BYTE, pixels)
+    return new ImageData(pixels, width, height)
   }
 
   async function toBlob(): Promise<Blob> {
-    if (!canvas) throw new Error('Renderer not initialized')
-    return canvas.convertToBlob({ type: 'image/webp', quality: 0.92 })
+    const data = readPixels()
+    const c = document.createElement('canvas')
+    c.width = data.width
+    c.height = data.height
+    const ctx = c.getContext('2d')
+    if (!ctx) throw new Error('2D context unavailable')
+    ctx.putImageData(data, 0, 0)
+    return await new Promise<Blob>((res, rej) =>
+      c.toBlob((b) => (b ? res(b) : rej(new Error('toBlob failed'))),
+               'image/webp', 0.92))
   }
 
-  function getCanvas(): OffscreenCanvas | null {
-    return canvas
+  function getCanvas(): OffscreenCanvas | HTMLCanvasElement | null {
+    return ref?.canvas ?? null
+  }
+
+  function isContextLost(): boolean {
+    if (disposed || !ref) return false
+    return ref.lost || ref.gl.isContextLost()
   }
 
   function dispose(): void {
     if (disposed) return
     disposed = true
-    if (!gl) return
-
-    for (const tex of inputTextures) {
-      if (tex) gl.deleteTexture(tex)
+    instanceCount--
+    const s = ref
+    ref = null
+    if (s && !s.lost && !s.gl.isContextLost()) {
+      for (const tex of inputTextures) {
+        if (tex) s.gl.deleteTexture(tex)
+      }
+      for (const tex of curveTextures) {
+        if (tex) s.gl.deleteTexture(tex)
+      }
+      if (fallbackTexture) s.gl.deleteTexture(fallbackTexture)
+      destroyPingPong(s)
     }
-    inputTextures.fill(null)
-
-    for (const tex of curveTextures) {
-      if (tex) gl.deleteTexture(tex)
-    }
-    curveTextures.fill(null)
-
-    if (fallbackTexture) {
-      gl.deleteTexture(fallbackTexture)
-      fallbackTexture = null
-    }
-
-    destroyPingPongFBOs()
-
-    if (fragmentShader) {
-      gl.deleteShader(fragmentShader)
-      fragmentShader = null
-    }
-    if (vertexShader) {
-      gl.deleteShader(vertexShader)
-      vertexShader = null
-    }
-
-    if (program) {
-      gl.deleteProgram(program)
-      program = null
-    }
-
-    uniformLocations.clear()
-
-    const ext = gl.getExtension('WEBGL_lose_context')
-    ext?.loseContext()
+    resetLocalHandles()
+    releaseSharedIfIdle()
   }
 
   return {
@@ -496,6 +528,7 @@ export function useGLSLRenderer(config: GLSLRendererConfig = DEFAULT_CONFIG) {
     readPixels,
     toBlob,
     getCanvas,
+    isContextLost,
     dispose
   }
 }
