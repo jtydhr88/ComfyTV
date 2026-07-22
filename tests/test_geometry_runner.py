@@ -87,8 +87,18 @@ def fake_mesh3d(monkeypatch):
     prims = types.ModuleType("ComfyTV.mesh3d.primitives")
     prims.make_primitive = record("make_primitive", mesh)
 
+    lineart = types.ModuleType("ComfyTV.mesh3d.lineart")
+
+    def _fake_lineart(*args, **kwargs):
+        seen.setdefault("lineart_image", []).append({"args": args, "kwargs": kwargs})
+        from PIL import Image
+        return Image.new("RGB", (8, 8)), {"feature_edges": 12, "visible_ratio": 0.5}
+
+    lineart.lineart_image = _fake_lineart
+
     import ComfyTV.mesh3d as pkg
-    for name, mod in (("ops", ops), ("io3d", io3d), ("primitives", prims)):
+    for name, mod in (("ops", ops), ("io3d", io3d), ("primitives", prims),
+                      ("lineart", lineart)):
         monkeypatch.setitem(sys.modules, f"ComfyTV.mesh3d.{name}", mod)
         monkeypatch.setattr(pkg, name, mod, raising=False)
     seen["mesh"] = mesh
@@ -213,6 +223,19 @@ def test_bake_maps_model_requires_uvs(fake_mesh3d, model_url):
     fake_mesh3d["mesh"].uvs = None
     with pytest.raises(RuntimeError):
         rg.bake_maps_model(model_url, model_url)
+
+
+def test_lineart_model_roundtrip(fake_mesh3d, model_url):
+    cam = {"position": [0, 0, 4], "target": [0, 0, 0], "fov": 45}
+    payload, stats = rg.lineart_model(model_url, camera=cam, width=512, height=256,
+                                      thickness=3.0, crease=False, invert=True)
+    _out_path(payload, ".png")
+    assert stats["feature_edges"] == 12
+    kw = fake_mesh3d["lineart_image"][0]["kwargs"]
+    assert kw["camera"] == cam
+    assert kw["width"] == 512 and kw["height"] == 256
+    assert kw["thickness"] == 3.0
+    assert kw["crease"] is False and kw["invert"] is True
 
 
 def test_get_model_info(fake_mesh3d, model_url):

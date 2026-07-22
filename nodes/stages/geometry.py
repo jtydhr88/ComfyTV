@@ -1,8 +1,8 @@
 from ._common import *  # noqa: F401, F403
 from ...runners.geometry import (
     bake_maps_model, boolean_model, decimate_model, export_model,
-    fill_holes_model, primitive_recipe, remesh_model, smooth_normals_model,
-    subdivide_model, unwrap_model, weld_model,
+    fill_holes_model, lineart_model, primitive_recipe, remesh_model,
+    smooth_normals_model, subdivide_model, unwrap_model, weld_model,
 )
 from .loaders import _captured_image_input
 
@@ -248,6 +248,79 @@ class MeshBooleanStage(io.ComfyNode):
                                 params={'op': 'boolean', 'stats': stats},
                                 parent_output_id=parent_output_id,
                                 picked_payload=captured_image or "")
+
+
+class LineArtStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.LineArtStage",
+            display_name="Line Art",
+            category="ComfyTV/3D",
+            inputs=[
+                *_standard_stage_inputs(),
+                io.Int.Input("width", default=1024, min=256, max=4096, step=64,
+                             socketless=True, extra_dict={"hidden": True}),
+                io.Int.Input("height", default=1024, min=256, max=4096, step=64,
+                             socketless=True, extra_dict={"hidden": True}),
+                io.Float.Input("thickness", default=2.0, min=0.5, max=8.0, step=0.5,
+                               socketless=True, extra_dict={"hidden": True},
+                               tooltip="Line width in output pixels."),
+                io.Boolean.Input("silhouette", default=True,
+                                 socketless=True, extra_dict={"hidden": True},
+                                 tooltip="Edges where the surface turns away from the camera."),
+                io.Boolean.Input("crease", default=True,
+                                 socketless=True, extra_dict={"hidden": True},
+                                 tooltip="Sharp edges — dihedral angle above the crease angle."),
+                io.Boolean.Input("boundary", default=True,
+                                 socketless=True, extra_dict={"hidden": True},
+                                 tooltip="Open-mesh border edges."),
+                io.Float.Input("crease_angle", default=60.0, min=1.0, max=179.0, step=1.0,
+                               socketless=True, extra_dict={"hidden": True},
+                               tooltip="Angle between face normals (deg) above which an edge "
+                                       "counts as a crease."),
+                io.Boolean.Input("occlusion", default=True,
+                                 socketless=True, extra_dict={"hidden": True},
+                                 tooltip="Hide lines behind the surface (BVH ray test). "
+                                         "Off = wireframe-style see-through."),
+                io.Boolean.Input("invert", default=False,
+                                 socketless=True, extra_dict={"hidden": True},
+                                 tooltip="Off: white lines on black (ControlNet lineart). "
+                                         "On: black lines on white."),
+                io.String.Input("camera", default="", socketless=True,
+                                extra_dict={"hidden": True},
+                                tooltip="Internal — view camera (position/target/fov JSON) "
+                                        "set by the node body; empty = auto-framed."),
+                COMFYTV_MODEL.Input("model", optional=True),
+            ],
+            outputs=[COMFYTV_IMAGE.Output("image")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
+                width=1024, height=1024, thickness=2.0,
+                silhouette=True, crease=True, boundary=True, crease_angle=60.0,
+                occlusion=True, invert=False, camera="", model=""):
+        _require_model("Line Art", model)
+        cam = None
+        if (camera or '').strip():
+            try:
+                cam = json.loads(camera)
+            except (ValueError, TypeError):
+                cam = None
+        if not isinstance(cam, dict):
+            cam = None
+        png_url, stats = lineart_model(
+            model, camera=cam, width=int(width), height=int(height),
+            thickness=float(thickness), silhouette=bool(silhouette), crease=bool(crease),
+            boundary=bool(boundary), crease_angle=float(crease_angle),
+            occlusion=bool(occlusion), invert=bool(invert))
+        return _stage_emit_auto(cls, project_id=project_id, payload_str=png_url,
+                                params={'op': 'lineart', 'stats': stats},
+                                parent_output_id=parent_output_id)
 
 
 class MeshBakeMapsStage(io.ComfyNode):

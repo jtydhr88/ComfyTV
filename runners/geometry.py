@@ -236,6 +236,23 @@ def export_model(view_url: str, fmt: str = 'glb'):
     return path_to_view_url(out), ops.mesh_stats(mesh)
 
 
+def lineart_model(view_url: str, camera: dict = None, width: int = 1024, height: int = 1024,
+                  thickness: float = 2.0, silhouette: bool = True, crease: bool = True,
+                  boundary: bool = True, crease_angle: float = 60.0,
+                  occlusion: bool = True, invert: bool = False):
+    """Render a model's feature lines to a PNG; returns (png_view_url, stats)."""
+    from ..mesh3d.lineart import lineart_image
+    mesh = load_model_mesh(view_url)
+    img, stats = lineart_image(
+        mesh, camera=camera, width=int(width), height=int(height),
+        thickness=float(thickness), silhouette=bool(silhouette), crease=bool(crease),
+        boundary=bool(boundary), crease_angle=float(crease_angle),
+        occlusion=bool(occlusion), invert=bool(invert))
+    out = fresh_output_path('.png', _SUBFOLDER)
+    img.save(out)
+    return path_to_view_url(out), stats
+
+
 def get_model_info(view_url: str) -> dict:
     """Face/vert counts + attribute presence for a model URL (card header info)."""
     from ..mesh3d import ops

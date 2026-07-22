@@ -40,12 +40,15 @@ def calls(monkeypatch):
     monkeypatch.setattr(geometry, "bake_maps_model",
                         record("bake", extra=("/view?filename=maps.png&type=output",
                                               {"baked": ["normal", "ao"]})))
+    monkeypatch.setattr(geometry, "lineart_model",
+                        record("lineart", payload="/view?filename=lineart.png&type=output"))
     return seen
 
 
 class TestSchemas:
     @pytest.mark.parametrize("cls_name", [
         "MeshOpStage", "MeshPrimitiveStage", "MeshBooleanStage", "MeshBakeMapsStage",
+        "LineArtStage",
     ])
     def test_define_schema(self, cls_name):
         cls = getattr(geometry, cls_name)
@@ -150,6 +153,35 @@ class TestBooleanStage:
         with pytest.raises(RuntimeError):
             geometry.MeshBooleanStage.execute(project_id="default", operation="union",
                                               model=MODEL_URL, model_b="")
+
+
+class TestLineArtStage:
+    def test_execute_passes_params_and_camera(self, reset_db, calls):
+        cam = {"position": [0, 1, 4], "target": [0, 0, 0], "fov": 50}
+        out = geometry.LineArtStage.execute(
+            project_id="default", model=MODEL_URL, width=512, height=768,
+            thickness=3.0, crease_angle=45.0, invert=True,
+            camera=json.dumps(cam))
+        kw = calls["lineart"]["kwargs"]
+        assert kw["camera"] == cam
+        assert kw["width"] == 512 and kw["height"] == 768
+        assert kw["thickness"] == 3.0 and kw["crease_angle"] == 45.0
+        assert kw["invert"] is True
+        assert "lineart.png" in out.values[0]
+
+    def test_bad_camera_json_falls_back_to_auto(self, reset_db, calls):
+        geometry.LineArtStage.execute(project_id="default", model=MODEL_URL,
+                                      camera="{not json")
+        assert calls["lineart"]["kwargs"]["camera"] is None
+
+    def test_empty_camera_is_auto(self, reset_db, calls):
+        geometry.LineArtStage.execute(project_id="default", model=MODEL_URL, camera="")
+        assert calls["lineart"]["kwargs"]["camera"] is None
+
+    def test_missing_model_raises(self, reset_db, calls):
+        with pytest.raises(RuntimeError):
+            geometry.LineArtStage.execute(project_id="default", model="")
+        assert not calls
 
 
 class TestBakeStage:

@@ -1482,6 +1482,26 @@
     "thetaLength": "纬度跨度",
     "arc": "弧度"
   },
+  "lineArt": {
+    "noInputModel": "连接一个 3D 模型后即可出线稿",
+    "model": "模型",
+    "result": "线稿",
+    "orbitHint": "拖动摆好视角，运行时以当前视角出图",
+    "width": "宽度",
+    "height": "高度",
+    "thickness": "线宽",
+    "silhouette": "轮廓线",
+    "crease": "折痕线",
+    "creaseAngle": "折痕角度",
+    "boundary": "边界线",
+    "occlusion": "遮挡剔除",
+    "invert": "黑线白底",
+    "on": "开",
+    "off": "关",
+    "processing": "线稿渲染中…",
+    "done": "完成——结果见上方视口",
+    "frameThenRun": "摆好视角后点击运行"
+  },
   "meshOps": {
     "operation": "操作",
     "op": {

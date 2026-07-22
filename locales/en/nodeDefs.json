@@ -216,6 +216,9 @@
     "MeshBooleanStage": {
       "display_name": "Mesh Boolean"
     },
+    "LineArtStage": {
+      "display_name": "Line Art"
+    },
     "VideoColorStage": {
       "display_name": "Video Color"
     },
@@ -1969,6 +1972,20 @@
       "1": {
         "name": "Image",
         "tooltip": "Viewport snapshot, or the UV atlas when the operation is unwrap."
+      }
+    }
+  },
+  "ComfyTV_LineArtStage": {
+    "display_name": "Line Art",
+    "inputs": {
+      "model": {
+        "name": "model"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "image",
+        "tooltip": "Feature-line render — ready to use as a ControlNet lineart condition image."
       }
     }
   },

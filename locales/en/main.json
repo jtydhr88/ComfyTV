@@ -1482,6 +1482,26 @@
     "thetaLength": "Theta length",
     "arc": "Arc"
   },
+  "lineArt": {
+    "noInputModel": "Wire in a 3D model to render line art",
+    "model": "Model",
+    "result": "Line art",
+    "orbitHint": "Orbit to frame the view — the render uses this camera",
+    "width": "Width",
+    "height": "Height",
+    "thickness": "Line width",
+    "silhouette": "Silhouette",
+    "crease": "Creases",
+    "creaseAngle": "Crease angle",
+    "boundary": "Boundaries",
+    "occlusion": "Occlusion",
+    "invert": "Black on white",
+    "on": "On",
+    "off": "Off",
+    "processing": "Rendering line art…",
+    "done": "Done — see the viewport above",
+    "frameThenRun": "Frame the view, then run"
+  },
   "meshOps": {
     "operation": "Operation",
     "op": {

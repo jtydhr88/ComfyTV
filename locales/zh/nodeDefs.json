@@ -216,6 +216,9 @@
     "MeshBooleanStage": {
       "display_name": "网格布尔"
     },
+    "LineArtStage": {
+      "display_name": "3D 线稿"
+    },
     "VideoColorStage": {
       "display_name": "视频调色"
     },
@@ -1969,6 +1972,20 @@
       "1": {
         "name": "图像",
         "tooltip": "视口截图；UV 展开操作时为 UV 图集。"
+      }
+    }
+  },
+  "ComfyTV_LineArtStage": {
+    "display_name": "3D 线稿",
+    "inputs": {
+      "model": {
+        "name": "模型"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "图像",
+        "tooltip": "特征线渲染图——可直接作为 ControlNet lineart 条件图。"
       }
     }
   },

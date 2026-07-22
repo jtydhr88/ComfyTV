@@ -296,6 +296,14 @@ onBeforeUnmount(() => {
 })
 
 defineExpose({
+  cameraState(): { position: number[]; target: number[]; fov: number } | null {
+    if (!camera || !controls) return null
+    return {
+      position: camera.position.toArray(),
+      target: controls.target.toArray(),
+      fov: camera.fov,
+    }
+  },
   captureCanvas(width: number, height: number): HTMLCanvasElement | null {
     if (!view || !scene || !camera) return null
     const captureCamera = camera.clone()
