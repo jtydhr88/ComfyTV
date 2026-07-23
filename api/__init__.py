@@ -6,6 +6,7 @@ from . import stages     # noqa: F401
 from . import stage_params  # noqa: F401
 from . import workflows  # noqa: F401
 from . import storyboard # noqa: F401
+from . import storyboard_editor  # noqa: F401
 from . import servers    # noqa: F401
 from . import scene3d_assets  # noqa: F401
 from . import resources  # noqa: F401

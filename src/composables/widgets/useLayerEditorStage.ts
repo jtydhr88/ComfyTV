@@ -107,9 +107,37 @@ function migrateState(raw: string): unknown {
   return { width: o.width, height: o.height, root: { kind: 'group', children } }
 }
 
+export interface LayerEditorStorage {
+  subfolder: string
+  readState(): string
+  writeState(json: string, width: number, height: number): void
+  readCapturedImage(): string
+  beginCapture(): (url: string, stale: boolean) => void
+  commitBatch(json: string): void
+}
+
+export function widgetStorage(node: LGraphNode): LayerEditorStorage {
+  return {
+    subfolder: SUBFOLDER,
+    readState: () => readWidgetStr(node, STATE_WIDGET, '{}'),
+    writeState: (json, width, height) => {
+      writeWidget(node, STATE_WIDGET, json, { fireCallback: false })
+      writeWidget(node, WIDTH_WIDGET, width, { fireCallback: false })
+      writeWidget(node, HEIGHT_WIDGET, height, { fireCallback: false })
+    },
+    readCapturedImage: () => readWidgetStr(node, IMAGE_WIDGET, ''),
+    beginCapture: () => (url, stale) => {
+      if (stale) return
+      writeWidget(node, IMAGE_WIDGET, url, { fireCallback: false })
+    },
+    commitBatch: (json) => writeWidget(node, IMAGES_WIDGET, json, { fireCallback: false }),
+  }
+}
+
 export interface UseLayerEditorStageOptions {
   onCaptured?: (url: string) => void
   onBatchCaptured?: (json: string) => void
+  storage?: LayerEditorStorage
 }
 
 function toastError(detail: string): void {
@@ -143,6 +171,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
   registerBuiltinKinds()
   registerBuiltinTools()
 
+  const storage = opts?.storage ?? widgetStorage(node)
   const version = ref(0)
   const tool = ref<ToolId>('select')
   const brushSize = ref(40)
@@ -159,7 +188,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
   const shapeCombine = ref(false)
   const editingTextId = ref<string | null>(null)
   const capturing = ref(false)
-  const capturedImageUrl = shallowRef<string>(readWidgetStr(node, IMAGE_WIDGET, ''))
+  const capturedImageUrl = shallowRef<string>(storage.readCapturedImage())
   const activeId = ref<string | null>(null)
   const glOk = ref(true)
 
@@ -305,9 +334,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
 
   function persistRaw(json: string): void {
     lastPersisted = json
-    writeWidget(node, STATE_WIDGET, json, { fireCallback: false })
-    writeWidget(node, WIDTH_WIDGET, editor.document().width, { fireCallback: false })
-    writeWidget(node, HEIGHT_WIDGET, editor.document().height, { fireCallback: false })
+    storage.writeState(json, editor.document().width, editor.document().height)
   }
   function persist(): void {
     persistRaw(JSON.stringify(editor.serialize()))
@@ -332,7 +359,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
           continue
         }
         const blob = await canvasToBlob(job.canvas)
-        const res = await uploadBlobNamed(blob, { subfolder: SUBFOLDER, filename: `comfytv-layer-${node.id}-${job.contentId}.png` })
+        const res = await uploadBlobNamed(blob, { subfolder: storage.subfolder, filename: `comfytv-layer-${node.id}-${job.contentId}.png` })
         job.commitUrl(res.url)
         content.markUploaded(job.contentId, res.url)
       }
@@ -368,14 +395,30 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     const seq = ++captureSeq
     try {
       editor.render()
-      const url = await uploadCanvas(flattenComposite(), { subfolder: SUBFOLDER, filenamePrefix: `comfytv-cap-${node.id}` })
-      if (seq !== captureSeq) return
+      const snapshot = flattenComposite()
+      const commit = storage.beginCapture()
+      const url = await uploadCanvas(snapshot, { subfolder: storage.subfolder, filenamePrefix: `comfytv-cap-${node.id}` })
+      const stale = seq !== captureSeq
+      commit(url, stale)
+      if (stale) return
       capturedImageUrl.value = url
-      writeWidget(node, IMAGE_WIDGET, url, { fireCallback: false })
       opts?.onCaptured?.(url)
     } catch {
       toastError(t('layerEditor.captureFailed'))
     }
+  }
+  function flushCapture(): void {
+    if (captureTimer == null) return
+    window.clearTimeout(captureTimer)
+    captureTimer = null
+    void runCapture()
+  }
+  function cancelPendingCapture(): void {
+    if (captureTimer != null) {
+      window.clearTimeout(captureTimer)
+      captureTimer = null
+    }
+    captureSeq += 1
   }
 
   async function captureBatch(): Promise<void> {
@@ -383,9 +426,10 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     capturing.value = true
     try {
       editor.render()
-      const compositeUrl = await uploadCanvas(flattenComposite(), { subfolder: SUBFOLDER, filenamePrefix: `comfytv-cap-${node.id}` })
+      const commit = storage.beginCapture()
+      const compositeUrl = await uploadCanvas(flattenComposite(), { subfolder: storage.subfolder, filenamePrefix: `comfytv-cap-${node.id}` })
+      commit(compositeUrl, false)
       capturedImageUrl.value = compositeUrl
-      writeWidget(node, IMAGE_WIDGET, compositeUrl, { fireCallback: false })
       opts?.onCaptured?.(compositeUrl)
 
       const children = editor.document().root.children
@@ -397,7 +441,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
           if (!saved[i] || children[i].kind === 'adjustment') continue
           children.forEach((n, j) => (n.visible = j === i))
           editor.render()
-          const url = await uploadCanvas(flattenComposite(), { subfolder: SUBFOLDER, filenamePrefix: `comfytv-layer-${node.id}` })
+          const url = await uploadCanvas(flattenComposite(), { subfolder: storage.subfolder, filenamePrefix: `comfytv-layer-${node.id}` })
           images.push({ index: idx++, label: children[i].name, image_url: url })
         }
       } finally {
@@ -405,7 +449,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
         editor.render()
       }
       const json = JSON.stringify({ images })
-      writeWidget(node, IMAGES_WIDGET, json, { fireCallback: false })
+      storage.commitBatch(json)
       opts?.onBatchCaptured?.(json)
     } catch {
       toastError(t('layerEditor.captureFailed'))
@@ -558,6 +602,9 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
   }
   function flattenImage(): void {
     editor.flattenImage()
+  }
+  function flipImage(axis: 'h' | 'v'): void {
+    editor.flipImage(axis)
   }
   function cropToContent(id: string): void {
     editor.cropToContent(id)
@@ -809,14 +856,14 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
   }
   function loadDocument(): void {
     lastPersisted = null
-    editor.loadJSON(migrateState(readWidgetStr(node, STATE_WIDGET, '{}')))
+    editor.loadJSON(migrateState(storage.readState()))
     lastPersisted = JSON.stringify(editor.serialize())
     if (glOk.value) compositor.resize(editor.document().width, editor.document().height)
   }
   function loadFromNode(): void {
     loadDocument()
     editingTextId.value = null
-    capturedImageUrl.value = readWidgetStr(node, IMAGE_WIDGET, '')
+    capturedImageUrl.value = storage.readCapturedImage()
     void hydrate()
     fitView()
   }
@@ -851,9 +898,10 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     setActiveLayer, setOpacity, setBlendMode, toggleVisible, toggleLock, renameLayer,
     addMask, removeMask, toggleMaskEnabled, updateTextLayer,
     setArtboardSize, nudgeActive,
-    captureBatch,
+    captureBatch, flushCapture, cancelPendingCapture, reload: loadFromNode,
+    documentIsEmpty: () => editor.document().root.children.length === 0,
     addEmptyLayer, floating, anchorFloating, cancelFloating,
-    mergeDown, flattenImage, cropToContent, layerToCanvasSize, toggleLockAlpha,
+    mergeDown, flattenImage, flipImage, cropToContent, layerToCanvasSize, toggleLockAlpha,
     selectAll, selectNone, invertSelection,
     addAdjustmentLayer, updateAdjustment, updateVectorStyle,
     addFillLayer, updateFillLayer,

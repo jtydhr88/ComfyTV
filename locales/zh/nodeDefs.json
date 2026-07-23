@@ -1819,6 +1819,33 @@
       }
     }
   },
+  "ComfyTV_StoryboardEditorStage": {
+    "display_name": "故事板工作台",
+    "inputs": {
+      "storyboard": {
+        "name": "分镜",
+        "tooltip": "可选 — 连接 Storyboard 节点后可一键导入分镜为画板。"
+      },
+      "images": {
+        "name": "图组",
+        "tooltip": "可选 — 连接图组后可一键铺板（每张图一块板）。"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "图像",
+        "tooltip": "封面画板的合成图。"
+      },
+      "1": {
+        "name": "图像组",
+        "tooltip": "每块画板一张合成图，按镜头顺序排列。"
+      },
+      "2": {
+        "name": "视频",
+        "tooltip": "最近一次导出的动画稿视频（按板时长串片）。"
+      }
+    }
+  },
   "ComfyTV_Model3DStage": {
     "display_name": "3D 模型阶段",
     "inputs": {

@@ -99,6 +99,7 @@ EXPECTED_NODE_IDS = [
     'ComfyTV.SequenceStage',
     'ComfyTV.SpeechStage',
     'ComfyTV.SplitPartStage',
+    'ComfyTV.StoryboardEditorStage',
     'ComfyTV.SubtitleGenStage',
     'ComfyTV.SubtitleStage',
     'ComfyTV.TextStage',

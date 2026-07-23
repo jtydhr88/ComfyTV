@@ -1,12 +1,14 @@
 import { BakeRasterCommand, snapshotRaster } from '../commands/bakeContent'
+import { PropCommand } from '../commands/prop'
+import { SetContentCommand } from '../commands/setContent'
 import { AddNodeCommand, RemoveNodeCommand, ReorderCommand } from '../commands/structure'
 import type { Compositor, CompositeInput } from '../compositor'
 import type { ContentStore } from '../content'
 import { findNode, type Document } from '../document'
-import { CommandGroup, History } from '../history'
+import { CommandGroup, Dirty, History } from '../history'
 import { DefaultContentStore } from '../impl/contentStore'
 import { defaultMode, resolveMode } from '../mode'
-import type { GroupData, RasterData, SceneNode, Transform, Vec2 } from '../node'
+import type { GroupData, RasterData, SceneNode, Transform, Vec2, VectorData } from '../node'
 import { getNodeKind } from '../nodeKind'
 import type { BrushParams } from '../paint'
 import { getPaintCore } from '../paint'
@@ -17,7 +19,8 @@ import { getTool, type Tool, type ToolContext } from '../tool'
 import { addTransformBox } from '../tools/overlayBox'
 import { angleTo, applyMove, applyResize, applyRotate, hitHandle, insideBox, type HandleId } from '../tools/transformMath'
 import { textBitmap } from '../kinds/text'
-import { vectorBitmap } from '../kinds/vector'
+import { deriveVectorTransform, vectorBitmap } from '../kinds/vector'
+import { clonePath, transformPath, type PathData } from '../vector'
 import { fillBitmap } from '../kinds/fill'
 import { groupKind } from '../kinds/group'
 import { DEFAULT_SHAPE_OPTIONS, type ShapeToolOptions } from '../tools/shapeTool'
@@ -105,6 +108,7 @@ export interface Editor {
   cancelFloating(): void
   mergeDown(id: string): boolean
   flattenImage(): boolean
+  flipImage(axis: 'h' | 'v'): boolean
   cropToContent(id: string): boolean
   layerToCanvasSize(id: string): boolean
   selectionBounds(): Rect | null
@@ -683,6 +687,85 @@ export function createEditor(opts: EditorOptions): Editor {
       children.push(flat)
       group.children.push(new AddNodeCommand('Flatten Result', doc.root, flat, 0))
       activeId = flat.id
+      history.push(group)
+      refresh()
+      return true
+    },
+    flipImage(axis) {
+      if (floating) anchorFloatingImpl()
+      const W = doc.width
+      const H = doc.height
+      const group = new CommandGroup(axis === 'h' ? 'Flip Horizontal' : 'Flip Vertical')
+
+      const flipCanvas = (src: HTMLCanvasElement): HTMLCanvasElement | null => {
+        const c = document.createElement('canvas')
+        c.width = src.width
+        c.height = src.height
+        const g = c.getContext('2d')
+        if (!g) return null
+        if (axis === 'h') {
+          g.translate(src.width, 0)
+          g.scale(-1, 1)
+        } else {
+          g.translate(0, src.height)
+          g.scale(1, -1)
+        }
+        g.drawImage(src, 0, 0)
+        return c
+      }
+      const flipSlot = (slot: { contentId: string; url?: string }, label: string): void => {
+        const entry = content.get(slot.contentId)
+        if (!entry) return
+        const flipped = flipCanvas(entry.canvas)
+        if (!flipped) return
+        const cmd = new SetContentCommand(label, slot, slot.contentId, content.register(flipped), content, slot.url)
+        cmd.apply('redo')
+        group.children.push(cmd)
+      }
+      const pushTransform = (n: SceneNode): void => {
+        const before = { ...n.transform }
+        const after: Transform = axis === 'h'
+          ? { ...n.transform, x: W - n.transform.x - n.transform.w, rotation: -n.transform.rotation }
+          : { ...n.transform, y: H - n.transform.y - n.transform.h, rotation: -n.transform.rotation }
+        n.transform = after
+        group.children.push(new PropCommand('Flip', Dirty.DRAWABLE,
+          () => n.transform, (v) => (n.transform = v), before, after))
+      }
+      const walk = (nodes: SceneNode[]): void => {
+        for (const n of nodes) {
+          if (n.mask?.contentId) flipSlot(n.mask, 'Flip Mask')
+          switch (n.kind) {
+            case 'group':
+              walk((n as GroupData).children)
+              break
+            case 'raster':
+              flipSlot(n as RasterData, 'Flip Layer')
+              pushTransform(n)
+              break
+            case 'vector': {
+              const v = n as VectorData
+              const snapshot = () => ({ path: clonePath(v.path), transform: { ...v.transform } })
+              const restore = (s: { path: PathData; transform: Transform }) => {
+                v.path = clonePath(s.path)
+                v.transform = { ...s.transform }
+              }
+              const before = snapshot()
+              v.path = transformPath(v.path, (p) =>
+                axis === 'h' ? { x: W - p.x, y: p.y } : { x: p.x, y: H - p.y })
+              v.transform = deriveVectorTransform(v.path, v.stroke?.width ?? 0)
+              group.children.push(new PropCommand('Flip', Dirty.DRAWABLE, snapshot, restore, before, snapshot()))
+              break
+            }
+            case 'fill':
+            case 'adjustment':
+              break
+            default:
+              pushTransform(n)
+          }
+        }
+      }
+      walk(doc.root.children)
+      if (group.empty) return false
       history.push(group)
       refresh()
       return true

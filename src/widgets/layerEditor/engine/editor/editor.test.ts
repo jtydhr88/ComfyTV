@@ -56,6 +56,7 @@ function stub2d(): () => void {
       restore: () => {},
       translate: () => {},
       rotate: () => {},
+      scale: () => {},
       drawImage: () => {},
       fillRect: () => {},
       clearRect: () => {},
@@ -127,6 +128,68 @@ describe('createEditor — end-to-end orchestration', () => {
     expect(editor.document().root.children).toHaveLength(0)
     editor.undo()
     expect(editor.document().root.children).toHaveLength(1)
+  })
+
+  it('flipImage mirrors transforms, swaps raster content, and undoes as one step', () => {
+    const restore = stub2d()
+    try {
+      const editor = setup()
+      const canvas = document.createElement('canvas')
+      canvas.width = 64
+      canvas.height = 32
+      const cid = editor.content.register(canvas)
+      const r = rasterKind.create({
+        name: 'photo', contentId: cid, naturalWidth: 64, naturalHeight: 32,
+        transform: { x: 100, y: 40, w: 200, h: 80, rotation: 0.5 },
+      })
+      editor.addNode(r)
+
+      expect(editor.flipImage('h')).toBe(true)
+      expect(r.transform.x).toBe(1024 - 100 - 200)
+      expect(r.transform.y).toBe(40)
+      expect(r.transform.rotation).toBe(-0.5)
+      expect(r.contentId).not.toBe(cid)
+      expect(editor.content.get(r.contentId)).toBeDefined()
+
+      editor.undo()
+      expect(r.transform.x).toBe(100)
+      expect(r.transform.rotation).toBe(0.5)
+      expect(r.contentId).toBe(cid)
+
+      editor.redo()
+      expect(r.transform.x).toBe(724)
+    } finally {
+      restore()
+    }
+  })
+
+  it('flipImage twice restores geometry (involution) and flips vertically', () => {
+    const restore = stub2d()
+    try {
+      const editor = setup()
+      const canvas = document.createElement('canvas')
+      canvas.width = 8
+      canvas.height = 8
+      const r = rasterKind.create({
+        contentId: editor.content.register(canvas), naturalWidth: 8, naturalHeight: 8,
+        transform: { x: 10, y: 20, w: 50, h: 60, rotation: 0 },
+      })
+      editor.addNode(r)
+
+      editor.flipImage('v')
+      expect(r.transform.y).toBe(1024 - 20 - 60)
+      expect(r.transform.x).toBe(10)
+      editor.flipImage('v')
+      expect(r.transform.y).toBe(20)
+    } finally {
+      restore()
+    }
+  })
+
+  it('flipImage on an empty document is a no-op', () => {
+    const editor = setup()
+    expect(editor.flipImage('h')).toBe(false)
+    expect(editor.history.canUndo()).toBe(false)
   })
 
   it('serializes the full document (width/height/root/channels)', () => {

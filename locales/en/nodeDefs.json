@@ -1819,6 +1819,33 @@
       }
     }
   },
+  "ComfyTV_StoryboardEditorStage": {
+    "display_name": "Storyboard Editor",
+    "inputs": {
+      "storyboard": {
+        "name": "storyboard",
+        "tooltip": "Optional - connect a Storyboard node to import its shots as boards."
+      },
+      "images": {
+        "name": "images",
+        "tooltip": "Optional - connect an images batch to seed one board per image."
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Image",
+        "tooltip": "Composite of the cover board."
+      },
+      "1": {
+        "name": "Images",
+        "tooltip": "One composite per board, in shot order."
+      },
+      "2": {
+        "name": "Video",
+        "tooltip": "The last exported animatic video (boards timed back-to-back)."
+      }
+    }
+  },
   "ComfyTV_Model3DStage": {
     "display_name": "3D Model Stage",
     "inputs": {

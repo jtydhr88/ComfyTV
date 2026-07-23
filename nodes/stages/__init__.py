@@ -82,6 +82,7 @@ from .geometry import (
 )
 from .scene3d import Scene3DStage
 from .layer_editor import LayerEditorStage
+from .storyboard_editor import StoryboardEditorStage
 from .material import MaterialStage
 from .split_part import SplitPartStage, MaskCleanup
 
@@ -132,6 +133,7 @@ class ComfyTVExtension(ComfyExtension):
             MeshOpStage, MeshPrimitiveStage, MeshBooleanStage, MeshBakeMapsStage,
             Scene3DStage,
             LayerEditorStage,
+            StoryboardEditorStage,
             MaterialStage,
             SplitPartStage, MaskCleanup,
             *_bridge_classes(),

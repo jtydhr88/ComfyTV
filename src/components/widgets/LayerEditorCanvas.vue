@@ -16,6 +16,7 @@
   >
     <div ref="containerRef" class="ctv:absolute ctv:top-0 ctv:left-0 ctv:pointer-events-none">
       <canvas ref="mainRef" class="ctv:absolute ctv:top-0 ctv:left-0 ctv:size-full" />
+      <slot name="onion" />
       <canvas ref="overlayRef" class="ctv:absolute ctv:top-0 ctv:left-0 ctv:size-full" />
     </div>
 
