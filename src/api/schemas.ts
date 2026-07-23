@@ -469,6 +469,23 @@ export const ExpressionEvalSchema = z.object({
 })
 export type ExpressionEvalResult = z.infer<typeof ExpressionEvalSchema>
 
+export const ScoreEditorImportSchema = z.object({
+  tempo: z.number(),
+  beats_per_bar: z.number(),
+  beat_type: z.number(),
+  parts: z.array(z.object({
+    name: z.string(),
+    percussion: z.boolean().optional(),
+    program: z.string().optional(),
+    notes: z.array(z.object({
+      midi: z.number(), start: z.number(), dur: z.number(),
+      vel: z.number().optional(),
+    })),
+  })),
+  skipped_percussion: z.number().optional(),
+})
+export type ScoreEditorImport = z.infer<typeof ScoreEditorImportSchema>
+
 export const AdoptAssetsSchema = z.object({
   ok: z.boolean(),
   adopted: z.number(),

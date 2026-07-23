@@ -491,6 +491,9 @@
     },
     "MuseReverbStage": {
       "display_name": "Muse Reverb (FDN)"
+    },
+    "ScoreEditorStage": {
+      "display_name": "Score Editor"
     }
   },
   "ComfyTV_AssetAudioLoaderStage": {
@@ -2372,5 +2375,8 @@
   },
   "ComfyTV_MuseReverbStage": {
     "display_name": "Muse Reverb (FDN)"
+  },
+  "ComfyTV_ScoreEditorStage": {
+    "display_name": "Score Editor"
   }
 }

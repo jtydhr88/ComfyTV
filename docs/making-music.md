@@ -64,7 +64,17 @@ The Score node is **forgiving**: paste the LLM's entire answer as-is — it extr
 
 Two voices, a specific chord progression, dynamics (`<dynamics>`), hairpins (`<wedge>`), staccato (`<articulations>`) — just ask for them in the prompt. The parser reads those markings, and the performance stage actually plays them.
 
-### Route two: public downloads
+### Route two: draw it yourself — Score Editor
+
+The **Score Editor** node is a piano roll on the canvas — no XML required:
+
+- **Three input styles**: draw (press and drag out a note), select (marquee, move, resize both edges), and **step input** (MuseScore-style: A–G enters pitches, 7–2 picks durations, `.` dots, 0/space rests, the cursor advances automatically — typing a melody is an order of magnitude faster than clicking)
+- **Up to 4 parts**, each with its **own instrument** (a GM program written into the score — Score Synth picks it up automatically) or flagged as a **drum part** (the sidebar switches to GM drum names; paint Kick/Snare/HH directly)
+- **Velocity lane**: paint per-note loudness under the grid, DAW-style — it carries through to the final performance
+- **Playback**: ▶ auditions the draft right in the editor (per-part waveforms, synthesized drums); the real timbres come from the proper chain once you Run
+- Outputs standard MusicXML — wire to Score for engraving or Score Performer → Score Synth for the finished audio; an upstream score (LLM-written or downloaded) can also be **imported into the roll** for editing
+
+### Route three: public downloads
 
 | Site | Content | Notes |
 |---|---|---|

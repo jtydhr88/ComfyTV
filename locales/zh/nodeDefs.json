@@ -491,6 +491,9 @@
     },
     "MuseReverbStage": {
       "display_name": "Muse 混响 (FDN)"
+    },
+    "ScoreEditorStage": {
+      "display_name": "打谱器"
     }
   },
   "ComfyTV_AssetAudioLoaderStage": {
@@ -2372,5 +2375,8 @@
   },
   "ComfyTV_MuseReverbStage": {
     "display_name": "Muse 混响 (FDN)"
+  },
+  "ComfyTV_ScoreEditorStage": {
+    "display_name": "打谱器"
   }
 }

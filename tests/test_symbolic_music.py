@@ -113,6 +113,169 @@ class TestParser:
         assert [n.onset for n in s.parts[1].notes] == [0.0, 0.5]
 
 
+class TestScoreEdit:
+    def _roundtrip(self, state):
+        from ComfyTV.runners.score_edit import notes_to_musicxml
+        from ComfyTV.runners.score_model import parse_musicxml, merge_ties
+        xml = notes_to_musicxml(state)
+        score = parse_musicxml(xml)
+        got = []
+        for part in score.parts:
+            merged = merge_ties(part)
+            got.append(sorted((n.midi, round(n.onset, 4),
+                               round(n.duration, 4)) for n in merged))
+        return xml, score, got
+
+    def test_simple_melody_roundtrip(self):
+        state = {'tempo': 100, 'beats_per_bar': 4, 'parts': [{'notes': [
+            {'midi': 60, 'start': 0.0, 'dur': 1.0},
+            {'midi': 64, 'start': 1.0, 'dur': 0.5},
+            {'midi': 67, 'start': 2.0, 'dur': 2.0},
+        ]}]}
+        xml, score, got = self._roundtrip(state)
+        assert score.initial_tempo == 100
+        assert got[0] == [(60, 0.0, 1.0), (64, 1.0, 0.5), (67, 2.0, 2.0)]
+
+    def test_gap_becomes_rest(self):
+        state = {'parts': [{'notes': [
+            {'midi': 60, 'start': 1.5, 'dur': 0.5},
+            {'midi': 62, 'start': 3.0, 'dur': 1.0},
+        ]}]}
+        _, _, got = self._roundtrip(state)
+        assert got[0] == [(60, 1.5, 0.5), (62, 3.0, 1.0)]
+
+    def test_chord_roundtrip(self):
+        state = {'parts': [{'notes': [
+            {'midi': 60, 'start': 0.0, 'dur': 1.0},
+            {'midi': 64, 'start': 0.0, 'dur': 1.0},
+            {'midi': 67, 'start': 0.0, 'dur': 1.0},
+        ]}]}
+        xml, _, got = self._roundtrip(state)
+        assert xml.count('<chord/>') == 2
+        assert got[0] == [(60, 0.0, 1.0), (64, 0.0, 1.0), (67, 0.0, 1.0)]
+
+    def test_overlap_uses_second_voice(self):
+        state = {'parts': [{'notes': [
+            {'midi': 48, 'start': 0.0, 'dur': 4.0},
+            {'midi': 72, 'start': 1.0, 'dur': 1.0},
+        ]}]}
+        xml, _, got = self._roundtrip(state)
+        assert '<backup>' in xml
+        assert got[0] == [(48, 0.0, 4.0), (72, 1.0, 1.0)]
+
+    def test_cross_bar_note_tied_and_merged(self):
+        state = {'beats_per_bar': 4, 'parts': [{'notes': [
+            {'midi': 60, 'start': 3.0, 'dur': 2.0},
+        ]}]}
+        xml, score, got = self._roundtrip(state)
+        assert '<tie type="start"/>' in xml
+        assert '<tie type="stop"/>' in xml
+        assert got[0] == [(60, 3.0, 2.0)]
+        assert len(score.parts) == 1
+
+    def test_multi_part_and_names(self):
+        state = {'parts': [
+            {'name': 'Lead', 'notes': [{'midi': 72, 'start': 0, 'dur': 1}]},
+            {'name': 'Bass', 'notes': [{'midi': 40, 'start': 0, 'dur': 2}]},
+        ]}
+        xml, score, got = self._roundtrip(state)
+        assert '<part-name>Lead</part-name>' in xml
+        assert '<part-name>Bass</part-name>' in xml
+        assert got == [[(72, 0.0, 1.0)], [(40, 0.0, 2.0)]]
+
+    def test_rejects_empty(self):
+        from ComfyTV.runners.score_edit import notes_to_musicxml
+        with pytest.raises(RuntimeError, match='no notes'):
+            notes_to_musicxml({'parts': [{'notes': []}]})
+
+    def test_importer_returns_editor_state(self):
+        from ComfyTV.runners.score_edit import (
+            notes_to_musicxml, musicxml_to_editor,
+        )
+        state = {'tempo': 90, 'beats_per_bar': 3, 'parts': [{'notes': [
+            {'midi': 60, 'start': 0.0, 'dur': 1.0},
+            {'midi': 64, 'start': 1.0, 'dur': 2.0},
+        ]}]}
+        back = musicxml_to_editor(notes_to_musicxml(state))
+        assert back['tempo'] == 90
+        assert back['beats_per_bar'] == 3
+        assert back['parts'][0]['notes'] == [
+            {'midi': 60, 'start': 0.0, 'dur': 1.0},
+            {'midi': 64, 'start': 1.0, 'dur': 2.0},
+        ]
+
+    def test_percussion_part_roundtrip(self):
+        from ComfyTV.runners.score_edit import (
+            notes_to_musicxml, musicxml_to_editor,
+        )
+        from ComfyTV.runners.score_model import parse_musicxml
+        state = {'tempo': 120, 'beats_per_bar': 4, 'parts': [
+            {'name': 'Lead', 'notes': [{'midi': 72, 'start': 0, 'dur': 1}]},
+            {'name': 'Drums', 'percussion': True, 'notes': [
+                {'midi': 36, 'start': 0.0, 'dur': 0.5},
+                {'midi': 42, 'start': 0.0, 'dur': 0.5},
+                {'midi': 38, 'start': 1.0, 'dur': 0.5},
+            ]},
+        ]}
+        xml = notes_to_musicxml(state)
+        assert '<clef><sign>percussion</sign></clef>' in xml
+        assert '<midi-unpitched>37</midi-unpitched>' in xml
+        score = parse_musicxml(xml)
+        drums = score.parts[1]
+        assert drums.is_percussion
+        assert sorted((n.midi, n.onset) for n in drums.notes
+                      if n.midi >= 0) == [(36, 0.0), (38, 1.0), (42, 0.0)]
+        back = musicxml_to_editor(xml)
+        assert back['parts'][1]['percussion'] is True
+        assert back['parts'][0]['percussion'] is False
+        assert {n['midi'] for n in back['parts'][1]['notes']} == {36, 38, 42}
+
+    def test_part_program_and_velocity_roundtrip(self):
+        from ComfyTV.runners.score_edit import (
+            notes_to_musicxml, musicxml_to_editor,
+        )
+        from ComfyTV.runners.score_model import parse_musicxml
+        from ComfyTV.runners.score_perform import perform_score
+        state = {'tempo': 120, 'beats_per_bar': 4, 'parts': [
+            {'name': 'Lead', 'program': 'saw_lead', 'notes': [
+                {'midi': 72, 'start': 0, 'dur': 1, 'vel': 0.9},
+                {'midi': 74, 'start': 1, 'dur': 1, 'vel': 0.3},
+            ]},
+        ]}
+        xml = notes_to_musicxml(state)
+        assert '<midi-program>82</midi-program>' in xml
+        score = parse_musicxml(xml)
+        assert score.parts[0].midi_program == 81
+        vels = sorted(round(n.velocity, 3) for n in score.parts[0].notes
+                      if n.midi >= 0)
+        assert vels == [0.3, 0.9]
+        perf = perform_score(score, humanize=0.0)
+        assert perf['programs'] == {'0': 81}
+        evs = sorted(perf['events'], key=lambda e: e['t'])
+        assert evs[0]['vel'] == round(0.9 * 127)
+        assert evs[1]['vel'] == round(0.3 * 127)
+        back = musicxml_to_editor(xml)
+        assert back['parts'][0]['program'] == 'saw_lead'
+        assert back['parts'][0]['notes'][0]['vel'] == 0.9
+
+    def test_program_resolution_priority(self):
+        from ComfyTV.runners.score_synth import resolve_programs
+        perf = {'programs': {'0': 81, '1': 33}}
+        merged = resolve_programs(perf, programs={1: 4}, default_program=7)
+        assert merged[0] == 81
+        assert merged[1] == 4
+        assert merged[2] == 7
+
+    def test_dotted_and_plain_types_emitted(self):
+        from ComfyTV.runners.score_edit import notes_to_musicxml
+        xml = notes_to_musicxml({'parts': [{'notes': [
+            {'midi': 60, 'start': 0.0, 'dur': 1.5},
+            {'midi': 62, 'start': 1.5, 'dur': 0.5},
+        ]}]})
+        assert '<type>quarter</type><dot/>' in xml
+        assert '<type>eighth</type>' in xml
+
+
 class TestPerform:
     def _score(self, extra_first='', dyn=''):
         from ComfyTV.runners.score_model import parse_musicxml

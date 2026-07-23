@@ -90,8 +90,8 @@ from .audio_mir_stages import (
     AudioStemSplitStage, AudioNoiseReductionStage, AudioMIRStage,
 )
 from .score_stages import (
-    ScoreStage, ScoreToMidiStage, SF2SynthStage, ClickTrackStage,
-    ChordAccompStage,
+    ScoreStage, ScoreEditorStage, ScoreToMidiStage, SF2SynthStage,
+    ClickTrackStage, ChordAccompStage,
 )
 from .panorama import (
     PanoramaStage, PanoramaCurrentViewStage, PanoramaMultiViewStage,
@@ -160,8 +160,8 @@ class ComfyTVExtension(ComfyExtension):
             Video360StabilizeStage, Card3DStage, STMapGenStage,
             RegrainStage, ContactSheetStage,
             AudioStemSplitStage, AudioNoiseReductionStage, AudioMIRStage,
-            ScoreStage, ScoreToMidiStage, SF2SynthStage, ClickTrackStage,
-            ChordAccompStage, MuseReverbStage,
+            ScoreStage, ScoreEditorStage, ScoreToMidiStage, SF2SynthStage,
+            ClickTrackStage, ChordAccompStage, MuseReverbStage,
             AnnotateStage, AudioReactiveStage, AudioMeterStage,
             ImageLoaderStage, VideoLoaderStage, AudioLoaderStage,
             AssetImageLoaderStage, AssetVideoLoaderStage, AssetAudioLoaderStage,

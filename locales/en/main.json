@@ -2086,6 +2086,26 @@
     "repeats": "Repeats",
     "chordHint": "Bars split by |, chords per bar split evenly. Slash bass (C/E), qualities: m, 7, maj7, m7, dim, aug, sus4, 6, 9, m7b5…",
     "channelPrograms": "Per-channel instruments",
-    "channelProgramsHint": "Channels map to score parts in order (part 1 = ch 0). Unlisted channels use the Instrument above; drums (ch 9) are automatic."
+    "channelProgramsHint": "Channels map to score parts in order (part 1 = ch 0). Unlisted channels use the Instrument above; drums (ch 9) are automatic.",
+    "draw": "Draw",
+    "select": "Select",
+    "snap": "Snap",
+    "tempo": "Tempo",
+    "timeSig": "Time Sig",
+    "part": "Part",
+    "addPart": "Add part",
+    "removePart": "Remove part",
+    "importScore": "Import wired score",
+    "importFailed": "Import failed",
+    "clearPart": "Clear part",
+    "undo": "Undo",
+    "rollHint": "Draw: press and drag out a note · drag moves · right edge resizes · double-click deletes · Del removes selection · Ctrl+wheel zooms",
+    "skippedPercussion": "Percussion parts were skipped on import",
+    "step": "Step",
+    "stepHint": "Step input: A-G enters a note at the cursor (nearest octave) · 7-2 picks duration · . dot · 0/space rest · Backspace steps back · Up/Down transposes (Shift = octave) · click sets the cursor",
+    "percussion": "Drum part (GM keys)",
+    "quantize": "Quantize selection",
+    "renamePart": "Rename part (double-click)",
+    "rollHint2": "Select: drag for marquee · Ctrl+A all · Ctrl+D duplicate · velocity lane below the grid"
   }
 }

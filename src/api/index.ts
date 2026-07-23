@@ -23,6 +23,7 @@ import {
   MutateStagePresetSchema,
   OkSchema,
   ProxyEnsureSchema,
+  ScoreEditorImportSchema,
   RemoteRunResultSchema,
   RescanResultSchema,
   StageDefaultsSchema,
@@ -42,6 +43,7 @@ import type {
   NativeWorkflow,
   ProxyEnsureResult,
   RescanResult,
+  ScoreEditorImport,
   TestServerResult,
 } from './schemas'
 
@@ -93,6 +95,11 @@ export async function apiSend<T extends z.ZodType>(
 
 export function fetchCaps(): Promise<CapsPayload> {
   return apiFetch('/comfytv/caps', CapsPayloadSchema)
+}
+
+export function importScoreEditor(musicxml: string): Promise<ScoreEditorImport> {
+  return apiSend('/comfytv/score_editor/import', 'POST',
+    ScoreEditorImportSchema, { musicxml })
 }
 
 export function importWorkflow(

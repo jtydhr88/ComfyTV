@@ -140,6 +140,7 @@ import AudioMIRStageCard from '@/components/stages/AudioMIRStageCard.vue'
 import ScoreStageCard from '@/components/stages/ScoreStageCard.vue'
 import ScoreToMidiStageCard from '@/components/stages/ScoreToMidiStageCard.vue'
 import SF2SynthStageCard from '@/components/stages/SF2SynthStageCard.vue'
+import ScoreEditorStageCard from '@/components/stages/ScoreEditorStageCard.vue'
 import ClickTrackStageCard from '@/components/stages/ClickTrackStageCard.vue'
 import ChordAccompStageCard from '@/components/stages/ChordAccompStageCard.vue'
 import MuseReverbStageCard from '@/components/stages/MuseReverbStageCard.vue'
@@ -232,6 +233,7 @@ const RICH_STAGE_CARDS: Record<string, any> = {
   'ComfyTV.ScoreStage':               ScoreStageCard,
   'ComfyTV.ScoreToMidiStage':         ScoreToMidiStageCard,
   'ComfyTV.SF2SynthStage':            SF2SynthStageCard,
+  'ComfyTV.ScoreEditorStage':         ScoreEditorStageCard,
   'ComfyTV.ClickTrackStage':          ClickTrackStageCard,
   'ComfyTV.ChordAccompStage':         ChordAccompStageCard,
   'ComfyTV.MuseReverbStage':          MuseReverbStageCard,
@@ -485,6 +487,7 @@ const RICH_STAGE_MIN_HEIGHTS: Record<string, number> = {
   'ComfyTV.AudioNoiseReductionStage': 640,
   'ComfyTV.AudioMIRStage':            660,
   'ComfyTV.ScoreStage':               960,
+  'ComfyTV.ScoreEditorStage':         960,
   'ComfyTV.ScoreToMidiStage':         640,
   'ComfyTV.SF2SynthStage':            960,
   'ComfyTV.ClickTrackStage':          600,

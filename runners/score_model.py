@@ -44,6 +44,7 @@ class ScoreNote:
     slur_start: bool = False
     slur_stop: bool = False
     tremolo_marks: int = 0
+    velocity: float = -1.0
 
     @property
     def is_rest(self):
@@ -63,7 +64,7 @@ class ScorePart:
     name: str
     notes: list = field(default_factory=list)
     directions: list = field(default_factory=list)
-    midi_program: int = 0
+    midi_program: int = -1
     midi_channel: int = 0
     is_percussion: bool = False
 
@@ -154,6 +155,13 @@ def _parse_note(el, beat_pos, divisions, chord_seq, unpitched_map=None):
             note.tie_start = True
         elif tie.get('type') == 'stop':
             note.tie_stop = True
+    dyn_attr = el.get('dynamics')
+    if dyn_attr:
+        try:
+            note.velocity = max(0.0, min(1.0,
+                                         float(dyn_attr) * 0.9 / 127.0))
+        except ValueError:
+            pass
     note.chord_id = chord_seq if el.find('chord') is not None else -1
     for art in el.iter('articulations'):
         for child in art:
@@ -293,6 +301,7 @@ def parse_musicxml(text: str) -> Score:
     part_names = {}
     part_percussion = {}
     part_unpitched = {}
+    part_programs = {}
     for sp in root.findall('.//score-part'):
         pid = sp.get('id') or ''
         part_names[pid] = sp.findtext('part-name', pid) or pid
@@ -302,6 +311,12 @@ def parse_musicxml(text: str) -> Score:
             if uv:
                 try:
                     umap[mi.get('id')] = max(0, min(127, int(uv) - 1))
+                except ValueError:
+                    pass
+            pv = mi.findtext('midi-program')
+            if pv and pid not in part_programs:
+                try:
+                    part_programs[pid] = max(0, min(127, int(pv) - 1))
                 except ValueError:
                     pass
         part_unpitched[pid] = umap
@@ -322,7 +337,8 @@ def parse_musicxml(text: str) -> Score:
     for part_el in part_els:
         pid = part_el.get('id') or f'P{len(score.parts) + 1}'
         part = ScorePart(part_id=pid, name=part_names.get(pid, pid),
-                         midi_channel=len(score.parts))
+                         midi_channel=len(score.parts),
+                         midi_program=part_programs.get(pid, -1))
         divisions = score.divisions if first_attrs_seen else 480.0
         beat_pos = 0.0
         chord_seq = 0

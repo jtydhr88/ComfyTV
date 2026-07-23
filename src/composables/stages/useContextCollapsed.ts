@@ -23,3 +23,4 @@ function makeCollapsed(storageKey: string) {
 
 export const useContextCollapsed = makeCollapsed('comfytv:stage:context-expanded')
 export const useActionsCollapsed = makeCollapsed('comfytv:stage:actions-expanded')
+export const useTextOutputCollapsed = makeCollapsed('comfytv:stage:text-output-expanded')

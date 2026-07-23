@@ -158,10 +158,30 @@
       </span>
     </div>
 
-    <section v-if="!hideOutput && !hideRunButton && state.kind !== 'audio-picker' && state.kind !== 'video-picker'" class="output ctv:flex-1 ctv:min-h-0 ctv:flex ctv:flex-col ctv:gap-1">
-      <div :class="sectionLabel">{{ $t('stage.section.output', { type: state.outputType }) }}</div>
+    <section
+      v-if="!hideOutput && !hideRunButton && state.kind !== 'audio-picker' && state.kind !== 'video-picker'"
+      class="output ctv:min-h-0 ctv:flex ctv:flex-col ctv:gap-1"
+      :class="isTextOutput && textOutputCollapsed ? '' : 'ctv:flex-1'"
+    >
+      <div v-if="isTextOutput" class="ctv:flex ctv:items-center ctv:gap-1">
+        <button :class="contextToggle" :aria-expanded="!textOutputCollapsed" @click="textOutputCollapsed = !textOutputCollapsed">
+          <i :class="['pi', textOutputCollapsed ? 'pi-chevron-right' : 'pi-chevron-down', 'ctv:w-2.5 ctv:text-2xs ctv:text-muted-foreground']" />
+          <span :class="sectionLabel" class="ctv:mb-0">{{ $t('stage.section.output', { type: state.outputType }) }}</span>
+          <span class="ctv:text-3xs ctv:text-muted-foreground ctv:font-mono ctv:normal-case ctv:tracking-normal ctv:truncate ctv:max-w-44">{{ textOutputSummary }}</span>
+        </button>
+        <div v-if="state.output" class="ctv:ml-auto ctv:flex ctv:shrink-0 ctv:gap-1">
+          <button type="button" :class="textOutputBtn"
+                  :title="$t('stage.action.copyText')"
+                  @click.stop="copyTextOutput"><i :class="textOutputCopied ? 'pi pi-check' : 'pi pi-copy'" /></button>
+          <button type="button" :class="textOutputBtn"
+                  :title="$t('stage.action.download')"
+                  @click.stop="downloadTextOutput"><i class="pi pi-download" /></button>
+        </div>
+      </div>
+      <div v-else :class="sectionLabel">{{ $t('stage.section.output', { type: state.outputType }) }}</div>
 
       <ValuePreview
+        v-show="!isTextOutput || !textOutputCollapsed"
         class="ctv:flex-1 ctv:min-h-0"
         :type="state.outputType"
         :content="state.output"
@@ -227,7 +247,8 @@ import StagePresetBar from './StagePresetBar.vue'
 import { t } from '@/i18n'
 import ValuePreview from './ValuePreview.vue'
 import { imageInputSlotIndex, slotColor } from '@/composables/stages/imageSlotMentions'
-import { useActionsCollapsed, useContextCollapsed } from '@/composables/stages/useContextCollapsed'
+import { useActionsCollapsed, useContextCollapsed, useTextOutputCollapsed } from '@/composables/stages/useContextCollapsed'
+import { useTextOutputActions } from '@/composables/stages/useTextOutputActions'
 import { formatSlot, progressFallbackOf, useStageCard } from '@/composables/stages/useStageCard'
 import { useStageLoaderDrop } from '@/composables/stages/useStageLoaderDrop'
 import { useStageServerSelect } from '@/composables/stages/useStageServerSelect'
@@ -276,6 +297,20 @@ const {
 const isPicker = computed(() => isPoolPickerKind(props.state.kind))
 
 const contextCollapsed = useContextCollapsed(() => (props.node as any)?.id ?? null)
+const textOutputCollapsed = useTextOutputCollapsed(() => (props.node as any)?.id ?? null)
+const isTextOutput = computed(() => props.state.outputType === 'COMFYTV_TEXT')
+const textOutputSummary = computed(() => {
+  if (!textOutputCollapsed.value) return ''
+  const s = String(props.state.output ?? '').trim().replace(/\s+/g, ' ')
+  return s.length > 48 ? s.slice(0, 48) + '…' : s
+})
+const {
+  textCopied: textOutputCopied,
+  copyText: copyTextOutput,
+  downloadText: downloadTextOutput,
+} = useTextOutputActions(() => String(props.state.output ?? ''))
+const textOutputBtn = 'ctv:flex ctv:items-center ctv:justify-center ctv:size-5 ctv:p-0 ctv:rounded-sm ctv:text-xs ctv:cursor-pointer'
+  + ' ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-muted-foreground ctv:hover:text-base-foreground ctv:hover:border-primary-background'
 const actionsCollapsed = useActionsCollapsed(() => (props.node as any)?.id ?? null)
 
 const {

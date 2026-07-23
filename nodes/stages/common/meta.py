@@ -129,6 +129,7 @@ STAGE_META: dict[str, dict] = {
     'AudioNoiseReductionStage':     {'kind': 'audio'},
     'AudioMIRStage':                {'kind': 'text'},
     'ScoreStage':                   {'kind': 'text'},
+    'ScoreEditorStage':             {'kind': 'text'},
     'ScoreToMidiStage':             {'kind': 'text'},
     'SF2SynthStage':                {'kind': 'audio'},
     'ClickTrackStage':              {'kind': 'audio'},

@@ -86,16 +86,34 @@ def _timbre_for(program):
     return (1.0, 2.0)
 
 
+def resolve_programs(performance, programs=None, default_program=0):
+    merged = {ch: int(default_program) for ch in range(16)}
+    embedded = performance.get('programs') or {}
+    for k, v in embedded.items():
+        try:
+            merged[int(k)] = max(0, min(127, int(v)))
+        except (TypeError, ValueError):
+            pass
+    for k, v in (programs or {}).items():
+        try:
+            merged[int(k)] = max(0, min(127, int(v)))
+        except (TypeError, ValueError):
+            pass
+    return merged
+
+
 def synthesize_events(performance: dict, *, soundfont_path='',
-                      programs=None, gain=1.0, report=None):
+                      programs=None, gain=1.0, default_program=0,
+                      report=None):
+    merged = resolve_programs(performance, programs, default_program)
     if (soundfont_path or '').strip():
         from .sf2_synth import render_sf2
         return render_sf2(performance, soundfont_path,
-                          programs=programs or {}, gain=gain, report=report)
+                          programs=merged, gain=gain, report=report)
     events = performance.get('events') or []
     if not events:
         raise RuntimeError("score synth: no events")
-    programs = programs or {}
+    programs = merged
     total = max(e['t'] + e['dur'] for e in events) + 1.2
     buf = np.zeros((2, int(SR * total)))
     for i, e in enumerate(events):
@@ -124,7 +142,7 @@ def synthesize_events(performance: dict, *, soundfont_path='',
 
 
 def render_performance(perf_json: str, *, soundfont_path='', programs=None,
-                       gain=1.0, progress=None) -> str:
+                       gain=1.0, default_program=0, progress=None) -> str:
     from .media_filter import make_progress
 
     try:
@@ -135,7 +153,8 @@ def render_performance(perf_json: str, *, soundfont_path='', programs=None,
     events = perf.get('events') or []
     report = make_progress(progress, max(1, len(events)), "synthesizing")
     buf = synthesize_events(perf, soundfont_path=soundfont_path,
-                            programs=programs, gain=gain, report=report)
+                            programs=programs, gain=gain,
+                            default_program=default_program, report=report)
     return _write_wav(buf)
 
 

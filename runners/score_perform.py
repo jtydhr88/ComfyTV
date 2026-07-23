@@ -275,7 +275,9 @@ def perform_score(score: Score, *, swing_ratio=50.0, swing_unit=0.5,
                     g_on = onset_b + gi * seg
                     events.append(_event(to_sec, g_on, seg * 0.9, g.midi,
                                          dyn, easing, 0.9, channel,
-                                         humanize, seed, hk))
+                                         humanize, seed, hk,
+                                         note_vel=g.velocity
+                                         if g.velocity >= 0 else None))
                     hk += 1
                 onset_b += steal
                 dur_b -= steal
@@ -294,7 +296,9 @@ def perform_score(score: Score, *, swing_ratio=50.0, swing_unit=0.5,
                 rel_dur = min(s_dur, dur_b) * dur_f
                 events.append(_event(to_sec, rel_on, rel_dur, s_midi, dyn,
                                      easing, vel_f, channel, humanize,
-                                     seed, hk))
+                                     seed, hk,
+                                     note_vel=n.velocity
+                                     if n.velocity >= 0 else None))
                 hk += 1
             if n.slur_stop:
                 in_slur = False
@@ -302,16 +306,26 @@ def perform_score(score: Score, *, swing_ratio=50.0, swing_unit=0.5,
     events.sort(key=lambda e: (e['t'], e['midi']))
     tempo_sec = [{'beat': b, 't': round(to_sec(b), 6), 'bpm': bpm}
                  for b, bpm in tempo_map]
+    programs = {}
+    for pi, part in enumerate(score.parts):
+        if part.is_percussion or part.midi_program < 0:
+            continue
+        ch = min(15, pi if pi < 9 else pi + 1)
+        programs[str(ch)] = part.midi_program
     return {'tempo_map': tempo_sec, 'events': events,
+            'programs': programs,
             'duration': round(to_sec(total_beats) + 1.0, 3)}
 
 
 def _event(to_sec, onset_b, dur_b, midi, dyn, easing, vel_f, channel,
-           humanize, seed, hk):
+           humanize, seed, hk, note_vel=None):
     t0 = to_sec(onset_b)
     t1 = to_sec(onset_b + max(0.01, dur_b))
-    level = dyn.level_at(onset_b, easing)
-    vel = int(round(level / 10000.0 * 127.0 * vel_f))
+    if note_vel is not None and note_vel >= 0:
+        vel = int(round(note_vel * 127.0 * vel_f))
+    else:
+        level = dyn.level_at(onset_b, easing)
+        vel = int(round(level / 10000.0 * 127.0 * vel_f))
     if humanize > 0:
         t0 += (_hash01(seed, hk * 2) - 0.5) * 0.02 * humanize
         vel = int(round(vel * (1.0 + (_hash01(seed, hk * 2 + 1) - 0.5)

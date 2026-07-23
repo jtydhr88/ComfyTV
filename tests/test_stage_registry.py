@@ -121,6 +121,7 @@ EXPECTED_NODE_IDS = [
     'ComfyTV.STMapStage',
     'ComfyTV.Scene3DStage',
     'ComfyTV.SceneDetectStage',
+    'ComfyTV.ScoreEditorStage',
     'ComfyTV.ScoreStage',
     'ComfyTV.ScoreToMidiStage',
     'ComfyTV.Select0rStage',

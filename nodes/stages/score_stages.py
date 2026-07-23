@@ -10,18 +10,7 @@ from .common.fx_helpers import (  # noqa: F401
     _hidden_float, _hidden_int, _hidden_str, _hidden_combo,
 )
 
-GM_PROGRAMS = {
-    'piano': 0, 'bright_piano': 1, 'e_piano': 4, 'harpsichord': 6,
-    'celesta': 8, 'music_box': 10, 'vibraphone': 11, 'marimba': 12,
-    'organ': 19, 'accordion': 21, 'nylon_guitar': 24, 'steel_guitar': 25,
-    'jazz_guitar': 26, 'clean_guitar': 27, 'overdrive_guitar': 29,
-    'acoustic_bass': 32, 'finger_bass': 33, 'pick_bass': 34,
-    'violin': 40, 'cello': 42, 'harp': 46, 'strings': 48,
-    'slow_strings': 49, 'synth_strings': 50, 'choir': 52, 'voice_oohs': 53,
-    'trumpet': 56, 'trombone': 57, 'brass': 61, 'alto_sax': 65,
-    'tenor_sax': 66, 'oboe': 68, 'clarinet': 71, 'flute': 73,
-    'pan_flute': 75, 'square_lead': 80, 'saw_lead': 81, 'warm_pad': 89,
-}
+from ...runners.gm_programs import GM_PROGRAMS
 
 
 class ScoreStage(io.ComfyNode):
@@ -69,6 +58,39 @@ class ScoreStage(io.ComfyNode):
                                 parent_output_id=parent_output_id,
                                 extra_outputs=None,
                                 params={'summary': summary})
+
+
+class ScoreEditorStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.ScoreEditorStage",
+            display_name="Score Editor",
+            category="ComfyTV/Music",
+            inputs=[
+                *_standard_stage_inputs(),
+                _hidden_str("notes_json", ""),
+                COMFYTV_TEXT.Input("score", optional=True),
+            ],
+            outputs=[COMFYTV_TEXT.Output("score")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
+                notes_json="", score=""):
+        from ...runners.score_edit import notes_to_musicxml
+
+        raw = (notes_json or '').strip()
+        if not raw:
+            raise RuntimeError(
+                "Score Editor: the piano roll is empty — draw some notes "
+                "(or import the wired score first).")
+        xml = notes_to_musicxml(raw)
+        return _stage_emit_auto(cls, project_id=project_id, payload_str=xml,
+                                parent_output_id=parent_output_id)
 
 
 class ScoreToMidiStage(io.ComfyNode):
@@ -179,11 +201,10 @@ class SF2SynthStage(io.ComfyNode):
                                                    isinstance(v, int) else 0)
         except (ValueError, TypeError):
             pass
-        for ch in range(16):
-            programs.setdefault(ch, base_prog)
         payload = render_performance(raw, soundfont_path=sf_path,
                                      programs=programs,
                                      gain=_f(gain, 0.1, 2, 1.0),
+                                     default_program=base_prog,
                                      progress=_progress_cb(cls))
         return _stage_emit_auto(cls, project_id=project_id,
                                 payload_str=payload,
