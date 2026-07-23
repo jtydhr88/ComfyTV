@@ -1,8 +1,38 @@
 import { describe, expect, it } from 'vitest'
 import {
   compressorTransferDb, envelopeDb, kneeWidthDb, resampleEnvelope,
-  transferCurvePoints,
+  transferCurvePoints, waveformPeaks,
 } from './audioViz'
+
+describe('waveformPeaks', () => {
+  it('emits min/max pairs per column', () => {
+    const samples = new Float32Array([0.5, -0.5, 0.2, 0.1, -0.9, 0.9])
+    const peaks = waveformPeaks(samples, 2)
+    expect(Array.from(peaks.slice(0, 2))).toEqual([-0.5, 0.5])
+    expect(peaks[2]).toBeCloseTo(-0.9)
+    expect(peaks[3]).toBeCloseTo(0.9)
+  })
+
+  it('spreads few samples across many columns without gaps', () => {
+    const peaks = waveformPeaks(new Float32Array([0.4, -0.4]), 4)
+    expect(peaks.length).toBe(8)
+    for (let x = 0; x < 4; x++) {
+      expect(peaks[x * 2]).toBeLessThanOrEqual(peaks[x * 2 + 1])
+    }
+  })
+
+  it('clamps out-of-range samples to [-1, 1]', () => {
+    const peaks = waveformPeaks(new Float32Array([2.0, -3.0]), 1)
+    expect(peaks[0]).toBe(-1)
+    expect(peaks[1]).toBe(1)
+  })
+
+  it('returns zeros for empty input or zero columns', () => {
+    expect(waveformPeaks(new Float32Array(0), 4).every((v) => v === 0))
+      .toBe(true)
+    expect(waveformPeaks(new Float32Array([0.5]), 0).length).toBe(0)
+  })
+})
 
 describe('kneeWidthDb', () => {
   it('factor 1 gives hard knee', () => {

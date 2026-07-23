@@ -52,6 +52,32 @@ export function envelopeDb(
   return out
 }
 
+export function waveformPeaks(
+  samples: Float32Array, columns: number,
+): Float32Array {
+  const cols = Math.max(0, Math.floor(columns))
+  const out = new Float32Array(cols * 2)
+  if (samples.length === 0 || cols === 0) return out
+  for (let x = 0; x < cols; x++) {
+    const a = Math.floor((x * samples.length) / cols)
+    const b = Math.max(a + 1, Math.floor(((x + 1) * samples.length) / cols))
+    let mn = Infinity
+    let mx = -Infinity
+    for (let i = a; i < Math.min(b, samples.length); i++) {
+      const s = samples[i]
+      if (s < mn) mn = s
+      if (s > mx) mx = s
+    }
+    if (mn > mx) {
+      mn = 0
+      mx = 0
+    }
+    out[x * 2] = Math.max(-1, mn)
+    out[x * 2 + 1] = Math.min(1, mx)
+  }
+  return out
+}
+
 export function resampleEnvelope(env: Float32Array, width: number): Float32Array {
   const out = new Float32Array(width)
   if (env.length === 0) return out.fill(-90)

@@ -48,6 +48,22 @@
           :title="$t('fx.makeProxyHint')"
           @click.stop="requestProxy"
         >{{ $t('fx.makeProxy') }}</button>
+        <canvas
+          v-show="audioOnly && wave.ready.value"
+          ref="waveEl"
+          class="ctv:absolute ctv:inset-0 ctv:size-full ctv:pointer-events-none ctv:text-primary-background"
+        />
+        <div
+          v-if="audioOnly && wave.ready.value"
+          class="ctv:absolute ctv:inset-y-0 ctv:w-px ctv:bg-white/70 ctv:pointer-events-none"
+          :style="{ left: `${playheadPct}%` }"
+        />
+        <div
+          v-if="audioOnly && !wave.ready.value"
+          class="ctv:absolute ctv:inset-0 ctv:flex ctv:items-center ctv:justify-center ctv:text-white/40 ctv:pointer-events-none"
+        >
+          <i class="pi pi-volume-up ctv:text-[28px]" />
+        </div>
         <slot name="overlay" />
         <div v-if="loadError"
              class="ctv:absolute ctv:inset-0 ctv:z-10 ctv:flex ctv:items-center ctv:justify-center ctv:text-xs
@@ -98,9 +114,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useProxiedVideoUrl } from '@/composables/widgets/useProxiedVideoUrl'
 import { useVideoPlayback } from '@/composables/widgets/useVideoPlayback'
+import { useAudioWaveform } from '@/composables/widgets/useAudioWaveform'
 import { formatTime } from '@/composables/widgets/useVideoTrim'
 
 const props = withDefaults(defineProps<{
@@ -127,6 +144,33 @@ const sourceVideoUrlRef = computed(() => props.sourceVideoUrl)
 const {
   url: effectiveUrl, isProxy, canProxy, building, pct, requestProxy,
 } = useProxiedVideoUrl(sourceVideoUrlRef)
+
+const waveEl = ref<HTMLCanvasElement | null>(null)
+const audioOnly = ref(false)
+const playheadPct = ref(0)
+watch(effectiveUrl, () => {
+  audioOnly.value = false
+})
+const wave = useAudioWaveform({
+  url: effectiveUrl,
+  enabled: audioOnly,
+  canvas: waveEl,
+})
+
+let playheadRaf = 0
+function playheadTick() {
+  const v = videoEl.value
+  if (v && audioOnly.value && duration.value > 0) {
+    playheadPct.value = Math.min(100, (v.currentTime / duration.value) * 100)
+  }
+  playheadRaf = requestAnimationFrame(playheadTick)
+}
+onMounted(() => {
+  playheadRaf = requestAnimationFrame(playheadTick)
+})
+onBeforeUnmount(() => {
+  cancelAnimationFrame(playheadRaf)
+})
 
 const isAlphaSource = computed(() =>
   /\.webm([?&#]|$)/i.test(props.sourceVideoUrl ?? '')
@@ -166,6 +210,7 @@ function onMeta() {
   if (!v) return
   onLoadedMetadata()
   applyTuning()
+  audioOnly.value = v.videoWidth === 0 && v.videoHeight === 0
   if (carryTime != null) {
     if (carryTime < (v.duration || Infinity)) v.currentTime = carryTime
     carryTime = null
