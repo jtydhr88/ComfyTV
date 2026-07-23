@@ -59,6 +59,7 @@ Step-by-step usage docs live in [`docs/`](docs/):
 | [image-tools.md](docs/image-tools.md) | Crop, Rotate, Mirror, Inpaint, Erase, Cutout, Upscale, Outpaint, Grid Split, Variations, Multiangle |
 | [panorama.md](docs/panorama.md) | Loading/viewing a 360° panorama, capturing single + multi viewports |
 | [video-and-audio.md](docs/video-and-audio.md) | Video editing (clip / crop / resize / extract-frame / demux) and audio (vocal/bg separation, demux) |
+| [making-music.md](docs/making-music.md) | Composition → performance → synthesis → mixing on one canvas: MusicXML, every Music-node parameter, reverb presets |
 | [compose.md](docs/compose.md) | Image Picker, A/B Compare |
 | [roadmap.md](docs/roadmap.md) | What works today vs **TODO** (backend workflows not yet built) |
 | [models.md](docs/models.md) | Per-workflow model files + folder locations + download URLs for everything shipped under `workflows/` |

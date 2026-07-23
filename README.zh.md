@@ -61,6 +61,7 @@ git clone https://github.com/jtydhr88/ComfyTV
 | [image-tools.zh.md](docs/image-tools.zh.md) | 裁剪、旋转、镜像、Inpaint、擦除、抠图、放大、扩图、九宫格切分、变体、多视角 |
 | [panorama.zh.md](docs/panorama.zh.md) | 加载/查看 360° 全景图,单视角 + 多视角截图 |
 | [video-and-audio.zh.md](docs/video-and-audio.zh.md) | 视频编辑(剪辑/裁剪/缩放/抽帧/音视频分离)和音频(人声/背景分离、解复用) |
+| [making-music.zh.md](docs/making-music.zh.md) | 一张画布上的作曲→演奏→合成→混音:MusicXML 格式、每个 Music 节点的全部参数、混响起手参数 |
 | [compose.zh.md](docs/compose.zh.md) | Image Picker、A/B 对比 |
 | [roadmap.zh.md](docs/roadmap.zh.md) | 当前能用什么 vs **TODO**(还没接上的后端工作流) |
 | [models.zh.md](docs/models.zh.md) | 自带工作流所需的模型文件 + 放置目录 + 下载地址 |
