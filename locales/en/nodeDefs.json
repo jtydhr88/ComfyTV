@@ -380,6 +380,42 @@
     },
     "AudioMeterStage": {
       "display_name": "Audio Meter Overlay"
+    },
+    "CDLStage": {
+      "display_name": "CDL Grade"
+    },
+    "HistogramEqStage": {
+      "display_name": "Histogram Equalize"
+    },
+    "Video360Stage": {
+      "display_name": "360 Projection"
+    },
+    "ShapeMaskStage": {
+      "display_name": "Shape Mask"
+    },
+    "LensDistortStage": {
+      "display_name": "Lens Distort"
+    },
+    "ChromaticAberrationStage": {
+      "display_name": "Chromatic Aberration"
+    },
+    "LensFlareStage": {
+      "display_name": "Lens Flare"
+    },
+    "ParticlesStage": {
+      "display_name": "Particles"
+    },
+    "ZDefocusStage": {
+      "display_name": "Z Defocus"
+    },
+    "FaceBlurStage": {
+      "display_name": "Face Blur"
+    },
+    "SpotRemoverStage": {
+      "display_name": "Spot Remover"
+    },
+    "AudioDuckStage": {
+      "display_name": "Audio Duck"
     }
   },
   "ComfyTV_AssetAudioLoaderStage": {
@@ -2150,5 +2186,41 @@
   },
   "ComfyTV_AudioMeterStage": {
     "display_name": "Audio Meter Overlay"
+  },
+  "ComfyTV_CDLStage": {
+    "display_name": "CDL Grade"
+  },
+  "ComfyTV_HistogramEqStage": {
+    "display_name": "Histogram Equalize"
+  },
+  "ComfyTV_Video360Stage": {
+    "display_name": "360 Projection"
+  },
+  "ComfyTV_ShapeMaskStage": {
+    "display_name": "Shape Mask"
+  },
+  "ComfyTV_LensDistortStage": {
+    "display_name": "Lens Distort"
+  },
+  "ComfyTV_ChromaticAberrationStage": {
+    "display_name": "Chromatic Aberration"
+  },
+  "ComfyTV_LensFlareStage": {
+    "display_name": "Lens Flare"
+  },
+  "ComfyTV_ParticlesStage": {
+    "display_name": "Particles"
+  },
+  "ComfyTV_ZDefocusStage": {
+    "display_name": "Z Defocus"
+  },
+  "ComfyTV_FaceBlurStage": {
+    "display_name": "Face Blur"
+  },
+  "ComfyTV_SpotRemoverStage": {
+    "display_name": "Spot Remover"
+  },
+  "ComfyTV_AudioDuckStage": {
+    "display_name": "Audio Duck"
   }
 }

@@ -1,11 +1,60 @@
 from ._common import *  # noqa: F401, F403
-from ...runners.media_filter import crossfade_audios, AFADE_CURVES
+from ...runners.media_filter import crossfade_audios, duck_audio, AFADE_CURVES
 from ...runners.audio_dsp import mix_audios, segment_export
 
 from .common.fx_helpers import (  # noqa: F401
     _pick_source, _progress_cb, _f,
     _hidden_float, _hidden_combo,
 )
+
+
+class AudioDuckStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.AudioDuckStage",
+            display_name="Audio Duck",
+            category="ComfyTV/AudioFX",
+            inputs=[
+                *_standard_stage_inputs(),
+                _hidden_float("threshold", 0.05, 0.001, 1.0, step=0.005),
+                _hidden_float("ratio", 8.0, 1.0, 20.0, step=0.5),
+                _hidden_float("attack", 20.0, 1.0, 2000.0, step=1.0),
+                _hidden_float("release", 400.0, 10.0, 9000.0, step=10.0),
+                _hidden_float("makeup", 1.0, 1.0, 8.0, step=0.1),
+                io.Boolean.Input("mix_back", default=True, socketless=True,
+                                 extra_dict={"hidden": True}),
+                _hidden_float("side_gain", 1.0, 0.0, 4.0, step=0.05),
+                COMFYTV_AUDIO.Input("audio", optional=True),
+                COMFYTV_AUDIO.Input("sidechain", optional=True),
+                COMFYTV_VIDEO.Input("video", optional=True),
+                COMFYTV_VIDEO.Input("sidechain_video", optional=True),
+            ],
+            outputs=[COMFYTV_AUDIO.Output("audio")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
+                threshold=0.05, ratio=8.0, attack=20.0, release=400.0,
+                makeup=1.0, mix_back=True, side_gain=1.0,
+                audio="", sidechain="", video="", sidechain_video=""):
+        src_main = _pick_source(audio, video, "Audio Duck (main)")
+        src_side = _pick_source(sidechain, sidechain_video,
+                                "Audio Duck (sidechain)")
+        payload = duck_audio(
+            src_main, src_side,
+            threshold=_f(threshold, 0.001, 1.0, 0.05),
+            ratio=_f(ratio, 1, 20, 8.0),
+            attack=_f(attack, 1, 2000, 20.0),
+            release=_f(release, 10, 9000, 400.0),
+            makeup=_f(makeup, 1, 8, 1.0),
+            mix_back=bool(mix_back),
+            side_gain=_f(side_gain, 0, 4, 1.0))
+        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
+                                parent_output_id=parent_output_id)
 
 
 class AudioCrossfadeStage(io.ComfyNode):

@@ -28,7 +28,13 @@ from .video_edit import (
 from .video_color import (
     VideoColorStage, VideoCurvesStage, VideoLUTStage,
     HueCorrectStage, SelectiveColorStage, GrayWorldStage,
+    CDLStage, HistogramEqStage,
 )
+from .video_optics import (
+    Video360Stage, LensDistortStage, ChromaticAberrationStage, LensFlareStage,
+    ZDefocusStage,
+)
+from .video_particles import ParticlesStage
 from .video_enhance import (
     VideoBlurSharpenStage, VideoDenoiseStage, VideoInterpolateStage,
     VideoDeinterlaceStage, VideoStabilizeStage, VideoStabilizeV2Stage,
@@ -46,7 +52,7 @@ from .video_compose import (
 )
 from .video_masking import (
     MotionTrackStage, RotoMaskStage, MaskPropagateStage, PaintStrokeStage,
-    AnnotateStage,
+    AnnotateStage, ShapeMaskStage, FaceBlurStage, SpotRemoverStage,
 )
 from .video_text import TitleStage, SubtitleStage, SubtitleGenStage
 from .video_timeline import VideoTransitionStage, TimeRemapStage, SequenceStage
@@ -63,6 +69,7 @@ from .audio_effects import (
 )
 from .audio_edit import (
     AudioCrossfadeStage, AudioMixStage, AudioSegmentExportStage,
+    AudioDuckStage,
 )
 from .audio_measure import (
     AudioAnalyzeStage, AudioVisualizeStage, AudioSweepStage,
@@ -126,6 +133,10 @@ class ComfyTVExtension(ComfyExtension):
             FrameBlendStage, KenBurnsStage, OldFilmStage,
             SelectiveColorStage, ChromaShiftStage, PseudocolorStage,
             PosterizeStage, GrayWorldStage,
+            CDLStage, HistogramEqStage, Video360Stage, AudioDuckStage,
+            ShapeMaskStage, LensDistortStage, ChromaticAberrationStage,
+            LensFlareStage, ZDefocusStage, FaceBlurStage, SpotRemoverStage,
+            ParticlesStage,
             AnnotateStage, AudioReactiveStage, AudioMeterStage,
             ImageLoaderStage, VideoLoaderStage, AudioLoaderStage,
             AssetImageLoaderStage, AssetVideoLoaderStage, AssetAudioLoaderStage,

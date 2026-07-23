@@ -1,6 +1,7 @@
 from ._common import *  # noqa: F401, F403
 from ...runners.media_filter import xfade_videos, XFADE_TRANSITIONS
 from ...runners.media_remap import time_remap, frame_hold, render_sequence
+from ...runners.luma_maps import LUMA_MAP_KINDS
 
 from .common.fx_helpers import (  # noqa: F401
     _need_video, _progress_cb, _f, _parse_json,
@@ -25,6 +26,7 @@ class VideoTransitionStage(io.ComfyNode):
                 _hidden_float("luma_softness", 0.1, 0.0, 1.0),
                 io.Boolean.Input("luma_invert", default=False,
                                  socketless=True, extra_dict={"hidden": True}),
+                _hidden_combo("luma_map", ['none'] + LUMA_MAP_KINDS, 'none'),
                 COMFYTV_VIDEO.Input("video_a", optional=True),
                 COMFYTV_VIDEO.Input("video_b", optional=True),
                 COMFYTV_IMAGE.Input("luma_image", optional=True),
@@ -37,12 +39,19 @@ class VideoTransitionStage(io.ComfyNode):
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                 transition='fade', duration=1.0, offset=0.0,
-                luma_softness=0.1, luma_invert=False,
+                luma_softness=0.1, luma_invert=False, luma_map='none',
                 video_a="", video_b="", luma_image=""):
         if not (video_a or '').strip() or not (video_b or '').strip():
             raise RuntimeError(
                 "Video Transition needs two upstream videos — wire video_a and video_b."
             )
+        if not (luma_image or '').strip() and luma_map in LUMA_MAP_KINDS:
+            from ...runners.luma_maps import luma_map_image_url
+            from ...runners.media import get_video_info
+            info = get_video_info(video_a)
+            luma_image = luma_map_image_url(
+                luma_map, int(info.get('width') or 1280),
+                int(info.get('height') or 720))
         if (luma_image or '').strip():
             from ...runners.video_timeline_ops import luma_wipe_videos
             payload = luma_wipe_videos(

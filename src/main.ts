@@ -100,6 +100,18 @@ import ChromaShiftStageCard from '@/components/stages/ChromaShiftStageCard.vue'
 import PseudocolorStageCard from '@/components/stages/PseudocolorStageCard.vue'
 import PosterizeStageCard from '@/components/stages/PosterizeStageCard.vue'
 import GrayWorldStageCard from '@/components/stages/GrayWorldStageCard.vue'
+import CDLStageCard from '@/components/stages/CDLStageCard.vue'
+import HistogramEqStageCard from '@/components/stages/HistogramEqStageCard.vue'
+import Video360StageCard from '@/components/stages/Video360StageCard.vue'
+import ShapeMaskStageCard from '@/components/stages/ShapeMaskStageCard.vue'
+import LensDistortStageCard from '@/components/stages/LensDistortStageCard.vue'
+import ChromaticAberrationStageCard from '@/components/stages/ChromaticAberrationStageCard.vue'
+import LensFlareStageCard from '@/components/stages/LensFlareStageCard.vue'
+import ParticlesStageCard from '@/components/stages/ParticlesStageCard.vue'
+import ZDefocusStageCard from '@/components/stages/ZDefocusStageCard.vue'
+import FaceBlurStageCard from '@/components/stages/FaceBlurStageCard.vue'
+import SpotRemoverStageCard from '@/components/stages/SpotRemoverStageCard.vue'
+import AudioDuckStageCard from '@/components/stages/AudioDuckStageCard.vue'
 import KenBurnsStageCard from '@/components/stages/KenBurnsStageCard.vue'
 import OldFilmStageCard from '@/components/stages/OldFilmStageCard.vue'
 import AnnotateStageCard from '@/components/stages/AnnotateStageCard.vue'
@@ -161,6 +173,18 @@ let mountKeySeq = 0
 })()
 
 const RICH_STAGE_CARDS: Record<string, any> = {
+  'ComfyTV.CDLStage':                 CDLStageCard,
+  'ComfyTV.HistogramEqStage':         HistogramEqStageCard,
+  'ComfyTV.Video360Stage':            Video360StageCard,
+  'ComfyTV.ShapeMaskStage':           ShapeMaskStageCard,
+  'ComfyTV.LensDistortStage':         LensDistortStageCard,
+  'ComfyTV.ChromaticAberrationStage': ChromaticAberrationStageCard,
+  'ComfyTV.LensFlareStage':           LensFlareStageCard,
+  'ComfyTV.ParticlesStage':           ParticlesStageCard,
+  'ComfyTV.ZDefocusStage':            ZDefocusStageCard,
+  'ComfyTV.FaceBlurStage':            FaceBlurStageCard,
+  'ComfyTV.SpotRemoverStage':         SpotRemoverStageCard,
+  'ComfyTV.AudioDuckStage':           AudioDuckStageCard,
   'ComfyTV.MultiangleStage': MultiangleStageCard,
   'ComfyTV.RelightStage':    RelightStageCard,
   'ComfyTV.InpaintStage':    PainterStageCard,
@@ -379,6 +403,18 @@ const RICH_STAGE_MIN_HEIGHTS: Record<string, number> = {
   'ComfyTV.AudioReactiveStage':       700,
   'ComfyTV.AudioMeterStage':          620,
   'ComfyTV.FXChainStage':             520,
+  'ComfyTV.CDLStage':                 780,
+  'ComfyTV.HistogramEqStage':         640,
+  'ComfyTV.Video360Stage':            760,
+  'ComfyTV.ShapeMaskStage':           760,
+  'ComfyTV.LensDistortStage':         780,
+  'ComfyTV.ChromaticAberrationStage': 700,
+  'ComfyTV.LensFlareStage':           720,
+  'ComfyTV.ParticlesStage':           860,
+  'ComfyTV.ZDefocusStage':            740,
+  'ComfyTV.FaceBlurStage':            700,
+  'ComfyTV.SpotRemoverStage':         720,
+  'ComfyTV.AudioDuckStage':           640,
 }
 
 const RICH_STAGE_MIN_WIDTHS: Record<string, number> = {

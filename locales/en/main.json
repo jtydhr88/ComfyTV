@@ -2018,10 +2018,15 @@
     "waveform": "Waveform",
     "spectrum": "Spectrum",
     "splitChannels": "Split channels",
-    "legend": "Legend"
+    "legend": "Legend",
+    "mixBack": "Mix voice back over ducked audio",
+    "threshold": "Threshold"
   },
   "scopes": {
     "liveSampling": "Sampling the upstream preview live",
     "wireHint": "Wire a live-preview node (Color / Curves / Blur / Stylize / Chroma Key) for live scopes"
+  },
+  "optics": {
+    "needsDepth": "Wire a depth map (image or video) first"
   }
 }

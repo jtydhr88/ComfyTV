@@ -33,7 +33,8 @@ def _sample_lut(lut, coord):
 HUE_LUT_DEFAULTS = (('sat', 1.0), ('lum', 1.0),
                     ('red', 1.0), ('green', 1.0), ('blue', 1.0),
                     ('r_sup', 1.0), ('g_sup', 1.0), ('b_sup', 1.0),
-                    ('hue', 1.0))
+                    ('hue', 1.0),
+                    ('sat_sat', 1.0), ('lum_lum', 1.0))
 
 
 def build_hue_luts(curves, device='cpu'):
@@ -90,6 +91,19 @@ def hue_correct_frame(img, luts, sat_thrsh=0.0, luminance_mix=0.0):
              + out[..., 2] * LUMA_B).unsqueeze(-1)
     out = l_sat * (1 - sat_gain.unsqueeze(-1)) + out * sat_gain.unsqueeze(-1)
 
+    ss_lut = luts.get('sat_sat')
+    if ss_lut is not None and (ss_lut - 1.0).abs().max() > 1e-6:
+        ss_gain = _sample_lut(ss_lut, s).unsqueeze(-1)
+        l_ss = (out[..., 0] * LUMA_R + out[..., 1] * LUMA_G
+                + out[..., 2] * LUMA_B).unsqueeze(-1)
+        out = l_ss + ss_gain * (out - l_ss)
+
+    ll_lut = luts.get('lum_lum')
+    if ll_lut is not None and (ll_lut - 1.0).abs().max() > 1e-6:
+        l_cur = (out[..., 0] * LUMA_R + out[..., 1] * LUMA_G
+                 + out[..., 2] * LUMA_B)
+        out = out * _sample_lut(ll_lut, l_cur).unsqueeze(-1)
+
     mixv = max(0.0, min(1.0, float(luminance_mix)))
     if mixv > 0:
         lum_out = (out[..., 0] * LUMA_R + out[..., 1] * LUMA_G
@@ -121,4 +135,43 @@ def hue_correct_video(view_url: str, curves_raw: str, *,
     return torch_process_video(view_url, frame_fn, progress=progress)
 
 
-__all__ = ['hue_correct_video', 'build_hue_luts', 'hue_correct_frame']
+def cdl_frame(img, slope, offset, power, saturation=1.0):
+    import torch
+
+    s = torch.tensor(slope, dtype=img.dtype, device=img.device)
+    o = torch.tensor(offset, dtype=img.dtype, device=img.device)
+    p = torch.tensor(power, dtype=img.dtype, device=img.device)
+    out = (img * s + o).clamp(0.0, 1.0)
+    out = out.pow(p)
+    sat = float(saturation)
+    if sat != 1.0:
+        luma = (out[..., 0] * LUMA_R + out[..., 1] * LUMA_G
+                + out[..., 2] * LUMA_B).unsqueeze(-1)
+        out = luma + sat * (out - luma)
+    return out.clamp(0, 1)
+
+
+def histeq_frame(img, strength=1.0, clip_limit=0.0):
+    import torch
+
+    y = (img[..., 0] * LUMA_R + img[..., 1] * LUMA_G
+         + img[..., 2] * LUMA_B).clamp(0, 1)
+    hist = torch.histc(y, bins=256, min=0.0, max=1.0)
+    if clip_limit > 0:
+        cap = clip_limit * y.numel() / 256.0
+        excess = (hist - cap).clamp(min=0).sum()
+        hist = hist.clamp(max=cap) + excess / 256.0
+    cdf = torch.cumsum(hist, dim=0)
+    total = cdf[-1].clamp(min=1.0)
+    cdf_min = cdf[cdf > 0][0] if (cdf > 0).any() else cdf[0]
+    lut = ((cdf - cdf_min) / (total - cdf_min).clamp(min=1.0)).clamp(0, 1)
+    idx = (y * 255.0).round().long().clamp(0, 255)
+    y_eq = lut[idx]
+    k = max(0.0, min(1.0, float(strength)))
+    y_new = y * (1 - k) + y_eq * k
+    gain = ((y_new + 1e-6) / (y + 1e-6)).clamp(0.0, 8.0).unsqueeze(-1)
+    return (img * gain).clamp(0, 1)
+
+
+__all__ = ['hue_correct_video', 'build_hue_luts', 'hue_correct_frame',
+           'cdl_frame', 'histeq_frame']

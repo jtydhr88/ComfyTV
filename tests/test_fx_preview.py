@@ -118,6 +118,16 @@ class TestFxPreviewEndpoint:
         from ComfyTV.runners import media
         assert media.get_video_info(data['url'])['duration'] <= 3.0 + 0.2
 
+    async def test_torch_chain_node_preview(self, client, noise_clip):
+        r = await _post(client, noise_clip, node_id='ComfyTV.CDLStage',
+                        params={'slope_r': 0.3, 'slope_g': 0.3,
+                                'slope_b': 0.3}, window=0.4)
+        assert r.status == 200, (await r.json())
+        data = await r.json()
+        assert data['url'].startswith('/view?')
+        f_low = _decode_frames(data['url'])
+        assert f_low and float(np.mean(f_low[0])) < 100
+
     async def test_unknown_node_404(self, client, noise_clip):
         r = await _post(client, noise_clip, node_id='ComfyTV.NopeStage')
         assert r.status == 404

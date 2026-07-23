@@ -46,8 +46,17 @@ def polygonize(points) -> list:
 def _interp_points(a, b, f):
     out = []
     for pa, pb in zip(a, b):
-        out.append({k: float(pa.get(k, 0)) * (1 - f) + float(pb.get(k, 0)) * f
-                    for k in ('x', 'y', 'lx', 'ly', 'rx', 'ry')})
+        pt = {k: float(pa.get(k, 0)) * (1 - f) + float(pb.get(k, 0)) * f
+              for k in ('x', 'y', 'lx', 'ly', 'rx', 'ry')}
+        fa = float(pa.get('f', -1.0))
+        fb = float(pb.get('f', -1.0))
+        if fa >= 0 and fb >= 0:
+            pt['f'] = fa * (1 - f) + fb * f
+        elif fa >= 0 or fb >= 0:
+            pt['f'] = max(fa, fb)
+        else:
+            pt['f'] = -1.0
+        out.append(pt)
     return out
 
 
@@ -86,13 +95,31 @@ def rasterize_mask(points, w, h, feather_px=0.0, invert=False) -> np.ndarray:
         img.resize((w, h), Image.LANCZOS), dtype=np.float32) / 255.0
 
     f = float(feather_px or 0.0)
-    if f > 0.25:
+    per_point = [float(p.get('f', -1.0)) for p in points or []]
+    has_pp = any(v >= 0 for v in per_point)
+    if f > 0.25 or has_pp:
         from scipy.ndimage import distance_transform_edt
         hard = mask > 0.5
         d_out = distance_transform_edt(~hard)
         d_in = distance_transform_edt(hard)
         signed = np.where(hard, d_in, -d_out)
-        mask = np.clip(signed / f + 1.0, 0.0, 1.0).astype(np.float32)
+        if has_pp:
+            ctrl = np.array([[float(p.get('x', 0)), float(p.get('y', 0))]
+                             for p in points], dtype=np.float32)
+            fv = np.array([v if v >= 0 else max(0.25, f)
+                           for v in per_point], dtype=np.float32)
+            fv = np.clip(fv, 0.25, None)
+            ys, xs = np.mgrid[0:h, 0:w].astype(np.float32)
+            num = np.zeros((h, w), dtype=np.float32)
+            den = np.zeros((h, w), dtype=np.float32)
+            for (cx, cy), cf in zip(ctrl, fv):
+                wgt = 1.0 / ((xs - cx) ** 2 + (ys - cy) ** 2 + 1.0)
+                num += wgt * cf
+                den += wgt
+            fmap = num / np.maximum(den, 1e-9)
+            mask = np.clip(signed / fmap + 1.0, 0.0, 1.0).astype(np.float32)
+        else:
+            mask = np.clip(signed / f + 1.0, 0.0, 1.0).astype(np.float32)
 
     if invert:
         mask = 1.0 - mask

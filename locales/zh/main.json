@@ -2018,10 +2018,15 @@
     "waveform": "波形图",
     "spectrum": "频谱图",
     "splitChannels": "分声道",
-    "legend": "图例"
+    "legend": "图例",
+    "mixBack": "闪避后混回人声",
+    "threshold": "阈值"
   },
   "scopes": {
     "liveSampling": "实时采样上游预览",
     "wireHint": "连接带实时预览的节点（调色/曲线/模糊/风格化/抠像）以启用实时示波"
+  },
+  "optics": {
+    "needsDepth": "先接入深度图(图片或视频)"
   }
 }

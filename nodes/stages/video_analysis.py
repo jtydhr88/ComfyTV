@@ -126,7 +126,7 @@ class SceneDetectStage(io.ComfyNode):
                                 parent_output_id=parent_output_id)
 
 
-SCOPES = ['waveform', 'waveform_parade', 'vectorscope', 'histogram']
+SCOPES = ['waveform', 'waveform_parade', 'vectorscope', 'histogram', 'cie']
 
 
 class VideoScopesStage(io.ComfyNode):
@@ -158,6 +158,7 @@ class VideoScopesStage(io.ComfyNode):
             'waveform_parade': [('waveform', 'display=parade:graticule=green:flags=numbers')],
             'vectorscope': [('vectorscope', 'mode=color3:graticule=green:flags=name')],
             'histogram': [('histogram', None)],
+            'cie': [('ciescope', 'system=hdtv:gamuts=hdtv:showwhite=1')],
         }.get(scope)
         if specs is None:
             raise RuntimeError(f"Video Scopes: unknown scope {scope!r}")

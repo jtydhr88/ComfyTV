@@ -43,6 +43,53 @@ PRESET_FIELDS: dict[str, tuple[str, ...]] = {
     ),
     "ComfyTV.PseudocolorStage": ("pseudo_preset", "pseudo_opacity"),
     "ComfyTV.PosterizeStage": ("elbg_colors", "elbg_steps"),
+    "ComfyTV.CDLStage": (
+        "slope_r", "slope_g", "slope_b", "offset_r", "offset_g", "offset_b",
+        "power_r", "power_g", "power_b", "cdl_sat",
+    ),
+    "ComfyTV.HistogramEqStage": ("strength", "clip_limit"),
+    "ComfyTV.Video360Stage": (
+        "proj_in", "proj_out", "v360_yaw", "v360_pitch", "v360_roll",
+        "v360_fov", "v360_interp",
+    ),
+    "ComfyTV.ShapeMaskStage": (
+        "map_kind", "threshold", "softness", "invert", "animate", "output",
+        "seed",
+    ),
+    "ComfyTV.LensDistortStage": (
+        "model", "direction", "k1", "k2", "fov", "center_x", "center_y",
+        "squeeze", "lens_scale", "edge",
+    ),
+    "ComfyTV.ChromaticAberrationStage": (
+        "amount", "falloff", "center_x", "center_y",
+    ),
+    "ComfyTV.LensFlareStage": (
+        "pos_x", "pos_y", "intensity", "size", "streak", "ghosts",
+    ),
+    "ComfyTV.ParticlesStage": (
+        "emitter", "e_x0", "e_y0", "e_x1", "e_y1", "rate", "lifetime",
+        "speed", "direction", "spread", "gravity", "wind", "turbulence",
+        "turb_scale", "drag", "attract_strength", "attract_x", "attract_y",
+        "attract_radius", "swirl", "collide", "floor_y", "bounce",
+        "sub_mode", "sub_count", "sub_speed", "sub_lifetime",
+        "sub_size_ratio", "sub_color", "size", "size_end_ratio",
+        "opacity_start", "opacity_end", "size_curve", "opacity_curve",
+        "color0", "color1", "sprite", "renderer", "stretch", "trail_len",
+        "blend", "warmup", "seed",
+    ),
+    "ComfyTV.ZDefocusStage": (
+        "focus_depth", "focus_range", "max_radius", "layers", "shape",
+        "highlight_boost", "invert_depth",
+    ),
+    "ComfyTV.FaceBlurStage": (
+        "mode", "shape", "strength", "recheck", "search_scale", "neighbors",
+        "min_size",
+    ),
+    "ComfyTV.SpotRemoverStage": ("method", "feather"),
+    "ComfyTV.AudioDuckStage": (
+        "threshold", "ratio", "attack", "release", "makeup", "mix_back",
+        "side_gain",
+    ),
     "ComfyTV.GlowStage": (
         "threshold", "size", "bloom_ratio", "bloom_count", "gain", "mix",
     ),

@@ -44,9 +44,10 @@ def _spec_from_stage(node_id: str, stage_cls, params: dict,
     if args and isinstance(args[0], str):
         _url, entries = unpack_fx_video(args[0])
         if entries:
-            entry = entries[-1]
-            return {'domain': entry.get('domain', 'video'),
-                    'specs': entry.get('specs', [])}
+            entry = dict(entries[-1])
+            entry.setdefault('domain', 'video')
+            entry.setdefault('specs', [])
+            return entry
     if len(args) >= 2 and isinstance(args[1], str) and args[1].strip():
         return parse_fx_spec(args[1], node_id)
     raise RuntimeError("stage did not return an fx spec")
@@ -71,6 +72,11 @@ def _render_preview(video: str, data: dict, t: float, window: float) -> dict:
         url = filter_video(video, [scale_spec], audio_specs=list(data['specs']),
                            start=t0, end=t1, vcodec_options=opts,
                            keep_audio=True)
+    elif data.get('engine') == 'torch':
+        from ..runners.fx_chain_exec import run_fx_chain
+        clip = filter_video(video, [scale_spec], start=t0, end=t1,
+                            vcodec_options=opts, keep_audio=False)
+        url = run_fx_chain(clip, [data])
     else:
         url = filter_video(video, [scale_spec, *data['specs']],
                            start=t0, end=t1, vcodec_options=opts,

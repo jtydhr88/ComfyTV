@@ -308,6 +308,96 @@ class SelectiveColorStage(io.ComfyNode):
         return _fx_passthrough(video, fx_spec)
 
 
+class CDLStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.CDLStage",
+            display_name="CDL Grade",
+            category="ComfyTV/VideoFX",
+            inputs=[
+                *_standard_stage_inputs(),
+                _hidden_float("slope_r", 1.0, 0.0, 4.0),
+                _hidden_float("slope_g", 1.0, 0.0, 4.0),
+                _hidden_float("slope_b", 1.0, 0.0, 4.0),
+                _hidden_float("offset_r", 0.0, -1.0, 1.0),
+                _hidden_float("offset_g", 0.0, -1.0, 1.0),
+                _hidden_float("offset_b", 0.0, -1.0, 1.0),
+                _hidden_float("power_r", 1.0, 0.1, 4.0),
+                _hidden_float("power_g", 1.0, 0.1, 4.0),
+                _hidden_float("power_b", 1.0, 0.1, 4.0),
+                _hidden_float("cdl_sat", 1.0, 0.0, 4.0),
+                COMFYTV_VIDEO.Input("video", optional=True),
+            ],
+            outputs=[COMFYTV_VIDEO.Output("video")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
+                slope_r=1.0, slope_g=1.0, slope_b=1.0,
+                offset_r=0.0, offset_g=0.0, offset_b=0.0,
+                power_r=1.0, power_g=1.0, power_b=1.0,
+                cdl_sat=1.0, video=""):
+        params = {
+            'slope_r': _f(slope_r, 0, 4, 1.0),
+            'slope_g': _f(slope_g, 0, 4, 1.0),
+            'slope_b': _f(slope_b, 0, 4, 1.0),
+            'offset_r': _f(offset_r, -1, 1, 0.0),
+            'offset_g': _f(offset_g, -1, 1, 0.0),
+            'offset_b': _f(offset_b, -1, 1, 0.0),
+            'power_r': _f(power_r, 0.1, 4, 1.0),
+            'power_g': _f(power_g, 0.1, 4, 1.0),
+            'power_b': _f(power_b, 0.1, 4, 1.0),
+            'cdl_sat': _f(cdl_sat, 0, 4, 1.0),
+        }
+        neutral = all(params[k] == 1.0 for k in
+                      ('slope_r', 'slope_g', 'slope_b',
+                       'power_r', 'power_g', 'power_b', 'cdl_sat')) \
+            and all(params[k] == 0.0 for k in
+                    ('offset_r', 'offset_g', 'offset_b'))
+        if neutral:
+            return _fx_identity(video)
+        fx_spec = build_torch_fx_spec(
+            "ComfyTV.CDLStage", "CDL Grade", "video", "cdl", params)
+        return _fx_passthrough(video, fx_spec)
+
+
+class HistogramEqStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.HistogramEqStage",
+            display_name="Histogram Equalize",
+            category="ComfyTV/VideoFX",
+            inputs=[
+                *_standard_stage_inputs(),
+                _hidden_float("strength", 0.5, 0.0, 1.0),
+                _hidden_float("clip_limit", 0.0, 0.0, 0.1, step=0.005,
+                              tooltip="cap per-bin fraction, 0 = off"),
+                COMFYTV_VIDEO.Input("video", optional=True),
+            ],
+            outputs=[COMFYTV_VIDEO.Output("video")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
+                strength=0.5, clip_limit=0.0, video=""):
+        k = _f(strength, 0, 1, 0.5)
+        if k <= 0:
+            return _fx_identity(video)
+        fx_spec = build_torch_fx_spec(
+            "ComfyTV.HistogramEqStage", "Histogram Equalize", "video",
+            "histeq",
+            {'strength': k, 'clip_limit': _f(clip_limit, 0, 0.1, 0.0)})
+        return _fx_passthrough(video, fx_spec)
+
+
 class GrayWorldStage(io.ComfyNode):
 
     @classmethod

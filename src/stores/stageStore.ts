@@ -82,6 +82,14 @@ export const FX_PASSTHROUGH_CLASSES = new Set([
   'ComfyTV.PseudocolorStage',
   'ComfyTV.PosterizeStage',
   'ComfyTV.GrayWorldStage',
+  'ComfyTV.CDLStage',
+  'ComfyTV.HistogramEqStage',
+  'ComfyTV.Video360Stage',
+  'ComfyTV.ShapeMaskStage',
+  'ComfyTV.LensDistortStage',
+  'ComfyTV.ChromaticAberrationStage',
+  'ComfyTV.LensFlareStage',
+  'ComfyTV.ParticlesStage',
   'ComfyTV.VideoBlurSharpenStage',
   'ComfyTV.VideoDenoiseStage',
   'ComfyTV.VideoDeinterlaceStage',
@@ -103,6 +111,8 @@ export const FX_SIDE_SLOTS: Record<string, string[]> = {
   'ComfyTV.PIKStage': ['clean_plate_video', 'clean_plate', 'in_mask',
     'out_mask', 'bg_video'],
   'ComfyTV.VideoTransformStage': ['track'],
+  'ComfyTV.ShapeMaskStage': ['shape_image'],
+  'ComfyTV.ParticlesStage': ['mask_video', 'mask_image'],
 }
 
 export function isChainableFx(node: unknown): boolean {

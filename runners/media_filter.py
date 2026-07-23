@@ -934,6 +934,113 @@ def crossfade_audios(url_a: str, url_b: str, duration: float = 1.0,
     return path_to_view_url(out)
 
 
+def duck_audio(main_url: str, side_url: str, *,
+               threshold: float = 0.05, ratio: float = 8.0,
+               attack: float = 20.0, release: float = 400.0,
+               makeup: float = 1.0, mix_back: bool = True,
+               side_gain: float = 1.0) -> str:
+    import av
+
+    require_filters('sidechaincompress', 'aformat', 'amix', 'asplit')
+    threshold = min(max(float(threshold), 0.001), 1.0)
+    ratio = min(max(float(ratio), 1.0), 20.0)
+    attack = min(max(float(attack), 0.01), 2000.0)
+    release = min(max(float(release), 0.01), 9000.0)
+    makeup = min(max(float(makeup), 1.0), 64.0)
+    side_gain = min(max(float(side_gain), 0.0), 4.0)
+
+    src_m = localize(main_url)
+    src_s = localize(side_url)
+    out = fresh_output_path('.wav', subfolder='comfytv/audio')
+
+    with av.open(str(src_m)) as cm, av.open(str(src_s)) as cs, \
+            av.open(str(out), 'w', format='wav') as outp:
+        if not cm.streams.audio:
+            raise RuntimeError("duck: main input has no audio stream")
+        if not cs.streams.audio:
+            raise RuntimeError("duck: sidechain input has no audio stream")
+        in_m = cm.streams.audio[0]
+        in_s = cs.streams.audio[0]
+
+        graph = av.filter.Graph()
+        buf_m = graph.add_abuffer(template=in_m)
+        buf_s = graph.add_abuffer(template=in_s)
+        sc = graph.add(
+            'sidechaincompress',
+            f'threshold={threshold}:ratio={ratio}:attack={attack}'
+            f':release={release}:makeup={makeup}')
+        if mix_back:
+            split = graph.add('asplit', '2')
+            buf_s.link_to(split)
+            split.link_to(sc, 0, 1)
+            buf_m.link_to(sc, 0, 0)
+            side_fmt = graph.add(
+                'aformat',
+                f'sample_fmts=fltp:sample_rates={_AUDIO_RATE}'
+                f':channel_layouts=stereo')
+            split.link_to(side_fmt, 1, 0)
+            duck_fmt = graph.add(
+                'aformat',
+                f'sample_fmts=fltp:sample_rates={_AUDIO_RATE}'
+                f':channel_layouts=stereo')
+            sc.link_to(duck_fmt)
+            vol = graph.add('volume', f'volume={side_gain}')
+            side_fmt.link_to(vol)
+            amix = graph.add('amix', 'inputs=2:normalize=0')
+            duck_fmt.link_to(amix, 0, 0)
+            vol.link_to(amix, 0, 1)
+            tail = amix
+        else:
+            buf_m.link_to(sc, 0, 0)
+            buf_s.link_to(sc, 0, 1)
+            tail = sc
+        fmt = graph.add(
+            'aformat',
+            f'sample_fmts=fltp:sample_rates={_AUDIO_RATE}'
+            f':channel_layouts=stereo')
+        tail.link_to(fmt)
+        sink = graph.add('abuffersink')
+        fmt.link_to(sink)
+        graph.configure()
+
+        out_a = outp.add_stream('pcm_s16le', rate=_AUDIO_RATE)
+        out_a.layout = 'stereo'
+        pts = 0
+
+        def _write(frame):
+            nonlocal pts
+            frame.pts = pts
+            frame.time_base = Fraction(1, _AUDIO_RATE)
+            pts += frame.samples
+            for pkt in out_a.encode(frame):
+                outp.mux(pkt)
+
+        dec_m = cm.decode(in_m)
+        dec_s = cs.decode(in_s)
+        done_m = done_s = False
+        while not (done_m and done_s):
+            if not done_m:
+                try:
+                    buf_m.push(next(dec_m))
+                except StopIteration:
+                    buf_m.push(None)
+                    done_m = True
+            if not done_s:
+                try:
+                    buf_s.push(next(dec_s))
+                except StopIteration:
+                    buf_s.push(None)
+                    done_s = True
+            for f in _drain(sink):
+                _write(f)
+        for f in _drain(sink):
+            _write(f)
+        for pkt in out_a.encode():
+            outp.mux(pkt)
+
+    return path_to_view_url(out)
+
+
 def analyze_audio(view_url: str, audio_specs) -> list:
     import gc
 

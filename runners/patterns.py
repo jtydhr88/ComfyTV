@@ -8,7 +8,8 @@ from .media_filter import make_progress
 
 _OUT_TB = Fraction(1, 90000)
 
-PATTERN_KINDS = ['ramp', 'radial', 'rectangle', 'noise', 'checkerboard',
+PATTERN_KINDS = ['ramp', 'radial', 'rectangle', 'noise', 'perlin',
+                 'turbulence', 'cellular', 'plasma', 'checkerboard',
                  'colorbars', 'colorwheel', 'count']
 RAMP_INTERPS = ['linear', 'smooth', 'ease_in', 'ease_out']
 
@@ -314,6 +315,7 @@ def generate_pattern_video(kind: str, *, width: int = 1280, height: int = 720,
         from .media_filter import tag_bt709
         tag_bt709(enc.codec_context)
         cached = None
+        perm = None
         for i in range(n):
             t = i / fps
             if kind == 'count':
@@ -323,6 +325,37 @@ def generate_pattern_video(kind: str, *, width: int = 1280, height: int = 720,
                 tmap = _value_noise(w, h, int(noise_scale),
                                     int(noise_octaves), int(seed),
                                     t * float(noise_speed))
+                mix = tmap[..., None]
+                rgb = np.ascontiguousarray(
+                    ((c0 * (1 - mix) + c1 * mix) * 255).astype(np.uint8))
+            elif kind in ('perlin', 'turbulence'):
+                from .procedural import fbm3, perm_table
+                if perm is None:
+                    perm = perm_table(int(seed))
+                s = max(4.0, float(noise_scale))
+                val = fbm3(xs / s, ys / s,
+                           np.float64(t * float(noise_speed) * 0.5),
+                           perm, octaves=int(noise_octaves),
+                           turbulence=(kind == 'turbulence'))
+                if kind == 'turbulence':
+                    tmap = np.clip(val * 1.8, 0, 1)
+                else:
+                    tmap = np.clip(val * 0.75 + 0.5, 0, 1)
+                mix = tmap[..., None]
+                rgb = np.ascontiguousarray(
+                    ((c0 * (1 - mix) + c1 * mix) * 255).astype(np.uint8))
+            elif kind == 'cellular':
+                from .procedural import cellular2
+                s = max(4.0, float(noise_scale))
+                tmap = cellular2(xs / s, ys / s,
+                                 t * float(noise_speed) * 0.15, int(seed))
+                mix = tmap[..., None]
+                rgb = np.ascontiguousarray(
+                    ((c0 * (1 - mix) + c1 * mix) * 255).astype(np.uint8))
+            elif kind == 'plasma':
+                from .procedural import plasma_field
+                tmap = plasma_field(xs, ys, t * float(noise_speed),
+                                    float(noise_scale))
                 mix = tmap[..., None]
                 rgb = np.ascontiguousarray(
                     ((c0 * (1 - mix) + c1 * mix) * 255).astype(np.uint8))

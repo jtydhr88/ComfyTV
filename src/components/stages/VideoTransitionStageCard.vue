@@ -132,8 +132,14 @@
         <div class="ctv:text-2xs ctv:text-muted-foreground">{{ $t('fx.offsetAuto') }}</div>
       </template>
 
-      <template v-if="lumaWired">
+      <template v-if="!lumaWired">
         <div class="ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">Luma wipe</div>
+        <div class="ctv-scroll-thin ctv:max-h-20 ctv:overflow-y-auto" @wheel.stop>
+          <FxChips v-model="lumaMap" :options="LUMA_MAP_OPTS" />
+        </div>
+      </template>
+
+      <template v-if="lumaWired || lumaMap !== 'none'">
         <FxSlider v-model="lumaSoftness" label="Softness" :min="0" :max="1" :step="0.01" :reset-to="0.1" />
         <label class="ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs ctv:text-muted-foreground ctv:cursor-pointer">
           <input type="checkbox" v-model="lumaInvert" class="ctv:accent-primary-background" />
@@ -203,6 +209,11 @@ const offset = useNumWidget(props.node, 'offset', 0)
 const lumaWired = computed(() => Boolean(pickSourceImageUrl(props.state.inputs, 'luma_image')))
 const lumaSoftness = useNumWidget(props.node, 'luma_softness', 0.1)
 const lumaInvert = useBoolWidget(props.node, 'luma_invert', false)
+const lumaMap = useStrWidget(props.node, 'luma_map', 'none')
+const LUMA_MAP_OPTS = ['none', 'linear_x', 'linear_y', 'bilinear_x',
+  'bilinear_y', 'radial', 'square', 'diamond', 'clock', 'symmetric_clock',
+  'spiral', 'burst', 'curtain', 'blinds_h', 'blinds_v', 'checker', 'cloud']
+  .map(v => ({ value: v, label: v.replace('_', ' ') }))
 
 const canvasEl = ref<HTMLCanvasElement | null>(null)
 const videoAEl = ref<HTMLVideoElement | null>(null)

@@ -37,11 +37,11 @@
       <FxChips v-if="kind === 'ramp' || kind === 'radial'" v-model="interp" :options="INTERPS" />
       <FxSlider v-if="kind === 'rectangle'" v-model="softness" label="Softness" :min="0" :max="1" :step="0.01" :reset-to="0" />
 
-      <template v-if="kind === 'noise'">
+      <template v-if="['noise', 'perlin', 'turbulence', 'cellular', 'plasma'].includes(kind)">
         <FxSlider v-model="noiseScale" label="Noise scale" :min="4" :max="512" :step="1" :decimals="0" :reset-to="64" />
-        <FxSlider v-model="noiseOctaves" label="Octaves" :min="1" :max="8" :step="1" :decimals="0" :reset-to="4" />
+        <FxSlider v-if="kind !== 'plasma' && kind !== 'cellular'" v-model="noiseOctaves" label="Octaves" :min="1" :max="8" :step="1" :decimals="0" :reset-to="4" />
         <FxSlider v-model="noiseSpeed" label="Speed" :min="0" :max="10" :step="0.1" :reset-to="1" />
-        <FxSlider v-model="seed" label="Seed" :min="0" :max="99999" :step="1" :decimals="0" :reset-to="7" />
+        <FxSlider v-if="kind !== 'plasma'" v-model="seed" label="Seed" :min="0" :max="99999" :step="1" :decimals="0" :reset-to="7" />
       </template>
 
       <FxSlider v-if="kind === 'checkerboard'" v-model="boxSize" label="Box size" :min="2" :max="1024" :step="2" :decimals="0" :reset-to="64" />
@@ -95,6 +95,10 @@ const props = defineProps<{
 const KINDS = [
   { value: 'ramp', label: 'Ramp' },
   { value: 'radial', label: 'Radial' },
+  { value: 'perlin', label: 'Perlin' },
+  { value: 'turbulence', label: 'Turbulence' },
+  { value: 'cellular', label: 'Cellular' },
+  { value: 'plasma', label: 'Plasma' },
   { value: 'rectangle', label: 'Rectangle' },
   { value: 'noise', label: 'Noise' },
   { value: 'checkerboard', label: 'Checker' },

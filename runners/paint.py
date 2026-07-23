@@ -56,7 +56,7 @@ def _hex_rgb(s):
 
 
 def paint_video(view_url: str, strokes, *, t_start=0.0, t_end=-1.0,
-                progress=None) -> str:
+                reveal_url: str = "", progress=None) -> str:
     import torch
 
     info = get_video_info(view_url)
@@ -79,9 +79,22 @@ def paint_video(view_url: str, strokes, *, t_start=0.0, t_end=-1.0,
             'color': _hex_rgb(s.get('color')),
             'time_offset': float(s.get('time_offset') or 0.0),
             'time_absolute': float(s.get('time_absolute', -1.0)),
+            'life_start': float(s.get('life_start', -1.0)),
+            'life_end': float(s.get('life_end', -1.0)),
         })
     if not prepared:
         raise RuntimeError("paint: no strokes")
+
+    needs_reveal = any(s['mode'] == 'reveal' for s in prepared)
+    if needs_reveal and not (reveal_url or '').strip():
+        raise RuntimeError(
+            "paint: a reveal stroke needs a reveal video — wire one in")
+    reveal_state = {'decoder': None, 'container': None, 'last': None}
+    if needs_reveal:
+        import av
+        reveal_state['container'] = av.open(str(localize(reveal_url)))
+        reveal_state['decoder'] = reveal_state['container'].decode(
+            reveal_state['container'].streams.video[0])
 
     fps = info['fps'] or 24
     max_back = max((-s['time_offset'] for s in prepared
@@ -181,18 +194,46 @@ def paint_video(view_url: str, strokes, *, t_start=0.0, t_end=-1.0,
             torch.arange(w, device=t_frame.device) - int(round(dx)), 0, w - 1)
         return t_frame[ys][:, xs]
 
+    def _reveal_frame(img):
+        dec = reveal_state['decoder']
+        if dec is not None:
+            try:
+                frame = next(dec)
+                arr = frame.to_ndarray(format='rgb24')
+                reveal_state['last'] = torch.from_numpy(
+                    arr.astype(np.float32) / 255.0).to(img.device)
+            except StopIteration:
+                pass
+        rv = reveal_state['last']
+        if rv is None:
+            return img
+        if rv.shape[:2] != img.shape[:2]:
+            rv = torch.nn.functional.interpolate(
+                rv.permute(2, 0, 1).unsqueeze(0), size=img.shape[:2],
+                mode='bilinear', align_corners=False
+            ).squeeze(0).permute(1, 2, 0)
+            reveal_state['last'] = rv
+        return rv
+
     def frame_fn(img, t):
         if history_len > 0 and t <= end + max_back:
             history.append((t, (img.clamp(0, 1) * 255).byte().cpu()))
+        reveal_now = _reveal_frame(img) if needs_reveal else None
         if t < t_start or t > end:
             return img
         out = img
         for s in prepared:
+            if s['life_start'] >= 0 and t < s['life_start'] - 1e-6:
+                continue
+            if s['life_end'] >= 0 and t > s['life_end'] + 1e-6:
+                continue
             m = _mask_for(s, img.device)
             if s['mode'] == 'clone':
                 base = _clone_source(s, img, t)
                 src = _shift(base, s['dx'], s['dy'])
                 out = src * m + out * (1 - m)
+            elif s['mode'] == 'reveal':
+                out = reveal_now * m + out * (1 - m)
             elif s['mode'] == 'blur':
                 out = _gauss_blur(out, s['sigma']) * m + out * (1 - m)
             elif s['mode'] == 'color':
@@ -201,7 +242,11 @@ def paint_video(view_url: str, strokes, *, t_start=0.0, t_end=-1.0,
                 out = col * m + out * (1 - m)
         return out
 
-    return torch_process_video(view_url, frame_fn, progress=progress)
+    try:
+        return torch_process_video(view_url, frame_fn, progress=progress)
+    finally:
+        if reveal_state['container'] is not None:
+            reveal_state['container'].close()
 
 
 __all__ = ['rasterize_stroke', 'paint_video']

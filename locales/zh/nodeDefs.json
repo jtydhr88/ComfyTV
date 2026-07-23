@@ -380,6 +380,42 @@
     },
     "AudioMeterStage": {
       "display_name": "电平表叠加"
+    },
+    "CDLStage": {
+      "display_name": "CDL 调色"
+    },
+    "HistogramEqStage": {
+      "display_name": "直方图均衡"
+    },
+    "Video360Stage": {
+      "display_name": "360 投影"
+    },
+    "ShapeMaskStage": {
+      "display_name": "形状蒙版"
+    },
+    "LensDistortStage": {
+      "display_name": "镜头畸变"
+    },
+    "ChromaticAberrationStage": {
+      "display_name": "色差"
+    },
+    "LensFlareStage": {
+      "display_name": "镜头光晕"
+    },
+    "ParticlesStage": {
+      "display_name": "粒子"
+    },
+    "ZDefocusStage": {
+      "display_name": "深度散景"
+    },
+    "FaceBlurStage": {
+      "display_name": "人脸打码"
+    },
+    "SpotRemoverStage": {
+      "display_name": "瑕疵移除"
+    },
+    "AudioDuckStage": {
+      "display_name": "音频闪避"
     }
   },
   "ComfyTV_AssetAudioLoaderStage": {
@@ -2150,5 +2186,41 @@
   },
   "ComfyTV_AudioMeterStage": {
     "display_name": "电平表叠加"
+  },
+  "ComfyTV_CDLStage": {
+    "display_name": "CDL 调色"
+  },
+  "ComfyTV_HistogramEqStage": {
+    "display_name": "直方图均衡"
+  },
+  "ComfyTV_Video360Stage": {
+    "display_name": "360 投影"
+  },
+  "ComfyTV_ShapeMaskStage": {
+    "display_name": "形状蒙版"
+  },
+  "ComfyTV_LensDistortStage": {
+    "display_name": "镜头畸变"
+  },
+  "ComfyTV_ChromaticAberrationStage": {
+    "display_name": "色差"
+  },
+  "ComfyTV_LensFlareStage": {
+    "display_name": "镜头光晕"
+  },
+  "ComfyTV_ParticlesStage": {
+    "display_name": "粒子"
+  },
+  "ComfyTV_ZDefocusStage": {
+    "display_name": "深度散景"
+  },
+  "ComfyTV_FaceBlurStage": {
+    "display_name": "人脸打码"
+  },
+  "ComfyTV_SpotRemoverStage": {
+    "display_name": "瑕疵移除"
+  },
+  "ComfyTV_AudioDuckStage": {
+    "display_name": "音频闪避"
   }
 }

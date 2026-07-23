@@ -98,11 +98,13 @@ export function createChainCompositor(
   function render(src: FxPreviewSource): FxPreviewSource | null {
     let cur = src
     const stack = syncStack()
+    const t = (src as { currentTime?: unknown }).currentTime
+    const timeSec = typeof t === 'number' ? t : undefined
     for (const entry of stack) {
       const def = CHAIN_PREVIEW_STAGES[entry.cls]
       if (!def) continue
       if (!entry.renderer.renderToCanvas(cur, def.paramsOf(entry.node),
-                                         entry.canvas)) {
+                                         entry.canvas, timeSec)) {
         console.warn(`[ComfyTV/fx-preview] upstream ${entry.cls} render failed: `
           + (entry.renderer.error ?? 'unknown'))
         return null
@@ -183,7 +185,8 @@ export function useChainedFxPreview<TParams>(
       return
     }
     if (!ownRenderer.renderToCanvas(
-        src, opts.params() as Record<string, unknown>, target)) {
+        src, opts.params() as Record<string, unknown>, target,
+        v.currentTime)) {
       console.warn(`[ComfyTV/fx-preview] ${ownClass()}: own render failed: `
         + `${ownRenderer.error ?? 'unknown'} — preview disabled for this card`)
       supported.value = false

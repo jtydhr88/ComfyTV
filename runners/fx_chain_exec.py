@@ -132,6 +132,77 @@ def _pik_op(p, ctx=None):
     return fn
 
 
+def _cdl_op(p, ctx=None):
+    from .video_color_ops import cdl_frame
+
+    slope = [float(p.get(f'slope_{c}', 1.0)) for c in 'rgb']
+    offset = [float(p.get(f'offset_{c}', 0.0)) for c in 'rgb']
+    power = [float(p.get(f'power_{c}', 1.0)) for c in 'rgb']
+    sat = float(p.get('cdl_sat', 1.0))
+
+    def fn(img, t):
+        return cdl_frame(img, slope, offset, power, sat)
+
+    return fn
+
+
+def _histeq_op(p, ctx=None):
+    from .video_color_ops import histeq_frame
+
+    strength = float(p.get('strength', 1.0))
+    clip_limit = float(p.get('clip_limit', 0.0))
+
+    def fn(img, t):
+        return histeq_frame(img, strength=strength, clip_limit=clip_limit)
+
+    return fn
+
+
+def _particles_op(p, ctx=None):
+    from .particles import build_particles_fn
+    return build_particles_fn(p, ctx)
+
+
+def _lens_distort_op(p, ctx=None):
+    from .optics import build_lens_distort_fn
+    return build_lens_distort_fn(p)
+
+
+def _chroma_ab_op(p, ctx=None):
+    from .optics import build_chroma_ab_fn
+    return build_chroma_ab_fn(p)
+
+
+def _lens_flare_op(p, ctx=None):
+    from .optics import build_lens_flare_fn
+    return build_lens_flare_fn(p)
+
+
+def _shape_mask_op(p, ctx=None):
+    import torch
+    from .luma_maps import build_shape_mask_fn, luma_map
+
+    info = (ctx or {}).get('info') or {}
+    kind = p.get('map_kind') or 'radial'
+    seed = int(p.get('seed', 7))
+    cache = {}
+
+    def map_for(img):
+        key = (img.shape[0], img.shape[1])
+        if key not in cache:
+            cache[key] = torch.from_numpy(
+                luma_map(kind, key[1], key[0], seed)).to(img.device)
+        return cache[key]
+
+    return build_shape_mask_fn(
+        map_for, float(info.get('duration') or 0.0),
+        threshold=float(p.get('threshold', 0.5)),
+        softness=float(p.get('softness', 0.1)),
+        invert=bool(p.get('invert', False)),
+        animate=p.get('animate') or 'static',
+        output=p.get('output') or 'stencil')
+
+
 def _matte_morph_op(p, ctx=None):
     from .keying import morphology_math
 
@@ -231,6 +302,13 @@ def _transform_op(p, ctx=None):
 
 TORCH_FX_OPS = {
     'hue_correct': _hue_correct_op,
+    'cdl': _cdl_op,
+    'histeq': _histeq_op,
+    'shape_mask': _shape_mask_op,
+    'lens_distort': _lens_distort_op,
+    'chroma_ab': _chroma_ab_op,
+    'lens_flare': _lens_flare_op,
+    'particles': _particles_op,
     'despill': _despill_op,
     'color_suppress': _color_suppress_op,
     'keyer': _keyer_op,

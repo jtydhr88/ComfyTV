@@ -12,6 +12,7 @@ import {
 } from '@/widgets/glsl/keyingRenderers'
 import { VideoTransformRenderer } from '@/widgets/glsl/videoTransformRenderer'
 import { VideoSelectiveColorRenderer } from '@/widgets/glsl/videoSelectiveColorRenderer'
+import { ParticlesPreviewRenderer } from '@/composables/stages/particlesPreviewRenderer'
 import { VideoChromaShiftRenderer } from '@/widgets/glsl/videoChromaShiftRenderer'
 import { VideoPseudocolorRenderer } from '@/widgets/glsl/videoPseudocolorRenderer'
 import { SELECTIVE_ZONE_IDS } from '@/composables/stages/videoSelectiveColorMath'
@@ -30,6 +31,7 @@ export interface ChainRendererLike {
     src: FxPreviewSource,
     params: Record<string, unknown>,
     target: HTMLCanvasElement,
+    timeSec?: number,
   ): boolean
   dispose(): void
   isLost?(): boolean
@@ -267,6 +269,47 @@ export const CHAIN_PREVIEW_STAGES: Record<string, ChainStageDef> = {
     paramsOf: (n) => ({
       preset: str(n, 'pseudo_preset', 'viridis'),
       opacity: num(n, 'pseudo_opacity', 1),
+    }),
+  },
+  'ComfyTV.ParticlesStage': {
+    create: () => new ParticlesPreviewRenderer() as ChainRendererLike,
+    paramsOf: (n) => ({
+      emitter: str(n, 'emitter', 'point'),
+      e_x0: num(n, 'e_x0', 0.5), e_y0: num(n, 'e_y0', 0.85),
+      e_x1: num(n, 'e_x1', 0.5), e_y1: num(n, 'e_y1', 0.85),
+      rate: num(n, 'rate', 120), lifetime: num(n, 'lifetime', 2),
+      speed: num(n, 'speed', 120), direction: num(n, 'direction', -90),
+      spread: num(n, 'spread', 30), gravity: num(n, 'gravity', 60),
+      wind: num(n, 'wind', 0), turbulence: num(n, 'turbulence', 60),
+      turb_scale: num(n, 'turb_scale', 120), drag: num(n, 'drag', 0.1),
+      attract_strength: num(n, 'attract_strength', 0),
+      attract_x: num(n, 'attract_x', 0.5),
+      attract_y: num(n, 'attract_y', 0.5),
+      attract_radius: num(n, 'attract_radius', 0.5),
+      swirl: num(n, 'swirl', 0),
+      collide: str(n, 'collide', 'none'),
+      floor_y: num(n, 'floor_y', 0.9), bounce: num(n, 'bounce', 0.5),
+      sub_mode: str(n, 'sub_mode', 'none'),
+      sub_count: num(n, 'sub_count', 8),
+      sub_speed: num(n, 'sub_speed', 120),
+      sub_lifetime: num(n, 'sub_lifetime', 0.6),
+      sub_size_ratio: num(n, 'sub_size_ratio', 0.5),
+      sub_color: str(n, 'sub_color', '#FFF2B0'),
+      size: num(n, 'size', 12),
+      size_end_ratio: num(n, 'size_end_ratio', 0.4),
+      opacity_start: num(n, 'opacity_start', 1),
+      opacity_end: num(n, 'opacity_end', 0),
+      size_curve: str(n, 'size_curve', ''),
+      opacity_curve: str(n, 'opacity_curve', ''),
+      color0: str(n, 'color0', '#FFD27A'),
+      color1: str(n, 'color1', '#FF5A2A'),
+      sprite: str(n, 'sprite', 'glow'),
+      renderer: str(n, 'renderer', 'sprite'),
+      stretch: num(n, 'stretch', 1),
+      trail_len: num(n, 'trail_len', 4),
+      blend: str(n, 'blend', 'additive'),
+      warmup: num(n, 'warmup', 1),
+      seed: num(n, 'seed', 7),
     }),
   },
   'ComfyTV.VideoTransformStage': {

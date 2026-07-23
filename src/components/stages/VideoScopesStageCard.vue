@@ -11,6 +11,7 @@
           { value: 'waveform_parade', label: 'Parade' },
           { value: 'vectorscope', label: 'Vector' },
           { value: 'histogram', label: 'Histogram' },
+          { value: 'cie', label: 'CIE' },
         ]"
       />
 
