@@ -416,6 +416,81 @@
     },
     "AudioDuckStage": {
       "display_name": "Audio Duck"
+    },
+    "SlitScanStage": {
+      "display_name": "Slit Scan"
+    },
+    "FeedbackFXStage": {
+      "display_name": "Feedback FX"
+    },
+    "StrobeStage": {
+      "display_name": "Strobe"
+    },
+    "ExpressionStage": {
+      "display_name": "Expression"
+    },
+    "Select0rStage": {
+      "display_name": "Select0r"
+    },
+    "ArtFXStage": {
+      "display_name": "Art FX"
+    },
+    "GlitchFXStage": {
+      "display_name": "Glitch FX"
+    },
+    "KaleidoscopeStage": {
+      "display_name": "Kaleidoscope"
+    },
+    "WaveWarpStage": {
+      "display_name": "Wave Warp"
+    },
+    "WaterStage": {
+      "display_name": "Water"
+    },
+    "LightGraffitiStage": {
+      "display_name": "Light Graffiti"
+    },
+    "Card3DStage": {
+      "display_name": "Card 3D"
+    },
+    "RegrainStage": {
+      "display_name": "Regrain"
+    },
+    "Video360StabilizeStage": {
+      "display_name": "360 Stabilize"
+    },
+    "ContactSheetStage": {
+      "display_name": "Contact Sheet"
+    },
+    "STMapGenStage": {
+      "display_name": "STMap Generate"
+    },
+    "AudioStemSplitStage": {
+      "display_name": "Audio Stem Split"
+    },
+    "AudioNoiseReductionStage": {
+      "display_name": "Noise Reduction (Spectral)"
+    },
+    "AudioMIRStage": {
+      "display_name": "Audio Beats & Notes"
+    },
+    "ScoreStage": {
+      "display_name": "Score"
+    },
+    "ScoreToMidiStage": {
+      "display_name": "Score Performer"
+    },
+    "SF2SynthStage": {
+      "display_name": "Score Synth"
+    },
+    "ClickTrackStage": {
+      "display_name": "Click Track"
+    },
+    "ChordAccompStage": {
+      "display_name": "Chord Accompaniment"
+    },
+    "MuseReverbStage": {
+      "display_name": "Muse Reverb (FDN)"
     }
   },
   "ComfyTV_AssetAudioLoaderStage": {
@@ -2222,5 +2297,80 @@
   },
   "ComfyTV_AudioDuckStage": {
     "display_name": "Audio Duck"
+  },
+  "ComfyTV_SlitScanStage": {
+    "display_name": "Slit Scan"
+  },
+  "ComfyTV_FeedbackFXStage": {
+    "display_name": "Feedback FX"
+  },
+  "ComfyTV_StrobeStage": {
+    "display_name": "Strobe"
+  },
+  "ComfyTV_ExpressionStage": {
+    "display_name": "Expression"
+  },
+  "ComfyTV_Select0rStage": {
+    "display_name": "Select0r"
+  },
+  "ComfyTV_ArtFXStage": {
+    "display_name": "Art FX"
+  },
+  "ComfyTV_GlitchFXStage": {
+    "display_name": "Glitch FX"
+  },
+  "ComfyTV_KaleidoscopeStage": {
+    "display_name": "Kaleidoscope"
+  },
+  "ComfyTV_WaveWarpStage": {
+    "display_name": "Wave Warp"
+  },
+  "ComfyTV_WaterStage": {
+    "display_name": "Water"
+  },
+  "ComfyTV_LightGraffitiStage": {
+    "display_name": "Light Graffiti"
+  },
+  "ComfyTV_Card3DStage": {
+    "display_name": "Card 3D"
+  },
+  "ComfyTV_RegrainStage": {
+    "display_name": "Regrain"
+  },
+  "ComfyTV_Video360StabilizeStage": {
+    "display_name": "360 Stabilize"
+  },
+  "ComfyTV_ContactSheetStage": {
+    "display_name": "Contact Sheet"
+  },
+  "ComfyTV_STMapGenStage": {
+    "display_name": "STMap Generate"
+  },
+  "ComfyTV_AudioStemSplitStage": {
+    "display_name": "Audio Stem Split"
+  },
+  "ComfyTV_AudioNoiseReductionStage": {
+    "display_name": "Noise Reduction (Spectral)"
+  },
+  "ComfyTV_AudioMIRStage": {
+    "display_name": "Audio Beats & Notes"
+  },
+  "ComfyTV_ScoreStage": {
+    "display_name": "Score"
+  },
+  "ComfyTV_ScoreToMidiStage": {
+    "display_name": "Score Performer"
+  },
+  "ComfyTV_SF2SynthStage": {
+    "display_name": "Score Synth"
+  },
+  "ComfyTV_ClickTrackStage": {
+    "display_name": "Click Track"
+  },
+  "ComfyTV_ChordAccompStage": {
+    "display_name": "Chord Accompaniment"
+  },
+  "ComfyTV_MuseReverbStage": {
+    "display_name": "Muse Reverb (FDN)"
   }
 }

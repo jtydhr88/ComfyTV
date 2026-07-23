@@ -8,6 +8,7 @@ import {
   CapabilitiesSchema,
   CapsPayloadSchema,
   FxClipPreviewSchema,
+  ExpressionEvalSchema,
   ImportWorkflowResultSchema,
   LinkWorkflowResultSchema,
   ListNativeWorkflowsSchema,
@@ -276,6 +277,16 @@ export function proxyEnsure(
     ...(opts.create ? { create: true } : {}),
     ...(opts.retry ? { retry: true } : {}),
   })
+}
+
+export function expressionEval(body: {
+  expression: string
+  duration?: number
+  fps?: number
+  rate?: number
+  seed?: number
+}): Promise<z.infer<typeof ExpressionEvalSchema>> {
+  return apiSend('/comfytv/expression_eval', 'POST', ExpressionEvalSchema, body)
 }
 
 export function fxClipPreview(

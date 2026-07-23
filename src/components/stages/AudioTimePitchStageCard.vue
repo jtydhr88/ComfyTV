@@ -9,19 +9,21 @@
         :options="[
           { value: 'speed', label: $t('afx.speed') },
           { value: 'pitch', label: $t('afx.pitch') },
+          { value: 'pitch_hq', label: $t('afx.pitchHq') },
+          { value: 'stretch_hq', label: $t('afx.stretchHq') },
           { value: 'reverse', label: $t('afx.reverse') },
         ]"
       />
 
       <FxSlider
-        v-if="mode === 'speed'"
+        v-if="mode === 'speed' || mode === 'stretch_hq'"
         v-model="tempo"
         :label="$t('afx.tempo')"
         :min="0.25" :max="4" :step="0.05"
         unit="×" :reset-to="1"
       />
       <FxSlider
-        v-if="mode === 'pitch'"
+        v-if="mode === 'pitch' || mode === 'pitch_hq'"
         v-model="semitones"
         :label="$t('afx.semitones')"
         :min="-24" :max="24" :step="0.5"
@@ -29,6 +31,7 @@
       />
       <div v-if="mode === 'speed'" class="ctv:text-2xs ctv:text-muted-foreground">{{ $t('afx.speedNote') }}</div>
       <div v-if="mode === 'pitch'" class="ctv:text-2xs ctv:text-muted-foreground">{{ $t('afx.pitchNote') }}</div>
+      <div v-if="mode === 'pitch_hq' || mode === 'stretch_hq'" class="ctv:text-2xs ctv:text-muted-foreground">{{ $t('afx.hqNote') }}</div>
     </div>
 
     <div class="ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide">

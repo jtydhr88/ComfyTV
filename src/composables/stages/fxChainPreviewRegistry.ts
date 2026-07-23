@@ -15,6 +15,10 @@ import { VideoSelectiveColorRenderer } from '@/widgets/glsl/videoSelectiveColorR
 import { ParticlesPreviewRenderer } from '@/composables/stages/particlesPreviewRenderer'
 import { VideoChromaShiftRenderer } from '@/widgets/glsl/videoChromaShiftRenderer'
 import { VideoPseudocolorRenderer } from '@/widgets/glsl/videoPseudocolorRenderer'
+import {
+  VideoKaleidoRenderer,
+  VideoWaveWarpRenderer,
+} from '@/widgets/glsl/videoDistortRenderers'
 import { SELECTIVE_ZONE_IDS } from '@/composables/stages/videoSelectiveColorMath'
 import {
   isPreviewableLutFile,
@@ -320,6 +324,26 @@ export const CHAIN_PREVIEW_STAGES: Record<string, ChainStageDef> = {
       scale: num(n, 'scale', 1),
       rotation: num(n, 'rotation', 0),
       skewX: num(n, 'skew_x', 0),
+    }),
+  },
+  'ComfyTV.KaleidoscopeStage': {
+    create: () => new VideoKaleidoRenderer() as unknown as ChainRendererLike,
+    paramsOf: (n) => ({
+      segments: num(n, 'segments', 6),
+      angle: num(n, 'angle', 0),
+      sourceAngle: num(n, 'source_angle', 0),
+      centerX: num(n, 'center_x', 0.5),
+      centerY: num(n, 'center_y', 0.5),
+    }),
+  },
+  'ComfyTV.WaveWarpStage': {
+    create: () => new VideoWaveWarpRenderer() as unknown as ChainRendererLike,
+    paramsOf: (n) => ({
+      amplitude: num(n, 'amplitude', 16),
+      frequency: num(n, 'frequency', 3),
+      speed: num(n, 'speed', 0.5),
+      axis: str(n, 'axis', 'both'),
+      envelope: str(n, 'envelope', 'parabolic'),
     }),
   },
   'ComfyTV.PIKStage': {

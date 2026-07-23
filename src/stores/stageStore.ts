@@ -104,6 +104,17 @@ export const FX_PASSTHROUGH_CLASSES = new Set([
   'ComfyTV.GodRaysStage',
   'ComfyTV.OldFilmStage',
   'ComfyTV.VideoTransformStage',
+  'ComfyTV.FeedbackFXStage',
+  'ComfyTV.StrobeStage',
+  'ComfyTV.ArtFXStage',
+  'ComfyTV.GlitchFXStage',
+  'ComfyTV.KaleidoscopeStage',
+  'ComfyTV.WaveWarpStage',
+  'ComfyTV.WaterStage',
+  'ComfyTV.LightGraffitiStage',
+  'ComfyTV.Select0rStage',
+  'ComfyTV.Card3DStage',
+  'ComfyTV.RegrainStage',
 ])
 
 export const FX_SIDE_SLOTS: Record<string, string[]> = {

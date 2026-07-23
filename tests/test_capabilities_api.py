@@ -54,7 +54,7 @@ class TestCapabilitiesEndpoint:
         assert data["node_ids"] == sorted(data["node_ids"])
         assert "ComfyTV.VideoColorStage" in data["node_ids"]
         assert "ComfyTV.VideoLUTStage" in data["node_ids"]
-        assert set(data["resources"]) == {"lut", "font"}
+        assert set(data["resources"]) == {"lut", "font", "soundfont"}
         assert data["resources"]["lut"] == []
         assert data["resources"]["font"] == []
         assert data["resource_fields"]["ComfyTV.VideoLUTStage"] == {"lut_file": "lut"}

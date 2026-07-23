@@ -1,0 +1,98 @@
+<template>
+  <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" @contextmenu.stop.prevent>
+    <img
+      v-if="state.output"
+      :src="state.output"
+      class="ctv:w-full ctv:rounded ctv:border ctv:border-border-subtle"
+    >
+
+    <div class="ctv:flex ctv:flex-col ctv:gap-1" @pointerdown.stop @pointermove.stop @pointerup.stop>
+      <div class="ctv-scroll-thin ctv:max-h-16 ctv:overflow-y-auto" @wheel.stop>
+        <FxChips v-model="model" :options="MODEL_OPTS" />
+      </div>
+      <FxChips v-model="direction" :options="DIR_OPTS" />
+      <template v-if="model.startsWith('fisheye')">
+        <FxSlider v-model="fov" label="FOV" :min="20" :max="180" :step="1" :decimals="0" :reset-to="140" />
+      </template>
+      <template v-else>
+        <FxSlider v-model="k1" label="K1" :min="-1" :max="1" :step="0.005" :reset-to="0" />
+        <FxSlider v-model="k2" label="K2" :min="-1" :max="1" :step="0.005" :reset-to="0" />
+      </template>
+      <FxSlider v-model="centerX" label="Center X" :min="-0.5" :max="0.5" :step="0.005" :reset-to="0" />
+      <FxSlider v-model="centerY" label="Center Y" :min="-0.5" :max="0.5" :step="0.005" :reset-to="0" />
+      <FxSlider v-model="squeeze" label="Squeeze" :min="0.5" :max="2" :step="0.01" :reset-to="1" />
+      <FxSlider v-model="lensScale" label="Scale" :min="0.25" :max="4" :step="0.01" :reset-to="1" />
+      <template v-if="!hasVideo">
+        <FxSlider v-model="width" label="Width" :min="8" :max="8192" :step="8" :decimals="0" :reset-to="1920" />
+        <FxSlider v-model="height" label="Height" :min="8" :max="8192" :step="8" :decimals="0" :reset-to="1080" />
+      </template>
+      <div class="ctv:text-2xs ctv:text-muted-foreground ctv:leading-snug">
+        {{ $t('fx.stmapGenHint') }}
+      </div>
+    </div>
+
+    <div class="ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide">
+      <span v-if="state.running" class="ctv:text-muted-foreground">{{ $t('fx.processing') }}</span>
+      <span v-else-if="state.output" class="ctv:text-success-background">{{ $t('fx.done') }}</span>
+      <span v-else class="ctv:text-muted-foreground">{{ $t('fx.adjustThenRun') }}</span>
+    </div>
+
+    <StageCard
+      :state="state"
+      :node="node"
+      :on-run-request="onRunRequest"
+      :on-cancel-request="onCancelRequest"
+      :on-disconnect="onDisconnect"
+      :on-action="onAction"
+    />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { computed } from 'vue'
+import type { LGraphNode } from '@/lib/comfyApp'
+import type { StageState } from '@/stores/stageStore'
+import StageCard from '@/components/stages/StageCard.vue'
+import FxSlider from '@/components/widgets/fx/FxSlider.vue'
+import FxChips from '@/components/widgets/fx/FxChips.vue'
+import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
+import { useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
+
+const props = defineProps<{
+  state: StageState
+  onRunRequest: () => void
+  onCancelRequest: () => void
+  onDisconnect: (slot: string) => void
+  onAction: (id: string) => void
+  node: LGraphNode
+}>()
+
+const MODEL_OPTS = [
+  { value: 'nuke_k1k2', label: 'K1/K2' },
+  { value: 'pf_barrel', label: 'PFBarrel' },
+  { value: '3de_classic', label: '3DE Classic' },
+  { value: '3de_radial', label: '3DE Radial' },
+  { value: 'panotools', label: 'PanoTools' },
+  { value: 'fisheye_equidistant', label: 'Fish EQ' },
+  { value: 'fisheye_orthographic', label: 'Fish Ortho' },
+  { value: 'fisheye_equisolid', label: 'Fish Solid' },
+  { value: 'fisheye_stereographic', label: 'Fish Stereo' },
+]
+const DIR_OPTS = [
+  { value: 'undistort', label: 'Undistort' },
+  { value: 'distort', label: 'Distort' },
+]
+
+const hasVideo = computed(() => !!pickSourceImageUrl(props.state.inputs, 'video'))
+const model = useStrWidget(props.node, 'model', 'nuke_k1k2')
+const direction = useStrWidget(props.node, 'direction', 'undistort')
+const k1 = useNumWidget(props.node, 'k1', 0)
+const k2 = useNumWidget(props.node, 'k2', 0)
+const fov = useNumWidget(props.node, 'fov', 140)
+const centerX = useNumWidget(props.node, 'center_x', 0)
+const centerY = useNumWidget(props.node, 'center_y', 0)
+const squeeze = useNumWidget(props.node, 'squeeze', 1)
+const lensScale = useNumWidget(props.node, 'lens_scale', 1)
+const width = useNumWidget(props.node, 'width', 1920)
+const height = useNumWidget(props.node, 'height', 1080)
+</script>

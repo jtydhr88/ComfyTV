@@ -11,6 +11,7 @@
       @pointerup.stop
     >
       <FxSlider v-model="mix" label="Mix" :min="0" :max="1" :step="0.01" :reset-to="1" />
+      <FxChips v-model="alphaOp" :options="OP_OPTS" />
       <label class="ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs ctv:text-muted-foreground ctv:cursor-pointer">
         <input type="checkbox" v-model="invertMask" class="ctv:accent-primary-background" />
         Invert mask
@@ -44,8 +45,9 @@ import StageCard from '@/components/stages/StageCard.vue'
 import FxCardShell from '@/components/stages/FxCardShell.vue'
 import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import FxSlider from '@/components/widgets/fx/FxSlider.vue'
+import FxChips from '@/components/widgets/fx/FxChips.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
-import { useBoolWidget, useNumWidget } from '@/composables/widgets/useWidgetModel'
+import { useBoolWidget, useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
 
 const props = defineProps<{
   state: StageState
@@ -60,6 +62,15 @@ const sourceAUrl = computed(() => pickSourceImageUrl(props.state.inputs, 'video_
 const sourceBUrl = computed(() => pickSourceImageUrl(props.state.inputs, 'video_b'))
 const maskWired = computed(() =>
   Boolean(pickSourceImageUrl(props.state.inputs, 'mask_video') || pickSourceImageUrl(props.state.inputs, 'mask')))
+const OP_OPTS = [
+  { value: 'over', label: 'Over' },
+  { value: 'add', label: 'Add' },
+  { value: 'subtract', label: 'Subtract' },
+  { value: 'max', label: 'Max' },
+  { value: 'min', label: 'Min' },
+]
+
 const mix = useNumWidget(props.node, 'mix', 1)
 const invertMask = useBoolWidget(props.node, 'invert_mask', false)
+const alphaOp = useStrWidget(props.node, 'alpha_op', 'over')
 </script>

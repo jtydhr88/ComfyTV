@@ -14,11 +14,22 @@
         <FxChips v-model="model" :options="MODEL_OPTS" />
       </div>
       <FxChips v-model="direction" :options="DIR_OPTS" />
-      <template v-if="model === 'nuke_k1k2'">
-        <FxSlider v-model="k1" label="K1" :min="-1" :max="1" :step="0.005" :reset-to="0" />
-        <FxSlider v-model="k2" label="K2" :min="-1" :max="1" :step="0.005" :reset-to="0" />
+      <template v-if="isFisheye">
+        <FxSlider v-model="fov" label="FOV" :min="20" :max="180" :step="1" :decimals="0" :reset-to="140" />
       </template>
-      <FxSlider v-else v-model="fov" label="FOV" :min="20" :max="180" :step="1" :decimals="0" :reset-to="140" />
+      <template v-else>
+        <FxSlider v-model="k1" :label="kLabels[0]" :min="-1" :max="1" :step="0.005" :reset-to="0" />
+        <FxSlider v-model="k2" :label="kLabels[1]" :min="-1" :max="1" :step="0.005" :reset-to="0" />
+      </template>
+      <template v-if="model === '3de_classic'">
+        <FxSlider v-model="cxCurv" label="Curvature X" :min="-0.5" :max="0.5" :step="0.005" :reset-to="0" />
+        <FxSlider v-model="cyCurv" label="Curvature Y" :min="-0.5" :max="0.5" :step="0.005" :reset-to="0" />
+      </template>
+      <template v-if="model === '3de_radial'">
+        <FxSlider v-model="tangU" label="Tangential U" :min="-0.5" :max="0.5" :step="0.005" :reset-to="0" />
+        <FxSlider v-model="tangV" label="Tangential V" :min="-0.5" :max="0.5" :step="0.005" :reset-to="0" />
+      </template>
+      <FxSlider v-if="model === 'panotools'" v-model="ptC" label="C" :min="-1" :max="1" :step="0.005" :reset-to="0" />
       <FxSlider v-model="centerX" label="Center X" :min="-0.5" :max="0.5" :step="0.005" :reset-to="0" />
       <FxSlider v-model="centerY" label="Center Y" :min="-0.5" :max="0.5" :step="0.005" :reset-to="0" />
       <FxSlider v-model="squeeze" label="Squeeze" :min="0.5" :max="2" :step="0.01" :reset-to="1" />
@@ -70,6 +81,10 @@ const props = defineProps<{
 
 const MODEL_OPTS = [
   { value: 'nuke_k1k2', label: 'K1/K2' },
+  { value: 'pf_barrel', label: 'PFBarrel' },
+  { value: '3de_classic', label: '3DE Classic' },
+  { value: '3de_radial', label: '3DE Radial' },
+  { value: 'panotools', label: 'PanoTools' },
   { value: 'fisheye_equidistant', label: 'Fish EQ' },
   { value: 'fisheye_orthographic', label: 'Fish Ortho' },
   { value: 'fisheye_equisolid', label: 'Fish Solid' },
@@ -95,7 +110,21 @@ const centerX = useNumWidget(props.node, 'center_x', 0)
 const centerY = useNumWidget(props.node, 'center_y', 0)
 const squeeze = useNumWidget(props.node, 'squeeze', 1)
 const lensScale = useNumWidget(props.node, 'lens_scale', 1)
+const cxCurv = useNumWidget(props.node, 'cx_curv', 0)
+const cyCurv = useNumWidget(props.node, 'cy_curv', 0)
+const tangU = useNumWidget(props.node, 'tang_u', 0)
+const tangV = useNumWidget(props.node, 'tang_v', 0)
+const ptC = useNumWidget(props.node, 'pt_c', 0)
 const edge = useStrWidget(props.node, 'edge', 'clamp')
+
+const isFisheye = computed(() => model.value.startsWith('fisheye'))
+const kLabels = computed(() => {
+  if (model.value === 'pf_barrel') return ['C3', 'C5']
+  if (model.value === '3de_classic') return ['Distortion', 'Quartic']
+  if (model.value === '3de_radial') return ['C2', 'C4']
+  if (model.value === 'panotools') return ['A', 'B']
+  return ['K1', 'K2']
+})
 
 const playerRef = ref<InstanceType<typeof VideoPlayerLite> | null>(null)
 
@@ -112,7 +141,10 @@ const preview = useFxClipPreview({
     model: model.value, direction: direction.value,
     k1: k1.value, k2: k2.value, fov: fov.value,
     center_x: centerX.value, center_y: centerY.value,
-    squeeze: squeeze.value, lens_scale: lensScale.value, edge: edge.value,
+    squeeze: squeeze.value, lens_scale: lensScale.value,
+    cx_curv: cxCurv.value, cy_curv: cyCurv.value,
+    tang_u: tangU.value, tang_v: tangV.value, pt_c: ptC.value,
+    edge: edge.value,
   }),
   getVideo: () => sourceVideoUrl.value,
   getPlayhead: playhead,

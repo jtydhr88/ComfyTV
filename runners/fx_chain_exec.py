@@ -253,14 +253,23 @@ def _god_rays_op(p, ctx=None):
 
 
 def _old_film_op(p, ctx=None):
-    from .video_stylize_ops import old_film_frame
+    from .video_stylize_ops import old_film_frame, gate_weave_shift
 
     info = (ctx or {}).get('info') or {}
     duration = max(1e-6, float(info.get('duration') or 0.0))
     fps = info.get('fps') or 24
     line_state = {}
+    weave_x = float(p.get('weave_x', 0.0))
+    weave_y = float(p.get('weave_y', 0.0))
+    weave_interval = float(p.get('weave_interval', 0.6))
+    weave_seed = int(p.get('seed', 7))
 
     def fn(img, t):
+        if weave_x > 0 or weave_y > 0:
+            img = gate_weave_shift(img, t, amount_x=weave_x,
+                                   amount_y=weave_y,
+                                   interval=weave_interval,
+                                   seed=weave_seed)
         return old_film_frame(
             img, t, duration=duration, fps=fps, line_state=line_state,
             delta=int(p.get('delta', 14)), every=int(p.get('every', 20)),
@@ -300,6 +309,78 @@ def _transform_op(p, ctx=None):
         shutter_offset=float(p.get('shutter_offset', 0.0)))
 
 
+def _feedback_op(p, ctx=None):
+    from .time_fx import build_feedback_fn
+    return build_feedback_fn(p)
+
+
+def _strobe_op(p, ctx=None):
+    from .time_fx import build_strobe_fn
+    return build_strobe_fn(p)
+
+
+def _artfx_op(p, ctx=None):
+    from .stylize_fx import build_artfx_fn
+    return build_artfx_fn(p)
+
+
+def _glitch_op(p, ctx=None):
+    from .stylize_fx import build_glitch_fn
+    return build_glitch_fn(p)
+
+
+def _kaleido_op(p, ctx=None):
+    from .stylize_fx import build_kaleido_fn
+    return build_kaleido_fn(p)
+
+
+def _wave_warp_op(p, ctx=None):
+    from .stylize_fx import build_wave_warp_fn
+    return build_wave_warp_fn(p)
+
+
+def _water_op(p, ctx=None):
+    from .stylize_fx import build_water_fn
+    return build_water_fn(p)
+
+
+def _light_graffiti_op(p, ctx=None):
+    from .stylize_fx import build_light_graffiti_fn
+    return build_light_graffiti_fn(p)
+
+
+def _card3d_op(p, ctx=None):
+    from .optics import build_card3d_fn
+    return build_card3d_fn(p)
+
+
+def _regrain_op(p, ctx=None):
+    from .stylize_fx import build_regrain_fn
+    return build_regrain_fn(p)
+
+
+def _select0r_op(p, ctx=None):
+    from .keying import select0r_math, select0r_params
+
+    sp = select0r_params(
+        key_color=p.get('key_color') or '#00FF00',
+        space=p.get('space') or 'rgb',
+        shape=p.get('shape') or 'ellipsoid',
+        edge=p.get('edge') or 'normal',
+        delta_1=float(p.get('delta_1', 0.2)),
+        delta_2=float(p.get('delta_2', 0.2)),
+        delta_3=float(p.get('delta_3', 0.2)),
+        slope=float(p.get('slope', 0.2)),
+        invert=bool(p.get('invert', False)))
+    output = p.get('output') or 'matte'
+
+    def fn(img, t):
+        pre, alpha = select0r_math(img, sp)
+        return _pack_key_output(pre, alpha, output)
+
+    return fn
+
+
 TORCH_FX_OPS = {
     'hue_correct': _hue_correct_op,
     'cdl': _cdl_op,
@@ -318,6 +399,17 @@ TORCH_FX_OPS = {
     'god_rays': _god_rays_op,
     'old_film': _old_film_op,
     'transform': _transform_op,
+    'feedback': _feedback_op,
+    'strobe': _strobe_op,
+    'artfx': _artfx_op,
+    'glitch': _glitch_op,
+    'kaleido': _kaleido_op,
+    'wave_warp': _wave_warp_op,
+    'water': _water_op,
+    'light_graffiti': _light_graffiti_op,
+    'select0r': _select0r_op,
+    'card3d': _card3d_op,
+    'regrain': _regrain_op,
 }
 
 

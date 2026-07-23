@@ -118,6 +118,31 @@ import AnnotateStageCard from '@/components/stages/AnnotateStageCard.vue'
 import AudioReactiveStageCard from '@/components/stages/AudioReactiveStageCard.vue'
 import AudioMeterStageCard from '@/components/stages/AudioMeterStageCard.vue'
 import FXChainStageCard from '@/components/stages/FXChainStageCard.vue'
+import SlitScanStageCard from '@/components/stages/SlitScanStageCard.vue'
+import FeedbackFXStageCard from '@/components/stages/FeedbackFXStageCard.vue'
+import StrobeStageCard from '@/components/stages/StrobeStageCard.vue'
+import ExpressionStageCard from '@/components/stages/ExpressionStageCard.vue'
+import Select0rStageCard from '@/components/stages/Select0rStageCard.vue'
+import ArtFXStageCard from '@/components/stages/ArtFXStageCard.vue'
+import GlitchFXStageCard from '@/components/stages/GlitchFXStageCard.vue'
+import KaleidoscopeStageCard from '@/components/stages/KaleidoscopeStageCard.vue'
+import WaveWarpStageCard from '@/components/stages/WaveWarpStageCard.vue'
+import WaterStageCard from '@/components/stages/WaterStageCard.vue'
+import LightGraffitiStageCard from '@/components/stages/LightGraffitiStageCard.vue'
+import Card3DStageCard from '@/components/stages/Card3DStageCard.vue'
+import RegrainStageCard from '@/components/stages/RegrainStageCard.vue'
+import Video360StabilizeStageCard from '@/components/stages/Video360StabilizeStageCard.vue'
+import ContactSheetStageCard from '@/components/stages/ContactSheetStageCard.vue'
+import STMapGenStageCard from '@/components/stages/STMapGenStageCard.vue'
+import AudioStemSplitStageCard from '@/components/stages/AudioStemSplitStageCard.vue'
+import AudioNoiseReductionStageCard from '@/components/stages/AudioNoiseReductionStageCard.vue'
+import AudioMIRStageCard from '@/components/stages/AudioMIRStageCard.vue'
+import ScoreStageCard from '@/components/stages/ScoreStageCard.vue'
+import ScoreToMidiStageCard from '@/components/stages/ScoreToMidiStageCard.vue'
+import SF2SynthStageCard from '@/components/stages/SF2SynthStageCard.vue'
+import ClickTrackStageCard from '@/components/stages/ClickTrackStageCard.vue'
+import ChordAccompStageCard from '@/components/stages/ChordAccompStageCard.vue'
+import MuseReverbStageCard from '@/components/stages/MuseReverbStageCard.vue'
 import ProjectCard from '@/components/stages/ProjectCard.vue'
 import ComfyTVMountHost from '@/components/ComfyTVMountHost.vue'
 import { registerMount, unregisterMount } from '@/composables/stages/widgetMounts'
@@ -185,6 +210,31 @@ const RICH_STAGE_CARDS: Record<string, any> = {
   'ComfyTV.FaceBlurStage':            FaceBlurStageCard,
   'ComfyTV.SpotRemoverStage':         SpotRemoverStageCard,
   'ComfyTV.AudioDuckStage':           AudioDuckStageCard,
+  'ComfyTV.SlitScanStage':            SlitScanStageCard,
+  'ComfyTV.FeedbackFXStage':          FeedbackFXStageCard,
+  'ComfyTV.StrobeStage':              StrobeStageCard,
+  'ComfyTV.ExpressionStage':          ExpressionStageCard,
+  'ComfyTV.Select0rStage':            Select0rStageCard,
+  'ComfyTV.ArtFXStage':               ArtFXStageCard,
+  'ComfyTV.GlitchFXStage':            GlitchFXStageCard,
+  'ComfyTV.KaleidoscopeStage':        KaleidoscopeStageCard,
+  'ComfyTV.WaveWarpStage':            WaveWarpStageCard,
+  'ComfyTV.WaterStage':               WaterStageCard,
+  'ComfyTV.LightGraffitiStage':       LightGraffitiStageCard,
+  'ComfyTV.Card3DStage':              Card3DStageCard,
+  'ComfyTV.RegrainStage':             RegrainStageCard,
+  'ComfyTV.Video360StabilizeStage':   Video360StabilizeStageCard,
+  'ComfyTV.ContactSheetStage':        ContactSheetStageCard,
+  'ComfyTV.STMapGenStage':            STMapGenStageCard,
+  'ComfyTV.AudioStemSplitStage':      AudioStemSplitStageCard,
+  'ComfyTV.AudioNoiseReductionStage': AudioNoiseReductionStageCard,
+  'ComfyTV.AudioMIRStage':            AudioMIRStageCard,
+  'ComfyTV.ScoreStage':               ScoreStageCard,
+  'ComfyTV.ScoreToMidiStage':         ScoreToMidiStageCard,
+  'ComfyTV.SF2SynthStage':            SF2SynthStageCard,
+  'ComfyTV.ClickTrackStage':          ClickTrackStageCard,
+  'ComfyTV.ChordAccompStage':         ChordAccompStageCard,
+  'ComfyTV.MuseReverbStage':          MuseReverbStageCard,
   'ComfyTV.MultiangleStage': MultiangleStageCard,
   'ComfyTV.RelightStage':    RelightStageCard,
   'ComfyTV.InpaintStage':    PainterStageCard,
@@ -415,6 +465,31 @@ const RICH_STAGE_MIN_HEIGHTS: Record<string, number> = {
   'ComfyTV.FaceBlurStage':            700,
   'ComfyTV.SpotRemoverStage':         720,
   'ComfyTV.AudioDuckStage':           640,
+  'ComfyTV.SlitScanStage':            720,
+  'ComfyTV.FeedbackFXStage':          720,
+  'ComfyTV.StrobeStage':              640,
+  'ComfyTV.ExpressionStage':          560,
+  'ComfyTV.Select0rStage':            780,
+  'ComfyTV.ArtFXStage':               760,
+  'ComfyTV.GlitchFXStage':            700,
+  'ComfyTV.KaleidoscopeStage':        720,
+  'ComfyTV.WaveWarpStage':            720,
+  'ComfyTV.WaterStage':               720,
+  'ComfyTV.LightGraffitiStage':       680,
+  'ComfyTV.Card3DStage':              740,
+  'ComfyTV.RegrainStage':             700,
+  'ComfyTV.Video360StabilizeStage':   640,
+  'ComfyTV.ContactSheetStage':        760,
+  'ComfyTV.STMapGenStage':            720,
+  'ComfyTV.AudioStemSplitStage':      640,
+  'ComfyTV.AudioNoiseReductionStage': 640,
+  'ComfyTV.AudioMIRStage':            660,
+  'ComfyTV.ScoreStage':               960,
+  'ComfyTV.ScoreToMidiStage':         640,
+  'ComfyTV.SF2SynthStage':            960,
+  'ComfyTV.ClickTrackStage':          600,
+  'ComfyTV.ChordAccompStage':         680,
+  'ComfyTV.MuseReverbStage':          680,
 }
 
 const RICH_STAGE_MIN_WIDTHS: Record<string, number> = {

@@ -3,6 +3,7 @@ from ...runners.media_filter import chroma_key_video
 from ...runners.keying import (
     pik_video, keyer_video, despill_video, color_suppress_video,
     keymix_videos, matte_monitor_video, morphology_video, MATTE_OUTPUTS,
+    KEYMIX_OPS, SELECT0R_SPACES, SELECT0R_SHAPES, SELECT0R_EDGES,
 )
 
 from .common.fx_helpers import (  # noqa: F401
@@ -305,6 +306,7 @@ class KeyMixStage(io.ComfyNode):
                 _hidden_float("mix", 1.0, 0.0, 1.0),
                 io.Boolean.Input("invert_mask", default=False,
                                  socketless=True, extra_dict={"hidden": True}),
+                _hidden_combo("alpha_op", list(KEYMIX_OPS), 'over'),
                 COMFYTV_VIDEO.Input("video_a", optional=True),
                 COMFYTV_VIDEO.Input("video_b", optional=True),
                 COMFYTV_VIDEO.Input("mask_video", optional=True),
@@ -317,8 +319,8 @@ class KeyMixStage(io.ComfyNode):
 
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
-                mix=1.0, invert_mask=False, video_a="", video_b="",
-                mask_video="", mask=""):
+                mix=1.0, invert_mask=False, alpha_op='over', video_a="",
+                video_b="", mask_video="", mask=""):
         if not (video_a or '').strip() or not (video_b or '').strip():
             raise RuntimeError(
                 "Key Mix needs two videos — A goes over B where the mask is white.")
@@ -328,7 +330,9 @@ class KeyMixStage(io.ComfyNode):
                 "Key Mix needs a mask — wire a matte video or mask image.")
         payload = keymix_videos(
             video_a, video_b, mk, mix=_f(mix, 0, 1, 1.0),
-            invert_mask=bool(invert_mask), progress=_progress_cb(cls))
+            invert_mask=bool(invert_mask),
+            alpha_op=alpha_op if alpha_op in KEYMIX_OPS else 'over',
+            progress=_progress_cb(cls))
         return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
                                 parent_output_id=parent_output_id)
 
@@ -392,4 +396,54 @@ class MatteMorphStage(io.ComfyNode):
             "matte_morph",
             {'op': op, 'size_x': min(64, max(0, int(size_x or 0))),
              'size_y': min(64, max(0, int(size_y or 0)))})
+        return _fx_passthrough(video, fx_spec)
+
+
+class Select0rStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.Select0rStage",
+            display_name="Select0r",
+            category="ComfyTV/Keying",
+            inputs=[
+                *_standard_stage_inputs(),
+                _hidden_str("key_color", "#00FF00"),
+                _hidden_combo("space", list(SELECT0R_SPACES), 'rgb'),
+                _hidden_combo("shape", list(SELECT0R_SHAPES), 'ellipsoid'),
+                _hidden_combo("edge", list(SELECT0R_EDGES), 'normal'),
+                _hidden_float("delta_1", 0.2, 0.001, 2.0, step=0.005),
+                _hidden_float("delta_2", 0.2, 0.001, 2.0, step=0.005),
+                _hidden_float("delta_3", 0.2, 0.001, 2.0, step=0.005),
+                _hidden_float("slope", 0.2, 0.001, 1.0, step=0.005),
+                io.Boolean.Input("invert", default=False, socketless=True,
+                                 extra_dict={"hidden": True}),
+                _hidden_combo("output", ['matte', 'image'], 'matte'),
+                COMFYTV_VIDEO.Input("video", optional=True),
+            ],
+            outputs=[COMFYTV_VIDEO.Output("video")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
+                key_color="#00FF00", space='rgb', shape='ellipsoid',
+                edge='normal', delta_1=0.2, delta_2=0.2, delta_3=0.2,
+                slope=0.2, invert=False, output='matte', video=""):
+        params = {
+            'key_color': (key_color or '#00FF00').strip() or '#00FF00',
+            'space': space if space in SELECT0R_SPACES else 'rgb',
+            'shape': shape if shape in SELECT0R_SHAPES else 'ellipsoid',
+            'edge': edge if edge in SELECT0R_EDGES else 'normal',
+            'delta_1': _f(delta_1, 0.001, 2, 0.2),
+            'delta_2': _f(delta_2, 0.001, 2, 0.2),
+            'delta_3': _f(delta_3, 0.001, 2, 0.2),
+            'slope': _f(slope, 0.001, 1, 0.2),
+            'invert': bool(invert),
+            'output': output if output in ('matte', 'image') else 'matte',
+        }
+        fx_spec = build_torch_fx_spec(
+            "ComfyTV.Select0rStage", "Select0r", "video", "select0r", params)
         return _fx_passthrough(video, fx_spec)

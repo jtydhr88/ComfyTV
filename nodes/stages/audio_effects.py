@@ -255,7 +255,8 @@ class AudioTimePitchStage(io.ComfyNode):
             category="ComfyTV/AudioFX",
             inputs=[
                 *_standard_stage_inputs(),
-                _hidden_combo("mode", ['speed', 'pitch', 'reverse'], 'speed'),
+                _hidden_combo("mode", ['speed', 'pitch', 'pitch_hq',
+                                       'stretch_hq', 'reverse'], 'speed'),
                 _hidden_float("tempo", 1.0, 0.25, 4.0),
                 _hidden_float("semitones", 0.0, -24.0, 24.0, step=0.5),
                 COMFYTV_AUDIO.Input("audio", optional=True),
@@ -270,6 +271,30 @@ class AudioTimePitchStage(io.ComfyNode):
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                 mode='speed', tempo=1.0, semitones=0.0, audio="", video=""):
         src = (audio or '').strip() or (video or '').strip()
+        if mode in ('pitch_hq', 'stretch_hq'):
+            from ...runners.staffpad_pv import pv_process_audio
+            if not src:
+                raise RuntimeError(
+                    "Audio Time / Pitch: HQ modes need an audio input.")
+            if mode == 'pitch_hq':
+                n = _f(semitones, -24.0, 24.0, 0.0)
+                if not n:
+                    raise RuntimeError(
+                        "Audio Time / Pitch: semitones is 0 — nothing to do.")
+                payload = pv_process_audio(src, mode='pitch', semitones=n,
+                                           progress=_progress_cb(cls))
+            else:
+                t = _f(tempo, 0.25, 4.0, 1.0)
+                if t == 1.0:
+                    raise RuntimeError(
+                        "Audio Time / Pitch: tempo is 1.0 — nothing to do.")
+                payload = pv_process_audio(src, mode='stretch',
+                                           stretch=1.0 / t,
+                                           progress=_progress_cb(cls))
+            return _stage_emit_auto(cls, project_id=project_id,
+                                    payload_str=payload,
+                                    parent_output_id=parent_output_id,
+                                    extra_outputs=("",))
         if mode == 'speed':
             t = _f(tempo, 0.25, 4.0, 1.0)
             if t == 1.0:
@@ -415,4 +440,77 @@ class AudioConvolveStage(io.ComfyNode):
                               normalize=bool(normalize),
                               progress=_progress_cb(cls))
         return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
+                                parent_output_id=parent_output_id)
+
+
+class MuseReverbStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.MuseReverbStage",
+            display_name="Muse Reverb (FDN)",
+            category="ComfyTV/AudioFX",
+            inputs=[
+                *_standard_stage_inputs(),
+                _hidden_float("reverb_time_ms", 2200.0, 100.0, 10000.0,
+                              step=50.0),
+                _hidden_float("room_scale", 0.8, 0.5, 4.0, step=0.05),
+                _hidden_float("predelay_ms", 10.0, 0.0, 500.0, step=1.0),
+                _hidden_float("dry_db", 0.0, -60.0, 6.0, step=0.5),
+                _hidden_float("late_db", -14.0, -60.0, 6.0, step=0.5),
+                _hidden_float("er_db", -14.0, -60.0, 6.0, step=0.5),
+                _hidden_float("time_low", 100.0, 50.0, 200.0, step=1.0),
+                _hidden_float("time_high", 60.0, 50.0, 200.0, step=1.0),
+                _hidden_float("xover_low_mid", 400.0, 50.0, 500.0,
+                              step=10.0),
+                _hidden_float("xover_mid_high", 4000.0, 1000.0, 10000.0,
+                              step=100.0),
+                _hidden_float("feedback_top", 8000.0, 500.0, 20000.0,
+                              step=100.0),
+                _hidden_float("mod_freq", 1.0, 0.0, 10.0, step=0.05),
+                _hidden_float("mod_amp", 0.2, 0.0, 1.0, step=0.01),
+                _hidden_float("stereo_spread", 100.0, 0.0, 150.0, step=1.0),
+                _hidden_combo("quality", ['8', '16'], '16'),
+                COMFYTV_AUDIO.Input("audio", optional=True),
+                COMFYTV_VIDEO.Input("video", optional=True),
+            ],
+            outputs=[COMFYTV_AUDIO.Output("audio")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
+                reverb_time_ms=2200.0, room_scale=0.8, predelay_ms=10.0,
+                dry_db=0.0, late_db=-14.0, er_db=-14.0, time_low=100.0,
+                time_high=60.0, xover_low_mid=400.0, xover_mid_high=4000.0,
+                feedback_top=8000.0, mod_freq=1.0, mod_amp=0.2,
+                stereo_spread=100.0, quality='16', audio="", video=""):
+        from ...runners.muse_reverb import muse_reverb_audio
+
+        src = (audio or '').strip() or (video or '').strip()
+        if not src:
+            raise RuntimeError(
+                "Muse Reverb needs an audio (or video with audio) input.")
+        payload = muse_reverb_audio(
+            src,
+            reverb_time_ms=_f(reverb_time_ms, 100, 10000, 2200.0),
+            room_scale=_f(room_scale, 0.5, 4, 0.8),
+            predelay_ms=_f(predelay_ms, 0, 500, 10.0),
+            dry_db=_f(dry_db, -60, 6, 0.0),
+            late_db=_f(late_db, -60, 6, -14.0),
+            er_db=_f(er_db, -60, 6, -14.0),
+            time_low=_f(time_low, 50, 200, 100.0),
+            time_high=_f(time_high, 50, 200, 60.0),
+            xover_low_mid=_f(xover_low_mid, 50, 500, 400.0),
+            xover_mid_high=_f(xover_mid_high, 1000, 10000, 4000.0),
+            feedback_top=_f(feedback_top, 500, 20000, 8000.0),
+            mod_freq=_f(mod_freq, 0, 10, 1.0),
+            mod_amp=_f(mod_amp, 0, 1, 0.2),
+            stereo_spread=_f(stereo_spread, 0, 150, 100.0),
+            quality=16 if quality == '16' else 8,
+            progress=_progress_cb(cls))
+        return _stage_emit_auto(cls, project_id=project_id,
+                                payload_str=payload,
                                 parent_output_id=parent_output_id)

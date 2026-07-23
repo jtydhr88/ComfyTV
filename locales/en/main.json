@@ -485,7 +485,8 @@
     },
     "kind": {
       "lut": "LUTs",
-      "font": "Fonts"
+      "font": "Fonts",
+      "soundfont": "Soundfonts"
     },
     "upload": "Upload file",
     "rename": "Rename",
@@ -1906,7 +1907,12 @@
       "coverreveal": "Cover & Reveal",
       "wind": "Wind",
       "fx": "FX"
-    }
+    },
+    "echoHint": "Layered frame echoes with feedback trails.",
+    "needsRetimeMap": "Map mode needs a grayscale retime image",
+    "expressionHint": "Vars: t, frame, duration, fps. Fns: noise, fbm, turbulence, smoothstep, remap, mix, hash, random, sin/cos…",
+    "stab360Hint": "Two-pass: analyzes equirect yaw/pitch motion, smooths the camera path, then re-renders.",
+    "stmapGenHint": "16-bit STMap for the undistort → comp → redistort workflow. Feed it into the STMap node."
   },
   "afx": {
     "custom": "Custom",
@@ -2020,7 +2026,31 @@
     "splitChannels": "Split channels",
     "legend": "Legend",
     "mixBack": "Mix voice back over ducked audio",
-    "threshold": "Threshold"
+    "threshold": "Threshold",
+    "pitchHq": "Pitch HQ",
+    "stretchHq": "Stretch HQ",
+    "hqNote": "Phase-locked vocoder (StaffPad algorithm) — slower but much cleaner than the standard modes.",
+    "stemSplitHint": "Hybrid Demucs 4-stem separation. First run downloads the model (~319 MB). Vocals / accompaniment cover karaoke workflows.",
+    "reduction": "Reduction",
+    "sensitivity": "Sensitivity",
+    "freqSmoothing": "Freq Smoothing",
+    "nrProfileWired": "Noise profile: from the wired noise sample.",
+    "nrProfileAuto": "Noise profile: auto (quietest 10% of frames). Wire a noise-only clip into noise_sample for best results.",
+    "beats": "Beats",
+    "onsets": "Onsets",
+    "notes": "Notes",
+    "minGap": "Min Gap",
+    "mirHint": "Outputs keyframe pulses (wire into Transform/Composite track) and labels JSON with times.",
+    "reverbTime": "Reverb Time",
+    "roomScale": "Room Scale",
+    "predelay": "Pre-delay",
+    "dry": "Dry",
+    "late": "Late",
+    "early": "Early Refl.",
+    "timeLow": "Low Decay",
+    "timeHigh": "High Decay",
+    "modulation": "Modulation",
+    "stereoSpread": "Stereo Spread"
   },
   "scopes": {
     "liveSampling": "Sampling the upstream preview live",
@@ -2028,5 +2058,34 @@
   },
   "optics": {
     "needsDepth": "Wire a depth map (image or video) first"
+  },
+  "music": {
+    "scorePlaceholder": "Paste MusicXML here (score-partwise)…",
+    "scoreFromInput": "Score comes from the wired text input.",
+    "scoreHint": "MusicXML from an LLM, MuseScore export, or by hand. Run validates and passes it downstream.",
+    "needsScore": "Wire a Score stage",
+    "needsPerformance": "Wire Score Performer (or Click Track)",
+    "swing": "Swing",
+    "humanize": "Humanize",
+    "downloadMidi": "Download .mid",
+    "soundfont": "Soundfont",
+    "builtinSynth": "Built-in synth (no soundfont)",
+    "instrument": "Instrument",
+    "gain": "Gain",
+    "sfHint": "Rendering with the SF2/SF3 engine (own port, no fluidsynth).",
+    "builtinHint": "No soundfont selected — using the additive fallback synth. Drop an .sf2/.sf3 (e.g. FluidR3Mono_GM) into the Resources panel for real instruments.",
+    "beatsPerBar": "Beats / bar",
+    "bars": "Bars",
+    "clickFromLabels": "Clicks follow the wired labels (e.g. Audio Beats & Notes).",
+    "clickHint": "Strong beat = GM woodblock high, weak = low. Wire beat labels to click along real music.",
+    "engraving": "engraving…",
+    "noScoreYet": "Paste or wire MusicXML to see the engraved score",
+    "following": "following playback",
+    "octave": "Octave",
+    "velocity": "Velocity",
+    "repeats": "Repeats",
+    "chordHint": "Bars split by |, chords per bar split evenly. Slash bass (C/E), qualities: m, 7, maj7, m7, dim, aug, sus4, 6, 9, m7b5…",
+    "channelPrograms": "Per-channel instruments",
+    "channelProgramsHint": "Channels map to score parts in order (part 1 = ch 0). Unlisted channels use the Instrument above; drums (ch 9) are automatic."
   }
 }

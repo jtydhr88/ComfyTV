@@ -22,6 +22,9 @@
       <FxSlider v-model="lineWidth" label="Line width" :min="0" :max="100" :step="1" :decimals="0" :reset-to="2" />
       <FxSlider v-model="linesDarker" label="Darker" :min="0" :max="100" :step="1" :decimals="0" :reset-to="40" />
       <FxSlider v-model="linesLighter" label="Lighter" :min="0" :max="100" :step="1" :decimals="0" :reset-to="40" />
+      <FxSlider v-model="weaveX" label="Gate weave X (px)" :min="0" :max="32" :step="0.5" :reset-to="0" />
+      <FxSlider v-model="weaveY" label="Gate weave Y (px)" :min="0" :max="32" :step="0.5" :reset-to="0" />
+      <FxSlider v-if="weaveX > 0 || weaveY > 0" v-model="weaveInterval" label="Weave interval (s)" :min="0.05" :max="5" :step="0.05" :reset-to="0.6" />
     </div>
 
     <div class="ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide">
@@ -76,4 +79,7 @@ const linesNum = useNumWidget(props.node, 'lines_num', 5)
 const lineWidth = useNumWidget(props.node, 'line_width', 2)
 const linesDarker = useNumWidget(props.node, 'lines_darker', 40)
 const linesLighter = useNumWidget(props.node, 'lines_lighter', 40)
+const weaveX = useNumWidget(props.node, 'weave_x', 0)
+const weaveY = useNumWidget(props.node, 'weave_y', 0)
+const weaveInterval = useNumWidget(props.node, 'weave_interval', 0.6)
 </script>

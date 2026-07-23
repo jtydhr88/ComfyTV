@@ -247,5 +247,52 @@ def old_film_video(view_url: str, *, delta: int = 14, every: int = 20,
     return torch_process_video(view_url, frame_fn, progress=progress)
 
 
+_WEAVE_MASK64 = (1 << 64) - 1
+
+
+def _weave_hash01(seed, k, axis):
+    z = ((int(seed) + 1) * 0x9E3779B97F4A7C15
+         ^ (int(k) + 1) * 0xBF58476D1CE4E5B9
+         ^ (int(axis) + 1) * 0x94D049BB133111EB) & _WEAVE_MASK64
+    z = ((z ^ (z >> 30)) * 0xBF58476D1CE4E5B9) & _WEAVE_MASK64
+    z = ((z ^ (z >> 27)) * 0x94D049BB133111EB) & _WEAVE_MASK64
+    z = (z ^ (z >> 31)) & _WEAVE_MASK64
+    return z / float(_WEAVE_MASK64 + 1)
+
+
+def gate_weave_shift(img, t, *, amount_x=2.0, amount_y=2.0, interval=0.6,
+                     seed=7):
+    import torch
+
+    ax = max(0.0, min(64.0, float(amount_x)))
+    ay = max(0.0, min(64.0, float(amount_y)))
+    if ax <= 0 and ay <= 0:
+        return img
+    iv = max(0.05, min(10.0, float(interval)))
+    k = int(t / iv)
+    frac = (t - k * iv) / iv
+
+    def key_pos(idx, axis, amp):
+        return (_weave_hash01(seed, idx, axis) * 2.0 - 1.0) * amp
+
+    sx = key_pos(k, 0, ax) + (key_pos(k + 1, 0, ax)
+                              - key_pos(k, 0, ax)) * frac
+    sy = key_pos(k, 1, ay) + (key_pos(k + 1, 1, ay)
+                              - key_pos(k, 1, ay)) * frac
+    h, w = img.shape[0], img.shape[1]
+    theta = torch.tensor(
+        [[1.0, 0.0, -2.0 * sx / max(1, w)],
+         [0.0, 1.0, -2.0 * sy / max(1, h)]],
+        dtype=img.dtype, device=img.device).unsqueeze(0)
+    src = img.permute(2, 0, 1).unsqueeze(0)
+    grid = torch.nn.functional.affine_grid(theta, src.shape,
+                                           align_corners=False)
+    out = torch.nn.functional.grid_sample(
+        src, grid, mode='bilinear', padding_mode='border',
+        align_corners=False)
+    return out.squeeze(0).permute(1, 2, 0)
+
+
 __all__ = ['glow_video', 'god_rays_video', 'old_film_video',
-           'glow_math', 'god_rays_setup', 'god_rays_frame', 'old_film_frame']
+           'glow_math', 'god_rays_setup', 'god_rays_frame', 'old_film_frame',
+           'gate_weave_shift']

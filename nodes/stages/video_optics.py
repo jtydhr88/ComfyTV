@@ -36,6 +36,11 @@ class LensDistortStage(io.ComfyNode):
                 _hidden_float("center_y", 0.0, -0.5, 0.5),
                 _hidden_float("squeeze", 1.0, 0.5, 2.0),
                 _hidden_float("lens_scale", 1.0, 0.25, 4.0),
+                _hidden_float("cx_curv", 0.0, -0.5, 0.5, step=0.005),
+                _hidden_float("cy_curv", 0.0, -0.5, 0.5, step=0.005),
+                _hidden_float("tang_u", 0.0, -0.5, 0.5, step=0.005),
+                _hidden_float("tang_v", 0.0, -0.5, 0.5, step=0.005),
+                _hidden_float("pt_c", 0.0, -1.0, 1.0, step=0.005),
                 _hidden_combo("edge", LENS_EDGES, 'clamp'),
                 COMFYTV_VIDEO.Input("video", optional=True),
             ],
@@ -48,7 +53,8 @@ class LensDistortStage(io.ComfyNode):
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                 model='nuke_k1k2', direction='undistort', k1=0.0, k2=0.0,
                 fov=140.0, center_x=0.0, center_y=0.0, squeeze=1.0,
-                lens_scale=1.0, edge='clamp', video=""):
+                lens_scale=1.0, cx_curv=0.0, cy_curv=0.0, tang_u=0.0,
+                tang_v=0.0, pt_c=0.0, edge='clamp', video=""):
         params = {
             'model': model if model in LENS_MODELS else 'nuke_k1k2',
             'direction': direction if direction in LENS_DIRECTIONS
@@ -59,6 +65,11 @@ class LensDistortStage(io.ComfyNode):
             'center_y': _f(center_y, -0.5, 0.5, 0.0),
             'squeeze': _f(squeeze, 0.5, 2, 1.0),
             'lens_scale': _f(lens_scale, 0.25, 4, 1.0),
+            'cx_curv': _f(cx_curv, -0.5, 0.5, 0.0),
+            'cy_curv': _f(cy_curv, -0.5, 0.5, 0.0),
+            'tang_u': _f(tang_u, -0.5, 0.5, 0.0),
+            'tang_v': _f(tang_v, -0.5, 0.5, 0.0),
+            'pt_c': _f(pt_c, -1, 1, 0.0),
             'edge': edge if edge in LENS_EDGES else 'clamp',
         }
         if params['model'] == 'nuke_k1k2' and not params['k1'] \
@@ -265,3 +276,154 @@ class Video360Stage(io.ComfyNode):
                     'v360_pitch': pitch, 'v360_roll': roll, 'v360_fov': fov,
                     'v360_interp': interp})
         return _fx_passthrough(video, fx_spec)
+
+
+class Video360StabilizeStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.Video360StabilizeStage",
+            display_name="360 Stabilize",
+            category="ComfyTV/VideoFX",
+            inputs=[
+                *_standard_stage_inputs(),
+                _hidden_int("smoothing", 15, 1, 120),
+                _hidden_float("strength", 1.0, 0.0, 1.0),
+                COMFYTV_VIDEO.Input("video", optional=True),
+            ],
+            outputs=[COMFYTV_VIDEO.Output("video")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
+                smoothing=15, strength=1.0, video=""):
+        from ...runners.video360_stab import stabilize_360_video
+
+        _need_video(video, "360 Stabilize")
+        payload = stabilize_360_video(
+            video, smoothing=min(120, max(1, int(smoothing or 15))),
+            strength=_f(strength, 0, 1, 1.0), progress=_progress_cb(cls))
+        return _stage_emit_auto(cls, project_id=project_id,
+                                payload_str=payload,
+                                parent_output_id=parent_output_id)
+
+
+class Card3DStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.Card3DStage",
+            display_name="Card 3D",
+            category="ComfyTV/VideoFX",
+            inputs=[
+                *_standard_stage_inputs(),
+                _hidden_float("fov", 40.0, 5.0, 140.0, step=1.0),
+                _hidden_float("tx", 0.0, -4.0, 4.0, step=0.01),
+                _hidden_float("ty", 0.0, -4.0, 4.0, step=0.01),
+                _hidden_float("tz", 0.0, -0.95, 6.0, step=0.01),
+                _hidden_float("rx", 0.0, -89.0, 89.0, step=0.5),
+                _hidden_float("ry", 0.0, -89.0, 89.0, step=0.5),
+                _hidden_float("rz", 0.0, -180.0, 180.0, step=0.5),
+                _hidden_float("card_scale", 1.0, 0.05, 8.0, step=0.01),
+                COMFYTV_VIDEO.Input("video", optional=True),
+            ],
+            outputs=[COMFYTV_VIDEO.Output("video")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
+                fov=40.0, tx=0.0, ty=0.0, tz=0.0, rx=0.0, ry=0.0, rz=0.0,
+                card_scale=1.0, video=""):
+        params = {
+            'fov': _f(fov, 5, 140, 40.0),
+            'tx': _f(tx, -4, 4, 0.0), 'ty': _f(ty, -4, 4, 0.0),
+            'tz': _f(tz, -0.95, 6, 0.0),
+            'rx': _f(rx, -89, 89, 0.0), 'ry': _f(ry, -89, 89, 0.0),
+            'rz': _f(rz, -180, 180, 0.0),
+            'card_scale': _f(card_scale, 0.05, 8, 1.0),
+        }
+        if all(params[k] == 0.0 for k in ('tx', 'ty', 'tz', 'rx', 'ry',
+                                          'rz')) \
+                and params['card_scale'] == 1.0:
+            return _fx_identity(video)
+        fx_spec = build_torch_fx_spec(
+            "ComfyTV.Card3DStage", "Card 3D", "video", "card3d", params)
+        return _fx_passthrough(video, fx_spec)
+
+
+class STMapGenStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.STMapGenStage",
+            display_name="STMap Generate",
+            category="ComfyTV/VideoFX",
+            inputs=[
+                *_standard_stage_inputs(),
+                _hidden_int("width", 1920, 8, 8192),
+                _hidden_int("height", 1080, 8, 8192),
+                _hidden_combo("model", LENS_MODELS, 'nuke_k1k2'),
+                _hidden_combo("direction", LENS_DIRECTIONS, 'undistort'),
+                _hidden_float("k1", 0.0, -1.0, 1.0, step=0.005),
+                _hidden_float("k2", 0.0, -1.0, 1.0, step=0.005),
+                _hidden_float("fov", 140.0, 20.0, 180.0, step=1.0),
+                _hidden_float("center_x", 0.0, -0.5, 0.5),
+                _hidden_float("center_y", 0.0, -0.5, 0.5),
+                _hidden_float("squeeze", 1.0, 0.5, 2.0),
+                _hidden_float("lens_scale", 1.0, 0.25, 4.0),
+                _hidden_float("cx_curv", 0.0, -0.5, 0.5, step=0.005),
+                _hidden_float("cy_curv", 0.0, -0.5, 0.5, step=0.005),
+                _hidden_float("tang_u", 0.0, -0.5, 0.5, step=0.005),
+                _hidden_float("tang_v", 0.0, -0.5, 0.5, step=0.005),
+                _hidden_float("pt_c", 0.0, -1.0, 1.0, step=0.005),
+                COMFYTV_VIDEO.Input("video", optional=True),
+            ],
+            outputs=[COMFYTV_IMAGE.Output("stmap")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
+                width=1920, height=1080, model='nuke_k1k2',
+                direction='undistort', k1=0.0, k2=0.0, fov=140.0,
+                center_x=0.0, center_y=0.0, squeeze=1.0, lens_scale=1.0,
+                cx_curv=0.0, cy_curv=0.0, tang_u=0.0, tang_v=0.0, pt_c=0.0,
+                video=""):
+        from ...runners.optics import lens_stmap_image
+        from ...runners.media import get_video_info
+
+        w = min(8192, max(8, int(width or 1920)))
+        h = min(8192, max(8, int(height or 1080)))
+        src = (video or '').strip()
+        if src:
+            info = get_video_info(src)
+            if info.get('width') and info.get('height'):
+                w, h = int(info['width']), int(info['height'])
+        params = {
+            'model': model if model in LENS_MODELS else 'nuke_k1k2',
+            'direction': direction if direction in LENS_DIRECTIONS
+            else 'undistort',
+            'k1': _f(k1, -1, 1, 0.0), 'k2': _f(k2, -1, 1, 0.0),
+            'fov': _f(fov, 20, 180, 140.0),
+            'center_x': _f(center_x, -0.5, 0.5, 0.0),
+            'center_y': _f(center_y, -0.5, 0.5, 0.0),
+            'squeeze': _f(squeeze, 0.5, 2, 1.0),
+            'lens_scale': _f(lens_scale, 0.25, 4, 1.0),
+            'cx_curv': _f(cx_curv, -0.5, 0.5, 0.0),
+            'cy_curv': _f(cy_curv, -0.5, 0.5, 0.0),
+            'tang_u': _f(tang_u, -0.5, 0.5, 0.0),
+            'tang_v': _f(tang_v, -0.5, 0.5, 0.0),
+            'pt_c': _f(pt_c, -1, 1, 0.0),
+        }
+        payload = lens_stmap_image(w, h, params)
+        return _stage_emit_auto(cls, project_id=project_id,
+                                payload_str=payload,
+                                parent_output_id=parent_output_id)

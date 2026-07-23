@@ -22,8 +22,23 @@ def _is_video(path) -> bool:
 
 def _load_uv_image(path, device):
     import torch
-    from PIL import Image
-    arr = np.asarray(Image.open(str(path)).convert('RGB'), dtype=np.float32) / 255.0
+    try:
+        import cv2
+        raw = cv2.imread(str(path), cv2.IMREAD_UNCHANGED)
+    except ImportError:
+        raw = None
+    if raw is not None:
+        if raw.ndim == 2:
+            raw = raw[..., None].repeat(3, axis=2)
+        if raw.shape[2] == 4:
+            raw = raw[..., :3]
+        raw = raw[..., ::-1]
+        div = 65535.0 if raw.dtype == np.uint16 else 255.0
+        arr = np.ascontiguousarray(raw).astype(np.float32) / div
+    else:
+        from PIL import Image
+        arr = np.asarray(Image.open(str(path)).convert('RGB'),
+                         dtype=np.float32) / 255.0
     return torch.from_numpy(arr).to(device)
 
 

@@ -58,8 +58,23 @@ PRESET_FIELDS: dict[str, tuple[str, ...]] = {
     ),
     "ComfyTV.LensDistortStage": (
         "model", "direction", "k1", "k2", "fov", "center_x", "center_y",
-        "squeeze", "lens_scale", "edge",
+        "squeeze", "lens_scale", "cx_curv", "cy_curv", "tang_u", "tang_v",
+        "pt_c", "edge",
     ),
+    "ComfyTV.STMapGenStage": (
+        "model", "direction", "k1", "k2", "fov", "center_x", "center_y",
+        "squeeze", "lens_scale", "cx_curv", "cy_curv", "tang_u", "tang_v",
+        "pt_c",
+    ),
+    "ComfyTV.Card3DStage": (
+        "fov", "tx", "ty", "tz", "rx", "ry", "rz", "card_scale",
+    ),
+    "ComfyTV.RegrainStage": (
+        "grain_size", "shadows", "midtones", "highlights", "grain_sat",
+        "seed",
+    ),
+    "ComfyTV.Video360StabilizeStage": ("smoothing", "strength"),
+    "ComfyTV.ContactSheetStage": ("cols", "rows", "sheet_width", "timecode"),
     "ComfyTV.ChromaticAberrationStage": (
         "amount", "falloff", "center_x", "center_y",
     ),
@@ -101,6 +116,7 @@ PRESET_FIELDS: dict[str, tuple[str, ...]] = {
         "delta", "every", "brightness_up", "brightness_down",
         "brightness_every", "develop_up", "develop_down", "develop_duration",
         "lines_num", "line_width", "lines_darker", "lines_lighter",
+        "weave_x", "weave_y", "weave_interval", "seed",
     ),
     "ComfyTV.FrameBlendStage": (
         "mode", "frame_min", "frame_max", "interval", "operation", "decay",
@@ -135,8 +151,42 @@ PRESET_FIELDS: dict[str, tuple[str, ...]] = {
         "red", "green", "blue", "cyan", "magenta", "yellow", "preserve_luma",
         "output",
     ),
-    "ComfyTV.KeyMixStage": ("mix", "invert_mask"),
+    "ComfyTV.KeyMixStage": ("mix", "invert_mask", "alpha_op"),
     "ComfyTV.MatteMorphStage": ("op", "size_x", "size_y"),
+    "ComfyTV.Select0rStage": (
+        "key_color", "space", "shape", "edge", "delta_1", "delta_2",
+        "delta_3", "slope", "invert", "output",
+    ),
+    "ComfyTV.SlitScanStage": ("mode", "gain", "offset", "filter_mode",
+                              "invert"),
+    "ComfyTV.FeedbackFXStage": (
+        "mode", "phase_increment", "zoom", "feedback_mix", "style", "frames",
+        "seed",
+    ),
+    "ComfyTV.StrobeStage": ("interval", "strobe_mode", "invert"),
+    "ComfyTV.ExpressionStage": ("expression", "field", "rate", "duration",
+                                "fps", "seed"),
+    "ComfyTV.ArtFXStage": (
+        "mode", "threshold", "levels", "diff_space", "edge_scale", "scatter",
+        "color_mix", "invert", "azimuth", "elevation", "emboss_width",
+        "dot_radius", "angle_c", "angle_m", "angle_y",
+    ),
+    "ComfyTV.GlitchFXStage": (
+        "chance", "block_h", "shift", "color_intensity", "seed",
+    ),
+    "ComfyTV.KaleidoscopeStage": (
+        "segments", "angle", "source_angle", "center_x", "center_y",
+    ),
+    "ComfyTV.WaveWarpStage": (
+        "amplitude", "frequency", "speed", "axis", "envelope",
+    ),
+    "ComfyTV.WaterStage": (
+        "physics", "rain", "swirl", "rain_every", "amplitude", "swirl_x",
+        "swirl_y", "seed",
+    ),
+    "ComfyTV.LightGraffitiStage": (
+        "threshold", "sum_threshold", "decay", "gain",
+    ),
     "ComfyTV.MaskPropagateStage": ("model", "max_points", "invert"),
     "ComfyTV.AudioReactiveStage": (
         "band", "freq_lo", "freq_hi", "attack", "release", "rate",
@@ -170,6 +220,26 @@ PRESET_FIELDS: dict[str, tuple[str, ...]] = {
         "haas_left_delay", "haas_right_delay", "balance",
     ),
     "ComfyTV.AudioTimePitchStage": ("mode", "tempo", "semitones"),
+    "ComfyTV.AudioNoiseReductionStage": (
+        "reduction_db", "sensitivity", "freq_smooth_bands",
+    ),
+    "ComfyTV.AudioMIRStage": ("mode", "threshold", "min_gap_s", "field"),
+    "ComfyTV.ScoreToMidiStage": (
+        "swing_ratio", "swing_unit", "humanize", "easing", "profile",
+        "seed",
+    ),
+    "ComfyTV.ChordAccompStage": (
+        "progression", "bpm", "beats_per_bar", "pattern", "voicing",
+        "octave_shift", "velocity", "repeats",
+    ),
+    "ComfyTV.MuseReverbStage": (
+        "reverb_time_ms", "room_scale", "predelay_ms", "dry_db", "late_db",
+        "er_db", "time_low", "time_high", "xover_low_mid", "xover_mid_high",
+        "feedback_top", "mod_freq", "mod_amp", "stereo_spread", "quality",
+    ),
+    "ComfyTV.SF2SynthStage": ("soundfont", "program", "gain"),
+    "ComfyTV.ClickTrackStage": ("bpm", "beats_per_bar", "bars",
+                                "soundfont"),
     "ComfyTV.AudioRepairStage": (
         "method", "dk_window", "dk_threshold", "dk_burst", "dc_threshold",
         "dc_hsize", "dn_level", "wt_sigma", "wt_percent", "wt_levels",

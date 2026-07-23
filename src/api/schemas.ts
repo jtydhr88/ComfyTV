@@ -323,7 +323,7 @@ export const MutateStageParamSchema = z.object({
   param: StageParamSchema,
 })
 
-export const RESOURCE_KINDS = ['lut', 'font'] as const
+export const RESOURCE_KINDS = ['lut', 'font', 'soundfont'] as const
 export type ResourceKind = (typeof RESOURCE_KINDS)[number]
 
 export const ResourceSchema = z.object({
@@ -463,6 +463,11 @@ export const FxClipPreviewSchema = z.object({
   t1: z.number(),
 })
 export type FxClipPreviewResult = z.infer<typeof FxClipPreviewSchema>
+
+export const ExpressionEvalSchema = z.object({
+  samples: z.array(z.tuple([z.number(), z.number()])),
+})
+export type ExpressionEvalResult = z.infer<typeof ExpressionEvalSchema>
 
 export const AdoptAssetsSchema = z.object({
   ok: z.boolean(),

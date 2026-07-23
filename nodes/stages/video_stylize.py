@@ -172,6 +172,10 @@ class OldFilmStage(io.ComfyNode):
                 _hidden_int("line_width", 2, 0, 100),
                 _hidden_int("lines_darker", 40, 0, 100),
                 _hidden_int("lines_lighter", 40, 0, 100),
+                _hidden_float("weave_x", 0.0, 0.0, 32.0, step=0.5),
+                _hidden_float("weave_y", 0.0, 0.0, 32.0, step=0.5),
+                _hidden_float("weave_interval", 0.6, 0.05, 5.0, step=0.05),
+                _hidden_int("seed", 7, 0, 99999),
                 COMFYTV_VIDEO.Input("video", optional=True),
             ],
             outputs=[COMFYTV_VIDEO.Output("video")],
@@ -184,7 +188,8 @@ class OldFilmStage(io.ComfyNode):
                 delta=14, every=20, brightness_up=20, brightness_down=30,
                 brightness_every=70, develop_up=60, develop_down=20,
                 develop_duration=70, lines_num=5, line_width=2,
-                lines_darker=40, lines_lighter=40, video=""):
+                lines_darker=40, lines_lighter=40, weave_x=0.0, weave_y=0.0,
+                weave_interval=0.6, seed=7, video=""):
         fx_spec = build_torch_fx_spec(
             "ComfyTV.OldFilmStage", "Old Film", "video", "old_film",
             {'delta': min(400, max(0, int(delta))),
@@ -198,7 +203,54 @@ class OldFilmStage(io.ComfyNode):
              'lines_num': min(100, max(0, int(lines_num))),
              'line_width': min(100, max(0, int(line_width))),
              'lines_darker': min(100, max(0, int(lines_darker))),
-             'lines_lighter': min(100, max(0, int(lines_lighter)))})
+             'lines_lighter': min(100, max(0, int(lines_lighter))),
+             'weave_x': _f(weave_x, 0, 32, 0.0),
+             'weave_y': _f(weave_y, 0, 32, 0.0),
+             'weave_interval': _f(weave_interval, 0.05, 5, 0.6),
+             'seed': min(99999, max(0, int(seed)))})
+        return _fx_passthrough(video, fx_spec)
+
+
+class RegrainStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.RegrainStage",
+            display_name="Regrain",
+            category="ComfyTV/VideoFX",
+            inputs=[
+                *_standard_stage_inputs(),
+                _hidden_float("grain_size", 0.8, 0.0, 4.0, step=0.05),
+                _hidden_float("shadows", 0.3, 0.0, 1.0),
+                _hidden_float("midtones", 0.15, 0.0, 1.0),
+                _hidden_float("highlights", 0.05, 0.0, 1.0),
+                _hidden_float("grain_sat", 0.4, 0.0, 1.0),
+                _hidden_int("seed", 7, 0, 99999),
+                COMFYTV_VIDEO.Input("video", optional=True),
+            ],
+            outputs=[COMFYTV_VIDEO.Output("video")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
+                grain_size=0.8, shadows=0.3, midtones=0.15, highlights=0.05,
+                grain_sat=0.4, seed=7, video=""):
+        params = {
+            'grain_size': _f(grain_size, 0, 4, 0.8),
+            'shadows': _f(shadows, 0, 1, 0.3),
+            'midtones': _f(midtones, 0, 1, 0.15),
+            'highlights': _f(highlights, 0, 1, 0.05),
+            'grain_sat': _f(grain_sat, 0, 1, 0.4),
+            'seed': min(99999, max(0, int(seed or 0))),
+        }
+        if params['shadows'] <= 0 and params['midtones'] <= 0 \
+                and params['highlights'] <= 0:
+            return _fx_identity(video)
+        fx_spec = build_torch_fx_spec(
+            "ComfyTV.RegrainStage", "Regrain", "video", "regrain", params)
         return _fx_passthrough(video, fx_spec)
 
 

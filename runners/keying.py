@@ -251,23 +251,40 @@ def color_suppress_math(img, *, red=0.0, green=0.0, blue=0.0, cyan=0.0,
     return out.clamp(0, 1)
 
 
+KEYMIX_OPS = ('over', 'add', 'subtract', 'max', 'min')
+
+
 def keymix_videos(a_url: str, b_url: str, mask_url: str, *,
                   mix: float = 1.0, invert_mask: bool = False,
-                  progress=None) -> str:
+                  alpha_op: str = 'over', progress=None) -> str:
     import torch
 
+    if alpha_op not in KEYMIX_OPS:
+        raise RuntimeError(f"keymix: unknown alpha op {alpha_op!r}")
     a_src = _SideSource(a_url)
     mask_src = _SideSource(mask_url)
     eff = max(0.0, min(1.0, float(mix)))
 
     def frame_fn(img, t):
         hw = (img.shape[0], img.shape[1])
-        a = a_src.at(t, img.device, hw)[..., :3]
+        a_full = a_src.at(t, img.device, hw)
+        a = a_full[..., :3]
         mk = mask_src.at(t, img.device, hw)
         m = mk[..., 3] if mk.shape[-1] == 4 else _luma(mk)
         m = m.clamp(0, 1)
         if invert_mask:
             m = 1 - m
+        if alpha_op != 'over':
+            aa = a_full[..., 3].clamp(0, 1) if a_full.shape[-1] == 4 \
+                else torch.ones_like(m)
+            if alpha_op == 'add':
+                m = (aa + m).clamp(0, 1)
+            elif alpha_op == 'subtract':
+                m = (aa - m).clamp(0, 1)
+            elif alpha_op == 'max':
+                m = torch.maximum(aa, m)
+            else:
+                m = torch.minimum(aa, m)
         return img + (a - img) * (m * eff).unsqueeze(-1)
 
     try:
@@ -705,9 +722,136 @@ def pik_math(img, p, c, in_mask_t=None, out_mask_t=None):
     return out, alpha
 
 
+SELECT0R_SPACES = ('rgb', 'abi', 'hci')
+SELECT0R_SHAPES = ('box', 'ellipsoid', 'octahedron')
+SELECT0R_EDGES = ('hard', 'fat', 'normal', 'skiny', 'slope')
+
+_K32 = 0.8660254037844386
+
+
+def _rgb_to_abi(r, g, b):
+    return r - 0.5 * g - 0.5 * b, _K32 * (g - b), (r + g + b) / 3.0
+
+
+def select0r_params(*, key_color='#00FF00', space='rgb', shape='ellipsoid',
+                    edge='normal', delta_1=0.2, delta_2=0.2, delta_3=0.2,
+                    slope=0.2, invert=False):
+    if space not in SELECT0R_SPACES:
+        raise RuntimeError(f"select0r: unknown space {space!r}")
+    if shape not in SELECT0R_SHAPES:
+        raise RuntimeError(f"select0r: unknown shape {shape!r}")
+    if edge not in SELECT0R_EDGES:
+        raise RuntimeError(f"select0r: unknown edge {edge!r}")
+    kr, kg, kb = _parse_color(key_color)
+    if space == 'rgb':
+        center = (kr, kg, kb)
+    else:
+        a, bb, i = _rgb_to_abi(kr, kg, kb)
+        if space == 'abi':
+            center = (a, bb, i)
+        else:
+            h = np.arctan2(bb, a) / (2 * np.pi)
+            c = float(np.hypot(a, bb))
+            center = (float(h), c, i)
+    deltas = tuple(max(1e-4, min(2.0, float(d)))
+                   for d in (delta_1, delta_2, delta_3))
+    return {'space': space, 'shape': shape, 'edge': edge,
+            'center': center, 'deltas': deltas,
+            'slope': max(1e-6, min(1.0, float(slope))),
+            'invert': bool(invert)}
+
+
+def select0r_math(img, p):
+    import torch
+
+    r, g, b = img[..., 0], img[..., 1], img[..., 2]
+    space = p['space']
+    if space == 'rgb':
+        ax0, ax1, ax2 = r, g, b
+        wrap0 = False
+    elif space == 'abi':
+        a, bb, i = _rgb_to_abi(r, g, b)
+        ax0, ax1, ax2 = a, bb, i
+        wrap0 = False
+    else:
+        a, bb, i = _rgb_to_abi(r, g, b)
+        ax0 = torch.atan2(bb, a) / (2 * np.pi)
+        ax1 = torch.sqrt(a * a + bb * bb)
+        ax2 = i
+        wrap0 = True
+
+    c0, c1, c2 = p['center']
+    d0, d1, d2 = (1.0 / d for d in p['deltas'])
+    if wrap0:
+        f0 = (0.5 - ((ax0 - c0).abs() % 1.0 - 0.5).abs()) * d0
+    else:
+        f0 = (ax0 - c0).abs() * d0
+    f1 = (ax1 - c1).abs() * d1
+    f2 = (ax2 - c2).abs() * d2
+
+    shape = p['shape']
+    if shape == 'box':
+        rr = torch.maximum(torch.maximum(f0, f1), f2)
+        r2 = rr * rr
+    elif shape == 'octahedron':
+        rr = f0 + f1 + f2
+        r2 = rr * rr
+    else:
+        r2 = f0 * f0 + f1 * f1 + f2 * f2
+
+    edge = p['edge']
+    if edge == 'hard':
+        alpha = (r2 < 1.0).to(img.dtype)
+    elif edge == 'fat':
+        alpha = (1.0 - r2 ** 4).clamp(min=0.0)
+    elif edge == 'normal':
+        alpha = (1.0 - r2 * r2).clamp(min=0.0)
+    elif edge == 'skiny':
+        alpha = (1.0 - r2).clamp(min=0.0)
+    else:
+        islp = 0.2 / p['slope']
+        alpha = torch.where(r2 < 1.0, torch.ones_like(r2),
+                            (1.0 - islp * (r2 - 1.0)).clamp(min=0.0))
+    if p['invert']:
+        alpha = 1.0 - alpha
+    return img[..., :3] * alpha.unsqueeze(-1), alpha
+
+
+def select0r_video(view_url: str, *, key_color='#00FF00', space='rgb',
+                   shape='ellipsoid', edge='normal', delta_1=0.2,
+                   delta_2=0.2, delta_3=0.2, slope=0.2, invert=False,
+                   output='matte', bg_video='', progress=None) -> str:
+    _check_output(output, needs_encoder=True)
+    if output == 'composite' and not (bg_video or '').strip():
+        raise RuntimeError(
+            "select0r: composite output needs a background input")
+    p = select0r_params(key_color=key_color, space=space, shape=shape,
+                        edge=edge, delta_1=delta_1, delta_2=delta_2,
+                        delta_3=delta_3, slope=slope, invert=invert)
+    bg_src = _SideSource(bg_video) if (bg_video or '').strip() else None
+
+    def frame_fn(img, t):
+        pre, alpha = select0r_math(img, p)
+        bg = None
+        if bg_src is not None:
+            bg = bg_src.at(t, img.device,
+                           (img.shape[0], img.shape[1]))[..., :3]
+        return _matte_out(pre, alpha, output, bg=bg)
+
+    try:
+        return torch_process_video(
+            view_url, frame_fn, out_alpha=(output == 'alpha'),
+            progress=progress)
+    finally:
+        if bg_src is not None:
+            bg_src.close()
+
+
 __all__ = [
     'despill_video', 'color_suppress_video', 'keymix_videos',
     'matte_monitor_video', 'morphology_video', 'keyer_video', 'pik_video',
     'despill_math', 'color_suppress_math', 'morphology_math',
     'keyer_params', 'keyer_math', 'pik_params', 'pik_math',
+    'select0r_params', 'select0r_math', 'select0r_video',
+    'SELECT0R_SPACES', 'SELECT0R_SHAPES', 'SELECT0R_EDGES', 'KEYMIX_OPS',
 ]

@@ -32,7 +32,7 @@ from .video_color import (
 )
 from .video_optics import (
     Video360Stage, LensDistortStage, ChromaticAberrationStage, LensFlareStage,
-    ZDefocusStage,
+    ZDefocusStage, Video360StabilizeStage, Card3DStage, STMapGenStage,
 )
 from .video_particles import ParticlesStage
 from .video_enhance import (
@@ -42,11 +42,18 @@ from .video_enhance import (
 from .video_keying import (
     VideoChromaKeyStage, PIKStage, KeyerStage, DespillStage,
     ColorSuppressStage, KeyMixStage, MatteMonitorStage, MatteMorphStage,
+    Select0rStage,
 )
 from .video_stylize import (
     VideoStylizeStage, GlowStage, GodRaysStage, OldFilmStage, FrameBlendStage,
-    ChromaShiftStage, PseudocolorStage, PosterizeStage,
+    ChromaShiftStage, PseudocolorStage, PosterizeStage, RegrainStage,
 )
+from .video_timefx import SlitScanStage, FeedbackFXStage, StrobeStage
+from .video_artfx import (
+    ArtFXStage, GlitchFXStage, KaleidoscopeStage, WaveWarpStage, WaterStage,
+    LightGraffitiStage,
+)
+from .expression_stage import ExpressionStage
 from .video_compose import (
     VideoCompositeStage, VideoTransformStage, CornerPinStage, STMapStage,
 )
@@ -56,7 +63,9 @@ from .video_masking import (
 )
 from .video_text import TitleStage, SubtitleStage, SubtitleGenStage
 from .video_timeline import VideoTransitionStage, TimeRemapStage, SequenceStage
-from .video_analysis import VideoScopesStage, SceneDetectStage
+from .video_analysis import (
+    VideoScopesStage, SceneDetectStage, ContactSheetStage,
+)
 from .video_generate import PatternStage, KenBurnsStage
 from .fx_chain import FXChainStage
 from .audio_process import (
@@ -66,6 +75,7 @@ from .audio_process import (
 from .audio_effects import (
     AudioEchoStage, AudioModulationStage, AudioStereoStage,
     AudioTimePitchStage, AudioSaturateStage, AudioConvolveStage,
+    MuseReverbStage,
 )
 from .audio_edit import (
     AudioCrossfadeStage, AudioMixStage, AudioSegmentExportStage,
@@ -76,6 +86,13 @@ from .audio_measure import (
     AudioDeconvolveStage,
 )
 from .audio_reactive import AudioReactiveStage, AudioMeterStage
+from .audio_mir_stages import (
+    AudioStemSplitStage, AudioNoiseReductionStage, AudioMIRStage,
+)
+from .score_stages import (
+    ScoreStage, ScoreToMidiStage, SF2SynthStage, ClickTrackStage,
+    ChordAccompStage,
+)
 from .panorama import (
     PanoramaStage, PanoramaCurrentViewStage, PanoramaMultiViewStage,
 )
@@ -137,6 +154,14 @@ class ComfyTVExtension(ComfyExtension):
             ShapeMaskStage, LensDistortStage, ChromaticAberrationStage,
             LensFlareStage, ZDefocusStage, FaceBlurStage, SpotRemoverStage,
             ParticlesStage,
+            SlitScanStage, FeedbackFXStage, StrobeStage, ExpressionStage,
+            Select0rStage, ArtFXStage, GlitchFXStage, KaleidoscopeStage,
+            WaveWarpStage, WaterStage, LightGraffitiStage,
+            Video360StabilizeStage, Card3DStage, STMapGenStage,
+            RegrainStage, ContactSheetStage,
+            AudioStemSplitStage, AudioNoiseReductionStage, AudioMIRStage,
+            ScoreStage, ScoreToMidiStage, SF2SynthStage, ClickTrackStage,
+            ChordAccompStage, MuseReverbStage,
             AnnotateStage, AudioReactiveStage, AudioMeterStage,
             ImageLoaderStage, VideoLoaderStage, AudioLoaderStage,
             AssetImageLoaderStage, AssetVideoLoaderStage, AssetAudioLoaderStage,

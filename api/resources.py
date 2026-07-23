@@ -8,10 +8,12 @@ from aiohttp import web
 from .. import storage
 from ._common import routes
 
-RESOURCE_KIND_DIRS = {'lut': 'comfytv/luts', 'font': 'comfytv/fonts'}
+RESOURCE_KIND_DIRS = {'lut': 'comfytv/luts', 'font': 'comfytv/fonts',
+                      'soundfont': 'comfytv/soundfonts'}
 RESOURCE_KIND_EXTS = {
     'lut': {'.cube', '.3dl', '.dat', '.m3d', '.csp'},
     'font': {'.ttf', '.otf', '.woff', '.woff2'},
+    'soundfont': {'.sf2', '.sf3'},
 }
 MAX_RESOURCE_SIZE = 64 * 1024 * 1024
 _SAFE_NAME = re.compile(r'^[\w][\w .()\-一-鿿]*$')

@@ -485,7 +485,8 @@
     },
     "kind": {
       "lut": "LUT",
-      "font": "字体"
+      "font": "字体",
+      "soundfont": "音色库"
     },
     "upload": "上传文件",
     "rename": "重命名",
@@ -1906,7 +1907,12 @@
       "coverreveal": "覆盖与揭示",
       "wind": "风蚀",
       "fx": "特效"
-    }
+    },
+    "echoHint": "多帧残影叠加,带反馈拖尾。",
+    "needsRetimeMap": "Map 模式需要接入灰度重定时图",
+    "expressionHint": "变量:t、frame、duration、fps;函数:noise、fbm、turbulence、smoothstep、remap、mix、hash、random、sin/cos…",
+    "stab360Hint": "两遍:分析 equirect 的 yaw/pitch 运动,平滑相机路径后重渲染。",
+    "stmapGenHint": "16-bit STMap,用于 undistort→合成→redistort 工作流;接入 STMap 节点使用。"
   },
   "afx": {
     "custom": "自定义",
@@ -2020,7 +2026,31 @@
     "splitChannels": "分声道",
     "legend": "图例",
     "mixBack": "闪避后混回人声",
-    "threshold": "阈值"
+    "threshold": "阈值",
+    "pitchHq": "变调 HQ",
+    "stretchHq": "变速 HQ",
+    "hqNote": "相位锁定声码器(StaffPad 算法)——更慢,但音质远超普通模式。",
+    "stemSplitHint": "Hybrid Demucs 四轨分离;首次运行自动下载模型(~319MB)。人声/伴奏两路输出即卡拉OK工作流。",
+    "reduction": "降噪量",
+    "sensitivity": "灵敏度",
+    "freqSmoothing": "频率平滑",
+    "nrProfileWired": "噪声样本:来自接入的 noise_sample 输入。",
+    "nrProfileAuto": "噪声样本:自动(取最安静的 10% 帧)。接入纯噪声片段到 noise_sample 效果最佳。",
+    "beats": "节拍",
+    "onsets": "瞬态",
+    "notes": "音符",
+    "minGap": "最小间隔",
+    "mirHint": "输出关键帧脉冲(接 Transform/Composite 的 track 输入)和带时间的 labels JSON。",
+    "reverbTime": "混响时长",
+    "roomScale": "房间尺度",
+    "predelay": "预延迟",
+    "dry": "干声",
+    "late": "晚期混响",
+    "early": "早反射",
+    "timeLow": "低频衰减",
+    "timeHigh": "高频衰减",
+    "modulation": "调制",
+    "stereoSpread": "立体声宽度"
   },
   "scopes": {
     "liveSampling": "实时采样上游预览",
@@ -2028,5 +2058,34 @@
   },
   "optics": {
     "needsDepth": "先接入深度图(图片或视频)"
+  },
+  "music": {
+    "scorePlaceholder": "在此粘贴 MusicXML(score-partwise)…",
+    "scoreFromInput": "乐谱来自接入的 text 输入。",
+    "scoreHint": "可来自 LLM、MuseScore 导出或手写。Run 校验后传给下游。",
+    "needsScore": "请接入乐谱节点",
+    "needsPerformance": "请接入演奏引擎(或节拍器轨)",
+    "swing": "摇摆",
+    "humanize": "人性化",
+    "downloadMidi": "下载 .mid",
+    "soundfont": "音色库",
+    "builtinSynth": "内置合成(无音色库)",
+    "instrument": "乐器",
+    "gain": "增益",
+    "sfHint": "使用自研 SF2/SF3 引擎渲染(非 fluidsynth)。",
+    "builtinHint": "未选音色库——使用内置加法合成兜底。把 .sf2/.sf3(如 FluidR3Mono_GM)拖进资源面板即可获得真实乐器音色。",
+    "beatsPerBar": "每小节拍数",
+    "bars": "小节数",
+    "clickFromLabels": "打点跟随接入的 labels(如节拍分析输出)。",
+    "clickHint": "强拍=GM 高音梆子,弱拍=低音。接节拍分析的 labels 可跟真实音乐打点。",
+    "engraving": "刻谱中…",
+    "noScoreYet": "粘贴或接入 MusicXML 即可看到刻谱",
+    "following": "跟随播放中",
+    "octave": "八度",
+    "velocity": "力度",
+    "repeats": "循环次数",
+    "chordHint": "小节用 | 分隔,小节内和弦均分拍。支持转位(C/E)与 m/7/maj7/m7/dim/aug/sus4/6/9/m7b5 等。",
+    "channelPrograms": "分轨乐器",
+    "channelProgramsHint": "通道按声部顺序对应(第 1 声部 = ch 0);未列出的通道用上面的乐器,鼓(通道 9)自动。"
   }
 }

@@ -7,7 +7,7 @@ from ...runners.media_filter import scene_detect, filter_frame_image
 
 from .common.fx_helpers import (  # noqa: F401
     _need_video, _progress_cb, _f,
-    _hidden_float, _hidden_combo,
+    _hidden_float, _hidden_int, _hidden_combo,
 )
 
 
@@ -165,4 +165,42 @@ class VideoScopesStage(io.ComfyNode):
         pos = 'middle' if float(at_seconds or -1) < 0 else float(at_seconds)
         payload = filter_frame_image(video, pos, specs)
         return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
+                                parent_output_id=parent_output_id)
+
+
+class ContactSheetStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.ContactSheetStage",
+            display_name="Contact Sheet",
+            category="ComfyTV/Video",
+            inputs=[
+                *_standard_stage_inputs(),
+                _hidden_int("cols", 4, 1, 12),
+                _hidden_int("rows", 4, 1, 12),
+                _hidden_int("sheet_width", 1920, 320, 8192),
+                io.Boolean.Input("timecode", default=True, socketless=True,
+                                 extra_dict={"hidden": True}),
+                COMFYTV_VIDEO.Input("video", optional=True),
+            ],
+            outputs=[COMFYTV_IMAGE.Output("image")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
+                cols=4, rows=4, sheet_width=1920, timecode=True, video=""):
+        from ...runners.contact_sheet import contact_sheet_image
+
+        _need_video(video, "Contact Sheet")
+        payload = contact_sheet_image(
+            video, cols=min(12, max(1, int(cols or 4))),
+            rows=min(12, max(1, int(rows or 4))),
+            sheet_width=min(8192, max(320, int(sheet_width or 1920))),
+            timecode=bool(timecode), progress=_progress_cb(cls))
+        return _stage_emit_auto(cls, project_id=project_id,
+                                payload_str=payload,
                                 parent_output_id=parent_output_id)

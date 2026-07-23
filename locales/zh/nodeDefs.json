@@ -416,6 +416,81 @@
     },
     "AudioDuckStage": {
       "display_name": "音频闪避"
+    },
+    "SlitScanStage": {
+      "display_name": "狭缝扫描"
+    },
+    "FeedbackFXStage": {
+      "display_name": "反馈特效"
+    },
+    "StrobeStage": {
+      "display_name": "闪帧"
+    },
+    "ExpressionStage": {
+      "display_name": "表达式"
+    },
+    "Select0rStage": {
+      "display_name": "高级选色"
+    },
+    "ArtFXStage": {
+      "display_name": "艺术滤镜"
+    },
+    "GlitchFXStage": {
+      "display_name": "数字故障"
+    },
+    "KaleidoscopeStage": {
+      "display_name": "万花筒"
+    },
+    "WaveWarpStage": {
+      "display_name": "波浪扭曲"
+    },
+    "WaterStage": {
+      "display_name": "水面"
+    },
+    "LightGraffitiStage": {
+      "display_name": "光绘"
+    },
+    "Card3DStage": {
+      "display_name": "3D 卡片"
+    },
+    "RegrainStage": {
+      "display_name": "胶片颗粒"
+    },
+    "Video360StabilizeStage": {
+      "display_name": "360 稳定"
+    },
+    "ContactSheetStage": {
+      "display_name": "审片宫格"
+    },
+    "STMapGenStage": {
+      "display_name": "STMap 生成"
+    },
+    "AudioStemSplitStage": {
+      "display_name": "音源分轨"
+    },
+    "AudioNoiseReductionStage": {
+      "display_name": "谱门控降噪"
+    },
+    "AudioMIRStage": {
+      "display_name": "节拍与音符分析"
+    },
+    "ScoreStage": {
+      "display_name": "乐谱"
+    },
+    "ScoreToMidiStage": {
+      "display_name": "演奏引擎"
+    },
+    "SF2SynthStage": {
+      "display_name": "乐谱合成"
+    },
+    "ClickTrackStage": {
+      "display_name": "节拍器轨"
+    },
+    "ChordAccompStage": {
+      "display_name": "和弦伴奏"
+    },
+    "MuseReverbStage": {
+      "display_name": "Muse 混响 (FDN)"
     }
   },
   "ComfyTV_AssetAudioLoaderStage": {
@@ -2222,5 +2297,80 @@
   },
   "ComfyTV_AudioDuckStage": {
     "display_name": "音频闪避"
+  },
+  "ComfyTV_SlitScanStage": {
+    "display_name": "狭缝扫描"
+  },
+  "ComfyTV_FeedbackFXStage": {
+    "display_name": "反馈特效"
+  },
+  "ComfyTV_StrobeStage": {
+    "display_name": "闪帧"
+  },
+  "ComfyTV_ExpressionStage": {
+    "display_name": "表达式"
+  },
+  "ComfyTV_Select0rStage": {
+    "display_name": "高级选色"
+  },
+  "ComfyTV_ArtFXStage": {
+    "display_name": "艺术滤镜"
+  },
+  "ComfyTV_GlitchFXStage": {
+    "display_name": "数字故障"
+  },
+  "ComfyTV_KaleidoscopeStage": {
+    "display_name": "万花筒"
+  },
+  "ComfyTV_WaveWarpStage": {
+    "display_name": "波浪扭曲"
+  },
+  "ComfyTV_WaterStage": {
+    "display_name": "水面"
+  },
+  "ComfyTV_LightGraffitiStage": {
+    "display_name": "光绘"
+  },
+  "ComfyTV_Card3DStage": {
+    "display_name": "3D 卡片"
+  },
+  "ComfyTV_RegrainStage": {
+    "display_name": "胶片颗粒"
+  },
+  "ComfyTV_Video360StabilizeStage": {
+    "display_name": "360 稳定"
+  },
+  "ComfyTV_ContactSheetStage": {
+    "display_name": "审片宫格"
+  },
+  "ComfyTV_STMapGenStage": {
+    "display_name": "STMap 生成"
+  },
+  "ComfyTV_AudioStemSplitStage": {
+    "display_name": "音源分轨"
+  },
+  "ComfyTV_AudioNoiseReductionStage": {
+    "display_name": "谱门控降噪"
+  },
+  "ComfyTV_AudioMIRStage": {
+    "display_name": "节拍与音符分析"
+  },
+  "ComfyTV_ScoreStage": {
+    "display_name": "乐谱"
+  },
+  "ComfyTV_ScoreToMidiStage": {
+    "display_name": "演奏引擎"
+  },
+  "ComfyTV_SF2SynthStage": {
+    "display_name": "乐谱合成"
+  },
+  "ComfyTV_ClickTrackStage": {
+    "display_name": "节拍器轨"
+  },
+  "ComfyTV_ChordAccompStage": {
+    "display_name": "和弦伴奏"
+  },
+  "ComfyTV_MuseReverbStage": {
+    "display_name": "Muse 混响 (FDN)"
   }
 }

@@ -10,6 +10,7 @@ import { askText } from '@/composables/dialog/useTextInputDialog'
 export const RESOURCE_ACCEPT: Record<ResourceKind, string> = {
   lut: '.cube,.3dl,.dat,.m3d,.csp',
   font: '.ttf,.otf,.woff,.woff2',
+  soundfont: '.sf2,.sf3',
 }
 
 export interface ResourceGroup {
