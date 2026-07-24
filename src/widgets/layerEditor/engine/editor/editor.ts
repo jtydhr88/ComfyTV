@@ -24,6 +24,7 @@ import { clonePath, transformPath, type PathData } from '../vector'
 import { fillBitmap } from '../kinds/fill'
 import { groupKind } from '../kinds/group'
 import { DEFAULT_SHAPE_OPTIONS, type ShapeToolOptions } from '../tools/shapeTool'
+import { DEFAULT_WARP_OPTIONS, isWarpTool, type WarpToolOptions } from '../tools/warpTool'
 import { SetSelectionCommand, snapshotSelection } from '../commands/selection'
 import { generateId } from '../id'
 import type { ChannelData, Rect } from '../node'
@@ -82,12 +83,17 @@ export interface Editor {
   brushParams(): BrushParams
   setShapeOptions(opts: Partial<ShapeToolOptions>): void
   shapeOptions(): ShapeToolOptions
+  setWarpOptions(opts: Partial<WarpToolOptions>): void
+  warpApply(): boolean
+  warpCancel(): boolean
+  warpDirty(): boolean
   activeNodeId(): string | null
   setActiveNode(id: string | null): void
   pointerDown(e: PointerEvent, pt: Vec2): void
   pointerMove(e: PointerEvent, pt: Vec2): void
   pointerUp(e: PointerEvent, pt: Vec2): void
   hover(e: PointerEvent, pt: Vec2): void
+  cursorAt(pt: Vec2): string
   addNode(node: SceneNode, index?: number, parentId?: string): void
   removeActive(): void
   reorder(id: string, toIndex: number): void
@@ -134,6 +140,7 @@ export function createEditor(opts: EditorOptions): Editor {
   let zoomLevel = 1
   let brush: BrushParams = { ...DEFAULT_BRUSH }
   let shape: ShapeToolOptions = { ...DEFAULT_SHAPE_OPTIONS }
+  let warp: WarpToolOptions = { ...DEFAULT_WARP_OPTIONS }
 
   const overrides = new Map<string, HTMLCanvasElement>()
   const placedCache = new Map<string, PlacedEntry>()
@@ -218,7 +225,7 @@ export function createEditor(opts: EditorOptions): Editor {
     },
     zoom: () => zoomLevel,
     requestRender: refresh,
-    options: <T,>() => (toolId === 'shape' ? shape : brush) as unknown as T,
+    options: <T,>() => (toolId === 'shape' ? shape : toolId === 'warp' ? warp : brush) as unknown as T,
   }
 
   function makeTool(): void {
@@ -500,6 +507,13 @@ export function createEditor(opts: EditorOptions): Editor {
       shape = { ...shape, ...opts }
     },
     shapeOptions: () => ({ ...shape }),
+    setWarpOptions(opts) {
+      warp = { ...warp, ...opts }
+      if (isWarpTool(tool)) tool.optionsChanged()
+    },
+    warpApply: () => (isWarpTool(tool) ? tool.apply() : false),
+    warpCancel: () => (isWarpTool(tool) ? tool.cancel() : false),
+    warpDirty: () => (isWarpTool(tool) ? tool.isDirty() : false),
     activeNodeId: () => activeId,
     setActiveNode: setActive,
     pointerDown(e, pt) {
@@ -526,6 +540,10 @@ export function createEditor(opts: EditorOptions): Editor {
     hover(e, pt) {
       if (floating) return
       tool?.onHover(e, pt)
+    },
+    cursorAt(pt) {
+      if (floating) return 'default'
+      return tool?.cursorFor(pt) ?? 'default'
     },
     addNode(node, index, parentId) {
       const parent =

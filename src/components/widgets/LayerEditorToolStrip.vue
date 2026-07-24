@@ -20,6 +20,7 @@
 <script setup lang="ts">
 import IconBrush from '~icons/lucide/brush'
 import IconEraser from '~icons/lucide/eraser'
+import IconGrid from '~icons/lucide/grid-3x3'
 import IconMousePointer from '~icons/lucide/mouse-pointer-2'
 import IconShapes from '~icons/lucide/shapes'
 import IconSquareDashed from '~icons/lucide/square-dashed'
@@ -40,6 +41,7 @@ const TOOL_OPTIONS: Array<{ id: ToolId; labelKey: string; icon: unknown }> = [
   { id: 'brush', labelKey: 'layerEditor.toolBrush', icon: IconBrush },
   { id: 'eraser', labelKey: 'layerEditor.toolEraser', icon: IconEraser },
   { id: 'shape', labelKey: 'layerEditor.toolShape', icon: IconShapes },
+  { id: 'warp', labelKey: 'layerEditor.toolWarp', icon: IconGrid },
   { id: 'text', labelKey: 'layerEditor.toolText', icon: IconType },
 ]
 

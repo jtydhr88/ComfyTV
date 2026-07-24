@@ -194,6 +194,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
   const shapeSides = ref(6)
   const shapeStarRatio = ref(0.5)
   const shapeTurns = ref(3)
+  const warpPoints = ref(4)
   const editingTextId = ref<string | null>(null)
   const maskView = ref(false)
   const capturing = ref(false)
@@ -971,6 +972,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     syncEngineTool
   )
   watch(maskView, () => requestRender())
+  watch(warpPoints, () => editor.setWarpOptions({ points: warpPoints.value }))
   const textToolHandler: ToolHandler = {
     onPointerDown: (_e, pt) => {
       const hit = [...editor.document().root.children].reverse().find((n) => n.kind === 'text' && insideBox(n.transform, pt))
@@ -995,7 +997,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     },
     onPointerMove: (e, pt) => editor.pointerMove(e, pt),
     onPointerUp: (e, pt) => editor.pointerUp(e, pt),
-    cursorFor: () => (tool.value === 'select' ? 'default' : 'crosshair'),
+    cursorFor: (pt) => editor.cursorAt(pt),
   }
   function activeToolHandler(): ToolHandler {
     if (editor.floating()) return engineToolHandler
@@ -1061,6 +1063,13 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     setActiveLayer, setOpacity, setBlendMode, toggleVisible, toggleLock, renameLayer,
     addMask, removeMask, toggleMaskEnabled, invertMask, applyMask, maskToSelection, maskView,
     hasSelection: () => editor.selectionBounds() != null,
+    warpPoints,
+    warpDirty: computed(() => {
+      void version.value
+      return editor.warpDirty()
+    }),
+    warpApply: () => { editor.warpApply() },
+    warpCancel: () => { editor.warpCancel() },
     updateTextLayer,
     setArtboardSize, nudgeActive,
     captureBatch, flushCapture, cancelPendingCapture, reload: loadFromNode,

@@ -152,6 +152,40 @@
       </label>
     </template>
 
+    <template v-else-if="isWarpTool">
+      <div class="ctv:flex ctv:h-6 ctv:items-center ctv:gap-0.5 ctv:rounded ctv:bg-[#1e1e1e] ctv:p-0.5">
+        <button
+          v-for="n in WARP_GRID_SIZES"
+          :key="n"
+          type="button"
+          :class="segBtnClass(editor.warpPoints.value === n)"
+          :aria-pressed="editor.warpPoints.value === n"
+          @click="editor.warpPoints.value = n"
+        >
+          {{ n }}×{{ n }}
+        </button>
+      </div>
+
+      <button
+        type="button"
+        :class="actionBtnClass"
+        :disabled="!editor.warpDirty.value"
+        @click="editor.warpApply()"
+      >
+        <IconCheck class="ctv:size-3.5" />
+        {{ $t('layerEditor.warpApply') }}
+      </button>
+      <button
+        type="button"
+        :class="actionBtnClass"
+        :disabled="!editor.warpDirty.value"
+        @click="editor.warpCancel()"
+      >
+        <IconX class="ctv:size-3.5" />
+        {{ $t('layerEditor.warpCancel') }}
+      </button>
+    </template>
+
     <div class="ctv:flex-1" />
 
     <button
@@ -204,8 +238,10 @@
 import { computed } from 'vue'
 import IconBrush from '~icons/lucide/brush'
 import IconCamera from '~icons/lucide/camera'
+import IconCheck from '~icons/lucide/check'
 import IconCircle from '~icons/lucide/circle'
 import IconEraser from '~icons/lucide/eraser'
+import IconGrid from '~icons/lucide/grid-3x3'
 import IconHexagon from '~icons/lucide/hexagon'
 import IconLoader from '~icons/lucide/loader-2'
 import IconMinus from '~icons/lucide/minus'
@@ -220,6 +256,7 @@ import IconStar from '~icons/lucide/star'
 import IconSquareDashed from '~icons/lucide/square-dashed'
 import IconType from '~icons/lucide/type'
 import IconUndo from '~icons/lucide/undo-2'
+import IconX from '~icons/lucide/x'
 
 import type { LayerEditorController } from '@/composables/widgets/useLayerEditorStage'
 import { STROKE_ONLY_SHAPES, type ShapeKind } from '@/widgets/layerEditor/engine'
@@ -238,6 +275,7 @@ const TOOL_META: Record<ToolId, { labelKey: string; icon: unknown }> = {
   eraser: { labelKey: 'layerEditor.toolEraser', icon: IconEraser },
   text: { labelKey: 'layerEditor.toolText', icon: IconType },
   shape: { labelKey: 'layerEditor.toolShape', icon: IconShapes },
+  warp: { labelKey: 'layerEditor.toolWarp', icon: IconGrid },
 }
 
 const SHAPE_OPTIONS: Array<{ id: ShapeKind; labelKey: string; icon: unknown }> = [
@@ -261,6 +299,8 @@ const activeToolIcon = computed(() => TOOL_META[editor.tool.value].icon)
 const activeToolLabelKey = computed(() => TOOL_META[editor.tool.value].labelKey)
 const isPaintTool = computed(() => editor.tool.value === 'brush' || editor.tool.value === 'eraser')
 const isShapeTool = computed(() => editor.tool.value === 'shape')
+const isWarpTool = computed(() => editor.tool.value === 'warp')
+const WARP_GRID_SIZES = [3, 4, 5]
 const showBrushColor = computed(
   () => editor.tool.value === 'brush' && editor.paintTarget.value === 'content'
 )

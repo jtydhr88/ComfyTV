@@ -1,7 +1,9 @@
 <template>
   <div
     ref="viewportRef"
-    class="ctv:relative ctv:size-full ctv:min-h-0 ctv:overflow-hidden ctv:rounded-md ctv:border ctv:border-[#161616] ctv:bg-[#141414]"
+    data-capture-wheel="true"
+    tabindex="-1"
+    class="ctv:relative ctv:size-full ctv:min-h-0 ctv:overflow-hidden ctv:rounded-md ctv:border ctv:border-[#161616] ctv:bg-[#141414] ctv:outline-none"
     :style="{ cursor: viewportCursor }"
     @pointerdown="onPointerDown"
     @pointermove="onPointerMove"

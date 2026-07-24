@@ -160,6 +160,7 @@ export function useLayerEditorCanvas(
 
   function onPointerEnter(): void {
     hovering.value = true
+    viewportEl.value?.focus?.({ preventScroll: true })
   }
 
   function onPointerLeave(e: PointerEvent): void {
