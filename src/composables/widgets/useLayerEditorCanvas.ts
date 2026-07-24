@@ -186,13 +186,14 @@ export function useLayerEditorCanvas(
 
   const viewportCursor = computed(() => {
     if (panning || spaceDown.value) return spaceDown.value ? 'grab' : 'grabbing'
-    if (isPaintTool.value) return 'none'
+    if (isPaintTool.value) return hoverCursor.value === 'not-allowed' ? 'not-allowed' : 'none'
     if (editor.tool.value === 'text') return 'text'
     return hoverCursor.value
   })
 
   const brushCursorVisible = computed(
-    () => (hovering.value || adjusting.value != null) && isPaintTool.value && !spaceDown.value,
+    () => (hovering.value || adjusting.value != null) && isPaintTool.value && !spaceDown.value
+      && hoverCursor.value !== 'not-allowed',
   )
 
 

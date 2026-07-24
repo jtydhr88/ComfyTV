@@ -129,14 +129,18 @@ class SelectTool implements Tool {
 
   cursorFor(pt: Vec2): string {
     const node = this.activeNode()
-    if (node && hitHandle(node.transform, pt, this.tol())) return 'pointer'
+    if (!node) return 'default'
+    if (node.locks.position) {
+      return insideBox(node.transform, pt) ? 'not-allowed' : 'default'
+    }
+    if (hitHandle(node.transform, pt, this.tol())) return 'pointer'
     return 'default'
   }
 
   drawOverlay(overlay: Overlay): void {
     const node = this.activeNode()
     if (!node) return
-    addTransformBox(overlay, node.transform)
+    addTransformBox(overlay, node.transform, !node.locks.position)
   }
 
   private pick(pt: Vec2): SceneNode | null {

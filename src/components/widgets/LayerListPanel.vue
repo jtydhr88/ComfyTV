@@ -81,8 +81,25 @@
         :title="$t(active?.locks.content ? 'layerEditor.unlockLayer' : 'layerEditor.lockLayer')"
         @click="active && editor.toggleLock(active.id)"
       >
-        <IconLock v-if="active?.locks.content" class="ctv:size-3.5" />
-        <IconUnlock v-else class="ctv:size-3.5" />
+        <IconBrush class="ctv:size-3.5" />
+      </button>
+      <button
+        type="button"
+        :class="[miniBtnClass, active?.locks.position ? 'ctv:text-[#1473e6]' : '']"
+        :disabled="!active"
+        :title="$t(active?.locks.position ? 'layerEditor.unlockPosition' : 'layerEditor.lockPosition')"
+        @click="active && editor.toggleLockPosition(active.id)"
+      >
+        <IconMove class="ctv:size-3.5" />
+      </button>
+      <button
+        type="button"
+        :class="[miniBtnClass, active?.locks.content && active?.locks.position ? 'ctv:text-[#1473e6]' : '']"
+        :disabled="!active"
+        :title="$t(active?.locks.content && active?.locks.position ? 'layerEditor.unlockAll' : 'layerEditor.lockAll')"
+        @click="active && editor.toggleLockAll(active.id)"
+      >
+        <IconLock class="ctv:size-3.5" />
       </button>
     </div>
 
@@ -185,8 +202,9 @@
           </span>
 
           <IconLock
-            v-if="row.node.locks.content"
-            class="ctv:mr-1.5 ctv:size-3 ctv:shrink-0 ctv:self-center ctv:text-[#9b9b9b]"
+            v-if="anyLocked(row.node)"
+            class="ctv:mr-1.5 ctv:size-3 ctv:shrink-0 ctv:self-center"
+            :class="fullyLocked(row.node) ? 'ctv:text-[#d6d6d6]' : 'ctv:text-[#9b9b9b] ctv:opacity-60'"
           />
         </div>
       </div>
@@ -525,6 +543,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import IconArrowDownToLine from '~icons/lucide/arrow-down-to-line'
+import IconBrush from '~icons/lucide/brush'
 import IconChevronDown from '~icons/lucide/chevron-down'
 import IconChevronDownArrange from '~icons/lucide/chevron-down'
 import IconChevronRight from '~icons/lucide/chevron-right'
@@ -542,13 +561,13 @@ import IconImagePlus from '~icons/lucide/image-plus'
 import IconLayers from '~icons/lucide/layers'
 import IconLock from '~icons/lucide/lock'
 import IconMaximize from '~icons/lucide/maximize'
+import IconMove from '~icons/lucide/move'
 import IconPaintBucket from '~icons/lucide/paint-bucket'
 import IconShapes from '~icons/lucide/shapes'
 import IconSlidersHorizontal from '~icons/lucide/sliders-horizontal'
 import IconSquarePlus from '~icons/lucide/square-plus'
 import IconTrash from '~icons/lucide/trash-2'
 import IconType from '~icons/lucide/type'
-import IconUnlock from '~icons/lucide/unlock'
 import IconUpload from '~icons/lucide/upload'
 
 import AssetPickerPopup from '@/components/stages/AssetPickerPopup.vue'
@@ -620,6 +639,14 @@ function maskTargeted(node: SceneNode): boolean {
 
 function contentTargeted(node: SceneNode): boolean {
   return node.id === editor.activeId.value && editor.paintTarget.value === 'content'
+}
+
+function anyLocked(node: SceneNode): boolean {
+  return node.locks.content || node.locks.position || (node as { lockAlpha?: boolean }).lockAlpha === true
+}
+
+function fullyLocked(node: SceneNode): boolean {
+  return node.locks.content && node.locks.position
 }
 
 function maskThumbBorder(node: SceneNode): string {

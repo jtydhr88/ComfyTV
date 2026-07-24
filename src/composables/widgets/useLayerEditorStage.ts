@@ -539,6 +539,20 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     const n = engineNode(id); if (!n) return
     editProp('Lock', Dirty.META, () => n.locks.content, (x) => (n.locks.content = x), !n.locks.content)
   }
+  function toggleLockPosition(id: string): void {
+    const n = engineNode(id); if (!n) return
+    editProp('Lock Position', Dirty.META, () => n.locks.position, (x) => (n.locks.position = x), !n.locks.position)
+  }
+  function toggleLockAll(id: string): void {
+    const n = engineNode(id); if (!n) return
+    const target = !(n.locks.content && n.locks.position)
+    editProp(
+      'Lock All', Dirty.META,
+      () => ({ content: n.locks.content, position: n.locks.position }),
+      (v) => { n.locks.content = v.content; n.locks.position = v.position },
+      { content: target, position: target }
+    )
+  }
   function renameLayer(id: string, name: string): void {
     const n = engineNode(id); if (!n) return
     editProp('Rename', Dirty.META, () => n.name, (x) => (n.name = x), name.trim() || 'Layer')
@@ -548,6 +562,8 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     editor.moveNode(id, dir)
   }
   function removeLayer(id: string): void {
+    const n = engineNode(id)
+    if (n && n.locks.content && n.locks.position) return
     editor.setActiveNode(id)
     editor.removeActive()
   }
@@ -958,6 +974,10 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
   const textToolHandler: ToolHandler = {
     onPointerDown: (_e, pt) => {
       const hit = [...editor.document().root.children].reverse().find((n) => n.kind === 'text' && insideBox(n.transform, pt))
+      if (hit && hit.locks.content) {
+        editor.setActiveNode(hit.id)
+        return true
+      }
       const id = hit ? hit.id : addTextLayerAt(pt)
       editor.setActiveNode(id)
       editingTextId.value = id
@@ -1047,6 +1067,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     documentIsEmpty: () => editor.document().root.children.length === 0,
     addEmptyLayer, floating, anchorFloating, cancelFloating,
     mergeDown, flattenImage, flipImage, cropToContent, layerToCanvasSize, toggleLockAlpha,
+    toggleLockPosition, toggleLockAll,
     selectAll, selectNone, invertSelection,
     addAdjustmentLayer, updateAdjustment, updateVectorStyle,
     addFillLayer, updateFillLayer,

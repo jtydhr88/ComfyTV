@@ -240,6 +240,40 @@ describe('layer operations + undo (engine-backed)', () => {
     expect(nodes(s)[0].name).toBe('Photo')
   })
 
+  it('toggleLockAll sets and clears content+position as one undoable step', () => {
+    const { s } = setup(V1_STATE)
+    s.toggleLock('r1')
+    expect(nodes(s)[0].locks.content).toBe(false)
+    s.toggleLockAll('r1')
+    expect(nodes(s)[0].locks).toMatchObject({ content: true, position: true })
+    s.toggleLockAll('r1')
+    expect(nodes(s)[0].locks).toMatchObject({ content: false, position: false })
+    s.undo()
+    expect(nodes(s)[0].locks).toMatchObject({ content: true, position: true })
+  })
+
+  it('removeLayer refuses a fully locked layer (PS behavior)', () => {
+    const { s } = setup(V1_STATE)
+    s.toggleLockAll('t1')
+    s.removeLayer('t1')
+    expect(s.layers.value).toHaveLength(2)
+    s.toggleLockAll('t1')
+    s.removeLayer('t1')
+    expect(s.layers.value).toHaveLength(1)
+  })
+
+  it('nudgeActive respects the position lock', () => {
+    const { s } = setup(V1_STATE)
+    s.setActiveLayer('t1')
+    const before = (nodes(s)[1].transform as { x: number }).x
+    s.toggleLockPosition('t1')
+    s.nudgeActive(5, 0)
+    expect((nodes(s)[1].transform as { x: number }).x).toBe(before)
+    s.toggleLockPosition('t1')
+    s.nudgeActive(5, 0)
+    expect((nodes(s)[1].transform as { x: number }).x).toBe(before + 5)
+  })
+
   it('moveLayer reorders and duplicateLayer offsets + selects the copy', () => {
     const { s } = setup(V1_STATE)
     s.moveLayer('r1', 1)

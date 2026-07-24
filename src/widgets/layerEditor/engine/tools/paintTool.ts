@@ -81,7 +81,8 @@ class PaintTool implements Tool {
   }
 
   cursorFor(): string {
-    return 'crosshair'
+    const target = resolvePaintTarget(this.ctx.document(), this.ctx.content, this.ctx.activeNodeId(), this.channel)
+    return target ? 'crosshair' : 'not-allowed'
   }
 
   drawOverlay(overlay: Overlay): void {
