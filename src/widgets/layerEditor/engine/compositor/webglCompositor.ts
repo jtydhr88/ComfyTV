@@ -39,10 +39,13 @@ const ADJUST_FRAG = `#version 300 es
 precision highp float;
 uniform sampler2D u_backdrop;
 uniform sampler2D u_mask;
+uniform sampler2D u_lut;
 uniform bool u_hasMask;
 uniform float u_opacity;
 uniform int u_op;
 uniform vec4 u_p0;
+uniform vec4 u_p1;
+uniform vec4 u_p2;
 in vec2 v_texCoord;
 out vec4 fragColor;
 
@@ -88,6 +91,47 @@ vec3 hsl2rgb(vec3 hsl){
   return vec3(hue2rgb(p, q, hsl.x + 1.0/3.0), hue2rgb(p, q, hsl.x), hue2rgb(p, q, hsl.x - 1.0/3.0));
 }
 
+float lev(float v){
+  float t = clamp((v - u_p0.x) / max(u_p0.y - u_p0.x, 1e-4), 0.0, 1.0);
+  return u_p0.w + pow(t, 1.0 / max(u_p0.z, 1e-4)) * (u_p1.x - u_p0.w);
+}
+
+float balComp(float v, float l, float s, float m, float h){
+  const float a = 4.0;
+  const float b = 0.333;
+  const float sc = 0.7;
+  float sw = s * clamp((b - l) * a + 0.5, 0.0, 1.0) * sc;
+  float mw = m * clamp((l - b) * a + 0.5, 0.0, 1.0) * clamp((1.0 - l - b) * a + 0.5, 0.0, 1.0) * sc;
+  float hw = h * clamp((l + b - 1.0) * a + 0.5, 0.0, 1.0) * sc;
+  return clamp(v + sw + mw + hw, 0.0, 1.0);
+}
+
+float hfun(float n, float h, float s, float l){
+  float a = s * min(l, 1.0 - l);
+  float k = mod(n + h / 30.0, 12.0);
+  return clamp(l - a * max(min(min(k - 3.0, 9.0 - k), 1.0), -1.0), 0.0, 1.0);
+}
+
+vec3 preservel(vec3 c, float l){
+  float mx = max(c.r, max(c.g, c.b));
+  float mn = min(c.r, min(c.g, c.b));
+  float hl = l * 0.5;
+  float h;
+  if (c.r == c.g && c.g == c.b) h = 0.0;
+  else if (mx == c.r) h = 60.0 * ((c.g - c.b) / (mx - mn));
+  else if (mx == c.g) h = 60.0 * (2.0 + (c.b - c.r) / (mx - mn));
+  else h = 60.0 * (4.0 + (c.r - c.g) / (mx - mn));
+  if (h < 0.0) h += 360.0;
+  float s = (mx == 1.0 || mn == 0.0) ? 0.0 : (mx - mn) / (1.0 - abs(2.0 * hl - 1.0));
+  return vec3(hfun(0.0, h, s, hl), hfun(8.0, h, s, hl), hfun(4.0, h, s, hl));
+}
+
+float lutAt(float v, int ch){
+  float x = (floor(clamp(v, 0.0, 1.0) * 255.0 + 0.5) + 0.5) / 256.0;
+  vec4 s = texture(u_lut, vec2(x, 0.5));
+  return ch == 0 ? s.r : ch == 1 ? s.g : s.b;
+}
+
 void main(){
   vec4 bg = texture(u_backdrop, v_texCoord);
   vec3 adjusted;
@@ -102,10 +146,37 @@ void main(){
       hsl.y = clamp(hsl.y * (1.0 + u_p0.y), 0.0, 1.0);
       hsl.z = clamp(u_p0.z > 0.0 ? hsl.z + u_p0.z * (1.0 - hsl.z) : hsl.z + u_p0.z * hsl.z, 0.0, 1.0);
       o = hsl2rgb(hsl);
-    } else {
+    } else if (u_op == 2) {
       o = vec3(1.0) - g;
+    } else if (u_op == 3) {
+      o = vec3(lev(g.r), lev(g.g), lev(g.b));
+    } else if (u_op == 4) {
+      o = mix(g, g * u_p0.xyz, u_p0.w);
+    } else if (u_op == 5) {
+      o = clamp((g - vec3(u_p0.x)) * u_p0.y, 0.0, 1.0);
+    } else if (u_op == 6) {
+      float l = max(g.r, max(g.g, g.b)) + min(g.r, min(g.g, g.b));
+      o = vec3(
+        balComp(g.r, l, u_p0.x, u_p0.w, u_p1.z),
+        balComp(g.g, l, u_p0.y, u_p1.x, u_p1.w),
+        balComp(g.b, l, u_p0.z, u_p1.y, u_p2.x));
+      o = preservel(o, l);
+    } else if (u_op == 7) {
+      float n = max(u_p0.x, 2.0) - 1.0;
+      o = floor(g * n + 0.5) / n;
+    } else if (u_op == 8) {
+      float y = dot(g, vec3(0.2126, 0.7152, 0.0722));
+      o = vec3(y >= u_p0.x ? 1.0 : 0.0);
+    } else if (u_op == 9) {
+      float sat = max(g.r, max(g.g, g.b)) - min(g.r, min(g.g, g.b));
+      float luma = g.g * 0.715158 + g.r * 0.212656 + g.b * 0.072186;
+      float s = u_p0.x > 0.0 ? 1.0 : -1.0;
+      float k = 1.0 + u_p0.x * (1.0 + s * sat);
+      o = clamp(vec3(luma) + (g - vec3(luma)) * k, 0.0, 1.0);
+    } else {
+      o = vec3(lutAt(g.r, 0), lutAt(g.g, 1), lutAt(g.b, 2));
     }
-    adjusted = s2l(o);
+    adjusted = s2l(clamp(o, 0.0, 1.0));
   }
   float t = u_opacity * (u_hasMask ? texture(u_mask, v_texCoord).r : 1.0);
   fragColor = vec4(mix(bg.rgb, adjusted, t), bg.a);
@@ -154,6 +225,7 @@ export function createWebGLCompositor(): Compositor {
   let pong: Target | null = null
   let result: Target | null = null
   let fallback: WebGLTexture | null = null
+  let lutTex: WebGLTexture | null = null
   let width = 0
   let height = 0
   let nextHandle = 1
@@ -251,6 +323,23 @@ export function createWebGLCompositor(): Compositor {
     return fallback
   }
 
+  function getLutTex(lut?: Uint8Array): WebGLTexture {
+    if (!lut) return getFallback()
+    const g = gl!
+    if (!lutTex) {
+      lutTex = g.createTexture()!
+      g.bindTexture(g.TEXTURE_2D, lutTex)
+      g.texParameteri(g.TEXTURE_2D, g.TEXTURE_MIN_FILTER, g.NEAREST)
+      g.texParameteri(g.TEXTURE_2D, g.TEXTURE_MAG_FILTER, g.NEAREST)
+      g.texParameteri(g.TEXTURE_2D, g.TEXTURE_WRAP_S, g.CLAMP_TO_EDGE)
+      g.texParameteri(g.TEXTURE_2D, g.TEXTURE_WRAP_T, g.CLAMP_TO_EDGE)
+    } else {
+      g.bindTexture(g.TEXTURE_2D, lutTex)
+    }
+    g.texImage2D(g.TEXTURE_2D, 0, g.RGBA, 256, 1, 0, g.RGBA, g.UNSIGNED_BYTE, lut)
+    return lutTex
+  }
+
   function clearTarget(t: Target): void {
     const g = gl!
     g.bindFramebuffer(g.FRAMEBUFFER, t.fbo)
@@ -265,6 +354,7 @@ export function createWebGLCompositor(): Compositor {
     uniformCache = new WeakMap()
     ping = pong = result = null
     fallback = null
+    lutTex = null
     blendProg = presentProg = copyProg = adjustProg = null
     gl = null
     canvas = null
@@ -390,6 +480,11 @@ export function createWebGLCompositor(): Compositor {
           g.uniform1i(loc(adjustProg, 'u_op'), input.adjust.op)
           const p = input.adjust.params
           g.uniform4f(loc(adjustProg, 'u_p0'), p[0] ?? 0, p[1] ?? 0, p[2] ?? 0, p[3] ?? 0)
+          g.uniform4f(loc(adjustProg, 'u_p1'), p[4] ?? 0, p[5] ?? 0, p[6] ?? 0, p[7] ?? 0)
+          g.uniform4f(loc(adjustProg, 'u_p2'), p[8] ?? 0, p[9] ?? 0, p[10] ?? 0, p[11] ?? 0)
+          g.activeTexture(g.TEXTURE1)
+          g.bindTexture(g.TEXTURE_2D, getLutTex(input.adjust.lut))
+          g.uniform1i(loc(adjustProg, 'u_lut'), 1)
         } else {
           g.useProgram(blendProg)
           g.activeTexture(g.TEXTURE0)
@@ -495,6 +590,7 @@ export function createWebGLCompositor(): Compositor {
       for (const entry of texCache.values()) gl.deleteTexture(entry.tex)
       texCache.clear()
       if (fallback) gl.deleteTexture(fallback)
+      if (lutTex) gl.deleteTexture(lutTex)
       if (blendProg) gl.deleteProgram(blendProg)
       if (presentProg) gl.deleteProgram(presentProg)
       if (copyProg) gl.deleteProgram(copyProg)
@@ -502,6 +598,7 @@ export function createWebGLCompositor(): Compositor {
       gl.getExtension('WEBGL_lose_context')?.loseContext()
       gl = null
       ping = pong = result = null
+      lutTex = null
       fallback = blendProg = presentProg = copyProg = adjustProg = null
     },
   }

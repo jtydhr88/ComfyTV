@@ -5,6 +5,7 @@ import type { LayerEditorController } from '@/composables/widgets/useLayerEditor
 import { computeFit } from '@/composables/widgets/useVideoViewport'
 import { t } from '@/i18n'
 import {
+  ADJUST_OPS,
   ADJUST_PARAM_DEFS,
   LAYER_MODES,
   paintFillInto,
@@ -18,8 +19,6 @@ import {
   type VectorData,
 } from '@/widgets/layerEditor/engine'
 import type { LayerRow } from '@/widgets/layerEditor/types'
-
-const ADJUST_OPS: AdjustmentOp[] = ['brightness-contrast', 'hue-saturation', 'invert']
 
 export const ARTBOARD_MIN = 64
 export const ARTBOARD_MAX = 4096
@@ -86,9 +85,10 @@ export function useLayerListPanel(editor: LayerEditorController) {
   )
 
   const adjustParamDefs = computed(() => {
+    void editor.layers.value
     const a = active.value
     if (!a || a.kind !== 'adjustment') return []
-    return ADJUST_PARAM_DEFS[a.op as AdjustmentOp] ?? []
+    return [...(ADJUST_PARAM_DEFS[a.op as AdjustmentOp] ?? [])]
   })
 
   function toggleCollapsed(id: string): void {

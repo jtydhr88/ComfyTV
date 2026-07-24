@@ -1,4 +1,4 @@
-import { ADJUST_PARAM_DEFS, defaultParams, type AdjustmentOp } from '../adjust'
+import { ADJUST_CODE, ADJUST_PARAM_DEFS, defaultParams, type AdjustmentOp } from '../adjust'
 import { generateId } from '../id'
 import { defaultMode } from '../mode'
 import type { NodeKind } from '../nodeKind'
@@ -9,7 +9,17 @@ const str = (v: unknown, d: string): string => (typeof v === 'string' ? v : d)
 const bool = (v: unknown, d: boolean): boolean => (typeof v === 'boolean' ? v : d)
 
 function normalizeOp(v: unknown): AdjustmentOp {
-  return v === 'hue-saturation' || v === 'invert' ? v : 'brightness-contrast'
+  return typeof v === 'string' && v in ADJUST_CODE ? (v as AdjustmentOp) : 'brightness-contrast'
+}
+
+function normalizeCurves(raw: unknown): AdjustmentData['curves'] {
+  if (!raw || typeof raw !== 'object') return undefined
+  const src = raw as Record<string, unknown>
+  const out: Record<string, string> = {}
+  for (const ch of ['master', 'red', 'green', 'blue']) {
+    if (typeof src[ch] === 'string' && src[ch]) out[ch] = src[ch] as string
+  }
+  return Object.keys(out).length ? out : undefined
 }
 
 function normalizeParams(op: AdjustmentOp, raw: unknown): Record<string, number> {
@@ -37,6 +47,7 @@ export const adjustmentKind: NodeKind<AdjustmentData> = {
       locks: init.locks ?? { content: false, position: false, visibility: false },
       op,
       params: init.params ? normalizeParams(op, init.params) : defaultParams(op),
+      curves: normalizeCurves(init.curves),
       mask: init.mask,
     }
   },
@@ -60,6 +71,7 @@ export const adjustmentKind: NodeKind<AdjustmentData> = {
       },
       op,
       params: normalizeParams(op, r.params),
+      curves: normalizeCurves(r.curves),
       mask: r.mask as AdjustmentData['mask'],
     }
   },
@@ -76,6 +88,7 @@ export const adjustmentKind: NodeKind<AdjustmentData> = {
       locks: node.locks,
       op: node.op,
       params: node.params,
+      curves: node.curves,
       mask: node.mask,
     }
   },

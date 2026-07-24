@@ -4,6 +4,7 @@ import { app, type LGraphNode } from '@/lib/comfyApp'
 import { t } from '@/i18n'
 import { uploadBlobNamed, uploadCanvas } from '@/utils/uploadCanvas'
 import { onNodeConfigure, readWidgetStr, writeWidget } from '@/utils/widget'
+import { applyImageFilter, defaultFilterParams, type FilterOp } from '@/widgets/layerEditor/filters'
 import { getFontStore } from '@/widgets/layerEditor/fontStore'
 import { createPanZoom } from '@/widgets/layerEditor/panZoom'
 import { measureText, type TextStyle } from '@/widgets/layerEditor/textRender'
@@ -693,14 +694,22 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     )
     editor.invalidate()
   }
-  function updateAdjustment(id: string, patch: { op?: string; params?: Record<string, number> }): void {
+  function updateAdjustment(
+    id: string,
+    patch: { op?: string; params?: Record<string, number>; curves?: Record<string, string> }
+  ): void {
     const n = engineNode(id)
     if (!n || n.kind !== 'adjustment') return
     const adj = n as AdjustmentData
-    const snapshot = () => ({ op: adj.op, params: { ...adj.params } })
-    const restore = (v: { op: string; params: Record<string, number> }) => {
+    const snapshot = () => ({
+      op: adj.op,
+      params: { ...adj.params },
+      curves: adj.curves ? { ...adj.curves } : undefined,
+    })
+    const restore = (v: { op: string; params: Record<string, number>; curves?: AdjustmentData['curves'] }) => {
       adj.op = v.op
       adj.params = { ...v.params }
+      adj.curves = v.curves ? { ...v.curves } : undefined
     }
     const before = snapshot()
     if (patch.op && patch.op !== adj.op) {
@@ -708,6 +717,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
       adj.params = defaultParams(patch.op as AdjustmentOp)
     }
     if (patch.params) adj.params = { ...adj.params, ...patch.params }
+    if (patch.curves) adj.curves = { ...adj.curves, ...patch.curves }
     editor.history.push(
       new PropCommand('Adjustment', Dirty.DRAWABLE, snapshot, restore, before, snapshot(), `adjust:${id}`)
     )
@@ -946,6 +956,74 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     if (editor.maskToSelection(id)) editor.invalidate()
   }
 
+  const filterSession = ref<{ nodeId: string; op: FilterOp; params: Record<string, number> } | null>(null)
+  let filterRaf: number | null = null
+  function renderFilterPreview(): void {
+    const s = filterSession.value
+    if (!s) return
+    const n = engineNode(s.nodeId)
+    if (!n || n.kind !== 'raster') return
+    const entry = content.get((n as RasterData).contentId)
+    if (!entry) return
+    editor.setPaintPreview(`content:${s.nodeId}`, applyImageFilter(s.op, entry.canvas, s.params))
+    requestRender()
+  }
+  function scheduleFilterPreview(): void {
+    if (filterRaf != null) return
+    filterRaf = requestAnimationFrame(() => {
+      filterRaf = null
+      renderFilterPreview()
+    })
+  }
+  function startFilter(op: FilterOp): void {
+    if (!activeId.value) return
+    const n = engineNode(activeId.value)
+    if (!n || n.kind !== 'raster' || n.locks.content) return
+    editor.warpCancel()
+    cancelFilter()
+    filterSession.value = { nodeId: n.id, op, params: defaultFilterParams(op) }
+    renderFilterPreview()
+  }
+  function updateFilterParam(key: string, value: number): void {
+    const s = filterSession.value
+    if (!s) return
+    s.params = { ...s.params, [key]: value }
+    scheduleFilterPreview()
+  }
+  function applyFilter(): void {
+    const s = filterSession.value
+    if (!s) return
+    const n = engineNode(s.nodeId)
+    if (!n || n.kind !== 'raster') {
+      cancelFilter()
+      return
+    }
+    const r = n as RasterData
+    const entry = content.get(r.contentId)
+    if (!entry) {
+      cancelFilter()
+      return
+    }
+    const out = applyImageFilter(s.op, entry.canvas, s.params)
+    const beforeId = r.contentId
+    const beforeUrl = r.url
+    const afterId = content.register(out)
+    r.contentId = afterId
+    r.url = undefined
+    editor.history.push(new SetContentCommand('Filter', r, beforeId, afterId, content, beforeUrl))
+    editor.setPaintPreview(`content:${s.nodeId}`, null)
+    filterSession.value = null
+    editor.invalidate()
+  }
+  function cancelFilter(): void {
+    const s = filterSession.value
+    if (!s) return
+    editor.setPaintPreview(`content:${s.nodeId}`, null)
+    filterSession.value = null
+    requestRender()
+  }
+  watch(activeId, () => cancelFilter())
+
   function syncEngineTool(): void {
     editor.setBrush({ size: brushSize.value, hardness: brushHardness.value, opacity: brushOpacity.value, flow: 1, color: brushColor.value, spacing: 0.1 })
     editor.setShapeOptions({
@@ -1070,6 +1148,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     }),
     warpApply: () => { editor.warpApply() },
     warpCancel: () => { editor.warpCancel() },
+    filterSession, startFilter, updateFilterParam, applyFilter, cancelFilter,
     updateTextLayer,
     setArtboardSize, nudgeActive,
     captureBatch, flushCapture, cancelPendingCapture, reload: loadFromNode,

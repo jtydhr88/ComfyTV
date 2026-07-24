@@ -104,6 +104,7 @@ export interface AdjustmentData extends DrawableData {
   kind: 'adjustment'
   op: string
   params: Record<string, number>
+  curves?: { master?: string; red?: string; green?: string; blue?: string }
 }
 
 export interface FillData extends DrawableData {

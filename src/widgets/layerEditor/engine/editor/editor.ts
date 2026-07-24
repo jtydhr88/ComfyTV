@@ -124,6 +124,7 @@ export interface Editor {
   invertSelection(): boolean
   maskToSelection(id: string): boolean
   paintPreview(key: string): HTMLCanvasElement | null
+  setPaintPreview(key: string, canvas: HTMLCanvasElement | null): void
 }
 
 export function createEditor(opts: EditorOptions): Editor {
@@ -817,6 +818,10 @@ export function createEditor(opts: EditorOptions): Editor {
     },
     paintPreview(key) {
       return overrides.get(key) ?? null
+    },
+    setPaintPreview(key, canvas) {
+      if (canvas) overrides.set(key, canvas)
+      else overrides.delete(key)
     },
     maskToSelection(id) {
       const node = findNode(doc.root, id)?.node

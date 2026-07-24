@@ -262,25 +262,46 @@
             />
           </div>
         </div>
-        <div
+        <FxSlider
           v-for="def in adjustParamDefs"
           :key="def.key"
-          class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:px-2 ctv:pt-1"
-        >
-          <span :class="paramLabelClass">{{ $t(`layerEditor.adj_${def.key}`) }}</span>
-          <input
-            type="range"
-            :min="def.min"
-            :max="def.max"
-            :step="(def.max - def.min) / 200"
-            class="ctv:flex-1 ctv:accent-[#1473e6] ctv:cursor-pointer"
-            :value="(active as any).params[def.key] ?? def.default"
-            @input="(e) => editor.updateAdjustment(active!.id, { params: { [def.key]: Number((e.target as HTMLInputElement).value) } })"
-          />
-          <span :class="paramValueClass">
-            {{ Math.round(((active as any).params[def.key] ?? def.default) * (def.max === 180 ? 1 : 100)) }}
-          </span>
-        </div>
+          class="ctv:px-2 ctv:pt-1"
+          :model-value="(active as any).params[def.key] ?? def.default"
+          :label="$t(`layerEditor.adj_${def.key}`)"
+          :min="def.min"
+          :max="def.max"
+          :step="def.step ?? (def.max - def.min) / 200"
+          :decimals="def.max > 10 ? 0 : 2"
+          :reset-to="def.default"
+          :gradient="ADJ_GRADIENTS[def.key]"
+          @update:model-value="(v) => editor.updateAdjustment(active!.id, { params: { [def.key]: v } })"
+        />
+
+        <template v-if="active.op === 'curves'">
+          <div class="ctv:flex ctv:items-center ctv:gap-0.5 ctv:px-2 ctv:pt-1">
+            <button
+              v-for="ch in CURVE_CHANNELS"
+              :key="ch.id"
+              type="button"
+              class="ctv:inline-flex ctv:items-center ctv:rounded-sm ctv:border-0 ctv:px-1.5 ctv:py-0.5 ctv:text-[10px]
+                     ctv:cursor-pointer ctv:[font-family:inherit] ctv:transition-colors"
+              :class="curveChannel === ch.id
+                ? 'ctv:bg-[#4a4a4a] ctv:text-[#f0f0f0]'
+                : 'ctv:bg-transparent ctv:text-[#9b9b9b] ctv:hover:text-[#d6d6d6]'"
+              :style="{ color: curveChannel === ch.id ? ch.color : undefined }"
+              @click="curveChannel = ch.id"
+            >
+              {{ $t(`layerEditor.curveCh_${ch.id}`) }}
+            </button>
+          </div>
+          <div class="ctv:px-2 ctv:pt-1">
+            <CurvesCanvas
+              :model-value="curvePoints"
+              :color="curveColor"
+              @update:model-value="onCurvePoints"
+            />
+          </div>
+        </template>
       </template>
 
       <template v-if="active.kind === 'vector'">
@@ -411,6 +432,38 @@
       <span>px</span>
     </div>
 
+    <div
+      v-if="editor.filterSession.value"
+      class="ctv:border-t ctv:border-[#161616] ctv:bg-[#2f2f2f] ctv:px-2 ctv:py-1"
+    >
+      <div class="ctv:flex ctv:items-center ctv:justify-between ctv:pb-0.5">
+        <span class="ctv:text-[10px] ctv:uppercase ctv:tracking-wide ctv:text-[#d6d6d6]">
+          {{ $t(`layerEditor.filter_${editor.filterSession.value.op}`) }}
+        </span>
+        <div class="ctv:flex ctv:items-center ctv:gap-0.5">
+          <button type="button" :class="miniBtnClass" :title="$t('layerEditor.filterApply')" @click="editor.applyFilter()">
+            <IconCheck class="ctv:size-3.5" />
+          </button>
+          <button type="button" :class="miniBtnClass" :title="$t('layerEditor.filterCancel')" @click="editor.cancelFilter()">
+            <IconX class="ctv:size-3.5" />
+          </button>
+        </div>
+      </div>
+      <FxSlider
+        v-for="def in FILTER_PARAM_DEFS[editor.filterSession.value.op]"
+        :key="def.key"
+        class="ctv:pt-0.5"
+        :model-value="editor.filterSession.value.params[def.key] ?? def.default"
+        :label="$t(`layerEditor.filterParam_${def.key}`)"
+        :min="def.min"
+        :max="def.max"
+        :step="def.step ?? (def.max - def.min) / 200"
+        :decimals="def.max > 10 ? 0 : 2"
+        :reset-to="def.default"
+        @update:model-value="(v) => editor.updateFilterParam(def.key, v)"
+      />
+    </div>
+
     <div class="ctv:flex ctv:items-center ctv:justify-evenly ctv:border-t ctv:border-[#161616] ctv:bg-[#333333] ctv:px-1 ctv:py-0.5">
       <div class="ctv:relative">
         <button
@@ -461,6 +514,34 @@
               {{ $t('layerEditor.maskInitGray') }}
             </button>
           </template>
+        </div>
+      </div>
+      <div class="ctv:relative">
+        <button
+          type="button"
+          :class="miniBtnClass"
+          :disabled="active?.kind !== 'raster' || active?.locks.content"
+          :title="$t('layerEditor.filters')"
+          @click.stop="filterMenuOpen = !filterMenuOpen"
+          @pointerdown.stop
+        >
+          <IconWand class="ctv:size-3.5" />
+        </button>
+        <div
+          v-if="filterMenuOpen"
+          class="ctv:absolute ctv:bottom-7 ctv:left-0 ctv:z-30 ctv:flex ctv:min-w-32 ctv:flex-col ctv:rounded-md
+                 ctv:border ctv:border-[#161616] ctv:bg-[#2b2b2b] ctv:py-1 ctv:shadow-lg"
+          @pointerdown.stop
+        >
+          <button
+            v-for="op in FILTER_OPS"
+            :key="op"
+            type="button"
+            :class="menuItemClass"
+            @click="filterMenuOpen = false; editor.startFilter(op)"
+          >
+            {{ $t(`layerEditor.filter_${op}`) }}
+          </button>
         </div>
       </div>
       <button
@@ -544,6 +625,7 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import IconArrowDownToLine from '~icons/lucide/arrow-down-to-line'
 import IconBrush from '~icons/lucide/brush'
+import IconCheck from '~icons/lucide/check'
 import IconChevronDown from '~icons/lucide/chevron-down'
 import IconChevronDownArrange from '~icons/lucide/chevron-down'
 import IconChevronRight from '~icons/lucide/chevron-right'
@@ -569,12 +651,29 @@ import IconSquarePlus from '~icons/lucide/square-plus'
 import IconTrash from '~icons/lucide/trash-2'
 import IconType from '~icons/lucide/type'
 import IconUpload from '~icons/lucide/upload'
+import IconWand from '~icons/lucide/wand'
+import IconX from '~icons/lucide/x'
 
 import AssetPickerPopup from '@/components/stages/AssetPickerPopup.vue'
 import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
+import CurvesCanvas from '@/components/widgets/fx/CurvesCanvas.vue'
+import FxSlider from '@/components/widgets/fx/FxSlider.vue'
+import {
+  CONTRAST_STOPS,
+  CR_STOPS,
+  GAMMA_STOPS,
+  HUE_STOPS,
+  LUMA_STOPS,
+  MG_STOPS,
+  SAT_STOPS,
+  TEMP_KELVIN_STOPS,
+  YB_STOPS,
+  type ColorStop,
+} from '@/components/widgets/colorStops'
 import type { LayerEditorController, MaskInit } from '@/composables/widgets/useLayerEditorStage'
 import { useLayerListPanel } from '@/composables/widgets/useLayerListPanel'
 import type { BlendFn, SceneNode } from '@/widgets/layerEditor/engine'
+import { FILTER_OPS, FILTER_PARAM_DEFS } from '@/widgets/layerEditor/filters'
 
 const props = defineProps<{
   editor: LayerEditorController
@@ -641,6 +740,60 @@ function contentTargeted(node: SceneNode): boolean {
   return node.id === editor.activeId.value && editor.paintTarget.value === 'content'
 }
 
+const ADJ_GRADIENTS: Record<string, ColorStop[]> = {
+  brightness: LUMA_STOPS,
+  contrast: CONTRAST_STOPS,
+  hue: HUE_STOPS,
+  saturation: SAT_STOPS,
+  lightness: LUMA_STOPS,
+  inBlack: LUMA_STOPS,
+  inWhite: LUMA_STOPS,
+  gamma: GAMMA_STOPS,
+  outBlack: LUMA_STOPS,
+  outWhite: LUMA_STOPS,
+  temperature: TEMP_KELVIN_STOPS,
+  exposure: LUMA_STOPS,
+  black: LUMA_STOPS,
+  shadowsR: CR_STOPS,
+  midtonesR: CR_STOPS,
+  highlightsR: CR_STOPS,
+  shadowsG: MG_STOPS,
+  midtonesG: MG_STOPS,
+  highlightsG: MG_STOPS,
+  shadowsB: YB_STOPS,
+  midtonesB: YB_STOPS,
+  highlightsB: YB_STOPS,
+  amount: SAT_STOPS,
+  level: LUMA_STOPS,
+}
+
+type CurveChannel = 'master' | 'red' | 'green' | 'blue'
+const CURVE_CHANNELS: Array<{ id: CurveChannel; color: string }> = [
+  { id: 'master', color: '#e0e0e0' },
+  { id: 'red', color: '#f87171' },
+  { id: 'green', color: '#4ade80' },
+  { id: 'blue', color: '#60a5fa' },
+]
+const curveChannel = ref<CurveChannel>('master')
+const curveColor = computed(() => CURVE_CHANNELS.find((c) => c.id === curveChannel.value)!.color)
+const curvePoints = computed<[number, number][]>(() => {
+  void editor.layers.value
+  const a = active.value
+  if (!a || a.kind !== 'adjustment') return [[0, 0], [1, 1]]
+  const raw = (a as { curves?: Record<string, string> }).curves?.[curveChannel.value]
+  if (!raw) return [[0, 0], [1, 1]]
+  try {
+    const parsed = JSON.parse(raw) as [number, number][]
+    return Array.isArray(parsed) && parsed.length >= 2 ? parsed : [[0, 0], [1, 1]]
+  } catch {
+    return [[0, 0], [1, 1]]
+  }
+})
+function onCurvePoints(v: [number, number][]): void {
+  if (!active.value) return
+  editor.updateAdjustment(active.value.id, { curves: { [curveChannel.value]: JSON.stringify(v) } })
+}
+
 function anyLocked(node: SceneNode): boolean {
   return node.locks.content || node.locks.position || (node as { lockAlpha?: boolean }).lockAlpha === true
 }
@@ -689,6 +842,7 @@ function maskMenuAction(fn: (id: string) => void): void {
 }
 
 const addMaskMenuOpen = ref(false)
+const filterMenuOpen = ref(false)
 
 function addMaskWith(init: MaskInit): void {
   addMaskMenuOpen.value = false
@@ -698,6 +852,7 @@ function addMaskWith(init: MaskInit): void {
 function onGlobalPointerDown(): void {
   maskMenu.value = null
   addMaskMenuOpen.value = false
+  filterMenuOpen.value = false
 }
 onMounted(() => window.addEventListener('pointerdown', onGlobalPointerDown))
 onBeforeUnmount(() => window.removeEventListener('pointerdown', onGlobalPointerDown))

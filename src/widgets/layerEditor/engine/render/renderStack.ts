@@ -1,4 +1,4 @@
-import { ADJUST_CODE, packParams, type AdjustmentOp } from '../adjust'
+import { ADJUST_CODE, curvesLutData, packParams, type AdjustmentOp } from '../adjust'
 import type { Compositor, CompositeInput, NodeTexture } from '../compositor'
 import type { ContentStore } from '../content'
 import type { Document } from '../document'
@@ -109,7 +109,11 @@ function buildInputs(group: GroupData, doc: Document, deps: RenderDeps, used: Se
       const adj = node as AdjustmentData
       const docSpace = { ...node, transform: { x: 0, y: 0, w: region.w, h: region.h, rotation: 0 } } as SceneNode
       inputs.push({
-        adjust: { op: ADJUST_CODE[adj.op as AdjustmentOp] ?? 0, params: packParams(adj.op as AdjustmentOp, adj.params) },
+        adjust: {
+          op: ADJUST_CODE[adj.op as AdjustmentOp] ?? 0,
+          params: packParams(adj.op as AdjustmentOp, adj.params),
+          lut: adj.op === 'curves' ? curvesLutData(adj.curves) : undefined,
+        },
         opacity: node.opacity,
         mask: renderMaskTexture(docSpace, region, deps, placed),
       })

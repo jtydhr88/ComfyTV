@@ -16,7 +16,7 @@ export interface LayerInput {
 }
 
 export interface AdjustmentInput {
-  adjust: { op: number; params: number[] }
+  adjust: { op: number; params: number[]; lut?: Uint8Array }
   opacity: number
   mask?: NodeTexture
 }
