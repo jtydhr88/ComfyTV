@@ -27,8 +27,10 @@ function blendPixel(
   const ba = base[i + 3]
 
   if (channel === 'mask') {
-    const v = br
-    const nv = mode === 'brush' ? Math.max(v, a * 255) : v * (1 - a)
+    const g = mode === 'brush'
+      ? 0.2126 * color[0] + 0.7152 * color[1] + 0.0722 * color[2]
+      : 255
+    const nv = g * a + br * (1 - a)
     out[i] = out[i + 1] = out[i + 2] = nv
     out[i + 3] = 255
     return

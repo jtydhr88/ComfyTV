@@ -8,10 +8,10 @@ import { makeShapeToolDef } from './shapeTool'
 export { makeSelectToolDef } from './selectTool'
 export { makeMarqueeToolDef } from './marqueeTool'
 export { makePaintToolDef, DEFAULT_BRUSH } from './paintTool'
-export { makeShapeToolDef, DEFAULT_SHAPE_OPTIONS, buildShapePath, resolveShapeStyles, appendShapeToVector } from './shapeTool'
+export { makeShapeToolDef, DEFAULT_SHAPE_OPTIONS, STROKE_ONLY_SHAPES, buildShapePath, resolveShapeStyles, appendShapeToVector } from './shapeTool'
 export type { ShapeKind, ShapeToolOptions } from './shapeTool'
 export * from './transformMath'
-export { resolvePaintTarget, makeToLocal } from './paintTarget'
+export { resolvePaintTarget, makeToLocal, rasterizeSelectionToLocal } from './paintTarget'
 
 let registered = false
 

@@ -297,13 +297,13 @@ describe('useLayerEditorCanvas cursor state', () => {
     expect(api.brushCursorStyle.value.transform).toBe('translate(80px, 80px)')
   })
 
-  it('uses white for eraser and mask painting, brush color otherwise', () => {
+  it('uses white for eraser, brush-color grayscale on masks, brush color otherwise', () => {
     const { api, editor } = setup()
     editor.tool.value = 'eraser'
     expect(api.brushGradient.value).toBe('rgba(255, 255, 255, 0.5)')
     editor.tool.value = 'brush'
     editor.paintTarget.value = 'mask'
-    expect(api.brushGradient.value).toBe('rgba(255, 255, 255, 0.5)')
+    expect(api.brushGradient.value).toBe('rgba(108, 108, 108, 0.5)')
     editor.paintTarget.value = 'content'
     expect(api.brushGradient.value).toBe('rgba(255, 68, 68, 0.5)')
   })

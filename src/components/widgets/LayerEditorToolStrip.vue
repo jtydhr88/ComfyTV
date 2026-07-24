@@ -18,6 +18,8 @@
 </template>
 
 <script setup lang="ts">
+import IconBrush from '~icons/lucide/brush'
+import IconEraser from '~icons/lucide/eraser'
 import IconMousePointer from '~icons/lucide/mouse-pointer-2'
 import IconShapes from '~icons/lucide/shapes'
 import IconSquareDashed from '~icons/lucide/square-dashed'
@@ -35,6 +37,8 @@ const editor = props.editor
 const TOOL_OPTIONS: Array<{ id: ToolId; labelKey: string; icon: unknown }> = [
   { id: 'select', labelKey: 'layerEditor.toolSelect', icon: IconMousePointer },
   { id: 'marquee', labelKey: 'layerEditor.toolMarquee', icon: IconSquareDashed },
+  { id: 'brush', labelKey: 'layerEditor.toolBrush', icon: IconBrush },
+  { id: 'eraser', labelKey: 'layerEditor.toolEraser', icon: IconEraser },
   { id: 'shape', labelKey: 'layerEditor.toolShape', icon: IconShapes },
   { id: 'text', labelKey: 'layerEditor.toolText', icon: IconType },
 ]

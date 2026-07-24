@@ -28,8 +28,11 @@ import {
   insideBox,
   pendingUploads,
   rasterKind,
+  rasterizeSelectionToLocal,
   registerBuiltinKinds,
   registerBuiltinTools,
+  SetContentCommand,
+  STROKE_ONLY_SHAPES,
   textKind,
   transformPath,
   type BlendFn,
@@ -51,6 +54,8 @@ import {
 } from '@/widgets/layerEditor/engine'
 
 const STATE_WIDGET = 'layer_state'
+
+export type MaskInit = 'white' | 'black' | 'selection' | 'alpha' | 'gray'
 const WIDTH_WIDGET = 'width'
 const HEIGHT_WIDGET = 'height'
 const IMAGE_WIDGET = 'captured_image'
@@ -186,7 +191,11 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
   const shapeStrokeColor = ref('#ffffff')
   const shapeStrokeWidth = ref(4)
   const shapeCombine = ref(false)
+  const shapeSides = ref(6)
+  const shapeStarRatio = ref(0.5)
+  const shapeTurns = ref(3)
   const editingTextId = ref<string | null>(null)
+  const maskView = ref(false)
   const capturing = ref(false)
   const capturedImageUrl = shallowRef<string>(storage.readCapturedImage())
   const activeId = ref<string | null>(null)
@@ -247,6 +256,24 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
   const engineNode = (id: string): SceneNode | null => findNode(editor.document().root, id)?.node ?? null
 
   let rafId: number | null = null
+  function presentMaskView(ctx: CanvasRenderingContext2D, width: number, height: number): boolean {
+    const n = activeId.value ? engineNode(activeId.value) : null
+    if (!n?.mask) return false
+    const entry = content.get(n.mask.contentId)
+    if (!entry) return false
+    const bitmap = editor.paintPreview(`mask:${n.id}`) ?? entry.canvas
+    ctx.fillStyle = '#000000'
+    ctx.fillRect(0, 0, width, height)
+    const tf = n.transform.w > 0 && n.transform.h > 0
+      ? n.transform
+      : { x: 0, y: 0, w: entry.width, h: entry.height, rotation: 0 }
+    ctx.save()
+    ctx.translate(tf.x + tf.w / 2, tf.y + tf.h / 2)
+    ctx.rotate(tf.rotation)
+    ctx.drawImage(bitmap, -tf.w / 2, -tf.h / 2, tf.w, tf.h)
+    ctx.restore()
+    return true
+  }
   function present(): void {
     if (!mainCanvas) return
     const { width, height } = editor.document()
@@ -255,6 +282,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     const ctx = mainCanvas.getContext('2d')
     if (!ctx) return
     ctx.clearRect(0, 0, width, height)
+    if (maskView.value && presentMaskView(ctx, width, height)) return
     if (glOk.value) {
       editor.setZoom(Math.max(0.01, panZoom.zoom()))
       editor.render()
@@ -773,20 +801,66 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     editor.invalidate()
   }
 
-  function whiteMask(w: number, h: number): HTMLCanvasElement {
+  function solidMask(w: number, h: number, color: string): HTMLCanvasElement {
     const c = newCanvas(w, h)
     const g = c.getContext('2d')!
-    g.fillStyle = '#ffffff'
+    g.fillStyle = color
     g.fillRect(0, 0, w, h)
     return c
   }
-  function addMask(id: string): void {
+  function maskFromLayerPixels(n: RasterData, w: number, h: number, source: 'alpha' | 'gray'): HTMLCanvasElement | null {
+    const entry = content.get(n.contentId)
+    if (!entry) return null
+    const src = newCanvas(w, h)
+    const sg = src.getContext('2d')!
+    sg.drawImage(entry.canvas, 0, 0, w, h)
+    const img = sg.getImageData(0, 0, w, h)
+    const d = img.data
+    for (let i = 0; i < d.length; i += 4) {
+      const v = source === 'alpha'
+        ? d[i + 3]
+        : Math.round((0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2]) * (d[i + 3] / 255))
+      d[i] = d[i + 1] = d[i + 2] = v
+      d[i + 3] = 255
+    }
+    sg.putImageData(img, 0, 0)
+    return src
+  }
+  function maskFromSelection(tf: Transform, w: number, h: number): HTMLCanvasElement | null {
+    const d = editor.document()
+    if (!d.selectionId) return null
+    const channel = d.channels.find((ch) => ch.id === d.selectionId)
+    if (!channel) return null
+    const entry = content.get(channel.contentId)
+    if (!entry) return null
+    const cov = rasterizeSelectionToLocal(entry.canvas, tf, w, h)
+    if (!cov) return null
+    const c = newCanvas(w, h)
+    const g = c.getContext('2d')!
+    const img = g.createImageData(w, h)
+    for (let p = 0; p < cov.length; p++) {
+      const v = Math.round(cov[p] * 255)
+      img.data[p * 4] = img.data[p * 4 + 1] = img.data[p * 4 + 2] = v
+      img.data[p * 4 + 3] = 255
+    }
+    g.putImageData(img, 0, 0)
+    return c
+  }
+  function addMask(id: string, init: MaskInit = 'white'): void {
     const n = engineNode(id); if (!n || n.mask) return
     const d = editor.document()
     const docSized = n.kind === 'adjustment' || n.kind === 'fill' || n.kind === 'group'
     const w = n.kind === 'raster' ? (n as RasterData).naturalWidth : docSized ? d.width : Math.max(1, Math.round(n.transform.w))
     const h = n.kind === 'raster' ? (n as RasterData).naturalHeight : docSized ? d.height : Math.max(1, Math.round(n.transform.h))
-    const cid = content.register(whiteMask(w, h))
+    const tf = n.transform.w > 0 && n.transform.h > 0 ? n.transform : { x: 0, y: 0, w, h, rotation: 0 }
+    let canvas: HTMLCanvasElement | null = null
+    if (init === 'black') canvas = solidMask(w, h, '#000000')
+    else if (init === 'selection') canvas = maskFromSelection(tf, w, h)
+    else if (init === 'alpha' || init === 'gray') {
+      if (n.kind === 'raster') canvas = maskFromLayerPixels(n as RasterData, w, h, init)
+    }
+    canvas ??= solidMask(w, h, '#ffffff')
+    const cid = content.register(canvas)
     editProp('Add Mask', Dirty.CHANNEL, () => n.mask, (m) => (n.mask = m), { id: generateId('mask'), role: 'mask', contentId: cid, enabled: true })
     paintTarget.value = 'mask'
   }
@@ -800,16 +874,73 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     const mask = n.mask
     editProp('Toggle Mask', Dirty.CHANNEL, () => mask.enabled, (x) => (mask.enabled = x), !mask.enabled)
   }
+  function invertMask(id: string): void {
+    const n = engineNode(id); if (!n || !n.mask) return
+    const mask = n.mask
+    const entry = content.get(mask.contentId)
+    if (!entry) return
+    const c = newCanvas(entry.width, entry.height)
+    const g = c.getContext('2d')!
+    g.fillStyle = '#ffffff'
+    g.fillRect(0, 0, entry.width, entry.height)
+    g.globalCompositeOperation = 'difference'
+    g.drawImage(entry.canvas, 0, 0)
+    const beforeId = mask.contentId
+    const beforeUrl = mask.url
+    const afterId = content.register(c)
+    mask.contentId = afterId
+    mask.url = undefined
+    editor.history.push(new SetContentCommand('Invert Mask', mask, beforeId, afterId, content, beforeUrl))
+    editor.invalidate()
+  }
+  function applyMask(id: string): void {
+    const n = engineNode(id)
+    if (!n || !n.mask || n.kind !== 'raster') return
+    const r = n as RasterData
+    const contentEntry = content.get(r.contentId)
+    const maskEntry = content.get(n.mask.contentId)
+    if (!contentEntry || !maskEntry) return
+    const w = contentEntry.width
+    const h = contentEntry.height
+    const scaled = newCanvas(w, h)
+    scaled.getContext('2d')!.drawImage(maskEntry.canvas, 0, 0, w, h)
+    const maskData = scaled.getContext('2d')!.getImageData(0, 0, w, h).data
+    const c = newCanvas(w, h)
+    const g = c.getContext('2d')!
+    g.drawImage(contentEntry.canvas, 0, 0)
+    const img = g.getImageData(0, 0, w, h)
+    for (let i = 0; i < img.data.length; i += 4) {
+      img.data[i + 3] = (img.data[i + 3] * maskData[i]) / 255
+    }
+    g.putImageData(img, 0, 0)
+    const beforeId = r.contentId
+    const beforeUrl = r.url
+    const afterId = content.register(c)
+    editor.history.beginGroup('Apply Mask')
+    r.contentId = afterId
+    r.url = undefined
+    editor.history.push(new SetContentCommand('Apply Mask', r, beforeId, afterId, content, beforeUrl))
+    editProp('Delete Mask', Dirty.CHANNEL, () => n.mask, (m) => (n.mask = m), undefined)
+    editor.history.endGroup()
+    paintTarget.value = 'content'
+    editor.invalidate()
+  }
+  function maskToSelection(id: string): void {
+    if (editor.maskToSelection(id)) editor.invalidate()
+  }
 
   function syncEngineTool(): void {
     editor.setBrush({ size: brushSize.value, hardness: brushHardness.value, opacity: brushOpacity.value, flow: 1, color: brushColor.value, spacing: 0.1 })
     editor.setShapeOptions({
       shape: shapeKind.value,
       fill: shapeFillEnabled.value ? { color: shapeFillColor.value } : null,
-      stroke: shapeStrokeEnabled.value || shapeKind.value === 'line'
+      stroke: shapeStrokeEnabled.value || STROKE_ONLY_SHAPES.has(shapeKind.value)
         ? { color: shapeStrokeColor.value, width: Math.max(1, shapeStrokeWidth.value), cap: 'butt', join: 'miter' }
         : null,
       combine: shapeCombine.value,
+      sides: shapeSides.value,
+      starRatio: shapeStarRatio.value,
+      turns: shapeTurns.value,
     })
     let id: string = tool.value
     if (tool.value === 'brush') id = paintTarget.value === 'mask' ? 'mask-brush' : 'brush'
@@ -819,9 +950,11 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
   }
   watch(
     [tool, paintTarget, brushSize, brushHardness, brushOpacity, brushColor,
-     shapeKind, shapeFillEnabled, shapeFillColor, shapeStrokeEnabled, shapeStrokeColor, shapeStrokeWidth, shapeCombine],
+     shapeKind, shapeFillEnabled, shapeFillColor, shapeStrokeEnabled, shapeStrokeColor, shapeStrokeWidth, shapeCombine,
+     shapeSides, shapeStarRatio, shapeTurns],
     syncEngineTool
   )
+  watch(maskView, () => requestRender())
   const textToolHandler: ToolHandler = {
     onPointerDown: (_e, pt) => {
       const hit = [...editor.document().root.children].reverse().find((n) => n.kind === 'text' && insideBox(n.transform, pt))
@@ -896,6 +1029,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     layers, canvasSize, activeId, activeNode, selectedIds,
     tool, brushSize, brushOpacity, brushHardness, brushColor, paintTarget,
     shapeKind, shapeFillEnabled, shapeFillColor, shapeStrokeEnabled, shapeStrokeColor, shapeStrokeWidth, shapeCombine,
+    shapeSides, shapeStarRatio, shapeTurns,
     editingTextId, capturing, capturedImageUrl,
     canUndo, canRedo,
     panZoom, setElements, fitView, requestRender, requestOverlayRender,
@@ -905,7 +1039,9 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     removeLayer, moveLayer, moveLayerRelative, duplicateLayer,
     groupActiveLayer, ungroupActiveLayer,
     setActiveLayer, setOpacity, setBlendMode, toggleVisible, toggleLock, renameLayer,
-    addMask, removeMask, toggleMaskEnabled, updateTextLayer,
+    addMask, removeMask, toggleMaskEnabled, invertMask, applyMask, maskToSelection, maskView,
+    hasSelection: () => editor.selectionBounds() != null,
+    updateTextLayer,
     setArtboardSize, nudgeActive,
     captureBatch, flushCapture, cancelPendingCapture, reload: loadFromNode,
     documentIsEmpty: () => editor.document().root.children.length === 0,

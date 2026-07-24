@@ -122,6 +122,45 @@ describe('compositeStroke — apply once at stroke opacity', () => {
     expect(out[7]).toBe(255)
   })
 
+  it('mask brush paints the colour grayscale with a normal blend (GIMP paint-on-mask)', () => {
+    const out = compositeStroke(Uint8ClampedArray.of(255, 255, 255, 255), cov(1), {
+      mode: 'brush',
+      channel: 'mask',
+      color: [0, 0, 0],
+      opacity: 1,
+    })
+    expect([out[0], out[1], out[2], out[3]]).toEqual([0, 0, 0, 255])
+  })
+
+  it('mask brush can paint arbitrary grays and blends by coverage', () => {
+    const luma = Math.round(0.2126 * 255)
+    const out = compositeStroke(Uint8ClampedArray.of(0, 0, 0, 255), cov(1), {
+      mode: 'brush',
+      channel: 'mask',
+      color: [255, 0, 0],
+      opacity: 1,
+    })
+    expect(out[0]).toBeCloseTo(luma, -0.5)
+
+    const half = compositeStroke(Uint8ClampedArray.of(0, 0, 0, 255), cov(0.5), {
+      mode: 'brush',
+      channel: 'mask',
+      color: [255, 255, 255],
+      opacity: 1,
+    })
+    expect(half[0]).toBeCloseTo(128, -0.5)
+  })
+
+  it('mask eraser paints back toward white (GIMP background colour)', () => {
+    const out = compositeStroke(Uint8ClampedArray.of(40, 40, 40, 255), cov(1), {
+      mode: 'eraser',
+      channel: 'mask',
+      color: [0, 0, 0],
+      opacity: 1,
+    })
+    expect([out[0], out[1], out[2], out[3]]).toEqual([255, 255, 255, 255])
+  })
+
   it('lockAlpha: brush recolors but never changes alpha (GIMP lock_alpha)', () => {
     const base = Uint8ClampedArray.of(0, 0, 255, 128, 0, 0, 255, 0)
     const out = compositeStroke(base, Float32Array.of(1, 1), {

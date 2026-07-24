@@ -116,6 +116,8 @@ export interface Editor {
   selectAll(): boolean
   selectNone(): boolean
   invertSelection(): boolean
+  maskToSelection(id: string): boolean
+  paintPreview(key: string): HTMLCanvasElement | null
 }
 
 export function createEditor(opts: EditorOptions): Editor {
@@ -794,6 +796,31 @@ export function createEditor(opts: EditorOptions): Editor {
     },
     selectNone() {
       return commitSelection('Select None', null, null)
+    },
+    paintPreview(key) {
+      return overrides.get(key) ?? null
+    },
+    maskToSelection(id) {
+      const node = findNode(doc.root, id)?.node
+      const m = node?.mask
+      if (!node || !m) return false
+      const entry = content.get(m.contentId)
+      if (!entry) return false
+      const canvas = document.createElement('canvas')
+      canvas.width = doc.width
+      canvas.height = doc.height
+      const g = canvas.getContext('2d')
+      if (!g) return false
+      g.fillStyle = '#000000'
+      g.fillRect(0, 0, doc.width, doc.height)
+      const tf =
+        node.transform.w > 0 && node.transform.h > 0
+          ? node.transform
+          : { x: 0, y: 0, w: entry.width, h: entry.height, rotation: 0 }
+      drawPlacedInto(g, entry.canvas, tf, 0, 0)
+      const bounds = lumaBBox(canvas)
+      if (!bounds) return commitSelection('Select None', null, null)
+      return commitSelection('Mask to Selection', canvas, bounds)
     },
     invertSelection() {
       const sel = selectionChannel()

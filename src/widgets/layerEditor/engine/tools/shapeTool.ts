@@ -6,23 +6,32 @@ import { deriveVectorTransform, vectorKind } from '../kinds/vector'
 import type { SceneNode, Transform, Vec2, VectorData } from '../node'
 import { defaultControl, type Overlay, type Tool, type ToolContext, type ToolControl, type ToolDef } from '../tool'
 import {
+  arcPath,
   clonePath,
   ellipsePath,
   flattenStroke,
   linePath,
+  polygonPath,
   rectPath,
+  spiralPath,
+  starPath,
   type FillStyle,
   type PathData,
   type StrokeStyle,
 } from '../vector'
 
-export type ShapeKind = 'rect' | 'ellipse' | 'line'
+export type ShapeKind = 'rect' | 'ellipse' | 'line' | 'polygon' | 'star' | 'arc' | 'spiral'
+
+export const STROKE_ONLY_SHAPES: ReadonlySet<ShapeKind> = new Set(['line', 'arc', 'spiral'])
 
 export interface ShapeToolOptions {
   shape: ShapeKind
   fill: FillStyle | null
   stroke: StrokeStyle | null
   combine?: boolean
+  sides?: number
+  starRatio?: number
+  turns?: number
 }
 
 export const DEFAULT_SHAPE_OPTIONS: ShapeToolOptions = {
@@ -30,6 +39,9 @@ export const DEFAULT_SHAPE_OPTIONS: ShapeToolOptions = {
   fill: { color: '#3b82f6' },
   stroke: null,
   combine: false,
+  sides: 6,
+  starRatio: 0.5,
+  turns: 3,
 }
 
 export function appendShapeToVector(node: VectorData, path: PathData): Command {
@@ -48,6 +60,10 @@ const SHAPE_NAMES: Record<ShapeKind, string> = {
   rect: 'Rectangle',
   ellipse: 'Ellipse',
   line: 'Line',
+  polygon: 'Polygon',
+  star: 'Star',
+  arc: 'Arc',
+  spiral: 'Spiral',
 }
 
 function constrainCorner(start: Vec2, cur: Vec2): Vec2 {
@@ -67,11 +83,31 @@ function constrainAngle(start: Vec2, cur: Vec2): Vec2 {
   return { x: start.x + Math.cos(angle) * len, y: start.y + Math.sin(angle) * len }
 }
 
-export function buildShapePath(shape: ShapeKind, start: Vec2, end: Vec2, constrain: boolean): PathData | null {
-  if (shape === 'line') {
+export function buildShapePath(
+  shape: ShapeKind,
+  start: Vec2,
+  end: Vec2,
+  constrain: boolean,
+  options?: Pick<ShapeToolOptions, 'sides' | 'starRatio' | 'turns'>
+): PathData | null {
+  if (shape === 'line' || shape === 'arc') {
     const to = constrain ? constrainAngle(start, end) : end
     if (Math.hypot(to.x - start.x, to.y - start.y) < 2) return null
+    if (shape === 'arc') return arcPath(start.x, start.y, to.x, to.y)
     return linePath(start.x, start.y, to.x, to.y)
+  }
+  if (shape === 'polygon' || shape === 'star' || shape === 'spiral') {
+    const to = constrain ? constrainAngle(start, end) : end
+    const r = Math.hypot(to.x - start.x, to.y - start.y)
+    if (r < 2) return null
+    const rotation = Math.atan2(to.y - start.y, to.x - start.x)
+    const sides = options?.sides ?? DEFAULT_SHAPE_OPTIONS.sides!
+    if (shape === 'polygon') return polygonPath(start.x, start.y, r, sides, rotation)
+    if (shape === 'star') {
+      const ratio = options?.starRatio ?? DEFAULT_SHAPE_OPTIONS.starRatio!
+      return starPath(start.x, start.y, r, r * ratio, sides, rotation)
+    }
+    return spiralPath(start.x, start.y, r, options?.turns ?? DEFAULT_SHAPE_OPTIONS.turns!, rotation)
   }
   const to = constrain ? constrainCorner(start, end) : end
   const x = Math.min(start.x, to.x)
@@ -84,7 +120,7 @@ export function buildShapePath(shape: ShapeKind, start: Vec2, end: Vec2, constra
 }
 
 export function resolveShapeStyles(options: ShapeToolOptions): { fill: FillStyle | null; stroke: StrokeStyle | null } {
-  if (options.shape === 'line') {
+  if (STROKE_ONLY_SHAPES.has(options.shape)) {
     const stroke: StrokeStyle = options.stroke
       ? { ...options.stroke }
       : { color: options.fill?.color ?? '#3b82f6', width: 2, cap: 'butt', join: 'miter' }
@@ -136,7 +172,7 @@ class ShapeTool implements Tool {
     this.cur = null
     if (!start) return
     const options = this.options()
-    const path = buildShapePath(options.shape, start, pt, e.shiftKey || this.constrain)
+    const path = buildShapePath(options.shape, start, pt, e.shiftKey || this.constrain, options)
     this.ctx.requestRender()
     if (!path) return
     if (options.combine) {
@@ -172,7 +208,7 @@ class ShapeTool implements Tool {
   drawOverlay(overlay: Overlay): void {
     if (!this.start || !this.cur) return
     const options = this.options()
-    const path = buildShapePath(options.shape, this.start, this.cur, this.constrain)
+    const path = buildShapePath(options.shape, this.start, this.cur, this.constrain, options)
     if (!path) return
     if (options.shape === 'line') {
       const seg = path.strokes[0]
@@ -192,7 +228,9 @@ class ShapeTool implements Tool {
       overlay.add({ type: 'rect', rect: { x: minX, y: minY, w: maxX - minX, h: maxY - minY } })
       return
     }
-    overlay.add({ type: 'polyline', points: flattenStroke(path.strokes[0]), closed: true })
+    for (const stroke of path.strokes) {
+      overlay.add({ type: 'polyline', points: flattenStroke(stroke), closed: stroke.closed })
+    }
   }
 }
 

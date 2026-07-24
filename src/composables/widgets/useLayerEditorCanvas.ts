@@ -209,10 +209,13 @@ export function useLayerEditorCanvas(
   })
 
   const brushGradient = computed(() => {
-    const target = editor.paintTarget.value
-    const rgb = target === 'mask' || editor.tool.value === 'eraser'
-      ? { r: 255, g: 255, b: 255 }
-      : hexToRgb(editor.brushColor.value)
+    let rgb = hexToRgb(editor.brushColor.value)
+    if (editor.tool.value === 'eraser') {
+      rgb = { r: 255, g: 255, b: 255 }
+    } else if (editor.paintTarget.value === 'mask') {
+      const g = Math.round(0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b)
+      rgb = { r: g, g, b: g }
+    }
     return brushGradientCss(rgb, editor.brushOpacity.value, activeHardness.value)
   })
 

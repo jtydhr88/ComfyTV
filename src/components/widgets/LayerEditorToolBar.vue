@@ -80,7 +80,40 @@
         </button>
       </div>
 
-      <label v-if="editor.shapeKind.value !== 'line'" :class="fieldClass">
+      <label
+        v-if="editor.shapeKind.value === 'polygon' || editor.shapeKind.value === 'star'"
+        :class="fieldClass"
+      >
+        {{ $t('layerEditor.shapeSides') }}
+        <input
+          v-model.number="editor.shapeSides.value"
+          type="range" min="3" max="24" step="1"
+          class="ctv:w-16"
+        />
+        <span class="ctv:w-5 ctv:text-right ctv:font-mono">{{ editor.shapeSides.value }}</span>
+      </label>
+
+      <label v-if="editor.shapeKind.value === 'star'" :class="fieldClass">
+        {{ $t('layerEditor.shapeStarRatio') }}
+        <input
+          v-model.number="editor.shapeStarRatio.value"
+          type="range" min="0.1" max="0.9" step="0.05"
+          class="ctv:w-16"
+        />
+        <span class="ctv:w-7 ctv:text-right ctv:font-mono">{{ editor.shapeStarRatio.value.toFixed(2) }}</span>
+      </label>
+
+      <label v-if="editor.shapeKind.value === 'spiral'" :class="fieldClass">
+        {{ $t('layerEditor.shapeTurns') }}
+        <input
+          v-model.number="editor.shapeTurns.value"
+          type="range" min="1" max="8" step="1"
+          class="ctv:w-16"
+        />
+        <span class="ctv:w-5 ctv:text-right ctv:font-mono">{{ editor.shapeTurns.value }}</span>
+      </label>
+
+      <label v-if="!strokeOnlyShape" :class="fieldClass">
         <input v-model="editor.shapeFillEnabled.value" type="checkbox" class="ctv:accent-[#1473e6]" />
         {{ $t('layerEditor.shapeFill') }}
         <input
@@ -93,7 +126,7 @@
 
       <label :class="fieldClass">
         <input
-          v-if="editor.shapeKind.value !== 'line'"
+          v-if="!strokeOnlyShape"
           v-model="editor.shapeStrokeEnabled.value"
           type="checkbox"
           class="ctv:accent-[#1473e6]"
@@ -102,7 +135,7 @@
         <input
           v-model="editor.shapeStrokeColor.value"
           type="color"
-          :disabled="editor.shapeKind.value !== 'line' && !editor.shapeStrokeEnabled.value"
+          :disabled="!strokeOnlyShape && !editor.shapeStrokeEnabled.value"
           :class="colorInputClass"
         />
       </label>
@@ -112,7 +145,7 @@
         <input
           v-model.number="editor.shapeStrokeWidth.value"
           type="range" min="1" max="100" step="1"
-          :disabled="editor.shapeKind.value !== 'line' && !editor.shapeStrokeEnabled.value"
+          :disabled="!strokeOnlyShape && !editor.shapeStrokeEnabled.value"
           class="ctv:w-20 ctv:disabled:opacity-30"
         />
         <span class="ctv:w-7 ctv:text-right ctv:font-mono">{{ editor.shapeStrokeWidth.value }}</span>
@@ -173,18 +206,23 @@ import IconBrush from '~icons/lucide/brush'
 import IconCamera from '~icons/lucide/camera'
 import IconCircle from '~icons/lucide/circle'
 import IconEraser from '~icons/lucide/eraser'
+import IconHexagon from '~icons/lucide/hexagon'
 import IconLoader from '~icons/lucide/loader-2'
 import IconMinus from '~icons/lucide/minus'
 import IconMousePointer from '~icons/lucide/mouse-pointer-2'
 import IconRedo from '~icons/lucide/redo-2'
 import IconScan from '~icons/lucide/scan'
 import IconShapes from '~icons/lucide/shapes'
+import IconShell from '~icons/lucide/shell'
+import IconSpline from '~icons/lucide/spline'
 import IconSquare from '~icons/lucide/square'
+import IconStar from '~icons/lucide/star'
 import IconSquareDashed from '~icons/lucide/square-dashed'
 import IconType from '~icons/lucide/type'
 import IconUndo from '~icons/lucide/undo-2'
 
 import type { LayerEditorController } from '@/composables/widgets/useLayerEditorStage'
+import { STROKE_ONLY_SHAPES, type ShapeKind } from '@/widgets/layerEditor/engine'
 import type { ToolId } from '@/widgets/layerEditor/types'
 
 const props = defineProps<{
@@ -202,11 +240,17 @@ const TOOL_META: Record<ToolId, { labelKey: string; icon: unknown }> = {
   shape: { labelKey: 'layerEditor.toolShape', icon: IconShapes },
 }
 
-const SHAPE_OPTIONS: Array<{ id: 'rect' | 'ellipse' | 'line'; labelKey: string; icon: unknown }> = [
+const SHAPE_OPTIONS: Array<{ id: ShapeKind; labelKey: string; icon: unknown }> = [
   { id: 'rect', labelKey: 'layerEditor.shapeRect', icon: IconSquare },
   { id: 'ellipse', labelKey: 'layerEditor.shapeEllipse', icon: IconCircle },
   { id: 'line', labelKey: 'layerEditor.shapeLine', icon: IconMinus },
+  { id: 'polygon', labelKey: 'layerEditor.shapePolygon', icon: IconHexagon },
+  { id: 'star', labelKey: 'layerEditor.shapeStar', icon: IconStar },
+  { id: 'arc', labelKey: 'layerEditor.shapeArc', icon: IconSpline },
+  { id: 'spiral', labelKey: 'layerEditor.shapeSpiral', icon: IconShell },
 ]
+
+const strokeOnlyShape = computed(() => STROKE_ONLY_SHAPES.has(editor.shapeKind.value))
 
 const PAINT_TARGETS: Array<{ id: 'content' | 'mask'; labelKey: string }> = [
   { id: 'content', labelKey: 'layerEditor.targetContent' },

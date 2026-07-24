@@ -143,7 +143,8 @@
             <canvas
               width="40"
               height="32"
-              class="ctv:my-1 ctv:ml-1.5 ctv:h-8 ctv:w-10 ctv:shrink-0 ctv:rounded-xs ctv:border ctv:border-[#161616]"
+              class="ctv:my-1 ctv:ml-1.5 ctv:h-8 ctv:w-10 ctv:shrink-0 ctv:rounded-xs ctv:border"
+              :class="contentTargeted(row.node) ? 'ctv:border-[#1473e6]' : 'ctv:border-[#161616]'"
               :style="checkerStyle"
               :title="$t('layerEditor.targetContent')"
               :ref="(el) => drawThumb(el as HTMLCanvasElement | null, row.node)"
@@ -154,13 +155,11 @@
               width="32"
               height="32"
               class="ctv:my-1 ctv:ml-1 ctv:size-8 ctv:shrink-0 ctv:rounded-xs ctv:border"
-              :class="[
-                maskTargeted(row.node) ? 'ctv:border-[#1473e6]' : 'ctv:border-[#161616]',
-                row.node.mask.enabled ? '' : 'ctv:opacity-40',
-              ]"
+              :class="maskThumbBorder(row.node)"
               :title="$t('layerEditor.targetMask')"
               :ref="(el) => drawMaskThumb(el as HTMLCanvasElement | null, row.node)"
               @click.stop="onMaskThumbClick(row.node, $event)"
+              @contextmenu.stop.prevent="openMaskMenu(row.node, $event)"
             />
           </template>
 
@@ -395,25 +394,57 @@
     </div>
 
     <div class="ctv:flex ctv:items-center ctv:justify-evenly ctv:border-t ctv:border-[#161616] ctv:bg-[#333333] ctv:px-1 ctv:py-0.5">
-      <button
-        v-if="!active?.mask"
-        type="button"
-        :class="miniBtnClass"
-        :disabled="!active"
-        :title="$t('layerEditor.addMask')"
-        @click="active && editor.addMask(active.id)"
-      >
-        <IconCircleDashed class="ctv:size-3.5" />
-      </button>
-      <button
-        v-else
-        type="button"
-        :class="miniBtnClass"
-        :title="$t('layerEditor.deleteMask')"
-        @click="editor.removeMask(active!.id)"
-      >
-        <IconCircleOff class="ctv:size-3.5" />
-      </button>
+      <div class="ctv:relative">
+        <button
+          v-if="!active?.mask"
+          type="button"
+          :class="miniBtnClass"
+          :disabled="!active"
+          :title="$t('layerEditor.addMask')"
+          @click.stop="addMaskMenuOpen = !addMaskMenuOpen"
+          @pointerdown.stop
+        >
+          <IconCircleDashed class="ctv:size-3.5" />
+        </button>
+        <button
+          v-else
+          type="button"
+          :class="miniBtnClass"
+          :title="$t('layerEditor.deleteMask')"
+          @click="editor.removeMask(active!.id)"
+        >
+          <IconCircleOff class="ctv:size-3.5" />
+        </button>
+        <div
+          v-if="addMaskMenuOpen"
+          class="ctv:absolute ctv:bottom-7 ctv:left-0 ctv:z-30 ctv:flex ctv:min-w-32 ctv:flex-col ctv:rounded-md
+                 ctv:border ctv:border-[#161616] ctv:bg-[#2b2b2b] ctv:py-1 ctv:shadow-lg"
+          @pointerdown.stop
+        >
+          <button type="button" :class="menuItemClass" @click="addMaskWith('white')">
+            {{ $t('layerEditor.maskInitWhite') }}
+          </button>
+          <button type="button" :class="menuItemClass" @click="addMaskWith('black')">
+            {{ $t('layerEditor.maskInitBlack') }}
+          </button>
+          <button
+            type="button"
+            :class="menuItemClass"
+            :disabled="!editor.hasSelection()"
+            @click="addMaskWith('selection')"
+          >
+            {{ $t('layerEditor.maskInitSelection') }}
+          </button>
+          <template v-if="active?.kind === 'raster'">
+            <button type="button" :class="menuItemClass" @click="addMaskWith('alpha')">
+              {{ $t('layerEditor.maskInitAlpha') }}
+            </button>
+            <button type="button" :class="menuItemClass" @click="addMaskWith('gray')">
+              {{ $t('layerEditor.maskInitGray') }}
+            </button>
+          </template>
+        </div>
+      </div>
       <button
         type="button"
         :class="miniBtnClass"
@@ -456,11 +487,43 @@
         <IconTrash class="ctv:size-3.5" />
       </button>
     </div>
+
+    <div
+      v-if="maskMenu && maskMenuNode"
+      class="ctv:fixed ctv:z-50 ctv:flex ctv:min-w-36 ctv:flex-col ctv:rounded-md ctv:border ctv:border-[#161616]
+             ctv:bg-[#2b2b2b] ctv:py-1 ctv:shadow-lg"
+      :style="{ left: maskMenu.x + 'px', top: maskMenu.y + 'px' }"
+      @pointerdown.stop
+    >
+      <button type="button" :class="menuItemClass" @click="maskMenuAction(() => { editor.maskView.value = !editor.maskView.value })">
+        {{ $t('layerEditor.maskShow') }}
+      </button>
+      <button type="button" :class="menuItemClass" @click="maskMenuAction((id) => editor.toggleMaskEnabled(id))">
+        {{ $t(maskMenuNode.mask!.enabled ? 'layerEditor.maskDisable' : 'layerEditor.maskEnable') }}
+      </button>
+      <button type="button" :class="menuItemClass" @click="maskMenuAction((id) => editor.invertMask(id))">
+        {{ $t('layerEditor.maskInvert') }}
+      </button>
+      <button
+        v-if="maskMenuNode.kind === 'raster'"
+        type="button"
+        :class="menuItemClass"
+        @click="maskMenuAction((id) => editor.applyMask(id))"
+      >
+        {{ $t('layerEditor.maskApply') }}
+      </button>
+      <button type="button" :class="menuItemClass" @click="maskMenuAction((id) => editor.maskToSelection(id))">
+        {{ $t('layerEditor.maskToSelection') }}
+      </button>
+      <button type="button" :class="menuItemClass" @click="maskMenuAction((id) => editor.removeMask(id))">
+        {{ $t('layerEditor.deleteMask') }}
+      </button>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import IconArrowDownToLine from '~icons/lucide/arrow-down-to-line'
 import IconChevronDown from '~icons/lucide/chevron-down'
 import IconChevronDownArrange from '~icons/lucide/chevron-down'
@@ -490,7 +553,7 @@ import IconUpload from '~icons/lucide/upload'
 
 import AssetPickerPopup from '@/components/stages/AssetPickerPopup.vue'
 import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
-import type { LayerEditorController } from '@/composables/widgets/useLayerEditorStage'
+import type { LayerEditorController, MaskInit } from '@/composables/widgets/useLayerEditorStage'
 import { useLayerListPanel } from '@/composables/widgets/useLayerListPanel'
 import type { BlendFn, SceneNode } from '@/widgets/layerEditor/engine'
 
@@ -555,16 +618,69 @@ function maskTargeted(node: SceneNode): boolean {
   return node.id === editor.activeId.value && editor.paintTarget.value === 'mask'
 }
 
+function contentTargeted(node: SceneNode): boolean {
+  return node.id === editor.activeId.value && editor.paintTarget.value === 'content'
+}
+
+function maskThumbBorder(node: SceneNode): string {
+  if (!node.mask?.enabled) return 'ctv:border-[#dc2626] ctv:opacity-60'
+  if (node.id === editor.activeId.value && editor.maskView.value) return 'ctv:border-[#22c55e]'
+  if (maskTargeted(node)) return 'ctv:border-[#1473e6]'
+  return 'ctv:border-[#161616]'
+}
+
 function onMaskThumbClick(node: SceneNode, e: MouseEvent): void {
   if (e.shiftKey) {
     editor.toggleMaskEnabled(node.id)
     return
   }
+  if (e.altKey) {
+    selectLayer(node, 'mask')
+    editor.maskView.value = !editor.maskView.value
+    return
+  }
   selectLayer(node, 'mask')
 }
 
+const maskMenu = ref<{ nodeId: string; x: number; y: number } | null>(null)
+
+function openMaskMenu(node: SceneNode, e: MouseEvent): void {
+  selectLayer(node, 'mask')
+  maskMenu.value = { nodeId: node.id, x: e.clientX, y: e.clientY }
+}
+
+const maskMenuNode = computed<SceneNode | null>(() => {
+  if (!maskMenu.value) return null
+  const row = editor.layers.value.find((r) => r.node.id === maskMenu.value!.nodeId)
+  return row?.node.mask ? row.node : null
+})
+
+function maskMenuAction(fn: (id: string) => void): void {
+  const m = maskMenu.value
+  maskMenu.value = null
+  if (m) fn(m.nodeId)
+}
+
+const addMaskMenuOpen = ref(false)
+
+function addMaskWith(init: MaskInit): void {
+  addMaskMenuOpen.value = false
+  if (editor.activeId.value) editor.addMask(editor.activeId.value, init)
+}
+
+function onGlobalPointerDown(): void {
+  maskMenu.value = null
+  addMaskMenuOpen.value = false
+}
+onMounted(() => window.addEventListener('pointerdown', onGlobalPointerDown))
+onBeforeUnmount(() => window.removeEventListener('pointerdown', onGlobalPointerDown))
+
 const paramLabelClass = 'ctv:w-12 ctv:shrink-0 ctv:text-[10px] ctv:uppercase ctv:tracking-wide ctv:text-[#9b9b9b]'
 const paramValueClass = 'ctv:w-8 ctv:text-right ctv:text-[10px] ctv:font-mono ctv:text-[#9b9b9b]'
+const menuItemClass =
+  'ctv:flex ctv:items-center ctv:border-0 ctv:bg-transparent ctv:px-3 ctv:py-1 ctv:text-left ctv:text-[11px] ' +
+  'ctv:text-[#d6d6d6] ctv:cursor-pointer ctv:[font-family:inherit] ctv:hover:bg-[#3a3a3a] ' +
+  'ctv:disabled:opacity-30 ctv:disabled:cursor-default ctv:disabled:hover:bg-transparent'
 const miniBtnClass =
   'ctv:inline-flex ctv:size-6 ctv:shrink-0 ctv:items-center ctv:justify-center ctv:rounded ctv:border-0 ' +
   'ctv:bg-transparent ctv:p-0 ctv:text-[#9b9b9b] ctv:cursor-pointer ctv:transition-colors ' +

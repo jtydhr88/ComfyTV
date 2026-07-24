@@ -83,6 +83,65 @@ export function linePath(x1: number, y1: number, x2: number, y2: number): PathDa
   return { strokes: [strokeFromTriples(triples, false)] }
 }
 
+export function polygonPath(cx: number, cy: number, r: number, sides: number, rotation: number): PathData {
+  const n = Math.max(3, Math.round(sides))
+  const triples: Vec2[] = []
+  for (let i = 0; i < n; i++) {
+    const ang = rotation + (i * 2 * Math.PI) / n
+    const p = { x: cx + Math.cos(ang) * r, y: cy + Math.sin(ang) * r }
+    triples.push(p, p, p)
+  }
+  return { strokes: [strokeFromTriples(triples, true)] }
+}
+
+export function starPath(cx: number, cy: number, rOuter: number, rInner: number, points: number, rotation: number): PathData {
+  const n = Math.max(3, Math.round(points))
+  const triples: Vec2[] = []
+  for (let i = 0; i < n * 2; i++) {
+    const r = i % 2 === 0 ? rOuter : rInner
+    const ang = rotation + (i * Math.PI) / n
+    const p = { x: cx + Math.cos(ang) * r, y: cy + Math.sin(ang) * r }
+    triples.push(p, p, p)
+  }
+  return { strokes: [strokeFromTriples(triples, true)] }
+}
+
+export function arcPath(x1: number, y1: number, x2: number, y2: number): PathData {
+  const chord = Math.hypot(x2 - x1, y2 - y1)
+  if (chord === 0) return { strokes: [] }
+  const r = chord / 2
+  const mx = (x1 + x2) / 2
+  const my = (y1 + y2) / 2
+  const a0 = Math.atan2(y1 - my, x1 - mx)
+  const k = ELLIPSE_KAPPA * r
+  const triples: Vec2[] = []
+  for (let i = 0; i <= 2; i++) {
+    const ang = a0 + (i * Math.PI) / 2
+    const p = { x: mx + Math.cos(ang) * r, y: my + Math.sin(ang) * r }
+    const t = { x: -Math.sin(ang), y: Math.cos(ang) }
+    triples.push(
+      { x: p.x - t.x * k, y: p.y - t.y * k },
+      p,
+      { x: p.x + t.x * k, y: p.y + t.y * k }
+    )
+  }
+  return { strokes: [strokeFromTriples(triples, false)] }
+}
+
+export function spiralPath(cx: number, cy: number, r: number, turns: number, endAngle: number): PathData {
+  const t = Math.max(1, Math.round(turns))
+  const steps = t * 32
+  const total = t * 2 * Math.PI
+  const triples: Vec2[] = []
+  for (let i = 0; i <= steps; i++) {
+    const f = i / steps
+    const ang = endAngle - total * (1 - f)
+    const p = { x: cx + Math.cos(ang) * r * f, y: cy + Math.sin(ang) * r * f }
+    triples.push(p, p, p)
+  }
+  return { strokes: [strokeFromTriples(triples, false)] }
+}
+
 interface Segment {
   from: Vec2
   c1: Vec2

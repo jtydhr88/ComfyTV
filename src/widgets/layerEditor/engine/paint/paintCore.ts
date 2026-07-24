@@ -97,6 +97,7 @@ class BasePaintCore implements PaintCore {
       const img = ctx.createImageData(this.w, this.h)
       img.data.set(this.base)
       this.previewData = img
+      ctx.putImageData(img, 0, 0)
     }
     if (rect) {
       compositeStrokeRect(
