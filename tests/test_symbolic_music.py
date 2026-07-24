@@ -7,6 +7,8 @@ import pytest
 
 np = pytest.importorskip("numpy")
 
+from conftest import needs_scipy  # noqa: E402
+
 _SF3 = Path(r'H:\MuseScore\share\sound\FluidR3Mono_GM.sf3')
 
 
@@ -548,6 +550,7 @@ class TestPerformanceCarriesScore:
         assert perf['events']
 
 
+@needs_scipy
 class TestMuseReverb:
     def _impulse(self, seconds=1.0):
         x = np.zeros((2, int(44100 * seconds)))

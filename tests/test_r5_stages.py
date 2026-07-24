@@ -7,6 +7,7 @@ import pytest
 av = pytest.importorskip("av")
 np = pytest.importorskip("numpy")
 
+from conftest import needs_cv2, needs_scipy, needs_torch  # noqa: E402
 from test_media_concat import _write_clip  # noqa: E402
 
 NEW_CLASSES = [
@@ -106,6 +107,7 @@ class TestCDL:
         _url, entries = _unpack(out.values[0])
         assert entries == []
 
+    @needs_torch
     def test_slope_changes_mean(self, clip):
         cls = _classes()["CDLStage"]
         v = cls.execute(project_id='p1', slope_r=0.3, slope_g=0.3,
@@ -113,6 +115,7 @@ class TestCDL:
         out = _chain(v)
         assert _frames_mean(out.values[0]) < _frames_mean(clip) - 5
 
+    @needs_torch
     def test_cdl_frame_formula(self):
         import torch
         from ComfyTV.runners.video_color_ops import cdl_frame
@@ -123,6 +126,7 @@ class TestCDL:
         assert out[0, 0, 1].item() == pytest.approx(0.35, abs=1e-5)
         assert out[0, 0, 2].item() == pytest.approx(0.0625, abs=1e-5)
 
+    @needs_torch
     def test_saturation_zero_is_gray(self):
         import torch
         from ComfyTV.runners.video_color_ops import cdl_frame
@@ -139,12 +143,14 @@ class TestHistogramEq:
         _url, entries = _unpack(out.values[0])
         assert entries == []
 
+    @needs_torch
     def test_equalize_renders(self, clip):
         cls = _classes()["HistogramEqStage"]
         v = cls.execute(project_id='p1', strength=1.0, video=clip).values[0]
         out = _chain(v)
         assert out.values[0].startswith('/view?')
 
+    @needs_torch
     def test_flat_image_stays_flat(self):
         import torch
         from ComfyTV.runners.video_color_ops import histeq_frame
@@ -173,6 +179,7 @@ class TestAudioDuck:
         assert out.values[0].startswith('/view?')
 
 
+@needs_torch
 class TestHueCorrectDomains:
     def test_sat_vs_sat_desaturates(self):
         import torch
@@ -241,6 +248,7 @@ class TestLumaMaps:
             assert m.min() == pytest.approx(0.0, abs=1e-5), kind
             assert m.max() == pytest.approx(1.0, abs=1e-5), kind
 
+    @needs_torch
     def test_transition_builtin_luma(self, clip, voice_clip):
         from ComfyTV.nodes.stages.video_timeline import VideoTransitionStage
         out = VideoTransitionStage.execute(
@@ -249,6 +257,7 @@ class TestLumaMaps:
         assert out.values[0].startswith('/view?')
 
 
+@needs_torch
 class TestShapeMask:
     def test_chain_stencil(self, clip):
         classes = _classes()
@@ -290,6 +299,7 @@ class TestShapeMask:
         assert out.values[0].startswith('/view?')
 
 
+@needs_torch
 class TestOptics:
     def test_lens_identity_grid(self):
         import torch
@@ -360,6 +370,7 @@ class TestOptics:
 
 
 class TestZDefocus:
+    @needs_torch
     def test_focus_zone_stays_sharp(self):
         import torch
         from ComfyTV.runners.zdefocus import build_zdefocus_fn
@@ -379,6 +390,7 @@ class TestZDefocus:
         assert left_diff < 0.01
         assert right_diff > 0.05
 
+    @needs_torch
     def test_node_with_depth_image(self, clip):
         from PIL import Image
         import folder_paths
@@ -400,6 +412,7 @@ class TestZDefocus:
         with pytest.raises(RuntimeError, match="depth"):
             ZDefocusStage.execute(project_id='p1', video=clip)
 
+    @needs_torch
     def test_occlusion_order_with_inverted_depth(self):
         import torch
         from ComfyTV.runners.zdefocus import build_zdefocus_fn
@@ -418,12 +431,16 @@ class TestZDefocus:
 
 
 class TestFaceAndSpot:
+    @needs_cv2
+    @needs_torch
     def test_face_blur_renders(self, clip):
         from ComfyTV.nodes.stages.video_masking import FaceBlurStage
         out = FaceBlurStage.execute(project_id='p1', mode='pixelate',
                                     recheck=6, video=clip)
         assert out.values[0].startswith('/view?')
 
+    @needs_cv2
+    @needs_torch
     def test_spot_remover_edge_blend(self, clip):
         from ComfyTV.nodes.stages.video_masking import SpotRemoverStage
         out = SpotRemoverStage.execute(
@@ -431,6 +448,7 @@ class TestFaceAndSpot:
             video=clip)
         assert out.values[0].startswith('/view?')
 
+    @needs_torch
     def test_spot_remover_flattens_region(self):
         import torch
         from ComfyTV.runners.face_tools import spot_remove_video  # noqa: F401
@@ -487,6 +505,7 @@ class TestParticles:
         sim.advance_to(1.5)
         assert sim.parts['y'].mean() > y_early + 5
 
+    @needs_torch
     def test_particles_chain_render(self, clip):
         from ComfyTV.nodes.stages.video_particles import ParticlesStage
         v = ParticlesStage.execute(
@@ -567,6 +586,7 @@ class TestParticles:
         if mid.any() and young.any():
             assert sizes[mid].mean() > sizes[young].mean()
 
+    @needs_torch
     def test_mask_edge_local_render(self, clip):
         from PIL import Image
         import folder_paths
@@ -605,6 +625,7 @@ class TestParticles:
             assert layer.max() > 0.1, renderer
 
 
+@needs_torch
 class TestRotoPaintUpgrades:
     def test_stroke_lifespan(self, clip):
         from ComfyTV.nodes.stages.video_masking import PaintStrokeStage
@@ -643,6 +664,7 @@ class TestRotoPaintUpgrades:
             PaintStrokeStage.execute(project_id='p1', strokes=strokes,
                                      video=clip)
 
+    @needs_scipy
     def test_per_point_feather(self):
         from ComfyTV.runners.roto import rasterize_mask
         pts = [

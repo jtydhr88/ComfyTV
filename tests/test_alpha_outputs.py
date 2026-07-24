@@ -11,6 +11,8 @@ import pytest
 av = pytest.importorskip("av")
 np = pytest.importorskip("numpy")
 
+from conftest import needs_torch  # noqa: E402
+
 
 def _write_green_clip(p: Path, w=64, h=64, fps=8, n=12):
     with av.open(str(p), 'w') as outp:
@@ -67,6 +69,7 @@ def test_chroma_key_alpha_survives_filter_lane(green_clip):
     assert 0.3 < frac < 0.99
 
 
+@needs_torch
 def test_keyer_alpha_survives_torch_lane(green_clip):
     from ComfyTV.runners.keying import keyer_video
     out = keyer_video(green_clip, mode='screen', key_color='#00C800',

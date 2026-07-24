@@ -1,11 +1,23 @@
 from __future__ import annotations
 
+import importlib.util
 import os
 import sys
 import types
 from pathlib import Path
 
+import pytest
+
 os.environ["COMFYTV_TESTING"] = "1"
+
+
+def _has_module(name: str) -> bool:
+    return importlib.util.find_spec(name) is not None
+
+
+needs_torch = pytest.mark.skipif(not _has_module("torch"), reason="torch not installed")
+needs_cv2 = pytest.mark.skipif(not _has_module("cv2"), reason="cv2 not installed")
+needs_scipy = pytest.mark.skipif(not _has_module("scipy"), reason="scipy not installed")
 
 _REPO = Path(__file__).resolve().parent.parent
 _PARENT = _REPO.parent

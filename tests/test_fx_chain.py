@@ -7,6 +7,7 @@ import pytest
 av = pytest.importorskip("av")
 np = pytest.importorskip("numpy")
 
+from conftest import needs_torch  # noqa: E402
 from test_media_concat import _write_clip  # noqa: E402
 
 
@@ -82,6 +83,7 @@ class TestDeliveryColorspace:
         assert _stream_tags(url) == (9, 9)
         assert _frames_mean(url) > 0
 
+    @needs_torch
     def test_torch_tail_gets_extra_pass(self, clip):
         from ComfyTV.nodes.stages.video_keying import ColorSuppressStage
         v = ColorSuppressStage.execute(project_id='p1', green=1.0,
@@ -141,6 +143,7 @@ class TestDeliveryParams:
             first = next(c.decode(c.streams.video[0]))
             assert first.format.name == 'yuv422p10le'
 
+    @needs_torch
     def test_torch_tail_gets_delivery(self, clip):
         from ComfyTV.nodes.stages.video_keying import ColorSuppressStage
         from ComfyTV.runners.fx_chain_exec import run_fx_chain
@@ -231,6 +234,7 @@ class TestSerialChain:
         assert url.startswith('/view?')
         assert _frames_mean(url) < _frames_mean(clip)
 
+    @needs_torch
     def test_torch_only_chain_renders(self, clip):
         from ComfyTV.nodes.stages.video_keying import ColorSuppressStage
         v = ColorSuppressStage.execute(project_id='p1', green=1.0,
@@ -241,6 +245,7 @@ class TestSerialChain:
         assert out.values[0].startswith('/view?')
         assert abs(_frames_mean(out.values[0]) - _frames_mean(clip)) > 20
 
+    @needs_torch
     def test_mixed_avfilter_torch_chain(self, clip):
         from ComfyTV.nodes.stages.video_keying import ColorSuppressStage
         v = ColorSuppressStage.execute(project_id='p1', green=1.0,
@@ -251,6 +256,7 @@ class TestSerialChain:
         out = _chain().execute(project_id='p1', video=v)
         assert _frames_mean(out.values[0]) < _frames_mean(clip)
 
+    @needs_torch
     def test_keyer_matte_in_chain(self, clip):
         from ComfyTV.nodes.stages.video_keying import KeyerStage
         v = KeyerStage.execute(project_id='p1', mode='luminance',
@@ -262,6 +268,7 @@ class TestSerialChain:
             arr = frame.to_ndarray(format='rgb24')
         assert abs(int(arr[..., 0].mean()) - int(arr[..., 1].mean())) <= 2
 
+    @needs_torch
     def test_pik_in_chain_uses_pick_color(self, clip):
         from ComfyTV.nodes.stages.video_keying import PIKStage
         v = PIKStage.execute(project_id='p1', screen='green',
@@ -280,6 +287,7 @@ class TestSerialChain:
             assert entries[0]['engine'] == 'torch'
             assert out.ui == {'output': [clip]}
 
+    @needs_torch
     def test_keyer_with_mask_still_renders_locally(self, clip):
         import folder_paths
         from PIL import Image
@@ -295,6 +303,7 @@ class TestSerialChain:
         assert out.values[0] != clip
         assert out.values[0].startswith('/view?')
 
+    @needs_torch
     def test_local_render_bakes_pending_chain(self, clip):
         from ComfyTV.nodes.stages.video_compose import VideoTransformStage
         track = json.dumps([{'t': 0.0, 'x': 0.0, 'y': 0.0,
@@ -305,6 +314,7 @@ class TestSerialChain:
         assert out.values[0].startswith('/view?')
         assert _frames_mean(out.values[0]) < _frames_mean(clip) - 1.0
 
+    @needs_torch
     def test_glow_in_chain_brightens(self, clip):
         from ComfyTV.nodes.stages.video_stylize import GlowStage
         v = GlowStage.execute(project_id='p1', threshold=0.1, gain=2.0,
@@ -314,6 +324,7 @@ class TestSerialChain:
         out = _chain().execute(project_id='p1', video=v)
         assert _frames_mean(out.values[0]) > _frames_mean(clip)
 
+    @needs_torch
     def test_god_rays_in_chain_renders(self, clip):
         from ComfyTV.nodes.stages.video_stylize import GodRaysStage
         v = GodRaysStage.execute(project_id='p1', scale=1.4,
@@ -322,6 +333,7 @@ class TestSerialChain:
         out = _chain().execute(project_id='p1', video=v)
         assert out.values[0].startswith('/view?')
 
+    @needs_torch
     def test_old_film_in_chain_renders(self, clip):
         from ComfyTV.nodes.stages.video_stylize import OldFilmStage
         v = OldFilmStage.execute(project_id='p1', video=clip).values[0]
@@ -340,6 +352,7 @@ class TestSerialChain:
         assert entries[0]['op'] == 'transform'
         assert entries[0]['params']['pos_x'] == 160.0
 
+    @needs_torch
     def test_transform_in_chain_shifts_frame(self, clip):
         from ComfyTV.nodes.stages.video_compose import VideoTransformStage
         v = VideoTransformStage.execute(project_id='p1', pos_x=160.0,
@@ -347,6 +360,7 @@ class TestSerialChain:
         out = _chain().execute(project_id='p1', video=v)
         assert _frames_mean(out.values[0]) < _frames_mean(clip) * 0.75
 
+    @needs_torch
     def test_transform_with_track_renders_locally(self, clip):
         from ComfyTV.nodes.stages.video_compose import VideoTransformStage
         track = json.dumps([{'t': 0.0, 'x': 10.0, 'y': 0.0,
@@ -454,10 +468,10 @@ VIDEO_ELIGIBLE = [
     ("video_color", "SelectiveColorStage", {"sc_reds": 0.4}),
     ("video_stylize", "PseudocolorStage", {"pseudo_preset": "turbo"}),
     ("video_color", "GrayWorldStage", {}),
-    ("video_color", "HueCorrectStage",
-     {"curves": '{"sat": [[0.0, 0.5], [1.0, 0.5]]}'}),
-    ("video_keying", "DespillStage", {"screen": "green"}),
-    ("video_keying", "MatteMorphStage", {"op": "dilate", "size_x": 2}),
+    pytest.param("video_color", "HueCorrectStage",
+                 {"curves": '{"sat": [[0.0, 0.5], [1.0, 0.5]]}'}, marks=needs_torch),
+    pytest.param("video_keying", "DespillStage", {"screen": "green"}, marks=needs_torch),
+    pytest.param("video_keying", "MatteMorphStage", {"op": "dilate", "size_x": 2}, marks=needs_torch),
 ]
 
 

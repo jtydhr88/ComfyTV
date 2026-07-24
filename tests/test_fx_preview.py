@@ -11,6 +11,7 @@ from aiohttp.test_utils import TestClient, TestServer
 av = pytest.importorskip("av")
 np = pytest.importorskip("numpy")
 
+from conftest import needs_torch  # noqa: E402
 from test_media_concat import _write_clip  # noqa: E402
 
 
@@ -118,6 +119,7 @@ class TestFxPreviewEndpoint:
         from ComfyTV.runners import media
         assert media.get_video_info(data['url'])['duration'] <= 3.0 + 0.2
 
+    @needs_torch
     async def test_torch_chain_node_preview(self, client, noise_clip):
         r = await _post(client, noise_clip, node_id='ComfyTV.CDLStage',
                         params={'slope_r': 0.3, 'slope_g': 0.3,
