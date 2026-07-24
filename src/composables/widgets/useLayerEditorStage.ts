@@ -262,15 +262,19 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     }
   }
   function drawOverlayCanvas(): void {
-    if (!overlayCanvas) return
-    const { width, height } = editor.document()
-    if (overlayCanvas.width !== width) overlayCanvas.width = width
-    if (overlayCanvas.height !== height) overlayCanvas.height = height
+    if (!overlayCanvas || !viewportEl || !containerEl) return
+    const dpr = window.devicePixelRatio || 1
+    const bw = Math.max(1, Math.round(viewportEl.clientWidth * dpr))
+    const bh = Math.max(1, Math.round(viewportEl.clientHeight * dpr))
+    if (overlayCanvas.width !== bw) overlayCanvas.width = bw
+    if (overlayCanvas.height !== bh) overlayCanvas.height = bh
     editor.buildOverlay()
     const ctx = overlayCanvas.getContext('2d')
     if (!ctx) return
-    ctx.clearRect(0, 0, width, height)
+    ctx.setTransform(1, 0, 0, 1, 0, 0)
+    ctx.clearRect(0, 0, bw, bh)
     const z = Math.max(0.01, panZoom.zoom())
+    ctx.setTransform(z * dpr, 0, 0, z * dpr, containerEl.offsetLeft * dpr, containerEl.offsetTop * dpr)
     ctx.lineWidth = 1 / z
     ctx.strokeStyle = '#3b82f6'
     ctx.fillStyle = '#ffffff'
@@ -318,6 +322,11 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
   }
   function requestRender(): void {
     if (rafId == null) rafId = requestAnimationFrame(() => { rafId = null; present(); drawOverlayCanvas() })
+  }
+  let overlayRafId: number | null = null
+  function requestOverlayRender(): void {
+    if (rafId != null || overlayRafId != null) return
+    overlayRafId = requestAnimationFrame(() => { overlayRafId = null; drawOverlayCanvas() })
   }
 
   function setElements(els: { viewport: HTMLElement; container: HTMLElement; main: HTMLCanvasElement; overlay: HTMLCanvasElement }): void {
@@ -889,7 +898,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     shapeKind, shapeFillEnabled, shapeFillColor, shapeStrokeEnabled, shapeStrokeColor, shapeStrokeWidth, shapeCombine,
     editingTextId, capturing, capturedImageUrl,
     canUndo, canRedo,
-    panZoom, setElements, fitView, requestRender,
+    panZoom, setElements, fitView, requestRender, requestOverlayRender,
     activeToolHandler,
     undo, redo,
     addImageFromUrl, addImageFromFile, addTextLayerAt,

@@ -120,6 +120,7 @@ export function useLayerEditorCanvas(
     if (panning) {
       editor.panZoom.panBy(e.offsetX - panLast.x, e.offsetY - panLast.y)
       panLast = { x: e.offsetX, y: e.offsetY }
+      editor.requestOverlayRender()
       return
     }
     if (adjusting.value) {

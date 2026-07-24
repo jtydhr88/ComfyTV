@@ -56145,7 +56145,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-CIs54D5-.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-1c3KxPoi.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -127157,7 +127157,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-CG5tYrfQ.mjs");
+    const { STLLoader } = await import("./STLLoader-Bv3hzAy9.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -127165,7 +127165,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-RzAzqIf5.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-CLT9stvg.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -152927,6 +152927,7 @@ function useLayerEditorCanvas(editor, viewportEl) {
     if (panning) {
       editor.panZoom.panBy(e.offsetX - panLast.x, e.offsetY - panLast.y);
       panLast = { x: e.offsetX, y: e.offsetY };
+      editor.requestOverlayRender();
       return;
     }
     if (adjusting.value) {
@@ -153065,6 +153066,11 @@ const _sfc_main$24 = /* @__PURE__ */ defineComponent({
       setSpaceDown
     } = useLayerEditorCanvas(editor, viewportRef);
     __expose({ setSpaceDown });
+    const canvasBackdropStyle = {
+      backgroundImage: "conic-gradient(#6a6a6a 25%, #4c4c4c 0 50%, #6a6a6a 0 75%, #4c4c4c 0)",
+      backgroundSize: "8px 8px",
+      boxShadow: "0 0 0 1px rgb(0 0 0 / 0.9), 0 4px 16px rgb(0 0 0 / 0.55)"
+    };
     const drop = useLoaderFileDrop({
       kind: () => "image",
       onFiles: (files) => {
@@ -153083,7 +153089,10 @@ const _sfc_main$24 = /* @__PURE__ */ defineComponent({
         main: mainRef.value,
         overlay: overlayRef.value
       });
-      resizeObserver = new ResizeObserver(() => editor.panZoom.invalidate());
+      resizeObserver = new ResizeObserver(() => {
+        editor.panZoom.invalidate();
+        editor.requestOverlayRender();
+      });
       resizeObserver.observe(viewportRef.value);
     });
     onBeforeUnmount(() => {
@@ -153093,7 +153102,7 @@ const _sfc_main$24 = /* @__PURE__ */ defineComponent({
       return openBlock(), createElementBlock("div", {
         ref_key: "viewportRef",
         ref: viewportRef,
-        class: "ctv:relative ctv:size-full ctv:min-h-0 ctv:overflow-hidden ctv:rounded-md ctv:border ctv:border-[#161616] ctv:bg-[#1e1e1e]",
+        class: "ctv:relative ctv:size-full ctv:min-h-0 ctv:overflow-hidden ctv:rounded-md ctv:border ctv:border-[#161616] ctv:bg-[#141414]",
         style: normalizeStyle({ cursor: unref(viewportCursor) }),
         onPointerdown: _cache2[4] || (_cache2[4] = //@ts-ignore
         (...args) => unref(onPointerDown2) && unref(onPointerDown2)(...args)),
@@ -153122,20 +153131,21 @@ const _sfc_main$24 = /* @__PURE__ */ defineComponent({
         createBaseVNode("div", {
           ref_key: "containerRef",
           ref: containerRef,
-          class: "ctv:absolute ctv:top-0 ctv:left-0 ctv:pointer-events-none"
+          class: "ctv:absolute ctv:top-0 ctv:left-0 ctv:pointer-events-none",
+          style: canvasBackdropStyle
         }, [
           createBaseVNode("canvas", {
             ref_key: "mainRef",
             ref: mainRef,
             class: "ctv:absolute ctv:top-0 ctv:left-0 ctv:size-full"
           }, null, 512),
-          renderSlot(_ctx.$slots, "onion"),
-          createBaseVNode("canvas", {
-            ref_key: "overlayRef",
-            ref: overlayRef,
-            class: "ctv:absolute ctv:top-0 ctv:left-0 ctv:size-full"
-          }, null, 512)
+          renderSlot(_ctx.$slots, "onion")
         ], 512),
+        createBaseVNode("canvas", {
+          ref_key: "overlayRef",
+          ref: overlayRef,
+          class: "ctv:absolute ctv:inset-0 ctv:size-full ctv:pointer-events-none"
+        }, null, 512),
         withDirectives(createBaseVNode("div", {
           class: "ctv:absolute ctv:top-0 ctv:left-0 ctv:rounded-full ctv:pointer-events-none ctv:overflow-hidden ctv:border ctv:border-black/70 ctv:shadow-[0_0_0_1px_rgb(255_255_255/0.8)] ctv:will-change-transform",
           style: normalizeStyle(unref(brushCursorStyle))
@@ -155767,15 +155777,19 @@ function useLayerEditorStage(node, opts) {
     }
   }
   function drawOverlayCanvas() {
-    if (!overlayCanvas) return;
-    const { width, height } = editor.document();
-    if (overlayCanvas.width !== width) overlayCanvas.width = width;
-    if (overlayCanvas.height !== height) overlayCanvas.height = height;
+    if (!overlayCanvas || !viewportEl || !containerEl) return;
+    const dpr = window.devicePixelRatio || 1;
+    const bw = Math.max(1, Math.round(viewportEl.clientWidth * dpr));
+    const bh = Math.max(1, Math.round(viewportEl.clientHeight * dpr));
+    if (overlayCanvas.width !== bw) overlayCanvas.width = bw;
+    if (overlayCanvas.height !== bh) overlayCanvas.height = bh;
     editor.buildOverlay();
     const ctx = overlayCanvas.getContext("2d");
     if (!ctx) return;
-    ctx.clearRect(0, 0, width, height);
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, bw, bh);
     const z2 = Math.max(0.01, panZoom.zoom());
+    ctx.setTransform(z2 * dpr, 0, 0, z2 * dpr, containerEl.offsetLeft * dpr, containerEl.offsetTop * dpr);
     ctx.lineWidth = 1 / z2;
     ctx.strokeStyle = "#3b82f6";
     ctx.fillStyle = "#ffffff";
@@ -155830,6 +155844,14 @@ function useLayerEditorStage(node, opts) {
     if (rafId == null) rafId = requestAnimationFrame(() => {
       rafId = null;
       present();
+      drawOverlayCanvas();
+    });
+  }
+  let overlayRafId = null;
+  function requestOverlayRender() {
+    if (rafId != null || overlayRafId != null) return;
+    overlayRafId = requestAnimationFrame(() => {
+      overlayRafId = null;
       drawOverlayCanvas();
     });
   }
@@ -156448,6 +156470,7 @@ function useLayerEditorStage(node, opts) {
     setElements,
     fitView,
     requestRender,
+    requestOverlayRender,
     activeToolHandler,
     undo: undo2,
     redo: redo2,
@@ -185331,4 +185354,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-CIELcorg.mjs.map
+//# sourceMappingURL=main-yjpfoy-Z.mjs.map

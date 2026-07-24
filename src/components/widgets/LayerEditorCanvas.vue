@@ -1,7 +1,7 @@
 <template>
   <div
     ref="viewportRef"
-    class="ctv:relative ctv:size-full ctv:min-h-0 ctv:overflow-hidden ctv:rounded-md ctv:border ctv:border-[#161616] ctv:bg-[#1e1e1e]"
+    class="ctv:relative ctv:size-full ctv:min-h-0 ctv:overflow-hidden ctv:rounded-md ctv:border ctv:border-[#161616] ctv:bg-[#141414]"
     :style="{ cursor: viewportCursor }"
     @pointerdown="onPointerDown"
     @pointermove="onPointerMove"
@@ -14,11 +14,15 @@
     @dragleave="drop.onDragLeave"
     @drop="drop.onDrop"
   >
-    <div ref="containerRef" class="ctv:absolute ctv:top-0 ctv:left-0 ctv:pointer-events-none">
+    <div
+      ref="containerRef"
+      class="ctv:absolute ctv:top-0 ctv:left-0 ctv:pointer-events-none"
+      :style="canvasBackdropStyle"
+    >
       <canvas ref="mainRef" class="ctv:absolute ctv:top-0 ctv:left-0 ctv:size-full" />
       <slot name="onion" />
-      <canvas ref="overlayRef" class="ctv:absolute ctv:top-0 ctv:left-0 ctv:size-full" />
     </div>
+    <canvas ref="overlayRef" class="ctv:absolute ctv:inset-0 ctv:size-full ctv:pointer-events-none" />
 
     <div
       v-show="brushCursorVisible"
@@ -97,6 +101,12 @@ const {
 
 defineExpose({ setSpaceDown })
 
+const canvasBackdropStyle = {
+  backgroundImage: 'conic-gradient(#6a6a6a 25%, #4c4c4c 0 50%, #6a6a6a 0 75%, #4c4c4c 0)',
+  backgroundSize: '8px 8px',
+  boxShadow: '0 0 0 1px rgb(0 0 0 / 0.9), 0 4px 16px rgb(0 0 0 / 0.55)',
+}
+
 const floatBtnClass =
   'ctv:inline-flex ctv:h-6 ctv:items-center ctv:rounded-md ctv:border-0 ctv:bg-secondary-background ' +
   'ctv:px-2 ctv:text-2xs ctv:text-base-foreground ctv:cursor-pointer ctv:[font-family:inherit] ' +
@@ -122,7 +132,10 @@ onMounted(() => {
     main: mainRef.value,
     overlay: overlayRef.value,
   })
-  resizeObserver = new ResizeObserver(() => editor.panZoom.invalidate())
+  resizeObserver = new ResizeObserver(() => {
+    editor.panZoom.invalidate()
+    editor.requestOverlayRender()
+  })
   resizeObserver.observe(viewportRef.value)
 })
 

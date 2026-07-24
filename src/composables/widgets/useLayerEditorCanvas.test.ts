@@ -52,6 +52,7 @@ function makeEditor() {
     },
     activeToolHandler: () => handler,
     requestRender: vi.fn(),
+    requestOverlayRender: vi.fn(),
   }
   return { editor, handler }
 }
