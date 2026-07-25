@@ -14911,6 +14911,10 @@ const ProxyEnsureSchema = object({
   pct: number$1().optional(),
   error: string().optional()
 });
+const MidiEnsureSchema = object({
+  status: _enum(["original", "ready"]),
+  url: string().optional()
+});
 object({
   output: union([string(), array(unknown())]).optional(),
   picked: union([string(), array(unknown())]).optional(),
@@ -15093,6 +15097,9 @@ function proxyEnsure(url, opts = {}) {
     ...opts.retry ? { retry: true } : {}
   });
 }
+function midiEnsure(url) {
+  return apiSend("/comfytv/midi/ensure", "POST", MidiEnsureSchema, { url });
+}
 function expressionEval(body) {
   return apiSend("/comfytv/expression_eval", "POST", ExpressionEvalSchema, body);
 }
@@ -15107,7 +15114,7 @@ function fxClipPreview(nodeId, params, video, t2, window2) {
 }
 const POLL_MS = 2500;
 const PROXY_NODE_CLASS = "ComfyTV.MakeProxyStage";
-const readyCache = /* @__PURE__ */ new Map();
+const readyCache$1 = /* @__PURE__ */ new Map();
 const originalCache = /* @__PURE__ */ new Set();
 const requestedUrls = /* @__PURE__ */ reactive(/* @__PURE__ */ new Set());
 const autoChecked = /* @__PURE__ */ new Set();
@@ -15134,7 +15141,7 @@ async function requestProxyBuild(url, retry = false) {
 }
 async function autoProxyOutput(url) {
   if (!url || !url.includes("/view")) return;
-  if (autoChecked.has(url) || requestedUrls.has(url) || readyCache.has(url) || originalCache.has(url)) return;
+  if (autoChecked.has(url) || requestedUrls.has(url) || readyCache$1.has(url) || originalCache.has(url)) return;
   autoChecked.add(url);
   let res;
   try {
@@ -15166,7 +15173,7 @@ function useProxiedVideoUrl(source) {
     }
     if (gen !== generation || source.value !== src) return;
     if (res.status === "ready" && res.proxy_url) {
-      readyCache.set(src, res.proxy_url);
+      readyCache$1.set(src, res.proxy_url);
       url.value = res.proxy_url;
       isProxy2.value = true;
       canProxy.value = false;
@@ -15207,7 +15214,7 @@ function useProxiedVideoUrl(source) {
     pct.value = 0;
     url.value = src;
     if (!src || !src.includes("/view")) return;
-    const cached2 = readyCache.get(src);
+    const cached2 = readyCache$1.get(src);
     if (cached2) {
       url.value = cached2;
       isProxy2.value = true;
@@ -56145,7 +56152,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-uaNs0LkA.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-DBUhBgjf.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -118512,6 +118519,47 @@ const _sfc_main$2J = /* @__PURE__ */ defineComponent({
     };
   }
 });
+const readyCache = /* @__PURE__ */ new Map();
+function isMidiUrl(url) {
+  if (!url) return false;
+  return /\.midi?([?&#]|$)/i.test(url) || /filename=[^&]*\.midi?([&#]|$)/i.test(url);
+}
+function useMidiRenderedUrl(source) {
+  const url = /* @__PURE__ */ ref(source.value);
+  const rendering = /* @__PURE__ */ ref(false);
+  let generation = 0;
+  watch(source, (src) => {
+    generation++;
+    rendering.value = false;
+    if (!src || !isMidiUrl(src)) {
+      url.value = src;
+      return;
+    }
+    const cached2 = readyCache.get(src);
+    if (cached2) {
+      url.value = cached2;
+      return;
+    }
+    url.value = null;
+    rendering.value = true;
+    const gen = generation;
+    void midiEnsure(src).then((res) => {
+      if (gen !== generation || source.value !== src) return;
+      rendering.value = false;
+      if (res.status === "ready" && res.url) {
+        readyCache.set(src, res.url);
+        url.value = res.url;
+      } else {
+        url.value = src;
+      }
+    }).catch(() => {
+      if (gen !== generation || source.value !== src) return;
+      rendering.value = false;
+      url.value = src;
+    });
+  }, { immediate: true });
+  return { url, rendering };
+}
 function kneeWidthDb(kneeFactor) {
   return 20 * Math.log10(Math.max(1, kneeFactor));
 }
@@ -118718,6 +118766,7 @@ const _sfc_main$2I = /* @__PURE__ */ defineComponent({
     const boxEl = /* @__PURE__ */ ref(null);
     const seekEl = /* @__PURE__ */ ref(null);
     const sourceVideoUrlRef = computed(() => props.sourceVideoUrl);
+    const { url: midiResolvedUrl } = useMidiRenderedUrl(sourceVideoUrlRef);
     const {
       url: effectiveUrl,
       isProxy: isProxy2,
@@ -118725,7 +118774,7 @@ const _sfc_main$2I = /* @__PURE__ */ defineComponent({
       building,
       pct,
       requestProxy
-    } = useProxiedVideoUrl(sourceVideoUrlRef);
+    } = useProxiedVideoUrl(midiResolvedUrl);
     const waveEl = /* @__PURE__ */ ref(null);
     const audioOnly = /* @__PURE__ */ ref(false);
     const playheadPct = /* @__PURE__ */ ref(0);
@@ -118918,7 +118967,7 @@ const _sfc_main$2I = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const VideoPlayerLite = /* @__PURE__ */ _export_sfc(_sfc_main$2I, [["__scopeId", "data-v-14f6429f"]]);
+const VideoPlayerLite = /* @__PURE__ */ _export_sfc(_sfc_main$2I, [["__scopeId", "data-v-8c76a525"]]);
 function useNumWidget(node, name, fallback) {
   const local = /* @__PURE__ */ ref(readWidgetNum(node, name, fallback));
   bindWidgetCallback(node, name, (value) => {
@@ -127157,7 +127206,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-Bkesc58p.mjs");
+    const { STLLoader } = await import("./STLLoader-B5nVB1oC.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -127165,7 +127214,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-CqlAzH60.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-DeSIE_AL.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -186925,4 +186974,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-BmG7SZuq.mjs.map
+//# sourceMappingURL=main-B3DAW2fP.mjs.map

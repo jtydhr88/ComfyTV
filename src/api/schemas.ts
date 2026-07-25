@@ -503,6 +503,12 @@ export const ProxyEnsureSchema = z.object({
 })
 export type ProxyEnsureResult = z.infer<typeof ProxyEnsureSchema>
 
+export const MidiEnsureSchema = z.object({
+  status: z.enum(['original', 'ready']),
+  url: z.string().optional(),
+})
+export type MidiEnsureResult = z.infer<typeof MidiEnsureSchema>
+
 export const ExecutedPayloadSchema = z.object({
   output: z.union([z.string(), z.array(z.unknown())]).optional(),
   picked: z.union([z.string(), z.array(z.unknown())]).optional(),

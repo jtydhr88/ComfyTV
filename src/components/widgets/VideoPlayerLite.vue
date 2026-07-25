@@ -115,6 +115,7 @@
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { useMidiRenderedUrl } from '@/composables/widgets/useMidiRenderedUrl'
 import { useProxiedVideoUrl } from '@/composables/widgets/useProxiedVideoUrl'
 import { useVideoPlayback } from '@/composables/widgets/useVideoPlayback'
 import { useAudioWaveform } from '@/composables/widgets/useAudioWaveform'
@@ -141,9 +142,10 @@ const boxEl = ref<HTMLDivElement | null>(null)
 const seekEl = ref<HTMLDivElement | null>(null)
 
 const sourceVideoUrlRef = computed(() => props.sourceVideoUrl)
+const { url: midiResolvedUrl } = useMidiRenderedUrl(sourceVideoUrlRef)
 const {
   url: effectiveUrl, isProxy, canProxy, building, pct, requestProxy,
-} = useProxiedVideoUrl(sourceVideoUrlRef)
+} = useProxiedVideoUrl(midiResolvedUrl)
 
 const waveEl = ref<HTMLCanvasElement | null>(null)
 const audioOnly = ref(false)

@@ -461,6 +461,9 @@ def _new_aac_stream(outp):
 def _decode_audio_to_array(path):
     import av
     import numpy as np
+    if str(path).lower().endswith(('.mid', '.midi')):
+        from .midi_import import render_midi_to_wav
+        path = render_midi_to_wav(Path(path))
     chunks = []
     with av.open(str(path)) as inp:
         if not inp.streams.audio:
