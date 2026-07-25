@@ -14915,6 +14915,19 @@ const MidiEnsureSchema = object({
   status: _enum(["original", "ready"]),
   url: string().optional()
 });
+const MidiNoteSchema = object({
+  t: number$1(),
+  dur: number$1(),
+  midi: number$1(),
+  vel: number$1(),
+  ch: number$1()
+});
+const MidiEventsSchema = object({
+  status: _enum(["original", "ready"]),
+  events: array(MidiNoteSchema).optional(),
+  programs: record(string(), number$1()).optional(),
+  duration: number$1().optional()
+});
 object({
   output: union([string(), array(unknown())]).optional(),
   picked: union([string(), array(unknown())]).optional(),
@@ -15099,6 +15112,9 @@ function proxyEnsure(url, opts = {}) {
 }
 function midiEnsure(url) {
   return apiSend("/comfytv/midi/ensure", "POST", MidiEnsureSchema, { url });
+}
+function midiEvents(url) {
+  return apiSend("/comfytv/midi/events", "POST", MidiEventsSchema, { url });
 }
 function expressionEval(body) {
   return apiSend("/comfytv/expression_eval", "POST", ExpressionEvalSchema, body);
@@ -56152,7 +56168,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-DBUhBgjf.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-CjxbjSrQ.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -118560,6 +118576,194 @@ function useMidiRenderedUrl(source) {
   }, { immediate: true });
   return { url, rendering };
 }
+const PX_PER_SEC = 80;
+const KEY_WIDTH$1 = 56;
+const PITCH_MIN = 21;
+const PITCH_MAX = 108;
+const DEFAULT_PITCH_TOP = 84;
+const DEFAULT_PITCH_RANGE = DEFAULT_PITCH_TOP - PITCH_MIN + 1;
+const NOTE_GAP_PX = 1.5;
+const GOLDEN_ANGLE = 137.508;
+const colorIndex = /* @__PURE__ */ new Map();
+function rollColor(key) {
+  let idx = colorIndex.get(key);
+  if (idx === void 0) {
+    idx = colorIndex.size;
+    colorIndex.set(key, idx);
+  }
+  const hue = idx * GOLDEN_ANGLE % 360;
+  return `hsl(${hue}, 70%, 55%)`;
+}
+function isBlackKey(pitch) {
+  const n = (pitch % 12 + 12) % 12;
+  return n === 1 || n === 3 || n === 6 || n === 8 || n === 10;
+}
+function buildRollNotes(events, programs = {}) {
+  return events.map((e) => ({
+    start: e.t,
+    end: e.t + e.dur,
+    pitch: e.midi,
+    color: rollColor(e.ch === 9 ? "drums" : `p${programs[String(e.ch)] ?? 0}`)
+  }));
+}
+function maxEnd(notes) {
+  let m = 0;
+  for (const n of notes) if (n.end > m) m = n.end;
+  return m;
+}
+function followOffset(lastOffset, playhead, contentEnd, viewSec) {
+  const maxT = Math.max(contentEnd, playhead + 1);
+  let offsetSec = lastOffset;
+  if (playhead > offsetSec + viewSec * 0.66) {
+    offsetSec = playhead - viewSec * 0.66;
+  } else if (playhead < offsetSec) {
+    offsetSec = playhead;
+  }
+  return Math.max(0, Math.min(offsetSec, Math.max(0, maxT - viewSec)));
+}
+const PALETTE = {
+  stripe: "rgba(255, 255, 255, 0.07)",
+  grid: "rgba(255, 255, 255, 0.09)",
+  playhead: "rgba(255, 255, 255, 0.85)",
+  keyBlack: "#161616",
+  keyWhite: "#d8d8d8"
+};
+function drawRoll(ctx, W2, H2, notes, offsetSec, playhead, pxPerSec = PX_PER_SEC) {
+  ctx.clearRect(0, 0, W2, H2);
+  const contentW = W2 - KEY_WIDTH$1;
+  const viewSec = contentW / pxPerSec;
+  const rowH = H2 / DEFAULT_PITCH_RANGE;
+  const pitchTop = DEFAULT_PITCH_TOP;
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(KEY_WIDTH$1, 0, contentW, H2);
+  ctx.clip();
+  ctx.fillStyle = PALETTE.stripe;
+  for (let p2 = PITCH_MIN; p2 <= PITCH_MAX; p2++) {
+    if (p2 % 12 === 0) {
+      const y = (pitchTop - p2) * rowH;
+      ctx.fillRect(KEY_WIDTH$1, y, contentW, rowH);
+    }
+  }
+  ctx.strokeStyle = PALETTE.grid;
+  ctx.lineWidth = 1;
+  const startSec = Math.floor(offsetSec);
+  const endSec = Math.ceil(offsetSec + viewSec);
+  for (let s = startSec; s <= endSec; s++) {
+    const x = KEY_WIDTH$1 + (s - offsetSec) * pxPerSec;
+    ctx.beginPath();
+    ctx.moveTo(x + 0.5, 0);
+    ctx.lineTo(x + 0.5, H2);
+    ctx.stroke();
+  }
+  const rowGap = Math.max(0.5, Math.min(4, rowH * 0.1));
+  for (const n of notes) {
+    if (n.pitch < PITCH_MIN || n.pitch > PITCH_MAX) continue;
+    const x = KEY_WIDTH$1 + (n.start - offsetSec) * pxPerSec;
+    const w = Math.max(2, (n.end - n.start) * pxPerSec - NOTE_GAP_PX);
+    if (x + w < KEY_WIDTH$1 || x > W2) continue;
+    const y = (pitchTop - n.pitch) * rowH;
+    if (y + rowH < 0 || y > H2) continue;
+    ctx.fillStyle = n.color;
+    ctx.fillRect(x, y, w, Math.max(2, rowH - rowGap));
+  }
+  const px2 = KEY_WIDTH$1 + (playhead - offsetSec) * pxPerSec;
+  ctx.strokeStyle = PALETTE.playhead;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(px2, 0);
+  ctx.lineTo(px2, H2);
+  ctx.stroke();
+  ctx.restore();
+  const showLabels = rowH >= 8;
+  if (showLabels) {
+    ctx.font = "10px sans-serif";
+    ctx.textBaseline = "middle";
+  }
+  for (let p2 = PITCH_MIN; p2 <= PITCH_MAX; p2++) {
+    const y = (pitchTop - p2) * rowH;
+    if (y + rowH < 0 || y > H2) continue;
+    ctx.fillStyle = isBlackKey(p2) ? PALETTE.keyBlack : PALETTE.keyWhite;
+    ctx.fillRect(0, y, KEY_WIDTH$1, rowH);
+    ctx.strokeStyle = PALETTE.stripe;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, y + 0.5);
+    ctx.lineTo(KEY_WIDTH$1, y + 0.5);
+    ctx.stroke();
+    if (showLabels && p2 % 12 === 0) {
+      ctx.fillStyle = PALETTE.stripe;
+      ctx.fillText(`C${p2 / 12 - 1}`, 4, y + rowH / 2);
+    }
+  }
+  ctx.strokeStyle = "#000";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(KEY_WIDTH$1 + 0.5, 0);
+  ctx.lineTo(KEY_WIDTH$1 + 0.5, H2);
+  ctx.stroke();
+}
+function useMidiPianoRoll(opts) {
+  const ready = /* @__PURE__ */ ref(false);
+  let notes = [];
+  let contentEnd = 0;
+  let lastOffset = 0;
+  let token = 0;
+  let raf = 0;
+  function render2() {
+    const el = opts.canvas.value;
+    if (!el || !ready.value) return;
+    const box = el.parentElement;
+    const width = Math.max(1, Math.floor((box == null ? void 0 : box.clientWidth) ?? el.clientWidth));
+    const height = Math.max(1, Math.floor((box == null ? void 0 : box.clientHeight) ?? el.clientHeight));
+    const dpr = Math.max(1, window.devicePixelRatio || 1);
+    if (el.width !== width * dpr || el.height !== height * dpr) {
+      el.width = width * dpr;
+      el.height = height * dpr;
+    }
+    const ctx = el.getContext("2d");
+    if (!ctx) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const playhead = opts.currentTime();
+    const viewSec = Math.max(0.5, (width - KEY_WIDTH$1) / PX_PER_SEC);
+    lastOffset = followOffset(lastOffset, playhead, contentEnd, viewSec);
+    drawRoll(ctx, width, height, notes, lastOffset, playhead);
+  }
+  function loop() {
+    render2();
+    raf = requestAnimationFrame(loop);
+  }
+  function stop() {
+    if (raf) cancelAnimationFrame(raf);
+    raf = 0;
+  }
+  async function reload() {
+    const my = ++token;
+    ready.value = false;
+    stop();
+    notes = [];
+    lastOffset = 0;
+    const url = opts.url.value;
+    if (!opts.enabled.value || !url) return;
+    try {
+      const res = await midiEvents(url);
+      if (my !== token) return;
+      if (res.status !== "ready" || !res.events) return;
+      notes = buildRollNotes(res.events, res.programs ?? {});
+      contentEnd = Math.max(res.duration ?? 0, maxEnd(notes));
+      ready.value = true;
+      loop();
+    } catch {
+      if (my === token) ready.value = false;
+    }
+  }
+  watch([opts.url, opts.enabled], () => void reload(), { immediate: true });
+  onBeforeUnmount(() => {
+    token++;
+    stop();
+  });
+  return { ready, render: render2 };
+}
 function kneeWidthDb(kneeFactor) {
   return 20 * Math.log10(Math.max(1, kneeFactor));
 }
@@ -118781,9 +118985,22 @@ const _sfc_main$2I = /* @__PURE__ */ defineComponent({
     watch(effectiveUrl, () => {
       audioOnly.value = false;
     });
+    const isMidiSource = computed(() => isMidiUrl(props.sourceVideoUrl));
+    const rollEl = /* @__PURE__ */ ref(null);
+    const roll = useMidiPianoRoll({
+      url: sourceVideoUrlRef,
+      enabled: isMidiSource,
+      canvas: rollEl,
+      currentTime: () => {
+        var _a2;
+        return ((_a2 = videoEl.value) == null ? void 0 : _a2.currentTime) ?? 0;
+      }
+    });
+    const showRoll = computed(() => isMidiSource.value && roll.ready.value);
+    const waveEnabled = computed(() => audioOnly.value && !isMidiSource.value);
     const wave = useAudioWaveform({
       url: effectiveUrl,
-      enabled: audioOnly,
+      enabled: waveEnabled,
       canvas: waveEl
     });
     let playheadRaf = 0;
@@ -118902,18 +119119,25 @@ const _sfc_main$2I = /* @__PURE__ */ defineComponent({
               ))
             }, toDisplayString$1(_ctx.$t("fx.makeProxy")), 9, _hoisted_6$1S)) : createCommentVNode("", true),
             withDirectives(createBaseVNode("canvas", {
+              ref_key: "rollEl",
+              ref: rollEl,
+              class: "ctv:absolute ctv:inset-0 ctv:size-full ctv:pointer-events-none"
+            }, null, 512), [
+              [vShow, showRoll.value]
+            ]),
+            withDirectives(createBaseVNode("canvas", {
               ref_key: "waveEl",
               ref: waveEl,
               class: "ctv:absolute ctv:inset-0 ctv:size-full ctv:pointer-events-none ctv:text-primary-background"
             }, null, 512), [
-              [vShow, audioOnly.value && unref(wave).ready.value]
+              [vShow, audioOnly.value && unref(wave).ready.value && !showRoll.value]
             ]),
-            audioOnly.value && unref(wave).ready.value ? (openBlock(), createElementBlock("div", {
+            audioOnly.value && unref(wave).ready.value && !showRoll.value ? (openBlock(), createElementBlock("div", {
               key: 3,
               class: "ctv:absolute ctv:inset-y-0 ctv:w-px ctv:bg-white/70 ctv:pointer-events-none",
               style: normalizeStyle({ left: `${playheadPct.value}%` })
             }, null, 4)) : createCommentVNode("", true),
-            audioOnly.value && !unref(wave).ready.value ? (openBlock(), createElementBlock("div", _hoisted_7$1u, [..._cache2[16] || (_cache2[16] = [
+            audioOnly.value && !unref(wave).ready.value && !showRoll.value ? (openBlock(), createElementBlock("div", _hoisted_7$1u, [..._cache2[16] || (_cache2[16] = [
               createBaseVNode("i", { class: "pi pi-volume-up ctv:text-[28px]" }, null, -1)
             ])])) : createCommentVNode("", true),
             renderSlot(_ctx.$slots, "overlay", {}, void 0, true),
@@ -118967,7 +119191,7 @@ const _sfc_main$2I = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const VideoPlayerLite = /* @__PURE__ */ _export_sfc(_sfc_main$2I, [["__scopeId", "data-v-8c76a525"]]);
+const VideoPlayerLite = /* @__PURE__ */ _export_sfc(_sfc_main$2I, [["__scopeId", "data-v-9db5d5da"]]);
 function useNumWidget(node, name, fallback) {
   const local = /* @__PURE__ */ ref(readWidgetNum(node, name, fallback));
   bindWidgetCallback(node, name, (value) => {
@@ -127206,7 +127430,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-B5nVB1oC.mjs");
+    const { STLLoader } = await import("./STLLoader-BMykMlQv.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -127214,7 +127438,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-DeSIE_AL.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-Df3HAL1x.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -182342,13 +182566,13 @@ function usePianoRoll(opts) {
         vel: Number.isFinite(n.vel) ? Math.max(0.05, Math.min(1, Number(n.vel))) : DEFAULT_VEL
       }))
     })));
-    let maxEnd = 0;
+    let maxEnd2 = 0;
     for (const p2 of parts) {
-      for (const n of p2.notes) maxEnd = Math.max(maxEnd, n.start + n.dur);
+      for (const n of p2.notes) maxEnd2 = Math.max(maxEnd2, n.start + n.dur);
     }
     bars.value = Math.min(256, Math.max(
       Math.round(Number(state2.bars) || 16),
-      Math.ceil(maxEnd / beatsPerBar.value) || 1
+      Math.ceil(maxEnd2 / beatsPerBar.value) || 1
     ));
     activePart.value = 0;
     selection.value = /* @__PURE__ */ new Set();
@@ -182441,9 +182665,9 @@ function usePianoRoll(opts) {
     pushHistory();
     const picked = current.value.notes.filter((n) => selection.value.has(n.id));
     const minStart = Math.min(...picked.map((n) => n.start));
-    const maxEnd = Math.max(...picked.map((n) => n.start + n.dur));
-    const span = Math.max(1, Math.ceil((maxEnd - minStart) / beatsPerBar.value)) * beatsPerBar.value;
-    ensureBars(maxEnd + span);
+    const maxEnd2 = Math.max(...picked.map((n) => n.start + n.dur));
+    const span = Math.max(1, Math.ceil((maxEnd2 - minStart) / beatsPerBar.value)) * beatsPerBar.value;
+    ensureBars(maxEnd2 + span);
     const clones = picked.map((n) => ({
       id: nextId++,
       midi: n.midi,
@@ -186974,4 +187198,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-B3DAW2fP.mjs.map
+//# sourceMappingURL=main-DKdiFMVT.mjs.map

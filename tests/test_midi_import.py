@@ -259,6 +259,24 @@ class TestEnsureAndLocalize:
         assert ensure_midi_wav('/view?filename=nope.wav&type=input') == {
             'status': 'original'}
 
+    def test_midi_events_endpoint_runner(self):
+        from pathlib import Path
+
+        import folder_paths
+        from ComfyTV.runners.midi_import import midi_events
+
+        input_dir = Path(folder_paths.get_input_directory())
+        input_dir.mkdir(parents=True, exist_ok=True)
+        self._write_mid(input_dir, name='ev.mid')
+
+        res = midi_events('/view?filename=ev.mid&type=input')
+        assert res['status'] == 'ready'
+        assert [e['midi'] for e in res['events']] == [60]
+        assert res['programs'] == {'0': 0}
+        assert res['duration'] == pytest.approx(1.5)
+        assert midi_events('/view?filename=x.wav&type=input') == {
+            'status': 'original'}
+
     def test_localize_keeps_midi_raw(self):
         from pathlib import Path
 

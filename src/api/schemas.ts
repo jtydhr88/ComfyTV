@@ -509,6 +509,23 @@ export const MidiEnsureSchema = z.object({
 })
 export type MidiEnsureResult = z.infer<typeof MidiEnsureSchema>
 
+export const MidiNoteSchema = z.object({
+  t: z.number(),
+  dur: z.number(),
+  midi: z.number(),
+  vel: z.number(),
+  ch: z.number(),
+})
+export type MidiNote = z.infer<typeof MidiNoteSchema>
+
+export const MidiEventsSchema = z.object({
+  status: z.enum(['original', 'ready']),
+  events: z.array(MidiNoteSchema).optional(),
+  programs: z.record(z.string(), z.number()).optional(),
+  duration: z.number().optional(),
+})
+export type MidiEventsResult = z.infer<typeof MidiEventsSchema>
+
 export const ExecutedPayloadSchema = z.object({
   output: z.union([z.string(), z.array(z.unknown())]).optional(),
   picked: z.union([z.string(), z.array(z.unknown())]).optional(),

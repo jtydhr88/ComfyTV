@@ -274,5 +274,15 @@ def ensure_midi_wav(view_url: str) -> dict:
             'url': path_to_view_url(render_midi_to_wav(src))}
 
 
+def midi_events(view_url: str) -> dict:
+    from .media import view_url_to_path
+    src = view_url_to_path(view_url)
+    if src is None or src.suffix.lower() not in MIDI_SUFFIXES:
+        return {'status': 'original'}
+    perf = parse_smf(src.read_bytes())
+    return {'status': 'ready', 'events': perf['events'],
+            'programs': perf['programs'], 'duration': perf['duration']}
+
+
 __all__ = ['parse_smf', 'ensure_midi_wav', 'render_midi_to_wav',
-           'midi_wav_path', 'MIDI_SUFFIXES']
+           'midi_events', 'midi_wav_path', 'MIDI_SUFFIXES']

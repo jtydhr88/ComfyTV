@@ -49,17 +49,22 @@
           @click.stop="requestProxy"
         >{{ $t('fx.makeProxy') }}</button>
         <canvas
-          v-show="audioOnly && wave.ready.value"
+          v-show="showRoll"
+          ref="rollEl"
+          class="ctv:absolute ctv:inset-0 ctv:size-full ctv:pointer-events-none"
+        />
+        <canvas
+          v-show="audioOnly && wave.ready.value && !showRoll"
           ref="waveEl"
           class="ctv:absolute ctv:inset-0 ctv:size-full ctv:pointer-events-none ctv:text-primary-background"
         />
         <div
-          v-if="audioOnly && wave.ready.value"
+          v-if="audioOnly && wave.ready.value && !showRoll"
           class="ctv:absolute ctv:inset-y-0 ctv:w-px ctv:bg-white/70 ctv:pointer-events-none"
           :style="{ left: `${playheadPct}%` }"
         />
         <div
-          v-if="audioOnly && !wave.ready.value"
+          v-if="audioOnly && !wave.ready.value && !showRoll"
           class="ctv:absolute ctv:inset-0 ctv:flex ctv:items-center ctv:justify-center ctv:text-white/40 ctv:pointer-events-none"
         >
           <i class="pi pi-volume-up ctv:text-[28px]" />
@@ -115,7 +120,8 @@
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { useMidiRenderedUrl } from '@/composables/widgets/useMidiRenderedUrl'
+import { isMidiUrl, useMidiRenderedUrl } from '@/composables/widgets/useMidiRenderedUrl'
+import { useMidiPianoRoll } from '@/composables/widgets/useMidiPianoRoll'
 import { useProxiedVideoUrl } from '@/composables/widgets/useProxiedVideoUrl'
 import { useVideoPlayback } from '@/composables/widgets/useVideoPlayback'
 import { useAudioWaveform } from '@/composables/widgets/useAudioWaveform'
@@ -153,9 +159,19 @@ const playheadPct = ref(0)
 watch(effectiveUrl, () => {
   audioOnly.value = false
 })
+const isMidiSource = computed(() => isMidiUrl(props.sourceVideoUrl))
+const rollEl = ref<HTMLCanvasElement | null>(null)
+const roll = useMidiPianoRoll({
+  url: sourceVideoUrlRef,
+  enabled: isMidiSource,
+  canvas: rollEl,
+  currentTime: () => videoEl.value?.currentTime ?? 0,
+})
+const showRoll = computed(() => isMidiSource.value && roll.ready.value)
+const waveEnabled = computed(() => audioOnly.value && !isMidiSource.value)
 const wave = useAudioWaveform({
   url: effectiveUrl,
-  enabled: audioOnly,
+  enabled: waveEnabled,
   canvas: waveEl,
 })
 

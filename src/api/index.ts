@@ -22,6 +22,7 @@ import {
   MutateServerSchema,
   MutateStagePresetSchema,
   MidiEnsureSchema,
+  MidiEventsSchema,
   OkSchema,
   ProxyEnsureSchema,
   ScoreEditorImportSchema,
@@ -42,6 +43,7 @@ import type {
   LinkWorkflowResult,
   ListWorkflowOverview,
   MidiEnsureResult,
+  MidiEventsResult,
   NativeWorkflow,
   ProxyEnsureResult,
   RescanResult,
@@ -290,6 +292,10 @@ export function proxyEnsure(
 
 export function midiEnsure(url: string): Promise<MidiEnsureResult> {
   return apiSend('/comfytv/midi/ensure', 'POST', MidiEnsureSchema, { url })
+}
+
+export function midiEvents(url: string): Promise<MidiEventsResult> {
+  return apiSend('/comfytv/midi/events', 'POST', MidiEventsSchema, { url })
 }
 
 export function expressionEval(body: {
