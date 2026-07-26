@@ -35,13 +35,43 @@
       @pointerdown.stop @pointermove.stop @pointerup.stop
     >
       <span class="ctv:text-muted-foreground">{{ $t('music.channel') }}</span>
-      <button
+      <div
         v-for="(c, i) in roll.channels"
         :key="c.ch"
-        type="button"
-        :class="[btn, i === roll.activeChannel.value ? btnOn : '']"
-        @click="roll.setActiveChannel(i)"
-      >{{ c.ch === 9 ? '🥁' : `Ch${c.ch + 1}` }}</button>
+        class="ctv:flex ctv:items-center ctv:gap-0.5 ctv:rounded ctv:border ctv:bg-secondary-background ctv:pl-1.5 ctv:pr-0.5 ctv:py-0.5"
+        :class="i === roll.activeChannel.value
+          ? 'ctv:border-primary-background ctv:bg-primary-background/20'
+          : 'ctv:border-border-subtle'"
+        @mouseenter="highlightCh = c.ch"
+        @mouseleave="highlightCh = null"
+      >
+        <button
+          type="button"
+          class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:cursor-pointer ctv:text-base-foreground"
+          :class="mutedCh.has(c.ch) ? 'ctv:opacity-20' : ''"
+          @click="roll.setActiveChannel(i)"
+        >
+          <span
+            class="ctv:size-2.5 ctv:shrink-0 ctv:rounded-xs"
+            :style="{ background: chColor(c), boxShadow: `0 0 6px ${chColor(c)}` }"
+          />
+          <span>{{ c.ch === 9 ? '🥁' : `Ch${c.ch + 1}` }}</span>
+        </button>
+        <button
+          type="button"
+          class="ctv:flex ctv:size-5 ctv:items-center ctv:justify-center ctv:rounded ctv:cursor-pointer ctv:text-2xs ctv:font-semibold ctv:hover:bg-white/10"
+          :class="soloCh === c.ch ? 'ctv:text-warning-background' : 'ctv:text-muted-foreground'"
+          :title="$t('music.solo')"
+          @click="toggleSolo(c.ch)"
+        >S</button>
+        <button
+          type="button"
+          class="ctv:flex ctv:size-5 ctv:items-center ctv:justify-center ctv:rounded ctv:cursor-pointer ctv:hover:bg-white/10"
+          :class="mutedCh.has(c.ch) ? 'ctv:text-destructive-background' : 'ctv:text-muted-foreground'"
+          :title="mutedCh.has(c.ch) ? $t('music.unmuteChannel') : $t('music.muteChannel')"
+          @click="toggleMute(c.ch)"
+        ><i :class="['pi', 'ctv:text-3xs', mutedCh.has(c.ch) ? 'pi-volume-off' : 'pi-volume-up']" /></button>
+      </div>
       <button
         type="button" :class="btn" :title="$t('music.addChannel')"
         @click="roll.addChannel(false)"
@@ -117,7 +147,7 @@
               v-for="g in ghostBlocks"
               :key="'g' + g.id"
               class="ctv:absolute ctv:rounded-xs ctv:pointer-events-none"
-              :style="{ left: g.x + 'px', top: g.y + 'px', width: g.w + 'px', height: g.h + 'px', background: g.color }"
+              :style="{ left: g.x + 'px', top: g.y + 'px', width: g.w + 'px', height: g.h + 'px', background: g.color, opacity: g.alpha * 0.55 }"
             />
             <div
               v-if="marquee"
@@ -130,8 +160,10 @@
               class="ctv:absolute ctv:rounded-xs ctv:cursor-grab ctv:border"
               :class="n.selected
                 ? 'ctv:bg-warning-background ctv:border-white/80 ctv:z-10'
-                : 'ctv:bg-primary-background ctv:border-white/25'"
-              :style="{ left: n.x + 'px', top: n.y + 'px', width: n.w + 'px', height: n.h + 'px' }"
+                : 'ctv:border-white/25'"
+              :style="{ left: n.x + 'px', top: n.y + 'px', width: n.w + 'px', height: n.h + 'px',
+                        background: n.selected ? undefined : n.color,
+                        opacity: n.selected ? 1 : n.alpha }"
               @pointerdown.stop="onNoteDown(n.id, n.midi, $event)"
               @dblclick.stop="onNoteDblClick(n.id)"
             >
@@ -159,8 +191,10 @@
               v-for="vb in velBars"
               :key="vb.id"
               class="ctv:absolute ctv:bottom-0 ctv:rounded-t-xs ctv:pointer-events-none"
-              :class="vb.selected ? 'ctv:bg-warning-background' : 'ctv:bg-primary-background/70'"
-              :style="{ left: vb.x + 'px', width: vb.w + 'px', height: vb.h + '%' }"
+              :class="vb.selected ? 'ctv:bg-warning-background' : ''"
+              :style="{ left: vb.x + 'px', width: vb.w + 'px', height: vb.h + '%',
+                        background: vb.selected ? undefined : vb.color,
+                        opacity: vb.selected ? 1 : 0.7 }"
             />
           </div>
         </div>
@@ -236,6 +270,41 @@ const GM_DRUMS: Record<number, string> = {
 const isDrumChannel = computed(() => roll.current.value.ch === 9)
 const hasDrums = computed(() => roll.channels.some((c) => c.ch === 9))
 
+const mutedCh = ref<Set<number>>(new Set())
+const soloCh = ref<number | null>(null)
+const highlightCh = ref<number | null>(null)
+
+function chColor(c: { ch: number; program: number }): string {
+  return rollColor(c.ch === 9 ? 'drums' : `p${c.program}`)
+}
+
+function chAlpha(ch: number): number {
+  let a = mutedCh.value.has(ch) ? 0.2 : 1
+  if (highlightCh.value !== null && ch !== highlightCh.value) {
+    a = Math.min(a, 0.15)
+  }
+  return a
+}
+
+function toggleMute(ch: number): void {
+  soloCh.value = null
+  const next = new Set(mutedCh.value)
+  if (next.has(ch)) next.delete(ch)
+  else next.add(ch)
+  mutedCh.value = next
+}
+
+function toggleSolo(ch: number): void {
+  if (soloCh.value === ch) {
+    soloCh.value = null
+    mutedCh.value = new Set()
+  } else {
+    soloCh.value = ch
+    mutedCh.value = new Set(
+      roll.channels.filter((c) => c.ch !== ch).map((c) => c.ch))
+  }
+}
+
 const programChoice = computed(() => {
   const p = roll.current.value.program
   return gmNameForProgram(p) ?? `p:${p}`
@@ -302,29 +371,41 @@ const gridStyle = computed(() => {
   }
 })
 
-const noteBlocks = computed(() => roll.current.value.notes.map((n) => ({
-  id: n.id,
-  midi: n.midi,
-  x: roll.secToX(n.start),
-  y: roll.midiToY(n.midi),
-  w: Math.max(3, n.dur * roll.pxPerSec.value - 1),
-  h: NOTE_HEIGHT - 1,
-  selected: roll.selection.value.has(n.id),
-})))
+const noteBlocks = computed(() => {
+  const c = roll.current.value
+  const color = chColor(c)
+  const alpha = chAlpha(c.ch)
+  return c.notes.map((n) => ({
+    id: n.id,
+    midi: n.midi,
+    x: roll.secToX(n.start),
+    y: roll.midiToY(n.midi),
+    w: Math.max(3, n.dur * roll.pxPerSec.value - 1),
+    h: NOTE_HEIGHT - 1,
+    selected: roll.selection.value.has(n.id),
+    color,
+    alpha,
+  }))
+})
 
-const velBars = computed(() => roll.current.value.notes.map((n) => ({
-  id: n.id,
-  x: roll.secToX(n.start),
-  w: Math.max(3, n.dur * roll.pxPerSec.value - 1),
-  h: Math.round((n.vel / 127) * 100),
-  selected: roll.selection.value.has(n.id),
-})))
+const velBars = computed(() => {
+  const color = chColor(roll.current.value)
+  return roll.current.value.notes.map((n) => ({
+    id: n.id,
+    x: roll.secToX(n.start),
+    w: Math.max(3, n.dur * roll.pxPerSec.value - 1),
+    h: Math.round((n.vel / 127) * 100),
+    selected: roll.selection.value.has(n.id),
+    color,
+  }))
+})
 
 const ghostBlocks = computed(() => {
-  const out: Array<{ id: number; x: number; y: number; w: number; h: number; color: string }> = []
+  const out: Array<{ id: number; x: number; y: number; w: number; h: number; color: string; alpha: number }> = []
   roll.channels.forEach((c, i) => {
     if (i === roll.activeChannel.value) return
-    const color = rollColor(c.ch === 9 ? 'drums' : `p${c.program}`)
+    const color = chColor(c)
+    const alpha = chAlpha(c.ch)
     for (const n of c.notes) {
       out.push({
         id: n.id,
@@ -333,6 +414,7 @@ const ghostBlocks = computed(() => {
         w: Math.max(3, n.dur * roll.pxPerSec.value - 1),
         h: NOTE_HEIGHT - 1,
         color,
+        alpha,
       })
     }
   })
@@ -438,6 +520,7 @@ function scheduleAhead(): void {
   while (schedIdx < schedQueue.length
     && schedQueue[schedIdx].start <= horizon) {
     const n = schedQueue[schedIdx++]
+    if (mutedCh.value.has(n.ch)) continue
     const on = playStartTime + n.start
     if (n.ch === 9) {
       drumHit(n.midi, on, playMaster, n.vel)
@@ -749,6 +832,9 @@ async function doImport(): Promise<void> {
       programs: res.programs ?? {},
       events: res.events,
     })
+    mutedCh.value = new Set()
+    soloCh.value = null
+    highlightCh.value = null
   } catch {
     importError.value = t('music.importFailed')
   } finally {

@@ -2184,6 +2184,9 @@
     "removeChannel": "删通道",
     "clearChannel": "清空通道",
     "importMidi": "导入上游 MIDI",
-    "notMidi": "上游输入不是 MIDI"
+    "notMidi": "上游输入不是 MIDI",
+    "solo": "独奏(静音其它通道)",
+    "muteChannel": "静音通道",
+    "unmuteChannel": "取消静音"
   }
 }

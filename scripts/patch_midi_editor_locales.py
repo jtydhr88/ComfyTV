@@ -14,6 +14,9 @@ MUSIC_KEYS = {
     'clearChannel': ('Clear channel', '清空通道'),
     'importMidi': ('Import wired MIDI', '导入上游 MIDI'),
     'notMidi': ('Wired input is not a MIDI payload', '上游输入不是 MIDI'),
+    'solo': ('Solo (mute everything else)', '独奏(静音其它通道)'),
+    'muteChannel': ('Mute channel', '静音通道'),
+    'unmuteChannel': ('Unmute channel', '取消静音'),
 }
 
 

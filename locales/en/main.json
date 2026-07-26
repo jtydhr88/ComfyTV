@@ -2184,6 +2184,9 @@
     "removeChannel": "Remove channel",
     "clearChannel": "Clear channel",
     "importMidi": "Import wired MIDI",
-    "notMidi": "Wired input is not a MIDI payload"
+    "notMidi": "Wired input is not a MIDI payload",
+    "solo": "Solo (mute everything else)",
+    "muteChannel": "Mute channel",
+    "unmuteChannel": "Unmute channel"
   }
 }
