@@ -281,7 +281,8 @@ def midi_events(view_url: str) -> dict:
         return {'status': 'original'}
     perf = parse_smf(src.read_bytes())
     return {'status': 'ready', 'events': perf['events'],
-            'programs': perf['programs'], 'duration': perf['duration']}
+            'programs': perf['programs'], 'tempo_map': perf['tempo_map'],
+            'duration': perf['duration']}
 
 
 __all__ = ['parse_smf', 'ensure_midi_wav', 'render_midi_to_wav',

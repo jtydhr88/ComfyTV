@@ -93,6 +93,55 @@ class ScoreEditorStage(io.ComfyNode):
                                 parent_output_id=parent_output_id)
 
 
+class MidiEditorStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.MidiEditorStage",
+            display_name="MIDI Editor",
+            category="ComfyTV/Music",
+            inputs=[
+                *_standard_stage_inputs(),
+                _hidden_str("events_json", ""),
+                COMFYTV_AUDIO.Input("midi", optional=True),
+            ],
+            outputs=[COMFYTV_AUDIO.Output("midi")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
+                events_json="", midi=""):
+        from ...runners.midi_file import write_smf
+
+        raw = (events_json or '').strip()
+        if not raw:
+            raise RuntimeError(
+                "MIDI Editor: the piano roll is empty — import the wired "
+                "MIDI (or draw some notes) first.")
+        try:
+            state = json.loads(raw)
+        except (ValueError, TypeError):
+            raise RuntimeError("MIDI Editor: invalid editor state")
+        events = [e for e in (state.get('events') or [])
+                  if isinstance(e, dict) and e.get('dur', 0) > 0]
+        if not events:
+            raise RuntimeError("MIDI Editor: no notes to export")
+        programs = {}
+        for k, v in (state.get('programs') or {}).items():
+            try:
+                programs[int(k)] = max(0, min(127, int(v)))
+            except (TypeError, ValueError):
+                pass
+        perf = {'tempo_map': state.get('tempo_map') or [], 'events': events}
+        url = write_smf(perf, programs=programs)
+        _emit_progress(cls, 1, 1, text=f"{len(events)} notes")
+        return _stage_emit_auto(cls, project_id=project_id, payload_str=url,
+                                parent_output_id=parent_output_id)
+
+
 class ScoreToMidiStage(io.ComfyNode):
 
     @classmethod

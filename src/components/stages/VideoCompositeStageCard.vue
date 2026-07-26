@@ -1,18 +1,18 @@
 <template>
-  <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" @contextmenu.stop.prevent>
+  <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:grow" @contextmenu.stop.prevent>
     <div
-      class="ctv:relative ctv:w-full ctv:h-[200px] ctv:rounded-md ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle"
+      class="ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[200px] ctv:rounded-md ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle"
       @pointerdown.stop @pointermove.stop @pointerup.stop
     >
       <div v-if="!bgUrl"
-           class="ctv:h-full ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50">
+           class="ctv:absolute ctv:inset-0 ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50">
         <i class="pi pi-clone ctv:text-[32px] ctv:opacity-60" />
         <div class="ctv:text-xs">{{ $t('fx.needsBgFg') }}</div>
       </div>
       <template v-else>
         <video
           ref="videoEl" :src="bgUrl" muted playsinline preload="metadata"
-          class="ctv:block ctv:size-full ctv:object-contain"
+          class="ctv:absolute ctv:inset-0 ctv:size-full ctv:object-contain"
           @loadedmetadata="onMeta"
           @timeupdate="onTime"
         />

@@ -39,7 +39,8 @@ export function useCompositeOverlay(opts: {
   rotation: Ref<number>
 }) {
   const { videoEl, overlayEl, posX, posY, scale, rotation } = opts
-  const vp = useVideoViewport({ videoEl, overlayEl })
+  const vp = useVideoViewport({ videoEl, overlayEl,
+                                onResize: () => draw() })
   const { vw, vh, duration, currentTime } = vp
 
   const dragging = ref(false)

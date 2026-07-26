@@ -46,7 +46,8 @@ export function useCornerPinEditor(opts: {
   const { node, videoEl, overlayEl } = opts
 
   const cornersRaw = useStrWidget(node, 'corners', '')
-  const viewport = useVideoViewport({ videoEl, overlayEl })
+  const viewport = useVideoViewport({ videoEl, overlayEl,
+                                      onResize: () => draw() })
   const { vw, vh } = viewport
   const dragIdx = ref(-1)
 

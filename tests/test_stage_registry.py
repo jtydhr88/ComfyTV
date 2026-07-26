@@ -94,6 +94,7 @@ EXPECTED_NODE_IDS = [
     'ComfyTV.MeshBooleanStage',
     'ComfyTV.MeshOpStage',
     'ComfyTV.MeshPrimitiveStage',
+    'ComfyTV.MidiEditorStage',
     'ComfyTV.MirrorStage',
     'ComfyTV.Model3DStage',
     'ComfyTV.ModelLoaderStage',

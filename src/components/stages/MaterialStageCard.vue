@@ -1,12 +1,12 @@
 <template>
   <div
-    class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full ctv:p-2 ctv:box-border ctv:text-xs ctv:text-base-foreground"
+    class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:grow ctv:p-2 ctv:box-border ctv:text-xs ctv:text-base-foreground"
     @pointerdown.stop
     @mousedown.stop
     @contextmenu.stop.prevent
   >
-    <div class="ctv:relative ctv:w-full ctv:h-[200px] ctv:shrink-0 ctv:rounded-lg ctv:overflow-hidden ctv:bg-black">
-      <MaterialSphere ref="sphereEl" :params="params" @rendered="scheduleCapture" />
+    <div class="ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[200px] ctv:rounded-lg ctv:overflow-hidden ctv:bg-black">
+      <MaterialSphere ref="sphereEl" class="ctv:absolute! ctv:inset-0" :params="params" @rendered="scheduleCapture" />
     </div>
 
     <div class="ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1">

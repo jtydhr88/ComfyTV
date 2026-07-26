@@ -1,5 +1,5 @@
 <template>
-  <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full">
+  <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:grow">
     <CropCanvas
       :source-image-url="sourceImageUrl"
       :bounds="bounds"

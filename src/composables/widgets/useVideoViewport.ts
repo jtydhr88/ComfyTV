@@ -1,4 +1,4 @@
-import { ref, type Ref } from 'vue'
+import { onBeforeUnmount, ref, watch, type Ref } from 'vue'
 
 export type Pt = [number, number]
 
@@ -44,6 +44,7 @@ export function mediaToBox(x: number, y: number, fit: FitMetrics): Pt {
 export function useVideoViewport(opts: {
   videoEl: Ref<HTMLVideoElement | null>
   overlayEl: Ref<HTMLCanvasElement | null>
+  onResize?: () => void
 }) {
   const { videoEl, overlayEl } = opts
 
@@ -51,6 +52,23 @@ export function useVideoViewport(opts: {
   const vh = ref(0)
   const duration = ref(0)
   const currentTime = ref(0)
+
+  let observer: ResizeObserver | null = null
+
+  function observe(el: HTMLCanvasElement | null): void {
+    observer?.disconnect()
+    observer = null
+    if (!el || !opts.onResize || typeof ResizeObserver === 'undefined') return
+    observer = new ResizeObserver(() => opts.onResize?.())
+    observer.observe(el)
+  }
+
+  watch(overlayEl, observe, { immediate: true })
+
+  onBeforeUnmount(() => {
+    observer?.disconnect()
+    observer = null
+  })
 
   function onLoadedMetadata(): void {
     const v = videoEl.value

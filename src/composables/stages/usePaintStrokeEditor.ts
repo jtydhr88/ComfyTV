@@ -76,7 +76,8 @@ export function usePaintStrokeEditor(opts: {
   const { node, videoEl, overlayEl } = opts
 
   const strokesRaw = useStrWidget(node, 'strokes', '')
-  const viewport = useVideoViewport({ videoEl, overlayEl })
+  const viewport = useVideoViewport({ videoEl, overlayEl,
+                                      onResize: () => draw() })
   const duration = viewport.duration
   const { vw } = viewport
 

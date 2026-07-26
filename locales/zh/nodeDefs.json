@@ -494,6 +494,9 @@
     },
     "ScoreEditorStage": {
       "display_name": "打谱器"
+    },
+    "MidiEditorStage": {
+      "display_name": "MIDI 编辑器"
     }
   },
   "ComfyTV_AssetAudioLoaderStage": {
@@ -2378,5 +2381,8 @@
   },
   "ComfyTV_ScoreEditorStage": {
     "display_name": "打谱器"
+  },
+  "ComfyTV_MidiEditorStage": {
+    "display_name": "MIDI 编辑器"
   }
 }

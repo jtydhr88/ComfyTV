@@ -59,7 +59,8 @@ export function useMotionTrackEditor(opts: {
   const pointY = useNumWidget(node, 'point_y', 0)
   const pattern = useNumWidget(node, 'pattern', 16)
   const search = useNumWidget(node, 'search', 32)
-  const viewport = useVideoViewport({ videoEl, overlayEl })
+  const viewport = useVideoViewport({ videoEl, overlayEl,
+                                      onResize: () => redraw() })
   const { vw, vh } = viewport
 
   const points = computed<TrackPoint[]>({

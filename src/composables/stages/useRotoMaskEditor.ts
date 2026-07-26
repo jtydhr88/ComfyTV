@@ -68,7 +68,8 @@ export function useRotoMaskEditor(opts: {
 
   const shapeRaw = useStrWidget(node, 'shape_keys', '')
   const smooth = ref(true)
-  const viewport = useVideoViewport({ videoEl, overlayEl })
+  const viewport = useVideoViewport({ videoEl, overlayEl,
+                                      onResize: () => draw() })
   const dragIdx = ref(-1)
   const verts = ref<RotoPt[]>(parseShapeVerts(shapeRaw.value))
 

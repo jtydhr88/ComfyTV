@@ -1,4 +1,4 @@
-import { K as Loader, F as FileLoader, d as BufferGeometry, g as Color, a9 as SRGBColorSpace, c as BufferAttribute, ao as Vector3, p as Float32BufferAttribute } from "./main-DKdiFMVT.mjs";
+import { K as Loader, F as FileLoader, d as BufferGeometry, g as Color, a9 as SRGBColorSpace, c as BufferAttribute, ao as Vector3, p as Float32BufferAttribute } from "./main-Df--pGIY.mjs";
 class STLLoader extends Loader {
   /**
    * Constructs a new STL loader.
@@ -208,4 +208,4 @@ class STLLoader extends Loader {
 export {
   STLLoader
 };
-//# sourceMappingURL=STLLoader-BMykMlQv.mjs.map
+//# sourceMappingURL=STLLoader-THd6pAWN.mjs.map

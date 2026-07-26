@@ -6,18 +6,6 @@
     >
       <button type="button" :class="[btn, mode === 'draw' ? btnOn : '']" @click="mode = 'draw'">{{ $t('music.draw') }}</button>
       <button type="button" :class="[btn, mode === 'select' ? btnOn : '']" @click="mode = 'select'">{{ $t('music.select') }}</button>
-      <button type="button" :class="[btn, mode === 'step' ? btnOn : '']" @click="mode = 'step'">{{ $t('music.step') }}</button>
-      <template v-if="mode === 'step'">
-        <button
-          v-for="d in STEP_DURS"
-          :key="d.beats"
-          type="button"
-          :class="[btn, roll.stepDur.value === d.beats ? btnOn : '']"
-          :title="`${d.key}`"
-          @click="roll.stepDur.value = d.beats"
-        >{{ d.label }}</button>
-        <button type="button" :class="[btn, roll.stepDotted.value ? btnOn : '']" @click="roll.stepDotted.value = !roll.stepDotted.value">·</button>
-      </template>
       <button
         type="button" :class="btn"
         :title="playing ? $t('videoTrim.pause') : $t('videoCrop.play')"
@@ -25,79 +13,59 @@
       ><i :class="['pi', playing ? 'pi-stop' : 'pi-play']" /></button>
       <span class="ctv:text-muted-foreground">{{ $t('music.snap') }}</span>
       <select v-model="roll.snap.value" :class="sel">
-        <option value="1/4">1/4</option>
-        <option value="1/8">1/8</option>
-        <option value="1/16">1/16</option>
-        <option value="1/32">1/32</option>
         <option value="free">free</option>
+        <option value="10ms">10ms</option>
+        <option value="50ms">50ms</option>
+        <option value="100ms">100ms</option>
+        <option value="250ms">250ms</option>
+        <option value="1s">1s</option>
       </select>
-      <span class="ctv:text-muted-foreground">{{ $t('music.tempo') }}</span>
-      <input v-model.number="roll.tempo.value" type="number" min="20" max="400" :class="[sel, 'ctv:w-14']">
-      <span class="ctv:text-muted-foreground">{{ $t('music.timeSig') }}</span>
-      <select v-model.number="roll.beatsPerBar.value" :class="sel">
-        <option v-for="n in 12" :key="n" :value="n">{{ n }}</option>
-      </select>
-      <span class="ctv:text-muted-foreground">/</span>
-      <select v-model.number="roll.beatType.value" :class="sel">
-        <option v-for="n in [2, 4, 8]" :key="n" :value="n">{{ n }}</option>
-      </select>
-      <span class="ctv:text-muted-foreground">{{ $t('music.bars') }}</span>
-      <input v-model.number="roll.bars.value" type="number" min="1" max="256" :class="[sel, 'ctv:w-14']">
       <button type="button" :class="btn" :title="$t('music.undo')" @click="roll.undo()">↩</button>
-      <button type="button" :class="btn" @click="roll.clearAll()">{{ $t('music.clearPart') }}</button>
+      <button type="button" :class="btn" @click="roll.clearChannel()">{{ $t('music.clearChannel') }}</button>
       <button
-        v-if="wiredScore"
+        v-if="wiredMidi"
         type="button" :class="btn" :disabled="importBusy"
         @click="doImport"
-      >{{ $t('music.importScore') }}</button>
+      >{{ $t('music.importMidi') }}</button>
+      <span v-if="importError" class="ctv:text-destructive-background">{{ importError }}</span>
     </div>
 
     <div
-      class="ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1 ctv:text-2xs"
+      class="ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1 ctv:text-2xs ctv:flex-wrap"
       @pointerdown.stop @pointermove.stop @pointerup.stop
     >
-      <span class="ctv:text-muted-foreground">{{ $t('music.part') }}</span>
+      <span class="ctv:text-muted-foreground">{{ $t('music.channel') }}</span>
       <button
-        v-for="(p, i) in roll.parts"
-        :key="i"
+        v-for="(c, i) in roll.channels"
+        :key="c.ch"
         type="button"
-        :class="[btn, i === roll.activePart.value ? btnOn : '']"
-        :title="$t('music.renamePart')"
-        @click="roll.setActivePart(i)"
-        @dblclick="onRenamePart(i)"
-      >{{ p.name }}</button>
+        :class="[btn, i === roll.activeChannel.value ? btnOn : '']"
+        @click="roll.setActiveChannel(i)"
+      >{{ c.ch === 9 ? '🥁' : `Ch${c.ch + 1}` }}</button>
       <button
-        v-if="roll.parts.length < 4"
-        type="button" :class="btn" :title="$t('music.addPart')"
-        @click="roll.addPart()"
+        type="button" :class="btn" :title="$t('music.addChannel')"
+        @click="roll.addChannel(false)"
       >＋</button>
       <button
-        v-if="roll.parts.length > 1"
-        type="button" :class="btn" :title="$t('music.removePart')"
-        @click="roll.removePart(roll.activePart.value)"
-      >−</button>
+        v-if="!hasDrums"
+        type="button" :class="btn" :title="$t('music.percussion')"
+        @click="roll.addChannel(true)"
+      >＋🥁</button>
       <button
-        type="button"
-        :class="[btn, roll.current.value.percussion ? btnOn : '']"
-        :title="$t('music.percussion')"
-        @click="roll.current.value.percussion = !roll.current.value.percussion"
-      >🥁</button>
-      <template v-if="!roll.current.value.percussion">
+        v-if="roll.channels.length > 1"
+        type="button" :class="btn" :title="$t('music.removeChannel')"
+        @click="roll.removeChannel(roll.activeChannel.value)"
+      >−</button>
+      <template v-if="!isDrumChannel">
         <span class="ctv:text-muted-foreground">{{ $t('music.instrument') }}</span>
-        <select
-          :value="roll.current.value.program ?? 'piano'"
-          :class="sel"
-          @change="roll.current.value.program = ($event.target as HTMLSelectElement).value"
-        >
+        <select :value="programChoice" :class="sel" @change="onProgramChange">
           <option v-for="g in GM_NAMES" :key="g" :value="g">{{ g.replace(/_/g, ' ') }}</option>
+          <option v-if="programChoice.startsWith('p:')" :value="programChoice">{{ programChoice.slice(2) }}</option>
         </select>
       </template>
-      <button type="button" :class="btn" :title="$t('music.quantize')" @click="roll.quantizeSelected()">Q</button>
-      <span v-if="importError" class="ctv:text-destructive-background">{{ importError }}</span>
-      <span v-else-if="importNote" class="ctv:text-warning-background">{{ importNote }}</span>
     </div>
 
-    <div class="ctv:relative ctv:flex-1 ctv:min-h-0">
+    <div class="ctv:relative ctv:flex-1 ctv:min-h-0" data-testid="roll-shell">
     <div
       class="ctv:absolute ctv:inset-0 ctv:flex ctv:rounded ctv:border ctv:border-border-subtle ctv:overflow-hidden ctv:bg-black/40 ctv:outline-none"
       tabindex="0"
@@ -106,7 +74,7 @@
       @keydown="onKeydown"
       @wheel.stop="onWheel"
     >
-      <div class="ctv:relative ctv:shrink-0 ctv:overflow-hidden ctv:bg-secondary-background" :style="{ width: (isPercPart ? 64 : KEY_WIDTH) + 'px', marginTop: '20px' }">
+      <div class="ctv:relative ctv:shrink-0 ctv:overflow-hidden ctv:bg-secondary-background" :style="{ width: (isDrumChannel ? 64 : KEY_WIDTH) + 'px', marginTop: '20px' }">
         <div class="ctv:absolute ctv:inset-x-0" :style="{ top: -scrollTop + 'px' }">
           <div
             v-for="k in keys"
@@ -125,11 +93,11 @@
         <div class="ctv:relative ctv:h-5 ctv:shrink-0 ctv:overflow-hidden ctv:bg-secondary-background ctv:border-b ctv:border-white/10">
           <div class="ctv:absolute ctv:inset-y-0" :style="{ left: -scrollLeft + 'px' }">
             <span
-              v-for="b in roll.bars.value"
-              :key="b"
+              v-for="tick in rulerTicks"
+              :key="tick"
               class="ctv:absolute ctv:top-0.5 ctv:text-3xs ctv:text-muted-foreground"
-              :style="{ left: (b - 1) * barPx + 3 + 'px' }"
-            >{{ b }}</span>
+              :style="{ left: roll.secToX(tick) + 3 + 'px' }"
+            >{{ tick }}s</span>
           </div>
         </div>
 
@@ -141,20 +109,15 @@
             @pointerdown="onGridDown"
           >
             <div
-              v-if="mode === 'step'"
-              class="ctv:absolute ctv:inset-y-0 ctv:w-0.5 ctv:bg-warning-background/80 ctv:pointer-events-none ctv:z-20"
-              :style="{ left: roll.beatToX(roll.stepCursor.value) + 'px' }"
-            />
-            <div
               v-if="playing"
               class="ctv:absolute ctv:inset-y-0 ctv:w-0.5 ctv:bg-success-background ctv:pointer-events-none ctv:z-20"
-              :style="{ left: roll.beatToX(playBeat) + 'px' }"
+              :style="{ left: roll.secToX(playSec) + 'px' }"
             />
             <div
               v-for="g in ghostBlocks"
               :key="'g' + g.id"
-              class="ctv:absolute ctv:rounded-xs ctv:bg-white/20 ctv:pointer-events-none"
-              :style="{ left: g.x + 'px', top: g.y + 'px', width: g.w + 'px', height: g.h + 'px' }"
+              class="ctv:absolute ctv:rounded-xs ctv:pointer-events-none"
+              :style="{ left: g.x + 'px', top: g.y + 'px', width: g.w + 'px', height: g.h + 'px', background: g.color }"
             />
             <div
               v-if="marquee"
@@ -205,7 +168,7 @@
     </div>
     </div>
 
-    <div class="ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground ctv:leading-snug">{{ mode === 'step' ? $t('music.stepHint') : mode === 'select' ? $t('music.rollHint2') : $t('music.rollHint') }}</div>
+    <div class="ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground ctv:leading-snug">{{ mode === 'select' ? $t('music.rollHint2') : $t('music.rollHint') }}</div>
 
     <StageCard
       class="ctv:h-auto! ctv:grow-0 ctv:shrink-0"
@@ -225,11 +188,11 @@ import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
-import { usePianoRoll, NOTE_HEIGHT, KEY_WIDTH } from '@/composables/stages/usePianoRoll'
+import { useMidiEditor, NOTE_HEIGHT, KEY_WIDTH, MIN_PX_PER_SEC, MAX_PX_PER_SEC } from '@/composables/stages/useMidiEditor'
 import { useStrWidget } from '@/composables/widgets/useWidgetModel'
-import { importScoreEditor } from '@/api'
-import { askText } from '@/composables/dialog/useTextInputDialog'
-import { GM_NAMES } from '@/constants/gmPrograms'
+import { midiEvents } from '@/api'
+import { rollColor } from '@/utils/midiRoll'
+import { GM_NAMES, GM_PROGRAM_NUMBERS, gmNameForProgram } from '@/constants/gmPrograms'
 import { useI18n } from 'vue-i18n'
 
 const props = defineProps<{
@@ -247,16 +210,15 @@ const btn = 'ctv:py-0.5 ctv:px-1.5 ctv:rounded ctv:border ctv:border-border-subt
 const btnOn = 'ctv:border-primary-background ctv:bg-primary-background/30'
 const sel = 'ctv:rounded ctv:border ctv:border-border-subtle ctv:bg-secondary-background ctv:px-1 ctv:py-0.5 ctv:text-2xs ctv:text-base-foreground'
 
-const notesJson = useStrWidget(props.node, 'notes_json', '')
-const roll = usePianoRoll({ widget: notesJson })
+const eventsJson = useStrWidget(props.node, 'events_json', '')
+const roll = useMidiEditor({ widget: eventsJson })
 
-const mode = ref<'draw' | 'select' | 'step'>('draw')
+const mode = ref<'draw' | 'select'>('select')
 const scrollEl = ref<HTMLElement | null>(null)
 const contentEl = ref<HTMLElement | null>(null)
 const scrollTop = ref(0)
 const scrollLeft = ref(0)
 
-const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 const BLACK = new Set([1, 3, 6, 8, 10])
 
 const GM_DRUMS: Record<number, string> = {
@@ -271,10 +233,23 @@ const GM_DRUMS: Record<number, string> = {
   76: 'Woodblk Hi', 77: 'Woodblk Lo', 80: 'Tri Mute', 81: 'Tri Open',
 }
 
-const isPercPart = computed(() => !!roll.current.value.percussion)
+const isDrumChannel = computed(() => roll.current.value.ch === 9)
+const hasDrums = computed(() => roll.channels.some((c) => c.ch === 9))
+
+const programChoice = computed(() => {
+  const p = roll.current.value.program
+  return gmNameForProgram(p) ?? `p:${p}`
+})
+
+function onProgramChange(e: Event): void {
+  const v = (e.target as HTMLSelectElement).value
+  if (v.startsWith('p:')) return
+  const num = GM_PROGRAM_NUMBERS[v]
+  if (num !== undefined) roll.setProgram(roll.activeChannel.value, num)
+}
 
 const keys = computed(() => {
-  const perc = isPercPart.value
+  const perc = isDrumChannel.value
   const out: Array<{ midi: number; y: number; black: boolean; label: string }> = []
   for (let midi = 127; midi >= 0; midi--) {
     const semi = midi % 12
@@ -290,7 +265,13 @@ const keys = computed(() => {
   return out
 })
 
-const barPx = computed(() => roll.pxPerBeat.value * roll.beatsPerBar.value)
+const rulerTicks = computed(() => {
+  const px = roll.pxPerSec.value
+  const step = px >= 48 ? 1 : px >= 16 ? 5 : px >= 4 ? 15 : 60
+  const out: number[] = []
+  for (let s = 0; s <= roll.totalSec.value; s += step) out.push(s)
+  return out
+})
 
 const blackRows = (() => {
   const dark = [1, 4, 6, 9, 11]
@@ -306,13 +287,13 @@ const blackRows = (() => {
 })()
 
 const gridStyle = computed(() => {
-  const pb = roll.pxPerBeat.value
+  const px = roll.pxPerSec.value
   return {
-    width: `${roll.totalBeats.value * pb}px`,
+    width: `${roll.totalSec.value * px}px`,
     height: `${128 * NOTE_HEIGHT}px`,
     backgroundImage: [
-      `repeating-linear-gradient(to right, rgba(255,255,255,0.16) 0 1px, transparent 1px ${barPx.value}px)`,
-      `repeating-linear-gradient(to right, rgba(255,255,255,0.05) 0 1px, transparent 1px ${pb}px)`,
+      `repeating-linear-gradient(to right, rgba(255,255,255,0.16) 0 1px, transparent 1px ${px}px)`,
+      `repeating-linear-gradient(to right, rgba(255,255,255,0.05) 0 1px, transparent 1px ${px / 4}px)`,
       `repeating-linear-gradient(to bottom, rgba(255,255,255,0.10) 0 1px, transparent 1px ${12 * NOTE_HEIGHT}px)`,
       `repeating-linear-gradient(to bottom, rgba(255,255,255,0.04) 0 1px, transparent 1px ${NOTE_HEIGHT}px)`,
       blackRows,
@@ -324,32 +305,34 @@ const gridStyle = computed(() => {
 const noteBlocks = computed(() => roll.current.value.notes.map((n) => ({
   id: n.id,
   midi: n.midi,
-  x: roll.beatToX(n.start),
+  x: roll.secToX(n.start),
   y: roll.midiToY(n.midi),
-  w: Math.max(3, n.dur * roll.pxPerBeat.value - 1),
+  w: Math.max(3, n.dur * roll.pxPerSec.value - 1),
   h: NOTE_HEIGHT - 1,
   selected: roll.selection.value.has(n.id),
 })))
 
 const velBars = computed(() => roll.current.value.notes.map((n) => ({
   id: n.id,
-  x: roll.beatToX(n.start),
-  w: Math.max(3, n.dur * roll.pxPerBeat.value - 1),
-  h: Math.round(n.vel * 100),
+  x: roll.secToX(n.start),
+  w: Math.max(3, n.dur * roll.pxPerSec.value - 1),
+  h: Math.round((n.vel / 127) * 100),
   selected: roll.selection.value.has(n.id),
 })))
 
 const ghostBlocks = computed(() => {
-  const out: Array<{ id: number; x: number; y: number; w: number; h: number }> = []
-  roll.parts.forEach((p, i) => {
-    if (i === roll.activePart.value) return
-    for (const n of p.notes) {
+  const out: Array<{ id: number; x: number; y: number; w: number; h: number; color: string }> = []
+  roll.channels.forEach((c, i) => {
+    if (i === roll.activeChannel.value) return
+    const color = rollColor(c.ch === 9 ? 'drums' : `p${c.program}`)
+    for (const n of c.notes) {
       out.push({
         id: n.id,
-        x: roll.beatToX(n.start),
+        x: roll.secToX(n.start),
         y: roll.midiToY(n.midi),
-        w: Math.max(3, n.dur * roll.pxPerBeat.value - 1),
+        w: Math.max(3, n.dur * roll.pxPerSec.value - 1),
         h: NOTE_HEIGHT - 1,
+        color,
       })
     }
   })
@@ -368,10 +351,9 @@ function noiseBuffer(ctx: AudioContext): AudioBuffer {
   return noiseBuf
 }
 
-function drumHit(midi: number, when: number, dest: AudioNode,
-  vel = 0.8): void {
+function drumHit(midi: number, when: number, dest: AudioNode, vel = 100): void {
   const ctx = audioCtx!
-  const amp = vel / 0.8
+  const amp = vel / 100
   if (midi === 35 || midi === 36) {
     const osc = ctx.createOscillator()
     const g = ctx.createGain()
@@ -407,7 +389,7 @@ function beep(midi: number): void {
   try {
     audioCtx = audioCtx ?? new AudioContext()
     const now = audioCtx.currentTime
-    if (isPercPart.value) {
+    if (isDrumChannel.value) {
       drumHit(midi, now + 0.01, audioCtx.destination)
       return
     }
@@ -424,17 +406,24 @@ function beep(midi: number): void {
 }
 
 const playing = ref(false)
-const playBeat = ref(0)
+const playSec = ref(0)
 let playMaster: GainNode | null = null
 let playStartTime = 0
 let playRaf = 0
-let playEndBeat = 0
+let playEndSec = 0
+let schedTimer: ReturnType<typeof setInterval> | null = null
+let schedQueue: Array<{ start: number; dur: number; midi: number; vel: number; ch: number; wave: OscillatorType }> = []
+let schedIdx = 0
 
-const PART_WAVES: OscillatorType[] = ['triangle', 'square', 'sawtooth', 'sine']
+const CH_WAVES: OscillatorType[] = ['triangle', 'square', 'sawtooth', 'sine']
 
 function stopPlayback(): void {
   playing.value = false
   cancelAnimationFrame(playRaf)
+  if (schedTimer) clearInterval(schedTimer)
+  schedTimer = null
+  schedQueue = []
+  schedIdx = 0
   if (playMaster) {
     try {
       playMaster.disconnect()
@@ -443,18 +432,43 @@ function stopPlayback(): void {
   }
 }
 
+function scheduleAhead(): void {
+  if (!audioCtx || !playMaster) return
+  const horizon = audioCtx.currentTime - playStartTime + 2.5
+  while (schedIdx < schedQueue.length
+    && schedQueue[schedIdx].start <= horizon) {
+    const n = schedQueue[schedIdx++]
+    const on = playStartTime + n.start
+    if (n.ch === 9) {
+      drumHit(n.midi, on, playMaster, n.vel)
+      continue
+    }
+    const off = on + Math.max(0.05, n.dur)
+    const amp = 0.125 * (n.vel / 100)
+    const osc = audioCtx.createOscillator()
+    const gain = audioCtx.createGain()
+    osc.type = n.wave
+    osc.frequency.value = 440 * Math.pow(2, (n.midi - 69) / 12)
+    gain.gain.setValueAtTime(0.0001, on)
+    gain.gain.exponentialRampToValueAtTime(amp, on + 0.01)
+    gain.gain.setValueAtTime(amp, Math.max(on + 0.01, off - 0.04))
+    gain.gain.exponentialRampToValueAtTime(0.0001, off)
+    osc.connect(gain).connect(playMaster)
+    osc.start(on)
+    osc.stop(off + 0.02)
+  }
+}
+
 function playTick(): void {
   if (!playing.value || !audioCtx) return
-  const beat = (audioCtx.currentTime - playStartTime)
-    * roll.tempo.value / 60
-  playBeat.value = Math.max(0, beat)
-  const x = roll.beatToX(playBeat.value)
+  playSec.value = Math.max(0, audioCtx.currentTime - playStartTime)
+  const x = roll.secToX(playSec.value)
   const scroller = scrollEl.value
   if (scroller && (x < scroller.scrollLeft
     || x > scroller.scrollLeft + scroller.clientWidth - 48)) {
     scroller.scrollLeft = Math.max(0, x - 48)
   }
-  if (beat > playEndBeat + 1) {
+  if (playSec.value > playEndSec + 1) {
     stopPlayback()
     return
   }
@@ -471,43 +485,29 @@ function togglePlay(): void {
   } catch {
     return
   }
-  const secPerBeat = 60 / roll.tempo.value
-  playEndBeat = 0
+  playEndSec = 0
+  schedQueue = []
+  roll.channels.forEach((c, i) => {
+    const wave = CH_WAVES[i % CH_WAVES.length]
+    for (const n of c.notes) {
+      playEndSec = Math.max(playEndSec, n.start + n.dur)
+      schedQueue.push({
+        start: n.start, dur: n.dur, midi: n.midi, vel: n.vel,
+        ch: c.ch, wave,
+      })
+    }
+  })
+  if (!schedQueue.length) return
+  schedQueue.sort((a, b) => a.start - b.start)
+  schedIdx = 0
   playMaster = audioCtx.createGain()
   playMaster.gain.value = 0.9
   playMaster.connect(audioCtx.destination)
-  const t0 = audioCtx.currentTime + 0.08
-  roll.parts.forEach((part, pi) => {
-    const wave = PART_WAVES[pi % PART_WAVES.length]
-    for (const n of part.notes) {
-      const on = t0 + n.start * secPerBeat
-      playEndBeat = Math.max(playEndBeat, n.start + n.dur)
-      if (part.percussion) {
-        drumHit(n.midi, on, playMaster!, n.vel)
-        continue
-      }
-      const off = on + Math.max(0.05, n.dur * secPerBeat)
-      const amp = 0.125 * (n.vel ?? 0.8)
-      const osc = audioCtx!.createOscillator()
-      const gain = audioCtx!.createGain()
-      osc.type = wave
-      osc.frequency.value = 440 * Math.pow(2, (n.midi - 69) / 12)
-      gain.gain.setValueAtTime(0.0001, on)
-      gain.gain.exponentialRampToValueAtTime(amp, on + 0.01)
-      gain.gain.setValueAtTime(amp, Math.max(on + 0.01, off - 0.04))
-      gain.gain.exponentialRampToValueAtTime(0.0001, off)
-      osc.connect(gain).connect(playMaster!)
-      osc.start(on)
-      osc.stop(off + 0.02)
-    }
-  })
-  if (playEndBeat === 0) {
-    stopPlayback()
-    return
-  }
-  playStartTime = t0
-  playBeat.value = 0
+  playStartTime = audioCtx.currentTime + 0.08
+  playSec.value = 0
   playing.value = true
+  scheduleAhead()
+  schedTimer = setInterval(scheduleAhead, 400)
   playRaf = requestAnimationFrame(playTick)
 }
 
@@ -533,14 +533,14 @@ function onDragMove(e: PointerEvent): void {
     paintVelocity(e, zoom)
     return
   }
-  const dBeat = (e.clientX - drag.startX) / zoom / roll.pxPerBeat.value
+  const dSec = (e.clientX - drag.startX) / zoom / roll.pxPerSec.value
   if (drag.type === 'move') {
     const dMidi = -Math.round((e.clientY - drag.startY) / zoom / NOTE_HEIGHT)
-    roll.dragBy(dMidi, dBeat)
+    roll.dragBy(dMidi, dSec)
   } else if (drag.type === 'resize') {
-    roll.resizeBy(drag.id, dBeat)
+    roll.resizeBy(drag.id, dSec)
   } else {
-    roll.resizeLeftBy(drag.id, dBeat)
+    roll.resizeLeftBy(drag.id, dSec)
   }
 }
 
@@ -579,14 +579,12 @@ function rollZoom(): number {
     : 1
 }
 
-function gridPos(e: PointerEvent): { beat: number; midi: number } {
+function contentPos(e: PointerEvent, zoom?: number): { x: number; y: number } {
   const el = contentEl.value
-  if (!el) return { beat: 0, midi: 60 }
+  if (!el) return { x: 0, y: 0 }
   const rect = el.getBoundingClientRect()
-  const zoom = rollZoom()
-  const x = (e.clientX - rect.left) / zoom
-  const y = (e.clientY - rect.top) / zoom
-  return { beat: roll.xToBeat(x), midi: roll.yToMidi(y) }
+  const z = zoom ?? rollZoom()
+  return { x: (e.clientX - rect.left) / z, y: (e.clientY - rect.top) / z }
 }
 
 const marquee = ref<{
@@ -604,14 +602,6 @@ const marqueeStyle = computed(() => {
   }
 })
 
-function contentPos(e: PointerEvent, zoom?: number): { x: number; y: number } {
-  const el = contentEl.value
-  if (!el) return { x: 0, y: 0 }
-  const rect = el.getBoundingClientRect()
-  const z = zoom ?? rollZoom()
-  return { x: (e.clientX - rect.left) / z, y: (e.clientY - rect.top) / z }
-}
-
 function updateMarquee(e: PointerEvent, zoom: number): void {
   const m = marquee.value
   if (!m) return
@@ -619,8 +609,8 @@ function updateMarquee(e: PointerEvent, zoom: number): void {
   m.x1 = p.x
   m.y1 = p.y
   roll.selectInRect(
-    roll.xToBeat(Math.min(m.x0, m.x1)),
-    roll.xToBeat(Math.max(m.x0, m.x1)),
+    roll.xToSec(Math.min(m.x0, m.x1)),
+    roll.xToSec(Math.max(m.x0, m.x1)),
     roll.yToMidi(Math.max(m.y0, m.y1)),
     roll.yToMidi(Math.min(m.y0, m.y1)),
     m.additive,
@@ -636,10 +626,10 @@ function paintVelocity(e: PointerEvent, zoom?: number): void {
   const z = zoom ?? rollZoom()
   const x = (e.clientX - rect.left) / z + scrollLeft.value
   const y = (e.clientY - rect.top) / z
-  const beat = roll.xToBeat(x)
-  const vel = Math.max(0.05, Math.min(1, 1 - y / 44))
+  const sec = roll.xToSec(x)
+  const vel = Math.max(1, Math.min(127, Math.round((1 - y / 44) * 127)))
   for (const n of roll.current.value.notes) {
-    if (n.start <= beat && beat < n.start + n.dur) {
+    if (n.start <= sec && sec < n.start + n.dur) {
       roll.setNoteVelocity(n.id, vel)
     }
   }
@@ -652,17 +642,19 @@ function onVelDown(e: PointerEvent): void {
   startDrag({ type: 'vel', id: -1, startX: e.clientX, startY: e.clientY }, e)
 }
 
+function gridPos(e: PointerEvent): { sec: number; midi: number } {
+  const p = contentPos(e)
+  return { sec: roll.xToSec(p.x), midi: roll.yToMidi(p.y) }
+}
+
 function onGridDown(e: PointerEvent): void {
   if (e.button !== 0) return
   if (mode.value === 'draw') {
-    const { beat, midi } = gridPos(e)
-    const id = roll.addNote(midi, beat)
+    const { sec, midi } = gridPos(e)
+    const id = roll.addNote(midi, sec)
     beep(midi)
     roll.beginResize(id, false)
     startDrag({ type: 'resize', id, startX: e.clientX, startY: e.clientY }, e)
-  } else if (mode.value === 'step') {
-    const { beat } = gridPos(e)
-    roll.stepSetCursor(beat)
   } else {
     if (!e.shiftKey) roll.clearSelection()
     const p = contentPos(e)
@@ -704,62 +696,7 @@ function onNoteDblClick(id: number): void {
   roll.deleteSelected()
 }
 
-const STEP_DURS = [
-  { beats: 4, label: '1', key: '7' },
-  { beats: 2, label: '1/2', key: '6' },
-  { beats: 1, label: '1/4', key: '5' },
-  { beats: 0.5, label: '1/8', key: '4' },
-  { beats: 0.25, label: '1/16', key: '3' },
-  { beats: 0.125, label: '1/32', key: '2' },
-]
-
-function onStepKeydown(e: KeyboardEvent): boolean {
-  const k = e.key.toLowerCase()
-  if (/^[a-g]$/.test(k)) {
-    const id = roll.stepInsert(k)
-    if (id !== null) beep(roll.findNote(id)!.midi)
-    return true
-  }
-  if (k === '0' || k === ' ') {
-    roll.stepRest()
-    return true
-  }
-  const dur = STEP_DURS.find((d) => d.key === k)
-  if (dur) {
-    roll.stepDur.value = dur.beats
-    return true
-  }
-  if (k === '.') {
-    roll.stepDotted.value = !roll.stepDotted.value
-    return true
-  }
-  if (k === 'backspace') {
-    roll.stepBackspace()
-    return true
-  }
-  if (k === 'arrowup' || k === 'arrowdown') {
-    roll.stepTranspose((e.shiftKey ? 12 : 1) * (k === 'arrowup' ? 1 : -1))
-    for (const id of roll.selection.value) {
-      const n = roll.findNote(id)
-      if (n) beep(n.midi)
-    }
-    return true
-  }
-  if (k === 'arrowleft' || k === 'arrowright') {
-    const d = roll.stepDotted.value ? roll.stepDur.value * 1.5 : roll.stepDur.value
-    roll.stepSetCursor(roll.stepCursor.value + (k === 'arrowright' ? d : -d))
-    return true
-  }
-  return false
-}
-
 function onKeydown(e: KeyboardEvent): void {
-  if (mode.value === 'step' && !e.ctrlKey && !e.metaKey) {
-    if (onStepKeydown(e)) {
-      e.preventDefault()
-      return
-    }
-  }
   if (e.key === 'Delete' || e.key === 'Backspace') {
     roll.deleteSelected()
     e.preventDefault()
@@ -769,24 +706,14 @@ function onKeydown(e: KeyboardEvent): void {
   } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'a') {
     roll.selectAll()
     e.preventDefault()
-  } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'd') {
-    roll.duplicateSelected()
-    e.preventDefault()
   }
-}
-
-async function onRenamePart(index: number): Promise<void> {
-  const name = (await askText({
-    title: t('music.renamePart'),
-    label: t('music.part'),
-  }))?.trim()
-  if (name) roll.renamePart(index, name)
 }
 
 function onWheel(e: WheelEvent): void {
   if (e.ctrlKey || e.metaKey) {
-    const next = roll.pxPerBeat.value * (e.deltaY < 0 ? 1.2 : 1 / 1.2)
-    roll.pxPerBeat.value = Math.min(96, Math.max(8, Math.round(next)))
+    const next = roll.pxPerSec.value * (e.deltaY < 0 ? 1.2 : 1 / 1.2)
+    roll.pxPerSec.value = Math.min(MAX_PX_PER_SEC,
+      Math.max(MIN_PX_PER_SEC, Math.round(next)))
     e.preventDefault()
   }
 }
@@ -800,25 +727,28 @@ function focusRoll(e: PointerEvent): void {
   (e.currentTarget as HTMLElement | null)?.focus?.()
 }
 
-const wiredScore = computed(() =>
-  pickSourceImageUrl(props.state.inputs, 'score') ?? '')
+const wiredMidi = computed(() =>
+  pickSourceImageUrl(props.state.inputs, 'midi') ?? '')
 
 const importBusy = ref(false)
 const importError = ref('')
-const importNote = ref('')
 
 async function doImport(): Promise<void> {
-  const xml = wiredScore.value
-  if (!xml || importBusy.value) return
+  const url = wiredMidi.value
+  if (!url || importBusy.value) return
   importBusy.value = true
   importError.value = ''
-  importNote.value = ''
   try {
-    const state = await importScoreEditor(xml)
-    roll.loadEditorState(state)
-    if ((state.skipped_percussion ?? 0) > 0) {
-      importNote.value = t('music.skippedPercussion')
+    const res = await midiEvents(url)
+    if (res.status !== 'ready' || !res.events) {
+      importError.value = t('music.notMidi')
+      return
     }
+    roll.loadEditorState({
+      tempo_map: res.tempo_map ?? [],
+      programs: res.programs ?? {},
+      events: res.events,
+    })
   } catch {
     importError.value = t('music.importFailed')
   } finally {

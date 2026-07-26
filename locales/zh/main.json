@@ -2178,6 +2178,12 @@
     "percussion": "鼓声部(GM 鼓组)",
     "quantize": "量化选中",
     "renamePart": "重命名声部(双击)",
-    "rollHint2": "选择模式:拖拽框选 · Ctrl+A 全选 · Ctrl+D 复制 · 网格下方是力度条"
+    "rollHint2": "选择模式:拖拽框选 · Ctrl+A 全选 · Ctrl+D 复制 · 网格下方是力度条",
+    "channel": "通道",
+    "addChannel": "加通道",
+    "removeChannel": "删通道",
+    "clearChannel": "清空通道",
+    "importMidi": "导入上游 MIDI",
+    "notMidi": "上游输入不是 MIDI"
   }
 }

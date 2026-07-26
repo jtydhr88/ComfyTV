@@ -494,6 +494,9 @@
     },
     "ScoreEditorStage": {
       "display_name": "Score Editor"
+    },
+    "MidiEditorStage": {
+      "display_name": "MIDI Editor"
     }
   },
   "ComfyTV_AssetAudioLoaderStage": {
@@ -2378,5 +2381,8 @@
   },
   "ComfyTV_ScoreEditorStage": {
     "display_name": "Score Editor"
+  },
+  "ComfyTV_MidiEditorStage": {
+    "display_name": "MIDI Editor"
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" @contextmenu.stop.prevent>
+  <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:grow" @contextmenu.stop.prevent>
     <div
       v-if="scoreXml"
       class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-2xs"
@@ -12,10 +12,10 @@
       <span v-else-if="following" class="ctv:ml-auto ctv:text-success-background">{{ $t('music.following') }}</span>
     </div>
 
+    <div v-if="scoreXml" class="ctv:relative ctv:flex-1 ctv:min-h-40">
     <div
-      v-if="scoreXml"
-      class="ctv-scroll-thin ctv:relative ctv:min-h-40 ctv:overflow-y-auto ctv:overflow-x-auto ctv:rounded ctv:border ctv:border-border-subtle ctv:bg-white"
-      style="max-height: 420px; overscroll-behavior: contain;"
+      class="ctv-scroll-thin ctv:absolute ctv:inset-0 ctv:overflow-y-auto ctv:overflow-x-auto ctv:rounded ctv:border ctv:border-border-subtle ctv:bg-white"
+      style="overscroll-behavior: contain;"
       @pointerdown.stop @pointermove.stop @pointerup.stop @wheel.stop
     >
       <div ref="sheetEl" class="ctv:min-w-full ctv:p-2" />
@@ -23,6 +23,7 @@
         v-if="engrave.error.value"
         class="ctv:absolute ctv:inset-x-0 ctv:bottom-0 ctv:bg-black/70 ctv:px-2 ctv:py-1 ctv:text-2xs ctv:text-red-300"
       >{{ engrave.error.value }}</div>
+    </div>
     </div>
 
     <VideoPlayerLite ref="playerRef" :source-video-url="state.output ?? ''" :default-muted="false" />

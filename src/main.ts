@@ -141,6 +141,7 @@ import ScoreStageCard from '@/components/stages/ScoreStageCard.vue'
 import ScoreToMidiStageCard from '@/components/stages/ScoreToMidiStageCard.vue'
 import SF2SynthStageCard from '@/components/stages/SF2SynthStageCard.vue'
 import ScoreEditorStageCard from '@/components/stages/ScoreEditorStageCard.vue'
+import MidiEditorStageCard from '@/components/stages/MidiEditorStageCard.vue'
 import ClickTrackStageCard from '@/components/stages/ClickTrackStageCard.vue'
 import ChordAccompStageCard from '@/components/stages/ChordAccompStageCard.vue'
 import MuseReverbStageCard from '@/components/stages/MuseReverbStageCard.vue'
@@ -234,6 +235,7 @@ const RICH_STAGE_CARDS: Record<string, any> = {
   'ComfyTV.ScoreToMidiStage':         ScoreToMidiStageCard,
   'ComfyTV.SF2SynthStage':            SF2SynthStageCard,
   'ComfyTV.ScoreEditorStage':         ScoreEditorStageCard,
+  'ComfyTV.MidiEditorStage':          MidiEditorStageCard,
   'ComfyTV.ClickTrackStage':          ClickTrackStageCard,
   'ComfyTV.ChordAccompStage':         ChordAccompStageCard,
   'ComfyTV.MuseReverbStage':          MuseReverbStageCard,
@@ -346,6 +348,30 @@ const RICH_STAGE_CARDS: Record<string, any> = {
   'ComfyTV.AudioMeterStage':          AudioMeterStageCard,
   'ComfyTV.FXChainStage':             FXChainStageCard,
 }
+
+const FLEX_FILL_STAGES = new Set([
+  'ComfyTV.ScoreEditorStage',
+  'ComfyTV.MidiEditorStage',
+  'ComfyTV.ScoreStage',
+  'ComfyTV.SF2SynthStage',
+  'ComfyTV.ColorGradeStage',
+  'ComfyTV.CornerPinStage',
+  'ComfyTV.GridSplitStage',
+  'ComfyTV.MirrorStage',
+  'ComfyTV.RotateStage',
+  'ComfyTV.MotionTrackStage',
+  'ComfyTV.MultiangleStage',
+  'ComfyTV.PaintStrokeStage',
+  'ComfyTV.RotoMaskStage',
+  'ComfyTV.VideoCompositeStage',
+  'ComfyTV.VideoFramesStage',
+  'ComfyTV.MaterialStage',
+  'ComfyTV.CropStage',
+  'ComfyTV.VideoCropStage',
+  'ComfyTV.SplitPartStage',
+  'ComfyTV.VideoClipStage',
+  'ComfyTV.VideoSplitStage',
+])
 
 const RICH_STAGE_MIN_HEIGHTS: Record<string, number> = {
   'ComfyTV.MultiangleStage': 640,
@@ -487,7 +513,8 @@ const RICH_STAGE_MIN_HEIGHTS: Record<string, number> = {
   'ComfyTV.AudioNoiseReductionStage': 640,
   'ComfyTV.AudioMIRStage':            660,
   'ComfyTV.ScoreStage':               960,
-  'ComfyTV.ScoreEditorStage':         960,
+  'ComfyTV.ScoreEditorStage':         640,
+  'ComfyTV.MidiEditorStage':          640,
   'ComfyTV.ScoreToMidiStage':         640,
   'ComfyTV.SF2SynthStage':            960,
   'ComfyTV.ClickTrackStage':          600,
@@ -538,6 +565,11 @@ function mountStage(node: ComfyNode, kind: StageKind, variant: StageVariant = 'g
     color: 'var(--input-text, #e0e0e0)',
     fontSize: '12px',
   })
+  if (FLEX_FILL_STAGES.has(node.comfyClass)) {
+    Object.assign(container.style, {
+      display: 'flex', flexDirection: 'column', alignItems: 'stretch',
+    })
+  }
 
   node.addDOMWidget('comfytv_stage', 'stage', container, {
     getMinHeight: () => lgMinHeight,

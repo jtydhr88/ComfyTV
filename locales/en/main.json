@@ -2178,6 +2178,12 @@
     "percussion": "Drum part (GM keys)",
     "quantize": "Quantize selection",
     "renamePart": "Rename part (double-click)",
-    "rollHint2": "Select: drag for marquee · Ctrl+A all · Ctrl+D duplicate · velocity lane below the grid"
+    "rollHint2": "Select: drag for marquee · Ctrl+A all · Ctrl+D duplicate · velocity lane below the grid",
+    "channel": "Channel",
+    "addChannel": "Add channel",
+    "removeChannel": "Remove channel",
+    "clearChannel": "Clear channel",
+    "importMidi": "Import wired MIDI",
+    "notMidi": "Wired input is not a MIDI payload"
   }
 }

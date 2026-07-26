@@ -1,7 +1,7 @@
 <template>
-  <div class="ctv:flex ctv:flex-col ctv:size-full">
-    <div class="ctv:relative ctv:w-full ctv:h-[350px] ctv:shrink-0 ctv:rounded-lg ctv:overflow-hidden ctv:bg-black ctv:mb-1.5">
-      <SceneCanvas :init-scene="initScene" />
+  <div class="ctv:flex ctv:flex-col ctv:w-full ctv:grow">
+    <div class="ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[350px] ctv:rounded-lg ctv:overflow-hidden ctv:bg-black ctv:mb-1.5">
+      <SceneCanvas class="ctv:absolute! ctv:inset-0" :init-scene="initScene" />
       <div
         class="ctv:absolute ctv:top-2 ctv:left-2 ctv:right-2 ctv:z-10 ctv:pointer-events-none
                ctv:bg-black/90 ctv:border ctv:border-[rgb(233_61_130/0.3)] ctv:rounded-md

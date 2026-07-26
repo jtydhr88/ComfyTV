@@ -1,8 +1,9 @@
 <template>
-  <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full">
+  <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:grow">
     <div ref="containerEl"
-         class="ctv:relative ctv:w-full ctv:h-[280px] ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle
-                ctv:bg-black ctv:flex ctv:items-center ctv:justify-center">
+         class="ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[280px] ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle
+                ctv:bg-black">
+      <div class="ctv:absolute ctv:inset-0 ctv:flex ctv:items-center ctv:justify-center">
       <div v-if="!sourceImageUrl"
            class="ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50">
         <i class="pi pi-th-large ctv:text-[32px] ctv:opacity-60" />
@@ -32,6 +33,7 @@
           />
         </div>
       </template>
+      </div>
     </div>
 
     <div class="ctv:text-2xs ctv:text-center ctv:py-0.5">

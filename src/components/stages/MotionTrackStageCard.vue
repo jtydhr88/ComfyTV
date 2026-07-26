@@ -1,13 +1,13 @@
 <template>
-  <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" @contextmenu.stop.prevent>
-    <div class="ctv:relative ctv:w-full ctv:h-[200px] ctv:rounded-md ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle">
+  <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:grow" @contextmenu.stop.prevent>
+    <div class="ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[200px] ctv:rounded-md ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle">
       <video
         ref="videoEl"
         :src="sourceVideoUrl ?? undefined"
         muted
         playsinline
         preload="metadata"
-        class="ctv:block ctv:size-full ctv:object-contain"
+        class="ctv:absolute ctv:inset-0 ctv:size-full ctv:object-contain"
         @loadedmetadata="onMeta"
         @click="onVideoClick"
         @dblclick="onVideoDblClick"

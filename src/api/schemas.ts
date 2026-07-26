@@ -522,6 +522,7 @@ export const MidiEventsSchema = z.object({
   status: z.enum(['original', 'ready']),
   events: z.array(MidiNoteSchema).optional(),
   programs: z.record(z.string(), z.number()).optional(),
+  tempo_map: z.array(z.record(z.string(), z.number())).optional(),
   duration: z.number().optional(),
 })
 export type MidiEventsResult = z.infer<typeof MidiEventsSchema>

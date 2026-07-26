@@ -1,13 +1,13 @@
 <template>
   <div
-    class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full"
+    class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:grow"
     @pointerdown.stop
     @pointermove.stop
     @pointerup.stop
   >
-    <div class="ctv:relative ctv:w-full ctv:h-[240px] ctv:rounded-md ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle">
+    <div class="ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[240px] ctv:rounded-md ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle">
       <div v-if="!sourceVideoUrl"
-           class="ctv:h-full ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50">
+           class="ctv:absolute ctv:inset-0 ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50">
         <i class="pi pi-video ctv:text-[32px] ctv:opacity-60" />
         <div class="ctv:text-xs">{{ $t('videoTrim.noInputVideo') }}</div>
       </div>
@@ -17,7 +17,7 @@
           ref="videoEl"
           :src="sourceVideoUrl"
           :muted="muted"
-          class="ctv:block ctv:size-full ctv:object-contain ctv:cursor-pointer"
+          class="ctv:absolute ctv:inset-0 ctv:size-full ctv:object-contain ctv:cursor-pointer"
           playsinline preload="metadata"
           @click="playSelection"
         />

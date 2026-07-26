@@ -1,5 +1,5 @@
 <template>
-  <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" @contextmenu.stop.prevent>
+  <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:grow" @contextmenu.stop.prevent>
     <div class="ctv:grid ctv:grid-cols-[64px_1fr] ctv:items-center ctv:gap-1.5 ctv:text-xs">
       <span class="ctv:text-2xs ctv:uppercase ctv:tracking-wider ctv:text-muted-foreground">{{ $t('colorGrade.effect') }}</span>
       <ComfyTVSelect
@@ -9,8 +9,9 @@
       />
     </div>
 
-    <div class="ctv:relative ctv:w-full ctv:h-[260px] ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle
-                ctv:bg-black ctv:flex ctv:items-center ctv:justify-center">
+    <div class="ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[260px] ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle
+                ctv:bg-black">
+      <div class="ctv:absolute ctv:inset-0 ctv:flex ctv:items-center ctv:justify-center">
       <div v-if="!sourceImageUrl" class="ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50">
         <i class="pi pi-image ctv:text-[32px] ctv:opacity-60" />
         <div class="ctv:text-xs">{{ $t('colorGrade.noInputImage') }}</div>
@@ -20,6 +21,7 @@
         ref="previewCanvas"
         class="ctv:max-w-full ctv:max-h-full ctv:object-contain ctv:select-none ctv:pointer-events-none"
       />
+      </div>
     </div>
 
     <div class="ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide">
