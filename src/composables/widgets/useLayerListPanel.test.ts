@@ -217,6 +217,22 @@ describe('useLayerListPanel', () => {
     expect(raw.addAsset).toHaveBeenCalledWith({ payload_url: '/u.png', name: 'pic' })
   })
 
+  it('applies a canvas preset and resets the select', () => {
+    const { editor, raw } = makeEditor()
+    const api = useLayerListPanel(editor)
+    const target = { value: 'full-hd' }
+    api.onCanvasPreset({ target } as unknown as Event)
+    expect(raw.setArtboardSize).toHaveBeenCalledWith(1920, 1080)
+    expect(target.value).toBe('')
+  })
+
+  it('ignores unknown preset values', () => {
+    const { editor, raw } = makeEditor()
+    const api = useLayerListPanel(editor)
+    api.onCanvasPreset({ target: { value: '' } } as unknown as Event)
+    expect(raw.setArtboardSize).not.toHaveBeenCalled()
+  })
+
   it('imports picked files and resets the input', () => {
     const { editor, raw } = makeEditor()
     const api = useLayerListPanel(editor)

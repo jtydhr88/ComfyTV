@@ -432,6 +432,23 @@
       <span>px</span>
     </div>
 
+    <div class="ctv:px-2 ctv:pb-1">
+      <select
+        :class="presetSelectClass"
+        :title="$t('layerEditor.canvasPresetHint')"
+        @change="onCanvasPreset"
+      >
+        <option value="" selected>{{ $t('layerEditor.canvasPreset') }}</option>
+        <optgroup
+          v-for="group in CANVAS_PRESET_GROUPS"
+          :key="group.id"
+          :label="$t(group.labelKey)"
+        >
+          <option v-for="p in group.presets" :key="p.id" :value="p.id">{{ p.label }}</option>
+        </optgroup>
+      </select>
+    </div>
+
     <div
       v-if="editor.filterSession.value"
       class="ctv:border-t ctv:border-[#161616] ctv:bg-[#2f2f2f] ctv:px-2 ctv:py-1"
@@ -673,6 +690,7 @@ import {
 import type { LayerEditorController, MaskInit } from '@/composables/widgets/useLayerEditorStage'
 import { useLayerListPanel } from '@/composables/widgets/useLayerListPanel'
 import type { BlendFn, SceneNode } from '@/widgets/layerEditor/engine'
+import { CANVAS_PRESET_GROUPS } from '@/widgets/layerEditor/canvasPresets'
 import { FILTER_OPS, FILTER_PARAM_DEFS } from '@/widgets/layerEditor/filters'
 
 const props = defineProps<{
@@ -716,6 +734,7 @@ const {
   addText,
   commitRename,
   onArtboardSize,
+  onCanvasPreset,
   drawThumb,
   drawMaskThumb,
 } = useLayerListPanel(editor)
@@ -871,6 +890,9 @@ const miniBtnClass =
 const numInputClass =
   'ctv-num-input ctv:w-14 ctv:rounded-xs ctv:border ctv:border-[#3d3d3d] ctv:bg-[#1e1e1e] ' +
   'ctv:px-1 ctv:py-0.5 ctv:text-[11px] ctv:font-mono ctv:text-[#d6d6d6]'
+const presetSelectClass =
+  'ctv:w-full ctv:cursor-pointer ctv:rounded-xs ctv:border ctv:border-[#3d3d3d] ctv:bg-[#1e1e1e] ' +
+  'ctv:px-1 ctv:py-0.5 ctv:text-[10px] ctv:text-[#9b9b9b] ctv:[font-family:inherit]'
 const colorInputClass =
   'ctv:size-6 ctv:cursor-pointer ctv:rounded ctv:border ctv:border-[#161616] ctv:bg-transparent ctv:p-0 ctv:disabled:opacity-30'
 </script>

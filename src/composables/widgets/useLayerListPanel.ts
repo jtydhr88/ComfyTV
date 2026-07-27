@@ -18,6 +18,7 @@ import {
   type SceneNode,
   type VectorData,
 } from '@/widgets/layerEditor/engine'
+import { findCanvasPreset } from '@/widgets/layerEditor/canvasPresets'
 import type { LayerRow } from '@/widgets/layerEditor/types'
 
 export const ARTBOARD_MIN = 64
@@ -305,6 +306,14 @@ export function useLayerListPanel(editor: LayerEditorController) {
     editor.setArtboardSize(axis === 'w' ? clamped : size.width, axis === 'h' ? clamped : size.height)
   }
 
+  function onCanvasPreset(e: Event): void {
+    const select = e.target as HTMLSelectElement
+    const preset = findCanvasPreset(select.value)
+    select.value = ''
+    if (!preset) return
+    editor.setArtboardSize(preset.width, preset.height)
+  }
+
   function drawThumb(el: HTMLCanvasElement | null, node: SceneNode): void {
     if (!el) return
     const ctx = el.getContext('2d')
@@ -399,6 +408,7 @@ export function useLayerListPanel(editor: LayerEditorController) {
     addText,
     commitRename,
     onArtboardSize,
+    onCanvasPreset,
     fillTypeOptions,
     onFillType,
     onFillSolidColor,

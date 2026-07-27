@@ -56186,7 +56186,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-D1HMEjmt.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-ChifYglg.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -57568,7 +57568,7 @@ const meshOps$1 = { "operation": "Operation", "op": { "decimate": "Decimate", "r
 const splitPart$1 = { "noInputImage": "Connect an image to annotate parts", "tool": { "point-pos": "+ point", "point-neg": "− point", "box": "Box" }, "newGroup": "New part", "clear": "Clear", "chipBox": "Box {n}", "chipPoints": "Part {n} ({count} pts)", "hint": "Click to add points to the active part (right-click = exclude); drag with Box to mark a part per box. Or leave empty and type a concept for the text workflow." };
 const materialStage$1 = { "presets": "Presets", "preset": { "plasticGlossy": "Glossy plastic", "plasticMatte": "Matte plastic", "metalPolished": "Polished metal", "metalBrushed": "Brushed metal", "glassClear": "Clear glass", "glassFrosted": "Frosted glass", "rubber": "Rubber", "ceramic": "Ceramic" }, "color": "Color", "param": { "metalness": "Metalness", "roughness": "Roughness", "transmission": "Transmission", "opacity": "Opacity", "clearcoat": "Clearcoat", "ior": "IOR" } };
 const loaderDrop$1 = { "mismatchTitle": "Wrong file type", "typeMismatch": "This node only loads {kind}.", "assetTypeMismatch": "This node loads {expected}, but the dropped asset is {actual}.", "failedTitle": "ComfyTV upload", "uploadFailed": "Upload failed: {detail}" };
-const layerEditor$1 = { "undo": "Undo", "redo": "Redo", "capture": "Capture", "captureHint": "Upload composite + one image per visible layer", "captureFailed": "Capture failed", "exportPsd": "Export PSD", "exportPsdHint": "Download the document as a layered PSD file", "exportPsdFailed": "PSD export failed", "exportPsdAssetHint": "Save layered PSD into the asset library", "exportPsdAssetDone": "PSD saved to asset library", "importPsd": "Import PSD", "importPsdHint": "Import a PSD file as layers", "importPsdFailed": "PSD import failed", "importPsdEmpty": "No importable layers in this PSD", "uploadFailed": "Layer upload failed", "loadImageFailed": "Failed to load image", "loadFontFailed": "Failed to load font", "fitView": "Fit view", "fullscreen": "Fullscreen", "exitFullscreen": "Exit fullscreen", "close": "Close", "toolSelect": "Select", "toolMarquee": "Select area", "toolBrush": "Brush", "toolEraser": "Eraser", "toolText": "Text", "toolShape": "Shape", "toolWarp": "Warp", "warpApply": "Apply", "warpCancel": "Cancel", "shapeRect": "Rectangle", "shapeEllipse": "Ellipse", "shapeLine": "Line", "shapePolygon": "Polygon", "shapeStar": "Star", "shapeArc": "Arc", "shapeSpiral": "Spiral", "shapeSides": "Sides", "shapeStarRatio": "Inner ratio", "shapeTurns": "Turns", "shapeFill": "Fill", "shapeStroke": "Stroke", "shapeStrokeWidth": "Width", "shapeNewLayer": "New layer", "shapeCombine": "Add to layer", "groupLayers": "Group", "ungroupLayers": "Ungroup", "brushSize": "Size", "brushOpacity": "Opacity", "brushHardness": "Hardness", "brushColor": "Color", "targetContent": "Layer", "targetMask": "Mask", "maskInitWhite": "White (full opacity)", "maskInitBlack": "Black (full transparency)", "maskInitSelection": "Selection", "maskInitAlpha": "Layer's alpha channel", "maskInitGray": "Grayscale copy of layer", "maskShow": "Show mask", "maskDisable": "Disable mask", "maskEnable": "Enable mask", "maskInvert": "Invert mask", "maskApply": "Apply mask", "maskToSelection": "Mask to selection", "layers": "Layers", "addFromLibrary": "Add image from asset library", "addFromFile": "Add image from file", "addTextLayer": "Add text layer", "newLayer": "New layer", "flattenImage": "Flatten image", "mergeDown": "Merge down", "cropToContent": "Crop to content", "layerToCanvasSize": "Layer to canvas size", "lockAlpha": "Lock transparency", "unlockAlpha": "Unlock transparency", "anchor": "Anchor", "anchorAsNewLayer": "As new layer", "cancelFloating": "Cancel", "noLayers": "No layers yet — drop an image here", "hideLayer": "Hide layer", "showLayer": "Show layer", "lockLayer": "Lock pixels", "unlockLayer": "Unlock pixels", "lockPosition": "Lock position", "unlockPosition": "Unlock position", "lockAll": "Lock all", "unlockAll": "Unlock all", "moveUp": "Move up", "moveDown": "Move down", "duplicateLayer": "Duplicate layer", "deleteLayer": "Delete layer", "addMask": "Add mask", "deleteMask": "Delete mask", "enableMask": "Enable mask", "disableMask": "Disable mask", "opacity": "Opacity", "blendMode": "Blend", "sectionCanvas": "Canvas", "sectionText": "Text", "blend": { "normal": "Normal", "multiply": "Multiply", "screen": "Screen", "overlay": "Overlay", "darken": "Darken", "lighten": "Lighten", "colorDodge": "Color Dodge", "colorBurn": "Color Burn", "hardLight": "Hard Light", "softLight": "Soft Light", "difference": "Difference", "exclusion": "Exclusion" }, "font": "Font", "fontSize": "Size", "textColor": "Color", "letterSpacing": "Spacing", "lineHeight": "Leading", "align": "Align", "alignLeft": "Align left", "alignCenter": "Align center", "alignRight": "Align right", "textPlaceholder": "Type something…", "dropHint": "Drop image to add a layer", "addAdjustment": "Add adjustment layer", "addFill": "Add fill layer", "lockLabel": "Lock:", "fillType": "Fill", "fillSolid": "Solid color", "fillLinear": "Linear gradient", "fillRadial": "Radial gradient", "fillColors": "Colors", "fillAngle": "Angle", "fillRadius": "Radius", "adjustmentOp": "Adjustment", "adj_brightness": "Brightness", "adj_contrast": "Contrast", "adj_hue": "Hue", "adj_saturation": "Saturation", "adj_lightness": "Lightness", "adj_inBlack": "Input black", "adj_inWhite": "Input white", "adj_gamma": "Gamma", "adj_outBlack": "Output black", "adj_outWhite": "Output white", "adj_temperature": "Temperature (K)", "adj_mix": "Strength", "adj_exposure": "Exposure", "adj_black": "Black level", "adj_shadowsR": "Shadows R", "adj_shadowsG": "Shadows G", "adj_shadowsB": "Shadows B", "adj_midtonesR": "Midtones R", "adj_midtonesG": "Midtones G", "adj_midtonesB": "Midtones B", "adj_highlightsR": "Highlights R", "adj_highlightsG": "Highlights G", "adj_highlightsB": "Highlights B", "adj_amount": "Amount", "adj_levels": "Levels", "adj_level": "Level", "adjOp": { "brightness-contrast": "Brightness / Contrast", "hue-saturation": "Hue / Saturation", "invert": "Invert", "levels": "Levels", "curves": "Curves", "temperature": "Temperature", "exposure": "Exposure", "color-balance": "Color balance", "vibrance": "Vibrance", "posterize": "Posterize", "threshold": "Threshold" }, "curveCh_master": "Master", "curveCh_red": "R", "curveCh_green": "G", "curveCh_blue": "B", "filters": "Filters", "filterApply": "Apply", "filterCancel": "Cancel", "filter_gaussian-blur": "Gaussian blur", "filter_sharpen": "Sharpen", "filter_motion-blur": "Motion blur", "filter_pixelate": "Pixelate", "filter_noise": "Add noise", "filter_desaturate": "Desaturate", "filterParam_radius": "Radius", "filterParam_amount": "Amount", "filterParam_distance": "Distance", "filterParam_angle": "Angle", "filterParam_size": "Size" };
+const layerEditor$1 = { "undo": "Undo", "redo": "Redo", "capture": "Capture", "captureHint": "Upload composite + one image per visible layer", "captureFailed": "Capture failed", "exportPsd": "Export PSD", "exportPsdHint": "Download the document as a layered PSD file", "exportPsdFailed": "PSD export failed", "exportPsdAssetHint": "Save layered PSD into the asset library", "exportPsdAssetDone": "PSD saved to asset library", "importPsd": "Import PSD", "importPsdHint": "Import a PSD file as layers", "importPsdFailed": "PSD import failed", "importPsdEmpty": "No importable layers in this PSD", "uploadFailed": "Layer upload failed", "loadImageFailed": "Failed to load image", "loadFontFailed": "Failed to load font", "fitView": "Fit view", "canvasPreset": "Preset…", "canvasPresetHint": "Apply a canvas size preset", "presetGroupPaper": "Paper (300 ppi)", "presetGroupBusinessCard": "Business card (300 ppi)", "presetGroupWeb": "Web", "presetGroupDisplay": "Display", "presetGroupPhone": "Phone", "presetGroupMisc": "Misc", "fullscreen": "Fullscreen", "exitFullscreen": "Exit fullscreen", "close": "Close", "toolSelect": "Select", "toolMarquee": "Select area", "toolBrush": "Brush", "toolEraser": "Eraser", "toolText": "Text", "toolShape": "Shape", "toolWarp": "Warp", "warpApply": "Apply", "warpCancel": "Cancel", "shapeRect": "Rectangle", "shapeEllipse": "Ellipse", "shapeLine": "Line", "shapePolygon": "Polygon", "shapeStar": "Star", "shapeArc": "Arc", "shapeSpiral": "Spiral", "shapeSides": "Sides", "shapeStarRatio": "Inner ratio", "shapeTurns": "Turns", "shapeFill": "Fill", "shapeStroke": "Stroke", "shapeStrokeWidth": "Width", "shapeNewLayer": "New layer", "shapeCombine": "Add to layer", "groupLayers": "Group", "ungroupLayers": "Ungroup", "brushSize": "Size", "brushOpacity": "Opacity", "brushHardness": "Hardness", "brushColor": "Color", "targetContent": "Layer", "targetMask": "Mask", "maskInitWhite": "White (full opacity)", "maskInitBlack": "Black (full transparency)", "maskInitSelection": "Selection", "maskInitAlpha": "Layer's alpha channel", "maskInitGray": "Grayscale copy of layer", "maskShow": "Show mask", "maskDisable": "Disable mask", "maskEnable": "Enable mask", "maskInvert": "Invert mask", "maskApply": "Apply mask", "maskToSelection": "Mask to selection", "layers": "Layers", "addFromLibrary": "Add image from asset library", "addFromFile": "Add image from file", "addTextLayer": "Add text layer", "newLayer": "New layer", "flattenImage": "Flatten image", "mergeDown": "Merge down", "cropToContent": "Crop to content", "layerToCanvasSize": "Layer to canvas size", "lockAlpha": "Lock transparency", "unlockAlpha": "Unlock transparency", "anchor": "Anchor", "anchorAsNewLayer": "As new layer", "cancelFloating": "Cancel", "noLayers": "No layers yet — drop an image here", "hideLayer": "Hide layer", "showLayer": "Show layer", "lockLayer": "Lock pixels", "unlockLayer": "Unlock pixels", "lockPosition": "Lock position", "unlockPosition": "Unlock position", "lockAll": "Lock all", "unlockAll": "Unlock all", "moveUp": "Move up", "moveDown": "Move down", "duplicateLayer": "Duplicate layer", "deleteLayer": "Delete layer", "addMask": "Add mask", "deleteMask": "Delete mask", "enableMask": "Enable mask", "disableMask": "Disable mask", "opacity": "Opacity", "blendMode": "Blend", "sectionCanvas": "Canvas", "sectionText": "Text", "blend": { "normal": "Normal", "multiply": "Multiply", "screen": "Screen", "overlay": "Overlay", "darken": "Darken", "lighten": "Lighten", "colorDodge": "Color Dodge", "colorBurn": "Color Burn", "hardLight": "Hard Light", "softLight": "Soft Light", "difference": "Difference", "exclusion": "Exclusion" }, "font": "Font", "fontSize": "Size", "textColor": "Color", "letterSpacing": "Spacing", "lineHeight": "Leading", "align": "Align", "alignLeft": "Align left", "alignCenter": "Align center", "alignRight": "Align right", "textPlaceholder": "Type something…", "dropHint": "Drop image to add a layer", "addAdjustment": "Add adjustment layer", "addFill": "Add fill layer", "lockLabel": "Lock:", "fillType": "Fill", "fillSolid": "Solid color", "fillLinear": "Linear gradient", "fillRadial": "Radial gradient", "fillColors": "Colors", "fillAngle": "Angle", "fillRadius": "Radius", "adjustmentOp": "Adjustment", "adj_brightness": "Brightness", "adj_contrast": "Contrast", "adj_hue": "Hue", "adj_saturation": "Saturation", "adj_lightness": "Lightness", "adj_inBlack": "Input black", "adj_inWhite": "Input white", "adj_gamma": "Gamma", "adj_outBlack": "Output black", "adj_outWhite": "Output white", "adj_temperature": "Temperature (K)", "adj_mix": "Strength", "adj_exposure": "Exposure", "adj_black": "Black level", "adj_shadowsR": "Shadows R", "adj_shadowsG": "Shadows G", "adj_shadowsB": "Shadows B", "adj_midtonesR": "Midtones R", "adj_midtonesG": "Midtones G", "adj_midtonesB": "Midtones B", "adj_highlightsR": "Highlights R", "adj_highlightsG": "Highlights G", "adj_highlightsB": "Highlights B", "adj_amount": "Amount", "adj_levels": "Levels", "adj_level": "Level", "adjOp": { "brightness-contrast": "Brightness / Contrast", "hue-saturation": "Hue / Saturation", "invert": "Invert", "levels": "Levels", "curves": "Curves", "temperature": "Temperature", "exposure": "Exposure", "color-balance": "Color balance", "vibrance": "Vibrance", "posterize": "Posterize", "threshold": "Threshold" }, "curveCh_master": "Master", "curveCh_red": "R", "curveCh_green": "G", "curveCh_blue": "B", "filters": "Filters", "filterApply": "Apply", "filterCancel": "Cancel", "filter_gaussian-blur": "Gaussian blur", "filter_sharpen": "Sharpen", "filter_motion-blur": "Motion blur", "filter_pixelate": "Pixelate", "filter_noise": "Add noise", "filter_desaturate": "Desaturate", "filterParam_radius": "Radius", "filterParam_amount": "Amount", "filterParam_distance": "Distance", "filterParam_angle": "Angle", "filterParam_size": "Size" };
 const fxChain$1 = { "title": "FX Chain", "empty": "Chain FX nodes along the video wire into this node", "noPreview": "no live preview", "delivery": "Delivery", "dColorspace": "Colorspace", "dSize": "Resolution (short side)", "dFps": "Frame rate", "dCodec": "Codec", "dQuality": "Quality", "sourceOpt": "Source", "qDraft": "Draft", "qStandard": "Standard", "qHigh": "High" };
 const fxPreview$1 = { "run": "Preview clip", "stale": "Params changed — preview again", "window": "Real-filter preview · {s}s", "failed": "Preview failed — try again" };
 const fx$1 = { "processing": "Processing…", "done": "Done — ready for downstream", "adjustThenRun": "Adjust parameters, then Run", "fullscreen": "Full size", "exitFullscreen": "Exit full size", "chainMode": "Adjust freely — an FX Chain node downstream renders once", "makeProxy": "PROXY?", "makeProxyHint": "Large source — generate a lightweight proxy for smooth preview (Run still uses the original)", "needsTwoInputs": "Wire two videos into A and B", "needsAudioOrVideo": "Wire an audio or video input", "previewNote": "Preview is approximate — Run renders precisely", "mode": "Mode", "method": "Method", "effect": "Effect", "scope": "Scope", "preset": "Preset", "transition": "Transition", "amount": "Amount", "size": "Size", "strength": "Strength", "edgePreserve": "Edge keep", "exposure": "Exposure", "black": "Black", "temperature": "Temp (K)", "tempMix": "Temp mix", "hue": "Hue", "saturation": "Saturation", "vibrance": "Vibrance", "shadows": "Shadows", "midtones": "Midtones", "highlights": "Highlights", "preserveLightness": "Preserve lightness", "resetWheels": "Reset wheels", "master": "Master", "red": "Red", "green": "Green", "blue": "Blue", "resetCurve": "Reset curve", "curveHint": "Click to add · drag to move · right-click deletes", "keyColor": "Key color", "pickFromVideo": "Pick from frame", "similarity": "Similarity", "blend": "Blend", "despill": "Despill", "despillExpand": "Despill expand", "outAlpha": "Alpha (WebM)", "outMatte": "B/W matte", "duration": "Duration", "offset": "Offset", "offsetAuto": "0 = auto (end of A)", "lumaPreviewHint": "Luma wipe preview shows a crossfade — run to see the final wipe", "rangeX": "Range X", "rangeY": "Range Y", "edgeMode": "Edge fill", "threshold": "Threshold", "minGap": "Min gap", "detectHint": "Run scans for hard cuts and outputs one thumbnail per scene", "sceneFrames": "Scene frames", "sceneClips": "Scene clips", "sceneClipsHint": "Run splits the video at each cut into per-scene clips — wire the clips output into a Video Picker", "sceneClipPickHint": "Click a clip to select it — re-run and the clips output becomes that clip", "cutFast": "Fast (keyframe)", "cutPrecise": "Precise (re-encode)", "targetFps": "Target fps", "slowFactor": "Slow ×", "miMode": "Interp mode", "rateFrame": "Same rate", "rateField": "Double rate", "block": "Block", "atSeconds": "At (s)", "middle": "middle", "thresholdDb": "Threshold", "ratio": "Ratio", "attack": "Attack", "release": "Release", "makeup": "Makeup", "knee": "Knee", "intensity": "Intensity", "eqHint": "Double-click adds a band · drag moves · wheel = Q · double-click a dot removes", "targetI": "Target LUFS", "targetTp": "True peak", "targetLra": "LRA", "frameLen": "Frame (ms)", "gaussWin": "Gauss win", "silenceDb": "Silence (dB)", "minSilence": "Min silence (s)", "lutFile": "LUT file", "upload": "Upload", "interp": "Interp", "noLuts": "No LUTs yet — upload a .cube file", "lutPreviewUnavailable": "Live preview supports .cube and .3dl only — this LUT is applied on run", "refresh": "Refresh", "operator": "Blend mode", "opacity": "Opacity", "position": "Position", "scale": "Scale", "rotation": "Rotation", "skew": "Skew", "motionBlur": "Motion blur", "keyframes": "Keyframes", "addKey": "Add key", "delKey": "Delete key", "clearKeys": "Clear", "dragHint": "Drag the frame to move · wheel to scale", "cornerHint": "Drag the four corner handles", "rotoHint": "Click adds a point · drag moves · double-click a point removes it", "trackHint": "Click the frame to set the track point", "needsBgFg": "Wire background and foreground videos", "foreground": "Foreground", "background": "Background", "text": "Text", "fontLbl": "Font", "fontSize": "Size", "colorLbl": "Color", "strokeLbl": "Stroke", "anchor": "Anchor", "tStart": "Start (s)", "tEnd": "End (s)", "tEndAuto": "-1 = to the end", "fade": "Fade (s)", "subsPlaceholder": "Paste SRT / WebVTT cues here…", "cues": "cues", "trackPoint": "Track point", "pattern": "Pattern", "searchR": "Search", "feather": "Feather", "invert": "Invert", "transitionGroup": { "fade": "Fade", "wipe": "Wipe", "slide": "Slide & Smooth", "shape": "Shapes", "diagslice": "Diagonal & Slice", "coverreveal": "Cover & Reveal", "wind": "Wind", "fx": "FX" }, "echoHint": "Layered frame echoes with feedback trails.", "needsRetimeMap": "Map mode needs a grayscale retime image", "expressionHint": "Vars: t, frame, duration, fps. Fns: noise, fbm, turbulence, smoothstep, remap, mix, hash, random, sin/cos…", "stab360Hint": "Two-pass: analyzes equirect yaw/pitch motion, smooths the camera path, then re-renders.", "stmapGenHint": "16-bit STMap for the undistort → comp → redistort workflow. Feed it into the STMap node." };
@@ -57718,7 +57718,7 @@ const meshOps = { "operation": "操作", "op": { "decimate": "减面", "remesh":
 const splitPart = { "noInputImage": "连接一张图片后即可标注部件", "tool": { "point-pos": "＋ 点", "point-neg": "－ 点", "box": "框选" }, "newGroup": "新建部件", "clear": "清空", "chipBox": "框 {n}", "chipPoints": "部件 {n}（{count} 点）", "hint": "点击给当前部件加点（右键=排除点）；框选工具拖拽一个框即一个部件。也可以不标注，直接在提示词里输入概念走文本工作流。" };
 const materialStage = { "presets": "预设", "preset": { "plasticGlossy": "亮面塑料", "plasticMatte": "哑光塑料", "metalPolished": "抛光金属", "metalBrushed": "拉丝金属", "glassClear": "透明玻璃", "glassFrosted": "磨砂玻璃", "rubber": "橡胶", "ceramic": "陶瓷" }, "color": "颜色", "param": { "metalness": "金属度", "roughness": "粗糙度", "transmission": "透射", "opacity": "不透明度", "clearcoat": "清漆", "ior": "折射率" } };
 const loaderDrop = { "mismatchTitle": "文件类型不匹配", "typeMismatch": "该节点只能加载{kind}。", "assetTypeMismatch": "该节点加载{expected}，拖入的素材是{actual}。", "failedTitle": "ComfyTV 上传", "uploadFailed": "上传失败: {detail}" };
-const layerEditor = { "undo": "撤销", "redo": "重做", "capture": "截取", "captureHint": "上传合成图 + 每个可见图层一张", "captureFailed": "截取失败", "exportPsd": "导出 PSD", "exportPsdHint": "将文档下载为分层 PSD 文件", "exportPsdFailed": "PSD 导出失败", "exportPsdAssetHint": "把分层 PSD 存入资产库", "exportPsdAssetDone": "PSD 已存入资产库", "importPsd": "导入 PSD", "importPsdHint": "把 PSD 文件按图层导入", "importPsdFailed": "PSD 导入失败", "importPsdEmpty": "这个 PSD 里没有可导入的图层", "uploadFailed": "图层上传失败", "loadImageFailed": "图片加载失败", "loadFontFailed": "字体加载失败", "fitView": "适配视图", "fullscreen": "全屏", "exitFullscreen": "退出全屏", "close": "关闭", "toolSelect": "选择", "toolMarquee": "框选", "toolBrush": "画笔", "toolEraser": "橡皮", "toolText": "文字", "toolShape": "形状", "toolWarp": "变形", "warpApply": "应用", "warpCancel": "取消", "shapeRect": "矩形", "shapeEllipse": "椭圆", "shapeLine": "直线", "shapePolygon": "多边形", "shapeStar": "星形", "shapeArc": "圆弧", "shapeSpiral": "螺旋线", "shapeSides": "边数", "shapeStarRatio": "内径比", "shapeTurns": "圈数", "shapeFill": "填充", "shapeStroke": "描边", "shapeStrokeWidth": "宽度", "shapeNewLayer": "新图层", "shapeCombine": "并入当前层", "groupLayers": "编组", "ungroupLayers": "取消编组", "brushSize": "大小", "brushOpacity": "不透明度", "brushHardness": "硬度", "brushColor": "颜色", "targetContent": "图层", "targetMask": "蒙版", "maskInitWhite": "白色（全显示）", "maskInitBlack": "黑色（全隐藏）", "maskInitSelection": "选区", "maskInitAlpha": "图层 Alpha 通道", "maskInitGray": "图层灰度副本", "maskShow": "显示蒙版", "maskDisable": "停用蒙版", "maskEnable": "启用蒙版", "maskInvert": "反相蒙版", "maskApply": "应用蒙版", "maskToSelection": "蒙版转选区", "layers": "图层", "addFromLibrary": "从资产库添加图片", "addFromFile": "从文件添加图片", "addTextLayer": "添加文字图层", "newLayer": "新建图层", "flattenImage": "拼合图像", "mergeDown": "向下合并", "cropToContent": "裁剪到内容", "layerToCanvasSize": "图层扩展到画布", "lockAlpha": "锁定透明度", "unlockAlpha": "解锁透明度", "anchor": "锚定", "anchorAsNewLayer": "锚定为新图层", "cancelFloating": "取消", "noLayers": "还没有图层——拖张图片进来", "hideLayer": "隐藏图层", "showLayer": "显示图层", "lockLayer": "锁定像素", "unlockLayer": "解锁像素", "lockPosition": "锁定位置", "unlockPosition": "解锁位置", "lockAll": "锁定全部", "unlockAll": "解锁全部", "moveUp": "上移", "moveDown": "下移", "duplicateLayer": "复制图层", "deleteLayer": "删除图层", "addMask": "添加蒙版", "deleteMask": "删除蒙版", "enableMask": "启用蒙版", "disableMask": "停用蒙版", "opacity": "不透明度", "blendMode": "混合", "sectionCanvas": "画布", "sectionText": "文字", "blend": { "normal": "正常", "multiply": "正片叠底", "screen": "滤色", "overlay": "叠加", "darken": "变暗", "lighten": "变亮", "colorDodge": "颜色减淡", "colorBurn": "颜色加深", "hardLight": "强光", "softLight": "柔光", "difference": "差值", "exclusion": "排除" }, "font": "字体", "fontSize": "字号", "textColor": "颜色", "letterSpacing": "字距", "lineHeight": "行距", "align": "对齐", "alignLeft": "左对齐", "alignCenter": "居中", "alignRight": "右对齐", "textPlaceholder": "输入文字…", "dropHint": "拖入图片以添加图层", "addAdjustment": "添加调整层", "addFill": "添加填充层", "lockLabel": "锁定:", "fillType": "填充", "fillSolid": "纯色", "fillLinear": "线性渐变", "fillRadial": "径向渐变", "fillColors": "颜色", "fillAngle": "角度", "fillRadius": "半径", "adjustmentOp": "调整类型", "adj_brightness": "亮度", "adj_contrast": "对比度", "adj_hue": "色相", "adj_saturation": "饱和度", "adj_lightness": "明度", "adj_inBlack": "输入黑场", "adj_inWhite": "输入白场", "adj_gamma": "Gamma", "adj_outBlack": "输出黑场", "adj_outWhite": "输出白场", "adj_temperature": "色温 (K)", "adj_mix": "强度", "adj_exposure": "曝光", "adj_black": "黑位", "adj_shadowsR": "阴影 红", "adj_shadowsG": "阴影 绿", "adj_shadowsB": "阴影 蓝", "adj_midtonesR": "中间调 红", "adj_midtonesG": "中间调 绿", "adj_midtonesB": "中间调 蓝", "adj_highlightsR": "高光 红", "adj_highlightsG": "高光 绿", "adj_highlightsB": "高光 蓝", "adj_amount": "数量", "adj_levels": "级数", "adj_level": "阈值", "adjOp": { "brightness-contrast": "亮度 / 对比度", "hue-saturation": "色相 / 饱和度", "invert": "反相", "levels": "色阶", "curves": "曲线", "temperature": "色温", "exposure": "曝光", "color-balance": "色彩平衡", "vibrance": "自然饱和度", "posterize": "色调分离", "threshold": "阈值" }, "curveCh_master": "主", "curveCh_red": "红", "curveCh_green": "绿", "curveCh_blue": "蓝", "filters": "滤镜", "filterApply": "应用", "filterCancel": "取消", "filter_gaussian-blur": "高斯模糊", "filter_sharpen": "锐化", "filter_motion-blur": "运动模糊", "filter_pixelate": "像素化", "filter_noise": "添加噪点", "filter_desaturate": "去色", "filterParam_radius": "半径", "filterParam_amount": "数量", "filterParam_distance": "距离", "filterParam_angle": "角度", "filterParam_size": "大小" };
+const layerEditor = { "undo": "撤销", "redo": "重做", "capture": "截取", "captureHint": "上传合成图 + 每个可见图层一张", "captureFailed": "截取失败", "exportPsd": "导出 PSD", "exportPsdHint": "将文档下载为分层 PSD 文件", "exportPsdFailed": "PSD 导出失败", "exportPsdAssetHint": "把分层 PSD 存入资产库", "exportPsdAssetDone": "PSD 已存入资产库", "importPsd": "导入 PSD", "importPsdHint": "把 PSD 文件按图层导入", "importPsdFailed": "PSD 导入失败", "importPsdEmpty": "这个 PSD 里没有可导入的图层", "uploadFailed": "图层上传失败", "loadImageFailed": "图片加载失败", "loadFontFailed": "字体加载失败", "fitView": "适配视图", "canvasPreset": "预设…", "canvasPresetHint": "应用画布尺寸预设", "presetGroupPaper": "纸张 (300 ppi)", "presetGroupBusinessCard": "名片 (300 ppi)", "presetGroupWeb": "网页", "presetGroupDisplay": "显示器", "presetGroupPhone": "手机", "presetGroupMisc": "其它", "fullscreen": "全屏", "exitFullscreen": "退出全屏", "close": "关闭", "toolSelect": "选择", "toolMarquee": "框选", "toolBrush": "画笔", "toolEraser": "橡皮", "toolText": "文字", "toolShape": "形状", "toolWarp": "变形", "warpApply": "应用", "warpCancel": "取消", "shapeRect": "矩形", "shapeEllipse": "椭圆", "shapeLine": "直线", "shapePolygon": "多边形", "shapeStar": "星形", "shapeArc": "圆弧", "shapeSpiral": "螺旋线", "shapeSides": "边数", "shapeStarRatio": "内径比", "shapeTurns": "圈数", "shapeFill": "填充", "shapeStroke": "描边", "shapeStrokeWidth": "宽度", "shapeNewLayer": "新图层", "shapeCombine": "并入当前层", "groupLayers": "编组", "ungroupLayers": "取消编组", "brushSize": "大小", "brushOpacity": "不透明度", "brushHardness": "硬度", "brushColor": "颜色", "targetContent": "图层", "targetMask": "蒙版", "maskInitWhite": "白色（全显示）", "maskInitBlack": "黑色（全隐藏）", "maskInitSelection": "选区", "maskInitAlpha": "图层 Alpha 通道", "maskInitGray": "图层灰度副本", "maskShow": "显示蒙版", "maskDisable": "停用蒙版", "maskEnable": "启用蒙版", "maskInvert": "反相蒙版", "maskApply": "应用蒙版", "maskToSelection": "蒙版转选区", "layers": "图层", "addFromLibrary": "从资产库添加图片", "addFromFile": "从文件添加图片", "addTextLayer": "添加文字图层", "newLayer": "新建图层", "flattenImage": "拼合图像", "mergeDown": "向下合并", "cropToContent": "裁剪到内容", "layerToCanvasSize": "图层扩展到画布", "lockAlpha": "锁定透明度", "unlockAlpha": "解锁透明度", "anchor": "锚定", "anchorAsNewLayer": "锚定为新图层", "cancelFloating": "取消", "noLayers": "还没有图层——拖张图片进来", "hideLayer": "隐藏图层", "showLayer": "显示图层", "lockLayer": "锁定像素", "unlockLayer": "解锁像素", "lockPosition": "锁定位置", "unlockPosition": "解锁位置", "lockAll": "锁定全部", "unlockAll": "解锁全部", "moveUp": "上移", "moveDown": "下移", "duplicateLayer": "复制图层", "deleteLayer": "删除图层", "addMask": "添加蒙版", "deleteMask": "删除蒙版", "enableMask": "启用蒙版", "disableMask": "停用蒙版", "opacity": "不透明度", "blendMode": "混合", "sectionCanvas": "画布", "sectionText": "文字", "blend": { "normal": "正常", "multiply": "正片叠底", "screen": "滤色", "overlay": "叠加", "darken": "变暗", "lighten": "变亮", "colorDodge": "颜色减淡", "colorBurn": "颜色加深", "hardLight": "强光", "softLight": "柔光", "difference": "差值", "exclusion": "排除" }, "font": "字体", "fontSize": "字号", "textColor": "颜色", "letterSpacing": "字距", "lineHeight": "行距", "align": "对齐", "alignLeft": "左对齐", "alignCenter": "居中", "alignRight": "右对齐", "textPlaceholder": "输入文字…", "dropHint": "拖入图片以添加图层", "addAdjustment": "添加调整层", "addFill": "添加填充层", "lockLabel": "锁定:", "fillType": "填充", "fillSolid": "纯色", "fillLinear": "线性渐变", "fillRadial": "径向渐变", "fillColors": "颜色", "fillAngle": "角度", "fillRadius": "半径", "adjustmentOp": "调整类型", "adj_brightness": "亮度", "adj_contrast": "对比度", "adj_hue": "色相", "adj_saturation": "饱和度", "adj_lightness": "明度", "adj_inBlack": "输入黑场", "adj_inWhite": "输入白场", "adj_gamma": "Gamma", "adj_outBlack": "输出黑场", "adj_outWhite": "输出白场", "adj_temperature": "色温 (K)", "adj_mix": "强度", "adj_exposure": "曝光", "adj_black": "黑位", "adj_shadowsR": "阴影 红", "adj_shadowsG": "阴影 绿", "adj_shadowsB": "阴影 蓝", "adj_midtonesR": "中间调 红", "adj_midtonesG": "中间调 绿", "adj_midtonesB": "中间调 蓝", "adj_highlightsR": "高光 红", "adj_highlightsG": "高光 绿", "adj_highlightsB": "高光 蓝", "adj_amount": "数量", "adj_levels": "级数", "adj_level": "阈值", "adjOp": { "brightness-contrast": "亮度 / 对比度", "hue-saturation": "色相 / 饱和度", "invert": "反相", "levels": "色阶", "curves": "曲线", "temperature": "色温", "exposure": "曝光", "color-balance": "色彩平衡", "vibrance": "自然饱和度", "posterize": "色调分离", "threshold": "阈值" }, "curveCh_master": "主", "curveCh_red": "红", "curveCh_green": "绿", "curveCh_blue": "蓝", "filters": "滤镜", "filterApply": "应用", "filterCancel": "取消", "filter_gaussian-blur": "高斯模糊", "filter_sharpen": "锐化", "filter_motion-blur": "运动模糊", "filter_pixelate": "像素化", "filter_noise": "添加噪点", "filter_desaturate": "去色", "filterParam_radius": "半径", "filterParam_amount": "数量", "filterParam_distance": "距离", "filterParam_angle": "角度", "filterParam_size": "大小" };
 const fxChain = { "title": "特效链", "empty": "沿 video 线把 FX 节点串联接入本节点即可成链", "noPreview": "无实时预览", "delivery": "交付出片", "dColorspace": "色彩空间", "dSize": "分辨率(短边)", "dFps": "帧率", "dCodec": "编码", "dQuality": "质量", "sourceOpt": "原始", "qDraft": "草稿", "qStandard": "标准", "qHigh": "高" };
 const fxPreview = { "run": "预览片段", "stale": "参数已变 — 请重新预览", "window": "真实滤镜预览 · {s} 秒", "failed": "预览失败 — 请重试" };
 const fx = { "processing": "处理中…", "done": "完成 — 可供下游使用", "adjustThenRun": "调整参数后点击 Run", "fullscreen": "全屏编辑", "exitFullscreen": "退出全屏", "chainMode": "自由调整——由下游 FX Chain 节点一次渲染", "makeProxy": "PROXY?", "makeProxyHint": "源文件较大——生成轻量代理让预览流畅（运行仍使用原片）", "needsTwoInputs": "需要接入两个视频（A 和 B）", "needsAudioOrVideo": "需要接入音频或视频", "previewNote": "预览为近似效果 — Run 后精确渲染", "mode": "模式", "method": "方法", "effect": "效果", "scope": "示波器", "preset": "预设", "transition": "转场", "amount": "强度", "size": "尺寸", "strength": "力度", "edgePreserve": "保边", "exposure": "曝光", "black": "黑位", "temperature": "色温 (K)", "tempMix": "色温混合", "hue": "色相", "saturation": "饱和度", "vibrance": "自然饱和", "shadows": "阴影", "midtones": "中间调", "highlights": "高光", "preserveLightness": "保持明度", "resetWheels": "重置色轮", "master": "主通道", "red": "红", "green": "绿", "blue": "蓝", "resetCurve": "重置曲线", "curveHint": "单击添加 · 拖动移动 · 右键删除", "keyColor": "键色", "pickFromVideo": "从画面取色", "similarity": "相似度", "blend": "边缘融合", "despill": "去溢色", "despillExpand": "溢色扩展", "outAlpha": "透明通道 (WebM)", "outMatte": "黑白遮罩", "duration": "时长", "offset": "起始位置", "offsetAuto": "0 = 自动（A 末尾）", "lumaPreviewHint": "亮度擦除预览仅显示交叉淡化 — 运行后可见最终擦除效果", "rangeX": "水平搜索", "rangeY": "垂直搜索", "edgeMode": "边缘填充", "threshold": "阈值", "minGap": "最小间隔", "detectHint": "Run 扫描硬切点，每个场景输出一张缩略图", "sceneFrames": "场景帧", "sceneClips": "场景片段", "sceneClipsHint": "Run 在每个切点拆条，输出逐场景片段——把 clips 输出接到视频挑选器", "sceneClipPickHint": "点击选中片段——重新 Run 后 clips 输出即为所选片段", "cutFast": "快速（关键帧）", "cutPrecise": "精确（重编码）", "targetFps": "目标帧率", "slowFactor": "慢放倍数", "miMode": "补偿模式", "rateFrame": "同帧率", "rateField": "倍帧率", "block": "块大小", "atSeconds": "取帧时间 (s)", "middle": "中点", "thresholdDb": "阈值", "ratio": "压缩比", "attack": "启动", "release": "释放", "makeup": "增益补偿", "knee": "拐点", "intensity": "强度", "eqHint": "双击空白添加频段 · 拖动调节 · 滚轮调 Q · 双击圆点删除", "targetI": "目标响度 LUFS", "targetTp": "真峰值", "targetLra": "响度范围", "frameLen": "帧长 (ms)", "gaussWin": "高斯窗", "silenceDb": "静音阈值 (dB)", "minSilence": "最短静音 (s)", "lutFile": "LUT 文件", "upload": "上传", "interp": "插值", "noLuts": "暂无 LUT — 请上传 .cube 文件", "lutPreviewUnavailable": "实时预览仅支持 .cube 和 .3dl —— 该 LUT 将在运行时生效", "refresh": "刷新", "operator": "混合模式", "opacity": "不透明度", "position": "位置", "scale": "缩放", "rotation": "旋转", "skew": "斜切", "motionBlur": "运动模糊", "keyframes": "关键帧", "addKey": "打帧", "delKey": "删帧", "clearKeys": "清空", "dragHint": "拖动画面移动 · 滚轮缩放", "cornerHint": "拖动四个角点", "rotoHint": "单击加点 · 拖动移动 · 双击点删除", "trackHint": "在画面上单击设置跟踪点", "needsBgFg": "需要接入背景和前景视频", "foreground": "前景", "background": "背景", "text": "文本", "fontLbl": "字体", "fontSize": "字号", "colorLbl": "颜色", "strokeLbl": "描边", "anchor": "锚点", "tStart": "开始 (s)", "tEnd": "结束 (s)", "tEndAuto": "-1 = 到结尾", "fade": "淡入淡出 (s)", "subsPlaceholder": "在此粘贴 SRT / WebVTT 字幕…", "cues": "条字幕", "trackPoint": "跟踪点", "pattern": "模板半径", "searchR": "搜索半径", "feather": "羽化", "invert": "反转", "transitionGroup": { "fade": "淡变", "wipe": "擦除", "slide": "滑动与平滑", "shape": "形状开合", "diagslice": "对角与切片", "coverreveal": "覆盖与揭示", "wind": "风蚀", "fx": "特效" }, "echoHint": "多帧残影叠加,带反馈拖尾。", "needsRetimeMap": "Map 模式需要接入灰度重定时图", "expressionHint": "变量:t、frame、duration、fps;函数:noise、fbm、turbulence、smoothstep、remap、mix、hash、random、sin/cos…", "stab360Hint": "两遍:分析 equirect 的 yaw/pitch 运动,平滑相机路径后重渲染。", "stmapGenHint": "16-bit STMap,用于 undistort→合成→redistort 工作流;接入 STMap 节点使用。" };
@@ -108817,7 +108817,7 @@ const DEFAULT_MATERIAL = {
   emissive: "#000000",
   emissiveIntensity: 0
 };
-const preset = (p2) => ({
+const preset$1 = (p2) => ({
   metalness: 0,
   roughness: 0.4,
   transmission: 0,
@@ -108829,14 +108829,14 @@ const preset = (p2) => ({
   ...p2
 });
 const MATERIAL_PRESETS = [
-  { key: "plasticGlossy", params: preset({ roughness: 0.15, clearcoat: 0.6 }) },
-  { key: "plasticMatte", params: preset({ roughness: 0.75 }) },
-  { key: "metalPolished", params: preset({ metalness: 1, roughness: 0.08 }) },
-  { key: "metalBrushed", params: preset({ metalness: 1, roughness: 0.45 }) },
-  { key: "glassClear", params: preset({ roughness: 0.05, transmission: 1 }) },
-  { key: "glassFrosted", params: preset({ roughness: 0.45, transmission: 1 }) },
-  { key: "rubber", params: preset({ roughness: 0.95 }) },
-  { key: "ceramic", params: preset({ roughness: 0.2, clearcoat: 1, clearcoatRoughness: 0.05 }) }
+  { key: "plasticGlossy", params: preset$1({ roughness: 0.15, clearcoat: 0.6 }) },
+  { key: "plasticMatte", params: preset$1({ roughness: 0.75 }) },
+  { key: "metalPolished", params: preset$1({ metalness: 1, roughness: 0.08 }) },
+  { key: "metalBrushed", params: preset$1({ metalness: 1, roughness: 0.45 }) },
+  { key: "glassClear", params: preset$1({ roughness: 0.05, transmission: 1 }) },
+  { key: "glassFrosted", params: preset$1({ roughness: 0.45, transmission: 1 }) },
+  { key: "rubber", params: preset$1({ roughness: 0.95 }) },
+  { key: "ceramic", params: preset$1({ roughness: 0.2, clearcoat: 1, clearcoatRoughness: 0.05 }) }
 ];
 const clamp01$4 = (v, fallback) => {
   const n = Number(v);
@@ -109011,14 +109011,14 @@ const _hoisted_72$1 = ["title", "onClick"];
 const _hoisted_73$1 = ["title", "onClick"];
 const _hoisted_74$1 = ["title", "onClick"];
 const _hoisted_75$1 = { class: "ctv:w-3 ctv:inline-block ctv:text-primary-background" };
-const _hoisted_76 = {
+const _hoisted_76$1 = {
   key: 0,
   class: "pi pi-check"
 };
-const _hoisted_77 = { class: "ctv:flex-1 ctv:truncate ctv:italic ctv:text-muted-foreground" };
-const _hoisted_78 = ["onClick"];
-const _hoisted_79 = { class: "ctv:w-3 ctv:inline-block ctv:text-primary-background" };
-const _hoisted_80 = {
+const _hoisted_77$1 = { class: "ctv:flex-1 ctv:truncate ctv:italic ctv:text-muted-foreground" };
+const _hoisted_78$1 = ["onClick"];
+const _hoisted_79$1 = { class: "ctv:w-3 ctv:inline-block ctv:text-primary-background" };
+const _hoisted_80$1 = {
   key: 0,
   class: "pi pi-check"
 };
@@ -109848,9 +109848,9 @@ const _sfc_main$2$ = /* @__PURE__ */ defineComponent({
                 ))
               }, [
                 createBaseVNode("span", _hoisted_75$1, [
-                  unref(tagMenuIsUncategorized)() ? (openBlock(), createElementBlock("i", _hoisted_76)) : createCommentVNode("", true)
+                  unref(tagMenuIsUncategorized)() ? (openBlock(), createElementBlock("i", _hoisted_76$1)) : createCommentVNode("", true)
                 ]),
-                createBaseVNode("span", _hoisted_77, toDisplayString$1(_ctx.$t("assets.category.none")), 1)
+                createBaseVNode("span", _hoisted_77$1, toDisplayString$1(_ctx.$t("assets.category.none")), 1)
               ]),
               _cache2[61] || (_cache2[61] = createBaseVNode("div", { class: "ctv:my-1 ctv:border-t ctv:border-border-subtle" }, null, -1)),
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(categories), (cat2) => {
@@ -109860,11 +109860,11 @@ const _sfc_main$2$ = /* @__PURE__ */ defineComponent({
                   class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:px-1.5 ctv:py-1 ctv:rounded-sm ctv:cursor-pointer ctv:text-left ctv:text-2xs ctv:bg-transparent ctv:border-none ctv:text-base-foreground ctv:hover:bg-secondary-background-hover",
                   onClick: withModifiers(($event) => unref(toggleOutputTag)(cat2.id), ["stop"])
                 }, [
-                  createBaseVNode("span", _hoisted_79, [
-                    unref(tagMenuHas)(cat2.id) ? (openBlock(), createElementBlock("i", _hoisted_80)) : createCommentVNode("", true)
+                  createBaseVNode("span", _hoisted_79$1, [
+                    unref(tagMenuHas)(cat2.id) ? (openBlock(), createElementBlock("i", _hoisted_80$1)) : createCommentVNode("", true)
                   ]),
                   createBaseVNode("span", _hoisted_81, toDisplayString$1(cat2.name), 1)
-                ], 8, _hoisted_78);
+                ], 8, _hoisted_78$1);
               }), 128)),
               unref(categories).length ? (openBlock(), createElementBlock("div", _hoisted_82)) : createCommentVNode("", true),
               createBaseVNode("button", {
@@ -127464,7 +127464,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-BOuN765u.mjs");
+    const { STLLoader } = await import("./STLLoader-8laPG9Xr.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -127472,7 +127472,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-D5ePTWJZ.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-BBlk88t4.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -155789,6 +155789,87 @@ const _sfc_main$21 = /* @__PURE__ */ defineComponent({
   }
 });
 const FxSlider = /* @__PURE__ */ _export_sfc(_sfc_main$21, [["__scopeId", "data-v-a7c2c51e"]]);
+const preset = (id, label, width, height) => ({ id, label, width, height });
+const CANVAS_PRESET_GROUPS = [
+  {
+    id: "paper",
+    labelKey: "layerEditor.presetGroupPaper",
+    presets: [
+      preset("a4", "A4 (300 ppi) · 2480×3508", 2480, 3508),
+      preset("a5", "A5 (300 ppi) · 1748×2480", 1748, 2480),
+      preset("a6", "A6 (300 ppi) · 1240×1748", 1240, 1748),
+      preset("a7", "A7 (300 ppi) · 874×1240", 874, 1240),
+      preset("b5", "B5 (300 ppi) · 2079×2953", 2079, 2953),
+      preset("b5-japan", "B5-Japan (300 ppi) · 2150×3035", 2150, 3035),
+      preset("us-letter", "US Letter (300 ppi) · 2550×3300", 2550, 3300)
+    ]
+  },
+  {
+    id: "business-card",
+    labelKey: "layerEditor.presetGroupBusinessCard",
+    presets: [
+      preset("card-us", "88.9×50.8 US · 1050×600", 1050, 600),
+      preset("card-we", "85×55 Western Europe · 1004×650", 1004, 650),
+      preset("card-ee", "90×50 Eastern Europe · 1063×591", 1063, 591),
+      preset("card-au", "90×55 AU / IN · 1063×650", 1063, 650)
+    ]
+  },
+  {
+    id: "web",
+    labelKey: "layerEditor.presetGroupWeb",
+    presets: [
+      preset("web-avatar", "Avatar / icon · 512×512", 512, 512),
+      preset("web-leaderboard", "Banner leaderboard · 728×90", 728, 90),
+      preset("web-half-page", "Banner half page · 300×600", 300, 600),
+      preset("web-rectangle", "Banner medium rectangle · 300×250", 300, 250),
+      preset("web-skyscraper", "Banner wide skyscraper · 160×600", 160, 600)
+    ]
+  },
+  {
+    id: "display",
+    labelKey: "layerEditor.presetGroupDisplay",
+    presets: [
+      preset("xga", "4:3 · 1024×768 (XGA)", 1024, 768),
+      preset("xga-plus", "4:3 · 1152×864 (XGA+)", 1152, 864),
+      preset("uxga", "4:3 · 1600×1200 (UXGA)", 1600, 1200),
+      preset("qxga", "4:3 · 2048×1536 (QXGA)", 2048, 1536),
+      preset("wsxga-plus", "16:10 · 1680×1050 (WSXGA+)", 1680, 1050),
+      preset("wuxga", "16:10 · 1920×1200 (WUXGA)", 1920, 1200),
+      preset("wqxga", "16:10 · 2560×1600 (WQXGA)", 2560, 1600),
+      preset("wquxga", "16:10 · 3840×2400 (WQUXGA)", 3840, 2400),
+      preset("hd-720", "16:9 · 1280×720 (HD 720p)", 1280, 720),
+      preset("full-hd", "16:9 · 1920×1080 (Full HD)", 1920, 1080),
+      preset("uhd-4k", "16:9 · 3840×2160 (4K UHD)", 3840, 2160),
+      preset("dci-2k", "17:9 · 2048×1080 (DCI 2K)", 2048, 1080),
+      preset("dci-4k", "17:9 · 4096×2160 (DCI 4K)", 4096, 2160)
+    ]
+  },
+  {
+    id: "phone",
+    labelKey: "layerEditor.presetGroupPhone",
+    presets: [
+      preset("phone-18-5-9", "18.5:9 · 1440×2960", 1440, 2960),
+      preset("phone-19-9", "19:9 · 1440×3040", 1440, 3040),
+      preset("phone-19-5-9", "19.5:9 · 1440×3120", 1440, 3120),
+      preset("phone-20-9", "20:9 · 1440×3200", 1440, 3200)
+    ]
+  },
+  {
+    id: "misc",
+    labelKey: "layerEditor.presetGroupMisc",
+    presets: [
+      preset("cd-cover", "CD cover (300 ppi) · 1417×1417", 1417, 1417),
+      preset("toilet-paper", "Toilet paper (US) · 1350×1350", 1350, 1350)
+    ]
+  }
+];
+function findCanvasPreset(id) {
+  for (const group of CANVAS_PRESET_GROUPS) {
+    const hit = group.presets.find((p2) => p2.id === id);
+    if (hit) return hit;
+  }
+  return null;
+}
 const ARTBOARD_MIN = 64;
 const ARTBOARD_MAX = 4096;
 const BLEND_KEYS = {
@@ -156045,6 +156126,13 @@ function useLayerListPanel(editor) {
     const size2 = editor.canvasSize.value;
     editor.setArtboardSize(axis === "w" ? clamped : size2.width, axis === "h" ? clamped : size2.height);
   }
+  function onCanvasPreset(e) {
+    const select = e.target;
+    const preset2 = findCanvasPreset(select.value);
+    select.value = "";
+    if (!preset2) return;
+    editor.setArtboardSize(preset2.width, preset2.height);
+  }
   function drawThumb(el, node) {
     var _a2, _b2;
     if (!el) return;
@@ -156138,6 +156226,7 @@ function useLayerListPanel(editor) {
     addText,
     commitRename,
     onArtboardSize,
+    onCanvasPreset,
     fillTypeOptions,
     onFillType,
     onFillSolidColor,
@@ -156335,33 +156424,42 @@ const _hoisted_53 = ["value"];
 const _hoisted_54 = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:px-2 ctv:py-1 ctv:text-[10px] ctv:text-[#9b9b9b]" };
 const _hoisted_55 = ["value"];
 const _hoisted_56 = ["value"];
-const _hoisted_57 = {
+const _hoisted_57 = { class: "ctv:px-2 ctv:pb-1" };
+const _hoisted_58 = ["title"];
+const _hoisted_59 = {
+  value: "",
+  selected: ""
+};
+const _hoisted_60 = ["label"];
+const _hoisted_61 = ["value"];
+const _hoisted_62 = {
   key: 3,
   class: "ctv:border-t ctv:border-[#161616] ctv:bg-[#2f2f2f] ctv:px-2 ctv:py-1"
 };
-const _hoisted_58 = { class: "ctv:flex ctv:items-center ctv:justify-between ctv:pb-0.5" };
-const _hoisted_59 = { class: "ctv:text-[10px] ctv:uppercase ctv:tracking-wide ctv:text-[#d6d6d6]" };
-const _hoisted_60 = { class: "ctv:flex ctv:items-center ctv:gap-0.5" };
-const _hoisted_61 = ["title"];
-const _hoisted_62 = ["title"];
-const _hoisted_63 = { class: "ctv:flex ctv:items-center ctv:justify-evenly ctv:border-t ctv:border-[#161616] ctv:bg-[#333333] ctv:px-1 ctv:py-0.5" };
-const _hoisted_64 = { class: "ctv:relative" };
-const _hoisted_65 = ["disabled", "title"];
+const _hoisted_63 = { class: "ctv:flex ctv:items-center ctv:justify-between ctv:pb-0.5" };
+const _hoisted_64 = { class: "ctv:text-[10px] ctv:uppercase ctv:tracking-wide ctv:text-[#d6d6d6]" };
+const _hoisted_65 = { class: "ctv:flex ctv:items-center ctv:gap-0.5" };
 const _hoisted_66 = ["title"];
-const _hoisted_67 = ["disabled"];
-const _hoisted_68 = { class: "ctv:relative" };
-const _hoisted_69 = ["disabled", "title"];
-const _hoisted_70 = ["onClick"];
+const _hoisted_67 = ["title"];
+const _hoisted_68 = { class: "ctv:flex ctv:items-center ctv:justify-evenly ctv:border-t ctv:border-[#161616] ctv:bg-[#333333] ctv:px-1 ctv:py-0.5" };
+const _hoisted_69 = { class: "ctv:relative" };
+const _hoisted_70 = ["disabled", "title"];
 const _hoisted_71 = ["title"];
-const _hoisted_72 = ["title"];
-const _hoisted_73 = ["title"];
-const _hoisted_74 = ["title"];
-const _hoisted_75 = ["disabled", "title"];
+const _hoisted_72 = ["disabled"];
+const _hoisted_73 = { class: "ctv:relative" };
+const _hoisted_74 = ["disabled", "title"];
+const _hoisted_75 = ["onClick"];
+const _hoisted_76 = ["title"];
+const _hoisted_77 = ["title"];
+const _hoisted_78 = ["title"];
+const _hoisted_79 = ["title"];
+const _hoisted_80 = ["disabled", "title"];
 const paramLabelClass$1 = "ctv:w-12 ctv:shrink-0 ctv:text-[10px] ctv:uppercase ctv:tracking-wide ctv:text-[#9b9b9b]";
 const paramValueClass = "ctv:w-8 ctv:text-right ctv:text-[10px] ctv:font-mono ctv:text-[#9b9b9b]";
 const menuItemClass = "ctv:flex ctv:items-center ctv:border-0 ctv:bg-transparent ctv:px-3 ctv:py-1 ctv:text-left ctv:text-[11px] ctv:text-[#d6d6d6] ctv:cursor-pointer ctv:[font-family:inherit] ctv:hover:bg-[#3a3a3a] ctv:disabled:opacity-30 ctv:disabled:cursor-default ctv:disabled:hover:bg-transparent";
 const miniBtnClass$1 = "ctv:inline-flex ctv:size-6 ctv:shrink-0 ctv:items-center ctv:justify-center ctv:rounded ctv:border-0 ctv:bg-transparent ctv:p-0 ctv:text-[#9b9b9b] ctv:cursor-pointer ctv:transition-colors ctv:hover:bg-[#3a3a3a] ctv:hover:text-[#d6d6d6] ctv:disabled:opacity-30 ctv:disabled:cursor-default ctv:disabled:hover:bg-transparent";
 const numInputClass$1 = "ctv-num-input ctv:w-14 ctv:rounded-xs ctv:border ctv:border-[#3d3d3d] ctv:bg-[#1e1e1e] ctv:px-1 ctv:py-0.5 ctv:text-[11px] ctv:font-mono ctv:text-[#d6d6d6]";
+const presetSelectClass = "ctv:w-full ctv:cursor-pointer ctv:rounded-xs ctv:border ctv:border-[#3d3d3d] ctv:bg-[#1e1e1e] ctv:px-1 ctv:py-0.5 ctv:text-[10px] ctv:text-[#9b9b9b] ctv:[font-family:inherit]";
 const colorInputClass = "ctv:size-6 ctv:cursor-pointer ctv:rounded ctv:border ctv:border-[#161616] ctv:bg-transparent ctv:p-0 ctv:disabled:opacity-30";
 const _sfc_main$20 = /* @__PURE__ */ defineComponent({
   __name: "LayerListPanel",
@@ -156406,6 +156504,7 @@ const _sfc_main$20 = /* @__PURE__ */ defineComponent({
       addText,
       commitRename,
       onArtboardSize,
+      onCanvasPreset,
       drawThumb,
       drawMaskThumb
     } = useLayerListPanel(editor);
@@ -156592,7 +156691,7 @@ const _sfc_main$20 = /* @__PURE__ */ defineComponent({
               value: unref(active) ? Math.round(unref(active).opacity * 100) : 100,
               onChange: _cache2[5] || (_cache2[5] = (e) => unref(active) && unref(editor).setOpacity(unref(active).id, Math.max(0, Math.min(100, Number(e.target.value))) / 100))
             }, null, 40, _hoisted_7$$),
-            _cache2[65] || (_cache2[65] = createTextVNode("% ", -1))
+            _cache2[66] || (_cache2[66] = createTextVNode("% ", -1))
           ], 2)
         ]),
         createBaseVNode("div", _hoisted_8$I, [
@@ -156814,7 +156913,7 @@ const _sfc_main$20 = /* @__PURE__ */ defineComponent({
               createVNode(unref(IconMaximize), { class: "ctv:size-3.5" })
             ], 8, _hoisted_30$3)
           ], 64)) : createCommentVNode("", true),
-          _cache2[66] || (_cache2[66] = createBaseVNode("div", { class: "ctv:flex-1" }, null, -1)),
+          _cache2[67] || (_cache2[67] = createBaseVNode("div", { class: "ctv:flex-1" }, null, -1)),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(miniBtnClass$1),
@@ -156826,7 +156925,7 @@ const _sfc_main$20 = /* @__PURE__ */ defineComponent({
         ])) : createCommentVNode("", true),
         unref(active) ? (openBlock(), createElementBlock(Fragment$1, { key: 2 }, [
           unref(active).kind === "adjustment" ? (openBlock(), createElementBlock(Fragment$1, { key: 0 }, [
-            _cache2[67] || (_cache2[67] = createBaseVNode("div", { class: "ctv:mx-2 ctv:border-t ctv:border-[#3d3d3d]" }, null, -1)),
+            _cache2[68] || (_cache2[68] = createBaseVNode("div", { class: "ctv:mx-2 ctv:border-t ctv:border-[#3d3d3d]" }, null, -1)),
             createBaseVNode("div", _hoisted_32$1, [
               createBaseVNode("span", {
                 class: normalizeClass(paramLabelClass$1)
@@ -156876,7 +156975,7 @@ const _sfc_main$20 = /* @__PURE__ */ defineComponent({
             ], 64)) : createCommentVNode("", true)
           ], 64)) : createCommentVNode("", true),
           unref(active).kind === "vector" ? (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
-            _cache2[68] || (_cache2[68] = createBaseVNode("div", { class: "ctv:mx-2 ctv:border-t ctv:border-[#3d3d3d]" }, null, -1)),
+            _cache2[69] || (_cache2[69] = createBaseVNode("div", { class: "ctv:mx-2 ctv:border-t ctv:border-[#3d3d3d]" }, null, -1)),
             createBaseVNode("div", _hoisted_37, [
               createBaseVNode("span", {
                 class: normalizeClass(paramLabelClass$1)
@@ -156930,7 +157029,7 @@ const _sfc_main$20 = /* @__PURE__ */ defineComponent({
             ])
           ], 64)) : createCommentVNode("", true),
           unref(active).kind === "fill" ? (openBlock(), createElementBlock(Fragment$1, { key: 2 }, [
-            _cache2[69] || (_cache2[69] = createBaseVNode("div", { class: "ctv:mx-2 ctv:border-t ctv:border-[#3d3d3d]" }, null, -1)),
+            _cache2[70] || (_cache2[70] = createBaseVNode("div", { class: "ctv:mx-2 ctv:border-t ctv:border-[#3d3d3d]" }, null, -1)),
             createBaseVNode("div", _hoisted_44, [
               createBaseVNode("span", {
                 class: normalizeClass(paramLabelClass$1)
@@ -157015,7 +157114,7 @@ const _sfc_main$20 = /* @__PURE__ */ defineComponent({
             value: unref(editor).canvasSize.value.width,
             onChange: _cache2[37] || (_cache2[37] = ($event) => unref(onArtboardSize)($event, "w"))
           }, null, 40, _hoisted_55),
-          _cache2[70] || (_cache2[70] = createBaseVNode("span", null, "×", -1)),
+          _cache2[71] || (_cache2[71] = createBaseVNode("span", null, "×", -1)),
           createBaseVNode("input", {
             type: "number",
             min: "64",
@@ -157025,28 +157124,51 @@ const _sfc_main$20 = /* @__PURE__ */ defineComponent({
             value: unref(editor).canvasSize.value.height,
             onChange: _cache2[38] || (_cache2[38] = ($event) => unref(onArtboardSize)($event, "h"))
           }, null, 40, _hoisted_56),
-          _cache2[71] || (_cache2[71] = createBaseVNode("span", null, "px", -1))
+          _cache2[72] || (_cache2[72] = createBaseVNode("span", null, "px", -1))
         ]),
-        unref(editor).filterSession.value ? (openBlock(), createElementBlock("div", _hoisted_57, [
-          createBaseVNode("div", _hoisted_58, [
-            createBaseVNode("span", _hoisted_59, toDisplayString$1(_ctx.$t(`layerEditor.filter_${unref(editor).filterSession.value.op}`)), 1),
-            createBaseVNode("div", _hoisted_60, [
+        createBaseVNode("div", _hoisted_57, [
+          createBaseVNode("select", {
+            class: normalizeClass(presetSelectClass),
+            title: _ctx.$t("layerEditor.canvasPresetHint"),
+            onChange: _cache2[39] || (_cache2[39] = //@ts-ignore
+            (...args) => unref(onCanvasPreset) && unref(onCanvasPreset)(...args))
+          }, [
+            createBaseVNode("option", _hoisted_59, toDisplayString$1(_ctx.$t("layerEditor.canvasPreset")), 1),
+            (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(CANVAS_PRESET_GROUPS), (group) => {
+              return openBlock(), createElementBlock("optgroup", {
+                key: group.id,
+                label: _ctx.$t(group.labelKey)
+              }, [
+                (openBlock(true), createElementBlock(Fragment$1, null, renderList(group.presets, (p2) => {
+                  return openBlock(), createElementBlock("option", {
+                    key: p2.id,
+                    value: p2.id
+                  }, toDisplayString$1(p2.label), 9, _hoisted_61);
+                }), 128))
+              ], 8, _hoisted_60);
+            }), 128))
+          ], 40, _hoisted_58)
+        ]),
+        unref(editor).filterSession.value ? (openBlock(), createElementBlock("div", _hoisted_62, [
+          createBaseVNode("div", _hoisted_63, [
+            createBaseVNode("span", _hoisted_64, toDisplayString$1(_ctx.$t(`layerEditor.filter_${unref(editor).filterSession.value.op}`)), 1),
+            createBaseVNode("div", _hoisted_65, [
               createBaseVNode("button", {
                 type: "button",
                 class: normalizeClass(miniBtnClass$1),
                 title: _ctx.$t("layerEditor.filterApply"),
-                onClick: _cache2[39] || (_cache2[39] = ($event) => unref(editor).applyFilter())
+                onClick: _cache2[40] || (_cache2[40] = ($event) => unref(editor).applyFilter())
               }, [
                 createVNode(unref(IconCheck), { class: "ctv:size-3.5" })
-              ], 8, _hoisted_61),
+              ], 8, _hoisted_66),
               createBaseVNode("button", {
                 type: "button",
                 class: normalizeClass(miniBtnClass$1),
                 title: _ctx.$t("layerEditor.filterCancel"),
-                onClick: _cache2[40] || (_cache2[40] = ($event) => unref(editor).cancelFilter())
+                onClick: _cache2[41] || (_cache2[41] = ($event) => unref(editor).cancelFilter())
               }, [
                 createVNode(unref(IconX), { class: "ctv:size-3.5" })
-              ], 8, _hoisted_62)
+              ], 8, _hoisted_67)
             ])
           ]),
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(FILTER_PARAM_DEFS)[unref(editor).filterSession.value.op], (def2) => {
@@ -157064,80 +157186,80 @@ const _sfc_main$20 = /* @__PURE__ */ defineComponent({
             }, null, 8, ["model-value", "label", "min", "max", "step", "decimals", "reset-to", "onUpdate:modelValue"]);
           }), 128))
         ])) : createCommentVNode("", true),
-        createBaseVNode("div", _hoisted_63, [
-          createBaseVNode("div", _hoisted_64, [
+        createBaseVNode("div", _hoisted_68, [
+          createBaseVNode("div", _hoisted_69, [
             !((_p = unref(active)) == null ? void 0 : _p.mask) ? (openBlock(), createElementBlock("button", {
               key: 0,
               type: "button",
               class: normalizeClass(miniBtnClass$1),
               disabled: !unref(active),
               title: _ctx.$t("layerEditor.addMask"),
-              onClick: _cache2[41] || (_cache2[41] = withModifiers(($event) => addMaskMenuOpen.value = !addMaskMenuOpen.value, ["stop"])),
-              onPointerdown: _cache2[42] || (_cache2[42] = withModifiers(() => {
+              onClick: _cache2[42] || (_cache2[42] = withModifiers(($event) => addMaskMenuOpen.value = !addMaskMenuOpen.value, ["stop"])),
+              onPointerdown: _cache2[43] || (_cache2[43] = withModifiers(() => {
               }, ["stop"]))
             }, [
               createVNode(unref(IconCircleDashed), { class: "ctv:size-3.5" })
-            ], 40, _hoisted_65)) : (openBlock(), createElementBlock("button", {
+            ], 40, _hoisted_70)) : (openBlock(), createElementBlock("button", {
               key: 1,
               type: "button",
               class: normalizeClass(miniBtnClass$1),
               title: _ctx.$t("layerEditor.deleteMask"),
-              onClick: _cache2[43] || (_cache2[43] = ($event) => unref(editor).removeMask(unref(active).id))
+              onClick: _cache2[44] || (_cache2[44] = ($event) => unref(editor).removeMask(unref(active).id))
             }, [
               createVNode(unref(IconCircleOff), { class: "ctv:size-3.5" })
-            ], 8, _hoisted_66)),
+            ], 8, _hoisted_71)),
             addMaskMenuOpen.value ? (openBlock(), createElementBlock("div", {
               key: 2,
               class: "ctv:absolute ctv:bottom-7 ctv:left-0 ctv:z-30 ctv:flex ctv:min-w-32 ctv:flex-col ctv:rounded-md ctv:border ctv:border-[#161616] ctv:bg-[#2b2b2b] ctv:py-1 ctv:shadow-lg",
-              onPointerdown: _cache2[49] || (_cache2[49] = withModifiers(() => {
+              onPointerdown: _cache2[50] || (_cache2[50] = withModifiers(() => {
               }, ["stop"]))
             }, [
               createBaseVNode("button", {
                 type: "button",
                 class: normalizeClass(menuItemClass),
-                onClick: _cache2[44] || (_cache2[44] = ($event) => addMaskWith("white"))
+                onClick: _cache2[45] || (_cache2[45] = ($event) => addMaskWith("white"))
               }, toDisplayString$1(_ctx.$t("layerEditor.maskInitWhite")), 1),
               createBaseVNode("button", {
                 type: "button",
                 class: normalizeClass(menuItemClass),
-                onClick: _cache2[45] || (_cache2[45] = ($event) => addMaskWith("black"))
+                onClick: _cache2[46] || (_cache2[46] = ($event) => addMaskWith("black"))
               }, toDisplayString$1(_ctx.$t("layerEditor.maskInitBlack")), 1),
               createBaseVNode("button", {
                 type: "button",
                 class: normalizeClass(menuItemClass),
                 disabled: !unref(editor).hasSelection(),
-                onClick: _cache2[46] || (_cache2[46] = ($event) => addMaskWith("selection"))
-              }, toDisplayString$1(_ctx.$t("layerEditor.maskInitSelection")), 9, _hoisted_67),
+                onClick: _cache2[47] || (_cache2[47] = ($event) => addMaskWith("selection"))
+              }, toDisplayString$1(_ctx.$t("layerEditor.maskInitSelection")), 9, _hoisted_72),
               ((_q = unref(active)) == null ? void 0 : _q.kind) === "raster" ? (openBlock(), createElementBlock(Fragment$1, { key: 0 }, [
                 createBaseVNode("button", {
                   type: "button",
                   class: normalizeClass(menuItemClass),
-                  onClick: _cache2[47] || (_cache2[47] = ($event) => addMaskWith("alpha"))
+                  onClick: _cache2[48] || (_cache2[48] = ($event) => addMaskWith("alpha"))
                 }, toDisplayString$1(_ctx.$t("layerEditor.maskInitAlpha")), 1),
                 createBaseVNode("button", {
                   type: "button",
                   class: normalizeClass(menuItemClass),
-                  onClick: _cache2[48] || (_cache2[48] = ($event) => addMaskWith("gray"))
+                  onClick: _cache2[49] || (_cache2[49] = ($event) => addMaskWith("gray"))
                 }, toDisplayString$1(_ctx.$t("layerEditor.maskInitGray")), 1)
               ], 64)) : createCommentVNode("", true)
             ], 32)) : createCommentVNode("", true)
           ]),
-          createBaseVNode("div", _hoisted_68, [
+          createBaseVNode("div", _hoisted_73, [
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(miniBtnClass$1),
               disabled: ((_r = unref(active)) == null ? void 0 : _r.kind) !== "raster" || ((_s = unref(active)) == null ? void 0 : _s.locks.content),
               title: _ctx.$t("layerEditor.filters"),
-              onClick: _cache2[50] || (_cache2[50] = withModifiers(($event) => filterMenuOpen.value = !filterMenuOpen.value, ["stop"])),
-              onPointerdown: _cache2[51] || (_cache2[51] = withModifiers(() => {
+              onClick: _cache2[51] || (_cache2[51] = withModifiers(($event) => filterMenuOpen.value = !filterMenuOpen.value, ["stop"])),
+              onPointerdown: _cache2[52] || (_cache2[52] = withModifiers(() => {
               }, ["stop"]))
             }, [
               createVNode(unref(IconWand), { class: "ctv:size-3.5" })
-            ], 40, _hoisted_69),
+            ], 40, _hoisted_74),
             filterMenuOpen.value ? (openBlock(), createElementBlock("div", {
               key: 0,
               class: "ctv:absolute ctv:bottom-7 ctv:left-0 ctv:z-30 ctv:flex ctv:min-w-32 ctv:flex-col ctv:rounded-md ctv:border ctv:border-[#161616] ctv:bg-[#2b2b2b] ctv:py-1 ctv:shadow-lg",
-              onPointerdown: _cache2[52] || (_cache2[52] = withModifiers(() => {
+              onPointerdown: _cache2[53] || (_cache2[53] = withModifiers(() => {
               }, ["stop"]))
             }, [
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(FILTER_OPS), (op) => {
@@ -157149,7 +157271,7 @@ const _sfc_main$20 = /* @__PURE__ */ defineComponent({
                     filterMenuOpen.value = false;
                     unref(editor).startFilter(op);
                   }
-                }, toDisplayString$1(_ctx.$t(`layerEditor.filter_${op}`)), 9, _hoisted_70);
+                }, toDisplayString$1(_ctx.$t(`layerEditor.filter_${op}`)), 9, _hoisted_75);
               }), 128))
             ], 32)) : createCommentVNode("", true)
           ]),
@@ -157157,84 +157279,84 @@ const _sfc_main$20 = /* @__PURE__ */ defineComponent({
             type: "button",
             class: normalizeClass(miniBtnClass$1),
             title: _ctx.$t("layerEditor.addAdjustment"),
-            onClick: _cache2[53] || (_cache2[53] = ($event) => unref(editor).addAdjustmentLayer())
+            onClick: _cache2[54] || (_cache2[54] = ($event) => unref(editor).addAdjustmentLayer())
           }, [
             createVNode(unref(IconSlidersHorizontal), { class: "ctv:size-3.5" })
-          ], 8, _hoisted_71),
+          ], 8, _hoisted_76),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(miniBtnClass$1),
             title: _ctx.$t("layerEditor.addFill"),
-            onClick: _cache2[54] || (_cache2[54] = ($event) => unref(editor).addFillLayer())
+            onClick: _cache2[55] || (_cache2[55] = ($event) => unref(editor).addFillLayer())
           }, [
             createVNode(unref(IconPaintBucket), { class: "ctv:size-3.5" })
-          ], 8, _hoisted_72),
+          ], 8, _hoisted_77),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(miniBtnClass$1),
             title: _ctx.$t("layerEditor.addTextLayer"),
-            onClick: _cache2[55] || (_cache2[55] = //@ts-ignore
+            onClick: _cache2[56] || (_cache2[56] = //@ts-ignore
             (...args) => unref(addText) && unref(addText)(...args))
           }, [
             createVNode(unref(IconType), { class: "ctv:size-3.5" })
-          ], 8, _hoisted_73),
+          ], 8, _hoisted_78),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(miniBtnClass$1),
             title: _ctx.$t("layerEditor.newLayer"),
-            onClick: _cache2[56] || (_cache2[56] = ($event) => unref(editor).addEmptyLayer())
+            onClick: _cache2[57] || (_cache2[57] = ($event) => unref(editor).addEmptyLayer())
           }, [
             createVNode(unref(IconSquarePlus), { class: "ctv:size-3.5" })
-          ], 8, _hoisted_74),
+          ], 8, _hoisted_79),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(miniBtnClass$1),
             disabled: !unref(active),
             title: _ctx.$t("layerEditor.deleteLayer"),
-            onClick: _cache2[57] || (_cache2[57] = ($event) => unref(active) && unref(editor).removeLayer(unref(active).id))
+            onClick: _cache2[58] || (_cache2[58] = ($event) => unref(active) && unref(editor).removeLayer(unref(active).id))
           }, [
             createVNode(unref(IconTrash), { class: "ctv:size-3.5" })
-          ], 8, _hoisted_75)
+          ], 8, _hoisted_80)
         ]),
         maskMenu.value && maskMenuNode.value ? (openBlock(), createElementBlock("div", {
           key: 4,
           class: "ctv:fixed ctv:z-50 ctv:flex ctv:min-w-36 ctv:flex-col ctv:rounded-md ctv:border ctv:border-[#161616] ctv:bg-[#2b2b2b] ctv:py-1 ctv:shadow-lg",
           style: normalizeStyle({ left: maskMenu.value.x + "px", top: maskMenu.value.y + "px" }),
-          onPointerdown: _cache2[64] || (_cache2[64] = withModifiers(() => {
+          onPointerdown: _cache2[65] || (_cache2[65] = withModifiers(() => {
           }, ["stop"]))
         }, [
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(menuItemClass),
-            onClick: _cache2[58] || (_cache2[58] = ($event) => maskMenuAction(() => {
+            onClick: _cache2[59] || (_cache2[59] = ($event) => maskMenuAction(() => {
               unref(editor).maskView.value = !unref(editor).maskView.value;
             }))
           }, toDisplayString$1(_ctx.$t("layerEditor.maskShow")), 1),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(menuItemClass),
-            onClick: _cache2[59] || (_cache2[59] = ($event) => maskMenuAction((id) => unref(editor).toggleMaskEnabled(id)))
+            onClick: _cache2[60] || (_cache2[60] = ($event) => maskMenuAction((id) => unref(editor).toggleMaskEnabled(id)))
           }, toDisplayString$1(_ctx.$t(maskMenuNode.value.mask.enabled ? "layerEditor.maskDisable" : "layerEditor.maskEnable")), 1),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(menuItemClass),
-            onClick: _cache2[60] || (_cache2[60] = ($event) => maskMenuAction((id) => unref(editor).invertMask(id)))
+            onClick: _cache2[61] || (_cache2[61] = ($event) => maskMenuAction((id) => unref(editor).invertMask(id)))
           }, toDisplayString$1(_ctx.$t("layerEditor.maskInvert")), 1),
           maskMenuNode.value.kind === "raster" ? (openBlock(), createElementBlock("button", {
             key: 0,
             type: "button",
             class: normalizeClass(menuItemClass),
-            onClick: _cache2[61] || (_cache2[61] = ($event) => maskMenuAction((id) => unref(editor).applyMask(id)))
+            onClick: _cache2[62] || (_cache2[62] = ($event) => maskMenuAction((id) => unref(editor).applyMask(id)))
           }, toDisplayString$1(_ctx.$t("layerEditor.maskApply")), 1)) : createCommentVNode("", true),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(menuItemClass),
-            onClick: _cache2[62] || (_cache2[62] = ($event) => maskMenuAction((id) => unref(editor).maskToSelection(id)))
+            onClick: _cache2[63] || (_cache2[63] = ($event) => maskMenuAction((id) => unref(editor).maskToSelection(id)))
           }, toDisplayString$1(_ctx.$t("layerEditor.maskToSelection")), 1),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(menuItemClass),
-            onClick: _cache2[63] || (_cache2[63] = ($event) => maskMenuAction((id) => unref(editor).removeMask(id)))
+            onClick: _cache2[64] || (_cache2[64] = ($event) => maskMenuAction((id) => unref(editor).removeMask(id)))
           }, toDisplayString$1(_ctx.$t("layerEditor.deleteMask")), 1)
         ], 36)) : createCommentVNode("", true)
       ]);
@@ -189976,4 +190098,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-r7ULxtLj.mjs.map
+//# sourceMappingURL=main-CBPzmxs-.mjs.map
