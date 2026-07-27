@@ -69,10 +69,7 @@
             >
               {{ $t('workflowLink.linkedBadge') }}
             </span>
-            <span
-              class="ctv:flex ctv:gap-1 ctv:opacity-0 ctv:group-hover:opacity-100 ctv:transition-opacity"
-              :class="busyPath === row.node.wf.path ? 'ctv:opacity-100' : ''"
-            >
+            <span class="ctv:flex ctv:gap-1">
               <button
                 v-if="row.node.wf.is_linked"
                 type="button"
