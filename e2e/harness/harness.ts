@@ -750,6 +750,12 @@ async function runPsdRoundTrip() {
     transform: deriveVectorTransform(path, 0),
   }))
 
+  const overflowId = editor.content.register(solidCanvas(64, 64, 'rgb(255,140,0)'))
+  editor.addNode(rasterKind.create({
+    name: 'overflow', contentId: overflowId, naturalWidth: 64, naturalHeight: 64,
+    transform: { x: 96, y: 96, w: 64, h: 64, rotation: 0 },
+  }))
+
   editor.addNode(adjustmentKind.create({ name: 'invert', op: 'invert' }))
 
   editor.render()
@@ -798,6 +804,7 @@ async function runPsdRoundTrip() {
     diff,
     warnings: imported.result.warnings,
     importedKinds: imported.result.nodes.map((n: SceneNode) => n.kind),
+    importedTransforms: imported.result.nodes.map((n: SceneNode) => ({ name: n.name, transform: n.transform })),
     reloaded,
     reloadDiff,
     uploadedJobs: reload.uploadedJobs,

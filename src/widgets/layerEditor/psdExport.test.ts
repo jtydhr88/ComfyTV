@@ -2,7 +2,13 @@ import { describe, expect, it } from 'vitest'
 
 import { defaultMode, type Document, type GroupData, type SceneNode } from './engine'
 import { rectPath } from './engine/vector'
-import { buildPsd, makeGuid, transformCorners, type PsdExportDeps } from './psdExport'
+import {
+  buildPsd,
+  leafPlacedBounds,
+  makeGuid,
+  transformCorners,
+  type PsdExportDeps,
+} from './psdExport'
 
 function fakeCanvas(w = 8, h = 8): HTMLCanvasElement {
   return { width: w, height: h, tag: Math.random() } as unknown as HTMLCanvasElement
@@ -38,8 +44,8 @@ function doc(children: SceneNode[]): Document {
 
 function deps(over: Partial<PsdExportDeps> = {}): PsdExportDeps {
   return {
-    rasterizeLeaf: () => fakeCanvas(),
-    maskCanvas: () => fakeCanvas(),
+    rasterizeLeaf: () => ({ canvas: fakeCanvas(), left: 0, top: 0 }),
+    maskCanvas: () => ({ canvas: fakeCanvas(), left: 0, top: 0 }),
     composite: () => fakeCanvas(),
     ...over,
   }
@@ -48,9 +54,12 @@ function deps(over: Partial<PsdExportDeps> = {}): PsdExportDeps {
 describe('buildPsd basics', () => {
   it('builds document with composite and leaf layers', async () => {
     const composite = fakeCanvas()
-    const leafCanvas = fakeCanvas()
+    const leafCanvas = fakeCanvas(20, 10)
     const d = doc([raster({ name: 'Photo', opacity: 0.5, mode: defaultMode('multiply') })])
-    const psd = await buildPsd(d, deps({ composite: () => composite, rasterizeLeaf: () => leafCanvas }))
+    const psd = await buildPsd(d, deps({
+      composite: () => composite,
+      rasterizeLeaf: () => ({ canvas: leafCanvas, left: 5, top: 7 }),
+    }))
 
     expect(psd.width).toBe(64)
     expect(psd.height).toBe(32)
@@ -60,8 +69,23 @@ describe('buildPsd basics', () => {
     expect(layer.opacity).toBe(0.5)
     expect(layer.blendMode).toBe('multiply')
     expect(layer.canvas).toBe(leafCanvas)
-    expect(layer.right).toBe(64)
-    expect(layer.bottom).toBe(32)
+    expect(layer.left).toBe(5)
+    expect(layer.top).toBe(7)
+    expect(layer.right).toBe(25)
+    expect(layer.bottom).toBe(17)
+  })
+
+  it('keeps layer bounds that extend beyond the canvas', async () => {
+    const leafCanvas = fakeCanvas(64, 64)
+    const d = doc([raster({ name: 'Overflow' })])
+    const psd = await buildPsd(d, deps({
+      rasterizeLeaf: () => ({ canvas: leafCanvas, left: 96, top: -10 }),
+    }))
+    const layer = psd.children![0]
+    expect(layer.left).toBe(96)
+    expect(layer.top).toBe(-10)
+    expect(layer.right).toBe(160)
+    expect(layer.bottom).toBe(54)
   })
 
   it('marks invisible layers hidden and clamps opacity', async () => {
@@ -80,11 +104,16 @@ describe('buildPsd basics', () => {
     expect(layer.children![0].name).toBe('Inner')
   })
 
-  it('attaches masks with enabled state', async () => {
-    const maskCanvas = fakeCanvas()
+  it('attaches masks with enabled state and placed bounds', async () => {
+    const maskCanvas = fakeCanvas(20, 10)
     const masked = raster({ mask: { id: 'm1', role: 'mask', contentId: 'mc', enabled: false } })
-    const layer = (await buildPsd(doc([masked]), deps({ maskCanvas: () => maskCanvas }))).children![0]
-    expect(layer.mask).toMatchObject({ canvas: maskCanvas, disabled: true, defaultColor: 0 })
+    const layer = (await buildPsd(doc([masked]), deps({
+      maskCanvas: () => ({ canvas: maskCanvas, left: 3, top: 4 }),
+    }))).children![0]
+    expect(layer.mask).toMatchObject({
+      canvas: maskCanvas, disabled: true, defaultColor: 0,
+      left: 3, top: 4, right: 23, bottom: 14,
+    })
   })
 })
 
@@ -204,6 +233,17 @@ describe('guides', () => {
 describe('helpers', () => {
   it('generates guid format', () => {
     expect(makeGuid()).toMatch(/^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/)
+  })
+
+  it('computes placed bounds for plain and rotated transforms', () => {
+    const d = doc([])
+    expect(leafPlacedBounds({ x: 96, y: -10, w: 64, h: 32, rotation: 0 }, d))
+      .toEqual({ x: 96, y: -10, w: 64, h: 32 })
+    const rotated = leafPlacedBounds({ x: 0, y: 0, w: 10, h: 10, rotation: Math.PI / 4 }, d)
+    expect(rotated.w).toBeGreaterThan(13)
+    expect(rotated.x).toBeLessThan(0)
+    expect(leafPlacedBounds({ x: 5, y: 5, w: 0, h: 0, rotation: 0 }, d))
+      .toEqual({ x: 0, y: 0, w: 64, h: 32 })
   })
 
   it('computes rotated corners', () => {

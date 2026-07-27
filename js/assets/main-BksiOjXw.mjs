@@ -56187,7 +56187,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-Dr1fKsSc.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-PDvTfcM0.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -127489,7 +127489,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-HPOZaEw-.mjs");
+    const { STLLoader } = await import("./STLLoader-CLsrD3ax.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -127497,7 +127497,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-Bkk2Am71.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-Ba0Hq9iA.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -158242,16 +158242,16 @@ function transformCorners(t2) {
   const hh = t2.h / 2;
   return [...pt2(-hw, -hh), ...pt2(hw, -hh), ...pt2(hw, hh), ...pt2(-hw, hh)];
 }
-function maskData(node, doc2, deps) {
+function maskData(node, deps) {
   if (!node.mask) return void 0;
-  const canvas = deps.maskCanvas(node);
-  if (!canvas) return void 0;
+  const placed = deps.maskCanvas(node);
+  if (!placed) return void 0;
   return {
-    canvas,
-    left: 0,
-    top: 0,
-    right: doc2.width,
-    bottom: doc2.height,
+    canvas: placed.canvas,
+    left: placed.left,
+    top: placed.top,
+    right: placed.left + placed.canvas.width,
+    bottom: placed.top + placed.canvas.height,
     defaultColor: 0,
     disabled: !node.mask.enabled
   };
@@ -158340,7 +158340,7 @@ async function buildLayer(node, doc2, deps, linkedFiles) {
     hidden: !node.visible,
     opacity: clamp01$1(node.opacity),
     blendMode: PSD_BLEND_MODES[node.mode.blend] ?? "normal",
-    mask: maskData(node, doc2, deps)
+    mask: maskData(node, deps)
   };
   if (node.kind === "group") {
     const g = node;
@@ -158357,13 +158357,13 @@ async function buildLayer(node, doc2, deps, linkedFiles) {
     if (adj) layer.adjustment = adj;
     return layer;
   }
-  const canvas = deps.rasterizeLeaf(node);
-  if (canvas) {
-    layer.canvas = canvas;
-    layer.left = 0;
-    layer.top = 0;
-    layer.right = doc2.width;
-    layer.bottom = doc2.height;
+  const placed = deps.rasterizeLeaf(node);
+  if (placed) {
+    layer.canvas = placed.canvas;
+    layer.left = placed.left;
+    layer.top = placed.top;
+    layer.right = placed.left + placed.canvas.width;
+    layer.bottom = placed.top + placed.canvas.height;
   }
   if (node.kind === "text") applyTextData(layer, node, deps);
   else if (node.kind === "vector") applyVectorData(layer, node);
@@ -158371,69 +158371,64 @@ async function buildLayer(node, doc2, deps, linkedFiles) {
   else if (node.kind === "raster") await applyPlacedLayer(layer, node, deps, linkedFiles);
   return layer;
 }
-function rasterizeLeavesSolo(host) {
-  const doc2 = host.document();
-  const parents = /* @__PURE__ */ new Map();
-  const all = [];
-  walk(doc2.root, (n, parent) => {
-    all.push(n);
-    parents.set(n.id, parent);
-  });
-  const saved = all.map((n) => {
-    var _a2;
-    return {
-      n,
-      visible: n.visible,
-      opacity: n.opacity,
-      mode: n.mode,
-      maskEnabled: (_a2 = n.mask) == null ? void 0 : _a2.enabled
-    };
-  });
-  const out = /* @__PURE__ */ new Map();
-  try {
-    for (const leaf of all) {
-      if (leaf.kind === "group" || leaf.kind === "adjustment") continue;
-      for (const s of saved) s.n.visible = false;
-      let cur = leaf;
-      while (cur) {
-        cur.visible = true;
-        cur.opacity = 1;
-        cur.mode = defaultMode("normal");
-        if (cur.mask) cur.mask.enabled = false;
-        const parent = parents.get(cur.id);
-        cur = parent && parent !== doc2.root ? parent : void 0;
-      }
-      host.render();
-      out.set(leaf.id, host.readbackCanvas());
-    }
-  } finally {
-    for (const s of saved) {
-      s.n.visible = s.visible;
-      s.n.opacity = s.opacity;
-      s.n.mode = s.mode;
-      if (s.n.mask && s.maskEnabled != null) s.n.mask.enabled = s.maskEnabled;
-    }
-  }
-  host.render();
-  return out;
+function leafPlacedBounds(t2, doc2) {
+  if (!(t2.w > 0 && t2.h > 0)) return { x: 0, y: 0, w: doc2.width, h: doc2.height };
+  const corners = transformCorners(t2);
+  const xs = [corners[0], corners[2], corners[4], corners[6]];
+  const ys = [corners[1], corners[3], corners[5], corners[7]];
+  const x = Math.floor(Math.min(...xs));
+  const y = Math.floor(Math.min(...ys));
+  return {
+    x,
+    y,
+    w: Math.max(1, Math.ceil(Math.max(...xs)) - x),
+    h: Math.max(1, Math.ceil(Math.max(...ys)) - y)
+  };
 }
-function maskToDocCanvas(node, doc2, content) {
+function rasterizeLeafPlaced(node, doc2, content) {
+  const bounds = leafPlacedBounds(node.transform, doc2);
+  let captured = null;
+  const ctx = {
+    compositor: null,
+    content,
+    renderChild: () => null,
+    placed: (_key2, _stamp, bitmap, tf, linear) => {
+      captured = placeBitmap(
+        bitmap,
+        { ...tf, x: tf.x - bounds.x, y: tf.y - bounds.y },
+        bounds.w,
+        bounds.h
+      );
+      return captured ? { source: captured, rect: bounds, linear: !!linear } : null;
+    },
+    region: { x: 0, y: 0, w: bounds.w, h: bounds.h },
+    devicePixelRatio: 1
+  };
+  try {
+    getNodeKind(node.kind).renderNode(node, ctx);
+  } catch {
+    return null;
+  }
+  return captured ? { canvas: captured, left: bounds.x, top: bounds.y } : null;
+}
+function maskToPlacedCanvas(node, doc2, content) {
   const m = node.mask;
   if (!m) return null;
   const entry = content.get(m.contentId);
   if (!entry) return null;
+  const bounds = leafPlacedBounds(node.transform, doc2);
   const c2 = document.createElement("canvas");
-  c2.width = doc2.width;
-  c2.height = doc2.height;
+  c2.width = bounds.w;
+  c2.height = bounds.h;
   const ctx = c2.getContext("2d");
   if (!ctx) return null;
   ctx.fillStyle = "#000000";
-  ctx.fillRect(0, 0, doc2.width, doc2.height);
+  ctx.fillRect(0, 0, bounds.w, bounds.h);
   const tf = node.transform.w > 0 && node.transform.h > 0 ? node.transform : { x: 0, y: 0, w: doc2.width, h: doc2.height, rotation: 0 };
-  ctx.translate(tf.x + tf.w / 2, tf.y + tf.h / 2);
+  ctx.translate(tf.x - bounds.x + tf.w / 2, tf.y - bounds.y + tf.h / 2);
   ctx.rotate(tf.rotation);
   ctx.drawImage(entry.canvas, -tf.w / 2, -tf.h / 2, tf.w, tf.h);
-  return c2;
+  return { canvas: c2, left: bounds.x, top: bounds.y };
 }
 async function canvasPngBytes(canvas) {
   const blob = await new Promise(
@@ -158443,10 +158438,10 @@ async function canvasPngBytes(canvas) {
 }
 async function buildPsdFromEditor(host, content, opts) {
   const doc2 = host.document();
-  const rasterized = rasterizeLeavesSolo(host);
+  host.render();
   return buildPsd(doc2, {
-    rasterizeLeaf: (n) => rasterized.get(n.id) ?? null,
-    maskCanvas: (n) => maskToDocCanvas(n, doc2, content),
+    rasterizeLeaf: (n) => rasterizeLeafPlaced(n, doc2, content),
+    maskCanvas: (n) => maskToPlacedCanvas(n, doc2, content),
     composite: () => host.readbackCanvas(),
     contentCanvas: (id) => {
       var _a2;
@@ -190123,4 +190118,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-CalJccK8.mjs.map
+//# sourceMappingURL=main-BksiOjXw.mjs.map

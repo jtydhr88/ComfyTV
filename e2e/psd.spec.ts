@@ -19,6 +19,7 @@ interface RoundTripResults {
   diff?: { maxDiff: number; avgDiff: number; samples: number }
   warnings?: string[]
   importedKinds?: string[]
+  importedTransforms?: Array<{ name: string; transform: { x: number; y: number; w: number; h: number; rotation: number } }>
   reloaded?: { composite: number; layers: LayerReport[] }
   reloadDiff?: { maxDiff: number; avgDiff: number; samples: number }
   uploadedJobs?: number
@@ -58,7 +59,13 @@ test('PSD round trip: export -> writePsd -> readPsd -> import keeps every layer,
   expect(errors, errors.join('\n')).toHaveLength(0)
   expect(res.glOk).toBe(true)
   expect(res.warnings, `import warnings: ${JSON.stringify(res.warnings)}`).toEqual([])
-  expect(res.importedKinds).toEqual(['raster', 'raster', 'fill', 'vector', 'adjustment'])
+  expect(res.importedKinds).toEqual(['raster', 'raster', 'fill', 'vector', 'raster', 'adjustment'])
+
+  const overflow = res.importedTransforms!.find((t) => t.name === 'overflow')!
+  expect(overflow.transform.x, 'overflow layer keeps its off-canvas position').toBeCloseTo(96, 3)
+  expect(overflow.transform.y).toBeCloseTo(96, 3)
+  expect(overflow.transform.w, 'overflow layer pixels are not cropped to the canvas').toBeCloseTo(64, 3)
+  expect(overflow.transform.h).toBeCloseTo(64, 3)
 
   for (const layer of res.after!.layers) {
     if (layer.coverage < 0) continue

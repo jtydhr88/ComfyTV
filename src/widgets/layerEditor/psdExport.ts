@@ -1,13 +1,17 @@
 import type { Layer, LayerMaskData, LinkedFile, Psd } from 'ag-psd'
 
-import { defaultMode, walk } from './engine'
+import { getNodeKind, placeBitmap } from './engine'
 import type {
   AdjustmentData,
+  Compositor,
   ContentEntry,
+  ContentStore,
   Document,
   FillData,
   GroupData,
   RasterData,
+  Rect,
+  RenderNodeCtx,
   SceneNode,
   TextData,
   Transform,
@@ -29,9 +33,15 @@ export interface PsdGuides {
   vertical: number[]
 }
 
+export interface PlacedLeaf {
+  canvas: HTMLCanvasElement
+  left: number
+  top: number
+}
+
 export interface PsdExportDeps {
-  rasterizeLeaf: (node: SceneNode) => HTMLCanvasElement | null
-  maskCanvas: (node: SceneNode) => HTMLCanvasElement | null
+  rasterizeLeaf: (node: SceneNode) => PlacedLeaf | null
+  maskCanvas: (node: SceneNode) => PlacedLeaf | null
   composite: () => HTMLCanvasElement
   contentCanvas?: (id: string) => HTMLCanvasElement | null
   fontName?: (node: TextData) => string | undefined
@@ -62,16 +72,16 @@ export function transformCorners(t: Transform): number[] {
   return [...pt(-hw, -hh), ...pt(hw, -hh), ...pt(hw, hh), ...pt(-hw, hh)]
 }
 
-function maskData(node: SceneNode, doc: Document, deps: PsdExportDeps): LayerMaskData | undefined {
+function maskData(node: SceneNode, deps: PsdExportDeps): LayerMaskData | undefined {
   if (!node.mask) return undefined
-  const canvas = deps.maskCanvas(node)
-  if (!canvas) return undefined
+  const placed = deps.maskCanvas(node)
+  if (!placed) return undefined
   return {
-    canvas,
-    left: 0,
-    top: 0,
-    right: doc.width,
-    bottom: doc.height,
+    canvas: placed.canvas,
+    left: placed.left,
+    top: placed.top,
+    right: placed.left + placed.canvas.width,
+    bottom: placed.top + placed.canvas.height,
     defaultColor: 0,
     disabled: !node.mask.enabled,
   }
@@ -173,7 +183,7 @@ async function buildLayer(
     hidden: !node.visible,
     opacity: clamp01(node.opacity),
     blendMode: PSD_BLEND_MODES[node.mode.blend] ?? 'normal',
-    mask: maskData(node, doc, deps),
+    mask: maskData(node, deps),
   }
   if (node.kind === 'group') {
     const g = node as GroupData
@@ -190,13 +200,13 @@ async function buildLayer(
     if (adj) layer.adjustment = adj
     return layer
   }
-  const canvas = deps.rasterizeLeaf(node)
-  if (canvas) {
-    layer.canvas = canvas
-    layer.left = 0
-    layer.top = 0
-    layer.right = doc.width
-    layer.bottom = doc.height
+  const placed = deps.rasterizeLeaf(node)
+  if (placed) {
+    layer.canvas = placed.canvas
+    layer.left = placed.left
+    layer.top = placed.top
+    layer.right = placed.left + placed.canvas.width
+    layer.bottom = placed.top + placed.canvas.height
   }
   if (node.kind === 'text') applyTextData(layer, node as TextData, deps)
   else if (node.kind === 'vector') applyVectorData(layer, node as VectorData)
@@ -215,69 +225,72 @@ export interface PsdContentSource {
   get(id: string): ContentEntry | undefined
 }
 
-export function rasterizeLeavesSolo(host: PsdRenderHost): Map<string, HTMLCanvasElement> {
-  const doc = host.document()
-  const parents = new Map<string, GroupData>()
-  const all: SceneNode[] = []
-  walk(doc.root, (n, parent) => {
-    all.push(n)
-    parents.set(n.id, parent)
-  })
-  const saved = all.map((n) => ({
-    n,
-    visible: n.visible,
-    opacity: n.opacity,
-    mode: n.mode,
-    maskEnabled: n.mask?.enabled,
-  }))
-  const out = new Map<string, HTMLCanvasElement>()
-  try {
-    for (const leaf of all) {
-      if (leaf.kind === 'group' || leaf.kind === 'adjustment') continue
-      for (const s of saved) s.n.visible = false
-      let cur: SceneNode | undefined = leaf
-      while (cur) {
-        cur.visible = true
-        cur.opacity = 1
-        cur.mode = defaultMode('normal')
-        if (cur.mask) cur.mask.enabled = false
-        const parent = parents.get(cur.id)
-        cur = parent && parent !== doc.root ? parent : undefined
-      }
-      host.render()
-      out.set(leaf.id, host.readbackCanvas())
-    }
-  } finally {
-    for (const s of saved) {
-      s.n.visible = s.visible
-      s.n.opacity = s.opacity
-      s.n.mode = s.mode
-      if (s.n.mask && s.maskEnabled != null) s.n.mask.enabled = s.maskEnabled
-    }
+export function leafPlacedBounds(t: Transform, doc: Document): Rect {
+  if (!(t.w > 0 && t.h > 0)) return { x: 0, y: 0, w: doc.width, h: doc.height }
+  const corners = transformCorners(t)
+  const xs = [corners[0], corners[2], corners[4], corners[6]]
+  const ys = [corners[1], corners[3], corners[5], corners[7]]
+  const x = Math.floor(Math.min(...xs))
+  const y = Math.floor(Math.min(...ys))
+  return {
+    x,
+    y,
+    w: Math.max(1, Math.ceil(Math.max(...xs)) - x),
+    h: Math.max(1, Math.ceil(Math.max(...ys)) - y),
   }
-  host.render()
-  return out
 }
 
-export function maskToDocCanvas(node: SceneNode, doc: Document, content: PsdContentSource): HTMLCanvasElement | null {
+export function rasterizeLeafPlaced(
+  node: SceneNode,
+  doc: Document,
+  content: PsdContentSource
+): PlacedLeaf | null {
+  const bounds = leafPlacedBounds(node.transform, doc)
+  let captured: HTMLCanvasElement | null = null
+  const ctx: RenderNodeCtx = {
+    compositor: null as unknown as Compositor,
+    content: content as ContentStore,
+    renderChild: () => null,
+    placed: (_key, _stamp, bitmap, tf, linear) => {
+      captured = placeBitmap(
+        bitmap,
+        { ...tf, x: tf.x - bounds.x, y: tf.y - bounds.y },
+        bounds.w,
+        bounds.h
+      )
+      return captured ? { source: captured, rect: bounds, linear: !!linear } : null
+    },
+    region: { x: 0, y: 0, w: bounds.w, h: bounds.h },
+    devicePixelRatio: 1,
+  }
+  try {
+    getNodeKind(node.kind).renderNode(node, ctx)
+  } catch {
+    return null
+  }
+  return captured ? { canvas: captured, left: bounds.x, top: bounds.y } : null
+}
+
+export function maskToPlacedCanvas(node: SceneNode, doc: Document, content: PsdContentSource): PlacedLeaf | null {
   const m = node.mask
   if (!m) return null
   const entry = content.get(m.contentId)
   if (!entry) return null
+  const bounds = leafPlacedBounds(node.transform, doc)
   const c = document.createElement('canvas')
-  c.width = doc.width
-  c.height = doc.height
+  c.width = bounds.w
+  c.height = bounds.h
   const ctx = c.getContext('2d')
   if (!ctx) return null
   ctx.fillStyle = '#000000'
-  ctx.fillRect(0, 0, doc.width, doc.height)
+  ctx.fillRect(0, 0, bounds.w, bounds.h)
   const tf = node.transform.w > 0 && node.transform.h > 0
     ? node.transform
     : { x: 0, y: 0, w: doc.width, h: doc.height, rotation: 0 }
-  ctx.translate(tf.x + tf.w / 2, tf.y + tf.h / 2)
+  ctx.translate(tf.x - bounds.x + tf.w / 2, tf.y - bounds.y + tf.h / 2)
   ctx.rotate(tf.rotation)
   ctx.drawImage(entry.canvas, -tf.w / 2, -tf.h / 2, tf.w, tf.h)
-  return c
+  return { canvas: c, left: bounds.x, top: bounds.y }
 }
 
 export async function canvasPngBytes(canvas: HTMLCanvasElement): Promise<Uint8Array> {
@@ -293,10 +306,10 @@ export async function buildPsdFromEditor(
   opts?: { fontName?: (node: TextData) => string | undefined; guides?: PsdGuides }
 ): Promise<Psd> {
   const doc = host.document()
-  const rasterized = rasterizeLeavesSolo(host)
+  host.render()
   return buildPsd(doc, {
-    rasterizeLeaf: (n) => rasterized.get(n.id) ?? null,
-    maskCanvas: (n) => maskToDocCanvas(n, doc, content),
+    rasterizeLeaf: (n) => rasterizeLeafPlaced(n, doc, content),
+    maskCanvas: (n) => maskToPlacedCanvas(n, doc, content),
     composite: () => host.readbackCanvas(),
     contentCanvas: (id) => content.get(id)?.canvas ?? null,
     fontName: opts?.fontName,
