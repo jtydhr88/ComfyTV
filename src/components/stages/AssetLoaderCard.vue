@@ -75,7 +75,7 @@
           </div>
           <img
             v-else
-            :src="asset.payload_url"
+            :src="assetPreviewUrl(asset)"
             :alt="asset.name"
             loading="lazy"
             class="ctv:block ctv:w-full ctv:aspect-square ctv:object-cover"
@@ -121,6 +121,7 @@ import ModelThumb from '@/components/widgets/ModelThumb.vue'
 import ProxiedVideo from '@/components/widgets/ProxiedVideo.vue'
 import StageCard from '@/components/stages/StageCard.vue'
 import { assetTooltipOf as assetTooltip, useAssetLoaderCard } from '@/composables/stages/useAssetLoaderCard'
+import { assetPreviewUrl } from '@/utils/assetMedia'
 import type { StageState } from '@/stores/stageStore'
 
 const props = defineProps<{

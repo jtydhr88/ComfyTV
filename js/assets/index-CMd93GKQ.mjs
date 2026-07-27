@@ -17,9 +17,6 @@ function _mergeNamespaces(n, m) {
   }
   return Object.freeze(Object.defineProperty(n, Symbol.toStringTag, { value: "Module" }));
 }
-function getDefaultExportFromCjs(x) {
-  return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, "default") ? x["default"] : x;
-}
 var distEs = {};
 var psdWriter = {};
 var helpers = {};
@@ -17199,12 +17196,10 @@ function requireDistEs() {
   return distEs;
 }
 var distEsExports = requireDistEs();
-const index = /* @__PURE__ */ getDefaultExportFromCjs(distEsExports);
-const index$1 = /* @__PURE__ */ _mergeNamespaces({
-  __proto__: null,
-  default: index
+const index = /* @__PURE__ */ _mergeNamespaces({
+  __proto__: null
 }, [distEsExports]);
 export {
-  index$1 as i
+  index as i
 };
-//# sourceMappingURL=index-DVQsUV9P.mjs.map
+//# sourceMappingURL=index-CMd93GKQ.mjs.map

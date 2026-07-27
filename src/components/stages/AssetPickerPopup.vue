@@ -47,7 +47,7 @@
           @click="$emit('select', asset)"
         >
           <img
-            :src="asset.payload_url"
+            :src="assetPreviewUrl(asset)"
             :alt="asset.name"
             loading="lazy"
             :class="['ctv:block ctv:w-full ctv:aspect-square ctv:object-cover',
@@ -73,6 +73,7 @@ import { onMounted, ref } from 'vue'
 
 import type { Asset } from '@/api/schemas'
 import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
+import { assetPreviewUrl } from '@/utils/assetMedia'
 import { useAssetPicker } from '@/composables/stages/useAssetPicker'
 
 const props = defineProps<{

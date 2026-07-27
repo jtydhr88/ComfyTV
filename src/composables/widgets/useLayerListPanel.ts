@@ -184,7 +184,7 @@ export function useLayerListPanel(editor: LayerEditorController) {
 
   function onAssetPicked(asset: Asset): void {
     pickerOpen.value = false
-    void editor.addImageFromUrl(asset.payload_url, asset.name)
+    void editor.addAsset(asset)
   }
 
   function onFilesPicked(e: Event): void {

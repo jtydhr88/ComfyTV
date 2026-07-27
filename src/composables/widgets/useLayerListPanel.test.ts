@@ -33,6 +33,7 @@ function makeEditor() {
     editingTextId: ref<string | null>(null),
     content: new Map([['c1', { canvas: {} as HTMLCanvasElement, width: 100, height: 50 }]]),
     addImageFromUrl: vi.fn(async () => {}),
+    addAsset: vi.fn(async () => {}),
     addImageFromFile: vi.fn(),
     addTextLayerAt: vi.fn((..._a: unknown[]) => 'new-text-id'),
     renameLayer: vi.fn(),
@@ -213,7 +214,7 @@ describe('useLayerListPanel', () => {
     api.pickerOpen.value = true
     api.onAssetPicked({ payload_url: '/u.png', name: 'pic' } as never)
     expect(api.pickerOpen.value).toBe(false)
-    expect(raw.addImageFromUrl).toHaveBeenCalledWith('/u.png', 'pic')
+    expect(raw.addAsset).toHaveBeenCalledWith({ payload_url: '/u.png', name: 'pic' })
   })
 
   it('imports picked files and resets the input', () => {

@@ -30,7 +30,7 @@
       </ModelThumb>
       <img
         v-else
-        :src="asset.payload_url"
+        :src="assetPreviewUrl(asset)"
         :alt="asset.name"
         loading="lazy"
         class="ctv:size-full ctv:object-cover"
@@ -77,6 +77,7 @@
 import { computed } from 'vue'
 
 import IconBox from '~icons/lucide/box'
+import { assetPreviewUrl } from '@/utils/assetMedia'
 import ProxiedVideo from '@/components/widgets/ProxiedVideo.vue'
 import IconEllipsis from '~icons/lucide/ellipsis'
 import IconMaximize from '~icons/lucide/maximize-2'

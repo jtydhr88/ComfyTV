@@ -2,6 +2,7 @@ import { computed, onBeforeUnmount, ref, shallowRef, watch } from 'vue'
 
 import { app, type LGraphNode } from '@/lib/comfyApp'
 import { t } from '@/i18n'
+import { isPsdAsset, PSD_MIME, type AssetMediaInfo } from '@/utils/assetMedia'
 import { downloadBlob } from '@/utils/download'
 import { uploadBlobNamed, uploadCanvas } from '@/utils/uploadCanvas'
 import { onNodeConfigure, readWidgetStr, writeWidget } from '@/utils/widget'
@@ -544,8 +545,6 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     )
   }
 
-  const PSD_MIME = 'image/vnd.adobe.photoshop'
-
   async function writePsdBlob(): Promise<Blob> {
     const psd = await buildPsdForExport()
     const { writePsd } = await import('ag-psd')
@@ -572,6 +571,10 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     try {
       const doc = editor.document()
       const blob = await writePsdBlob()
+      const previewUrl = await uploadCanvas(flattenComposite(), {
+        subfolder: 'comfytv/assets',
+        filenamePrefix: `comfytv-psd-preview-${node.id}`,
+      })
       const filename = `comfytv-layers-${Date.now()}.psd`
       const res = await uploadBlobNamed(blob, { subfolder: 'comfytv/assets', filename })
       const { useAssetStore } = await import('@/stores/assetStore')
@@ -584,6 +587,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
         height: doc.height,
         size_bytes: blob.size,
         source: 'layer-editor',
+        metadata: { preview_url: previewUrl },
       })
       if (!asset) throw new Error('asset create failed')
       toastInfo(t('layerEditor.exportPsdAssetDone'))
@@ -596,41 +600,45 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     }
   }
 
-  async function importPsdFile(file: File): Promise<void> {
+  async function importPsdBuffer(buffer: ArrayBuffer, sourceName: string): Promise<void> {
+    const { readPsd } = await import('ag-psd')
+    const psd = readPsd(buffer, { skipThumbnail: true })
+    const registry = bufferedContentRegistry()
+    const result = await psdToNodes(psd, {
+      registerContent: registry.registerContent,
+      matchFont: matchFontByName,
+      decodePng: decodePngBytes,
+    })
+    if (!result.nodes.length) {
+      toastError(t('layerEditor.importPsdEmpty'))
+      return
+    }
+    if (editor.document().root.children.length === 0) {
+      setArtboardSize(
+        Math.min(result.width, MAX_CONTENT_DIM),
+        Math.min(result.height, MAX_CONTENT_DIM)
+      )
+      for (const node of result.nodes) editor.addNode(node)
+    } else {
+      editor.addNode(groupKind.create({
+        name: sourceName.replace(/\.(psd|psb)$/i, ''),
+        children: result.nodes,
+        passThrough: false,
+      }))
+    }
+    registry.commit((canvas, id) => content.register(canvas, { id }))
+    editor.invalidate()
+    if (result.warnings.length) {
+      console.warn('[ComfyTV/layerEditor] PSD import warnings', result.warnings)
+    }
+  }
+
+  async function runPsdImport(load: () => Promise<{ buffer: ArrayBuffer; name: string }>): Promise<void> {
     if (importingPsd.value) return
     importingPsd.value = true
     try {
-      const buffer = await file.arrayBuffer()
-      const { readPsd } = await import('ag-psd')
-      const psd = readPsd(buffer, { skipThumbnail: true })
-      const registry = bufferedContentRegistry()
-      const result = await psdToNodes(psd, {
-        registerContent: registry.registerContent,
-        matchFont: matchFontByName,
-        decodePng: decodePngBytes,
-      })
-      if (!result.nodes.length) {
-        toastError(t('layerEditor.importPsdEmpty'))
-        return
-      }
-      if (editor.document().root.children.length === 0) {
-        setArtboardSize(
-          Math.min(result.width, MAX_CONTENT_DIM),
-          Math.min(result.height, MAX_CONTENT_DIM)
-        )
-        for (const node of result.nodes) editor.addNode(node)
-      } else {
-        editor.addNode(groupKind.create({
-          name: file.name.replace(/\.(psd|psb)$/i, ''),
-          children: result.nodes,
-          passThrough: false,
-        }))
-      }
-      registry.commit((canvas, id) => content.register(canvas, { id }))
-      editor.invalidate()
-      if (result.warnings.length) {
-        console.warn('[ComfyTV/layerEditor] PSD import warnings', result.warnings)
-      }
+      const { buffer, name } = await load()
+      await importPsdBuffer(buffer, name)
     } catch (e) {
       console.warn('[ComfyTV/layerEditor] PSD import failed', e)
       toastError(t('layerEditor.importPsdFailed'))
@@ -638,6 +646,23 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
       importingPsd.value = false
       requestRender()
     }
+  }
+
+  function importPsdFile(file: File): Promise<void> {
+    return runPsdImport(async () => ({ buffer: await file.arrayBuffer(), name: file.name }))
+  }
+
+  function importPsdFromUrl(url: string, name: string): Promise<void> {
+    return runPsdImport(async () => {
+      const resp = await fetch(url)
+      if (!resp.ok) throw new Error(`psd fetch ${resp.status}`)
+      return { buffer: await resp.arrayBuffer(), name }
+    })
+  }
+
+  function addAsset(asset: AssetMediaInfo): Promise<void> {
+    if (isPsdAsset(asset)) return importPsdFromUrl(asset.payload_url, asset.name || 'PSD')
+    return addImageFromUrl(asset.payload_url, asset.name || 'Image')
   }
 
   function onChange(): void {
@@ -1294,7 +1319,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     updateTextLayer,
     setArtboardSize, nudgeActive,
     captureBatch, flushCapture, cancelPendingCapture, reload: loadFromNode,
-    exportPsd, exportPsdToLibrary, importPsdFile, exportingPsd, importingPsd,
+    exportPsd, exportPsdToLibrary, importPsdFile, importPsdFromUrl, addAsset, exportingPsd, importingPsd,
     documentIsEmpty: () => editor.document().root.children.length === 0,
     addEmptyLayer, floating, anchorFloating, cancelFloating,
     mergeDown, flattenImage, flipImage, cropToContent, layerToCanvasSize, toggleLockAlpha,

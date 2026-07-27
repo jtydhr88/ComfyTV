@@ -120,7 +120,7 @@ const drop = useLoaderFileDrop({
     for (const f of files) editor.addImageFromFile(f)
   },
   onAsset: (asset: Asset) => {
-    void editor.addImageFromUrl(asset.payload_url, asset.name)
+    void editor.addAsset(asset)
   },
 })
 

@@ -9514,6 +9514,19 @@ function render$1L(_ctx, _cache2) {
   ])]);
 }
 const IconBox = markRaw({ name: "lucide-box", render: render$1L });
+const PSD_MIME = "image/vnd.adobe.photoshop";
+function isPsdAsset(asset) {
+  if (asset.mime_type === PSD_MIME) return true;
+  const name = (asset.name ?? "").toLowerCase();
+  if (name.endsWith(".psd") || name.endsWith(".psb")) return true;
+  const url = asset.payload_url.toLowerCase();
+  return /\.(psd|psb)([?&#]|$)/.test(url) || /filename=[^&]*\.(psd|psb)/.test(url);
+}
+function assetPreviewUrl(asset) {
+  var _a2;
+  const preview = (_a2 = asset.metadata) == null ? void 0 : _a2.preview_url;
+  return typeof preview === "string" && preview ? preview : asset.payload_url;
+}
 const _hoisted_1$56 = {
   viewBox: "0 0 24 24",
   width: "1.2em",
@@ -15353,7 +15366,7 @@ const _sfc_main$3u = /* @__PURE__ */ defineComponent({
             }, 8, ["src", "alt"])
           ], 8, _hoisted_5$2y)) : (openBlock(), createElementBlock("img", {
             key: 3,
-            src: __props.asset.payload_url,
+            src: unref(assetPreviewUrl)(__props.asset),
             alt: __props.asset.name,
             title: __props.tooltip,
             loading: "lazy",
@@ -15425,7 +15438,7 @@ const _export_sfc = (sfc, props) => {
   }
   return target;
 };
-const AssetGridCard = /* @__PURE__ */ _export_sfc(_sfc_main$3u, [["__scopeId", "data-v-1b8e169d"]]);
+const AssetGridCard = /* @__PURE__ */ _export_sfc(_sfc_main$3u, [["__scopeId", "data-v-56f3bbe8"]]);
 const _hoisted_1$51 = ["src"];
 const _sfc_main$3t = /* @__PURE__ */ defineComponent({
   __name: "ProxiedVideo",
@@ -15496,7 +15509,7 @@ const _sfc_main$3s = /* @__PURE__ */ defineComponent({
             _: 1
           }, 8, ["src", "alt"])) : (openBlock(), createElementBlock("img", {
             key: 3,
-            src: __props.asset.payload_url,
+            src: unref(assetPreviewUrl)(__props.asset),
             alt: __props.asset.name,
             loading: "lazy",
             class: "ctv:size-full ctv:object-cover"
@@ -15534,7 +15547,7 @@ const _sfc_main$3s = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const AssetListItem = /* @__PURE__ */ _export_sfc(_sfc_main$3s, [["__scopeId", "data-v-a1e7f588"]]);
+const AssetListItem = /* @__PURE__ */ _export_sfc(_sfc_main$3s, [["__scopeId", "data-v-c639f9e7"]]);
 /*!
   * shared v9.14.5
   * (c) 2025 kazuya kawaguchi
@@ -56173,7 +56186,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-CnMxmmz5.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-D1HMEjmt.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -71040,7 +71053,7 @@ const _sfc_main$3b = /* @__PURE__ */ defineComponent({
                 onClick: ($event) => _ctx.$emit("select", asset)
               }, [
                 createBaseVNode("img", {
-                  src: asset.payload_url,
+                  src: unref(assetPreviewUrl)(asset),
                   alt: asset.name,
                   loading: "lazy",
                   class: normalizeClass([
@@ -125386,7 +125399,7 @@ const _sfc_main$2q = /* @__PURE__ */ defineComponent({
                   }, 8, ["src", "alt"])
                 ])) : (openBlock(), createElementBlock("img", {
                   key: 3,
-                  src: asset.payload_url,
+                  src: unref(assetPreviewUrl)(asset),
                   alt: asset.name,
                   loading: "lazy",
                   class: "ctv:block ctv:w-full ctv:aspect-square ctv:object-cover",
@@ -127451,7 +127464,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-2XGq9fNx.mjs");
+    const { STLLoader } = await import("./STLLoader-BOuN765u.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -127459,7 +127472,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-CgcxyGsw.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-D5ePTWJZ.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -154097,7 +154110,7 @@ const _sfc_main$25 = /* @__PURE__ */ defineComponent({
         for (const f2 of files) editor.addImageFromFile(f2);
       },
       onAsset: (asset) => {
-        void editor.addImageFromUrl(asset.payload_url, asset.name);
+        void editor.addAsset(asset);
       }
     });
     let resizeObserver = null;
@@ -155932,7 +155945,7 @@ function useLayerListPanel(editor) {
   }
   function onAssetPicked(asset) {
     pickerOpen.value = false;
-    void editor.addImageFromUrl(asset.payload_url, asset.name);
+    void editor.addAsset(asset);
   }
   function onFilesPicked(e) {
     const input = e.target;
@@ -159041,10 +159054,9 @@ function useLayerEditorStage(node, opts) {
       { fontName: (n) => fontDisplayName(n.fontRef) }
     );
   }
-  const PSD_MIME = "image/vnd.adobe.photoshop";
   async function writePsdBlob() {
     const psd = await buildPsdForExport();
-    const { writePsd } = await import("./index-DVQsUV9P.mjs").then((n) => n.i);
+    const { writePsd } = await import("./index-CMd93GKQ.mjs").then((n) => n.i);
     return new Blob([writePsd(psd)], { type: PSD_MIME });
   }
   async function exportPsd() {
@@ -159066,6 +159078,10 @@ function useLayerEditorStage(node, opts) {
     try {
       const doc2 = editor.document();
       const blob = await writePsdBlob();
+      const previewUrl = await uploadCanvas(flattenComposite(), {
+        subfolder: "comfytv/assets",
+        filenamePrefix: `comfytv-psd-preview-${node.id}`
+      });
       const filename = `comfytv-layers-${Date.now()}.psd`;
       const res = await uploadBlobNamed(blob, { subfolder: "comfytv/assets", filename });
       const { useAssetStore: useAssetStore2 } = await Promise.resolve().then(() => assetStore);
@@ -159077,7 +159093,8 @@ function useLayerEditorStage(node, opts) {
         width: doc2.width,
         height: doc2.height,
         size_bytes: blob.size,
-        source: "layer-editor"
+        source: "layer-editor",
+        metadata: { preview_url: previewUrl }
       });
       if (!asset) throw new Error("asset create failed");
       toastInfo(t("layerEditor.exportPsdAssetDone"));
@@ -159089,41 +159106,44 @@ function useLayerEditorStage(node, opts) {
       requestRender();
     }
   }
-  async function importPsdFile(file) {
+  async function importPsdBuffer(buffer, sourceName) {
+    const { readPsd } = await import("./index-CMd93GKQ.mjs").then((n) => n.i);
+    const psd = readPsd(buffer, { skipThumbnail: true });
+    const registry2 = bufferedContentRegistry();
+    const result = await psdToNodes(psd, {
+      registerContent: registry2.registerContent,
+      matchFont: matchFontByName,
+      decodePng: decodePngBytes
+    });
+    if (!result.nodes.length) {
+      toastError(t("layerEditor.importPsdEmpty"));
+      return;
+    }
+    if (editor.document().root.children.length === 0) {
+      setArtboardSize(
+        Math.min(result.width, MAX_CONTENT_DIM),
+        Math.min(result.height, MAX_CONTENT_DIM)
+      );
+      for (const node2 of result.nodes) editor.addNode(node2);
+    } else {
+      editor.addNode(groupKind.create({
+        name: sourceName.replace(/\.(psd|psb)$/i, ""),
+        children: result.nodes,
+        passThrough: false
+      }));
+    }
+    registry2.commit((canvas, id) => content.register(canvas, { id }));
+    editor.invalidate();
+    if (result.warnings.length) {
+      console.warn("[ComfyTV/layerEditor] PSD import warnings", result.warnings);
+    }
+  }
+  async function runPsdImport(load) {
     if (importingPsd.value) return;
     importingPsd.value = true;
     try {
-      const buffer = await file.arrayBuffer();
-      const { readPsd } = await import("./index-DVQsUV9P.mjs").then((n) => n.i);
-      const psd = readPsd(buffer, { skipThumbnail: true });
-      const registry2 = bufferedContentRegistry();
-      const result = await psdToNodes(psd, {
-        registerContent: registry2.registerContent,
-        matchFont: matchFontByName,
-        decodePng: decodePngBytes
-      });
-      if (!result.nodes.length) {
-        toastError(t("layerEditor.importPsdEmpty"));
-        return;
-      }
-      if (editor.document().root.children.length === 0) {
-        setArtboardSize(
-          Math.min(result.width, MAX_CONTENT_DIM),
-          Math.min(result.height, MAX_CONTENT_DIM)
-        );
-        for (const node2 of result.nodes) editor.addNode(node2);
-      } else {
-        editor.addNode(groupKind.create({
-          name: file.name.replace(/\.(psd|psb)$/i, ""),
-          children: result.nodes,
-          passThrough: false
-        }));
-      }
-      registry2.commit((canvas, id) => content.register(canvas, { id }));
-      editor.invalidate();
-      if (result.warnings.length) {
-        console.warn("[ComfyTV/layerEditor] PSD import warnings", result.warnings);
-      }
+      const { buffer, name } = await load();
+      await importPsdBuffer(buffer, name);
     } catch (e) {
       console.warn("[ComfyTV/layerEditor] PSD import failed", e);
       toastError(t("layerEditor.importPsdFailed"));
@@ -159131,6 +159151,20 @@ function useLayerEditorStage(node, opts) {
       importingPsd.value = false;
       requestRender();
     }
+  }
+  function importPsdFile(file) {
+    return runPsdImport(async () => ({ buffer: await file.arrayBuffer(), name: file.name }));
+  }
+  function importPsdFromUrl(url, name) {
+    return runPsdImport(async () => {
+      const resp = await fetch(url);
+      if (!resp.ok) throw new Error(`psd fetch ${resp.status}`);
+      return { buffer: await resp.arrayBuffer(), name };
+    });
+  }
+  function addAsset(asset) {
+    if (isPsdAsset(asset)) return importPsdFromUrl(asset.payload_url, asset.name || "PSD");
+    return addImageFromUrl(asset.payload_url, asset.name || "Image");
   }
   function onChange() {
     version2.value += 1;
@@ -159868,6 +159902,8 @@ function useLayerEditorStage(node, opts) {
     exportPsd,
     exportPsdToLibrary,
     importPsdFile,
+    importPsdFromUrl,
+    addAsset,
     exportingPsd,
     importingPsd,
     documentIsEmpty: () => editor.document().root.children.length === 0,
@@ -161654,7 +161690,7 @@ function applyGuides(psd, doc2, guides, offsets) {
   };
 }
 async function writeBlob(psd) {
-  const { writePsd } = await import("./index-DVQsUV9P.mjs").then((n) => n.i);
+  const { writePsd } = await import("./index-CMd93GKQ.mjs").then((n) => n.i);
   const psb = psd.width > MAX_PSD_DIM || psd.height > MAX_PSD_DIM;
   const buffer = writePsd(psd, psb ? { psb: true } : void 0);
   return new Blob([buffer], { type: "image/vnd.adobe.photoshop" });
@@ -189940,4 +189976,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-DMonq5wt.mjs.map
+//# sourceMappingURL=main-r7ULxtLj.mjs.map

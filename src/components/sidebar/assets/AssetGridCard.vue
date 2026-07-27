@@ -35,7 +35,7 @@
       </div>
       <img
         v-else
-        :src="asset.payload_url"
+        :src="assetPreviewUrl(asset)"
         :alt="asset.name"
         :title="tooltip"
         loading="lazy"
@@ -113,6 +113,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import IconBox from '~icons/lucide/box'
+import { assetPreviewUrl } from '@/utils/assetMedia'
 import IconEllipsis from '~icons/lucide/ellipsis'
 import IconMaximize from '~icons/lucide/maximize-2'
 import IconPlay from '~icons/lucide/play'
