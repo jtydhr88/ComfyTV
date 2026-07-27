@@ -37,6 +37,7 @@ export const OutputSchema = z.object({
   payload_json: z.unknown().nullable().optional(),
   params_json: z.unknown().nullable().optional(),
   parent_output_id: z.number().nullable().optional(),
+  duration_ms: z.number().nullable().optional(),
   created_at: z.string().nullable().optional(),
 })
 export type Output = z.infer<typeof OutputSchema>

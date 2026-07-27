@@ -17,6 +17,7 @@
     "running": "Running…",
     "cancel": "Cancel",
     "preparingWorkflow": "Preparing workflow…",
+    "outputDurationHint": "Generation time",
     "section": {
       "context": "Context",
       "pool": "Pool",

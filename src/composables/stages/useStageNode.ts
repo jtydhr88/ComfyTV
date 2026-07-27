@@ -998,6 +998,7 @@ export function useStageNode(
     if (latest.id != null && state.outputId !== latest.id) {
       state.outputId = Number(latest.id)
     }
+    state.durationMs = latest.duration_ms != null ? Number(latest.duration_ms) : null
     if (restored && restored !== state.output) {
       store.setOutputSlot(state, 0, restored)
     }

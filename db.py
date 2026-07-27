@@ -116,6 +116,7 @@ class Output(Base):
         Integer, ForeignKey("comfytv_outputs.id", ondelete="SET NULL"), nullable=True
     )
     picked_index:     Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    duration_ms:      Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     created_at:       Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
 
 
@@ -328,6 +329,12 @@ def _migrate_additive_columns(engine) -> None:
                     "ON comfytv_outputs (stage_uid)"
                 ))
             logging.info("[ComfyTV] migrated: comfytv_outputs + stage_uid")
+        if "duration_ms" not in cols:
+            with engine.begin() as conn:
+                conn.execute(text(
+                    "ALTER TABLE comfytv_outputs ADD COLUMN duration_ms INTEGER"
+                ))
+            logging.info("[ComfyTV] migrated: comfytv_outputs + duration_ms")
 
         wf_cols = {c["name"] for c in insp.get_columns("comfytv_workflows")}
         if "link_type" not in wf_cols:

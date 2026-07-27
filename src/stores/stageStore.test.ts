@@ -369,6 +369,22 @@ describe('stageStore.applyExecutedPayload', () => {
     expect(state.outputId).toBeNull()
   })
 
+  it('stamps durationMs from msg', () => {
+    const store = useStageStore()
+    const state = freshState()
+    store.applyExecutedPayload(state, { output: ['ok'], duration_ms: [12345] })
+    expect(state.durationMs).toBe(12345)
+  })
+
+  it('durationMs nulls out when missing or invalid', () => {
+    const store = useStageStore()
+    const state = freshState({ durationMs: 999 })
+    store.applyExecutedPayload(state, { output: ['ok'] })
+    expect(state.durationMs).toBeNull()
+    store.applyExecutedPayload(state, { output: ['ok'], duration_ms: ['nan'] })
+    expect(state.durationMs).toBeNull()
+  })
+
   it('bumps stateTick for downstream propagation', () => {
     const store = useStageStore()
     const state = freshState()

@@ -169,7 +169,12 @@
           <span :class="sectionLabel" class="ctv:mb-0">{{ $t('stage.section.output', { type: state.outputType }) }}</span>
           <span class="ctv:text-3xs ctv:text-muted-foreground ctv:font-mono ctv:normal-case ctv:tracking-normal ctv:truncate ctv:max-w-44">{{ textOutputSummary }}</span>
         </button>
-        <div v-if="state.output" class="ctv:ml-auto ctv:flex ctv:shrink-0 ctv:gap-1">
+        <div v-if="state.output" class="ctv:ml-auto ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1">
+          <span
+            v-if="durationLabel"
+            class="ctv:text-3xs ctv:text-muted-foreground ctv:font-mono"
+            :title="$t('stage.outputDurationHint')"
+          >{{ durationLabel }}</span>
           <button type="button" :class="textOutputBtn"
                   :title="$t('stage.action.copyText')"
                   @click.stop="copyTextOutput"><i :class="textOutputCopied ? 'pi pi-check' : 'pi pi-copy'" /></button>
@@ -180,18 +185,28 @@
       </div>
       <div v-else :class="sectionLabel">{{ $t('stage.section.output', { type: state.outputType }) }}</div>
 
-      <ValuePreview
+      <div
         v-show="!isTextOutput || !textOutputCollapsed"
-        class="ctv:flex-1 ctv:min-h-0"
-        :type="state.outputType"
-        :content="state.output"
-        :empty-label="state.running ? $t('stage.empty.generating') : $t('stage.empty.no_output')"
-        :click-mode="state.kind === 'image-batch' ? 'pick' : 'refine'"
-        :selected-index="state.kind === 'image-batch' ? state.pickedIndex : undefined"
-        @item-click="onOutputItemClick"
-        @load-asset="onLoadAssetAction"
-        @capture-view="onCaptureViewAction"
-      />
+        class="ctv:relative ctv:flex-1 ctv:min-h-0 ctv:flex ctv:flex-col"
+      >
+        <ValuePreview
+          class="ctv:flex-1 ctv:min-h-0"
+          :type="state.outputType"
+          :content="state.output"
+          :empty-label="state.running ? $t('stage.empty.generating') : $t('stage.empty.no_output')"
+          :click-mode="state.kind === 'image-batch' ? 'pick' : 'refine'"
+          :selected-index="state.kind === 'image-batch' ? state.pickedIndex : undefined"
+          @item-click="onOutputItemClick"
+          @load-asset="onLoadAssetAction"
+          @capture-view="onCaptureViewAction"
+        />
+        <span
+          v-if="durationLabel && !isTextOutput"
+          class="ctv:absolute ctv:bottom-1.5 ctv:right-1.5 ctv:px-1 ctv:py-px ctv:rounded-sm ctv:text-3xs ctv:font-mono
+                 ctv:bg-black/65 ctv:text-white/90 ctv:pointer-events-none"
+          :title="$t('stage.outputDurationHint')"
+        >{{ durationLabel }}</span>
+      </div>
     </section>
 
     <section v-if="!hideActions && !hideRunButton && state.output && stageActions.length" class="ctv:flex ctv:flex-col ctv:gap-1">
@@ -299,6 +314,13 @@ const isPicker = computed(() => isPoolPickerKind(props.state.kind))
 const contextCollapsed = useContextCollapsed(() => (props.node as any)?.id ?? null)
 const textOutputCollapsed = useTextOutputCollapsed(() => (props.node as any)?.id ?? null)
 const isTextOutput = computed(() => props.state.outputType === 'COMFYTV_TEXT')
+const durationLabel = computed(() => {
+  const ms = props.state.durationMs
+  if (ms == null || !Number.isFinite(ms) || ms <= 0 || !props.state.output) return ''
+  const secs = ms / 1000
+  if (secs < 60) return `${secs.toFixed(1)}s`
+  return `${Math.floor(secs / 60)}m ${Math.round(secs % 60)}s`
+})
 const textOutputSummary = computed(() => {
   if (!textOutputCollapsed.value) return ''
   const s = String(props.state.output ?? '').trim().replace(/\s+/g, ' ')

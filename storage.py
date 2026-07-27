@@ -191,6 +191,7 @@ def persist_output(
     params: Any = None,
     parent_output_id: Optional[int] = None,
     picked_index: Optional[int] = None,
+    duration_ms: Optional[int] = None,
 ) -> Optional[dict]:
     pid = (project_id or "").strip() or DEFAULT_PROJECT_ID
     if pid == DEFAULT_PROJECT_ID:
@@ -212,6 +213,7 @@ def persist_output(
             params_json=json.dumps(params, default=str) if params is not None else None,
             parent_output_id=parent_output_id,
             picked_index=int(picked_index) if picked_index is not None else None,
+            duration_ms=int(duration_ms) if duration_ms is not None else None,
         )
         s.add(out)
         s.commit()
@@ -591,6 +593,7 @@ def _output_to_dict(o: Output) -> dict:
         "params_json": json.loads(o.params_json) if o.params_json else None,
         "parent_output_id": o.parent_output_id,
         "picked_index": o.picked_index,
+        "duration_ms": o.duration_ms,
         "created_at": o.created_at.isoformat() if o.created_at else None,
     }
 

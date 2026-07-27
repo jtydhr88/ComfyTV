@@ -492,3 +492,48 @@ class TestStageEmitAutoOutputType:
                            payload_str='{"images": [{"index": "1"}]}', emit_ui=False)
         assert captured["payload_json"] == {"images": [{"index": "1"}]}
         assert captured["payload_url"] == ""
+
+
+# --- invoke duration plumbing -------------------------------------------------
+
+class TestInvokeDuration:
+    def _fake_cls(self):
+        return type("ImageStageClone", (), {
+            "hidden": type("H", (), {"unique_id": 1})(),
+        })
+
+    def test_timing_consume_is_one_shot(self):
+        from ComfyTV.nodes.stages.common import timing
+        timing.set_invoke_duration(1234)
+        assert timing.consume_invoke_duration() == 1234
+        assert timing.consume_invoke_duration() is None
+        timing.reset_invoke_duration()
+        assert timing.consume_invoke_duration() is None
+
+    def test_emit_picks_up_invoke_duration(self, monkeypatch):
+        from ComfyTV import storage
+        from ComfyTV.nodes.stages.common import timing
+        captured = {}
+        monkeypatch.setattr(storage, "persist_output",
+                            lambda **kw: captured.update(kw) or {"id": 1})
+        monkeypatch.setattr(c, "_emit_progress", lambda *a, **k: None)
+        timing.set_invoke_duration(7770)
+        c._stage_emit_auto(self._fake_cls(), project_id="default",
+                           payload_str="/view?filename=x.png", emit_ui=False)
+        assert captured["duration_ms"] == 7770
+
+        captured.clear()
+        c._stage_emit_auto(self._fake_cls(), project_id="default",
+                           payload_str="/view?filename=y.png", emit_ui=False)
+        assert captured["duration_ms"] is None
+
+    def test_emit_ui_payload_includes_duration(self, monkeypatch):
+        from ComfyTV import storage
+        from ComfyTV.nodes.stages.common import timing
+        monkeypatch.setattr(storage, "persist_output", lambda **kw: {"id": 9})
+        monkeypatch.setattr(c, "_emit_progress", lambda *a, **k: None)
+        timing.set_invoke_duration(4500)
+        out = c._stage_emit_auto(self._fake_cls(), project_id="default",
+                                 payload_str="/view?filename=x.png", emit_ui=True)
+        assert out.ui["duration_ms"] == [4500]
+        assert out.ui["output_id"] == [9]

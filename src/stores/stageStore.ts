@@ -70,6 +70,7 @@ export interface StageState {
   progress?: { value: number; max: number; text?: string } | null
   error?: { message: string; type?: string; traceback?: string } | null
    outputId?: number | null
+   durationMs?: number | null
    preparingWorkflow?: boolean
 }
 
@@ -244,6 +245,7 @@ export const useStageStore = defineStore('comfytv-stage', () => {
     const picked = Array.isArray(msg?.picked) ? msg.picked[0] : msg?.picked
     const pickedIdxRaw = Array.isArray(msg?.picked_index) ? msg.picked_index[0] : msg?.picked_index
     const outId = Array.isArray(msg?.output_id) ? msg.output_id[0] : msg?.output_id
+    const durationRaw = Array.isArray(msg?.duration_ms) ? msg.duration_ms[0] : msg?.duration_ms
     state.running = false
     state.progress = null
     state.error = null  // success clears any prior error
@@ -267,6 +269,9 @@ export const useStageStore = defineStore('comfytv-stage', () => {
       if (Number.isFinite(idx) && idx >= 1) state.pickedIndex = idx
     }
     state.outputId = (outId != null && outId !== '') ? Number(outId) : null
+    state.durationMs = (durationRaw != null && durationRaw !== '' && Number.isFinite(Number(durationRaw)))
+      ? Number(durationRaw)
+      : null
     bumpStateTick()
   }
 

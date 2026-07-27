@@ -17,6 +17,7 @@
     "running": "运行中…",
     "cancel": "取消",
     "preparingWorkflow": "准备工作流中…",
+    "outputDurationHint": "生成耗时",
     "section": {
       "context": "上游输入",
       "pool": "图片池",

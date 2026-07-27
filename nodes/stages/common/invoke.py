@@ -1,11 +1,13 @@
 import json
 import logging
+import time
 
 from .inputs import (
     _force_run_token, _project_id_input, _parent_output_id_input,
     _custom_params_input,
 )
 from .emit import _stage_emit_auto
+from .timing import reset_invoke_duration, set_invoke_duration
 from ....runners import RUNNER_REGISTRY, RunnerContext
 
 
@@ -123,12 +125,15 @@ async def invoke_runner(
 
     ctx = RunnerContext(**ctx_kwargs)
 
+    reset_invoke_duration()
+    started = time.perf_counter()
     try:
         payload = await runner.invoke(ctx)
     except NotImplementedError as e:
         raise StageNotImplemented(
             f"stage {kind} not implemented yet: {e}"
         ) from e
+    set_invoke_duration(int((time.perf_counter() - started) * 1000))
 
     if not payload:
         raise StageEmptyOutput(

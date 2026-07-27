@@ -87,6 +87,19 @@ class TestOutputs:
         assert out["project_id"] == "default"
         assert out["stage_node_id"] == "42"
         assert out["payload_url"] == "/view?filename=x.png"
+        assert out["duration_ms"] is None
+
+    def test_persist_duration_ms(self, reset_db):
+        from ComfyTV import storage
+        out = storage.persist_output(
+            project_id="default", stage_class="ImageStage",
+            stage_node_id="42", output_type="image",
+            payload_url="/view?filename=x.png",
+            duration_ms=12345.9,
+        )
+        assert out["duration_ms"] == 12345
+        latest = storage.latest_output("default", "42")
+        assert latest["duration_ms"] == 12345
 
     def test_persist_with_payload_json_and_params(self, reset_db):
         from ComfyTV import storage

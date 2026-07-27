@@ -8,6 +8,7 @@ from comfy_api.latest import io
 from .... import storage as _storage_module
 from .meta import STAGE_META, _KIND_TO_OUTPUT_TYPE
 from .progress import _emit_progress
+from .timing import consume_invoke_duration
 
 
 _JSON_PAYLOAD_TYPES = {'storyboard', 'images', 'timeline', 'material'}
@@ -28,6 +29,7 @@ def _persist(
     params=None,
     parent_output_id=None,
     picked_index=None,
+    duration_ms=None,
 ):
     try:
         node_id = getattr(cls.hidden, "unique_id", None) if hasattr(cls, "hidden") else None
@@ -41,6 +43,7 @@ def _persist(
             params=params,
             parent_output_id=int(parent_output_id) if parent_output_id else None,
             picked_index=int(picked_index) if picked_index is not None else None,
+            duration_ms=int(duration_ms) if duration_ms is not None else None,
         )
         return row.get('id') if row else None
     except Exception as e:
@@ -50,7 +53,7 @@ def _persist(
 
 def _stage_emit_auto(cls, *, project_id, payload_str, params=None, emit_ui: bool = True,
                      parent_output_id=None, picked_payload=None, picked_index=None,
-                     extra_outputs=None):
+                     extra_outputs=None, duration_ms=None):
     meta = STAGE_META.get(_stage_name(cls))
     if meta is None:
         logging.warning(
@@ -65,7 +68,7 @@ def _stage_emit_auto(cls, *, project_id, payload_str, params=None, emit_ui: bool
                        payload_str=payload_str, params=params, emit_ui=emit_ui,
                        parent_output_id=parent_output_id,
                        picked_payload=picked_payload, picked_index=picked_index,
-                       extra_outputs=extra_outputs)
+                       extra_outputs=extra_outputs, duration_ms=duration_ms)
 
 
 def _stage_emit(
@@ -80,7 +83,10 @@ def _stage_emit(
     picked_payload=None,
     picked_index=None,
     extra_outputs=None,
+    duration_ms=None,
 ):
+    if duration_ms is None:
+        duration_ms = consume_invoke_duration()
     is_json = output_type in _JSON_PAYLOAD_TYPES
 
     payload_json = None
@@ -98,6 +104,7 @@ def _stage_emit(
         params=params,
         parent_output_id=parent_output_id,
         picked_index=picked_index,
+        duration_ms=duration_ms,
     )
     has_pick = picked_payload is not None
     extras = tuple(extra_outputs or ())
@@ -109,6 +116,8 @@ def _stage_emit(
                 ui_data["picked_index"] = [int(picked_index)]
         if row_id is not None:
             ui_data["output_id"] = [row_id]
+        if duration_ms is not None:
+            ui_data["duration_ms"] = [int(duration_ms)]
         if has_pick:
             return io.NodeOutput(payload_str, picked_payload, *extras, ui=ui_data)
         return io.NodeOutput(payload_str, *extras, ui=ui_data)
