@@ -31,6 +31,7 @@
     "marked": "^18.0.6",
     "opensheetmusicdisplay": "^2.1.0",
     "pinia": "^3.0.4",
+    "postcss": "8.5.18",
     "reka-ui": "^2.9.9",
     "three": "^0.184.0",
     "tippy.js": "^6.3.7",
