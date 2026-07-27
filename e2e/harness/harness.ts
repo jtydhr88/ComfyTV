@@ -1,12 +1,18 @@
+﻿import { readPsd, writePsd } from 'ag-psd'
+
 import {
   blendComposite,
   createEditor,
   createWebGLCompositor,
   defaultMode,
+  deriveVectorTransform,
   emptyDocument,
+  generateId,
   linearToSrgb,
   adjustmentKind,
+  pendingUploads,
   rasterKind,
+  rectPath,
   registerBuiltinKinds,
   registerBuiltinTools,
   resolveMode,
@@ -16,8 +22,12 @@ import {
   type BlendFn,
   type CompositeInput,
   type RGBA,
+  type SceneNode,
   type VectorData,
 } from '@/widgets/layerEditor/engine'
+import { buildPsdFromEditor } from '@/widgets/layerEditor/psdExport'
+import { bufferedContentRegistry, decodePngBytes, psdToNodes } from '@/widgets/layerEditor/psdImport'
+import { uploadBlob } from '@/utils/uploadCanvas'
 
 const W = 64
 const H = 64
@@ -564,6 +574,272 @@ async function runContextLoss() {
   return { glOk: true, before, after, lostImmediately, restoredCalls, swappedCanvas }
 }
 
+function coverageOf(img: ImageData): number {
+  let opaque = 0
+  for (let i = 3; i < img.data.length; i += 4) {
+    if (img.data[i] > 8) opaque++
+  }
+  return opaque / (img.data.length / 4)
+}
+
+function diffStats(a: ImageData, b: ImageData, step = 8): { maxDiff: number; avgDiff: number; samples: number } {
+  if (a.width !== b.width || a.height !== b.height) return { maxDiff: 255, avgDiff: 255, samples: 0 }
+  let maxDiff = 0
+  let sum = 0
+  let samples = 0
+  for (let y = 0; y < a.height; y += step) {
+    for (let x = 0; x < a.width; x += step) {
+      const i = (y * a.width + x) * 4
+      for (let c = 0; c < 4; c++) {
+        const d = Math.abs(a.data[i + c] - b.data[i + c])
+        maxDiff = Math.max(maxDiff, d)
+        sum += d
+      }
+      samples++
+    }
+  }
+  return { maxDiff, avgDiff: sum / Math.max(1, samples * 4), samples }
+}
+
+function canvasFromUrl(url: string): Promise<HTMLCanvasElement> {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    img.onload = () => {
+      const c = document.createElement('canvas')
+      c.width = img.width
+      c.height = img.height
+      c.getContext('2d')!.drawImage(img, 0, 0)
+      resolve(c)
+    }
+    img.onerror = () => reject(new Error(`load failed: ${url}`))
+    img.src = url
+  })
+}
+
+interface PsdEditorSetup {
+  comp: ReturnType<typeof createWebGLCompositor>
+  editor: ReturnType<typeof createEditor>
+}
+
+function makeEditor(w: number, h: number): PsdEditorSetup | null {
+  registerBuiltinKinds()
+  registerBuiltinTools()
+  const comp = createWebGLCompositor()
+  if (!comp.init({ width: w, height: h })) return null
+  const editor = createEditor({ compositor: comp })
+  editor.loadDocument(emptyDocument(w, h))
+  return { comp, editor }
+}
+
+interface LayerReport {
+  name: string
+  kind: string
+  coverage: number
+}
+
+function analyzeEditor(setup: PsdEditorSetup): { composite: number; layers: LayerReport[] } {
+  const { comp, editor } = setup
+  editor.render()
+  const composite = coverageOf(comp.readback())
+  const children = editor.document().root.children
+  const saved = children.map((n) => n.visible)
+  const layers: LayerReport[] = []
+  for (let i = 0; i < children.length; i++) {
+    if (children[i].kind === 'adjustment') {
+      layers.push({ name: children[i].name, kind: children[i].kind, coverage: -1 })
+      continue
+    }
+    children.forEach((n, j) => (n.visible = j === i))
+    editor.render()
+    layers.push({ name: children[i].name, kind: children[i].kind, coverage: coverageOf(comp.readback()) })
+  }
+  children.forEach((n, j) => (n.visible = saved[j]))
+  editor.render()
+  return { composite, layers }
+}
+
+async function importPsdIntoEditor(psdBytes: ArrayBuffer) {
+  const psd = readPsd(psdBytes, { skipThumbnail: true })
+  const setup = makeEditor(psd.width, psd.height)
+  if (!setup) return null
+  const registry = bufferedContentRegistry()
+  const result = await psdToNodes(psd, {
+    registerContent: registry.registerContent,
+    matchFont: () => ({ kind: 'builtin', id: 'inter' }),
+    decodePng: decodePngBytes,
+  })
+  for (const node of result.nodes) setup.editor.addNode(node)
+  registry.commit((canvas, id) => setup.editor.content.register(canvas, { id }))
+  setup.editor.invalidate()
+  setup.editor.render()
+  return { setup, result, psd }
+}
+
+async function persistReload(setup: PsdEditorSetup) {
+  const { editor } = setup
+  const doc = editor.document()
+  const jobs = pendingUploads(doc, editor.content)
+  for (const job of jobs) {
+    const blob = await new Promise<Blob>((res, rej) =>
+      job.canvas.toBlob((b) => (b ? res(b) : rej(new Error('toBlob null'))), 'image/png')
+    )
+    const url = await uploadBlob(blob, { subfolder: 'e2e' })
+    job.commitUrl(url)
+    editor.content.markUploaded(job.contentId, url)
+  }
+  const json = JSON.stringify(editor.serialize())
+  const fresh = makeEditor(doc.width, doc.height)
+  if (!fresh) return null
+  fresh.editor.loadJSON(json)
+  await fresh.editor.hydrate(canvasFromUrl)
+  fresh.editor.render()
+  return { fresh, uploadedJobs: jobs.length }
+}
+
+function solidCanvas(w: number, h: number, css: string): HTMLCanvasElement {
+  const c = document.createElement('canvas')
+  c.width = w
+  c.height = h
+  const g = c.getContext('2d')!
+  g.fillStyle = css
+  g.fillRect(0, 0, w, h)
+  return c
+}
+
+async function runPsdRoundTrip() {
+  const W2 = 128
+  const H2 = 128
+  const source = makeEditor(W2, H2)
+  if (!source) return { glOk: false }
+  const { comp, editor } = source
+
+  const redId = editor.content.register(solidCanvas(64, 64, 'rgb(220,40,40)'))
+  editor.addNode(rasterKind.create({
+    name: 'red', contentId: redId, naturalWidth: 64, naturalHeight: 64,
+    transform: { x: 10, y: 10, w: 64, h: 64, rotation: 0 },
+  }))
+
+  const blueId = editor.content.register(solidCanvas(W2, H2, 'rgb(40,60,220)'))
+  const maskCanvas = document.createElement('canvas')
+  maskCanvas.width = W2
+  maskCanvas.height = H2
+  const mg = maskCanvas.getContext('2d')!
+  mg.fillStyle = '#000000'
+  mg.fillRect(0, 0, W2, H2)
+  mg.fillStyle = '#ffffff'
+  mg.fillRect(0, 0, W2 / 2, H2)
+  const maskId = editor.content.register(maskCanvas)
+  const masked = rasterKind.create({
+    name: 'masked-blue', contentId: blueId, naturalWidth: W2, naturalHeight: H2,
+    transform: { x: 0, y: 0, w: W2, h: H2, rotation: 0 },
+  })
+  masked.mask = { id: generateId('mask'), role: 'mask', contentId: maskId, enabled: true }
+  editor.addNode(masked)
+
+  editor.addNode(fillKind.create({
+    name: 'green-fill',
+    fill: { type: 'solid', color: '#22cc44' },
+    opacity: 0.6,
+  }))
+
+  const path = rectPath(70, 70, 40, 30)
+  editor.addNode(vectorKind.create({
+    name: 'yellow-rect',
+    path,
+    fill: { color: '#ffee00', rule: 'nonzero', opacity: 1 },
+    transform: deriveVectorTransform(path, 0),
+  }))
+
+  editor.addNode(adjustmentKind.create({ name: 'invert', op: 'invert' }))
+
+  editor.render()
+  const beforeImg = comp.readback()
+  const before = analyzeEditor(source)
+
+  const psd = await buildPsdFromEditor(
+    {
+      document: () => editor.document(),
+      render: () => editor.render(),
+      readbackCanvas: () => {
+        const img = comp.readback()
+        const c = document.createElement('canvas')
+        c.width = img.width
+        c.height = img.height
+        c.getContext('2d')!.putImageData(img, 0, 0)
+        return c
+      },
+    },
+    editor.content
+  )
+  const bytes = writePsd(psd)
+
+  const imported = await importPsdIntoEditor(bytes)
+  if (!imported) return { glOk: false }
+  const after = analyzeEditor(imported.setup)
+  imported.setup.editor.render()
+  const afterImg = imported.setup.comp.readback()
+  const diff = diffStats(beforeImg, afterImg)
+
+  const reload = await persistReload(imported.setup)
+  if (!reload) return { glOk: false }
+  const reloaded = analyzeEditor(reload.fresh)
+  reload.fresh.editor.render()
+  const reloadImg = reload.fresh.comp.readback()
+  const reloadDiff = diffStats(beforeImg, reloadImg)
+
+  comp.dispose()
+  imported.setup.comp.dispose()
+  reload.fresh.comp.dispose()
+
+  return {
+    glOk: true,
+    before,
+    after,
+    diff,
+    warnings: imported.result.warnings,
+    importedKinds: imported.result.nodes.map((n: SceneNode) => n.kind),
+    reloaded,
+    reloadDiff,
+    uploadedJobs: reload.uploadedJobs,
+  }
+}
+
+async function runPsdFixture(url: string) {
+  const resp = await fetch(url)
+  if (!resp.ok) return { ok: false, error: `fetch ${resp.status}` }
+  const bytes = await resp.arrayBuffer()
+  const imported = await importPsdIntoEditor(bytes)
+  if (!imported) return { ok: false, error: 'gl init failed' }
+
+  const nodes = imported.result.nodes.map((n: SceneNode) => ({
+    name: n.name,
+    kind: n.kind,
+    visible: n.visible,
+    transform: n.transform,
+  }))
+  const analysis = analyzeEditor(imported.setup)
+
+  const reload = await persistReload(imported.setup)
+  if (!reload) return { ok: false, error: 'reload gl init failed' }
+  const reloadAnalysis = analyzeEditor(reload.fresh)
+
+  imported.setup.comp.dispose()
+  reload.fresh.comp.dispose()
+
+  return {
+    ok: true,
+    width: imported.psd.width,
+    height: imported.psd.height,
+    warnings: imported.result.warnings,
+    nodes,
+    composite: analysis.composite,
+    layers: analysis.layers,
+    reloadComposite: reloadAnalysis.composite,
+    reloadLayers: reloadAnalysis.layers,
+    uploadedJobs: reload.uploadedJobs,
+  }
+}
+
 ;(window as unknown as { runCompositorTests: () => unknown }).runCompositorTests = run
 ;(window as unknown as { runPaintTests: () => unknown }).runPaintTests = runPaint
 ;(window as unknown as { runLayerTests: () => unknown }).runLayerTests = runLayers
@@ -571,4 +847,6 @@ async function runContextLoss() {
 ;(window as unknown as { runVectorTests: () => unknown }).runVectorTests = runVector
 ;(window as unknown as { runFillTests: () => unknown }).runFillTests = runFill
 ;(window as unknown as { runContextLossTests: () => unknown }).runContextLossTests = runContextLoss
+;(window as unknown as { runPsdRoundTrip: () => unknown }).runPsdRoundTrip = runPsdRoundTrip
+;(window as unknown as { runPsdFixture: (url: string) => unknown }).runPsdFixture = runPsdFixture
 document.getElementById('status')!.textContent = 'ready'

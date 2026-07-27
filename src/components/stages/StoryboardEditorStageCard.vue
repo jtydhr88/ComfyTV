@@ -174,6 +174,7 @@
         :has-upstream="hasUpstream"
         :has-upstream-images="hasUpstreamImages"
         :exporting-pdf="exportingPdf"
+        :exporting-psd="exportingPsd"
         @import-upstream="onImportUpstream"
         @import-upstream-images="onImportUpstreamImages"
         @import-script="onImportScript"
@@ -182,6 +183,8 @@
         @export-gif="onExportGif"
         @export-pdf="onExportPdf"
         @export-zip="onExportZip"
+        @export-psd="onExportPsd(false)"
+        @export-psd-anim="onExportPsd(true)"
       />
 
       <StageCard
@@ -222,6 +225,7 @@ import { useStoryboardHotkeys } from '@/composables/widgets/useStoryboardHotkeys
 import { useStageStore, type StageState } from '@/stores/stageStore'
 import { boardImageUrl } from '@/widgets/storyboard/boardDoc'
 import { downloadBlob, exportStoryboardPdf } from '@/widgets/storyboard/pdfExport'
+import { exportStoryboardAnimationPsd, exportStoryboardArtboardsPsd } from '@/widgets/storyboard/psdExport'
 import { onNodeConfigure, readWidgetStr } from '@/utils/widget'
 
 const props = defineProps<{
@@ -248,6 +252,7 @@ const sb = useStoryboardEditor(props.node, stageState, {
 })
 const editor = sb.editor
 const exportingPdf = ref(false)
+const exportingPsd = ref(false)
 
 const hasUpstream = computed(() =>
   stageState.inputs.some((i) => i.slot === 'storyboard' && i.source !== 'empty'))
@@ -348,6 +353,27 @@ async function onExportAnimatic(): Promise<void> {
   } catch (err: any) {
     console.error('[ComfyTV/storyboardEditor] animatic export failed', err)
     toast('error', `${t('storyboardEditor.animaticFailed')}: ${String(err?.message || err)}`)
+  }
+}
+
+async function onExportPsd(animation: boolean): Promise<void> {
+  if (exportingPsd.value) return
+  exportingPsd.value = true
+  try {
+    const guides = {
+      center: sb.guideCenter.value,
+      thirds: sb.guideThirds.value,
+      grid: sb.guideGrid.value,
+    }
+    const blob = animation
+      ? await exportStoryboardAnimationPsd(sb.doc.value, sb.labels.value, guides)
+      : await exportStoryboardArtboardsPsd(sb.doc.value, sb.labels.value, guides)
+    downloadBlob(blob, `storyboard-${props.node.id}${animation ? '-anim' : ''}.psd`)
+  } catch (err: any) {
+    console.error('[ComfyTV/storyboardEditor] psd export failed', err)
+    toast('error', `${t('storyboardEditor.psdFailed')}: ${String(err?.message || err)}`)
+  } finally {
+    exportingPsd.value = false
   }
 }
 

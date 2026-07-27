@@ -67,6 +67,24 @@
         <span v-if="sb.exportingZip.value">…</span>
         <template v-else>PNG</template>
       </button>
+      <button
+        type="button" :class="stripBtn"
+        :disabled="exportingPsd"
+        :title="$t('storyboardEditor.exportPsdHint')"
+        @click="$emit('export-psd')"
+      >
+        <span v-if="exportingPsd">…</span>
+        <template v-else>PSD</template>
+      </button>
+      <button
+        type="button" :class="stripBtn"
+        :disabled="exportingPsd"
+        :title="$t('storyboardEditor.exportPsdAnimHint')"
+        @click="$emit('export-psd-anim')"
+      >
+        <span v-if="exportingPsd">…</span>
+        <template v-else>{{ $t('storyboardEditor.exportPsdAnim') }}</template>
+      </button>
 
       <span class="ctv:w-px ctv:h-4 ctv:bg-border-subtle" />
 
@@ -170,6 +188,7 @@ const props = defineProps<{
   hasUpstream: boolean
   hasUpstreamImages: boolean
   exportingPdf: boolean
+  exportingPsd: boolean
 }>()
 
 const emit = defineEmits<{
@@ -179,6 +198,8 @@ const emit = defineEmits<{
   (e: 'export-gif'): void
   (e: 'export-pdf'): void
   (e: 'export-zip'): void
+  (e: 'export-psd'): void
+  (e: 'export-psd-anim'): void
   (e: 'import-script', text: string): void
   (e: 'import-images', files: File[]): void
 }>()

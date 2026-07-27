@@ -50,6 +50,9 @@ importers:
       '@vueuse/core':
         specifier: ^14.3.0
         version: 14.3.0(vue@3.5.35(typescript@5.9.3))
+      ag-psd:
+        specifier: ^31.0.2
+        version: 31.0.2
       animation-timeline-js:
         specifier: ^2.3.5
         version: 2.3.5
@@ -974,6 +977,9 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
+  ag-psd@31.0.2:
+    resolution: {integrity: sha512-5s5PvqbomPIIJ9YjL6robz55rT4RYPiQkww4brisyZEb5jzlHB1EKh47IJg7gIFj0RUrD0cMgdntM907qaZjXA==}
+
   alien-signals@1.0.13:
     resolution: {integrity: sha512-OGj9yyTnJEttvzhTUWuscOvtqxq5vrhF7vL9oS0xJ2mK0ItPYP1/y+vCFebfxoEyAz0++1AIwJ5CMr+Fk3nDmg==}
 
@@ -1727,6 +1733,9 @@ packages:
 
   pako@1.0.11:
     resolution: {integrity: sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==}
+
+  pako@2.1.0:
+    resolution: {integrity: sha512-w+eufiZ1WuJYgPXbV/PO3NCMEc3xqylkKHzp8bxp1uW4qaSNQUkwmLLEc3kKsfz8lpV1F8Ht3U1Cm+9Srog2ug==}
 
   path-browserify@1.0.1:
     resolution: {integrity: sha512-b7uo2UCUOYZcnF/3ID0lulOJi/bafxa1xPe7ZPsammBSpjSWQkjNxlt635YGS2MiR9GjvuXCtz2emr3jbsz98g==}
@@ -3045,6 +3054,11 @@ snapshots:
 
   acorn@8.17.0: {}
 
+  ag-psd@31.0.2:
+    dependencies:
+      base64-js: 1.5.1
+      pako: 2.1.0
+
   alien-signals@1.0.13: {}
 
   animation-timeline-js@2.3.5: {}
@@ -3090,8 +3104,7 @@ snapshots:
 
   balanced-match@1.0.2: {}
 
-  base64-js@1.5.1:
-    optional: true
+  base64-js@1.5.1: {}
 
   bindings@1.5.0:
     dependencies:
@@ -3812,6 +3825,8 @@ snapshots:
   package-manager-detector@1.6.0: {}
 
   pako@1.0.11: {}
+
+  pako@2.1.0: {}
 
   path-browserify@1.0.1: {}
 

@@ -223,6 +223,47 @@
 
     <button
       type="button"
+      :class="actionBtnClass"
+      :disabled="editor.importingPsd.value"
+      :title="$t('layerEditor.importPsdHint')"
+      @click="psdFileInput?.click()"
+    >
+      <IconLoader v-if="editor.importingPsd.value" class="ctv:size-3.5 ctv:animate-spin" />
+      <IconFileUp v-else class="ctv:size-3.5" />
+      {{ $t('layerEditor.importPsd') }}
+    </button>
+    <input
+      ref="psdFileInput"
+      type="file"
+      accept=".psd,.psb"
+      class="ctv:hidden"
+      @change="onPsdFilePicked"
+    />
+
+    <button
+      type="button"
+      :class="actionBtnClass"
+      :disabled="editor.exportingPsd.value"
+      :title="$t('layerEditor.exportPsdHint')"
+      @click="editor.exportPsd"
+    >
+      <IconLoader v-if="editor.exportingPsd.value" class="ctv:size-3.5 ctv:animate-spin" />
+      <IconFileDown v-else class="ctv:size-3.5" />
+      {{ $t('layerEditor.exportPsd') }}
+    </button>
+
+    <button
+      type="button"
+      :class="iconBtnClass"
+      :disabled="editor.exportingPsd.value"
+      :title="$t('layerEditor.exportPsdAssetHint')"
+      @click="editor.exportPsdToLibrary"
+    >
+      <IconLibrary class="ctv:size-4" />
+    </button>
+
+    <button
+      type="button"
       :class="iconBtnClass"
       :title="$t('layerEditor.fitView')"
       @click="editor.fitView"
@@ -235,12 +276,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import IconBrush from '~icons/lucide/brush'
 import IconCamera from '~icons/lucide/camera'
 import IconCheck from '~icons/lucide/check'
 import IconCircle from '~icons/lucide/circle'
 import IconEraser from '~icons/lucide/eraser'
+import IconFileDown from '~icons/lucide/file-down'
+import IconFileUp from '~icons/lucide/file-up'
+import IconLibrary from '~icons/lucide/library'
 import IconGrid from '~icons/lucide/grid-3x3'
 import IconHexagon from '~icons/lucide/hexagon'
 import IconLoader from '~icons/lucide/loader-2'
@@ -267,6 +311,15 @@ const props = defineProps<{
 }>()
 
 const editor = props.editor
+
+const psdFileInput = ref<HTMLInputElement | null>(null)
+
+function onPsdFilePicked(e: Event): void {
+  const input = e.target as HTMLInputElement
+  const file = input.files?.[0]
+  input.value = ''
+  if (file) void editor.importPsdFile(file)
+}
 
 const TOOL_META: Record<ToolId, { labelKey: string; icon: unknown }> = {
   select: { labelKey: 'layerEditor.toolSelect', icon: IconMousePointer },

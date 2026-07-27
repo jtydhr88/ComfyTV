@@ -2,10 +2,11 @@ import { computed, onBeforeUnmount, ref, shallowRef, watch } from 'vue'
 
 import { app, type LGraphNode } from '@/lib/comfyApp'
 import { t } from '@/i18n'
+import { downloadBlob } from '@/utils/download'
 import { uploadBlobNamed, uploadCanvas } from '@/utils/uploadCanvas'
 import { onNodeConfigure, readWidgetStr, writeWidget } from '@/utils/widget'
 import { applyImageFilter, defaultFilterParams, type FilterOp } from '@/widgets/layerEditor/filters'
-import { getFontStore } from '@/widgets/layerEditor/fontStore'
+import { DEFAULT_FONT_REF, getFontStore } from '@/widgets/layerEditor/fontStore'
 import { createPanZoom } from '@/widgets/layerEditor/panZoom'
 import { measureText, type TextStyle } from '@/widgets/layerEditor/textRender'
 import type { LayerRow, ToolHandler, ToolId } from '@/widgets/layerEditor/types'
@@ -17,6 +18,7 @@ import {
   deriveVectorTransform,
   Dirty,
   fillKind,
+  groupKind,
   normalizeFillSpec,
   LAYER_MODES,
   PropCommand,
@@ -36,6 +38,7 @@ import {
   STROKE_ONLY_SHAPES,
   textKind,
   transformPath,
+  walk,
   type BlendFn,
   type CanvasItem,
   type AdjustmentData,
@@ -51,8 +54,11 @@ import {
   type StrokeStyle,
   type TextData,
   type Transform,
+  type FontRef,
   type VectorData,
 } from '@/widgets/layerEditor/engine'
+import { buildPsdFromEditor } from '@/widgets/layerEditor/psdExport'
+import { bufferedContentRegistry, decodePngBytes, psdToNodes } from '@/widgets/layerEditor/psdImport'
 
 const STATE_WIDGET = 'layer_state'
 
@@ -150,6 +156,10 @@ function toastError(detail: string): void {
   ;(app as any)?.extensionManager?.toast?.add?.({ severity: 'error', summary: 'ComfyTV', detail, life: 5000 })
 }
 
+function toastInfo(detail: string): void {
+  ;(app as any)?.extensionManager?.toast?.add?.({ severity: 'success', summary: 'ComfyTV', detail, life: 4000 })
+}
+
 function loadImageElement(url: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const img = new Image()
@@ -199,6 +209,8 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
   const editingTextId = ref<string | null>(null)
   const maskView = ref(false)
   const capturing = ref(false)
+  const exportingPsd = ref(false)
+  const importingPsd = ref(false)
   const capturedImageUrl = shallowRef<string>(storage.readCapturedImage())
   const activeId = ref<string | null>(null)
   const glOk = ref(true)
@@ -494,6 +506,136 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
       toastError(t('layerEditor.captureFailed'))
     } finally {
       capturing.value = false
+      requestRender()
+    }
+  }
+
+  function readbackCanvas(): HTMLCanvasElement {
+    const img = compositor.readback()
+    const c = newCanvas(img.width, img.height)
+    c.getContext('2d')!.putImageData(img, 0, 0)
+    return c
+  }
+
+  function fontDisplayName(ref: FontRef): string | undefined {
+    if (ref.kind === 'builtin') return fontStore.builtins().find((b) => b.id === ref.id)?.name ?? ref.id
+    return ref.name
+  }
+
+  function matchFontByName(name: string | undefined): FontRef {
+    if (!name) return DEFAULT_FONT_REF
+    const normalize = (v: string): string => v.toLowerCase().replace(/[^a-z0-9]/g, '')
+    const target = normalize(name)
+    if (!target) return DEFAULT_FONT_REF
+    const hit = fontStore.builtins().find((b) => {
+      const n = normalize(b.name)
+      const id = normalize(b.id)
+      return n === target || id === target || (n.length >= 4 && (target.includes(n) || n.includes(target)))
+    })
+    return hit ? { kind: 'builtin', id: hit.id } : DEFAULT_FONT_REF
+  }
+
+  async function buildPsdForExport(): Promise<import('ag-psd').Psd> {
+    if (editor.floating()) editor.anchorFloating()
+    return buildPsdFromEditor(
+      { document: () => editor.document(), render: () => editor.render(), readbackCanvas },
+      content,
+      { fontName: (n) => fontDisplayName(n.fontRef) }
+    )
+  }
+
+  const PSD_MIME = 'image/vnd.adobe.photoshop'
+
+  async function writePsdBlob(): Promise<Blob> {
+    const psd = await buildPsdForExport()
+    const { writePsd } = await import('ag-psd')
+    return new Blob([writePsd(psd)], { type: PSD_MIME })
+  }
+
+  async function exportPsd(): Promise<void> {
+    if (!glOk.value || exportingPsd.value) return
+    exportingPsd.value = true
+    try {
+      downloadBlob(`comfytv-layers-${Date.now()}.psd`, await writePsdBlob())
+    } catch (e) {
+      console.warn('[ComfyTV/layerEditor] PSD export failed', e)
+      toastError(t('layerEditor.exportPsdFailed'))
+    } finally {
+      exportingPsd.value = false
+      requestRender()
+    }
+  }
+
+  async function exportPsdToLibrary(): Promise<void> {
+    if (!glOk.value || exportingPsd.value) return
+    exportingPsd.value = true
+    try {
+      const doc = editor.document()
+      const blob = await writePsdBlob()
+      const filename = `comfytv-layers-${Date.now()}.psd`
+      const res = await uploadBlobNamed(blob, { subfolder: 'comfytv/assets', filename })
+      const { useAssetStore } = await import('@/stores/assetStore')
+      const asset = await useAssetStore().create({
+        name: filename,
+        payload_url: res.url,
+        media_type: 'image',
+        mime_type: PSD_MIME,
+        width: doc.width,
+        height: doc.height,
+        size_bytes: blob.size,
+        source: 'layer-editor',
+      })
+      if (!asset) throw new Error('asset create failed')
+      toastInfo(t('layerEditor.exportPsdAssetDone'))
+    } catch (e) {
+      console.warn('[ComfyTV/layerEditor] PSD asset export failed', e)
+      toastError(t('layerEditor.exportPsdFailed'))
+    } finally {
+      exportingPsd.value = false
+      requestRender()
+    }
+  }
+
+  async function importPsdFile(file: File): Promise<void> {
+    if (importingPsd.value) return
+    importingPsd.value = true
+    try {
+      const buffer = await file.arrayBuffer()
+      const { readPsd } = await import('ag-psd')
+      const psd = readPsd(buffer, { skipThumbnail: true })
+      const registry = bufferedContentRegistry()
+      const result = await psdToNodes(psd, {
+        registerContent: registry.registerContent,
+        matchFont: matchFontByName,
+        decodePng: decodePngBytes,
+      })
+      if (!result.nodes.length) {
+        toastError(t('layerEditor.importPsdEmpty'))
+        return
+      }
+      if (editor.document().root.children.length === 0) {
+        setArtboardSize(
+          Math.min(result.width, MAX_CONTENT_DIM),
+          Math.min(result.height, MAX_CONTENT_DIM)
+        )
+        for (const node of result.nodes) editor.addNode(node)
+      } else {
+        editor.addNode(groupKind.create({
+          name: file.name.replace(/\.(psd|psb)$/i, ''),
+          children: result.nodes,
+          passThrough: false,
+        }))
+      }
+      registry.commit((canvas, id) => content.register(canvas, { id }))
+      editor.invalidate()
+      if (result.warnings.length) {
+        console.warn('[ComfyTV/layerEditor] PSD import warnings', result.warnings)
+      }
+    } catch (e) {
+      console.warn('[ComfyTV/layerEditor] PSD import failed', e)
+      toastError(t('layerEditor.importPsdFailed'))
+    } finally {
+      importingPsd.value = false
       requestRender()
     }
   }
@@ -1152,6 +1294,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     updateTextLayer,
     setArtboardSize, nudgeActive,
     captureBatch, flushCapture, cancelPendingCapture, reload: loadFromNode,
+    exportPsd, exportPsdToLibrary, importPsdFile, exportingPsd, importingPsd,
     documentIsEmpty: () => editor.document().root.children.length === 0,
     addEmptyLayer, floating, anchorFloating, cancelFloating,
     mergeDown, flattenImage, flipImage, cropToContent, layerToCanvasSize, toggleLockAlpha,
