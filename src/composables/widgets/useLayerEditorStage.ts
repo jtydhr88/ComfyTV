@@ -877,6 +877,9 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
   function cropToContent(id: string): void {
     editor.cropToContent(id)
   }
+  function rasterizeLayer(id: string): void {
+    editor.rasterizeLayer(id)
+  }
   function layerToCanvasSize(id: string): void {
     editor.layerToCanvasSize(id)
   }
@@ -1391,6 +1394,8 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     documentIsEmpty: () => editor.document().root.children.length === 0,
     addEmptyLayer, floating, anchorFloating, cancelFloating,
     mergeDown, flattenImage, flipImage, cropToContent, layerToCanvasSize, toggleLockAlpha,
+    rasterizeLayer,
+    canRasterize: (id: string) => editor.canRasterize(id),
     toggleLockPosition, toggleLockAll,
     selectAll, selectNone, invertSelection,
     addAdjustmentLayer, updateAdjustment, updateVectorStyle,

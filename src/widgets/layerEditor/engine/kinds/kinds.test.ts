@@ -16,6 +16,8 @@ vi.mock('../../textRender', () => ({
   },
 }))
 
+import { canRasterizeLayer, rasterizeLayer } from '../editor/layerOps'
+import type { Command } from '../history'
 import { DefaultContentStore } from '../impl/contentStore'
 import type { GroupData, RasterData, TextData, VectorData } from '../node'
 import { ellipsePath, rectPath } from '../vector'
@@ -56,7 +58,11 @@ describe('rasterKind', () => {
     expect(rasterKind.hitTest!(node, { x: 5, y: 5 })).toBe(false)
   })
 
-  it('onTransformCommitted bakes scale into a new buffer (GIMP destructive transform)', () => {
+  it('has no transform-commit hook: scale/rotate stay metadata (non-destructive)', () => {
+    expect(rasterKind.onTransformCommitted).toBeUndefined()
+  })
+
+  it('rasterizeLayer bakes scale into a new buffer on demand (undoable)', () => {
     const orig = HTMLCanvasElement.prototype.getContext
     ;(HTMLCanvasElement.prototype as any).getContext = function (kind: string) {
       if (kind !== '2d') return null
@@ -82,30 +88,32 @@ describe('rasterKind', () => {
         url: 'http://x/a.png',
         naturalWidth: 100,
         naturalHeight: 50,
-        transform: { x: 10, y: 10, w: 100, h: 50, rotation: 0 },
+        transform: { x: 10, y: 10, w: 200, h: 100, rotation: 0 },
       })
-      const before = { ...node.transform }
-      node.transform = { x: 10, y: 10, w: 200, h: 100, rotation: 0 }
+      const root = groupKind.create({ id: 'root', children: [node] })
+      const cmds: Command[] = []
+      const deps = { root, content, push: (c: Command) => cmds.push(c), bitmapOf: () => null }
 
-      const cmd = rasterKind.onTransformCommitted!(node, before, { content })
-      expect(cmd).not.toBeNull()
+      expect(canRasterizeLayer(root, node.id)).toBe(true)
+      expect(rasterizeLayer(deps, node.id)).toBe(true)
       expect(node.contentId).not.toBe(cid)
       expect(node.url).toBeUndefined()
       expect(node.naturalWidth).toBe(200)
       expect(node.naturalHeight).toBe(100)
       expect(node.transform).toMatchObject({ w: 200, h: 100, rotation: 0 })
+      expect(canRasterizeLayer(root, node.id)).toBe(false)
 
-      cmd!.apply('undo')
+      cmds[0].apply('undo')
       expect(node.contentId).toBe(cid)
       expect(node.url).toBe('http://x/a.png')
       expect(node.naturalWidth).toBe(100)
-      expect(node.transform).toMatchObject({ x: 10, y: 10, w: 100, h: 50 })
+      expect(node.transform).toMatchObject({ x: 10, y: 10, w: 200, h: 100 })
     } finally {
       HTMLCanvasElement.prototype.getContext = orig
     }
   })
 
-  it('onTransformCommitted grows to the rotated bounding box (ADJUST clip policy)', () => {
+  it('rasterizeLayer grows to the rotated bounding box and clears rotation', () => {
     const orig = HTMLCanvasElement.prototype.getContext
     ;(HTMLCanvasElement.prototype as any).getContext = function (kind: string) {
       if (kind !== '2d') return null
@@ -121,12 +129,11 @@ describe('rasterKind', () => {
       const cid = content.register(buf)
       const node = rasterKind.create({
         contentId: cid, naturalWidth: 100, naturalHeight: 100,
-        transform: { x: 0, y: 0, w: 100, h: 100, rotation: 0 },
+        transform: { x: 0, y: 0, w: 100, h: 100, rotation: Math.PI / 4 },
       })
-      const before = { ...node.transform }
-      node.transform = { ...node.transform, rotation: Math.PI / 4 }
-      const cmd = rasterKind.onTransformCommitted!(node, before, { content })
-      expect(cmd).not.toBeNull()
+      const root = groupKind.create({ id: 'root', children: [node] })
+      const deps = { root, content, push: () => {}, bitmapOf: () => null }
+      expect(rasterizeLayer(deps, node.id)).toBe(true)
       const expected = Math.ceil(100 * Math.SQRT2)
       expect(node.naturalWidth).toBeGreaterThanOrEqual(expected - 1)
       expect(node.naturalWidth).toBeLessThanOrEqual(expected + 2)
@@ -136,15 +143,16 @@ describe('rasterKind', () => {
     }
   })
 
-  it('onTransformCommitted is a no-op for pure moves', () => {
+  it('rasterizeLayer refuses identity placements (nothing to bake)', () => {
     const content = new DefaultContentStore()
-    const node = rasterKind.create({ contentId: 'c', naturalWidth: 10, naturalHeight: 10, transform: { x: 0, y: 0, w: 10, h: 10, rotation: 0 } })
-    const before = { ...node.transform }
-    node.transform = { ...node.transform, x: 40 }
-    expect(rasterKind.onTransformCommitted!(node, before, { content })).toBeNull()
+    const node = rasterKind.create({ contentId: 'c', naturalWidth: 10, naturalHeight: 10, transform: { x: 40, y: 0, w: 10, h: 10, rotation: 0 } })
+    const root = groupKind.create({ id: 'root', children: [node] })
+    const deps = { root, content, push: () => {}, bitmapOf: () => null }
+    expect(canRasterizeLayer(root, node.id)).toBe(false)
+    expect(rasterizeLayer(deps, node.id)).toBe(false)
   })
 
-  it('onTransformCommitted bakes the mask alongside the content and undo restores both', () => {
+  it('rasterizeLayer bakes the mask alongside the content and undo restores both', () => {
     const orig = HTMLCanvasElement.prototype.getContext
     ;(HTMLCanvasElement.prototype as any).getContext = function (kind: string) {
       if (kind !== '2d') return null
@@ -165,17 +173,17 @@ describe('rasterKind', () => {
       const mid = content.register(maskBuf, { uploadedUrl: 'http://x/m.png' })
       const node = rasterKind.create({
         contentId: cid, naturalWidth: 50, naturalHeight: 50,
-        transform: { x: 0, y: 0, w: 50, h: 50, rotation: 0 },
+        transform: { x: 0, y: 0, w: 100, h: 100, rotation: 0 },
         mask: { id: 'm', role: 'mask', contentId: mid, url: 'http://x/m.png', enabled: true },
       })
-      const before = { ...node.transform }
-      node.transform = { ...node.transform, w: 100, h: 100 }
-      const cmd = rasterKind.onTransformCommitted!(node, before, { content })
-      expect(cmd).not.toBeNull()
+      const root = groupKind.create({ id: 'root', children: [node] })
+      const cmds: Command[] = []
+      const deps = { root, content, push: (c: Command) => cmds.push(c), bitmapOf: () => null }
+      expect(rasterizeLayer(deps, node.id)).toBe(true)
       expect(node.mask!.contentId).not.toBe(mid)
       expect(node.mask!.url).toBeUndefined()
 
-      cmd!.apply('undo')
+      cmds[0].apply('undo')
       expect(node.mask!.contentId).toBe(mid)
       expect(node.mask!.url).toBe('http://x/m.png')
     } finally {

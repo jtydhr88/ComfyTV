@@ -221,6 +221,41 @@ describe('createEditor — end-to-end orchestration', () => {
     expect(b.transform).toMatchObject({ x: 200, y: 0 })
   })
 
+  it('transform commits keep the original pixels: shrink then enlarge loses nothing', () => {
+    const restore = stub2d()
+    try {
+      const editor = setup()
+      const canvas = document.createElement('canvas')
+      canvas.width = 1000
+      canvas.height = 1000
+      const cid = editor.content.register(canvas)
+      const r = rasterKind.create({
+        contentId: cid, naturalWidth: 1000, naturalHeight: 1000,
+        transform: { x: 0, y: 0, w: 1000, h: 1000, rotation: 0 },
+      })
+      editor.addNode(r)
+      editor.setTool('transform')
+
+      editor.pointerDown(ev, { x: 1000, y: 1000 })
+      editor.pointerMove(ev, { x: 100, y: 100 })
+      editor.pointerUp(ev, { x: 100, y: 100 })
+      expect(editor.transformApply()).toBe(true)
+      expect(r.transform.w).toBeCloseTo(100)
+      expect(r.contentId).toBe(cid)
+      expect(r.naturalWidth).toBe(1000)
+
+      editor.pointerDown(ev, { x: 100, y: 100 })
+      editor.pointerMove(ev, { x: 1000, y: 1000 })
+      editor.pointerUp(ev, { x: 1000, y: 1000 })
+      expect(editor.transformApply()).toBe(true)
+      expect(r.transform.w).toBeCloseTo(1000)
+      expect(r.contentId).toBe(cid)
+      expect(r.naturalWidth).toBe(1000)
+    } finally {
+      restore()
+    }
+  })
+
   it('flipImage mirrors transforms, swaps raster content, and undoes as one step', () => {
     const restore = stub2d()
     try {

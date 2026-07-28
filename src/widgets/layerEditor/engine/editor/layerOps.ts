@@ -4,10 +4,11 @@ import { BakeRasterCommand, snapshotRaster } from '../commands/bakeContent'
 import { PropCommand } from '../commands/prop'
 import { RemoveNodeCommand } from '../commands/structure'
 import type { ContentStore } from '../content'
+import { findNode } from '../document'
 import { CommandGroup, Dirty, type Command } from '../history'
 import { defaultMode, resolveMode, type EffectiveMode } from '../mode'
 import type { GroupData, RasterData, Rect, SceneNode } from '../node'
-import { bakeMaskInto, placedBounds, drawPlacedInto } from '../render/bake'
+import { bakeMaskInto, bakePlaced, isIdentityPlacement, placedBounds, drawPlacedInto } from '../render/bake'
 
 export function alphaBBox(data: Uint8ClampedArray, w: number, h: number): Rect | null {
   let minX = w
@@ -209,6 +210,40 @@ export function mergeDown(deps: LayerOpDeps, topId: string): boolean {
   group.children.push(new RemoveNodeCommand(`Merge ${top.name}`, deps.root, top, topIndex))
 
   deps.push(group)
+  return true
+}
+
+export function canRasterizeLayer(root: GroupData, id: string): boolean {
+  const node = findNode(root, id)?.node ?? null
+  if (!node || node.kind !== 'raster') return false
+  const raster = node as RasterData
+  return !isIdentityPlacement(raster.transform, raster.naturalWidth, raster.naturalHeight)
+}
+
+export function rasterizeLayer(deps: LayerOpDeps, id: string): boolean {
+  const node = findNode(deps.root, id)?.node
+  if (!node || node.kind !== 'raster') return false
+  const raster = node as RasterData
+  const t = { ...raster.transform }
+  if (isIdentityPlacement(t, raster.naturalWidth, raster.naturalHeight)) return false
+  const entry = deps.content.get(raster.contentId)
+  if (!entry) return false
+  const baked = bakePlaced(entry.canvas, t)
+  if (!baked) return false
+  const before = snapshotRaster(raster)
+  raster.contentId = deps.content.register(baked.canvas)
+  raster.url = undefined
+  raster.naturalWidth = baked.bounds.w
+  raster.naturalHeight = baked.bounds.h
+  raster.transform = { x: baked.bounds.x, y: baked.bounds.y, w: baked.bounds.w, h: baked.bounds.h, rotation: 0 }
+  if (raster.mask) {
+    const maskEntry = deps.content.get(raster.mask.contentId)
+    const bakedMask = maskEntry ? bakeMaskInto(maskEntry.canvas, t, baked.bounds, 'black') : null
+    if (bakedMask) {
+      raster.mask = { ...raster.mask, contentId: deps.content.register(bakedMask), url: undefined }
+    }
+  }
+  deps.push(new BakeRasterCommand('Rasterize Layer', raster, before, snapshotRaster(raster), deps.content))
   return true
 }
 

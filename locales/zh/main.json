@@ -1686,6 +1686,7 @@
     "transformApply": "应用",
     "transformCancel": "取消",
     "transformHint": "Enter 应用 · Esc 取消",
+    "rasterizeLayer": "栅格化图层（按当前尺寸定格像素）",
     "shapeRect": "矩形",
     "shapeEllipse": "椭圆",
     "shapeLine": "直线",

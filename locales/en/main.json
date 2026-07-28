@@ -1686,6 +1686,7 @@
     "transformApply": "Apply",
     "transformCancel": "Cancel",
     "transformHint": "Enter to apply · Esc to cancel",
+    "rasterizeLayer": "Rasterize layer (fix pixels at current size)",
     "shapeRect": "Rectangle",
     "shapeEllipse": "Ellipse",
     "shapeLine": "Line",

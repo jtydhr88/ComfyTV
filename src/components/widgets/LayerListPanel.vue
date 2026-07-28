@@ -244,6 +244,15 @@
         <button type="button" :class="miniBtnClass" :title="$t('layerEditor.layerToCanvasSize')" @click="editor.layerToCanvasSize(active.id)">
           <IconMaximize class="ctv:size-3.5" />
         </button>
+        <button
+          type="button"
+          :class="miniBtnClass"
+          :disabled="!editor.canRasterize(active.id)"
+          :title="$t('layerEditor.rasterizeLayer')"
+          @click="editor.rasterizeLayer(active.id)"
+        >
+          <IconFrame class="ctv:size-3.5" />
+        </button>
       </template>
       <div class="ctv:flex-1" />
       <button type="button" :class="miniBtnClass" :title="$t('layerEditor.flattenImage')" @click="editor.flattenImage()">
@@ -658,6 +667,7 @@ import IconEye from '~icons/lucide/eye'
 import IconFolder from '~icons/lucide/folder'
 import IconFolderMinus from '~icons/lucide/folder-minus'
 import IconFolderPlus from '~icons/lucide/folder-plus'
+import IconFrame from '~icons/lucide/frame'
 import IconImagePlus from '~icons/lucide/image-plus'
 import IconLayers from '~icons/lucide/layers'
 import IconLock from '~icons/lucide/lock'

@@ -29,7 +29,7 @@ import { isTransformTool } from '../tools/transformTool'
 import { SetSelectionCommand, snapshotSelection } from '../commands/selection'
 import { generateId } from '../id'
 import type { ChannelData, Rect } from '../node'
-import { cropToContent as cropToContentOp, layerToCanvasSize as layerToCanvasSizeOp, mergeDown as mergeDownOp } from './layerOps'
+import { canRasterizeLayer, cropToContent as cropToContentOp, layerToCanvasSize as layerToCanvasSizeOp, mergeDown as mergeDownOp, rasterizeLayer as rasterizeLayerOp } from './layerOps'
 import { clampRectToDoc, fullSelectionCanvas, invertSelectionCanvas, lumaBBox, rectSelectionCanvas } from './selectionOps'
 import { OverlayList } from './overlayList'
 
@@ -120,6 +120,8 @@ export interface Editor {
   anchorFloating(target?: 'active' | 'new'): void
   cancelFloating(): void
   mergeDown(id: string): boolean
+  rasterizeLayer(id: string): boolean
+  canRasterize(id: string): boolean
   flattenImage(): boolean
   flipImage(axis: 'h' | 'v'): boolean
   cropToContent(id: string): boolean
@@ -735,6 +737,14 @@ export function createEditor(opts: EditorOptions): Editor {
       const ok = mergeDownOp(layerOpDeps(), id)
       if (ok) refresh()
       return ok
+    },
+    rasterizeLayer(id) {
+      const ok = rasterizeLayerOp(layerOpDeps(), id)
+      if (ok) refresh()
+      return ok
+    },
+    canRasterize(id) {
+      return canRasterizeLayer(doc.root, id)
     },
     flattenImage() {
       if (!compositor.getCanvas()) return false
