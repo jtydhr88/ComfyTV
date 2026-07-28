@@ -19,6 +19,8 @@ import {
   readImageRefs,
   writeImageRefs,
 } from '@/composables/stages/imageRefs'
+import { importAssetFiles } from '@/composables/sidebar/assetImport'
+import { toastLoaderUploadFailed, useLoaderFileDrop } from '@/composables/stages/useLoaderFileDrop'
 import type { LGraphNode } from '@/lib/comfyApp'
 import { useAssetStore } from '@/stores/assetStore'
 import { useSelectionStore } from '@/stores/selectionStore'
@@ -83,6 +85,22 @@ export function useImageReferences(
     if (refs.value.some(r => r.asset_id === asset.id)) return
     setRefs([...refs.value, { asset_id: asset.id, slot: nextFreeSlot() }])
   }
+
+  async function importFiles(files: File[]): Promise<void> {
+    try {
+      const created = await importAssetFiles(files)
+      for (const asset of created) onAddAsset(asset)
+    } catch (e) {
+      console.error('[ComfyTV/image-refs] import failed', e)
+      toastLoaderUploadFailed(e)
+    }
+  }
+
+  const fileDrop = useLoaderFileDrop({
+    kind: () => 'image',
+    onAsset: onAddAsset,
+    onFiles: importFiles,
+  })
 
   function removeRef(index: number) {
     setRefs(refs.value.filter((_, i) => i !== index))
@@ -192,6 +210,8 @@ export function useImageReferences(
     assetLabel,
     tileTooltip,
     onAddAsset,
+    importFiles,
+    fileDrop,
     removeRef,
     openSlotPicker,
     onSlotPick,

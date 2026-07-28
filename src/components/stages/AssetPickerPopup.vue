@@ -1,10 +1,16 @@
 <template>
   <div
-    class="ctv:w-full ctv:mt-1
-           ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2 ctv:rounded ctv:text-xs
-           ctv:bg-interface-menu-surface ctv:text-base-foreground
-           ctv:border ctv:border-border-default"
+    :class="[
+      'ctv:w-full ctv:mt-1 ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2 ctv:rounded ctv:text-xs',
+      'ctv:bg-interface-menu-surface ctv:text-base-foreground ctv:border ctv:border-border-default',
+      fileDrop.dragActive.value
+        && 'ctv:outline ctv:outline-2 ctv:-outline-offset-2 ctv:outline-primary-background/70 ctv:bg-primary-background/5',
+    ]"
     @keydown.escape.stop="$emit('close')"
+    @dragenter="fileDrop.onDragEnter"
+    @dragover="fileDrop.onDragOver"
+    @dragleave="fileDrop.onDragLeave"
+    @drop="fileDrop.onDrop"
   >
     <div class="ctv:flex ctv:gap-1.5 ctv:items-center">
       <input
@@ -24,6 +30,25 @@
           @update:model-value="setFilter"
         />
       </div>
+      <button
+        type="button"
+        class="ctv:inline-flex ctv:items-center ctv:justify-center ctv:size-6 ctv:shrink-0 ctv:cursor-pointer ctv:[font-family:inherit]
+               ctv:rounded-sm ctv:border ctv:border-border-default ctv:leading-none
+               ctv:bg-secondary-background ctv:text-muted-foreground
+               ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground
+               ctv:disabled:opacity-50 ctv:disabled:cursor-default"
+        :disabled="uploading"
+        :title="$t('promptAssets.upload')"
+        @click="fileInput?.click()"
+      ><IconUpload class="ctv:size-3.5" /></button>
+      <input
+        ref="fileInput"
+        type="file"
+        accept="image/*"
+        multiple
+        class="ctv:hidden"
+        @change="onPickFiles"
+      />
     </div>
 
     <div class="comfytv-asset-scroll ctv:h-[224px] ctv:shrink-0 ctv:overflow-y-scroll">
@@ -69,10 +94,13 @@
 </template>
 
 <script setup lang="ts">
+import IconUpload from '~icons/lucide/upload'
 import { onMounted, ref } from 'vue'
 
 import type { Asset } from '@/api/schemas'
 import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
+import { importAssetFiles } from '@/composables/sidebar/assetImport'
+import { toastLoaderUploadFailed, useLoaderFileDrop } from '@/composables/stages/useLoaderFileDrop'
 import { assetPreviewUrl } from '@/utils/assetMedia'
 import { useAssetPicker } from '@/composables/stages/useAssetPicker'
 
@@ -80,15 +108,18 @@ const props = defineProps<{
   addedIds?: number[]
 }>()
 
-defineEmits<{
+const emit = defineEmits<{
   select: [asset: Asset]
   close: []
 }>()
 
 const searchEl = ref<HTMLInputElement | null>(null)
+const fileInput = ref<HTMLInputElement | null>(null)
+const uploading = ref(false)
 
 const {
   query,
+  filter,
   filterValue,
   categoryOptions,
   setFilter,
@@ -96,6 +127,34 @@ const {
   isAdded,
   ensureHydrated,
 } = useAssetPicker(() => props.addedIds ?? [])
+
+async function uploadFiles(files: File[]): Promise<void> {
+  uploading.value = true
+  try {
+    const created = await importAssetFiles(files, {
+      categoryIds: typeof filter.value === 'number' ? [filter.value] : [],
+    })
+    for (const asset of created) emit('select', asset)
+  } catch (e) {
+    console.error('[ComfyTV/asset-picker] upload failed', e)
+    toastLoaderUploadFailed(e)
+  } finally {
+    uploading.value = false
+  }
+}
+
+function onPickFiles(e: Event): void {
+  const input = e.target as HTMLInputElement
+  const files = Array.from(input.files ?? [])
+  input.value = ''
+  if (files.length) void uploadFiles(files)
+}
+
+const fileDrop = useLoaderFileDrop({
+  kind: () => 'image',
+  onAsset: (asset) => emit('select', asset),
+  onFiles: uploadFiles,
+})
 
 onMounted(() => {
   ensureHydrated()

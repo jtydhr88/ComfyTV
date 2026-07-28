@@ -2,7 +2,15 @@
   <section
     v-if="accepts"
     ref="rootEl"
-    class="ctv:relative ctv:flex ctv:flex-col ctv:gap-1"
+    :class="[
+      'ctv:relative ctv:flex ctv:flex-col ctv:gap-1',
+      fileDrop.dragActive.value
+        && 'ctv:rounded ctv:outline ctv:outline-2 ctv:-outline-offset-2 ctv:outline-primary-background/70 ctv:bg-primary-background/5',
+    ]"
+    @dragenter="fileDrop.onDragEnter"
+    @dragover="fileDrop.onDragOver"
+    @dragleave="fileDrop.onDragLeave"
+    @drop="fileDrop.onDrop"
   >
     <div class="ctv:flex ctv:items-center ctv:gap-2">
       <span class="ctv:text-[11px] ctv:font-semibold">{{ $t('imageRefs.title') }}</span>
@@ -109,6 +117,7 @@ const {
   assetOf,
   tileTooltip,
   onAddAsset,
+  fileDrop,
   removeRef,
   openSlotPicker,
   onSlotPick,

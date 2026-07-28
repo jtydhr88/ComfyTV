@@ -28,6 +28,23 @@
         {{ cat.name }}
         <span :class="chipCountClass">{{ mediaCount(cat.id) }}</span>
       </button>
+      <button
+        type="button"
+        class="ctv:ml-auto ctv:inline-flex ctv:items-center ctv:justify-center ctv:size-6 ctv:shrink-0 ctv:cursor-pointer ctv:[font-family:inherit]
+               ctv:rounded-lg ctv:border ctv:border-border-subtle ctv:leading-none
+               ctv:bg-secondary-background ctv:text-muted-foreground
+               ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground"
+        :title="$t('assetLoader.upload')"
+        @click="fileInput?.click()"
+      ><IconUpload class="ctv:size-3.5" /></button>
+      <input
+        ref="fileInput"
+        type="file"
+        :accept="fileAccept"
+        multiple
+        class="ctv:hidden"
+        @change="onPickFiles"
+      />
     </div>
 
     <div class="ctv-scroll-thin ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:rounded-md ctv:border ctv:border-border-subtle ctv:bg-black/20 ctv:p-1.5" @wheel.stop>
@@ -116,6 +133,9 @@
 </template>
 
 <script setup lang="ts">
+import IconUpload from '~icons/lucide/upload'
+import { computed, ref } from 'vue'
+
 import type { LGraphNode } from '@/lib/comfyApp'
 import ModelThumb from '@/components/widgets/ModelThumb.vue'
 import ProxiedVideo from '@/components/widgets/ProxiedVideo.vue'
@@ -123,6 +143,7 @@ import StageCard from '@/components/stages/StageCard.vue'
 import { assetTooltipOf as assetTooltip, useAssetLoaderCard } from '@/composables/stages/useAssetLoaderCard'
 import { assetPreviewUrl } from '@/utils/assetMedia'
 import type { StageState } from '@/stores/stageStore'
+import { MODEL_FILE_EXTENSIONS } from '@/widgets/three/modelFormats'
 
 const props = defineProps<{
   state: StageState
@@ -143,8 +164,21 @@ const {
   selectedAsset,
   setFilter,
   selectAsset,
+  importFiles,
   fileDrop,
 } = useAssetLoaderCard(props.node, () => props.state)
+
+const fileInput = ref<HTMLInputElement | null>(null)
+
+const fileAccept = computed(() =>
+  mediaType.value === 'model' ? MODEL_FILE_EXTENSIONS.join(',') : `${mediaType.value}/*`)
+
+function onPickFiles(e: Event) {
+  const input = e.target as HTMLInputElement
+  const files = Array.from(input.files ?? [])
+  input.value = ''
+  if (files.length) void importFiles(files)
+}
 
 function hoverPlay(e: MouseEvent) {
   void (e.currentTarget as HTMLVideoElement).play().catch(() => {})

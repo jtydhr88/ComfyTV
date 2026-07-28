@@ -230,7 +230,8 @@
   "assetLoader": {
     "empty": "No matching assets in the library yet — add some in the Assets panel.",
     "pickHint": "Pick an asset from the library to use as this node's output.",
-    "selected": "Selected: {name}"
+    "selected": "Selected: {name}",
+    "upload": "Upload files into the library and select the last one"
   },
   "stageParams": {
     "section": "Parameters",
@@ -310,6 +311,7 @@
   "promptAssets": {
     "addTooltip": "Insert an image asset from the library — it will be sent as a reference image at run",
     "search": "Search assets…",
+    "upload": "Upload images into the library and use them here",
     "empty": "No matching assets — add some in the sidebar Assets tab.",
     "missing": "asset #{id} was removed from the library — this chip is ignored at run",
     "slotTitle": "Reference image slot",

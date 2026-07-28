@@ -59,21 +59,23 @@ export function useAssetLoaderCard(node: LGraphNode, getState: () => StageState)
     stageStore.setOutputSlot(getState(), 0, asset.payload_url)
   }
 
+  async function importFiles(files: File[]): Promise<void> {
+    try {
+      const created = await importAssetFiles(files, {
+        categoryIds: typeof activeFilter.value === 'number' ? [activeFilter.value] : [],
+      })
+      const last = created[created.length - 1]
+      if (last) selectAsset(last)
+    } catch (e) {
+      console.error('[ComfyTV/asset-loader] import failed', e)
+      toastLoaderUploadFailed(e)
+    }
+  }
+
   const fileDrop = useLoaderFileDrop({
     kind: () => mediaType.value,
     onAsset: selectAsset,
-    onFiles: async (files) => {
-      try {
-        const created = await importAssetFiles(files, {
-          categoryIds: typeof activeFilter.value === 'number' ? [activeFilter.value] : [],
-        })
-        const last = created[created.length - 1]
-        if (last) selectAsset(last)
-      } catch (e) {
-        console.error('[ComfyTV/asset-loader] drop import failed', e)
-        toastLoaderUploadFailed(e)
-      }
-    },
+    onFiles: importFiles,
   })
 
   onMounted(async () => {
@@ -108,6 +110,7 @@ export function useAssetLoaderCard(node: LGraphNode, getState: () => StageState)
     selectedAsset,
     setFilter,
     selectAsset,
+    importFiles,
     fileDrop,
   }
 }

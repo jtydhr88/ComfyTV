@@ -209,4 +209,13 @@ describe('useAssetLoaderCard — file drop import', () => {
     await vi.waitFor(() => expect(importAssetFiles).toHaveBeenCalledTimes(1))
     expect(importAssetFiles.mock.calls[0][1]).toEqual({ categoryIds: [] })
   })
+
+  it('importFiles (upload button path) imports and selects the last created asset', async () => {
+    const created = { ...IMG_ASSET, id: 12, payload_url: '/a/pick.png' }
+    importAssetFiles.mockResolvedValue([created])
+    const { api } = await setup()
+    await api.importFiles([new File([''], 'pick.png', { type: 'image/png' })])
+    expect(importAssetFiles).toHaveBeenCalledTimes(1)
+    expect(api.selectedId.value).toBe(12)
+  })
 })

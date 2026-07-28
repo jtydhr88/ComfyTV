@@ -15,11 +15,17 @@ const asMock = {
   fetchImageSlotOptionsCached: vi.fn(),
 }
 
+const { importAssetFiles } = vi.hoisted(() => ({
+  importAssetFiles: vi.fn(async (..._a: unknown[]): Promise<any[]> => []),
+}))
+vi.mock('@/composables/sidebar/assetImport', () => ({ importAssetFiles }))
+
 vi.mock('@/stores/assetStore', () => ({ useAssetStore: () => store }))
 vi.mock('@/stores/selectionStore', () => ({ useSelectionStore: () => selection }))
 vi.mock('vue-i18n', () => ({
   useI18n: () => ({ t: (k: string, p?: any) => (p ? `${k}:${JSON.stringify(p)}` : k) }),
 }))
+vi.mock('@/i18n', () => ({ t: (k: string) => k }))
 // Keep the real pure helpers (nodeAcceptsAutogrowImages, wiredImageSlots,
 // refSlotWarnings, assetChipLabel) but stub the network-backed lookups.
 vi.mock('@/composables/stages/assetSlots', async (importOriginal) => {
@@ -85,6 +91,33 @@ describe('useImageReferences', () => {
     const ir = useImageReferences(() => node, rootElStub())
     ir.onAddAsset({ id: 5 } as any)
     expect(ir.refs.value).toEqual([{ asset_id: 5, slot: 1 }])
+  })
+
+  it('importFiles pins every created asset as a reference', async () => {
+    importAssetFiles.mockResolvedValue([{ id: 21 }, { id: 22 }])
+    const node = { ...IMAGES_NODE, properties: {} as any }
+    const ir = useImageReferences(() => node, rootElStub())
+    await ir.importFiles([new File([''], 'a.png', { type: 'image/png' })])
+    expect(ir.refs.value).toEqual([{ asset_id: 21, slot: 0 }, { asset_id: 22, slot: 1 }])
+  })
+
+  it('fileDrop imports dropped image files and pins them', async () => {
+    importAssetFiles.mockResolvedValue([{ id: 31 }])
+    const node = { ...IMAGES_NODE, properties: {} as any }
+    const ir = useImageReferences(() => node, rootElStub())
+    const files = [new File([''], 'a.png', { type: 'image/png' })]
+    ir.fileDrop.onDrop({
+      preventDefault: vi.fn(),
+      stopPropagation: vi.fn(),
+      dataTransfer: {
+        types: ['Files'],
+        items: [{ kind: 'file', type: 'image/png' }],
+        files,
+        dropEffect: '',
+        getData: () => '',
+      },
+    } as unknown as DragEvent)
+    await vi.waitFor(() => expect(ir.refs.value).toEqual([{ asset_id: 31, slot: 0 }]))
   })
 
   it('removeRef drops by index and persists', () => {

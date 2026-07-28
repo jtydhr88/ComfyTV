@@ -230,7 +230,8 @@
   "assetLoader": {
     "empty": "资产库中还没有匹配的素材 —— 请先在资产面板中添加。",
     "pickHint": "从资产库中选择一个素材作为该节点的输出。",
-    "selected": "已选择：{name}"
+    "selected": "已选择：{name}",
+    "upload": "上传文件到资产库并选中最后一个"
   },
   "stageParams": {
     "section": "参数",
@@ -310,6 +311,7 @@
   "promptAssets": {
     "addTooltip": "从资产库插入图片 —— 运行时会作为参考图传给工作流",
     "search": "搜索资产…",
+    "upload": "上传图片到资产库并直接使用",
     "empty": "没有匹配的资产 —— 先在侧边栏「资产库」里添加。",
     "missing": "资产 #{id} 已从资产库移除 —— 运行时会忽略这个标记",
     "slotTitle": "参考图槽位",
