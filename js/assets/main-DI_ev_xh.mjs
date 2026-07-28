@@ -56187,7 +56187,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-yzcFCxkG.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-CcJiFIlL.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -127613,7 +127613,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-CqEoHNxy.mjs");
+    const { STLLoader } = await import("./STLLoader-Dikc_mLU.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -127621,7 +127621,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-DAnOe6hz.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-Dc7NOs5I.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -154481,13 +154481,20 @@ function createEditor(opts) {
       refresh();
     },
     serialize() {
+      var _a2;
       return {
         version: doc2.version,
         width: doc2.width,
         height: doc2.height,
         root: getNodeKind(doc2.root.kind).serialize(doc2.root),
         channels: doc2.channels,
-        selectionId: doc2.selectionId
+        selectionId: doc2.selectionId,
+        floating: floating ? {
+          contentId: floating.contentId,
+          url: ((_a2 = content.get(floating.contentId)) == null ? void 0 : _a2.uploadedUrl) ?? void 0,
+          transform: { ...floating.transform },
+          name: floating.name
+        } : void 0
       };
     },
     loadJSON(raw) {
@@ -154512,11 +154519,29 @@ function createEditor(opts) {
       selectedIds = [];
       floating = null;
       floatSession = { mode: "idle" };
+      const rawFloat = o.floating;
+      if (rawFloat && typeof rawFloat.contentId === "string" && rawFloat.transform && typeof rawFloat.transform === "object") {
+        const t2 = rawFloat.transform;
+        const num2 = (v, d) => typeof v === "number" && isFinite(v) ? v : d;
+        floating = {
+          contentId: rawFloat.contentId,
+          url: typeof rawFloat.url === "string" ? rawFloat.url : void 0,
+          name: typeof rawFloat.name === "string" ? rawFloat.name : void 0,
+          transform: { x: num2(t2.x, 0), y: num2(t2.y, 0), w: num2(t2.w, 1), h: num2(t2.h, 1), rotation: num2(t2.rotation, 0) }
+        };
+      }
       history2.clear();
       refresh();
     },
     async hydrate(loadUrl) {
       await getNodeKind(doc2.root.kind).hydrate(doc2.root, { content, loadUrl });
+      if (floating && floating.url && !content.has(floating.contentId)) {
+        try {
+          const canvas = await loadUrl(floating.url);
+          content.register(canvas, { id: floating.contentId, uploadedUrl: floating.url });
+        } catch {
+        }
+      }
       for (const ch of doc2.channels) {
         if (ch.url && !content.has(ch.contentId)) {
           try {
@@ -161317,7 +161342,7 @@ function useLayerEditorStage(node, opts) {
     uploadTimer = window.setTimeout(uploadDirty, UPLOAD_DEBOUNCE_MS);
   }
   async function uploadDirty() {
-    var _a2;
+    var _a2, _b2;
     if (uploading) {
       uploadAgain = true;
       return;
@@ -161336,7 +161361,18 @@ function useLayerEditorStage(node, opts) {
         job.commitUrl(res.url);
         content.markUploaded(job.contentId, res.url);
       }
-      if (jobs.length) persist();
+      let uploaded = jobs.length > 0;
+      const f2 = editor.floating();
+      if (f2 && !((_b2 = content.get(f2.contentId)) == null ? void 0 : _b2.uploadedUrl)) {
+        const entry = content.get(f2.contentId);
+        if (entry) {
+          const blob = await canvasToBlob(entry.canvas);
+          const res = await uploadBlobNamed(blob, { subfolder: storage.subfolder, filename: `comfytv-float-${node.id}-${f2.contentId}.png` });
+          content.markUploaded(f2.contentId, res.url);
+          uploaded = true;
+        }
+      }
+      if (uploaded) persist();
     } catch {
       toastError(t("layerEditor.uploadFailed"));
     } finally {
@@ -192541,4 +192577,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-B1CtynHR.mjs.map
+//# sourceMappingURL=main-DI_ev_xh.mjs.map

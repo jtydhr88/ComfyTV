@@ -436,7 +436,18 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
         job.commitUrl(res.url)
         content.markUploaded(job.contentId, res.url)
       }
-      if (jobs.length) persist()
+      let uploaded = jobs.length > 0
+      const f = editor.floating()
+      if (f && !content.get(f.contentId)?.uploadedUrl) {
+        const entry = content.get(f.contentId)
+        if (entry) {
+          const blob = await canvasToBlob(entry.canvas)
+          const res = await uploadBlobNamed(blob, { subfolder: storage.subfolder, filename: `comfytv-float-${node.id}-${f.contentId}.png` })
+          content.markUploaded(f.contentId, res.url)
+          uploaded = true
+        }
+      }
+      if (uploaded) persist()
     } catch {
       toastError(t('layerEditor.uploadFailed'))
     } finally {

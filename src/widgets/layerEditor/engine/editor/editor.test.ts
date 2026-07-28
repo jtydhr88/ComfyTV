@@ -130,6 +130,26 @@ describe('createEditor — end-to-end orchestration', () => {
     expect(editor.document().root.children).toHaveLength(1)
   })
 
+  it('floating item survives serialize/loadJSON (no data loss on refresh)', () => {
+    const editor = setup()
+    const canvas = document.createElement('canvas')
+    canvas.width = 40
+    canvas.height = 30
+    const cid = editor.content.register(canvas, { uploadedUrl: 'http://x/float.png' })
+    editor.startFloating(cid, 40, 30, 'chunk')
+    expect(editor.floating()).not.toBeNull()
+
+    const json = editor.serialize()
+    const restored = setup()
+    restored.loadJSON(json)
+    const f = restored.floating()
+    expect(f).not.toBeNull()
+    expect(f!.contentId).toBe(cid)
+    expect(f!.url).toBe('http://x/float.png')
+    expect(f!.transform.w).toBe(40)
+    expect(f!.transform.h).toBe(30)
+  })
+
   it('multi-select: selection set is the truth, active derives from its tail', () => {
     const editor = setup()
     const a = rasterKind.create({ name: 'a' })

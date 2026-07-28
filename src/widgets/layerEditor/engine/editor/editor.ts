@@ -46,6 +46,7 @@ export interface FloatingItem {
   contentId: string
   transform: Transform
   name?: string
+  url?: string
 }
 
 type FloatSession =
@@ -626,6 +627,14 @@ export function createEditor(opts: EditorOptions): Editor {
         root: getNodeKind(doc.root.kind).serialize(doc.root),
         channels: doc.channels,
         selectionId: doc.selectionId,
+        floating: floating
+          ? {
+              contentId: floating.contentId,
+              url: content.get(floating.contentId)?.uploadedUrl ?? undefined,
+              transform: { ...floating.transform },
+              name: floating.name,
+            }
+          : undefined,
       }
     },
     loadJSON(raw) {
@@ -650,11 +659,30 @@ export function createEditor(opts: EditorOptions): Editor {
       selectedIds = []
       floating = null
       floatSession = { mode: 'idle' }
+      const rawFloat = o.floating as { contentId?: unknown; url?: unknown; transform?: unknown; name?: unknown } | undefined
+      if (rawFloat && typeof rawFloat.contentId === 'string' && rawFloat.transform && typeof rawFloat.transform === 'object') {
+        const t = rawFloat.transform as Record<string, unknown>
+        const num = (v: unknown, d: number): number => (typeof v === 'number' && isFinite(v) ? v : d)
+        floating = {
+          contentId: rawFloat.contentId,
+          url: typeof rawFloat.url === 'string' ? rawFloat.url : undefined,
+          name: typeof rawFloat.name === 'string' ? rawFloat.name : undefined,
+          transform: { x: num(t.x, 0), y: num(t.y, 0), w: num(t.w, 1), h: num(t.h, 1), rotation: num(t.rotation, 0) },
+        }
+      }
       history.clear()
       refresh()
     },
     async hydrate(loadUrl) {
       await getNodeKind(doc.root.kind).hydrate(doc.root, { content, loadUrl })
+      if (floating && floating.url && !content.has(floating.contentId)) {
+        try {
+          const canvas = await loadUrl(floating.url)
+          content.register(canvas, { id: floating.contentId, uploadedUrl: floating.url })
+        } catch {
+          void 0
+        }
+      }
       for (const ch of doc.channels) {
         if (ch.url && !content.has(ch.contentId)) {
           try {
