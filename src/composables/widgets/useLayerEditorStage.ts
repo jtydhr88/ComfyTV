@@ -1259,7 +1259,35 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
       cancelFilter()
       return
     }
-    const out = applyImageFilter(s.op, entry.canvas, s.params)
+    let out = applyImageFilter(s.op, entry.canvas, s.params)
+    const doc = editor.document()
+    if (doc.selectionId) {
+      const ch = doc.channels.find((c) => c.id === doc.selectionId && c.enabled)
+      const selCanvas = ch ? content.get(ch.contentId)?.canvas : null
+      if (selCanvas) {
+        const w = out.width
+        const h = out.height
+        const tf = r.transform.w > 0 && r.transform.h > 0 ? r.transform : { x: 0, y: 0, w, h, rotation: 0 }
+        const cov = rasterizeSelectionToLocal(selCanvas, tf, w, h)
+        if (cov) {
+          const mixed = newCanvas(w, h)
+          const mg = mixed.getContext('2d')!
+          mg.drawImage(entry.canvas, 0, 0, w, h)
+          const base = mg.getImageData(0, 0, w, h)
+          const fg = out.getContext('2d')!.getImageData(0, 0, w, h)
+          for (let p = 0; p < cov.length; p++) {
+            const c = cov[p]
+            if (c <= 0) continue
+            const i = p * 4
+            for (let k = 0; k < 4; k++) {
+              base.data[i + k] = Math.round(base.data[i + k] * (1 - c) + fg.data[i + k] * c)
+            }
+          }
+          mg.putImageData(base, 0, 0)
+          out = mixed
+        }
+      }
+    }
     const beforeId = r.contentId
     const beforeUrl = r.url
     const afterId = content.register(out)
@@ -1437,6 +1465,12 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     modifySelection: (kind: 'feather' | 'grow' | 'shrink' | 'border') => {
       editor.modifySelection(kind, selectionRadius.value)
     },
+    clearSelectionPixels: () => { editor.clearSelectionPixels() },
+    fillSelection: () => { editor.fillSelectionPixels(brushColor.value) },
+    strokeSelection: () => { editor.strokeSelectionPixels(brushColor.value, Math.max(1, shapeStrokeWidth.value)) },
+    cutSelection: () => { editor.cutSelection() },
+    copySelection: () => { editor.copySelection() },
+    pasteClipboard: () => { editor.pasteClipboard() },
     addAdjustmentLayer, updateAdjustment, updateVectorStyle,
     addFillLayer, updateFillLayer,
     content, fontStore,

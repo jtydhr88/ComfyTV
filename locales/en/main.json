@@ -1699,6 +1699,8 @@
     "sel_grow": "Grow",
     "sel_shrink": "Shrink",
     "sel_border": "Border",
+    "selFill": "Fill",
+    "selStroke": "Stroke",
     "selOpsHint": "Shift add · Ctrl subtract · Shift+Ctrl intersect",
     "fxAdd": "+ Add effect",
     "fx_drop-shadow": "Drop shadow",

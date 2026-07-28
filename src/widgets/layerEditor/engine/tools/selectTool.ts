@@ -66,6 +66,18 @@ class SelectTool implements Tool {
       this.session = { mode: 'idle' }
       return
     }
+    const selMask = this.ctx.selection.currentMask()
+    if (selMask) {
+      const mx = Math.floor(pt.x)
+      const my = Math.floor(pt.y)
+      const insideSel =
+        mx >= 0 && my >= 0 && mx < selMask.width && my < selMask.height &&
+        selMask.data[my * selMask.width + mx] >= 0.5
+      if (insideSel && this.ctx.floatSelection()) {
+        this.session = { mode: 'idle' }
+        return
+      }
+    }
     const selected = this.selectedNodes()
     if (selected.some((n) => insideBox(nodeBounds(n), pt))) {
       this.startMove(selected, pt)

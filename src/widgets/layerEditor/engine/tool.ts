@@ -72,6 +72,7 @@ export interface ToolContext {
     none(): void
   }
   compositePixels(): ImageData | null
+  floatSelection(): boolean
   zoom(): number
   requestRender(): void
 

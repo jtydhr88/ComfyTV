@@ -191,6 +191,16 @@
         >
           {{ $t(`layerEditor.sel_${mod}`) }}
         </button>
+        <button type="button" :class="actionBtnClass" :disabled="!editor.hasSelection()" @click="editor.fillSelection()">
+          {{ $t('layerEditor.selFill') }}
+        </button>
+        <button type="button" :class="actionBtnClass" :disabled="!editor.hasSelection()" @click="editor.strokeSelection()">
+          {{ $t('layerEditor.selStroke') }}
+        </button>
+        <label :class="fieldClass">
+          {{ $t('layerEditor.brushColor') }}
+          <input v-model="editor.brushColor.value" type="color" :class="colorInputClass" />
+        </label>
         <span class="ctv:whitespace-nowrap ctv:text-[10px] ctv:text-[#9b9b9b]/70">
           {{ $t('layerEditor.selOpsHint') }}
         </span>

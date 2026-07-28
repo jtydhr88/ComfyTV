@@ -87,9 +87,25 @@ export function useLayerEditorHotkeys(
       editor.redo()
       return
     }
+    if (ctrl && e.code === 'KeyX') {
+      e.preventDefault()
+      editor.cutSelection()
+      return
+    }
+    if (ctrl && e.code === 'KeyC') {
+      e.preventDefault()
+      editor.copySelection()
+      return
+    }
+    if (ctrl && e.code === 'KeyV') {
+      e.preventDefault()
+      editor.pasteClipboard()
+      return
+    }
     if ((e.key === 'Delete' || e.key === 'Backspace') && editor.activeId.value) {
       e.preventDefault()
-      editor.removeLayer(editor.activeId.value)
+      if (editor.hasSelection()) editor.clearSelectionPixels()
+      else editor.removeLayer(editor.activeId.value)
       return
     }
     const nudge = e.shiftKey ? 10 : 1

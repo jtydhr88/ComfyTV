@@ -36,6 +36,10 @@ import {
   shrinkMask, type GrayMask, type SelectionOp,
 } from './selectionMath'
 import { DEFAULT_WAND_OPTIONS, type WandToolOptions } from '../tools/wandTool'
+import {
+  clearSelectedPixels, extractSelectedPixels, fillSelectedPixels, strokeSelectedPixels,
+  type SelectionClipboard,
+} from './selectionEdit'
 import { OverlayList } from './overlayList'
 
 export interface FloatingItem {
@@ -93,6 +97,13 @@ export interface Editor {
   setWandOptions(opts: Partial<WandToolOptions>): void
   wandOptions(): WandToolOptions
   modifySelection(kind: 'feather' | 'grow' | 'shrink' | 'border', radius: number): boolean
+  clearSelectionPixels(): boolean
+  fillSelectionPixels(colorHex: string): boolean
+  strokeSelectionPixels(colorHex: string, width: number): boolean
+  copySelection(): boolean
+  cutSelection(): boolean
+  pasteClipboard(): boolean
+  hasClipboard(): boolean
   warpApply(): boolean
   warpCancel(): boolean
   warpDirty(): boolean
@@ -165,6 +176,13 @@ export function createEditor(opts: EditorOptions): Editor {
   const placedCache = new Map<string, PlacedEntry>()
   let floating: FloatingItem | null = null
   let floatSession: FloatSession = { mode: 'idle' }
+  let clipboard: SelectionClipboard | null = null
+
+  function hexRgb(hex: string): [number, number, number] {
+    const m = /^#?([0-9a-f]{6})$/i.exec(hex)
+    const v = m ? parseInt(m[1], 16) : 0
+    return [(v >> 16) & 255, (v >> 8) & 255, v & 255]
+  }
 
   function floatingInputs(): CompositeInput[] {
     if (!floating) return []
@@ -278,6 +296,26 @@ export function createEditor(opts: EditorOptions): Editor {
       none: () => {
         commitSelection('Select None', null, null)
       },
+    },
+    floatSelection: () => {
+      const sel = selectionChannel()
+      const node = activeRaster()
+      const selCanvas = sel ? content.get(sel.contentId)?.canvas : null
+      if (!sel?.bounds || !node || node.locks.content || !selCanvas) return false
+      const clip = extractSelectedPixels(node, content, selCanvas, sel.bounds)
+      if (!clip) return false
+      history.beginGroup('Float Selection')
+      clearSelectedPixels({ content, push: (c) => history.push(c) }, node, selCanvas)
+      commitSelection('Select None', null, null)
+      history.endGroup()
+      floating = {
+        contentId: content.register(clip.canvas),
+        name: 'Floating Selection',
+        transform: { x: clip.bounds.x, y: clip.bounds.y, w: clip.bounds.w, h: clip.bounds.h, rotation: 0 },
+      }
+      floatSession = { mode: 'idle' }
+      refresh()
+      return true
     },
     compositePixels: () => {
       render()
@@ -648,6 +686,74 @@ export function createEditor(opts: EditorOptions): Editor {
       warp = { ...warp, ...opts }
       if (isWarpTool(tool)) tool.optionsChanged()
     },
+    clearSelectionPixels() {
+      const sel = selectionChannel()
+      const node = activeRaster()
+      const selCanvas = sel ? content.get(sel.contentId)?.canvas : null
+      if (!sel || !node || !selCanvas) return false
+      const ok = clearSelectedPixels({ content, push: (c) => history.push(c) }, node, selCanvas)
+      if (ok) refresh()
+      return ok
+    },
+    fillSelectionPixels(colorHex) {
+      const sel = selectionChannel()
+      const node = activeRaster()
+      const selCanvas = sel ? content.get(sel.contentId)?.canvas : null
+      if (!sel || !node || !selCanvas) return false
+      const ok = fillSelectedPixels({ content, push: (c) => history.push(c) }, node, selCanvas, hexRgb(colorHex))
+      if (ok) refresh()
+      return ok
+    },
+    strokeSelectionPixels(colorHex, width) {
+      const sel = selectionChannel()
+      const node = activeRaster()
+      if (!sel || !node) return false
+      const outlines = selectionOutlines(sel)
+      const ok = strokeSelectedPixels(
+        { content, push: (c) => history.push(c) }, node, content.get(sel.contentId)?.canvas ?? document.createElement('canvas'),
+        hexRgb(colorHex), Math.max(1, width), outlines
+      )
+      if (ok) refresh()
+      return ok
+    },
+    copySelection() {
+      const sel = selectionChannel()
+      const node = activeRaster()
+      const selCanvas = sel ? content.get(sel.contentId)?.canvas : null
+      if (!sel?.bounds || !node || !selCanvas) return false
+      const clip = extractSelectedPixels(node, content, selCanvas, sel.bounds)
+      if (!clip) return false
+      clipboard = clip
+      return true
+    },
+    cutSelection() {
+      const sel = selectionChannel()
+      const node = activeRaster()
+      const selCanvas = sel ? content.get(sel.contentId)?.canvas : null
+      if (!sel?.bounds || !node || !selCanvas) return false
+      const clip = extractSelectedPixels(node, content, selCanvas, sel.bounds)
+      if (!clip) return false
+      clipboard = clip
+      history.beginGroup('Cut Selection')
+      const ok = clearSelectedPixels({ content, push: (c) => history.push(c) }, node, selCanvas)
+      history.endGroup()
+      if (ok) refresh()
+      return ok
+    },
+    pasteClipboard() {
+      if (!clipboard) return false
+      if (floating) anchorFloatingImpl()
+      const cid = content.register(clipboard.canvas)
+      floating = {
+        contentId: cid,
+        name: 'Pasted',
+        transform: { x: clipboard.bounds.x, y: clipboard.bounds.y, w: clipboard.bounds.w, h: clipboard.bounds.h, rotation: 0 },
+      }
+      floatSession = { mode: 'idle' }
+      refresh()
+      return true
+    },
+    hasClipboard: () => clipboard !== null,
     setWandOptions(opts) {
       wand = { ...wand, ...opts }
     },

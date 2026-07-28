@@ -69,6 +69,7 @@ function harness(doc: Document, content: DefaultContentStore, createPaintCore: (
     },
     selection: { combineShape: vi.fn(), currentMask: () => null, none: vi.fn() },
     compositePixels: () => null,
+    floatSelection: () => false,
     zoom: () => 1,
     requestRender: vi.fn(),
     options: <T,>() => ({}) as T,

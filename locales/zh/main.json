@@ -1699,6 +1699,8 @@
     "sel_grow": "扩大",
     "sel_shrink": "收缩",
     "sel_border": "边界",
+    "selFill": "填充",
+    "selStroke": "描边",
     "selOpsHint": "Shift 加选 · Ctrl 减选 · Shift+Ctrl 交选",
     "fxAdd": "+ 添加效果",
     "fx_drop-shadow": "投影",

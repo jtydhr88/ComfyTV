@@ -18,6 +18,11 @@ function makeEditor() {
     startTransform: vi.fn(),
     transformApply: vi.fn(),
     transformCancel: vi.fn(),
+    hasSelection: vi.fn(() => false),
+    clearSelectionPixels: vi.fn(),
+    cutSelection: vi.fn(),
+    copySelection: vi.fn(),
+    pasteClipboard: vi.fn(),
   }
 }
 

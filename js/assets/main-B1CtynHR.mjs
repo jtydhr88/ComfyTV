@@ -56187,7 +56187,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-CnA_qoaq.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-yzcFCxkG.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -56975,8 +56975,8 @@ const _hoisted_34$8 = {
   class: "ctv:py-2 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60 ctv:text-2xs"
 };
 const _hoisted_35$8 = ["onClick"];
-const _hoisted_36$7 = { class: "ctv:w-3 ctv:inline-flex ctv:text-primary-background" };
-const _hoisted_37$6 = { class: "ctv:flex-1 ctv:truncate" };
+const _hoisted_36$8 = { class: "ctv:w-3 ctv:inline-flex ctv:text-primary-background" };
+const _hoisted_37$7 = { class: "ctv:flex-1 ctv:truncate" };
 const chipCountClass$2 = "ctv:py-0 ctv:px-1 ctv:rounded-lg ctv:text-3xs ctv:bg-base-foreground/10";
 const _sfc_main$3p = /* @__PURE__ */ defineComponent({
   __name: "AssetsPanel",
@@ -57374,13 +57374,13 @@ const _sfc_main$3p = /* @__PURE__ */ defineComponent({
                 class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:px-1.5 ctv:py-1 ctv:rounded-sm ctv:cursor-pointer ctv:text-left ctv:text-2xs ctv:[font-family:inherit] ctv:bg-transparent ctv:border-none ctv:text-base-foreground ctv:hover:bg-secondary-background-hover",
                 onClick: ($event) => unref(toggleTag)(cat2.id)
               }, [
-                createBaseVNode("span", _hoisted_36$7, [
+                createBaseVNode("span", _hoisted_36$8, [
                   unref(editorHas)(cat2.id) ? (openBlock(), createBlock(unref(IconCheck), {
                     key: 0,
                     class: "ctv:size-3"
                   })) : createCommentVNode("", true)
                 ]),
-                createBaseVNode("span", _hoisted_37$6, toDisplayString$1(cat2.name), 1)
+                createBaseVNode("span", _hoisted_37$7, toDisplayString$1(cat2.name), 1)
               ], 8, _hoisted_35$8);
             }), 128))
           ], 4)
@@ -57569,7 +57569,7 @@ const meshOps$1 = { "operation": "Operation", "op": { "decimate": "Decimate", "r
 const splitPart$1 = { "noInputImage": "Connect an image to annotate parts", "tool": { "point-pos": "+ point", "point-neg": "− point", "box": "Box" }, "newGroup": "New part", "clear": "Clear", "chipBox": "Box {n}", "chipPoints": "Part {n} ({count} pts)", "hint": "Click to add points to the active part (right-click = exclude); drag with Box to mark a part per box. Or leave empty and type a concept for the text workflow." };
 const materialStage$1 = { "presets": "Presets", "preset": { "plasticGlossy": "Glossy plastic", "plasticMatte": "Matte plastic", "metalPolished": "Polished metal", "metalBrushed": "Brushed metal", "glassClear": "Clear glass", "glassFrosted": "Frosted glass", "rubber": "Rubber", "ceramic": "Ceramic" }, "color": "Color", "param": { "metalness": "Metalness", "roughness": "Roughness", "transmission": "Transmission", "opacity": "Opacity", "clearcoat": "Clearcoat", "ior": "IOR" } };
 const loaderDrop$1 = { "mismatchTitle": "Wrong file type", "typeMismatch": "This node only loads {kind}.", "assetTypeMismatch": "This node loads {expected}, but the dropped asset is {actual}.", "failedTitle": "ComfyTV upload", "uploadFailed": "Upload failed: {detail}" };
-const layerEditor$1 = { "undo": "Undo", "redo": "Redo", "capture": "Capture", "captureHint": "Upload composite + one image per visible layer", "captureFailed": "Capture failed", "exportPsd": "Export PSD", "exportPsdHint": "Download the document as a layered PSD file", "exportPsdFailed": "PSD export failed", "exportPsdAssetHint": "Save layered PSD into the asset library", "exportPsdAssetDone": "PSD saved to asset library", "importPsd": "Import PSD", "importPsdHint": "Import a PSD file as layers", "importPsdFailed": "PSD import failed", "importPsdEmpty": "No importable layers in this PSD", "uploadFailed": "Layer upload failed", "loadImageFailed": "Failed to load image", "loadFontFailed": "Failed to load font", "fitView": "Fit view", "canvasPreset": "Preset…", "canvasPresetHint": "Apply a canvas size preset", "presetGroupPaper": "Paper (300 ppi)", "presetGroupBusinessCard": "Business card (300 ppi)", "presetGroupWeb": "Web", "presetGroupDisplay": "Display", "presetGroupPhone": "Phone", "presetGroupMisc": "Misc", "fullscreen": "Fullscreen", "exitFullscreen": "Exit fullscreen", "close": "Close", "toolSelect": "Select", "toolMarquee": "Select area", "toolBrush": "Brush", "toolEraser": "Eraser", "toolText": "Text", "toolShape": "Shape", "toolWarp": "Warp", "warpApply": "Apply", "warpCancel": "Cancel", "toolTransform": "Transform (Ctrl+T)", "transformApply": "Apply", "transformCancel": "Cancel", "transformHint": "Enter to apply · Esc to cancel", "rasterizeLayer": "Rasterize layer (fix pixels at current size)", "toolMarqueeEllipse": "Ellipse select", "toolLasso": "Lasso", "toolWand": "Fuzzy select", "toolBucket": "Bucket fill", "wandThreshold": "Threshold", "wandAntialias": "Antialias", "wandContiguous": "Contiguous", "selRadius": "Radius", "sel_feather": "Feather", "sel_grow": "Grow", "sel_shrink": "Shrink", "sel_border": "Border", "selOpsHint": "Shift add · Ctrl subtract · Shift+Ctrl intersect", "fxAdd": "+ Add effect", "fx_drop-shadow": "Drop shadow", "fx_gaussian-blur": "Gaussian blur", "fx_unsharp-mask": "Unsharp mask", "fx_median-blur": "Median blur", "fx_vignette": "Vignette", "fx_emboss": "Emboss", "fx_pixelate": "Pixelate", "fx_noise": "Noise", "fx_desaturate": "Desaturate", "fxParam_x": "Offset X", "fxParam_y": "Offset Y", "fxParam_stdDev": "Blur", "fxParam_shadowOpacity": "Shadow opacity", "fxParam_color": "Color", "fxParam_scale": "Amount", "fxParam_radius": "Radius", "fxParam_softness": "Softness", "fxParam_gamma": "Gamma", "fxParam_azimuth": "Azimuth", "fxParam_elevation": "Elevation", "fxParam_depth": "Depth", "fxParam_size": "Size", "fxParam_amount": "Amount", "shapeRect": "Rectangle", "shapeEllipse": "Ellipse", "shapeLine": "Line", "shapePolygon": "Polygon", "shapeStar": "Star", "shapeArc": "Arc", "shapeSpiral": "Spiral", "shapeSides": "Sides", "shapeStarRatio": "Inner ratio", "shapeTurns": "Turns", "shapeFill": "Fill", "shapeStroke": "Stroke", "shapeStrokeWidth": "Width", "shapeNewLayer": "New layer", "shapeCombine": "Add to layer", "groupLayers": "Group", "ungroupLayers": "Ungroup", "brushSize": "Size", "brushOpacity": "Opacity", "brushHardness": "Hardness", "brushColor": "Color", "targetContent": "Layer", "targetMask": "Mask", "maskInitWhite": "White (full opacity)", "maskInitBlack": "Black (full transparency)", "maskInitSelection": "Selection", "maskInitAlpha": "Layer's alpha channel", "maskInitGray": "Grayscale copy of layer", "maskShow": "Show mask", "maskDisable": "Disable mask", "maskEnable": "Enable mask", "maskInvert": "Invert mask", "maskApply": "Apply mask", "maskToSelection": "Mask to selection", "layers": "Layers", "addFromLibrary": "Add image from asset library", "addFromFile": "Add image from file", "addTextLayer": "Add text layer", "newLayer": "New layer", "flattenImage": "Flatten image", "mergeDown": "Merge down", "cropToContent": "Crop to content", "layerToCanvasSize": "Layer to canvas size", "lockAlpha": "Lock transparency", "unlockAlpha": "Unlock transparency", "anchor": "Anchor", "anchorAsNewLayer": "As new layer", "cancelFloating": "Cancel", "noLayers": "No layers yet — drop an image here", "hideLayer": "Hide layer", "showLayer": "Show layer", "lockLayer": "Lock pixels", "unlockLayer": "Unlock pixels", "lockPosition": "Lock position", "unlockPosition": "Unlock position", "lockAll": "Lock all", "unlockAll": "Unlock all", "moveUp": "Move up", "moveDown": "Move down", "duplicateLayer": "Duplicate layer", "deleteLayer": "Delete layer", "addMask": "Add mask", "deleteMask": "Delete mask", "enableMask": "Enable mask", "disableMask": "Disable mask", "opacity": "Opacity", "blendMode": "Blend", "sectionCanvas": "Canvas", "sectionText": "Text", "blend": { "normal": "Normal", "multiply": "Multiply", "screen": "Screen", "overlay": "Overlay", "darken": "Darken", "lighten": "Lighten", "colorDodge": "Color Dodge", "colorBurn": "Color Burn", "hardLight": "Hard Light", "softLight": "Soft Light", "difference": "Difference", "exclusion": "Exclusion", "linearDodge": "Linear Dodge", "linearBurn": "Linear Burn", "vividLight": "Vivid Light", "pinLight": "Pin Light", "linearLight": "Linear Light", "hardMix": "Hard Mix", "subtract": "Subtract", "divide": "Divide", "grainExtract": "Grain Extract", "grainMerge": "Grain Merge", "hue": "Hue", "saturation": "Saturation", "color": "Color", "luminosity": "Luminosity" }, "font": "Font", "fontSize": "Size", "textColor": "Color", "letterSpacing": "Spacing", "lineHeight": "Leading", "align": "Align", "alignLeft": "Align left", "alignCenter": "Align center", "alignRight": "Align right", "textPlaceholder": "Type something…", "dropHint": "Drop image to add a layer", "addAdjustment": "Add adjustment layer", "addFill": "Add fill layer", "lockLabel": "Lock:", "fillType": "Fill", "fillSolid": "Solid color", "fillLinear": "Linear gradient", "fillRadial": "Radial gradient", "fillColors": "Colors", "fillAngle": "Angle", "fillRadius": "Radius", "adjustmentOp": "Adjustment", "adj_brightness": "Brightness", "adj_contrast": "Contrast", "adj_hue": "Hue", "adj_saturation": "Saturation", "adj_lightness": "Lightness", "adj_inBlack": "Input black", "adj_inWhite": "Input white", "adj_gamma": "Gamma", "adj_outBlack": "Output black", "adj_outWhite": "Output white", "adj_temperature": "Temperature (K)", "adj_mix": "Strength", "adj_exposure": "Exposure", "adj_black": "Black level", "adj_shadowsR": "Shadows R", "adj_shadowsG": "Shadows G", "adj_shadowsB": "Shadows B", "adj_midtonesR": "Midtones R", "adj_midtonesG": "Midtones G", "adj_midtonesB": "Midtones B", "adj_highlightsR": "Highlights R", "adj_highlightsG": "Highlights G", "adj_highlightsB": "Highlights B", "adj_amount": "Amount", "adj_levels": "Levels", "adj_level": "Level", "adjOp": { "brightness-contrast": "Brightness / Contrast", "hue-saturation": "Hue / Saturation", "invert": "Invert", "levels": "Levels", "curves": "Curves", "temperature": "Temperature", "exposure": "Exposure", "color-balance": "Color balance", "vibrance": "Vibrance", "posterize": "Posterize", "threshold": "Threshold" }, "curveCh_master": "Master", "curveCh_red": "R", "curveCh_green": "G", "curveCh_blue": "B", "filters": "Filters", "filterApply": "Apply", "filterCancel": "Cancel", "filter_gaussian-blur": "Gaussian blur", "filter_sharpen": "Sharpen", "filter_motion-blur": "Motion blur", "filter_pixelate": "Pixelate", "filter_noise": "Add noise", "filter_desaturate": "Desaturate", "filterParam_radius": "Radius", "filterParam_amount": "Amount", "filterParam_distance": "Distance", "filterParam_angle": "Angle", "filterParam_size": "Size" };
+const layerEditor$1 = { "undo": "Undo", "redo": "Redo", "capture": "Capture", "captureHint": "Upload composite + one image per visible layer", "captureFailed": "Capture failed", "exportPsd": "Export PSD", "exportPsdHint": "Download the document as a layered PSD file", "exportPsdFailed": "PSD export failed", "exportPsdAssetHint": "Save layered PSD into the asset library", "exportPsdAssetDone": "PSD saved to asset library", "importPsd": "Import PSD", "importPsdHint": "Import a PSD file as layers", "importPsdFailed": "PSD import failed", "importPsdEmpty": "No importable layers in this PSD", "uploadFailed": "Layer upload failed", "loadImageFailed": "Failed to load image", "loadFontFailed": "Failed to load font", "fitView": "Fit view", "canvasPreset": "Preset…", "canvasPresetHint": "Apply a canvas size preset", "presetGroupPaper": "Paper (300 ppi)", "presetGroupBusinessCard": "Business card (300 ppi)", "presetGroupWeb": "Web", "presetGroupDisplay": "Display", "presetGroupPhone": "Phone", "presetGroupMisc": "Misc", "fullscreen": "Fullscreen", "exitFullscreen": "Exit fullscreen", "close": "Close", "toolSelect": "Select", "toolMarquee": "Select area", "toolBrush": "Brush", "toolEraser": "Eraser", "toolText": "Text", "toolShape": "Shape", "toolWarp": "Warp", "warpApply": "Apply", "warpCancel": "Cancel", "toolTransform": "Transform (Ctrl+T)", "transformApply": "Apply", "transformCancel": "Cancel", "transformHint": "Enter to apply · Esc to cancel", "rasterizeLayer": "Rasterize layer (fix pixels at current size)", "toolMarqueeEllipse": "Ellipse select", "toolLasso": "Lasso", "toolWand": "Fuzzy select", "toolBucket": "Bucket fill", "wandThreshold": "Threshold", "wandAntialias": "Antialias", "wandContiguous": "Contiguous", "selRadius": "Radius", "sel_feather": "Feather", "sel_grow": "Grow", "sel_shrink": "Shrink", "sel_border": "Border", "selFill": "Fill", "selStroke": "Stroke", "selOpsHint": "Shift add · Ctrl subtract · Shift+Ctrl intersect", "fxAdd": "+ Add effect", "fx_drop-shadow": "Drop shadow", "fx_gaussian-blur": "Gaussian blur", "fx_unsharp-mask": "Unsharp mask", "fx_median-blur": "Median blur", "fx_vignette": "Vignette", "fx_emboss": "Emboss", "fx_pixelate": "Pixelate", "fx_noise": "Noise", "fx_desaturate": "Desaturate", "fxParam_x": "Offset X", "fxParam_y": "Offset Y", "fxParam_stdDev": "Blur", "fxParam_shadowOpacity": "Shadow opacity", "fxParam_color": "Color", "fxParam_scale": "Amount", "fxParam_radius": "Radius", "fxParam_softness": "Softness", "fxParam_gamma": "Gamma", "fxParam_azimuth": "Azimuth", "fxParam_elevation": "Elevation", "fxParam_depth": "Depth", "fxParam_size": "Size", "fxParam_amount": "Amount", "shapeRect": "Rectangle", "shapeEllipse": "Ellipse", "shapeLine": "Line", "shapePolygon": "Polygon", "shapeStar": "Star", "shapeArc": "Arc", "shapeSpiral": "Spiral", "shapeSides": "Sides", "shapeStarRatio": "Inner ratio", "shapeTurns": "Turns", "shapeFill": "Fill", "shapeStroke": "Stroke", "shapeStrokeWidth": "Width", "shapeNewLayer": "New layer", "shapeCombine": "Add to layer", "groupLayers": "Group", "ungroupLayers": "Ungroup", "brushSize": "Size", "brushOpacity": "Opacity", "brushHardness": "Hardness", "brushColor": "Color", "targetContent": "Layer", "targetMask": "Mask", "maskInitWhite": "White (full opacity)", "maskInitBlack": "Black (full transparency)", "maskInitSelection": "Selection", "maskInitAlpha": "Layer's alpha channel", "maskInitGray": "Grayscale copy of layer", "maskShow": "Show mask", "maskDisable": "Disable mask", "maskEnable": "Enable mask", "maskInvert": "Invert mask", "maskApply": "Apply mask", "maskToSelection": "Mask to selection", "layers": "Layers", "addFromLibrary": "Add image from asset library", "addFromFile": "Add image from file", "addTextLayer": "Add text layer", "newLayer": "New layer", "flattenImage": "Flatten image", "mergeDown": "Merge down", "cropToContent": "Crop to content", "layerToCanvasSize": "Layer to canvas size", "lockAlpha": "Lock transparency", "unlockAlpha": "Unlock transparency", "anchor": "Anchor", "anchorAsNewLayer": "As new layer", "cancelFloating": "Cancel", "noLayers": "No layers yet — drop an image here", "hideLayer": "Hide layer", "showLayer": "Show layer", "lockLayer": "Lock pixels", "unlockLayer": "Unlock pixels", "lockPosition": "Lock position", "unlockPosition": "Unlock position", "lockAll": "Lock all", "unlockAll": "Unlock all", "moveUp": "Move up", "moveDown": "Move down", "duplicateLayer": "Duplicate layer", "deleteLayer": "Delete layer", "addMask": "Add mask", "deleteMask": "Delete mask", "enableMask": "Enable mask", "disableMask": "Disable mask", "opacity": "Opacity", "blendMode": "Blend", "sectionCanvas": "Canvas", "sectionText": "Text", "blend": { "normal": "Normal", "multiply": "Multiply", "screen": "Screen", "overlay": "Overlay", "darken": "Darken", "lighten": "Lighten", "colorDodge": "Color Dodge", "colorBurn": "Color Burn", "hardLight": "Hard Light", "softLight": "Soft Light", "difference": "Difference", "exclusion": "Exclusion", "linearDodge": "Linear Dodge", "linearBurn": "Linear Burn", "vividLight": "Vivid Light", "pinLight": "Pin Light", "linearLight": "Linear Light", "hardMix": "Hard Mix", "subtract": "Subtract", "divide": "Divide", "grainExtract": "Grain Extract", "grainMerge": "Grain Merge", "hue": "Hue", "saturation": "Saturation", "color": "Color", "luminosity": "Luminosity" }, "font": "Font", "fontSize": "Size", "textColor": "Color", "letterSpacing": "Spacing", "lineHeight": "Leading", "align": "Align", "alignLeft": "Align left", "alignCenter": "Align center", "alignRight": "Align right", "textPlaceholder": "Type something…", "dropHint": "Drop image to add a layer", "addAdjustment": "Add adjustment layer", "addFill": "Add fill layer", "lockLabel": "Lock:", "fillType": "Fill", "fillSolid": "Solid color", "fillLinear": "Linear gradient", "fillRadial": "Radial gradient", "fillColors": "Colors", "fillAngle": "Angle", "fillRadius": "Radius", "adjustmentOp": "Adjustment", "adj_brightness": "Brightness", "adj_contrast": "Contrast", "adj_hue": "Hue", "adj_saturation": "Saturation", "adj_lightness": "Lightness", "adj_inBlack": "Input black", "adj_inWhite": "Input white", "adj_gamma": "Gamma", "adj_outBlack": "Output black", "adj_outWhite": "Output white", "adj_temperature": "Temperature (K)", "adj_mix": "Strength", "adj_exposure": "Exposure", "adj_black": "Black level", "adj_shadowsR": "Shadows R", "adj_shadowsG": "Shadows G", "adj_shadowsB": "Shadows B", "adj_midtonesR": "Midtones R", "adj_midtonesG": "Midtones G", "adj_midtonesB": "Midtones B", "adj_highlightsR": "Highlights R", "adj_highlightsG": "Highlights G", "adj_highlightsB": "Highlights B", "adj_amount": "Amount", "adj_levels": "Levels", "adj_level": "Level", "adjOp": { "brightness-contrast": "Brightness / Contrast", "hue-saturation": "Hue / Saturation", "invert": "Invert", "levels": "Levels", "curves": "Curves", "temperature": "Temperature", "exposure": "Exposure", "color-balance": "Color balance", "vibrance": "Vibrance", "posterize": "Posterize", "threshold": "Threshold" }, "curveCh_master": "Master", "curveCh_red": "R", "curveCh_green": "G", "curveCh_blue": "B", "filters": "Filters", "filterApply": "Apply", "filterCancel": "Cancel", "filter_gaussian-blur": "Gaussian blur", "filter_sharpen": "Sharpen", "filter_motion-blur": "Motion blur", "filter_pixelate": "Pixelate", "filter_noise": "Add noise", "filter_desaturate": "Desaturate", "filterParam_radius": "Radius", "filterParam_amount": "Amount", "filterParam_distance": "Distance", "filterParam_angle": "Angle", "filterParam_size": "Size" };
 const fxChain$1 = { "title": "FX Chain", "empty": "Chain FX nodes along the video wire into this node", "noPreview": "no live preview", "delivery": "Delivery", "dColorspace": "Colorspace", "dSize": "Resolution (short side)", "dFps": "Frame rate", "dCodec": "Codec", "dQuality": "Quality", "sourceOpt": "Source", "qDraft": "Draft", "qStandard": "Standard", "qHigh": "High" };
 const fxPreview$1 = { "run": "Preview clip", "stale": "Params changed — preview again", "window": "Real-filter preview · {s}s", "failed": "Preview failed — try again" };
 const fx$1 = { "processing": "Processing…", "done": "Done — ready for downstream", "adjustThenRun": "Adjust parameters, then Run", "fullscreen": "Full size", "exitFullscreen": "Exit full size", "chainMode": "Adjust freely — an FX Chain node downstream renders once", "makeProxy": "PROXY?", "makeProxyHint": "Large source — generate a lightweight proxy for smooth preview (Run still uses the original)", "needsTwoInputs": "Wire two videos into A and B", "needsAudioOrVideo": "Wire an audio or video input", "previewNote": "Preview is approximate — Run renders precisely", "mode": "Mode", "method": "Method", "effect": "Effect", "scope": "Scope", "preset": "Preset", "transition": "Transition", "amount": "Amount", "size": "Size", "strength": "Strength", "edgePreserve": "Edge keep", "exposure": "Exposure", "black": "Black", "temperature": "Temp (K)", "tempMix": "Temp mix", "hue": "Hue", "saturation": "Saturation", "vibrance": "Vibrance", "shadows": "Shadows", "midtones": "Midtones", "highlights": "Highlights", "preserveLightness": "Preserve lightness", "resetWheels": "Reset wheels", "master": "Master", "red": "Red", "green": "Green", "blue": "Blue", "resetCurve": "Reset curve", "curveHint": "Click to add · drag to move · right-click deletes", "keyColor": "Key color", "pickFromVideo": "Pick from frame", "similarity": "Similarity", "blend": "Blend", "despill": "Despill", "despillExpand": "Despill expand", "outAlpha": "Alpha (WebM)", "outMatte": "B/W matte", "duration": "Duration", "offset": "Offset", "offsetAuto": "0 = auto (end of A)", "lumaPreviewHint": "Luma wipe preview shows a crossfade — run to see the final wipe", "rangeX": "Range X", "rangeY": "Range Y", "edgeMode": "Edge fill", "threshold": "Threshold", "minGap": "Min gap", "detectHint": "Run scans for hard cuts and outputs one thumbnail per scene", "sceneFrames": "Scene frames", "sceneClips": "Scene clips", "sceneClipsHint": "Run splits the video at each cut into per-scene clips — wire the clips output into a Video Picker", "sceneClipPickHint": "Click a clip to select it — re-run and the clips output becomes that clip", "cutFast": "Fast (keyframe)", "cutPrecise": "Precise (re-encode)", "targetFps": "Target fps", "slowFactor": "Slow ×", "miMode": "Interp mode", "rateFrame": "Same rate", "rateField": "Double rate", "block": "Block", "atSeconds": "At (s)", "middle": "middle", "thresholdDb": "Threshold", "ratio": "Ratio", "attack": "Attack", "release": "Release", "makeup": "Makeup", "knee": "Knee", "intensity": "Intensity", "eqHint": "Double-click adds a band · drag moves · wheel = Q · double-click a dot removes", "targetI": "Target LUFS", "targetTp": "True peak", "targetLra": "LRA", "frameLen": "Frame (ms)", "gaussWin": "Gauss win", "silenceDb": "Silence (dB)", "minSilence": "Min silence (s)", "lutFile": "LUT file", "upload": "Upload", "interp": "Interp", "noLuts": "No LUTs yet — upload a .cube file", "lutPreviewUnavailable": "Live preview supports .cube and .3dl only — this LUT is applied on run", "refresh": "Refresh", "operator": "Blend mode", "opacity": "Opacity", "position": "Position", "scale": "Scale", "rotation": "Rotation", "skew": "Skew", "motionBlur": "Motion blur", "keyframes": "Keyframes", "addKey": "Add key", "delKey": "Delete key", "clearKeys": "Clear", "dragHint": "Drag the frame to move · wheel to scale", "cornerHint": "Drag the four corner handles", "rotoHint": "Click adds a point · drag moves · double-click a point removes it", "trackHint": "Click the frame to set the track point", "needsBgFg": "Wire background and foreground videos", "foreground": "Foreground", "background": "Background", "text": "Text", "fontLbl": "Font", "fontSize": "Size", "colorLbl": "Color", "strokeLbl": "Stroke", "anchor": "Anchor", "tStart": "Start (s)", "tEnd": "End (s)", "tEndAuto": "-1 = to the end", "fade": "Fade (s)", "subsPlaceholder": "Paste SRT / WebVTT cues here…", "cues": "cues", "trackPoint": "Track point", "pattern": "Pattern", "searchR": "Search", "feather": "Feather", "invert": "Invert", "transitionGroup": { "fade": "Fade", "wipe": "Wipe", "slide": "Slide & Smooth", "shape": "Shapes", "diagslice": "Diagonal & Slice", "coverreveal": "Cover & Reveal", "wind": "Wind", "fx": "FX" }, "echoHint": "Layered frame echoes with feedback trails.", "needsRetimeMap": "Map mode needs a grayscale retime image", "expressionHint": "Vars: t, frame, duration, fps. Fns: noise, fbm, turbulence, smoothstep, remap, mix, hash, random, sin/cos…", "stab360Hint": "Two-pass: analyzes equirect yaw/pitch motion, smooths the camera path, then re-renders.", "stmapGenHint": "16-bit STMap for the undistort → comp → redistort workflow. Feed it into the STMap node." };
@@ -57719,7 +57719,7 @@ const meshOps = { "operation": "操作", "op": { "decimate": "减面", "remesh":
 const splitPart = { "noInputImage": "连接一张图片后即可标注部件", "tool": { "point-pos": "＋ 点", "point-neg": "－ 点", "box": "框选" }, "newGroup": "新建部件", "clear": "清空", "chipBox": "框 {n}", "chipPoints": "部件 {n}（{count} 点）", "hint": "点击给当前部件加点（右键=排除点）；框选工具拖拽一个框即一个部件。也可以不标注，直接在提示词里输入概念走文本工作流。" };
 const materialStage = { "presets": "预设", "preset": { "plasticGlossy": "亮面塑料", "plasticMatte": "哑光塑料", "metalPolished": "抛光金属", "metalBrushed": "拉丝金属", "glassClear": "透明玻璃", "glassFrosted": "磨砂玻璃", "rubber": "橡胶", "ceramic": "陶瓷" }, "color": "颜色", "param": { "metalness": "金属度", "roughness": "粗糙度", "transmission": "透射", "opacity": "不透明度", "clearcoat": "清漆", "ior": "折射率" } };
 const loaderDrop = { "mismatchTitle": "文件类型不匹配", "typeMismatch": "该节点只能加载{kind}。", "assetTypeMismatch": "该节点加载{expected}，拖入的素材是{actual}。", "failedTitle": "ComfyTV 上传", "uploadFailed": "上传失败: {detail}" };
-const layerEditor = { "undo": "撤销", "redo": "重做", "capture": "截取", "captureHint": "上传合成图 + 每个可见图层一张", "captureFailed": "截取失败", "exportPsd": "导出 PSD", "exportPsdHint": "将文档下载为分层 PSD 文件", "exportPsdFailed": "PSD 导出失败", "exportPsdAssetHint": "把分层 PSD 存入资产库", "exportPsdAssetDone": "PSD 已存入资产库", "importPsd": "导入 PSD", "importPsdHint": "把 PSD 文件按图层导入", "importPsdFailed": "PSD 导入失败", "importPsdEmpty": "这个 PSD 里没有可导入的图层", "uploadFailed": "图层上传失败", "loadImageFailed": "图片加载失败", "loadFontFailed": "字体加载失败", "fitView": "适配视图", "canvasPreset": "预设…", "canvasPresetHint": "应用画布尺寸预设", "presetGroupPaper": "纸张 (300 ppi)", "presetGroupBusinessCard": "名片 (300 ppi)", "presetGroupWeb": "网页", "presetGroupDisplay": "显示器", "presetGroupPhone": "手机", "presetGroupMisc": "其它", "fullscreen": "全屏", "exitFullscreen": "退出全屏", "close": "关闭", "toolSelect": "选择", "toolMarquee": "框选", "toolBrush": "画笔", "toolEraser": "橡皮", "toolText": "文字", "toolShape": "形状", "toolWarp": "变形", "warpApply": "应用", "warpCancel": "取消", "toolTransform": "变换 (Ctrl+T)", "transformApply": "应用", "transformCancel": "取消", "transformHint": "Enter 应用 · Esc 取消", "rasterizeLayer": "栅格化图层（按当前尺寸定格像素）", "toolMarqueeEllipse": "椭圆选区", "toolLasso": "套索", "toolWand": "魔棒", "toolBucket": "油漆桶", "wandThreshold": "阈值", "wandAntialias": "抗锯齿", "wandContiguous": "相邻", "selRadius": "半径", "sel_feather": "羽化", "sel_grow": "扩大", "sel_shrink": "收缩", "sel_border": "边界", "selOpsHint": "Shift 加选 · Ctrl 减选 · Shift+Ctrl 交选", "fxAdd": "+ 添加效果", "fx_drop-shadow": "投影", "fx_gaussian-blur": "高斯模糊", "fx_unsharp-mask": "USM 锐化", "fx_median-blur": "中值模糊", "fx_vignette": "晕影", "fx_emboss": "浮雕", "fx_pixelate": "像素化", "fx_noise": "噪点", "fx_desaturate": "去色", "fxParam_x": "偏移 X", "fxParam_y": "偏移 Y", "fxParam_stdDev": "模糊", "fxParam_shadowOpacity": "阴影不透明度", "fxParam_color": "颜色", "fxParam_scale": "强度", "fxParam_radius": "半径", "fxParam_softness": "柔和", "fxParam_gamma": "伽马", "fxParam_azimuth": "光照方向", "fxParam_elevation": "光照高度", "fxParam_depth": "深度", "fxParam_size": "尺寸", "fxParam_amount": "数量", "shapeRect": "矩形", "shapeEllipse": "椭圆", "shapeLine": "直线", "shapePolygon": "多边形", "shapeStar": "星形", "shapeArc": "圆弧", "shapeSpiral": "螺旋线", "shapeSides": "边数", "shapeStarRatio": "内径比", "shapeTurns": "圈数", "shapeFill": "填充", "shapeStroke": "描边", "shapeStrokeWidth": "宽度", "shapeNewLayer": "新图层", "shapeCombine": "并入当前层", "groupLayers": "编组", "ungroupLayers": "取消编组", "brushSize": "大小", "brushOpacity": "不透明度", "brushHardness": "硬度", "brushColor": "颜色", "targetContent": "图层", "targetMask": "蒙版", "maskInitWhite": "白色（全显示）", "maskInitBlack": "黑色（全隐藏）", "maskInitSelection": "选区", "maskInitAlpha": "图层 Alpha 通道", "maskInitGray": "图层灰度副本", "maskShow": "显示蒙版", "maskDisable": "停用蒙版", "maskEnable": "启用蒙版", "maskInvert": "反相蒙版", "maskApply": "应用蒙版", "maskToSelection": "蒙版转选区", "layers": "图层", "addFromLibrary": "从资产库添加图片", "addFromFile": "从文件添加图片", "addTextLayer": "添加文字图层", "newLayer": "新建图层", "flattenImage": "拼合图像", "mergeDown": "向下合并", "cropToContent": "裁剪到内容", "layerToCanvasSize": "图层扩展到画布", "lockAlpha": "锁定透明度", "unlockAlpha": "解锁透明度", "anchor": "锚定", "anchorAsNewLayer": "锚定为新图层", "cancelFloating": "取消", "noLayers": "还没有图层——拖张图片进来", "hideLayer": "隐藏图层", "showLayer": "显示图层", "lockLayer": "锁定像素", "unlockLayer": "解锁像素", "lockPosition": "锁定位置", "unlockPosition": "解锁位置", "lockAll": "锁定全部", "unlockAll": "解锁全部", "moveUp": "上移", "moveDown": "下移", "duplicateLayer": "复制图层", "deleteLayer": "删除图层", "addMask": "添加蒙版", "deleteMask": "删除蒙版", "enableMask": "启用蒙版", "disableMask": "停用蒙版", "opacity": "不透明度", "blendMode": "混合", "sectionCanvas": "画布", "sectionText": "文字", "blend": { "normal": "正常", "multiply": "正片叠底", "screen": "滤色", "overlay": "叠加", "darken": "变暗", "lighten": "变亮", "colorDodge": "颜色减淡", "colorBurn": "颜色加深", "hardLight": "强光", "softLight": "柔光", "difference": "差值", "exclusion": "排除", "linearDodge": "线性减淡", "linearBurn": "线性加深", "vividLight": "亮光", "pinLight": "点光", "linearLight": "线性光", "hardMix": "实色混合", "subtract": "减去", "divide": "划分", "grainExtract": "颗粒提取", "grainMerge": "颗粒合并", "hue": "色相", "saturation": "饱和度", "color": "颜色", "luminosity": "明度" }, "font": "字体", "fontSize": "字号", "textColor": "颜色", "letterSpacing": "字距", "lineHeight": "行距", "align": "对齐", "alignLeft": "左对齐", "alignCenter": "居中", "alignRight": "右对齐", "textPlaceholder": "输入文字…", "dropHint": "拖入图片以添加图层", "addAdjustment": "添加调整层", "addFill": "添加填充层", "lockLabel": "锁定:", "fillType": "填充", "fillSolid": "纯色", "fillLinear": "线性渐变", "fillRadial": "径向渐变", "fillColors": "颜色", "fillAngle": "角度", "fillRadius": "半径", "adjustmentOp": "调整类型", "adj_brightness": "亮度", "adj_contrast": "对比度", "adj_hue": "色相", "adj_saturation": "饱和度", "adj_lightness": "明度", "adj_inBlack": "输入黑场", "adj_inWhite": "输入白场", "adj_gamma": "Gamma", "adj_outBlack": "输出黑场", "adj_outWhite": "输出白场", "adj_temperature": "色温 (K)", "adj_mix": "强度", "adj_exposure": "曝光", "adj_black": "黑位", "adj_shadowsR": "阴影 红", "adj_shadowsG": "阴影 绿", "adj_shadowsB": "阴影 蓝", "adj_midtonesR": "中间调 红", "adj_midtonesG": "中间调 绿", "adj_midtonesB": "中间调 蓝", "adj_highlightsR": "高光 红", "adj_highlightsG": "高光 绿", "adj_highlightsB": "高光 蓝", "adj_amount": "数量", "adj_levels": "级数", "adj_level": "阈值", "adjOp": { "brightness-contrast": "亮度 / 对比度", "hue-saturation": "色相 / 饱和度", "invert": "反相", "levels": "色阶", "curves": "曲线", "temperature": "色温", "exposure": "曝光", "color-balance": "色彩平衡", "vibrance": "自然饱和度", "posterize": "色调分离", "threshold": "阈值" }, "curveCh_master": "主", "curveCh_red": "红", "curveCh_green": "绿", "curveCh_blue": "蓝", "filters": "滤镜", "filterApply": "应用", "filterCancel": "取消", "filter_gaussian-blur": "高斯模糊", "filter_sharpen": "锐化", "filter_motion-blur": "运动模糊", "filter_pixelate": "像素化", "filter_noise": "添加噪点", "filter_desaturate": "去色", "filterParam_radius": "半径", "filterParam_amount": "数量", "filterParam_distance": "距离", "filterParam_angle": "角度", "filterParam_size": "大小" };
+const layerEditor = { "undo": "撤销", "redo": "重做", "capture": "截取", "captureHint": "上传合成图 + 每个可见图层一张", "captureFailed": "截取失败", "exportPsd": "导出 PSD", "exportPsdHint": "将文档下载为分层 PSD 文件", "exportPsdFailed": "PSD 导出失败", "exportPsdAssetHint": "把分层 PSD 存入资产库", "exportPsdAssetDone": "PSD 已存入资产库", "importPsd": "导入 PSD", "importPsdHint": "把 PSD 文件按图层导入", "importPsdFailed": "PSD 导入失败", "importPsdEmpty": "这个 PSD 里没有可导入的图层", "uploadFailed": "图层上传失败", "loadImageFailed": "图片加载失败", "loadFontFailed": "字体加载失败", "fitView": "适配视图", "canvasPreset": "预设…", "canvasPresetHint": "应用画布尺寸预设", "presetGroupPaper": "纸张 (300 ppi)", "presetGroupBusinessCard": "名片 (300 ppi)", "presetGroupWeb": "网页", "presetGroupDisplay": "显示器", "presetGroupPhone": "手机", "presetGroupMisc": "其它", "fullscreen": "全屏", "exitFullscreen": "退出全屏", "close": "关闭", "toolSelect": "选择", "toolMarquee": "框选", "toolBrush": "画笔", "toolEraser": "橡皮", "toolText": "文字", "toolShape": "形状", "toolWarp": "变形", "warpApply": "应用", "warpCancel": "取消", "toolTransform": "变换 (Ctrl+T)", "transformApply": "应用", "transformCancel": "取消", "transformHint": "Enter 应用 · Esc 取消", "rasterizeLayer": "栅格化图层（按当前尺寸定格像素）", "toolMarqueeEllipse": "椭圆选区", "toolLasso": "套索", "toolWand": "魔棒", "toolBucket": "油漆桶", "wandThreshold": "阈值", "wandAntialias": "抗锯齿", "wandContiguous": "相邻", "selRadius": "半径", "sel_feather": "羽化", "sel_grow": "扩大", "sel_shrink": "收缩", "sel_border": "边界", "selFill": "填充", "selStroke": "描边", "selOpsHint": "Shift 加选 · Ctrl 减选 · Shift+Ctrl 交选", "fxAdd": "+ 添加效果", "fx_drop-shadow": "投影", "fx_gaussian-blur": "高斯模糊", "fx_unsharp-mask": "USM 锐化", "fx_median-blur": "中值模糊", "fx_vignette": "晕影", "fx_emboss": "浮雕", "fx_pixelate": "像素化", "fx_noise": "噪点", "fx_desaturate": "去色", "fxParam_x": "偏移 X", "fxParam_y": "偏移 Y", "fxParam_stdDev": "模糊", "fxParam_shadowOpacity": "阴影不透明度", "fxParam_color": "颜色", "fxParam_scale": "强度", "fxParam_radius": "半径", "fxParam_softness": "柔和", "fxParam_gamma": "伽马", "fxParam_azimuth": "光照方向", "fxParam_elevation": "光照高度", "fxParam_depth": "深度", "fxParam_size": "尺寸", "fxParam_amount": "数量", "shapeRect": "矩形", "shapeEllipse": "椭圆", "shapeLine": "直线", "shapePolygon": "多边形", "shapeStar": "星形", "shapeArc": "圆弧", "shapeSpiral": "螺旋线", "shapeSides": "边数", "shapeStarRatio": "内径比", "shapeTurns": "圈数", "shapeFill": "填充", "shapeStroke": "描边", "shapeStrokeWidth": "宽度", "shapeNewLayer": "新图层", "shapeCombine": "并入当前层", "groupLayers": "编组", "ungroupLayers": "取消编组", "brushSize": "大小", "brushOpacity": "不透明度", "brushHardness": "硬度", "brushColor": "颜色", "targetContent": "图层", "targetMask": "蒙版", "maskInitWhite": "白色（全显示）", "maskInitBlack": "黑色（全隐藏）", "maskInitSelection": "选区", "maskInitAlpha": "图层 Alpha 通道", "maskInitGray": "图层灰度副本", "maskShow": "显示蒙版", "maskDisable": "停用蒙版", "maskEnable": "启用蒙版", "maskInvert": "反相蒙版", "maskApply": "应用蒙版", "maskToSelection": "蒙版转选区", "layers": "图层", "addFromLibrary": "从资产库添加图片", "addFromFile": "从文件添加图片", "addTextLayer": "添加文字图层", "newLayer": "新建图层", "flattenImage": "拼合图像", "mergeDown": "向下合并", "cropToContent": "裁剪到内容", "layerToCanvasSize": "图层扩展到画布", "lockAlpha": "锁定透明度", "unlockAlpha": "解锁透明度", "anchor": "锚定", "anchorAsNewLayer": "锚定为新图层", "cancelFloating": "取消", "noLayers": "还没有图层——拖张图片进来", "hideLayer": "隐藏图层", "showLayer": "显示图层", "lockLayer": "锁定像素", "unlockLayer": "解锁像素", "lockPosition": "锁定位置", "unlockPosition": "解锁位置", "lockAll": "锁定全部", "unlockAll": "解锁全部", "moveUp": "上移", "moveDown": "下移", "duplicateLayer": "复制图层", "deleteLayer": "删除图层", "addMask": "添加蒙版", "deleteMask": "删除蒙版", "enableMask": "启用蒙版", "disableMask": "停用蒙版", "opacity": "不透明度", "blendMode": "混合", "sectionCanvas": "画布", "sectionText": "文字", "blend": { "normal": "正常", "multiply": "正片叠底", "screen": "滤色", "overlay": "叠加", "darken": "变暗", "lighten": "变亮", "colorDodge": "颜色减淡", "colorBurn": "颜色加深", "hardLight": "强光", "softLight": "柔光", "difference": "差值", "exclusion": "排除", "linearDodge": "线性减淡", "linearBurn": "线性加深", "vividLight": "亮光", "pinLight": "点光", "linearLight": "线性光", "hardMix": "实色混合", "subtract": "减去", "divide": "划分", "grainExtract": "颗粒提取", "grainMerge": "颗粒合并", "hue": "色相", "saturation": "饱和度", "color": "颜色", "luminosity": "明度" }, "font": "字体", "fontSize": "字号", "textColor": "颜色", "letterSpacing": "字距", "lineHeight": "行距", "align": "对齐", "alignLeft": "左对齐", "alignCenter": "居中", "alignRight": "右对齐", "textPlaceholder": "输入文字…", "dropHint": "拖入图片以添加图层", "addAdjustment": "添加调整层", "addFill": "添加填充层", "lockLabel": "锁定:", "fillType": "填充", "fillSolid": "纯色", "fillLinear": "线性渐变", "fillRadial": "径向渐变", "fillColors": "颜色", "fillAngle": "角度", "fillRadius": "半径", "adjustmentOp": "调整类型", "adj_brightness": "亮度", "adj_contrast": "对比度", "adj_hue": "色相", "adj_saturation": "饱和度", "adj_lightness": "明度", "adj_inBlack": "输入黑场", "adj_inWhite": "输入白场", "adj_gamma": "Gamma", "adj_outBlack": "输出黑场", "adj_outWhite": "输出白场", "adj_temperature": "色温 (K)", "adj_mix": "强度", "adj_exposure": "曝光", "adj_black": "黑位", "adj_shadowsR": "阴影 红", "adj_shadowsG": "阴影 绿", "adj_shadowsB": "阴影 蓝", "adj_midtonesR": "中间调 红", "adj_midtonesG": "中间调 绿", "adj_midtonesB": "中间调 蓝", "adj_highlightsR": "高光 红", "adj_highlightsG": "高光 绿", "adj_highlightsB": "高光 蓝", "adj_amount": "数量", "adj_levels": "级数", "adj_level": "阈值", "adjOp": { "brightness-contrast": "亮度 / 对比度", "hue-saturation": "色相 / 饱和度", "invert": "反相", "levels": "色阶", "curves": "曲线", "temperature": "色温", "exposure": "曝光", "color-balance": "色彩平衡", "vibrance": "自然饱和度", "posterize": "色调分离", "threshold": "阈值" }, "curveCh_master": "主", "curveCh_red": "红", "curveCh_green": "绿", "curveCh_blue": "蓝", "filters": "滤镜", "filterApply": "应用", "filterCancel": "取消", "filter_gaussian-blur": "高斯模糊", "filter_sharpen": "锐化", "filter_motion-blur": "运动模糊", "filter_pixelate": "像素化", "filter_noise": "添加噪点", "filter_desaturate": "去色", "filterParam_radius": "半径", "filterParam_amount": "数量", "filterParam_distance": "距离", "filterParam_angle": "角度", "filterParam_size": "大小" };
 const fxChain = { "title": "特效链", "empty": "沿 video 线把 FX 节点串联接入本节点即可成链", "noPreview": "无实时预览", "delivery": "交付出片", "dColorspace": "色彩空间", "dSize": "分辨率(短边)", "dFps": "帧率", "dCodec": "编码", "dQuality": "质量", "sourceOpt": "原始", "qDraft": "草稿", "qStandard": "标准", "qHigh": "高" };
 const fxPreview = { "run": "预览片段", "stale": "参数已变 — 请重新预览", "window": "真实滤镜预览 · {s} 秒", "failed": "预览失败 — 请重试" };
 const fx = { "processing": "处理中…", "done": "完成 — 可供下游使用", "adjustThenRun": "调整参数后点击 Run", "fullscreen": "全屏编辑", "exitFullscreen": "退出全屏", "chainMode": "自由调整——由下游 FX Chain 节点一次渲染", "makeProxy": "PROXY?", "makeProxyHint": "源文件较大——生成轻量代理让预览流畅（运行仍使用原片）", "needsTwoInputs": "需要接入两个视频（A 和 B）", "needsAudioOrVideo": "需要接入音频或视频", "previewNote": "预览为近似效果 — Run 后精确渲染", "mode": "模式", "method": "方法", "effect": "效果", "scope": "示波器", "preset": "预设", "transition": "转场", "amount": "强度", "size": "尺寸", "strength": "力度", "edgePreserve": "保边", "exposure": "曝光", "black": "黑位", "temperature": "色温 (K)", "tempMix": "色温混合", "hue": "色相", "saturation": "饱和度", "vibrance": "自然饱和", "shadows": "阴影", "midtones": "中间调", "highlights": "高光", "preserveLightness": "保持明度", "resetWheels": "重置色轮", "master": "主通道", "red": "红", "green": "绿", "blue": "蓝", "resetCurve": "重置曲线", "curveHint": "单击添加 · 拖动移动 · 右键删除", "keyColor": "键色", "pickFromVideo": "从画面取色", "similarity": "相似度", "blend": "边缘融合", "despill": "去溢色", "despillExpand": "溢色扩展", "outAlpha": "透明通道 (WebM)", "outMatte": "黑白遮罩", "duration": "时长", "offset": "起始位置", "offsetAuto": "0 = 自动（A 末尾）", "lumaPreviewHint": "亮度擦除预览仅显示交叉淡化 — 运行后可见最终擦除效果", "rangeX": "水平搜索", "rangeY": "垂直搜索", "edgeMode": "边缘填充", "threshold": "阈值", "minGap": "最小间隔", "detectHint": "Run 扫描硬切点，每个场景输出一张缩略图", "sceneFrames": "场景帧", "sceneClips": "场景片段", "sceneClipsHint": "Run 在每个切点拆条，输出逐场景片段——把 clips 输出接到视频挑选器", "sceneClipPickHint": "点击选中片段——重新 Run 后 clips 输出即为所选片段", "cutFast": "快速（关键帧）", "cutPrecise": "精确（重编码）", "targetFps": "目标帧率", "slowFactor": "慢放倍数", "miMode": "补偿模式", "rateFrame": "同帧率", "rateField": "倍帧率", "block": "块大小", "atSeconds": "取帧时间 (s)", "middle": "中点", "thresholdDb": "阈值", "ratio": "压缩比", "attack": "启动", "release": "释放", "makeup": "增益补偿", "knee": "拐点", "intensity": "强度", "eqHint": "双击空白添加频段 · 拖动调节 · 滚轮调 Q · 双击圆点删除", "targetI": "目标响度 LUFS", "targetTp": "真峰值", "targetLra": "响度范围", "frameLen": "帧长 (ms)", "gaussWin": "高斯窗", "silenceDb": "静音阈值 (dB)", "minSilence": "最短静音 (s)", "lutFile": "LUT 文件", "upload": "上传", "interp": "插值", "noLuts": "暂无 LUT — 请上传 .cube 文件", "lutPreviewUnavailable": "实时预览仅支持 .cube 和 .3dl —— 该 LUT 将在运行时生效", "refresh": "刷新", "operator": "混合模式", "opacity": "不透明度", "position": "位置", "scale": "缩放", "rotation": "旋转", "skew": "斜切", "motionBlur": "运动模糊", "keyframes": "关键帧", "addKey": "打帧", "delKey": "删帧", "clearKeys": "清空", "dragHint": "拖动画面移动 · 滚轮缩放", "cornerHint": "拖动四个角点", "rotoHint": "单击加点 · 拖动移动 · 双击点删除", "trackHint": "在画面上单击设置跟踪点", "needsBgFg": "需要接入背景和前景视频", "foreground": "前景", "background": "背景", "text": "文本", "fontLbl": "字体", "fontSize": "字号", "colorLbl": "颜色", "strokeLbl": "描边", "anchor": "锚点", "tStart": "开始 (s)", "tEnd": "结束 (s)", "tEndAuto": "-1 = 到结尾", "fade": "淡入淡出 (s)", "subsPlaceholder": "在此粘贴 SRT / WebVTT 字幕…", "cues": "条字幕", "trackPoint": "跟踪点", "pattern": "模板半径", "searchR": "搜索半径", "feather": "羽化", "invert": "反转", "transitionGroup": { "fade": "淡变", "wipe": "擦除", "slide": "滑动与平滑", "shape": "形状开合", "diagslice": "对角与切片", "coverreveal": "覆盖与揭示", "wind": "风蚀", "fx": "特效" }, "echoHint": "多帧残影叠加,带反馈拖尾。", "needsRetimeMap": "Map 模式需要接入灰度重定时图", "expressionHint": "变量:t、frame、duration、fps;函数:noise、fbm、turbulence、smoothstep、remap、mix、hash、random、sin/cos…", "stab360Hint": "两遍:分析 equirect 的 yaw/pitch 运动,平滑相机路径后重渲染。", "stmapGenHint": "16-bit STMap,用于 undistort→合成→redistort 工作流;接入 STMap 节点使用。" };
@@ -69675,8 +69675,8 @@ const _hoisted_32$9 = {
 const _hoisted_33$7 = { class: "ctv:text-2xs" };
 const _hoisted_34$7 = { class: "ctv:font-mono ctv:text-muted-foreground" };
 const _hoisted_35$7 = { class: "ctv:grid ctv:grid-cols-[60px_1fr] ctv:items-center ctv:gap-1.5 ctv:mt-0.5" };
-const _hoisted_36$6 = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_37$5 = {
+const _hoisted_36$7 = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_37$6 = {
   key: 3,
   class: "ctv:p-2 ctv:text-xs ctv:text-left ctv:flex ctv:flex-col ctv:gap-2"
 };
@@ -69980,7 +69980,7 @@ const _sfc_main$3f = /* @__PURE__ */ defineComponent({
                             "onUpdate:modelValue": ($event) => unref(onValueChange)(w, $event)
                           }, null, 8, ["kind", "model-value", "options", "min", "max", "step", "precision", "multiline", "disabled", "onUpdate:modelValue"]),
                           createBaseVNode("div", _hoisted_35$7, [
-                            createBaseVNode("span", _hoisted_36$6, toDisplayString$1(_ctx.$t("configSidebar.bindTo")), 1),
+                            createBaseVNode("span", _hoisted_36$7, toDisplayString$1(_ctx.$t("configSidebar.bindTo")), 1),
                             createVNode(_sfc_main$3j, {
                               "model-value": unref(dropdownValueFor)(w),
                               options: bindingOptions.value,
@@ -69994,7 +69994,7 @@ const _sfc_main$3f = /* @__PURE__ */ defineComponent({
                 }), 128))
               ]);
             }), 128))
-          ])) : (openBlock(), createElementBlock("div", _hoisted_37$5, [
+          ])) : (openBlock(), createElementBlock("div", _hoisted_37$6, [
             createBaseVNode("p", _hoisted_38$5, toDisplayString$1(_ctx.$t("configSidebar.noExposedWidgets")), 1),
             unref(config2) && !unref(config2).has_api ? (openBlock(), createElementBlock(Fragment$1, { key: 0 }, [
               createBaseVNode("p", _hoisted_39$5, toDisplayString$1(_ctx.$t("configSidebar.conversionMayHaveFailed")), 1),
@@ -109112,11 +109112,11 @@ const _hoisted_32$8 = {
 const _hoisted_33$6 = { class: "ctv:list-none ctv:m-0 ctv:p-0 ctv:flex ctv:flex-col ctv:gap-px ctv:flex-auto ctv:min-h-0" };
 const _hoisted_34$6 = { class: "ctv:shrink-0 ctv:font-semibold ctv:text-[#d8b0ff] ctv:min-w-2" };
 const _hoisted_35$6 = { class: "ctv:flex-auto ctv:overflow-hidden ctv:text-ellipsis ctv:text-base-foreground/80" };
-const _hoisted_36$5 = {
+const _hoisted_36$6 = {
   key: 0,
   class: "vp-sb-more ctv:text-[8px] ctv:text-right ctv:italic ctv:text-muted-foreground/60"
 };
-const _hoisted_37$4 = { class: "vp-compact-count-text ctv:text-sm ctv:font-bold ctv:text-[#d8b0ff]" };
+const _hoisted_37$5 = { class: "vp-compact-count-text ctv:text-sm ctv:font-bold ctv:text-[#d8b0ff]" };
 const _hoisted_38$4 = ["src", "alt"];
 const _hoisted_39$4 = {
   key: 2,
@@ -109669,7 +109669,7 @@ const _sfc_main$2$ = /* @__PURE__ */ defineComponent({
                 ]);
               }), 128))
             ]),
-            unref(storyboardShots).length > 3 ? (openBlock(), createElementBlock("div", _hoisted_36$5, toDisplayString$1(_ctx.$t("valuePreview.moreShots", { n: unref(storyboardShots).length - 3 })), 1)) : createCommentVNode("", true)
+            unref(storyboardShots).length > 3 ? (openBlock(), createElementBlock("div", _hoisted_36$6, toDisplayString$1(_ctx.$t("valuePreview.moreShots", { n: unref(storyboardShots).length - 3 })), 1)) : createCommentVNode("", true)
           ])) : (openBlock(), createElementBlock("div", {
             key: 1,
             class: normalizeClass(storyboardListClass)
@@ -109700,7 +109700,7 @@ const _sfc_main$2$ = /* @__PURE__ */ defineComponent({
             _cache2[38] || (_cache2[38] = createBaseVNode("span", { class: "ctv:text-[22px] ctv:leading-none" }, [
               createBaseVNode("i", { class: "pi pi-video" })
             ], -1)),
-            createBaseVNode("span", _hoisted_37$4, toDisplayString$1(unref(timelineSegs).length), 1)
+            createBaseVNode("span", _hoisted_37$5, toDisplayString$1(unref(timelineSegs).length), 1)
           ])) : (openBlock(), createElementBlock("div", {
             key: 1,
             class: normalizeClass(storyboardListClass)
@@ -110594,8 +110594,8 @@ const _hoisted_35$5 = {
   key: 10,
   class: "ctv:flex ctv:flex-col ctv:gap-1"
 };
-const _hoisted_36$4 = ["aria-expanded"];
-const _hoisted_37$3 = { class: "ctv:text-3xs ctv:text-muted-foreground ctv:font-mono ctv:normal-case ctv:tracking-normal" };
+const _hoisted_36$5 = ["aria-expanded"];
+const _hoisted_37$4 = { class: "ctv:text-3xs ctv:text-muted-foreground ctv:font-mono ctv:normal-case ctv:tracking-normal" };
 const _hoisted_38$3 = { class: "action-list ctv:flex ctv:flex-wrap ctv:gap-1.5" };
 const _hoisted_39$3 = ["title", "onClick"];
 const _hoisted_40$1 = { class: "ctv:font-semibold" };
@@ -111026,8 +111026,8 @@ const _sfc_main$2_ = /* @__PURE__ */ defineComponent({
             createBaseVNode("span", {
               class: normalizeClass([sectionLabel$1, "ctv:mb-0"])
             }, toDisplayString$1(_ctx.$t("stage.section.actions")), 1),
-            createBaseVNode("span", _hoisted_37$3, toDisplayString$1(unref(stageActions).length), 1)
-          ], 8, _hoisted_36$4),
+            createBaseVNode("span", _hoisted_37$4, toDisplayString$1(unref(stageActions).length), 1)
+          ], 8, _hoisted_36$5),
           withDirectives(createBaseVNode("div", _hoisted_38$3, [
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(stageActions), (a2) => {
               var _a3;
@@ -127613,7 +127613,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-QNgCAkqi.mjs");
+    const { STLLoader } = await import("./STLLoader-CqEoHNxy.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -127621,7 +127621,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-B1SbTPmV.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-DAnOe6hz.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -127928,7 +127928,7 @@ const _hoisted_35$4 = {
   key: 0,
   class: "ctv:my-1 ctv:border-t ctv:border-border-subtle"
 };
-const _hoisted_36$3 = { class: "ctv:flex-1 ctv:truncate" };
+const _hoisted_36$4 = { class: "ctv:flex-1 ctv:truncate" };
 const PREVIEW_BTN_BASE$3 = "ctv:relative ctv:inline-flex ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:appearance-none ctv:border-none ctv:transition-colors ctv:size-5 ctv:p-0 ctv:rounded-sm ctv:text-sm";
 const previewActionsClass = "ctv:absolute ctv:top-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1 ctv:opacity-0 ctv:group-hover:opacity-100 ctv:transition-opacity";
 const uploadBtnClass = "ctv:relative ctv:inline-flex ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:cursor-pointer ctv:whitespace-nowrap ctv:appearance-none ctv:border-none ctv:transition-colors ctv:disabled:pointer-events-none ctv:disabled:opacity-50 ctv:h-6 ctv:rounded-sm ctv:px-2 ctv:py-1 ctv:text-xs ctv:font-medium ctv:shrink-0 ctv:bg-secondary-background ctv:text-secondary-foreground ctv:hover:bg-secondary-background-hover";
@@ -128346,7 +128346,7 @@ const _sfc_main$2p = /* @__PURE__ */ defineComponent({
                 _cache2[25] || (_cache2[25] = createBaseVNode("span", { class: "ctv:w-3 ctv:inline-block" }, [
                   createBaseVNode("i", { class: "pi pi-plus" })
                 ], -1)),
-                createBaseVNode("span", _hoisted_36$3, toDisplayString$1(_ctx.$t("assets.tagPopover.create")), 1)
+                createBaseVNode("span", _hoisted_36$4, toDisplayString$1(_ctx.$t("assets.tagPopover.create")), 1)
               ])
             ], 4)
           ], 32)) : createCommentVNode("", true)
@@ -131980,8 +131980,8 @@ const _hoisted_32$4 = ["value", "onInput"];
 const _hoisted_33$3 = ["value", "onInput"];
 const _hoisted_34$3 = ["open"];
 const _hoisted_35$3 = { class: "ctv:cursor-pointer ctv:opacity-75 ctv:select-none ctv:pb-1 ctv:hover:opacity-100" };
-const _hoisted_36$2 = ["value", "onInput"];
-const _hoisted_37$2 = ["open"];
+const _hoisted_36$3 = ["value", "onInput"];
+const _hoisted_37$3 = ["open"];
 const _hoisted_38$2 = { class: "ctv:cursor-pointer ctv:opacity-75 ctv:select-none ctv:pb-1 ctv:hover:opacity-100" };
 const _hoisted_39$2 = ["value", "onInput"];
 const META_INPUT_BASE = "ctv:w-full ctv:box-border ctv:py-0.5 ctv:px-1.5 ctv:text-2xs ctv:leading-snug ctv:rounded-sm ctv:[font-family:inherit] ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-transparent ctv:hover:border-border-subtle ctv:focus:outline-none ctv:focus:border-primary-background/50 ctv:focus:bg-secondary-background-hover";
@@ -132185,7 +132185,7 @@ const _sfc_main$2f = /* @__PURE__ */ defineComponent({
                   value: shot.character_desc,
                   rows: "2",
                   onInput: (e) => unref(setField)(shot.id, "character_desc", e.target.value)
-                }, null, 42, _hoisted_36$2)
+                }, null, 42, _hoisted_36$3)
               ], 8, _hoisted_34$3),
               createBaseVNode("details", {
                 class: "ctv:text-2xs ctv:py-[3px] ctv:px-1.5 ctv:rounded ctv:border ctv:border-dashed ctv:border-border-subtle",
@@ -132198,7 +132198,7 @@ const _sfc_main$2f = /* @__PURE__ */ defineComponent({
                   rows: "2",
                   onInput: (e) => unref(setField)(shot.id, "motion_prompt", e.target.value)
                 }, null, 42, _hoisted_39$2)
-              ], 8, _hoisted_37$2)
+              ], 8, _hoisted_37$3)
             ]);
           }), 128))
         ])),
@@ -144888,8 +144888,8 @@ const _hoisted_32$3 = { class: "ctv:flex ctv:cursor-pointer ctv:items-center ctv
 const _hoisted_33$2 = { class: "ctv:text-2xs ctv:text-muted-foreground" };
 const _hoisted_34$2 = { class: "ctv:flex ctv:cursor-pointer ctv:items-center ctv:gap-1.5" };
 const _hoisted_35$2 = { class: "ctv:text-2xs ctv:text-muted-foreground" };
-const _hoisted_36$1 = { class: "ctv:flex ctv:cursor-pointer ctv:items-center ctv:gap-1.5" };
-const _hoisted_37$1 = { class: "ctv:text-2xs ctv:text-muted-foreground" };
+const _hoisted_36$2 = { class: "ctv:flex ctv:cursor-pointer ctv:items-center ctv:gap-1.5" };
+const _hoisted_37$2 = { class: "ctv:text-2xs ctv:text-muted-foreground" };
 const _hoisted_38$1 = ["value"];
 const _hoisted_39$1 = {
   key: 0,
@@ -145465,8 +145465,8 @@ const _sfc_main$26 = /* @__PURE__ */ defineComponent({
                     "onUpdate:modelValue": _cache2[23] || (_cache2[23] = (v) => unref(updateEnvironment)({ showRoom: v }))
                   }, null, 8, ["model-value"])
                 ]),
-                createBaseVNode("label", _hoisted_36$1, [
-                  createBaseVNode("span", _hoisted_37$1, toDisplayString$1(_ctx.$t("scene3d.background")), 1),
+                createBaseVNode("label", _hoisted_36$2, [
+                  createBaseVNode("span", _hoisted_37$2, toDisplayString$1(_ctx.$t("scene3d.background")), 1),
                   createVNode(_sfc_main$3h, {
                     "model-value": unref(state2).environment.background !== "",
                     "onUpdate:modelValue": _cache2[24] || (_cache2[24] = (v) => unref(updateEnvironment)({ background: v ? "#222222" : "" }))
@@ -153893,6 +153893,149 @@ class WandTool {
 function makeWandToolDef() {
   return { id: "wand", create: (ctx) => new WandTool("wand", ctx) };
 }
+function localCoverage(node, content, selCanvas) {
+  const entry = content.get(node.contentId);
+  if (!entry) return null;
+  const nw = node.naturalWidth;
+  const nh = node.naturalHeight;
+  const tf = node.transform.w > 0 && node.transform.h > 0 ? node.transform : { x: 0, y: 0, w: nw, h: nh, rotation: 0 };
+  const cov = rasterizeSelectionToLocal(selCanvas, tf, nw, nh);
+  if (!cov) return null;
+  return { cov, entry, tf };
+}
+function cloneContent(node, entry) {
+  const c2 = document.createElement("canvas");
+  c2.width = node.naturalWidth;
+  c2.height = node.naturalHeight;
+  const g = c2.getContext("2d");
+  if (!g) return null;
+  g.drawImage(entry.canvas, 0, 0, c2.width, c2.height);
+  return { canvas: c2, g };
+}
+function commitContent(deps, node, label, canvas) {
+  const beforeId = node.contentId;
+  const beforeUrl = node.url;
+  const afterId = deps.content.register(canvas);
+  node.contentId = afterId;
+  node.url = void 0;
+  deps.push(new SetContentCommand(label, node, beforeId, afterId, deps.content, beforeUrl));
+}
+function clearSelectedPixels(deps, node, selCanvas) {
+  if (node.locks.content) return false;
+  const loc = localCoverage(node, deps.content, selCanvas);
+  if (!loc) return false;
+  const copy2 = cloneContent(node, loc.entry);
+  if (!copy2) return false;
+  const img = copy2.g.getImageData(0, 0, copy2.canvas.width, copy2.canvas.height);
+  let touched = false;
+  for (let p2 = 0; p2 < loc.cov.length; p2++) {
+    const c2 = loc.cov[p2];
+    if (c2 <= 0) continue;
+    const i = p2 * 4 + 3;
+    if (img.data[i] === 0) continue;
+    touched = true;
+    img.data[i] = Math.round(img.data[i] * (1 - c2));
+  }
+  if (!touched) return false;
+  copy2.g.putImageData(img, 0, 0);
+  commitContent(deps, node, "Clear Selection", copy2.canvas);
+  return true;
+}
+function fillSelectedPixels(deps, node, selCanvas, color) {
+  if (node.locks.content) return false;
+  const loc = localCoverage(node, deps.content, selCanvas);
+  if (!loc) return false;
+  const copy2 = cloneContent(node, loc.entry);
+  if (!copy2) return false;
+  const img = copy2.g.getImageData(0, 0, copy2.canvas.width, copy2.canvas.height);
+  const lockAlpha = node.lockAlpha === true;
+  let touched = false;
+  for (let p2 = 0; p2 < loc.cov.length; p2++) {
+    let c2 = loc.cov[p2];
+    if (c2 <= 0) continue;
+    const i = p2 * 4;
+    const sa = img.data[i + 3] / 255;
+    if (lockAlpha) c2 *= sa;
+    if (c2 <= 0) continue;
+    touched = true;
+    const outA = c2 + sa * (1 - c2);
+    if (outA <= 0) continue;
+    for (let ch = 0; ch < 3; ch++) {
+      img.data[i + ch] = Math.round((color[ch] * c2 + img.data[i + ch] * sa * (1 - c2)) / outA);
+    }
+    img.data[i + 3] = Math.round(outA * 255);
+  }
+  if (!touched) return false;
+  copy2.g.putImageData(img, 0, 0);
+  commitContent(deps, node, "Fill Selection", copy2.canvas);
+  return true;
+}
+function strokeSelectedPixels(deps, node, selCanvas, color, width, outlines) {
+  if (node.locks.content || !outlines.length) return false;
+  const entry = deps.content.get(node.contentId);
+  if (!entry) return false;
+  const copy2 = cloneContent(node, entry);
+  if (!copy2) return false;
+  const nw = node.naturalWidth;
+  const nh = node.naturalHeight;
+  const tf = node.transform.w > 0 && node.transform.h > 0 ? node.transform : { x: 0, y: 0, w: nw, h: nh, rotation: 0 };
+  const g = copy2.g;
+  g.save();
+  g.scale(nw / (tf.w || 1), nh / (tf.h || 1));
+  g.translate(tf.w / 2, tf.h / 2);
+  g.rotate(-tf.rotation);
+  g.translate(-(tf.x + tf.w / 2), -(tf.y + tf.h / 2));
+  g.strokeStyle = `rgb(${color[0]},${color[1]},${color[2]})`;
+  g.lineWidth = width;
+  g.lineJoin = "round";
+  for (const loop of outlines) {
+    g.beginPath();
+    loop.forEach((p2, i) => i ? g.lineTo(p2.x, p2.y) : g.moveTo(p2.x, p2.y));
+    g.closePath();
+    g.stroke();
+  }
+  g.restore();
+  commitContent(deps, node, "Stroke Selection", copy2.canvas);
+  return true;
+}
+function extractSelectedPixels(node, content, selCanvas, selBounds) {
+  const loc = localCoverage(node, content, selCanvas);
+  if (!loc) return null;
+  const nw = node.naturalWidth;
+  const nh = node.naturalHeight;
+  const local = document.createElement("canvas");
+  local.width = nw;
+  local.height = nh;
+  const lg = local.getContext("2d");
+  if (!lg) return null;
+  lg.drawImage(loc.entry.canvas, 0, 0, nw, nh);
+  const img = lg.getImageData(0, 0, nw, nh);
+  let any = false;
+  for (let p2 = 0; p2 < loc.cov.length; p2++) {
+    const c2 = loc.cov[p2];
+    const i = p2 * 4 + 3;
+    const a2 = Math.round(img.data[i] * c2);
+    if (a2 > 0) any = true;
+    img.data[i] = a2;
+  }
+  if (!any) return null;
+  lg.putImageData(img, 0, 0);
+  const w = Math.max(1, Math.round(selBounds.w));
+  const h2 = Math.max(1, Math.round(selBounds.h));
+  const out = document.createElement("canvas");
+  out.width = w;
+  out.height = h2;
+  const og = out.getContext("2d");
+  if (!og) return null;
+  og.imageSmoothingEnabled = true;
+  og.imageSmoothingQuality = "high";
+  const tf = loc.tf;
+  og.translate(-selBounds.x, -selBounds.y);
+  og.translate(tf.x + tf.w / 2, tf.y + tf.h / 2);
+  og.rotate(tf.rotation);
+  og.drawImage(local, -tf.w / 2, -tf.h / 2, tf.w, tf.h);
+  return { canvas: out, bounds: { x: Math.round(selBounds.x), y: Math.round(selBounds.y), w, h: h2 } };
+}
 const DEFAULT_BRUSH$1 = { size: 24, hardness: 0.6, spacing: 0.1, opacity: 1, flow: 1, color: "#ffffff" };
 function emptyDocument(width, height) {
   const root = {
@@ -153929,6 +154072,12 @@ function createEditor(opts) {
   const placedCache = /* @__PURE__ */ new Map();
   let floating = null;
   let floatSession = { mode: "idle" };
+  let clipboard = null;
+  function hexRgb2(hex) {
+    const m = /^#?([0-9a-f]{6})$/i.exec(hex);
+    const v = m ? parseInt(m[1], 16) : 0;
+    return [v >> 16 & 255, v >> 8 & 255, v & 255];
+  }
   function floatingInputs() {
     if (!floating) return [];
     const entry = content.get(floating.contentId);
@@ -154038,6 +154187,27 @@ function createEditor(opts) {
       none: () => {
         commitSelection("Select None", null, null);
       }
+    },
+    floatSelection: () => {
+      var _a2;
+      const sel2 = selectionChannel();
+      const node = activeRaster();
+      const selCanvas = sel2 ? (_a2 = content.get(sel2.contentId)) == null ? void 0 : _a2.canvas : null;
+      if (!(sel2 == null ? void 0 : sel2.bounds) || !node || node.locks.content || !selCanvas) return false;
+      const clip = extractSelectedPixels(node, content, selCanvas, sel2.bounds);
+      if (!clip) return false;
+      history2.beginGroup("Float Selection");
+      clearSelectedPixels({ content, push: (c2) => history2.push(c2) }, node, selCanvas);
+      commitSelection("Select None", null, null);
+      history2.endGroup();
+      floating = {
+        contentId: content.register(clip.canvas),
+        name: "Floating Selection",
+        transform: { x: clip.bounds.x, y: clip.bounds.y, w: clip.bounds.w, h: clip.bounds.h, rotation: 0 }
+      };
+      floatSession = { mode: "idle" };
+      refresh();
+      return true;
     },
     compositePixels: () => {
       render2();
@@ -154377,6 +154547,83 @@ function createEditor(opts) {
       warp = { ...warp, ...opts2 };
       if (isWarpTool(tool)) tool.optionsChanged();
     },
+    clearSelectionPixels() {
+      var _a2;
+      const sel2 = selectionChannel();
+      const node = activeRaster();
+      const selCanvas = sel2 ? (_a2 = content.get(sel2.contentId)) == null ? void 0 : _a2.canvas : null;
+      if (!sel2 || !node || !selCanvas) return false;
+      const ok = clearSelectedPixels({ content, push: (c2) => history2.push(c2) }, node, selCanvas);
+      if (ok) refresh();
+      return ok;
+    },
+    fillSelectionPixels(colorHex) {
+      var _a2;
+      const sel2 = selectionChannel();
+      const node = activeRaster();
+      const selCanvas = sel2 ? (_a2 = content.get(sel2.contentId)) == null ? void 0 : _a2.canvas : null;
+      if (!sel2 || !node || !selCanvas) return false;
+      const ok = fillSelectedPixels({ content, push: (c2) => history2.push(c2) }, node, selCanvas, hexRgb2(colorHex));
+      if (ok) refresh();
+      return ok;
+    },
+    strokeSelectionPixels(colorHex, width) {
+      var _a2;
+      const sel2 = selectionChannel();
+      const node = activeRaster();
+      if (!sel2 || !node) return false;
+      const outlines = selectionOutlines(sel2);
+      const ok = strokeSelectedPixels(
+        { content, push: (c2) => history2.push(c2) },
+        node,
+        ((_a2 = content.get(sel2.contentId)) == null ? void 0 : _a2.canvas) ?? document.createElement("canvas"),
+        hexRgb2(colorHex),
+        Math.max(1, width),
+        outlines
+      );
+      if (ok) refresh();
+      return ok;
+    },
+    copySelection() {
+      var _a2;
+      const sel2 = selectionChannel();
+      const node = activeRaster();
+      const selCanvas = sel2 ? (_a2 = content.get(sel2.contentId)) == null ? void 0 : _a2.canvas : null;
+      if (!(sel2 == null ? void 0 : sel2.bounds) || !node || !selCanvas) return false;
+      const clip = extractSelectedPixels(node, content, selCanvas, sel2.bounds);
+      if (!clip) return false;
+      clipboard = clip;
+      return true;
+    },
+    cutSelection() {
+      var _a2;
+      const sel2 = selectionChannel();
+      const node = activeRaster();
+      const selCanvas = sel2 ? (_a2 = content.get(sel2.contentId)) == null ? void 0 : _a2.canvas : null;
+      if (!(sel2 == null ? void 0 : sel2.bounds) || !node || !selCanvas) return false;
+      const clip = extractSelectedPixels(node, content, selCanvas, sel2.bounds);
+      if (!clip) return false;
+      clipboard = clip;
+      history2.beginGroup("Cut Selection");
+      const ok = clearSelectedPixels({ content, push: (c2) => history2.push(c2) }, node, selCanvas);
+      history2.endGroup();
+      if (ok) refresh();
+      return ok;
+    },
+    pasteClipboard() {
+      if (!clipboard) return false;
+      if (floating) anchorFloatingImpl();
+      const cid = content.register(clipboard.canvas);
+      floating = {
+        contentId: cid,
+        name: "Pasted",
+        transform: { x: clipboard.bounds.x, y: clipboard.bounds.y, w: clipboard.bounds.w, h: clipboard.bounds.h, rotation: 0 }
+      };
+      floatSession = { mode: "idle" };
+      refresh();
+      return true;
+    },
+    hasClipboard: () => clipboard !== null,
     setWandOptions(opts2) {
       wand = { ...wand, ...opts2 };
     },
@@ -155321,6 +155568,16 @@ class SelectTool {
       this.session = { mode: "idle" };
       return;
     }
+    const selMask = this.ctx.selection.currentMask();
+    if (selMask) {
+      const mx = Math.floor(pt2.x);
+      const my = Math.floor(pt2.y);
+      const insideSel = mx >= 0 && my >= 0 && mx < selMask.width && my < selMask.height && selMask.data[my * selMask.width + mx] >= 0.5;
+      if (insideSel && this.ctx.floatSelection()) {
+        this.session = { mode: "idle" };
+        return;
+      }
+    }
     const selected = this.selectedNodes();
     if (selected.some((n) => insideBox(nodeBounds(n), pt2))) {
       this.startMove(selected, pt2);
@@ -156220,21 +156477,23 @@ const _hoisted_17$b = ["disabled"];
 const _hoisted_18$a = { class: "ctv:w-7 ctv:text-right ctv:font-mono" };
 const _hoisted_19$9 = { class: "ctv:w-8 ctv:text-right ctv:font-mono" };
 const _hoisted_20$8 = ["disabled", "onClick"];
-const _hoisted_21$8 = { class: "ctv:whitespace-nowrap ctv:text-[10px] ctv:text-[#9b9b9b]/70" };
+const _hoisted_21$8 = ["disabled"];
 const _hoisted_22$8 = ["disabled"];
-const _hoisted_23$6 = ["disabled"];
-const _hoisted_24$5 = { class: "ctv:whitespace-nowrap ctv:text-[10px] ctv:text-[#9b9b9b]/70" };
-const _hoisted_25$5 = { class: "ctv:flex ctv:h-6 ctv:items-center ctv:gap-0.5 ctv:rounded ctv:bg-[#1e1e1e] ctv:p-0.5" };
-const _hoisted_26$5 = ["aria-pressed", "onClick"];
-const _hoisted_27$5 = ["disabled"];
-const _hoisted_28$5 = ["disabled"];
-const _hoisted_29$4 = ["disabled", "title"];
-const _hoisted_30$4 = ["disabled", "title"];
+const _hoisted_23$6 = { class: "ctv:whitespace-nowrap ctv:text-[10px] ctv:text-[#9b9b9b]/70" };
+const _hoisted_24$5 = ["disabled"];
+const _hoisted_25$5 = ["disabled"];
+const _hoisted_26$5 = { class: "ctv:whitespace-nowrap ctv:text-[10px] ctv:text-[#9b9b9b]/70" };
+const _hoisted_27$5 = { class: "ctv:flex ctv:h-6 ctv:items-center ctv:gap-0.5 ctv:rounded ctv:bg-[#1e1e1e] ctv:p-0.5" };
+const _hoisted_28$5 = ["aria-pressed", "onClick"];
+const _hoisted_29$4 = ["disabled"];
+const _hoisted_30$4 = ["disabled"];
 const _hoisted_31$2 = ["disabled", "title"];
 const _hoisted_32$2 = ["disabled", "title"];
 const _hoisted_33$1 = ["disabled", "title"];
 const _hoisted_34$1 = ["disabled", "title"];
-const _hoisted_35$1 = ["title"];
+const _hoisted_35$1 = ["disabled", "title"];
+const _hoisted_36$1 = ["disabled", "title"];
+const _hoisted_37$1 = ["title"];
 const dividerClass = "ctv:h-5 ctv:w-px ctv:shrink-0 ctv:bg-[#161616]";
 const fieldClass = "ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1 ctv:whitespace-nowrap";
 const colorInputClass$1 = "ctv:size-6 ctv:cursor-pointer ctv:rounded ctv:border ctv:border-[#161616] ctv:bg-transparent ctv:p-0 ctv:disabled:opacity-30";
@@ -156651,36 +156910,60 @@ const _sfc_main$24 = /* @__PURE__ */ defineComponent({
                 onClick: ($event) => unref(editor).modifySelection(mod)
               }, toDisplayString$1(_ctx.$t(`layerEditor.sel_${mod}`)), 9, _hoisted_20$8);
             }), 64)),
-            createBaseVNode("span", _hoisted_21$8, toDisplayString$1(_ctx.$t("layerEditor.selOpsHint")), 1)
+            createBaseVNode("button", {
+              type: "button",
+              class: normalizeClass(actionBtnClass),
+              disabled: !unref(editor).hasSelection(),
+              onClick: _cache2[19] || (_cache2[19] = ($event) => unref(editor).fillSelection())
+            }, toDisplayString$1(_ctx.$t("layerEditor.selFill")), 9, _hoisted_21$8),
+            createBaseVNode("button", {
+              type: "button",
+              class: normalizeClass(actionBtnClass),
+              disabled: !unref(editor).hasSelection(),
+              onClick: _cache2[20] || (_cache2[20] = ($event) => unref(editor).strokeSelection())
+            }, toDisplayString$1(_ctx.$t("layerEditor.selStroke")), 9, _hoisted_22$8),
+            createBaseVNode("label", {
+              class: normalizeClass(fieldClass)
+            }, [
+              createTextVNode(toDisplayString$1(_ctx.$t("layerEditor.brushColor")) + " ", 1),
+              withDirectives(createBaseVNode("input", {
+                "onUpdate:modelValue": _cache2[21] || (_cache2[21] = ($event) => unref(editor).brushColor.value = $event),
+                type: "color",
+                class: normalizeClass(colorInputClass$1)
+              }, null, 512), [
+                [vModelText, unref(editor).brushColor.value]
+              ])
+            ]),
+            createBaseVNode("span", _hoisted_23$6, toDisplayString$1(_ctx.$t("layerEditor.selOpsHint")), 1)
           ], 64)) : createCommentVNode("", true)
         ], 64)) : isTransformTool2.value ? (openBlock(), createElementBlock(Fragment$1, { key: 3 }, [
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(actionBtnClass),
             disabled: !unref(editor).transformDirty.value,
-            onClick: _cache2[19] || (_cache2[19] = ($event) => {
+            onClick: _cache2[22] || (_cache2[22] = ($event) => {
               unref(editor).transformApply();
               unref(editor).tool.value = "select";
             })
           }, [
             createVNode(unref(IconCheck), { class: "ctv:size-3.5" }),
             createTextVNode(" " + toDisplayString$1(_ctx.$t("layerEditor.transformApply")), 1)
-          ], 8, _hoisted_22$8),
+          ], 8, _hoisted_24$5),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(actionBtnClass),
             disabled: !unref(editor).transformDirty.value,
-            onClick: _cache2[20] || (_cache2[20] = ($event) => {
+            onClick: _cache2[23] || (_cache2[23] = ($event) => {
               unref(editor).transformCancel();
               unref(editor).tool.value = "select";
             })
           }, [
             createVNode(unref(IconX), { class: "ctv:size-3.5" }),
             createTextVNode(" " + toDisplayString$1(_ctx.$t("layerEditor.transformCancel")), 1)
-          ], 8, _hoisted_23$6),
-          createBaseVNode("span", _hoisted_24$5, toDisplayString$1(_ctx.$t("layerEditor.transformHint")), 1)
+          ], 8, _hoisted_25$5),
+          createBaseVNode("span", _hoisted_26$5, toDisplayString$1(_ctx.$t("layerEditor.transformHint")), 1)
         ], 64)) : isWarpTool2.value ? (openBlock(), createElementBlock(Fragment$1, { key: 4 }, [
-          createBaseVNode("div", _hoisted_25$5, [
+          createBaseVNode("div", _hoisted_27$5, [
             (openBlock(), createElementBlock(Fragment$1, null, renderList(WARP_GRID_SIZES, (n) => {
               return createBaseVNode("button", {
                 key: n,
@@ -156688,49 +156971,49 @@ const _sfc_main$24 = /* @__PURE__ */ defineComponent({
                 class: normalizeClass(segBtnClass(unref(editor).warpPoints.value === n)),
                 "aria-pressed": unref(editor).warpPoints.value === n,
                 onClick: ($event) => unref(editor).warpPoints.value = n
-              }, toDisplayString$1(n) + "×" + toDisplayString$1(n), 11, _hoisted_26$5);
+              }, toDisplayString$1(n) + "×" + toDisplayString$1(n), 11, _hoisted_28$5);
             }), 64))
           ]),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(actionBtnClass),
             disabled: !unref(editor).warpDirty.value,
-            onClick: _cache2[21] || (_cache2[21] = ($event) => unref(editor).warpApply())
+            onClick: _cache2[24] || (_cache2[24] = ($event) => unref(editor).warpApply())
           }, [
             createVNode(unref(IconCheck), { class: "ctv:size-3.5" }),
             createTextVNode(" " + toDisplayString$1(_ctx.$t("layerEditor.warpApply")), 1)
-          ], 8, _hoisted_27$5),
+          ], 8, _hoisted_29$4),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(actionBtnClass),
             disabled: !unref(editor).warpDirty.value,
-            onClick: _cache2[22] || (_cache2[22] = ($event) => unref(editor).warpCancel())
+            onClick: _cache2[25] || (_cache2[25] = ($event) => unref(editor).warpCancel())
           }, [
             createVNode(unref(IconX), { class: "ctv:size-3.5" }),
             createTextVNode(" " + toDisplayString$1(_ctx.$t("layerEditor.warpCancel")), 1)
-          ], 8, _hoisted_28$5)
+          ], 8, _hoisted_30$4)
         ], 64)) : createCommentVNode("", true),
-        _cache2[30] || (_cache2[30] = createBaseVNode("div", { class: "ctv:flex-1" }, null, -1)),
+        _cache2[33] || (_cache2[33] = createBaseVNode("div", { class: "ctv:flex-1" }, null, -1)),
         createBaseVNode("button", {
           type: "button",
           class: normalizeClass(iconBtnClass),
           disabled: !unref(editor).canUndo.value,
           title: _ctx.$t("layerEditor.undo"),
-          onClick: _cache2[23] || (_cache2[23] = //@ts-ignore
+          onClick: _cache2[26] || (_cache2[26] = //@ts-ignore
           (...args) => unref(editor).undo && unref(editor).undo(...args))
         }, [
           createVNode(unref(IconUndo), { class: "ctv:size-4" })
-        ], 8, _hoisted_29$4),
+        ], 8, _hoisted_31$2),
         createBaseVNode("button", {
           type: "button",
           class: normalizeClass(iconBtnClass),
           disabled: !unref(editor).canRedo.value,
           title: _ctx.$t("layerEditor.redo"),
-          onClick: _cache2[24] || (_cache2[24] = //@ts-ignore
+          onClick: _cache2[27] || (_cache2[27] = //@ts-ignore
           (...args) => unref(editor).redo && unref(editor).redo(...args))
         }, [
           createVNode(unref(IconRedo), { class: "ctv:size-4" })
-        ], 8, _hoisted_30$4),
+        ], 8, _hoisted_32$2),
         createBaseVNode("div", {
           class: normalizeClass(dividerClass)
         }),
@@ -156739,7 +157022,7 @@ const _sfc_main$24 = /* @__PURE__ */ defineComponent({
           class: normalizeClass(actionBtnClass),
           disabled: unref(editor).capturing.value,
           title: _ctx.$t("layerEditor.captureHint"),
-          onClick: _cache2[25] || (_cache2[25] = //@ts-ignore
+          onClick: _cache2[28] || (_cache2[28] = //@ts-ignore
           (...args) => unref(editor).captureBatch && unref(editor).captureBatch(...args))
         }, [
           unref(editor).capturing.value ? (openBlock(), createBlock(unref(IconLoader), {
@@ -156750,13 +157033,13 @@ const _sfc_main$24 = /* @__PURE__ */ defineComponent({
             class: "ctv:size-3.5"
           })),
           createTextVNode(" " + toDisplayString$1(_ctx.$t("layerEditor.capture")), 1)
-        ], 8, _hoisted_31$2),
+        ], 8, _hoisted_33$1),
         createBaseVNode("button", {
           type: "button",
           class: normalizeClass(actionBtnClass),
           disabled: unref(editor).importingPsd.value,
           title: _ctx.$t("layerEditor.importPsdHint"),
-          onClick: _cache2[26] || (_cache2[26] = ($event) => {
+          onClick: _cache2[29] || (_cache2[29] = ($event) => {
             var _a2;
             return (_a2 = psdFileInput.value) == null ? void 0 : _a2.click();
           })
@@ -156769,7 +157052,7 @@ const _sfc_main$24 = /* @__PURE__ */ defineComponent({
             class: "ctv:size-3.5"
           })),
           createTextVNode(" " + toDisplayString$1(_ctx.$t("layerEditor.importPsd")), 1)
-        ], 8, _hoisted_32$2),
+        ], 8, _hoisted_34$1),
         createBaseVNode("input", {
           ref_key: "psdFileInput",
           ref: psdFileInput,
@@ -156783,7 +157066,7 @@ const _sfc_main$24 = /* @__PURE__ */ defineComponent({
           class: normalizeClass(actionBtnClass),
           disabled: unref(editor).exportingPsd.value,
           title: _ctx.$t("layerEditor.exportPsdHint"),
-          onClick: _cache2[27] || (_cache2[27] = //@ts-ignore
+          onClick: _cache2[30] || (_cache2[30] = //@ts-ignore
           (...args) => unref(editor).exportPsd && unref(editor).exportPsd(...args))
         }, [
           unref(editor).exportingPsd.value ? (openBlock(), createBlock(unref(IconLoader), {
@@ -156794,26 +157077,26 @@ const _sfc_main$24 = /* @__PURE__ */ defineComponent({
             class: "ctv:size-3.5"
           })),
           createTextVNode(" " + toDisplayString$1(_ctx.$t("layerEditor.exportPsd")), 1)
-        ], 8, _hoisted_33$1),
+        ], 8, _hoisted_35$1),
         createBaseVNode("button", {
           type: "button",
           class: normalizeClass(iconBtnClass),
           disabled: unref(editor).exportingPsd.value,
           title: _ctx.$t("layerEditor.exportPsdAssetHint"),
-          onClick: _cache2[28] || (_cache2[28] = //@ts-ignore
+          onClick: _cache2[31] || (_cache2[31] = //@ts-ignore
           (...args) => unref(editor).exportPsdToLibrary && unref(editor).exportPsdToLibrary(...args))
         }, [
           createVNode(unref(IconLibrary), { class: "ctv:size-4" })
-        ], 8, _hoisted_34$1),
+        ], 8, _hoisted_36$1),
         createBaseVNode("button", {
           type: "button",
           class: normalizeClass(iconBtnClass),
           title: _ctx.$t("layerEditor.fitView"),
-          onClick: _cache2[29] || (_cache2[29] = //@ts-ignore
+          onClick: _cache2[32] || (_cache2[32] = //@ts-ignore
           (...args) => unref(editor).fitView && unref(editor).fitView(...args))
         }, [
           createVNode(unref(IconScan), { class: "ctv:size-4" })
-        ], 8, _hoisted_35$1),
+        ], 8, _hoisted_37$1),
         renderSlot(_ctx.$slots, "trailing")
       ]);
     };
@@ -159694,9 +159977,25 @@ function useLayerEditorHotkeys(editor, opts) {
       editor.redo();
       return;
     }
+    if (ctrl && e.code === "KeyX") {
+      e.preventDefault();
+      editor.cutSelection();
+      return;
+    }
+    if (ctrl && e.code === "KeyC") {
+      e.preventDefault();
+      editor.copySelection();
+      return;
+    }
+    if (ctrl && e.code === "KeyV") {
+      e.preventDefault();
+      editor.pasteClipboard();
+      return;
+    }
     if ((e.key === "Delete" || e.key === "Backspace") && editor.activeId.value) {
       e.preventDefault();
-      editor.removeLayer(editor.activeId.value);
+      if (editor.hasSelection()) editor.clearSelectionPixels();
+      else editor.removeLayer(editor.activeId.value);
       return;
     }
     const nudge = e.shiftKey ? 10 : 1;
@@ -161860,6 +162159,7 @@ function useLayerEditorStage(node, opts) {
     scheduleFilterPreview();
   }
   function applyFilter() {
+    var _a2;
     const s = filterSession.value;
     if (!s) return;
     const n = engineNode(s.nodeId);
@@ -161873,7 +162173,35 @@ function useLayerEditorStage(node, opts) {
       cancelFilter();
       return;
     }
-    const out = applyImageFilter(s.op, entry.canvas, s.params);
+    let out = applyImageFilter(s.op, entry.canvas, s.params);
+    const doc2 = editor.document();
+    if (doc2.selectionId) {
+      const ch = doc2.channels.find((c2) => c2.id === doc2.selectionId && c2.enabled);
+      const selCanvas = ch ? (_a2 = content.get(ch.contentId)) == null ? void 0 : _a2.canvas : null;
+      if (selCanvas) {
+        const w = out.width;
+        const h2 = out.height;
+        const tf = r.transform.w > 0 && r.transform.h > 0 ? r.transform : { x: 0, y: 0, w, h: h2, rotation: 0 };
+        const cov = rasterizeSelectionToLocal(selCanvas, tf, w, h2);
+        if (cov) {
+          const mixed = newCanvas(w, h2);
+          const mg = mixed.getContext("2d");
+          mg.drawImage(entry.canvas, 0, 0, w, h2);
+          const base2 = mg.getImageData(0, 0, w, h2);
+          const fg2 = out.getContext("2d").getImageData(0, 0, w, h2);
+          for (let p2 = 0; p2 < cov.length; p2++) {
+            const c2 = cov[p2];
+            if (c2 <= 0) continue;
+            const i = p2 * 4;
+            for (let k2 = 0; k2 < 4; k2++) {
+              base2.data[i + k2] = Math.round(base2.data[i + k2] * (1 - c2) + fg2.data[i + k2] * c2);
+            }
+          }
+          mg.putImageData(base2, 0, 0);
+          out = mixed;
+        }
+      }
+    }
     const beforeId = r.contentId;
     const beforeUrl = r.url;
     const afterId = content.register(out);
@@ -162140,6 +162468,24 @@ function useLayerEditorStage(node, opts) {
     selectionRadius,
     modifySelection: (kind) => {
       editor.modifySelection(kind, selectionRadius.value);
+    },
+    clearSelectionPixels: () => {
+      editor.clearSelectionPixels();
+    },
+    fillSelection: () => {
+      editor.fillSelectionPixels(brushColor.value);
+    },
+    strokeSelection: () => {
+      editor.strokeSelectionPixels(brushColor.value, Math.max(1, shapeStrokeWidth.value));
+    },
+    cutSelection: () => {
+      editor.cutSelection();
+    },
+    copySelection: () => {
+      editor.copySelection();
+    },
+    pasteClipboard: () => {
+      editor.pasteClipboard();
     },
     addAdjustmentLayer,
     updateAdjustment,
@@ -192195,4 +192541,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-DmEh3qJN.mjs.map
+//# sourceMappingURL=main-B1CtynHR.mjs.map
