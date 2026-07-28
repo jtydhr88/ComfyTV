@@ -78,7 +78,7 @@
           <button
             type="button"
             :class="toggleBtnClass"
-            :title="$t(fullscreen ? 'layerEditor.exitFullscreen' : 'layerEditor.fullscreen')"
+            :title="$t(fullscreen ? 'pictor.exitFullscreen' : 'pictor.fullscreen')"
             @click="toggleFullscreen"
           >
             <IconMinimize v-if="fullscreen" class="ctv:size-4" />
@@ -211,15 +211,18 @@ import IconMinimize from '~icons/lucide/minimize-2'
 import type { LGraphNode } from '@/lib/comfyApp'
 import { app } from '@/lib/comfyApp'
 import { t } from '@/i18n'
+import {
+  LayerEditorCanvas,
+  LayerEditorToolBar,
+  LayerEditorToolStrip,
+  LayerListPanel,
+  TextEditPopup,
+  useLayerEditorHotkeys,
+} from '@jtydhr88/pictor'
+
 import StageCard from '@/components/stages/StageCard.vue'
-import LayerEditorCanvas from '@/components/widgets/LayerEditorCanvas.vue'
-import LayerEditorToolBar from '@/components/widgets/LayerEditorToolBar.vue'
-import LayerEditorToolStrip from '@/components/widgets/LayerEditorToolStrip.vue'
-import LayerListPanel from '@/components/widgets/LayerListPanel.vue'
 import StoryboardBoardPanel from '@/components/widgets/StoryboardBoardPanel.vue'
 import StoryboardTimelineStrip from '@/components/widgets/StoryboardTimelineStrip.vue'
-import TextEditPopup from '@/components/widgets/TextEditPopup.vue'
-import { useLayerEditorHotkeys } from '@/composables/widgets/useLayerEditorHotkeys'
 import { useStoryboardEditor } from '@/composables/widgets/useStoryboardEditor'
 import { useStoryboardHotkeys } from '@/composables/widgets/useStoryboardHotkeys'
 import { useStageStore, type StageState } from '@/stores/stageStore'

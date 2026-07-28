@@ -3,24 +3,26 @@ import '@/style.css'
 
 import { createApp, defineComponent, h } from 'vue'
 
-import LayerEditorCanvas from '@/components/widgets/LayerEditorCanvas.vue'
-import LayerEditorToolBar from '@/components/widgets/LayerEditorToolBar.vue'
-import LayerEditorToolStrip from '@/components/widgets/LayerEditorToolStrip.vue'
-import LayerListPanel from '@/components/widgets/LayerListPanel.vue'
-import { useLayerEditorStage, type LayerEditorController } from '@/composables/widgets/useLayerEditorStage'
+import {
+  LayerEditorCanvas,
+  LayerEditorToolBar,
+  LayerEditorToolStrip,
+  LayerListPanel,
+  useLayerEditorStage,
+  type LayerEditorController,
+} from '@jtydhr88/pictor'
 import { i18n } from '@/i18n'
 
-function makeNode(): any {
+function memoryStorage() {
+  let state = '{}'
+  let captured = ''
   return {
-    id: 1,
-    widgets: [
-      { name: 'layer_state', value: '{}', callback: undefined },
-      { name: 'width', value: 1024, callback: undefined },
-      { name: 'height', value: 1024, callback: undefined },
-      { name: 'captured_image', value: '', callback: undefined },
-      { name: 'captured_images', value: '', callback: undefined },
-    ],
-    onConfigure: undefined,
+    subfolder: 'pictor-harness',
+    readState: () => state,
+    writeState: (json: string) => { state = json },
+    readCapturedImage: () => captured,
+    beginCapture: () => (url: string, stale: boolean) => { if (!stale) captured = url },
+    commitBatch: () => {},
   }
 }
 
@@ -111,7 +113,7 @@ async function buildDemo(editor: LayerEditorController): Promise<void> {
 
 const Root = defineComponent({
   setup() {
-    const editor = useLayerEditorStage(makeNode())
+    const editor = useLayerEditorStage({ storage: memoryStorage(), instanceId: 'harness' })
     ;(window as unknown as { editorCtl: LayerEditorController }).editorCtl = editor
     void (async () => {
       await nextFrame()

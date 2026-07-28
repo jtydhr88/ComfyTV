@@ -16,8 +16,15 @@
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
-    "paths": { "@/*": ["src/*"] }
+    "paths": {
+      "@jtydhr88/pictor": ["packages/pictor/src/index.ts"],
+      "@jtydhr88/pictor/*": ["packages/pictor/src/*"],
+      "@/*": ["src/*"]
+    }
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "include": [
+    "src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue",
+    "packages/*/src/**/*.ts", "packages/*/src/**/*.vue"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

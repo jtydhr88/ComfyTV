@@ -24,9 +24,13 @@ import {
   type RGBA,
   type SceneNode,
   type VectorData,
-} from '@/widgets/layerEditor/engine'
-import { buildPsdFromEditor } from '@/widgets/layerEditor/psdExport'
-import { bufferedContentRegistry, decodePngBytes, psdToNodes } from '@/widgets/layerEditor/psdImport'
+} from '@jtydhr88/pictor'
+import {
+  buildPsdFromEditor,
+  bufferedContentRegistry,
+  decodePngBytes,
+  psdToNodes,
+} from '@jtydhr88/pictor'
 import { uploadBlob } from '@/utils/uploadCanvas'
 
 const W = 64

@@ -27,8 +27,9 @@ import { uploadBlob } from '@/utils/uploadCanvas'
 import {
   useLayerEditorStage,
   type LayerEditorStorage,
-  type UseLayerEditorStageOptions,
-} from '@/composables/widgets/useLayerEditorStage'
+} from '@jtydhr88/pictor'
+
+import { pictorHost } from '@/lib/pictorHost'
 
 const STATE_WIDGET = 'board_state'
 const WIDTH_WIDGET = 'width'
@@ -159,8 +160,7 @@ export function useStoryboardEditor(node: LGraphNode, state: StageState, opts?: 
     commitBatch: () => {},
   }
 
-  const editorOpts: UseLayerEditorStageOptions = { storage }
-  const editor = useLayerEditorStage(node, editorOpts)
+  const editor = useLayerEditorStage({ storage, instanceId: node.id, host: pictorHost })
 
   function seedReference(): void {
     const b = currentBoard.value

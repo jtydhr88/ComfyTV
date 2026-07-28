@@ -6,20 +6,25 @@ import { resolve } from 'path'
 export default defineConfig({
   plugins: [vue(), Icons({ compiler: 'vue3', autoInstall: false })],
   resolve: {
-    alias: { '@': resolve(__dirname, './src') }
+    alias: {
+      '@jtydhr88/pictor': resolve(__dirname, './packages/pictor/src'),
+      '@': resolve(__dirname, './src')
+    }
   },
   test: {
     environment: 'happy-dom',
     globals: true,
-    include: ['src/**/*.test.ts', 'src/**/*.spec.ts'],
+    include: ['src/**/*.test.ts', 'src/**/*.spec.ts', 'packages/*/src/**/*.test.ts'],
     setupFiles: ['./src/__tests__/setup.ts'],
     retry: process.env.CI ? 2 : 0,
     silent: 'passed-only',
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html'],
-      include: ['src/**/*.ts', 'src/**/*.vue'],
+      include: ['src/**/*.ts', 'src/**/*.vue', 'packages/*/src/**/*.ts'],
       exclude: [
+        'packages/*/src/**/*.vue',
+        'packages/pictor/src/vendor/**',
         'src/widgets/three/**',
         'src/widgets/glsl/**',
         'src/composables/widgets/useLightBall.ts',

@@ -1,4 +1,4 @@
-import { isTextEditingTarget } from '@/composables/widgets/useLayerEditorHotkeys'
+import { isTextEditingTarget } from '@jtydhr88/pictor'
 import type { StoryboardEditorController } from '@/composables/widgets/useStoryboardEditor'
 
 /**

@@ -1,5 +1,7 @@
 import { createI18n } from 'vue-i18n'
 
+import { messages as pictorMessages } from '@jtydhr88/pictor/locales'
+
 import { app } from '@/lib/comfyApp'
 
 import en from '../locales/en/main.json'
@@ -24,7 +26,10 @@ export const i18n = createI18n({
   legacy: false,
   locale: pickLocale(),
   fallbackLocale: 'en',
-  messages: { en, zh },
+  messages: {
+    en: { ...en, ...pictorMessages.en },
+    zh: { ...zh, ...pictorMessages.zh },
+  },
   missingWarn: false,
   fallbackWarn: false,
 })

@@ -28,7 +28,10 @@ export default defineConfig({
     copyNodeDocs()
   ],
   resolve: {
-    alias: { '@': resolve(__dirname, './src') }
+    alias: {
+      '@jtydhr88/pictor': resolve(__dirname, './packages/pictor/src'),
+      '@': resolve(__dirname, './src')
+    }
   },
   build: {
     lib: {

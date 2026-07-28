@@ -17,7 +17,7 @@
           <button
             type="button"
             :class="iconToolBtnClass"
-            :title="$t(fullscreen ? 'layerEditor.exitFullscreen' : 'layerEditor.fullscreen')"
+            :title="$t(fullscreen ? 'pictor.exitFullscreen' : 'pictor.fullscreen')"
             @click="toggleFullscreen"
           >
             <IconMinimize v-if="fullscreen" class="ctv:size-4" />
@@ -56,15 +56,18 @@ import { nextTick, ref } from 'vue'
 import IconMaximize from '~icons/lucide/maximize-2'
 import IconMinimize from '~icons/lucide/minimize-2'
 
+import {
+  LayerEditorCanvas,
+  LayerEditorToolBar,
+  LayerEditorToolStrip,
+  LayerListPanel,
+  TextEditPopup,
+  useLayerEditorHotkeys,
+} from '@jtydhr88/pictor'
+
 import type { LGraphNode } from '@/lib/comfyApp'
 import StageCard from '@/components/stages/StageCard.vue'
-import LayerEditorCanvas from '@/components/widgets/LayerEditorCanvas.vue'
-import LayerEditorToolBar from '@/components/widgets/LayerEditorToolBar.vue'
-import LayerEditorToolStrip from '@/components/widgets/LayerEditorToolStrip.vue'
-import LayerListPanel from '@/components/widgets/LayerListPanel.vue'
-import TextEditPopup from '@/components/widgets/TextEditPopup.vue'
-import { useLayerEditorHotkeys } from '@/composables/widgets/useLayerEditorHotkeys'
-import { useLayerEditorStage } from '@/composables/widgets/useLayerEditorStage'
+import { useNodePictorEditor } from '@/lib/pictorHost'
 import { useStageStore, type StageState } from '@/stores/stageStore'
 import { onNodeConfigure, readWidgetStr } from '@/utils/widget'
 
@@ -82,7 +85,7 @@ const stageStore = useStageStore()
 const canvasEl = ref<InstanceType<typeof LayerEditorCanvas> | null>(null)
 const fullscreen = ref(false)
 
-const editor = useLayerEditorStage(props.node, {
+const editor = useNodePictorEditor(props.node, {
   onCaptured: (url) => stageStore.setOutputSlot(stageState, 0, url),
   onBatchCaptured: (json) => stageStore.setOutputSlot(stageState, 1, json),
 })

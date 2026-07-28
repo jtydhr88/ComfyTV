@@ -13,6 +13,7 @@ export default defineConfig({
       '@/lib/comfyApp': fileURLToPath(new URL('./e2e/harness/stubs/comfyApp.ts', import.meta.url)),
       '@/utils/uploadCanvas': fileURLToPath(new URL('./e2e/harness/stubs/uploadCanvas.ts', import.meta.url)),
       '@/components/stages/StageCard.vue': fileURLToPath(new URL('./e2e/harness/stubs/StageCardStub.vue', import.meta.url)),
+      '@jtydhr88/pictor': fileURLToPath(new URL('./packages/pictor/src', import.meta.url)),
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
