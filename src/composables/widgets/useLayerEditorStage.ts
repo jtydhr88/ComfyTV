@@ -13,6 +13,7 @@ import { measureText, type TextStyle } from '@/widgets/layerEditor/textRender'
 import type { LayerRow, ToolHandler, ToolId } from '@/widgets/layerEditor/types'
 import {
   adjustmentKind,
+  canTransformNode,
   clonePath,
   cloneFillSpec,
   defaultParams,
@@ -26,6 +27,7 @@ import {
   createEditor,
   createWebGLCompositor,
   defaultMode,
+  filterTopmost,
   findNode,
   generateId,
   getNodeKind,
@@ -263,7 +265,11 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     void version.value
     return editor.floating()
   })
-  const selectedIds = computed(() => new Set(activeId.value ? [activeId.value] : []))
+  const selectedIdList = computed(() => {
+    void version.value
+    return editor.selectedNodeIds()
+  })
+  const selectedIds = computed(() => new Set(selectedIdList.value))
   const canUndo = computed(() => version.value >= 0 && editor.history.canUndo())
   const canRedo = computed(() => version.value >= 0 && editor.history.canRedo())
 
@@ -689,38 +695,67 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
   function setActiveLayer(id: string | null): void {
     editor.setActiveNode(id)
   }
+  function setSelectedLayers(ids: string[]): void {
+    editor.setSelectedNodes(ids)
+  }
   function undo(): void { editor.undo() }
   function redo(): void { editor.redo() }
 
+  function selectionTargets(id: string): string[] {
+    const sel = editor.selectedNodeIds()
+    return sel.length > 1 && sel.includes(id) ? sel : [id]
+  }
+  function batch(label: string, ids: string[], apply: (id: string) => void): void {
+    if (ids.length > 1) editor.history.beginGroup(label)
+    for (const tid of ids) apply(tid)
+    if (ids.length > 1) editor.history.endGroup()
+  }
+
   function setOpacity(id: string, v: number): void {
-    const n = engineNode(id); if (!n) return
-    editProp('Opacity', Dirty.META, () => n.opacity, (x) => (n.opacity = x), clamp01(v), `opacity:${id}`)
+    batch('Opacity', selectionTargets(id), (tid) => {
+      const n = engineNode(tid); if (!n) return
+      editProp('Opacity', Dirty.META, () => n.opacity, (x) => (n.opacity = x), clamp01(v), `opacity:${tid}`)
+    })
   }
   function setBlendMode(id: string, v: BlendFn): void {
-    const n = engineNode(id); if (!n) return
-    editProp('Blend', Dirty.DRAWABLE, () => n.mode, (m) => (n.mode = m), defaultMode(v in LAYER_MODES ? v : 'normal'), `blend:${id}`)
+    batch('Blend', selectionTargets(id), (tid) => {
+      const n = engineNode(tid); if (!n) return
+      editProp('Blend', Dirty.DRAWABLE, () => n.mode, (m) => (n.mode = m), defaultMode(v in LAYER_MODES ? v : 'normal'), `blend:${tid}`)
+    })
   }
   function toggleVisible(id: string): void {
     const n = engineNode(id); if (!n) return
     editProp('Visibility', Dirty.META, () => n.visible, (x) => (n.visible = x), !n.visible)
   }
   function toggleLock(id: string): void {
-    const n = engineNode(id); if (!n) return
-    editProp('Lock', Dirty.META, () => n.locks.content, (x) => (n.locks.content = x), !n.locks.content)
+    const base = engineNode(id); if (!base) return
+    const target = !base.locks.content
+    batch('Lock', selectionTargets(id), (tid) => {
+      const n = engineNode(tid); if (!n) return
+      editProp('Lock', Dirty.META, () => n.locks.content, (x) => (n.locks.content = x), target)
+    })
   }
   function toggleLockPosition(id: string): void {
-    const n = engineNode(id); if (!n) return
-    editProp('Lock Position', Dirty.META, () => n.locks.position, (x) => (n.locks.position = x), !n.locks.position)
+    const base = engineNode(id); if (!base) return
+    const target = !base.locks.position
+    batch('Lock Position', selectionTargets(id), (tid) => {
+      const n = engineNode(tid); if (!n) return
+      editProp('Lock Position', Dirty.META, () => n.locks.position, (x) => (n.locks.position = x), target)
+    })
   }
   function toggleLockAll(id: string): void {
-    const n = engineNode(id); if (!n) return
-    const target = !(n.locks.content && n.locks.position)
-    editProp(
-      'Lock All', Dirty.META,
-      () => ({ content: n.locks.content, position: n.locks.position }),
-      (v) => { n.locks.content = v.content; n.locks.position = v.position },
-      { content: target, position: target }
-    )
+    const base = engineNode(id); if (!base) return
+    const target = !(base.locks.content && base.locks.position)
+    batch('Lock All', selectionTargets(id), (tid) => {
+      const n = engineNode(tid); if (!n) return
+      if (n.locks.content === target && n.locks.position === target) return
+      editProp(
+        'Lock All', Dirty.META,
+        () => ({ content: n.locks.content, position: n.locks.position }),
+        (v) => { n.locks.content = v.content; n.locks.position = v.position },
+        { content: target, position: target }
+      )
+    })
   }
   function renameLayer(id: string, name: string): void {
     const n = engineNode(id); if (!n) return
@@ -731,18 +766,19 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     editor.moveNode(id, dir)
   }
   function removeLayer(id: string): void {
-    const n = engineNode(id)
-    if (n && n.locks.content && n.locks.position) return
-    editor.setActiveNode(id)
-    editor.removeActive()
+    const targets = selectionTargets(id).filter((tid) => {
+      const n = engineNode(tid)
+      return n && !(n.locks.content && n.locks.position)
+    })
+    if (targets.length) editor.removeNodes(targets)
   }
   function regenIds(n: SceneNode): void {
     n.id = generateId(n.kind)
     if (n.kind === 'group') for (const c of (n as GroupData).children) regenIds(c)
   }
-  function duplicateLayer(id: string): void {
+  function duplicateOne(id: string): string | null {
     const loc = findNode(editor.document().root, id)
-    if (!loc) return
+    if (!loc) return null
     const kind = getNodeKind(loc.node.kind)
     const copy = kind.normalize(kind.serialize(loc.node)) as SceneNode
     regenIds(copy)
@@ -754,6 +790,16 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
       copy.transform = { ...copy.transform, x: copy.transform.x + 16, y: copy.transform.y + 16 }
     }
     editor.addNode(copy, loc.index + 1, loc.parent.id)
+    return copy.id
+  }
+  function duplicateLayer(id: string): void {
+    const targets = filterTopmost(editor.document().root, selectionTargets(id))
+    const copies: string[] = []
+    batch('Duplicate Layers', targets, (tid) => {
+      const cid = duplicateOne(tid)
+      if (cid) copies.push(cid)
+    })
+    if (copies.length > 1) editor.setSelectedNodes(copies)
   }
   function groupActiveLayer(): void {
     editor.groupActive()
@@ -835,10 +881,14 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     editor.layerToCanvasSize(id)
   }
   function toggleLockAlpha(id: string): void {
-    const n = engineNode(id)
-    if (!n || n.kind !== 'raster') return
-    const r = n as RasterData
-    editProp('Lock Alpha', Dirty.META, () => r.lockAlpha === true, (v) => (r.lockAlpha = v), !(r.lockAlpha === true))
+    const base = engineNode(id)
+    if (!base || base.kind !== 'raster') return
+    const target = !((base as RasterData).lockAlpha === true)
+    const targets = selectionTargets(id).filter((tid) => engineNode(tid)?.kind === 'raster')
+    batch('Lock Alpha', targets, (tid) => {
+      const r = engineNode(tid) as RasterData
+      editProp('Lock Alpha', Dirty.META, () => r.lockAlpha === true, (v) => (r.lockAlpha = v), target)
+    })
   }
   function addAdjustmentLayer(op: AdjustmentOp = 'brightness-contrast'): void {
     editor.addNode(adjustmentKind.create({ op, params: defaultParams(op) }))
@@ -951,6 +1001,13 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
   }
   function nudgeActive(dx: number, dy: number): void {
     const id = activeId.value; if (!id) return
+    const targets = filterTopmost(editor.document().root, selectionTargets(id)).filter((tid) => {
+      const n = engineNode(tid)
+      return n && !n.locks.position
+    })
+    batch('Move', targets, (tid) => nudgeOne(tid, dx, dy))
+  }
+  function nudgeOne(id: string, dx: number, dy: number): void {
     const n = engineNode(id); if (!n || n.locks.position) return
     if (n.kind === 'vector') {
       const v = n as VectorData
@@ -1041,6 +1098,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     return c
   }
   function addMask(id: string, init: MaskInit = 'white'): void {
+    if (editor.selectedNodeIds().length > 1) return
     const n = engineNode(id); if (!n || n.mask) return
     const d = editor.document()
     const docSized = n.kind === 'adjustment' || n.kind === 'fill' || n.kind === 'group'
@@ -1293,7 +1351,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
   })
 
   return {
-    layers, canvasSize, activeId, activeNode, selectedIds,
+    layers, canvasSize, activeId, activeNode, selectedIds, selectedIdList,
     tool, brushSize, brushOpacity, brushHardness, brushColor, paintTarget,
     shapeKind, shapeFillEnabled, shapeFillColor, shapeStrokeEnabled, shapeStrokeColor, shapeStrokeWidth, shapeCombine,
     shapeSides, shapeStarRatio, shapeTurns,
@@ -1305,7 +1363,7 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     addImageFromUrl, addImageFromFile, addTextLayerAt,
     removeLayer, moveLayer, moveLayerRelative, duplicateLayer,
     groupActiveLayer, ungroupActiveLayer,
-    setActiveLayer, setOpacity, setBlendMode, toggleVisible, toggleLock, renameLayer,
+    setActiveLayer, setSelectedLayers, setOpacity, setBlendMode, toggleVisible, toggleLock, renameLayer,
     addMask, removeMask, toggleMaskEnabled, invertMask, applyMask, maskToSelection, maskView,
     hasSelection: () => editor.selectionBounds() != null,
     warpPoints,
@@ -1315,6 +1373,16 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     }),
     warpApply: () => { editor.warpApply() },
     warpCancel: () => { editor.warpCancel() },
+    transformDirty: computed(() => {
+      void version.value
+      return editor.transformDirty()
+    }),
+    transformApply: () => { editor.transformApply() },
+    transformCancel: () => { editor.transformCancel() },
+    canTransformActive: () => canTransformNode(activeNode.value),
+    startTransform: () => {
+      if (canTransformNode(activeNode.value)) tool.value = 'transform'
+    },
     filterSession, startFilter, updateFilterParam, applyFilter, cancelFilter,
     updateTextLayer,
     setArtboardSize, nudgeActive,

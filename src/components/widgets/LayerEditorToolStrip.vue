@@ -22,6 +22,7 @@ import IconBrush from '~icons/lucide/brush'
 import IconEraser from '~icons/lucide/eraser'
 import IconGrid from '~icons/lucide/grid-3x3'
 import IconMousePointer from '~icons/lucide/mouse-pointer-2'
+import IconScaling from '~icons/lucide/scaling'
 import IconShapes from '~icons/lucide/shapes'
 import IconSquareDashed from '~icons/lucide/square-dashed'
 import IconType from '~icons/lucide/type'
@@ -37,6 +38,7 @@ const editor = props.editor
 
 const TOOL_OPTIONS: Array<{ id: ToolId; labelKey: string; icon: unknown }> = [
   { id: 'select', labelKey: 'layerEditor.toolSelect', icon: IconMousePointer },
+  { id: 'transform', labelKey: 'layerEditor.toolTransform', icon: IconScaling },
   { id: 'marquee', labelKey: 'layerEditor.toolMarquee', icon: IconSquareDashed },
   { id: 'brush', labelKey: 'layerEditor.toolBrush', icon: IconBrush },
   { id: 'eraser', labelKey: 'layerEditor.toolEraser', icon: IconEraser },

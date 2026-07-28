@@ -61,6 +61,8 @@ export interface ToolContext {
   overlay: Overlay
   activeNodeId(): string | null
   setActiveNode(id: string | null): void
+  selectedNodeIds(): string[]
+  setSelectedNodes(ids: string[]): void
   createPaintCore(id: string): PaintCore
 
   setPaintPreview(key: string, canvas: HTMLCanvasElement | null): void

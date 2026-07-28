@@ -44,6 +44,18 @@ export function parentOf(root: GroupData, id: string): GroupData | null {
   return findNode(root, id)?.parent ?? null
 }
 
+export function filterTopmost(root: GroupData, ids: Iterable<string>): string[] {
+  const want = new Set(ids)
+  const out: string[] = []
+  walk(root, (node) => {
+    if (want.has(node.id)) {
+      out.push(node.id)
+      return false
+    }
+  })
+  return out
+}
+
 export function flattenTree(root: GroupData): SceneNode[] {
   const out: SceneNode[] = []
   walk(root, (n) => {

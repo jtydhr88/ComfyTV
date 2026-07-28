@@ -130,6 +130,97 @@ describe('createEditor — end-to-end orchestration', () => {
     expect(editor.document().root.children).toHaveLength(1)
   })
 
+  it('multi-select: selection set is the truth, active derives from its tail', () => {
+    const editor = setup()
+    const a = rasterKind.create({ name: 'a' })
+    const b = rasterKind.create({ name: 'b' })
+    editor.addNode(a)
+    editor.addNode(b)
+    editor.setSelectedNodes([a.id, b.id])
+    expect(editor.selectedNodeIds()).toEqual([a.id, b.id])
+    expect(editor.activeNodeId()).toBe(b.id)
+    editor.setActiveNode(a.id)
+    expect(editor.selectedNodeIds()).toEqual([a.id])
+  })
+
+  it('multi-select survives undo/redo of structural changes (stale ids filtered on read)', () => {
+    const editor = setup()
+    const a = rasterKind.create({ name: 'a' })
+    editor.addNode(a)
+    editor.undo()
+    expect(editor.selectedNodeIds()).toEqual([])
+    expect(editor.activeNodeId()).toBeNull()
+    editor.redo()
+    expect(editor.selectedNodeIds()).toEqual([a.id])
+  })
+
+  it('removeNodes deletes the whole selection as one undo step', () => {
+    const editor = setup()
+    const a = rasterKind.create({ name: 'a' })
+    const b = rasterKind.create({ name: 'b' })
+    const c = rasterKind.create({ name: 'c' })
+    editor.addNode(a)
+    editor.addNode(b)
+    editor.addNode(c)
+    expect(editor.removeNodes([a.id, c.id])).toBe(true)
+    expect(editor.document().root.children.map((n) => n.id)).toEqual([b.id])
+    editor.undo()
+    expect(editor.document().root.children.map((n) => n.id)).toEqual([a.id, b.id, c.id])
+  })
+
+  it('removeNodes skips descendants of a selected group (topmost filter)', () => {
+    const editor = setup()
+    const a = rasterKind.create({ name: 'a' })
+    editor.addNode(a)
+    editor.setSelectedNodes([a.id])
+    editor.groupActive()
+    const group = editor.document().root.children[0]
+    expect(editor.removeNodes([group.id, a.id])).toBe(true)
+    expect(editor.document().root.children).toHaveLength(0)
+    editor.undo()
+    expect(editor.document().root.children.map((n) => n.id)).toEqual([group.id])
+  })
+
+  it('groupActive wraps a multi-selection at the topmost original index', () => {
+    const editor = setup()
+    const a = rasterKind.create({ name: 'a' })
+    const b = rasterKind.create({ name: 'b' })
+    const c = rasterKind.create({ name: 'c' })
+    editor.addNode(a)
+    editor.addNode(b)
+    editor.addNode(c)
+    editor.setSelectedNodes([a.id, c.id])
+    expect(editor.groupActive()).toBe(true)
+    const children = editor.document().root.children
+    expect(children).toHaveLength(2)
+    expect(children[0].kind).toBe('group')
+    expect((children[0] as import('../node').GroupData).children.map((n) => n.id)).toEqual([a.id, c.id])
+    expect(children[1].id).toBe(b.id)
+    expect(editor.activeNodeId()).toBe(children[0].id)
+    editor.undo()
+    expect(editor.document().root.children.map((n) => n.id)).toEqual([a.id, b.id, c.id])
+  })
+
+  it('select tool drags every selected layer and undoes as one step', () => {
+    const editor = setup()
+    const a = rasterKind.create({ transform: { x: 0, y: 0, w: 100, h: 100, rotation: 0 } })
+    const b = rasterKind.create({ transform: { x: 200, y: 0, w: 100, h: 100, rotation: 0 } })
+    editor.addNode(a)
+    editor.addNode(b)
+    editor.setTool('select')
+    editor.setSelectedNodes([a.id, b.id])
+
+    editor.pointerDown(ev, { x: 50, y: 50 })
+    editor.pointerMove(ev, { x: 70, y: 60 })
+    editor.pointerUp(ev, { x: 70, y: 60 })
+    expect(a.transform).toMatchObject({ x: 20, y: 10 })
+    expect(b.transform).toMatchObject({ x: 220, y: 10 })
+
+    editor.undo()
+    expect(a.transform).toMatchObject({ x: 0, y: 0 })
+    expect(b.transform).toMatchObject({ x: 200, y: 0 })
+  })
+
   it('flipImage mirrors transforms, swaps raster content, and undoes as one step', () => {
     const restore = stub2d()
     try {

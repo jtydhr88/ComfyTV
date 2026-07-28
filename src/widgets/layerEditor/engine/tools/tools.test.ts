@@ -5,6 +5,7 @@ import type { Document } from '../document'
 import { History } from '../history'
 import { DefaultContentStore } from '../impl/contentStore'
 import { registerBuiltinKinds } from '../kinds'
+import { groupKind } from '../kinds/group'
 import { rasterKind } from '../kinds/raster'
 import type { GroupData, RasterData } from '../node'
 import type { PaintCore } from '../paint'
@@ -12,6 +13,7 @@ import { defaultMode } from '../mode'
 import type { Overlay, ToolContext } from '../tool'
 import { makePaintToolDef } from './paintTool'
 import { makeSelectToolDef } from './selectTool'
+import { makeTransformToolDef } from './transformTool'
 
 beforeAll(() => registerBuiltinKinds())
 
@@ -48,7 +50,7 @@ interface Harness {
 function harness(doc: Document, content: DefaultContentStore, createPaintCore: () => PaintCore): Harness {
   const history = new History()
   const overlay: Overlay = { clear: vi.fn(), add: vi.fn(), pause: vi.fn(), resume: vi.fn(), hitHandle: () => null }
-  const state = { active: null as string | null }
+  const state = { selected: [] as string[] }
   const previews = new Map<string, HTMLCanvasElement>()
   const ctx: ToolContext = {
     document: () => doc,
@@ -56,8 +58,10 @@ function harness(doc: Document, content: DefaultContentStore, createPaintCore: (
     compositor: {} as Compositor,
     content,
     overlay,
-    activeNodeId: () => state.active,
-    setActiveNode: (id) => (state.active = id),
+    activeNodeId: () => (state.selected.length ? state.selected[state.selected.length - 1] : null),
+    setActiveNode: (id) => (state.selected = id ? [id] : []),
+    selectedNodeIds: () => [...state.selected],
+    setSelectedNodes: (ids) => (state.selected = [...ids]),
     createPaintCore: () => createPaintCore(),
     setPaintPreview: (key, canvas) => {
       if (canvas) previews.set(key, canvas)
@@ -117,7 +121,7 @@ describe('PaintTool — tool ⟂ core seam', () => {
   })
 })
 
-describe('SelectTool — move / resize commit one undo step', () => {
+describe('SelectTool — pure select + move, no handles', () => {
   function setup() {
     const content = new DefaultContentStore()
     const raster = rasterKind.create({ transform: { x: 0, y: 0, w: 100, h: 100, rotation: 0 } })
@@ -138,18 +142,113 @@ describe('SelectTool — move / resize commit one undo step', () => {
     expect(raster.transform).toMatchObject({ x: 0, y: 0 })
   })
 
-  it('resizes when a handle is grabbed', () => {
+  it('never resizes: dragging on the box corner just moves', () => {
     const { raster, tool } = setup()
     tool.onButtonPress(ev, { x: 100, y: 100 })
     tool.onMotion(ev, { x: 200, y: 150 })
     tool.onButtonRelease(ev, { x: 200, y: 150 })
-    expect(raster.transform).toMatchObject({ x: 0, y: 0, w: 200, h: 150 })
+    expect(raster.transform).toMatchObject({ x: 100, y: 50, w: 100, h: 100 })
   })
 
   it('does not record a command when nothing moved', () => {
     const { h, tool } = setup()
     tool.onButtonPress(ev, { x: 50, y: 50 })
     tool.onButtonRelease(ev, { x: 50, y: 50 })
+    expect(h.history.canUndo()).toBe(false)
+  })
+
+  it('moving a group translates all its children', () => {
+    const content = new DefaultContentStore()
+    const a = rasterKind.create({ transform: { x: 0, y: 0, w: 50, h: 50, rotation: 0 } })
+    const b = rasterKind.create({ transform: { x: 60, y: 0, w: 50, h: 50, rotation: 0 } })
+    const group = groupKind.create({ children: [a, b] })
+    const doc: Document = { version: 2, width: 200, height: 200, root: root([group as unknown as RasterData]), channels: [] }
+    const h = harness(doc, content, () => ({}) as PaintCore)
+    h.ctx.setActiveNode(group.id)
+    const tool = makeSelectToolDef().create(h.ctx)
+
+    tool.onButtonPress(ev, { x: 55, y: 25 })
+    tool.onMotion(ev, { x: 75, y: 35 })
+    tool.onButtonRelease(ev, { x: 75, y: 35 })
+    expect(a.transform).toMatchObject({ x: 20, y: 10 })
+    expect(b.transform).toMatchObject({ x: 80, y: 10 })
+
+    h.history.undo()
+    expect(a.transform).toMatchObject({ x: 0, y: 0 })
+    expect(b.transform).toMatchObject({ x: 60, y: 0 })
+  })
+})
+
+describe('TransformTool — explicit session with apply/cancel', () => {
+  function setup() {
+    const content = new DefaultContentStore()
+    const raster = rasterKind.create({ transform: { x: 0, y: 0, w: 100, h: 100, rotation: 0 } })
+    const doc: Document = { version: 2, width: 200, height: 200, root: root([raster]), channels: [] }
+    const h = harness(doc, content, () => ({}) as PaintCore)
+    h.ctx.setActiveNode(raster.id)
+    const tool = makeTransformToolDef().create(h.ctx)
+    tool.onActivate?.()
+    return { h, raster, tool }
+  }
+
+  it('resizes via handle, commits one undo step on apply', () => {
+    const { h, raster, tool } = setup()
+    tool.onButtonPress(ev, { x: 100, y: 100 })
+    tool.onMotion(ev, { x: 200, y: 150 })
+    tool.onButtonRelease(ev, { x: 200, y: 150 })
+    expect(raster.transform).toMatchObject({ w: 200, h: 150 })
+    expect(h.history.canUndo()).toBe(false)
+    expect((tool as unknown as { isDirty(): boolean }).isDirty()).toBe(true)
+
+    expect((tool as unknown as { apply(): boolean }).apply()).toBe(true)
+    expect(h.history.canUndo()).toBe(true)
+    h.history.undo()
+    expect(raster.transform).toMatchObject({ w: 100, h: 100 })
+  })
+
+  it('shift-resize keeps the aspect ratio', () => {
+    const { raster, tool } = setup()
+    const evShift = { pressure: 0.5, shiftKey: true } as unknown as PointerEvent
+    tool.onButtonPress(evShift, { x: 100, y: 100 })
+    tool.onMotion(evShift, { x: 300, y: 120 })
+    tool.onButtonRelease(evShift, { x: 300, y: 120 })
+    expect(raster.transform.w / raster.transform.h).toBeCloseTo(1)
+    expect(raster.transform.w).toBeCloseTo(210)
+  })
+
+  it('cancel restores the pre-session transform without touching history', () => {
+    const { h, raster, tool } = setup()
+    tool.onButtonPress(ev, { x: 100, y: 100 })
+    tool.onMotion(ev, { x: 200, y: 150 })
+    tool.onButtonRelease(ev, { x: 200, y: 150 })
+    expect((tool as unknown as { cancel(): boolean }).cancel()).toBe(true)
+    expect(raster.transform).toMatchObject({ x: 0, y: 0, w: 100, h: 100 })
+    expect(h.history.canUndo()).toBe(false)
+  })
+
+  it('deactivating the tool auto-commits a dirty session', () => {
+    const { h, raster, tool } = setup()
+    tool.onButtonPress(ev, { x: 50, y: 50 })
+    tool.onMotion(ev, { x: 70, y: 50 })
+    tool.onButtonRelease(ev, { x: 70, y: 50 })
+    tool.onDeactivate?.()
+    expect(raster.transform).toMatchObject({ x: 20 })
+    expect(h.history.canUndo()).toBe(true)
+  })
+
+  it('ignores groups', () => {
+    const content = new DefaultContentStore()
+    const a = rasterKind.create({ transform: { x: 0, y: 0, w: 50, h: 50, rotation: 0 } })
+    const group = groupKind.create({ children: [a] })
+    const doc: Document = { version: 2, width: 200, height: 200, root: root([group as unknown as RasterData]), channels: [] }
+    const h = harness(doc, content, () => ({}) as PaintCore)
+    h.ctx.setActiveNode(group.id)
+    const tool = makeTransformToolDef().create(h.ctx)
+    tool.onActivate?.()
+    tool.onButtonPress(ev, { x: 25, y: 25 })
+    tool.onMotion(ev, { x: 45, y: 25 })
+    tool.onButtonRelease(ev, { x: 45, y: 25 })
+    expect(a.transform).toMatchObject({ x: 0, y: 0 })
     expect(h.history.canUndo()).toBe(false)
   })
 })

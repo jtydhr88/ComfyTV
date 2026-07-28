@@ -4,7 +4,7 @@ import { SetContentCommand } from '../commands/setContent'
 import { AddNodeCommand, RemoveNodeCommand, ReorderCommand } from '../commands/structure'
 import type { Compositor, CompositeInput } from '../compositor'
 import type { ContentStore } from '../content'
-import { findNode, type Document } from '../document'
+import { filterTopmost, findNode, type Document, type NodeLocation } from '../document'
 import { CommandGroup, Dirty, History } from '../history'
 import { DefaultContentStore } from '../impl/contentStore'
 import { defaultMode, resolveMode } from '../mode'
@@ -25,6 +25,7 @@ import { fillBitmap } from '../kinds/fill'
 import { groupKind } from '../kinds/group'
 import { DEFAULT_SHAPE_OPTIONS, type ShapeToolOptions } from '../tools/shapeTool'
 import { DEFAULT_WARP_OPTIONS, isWarpTool, type WarpToolOptions } from '../tools/warpTool'
+import { isTransformTool } from '../tools/transformTool'
 import { SetSelectionCommand, snapshotSelection } from '../commands/selection'
 import { generateId } from '../id'
 import type { ChannelData, Rect } from '../node'
@@ -87,8 +88,14 @@ export interface Editor {
   warpApply(): boolean
   warpCancel(): boolean
   warpDirty(): boolean
+  transformApply(): boolean
+  transformCancel(): boolean
+  transformDirty(): boolean
   activeNodeId(): string | null
   setActiveNode(id: string | null): void
+  selectedNodeIds(): string[]
+  setSelectedNodes(ids: string[]): void
+  removeNodes(ids: string[]): boolean
   pointerDown(e: PointerEvent, pt: Vec2): void
   pointerMove(e: PointerEvent, pt: Vec2): void
   pointerUp(e: PointerEvent, pt: Vec2): void
@@ -137,7 +144,7 @@ export function createEditor(opts: EditorOptions): Editor {
   let doc = emptyDocument(1024, 1024)
   let toolId = 'select'
   let tool: Tool | null = null
-  let activeId: string | null = null
+  let selectedIds: string[] = []
   let zoomLevel = 1
   let brush: BrushParams = { ...DEFAULT_BRUSH }
   let shape: ShapeToolOptions = { ...DEFAULT_SHAPE_OPTIONS }
@@ -185,11 +192,30 @@ export function createEditor(opts: EditorOptions): Editor {
     buildOverlay()
     notify()
   }
-  function setActive(id: string | null): void {
-    if (activeId === id) return
-    activeId = id
+  function liveSelectedIds(): string[] {
+    return selectedIds.filter((id) => findNode(doc.root, id))
+  }
+  function activeNodeIdOf(): string | null {
+    for (let i = selectedIds.length - 1; i >= 0; i--) {
+      if (findNode(doc.root, selectedIds[i])) return selectedIds[i]
+    }
+    return null
+  }
+  function setSelected(ids: string[]): void {
+    const seen = new Set<string>()
+    const next: string[] = []
+    for (const id of ids) {
+      if (seen.has(id) || !findNode(doc.root, id)) continue
+      seen.add(id)
+      next.push(id)
+    }
+    if (next.length === selectedIds.length && next.every((id, i) => id === selectedIds[i])) return
+    selectedIds = next
     buildOverlay()
     notify()
+  }
+  function setActive(id: string | null): void {
+    setSelected(id ? [id] : [])
   }
   function collectGarbage(): void {
     const live = new Set<string>()
@@ -207,8 +233,10 @@ export function createEditor(opts: EditorOptions): Editor {
     compositor,
     content,
     overlay,
-    activeNodeId: () => activeId,
+    activeNodeId: activeNodeIdOf,
     setActiveNode: setActive,
+    selectedNodeIds: liveSelectedIds,
+    setSelectedNodes: setSelected,
     createPaintCore: (id) => getPaintCore(id).create(),
     setPaintPreview: (key, canvas) => {
       if (canvas) overrides.set(key, canvas)
@@ -237,8 +265,55 @@ export function createEditor(opts: EditorOptions): Editor {
   makeTool()
 
   function activeLocation(): { parent: GroupData; node: SceneNode; index: number } | null {
-    if (!activeId) return null
-    return findNode(doc.root, activeId)
+    const id = activeNodeIdOf()
+    if (!id) return null
+    return findNode(doc.root, id)
+  }
+
+  function removeNodesImpl(ids: string[]): boolean {
+    const locs = filterTopmost(doc.root, ids)
+      .map((id) => findNode(doc.root, id))
+      .filter((l): l is NodeLocation => l !== null)
+    if (!locs.length) return false
+    const cmds = new CommandGroup(`Delete ${locs.length} Layers`)
+    for (const loc of locs) {
+      const at = loc.parent.children.indexOf(loc.node)
+      if (at < 0) continue
+      loc.parent.children.splice(at, 1)
+      cmds.children.push(new RemoveNodeCommand(`Delete ${loc.node.name}`, loc.parent, loc.node, at))
+    }
+    if (cmds.empty) return false
+    history.push(cmds.children.length === 1 ? cmds.children[0] : cmds)
+    selectedIds = []
+    refresh()
+    return true
+  }
+
+  function groupNodesImpl(ids: string[]): boolean {
+    const locs = filterTopmost(doc.root, ids)
+      .filter((id) => id !== doc.root.id)
+      .map((id) => findNode(doc.root, id))
+      .filter((l): l is NodeLocation => l !== null)
+    if (!locs.length) return false
+    const sameParent = locs.every((l) => l.parent === locs[0].parent)
+    const insertParent = sameParent ? locs[0].parent : doc.root
+    const insertAt = sameParent
+      ? Math.min(...locs.map((l) => l.parent.children.indexOf(l.node)))
+      : doc.root.children.length
+    const cmds = new CommandGroup('Group')
+    for (const loc of locs) {
+      const at = loc.parent.children.indexOf(loc.node)
+      loc.parent.children.splice(at, 1)
+      cmds.children.push(new RemoveNodeCommand(`Group ${loc.node.name}`, loc.parent, loc.node, at))
+    }
+    const group = groupKind.create({ children: locs.map((l) => l.node) })
+    const at = Math.max(0, Math.min(insertAt, insertParent.children.length))
+    insertParent.children.splice(at, 0, group)
+    cmds.children.push(new AddNodeCommand(`Add ${group.name}`, insertParent, group, at))
+    history.push(cmds)
+    selectedIds = [group.id]
+    refresh()
+    return true
   }
 
   function activeRaster(): RasterData | null {
@@ -288,7 +363,7 @@ export function createEditor(opts: EditorOptions): Editor {
     const at = index ?? into.children.length
     into.children.splice(at, 0, node)
     history.push(new AddNodeCommand(`Add ${node.name}`, into, node, at))
-    activeId = node.id
+    selectedIds = [node.id]
     refresh()
   }
 
@@ -424,7 +499,7 @@ export function createEditor(opts: EditorOptions): Editor {
     if (s.mode === 'move') {
       floating.transform = applyMove(s.before, pt.x - s.start.x, pt.y - s.start.y)
     } else if (s.mode === 'resize') {
-      floating.transform = applyResize(s.before, s.handle, pt)
+      floating.transform = applyResize(s.before, s.handle, pt, 1, e.shiftKey)
     } else {
       floating.transform = applyRotate(s.before, s.before.rotation, s.grab, pt, e.shiftKey ? Math.PI / 12 : 0)
     }
@@ -438,7 +513,7 @@ export function createEditor(opts: EditorOptions): Editor {
     document: () => doc,
     loadDocument(d) {
       doc = d
-      activeId = null
+      selectedIds = []
       floating = null
       floatSession = { mode: 'idle' }
       history.clear()
@@ -473,7 +548,7 @@ export function createEditor(opts: EditorOptions): Editor {
         channels: Array.isArray(o.channels) ? (o.channels as Document['channels']) : [],
         selectionId: typeof o.selectionId === 'string' ? o.selectionId : undefined,
       }
-      activeId = null
+      selectedIds = []
       floating = null
       floatSession = { mode: 'idle' }
       history.clear()
@@ -515,8 +590,14 @@ export function createEditor(opts: EditorOptions): Editor {
     warpApply: () => (isWarpTool(tool) ? tool.apply() : false),
     warpCancel: () => (isWarpTool(tool) ? tool.cancel() : false),
     warpDirty: () => (isWarpTool(tool) ? tool.isDirty() : false),
-    activeNodeId: () => activeId,
+    transformApply: () => (isTransformTool(tool) ? tool.apply() : false),
+    transformCancel: () => (isTransformTool(tool) ? tool.cancel() : false),
+    transformDirty: () => (isTransformTool(tool) ? tool.isDirty() : false),
+    activeNodeId: activeNodeIdOf,
     setActiveNode: setActive,
+    selectedNodeIds: liveSelectedIds,
+    setSelectedNodes: setSelected,
+    removeNodes: removeNodesImpl,
     pointerDown(e, pt) {
       if (floating) {
         floatingPress(pt)
@@ -554,12 +635,8 @@ export function createEditor(opts: EditorOptions): Editor {
       addNodeInternal(node, index, parent && parent.kind === 'group' ? parent : undefined)
     },
     removeActive() {
-      const loc = activeLocation()
-      if (!loc) return
-      loc.parent.children.splice(loc.index, 1)
-      history.push(new RemoveNodeCommand(`Delete ${loc.node.name}`, loc.parent, loc.node, loc.index))
-      activeId = null
-      refresh()
+      const id = activeNodeIdOf()
+      if (id) removeNodesImpl([id])
     },
     reorder(id, toIndex) {
       const loc = findNode(doc.root, id)
@@ -623,17 +700,7 @@ export function createEditor(opts: EditorOptions): Editor {
       return true
     },
     groupActive() {
-      const loc = activeLocation()
-      if (!loc || loc.node.id === doc.root.id) return false
-      const group = groupKind.create({ children: [loc.node] })
-      loc.parent.children.splice(loc.index, 1, group)
-      const cmds = new CommandGroup('Group')
-      cmds.children.push(new RemoveNodeCommand(`Group ${loc.node.name}`, loc.parent, loc.node, loc.index))
-      cmds.children.push(new AddNodeCommand(`Add ${group.name}`, loc.parent, group, loc.index))
-      history.push(cmds)
-      activeId = group.id
-      refresh()
-      return true
+      return groupNodesImpl(selectedIds)
     },
     ungroupActive() {
       const loc = activeLocation()
@@ -645,7 +712,7 @@ export function createEditor(opts: EditorOptions): Editor {
       cmds.children.push(new RemoveNodeCommand(`Ungroup ${group.name}`, loc.parent, group, loc.index))
       kids.forEach((k, i) => cmds.children.push(new AddNodeCommand(`Add ${k.name}`, loc.parent, k, loc.index + i)))
       history.push(cmds)
-      activeId = kids.length ? kids[kids.length - 1].id : null
+      selectedIds = kids.map((k) => k.id)
       refresh()
       return true
     },
@@ -707,7 +774,7 @@ export function createEditor(opts: EditorOptions): Editor {
       } as Partial<RasterData>) as SceneNode
       children.push(flat)
       group.children.push(new AddNodeCommand('Flatten Result', doc.root, flat, 0))
-      activeId = flat.id
+      selectedIds = [flat.id]
       history.push(group)
       refresh()
       return true

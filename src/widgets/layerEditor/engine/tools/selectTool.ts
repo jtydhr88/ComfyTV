@@ -1,30 +1,36 @@
 import { SetTransformCommand } from '../commands/setTransform'
-import { findNode } from '../document'
-import { CommandGroup, Dirty } from '../history'
-import type { SceneNode, Transform, Vec2 } from '../node'
+import { filterTopmost, findNode } from '../document'
+import { CommandGroup, Dirty, type Command } from '../history'
+import type { GroupData, SceneNode, Transform, Vec2 } from '../node'
 import { getNodeKind } from '../nodeKind'
 import { defaultControl, type Overlay, type Tool, type ToolContext, type ToolControl, type ToolDef } from '../tool'
 import { addTransformBox } from './overlayBox'
-import {
-  angleTo,
-  applyMove,
-  applyResize,
-  applyRotate,
-  hitHandle,
-  insideBox,
-  type HandleId,
-} from './transformMath'
+import { applyMove, insideBox } from './transformMath'
+
+interface MoveTarget {
+  node: SceneNode
+  before: Transform
+}
 
 type Session =
   | { mode: 'idle' }
-  | { mode: 'move'; start: Vec2; before: Transform }
-  | { mode: 'resize'; handle: HandleId; before: Transform }
-  | { mode: 'rotate'; before: Transform; grab: number }
+  | { mode: 'move'; start: Vec2; targets: MoveTarget[] }
+
+export function nodeBounds(node: SceneNode): Transform {
+  if (node.kind !== 'group') return node.transform
+  const b = getNodeKind('group').bbox(node)
+  return { x: b.x, y: b.y, w: b.w, h: b.h, rotation: 0 }
+}
+
+function moveLeaves(node: SceneNode): SceneNode[] {
+  if (node.locks.position) return []
+  if (node.kind !== 'group') return [node]
+  return (node as GroupData).children.flatMap((c) => moveLeaves(c))
+}
 
 class SelectTool implements Tool {
   readonly control: ToolControl
   private session: Session = { mode: 'idle' }
-  private active: SceneNode | null = null
 
   constructor(
     readonly id: string,
@@ -33,92 +39,77 @@ class SelectTool implements Tool {
     this.control = { ...defaultControl(), cursor: 'default', abortMask: Dirty.STRUCTURE }
   }
 
-  private activeNode(): SceneNode | null {
-    const id = this.ctx.activeNodeId()
-    if (!id) return null
-    return findNode(this.ctx.document().root, id)?.node ?? null
+  private selectedNodes(): SceneNode[] {
+    const root = this.ctx.document().root
+    return filterTopmost(root, this.ctx.selectedNodeIds())
+      .map((id) => findNode(root, id)?.node)
+      .filter((n): n is SceneNode => !!n)
   }
 
-  private tol(): number {
-    return 8 / Math.max(1e-3, this.ctx.zoom())
+  private startMove(nodes: SceneNode[], pt: Vec2): void {
+    const targets = nodes
+      .flatMap((n) => moveLeaves(n))
+      .map((node) => ({ node, before: { ...node.transform } }))
+    this.session = targets.length ? { mode: 'move', start: pt, targets } : { mode: 'idle' }
   }
 
-  onButtonPress(_e: PointerEvent, pt: Vec2): void {
-    const node = this.activeNode()
-    if (node && !node.locks.position) {
-      const h = hitHandle(node.transform, pt, this.tol())
-      if (h === 'rotate') {
-        this.active = node
-        this.session = { mode: 'rotate', before: { ...node.transform }, grab: angleTo(node.transform, pt) }
-        return
+  onButtonPress(e: PointerEvent, pt: Vec2): void {
+    if (e.shiftKey || e.ctrlKey || e.metaKey) {
+      const picked = this.pick(pt)
+      if (picked) {
+        const sel = this.ctx.selectedNodeIds()
+        const at = sel.indexOf(picked.id)
+        if (at >= 0) sel.splice(at, 1)
+        else sel.push(picked.id)
+        this.ctx.setSelectedNodes(sel)
       }
-      if (h) {
-        this.active = node
-        this.session = { mode: 'resize', handle: h, before: { ...node.transform } }
-        return
-      }
-      if (insideBox(node.transform, pt)) {
-        this.active = node
-        this.session = { mode: 'move', start: pt, before: { ...node.transform } }
-        return
-      }
-    }
-    if (node?.locks.position && insideBox(node.transform, pt)) {
-      this.active = null
       this.session = { mode: 'idle' }
+      return
+    }
+    const selected = this.selectedNodes()
+    if (selected.some((n) => insideBox(nodeBounds(n), pt))) {
+      this.startMove(selected, pt)
       return
     }
     const picked = this.pick(pt)
     if (picked) {
       this.ctx.setActiveNode(picked.id)
-      if (picked.locks.position) {
-        this.active = null
-        this.session = { mode: 'idle' }
-        return
-      }
-      this.active = picked
-      this.session = { mode: 'move', start: pt, before: { ...picked.transform } }
+      this.startMove([picked], pt)
     } else {
       this.ctx.setActiveNode(null)
-      this.active = null
       this.session = { mode: 'idle' }
     }
   }
 
-  onMotion(e: PointerEvent, pt: Vec2): void {
-    if (!this.active || this.session.mode === 'idle') return
+  onMotion(_e: PointerEvent, pt: Vec2): void {
     const s = this.session
-    if (s.mode === 'move') {
-      this.active.transform = applyMove(s.before, pt.x - s.start.x, pt.y - s.start.y)
-    } else if (s.mode === 'resize') {
-      this.active.transform = applyResize(s.before, s.handle, pt)
-    } else {
-      this.active.transform = applyRotate(s.before, s.before.rotation, s.grab, pt, e.shiftKey ? Math.PI / 12 : 0)
+    if (s.mode !== 'move') return
+    for (const t of s.targets) {
+      t.node.transform = applyMove(t.before, pt.x - s.start.x, pt.y - s.start.y)
     }
     this.ctx.requestRender()
   }
 
+  private commitTransform(node: SceneNode, before: Transform): Command[] {
+    const after = { ...node.transform }
+    if (before.x === after.x && before.y === after.y) return []
+    const cmds: Command[] = [new SetTransformCommand('move', node, before, after)]
+    const extra = getNodeKind(node.kind).onTransformCommitted?.(node, before, { content: this.ctx.content }) ?? null
+    if (extra) cmds.push(extra)
+    return cmds
+  }
+
   onButtonRelease(): void {
-    if (this.active && this.session.mode !== 'idle') {
-      const before = this.session.before
-      const after = { ...this.active.transform }
-      const changed =
-        before.x !== after.x ||
-        before.y !== after.y ||
-        before.w !== after.w ||
-        before.h !== after.h ||
-        before.rotation !== after.rotation
-      if (changed) {
-        const transformCmd = new SetTransformCommand(this.session.mode, this.active, before, after)
-        const extra =
-          getNodeKind(this.active.kind).onTransformCommitted?.(this.active, before, { content: this.ctx.content }) ?? null
-        if (extra) {
-          const group = new CommandGroup(this.session.mode)
-          group.children.push(transformCmd, extra)
-          this.ctx.history.push(group)
-        } else {
-          this.ctx.history.push(transformCmd)
-        }
+    const s = this.session
+    if (s.mode === 'move') {
+      const cmds = s.targets.flatMap((t) => this.commitTransform(t.node, t.before))
+      if (cmds.length === 1) {
+        this.ctx.history.push(cmds[0])
+        this.ctx.requestRender()
+      } else if (cmds.length > 1) {
+        const group = new CommandGroup('move')
+        group.children.push(...cmds)
+        this.ctx.history.push(group)
         this.ctx.requestRender()
       }
     }
@@ -128,25 +119,24 @@ class SelectTool implements Tool {
   onHover(): void {}
 
   cursorFor(pt: Vec2): string {
-    const node = this.activeNode()
-    if (!node) return 'default'
-    if (node.locks.position) {
-      return insideBox(node.transform, pt) ? 'not-allowed' : 'default'
+    for (const n of this.selectedNodes()) {
+      if (insideBox(nodeBounds(n), pt)) return n.locks.position ? 'not-allowed' : 'move'
     }
-    if (hitHandle(node.transform, pt, this.tol())) return 'pointer'
     return 'default'
   }
 
   drawOverlay(overlay: Overlay): void {
-    const node = this.activeNode()
-    if (!node) return
-    addTransformBox(overlay, node.transform, !node.locks.position)
+    for (const n of this.selectedNodes()) {
+      const box = nodeBounds(n)
+      if (box.w <= 0 || box.h <= 0) continue
+      addTransformBox(overlay, box, false)
+    }
   }
 
   private pick(pt: Vec2): SceneNode | null {
     const children = this.ctx.document().root.children
     for (let i = children.length - 1; i >= 0; i--) {
-      if (insideBox(children[i].transform, pt)) return children[i]
+      if (insideBox(nodeBounds(children[i]), pt)) return children[i]
     }
     return null
   }

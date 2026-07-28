@@ -56187,7 +56187,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-C3c6_KNA.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-UWT71C-z.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -56966,9 +56966,9 @@ const _hoisted_26$j = { class: "ctv:flex-1 ctv:truncate" };
 const _hoisted_27$j = ["title"];
 const _hoisted_28$g = { class: "ctv:flex-1 ctv:truncate" };
 const _hoisted_29$e = { class: "ctv:flex-1 ctv:truncate" };
-const _hoisted_30$d = { class: "ctv:flex-1 ctv:truncate" };
-const _hoisted_31$b = { class: "ctv:flex-1 ctv:truncate" };
-const _hoisted_32$a = { class: "ctv:flex-1 ctv:truncate" };
+const _hoisted_30$e = { class: "ctv:flex-1 ctv:truncate" };
+const _hoisted_31$c = { class: "ctv:flex-1 ctv:truncate" };
+const _hoisted_32$b = { class: "ctv:flex-1 ctv:truncate" };
 const _hoisted_33$8 = { class: "ctv:flex-1 ctv:truncate" };
 const _hoisted_34$7 = {
   key: 0,
@@ -57327,7 +57327,7 @@ const _sfc_main$3p = /* @__PURE__ */ defineComponent({
               (...args) => unref(menuMakeProxy) && unref(menuMakeProxy)(...args))
             }, [
               createVNode(unref(IconClapperboard), { class: "ctv:size-4 ctv:shrink-0" }),
-              createBaseVNode("span", _hoisted_30$d, toDisplayString$1(_ctx.$t("assets.card.makeProxy")), 1)
+              createBaseVNode("span", _hoisted_30$e, toDisplayString$1(_ctx.$t("assets.card.makeProxy")), 1)
             ], 2)) : createCommentVNode("", true),
             createBaseVNode("button", {
               class: normalizeClass(unref(menuItemClass2)),
@@ -57335,7 +57335,7 @@ const _sfc_main$3p = /* @__PURE__ */ defineComponent({
               (...args) => unref(menuEditTags) && unref(menuEditTags)(...args))
             }, [
               createVNode(unref(IconTag), { class: "ctv:size-4 ctv:shrink-0" }),
-              createBaseVNode("span", _hoisted_31$b, toDisplayString$1(_ctx.$t("assets.card.tags")), 1)
+              createBaseVNode("span", _hoisted_31$c, toDisplayString$1(_ctx.$t("assets.card.tags")), 1)
             ], 2),
             createBaseVNode("button", {
               class: normalizeClass(unref(menuItemClass2)),
@@ -57343,7 +57343,7 @@ const _sfc_main$3p = /* @__PURE__ */ defineComponent({
               (...args) => unref(menuRenameAsset) && unref(menuRenameAsset)(...args))
             }, [
               createVNode(unref(IconPencil), { class: "ctv:size-4 ctv:shrink-0" }),
-              createBaseVNode("span", _hoisted_32$a, toDisplayString$1(_ctx.$t("assets.card.rename")), 1)
+              createBaseVNode("span", _hoisted_32$b, toDisplayString$1(_ctx.$t("assets.card.rename")), 1)
             ], 2),
             _cache2[31] || (_cache2[31] = createBaseVNode("div", { class: "ctv:my-1 ctv:border-b ctv:border-border-subtle" }, null, -1)),
             createBaseVNode("button", {
@@ -57569,7 +57569,7 @@ const meshOps$1 = { "operation": "Operation", "op": { "decimate": "Decimate", "r
 const splitPart$1 = { "noInputImage": "Connect an image to annotate parts", "tool": { "point-pos": "+ point", "point-neg": "− point", "box": "Box" }, "newGroup": "New part", "clear": "Clear", "chipBox": "Box {n}", "chipPoints": "Part {n} ({count} pts)", "hint": "Click to add points to the active part (right-click = exclude); drag with Box to mark a part per box. Or leave empty and type a concept for the text workflow." };
 const materialStage$1 = { "presets": "Presets", "preset": { "plasticGlossy": "Glossy plastic", "plasticMatte": "Matte plastic", "metalPolished": "Polished metal", "metalBrushed": "Brushed metal", "glassClear": "Clear glass", "glassFrosted": "Frosted glass", "rubber": "Rubber", "ceramic": "Ceramic" }, "color": "Color", "param": { "metalness": "Metalness", "roughness": "Roughness", "transmission": "Transmission", "opacity": "Opacity", "clearcoat": "Clearcoat", "ior": "IOR" } };
 const loaderDrop$1 = { "mismatchTitle": "Wrong file type", "typeMismatch": "This node only loads {kind}.", "assetTypeMismatch": "This node loads {expected}, but the dropped asset is {actual}.", "failedTitle": "ComfyTV upload", "uploadFailed": "Upload failed: {detail}" };
-const layerEditor$1 = { "undo": "Undo", "redo": "Redo", "capture": "Capture", "captureHint": "Upload composite + one image per visible layer", "captureFailed": "Capture failed", "exportPsd": "Export PSD", "exportPsdHint": "Download the document as a layered PSD file", "exportPsdFailed": "PSD export failed", "exportPsdAssetHint": "Save layered PSD into the asset library", "exportPsdAssetDone": "PSD saved to asset library", "importPsd": "Import PSD", "importPsdHint": "Import a PSD file as layers", "importPsdFailed": "PSD import failed", "importPsdEmpty": "No importable layers in this PSD", "uploadFailed": "Layer upload failed", "loadImageFailed": "Failed to load image", "loadFontFailed": "Failed to load font", "fitView": "Fit view", "canvasPreset": "Preset…", "canvasPresetHint": "Apply a canvas size preset", "presetGroupPaper": "Paper (300 ppi)", "presetGroupBusinessCard": "Business card (300 ppi)", "presetGroupWeb": "Web", "presetGroupDisplay": "Display", "presetGroupPhone": "Phone", "presetGroupMisc": "Misc", "fullscreen": "Fullscreen", "exitFullscreen": "Exit fullscreen", "close": "Close", "toolSelect": "Select", "toolMarquee": "Select area", "toolBrush": "Brush", "toolEraser": "Eraser", "toolText": "Text", "toolShape": "Shape", "toolWarp": "Warp", "warpApply": "Apply", "warpCancel": "Cancel", "shapeRect": "Rectangle", "shapeEllipse": "Ellipse", "shapeLine": "Line", "shapePolygon": "Polygon", "shapeStar": "Star", "shapeArc": "Arc", "shapeSpiral": "Spiral", "shapeSides": "Sides", "shapeStarRatio": "Inner ratio", "shapeTurns": "Turns", "shapeFill": "Fill", "shapeStroke": "Stroke", "shapeStrokeWidth": "Width", "shapeNewLayer": "New layer", "shapeCombine": "Add to layer", "groupLayers": "Group", "ungroupLayers": "Ungroup", "brushSize": "Size", "brushOpacity": "Opacity", "brushHardness": "Hardness", "brushColor": "Color", "targetContent": "Layer", "targetMask": "Mask", "maskInitWhite": "White (full opacity)", "maskInitBlack": "Black (full transparency)", "maskInitSelection": "Selection", "maskInitAlpha": "Layer's alpha channel", "maskInitGray": "Grayscale copy of layer", "maskShow": "Show mask", "maskDisable": "Disable mask", "maskEnable": "Enable mask", "maskInvert": "Invert mask", "maskApply": "Apply mask", "maskToSelection": "Mask to selection", "layers": "Layers", "addFromLibrary": "Add image from asset library", "addFromFile": "Add image from file", "addTextLayer": "Add text layer", "newLayer": "New layer", "flattenImage": "Flatten image", "mergeDown": "Merge down", "cropToContent": "Crop to content", "layerToCanvasSize": "Layer to canvas size", "lockAlpha": "Lock transparency", "unlockAlpha": "Unlock transparency", "anchor": "Anchor", "anchorAsNewLayer": "As new layer", "cancelFloating": "Cancel", "noLayers": "No layers yet — drop an image here", "hideLayer": "Hide layer", "showLayer": "Show layer", "lockLayer": "Lock pixels", "unlockLayer": "Unlock pixels", "lockPosition": "Lock position", "unlockPosition": "Unlock position", "lockAll": "Lock all", "unlockAll": "Unlock all", "moveUp": "Move up", "moveDown": "Move down", "duplicateLayer": "Duplicate layer", "deleteLayer": "Delete layer", "addMask": "Add mask", "deleteMask": "Delete mask", "enableMask": "Enable mask", "disableMask": "Disable mask", "opacity": "Opacity", "blendMode": "Blend", "sectionCanvas": "Canvas", "sectionText": "Text", "blend": { "normal": "Normal", "multiply": "Multiply", "screen": "Screen", "overlay": "Overlay", "darken": "Darken", "lighten": "Lighten", "colorDodge": "Color Dodge", "colorBurn": "Color Burn", "hardLight": "Hard Light", "softLight": "Soft Light", "difference": "Difference", "exclusion": "Exclusion" }, "font": "Font", "fontSize": "Size", "textColor": "Color", "letterSpacing": "Spacing", "lineHeight": "Leading", "align": "Align", "alignLeft": "Align left", "alignCenter": "Align center", "alignRight": "Align right", "textPlaceholder": "Type something…", "dropHint": "Drop image to add a layer", "addAdjustment": "Add adjustment layer", "addFill": "Add fill layer", "lockLabel": "Lock:", "fillType": "Fill", "fillSolid": "Solid color", "fillLinear": "Linear gradient", "fillRadial": "Radial gradient", "fillColors": "Colors", "fillAngle": "Angle", "fillRadius": "Radius", "adjustmentOp": "Adjustment", "adj_brightness": "Brightness", "adj_contrast": "Contrast", "adj_hue": "Hue", "adj_saturation": "Saturation", "adj_lightness": "Lightness", "adj_inBlack": "Input black", "adj_inWhite": "Input white", "adj_gamma": "Gamma", "adj_outBlack": "Output black", "adj_outWhite": "Output white", "adj_temperature": "Temperature (K)", "adj_mix": "Strength", "adj_exposure": "Exposure", "adj_black": "Black level", "adj_shadowsR": "Shadows R", "adj_shadowsG": "Shadows G", "adj_shadowsB": "Shadows B", "adj_midtonesR": "Midtones R", "adj_midtonesG": "Midtones G", "adj_midtonesB": "Midtones B", "adj_highlightsR": "Highlights R", "adj_highlightsG": "Highlights G", "adj_highlightsB": "Highlights B", "adj_amount": "Amount", "adj_levels": "Levels", "adj_level": "Level", "adjOp": { "brightness-contrast": "Brightness / Contrast", "hue-saturation": "Hue / Saturation", "invert": "Invert", "levels": "Levels", "curves": "Curves", "temperature": "Temperature", "exposure": "Exposure", "color-balance": "Color balance", "vibrance": "Vibrance", "posterize": "Posterize", "threshold": "Threshold" }, "curveCh_master": "Master", "curveCh_red": "R", "curveCh_green": "G", "curveCh_blue": "B", "filters": "Filters", "filterApply": "Apply", "filterCancel": "Cancel", "filter_gaussian-blur": "Gaussian blur", "filter_sharpen": "Sharpen", "filter_motion-blur": "Motion blur", "filter_pixelate": "Pixelate", "filter_noise": "Add noise", "filter_desaturate": "Desaturate", "filterParam_radius": "Radius", "filterParam_amount": "Amount", "filterParam_distance": "Distance", "filterParam_angle": "Angle", "filterParam_size": "Size" };
+const layerEditor$1 = { "undo": "Undo", "redo": "Redo", "capture": "Capture", "captureHint": "Upload composite + one image per visible layer", "captureFailed": "Capture failed", "exportPsd": "Export PSD", "exportPsdHint": "Download the document as a layered PSD file", "exportPsdFailed": "PSD export failed", "exportPsdAssetHint": "Save layered PSD into the asset library", "exportPsdAssetDone": "PSD saved to asset library", "importPsd": "Import PSD", "importPsdHint": "Import a PSD file as layers", "importPsdFailed": "PSD import failed", "importPsdEmpty": "No importable layers in this PSD", "uploadFailed": "Layer upload failed", "loadImageFailed": "Failed to load image", "loadFontFailed": "Failed to load font", "fitView": "Fit view", "canvasPreset": "Preset…", "canvasPresetHint": "Apply a canvas size preset", "presetGroupPaper": "Paper (300 ppi)", "presetGroupBusinessCard": "Business card (300 ppi)", "presetGroupWeb": "Web", "presetGroupDisplay": "Display", "presetGroupPhone": "Phone", "presetGroupMisc": "Misc", "fullscreen": "Fullscreen", "exitFullscreen": "Exit fullscreen", "close": "Close", "toolSelect": "Select", "toolMarquee": "Select area", "toolBrush": "Brush", "toolEraser": "Eraser", "toolText": "Text", "toolShape": "Shape", "toolWarp": "Warp", "warpApply": "Apply", "warpCancel": "Cancel", "toolTransform": "Transform (Ctrl+T)", "transformApply": "Apply", "transformCancel": "Cancel", "transformHint": "Enter to apply · Esc to cancel", "shapeRect": "Rectangle", "shapeEllipse": "Ellipse", "shapeLine": "Line", "shapePolygon": "Polygon", "shapeStar": "Star", "shapeArc": "Arc", "shapeSpiral": "Spiral", "shapeSides": "Sides", "shapeStarRatio": "Inner ratio", "shapeTurns": "Turns", "shapeFill": "Fill", "shapeStroke": "Stroke", "shapeStrokeWidth": "Width", "shapeNewLayer": "New layer", "shapeCombine": "Add to layer", "groupLayers": "Group", "ungroupLayers": "Ungroup", "brushSize": "Size", "brushOpacity": "Opacity", "brushHardness": "Hardness", "brushColor": "Color", "targetContent": "Layer", "targetMask": "Mask", "maskInitWhite": "White (full opacity)", "maskInitBlack": "Black (full transparency)", "maskInitSelection": "Selection", "maskInitAlpha": "Layer's alpha channel", "maskInitGray": "Grayscale copy of layer", "maskShow": "Show mask", "maskDisable": "Disable mask", "maskEnable": "Enable mask", "maskInvert": "Invert mask", "maskApply": "Apply mask", "maskToSelection": "Mask to selection", "layers": "Layers", "addFromLibrary": "Add image from asset library", "addFromFile": "Add image from file", "addTextLayer": "Add text layer", "newLayer": "New layer", "flattenImage": "Flatten image", "mergeDown": "Merge down", "cropToContent": "Crop to content", "layerToCanvasSize": "Layer to canvas size", "lockAlpha": "Lock transparency", "unlockAlpha": "Unlock transparency", "anchor": "Anchor", "anchorAsNewLayer": "As new layer", "cancelFloating": "Cancel", "noLayers": "No layers yet — drop an image here", "hideLayer": "Hide layer", "showLayer": "Show layer", "lockLayer": "Lock pixels", "unlockLayer": "Unlock pixels", "lockPosition": "Lock position", "unlockPosition": "Unlock position", "lockAll": "Lock all", "unlockAll": "Unlock all", "moveUp": "Move up", "moveDown": "Move down", "duplicateLayer": "Duplicate layer", "deleteLayer": "Delete layer", "addMask": "Add mask", "deleteMask": "Delete mask", "enableMask": "Enable mask", "disableMask": "Disable mask", "opacity": "Opacity", "blendMode": "Blend", "sectionCanvas": "Canvas", "sectionText": "Text", "blend": { "normal": "Normal", "multiply": "Multiply", "screen": "Screen", "overlay": "Overlay", "darken": "Darken", "lighten": "Lighten", "colorDodge": "Color Dodge", "colorBurn": "Color Burn", "hardLight": "Hard Light", "softLight": "Soft Light", "difference": "Difference", "exclusion": "Exclusion" }, "font": "Font", "fontSize": "Size", "textColor": "Color", "letterSpacing": "Spacing", "lineHeight": "Leading", "align": "Align", "alignLeft": "Align left", "alignCenter": "Align center", "alignRight": "Align right", "textPlaceholder": "Type something…", "dropHint": "Drop image to add a layer", "addAdjustment": "Add adjustment layer", "addFill": "Add fill layer", "lockLabel": "Lock:", "fillType": "Fill", "fillSolid": "Solid color", "fillLinear": "Linear gradient", "fillRadial": "Radial gradient", "fillColors": "Colors", "fillAngle": "Angle", "fillRadius": "Radius", "adjustmentOp": "Adjustment", "adj_brightness": "Brightness", "adj_contrast": "Contrast", "adj_hue": "Hue", "adj_saturation": "Saturation", "adj_lightness": "Lightness", "adj_inBlack": "Input black", "adj_inWhite": "Input white", "adj_gamma": "Gamma", "adj_outBlack": "Output black", "adj_outWhite": "Output white", "adj_temperature": "Temperature (K)", "adj_mix": "Strength", "adj_exposure": "Exposure", "adj_black": "Black level", "adj_shadowsR": "Shadows R", "adj_shadowsG": "Shadows G", "adj_shadowsB": "Shadows B", "adj_midtonesR": "Midtones R", "adj_midtonesG": "Midtones G", "adj_midtonesB": "Midtones B", "adj_highlightsR": "Highlights R", "adj_highlightsG": "Highlights G", "adj_highlightsB": "Highlights B", "adj_amount": "Amount", "adj_levels": "Levels", "adj_level": "Level", "adjOp": { "brightness-contrast": "Brightness / Contrast", "hue-saturation": "Hue / Saturation", "invert": "Invert", "levels": "Levels", "curves": "Curves", "temperature": "Temperature", "exposure": "Exposure", "color-balance": "Color balance", "vibrance": "Vibrance", "posterize": "Posterize", "threshold": "Threshold" }, "curveCh_master": "Master", "curveCh_red": "R", "curveCh_green": "G", "curveCh_blue": "B", "filters": "Filters", "filterApply": "Apply", "filterCancel": "Cancel", "filter_gaussian-blur": "Gaussian blur", "filter_sharpen": "Sharpen", "filter_motion-blur": "Motion blur", "filter_pixelate": "Pixelate", "filter_noise": "Add noise", "filter_desaturate": "Desaturate", "filterParam_radius": "Radius", "filterParam_amount": "Amount", "filterParam_distance": "Distance", "filterParam_angle": "Angle", "filterParam_size": "Size" };
 const fxChain$1 = { "title": "FX Chain", "empty": "Chain FX nodes along the video wire into this node", "noPreview": "no live preview", "delivery": "Delivery", "dColorspace": "Colorspace", "dSize": "Resolution (short side)", "dFps": "Frame rate", "dCodec": "Codec", "dQuality": "Quality", "sourceOpt": "Source", "qDraft": "Draft", "qStandard": "Standard", "qHigh": "High" };
 const fxPreview$1 = { "run": "Preview clip", "stale": "Params changed — preview again", "window": "Real-filter preview · {s}s", "failed": "Preview failed — try again" };
 const fx$1 = { "processing": "Processing…", "done": "Done — ready for downstream", "adjustThenRun": "Adjust parameters, then Run", "fullscreen": "Full size", "exitFullscreen": "Exit full size", "chainMode": "Adjust freely — an FX Chain node downstream renders once", "makeProxy": "PROXY?", "makeProxyHint": "Large source — generate a lightweight proxy for smooth preview (Run still uses the original)", "needsTwoInputs": "Wire two videos into A and B", "needsAudioOrVideo": "Wire an audio or video input", "previewNote": "Preview is approximate — Run renders precisely", "mode": "Mode", "method": "Method", "effect": "Effect", "scope": "Scope", "preset": "Preset", "transition": "Transition", "amount": "Amount", "size": "Size", "strength": "Strength", "edgePreserve": "Edge keep", "exposure": "Exposure", "black": "Black", "temperature": "Temp (K)", "tempMix": "Temp mix", "hue": "Hue", "saturation": "Saturation", "vibrance": "Vibrance", "shadows": "Shadows", "midtones": "Midtones", "highlights": "Highlights", "preserveLightness": "Preserve lightness", "resetWheels": "Reset wheels", "master": "Master", "red": "Red", "green": "Green", "blue": "Blue", "resetCurve": "Reset curve", "curveHint": "Click to add · drag to move · right-click deletes", "keyColor": "Key color", "pickFromVideo": "Pick from frame", "similarity": "Similarity", "blend": "Blend", "despill": "Despill", "despillExpand": "Despill expand", "outAlpha": "Alpha (WebM)", "outMatte": "B/W matte", "duration": "Duration", "offset": "Offset", "offsetAuto": "0 = auto (end of A)", "lumaPreviewHint": "Luma wipe preview shows a crossfade — run to see the final wipe", "rangeX": "Range X", "rangeY": "Range Y", "edgeMode": "Edge fill", "threshold": "Threshold", "minGap": "Min gap", "detectHint": "Run scans for hard cuts and outputs one thumbnail per scene", "sceneFrames": "Scene frames", "sceneClips": "Scene clips", "sceneClipsHint": "Run splits the video at each cut into per-scene clips — wire the clips output into a Video Picker", "sceneClipPickHint": "Click a clip to select it — re-run and the clips output becomes that clip", "cutFast": "Fast (keyframe)", "cutPrecise": "Precise (re-encode)", "targetFps": "Target fps", "slowFactor": "Slow ×", "miMode": "Interp mode", "rateFrame": "Same rate", "rateField": "Double rate", "block": "Block", "atSeconds": "At (s)", "middle": "middle", "thresholdDb": "Threshold", "ratio": "Ratio", "attack": "Attack", "release": "Release", "makeup": "Makeup", "knee": "Knee", "intensity": "Intensity", "eqHint": "Double-click adds a band · drag moves · wheel = Q · double-click a dot removes", "targetI": "Target LUFS", "targetTp": "True peak", "targetLra": "LRA", "frameLen": "Frame (ms)", "gaussWin": "Gauss win", "silenceDb": "Silence (dB)", "minSilence": "Min silence (s)", "lutFile": "LUT file", "upload": "Upload", "interp": "Interp", "noLuts": "No LUTs yet — upload a .cube file", "lutPreviewUnavailable": "Live preview supports .cube and .3dl only — this LUT is applied on run", "refresh": "Refresh", "operator": "Blend mode", "opacity": "Opacity", "position": "Position", "scale": "Scale", "rotation": "Rotation", "skew": "Skew", "motionBlur": "Motion blur", "keyframes": "Keyframes", "addKey": "Add key", "delKey": "Delete key", "clearKeys": "Clear", "dragHint": "Drag the frame to move · wheel to scale", "cornerHint": "Drag the four corner handles", "rotoHint": "Click adds a point · drag moves · double-click a point removes it", "trackHint": "Click the frame to set the track point", "needsBgFg": "Wire background and foreground videos", "foreground": "Foreground", "background": "Background", "text": "Text", "fontLbl": "Font", "fontSize": "Size", "colorLbl": "Color", "strokeLbl": "Stroke", "anchor": "Anchor", "tStart": "Start (s)", "tEnd": "End (s)", "tEndAuto": "-1 = to the end", "fade": "Fade (s)", "subsPlaceholder": "Paste SRT / WebVTT cues here…", "cues": "cues", "trackPoint": "Track point", "pattern": "Pattern", "searchR": "Search", "feather": "Feather", "invert": "Invert", "transitionGroup": { "fade": "Fade", "wipe": "Wipe", "slide": "Slide & Smooth", "shape": "Shapes", "diagslice": "Diagonal & Slice", "coverreveal": "Cover & Reveal", "wind": "Wind", "fx": "FX" }, "echoHint": "Layered frame echoes with feedback trails.", "needsRetimeMap": "Map mode needs a grayscale retime image", "expressionHint": "Vars: t, frame, duration, fps. Fns: noise, fbm, turbulence, smoothstep, remap, mix, hash, random, sin/cos…", "stab360Hint": "Two-pass: analyzes equirect yaw/pitch motion, smooths the camera path, then re-renders.", "stmapGenHint": "16-bit STMap for the undistort → comp → redistort workflow. Feed it into the STMap node." };
@@ -57719,7 +57719,7 @@ const meshOps = { "operation": "操作", "op": { "decimate": "减面", "remesh":
 const splitPart = { "noInputImage": "连接一张图片后即可标注部件", "tool": { "point-pos": "＋ 点", "point-neg": "－ 点", "box": "框选" }, "newGroup": "新建部件", "clear": "清空", "chipBox": "框 {n}", "chipPoints": "部件 {n}（{count} 点）", "hint": "点击给当前部件加点（右键=排除点）；框选工具拖拽一个框即一个部件。也可以不标注，直接在提示词里输入概念走文本工作流。" };
 const materialStage = { "presets": "预设", "preset": { "plasticGlossy": "亮面塑料", "plasticMatte": "哑光塑料", "metalPolished": "抛光金属", "metalBrushed": "拉丝金属", "glassClear": "透明玻璃", "glassFrosted": "磨砂玻璃", "rubber": "橡胶", "ceramic": "陶瓷" }, "color": "颜色", "param": { "metalness": "金属度", "roughness": "粗糙度", "transmission": "透射", "opacity": "不透明度", "clearcoat": "清漆", "ior": "折射率" } };
 const loaderDrop = { "mismatchTitle": "文件类型不匹配", "typeMismatch": "该节点只能加载{kind}。", "assetTypeMismatch": "该节点加载{expected}，拖入的素材是{actual}。", "failedTitle": "ComfyTV 上传", "uploadFailed": "上传失败: {detail}" };
-const layerEditor = { "undo": "撤销", "redo": "重做", "capture": "截取", "captureHint": "上传合成图 + 每个可见图层一张", "captureFailed": "截取失败", "exportPsd": "导出 PSD", "exportPsdHint": "将文档下载为分层 PSD 文件", "exportPsdFailed": "PSD 导出失败", "exportPsdAssetHint": "把分层 PSD 存入资产库", "exportPsdAssetDone": "PSD 已存入资产库", "importPsd": "导入 PSD", "importPsdHint": "把 PSD 文件按图层导入", "importPsdFailed": "PSD 导入失败", "importPsdEmpty": "这个 PSD 里没有可导入的图层", "uploadFailed": "图层上传失败", "loadImageFailed": "图片加载失败", "loadFontFailed": "字体加载失败", "fitView": "适配视图", "canvasPreset": "预设…", "canvasPresetHint": "应用画布尺寸预设", "presetGroupPaper": "纸张 (300 ppi)", "presetGroupBusinessCard": "名片 (300 ppi)", "presetGroupWeb": "网页", "presetGroupDisplay": "显示器", "presetGroupPhone": "手机", "presetGroupMisc": "其它", "fullscreen": "全屏", "exitFullscreen": "退出全屏", "close": "关闭", "toolSelect": "选择", "toolMarquee": "框选", "toolBrush": "画笔", "toolEraser": "橡皮", "toolText": "文字", "toolShape": "形状", "toolWarp": "变形", "warpApply": "应用", "warpCancel": "取消", "shapeRect": "矩形", "shapeEllipse": "椭圆", "shapeLine": "直线", "shapePolygon": "多边形", "shapeStar": "星形", "shapeArc": "圆弧", "shapeSpiral": "螺旋线", "shapeSides": "边数", "shapeStarRatio": "内径比", "shapeTurns": "圈数", "shapeFill": "填充", "shapeStroke": "描边", "shapeStrokeWidth": "宽度", "shapeNewLayer": "新图层", "shapeCombine": "并入当前层", "groupLayers": "编组", "ungroupLayers": "取消编组", "brushSize": "大小", "brushOpacity": "不透明度", "brushHardness": "硬度", "brushColor": "颜色", "targetContent": "图层", "targetMask": "蒙版", "maskInitWhite": "白色（全显示）", "maskInitBlack": "黑色（全隐藏）", "maskInitSelection": "选区", "maskInitAlpha": "图层 Alpha 通道", "maskInitGray": "图层灰度副本", "maskShow": "显示蒙版", "maskDisable": "停用蒙版", "maskEnable": "启用蒙版", "maskInvert": "反相蒙版", "maskApply": "应用蒙版", "maskToSelection": "蒙版转选区", "layers": "图层", "addFromLibrary": "从资产库添加图片", "addFromFile": "从文件添加图片", "addTextLayer": "添加文字图层", "newLayer": "新建图层", "flattenImage": "拼合图像", "mergeDown": "向下合并", "cropToContent": "裁剪到内容", "layerToCanvasSize": "图层扩展到画布", "lockAlpha": "锁定透明度", "unlockAlpha": "解锁透明度", "anchor": "锚定", "anchorAsNewLayer": "锚定为新图层", "cancelFloating": "取消", "noLayers": "还没有图层——拖张图片进来", "hideLayer": "隐藏图层", "showLayer": "显示图层", "lockLayer": "锁定像素", "unlockLayer": "解锁像素", "lockPosition": "锁定位置", "unlockPosition": "解锁位置", "lockAll": "锁定全部", "unlockAll": "解锁全部", "moveUp": "上移", "moveDown": "下移", "duplicateLayer": "复制图层", "deleteLayer": "删除图层", "addMask": "添加蒙版", "deleteMask": "删除蒙版", "enableMask": "启用蒙版", "disableMask": "停用蒙版", "opacity": "不透明度", "blendMode": "混合", "sectionCanvas": "画布", "sectionText": "文字", "blend": { "normal": "正常", "multiply": "正片叠底", "screen": "滤色", "overlay": "叠加", "darken": "变暗", "lighten": "变亮", "colorDodge": "颜色减淡", "colorBurn": "颜色加深", "hardLight": "强光", "softLight": "柔光", "difference": "差值", "exclusion": "排除" }, "font": "字体", "fontSize": "字号", "textColor": "颜色", "letterSpacing": "字距", "lineHeight": "行距", "align": "对齐", "alignLeft": "左对齐", "alignCenter": "居中", "alignRight": "右对齐", "textPlaceholder": "输入文字…", "dropHint": "拖入图片以添加图层", "addAdjustment": "添加调整层", "addFill": "添加填充层", "lockLabel": "锁定:", "fillType": "填充", "fillSolid": "纯色", "fillLinear": "线性渐变", "fillRadial": "径向渐变", "fillColors": "颜色", "fillAngle": "角度", "fillRadius": "半径", "adjustmentOp": "调整类型", "adj_brightness": "亮度", "adj_contrast": "对比度", "adj_hue": "色相", "adj_saturation": "饱和度", "adj_lightness": "明度", "adj_inBlack": "输入黑场", "adj_inWhite": "输入白场", "adj_gamma": "Gamma", "adj_outBlack": "输出黑场", "adj_outWhite": "输出白场", "adj_temperature": "色温 (K)", "adj_mix": "强度", "adj_exposure": "曝光", "adj_black": "黑位", "adj_shadowsR": "阴影 红", "adj_shadowsG": "阴影 绿", "adj_shadowsB": "阴影 蓝", "adj_midtonesR": "中间调 红", "adj_midtonesG": "中间调 绿", "adj_midtonesB": "中间调 蓝", "adj_highlightsR": "高光 红", "adj_highlightsG": "高光 绿", "adj_highlightsB": "高光 蓝", "adj_amount": "数量", "adj_levels": "级数", "adj_level": "阈值", "adjOp": { "brightness-contrast": "亮度 / 对比度", "hue-saturation": "色相 / 饱和度", "invert": "反相", "levels": "色阶", "curves": "曲线", "temperature": "色温", "exposure": "曝光", "color-balance": "色彩平衡", "vibrance": "自然饱和度", "posterize": "色调分离", "threshold": "阈值" }, "curveCh_master": "主", "curveCh_red": "红", "curveCh_green": "绿", "curveCh_blue": "蓝", "filters": "滤镜", "filterApply": "应用", "filterCancel": "取消", "filter_gaussian-blur": "高斯模糊", "filter_sharpen": "锐化", "filter_motion-blur": "运动模糊", "filter_pixelate": "像素化", "filter_noise": "添加噪点", "filter_desaturate": "去色", "filterParam_radius": "半径", "filterParam_amount": "数量", "filterParam_distance": "距离", "filterParam_angle": "角度", "filterParam_size": "大小" };
+const layerEditor = { "undo": "撤销", "redo": "重做", "capture": "截取", "captureHint": "上传合成图 + 每个可见图层一张", "captureFailed": "截取失败", "exportPsd": "导出 PSD", "exportPsdHint": "将文档下载为分层 PSD 文件", "exportPsdFailed": "PSD 导出失败", "exportPsdAssetHint": "把分层 PSD 存入资产库", "exportPsdAssetDone": "PSD 已存入资产库", "importPsd": "导入 PSD", "importPsdHint": "把 PSD 文件按图层导入", "importPsdFailed": "PSD 导入失败", "importPsdEmpty": "这个 PSD 里没有可导入的图层", "uploadFailed": "图层上传失败", "loadImageFailed": "图片加载失败", "loadFontFailed": "字体加载失败", "fitView": "适配视图", "canvasPreset": "预设…", "canvasPresetHint": "应用画布尺寸预设", "presetGroupPaper": "纸张 (300 ppi)", "presetGroupBusinessCard": "名片 (300 ppi)", "presetGroupWeb": "网页", "presetGroupDisplay": "显示器", "presetGroupPhone": "手机", "presetGroupMisc": "其它", "fullscreen": "全屏", "exitFullscreen": "退出全屏", "close": "关闭", "toolSelect": "选择", "toolMarquee": "框选", "toolBrush": "画笔", "toolEraser": "橡皮", "toolText": "文字", "toolShape": "形状", "toolWarp": "变形", "warpApply": "应用", "warpCancel": "取消", "toolTransform": "变换 (Ctrl+T)", "transformApply": "应用", "transformCancel": "取消", "transformHint": "Enter 应用 · Esc 取消", "shapeRect": "矩形", "shapeEllipse": "椭圆", "shapeLine": "直线", "shapePolygon": "多边形", "shapeStar": "星形", "shapeArc": "圆弧", "shapeSpiral": "螺旋线", "shapeSides": "边数", "shapeStarRatio": "内径比", "shapeTurns": "圈数", "shapeFill": "填充", "shapeStroke": "描边", "shapeStrokeWidth": "宽度", "shapeNewLayer": "新图层", "shapeCombine": "并入当前层", "groupLayers": "编组", "ungroupLayers": "取消编组", "brushSize": "大小", "brushOpacity": "不透明度", "brushHardness": "硬度", "brushColor": "颜色", "targetContent": "图层", "targetMask": "蒙版", "maskInitWhite": "白色（全显示）", "maskInitBlack": "黑色（全隐藏）", "maskInitSelection": "选区", "maskInitAlpha": "图层 Alpha 通道", "maskInitGray": "图层灰度副本", "maskShow": "显示蒙版", "maskDisable": "停用蒙版", "maskEnable": "启用蒙版", "maskInvert": "反相蒙版", "maskApply": "应用蒙版", "maskToSelection": "蒙版转选区", "layers": "图层", "addFromLibrary": "从资产库添加图片", "addFromFile": "从文件添加图片", "addTextLayer": "添加文字图层", "newLayer": "新建图层", "flattenImage": "拼合图像", "mergeDown": "向下合并", "cropToContent": "裁剪到内容", "layerToCanvasSize": "图层扩展到画布", "lockAlpha": "锁定透明度", "unlockAlpha": "解锁透明度", "anchor": "锚定", "anchorAsNewLayer": "锚定为新图层", "cancelFloating": "取消", "noLayers": "还没有图层——拖张图片进来", "hideLayer": "隐藏图层", "showLayer": "显示图层", "lockLayer": "锁定像素", "unlockLayer": "解锁像素", "lockPosition": "锁定位置", "unlockPosition": "解锁位置", "lockAll": "锁定全部", "unlockAll": "解锁全部", "moveUp": "上移", "moveDown": "下移", "duplicateLayer": "复制图层", "deleteLayer": "删除图层", "addMask": "添加蒙版", "deleteMask": "删除蒙版", "enableMask": "启用蒙版", "disableMask": "停用蒙版", "opacity": "不透明度", "blendMode": "混合", "sectionCanvas": "画布", "sectionText": "文字", "blend": { "normal": "正常", "multiply": "正片叠底", "screen": "滤色", "overlay": "叠加", "darken": "变暗", "lighten": "变亮", "colorDodge": "颜色减淡", "colorBurn": "颜色加深", "hardLight": "强光", "softLight": "柔光", "difference": "差值", "exclusion": "排除" }, "font": "字体", "fontSize": "字号", "textColor": "颜色", "letterSpacing": "字距", "lineHeight": "行距", "align": "对齐", "alignLeft": "左对齐", "alignCenter": "居中", "alignRight": "右对齐", "textPlaceholder": "输入文字…", "dropHint": "拖入图片以添加图层", "addAdjustment": "添加调整层", "addFill": "添加填充层", "lockLabel": "锁定:", "fillType": "填充", "fillSolid": "纯色", "fillLinear": "线性渐变", "fillRadial": "径向渐变", "fillColors": "颜色", "fillAngle": "角度", "fillRadius": "半径", "adjustmentOp": "调整类型", "adj_brightness": "亮度", "adj_contrast": "对比度", "adj_hue": "色相", "adj_saturation": "饱和度", "adj_lightness": "明度", "adj_inBlack": "输入黑场", "adj_inWhite": "输入白场", "adj_gamma": "Gamma", "adj_outBlack": "输出黑场", "adj_outWhite": "输出白场", "adj_temperature": "色温 (K)", "adj_mix": "强度", "adj_exposure": "曝光", "adj_black": "黑位", "adj_shadowsR": "阴影 红", "adj_shadowsG": "阴影 绿", "adj_shadowsB": "阴影 蓝", "adj_midtonesR": "中间调 红", "adj_midtonesG": "中间调 绿", "adj_midtonesB": "中间调 蓝", "adj_highlightsR": "高光 红", "adj_highlightsG": "高光 绿", "adj_highlightsB": "高光 蓝", "adj_amount": "数量", "adj_levels": "级数", "adj_level": "阈值", "adjOp": { "brightness-contrast": "亮度 / 对比度", "hue-saturation": "色相 / 饱和度", "invert": "反相", "levels": "色阶", "curves": "曲线", "temperature": "色温", "exposure": "曝光", "color-balance": "色彩平衡", "vibrance": "自然饱和度", "posterize": "色调分离", "threshold": "阈值" }, "curveCh_master": "主", "curveCh_red": "红", "curveCh_green": "绿", "curveCh_blue": "蓝", "filters": "滤镜", "filterApply": "应用", "filterCancel": "取消", "filter_gaussian-blur": "高斯模糊", "filter_sharpen": "锐化", "filter_motion-blur": "运动模糊", "filter_pixelate": "像素化", "filter_noise": "添加噪点", "filter_desaturate": "去色", "filterParam_radius": "半径", "filterParam_amount": "数量", "filterParam_distance": "距离", "filterParam_angle": "角度", "filterParam_size": "大小" };
 const fxChain = { "title": "特效链", "empty": "沿 video 线把 FX 节点串联接入本节点即可成链", "noPreview": "无实时预览", "delivery": "交付出片", "dColorspace": "色彩空间", "dSize": "分辨率(短边)", "dFps": "帧率", "dCodec": "编码", "dQuality": "质量", "sourceOpt": "原始", "qDraft": "草稿", "qStandard": "标准", "qHigh": "高" };
 const fxPreview = { "run": "预览片段", "stale": "参数已变 — 请重新预览", "window": "真实滤镜预览 · {s} 秒", "failed": "预览失败 — 请重试" };
 const fx = { "processing": "处理中…", "done": "完成 — 可供下游使用", "adjustThenRun": "调整参数后点击 Run", "fullscreen": "全屏编辑", "exitFullscreen": "退出全屏", "chainMode": "自由调整——由下游 FX Chain 节点一次渲染", "makeProxy": "PROXY?", "makeProxyHint": "源文件较大——生成轻量代理让预览流畅（运行仍使用原片）", "needsTwoInputs": "需要接入两个视频（A 和 B）", "needsAudioOrVideo": "需要接入音频或视频", "previewNote": "预览为近似效果 — Run 后精确渲染", "mode": "模式", "method": "方法", "effect": "效果", "scope": "示波器", "preset": "预设", "transition": "转场", "amount": "强度", "size": "尺寸", "strength": "力度", "edgePreserve": "保边", "exposure": "曝光", "black": "黑位", "temperature": "色温 (K)", "tempMix": "色温混合", "hue": "色相", "saturation": "饱和度", "vibrance": "自然饱和", "shadows": "阴影", "midtones": "中间调", "highlights": "高光", "preserveLightness": "保持明度", "resetWheels": "重置色轮", "master": "主通道", "red": "红", "green": "绿", "blue": "蓝", "resetCurve": "重置曲线", "curveHint": "单击添加 · 拖动移动 · 右键删除", "keyColor": "键色", "pickFromVideo": "从画面取色", "similarity": "相似度", "blend": "边缘融合", "despill": "去溢色", "despillExpand": "溢色扩展", "outAlpha": "透明通道 (WebM)", "outMatte": "黑白遮罩", "duration": "时长", "offset": "起始位置", "offsetAuto": "0 = 自动（A 末尾）", "lumaPreviewHint": "亮度擦除预览仅显示交叉淡化 — 运行后可见最终擦除效果", "rangeX": "水平搜索", "rangeY": "垂直搜索", "edgeMode": "边缘填充", "threshold": "阈值", "minGap": "最小间隔", "detectHint": "Run 扫描硬切点，每个场景输出一张缩略图", "sceneFrames": "场景帧", "sceneClips": "场景片段", "sceneClipsHint": "Run 在每个切点拆条，输出逐场景片段——把 clips 输出接到视频挑选器", "sceneClipPickHint": "点击选中片段——重新 Run 后 clips 输出即为所选片段", "cutFast": "快速（关键帧）", "cutPrecise": "精确（重编码）", "targetFps": "目标帧率", "slowFactor": "慢放倍数", "miMode": "补偿模式", "rateFrame": "同帧率", "rateField": "倍帧率", "block": "块大小", "atSeconds": "取帧时间 (s)", "middle": "中点", "thresholdDb": "阈值", "ratio": "压缩比", "attack": "启动", "release": "释放", "makeup": "增益补偿", "knee": "拐点", "intensity": "强度", "eqHint": "双击空白添加频段 · 拖动调节 · 滚轮调 Q · 双击圆点删除", "targetI": "目标响度 LUFS", "targetTp": "真峰值", "targetLra": "响度范围", "frameLen": "帧长 (ms)", "gaussWin": "高斯窗", "silenceDb": "静音阈值 (dB)", "minSilence": "最短静音 (s)", "lutFile": "LUT 文件", "upload": "上传", "interp": "插值", "noLuts": "暂无 LUT — 请上传 .cube 文件", "lutPreviewUnavailable": "实时预览仅支持 .cube 和 .3dl —— 该 LUT 将在运行时生效", "refresh": "刷新", "operator": "混合模式", "opacity": "不透明度", "position": "位置", "scale": "缩放", "rotation": "旋转", "skew": "斜切", "motionBlur": "运动模糊", "keyframes": "关键帧", "addKey": "打帧", "delKey": "删帧", "clearKeys": "清空", "dragHint": "拖动画面移动 · 滚轮缩放", "cornerHint": "拖动四个角点", "rotoHint": "单击加点 · 拖动移动 · 双击点删除", "trackHint": "在画面上单击设置跟踪点", "needsBgFg": "需要接入背景和前景视频", "foreground": "前景", "background": "背景", "text": "文本", "fontLbl": "字体", "fontSize": "字号", "colorLbl": "颜色", "strokeLbl": "描边", "anchor": "锚点", "tStart": "开始 (s)", "tEnd": "结束 (s)", "tEndAuto": "-1 = 到结尾", "fade": "淡入淡出 (s)", "subsPlaceholder": "在此粘贴 SRT / WebVTT 字幕…", "cues": "条字幕", "trackPoint": "跟踪点", "pattern": "模板半径", "searchR": "搜索半径", "feather": "羽化", "invert": "反转", "transitionGroup": { "fade": "淡变", "wipe": "擦除", "slide": "滑动与平滑", "shape": "形状开合", "diagslice": "对角与切片", "coverreveal": "覆盖与揭示", "wind": "风蚀", "fx": "特效" }, "echoHint": "多帧残影叠加,带反馈拖尾。", "needsRetimeMap": "Map 模式需要接入灰度重定时图", "expressionHint": "变量:t、frame、duration、fps;函数:noise、fbm、turbulence、smoothstep、remap、mix、hash、random、sin/cos…", "stab360Hint": "两遍:分析 equirect 的 yaw/pitch 运动,平滑相机路径后重渲染。", "stmapGenHint": "16-bit STMap,用于 undistort→合成→redistort 工作流;接入 STMap 节点使用。" };
@@ -60381,12 +60381,12 @@ const _hoisted_26$h = ["disabled", "title", "onClick"];
 const _hoisted_27$h = ["title", "onClick"];
 const _hoisted_28$f = ["title", "onClick"];
 const _hoisted_29$d = ["title", "onClick"];
-const _hoisted_30$c = {
+const _hoisted_30$d = {
   key: 0,
   class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-wrap"
 };
-const _hoisted_31$a = ["title", "onClick"];
-const _hoisted_32$9 = {
+const _hoisted_31$b = ["title", "onClick"];
+const _hoisted_32$a = {
   key: 1,
   class: "ctv:rounded ctv:bg-base-background/40 ctv:p-1.5 ctv:text-2xs ctv:text-muted-foreground"
 };
@@ -60571,7 +60571,7 @@ const _sfc_main$3k = /* @__PURE__ */ defineComponent({
                   createVNode(unref(IconTrash), { class: "ctv:size-3.5" })
                 ], 10, _hoisted_29$d)
               ]),
-              unref(capsInfo)(server) ? (openBlock(), createElementBlock("div", _hoisted_30$c, [
+              unref(capsInfo)(server) ? (openBlock(), createElementBlock("div", _hoisted_30$d, [
                 createBaseVNode("span", {
                   class: normalizeClass(["ctv:inline-flex ctv:items-center ctv:rounded ctv:px-1.5 ctv:py-0.5 ctv:text-2xs", unref(capsInfo)(server).kind === "comfytv" ? "ctv:bg-emerald-500/10 ctv:text-emerald-400" : "ctv:bg-amber-400/10 ctv:text-amber-400"])
                 }, toDisplayString$1(unref(capsInfo)(server).label), 3),
@@ -60580,9 +60580,9 @@ const _sfc_main$3k = /* @__PURE__ */ defineComponent({
                   class: "ctv:inline-flex ctv:items-center ctv:cursor-pointer ctv:rounded ctv:border-none ctv:bg-amber-400/10 ctv:text-amber-400 ctv:px-1.5 ctv:py-0.5 ctv:text-2xs ctv:hover:brightness-110",
                   title: _ctx.$t("servers.caps.missingTitle") + "\n" + unref(capsInfo)(server).missing.join("\n"),
                   onClick: ($event) => unref(toggleCapsExpand)(server)
-                }, toDisplayString$1(_ctx.$t("servers.caps.missingNodes", { n: unref(capsInfo)(server).missing.length })), 9, _hoisted_31$a)) : createCommentVNode("", true)
+                }, toDisplayString$1(_ctx.$t("servers.caps.missingNodes", { n: unref(capsInfo)(server).missing.length })), 9, _hoisted_31$b)) : createCommentVNode("", true)
               ])) : createCommentVNode("", true),
-              unref(expandedCapsId) === server.id && ((_a2 = unref(capsInfo)(server)) == null ? void 0 : _a2.missing.length) ? (openBlock(), createElementBlock("div", _hoisted_32$9, [
+              unref(expandedCapsId) === server.id && ((_a2 = unref(capsInfo)(server)) == null ? void 0 : _a2.missing.length) ? (openBlock(), createElementBlock("div", _hoisted_32$a, [
                 createBaseVNode("div", _hoisted_33$7, toDisplayString$1(_ctx.$t("servers.caps.missingTitle")), 1),
                 (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(capsInfo)(server).missing, (nodeId) => {
                   return openBlock(), createElementBlock("div", {
@@ -69666,9 +69666,9 @@ const _hoisted_29$c = {
   key: 0,
   class: "ctv:text-2xs ctv:font-mono ctv:text-muted-foreground/60"
 };
-const _hoisted_30$b = { class: "ctv:text-2xs ctv:font-mono ctv:text-muted-foreground/60" };
-const _hoisted_31$9 = { class: "ctv:text-3xs ctv:font-mono ctv:py-px ctv:px-1.5 ctv:rounded-lg ctv:bg-base-foreground/5 ctv:text-muted-foreground" };
-const _hoisted_32$8 = {
+const _hoisted_30$c = { class: "ctv:text-2xs ctv:font-mono ctv:text-muted-foreground/60" };
+const _hoisted_31$a = { class: "ctv:text-3xs ctv:font-mono ctv:py-px ctv:px-1.5 ctv:rounded-lg ctv:bg-base-foreground/5 ctv:text-muted-foreground" };
+const _hoisted_32$9 = {
   key: 0,
   class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2"
 };
@@ -69953,11 +69953,11 @@ const _sfc_main$3f = /* @__PURE__ */ defineComponent({
                       }, null, 2),
                       createBaseVNode("span", _hoisted_28$e, toDisplayString$1(node.node_title), 1),
                       node.node_title !== node.node_type ? (openBlock(), createElementBlock("span", _hoisted_29$c, " (" + toDisplayString$1(node.node_type) + ") ", 1)) : createCommentVNode("", true),
-                      createBaseVNode("span", _hoisted_30$b, "#" + toDisplayString$1(node.node_id), 1),
+                      createBaseVNode("span", _hoisted_30$c, "#" + toDisplayString$1(node.node_id), 1),
                       _cache2[10] || (_cache2[10] = createBaseVNode("span", { class: "ctv:flex-1" }, null, -1)),
-                      createBaseVNode("span", _hoisted_31$9, toDisplayString$1(boundCountFor(node)) + " / " + toDisplayString$1(node.widgets.length), 1)
+                      createBaseVNode("span", _hoisted_31$a, toDisplayString$1(boundCountFor(node)) + " / " + toDisplayString$1(node.widgets.length), 1)
                     ], 8, _hoisted_27$g),
-                    !isNodeCollapsed(node.node_id) ? (openBlock(), createElementBlock("div", _hoisted_32$8, [
+                    !isNodeCollapsed(node.node_id) ? (openBlock(), createElementBlock("div", _hoisted_32$9, [
                       (openBlock(true), createElementBlock(Fragment$1, null, renderList(node.widgets, (w) => {
                         var _a3;
                         return openBlock(), createElementBlock("div", {
@@ -109103,9 +109103,9 @@ const _hoisted_29$b = {
   key: 0,
   class: "ctv:flex ctv:flex-col ctv:gap-0.5 ctv:size-full ctv:py-[3px] ctv:px-1 ctv:box-border ctv:overflow-hidden"
 };
-const _hoisted_30$a = { class: "ctv:flex ctv:items-baseline ctv:gap-1 ctv:shrink-0" };
-const _hoisted_31$8 = { class: "vp-sb-count ctv:text-xs ctv:font-bold ctv:leading-none ctv:text-[#d8b0ff]" };
-const _hoisted_32$7 = {
+const _hoisted_30$b = { class: "ctv:flex ctv:items-baseline ctv:gap-1 ctv:shrink-0" };
+const _hoisted_31$9 = { class: "vp-sb-count ctv:text-xs ctv:font-bold ctv:leading-none ctv:text-[#d8b0ff]" };
+const _hoisted_32$8 = {
   key: 0,
   class: "ctv:ml-auto ctv:text-3xs ctv:tracking-wide ctv:text-muted-foreground"
 };
@@ -109651,12 +109651,12 @@ const _sfc_main$2$ = /* @__PURE__ */ defineComponent({
           ]))
         ], 64)) : __props.type === "COMFYTV_STORYBOARD" ? (openBlock(), createElementBlock(Fragment$1, { key: 12 }, [
           __props.compact ? (openBlock(), createElementBlock("div", _hoisted_29$b, [
-            createBaseVNode("div", _hoisted_30$a, [
+            createBaseVNode("div", _hoisted_30$b, [
               _cache2[37] || (_cache2[37] = createBaseVNode("span", { class: "ctv:text-[11px] ctv:leading-none" }, [
                 createBaseVNode("i", { class: "pi pi-copy" })
               ], -1)),
-              createBaseVNode("span", _hoisted_31$8, toDisplayString$1(unref(storyboardShots).length), 1),
-              unref(storyboardTotalSec) ? (openBlock(), createElementBlock("span", _hoisted_32$7, toDisplayString$1(unref(storyboardTotalSec)) + "s", 1)) : createCommentVNode("", true)
+              createBaseVNode("span", _hoisted_31$9, toDisplayString$1(unref(storyboardShots).length), 1),
+              unref(storyboardTotalSec) ? (openBlock(), createElementBlock("span", _hoisted_32$8, toDisplayString$1(unref(storyboardTotalSec)) + "s", 1)) : createCommentVNode("", true)
             ]),
             createBaseVNode("ul", _hoisted_33$5, [
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(storyboardShots).slice(0, 3), (shot, i) => {
@@ -110585,9 +110585,9 @@ const _hoisted_29$a = {
   key: 0,
   class: "ctv:ml-auto ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1"
 };
-const _hoisted_30$9 = ["title"];
-const _hoisted_31$7 = ["title"];
-const _hoisted_32$6 = ["title"];
+const _hoisted_30$a = ["title"];
+const _hoisted_31$8 = ["title"];
+const _hoisted_32$7 = ["title"];
 const _hoisted_33$4 = { class: "ctv:relative ctv:flex-1 ctv:min-h-0 ctv:flex ctv:flex-col" };
 const _hoisted_34$4 = ["title"];
 const _hoisted_35$4 = {
@@ -110961,7 +110961,7 @@ const _sfc_main$2_ = /* @__PURE__ */ defineComponent({
                 key: 0,
                 class: "ctv:text-3xs ctv:text-muted-foreground ctv:font-mono",
                 title: _ctx.$t("stage.outputDurationHint")
-              }, toDisplayString$1(durationLabel.value), 9, _hoisted_30$9)) : createCommentVNode("", true),
+              }, toDisplayString$1(durationLabel.value), 9, _hoisted_30$a)) : createCommentVNode("", true),
               createBaseVNode("button", {
                 type: "button",
                 class: normalizeClass(textOutputBtn),
@@ -110975,7 +110975,7 @@ const _sfc_main$2_ = /* @__PURE__ */ defineComponent({
                 createBaseVNode("i", {
                   class: normalizeClass(unref(textOutputCopied) ? "pi pi-check" : "pi pi-copy")
                 }, null, 2)
-              ], 8, _hoisted_31$7),
+              ], 8, _hoisted_31$8),
               createBaseVNode("button", {
                 type: "button",
                 class: normalizeClass(textOutputBtn),
@@ -110987,7 +110987,7 @@ const _sfc_main$2_ = /* @__PURE__ */ defineComponent({
                 ))
               }, [..._cache2[19] || (_cache2[19] = [
                 createBaseVNode("i", { class: "pi pi-download" }, null, -1)
-              ])], 8, _hoisted_32$6)
+              ])], 8, _hoisted_32$7)
             ])) : createCommentVNode("", true)
           ])) : (openBlock(), createElementBlock("div", {
             key: 1,
@@ -115358,8 +115358,8 @@ const _hoisted_26$c = { class: "ctv:text-white/50" };
 const _hoisted_27$c = ["value"];
 const _hoisted_28$b = { class: "ctv:flex ctv:flex-1 ctv:items-center ctv:gap-2" };
 const _hoisted_29$9 = { class: "ctv:text-white/50" };
-const _hoisted_30$8 = ["value"];
-const _hoisted_31$6 = {
+const _hoisted_30$9 = ["value"];
+const _hoisted_31$7 = {
   key: 1,
   class: "ctv:px-2 ctv:pb-1 ctv:text-white/40"
 };
@@ -115542,11 +115542,11 @@ const _sfc_main$2U = /* @__PURE__ */ defineComponent({
                   value: unref(selectedLight).outerConeAngle ?? 45,
                   class: normalizeClass(numberClass),
                   onChange: _cache2[8] || (_cache2[8] = ($event) => onNumberInput("outerConeAngle", $event))
-                }, null, 40, _hoisted_30$8)
+                }, null, 40, _hoisted_30$9)
               ])
             ], 64)) : createCommentVNode("", true)
           ])) : createCommentVNode("", true)
-        ])) : (openBlock(), createElementBlock("div", _hoisted_31$6, toDisplayString$1(_ctx.$t("lightBall.noLights")), 1))
+        ])) : (openBlock(), createElementBlock("div", _hoisted_31$7, toDisplayString$1(_ctx.$t("lightBall.noLights")), 1))
       ]);
     };
   }
@@ -127613,7 +127613,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-BILWcnPb.mjs");
+    const { STLLoader } = await import("./STLLoader-DT5G8ZEX.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -127621,7 +127621,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-DnYzpUcq.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-CHp83Mv4.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -127916,9 +127916,9 @@ const _hoisted_29$8 = {
   key: 0,
   class: "pi pi-check"
 };
-const _hoisted_30$7 = { class: "ctv:flex-1 ctv:truncate ctv:italic ctv:text-muted-foreground" };
-const _hoisted_31$5 = ["onClick"];
-const _hoisted_32$5 = { class: "ctv:w-3 ctv:inline-block ctv:text-primary-background" };
+const _hoisted_30$8 = { class: "ctv:flex-1 ctv:truncate ctv:italic ctv:text-muted-foreground" };
+const _hoisted_31$6 = ["onClick"];
+const _hoisted_32$6 = { class: "ctv:w-3 ctv:inline-block ctv:text-primary-background" };
 const _hoisted_33$3 = {
   key: 0,
   class: "pi pi-check"
@@ -128321,7 +128321,7 @@ const _sfc_main$2p = /* @__PURE__ */ defineComponent({
                 createBaseVNode("span", _hoisted_28$a, [
                   unref(tagMenuIsUncategorized)() ? (openBlock(), createElementBlock("i", _hoisted_29$8)) : createCommentVNode("", true)
                 ]),
-                createBaseVNode("span", _hoisted_30$7, toDisplayString$1(_ctx.$t("assets.category.none")), 1)
+                createBaseVNode("span", _hoisted_30$8, toDisplayString$1(_ctx.$t("assets.category.none")), 1)
               ]),
               _cache2[26] || (_cache2[26] = createBaseVNode("div", { class: "ctv:my-1 ctv:border-t ctv:border-border-subtle" }, null, -1)),
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(categories), (cat2) => {
@@ -128331,11 +128331,11 @@ const _sfc_main$2p = /* @__PURE__ */ defineComponent({
                   class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:px-1.5 ctv:py-1 ctv:rounded-sm ctv:cursor-pointer ctv:text-left ctv:text-2xs ctv:bg-transparent ctv:border-none ctv:text-base-foreground ctv:hover:bg-secondary-background-hover",
                   onClick: withModifiers(($event) => unref(toggleOutputTag)(cat2.id), ["stop"])
                 }, [
-                  createBaseVNode("span", _hoisted_32$5, [
+                  createBaseVNode("span", _hoisted_32$6, [
                     unref(tagMenuHas)(cat2.id) ? (openBlock(), createElementBlock("i", _hoisted_33$3)) : createCommentVNode("", true)
                   ]),
                   createBaseVNode("span", _hoisted_34$3, toDisplayString$1(cat2.name), 1)
-                ], 8, _hoisted_31$5);
+                ], 8, _hoisted_31$6);
               }), 128)),
               unref(categories).length ? (openBlock(), createElementBlock("div", _hoisted_35$3)) : createCommentVNode("", true),
               createBaseVNode("button", {
@@ -131176,9 +131176,9 @@ const _hoisted_26$8 = ["value"];
 const _hoisted_27$8 = { class: "ctv:text-2xs ctv:text-muted-foreground" };
 const _hoisted_28$8 = { class: "ctv:flex ctv:items-center ctv:gap-2.5" };
 const _hoisted_29$7 = { class: "ctv:flex ctv:items-center ctv:gap-1" };
-const _hoisted_30$6 = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_31$4 = ["value"];
-const _hoisted_32$4 = { class: "ctv:ml-auto ctv:text-2xs ctv:font-mono ctv:text-muted-foreground" };
+const _hoisted_30$7 = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_31$5 = ["value"];
+const _hoisted_32$5 = { class: "ctv:ml-auto ctv:text-2xs ctv:font-mono ctv:text-muted-foreground" };
 const _sfc_main$2h = /* @__PURE__ */ defineComponent({
   __name: "DirectorTimelineStageCard",
   props: {
@@ -131348,7 +131348,7 @@ const _sfc_main$2h = /* @__PURE__ */ defineComponent({
         ])) : createCommentVNode("", true),
         createBaseVNode("div", _hoisted_28$8, [
           createBaseVNode("div", _hoisted_29$7, [
-            createBaseVNode("span", _hoisted_30$6, toDisplayString$1(_ctx.$t("timeline.fps")), 1),
+            createBaseVNode("span", _hoisted_30$7, toDisplayString$1(_ctx.$t("timeline.fps")), 1),
             createBaseVNode("input", {
               type: "number",
               min: "1",
@@ -131357,9 +131357,9 @@ const _sfc_main$2h = /* @__PURE__ */ defineComponent({
               class: "ctv:w-14 ctv:py-0.5 ctv:px-1 ctv:rounded ctv:text-xs ctv:font-mono ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle",
               value: unref(frameRate),
               onChange: _cache2[6] || (_cache2[6] = (e) => unref(setFrameRate)(Number(e.target.value)))
-            }, null, 40, _hoisted_31$4)
+            }, null, 40, _hoisted_31$5)
           ]),
-          createBaseVNode("span", _hoisted_32$4, toDisplayString$1(unref(totalFrames)) + "f · " + toDisplayString$1((unref(totalFrames) / unref(frameRate)).toFixed(1)) + "s · " + toDisplayString$1(unref(segments).length) + " " + toDisplayString$1(_ctx.$t("timeline.shots")), 1)
+          createBaseVNode("span", _hoisted_32$5, toDisplayString$1(unref(totalFrames)) + "f · " + toDisplayString$1((unref(totalFrames) / unref(frameRate)).toFixed(1)) + "s · " + toDisplayString$1(unref(segments).length) + " " + toDisplayString$1(_ctx.$t("timeline.shots")), 1)
         ]),
         createVNode(StageCard, {
           state: __props.state,
@@ -131974,9 +131974,9 @@ const _hoisted_26$7 = {
 const _hoisted_27$7 = ["title", "onClick"];
 const _hoisted_28$7 = ["value", "placeholder", "onInput"];
 const _hoisted_29$6 = { class: "ctv:grid ctv:grid-cols-[max-content_1fr] ctv:gap-x-2.5 ctv:gap-y-[3px] ctv:m-0 ctv:text-2xs ctv:items-start" };
-const _hoisted_30$5 = { class: "ctv:opacity-50 ctv:whitespace-nowrap ctv:pt-1" };
-const _hoisted_31$3 = { class: "ctv:m-0" };
-const _hoisted_32$3 = ["value", "onInput"];
+const _hoisted_30$6 = { class: "ctv:opacity-50 ctv:whitespace-nowrap ctv:pt-1" };
+const _hoisted_31$4 = { class: "ctv:m-0" };
+const _hoisted_32$4 = ["value", "onInput"];
 const _hoisted_33$2 = ["value", "onInput"];
 const _hoisted_34$2 = ["open"];
 const _hoisted_35$2 = { class: "ctv:cursor-pointer ctv:opacity-75 ctv:select-none ctv:pb-1 ctv:hover:opacity-100" };
@@ -132156,15 +132156,15 @@ const _sfc_main$2f = /* @__PURE__ */ defineComponent({
                   return openBlock(), createElementBlock(Fragment$1, {
                     key: field.key
                   }, [
-                    createBaseVNode("dt", _hoisted_30$5, toDisplayString$1(_ctx.$t(field.label)), 1),
-                    createBaseVNode("dd", _hoisted_31$3, [
+                    createBaseVNode("dt", _hoisted_30$6, toDisplayString$1(_ctx.$t(field.label)), 1),
+                    createBaseVNode("dd", _hoisted_31$4, [
                       field.multiline ? (openBlock(), createElementBlock("textarea", {
                         key: 0,
                         class: normalizeClass(metaInput(true)),
                         value: String(shot[field.key] ?? ""),
                         rows: "1",
                         onInput: (e) => unref(setField)(shot.id, field.key, e.target.value)
-                      }, null, 42, _hoisted_32$3)) : (openBlock(), createElementBlock("input", {
+                      }, null, 42, _hoisted_32$4)) : (openBlock(), createElementBlock("input", {
                         key: 1,
                         class: normalizeClass(metaInput(false)),
                         type: "text",
@@ -144879,12 +144879,12 @@ const _hoisted_27$6 = {
 };
 const _hoisted_28$6 = ["title"];
 const _hoisted_29$5 = ["title"];
-const _hoisted_30$4 = {
+const _hoisted_30$5 = {
   key: 5,
   class: "ctv:px-1 ctv:text-2xs ctv:text-muted-foreground"
 };
-const _hoisted_31$2 = { class: "ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-x-3 ctv:gap-y-1.5 ctv:px-1" };
-const _hoisted_32$2 = { class: "ctv:flex ctv:cursor-pointer ctv:items-center ctv:gap-1.5" };
+const _hoisted_31$3 = { class: "ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-x-3 ctv:gap-y-1.5 ctv:px-1" };
+const _hoisted_32$3 = { class: "ctv:flex ctv:cursor-pointer ctv:items-center ctv:gap-1.5" };
 const _hoisted_33$1 = { class: "ctv:text-2xs ctv:text-muted-foreground" };
 const _hoisted_34$1 = { class: "ctv:flex ctv:cursor-pointer ctv:items-center ctv:gap-1.5" };
 const _hoisted_35$1 = { class: "ctv:text-2xs ctv:text-muted-foreground" };
@@ -145445,13 +145445,13 @@ const _sfc_main$26 = /* @__PURE__ */ defineComponent({
                 onSetFov: _cache2[20] || (_cache2[20] = (fov2) => unref(setCameraFov)(unref(selectedCamera).id, fov2)),
                 onUpdateTransform: unref(updateSelectedTransform),
                 onToggleView: _cache2[21] || (_cache2[21] = ($event) => unref(toggleLookThrough)(unref(selectedCamera).id))
-              }, null, 8, ["camera", "presets", "looking-through", "onUpdateTransform"])) : (openBlock(), createElementBlock("div", _hoisted_30$4, toDisplayString$1(_ctx.$t("scene3d.noSelection")), 1)),
+              }, null, 8, ["camera", "presets", "looking-through", "onUpdateTransform"])) : (openBlock(), createElementBlock("div", _hoisted_30$5, toDisplayString$1(_ctx.$t("scene3d.noSelection")), 1)),
               _cache2[39] || (_cache2[39] = createBaseVNode("div", { class: "ctv:my-0.5 ctv:border-b ctv:border-border-subtle" }, null, -1)),
               createBaseVNode("span", {
                 class: normalizeClass(inspectorHeaderClass)
               }, toDisplayString$1(_ctx.$t("scene3d.environment")), 1),
-              createBaseVNode("div", _hoisted_31$2, [
-                createBaseVNode("label", _hoisted_32$2, [
+              createBaseVNode("div", _hoisted_31$3, [
+                createBaseVNode("label", _hoisted_32$3, [
                   createBaseVNode("span", _hoisted_33$1, toDisplayString$1(_ctx.$t("scene3d.showGrid")), 1),
                   createVNode(_sfc_main$3h, {
                     "model-value": unref(state2).environment.showGrid,
@@ -146812,6 +146812,17 @@ function findNode(root, id) {
     }
   });
   return found2;
+}
+function filterTopmost(root, ids) {
+  const want = new Set(ids);
+  const out = [];
+  walk(root, (node) => {
+    if (want.has(node.id)) {
+      out.push(node.id);
+      return false;
+    }
+  });
+  return out;
 }
 const Dirty = {
   DRAWABLE: 1 << 0,
@@ -151671,7 +151682,7 @@ function insideBox(t2, pt2) {
 function applyMove(t2, dx, dy) {
   return { ...t2, x: t2.x + dx, y: t2.y + dy };
 }
-function applyResize(t2, h2, pt2, minSize = 1) {
+function applyResize(t2, h2, pt2, minSize = 1, keepAspect = false) {
   if (h2 === "rotate") return t2;
   const anchor = handlePos(t2, OPP[h2]);
   const { ex, ey } = axes(t2);
@@ -151681,10 +151692,32 @@ function applyResize(t2, h2, pt2, minSize = 1) {
   const d = { x: pt2.x - anchor.x, y: pt2.y - anchor.y };
   const projX = d.x * ex.x + d.y * ex.y;
   const projY = d.x * ey.x + d.y * ey.y;
-  const newW = controlsX ? Math.max(minSize, Math.abs(projX)) : t2.w;
-  const newH = controlsY ? Math.max(minSize, Math.abs(projY)) : t2.h;
   const oc = center(t2);
   const ocRel = { x: (oc.x - anchor.x) * ex.x + (oc.y - anchor.y) * ex.y, y: (oc.x - anchor.x) * ey.x + (oc.y - anchor.y) * ey.y };
+  if (keepAspect && t2.w > 0 && t2.h > 0) {
+    let s;
+    if (controlsX && controlsY) {
+      const vx = dir.x * t2.w;
+      const vy = dir.y * t2.h;
+      s = (projX * vx + projY * vy) / (vx * vx + vy * vy);
+    } else if (controlsX) {
+      s = dir.x * projX / t2.w;
+    } else {
+      s = dir.y * projY / t2.h;
+    }
+    s = Math.max(s, minSize / t2.w, minSize / t2.h);
+    const relX2 = ocRel.x * s;
+    const relY2 = ocRel.y * s;
+    const newW2 = t2.w * s;
+    const newH2 = t2.h * s;
+    const nc2 = {
+      x: anchor.x + ex.x * relX2 + ey.x * relY2,
+      y: anchor.y + ex.y * relX2 + ey.y * relY2
+    };
+    return { x: nc2.x - newW2 / 2, y: nc2.y - newH2 / 2, w: newW2, h: newH2, rotation: t2.rotation };
+  }
+  const newW = controlsX ? Math.max(minSize, Math.abs(projX)) : t2.w;
+  const newH = controlsY ? Math.max(minSize, Math.abs(projY)) : t2.h;
   const relX = controlsX ? dir.x * newW / 2 : ocRel.x;
   const relY = controlsY ? dir.y * newH / 2 : ocRel.y;
   const nc = {
@@ -152350,6 +152383,147 @@ function isWarpTool(tool) {
 function makeWarpToolDef() {
   return { id: "warp", create: (ctx) => new WarpTool("warp", ctx) };
 }
+const TRANSFORMABLE_KINDS = /* @__PURE__ */ new Set(["raster", "text", "vector"]);
+function sameTransform(a2, b) {
+  return a2.x === b.x && a2.y === b.y && a2.w === b.w && a2.h === b.h && a2.rotation === b.rotation;
+}
+function canTransformNode(node) {
+  return !!node && TRANSFORMABLE_KINDS.has(node.kind) && !node.locks.position;
+}
+class TransformTool {
+  constructor(id, ctx) {
+    __publicField(this, "control");
+    __publicField(this, "session", null);
+    __publicField(this, "drag", { mode: "idle" });
+    this.id = id;
+    this.ctx = ctx;
+    this.control = { ...defaultControl(), cursor: "default", abortMask: Dirty.STRUCTURE };
+  }
+  tol() {
+    return 8 / Math.max(1e-3, this.ctx.zoom());
+  }
+  eligibleActive() {
+    var _a2;
+    const id = this.ctx.activeNodeId();
+    const node = id ? ((_a2 = findNode(this.ctx.document().root, id)) == null ? void 0 : _a2.node) ?? null : null;
+    return canTransformNode(node) ? node : null;
+  }
+  sessionNode() {
+    var _a2;
+    if (!this.session) return null;
+    return ((_a2 = findNode(this.ctx.document().root, this.session.nodeId)) == null ? void 0 : _a2.node) ?? null;
+  }
+  ensureSession() {
+    const node = this.eligibleActive();
+    if (!node) {
+      if (this.session) this.apply();
+      return null;
+    }
+    if (this.session && this.session.nodeId !== node.id) this.apply();
+    if (!this.session) this.session = { nodeId: node.id, before: { ...node.transform } };
+    return node;
+  }
+  onActivate() {
+    this.ensureSession();
+  }
+  onDeactivate() {
+    if (this.isDirty()) this.apply();
+    else this.session = null;
+  }
+  onButtonPress(_e2, pt2) {
+    const node = this.ensureSession();
+    if (!node) return;
+    const h2 = hitHandle(node.transform, pt2, this.tol());
+    if (h2 === "rotate") {
+      this.drag = { mode: "rotate", base: { ...node.transform }, grab: angleTo(node.transform, pt2) };
+      return;
+    }
+    if (h2) {
+      this.drag = { mode: "resize", handle: h2, base: { ...node.transform } };
+      return;
+    }
+    if (insideBox(node.transform, pt2)) {
+      this.drag = { mode: "move", start: pt2, base: { ...node.transform } };
+      return;
+    }
+    this.apply();
+  }
+  onMotion(e, pt2) {
+    const node = this.sessionNode();
+    const d = this.drag;
+    if (!node || d.mode === "idle") return;
+    if (d.mode === "move") {
+      node.transform = applyMove(d.base, pt2.x - d.start.x, pt2.y - d.start.y);
+    } else if (d.mode === "resize") {
+      node.transform = applyResize(d.base, d.handle, pt2, 1, e.shiftKey);
+    } else {
+      node.transform = applyRotate(d.base, d.base.rotation, d.grab, pt2, e.shiftKey ? Math.PI / 12 : 0);
+    }
+    this.ctx.requestRender();
+  }
+  onButtonRelease() {
+    this.drag = { mode: "idle" };
+  }
+  onHover() {
+    this.ensureSession();
+  }
+  cursorFor(pt2) {
+    const node = this.sessionNode() ?? this.eligibleActive();
+    if (!node) return "default";
+    if (hitHandle(node.transform, pt2, this.tol())) return "pointer";
+    if (insideBox(node.transform, pt2)) return "move";
+    return "default";
+  }
+  drawOverlay(overlay) {
+    const node = this.sessionNode() ?? this.eligibleActive();
+    if (!node) return;
+    addTransformBox(overlay, node.transform, true);
+  }
+  isDirty() {
+    const node = this.sessionNode();
+    return !!this.session && !!node && !sameTransform(this.session.before, node.transform);
+  }
+  apply() {
+    var _a2, _b2, _c;
+    const s = this.session;
+    this.session = null;
+    this.drag = { mode: "idle" };
+    if (!s) return false;
+    const node = (_a2 = findNode(this.ctx.document().root, s.nodeId)) == null ? void 0 : _a2.node;
+    if (!node || sameTransform(s.before, node.transform)) return false;
+    const cmd = new SetTransformCommand("transform", node, s.before, { ...node.transform });
+    const extra = ((_c = (_b2 = getNodeKind(node.kind)).onTransformCommitted) == null ? void 0 : _c.call(_b2, node, s.before, { content: this.ctx.content })) ?? null;
+    if (extra) {
+      const group = new CommandGroup("transform");
+      group.children.push(cmd, extra);
+      this.ctx.history.push(group);
+    } else {
+      this.ctx.history.push(cmd);
+    }
+    this.ctx.requestRender();
+    return true;
+  }
+  cancel() {
+    var _a2;
+    const s = this.session;
+    this.session = null;
+    this.drag = { mode: "idle" };
+    if (!s) return false;
+    const node = (_a2 = findNode(this.ctx.document().root, s.nodeId)) == null ? void 0 : _a2.node;
+    if (node && !sameTransform(s.before, node.transform)) {
+      node.transform = { ...s.before };
+      this.ctx.requestRender();
+      return true;
+    }
+    return false;
+  }
+}
+function isTransformTool(tool) {
+  return !!tool && tool.id === "transform";
+}
+function makeTransformToolDef() {
+  return { id: "transform", create: (ctx) => new TransformTool("transform", ctx) };
+}
 function snapshotSelection(doc2) {
   const channel = doc2.channels.find((ch) => ch.role === "selection") ?? null;
   return { channel: channel ? { ...channel, bounds: channel.bounds ? { ...channel.bounds } : void 0 } : null, selectionId: channel ? channel.id : void 0 };
@@ -152725,7 +152899,7 @@ function createEditor(opts) {
   let doc2 = emptyDocument(1024, 1024);
   let toolId = "select";
   let tool = null;
-  let activeId = null;
+  let selectedIds = [];
   let zoomLevel = 1;
   let brush = { ...DEFAULT_BRUSH$1 };
   let shape = { ...DEFAULT_SHAPE_OPTIONS };
@@ -152770,11 +152944,30 @@ function createEditor(opts) {
     buildOverlay();
     notify();
   }
-  function setActive(id) {
-    if (activeId === id) return;
-    activeId = id;
+  function liveSelectedIds() {
+    return selectedIds.filter((id) => findNode(doc2.root, id));
+  }
+  function activeNodeIdOf() {
+    for (let i = selectedIds.length - 1; i >= 0; i--) {
+      if (findNode(doc2.root, selectedIds[i])) return selectedIds[i];
+    }
+    return null;
+  }
+  function setSelected2(ids) {
+    const seen = /* @__PURE__ */ new Set();
+    const next = [];
+    for (const id of ids) {
+      if (seen.has(id) || !findNode(doc2.root, id)) continue;
+      seen.add(id);
+      next.push(id);
+    }
+    if (next.length === selectedIds.length && next.every((id, i) => id === selectedIds[i])) return;
+    selectedIds = next;
     buildOverlay();
     notify();
+  }
+  function setActive(id) {
+    setSelected2(id ? [id] : []);
   }
   function collectGarbage() {
     const live = /* @__PURE__ */ new Set();
@@ -152791,8 +152984,10 @@ function createEditor(opts) {
     compositor,
     content,
     overlay,
-    activeNodeId: () => activeId,
+    activeNodeId: activeNodeIdOf,
     setActiveNode: setActive,
+    selectedNodeIds: liveSelectedIds,
+    setSelectedNodes: setSelected2,
     createPaintCore: (id) => getPaintCore(id).create(),
     setPaintPreview: (key, canvas) => {
       if (canvas) overrides.set(key, canvas);
@@ -152820,8 +153015,46 @@ function createEditor(opts) {
   }
   makeTool();
   function activeLocation() {
-    if (!activeId) return null;
-    return findNode(doc2.root, activeId);
+    const id = activeNodeIdOf();
+    if (!id) return null;
+    return findNode(doc2.root, id);
+  }
+  function removeNodesImpl(ids) {
+    const locs = filterTopmost(doc2.root, ids).map((id) => findNode(doc2.root, id)).filter((l) => l !== null);
+    if (!locs.length) return false;
+    const cmds = new CommandGroup(`Delete ${locs.length} Layers`);
+    for (const loc of locs) {
+      const at2 = loc.parent.children.indexOf(loc.node);
+      if (at2 < 0) continue;
+      loc.parent.children.splice(at2, 1);
+      cmds.children.push(new RemoveNodeCommand(`Delete ${loc.node.name}`, loc.parent, loc.node, at2));
+    }
+    if (cmds.empty) return false;
+    history2.push(cmds.children.length === 1 ? cmds.children[0] : cmds);
+    selectedIds = [];
+    refresh();
+    return true;
+  }
+  function groupNodesImpl(ids) {
+    const locs = filterTopmost(doc2.root, ids).filter((id) => id !== doc2.root.id).map((id) => findNode(doc2.root, id)).filter((l) => l !== null);
+    if (!locs.length) return false;
+    const sameParent = locs.every((l) => l.parent === locs[0].parent);
+    const insertParent = sameParent ? locs[0].parent : doc2.root;
+    const insertAt = sameParent ? Math.min(...locs.map((l) => l.parent.children.indexOf(l.node))) : doc2.root.children.length;
+    const cmds = new CommandGroup("Group");
+    for (const loc of locs) {
+      const at22 = loc.parent.children.indexOf(loc.node);
+      loc.parent.children.splice(at22, 1);
+      cmds.children.push(new RemoveNodeCommand(`Group ${loc.node.name}`, loc.parent, loc.node, at22));
+    }
+    const group = groupKind.create({ children: locs.map((l) => l.node) });
+    const at2 = Math.max(0, Math.min(insertAt, insertParent.children.length));
+    insertParent.children.splice(at2, 0, group);
+    cmds.children.push(new AddNodeCommand(`Add ${group.name}`, insertParent, group, at2));
+    history2.push(cmds);
+    selectedIds = [group.id];
+    refresh();
+    return true;
   }
   function activeRaster() {
     const loc = activeLocation();
@@ -152868,7 +153101,7 @@ function createEditor(opts) {
     const at2 = index ?? into.children.length;
     into.children.splice(at2, 0, node);
     history2.push(new AddNodeCommand(`Add ${node.name}`, into, node, at2));
-    activeId = node.id;
+    selectedIds = [node.id];
     refresh();
   }
   function anchorInto(node, item, floatCanvas) {
@@ -152997,7 +153230,7 @@ function createEditor(opts) {
     if (s.mode === "move") {
       floating.transform = applyMove(s.before, pt2.x - s.start.x, pt2.y - s.start.y);
     } else if (s.mode === "resize") {
-      floating.transform = applyResize(s.before, s.handle, pt2);
+      floating.transform = applyResize(s.before, s.handle, pt2, 1, e.shiftKey);
     } else {
       floating.transform = applyRotate(s.before, s.before.rotation, s.grab, pt2, e.shiftKey ? Math.PI / 12 : 0);
     }
@@ -153010,7 +153243,7 @@ function createEditor(opts) {
     document: () => doc2,
     loadDocument(d) {
       doc2 = d;
-      activeId = null;
+      selectedIds = [];
       floating = null;
       floatSession = { mode: "idle" };
       history2.clear();
@@ -153045,7 +153278,7 @@ function createEditor(opts) {
         channels: Array.isArray(o.channels) ? o.channels : [],
         selectionId: typeof o.selectionId === "string" ? o.selectionId : void 0
       };
-      activeId = null;
+      selectedIds = [];
       floating = null;
       floatSession = { mode: "idle" };
       history2.clear();
@@ -153086,8 +153319,14 @@ function createEditor(opts) {
     warpApply: () => isWarpTool(tool) ? tool.apply() : false,
     warpCancel: () => isWarpTool(tool) ? tool.cancel() : false,
     warpDirty: () => isWarpTool(tool) ? tool.isDirty() : false,
-    activeNodeId: () => activeId,
+    transformApply: () => isTransformTool(tool) ? tool.apply() : false,
+    transformCancel: () => isTransformTool(tool) ? tool.cancel() : false,
+    transformDirty: () => isTransformTool(tool) ? tool.isDirty() : false,
+    activeNodeId: activeNodeIdOf,
     setActiveNode: setActive,
+    selectedNodeIds: liveSelectedIds,
+    setSelectedNodes: setSelected2,
+    removeNodes: removeNodesImpl,
     pointerDown(e, pt2) {
       if (floating) {
         floatingPress(pt2);
@@ -153123,12 +153362,8 @@ function createEditor(opts) {
       addNodeInternal(node, index, parent && parent.kind === "group" ? parent : void 0);
     },
     removeActive() {
-      const loc = activeLocation();
-      if (!loc) return;
-      loc.parent.children.splice(loc.index, 1);
-      history2.push(new RemoveNodeCommand(`Delete ${loc.node.name}`, loc.parent, loc.node, loc.index));
-      activeId = null;
-      refresh();
+      const id = activeNodeIdOf();
+      if (id) removeNodesImpl([id]);
     },
     reorder(id, toIndex) {
       const loc = findNode(doc2.root, id);
@@ -153192,17 +153427,7 @@ function createEditor(opts) {
       return true;
     },
     groupActive() {
-      const loc = activeLocation();
-      if (!loc || loc.node.id === doc2.root.id) return false;
-      const group = groupKind.create({ children: [loc.node] });
-      loc.parent.children.splice(loc.index, 1, group);
-      const cmds = new CommandGroup("Group");
-      cmds.children.push(new RemoveNodeCommand(`Group ${loc.node.name}`, loc.parent, loc.node, loc.index));
-      cmds.children.push(new AddNodeCommand(`Add ${group.name}`, loc.parent, group, loc.index));
-      history2.push(cmds);
-      activeId = group.id;
-      refresh();
-      return true;
+      return groupNodesImpl(selectedIds);
     },
     ungroupActive() {
       const loc = activeLocation();
@@ -153214,7 +153439,7 @@ function createEditor(opts) {
       cmds.children.push(new RemoveNodeCommand(`Ungroup ${group.name}`, loc.parent, group, loc.index));
       kids.forEach((k2, i) => cmds.children.push(new AddNodeCommand(`Add ${k2.name}`, loc.parent, k2, loc.index + i)));
       history2.push(cmds);
-      activeId = kids.length ? kids[kids.length - 1].id : null;
+      selectedIds = kids.map((k2) => k2.id);
       refresh();
       return true;
     },
@@ -153275,7 +153500,7 @@ function createEditor(opts) {
       });
       children.push(flat);
       group.children.push(new AddNodeCommand("Flatten Result", doc2.root, flat, 0));
-      activeId = flat.id;
+      selectedIds = [flat.id];
       history2.push(group);
       refresh();
       return true;
@@ -153878,93 +154103,90 @@ class PaintTool {
 function makePaintToolDef(id, coreId, channel = "content") {
   return { id, create: (ctx) => new PaintTool(id, ctx, coreId, channel) };
 }
+function nodeBounds(node) {
+  if (node.kind !== "group") return node.transform;
+  const b = getNodeKind("group").bbox(node);
+  return { x: b.x, y: b.y, w: b.w, h: b.h, rotation: 0 };
+}
+function moveLeaves(node) {
+  if (node.locks.position) return [];
+  if (node.kind !== "group") return [node];
+  return node.children.flatMap((c2) => moveLeaves(c2));
+}
 class SelectTool {
   constructor(id, ctx) {
     __publicField(this, "control");
     __publicField(this, "session", { mode: "idle" });
-    __publicField(this, "active", null);
     this.id = id;
     this.ctx = ctx;
     this.control = { ...defaultControl(), cursor: "default", abortMask: Dirty.STRUCTURE };
   }
-  activeNode() {
-    var _a2;
-    const id = this.ctx.activeNodeId();
-    if (!id) return null;
-    return ((_a2 = findNode(this.ctx.document().root, id)) == null ? void 0 : _a2.node) ?? null;
+  selectedNodes() {
+    const root = this.ctx.document().root;
+    return filterTopmost(root, this.ctx.selectedNodeIds()).map((id) => {
+      var _a2;
+      return (_a2 = findNode(root, id)) == null ? void 0 : _a2.node;
+    }).filter((n) => !!n);
   }
-  tol() {
-    return 8 / Math.max(1e-3, this.ctx.zoom());
+  startMove(nodes, pt2) {
+    const targets = nodes.flatMap((n) => moveLeaves(n)).map((node) => ({ node, before: { ...node.transform } }));
+    this.session = targets.length ? { mode: "move", start: pt2, targets } : { mode: "idle" };
   }
-  onButtonPress(_e2, pt2) {
-    const node = this.activeNode();
-    if (node && !node.locks.position) {
-      const h2 = hitHandle(node.transform, pt2, this.tol());
-      if (h2 === "rotate") {
-        this.active = node;
-        this.session = { mode: "rotate", before: { ...node.transform }, grab: angleTo(node.transform, pt2) };
-        return;
+  onButtonPress(e, pt2) {
+    if (e.shiftKey || e.ctrlKey || e.metaKey) {
+      const picked2 = this.pick(pt2);
+      if (picked2) {
+        const sel2 = this.ctx.selectedNodeIds();
+        const at2 = sel2.indexOf(picked2.id);
+        if (at2 >= 0) sel2.splice(at2, 1);
+        else sel2.push(picked2.id);
+        this.ctx.setSelectedNodes(sel2);
       }
-      if (h2) {
-        this.active = node;
-        this.session = { mode: "resize", handle: h2, before: { ...node.transform } };
-        return;
-      }
-      if (insideBox(node.transform, pt2)) {
-        this.active = node;
-        this.session = { mode: "move", start: pt2, before: { ...node.transform } };
-        return;
-      }
-    }
-    if ((node == null ? void 0 : node.locks.position) && insideBox(node.transform, pt2)) {
-      this.active = null;
       this.session = { mode: "idle" };
+      return;
+    }
+    const selected = this.selectedNodes();
+    if (selected.some((n) => insideBox(nodeBounds(n), pt2))) {
+      this.startMove(selected, pt2);
       return;
     }
     const picked = this.pick(pt2);
     if (picked) {
       this.ctx.setActiveNode(picked.id);
-      if (picked.locks.position) {
-        this.active = null;
-        this.session = { mode: "idle" };
-        return;
-      }
-      this.active = picked;
-      this.session = { mode: "move", start: pt2, before: { ...picked.transform } };
+      this.startMove([picked], pt2);
     } else {
       this.ctx.setActiveNode(null);
-      this.active = null;
       this.session = { mode: "idle" };
     }
   }
-  onMotion(e, pt2) {
-    if (!this.active || this.session.mode === "idle") return;
+  onMotion(_e2, pt2) {
     const s = this.session;
-    if (s.mode === "move") {
-      this.active.transform = applyMove(s.before, pt2.x - s.start.x, pt2.y - s.start.y);
-    } else if (s.mode === "resize") {
-      this.active.transform = applyResize(s.before, s.handle, pt2);
-    } else {
-      this.active.transform = applyRotate(s.before, s.before.rotation, s.grab, pt2, e.shiftKey ? Math.PI / 12 : 0);
+    if (s.mode !== "move") return;
+    for (const t2 of s.targets) {
+      t2.node.transform = applyMove(t2.before, pt2.x - s.start.x, pt2.y - s.start.y);
     }
     this.ctx.requestRender();
   }
-  onButtonRelease() {
+  commitTransform(node, before) {
     var _a2, _b2;
-    if (this.active && this.session.mode !== "idle") {
-      const before = this.session.before;
-      const after = { ...this.active.transform };
-      const changed = before.x !== after.x || before.y !== after.y || before.w !== after.w || before.h !== after.h || before.rotation !== after.rotation;
-      if (changed) {
-        const transformCmd = new SetTransformCommand(this.session.mode, this.active, before, after);
-        const extra = ((_b2 = (_a2 = getNodeKind(this.active.kind)).onTransformCommitted) == null ? void 0 : _b2.call(_a2, this.active, before, { content: this.ctx.content })) ?? null;
-        if (extra) {
-          const group = new CommandGroup(this.session.mode);
-          group.children.push(transformCmd, extra);
-          this.ctx.history.push(group);
-        } else {
-          this.ctx.history.push(transformCmd);
-        }
+    const after = { ...node.transform };
+    if (before.x === after.x && before.y === after.y) return [];
+    const cmds = [new SetTransformCommand("move", node, before, after)];
+    const extra = ((_b2 = (_a2 = getNodeKind(node.kind)).onTransformCommitted) == null ? void 0 : _b2.call(_a2, node, before, { content: this.ctx.content })) ?? null;
+    if (extra) cmds.push(extra);
+    return cmds;
+  }
+  onButtonRelease() {
+    const s = this.session;
+    if (s.mode === "move") {
+      const cmds = s.targets.flatMap((t2) => this.commitTransform(t2.node, t2.before));
+      if (cmds.length === 1) {
+        this.ctx.history.push(cmds[0]);
+        this.ctx.requestRender();
+      } else if (cmds.length > 1) {
+        const group = new CommandGroup("move");
+        group.children.push(...cmds);
+        this.ctx.history.push(group);
         this.ctx.requestRender();
       }
     }
@@ -153973,23 +154195,22 @@ class SelectTool {
   onHover() {
   }
   cursorFor(pt2) {
-    const node = this.activeNode();
-    if (!node) return "default";
-    if (node.locks.position) {
-      return insideBox(node.transform, pt2) ? "not-allowed" : "default";
+    for (const n of this.selectedNodes()) {
+      if (insideBox(nodeBounds(n), pt2)) return n.locks.position ? "not-allowed" : "move";
     }
-    if (hitHandle(node.transform, pt2, this.tol())) return "pointer";
     return "default";
   }
   drawOverlay(overlay) {
-    const node = this.activeNode();
-    if (!node) return;
-    addTransformBox(overlay, node.transform, !node.locks.position);
+    for (const n of this.selectedNodes()) {
+      const box = nodeBounds(n);
+      if (box.w <= 0 || box.h <= 0) continue;
+      addTransformBox(overlay, box, false);
+    }
   }
   pick(pt2) {
     const children = this.ctx.document().root.children;
     for (let i = children.length - 1; i >= 0; i--) {
-      if (insideBox(children[i].transform, pt2)) return children[i];
+      if (insideBox(nodeBounds(children[i]), pt2)) return children[i];
     }
     return null;
   }
@@ -154003,6 +154224,7 @@ function registerBuiltinTools() {
   registered = true;
   registerBuiltinPaintCores();
   registerTool(makeSelectToolDef());
+  registerTool(makeTransformToolDef());
   registerTool(makeMarqueeToolDef());
   registerTool(makeShapeToolDef());
   registerTool(makeWarpToolDef());
@@ -154756,17 +154978,20 @@ const _hoisted_15$d = ["disabled"];
 const _hoisted_16$c = ["disabled"];
 const _hoisted_17$b = ["disabled"];
 const _hoisted_18$a = { class: "ctv:w-7 ctv:text-right ctv:font-mono" };
-const _hoisted_19$9 = { class: "ctv:flex ctv:h-6 ctv:items-center ctv:gap-0.5 ctv:rounded ctv:bg-[#1e1e1e] ctv:p-0.5" };
-const _hoisted_20$8 = ["aria-pressed", "onClick"];
-const _hoisted_21$8 = ["disabled"];
-const _hoisted_22$8 = ["disabled"];
-const _hoisted_23$6 = ["disabled", "title"];
-const _hoisted_24$5 = ["disabled", "title"];
-const _hoisted_25$5 = ["disabled", "title"];
+const _hoisted_19$9 = ["disabled"];
+const _hoisted_20$8 = ["disabled"];
+const _hoisted_21$8 = { class: "ctv:whitespace-nowrap ctv:text-[10px] ctv:text-[#9b9b9b]/70" };
+const _hoisted_22$8 = { class: "ctv:flex ctv:h-6 ctv:items-center ctv:gap-0.5 ctv:rounded ctv:bg-[#1e1e1e] ctv:p-0.5" };
+const _hoisted_23$6 = ["aria-pressed", "onClick"];
+const _hoisted_24$5 = ["disabled"];
+const _hoisted_25$5 = ["disabled"];
 const _hoisted_26$5 = ["disabled", "title"];
 const _hoisted_27$5 = ["disabled", "title"];
 const _hoisted_28$5 = ["disabled", "title"];
-const _hoisted_29$4 = ["title"];
+const _hoisted_29$4 = ["disabled", "title"];
+const _hoisted_30$4 = ["disabled", "title"];
+const _hoisted_31$2 = ["disabled", "title"];
+const _hoisted_32$2 = ["title"];
 const dividerClass = "ctv:h-5 ctv:w-px ctv:shrink-0 ctv:bg-[#161616]";
 const fieldClass = "ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1 ctv:whitespace-nowrap";
 const colorInputClass$1 = "ctv:size-6 ctv:cursor-pointer ctv:rounded ctv:border ctv:border-[#161616] ctv:bg-transparent ctv:p-0 ctv:disabled:opacity-30";
@@ -154790,6 +155015,7 @@ const _sfc_main$24 = /* @__PURE__ */ defineComponent({
     }
     const TOOL_META = {
       select: { labelKey: "layerEditor.toolSelect", icon: IconMousePointer },
+      transform: { labelKey: "layerEditor.toolTransform", icon: IconScaling },
       marquee: { labelKey: "layerEditor.toolMarquee", icon: IconSquareDashed },
       brush: { labelKey: "layerEditor.toolBrush", icon: IconBrush },
       eraser: { labelKey: "layerEditor.toolEraser", icon: IconEraser },
@@ -154816,6 +155042,7 @@ const _sfc_main$24 = /* @__PURE__ */ defineComponent({
     const isPaintTool = computed(() => editor.tool.value === "brush" || editor.tool.value === "eraser");
     const isShapeTool = computed(() => editor.tool.value === "shape");
     const isWarpTool2 = computed(() => editor.tool.value === "warp");
+    const isTransformTool2 = computed(() => editor.tool.value === "transform");
     const WARP_GRID_SIZES = [3, 4, 5];
     const showBrushColor = computed(
       () => editor.tool.value === "brush" && editor.paintTarget.value === "content"
@@ -155081,8 +155308,34 @@ const _sfc_main$24 = /* @__PURE__ */ defineComponent({
             ]),
             createBaseVNode("span", _hoisted_18$a, toDisplayString$1(unref(editor).shapeStrokeWidth.value), 1)
           ])
-        ], 64)) : isWarpTool2.value ? (openBlock(), createElementBlock(Fragment$1, { key: 2 }, [
-          createBaseVNode("div", _hoisted_19$9, [
+        ], 64)) : isTransformTool2.value ? (openBlock(), createElementBlock(Fragment$1, { key: 2 }, [
+          createBaseVNode("button", {
+            type: "button",
+            class: normalizeClass(actionBtnClass),
+            disabled: !unref(editor).transformDirty.value,
+            onClick: _cache2[14] || (_cache2[14] = ($event) => {
+              unref(editor).transformApply();
+              unref(editor).tool.value = "select";
+            })
+          }, [
+            createVNode(unref(IconCheck), { class: "ctv:size-3.5" }),
+            createTextVNode(" " + toDisplayString$1(_ctx.$t("layerEditor.transformApply")), 1)
+          ], 8, _hoisted_19$9),
+          createBaseVNode("button", {
+            type: "button",
+            class: normalizeClass(actionBtnClass),
+            disabled: !unref(editor).transformDirty.value,
+            onClick: _cache2[15] || (_cache2[15] = ($event) => {
+              unref(editor).transformCancel();
+              unref(editor).tool.value = "select";
+            })
+          }, [
+            createVNode(unref(IconX), { class: "ctv:size-3.5" }),
+            createTextVNode(" " + toDisplayString$1(_ctx.$t("layerEditor.transformCancel")), 1)
+          ], 8, _hoisted_20$8),
+          createBaseVNode("span", _hoisted_21$8, toDisplayString$1(_ctx.$t("layerEditor.transformHint")), 1)
+        ], 64)) : isWarpTool2.value ? (openBlock(), createElementBlock(Fragment$1, { key: 3 }, [
+          createBaseVNode("div", _hoisted_22$8, [
             (openBlock(), createElementBlock(Fragment$1, null, renderList(WARP_GRID_SIZES, (n) => {
               return createBaseVNode("button", {
                 key: n,
@@ -155090,49 +155343,49 @@ const _sfc_main$24 = /* @__PURE__ */ defineComponent({
                 class: normalizeClass(segBtnClass(unref(editor).warpPoints.value === n)),
                 "aria-pressed": unref(editor).warpPoints.value === n,
                 onClick: ($event) => unref(editor).warpPoints.value = n
-              }, toDisplayString$1(n) + "×" + toDisplayString$1(n), 11, _hoisted_20$8);
+              }, toDisplayString$1(n) + "×" + toDisplayString$1(n), 11, _hoisted_23$6);
             }), 64))
           ]),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(actionBtnClass),
             disabled: !unref(editor).warpDirty.value,
-            onClick: _cache2[14] || (_cache2[14] = ($event) => unref(editor).warpApply())
+            onClick: _cache2[16] || (_cache2[16] = ($event) => unref(editor).warpApply())
           }, [
             createVNode(unref(IconCheck), { class: "ctv:size-3.5" }),
             createTextVNode(" " + toDisplayString$1(_ctx.$t("layerEditor.warpApply")), 1)
-          ], 8, _hoisted_21$8),
+          ], 8, _hoisted_24$5),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(actionBtnClass),
             disabled: !unref(editor).warpDirty.value,
-            onClick: _cache2[15] || (_cache2[15] = ($event) => unref(editor).warpCancel())
+            onClick: _cache2[17] || (_cache2[17] = ($event) => unref(editor).warpCancel())
           }, [
             createVNode(unref(IconX), { class: "ctv:size-3.5" }),
             createTextVNode(" " + toDisplayString$1(_ctx.$t("layerEditor.warpCancel")), 1)
-          ], 8, _hoisted_22$8)
+          ], 8, _hoisted_25$5)
         ], 64)) : createCommentVNode("", true),
-        _cache2[23] || (_cache2[23] = createBaseVNode("div", { class: "ctv:flex-1" }, null, -1)),
+        _cache2[25] || (_cache2[25] = createBaseVNode("div", { class: "ctv:flex-1" }, null, -1)),
         createBaseVNode("button", {
           type: "button",
           class: normalizeClass(iconBtnClass),
           disabled: !unref(editor).canUndo.value,
           title: _ctx.$t("layerEditor.undo"),
-          onClick: _cache2[16] || (_cache2[16] = //@ts-ignore
+          onClick: _cache2[18] || (_cache2[18] = //@ts-ignore
           (...args) => unref(editor).undo && unref(editor).undo(...args))
         }, [
           createVNode(unref(IconUndo), { class: "ctv:size-4" })
-        ], 8, _hoisted_23$6),
+        ], 8, _hoisted_26$5),
         createBaseVNode("button", {
           type: "button",
           class: normalizeClass(iconBtnClass),
           disabled: !unref(editor).canRedo.value,
           title: _ctx.$t("layerEditor.redo"),
-          onClick: _cache2[17] || (_cache2[17] = //@ts-ignore
+          onClick: _cache2[19] || (_cache2[19] = //@ts-ignore
           (...args) => unref(editor).redo && unref(editor).redo(...args))
         }, [
           createVNode(unref(IconRedo), { class: "ctv:size-4" })
-        ], 8, _hoisted_24$5),
+        ], 8, _hoisted_27$5),
         createBaseVNode("div", {
           class: normalizeClass(dividerClass)
         }),
@@ -155141,7 +155394,7 @@ const _sfc_main$24 = /* @__PURE__ */ defineComponent({
           class: normalizeClass(actionBtnClass),
           disabled: unref(editor).capturing.value,
           title: _ctx.$t("layerEditor.captureHint"),
-          onClick: _cache2[18] || (_cache2[18] = //@ts-ignore
+          onClick: _cache2[20] || (_cache2[20] = //@ts-ignore
           (...args) => unref(editor).captureBatch && unref(editor).captureBatch(...args))
         }, [
           unref(editor).capturing.value ? (openBlock(), createBlock(unref(IconLoader), {
@@ -155152,13 +155405,13 @@ const _sfc_main$24 = /* @__PURE__ */ defineComponent({
             class: "ctv:size-3.5"
           })),
           createTextVNode(" " + toDisplayString$1(_ctx.$t("layerEditor.capture")), 1)
-        ], 8, _hoisted_25$5),
+        ], 8, _hoisted_28$5),
         createBaseVNode("button", {
           type: "button",
           class: normalizeClass(actionBtnClass),
           disabled: unref(editor).importingPsd.value,
           title: _ctx.$t("layerEditor.importPsdHint"),
-          onClick: _cache2[19] || (_cache2[19] = ($event) => {
+          onClick: _cache2[21] || (_cache2[21] = ($event) => {
             var _a2;
             return (_a2 = psdFileInput.value) == null ? void 0 : _a2.click();
           })
@@ -155171,7 +155424,7 @@ const _sfc_main$24 = /* @__PURE__ */ defineComponent({
             class: "ctv:size-3.5"
           })),
           createTextVNode(" " + toDisplayString$1(_ctx.$t("layerEditor.importPsd")), 1)
-        ], 8, _hoisted_26$5),
+        ], 8, _hoisted_29$4),
         createBaseVNode("input", {
           ref_key: "psdFileInput",
           ref: psdFileInput,
@@ -155185,7 +155438,7 @@ const _sfc_main$24 = /* @__PURE__ */ defineComponent({
           class: normalizeClass(actionBtnClass),
           disabled: unref(editor).exportingPsd.value,
           title: _ctx.$t("layerEditor.exportPsdHint"),
-          onClick: _cache2[20] || (_cache2[20] = //@ts-ignore
+          onClick: _cache2[22] || (_cache2[22] = //@ts-ignore
           (...args) => unref(editor).exportPsd && unref(editor).exportPsd(...args))
         }, [
           unref(editor).exportingPsd.value ? (openBlock(), createBlock(unref(IconLoader), {
@@ -155196,26 +155449,26 @@ const _sfc_main$24 = /* @__PURE__ */ defineComponent({
             class: "ctv:size-3.5"
           })),
           createTextVNode(" " + toDisplayString$1(_ctx.$t("layerEditor.exportPsd")), 1)
-        ], 8, _hoisted_27$5),
+        ], 8, _hoisted_30$4),
         createBaseVNode("button", {
           type: "button",
           class: normalizeClass(iconBtnClass),
           disabled: unref(editor).exportingPsd.value,
           title: _ctx.$t("layerEditor.exportPsdAssetHint"),
-          onClick: _cache2[21] || (_cache2[21] = //@ts-ignore
+          onClick: _cache2[23] || (_cache2[23] = //@ts-ignore
           (...args) => unref(editor).exportPsdToLibrary && unref(editor).exportPsdToLibrary(...args))
         }, [
           createVNode(unref(IconLibrary), { class: "ctv:size-4" })
-        ], 8, _hoisted_28$5),
+        ], 8, _hoisted_31$2),
         createBaseVNode("button", {
           type: "button",
           class: normalizeClass(iconBtnClass),
           title: _ctx.$t("layerEditor.fitView"),
-          onClick: _cache2[22] || (_cache2[22] = //@ts-ignore
+          onClick: _cache2[24] || (_cache2[24] = //@ts-ignore
           (...args) => unref(editor).fitView && unref(editor).fitView(...args))
         }, [
           createVNode(unref(IconScan), { class: "ctv:size-4" })
-        ], 8, _hoisted_29$4),
+        ], 8, _hoisted_32$2),
         renderSlot(_ctx.$slots, "trailing")
       ]);
     };
@@ -155233,6 +155486,7 @@ const _sfc_main$23 = /* @__PURE__ */ defineComponent({
     const editor = props.editor;
     const TOOL_OPTIONS = [
       { id: "select", labelKey: "layerEditor.toolSelect", icon: IconMousePointer },
+      { id: "transform", labelKey: "layerEditor.toolTransform", icon: IconScaling },
       { id: "marquee", labelKey: "layerEditor.toolMarquee", icon: IconSquareDashed },
       { id: "brush", labelKey: "layerEditor.toolBrush", icon: IconBrush },
       { id: "eraser", labelKey: "layerEditor.toolEraser", icon: IconEraser },
@@ -156666,6 +156920,36 @@ const _sfc_main$20 = /* @__PURE__ */ defineComponent({
       editor.setActiveLayer(node.id);
       if (target) editor.paintTarget.value = target;
     }
+    const multiSelect = computed(() => editor.selectedIds.value.size > 1);
+    function onRowClick(node, e) {
+      if (e.shiftKey) {
+        const rows = displayRows.value.map((r) => r.node.id);
+        const anchor = editor.activeId.value;
+        const ai = anchor ? rows.indexOf(anchor) : -1;
+        const ci = rows.indexOf(node.id);
+        if (ai >= 0 && ci >= 0 && ai !== ci) {
+          const range = ai < ci ? rows.slice(ai, ci + 1) : rows.slice(ci, ai + 1).reverse();
+          editor.setSelectedLayers(range);
+          return;
+        }
+      }
+      if (e.ctrlKey || e.metaKey) {
+        const sel2 = [...editor.selectedIdList.value];
+        const at2 = sel2.indexOf(node.id);
+        if (at2 >= 0) sel2.splice(at2, 1);
+        else sel2.push(node.id);
+        editor.setSelectedLayers(sel2);
+        return;
+      }
+      selectLayer(node);
+    }
+    function onContentThumbClick(node, e) {
+      if (e.shiftKey || e.ctrlKey || e.metaKey) {
+        onRowClick(node, e);
+        return;
+      }
+      selectLayer(node, "content");
+    }
     function maskTargeted(node) {
       return node.id === editor.activeId.value && editor.paintTarget.value === "mask";
     }
@@ -156894,12 +157178,12 @@ const _sfc_main$20 = /* @__PURE__ */ defineComponent({
             return openBlock(), createElementBlock("div", {
               key: row.node.id,
               class: normalizeClass(["ctv:flex ctv:h-10 ctv:cursor-pointer ctv:items-stretch ctv:border-b ctv:border-[#1c1c1c] ctv:transition-colors", [
-                row.node.id === unref(editor).activeId.value ? "ctv:bg-[#44546a]" : "ctv:hover:bg-[#333333]",
+                unref(editor).selectedIds.value.has(row.node.id) ? row.node.id === unref(editor).activeId.value ? "ctv:bg-[#44546a]" : "ctv:bg-[#39455a]" : "ctv:hover:bg-[#333333]",
                 unref(rowDropClass)(row),
                 unref(dragId) === row.node.id ? "ctv:opacity-50" : ""
               ]]),
               draggable: unref(renamingId) !== row.node.id,
-              onClick: ($event) => selectLayer(row.node),
+              onClick: ($event) => onRowClick(row.node, $event),
               onDblclick: ($event) => renamingId.value = row.node.id,
               onDragstart: ($event) => unref(onRowDragStart)(row, $event),
               onDragover: ($event) => unref(onRowDragOver)(row, $event),
@@ -156946,7 +157230,7 @@ const _sfc_main$20 = /* @__PURE__ */ defineComponent({
                     title: _ctx.$t("layerEditor.targetContent"),
                     ref_for: true,
                     ref: (el) => unref(drawThumb)(el, row.node),
-                    onClick: withModifiers(($event) => selectLayer(row.node, "content"), ["stop"])
+                    onClick: withModifiers(($event) => onContentThumbClick(row.node, $event), ["stop"])
                   }, null, 10, _hoisted_18$9),
                   row.node.mask ? (openBlock(), createElementBlock("canvas", {
                     key: 0,
@@ -157341,7 +157625,7 @@ const _sfc_main$20 = /* @__PURE__ */ defineComponent({
               key: 0,
               type: "button",
               class: normalizeClass(miniBtnClass$1),
-              disabled: !unref(active),
+              disabled: !unref(active) || multiSelect.value,
               title: _ctx.$t("layerEditor.addMask"),
               onClick: _cache2[42] || (_cache2[42] = withModifiers(($event) => addMaskMenuOpen.value = !addMaskMenuOpen.value, ["stop"])),
               onPointerdown: _cache2[43] || (_cache2[43] = withModifiers(() => {
@@ -157838,6 +158122,20 @@ function useLayerEditorHotkeys(editor, opts) {
         return;
       }
     }
+    if (editor.tool.value === "transform" && !isTextEditingTarget(e.target)) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        editor.transformApply();
+        editor.tool.value = "select";
+        return;
+      }
+      if (e.key === "Escape") {
+        e.preventDefault();
+        editor.transformCancel();
+        editor.tool.value = "select";
+        return;
+      }
+    }
     if (e.key === "Escape" && opts.isFullscreen()) {
       opts.exitFullscreen();
       return;
@@ -157849,6 +158147,11 @@ function useLayerEditorHotkeys(editor, opts) {
       return;
     }
     const ctrl = e.ctrlKey || e.metaKey;
+    if (ctrl && e.code === "KeyT") {
+      e.preventDefault();
+      editor.startTransform();
+      return;
+    }
     if (ctrl && e.code === "KeyA") {
       e.preventDefault();
       editor.selectAll();
@@ -159029,7 +159332,11 @@ function useLayerEditorStage(node, opts) {
     void version2.value;
     return editor.floating();
   });
-  const selectedIds = computed(() => new Set(activeId.value ? [activeId.value] : []));
+  const selectedIdList = computed(() => {
+    void version2.value;
+    return editor.selectedNodeIds();
+  });
+  const selectedIds = computed(() => new Set(selectedIdList.value));
   const canUndo = computed(() => version2.value >= 0 && editor.history.canUndo());
   const canRedo = computed(() => version2.value >= 0 && editor.history.canRedo());
   const content = editor.content;
@@ -159454,21 +159761,37 @@ function useLayerEditorStage(node, opts) {
   function setActiveLayer(id) {
     editor.setActiveNode(id);
   }
+  function setSelectedLayers(ids) {
+    editor.setSelectedNodes(ids);
+  }
   function undo2() {
     editor.undo();
   }
   function redo2() {
     editor.redo();
   }
+  function selectionTargets(id) {
+    const sel2 = editor.selectedNodeIds();
+    return sel2.length > 1 && sel2.includes(id) ? sel2 : [id];
+  }
+  function batch2(label, ids, apply2) {
+    if (ids.length > 1) editor.history.beginGroup(label);
+    for (const tid of ids) apply2(tid);
+    if (ids.length > 1) editor.history.endGroup();
+  }
   function setOpacity(id, v) {
-    const n = engineNode(id);
-    if (!n) return;
-    editProp("Opacity", Dirty.META, () => n.opacity, (x) => n.opacity = x, clamp01(v), `opacity:${id}`);
+    batch2("Opacity", selectionTargets(id), (tid) => {
+      const n = engineNode(tid);
+      if (!n) return;
+      editProp("Opacity", Dirty.META, () => n.opacity, (x) => n.opacity = x, clamp01(v), `opacity:${tid}`);
+    });
   }
   function setBlendMode(id, v) {
-    const n = engineNode(id);
-    if (!n) return;
-    editProp("Blend", Dirty.DRAWABLE, () => n.mode, (m) => n.mode = m, defaultMode(v in LAYER_MODES ? v : "normal"), `blend:${id}`);
+    batch2("Blend", selectionTargets(id), (tid) => {
+      const n = engineNode(tid);
+      if (!n) return;
+      editProp("Blend", Dirty.DRAWABLE, () => n.mode, (m) => n.mode = m, defaultMode(v in LAYER_MODES ? v : "normal"), `blend:${tid}`);
+    });
   }
   function toggleVisible(id) {
     const n = engineNode(id);
@@ -159476,29 +159799,44 @@ function useLayerEditorStage(node, opts) {
     editProp("Visibility", Dirty.META, () => n.visible, (x) => n.visible = x, !n.visible);
   }
   function toggleLock(id) {
-    const n = engineNode(id);
-    if (!n) return;
-    editProp("Lock", Dirty.META, () => n.locks.content, (x) => n.locks.content = x, !n.locks.content);
+    const base2 = engineNode(id);
+    if (!base2) return;
+    const target = !base2.locks.content;
+    batch2("Lock", selectionTargets(id), (tid) => {
+      const n = engineNode(tid);
+      if (!n) return;
+      editProp("Lock", Dirty.META, () => n.locks.content, (x) => n.locks.content = x, target);
+    });
   }
   function toggleLockPosition(id) {
-    const n = engineNode(id);
-    if (!n) return;
-    editProp("Lock Position", Dirty.META, () => n.locks.position, (x) => n.locks.position = x, !n.locks.position);
+    const base2 = engineNode(id);
+    if (!base2) return;
+    const target = !base2.locks.position;
+    batch2("Lock Position", selectionTargets(id), (tid) => {
+      const n = engineNode(tid);
+      if (!n) return;
+      editProp("Lock Position", Dirty.META, () => n.locks.position, (x) => n.locks.position = x, target);
+    });
   }
   function toggleLockAll(id) {
-    const n = engineNode(id);
-    if (!n) return;
-    const target = !(n.locks.content && n.locks.position);
-    editProp(
-      "Lock All",
-      Dirty.META,
-      () => ({ content: n.locks.content, position: n.locks.position }),
-      (v) => {
-        n.locks.content = v.content;
-        n.locks.position = v.position;
-      },
-      { content: target, position: target }
-    );
+    const base2 = engineNode(id);
+    if (!base2) return;
+    const target = !(base2.locks.content && base2.locks.position);
+    batch2("Lock All", selectionTargets(id), (tid) => {
+      const n = engineNode(tid);
+      if (!n) return;
+      if (n.locks.content === target && n.locks.position === target) return;
+      editProp(
+        "Lock All",
+        Dirty.META,
+        () => ({ content: n.locks.content, position: n.locks.position }),
+        (v) => {
+          n.locks.content = v.content;
+          n.locks.position = v.position;
+        },
+        { content: target, position: target }
+      );
+    });
   }
   function renameLayer(id, name) {
     const n = engineNode(id);
@@ -159509,19 +159847,20 @@ function useLayerEditorStage(node, opts) {
     editor.moveNode(id, dir);
   }
   function removeLayer(id) {
-    const n = engineNode(id);
-    if (n && n.locks.content && n.locks.position) return;
-    editor.setActiveNode(id);
-    editor.removeActive();
+    const targets = selectionTargets(id).filter((tid) => {
+      const n = engineNode(tid);
+      return n && !(n.locks.content && n.locks.position);
+    });
+    if (targets.length) editor.removeNodes(targets);
   }
   function regenIds(n) {
     n.id = generateId(n.kind);
     if (n.kind === "group") for (const c2 of n.children) regenIds(c2);
   }
-  function duplicateLayer(id) {
+  function duplicateOne(id) {
     var _a2;
     const loc = findNode(editor.document().root, id);
-    if (!loc) return;
+    if (!loc) return null;
     const kind = getNodeKind(loc.node.kind);
     const copy2 = kind.normalize(kind.serialize(loc.node));
     regenIds(copy2);
@@ -159533,6 +159872,16 @@ function useLayerEditorStage(node, opts) {
       copy2.transform = { ...copy2.transform, x: copy2.transform.x + 16, y: copy2.transform.y + 16 };
     }
     editor.addNode(copy2, loc.index + 1, loc.parent.id);
+    return copy2.id;
+  }
+  function duplicateLayer(id) {
+    const targets = filterTopmost(editor.document().root, selectionTargets(id));
+    const copies = [];
+    batch2("Duplicate Layers", targets, (tid) => {
+      const cid = duplicateOne(tid);
+      if (cid) copies.push(cid);
+    });
+    if (copies.length > 1) editor.setSelectedNodes(copies);
   }
   function groupActiveLayer() {
     editor.groupActive();
@@ -159619,10 +159968,17 @@ function useLayerEditorStage(node, opts) {
     editor.layerToCanvasSize(id);
   }
   function toggleLockAlpha(id) {
-    const n = engineNode(id);
-    if (!n || n.kind !== "raster") return;
-    const r = n;
-    editProp("Lock Alpha", Dirty.META, () => r.lockAlpha === true, (v) => r.lockAlpha = v, !(r.lockAlpha === true));
+    const base2 = engineNode(id);
+    if (!base2 || base2.kind !== "raster") return;
+    const target = !(base2.lockAlpha === true);
+    const targets = selectionTargets(id).filter((tid) => {
+      var _a2;
+      return ((_a2 = engineNode(tid)) == null ? void 0 : _a2.kind) === "raster";
+    });
+    batch2("Lock Alpha", targets, (tid) => {
+      const r = engineNode(tid);
+      editProp("Lock Alpha", Dirty.META, () => r.lockAlpha === true, (v) => r.lockAlpha = v, target);
+    });
   }
   function addAdjustmentLayer(op = "brightness-contrast") {
     editor.addNode(adjustmentKind.create({ op, params: defaultParams(op) }));
@@ -159731,9 +160087,16 @@ function useLayerEditorStage(node, opts) {
     fitView();
   }
   function nudgeActive(dx, dy) {
-    var _a2;
     const id = activeId.value;
     if (!id) return;
+    const targets = filterTopmost(editor.document().root, selectionTargets(id)).filter((tid) => {
+      const n = engineNode(tid);
+      return n && !n.locks.position;
+    });
+    batch2("Move", targets, (tid) => nudgeOne(tid, dx, dy));
+  }
+  function nudgeOne(id, dx, dy) {
+    var _a2;
     const n = engineNode(id);
     if (!n || n.locks.position) return;
     if (n.kind === "vector") {
@@ -159821,6 +160184,7 @@ function useLayerEditorStage(node, opts) {
     return c2;
   }
   function addMask(id, init = "white") {
+    if (editor.selectedNodeIds().length > 1) return;
     const n = engineNode(id);
     if (!n || n.mask) return;
     const d = editor.document();
@@ -160090,6 +160454,7 @@ function useLayerEditorStage(node, opts) {
     activeId,
     activeNode,
     selectedIds,
+    selectedIdList,
     tool,
     brushSize,
     brushOpacity,
@@ -160129,6 +160494,7 @@ function useLayerEditorStage(node, opts) {
     groupActiveLayer,
     ungroupActiveLayer,
     setActiveLayer,
+    setSelectedLayers,
     setOpacity,
     setBlendMode,
     toggleVisible,
@@ -160152,6 +160518,20 @@ function useLayerEditorStage(node, opts) {
     },
     warpCancel: () => {
       editor.warpCancel();
+    },
+    transformDirty: computed(() => {
+      void version2.value;
+      return editor.transformDirty();
+    }),
+    transformApply: () => {
+      editor.transformApply();
+    },
+    transformCancel: () => {
+      editor.transformCancel();
+    },
+    canTransformActive: () => canTransformNode(activeNode.value),
+    startTransform: () => {
+      if (canTransformNode(activeNode.value)) tool.value = "transform";
     },
     filterSession,
     startFilter,
@@ -190242,4 +190622,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-HTPUANRk.mjs.map
+//# sourceMappingURL=main-CBAgda63.mjs.map

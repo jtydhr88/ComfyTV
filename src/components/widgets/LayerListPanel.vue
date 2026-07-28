@@ -120,12 +120,14 @@
         :key="row.node.id"
         class="ctv:flex ctv:h-10 ctv:cursor-pointer ctv:items-stretch ctv:border-b ctv:border-[#1c1c1c] ctv:transition-colors"
         :class="[
-          row.node.id === editor.activeId.value ? 'ctv:bg-[#44546a]' : 'ctv:hover:bg-[#333333]',
+          editor.selectedIds.value.has(row.node.id)
+            ? (row.node.id === editor.activeId.value ? 'ctv:bg-[#44546a]' : 'ctv:bg-[#39455a]')
+            : 'ctv:hover:bg-[#333333]',
           rowDropClass(row),
           dragId === row.node.id ? 'ctv:opacity-50' : '',
         ]"
         :draggable="renamingId !== row.node.id"
-        @click="selectLayer(row.node)"
+        @click="onRowClick(row.node, $event)"
         @dblclick="renamingId = row.node.id"
         @dragstart="onRowDragStart(row, $event)"
         @dragover="onRowDragOver(row, $event)"
@@ -165,7 +167,7 @@
               :style="checkerStyle"
               :title="$t('layerEditor.targetContent')"
               :ref="(el) => drawThumb(el as HTMLCanvasElement | null, row.node)"
-              @click.stop="selectLayer(row.node, 'content')"
+              @click.stop="onContentThumbClick(row.node, $event)"
             />
             <canvas
               v-if="row.node.mask"
@@ -487,7 +489,7 @@
           v-if="!active?.mask"
           type="button"
           :class="miniBtnClass"
-          :disabled="!active"
+          :disabled="!active || multiSelect"
           :title="$t('layerEditor.addMask')"
           @click.stop="addMaskMenuOpen = !addMaskMenuOpen"
           @pointerdown.stop
@@ -749,6 +751,39 @@ const checkerStyle = {
 function selectLayer(node: SceneNode, target?: 'content' | 'mask'): void {
   editor.setActiveLayer(node.id)
   if (target) editor.paintTarget.value = target
+}
+
+const multiSelect = computed(() => editor.selectedIds.value.size > 1)
+
+function onRowClick(node: SceneNode, e: MouseEvent): void {
+  if (e.shiftKey) {
+    const rows = displayRows.value.map((r) => r.node.id)
+    const anchor = editor.activeId.value
+    const ai = anchor ? rows.indexOf(anchor) : -1
+    const ci = rows.indexOf(node.id)
+    if (ai >= 0 && ci >= 0 && ai !== ci) {
+      const range = ai < ci ? rows.slice(ai, ci + 1) : rows.slice(ci, ai + 1).reverse()
+      editor.setSelectedLayers(range)
+      return
+    }
+  }
+  if (e.ctrlKey || e.metaKey) {
+    const sel = [...editor.selectedIdList.value]
+    const at = sel.indexOf(node.id)
+    if (at >= 0) sel.splice(at, 1)
+    else sel.push(node.id)
+    editor.setSelectedLayers(sel)
+    return
+  }
+  selectLayer(node)
+}
+
+function onContentThumbClick(node: SceneNode, e: MouseEvent): void {
+  if (e.shiftKey || e.ctrlKey || e.metaKey) {
+    onRowClick(node, e)
+    return
+  }
+  selectLayer(node, 'content')
 }
 
 function maskTargeted(node: SceneNode): boolean {

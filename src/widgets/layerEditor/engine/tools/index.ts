@@ -4,9 +4,12 @@ import { makeMarqueeToolDef } from './marqueeTool'
 import { makePaintToolDef } from './paintTool'
 import { makeSelectToolDef } from './selectTool'
 import { makeShapeToolDef } from './shapeTool'
+import { makeTransformToolDef } from './transformTool'
 import { makeWarpToolDef } from './warpTool'
 
-export { makeSelectToolDef } from './selectTool'
+export { makeSelectToolDef, nodeBounds } from './selectTool'
+export { makeTransformToolDef, isTransformTool, canTransformNode } from './transformTool'
+export type { TransformToolApi } from './transformTool'
 export { makeMarqueeToolDef } from './marqueeTool'
 export { makePaintToolDef, DEFAULT_BRUSH } from './paintTool'
 export { makeShapeToolDef, DEFAULT_SHAPE_OPTIONS, STROKE_ONLY_SHAPES, buildShapePath, resolveShapeStyles, appendShapeToVector } from './shapeTool'
@@ -26,6 +29,7 @@ export function registerBuiltinTools(): void {
   registered = true
   registerBuiltinPaintCores()
   registerTool(makeSelectToolDef())
+  registerTool(makeTransformToolDef())
   registerTool(makeMarqueeToolDef())
   registerTool(makeShapeToolDef())
   registerTool(makeWarpToolDef())

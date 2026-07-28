@@ -69,7 +69,7 @@ export function applyMove(t: Transform, dx: number, dy: number): Transform {
   return { ...t, x: t.x + dx, y: t.y + dy }
 }
 
-export function applyResize(t: Transform, h: HandleId, pt: Vec2, minSize = 1): Transform {
+export function applyResize(t: Transform, h: HandleId, pt: Vec2, minSize = 1, keepAspect = false): Transform {
   if (h === 'rotate') return t
   const anchor = handlePos(t, OPP[h])
   const { ex, ey } = axes(t)
@@ -81,11 +81,35 @@ export function applyResize(t: Transform, h: HandleId, pt: Vec2, minSize = 1): T
   const projX = d.x * ex.x + d.y * ex.y
   const projY = d.x * ey.x + d.y * ey.y
 
+  const oc = center(t)
+  const ocRel = { x: (oc.x - anchor.x) * ex.x + (oc.y - anchor.y) * ex.y, y: (oc.x - anchor.x) * ey.x + (oc.y - anchor.y) * ey.y }
+
+  if (keepAspect && t.w > 0 && t.h > 0) {
+    let s: number
+    if (controlsX && controlsY) {
+      const vx = dir.x * t.w
+      const vy = dir.y * t.h
+      s = (projX * vx + projY * vy) / (vx * vx + vy * vy)
+    } else if (controlsX) {
+      s = (dir.x * projX) / t.w
+    } else {
+      s = (dir.y * projY) / t.h
+    }
+    s = Math.max(s, minSize / t.w, minSize / t.h)
+    const relX = ocRel.x * s
+    const relY = ocRel.y * s
+    const newW = t.w * s
+    const newH = t.h * s
+    const nc = {
+      x: anchor.x + ex.x * relX + ey.x * relY,
+      y: anchor.y + ex.y * relX + ey.y * relY,
+    }
+    return { x: nc.x - newW / 2, y: nc.y - newH / 2, w: newW, h: newH, rotation: t.rotation }
+  }
+
   const newW = controlsX ? Math.max(minSize, Math.abs(projX)) : t.w
   const newH = controlsY ? Math.max(minSize, Math.abs(projY)) : t.h
 
-  const oc = center(t)
-  const ocRel = { x: (oc.x - anchor.x) * ex.x + (oc.y - anchor.y) * ex.y, y: (oc.x - anchor.x) * ey.x + (oc.y - anchor.y) * ey.y }
   const relX = controlsX ? (dir.x * newW) / 2 : ocRel.x
   const relY = controlsY ? (dir.y * newH) / 2 : ocRel.y
 

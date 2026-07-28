@@ -152,6 +152,30 @@
       </label>
     </template>
 
+    <template v-else-if="isTransformTool">
+      <button
+        type="button"
+        :class="actionBtnClass"
+        :disabled="!editor.transformDirty.value"
+        @click="editor.transformApply(); editor.tool.value = 'select'"
+      >
+        <IconCheck class="ctv:size-3.5" />
+        {{ $t('layerEditor.transformApply') }}
+      </button>
+      <button
+        type="button"
+        :class="actionBtnClass"
+        :disabled="!editor.transformDirty.value"
+        @click="editor.transformCancel(); editor.tool.value = 'select'"
+      >
+        <IconX class="ctv:size-3.5" />
+        {{ $t('layerEditor.transformCancel') }}
+      </button>
+      <span class="ctv:whitespace-nowrap ctv:text-[10px] ctv:text-[#9b9b9b]/70">
+        {{ $t('layerEditor.transformHint') }}
+      </span>
+    </template>
+
     <template v-else-if="isWarpTool">
       <div class="ctv:flex ctv:h-6 ctv:items-center ctv:gap-0.5 ctv:rounded ctv:bg-[#1e1e1e] ctv:p-0.5">
         <button
@@ -291,6 +315,7 @@ import IconLoader from '~icons/lucide/loader-2'
 import IconMinus from '~icons/lucide/minus'
 import IconMousePointer from '~icons/lucide/mouse-pointer-2'
 import IconRedo from '~icons/lucide/redo-2'
+import IconScaling from '~icons/lucide/scaling'
 import IconScan from '~icons/lucide/scan'
 import IconShapes from '~icons/lucide/shapes'
 import IconShell from '~icons/lucide/shell'
@@ -323,6 +348,7 @@ function onPsdFilePicked(e: Event): void {
 
 const TOOL_META: Record<ToolId, { labelKey: string; icon: unknown }> = {
   select: { labelKey: 'layerEditor.toolSelect', icon: IconMousePointer },
+  transform: { labelKey: 'layerEditor.toolTransform', icon: IconScaling },
   marquee: { labelKey: 'layerEditor.toolMarquee', icon: IconSquareDashed },
   brush: { labelKey: 'layerEditor.toolBrush', icon: IconBrush },
   eraser: { labelKey: 'layerEditor.toolEraser', icon: IconEraser },
@@ -353,6 +379,7 @@ const activeToolLabelKey = computed(() => TOOL_META[editor.tool.value].labelKey)
 const isPaintTool = computed(() => editor.tool.value === 'brush' || editor.tool.value === 'eraser')
 const isShapeTool = computed(() => editor.tool.value === 'shape')
 const isWarpTool = computed(() => editor.tool.value === 'warp')
+const isTransformTool = computed(() => editor.tool.value === 'transform')
 const WARP_GRID_SIZES = [3, 4, 5]
 const showBrushColor = computed(
   () => editor.tool.value === 'brush' && editor.paintTarget.value === 'content'

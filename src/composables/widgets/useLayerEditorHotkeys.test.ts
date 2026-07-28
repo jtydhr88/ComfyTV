@@ -8,12 +8,16 @@ function makeEditor() {
   return {
     activeId: ref<string | null>('layer-1'),
     floating: ref<unknown>(null),
+    tool: ref<string>('select'),
     undo: vi.fn(),
     redo: vi.fn(),
     removeLayer: vi.fn(),
     nudgeActive: vi.fn(),
     anchorFloating: vi.fn(),
     cancelFloating: vi.fn(),
+    startTransform: vi.fn(),
+    transformApply: vi.fn(),
+    transformCancel: vi.fn(),
   }
 }
 
@@ -130,6 +134,25 @@ describe('useLayerEditorHotkeys', () => {
     expect(editor.nudgeActive).toHaveBeenCalledWith(0, -1)
     api.onKeyDown(key({ key: 'ArrowDown', shiftKey: true }))
     expect(editor.nudgeActive).toHaveBeenCalledWith(0, 10)
+  })
+
+  it('ctrl+t starts a transform session', () => {
+    const { api, editor } = setup()
+    api.onKeyDown(key({ code: 'KeyT', ctrlKey: true }))
+    expect(editor.startTransform).toHaveBeenCalled()
+  })
+
+  it('enter applies and escape cancels an active transform session', () => {
+    const { api, editor } = setup()
+    editor.tool.value = 'transform'
+    api.onKeyDown(key({ key: 'Enter' }))
+    expect(editor.transformApply).toHaveBeenCalled()
+    expect(editor.tool.value).toBe('select')
+
+    editor.tool.value = 'transform'
+    api.onKeyDown(key({ key: 'Escape' }))
+    expect(editor.transformCancel).toHaveBeenCalled()
+    expect(editor.tool.value).toBe('select')
   })
 
   it('leaves unrelated keys alone', () => {

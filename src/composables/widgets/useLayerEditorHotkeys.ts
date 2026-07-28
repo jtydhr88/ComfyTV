@@ -30,6 +30,20 @@ export function useLayerEditorHotkeys(
         return
       }
     }
+    if (editor.tool.value === 'transform' && !isTextEditingTarget(e.target)) {
+      if (e.key === 'Enter') {
+        e.preventDefault()
+        editor.transformApply()
+        editor.tool.value = 'select'
+        return
+      }
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        editor.transformCancel()
+        editor.tool.value = 'select'
+        return
+      }
+    }
     if (e.key === 'Escape' && opts.isFullscreen()) {
       opts.exitFullscreen()
       return
@@ -42,6 +56,11 @@ export function useLayerEditorHotkeys(
       return
     }
     const ctrl = e.ctrlKey || e.metaKey
+    if (ctrl && e.code === 'KeyT') {
+      e.preventDefault()
+      editor.startTransform()
+      return
+    }
     if (ctrl && e.code === 'KeyA') {
       e.preventDefault()
       editor.selectAll()

@@ -68,6 +68,40 @@ describe('applyResize (axis-aligned reduces to simple)', () => {
   })
 })
 
+describe('applyResize with keepAspect (GIMP constrained scale)', () => {
+  it('corner drag projects onto the diagonal and keeps the anchor fixed', () => {
+    const r = applyResize(box, 'se', { x: 210, y: 80 }, 1, true)
+    const s = (200 * 100 + 60 * 60) / (100 * 100 + 60 * 60)
+    expect(r.w).toBeCloseTo(100 * s)
+    expect(r.h).toBeCloseTo(60 * s)
+    expect(r.w / r.h).toBeCloseTo(100 / 60)
+    expect(r.x).toBeCloseTo(10)
+    expect(r.y).toBeCloseTo(20)
+  })
+
+  it('edge drag scales both dimensions about the opposite edge midpoint', () => {
+    const r = applyResize(box, 'e', { x: 310, y: 999 }, 1, true)
+    expect(r.w).toBeCloseTo(300)
+    expect(r.h).toBeCloseTo(180)
+    expect(r.x).toBeCloseTo(10)
+    expect(r.y).toBeCloseTo(-40)
+  })
+
+  it('preserves the ratio on rotated boxes', () => {
+    const rotated: Transform = { x: 10, y: 20, w: 100, h: 60, rotation: Math.PI / 5 }
+    const r = applyResize(rotated, 'nw', { x: -37, y: 3 }, 1, true)
+    expect(r.w / r.h).toBeCloseTo(100 / 60)
+    expect(r.rotation).toBe(rotated.rotation)
+  })
+
+  it('clamps the uniform factor so both dims stay above minSize', () => {
+    const r = applyResize(box, 'se', { x: 10, y: 20 }, 1, true)
+    expect(r.w).toBeGreaterThanOrEqual(1)
+    expect(r.h).toBeGreaterThanOrEqual(1)
+    expect(r.w / r.h).toBeCloseTo(100 / 60)
+  })
+})
+
 describe('applyRotate', () => {
   it('adds the pointer-angle delta to the base rotation', () => {
     const grab = 0
