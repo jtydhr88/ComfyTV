@@ -5,6 +5,7 @@ import type { Document } from '../document'
 import { resolveMode } from '../mode'
 import type { AdjustmentData, GroupData, Rect, SceneNode, Transform } from '../node'
 import { getNodeKind, type RenderNodeCtx } from '../nodeKind'
+import { fxStamp, getFxProcessed, type LayerFxData } from './layerFx'
 import { placeBitmap, type Bitmap } from './place'
 
 export interface PlacedEntry {
@@ -29,7 +30,7 @@ function transformStamp(t: Transform): string {
   return `${t.x},${t.y},${t.w},${t.h},${t.rotation}`
 }
 
-function makePlaced(deps: RenderDeps, region: Rect, used: Set<string>) {
+function makePlaced(deps: RenderDeps, region: Rect, used: Set<string>, fxRef: { current: LayerFxData[] | null }) {
   return (
     cacheKey: string,
     contentStamp: string,
@@ -37,7 +38,25 @@ function makePlaced(deps: RenderDeps, region: Rect, used: Set<string>) {
     transform: Transform,
     linear = false
   ): NodeTexture | null => {
-    const stamp = `${contentStamp}|${transformStamp(transform)}|${region.w}x${region.h}`
+    let fxTag = ''
+    const fx = fxRef.current
+    if (fx && fx.length && cacheKey.startsWith('content:')) {
+      const processed = getFxProcessed(cacheKey, contentStamp, bitmap, fx)
+      if (processed) {
+        const sx = transform.w / Math.max(1, bitmap.width)
+        const sy = transform.h / Math.max(1, bitmap.height)
+        bitmap = processed.canvas
+        transform = {
+          x: transform.x - processed.pad * sx,
+          y: transform.y - processed.pad * sy,
+          w: transform.w + 2 * processed.pad * sx,
+          h: transform.h + 2 * processed.pad * sy,
+          rotation: transform.rotation,
+        }
+        fxTag = `|${fxStamp(fx)}`
+      }
+    }
+    const stamp = `${contentStamp}|${transformStamp(transform)}|${region.w}x${region.h}${fxTag}`
     const cache = deps.placedCache
     if (!cache) {
       const canvas = placeBitmap(bitmap, transform, region.w, region.h)
@@ -92,7 +111,8 @@ function buildInputs(group: GroupData, doc: Document, deps: RenderDeps, used: Se
   const region: Rect = { x: 0, y: 0, w: doc.width, h: doc.height }
   const inputs: CompositeInput[] = []
   const cleanups: Array<() => void> = []
-  const placed = makePlaced(deps, region, used)
+  const fxRef: { current: LayerFxData[] | null } = { current: null }
+  const placed = makePlaced(deps, region, used, fxRef)
   const ctx: RenderNodeCtx = {
     compositor: deps.compositor,
     content: deps.content,
@@ -141,7 +161,9 @@ function buildInputs(group: GroupData, doc: Document, deps: RenderDeps, used: Se
       continue
     }
 
+    fxRef.current = node.fx?.length ? node.fx : null
     const texture = renderLeafTexture(node, ctx, deps)
+    fxRef.current = null
     if (!texture) continue
     inputs.push({
       texture,

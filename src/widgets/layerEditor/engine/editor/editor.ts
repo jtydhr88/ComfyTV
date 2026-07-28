@@ -31,6 +31,11 @@ import { generateId } from '../id'
 import type { ChannelData, Rect } from '../node'
 import { canRasterizeLayer, cropToContent as cropToContentOp, layerToCanvasSize as layerToCanvasSizeOp, mergeDown as mergeDownOp, rasterizeLayer as rasterizeLayerOp } from './layerOps'
 import { clampRectToDoc, fullSelectionCanvas, invertSelectionCanvas, lumaBBox, rectSelectionCanvas } from './selectionOps'
+import {
+  borderMask, combineMasks, emptyMask, featherMask, growMask, maskBoundary, maskBounds, maskFromCanvas, maskToCanvas,
+  shrinkMask, type GrayMask, type SelectionOp,
+} from './selectionMath'
+import { DEFAULT_WAND_OPTIONS, type WandToolOptions } from '../tools/wandTool'
 import { OverlayList } from './overlayList'
 
 export interface FloatingItem {
@@ -85,6 +90,9 @@ export interface Editor {
   setShapeOptions(opts: Partial<ShapeToolOptions>): void
   shapeOptions(): ShapeToolOptions
   setWarpOptions(opts: Partial<WarpToolOptions>): void
+  setWandOptions(opts: Partial<WandToolOptions>): void
+  wandOptions(): WandToolOptions
+  modifySelection(kind: 'feather' | 'grow' | 'shrink' | 'border', radius: number): boolean
   warpApply(): boolean
   warpCancel(): boolean
   warpDirty(): boolean
@@ -151,6 +159,7 @@ export function createEditor(opts: EditorOptions): Editor {
   let brush: BrushParams = { ...DEFAULT_BRUSH }
   let shape: ShapeToolOptions = { ...DEFAULT_SHAPE_OPTIONS }
   let warp: WarpToolOptions = { ...DEFAULT_WARP_OPTIONS }
+  let wand: WandToolOptions = { ...DEFAULT_WAND_OPTIONS }
 
   const overrides = new Map<string, HTMLCanvasElement>()
   const placedCache = new Map<string, PlacedEntry>()
@@ -179,10 +188,27 @@ export function createEditor(opts: EditorOptions): Editor {
     return doc.channels.find((ch) => ch.id === doc.selectionId && ch.role === 'selection') ?? null
   }
 
+  let selOutlineCache: { key: string; outlines: Vec2[][] } | null = null
+  function selectionOutlines(sel: ChannelData): Vec2[][] {
+    if (selOutlineCache?.key === sel.contentId) return selOutlineCache.outlines
+    const entry = content.get(sel.contentId)
+    const mask = entry ? maskFromCanvas(entry.canvas) : null
+    const outlines = mask ? maskBoundary(mask) : []
+    selOutlineCache = { key: sel.contentId, outlines }
+    return outlines
+  }
+
   function buildOverlay(): void {
     overlay.clear()
     const sel = selectionChannel()
-    if (sel?.bounds) overlay.add({ type: 'rect', rect: sel.bounds, ants: true })
+    if (sel?.bounds) {
+      const outlines = selectionOutlines(sel)
+      if (outlines.length) {
+        for (const points of outlines) overlay.add({ type: 'polyline', points, closed: true, ants: true })
+      } else {
+        overlay.add({ type: 'rect', rect: sel.bounds, ants: true })
+      }
+    }
     if (floating) {
       addTransformBox(overlay, floating.transform)
       return
@@ -245,18 +271,30 @@ export function createEditor(opts: EditorOptions): Editor {
       else overrides.delete(key)
     },
     selection: {
-      setRect: (rect) => {
-        const clamped = clampRectToDoc(rect, doc.width, doc.height)
-        if (!clamped) return
-        commitSelection('Select Rectangle', rectSelectionCanvas(doc.width, doc.height, clamped), clamped)
+      combineShape: (label, mask, op) => {
+        combineSelectionMask(label, mask, op)
       },
+      currentMask: currentSelectionMask,
       none: () => {
         commitSelection('Select None', null, null)
       },
     },
+    compositePixels: () => {
+      render()
+      const img = compositor.readback()
+      if (img.width !== doc.width || img.height !== doc.height) return null
+      return img
+    },
     zoom: () => zoomLevel,
     requestRender: refresh,
-    options: <T,>() => (toolId === 'shape' ? shape : toolId === 'warp' ? warp : brush) as unknown as T,
+    options: <T,>() =>
+      (toolId === 'shape'
+        ? shape
+        : toolId === 'warp'
+          ? warp
+          : toolId === 'wand' || toolId === 'bucket'
+            ? { ...wand, color: brush.color }
+            : brush) as unknown as T,
   }
 
   function makeTool(): void {
@@ -321,6 +359,27 @@ export function createEditor(opts: EditorOptions): Editor {
   function activeRaster(): RasterData | null {
     const loc = activeLocation()
     return loc && loc.node.kind === 'raster' ? (loc.node as RasterData) : null
+  }
+
+  function currentSelectionMask(): GrayMask | null {
+    const sel = selectionChannel()
+    if (!sel) return null
+    const entry = content.get(sel.contentId)
+    if (!entry) return null
+    return maskFromCanvas(entry.canvas)
+  }
+
+  function combineSelectionMask(label: string, shapeMask: GrayMask, op: SelectionOp): boolean {
+    let result = shapeMask
+    if (op !== 'replace') {
+      const base = currentSelectionMask() ?? emptyMask(doc.width, doc.height)
+      result = combineMasks(base, shapeMask, op)
+    }
+    const bounds = maskBounds(result)
+    if (!bounds) return commitSelection(label, null, null)
+    const canvas = maskToCanvas(result)
+    if (!canvas) return false
+    return commitSelection(label, canvas, bounds)
   }
 
   function commitSelection(label: string, canvas: HTMLCanvasElement | null, bounds: Rect | null): boolean {
@@ -588,6 +647,26 @@ export function createEditor(opts: EditorOptions): Editor {
     setWarpOptions(opts) {
       warp = { ...warp, ...opts }
       if (isWarpTool(tool)) tool.optionsChanged()
+    },
+    setWandOptions(opts) {
+      wand = { ...wand, ...opts }
+    },
+    wandOptions: () => ({ ...wand }),
+    modifySelection(kind, radius) {
+      const mask = currentSelectionMask()
+      if (!mask) return false
+      const r = Math.max(1, Math.round(radius))
+      const next =
+        kind === 'feather' ? featherMask(mask, r)
+        : kind === 'grow' ? growMask(mask, r)
+        : kind === 'shrink' ? shrinkMask(mask, r)
+        : borderMask(mask, r)
+      const bounds = maskBounds(next)
+      if (!bounds) return commitSelection('Select None', null, null)
+      const canvas = maskToCanvas(next)
+      if (!canvas) return false
+      const labels = { feather: 'Feather Selection', grow: 'Grow Selection', shrink: 'Shrink Selection', border: 'Border Selection' }
+      return commitSelection(labels[kind], canvas, bounds)
     },
     warpApply: () => (isWarpTool(tool) ? tool.apply() : false),
     warpCancel: () => (isWarpTool(tool) ? tool.cancel() : false),

@@ -67,7 +67,8 @@ function harness(doc: Document, content: DefaultContentStore, createPaintCore: (
       if (canvas) previews.set(key, canvas)
       else previews.delete(key)
     },
-    selection: { setRect: vi.fn(), none: vi.fn() },
+    selection: { combineShape: vi.fn(), currentMask: () => null, none: vi.fn() },
+    compositePixels: () => null,
     zoom: () => 1,
     requestRender: vi.fn(),
     options: <T,>() => ({}) as T,

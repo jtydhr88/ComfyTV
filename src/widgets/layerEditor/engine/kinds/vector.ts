@@ -5,6 +5,7 @@ import { generateId } from '../id'
 import { defaultMode } from '../mode'
 import type { NodeKind, RenderNodeCtx } from '../nodeKind'
 import type { Rect, Transform, VectorData, Vec2 } from '../node'
+import { normalizeLayerFx } from '../render/layerFx'
 import {
   clonePath,
   pathBounds,
@@ -196,6 +197,7 @@ export const vectorKind: NodeKind<VectorData> = {
       fill: normalizeFill(r.fill),
       stroke,
       mask: r.mask as VectorData['mask'],
+      fx: normalizeLayerFx(r.fx),
     }
   },
 
@@ -213,6 +215,7 @@ export const vectorKind: NodeKind<VectorData> = {
       fill: node.fill ? { ...node.fill } : undefined,
       stroke: node.stroke ? { ...node.stroke, dash: node.stroke.dash ? [...node.stroke.dash] : undefined } : undefined,
       mask: node.mask,
+      fx: node.fx,
     }
   },
 

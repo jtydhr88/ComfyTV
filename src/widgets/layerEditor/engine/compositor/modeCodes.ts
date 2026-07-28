@@ -21,6 +21,12 @@ export const BLEND_CODE: Record<BlendFn, number> = {
   saturation: 17,
   color: 18,
   luminosity: 19,
+  'linear-light': 20,
+  'hard-mix': 21,
+  subtract: 22,
+  divide: 23,
+  'grain-extract': 24,
+  'grain-merge': 25,
 }
 
 export const COMPOSITE_CODE: Record<CompositeMode, number> = {

@@ -26,8 +26,10 @@ describe('blend mode mapping', () => {
     }
   })
 
-  it('round-trips all engine modes', () => {
+  it('round-trips all engine modes that exist in PSD', () => {
+    const noPsdEquivalent = new Set<BlendFn>(['grain-extract', 'grain-merge'])
     for (const blend of Object.keys(LAYER_MODES) as BlendFn[]) {
+      if (noPsdEquivalent.has(blend)) continue
       expect(blendFromPsd(PSD_BLEND_MODES[blend])).toBe(blend)
     }
   })
@@ -35,7 +37,8 @@ describe('blend mode mapping', () => {
   it('falls back for psd-only modes', () => {
     expect(blendFromPsd('dissolve')).toBe('normal')
     expect(blendFromPsd('darker color')).toBe('darken')
-    expect(blendFromPsd('linear light')).toBe('vivid-light')
+    expect(blendFromPsd('linear light')).toBe('linear-light')
+    expect(blendFromPsd('subtraction')).toBe('subtract')
     expect(blendFromPsd(undefined)).toBe('normal')
     expect(blendFromPsd('bogus')).toBe('normal')
   })

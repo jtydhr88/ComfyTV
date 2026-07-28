@@ -193,7 +193,7 @@ describe('useLayerListPanel', () => {
     const { editor } = makeEditor()
     const api = useLayerListPanel(editor)
     const options = api.blendOptions.value
-    expect(options).toHaveLength(20)
+    expect(options).toHaveLength(26)
     expect(options[0]).toEqual({ label: 'layerEditor.blend.normal', value: 'normal' })
     expect(options.map((o) => o.value)).toContain('color-dodge')
     expect(options.map((o) => o.value)).toContain('luminosity')

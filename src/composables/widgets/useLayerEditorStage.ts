@@ -50,6 +50,7 @@ import {
   type FillSpec,
   type FillStyle,
   type GroupData,
+  type LayerFxData,
   type PathData,
   type RasterData,
   type SceneNode,
@@ -209,6 +210,10 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
   const shapeStarRatio = ref(0.5)
   const shapeTurns = ref(3)
   const warpPoints = ref(4)
+  const wandThreshold = ref(0.15)
+  const wandAntialias = ref(true)
+  const wandContiguous = ref(true)
+  const selectionRadius = ref(10)
   const editingTextId = ref<string | null>(null)
   const maskView = ref(false)
   const capturing = ref(false)
@@ -346,7 +351,17 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
         ctx.beginPath()
         item.points.forEach((p, i) => (i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)))
         if (item.closed) ctx.closePath()
-        ctx.stroke()
+        if (item.ants) {
+          ctx.save()
+          ctx.strokeStyle = '#000000'
+          ctx.stroke()
+          ctx.strokeStyle = '#ffffff'
+          ctx.setLineDash([hs, hs])
+          ctx.stroke()
+          ctx.restore()
+        } else {
+          ctx.stroke()
+        }
         break
       case 'arc':
         ctx.beginPath(); ctx.arc(item.center.x, item.center.y, item.radius, 0, Math.PI * 2); ctx.stroke()
@@ -880,6 +895,18 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
   function rasterizeLayer(id: string): void {
     editor.rasterizeLayer(id)
   }
+  function cloneFx(fx: LayerFxData[] | undefined): LayerFxData[] | undefined {
+    return fx?.map((f) => ({ ...f, params: { ...f.params } }))
+  }
+  function setLayerFx(id: string, next: LayerFxData[]): void {
+    const n = engineNode(id); if (!n) return
+    const get = (): LayerFxData[] | undefined => cloneFx(n.fx)
+    const set = (v: LayerFxData[] | undefined): void => { n.fx = cloneFx(v) }
+    const before = get()
+    n.fx = next.length ? cloneFx(next) : undefined
+    editor.history.push(new PropCommand('Layer Effects', Dirty.DRAWABLE, get, set, before, get(), `layerfx:${id}`))
+    editor.invalidate()
+  }
   function layerToCanvasSize(id: string): void {
     editor.layerToCanvasSize(id)
   }
@@ -1279,6 +1306,13 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
   )
   watch(maskView, () => requestRender())
   watch(warpPoints, () => editor.setWarpOptions({ points: warpPoints.value }))
+  watch([wandThreshold, wandAntialias, wandContiguous], () =>
+    editor.setWandOptions({
+      threshold: wandThreshold.value,
+      antialias: wandAntialias.value,
+      contiguous: wandContiguous.value,
+    })
+  )
   const textToolHandler: ToolHandler = {
     onPointerDown: (_e, pt) => {
       const hit = [...editor.document().root.children].reverse().find((n) => n.kind === 'text' && insideBox(n.transform, pt))
@@ -1396,8 +1430,13 @@ export function useLayerEditorStage(node: LGraphNode, opts?: UseLayerEditorStage
     mergeDown, flattenImage, flipImage, cropToContent, layerToCanvasSize, toggleLockAlpha,
     rasterizeLayer,
     canRasterize: (id: string) => editor.canRasterize(id),
+    setLayerFx,
     toggleLockPosition, toggleLockAll,
     selectAll, selectNone, invertSelection,
+    wandThreshold, wandAntialias, wandContiguous, selectionRadius,
+    modifySelection: (kind: 'feather' | 'grow' | 'shrink' | 'border') => {
+      editor.modifySelection(kind, selectionRadius.value)
+    },
     addAdjustmentLayer, updateAdjustment, updateVectorStyle,
     addFillLayer, updateFillLayer,
     content, fontStore,

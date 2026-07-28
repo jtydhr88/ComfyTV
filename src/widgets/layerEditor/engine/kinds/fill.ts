@@ -10,6 +10,7 @@ import { generateId } from '../id'
 import { defaultMode } from '../mode'
 import type { NodeKind, RenderNodeCtx } from '../nodeKind'
 import type { FillData, Rect } from '../node'
+import { normalizeLayerFx } from '../render/layerFx'
 
 const num = (v: unknown, d: number): number => (typeof v === 'number' && isFinite(v) ? v : d)
 const str = (v: unknown, d: string): string => (typeof v === 'string' ? v : d)
@@ -66,6 +67,7 @@ export const fillKind: NodeKind<FillData> = {
       },
       fill: normalizeFillSpec(r.fill),
       mask: r.mask as FillData['mask'],
+      fx: normalizeLayerFx(r.fx),
     }
   },
 
@@ -81,6 +83,7 @@ export const fillKind: NodeKind<FillData> = {
       locks: node.locks,
       fill: cloneFillSpec(node.fill),
       mask: node.mask,
+      fx: node.fx,
     }
   },
 

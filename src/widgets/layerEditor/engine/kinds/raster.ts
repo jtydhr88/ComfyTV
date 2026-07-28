@@ -3,6 +3,7 @@ import { generateId } from '../id'
 import { defaultMode } from '../mode'
 import type { NodeKind } from '../nodeKind'
 import type { RasterData, Rect, Transform, Vec2 } from '../node'
+import { normalizeLayerFx } from '../render/layerFx'
 
 function defaultTransform(w: number, h: number): Transform {
   return { x: 0, y: 0, w, h, rotation: 0 }
@@ -67,6 +68,7 @@ export const rasterKind: NodeKind<RasterData> = {
       naturalHeight: nh,
       lockAlpha: r.lockAlpha === true,
       mask: r.mask as RasterData['mask'],
+      fx: normalizeLayerFx(r.fx),
     }
   },
 
@@ -86,6 +88,7 @@ export const rasterKind: NodeKind<RasterData> = {
       naturalHeight: node.naturalHeight,
       lockAlpha: node.lockAlpha ?? false,
       mask: node.mask,
+      fx: node.fx,
     }
   },
 

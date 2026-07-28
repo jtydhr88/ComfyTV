@@ -37,6 +37,12 @@ const CHANNEL_BLEND: Partial<Record<BlendFn, (i: number, l: number) => number>> 
       ? Math.max(1 - safeDiv(1 - i, 2 * l), 0)
       : Math.min(safeDiv(i, 2 * (1 - l)), 1),
   'pin-light': (i, l) => (l > 0.5 ? Math.max(i, 2 * (l - 0.5)) : Math.min(i, 2 * l)),
+  'linear-light': (i, l) => i + 2 * l - 1,
+  'hard-mix': (i, l) => (i + l < 1 ? 0 : 1),
+  subtract: (i, l) => Math.max(i - l, 0),
+  divide: (i, l) => Math.max(0, Math.min(i / Math.max(l, EPSILON), 1)),
+  'grain-extract': (i, l) => i - l + 0.5,
+  'grain-merge': (i, l) => i + l - 0.5,
 }
 
 function blendHue(i: RGB, l: RGB): RGB {

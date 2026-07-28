@@ -15,7 +15,10 @@ export interface LayerRow {
   parentId?: string
 }
 
-export type ToolId = 'select' | 'transform' | 'marquee' | 'brush' | 'eraser' | 'text' | 'shape' | 'warp'
+export type ToolId =
+  | 'select' | 'transform'
+  | 'marquee' | 'marquee-ellipse' | 'lasso' | 'wand'
+  | 'brush' | 'eraser' | 'bucket' | 'text' | 'shape' | 'warp'
 
 export interface ToolHandler {
   onPointerDown: (e: PointerEvent, pt: Point) => boolean

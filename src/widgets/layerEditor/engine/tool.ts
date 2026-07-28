@@ -33,7 +33,7 @@ export type CanvasItem =
   | { type: 'handle'; pos: Vec2; shape: 'square' | 'circle' | 'diamond'; id?: string }
   | { type: 'line'; a: Vec2; b: Vec2 }
   | { type: 'rect'; rect: Rect; rotation?: number; ants?: boolean }
-  | { type: 'polyline'; points: Vec2[]; closed?: boolean }
+  | { type: 'polyline'; points: Vec2[]; closed?: boolean; ants?: boolean }
   | { type: 'arc'; center: Vec2; radius: number }
   | { type: 'preview'; canvas: HTMLCanvasElement; rect: Rect }
 
@@ -67,9 +67,11 @@ export interface ToolContext {
 
   setPaintPreview(key: string, canvas: HTMLCanvasElement | null): void
   selection: {
-    setRect(rect: Rect): void
+    combineShape(label: string, mask: import('./editor/selectionMath').GrayMask, op: import('./editor/selectionMath').SelectionOp): void
+    currentMask(): import('./editor/selectionMath').GrayMask | null
     none(): void
   }
+  compositePixels(): ImageData | null
   zoom(): number
   requestRender(): void
 

@@ -6,6 +6,7 @@ import { defaultMode } from '../mode'
 import type { NodeKind, RenderNodeCtx } from '../nodeKind'
 import type { NodeTexture } from '../compositor'
 import type { FontRef, Rect, TextData, Transform, Vec2 } from '../node'
+import { normalizeLayerFx } from '../render/layerFx'
 import { generateId } from '../id'
 
 const textCache = new TextRenderCache()
@@ -125,6 +126,7 @@ export const textKind: NodeKind<TextData> = {
       lineHeight: num(r.lineHeight, 1.2),
       align: align === 'center' || align === 'right' ? align : 'left',
       mask: r.mask as TextData['mask'],
+      fx: normalizeLayerFx(r.fx),
     }
   },
 

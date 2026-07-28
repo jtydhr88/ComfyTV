@@ -29,7 +29,9 @@ export const BLEND_KEYS: Record<string, string> = {
   darken: 'darken', lighten: 'lighten', 'color-dodge': 'colorDodge', 'color-burn': 'colorBurn',
   'hard-light': 'hardLight', 'soft-light': 'softLight', difference: 'difference', exclusion: 'exclusion',
   'linear-dodge': 'linearDodge', 'linear-burn': 'linearBurn', 'vivid-light': 'vividLight',
-  'pin-light': 'pinLight', hue: 'hue', saturation: 'saturation', color: 'color', luminosity: 'luminosity',
+  'pin-light': 'pinLight', 'linear-light': 'linearLight', 'hard-mix': 'hardMix',
+  subtract: 'subtract', divide: 'divide', 'grain-extract': 'grainExtract', 'grain-merge': 'grainMerge',
+  hue: 'hue', saturation: 'saturation', color: 'color', luminosity: 'luminosity',
 }
 
 export function clampArtboard(v: number): number | null {

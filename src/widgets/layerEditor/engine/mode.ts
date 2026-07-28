@@ -15,6 +15,12 @@ export type BlendFn =
   | 'linear-burn'
   | 'vivid-light'
   | 'pin-light'
+  | 'linear-light'
+  | 'hard-mix'
+  | 'subtract'
+  | 'divide'
+  | 'grain-extract'
+  | 'grain-merge'
   | 'hue'
   | 'saturation'
   | 'color'
@@ -74,6 +80,12 @@ export const LAYER_MODES: Record<BlendFn, LayerModeDef> = {
   'linear-burn': def('linear-burn', 'perceptual', 'clip-to-backdrop'),
   'vivid-light': def('vivid-light', 'perceptual', 'clip-to-backdrop'),
   'pin-light': def('pin-light', 'perceptual', 'clip-to-backdrop'),
+  'linear-light': def('linear-light', 'perceptual', 'clip-to-backdrop'),
+  'hard-mix': def('hard-mix', 'perceptual', 'clip-to-backdrop'),
+  subtract: def('subtract', 'linear', 'clip-to-backdrop'),
+  divide: def('divide', 'linear', 'clip-to-backdrop'),
+  'grain-extract': def('grain-extract', 'perceptual', 'clip-to-backdrop'),
+  'grain-merge': def('grain-merge', 'perceptual', 'clip-to-backdrop'),
   hue: def('hue', 'perceptual', 'clip-to-backdrop'),
   saturation: def('saturation', 'perceptual', 'clip-to-backdrop'),
   color: def('color', 'perceptual', 'clip-to-backdrop'),

@@ -56,6 +56,12 @@ float blendChannel(int mode, float i, float l) {
   if (mode == 14) return l <= 0.5 ? max(1.0 - safeDiv(1.0-i, 2.0*l), 0.0)
                                   : min(safeDiv(i, 2.0*(1.0-l)), 1.0);
   if (mode == 15) return l > 0.5 ? max(i, 2.0*(l-0.5)) : min(i, 2.0*l);
+  if (mode == 20) return i + 2.0*l - 1.0;
+  if (mode == 21) return i + l < 1.0 ? 0.0 : 1.0;
+  if (mode == 22) return max(i - l, 0.0);
+  if (mode == 23) return clamp(i / max(l, EPS), 0.0, 1.0);
+  if (mode == 24) return i - l + 0.5;
+  if (mode == 25) return i + l - 0.5;
   return l;
 }
 

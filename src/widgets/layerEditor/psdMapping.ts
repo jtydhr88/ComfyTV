@@ -32,25 +32,32 @@ export const PSD_BLEND_MODES: Record<BlendFn, NonNullable<Layer['blendMode']>> =
   'linear-burn': 'linear burn',
   'vivid-light': 'vivid light',
   'pin-light': 'pin light',
+  'linear-light': 'linear light',
+  'hard-mix': 'hard mix',
+  subtract: 'subtract',
+  divide: 'divide',
+  'grain-extract': 'normal',
+  'grain-merge': 'normal',
   hue: 'hue',
   saturation: 'saturation',
   color: 'color',
   luminosity: 'luminosity',
 }
 
-const BLEND_FROM_PSD = new Map<string, BlendFn>([
-  ...Object.entries(PSD_BLEND_MODES).map(([ours, psd]) => [psd, ours as BlendFn] as const),
+const BLEND_FROM_PSD = new Map<string, BlendFn>()
+for (const [ours, psd] of Object.entries(PSD_BLEND_MODES)) {
+  if (!BLEND_FROM_PSD.has(psd)) BLEND_FROM_PSD.set(psd, ours as BlendFn)
+}
+for (const [psd, ours] of [
   ['dissolve', 'normal'],
   ['darker color', 'darken'],
   ['lighter color', 'lighten'],
-  ['linear light', 'vivid-light'],
-  ['hard mix', 'hard-light'],
-  ['subtract', 'difference'],
-  ['divide', 'color-dodge'],
   ['linear height', 'normal'],
   ['height', 'normal'],
-  ['subtraction', 'difference'],
-] as const)
+  ['subtraction', 'subtract'],
+] as const) {
+  BLEND_FROM_PSD.set(psd, ours)
+}
 
 export function blendFromPsd(mode: string | undefined): BlendFn {
   return (mode && BLEND_FROM_PSD.get(mode)) || 'normal'

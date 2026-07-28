@@ -1,4 +1,5 @@
 import type { LayerMode } from './mode'
+import type { LayerFxData } from './render/layerFx'
 
 export interface Vec2 {
   x: number
@@ -36,6 +37,7 @@ export interface NodeBase {
   transform: Transform
   locks: Locks
   colorTag?: string
+  fx?: LayerFxData[]
 }
 
 export type ChannelRole = 'mask' | 'selection' | 'saved'
