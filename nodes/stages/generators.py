@@ -5,29 +5,6 @@ from ._common import *  # noqa: F401, F403
 _log = logging.getLogger(__name__)
 
 
-_SPEECH_LANGUAGES = [
-    "Auto",
-    "English", "English (British)", "Mandarin Chinese", "Japanese", "Korean",
-    "French", "German", "Spanish", "Brazilian Portuguese", "Portuguese",
-    "Italian", "Hindi", "Russian", "Arabic",
-]
-
-_ACE_TIME_SIGNATURES = ['2', '3', '4', '6']
-_ACE_LANGUAGES = [
-    'ar', 'az', 'bg', 'bn', 'ca', 'cs', 'da', 'de', 'el', 'en', 'es', 'fa',
-    'fi', 'fr', 'he', 'hi', 'hr', 'ht', 'hu', 'id', 'is', 'it', 'ja', 'ko',
-    'la', 'lt', 'ms', 'ne', 'nl', 'no', 'pa', 'pl', 'pt', 'ro', 'ru', 'sa',
-    'sk', 'sr', 'sv', 'sw', 'ta', 'te', 'th', 'tl', 'tr', 'uk', 'ur', 'vi',
-    'yue', 'zh', 'unknown',
-]
-_ACE_KEYSCALES = [
-    f"{root} {quality}"
-    for quality in ["major", "minor"]
-    for root in ["C", "C#", "Db", "D", "D#", "Eb", "E", "F", "F#", "Gb",
-                 "G", "G#", "Ab", "A", "A#", "Bb", "B"]
-]
-
-
 class ProjectStage(io.ComfyNode):
 
     @classmethod
@@ -304,11 +281,11 @@ class AudioStage(io.ComfyNode):
                                tooltip="Length of generated audio in seconds."),
                 io.Int.Input("bpm", default=120, min=10, max=300, step=1,
                              tooltip="Tempo in beats per minute (ACE-Step 1.5)."),
-                io.Combo.Input("timesignature", options=_ACE_TIME_SIGNATURES, default='4',
+                io.Combo.Input("timesignature", options=ACE_TIME_SIGNATURES, default='4',
                                tooltip="Time signature — beats per bar (ACE-Step 1.5)."),
-                io.Combo.Input("keyscale", options=_ACE_KEYSCALES, default='C major',
+                io.Combo.Input("keyscale", options=ACE_KEYSCALES, default='C major',
                                tooltip="Musical key and scale, e.g. 'C major' / 'A minor' (ACE-Step 1.5)."),
-                io.Combo.Input("language", options=_ACE_LANGUAGES, default='en',
+                io.Combo.Input("language", options=ACE_LANGUAGES, default='en',
                                tooltip="Lyrics language code (ACE-Step 1.5)."),
                 _custom_params_input(),
             ],
@@ -359,7 +336,7 @@ class SpeechStage(io.ComfyNode):
                 io.String.Input("voice", default="", multiline=False,
                                 extra_dict={"placeholder": "Preset voice / speaker id (leave empty when cloning from a reference clip)."},
                                 tooltip="Named preset voice for preset-voice models (Kokoro, Bark, ElevenLabs, …)."),
-                io.Combo.Input("language", options=_SPEECH_LANGUAGES, default="Auto",
+                io.Combo.Input("language", options=SPEECH_LANGUAGES, default="Auto",
                                tooltip="Language for multilingual models. 'Auto' lets the workflow/model default decide; "
                                        "ignored by single-language / auto-detect models. Note: names must match what the "
                                        "selected model expects (e.g. Kokoro uses 'Mandarin Chinese')."),
@@ -403,33 +380,36 @@ class SpeechStage(io.ComfyNode):
         )
 
 
-class ImagePickerStage(io.ComfyNode):
+class _PickerStage(io.ComfyNode):
+    _NODE_ID = ""
+    _DISPLAY = ""
+    _IDX_TOOLTIP = ""
+    _POOL_TOOLTIP = ""
+    _OUTPUT_TYPE = None
+    _OUTPUT_NAME = ""
+
+    @staticmethod
+    def _batch_input():
+        raise NotImplementedError
 
     @classmethod
     def define_schema(cls):
         return io.Schema(
-            node_id="ComfyTV.ImagePickerStage",
-            display_name="Image Picker",
+            node_id=cls._NODE_ID,
+            display_name=cls._DISPLAY,
             category="ComfyTV/Compose",
             inputs=[
                 _project_id_input(),
                 _parent_output_id_input(),
-
                 io.Int.Input("selected_index", default=1, min=1, max=999, step=1,
-                             socketless=True,
-                             extra_dict={"hidden": True},
-                             tooltip="Which item to extract (1-indexed). Hidden — set by clicking a thumbnail."),
+                             socketless=True, extra_dict={"hidden": True},
+                             tooltip=cls._IDX_TOOLTIP),
                 io.String.Input("pool", default="", multiline=False,
                                 socketless=True, extra_dict={"hidden": True},
-                                tooltip="Accumulated image pool (JSON {images:[...]}). Managed by the UI: "
-                                        "new upstream batches are appended (deduped by image_url) and survive "
-                                        "regeneration/disconnect; emptied by the Clear button."),
-                io.MultiType.Input("batch", [COMFYTV_IMAGES, COMFYTV_IMAGE], optional=True,
-                                   tooltip="Upstream image source. Accepts either a batch (COMFYTV_IMAGES) "
-                                           "or a single image (COMFYTV_IMAGE); a single image is treated as "
-                                           "a one-item batch."),
+                                tooltip=cls._POOL_TOOLTIP),
+                cls._batch_input(),
             ],
-            outputs=[COMFYTV_IMAGE.Output("image")],
+            outputs=[cls._OUTPUT_TYPE.Output(cls._OUTPUT_NAME)],
             is_output_node=True,
             hidden=[io.Hidden.unique_id],
         )
@@ -442,78 +422,54 @@ class ImagePickerStage(io.ComfyNode):
                                 emit_ui=False, parent_output_id=parent_output_id)
 
 
-class AudioPickerStage(io.ComfyNode):
+class ImagePickerStage(_PickerStage):
+    _NODE_ID = "ComfyTV.ImagePickerStage"
+    _DISPLAY = "Image Picker"
+    _IDX_TOOLTIP = "Which item to extract (1-indexed). Hidden — set by clicking a thumbnail."
+    _POOL_TOOLTIP = ("Accumulated image pool (JSON {images:[...]}). Managed by the UI: "
+                     "new upstream batches are appended (deduped by image_url) and survive "
+                     "regeneration/disconnect; emptied by the Clear button.")
+    _OUTPUT_TYPE = COMFYTV_IMAGE
+    _OUTPUT_NAME = "image"
 
-    @classmethod
-    def define_schema(cls):
-        return io.Schema(
-            node_id="ComfyTV.AudioPickerStage",
-            display_name="Audio Picker",
-            category="ComfyTV/Compose",
-            inputs=[
-                _project_id_input(),
-                _parent_output_id_input(),
-
-                io.Int.Input("selected_index", default=1, min=1, max=999, step=1,
-                             socketless=True,
-                             extra_dict={"hidden": True},
-                             tooltip="Which track to extract (1-indexed). Hidden — set by clicking a track."),
-                io.String.Input("pool", default="", multiline=False,
-                                socketless=True, extra_dict={"hidden": True},
-                                tooltip="Accumulated audio pool (JSON). Managed by the UI: new upstream tracks "
-                                        "are appended (deduped by URL) and survive regeneration/disconnect; "
-                                        "emptied by the Clear button."),
-                COMFYTV_AUDIO.Input("batch", optional=True,
-                                    tooltip="Upstream audio source. Each generated track is appended to the pool."),
-            ],
-            outputs=[COMFYTV_AUDIO.Output("audio")],
-            is_output_node=True,
-            hidden=[io.Hidden.unique_id],
-        )
-
-    @classmethod
-    def execute(cls, project_id="", parent_output_id=0, selected_index=1, pool="", batch=None):
-        source = pool if (pool or "").strip() else batch
-        payload = _pick_image_from_batch(source, int(selected_index or 1))
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                emit_ui=False, parent_output_id=parent_output_id)
+    @staticmethod
+    def _batch_input():
+        return io.MultiType.Input("batch", [COMFYTV_IMAGES, COMFYTV_IMAGE], optional=True,
+                                  tooltip="Upstream image source. Accepts either a batch (COMFYTV_IMAGES) "
+                                          "or a single image (COMFYTV_IMAGE); a single image is treated as "
+                                          "a one-item batch.")
 
 
-class VideoPickerStage(io.ComfyNode):
+class AudioPickerStage(_PickerStage):
+    _NODE_ID = "ComfyTV.AudioPickerStage"
+    _DISPLAY = "Audio Picker"
+    _IDX_TOOLTIP = "Which track to extract (1-indexed). Hidden — set by clicking a track."
+    _POOL_TOOLTIP = ("Accumulated audio pool (JSON). Managed by the UI: new upstream tracks "
+                     "are appended (deduped by URL) and survive regeneration/disconnect; "
+                     "emptied by the Clear button.")
+    _OUTPUT_TYPE = COMFYTV_AUDIO
+    _OUTPUT_NAME = "audio"
 
-    @classmethod
-    def define_schema(cls):
-        return io.Schema(
-            node_id="ComfyTV.VideoPickerStage",
-            display_name="Video Picker",
-            category="ComfyTV/Compose",
-            inputs=[
-                _project_id_input(),
-                _parent_output_id_input(),
+    @staticmethod
+    def _batch_input():
+        return COMFYTV_AUDIO.Input("batch", optional=True,
+                                   tooltip="Upstream audio source. Each generated track is appended to the pool.")
 
-                io.Int.Input("selected_index", default=1, min=1, max=999, step=1,
-                             socketless=True,
-                             extra_dict={"hidden": True},
-                             tooltip="Which clip to extract (1-indexed). Hidden — set by clicking a clip."),
-                io.String.Input("pool", default="", multiline=False,
-                                socketless=True, extra_dict={"hidden": True},
-                                tooltip="Accumulated video pool (JSON). Managed by the UI: new upstream clips "
-                                        "are appended (deduped by URL) and survive regeneration/disconnect; "
-                                        "emptied by the Clear button."),
-                COMFYTV_VIDEO.Input("batch", optional=True,
-                                    tooltip="Upstream video source. Each generated clip is appended to the pool."),
-            ],
-            outputs=[COMFYTV_VIDEO.Output("video")],
-            is_output_node=True,
-            hidden=[io.Hidden.unique_id],
-        )
 
-    @classmethod
-    def execute(cls, project_id="", parent_output_id=0, selected_index=1, pool="", batch=None):
-        source = pool if (pool or "").strip() else batch
-        payload = _pick_image_from_batch(source, int(selected_index or 1))
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                emit_ui=False, parent_output_id=parent_output_id)
+class VideoPickerStage(_PickerStage):
+    _NODE_ID = "ComfyTV.VideoPickerStage"
+    _DISPLAY = "Video Picker"
+    _IDX_TOOLTIP = "Which clip to extract (1-indexed). Hidden — set by clicking a clip."
+    _POOL_TOOLTIP = ("Accumulated video pool (JSON). Managed by the UI: new upstream clips "
+                     "are appended (deduped by URL) and survive regeneration/disconnect; "
+                     "emptied by the Clear button.")
+    _OUTPUT_TYPE = COMFYTV_VIDEO
+    _OUTPUT_NAME = "video"
+
+    @staticmethod
+    def _batch_input():
+        return COMFYTV_VIDEO.Input("batch", optional=True,
+                                   tooltip="Upstream video source. Each generated clip is appended to the pool.")
 
 
 class ShotImagesStage(io.ComfyNode):

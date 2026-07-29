@@ -59,6 +59,7 @@ from .workflow_lists import labels_for, default_for
 from .constants import (
     RESOLUTIONS, ASPECT_RATIOS,
     VIDEO_DURATION_MIN_S, VIDEO_DURATION_MAX_S, VIDEO_DURATION_DEFAULT_S,
+    SPEECH_LANGUAGES, ACE_TIME_SIGNATURES, ACE_LANGUAGES, ACE_KEYSCALES,
 )
 from .fx_helpers import (  # noqa: F401
     _need_video, _progress_cb, _f, _parse_json, _pick_source, _AUDIO_SR,
@@ -95,6 +96,7 @@ __all__ = [
     "labels_for", "default_for",
     "RESOLUTIONS", "ASPECT_RATIOS",
     "VIDEO_DURATION_MIN_S", "VIDEO_DURATION_MAX_S", "VIDEO_DURATION_DEFAULT_S",
+    "SPEECH_LANGUAGES", "ACE_TIME_SIGNATURES", "ACE_LANGUAGES", "ACE_KEYSCALES",
     "_multiangle_prompt", "_MULTIANGLE_AZIMUTHS",
     "RUNNER_REGISTRY", "RunnerContext",
     "io", "ComfyExtension", "override",

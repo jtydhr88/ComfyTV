@@ -4,7 +4,7 @@ from ...runners.audio_dsp import echo_feedback, convolve_ir
 
 from .common.fx_helpers import (  # noqa: F401
     _pick_source, _progress_cb, _f, _AUDIO_SR,
-    _hidden_float, _hidden_combo,
+    _hidden_float, _hidden_combo, _emit_audio_fx,
 )
 
 
@@ -162,12 +162,8 @@ class AudioModulationStage(io.ComfyNode):
             raise RuntimeError(f"Audio Modulation: unknown mode {mode!r}")
         fx_spec = build_fx_spec("ComfyTV.AudioModulationStage", "Audio Modulation",
                                 "audio", [spec])
-        if not src:
-            return _fx_spec_only(fx_spec)
-        payload = filter_audio(src, [spec], progress=_progress_cb(cls))
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id,
-                                extra_outputs=(fx_spec,))
+        return _emit_audio_fx(cls, src=src, fx_spec=fx_spec, specs=[spec],
+                              project_id=project_id, parent_output_id=parent_output_id)
 
 
 class AudioStereoStage(io.ComfyNode):
@@ -237,12 +233,8 @@ class AudioStereoStage(io.ComfyNode):
             raise RuntimeError(f"Audio Stereo: unknown mode {mode!r}")
         fx_spec = build_fx_spec("ComfyTV.AudioStereoStage", "Audio Stereo",
                                 "audio", [spec])
-        if not src:
-            return _fx_spec_only(fx_spec)
-        payload = filter_audio(src, [spec], progress=_progress_cb(cls))
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id,
-                                extra_outputs=(fx_spec,))
+        return _emit_audio_fx(cls, src=src, fx_spec=fx_spec, specs=[spec],
+                              project_id=project_id, parent_output_id=parent_output_id)
 
 
 class AudioTimePitchStage(io.ComfyNode):
@@ -320,12 +312,8 @@ class AudioTimePitchStage(io.ComfyNode):
             raise RuntimeError(f"Audio Time / Pitch: unknown mode {mode!r}")
         fx_spec = build_fx_spec("ComfyTV.AudioTimePitchStage", "Audio Time / Pitch",
                                 "audio", specs)
-        if not src:
-            return _fx_spec_only(fx_spec)
-        payload = filter_audio(src, specs, progress=_progress_cb(cls))
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id,
-                                extra_outputs=(fx_spec,))
+        return _emit_audio_fx(cls, src=src, fx_spec=fx_spec, specs=specs,
+                              project_id=project_id, parent_output_id=parent_output_id)
 
 
 class AudioSaturateStage(io.ComfyNode):
@@ -396,12 +384,8 @@ class AudioSaturateStage(io.ComfyNode):
             raise RuntimeError(f"Audio Saturate: unknown mode {mode!r}")
         fx_spec = build_fx_spec("ComfyTV.AudioSaturateStage", "Audio Saturate",
                                 "audio", [spec])
-        if not src:
-            return _fx_spec_only(fx_spec)
-        payload = filter_audio(src, [spec], progress=_progress_cb(cls))
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id,
-                                extra_outputs=(fx_spec,))
+        return _emit_audio_fx(cls, src=src, fx_spec=fx_spec, specs=[spec],
+                              project_id=project_id, parent_output_id=parent_output_id)
 
 
 class AudioConvolveStage(io.ComfyNode):

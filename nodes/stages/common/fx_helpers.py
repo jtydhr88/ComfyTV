@@ -28,6 +28,18 @@ def _progress_cb(cls):
     return _cb
 
 
+def _emit_audio_fx(cls, *, src, fx_spec, specs, project_id, parent_output_id):
+    from .emit import _stage_emit_auto
+    from .fx_spec import _fx_spec_only
+    if not src:
+        return _fx_spec_only(fx_spec)
+    from ....runners.media_filter import filter_audio
+    payload = filter_audio(src, specs, progress=_progress_cb(cls))
+    return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
+                            parent_output_id=parent_output_id,
+                            extra_outputs=(fx_spec,))
+
+
 def _f(v, lo, hi, default=0.0):
     try:
         x = float(v)
