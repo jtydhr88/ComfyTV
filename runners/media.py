@@ -7,99 +7,23 @@ from typing import Optional, Union
 
 import folder_paths
 
+from ._media_paths import (  # noqa: F401
+    _ensure_subdir,
+    _strip_fx_envelope,
+    fresh_output_path,
+    localize,
+    path_to_view_url,
+    view_url_to_path,
+)
+from ._audio_io import (  # noqa: F401
+    _AAC_FRAME,
+    _AUDIO_RATE,
+    _decode_audio_to_array,
+    _encode_audio_array,
+    _new_aac_stream,
+)
+
 _log = logging.getLogger(__name__)
-
-
-def view_url_to_path(view_url: str) -> Optional[Path]:
-    if not view_url or not isinstance(view_url, str):
-        return None
-
-    if view_url.startswith('http://') or view_url.startswith('https://'):
-        return None
-    try:
-        u = urllib.parse.urlparse(view_url)
-        q = urllib.parse.parse_qs(u.query)
-    except Exception:
-        return None
-    filename = (q.get('filename') or [''])[0]
-    if not filename:
-        return None
-    subfolder = (q.get('subfolder') or [''])[0]
-    type_ = (q.get('type') or ['output'])[0]
-    base = folder_paths.get_directory_by_type(type_)
-    if not base:
-        return None
-    p = Path(base) / subfolder / filename if subfolder else Path(base) / filename
-
-    base_resolved = Path(base).resolve()
-    p_resolved = p.resolve()
-    try:
-        p_resolved.relative_to(base_resolved)
-    except ValueError:
-        raise ValueError(
-            f"view URL escapes {type_!r} directory: {view_url!r}"
-        )
-
-    return p_resolved if p_resolved.exists() else None
-
-
-def path_to_view_url(p: Path, type_: str = 'output') -> str:
-    base = Path(folder_paths.get_directory_by_type(type_))
-    try:
-        rel = p.relative_to(base)
-    except ValueError:
-        rel = Path(p.name)
-    parts = rel.parts
-    filename = parts[-1]
-    subfolder = '/'.join(parts[:-1])
-    params = {'filename': filename, 'type': type_}
-    if subfolder:
-        params['subfolder'] = subfolder
-    return '/view?' + urllib.parse.urlencode(params)
-
-
-def _ensure_subdir(base: Path, sub: str) -> Path:
-    out = base / sub
-    out.mkdir(parents=True, exist_ok=True)
-    return out
-
-
-def fresh_output_path(suffix: str, subfolder: str = 'comfytv/video') -> Path:
-    base = Path(folder_paths.get_output_directory())
-    out_dir = _ensure_subdir(base, subfolder)
-    return out_dir / f"{uuid.uuid4().hex[:12]}{suffix}"
-
-
-def _strip_fx_envelope(view_url):
-    if not isinstance(view_url, str) or not view_url.lstrip().startswith('{'):
-        return view_url
-    import json
-    try:
-        data = json.loads(view_url)
-    except (ValueError, TypeError):
-        return view_url
-    inner = data.get('__fxvideo__') if isinstance(data, dict) else None
-    if isinstance(inner, dict) and inner.get('url'):
-        return str(inner['url'])
-    return view_url
-
-
-def localize(view_url: str) -> Path:
-    view_url = _strip_fx_envelope(view_url)
-    p = view_url_to_path(view_url)
-    if p is not None:
-        return p
-
-    if isinstance(view_url, str) and (view_url.startswith('http://') or view_url.startswith('https://')):
-        suffix = Path(urllib.parse.urlparse(view_url).path).suffix or '.mp4'
-        dl_dir = _ensure_subdir(Path(folder_paths.get_temp_directory()), 'comfytv/dl')
-        dest = dl_dir / f"{uuid.uuid4().hex[:12]}{suffix}"
-        try:
-            urllib.request.urlretrieve(view_url, dest)
-            return dest
-        except Exception as e:
-            raise RuntimeError(f"failed to download {view_url!r}: {e}") from e
-    raise RuntimeError(f"can't resolve view URL to a local file: {view_url!r}")
 
 
 def get_video_info(view_url: str) -> dict:
@@ -446,56 +370,6 @@ def silence_video(view_url: str) -> str:
             outp.mux(packet)
 
     return path_to_view_url(out)
-
-
-_AUDIO_RATE = 44100
-_AAC_FRAME = 1024
-
-
-def _new_aac_stream(outp):
-    out_a = outp.add_stream('aac', rate=_AUDIO_RATE)
-    out_a.layout = 'stereo'
-    return out_a
-
-
-def _decode_audio_to_array(path):
-    import av
-    import numpy as np
-    if str(path).lower().endswith(('.mid', '.midi')):
-        from .midi_import import render_midi_to_wav
-        path = render_midi_to_wav(Path(path))
-    chunks = []
-    with av.open(str(path)) as inp:
-        if not inp.streams.audio:
-            return np.zeros((2, 0), dtype=np.float32)
-        in_a = inp.streams.audio[0]
-        resampler = av.AudioResampler(format='fltp', layout='stereo', rate=_AUDIO_RATE)
-        for frame in inp.decode(in_a):
-            for rf in resampler.resample(frame):
-                chunks.append(rf.to_ndarray().astype(np.float32, copy=False))
-        for rf in resampler.resample(None):
-            chunks.append(rf.to_ndarray().astype(np.float32, copy=False))
-    return np.concatenate(chunks, axis=1) if chunks else np.zeros((2, 0), dtype=np.float32)
-
-
-def _encode_audio_array(outp, out_a, arr):
-    import av
-    import numpy as np
-    from fractions import Fraction
-    pos = 0
-    total = arr.shape[1]
-    while pos < total:
-        chunk = arr[:, pos:pos + _AAC_FRAME]
-        af = av.AudioFrame.from_ndarray(
-            np.ascontiguousarray(chunk), format='fltp', layout='stereo')
-        af.sample_rate = _AUDIO_RATE
-        af.pts = pos
-        af.time_base = Fraction(1, _AUDIO_RATE)
-        pos += chunk.shape[1]
-        for pkt in out_a.encode(af):
-            outp.mux(pkt)
-    for pkt in out_a.encode():
-        outp.mux(pkt)
 
 
 def speed_video(view_url: str, factor: float, reverse: bool = False,
