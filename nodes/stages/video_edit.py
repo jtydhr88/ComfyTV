@@ -1,5 +1,5 @@
 from ._common import *  # noqa: F401, F403
-from .common.fx_helpers import _progress_cb  # noqa: F401
+from .common.fx_helpers import _progress_cb, _need_video, _simple_video_op  # noqa: F401
 from ...runners.media import (
     extract_frame, trim_video, crop_video, resize_video, concat_videos,
     speed_video, transpose_video, adjust_volume, mux_audio, extract_frames_multi,
@@ -32,14 +32,10 @@ class VideoExtractFrameStage(io.ComfyNode):
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                 position='last', at_seconds=0.0, video=""):
-        if not (video or '').strip():
-            raise RuntimeError(
-                "Extract Frame needs an upstream video — wire one into the video input."
-            )
         pos = position if position != 'custom' else float(at_seconds or 0.0)
-        payload = extract_frame(video, pos)
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        return _simple_video_op(cls, video=video, label="Extract Frame",
+                                project_id=project_id, parent_output_id=parent_output_id,
+                                run=lambda v: extract_frame(v, pos))
 
 
 class VideoClipStage(io.ComfyNode):
@@ -66,10 +62,7 @@ class VideoClipStage(io.ComfyNode):
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                 start_s=0.0, end_s=0.0, video=""):
-        if not (video or '').strip():
-            raise RuntimeError(
-                "Video Clip needs an upstream video — wire one into the video input."
-            )
+        _need_video(video, "Video Clip")
         s = float(start_s or 0.0)
 
         if not end_s or float(end_s) <= 0:
@@ -112,17 +105,14 @@ class VideoCropStage(io.ComfyNode):
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                 x=0, y=0, w=0, h=0, video=""):
-        if not (video or '').strip():
-            raise RuntimeError(
-                "Video Crop needs an upstream video — wire one into the video input."
-            )
+        _need_video(video, "Video Crop")
         if int(w) <= 0 or int(h) <= 0:
             raise RuntimeError(
                 "Video Crop: no crop region set — drag the rectangle on the node first."
             )
-        payload = crop_video(video, int(x), int(y), int(w), int(h))
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        return _simple_video_op(cls, video=video, label="Video Crop",
+                                project_id=project_id, parent_output_id=parent_output_id,
+                                run=lambda v: crop_video(v, int(x), int(y), int(w), int(h)))
 
 
 class VideoConcatStage(io.ComfyNode):
@@ -206,18 +196,15 @@ class VideoSpeedStage(io.ComfyNode):
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                 speed=1.0, reverse=False, pitch_compensate=True, video=""):
-        if not (video or '').strip():
-            raise RuntimeError(
-                "Video Speed needs an upstream video — wire one into the video input."
-            )
+        _need_video(video, "Video Speed")
         if float(speed or 1.0) == 1.0 and not reverse:
             raise RuntimeError(
                 "Video Speed: nothing to do — set a speed other than 1x or enable reverse."
             )
-        payload = speed_video(video, float(speed or 1.0), bool(reverse),
-                              pitch_compensate=bool(pitch_compensate))
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        return _simple_video_op(cls, video=video, label="Video Speed",
+                                project_id=project_id, parent_output_id=parent_output_id,
+                                run=lambda v: speed_video(v, float(speed or 1.0), bool(reverse),
+                                                          pitch_compensate=bool(pitch_compensate)))
 
 
 class VideoRotateStage(io.ComfyNode):
@@ -246,13 +233,10 @@ class VideoRotateStage(io.ComfyNode):
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                 rotate_deg=0, flip_h=False, flip_v=False, video=""):
-        if not (video or '').strip():
-            raise RuntimeError(
-                "Video Rotate needs an upstream video — wire one into the video input."
-            )
-        payload = transpose_video(video, int(rotate_deg or 0), bool(flip_h), bool(flip_v))
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        return _simple_video_op(cls, video=video, label="Video Rotate",
+                                project_id=project_id, parent_output_id=parent_output_id,
+                                run=lambda v: transpose_video(v, int(rotate_deg or 0),
+                                                              bool(flip_h), bool(flip_v)))
 
 
 class VideoSplitStage(io.ComfyNode):
@@ -277,10 +261,7 @@ class VideoSplitStage(io.ComfyNode):
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                 split_s=0.0, video=""):
-        if not (video or '').strip():
-            raise RuntimeError(
-                "Video Split needs an upstream video — wire one into the video input."
-            )
+        _need_video(video, "Video Split")
         s = float(split_s or 0.0)
         dur = float(get_video_info(video).get('duration') or 0.0)
         if not (0.05 <= s <= max(0.05, dur - 0.05)):
@@ -323,14 +304,11 @@ class VideoVolumeStage(io.ComfyNode):
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                 volume=1.0, fade_in_s=0.0, fade_out_s=0.0, video=""):
-        if not (video or '').strip():
-            raise RuntimeError(
-                "Video Volume needs an upstream video — wire one into the video input."
-            )
-        payload = adjust_volume(video, float(volume or 0.0),
-                                float(fade_in_s or 0.0), float(fade_out_s or 0.0))
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        return _simple_video_op(cls, video=video, label="Video Volume",
+                                project_id=project_id, parent_output_id=parent_output_id,
+                                run=lambda v: adjust_volume(v, float(volume or 0.0),
+                                                            float(fade_in_s or 0.0),
+                                                            float(fade_out_s or 0.0)))
 
 
 class VideoMuxAudioStage(io.ComfyNode):
@@ -391,17 +369,13 @@ class VideoFramesStage(io.ComfyNode):
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                 marks="", video=""):
-        if not (video or '').strip():
-            raise RuntimeError(
-                "Extract Frames needs an upstream video — wire one into the video input."
-            )
         try:
             times = json.loads(marks or "[]")
         except (ValueError, TypeError):
             times = []
-        payload = extract_frames_multi(video, times)
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        return _simple_video_op(cls, video=video, label="Extract Frames",
+                                project_id=project_id, parent_output_id=parent_output_id,
+                                run=lambda v: extract_frames_multi(v, times))
 
 
 class VideoResizeStage(io.ComfyNode):
@@ -430,13 +404,9 @@ class VideoResizeStage(io.ComfyNode):
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
                 width=1280, height=720, video=""):
-        if not (video or '').strip():
-            raise RuntimeError(
-                "Video Resize needs an upstream video — wire one into the video input."
-            )
-        payload = resize_video(video, int(width), int(height))
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        return _simple_video_op(cls, video=video, label="Video Resize",
+                                project_id=project_id, parent_output_id=parent_output_id,
+                                run=lambda v: resize_video(v, int(width), int(height)))
 
 
 class VideoUpscaleStage(io.ComfyNode):
@@ -615,13 +585,9 @@ class AudioVideoDemuxAudioStage(io.ComfyNode):
 
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0, video=""):
-        if not (video or '').strip():
-            raise RuntimeError(
-                "Demux Audio needs an upstream video — wire one into the video input."
-            )
-        payload = demux_audio(video)
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        return _simple_video_op(cls, video=video, label="Demux Audio",
+                                project_id=project_id, parent_output_id=parent_output_id,
+                                run=demux_audio)
 
 
 class AudioVideoDemuxVideoStage(io.ComfyNode):
@@ -643,13 +609,9 @@ class AudioVideoDemuxVideoStage(io.ComfyNode):
 
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0, video=""):
-        if not (video or '').strip():
-            raise RuntimeError(
-                "Demux Silent Video needs an upstream video — wire one into the video input."
-            )
-        payload = silence_video(video)
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
-                                parent_output_id=parent_output_id)
+        return _simple_video_op(cls, video=video, label="Demux Silent Video",
+                                project_id=project_id, parent_output_id=parent_output_id,
+                                run=silence_video)
 
 
 

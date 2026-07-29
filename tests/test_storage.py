@@ -166,7 +166,7 @@ class TestOutputs:
 
     def test_retention_prune(self, reset_db, monkeypatch):
         from ComfyTV import storage
-        monkeypatch.setattr(storage, "OUTPUT_RETENTION_PER_STAGE", 3)
+        monkeypatch.setattr(storage.outputs, "OUTPUT_RETENTION_PER_STAGE", 3)
         for i in range(6):
             storage.persist_output(project_id="default", stage_class="X",
                                    stage_node_id="1", output_type="image",
@@ -178,7 +178,7 @@ class TestOutputs:
 
     def test_no_prune_when_stage_node_id_null(self, reset_db, monkeypatch):
         from ComfyTV import storage
-        monkeypatch.setattr(storage, "OUTPUT_RETENTION_PER_STAGE", 2)
+        monkeypatch.setattr(storage.outputs, "OUTPUT_RETENTION_PER_STAGE", 2)
         for i in range(5):
             storage.persist_output(project_id="default", stage_class="X",
                                    stage_node_id=None, output_type="image",

@@ -12,6 +12,14 @@ def _need_video(video, label):
         )
 
 
+def _simple_video_op(cls, *, video, label, project_id, parent_output_id, run):
+    from .emit import _stage_emit_auto
+    _need_video(video, label)
+    payload = run(video)
+    return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
+                            parent_output_id=parent_output_id)
+
+
 def _progress_cb(cls):
     def _cb(value, total, text=""):
         import comfy.model_management
