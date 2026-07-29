@@ -56179,7 +56179,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-B8l1kBPI.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-Bzfl6OZ5.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -128407,7 +128407,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-DAMce8FR.mjs");
+    const { STLLoader } = await import("./STLLoader-Pur57rEr.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -128415,7 +128415,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-D0aopSS8.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-Dyq-aYfx.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -192773,6 +192773,319 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
     };
   }
 });
+const STAGE_CLASS_BY_KIND = {
+  text: "ComfyTV.TextStage",
+  image: "ComfyTV.ImageStage",
+  video: "ComfyTV.VideoStage",
+  audio: "ComfyTV.AudioStage",
+  panorama: "ComfyTV.PanoramaStage",
+  storyboard: "ComfyTV.StoryboardStage",
+  "image-batch": "ComfyTV.ShotImagesStage",
+  "image-picker": "ComfyTV.ImagePickerStage",
+  "audio-picker": "ComfyTV.AudioPickerStage",
+  "video-picker": "ComfyTV.VideoPickerStage",
+  timeline: "ComfyTV.DirectorTimelineStage",
+  model: "ComfyTV.Model3DStage",
+  material: "ComfyTV.MaterialStage"
+};
+const TARGET_GROUP_BY_KIND = {
+  text: "texts",
+  image: "images",
+  video: "videos",
+  audio: "videos",
+  panorama: "images",
+  storyboard: "texts",
+  "image-batch": "images",
+  "image-picker": "images",
+  "audio-picker": "videos",
+  "video-picker": "videos",
+  timeline: "images",
+  model: "models",
+  material: "images"
+};
+function findFirstAutogrowSlot(node, groupPrefix) {
+  if (!node.inputs) return -1;
+  for (let i = 0; i < node.inputs.length; i++) {
+    const n = String(node.inputs[i].name || "");
+    if (n.startsWith(groupPrefix + ".")) return i;
+  }
+  return -1;
+}
+function findNamedSlot(node, name) {
+  if (!node.inputs) return -1;
+  for (let i = 0; i < node.inputs.length; i++) {
+    if (String(node.inputs[i].name || "") === name) return i;
+  }
+  return -1;
+}
+function outputHasLinks(node, idx) {
+  var _a2;
+  const out = (_a2 = node == null ? void 0 : node.outputs) == null ? void 0 : _a2[idx];
+  return !!((out == null ? void 0 : out.links) && out.links.length > 0);
+}
+function createNodeAt(targetClass, pos) {
+  var _a2, _b2;
+  const win = window;
+  if (!((_a2 = win.LiteGraph) == null ? void 0 : _a2.createNode)) {
+    console.error("[ComfyTV/action] LiteGraph.createNode not available");
+    return null;
+  }
+  const node = win.LiteGraph.createNode(targetClass);
+  if (!node) {
+    console.error("[ComfyTV/action] createNode returned null for", targetClass);
+    return null;
+  }
+  (_b2 = app == null ? void 0 : app.graph) == null ? void 0 : _b2.add(node);
+  node.pos = pos;
+  return node;
+}
+function posRightOf(srcNode, dx = 60) {
+  var _a2, _b2, _c;
+  return [
+    (((_a2 = srcNode.pos) == null ? void 0 : _a2[0]) || 0) + (((_b2 = srcNode.size) == null ? void 0 : _b2[0]) || 280) + dx,
+    ((_c = srcNode.pos) == null ? void 0 : _c[1]) || 0
+  ];
+}
+function setWidget(node, name, value) {
+  var _a2;
+  const w = (_a2 = node.widgets) == null ? void 0 : _a2.find((wi) => wi.name === name);
+  if (w) w.value = value;
+}
+function stampLineage(srcNode, newNode) {
+  const store2 = useStageStore();
+  const srcState = store2.getStage(srcNode);
+  const parentId = srcState == null ? void 0 : srcState.outputId;
+  if (parentId != null && parentId > 0) {
+    setWidget(newNode, "parent_output_id", parentId);
+  }
+}
+function wireAndSeed(srcNode, newNode, preset2, srcSlot = 0) {
+  var _a2;
+  const store2 = useStageStore();
+  let slot = -1;
+  if (preset2.inputSocket) {
+    slot = findNamedSlot(newNode, preset2.inputSocket);
+  } else if (preset2.inputAutogrowGroup) {
+    slot = findFirstAutogrowSlot(newNode, preset2.inputAutogrowGroup);
+  }
+  if (slot < 0) {
+    console.warn(
+      "[ComfyTV/preset]",
+      preset2.id,
+      "no target slot on",
+      newNode.comfyClass,
+      "inputs=",
+      (_a2 = newNode.inputs) == null ? void 0 : _a2.map((i) => i.name)
+    );
+  } else {
+    srcNode.connect(srcSlot, newNode, slot);
+  }
+  if (preset2.widgets) {
+    for (const [name, value] of Object.entries(preset2.widgets)) {
+      setWidget(newNode, name, value);
+    }
+    if ("main_prompt" in preset2.widgets) {
+      const state2 = store2.getStage(newNode);
+      if (state2) state2.mainPrompt = String(preset2.widgets.main_prompt ?? "");
+    }
+  }
+  stampLineage(srcNode, newNode);
+}
+function spawnImagePreset(srcNode, preset2, srcSlot = 0) {
+  var _a2, _b2, _c;
+  const store2 = useStageStore();
+  if (preset2.multiTargetClasses && preset2.multiTargetClasses.length) {
+    const baseX = (((_a2 = srcNode.pos) == null ? void 0 : _a2[0]) || 0) + (((_b2 = srcNode.size) == null ? void 0 : _b2[0]) || 280) + 60;
+    const baseY = ((_c = srcNode.pos) == null ? void 0 : _c[1]) || 0;
+    const rowGap = 60;
+    let rowY = baseY;
+    preset2.multiTargetClasses.forEach((cls, i) => {
+      var _a3;
+      const newNode2 = createNodeAt(cls, [baseX, rowY]);
+      if (!newNode2) return;
+      wireAndSeed(srcNode, newNode2, preset2, srcSlot);
+      rowY += (((_a3 = newNode2.size) == null ? void 0 : _a3[1]) || 260) + rowGap;
+    });
+    store2.notifyDownstream();
+    return;
+  }
+  const targetClass = preset2.targetClass ?? STAGE_CLASS_BY_KIND.image;
+  const newNode = createNodeAt(targetClass, posRightOf(srcNode));
+  if (!newNode) return;
+  wireAndSeed(srcNode, newNode, preset2, srcSlot);
+  store2.notifyDownstream();
+}
+function spawnConsumingNode(srcNode, targetClass, inputSlotName, srcSlot = 0) {
+  var _a2;
+  const newNode = createNodeAt(targetClass, posRightOf(srcNode));
+  if (!newNode) return null;
+  const slot = findNamedSlot(newNode, inputSlotName);
+  if (slot < 0) {
+    console.warn(
+      "[ComfyTV/action] target",
+      targetClass,
+      "has no",
+      inputSlotName,
+      "slot",
+      "inputs=",
+      (_a2 = newNode.inputs) == null ? void 0 : _a2.map((i) => i.name)
+    );
+    return newNode;
+  }
+  srcNode.connect(srcSlot, newNode, slot);
+  stampLineage(srcNode, newNode);
+  return newNode;
+}
+const RELIGHT_WORKFLOW_LABEL = "Flux2 Klein Relight";
+function spawnRelightPair(srcNode, srcSlot) {
+  const store2 = useStageStore();
+  const relight2 = createNodeAt("ComfyTV.RelightStage", posRightOf(srcNode));
+  if (!relight2) return;
+  const img = createNodeAt("ComfyTV.ImageStage", posRightOf(relight2));
+  if (!img) return;
+  setWidget(img, "workflow", RELIGHT_WORKFLOW_LABEL);
+  const s0 = findFirstAutogrowSlot(img, "images");
+  if (s0 >= 0) {
+    srcNode.connect(srcSlot, img, s0);
+  } else {
+    console.warn("[ComfyTV/relight] new ImageStage has no images autogrow slot");
+  }
+  const wireSecond = (attempt = 0) => {
+    const s1 = findNamedSlot(img, "images.image1");
+    if (s1 >= 0) {
+      relight2.connect(0, img, s1);
+      store2.notifyDownstream();
+      return;
+    }
+    if (attempt < 10) setTimeout(() => wireSecond(attempt + 1), 50);
+    else console.warn("[ComfyTV/relight] images.image1 never appeared on new ImageStage");
+  };
+  wireSecond();
+  stampLineage(srcNode, img);
+  store2.notifyDownstream();
+}
+function spawnExtendVideo(srcNode) {
+  const store2 = useStageStore();
+  const extract = createNodeAt("ComfyTV.VideoExtractFrameStage", posRightOf(srcNode));
+  if (!extract) return;
+  const extractInSlot = findNamedSlot(extract, "video");
+  if (extractInSlot >= 0) srcNode.connect(0, extract, extractInSlot);
+  stampLineage(srcNode, extract);
+  const newVideo = createNodeAt("ComfyTV.VideoStage", posRightOf(extract));
+  if (!newVideo) return;
+  const imageSlot = findFirstAutogrowSlot(newVideo, "images");
+  if (imageSlot >= 0) extract.connect(0, newVideo, imageSlot);
+  stampLineage(srcNode, newVideo);
+  store2.notifyDownstream();
+}
+function spawnPanoramaView(srcNode, mode) {
+  if (mode === "current") {
+    spawnConsumingNode(srcNode, "ComfyTV.PanoramaCurrentViewStage", "panorama");
+    return;
+  }
+  const node = spawnConsumingNode(srcNode, "ComfyTV.PanoramaMultiViewStage", "panorama");
+  if (!node) return;
+  setWidget(node, "view_count", mode === "four" ? 4 : 12);
+}
+async function spawnAssetImageLoader(srcNode, url, label, mediaType = "image") {
+  const assetStore2 = useAssetStore();
+  await assetStore2.hydrate();
+  let asset = assetStore2.byPayloadUrl(url) ?? null;
+  if (!asset) {
+    asset = await assetStore2.create({
+      name: label || mediaType,
+      payload_url: url,
+      media_type: mediaType,
+      category_ids: []
+    });
+  }
+  if (!asset) {
+    console.error("[ComfyTV/action] load-asset: could not add", mediaType, "to library", url);
+    return;
+  }
+  const newNode = createAssetLoaderNode(asset, posRightOf(srcNode));
+  if (!newNode) return;
+  useStageStore().notifyDownstream();
+}
+function makeImageActionHandlers(srcSlot) {
+  return {
+    "panorama": (src) => spawnConsumingNode(src, "ComfyTV.PanoramaStage", "image", srcSlot),
+    "multiangle": (src) => spawnConsumingNode(src, "ComfyTV.MultiangleStage", "image", srcSlot),
+    "relight": (src) => spawnRelightPair(src, srcSlot),
+    "material": (src) => spawnConsumingNode(src, "ComfyTV.MaterialStage", "image", srcSlot),
+    ...Object.fromEntries(
+      IMAGE_VARIANT_PRESETS.map((p2) => [
+        `preset:${p2.id}`,
+        (src) => spawnImagePreset(src, p2, srcSlot)
+      ])
+    ),
+    ...Object.fromEntries(
+      IMAGE_EDIT_PRESETS.map((p2) => [
+        `edit:${p2.id}`,
+        (src) => spawnImagePreset(src, p2, srcSlot)
+      ])
+    )
+  };
+}
+const imageActionHandlers = makeImageActionHandlers(0);
+const imageBatchActionHandlers = makeImageActionHandlers(1);
+const PRODUCT_SHOT_PRESET = {
+  id: "product-shot",
+  targetClass: "ComfyTV.ImageEditStage",
+  inputSocket: "image",
+  widgets: {
+    workflow: "Qwen Edit 2511",
+    main_prompt: "Turn this 3D viewport render into a professional product photograph on a clean light-gray studio backdrop with soft diffused lighting and a subtle ground reflection. Keep the subject's colors, materials and pose exactly as they are."
+  }
+};
+const SPAWN_HANDLERS = {
+  image: imageActionHandlers,
+  "image-picker": imageActionHandlers,
+  "image-batch": imageBatchActionHandlers,
+  model: {
+    "product-shot": (src) => spawnImagePreset(src, PRODUCT_SHOT_PRESET, 1)
+  },
+  video: {
+    "extend": (src) => spawnExtendVideo(src),
+    ...Object.fromEntries(
+      VIDEO_CHANGE_PRESETS.map((p2) => [
+        `change:${p2.id}`,
+        (src) => spawnImagePreset(src, p2)
+      ])
+    )
+  },
+  panorama: {
+    "view-current": (src) => spawnPanoramaView(src, "current"),
+    "view-four": (src) => spawnPanoramaView(src, "four"),
+    "view-twelve": (src) => spawnPanoramaView(src, "twelve")
+  }
+};
+function spawnFollowUpStage(srcNode, srcKind, actionId, context2) {
+  var _a2, _b2;
+  const handler = (_a2 = SPAWN_HANDLERS[srcKind]) == null ? void 0 : _a2[actionId];
+  if (handler) {
+    handler(srcNode, context2);
+    return;
+  }
+  const targetClass = STAGE_CLASS_BY_KIND[srcKind];
+  const targetGroup = TARGET_GROUP_BY_KIND[srcKind];
+  const newNode = createNodeAt(targetClass, posRightOf(srcNode));
+  if (!newNode) return;
+  const targetSlot = findFirstAutogrowSlot(newNode, targetGroup);
+  if (targetSlot < 0) {
+    console.warn(
+      "[ComfyTV/action] no autogrow slot for",
+      targetGroup,
+      "on new",
+      targetClass,
+      "inputs=",
+      (_b2 = newNode.inputs) == null ? void 0 : _b2.map((i) => i.name)
+    );
+    return;
+  }
+  srcNode.connect(0, newNode, targetSlot);
+  stampLineage(srcNode, newNode);
+}
 const _hoisted_1$3 = {
   viewBox: "0 0 24 24",
   width: "1.2em",
@@ -193381,319 +193694,6 @@ async function postPickedIndex(outputId, pickedIndex) {
   } catch (e) {
     console.warn("[ComfyTV/pick] persist picked_index threw", e);
   }
-}
-const STAGE_CLASS_BY_KIND = {
-  text: "ComfyTV.TextStage",
-  image: "ComfyTV.ImageStage",
-  video: "ComfyTV.VideoStage",
-  audio: "ComfyTV.AudioStage",
-  panorama: "ComfyTV.PanoramaStage",
-  storyboard: "ComfyTV.StoryboardStage",
-  "image-batch": "ComfyTV.ShotImagesStage",
-  "image-picker": "ComfyTV.ImagePickerStage",
-  "audio-picker": "ComfyTV.AudioPickerStage",
-  "video-picker": "ComfyTV.VideoPickerStage",
-  timeline: "ComfyTV.DirectorTimelineStage",
-  model: "ComfyTV.Model3DStage",
-  material: "ComfyTV.MaterialStage"
-};
-const TARGET_GROUP_BY_KIND = {
-  text: "texts",
-  image: "images",
-  video: "videos",
-  audio: "videos",
-  panorama: "images",
-  storyboard: "texts",
-  "image-batch": "images",
-  "image-picker": "images",
-  "audio-picker": "videos",
-  "video-picker": "videos",
-  timeline: "images",
-  model: "models",
-  material: "images"
-};
-function findFirstAutogrowSlot(node, groupPrefix) {
-  if (!node.inputs) return -1;
-  for (let i = 0; i < node.inputs.length; i++) {
-    const n = String(node.inputs[i].name || "");
-    if (n.startsWith(groupPrefix + ".")) return i;
-  }
-  return -1;
-}
-function findNamedSlot(node, name) {
-  if (!node.inputs) return -1;
-  for (let i = 0; i < node.inputs.length; i++) {
-    if (String(node.inputs[i].name || "") === name) return i;
-  }
-  return -1;
-}
-function outputHasLinks(node, idx) {
-  var _a2;
-  const out = (_a2 = node == null ? void 0 : node.outputs) == null ? void 0 : _a2[idx];
-  return !!((out == null ? void 0 : out.links) && out.links.length > 0);
-}
-function createNodeAt(targetClass, pos) {
-  var _a2, _b2;
-  const win = window;
-  if (!((_a2 = win.LiteGraph) == null ? void 0 : _a2.createNode)) {
-    console.error("[ComfyTV/action] LiteGraph.createNode not available");
-    return null;
-  }
-  const node = win.LiteGraph.createNode(targetClass);
-  if (!node) {
-    console.error("[ComfyTV/action] createNode returned null for", targetClass);
-    return null;
-  }
-  (_b2 = app == null ? void 0 : app.graph) == null ? void 0 : _b2.add(node);
-  node.pos = pos;
-  return node;
-}
-function posRightOf(srcNode, dx = 60) {
-  var _a2, _b2, _c;
-  return [
-    (((_a2 = srcNode.pos) == null ? void 0 : _a2[0]) || 0) + (((_b2 = srcNode.size) == null ? void 0 : _b2[0]) || 280) + dx,
-    ((_c = srcNode.pos) == null ? void 0 : _c[1]) || 0
-  ];
-}
-function setWidget(node, name, value) {
-  var _a2;
-  const w = (_a2 = node.widgets) == null ? void 0 : _a2.find((wi) => wi.name === name);
-  if (w) w.value = value;
-}
-function stampLineage(srcNode, newNode) {
-  const store2 = useStageStore();
-  const srcState = store2.getStage(srcNode);
-  const parentId = srcState == null ? void 0 : srcState.outputId;
-  if (parentId != null && parentId > 0) {
-    setWidget(newNode, "parent_output_id", parentId);
-  }
-}
-function wireAndSeed(srcNode, newNode, preset2, srcSlot = 0) {
-  var _a2;
-  const store2 = useStageStore();
-  let slot = -1;
-  if (preset2.inputSocket) {
-    slot = findNamedSlot(newNode, preset2.inputSocket);
-  } else if (preset2.inputAutogrowGroup) {
-    slot = findFirstAutogrowSlot(newNode, preset2.inputAutogrowGroup);
-  }
-  if (slot < 0) {
-    console.warn(
-      "[ComfyTV/preset]",
-      preset2.id,
-      "no target slot on",
-      newNode.comfyClass,
-      "inputs=",
-      (_a2 = newNode.inputs) == null ? void 0 : _a2.map((i) => i.name)
-    );
-  } else {
-    srcNode.connect(srcSlot, newNode, slot);
-  }
-  if (preset2.widgets) {
-    for (const [name, value] of Object.entries(preset2.widgets)) {
-      setWidget(newNode, name, value);
-    }
-    if ("main_prompt" in preset2.widgets) {
-      const state2 = store2.getStage(newNode);
-      if (state2) state2.mainPrompt = String(preset2.widgets.main_prompt ?? "");
-    }
-  }
-  stampLineage(srcNode, newNode);
-}
-function spawnImagePreset(srcNode, preset2, srcSlot = 0) {
-  var _a2, _b2, _c;
-  const store2 = useStageStore();
-  if (preset2.multiTargetClasses && preset2.multiTargetClasses.length) {
-    const baseX = (((_a2 = srcNode.pos) == null ? void 0 : _a2[0]) || 0) + (((_b2 = srcNode.size) == null ? void 0 : _b2[0]) || 280) + 60;
-    const baseY = ((_c = srcNode.pos) == null ? void 0 : _c[1]) || 0;
-    const rowGap = 60;
-    let rowY = baseY;
-    preset2.multiTargetClasses.forEach((cls, i) => {
-      var _a3;
-      const newNode2 = createNodeAt(cls, [baseX, rowY]);
-      if (!newNode2) return;
-      wireAndSeed(srcNode, newNode2, preset2, srcSlot);
-      rowY += (((_a3 = newNode2.size) == null ? void 0 : _a3[1]) || 260) + rowGap;
-    });
-    store2.notifyDownstream();
-    return;
-  }
-  const targetClass = preset2.targetClass ?? STAGE_CLASS_BY_KIND.image;
-  const newNode = createNodeAt(targetClass, posRightOf(srcNode));
-  if (!newNode) return;
-  wireAndSeed(srcNode, newNode, preset2, srcSlot);
-  store2.notifyDownstream();
-}
-function spawnConsumingNode(srcNode, targetClass, inputSlotName, srcSlot = 0) {
-  var _a2;
-  const newNode = createNodeAt(targetClass, posRightOf(srcNode));
-  if (!newNode) return null;
-  const slot = findNamedSlot(newNode, inputSlotName);
-  if (slot < 0) {
-    console.warn(
-      "[ComfyTV/action] target",
-      targetClass,
-      "has no",
-      inputSlotName,
-      "slot",
-      "inputs=",
-      (_a2 = newNode.inputs) == null ? void 0 : _a2.map((i) => i.name)
-    );
-    return newNode;
-  }
-  srcNode.connect(srcSlot, newNode, slot);
-  stampLineage(srcNode, newNode);
-  return newNode;
-}
-const RELIGHT_WORKFLOW_LABEL = "Flux2 Klein Relight";
-function spawnRelightPair(srcNode, srcSlot) {
-  const store2 = useStageStore();
-  const relight2 = createNodeAt("ComfyTV.RelightStage", posRightOf(srcNode));
-  if (!relight2) return;
-  const img = createNodeAt("ComfyTV.ImageStage", posRightOf(relight2));
-  if (!img) return;
-  setWidget(img, "workflow", RELIGHT_WORKFLOW_LABEL);
-  const s0 = findFirstAutogrowSlot(img, "images");
-  if (s0 >= 0) {
-    srcNode.connect(srcSlot, img, s0);
-  } else {
-    console.warn("[ComfyTV/relight] new ImageStage has no images autogrow slot");
-  }
-  const wireSecond = (attempt = 0) => {
-    const s1 = findNamedSlot(img, "images.image1");
-    if (s1 >= 0) {
-      relight2.connect(0, img, s1);
-      store2.notifyDownstream();
-      return;
-    }
-    if (attempt < 10) setTimeout(() => wireSecond(attempt + 1), 50);
-    else console.warn("[ComfyTV/relight] images.image1 never appeared on new ImageStage");
-  };
-  wireSecond();
-  stampLineage(srcNode, img);
-  store2.notifyDownstream();
-}
-function spawnExtendVideo(srcNode) {
-  const store2 = useStageStore();
-  const extract = createNodeAt("ComfyTV.VideoExtractFrameStage", posRightOf(srcNode));
-  if (!extract) return;
-  const extractInSlot = findNamedSlot(extract, "video");
-  if (extractInSlot >= 0) srcNode.connect(0, extract, extractInSlot);
-  stampLineage(srcNode, extract);
-  const newVideo = createNodeAt("ComfyTV.VideoStage", posRightOf(extract));
-  if (!newVideo) return;
-  const imageSlot = findFirstAutogrowSlot(newVideo, "images");
-  if (imageSlot >= 0) extract.connect(0, newVideo, imageSlot);
-  stampLineage(srcNode, newVideo);
-  store2.notifyDownstream();
-}
-function spawnPanoramaView(srcNode, mode) {
-  if (mode === "current") {
-    spawnConsumingNode(srcNode, "ComfyTV.PanoramaCurrentViewStage", "panorama");
-    return;
-  }
-  const node = spawnConsumingNode(srcNode, "ComfyTV.PanoramaMultiViewStage", "panorama");
-  if (!node) return;
-  setWidget(node, "view_count", mode === "four" ? 4 : 12);
-}
-async function spawnAssetImageLoader(srcNode, url, label, mediaType = "image") {
-  const assetStore2 = useAssetStore();
-  await assetStore2.hydrate();
-  let asset = assetStore2.byPayloadUrl(url) ?? null;
-  if (!asset) {
-    asset = await assetStore2.create({
-      name: label || mediaType,
-      payload_url: url,
-      media_type: mediaType,
-      category_ids: []
-    });
-  }
-  if (!asset) {
-    console.error("[ComfyTV/action] load-asset: could not add", mediaType, "to library", url);
-    return;
-  }
-  const newNode = createAssetLoaderNode(asset, posRightOf(srcNode));
-  if (!newNode) return;
-  useStageStore().notifyDownstream();
-}
-function makeImageActionHandlers(srcSlot) {
-  return {
-    "panorama": (src) => spawnConsumingNode(src, "ComfyTV.PanoramaStage", "image", srcSlot),
-    "multiangle": (src) => spawnConsumingNode(src, "ComfyTV.MultiangleStage", "image", srcSlot),
-    "relight": (src) => spawnRelightPair(src, srcSlot),
-    "material": (src) => spawnConsumingNode(src, "ComfyTV.MaterialStage", "image", srcSlot),
-    ...Object.fromEntries(
-      IMAGE_VARIANT_PRESETS.map((p2) => [
-        `preset:${p2.id}`,
-        (src) => spawnImagePreset(src, p2, srcSlot)
-      ])
-    ),
-    ...Object.fromEntries(
-      IMAGE_EDIT_PRESETS.map((p2) => [
-        `edit:${p2.id}`,
-        (src) => spawnImagePreset(src, p2, srcSlot)
-      ])
-    )
-  };
-}
-const imageActionHandlers = makeImageActionHandlers(0);
-const imageBatchActionHandlers = makeImageActionHandlers(1);
-const PRODUCT_SHOT_PRESET = {
-  id: "product-shot",
-  targetClass: "ComfyTV.ImageEditStage",
-  inputSocket: "image",
-  widgets: {
-    workflow: "Qwen Edit 2511",
-    main_prompt: "Turn this 3D viewport render into a professional product photograph on a clean light-gray studio backdrop with soft diffused lighting and a subtle ground reflection. Keep the subject's colors, materials and pose exactly as they are."
-  }
-};
-const SPAWN_HANDLERS = {
-  image: imageActionHandlers,
-  "image-picker": imageActionHandlers,
-  "image-batch": imageBatchActionHandlers,
-  model: {
-    "product-shot": (src) => spawnImagePreset(src, PRODUCT_SHOT_PRESET, 1)
-  },
-  video: {
-    "extend": (src) => spawnExtendVideo(src),
-    ...Object.fromEntries(
-      VIDEO_CHANGE_PRESETS.map((p2) => [
-        `change:${p2.id}`,
-        (src) => spawnImagePreset(src, p2)
-      ])
-    )
-  },
-  panorama: {
-    "view-current": (src) => spawnPanoramaView(src, "current"),
-    "view-four": (src) => spawnPanoramaView(src, "four"),
-    "view-twelve": (src) => spawnPanoramaView(src, "twelve")
-  }
-};
-function spawnFollowUpStage(srcNode, srcKind, actionId, context2) {
-  var _a2, _b2;
-  const handler = (_a2 = SPAWN_HANDLERS[srcKind]) == null ? void 0 : _a2[actionId];
-  if (handler) {
-    handler(srcNode, context2);
-    return;
-  }
-  const targetClass = STAGE_CLASS_BY_KIND[srcKind];
-  const targetGroup = TARGET_GROUP_BY_KIND[srcKind];
-  const newNode = createNodeAt(targetClass, posRightOf(srcNode));
-  if (!newNode) return;
-  const targetSlot = findFirstAutogrowSlot(newNode, targetGroup);
-  if (targetSlot < 0) {
-    console.warn(
-      "[ComfyTV/action] no autogrow slot for",
-      targetGroup,
-      "on new",
-      targetClass,
-      "inputs=",
-      (_b2 = newNode.inputs) == null ? void 0 : _b2.map((i) => i.name)
-    );
-    return;
-  }
-  srcNode.connect(0, newNode, targetSlot);
-  stampLineage(srcNode, newNode);
 }
 function inputFileUrl(value) {
   if (!value) return "";
@@ -194770,4 +194770,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-DFEOmVLh.mjs.map
+//# sourceMappingURL=main-BiR60Bvi.mjs.map
