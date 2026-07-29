@@ -14541,39 +14541,6 @@ const MutateProjectSchema = object({
 const DeleteProjectSchema = object({
   ok: literal(true)
 });
-const OutputSchema = object({
-  id: number$1(),
-  project_id: string(),
-  stage_class: string(),
-  stage_node_id: string().nullable().optional(),
-  stage_uid: string().nullable().optional(),
-  output_type: string(),
-  payload_url: string(),
-  payload_json: unknown().nullable().optional(),
-  params_json: unknown().nullable().optional(),
-  parent_output_id: number$1().nullable().optional(),
-  duration_ms: number$1().nullable().optional(),
-  created_at: string().nullable().optional()
-});
-object({
-  outputs: array(OutputSchema)
-});
-const LatestOutputSchema = object({
-  output: OutputSchema.nullable()
-});
-const StageMetaEntrySchema = object({
-  node_id: string(),
-  kind: string(),
-  variant: union([
-    literal("loader"),
-    literal("generator"),
-    literal("transform")
-  ]).nullable().optional(),
-  workflow_kind: string().nullable().optional()
-});
-const StageMetaResponseSchema = object({
-  stages: array(StageMetaEntrySchema)
-});
 const EntrySchema = object({
   id: number$1(),
   kind: string(),
@@ -14594,6 +14561,45 @@ const DeleteEntrySchema = object({
 });
 const OkSchema = object({
   ok: boolean()
+});
+const OutputSchema = object({
+  id: number$1(),
+  project_id: string(),
+  stage_class: string(),
+  stage_node_id: string().nullable().optional(),
+  stage_uid: string().nullable().optional(),
+  output_type: string(),
+  payload_url: string(),
+  payload_json: unknown().nullable().optional(),
+  params_json: unknown().nullable().optional(),
+  parent_output_id: number$1().nullable().optional(),
+  duration_ms: number$1().nullable().optional(),
+  created_at: string().nullable().optional()
+});
+object({
+  outputs: array(OutputSchema)
+});
+const LatestOutputSchema = object({
+  output: OutputSchema.nullable()
+});
+object({
+  output: union([string(), array(unknown())]).optional(),
+  picked: union([string(), array(unknown())]).optional(),
+  picked_index: union([string(), number$1(), array(unknown())]).optional(),
+  output_id: union([string(), number$1(), array(unknown())]).optional()
+}).passthrough();
+const StageMetaEntrySchema = object({
+  node_id: string(),
+  kind: string(),
+  variant: union([
+    literal("loader"),
+    literal("generator"),
+    literal("transform")
+  ]).nullable().optional(),
+  workflow_kind: string().nullable().optional()
+});
+const StageMetaResponseSchema = object({
+  stages: array(StageMetaEntrySchema)
 });
 const ImportWorkflowResultSchema = object({
   ok: boolean(),
@@ -14631,44 +14637,6 @@ const UnlinkWorkflowResultSchema = object({
   ok: boolean(),
   kind: string().optional(),
   label: string().optional()
-});
-const AssetCategorySchema = object({
-  id: number$1(),
-  name: string(),
-  created_at: string().nullable().optional(),
-  updated_at: string().nullable().optional()
-});
-const ListAssetCategoriesSchema = object({
-  categories: array(AssetCategorySchema)
-});
-const MutateAssetCategorySchema = object({
-  ok: literal(true),
-  category: AssetCategorySchema
-});
-const AssetSchema = object({
-  id: number$1(),
-  category_ids: array(number$1()).default([]),
-  name: string(),
-  media_type: string(),
-  payload_url: string(),
-  mime_type: string().nullable().optional(),
-  width: number$1().nullable().optional(),
-  height: number$1().nullable().optional(),
-  size_bytes: number$1().nullable().optional(),
-  source: string().nullable().optional(),
-  metadata: record(string(), unknown()).default({}),
-  created_at: string().nullable().optional(),
-  updated_at: string().nullable().optional()
-});
-const ListAssetsSchema = object({
-  assets: array(AssetSchema)
-});
-const MutateAssetSchema = object({
-  ok: literal(true),
-  asset: AssetSchema
-});
-const DeleteAssetSchema = object({
-  ok: literal(true)
 });
 const WorkflowOverviewSchema = object({
   id: number$1(),
@@ -14749,6 +14717,52 @@ const WorkflowInfoSchema = record(
   string(),
   record(string(), WorkflowUsageEntrySchema)
 );
+const StageDefaultsSchema = object({
+  defaults: record(string(), unknown())
+});
+const AssetCategorySchema = object({
+  id: number$1(),
+  name: string(),
+  created_at: string().nullable().optional(),
+  updated_at: string().nullable().optional()
+});
+const ListAssetCategoriesSchema = object({
+  categories: array(AssetCategorySchema)
+});
+const MutateAssetCategorySchema = object({
+  ok: literal(true),
+  category: AssetCategorySchema
+});
+const AssetSchema = object({
+  id: number$1(),
+  category_ids: array(number$1()).default([]),
+  name: string(),
+  media_type: string(),
+  payload_url: string(),
+  mime_type: string().nullable().optional(),
+  width: number$1().nullable().optional(),
+  height: number$1().nullable().optional(),
+  size_bytes: number$1().nullable().optional(),
+  source: string().nullable().optional(),
+  metadata: record(string(), unknown()).default({}),
+  created_at: string().nullable().optional(),
+  updated_at: string().nullable().optional()
+});
+const ListAssetsSchema = object({
+  assets: array(AssetSchema)
+});
+const MutateAssetSchema = object({
+  ok: literal(true),
+  asset: AssetSchema
+});
+const DeleteAssetSchema = object({
+  ok: literal(true)
+});
+const AdoptAssetsSchema = object({
+  ok: boolean(),
+  adopted: number$1(),
+  dir: string()
+});
 const CapsSchema = object({
   upstream_kinds: array(string()),
   option_keys: array(string()),
@@ -14758,6 +14772,16 @@ const CapsPayloadSchema = object({
   caps_by_kind: record(string(), CapsSchema),
   fallback_caps: CapsSchema,
   option_labels: record(string(), string()).default({})
+});
+const CapabilityResourceSchema = object({
+  filename: string(),
+  sha256: string().nullable().optional()
+});
+const CapabilitiesSchema = object({
+  version: string(),
+  node_ids: array(string()),
+  resources: record(string(), array(CapabilityResourceSchema)),
+  resource_fields: record(string(), record(string(), string())).default({})
 });
 const STAGE_PARAM_TYPES = ["boolean", "int", "float", "string", "combo"];
 const StageParamSchema = object({
@@ -14813,9 +14837,6 @@ const MutateStagePresetSchema = object({
   ok: literal(true),
   preset: StagePresetSchema
 });
-const StageDefaultsSchema = object({
-  defaults: record(string(), unknown())
-});
 const ComfyServerSchema = object({
   id: number$1(),
   label: string(),
@@ -14848,16 +14869,6 @@ const TestServerResultSchema = object({
   os: string().optional(),
   devices: array(string()).optional(),
   error: string().optional()
-});
-const CapabilityResourceSchema = object({
-  filename: string(),
-  sha256: string().nullable().optional()
-});
-const CapabilitiesSchema = object({
-  version: string(),
-  node_ids: array(string()),
-  resources: record(string(), array(CapabilityResourceSchema)),
-  resource_fields: record(string(), record(string(), string())).default({})
 });
 const RemoteJobSchema = object({
   id: string(),
@@ -14904,11 +14915,6 @@ const ScoreEditorImportSchema = object({
   })),
   skipped_percussion: number$1().optional()
 });
-const AdoptAssetsSchema = object({
-  ok: boolean(),
-  adopted: number$1(),
-  dir: string()
-});
 const ProxyEnsureSchema = object({
   status: _enum(["original", "candidate", "pending", "running", "ready", "failed"]),
   proxy_url: string().optional(),
@@ -14935,12 +14941,6 @@ const MidiEventsSchema = object({
   tempo_map: array(record(string(), number$1())).optional(),
   duration: number$1().optional()
 });
-object({
-  output: union([string(), array(unknown())]).optional(),
-  picked: union([string(), array(unknown())]).optional(),
-  picked_index: union([string(), number$1(), array(unknown())]).optional(),
-  output_id: union([string(), number$1(), array(unknown())]).optional()
-}).passthrough();
 class ApiError extends Error {
   constructor(path, status, message) {
     super(`${path} failed [${status}]: ${message}`);
@@ -56179,7 +56179,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-Bzfl6OZ5.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-DIH0SkyM.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -128407,7 +128407,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-Pur57rEr.mjs");
+    const { STLLoader } = await import("./STLLoader-CcWO0_di.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -128415,7 +128415,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-Dyq-aYfx.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-Bjy3Apfk.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -194770,4 +194770,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-BiR60Bvi.mjs.map
+//# sourceMappingURL=main-epfd4ZjY.mjs.map
