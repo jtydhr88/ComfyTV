@@ -130,3 +130,90 @@ export function applyRotate(t: Transform, baseRotation: number, grabAngle: numbe
   if (snap > 0) rotation = Math.round(rotation / snap) * snap
   return { ...t, rotation }
 }
+
+export function unionBounds(boxes: Transform[]): Transform {
+  let minX = Infinity
+  let minY = Infinity
+  let maxX = -Infinity
+  let maxY = -Infinity
+  const corners: HandleId[] = ['nw', 'ne', 'se', 'sw']
+  for (const b of boxes) {
+    for (const h of corners) {
+      const p = handlePos(b, h)
+      minX = Math.min(minX, p.x)
+      minY = Math.min(minY, p.y)
+      maxX = Math.max(maxX, p.x)
+      maxY = Math.max(maxY, p.y)
+    }
+  }
+  return { x: minX, y: minY, w: maxX - minX, h: maxY - minY, rotation: 0 }
+}
+
+export function scaleAround(t: Transform, anchor: Vec2, scale: number): Transform {
+  const c = center(t)
+  const nc = { x: anchor.x + (c.x - anchor.x) * scale, y: anchor.y + (c.y - anchor.y) * scale }
+  const w = t.w * scale
+  const h = t.h * scale
+  return { x: nc.x - w / 2, y: nc.y - h / 2, w, h, rotation: t.rotation }
+}
+
+export function rotateAround(t: Transform, pivot: Vec2, theta: number): Transform {
+  const c = center(t)
+  const cos = Math.cos(theta)
+  const sin = Math.sin(theta)
+  const dx = c.x - pivot.x
+  const dy = c.y - pivot.y
+  const nc = { x: pivot.x + dx * cos - dy * sin, y: pivot.y + dx * sin + dy * cos }
+  return { x: nc.x - t.w / 2, y: nc.y - t.h / 2, w: t.w, h: t.h, rotation: t.rotation + theta }
+}
+
+export function groupResize(
+  gizmo: Transform,
+  handle: HandleId,
+  pt: Vec2,
+  minSize = 1
+): { gizmo: Transform; anchor: Vec2; scale: number } {
+  const next = applyResize(gizmo, handle, pt, minSize, true)
+  const anchor = handlePos(gizmo, OPP[handle])
+  const scale = gizmo.w > 0 ? next.w / gizmo.w : 1
+  return { gizmo: next, anchor, scale }
+}
+
+export function alignedTo(rotation: number, frameRotation: number, eps = 1e-6): boolean {
+  const k = (rotation - frameRotation) / (Math.PI / 2)
+  return Math.abs(k - Math.round(k)) < eps
+}
+
+export function groupScale(
+  gizmo: Transform,
+  handle: HandleId,
+  pt: Vec2,
+  minSize = 1
+): { gizmo: Transform; anchor: Vec2; sx: number; sy: number } {
+  const next = applyResize(gizmo, handle, pt, minSize, false)
+  const anchor = handlePos(gizmo, OPP[handle])
+  const sx = gizmo.w > 0 ? next.w / gizmo.w : 1
+  const sy = gizmo.h > 0 ? next.h / gizmo.h : 1
+  return { gizmo: next, anchor, sx, sy }
+}
+
+export function scaleAroundFrame(
+  t: Transform,
+  anchor: Vec2,
+  frameRotation: number,
+  sx: number,
+  sy: number
+): Transform {
+  const c = center(t)
+  const cos = Math.cos(frameRotation)
+  const sin = Math.sin(frameRotation)
+  const dx = c.x - anchor.x
+  const dy = c.y - anchor.y
+  const fx = (dx * cos + dy * sin) * sx
+  const fy = (-dx * sin + dy * cos) * sy
+  const nc = { x: anchor.x + fx * cos - fy * sin, y: anchor.y + fx * sin + fy * cos }
+  const swap = Math.round((t.rotation - frameRotation) / (Math.PI / 2)) % 2 !== 0
+  const w = t.w * (swap ? sy : sx)
+  const h = t.h * (swap ? sx : sy)
+  return { x: nc.x - w / 2, y: nc.y - h / 2, w, h, rotation: t.rotation }
+}

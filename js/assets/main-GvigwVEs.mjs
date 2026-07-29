@@ -56179,7 +56179,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-BRPDJrIg.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-DpJ2lwex.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -128480,7 +128480,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-CeIv4ar9.mjs");
+    const { STLLoader } = await import("./STLLoader-BnPdXfun.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -128488,7 +128488,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-DdZ2d2cz.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-Ct12kJrR.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -153230,6 +153230,70 @@ function applyRotate(t2, baseRotation, grabAngle, pt2, snap = 0) {
   if (snap > 0) rotation2 = Math.round(rotation2 / snap) * snap;
   return { ...t2, rotation: rotation2 };
 }
+function unionBounds(boxes) {
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+  const corners = ["nw", "ne", "se", "sw"];
+  for (const b of boxes) {
+    for (const h2 of corners) {
+      const p2 = handlePos(b, h2);
+      minX = Math.min(minX, p2.x);
+      minY = Math.min(minY, p2.y);
+      maxX = Math.max(maxX, p2.x);
+      maxY = Math.max(maxY, p2.y);
+    }
+  }
+  return { x: minX, y: minY, w: maxX - minX, h: maxY - minY, rotation: 0 };
+}
+function scaleAround(t2, anchor2, scale) {
+  const c2 = center(t2);
+  const nc = { x: anchor2.x + (c2.x - anchor2.x) * scale, y: anchor2.y + (c2.y - anchor2.y) * scale };
+  const w = t2.w * scale;
+  const h2 = t2.h * scale;
+  return { x: nc.x - w / 2, y: nc.y - h2 / 2, w, h: h2, rotation: t2.rotation };
+}
+function rotateAround(t2, pivot, theta) {
+  const c2 = center(t2);
+  const cos = Math.cos(theta);
+  const sin = Math.sin(theta);
+  const dx = c2.x - pivot.x;
+  const dy = c2.y - pivot.y;
+  const nc = { x: pivot.x + dx * cos - dy * sin, y: pivot.y + dx * sin + dy * cos };
+  return { x: nc.x - t2.w / 2, y: nc.y - t2.h / 2, w: t2.w, h: t2.h, rotation: t2.rotation + theta };
+}
+function groupResize(gizmo, handle, pt2, minSize = 1) {
+  const next = applyResize(gizmo, handle, pt2, minSize, true);
+  const anchor2 = handlePos(gizmo, OPP[handle]);
+  const scale = gizmo.w > 0 ? next.w / gizmo.w : 1;
+  return { gizmo: next, anchor: anchor2, scale };
+}
+function alignedTo(rotation2, frameRotation, eps = 1e-6) {
+  const k2 = (rotation2 - frameRotation) / (Math.PI / 2);
+  return Math.abs(k2 - Math.round(k2)) < eps;
+}
+function groupScale(gizmo, handle, pt2, minSize = 1) {
+  const next = applyResize(gizmo, handle, pt2, minSize, false);
+  const anchor2 = handlePos(gizmo, OPP[handle]);
+  const sx = gizmo.w > 0 ? next.w / gizmo.w : 1;
+  const sy = gizmo.h > 0 ? next.h / gizmo.h : 1;
+  return { gizmo: next, anchor: anchor2, sx, sy };
+}
+function scaleAroundFrame(t2, anchor2, frameRotation, sx, sy) {
+  const c2 = center(t2);
+  const cos = Math.cos(frameRotation);
+  const sin = Math.sin(frameRotation);
+  const dx = c2.x - anchor2.x;
+  const dy = c2.y - anchor2.y;
+  const fx2 = (dx * cos + dy * sin) * sx;
+  const fy = (-dx * sin + dy * cos) * sy;
+  const nc = { x: anchor2.x + fx2 * cos - fy * sin, y: anchor2.y + fx2 * sin + fy * cos };
+  const swap = Math.round((t2.rotation - frameRotation) / (Math.PI / 2)) % 2 !== 0;
+  const w = t2.w * (swap ? sy : sx);
+  const h2 = t2.h * (swap ? sx : sy);
+  return { x: nc.x - w / 2, y: nc.y - h2 / 2, w, h: h2, rotation: t2.rotation };
+}
 const HANDLES = ["nw", "n", "ne", "e", "se", "s", "sw", "w"];
 function addTransformBox(overlay, t2, handles = true) {
   const corners = ["nw", "ne", "se", "sw"];
@@ -153882,8 +153946,14 @@ const TRANSFORMABLE_KINDS = /* @__PURE__ */ new Set(["raster", "text", "vector"]
 function sameTransform(a2, b) {
   return a2.x === b.x && a2.y === b.y && a2.w === b.w && a2.h === b.h && a2.rotation === b.rotation;
 }
+function sameIds(a2, b) {
+  return a2.length === b.length && a2.every((x, i) => x === b[i]);
+}
 function canTransformNode(node) {
   return !!node && TRANSFORMABLE_KINDS.has(node.kind) && !node.locks.position;
+}
+function computeGizmo(targets) {
+  return targets.length === 1 ? { ...targets[0].transform } : unionBounds(targets.map((n) => n.transform));
 }
 class TransformTool {
   constructor(id, ctx) {
@@ -153897,26 +153967,35 @@ class TransformTool {
   tol() {
     return 8 / Math.max(1e-3, this.ctx.zoom());
   }
-  eligibleActive() {
-    var _a2;
-    const id = this.ctx.activeNodeId();
-    const node = id ? ((_a2 = findNode(this.ctx.document().root, id)) == null ? void 0 : _a2.node) ?? null : null;
-    return canTransformNode(node) ? node : null;
+  eligibleTargets() {
+    const root = this.ctx.document().root;
+    return filterTopmost(root, this.ctx.selectedNodeIds()).map((id) => {
+      var _a2;
+      return ((_a2 = findNode(root, id)) == null ? void 0 : _a2.node) ?? null;
+    }).filter((n) => canTransformNode(n));
   }
-  sessionNode() {
-    var _a2;
-    if (!this.session) return null;
-    return ((_a2 = findNode(this.ctx.document().root, this.session.nodeId)) == null ? void 0 : _a2.node) ?? null;
+  sessionNodes() {
+    if (!this.session) return [];
+    const root = this.ctx.document().root;
+    return this.session.ids.map((id) => {
+      var _a2;
+      return ((_a2 = findNode(root, id)) == null ? void 0 : _a2.node) ?? null;
+    }).filter((n) => !!n);
   }
   ensureSession() {
-    const node = this.eligibleActive();
-    if (!node) {
+    const targets = this.eligibleTargets();
+    if (!targets.length) {
       if (this.session) this.apply();
       return null;
     }
-    if (this.session && this.session.nodeId !== node.id) this.apply();
-    if (!this.session) this.session = { nodeId: node.id, before: { ...node.transform } };
-    return node;
+    const ids = targets.map((n) => n.id);
+    if (this.session && !sameIds(this.session.ids, ids)) this.apply();
+    if (!this.session) {
+      const before = /* @__PURE__ */ new Map();
+      for (const n of targets) before.set(n.id, { ...n.transform });
+      this.session = { ids, before, gizmo: computeGizmo(targets) };
+    }
+    return targets;
   }
   onActivate() {
     this.ensureSession();
@@ -153926,33 +154005,66 @@ class TransformTool {
     else this.session = null;
   }
   onButtonPress(_e2, pt2) {
-    const node = this.ensureSession();
-    if (!node) return;
-    const h2 = hitHandle(node.transform, pt2, this.tol());
+    const targets = this.ensureSession();
+    const s = this.session;
+    if (!targets || !s) return;
+    const bases = /* @__PURE__ */ new Map();
+    for (const n of this.sessionNodes()) bases.set(n.id, { ...n.transform });
+    const gizmoBase = { ...s.gizmo };
+    const h2 = hitHandle(s.gizmo, pt2, this.tol());
     if (h2 === "rotate") {
-      this.drag = { mode: "rotate", base: { ...node.transform }, grab: angleTo(node.transform, pt2) };
+      this.drag = { mode: "rotate", gizmoBase, grab: angleTo(s.gizmo, pt2), bases };
       return;
     }
     if (h2) {
-      this.drag = { mode: "resize", handle: h2, base: { ...node.transform } };
+      this.drag = { mode: "resize", handle: h2, gizmoBase, bases };
       return;
     }
-    if (insideBox(node.transform, pt2)) {
-      this.drag = { mode: "move", start: pt2, base: { ...node.transform } };
+    if (insideBox(s.gizmo, pt2)) {
+      this.drag = { mode: "move", start: pt2, gizmoBase, bases };
       return;
     }
     this.apply();
   }
+  setTransform(id, t2) {
+    var _a2;
+    const node = (_a2 = findNode(this.ctx.document().root, id)) == null ? void 0 : _a2.node;
+    if (node) node.transform = t2;
+  }
   onMotion(e, pt2) {
-    const node = this.sessionNode();
+    const s = this.session;
     const d = this.drag;
-    if (!node || d.mode === "idle") return;
+    if (!s || d.mode === "idle") return;
+    const single = d.bases.size === 1;
     if (d.mode === "move") {
-      node.transform = applyMove(d.base, pt2.x - d.start.x, pt2.y - d.start.y);
+      const dx = pt2.x - d.start.x;
+      const dy = pt2.y - d.start.y;
+      s.gizmo = applyMove(d.gizmoBase, dx, dy);
+      for (const [id, base2] of d.bases) this.setTransform(id, applyMove(base2, dx, dy));
     } else if (d.mode === "resize") {
-      node.transform = applyResize(d.base, d.handle, pt2, 1, e.shiftKey);
+      if (single) {
+        const next = applyResize(d.gizmoBase, d.handle, pt2, 1, e.shiftKey);
+        s.gizmo = next;
+        for (const [id] of d.bases) this.setTransform(id, next);
+      } else {
+        const frame = d.gizmoBase.rotation;
+        const nonUniform = !e.shiftKey && [...d.bases.values()].every((b) => alignedTo(b.rotation, frame));
+        if (nonUniform) {
+          const { gizmo, anchor: anchor2, sx, sy } = groupScale(d.gizmoBase, d.handle, pt2, 1);
+          s.gizmo = gizmo;
+          for (const [id, base2] of d.bases) this.setTransform(id, scaleAroundFrame(base2, anchor2, frame, sx, sy));
+        } else {
+          const { gizmo, anchor: anchor2, scale } = groupResize(d.gizmoBase, d.handle, pt2, 1);
+          s.gizmo = gizmo;
+          for (const [id, base2] of d.bases) this.setTransform(id, scaleAround(base2, anchor2, scale));
+        }
+      }
     } else {
-      node.transform = applyRotate(d.base, d.base.rotation, d.grab, pt2, e.shiftKey ? Math.PI / 12 : 0);
+      const next = applyRotate(d.gizmoBase, d.gizmoBase.rotation, d.grab, pt2, e.shiftKey ? Math.PI / 12 : 0);
+      const theta = next.rotation - d.gizmoBase.rotation;
+      const pivot = center(d.gizmoBase);
+      s.gizmo = next;
+      for (const [id, base2] of d.bases) this.setTransform(id, rotateAround(base2, pivot, theta));
     }
     this.ctx.requestRender();
   }
@@ -153963,37 +154075,65 @@ class TransformTool {
     this.ensureSession();
   }
   cursorFor(pt2) {
-    const node = this.sessionNode() ?? this.eligibleActive();
-    if (!node) return "default";
-    if (hitHandle(node.transform, pt2, this.tol())) return "pointer";
-    if (insideBox(node.transform, pt2)) return "move";
+    const gizmo = this.currentGizmo();
+    if (!gizmo) return "default";
+    if (hitHandle(gizmo, pt2, this.tol())) return "pointer";
+    if (insideBox(gizmo, pt2)) return "move";
     return "default";
   }
+  currentGizmo() {
+    if (this.session) return this.session.gizmo;
+    const targets = this.eligibleTargets();
+    return targets.length ? computeGizmo(targets) : null;
+  }
   drawOverlay(overlay) {
-    const node = this.sessionNode() ?? this.eligibleActive();
-    if (!node) return;
-    addTransformBox(overlay, node.transform, true);
+    var _a2;
+    const targets = this.session ? this.sessionNodes() : this.eligibleTargets();
+    if (!targets.length) return;
+    const gizmo = ((_a2 = this.session) == null ? void 0 : _a2.gizmo) ?? computeGizmo(targets);
+    if (targets.length > 1) {
+      for (const n of targets) {
+        const b = n.transform;
+        if (b.w > 0 && b.h > 0) addTransformBox(overlay, b, false);
+      }
+    }
+    addTransformBox(overlay, gizmo, true);
   }
   isDirty() {
-    const node = this.sessionNode();
-    return !!this.session && !!node && !sameTransform(this.session.before, node.transform);
+    var _a2;
+    const s = this.session;
+    if (!s) return false;
+    for (const [id, before] of s.before) {
+      const node = (_a2 = findNode(this.ctx.document().root, id)) == null ? void 0 : _a2.node;
+      if (node && !sameTransform(before, node.transform)) return true;
+    }
+    return false;
+  }
+  buildCommands(s) {
+    var _a2, _b2, _c;
+    const cmds = [];
+    for (const [id, before] of s.before) {
+      const node = (_a2 = findNode(this.ctx.document().root, id)) == null ? void 0 : _a2.node;
+      if (!node || sameTransform(before, node.transform)) continue;
+      cmds.push(new SetTransformCommand("transform", node, before, { ...node.transform }));
+      const extra = ((_c = (_b2 = getNodeKind(node.kind)).onTransformCommitted) == null ? void 0 : _c.call(_b2, node, before, { content: this.ctx.content })) ?? null;
+      if (extra) cmds.push(extra);
+    }
+    return cmds;
   }
   apply() {
-    var _a2, _b2, _c;
     const s = this.session;
     this.session = null;
     this.drag = { mode: "idle" };
     if (!s) return false;
-    const node = (_a2 = findNode(this.ctx.document().root, s.nodeId)) == null ? void 0 : _a2.node;
-    if (!node || sameTransform(s.before, node.transform)) return false;
-    const cmd = new SetTransformCommand("transform", node, s.before, { ...node.transform });
-    const extra = ((_c = (_b2 = getNodeKind(node.kind)).onTransformCommitted) == null ? void 0 : _c.call(_b2, node, s.before, { content: this.ctx.content })) ?? null;
-    if (extra) {
-      const group = new CommandGroup("transform");
-      group.children.push(cmd, extra);
-      this.ctx.history.push(group);
+    const cmds = this.buildCommands(s);
+    if (!cmds.length) return false;
+    if (cmds.length === 1) {
+      this.ctx.history.push(cmds[0]);
     } else {
-      this.ctx.history.push(cmd);
+      const group = new CommandGroup("transform");
+      group.children.push(...cmds);
+      this.ctx.history.push(group);
     }
     this.ctx.requestRender();
     return true;
@@ -154004,13 +154144,16 @@ class TransformTool {
     this.session = null;
     this.drag = { mode: "idle" };
     if (!s) return false;
-    const node = (_a2 = findNode(this.ctx.document().root, s.nodeId)) == null ? void 0 : _a2.node;
-    if (node && !sameTransform(s.before, node.transform)) {
-      node.transform = { ...s.before };
-      this.ctx.requestRender();
-      return true;
+    let changed = false;
+    for (const [id, before] of s.before) {
+      const node = (_a2 = findNode(this.ctx.document().root, id)) == null ? void 0 : _a2.node;
+      if (node && !sameTransform(before, node.transform)) {
+        node.transform = { ...before };
+        changed = true;
+      }
     }
-    return false;
+    if (changed) this.ctx.requestRender();
+    return changed;
   }
 }
 function isTransformTool(tool) {
@@ -194686,4 +194829,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-CNrTPcW_.mjs.map
+//# sourceMappingURL=main-GvigwVEs.mjs.map

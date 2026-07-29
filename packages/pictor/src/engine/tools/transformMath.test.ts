@@ -2,13 +2,21 @@ import { describe, expect, it } from 'vitest'
 
 import type { Transform } from '../node'
 import {
+  alignedTo,
   applyMove,
   applyResize,
   applyRotate,
+  center,
+  groupResize,
+  groupScale,
   handlePos,
   hitHandle,
   insideBox,
+  rotateAround,
+  scaleAround,
+  scaleAroundFrame,
   toLocalFrame,
+  unionBounds,
 } from './transformMath'
 
 const box: Transform = { x: 10, y: 20, w: 100, h: 60, rotation: 0 }
@@ -115,5 +123,111 @@ describe('applyRotate', () => {
     const c = { x: box.x + box.w / 2, y: box.y + box.h / 2 }
     const r = applyRotate(box, 0, 0, { x: c.x + 100, y: c.y + 10 }, Math.PI / 12)
     expect((r.rotation / (Math.PI / 12)) % 1).toBeCloseTo(0)
+  })
+})
+
+describe('unionBounds (GIMP unified box)', () => {
+  it('encloses two axis-aligned boxes', () => {
+    const a: Transform = { x: 0, y: 0, w: 50, h: 50, rotation: 0 }
+    const b: Transform = { x: 100, y: 20, w: 40, h: 60, rotation: 0 }
+    expect(unionBounds([a, b])).toMatchObject({ x: 0, y: 0, w: 140, h: 80, rotation: 0 })
+  })
+
+  it('expands to cover a rotated box by its corners', () => {
+    const rotated: Transform = { x: 0, y: 0, w: 100, h: 20, rotation: Math.PI / 2 }
+    const u = unionBounds([rotated])
+    expect(u.x).toBeCloseTo(40)
+    expect(u.y).toBeCloseTo(-40)
+    expect(u.w).toBeCloseTo(20)
+    expect(u.h).toBeCloseTo(100)
+  })
+})
+
+describe('scaleAround (uniform group scale about a shared anchor)', () => {
+  it('keeps the anchor fixed and scales centre + size', () => {
+    const t: Transform = { x: 10, y: 10, w: 20, h: 20, rotation: 0 }
+    const r = scaleAround(t, { x: 0, y: 0 }, 2)
+    expect(center(r)).toMatchObject({ x: 40, y: 40 })
+    expect(r).toMatchObject({ w: 40, h: 40, rotation: 0 })
+  })
+
+  it('leaves each layer rotation untouched', () => {
+    const t: Transform = { x: 0, y: 0, w: 10, h: 10, rotation: 0.7 }
+    expect(scaleAround(t, { x: 100, y: 100 }, 0.5).rotation).toBe(0.7)
+  })
+})
+
+describe('rotateAround (group rotate about a shared pivot)', () => {
+  it('orbits the centre about the pivot and adds to the layer rotation', () => {
+    const t: Transform = { x: 90, y: -10, w: 20, h: 20, rotation: 0 }
+    const r = rotateAround(t, { x: 0, y: 0 }, Math.PI / 2)
+    expect(center(r).x).toBeCloseTo(0)
+    expect(center(r).y).toBeCloseTo(100)
+    expect(r.rotation).toBeCloseTo(Math.PI / 2)
+    expect(r).toMatchObject({ w: 20, h: 20 })
+  })
+
+  it('pivot at the box centre is a pure spin', () => {
+    const t: Transform = { x: 0, y: 0, w: 40, h: 20, rotation: 0 }
+    const r = rotateAround(t, center(t), 0.3)
+    expect(center(r)).toMatchObject({ x: 20, y: 10 })
+    expect(r.rotation).toBeCloseTo(0.3)
+  })
+})
+
+describe('groupResize (uniform gizmo handle drag)', () => {
+  it('returns a uniform scale and the opposite-handle anchor', () => {
+    const gizmo: Transform = { x: 0, y: 0, w: 100, h: 100, rotation: 0 }
+    const { anchor, scale } = groupResize(gizmo, 'se', { x: 200, y: 200 }, 1)
+    expect(anchor).toMatchObject({ x: 0, y: 0 })
+    expect(scale).toBeCloseTo(2)
+  })
+})
+
+describe('alignedTo (axis-aligned to the gizmo frame)', () => {
+  it('accepts multiples of 90° relative to the frame', () => {
+    expect(alignedTo(0, 0)).toBe(true)
+    expect(alignedTo(Math.PI / 2, 0)).toBe(true)
+    expect(alignedTo(Math.PI, 0)).toBe(true)
+    expect(alignedTo(0.6 + Math.PI / 2, 0.6)).toBe(true)
+  })
+  it('rejects an arbitrary relative angle', () => {
+    expect(alignedTo(0.3, 0)).toBe(false)
+  })
+})
+
+describe('groupScale (non-uniform gizmo handle drag)', () => {
+  it('an edge drag scales only one axis', () => {
+    const gizmo: Transform = { x: 0, y: 0, w: 100, h: 100, rotation: 0 }
+    const { anchor, sx, sy } = groupScale(gizmo, 'e', { x: 300, y: 50 }, 1)
+    expect(anchor).toMatchObject({ x: 0, y: 50 })
+    expect(sx).toBeCloseTo(3)
+    expect(sy).toBeCloseTo(1)
+  })
+})
+
+describe('scaleAroundFrame (per-axis scale within a frame)', () => {
+  it('scales each axis independently about the anchor (frame rotation 0)', () => {
+    const t: Transform = { x: 10, y: 10, w: 20, h: 20, rotation: 0 }
+    const r = scaleAroundFrame(t, { x: 0, y: 0 }, 0, 2, 3)
+    expect(center(r)).toMatchObject({ x: 40, y: 60 })
+    expect(r).toMatchObject({ w: 40, h: 60, rotation: 0 })
+  })
+
+  it('matches uniform scaleAround when sx === sy', () => {
+    const t: Transform = { x: 5, y: 7, w: 12, h: 30, rotation: 0.9 }
+    const a = scaleAroundFrame(t, { x: 3, y: 3 }, 0, 1.5, 1.5)
+    const b = scaleAround(t, { x: 3, y: 3 }, 1.5)
+    expect(a.x).toBeCloseTo(b.x)
+    expect(a.y).toBeCloseTo(b.y)
+    expect(a.w).toBeCloseTo(b.w)
+    expect(a.h).toBeCloseTo(b.h)
+  })
+
+  it('swaps w/h when the box sits at 90° to the frame', () => {
+    const t: Transform = { x: 0, y: 0, w: 40, h: 10, rotation: Math.PI / 2 }
+    const r = scaleAroundFrame(t, { x: 0, y: 0 }, 0, 2, 5)
+    expect(r.w).toBeCloseTo(40 * 5)
+    expect(r.h).toBeCloseTo(10 * 2)
   })
 })

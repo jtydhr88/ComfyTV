@@ -1,32 +1,41 @@
 import { SetTransformCommand } from '../commands/setTransform'
-import { findNode } from '../document'
-import { CommandGroup, Dirty } from '../history'
+import { filterTopmost, findNode } from '../document'
+import { CommandGroup, Dirty, type Command } from '../history'
 import type { SceneNode, Transform, Vec2 } from '../node'
 import { getNodeKind } from '../nodeKind'
 import { defaultControl, type Overlay, type Tool, type ToolContext, type ToolControl, type ToolDef } from '../tool'
 import { addTransformBox } from './overlayBox'
 import {
+  alignedTo,
   angleTo,
   applyMove,
   applyResize,
   applyRotate,
+  center,
+  groupResize,
+  groupScale,
   hitHandle,
   insideBox,
+  rotateAround,
+  scaleAround,
+  scaleAroundFrame,
+  unionBounds,
   type HandleId,
 } from './transformMath'
 
 const TRANSFORMABLE_KINDS = new Set(['raster', 'text', 'vector'])
 
 interface TransformSession {
-  nodeId: string
-  before: Transform
+  ids: string[]
+  before: Map<string, Transform>
+  gizmo: Transform
 }
 
 type Drag =
   | { mode: 'idle' }
-  | { mode: 'move'; start: Vec2; base: Transform }
-  | { mode: 'resize'; handle: HandleId; base: Transform }
-  | { mode: 'rotate'; base: Transform; grab: number }
+  | { mode: 'move'; start: Vec2; gizmoBase: Transform; bases: Map<string, Transform> }
+  | { mode: 'resize'; handle: HandleId; gizmoBase: Transform; bases: Map<string, Transform> }
+  | { mode: 'rotate'; gizmoBase: Transform; grab: number; bases: Map<string, Transform> }
 
 export interface TransformToolApi {
   apply(): boolean
@@ -38,8 +47,16 @@ function sameTransform(a: Transform, b: Transform): boolean {
   return a.x === b.x && a.y === b.y && a.w === b.w && a.h === b.h && a.rotation === b.rotation
 }
 
+function sameIds(a: string[], b: string[]): boolean {
+  return a.length === b.length && a.every((x, i) => x === b[i])
+}
+
 export function canTransformNode(node: SceneNode | null): node is SceneNode {
   return !!node && TRANSFORMABLE_KINDS.has(node.kind) && !node.locks.position
+}
+
+function computeGizmo(targets: SceneNode[]): Transform {
+  return targets.length === 1 ? { ...targets[0].transform } : unionBounds(targets.map((n) => n.transform))
 }
 
 class TransformTool implements Tool, TransformToolApi {
@@ -58,26 +75,35 @@ class TransformTool implements Tool, TransformToolApi {
     return 8 / Math.max(1e-3, this.ctx.zoom())
   }
 
-  private eligibleActive(): SceneNode | null {
-    const id = this.ctx.activeNodeId()
-    const node = id ? findNode(this.ctx.document().root, id)?.node ?? null : null
-    return canTransformNode(node) ? node : null
+  private eligibleTargets(): SceneNode[] {
+    const root = this.ctx.document().root
+    return filterTopmost(root, this.ctx.selectedNodeIds())
+      .map((id) => findNode(root, id)?.node ?? null)
+      .filter((n): n is SceneNode => canTransformNode(n))
   }
 
-  private sessionNode(): SceneNode | null {
-    if (!this.session) return null
-    return findNode(this.ctx.document().root, this.session.nodeId)?.node ?? null
+  private sessionNodes(): SceneNode[] {
+    if (!this.session) return []
+    const root = this.ctx.document().root
+    return this.session.ids
+      .map((id) => findNode(root, id)?.node ?? null)
+      .filter((n): n is SceneNode => !!n)
   }
 
-  private ensureSession(): SceneNode | null {
-    const node = this.eligibleActive()
-    if (!node) {
+  private ensureSession(): SceneNode[] | null {
+    const targets = this.eligibleTargets()
+    if (!targets.length) {
       if (this.session) this.apply()
       return null
     }
-    if (this.session && this.session.nodeId !== node.id) this.apply()
-    if (!this.session) this.session = { nodeId: node.id, before: { ...node.transform } }
-    return node
+    const ids = targets.map((n) => n.id)
+    if (this.session && !sameIds(this.session.ids, ids)) this.apply()
+    if (!this.session) {
+      const before = new Map<string, Transform>()
+      for (const n of targets) before.set(n.id, { ...n.transform })
+      this.session = { ids, before, gizmo: computeGizmo(targets) }
+    }
+    return targets
   }
 
   onActivate(): void {
@@ -90,34 +116,67 @@ class TransformTool implements Tool, TransformToolApi {
   }
 
   onButtonPress(_e: PointerEvent, pt: Vec2): void {
-    const node = this.ensureSession()
-    if (!node) return
-    const h = hitHandle(node.transform, pt, this.tol())
+    const targets = this.ensureSession()
+    const s = this.session
+    if (!targets || !s) return
+    const bases = new Map<string, Transform>()
+    for (const n of this.sessionNodes()) bases.set(n.id, { ...n.transform })
+    const gizmoBase = { ...s.gizmo }
+    const h = hitHandle(s.gizmo, pt, this.tol())
     if (h === 'rotate') {
-      this.drag = { mode: 'rotate', base: { ...node.transform }, grab: angleTo(node.transform, pt) }
+      this.drag = { mode: 'rotate', gizmoBase, grab: angleTo(s.gizmo, pt), bases }
       return
     }
     if (h) {
-      this.drag = { mode: 'resize', handle: h, base: { ...node.transform } }
+      this.drag = { mode: 'resize', handle: h, gizmoBase, bases }
       return
     }
-    if (insideBox(node.transform, pt)) {
-      this.drag = { mode: 'move', start: pt, base: { ...node.transform } }
+    if (insideBox(s.gizmo, pt)) {
+      this.drag = { mode: 'move', start: pt, gizmoBase, bases }
       return
     }
     this.apply()
   }
 
+  private setTransform(id: string, t: Transform): void {
+    const node = findNode(this.ctx.document().root, id)?.node
+    if (node) node.transform = t
+  }
+
   onMotion(e: PointerEvent, pt: Vec2): void {
-    const node = this.sessionNode()
+    const s = this.session
     const d = this.drag
-    if (!node || d.mode === 'idle') return
+    if (!s || d.mode === 'idle') return
+    const single = d.bases.size === 1
     if (d.mode === 'move') {
-      node.transform = applyMove(d.base, pt.x - d.start.x, pt.y - d.start.y)
+      const dx = pt.x - d.start.x
+      const dy = pt.y - d.start.y
+      s.gizmo = applyMove(d.gizmoBase, dx, dy)
+      for (const [id, base] of d.bases) this.setTransform(id, applyMove(base, dx, dy))
     } else if (d.mode === 'resize') {
-      node.transform = applyResize(d.base, d.handle, pt, 1, e.shiftKey)
+      if (single) {
+        const next = applyResize(d.gizmoBase, d.handle, pt, 1, e.shiftKey)
+        s.gizmo = next
+        for (const [id] of d.bases) this.setTransform(id, next)
+      } else {
+        const frame = d.gizmoBase.rotation
+        const nonUniform = !e.shiftKey && [...d.bases.values()].every((b) => alignedTo(b.rotation, frame))
+        if (nonUniform) {
+          const { gizmo, anchor, sx, sy } = groupScale(d.gizmoBase, d.handle, pt, 1)
+          s.gizmo = gizmo
+          for (const [id, base] of d.bases) this.setTransform(id, scaleAroundFrame(base, anchor, frame, sx, sy))
+        } else {
+          const { gizmo, anchor, scale } = groupResize(d.gizmoBase, d.handle, pt, 1)
+          s.gizmo = gizmo
+          for (const [id, base] of d.bases) this.setTransform(id, scaleAround(base, anchor, scale))
+        }
+      }
     } else {
-      node.transform = applyRotate(d.base, d.base.rotation, d.grab, pt, e.shiftKey ? Math.PI / 12 : 0)
+      const next = applyRotate(d.gizmoBase, d.gizmoBase.rotation, d.grab, pt, e.shiftKey ? Math.PI / 12 : 0)
+      const theta = next.rotation - d.gizmoBase.rotation
+      const pivot = center(d.gizmoBase)
+      s.gizmo = next
+      for (const [id, base] of d.bases) this.setTransform(id, rotateAround(base, pivot, theta))
     }
     this.ctx.requestRender()
   }
@@ -131,22 +190,52 @@ class TransformTool implements Tool, TransformToolApi {
   }
 
   cursorFor(pt: Vec2): string {
-    const node = this.sessionNode() ?? this.eligibleActive()
-    if (!node) return 'default'
-    if (hitHandle(node.transform, pt, this.tol())) return 'pointer'
-    if (insideBox(node.transform, pt)) return 'move'
+    const gizmo = this.currentGizmo()
+    if (!gizmo) return 'default'
+    if (hitHandle(gizmo, pt, this.tol())) return 'pointer'
+    if (insideBox(gizmo, pt)) return 'move'
     return 'default'
   }
 
+  private currentGizmo(): Transform | null {
+    if (this.session) return this.session.gizmo
+    const targets = this.eligibleTargets()
+    return targets.length ? computeGizmo(targets) : null
+  }
+
   drawOverlay(overlay: Overlay): void {
-    const node = this.sessionNode() ?? this.eligibleActive()
-    if (!node) return
-    addTransformBox(overlay, node.transform, true)
+    const targets = this.session ? this.sessionNodes() : this.eligibleTargets()
+    if (!targets.length) return
+    const gizmo = this.session?.gizmo ?? computeGizmo(targets)
+    if (targets.length > 1) {
+      for (const n of targets) {
+        const b = n.transform
+        if (b.w > 0 && b.h > 0) addTransformBox(overlay, b, false)
+      }
+    }
+    addTransformBox(overlay, gizmo, true)
   }
 
   isDirty(): boolean {
-    const node = this.sessionNode()
-    return !!this.session && !!node && !sameTransform(this.session.before, node.transform)
+    const s = this.session
+    if (!s) return false
+    for (const [id, before] of s.before) {
+      const node = findNode(this.ctx.document().root, id)?.node
+      if (node && !sameTransform(before, node.transform)) return true
+    }
+    return false
+  }
+
+  private buildCommands(s: TransformSession): Command[] {
+    const cmds: Command[] = []
+    for (const [id, before] of s.before) {
+      const node = findNode(this.ctx.document().root, id)?.node
+      if (!node || sameTransform(before, node.transform)) continue
+      cmds.push(new SetTransformCommand('transform', node, before, { ...node.transform }))
+      const extra = getNodeKind(node.kind).onTransformCommitted?.(node, before, { content: this.ctx.content }) ?? null
+      if (extra) cmds.push(extra)
+    }
+    return cmds
   }
 
   apply(): boolean {
@@ -154,16 +243,14 @@ class TransformTool implements Tool, TransformToolApi {
     this.session = null
     this.drag = { mode: 'idle' }
     if (!s) return false
-    const node = findNode(this.ctx.document().root, s.nodeId)?.node
-    if (!node || sameTransform(s.before, node.transform)) return false
-    const cmd = new SetTransformCommand('transform', node, s.before, { ...node.transform })
-    const extra = getNodeKind(node.kind).onTransformCommitted?.(node, s.before, { content: this.ctx.content }) ?? null
-    if (extra) {
-      const group = new CommandGroup('transform')
-      group.children.push(cmd, extra)
-      this.ctx.history.push(group)
+    const cmds = this.buildCommands(s)
+    if (!cmds.length) return false
+    if (cmds.length === 1) {
+      this.ctx.history.push(cmds[0])
     } else {
-      this.ctx.history.push(cmd)
+      const group = new CommandGroup('transform')
+      group.children.push(...cmds)
+      this.ctx.history.push(group)
     }
     this.ctx.requestRender()
     return true
@@ -174,13 +261,16 @@ class TransformTool implements Tool, TransformToolApi {
     this.session = null
     this.drag = { mode: 'idle' }
     if (!s) return false
-    const node = findNode(this.ctx.document().root, s.nodeId)?.node
-    if (node && !sameTransform(s.before, node.transform)) {
-      node.transform = { ...s.before }
-      this.ctx.requestRender()
-      return true
+    let changed = false
+    for (const [id, before] of s.before) {
+      const node = findNode(this.ctx.document().root, id)?.node
+      if (node && !sameTransform(before, node.transform)) {
+        node.transform = { ...before }
+        changed = true
+      }
     }
-    return false
+    if (changed) this.ctx.requestRender()
+    return changed
   }
 }
 

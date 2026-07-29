@@ -254,3 +254,90 @@ describe('TransformTool — explicit session with apply/cancel', () => {
     expect(h.history.canUndo()).toBe(false)
   })
 })
+
+describe('TransformTool — unified gizmo over a multi-layer selection', () => {
+  function setup() {
+    const content = new DefaultContentStore()
+    const a = rasterKind.create({ transform: { x: 0, y: 0, w: 50, h: 50, rotation: 0 } })
+    const b = rasterKind.create({ transform: { x: 100, y: 0, w: 50, h: 50, rotation: 0 } })
+    const doc: Document = { version: 2, width: 300, height: 300, root: root([a, b]), channels: [] }
+    const h = harness(doc, content, () => ({}) as PaintCore)
+    h.ctx.setSelectedNodes([a.id, b.id])
+    const tool = makeTransformToolDef().create(h.ctx)
+    tool.onActivate?.()
+    return { h, a, b, tool }
+  }
+
+  it('moves every selected layer and records a single undo step', () => {
+    const { h, a, b, tool } = setup()
+    tool.onButtonPress(ev, { x: 75, y: 25 })
+    tool.onMotion(ev, { x: 85, y: 35 })
+    tool.onButtonRelease(ev, { x: 85, y: 35 })
+    expect(a.transform).toMatchObject({ x: 10, y: 10 })
+    expect(b.transform).toMatchObject({ x: 110, y: 10 })
+
+    expect((tool as unknown as { apply(): boolean }).apply()).toBe(true)
+    expect(h.history.canUndo()).toBe(true)
+    h.history.undo()
+    expect(a.transform).toMatchObject({ x: 0, y: 0 })
+    expect(b.transform).toMatchObject({ x: 100, y: 0 })
+    expect(h.history.canUndo()).toBe(false)
+  })
+
+  it('scales the axis-aligned group non-uniformly (edge drag = width only)', () => {
+    const { a, b, tool } = setup()
+    tool.onButtonPress(ev, { x: 150, y: 25 })
+    tool.onMotion(ev, { x: 300, y: 25 })
+    tool.onButtonRelease(ev, { x: 300, y: 25 })
+    expect(a.transform).toMatchObject({ x: 0, y: 0, w: 100, h: 50 })
+    expect(b.transform).toMatchObject({ x: 200, y: 0, w: 100, h: 50 })
+  })
+
+  it('Shift constrains the group scale to uniform', () => {
+    const { a, b, tool } = setup()
+    const evShift = { pressure: 0.5, shiftKey: true } as unknown as PointerEvent
+    tool.onButtonPress(evShift, { x: 150, y: 25 })
+    tool.onMotion(evShift, { x: 300, y: 25 })
+    tool.onButtonRelease(evShift, { x: 300, y: 25 })
+    expect(a.transform.h).toBeGreaterThan(50)
+    expect(a.transform.w / a.transform.h).toBeCloseTo(1)
+    expect(b.transform.w).toBeCloseTo(a.transform.w)
+  })
+
+  it('falls back to uniform when any selected layer is rotated', () => {
+    const { a, b, tool } = setup()
+    a.transform = { ...a.transform, rotation: 0.3 }
+    tool.onActivate?.()
+    tool.onButtonPress(ev, { x: 150, y: 25 })
+    tool.onMotion(ev, { x: 300, y: 25 })
+    tool.onButtonRelease(ev, { x: 300, y: 25 })
+    expect(b.transform.h).toBeGreaterThan(50)
+    expect(b.transform.w / b.transform.h).toBeCloseTo(1)
+  })
+
+  it('rotates every layer about the union centre by the same angle', () => {
+    const { a, b, tool } = setup()
+    const rot = { x: 75, y: 25 - 25 - 24 }
+    tool.onButtonPress(ev, rot)
+    tool.onMotion(ev, { x: 75 + 49, y: 25 })
+    tool.onButtonRelease(ev, { x: 75 + 49, y: 25 })
+    expect(a.transform.rotation).toBeCloseTo(Math.PI / 2)
+    expect(b.transform.rotation).toBeCloseTo(Math.PI / 2)
+    const ca = { x: a.transform.x + a.transform.w / 2, y: a.transform.y + a.transform.h / 2 }
+    const cb = { x: b.transform.x + b.transform.w / 2, y: b.transform.y + b.transform.h / 2 }
+    expect(Math.hypot(ca.x - cb.x, ca.y - cb.y)).toBeCloseTo(100)
+  })
+
+  it('undoes a group rotate in one step', () => {
+    const { h, a, b, tool } = setup()
+    const rot = { x: 75, y: -24 }
+    tool.onButtonPress(ev, rot)
+    tool.onMotion(ev, { x: 124, y: 25 })
+    tool.onButtonRelease(ev, { x: 124, y: 25 })
+    expect((tool as unknown as { apply(): boolean }).apply()).toBe(true)
+    h.history.undo()
+    expect(a.transform).toMatchObject({ x: 0, y: 0, rotation: 0 })
+    expect(b.transform).toMatchObject({ x: 100, y: 0, rotation: 0 })
+    expect(h.history.canUndo()).toBe(false)
+  })
+})
