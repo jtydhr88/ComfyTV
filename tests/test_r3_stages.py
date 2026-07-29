@@ -164,9 +164,9 @@ def test_transition_luma_dispatch(monkeypatch):
                         lambda a, b, lm, **kw: captured.update(
                             {'luma': lm, **kw}) or 'o')
     monkeypatch.setattr(video_timeline, '_stage_emit_auto', lambda cls, **kw: {})
-    video_timeline.VideoTransitionStage.execute(
+    video_timeline.VideoLumaWipeStage.execute(
         project_id='p', video_a='/view?a', video_b='/view?b',
-        luma_image='/view?l.png', duration=0.8, luma_softness=0.2)
+        luma_image='/view?l.png', duration=0.8, softness=0.2)
     assert captured['luma'] == '/view?l.png'
     assert captured['softness'] == pytest.approx(0.2)
 

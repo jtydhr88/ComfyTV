@@ -57,6 +57,7 @@ STAGE_META: dict[str, dict] = {
     'VideoDenoiseStage':            {'kind': 'video'},
     'VideoChromaKeyStage':          {'kind': 'video'},
     'VideoTransitionStage':         {'kind': 'video'},
+    'VideoLumaWipeStage':           {'kind': 'video'},
     'VideoStabilizeStage':          {'kind': 'video'},
     'SceneDetectStage':             {'kind': 'image-batch'},
     'VideoInterpolateStage':        {'kind': 'video'},

@@ -23,10 +23,45 @@ class VideoTransitionStage(io.ComfyNode):
                 _hidden_float("duration", 1.0, 0.1, 5.0, step=0.05),
                 _hidden_float("offset", 0.0, 0.0, 3600.0,
                               tooltip="seconds into clip A where the transition starts; 0 = auto (end of A)"),
-                _hidden_float("luma_softness", 0.1, 0.0, 1.0),
-                io.Boolean.Input("luma_invert", default=False,
+                COMFYTV_VIDEO.Input("video_a", optional=True),
+                COMFYTV_VIDEO.Input("video_b", optional=True),
+            ],
+            outputs=[COMFYTV_VIDEO.Output("video")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
+                transition='fade', duration=1.0, offset=0.0,
+                video_a="", video_b=""):
+        if not (video_a or '').strip() or not (video_b or '').strip():
+            raise RuntimeError(
+                "Video Transition needs two upstream videos — wire video_a and video_b."
+            )
+        payload = xfade_videos(video_a, video_b, transition=transition,
+                               duration=_f(duration, 0.1, 5.0, 1.0),
+                               offset=(_f(offset, 0.0, 3600.0) or None),
+                               progress=_progress_cb(cls))
+        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
+                                parent_output_id=parent_output_id)
+
+
+class VideoLumaWipeStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.VideoLumaWipeStage",
+            display_name="Luma Wipe",
+            category="ComfyTV/Compose",
+            inputs=[
+                *_standard_stage_inputs(),
+                _hidden_combo("luma_map", ['none'] + LUMA_MAP_KINDS, 'radial'),
+                _hidden_float("duration", 1.0, 0.1, 5.0, step=0.05),
+                _hidden_float("softness", 0.1, 0.0, 1.0),
+                io.Boolean.Input("invert", default=False,
                                  socketless=True, extra_dict={"hidden": True}),
-                _hidden_combo("luma_map", ['none'] + LUMA_MAP_KINDS, 'none'),
                 COMFYTV_VIDEO.Input("video_a", optional=True),
                 COMFYTV_VIDEO.Input("video_b", optional=True),
                 COMFYTV_IMAGE.Input("luma_image", optional=True),
@@ -38,32 +73,29 @@ class VideoTransitionStage(io.ComfyNode):
 
     @classmethod
     def execute(cls, force_run_token=0, project_id="", parent_output_id=0,
-                transition='fade', duration=1.0, offset=0.0,
-                luma_softness=0.1, luma_invert=False, luma_map='none',
+                luma_map='radial', duration=1.0, softness=0.1, invert=False,
                 video_a="", video_b="", luma_image=""):
         if not (video_a or '').strip() or not (video_b or '').strip():
             raise RuntimeError(
-                "Video Transition needs two upstream videos — wire video_a and video_b."
+                "Luma Wipe needs two upstream videos — wire video_a and video_b."
             )
-        if not (luma_image or '').strip() and luma_map in LUMA_MAP_KINDS:
+        if not (luma_image or '').strip():
+            if luma_map not in LUMA_MAP_KINDS:
+                raise RuntimeError(
+                    "Luma Wipe: pick a luma pattern or wire a luma_image."
+                )
             from ...runners.luma_maps import luma_map_image_url
             from ...runners.media import get_video_info
             info = get_video_info(video_a)
             luma_image = luma_map_image_url(
                 luma_map, int(info.get('width') or 1280),
                 int(info.get('height') or 720))
-        if (luma_image or '').strip():
-            from ...runners.video_timeline_ops import luma_wipe_videos
-            payload = luma_wipe_videos(
-                video_a, video_b, luma_image,
-                duration=_f(duration, 0.1, 5.0, 1.0),
-                softness=_f(luma_softness, 0, 1, 0.1),
-                invert=bool(luma_invert), progress=_progress_cb(cls))
-        else:
-            payload = xfade_videos(video_a, video_b, transition=transition,
-                                   duration=_f(duration, 0.1, 5.0, 1.0),
-                                   offset=(_f(offset, 0.0, 3600.0) or None),
-                                   progress=_progress_cb(cls))
+        from ...runners.video_timeline_ops import luma_wipe_videos
+        payload = luma_wipe_videos(
+            video_a, video_b, luma_image,
+            duration=_f(duration, 0.1, 5.0, 1.0),
+            softness=_f(softness, 0, 1, 0.1),
+            invert=bool(invert), progress=_progress_cb(cls))
         return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
                                 parent_output_id=parent_output_id)
 

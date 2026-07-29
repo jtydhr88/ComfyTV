@@ -9217,13 +9217,13 @@ function useVModel(props, key, emit2, options = {}) {
     }
   });
 }
-const _hoisted_1$5s = {
+const _hoisted_1$5t = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$20(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$5s, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$5t, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -9235,13 +9235,13 @@ function render$20(_ctx, _cache2) {
   ])]);
 }
 const IconCheck = markRaw({ name: "lucide-check", render: render$20 });
-const _hoisted_1$5r = {
+const _hoisted_1$5s = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1$(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$5r, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$5s, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -9255,13 +9255,13 @@ function render$1$(_ctx, _cache2) {
   ])]);
 }
 const IconDownload = markRaw({ name: "lucide-download", render: render$1$ });
-const _hoisted_1$5q = {
+const _hoisted_1$5r = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1_(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$5q, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$5r, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -9273,13 +9273,13 @@ function render$1_(_ctx, _cache2) {
   ])]);
 }
 const IconClapperboard = markRaw({ name: "lucide-clapperboard", render: render$1_ });
-const _hoisted_1$5p = {
+const _hoisted_1$5q = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1Z(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$5p, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$5q, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -9297,24 +9297,24 @@ function render$1Z(_ctx, _cache2) {
   ])]);
 }
 const IconFolderSearch = markRaw({ name: "lucide-folder-search", render: render$1Z });
-const _hoisted_1$5o = {
+const _hoisted_1$5p = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1Y(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$5o, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$5p, [..._cache2[0] || (_cache2[0] = [
     createStaticVNode('<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="7" height="7" x="3" y="3" rx="1"></rect><rect width="7" height="7" x="14" y="3" rx="1"></rect><rect width="7" height="7" x="14" y="14" rx="1"></rect><rect width="7" height="7" x="3" y="14" rx="1"></rect></g>', 1)
   ])]);
 }
 const IconLayoutGrid = markRaw({ name: "lucide-layout-grid", render: render$1Y });
-const _hoisted_1$5n = {
+const _hoisted_1$5o = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1X(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$5n, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$5o, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -9326,13 +9326,13 @@ function render$1X(_ctx, _cache2) {
   ])]);
 }
 const IconMaximize$1 = markRaw({ name: "lucide-maximize-2", render: render$1X });
-const _hoisted_1$5m = {
+const _hoisted_1$5n = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1W(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$5m, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$5n, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -9344,13 +9344,13 @@ function render$1W(_ctx, _cache2) {
   ])]);
 }
 const IconPencil = markRaw({ name: "lucide-pencil", render: render$1W });
-const _hoisted_1$5l = {
+const _hoisted_1$5m = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1V(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$5l, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$5m, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -9362,13 +9362,13 @@ function render$1V(_ctx, _cache2) {
   ])]);
 }
 const IconPlus = markRaw({ name: "lucide-plus", render: render$1V });
-const _hoisted_1$5k = {
+const _hoisted_1$5l = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1U(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$5k, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$5l, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -9386,13 +9386,13 @@ function render$1U(_ctx, _cache2) {
   ])]);
 }
 const IconSearch = markRaw({ name: "lucide-search", render: render$1U });
-const _hoisted_1$5j = {
+const _hoisted_1$5k = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1T(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$5j, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$5k, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -9415,13 +9415,13 @@ function render$1T(_ctx, _cache2) {
   ])]);
 }
 const IconSettings2 = markRaw({ name: "lucide-settings-2", render: render$1T });
-const _hoisted_1$5i = {
+const _hoisted_1$5j = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1S(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$5i, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$5j, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -9433,13 +9433,13 @@ function render$1S(_ctx, _cache2) {
   ])]);
 }
 const IconTableOfContents = markRaw({ name: "lucide-table-of-contents", render: render$1S });
-const _hoisted_1$5h = {
+const _hoisted_1$5i = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1R(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$5h, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$5i, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -9458,13 +9458,13 @@ function render$1R(_ctx, _cache2) {
   ])]);
 }
 const IconTag = markRaw({ name: "lucide-tag", render: render$1R });
-const _hoisted_1$5g = {
+const _hoisted_1$5h = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1Q(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$5g, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$5h, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -9476,13 +9476,13 @@ function render$1Q(_ctx, _cache2) {
   ])]);
 }
 const IconTrash = markRaw({ name: "lucide-trash-2", render: render$1Q });
-const _hoisted_1$5f = {
+const _hoisted_1$5g = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1P(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$5f, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$5g, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -9494,13 +9494,13 @@ function render$1P(_ctx, _cache2) {
   ])]);
 }
 const IconX = markRaw({ name: "lucide-x", render: render$1P });
-const _hoisted_1$5e = {
+const _hoisted_1$5f = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1O(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$5e, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$5f, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -9519,13 +9519,13 @@ function assetPreviewUrl(asset) {
   const preview = (_a2 = asset.metadata) == null ? void 0 : _a2.preview_url;
   return typeof preview === "string" && preview ? preview : asset.payload_url;
 }
-const _hoisted_1$5d = {
+const _hoisted_1$5e = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1N(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$5d, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$5e, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -9552,13 +9552,13 @@ function render$1N(_ctx, _cache2) {
   ])]);
 }
 const IconEllipsis = markRaw({ name: "lucide-ellipsis", render: render$1N });
-const _hoisted_1$5c = {
+const _hoisted_1$5d = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1M(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$5c, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$5d, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -9570,13 +9570,13 @@ function render$1M(_ctx, _cache2) {
   ])]);
 }
 const IconPlay = markRaw({ name: "lucide-play", render: render$1M });
-const _hoisted_1$5b = {
+const _hoisted_1$5c = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1L(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$5b, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$5c, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -9690,12 +9690,12 @@ async function persistModelThumbnail(urlOrPath, blob) {
   } catch {
   }
 }
-const _hoisted_1$5a = ["src", "alt"];
-const _hoisted_2$3i = {
+const _hoisted_1$5b = ["src", "alt"];
+const _hoisted_2$3j = {
   key: 1,
   class: "ctv:flex ctv:size-full ctv:items-center ctv:justify-center ctv:text-muted-foreground"
 };
-const _sfc_main$3A = /* @__PURE__ */ defineComponent({
+const _sfc_main$3B = /* @__PURE__ */ defineComponent({
   __name: "ModelThumb",
   props: {
     src: {},
@@ -9729,7 +9729,7 @@ const _sfc_main$3A = /* @__PURE__ */ defineComponent({
         loading: "lazy",
         draggable: "false",
         class: "ctv:size-full ctv:object-cover"
-      }, null, 8, _hoisted_1$5a)) : (openBlock(), createElementBlock("div", _hoisted_2$3i, [
+      }, null, 8, _hoisted_1$5b)) : (openBlock(), createElementBlock("div", _hoisted_2$3j, [
         renderSlot(_ctx.$slots, "default", {}, () => [
           _cache2[0] || (_cache2[0] = createBaseVNode("i", { class: "pi pi-box" }, null, -1))
         ])
@@ -15259,33 +15259,33 @@ function useProxiedVideoUrl(source) {
   });
   return { url, isProxy: isProxy2, canProxy, building, pct, requestProxy };
 }
-const _hoisted_1$59 = {
+const _hoisted_1$5a = {
   class: "ctv-asset-card ctv:relative ctv:flex ctv:flex-col ctv:gap-2 ctv:overflow-hidden ctv:rounded-lg ctv:p-2 ctv:cursor-grab ctv:select-none ctv:transition-colors ctv:duration-200 ctv:hover:bg-secondary-background-hover/60",
   draggable: "true"
 };
-const _hoisted_2$3h = { class: "ctv:relative ctv:aspect-square ctv:overflow-hidden ctv:rounded-lg ctv:bg-secondary-background" };
-const _hoisted_3$3b = ["src", "title"];
-const _hoisted_4$2L = ["title"];
-const _hoisted_5$2A = ["title"];
-const _hoisted_6$2o = ["src", "alt", "title"];
-const _hoisted_7$1W = {
+const _hoisted_2$3i = { class: "ctv:relative ctv:aspect-square ctv:overflow-hidden ctv:rounded-lg ctv:bg-secondary-background" };
+const _hoisted_3$3c = ["src", "title"];
+const _hoisted_4$2M = ["title"];
+const _hoisted_5$2B = ["title"];
+const _hoisted_6$2p = ["src", "alt", "title"];
+const _hoisted_7$1X = {
   key: 4,
   class: "ctv:absolute ctv:bottom-1.5 ctv:left-1.5 ctv:flex ctv:items-center ctv:justify-center ctv:size-5 ctv:rounded ctv:bg-black/65 ctv:text-white/90 ctv:pointer-events-none"
 };
-const _hoisted_8$1A = {
+const _hoisted_8$1B = {
   key: 5,
   class: "ctv:absolute ctv:bottom-1.5 ctv:right-1.5 ctv:px-1 ctv:py-px ctv:rounded-sm ctv:text-3xs ctv:font-semibold ctv:tracking-wide ctv:bg-black/65 ctv:text-warning-background ctv:pointer-events-none"
 };
-const _hoisted_9$1s = {
+const _hoisted_9$1t = {
   key: 6,
   class: "ctv:absolute ctv:bottom-1.5 ctv:right-1.5 ctv:px-1 ctv:py-px ctv:rounded-sm ctv:text-3xs ctv:font-semibold ctv:tracking-wide ctv:bg-black/65 ctv:text-muted-foreground ctv:pointer-events-none"
 };
-const _hoisted_10$1g = ["title"];
-const _hoisted_11$17 = { class: "ctv-asset-actions ctv:absolute ctv:top-2 ctv:left-2 ctv:flex ctv:gap-1" };
-const _hoisted_12$$ = ["title"];
-const _hoisted_13$V = ["title"];
-const _hoisted_14$R = { class: "ctv:flex ctv:min-w-0 ctv:flex-col ctv:gap-1" };
-const _hoisted_15$L = ["title"];
+const _hoisted_10$1h = ["title"];
+const _hoisted_11$18 = { class: "ctv-asset-actions ctv:absolute ctv:top-2 ctv:left-2 ctv:flex ctv:gap-1" };
+const _hoisted_12$10 = ["title"];
+const _hoisted_13$W = ["title"];
+const _hoisted_14$S = { class: "ctv:flex ctv:min-w-0 ctv:flex-col ctv:gap-1" };
+const _hoisted_15$M = ["title"];
 const _hoisted_16$G = {
   key: 0,
   class: "ctv:text-2xs ctv:leading-none ctv:text-muted-foreground"
@@ -15294,7 +15294,7 @@ const _hoisted_17$E = {
   key: 1,
   class: "ctv:flex ctv:flex-wrap ctv:gap-0.5"
 };
-const _sfc_main$3z = /* @__PURE__ */ defineComponent({
+const _sfc_main$3A = /* @__PURE__ */ defineComponent({
   __name: "AssetGridCard",
   props: {
     asset: {},
@@ -15325,8 +15325,8 @@ const _sfc_main$3z = /* @__PURE__ */ defineComponent({
       v.currentTime = 0;
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$59, [
-        createBaseVNode("div", _hoisted_2$3h, [
+      return openBlock(), createElementBlock("div", _hoisted_1$5a, [
+        createBaseVNode("div", _hoisted_2$3i, [
           __props.asset.media_type === "video" ? (openBlock(), createElementBlock("video", {
             key: 0,
             src: unref(proxiedUrl) ?? void 0,
@@ -15337,18 +15337,18 @@ const _sfc_main$3z = /* @__PURE__ */ defineComponent({
             class: "ctv-asset-thumb ctv:absolute ctv:inset-0 ctv:size-full ctv:object-cover ctv:bg-black",
             onMouseenter: hoverPlay,
             onMouseleave: hoverPause
-          }, null, 40, _hoisted_3$3b)) : __props.asset.media_type === "audio" ? (openBlock(), createElementBlock("div", {
+          }, null, 40, _hoisted_3$3c)) : __props.asset.media_type === "audio" ? (openBlock(), createElementBlock("div", {
             key: 1,
             title: __props.tooltip,
             class: "ctv:absolute ctv:inset-0 ctv:flex ctv:items-center ctv:justify-center ctv:text-muted-foreground"
           }, [
             createVNode(unref(IconVolume2), { class: "ctv:size-8" })
-          ], 8, _hoisted_4$2L)) : __props.asset.media_type === "model" ? (openBlock(), createElementBlock("div", {
+          ], 8, _hoisted_4$2M)) : __props.asset.media_type === "model" ? (openBlock(), createElementBlock("div", {
             key: 2,
             title: __props.tooltip,
             class: "ctv:absolute ctv:inset-0"
           }, [
-            createVNode(_sfc_main$3A, {
+            createVNode(_sfc_main$3B, {
               src: __props.asset.payload_url,
               alt: __props.asset.name
             }, {
@@ -15357,15 +15357,15 @@ const _sfc_main$3z = /* @__PURE__ */ defineComponent({
               ]),
               _: 1
             }, 8, ["src", "alt"])
-          ], 8, _hoisted_5$2A)) : (openBlock(), createElementBlock("img", {
+          ], 8, _hoisted_5$2B)) : (openBlock(), createElementBlock("img", {
             key: 3,
             src: unref(assetPreviewUrl)(__props.asset),
             alt: __props.asset.name,
             title: __props.tooltip,
             loading: "lazy",
             class: "ctv-asset-thumb ctv:absolute ctv:inset-0 ctv:size-full ctv:object-cover"
-          }, null, 8, _hoisted_6$2o)),
-          __props.asset.media_type === "video" || __props.asset.media_type === "audio" ? (openBlock(), createElementBlock("span", _hoisted_7$1W, [
+          }, null, 8, _hoisted_6$2p)),
+          __props.asset.media_type === "video" || __props.asset.media_type === "audio" ? (openBlock(), createElementBlock("span", _hoisted_7$1X, [
             __props.asset.media_type === "video" ? (openBlock(), createBlock(unref(IconPlay), {
               key: 0,
               class: "ctv:size-3"
@@ -15374,7 +15374,7 @@ const _sfc_main$3z = /* @__PURE__ */ defineComponent({
               class: "ctv:size-3"
             }))
           ])) : createCommentVNode("", true),
-          unref(isProxy2) ? (openBlock(), createElementBlock("span", _hoisted_8$1A, "PROXY")) : unref(building) ? (openBlock(), createElementBlock("span", _hoisted_9$1s, "PROXY " + toDisplayString$1(unref(pct)) + "%", 1)) : unref(canProxy) ? (openBlock(), createElementBlock("button", {
+          unref(isProxy2) ? (openBlock(), createElementBlock("span", _hoisted_8$1B, "PROXY")) : unref(building) ? (openBlock(), createElementBlock("span", _hoisted_9$1t, "PROXY " + toDisplayString$1(unref(pct)) + "%", 1)) : unref(canProxy) ? (openBlock(), createElementBlock("button", {
             key: 7,
             type: "button",
             class: "ctv:absolute ctv:bottom-1.5 ctv:right-1.5 ctv:px-1 ctv:py-px ctv:rounded-sm ctv:text-3xs ctv:font-semibold ctv:tracking-wide ctv:cursor-pointer ctv:border ctv:border-warning-background/60 ctv:bg-black/65 ctv:text-warning-background ctv:hover:bg-warning-background/25",
@@ -15386,15 +15386,15 @@ const _sfc_main$3z = /* @__PURE__ */ defineComponent({
             )),
             onPointerdown: _cache2[1] || (_cache2[1] = withModifiers(() => {
             }, ["stop"]))
-          }, toDisplayString$1(_ctx.$t("fx.makeProxy")), 41, _hoisted_10$1g)) : createCommentVNode("", true),
-          createBaseVNode("div", _hoisted_11$17, [
+          }, toDisplayString$1(_ctx.$t("fx.makeProxy")), 41, _hoisted_10$1h)) : createCommentVNode("", true),
+          createBaseVNode("div", _hoisted_11$18, [
             createBaseVNode("button", {
               class: "ctv:flex ctv:size-6 ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:appearance-none ctv:rounded-md ctv:border-none ctv:shadow-sm ctv:bg-white/90 ctv:text-black/80 ctv:hover:bg-white",
               title: _ctx.$t("assets.card.more"),
               onClick: _cache2[2] || (_cache2[2] = withModifiers(($event) => emit2("open-menu", $event), ["stop"]))
             }, [
               createVNode(unref(IconEllipsis), { class: "ctv:size-4" })
-            ], 8, _hoisted_12$$),
+            ], 8, _hoisted_12$10),
             __props.asset.media_type === "image" ? (openBlock(), createElementBlock("button", {
               key: 0,
               class: "ctv:flex ctv:size-6 ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:appearance-none ctv:rounded-md ctv:border-none ctv:shadow-sm ctv:bg-white/90 ctv:text-black/80 ctv:hover:bg-white",
@@ -15402,14 +15402,14 @@ const _sfc_main$3z = /* @__PURE__ */ defineComponent({
               onClick: _cache2[3] || (_cache2[3] = withModifiers(($event) => emit2("view-full"), ["stop"]))
             }, [
               createVNode(unref(IconMaximize$1), { class: "ctv:size-4" })
-            ], 8, _hoisted_13$V)) : createCommentVNode("", true)
+            ], 8, _hoisted_13$W)) : createCommentVNode("", true)
           ])
         ]),
-        createBaseVNode("div", _hoisted_14$R, [
+        createBaseVNode("div", _hoisted_14$S, [
           createBaseVNode("span", {
             class: "ctv:line-clamp-2 ctv:break-all ctv:text-xs ctv:leading-tight ctv:text-base-foreground",
             title: __props.tooltip
-          }, toDisplayString$1(__props.asset.name || "—"), 9, _hoisted_15$L),
+          }, toDisplayString$1(__props.asset.name || "—"), 9, _hoisted_15$M),
           __props.meta ? (openBlock(), createElementBlock("div", _hoisted_16$G, toDisplayString$1(__props.meta), 1)) : createCommentVNode("", true),
           __props.categoryNames.length ? (openBlock(), createElementBlock("div", _hoisted_17$E, [
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(__props.categoryNames, (name) => {
@@ -15431,9 +15431,9 @@ const _export_sfc = (sfc, props) => {
   }
   return target;
 };
-const AssetGridCard = /* @__PURE__ */ _export_sfc(_sfc_main$3z, [["__scopeId", "data-v-56f3bbe8"]]);
-const _hoisted_1$58 = ["src"];
-const _sfc_main$3y = /* @__PURE__ */ defineComponent({
+const AssetGridCard = /* @__PURE__ */ _export_sfc(_sfc_main$3A, [["__scopeId", "data-v-56f3bbe8"]]);
+const _hoisted_1$59 = ["src"];
+const _sfc_main$3z = /* @__PURE__ */ defineComponent({
   __name: "ProxiedVideo",
   props: {
     src: {}
@@ -15446,24 +15446,24 @@ const _sfc_main$3y = /* @__PURE__ */ defineComponent({
       return openBlock(), createElementBlock("video", {
         src: unref(url) ?? void 0,
         class: normalizeClass({ "ctv-alpha-checker": isAlphaSource.value })
-      }, null, 10, _hoisted_1$58);
+      }, null, 10, _hoisted_1$59);
     };
   }
 });
-const ProxiedVideo = /* @__PURE__ */ _export_sfc(_sfc_main$3y, [["__scopeId", "data-v-e5ec41ef"]]);
-const _hoisted_1$57 = {
+const ProxiedVideo = /* @__PURE__ */ _export_sfc(_sfc_main$3z, [["__scopeId", "data-v-e5ec41ef"]]);
+const _hoisted_1$58 = {
   class: "ctv-asset-row ctv:relative ctv:flex ctv:items-center ctv:gap-2 ctv:overflow-hidden ctv:rounded-lg ctv:p-2 ctv:cursor-grab ctv:select-none ctv:transition-colors ctv:duration-200 ctv:hover:bg-secondary-background-hover/60",
   draggable: "true"
 };
-const _hoisted_2$3g = { class: "ctv:relative ctv:flex ctv:size-8 ctv:shrink-0 ctv:items-center ctv:justify-center ctv:overflow-hidden ctv:rounded-sm ctv:bg-secondary-background" };
-const _hoisted_3$3a = ["src", "alt"];
-const _hoisted_4$2K = { class: "ctv:flex ctv:min-w-0 ctv:flex-1 ctv:flex-col ctv:gap-1" };
-const _hoisted_5$2z = ["title"];
-const _hoisted_6$2n = ["title"];
-const _hoisted_7$1V = { class: "ctv-asset-actions ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1" };
-const _hoisted_8$1z = ["title"];
-const _hoisted_9$1r = ["title"];
-const _sfc_main$3x = /* @__PURE__ */ defineComponent({
+const _hoisted_2$3h = { class: "ctv:relative ctv:flex ctv:size-8 ctv:shrink-0 ctv:items-center ctv:justify-center ctv:overflow-hidden ctv:rounded-sm ctv:bg-secondary-background" };
+const _hoisted_3$3b = ["src", "alt"];
+const _hoisted_4$2L = { class: "ctv:flex ctv:min-w-0 ctv:flex-1 ctv:flex-col ctv:gap-1" };
+const _hoisted_5$2A = ["title"];
+const _hoisted_6$2o = ["title"];
+const _hoisted_7$1W = { class: "ctv-asset-actions ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1" };
+const _hoisted_8$1A = ["title"];
+const _hoisted_9$1s = ["title"];
+const _sfc_main$3y = /* @__PURE__ */ defineComponent({
   __name: "AssetListItem",
   props: {
     asset: {},
@@ -15479,8 +15479,8 @@ const _sfc_main$3x = /* @__PURE__ */ defineComponent({
       () => [props.meta, props.categoryNames.join(", ")].filter(Boolean).join(" · ")
     );
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$57, [
-        createBaseVNode("div", _hoisted_2$3g, [
+      return openBlock(), createElementBlock("div", _hoisted_1$58, [
+        createBaseVNode("div", _hoisted_2$3h, [
           __props.asset.media_type === "video" ? (openBlock(), createBlock(ProxiedVideo, {
             key: 0,
             src: __props.asset.payload_url,
@@ -15491,7 +15491,7 @@ const _sfc_main$3x = /* @__PURE__ */ defineComponent({
           }, null, 8, ["src"])) : __props.asset.media_type === "audio" ? (openBlock(), createBlock(unref(IconVolume2), {
             key: 1,
             class: "ctv:size-4 ctv:text-muted-foreground"
-          })) : __props.asset.media_type === "model" ? (openBlock(), createBlock(_sfc_main$3A, {
+          })) : __props.asset.media_type === "model" ? (openBlock(), createBlock(_sfc_main$3B, {
             key: 2,
             src: __props.asset.payload_url,
             alt: __props.asset.name
@@ -15506,20 +15506,20 @@ const _sfc_main$3x = /* @__PURE__ */ defineComponent({
             alt: __props.asset.name,
             loading: "lazy",
             class: "ctv:size-full ctv:object-cover"
-          }, null, 8, _hoisted_3$3a))
+          }, null, 8, _hoisted_3$3b))
         ]),
-        createBaseVNode("div", _hoisted_4$2K, [
+        createBaseVNode("div", _hoisted_4$2L, [
           createBaseVNode("span", {
             class: "ctv:block ctv:truncate ctv:text-xs ctv:leading-none ctv:text-base-foreground",
             title: __props.tooltip
-          }, toDisplayString$1(__props.asset.name || "—"), 9, _hoisted_5$2z),
+          }, toDisplayString$1(__props.asset.name || "—"), 9, _hoisted_5$2A),
           secondary.value ? (openBlock(), createElementBlock("span", {
             key: 0,
             class: "ctv:block ctv:truncate ctv:text-xs ctv:leading-none ctv:text-muted-foreground",
             title: secondary.value
-          }, toDisplayString$1(secondary.value), 9, _hoisted_6$2n)) : createCommentVNode("", true)
+          }, toDisplayString$1(secondary.value), 9, _hoisted_6$2o)) : createCommentVNode("", true)
         ]),
-        createBaseVNode("div", _hoisted_7$1V, [
+        createBaseVNode("div", _hoisted_7$1W, [
           __props.asset.media_type === "image" ? (openBlock(), createElementBlock("button", {
             key: 0,
             class: "ctv:flex ctv:size-6 ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:appearance-none ctv:rounded-md ctv:border-none ctv:bg-secondary-background ctv:text-base-foreground ctv:hover:bg-secondary-background-hover",
@@ -15527,20 +15527,20 @@ const _sfc_main$3x = /* @__PURE__ */ defineComponent({
             onClick: _cache2[0] || (_cache2[0] = withModifiers(($event) => emit2("view-full"), ["stop"]))
           }, [
             createVNode(unref(IconMaximize$1), { class: "ctv:size-4" })
-          ], 8, _hoisted_8$1z)) : createCommentVNode("", true),
+          ], 8, _hoisted_8$1A)) : createCommentVNode("", true),
           createBaseVNode("button", {
             class: "ctv:flex ctv:size-6 ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:appearance-none ctv:rounded-md ctv:border-none ctv:bg-secondary-background ctv:text-base-foreground ctv:hover:bg-secondary-background-hover",
             title: _ctx.$t("assets.card.more"),
             onClick: _cache2[1] || (_cache2[1] = withModifiers(($event) => emit2("open-menu", $event), ["stop"]))
           }, [
             createVNode(unref(IconEllipsis), { class: "ctv:size-4" })
-          ], 8, _hoisted_9$1r)
+          ], 8, _hoisted_9$1s)
         ])
       ]);
     };
   }
 });
-const AssetListItem = /* @__PURE__ */ _export_sfc(_sfc_main$3x, [["__scopeId", "data-v-c639f9e7"]]);
+const AssetListItem = /* @__PURE__ */ _export_sfc(_sfc_main$3y, [["__scopeId", "data-v-c639f9e7"]]);
 /*!
   * shared v9.14.5
   * (c) 2025 kazuya kawaguchi
@@ -56179,7 +56179,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-CWdicO8c.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-BRPDJrIg.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -56369,13 +56369,13 @@ async function importAssetFiles(files, opts = {}) {
   }
   return created;
 }
-const _hoisted_1$56 = { class: "ctv:flex ctv:flex-col ctv:gap-3" };
-const _hoisted_2$3f = { class: "ctv:m-0 ctv:text-xs ctv:leading-relaxed ctv:text-base-foreground ctv:whitespace-pre-wrap" };
-const _hoisted_3$39 = { class: "ctv:flex ctv:justify-end ctv:gap-2" };
+const _hoisted_1$57 = { class: "ctv:flex ctv:flex-col ctv:gap-3" };
+const _hoisted_2$3g = { class: "ctv:m-0 ctv:text-xs ctv:leading-relaxed ctv:text-base-foreground ctv:whitespace-pre-wrap" };
+const _hoisted_3$3a = { class: "ctv:flex ctv:justify-end ctv:gap-2" };
 const btnGhost$2 = "ctv:appearance-none ctv:border-none ctv:cursor-pointer ctv:[font-family:inherit] ctv:focus-visible:outline-none ctv:h-7 ctv:px-3 ctv:rounded-sm ctv:text-xs ctv:bg-secondary-background ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground";
 const btnPrimary$2 = "ctv:appearance-none ctv:border-none ctv:cursor-pointer ctv:[font-family:inherit] ctv:focus-visible:outline-none ctv:h-7 ctv:px-3 ctv:rounded-sm ctv:text-xs ctv:font-medium ctv:bg-primary-background ctv:text-primary-foreground ctv:hover:opacity-90";
 const btnDanger = "ctv:appearance-none ctv:border-none ctv:cursor-pointer ctv:[font-family:inherit] ctv:focus-visible:outline-none ctv:h-7 ctv:px-3 ctv:rounded-sm ctv:text-xs ctv:font-medium ctv:bg-destructive-background ctv:text-white ctv:hover:opacity-90";
-const _sfc_main$3w = /* @__PURE__ */ defineComponent({
+const _sfc_main$3x = /* @__PURE__ */ defineComponent({
   __name: "ConfirmDialog",
   props: {
     message: {},
@@ -56394,9 +56394,9 @@ const _sfc_main$3w = /* @__PURE__ */ defineComponent({
     }
     onBeforeUnmount(() => resolve2(false));
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$56, [
-        createBaseVNode("p", _hoisted_2$3f, toDisplayString$1(__props.message), 1),
-        createBaseVNode("div", _hoisted_3$39, [
+      return openBlock(), createElementBlock("div", _hoisted_1$57, [
+        createBaseVNode("p", _hoisted_2$3g, toDisplayString$1(__props.message), 1),
+        createBaseVNode("div", _hoisted_3$3a, [
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(btnGhost$2),
@@ -56448,7 +56448,7 @@ function askConfirm(opts) {
     dialog2.show({
       title: opts.title,
       width: opts.width ?? "420px",
-      component: markRaw(_sfc_main$3w),
+      component: markRaw(_sfc_main$3x),
       props: {
         message: opts.message,
         confirmText: opts.confirmText,
@@ -56459,16 +56459,16 @@ function askConfirm(opts) {
     });
   });
 }
-const _hoisted_1$55 = {
+const _hoisted_1$56 = {
   key: 0,
   class: "ctv:text-xs ctv:text-muted-foreground"
 };
-const _hoisted_2$3e = ["placeholder", "onKeydown"];
-const _hoisted_3$38 = { class: "ctv:flex ctv:justify-end ctv:gap-2" };
-const _hoisted_4$2J = ["disabled"];
+const _hoisted_2$3f = ["placeholder", "onKeydown"];
+const _hoisted_3$39 = { class: "ctv:flex ctv:justify-end ctv:gap-2" };
+const _hoisted_4$2K = ["disabled"];
 const btnGhost$1 = "ctv:appearance-none ctv:border-none ctv:cursor-pointer ctv:[font-family:inherit] ctv:focus-visible:outline-none ctv:h-7 ctv:px-3 ctv:rounded-sm ctv:text-xs ctv:bg-secondary-background ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground";
 const btnPrimary$1 = "ctv:appearance-none ctv:border-none ctv:cursor-pointer ctv:[font-family:inherit] ctv:focus-visible:outline-none ctv:h-7 ctv:px-3 ctv:rounded-sm ctv:text-xs ctv:font-medium ctv:bg-primary-background ctv:text-primary-foreground ctv:hover:opacity-90 ctv:disabled:opacity-50 ctv:disabled:pointer-events-none";
-const _sfc_main$3v = /* @__PURE__ */ defineComponent({
+const _sfc_main$3w = /* @__PURE__ */ defineComponent({
   __name: "TextInputDialog",
   props: {
     label: {},
@@ -56507,7 +56507,7 @@ const _sfc_main$3v = /* @__PURE__ */ defineComponent({
         class: "ctv:flex ctv:flex-col ctv:gap-3",
         onSubmit: withModifiers(confirm, ["prevent"])
       }, [
-        __props.label ? (openBlock(), createElementBlock("label", _hoisted_1$55, toDisplayString$1(__props.label), 1)) : createCommentVNode("", true),
+        __props.label ? (openBlock(), createElementBlock("label", _hoisted_1$56, toDisplayString$1(__props.label), 1)) : createCommentVNode("", true),
         withDirectives(createBaseVNode("input", {
           ref_key: "inputEl",
           ref: inputEl,
@@ -56516,10 +56516,10 @@ const _sfc_main$3v = /* @__PURE__ */ defineComponent({
           placeholder: __props.placeholder,
           class: "ctv:appearance-none ctv:[font-family:inherit] ctv:focus-visible:outline-none ctv:w-full ctv:h-8 ctv:px-2.5 ctv:rounded-sm ctv:text-sm ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle ctv:focus:border-primary-background",
           onKeydown: withKeys(withModifiers(cancel, ["prevent"]), ["esc"])
-        }, null, 40, _hoisted_2$3e), [
+        }, null, 40, _hoisted_2$3f), [
           [vModelText, value.value]
         ]),
-        createBaseVNode("div", _hoisted_3$38, [
+        createBaseVNode("div", _hoisted_3$39, [
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(btnGhost$1),
@@ -56529,7 +56529,7 @@ const _sfc_main$3v = /* @__PURE__ */ defineComponent({
             type: "submit",
             class: normalizeClass(btnPrimary$1),
             disabled: !value.value.trim()
-          }, toDisplayString$1(__props.confirmText || _ctx.$t("dialog.confirm")), 9, _hoisted_4$2J)
+          }, toDisplayString$1(__props.confirmText || _ctx.$t("dialog.confirm")), 9, _hoisted_4$2K)
         ])
       ], 32);
     };
@@ -56548,7 +56548,7 @@ function askText(opts) {
     dialog2.show({
       title: opts.title,
       width: opts.width ?? "420px",
-      component: markRaw(_sfc_main$3v),
+      component: markRaw(_sfc_main$3w),
       props: {
         label: opts.label,
         initialValue: opts.initialValue,
@@ -56914,21 +56914,21 @@ function useAssetsPanel(isActive2) {
     onDrop
   };
 }
-const _hoisted_1$54 = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:py-1.5 ctv:px-2.5 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle" };
-const _hoisted_2$3d = { class: "ctv:flex-1 ctv:font-semibold ctv:text-sm" };
-const _hoisted_3$37 = ["disabled", "title"];
-const _hoisted_4$2I = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-1.5 ctv:py-1.5 ctv:px-2.5 ctv:border-b ctv:border-border-subtle" };
-const _hoisted_5$2y = { class: "ctv:relative ctv:flex-1 ctv:min-w-0" };
-const _hoisted_6$2m = ["placeholder"];
-const _hoisted_7$1U = ["title"];
-const _hoisted_8$1y = { class: "ctv:shrink-0 ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1 ctv:py-1.5 ctv:px-2.5 ctv:border-b ctv:border-border-subtle" };
-const _hoisted_9$1q = ["onDrop", "onClick"];
-const _hoisted_10$1f = ["title", "onClick"];
-const _hoisted_11$16 = ["title", "onClick"];
-const _hoisted_12$_ = ["title"];
-const _hoisted_13$U = { class: "ctv:shrink-0 ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1 ctv:py-1.5 ctv:px-2.5 ctv:border-b ctv:border-border-subtle" };
-const _hoisted_14$Q = ["onClick"];
-const _hoisted_15$K = {
+const _hoisted_1$55 = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:py-1.5 ctv:px-2.5 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle" };
+const _hoisted_2$3e = { class: "ctv:flex-1 ctv:font-semibold ctv:text-sm" };
+const _hoisted_3$38 = ["disabled", "title"];
+const _hoisted_4$2J = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-1.5 ctv:py-1.5 ctv:px-2.5 ctv:border-b ctv:border-border-subtle" };
+const _hoisted_5$2z = { class: "ctv:relative ctv:flex-1 ctv:min-w-0" };
+const _hoisted_6$2n = ["placeholder"];
+const _hoisted_7$1V = ["title"];
+const _hoisted_8$1z = { class: "ctv:shrink-0 ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1 ctv:py-1.5 ctv:px-2.5 ctv:border-b ctv:border-border-subtle" };
+const _hoisted_9$1r = ["onDrop", "onClick"];
+const _hoisted_10$1g = ["title", "onClick"];
+const _hoisted_11$17 = ["title", "onClick"];
+const _hoisted_12$$ = ["title"];
+const _hoisted_13$V = { class: "ctv:shrink-0 ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1 ctv:py-1.5 ctv:px-2.5 ctv:border-b ctv:border-border-subtle" };
+const _hoisted_14$R = ["onClick"];
+const _hoisted_15$L = {
   key: 0,
   class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:my-1.5 ctv:mx-2.5 ctv:py-1.5 ctv:px-2 ctv:text-xs ctv:rounded ctv:bg-destructive-background/15 ctv:border ctv:border-destructive-background/50 ctv:text-destructive-background"
 };
@@ -56946,11 +56946,11 @@ const _hoisted_20$r = {
   key: 2,
   class: "ctv:flex ctv:flex-col ctv:gap-1"
 };
-const _hoisted_21$q = {
+const _hoisted_21$p = {
   key: 1,
   class: "ctv:absolute ctv:inset-0 ctv:z-10 ctv:flex ctv:items-center ctv:justify-center ctv:pointer-events-none ctv:bg-primary-background/15 ctv:border-2 ctv:border-dashed ctv:border-primary-background ctv:rounded-lg"
 };
-const _hoisted_22$p = { class: "ctv:py-1 ctv:px-2.5 ctv:rounded ctv:text-xs ctv:font-semibold ctv:bg-interface-panel-surface ctv:text-base-foreground" };
+const _hoisted_22$o = { class: "ctv:py-1 ctv:px-2.5 ctv:rounded ctv:text-xs ctv:font-semibold ctv:bg-interface-panel-surface ctv:text-base-foreground" };
 const _hoisted_23$n = { class: "ctv:flex-1 ctv:truncate" };
 const _hoisted_24$l = { class: "ctv:flex-1 ctv:truncate" };
 const _hoisted_25$l = ["disabled", "title"];
@@ -56970,7 +56970,7 @@ const _hoisted_35$8 = ["onClick"];
 const _hoisted_36$7 = { class: "ctv:w-3 ctv:inline-flex ctv:text-primary-background" };
 const _hoisted_37$6 = { class: "ctv:flex-1 ctv:truncate" };
 const chipCountClass$2 = "ctv:py-0 ctv:px-1 ctv:rounded-lg ctv:text-3xs ctv:bg-base-foreground/10";
-const _sfc_main$3u = /* @__PURE__ */ defineComponent({
+const _sfc_main$3v = /* @__PURE__ */ defineComponent({
   __name: "AssetsPanel",
   props: {
     active: { type: Boolean }
@@ -57071,8 +57071,8 @@ const _sfc_main$3u = /* @__PURE__ */ defineComponent({
           ["prevent"]
         ))
       }, [
-        createBaseVNode("div", _hoisted_1$54, [
-          createBaseVNode("span", _hoisted_2$3d, toDisplayString$1(_ctx.$t("assets.title")), 1),
+        createBaseVNode("div", _hoisted_1$55, [
+          createBaseVNode("span", _hoisted_2$3e, toDisplayString$1(_ctx.$t("assets.title")), 1),
           createBaseVNode("button", {
             class: normalizeClass(unref(addBtnClass2)),
             disabled: unref(uploading),
@@ -57081,7 +57081,7 @@ const _sfc_main$3u = /* @__PURE__ */ defineComponent({
               var _a3;
               return (_a3 = filePicker.value) == null ? void 0 : _a3.click();
             })
-          }, toDisplayString$1(unref(uploading) ? _ctx.$t("assets.uploading", { done: unref(uploadDone), total: unref(uploadTotal) }) : `+ ${_ctx.$t("assets.add")}`), 11, _hoisted_3$37),
+          }, toDisplayString$1(unref(uploading) ? _ctx.$t("assets.uploading", { done: unref(uploadDone), total: unref(uploadTotal) }) : `+ ${_ctx.$t("assets.add")}`), 11, _hoisted_3$38),
           createBaseVNode("input", {
             ref_key: "filePicker",
             ref: filePicker,
@@ -57093,15 +57093,15 @@ const _sfc_main$3u = /* @__PURE__ */ defineComponent({
             (...args) => unref(onPickFiles) && unref(onPickFiles)(...args))
           }, null, 544)
         ]),
-        createBaseVNode("div", _hoisted_4$2I, [
-          createBaseVNode("div", _hoisted_5$2y, [
+        createBaseVNode("div", _hoisted_4$2J, [
+          createBaseVNode("div", _hoisted_5$2z, [
             createVNode(unref(IconSearch), { class: "ctv:absolute ctv:left-2 ctv:top-1/2 ctv:-translate-y-1/2 ctv:size-3.5 ctv:text-muted-foreground ctv:pointer-events-none" }),
             withDirectives(createBaseVNode("input", {
               "onUpdate:modelValue": _cache2[2] || (_cache2[2] = ($event) => /* @__PURE__ */ isRef(searchQuery) ? searchQuery.value = $event : null),
               type: "text",
               placeholder: _ctx.$t("assets.search"),
               class: "ctv:w-full ctv:h-7 ctv:box-border ctv:pl-7 ctv:pr-2 ctv:rounded-lg ctv:text-xs ctv:[font-family:inherit] ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground ctv:placeholder:text-muted-foreground ctv:focus-visible:outline-none ctv:focus:border-border-default"
-            }, null, 8, _hoisted_6$2m), [
+            }, null, 8, _hoisted_6$2n), [
               [vModelText, unref(searchQuery)]
             ])
           ]),
@@ -57112,9 +57112,9 @@ const _sfc_main$3u = /* @__PURE__ */ defineComponent({
             (...args) => unref(openSettingsMenu) && unref(openSettingsMenu)(...args))
           }, [
             createVNode(unref(IconSettings2), { class: "ctv:size-4" })
-          ], 10, _hoisted_7$1U)
+          ], 10, _hoisted_7$1V)
         ]),
-        createBaseVNode("div", _hoisted_8$1y, [
+        createBaseVNode("div", _hoisted_8$1z, [
           createBaseVNode("button", {
             class: normalizeClass(chipClass2(unref(activeFilter) === "all")),
             onClick: _cache2[4] || (_cache2[4] = ($event) => activeFilter.value = "all")
@@ -57154,7 +57154,7 @@ const _sfc_main$3u = /* @__PURE__ */ defineComponent({
                   onClick: withModifiers(($event) => unref(onRenameCategory)(cat2.id, cat2.name), ["stop"])
                 }, [
                   createVNode(unref(IconPencil), { class: "ctv:size-3" })
-                ], 8, _hoisted_10$1f),
+                ], 8, _hoisted_10$1g),
                 createBaseVNode("span", {
                   role: "button",
                   class: "ctv:inline-flex ctv:opacity-60 ctv:hover:opacity-100 ctv:hover:text-destructive-background",
@@ -57162,9 +57162,9 @@ const _sfc_main$3u = /* @__PURE__ */ defineComponent({
                   onClick: withModifiers(($event) => unref(onDeleteCategory)(cat2.id), ["stop"])
                 }, [
                   createVNode(unref(IconX), { class: "ctv:size-3" })
-                ], 8, _hoisted_11$16)
+                ], 8, _hoisted_11$17)
               ], 64)) : createCommentVNode("", true)
-            ], 42, _hoisted_9$1q);
+            ], 42, _hoisted_9$1r);
           }), 128)),
           createBaseVNode("button", {
             class: normalizeClass(chipClass2(false)),
@@ -57173,9 +57173,9 @@ const _sfc_main$3u = /* @__PURE__ */ defineComponent({
             (...args) => unref(onCreateCategory) && unref(onCreateCategory)(...args))
           }, [
             createVNode(unref(IconPlus), { class: "ctv:size-3" })
-          ], 10, _hoisted_12$_)
+          ], 10, _hoisted_12$$)
         ]),
-        createBaseVNode("div", _hoisted_13$U, [
+        createBaseVNode("div", _hoisted_13$V, [
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(mediaFilters), (m) => {
             return openBlock(), createElementBlock("button", {
               key: m,
@@ -57186,10 +57186,10 @@ const _sfc_main$3u = /* @__PURE__ */ defineComponent({
               createBaseVNode("span", {
                 class: normalizeClass(chipCountClass$2)
               }, toDisplayString$1(unref(mediaCount)(m)), 1)
-            ], 10, _hoisted_14$Q);
+            ], 10, _hoisted_14$R);
           }), 128))
         ]),
-        unref(uploadError) ? (openBlock(), createElementBlock("div", _hoisted_15$K, [
+        unref(uploadError) ? (openBlock(), createElementBlock("div", _hoisted_15$L, [
           createBaseVNode("span", _hoisted_16$F, toDisplayString$1(unref(uploadError)), 1),
           createBaseVNode("button", {
             class: "ctv:inline-flex ctv:bg-transparent ctv:border-none ctv:cursor-pointer ctv:text-inherit ctv:opacity-70 ctv:hover:opacity-100",
@@ -57229,8 +57229,8 @@ const _sfc_main$3u = /* @__PURE__ */ defineComponent({
             }), 128))
           ]))
         ]),
-        unref(fileDragDepth) > 0 ? (openBlock(), createElementBlock("div", _hoisted_21$q, [
-          createBaseVNode("span", _hoisted_22$p, toDisplayString$1(_ctx.$t("assets.dropHint")), 1)
+        unref(fileDragDepth) > 0 ? (openBlock(), createElementBlock("div", _hoisted_21$p, [
+          createBaseVNode("span", _hoisted_22$o, toDisplayString$1(_ctx.$t("assets.dropHint")), 1)
         ])) : createCommentVNode("", true),
         unref(settingsMenu) ? (openBlock(), createElementBlock("div", {
           key: 2,
@@ -58431,7 +58431,7 @@ const materialStage$1 = { "presets": "Presets", "preset": { "plasticGlossy": "Gl
 const loaderDrop$1 = { "mismatchTitle": "Wrong file type", "typeMismatch": "This node only loads {kind}.", "assetTypeMismatch": "This node loads {expected}, but the dropped asset is {actual}.", "failedTitle": "ComfyTV upload", "uploadFailed": "Upload failed: {detail}" };
 const fxChain$1 = { "title": "FX Chain", "empty": "Chain FX nodes along the video wire into this node", "noPreview": "no live preview", "delivery": "Delivery", "dColorspace": "Colorspace", "dSize": "Resolution (short side)", "dFps": "Frame rate", "dCodec": "Codec", "dQuality": "Quality", "sourceOpt": "Source", "qDraft": "Draft", "qStandard": "Standard", "qHigh": "High" };
 const fxPreview$1 = { "run": "Preview clip", "stale": "Params changed — preview again", "window": "Real-filter preview · {s}s", "failed": "Preview failed — try again" };
-const fx$1 = { "processing": "Processing…", "done": "Done — ready for downstream", "adjustThenRun": "Adjust parameters, then Run", "fullscreen": "Full size", "exitFullscreen": "Exit full size", "chainMode": "Adjust freely — an FX Chain node downstream renders once", "makeProxy": "PROXY?", "makeProxyHint": "Large source — generate a lightweight proxy for smooth preview (Run still uses the original)", "needsTwoInputs": "Wire two videos into A and B", "needsAudioOrVideo": "Wire an audio or video input", "previewNote": "Preview is approximate — Run renders precisely", "mode": "Mode", "method": "Method", "effect": "Effect", "scope": "Scope", "preset": "Preset", "transition": "Transition", "amount": "Amount", "size": "Size", "strength": "Strength", "edgePreserve": "Edge keep", "exposure": "Exposure", "black": "Black", "temperature": "Temp (K)", "tempMix": "Temp mix", "hue": "Hue", "saturation": "Saturation", "vibrance": "Vibrance", "shadows": "Shadows", "midtones": "Midtones", "highlights": "Highlights", "preserveLightness": "Preserve lightness", "resetWheels": "Reset wheels", "master": "Master", "red": "Red", "green": "Green", "blue": "Blue", "resetCurve": "Reset curve", "curveHint": "Click to add · drag to move · right-click deletes", "keyColor": "Key color", "pickFromVideo": "Pick from frame", "similarity": "Similarity", "blend": "Blend", "despill": "Despill", "despillExpand": "Despill expand", "outAlpha": "Alpha (WebM)", "outMatte": "B/W matte", "duration": "Duration", "offset": "Offset", "offsetAuto": "0 = auto (end of A)", "lumaPreviewHint": "Luma wipe preview shows a crossfade — run to see the final wipe", "rangeX": "Range X", "rangeY": "Range Y", "edgeMode": "Edge fill", "threshold": "Threshold", "minGap": "Min gap", "detectHint": "Run scans for hard cuts and outputs one thumbnail per scene", "sceneFrames": "Scene frames", "sceneClips": "Scene clips", "sceneClipsHint": "Run splits the video at each cut into per-scene clips — wire the clips output into a Video Picker", "sceneClipPickHint": "Click a clip to select it — re-run and the clips output becomes that clip", "cutFast": "Fast (keyframe)", "cutPrecise": "Precise (re-encode)", "targetFps": "Target fps", "slowFactor": "Slow ×", "miMode": "Interp mode", "rateFrame": "Same rate", "rateField": "Double rate", "block": "Block", "atSeconds": "At (s)", "middle": "middle", "thresholdDb": "Threshold", "ratio": "Ratio", "attack": "Attack", "release": "Release", "makeup": "Makeup", "knee": "Knee", "intensity": "Intensity", "eqHint": "Double-click adds a band · drag moves · wheel = Q · double-click a dot removes", "targetI": "Target LUFS", "targetTp": "True peak", "targetLra": "LRA", "frameLen": "Frame (ms)", "gaussWin": "Gauss win", "silenceDb": "Silence (dB)", "minSilence": "Min silence (s)", "lutFile": "LUT file", "upload": "Upload", "interp": "Interp", "noLuts": "No LUTs yet — upload a .cube file", "lutPreviewUnavailable": "Live preview supports .cube and .3dl only — this LUT is applied on run", "refresh": "Refresh", "operator": "Blend mode", "opacity": "Opacity", "position": "Position", "scale": "Scale", "rotation": "Rotation", "skew": "Skew", "motionBlur": "Motion blur", "keyframes": "Keyframes", "addKey": "Add key", "delKey": "Delete key", "clearKeys": "Clear", "dragHint": "Drag the frame to move · wheel to scale", "cornerHint": "Drag the four corner handles", "rotoHint": "Click adds a point · drag moves · double-click a point removes it", "trackHint": "Click the frame to set the track point", "needsBgFg": "Wire background and foreground videos", "foreground": "Foreground", "background": "Background", "text": "Text", "fontLbl": "Font", "fontSize": "Size", "colorLbl": "Color", "strokeLbl": "Stroke", "anchor": "Anchor", "tStart": "Start (s)", "tEnd": "End (s)", "tEndAuto": "-1 = to the end", "fade": "Fade (s)", "subsPlaceholder": "Paste SRT / WebVTT cues here…", "cues": "cues", "trackPoint": "Track point", "pattern": "Pattern", "searchR": "Search", "feather": "Feather", "invert": "Invert", "transitionGroup": { "fade": "Fade", "wipe": "Wipe", "slide": "Slide & Smooth", "shape": "Shapes", "diagslice": "Diagonal & Slice", "coverreveal": "Cover & Reveal", "wind": "Wind", "fx": "FX" }, "echoHint": "Layered frame echoes with feedback trails.", "needsRetimeMap": "Map mode needs a grayscale retime image", "expressionHint": "Vars: t, frame, duration, fps. Fns: noise, fbm, turbulence, smoothstep, remap, mix, hash, random, sin/cos…", "stab360Hint": "Two-pass: analyzes equirect yaw/pitch motion, smooths the camera path, then re-renders.", "stmapGenHint": "16-bit STMap for the undistort → comp → redistort workflow. Feed it into the STMap node." };
+const fx$1 = { "processing": "Processing…", "done": "Done — ready for downstream", "adjustThenRun": "Adjust parameters, then Run", "fullscreen": "Full size", "exitFullscreen": "Exit full size", "chainMode": "Adjust freely — an FX Chain node downstream renders once", "makeProxy": "PROXY?", "makeProxyHint": "Large source — generate a lightweight proxy for smooth preview (Run still uses the original)", "needsTwoInputs": "Wire two videos into A and B", "needsAudioOrVideo": "Wire an audio or video input", "previewNote": "Preview is approximate — Run renders precisely", "mode": "Mode", "method": "Method", "effect": "Effect", "scope": "Scope", "preset": "Preset", "transition": "Transition", "amount": "Amount", "size": "Size", "strength": "Strength", "edgePreserve": "Edge keep", "exposure": "Exposure", "black": "Black", "temperature": "Temp (K)", "tempMix": "Temp mix", "hue": "Hue", "saturation": "Saturation", "vibrance": "Vibrance", "shadows": "Shadows", "midtones": "Midtones", "highlights": "Highlights", "preserveLightness": "Preserve lightness", "resetWheels": "Reset wheels", "master": "Master", "red": "Red", "green": "Green", "blue": "Blue", "resetCurve": "Reset curve", "curveHint": "Click to add · drag to move · right-click deletes", "keyColor": "Key color", "pickFromVideo": "Pick from frame", "similarity": "Similarity", "blend": "Blend", "despill": "Despill", "despillExpand": "Despill expand", "outAlpha": "Alpha (WebM)", "outMatte": "B/W matte", "duration": "Duration", "offset": "Offset", "offsetAuto": "0 = auto (end of A)", "lumaPattern": "Luma pattern", "lumaWiredHint": "Using the wired luma image", "softness": "Softness", "rangeX": "Range X", "rangeY": "Range Y", "edgeMode": "Edge fill", "threshold": "Threshold", "minGap": "Min gap", "detectHint": "Run scans for hard cuts and outputs one thumbnail per scene", "sceneFrames": "Scene frames", "sceneClips": "Scene clips", "sceneClipsHint": "Run splits the video at each cut into per-scene clips — wire the clips output into a Video Picker", "sceneClipPickHint": "Click a clip to select it — re-run and the clips output becomes that clip", "cutFast": "Fast (keyframe)", "cutPrecise": "Precise (re-encode)", "targetFps": "Target fps", "slowFactor": "Slow ×", "miMode": "Interp mode", "rateFrame": "Same rate", "rateField": "Double rate", "block": "Block", "atSeconds": "At (s)", "middle": "middle", "thresholdDb": "Threshold", "ratio": "Ratio", "attack": "Attack", "release": "Release", "makeup": "Makeup", "knee": "Knee", "intensity": "Intensity", "eqHint": "Double-click adds a band · drag moves · wheel = Q · double-click a dot removes", "targetI": "Target LUFS", "targetTp": "True peak", "targetLra": "LRA", "frameLen": "Frame (ms)", "gaussWin": "Gauss win", "silenceDb": "Silence (dB)", "minSilence": "Min silence (s)", "lutFile": "LUT file", "upload": "Upload", "interp": "Interp", "noLuts": "No LUTs yet — upload a .cube file", "lutPreviewUnavailable": "Live preview supports .cube and .3dl only — this LUT is applied on run", "refresh": "Refresh", "operator": "Blend mode", "opacity": "Opacity", "position": "Position", "scale": "Scale", "rotation": "Rotation", "skew": "Skew", "motionBlur": "Motion blur", "keyframes": "Keyframes", "addKey": "Add key", "delKey": "Delete key", "clearKeys": "Clear", "dragHint": "Drag the frame to move · wheel to scale", "cornerHint": "Drag the four corner handles", "rotoHint": "Click adds a point · drag moves · double-click a point removes it", "trackHint": "Click the frame to set the track point", "needsBgFg": "Wire background and foreground videos", "foreground": "Foreground", "background": "Background", "text": "Text", "fontLbl": "Font", "fontSize": "Size", "colorLbl": "Color", "strokeLbl": "Stroke", "anchor": "Anchor", "tStart": "Start (s)", "tEnd": "End (s)", "tEndAuto": "-1 = to the end", "fade": "Fade (s)", "subsPlaceholder": "Paste SRT / WebVTT cues here…", "cues": "cues", "trackPoint": "Track point", "pattern": "Pattern", "searchR": "Search", "feather": "Feather", "invert": "Invert", "transitionGroup": { "fade": "Fade", "wipe": "Wipe", "slide": "Slide & Smooth", "shape": "Shapes", "diagslice": "Diagonal & Slice", "coverreveal": "Cover & Reveal", "wind": "Wind", "fx": "FX" }, "echoHint": "Layered frame echoes with feedback trails.", "needsRetimeMap": "Map mode needs a grayscale retime image", "expressionHint": "Vars: t, frame, duration, fps. Fns: noise, fbm, turbulence, smoothstep, remap, mix, hash, random, sin/cos…", "stab360Hint": "Two-pass: analyzes equirect yaw/pitch motion, smooths the camera path, then re-renders.", "stmapGenHint": "16-bit STMap for the undistort → comp → redistort workflow. Feed it into the STMap node." };
 const afx$1 = { "custom": "Custom", "compliance": "Platform compliance", "hum": "De-hum", "harmonics": "Harmonics", "waveformPro": "Waveform+", "spectrumPro": "Spectrum+", "rmsLayer": "RMS layer", "clipMarks": "Mark clipping", "dbAxis": "dB axis", "rangeDb": "Range", "gainDb": "Gain", "freqGain": "Freq gain (dB/oct)", "normalize": "Normalize", "peakTarget": "Peak target", "rmsConstraint": "RMS constraint", "lufsConstraint": "LUFS constraint", "strictestNote": "The strictest constraint wins (constant gain)", "gain": "Gain", "pan": "Pan", "panLaw": "Pan law", "panLawLinear": "Linear (Audacity)", "panLawPower": "Const. power (Ardour)", "dither": "Dither", "detect": "Detect", "bySilence": "By silence", "byJson": "Manual JSON", "minSegment": "Min segment", "edgeFade": "Edge fade", "namingLbl": "Naming", "prefixPh": "File name prefix…", "filesOut": "files exported", "sourceLbl": "Source", "wet": "Wet", "dryLbl": "Dry", "normalizePeak": "Normalize peak", "needsSrcAndIr": "Wire a source audio and an IR audio", "sweepHint": "Generates a Farina ESS sweep — play it in a room, record the response, then use Deconvolve", "fminLbl": "From", "fmaxLbl": "To", "ampLbl": "Amplitude", "tailLbl": "Tail silence", "deconvHint": "Feed the recorded sweep response; parameters must match the Sweep node", "irLen": "IR length", "echoFeedback": "Feedback (Audacity)", "echoFeedbackNote": "Infinite repeats, exact Audacity Echo structure", "keepSilence": "Keep silence (s)", "echoMountains": "Mountains", "echoMountains2": "Two mountains", "echoDoubled": "Doubled", "echoRobot": "Robot", "inGain": "In gain", "outGain": "Out gain", "delayMs": "Delay", "decay": "Decay", "rateHz": "Rate", "depth": "Depth", "regen": "Feedback", "width": "Width", "triangular": "Triangular", "sinusoidal": "Sinusoidal", "chorusSingle": "Single", "chorusDouble": "Double", "chorusTriple": "Triple", "widen": "Widen", "balance": "Balance", "mono": "Mono", "swap": "Swap L/R", "feedback": "Feedback", "drymix": "Dry mix", "range": "Range", "sideGain": "Side gain", "leftDelay": "L delay", "rightDelay": "R delay", "speed": "Speed", "pitch": "Pitch", "reverse": "Reverse", "tempo": "Tempo", "semitones": "Semitones", "speedNote": "atempo keeps pitch while changing speed", "pitchNote": "Pitch shift keeps duration (resample + atempo)", "declick": "De-click", "declip": "De-clip", "denorm": "Denormals", "wavelet": "Wavelet NR", "window": "Window", "burst": "Burst", "hsize": "History", "levelDb": "Level", "sigma": "Sigma", "percent": "Percent", "levels": "Levels", "clipLevel": "Clip", "adaptive": "Adaptive", "bits": "Bits", "mix": "Mix", "drive": "Drive", "freqHz": "Freq", "curveOutA": "Fade-out curve (A)", "curveInB": "Fade-in curve (B)", "overlap": "Overlap (B starts under A's fade)", "needsTwoAudio": "Wire two audio (or video) inputs into A and B", "loudness": "Loudness", "volume": "Volume", "stats": "Stats", "silence": "Silence", "analyzeHint": "Run measures the audio and prints a report", "waveform": "Waveform", "spectrum": "Spectrum", "splitChannels": "Split channels", "legend": "Legend", "mixBack": "Mix voice back over ducked audio", "threshold": "Threshold", "pitchHq": "Pitch HQ", "stretchHq": "Stretch HQ", "hqNote": "Phase-locked vocoder (StaffPad algorithm) — slower but much cleaner than the standard modes.", "stemSplitHint": "Hybrid Demucs 4-stem separation. First run downloads the model (~319 MB). Vocals / accompaniment cover karaoke workflows.", "reduction": "Reduction", "sensitivity": "Sensitivity", "freqSmoothing": "Freq Smoothing", "nrProfileWired": "Noise profile: from the wired noise sample.", "nrProfileAuto": "Noise profile: auto (quietest 10% of frames). Wire a noise-only clip into noise_sample for best results.", "beats": "Beats", "onsets": "Onsets", "notes": "Notes", "minGap": "Min Gap", "mirHint": "Outputs keyframe pulses (wire into Transform/Composite track) and labels JSON with times.", "reverbTime": "Reverb Time", "roomScale": "Room Scale", "predelay": "Pre-delay", "dry": "Dry", "late": "Late", "early": "Early Refl.", "timeLow": "Low Decay", "timeHigh": "High Decay", "modulation": "Modulation", "stereoSpread": "Stereo Spread" };
 const scopes$1 = { "liveSampling": "Sampling the upstream preview live", "wireHint": "Wire a live-preview node (Color / Curves / Blur / Stylize / Chroma Key) for live scopes" };
 const optics$1 = { "needsDepth": "Wire a depth map (image or video) first" };
@@ -58581,7 +58581,7 @@ const materialStage = { "presets": "预设", "preset": { "plasticGlossy": "亮�
 const loaderDrop = { "mismatchTitle": "文件类型不匹配", "typeMismatch": "该节点只能加载{kind}。", "assetTypeMismatch": "该节点加载{expected}，拖入的素材是{actual}。", "failedTitle": "ComfyTV 上传", "uploadFailed": "上传失败: {detail}" };
 const fxChain = { "title": "特效链", "empty": "沿 video 线把 FX 节点串联接入本节点即可成链", "noPreview": "无实时预览", "delivery": "交付出片", "dColorspace": "色彩空间", "dSize": "分辨率(短边)", "dFps": "帧率", "dCodec": "编码", "dQuality": "质量", "sourceOpt": "原始", "qDraft": "草稿", "qStandard": "标准", "qHigh": "高" };
 const fxPreview = { "run": "预览片段", "stale": "参数已变 — 请重新预览", "window": "真实滤镜预览 · {s} 秒", "failed": "预览失败 — 请重试" };
-const fx = { "processing": "处理中…", "done": "完成 — 可供下游使用", "adjustThenRun": "调整参数后点击 Run", "fullscreen": "全屏编辑", "exitFullscreen": "退出全屏", "chainMode": "自由调整——由下游 FX Chain 节点一次渲染", "makeProxy": "PROXY?", "makeProxyHint": "源文件较大——生成轻量代理让预览流畅（运行仍使用原片）", "needsTwoInputs": "需要接入两个视频（A 和 B）", "needsAudioOrVideo": "需要接入音频或视频", "previewNote": "预览为近似效果 — Run 后精确渲染", "mode": "模式", "method": "方法", "effect": "效果", "scope": "示波器", "preset": "预设", "transition": "转场", "amount": "强度", "size": "尺寸", "strength": "力度", "edgePreserve": "保边", "exposure": "曝光", "black": "黑位", "temperature": "色温 (K)", "tempMix": "色温混合", "hue": "色相", "saturation": "饱和度", "vibrance": "自然饱和", "shadows": "阴影", "midtones": "中间调", "highlights": "高光", "preserveLightness": "保持明度", "resetWheels": "重置色轮", "master": "主通道", "red": "红", "green": "绿", "blue": "蓝", "resetCurve": "重置曲线", "curveHint": "单击添加 · 拖动移动 · 右键删除", "keyColor": "键色", "pickFromVideo": "从画面取色", "similarity": "相似度", "blend": "边缘融合", "despill": "去溢色", "despillExpand": "溢色扩展", "outAlpha": "透明通道 (WebM)", "outMatte": "黑白遮罩", "duration": "时长", "offset": "起始位置", "offsetAuto": "0 = 自动（A 末尾）", "lumaPreviewHint": "亮度擦除预览仅显示交叉淡化 — 运行后可见最终擦除效果", "rangeX": "水平搜索", "rangeY": "垂直搜索", "edgeMode": "边缘填充", "threshold": "阈值", "minGap": "最小间隔", "detectHint": "Run 扫描硬切点，每个场景输出一张缩略图", "sceneFrames": "场景帧", "sceneClips": "场景片段", "sceneClipsHint": "Run 在每个切点拆条，输出逐场景片段——把 clips 输出接到视频挑选器", "sceneClipPickHint": "点击选中片段——重新 Run 后 clips 输出即为所选片段", "cutFast": "快速（关键帧）", "cutPrecise": "精确（重编码）", "targetFps": "目标帧率", "slowFactor": "慢放倍数", "miMode": "补偿模式", "rateFrame": "同帧率", "rateField": "倍帧率", "block": "块大小", "atSeconds": "取帧时间 (s)", "middle": "中点", "thresholdDb": "阈值", "ratio": "压缩比", "attack": "启动", "release": "释放", "makeup": "增益补偿", "knee": "拐点", "intensity": "强度", "eqHint": "双击空白添加频段 · 拖动调节 · 滚轮调 Q · 双击圆点删除", "targetI": "目标响度 LUFS", "targetTp": "真峰值", "targetLra": "响度范围", "frameLen": "帧长 (ms)", "gaussWin": "高斯窗", "silenceDb": "静音阈值 (dB)", "minSilence": "最短静音 (s)", "lutFile": "LUT 文件", "upload": "上传", "interp": "插值", "noLuts": "暂无 LUT — 请上传 .cube 文件", "lutPreviewUnavailable": "实时预览仅支持 .cube 和 .3dl —— 该 LUT 将在运行时生效", "refresh": "刷新", "operator": "混合模式", "opacity": "不透明度", "position": "位置", "scale": "缩放", "rotation": "旋转", "skew": "斜切", "motionBlur": "运动模糊", "keyframes": "关键帧", "addKey": "打帧", "delKey": "删帧", "clearKeys": "清空", "dragHint": "拖动画面移动 · 滚轮缩放", "cornerHint": "拖动四个角点", "rotoHint": "单击加点 · 拖动移动 · 双击点删除", "trackHint": "在画面上单击设置跟踪点", "needsBgFg": "需要接入背景和前景视频", "foreground": "前景", "background": "背景", "text": "文本", "fontLbl": "字体", "fontSize": "字号", "colorLbl": "颜色", "strokeLbl": "描边", "anchor": "锚点", "tStart": "开始 (s)", "tEnd": "结束 (s)", "tEndAuto": "-1 = 到结尾", "fade": "淡入淡出 (s)", "subsPlaceholder": "在此粘贴 SRT / WebVTT 字幕…", "cues": "条字幕", "trackPoint": "跟踪点", "pattern": "模板半径", "searchR": "搜索半径", "feather": "羽化", "invert": "反转", "transitionGroup": { "fade": "淡变", "wipe": "擦除", "slide": "滑动与平滑", "shape": "形状开合", "diagslice": "对角与切片", "coverreveal": "覆盖与揭示", "wind": "风蚀", "fx": "特效" }, "echoHint": "多帧残影叠加,带反馈拖尾。", "needsRetimeMap": "Map 模式需要接入灰度重定时图", "expressionHint": "变量:t、frame、duration、fps;函数:noise、fbm、turbulence、smoothstep、remap、mix、hash、random、sin/cos…", "stab360Hint": "两遍:分析 equirect 的 yaw/pitch 运动,平滑相机路径后重渲染。", "stmapGenHint": "16-bit STMap,用于 undistort→合成→redistort 工作流;接入 STMap 节点使用。" };
+const fx = { "processing": "处理中…", "done": "完成 — 可供下游使用", "adjustThenRun": "调整参数后点击 Run", "fullscreen": "全屏编辑", "exitFullscreen": "退出全屏", "chainMode": "自由调整——由下游 FX Chain 节点一次渲染", "makeProxy": "PROXY?", "makeProxyHint": "源文件较大——生成轻量代理让预览流畅（运行仍使用原片）", "needsTwoInputs": "需要接入两个视频（A 和 B）", "needsAudioOrVideo": "需要接入音频或视频", "previewNote": "预览为近似效果 — Run 后精确渲染", "mode": "模式", "method": "方法", "effect": "效果", "scope": "示波器", "preset": "预设", "transition": "转场", "amount": "强度", "size": "尺寸", "strength": "力度", "edgePreserve": "保边", "exposure": "曝光", "black": "黑位", "temperature": "色温 (K)", "tempMix": "色温混合", "hue": "色相", "saturation": "饱和度", "vibrance": "自然饱和", "shadows": "阴影", "midtones": "中间调", "highlights": "高光", "preserveLightness": "保持明度", "resetWheels": "重置色轮", "master": "主通道", "red": "红", "green": "绿", "blue": "蓝", "resetCurve": "重置曲线", "curveHint": "单击添加 · 拖动移动 · 右键删除", "keyColor": "键色", "pickFromVideo": "从画面取色", "similarity": "相似度", "blend": "边缘融合", "despill": "去溢色", "despillExpand": "溢色扩展", "outAlpha": "透明通道 (WebM)", "outMatte": "黑白遮罩", "duration": "时长", "offset": "起始位置", "offsetAuto": "0 = 自动（A 末尾）", "lumaPattern": "亮度图案", "lumaWiredHint": "使用接入的亮度图", "softness": "柔和度", "rangeX": "水平搜索", "rangeY": "垂直搜索", "edgeMode": "边缘填充", "threshold": "阈值", "minGap": "最小间隔", "detectHint": "Run 扫描硬切点，每个场景输出一张缩略图", "sceneFrames": "场景帧", "sceneClips": "场景片段", "sceneClipsHint": "Run 在每个切点拆条，输出逐场景片段——把 clips 输出接到视频挑选器", "sceneClipPickHint": "点击选中片段——重新 Run 后 clips 输出即为所选片段", "cutFast": "快速（关键帧）", "cutPrecise": "精确（重编码）", "targetFps": "目标帧率", "slowFactor": "慢放倍数", "miMode": "补偿模式", "rateFrame": "同帧率", "rateField": "倍帧率", "block": "块大小", "atSeconds": "取帧时间 (s)", "middle": "中点", "thresholdDb": "阈值", "ratio": "压缩比", "attack": "启动", "release": "释放", "makeup": "增益补偿", "knee": "拐点", "intensity": "强度", "eqHint": "双击空白添加频段 · 拖动调节 · 滚轮调 Q · 双击圆点删除", "targetI": "目标响度 LUFS", "targetTp": "真峰值", "targetLra": "响度范围", "frameLen": "帧长 (ms)", "gaussWin": "高斯窗", "silenceDb": "静音阈值 (dB)", "minSilence": "最短静音 (s)", "lutFile": "LUT 文件", "upload": "上传", "interp": "插值", "noLuts": "暂无 LUT — 请上传 .cube 文件", "lutPreviewUnavailable": "实时预览仅支持 .cube 和 .3dl —— 该 LUT 将在运行时生效", "refresh": "刷新", "operator": "混合模式", "opacity": "不透明度", "position": "位置", "scale": "缩放", "rotation": "旋转", "skew": "斜切", "motionBlur": "运动模糊", "keyframes": "关键帧", "addKey": "打帧", "delKey": "删帧", "clearKeys": "清空", "dragHint": "拖动画面移动 · 滚轮缩放", "cornerHint": "拖动四个角点", "rotoHint": "单击加点 · 拖动移动 · 双击点删除", "trackHint": "在画面上单击设置跟踪点", "needsBgFg": "需要接入背景和前景视频", "foreground": "前景", "background": "背景", "text": "文本", "fontLbl": "字体", "fontSize": "字号", "colorLbl": "颜色", "strokeLbl": "描边", "anchor": "锚点", "tStart": "开始 (s)", "tEnd": "结束 (s)", "tEndAuto": "-1 = 到结尾", "fade": "淡入淡出 (s)", "subsPlaceholder": "在此粘贴 SRT / WebVTT 字幕…", "cues": "条字幕", "trackPoint": "跟踪点", "pattern": "模板半径", "searchR": "搜索半径", "feather": "羽化", "invert": "反转", "transitionGroup": { "fade": "淡变", "wipe": "擦除", "slide": "滑动与平滑", "shape": "形状开合", "diagslice": "对角与切片", "coverreveal": "覆盖与揭示", "wind": "风蚀", "fx": "特效" }, "echoHint": "多帧残影叠加,带反馈拖尾。", "needsRetimeMap": "Map 模式需要接入灰度重定时图", "expressionHint": "变量:t、frame、duration、fps;函数:noise、fbm、turbulence、smoothstep、remap、mix、hash、random、sin/cos…", "stab360Hint": "两遍:分析 equirect 的 yaw/pitch 运动,平滑相机路径后重渲染。", "stmapGenHint": "16-bit STMap,用于 undistort→合成→redistort 工作流;接入 STMap 节点使用。" };
 const afx = { "custom": "自定义", "compliance": "平台合规", "hum": "去电流声", "harmonics": "谐波数", "waveformPro": "波形+", "spectrumPro": "频谱+", "rmsLayer": "RMS 内层", "clipMarks": "标记削波", "dbAxis": "dB 纵轴", "rangeDb": "动态范围", "gainDb": "增益", "freqGain": "频率增益 (dB/oct)", "normalize": "归一化", "peakTarget": "峰值目标", "rmsConstraint": "RMS 约束", "lufsConstraint": "LUFS 约束", "strictestNote": "取最严格的约束（恒定增益）", "gain": "增益", "pan": "声像", "panLaw": "声像定律", "panLawLinear": "线性（Audacity）", "panLawPower": "等功率（Ardour）", "dither": "抖动", "detect": "检测方式", "bySilence": "按静音", "byJson": "手动 JSON", "minSegment": "最短片段", "edgeFade": "边缘淡化", "namingLbl": "命名", "prefixPh": "文件名前缀…", "filesOut": "个文件已导出", "sourceLbl": "源", "wet": "湿声", "dryLbl": "干声", "normalizePeak": "峰值归一", "needsSrcAndIr": "接入源音频和 IR 音频", "sweepHint": "生成 Farina ESS 扫频——在房间播放并录下响应，再用反卷积节点", "fminLbl": "起始", "fmaxLbl": "结束", "ampLbl": "幅度", "tailLbl": "尾部静音", "deconvHint": "输入录到的扫频响应；参数须与扫频节点一致", "irLen": "IR 长度", "echoFeedback": "无限回声（Audacity）", "echoFeedbackNote": "反馈式无限重复，与 Audacity Echo 结构一致", "keepSilence": "保留静音 (s)", "echoMountains": "山谷回声", "echoMountains2": "双重山谷", "echoDoubled": "加倍声部", "echoRobot": "机器人", "inGain": "输入增益", "outGain": "输出增益", "delayMs": "延迟", "decay": "衰减", "rateHz": "速率", "depth": "深度", "regen": "反馈", "width": "宽度", "triangular": "三角波", "sinusoidal": "正弦波", "chorusSingle": "单声部", "chorusDouble": "双声部", "chorusTriple": "三声部", "widen": "加宽", "balance": "平衡", "mono": "并成单声道", "swap": "交换左右", "feedback": "反馈", "drymix": "干声比例", "range": "范围", "sideGain": "侧声增益", "leftDelay": "左延迟", "rightDelay": "右延迟", "speed": "变速", "pitch": "变调", "reverse": "倒放", "tempo": "速度", "semitones": "半音", "speedNote": "atempo 变速不变调", "pitchNote": "变调不变时长（重采样 + atempo）", "declick": "去咔嗒", "declip": "去削波", "denorm": "去非规格化", "wavelet": "小波降噪", "window": "窗口", "burst": "突发", "hsize": "历史长度", "levelDb": "电平", "sigma": "Sigma", "percent": "百分比", "levels": "层数", "clipLevel": "削波电平", "adaptive": "自适应", "bits": "位深", "mix": "混合", "drive": "驱动", "freqHz": "频率", "curveOutA": "淡出曲线（A）", "curveInB": "淡入曲线（B）", "overlap": "重叠（B 在 A 淡出时进入）", "needsTwoAudio": "把两路音频（或视频）接入 A 和 B", "loudness": "响度", "volume": "音量", "stats": "统计", "silence": "静音", "analyzeHint": "点 Run 测量音频并输出报告", "waveform": "波形图", "spectrum": "频谱图", "splitChannels": "分声道", "legend": "图例", "mixBack": "闪避后混回人声", "threshold": "阈值", "pitchHq": "变调 HQ", "stretchHq": "变速 HQ", "hqNote": "相位锁定声码器(StaffPad 算法)——更慢,但音质远超普通模式。", "stemSplitHint": "Hybrid Demucs 四轨分离;首次运行自动下载模型(~319MB)。人声/伴奏两路输出即卡拉OK工作流。", "reduction": "降噪量", "sensitivity": "灵敏度", "freqSmoothing": "频率平滑", "nrProfileWired": "噪声样本:来自接入的 noise_sample 输入。", "nrProfileAuto": "噪声样本:自动(取最安静的 10% 帧)。接入纯噪声片段到 noise_sample 效果最佳。", "beats": "节拍", "onsets": "瞬态", "notes": "音符", "minGap": "最小间隔", "mirHint": "输出关键帧脉冲(接 Transform/Composite 的 track 输入)和带时间的 labels JSON。", "reverbTime": "混响时长", "roomScale": "房间尺度", "predelay": "预延迟", "dry": "干声", "late": "晚期混响", "early": "早反射", "timeLow": "低频衰减", "timeHigh": "高频衰减", "modulation": "调制", "stereoSpread": "立体声宽度" };
 const scopes = { "liveSampling": "实时采样上游预览", "wireHint": "连接带实时预览的节点（调色/曲线/模糊/风格化/抠像）以启用实时示波" };
 const optics = { "needsDepth": "先接入深度图(图片或视频)" };
@@ -59013,27 +59013,27 @@ const useProjectStore = /* @__PURE__ */ defineStore("comfytv-project", () => {
     tagOutputStageUid
   };
 });
-const _hoisted_1$53 = { class: "ctv:flex ctv:flex-col ctv:size-full ctv:box-border ctv:overflow-hidden ctv:text-xs ctv:text-base-foreground" };
-const _hoisted_2$3c = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-1.5 ctv:py-1.5 ctv:px-2.5 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle" };
-const _hoisted_3$36 = { class: "ctv:flex-1 ctv:font-semibold ctv:text-sm" };
-const _hoisted_4$2H = ["title"];
-const _hoisted_5$2x = ["title"];
-const _hoisted_6$2l = {
+const _hoisted_1$54 = { class: "ctv:flex ctv:flex-col ctv:size-full ctv:box-border ctv:overflow-hidden ctv:text-xs ctv:text-base-foreground" };
+const _hoisted_2$3d = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-1.5 ctv:py-1.5 ctv:px-2.5 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle" };
+const _hoisted_3$37 = { class: "ctv:flex-1 ctv:font-semibold ctv:text-sm" };
+const _hoisted_4$2I = ["title"];
+const _hoisted_5$2y = ["title"];
+const _hoisted_6$2m = {
   key: 0,
   class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:my-1.5 ctv:mx-2.5 ctv:py-1.5 ctv:px-2 ctv:text-xs ctv:rounded ctv:bg-secondary-background ctv:border ctv:border-border-subtle"
 };
-const _hoisted_7$1T = { class: "ctv:flex-1" };
-const _hoisted_8$1x = { class: "ctv:shrink-0 ctv:m-0 ctv:py-1.5 ctv:px-2.5 ctv:text-[11px] ctv:text-muted-foreground ctv:border-b ctv:border-border-subtle" };
-const _hoisted_9$1p = {
+const _hoisted_7$1U = { class: "ctv:flex-1" };
+const _hoisted_8$1y = { class: "ctv:shrink-0 ctv:m-0 ctv:py-1.5 ctv:px-2.5 ctv:text-[11px] ctv:text-muted-foreground ctv:border-b ctv:border-border-subtle" };
+const _hoisted_9$1q = {
   key: 1,
   class: "ctv:shrink-0 ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1 ctv:py-1.5 ctv:px-2.5 ctv:border-b ctv:border-border-subtle"
 };
-const _hoisted_10$1e = ["onClick"];
-const _hoisted_11$15 = { class: "ctv:py-0 ctv:px-1.5 ctv:rounded-lg ctv:text-2xs ctv:bg-base-foreground/10" };
-const _hoisted_12$Z = { class: "comfytv-entries-scroll ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-2.5 ctv:flex ctv:flex-col ctv:gap-2" };
-const _hoisted_13$T = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
-const _hoisted_14$P = ["onUpdate:modelValue", "onBlur", "onKeydown"];
-const _hoisted_15$J = ["title", "onClick"];
+const _hoisted_10$1f = ["onClick"];
+const _hoisted_11$16 = { class: "ctv:py-0 ctv:px-1.5 ctv:rounded-lg ctv:text-2xs ctv:bg-base-foreground/10" };
+const _hoisted_12$_ = { class: "comfytv-entries-scroll ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-2.5 ctv:flex ctv:flex-col ctv:gap-2" };
+const _hoisted_13$U = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
+const _hoisted_14$Q = ["onUpdate:modelValue", "onBlur", "onKeydown"];
+const _hoisted_15$K = ["title", "onClick"];
 const _hoisted_16$E = ["onUpdate:modelValue", "onBlur", "onKeydown"];
 const _hoisted_17$C = { class: "ctv:text-2xs ctv:text-muted-foreground" };
 const _hoisted_18$y = ["onUpdate:modelValue", "placeholder", "onBlur"];
@@ -59042,8 +59042,8 @@ const _hoisted_20$q = {
   key: 0,
   class: "ctv:m-0 ctv:p-4 ctv:text-center ctv:italic ctv:text-muted-foreground"
 };
-const _hoisted_21$p = ["title", "placeholder"];
-const _hoisted_22$o = ["placeholder"];
+const _hoisted_21$o = ["title", "placeholder"];
+const _hoisted_22$n = ["placeholder"];
 const _hoisted_23$m = { class: "ctv:text-2xs ctv:text-muted-foreground" };
 const _hoisted_24$k = ["onUpdate:modelValue", "placeholder"];
 const _hoisted_25$k = ["onUpdate:modelValue", "placeholder"];
@@ -59052,7 +59052,7 @@ const _hoisted_27$i = ["disabled"];
 const cardClass = "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2 ctv:rounded ctv:border ctv:border-border-subtle ctv:bg-secondary-background/40";
 const FIELD_BASE = "ctv:w-full ctv:py-1 ctv:px-1.5 ctv:text-xs ctv:leading-snug ctv:rounded-sm ctv:outline-none ctv:box-border ctv:[font-family:inherit] ctv:bg-secondary-background ctv:text-base-foreground ctv:focus:border-primary-background";
 const BTN_BASE$2 = "ctv:rounded-sm ctv:text-[11px] ctv:cursor-pointer ctv:[font-family:inherit] ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-default";
-const _sfc_main$3t = /* @__PURE__ */ defineComponent({
+const _sfc_main$3u = /* @__PURE__ */ defineComponent({
   __name: "EntriesPanel",
   props: {
     active: { type: Boolean }
@@ -59122,9 +59122,9 @@ const _sfc_main$3t = /* @__PURE__ */ defineComponent({
       return BTN_BASE$2 + v;
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$53, [
-        createBaseVNode("div", _hoisted_2$3c, [
-          createBaseVNode("span", _hoisted_3$36, toDisplayString$1(_ctx.$t("entries.title")), 1),
+      return openBlock(), createElementBlock("div", _hoisted_1$54, [
+        createBaseVNode("div", _hoisted_2$3d, [
+          createBaseVNode("span", _hoisted_3$37, toDisplayString$1(_ctx.$t("entries.title")), 1),
           createBaseVNode("button", {
             class: normalizeClass(btnClass2("mini")),
             title: _ctx.$t("entries.importTooltip"),
@@ -59135,7 +59135,7 @@ const _sfc_main$3t = /* @__PURE__ */ defineComponent({
           }, [
             _cache2[12] || (_cache2[12] = createBaseVNode("i", { class: "pi pi-upload ctv:mr-1 ctv:text-2xs" }, null, -1)),
             createTextVNode(toDisplayString$1(_ctx.$t("entries.import")), 1)
-          ], 10, _hoisted_4$2H),
+          ], 10, _hoisted_4$2I),
           createBaseVNode("button", {
             class: normalizeClass(btnClass2("mini")),
             title: _ctx.$t("entries.exportTooltip"),
@@ -59144,7 +59144,7 @@ const _sfc_main$3t = /* @__PURE__ */ defineComponent({
           }, [
             _cache2[13] || (_cache2[13] = createBaseVNode("i", { class: "pi pi-download ctv:mr-1 ctv:text-2xs" }, null, -1)),
             createTextVNode(toDisplayString$1(_ctx.$t("entries.export")), 1)
-          ], 10, _hoisted_5$2x),
+          ], 10, _hoisted_5$2y),
           createBaseVNode("input", {
             ref_key: "importPicker",
             ref: importPicker,
@@ -59154,8 +59154,8 @@ const _sfc_main$3t = /* @__PURE__ */ defineComponent({
             onChange: onImportFile
           }, null, 544)
         ]),
-        unref(ioStatus) ? (openBlock(), createElementBlock("div", _hoisted_6$2l, [
-          createBaseVNode("span", _hoisted_7$1T, toDisplayString$1(unref(ioStatus)), 1),
+        unref(ioStatus) ? (openBlock(), createElementBlock("div", _hoisted_6$2m, [
+          createBaseVNode("span", _hoisted_7$1U, toDisplayString$1(unref(ioStatus)), 1),
           createBaseVNode("button", {
             class: "ctv:inline-flex ctv:bg-transparent ctv:border-none ctv:cursor-pointer ctv:text-inherit ctv:opacity-70 ctv:hover:opacity-100",
             onClick: _cache2[2] || (_cache2[2] = ($event) => ioStatus.value = "")
@@ -59163,12 +59163,12 @@ const _sfc_main$3t = /* @__PURE__ */ defineComponent({
             createBaseVNode("i", { class: "pi pi-times ctv:text-2xs" }, null, -1)
           ])])
         ])) : createCommentVNode("", true),
-        createBaseVNode("p", _hoisted_8$1x, [
+        createBaseVNode("p", _hoisted_8$1y, [
           createTextVNode(toDisplayString$1(_ctx.$t("entries.refHelpPre")) + " ", 1),
           _cache2[15] || (_cache2[15] = createBaseVNode("code", { class: "ctv:py-0 ctv:px-1 ctv:rounded-sm ctv:font-mono ctv:bg-primary-background/20 ctv:border ctv:border-primary-background/45 ctv:text-primary-background" }, "@label", -1)),
           createTextVNode(" " + toDisplayString$1(_ctx.$t("entries.refHelpPost")), 1)
         ]),
-        unref(ENTRY_KINDS).length > 1 ? (openBlock(), createElementBlock("div", _hoisted_9$1p, [
+        unref(ENTRY_KINDS).length > 1 ? (openBlock(), createElementBlock("div", _hoisted_9$1q, [
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(ENTRY_KINDS), (k2) => {
             var _a2;
             return openBlock(), createElementBlock("button", {
@@ -59177,17 +59177,17 @@ const _sfc_main$3t = /* @__PURE__ */ defineComponent({
               onClick: ($event) => activeKind.value = k2
             }, [
               createTextVNode(toDisplayString$1(unref(KIND_LABELS)[k2]) + " ", 1),
-              createBaseVNode("span", _hoisted_11$15, toDisplayString$1(((_a2 = unref(rowsByKind)[k2]) == null ? void 0 : _a2.length) ?? 0), 1)
-            ], 10, _hoisted_10$1e);
+              createBaseVNode("span", _hoisted_11$16, toDisplayString$1(((_a2 = unref(rowsByKind)[k2]) == null ? void 0 : _a2.length) ?? 0), 1)
+            ], 10, _hoisted_10$1f);
           }), 128))
         ])) : createCommentVNode("", true),
-        createBaseVNode("div", _hoisted_12$Z, [
+        createBaseVNode("div", _hoisted_12$_, [
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(activeRows), (entry) => {
             return openBlock(), createElementBlock("div", {
               key: entry.id,
               class: normalizeClass(cardClass)
             }, [
-              createBaseVNode("div", _hoisted_13$T, [
+              createBaseVNode("div", _hoisted_13$U, [
                 withDirectives(createBaseVNode("input", {
                   "onUpdate:modelValue": ($event) => unref(drafts)[entry.id].label = $event,
                   class: normalizeClass(labelInputClass(!unref(isValidLabel)(unref(drafts)[entry.id].label))),
@@ -59196,7 +59196,7 @@ const _sfc_main$3t = /* @__PURE__ */ defineComponent({
                     withKeys(withModifiers(($event) => unref(saveIfDirty)(entry), ["ctrl", "prevent"]), ["enter"]),
                     withKeys(withModifiers(($event) => unref(saveIfDirty)(entry), ["meta", "prevent"]), ["enter"])
                   ]
-                }, null, 42, _hoisted_14$P), [
+                }, null, 42, _hoisted_14$Q), [
                   [vModelText, unref(drafts)[entry.id].label]
                 ]),
                 createBaseVNode("button", {
@@ -59205,7 +59205,7 @@ const _sfc_main$3t = /* @__PURE__ */ defineComponent({
                   onClick: ($event) => unref(confirmDelete)(entry)
                 }, [..._cache2[16] || (_cache2[16] = [
                   createBaseVNode("i", { class: "pi pi-trash" }, null, -1)
-                ])], 10, _hoisted_15$J)
+                ])], 10, _hoisted_15$K)
               ]),
               withDirectives(createBaseVNode("textarea", {
                 "onUpdate:modelValue": ($event) => unref(drafts)[entry.id].content = $event,
@@ -59264,7 +59264,7 @@ const _sfc_main$3t = /* @__PURE__ */ defineComponent({
                 (...args) => unref(cancelCreate) && unref(cancelCreate)(...args),
                 ["escape"]
               ))
-            }, null, 42, _hoisted_21$p), [
+            }, null, 42, _hoisted_21$o), [
               [vModelText, unref(newDraft).label]
             ]),
             withDirectives(createBaseVNode("textarea", {
@@ -59289,7 +59289,7 @@ const _sfc_main$3t = /* @__PURE__ */ defineComponent({
                   ["meta", "prevent"]
                 ), ["enter"]))
               ]
-            }, null, 42, _hoisted_22$o), [
+            }, null, 42, _hoisted_22$n), [
               [vModelText, unref(newDraft).content]
             ]),
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(metaFields.value, (f2) => {
@@ -59537,7 +59537,7 @@ function useStagePresets(getNode) {
     deletePresetById
   };
 }
-const ComfyTV$1 = { "AssetAudioLoaderStage": { "display_name": "Load Audio from Asset" }, "AssetImageLoaderStage": { "display_name": "Load Image from Asset" }, "AssetVideoLoaderStage": { "display_name": "Load Video from Asset" }, "AudioExtractBgStage": { "display_name": "Audio · Background Only" }, "AudioExtractVocalStage": { "display_name": "Audio · Vocals Only" }, "AudioLoaderStage": { "display_name": "Load Audio" }, "AudioStage": { "display_name": "Music Stage" }, "AudioVideoDemuxAudioStage": { "display_name": "Demux · Audio Track" }, "AudioVideoDemuxVideoStage": { "display_name": "Demux · Silent Video" }, "BridgeFromAudio": { "display_name": "← ComfyTV Audio" }, "BridgeFromImage": { "display_name": "← ComfyTV Image" }, "BridgeFromMask": { "display_name": "← ComfyTV Mask" }, "BridgeFromText": { "display_name": "← ComfyTV Text" }, "BridgeFromVideo": { "display_name": "← ComfyTV Video" }, "BridgeToAudio": { "display_name": "→ ComfyTV Audio" }, "BridgeToImage": { "display_name": "→ ComfyTV Image" }, "BridgeToImages": { "display_name": "→ ComfyTV Images" }, "BridgeToText": { "display_name": "→ ComfyTV Text" }, "BridgeToVideo": { "display_name": "→ ComfyTV Video" }, "ColorGradeStage": { "display_name": "Color Grade" }, "CompareStage": { "display_name": "Compare" }, "CropStage": { "display_name": "Crop" }, "CutoutStage": { "display_name": "Cutout" }, "DirectorTimelineStage": { "display_name": "Director Timeline" }, "EraseStage": { "display_name": "Erase" }, "GridSplitStage": { "display_name": "Grid Split" }, "ImageEditStage": { "display_name": "Image Edit" }, "ImageLoaderStage": { "display_name": "Load Image" }, "ImagePickerStage": { "display_name": "Image Picker" }, "ImageStage": { "display_name": "Image Stage" }, "ImageVariationsStage": { "display_name": "Image Variations" }, "InpaintStage": { "display_name": "Inpaint" }, "MaterialStage": { "display_name": "Material" }, "SplitPartStage": { "display_name": "Split Parts" }, "MirrorStage": { "display_name": "Mirror" }, "MultiangleStage": { "display_name": "Multiangle" }, "OutpaintStage": { "display_name": "Outpaint" }, "PanoramaCurrentViewStage": { "display_name": "Panorama · Current View" }, "PanoramaMultiViewStage": { "display_name": "Panorama · Multi-View" }, "PanoramaStage": { "display_name": "Panorama" }, "ProjectStage": { "display_name": "Project" }, "RelightStage": { "display_name": "Relight" }, "RotateStage": { "display_name": "Rotate" }, "ShotImagesStage": { "display_name": "Shot Images" }, "SpeechStage": { "display_name": "Speech Stage" }, "StoryboardStage": { "display_name": "Storyboard" }, "TextStage": { "display_name": "Text Stage" }, "TimelineVideoStage": { "display_name": "Timeline Render" }, "UpscaleStage": { "display_name": "Upscale" }, "VideoClipStage": { "display_name": "Video Clip" }, "VideoConcatStage": { "display_name": "Video Concat" }, "VideoCropStage": { "display_name": "Video Crop" }, "VideoExtractFrameStage": { "display_name": "Extract Frame" }, "VideoFramesStage": { "display_name": "Extract Frames" }, "VideoSpeedStage": { "display_name": "Video Speed" }, "VideoRotateStage": { "display_name": "Video Rotate" }, "VideoSplitStage": { "display_name": "Video Split" }, "VideoVolumeStage": { "display_name": "Video Volume" }, "VideoMuxAudioStage": { "display_name": "Mux Audio" }, "VideoLoaderStage": { "display_name": "Load Video" }, "VideoResizeStage": { "display_name": "Video Resize" }, "VideoStage": { "display_name": "Video Stage" }, "VideoSubtitleSelectEraseStage": { "display_name": "Subtitle Erase (Region)" }, "VideoSubtitleSmartEraseStage": { "display_name": "Subtitle Erase (Smart)" }, "VideoUpscaleStage": { "display_name": "Video Upscale" }, "Model3DStage": { "display_name": "3D Model Stage" }, "ModelLoaderStage": { "display_name": "Load 3D Model" }, "AssetModelLoaderStage": { "display_name": "Load 3D Model from Asset" }, "MeshOpStage": { "display_name": "Mesh Ops" }, "MeshBakeMapsStage": { "display_name": "Mesh Bake Maps" }, "MeshPrimitiveStage": { "display_name": "Mesh Primitive" }, "MeshBooleanStage": { "display_name": "Mesh Boolean" }, "LineArtStage": { "display_name": "Line Art" }, "VideoColorStage": { "display_name": "Video Color" }, "VideoCurvesStage": { "display_name": "Video Curves" }, "VideoLUTStage": { "display_name": "Video LUT" }, "VideoBlurSharpenStage": { "display_name": "Blur / Sharpen" }, "VideoDenoiseStage": { "display_name": "Video Denoise" }, "VideoChromaKeyStage": { "display_name": "Chroma Key" }, "VideoTransitionStage": { "display_name": "Video Transition" }, "VideoStabilizeStage": { "display_name": "Video Stabilize" }, "SceneDetectStage": { "display_name": "Scene Detect" }, "VideoInterpolateStage": { "display_name": "Frame Interpolate" }, "VideoDeinterlaceStage": { "display_name": "Deinterlace" }, "VideoStylizeStage": { "display_name": "Video Stylize" }, "VideoScopesStage": { "display_name": "Video Scopes" }, "AudioDynamicsStage": { "display_name": "Audio Dynamics" }, "AudioEQStage": { "display_name": "Audio EQ" }, "AudioLoudnessStage": { "display_name": "Audio Loudness" }, "AudioDenoiseStage": { "display_name": "Audio Denoise" }, "VideoCompositeStage": { "display_name": "Video Composite" }, "VideoTransformStage": { "display_name": "Video Transform" }, "CornerPinStage": { "display_name": "Corner Pin" }, "RotoMaskStage": { "display_name": "Roto Mask" }, "MotionTrackStage": { "display_name": "Motion Track" }, "TitleStage": { "display_name": "Title" }, "SubtitleStage": { "display_name": "Subtitles" }, "TimeRemapStage": { "display_name": "Time Remap" }, "SequenceStage": { "display_name": "Sequence" }, "VideoStabilizeV2Stage": { "display_name": "Stabilize Pro" }, "PaintStrokeStage": { "display_name": "Paint Strokes" }, "STMapStage": { "display_name": "UV Remap" }, "MaskPropagateStage": { "display_name": "Mask Propagate" }, "SubtitleGenStage": { "display_name": "Subtitles · Speech-to-Text" }, "HueCorrectStage": { "display_name": "Hue Correct" }, "GlowStage": { "display_name": "Glow" }, "GodRaysStage": { "display_name": "God Rays" }, "PatternStage": { "display_name": "Pattern" }, "PIKStage": { "display_name": "PIK Keyer" }, "KeyerStage": { "display_name": "Keyer" }, "DespillStage": { "display_name": "Despill" }, "ColorSuppressStage": { "display_name": "Color Suppress" }, "KeyMixStage": { "display_name": "Key Mix" }, "MatteMonitorStage": { "display_name": "Matte Monitor" }, "MatteMorphStage": { "display_name": "Matte Morphology" }, "FrameBlendStage": { "display_name": "Frame Blend" }, "FXChainStage": { "display_name": "FX Chain" }, "SelectiveColorStage": { "display_name": "Selective Color" }, "ChromaShiftStage": { "display_name": "Chroma Shift" }, "PseudocolorStage": { "display_name": "Pseudocolor" }, "PosterizeStage": { "display_name": "Posterize" }, "GrayWorldStage": { "display_name": "Auto White Balance" }, "KenBurnsStage": { "display_name": "Ken Burns" }, "OldFilmStage": { "display_name": "Old Film" }, "AnnotateStage": { "display_name": "Annotate" }, "AudioReactiveStage": { "display_name": "Audio Reactive" }, "AudioMeterStage": { "display_name": "Audio Meter Overlay" }, "CDLStage": { "display_name": "CDL Grade" }, "HistogramEqStage": { "display_name": "Histogram Equalize" }, "Video360Stage": { "display_name": "360 Projection" }, "ShapeMaskStage": { "display_name": "Shape Mask" }, "LensDistortStage": { "display_name": "Lens Distort" }, "ChromaticAberrationStage": { "display_name": "Chromatic Aberration" }, "LensFlareStage": { "display_name": "Lens Flare" }, "ParticlesStage": { "display_name": "Particles" }, "ZDefocusStage": { "display_name": "Z Defocus" }, "FaceBlurStage": { "display_name": "Face Blur" }, "SpotRemoverStage": { "display_name": "Spot Remover" }, "AudioDuckStage": { "display_name": "Audio Duck" }, "SlitScanStage": { "display_name": "Slit Scan" }, "FeedbackFXStage": { "display_name": "Feedback FX" }, "StrobeStage": { "display_name": "Strobe" }, "ExpressionStage": { "display_name": "Expression" }, "Select0rStage": { "display_name": "Select0r" }, "ArtFXStage": { "display_name": "Art FX" }, "GlitchFXStage": { "display_name": "Glitch FX" }, "KaleidoscopeStage": { "display_name": "Kaleidoscope" }, "WaveWarpStage": { "display_name": "Wave Warp" }, "WaterStage": { "display_name": "Water" }, "LightGraffitiStage": { "display_name": "Light Graffiti" }, "Card3DStage": { "display_name": "Card 3D" }, "RegrainStage": { "display_name": "Regrain" }, "Video360StabilizeStage": { "display_name": "360 Stabilize" }, "ContactSheetStage": { "display_name": "Contact Sheet" }, "STMapGenStage": { "display_name": "STMap Generate" }, "AudioStemSplitStage": { "display_name": "Audio Stem Split" }, "AudioNoiseReductionStage": { "display_name": "Noise Reduction (Spectral)" }, "AudioMIRStage": { "display_name": "Audio Beats & Notes" }, "ScoreStage": { "display_name": "Score" }, "ScoreToMidiStage": { "display_name": "Score Performer" }, "SF2SynthStage": { "display_name": "Score Synth" }, "ClickTrackStage": { "display_name": "Click Track" }, "ChordAccompStage": { "display_name": "Chord Accompaniment" }, "MuseReverbStage": { "display_name": "Muse Reverb (FDN)" }, "ScoreEditorStage": { "display_name": "Score Editor" }, "MidiEditorStage": { "display_name": "MIDI Editor" } };
+const ComfyTV$1 = { "AssetAudioLoaderStage": { "display_name": "Load Audio from Asset" }, "AssetImageLoaderStage": { "display_name": "Load Image from Asset" }, "AssetVideoLoaderStage": { "display_name": "Load Video from Asset" }, "AudioExtractBgStage": { "display_name": "Audio · Background Only" }, "AudioExtractVocalStage": { "display_name": "Audio · Vocals Only" }, "AudioLoaderStage": { "display_name": "Load Audio" }, "AudioStage": { "display_name": "Music Stage" }, "AudioVideoDemuxAudioStage": { "display_name": "Demux · Audio Track" }, "AudioVideoDemuxVideoStage": { "display_name": "Demux · Silent Video" }, "BridgeFromAudio": { "display_name": "← ComfyTV Audio" }, "BridgeFromImage": { "display_name": "← ComfyTV Image" }, "BridgeFromMask": { "display_name": "← ComfyTV Mask" }, "BridgeFromText": { "display_name": "← ComfyTV Text" }, "BridgeFromVideo": { "display_name": "← ComfyTV Video" }, "BridgeToAudio": { "display_name": "→ ComfyTV Audio" }, "BridgeToImage": { "display_name": "→ ComfyTV Image" }, "BridgeToImages": { "display_name": "→ ComfyTV Images" }, "BridgeToText": { "display_name": "→ ComfyTV Text" }, "BridgeToVideo": { "display_name": "→ ComfyTV Video" }, "ColorGradeStage": { "display_name": "Color Grade" }, "CompareStage": { "display_name": "Compare" }, "CropStage": { "display_name": "Crop" }, "CutoutStage": { "display_name": "Cutout" }, "DirectorTimelineStage": { "display_name": "Director Timeline" }, "EraseStage": { "display_name": "Erase" }, "GridSplitStage": { "display_name": "Grid Split" }, "ImageEditStage": { "display_name": "Image Edit" }, "ImageLoaderStage": { "display_name": "Load Image" }, "ImagePickerStage": { "display_name": "Image Picker" }, "ImageStage": { "display_name": "Image Stage" }, "ImageVariationsStage": { "display_name": "Image Variations" }, "InpaintStage": { "display_name": "Inpaint" }, "MaterialStage": { "display_name": "Material" }, "SplitPartStage": { "display_name": "Split Parts" }, "MirrorStage": { "display_name": "Mirror" }, "MultiangleStage": { "display_name": "Multiangle" }, "OutpaintStage": { "display_name": "Outpaint" }, "PanoramaCurrentViewStage": { "display_name": "Panorama · Current View" }, "PanoramaMultiViewStage": { "display_name": "Panorama · Multi-View" }, "PanoramaStage": { "display_name": "Panorama" }, "ProjectStage": { "display_name": "Project" }, "RelightStage": { "display_name": "Relight" }, "RotateStage": { "display_name": "Rotate" }, "ShotImagesStage": { "display_name": "Shot Images" }, "SpeechStage": { "display_name": "Speech Stage" }, "StoryboardStage": { "display_name": "Storyboard" }, "TextStage": { "display_name": "Text Stage" }, "TimelineVideoStage": { "display_name": "Timeline Render" }, "UpscaleStage": { "display_name": "Upscale" }, "VideoClipStage": { "display_name": "Video Clip" }, "VideoConcatStage": { "display_name": "Video Concat" }, "VideoCropStage": { "display_name": "Video Crop" }, "VideoExtractFrameStage": { "display_name": "Extract Frame" }, "VideoFramesStage": { "display_name": "Extract Frames" }, "VideoSpeedStage": { "display_name": "Video Speed" }, "VideoRotateStage": { "display_name": "Video Rotate" }, "VideoSplitStage": { "display_name": "Video Split" }, "VideoVolumeStage": { "display_name": "Video Volume" }, "VideoMuxAudioStage": { "display_name": "Mux Audio" }, "VideoLoaderStage": { "display_name": "Load Video" }, "VideoResizeStage": { "display_name": "Video Resize" }, "VideoStage": { "display_name": "Video Stage" }, "VideoSubtitleSelectEraseStage": { "display_name": "Subtitle Erase (Region)" }, "VideoSubtitleSmartEraseStage": { "display_name": "Subtitle Erase (Smart)" }, "VideoUpscaleStage": { "display_name": "Video Upscale" }, "Model3DStage": { "display_name": "3D Model Stage" }, "ModelLoaderStage": { "display_name": "Load 3D Model" }, "AssetModelLoaderStage": { "display_name": "Load 3D Model from Asset" }, "MeshOpStage": { "display_name": "Mesh Ops" }, "MeshBakeMapsStage": { "display_name": "Mesh Bake Maps" }, "MeshPrimitiveStage": { "display_name": "Mesh Primitive" }, "MeshBooleanStage": { "display_name": "Mesh Boolean" }, "LineArtStage": { "display_name": "Line Art" }, "VideoColorStage": { "display_name": "Video Color" }, "VideoCurvesStage": { "display_name": "Video Curves" }, "VideoLUTStage": { "display_name": "Video LUT" }, "VideoBlurSharpenStage": { "display_name": "Blur / Sharpen" }, "VideoDenoiseStage": { "display_name": "Video Denoise" }, "VideoChromaKeyStage": { "display_name": "Chroma Key" }, "VideoTransitionStage": { "display_name": "Video Transition" }, "VideoLumaWipeStage": { "display_name": "Luma Wipe" }, "VideoStabilizeStage": { "display_name": "Video Stabilize" }, "SceneDetectStage": { "display_name": "Scene Detect" }, "VideoInterpolateStage": { "display_name": "Frame Interpolate" }, "VideoDeinterlaceStage": { "display_name": "Deinterlace" }, "VideoStylizeStage": { "display_name": "Video Stylize" }, "VideoScopesStage": { "display_name": "Video Scopes" }, "AudioDynamicsStage": { "display_name": "Audio Dynamics" }, "AudioEQStage": { "display_name": "Audio EQ" }, "AudioLoudnessStage": { "display_name": "Audio Loudness" }, "AudioDenoiseStage": { "display_name": "Audio Denoise" }, "VideoCompositeStage": { "display_name": "Video Composite" }, "VideoTransformStage": { "display_name": "Video Transform" }, "CornerPinStage": { "display_name": "Corner Pin" }, "RotoMaskStage": { "display_name": "Roto Mask" }, "MotionTrackStage": { "display_name": "Motion Track" }, "TitleStage": { "display_name": "Title" }, "SubtitleStage": { "display_name": "Subtitles" }, "TimeRemapStage": { "display_name": "Time Remap" }, "SequenceStage": { "display_name": "Sequence" }, "VideoStabilizeV2Stage": { "display_name": "Stabilize Pro" }, "PaintStrokeStage": { "display_name": "Paint Strokes" }, "STMapStage": { "display_name": "UV Remap" }, "MaskPropagateStage": { "display_name": "Mask Propagate" }, "SubtitleGenStage": { "display_name": "Subtitles · Speech-to-Text" }, "HueCorrectStage": { "display_name": "Hue Correct" }, "GlowStage": { "display_name": "Glow" }, "GodRaysStage": { "display_name": "God Rays" }, "PatternStage": { "display_name": "Pattern" }, "PIKStage": { "display_name": "PIK Keyer" }, "KeyerStage": { "display_name": "Keyer" }, "DespillStage": { "display_name": "Despill" }, "ColorSuppressStage": { "display_name": "Color Suppress" }, "KeyMixStage": { "display_name": "Key Mix" }, "MatteMonitorStage": { "display_name": "Matte Monitor" }, "MatteMorphStage": { "display_name": "Matte Morphology" }, "FrameBlendStage": { "display_name": "Frame Blend" }, "FXChainStage": { "display_name": "FX Chain" }, "SelectiveColorStage": { "display_name": "Selective Color" }, "ChromaShiftStage": { "display_name": "Chroma Shift" }, "PseudocolorStage": { "display_name": "Pseudocolor" }, "PosterizeStage": { "display_name": "Posterize" }, "GrayWorldStage": { "display_name": "Auto White Balance" }, "KenBurnsStage": { "display_name": "Ken Burns" }, "OldFilmStage": { "display_name": "Old Film" }, "AnnotateStage": { "display_name": "Annotate" }, "AudioReactiveStage": { "display_name": "Audio Reactive" }, "AudioMeterStage": { "display_name": "Audio Meter Overlay" }, "CDLStage": { "display_name": "CDL Grade" }, "HistogramEqStage": { "display_name": "Histogram Equalize" }, "Video360Stage": { "display_name": "360 Projection" }, "ShapeMaskStage": { "display_name": "Shape Mask" }, "LensDistortStage": { "display_name": "Lens Distort" }, "ChromaticAberrationStage": { "display_name": "Chromatic Aberration" }, "LensFlareStage": { "display_name": "Lens Flare" }, "ParticlesStage": { "display_name": "Particles" }, "ZDefocusStage": { "display_name": "Z Defocus" }, "FaceBlurStage": { "display_name": "Face Blur" }, "SpotRemoverStage": { "display_name": "Spot Remover" }, "AudioDuckStage": { "display_name": "Audio Duck" }, "SlitScanStage": { "display_name": "Slit Scan" }, "FeedbackFXStage": { "display_name": "Feedback FX" }, "StrobeStage": { "display_name": "Strobe" }, "ExpressionStage": { "display_name": "Expression" }, "Select0rStage": { "display_name": "Select0r" }, "ArtFXStage": { "display_name": "Art FX" }, "GlitchFXStage": { "display_name": "Glitch FX" }, "KaleidoscopeStage": { "display_name": "Kaleidoscope" }, "WaveWarpStage": { "display_name": "Wave Warp" }, "WaterStage": { "display_name": "Water" }, "LightGraffitiStage": { "display_name": "Light Graffiti" }, "Card3DStage": { "display_name": "Card 3D" }, "RegrainStage": { "display_name": "Regrain" }, "Video360StabilizeStage": { "display_name": "360 Stabilize" }, "ContactSheetStage": { "display_name": "Contact Sheet" }, "STMapGenStage": { "display_name": "STMap Generate" }, "AudioStemSplitStage": { "display_name": "Audio Stem Split" }, "AudioNoiseReductionStage": { "display_name": "Noise Reduction (Spectral)" }, "AudioMIRStage": { "display_name": "Audio Beats & Notes" }, "ScoreStage": { "display_name": "Score" }, "ScoreToMidiStage": { "display_name": "Score Performer" }, "SF2SynthStage": { "display_name": "Score Synth" }, "ClickTrackStage": { "display_name": "Click Track" }, "ChordAccompStage": { "display_name": "Chord Accompaniment" }, "MuseReverbStage": { "display_name": "Muse Reverb (FDN)" }, "ScoreEditorStage": { "display_name": "Score Editor" }, "MidiEditorStage": { "display_name": "MIDI Editor" } };
 const ComfyTV_AssetAudioLoaderStage$1 = { "display_name": "Load Audio from Asset", "inputs": {}, "outputs": { "0": { "name": "Audio" } } };
 const ComfyTV_AssetImageLoaderStage$1 = { "display_name": "Load Image from Asset", "inputs": {}, "outputs": { "0": { "name": "Image" } } };
 const ComfyTV_AssetVideoLoaderStage$1 = { "display_name": "Load Video from Asset", "inputs": {}, "outputs": { "0": { "name": "Video" } } };
@@ -59621,6 +59621,7 @@ const ComfyTV_VideoBlurSharpenStage$1 = { "display_name": "Blur / Sharpen" };
 const ComfyTV_VideoDenoiseStage$1 = { "display_name": "Video Denoise" };
 const ComfyTV_VideoChromaKeyStage$1 = { "display_name": "Chroma Key" };
 const ComfyTV_VideoTransitionStage$1 = { "display_name": "Video Transition" };
+const ComfyTV_VideoLumaWipeStage$1 = { "display_name": "Luma Wipe" };
 const ComfyTV_VideoStabilizeStage$1 = { "display_name": "Video Stabilize" };
 const ComfyTV_SceneDetectStage$1 = { "display_name": "Scene Detect" };
 const ComfyTV_VideoInterpolateStage$1 = { "display_name": "Frame Interpolate" };
@@ -59792,6 +59793,7 @@ const enNodeDefs = {
   ComfyTV_VideoDenoiseStage: ComfyTV_VideoDenoiseStage$1,
   ComfyTV_VideoChromaKeyStage: ComfyTV_VideoChromaKeyStage$1,
   ComfyTV_VideoTransitionStage: ComfyTV_VideoTransitionStage$1,
+  ComfyTV_VideoLumaWipeStage: ComfyTV_VideoLumaWipeStage$1,
   ComfyTV_VideoStabilizeStage: ComfyTV_VideoStabilizeStage$1,
   ComfyTV_SceneDetectStage: ComfyTV_SceneDetectStage$1,
   ComfyTV_VideoInterpolateStage: ComfyTV_VideoInterpolateStage$1,
@@ -59879,7 +59881,7 @@ const enNodeDefs = {
   ComfyTV_ScoreEditorStage: ComfyTV_ScoreEditorStage$1,
   ComfyTV_MidiEditorStage: ComfyTV_MidiEditorStage$1
 };
-const ComfyTV = { "AssetAudioLoaderStage": { "display_name": "从资产加载音频" }, "AssetImageLoaderStage": { "display_name": "从资产加载图片" }, "AssetVideoLoaderStage": { "display_name": "从资产加载视频" }, "AudioExtractBgStage": { "display_name": "音频 · 仅背景声" }, "AudioExtractVocalStage": { "display_name": "音频 · 仅人声" }, "AudioLoaderStage": { "display_name": "加载音频" }, "AudioStage": { "display_name": "音乐阶段" }, "AudioVideoDemuxAudioStage": { "display_name": "分离 · 音轨" }, "AudioVideoDemuxVideoStage": { "display_name": "分离 · 静默视频" }, "BridgeFromAudio": { "display_name": "← ComfyTV 音频" }, "BridgeFromImage": { "display_name": "← ComfyTV 图像" }, "BridgeFromMask": { "display_name": "← ComfyTV 蒙版" }, "BridgeFromText": { "display_name": "← ComfyTV 文本" }, "BridgeFromVideo": { "display_name": "← ComfyTV 视频" }, "BridgeToAudio": { "display_name": "→ ComfyTV 音频" }, "BridgeToImage": { "display_name": "→ ComfyTV 图像" }, "BridgeToImages": { "display_name": "→ ComfyTV 多图" }, "BridgeToText": { "display_name": "→ ComfyTV 文本" }, "BridgeToVideo": { "display_name": "→ ComfyTV 视频" }, "ColorGradeStage": { "display_name": "调色" }, "CompareStage": { "display_name": "对比" }, "CropStage": { "display_name": "裁剪" }, "CutoutStage": { "display_name": "抠图" }, "DirectorTimelineStage": { "display_name": "导演时间线" }, "EraseStage": { "display_name": "擦除" }, "GridSplitStage": { "display_name": "宫格分割" }, "ImageEditStage": { "display_name": "图像编辑" }, "ImageLoaderStage": { "display_name": "加载图片" }, "ImagePickerStage": { "display_name": "图片选择器" }, "ImageStage": { "display_name": "图像阶段" }, "ImageVariationsStage": { "display_name": "图像变体" }, "InpaintStage": { "display_name": "重绘" }, "MaterialStage": { "display_name": "材质球" }, "SplitPartStage": { "display_name": "部件分割" }, "MirrorStage": { "display_name": "镜像" }, "MultiangleStage": { "display_name": "多角度" }, "OutpaintStage": { "display_name": "扩图" }, "PanoramaCurrentViewStage": { "display_name": "全景 · 当前视角" }, "PanoramaMultiViewStage": { "display_name": "全景 · 多视角" }, "PanoramaStage": { "display_name": "全景图" }, "ProjectStage": { "display_name": "项目" }, "RelightStage": { "display_name": "打光" }, "RotateStage": { "display_name": "旋转" }, "ShotImagesStage": { "display_name": "分镜图集" }, "SpeechStage": { "display_name": "语音阶段" }, "StoryboardStage": { "display_name": "故事板" }, "TextStage": { "display_name": "文本阶段" }, "TimelineVideoStage": { "display_name": "时间线渲染" }, "UpscaleStage": { "display_name": "高清" }, "VideoClipStage": { "display_name": "视频剪辑" }, "VideoConcatStage": { "display_name": "视频拼接" }, "VideoCropStage": { "display_name": "视频裁剪" }, "VideoExtractFrameStage": { "display_name": "抽帧" }, "VideoFramesStage": { "display_name": "批量抽帧" }, "VideoSpeedStage": { "display_name": "视频变速" }, "VideoRotateStage": { "display_name": "视频旋转" }, "VideoSplitStage": { "display_name": "视频分割" }, "VideoVolumeStage": { "display_name": "音量调整" }, "VideoMuxAudioStage": { "display_name": "合成音轨" }, "VideoLoaderStage": { "display_name": "加载视频" }, "VideoResizeStage": { "display_name": "视频缩放" }, "VideoStage": { "display_name": "视频阶段" }, "VideoSubtitleSelectEraseStage": { "display_name": "扣选去字幕" }, "VideoSubtitleSmartEraseStage": { "display_name": "智能去字幕" }, "VideoUpscaleStage": { "display_name": "视频高清" }, "Model3DStage": { "display_name": "3D 模型阶段" }, "ModelLoaderStage": { "display_name": "加载 3D 模型" }, "AssetModelLoaderStage": { "display_name": "从资产加载 3D 模型" }, "MeshOpStage": { "display_name": "网格处理" }, "MeshBakeMapsStage": { "display_name": "网格烘焙贴图" }, "MeshPrimitiveStage": { "display_name": "网格基元" }, "MeshBooleanStage": { "display_name": "网格布尔" }, "LineArtStage": { "display_name": "3D 线稿" }, "VideoColorStage": { "display_name": "视频调色" }, "VideoCurvesStage": { "display_name": "视频曲线" }, "VideoLUTStage": { "display_name": "视频 LUT" }, "VideoBlurSharpenStage": { "display_name": "模糊/锐化" }, "VideoDenoiseStage": { "display_name": "视频降噪" }, "VideoChromaKeyStage": { "display_name": "色度抠像" }, "VideoTransitionStage": { "display_name": "视频转场" }, "VideoStabilizeStage": { "display_name": "视频防抖" }, "SceneDetectStage": { "display_name": "场景检测" }, "VideoInterpolateStage": { "display_name": "光流补帧" }, "VideoDeinterlaceStage": { "display_name": "去隔行" }, "VideoStylizeStage": { "display_name": "视频风格化" }, "VideoScopesStage": { "display_name": "视频示波器" }, "AudioDynamicsStage": { "display_name": "音频动态" }, "AudioEQStage": { "display_name": "音频均衡器" }, "AudioLoudnessStage": { "display_name": "音频响度" }, "AudioDenoiseStage": { "display_name": "音频降噪" }, "VideoCompositeStage": { "display_name": "视频合成" }, "VideoTransformStage": { "display_name": "视频变换" }, "CornerPinStage": { "display_name": "四角定位" }, "RotoMaskStage": { "display_name": "Roto 遮罩" }, "MotionTrackStage": { "display_name": "运动跟踪" }, "TitleStage": { "display_name": "标题" }, "SubtitleStage": { "display_name": "字幕烧录" }, "TimeRemapStage": { "display_name": "时间重映射" }, "SequenceStage": { "display_name": "序列编排" }, "VideoStabilizeV2Stage": { "display_name": "专业防抖" }, "PaintStrokeStage": { "display_name": "笔刷修补" }, "STMapStage": { "display_name": "UV 重映射" }, "MaskPropagateStage": { "display_name": "遮罩传播" }, "SubtitleGenStage": { "display_name": "语音转字幕" }, "HueCorrectStage": { "display_name": "色相校正" }, "GlowStage": { "display_name": "辉光" }, "GodRaysStage": { "display_name": "光芒" }, "PatternStage": { "display_name": "图形生成" }, "PIKStage": { "display_name": "PIK 抠像" }, "KeyerStage": { "display_name": "通用键控" }, "DespillStage": { "display_name": "去溢色" }, "ColorSuppressStage": { "display_name": "压色" }, "KeyMixStage": { "display_name": "遮罩合成" }, "MatteMonitorStage": { "display_name": "遮罩质检" }, "MatteMorphStage": { "display_name": "遮罩形态学" }, "FrameBlendStage": { "display_name": "帧混合" }, "FXChainStage": { "display_name": "特效链" }, "SelectiveColorStage": { "display_name": "可选颜色" }, "ChromaShiftStage": { "display_name": "色度错位" }, "PseudocolorStage": { "display_name": "伪彩色" }, "PosterizeStage": { "display_name": "海报化" }, "GrayWorldStage": { "display_name": "自动白平衡" }, "KenBurnsStage": { "display_name": "静帧推拉" }, "OldFilmStage": { "display_name": "老电影" }, "AnnotateStage": { "display_name": "标注" }, "AudioReactiveStage": { "display_name": "音频反应" }, "AudioMeterStage": { "display_name": "电平表叠加" }, "CDLStage": { "display_name": "CDL 调色" }, "HistogramEqStage": { "display_name": "直方图均衡" }, "Video360Stage": { "display_name": "360 投影" }, "ShapeMaskStage": { "display_name": "形状蒙版" }, "LensDistortStage": { "display_name": "镜头畸变" }, "ChromaticAberrationStage": { "display_name": "色差" }, "LensFlareStage": { "display_name": "镜头光晕" }, "ParticlesStage": { "display_name": "粒子" }, "ZDefocusStage": { "display_name": "深度散景" }, "FaceBlurStage": { "display_name": "人脸打码" }, "SpotRemoverStage": { "display_name": "瑕疵移除" }, "AudioDuckStage": { "display_name": "音频闪避" }, "SlitScanStage": { "display_name": "狭缝扫描" }, "FeedbackFXStage": { "display_name": "反馈特效" }, "StrobeStage": { "display_name": "闪帧" }, "ExpressionStage": { "display_name": "表达式" }, "Select0rStage": { "display_name": "高级选色" }, "ArtFXStage": { "display_name": "艺术滤镜" }, "GlitchFXStage": { "display_name": "数字故障" }, "KaleidoscopeStage": { "display_name": "万花筒" }, "WaveWarpStage": { "display_name": "波浪扭曲" }, "WaterStage": { "display_name": "水面" }, "LightGraffitiStage": { "display_name": "光绘" }, "Card3DStage": { "display_name": "3D 卡片" }, "RegrainStage": { "display_name": "胶片颗粒" }, "Video360StabilizeStage": { "display_name": "360 稳定" }, "ContactSheetStage": { "display_name": "审片宫格" }, "STMapGenStage": { "display_name": "STMap 生成" }, "AudioStemSplitStage": { "display_name": "音源分轨" }, "AudioNoiseReductionStage": { "display_name": "谱门控降噪" }, "AudioMIRStage": { "display_name": "节拍与音符分析" }, "ScoreStage": { "display_name": "乐谱" }, "ScoreToMidiStage": { "display_name": "演奏引擎" }, "SF2SynthStage": { "display_name": "乐谱合成" }, "ClickTrackStage": { "display_name": "节拍器轨" }, "ChordAccompStage": { "display_name": "和弦伴奏" }, "MuseReverbStage": { "display_name": "Muse 混响 (FDN)" }, "ScoreEditorStage": { "display_name": "打谱器" }, "MidiEditorStage": { "display_name": "MIDI 编辑器" } };
+const ComfyTV = { "AssetAudioLoaderStage": { "display_name": "从资产加载音频" }, "AssetImageLoaderStage": { "display_name": "从资产加载图片" }, "AssetVideoLoaderStage": { "display_name": "从资产加载视频" }, "AudioExtractBgStage": { "display_name": "音频 · 仅背景声" }, "AudioExtractVocalStage": { "display_name": "音频 · 仅人声" }, "AudioLoaderStage": { "display_name": "加载音频" }, "AudioStage": { "display_name": "音乐阶段" }, "AudioVideoDemuxAudioStage": { "display_name": "分离 · 音轨" }, "AudioVideoDemuxVideoStage": { "display_name": "分离 · 静默视频" }, "BridgeFromAudio": { "display_name": "← ComfyTV 音频" }, "BridgeFromImage": { "display_name": "← ComfyTV 图像" }, "BridgeFromMask": { "display_name": "← ComfyTV 蒙版" }, "BridgeFromText": { "display_name": "← ComfyTV 文本" }, "BridgeFromVideo": { "display_name": "← ComfyTV 视频" }, "BridgeToAudio": { "display_name": "→ ComfyTV 音频" }, "BridgeToImage": { "display_name": "→ ComfyTV 图像" }, "BridgeToImages": { "display_name": "→ ComfyTV 多图" }, "BridgeToText": { "display_name": "→ ComfyTV 文本" }, "BridgeToVideo": { "display_name": "→ ComfyTV 视频" }, "ColorGradeStage": { "display_name": "调色" }, "CompareStage": { "display_name": "对比" }, "CropStage": { "display_name": "裁剪" }, "CutoutStage": { "display_name": "抠图" }, "DirectorTimelineStage": { "display_name": "导演时间线" }, "EraseStage": { "display_name": "擦除" }, "GridSplitStage": { "display_name": "宫格分割" }, "ImageEditStage": { "display_name": "图像编辑" }, "ImageLoaderStage": { "display_name": "加载图片" }, "ImagePickerStage": { "display_name": "图片选择器" }, "ImageStage": { "display_name": "图像阶段" }, "ImageVariationsStage": { "display_name": "图像变体" }, "InpaintStage": { "display_name": "重绘" }, "MaterialStage": { "display_name": "材质球" }, "SplitPartStage": { "display_name": "部件分割" }, "MirrorStage": { "display_name": "镜像" }, "MultiangleStage": { "display_name": "多角度" }, "OutpaintStage": { "display_name": "扩图" }, "PanoramaCurrentViewStage": { "display_name": "全景 · 当前视角" }, "PanoramaMultiViewStage": { "display_name": "全景 · 多视角" }, "PanoramaStage": { "display_name": "全景图" }, "ProjectStage": { "display_name": "项目" }, "RelightStage": { "display_name": "打光" }, "RotateStage": { "display_name": "旋转" }, "ShotImagesStage": { "display_name": "分镜图集" }, "SpeechStage": { "display_name": "语音阶段" }, "StoryboardStage": { "display_name": "故事板" }, "TextStage": { "display_name": "文本阶段" }, "TimelineVideoStage": { "display_name": "时间线渲染" }, "UpscaleStage": { "display_name": "高清" }, "VideoClipStage": { "display_name": "视频剪辑" }, "VideoConcatStage": { "display_name": "视频拼接" }, "VideoCropStage": { "display_name": "视频裁剪" }, "VideoExtractFrameStage": { "display_name": "抽帧" }, "VideoFramesStage": { "display_name": "批量抽帧" }, "VideoSpeedStage": { "display_name": "视频变速" }, "VideoRotateStage": { "display_name": "视频旋转" }, "VideoSplitStage": { "display_name": "视频分割" }, "VideoVolumeStage": { "display_name": "音量调整" }, "VideoMuxAudioStage": { "display_name": "合成音轨" }, "VideoLoaderStage": { "display_name": "加载视频" }, "VideoResizeStage": { "display_name": "视频缩放" }, "VideoStage": { "display_name": "视频阶段" }, "VideoSubtitleSelectEraseStage": { "display_name": "扣选去字幕" }, "VideoSubtitleSmartEraseStage": { "display_name": "智能去字幕" }, "VideoUpscaleStage": { "display_name": "视频高清" }, "Model3DStage": { "display_name": "3D 模型阶段" }, "ModelLoaderStage": { "display_name": "加载 3D 模型" }, "AssetModelLoaderStage": { "display_name": "从资产加载 3D 模型" }, "MeshOpStage": { "display_name": "网格处理" }, "MeshBakeMapsStage": { "display_name": "网格烘焙贴图" }, "MeshPrimitiveStage": { "display_name": "网格基元" }, "MeshBooleanStage": { "display_name": "网格布尔" }, "LineArtStage": { "display_name": "3D 线稿" }, "VideoColorStage": { "display_name": "视频调色" }, "VideoCurvesStage": { "display_name": "视频曲线" }, "VideoLUTStage": { "display_name": "视频 LUT" }, "VideoBlurSharpenStage": { "display_name": "模糊/锐化" }, "VideoDenoiseStage": { "display_name": "视频降噪" }, "VideoChromaKeyStage": { "display_name": "色度抠像" }, "VideoTransitionStage": { "display_name": "视频转场" }, "VideoLumaWipeStage": { "display_name": "亮度擦除" }, "VideoStabilizeStage": { "display_name": "视频防抖" }, "SceneDetectStage": { "display_name": "场景检测" }, "VideoInterpolateStage": { "display_name": "光流补帧" }, "VideoDeinterlaceStage": { "display_name": "去隔行" }, "VideoStylizeStage": { "display_name": "视频风格化" }, "VideoScopesStage": { "display_name": "视频示波器" }, "AudioDynamicsStage": { "display_name": "音频动态" }, "AudioEQStage": { "display_name": "音频均衡器" }, "AudioLoudnessStage": { "display_name": "音频响度" }, "AudioDenoiseStage": { "display_name": "音频降噪" }, "VideoCompositeStage": { "display_name": "视频合成" }, "VideoTransformStage": { "display_name": "视频变换" }, "CornerPinStage": { "display_name": "四角定位" }, "RotoMaskStage": { "display_name": "Roto 遮罩" }, "MotionTrackStage": { "display_name": "运动跟踪" }, "TitleStage": { "display_name": "标题" }, "SubtitleStage": { "display_name": "字幕烧录" }, "TimeRemapStage": { "display_name": "时间重映射" }, "SequenceStage": { "display_name": "序列编排" }, "VideoStabilizeV2Stage": { "display_name": "专业防抖" }, "PaintStrokeStage": { "display_name": "笔刷修补" }, "STMapStage": { "display_name": "UV 重映射" }, "MaskPropagateStage": { "display_name": "遮罩传播" }, "SubtitleGenStage": { "display_name": "语音转字幕" }, "HueCorrectStage": { "display_name": "色相校正" }, "GlowStage": { "display_name": "辉光" }, "GodRaysStage": { "display_name": "光芒" }, "PatternStage": { "display_name": "图形生成" }, "PIKStage": { "display_name": "PIK 抠像" }, "KeyerStage": { "display_name": "通用键控" }, "DespillStage": { "display_name": "去溢色" }, "ColorSuppressStage": { "display_name": "压色" }, "KeyMixStage": { "display_name": "遮罩合成" }, "MatteMonitorStage": { "display_name": "遮罩质检" }, "MatteMorphStage": { "display_name": "遮罩形态学" }, "FrameBlendStage": { "display_name": "帧混合" }, "FXChainStage": { "display_name": "特效链" }, "SelectiveColorStage": { "display_name": "可选颜色" }, "ChromaShiftStage": { "display_name": "色度错位" }, "PseudocolorStage": { "display_name": "伪彩色" }, "PosterizeStage": { "display_name": "海报化" }, "GrayWorldStage": { "display_name": "自动白平衡" }, "KenBurnsStage": { "display_name": "静帧推拉" }, "OldFilmStage": { "display_name": "老电影" }, "AnnotateStage": { "display_name": "标注" }, "AudioReactiveStage": { "display_name": "音频反应" }, "AudioMeterStage": { "display_name": "电平表叠加" }, "CDLStage": { "display_name": "CDL 调色" }, "HistogramEqStage": { "display_name": "直方图均衡" }, "Video360Stage": { "display_name": "360 投影" }, "ShapeMaskStage": { "display_name": "形状蒙版" }, "LensDistortStage": { "display_name": "镜头畸变" }, "ChromaticAberrationStage": { "display_name": "色差" }, "LensFlareStage": { "display_name": "镜头光晕" }, "ParticlesStage": { "display_name": "粒子" }, "ZDefocusStage": { "display_name": "深度散景" }, "FaceBlurStage": { "display_name": "人脸打码" }, "SpotRemoverStage": { "display_name": "瑕疵移除" }, "AudioDuckStage": { "display_name": "音频闪避" }, "SlitScanStage": { "display_name": "狭缝扫描" }, "FeedbackFXStage": { "display_name": "反馈特效" }, "StrobeStage": { "display_name": "闪帧" }, "ExpressionStage": { "display_name": "表达式" }, "Select0rStage": { "display_name": "高级选色" }, "ArtFXStage": { "display_name": "艺术滤镜" }, "GlitchFXStage": { "display_name": "数字故障" }, "KaleidoscopeStage": { "display_name": "万花筒" }, "WaveWarpStage": { "display_name": "波浪扭曲" }, "WaterStage": { "display_name": "水面" }, "LightGraffitiStage": { "display_name": "光绘" }, "Card3DStage": { "display_name": "3D 卡片" }, "RegrainStage": { "display_name": "胶片颗粒" }, "Video360StabilizeStage": { "display_name": "360 稳定" }, "ContactSheetStage": { "display_name": "审片宫格" }, "STMapGenStage": { "display_name": "STMap 生成" }, "AudioStemSplitStage": { "display_name": "音源分轨" }, "AudioNoiseReductionStage": { "display_name": "谱门控降噪" }, "AudioMIRStage": { "display_name": "节拍与音符分析" }, "ScoreStage": { "display_name": "乐谱" }, "ScoreToMidiStage": { "display_name": "演奏引擎" }, "SF2SynthStage": { "display_name": "乐谱合成" }, "ClickTrackStage": { "display_name": "节拍器轨" }, "ChordAccompStage": { "display_name": "和弦伴奏" }, "MuseReverbStage": { "display_name": "Muse 混响 (FDN)" }, "ScoreEditorStage": { "display_name": "打谱器" }, "MidiEditorStage": { "display_name": "MIDI 编辑器" } };
 const ComfyTV_AssetAudioLoaderStage = { "display_name": "从资产加载音频", "inputs": {}, "outputs": { "0": { "name": "音频" } } };
 const ComfyTV_AssetImageLoaderStage = { "display_name": "从资产加载图片", "inputs": {}, "outputs": { "0": { "name": "图像" } } };
 const ComfyTV_AssetVideoLoaderStage = { "display_name": "从资产加载视频", "inputs": {}, "outputs": { "0": { "name": "视频" } } };
@@ -59963,6 +59965,7 @@ const ComfyTV_VideoBlurSharpenStage = { "display_name": "模糊/锐化" };
 const ComfyTV_VideoDenoiseStage = { "display_name": "视频降噪" };
 const ComfyTV_VideoChromaKeyStage = { "display_name": "色度抠像" };
 const ComfyTV_VideoTransitionStage = { "display_name": "视频转场" };
+const ComfyTV_VideoLumaWipeStage = { "display_name": "亮度擦除" };
 const ComfyTV_VideoStabilizeStage = { "display_name": "视频防抖" };
 const ComfyTV_SceneDetectStage = { "display_name": "场景检测" };
 const ComfyTV_VideoInterpolateStage = { "display_name": "光流补帧" };
@@ -60134,6 +60137,7 @@ const zhNodeDefs = {
   ComfyTV_VideoDenoiseStage,
   ComfyTV_VideoChromaKeyStage,
   ComfyTV_VideoTransitionStage,
+  ComfyTV_VideoLumaWipeStage,
   ComfyTV_VideoStabilizeStage,
   ComfyTV_SceneDetectStage,
   ComfyTV_VideoInterpolateStage,
@@ -60323,13 +60327,13 @@ function usePresetsPanel(isActive2) {
     onDelete
   };
 }
-const _hoisted_1$52 = {
+const _hoisted_1$53 = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1K(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$52, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$53, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -60350,25 +60354,25 @@ function render$1K(_ctx, _cache2) {
   ])]);
 }
 const IconLock = markRaw({ name: "lucide-lock", render: render$1K });
-const _hoisted_1$51 = { class: "ctv:flex ctv:flex-col ctv:size-full ctv:overflow-hidden ctv:text-xs ctv:text-base-foreground" };
-const _hoisted_2$3b = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:py-1.5 ctv:px-2.5 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle" };
-const _hoisted_3$35 = { class: "ctv:flex-1 ctv:font-semibold ctv:text-sm" };
-const _hoisted_4$2G = { class: "ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-2.5 ctv:flex ctv:flex-col ctv:gap-2.5" };
-const _hoisted_5$2w = {
+const _hoisted_1$52 = { class: "ctv:flex ctv:flex-col ctv:size-full ctv:overflow-hidden ctv:text-xs ctv:text-base-foreground" };
+const _hoisted_2$3c = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:py-1.5 ctv:px-2.5 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle" };
+const _hoisted_3$36 = { class: "ctv:flex-1 ctv:font-semibold ctv:text-sm" };
+const _hoisted_4$2H = { class: "ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-2.5 ctv:flex ctv:flex-col ctv:gap-2.5" };
+const _hoisted_5$2x = {
   key: 0,
   class: "ctv:py-5 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60"
 };
-const _hoisted_6$2k = ["aria-expanded", "onClick"];
-const _hoisted_7$1S = { class: "ctv:flex-1 ctv:text-left ctv:truncate" };
-const _hoisted_8$1w = { class: "ctv:text-2xs ctv:tabular-nums ctv:text-muted-foreground" };
-const _hoisted_9$1o = { class: "ctv:mt-1.5 ctv:flex ctv:flex-col ctv:gap-1" };
-const _hoisted_10$1d = { class: "ctv:flex-1 ctv:min-w-0 ctv:truncate ctv:font-semibold" };
-const _hoisted_11$14 = ["title"];
-const _hoisted_12$Y = ["title", "onClick"];
-const _hoisted_13$S = ["title", "onClick"];
+const _hoisted_6$2l = ["aria-expanded", "onClick"];
+const _hoisted_7$1T = { class: "ctv:flex-1 ctv:text-left ctv:truncate" };
+const _hoisted_8$1x = { class: "ctv:text-2xs ctv:tabular-nums ctv:text-muted-foreground" };
+const _hoisted_9$1p = { class: "ctv:mt-1.5 ctv:flex ctv:flex-col ctv:gap-1" };
+const _hoisted_10$1e = { class: "ctv:flex-1 ctv:min-w-0 ctv:truncate ctv:font-semibold" };
+const _hoisted_11$15 = ["title"];
+const _hoisted_12$Z = ["title", "onClick"];
+const _hoisted_13$T = ["title", "onClick"];
 const sectionToggle$2 = "ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:py-1 ctv:px-0 ctv:cursor-pointer ctv:[font-family:inherit] ctv:bg-transparent ctv:border-none ctv:text-inherit ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:font-semibold ctv:text-muted-foreground ctv:hover:text-base-foreground";
 const iconBtnClass$4 = "ctv:inline-flex ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:shrink-0 ctv:rounded-md ctv:border-none ctv:bg-transparent ctv:p-1 ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground ctv:disabled:opacity-50 ctv:disabled:pointer-events-none";
-const _sfc_main$3s = /* @__PURE__ */ defineComponent({
+const _sfc_main$3t = /* @__PURE__ */ defineComponent({
   __name: "PresetsPanel",
   props: {
     active: { type: Boolean }
@@ -60377,12 +60381,12 @@ const _sfc_main$3s = /* @__PURE__ */ defineComponent({
     const props = __props;
     const { groups, isCollapsed, toggleGroup, onRename, onDelete } = usePresetsPanel(() => props.active);
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$51, [
-        createBaseVNode("div", _hoisted_2$3b, [
-          createBaseVNode("span", _hoisted_3$35, toDisplayString$1(_ctx.$t("stagePresets.panel.title")), 1)
+      return openBlock(), createElementBlock("div", _hoisted_1$52, [
+        createBaseVNode("div", _hoisted_2$3c, [
+          createBaseVNode("span", _hoisted_3$36, toDisplayString$1(_ctx.$t("stagePresets.panel.title")), 1)
         ]),
-        createBaseVNode("div", _hoisted_4$2G, [
-          unref(groups).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_5$2w, toDisplayString$1(_ctx.$t("stagePresets.panel.empty")), 1)) : createCommentVNode("", true),
+        createBaseVNode("div", _hoisted_4$2H, [
+          unref(groups).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_5$2x, toDisplayString$1(_ctx.$t("stagePresets.panel.empty")), 1)) : createCommentVNode("", true),
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(groups), (group) => {
             return openBlock(), createElementBlock("section", {
               key: group.kind
@@ -60395,37 +60399,37 @@ const _sfc_main$3s = /* @__PURE__ */ defineComponent({
                 createBaseVNode("i", {
                   class: normalizeClass(["pi", unref(isCollapsed)(group.kind) ? "pi-chevron-right" : "pi-chevron-down", "ctv:w-2.5 ctv:text-2xs ctv:text-muted-foreground"])
                 }, null, 2),
-                createBaseVNode("span", _hoisted_7$1S, toDisplayString$1(group.label), 1),
-                createBaseVNode("span", _hoisted_8$1w, toDisplayString$1(group.presets.length), 1)
-              ], 8, _hoisted_6$2k),
-              withDirectives(createBaseVNode("div", _hoisted_9$1o, [
+                createBaseVNode("span", _hoisted_7$1T, toDisplayString$1(group.label), 1),
+                createBaseVNode("span", _hoisted_8$1x, toDisplayString$1(group.presets.length), 1)
+              ], 8, _hoisted_6$2l),
+              withDirectives(createBaseVNode("div", _hoisted_9$1p, [
                 (openBlock(true), createElementBlock(Fragment$1, null, renderList(group.presets, (p2) => {
                   return openBlock(), createElementBlock("div", {
                     key: p2.id,
                     class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:py-1.5 ctv:px-2 ctv:rounded-lg ctv:bg-secondary-background ctv:border ctv:border-border-subtle"
                   }, [
-                    createBaseVNode("span", _hoisted_10$1d, toDisplayString$1(p2.name), 1),
+                    createBaseVNode("span", _hoisted_10$1e, toDisplayString$1(p2.name), 1),
                     p2.builtin ? (openBlock(), createElementBlock("span", {
                       key: 0,
                       class: "ctv:inline-flex ctv:items-center ctv:justify-center ctv:shrink-0 ctv:p-1 ctv:text-muted-foreground",
                       title: _ctx.$t("stagePresets.builtin")
                     }, [
                       createVNode(unref(IconLock), { class: "ctv:size-3.5" })
-                    ], 8, _hoisted_11$14)) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
+                    ], 8, _hoisted_11$15)) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
                       createBaseVNode("button", {
                         class: normalizeClass(iconBtnClass$4),
                         title: _ctx.$t("stagePresets.panel.rename"),
                         onClick: ($event) => unref(onRename)(p2)
                       }, [
                         createVNode(unref(IconPencil), { class: "ctv:size-3.5" })
-                      ], 8, _hoisted_12$Y),
+                      ], 8, _hoisted_12$Z),
                       createBaseVNode("button", {
                         class: normalizeClass([iconBtnClass$4, "ctv:hover:text-destructive-background"]),
                         title: _ctx.$t("stagePresets.delete"),
                         onClick: ($event) => unref(onDelete)(p2)
                       }, [
                         createVNode(unref(IconTrash), { class: "ctv:size-3.5" })
-                      ], 10, _hoisted_13$S)
+                      ], 10, _hoisted_13$T)
                     ], 64))
                   ]);
                 }), 128))
@@ -60539,13 +60543,13 @@ function useResourcesPanel(isActive2) {
     onUpload
   };
 }
-const _hoisted_1$50 = {
+const _hoisted_1$51 = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1J(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$50, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$51, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -60557,27 +60561,27 @@ function render$1J(_ctx, _cache2) {
   ])]);
 }
 const IconUpload = markRaw({ name: "lucide-upload", render: render$1J });
-const _hoisted_1$4$ = { class: "ctv:flex ctv:flex-col ctv:size-full ctv:overflow-hidden ctv:text-xs ctv:text-base-foreground" };
-const _hoisted_2$3a = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:py-1.5 ctv:px-2.5 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle" };
-const _hoisted_3$34 = { class: "ctv:flex-1 ctv:font-semibold ctv:text-sm" };
-const _hoisted_4$2F = { class: "ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-2.5 ctv:flex ctv:flex-col ctv:gap-2.5" };
-const _hoisted_5$2v = { class: "ctv:flex ctv:items-center ctv:gap-1" };
-const _hoisted_6$2j = ["aria-expanded", "onClick"];
-const _hoisted_7$1R = { class: "ctv:flex-1 ctv:text-left ctv:truncate" };
-const _hoisted_8$1v = { class: "ctv:text-2xs ctv:tabular-nums ctv:text-muted-foreground" };
-const _hoisted_9$1n = ["title", "onClick"];
-const _hoisted_10$1c = ["accept", "onChange"];
-const _hoisted_11$13 = { class: "ctv:mt-1.5 ctv:flex ctv:flex-col ctv:gap-1" };
-const _hoisted_12$X = {
+const _hoisted_1$50 = { class: "ctv:flex ctv:flex-col ctv:size-full ctv:overflow-hidden ctv:text-xs ctv:text-base-foreground" };
+const _hoisted_2$3b = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:py-1.5 ctv:px-2.5 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle" };
+const _hoisted_3$35 = { class: "ctv:flex-1 ctv:font-semibold ctv:text-sm" };
+const _hoisted_4$2G = { class: "ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-2.5 ctv:flex ctv:flex-col ctv:gap-2.5" };
+const _hoisted_5$2w = { class: "ctv:flex ctv:items-center ctv:gap-1" };
+const _hoisted_6$2k = ["aria-expanded", "onClick"];
+const _hoisted_7$1S = { class: "ctv:flex-1 ctv:text-left ctv:truncate" };
+const _hoisted_8$1w = { class: "ctv:text-2xs ctv:tabular-nums ctv:text-muted-foreground" };
+const _hoisted_9$1o = ["title", "onClick"];
+const _hoisted_10$1d = ["accept", "onChange"];
+const _hoisted_11$14 = { class: "ctv:mt-1.5 ctv:flex ctv:flex-col ctv:gap-1" };
+const _hoisted_12$Y = {
   key: 0,
   class: "ctv:py-2 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60"
 };
-const _hoisted_13$R = ["title"];
-const _hoisted_14$O = {
+const _hoisted_13$S = ["title"];
+const _hoisted_14$P = {
   key: 0,
   class: "ctv:shrink-0 ctv:rounded ctv:px-1 ctv:py-0.5 ctv:text-2xs ctv:font-semibold ctv:bg-destructive-background/20 ctv:text-destructive-background"
 };
-const _hoisted_15$I = {
+const _hoisted_15$J = {
   key: 1,
   class: "ctv:shrink-0 ctv:text-2xs ctv:tabular-nums ctv:text-muted-foreground"
 };
@@ -60585,7 +60589,7 @@ const _hoisted_16$D = ["title", "onClick"];
 const _hoisted_17$B = ["title", "onClick"];
 const sectionToggle$1 = "ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-1 ctv:min-w-0 ctv:py-1 ctv:px-0 ctv:cursor-pointer ctv:[font-family:inherit] ctv:bg-transparent ctv:border-none ctv:text-inherit ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:font-semibold ctv:text-muted-foreground ctv:hover:text-base-foreground";
 const iconBtnClass$3 = "ctv:inline-flex ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:shrink-0 ctv:rounded-md ctv:border-none ctv:bg-transparent ctv:p-1 ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground ctv:disabled:opacity-50 ctv:disabled:pointer-events-none";
-const _sfc_main$3r = /* @__PURE__ */ defineComponent({
+const _sfc_main$3s = /* @__PURE__ */ defineComponent({
   __name: "ResourcesPanel",
   props: {
     active: { type: Boolean }
@@ -60599,16 +60603,16 @@ const _sfc_main$3r = /* @__PURE__ */ defineComponent({
       else fileInputs.delete(kind);
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$4$, [
-        createBaseVNode("div", _hoisted_2$3a, [
-          createBaseVNode("span", _hoisted_3$34, toDisplayString$1(_ctx.$t("resources.panel.title")), 1)
+      return openBlock(), createElementBlock("div", _hoisted_1$50, [
+        createBaseVNode("div", _hoisted_2$3b, [
+          createBaseVNode("span", _hoisted_3$35, toDisplayString$1(_ctx.$t("resources.panel.title")), 1)
         ]),
-        createBaseVNode("div", _hoisted_4$2F, [
+        createBaseVNode("div", _hoisted_4$2G, [
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(groups), (group) => {
             return openBlock(), createElementBlock("section", {
               key: group.kind
             }, [
-              createBaseVNode("div", _hoisted_5$2v, [
+              createBaseVNode("div", _hoisted_5$2w, [
                 createBaseVNode("button", {
                   class: normalizeClass(sectionToggle$1),
                   "aria-expanded": !unref(isCollapsed)(group.kind),
@@ -60617,9 +60621,9 @@ const _sfc_main$3r = /* @__PURE__ */ defineComponent({
                   createBaseVNode("i", {
                     class: normalizeClass(["pi", unref(isCollapsed)(group.kind) ? "pi-chevron-right" : "pi-chevron-down", "ctv:w-2.5 ctv:text-2xs ctv:text-muted-foreground"])
                   }, null, 2),
-                  createBaseVNode("span", _hoisted_7$1R, toDisplayString$1(group.label), 1),
-                  createBaseVNode("span", _hoisted_8$1v, toDisplayString$1(group.resources.length), 1)
-                ], 8, _hoisted_6$2j),
+                  createBaseVNode("span", _hoisted_7$1S, toDisplayString$1(group.label), 1),
+                  createBaseVNode("span", _hoisted_8$1w, toDisplayString$1(group.resources.length), 1)
+                ], 8, _hoisted_6$2k),
                 createBaseVNode("button", {
                   class: normalizeClass(iconBtnClass$3),
                   title: _ctx.$t("resources.upload"),
@@ -60629,7 +60633,7 @@ const _sfc_main$3r = /* @__PURE__ */ defineComponent({
                   }
                 }, [
                   createVNode(unref(IconUpload), { class: "ctv:size-3.5" })
-                ], 8, _hoisted_9$1n),
+                ], 8, _hoisted_9$1o),
                 createBaseVNode("input", {
                   ref_for: true,
                   ref: (el) => setFileInput(group.kind, el),
@@ -60637,10 +60641,10 @@ const _sfc_main$3r = /* @__PURE__ */ defineComponent({
                   accept: group.accept,
                   class: "ctv:hidden",
                   onChange: (e) => unref(onUpload)(group.kind, e)
-                }, null, 40, _hoisted_10$1c)
+                }, null, 40, _hoisted_10$1d)
               ]),
-              withDirectives(createBaseVNode("div", _hoisted_11$13, [
-                group.resources.length === 0 ? (openBlock(), createElementBlock("div", _hoisted_12$X, toDisplayString$1(_ctx.$t("resources.panel.empty")), 1)) : createCommentVNode("", true),
+              withDirectives(createBaseVNode("div", _hoisted_11$14, [
+                group.resources.length === 0 ? (openBlock(), createElementBlock("div", _hoisted_12$Y, toDisplayString$1(_ctx.$t("resources.panel.empty")), 1)) : createCommentVNode("", true),
                 (openBlock(true), createElementBlock(Fragment$1, null, renderList(group.resources, (r) => {
                   return openBlock(), createElementBlock("div", {
                     key: r.id,
@@ -60649,8 +60653,8 @@ const _sfc_main$3r = /* @__PURE__ */ defineComponent({
                     createBaseVNode("span", {
                       class: "ctv:flex-1 ctv:min-w-0 ctv:truncate ctv:font-semibold",
                       title: r.filename
-                    }, toDisplayString$1(r.name), 9, _hoisted_13$R),
-                    r.missing ? (openBlock(), createElementBlock("span", _hoisted_14$O, toDisplayString$1(_ctx.$t("resources.missing")), 1)) : (openBlock(), createElementBlock("span", _hoisted_15$I, toDisplayString$1(unref(formatResourceSize)(r.size)), 1)),
+                    }, toDisplayString$1(r.name), 9, _hoisted_13$S),
+                    r.missing ? (openBlock(), createElementBlock("span", _hoisted_14$P, toDisplayString$1(_ctx.$t("resources.missing")), 1)) : (openBlock(), createElementBlock("span", _hoisted_15$J, toDisplayString$1(unref(formatResourceSize)(r.size)), 1)),
                     createBaseVNode("button", {
                       class: normalizeClass(iconBtnClass$3),
                       title: _ctx.$t("resources.rename"),
@@ -60677,9 +60681,9 @@ const _sfc_main$3r = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$4_ = ["value", "disabled", "rows", "placeholder"];
-const _hoisted_2$39 = ["value", "disabled", "placeholder"];
-const _sfc_main$3q = /* @__PURE__ */ defineComponent({
+const _hoisted_1$4$ = ["value", "disabled", "rows", "placeholder"];
+const _hoisted_2$3a = ["value", "disabled", "placeholder"];
+const _sfc_main$3r = /* @__PURE__ */ defineComponent({
   __name: "ComfyTVText",
   props: {
     modelValue: {},
@@ -60723,7 +60727,7 @@ const _sfc_main$3q = /* @__PURE__ */ defineComponent({
         rows: __props.rows ?? 3,
         placeholder: __props.placeholder ?? "",
         onInput: onTextareaInput
-      }, null, 40, _hoisted_1$4_)) : (openBlock(), createElementBlock("input", {
+      }, null, 40, _hoisted_1$4$)) : (openBlock(), createElementBlock("input", {
         key: 1,
         class: "ctv-text-input",
         type: "text",
@@ -60731,7 +60735,7 @@ const _sfc_main$3q = /* @__PURE__ */ defineComponent({
         disabled: __props.disabled,
         placeholder: __props.placeholder ?? "",
         onInput
-      }, null, 40, _hoisted_2$39));
+      }, null, 40, _hoisted_2$3a));
     };
   }
 });
@@ -61149,13 +61153,13 @@ function useServersPanel() {
     toggleCapsExpand
   };
 }
-const _hoisted_1$4Z = {
+const _hoisted_1$4_ = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1I(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$4Z, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$4_, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -61167,13 +61171,13 @@ function render$1I(_ctx, _cache2) {
   ])]);
 }
 const IconLoader = markRaw({ name: "lucide-loader-2", render: render$1I });
-const _hoisted_1$4Y = {
+const _hoisted_1$4Z = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1H(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$4Y, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$4Z, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -61185,13 +61189,13 @@ function render$1H(_ctx, _cache2) {
   ])]);
 }
 const IconPlugZap = markRaw({ name: "lucide-plug-zap", render: render$1H });
-const _hoisted_1$4X = {
+const _hoisted_1$4Y = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1G(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$4X, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$4Y, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -61203,24 +61207,24 @@ function render$1G(_ctx, _cache2) {
   ])]);
 }
 const IconPower = markRaw({ name: "lucide-power", render: render$1G });
-const _hoisted_1$4W = { class: "ctv:relative ctv:flex ctv:flex-col ctv:size-full ctv:box-border ctv:overflow-hidden ctv:text-xs ctv:text-base-foreground" };
-const _hoisted_2$38 = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:py-1.5 ctv:px-2.5 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle" };
-const _hoisted_3$33 = { class: "ctv:flex-1 ctv:font-semibold ctv:text-sm" };
-const _hoisted_4$2E = ["title"];
-const _hoisted_5$2u = { class: "ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-1.5 ctv:flex ctv:flex-col ctv:gap-1" };
-const _hoisted_6$2i = {
+const _hoisted_1$4X = { class: "ctv:relative ctv:flex ctv:flex-col ctv:size-full ctv:box-border ctv:overflow-hidden ctv:text-xs ctv:text-base-foreground" };
+const _hoisted_2$39 = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:py-1.5 ctv:px-2.5 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle" };
+const _hoisted_3$34 = { class: "ctv:flex-1 ctv:font-semibold ctv:text-sm" };
+const _hoisted_4$2F = ["title"];
+const _hoisted_5$2v = { class: "ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-1.5 ctv:flex ctv:flex-col ctv:gap-1" };
+const _hoisted_6$2j = {
   key: 0,
   class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2 ctv:rounded-lg ctv:bg-secondary-background ctv:border ctv:border-border-default"
 };
-const _hoisted_7$1Q = { class: "ctv:flex ctv:flex-col ctv:gap-0.5" };
-const _hoisted_8$1u = { class: "ctv:text-muted-foreground" };
-const _hoisted_9$1m = { class: "ctv:flex ctv:gap-1.5" };
-const _hoisted_10$1b = { class: "ctv:flex-1 ctv:flex ctv:flex-col ctv:gap-0.5 ctv:min-w-0" };
-const _hoisted_11$12 = { class: "ctv:text-muted-foreground" };
-const _hoisted_12$W = { class: "ctv:w-20 ctv:flex ctv:flex-col ctv:gap-0.5" };
-const _hoisted_13$Q = { class: "ctv:text-muted-foreground" };
-const _hoisted_14$N = { class: "ctv:opacity-75" };
-const _hoisted_15$H = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
+const _hoisted_7$1R = { class: "ctv:flex ctv:flex-col ctv:gap-0.5" };
+const _hoisted_8$1v = { class: "ctv:text-muted-foreground" };
+const _hoisted_9$1n = { class: "ctv:flex ctv:gap-1.5" };
+const _hoisted_10$1c = { class: "ctv:flex-1 ctv:flex ctv:flex-col ctv:gap-0.5 ctv:min-w-0" };
+const _hoisted_11$13 = { class: "ctv:text-muted-foreground" };
+const _hoisted_12$X = { class: "ctv:w-20 ctv:flex ctv:flex-col ctv:gap-0.5" };
+const _hoisted_13$R = { class: "ctv:text-muted-foreground" };
+const _hoisted_14$O = { class: "ctv:opacity-75" };
+const _hoisted_15$I = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
 const _hoisted_16$C = ["disabled"];
 const _hoisted_17$A = ["disabled"];
 const _hoisted_18$x = {
@@ -61232,8 +61236,8 @@ const _hoisted_19$t = {
   class: "ctv:py-5 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60"
 };
 const _hoisted_20$p = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
-const _hoisted_21$o = { class: "ctv:flex-1 ctv:min-w-0" };
-const _hoisted_22$n = { class: "ctv:font-semibold ctv:truncate" };
+const _hoisted_21$n = { class: "ctv:flex-1 ctv:min-w-0" };
+const _hoisted_22$m = { class: "ctv:font-semibold ctv:truncate" };
 const _hoisted_23$l = { class: "ctv:text-muted-foreground ctv:truncate" };
 const _hoisted_24$j = ["title"];
 const _hoisted_25$j = {
@@ -61257,7 +61261,7 @@ const _hoisted_33$8 = { class: "ctv:mb-0.5" };
 const addBtnClass = "ctv:shrink-0 ctv:inline-flex ctv:items-center ctv:gap-1 ctv:cursor-pointer ctv:[font-family:inherit] ctv:rounded-lg ctv:border-none ctv:px-2 ctv:py-1 ctv:text-xs ctv:bg-interface-menu-component-surface-hovered ctv:text-base-foreground ctv:hover:brightness-110 ctv:disabled:opacity-50 ctv:disabled:pointer-events-none";
 const chipBtnClass$2 = "ctv:inline-flex ctv:items-center ctv:cursor-pointer ctv:[font-family:inherit] ctv:rounded-lg ctv:border ctv:border-border-subtle ctv:bg-transparent ctv:px-2 ctv:py-1 ctv:text-xs ctv:text-base-foreground ctv:hover:bg-secondary-background-hover ctv:disabled:opacity-50 ctv:disabled:pointer-events-none";
 const iconBtnClass$2 = "ctv:inline-flex ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:shrink-0 ctv:rounded-md ctv:border-none ctv:bg-transparent ctv:p-1 ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground ctv:disabled:opacity-50 ctv:disabled:pointer-events-none";
-const _sfc_main$3p = /* @__PURE__ */ defineComponent({
+const _sfc_main$3q = /* @__PURE__ */ defineComponent({
   __name: "ServersPanel",
   setup(__props) {
     const {
@@ -61296,37 +61300,37 @@ const _sfc_main$3p = /* @__PURE__ */ defineComponent({
     }
     const primaryBtnClass = addBtnClass;
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$4W, [
-        createBaseVNode("div", _hoisted_2$38, [
-          createBaseVNode("span", _hoisted_3$33, toDisplayString$1(_ctx.$t("servers.title")), 1),
+      return openBlock(), createElementBlock("div", _hoisted_1$4X, [
+        createBaseVNode("div", _hoisted_2$39, [
+          createBaseVNode("span", _hoisted_3$34, toDisplayString$1(_ctx.$t("servers.title")), 1),
           createBaseVNode("button", {
             class: normalizeClass(addBtnClass),
             title: _ctx.$t("servers.addTooltip"),
             onClick: _cache2[0] || (_cache2[0] = ($event) => unref(openForm)())
-          }, " + " + toDisplayString$1(_ctx.$t("servers.add")), 9, _hoisted_4$2E)
+          }, " + " + toDisplayString$1(_ctx.$t("servers.add")), 9, _hoisted_4$2F)
         ]),
-        createBaseVNode("div", _hoisted_5$2u, [
-          unref(form) ? (openBlock(), createElementBlock("div", _hoisted_6$2i, [
-            createBaseVNode("label", _hoisted_7$1Q, [
-              createBaseVNode("span", _hoisted_8$1u, toDisplayString$1(_ctx.$t("servers.form.label")), 1),
-              createVNode(_sfc_main$3q, {
+        createBaseVNode("div", _hoisted_5$2v, [
+          unref(form) ? (openBlock(), createElementBlock("div", _hoisted_6$2j, [
+            createBaseVNode("label", _hoisted_7$1R, [
+              createBaseVNode("span", _hoisted_8$1v, toDisplayString$1(_ctx.$t("servers.form.label")), 1),
+              createVNode(_sfc_main$3r, {
                 modelValue: unref(form).label,
                 "onUpdate:modelValue": _cache2[1] || (_cache2[1] = ($event) => unref(form).label = $event),
                 placeholder: _ctx.$t("servers.form.labelPlaceholder")
               }, null, 8, ["modelValue", "placeholder"])
             ]),
-            createBaseVNode("div", _hoisted_9$1m, [
-              createBaseVNode("label", _hoisted_10$1b, [
-                createBaseVNode("span", _hoisted_11$12, toDisplayString$1(_ctx.$t("servers.form.host")), 1),
-                createVNode(_sfc_main$3q, {
+            createBaseVNode("div", _hoisted_9$1n, [
+              createBaseVNode("label", _hoisted_10$1c, [
+                createBaseVNode("span", _hoisted_11$13, toDisplayString$1(_ctx.$t("servers.form.host")), 1),
+                createVNode(_sfc_main$3r, {
                   modelValue: unref(form).host,
                   "onUpdate:modelValue": _cache2[2] || (_cache2[2] = ($event) => unref(form).host = $event),
                   placeholder: "192.168.1.20"
                 }, null, 8, ["modelValue"])
               ]),
-              createBaseVNode("label", _hoisted_12$W, [
-                createBaseVNode("span", _hoisted_13$Q, toDisplayString$1(_ctx.$t("servers.form.port")), 1),
-                createVNode(_sfc_main$3q, {
+              createBaseVNode("label", _hoisted_12$X, [
+                createBaseVNode("span", _hoisted_13$R, toDisplayString$1(_ctx.$t("servers.form.port")), 1),
+                createVNode(_sfc_main$3r, {
                   modelValue: unref(form).port,
                   "onUpdate:modelValue": _cache2[3] || (_cache2[3] = ($event) => unref(form).port = $event),
                   placeholder: "8188"
@@ -61339,7 +61343,7 @@ const _sfc_main$3p = /* @__PURE__ */ defineComponent({
             }, [
               unref(formTest).ok ? (openBlock(), createElementBlock(Fragment$1, { key: 0 }, [
                 createTextVNode(" ✓ " + toDisplayString$1(_ctx.$t("servers.test.ok")) + " ", 1),
-                createBaseVNode("span", _hoisted_14$N, toDisplayString$1([unref(formTest).version, ...unref(formTest).devices ?? []].filter(Boolean).join(" · ")), 1)
+                createBaseVNode("span", _hoisted_14$O, toDisplayString$1([unref(formTest).version, ...unref(formTest).devices ?? []].filter(Boolean).join(" · ")), 1)
               ], 64)) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
                 createTextVNode("✗ " + toDisplayString$1(unref(formTest).error || _ctx.$t("servers.test.failed")), 1)
               ], 64))
@@ -61348,7 +61352,7 @@ const _sfc_main$3p = /* @__PURE__ */ defineComponent({
               key: 1,
               class: normalizeClass(["ctv:py-1 ctv:px-1.5 ctv:rounded ctv:text-xs", unref(formCapsInfo).kind === "comfytv" ? "ctv:bg-emerald-500/10 ctv:text-emerald-400" : "ctv:bg-amber-400/10 ctv:text-amber-400"])
             }, toDisplayString$1(unref(formCapsInfo).label), 3)) : createCommentVNode("", true),
-            createBaseVNode("div", _hoisted_15$H, [
+            createBaseVNode("div", _hoisted_15$I, [
               createBaseVNode("button", {
                 class: normalizeClass(chipBtnClass$2),
                 disabled: unref(testing) || !unref(formValid),
@@ -61378,8 +61382,8 @@ const _sfc_main$3p = /* @__PURE__ */ defineComponent({
               class: normalizeClass(["ctv:flex ctv:flex-col ctv:gap-1 ctv:py-1.5 ctv:px-2 ctv:rounded-lg ctv:bg-secondary-background ctv:border ctv:border-border-subtle", { "ctv:opacity-50": !server.enabled }])
             }, [
               createBaseVNode("div", _hoisted_20$p, [
-                createBaseVNode("div", _hoisted_21$o, [
-                  createBaseVNode("div", _hoisted_22$n, toDisplayString$1(server.label), 1),
+                createBaseVNode("div", _hoisted_21$n, [
+                  createBaseVNode("div", _hoisted_22$m, toDisplayString$1(server.label), 1),
                   createBaseVNode("div", _hoisted_23$l, [
                     createTextVNode(toDisplayString$1(server.host) + ":" + toDisplayString$1(server.port) + " ", 1),
                     unref(rowTests)[server.id] ? (openBlock(), createElementBlock("span", {
@@ -68690,22 +68694,22 @@ var SwitchThumb_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ de
   }
 });
 var SwitchThumb_default = SwitchThumb_vue_vue_type_script_setup_true_lang_default;
-const _hoisted_1$4V = ["disabled", "aria-expanded"];
-const _hoisted_2$37 = { class: "ctv:truncate ctv:text-left" };
-const _hoisted_3$32 = {
+const _hoisted_1$4W = ["disabled", "aria-expanded"];
+const _hoisted_2$38 = { class: "ctv:truncate ctv:text-left" };
+const _hoisted_3$33 = {
   key: 0,
   class: "ctv:px-1 ctv:pb-2"
 };
-const _hoisted_4$2D = {
+const _hoisted_4$2E = {
   class: "ctv:max-h-60 ctv:overflow-y-auto",
   role: "presentation"
 };
-const _hoisted_5$2t = { class: "ctv:truncate" };
-const _hoisted_6$2h = {
+const _hoisted_5$2u = { class: "ctv:truncate" };
+const _hoisted_6$2i = {
   key: 0,
   class: "ctv:px-3 ctv:pb-2 ctv:text-xs ctv:text-muted-foreground"
 };
-const _sfc_main$3o = /* @__PURE__ */ defineComponent({
+const _sfc_main$3p = /* @__PURE__ */ defineComponent({
   __name: "ComfyTVSelect",
   props: {
     modelValue: {},
@@ -68767,9 +68771,9 @@ const _sfc_main$3o = /* @__PURE__ */ defineComponent({
                     disabled: __props.disabled,
                     "aria-expanded": isOpen.value
                   }, [
-                    createBaseVNode("span", _hoisted_2$37, toDisplayString$1(display.value), 1),
+                    createBaseVNode("span", _hoisted_2$38, toDisplayString$1(display.value), 1),
                     _cache2[2] || (_cache2[2] = createBaseVNode("i", { class: "pi pi-chevron-down ctv:shrink-0 ctv:text-muted-foreground ctv:text-2xs" }, null, -1))
-                  ], 8, _hoisted_1$4V)
+                  ], 8, _hoisted_1$4W)
                 ]),
                 _: 1
               })
@@ -68785,7 +68789,7 @@ const _sfc_main$3o = /* @__PURE__ */ defineComponent({
                 align: "start"
               }, {
                 default: withCtx(() => [
-                  filterable.value ? (openBlock(), createElementBlock("div", _hoisted_3$32, [
+                  filterable.value ? (openBlock(), createElementBlock("div", _hoisted_3$33, [
                     createVNode(unref(ComboboxInput_default), {
                       modelValue: query.value,
                       "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => query.value = $event),
@@ -68795,7 +68799,7 @@ const _sfc_main$3o = /* @__PURE__ */ defineComponent({
                       class: "ctv:flex ctv:h-7 ctv:w-full ctv:min-w-0 ctv:appearance-none ctv:rounded-lg ctv:border-none ctv:bg-secondary-background ctv:px-3 ctv:py-1 ctv:text-xs ctv:text-base-foreground ctv:placeholder:text-muted-foreground ctv:focus-visible:ring-1 ctv:focus-visible:ring-border-default ctv:focus-visible:outline-none"
                     }, null, 8, ["modelValue", "placeholder"])
                   ])) : createCommentVNode("", true),
-                  createBaseVNode("div", _hoisted_4$2D, [
+                  createBaseVNode("div", _hoisted_4$2E, [
                     (openBlock(true), createElementBlock(Fragment$1, null, renderList(filteredOptions.value, (opt) => {
                       return openBlock(), createBlock(unref(ComboboxItem_default), {
                         key: opt.value,
@@ -68804,7 +68808,7 @@ const _sfc_main$3o = /* @__PURE__ */ defineComponent({
                         class: "ctv:relative ctv:flex ctv:w-full ctv:cursor-pointer ctv:items-center ctv:justify-between ctv:select-none ctv:gap-3 ctv:rounded-sm ctv:px-2 ctv:py-2 ctv:text-xs ctv:outline-none ctv:hover:bg-secondary-background-hover ctv:data-[highlighted]:bg-secondary-background-hover ctv:data-[state=checked]:bg-secondary-background-selected ctv:data-[state=checked]:hover:bg-secondary-background-selected"
                       }, {
                         default: withCtx(() => [
-                          createBaseVNode("span", _hoisted_5$2t, toDisplayString$1(opt.label), 1),
+                          createBaseVNode("span", _hoisted_5$2u, toDisplayString$1(opt.label), 1),
                           createVNode(unref(ComboboxItemIndicator_default), { class: "ctv:flex ctv:shrink-0 ctv:items-center ctv:justify-center ctv:text-base-foreground" }, {
                             default: withCtx(() => [..._cache2[3] || (_cache2[3] = [
                               createBaseVNode("i", { class: "pi pi-check" }, null, -1)
@@ -68815,7 +68819,7 @@ const _sfc_main$3o = /* @__PURE__ */ defineComponent({
                         _: 2
                       }, 1032, ["value", "text-value"]);
                     }), 128)),
-                    !filteredOptions.value.length ? (openBlock(), createElementBlock("div", _hoisted_6$2h, " no matches ")) : createCommentVNode("", true)
+                    !filteredOptions.value.length ? (openBlock(), createElementBlock("div", _hoisted_6$2i, " no matches ")) : createCommentVNode("", true)
                   ])
                 ]),
                 _: 1
@@ -68829,7 +68833,7 @@ const _sfc_main$3o = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _sfc_main$3n = /* @__PURE__ */ defineComponent({
+const _sfc_main$3o = /* @__PURE__ */ defineComponent({
   __name: "ComfyTVNumber",
   props: {
     modelValue: {},
@@ -68890,7 +68894,7 @@ const _sfc_main$3n = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _sfc_main$3m = /* @__PURE__ */ defineComponent({
+const _sfc_main$3n = /* @__PURE__ */ defineComponent({
   __name: "ComfyTVToggle",
   props: {
     modelValue: { type: [Boolean, null] },
@@ -68917,8 +68921,8 @@ const _sfc_main$3m = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$4U = ["value", "title"];
-const _sfc_main$3l = /* @__PURE__ */ defineComponent({
+const _hoisted_1$4V = ["value", "title"];
+const _sfc_main$3m = /* @__PURE__ */ defineComponent({
   __name: "ComfyTVWidget",
   props: {
     kind: {},
@@ -68950,14 +68954,14 @@ const _sfc_main$3l = /* @__PURE__ */ defineComponent({
       () => props.multiline === true || stringValue.value.includes("\n")
     );
     return (_ctx, _cache2) => {
-      return __props.kind === "COMBO" ? (openBlock(), createBlock(_sfc_main$3o, {
+      return __props.kind === "COMBO" ? (openBlock(), createBlock(_sfc_main$3p, {
         key: 0,
         "model-value": __props.modelValue,
         options: __props.options ?? [],
         disabled: __props.disabled,
         placeholder: __props.placeholder,
         "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => emit2("update:modelValue", $event))
-      }, null, 8, ["model-value", "options", "disabled", "placeholder"])) : __props.kind === "INT" || __props.kind === "FLOAT" ? (openBlock(), createBlock(_sfc_main$3n, {
+      }, null, 8, ["model-value", "options", "disabled", "placeholder"])) : __props.kind === "INT" || __props.kind === "FLOAT" ? (openBlock(), createBlock(_sfc_main$3o, {
         key: 1,
         "model-value": numericValue.value,
         disabled: __props.disabled,
@@ -68966,12 +68970,12 @@ const _sfc_main$3l = /* @__PURE__ */ defineComponent({
         step: __props.step ?? (__props.kind === "INT" ? 1 : 0.01),
         precision: __props.kind === "INT" ? 0 : __props.precision,
         "onUpdate:modelValue": _cache2[1] || (_cache2[1] = ($event) => emit2("update:modelValue", $event))
-      }, null, 8, ["model-value", "disabled", "min", "max", "step", "precision"])) : __props.kind === "BOOLEAN" ? (openBlock(), createBlock(_sfc_main$3m, {
+      }, null, 8, ["model-value", "disabled", "min", "max", "step", "precision"])) : __props.kind === "BOOLEAN" ? (openBlock(), createBlock(_sfc_main$3n, {
         key: 2,
         "model-value": boolValue.value,
         disabled: __props.disabled,
         "onUpdate:modelValue": _cache2[2] || (_cache2[2] = ($event) => emit2("update:modelValue", $event))
-      }, null, 8, ["model-value", "disabled"])) : __props.kind === "STRING" ? (openBlock(), createBlock(_sfc_main$3q, {
+      }, null, 8, ["model-value", "disabled"])) : __props.kind === "STRING" ? (openBlock(), createBlock(_sfc_main$3r, {
         key: 3,
         "model-value": stringValue.value,
         disabled: __props.disabled,
@@ -68984,7 +68988,7 @@ const _sfc_main$3l = /* @__PURE__ */ defineComponent({
         value: String(__props.modelValue ?? ""),
         readonly: "",
         title: `Unsupported widget type: ${__props.kind}`
-      }, null, 8, _hoisted_1$4U));
+      }, null, 8, _hoisted_1$4V));
     };
   }
 });
@@ -70470,36 +70474,36 @@ function useWorkflowConfig(t2) {
     postMeta
   };
 }
-const _hoisted_1$4T = { class: "ctv:flex ctv:flex-col ctv:size-full ctv:box-border ctv:overflow-auto ctv:text-xs ctv:pt-2 ctv:pb-6 ctv:px-2.5 ctv:text-base-foreground" };
-const _hoisted_2$36 = { class: "ctv:sticky ctv:-top-2 ctv:z-[1] ctv:-mx-2.5 ctv:-mt-2 ctv:mb-2 ctv:py-1.5 ctv:px-2.5 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle" };
-const _hoisted_3$31 = { class: "ctv:font-semibold ctv:text-sm" };
-const _hoisted_4$2C = {
+const _hoisted_1$4U = { class: "ctv:flex ctv:flex-col ctv:size-full ctv:box-border ctv:overflow-auto ctv:text-xs ctv:pt-2 ctv:pb-6 ctv:px-2.5 ctv:text-base-foreground" };
+const _hoisted_2$37 = { class: "ctv:sticky ctv:-top-2 ctv:z-[1] ctv:-mx-2.5 ctv:-mt-2 ctv:mb-2 ctv:py-1.5 ctv:px-2.5 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle" };
+const _hoisted_3$32 = { class: "ctv:font-semibold ctv:text-sm" };
+const _hoisted_4$2D = {
   key: 2,
   class: "ctv:my-1.5 ctv:py-1.5 ctv:px-2 ctv:text-xs ctv:rounded ctv:bg-destructive-background/15 ctv:border ctv:border-destructive-background/50 ctv:text-destructive-background"
 };
-const _hoisted_5$2s = {
+const _hoisted_5$2t = {
   key: 3,
   class: "ctv:flex ctv:flex-col ctv:gap-3"
 };
-const _hoisted_6$2g = { class: "ctv:flex ctv:flex-col ctv:gap-0.5 ctv:pt-1 ctv:pb-2 ctv:border-b ctv:border-border-subtle" };
-const _hoisted_7$1P = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_8$1t = { class: "ctv:text-xs ctv:font-semibold" };
-const _hoisted_9$1l = {
+const _hoisted_6$2h = { class: "ctv:flex ctv:flex-col ctv:gap-0.5 ctv:pt-1 ctv:pb-2 ctv:border-b ctv:border-border-subtle" };
+const _hoisted_7$1Q = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_8$1u = { class: "ctv:text-xs ctv:font-semibold" };
+const _hoisted_9$1m = {
   key: 0,
   class: "ctv:mt-1 ctv:text-2xs ctv:italic ctv:text-warning-background"
 };
-const _hoisted_10$1a = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
-const _hoisted_11$11 = { class: "ctv:m-0 ctv:text-3xs ctv:leading-relaxed ctv:text-muted-foreground ctv:break-all" };
-const _hoisted_12$V = ["disabled"];
-const _hoisted_13$P = {
+const _hoisted_10$1b = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
+const _hoisted_11$12 = { class: "ctv:m-0 ctv:text-3xs ctv:leading-relaxed ctv:text-muted-foreground ctv:break-all" };
+const _hoisted_12$W = ["disabled"];
+const _hoisted_13$Q = {
   key: 0,
   class: "ctv:text-3xs ctv:text-destructive-background"
 };
-const _hoisted_14$M = {
+const _hoisted_14$N = {
   key: 1,
   class: "ctv:rounded ctv:overflow-hidden ctv:bg-warning-background/[0.03] ctv:border ctv:border-warning-background/25"
 };
-const _hoisted_15$G = ["aria-expanded"];
+const _hoisted_15$H = ["aria-expanded"];
 const _hoisted_16$B = { class: "ctv:flex-1 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:font-semibold ctv:text-warning-background" };
 const _hoisted_17$z = { class: "ctv:text-3xs ctv:font-mono ctv:py-px ctv:px-1.5 ctv:rounded-lg ctv:bg-warning-background/10 ctv:text-warning-background/70" };
 const _hoisted_18$w = {
@@ -70508,11 +70512,11 @@ const _hoisted_18$w = {
 };
 const _hoisted_19$s = { class: "ctv:m-0 ctv:text-xs ctv:whitespace-pre-wrap ctv:[font-family:inherit] ctv:text-base-foreground" };
 const _hoisted_20$o = { key: 2 };
-const _hoisted_21$n = {
+const _hoisted_21$m = {
   key: 0,
   class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:mb-2.5"
 };
-const _hoisted_22$m = { class: "ctv:relative" };
+const _hoisted_22$l = { class: "ctv:relative" };
 const _hoisted_23$k = ["placeholder"];
 const _hoisted_24$i = {
   key: 0,
@@ -70576,7 +70580,7 @@ const _hoisted_55$2 = {
 const emptyClass = "ctv:py-5 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-xs ctv:text-muted-foreground/60";
 const sectionHeading = "ctv:mt-1 ctv:mb-1.5 ctv:text-xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground";
 const chipCountClass$1 = "ctv:py-0 ctv:px-1 ctv:rounded-lg ctv:text-3xs ctv:bg-base-foreground/10";
-const _sfc_main$3k = /* @__PURE__ */ defineComponent({
+const _sfc_main$3l = /* @__PURE__ */ defineComponent({
   __name: "WorkflowConfigSidebar",
   setup(__props) {
     const { t: t2 } = useI18n();
@@ -70674,9 +70678,9 @@ const _sfc_main$3k = /* @__PURE__ */ defineComponent({
     }
     return (_ctx, _cache2) => {
       var _a2, _b2;
-      return openBlock(), createElementBlock("div", _hoisted_1$4T, [
-        createBaseVNode("div", _hoisted_2$36, [
-          createBaseVNode("span", _hoisted_3$31, toDisplayString$1(_ctx.$t("configSidebar.title")), 1)
+      return openBlock(), createElementBlock("div", _hoisted_1$4U, [
+        createBaseVNode("div", _hoisted_2$37, [
+          createBaseVNode("span", _hoisted_3$32, toDisplayString$1(_ctx.$t("configSidebar.title")), 1)
         ]),
         !unref(selected) ? (openBlock(), createElementBlock("div", {
           key: 0,
@@ -70684,17 +70688,17 @@ const _sfc_main$3k = /* @__PURE__ */ defineComponent({
         }, toDisplayString$1(_ctx.$t("configSidebar.empty")), 1)) : !unref(selected).workflowLabel ? (openBlock(), createElementBlock("div", {
           key: 1,
           class: normalizeClass(emptyClass)
-        }, toDisplayString$1(_ctx.$t("configSidebar.noWorkflowPicked")), 1)) : unref(loadError) ? (openBlock(), createElementBlock("div", _hoisted_4$2C, toDisplayString$1(unref(loadError)), 1)) : unref(config2) ? (openBlock(), createElementBlock("div", _hoisted_5$2s, [
-          createBaseVNode("div", _hoisted_6$2g, [
-            createBaseVNode("span", _hoisted_7$1P, toDisplayString$1(unref(config2).kind), 1),
-            createBaseVNode("span", _hoisted_8$1t, toDisplayString$1(unref(config2).label), 1),
-            !unref(config2).has_api ? (openBlock(), createElementBlock("span", _hoisted_9$1l, toDisplayString$1(_ctx.$t("configSidebar.pickWorkflowFirst")), 1)) : createCommentVNode("", true)
+        }, toDisplayString$1(_ctx.$t("configSidebar.noWorkflowPicked")), 1)) : unref(loadError) ? (openBlock(), createElementBlock("div", _hoisted_4$2D, toDisplayString$1(unref(loadError)), 1)) : unref(config2) ? (openBlock(), createElementBlock("div", _hoisted_5$2t, [
+          createBaseVNode("div", _hoisted_6$2h, [
+            createBaseVNode("span", _hoisted_7$1Q, toDisplayString$1(unref(config2).kind), 1),
+            createBaseVNode("span", _hoisted_8$1u, toDisplayString$1(unref(config2).label), 1),
+            !unref(config2).has_api ? (openBlock(), createElementBlock("span", _hoisted_9$1m, toDisplayString$1(_ctx.$t("configSidebar.pickWorkflowFirst")), 1)) : createCommentVNode("", true)
           ]),
           isLinked.value ? (openBlock(), createElementBlock("section", {
             key: 0,
             class: normalizeClass(["ctv:flex ctv:flex-col ctv:gap-1.5 ctv:py-1.5 ctv:px-2 ctv:rounded", linkBroken.value ? "ctv:bg-destructive-background/10 ctv:border ctv:border-destructive-background/40" : "ctv:bg-primary-background/[0.06] ctv:border ctv:border-primary-background/25"])
           }, [
-            createBaseVNode("div", _hoisted_10$1a, [
+            createBaseVNode("div", _hoisted_10$1b, [
               createBaseVNode("i", {
                 class: normalizeClass([
                   "pi",
@@ -70707,7 +70711,7 @@ const _sfc_main$3k = /* @__PURE__ */ defineComponent({
                 class: normalizeClass(["ctv:text-2xs ctv:font-semibold", linkBroken.value ? "ctv:text-destructive-background" : "ctv:text-base-foreground"])
               }, toDisplayString$1(linkBroken.value ? _ctx.$t("configSidebar.linkBroken") : _ctx.$t("configSidebar.linkedSource")), 3)
             ]),
-            createBaseVNode("p", _hoisted_11$11, toDisplayString$1(linkBroken.value ? _ctx.$t("configSidebar.linkBrokenHint") : _ctx.$t("configSidebar.linkedSourceHint")), 1),
+            createBaseVNode("p", _hoisted_11$12, toDisplayString$1(linkBroken.value ? _ctx.$t("configSidebar.linkBrokenHint") : _ctx.$t("configSidebar.linkedSourceHint")), 1),
             createBaseVNode("button", {
               class: normalizeClass(resetBtn),
               disabled: unref(unlinkBusy),
@@ -70716,10 +70720,10 @@ const _sfc_main$3k = /* @__PURE__ */ defineComponent({
             }, [
               _cache2[9] || (_cache2[9] = createBaseVNode("i", { class: "pi pi-link" }, null, -1)),
               createTextVNode(" " + toDisplayString$1(_ctx.$t("configSidebar.unlink")), 1)
-            ], 8, _hoisted_12$V),
-            unref(unlinkError) ? (openBlock(), createElementBlock("span", _hoisted_13$P, toDisplayString$1(unref(unlinkError)), 1)) : createCommentVNode("", true)
+            ], 8, _hoisted_12$W),
+            unref(unlinkError) ? (openBlock(), createElementBlock("span", _hoisted_13$Q, toDisplayString$1(unref(unlinkError)), 1)) : createCommentVNode("", true)
           ], 2)) : createCommentVNode("", true),
-          ((_a2 = unref(config2).gui_notes) == null ? void 0 : _a2.length) ? (openBlock(), createElementBlock("section", _hoisted_14$M, [
+          ((_a2 = unref(config2).gui_notes) == null ? void 0 : _a2.length) ? (openBlock(), createElementBlock("section", _hoisted_14$N, [
             createBaseVNode("button", {
               class: normalizeClass([
                 "ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:py-[5px] ctv:px-2 ctv:text-left ctv:cursor-pointer ctv:[font-family:inherit]",
@@ -70736,7 +70740,7 @@ const _sfc_main$3k = /* @__PURE__ */ defineComponent({
               }, null, 2),
               createBaseVNode("span", _hoisted_16$B, toDisplayString$1(_ctx.$t("configSidebar.section.notes")), 1),
               createBaseVNode("span", _hoisted_17$z, toDisplayString$1(unref(config2).gui_notes.length), 1)
-            ], 10, _hoisted_15$G),
+            ], 10, _hoisted_15$H),
             !unref(notesCollapsed) ? (openBlock(), createElementBlock("div", _hoisted_18$w, [
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(config2).gui_notes, (note, i) => {
                 return openBlock(), createElementBlock("div", {
@@ -70752,8 +70756,8 @@ const _sfc_main$3k = /* @__PURE__ */ defineComponent({
             createBaseVNode("h3", {
               class: normalizeClass(sectionHeading)
             }, toDisplayString$1(_ctx.$t("configSidebar.section.widgets")), 1),
-            unref(showNodeFilter) ? (openBlock(), createElementBlock("div", _hoisted_21$n, [
-              createBaseVNode("div", _hoisted_22$m, [
+            unref(showNodeFilter) ? (openBlock(), createElementBlock("div", _hoisted_21$m, [
+              createBaseVNode("div", _hoisted_22$l, [
                 createVNode(unref(IconSearch), { class: "ctv:absolute ctv:left-2 ctv:top-1/2 ctv:-translate-y-1/2 ctv:size-3.5 ctv:text-muted-foreground ctv:pointer-events-none" }),
                 withDirectives(createBaseVNode("input", {
                   "onUpdate:modelValue": _cache2[2] || (_cache2[2] = ($event) => /* @__PURE__ */ isRef(searchQuery) ? searchQuery.value = $event : null),
@@ -70830,7 +70834,7 @@ const _sfc_main$3k = /* @__PURE__ */ defineComponent({
                           createBaseVNode("div", _hoisted_33$7, [
                             createBaseVNode("span", _hoisted_34$7, "." + toDisplayString$1(w.widget_name), 1)
                           ]),
-                          createVNode(_sfc_main$3l, {
+                          createVNode(_sfc_main$3m, {
                             kind: w.widget_type,
                             "model-value": unref(effectiveValue)(w),
                             options: unref(comboOptions)(w),
@@ -70844,7 +70848,7 @@ const _sfc_main$3k = /* @__PURE__ */ defineComponent({
                           }, null, 8, ["kind", "model-value", "options", "min", "max", "step", "precision", "multiline", "disabled", "onUpdate:modelValue"]),
                           createBaseVNode("div", _hoisted_35$7, [
                             createBaseVNode("span", _hoisted_36$6, toDisplayString$1(_ctx.$t("configSidebar.bindTo")), 1),
-                            createVNode(_sfc_main$3o, {
+                            createVNode(_sfc_main$3p, {
                               "model-value": unref(dropdownValueFor)(w),
                               options: bindingOptions.value,
                               "onUpdate:modelValue": ($event) => unref(onBindingChange)(w, $event)
@@ -70881,7 +70885,7 @@ const _sfc_main$3k = /* @__PURE__ */ defineComponent({
             createBaseVNode("div", _hoisted_43$3, [
               createBaseVNode("div", _hoisted_44$2, [
                 createBaseVNode("span", _hoisted_45$2, toDisplayString$1(_ctx.$t("configSidebar.resultNode")), 1),
-                createVNode(_sfc_main$3o, {
+                createVNode(_sfc_main$3p, {
                   "model-value": unref(resultNodeModel),
                   options: unref(resultNodeOptions),
                   "onUpdate:modelValue": _cache2[5] || (_cache2[5] = ($event) => unref(onResultNodeChange)($event))
@@ -70889,7 +70893,7 @@ const _sfc_main$3k = /* @__PURE__ */ defineComponent({
               ]),
               unref(hasResultNode) && unref(resultTypeOptions).length > 1 ? (openBlock(), createElementBlock("div", _hoisted_46$2, [
                 createBaseVNode("span", _hoisted_47$2, toDisplayString$1(_ctx.$t("configSidebar.resultType.label")), 1),
-                createVNode(_sfc_main$3o, {
+                createVNode(_sfc_main$3p, {
                   "model-value": unref(resultType),
                   options: unref(resultTypeOptions),
                   "onUpdate:modelValue": _cache2[6] || (_cache2[6] = ($event) => unref(onResultTypeChange)($event))
@@ -71051,34 +71055,34 @@ function useStageWorkflowList(kind, isActive2, onKinds) {
     importFile
   };
 }
-const _hoisted_1$4S = { class: "ctv:flex ctv:flex-col ctv:gap-1.5" };
-const _hoisted_2$35 = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
-const _hoisted_3$30 = { class: "ctv:text-3xs ctv:font-mono ctv:py-px ctv:px-1.5 ctv:rounded-lg ctv:bg-base-foreground/5 ctv:text-muted-foreground" };
-const _hoisted_4$2B = ["title", "disabled"];
-const _hoisted_5$2r = ["title", "disabled"];
-const _hoisted_6$2f = ["disabled"];
-const _hoisted_7$1O = {
+const _hoisted_1$4T = { class: "ctv:flex ctv:flex-col ctv:gap-1.5" };
+const _hoisted_2$36 = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
+const _hoisted_3$31 = { class: "ctv:text-3xs ctv:font-mono ctv:py-px ctv:px-1.5 ctv:rounded-lg ctv:bg-base-foreground/5 ctv:text-muted-foreground" };
+const _hoisted_4$2C = ["title", "disabled"];
+const _hoisted_5$2s = ["title", "disabled"];
+const _hoisted_6$2g = ["disabled"];
+const _hoisted_7$1P = {
   key: 0,
   class: "ctv:py-1.5 ctv:px-2 ctv:text-xs ctv:rounded ctv:bg-destructive-background/15 ctv:border ctv:border-destructive-background/50 ctv:text-destructive-background"
 };
-const _hoisted_8$1s = {
+const _hoisted_8$1t = {
   key: 1,
   class: "ctv:py-3 ctv:text-center ctv:italic ctv:text-muted-foreground/60"
 };
-const _hoisted_9$1k = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-wrap" };
-const _hoisted_10$19 = { class: "ctv:font-semibold ctv:truncate" };
-const _hoisted_11$10 = ["title"];
-const _hoisted_12$U = ["title"];
-const _hoisted_13$O = ["title"];
-const _hoisted_14$L = ["title"];
-const _hoisted_15$F = ["title"];
+const _hoisted_9$1l = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-wrap" };
+const _hoisted_10$1a = { class: "ctv:font-semibold ctv:truncate" };
+const _hoisted_11$11 = ["title"];
+const _hoisted_12$V = ["title"];
+const _hoisted_13$P = ["title"];
+const _hoisted_14$M = ["title"];
+const _hoisted_15$G = ["title"];
 const _hoisted_16$A = ["title"];
 const _hoisted_17$y = ["title"];
 const _hoisted_18$v = ["title"];
 const badge = "ctv:inline-flex ctv:items-center ctv:gap-1 ctv:py-px ctv:px-1.5 ctv:rounded ctv:text-3xs ctv:whitespace-nowrap";
 const iconBtn = "ctv:shrink-0 ctv:flex ctv:items-center ctv:justify-center ctv:size-6 ctv:rounded-sm ctv:cursor-pointer ctv:text-xs ctv:border-none ctv:bg-transparent ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:disabled:pointer-events-none ctv:disabled:opacity-50";
 const importBtn = "ctv:inline-flex ctv:items-center ctv:gap-1 ctv:h-6 ctv:px-2 ctv:rounded-sm ctv:text-xs ctv:font-medium ctv:cursor-pointer ctv:border-none ctv:text-secondary-foreground ctv:bg-secondary-background ctv:hover:bg-secondary-background-hover ctv:disabled:pointer-events-none ctv:disabled:opacity-50";
-const _sfc_main$3j = /* @__PURE__ */ defineComponent({
+const _sfc_main$3k = /* @__PURE__ */ defineComponent({
   __name: "StageWorkflowList",
   props: {
     kind: {},
@@ -71105,9 +71109,9 @@ const _sfc_main$3j = /* @__PURE__ */ defineComponent({
     );
     __expose({ reload });
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$4S, [
-        createBaseVNode("div", _hoisted_2$35, [
-          createBaseVNode("span", _hoisted_3$30, toDisplayString$1(unref(rows).length), 1),
+      return openBlock(), createElementBlock("div", _hoisted_1$4T, [
+        createBaseVNode("div", _hoisted_2$36, [
+          createBaseVNode("span", _hoisted_3$31, toDisplayString$1(unref(rows).length), 1),
           _cache2[4] || (_cache2[4] = createBaseVNode("span", { class: "ctv:flex-1" }, null, -1)),
           createBaseVNode("button", {
             class: normalizeClass(iconBtn),
@@ -71119,7 +71123,7 @@ const _sfc_main$3j = /* @__PURE__ */ defineComponent({
             createBaseVNode("i", {
               class: normalizeClass(["pi pi-refresh", unref(loading2) ? "pi-spin" : ""])
             }, null, 2)
-          ], 8, _hoisted_4$2B),
+          ], 8, _hoisted_4$2C),
           createBaseVNode("button", {
             class: normalizeClass(importBtn),
             title: _ctx.$t("stageManager.rescanTooltip"),
@@ -71131,7 +71135,7 @@ const _sfc_main$3j = /* @__PURE__ */ defineComponent({
               class: normalizeClass(["pi pi-sync", unref(rescanBusy) ? "pi-spin" : ""])
             }, null, 2),
             createTextVNode(" " + toDisplayString$1(_ctx.$t("stageManager.rescan")), 1)
-          ], 8, _hoisted_5$2r),
+          ], 8, _hoisted_5$2s),
           createBaseVNode("button", {
             class: normalizeClass(importBtn),
             disabled: unref(importBusy),
@@ -71140,26 +71144,26 @@ const _sfc_main$3j = /* @__PURE__ */ defineComponent({
           }, [
             _cache2[3] || (_cache2[3] = createBaseVNode("i", { class: "pi pi-upload" }, null, -1)),
             createTextVNode(" " + toDisplayString$1(_ctx.$t("stageManager.import")), 1)
-          ], 8, _hoisted_6$2f)
+          ], 8, _hoisted_6$2g)
         ]),
-        unref(loadError) ? (openBlock(), createElementBlock("div", _hoisted_7$1O, toDisplayString$1(unref(loadError)), 1)) : !unref(loading2) && unref(rows).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_8$1s, toDisplayString$1(_ctx.$t("stageManager.emptyWorkflows")), 1)) : createCommentVNode("", true),
+        unref(loadError) ? (openBlock(), createElementBlock("div", _hoisted_7$1P, toDisplayString$1(unref(loadError)), 1)) : !unref(loading2) && unref(rows).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_8$1t, toDisplayString$1(_ctx.$t("stageManager.emptyWorkflows")), 1)) : createCommentVNode("", true),
         (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(rows), (w) => {
           return openBlock(), createElementBlock("div", {
             key: w.id,
             class: "ctv:flex ctv:flex-col ctv:gap-0.5 ctv:py-1.5 ctv:px-2 ctv:rounded ctv:border ctv:border-border-subtle"
           }, [
-            createBaseVNode("div", _hoisted_9$1k, [
-              createBaseVNode("span", _hoisted_10$19, toDisplayString$1(w.label), 1),
+            createBaseVNode("div", _hoisted_9$1l, [
+              createBaseVNode("span", _hoisted_10$1a, toDisplayString$1(w.label), 1),
               unref(recentAdded).has(w.label) ? (openBlock(), createElementBlock("span", {
                 key: 0,
                 class: normalizeClass([badge, "ctv:bg-success-background/15 ctv:text-success-background"]),
                 title: _ctx.$t("stageManager.badge.newHint")
-              }, toDisplayString$1(_ctx.$t("stageManager.badge.new")), 11, _hoisted_11$10)) : createCommentVNode("", true),
+              }, toDisplayString$1(_ctx.$t("stageManager.badge.new")), 11, _hoisted_11$11)) : createCommentVNode("", true),
               w.builtin ? (openBlock(), createElementBlock("span", {
                 key: 1,
                 class: normalizeClass([badge, "ctv:bg-base-foreground/10 ctv:text-muted-foreground"]),
                 title: _ctx.$t("stageManager.badge.builtinHint")
-              }, toDisplayString$1(_ctx.$t("stageManager.badge.builtin")), 11, _hoisted_12$U)) : createCommentVNode("", true),
+              }, toDisplayString$1(_ctx.$t("stageManager.badge.builtin")), 11, _hoisted_12$V)) : createCommentVNode("", true),
               w.link_type === unref(LINK_TYPE_NATIVE) ? (openBlock(), createElementBlock("span", {
                 key: 2,
                 class: normalizeClass([badge, "ctv:bg-primary-background/10 ctv:text-primary-foreground"]),
@@ -71167,7 +71171,7 @@ const _sfc_main$3j = /* @__PURE__ */ defineComponent({
               }, [
                 _cache2[5] || (_cache2[5] = createBaseVNode("i", { class: "pi pi-link ctv:text-3xs" }, null, -1)),
                 createTextVNode(" " + toDisplayString$1(_ctx.$t("stageManager.badge.linked")), 1)
-              ], 10, _hoisted_13$O)) : createCommentVNode("", true),
+              ], 10, _hoisted_13$P)) : createCommentVNode("", true),
               !w.file_exists ? (openBlock(), createElementBlock("span", {
                 key: 3,
                 class: normalizeClass([badge, "ctv:bg-destructive-background/15 ctv:text-destructive-background"]),
@@ -71175,14 +71179,14 @@ const _sfc_main$3j = /* @__PURE__ */ defineComponent({
               }, [
                 _cache2[6] || (_cache2[6] = createBaseVNode("i", { class: "pi pi-exclamation-triangle ctv:text-3xs" }, null, -1)),
                 createTextVNode(" " + toDisplayString$1(_ctx.$t("stageManager.badge.fileMissing")), 1)
-              ], 10, _hoisted_14$L)) : w.gui_valid === false ? (openBlock(), createElementBlock("span", {
+              ], 10, _hoisted_14$M)) : w.gui_valid === false ? (openBlock(), createElementBlock("span", {
                 key: 4,
                 class: normalizeClass([badge, "ctv:bg-warning-background/15 ctv:text-warning-background"]),
                 title: _ctx.$t("stageManager.badge.notGuiHint")
               }, [
                 _cache2[7] || (_cache2[7] = createBaseVNode("i", { class: "pi pi-exclamation-triangle ctv:text-3xs" }, null, -1)),
                 createTextVNode(" " + toDisplayString$1(_ctx.$t("stageManager.badge.notGui")), 1)
-              ], 10, _hoisted_15$F)) : createCommentVNode("", true),
+              ], 10, _hoisted_15$G)) : createCommentVNode("", true),
               w.file_exists && w.gui_valid !== false && !w.has_api ? (openBlock(), createElementBlock("span", {
                 key: 5,
                 class: normalizeClass([badge, "ctv:bg-base-foreground/5 ctv:text-muted-foreground"]),
@@ -71419,21 +71423,21 @@ function useStageParamForm(activeKind) {
     onDelete
   };
 }
-const _hoisted_1$4R = { class: "ctv:flex ctv:flex-col ctv:size-full ctv:overflow-hidden ctv:text-xs ctv:text-base-foreground" };
-const _hoisted_2$34 = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:py-1.5 ctv:px-2.5 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle" };
-const _hoisted_3$2$ = { class: "ctv:flex-1 ctv:font-semibold ctv:text-sm" };
-const _hoisted_4$2A = { class: "ctv:w-28" };
-const _hoisted_5$2q = { class: "ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-2.5 ctv:flex ctv:flex-col ctv:gap-2.5" };
-const _hoisted_6$2e = ["aria-expanded"];
-const _hoisted_7$1N = { class: "ctv:flex-1 ctv:text-left" };
-const _hoisted_8$1r = ["aria-expanded"];
-const _hoisted_9$1j = { class: "ctv:flex-1 ctv:text-left" };
-const _hoisted_10$18 = { class: "ctv:mt-1.5 ctv:flex ctv:flex-col ctv:gap-2.5" };
-const _hoisted_11$$ = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2 ctv:rounded ctv:border ctv:border-border-subtle ctv:bg-secondary-background/40" };
-const _hoisted_12$T = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:opacity-60" };
-const _hoisted_13$N = { class: "ctv:flex ctv:gap-1.5" };
-const _hoisted_14$K = { class: "ctv:flex-1" };
-const _hoisted_15$E = { class: "ctv:flex-1" };
+const _hoisted_1$4S = { class: "ctv:flex ctv:flex-col ctv:size-full ctv:overflow-hidden ctv:text-xs ctv:text-base-foreground" };
+const _hoisted_2$35 = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:py-1.5 ctv:px-2.5 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle" };
+const _hoisted_3$30 = { class: "ctv:flex-1 ctv:font-semibold ctv:text-sm" };
+const _hoisted_4$2B = { class: "ctv:w-28" };
+const _hoisted_5$2r = { class: "ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-2.5 ctv:flex ctv:flex-col ctv:gap-2.5" };
+const _hoisted_6$2f = ["aria-expanded"];
+const _hoisted_7$1O = { class: "ctv:flex-1 ctv:text-left" };
+const _hoisted_8$1s = ["aria-expanded"];
+const _hoisted_9$1k = { class: "ctv:flex-1 ctv:text-left" };
+const _hoisted_10$19 = { class: "ctv:mt-1.5 ctv:flex ctv:flex-col ctv:gap-2.5" };
+const _hoisted_11$10 = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2 ctv:rounded ctv:border ctv:border-border-subtle ctv:bg-secondary-background/40" };
+const _hoisted_12$U = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:opacity-60" };
+const _hoisted_13$O = { class: "ctv:flex ctv:gap-1.5" };
+const _hoisted_14$L = { class: "ctv:flex-1" };
+const _hoisted_15$F = { class: "ctv:flex-1" };
 const _hoisted_16$z = { class: "ctv:flex-1" };
 const _hoisted_17$x = {
   key: 0,
@@ -71448,11 +71452,11 @@ const _hoisted_20$n = {
   key: 1,
   class: "ctv:flex-1"
 };
-const _hoisted_21$m = {
+const _hoisted_21$l = {
   key: 0,
   class: "ctv:py-4 ctv:text-center ctv:italic ctv:text-muted-foreground/60"
 };
-const _hoisted_22$l = { class: "ctv:flex-1 ctv:min-w-0" };
+const _hoisted_22$k = { class: "ctv:flex-1 ctv:min-w-0" };
 const _hoisted_23$j = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
 const _hoisted_24$h = { class: "ctv:truncate ctv:font-semibold" };
 const _hoisted_25$h = {
@@ -71466,7 +71470,7 @@ const fieldRow = "ctv:flex ctv:flex-col ctv:gap-0.5";
 const fieldLabel = "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:opacity-55";
 const primaryBtn = "ctv:inline-flex ctv:items-center ctv:h-6 ctv:px-2.5 ctv:rounded-sm ctv:text-xs ctv:font-medium ctv:cursor-pointer ctv:border-none ctv:bg-primary-background ctv:text-base-foreground ctv:hover:bg-primary-background-hover";
 const deleteBtn = "ctv:shrink-0 ctv:flex ctv:items-center ctv:justify-center ctv:size-5 ctv:rounded-full ctv:cursor-pointer ctv:text-xs ctv:border-none ctv:bg-transparent ctv:text-destructive-background ctv:hover:bg-destructive-background/10";
-const _sfc_main$3i = /* @__PURE__ */ defineComponent({
+const _sfc_main$3j = /* @__PURE__ */ defineComponent({
   __name: "StageParamsPanel",
   props: {
     active: { type: Boolean }
@@ -71485,18 +71489,18 @@ const _sfc_main$3i = /* @__PURE__ */ defineComponent({
       onDelete
     } = useStageParamForm(activeKind);
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$4R, [
-        createBaseVNode("div", _hoisted_2$34, [
-          createBaseVNode("span", _hoisted_3$2$, toDisplayString$1(_ctx.$t("stageManager.title")), 1),
-          createBaseVNode("div", _hoisted_4$2A, [
-            createVNode(_sfc_main$3o, {
+      return openBlock(), createElementBlock("div", _hoisted_1$4S, [
+        createBaseVNode("div", _hoisted_2$35, [
+          createBaseVNode("span", _hoisted_3$30, toDisplayString$1(_ctx.$t("stageManager.title")), 1),
+          createBaseVNode("div", _hoisted_4$2B, [
+            createVNode(_sfc_main$3p, {
               "model-value": unref(activeKind),
               options: unref(kindOptions),
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => activeKind.value = String($event))
             }, null, 8, ["model-value", "options"])
           ])
         ]),
-        createBaseVNode("div", _hoisted_5$2q, [
+        createBaseVNode("div", _hoisted_5$2r, [
           createBaseVNode("section", null, [
             createBaseVNode("button", {
               class: normalizeClass(sectionToggle),
@@ -71506,9 +71510,9 @@ const _sfc_main$3i = /* @__PURE__ */ defineComponent({
               createBaseVNode("i", {
                 class: normalizeClass(["pi", unref(wfCollapsed) ? "pi-chevron-right" : "pi-chevron-down", "ctv:w-2.5 ctv:text-2xs ctv:text-muted-foreground"])
               }, null, 2),
-              createBaseVNode("span", _hoisted_7$1N, toDisplayString$1(_ctx.$t("stageManager.section.workflows")), 1)
-            ], 8, _hoisted_6$2e),
-            withDirectives(createVNode(_sfc_main$3j, {
+              createBaseVNode("span", _hoisted_7$1O, toDisplayString$1(_ctx.$t("stageManager.section.workflows")), 1)
+            ], 8, _hoisted_6$2f),
+            withDirectives(createVNode(_sfc_main$3k, {
               kind: unref(activeKind),
               active: __props.active,
               class: "ctv:mt-1.5",
@@ -71529,18 +71533,18 @@ const _sfc_main$3i = /* @__PURE__ */ defineComponent({
               createBaseVNode("i", {
                 class: normalizeClass(["pi", unref(paramsCollapsed) ? "pi-chevron-right" : "pi-chevron-down", "ctv:w-2.5 ctv:text-2xs ctv:text-muted-foreground"])
               }, null, 2),
-              createBaseVNode("span", _hoisted_9$1j, toDisplayString$1(_ctx.$t("stageManager.section.params")), 1)
-            ], 8, _hoisted_8$1r),
-            withDirectives(createBaseVNode("div", _hoisted_10$18, [
-              createBaseVNode("div", _hoisted_11$$, [
-                createBaseVNode("div", _hoisted_12$T, toDisplayString$1(_ctx.$t("stageParams.sidebar.new")), 1),
+              createBaseVNode("span", _hoisted_9$1k, toDisplayString$1(_ctx.$t("stageManager.section.params")), 1)
+            ], 8, _hoisted_8$1s),
+            withDirectives(createBaseVNode("div", _hoisted_10$19, [
+              createBaseVNode("div", _hoisted_11$10, [
+                createBaseVNode("div", _hoisted_12$U, toDisplayString$1(_ctx.$t("stageParams.sidebar.new")), 1),
                 createBaseVNode("label", {
                   class: normalizeClass(fieldRow)
                 }, [
                   createBaseVNode("span", {
                     class: normalizeClass(fieldLabel)
                   }, toDisplayString$1(_ctx.$t("stageParams.sidebar.label")), 1),
-                  createVNode(_sfc_main$3q, {
+                  createVNode(_sfc_main$3r, {
                     "model-value": unref(form).label,
                     placeholder: _ctx.$t("stageParams.sidebar.label"),
                     "onUpdate:modelValue": _cache2[3] || (_cache2[3] = ($event) => unref(form).label = $event)
@@ -71552,7 +71556,7 @@ const _sfc_main$3i = /* @__PURE__ */ defineComponent({
                   createBaseVNode("span", {
                     class: normalizeClass(fieldLabel)
                   }, toDisplayString$1(_ctx.$t("stageParams.sidebar.type")), 1),
-                  createVNode(_sfc_main$3o, {
+                  createVNode(_sfc_main$3p, {
                     "model-value": unref(form).type,
                     options: unref(typeOptions),
                     "onUpdate:modelValue": _cache2[4] || (_cache2[4] = ($event) => unref(form).type = String($event))
@@ -71565,28 +71569,28 @@ const _sfc_main$3i = /* @__PURE__ */ defineComponent({
                   createBaseVNode("span", {
                     class: normalizeClass(fieldLabel)
                   }, toDisplayString$1(_ctx.$t("stageParams.sidebar.options")), 1),
-                  createVNode(_sfc_main$3q, {
+                  createVNode(_sfc_main$3r, {
                     "model-value": unref(form).options,
                     placeholder: "a, b, c",
                     "onUpdate:modelValue": _cache2[5] || (_cache2[5] = ($event) => unref(form).options = $event)
                   }, null, 8, ["model-value"])
                 ])) : createCommentVNode("", true),
                 unref(form).type === "int" || unref(form).type === "float" ? (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
-                  createBaseVNode("div", _hoisted_13$N, [
-                    createBaseVNode("label", _hoisted_14$K, [
+                  createBaseVNode("div", _hoisted_13$O, [
+                    createBaseVNode("label", _hoisted_14$L, [
                       createBaseVNode("span", {
                         class: normalizeClass(fieldLabel)
                       }, toDisplayString$1(_ctx.$t("stageParams.sidebar.min")), 1),
-                      createVNode(_sfc_main$3n, {
+                      createVNode(_sfc_main$3o, {
                         "model-value": unref(form).min,
                         "onUpdate:modelValue": _cache2[6] || (_cache2[6] = ($event) => unref(form).min = $event)
                       }, null, 8, ["model-value"])
                     ]),
-                    createBaseVNode("label", _hoisted_15$E, [
+                    createBaseVNode("label", _hoisted_15$F, [
                       createBaseVNode("span", {
                         class: normalizeClass(fieldLabel)
                       }, toDisplayString$1(_ctx.$t("stageParams.sidebar.max")), 1),
-                      createVNode(_sfc_main$3n, {
+                      createVNode(_sfc_main$3o, {
                         "model-value": unref(form).max,
                         "onUpdate:modelValue": _cache2[7] || (_cache2[7] = ($event) => unref(form).max = $event)
                       }, null, 8, ["model-value"])
@@ -71595,7 +71599,7 @@ const _sfc_main$3i = /* @__PURE__ */ defineComponent({
                       createBaseVNode("span", {
                         class: normalizeClass(fieldLabel)
                       }, toDisplayString$1(_ctx.$t("stageParams.sidebar.step")), 1),
-                      createVNode(_sfc_main$3n, {
+                      createVNode(_sfc_main$3o, {
                         "model-value": unref(form).step,
                         "onUpdate:modelValue": _cache2[8] || (_cache2[8] = ($event) => unref(form).step = $event)
                       }, null, 8, ["model-value"])
@@ -71610,7 +71614,7 @@ const _sfc_main$3i = /* @__PURE__ */ defineComponent({
                   createBaseVNode("span", {
                     class: normalizeClass(fieldLabel)
                   }, toDisplayString$1(_ctx.$t("stageParams.sidebar.placeholder")), 1),
-                  createVNode(_sfc_main$3q, {
+                  createVNode(_sfc_main$3r, {
                     "model-value": unref(form).placeholder,
                     "onUpdate:modelValue": _cache2[9] || (_cache2[9] = ($event) => unref(form).placeholder = $event)
                   }, null, 8, ["model-value"])
@@ -71621,20 +71625,20 @@ const _sfc_main$3i = /* @__PURE__ */ defineComponent({
                   createBaseVNode("span", {
                     class: normalizeClass(fieldLabel)
                   }, toDisplayString$1(_ctx.$t("stageParams.sidebar.default")), 1),
-                  unref(form).type === "boolean" ? (openBlock(), createBlock(_sfc_main$3m, {
+                  unref(form).type === "boolean" ? (openBlock(), createBlock(_sfc_main$3n, {
                     key: 0,
                     "model-value": unref(form).boolDefault,
                     "onUpdate:modelValue": _cache2[10] || (_cache2[10] = ($event) => unref(form).boolDefault = $event)
-                  }, null, 8, ["model-value"])) : unref(form).type === "int" || unref(form).type === "float" ? (openBlock(), createBlock(_sfc_main$3n, {
+                  }, null, 8, ["model-value"])) : unref(form).type === "int" || unref(form).type === "float" ? (openBlock(), createBlock(_sfc_main$3o, {
                     key: 1,
                     "model-value": unref(form).numDefault,
                     "onUpdate:modelValue": _cache2[11] || (_cache2[11] = ($event) => unref(form).numDefault = $event)
-                  }, null, 8, ["model-value"])) : unref(form).type === "combo" ? (openBlock(), createBlock(_sfc_main$3o, {
+                  }, null, 8, ["model-value"])) : unref(form).type === "combo" ? (openBlock(), createBlock(_sfc_main$3p, {
                     key: 2,
                     "model-value": unref(form).default,
                     options: unref(comboDefaultOptions),
                     "onUpdate:modelValue": _cache2[12] || (_cache2[12] = ($event) => unref(form).default = String($event))
-                  }, null, 8, ["model-value", "options"])) : (openBlock(), createBlock(_sfc_main$3q, {
+                  }, null, 8, ["model-value", "options"])) : (openBlock(), createBlock(_sfc_main$3r, {
                     key: 3,
                     "model-value": unref(form).default,
                     "onUpdate:modelValue": _cache2[13] || (_cache2[13] = ($event) => unref(form).default = $event)
@@ -71649,13 +71653,13 @@ const _sfc_main$3i = /* @__PURE__ */ defineComponent({
                   }, toDisplayString$1(_ctx.$t("stageParams.sidebar.create")), 1)
                 ])
               ]),
-              unref(rows).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_21$m, toDisplayString$1(_ctx.$t("stageParams.sidebar.empty")), 1)) : createCommentVNode("", true),
+              unref(rows).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_21$l, toDisplayString$1(_ctx.$t("stageParams.sidebar.empty")), 1)) : createCommentVNode("", true),
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(rows), (p2) => {
                 return openBlock(), createElementBlock("div", {
                   key: p2.id,
                   class: "ctv:flex ctv:items-center ctv:gap-2 ctv:py-1.5 ctv:px-2 ctv:rounded ctv:border ctv:border-border-subtle"
                 }, [
-                  createBaseVNode("div", _hoisted_22$l, [
+                  createBaseVNode("div", _hoisted_22$k, [
                     createBaseVNode("div", _hoisted_23$j, [
                       createBaseVNode("span", _hoisted_24$h, toDisplayString$1(p2.label), 1),
                       p2.origin === 0 ? (openBlock(), createElementBlock("span", _hoisted_25$h, toDisplayString$1(_ctx.$t("stageParams.sidebar.system")), 1)) : createCommentVNode("", true)
@@ -71686,16 +71690,16 @@ const _sfc_main$3i = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$4Q = { class: "ctv:flex ctv:flex-col ctv:size-full ctv:overflow-hidden ctv:text-base-foreground" };
-const _hoisted_2$33 = ["aria-selected", "onClick"];
-const _hoisted_3$2_ = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
-const _hoisted_4$2z = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
-const _hoisted_5$2p = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
-const _hoisted_6$2d = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
-const _hoisted_7$1M = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
-const _hoisted_8$1q = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
-const _hoisted_9$1i = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
-const _sfc_main$3h = /* @__PURE__ */ defineComponent({
+const _hoisted_1$4R = { class: "ctv:flex ctv:flex-col ctv:size-full ctv:overflow-hidden ctv:text-base-foreground" };
+const _hoisted_2$34 = ["aria-selected", "onClick"];
+const _hoisted_3$2$ = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
+const _hoisted_4$2A = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
+const _hoisted_5$2q = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
+const _hoisted_6$2e = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
+const _hoisted_7$1N = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
+const _hoisted_8$1r = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
+const _hoisted_9$1j = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
+const _sfc_main$3i = /* @__PURE__ */ defineComponent({
   __name: "ComfyTVSidebar",
   setup(__props) {
     const TABS = [
@@ -71728,7 +71732,7 @@ const _sfc_main$3h = /* @__PURE__ */ defineComponent({
       ].join(" ");
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$4Q, [
+      return openBlock(), createElementBlock("div", _hoisted_1$4R, [
         createBaseVNode("div", {
           ref_key: "tabBar",
           ref: tabBar,
@@ -71743,51 +71747,51 @@ const _sfc_main$3h = /* @__PURE__ */ defineComponent({
               "aria-selected": unref(activeTab) === tab.id,
               class: normalizeClass(tabClass(unref(activeTab) === tab.id)),
               onClick: ($event) => activeTab.value = tab.id
-            }, toDisplayString$1(_ctx.$t(tab.labelKey)), 11, _hoisted_2$33);
+            }, toDisplayString$1(_ctx.$t(tab.labelKey)), 11, _hoisted_2$34);
           }), 64))
         ], 544),
-        withDirectives(createBaseVNode("div", _hoisted_3$2_, [
-          createVNode(_sfc_main$3k)
+        withDirectives(createBaseVNode("div", _hoisted_3$2$, [
+          createVNode(_sfc_main$3l)
         ], 512), [
           [vShow, unref(activeTab) === "workflow"]
         ]),
-        withDirectives(createBaseVNode("div", _hoisted_4$2z, [
-          createVNode(_sfc_main$3u, {
+        withDirectives(createBaseVNode("div", _hoisted_4$2A, [
+          createVNode(_sfc_main$3v, {
             active: unref(activeTab) === "assets"
           }, null, 8, ["active"])
         ], 512), [
           [vShow, unref(activeTab) === "assets"]
         ]),
-        withDirectives(createBaseVNode("div", _hoisted_5$2p, [
-          createVNode(_sfc_main$3t, {
+        withDirectives(createBaseVNode("div", _hoisted_5$2q, [
+          createVNode(_sfc_main$3u, {
             active: unref(activeTab) === "entries"
           }, null, 8, ["active"])
         ], 512), [
           [vShow, unref(activeTab) === "entries"]
         ]),
-        withDirectives(createBaseVNode("div", _hoisted_6$2d, [
-          createVNode(_sfc_main$3i, {
+        withDirectives(createBaseVNode("div", _hoisted_6$2e, [
+          createVNode(_sfc_main$3j, {
             active: unref(activeTab) === "params"
           }, null, 8, ["active"])
         ], 512), [
           [vShow, unref(activeTab) === "params"]
         ]),
-        withDirectives(createBaseVNode("div", _hoisted_7$1M, [
-          createVNode(_sfc_main$3s, {
+        withDirectives(createBaseVNode("div", _hoisted_7$1N, [
+          createVNode(_sfc_main$3t, {
             active: unref(activeTab) === "presets"
           }, null, 8, ["active"])
         ], 512), [
           [vShow, unref(activeTab) === "presets"]
         ]),
-        withDirectives(createBaseVNode("div", _hoisted_8$1q, [
-          createVNode(_sfc_main$3r, {
+        withDirectives(createBaseVNode("div", _hoisted_8$1r, [
+          createVNode(_sfc_main$3s, {
             active: unref(activeTab) === "resources"
           }, null, 8, ["active"])
         ], 512), [
           [vShow, unref(activeTab) === "resources"]
         ]),
-        withDirectives(createBaseVNode("div", _hoisted_9$1i, [
-          createVNode(_sfc_main$3p)
+        withDirectives(createBaseVNode("div", _hoisted_9$1j, [
+          createVNode(_sfc_main$3q)
         ], 512), [
           [vShow, unref(activeTab) === "servers"]
         ])
@@ -71795,7 +71799,7 @@ const _sfc_main$3h = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const ComfyTVSidebar = /* @__PURE__ */ _export_sfc(_sfc_main$3h, [["__scopeId", "data-v-97cbe8e1"]]);
+const ComfyTVSidebar = /* @__PURE__ */ _export_sfc(_sfc_main$3i, [["__scopeId", "data-v-97cbe8e1"]]);
 function toast$2(severity, summary, detail) {
   var _a2, _b2, _c;
   (_c = (_b2 = (_a2 = app == null ? void 0 : app.extensionManager) == null ? void 0 : _a2.toast) == null ? void 0 : _b2.add) == null ? void 0 : _c.call(_b2, { severity, summary, detail, life: 5e3 });
@@ -71916,27 +71920,27 @@ function useAssetPicker(getAddedIds = () => [], mediaTypes = ["image"]) {
     ensureHydrated
   };
 }
-const _hoisted_1$4P = { class: "ctv:flex ctv:gap-1.5 ctv:items-center" };
-const _hoisted_2$32 = ["placeholder"];
-const _hoisted_3$2Z = { class: "ctv:w-24 ctv:shrink-0" };
-const _hoisted_4$2y = ["disabled", "title"];
-const _hoisted_5$2o = { class: "comfytv-asset-scroll ctv:h-[224px] ctv:shrink-0 ctv:overflow-y-scroll" };
-const _hoisted_6$2c = {
+const _hoisted_1$4Q = { class: "ctv:flex ctv:gap-1.5 ctv:items-center" };
+const _hoisted_2$33 = ["placeholder"];
+const _hoisted_3$2_ = { class: "ctv:w-24 ctv:shrink-0" };
+const _hoisted_4$2z = ["disabled", "title"];
+const _hoisted_5$2p = { class: "comfytv-asset-scroll ctv:h-[224px] ctv:shrink-0 ctv:overflow-y-scroll" };
+const _hoisted_6$2d = {
   key: 0,
   class: "ctv:py-4 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60"
 };
-const _hoisted_7$1L = {
+const _hoisted_7$1M = {
   key: 1,
   class: "ctv:grid ctv:grid-cols-[repeat(auto-fill,minmax(64px,1fr))] ctv:gap-1"
 };
-const _hoisted_8$1p = ["title", "onClick"];
-const _hoisted_9$1h = ["src", "alt"];
-const _hoisted_10$17 = {
+const _hoisted_8$1q = ["title", "onClick"];
+const _hoisted_9$1i = ["src", "alt"];
+const _hoisted_10$18 = {
   key: 0,
   class: "ctv:absolute ctv:top-0.5 ctv:right-0.5 ctv:flex ctv:items-center ctv:justify-center ctv:size-4 ctv:rounded-full ctv:text-3xs ctv:leading-none ctv:bg-primary-background ctv:text-white"
 };
-const _hoisted_11$_ = { class: "ctv:w-full ctv:truncate ctv:py-0.5 ctv:px-1 ctv:text-left ctv:text-3xs ctv:text-muted-foreground" };
-const _sfc_main$3g = /* @__PURE__ */ defineComponent({
+const _hoisted_11$$ = { class: "ctv:w-full ctv:truncate ctv:py-0.5 ctv:px-1 ctv:text-left ctv:text-3xs ctv:text-muted-foreground" };
+const _sfc_main$3h = /* @__PURE__ */ defineComponent({
   __name: "AssetPickerPopup",
   props: {
     addedIds: {}
@@ -72005,7 +72009,7 @@ const _sfc_main$3g = /* @__PURE__ */ defineComponent({
         onDrop: _cache2[6] || (_cache2[6] = //@ts-ignore
         (...args) => unref(fileDrop).onDrop && unref(fileDrop).onDrop(...args))
       }, [
-        createBaseVNode("div", _hoisted_1$4P, [
+        createBaseVNode("div", _hoisted_1$4Q, [
           withDirectives(createBaseVNode("input", {
             ref_key: "searchEl",
             ref: searchEl,
@@ -72013,11 +72017,11 @@ const _sfc_main$3g = /* @__PURE__ */ defineComponent({
             type: "text",
             placeholder: _ctx.$t("promptAssets.search"),
             class: "ctv:flex-1 ctv:min-w-0 ctv:py-1 ctv:px-1.5 ctv:rounded-sm ctv:outline-none ctv:box-border ctv:text-xs ctv:leading-snug ctv:[font-family:inherit] ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-default ctv:focus:border-primary-background"
-          }, null, 8, _hoisted_2$32), [
+          }, null, 8, _hoisted_2$33), [
             [vModelText, unref(query)]
           ]),
-          createBaseVNode("div", _hoisted_3$2Z, [
-            createVNode(_sfc_main$3o, {
+          createBaseVNode("div", _hoisted_3$2_, [
+            createVNode(_sfc_main$3p, {
               "model-value": unref(filterValue),
               options: unref(categoryOptions),
               "onUpdate:modelValue": unref(setFilter)
@@ -72034,7 +72038,7 @@ const _sfc_main$3g = /* @__PURE__ */ defineComponent({
             })
           }, [
             createVNode(unref(IconUpload), { class: "ctv:size-3.5" })
-          ], 8, _hoisted_4$2y),
+          ], 8, _hoisted_4$2z),
           createBaseVNode("input", {
             ref_key: "fileInput",
             ref: fileInput,
@@ -72045,8 +72049,8 @@ const _sfc_main$3g = /* @__PURE__ */ defineComponent({
             onChange: onPickFiles
           }, null, 544)
         ]),
-        createBaseVNode("div", _hoisted_5$2o, [
-          unref(filtered).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_6$2c, toDisplayString$1(_ctx.$t("promptAssets.empty")), 1)) : (openBlock(), createElementBlock("div", _hoisted_7$1L, [
+        createBaseVNode("div", _hoisted_5$2p, [
+          unref(filtered).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_6$2d, toDisplayString$1(_ctx.$t("promptAssets.empty")), 1)) : (openBlock(), createElementBlock("div", _hoisted_7$1M, [
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(filtered), (asset) => {
               return openBlock(), createElementBlock("button", {
                 key: asset.id,
@@ -72067,12 +72071,12 @@ const _sfc_main$3g = /* @__PURE__ */ defineComponent({
                     "ctv:block ctv:w-full ctv:aspect-square ctv:object-cover",
                     unref(isAdded)(asset.id) ? "ctv:opacity-55" : ""
                   ])
-                }, null, 10, _hoisted_9$1h),
-                unref(isAdded)(asset.id) ? (openBlock(), createElementBlock("span", _hoisted_10$17, [..._cache2[7] || (_cache2[7] = [
+                }, null, 10, _hoisted_9$1i),
+                unref(isAdded)(asset.id) ? (openBlock(), createElementBlock("span", _hoisted_10$18, [..._cache2[7] || (_cache2[7] = [
                   createBaseVNode("i", { class: "pi pi-check" }, null, -1)
                 ])])) : createCommentVNode("", true),
-                createBaseVNode("span", _hoisted_11$_, toDisplayString$1(asset.name || "—"), 1)
-              ], 10, _hoisted_8$1p);
+                createBaseVNode("span", _hoisted_11$$, toDisplayString$1(asset.name || "—"), 1)
+              ], 10, _hoisted_8$1q);
             }), 128))
           ]))
         ])
@@ -72080,24 +72084,24 @@ const _sfc_main$3g = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$4O = { class: "ctv:py-1 ctv:px-2 ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_2$31 = {
+const _hoisted_1$4P = { class: "ctv:py-1 ctv:px-2 ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_2$32 = {
   key: 0,
   class: "ctv:py-1.5 ctv:px-2 ctv:italic ctv:text-muted-foreground"
 };
-const _hoisted_3$2Y = {
+const _hoisted_3$2Z = {
   key: 1,
   class: "ctv:py-1.5 ctv:px-2 ctv:text-destructive-background"
 };
-const _hoisted_4$2x = ["onClick"];
-const _hoisted_5$2n = { class: "ctv:shrink-0 ctv:font-mono ctv:text-muted-foreground" };
-const _hoisted_6$2b = { class: "ctv:flex-1 ctv:truncate ctv:text-left" };
-const _hoisted_7$1K = {
+const _hoisted_4$2y = ["onClick"];
+const _hoisted_5$2o = { class: "ctv:shrink-0 ctv:font-mono ctv:text-muted-foreground" };
+const _hoisted_6$2c = { class: "ctv:flex-1 ctv:truncate ctv:text-left" };
+const _hoisted_7$1L = {
   key: 0,
   class: "ctv:py-1.5 ctv:px-2 ctv:italic ctv:text-muted-foreground ctv:whitespace-normal"
 };
 const badgeClass = "ctv:shrink-0 ctv:py-px ctv:px-1 ctv:rounded-sm ctv:text-3xs ctv:bg-warning-background/15 ctv:text-warning-background";
-const _sfc_main$3f = /* @__PURE__ */ defineComponent({
+const _sfc_main$3g = /* @__PURE__ */ defineComponent({
   __name: "MentionSlotPopover",
   props: {
     x: {},
@@ -72129,8 +72133,8 @@ const _sfc_main$3f = /* @__PURE__ */ defineComponent({
         style: normalizeStyle({ left: `${__props.x}px`, top: `${__props.y}px` }),
         onKeydown: _cache2[0] || (_cache2[0] = withKeys(withModifiers(($event) => _ctx.$emit("close"), ["stop"]), ["escape"]))
       }, [
-        createBaseVNode("div", _hoisted_1$4O, toDisplayString$1(_ctx.$t("promptAssets.slotTitle")), 1),
-        __props.loading ? (openBlock(), createElementBlock("div", _hoisted_2$31, toDisplayString$1(_ctx.$t("configSidebar.loading")), 1)) : __props.error ? (openBlock(), createElementBlock("div", _hoisted_3$2Y, toDisplayString$1(__props.error), 1)) : (openBlock(), createElementBlock(Fragment$1, { key: 2 }, [
+        createBaseVNode("div", _hoisted_1$4P, toDisplayString$1(_ctx.$t("promptAssets.slotTitle")), 1),
+        __props.loading ? (openBlock(), createElementBlock("div", _hoisted_2$32, toDisplayString$1(_ctx.$t("configSidebar.loading")), 1)) : __props.error ? (openBlock(), createElementBlock("div", _hoisted_3$2Z, toDisplayString$1(__props.error), 1)) : (openBlock(), createElementBlock(Fragment$1, { key: 2 }, [
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(__props.options, (opt) => {
             return openBlock(), createElementBlock("button", {
               key: opt.slot,
@@ -72138,8 +72142,8 @@ const _sfc_main$3f = /* @__PURE__ */ defineComponent({
               class: normalizeClass(rowClass2(__props.currentSlot === opt.slot)),
               onClick: ($event) => _ctx.$emit("pick", opt.slot)
             }, [
-              createBaseVNode("span", _hoisted_5$2n, "#" + toDisplayString$1(opt.slot), 1),
-              createBaseVNode("span", _hoisted_6$2b, toDisplayString$1(opt.nodeTitles.join(" / ")), 1),
+              createBaseVNode("span", _hoisted_5$2o, "#" + toDisplayString$1(opt.slot), 1),
+              createBaseVNode("span", _hoisted_6$2c, toDisplayString$1(opt.nodeTitles.join(" / ")), 1),
               __props.wiredSlots.includes(opt.slot) ? (openBlock(), createElementBlock("span", {
                 key: 0,
                 class: normalizeClass(badgeClass)
@@ -72147,9 +72151,9 @@ const _sfc_main$3f = /* @__PURE__ */ defineComponent({
                 key: 1,
                 class: normalizeClass(badgeClass)
               }, toDisplayString$1(_ctx.$t("promptAssets.slotClaimed")), 1)) : createCommentVNode("", true)
-            ], 10, _hoisted_4$2x);
+            ], 10, _hoisted_4$2y);
           }), 128)),
-          __props.options.length === 0 ? (openBlock(), createElementBlock("div", _hoisted_7$1K, toDisplayString$1(_ctx.$t("promptAssets.slotEmpty")), 1)) : createCommentVNode("", true)
+          __props.options.length === 0 ? (openBlock(), createElementBlock("div", _hoisted_7$1L, toDisplayString$1(_ctx.$t("promptAssets.slotEmpty")), 1)) : createCommentVNode("", true)
         ], 64))
       ], 36);
     };
@@ -72357,30 +72361,30 @@ function useImageReferences(getNode, rootEl) {
     init
   };
 }
-const _hoisted_1$4N = { class: "ctv:flex ctv:items-center ctv:gap-2" };
-const _hoisted_2$30 = { class: "ctv:text-[11px] ctv:font-semibold" };
-const _hoisted_3$2X = { class: "ctv:text-3xs ctv:text-muted-foreground ctv:font-mono" };
-const _hoisted_4$2w = ["title"];
-const _hoisted_5$2m = {
+const _hoisted_1$4O = { class: "ctv:flex ctv:items-center ctv:gap-2" };
+const _hoisted_2$31 = { class: "ctv:text-[11px] ctv:font-semibold" };
+const _hoisted_3$2Y = { class: "ctv:text-3xs ctv:text-muted-foreground ctv:font-mono" };
+const _hoisted_4$2x = ["title"];
+const _hoisted_5$2n = {
   key: 1,
   class: "ctv:flex ctv:flex-wrap ctv:gap-1.5"
 };
-const _hoisted_6$2a = ["title", "onClick"];
-const _hoisted_7$1J = ["src", "alt"];
-const _hoisted_8$1o = {
+const _hoisted_6$2b = ["title", "onClick"];
+const _hoisted_7$1K = ["src", "alt"];
+const _hoisted_8$1p = {
   key: 1,
   class: "ctv:flex ctv:items-center ctv:justify-center ctv:size-full ctv:p-1 ctv:text-center ctv:text-3xs ctv:italic ctv:text-muted-foreground/60"
 };
-const _hoisted_9$1g = ["title", "onClick"];
-const _hoisted_10$16 = {
+const _hoisted_9$1h = ["title", "onClick"];
+const _hoisted_10$17 = {
   key: 2,
   class: "ctv:text-2xs ctv:italic ctv:text-muted-foreground/60"
 };
-const _hoisted_11$Z = {
+const _hoisted_11$_ = {
   key: 3,
   class: "ctv:flex ctv:flex-col ctv:gap-0.5 ctv:py-1 ctv:px-1.5 ctv:rounded ctv:text-2xs ctv:bg-warning-background/10 ctv:border ctv:border-warning-background/40 ctv:text-warning-background"
 };
-const _sfc_main$3e = /* @__PURE__ */ defineComponent({
+const _sfc_main$3f = /* @__PURE__ */ defineComponent({
   __name: "ImageReferences",
   props: {
     node: {}
@@ -72434,9 +72438,9 @@ const _sfc_main$3e = /* @__PURE__ */ defineComponent({
         onDrop: _cache2[5] || (_cache2[5] = //@ts-ignore
         (...args) => unref(fileDrop).onDrop && unref(fileDrop).onDrop(...args))
       }, [
-        createBaseVNode("div", _hoisted_1$4N, [
-          createBaseVNode("span", _hoisted_2$30, toDisplayString$1(_ctx.$t("imageRefs.title")), 1),
-          createBaseVNode("span", _hoisted_3$2X, toDisplayString$1(unref(refs).length || ""), 1),
+        createBaseVNode("div", _hoisted_1$4O, [
+          createBaseVNode("span", _hoisted_2$31, toDisplayString$1(_ctx.$t("imageRefs.title")), 1),
+          createBaseVNode("span", _hoisted_3$2Y, toDisplayString$1(unref(refs).length || ""), 1),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(["ctv:ml-auto", unref(plusBtnClass)]),
@@ -72446,15 +72450,15 @@ const _sfc_main$3e = /* @__PURE__ */ defineComponent({
             createBaseVNode("i", {
               class: normalizeClass(["pi", unref(pickerOpen) ? "pi-times" : "pi-plus"])
             }, null, 2)
-          ], 10, _hoisted_4$2w)
+          ], 10, _hoisted_4$2x)
         ]),
-        unref(pickerOpen) ? (openBlock(), createBlock(_sfc_main$3g, {
+        unref(pickerOpen) ? (openBlock(), createBlock(_sfc_main$3h, {
           key: 0,
           "added-ids": unref(refs).map((r) => r.asset_id),
           onSelect: unref(onAddAsset),
           onClose: _cache2[1] || (_cache2[1] = ($event) => pickerOpen.value = false)
         }, null, 8, ["added-ids", "onSelect"])) : createCommentVNode("", true),
-        unref(refs).length ? (openBlock(), createElementBlock("div", _hoisted_5$2m, [
+        unref(refs).length ? (openBlock(), createElementBlock("div", _hoisted_5$2n, [
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(refs), (ref2, i) => {
             return openBlock(), createElementBlock("div", {
               key: ref2.asset_id,
@@ -72469,7 +72473,7 @@ const _sfc_main$3e = /* @__PURE__ */ defineComponent({
                 alt: unref(assetOf)(ref2).name,
                 class: "ctv:block ctv:size-full ctv:object-cover",
                 draggable: "false"
-              }, null, 8, _hoisted_7$1J)) : (openBlock(), createElementBlock("div", _hoisted_8$1o, toDisplayString$1(_ctx.$t("promptAssets.missing", { id: ref2.asset_id })), 1)),
+              }, null, 8, _hoisted_7$1K)) : (openBlock(), createElementBlock("div", _hoisted_8$1p, toDisplayString$1(_ctx.$t("promptAssets.missing", { id: ref2.asset_id })), 1)),
               createBaseVNode("span", {
                 class: "ctv:absolute ctv:bottom-0 ctv:inset-x-0 ctv:py-0.5 ctv:px-1 ctv:text-3xs ctv:font-semibold ctv:overflow-hidden ctv:whitespace-nowrap ctv:text-ellipsis ctv:pointer-events-none ctv:bg-linear-to-b ctv:from-transparent ctv:to-black/75",
                 style: normalizeStyle({ color: unref(slotColor)(ref2.slot) })
@@ -72481,11 +72485,11 @@ const _sfc_main$3e = /* @__PURE__ */ defineComponent({
                 onClick: withModifiers(($event) => unref(removeRef)(i), ["stop"])
               }, [..._cache2[6] || (_cache2[6] = [
                 createBaseVNode("i", { class: "pi pi-times" }, null, -1)
-              ])], 10, _hoisted_9$1g)
-            ], 12, _hoisted_6$2a);
+              ])], 10, _hoisted_9$1h)
+            ], 12, _hoisted_6$2b);
           }), 128))
-        ])) : (openBlock(), createElementBlock("div", _hoisted_10$16, toDisplayString$1(_ctx.$t("imageRefs.empty")), 1)),
-        unref(slotWarnings).length ? (openBlock(), createElementBlock("div", _hoisted_11$Z, [
+        ])) : (openBlock(), createElementBlock("div", _hoisted_10$17, toDisplayString$1(_ctx.$t("imageRefs.empty")), 1)),
+        unref(slotWarnings).length ? (openBlock(), createElementBlock("div", _hoisted_11$_, [
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(slotWarnings), (w, i) => {
             return openBlock(), createElementBlock("div", { key: i }, [
               _cache2[7] || (_cache2[7] = createBaseVNode("i", { class: "pi pi-exclamation-triangle" }, null, -1)),
@@ -72493,7 +72497,7 @@ const _sfc_main$3e = /* @__PURE__ */ defineComponent({
             ]);
           }), 128))
         ])) : createCommentVNode("", true),
-        unref(slotPicker) ? (openBlock(), createBlock(_sfc_main$3f, {
+        unref(slotPicker) ? (openBlock(), createBlock(_sfc_main$3g, {
           key: 4,
           x: unref(slotPicker).x,
           y: unref(slotPicker).y,
@@ -96406,25 +96410,25 @@ function useCameraPrompt() {
     apertures: APERTURES
   };
 }
-const _hoisted_1$4M = { class: "ctv:flex ctv:flex-col ctv:gap-2 ctv:mt-1 ctv:p-2 ctv:rounded ctv:text-xs ctv:bg-interface-menu-surface ctv:text-base-foreground ctv:border ctv:border-border-default" };
-const _hoisted_2$2$ = { class: "ctv:grid ctv:grid-cols-2 ctv:gap-1.5" };
-const _hoisted_3$2W = { class: "ctv:flex ctv:flex-col ctv:gap-0.5" };
-const _hoisted_4$2v = { class: "ctv:flex ctv:flex-col ctv:gap-0.5" };
-const _hoisted_5$2l = { class: "ctv:flex ctv:flex-col ctv:gap-0.5" };
-const _hoisted_6$29 = { class: "ctv:flex ctv:flex-col ctv:gap-0.5" };
-const _hoisted_7$1I = {
+const _hoisted_1$4N = { class: "ctv:flex ctv:flex-col ctv:gap-2 ctv:mt-1 ctv:p-2 ctv:rounded ctv:text-xs ctv:bg-interface-menu-surface ctv:text-base-foreground ctv:border ctv:border-border-default" };
+const _hoisted_2$30 = { class: "ctv:grid ctv:grid-cols-2 ctv:gap-1.5" };
+const _hoisted_3$2X = { class: "ctv:flex ctv:flex-col ctv:gap-0.5" };
+const _hoisted_4$2w = { class: "ctv:flex ctv:flex-col ctv:gap-0.5" };
+const _hoisted_5$2m = { class: "ctv:flex ctv:flex-col ctv:gap-0.5" };
+const _hoisted_6$2a = { class: "ctv:flex ctv:flex-col ctv:gap-0.5" };
+const _hoisted_7$1J = {
   key: 0,
   class: "ctv:py-1 ctv:px-1.5 ctv:rounded-sm ctv:text-2xs ctv:leading-snug ctv:font-mono ctv:bg-secondary-background ctv:text-muted-foreground ctv:break-words"
 };
-const _hoisted_8$1n = {
+const _hoisted_8$1o = {
   key: 1,
   class: "ctv:text-2xs ctv:italic ctv:text-muted-foreground/60"
 };
-const _hoisted_9$1f = { class: "ctv:flex ctv:gap-1.5" };
-const _hoisted_10$15 = ["disabled"];
+const _hoisted_9$1g = { class: "ctv:flex ctv:gap-1.5" };
+const _hoisted_10$16 = ["disabled"];
 const labelClass$2 = "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground";
 const BTN_BASE$1 = "ctv:inline-flex ctv:items-center ctv:justify-center ctv:h-6 ctv:px-2.5 ctv:rounded-sm ctv:text-2xs ctv:font-medium ctv:cursor-pointer ctv:border ctv:[font-family:inherit] ctv:transition-colors";
-const _sfc_main$3d = /* @__PURE__ */ defineComponent({
+const _sfc_main$3e = /* @__PURE__ */ defineComponent({
   __name: "CameraPromptPanel",
   emits: ["insert"],
   setup(__props) {
@@ -96448,57 +96452,57 @@ const _sfc_main$3d = /* @__PURE__ */ defineComponent({
     const insertBtnClass = BTN_BASE$1 + " ctv:bg-primary-background ctv:text-base-foreground ctv:border-transparent ctv:hover:bg-primary-background-hover ctv:disabled:opacity-40 ctv:disabled:cursor-not-allowed";
     const clearBtnClass = BTN_BASE$1 + " ctv:bg-secondary-background ctv:text-muted-foreground ctv:border-border-default ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground";
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$4M, [
-        createBaseVNode("div", _hoisted_2$2$, [
-          createBaseVNode("label", _hoisted_3$2W, [
+      return openBlock(), createElementBlock("div", _hoisted_1$4N, [
+        createBaseVNode("div", _hoisted_2$30, [
+          createBaseVNode("label", _hoisted_3$2X, [
             createBaseVNode("span", {
               class: normalizeClass(labelClass$2)
             }, toDisplayString$1(_ctx.$t("cameraPrompt.camera")), 1),
-            createVNode(_sfc_main$3o, {
+            createVNode(_sfc_main$3p, {
               "model-value": unref(camera2),
               options: cameraOptions,
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => camera2.value = String($event))
             }, null, 8, ["model-value"])
           ]),
-          createBaseVNode("label", _hoisted_4$2v, [
+          createBaseVNode("label", _hoisted_4$2w, [
             createBaseVNode("span", {
               class: normalizeClass(labelClass$2)
             }, toDisplayString$1(_ctx.$t("cameraPrompt.lens")), 1),
-            createVNode(_sfc_main$3o, {
+            createVNode(_sfc_main$3p, {
               "model-value": unref(lens),
               options: lensOptions,
               "onUpdate:modelValue": _cache2[1] || (_cache2[1] = ($event) => lens.value = String($event))
             }, null, 8, ["model-value"])
           ]),
-          createBaseVNode("label", _hoisted_5$2l, [
+          createBaseVNode("label", _hoisted_5$2m, [
             createBaseVNode("span", {
               class: normalizeClass(labelClass$2)
             }, toDisplayString$1(_ctx.$t("cameraPrompt.focal")), 1),
-            createVNode(_sfc_main$3o, {
+            createVNode(_sfc_main$3p, {
               "model-value": unref(focal),
               options: focalOptions,
               "onUpdate:modelValue": _cache2[2] || (_cache2[2] = ($event) => focal.value = String($event))
             }, null, 8, ["model-value"])
           ]),
-          createBaseVNode("label", _hoisted_6$29, [
+          createBaseVNode("label", _hoisted_6$2a, [
             createBaseVNode("span", {
               class: normalizeClass(labelClass$2)
             }, toDisplayString$1(_ctx.$t("cameraPrompt.aperture")), 1),
-            createVNode(_sfc_main$3o, {
+            createVNode(_sfc_main$3p, {
               "model-value": unref(aperture),
               options: apertureOptions,
               "onUpdate:modelValue": _cache2[3] || (_cache2[3] = ($event) => aperture.value = String($event))
             }, null, 8, ["model-value"])
           ])
         ]),
-        unref(compiled) ? (openBlock(), createElementBlock("div", _hoisted_7$1I, toDisplayString$1(unref(compiled)), 1)) : (openBlock(), createElementBlock("div", _hoisted_8$1n, toDisplayString$1(_ctx.$t("cameraPrompt.empty")), 1)),
-        createBaseVNode("div", _hoisted_9$1f, [
+        unref(compiled) ? (openBlock(), createElementBlock("div", _hoisted_7$1J, toDisplayString$1(unref(compiled)), 1)) : (openBlock(), createElementBlock("div", _hoisted_8$1o, toDisplayString$1(_ctx.$t("cameraPrompt.empty")), 1)),
+        createBaseVNode("div", _hoisted_9$1g, [
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(insertBtnClass),
             disabled: !unref(compiled),
             onClick: _cache2[4] || (_cache2[4] = ($event) => _ctx.$emit("insert", { camera: unref(camera2), lens: unref(lens), focal: unref(focal), aperture: unref(aperture) }))
-          }, toDisplayString$1(_ctx.$t("cameraPrompt.insert")), 9, _hoisted_10$15),
+          }, toDisplayString$1(_ctx.$t("cameraPrompt.insert")), 9, _hoisted_10$16),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(clearBtnClass),
@@ -96633,29 +96637,29 @@ function useMentionList(opts) {
     onKeyDown: onKeyDown2
   };
 }
-const _hoisted_1$4L = {
+const _hoisted_1$4M = {
   key: 0,
   class: "ctv:py-1 ctv:px-2 ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground"
 };
-const _hoisted_2$2_ = ["title", "onClick"];
-const _hoisted_3$2V = ["src"];
-const _hoisted_4$2u = { class: "ctv:ml-auto ctv:text-muted-foreground ctv:whitespace-nowrap" };
-const _hoisted_5$2k = ["title", "onClick"];
-const _hoisted_6$28 = { class: "ctv:font-mono ctv:text-base-foreground ctv:shrink-0" };
-const _hoisted_7$1H = { class: "ctv:text-muted-foreground ctv:overflow-hidden ctv:text-ellipsis ctv:whitespace-nowrap" };
-const _hoisted_8$1m = { class: "ctv:font-mono ctv:text-base-foreground ctv:shrink-0" };
-const _hoisted_9$1e = { class: "ctv:text-muted-foreground ctv:overflow-hidden ctv:text-ellipsis ctv:whitespace-nowrap" };
-const _hoisted_10$14 = {
+const _hoisted_2$2$ = ["title", "onClick"];
+const _hoisted_3$2W = ["src"];
+const _hoisted_4$2v = { class: "ctv:ml-auto ctv:text-muted-foreground ctv:whitespace-nowrap" };
+const _hoisted_5$2l = ["title", "onClick"];
+const _hoisted_6$29 = { class: "ctv:font-mono ctv:text-base-foreground ctv:shrink-0" };
+const _hoisted_7$1I = { class: "ctv:text-muted-foreground ctv:overflow-hidden ctv:text-ellipsis ctv:whitespace-nowrap" };
+const _hoisted_8$1n = { class: "ctv:font-mono ctv:text-base-foreground ctv:shrink-0" };
+const _hoisted_9$1f = { class: "ctv:text-muted-foreground ctv:overflow-hidden ctv:text-ellipsis ctv:whitespace-nowrap" };
+const _hoisted_10$15 = {
   key: 2,
   class: "ctv:py-1.5 ctv:px-2 ctv:italic ctv:text-xs ctv:text-muted-foreground"
 };
-const _hoisted_11$Y = { class: "ctv:text-xs ctv:text-muted-foreground" };
-const _hoisted_12$S = { class: "ctv:text-base-foreground ctv:font-mono" };
-const _hoisted_13$M = ["placeholder"];
-const _hoisted_14$J = { class: "ctv:flex ctv:justify-end ctv:gap-1.5" };
-const _hoisted_15$D = ["disabled"];
+const _hoisted_11$Z = { class: "ctv:text-xs ctv:text-muted-foreground" };
+const _hoisted_12$T = { class: "ctv:text-base-foreground ctv:font-mono" };
+const _hoisted_13$N = ["placeholder"];
+const _hoisted_14$K = { class: "ctv:flex ctv:justify-end ctv:gap-1.5" };
+const _hoisted_15$E = ["disabled"];
 const ACTION_BTN_BASE = "ctv:relative ctv:inline-flex ctv:items-center ctv:justify-center ctv:gap-2 ctv:cursor-pointer ctv:touch-manipulation ctv:whitespace-nowrap ctv:appearance-none ctv:border-none ctv:transition-colors ctv:h-6 ctv:rounded-sm ctv:px-2 ctv:py-1 ctv:text-xs ctv:font-medium ctv:disabled:pointer-events-none ctv:disabled:opacity-50";
-const _sfc_main$3c = /* @__PURE__ */ defineComponent({
+const _sfc_main$3d = /* @__PURE__ */ defineComponent({
   __name: "MentionList",
   props: {
     items: {},
@@ -96719,7 +96723,7 @@ const _sfc_main$3c = /* @__PURE__ */ defineComponent({
         class: "ctv-scroll-thin ctv:min-w-64 ctv:max-w-md ctv:max-h-60 ctv:overflow-y-auto ctv:rounded ctv:text-xs ctv:bg-interface-menu-surface ctv:text-base-foreground ctv:border ctv:border-border-default ctv:shadow-md"
       }, [
         !unref(creating) ? (openBlock(), createElementBlock(Fragment$1, { key: 0 }, [
-          unref(imageItems).length ? (openBlock(), createElementBlock("div", _hoisted_1$4L, toDisplayString$1(_ctx.$t("mention.imageSlots")), 1)) : createCommentVNode("", true),
+          unref(imageItems).length ? (openBlock(), createElementBlock("div", _hoisted_1$4M, toDisplayString$1(_ctx.$t("mention.imageSlots")), 1)) : createCommentVNode("", true),
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(imageItems), (item, i) => {
             return openBlock(), createElementBlock("div", {
               key: unref(mentionItemKey)(item),
@@ -96742,14 +96746,14 @@ const _sfc_main$3c = /* @__PURE__ */ defineComponent({
                   src: item.url,
                   class: "ctv:block ctv:size-full ctv:object-cover",
                   draggable: "false"
-                }, null, 8, _hoisted_3$2V)) : createCommentVNode("", true)
+                }, null, 8, _hoisted_3$2W)) : createCommentVNode("", true)
               ], 4),
               createBaseVNode("span", {
                 class: "ctv:font-mono ctv:shrink-0",
                 style: normalizeStyle({ color: item.color })
               }, "@" + toDisplayString$1(_ctx.$t("mention.imageChip", { n: item.slot })), 5),
-              createBaseVNode("span", _hoisted_4$2u, "→ " + toDisplayString$1(_ctx.$t("mention.imageExpand", { n: item.ordinal })), 1)
-            ], 42, _hoisted_2$2_);
+              createBaseVNode("span", _hoisted_4$2v, "→ " + toDisplayString$1(_ctx.$t("mention.imageExpand", { n: item.ordinal })), 1)
+            ], 42, _hoisted_2$2$);
           }), 128)),
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(snippetItems), (item, j2) => {
             return openBlock(), createElementBlock("div", {
@@ -96765,9 +96769,9 @@ const _sfc_main$3c = /* @__PURE__ */ defineComponent({
               }, ["prevent"])),
               onClick: ($event) => unref(selectItem)(unref(imageItems).length + j2)
             }, [
-              createBaseVNode("span", _hoisted_6$28, "@" + toDisplayString$1(item.module.label), 1),
-              createBaseVNode("span", _hoisted_7$1H, toDisplayString$1(item.module.body), 1)
-            ], 42, _hoisted_5$2k);
+              createBaseVNode("span", _hoisted_6$29, "@" + toDisplayString$1(item.module.label), 1),
+              createBaseVNode("span", _hoisted_7$1I, toDisplayString$1(item.module.body), 1)
+            ], 42, _hoisted_5$2l);
           }), 128)),
           unref(canCreate) ? (openBlock(), createElementBlock("div", {
             key: 1,
@@ -96781,22 +96785,22 @@ const _sfc_main$3c = /* @__PURE__ */ defineComponent({
             onClick: _cache2[3] || (_cache2[3] = //@ts-ignore
             (...args) => unref(startCreate) && unref(startCreate)(...args))
           }, [
-            createBaseVNode("span", _hoisted_8$1m, toDisplayString$1(_ctx.$t("mention.create")), 1),
-            createBaseVNode("span", _hoisted_9$1e, [
+            createBaseVNode("span", _hoisted_8$1n, toDisplayString$1(_ctx.$t("mention.create")), 1),
+            createBaseVNode("span", _hoisted_9$1f, [
               createTextVNode(toDisplayString$1(_ctx.$t("mention.newFragment")) + " ", 1),
               createBaseVNode("code", null, "@" + toDisplayString$1(__props.query), 1)
             ])
           ], 34)) : createCommentVNode("", true),
-          __props.items.length === 0 && !unref(canCreate) ? (openBlock(), createElementBlock("div", _hoisted_10$14, toDisplayString$1(__props.query ? _ctx.$t("mention.invalidLabel") : _ctx.$t("mention.noEntries")), 1)) : createCommentVNode("", true)
+          __props.items.length === 0 && !unref(canCreate) ? (openBlock(), createElementBlock("div", _hoisted_10$15, toDisplayString$1(__props.query ? _ctx.$t("mention.invalidLabel") : _ctx.$t("mention.noEntries")), 1)) : createCommentVNode("", true)
         ], 64)) : (openBlock(), createElementBlock("div", {
           key: 1,
           class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2",
           onMousedown: _cache2[8] || (_cache2[8] = withModifiers(() => {
           }, ["stop"]))
         }, [
-          createBaseVNode("div", _hoisted_11$Y, [
+          createBaseVNode("div", _hoisted_11$Z, [
             createTextVNode(toDisplayString$1(_ctx.$t("mention.createFragment")) + " ", 1),
-            createBaseVNode("code", _hoisted_12$S, "@" + toDisplayString$1(unref(pendingLabel)), 1)
+            createBaseVNode("code", _hoisted_12$T, "@" + toDisplayString$1(unref(pendingLabel)), 1)
           ]),
           withDirectives(createBaseVNode("textarea", {
             ref_key: "createTa",
@@ -96810,10 +96814,10 @@ const _sfc_main$3c = /* @__PURE__ */ defineComponent({
               (...args) => unref(onCreateKeydown) && unref(onCreateKeydown)(...args),
               ["stop"]
             ))
-          }, null, 40, _hoisted_13$M), [
+          }, null, 40, _hoisted_13$N), [
             [vModelText, unref(pendingContent)]
           ]),
-          createBaseVNode("div", _hoisted_14$J, [
+          createBaseVNode("div", _hoisted_14$K, [
             createBaseVNode("button", {
               class: normalizeClass(actionBtn()),
               onClick: _cache2[6] || (_cache2[6] = //@ts-ignore
@@ -96824,20 +96828,20 @@ const _sfc_main$3c = /* @__PURE__ */ defineComponent({
               disabled: !unref(pendingContent).trim(),
               onClick: _cache2[7] || (_cache2[7] = //@ts-ignore
               (...args) => unref(saveCreate) && unref(saveCreate)(...args))
-            }, toDisplayString$1(_ctx.$t("mention.save")), 11, _hoisted_15$D)
+            }, toDisplayString$1(_ctx.$t("mention.save")), 11, _hoisted_15$E)
           ])
         ], 32))
       ], 32);
     };
   }
 });
-const _hoisted_1$4K = { class: "ctv:flex ctv:flex-col ctv:gap-2 ctv:mt-1 ctv:p-2 ctv:rounded ctv:text-xs ctv:bg-interface-menu-surface ctv:text-base-foreground ctv:border ctv:border-border-default" };
-const _hoisted_2$2Z = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_3$2U = { class: "ctv:flex ctv:flex-wrap ctv:gap-1" };
-const _hoisted_4$2t = ["title", "onClick"];
+const _hoisted_1$4L = { class: "ctv:flex ctv:flex-col ctv:gap-2 ctv:mt-1 ctv:p-2 ctv:rounded ctv:text-xs ctv:bg-interface-menu-surface ctv:text-base-foreground ctv:border ctv:border-border-default" };
+const _hoisted_2$2_ = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_3$2V = { class: "ctv:flex ctv:flex-wrap ctv:gap-1" };
+const _hoisted_4$2u = ["title", "onClick"];
 const CHIP_BASE = "ctv:inline-flex ctv:items-center ctv:cursor-pointer ctv:[font-family:inherit] ctv:rounded-full ctv:border ctv:py-0.5 ctv:px-2 ctv:text-2xs ctv:transition-colors";
 const templateClass = "ctv:inline-flex ctv:items-center ctv:cursor-pointer ctv:[font-family:inherit] ctv:rounded ctv:border ctv:py-0.5 ctv:px-2 ctv:text-2xs ctv:transition-colors ctv:bg-secondary-background ctv:border-border-default ctv:text-base-foreground ctv:hover:bg-primary-background/20 ctv:hover:border-primary-background/50 ctv:hover:text-primary-background";
-const _sfc_main$3b = /* @__PURE__ */ defineComponent({
+const _sfc_main$3c = /* @__PURE__ */ defineComponent({
   __name: "PromptHelperPanel",
   props: {
     groups: {},
@@ -96849,14 +96853,14 @@ const _sfc_main$3b = /* @__PURE__ */ defineComponent({
       return CHIP_BASE + (active ? " ctv:bg-primary-background/25 ctv:border-primary-background/60 ctv:text-primary-background" : " ctv:bg-secondary-background ctv:border-border-default ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground");
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$4K, [
+      return openBlock(), createElementBlock("div", _hoisted_1$4L, [
         (openBlock(true), createElementBlock(Fragment$1, null, renderList(__props.groups, (group) => {
           return openBlock(), createElementBlock("div", {
             key: group.key,
             class: "ctv:flex ctv:flex-col ctv:gap-1"
           }, [
-            createBaseVNode("span", _hoisted_2$2Z, toDisplayString$1(_ctx.$t(group.key)), 1),
-            createBaseVNode("div", _hoisted_3$2U, [
+            createBaseVNode("span", _hoisted_2$2_, toDisplayString$1(_ctx.$t(group.key)), 1),
+            createBaseVNode("div", _hoisted_3$2V, [
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(group.modules, (m) => {
                 return openBlock(), createElementBlock("button", {
                   key: m.id,
@@ -96864,7 +96868,7 @@ const _sfc_main$3b = /* @__PURE__ */ defineComponent({
                   class: normalizeClass(m.kind === "template" ? templateClass : chipClass2(__props.isActive(m))),
                   title: m.body,
                   onClick: ($event) => _ctx.$emit("apply", m)
-                }, toDisplayString$1(m.labelKey ? _ctx.$t(m.labelKey) : m.label), 11, _hoisted_4$2t);
+                }, toDisplayString$1(m.labelKey ? _ctx.$t(m.labelKey) : m.label), 11, _hoisted_4$2u);
               }), 128))
             ])
           ]);
@@ -96873,11 +96877,11 @@ const _sfc_main$3b = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$4J = { class: "ctv:flex ctv:gap-1 ctv:mt-1" };
-const _hoisted_2$2Y = ["title"];
-const _hoisted_3$2T = ["title"];
+const _hoisted_1$4K = { class: "ctv:flex ctv:gap-1 ctv:mt-1" };
+const _hoisted_2$2Z = ["title"];
+const _hoisted_3$2U = ["title"];
 const iconBtnClass$1 = "ctv:inline-flex ctv:items-center ctv:justify-center ctv:size-5 ctv:cursor-pointer ctv:rounded-sm ctv:border ctv:text-2xs ctv:leading-none ctv:[font-family:inherit] ctv:transition-colors";
-const _sfc_main$3a = /* @__PURE__ */ defineComponent({
+const _sfc_main$3b = /* @__PURE__ */ defineComponent({
   __name: "MainPromptInput",
   props: {
     node: {}
@@ -96887,7 +96891,7 @@ const _sfc_main$3a = /* @__PURE__ */ defineComponent({
     const rootEl = /* @__PURE__ */ ref(null);
     const { widget, editor, promptText, applyPromptText } = useMainPromptInput(
       () => props.node,
-      _sfc_main$3c
+      _sfc_main$3d
     );
     const helperOpen = /* @__PURE__ */ ref(false);
     const helper = usePromptModules(() => promptText.value, applyPromptText);
@@ -96906,7 +96910,7 @@ const _sfc_main$3a = /* @__PURE__ */ defineComponent({
           editor: unref(editor),
           class: "comfytv-prompt-editor"
         }, null, 8, ["editor"]),
-        createBaseVNode("div", _hoisted_1$4J, [
+        createBaseVNode("div", _hoisted_1$4K, [
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass([iconBtnClass$1, helperOpen.value ? "ctv:bg-primary-background/20 ctv:border-primary-background/50 ctv:text-primary-background" : "ctv:bg-secondary-background ctv:border-border-default ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground"]),
@@ -96914,7 +96918,7 @@ const _sfc_main$3a = /* @__PURE__ */ defineComponent({
             onClick: _cache2[0] || (_cache2[0] = ($event) => helperOpen.value = !helperOpen.value)
           }, [..._cache2[2] || (_cache2[2] = [
             createBaseVNode("i", { class: "pi pi-sparkles" }, null, -1)
-          ])], 10, _hoisted_2$2Y),
+          ])], 10, _hoisted_2$2Z),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass([iconBtnClass$1, cameraOpen.value ? "ctv:bg-primary-background/20 ctv:border-primary-background/50 ctv:text-primary-background" : "ctv:bg-secondary-background ctv:border-border-default ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground"]),
@@ -96922,15 +96926,15 @@ const _sfc_main$3a = /* @__PURE__ */ defineComponent({
             onClick: _cache2[1] || (_cache2[1] = ($event) => cameraOpen.value = !cameraOpen.value)
           }, [..._cache2[3] || (_cache2[3] = [
             createBaseVNode("i", { class: "pi pi-video" }, null, -1)
-          ])], 10, _hoisted_3$2T)
+          ])], 10, _hoisted_3$2U)
         ]),
-        helperOpen.value ? (openBlock(), createBlock(_sfc_main$3b, {
+        helperOpen.value ? (openBlock(), createBlock(_sfc_main$3c, {
           key: 0,
           groups: unref(helper).groups,
           "is-active": unref(helper).isActive,
           onApply: unref(helper).apply
         }, null, 8, ["groups", "is-active", "onApply"])) : createCommentVNode("", true),
-        cameraOpen.value ? (openBlock(), createBlock(_sfc_main$3d, {
+        cameraOpen.value ? (openBlock(), createBlock(_sfc_main$3e, {
           key: 1,
           onInsert: onCameraInsert
         })) : createCommentVNode("", true)
@@ -96938,25 +96942,25 @@ const _sfc_main$3a = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const MainPromptInput = /* @__PURE__ */ _export_sfc(_sfc_main$3a, [["__scopeId", "data-v-d7bb6b46"]]);
-const _hoisted_1$4I = {
+const MainPromptInput = /* @__PURE__ */ _export_sfc(_sfc_main$3b, [["__scopeId", "data-v-d7bb6b46"]]);
+const _hoisted_1$4J = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1E(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$4I, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$4J, [..._cache2[0] || (_cache2[0] = [
     createStaticVNode('<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="6" cy="6" r="3"></circle><path d="M8.12 8.12L12 12m8-8L8.12 15.88"></path><circle cx="6" cy="18" r="3"></circle><path d="M14.8 14.8L20 20"></path></g>', 1)
   ])]);
 }
 const IconScissors = markRaw({ name: "lucide-scissors", render: render$1E });
-const _hoisted_1$4H = {
+const _hoisted_1$4I = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1D(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$4H, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$4I, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -96970,13 +96974,13 @@ function render$1D(_ctx, _cache2) {
   ])]);
 }
 const IconCrop = markRaw({ name: "lucide-crop", render: render$1D });
-const _hoisted_1$4G = {
+const _hoisted_1$4H = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1C(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$4G, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$4H, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -96988,7 +96992,7 @@ function render$1C(_ctx, _cache2) {
   ])]);
 }
 const IconPaintBucket = markRaw({ name: "lucide-paint-bucket", render: render$1C });
-const _sfc_main$39 = /* @__PURE__ */ defineComponent({
+const _sfc_main$3a = /* @__PURE__ */ defineComponent({
   __name: "StageIcon",
   props: {
     name: {}
@@ -97010,12 +97014,12 @@ const _sfc_main$39 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$4F = { class: "ctv-slider-row" };
-const _hoisted_2$2X = {
+const _hoisted_1$4G = { class: "ctv-slider-row" };
+const _hoisted_2$2Y = {
   key: 0,
   class: "ctv-slider-value"
 };
-const _sfc_main$38 = /* @__PURE__ */ defineComponent({
+const _sfc_main$39 = /* @__PURE__ */ defineComponent({
   __name: "ComfyTVSlider",
   props: {
     modelValue: {},
@@ -97047,7 +97051,7 @@ const _sfc_main$38 = /* @__PURE__ */ defineComponent({
       if (typeof v === "number" && Number.isFinite(v)) emit2("commit", v);
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$4F, [
+      return openBlock(), createElementBlock("div", _hoisted_1$4G, [
         createVNode(unref(SliderRoot_default), {
           class: "ctv-slider-root",
           "model-value": [clamped.value],
@@ -97069,7 +97073,7 @@ const _sfc_main$38 = /* @__PURE__ */ defineComponent({
           ]),
           _: 1
         }, 8, ["model-value", "min", "max", "step", "disabled"]),
-        !__props.hideValue ? (openBlock(), createElementBlock("span", _hoisted_2$2X, toDisplayString$1(display.value), 1)) : createCommentVNode("", true)
+        !__props.hideValue ? (openBlock(), createElementBlock("span", _hoisted_2$2Y, toDisplayString$1(display.value), 1)) : createCommentVNode("", true)
       ]);
     };
   }
@@ -97204,23 +97208,23 @@ function useCustomParams(node, getState) {
     setVal
   };
 }
-const _hoisted_1$4E = {
+const _hoisted_1$4F = {
   key: 0,
   class: "ctv:flex ctv:flex-col ctv:gap-1"
 };
-const _hoisted_2$2W = { class: "ctv:flex ctv:items-center ctv:gap-2" };
-const _hoisted_3$2S = { class: "ctv:relative ctv:ml-auto" };
-const _hoisted_4$2s = ["disabled", "title"];
-const _hoisted_5$2j = ["onClick"];
-const _hoisted_6$27 = { class: "ctv:flex-1 ctv:truncate" };
-const _hoisted_7$1G = { class: "ctv:text-3xs ctv:opacity-50" };
-const _hoisted_8$1l = ["title"];
-const _hoisted_9$1d = { class: "ctv:flex-1 ctv:min-w-0" };
-const _hoisted_10$13 = ["title", "onClick"];
+const _hoisted_2$2X = { class: "ctv:flex ctv:items-center ctv:gap-2" };
+const _hoisted_3$2T = { class: "ctv:relative ctv:ml-auto" };
+const _hoisted_4$2t = ["disabled", "title"];
+const _hoisted_5$2k = ["onClick"];
+const _hoisted_6$28 = { class: "ctv:flex-1 ctv:truncate" };
+const _hoisted_7$1H = { class: "ctv:text-3xs ctv:opacity-50" };
+const _hoisted_8$1m = ["title"];
+const _hoisted_9$1e = { class: "ctv:flex-1 ctv:min-w-0" };
+const _hoisted_10$14 = ["title", "onClick"];
 const sectionLabel$2 = "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:opacity-60";
 const addBtn = "ctv:inline-flex ctv:items-center ctv:h-5 ctv:px-1.5 ctv:rounded-sm ctv:text-3xs ctv:font-semibold ctv:cursor-pointer ctv:border-none ctv:bg-secondary-background ctv:text-secondary-foreground ctv:hover:bg-secondary-background-hover ctv:disabled:opacity-40 ctv:disabled:pointer-events-none";
 const removeBtn = "ctv:shrink-0 ctv:flex ctv:items-center ctv:justify-center ctv:size-5 ctv:rounded-full ctv:cursor-pointer ctv:border-none ctv:bg-transparent ctv:text-destructive-background ctv:hover:bg-destructive-background/10";
-const _sfc_main$37 = /* @__PURE__ */ defineComponent({
+const _sfc_main$38 = /* @__PURE__ */ defineComponent({
   __name: "CustomParamsSection",
   props: {
     state: {},
@@ -97246,18 +97250,18 @@ const _sfc_main$37 = /* @__PURE__ */ defineComponent({
       setVal
     } = useCustomParams(props.node, () => props.state);
     return (_ctx, _cache2) => {
-      return unref(hasWidget) && (unref(attached).length || unref(available).length) ? (openBlock(), createElementBlock("section", _hoisted_1$4E, [
-        createBaseVNode("div", _hoisted_2$2W, [
+      return unref(hasWidget) && (unref(attached).length || unref(available).length) ? (openBlock(), createElementBlock("section", _hoisted_1$4F, [
+        createBaseVNode("div", _hoisted_2$2X, [
           createBaseVNode("div", {
             class: normalizeClass(sectionLabel$2)
           }, toDisplayString$1(_ctx.$t("stageParams.section")), 1),
-          createBaseVNode("div", _hoisted_3$2S, [
+          createBaseVNode("div", _hoisted_3$2T, [
             createBaseVNode("button", {
               class: normalizeClass(addBtn),
               disabled: !unref(available).length,
               title: _ctx.$t("stageParams.addHint"),
               onClick: _cache2[0] || (_cache2[0] = withModifiers(($event) => menuOpen.value = !unref(menuOpen), ["stop"]))
-            }, "+ " + toDisplayString$1(_ctx.$t("stageParams.add")), 9, _hoisted_4$2s),
+            }, "+ " + toDisplayString$1(_ctx.$t("stageParams.add")), 9, _hoisted_4$2t),
             unref(menuOpen) ? (openBlock(), createElementBlock("div", {
               key: 0,
               onWheel: _cache2[1] || (_cache2[1] = withModifiers(() => {
@@ -97272,9 +97276,9 @@ const _sfc_main$37 = /* @__PURE__ */ defineComponent({
                   class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:px-1.5 ctv:py-1 ctv:rounded-sm ctv:cursor-pointer ctv:text-left ctv:text-2xs ctv:bg-transparent ctv:border-none ctv:text-base-foreground ctv:hover:bg-secondary-background-hover",
                   onClick: ($event) => unref(attach)(d)
                 }, [
-                  createBaseVNode("span", _hoisted_6$27, toDisplayString$1(d.label), 1),
-                  createBaseVNode("span", _hoisted_7$1G, toDisplayString$1(d.type), 1)
-                ], 8, _hoisted_5$2j);
+                  createBaseVNode("span", _hoisted_6$28, toDisplayString$1(d.label), 1),
+                  createBaseVNode("span", _hoisted_7$1H, toDisplayString$1(d.type), 1)
+                ], 8, _hoisted_5$2k);
               }), 128))
             ], 32)) : createCommentVNode("", true)
           ])
@@ -97288,13 +97292,13 @@ const _sfc_main$37 = /* @__PURE__ */ defineComponent({
             createBaseVNode("span", {
               class: "ctv:shrink-0 ctv:w-20 ctv:truncate ctv:text-[11px] ctv:text-muted-foreground",
               title: unref(defLabel)(item.key)
-            }, toDisplayString$1(unref(defLabel)(item.key)), 9, _hoisted_8$1l),
-            createBaseVNode("div", _hoisted_9$1d, [
-              unref(defType)(item.key) === "boolean" ? (openBlock(), createBlock(_sfc_main$3m, {
+            }, toDisplayString$1(unref(defLabel)(item.key)), 9, _hoisted_8$1m),
+            createBaseVNode("div", _hoisted_9$1e, [
+              unref(defType)(item.key) === "boolean" ? (openBlock(), createBlock(_sfc_main$3n, {
                 key: 0,
                 "model-value": Boolean(item.value),
                 "onUpdate:modelValue": ($event) => unref(setVal)(item.key, $event)
-              }, null, 8, ["model-value", "onUpdate:modelValue"])) : unref(useSlider)(item.key) ? (openBlock(), createBlock(_sfc_main$38, {
+              }, null, 8, ["model-value", "onUpdate:modelValue"])) : unref(useSlider)(item.key) ? (openBlock(), createBlock(_sfc_main$39, {
                 key: 1,
                 "model-value": unref(numVal)(item.value),
                 min: unref(cfgNum)(item.key, "min"),
@@ -97302,7 +97306,7 @@ const _sfc_main$37 = /* @__PURE__ */ defineComponent({
                 step: unref(cfgNum)(item.key, "step") ?? (unref(defType)(item.key) === "int" ? 1 : 0.1),
                 precision: unref(defType)(item.key) === "int" ? 0 : void 0,
                 "onUpdate:modelValue": ($event) => unref(setVal)(item.key, $event)
-              }, null, 8, ["model-value", "min", "max", "step", "precision", "onUpdate:modelValue"])) : unref(defType)(item.key) === "int" || unref(defType)(item.key) === "float" ? (openBlock(), createBlock(_sfc_main$3n, {
+              }, null, 8, ["model-value", "min", "max", "step", "precision", "onUpdate:modelValue"])) : unref(defType)(item.key) === "int" || unref(defType)(item.key) === "float" ? (openBlock(), createBlock(_sfc_main$3o, {
                 key: 2,
                 "model-value": unref(numVal)(item.value),
                 min: unref(cfgNum)(item.key, "min"),
@@ -97310,12 +97314,12 @@ const _sfc_main$37 = /* @__PURE__ */ defineComponent({
                 step: unref(cfgNum)(item.key, "step") ?? (unref(defType)(item.key) === "int" ? 1 : 0.1),
                 precision: unref(defType)(item.key) === "int" ? 0 : void 0,
                 "onUpdate:modelValue": ($event) => unref(setVal)(item.key, $event)
-              }, null, 8, ["model-value", "min", "max", "step", "precision", "onUpdate:modelValue"])) : unref(defType)(item.key) === "combo" ? (openBlock(), createBlock(_sfc_main$3o, {
+              }, null, 8, ["model-value", "min", "max", "step", "precision", "onUpdate:modelValue"])) : unref(defType)(item.key) === "combo" ? (openBlock(), createBlock(_sfc_main$3p, {
                 key: 3,
                 "model-value": item.value,
                 options: unref(comboOptions)(item.key),
                 "onUpdate:modelValue": ($event) => unref(setVal)(item.key, $event)
-              }, null, 8, ["model-value", "options", "onUpdate:modelValue"])) : (openBlock(), createBlock(_sfc_main$3q, {
+              }, null, 8, ["model-value", "options", "onUpdate:modelValue"])) : (openBlock(), createBlock(_sfc_main$3r, {
                 key: 4,
                 "model-value": item.value == null ? "" : String(item.value),
                 multiline: Boolean((_a2 = unref(cfg)(item.key)) == null ? void 0 : _a2.multiline),
@@ -97327,22 +97331,22 @@ const _sfc_main$37 = /* @__PURE__ */ defineComponent({
               class: normalizeClass(removeBtn),
               title: _ctx.$t("stageParams.remove"),
               onClick: ($event) => unref(detach)(item.key)
-            }, "−", 8, _hoisted_10$13)
+            }, "−", 8, _hoisted_10$14)
           ]);
         }), 128))
       ])) : createCommentVNode("", true);
     };
   }
 });
-const _hoisted_1$4D = {
+const _hoisted_1$4E = {
   key: 0,
   class: "ctv-preset-bar ctv:flex ctv:items-center ctv:gap-1.5"
 };
-const _hoisted_2$2V = ["title"];
-const _hoisted_3$2R = ["title"];
+const _hoisted_2$2W = ["title"];
+const _hoisted_3$2S = ["title"];
 const CUSTOM_VALUE = "__custom__";
 const BTN_BASE = "ctv:relative ctv:inline-flex ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:touch-manipulation ctv:whitespace-nowrap ctv:appearance-none ctv:border-none ctv:transition-colors ctv:disabled:pointer-events-none ctv:disabled:opacity-50 ctv:size-6 ctv:shrink-0 ctv:p-0 ctv:rounded-sm ctv:text-xs";
-const _sfc_main$36 = /* @__PURE__ */ defineComponent({
+const _sfc_main$37 = /* @__PURE__ */ defineComponent({
   __name: "StagePresetBar",
   props: {
     node: {}
@@ -97403,8 +97407,8 @@ const _sfc_main$36 = /* @__PURE__ */ defineComponent({
     }
     const iconBtn2 = BTN_BASE + " ctv:bg-secondary-background ctv:text-secondary-foreground ctv:hover:bg-secondary-background-hover";
     return (_ctx, _cache2) => {
-      return unref(hasConfig) ? (openBlock(), createElementBlock("div", _hoisted_1$4D, [
-        createVNode(_sfc_main$3o, {
+      return unref(hasConfig) ? (openBlock(), createElementBlock("div", _hoisted_1$4E, [
+        createVNode(_sfc_main$3p, {
           class: "ctv:flex-1 ctv:min-w-0",
           "model-value": selectionValue.value,
           options: presetOptions.value,
@@ -97416,14 +97420,14 @@ const _sfc_main$36 = /* @__PURE__ */ defineComponent({
           onClick: onSave
         }, [..._cache2[0] || (_cache2[0] = [
           createBaseVNode("i", { class: "pi pi-save" }, null, -1)
-        ])], 10, _hoisted_2$2V),
+        ])], 10, _hoisted_2$2W),
         createBaseVNode("button", {
           class: normalizeClass([iconBtn2, "ctv-preset-reset"]),
           title: _ctx.$t("stagePresets.reset"),
           onClick: onReset
         }, [..._cache2[1] || (_cache2[1] = [
           createBaseVNode("i", { class: "pi pi-replay" }, null, -1)
-        ])], 10, _hoisted_3$2R)
+        ])], 10, _hoisted_3$2S)
       ])) : createCommentVNode("", true);
     };
   }
@@ -105425,12 +105429,12 @@ async function getCustomModelClipNames(url) {
   const assets2 = await loadCustomModelAssets(url);
   return assets2.clips.map((clip) => clip.name);
 }
-const _hoisted_1$4C = {
+const _hoisted_1$4D = {
   key: 0,
   class: "ctv:absolute ctv:inset-0 ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50 ctv:pointer-events-none"
 };
-const _hoisted_2$2U = { class: "ctv:text-2xs ctv:text-center ctv:px-3" };
-const _sfc_main$35 = /* @__PURE__ */ defineComponent({
+const _hoisted_2$2V = { class: "ctv:text-2xs ctv:text-center ctv:px-3" };
+const _sfc_main$36 = /* @__PURE__ */ defineComponent({
   __name: "ModelPreview",
   props: {
     src: {},
@@ -105688,11 +105692,11 @@ const _sfc_main$35 = /* @__PURE__ */ defineComponent({
         onPointerenter: onHostEnter,
         class: "ctv:relative ctv:w-full ctv:h-full ctv:min-h-[220px] ctv:overflow-hidden ctv:rounded-sm ctv:bg-black ctv:touch-none ctv:outline-none"
       }, [
-        unref(loading2) || unref(loadError) ? (openBlock(), createElementBlock("div", _hoisted_1$4C, [
+        unref(loading2) || unref(loadError) ? (openBlock(), createElementBlock("div", _hoisted_1$4D, [
           createBaseVNode("i", {
             class: normalizeClass(["pi", unref(loadError) ? "pi-exclamation-triangle" : "pi-box", "ctv:text-[28px] ctv:opacity-60"])
           }, null, 2),
-          createBaseVNode("div", _hoisted_2$2U, toDisplayString$1(unref(loadError) ? _ctx.$t("modelPreview.loadFailed") : _ctx.$t("modelPreview.loading")), 1)
+          createBaseVNode("div", _hoisted_2$2V, toDisplayString$1(unref(loadError) ? _ctx.$t("modelPreview.loadFailed") : _ctx.$t("modelPreview.loading")), 1)
         ])) : createCommentVNode("", true)
       ], 544);
     };
@@ -109910,27 +109914,27 @@ function parseMaterialState(json) {
 function serializeMaterialState(params) {
   return JSON.stringify(normalizeMaterial(params));
 }
-const _hoisted_1$4B = {
+const _hoisted_1$4C = {
   key: 3,
   class: "vp-img-host ctv:group ctv:relative ctv:flex-1 ctv:min-h-[160px]"
 };
-const _hoisted_2$2T = ["title"];
-const _hoisted_3$2Q = ["title"];
-const _hoisted_4$2r = ["src", "alt"];
-const _hoisted_5$2i = ["title"];
-const _hoisted_6$26 = ["title"];
-const _hoisted_7$1F = ["title"];
-const _hoisted_8$1k = ["title"];
-const _hoisted_9$1c = ["src", "alt"];
-const _hoisted_10$12 = {
+const _hoisted_2$2U = ["title"];
+const _hoisted_3$2R = ["title"];
+const _hoisted_4$2s = ["src", "alt"];
+const _hoisted_5$2j = ["title"];
+const _hoisted_6$27 = ["title"];
+const _hoisted_7$1G = ["title"];
+const _hoisted_8$1l = ["title"];
+const _hoisted_9$1d = ["src", "alt"];
+const _hoisted_10$13 = {
   key: 6,
   class: "vp-img-host ctv:group ctv:relative ctv:w-full"
 };
-const _hoisted_11$X = ["title"];
-const _hoisted_12$R = ["title"];
-const _hoisted_13$L = ["title"];
-const _hoisted_14$I = ["src"];
-const _hoisted_15$C = {
+const _hoisted_11$Y = ["title"];
+const _hoisted_12$S = ["title"];
+const _hoisted_13$M = ["title"];
+const _hoisted_14$J = ["src"];
+const _hoisted_15$D = {
   key: 0,
   class: "ctv:size-full"
 };
@@ -109945,11 +109949,11 @@ const _hoisted_20$m = {
   key: 0,
   class: "ctv:flex ctv:items-center ctv:justify-center ctv:size-full"
 };
-const _hoisted_21$l = {
+const _hoisted_21$k = {
   key: 1,
   class: "ctv:flex ctv:items-center ctv:gap-2.5 ctv:pt-3.5 ctv:pb-1 ctv:px-1"
 };
-const _hoisted_22$k = { class: "ctv:flex ctv:flex-col ctv:gap-0.5 ctv:min-w-0 ctv:text-2xs ctv:font-mono ctv:text-muted-foreground" };
+const _hoisted_22$j = { class: "ctv:flex ctv:flex-col ctv:gap-0.5 ctv:min-w-0 ctv:text-2xs ctv:font-mono ctv:text-muted-foreground" };
 const _hoisted_23$i = { class: "ctv:text-base-foreground" };
 const _hoisted_24$g = { class: "ctv:max-w-full ctv:px-1 ctv:truncate ctv:text-3xs ctv:font-bold ctv:text-[#b8c4ff]" };
 const _hoisted_25$g = {
@@ -110075,7 +110079,7 @@ const shotDurClass = "ctv:shrink-0 ctv:py-px ctv:px-1 ctv:text-2xs ctv:rounded-s
 const shotPromptClass = "ctv:flex-auto ctv:break-words ctv:text-base-foreground";
 const COMFY_BTN_BASE$1 = "ctv:relative ctv:inline-flex ctv:items-center ctv:justify-center ctv:gap-2 ctv:cursor-pointer ctv:touch-manipulation ctv:whitespace-nowrap ctv:appearance-none ctv:border-none ctv:transition-colors ctv:disabled:pointer-events-none ctv:disabled:opacity-50";
 const imgActionsClass = "vp-img-actions ctv:absolute ctv:top-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1";
-const _sfc_main$34 = /* @__PURE__ */ defineComponent({
+const _sfc_main$35 = /* @__PURE__ */ defineComponent({
   __name: "ValuePreview",
   props: {
     type: {},
@@ -110274,7 +110278,7 @@ const _sfc_main$34 = /* @__PURE__ */ defineComponent({
         }, toDisplayString$1(__props.emptyLabel), 3)) : __props.type === "COMFYTV_TEXT" && __props.compact ? (openBlock(), createElementBlock("pre", {
           key: 2,
           class: normalizeClass(textClass.value)
-        }, toDisplayString$1(__props.content), 3)) : __props.type === "COMFYTV_TEXT" ? (openBlock(), createElementBlock("div", _hoisted_1$4B, [
+        }, toDisplayString$1(__props.content), 3)) : __props.type === "COMFYTV_TEXT" ? (openBlock(), createElementBlock("div", _hoisted_1$4C, [
           createBaseVNode("pre", {
             onWheel: _cache2[0] || (_cache2[0] = withModifiers(() => {
             }, ["stop"])),
@@ -110302,7 +110306,7 @@ const _sfc_main$34 = /* @__PURE__ */ defineComponent({
               createBaseVNode("i", {
                 class: normalizeClass(unref(textCopied) ? "pi pi-check" : "pi pi-copy")
               }, null, 2)
-            ], 8, _hoisted_2$2T),
+            ], 8, _hoisted_2$2U),
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(imgActionBtn),
@@ -110314,7 +110318,7 @@ const _sfc_main$34 = /* @__PURE__ */ defineComponent({
               ))
             }, [..._cache2[22] || (_cache2[22] = [
               createBaseVNode("i", { class: "pi pi-download" }, null, -1)
-            ])], 8, _hoisted_3$2Q)
+            ])], 8, _hoisted_3$2R)
           ])
         ])) : (__props.type === "COMFYTV_IMAGE" || __props.type === "COMFYTV_PANORAMA") && !__props.compact ? (openBlock(), createElementBlock("div", {
           key: 4,
@@ -110329,7 +110333,7 @@ const _sfc_main$34 = /* @__PURE__ */ defineComponent({
             class: "ctv:block ctv:size-full ctv:object-contain ctv:select-none",
             alt: String(__props.content),
             draggable: "false"
-          }, null, 8, _hoisted_4$2r),
+          }, null, 8, _hoisted_4$2s),
           createBaseVNode("div", {
             class: normalizeClass(imgActionsClass)
           }, [
@@ -110340,7 +110344,7 @@ const _sfc_main$34 = /* @__PURE__ */ defineComponent({
               onClick: _cache2[6] || (_cache2[6] = withModifiers(($event) => openViewer(String(__props.content)), ["stop"]))
             }, [..._cache2[23] || (_cache2[23] = [
               createBaseVNode("i", { class: "pi pi-window-maximize" }, null, -1)
-            ])], 8, _hoisted_5$2i),
+            ])], 8, _hoisted_5$2j),
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(imgActionBtn),
@@ -110348,7 +110352,7 @@ const _sfc_main$34 = /* @__PURE__ */ defineComponent({
               onClick: _cache2[7] || (_cache2[7] = withModifiers(($event) => onDownload(String(__props.content)), ["stop"]))
             }, [..._cache2[24] || (_cache2[24] = [
               createBaseVNode("i", { class: "pi pi-download" }, null, -1)
-            ])], 8, _hoisted_6$26),
+            ])], 8, _hoisted_6$27),
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(tagActionBtn(String(__props.content))),
@@ -110356,7 +110360,7 @@ const _sfc_main$34 = /* @__PURE__ */ defineComponent({
               onClick: _cache2[8] || (_cache2[8] = withModifiers(($event) => unref(openTagMenu)(String(__props.content), unref(nameFromUrl)(String(__props.content)), $event, previewMediaType.value), ["stop"]))
             }, [..._cache2[25] || (_cache2[25] = [
               createBaseVNode("i", { class: "pi pi-tag" }, null, -1)
-            ])], 10, _hoisted_7$1F),
+            ])], 10, _hoisted_7$1G),
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(imgActionBtn),
@@ -110364,14 +110368,14 @@ const _sfc_main$34 = /* @__PURE__ */ defineComponent({
               onClick: _cache2[9] || (_cache2[9] = withModifiers(($event) => onLoadAsset(String(__props.content), unref(nameFromUrl)(String(__props.content))), ["stop"]))
             }, [..._cache2[26] || (_cache2[26] = [
               createBaseVNode("i", { class: "pi pi-bookmark" }, null, -1)
-            ])], 8, _hoisted_8$1k)
+            ])], 8, _hoisted_8$1l)
           ])
         ], 512)) : __props.type === "COMFYTV_IMAGE" || __props.type === "COMFYTV_PANORAMA" ? (openBlock(), createElementBlock("img", {
           key: 5,
           src: String(__props.content),
           class: normalizeClass(imgClass.value),
           alt: String(__props.content)
-        }, null, 10, _hoisted_9$1c)) : __props.type === "COMFYTV_VIDEO" && !__props.compact ? (openBlock(), createElementBlock("div", _hoisted_10$12, [
+        }, null, 10, _hoisted_9$1d)) : __props.type === "COMFYTV_VIDEO" && !__props.compact ? (openBlock(), createElementBlock("div", _hoisted_10$13, [
           createVNode(ProxiedVideo, {
             src: String(__props.content),
             class: normalizeClass(videoClass.value),
@@ -110390,7 +110394,7 @@ const _sfc_main$34 = /* @__PURE__ */ defineComponent({
               onClick: _cache2[10] || (_cache2[10] = withModifiers(($event) => onDownload(String(__props.content)), ["stop"]))
             }, [..._cache2[27] || (_cache2[27] = [
               createBaseVNode("i", { class: "pi pi-download" }, null, -1)
-            ])], 8, _hoisted_11$X),
+            ])], 8, _hoisted_11$Y),
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(tagActionBtn(String(__props.content))),
@@ -110398,7 +110402,7 @@ const _sfc_main$34 = /* @__PURE__ */ defineComponent({
               onClick: _cache2[11] || (_cache2[11] = withModifiers(($event) => unref(openTagMenu)(String(__props.content), unref(nameFromUrl)(String(__props.content)), $event, previewMediaType.value), ["stop"]))
             }, [..._cache2[28] || (_cache2[28] = [
               createBaseVNode("i", { class: "pi pi-tag" }, null, -1)
-            ])], 10, _hoisted_12$R),
+            ])], 10, _hoisted_12$S),
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(imgActionBtn),
@@ -110406,7 +110410,7 @@ const _sfc_main$34 = /* @__PURE__ */ defineComponent({
               onClick: _cache2[12] || (_cache2[12] = withModifiers(($event) => onLoadAsset(String(__props.content), unref(nameFromUrl)(String(__props.content))), ["stop"]))
             }, [..._cache2[29] || (_cache2[29] = [
               createBaseVNode("i", { class: "pi pi-bookmark" }, null, -1)
-            ])], 8, _hoisted_13$L)
+            ])], 8, _hoisted_13$M)
           ])
         ])) : __props.type === "COMFYTV_VIDEO" ? (openBlock(), createBlock(ProxiedVideo, {
           key: 7,
@@ -110430,10 +110434,10 @@ const _sfc_main$34 = /* @__PURE__ */ defineComponent({
             class: "ctv:block ctv:w-full ctv:mt-3.5",
             controls: "",
             preload: "metadata"
-          }, null, 8, _hoisted_14$I))
+          }, null, 8, _hoisted_14$J))
         ], 64)) : __props.type === "COMFYTV_MODEL" ? (openBlock(), createElementBlock(Fragment$1, { key: 9 }, [
-          __props.compact ? (openBlock(), createElementBlock("div", _hoisted_15$C, [
-            createVNode(_sfc_main$3A, {
+          __props.compact ? (openBlock(), createElementBlock("div", _hoisted_15$D, [
+            createVNode(_sfc_main$3B, {
               src: String(__props.content)
             }, {
               default: withCtx(() => [..._cache2[31] || (_cache2[31] = [
@@ -110442,7 +110446,7 @@ const _sfc_main$34 = /* @__PURE__ */ defineComponent({
               _: 1
             }, 8, ["src"])
           ])) : (openBlock(), createElementBlock("div", _hoisted_16$y, [
-            createVNode(_sfc_main$35, {
+            createVNode(_sfc_main$36, {
               ref_key: "modelPreviewEl",
               ref: modelPreviewEl,
               src: String(__props.content),
@@ -110483,12 +110487,12 @@ const _sfc_main$34 = /* @__PURE__ */ defineComponent({
               class: "ctv:size-10 ctv:rounded-full",
               style: normalizeStyle(materialSwatchStyle.value)
             }, null, 4)
-          ])) : (openBlock(), createElementBlock("div", _hoisted_21$l, [
+          ])) : (openBlock(), createElementBlock("div", _hoisted_21$k, [
             createBaseVNode("span", {
               class: "ctv:size-16 ctv:shrink-0 ctv:rounded-full",
               style: normalizeStyle(materialSwatchStyle.value)
             }, null, 4),
-            createBaseVNode("div", _hoisted_22$k, [
+            createBaseVNode("div", _hoisted_22$j, [
               createBaseVNode("span", _hoisted_23$i, toDisplayString$1(materialParams.value.color), 1),
               createBaseVNode("span", null, "M " + toDisplayString$1(materialParams.value.metalness.toFixed(2)) + " · R " + toDisplayString$1(materialParams.value.roughness.toFixed(2)), 1),
               createBaseVNode("span", null, "T " + toDisplayString$1(materialParams.value.transmission.toFixed(2)) + " · A " + toDisplayString$1(materialParams.value.opacity.toFixed(2)), 1)
@@ -110921,7 +110925,7 @@ const _sfc_main$34 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const ValuePreview = /* @__PURE__ */ _export_sfc(_sfc_main$34, [["__scopeId", "data-v-7183804e"]]);
+const ValuePreview = /* @__PURE__ */ _export_sfc(_sfc_main$35, [["__scopeId", "data-v-7183804e"]]);
 function makeCollapsed(storageKey) {
   const expanded = useStorage(storageKey, []);
   return (getNodeId) => computed({
@@ -111401,27 +111405,27 @@ function presetLabelKey(category, presetId) {
 function presetTooltipKey(category, presetId) {
   return `presets.${category}.${presetId}.tooltip`;
 }
-const _hoisted_1$4A = { class: "ctv:flex ctv:items-center ctv:gap-2" };
-const _hoisted_2$2S = { class: "ctv:text-[11px] ctv:font-semibold" };
-const _hoisted_3$2P = { class: "ctv:text-3xs ctv:text-muted-foreground ctv:font-mono" };
-const _hoisted_4$2q = {
+const _hoisted_1$4B = { class: "ctv:flex ctv:items-center ctv:gap-2" };
+const _hoisted_2$2T = { class: "ctv:text-[11px] ctv:font-semibold" };
+const _hoisted_3$2Q = { class: "ctv:text-3xs ctv:text-muted-foreground ctv:font-mono" };
+const _hoisted_4$2r = {
   key: 0,
   class: "ctv-src-tag ctv:text-3xs ctv:py-px ctv:px-1.5 ctv:rounded-sm ctv:tracking-wide ctv:bg-base-foreground/5 ctv:text-muted-foreground"
 };
-const _hoisted_5$2h = ["title"];
-const _hoisted_6$25 = { class: "ctv:ml-auto ctv:text-3xs ctv:text-destructive-background ctv:font-semibold" };
-const _hoisted_7$1E = {
+const _hoisted_5$2i = ["title"];
+const _hoisted_6$26 = { class: "ctv:ml-auto ctv:text-3xs ctv:text-destructive-background ctv:font-semibold" };
+const _hoisted_7$1F = {
   key: 3,
   class: "ctv:flex ctv:flex-col ctv:gap-1"
 };
-const _hoisted_8$1j = ["aria-expanded"];
-const _hoisted_9$1b = { class: "ctv:text-3xs ctv:text-muted-foreground ctv:font-mono ctv:normal-case ctv:tracking-normal" };
-const _hoisted_10$11 = { class: "ctv:flex ctv:flex-wrap ctv:gap-1.5" };
-const _hoisted_11$W = ["title"];
-const _hoisted_12$Q = { class: "ctv:absolute ctv:bottom-0 ctv:inset-x-0 ctv:py-0.5 ctv:px-1 ctv:text-3xs ctv:font-semibold ctv:tracking-wide ctv:text-white/90 ctv:overflow-hidden ctv:whitespace-nowrap ctv:text-ellipsis ctv:pointer-events-none ctv:bg-linear-to-b ctv:from-transparent ctv:to-black/75" };
-const _hoisted_13$K = ["title", "onClick"];
-const _hoisted_14$H = ["title"];
-const _hoisted_15$B = ["title"];
+const _hoisted_8$1k = ["aria-expanded"];
+const _hoisted_9$1c = { class: "ctv:text-3xs ctv:text-muted-foreground ctv:font-mono ctv:normal-case ctv:tracking-normal" };
+const _hoisted_10$12 = { class: "ctv:flex ctv:flex-wrap ctv:gap-1.5" };
+const _hoisted_11$X = ["title"];
+const _hoisted_12$R = { class: "ctv:absolute ctv:bottom-0 ctv:inset-x-0 ctv:py-0.5 ctv:px-1 ctv:text-3xs ctv:font-semibold ctv:tracking-wide ctv:text-white/90 ctv:overflow-hidden ctv:whitespace-nowrap ctv:text-ellipsis ctv:pointer-events-none ctv:bg-linear-to-b ctv:from-transparent ctv:to-black/75" };
+const _hoisted_13$L = ["title", "onClick"];
+const _hoisted_14$I = ["title"];
+const _hoisted_15$C = ["title"];
 const _hoisted_16$x = {
   key: 6,
   class: "ctv:flex ctv:items-center ctv:gap-1.5"
@@ -111430,8 +111434,8 @@ const _hoisted_17$v = { class: "ctv:shrink-0 ctv:text-2xs ctv:uppercase ctv:trac
 const _hoisted_18$s = ["disabled"];
 const _hoisted_19$p = { key: 0 };
 const _hoisted_20$l = { key: 1 };
-const _hoisted_21$k = { key: 2 };
-const _hoisted_22$j = { key: 3 };
+const _hoisted_21$j = { key: 2 };
+const _hoisted_22$i = { key: 3 };
 const _hoisted_23$h = {
   key: 8,
   class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:mt-0.5"
@@ -111474,7 +111478,7 @@ const contextToggle = "ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:py-0
 const COMFY_BTN_BASE = "ctv:relative ctv:inline-flex ctv:items-center ctv:justify-center ctv:gap-2 ctv:cursor-pointer ctv:touch-manipulation ctv:whitespace-nowrap ctv:appearance-none ctv:border-none ctv:transition-colors ctv:disabled:pointer-events-none ctv:disabled:opacity-50";
 const COMFY_SIZE_LG = " ctv:h-10 ctv:rounded-lg ctv:px-4 ctv:py-2 ctv:text-sm ctv:font-medium";
 const COMFY_SIZE_SM = " ctv:h-6 ctv:rounded-sm ctv:px-2 ctv:py-1 ctv:text-xs ctv:font-medium";
-const _sfc_main$33 = /* @__PURE__ */ defineComponent({
+const _sfc_main$34 = /* @__PURE__ */ defineComponent({
   __name: "StageCard",
   props: {
     state: {},
@@ -111632,11 +111636,11 @@ const _sfc_main$33 = /* @__PURE__ */ defineComponent({
         (...args) => unref(onCardDrop) && unref(onCardDrop)(...args))
       }, [
         createVNode(MainPromptInput, { node: __props.node }, null, 8, ["node"]),
-        __props.node && !__props.hideRun ? (openBlock(), createBlock(_sfc_main$36, {
+        __props.node && !__props.hideRun ? (openBlock(), createBlock(_sfc_main$37, {
           key: 0,
           node: __props.node
         }, null, 8, ["node"])) : createCommentVNode("", true),
-        !__props.hideContext && __props.state.variant !== "loader" ? (openBlock(), createBlock(_sfc_main$3e, {
+        !__props.hideContext && __props.state.variant !== "loader" ? (openBlock(), createBlock(_sfc_main$3f, {
           key: 1,
           node: __props.node
         }, null, 8, ["node"])) : createCommentVNode("", true),
@@ -111644,18 +111648,18 @@ const _sfc_main$33 = /* @__PURE__ */ defineComponent({
           key: 2,
           class: normalizeClass(["ctv-picker-input ctv:flex ctv:flex-col ctv:gap-1 ctv:py-1", `ctv-src-${unref(pickerSource)}`])
         }, [
-          createBaseVNode("div", _hoisted_1$4A, [
-            createBaseVNode("span", _hoisted_2$2S, toDisplayString$1(_ctx.$t("stage.section.pool")), 1),
-            createBaseVNode("span", _hoisted_3$2P, toDisplayString$1(unref(poolCount)), 1),
-            unref(pickerSource) !== "empty" ? (openBlock(), createElementBlock("span", _hoisted_4$2q, toDisplayString$1(sourceLabel(unref(pickerSource))), 1)) : createCommentVNode("", true),
+          createBaseVNode("div", _hoisted_1$4B, [
+            createBaseVNode("span", _hoisted_2$2T, toDisplayString$1(_ctx.$t("stage.section.pool")), 1),
+            createBaseVNode("span", _hoisted_3$2Q, toDisplayString$1(unref(poolCount)), 1),
+            unref(pickerSource) !== "empty" ? (openBlock(), createElementBlock("span", _hoisted_4$2r, toDisplayString$1(sourceLabel(unref(pickerSource))), 1)) : createCommentVNode("", true),
             unref(poolCount) > 0 ? (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
               !unref(confirmingClear) ? (openBlock(), createElementBlock("button", {
                 key: 0,
                 class: normalizeClass(["ctv:ml-auto", clearBtn]),
                 title: _ctx.$t("stage.pool.clearHint"),
                 onClick: _cache2[0] || (_cache2[0] = ($event) => confirmingClear.value = true)
-              }, toDisplayString$1(_ctx.$t("stage.pool.clear")), 11, _hoisted_5$2h)) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
-                createBaseVNode("span", _hoisted_6$25, toDisplayString$1(_ctx.$t("stage.pool.confirmClear")), 1),
+              }, toDisplayString$1(_ctx.$t("stage.pool.clear")), 11, _hoisted_5$2i)) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
+                createBaseVNode("span", _hoisted_6$26, toDisplayString$1(_ctx.$t("stage.pool.confirmClear")), 1),
                 createBaseVNode("button", {
                   class: normalizeClass(clearConfirmBtn),
                   onClick: _cache2[1] || (_cache2[1] = //@ts-ignore
@@ -111681,7 +111685,7 @@ const _sfc_main$33 = /* @__PURE__ */ defineComponent({
             onLoadAsset: onLoadAssetAction
           }, null, 8, ["type", "content", "empty-label", "selected-index", "upstream-urls"])
         ], 2)) : createCommentVNode("", true),
-        !__props.hideContext && __props.state.variant !== "loader" && !isPicker.value && unref(connectedInputs).length > 0 ? (openBlock(), createElementBlock("section", _hoisted_7$1E, [
+        !__props.hideContext && __props.state.variant !== "loader" && !isPicker.value && unref(connectedInputs).length > 0 ? (openBlock(), createElementBlock("section", _hoisted_7$1F, [
           createBaseVNode("button", {
             class: normalizeClass(contextToggle),
             "aria-expanded": !unref(contextCollapsed),
@@ -111693,9 +111697,9 @@ const _sfc_main$33 = /* @__PURE__ */ defineComponent({
             createBaseVNode("span", {
               class: normalizeClass([sectionLabel$1, "ctv:mb-0"])
             }, toDisplayString$1(_ctx.$t("stage.section.context")), 1),
-            createBaseVNode("span", _hoisted_9$1b, toDisplayString$1(unref(contextSummary)), 1)
-          ], 8, _hoisted_8$1j),
-          withDirectives(createBaseVNode("div", _hoisted_10$11, [
+            createBaseVNode("span", _hoisted_9$1c, toDisplayString$1(unref(contextSummary)), 1)
+          ], 8, _hoisted_8$1k),
+          withDirectives(createBaseVNode("div", _hoisted_10$12, [
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(connectedInputs), (inp) => {
               return openBlock(), createElementBlock("div", {
                 key: inp.slot,
@@ -111712,15 +111716,15 @@ const _sfc_main$33 = /* @__PURE__ */ defineComponent({
                   content: inp.content,
                   "empty-label": inp.source === "upstream-pending" ? "…" : ""
                 }, null, 8, ["type", "content", "empty-label"]),
-                createBaseVNode("span", _hoisted_12$Q, toDisplayString$1(unref(formatSlot)(inp.slot)), 1),
+                createBaseVNode("span", _hoisted_12$R, toDisplayString$1(unref(formatSlot)(inp.slot)), 1),
                 createBaseVNode("button", {
                   class: normalizeClass(["ctv-tile-disconnect ctv:absolute ctv:top-0.5 ctv:right-0.5 ctv:hidden", tileDisconnectBtn]),
                   title: _ctx.$t("stage.disconnect"),
                   onClick: ($event) => onDisconnect(inp.slot)
                 }, [..._cache2[13] || (_cache2[13] = [
                   createBaseVNode("i", { class: "pi pi-times" }, null, -1)
-                ])], 10, _hoisted_13$K)
-              ], 14, _hoisted_11$W);
+                ])], 10, _hoisted_13$L)
+              ], 14, _hoisted_11$X);
             }), 128))
           ], 512), [
             [vShow, !unref(contextCollapsed)]
@@ -111748,23 +111752,23 @@ const _sfc_main$33 = /* @__PURE__ */ defineComponent({
               ])
             }, toDisplayString$1(__props.state.error.type) + ":", 3)) : createCommentVNode("", true),
             createTextVNode(" " + toDisplayString$1(__props.state.error.message), 1)
-          ], 8, _hoisted_14$H),
+          ], 8, _hoisted_14$I),
           createBaseVNode("button", {
             class: normalizeClass(tileDisconnectBtn),
             title: _ctx.$t("error.dismiss"),
             onClick: onDismissError
           }, [..._cache2[14] || (_cache2[14] = [
             createBaseVNode("i", { class: "pi pi-times" }, null, -1)
-          ])], 8, _hoisted_15$B)
+          ])], 8, _hoisted_15$C)
         ], 2)) : createCommentVNode("", true),
-        __props.node && !__props.hideRun ? (openBlock(), createBlock(_sfc_main$37, {
+        __props.node && !__props.hideRun ? (openBlock(), createBlock(_sfc_main$38, {
           key: 5,
           state: __props.state,
           node: __props.node
         }, null, 8, ["state", "node"])) : createCommentVNode("", true),
         unref(showServerSelect) && !__props.hideRun && !__props.hideRunButton ? (openBlock(), createElementBlock("div", _hoisted_16$x, [
           createBaseVNode("span", _hoisted_17$v, toDisplayString$1(_ctx.$t("servers.runOn")), 1),
-          createVNode(_sfc_main$3o, {
+          createVNode(_sfc_main$3p, {
             class: "ctv:flex-1 ctv:min-w-0",
             "model-value": unref(serverSelection),
             options: unref(serverOptions),
@@ -111784,10 +111788,10 @@ const _sfc_main$33 = /* @__PURE__ */ defineComponent({
           ])) : __props.state.preparingWorkflow ? (openBlock(), createElementBlock("span", _hoisted_20$l, [
             _cache2[16] || (_cache2[16] = createBaseVNode("i", { class: "pi pi-hourglass" }, null, -1)),
             createTextVNode(" " + toDisplayString$1(_ctx.$t("stage.preparingWorkflow")), 1)
-          ])) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_21$k, [
+          ])) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_21$j, [
             _cache2[17] || (_cache2[17] = createBaseVNode("i", { class: "pi pi-refresh" }, null, -1)),
             createTextVNode(" " + toDisplayString$1(_ctx.$t("stage.rerun")), 1)
-          ])) : (openBlock(), createElementBlock("span", _hoisted_22$j, [
+          ])) : (openBlock(), createElementBlock("span", _hoisted_22$i, [
             _cache2[18] || (_cache2[18] = createBaseVNode("i", { class: "pi pi-play" }, null, -1)),
             createTextVNode(" " + toDisplayString$1(_ctx.$t(`stage.runByKind.${__props.state.kind}`, _ctx.$t("stage.run"))), 1)
           ]))
@@ -111900,7 +111904,7 @@ const _sfc_main$33 = /* @__PURE__ */ defineComponent({
                 title: _ctx.$t(unref(actionTooltipKey)(__props.state.kind, a2.id)),
                 onClick: ($event) => unref(onActionClick)(a2)
               }, [
-                createVNode(_sfc_main$39, {
+                createVNode(_sfc_main$3a, {
                   name: a2.icon,
                   class: "ctv:text-xs"
                 }, null, 8, ["name"]),
@@ -111922,7 +111926,7 @@ const _sfc_main$33 = /* @__PURE__ */ defineComponent({
                 title: _ctx.$t(unref(presetTooltipKey)(p2.category, p2.id)),
                 onClick: ($event) => unref(onPresetClick)(p2)
               }, [
-                createVNode(_sfc_main$39, {
+                createVNode(_sfc_main$3a, {
                   name: p2.icon,
                   class: "ctv:shrink-0 ctv:text-xs"
                 }, null, 8, ["name"]),
@@ -111937,8 +111941,8 @@ const _sfc_main$33 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const StageCard = /* @__PURE__ */ _export_sfc(_sfc_main$33, [["__scopeId", "data-v-5f598545"]]);
-const _sfc_main$32 = /* @__PURE__ */ defineComponent({
+const StageCard = /* @__PURE__ */ _export_sfc(_sfc_main$34, [["__scopeId", "data-v-5f598545"]]);
+const _sfc_main$33 = /* @__PURE__ */ defineComponent({
   __name: "SceneCanvas",
   props: {
     initScene: { type: Function }
@@ -112001,27 +112005,27 @@ function findClosestDistanceOption(dist2) {
   if (dist2 < 6) return 4;
   return 8;
 }
-const _hoisted_1$4z = { class: "ctv:absolute ctv:bottom-2 ctv:left-2 ctv:right-2 ctv:z-10 ctv:flex ctv:flex-col ctv:gap-1 ctv:py-1.5 ctv:px-2.5 ctv:text-[11px] ctv:text-white/85 ctv:rounded-md ctv:backdrop-blur-sm ctv:bg-black/90 ctv:border ctv:border-[rgb(233_61_130/0.3)]" };
-const _hoisted_2$2R = { class: "ctv:flex ctv:justify-around ctv:items-center" };
-const _hoisted_3$2O = { class: "ctv:flex ctv:items-center ctv:gap-1" };
-const _hoisted_4$2p = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:whitespace-nowrap ctv:text-[#E93D82]" };
-const _hoisted_5$2g = ["value"];
-const _hoisted_6$24 = ["value"];
-const _hoisted_7$1D = { class: "ctv:flex ctv:items-center ctv:gap-1" };
-const _hoisted_8$1i = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:whitespace-nowrap ctv:text-[#00FFD0]" };
-const _hoisted_9$1a = ["value"];
-const _hoisted_10$10 = ["value"];
-const _hoisted_11$V = { class: "ctv:flex ctv:items-center ctv:gap-1" };
-const _hoisted_12$P = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:whitespace-nowrap ctv:text-[#FFB800]" };
-const _hoisted_13$J = ["value"];
-const _hoisted_14$G = ["value"];
-const _hoisted_15$A = { class: "ctv:flex ctv:justify-around ctv:items-center" };
+const _hoisted_1$4A = { class: "ctv:absolute ctv:bottom-2 ctv:left-2 ctv:right-2 ctv:z-10 ctv:flex ctv:flex-col ctv:gap-1 ctv:py-1.5 ctv:px-2.5 ctv:text-[11px] ctv:text-white/85 ctv:rounded-md ctv:backdrop-blur-sm ctv:bg-black/90 ctv:border ctv:border-[rgb(233_61_130/0.3)]" };
+const _hoisted_2$2S = { class: "ctv:flex ctv:justify-around ctv:items-center" };
+const _hoisted_3$2P = { class: "ctv:flex ctv:items-center ctv:gap-1" };
+const _hoisted_4$2q = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:whitespace-nowrap ctv:text-[#E93D82]" };
+const _hoisted_5$2h = ["value"];
+const _hoisted_6$25 = ["value"];
+const _hoisted_7$1E = { class: "ctv:flex ctv:items-center ctv:gap-1" };
+const _hoisted_8$1j = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:whitespace-nowrap ctv:text-[#00FFD0]" };
+const _hoisted_9$1b = ["value"];
+const _hoisted_10$11 = ["value"];
+const _hoisted_11$W = { class: "ctv:flex ctv:items-center ctv:gap-1" };
+const _hoisted_12$Q = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:whitespace-nowrap ctv:text-[#FFB800]" };
+const _hoisted_13$K = ["value"];
+const _hoisted_14$H = ["value"];
+const _hoisted_15$B = { class: "ctv:flex ctv:justify-around ctv:items-center" };
 const _hoisted_16$w = { class: "ctv:text-center ctv:text-[13px] ctv:font-semibold ctv:text-[#E93D82]" };
 const _hoisted_17$u = { class: "ctv:text-center ctv:text-[13px] ctv:font-semibold ctv:text-[#00FFD0]" };
 const _hoisted_18$r = { class: "ctv:text-center ctv:text-[13px] ctv:font-semibold ctv:text-[#FFB800]" };
 const _hoisted_19$o = ["title"];
 const DROPDOWN_BASE = "ctv-camera-dropdown ctv:min-w-0 ctv:max-w-[90px] ctv:py-0.5 ctv:px-1 ctv:text-3xs ctv:cursor-pointer ctv:rounded ctv:outline-none ctv:backdrop-blur-sm ctv:bg-black/90 ctv:text-white/85 ctv:border ctv:border-white/20 ctv:hover:border-white/40";
-const _sfc_main$31 = /* @__PURE__ */ defineComponent({
+const _sfc_main$32 = /* @__PURE__ */ defineComponent({
   __name: "CameraControlPanel",
   props: {
     azimuth: {},
@@ -112056,10 +112060,10 @@ const _sfc_main$31 = /* @__PURE__ */ defineComponent({
       return `${DROPDOWN_BASE} ${DROPDOWN_FOCUS[channel]}`;
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$4z, [
-        createBaseVNode("div", _hoisted_2$2R, [
-          createBaseVNode("div", _hoisted_3$2O, [
-            createBaseVNode("span", _hoisted_4$2p, toDisplayString$1(_ctx.$t("camera.horizontal")), 1),
+      return openBlock(), createElementBlock("div", _hoisted_1$4A, [
+        createBaseVNode("div", _hoisted_2$2S, [
+          createBaseVNode("div", _hoisted_3$2P, [
+            createBaseVNode("span", _hoisted_4$2q, toDisplayString$1(_ctx.$t("camera.horizontal")), 1),
             createBaseVNode("select", {
               class: normalizeClass(dropdownClass("azimuth")),
               value: closestAzimuth.value,
@@ -112069,12 +112073,12 @@ const _sfc_main$31 = /* @__PURE__ */ defineComponent({
                 return openBlock(), createElementBlock("option", {
                   key: opt.value,
                   value: opt.value
-                }, toDisplayString$1(_ctx.$t(`camera.azimuth.${opt.key}`)), 9, _hoisted_6$24);
+                }, toDisplayString$1(_ctx.$t(`camera.azimuth.${opt.key}`)), 9, _hoisted_6$25);
               }), 128))
-            ], 42, _hoisted_5$2g)
+            ], 42, _hoisted_5$2h)
           ]),
-          createBaseVNode("div", _hoisted_7$1D, [
-            createBaseVNode("span", _hoisted_8$1i, toDisplayString$1(_ctx.$t("camera.vertical")), 1),
+          createBaseVNode("div", _hoisted_7$1E, [
+            createBaseVNode("span", _hoisted_8$1j, toDisplayString$1(_ctx.$t("camera.vertical")), 1),
             createBaseVNode("select", {
               class: normalizeClass(dropdownClass("elevation")),
               value: closestElevation.value,
@@ -112084,12 +112088,12 @@ const _sfc_main$31 = /* @__PURE__ */ defineComponent({
                 return openBlock(), createElementBlock("option", {
                   key: opt.value,
                   value: opt.value
-                }, toDisplayString$1(_ctx.$t(`camera.elevation.${opt.key}`)), 9, _hoisted_10$10);
+                }, toDisplayString$1(_ctx.$t(`camera.elevation.${opt.key}`)), 9, _hoisted_10$11);
               }), 128))
-            ], 42, _hoisted_9$1a)
+            ], 42, _hoisted_9$1b)
           ]),
-          createBaseVNode("div", _hoisted_11$V, [
-            createBaseVNode("span", _hoisted_12$P, toDisplayString$1(_ctx.$t("camera.zoom")), 1),
+          createBaseVNode("div", _hoisted_11$W, [
+            createBaseVNode("span", _hoisted_12$Q, toDisplayString$1(_ctx.$t("camera.zoom")), 1),
             createBaseVNode("select", {
               class: normalizeClass(dropdownClass("distance")),
               value: closestDistance.value,
@@ -112099,12 +112103,12 @@ const _sfc_main$31 = /* @__PURE__ */ defineComponent({
                 return openBlock(), createElementBlock("option", {
                   key: opt.value,
                   value: opt.value
-                }, toDisplayString$1(_ctx.$t(`camera.distance.${opt.key}`)), 9, _hoisted_14$G);
+                }, toDisplayString$1(_ctx.$t(`camera.distance.${opt.key}`)), 9, _hoisted_14$H);
               }), 128))
-            ], 42, _hoisted_13$J)
+            ], 42, _hoisted_13$K)
           ])
         ]),
-        createBaseVNode("div", _hoisted_15$A, [
+        createBaseVNode("div", _hoisted_15$B, [
           createBaseVNode("div", _hoisted_16$w, toDisplayString$1(Math.round(__props.azimuth)) + "°", 1),
           createBaseVNode("div", _hoisted_17$u, toDisplayString$1(Math.round(__props.elevation)) + "°", 1),
           createBaseVNode("div", _hoisted_18$r, toDisplayString$1(__props.distance.toFixed(1)), 1),
@@ -112118,7 +112122,7 @@ const _sfc_main$31 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const CameraControlPanel = /* @__PURE__ */ _export_sfc(_sfc_main$31, [["__scopeId", "data-v-d255fcd1"]]);
+const CameraControlPanel = /* @__PURE__ */ _export_sfc(_sfc_main$32, [["__scopeId", "data-v-d255fcd1"]]);
 class CameraWidget {
   constructor(options) {
     __publicField(this, "container");
@@ -112871,11 +112875,11 @@ function useCameraWidget(initialState = {}, onExternalStateChange) {
     cleanup
   };
 }
-const _hoisted_1$4y = { class: "ctv:flex ctv:flex-col ctv:w-full ctv:grow" };
-const _hoisted_2$2Q = { class: "ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[350px] ctv:rounded-lg ctv:overflow-hidden ctv:bg-black ctv:mb-1.5" };
-const _hoisted_3$2N = { class: "ctv:absolute ctv:top-2 ctv:left-2 ctv:right-2 ctv:z-10 ctv:pointer-events-none ctv:bg-black/90 ctv:border ctv:border-[rgb(233_61_130/0.3)] ctv:rounded-md ctv:py-1.5 ctv:px-2.5 ctv:text-xs ctv:text-[#E93D82] ctv:font-mono ctv:leading-snug ctv:break-all ctv:backdrop-blur-sm" };
+const _hoisted_1$4z = { class: "ctv:flex ctv:flex-col ctv:w-full ctv:grow" };
+const _hoisted_2$2R = { class: "ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[350px] ctv:rounded-lg ctv:overflow-hidden ctv:bg-black ctv:mb-1.5" };
+const _hoisted_3$2O = { class: "ctv:absolute ctv:top-2 ctv:left-2 ctv:right-2 ctv:z-10 ctv:pointer-events-none ctv:bg-black/90 ctv:border ctv:border-[rgb(233_61_130/0.3)] ctv:rounded-md ctv:py-1.5 ctv:px-2.5 ctv:text-xs ctv:text-[#E93D82] ctv:font-mono ctv:leading-snug ctv:break-all ctv:backdrop-blur-sm" };
 const PROP_KEY$3 = "comfytv_multiangle_camera";
-const _sfc_main$30 = /* @__PURE__ */ defineComponent({
+const _sfc_main$31 = /* @__PURE__ */ defineComponent({
   __name: "MultiangleStageCard",
   props: {
     state: {},
@@ -112937,13 +112941,13 @@ const _sfc_main$30 = /* @__PURE__ */ defineComponent({
       cleanup();
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$4y, [
-        createBaseVNode("div", _hoisted_2$2Q, [
-          createVNode(_sfc_main$32, {
+      return openBlock(), createElementBlock("div", _hoisted_1$4z, [
+        createBaseVNode("div", _hoisted_2$2R, [
+          createVNode(_sfc_main$33, {
             class: "ctv:absolute! ctv:inset-0",
             "init-scene": unref(initScene)
           }, null, 8, ["init-scene"]),
-          createBaseVNode("div", _hoisted_3$2N, toDisplayString$1(unref(prompt)), 1),
+          createBaseVNode("div", _hoisted_3$2O, toDisplayString$1(unref(prompt)), 1),
           createVNode(CameraControlPanel, {
             azimuth: unref(azimuth),
             elevation: unref(elevation),
@@ -113741,23 +113745,23 @@ function usePainter(options) {
     commitMask
   };
 }
-const _hoisted_1$4x = ["src"];
-const _hoisted_2$2P = {
+const _hoisted_1$4y = ["src"];
+const _hoisted_2$2Q = {
   key: 0,
   class: "ctv:text-2xs ctv:text-center ctv:font-mono ctv:text-muted-foreground"
 };
-const _hoisted_3$2M = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
-const _hoisted_4$2o = { class: "ctv:flex ctv:gap-0.5 ctv:p-0.5 ctv:rounded ctv:bg-secondary-background" };
-const _hoisted_5$2f = ["title", "onClick"];
-const _hoisted_6$23 = ["value"];
-const _hoisted_7$1C = ["value"];
-const _hoisted_8$1h = ["value"];
-const _hoisted_9$19 = ["value"];
+const _hoisted_3$2N = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
+const _hoisted_4$2p = { class: "ctv:flex ctv:gap-0.5 ctv:p-0.5 ctv:rounded ctv:bg-secondary-background" };
+const _hoisted_5$2g = ["title", "onClick"];
+const _hoisted_6$24 = ["value"];
+const _hoisted_7$1D = ["value"];
+const _hoisted_8$1i = ["value"];
+const _hoisted_9$1a = ["value"];
 const SHELL_MAX_HEIGHT_PX = 360;
 const rowClass = "ctv:grid ctv:grid-cols-[64px_1fr_48px] ctv:items-center ctv:gap-1.5 ctv:text-[11px]";
 const labelClass$1 = "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground";
 const valueClass = "ctv:text-right ctv:text-base-foreground";
-const _sfc_main$2$ = /* @__PURE__ */ defineComponent({
+const _sfc_main$30 = /* @__PURE__ */ defineComponent({
   __name: "PainterCanvas",
   props: {
     node: {},
@@ -113850,7 +113854,7 @@ const _sfc_main$2$ = /* @__PURE__ */ defineComponent({
             draggable: "false",
             onDragstart: _cache2[0] || (_cache2[0] = withModifiers(() => {
             }, ["prevent"]))
-          }, null, 40, _hoisted_1$4x)) : createCommentVNode("", true),
+          }, null, 40, _hoisted_1$4y)) : createCommentVNode("", true),
           createBaseVNode("canvas", {
             ref_key: "canvasEl",
             ref: canvasEl,
@@ -113875,15 +113879,15 @@ const _sfc_main$2$ = /* @__PURE__ */ defineComponent({
             [vShow, unref(cursorVisible) && unref(tool) !== "fill"]
           ])
         ], 4),
-        __props.sourceImageUrl ? (openBlock(), createElementBlock("div", _hoisted_2$2P, toDisplayString$1(unref(canvasWidth)) + " × " + toDisplayString$1(unref(canvasHeight)), 1)) : createCommentVNode("", true),
-        createBaseVNode("div", _hoisted_3$2M, [
+        __props.sourceImageUrl ? (openBlock(), createElementBlock("div", _hoisted_2$2Q, toDisplayString$1(unref(canvasWidth)) + " × " + toDisplayString$1(unref(canvasHeight)), 1)) : createCommentVNode("", true),
+        createBaseVNode("div", _hoisted_3$2N, [
           createBaseVNode("div", {
             class: normalizeClass(rowClass)
           }, [
             createBaseVNode("span", {
               class: normalizeClass(labelClass$1)
             }, toDisplayString$1(_ctx.$t("painter.tool")), 1),
-            createBaseVNode("div", _hoisted_4$2o, [
+            createBaseVNode("div", _hoisted_4$2p, [
               (openBlock(), createElementBlock(Fragment$1, null, renderList(TOOLS, (t2) => {
                 return createBaseVNode("button", {
                   key: t2.id,
@@ -113892,11 +113896,11 @@ const _sfc_main$2$ = /* @__PURE__ */ defineComponent({
                   title: _ctx.$t(t2.i18n),
                   onClick: ($event) => tool.value = t2.id
                 }, [
-                  createVNode(_sfc_main$39, {
+                  createVNode(_sfc_main$3a, {
                     name: t2.icon,
                     class: "ctv:mx-auto"
                   }, null, 8, ["name"])
-                ], 10, _hoisted_5$2f);
+                ], 10, _hoisted_5$2g);
               }), 64))
             ])
           ]),
@@ -113915,7 +113919,7 @@ const _sfc_main$2$ = /* @__PURE__ */ defineComponent({
               class: "ctv:w-full",
               value: unref(brushSize2),
               onInput: _cache2[6] || (_cache2[6] = (e) => brushSize2.value = Number(e.target.value))
-            }, null, 40, _hoisted_6$23),
+            }, null, 40, _hoisted_6$24),
             createBaseVNode("span", {
               class: normalizeClass(valueClass)
             }, toDisplayString$1(unref(brushSize2)), 1)
@@ -113932,7 +113936,7 @@ const _sfc_main$2$ = /* @__PURE__ */ defineComponent({
                 class: "ctv:w-7 ctv:h-[18px] ctv:p-0 ctv:border-0 ctv:bg-transparent ctv:cursor-pointer",
                 value: unref(brushColorDisplay),
                 onInput: _cache2[7] || (_cache2[7] = (e) => brushColorDisplay.value = e.target.value)
-              }, null, 40, _hoisted_7$1C),
+              }, null, 40, _hoisted_7$1D),
               createBaseVNode("span", {
                 class: normalizeClass(`${valueClass} ctv:font-mono`)
               }, toDisplayString$1(unref(brushColorDisplay)), 3)
@@ -113951,7 +113955,7 @@ const _sfc_main$2$ = /* @__PURE__ */ defineComponent({
                 class: "ctv:w-full",
                 value: brushOpacityPercent.value,
                 onInput: _cache2[8] || (_cache2[8] = (e) => brushOpacityPercent.value = Number(e.target.value))
-              }, null, 40, _hoisted_8$1h),
+              }, null, 40, _hoisted_8$1i),
               createBaseVNode("span", {
                 class: normalizeClass(valueClass)
               }, toDisplayString$1(brushOpacityPercent.value) + "%", 1)
@@ -113972,7 +113976,7 @@ const _sfc_main$2$ = /* @__PURE__ */ defineComponent({
               class: "ctv:w-full",
               value: brushHardnessPercent.value,
               onInput: _cache2[9] || (_cache2[9] = (e) => brushHardnessPercent.value = Number(e.target.value))
-            }, null, 40, _hoisted_9$19),
+            }, null, 40, _hoisted_9$1a),
             createBaseVNode("span", {
               class: normalizeClass(valueClass)
             }, toDisplayString$1(brushHardnessPercent.value) + "%", 1)
@@ -113991,8 +113995,8 @@ const _sfc_main$2$ = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$4w = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
-const _sfc_main$2_ = /* @__PURE__ */ defineComponent({
+const _hoisted_1$4x = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
+const _sfc_main$2$ = /* @__PURE__ */ defineComponent({
   __name: "PainterStageCard",
   props: {
     state: {},
@@ -114016,8 +114020,8 @@ const _sfc_main$2_ = /* @__PURE__ */ defineComponent({
       props.onRunRequest();
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$4w, [
-        createVNode(_sfc_main$2$, {
+      return openBlock(), createElementBlock("div", _hoisted_1$4x, [
+        createVNode(_sfc_main$30, {
           ref_key: "painterRef",
           ref: painterRef,
           node: __props.node,
@@ -116186,34 +116190,34 @@ function useLightControlPanel(props) {
   const transformOptions = computed(() => transformModeOptions(selectedLight.value));
   return { selectedLight, transformOptions };
 }
-const _hoisted_1$4v = { class: "ctv:flex ctv:flex-col ctv:gap-1 ctv:text-xs ctv:text-white/85" };
-const _hoisted_2$2O = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:px-1" };
-const _hoisted_3$2L = ["title"];
-const _hoisted_4$2n = ["disabled", "title", "onClick"];
-const _hoisted_5$2e = ["title"];
-const _hoisted_6$22 = ["title"];
-const _hoisted_7$1B = { class: "ctv:flex ctv:h-8 ctv:items-center ctv:gap-1 ctv:overflow-x-auto ctv:px-1" };
-const _hoisted_8$1g = ["title", "onClick"];
-const _hoisted_9$18 = ["title"];
-const _hoisted_10$$ = ["title"];
-const _hoisted_11$U = {
+const _hoisted_1$4w = { class: "ctv:flex ctv:flex-col ctv:gap-1 ctv:text-xs ctv:text-white/85" };
+const _hoisted_2$2P = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:px-1" };
+const _hoisted_3$2M = ["title"];
+const _hoisted_4$2o = ["disabled", "title", "onClick"];
+const _hoisted_5$2f = ["title"];
+const _hoisted_6$23 = ["title"];
+const _hoisted_7$1C = { class: "ctv:flex ctv:h-8 ctv:items-center ctv:gap-1 ctv:overflow-x-auto ctv:px-1" };
+const _hoisted_8$1h = ["title", "onClick"];
+const _hoisted_9$19 = ["title"];
+const _hoisted_10$10 = ["title"];
+const _hoisted_11$V = {
   key: 0,
   class: "ctv:flex ctv:flex-col ctv:gap-2 ctv:rounded-md ctv:bg-black/40 ctv:border ctv:border-white/10 ctv:p-2"
 };
-const _hoisted_12$O = { class: "ctv:flex ctv:h-7 ctv:items-center ctv:gap-1 ctv:rounded ctv:bg-black/60 ctv:p-0.5" };
-const _hoisted_13$I = ["onClick"];
-const _hoisted_14$F = { class: "ctv:flex ctv:items-center ctv:gap-3" };
-const _hoisted_15$z = { class: "ctv:flex ctv:items-center ctv:gap-2" };
+const _hoisted_12$P = { class: "ctv:flex ctv:h-7 ctv:items-center ctv:gap-1 ctv:rounded ctv:bg-black/60 ctv:p-0.5" };
+const _hoisted_13$J = ["onClick"];
+const _hoisted_14$G = { class: "ctv:flex ctv:items-center ctv:gap-3" };
+const _hoisted_15$A = { class: "ctv:flex ctv:items-center ctv:gap-2" };
 const _hoisted_16$v = { class: "ctv:text-white/50" };
 const _hoisted_17$t = ["value"];
 const _hoisted_18$q = { class: "ctv:flex ctv:flex-1 ctv:items-center ctv:gap-2" };
 const _hoisted_19$n = { class: "ctv:text-white/50" };
 const _hoisted_20$k = ["value"];
-const _hoisted_21$j = {
+const _hoisted_21$i = {
   key: 0,
   class: "ctv:flex ctv:items-center ctv:gap-3"
 };
-const _hoisted_22$i = { class: "ctv:flex ctv:flex-1 ctv:items-center ctv:gap-2" };
+const _hoisted_22$h = { class: "ctv:flex ctv:flex-1 ctv:items-center ctv:gap-2" };
 const _hoisted_23$g = { class: "ctv:text-white/50" };
 const _hoisted_24$e = ["value"];
 const _hoisted_25$e = { class: "ctv:flex ctv:flex-1 ctv:items-center ctv:gap-2" };
@@ -116227,7 +116231,7 @@ const _hoisted_31$7 = {
   class: "ctv:px-2 ctv:pb-1 ctv:text-white/40"
 };
 const numberClass = "ctv:w-full ctv:min-w-0 ctv:flex-1 ctv:rounded ctv:border ctv:border-white/15 ctv:bg-black/60 ctv:px-2 ctv:py-1 ctv:text-xs ctv:text-white/85 ctv:outline-none ctv:focus:border-[#E93D82]";
-const _sfc_main$2Z = /* @__PURE__ */ defineComponent({
+const _sfc_main$2_ = /* @__PURE__ */ defineComponent({
   __name: "LightControlPanel",
   props: {
     lights: {},
@@ -116271,14 +116275,14 @@ const _sfc_main$2Z = /* @__PURE__ */ defineComponent({
       emit2("update", { [field]: value });
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$4v, [
-        createBaseVNode("div", _hoisted_2$2O, [
+      return openBlock(), createElementBlock("div", _hoisted_1$4w, [
+        createBaseVNode("div", _hoisted_2$2P, [
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(actionClass(__props.gizmosOn)),
             title: __props.gizmosOn ? _ctx.$t("lightBall.hideGizmos") : _ctx.$t("lightBall.showGizmos"),
             onClick: _cache2[0] || (_cache2[0] = ($event) => _ctx.$emit("toggle-gizmos"))
-          }, toDisplayString$1(__props.gizmosOn ? _ctx.$t("lightBall.hideGizmos") : _ctx.$t("lightBall.showGizmos")), 11, _hoisted_3$2L),
+          }, toDisplayString$1(__props.gizmosOn ? _ctx.$t("lightBall.hideGizmos") : _ctx.$t("lightBall.showGizmos")), 11, _hoisted_3$2M),
           _cache2[9] || (_cache2[9] = createBaseVNode("div", { class: "ctv:mx-1 ctv:h-4 ctv:w-px ctv:shrink-0 ctv:bg-white/15" }, null, -1)),
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(transformOptions), (option) => {
             return openBlock(), createElementBlock("button", {
@@ -116291,7 +116295,7 @@ const _sfc_main$2Z = /* @__PURE__ */ defineComponent({
               ]),
               title: _ctx.$t(option.labelKey),
               onClick: ($event) => _ctx.$emit("set-transform-mode", option.value)
-            }, toDisplayString$1(_ctx.$t(option.labelKey)), 11, _hoisted_4$2n);
+            }, toDisplayString$1(_ctx.$t(option.labelKey)), 11, _hoisted_4$2o);
           }), 128)),
           _cache2[10] || (_cache2[10] = createBaseVNode("div", { class: "ctv:flex-1" }, null, -1)),
           createBaseVNode("button", {
@@ -116299,15 +116303,15 @@ const _sfc_main$2Z = /* @__PURE__ */ defineComponent({
             class: normalizeClass(actionClass(false)),
             title: _ctx.$t("lightBall.outputView"),
             onClick: _cache2[1] || (_cache2[1] = ($event) => _ctx.$emit("reset-view"))
-          }, "⌖", 10, _hoisted_5$2e),
+          }, "⌖", 10, _hoisted_5$2f),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(actionClass(__props.cameraLocked)),
             title: __props.cameraLocked ? _ctx.$t("lightBall.unlockCamera") : _ctx.$t("lightBall.lockCamera"),
             onClick: _cache2[2] || (_cache2[2] = ($event) => _ctx.$emit("toggle-lock"))
-          }, toDisplayString$1(__props.cameraLocked ? "🔒" : "🔓"), 11, _hoisted_6$22)
+          }, toDisplayString$1(__props.cameraLocked ? "🔒" : "🔓"), 11, _hoisted_6$23)
         ]),
-        createBaseVNode("div", _hoisted_7$1B, [
+        createBaseVNode("div", _hoisted_7$1C, [
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(__props.lights, (light, index) => {
             return openBlock(), createElementBlock("button", {
               key: index,
@@ -116321,35 +116325,35 @@ const _sfc_main$2Z = /* @__PURE__ */ defineComponent({
                 style: normalizeStyle({ backgroundColor: light.color })
               }, null, 4),
               createTextVNode(" " + toDisplayString$1(String(index + 1).padStart(2, "0")), 1)
-            ], 10, _hoisted_8$1g);
+            ], 10, _hoisted_8$1h);
           }), 128)),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(actionClass(false)),
             title: _ctx.$t("lightBall.addLight"),
             onClick: _cache2[3] || (_cache2[3] = ($event) => _ctx.$emit("add", "directional"))
-          }, "+", 10, _hoisted_9$18),
+          }, "+", 10, _hoisted_9$19),
           unref(selectedLight) ? (openBlock(), createElementBlock("button", {
             key: 0,
             type: "button",
             class: normalizeClass(actionClass(false)),
             title: _ctx.$t("lightBall.removeLight"),
             onClick: _cache2[4] || (_cache2[4] = ($event) => _ctx.$emit("remove"))
-          }, "×", 10, _hoisted_10$$)) : createCommentVNode("", true)
+          }, "×", 10, _hoisted_10$10)) : createCommentVNode("", true)
         ]),
-        unref(selectedLight) ? (openBlock(), createElementBlock("div", _hoisted_11$U, [
-          createBaseVNode("div", _hoisted_12$O, [
+        unref(selectedLight) ? (openBlock(), createElementBlock("div", _hoisted_11$V, [
+          createBaseVNode("div", _hoisted_12$P, [
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(LIGHT_TYPES$1), (type) => {
               return openBlock(), createElementBlock("button", {
                 key: type,
                 type: "button",
                 class: normalizeClass(segmentClass(unref(selectedLight).type === type)),
                 onClick: ($event) => _ctx.$emit("set-type", type)
-              }, toDisplayString$1(_ctx.$t(`lightBall.${type}`)), 11, _hoisted_13$I);
+              }, toDisplayString$1(_ctx.$t(`lightBall.${type}`)), 11, _hoisted_13$J);
             }), 128))
           ]),
-          createBaseVNode("div", _hoisted_14$F, [
-            createBaseVNode("label", _hoisted_15$z, [
+          createBaseVNode("div", _hoisted_14$G, [
+            createBaseVNode("label", _hoisted_15$A, [
               createBaseVNode("span", _hoisted_16$v, toDisplayString$1(_ctx.$t("lightBall.color")), 1),
               createBaseVNode("input", {
                 type: "color",
@@ -116370,8 +116374,8 @@ const _sfc_main$2Z = /* @__PURE__ */ defineComponent({
               }, null, 40, _hoisted_20$k)
             ])
           ]),
-          unref(selectedLight).type !== "directional" ? (openBlock(), createElementBlock("div", _hoisted_21$j, [
-            createBaseVNode("label", _hoisted_22$i, [
+          unref(selectedLight).type !== "directional" ? (openBlock(), createElementBlock("div", _hoisted_21$i, [
+            createBaseVNode("label", _hoisted_22$h, [
               createBaseVNode("span", _hoisted_23$g, toDisplayString$1(_ctx.$t("lightBall.range")), 1),
               createBaseVNode("input", {
                 type: "number",
@@ -116734,12 +116738,12 @@ const LIGHT_PRESETS = [
     lights: [D$1(2.5, 3, 1.2, 0)]
   }
 ];
-const _hoisted_1$4u = { class: "ctv:relative ctv:w-full ctv:h-[calc(100%-360px)] ctv:min-h-[280px] ctv:shrink-0 ctv:rounded-lg ctv:overflow-hidden ctv:bg-black" };
-const _hoisted_2$2N = { class: "ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1" };
-const _hoisted_3$2K = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_4$2m = ["onClick"];
+const _hoisted_1$4v = { class: "ctv:relative ctv:w-full ctv:h-[calc(100%-360px)] ctv:min-h-[280px] ctv:shrink-0 ctv:rounded-lg ctv:overflow-hidden ctv:bg-black" };
+const _hoisted_2$2O = { class: "ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1" };
+const _hoisted_3$2L = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_4$2n = ["onClick"];
 const presetChipClass$1 = "ctv:inline-flex ctv:items-center ctv:cursor-pointer ctv:[font-family:inherit] ctv:rounded-lg ctv:border ctv:border-border-subtle ctv:bg-secondary-background ctv:px-2 ctv:py-0.5 ctv:text-2xs ctv:text-muted-foreground ctv:transition-colors ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground";
-const _sfc_main$2Y = /* @__PURE__ */ defineComponent({
+const _sfc_main$2Z = /* @__PURE__ */ defineComponent({
   __name: "RelightStageCard",
   props: {
     state: {},
@@ -116802,21 +116806,21 @@ const _sfc_main$2Y = /* @__PURE__ */ defineComponent({
         onContextmenu: _cache2[4] || (_cache2[4] = withModifiers(() => {
         }, ["stop", "prevent"]))
       }, [
-        createBaseVNode("div", _hoisted_1$4u, [
-          createVNode(_sfc_main$32, { "init-scene": unref(initScene) }, null, 8, ["init-scene"])
+        createBaseVNode("div", _hoisted_1$4v, [
+          createVNode(_sfc_main$33, { "init-scene": unref(initScene) }, null, 8, ["init-scene"])
         ]),
-        createBaseVNode("div", _hoisted_2$2N, [
-          createBaseVNode("span", _hoisted_3$2K, toDisplayString$1(_ctx.$t("relight.presets")), 1),
+        createBaseVNode("div", _hoisted_2$2O, [
+          createBaseVNode("span", _hoisted_3$2L, toDisplayString$1(_ctx.$t("relight.presets")), 1),
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(LIGHT_PRESETS), (p2) => {
             return openBlock(), createElementBlock("button", {
               key: p2.key,
               type: "button",
               class: normalizeClass(presetChipClass$1),
               onClick: ($event) => unref(applyPreset)(p2.lights)
-            }, toDisplayString$1(_ctx.$t(`relight.preset.${p2.key}`)), 9, _hoisted_4$2m);
+            }, toDisplayString$1(_ctx.$t(`relight.preset.${p2.key}`)), 9, _hoisted_4$2n);
           }), 128))
         ]),
-        createVNode(_sfc_main$2Z, {
+        createVNode(_sfc_main$2_, {
           lights: unref(lights),
           "selected-index": unref(selectedIndex),
           "gizmos-on": unref(gizmosOn),
@@ -117293,26 +117297,26 @@ function useImageCrop(options) {
     handleResizeEnd
   };
 }
-const _hoisted_1$4t = {
+const _hoisted_1$4u = {
   key: 0,
   class: "ctv:absolute ctv:inset-0 ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50"
 };
-const _hoisted_2$2M = { class: "ctv:text-xs" };
-const _hoisted_3$2J = ["src", "alt"];
-const _hoisted_4$2l = {
+const _hoisted_2$2N = { class: "ctv:text-xs" };
+const _hoisted_3$2K = ["src", "alt"];
+const _hoisted_4$2m = {
   key: 0,
   class: "ctv:absolute ctv:inset-0 ctv:z-10 ctv:flex ctv:items-center ctv:justify-center ctv:text-xs ctv:bg-black/90 ctv:text-white/85"
 };
-const _hoisted_5$2d = ["onPointerdown"];
-const _hoisted_6$21 = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
-const _hoisted_7$1A = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
-const _hoisted_8$1f = { class: "ctv:min-w-9 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_9$17 = ["value"];
-const _hoisted_10$_ = ["title"];
-const _hoisted_11$T = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-[11px]" };
-const _hoisted_12$N = { class: "ctv:w-3 ctv:text-2xs ctv:text-muted-foreground" };
-const _hoisted_13$H = ["min", "value", "onChange"];
-const _sfc_main$2X = /* @__PURE__ */ defineComponent({
+const _hoisted_5$2e = ["onPointerdown"];
+const _hoisted_6$22 = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
+const _hoisted_7$1B = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
+const _hoisted_8$1g = { class: "ctv:min-w-9 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_9$18 = ["value"];
+const _hoisted_10$$ = ["title"];
+const _hoisted_11$U = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-[11px]" };
+const _hoisted_12$O = { class: "ctv:w-3 ctv:text-2xs ctv:text-muted-foreground" };
+const _hoisted_13$I = ["min", "value", "onChange"];
+const _sfc_main$2Y = /* @__PURE__ */ defineComponent({
   __name: "CropCanvas",
   props: {
     sourceImageUrl: {},
@@ -117397,9 +117401,9 @@ const _sfc_main$2X = /* @__PURE__ */ defineComponent({
           ref: containerEl,
           class: "ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[340px] ctv:rounded-md ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle"
         }, [
-          !unref(imageUrl) ? (openBlock(), createElementBlock("div", _hoisted_1$4t, [
+          !unref(imageUrl) ? (openBlock(), createElementBlock("div", _hoisted_1$4u, [
             _cache2[13] || (_cache2[13] = createBaseVNode("i", { class: "pi pi-image ctv:text-[32px] ctv:opacity-60" }, null, -1)),
-            createBaseVNode("div", _hoisted_2$2M, toDisplayString$1(_ctx.$t("imageCrop.noInputImage")), 1)
+            createBaseVNode("div", _hoisted_2$2N, toDisplayString$1(_ctx.$t("imageCrop.noInputImage")), 1)
           ])) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
             createBaseVNode("img", {
               ref_key: "imageEl",
@@ -117414,8 +117418,8 @@ const _sfc_main$2X = /* @__PURE__ */ defineComponent({
               (...args) => unref(handleImageError) && unref(handleImageError)(...args)),
               onDragstart: _cache2[2] || (_cache2[2] = withModifiers(() => {
               }, ["prevent"]))
-            }, null, 40, _hoisted_3$2J),
-            unref(isLoading) ? (openBlock(), createElementBlock("div", _hoisted_4$2l, toDisplayString$1(_ctx.$t("imageCrop.loading")), 1)) : createCommentVNode("", true),
+            }, null, 40, _hoisted_3$2K),
+            unref(isLoading) ? (openBlock(), createElementBlock("div", _hoisted_4$2m, toDisplayString$1(_ctx.$t("imageCrop.loading")), 1)) : createCommentVNode("", true),
             !unref(isLoading) ? (openBlock(), createElementBlock("div", {
               key: 1,
               class: "ctv:absolute ctv:box-content ctv:border-2 ctv:border-white ctv:cursor-move ctv:select-none ctv:shadow-[0_0_0_9999px_rgb(0_0_0/0.5)]",
@@ -117437,15 +117441,15 @@ const _sfc_main$2X = /* @__PURE__ */ defineComponent({
                 (...args) => unref(handleResizeMove) && unref(handleResizeMove)(...args)),
                 onPointerup: _cache2[7] || (_cache2[7] = //@ts-ignore
                 (...args) => unref(handleResizeEnd) && unref(handleResizeEnd)(...args))
-              }, null, 46, _hoisted_5$2d)), [
+              }, null, 46, _hoisted_5$2e)), [
                 [vShow, !unref(isLoading)]
               ]);
             }), 128))
           ], 64))
         ], 512),
-        createBaseVNode("div", _hoisted_6$21, [
-          createBaseVNode("div", _hoisted_7$1A, [
-            createBaseVNode("span", _hoisted_8$1f, toDisplayString$1(_ctx.$t("imageCrop.ratio")), 1),
+        createBaseVNode("div", _hoisted_6$22, [
+          createBaseVNode("div", _hoisted_7$1B, [
+            createBaseVNode("span", _hoisted_8$1g, toDisplayString$1(_ctx.$t("imageCrop.ratio")), 1),
             withDirectives(createBaseVNode("select", {
               "onUpdate:modelValue": _cache2[8] || (_cache2[8] = ($event) => /* @__PURE__ */ isRef(selectedRatio) ? selectedRatio.value = $event : null),
               class: "ctv-crop-select ctv:shrink-0 ctv:py-[3px] ctv:px-1.5 ctv:text-[11px] ctv:rounded ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle"
@@ -117454,7 +117458,7 @@ const _sfc_main$2X = /* @__PURE__ */ defineComponent({
                 return openBlock(), createElementBlock("option", {
                   key,
                   value: key
-                }, toDisplayString$1(key === "custom" ? _ctx.$t("imageCrop.custom") : key), 9, _hoisted_9$17);
+                }, toDisplayString$1(key === "custom" ? _ctx.$t("imageCrop.custom") : key), 9, _hoisted_9$18);
               }), 128))
             ], 512), [
               [vModelSelect, unref(selectedRatio)]
@@ -117471,15 +117475,15 @@ const _sfc_main$2X = /* @__PURE__ */ defineComponent({
               createBaseVNode("i", {
                 class: normalizeClass(["pi", unref(isLockEnabled) ? "pi-lock" : "pi-lock-open"])
               }, null, 2)
-            ], 10, _hoisted_10$_)
+            ], 10, _hoisted_10$$)
           ]),
-          createBaseVNode("div", _hoisted_11$T, [
+          createBaseVNode("div", _hoisted_11$U, [
             (openBlock(), createElementBlock(Fragment$1, null, renderList(BOUND_FIELDS, (b) => {
               return createBaseVNode("label", {
                 key: b.label,
                 class: "ctv:flex-1 ctv:flex ctv:items-center ctv:gap-1 ctv:py-0.5 ctv:px-1 ctv:rounded ctv:bg-secondary-background ctv:border ctv:border-border-subtle"
               }, [
-                createBaseVNode("span", _hoisted_12$N, toDisplayString$1(b.label), 1),
+                createBaseVNode("span", _hoisted_12$O, toDisplayString$1(b.label), 1),
                 createBaseVNode("input", {
                   type: "number",
                   min: b.min,
@@ -117487,7 +117491,7 @@ const _sfc_main$2X = /* @__PURE__ */ defineComponent({
                   class: "ctv-bound-input ctv:w-full ctv:border-0 ctv:outline-none ctv:bg-transparent ctv:text-[11px] ctv:font-mono ctv:text-base-foreground",
                   value: boundFieldValue(b),
                   onChange: (e) => boundFieldSet(b, e.target.value)
-                }, null, 40, _hoisted_13$H)
+                }, null, 40, _hoisted_13$I)
               ]);
             }), 64))
           ])
@@ -117496,7 +117500,7 @@ const _sfc_main$2X = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const CropCanvas = /* @__PURE__ */ _export_sfc(_sfc_main$2X, [["__scopeId", "data-v-a2ee2b36"]]);
+const CropCanvas = /* @__PURE__ */ _export_sfc(_sfc_main$2Y, [["__scopeId", "data-v-a2ee2b36"]]);
 function useTransformPipeline(options) {
   const {
     sourceImageUrl,
@@ -117651,25 +117655,25 @@ function useCropStage(node, state2) {
     computing
   };
 }
-const _hoisted_1$4s = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:grow" };
-const _hoisted_2$2L = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_3$2I = {
+const _hoisted_1$4t = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:grow" };
+const _hoisted_2$2M = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_3$2J = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_4$2k = {
+const _hoisted_4$2l = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_5$2c = {
+const _hoisted_5$2d = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_6$20 = {
+const _hoisted_6$21 = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
-const _sfc_main$2W = /* @__PURE__ */ defineComponent({
+const _sfc_main$2X = /* @__PURE__ */ defineComponent({
   __name: "CropStageCard",
   props: {
     state: {},
@@ -117686,14 +117690,14 @@ const _sfc_main$2W = /* @__PURE__ */ defineComponent({
       setBounds(v);
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$4s, [
+      return openBlock(), createElementBlock("div", _hoisted_1$4t, [
         createVNode(CropCanvas, {
           "source-image-url": unref(sourceImageUrl),
           bounds: unref(bounds),
           "onUpdate:bounds": onBoundsUpdate
         }, null, 8, ["source-image-url", "bounds"]),
-        createBaseVNode("div", _hoisted_2$2L, [
-          !unref(sourceImageUrl) ? (openBlock(), createElementBlock("span", _hoisted_3$2I, toDisplayString$1(_ctx.$t("imageCrop.noInputImage")), 1)) : unref(computing) ? (openBlock(), createElementBlock("span", _hoisted_4$2k, toDisplayString$1(_ctx.$t("imageCrop.applying")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_5$2c, toDisplayString$1(_ctx.$t("imageCrop.applied")), 1)) : (openBlock(), createElementBlock("span", _hoisted_6$20, toDisplayString$1(_ctx.$t("imageCrop.adjustToApply")), 1))
+        createBaseVNode("div", _hoisted_2$2M, [
+          !unref(sourceImageUrl) ? (openBlock(), createElementBlock("span", _hoisted_3$2J, toDisplayString$1(_ctx.$t("imageCrop.noInputImage")), 1)) : unref(computing) ? (openBlock(), createElementBlock("span", _hoisted_4$2l, toDisplayString$1(_ctx.$t("imageCrop.applying")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_5$2d, toDisplayString$1(_ctx.$t("imageCrop.applied")), 1)) : (openBlock(), createElementBlock("span", _hoisted_6$21, toDisplayString$1(_ctx.$t("imageCrop.adjustToApply")), 1))
         ]),
         createVNode(StageCard, {
           state: __props.state,
@@ -117981,36 +117985,36 @@ function useVideoTrim(opts) {
     thumbnails
   };
 }
-const _hoisted_1$4r = { class: "ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[240px] ctv:rounded-md ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle" };
-const _hoisted_2$2K = {
+const _hoisted_1$4s = { class: "ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[240px] ctv:rounded-md ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle" };
+const _hoisted_2$2L = {
   key: 0,
   class: "ctv:absolute ctv:inset-0 ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50"
 };
-const _hoisted_3$2H = { class: "ctv:text-xs" };
-const _hoisted_4$2j = ["src", "muted"];
-const _hoisted_5$2b = {
+const _hoisted_3$2I = { class: "ctv:text-xs" };
+const _hoisted_4$2k = ["src", "muted"];
+const _hoisted_5$2c = {
   key: 0,
   class: "ctv:absolute ctv:inset-0 ctv:z-10 ctv:flex ctv:items-center ctv:justify-center ctv:text-xs ctv:bg-black/80 ctv:text-white/85 ctv:pointer-events-none"
 };
-const _hoisted_6$1$ = {
+const _hoisted_6$20 = {
   key: 1,
   class: "ctv:absolute ctv:inset-0 ctv:z-10 ctv:flex ctv:items-center ctv:justify-center ctv:text-xs ctv:bg-black/80 ctv:text-destructive-background ctv:pointer-events-none"
 };
-const _hoisted_7$1z = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
-const _hoisted_8$1e = ["disabled", "title"];
-const _hoisted_9$16 = ["title"];
-const _hoisted_10$Z = { class: "ctv:font-mono ctv:text-muted-foreground" };
-const _hoisted_11$S = {
+const _hoisted_7$1A = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
+const _hoisted_8$1f = ["disabled", "title"];
+const _hoisted_9$17 = ["title"];
+const _hoisted_10$_ = { class: "ctv:font-mono ctv:text-muted-foreground" };
+const _hoisted_11$T = {
   key: 0,
   class: "ctv:ml-auto ctv:font-mono ctv:text-base-foreground"
 };
-const _hoisted_12$M = {
+const _hoisted_12$N = {
   key: 1,
   class: "ctv:ml-auto ctv:font-mono ctv:text-base-foreground"
 };
-const _hoisted_13$G = { class: "ctv:text-primary-background ctv:font-bold" };
-const _hoisted_14$E = { class: "ctv:absolute ctv:inset-0 ctv:flex ctv:pointer-events-none" };
-const _hoisted_15$y = ["src"];
+const _hoisted_13$H = { class: "ctv:text-primary-background ctv:font-bold" };
+const _hoisted_14$F = { class: "ctv:absolute ctv:inset-0 ctv:flex ctv:pointer-events-none" };
+const _hoisted_15$z = ["src"];
 const _hoisted_16$u = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-[11px]" };
 const _hoisted_17$s = { class: "ctv:flex-1 ctv:flex ctv:items-center ctv:gap-1 ctv:py-0.5 ctv:px-1 ctv:rounded ctv:bg-secondary-background ctv:border ctv:border-border-subtle" };
 const _hoisted_18$p = { class: "ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground" };
@@ -118019,10 +118023,10 @@ const _hoisted_20$j = {
   key: 0,
   class: "ctv:flex-1 ctv:flex ctv:items-center ctv:gap-1 ctv:py-0.5 ctv:px-1 ctv:rounded ctv:bg-secondary-background ctv:border ctv:border-border-subtle"
 };
-const _hoisted_21$i = { class: "ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground" };
-const _hoisted_22$h = ["disabled", "value"];
+const _hoisted_21$h = { class: "ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground" };
+const _hoisted_22$g = ["disabled", "value"];
 const _hoisted_23$f = ["disabled", "title"];
-const _sfc_main$2V = /* @__PURE__ */ defineComponent({
+const _sfc_main$2W = /* @__PURE__ */ defineComponent({
   __name: "VideoTrimBar",
   props: {
     sourceVideoUrl: {},
@@ -118094,10 +118098,10 @@ const _sfc_main$2V = /* @__PURE__ */ defineComponent({
         onPointerup: _cache2[19] || (_cache2[19] = withModifiers(() => {
         }, ["stop"]))
       }, [
-        createBaseVNode("div", _hoisted_1$4r, [
-          !__props.sourceVideoUrl ? (openBlock(), createElementBlock("div", _hoisted_2$2K, [
+        createBaseVNode("div", _hoisted_1$4s, [
+          !__props.sourceVideoUrl ? (openBlock(), createElementBlock("div", _hoisted_2$2L, [
             _cache2[20] || (_cache2[20] = createBaseVNode("i", { class: "pi pi-video ctv:text-[32px] ctv:opacity-60" }, null, -1)),
-            createBaseVNode("div", _hoisted_3$2H, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)
+            createBaseVNode("div", _hoisted_3$2I, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)
           ])) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
             createBaseVNode("video", {
               ref_key: "videoEl",
@@ -118109,11 +118113,11 @@ const _sfc_main$2V = /* @__PURE__ */ defineComponent({
               preload: "metadata",
               onClick: _cache2[0] || (_cache2[0] = //@ts-ignore
               (...args) => unref(playSelection) && unref(playSelection)(...args))
-            }, null, 8, _hoisted_4$2j),
-            unref(isLoading) ? (openBlock(), createElementBlock("div", _hoisted_5$2b, toDisplayString$1(_ctx.$t("videoTrim.loading")), 1)) : unref(loadError) ? (openBlock(), createElementBlock("div", _hoisted_6$1$, toDisplayString$1(_ctx.$t("videoTrim.loadError")), 1)) : createCommentVNode("", true)
+            }, null, 8, _hoisted_4$2k),
+            unref(isLoading) ? (openBlock(), createElementBlock("div", _hoisted_5$2c, toDisplayString$1(_ctx.$t("videoTrim.loading")), 1)) : unref(loadError) ? (openBlock(), createElementBlock("div", _hoisted_6$20, toDisplayString$1(_ctx.$t("videoTrim.loadError")), 1)) : createCommentVNode("", true)
           ], 64))
         ]),
-        createBaseVNode("div", _hoisted_7$1z, [
+        createBaseVNode("div", _hoisted_7$1A, [
           createBaseVNode("button", {
             type: "button",
             class: "ctv:flex ctv:items-center ctv:justify-center ctv:w-7 ctv:h-6 ctv:text-xs ctv:rounded ctv:cursor-pointer ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background ctv:disabled:opacity-40 ctv:disabled:cursor-default",
@@ -118125,7 +118129,7 @@ const _sfc_main$2V = /* @__PURE__ */ defineComponent({
             createBaseVNode("i", {
               class: normalizeClass(["pi", unref(previewing) ? "pi-pause" : "pi-play"])
             }, null, 2)
-          ], 8, _hoisted_8$1e),
+          ], 8, _hoisted_8$1f),
           createBaseVNode("button", {
             type: "button",
             class: "ctv:flex ctv:items-center ctv:justify-center ctv:w-7 ctv:h-6 ctv:text-xs ctv:rounded ctv:cursor-pointer ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background",
@@ -118135,16 +118139,16 @@ const _sfc_main$2V = /* @__PURE__ */ defineComponent({
             createBaseVNode("i", {
               class: normalizeClass(["pi", muted.value ? "pi-volume-off" : "pi-volume-up"])
             }, null, 2)
-          ], 8, _hoisted_9$16),
-          createBaseVNode("span", _hoisted_10$Z, toDisplayString$1(unref(formatTime)(unref(currentTime))) + " / " + toDisplayString$1(unref(formatTime)(unref(duration2))), 1),
-          isSplit.value ? (openBlock(), createElementBlock("span", _hoisted_11$S, [
+          ], 8, _hoisted_9$17),
+          createBaseVNode("span", _hoisted_10$_, toDisplayString$1(unref(formatTime)(unref(currentTime))) + " / " + toDisplayString$1(unref(formatTime)(unref(duration2))), 1),
+          isSplit.value ? (openBlock(), createElementBlock("span", _hoisted_11$T, [
             _cache2[21] || (_cache2[21] = createBaseVNode("span", { class: "ctv:text-primary-background ctv:font-bold" }, "A", -1)),
             createTextVNode(" " + toDisplayString$1(unref(selStart).toFixed(1)) + "s · ", 1),
             _cache2[22] || (_cache2[22] = createBaseVNode("span", { class: "ctv:text-[#ffd089] ctv:font-bold" }, "B", -1)),
             createTextVNode(" " + toDisplayString$1(Math.max(0, unref(duration2) - unref(selStart)).toFixed(1)) + "s ", 1)
-          ])) : (openBlock(), createElementBlock("span", _hoisted_12$M, [
+          ])) : (openBlock(), createElementBlock("span", _hoisted_12$N, [
             createTextVNode(toDisplayString$1(unref(formatTime)(unref(selStart))) + " – " + toDisplayString$1(unref(formatTime)(unref(selEnd))) + " ", 1),
-            createBaseVNode("span", _hoisted_13$G, "(" + toDisplayString$1(unref(selDuration).toFixed(1)) + "s)", 1)
+            createBaseVNode("span", _hoisted_13$H, "(" + toDisplayString$1(unref(selDuration).toFixed(1)) + "s)", 1)
           ]))
         ]),
         createBaseVNode("div", {
@@ -118159,7 +118163,7 @@ const _sfc_main$2V = /* @__PURE__ */ defineComponent({
           onPointercancel: _cache2[14] || (_cache2[14] = //@ts-ignore
           (...args) => unref(onDragEnd) && unref(onDragEnd)(...args))
         }, [
-          createBaseVNode("div", _hoisted_14$E, [
+          createBaseVNode("div", _hoisted_14$F, [
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(thumbnails), (thumb, i) => {
               return openBlock(), createElementBlock("img", {
                 key: i,
@@ -118167,7 +118171,7 @@ const _sfc_main$2V = /* @__PURE__ */ defineComponent({
                 class: "ctv:h-full ctv:object-cover ctv:min-w-0",
                 style: normalizeStyle({ width: `${100 / unref(THUMB_COUNT)}%` }),
                 draggable: "false"
-              }, null, 12, _hoisted_15$y);
+              }, null, 12, _hoisted_15$z);
             }), 128))
           ]),
           unref(duration2) > 0 ? (openBlock(), createElementBlock(Fragment$1, { key: 0 }, [
@@ -118241,7 +118245,7 @@ const _sfc_main$2V = /* @__PURE__ */ defineComponent({
             }, null, 40, _hoisted_19$m)
           ]),
           !isSplit.value ? (openBlock(), createElementBlock("label", _hoisted_20$j, [
-            createBaseVNode("span", _hoisted_21$i, toDisplayString$1(_ctx.$t("videoTrim.end")), 1),
+            createBaseVNode("span", _hoisted_21$h, toDisplayString$1(_ctx.$t("videoTrim.end")), 1),
             createBaseVNode("input", {
               type: "number",
               min: "0",
@@ -118250,7 +118254,7 @@ const _sfc_main$2V = /* @__PURE__ */ defineComponent({
               class: "ctv-trim-input ctv:w-full ctv:border-0 ctv:outline-none ctv:bg-transparent ctv:text-[11px] ctv:font-mono ctv:text-base-foreground ctv:disabled:opacity-40",
               value: unref(selEnd).toFixed(2),
               onChange: _cache2[16] || (_cache2[16] = (e) => onFieldChange("end", e.target.value))
-            }, null, 40, _hoisted_22$h)
+            }, null, 40, _hoisted_22$g)
           ])) : createCommentVNode("", true),
           !isSplit.value ? (openBlock(), createElementBlock("button", {
             key: 1,
@@ -118265,26 +118269,26 @@ const _sfc_main$2V = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const VideoTrimBar = /* @__PURE__ */ _export_sfc(_sfc_main$2V, [["__scopeId", "data-v-8b561988"]]);
-const _hoisted_1$4q = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:grow" };
-const _hoisted_2$2J = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_3$2G = {
+const VideoTrimBar = /* @__PURE__ */ _export_sfc(_sfc_main$2W, [["__scopeId", "data-v-8b561988"]]);
+const _hoisted_1$4r = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:grow" };
+const _hoisted_2$2K = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_3$2H = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_4$2i = {
+const _hoisted_4$2j = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_5$2a = {
+const _hoisted_5$2b = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_6$1_ = {
+const _hoisted_6$1$ = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
-const _sfc_main$2U = /* @__PURE__ */ defineComponent({
+const _sfc_main$2V = /* @__PURE__ */ defineComponent({
   __name: "VideoClipStageCard",
   props: {
     state: {},
@@ -118328,14 +118332,14 @@ const _sfc_main$2U = /* @__PURE__ */ defineComponent({
       }
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$4q, [
+      return openBlock(), createElementBlock("div", _hoisted_1$4r, [
         createVNode(VideoTrimBar, {
           "source-video-url": sourceVideoUrl.value,
           range: range.value,
           "onUpdate:range": onRangeUpdate
         }, null, 8, ["source-video-url", "range"]),
-        createBaseVNode("div", _hoisted_2$2J, [
-          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_3$2G, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_4$2i, toDisplayString$1(_ctx.$t("videoTrim.trimming")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_5$2a, toDisplayString$1(_ctx.$t("videoTrim.trimmed")), 1)) : (openBlock(), createElementBlock("span", _hoisted_6$1_, toDisplayString$1(_ctx.$t("videoTrim.adjustThenRun")), 1))
+        createBaseVNode("div", _hoisted_2$2K, [
+          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_3$2H, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_4$2j, toDisplayString$1(_ctx.$t("videoTrim.trimming")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_5$2b, toDisplayString$1(_ctx.$t("videoTrim.trimmed")), 1)) : (openBlock(), createElementBlock("span", _hoisted_6$1$, toDisplayString$1(_ctx.$t("videoTrim.adjustThenRun")), 1))
         ]),
         createVNode(StageCard, {
           state: __props.state,
@@ -118452,34 +118456,34 @@ function useVideoPlayback(opts) {
     onSeekEnd
   };
 }
-const _hoisted_1$4p = {
+const _hoisted_1$4q = {
   key: 0,
   class: "ctv:absolute ctv:inset-0 ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50"
 };
-const _hoisted_2$2I = { class: "ctv:text-xs" };
-const _hoisted_3$2F = ["src", "muted"];
-const _hoisted_4$2h = {
+const _hoisted_2$2J = { class: "ctv:text-xs" };
+const _hoisted_3$2G = ["src", "muted"];
+const _hoisted_4$2i = {
   key: 0,
   class: "ctv:absolute ctv:inset-0 ctv:z-10 ctv:flex ctv:items-center ctv:justify-center ctv:text-xs ctv:bg-black/90 ctv:text-white/85"
 };
-const _hoisted_5$29 = {
+const _hoisted_5$2a = {
   key: 1,
   class: "ctv:absolute ctv:inset-0 ctv:z-10 ctv:flex ctv:items-center ctv:justify-center ctv:text-xs ctv:bg-black/90 ctv:text-destructive-background"
 };
-const _hoisted_6$1Z = ["onPointerdown"];
-const _hoisted_7$1y = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
-const _hoisted_8$1d = ["disabled", "title"];
-const _hoisted_9$15 = ["title"];
-const _hoisted_10$Y = { class: "ctv:shrink-0 ctv:font-mono ctv:text-muted-foreground" };
-const _hoisted_11$R = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
-const _hoisted_12$L = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
-const _hoisted_13$F = { class: "ctv:min-w-9 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_14$D = ["value"];
-const _hoisted_15$x = ["title"];
+const _hoisted_6$1_ = ["onPointerdown"];
+const _hoisted_7$1z = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
+const _hoisted_8$1e = ["disabled", "title"];
+const _hoisted_9$16 = ["title"];
+const _hoisted_10$Z = { class: "ctv:shrink-0 ctv:font-mono ctv:text-muted-foreground" };
+const _hoisted_11$S = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
+const _hoisted_12$M = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
+const _hoisted_13$G = { class: "ctv:min-w-9 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_14$E = ["value"];
+const _hoisted_15$y = ["title"];
 const _hoisted_16$t = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-[11px]" };
 const _hoisted_17$r = { class: "ctv:w-3 ctv:text-2xs ctv:text-muted-foreground" };
 const _hoisted_18$o = ["min", "disabled", "value", "onChange"];
-const _sfc_main$2T = /* @__PURE__ */ defineComponent({
+const _sfc_main$2U = /* @__PURE__ */ defineComponent({
   __name: "VideoCropCanvas",
   props: {
     sourceVideoUrl: {},
@@ -118587,9 +118591,9 @@ const _sfc_main$2T = /* @__PURE__ */ defineComponent({
           ref: containerEl,
           class: "ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[300px] ctv:rounded-md ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle"
         }, [
-          !__props.sourceVideoUrl ? (openBlock(), createElementBlock("div", _hoisted_1$4p, [
+          !__props.sourceVideoUrl ? (openBlock(), createElementBlock("div", _hoisted_1$4q, [
             _cache2[17] || (_cache2[17] = createBaseVNode("i", { class: "pi pi-video ctv:text-[32px] ctv:opacity-60" }, null, -1)),
-            createBaseVNode("div", _hoisted_2$2I, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)
+            createBaseVNode("div", _hoisted_2$2J, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)
           ])) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
             createBaseVNode("video", {
               ref_key: "videoEl",
@@ -118603,8 +118607,8 @@ const _sfc_main$2T = /* @__PURE__ */ defineComponent({
               onTimeupdate: _cache2[0] || (_cache2[0] = //@ts-ignore
               (...args) => unref(onTimeUpdate) && unref(onTimeUpdate)(...args)),
               onError: onVideoError
-            }, null, 40, _hoisted_3$2F),
-            unref(isLoading) ? (openBlock(), createElementBlock("div", _hoisted_4$2h, toDisplayString$1(_ctx.$t("videoTrim.loading")), 1)) : unref(loadError) ? (openBlock(), createElementBlock("div", _hoisted_5$29, toDisplayString$1(_ctx.$t("videoTrim.loadError")), 1)) : createCommentVNode("", true),
+            }, null, 40, _hoisted_3$2G),
+            unref(isLoading) ? (openBlock(), createElementBlock("div", _hoisted_4$2i, toDisplayString$1(_ctx.$t("videoTrim.loading")), 1)) : unref(loadError) ? (openBlock(), createElementBlock("div", _hoisted_5$2a, toDisplayString$1(_ctx.$t("videoTrim.loadError")), 1)) : createCommentVNode("", true),
             !unref(isLoading) && !unref(loadError) ? (openBlock(), createElementBlock("div", {
               key: 2,
               class: "ctv:absolute ctv:box-content ctv:border-2 ctv:border-white ctv:cursor-move ctv:select-none ctv:shadow-[0_0_0_9999px_rgb(0_0_0/0.5)]",
@@ -118626,13 +118630,13 @@ const _sfc_main$2T = /* @__PURE__ */ defineComponent({
                 (...args) => unref(handleResizeMove) && unref(handleResizeMove)(...args)),
                 onPointerup: _cache2[5] || (_cache2[5] = //@ts-ignore
                 (...args) => unref(handleResizeEnd) && unref(handleResizeEnd)(...args))
-              }, null, 46, _hoisted_6$1Z)), [
+              }, null, 46, _hoisted_6$1_)), [
                 [vShow, !unref(isLoading) && !unref(loadError)]
               ]);
             }), 128))
           ], 64))
         ], 512),
-        createBaseVNode("div", _hoisted_7$1y, [
+        createBaseVNode("div", _hoisted_7$1z, [
           createBaseVNode("button", {
             type: "button",
             class: "ctv:flex ctv:items-center ctv:justify-center ctv:w-7 ctv:h-6 ctv:text-xs ctv:rounded ctv:cursor-pointer ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background ctv:disabled:opacity-40 ctv:disabled:cursor-default",
@@ -118644,7 +118648,7 @@ const _sfc_main$2T = /* @__PURE__ */ defineComponent({
             createBaseVNode("i", {
               class: normalizeClass(["pi", unref(playing) ? "pi-pause" : "pi-play"])
             }, null, 2)
-          ], 8, _hoisted_8$1d),
+          ], 8, _hoisted_8$1e),
           createBaseVNode("button", {
             type: "button",
             class: "ctv:flex ctv:items-center ctv:justify-center ctv:w-7 ctv:h-6 ctv:text-xs ctv:rounded ctv:cursor-pointer ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background",
@@ -118654,7 +118658,7 @@ const _sfc_main$2T = /* @__PURE__ */ defineComponent({
             createBaseVNode("i", {
               class: normalizeClass(["pi", unref(muted) ? "pi-volume-off" : "pi-volume-up"])
             }, null, 2)
-          ], 8, _hoisted_9$15),
+          ], 8, _hoisted_9$16),
           createBaseVNode("div", {
             ref_key: "seekEl",
             ref: seekEl,
@@ -118673,11 +118677,11 @@ const _sfc_main$2T = /* @__PURE__ */ defineComponent({
               style: normalizeStyle({ width: `${unref(progressPct)}%` })
             }, null, 4)
           ], 34),
-          createBaseVNode("span", _hoisted_10$Y, toDisplayString$1(unref(formatTime)(unref(currentTime))) + " / " + toDisplayString$1(unref(formatTime)(unref(duration2))), 1)
+          createBaseVNode("span", _hoisted_10$Z, toDisplayString$1(unref(formatTime)(unref(currentTime))) + " / " + toDisplayString$1(unref(formatTime)(unref(duration2))), 1)
         ]),
-        createBaseVNode("div", _hoisted_11$R, [
-          createBaseVNode("div", _hoisted_12$L, [
-            createBaseVNode("span", _hoisted_13$F, toDisplayString$1(_ctx.$t("imageCrop.ratio")), 1),
+        createBaseVNode("div", _hoisted_11$S, [
+          createBaseVNode("div", _hoisted_12$M, [
+            createBaseVNode("span", _hoisted_13$G, toDisplayString$1(_ctx.$t("imageCrop.ratio")), 1),
             withDirectives(createBaseVNode("select", {
               "onUpdate:modelValue": _cache2[12] || (_cache2[12] = ($event) => /* @__PURE__ */ isRef(selectedRatio) ? selectedRatio.value = $event : null),
               class: "ctv-crop-select ctv:shrink-0 ctv:py-[3px] ctv:px-1.5 ctv:text-[11px] ctv:rounded ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle"
@@ -118686,7 +118690,7 @@ const _sfc_main$2T = /* @__PURE__ */ defineComponent({
                 return openBlock(), createElementBlock("option", {
                   key,
                   value: key
-                }, toDisplayString$1(key === "custom" ? _ctx.$t("imageCrop.custom") : key), 9, _hoisted_14$D);
+                }, toDisplayString$1(key === "custom" ? _ctx.$t("imageCrop.custom") : key), 9, _hoisted_14$E);
               }), 128))
             ], 512), [
               [vModelSelect, unref(selectedRatio)]
@@ -118703,7 +118707,7 @@ const _sfc_main$2T = /* @__PURE__ */ defineComponent({
               createBaseVNode("i", {
                 class: normalizeClass(["pi", unref(isLockEnabled) ? "pi-lock" : "pi-lock-open"])
               }, null, 2)
-            ], 10, _hoisted_15$x)
+            ], 10, _hoisted_15$y)
           ]),
           createBaseVNode("div", _hoisted_16$t, [
             (openBlock(), createElementBlock(Fragment$1, null, renderList(BOUND_FIELDS, (b) => {
@@ -118729,26 +118733,26 @@ const _sfc_main$2T = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const VideoCropCanvas = /* @__PURE__ */ _export_sfc(_sfc_main$2T, [["__scopeId", "data-v-d4d4649d"]]);
-const _hoisted_1$4o = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:grow" };
-const _hoisted_2$2H = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_3$2E = {
+const VideoCropCanvas = /* @__PURE__ */ _export_sfc(_sfc_main$2U, [["__scopeId", "data-v-d4d4649d"]]);
+const _hoisted_1$4p = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:grow" };
+const _hoisted_2$2I = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_3$2F = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_4$2g = {
+const _hoisted_4$2h = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_5$28 = {
+const _hoisted_5$29 = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_6$1Y = {
+const _hoisted_6$1Z = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
-const _sfc_main$2S = /* @__PURE__ */ defineComponent({
+const _sfc_main$2T = /* @__PURE__ */ defineComponent({
   __name: "VideoCropStageCard",
   props: {
     state: {},
@@ -118800,14 +118804,14 @@ const _sfc_main$2S = /* @__PURE__ */ defineComponent({
       }
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$4o, [
+      return openBlock(), createElementBlock("div", _hoisted_1$4p, [
         createVNode(VideoCropCanvas, {
           "source-video-url": sourceVideoUrl.value,
           bounds: bounds.value,
           "onUpdate:bounds": onBoundsUpdate
         }, null, 8, ["source-video-url", "bounds"]),
-        createBaseVNode("div", _hoisted_2$2H, [
-          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_3$2E, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_4$2g, toDisplayString$1(_ctx.$t("videoCrop.cropping")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_5$28, toDisplayString$1(_ctx.$t("videoCrop.cropped")), 1)) : (openBlock(), createElementBlock("span", _hoisted_6$1Y, toDisplayString$1(_ctx.$t("videoCrop.adjustThenRun")), 1))
+        createBaseVNode("div", _hoisted_2$2I, [
+          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_3$2F, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_4$2h, toDisplayString$1(_ctx.$t("videoCrop.cropping")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_5$29, toDisplayString$1(_ctx.$t("videoCrop.cropped")), 1)) : (openBlock(), createElementBlock("span", _hoisted_6$1Z, toDisplayString$1(_ctx.$t("videoCrop.adjustThenRun")), 1))
         ]),
         createVNode(StageCard, {
           state: __props.state,
@@ -118933,37 +118937,37 @@ function videoClipsFromInputs(inputs) {
     return { key, url: i.content, color: slotColor(slot) };
   });
 }
-const _hoisted_1$4n = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
-const _hoisted_2$2G = {
+const _hoisted_1$4o = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
+const _hoisted_2$2H = {
   key: 0,
   class: "ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:h-24 ctv:rounded-md ctv:bg-black/40 ctv:border ctv:border-dashed ctv:border-border-subtle ctv:text-white/50"
 };
-const _hoisted_3$2D = { class: "ctv:text-xs" };
-const _hoisted_4$2f = ["onPointerdown"];
-const _hoisted_5$27 = ["src"];
-const _hoisted_6$1X = {
+const _hoisted_3$2E = { class: "ctv:text-xs" };
+const _hoisted_4$2g = ["onPointerdown"];
+const _hoisted_5$28 = ["src"];
+const _hoisted_6$1Y = {
   key: 2,
   class: "ctv:text-3xs ctv:text-center ctv:text-muted-foreground ctv:tracking-wide"
 };
-const _hoisted_7$1x = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_8$1c = {
+const _hoisted_7$1y = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_8$1d = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_9$14 = {
+const _hoisted_9$15 = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_10$X = {
+const _hoisted_10$Y = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_11$Q = {
+const _hoisted_11$R = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_12$K = ["src"];
-const _sfc_main$2R = /* @__PURE__ */ defineComponent({
+const _hoisted_12$L = ["src"];
+const _sfc_main$2S = /* @__PURE__ */ defineComponent({
   __name: "VideoConcatStageCard",
   props: {
     state: {},
@@ -118991,7 +118995,7 @@ const _sfc_main$2R = /* @__PURE__ */ defineComponent({
       onTileUp
     } = useClipReorder(props.node, { clips, stripEl });
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$4n, [
+      return openBlock(), createElementBlock("div", _hoisted_1$4o, [
         createBaseVNode("div", {
           class: "ctv:flex ctv:flex-col ctv:gap-1",
           onPointerdown: _cache2[3] || (_cache2[3] = withModifiers(() => {
@@ -119001,9 +119005,9 @@ const _sfc_main$2R = /* @__PURE__ */ defineComponent({
           onPointerup: _cache2[5] || (_cache2[5] = withModifiers(() => {
           }, ["stop"]))
         }, [
-          clips.value.length === 0 ? (openBlock(), createElementBlock("div", _hoisted_2$2G, [
+          clips.value.length === 0 ? (openBlock(), createElementBlock("div", _hoisted_2$2H, [
             _cache2[6] || (_cache2[6] = createBaseVNode("i", { class: "pi pi-video ctv:text-[24px] ctv:opacity-60" }, null, -1)),
-            createBaseVNode("div", _hoisted_3$2D, toDisplayString$1(_ctx.$t("videoConcat.noInputs")), 1)
+            createBaseVNode("div", _hoisted_3$2E, toDisplayString$1(_ctx.$t("videoConcat.noInputs")), 1)
           ])) : (openBlock(), createElementBlock("div", {
             key: 1,
             ref_key: "stripEl",
@@ -119029,7 +119033,7 @@ const _sfc_main$2R = /* @__PURE__ */ defineComponent({
                   muted: "",
                   playsinline: "",
                   preload: "metadata"
-                }, null, 8, _hoisted_5$27),
+                }, null, 8, _hoisted_5$28),
                 createBaseVNode("span", {
                   class: "ctv:absolute ctv:top-0.5 ctv:left-0.5 ctv:py-px ctv:px-1.5 ctv:text-3xs ctv:font-bold ctv:rounded ctv:text-black ctv:pointer-events-none",
                   style: normalizeStyle({ background: clip.color })
@@ -119038,13 +119042,13 @@ const _sfc_main$2R = /* @__PURE__ */ defineComponent({
                   class: "ctv:absolute ctv:bottom-0.5 ctv:right-0.5 ctv:py-px ctv:px-1 ctv:text-3xs ctv:font-bold ctv:rounded ctv:bg-black/70 ctv:pointer-events-none",
                   style: normalizeStyle({ color: clip.color })
                 }, toDisplayString$1(clip.key.replace("video", "#")), 5)
-              ], 46, _hoisted_4$2f);
+              ], 46, _hoisted_4$2g);
             }), 128))
           ], 512)),
-          clips.value.length > 1 ? (openBlock(), createElementBlock("div", _hoisted_6$1X, toDisplayString$1(_ctx.$t("videoConcat.dragToReorder")), 1)) : createCommentVNode("", true)
+          clips.value.length > 1 ? (openBlock(), createElementBlock("div", _hoisted_6$1Y, toDisplayString$1(_ctx.$t("videoConcat.dragToReorder")), 1)) : createCommentVNode("", true)
         ], 32),
-        createBaseVNode("div", _hoisted_7$1x, [
-          clips.value.length < 2 ? (openBlock(), createElementBlock("span", _hoisted_8$1c, toDisplayString$1(_ctx.$t("videoConcat.needTwo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_9$14, toDisplayString$1(_ctx.$t("videoConcat.concatenating")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_10$X, toDisplayString$1(_ctx.$t("videoConcat.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_11$Q, toDisplayString$1(_ctx.$t("videoConcat.readyToRun", { n: clips.value.length })), 1))
+        createBaseVNode("div", _hoisted_7$1y, [
+          clips.value.length < 2 ? (openBlock(), createElementBlock("span", _hoisted_8$1d, toDisplayString$1(_ctx.$t("videoConcat.needTwo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_9$15, toDisplayString$1(_ctx.$t("videoConcat.concatenating")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_10$Y, toDisplayString$1(_ctx.$t("videoConcat.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_11$R, toDisplayString$1(_ctx.$t("videoConcat.readyToRun", { n: clips.value.length })), 1))
         ]),
         createVNode(StageCard, {
           state: __props.state,
@@ -119072,7 +119076,7 @@ const _sfc_main$2R = /* @__PURE__ */ defineComponent({
               muted: "",
               playsinline: "",
               preload: "metadata"
-            }, null, 8, _hoisted_12$K),
+            }, null, 8, _hoisted_12$L),
             createBaseVNode("span", {
               class: "ctv:absolute ctv:top-0.5 ctv:left-0.5 ctv:py-px ctv:px-1.5 ctv:text-3xs ctv:font-bold ctv:rounded ctv:text-black",
               style: normalizeStyle({ background: unref(dragClip).color })
@@ -119083,13 +119087,13 @@ const _sfc_main$2R = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$4m = {
+const _hoisted_1$4n = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1B(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$4m, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$4n, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -119408,9 +119412,9 @@ function scopeKindOf(scopeNode) {
   const v = w == null ? void 0 : w.value;
   return typeof v === "string" && v ? v : "waveform";
 }
-const _hoisted_1$4l = { class: "ctv:flex ctv:flex-col ctv:gap-1 ctv:min-w-0 ctv:min-h-0" };
-const _hoisted_2$2F = { class: "ctv:shrink-0 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _sfc_main$2Q = /* @__PURE__ */ defineComponent({
+const _hoisted_1$4m = { class: "ctv:flex ctv:flex-col ctv:gap-1 ctv:min-w-0 ctv:min-h-0" };
+const _hoisted_2$2G = { class: "ctv:shrink-0 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _sfc_main$2R = /* @__PURE__ */ defineComponent({
   __name: "FxScopeMirror",
   props: {
     scopeNode: {}
@@ -119425,8 +119429,8 @@ const _sfc_main$2Q = /* @__PURE__ */ defineComponent({
       canvasEl: scopeCanvas
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$4l, [
-        createBaseVNode("span", _hoisted_2$2F, toDisplayString$1(label.value), 1),
+      return openBlock(), createElementBlock("div", _hoisted_1$4m, [
+        createBaseVNode("span", _hoisted_2$2G, toDisplayString$1(label.value), 1),
         createBaseVNode("canvas", {
           ref_key: "scopeCanvas",
           ref: scopeCanvas,
@@ -119438,17 +119442,17 @@ const _sfc_main$2Q = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$4k = { class: "ctv:flex-[2] ctv:min-w-0 ctv:min-h-0 ctv:flex ctv:flex-col ctv:gap-2" };
-const _hoisted_2$2E = { class: "ctv:relative ctv:flex-1 ctv:min-h-0 ctv:flex ctv:flex-col" };
-const _hoisted_3$2C = ["title"];
-const _hoisted_4$2e = {
+const _hoisted_1$4l = { class: "ctv:flex-[2] ctv:min-w-0 ctv:min-h-0 ctv:flex ctv:flex-col ctv:gap-2" };
+const _hoisted_2$2F = { class: "ctv:relative ctv:flex-1 ctv:min-h-0 ctv:flex ctv:flex-col" };
+const _hoisted_3$2D = ["title"];
+const _hoisted_4$2f = {
   key: 0,
   class: "ctv:h-52 ctv:shrink-0 ctv:flex ctv:flex-row ctv:gap-2"
 };
-const _hoisted_5$26 = { class: "ctv:relative ctv:flex-1 ctv:flex ctv:flex-col" };
-const _hoisted_6$1W = ["title"];
+const _hoisted_5$27 = { class: "ctv:relative ctv:flex-1 ctv:flex ctv:flex-col" };
+const _hoisted_6$1X = ["title"];
 const toggleBtnClass$1 = "ctv:absolute ctv:top-1 ctv:right-1 ctv:z-20 ctv:inline-flex ctv:size-6 ctv:items-center ctv:justify-center ctv:rounded ctv:border ctv:border-border-subtle ctv:cursor-pointer ctv:bg-secondary-background/80 ctv:text-base-foreground ctv:hover:border-primary-background";
-const _sfc_main$2P = /* @__PURE__ */ defineComponent({
+const _sfc_main$2Q = /* @__PURE__ */ defineComponent({
   __name: "FxCardShell",
   props: {
     node: {}
@@ -119487,8 +119491,8 @@ const _sfc_main$2P = /* @__PURE__ */ defineComponent({
           onContextmenu: _cache2[1] || (_cache2[1] = withModifiers(() => {
           }, ["stop", "prevent"]))
         }, [
-          createBaseVNode("div", _hoisted_1$4k, [
-            createBaseVNode("div", _hoisted_2$2E, [
+          createBaseVNode("div", _hoisted_1$4l, [
+            createBaseVNode("div", _hoisted_2$2F, [
               renderSlot(_ctx.$slots, "player"),
               createBaseVNode("button", {
                 type: "button",
@@ -119497,11 +119501,11 @@ const _sfc_main$2P = /* @__PURE__ */ defineComponent({
                 onClick: withModifiers(toggleFullscreen, ["stop"])
               }, [
                 createVNode(unref(IconMinimize), { class: "ctv:size-3.5" })
-              ], 8, _hoisted_3$2C)
+              ], 8, _hoisted_3$2D)
             ]),
-            scopeNodes.value.length ? (openBlock(), createElementBlock("div", _hoisted_4$2e, [
+            scopeNodes.value.length ? (openBlock(), createElementBlock("div", _hoisted_4$2f, [
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(scopeNodes.value, (s) => {
-                return openBlock(), createBlock(_sfc_main$2Q, {
+                return openBlock(), createBlock(_sfc_main$2R, {
                   key: String(s.id),
                   "scope-node": s,
                   class: "ctv:flex-1 ctv:min-w-0"
@@ -119522,7 +119526,7 @@ const _sfc_main$2P = /* @__PURE__ */ defineComponent({
           onContextmenu: _cache2[2] || (_cache2[2] = withModifiers(() => {
           }, ["stop", "prevent"]))
         }, [
-          createBaseVNode("div", _hoisted_5$26, [
+          createBaseVNode("div", _hoisted_5$27, [
             renderSlot(_ctx.$slots, "player"),
             createBaseVNode("button", {
               type: "button",
@@ -119531,7 +119535,7 @@ const _sfc_main$2P = /* @__PURE__ */ defineComponent({
               onClick: withModifiers(toggleFullscreen, ["stop"])
             }, [
               createVNode(unref(IconMaximize$1), { class: "ctv:size-3.5" })
-            ], 8, _hoisted_6$1W)
+            ], 8, _hoisted_6$1X)
           ]),
           renderSlot(_ctx.$slots, "default")
         ], 32))
@@ -119930,34 +119934,34 @@ function useAudioWaveform(opts) {
   });
   return { ready, reload, render: render2 };
 }
-const _hoisted_1$4j = {
+const _hoisted_1$4k = {
   key: 0,
   class: "ctv:h-full ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50"
 };
-const _hoisted_2$2D = { class: "ctv:text-xs" };
-const _hoisted_3$2B = ["src", "muted"];
-const _hoisted_4$2d = {
+const _hoisted_2$2E = { class: "ctv:text-xs" };
+const _hoisted_3$2C = ["src", "muted"];
+const _hoisted_4$2e = {
   key: 0,
   class: "ctv:absolute ctv:top-1 ctv:left-1 ctv:z-10 ctv:px-1 ctv:py-px ctv:rounded-sm ctv:text-3xs ctv:font-semibold ctv:tracking-wide ctv:bg-black/60 ctv:text-warning-background ctv:pointer-events-none"
 };
-const _hoisted_5$25 = {
+const _hoisted_5$26 = {
   key: 1,
   class: "ctv:absolute ctv:top-1 ctv:left-1 ctv:z-10 ctv:px-1 ctv:py-px ctv:rounded-sm ctv:text-3xs ctv:font-semibold ctv:tracking-wide ctv:bg-black/60 ctv:text-muted-foreground ctv:pointer-events-none"
 };
-const _hoisted_6$1V = ["title"];
-const _hoisted_7$1w = {
+const _hoisted_6$1W = ["title"];
+const _hoisted_7$1x = {
   key: 4,
   class: "ctv:absolute ctv:inset-0 ctv:flex ctv:items-center ctv:justify-center ctv:text-white/40 ctv:pointer-events-none"
 };
-const _hoisted_8$1b = {
+const _hoisted_8$1c = {
   key: 5,
   class: "ctv:absolute ctv:inset-0 ctv:z-10 ctv:flex ctv:items-center ctv:justify-center ctv:text-xs ctv:bg-black/80 ctv:text-destructive-background ctv:pointer-events-none"
 };
-const _hoisted_9$13 = { class: "ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
-const _hoisted_10$W = ["disabled", "title"];
-const _hoisted_11$P = ["title"];
-const _hoisted_12$J = { class: "ctv:shrink-0 ctv:font-mono ctv:text-muted-foreground" };
-const _sfc_main$2O = /* @__PURE__ */ defineComponent({
+const _hoisted_9$14 = { class: "ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
+const _hoisted_10$X = ["disabled", "title"];
+const _hoisted_11$Q = ["title"];
+const _hoisted_12$K = { class: "ctv:shrink-0 ctv:font-mono ctv:text-muted-foreground" };
+const _sfc_main$2P = /* @__PURE__ */ defineComponent({
   __name: "VideoPlayerLite",
   props: {
     sourceVideoUrl: {},
@@ -120086,9 +120090,9 @@ const _sfc_main$2O = /* @__PURE__ */ defineComponent({
           ref: boxEl,
           class: "ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[140px] ctv:rounded-md ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle"
         }, [
-          !__props.sourceVideoUrl ? (openBlock(), createElementBlock("div", _hoisted_1$4j, [
+          !__props.sourceVideoUrl ? (openBlock(), createElementBlock("div", _hoisted_1$4k, [
             _cache2[15] || (_cache2[15] = createBaseVNode("i", { class: "pi pi-video ctv:text-[32px] ctv:opacity-60" }, null, -1)),
-            createBaseVNode("div", _hoisted_2$2D, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)
+            createBaseVNode("div", _hoisted_2$2E, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)
           ])) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
             createBaseVNode("video", {
               ref_key: "videoEl",
@@ -120110,8 +120114,8 @@ const _sfc_main$2O = /* @__PURE__ */ defineComponent({
               (...args) => unref(onError) && unref(onError)(...args)),
               onClick: _cache2[4] || (_cache2[4] = //@ts-ignore
               (...args) => unref(togglePlay) && unref(togglePlay)(...args))
-            }, null, 46, _hoisted_3$2B),
-            unref(isProxy2) ? (openBlock(), createElementBlock("span", _hoisted_4$2d, "PROXY")) : unref(building) ? (openBlock(), createElementBlock("span", _hoisted_5$25, "PROXY " + toDisplayString$1(unref(pct)) + "%", 1)) : unref(canProxy) ? (openBlock(), createElementBlock("button", {
+            }, null, 46, _hoisted_3$2C),
+            unref(isProxy2) ? (openBlock(), createElementBlock("span", _hoisted_4$2e, "PROXY")) : unref(building) ? (openBlock(), createElementBlock("span", _hoisted_5$26, "PROXY " + toDisplayString$1(unref(pct)) + "%", 1)) : unref(canProxy) ? (openBlock(), createElementBlock("button", {
               key: 2,
               type: "button",
               class: "ctv:absolute ctv:top-1 ctv:left-1 ctv:z-10 ctv:px-1 ctv:py-px ctv:rounded-sm ctv:text-3xs ctv:font-semibold ctv:tracking-wide ctv:cursor-pointer ctv:border ctv:border-warning-background/60 ctv:bg-black/60 ctv:text-warning-background ctv:hover:bg-warning-background/25",
@@ -120121,7 +120125,7 @@ const _sfc_main$2O = /* @__PURE__ */ defineComponent({
                 (...args) => unref(requestProxy) && unref(requestProxy)(...args),
                 ["stop"]
               ))
-            }, toDisplayString$1(_ctx.$t("fx.makeProxy")), 9, _hoisted_6$1V)) : createCommentVNode("", true),
+            }, toDisplayString$1(_ctx.$t("fx.makeProxy")), 9, _hoisted_6$1W)) : createCommentVNode("", true),
             withDirectives(createBaseVNode("canvas", {
               ref_key: "rollEl",
               ref: rollEl,
@@ -120141,14 +120145,14 @@ const _sfc_main$2O = /* @__PURE__ */ defineComponent({
               class: "ctv:absolute ctv:inset-y-0 ctv:w-px ctv:bg-white/70 ctv:pointer-events-none",
               style: normalizeStyle({ left: `${playheadPct.value}%` })
             }, null, 4)) : createCommentVNode("", true),
-            audioOnly.value && !unref(wave).ready.value && !showRoll.value ? (openBlock(), createElementBlock("div", _hoisted_7$1w, [..._cache2[16] || (_cache2[16] = [
+            audioOnly.value && !unref(wave).ready.value && !showRoll.value ? (openBlock(), createElementBlock("div", _hoisted_7$1x, [..._cache2[16] || (_cache2[16] = [
               createBaseVNode("i", { class: "pi pi-volume-up ctv:text-[28px]" }, null, -1)
             ])])) : createCommentVNode("", true),
             renderSlot(_ctx.$slots, "overlay", {}, void 0, true),
-            unref(loadError) ? (openBlock(), createElementBlock("div", _hoisted_8$1b, toDisplayString$1(_ctx.$t("videoTrim.loadError")), 1)) : createCommentVNode("", true)
+            unref(loadError) ? (openBlock(), createElementBlock("div", _hoisted_8$1c, toDisplayString$1(_ctx.$t("videoTrim.loadError")), 1)) : createCommentVNode("", true)
           ], 64))
         ], 512),
-        createBaseVNode("div", _hoisted_9$13, [
+        createBaseVNode("div", _hoisted_9$14, [
           createBaseVNode("button", {
             type: "button",
             class: "ctv:flex ctv:items-center ctv:justify-center ctv:w-7 ctv:h-6 ctv:text-xs ctv:rounded ctv:cursor-pointer ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background ctv:disabled:opacity-40 ctv:disabled:cursor-default",
@@ -120160,7 +120164,7 @@ const _sfc_main$2O = /* @__PURE__ */ defineComponent({
             createBaseVNode("i", {
               class: normalizeClass(["pi", unref(playing) ? "pi-pause" : "pi-play"])
             }, null, 2)
-          ], 8, _hoisted_10$W),
+          ], 8, _hoisted_10$X),
           createBaseVNode("button", {
             type: "button",
             class: "ctv:flex ctv:items-center ctv:justify-center ctv:w-7 ctv:h-6 ctv:text-xs ctv:rounded ctv:cursor-pointer ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background",
@@ -120170,7 +120174,7 @@ const _sfc_main$2O = /* @__PURE__ */ defineComponent({
             createBaseVNode("i", {
               class: normalizeClass(["pi", unref(muted) ? "pi-volume-off" : "pi-volume-up"])
             }, null, 2)
-          ], 8, _hoisted_11$P),
+          ], 8, _hoisted_11$Q),
           createBaseVNode("div", {
             ref_key: "seekEl",
             ref: seekEl,
@@ -120189,13 +120193,13 @@ const _sfc_main$2O = /* @__PURE__ */ defineComponent({
               style: normalizeStyle({ width: `${unref(progressPct)}%` })
             }, null, 4)
           ], 34),
-          createBaseVNode("span", _hoisted_12$J, toDisplayString$1(unref(formatTime)(unref(currentTime))) + " / " + toDisplayString$1(unref(formatTime)(unref(duration2))), 1)
+          createBaseVNode("span", _hoisted_12$K, toDisplayString$1(unref(formatTime)(unref(currentTime))) + " / " + toDisplayString$1(unref(formatTime)(unref(duration2))), 1)
         ])
       ], 32);
     };
   }
 });
-const VideoPlayerLite = /* @__PURE__ */ _export_sfc(_sfc_main$2O, [["__scopeId", "data-v-9db5d5da"]]);
+const VideoPlayerLite = /* @__PURE__ */ _export_sfc(_sfc_main$2P, [["__scopeId", "data-v-9db5d5da"]]);
 function useNumWidget(node, name, fallback) {
   const local = /* @__PURE__ */ ref(readWidgetNum(node, name, fallback));
   bindWidgetCallback(node, name, (value) => {
@@ -120250,36 +120254,36 @@ function useBoolWidget(node, name, fallback) {
     }
   });
 }
-const _hoisted_1$4i = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
-const _hoisted_2$2C = { class: "ctv:min-w-9 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_3$2A = ["value"];
-const _hoisted_4$2c = { class: "ctv:w-11 ctv:text-right ctv:font-mono ctv:font-bold ctv:text-primary-background" };
-const _hoisted_5$24 = { class: "ctv:flex ctv:items-center ctv:gap-1" };
-const _hoisted_6$1U = ["onClick"];
-const _hoisted_7$1v = ["title"];
-const _hoisted_8$1a = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs ctv:text-muted-foreground ctv:cursor-pointer" };
-const _hoisted_9$12 = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_10$V = {
+const _hoisted_1$4j = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
+const _hoisted_2$2D = { class: "ctv:min-w-9 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_3$2B = ["value"];
+const _hoisted_4$2d = { class: "ctv:w-11 ctv:text-right ctv:font-mono ctv:font-bold ctv:text-primary-background" };
+const _hoisted_5$25 = { class: "ctv:flex ctv:items-center ctv:gap-1" };
+const _hoisted_6$1V = ["onClick"];
+const _hoisted_7$1w = ["title"];
+const _hoisted_8$1b = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs ctv:text-muted-foreground ctv:cursor-pointer" };
+const _hoisted_9$13 = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_10$W = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_11$O = {
+const _hoisted_11$P = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_12$I = {
+const _hoisted_12$J = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_13$E = {
+const _hoisted_13$F = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_14$C = {
+const _hoisted_14$D = {
   key: 4,
   class: "ctv:text-muted-foreground"
 };
-const _sfc_main$2N = /* @__PURE__ */ defineComponent({
+const _sfc_main$2O = /* @__PURE__ */ defineComponent({
   __name: "VideoSpeedStageCard",
   props: {
     state: {},
@@ -120301,7 +120305,7 @@ const _sfc_main$2N = /* @__PURE__ */ defineComponent({
       speed.value = Math.min(4, Math.max(0.25, Math.round(v * 100) / 100));
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             "source-video-url": sourceVideoUrl.value,
@@ -120318,8 +120322,8 @@ const _sfc_main$2N = /* @__PURE__ */ defineComponent({
             onPointerup: _cache2[5] || (_cache2[5] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createBaseVNode("div", _hoisted_1$4i, [
-              createBaseVNode("span", _hoisted_2$2C, toDisplayString$1(_ctx.$t("videoSpeed.speed")), 1),
+            createBaseVNode("div", _hoisted_1$4j, [
+              createBaseVNode("span", _hoisted_2$2D, toDisplayString$1(_ctx.$t("videoSpeed.speed")), 1),
               createBaseVNode("input", {
                 type: "range",
                 min: "0.25",
@@ -120328,17 +120332,17 @@ const _sfc_main$2N = /* @__PURE__ */ defineComponent({
                 class: "ctv:flex-1 ctv:accent-primary-background ctv:cursor-pointer",
                 value: unref(speed),
                 onInput: _cache2[0] || (_cache2[0] = (e) => setSpeed(Number(e.target.value)))
-              }, null, 40, _hoisted_3$2A),
-              createBaseVNode("span", _hoisted_4$2c, toDisplayString$1(unref(speed).toFixed(2)) + "x", 1)
+              }, null, 40, _hoisted_3$2B),
+              createBaseVNode("span", _hoisted_4$2d, toDisplayString$1(unref(speed).toFixed(2)) + "x", 1)
             ]),
-            createBaseVNode("div", _hoisted_5$24, [
+            createBaseVNode("div", _hoisted_5$25, [
               (openBlock(), createElementBlock(Fragment$1, null, renderList(SPEED_PRESETS, (p2) => {
                 return createBaseVNode("button", {
                   key: p2,
                   type: "button",
                   class: normalizeClass(["ctv:flex-1 ctv:py-0.5 ctv:text-2xs ctv:rounded ctv:cursor-pointer ctv:border ctv:transition-colors", unref(speed) === p2 ? "ctv:bg-secondary-background-selected ctv:border-primary-background ctv:text-primary-background" : "ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background"]),
                   onClick: ($event) => setSpeed(p2)
-                }, toDisplayString$1(p2) + "x", 11, _hoisted_6$1U);
+                }, toDisplayString$1(p2) + "x", 11, _hoisted_6$1V);
               }), 64)),
               createBaseVNode("button", {
                 type: "button",
@@ -120348,9 +120352,9 @@ const _sfc_main$2N = /* @__PURE__ */ defineComponent({
               }, [
                 _cache2[6] || (_cache2[6] = createBaseVNode("i", { class: "pi pi-replay" }, null, -1)),
                 createTextVNode(" " + toDisplayString$1(_ctx.$t("videoSpeed.reverse")), 1)
-              ], 10, _hoisted_7$1v)
+              ], 10, _hoisted_7$1w)
             ]),
-            createBaseVNode("label", _hoisted_8$1a, [
+            createBaseVNode("label", _hoisted_8$1b, [
               withDirectives(createBaseVNode("input", {
                 type: "checkbox",
                 "onUpdate:modelValue": _cache2[2] || (_cache2[2] = ($event) => /* @__PURE__ */ isRef(pitchCompensate) ? pitchCompensate.value = $event : null),
@@ -120361,8 +120365,8 @@ const _sfc_main$2N = /* @__PURE__ */ defineComponent({
               _cache2[7] || (_cache2[7] = createTextVNode(" Keep pitch ", -1))
             ])
           ], 32),
-          createBaseVNode("div", _hoisted_9$12, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_10$V, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_11$O, toDisplayString$1(_ctx.$t("videoSpeed.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_12$I, toDisplayString$1(_ctx.$t("videoSpeed.done")), 1)) : unref(reverse) ? (openBlock(), createElementBlock("span", _hoisted_13$E, toDisplayString$1(_ctx.$t("videoSpeed.reverseNote")), 1)) : (openBlock(), createElementBlock("span", _hoisted_14$C, toDisplayString$1(_ctx.$t("videoSpeed.adjustThenRun")), 1))
+          createBaseVNode("div", _hoisted_9$13, [
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_10$W, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_11$P, toDisplayString$1(_ctx.$t("videoSpeed.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_12$J, toDisplayString$1(_ctx.$t("videoSpeed.done")), 1)) : unref(reverse) ? (openBlock(), createElementBlock("span", _hoisted_13$F, toDisplayString$1(_ctx.$t("videoSpeed.reverseNote")), 1)) : (openBlock(), createElementBlock("span", _hoisted_14$D, toDisplayString$1(_ctx.$t("videoSpeed.adjustThenRun")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
@@ -120428,29 +120432,29 @@ function useVideoRotate(node, boxEl) {
   const videoStyle = computed(() => rotationStyle(rotateDeg.value, flipH.value, flipV.value, boxRatio.value));
   return { rotateDeg, flipH, flipV, boxRatio, rotateBy, setFlipH, setFlipV, videoStyle };
 }
-const _hoisted_1$4h = ["title"];
-const _hoisted_2$2B = ["title"];
-const _hoisted_3$2z = ["title"];
-const _hoisted_4$2b = ["title"];
-const _hoisted_5$23 = { class: "ctv:ml-auto ctv:text-[11px] ctv:font-mono ctv:font-bold ctv:text-primary-background" };
-const _hoisted_6$1T = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_7$1u = {
+const _hoisted_1$4i = ["title"];
+const _hoisted_2$2C = ["title"];
+const _hoisted_3$2A = ["title"];
+const _hoisted_4$2c = ["title"];
+const _hoisted_5$24 = { class: "ctv:ml-auto ctv:text-[11px] ctv:font-mono ctv:font-bold ctv:text-primary-background" };
+const _hoisted_6$1U = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_7$1v = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_8$19 = {
+const _hoisted_8$1a = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_9$11 = {
+const _hoisted_9$12 = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_10$U = {
+const _hoisted_10$V = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
-const _sfc_main$2M = /* @__PURE__ */ defineComponent({
+const _sfc_main$2N = /* @__PURE__ */ defineComponent({
   __name: "VideoRotateStageCard",
   props: {
     state: {},
@@ -120480,7 +120484,7 @@ const _sfc_main$2M = /* @__PURE__ */ defineComponent({
       return "ctv:flex-1 ctv:flex ctv:items-center ctv:justify-center ctv:gap-1 ctv:py-1 ctv:text-2xs ctv:rounded ctv:cursor-pointer ctv:border ctv:transition-colors " + (active ? "ctv:bg-secondary-background-selected ctv:border-primary-background ctv:text-primary-background" : "ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background");
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerEl",
@@ -120507,7 +120511,7 @@ const _sfc_main$2M = /* @__PURE__ */ defineComponent({
             }, [..._cache2[7] || (_cache2[7] = [
               createBaseVNode("i", { class: "pi pi-undo" }, null, -1),
               createTextVNode(" 90°", -1)
-            ])], 10, _hoisted_1$4h),
+            ])], 10, _hoisted_1$4i),
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(btnClass2(false)),
@@ -120516,7 +120520,7 @@ const _sfc_main$2M = /* @__PURE__ */ defineComponent({
             }, [..._cache2[8] || (_cache2[8] = [
               createBaseVNode("i", { class: "pi pi-refresh" }, null, -1),
               createTextVNode(" 90°", -1)
-            ])], 10, _hoisted_2$2B),
+            ])], 10, _hoisted_2$2C),
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(btnClass2(unref(flipH))),
@@ -120524,7 +120528,7 @@ const _sfc_main$2M = /* @__PURE__ */ defineComponent({
               onClick: _cache2[2] || (_cache2[2] = ($event) => unref(setFlipH)(!unref(flipH)))
             }, [..._cache2[9] || (_cache2[9] = [
               createBaseVNode("i", { class: "pi pi-arrows-h" }, null, -1)
-            ])], 10, _hoisted_3$2z),
+            ])], 10, _hoisted_3$2A),
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(btnClass2(unref(flipV))),
@@ -120532,11 +120536,11 @@ const _sfc_main$2M = /* @__PURE__ */ defineComponent({
               onClick: _cache2[3] || (_cache2[3] = ($event) => unref(setFlipV)(!unref(flipV)))
             }, [..._cache2[10] || (_cache2[10] = [
               createBaseVNode("i", { class: "pi pi-arrows-v" }, null, -1)
-            ])], 10, _hoisted_4$2b),
-            createBaseVNode("span", _hoisted_5$23, toDisplayString$1(unref(rotateDeg)) + "°", 1)
+            ])], 10, _hoisted_4$2c),
+            createBaseVNode("span", _hoisted_5$24, toDisplayString$1(unref(rotateDeg)) + "°", 1)
           ], 32),
-          createBaseVNode("div", _hoisted_6$1T, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_7$1u, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_8$19, toDisplayString$1(_ctx.$t("videoRotate.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_9$11, toDisplayString$1(_ctx.$t("videoRotate.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_10$U, toDisplayString$1(_ctx.$t("videoRotate.adjustThenRun")), 1))
+          createBaseVNode("div", _hoisted_6$1U, [
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_7$1v, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_8$1a, toDisplayString$1(_ctx.$t("videoRotate.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_9$12, toDisplayString$1(_ctx.$t("videoRotate.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_10$V, toDisplayString$1(_ctx.$t("videoRotate.adjustThenRun")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
@@ -120552,25 +120556,25 @@ const _sfc_main$2M = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$4g = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:grow" };
-const _hoisted_2$2A = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_3$2y = {
+const _hoisted_1$4h = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:grow" };
+const _hoisted_2$2B = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_3$2z = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_4$2a = {
+const _hoisted_4$2b = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_5$22 = {
+const _hoisted_5$23 = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_6$1S = {
+const _hoisted_6$1T = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
-const _sfc_main$2L = /* @__PURE__ */ defineComponent({
+const _sfc_main$2M = /* @__PURE__ */ defineComponent({
   __name: "VideoSplitStageCard",
   props: {
     state: {},
@@ -120606,15 +120610,15 @@ const _sfc_main$2L = /* @__PURE__ */ defineComponent({
       }
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$4g, [
+      return openBlock(), createElementBlock("div", _hoisted_1$4h, [
         createVNode(VideoTrimBar, {
           "source-video-url": sourceVideoUrl.value,
           range: range.value,
           mode: "split",
           "onUpdate:range": onRangeUpdate
         }, null, 8, ["source-video-url", "range"]),
-        createBaseVNode("div", _hoisted_2$2A, [
-          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_3$2y, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_4$2a, toDisplayString$1(_ctx.$t("videoSplit.splitting")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_5$22, toDisplayString$1(_ctx.$t("videoSplit.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_6$1S, toDisplayString$1(_ctx.$t("videoSplit.adjustThenRun")), 1))
+        createBaseVNode("div", _hoisted_2$2B, [
+          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_3$2z, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_4$2b, toDisplayString$1(_ctx.$t("videoSplit.splitting")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_5$23, toDisplayString$1(_ctx.$t("videoSplit.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_6$1T, toDisplayString$1(_ctx.$t("videoSplit.adjustThenRun")), 1))
         ]),
         createVNode(StageCard, {
           state: __props.state,
@@ -120628,27 +120632,27 @@ const _sfc_main$2L = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$4f = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
-const _hoisted_2$2z = { class: "ctv:min-w-9 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_3$2x = ["value"];
-const _hoisted_4$29 = ["value"];
-const _hoisted_5$21 = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-[11px]" };
-const _hoisted_6$1R = { class: "ctv:flex-1 ctv:flex ctv:items-center ctv:gap-1 ctv:py-0.5 ctv:px-1 ctv:rounded ctv:bg-secondary-background ctv:border ctv:border-border-subtle" };
-const _hoisted_7$1t = { class: "ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground" };
-const _hoisted_8$18 = ["value"];
-const _hoisted_9$10 = { class: "ctv:flex-1 ctv:flex ctv:items-center ctv:gap-1 ctv:py-0.5 ctv:px-1 ctv:rounded ctv:bg-secondary-background ctv:border ctv:border-border-subtle" };
-const _hoisted_10$T = { class: "ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground" };
-const _hoisted_11$N = ["value"];
-const _hoisted_12$H = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_13$D = {
+const _hoisted_1$4g = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
+const _hoisted_2$2A = { class: "ctv:min-w-9 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_3$2y = ["value"];
+const _hoisted_4$2a = ["value"];
+const _hoisted_5$22 = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-[11px]" };
+const _hoisted_6$1S = { class: "ctv:flex-1 ctv:flex ctv:items-center ctv:gap-1 ctv:py-0.5 ctv:px-1 ctv:rounded ctv:bg-secondary-background ctv:border ctv:border-border-subtle" };
+const _hoisted_7$1u = { class: "ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground" };
+const _hoisted_8$19 = ["value"];
+const _hoisted_9$11 = { class: "ctv:flex-1 ctv:flex ctv:items-center ctv:gap-1 ctv:py-0.5 ctv:px-1 ctv:rounded ctv:bg-secondary-background ctv:border ctv:border-border-subtle" };
+const _hoisted_10$U = { class: "ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground" };
+const _hoisted_11$O = ["value"];
+const _hoisted_12$I = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_13$E = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_14$B = {
+const _hoisted_14$C = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_15$w = {
+const _hoisted_15$x = {
   key: 2,
   class: "ctv:text-success-background"
 };
@@ -120660,7 +120664,7 @@ const _hoisted_17$q = {
   key: 4,
   class: "ctv:text-muted-foreground"
 };
-const _sfc_main$2K = /* @__PURE__ */ defineComponent({
+const _sfc_main$2L = /* @__PURE__ */ defineComponent({
   __name: "VideoVolumeStageCard",
   props: {
     state: {},
@@ -120707,7 +120711,7 @@ const _sfc_main$2K = /* @__PURE__ */ defineComponent({
       fadeOut.value = readWidgetNum(props.node, "fade_out_s", fadeOut.value);
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             "source-video-url": sourceVideoUrl.value,
@@ -120725,8 +120729,8 @@ const _sfc_main$2K = /* @__PURE__ */ defineComponent({
             onPointerup: _cache2[6] || (_cache2[6] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createBaseVNode("div", _hoisted_1$4f, [
-              createBaseVNode("span", _hoisted_2$2z, toDisplayString$1(_ctx.$t("videoVolume.volume")), 1),
+            createBaseVNode("div", _hoisted_1$4g, [
+              createBaseVNode("span", _hoisted_2$2A, toDisplayString$1(_ctx.$t("videoVolume.volume")), 1),
               createBaseVNode("input", {
                 type: "range",
                 min: "0",
@@ -120735,7 +120739,7 @@ const _sfc_main$2K = /* @__PURE__ */ defineComponent({
                 class: "ctv:flex-1 ctv:accent-primary-background ctv:cursor-pointer",
                 value: Math.min(2, volume.value),
                 onInput: _cache2[0] || (_cache2[0] = (e) => setVolume(Number(e.target.value)))
-              }, null, 40, _hoisted_3$2x),
+              }, null, 40, _hoisted_3$2y),
               createBaseVNode("input", {
                 type: "number",
                 min: "0",
@@ -120744,12 +120748,12 @@ const _sfc_main$2K = /* @__PURE__ */ defineComponent({
                 class: "ctv-num-input ctv:w-14 ctv:py-0.5 ctv:px-1 ctv:text-right ctv:text-[11px] ctv:font-mono ctv:rounded ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground",
                 value: Math.round(volume.value * 100),
                 onChange: _cache2[1] || (_cache2[1] = (e) => setVolume(Number(e.target.value) / 100))
-              }, null, 40, _hoisted_4$29),
+              }, null, 40, _hoisted_4$2a),
               _cache2[7] || (_cache2[7] = createBaseVNode("span", { class: "ctv:text-2xs ctv:text-muted-foreground" }, "%", -1))
             ]),
-            createBaseVNode("div", _hoisted_5$21, [
-              createBaseVNode("label", _hoisted_6$1R, [
-                createBaseVNode("span", _hoisted_7$1t, toDisplayString$1(_ctx.$t("videoVolume.fadeIn")), 1),
+            createBaseVNode("div", _hoisted_5$22, [
+              createBaseVNode("label", _hoisted_6$1S, [
+                createBaseVNode("span", _hoisted_7$1u, toDisplayString$1(_ctx.$t("videoVolume.fadeIn")), 1),
                 createBaseVNode("input", {
                   type: "number",
                   min: "0",
@@ -120758,11 +120762,11 @@ const _sfc_main$2K = /* @__PURE__ */ defineComponent({
                   class: "ctv-num-input ctv:w-full ctv:border-0 ctv:outline-none ctv:bg-transparent ctv:text-[11px] ctv:font-mono ctv:text-base-foreground",
                   value: fadeIn.value,
                   onChange: _cache2[2] || (_cache2[2] = (e) => setFade("fade_in_s", e.target.value))
-                }, null, 40, _hoisted_8$18),
+                }, null, 40, _hoisted_8$19),
                 _cache2[8] || (_cache2[8] = createBaseVNode("span", { class: "ctv:text-2xs ctv:text-muted-foreground" }, "s", -1))
               ]),
-              createBaseVNode("label", _hoisted_9$10, [
-                createBaseVNode("span", _hoisted_10$T, toDisplayString$1(_ctx.$t("videoVolume.fadeOut")), 1),
+              createBaseVNode("label", _hoisted_9$11, [
+                createBaseVNode("span", _hoisted_10$U, toDisplayString$1(_ctx.$t("videoVolume.fadeOut")), 1),
                 createBaseVNode("input", {
                   type: "number",
                   min: "0",
@@ -120771,13 +120775,13 @@ const _sfc_main$2K = /* @__PURE__ */ defineComponent({
                   class: "ctv-num-input ctv:w-full ctv:border-0 ctv:outline-none ctv:bg-transparent ctv:text-[11px] ctv:font-mono ctv:text-base-foreground",
                   value: fadeOut.value,
                   onChange: _cache2[3] || (_cache2[3] = (e) => setFade("fade_out_s", e.target.value))
-                }, null, 40, _hoisted_11$N),
+                }, null, 40, _hoisted_11$O),
                 _cache2[9] || (_cache2[9] = createBaseVNode("span", { class: "ctv:text-2xs ctv:text-muted-foreground" }, "s", -1))
               ])
             ])
           ], 32),
-          createBaseVNode("div", _hoisted_12$H, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_13$D, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_14$B, toDisplayString$1(_ctx.$t("videoVolume.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_15$w, toDisplayString$1(_ctx.$t("videoVolume.done")), 1)) : volume.value > 1 ? (openBlock(), createElementBlock("span", _hoisted_16$s, toDisplayString$1(_ctx.$t("videoVolume.previewCapNote")), 1)) : (openBlock(), createElementBlock("span", _hoisted_17$q, toDisplayString$1(_ctx.$t("videoVolume.adjustThenRun")), 1))
+          createBaseVNode("div", _hoisted_12$I, [
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_13$E, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_14$C, toDisplayString$1(_ctx.$t("videoVolume.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_15$x, toDisplayString$1(_ctx.$t("videoVolume.done")), 1)) : volume.value > 1 ? (openBlock(), createElementBlock("span", _hoisted_16$s, toDisplayString$1(_ctx.$t("videoVolume.previewCapNote")), 1)) : (openBlock(), createElementBlock("span", _hoisted_17$q, toDisplayString$1(_ctx.$t("videoVolume.adjustThenRun")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
@@ -120793,37 +120797,37 @@ const _sfc_main$2K = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const VideoVolumeStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$2K, [["__scopeId", "data-v-977e0d99"]]);
-const _hoisted_1$4e = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
-const _hoisted_2$2y = { class: "ctv:min-w-9 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_3$2w = ["src"];
-const _hoisted_4$28 = {
+const VideoVolumeStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$2L, [["__scopeId", "data-v-977e0d99"]]);
+const _hoisted_1$4f = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
+const _hoisted_2$2z = { class: "ctv:min-w-9 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_3$2x = ["src"];
+const _hoisted_4$29 = {
   key: 1,
   class: "ctv:flex-1 ctv:text-2xs ctv:italic ctv:text-muted-foreground"
 };
-const _hoisted_5$20 = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-[11px]" };
-const _hoisted_6$1Q = ["onClick"];
-const _hoisted_7$1s = { class: "ctv:flex-1 ctv:flex ctv:items-center ctv:gap-1 ctv:py-0.5 ctv:px-1 ctv:rounded ctv:bg-secondary-background ctv:border ctv:border-border-subtle" };
-const _hoisted_8$17 = { class: "ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground" };
-const _hoisted_9$$ = ["value"];
-const _hoisted_10$S = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_11$M = {
+const _hoisted_5$21 = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-[11px]" };
+const _hoisted_6$1R = ["onClick"];
+const _hoisted_7$1t = { class: "ctv:flex-1 ctv:flex ctv:items-center ctv:gap-1 ctv:py-0.5 ctv:px-1 ctv:rounded ctv:bg-secondary-background ctv:border ctv:border-border-subtle" };
+const _hoisted_8$18 = { class: "ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground" };
+const _hoisted_9$10 = ["value"];
+const _hoisted_10$T = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_11$N = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_12$G = {
+const _hoisted_12$H = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_13$C = {
+const _hoisted_13$D = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_14$A = {
+const _hoisted_14$B = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
-const _sfc_main$2J = /* @__PURE__ */ defineComponent({
+const _sfc_main$2K = /* @__PURE__ */ defineComponent({
   __name: "VideoMuxAudioStageCard",
   props: {
     state: {},
@@ -120862,7 +120866,7 @@ const _sfc_main$2J = /* @__PURE__ */ defineComponent({
       offset2.value = readWidgetNum(props.node, "offset_s", offset2.value);
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             "source-video-url": sourceVideoUrl.value,
@@ -120879,27 +120883,27 @@ const _sfc_main$2J = /* @__PURE__ */ defineComponent({
             onPointerup: _cache2[3] || (_cache2[3] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createBaseVNode("div", _hoisted_1$4e, [
-              createBaseVNode("span", _hoisted_2$2y, toDisplayString$1(_ctx.$t("videoMux.audioTrack")), 1),
+            createBaseVNode("div", _hoisted_1$4f, [
+              createBaseVNode("span", _hoisted_2$2z, toDisplayString$1(_ctx.$t("videoMux.audioTrack")), 1),
               sourceAudioUrl.value ? (openBlock(), createElementBlock("audio", {
                 key: 0,
                 src: sourceAudioUrl.value,
                 class: "ctv:flex-1 ctv:h-7 ctv:min-w-0",
                 controls: "",
                 preload: "metadata"
-              }, null, 8, _hoisted_3$2w)) : (openBlock(), createElementBlock("span", _hoisted_4$28, toDisplayString$1(_ctx.$t("videoMux.noAudio")), 1))
+              }, null, 8, _hoisted_3$2x)) : (openBlock(), createElementBlock("span", _hoisted_4$29, toDisplayString$1(_ctx.$t("videoMux.noAudio")), 1))
             ]),
-            createBaseVNode("div", _hoisted_5$20, [
+            createBaseVNode("div", _hoisted_5$21, [
               (openBlock(), createElementBlock(Fragment$1, null, renderList(["replace", "mix"], (m) => {
                 return createBaseVNode("button", {
                   key: m,
                   type: "button",
                   class: normalizeClass(["ctv:flex-1 ctv:py-1 ctv:text-2xs ctv:rounded ctv:cursor-pointer ctv:border ctv:transition-colors", mode.value === m ? "ctv:bg-secondary-background-selected ctv:border-primary-background ctv:text-primary-background" : "ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background"]),
                   onClick: ($event) => setMode(m)
-                }, toDisplayString$1(_ctx.$t(`videoMux.${m}`)), 11, _hoisted_6$1Q);
+                }, toDisplayString$1(_ctx.$t(`videoMux.${m}`)), 11, _hoisted_6$1R);
               }), 64)),
-              createBaseVNode("label", _hoisted_7$1s, [
-                createBaseVNode("span", _hoisted_8$17, toDisplayString$1(_ctx.$t("videoMux.offset")), 1),
+              createBaseVNode("label", _hoisted_7$1t, [
+                createBaseVNode("span", _hoisted_8$18, toDisplayString$1(_ctx.$t("videoMux.offset")), 1),
                 createBaseVNode("input", {
                   type: "number",
                   min: "-600",
@@ -120908,13 +120912,13 @@ const _sfc_main$2J = /* @__PURE__ */ defineComponent({
                   class: "ctv-num-input ctv:w-full ctv:border-0 ctv:outline-none ctv:bg-transparent ctv:text-[11px] ctv:font-mono ctv:text-base-foreground",
                   value: offset2.value,
                   onChange: _cache2[0] || (_cache2[0] = (e) => setOffset(e.target.value))
-                }, null, 40, _hoisted_9$$),
+                }, null, 40, _hoisted_9$10),
                 _cache2[4] || (_cache2[4] = createBaseVNode("span", { class: "ctv:text-2xs ctv:text-muted-foreground" }, "s", -1))
               ])
             ])
           ], 32),
-          createBaseVNode("div", _hoisted_10$S, [
-            !sourceVideoUrl.value || !sourceAudioUrl.value ? (openBlock(), createElementBlock("span", _hoisted_11$M, toDisplayString$1(_ctx.$t("videoMux.needBoth")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_12$G, toDisplayString$1(_ctx.$t("videoMux.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_13$C, toDisplayString$1(_ctx.$t("videoMux.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_14$A, toDisplayString$1(_ctx.$t("videoMux.adjustThenRun")), 1))
+          createBaseVNode("div", _hoisted_10$T, [
+            !sourceVideoUrl.value || !sourceAudioUrl.value ? (openBlock(), createElementBlock("span", _hoisted_11$N, toDisplayString$1(_ctx.$t("videoMux.needBoth")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_12$H, toDisplayString$1(_ctx.$t("videoMux.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_13$D, toDisplayString$1(_ctx.$t("videoMux.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_14$B, toDisplayString$1(_ctx.$t("videoMux.adjustThenRun")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
@@ -120930,7 +120934,7 @@ const _sfc_main$2J = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const VideoMuxAudioStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$2J, [["__scopeId", "data-v-493777f3"]]);
+const VideoMuxAudioStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$2K, [["__scopeId", "data-v-493777f3"]]);
 const MAX_MARKS = 48;
 function normalizeMarks(list) {
   const uniq = [...new Set(list.filter((n) => Number.isFinite(n) && n >= 0).map((n) => Math.round(n * 100) / 100))];
@@ -120997,37 +121001,37 @@ function useFrameMarks(node, opts) {
     clearMarks
   };
 }
-const _hoisted_1$4d = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:grow" };
-const _hoisted_2$2x = { class: "ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[220px] ctv:rounded-md ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle" };
-const _hoisted_3$2v = {
+const _hoisted_1$4e = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:grow" };
+const _hoisted_2$2y = { class: "ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[220px] ctv:rounded-md ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle" };
+const _hoisted_3$2w = {
   key: 0,
   class: "ctv:absolute ctv:inset-0 ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50"
 };
-const _hoisted_4$27 = { class: "ctv:text-xs" };
-const _hoisted_5$1$ = ["src"];
-const _hoisted_6$1P = {
+const _hoisted_4$28 = { class: "ctv:text-xs" };
+const _hoisted_5$20 = ["src"];
+const _hoisted_6$1Q = {
   key: 0,
   class: "ctv:absolute ctv:inset-0 ctv:z-10 ctv:flex ctv:items-center ctv:justify-center ctv:text-xs ctv:bg-black/80 ctv:text-white/85 ctv:pointer-events-none"
 };
-const _hoisted_7$1r = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
-const _hoisted_8$16 = ["disabled", "title"];
-const _hoisted_9$_ = { class: "ctv:font-mono ctv:text-muted-foreground" };
-const _hoisted_10$R = { class: "ctv:ml-auto ctv:font-mono ctv:font-bold ctv:text-primary-background" };
-const _hoisted_11$L = { class: "ctv:absolute ctv:inset-0 ctv:flex ctv:pointer-events-none ctv:overflow-hidden ctv:rounded" };
-const _hoisted_12$F = ["src"];
-const _hoisted_13$B = ["title", "onClick"];
-const _hoisted_14$z = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-[11px]" };
-const _hoisted_15$v = ["disabled"];
+const _hoisted_7$1s = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
+const _hoisted_8$17 = ["disabled", "title"];
+const _hoisted_9$$ = { class: "ctv:font-mono ctv:text-muted-foreground" };
+const _hoisted_10$S = { class: "ctv:ml-auto ctv:font-mono ctv:font-bold ctv:text-primary-background" };
+const _hoisted_11$M = { class: "ctv:absolute ctv:inset-0 ctv:flex ctv:pointer-events-none ctv:overflow-hidden ctv:rounded" };
+const _hoisted_12$G = ["src"];
+const _hoisted_13$C = ["title", "onClick"];
+const _hoisted_14$A = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-[11px]" };
+const _hoisted_15$w = ["disabled"];
 const _hoisted_16$r = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:py-0.5 ctv:px-1 ctv:rounded ctv:bg-secondary-background ctv:border ctv:border-border-subtle" };
 const _hoisted_17$p = ["value"];
 const _hoisted_18$n = ["disabled"];
 const _hoisted_19$l = ["disabled"];
 const _hoisted_20$i = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_21$h = {
+const _hoisted_21$g = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_22$g = {
+const _hoisted_22$f = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
@@ -121043,7 +121047,7 @@ const _hoisted_25$d = {
   key: 4,
   class: "ctv:text-muted-foreground"
 };
-const _sfc_main$2I = /* @__PURE__ */ defineComponent({
+const _sfc_main$2J = /* @__PURE__ */ defineComponent({
   __name: "VideoFramesStageCard",
   props: {
     state: {},
@@ -121086,7 +121090,7 @@ const _sfc_main$2I = /* @__PURE__ */ defineComponent({
       clearMarks
     } = useFrameMarks(props.node, { duration: duration2, currentTime });
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$4d, [
+      return openBlock(), createElementBlock("div", _hoisted_1$4e, [
         createBaseVNode("div", {
           class: "ctv:flex ctv:flex-col ctv:gap-1.5",
           onPointerdown: _cache2[11] || (_cache2[11] = withModifiers(() => {
@@ -121096,10 +121100,10 @@ const _sfc_main$2I = /* @__PURE__ */ defineComponent({
           onPointerup: _cache2[13] || (_cache2[13] = withModifiers(() => {
           }, ["stop"]))
         }, [
-          createBaseVNode("div", _hoisted_2$2x, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("div", _hoisted_3$2v, [
+          createBaseVNode("div", _hoisted_2$2y, [
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("div", _hoisted_3$2w, [
               _cache2[14] || (_cache2[14] = createBaseVNode("i", { class: "pi pi-video ctv:text-[32px] ctv:opacity-60" }, null, -1)),
-              createBaseVNode("div", _hoisted_4$27, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)
+              createBaseVNode("div", _hoisted_4$28, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)
             ])) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
               createBaseVNode("video", {
                 ref_key: "videoEl",
@@ -121111,11 +121115,11 @@ const _sfc_main$2I = /* @__PURE__ */ defineComponent({
                 preload: "metadata",
                 onClick: _cache2[0] || (_cache2[0] = //@ts-ignore
                 (...args) => unref(playSelection) && unref(playSelection)(...args))
-              }, null, 8, _hoisted_5$1$),
-              unref(isLoading) ? (openBlock(), createElementBlock("div", _hoisted_6$1P, toDisplayString$1(_ctx.$t("videoTrim.loading")), 1)) : createCommentVNode("", true)
+              }, null, 8, _hoisted_5$20),
+              unref(isLoading) ? (openBlock(), createElementBlock("div", _hoisted_6$1Q, toDisplayString$1(_ctx.$t("videoTrim.loading")), 1)) : createCommentVNode("", true)
             ], 64))
           ]),
-          createBaseVNode("div", _hoisted_7$1r, [
+          createBaseVNode("div", _hoisted_7$1s, [
             createBaseVNode("button", {
               type: "button",
               class: "ctv:flex ctv:items-center ctv:justify-center ctv:w-7 ctv:h-6 ctv:text-xs ctv:rounded ctv:cursor-pointer ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background ctv:disabled:opacity-40 ctv:disabled:cursor-default",
@@ -121127,9 +121131,9 @@ const _sfc_main$2I = /* @__PURE__ */ defineComponent({
               createBaseVNode("i", {
                 class: normalizeClass(["pi", unref(previewing) ? "pi-pause" : "pi-play"])
               }, null, 2)
-            ], 8, _hoisted_8$16),
-            createBaseVNode("span", _hoisted_9$_, toDisplayString$1(unref(formatTime)(unref(currentTime))) + " / " + toDisplayString$1(unref(formatTime)(unref(duration2))), 1),
-            createBaseVNode("span", _hoisted_10$R, toDisplayString$1(_ctx.$t("videoFrames.marks", { n: unref(marks).length })), 1)
+            ], 8, _hoisted_8$17),
+            createBaseVNode("span", _hoisted_9$$, toDisplayString$1(unref(formatTime)(unref(currentTime))) + " / " + toDisplayString$1(unref(formatTime)(unref(duration2))), 1),
+            createBaseVNode("span", _hoisted_10$S, toDisplayString$1(_ctx.$t("videoFrames.marks", { n: unref(marks).length })), 1)
           ]),
           createBaseVNode("div", {
             ref_key: "trackEl",
@@ -121143,7 +121147,7 @@ const _sfc_main$2I = /* @__PURE__ */ defineComponent({
             onPointercancel: _cache2[6] || (_cache2[6] = //@ts-ignore
             (...args) => unref(onDragEnd) && unref(onDragEnd)(...args))
           }, [
-            createBaseVNode("div", _hoisted_11$L, [
+            createBaseVNode("div", _hoisted_11$M, [
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(thumbnails), (thumb, i) => {
                 return openBlock(), createElementBlock("img", {
                   key: i,
@@ -121151,7 +121155,7 @@ const _sfc_main$2I = /* @__PURE__ */ defineComponent({
                   class: "ctv:h-full ctv:object-cover ctv:min-w-0",
                   style: normalizeStyle({ width: `${100 / unref(THUMB_COUNT)}%` }),
                   draggable: "false"
-                }, null, 12, _hoisted_12$F);
+                }, null, 12, _hoisted_12$G);
               }), 128))
             ]),
             unref(duration2) > 0 ? (openBlock(), createElementBlock(Fragment$1, { key: 0 }, [
@@ -121169,11 +121173,11 @@ const _sfc_main$2I = /* @__PURE__ */ defineComponent({
                   onPointerdown: _cache2[2] || (_cache2[2] = withModifiers(() => {
                   }, ["stop"])),
                   onClick: withModifiers(($event) => unref(removeMark2)(i), ["stop"])
-                }, toDisplayString$1(i + 1), 45, _hoisted_13$B);
+                }, toDisplayString$1(i + 1), 45, _hoisted_13$C);
               }), 128))
             ], 64)) : createCommentVNode("", true)
           ], 34),
-          createBaseVNode("div", _hoisted_14$z, [
+          createBaseVNode("div", _hoisted_14$A, [
             createBaseVNode("button", {
               type: "button",
               class: "ctv:flex-1 ctv:py-1 ctv:text-2xs ctv:rounded ctv:cursor-pointer ctv:border ctv:transition-colors ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background ctv:disabled:opacity-40 ctv:disabled:cursor-default",
@@ -121183,7 +121187,7 @@ const _sfc_main$2I = /* @__PURE__ */ defineComponent({
             }, [
               _cache2[15] || (_cache2[15] = createBaseVNode("i", { class: "pi pi-plus" }, null, -1)),
               createTextVNode(" " + toDisplayString$1(_ctx.$t("videoFrames.addMark")), 1)
-            ], 8, _hoisted_15$v),
+            ], 8, _hoisted_15$w),
             createBaseVNode("label", _hoisted_16$r, [
               createBaseVNode("input", {
                 type: "number",
@@ -121212,7 +121216,7 @@ const _sfc_main$2I = /* @__PURE__ */ defineComponent({
           ])
         ], 32),
         createBaseVNode("div", _hoisted_20$i, [
-          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_21$h, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_22$g, toDisplayString$1(_ctx.$t("videoFrames.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_23$e, toDisplayString$1(_ctx.$t("videoFrames.done")), 1)) : unref(marks).length === 0 ? (openBlock(), createElementBlock("span", _hoisted_24$d, toDisplayString$1(_ctx.$t("videoFrames.addFirst")), 1)) : (openBlock(), createElementBlock("span", _hoisted_25$d, toDisplayString$1(_ctx.$t("videoFrames.readyToRun", { n: unref(marks).length })), 1))
+          !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_21$g, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_22$f, toDisplayString$1(_ctx.$t("videoFrames.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_23$e, toDisplayString$1(_ctx.$t("videoFrames.done")), 1)) : unref(marks).length === 0 ? (openBlock(), createElementBlock("span", _hoisted_24$d, toDisplayString$1(_ctx.$t("videoFrames.addFirst")), 1)) : (openBlock(), createElementBlock("span", _hoisted_25$d, toDisplayString$1(_ctx.$t("videoFrames.readyToRun", { n: unref(marks).length })), 1))
         ]),
         createVNode(StageCard, {
           state: __props.state,
@@ -121226,7 +121230,7 @@ const _sfc_main$2I = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const VideoFramesStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$2I, [["__scopeId", "data-v-3c3bfe35"]]);
+const VideoFramesStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$2J, [["__scopeId", "data-v-3c3bfe35"]]);
 function evenDim(n) {
   return Math.max(2, Math.round(n / 2) * 2);
 }
@@ -121295,37 +121299,37 @@ function useVideoResize(node) {
     targetLabel
   };
 }
-const _hoisted_1$4c = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-[11px]" };
-const _hoisted_2$2w = { class: "ctv:flex-1 ctv:flex ctv:items-center ctv:gap-1 ctv:py-0.5 ctv:px-1 ctv:rounded ctv:bg-secondary-background ctv:border ctv:border-border-subtle" };
-const _hoisted_3$2u = ["value"];
-const _hoisted_4$26 = { class: "ctv:flex-1 ctv:flex ctv:items-center ctv:gap-1 ctv:py-0.5 ctv:px-1 ctv:rounded ctv:bg-secondary-background ctv:border ctv:border-border-subtle" };
-const _hoisted_5$1_ = ["value"];
-const _hoisted_6$1O = ["title"];
-const _hoisted_7$1q = { class: "ctv:flex ctv:items-center ctv:gap-1" };
-const _hoisted_8$15 = ["disabled", "onClick"];
-const _hoisted_9$Z = ["disabled"];
-const _hoisted_10$Q = {
+const _hoisted_1$4d = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-[11px]" };
+const _hoisted_2$2x = { class: "ctv:flex-1 ctv:flex ctv:items-center ctv:gap-1 ctv:py-0.5 ctv:px-1 ctv:rounded ctv:bg-secondary-background ctv:border ctv:border-border-subtle" };
+const _hoisted_3$2v = ["value"];
+const _hoisted_4$27 = { class: "ctv:flex-1 ctv:flex ctv:items-center ctv:gap-1 ctv:py-0.5 ctv:px-1 ctv:rounded ctv:bg-secondary-background ctv:border ctv:border-border-subtle" };
+const _hoisted_5$1$ = ["value"];
+const _hoisted_6$1P = ["title"];
+const _hoisted_7$1r = { class: "ctv:flex ctv:items-center ctv:gap-1" };
+const _hoisted_8$16 = ["disabled", "onClick"];
+const _hoisted_9$_ = ["disabled"];
+const _hoisted_10$R = {
   key: 0,
   class: "ctv:text-3xs ctv:text-center ctv:font-mono ctv:text-muted-foreground"
 };
-const _hoisted_11$K = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_12$E = {
+const _hoisted_11$L = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_12$F = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_13$A = {
+const _hoisted_13$B = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_14$y = {
+const _hoisted_14$z = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_15$u = {
+const _hoisted_15$v = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
-const _sfc_main$2H = /* @__PURE__ */ defineComponent({
+const _sfc_main$2I = /* @__PURE__ */ defineComponent({
   __name: "VideoResizeStageCard",
   props: {
     state: {},
@@ -121356,7 +121360,7 @@ const _sfc_main$2H = /* @__PURE__ */ defineComponent({
       targetLabel
     } = useVideoResize(props.node);
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             "source-video-url": sourceVideoUrl.value,
@@ -121373,8 +121377,8 @@ const _sfc_main$2H = /* @__PURE__ */ defineComponent({
             onPointerup: _cache2[6] || (_cache2[6] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createBaseVNode("div", _hoisted_1$4c, [
-              createBaseVNode("label", _hoisted_2$2w, [
+            createBaseVNode("div", _hoisted_1$4d, [
+              createBaseVNode("label", _hoisted_2$2x, [
                 _cache2[7] || (_cache2[7] = createBaseVNode("span", { class: "ctv:w-3 ctv:text-2xs ctv:text-muted-foreground" }, "W", -1)),
                 createBaseVNode("input", {
                   type: "number",
@@ -121383,9 +121387,9 @@ const _sfc_main$2H = /* @__PURE__ */ defineComponent({
                   class: "ctv-num-input ctv:w-full ctv:border-0 ctv:outline-none ctv:bg-transparent ctv:text-[11px] ctv:font-mono ctv:text-base-foreground",
                   value: unref(width),
                   onChange: _cache2[0] || (_cache2[0] = (e) => unref(setDim)("width", e.target.value))
-                }, null, 40, _hoisted_3$2u)
+                }, null, 40, _hoisted_3$2v)
               ]),
-              createBaseVNode("label", _hoisted_4$26, [
+              createBaseVNode("label", _hoisted_4$27, [
                 _cache2[8] || (_cache2[8] = createBaseVNode("span", { class: "ctv:w-3 ctv:text-2xs ctv:text-muted-foreground" }, "H", -1)),
                 createBaseVNode("input", {
                   type: "number",
@@ -121394,7 +121398,7 @@ const _sfc_main$2H = /* @__PURE__ */ defineComponent({
                   class: "ctv-num-input ctv:w-full ctv:border-0 ctv:outline-none ctv:bg-transparent ctv:text-[11px] ctv:font-mono ctv:text-base-foreground",
                   value: unref(height),
                   onChange: _cache2[1] || (_cache2[1] = (e) => unref(setDim)("height", e.target.value))
-                }, null, 40, _hoisted_5$1_)
+                }, null, 40, _hoisted_5$1$)
               ]),
               createBaseVNode("button", {
                 type: "button",
@@ -121408,9 +121412,9 @@ const _sfc_main$2H = /* @__PURE__ */ defineComponent({
                 createBaseVNode("i", {
                   class: normalizeClass(["pi", unref(lockRatio) ? "pi-lock" : "pi-lock-open"])
                 }, null, 2)
-              ], 10, _hoisted_6$1O)
+              ], 10, _hoisted_6$1P)
             ]),
-            createBaseVNode("div", _hoisted_7$1q, [
+            createBaseVNode("div", _hoisted_7$1r, [
               (openBlock(), createElementBlock(Fragment$1, null, renderList(PRESETS2, (p2) => {
                 return createBaseVNode("button", {
                   key: p2.label,
@@ -121418,7 +121422,7 @@ const _sfc_main$2H = /* @__PURE__ */ defineComponent({
                   class: "ctv:flex-1 ctv:py-0.5 ctv:text-2xs ctv:rounded ctv:cursor-pointer ctv:border ctv:transition-colors ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background ctv:disabled:opacity-40 ctv:disabled:cursor-default",
                   disabled: unref(srcW) <= 0,
                   onClick: ($event) => unref(applyPreset)(p2.short)
-                }, toDisplayString$1(p2.label), 9, _hoisted_8$15);
+                }, toDisplayString$1(p2.label), 9, _hoisted_8$16);
               }), 64)),
               createBaseVNode("button", {
                 type: "button",
@@ -121426,12 +121430,12 @@ const _sfc_main$2H = /* @__PURE__ */ defineComponent({
                 disabled: unref(srcW) <= 0,
                 onClick: _cache2[3] || (_cache2[3] = //@ts-ignore
                 (...args) => unref(applySource) && unref(applySource)(...args))
-              }, toDisplayString$1(_ctx.$t("videoResize.source")), 9, _hoisted_9$Z)
+              }, toDisplayString$1(_ctx.$t("videoResize.source")), 9, _hoisted_9$_)
             ]),
-            unref(srcW) > 0 ? (openBlock(), createElementBlock("div", _hoisted_10$Q, toDisplayString$1(unref(srcW)) + "×" + toDisplayString$1(unref(srcH)) + " → " + toDisplayString$1(unref(targetLabel)), 1)) : createCommentVNode("", true)
+            unref(srcW) > 0 ? (openBlock(), createElementBlock("div", _hoisted_10$R, toDisplayString$1(unref(srcW)) + "×" + toDisplayString$1(unref(srcH)) + " → " + toDisplayString$1(unref(targetLabel)), 1)) : createCommentVNode("", true)
           ], 32),
-          createBaseVNode("div", _hoisted_11$K, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_12$E, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_13$A, toDisplayString$1(_ctx.$t("videoResize.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_14$y, toDisplayString$1(_ctx.$t("videoResize.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_15$u, toDisplayString$1(_ctx.$t("videoResize.adjustThenRun")), 1))
+          createBaseVNode("div", _hoisted_11$L, [
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_12$F, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_13$B, toDisplayString$1(_ctx.$t("videoResize.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_14$z, toDisplayString$1(_ctx.$t("videoResize.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_15$v, toDisplayString$1(_ctx.$t("videoResize.adjustThenRun")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
@@ -121447,7 +121451,7 @@ const _sfc_main$2H = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const VideoResizeStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$2H, [["__scopeId", "data-v-c49f9da7"]]);
+const VideoResizeStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$2I, [["__scopeId", "data-v-c49f9da7"]]);
 const PREVIEW_TRANSITION = "transform 80ms linear";
 function mirrorPreviewStyle(flipH, flipV) {
   return {
@@ -121498,40 +121502,40 @@ function rotateToCanvas(img, deg) {
   ctx.drawImage(img, -w / 2, -h2 / 2);
   return canvas;
 }
-const _hoisted_1$4b = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:grow" };
-const _hoisted_2$2v = { class: "ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[280px] ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle ctv:bg-black" };
-const _hoisted_3$2t = { class: "ctv:absolute ctv:inset-0 ctv:flex ctv:items-center ctv:justify-center" };
-const _hoisted_4$25 = {
+const _hoisted_1$4c = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:grow" };
+const _hoisted_2$2w = { class: "ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[280px] ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle ctv:bg-black" };
+const _hoisted_3$2u = { class: "ctv:absolute ctv:inset-0 ctv:flex ctv:items-center ctv:justify-center" };
+const _hoisted_4$26 = {
   key: 0,
   class: "ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50"
 };
-const _hoisted_5$1Z = { class: "ctv:text-xs" };
-const _hoisted_6$1N = ["src"];
-const _hoisted_7$1p = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_8$14 = {
+const _hoisted_5$1_ = { class: "ctv:text-xs" };
+const _hoisted_6$1O = ["src"];
+const _hoisted_7$1q = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_8$15 = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_9$Y = {
+const _hoisted_9$Z = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_10$P = {
+const _hoisted_10$Q = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_11$J = {
+const _hoisted_11$K = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_12$D = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
-const _hoisted_13$z = { class: "ctv:grid ctv:grid-cols-[64px_1fr_48px] ctv:items-center ctv:gap-1.5 ctv:text-xs" };
-const _hoisted_14$x = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wider ctv:text-muted-foreground" };
-const _hoisted_15$t = ["value"];
+const _hoisted_12$E = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
+const _hoisted_13$A = { class: "ctv:grid ctv:grid-cols-[64px_1fr_48px] ctv:items-center ctv:gap-1.5 ctv:text-xs" };
+const _hoisted_14$y = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wider ctv:text-muted-foreground" };
+const _hoisted_15$u = ["value"];
 const _hoisted_16$q = { class: "ctv:text-right ctv:text-base-foreground ctv:font-mono" };
 const _hoisted_17$o = { class: "ctv:grid ctv:grid-cols-4 ctv:gap-1.5 ctv:text-xs" };
 const _hoisted_18$m = ["onClick"];
-const _sfc_main$2G = /* @__PURE__ */ defineComponent({
+const _sfc_main$2H = /* @__PURE__ */ defineComponent({
   __name: "RotateStageCard",
   props: {
     state: {},
@@ -121563,12 +121567,12 @@ const _sfc_main$2G = /* @__PURE__ */ defineComponent({
       if (url) requestRecompute();
     }, { immediate: true });
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$4b, [
-        createBaseVNode("div", _hoisted_2$2v, [
-          createBaseVNode("div", _hoisted_3$2t, [
-            !sourceImageUrl.value ? (openBlock(), createElementBlock("div", _hoisted_4$25, [
+      return openBlock(), createElementBlock("div", _hoisted_1$4c, [
+        createBaseVNode("div", _hoisted_2$2w, [
+          createBaseVNode("div", _hoisted_3$2u, [
+            !sourceImageUrl.value ? (openBlock(), createElementBlock("div", _hoisted_4$26, [
               _cache2[2] || (_cache2[2] = createBaseVNode("i", { class: "pi pi-image ctv:text-[32px] ctv:opacity-60" }, null, -1)),
-              createBaseVNode("div", _hoisted_5$1Z, toDisplayString$1(_ctx.$t("imageCrop.noInputImage")), 1)
+              createBaseVNode("div", _hoisted_5$1_, toDisplayString$1(_ctx.$t("imageCrop.noInputImage")), 1)
             ])) : (openBlock(), createElementBlock("img", {
               key: 1,
               src: sourceImageUrl.value,
@@ -121577,15 +121581,15 @@ const _sfc_main$2G = /* @__PURE__ */ defineComponent({
               draggable: "false",
               onDragstart: _cache2[0] || (_cache2[0] = withModifiers(() => {
               }, ["prevent"]))
-            }, null, 44, _hoisted_6$1N))
+            }, null, 44, _hoisted_6$1O))
           ])
         ]),
-        createBaseVNode("div", _hoisted_7$1p, [
-          !sourceImageUrl.value ? (openBlock(), createElementBlock("span", _hoisted_8$14, toDisplayString$1(_ctx.$t("imageCrop.noInputImage")), 1)) : unref(computing) ? (openBlock(), createElementBlock("span", _hoisted_9$Y, toDisplayString$1(_ctx.$t("rotate.applying")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_10$P, toDisplayString$1(_ctx.$t("rotate.applied")), 1)) : (openBlock(), createElementBlock("span", _hoisted_11$J, toDisplayString$1(_ctx.$t("rotate.adjustToApply")), 1))
+        createBaseVNode("div", _hoisted_7$1q, [
+          !sourceImageUrl.value ? (openBlock(), createElementBlock("span", _hoisted_8$15, toDisplayString$1(_ctx.$t("imageCrop.noInputImage")), 1)) : unref(computing) ? (openBlock(), createElementBlock("span", _hoisted_9$Z, toDisplayString$1(_ctx.$t("rotate.applying")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_10$Q, toDisplayString$1(_ctx.$t("rotate.applied")), 1)) : (openBlock(), createElementBlock("span", _hoisted_11$K, toDisplayString$1(_ctx.$t("rotate.adjustToApply")), 1))
         ]),
-        createBaseVNode("div", _hoisted_12$D, [
-          createBaseVNode("div", _hoisted_13$z, [
-            createBaseVNode("span", _hoisted_14$x, toDisplayString$1(_ctx.$t("rotate.angle")), 1),
+        createBaseVNode("div", _hoisted_12$E, [
+          createBaseVNode("div", _hoisted_13$A, [
+            createBaseVNode("span", _hoisted_14$y, toDisplayString$1(_ctx.$t("rotate.angle")), 1),
             createBaseVNode("input", {
               type: "range",
               class: "ctv:w-full",
@@ -121594,7 +121598,7 @@ const _sfc_main$2G = /* @__PURE__ */ defineComponent({
               step: "1",
               value: unref(angle),
               onInput: _cache2[1] || (_cache2[1] = (e) => angle.value = Number(e.target.value))
-            }, null, 40, _hoisted_15$t),
+            }, null, 40, _hoisted_15$u),
             createBaseVNode("span", _hoisted_16$q, toDisplayString$1(unref(angle)) + "°", 1)
           ]),
           createBaseVNode("div", _hoisted_17$o, [
@@ -121620,36 +121624,36 @@ const _sfc_main$2G = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$4a = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:grow" };
-const _hoisted_2$2u = { class: "ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[280px] ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle ctv:bg-black" };
-const _hoisted_3$2s = { class: "ctv:absolute ctv:inset-0 ctv:flex ctv:items-center ctv:justify-center" };
-const _hoisted_4$24 = {
+const _hoisted_1$4b = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:grow" };
+const _hoisted_2$2v = { class: "ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[280px] ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle ctv:bg-black" };
+const _hoisted_3$2t = { class: "ctv:absolute ctv:inset-0 ctv:flex ctv:items-center ctv:justify-center" };
+const _hoisted_4$25 = {
   key: 0,
   class: "ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50"
 };
-const _hoisted_5$1Y = { class: "ctv:text-xs" };
-const _hoisted_6$1M = ["src"];
-const _hoisted_7$1o = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5" };
-const _hoisted_8$13 = {
+const _hoisted_5$1Z = { class: "ctv:text-xs" };
+const _hoisted_6$1N = ["src"];
+const _hoisted_7$1p = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5" };
+const _hoisted_8$14 = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_9$X = {
+const _hoisted_9$Y = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_10$O = {
+const _hoisted_10$P = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_11$I = {
+const _hoisted_11$J = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_12$C = { class: "ctv:flex ctv:gap-1.5" };
-const _hoisted_13$y = ["title"];
-const _hoisted_14$w = ["title"];
-const _sfc_main$2F = /* @__PURE__ */ defineComponent({
+const _hoisted_12$D = { class: "ctv:flex ctv:gap-1.5" };
+const _hoisted_13$z = ["title"];
+const _hoisted_14$x = ["title"];
+const _sfc_main$2G = /* @__PURE__ */ defineComponent({
   __name: "MirrorStageCard",
   props: {
     state: {},
@@ -121679,12 +121683,12 @@ const _sfc_main$2F = /* @__PURE__ */ defineComponent({
       if (url) requestRecompute();
     }, { immediate: true });
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$4a, [
-        createBaseVNode("div", _hoisted_2$2u, [
-          createBaseVNode("div", _hoisted_3$2s, [
-            !sourceImageUrl.value ? (openBlock(), createElementBlock("div", _hoisted_4$24, [
+      return openBlock(), createElementBlock("div", _hoisted_1$4b, [
+        createBaseVNode("div", _hoisted_2$2v, [
+          createBaseVNode("div", _hoisted_3$2t, [
+            !sourceImageUrl.value ? (openBlock(), createElementBlock("div", _hoisted_4$25, [
               _cache2[3] || (_cache2[3] = createBaseVNode("i", { class: "pi pi-image ctv:text-[32px] ctv:opacity-60" }, null, -1)),
-              createBaseVNode("div", _hoisted_5$1Y, toDisplayString$1(_ctx.$t("imageCrop.noInputImage")), 1)
+              createBaseVNode("div", _hoisted_5$1Z, toDisplayString$1(_ctx.$t("imageCrop.noInputImage")), 1)
             ])) : (openBlock(), createElementBlock("img", {
               key: 1,
               src: sourceImageUrl.value,
@@ -121693,13 +121697,13 @@ const _sfc_main$2F = /* @__PURE__ */ defineComponent({
               draggable: "false",
               onDragstart: _cache2[0] || (_cache2[0] = withModifiers(() => {
               }, ["prevent"]))
-            }, null, 44, _hoisted_6$1M))
+            }, null, 44, _hoisted_6$1N))
           ])
         ]),
-        createBaseVNode("div", _hoisted_7$1o, [
-          !sourceImageUrl.value ? (openBlock(), createElementBlock("span", _hoisted_8$13, toDisplayString$1(_ctx.$t("imageCrop.noInputImage")), 1)) : unref(computing) ? (openBlock(), createElementBlock("span", _hoisted_9$X, toDisplayString$1(_ctx.$t("mirror.applying")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_10$O, toDisplayString$1(_ctx.$t("mirror.applied")), 1)) : (openBlock(), createElementBlock("span", _hoisted_11$I, toDisplayString$1(_ctx.$t("mirror.adjustToApply")), 1))
+        createBaseVNode("div", _hoisted_7$1p, [
+          !sourceImageUrl.value ? (openBlock(), createElementBlock("span", _hoisted_8$14, toDisplayString$1(_ctx.$t("imageCrop.noInputImage")), 1)) : unref(computing) ? (openBlock(), createElementBlock("span", _hoisted_9$Y, toDisplayString$1(_ctx.$t("mirror.applying")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_10$P, toDisplayString$1(_ctx.$t("mirror.applied")), 1)) : (openBlock(), createElementBlock("span", _hoisted_11$J, toDisplayString$1(_ctx.$t("mirror.adjustToApply")), 1))
         ]),
-        createBaseVNode("div", _hoisted_12$C, [
+        createBaseVNode("div", _hoisted_12$D, [
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(["ctv:flex-1 ctv:flex ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:py-1.5 ctv:px-2.5 ctv:rounded ctv:text-xs ctv:border ctv:cursor-pointer", unref(flipH) ? "ctv:bg-secondary-background-selected ctv:border-primary-background ctv:text-primary-background ctv:font-semibold" : "ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:bg-secondary-background-hover"]),
@@ -121708,7 +121712,7 @@ const _sfc_main$2F = /* @__PURE__ */ defineComponent({
           }, [
             _cache2[4] || (_cache2[4] = createBaseVNode("i", { class: "pi pi-arrow-right-arrow-left ctv:text-sm ctv:leading-none" }, null, -1)),
             createTextVNode(" " + toDisplayString$1(_ctx.$t("mirror.horizontal")), 1)
-          ], 10, _hoisted_13$y),
+          ], 10, _hoisted_13$z),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(["ctv:flex-1 ctv:flex ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:py-1.5 ctv:px-2.5 ctv:rounded ctv:text-xs ctv:border ctv:cursor-pointer", unref(flipV) ? "ctv:bg-secondary-background-selected ctv:border-primary-background ctv:text-primary-background ctv:font-semibold" : "ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:bg-secondary-background-hover"]),
@@ -121717,7 +121721,7 @@ const _sfc_main$2F = /* @__PURE__ */ defineComponent({
           }, [
             _cache2[5] || (_cache2[5] = createBaseVNode("i", { class: "pi pi-arrows-v ctv:text-sm ctv:leading-none" }, null, -1)),
             createTextVNode(" " + toDisplayString$1(_ctx.$t("mirror.vertical")), 1)
-          ], 10, _hoisted_14$w)
+          ], 10, _hoisted_14$x)
         ]),
         createVNode(StageCard, {
           state: __props.state,
@@ -121833,9 +121837,9 @@ function interpolateStops$1(stops, t2) {
   const [r, g, b] = stops[stops.length - 1].color;
   return `rgb(${r},${g},${b})`;
 }
-const _hoisted_1$49 = { class: "ctv-gradient-row" };
-const _hoisted_2$2t = { class: "ctv-gradient-value" };
-const _sfc_main$2E = /* @__PURE__ */ defineComponent({
+const _hoisted_1$4a = { class: "ctv-gradient-row" };
+const _hoisted_2$2u = { class: "ctv-gradient-value" };
+const _sfc_main$2F = /* @__PURE__ */ defineComponent({
   __name: "GradientSlider",
   props: {
     modelValue: {},
@@ -121874,7 +121878,7 @@ const _sfc_main$2E = /* @__PURE__ */ defineComponent({
       if (typeof v === "number" && Number.isFinite(v)) emit2("commit", v);
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$49, [
+      return openBlock(), createElementBlock("div", _hoisted_1$4a, [
         createVNode(unref(SliderRoot_default), {
           class: "ctv-gradient-root",
           "model-value": [clamped.value],
@@ -121898,12 +121902,12 @@ const _sfc_main$2E = /* @__PURE__ */ defineComponent({
           ]),
           _: 1
         }, 8, ["model-value", "min", "max", "step", "disabled"]),
-        createBaseVNode("span", _hoisted_2$2t, toDisplayString$1(display.value), 1)
+        createBaseVNode("span", _hoisted_2$2u, toDisplayString$1(display.value), 1)
       ]);
     };
   }
 });
-const GradientSlider = /* @__PURE__ */ _export_sfc(_sfc_main$2E, [["__scopeId", "data-v-e17187da"]]);
+const GradientSlider = /* @__PURE__ */ _export_sfc(_sfc_main$2F, [["__scopeId", "data-v-e17187da"]]);
 const CURVE_INTERPOLATIONS = ["monotone_cubic", "linear"];
 function identityCurve() {
   return { points: [[0, 0], [1, 1]], interpolation: "monotone_cubic" };
@@ -122125,11 +122129,11 @@ function useCurveEditor({
     startDrag
   };
 }
-const _hoisted_1$48 = ["y1", "y2"];
-const _hoisted_2$2s = ["x1", "x2"];
-const _hoisted_3$2r = ["d", "stroke", "opacity"];
-const _hoisted_4$23 = ["cx", "cy", "fill", "onPointerdown"];
-const _sfc_main$2D = /* @__PURE__ */ defineComponent({
+const _hoisted_1$49 = ["y1", "y2"];
+const _hoisted_2$2t = ["x1", "x2"];
+const _hoisted_3$2s = ["d", "stroke", "opacity"];
+const _hoisted_4$24 = ["cx", "cy", "fill", "onPointerdown"];
+const _sfc_main$2E = /* @__PURE__ */ defineComponent({
   __name: "CurveEditor",
   props: /* @__PURE__ */ mergeModels({
     curveColor: { default: "white" },
@@ -122172,7 +122176,7 @@ const _sfc_main$2D = /* @__PURE__ */ defineComponent({
             stroke: "currentColor",
             "stroke-opacity": "0.1",
             "stroke-width": "0.003"
-          }, null, 8, _hoisted_1$48);
+          }, null, 8, _hoisted_1$49);
         }), 64)),
         (openBlock(), createElementBlock(Fragment$1, null, renderList([0.25, 0.5, 0.75], (v) => {
           return createBaseVNode("line", {
@@ -122184,7 +122188,7 @@ const _sfc_main$2D = /* @__PURE__ */ defineComponent({
             stroke: "currentColor",
             "stroke-opacity": "0.1",
             "stroke-width": "0.003"
-          }, null, 8, _hoisted_2$2s);
+          }, null, 8, _hoisted_2$2t);
         }), 64)),
         _cache2[1] || (_cache2[1] = createBaseVNode("line", {
           x1: "0",
@@ -122202,7 +122206,7 @@ const _sfc_main$2D = /* @__PURE__ */ defineComponent({
           "stroke-width": "0.008",
           "stroke-linecap": "round",
           opacity: __props.disabled ? 0.5 : 1
-        }, null, 8, _hoisted_3$2r),
+        }, null, 8, _hoisted_3$2s),
         !__props.disabled ? (openBlock(true), createElementBlock(Fragment$1, { key: 0 }, renderList(modelValue.value, (point, i) => {
           return openBlock(), createElementBlock("circle", {
             key: i,
@@ -122214,13 +122218,13 @@ const _sfc_main$2D = /* @__PURE__ */ defineComponent({
             "stroke-width": "0.004",
             class: "ctv-curve-point",
             onPointerdown: withModifiers(($event) => unref(startDrag)(i, $event), ["stop"])
-          }, null, 40, _hoisted_4$23);
+          }, null, 40, _hoisted_4$24);
         }), 128)) : createCommentVNode("", true)
       ], 34);
     };
   }
 });
-const CurveEditor = /* @__PURE__ */ _export_sfc(_sfc_main$2D, [["__scopeId", "data-v-412edb45"]]);
+const CurveEditor = /* @__PURE__ */ _export_sfc(_sfc_main$2E, [["__scopeId", "data-v-412edb45"]]);
 const brightnessContrast = "#version 300 es\r\nprecision highp float;\r\n\r\nuniform sampler2D u_image0;\r\nuniform float u_float0; // Brightness slider -100..100\r\nuniform float u_float1; // Contrast slider -100..100\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nconst float MID_GRAY = 0.18;  // 18% reflectance\r\n\r\n// sRGB gamma 2.2 approximation\r\nvec3 srgbToLinear(vec3 c) {\r\n    return pow(max(c, 0.0), vec3(2.2));\r\n}\r\n\r\nvec3 linearToSrgb(vec3 c) {\r\n    return pow(max(c, 0.0), vec3(1.0/2.2));\r\n}\r\n\r\nfloat mapBrightness(float b) {\r\n    return clamp(b / 100.0, -1.0, 1.0);\r\n}\r\n\r\nfloat mapContrast(float c) {\r\n    return clamp(c / 100.0 + 1.0, 0.0, 2.0);\r\n}\r\n\r\nvoid main() {\r\n    vec4 orig = texture(u_image0, v_texCoord);\r\n\r\n    float brightness = mapBrightness(u_float0);\r\n    float contrast   = mapContrast(u_float1);\r\n\r\n    vec3 lin = srgbToLinear(orig.rgb);\r\n\r\n    lin = (lin - MID_GRAY) * contrast + brightness + MID_GRAY;\r\n\r\n    // Convert back to sRGB\r\n    vec3 result = linearToSrgb(clamp(lin, 0.0, 1.0));\r\n\r\n    fragColor = vec4(result, orig.a);\r\n}\r\n";
 const colorAdjustment = "#version 300 es\r\nprecision highp float;\r\n\r\nuniform sampler2D u_image0;\r\nuniform float u_float0; // temperature (-100 to 100)\r\nuniform float u_float1; // tint (-100 to 100)\r\nuniform float u_float2; // vibrance (-100 to 100)\r\nuniform float u_float3; // saturation (-100 to 100)\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nconst float INPUT_SCALE = 0.01;\r\nconst float TEMP_TINT_PRIMARY = 0.3;\r\nconst float TEMP_TINT_SECONDARY = 0.15;\r\nconst float VIBRANCE_BOOST = 2.0;\r\nconst float SATURATION_BOOST = 2.0;\r\nconst float SKIN_PROTECTION = 0.5;\r\nconst float EPSILON = 0.001;\r\nconst vec3 LUMA_WEIGHTS = vec3(0.299, 0.587, 0.114);\r\n\r\nvoid main() {\r\n    vec4 tex = texture(u_image0, v_texCoord);\r\n    vec3 color = tex.rgb;\r\n    \r\n    // Scale inputs: -100/100 → -1/1\r\n    float temperature = u_float0 * INPUT_SCALE;\r\n    float tint = u_float1 * INPUT_SCALE;\r\n    float vibrance = u_float2 * INPUT_SCALE;\r\n    float saturation = u_float3 * INPUT_SCALE;\r\n    \r\n    // Temperature (warm/cool): positive = warm, negative = cool\r\n    color.r += temperature * TEMP_TINT_PRIMARY;\r\n    color.b -= temperature * TEMP_TINT_PRIMARY;\r\n    \r\n    // Tint (green/magenta): positive = green, negative = magenta\r\n    color.g += tint * TEMP_TINT_PRIMARY;\r\n    color.r -= tint * TEMP_TINT_SECONDARY;\r\n    color.b -= tint * TEMP_TINT_SECONDARY;\r\n    \r\n    // Single clamp after temperature/tint\r\n    color = clamp(color, 0.0, 1.0);\r\n    \r\n    // Vibrance with skin protection\r\n    if (vibrance != 0.0) {\r\n        float maxC = max(color.r, max(color.g, color.b));\r\n        float minC = min(color.r, min(color.g, color.b));\r\n        float sat = maxC - minC;\r\n        float gray = dot(color, LUMA_WEIGHTS);\r\n        \r\n        if (vibrance < 0.0) {\r\n            // Desaturate: -100 → gray\r\n            color = mix(vec3(gray), color, 1.0 + vibrance);\r\n        } else {\r\n            // Boost less saturated colors more\r\n            float vibranceAmt = vibrance * (1.0 - sat);\r\n            \r\n            // Branchless skin tone protection\r\n            float isWarmTone = step(color.b, color.g) * step(color.g, color.r);\r\n            float warmth = (color.r - color.b) / max(maxC, EPSILON);\r\n            float skinTone = isWarmTone * warmth * sat * (1.0 - sat);\r\n            vibranceAmt *= (1.0 - skinTone * SKIN_PROTECTION);\r\n            \r\n            color = mix(vec3(gray), color, 1.0 + vibranceAmt * VIBRANCE_BOOST);\r\n        }\r\n    }\r\n    \r\n    // Saturation\r\n    if (saturation != 0.0) {\r\n        float gray = dot(color, LUMA_WEIGHTS);\r\n        float satMix = saturation < 0.0\r\n            ? 1.0 + saturation                      // -100 → gray\r\n            : 1.0 + saturation * SATURATION_BOOST;  // +100 → 3x boost\r\n        color = mix(vec3(gray), color, satMix);\r\n    }\r\n    \r\n    fragColor = vec4(clamp(color, 0.0, 1.0), tex.a);\r\n}";
 const colorBalance = "#version 300 es\r\nprecision highp float;\r\n\r\nuniform sampler2D u_image0;\r\nuniform float u_float0;\r\nuniform float u_float1;\r\nuniform float u_float2;\r\nuniform float u_float3;\r\nuniform float u_float4;\r\nuniform float u_float5;\r\nuniform float u_float6;\r\nuniform float u_float7;\r\nuniform float u_float8;\r\nuniform bool u_bool0;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nvec3 rgb2hsl(vec3 c) {\r\n    float maxC = max(c.r, max(c.g, c.b));\r\n    float minC = min(c.r, min(c.g, c.b));\r\n    float l = (maxC + minC) * 0.5;\r\n    if (maxC == minC) return vec3(0.0, 0.0, l);\r\n    float d = maxC - minC;\r\n    float s = l > 0.5 ? d / (2.0 - maxC - minC) : d / (maxC + minC);\r\n    float h;\r\n    if (maxC == c.r) {\r\n        h = (c.g - c.b) / d + (c.g < c.b ? 6.0 : 0.0);\r\n    } else if (maxC == c.g) {\r\n        h = (c.b - c.r) / d + 2.0;\r\n    } else {\r\n        h = (c.r - c.g) / d + 4.0;\r\n    }\r\n    h /= 6.0;\r\n    return vec3(h, s, l);\r\n}\r\n\r\nfloat hue2rgb(float p, float q, float t) {\r\n    if (t < 0.0) t += 1.0;\r\n    if (t > 1.0) t -= 1.0;\r\n    if (t < 1.0 / 6.0) return p + (q - p) * 6.0 * t;\r\n    if (t < 1.0 / 2.0) return q;\r\n    if (t < 2.0 / 3.0) return p + (q - p) * (2.0 / 3.0 - t) * 6.0;\r\n    return p;\r\n}\r\n\r\nvec3 hsl2rgb(vec3 hsl) {\r\n    float h = hsl.x, s = hsl.y, l = hsl.z;\r\n    if (s == 0.0) return vec3(l);\r\n    float q = l < 0.5 ? l * (1.0 + s) : l + s - l * s;\r\n    float p = 2.0 * l - q;\r\n    return vec3(\r\n        hue2rgb(p, q, h + 1.0 / 3.0),\r\n        hue2rgb(p, q, h),\r\n        hue2rgb(p, q, h - 1.0 / 3.0)\r\n    );\r\n}\r\n\r\nvoid main() {\r\n    vec4 tex = texture(u_image0, v_texCoord);\r\n    vec3 color = tex.rgb;\r\n\r\n    vec3 shadows = vec3(u_float0, u_float1, u_float2) * 0.01;\r\n    vec3 midtones = vec3(u_float3, u_float4, u_float5) * 0.01;\r\n    vec3 highlights = vec3(u_float6, u_float7, u_float8) * 0.01;\r\n\r\n    float maxC = max(color.r, max(color.g, color.b));\r\n    float minC = min(color.r, min(color.g, color.b));\r\n    float lightness = (maxC + minC) * 0.5;\r\n\r\n    // GIMP weight curves: linear ramps with constants a=0.25, b=0.333, scale=0.7\r\n    const float a = 0.25;\r\n    const float b = 0.333;\r\n    const float scale = 0.7;\r\n\r\n    float sw = clamp((lightness - b) / -a + 0.5, 0.0, 1.0) * scale;\r\n    float mw = clamp((lightness - b) / a + 0.5, 0.0, 1.0) *\r\n               clamp((lightness + b - 1.0) / -a + 0.5, 0.0, 1.0) * scale;\r\n    float hw = clamp((lightness + b - 1.0) / a + 0.5, 0.0, 1.0) * scale;\r\n\r\n    color += sw * shadows + mw * midtones + hw * highlights;\r\n\r\n    if (u_bool0) {\r\n        vec3 hsl = rgb2hsl(clamp(color, 0.0, 1.0));\r\n        hsl.z = lightness;\r\n        color = hsl2rgb(hsl);\r\n    }\r\n\r\n    fragColor = vec4(clamp(color, 0.0, 1.0), tex.a);\r\n}\r\n";
@@ -122610,45 +122614,45 @@ function useGradePreview(opts) {
   });
   return { renderError, renderer: renderer2, renderPreview };
 }
-const _hoisted_1$47 = { class: "ctv:grid ctv:grid-cols-[64px_1fr] ctv:items-center ctv:gap-1.5 ctv:text-xs" };
-const _hoisted_2$2r = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wider ctv:text-muted-foreground" };
-const _hoisted_3$2q = { class: "ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[260px] ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle ctv:bg-black" };
-const _hoisted_4$22 = { class: "ctv:absolute ctv:inset-0 ctv:flex ctv:items-center ctv:justify-center" };
-const _hoisted_5$1X = {
+const _hoisted_1$48 = { class: "ctv:grid ctv:grid-cols-[64px_1fr] ctv:items-center ctv:gap-1.5 ctv:text-xs" };
+const _hoisted_2$2s = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wider ctv:text-muted-foreground" };
+const _hoisted_3$2r = { class: "ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[260px] ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle ctv:bg-black" };
+const _hoisted_4$23 = { class: "ctv:absolute ctv:inset-0 ctv:flex ctv:items-center ctv:justify-center" };
+const _hoisted_5$1Y = {
   key: 0,
   class: "ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50"
 };
-const _hoisted_6$1L = { class: "ctv:text-xs" };
-const _hoisted_7$1n = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_8$12 = {
+const _hoisted_6$1M = { class: "ctv:text-xs" };
+const _hoisted_7$1o = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_8$13 = {
   key: 0,
   class: "ctv:text-error-background"
 };
-const _hoisted_9$W = {
+const _hoisted_9$X = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_10$N = {
+const _hoisted_10$O = {
   key: 2,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_11$H = {
+const _hoisted_11$I = {
   key: 3,
   class: "ctv:text-success-background"
 };
-const _hoisted_12$B = {
+const _hoisted_12$C = {
   key: 4,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_13$x = {
+const _hoisted_13$y = {
   key: 0,
   class: "ctv:flex ctv:flex-col ctv:gap-1"
 };
-const _hoisted_14$v = { class: "ctv:flex ctv:items-center ctv:gap-1" };
-const _hoisted_15$s = ["onClick"];
+const _hoisted_14$w = { class: "ctv:flex ctv:items-center ctv:gap-1" };
+const _hoisted_15$t = ["onClick"];
 const _hoisted_16$p = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
 const _hoisted_17$n = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wider ctv:text-muted-foreground ctv:truncate" };
-const _sfc_main$2C = /* @__PURE__ */ defineComponent({
+const _sfc_main$2D = /* @__PURE__ */ defineComponent({
   __name: "ColorGradeStageCard",
   props: {
     state: {},
@@ -122722,19 +122726,19 @@ const _sfc_main$2C = /* @__PURE__ */ defineComponent({
         onContextmenu: _cache2[4] || (_cache2[4] = withModifiers(() => {
         }, ["stop", "prevent"]))
       }, [
-        createBaseVNode("div", _hoisted_1$47, [
-          createBaseVNode("span", _hoisted_2$2r, toDisplayString$1(_ctx.$t("colorGrade.effect")), 1),
-          createVNode(_sfc_main$3o, {
+        createBaseVNode("div", _hoisted_1$48, [
+          createBaseVNode("span", _hoisted_2$2s, toDisplayString$1(_ctx.$t("colorGrade.effect")), 1),
+          createVNode(_sfc_main$3p, {
             "model-value": unref(effectId),
             options: effectOptions.value,
             "onUpdate:modelValue": _cache2[0] || (_cache2[0] = (v) => unref(onEffectChange)(String(v)))
           }, null, 8, ["model-value", "options"])
         ]),
-        createBaseVNode("div", _hoisted_3$2q, [
-          createBaseVNode("div", _hoisted_4$22, [
-            !sourceImageUrl.value ? (openBlock(), createElementBlock("div", _hoisted_5$1X, [
+        createBaseVNode("div", _hoisted_3$2r, [
+          createBaseVNode("div", _hoisted_4$23, [
+            !sourceImageUrl.value ? (openBlock(), createElementBlock("div", _hoisted_5$1Y, [
               _cache2[5] || (_cache2[5] = createBaseVNode("i", { class: "pi pi-image ctv:text-[32px] ctv:opacity-60" }, null, -1)),
-              createBaseVNode("div", _hoisted_6$1L, toDisplayString$1(_ctx.$t("colorGrade.noInputImage")), 1)
+              createBaseVNode("div", _hoisted_6$1M, toDisplayString$1(_ctx.$t("colorGrade.noInputImage")), 1)
             ])) : createCommentVNode("", true),
             withDirectives(createBaseVNode("canvas", {
               ref_key: "previewCanvas",
@@ -122745,11 +122749,11 @@ const _sfc_main$2C = /* @__PURE__ */ defineComponent({
             ])
           ])
         ]),
-        createBaseVNode("div", _hoisted_7$1n, [
-          unref(renderError) ? (openBlock(), createElementBlock("span", _hoisted_8$12, toDisplayString$1(unref(renderError)), 1)) : !sourceImageUrl.value ? (openBlock(), createElementBlock("span", _hoisted_9$W, toDisplayString$1(_ctx.$t("colorGrade.noInputImage")), 1)) : unref(computing) ? (openBlock(), createElementBlock("span", _hoisted_10$N, toDisplayString$1(_ctx.$t("colorGrade.applying")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_11$H, toDisplayString$1(_ctx.$t("colorGrade.applied")), 1)) : (openBlock(), createElementBlock("span", _hoisted_12$B, toDisplayString$1(_ctx.$t("colorGrade.adjustToApply")), 1))
+        createBaseVNode("div", _hoisted_7$1o, [
+          unref(renderError) ? (openBlock(), createElementBlock("span", _hoisted_8$13, toDisplayString$1(unref(renderError)), 1)) : !sourceImageUrl.value ? (openBlock(), createElementBlock("span", _hoisted_9$X, toDisplayString$1(_ctx.$t("colorGrade.noInputImage")), 1)) : unref(computing) ? (openBlock(), createElementBlock("span", _hoisted_10$O, toDisplayString$1(_ctx.$t("colorGrade.applying")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_11$I, toDisplayString$1(_ctx.$t("colorGrade.applied")), 1)) : (openBlock(), createElementBlock("span", _hoisted_12$C, toDisplayString$1(_ctx.$t("colorGrade.adjustToApply")), 1))
         ]),
-        unref(curveUniforms).length ? (openBlock(), createElementBlock("div", _hoisted_13$x, [
-          createBaseVNode("div", _hoisted_14$v, [
+        unref(curveUniforms).length ? (openBlock(), createElementBlock("div", _hoisted_13$y, [
+          createBaseVNode("div", _hoisted_14$w, [
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(curveUniforms), (cu) => {
               return openBlock(), createElementBlock("button", {
                 key: cu.key,
@@ -122757,7 +122761,7 @@ const _sfc_main$2C = /* @__PURE__ */ defineComponent({
                 class: normalizeClass(["ctv:flex-1 ctv:py-0.5 ctv:rounded ctv:text-2xs ctv:cursor-pointer ctv:border", cu.key === unref(activeCurveKey) ? "ctv:bg-secondary-background-hover ctv:border-border-subtle ctv:text-base-foreground" : "ctv:bg-secondary-background ctv:border-transparent ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover"]),
                 style: normalizeStyle({ borderLeft: `3px solid ${cu.curveColor}` }),
                 onClick: ($event) => activeCurveKey.value = cu.key
-              }, toDisplayString$1(_ctx.$t(cu.labelKey)), 15, _hoisted_15$s);
+              }, toDisplayString$1(_ctx.$t(cu.labelKey)), 15, _hoisted_15$t);
             }), 128)),
             createBaseVNode("button", {
               type: "button",
@@ -122781,12 +122785,12 @@ const _sfc_main$2C = /* @__PURE__ */ defineComponent({
               class: "ctv:grid ctv:grid-cols-[88px_1fr] ctv:items-center ctv:gap-1.5 ctv:text-xs"
             }, [
               createBaseVNode("span", _hoisted_17$n, toDisplayString$1(_ctx.$t(u.labelKey)), 1),
-              u.options ? (openBlock(), createBlock(_sfc_main$3o, {
+              u.options ? (openBlock(), createBlock(_sfc_main$3p, {
                 key: 0,
                 "model-value": String(unref(num2)(u.key)),
                 options: optionList(u),
                 "onUpdate:modelValue": (v) => unref(setValueCommit)(u.key, Number(v))
-              }, null, 8, ["model-value", "options", "onUpdate:modelValue"])) : u.kind === "bool" ? (openBlock(), createBlock(_sfc_main$3m, {
+              }, null, 8, ["model-value", "options", "onUpdate:modelValue"])) : u.kind === "bool" ? (openBlock(), createBlock(_sfc_main$3n, {
                 key: 1,
                 "model-value": unref(bool2)(u.key),
                 "onUpdate:modelValue": (v) => unref(setValueCommit)(u.key, v)
@@ -122800,7 +122804,7 @@ const _sfc_main$2C = /* @__PURE__ */ defineComponent({
                 precision: (u.step ?? 1) < 1 ? void 0 : 0,
                 "onUpdate:modelValue": (v) => unref(setValueByKey)(u.key, v),
                 onCommit: unref(commitNow)
-              }, null, 8, ["model-value", "stops", "min", "max", "step", "precision", "onUpdate:modelValue", "onCommit"])) : (openBlock(), createBlock(_sfc_main$38, {
+              }, null, 8, ["model-value", "stops", "min", "max", "step", "precision", "onUpdate:modelValue", "onCommit"])) : (openBlock(), createBlock(_sfc_main$39, {
                 key: 3,
                 "model-value": unref(num2)(u.key),
                 min: u.min ?? 0,
@@ -125301,26 +125305,26 @@ async function capturePanoramaOffscreen(url, options) {
     handle.release();
   }
 }
-const _hoisted_1$46 = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full" };
-const _hoisted_2$2q = {
+const _hoisted_1$47 = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full" };
+const _hoisted_2$2r = {
   key: 0,
   class: "ctv:absolute ctv:inset-0 ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50 ctv:pointer-events-none"
 };
-const _hoisted_3$2p = { class: "ctv:text-xs" };
-const _hoisted_4$21 = {
+const _hoisted_3$2q = { class: "ctv:text-xs" };
+const _hoisted_4$22 = {
   key: 1,
   class: "ctv:absolute ctv:inset-0 ctv:flex ctv:items-center ctv:justify-center ctv:text-[11px] ctv:bg-destructive-background/30 ctv:text-destructive-background ctv:pointer-events-none"
 };
-const _hoisted_5$1W = { class: "ctv:flex ctv:flex-wrap ctv:gap-1.5 ctv:items-center" };
-const _hoisted_6$1K = ["disabled"];
-const _hoisted_7$1m = { key: 0 };
-const _hoisted_8$11 = { key: 1 };
-const _hoisted_9$V = ["title"];
-const _hoisted_10$M = {
+const _hoisted_5$1X = { class: "ctv:flex ctv:flex-wrap ctv:gap-1.5 ctv:items-center" };
+const _hoisted_6$1L = ["disabled"];
+const _hoisted_7$1n = { key: 0 };
+const _hoisted_8$12 = { key: 1 };
+const _hoisted_9$W = ["title"];
+const _hoisted_10$N = {
   key: 1,
   class: "ctv:text-2xs ctv:py-0.5 ctv:px-1.5 ctv:rounded-lg ctv:tracking-wide ctv:bg-primary-background/20 ctv:text-primary-background"
 };
-const _sfc_main$2B = /* @__PURE__ */ defineComponent({
+const _sfc_main$2C = /* @__PURE__ */ defineComponent({
   __name: "PanoramaCanvas",
   props: {
     panoramaUrl: {},
@@ -125378,21 +125382,21 @@ const _sfc_main$2B = /* @__PURE__ */ defineComponent({
       emit2("manual-source-cleared");
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$46, [
+      return openBlock(), createElementBlock("div", _hoisted_1$47, [
         createBaseVNode("div", {
           ref_key: "containerEl",
           ref: containerEl,
           class: "ctv:relative ctv:w-full ctv:h-80 ctv:rounded-md ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle"
         }, [
-          !__props.panoramaUrl ? (openBlock(), createElementBlock("div", _hoisted_2$2q, [
+          !__props.panoramaUrl ? (openBlock(), createElementBlock("div", _hoisted_2$2r, [
             _cache2[1] || (_cache2[1] = createBaseVNode("div", { class: "ctv:text-[32px] ctv:opacity-60" }, [
               createBaseVNode("i", { class: "pi pi-globe" })
             ], -1)),
-            createBaseVNode("div", _hoisted_3$2p, toDisplayString$1(_ctx.$t("panorama.empty")), 1)
+            createBaseVNode("div", _hoisted_3$2q, toDisplayString$1(_ctx.$t("panorama.empty")), 1)
           ])) : createCommentVNode("", true),
-          loadError.value ? (openBlock(), createElementBlock("div", _hoisted_4$21, toDisplayString$1(_ctx.$t("panorama.loadError")), 1)) : createCommentVNode("", true)
+          loadError.value ? (openBlock(), createElementBlock("div", _hoisted_4$22, toDisplayString$1(_ctx.$t("panorama.loadError")), 1)) : createCommentVNode("", true)
         ], 512),
-        createBaseVNode("div", _hoisted_5$1W, [
+        createBaseVNode("div", _hoisted_5$1X, [
           createBaseVNode("input", {
             ref_key: "fileInputEl",
             ref: fileInputEl,
@@ -125410,11 +125414,11 @@ const _sfc_main$2B = /* @__PURE__ */ defineComponent({
               return (_a2 = fileInputEl.value) == null ? void 0 : _a2.click();
             })
           }, [
-            uploading.value ? (openBlock(), createElementBlock("span", _hoisted_7$1m, toDisplayString$1(_ctx.$t("panorama.uploading")), 1)) : (openBlock(), createElementBlock("span", _hoisted_8$11, [
+            uploading.value ? (openBlock(), createElementBlock("span", _hoisted_7$1n, toDisplayString$1(_ctx.$t("panorama.uploading")), 1)) : (openBlock(), createElementBlock("span", _hoisted_8$12, [
               _cache2[2] || (_cache2[2] = createBaseVNode("i", { class: "pi pi-upload" }, null, -1)),
               createTextVNode(" " + toDisplayString$1(_ctx.$t("panorama.upload")), 1)
             ]))
-          ], 8, _hoisted_6$1K),
+          ], 8, _hoisted_6$1L),
           __props.manualSource ? (openBlock(), createElementBlock("button", {
             key: 0,
             type: "button",
@@ -125424,15 +125428,15 @@ const _sfc_main$2B = /* @__PURE__ */ defineComponent({
           }, [
             _cache2[3] || (_cache2[3] = createBaseVNode("i", { class: "pi pi-times" }, null, -1)),
             createTextVNode(" " + toDisplayString$1(_ctx.$t("panorama.clearUpload")), 1)
-          ], 8, _hoisted_9$V)) : createCommentVNode("", true),
-          __props.manualSource ? (openBlock(), createElementBlock("span", _hoisted_10$M, toDisplayString$1(_ctx.$t("panorama.manualSourceBadge")), 1)) : createCommentVNode("", true)
+          ], 8, _hoisted_9$W)) : createCommentVNode("", true),
+          __props.manualSource ? (openBlock(), createElementBlock("span", _hoisted_10$N, toDisplayString$1(_ctx.$t("panorama.manualSourceBadge")), 1)) : createCommentVNode("", true)
         ])
       ]);
     };
   }
 });
-const _hoisted_1$45 = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
-const _sfc_main$2A = /* @__PURE__ */ defineComponent({
+const _hoisted_1$46 = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
+const _sfc_main$2B = /* @__PURE__ */ defineComponent({
   __name: "PanoramaStageCard",
   props: {
     state: {},
@@ -125490,8 +125494,8 @@ const _sfc_main$2A = /* @__PURE__ */ defineComponent({
       { immediate: true }
     );
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$45, [
-        createVNode(_sfc_main$2B, {
+      return openBlock(), createElementBlock("div", _hoisted_1$46, [
+        createVNode(_sfc_main$2C, {
           "panorama-url": visibleUrl.value,
           "manual-source": manualSource.value,
           onManualSourceChanged,
@@ -125659,24 +125663,24 @@ function useCurrentViewCapture(node, state2, viewerHostEl, aspectRatio, resoluti
     captureSize
   };
 }
-const _hoisted_1$44 = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
-const _hoisted_2$2p = { class: "ctv:flex ctv:items-center ctv:justify-center ctv:w-full" };
-const _hoisted_3$2o = {
+const _hoisted_1$45 = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
+const _hoisted_2$2q = { class: "ctv:flex ctv:items-center ctv:justify-center ctv:w-full" };
+const _hoisted_3$2p = {
   key: 0,
   class: "ctv:absolute ctv:inset-0 ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50 ctv:pointer-events-none"
 };
-const _hoisted_4$20 = { class: "ctv:text-xs ctv:text-center ctv:px-3" };
-const _hoisted_5$1V = { class: "ctv:flex ctv:items-center ctv:gap-2 ctv:flex-wrap" };
-const _hoisted_6$1J = { class: "ctv:flex ctv:items-center ctv:gap-1" };
-const _hoisted_7$1l = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_8$10 = { class: "ctv-pano-select-wrap" };
-const _hoisted_9$U = ["value"];
-const _hoisted_10$L = { class: "ctv:flex ctv:items-center ctv:gap-1" };
-const _hoisted_11$G = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_12$A = { class: "ctv-pano-select-wrap" };
-const _hoisted_13$w = ["value"];
-const _hoisted_14$u = { class: "ctv:ml-auto ctv:text-2xs ctv:font-mono ctv:text-muted-foreground" };
-const _hoisted_15$r = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5" };
+const _hoisted_4$21 = { class: "ctv:text-xs ctv:text-center ctv:px-3" };
+const _hoisted_5$1W = { class: "ctv:flex ctv:items-center ctv:gap-2 ctv:flex-wrap" };
+const _hoisted_6$1K = { class: "ctv:flex ctv:items-center ctv:gap-1" };
+const _hoisted_7$1m = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_8$11 = { class: "ctv-pano-select-wrap" };
+const _hoisted_9$V = ["value"];
+const _hoisted_10$M = { class: "ctv:flex ctv:items-center ctv:gap-1" };
+const _hoisted_11$H = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_12$B = { class: "ctv-pano-select-wrap" };
+const _hoisted_13$x = ["value"];
+const _hoisted_14$v = { class: "ctv:ml-auto ctv:text-2xs ctv:font-mono ctv:text-muted-foreground" };
+const _hoisted_15$s = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5" };
 const _hoisted_16$o = {
   key: 0,
   class: "ctv:text-muted-foreground"
@@ -125694,7 +125698,7 @@ const _hoisted_19$k = {
   class: "ctv:text-muted-foreground"
 };
 const VIEWER_HEIGHT_PX = 300;
-const _sfc_main$2z = /* @__PURE__ */ defineComponent({
+const _sfc_main$2A = /* @__PURE__ */ defineComponent({
   __name: "PanoramaCurrentViewStageCard",
   props: {
     state: {},
@@ -125724,24 +125728,24 @@ const _sfc_main$2z = /* @__PURE__ */ defineComponent({
       };
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$44, [
-        createBaseVNode("div", _hoisted_2$2p, [
+      return openBlock(), createElementBlock("div", _hoisted_1$45, [
+        createBaseVNode("div", _hoisted_2$2q, [
           createBaseVNode("div", {
             ref_key: "viewerHostEl",
             ref: viewerHostEl,
             class: "ctv:relative ctv:max-w-full ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle ctv:bg-black",
             style: normalizeStyle(viewerStyle.value)
           }, [
-            !unref(panoramaUrl) ? (openBlock(), createElementBlock("div", _hoisted_3$2o, [
+            !unref(panoramaUrl) ? (openBlock(), createElementBlock("div", _hoisted_3$2p, [
               _cache2[2] || (_cache2[2] = createBaseVNode("i", { class: "pi pi-globe ctv:text-[32px] ctv:opacity-60" }, null, -1)),
-              createBaseVNode("div", _hoisted_4$20, toDisplayString$1(_ctx.$t("panoramaView.connectPanorama")), 1)
+              createBaseVNode("div", _hoisted_4$21, toDisplayString$1(_ctx.$t("panoramaView.connectPanorama")), 1)
             ])) : createCommentVNode("", true)
           ], 4)
         ]),
-        createBaseVNode("div", _hoisted_5$1V, [
-          createBaseVNode("div", _hoisted_6$1J, [
-            createBaseVNode("span", _hoisted_7$1l, toDisplayString$1(_ctx.$t("panoramaView.aspect")), 1),
-            createBaseVNode("span", _hoisted_8$10, [
+        createBaseVNode("div", _hoisted_5$1W, [
+          createBaseVNode("div", _hoisted_6$1K, [
+            createBaseVNode("span", _hoisted_7$1m, toDisplayString$1(_ctx.$t("panoramaView.aspect")), 1),
+            createBaseVNode("span", _hoisted_8$11, [
               withDirectives(createBaseVNode("select", {
                 "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => aspectRatio.value = $event),
                 class: "ctv-pano-select"
@@ -125750,7 +125754,7 @@ const _sfc_main$2z = /* @__PURE__ */ defineComponent({
                   return openBlock(), createElementBlock("option", {
                     key: opt,
                     value: opt
-                  }, toDisplayString$1(opt), 9, _hoisted_9$U);
+                  }, toDisplayString$1(opt), 9, _hoisted_9$V);
                 }), 128))
               ], 512), [
                 [vModelSelect, aspectRatio.value]
@@ -125758,9 +125762,9 @@ const _sfc_main$2z = /* @__PURE__ */ defineComponent({
               _cache2[3] || (_cache2[3] = createBaseVNode("i", { class: "pi pi-chevron-down ctv-pano-caret" }, null, -1))
             ])
           ]),
-          createBaseVNode("div", _hoisted_10$L, [
-            createBaseVNode("span", _hoisted_11$G, toDisplayString$1(_ctx.$t("panoramaView.resolution")), 1),
-            createBaseVNode("span", _hoisted_12$A, [
+          createBaseVNode("div", _hoisted_10$M, [
+            createBaseVNode("span", _hoisted_11$H, toDisplayString$1(_ctx.$t("panoramaView.resolution")), 1),
+            createBaseVNode("span", _hoisted_12$B, [
               withDirectives(createBaseVNode("select", {
                 "onUpdate:modelValue": _cache2[1] || (_cache2[1] = ($event) => resolution.value = $event),
                 class: "ctv-pano-select"
@@ -125769,7 +125773,7 @@ const _sfc_main$2z = /* @__PURE__ */ defineComponent({
                   return openBlock(), createElementBlock("option", {
                     key: opt,
                     value: opt
-                  }, toDisplayString$1(opt), 9, _hoisted_13$w);
+                  }, toDisplayString$1(opt), 9, _hoisted_13$x);
                 }), 128))
               ], 512), [
                 [vModelSelect, resolution.value]
@@ -125777,9 +125781,9 @@ const _sfc_main$2z = /* @__PURE__ */ defineComponent({
               _cache2[4] || (_cache2[4] = createBaseVNode("i", { class: "pi pi-chevron-down ctv-pano-caret" }, null, -1))
             ])
           ]),
-          createBaseVNode("span", _hoisted_14$u, toDisplayString$1(unref(captureSize).w) + "×" + toDisplayString$1(unref(captureSize).h), 1)
+          createBaseVNode("span", _hoisted_14$v, toDisplayString$1(unref(captureSize).w) + "×" + toDisplayString$1(unref(captureSize).h), 1)
         ]),
-        createBaseVNode("div", _hoisted_15$r, [
+        createBaseVNode("div", _hoisted_15$s, [
           !unref(panoramaUrl) ? (openBlock(), createElementBlock("span", _hoisted_16$o, toDisplayString$1(_ctx.$t("panoramaView.connectPanorama")), 1)) : unref(capturing) ? (openBlock(), createElementBlock("span", _hoisted_17$m, toDisplayString$1(_ctx.$t("panoramaView.capturing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_18$l, toDisplayString$1(_ctx.$t("panoramaView.captured")), 1)) : (openBlock(), createElementBlock("span", _hoisted_19$k, toDisplayString$1(_ctx.$t("panoramaView.orbitToCapture")), 1))
         ]),
         createVNode(StageCard, {
@@ -125796,7 +125800,7 @@ const _sfc_main$2z = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const PanoramaCurrentViewStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$2z, [["__scopeId", "data-v-0db49e33"]]);
+const PanoramaCurrentViewStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$2A, [["__scopeId", "data-v-0db49e33"]]);
 const SCHEDULE_DELAY_MS$1 = 350;
 const MIN_VIEWS = 2;
 const MAX_VIEWS = 24;
@@ -125895,39 +125899,39 @@ function useMultiViewCapture(node, state2, viewCount2, aspectRatio, resolution) 
     captureSize
   };
 }
-const _hoisted_1$43 = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
-const _hoisted_2$2o = { class: "ctv:text-[11px] ctv:text-center ctv:py-1" };
-const _hoisted_3$2n = {
+const _hoisted_1$44 = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
+const _hoisted_2$2p = { class: "ctv:text-[11px] ctv:text-center ctv:py-1" };
+const _hoisted_3$2o = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_4$1$ = {
+const _hoisted_4$20 = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_5$1U = {
+const _hoisted_5$1V = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_6$1I = {
+const _hoisted_6$1J = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_7$1k = { class: "ctv:flex ctv:items-center ctv:gap-2 ctv:flex-wrap" };
-const _hoisted_8$$ = { class: "ctv:flex ctv:items-center ctv:gap-1" };
-const _hoisted_9$T = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_10$K = { class: "ctv-pano-select-wrap" };
-const _hoisted_11$F = ["value"];
-const _hoisted_12$z = { class: "ctv:flex ctv:items-center ctv:gap-1" };
-const _hoisted_13$v = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_14$t = { class: "ctv-pano-select-wrap" };
-const _hoisted_15$q = ["value"];
+const _hoisted_7$1l = { class: "ctv:flex ctv:items-center ctv:gap-2 ctv:flex-wrap" };
+const _hoisted_8$10 = { class: "ctv:flex ctv:items-center ctv:gap-1" };
+const _hoisted_9$U = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_10$L = { class: "ctv-pano-select-wrap" };
+const _hoisted_11$G = ["value"];
+const _hoisted_12$A = { class: "ctv:flex ctv:items-center ctv:gap-1" };
+const _hoisted_13$w = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_14$u = { class: "ctv-pano-select-wrap" };
+const _hoisted_15$r = ["value"];
 const _hoisted_16$n = { class: "ctv:ml-auto ctv:text-2xs ctv:font-mono ctv:text-muted-foreground" };
 const _hoisted_17$l = { class: "ctv:grid ctv:grid-cols-[80px_1fr_36px] ctv:items-center ctv:gap-1.5 ctv:py-1 ctv:px-2 ctv:rounded ctv:bg-secondary-background ctv:border ctv:border-border-subtle" };
 const _hoisted_18$k = { class: "ctv:text-xs ctv:text-muted-foreground" };
 const _hoisted_19$j = ["value", "disabled"];
 const _hoisted_20$h = { class: "ctv:text-right ctv:text-xs ctv:font-mono ctv:text-base-foreground" };
-const _sfc_main$2y = /* @__PURE__ */ defineComponent({
+const _sfc_main$2z = /* @__PURE__ */ defineComponent({
   __name: "PanoramaMultiViewStageCard",
   props: {
     state: {},
@@ -125950,14 +125954,14 @@ const _sfc_main$2y = /* @__PURE__ */ defineComponent({
       resolution
     );
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$43, [
-        createBaseVNode("div", _hoisted_2$2o, [
-          !unref(panoramaUrl) ? (openBlock(), createElementBlock("span", _hoisted_3$2n, toDisplayString$1(_ctx.$t("panoramaView.connectPanorama")), 1)) : unref(capturing) ? (openBlock(), createElementBlock("span", _hoisted_4$1$, toDisplayString$1(_ctx.$t("panoramaView.capturingCount", { i: unref(captureProgress), n: viewCount2.value })), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_5$1U, toDisplayString$1(_ctx.$t("panoramaView.capturedN", { n: viewCount2.value })), 1)) : (openBlock(), createElementBlock("span", _hoisted_6$1I, toDisplayString$1(_ctx.$t("panoramaView.adjustCountToCapture")), 1))
+      return openBlock(), createElementBlock("div", _hoisted_1$44, [
+        createBaseVNode("div", _hoisted_2$2p, [
+          !unref(panoramaUrl) ? (openBlock(), createElementBlock("span", _hoisted_3$2o, toDisplayString$1(_ctx.$t("panoramaView.connectPanorama")), 1)) : unref(capturing) ? (openBlock(), createElementBlock("span", _hoisted_4$20, toDisplayString$1(_ctx.$t("panoramaView.capturingCount", { i: unref(captureProgress), n: viewCount2.value })), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_5$1V, toDisplayString$1(_ctx.$t("panoramaView.capturedN", { n: viewCount2.value })), 1)) : (openBlock(), createElementBlock("span", _hoisted_6$1J, toDisplayString$1(_ctx.$t("panoramaView.adjustCountToCapture")), 1))
         ]),
-        createBaseVNode("div", _hoisted_7$1k, [
-          createBaseVNode("div", _hoisted_8$$, [
-            createBaseVNode("span", _hoisted_9$T, toDisplayString$1(_ctx.$t("panoramaView.aspect")), 1),
-            createBaseVNode("span", _hoisted_10$K, [
+        createBaseVNode("div", _hoisted_7$1l, [
+          createBaseVNode("div", _hoisted_8$10, [
+            createBaseVNode("span", _hoisted_9$U, toDisplayString$1(_ctx.$t("panoramaView.aspect")), 1),
+            createBaseVNode("span", _hoisted_10$L, [
               withDirectives(createBaseVNode("select", {
                 "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => aspectRatio.value = $event),
                 class: "ctv-pano-select"
@@ -125966,7 +125970,7 @@ const _sfc_main$2y = /* @__PURE__ */ defineComponent({
                   return openBlock(), createElementBlock("option", {
                     key: opt,
                     value: opt
-                  }, toDisplayString$1(opt), 9, _hoisted_11$F);
+                  }, toDisplayString$1(opt), 9, _hoisted_11$G);
                 }), 128))
               ], 512), [
                 [vModelSelect, aspectRatio.value]
@@ -125974,9 +125978,9 @@ const _sfc_main$2y = /* @__PURE__ */ defineComponent({
               _cache2[3] || (_cache2[3] = createBaseVNode("i", { class: "pi pi-chevron-down ctv-pano-caret" }, null, -1))
             ])
           ]),
-          createBaseVNode("div", _hoisted_12$z, [
-            createBaseVNode("span", _hoisted_13$v, toDisplayString$1(_ctx.$t("panoramaView.resolution")), 1),
-            createBaseVNode("span", _hoisted_14$t, [
+          createBaseVNode("div", _hoisted_12$A, [
+            createBaseVNode("span", _hoisted_13$w, toDisplayString$1(_ctx.$t("panoramaView.resolution")), 1),
+            createBaseVNode("span", _hoisted_14$u, [
               withDirectives(createBaseVNode("select", {
                 "onUpdate:modelValue": _cache2[1] || (_cache2[1] = ($event) => resolution.value = $event),
                 class: "ctv-pano-select"
@@ -125985,7 +125989,7 @@ const _sfc_main$2y = /* @__PURE__ */ defineComponent({
                   return openBlock(), createElementBlock("option", {
                     key: opt,
                     value: opt
-                  }, toDisplayString$1(opt), 9, _hoisted_15$q);
+                  }, toDisplayString$1(opt), 9, _hoisted_15$r);
                 }), 128))
               ], 512), [
                 [vModelSelect, resolution.value]
@@ -126022,16 +126026,16 @@ const _sfc_main$2y = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const PanoramaMultiViewStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$2y, [["__scopeId", "data-v-1c06d1c2"]]);
-const _hoisted_1$42 = ["src", "alt"];
-const _hoisted_2$2n = ["src", "alt"];
-const _hoisted_3$2m = { class: "ctv:absolute ctv:top-2 ctv:left-2 ctv:z-[7] ctv:py-0.5 ctv:px-1.5 ctv:rounded-lg ctv:bg-black/60 ctv:text-white/90 ctv:text-2xs ctv:tracking-wide ctv:pointer-events-none" };
-const _hoisted_4$1_ = { class: "ctv:absolute ctv:top-2 ctv:right-2 ctv:z-[7] ctv:py-0.5 ctv:px-1.5 ctv:rounded-lg ctv:bg-black/60 ctv:text-white/90 ctv:text-2xs ctv:tracking-wide ctv:pointer-events-none" };
-const _hoisted_5$1T = {
+const PanoramaMultiViewStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$2z, [["__scopeId", "data-v-1c06d1c2"]]);
+const _hoisted_1$43 = ["src", "alt"];
+const _hoisted_2$2o = ["src", "alt"];
+const _hoisted_3$2n = { class: "ctv:absolute ctv:top-2 ctv:left-2 ctv:z-[7] ctv:py-0.5 ctv:px-1.5 ctv:rounded-lg ctv:bg-black/60 ctv:text-white/90 ctv:text-2xs ctv:tracking-wide ctv:pointer-events-none" };
+const _hoisted_4$1$ = { class: "ctv:absolute ctv:top-2 ctv:right-2 ctv:z-[7] ctv:py-0.5 ctv:px-1.5 ctv:rounded-lg ctv:bg-black/60 ctv:text-white/90 ctv:text-2xs ctv:tracking-wide ctv:pointer-events-none" };
+const _hoisted_5$1U = {
   key: 1,
   class: "ctv:absolute ctv:inset-0 ctv:flex ctv:items-center ctv:justify-center ctv:px-4 ctv:text-center ctv:text-white/50 ctv:text-xs"
 };
-const _sfc_main$2x = /* @__PURE__ */ defineComponent({
+const _sfc_main$2y = /* @__PURE__ */ defineComponent({
   __name: "ImageCompare",
   props: {
     beforeImage: {},
@@ -126065,7 +126069,7 @@ const _sfc_main$2x = /* @__PURE__ */ defineComponent({
             draggable: "false",
             onDragstart: _cache2[0] || (_cache2[0] = withModifiers(() => {
             }, ["prevent"]))
-          }, null, 40, _hoisted_1$42)) : createCommentVNode("", true),
+          }, null, 40, _hoisted_1$43)) : createCommentVNode("", true),
           __props.beforeImage ? (openBlock(), createElementBlock("img", {
             key: 1,
             src: __props.beforeImage,
@@ -126075,7 +126079,7 @@ const _sfc_main$2x = /* @__PURE__ */ defineComponent({
             style: normalizeStyle(hasBoth.value ? { clipPath: `inset(0 ${100 - sliderPosition.value}% 0 0)` } : void 0),
             onDragstart: _cache2[1] || (_cache2[1] = withModifiers(() => {
             }, ["prevent"]))
-          }, null, 44, _hoisted_2$2n)) : createCommentVNode("", true),
+          }, null, 44, _hoisted_2$2o)) : createCommentVNode("", true),
           hasBoth.value ? (openBlock(), createElementBlock(Fragment$1, { key: 2 }, [
             createBaseVNode("div", {
               class: "ctv:absolute ctv:top-0 ctv:bottom-0 ctv:w-0.5 ctv:-ml-px ctv:z-[5] ctv:pointer-events-none ctv:bg-white/85 ctv:shadow-[0_0_4px_rgb(0_0_0/0.6)]",
@@ -126085,17 +126089,17 @@ const _sfc_main$2x = /* @__PURE__ */ defineComponent({
               class: "ctv:absolute ctv:top-1/2 ctv:size-6 ctv:-translate-x-1/2 ctv:-translate-y-1/2 ctv:rounded-full ctv:border-2 ctv:border-white ctv:bg-white/30 ctv:backdrop-blur-[2px] ctv:shadow-[0_1px_4px_rgb(0_0_0/0.5)] ctv:pointer-events-none ctv:z-[6]",
               style: normalizeStyle({ left: `${sliderPosition.value}%` })
             }, null, 4),
-            createBaseVNode("span", _hoisted_3$2m, toDisplayString$1(_ctx.$t("imageCompare.before")), 1),
-            createBaseVNode("span", _hoisted_4$1_, toDisplayString$1(_ctx.$t("imageCompare.after")), 1)
+            createBaseVNode("span", _hoisted_3$2n, toDisplayString$1(_ctx.$t("imageCompare.before")), 1),
+            createBaseVNode("span", _hoisted_4$1$, toDisplayString$1(_ctx.$t("imageCompare.after")), 1)
           ], 64)) : createCommentVNode("", true)
-        ], 64)) : (openBlock(), createElementBlock("div", _hoisted_5$1T, toDisplayString$1(_ctx.$t("imageCompare.noImages")), 1))
+        ], 64)) : (openBlock(), createElementBlock("div", _hoisted_5$1U, toDisplayString$1(_ctx.$t("imageCompare.noImages")), 1))
       ], 544);
     };
   }
 });
-const _hoisted_1$41 = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
-const _hoisted_2$2m = { class: "ctv:shrink-0" };
-const _sfc_main$2w = /* @__PURE__ */ defineComponent({
+const _hoisted_1$42 = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
+const _hoisted_2$2n = { class: "ctv:shrink-0" };
+const _sfc_main$2x = /* @__PURE__ */ defineComponent({
   __name: "CompareStageCard",
   props: {
     state: {},
@@ -126115,13 +126119,13 @@ const _sfc_main$2w = /* @__PURE__ */ defineComponent({
     const imageA = computed(() => resolvedInput("image_a"));
     const imageB = computed(() => resolvedInput("image_b"));
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$41, [
-        createVNode(_sfc_main$2x, {
+      return openBlock(), createElementBlock("div", _hoisted_1$42, [
+        createVNode(_sfc_main$2y, {
           class: "ctv:flex-1 ctv:min-h-0",
           "before-image": imageA.value,
           "after-image": imageB.value
         }, null, 8, ["before-image", "after-image"]),
-        createBaseVNode("div", _hoisted_2$2m, [
+        createBaseVNode("div", _hoisted_2$2n, [
           createVNode(StageCard, {
             state: __props.state,
             node: __props.node,
@@ -126217,45 +126221,45 @@ function useAssetLoaderCard(node, getState) {
     fileDrop
   };
 }
-const _hoisted_1$40 = { class: "ctv:shrink-0 ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1" };
-const _hoisted_2$2l = ["onClick"];
-const _hoisted_3$2l = ["title"];
-const _hoisted_4$1Z = ["accept"];
-const _hoisted_5$1S = {
+const _hoisted_1$41 = { class: "ctv:shrink-0 ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1" };
+const _hoisted_2$2m = ["onClick"];
+const _hoisted_3$2m = ["title"];
+const _hoisted_4$1_ = ["accept"];
+const _hoisted_5$1T = {
   key: 0,
   class: "ctv:py-5 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60"
 };
-const _hoisted_6$1H = {
+const _hoisted_6$1I = {
   key: 1,
   class: "ctv:grid ctv:grid-cols-[repeat(auto-fill,minmax(80px,1fr))] ctv:gap-1.5"
 };
-const _hoisted_7$1j = ["title", "onClick"];
-const _hoisted_8$_ = {
+const _hoisted_7$1k = ["title", "onClick"];
+const _hoisted_8$$ = {
   key: 1,
   class: "ctv:flex ctv:items-center ctv:justify-center ctv:w-full ctv:aspect-square ctv:text-2xl ctv:bg-secondary-background-hover ctv:text-muted-foreground"
 };
-const _hoisted_9$S = {
+const _hoisted_9$T = {
   key: 2,
   class: "ctv:relative ctv:w-full ctv:aspect-square ctv:bg-secondary-background-hover"
 };
-const _hoisted_10$J = ["src", "alt"];
-const _hoisted_11$E = { class: "ctv:truncate ctv:py-0.5 ctv:px-1 ctv:text-2xs ctv:text-left ctv:text-muted-foreground" };
-const _hoisted_12$y = {
+const _hoisted_10$K = ["src", "alt"];
+const _hoisted_11$F = { class: "ctv:truncate ctv:py-0.5 ctv:px-1 ctv:text-2xs ctv:text-left ctv:text-muted-foreground" };
+const _hoisted_12$z = {
   key: 4,
   class: "ctv:absolute ctv:top-1 ctv:right-1 ctv:flex ctv:items-center ctv:justify-center ctv:size-4 ctv:rounded-full ctv:bg-primary-background ctv:text-base-foreground ctv:text-3xs ctv:font-bold ctv:shadow"
 };
-const _hoisted_13$u = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:text-2xs ctv:text-muted-foreground" };
-const _hoisted_14$s = {
+const _hoisted_13$v = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:text-2xs ctv:text-muted-foreground" };
+const _hoisted_14$t = {
   key: 0,
   class: "ctv:flex-1 ctv:truncate ctv:text-success-background"
 };
-const _hoisted_15$p = {
+const _hoisted_15$q = {
   key: 1,
   class: "ctv:flex-1 ctv:truncate"
 };
 const _hoisted_16$m = { class: "ctv:shrink-0" };
 const chipCountClass = "ctv:py-0 ctv:px-1 ctv:rounded-lg ctv:text-3xs ctv:bg-base-foreground/10";
-const _sfc_main$2v = /* @__PURE__ */ defineComponent({
+const _sfc_main$2w = /* @__PURE__ */ defineComponent({
   __name: "AssetLoaderCard",
   props: {
     state: {},
@@ -126319,7 +126323,7 @@ const _sfc_main$2v = /* @__PURE__ */ defineComponent({
         onDrop: _cache2[7] || (_cache2[7] = //@ts-ignore
         (...args) => unref(fileDrop).onDrop && unref(fileDrop).onDrop(...args))
       }, [
-        createBaseVNode("div", _hoisted_1$40, [
+        createBaseVNode("div", _hoisted_1$41, [
           createBaseVNode("button", {
             class: normalizeClass(chipClass2(unref(activeFilter) === "all")),
             onClick: _cache2[0] || (_cache2[0] = ($event) => unref(setFilter)("all"))
@@ -126348,7 +126352,7 @@ const _sfc_main$2v = /* @__PURE__ */ defineComponent({
               createBaseVNode("span", {
                 class: normalizeClass(chipCountClass)
               }, toDisplayString$1(unref(mediaCount)(cat2.id)), 1)
-            ], 10, _hoisted_2$2l);
+            ], 10, _hoisted_2$2m);
           }), 128)),
           createBaseVNode("button", {
             type: "button",
@@ -126360,7 +126364,7 @@ const _sfc_main$2v = /* @__PURE__ */ defineComponent({
             })
           }, [
             createVNode(unref(IconUpload), { class: "ctv:size-3.5" })
-          ], 8, _hoisted_3$2l),
+          ], 8, _hoisted_3$2m),
           createBaseVNode("input", {
             ref_key: "fileInput",
             ref: fileInput,
@@ -126369,14 +126373,14 @@ const _sfc_main$2v = /* @__PURE__ */ defineComponent({
             multiple: "",
             class: "ctv:hidden",
             onChange: onPickFiles
-          }, null, 40, _hoisted_4$1Z)
+          }, null, 40, _hoisted_4$1_)
         ]),
         createBaseVNode("div", {
           class: "ctv-scroll-thin ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:rounded-md ctv:border ctv:border-border-subtle ctv:bg-black/20 ctv:p-1.5",
           onWheel: _cache2[3] || (_cache2[3] = withModifiers(() => {
           }, ["stop"]))
         }, [
-          unref(visibleAssets).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_5$1S, toDisplayString$1(unref(activeFilter) === "all" ? _ctx.$t("assetLoader.empty") : _ctx.$t("assets.emptyCategory")), 1)) : (openBlock(), createElementBlock("div", _hoisted_6$1H, [
+          unref(visibleAssets).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_5$1T, toDisplayString$1(unref(activeFilter) === "all" ? _ctx.$t("assetLoader.empty") : _ctx.$t("assets.emptyCategory")), 1)) : (openBlock(), createElementBlock("div", _hoisted_6$1I, [
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(visibleAssets), (asset) => {
               return openBlock(), createElementBlock("button", {
                 key: asset.id,
@@ -126397,10 +126401,10 @@ const _sfc_main$2v = /* @__PURE__ */ defineComponent({
                   class: "ctv:block ctv:w-full ctv:aspect-square ctv:object-cover ctv:bg-black",
                   onMouseenter: hoverPlay,
                   onMouseleave: hoverPause
-                }, null, 8, ["src"])) : unref(mediaType) === "audio" ? (openBlock(), createElementBlock("div", _hoisted_8$_, [..._cache2[8] || (_cache2[8] = [
+                }, null, 8, ["src"])) : unref(mediaType) === "audio" ? (openBlock(), createElementBlock("div", _hoisted_8$$, [..._cache2[8] || (_cache2[8] = [
                   createBaseVNode("i", { class: "pi pi-volume-up" }, null, -1)
-                ])])) : unref(mediaType) === "model" ? (openBlock(), createElementBlock("div", _hoisted_9$S, [
-                  createVNode(_sfc_main$3A, {
+                ])])) : unref(mediaType) === "model" ? (openBlock(), createElementBlock("div", _hoisted_9$T, [
+                  createVNode(_sfc_main$3B, {
                     src: asset.payload_url,
                     alt: asset.name
                   }, {
@@ -126416,17 +126420,17 @@ const _sfc_main$2v = /* @__PURE__ */ defineComponent({
                   loading: "lazy",
                   class: "ctv:block ctv:w-full ctv:aspect-square ctv:object-cover",
                   draggable: "false"
-                }, null, 8, _hoisted_10$J)),
-                createBaseVNode("div", _hoisted_11$E, toDisplayString$1(asset.name || "—"), 1),
-                asset.id === unref(selectedId) ? (openBlock(), createElementBlock("span", _hoisted_12$y, [..._cache2[10] || (_cache2[10] = [
+                }, null, 8, _hoisted_10$K)),
+                createBaseVNode("div", _hoisted_11$F, toDisplayString$1(asset.name || "—"), 1),
+                asset.id === unref(selectedId) ? (openBlock(), createElementBlock("span", _hoisted_12$z, [..._cache2[10] || (_cache2[10] = [
                   createBaseVNode("i", { class: "pi pi-check" }, null, -1)
                 ])])) : createCommentVNode("", true)
-              ], 10, _hoisted_7$1j);
+              ], 10, _hoisted_7$1k);
             }), 128))
           ]))
         ], 32),
-        createBaseVNode("div", _hoisted_13$u, [
-          unref(selectedAsset) ? (openBlock(), createElementBlock("span", _hoisted_14$s, toDisplayString$1(_ctx.$t("assetLoader.selected", { name: unref(selectedAsset).name || "—" })), 1)) : (openBlock(), createElementBlock("span", _hoisted_15$p, toDisplayString$1(_ctx.$t("assetLoader.pickHint")), 1))
+        createBaseVNode("div", _hoisted_13$v, [
+          unref(selectedAsset) ? (openBlock(), createElementBlock("span", _hoisted_14$t, toDisplayString$1(_ctx.$t("assetLoader.selected", { name: unref(selectedAsset).name || "—" })), 1)) : (openBlock(), createElementBlock("span", _hoisted_15$q, toDisplayString$1(_ctx.$t("assetLoader.pickHint")), 1))
         ]),
         createBaseVNode("div", _hoisted_16$m, [
           createVNode(StageCard, {
@@ -128476,7 +128480,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-DjSvPq1K.mjs");
+    const { STLLoader } = await import("./STLLoader-CeIv4ar9.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -128484,7 +128488,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-CAlBy7Xr.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-DdZ2d2cz.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -128726,30 +128730,30 @@ function useModelLoader(node, opts) {
     teardown
   };
 }
-const _hoisted_1$3$ = { class: "ctv:relative ctv:size-6 ctv:shrink-0 ctv:overflow-hidden ctv:rounded-sm ctv:bg-secondary-background-hover" };
-const _hoisted_2$2k = {
+const _hoisted_1$40 = { class: "ctv:relative ctv:size-6 ctv:shrink-0 ctv:overflow-hidden ctv:rounded-sm ctv:bg-secondary-background-hover" };
+const _hoisted_2$2l = {
   key: 1,
   class: "ctv:flex ctv:size-full ctv:items-center ctv:justify-center ctv:text-muted-foreground"
 };
-const _hoisted_3$2k = { class: "ctv:group ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[280px] ctv:rounded-md ctv:overflow-hidden ctv:bg-black" };
-const _hoisted_4$1Y = {
+const _hoisted_3$2l = { class: "ctv:group ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[280px] ctv:rounded-md ctv:overflow-hidden ctv:bg-black" };
+const _hoisted_4$1Z = {
   key: 1,
   class: "ctv:h-full ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50"
 };
-const _hoisted_5$1R = { class: "ctv:text-xs" };
-const _hoisted_6$1G = ["title"];
-const _hoisted_7$1i = ["title"];
-const _hoisted_8$Z = { class: "ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1 ctv:text-2xs" };
-const _hoisted_9$R = { class: "ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_10$I = ["title", "onClick"];
-const _hoisted_11$D = {
+const _hoisted_5$1S = { class: "ctv:text-xs" };
+const _hoisted_6$1H = ["title"];
+const _hoisted_7$1j = ["title"];
+const _hoisted_8$_ = { class: "ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1 ctv:text-2xs" };
+const _hoisted_9$S = { class: "ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_10$J = ["title", "onClick"];
+const _hoisted_11$E = {
   key: 0,
   class: "ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1"
 };
-const _hoisted_12$x = ["title", "onClick"];
-const _hoisted_13$t = { class: "ctv:max-w-24 ctv:truncate" };
-const _hoisted_14$r = ["onClick"];
-const _hoisted_15$o = { class: "ctv:shrink-0" };
+const _hoisted_12$y = ["title", "onClick"];
+const _hoisted_13$u = { class: "ctv:max-w-24 ctv:truncate" };
+const _hoisted_14$s = ["onClick"];
+const _hoisted_15$p = { class: "ctv:shrink-0" };
 const _hoisted_16$l = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
 const _hoisted_17$k = ["placeholder"];
 const _hoisted_18$j = ["disabled"];
@@ -128758,11 +128762,11 @@ const _hoisted_20$g = {
   key: 0,
   class: "ctv:py-4 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60"
 };
-const _hoisted_21$g = {
+const _hoisted_21$f = {
   key: 1,
   class: "ctv:grid ctv:grid-cols-4 ctv:gap-1.5"
 };
-const _hoisted_22$f = ["title", "onClick"];
+const _hoisted_22$e = ["title", "onClick"];
 const _hoisted_23$d = { class: "ctv:relative ctv:w-full ctv:aspect-square ctv:bg-secondary-background-hover" };
 const _hoisted_24$c = {
   key: 0,
@@ -128795,7 +128799,7 @@ const _hoisted_36$3 = { class: "ctv:flex-1 ctv:truncate" };
 const PREVIEW_BTN_BASE$3 = "ctv:relative ctv:inline-flex ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:appearance-none ctv:border-none ctv:transition-colors ctv:size-5 ctv:p-0 ctv:rounded-sm ctv:text-sm";
 const previewActionsClass = "ctv:absolute ctv:top-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1 ctv:opacity-0 ctv:group-hover:opacity-100 ctv:transition-opacity";
 const uploadBtnClass = "ctv:relative ctv:inline-flex ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:cursor-pointer ctv:whitespace-nowrap ctv:appearance-none ctv:border-none ctv:transition-colors ctv:disabled:pointer-events-none ctv:disabled:opacity-50 ctv:h-6 ctv:rounded-sm ctv:px-2 ctv:py-1 ctv:text-xs ctv:font-medium ctv:shrink-0 ctv:bg-secondary-background ctv:text-secondary-foreground ctv:hover:bg-secondary-background-hover";
-const _sfc_main$2u = /* @__PURE__ */ defineComponent({
+const _sfc_main$2v = /* @__PURE__ */ defineComponent({
   __name: "ModelLoaderCard",
   props: {
     state: {},
@@ -128941,8 +128945,8 @@ const _sfc_main$2u = /* @__PURE__ */ defineComponent({
           class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:h-8 ctv:px-1.5 ctv:cursor-pointer ctv:rounded ctv:border ctv:border-border-default ctv:bg-secondary-background ctv:text-xs ctv:text-base-foreground ctv:[font-family:inherit] ctv:transition-colors ctv:hover:border-border-default ctv:hover:bg-secondary-background-hover",
           onClick: toggleMenu
         }, [
-          createBaseVNode("span", _hoisted_1$3$, [
-            unref(selected) ? (openBlock(), createBlock(_sfc_main$3A, {
+          createBaseVNode("span", _hoisted_1$40, [
+            unref(selected) ? (openBlock(), createBlock(_sfc_main$3B, {
               key: 0,
               src: unref(selected),
               alt: unref(baseName)(unref(selected))
@@ -128951,7 +128955,7 @@ const _sfc_main$2u = /* @__PURE__ */ defineComponent({
                 createVNode(unref(IconBox), { class: "ctv:size-3.5" })
               ]),
               _: 1
-            }, 8, ["src", "alt"])) : (openBlock(), createElementBlock("span", _hoisted_2$2k, [
+            }, 8, ["src", "alt"])) : (openBlock(), createElementBlock("span", _hoisted_2$2l, [
               createVNode(unref(IconBox), { class: "ctv:size-3.5" })
             ]))
           ]),
@@ -128962,8 +128966,8 @@ const _sfc_main$2u = /* @__PURE__ */ defineComponent({
             class: normalizeClass(["pi", menuOpen.value ? "pi-chevron-up" : "pi-chevron-down", "ctv:shrink-0 ctv:text-3xs ctv:text-muted-foreground"])
           }, null, 2)
         ], 512),
-        createBaseVNode("div", _hoisted_3$2k, [
-          unref(modelSrc) ? (openBlock(), createBlock(_sfc_main$35, {
+        createBaseVNode("div", _hoisted_3$2l, [
+          unref(modelSrc) ? (openBlock(), createBlock(_sfc_main$36, {
             key: 0,
             ref_key: "previewEl",
             ref: previewEl,
@@ -128974,9 +128978,9 @@ const _sfc_main$2u = /* @__PURE__ */ defineComponent({
             onPartsChanged: unref(onPartsChanged),
             onPartPick: unref(onPartPick),
             onViewChanged: unref(scheduleCapture)
-          }, null, 8, ["src", "part-materials", "selected-part", "onPartsChanged", "onPartPick", "onViewChanged"])) : (openBlock(), createElementBlock("div", _hoisted_4$1Y, [
+          }, null, 8, ["src", "part-materials", "selected-part", "onPartsChanged", "onPartPick", "onViewChanged"])) : (openBlock(), createElementBlock("div", _hoisted_4$1Z, [
             createVNode(unref(IconBox), { class: "ctv:size-8 ctv:opacity-60" }),
-            createBaseVNode("div", _hoisted_5$1R, toDisplayString$1(_ctx.$t("modelBinder.noModel")), 1)
+            createBaseVNode("div", _hoisted_5$1S, toDisplayString$1(_ctx.$t("modelBinder.noModel")), 1)
           ])),
           unref(modelSrc) ? (openBlock(), createElementBlock("div", {
             key: 2,
@@ -128989,7 +128993,7 @@ const _sfc_main$2u = /* @__PURE__ */ defineComponent({
               onClick: withModifiers(onDownloadModel, ["stop"])
             }, [..._cache2[19] || (_cache2[19] = [
               createBaseVNode("i", { class: "pi pi-download" }, null, -1)
-            ])], 8, _hoisted_6$1G),
+            ])], 8, _hoisted_6$1H),
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(previewTagBtn.value),
@@ -128997,7 +129001,7 @@ const _sfc_main$2u = /* @__PURE__ */ defineComponent({
               onClick: _cache2[0] || (_cache2[0] = withModifiers(($event) => unref(openTagMenu)(unref(modelSrc), unref(nameFromUrl)(unref(modelSrc)), $event, "model"), ["stop"]))
             }, [..._cache2[20] || (_cache2[20] = [
               createBaseVNode("i", { class: "pi pi-tag" }, null, -1)
-            ])], 10, _hoisted_7$1i)
+            ])], 10, _hoisted_7$1j)
           ])) : createCommentVNode("", true)
         ]),
         unref(modelSrc) && unref(materialSlots).length ? (openBlock(), createElementBlock("div", {
@@ -129008,8 +129012,8 @@ const _sfc_main$2u = /* @__PURE__ */ defineComponent({
           onMousedown: _cache2[3] || (_cache2[3] = withModifiers(() => {
           }, ["stop"]))
         }, [
-          createBaseVNode("div", _hoisted_8$Z, [
-            createBaseVNode("span", _hoisted_9$R, toDisplayString$1(unref(selectedPart) ? _ctx.$t("modelBinder.selected", { part: unref(selectedPart) }) : _ctx.$t("modelBinder.pickHint")), 1),
+          createBaseVNode("div", _hoisted_8$_, [
+            createBaseVNode("span", _hoisted_9$S, toDisplayString$1(unref(selectedPart) ? _ctx.$t("modelBinder.selected", { part: unref(selectedPart) }) : _ctx.$t("modelBinder.pickHint")), 1),
             unref(selectedPart) ? (openBlock(), createElementBlock(Fragment$1, { key: 0 }, [
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(materialSlots), (s) => {
                 return openBlock(), createElementBlock("button", {
@@ -129024,7 +129028,7 @@ const _sfc_main$2u = /* @__PURE__ */ defineComponent({
                     style: normalizeStyle({ background: s.color })
                   }, null, 4),
                   createTextVNode(" " + toDisplayString$1(s.label), 1)
-                ], 10, _hoisted_10$I);
+                ], 10, _hoisted_10$J);
               }), 128)),
               unref(bindings)[unref(selectedPart)] ? (openBlock(), createElementBlock("button", {
                 key: 0,
@@ -129037,7 +129041,7 @@ const _sfc_main$2u = /* @__PURE__ */ defineComponent({
               ], 2)) : createCommentVNode("", true)
             ], 64)) : createCommentVNode("", true)
           ]),
-          unref(boundEntries).length ? (openBlock(), createElementBlock("div", _hoisted_11$D, [
+          unref(boundEntries).length ? (openBlock(), createElementBlock("div", _hoisted_11$E, [
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(boundEntries), ([part, slot]) => {
               return openBlock(), createElementBlock("button", {
                 key: part,
@@ -129050,18 +129054,18 @@ const _sfc_main$2u = /* @__PURE__ */ defineComponent({
                   class: "ctv:size-2 ctv:rounded-full",
                   style: normalizeStyle({ background: unref(slotColor2)(slot) })
                 }, null, 4),
-                createBaseVNode("span", _hoisted_13$t, toDisplayString$1(part), 1),
+                createBaseVNode("span", _hoisted_13$u, toDisplayString$1(part), 1),
                 createBaseVNode("span", {
                   class: "ctv:text-muted-foreground ctv:hover:text-destructive-background",
                   onClick: withModifiers(($event) => unref(unbind)(part), ["stop"])
                 }, [..._cache2[22] || (_cache2[22] = [
                   createBaseVNode("i", { class: "pi pi-times" }, null, -1)
-                ])], 8, _hoisted_14$r)
-              ], 10, _hoisted_12$x);
+                ])], 8, _hoisted_14$s)
+              ], 10, _hoisted_12$y);
             }), 128))
           ])) : createCommentVNode("", true)
         ], 32)) : createCommentVNode("", true),
-        createBaseVNode("div", _hoisted_15$o, [
+        createBaseVNode("div", _hoisted_15$p, [
           createVNode(StageCard, {
             state: __props.state,
             node: __props.node,
@@ -129111,7 +129115,7 @@ const _sfc_main$2u = /* @__PURE__ */ defineComponent({
                 ], 8, _hoisted_18$j)
               ]),
               createBaseVNode("div", _hoisted_19$i, [
-                unref(filteredFiles).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_20$g, toDisplayString$1(_ctx.$t("modelLoader.empty")), 1)) : (openBlock(), createElementBlock("div", _hoisted_21$g, [
+                unref(filteredFiles).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_20$g, toDisplayString$1(_ctx.$t("modelLoader.empty")), 1)) : (openBlock(), createElementBlock("div", _hoisted_21$f, [
                   (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(filteredFiles), (file) => {
                     return openBlock(), createElementBlock("button", {
                       key: file,
@@ -129125,7 +129129,7 @@ const _sfc_main$2u = /* @__PURE__ */ defineComponent({
                       onClick: ($event) => unref(onPick)(file)
                     }, [
                       createBaseVNode("div", _hoisted_23$d, [
-                        createVNode(_sfc_main$3A, {
+                        createVNode(_sfc_main$3B, {
                           src: file,
                           alt: unref(baseName)(file)
                         }, {
@@ -129139,7 +129143,7 @@ const _sfc_main$2u = /* @__PURE__ */ defineComponent({
                         createBaseVNode("i", { class: "pi pi-check" }, null, -1)
                       ])])) : createCommentVNode("", true),
                       createBaseVNode("span", _hoisted_25$c, toDisplayString$1(unref(baseName)(file)), 1)
-                    ], 10, _hoisted_22$f);
+                    ], 10, _hoisted_22$e);
                   }), 128))
                 ]))
               ]),
@@ -129218,13 +129222,13 @@ const _sfc_main$2u = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$3_ = {
+const _hoisted_1$3$ = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1A(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3_, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3$, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -129243,25 +129247,25 @@ function render$1A(_ctx, _cache2) {
   ])]);
 }
 const IconPenTool = markRaw({ name: "lucide-pen-tool", render: render$1A });
-const _hoisted_1$3Z = { class: "ctv:w-3 ctv:inline-block ctv:text-primary-background" };
-const _hoisted_2$2j = {
+const _hoisted_1$3_ = { class: "ctv:w-3 ctv:inline-block ctv:text-primary-background" };
+const _hoisted_2$2k = {
   key: 0,
   class: "pi pi-check"
 };
-const _hoisted_3$2j = { class: "ctv:flex-1 ctv:truncate ctv:italic ctv:text-muted-foreground" };
-const _hoisted_4$1X = ["onClick"];
-const _hoisted_5$1Q = { class: "ctv:w-3 ctv:inline-block ctv:text-primary-background" };
-const _hoisted_6$1F = {
+const _hoisted_3$2k = { class: "ctv:flex-1 ctv:truncate ctv:italic ctv:text-muted-foreground" };
+const _hoisted_4$1Y = ["onClick"];
+const _hoisted_5$1R = { class: "ctv:w-3 ctv:inline-block ctv:text-primary-background" };
+const _hoisted_6$1G = {
   key: 0,
   class: "pi pi-check"
 };
-const _hoisted_7$1h = { class: "ctv:flex-1 ctv:truncate" };
-const _hoisted_8$Y = {
+const _hoisted_7$1i = { class: "ctv:flex-1 ctv:truncate" };
+const _hoisted_8$Z = {
   key: 0,
   class: "ctv:my-1 ctv:border-t ctv:border-border-subtle"
 };
-const _hoisted_9$Q = { class: "ctv:flex-1 ctv:truncate" };
-const _sfc_main$2t = /* @__PURE__ */ defineComponent({
+const _hoisted_9$R = { class: "ctv:flex-1 ctv:truncate" };
+const _sfc_main$2u = /* @__PURE__ */ defineComponent({
   __name: "AssetTagMenu",
   setup(__props, { expose: __expose }) {
     const { t: t2 } = useI18n();
@@ -129322,10 +129326,10 @@ const _sfc_main$2t = /* @__PURE__ */ defineComponent({
                 ["stop"]
               ))
             }, [
-              createBaseVNode("span", _hoisted_1$3Z, [
-                unref(tagMenuIsUncategorized)() ? (openBlock(), createElementBlock("i", _hoisted_2$2j)) : createCommentVNode("", true)
+              createBaseVNode("span", _hoisted_1$3_, [
+                unref(tagMenuIsUncategorized)() ? (openBlock(), createElementBlock("i", _hoisted_2$2k)) : createCommentVNode("", true)
               ]),
-              createBaseVNode("span", _hoisted_3$2j, toDisplayString$1(_ctx.$t("assets.category.none")), 1)
+              createBaseVNode("span", _hoisted_3$2k, toDisplayString$1(_ctx.$t("assets.category.none")), 1)
             ]),
             _cache2[5] || (_cache2[5] = createBaseVNode("div", { class: "ctv:my-1 ctv:border-t ctv:border-border-subtle" }, null, -1)),
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(categories), (cat2) => {
@@ -129335,13 +129339,13 @@ const _sfc_main$2t = /* @__PURE__ */ defineComponent({
                 class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:px-1.5 ctv:py-1 ctv:rounded-sm ctv:cursor-pointer ctv:text-left ctv:text-2xs ctv:bg-transparent ctv:border-none ctv:text-base-foreground ctv:hover:bg-secondary-background-hover",
                 onClick: withModifiers(($event) => unref(toggleOutputTag)(cat2.id), ["stop"])
               }, [
-                createBaseVNode("span", _hoisted_5$1Q, [
-                  unref(tagMenuHas)(cat2.id) ? (openBlock(), createElementBlock("i", _hoisted_6$1F)) : createCommentVNode("", true)
+                createBaseVNode("span", _hoisted_5$1R, [
+                  unref(tagMenuHas)(cat2.id) ? (openBlock(), createElementBlock("i", _hoisted_6$1G)) : createCommentVNode("", true)
                 ]),
-                createBaseVNode("span", _hoisted_7$1h, toDisplayString$1(cat2.name), 1)
-              ], 8, _hoisted_4$1X);
+                createBaseVNode("span", _hoisted_7$1i, toDisplayString$1(cat2.name), 1)
+              ], 8, _hoisted_4$1Y);
             }), 128)),
-            unref(categories).length ? (openBlock(), createElementBlock("div", _hoisted_8$Y)) : createCommentVNode("", true),
+            unref(categories).length ? (openBlock(), createElementBlock("div", _hoisted_8$Z)) : createCommentVNode("", true),
             createBaseVNode("button", {
               type: "button",
               class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:px-1.5 ctv:py-1 ctv:rounded-sm ctv:cursor-pointer ctv:text-left ctv:text-2xs ctv:bg-transparent ctv:border-none ctv:text-primary-background ctv:hover:bg-secondary-background-hover",
@@ -129350,7 +129354,7 @@ const _sfc_main$2t = /* @__PURE__ */ defineComponent({
               _cache2[4] || (_cache2[4] = createBaseVNode("span", { class: "ctv:w-3 ctv:inline-block" }, [
                 createBaseVNode("i", { class: "pi pi-plus" })
               ], -1)),
-              createBaseVNode("span", _hoisted_9$Q, toDisplayString$1(_ctx.$t("assets.tagPopover.create")), 1)
+              createBaseVNode("span", _hoisted_9$R, toDisplayString$1(_ctx.$t("assets.tagPopover.create")), 1)
             ])
           ], 4)
         ], 32)) : createCommentVNode("", true)
@@ -129453,33 +129457,33 @@ function useLineArt(node, stageState) {
     onDownloadResult
   };
 }
-const _hoisted_1$3Y = { class: "ctv:group ctv:relative ctv:w-full ctv:h-[calc(100%-320px)] ctv:min-h-[240px] ctv:shrink-0 ctv:rounded-md ctv:overflow-hidden ctv:bg-black" };
-const _hoisted_2$2i = ["src", "alt"];
-const _hoisted_3$2i = {
+const _hoisted_1$3Z = { class: "ctv:group ctv:relative ctv:w-full ctv:h-[calc(100%-320px)] ctv:min-h-[240px] ctv:shrink-0 ctv:rounded-md ctv:overflow-hidden ctv:bg-black" };
+const _hoisted_2$2j = ["src", "alt"];
+const _hoisted_3$2j = {
   key: 2,
   class: "ctv:h-full ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50"
 };
-const _hoisted_4$1W = { class: "ctv:text-xs" };
-const _hoisted_5$1P = {
+const _hoisted_4$1X = { class: "ctv:text-xs" };
+const _hoisted_5$1Q = {
   key: 3,
   class: "ctv:absolute ctv:top-1 ctv:left-1 ctv:z-10 ctv:flex ctv:gap-1"
 };
-const _hoisted_6$1E = {
+const _hoisted_6$1F = {
   key: 4,
   class: "ctv:absolute ctv:top-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1 ctv:opacity-0 ctv:group-hover:opacity-100 ctv:transition-opacity"
 };
-const _hoisted_7$1g = ["title"];
-const _hoisted_8$X = ["title"];
-const _hoisted_9$P = {
+const _hoisted_7$1h = ["title"];
+const _hoisted_8$Y = ["title"];
+const _hoisted_9$Q = {
   key: 5,
   class: "ctv:absolute ctv:bottom-1 ctv:left-1 ctv:z-10 ctv:px-1.5 ctv:py-0.5 ctv:rounded-sm ctv:bg-black/60 ctv:text-3xs ctv:text-white/70 ctv:pointer-events-none"
 };
-const _hoisted_10$H = ["title"];
-const _hoisted_11$C = ["onClick"];
-const _hoisted_12$w = ["min", "max", "step", "value", "onInput"];
-const _hoisted_13$s = ["min", "max", "step", "value", "onChange"];
-const _hoisted_14$q = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide ctv:shrink-0" };
-const _hoisted_15$n = {
+const _hoisted_10$I = ["title"];
+const _hoisted_11$D = ["onClick"];
+const _hoisted_12$x = ["min", "max", "step", "value", "onInput"];
+const _hoisted_13$t = ["min", "max", "step", "value", "onChange"];
+const _hoisted_14$r = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide ctv:shrink-0" };
+const _hoisted_15$o = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
@@ -129497,7 +129501,7 @@ const _hoisted_18$i = {
 };
 const _hoisted_19$h = { class: "ctv:shrink-0" };
 const PREVIEW_BTN_BASE$2 = "ctv:relative ctv:inline-flex ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:appearance-none ctv:border-none ctv:transition-colors ctv:size-5 ctv:p-0 ctv:rounded-sm ctv:text-sm";
-const _sfc_main$2s = /* @__PURE__ */ defineComponent({
+const _sfc_main$2t = /* @__PURE__ */ defineComponent({
   __name: "LineArtStageCard",
   props: {
     state: {},
@@ -129541,23 +129545,23 @@ const _sfc_main$2s = /* @__PURE__ */ defineComponent({
         onContextmenu: _cache2[7] || (_cache2[7] = withModifiers(() => {
         }, ["stop", "prevent"]))
       }, [
-        createBaseVNode("div", _hoisted_1$3Y, [
+        createBaseVNode("div", _hoisted_1$3Z, [
           unref(showResult) && unref(resultUrl) ? (openBlock(), createElementBlock("img", {
             key: 0,
             src: unref(assetUrl2)(unref(resultUrl)),
             alt: _ctx.$t("lineArt.result"),
             class: "ctv:block ctv:size-full ctv:object-contain"
-          }, null, 8, _hoisted_2$2i)) : unref(sourceUrl) ? (openBlock(), createBlock(_sfc_main$35, {
+          }, null, 8, _hoisted_2$2j)) : unref(sourceUrl) ? (openBlock(), createBlock(_sfc_main$36, {
             key: 1,
             ref_key: "previewEl",
             ref: previewEl,
             src: unref(sourceUrl),
             channel: "clay"
-          }, null, 8, ["src"])) : (openBlock(), createElementBlock("div", _hoisted_3$2i, [
+          }, null, 8, ["src"])) : (openBlock(), createElementBlock("div", _hoisted_3$2j, [
             createVNode(unref(IconPenTool), { class: "ctv:size-8 ctv:opacity-60" }),
-            createBaseVNode("div", _hoisted_4$1W, toDisplayString$1(_ctx.$t("lineArt.noInputModel")), 1)
+            createBaseVNode("div", _hoisted_4$1X, toDisplayString$1(_ctx.$t("lineArt.noInputModel")), 1)
           ])),
-          unref(sourceUrl) && unref(resultUrl) ? (openBlock(), createElementBlock("div", _hoisted_5$1P, [
+          unref(sourceUrl) && unref(resultUrl) ? (openBlock(), createElementBlock("div", _hoisted_5$1Q, [
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(chipClass2(!unref(showResult))),
@@ -129569,7 +129573,7 @@ const _sfc_main$2s = /* @__PURE__ */ defineComponent({
               onClick: _cache2[1] || (_cache2[1] = withModifiers(($event) => showResult.value = true, ["stop"]))
             }, toDisplayString$1(_ctx.$t("lineArt.result")), 3)
           ])) : createCommentVNode("", true),
-          unref(showResult) && unref(resultUrl) ? (openBlock(), createElementBlock("div", _hoisted_6$1E, [
+          unref(showResult) && unref(resultUrl) ? (openBlock(), createElementBlock("div", _hoisted_6$1F, [
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(downloadBtnClass),
@@ -129581,7 +129585,7 @@ const _sfc_main$2s = /* @__PURE__ */ defineComponent({
               ))
             }, [..._cache2[8] || (_cache2[8] = [
               createBaseVNode("i", { class: "pi pi-download" }, null, -1)
-            ])], 8, _hoisted_7$1g),
+            ])], 8, _hoisted_7$1h),
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(tagBtnClass.value),
@@ -129592,9 +129596,9 @@ const _sfc_main$2s = /* @__PURE__ */ defineComponent({
               }, ["stop"]))
             }, [..._cache2[9] || (_cache2[9] = [
               createBaseVNode("i", { class: "pi pi-tag" }, null, -1)
-            ])], 10, _hoisted_8$X)
+            ])], 10, _hoisted_8$Y)
           ])) : createCommentVNode("", true),
-          !unref(showResult) && unref(sourceUrl) ? (openBlock(), createElementBlock("div", _hoisted_9$P, toDisplayString$1(_ctx.$t("lineArt.orbitHint")), 1)) : createCommentVNode("", true)
+          !unref(showResult) && unref(sourceUrl) ? (openBlock(), createElementBlock("div", _hoisted_9$Q, toDisplayString$1(_ctx.$t("lineArt.orbitHint")), 1)) : createCommentVNode("", true)
         ]),
         createBaseVNode("div", {
           class: "ctv-scroll-thin ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:flex ctv:flex-col ctv:gap-1",
@@ -129613,13 +129617,13 @@ const _sfc_main$2s = /* @__PURE__ */ defineComponent({
               createBaseVNode("span", {
                 class: "ctv:w-28 ctv:shrink-0 ctv:truncate ctv:text-2xs ctv:text-muted-foreground",
                 title: _ctx.$t(c2.labelKey)
-              }, toDisplayString$1(_ctx.$t(c2.labelKey)), 9, _hoisted_10$H),
+              }, toDisplayString$1(_ctx.$t(c2.labelKey)), 9, _hoisted_10$I),
               c2.type === "bool" ? (openBlock(), createElementBlock("button", {
                 key: 0,
                 type: "button",
                 class: normalizeClass(chipClass2(Boolean(unref(values)[c2.widget]))),
                 onClick: ($event) => unref(setValue)(c2, !unref(values)[c2.widget])
-              }, toDisplayString$1(Boolean(unref(values)[c2.widget]) ? _ctx.$t("lineArt.on") : _ctx.$t("lineArt.off")), 11, _hoisted_11$C)) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
+              }, toDisplayString$1(Boolean(unref(values)[c2.widget]) ? _ctx.$t("lineArt.on") : _ctx.$t("lineArt.off")), 11, _hoisted_11$D)) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
                 createBaseVNode("input", {
                   type: "range",
                   class: "ctv:flex-1 ctv:min-w-0 ctv:accent-[var(--ctv-primary-background,#4ea8ff)]",
@@ -129628,7 +129632,7 @@ const _sfc_main$2s = /* @__PURE__ */ defineComponent({
                   step: c2.step,
                   value: Number(unref(values)[c2.widget]),
                   onInput: ($event) => unref(setValue)(c2, $event.target.value)
-                }, null, 40, _hoisted_12$w),
+                }, null, 40, _hoisted_12$x),
                 createBaseVNode("input", {
                   type: "number",
                   class: "ctv:w-20 ctv:shrink-0 ctv:py-0.5 ctv:px-1 ctv:rounded-sm ctv:outline-none ctv:box-border ctv:text-2xs ctv:text-right ctv:[font-family:inherit] ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-default ctv:focus:border-primary-background",
@@ -129637,13 +129641,13 @@ const _sfc_main$2s = /* @__PURE__ */ defineComponent({
                   step: c2.step,
                   value: Number(unref(values)[c2.widget]),
                   onChange: ($event) => unref(setValue)(c2, $event.target.value)
-                }, null, 40, _hoisted_13$s)
+                }, null, 40, _hoisted_13$t)
               ], 64))
             ]);
           }), 128))
         ], 32),
-        createBaseVNode("div", _hoisted_14$q, [
-          !unref(sourceUrl) ? (openBlock(), createElementBlock("span", _hoisted_15$n, toDisplayString$1(_ctx.$t("lineArt.noInputModel")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_16$k, toDisplayString$1(_ctx.$t("lineArt.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_17$j, toDisplayString$1(_ctx.$t("lineArt.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_18$i, toDisplayString$1(_ctx.$t("lineArt.frameThenRun")), 1))
+        createBaseVNode("div", _hoisted_14$r, [
+          !unref(sourceUrl) ? (openBlock(), createElementBlock("span", _hoisted_15$o, toDisplayString$1(_ctx.$t("lineArt.noInputModel")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_16$k, toDisplayString$1(_ctx.$t("lineArt.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_17$j, toDisplayString$1(_ctx.$t("lineArt.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_18$i, toDisplayString$1(_ctx.$t("lineArt.frameThenRun")), 1))
         ]),
         createBaseVNode("div", _hoisted_19$h, [
           createVNode(StageCard, {
@@ -129656,7 +129660,7 @@ const _sfc_main$2s = /* @__PURE__ */ defineComponent({
             "hide-output": ""
           }, null, 8, ["state", "node", "on-cancel-request", "on-disconnect", "on-action"])
         ]),
-        createVNode(_sfc_main$2t, {
+        createVNode(_sfc_main$2u, {
           ref_key: "tagMenuEl",
           ref: tagMenuEl
         }, null, 512)
@@ -129907,49 +129911,49 @@ function useMeshOp(node, stageState) {
     onDownloadModel
   };
 }
-const _hoisted_1$3X = { class: "ctv:group ctv:relative ctv:w-full ctv:h-[calc(100%-320px)] ctv:min-h-[240px] ctv:shrink-0 ctv:rounded-md ctv:overflow-hidden ctv:bg-black" };
-const _hoisted_2$2h = {
+const _hoisted_1$3Y = { class: "ctv:group ctv:relative ctv:w-full ctv:h-[calc(100%-320px)] ctv:min-h-[240px] ctv:shrink-0 ctv:rounded-md ctv:overflow-hidden ctv:bg-black" };
+const _hoisted_2$2i = {
   key: 1,
   class: "ctv:h-full ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50"
 };
-const _hoisted_3$2h = { class: "ctv:text-xs" };
-const _hoisted_4$1V = {
+const _hoisted_3$2i = { class: "ctv:text-xs" };
+const _hoisted_4$1W = {
   key: 2,
   class: "ctv:absolute ctv:top-1 ctv:left-1 ctv:z-10 ctv:flex ctv:gap-1"
 };
-const _hoisted_5$1O = {
+const _hoisted_5$1P = {
   key: 3,
   class: "ctv:absolute ctv:top-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1 ctv:opacity-0 ctv:group-hover:opacity-100 ctv:transition-opacity"
 };
-const _hoisted_6$1D = ["title"];
-const _hoisted_7$1f = ["title"];
-const _hoisted_8$W = {
+const _hoisted_6$1E = ["title"];
+const _hoisted_7$1g = ["title"];
+const _hoisted_8$X = {
   key: 4,
   class: "ctv:absolute ctv:bottom-1 ctv:left-1 ctv:z-10 ctv:px-1.5 ctv:py-0.5 ctv:rounded-sm ctv:bg-black/60 ctv:text-3xs ctv:font-mono ctv:text-white/80 ctv:pointer-events-none"
 };
-const _hoisted_9$O = {
+const _hoisted_9$P = {
   key: 5,
   class: "ctv:absolute ctv:bottom-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1"
 };
-const _hoisted_10$G = ["onClick"];
-const _hoisted_11$B = {
+const _hoisted_10$H = ["onClick"];
+const _hoisted_11$C = {
   key: 0,
   class: "ctv:relative ctv:w-full ctv:shrink-0 ctv:rounded-md ctv:overflow-hidden ctv:bg-black"
 };
-const _hoisted_12$v = ["src", "alt"];
-const _hoisted_13$r = { class: "ctv:absolute ctv:top-1 ctv:left-1 ctv:px-1.5 ctv:py-0.5 ctv:rounded-sm ctv:bg-black/60 ctv:text-3xs ctv:text-white/80 ctv:pointer-events-none" };
-const _hoisted_14$p = {
+const _hoisted_12$w = ["src", "alt"];
+const _hoisted_13$s = { class: "ctv:absolute ctv:top-1 ctv:left-1 ctv:px-1.5 ctv:py-0.5 ctv:rounded-sm ctv:bg-black/60 ctv:text-3xs ctv:text-white/80 ctv:pointer-events-none" };
+const _hoisted_14$q = {
   key: 0,
   class: "ctv:flex ctv:items-start ctv:gap-1.5"
 };
-const _hoisted_15$m = { class: "ctv:w-28 ctv:shrink-0 ctv:truncate ctv:text-2xs ctv:text-muted-foreground ctv:pt-0.5" };
+const _hoisted_15$n = { class: "ctv:w-28 ctv:shrink-0 ctv:truncate ctv:text-2xs ctv:text-muted-foreground ctv:pt-0.5" };
 const _hoisted_16$j = { class: "ctv:flex ctv:flex-wrap ctv:gap-1" };
 const _hoisted_17$i = ["onClick"];
 const _hoisted_18$h = ["title"];
 const _hoisted_19$g = ["onClick"];
 const _hoisted_20$f = ["onClick"];
-const _hoisted_21$f = ["min", "max", "step", "value", "onInput"];
-const _hoisted_22$e = ["min", "max", "step", "value", "onChange"];
+const _hoisted_21$e = ["min", "max", "step", "value", "onInput"];
+const _hoisted_22$d = ["min", "max", "step", "value", "onChange"];
 const _hoisted_23$c = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide ctv:shrink-0" };
 const _hoisted_24$b = {
   key: 0,
@@ -129969,7 +129973,7 @@ const _hoisted_27$a = {
 };
 const _hoisted_28$9 = { class: "ctv:shrink-0" };
 const PREVIEW_BTN_BASE$1 = "ctv:relative ctv:inline-flex ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:appearance-none ctv:border-none ctv:transition-colors ctv:size-5 ctv:p-0 ctv:rounded-sm ctv:text-sm";
-const _sfc_main$2r = /* @__PURE__ */ defineComponent({
+const _sfc_main$2s = /* @__PURE__ */ defineComponent({
   __name: "MeshOpStageCard",
   props: {
     state: {},
@@ -130031,8 +130035,8 @@ const _sfc_main$2r = /* @__PURE__ */ defineComponent({
         onContextmenu: _cache2[7] || (_cache2[7] = withModifiers(() => {
         }, ["stop", "prevent"]))
       }, [
-        createBaseVNode("div", _hoisted_1$3X, [
-          unref(previewSrc) ? (openBlock(), createBlock(_sfc_main$35, {
+        createBaseVNode("div", _hoisted_1$3Y, [
+          unref(previewSrc) ? (openBlock(), createBlock(_sfc_main$36, {
             key: 0,
             ref_key: "previewEl",
             ref: previewEl,
@@ -130040,11 +130044,11 @@ const _sfc_main$2r = /* @__PURE__ */ defineComponent({
             channel: unref(channel),
             onViewChanged: unref(scheduleCapture),
             onModelStats: unref(onModelStats)
-          }, null, 8, ["src", "channel", "onViewChanged", "onModelStats"])) : (openBlock(), createElementBlock("div", _hoisted_2$2h, [
+          }, null, 8, ["src", "channel", "onViewChanged", "onModelStats"])) : (openBlock(), createElementBlock("div", _hoisted_2$2i, [
             createVNode(unref(IconBox), { class: "ctv:size-8 ctv:opacity-60" }),
-            createBaseVNode("div", _hoisted_3$2h, toDisplayString$1(_ctx.$t(unref(isPrimitive) ? "meshOps.runToGenerate" : "meshOps.noInputModel")), 1)
+            createBaseVNode("div", _hoisted_3$2i, toDisplayString$1(_ctx.$t(unref(isPrimitive) ? "meshOps.runToGenerate" : "meshOps.noInputModel")), 1)
           ])),
-          unref(sourceUrl) && unref(resultUrl) ? (openBlock(), createElementBlock("div", _hoisted_4$1V, [
+          unref(sourceUrl) && unref(resultUrl) ? (openBlock(), createElementBlock("div", _hoisted_4$1W, [
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(chipClass2(!unref(showResult))),
@@ -130056,7 +130060,7 @@ const _sfc_main$2r = /* @__PURE__ */ defineComponent({
               onClick: _cache2[1] || (_cache2[1] = withModifiers(($event) => showResult.value = true, ["stop"]))
             }, toDisplayString$1(_ctx.$t("meshOps.result")), 3)
           ])) : createCommentVNode("", true),
-          unref(previewSrc) ? (openBlock(), createElementBlock("div", _hoisted_5$1O, [
+          unref(previewSrc) ? (openBlock(), createElementBlock("div", _hoisted_5$1P, [
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(downloadBtnClass),
@@ -130068,7 +130072,7 @@ const _sfc_main$2r = /* @__PURE__ */ defineComponent({
               ))
             }, [..._cache2[8] || (_cache2[8] = [
               createBaseVNode("i", { class: "pi pi-download" }, null, -1)
-            ])], 8, _hoisted_6$1D),
+            ])], 8, _hoisted_6$1E),
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(tagBtnClass.value),
@@ -130079,17 +130083,17 @@ const _sfc_main$2r = /* @__PURE__ */ defineComponent({
               }, ["stop"]))
             }, [..._cache2[9] || (_cache2[9] = [
               createBaseVNode("i", { class: "pi pi-tag" }, null, -1)
-            ])], 10, _hoisted_7$1f)
+            ])], 10, _hoisted_7$1g)
           ])) : createCommentVNode("", true),
-          unref(statsLine) ? (openBlock(), createElementBlock("div", _hoisted_8$W, toDisplayString$1(unref(statsLine)), 1)) : createCommentVNode("", true),
-          unref(previewSrc) ? (openBlock(), createElementBlock("div", _hoisted_9$O, [
+          unref(statsLine) ? (openBlock(), createElementBlock("div", _hoisted_8$X, toDisplayString$1(unref(statsLine)), 1)) : createCommentVNode("", true),
+          unref(previewSrc) ? (openBlock(), createElementBlock("div", _hoisted_9$P, [
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(channels), (ch) => {
               return openBlock(), createElementBlock("button", {
                 key: ch,
                 type: "button",
                 class: normalizeClass(chipClass2(unref(channel) === ch)),
                 onClick: withModifiers(($event) => channel.value = ch, ["stop"])
-              }, toDisplayString$1(_ctx.$t(`meshOps.channel.${ch}`)), 11, _hoisted_10$G);
+              }, toDisplayString$1(_ctx.$t(`meshOps.channel.${ch}`)), 11, _hoisted_10$H);
             }), 128))
           ])) : createCommentVNode("", true)
         ]),
@@ -130098,13 +130102,13 @@ const _sfc_main$2r = /* @__PURE__ */ defineComponent({
           onWheel: _cache2[6] || (_cache2[6] = withModifiers(() => {
           }, ["stop"]))
         }, [
-          unref(hasMapsPanel) && unref(mapsUrl) ? (openBlock(), createElementBlock("div", _hoisted_11$B, [
+          unref(hasMapsPanel) && unref(mapsUrl) ? (openBlock(), createElementBlock("div", _hoisted_11$C, [
             createBaseVNode("img", {
               src: unref(assetUrl2)(unref(mapsUrl)),
               alt: mapsPanelLabel.value,
               class: "ctv:block ctv:w-full ctv:max-h-40 ctv:object-contain"
-            }, null, 8, _hoisted_12$v),
-            createBaseVNode("span", _hoisted_13$r, toDisplayString$1(mapsPanelLabel.value), 1)
+            }, null, 8, _hoisted_12$w),
+            createBaseVNode("span", _hoisted_13$s, toDisplayString$1(mapsPanelLabel.value), 1)
           ])) : createCommentVNode("", true),
           createBaseVNode("div", {
             class: "ctv:flex ctv:flex-col ctv:gap-1 ctv:shrink-0",
@@ -130113,8 +130117,8 @@ const _sfc_main$2r = /* @__PURE__ */ defineComponent({
             onMousedown: _cache2[5] || (_cache2[5] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            unref(isMeshOp) ? (openBlock(), createElementBlock("div", _hoisted_14$p, [
-              createBaseVNode("span", _hoisted_15$m, toDisplayString$1(_ctx.$t("meshOps.operation")), 1),
+            unref(isMeshOp) ? (openBlock(), createElementBlock("div", _hoisted_14$q, [
+              createBaseVNode("span", _hoisted_15$n, toDisplayString$1(_ctx.$t("meshOps.operation")), 1),
               createBaseVNode("div", _hoisted_16$j, [
                 (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(MESH_OPERATIONS), (op) => {
                   return openBlock(), createElementBlock("button", {
@@ -130156,7 +130160,7 @@ const _sfc_main$2r = /* @__PURE__ */ defineComponent({
                     step: c2.step,
                     value: Number(unref(values)[c2.widget]),
                     onInput: ($event) => unref(setValue)(c2, $event.target.value)
-                  }, null, 40, _hoisted_21$f),
+                  }, null, 40, _hoisted_21$e),
                   createBaseVNode("input", {
                     type: "number",
                     class: "ctv:w-20 ctv:shrink-0 ctv:py-0.5 ctv:px-1 ctv:rounded-sm ctv:outline-none ctv:box-border ctv:text-2xs ctv:text-right ctv:[font-family:inherit] ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-default ctv:focus:border-primary-background",
@@ -130165,7 +130169,7 @@ const _sfc_main$2r = /* @__PURE__ */ defineComponent({
                     step: c2.step,
                     value: Number(unref(values)[c2.widget]),
                     onChange: ($event) => unref(setValue)(c2, $event.target.value)
-                  }, null, 40, _hoisted_22$e)
+                  }, null, 40, _hoisted_22$d)
                 ], 64))
               ]);
             }), 128))
@@ -130185,7 +130189,7 @@ const _sfc_main$2r = /* @__PURE__ */ defineComponent({
             "hide-output": ""
           }, null, 8, ["state", "node", "on-run-request", "on-cancel-request", "on-disconnect", "on-action"])
         ]),
-        createVNode(_sfc_main$2t, {
+        createVNode(_sfc_main$2u, {
           ref_key: "tagMenuEl",
           ref: tagMenuEl
         }, null, 512)
@@ -130329,7 +130333,7 @@ function useMeshPrimitive(node, opts) {
     cancelCapture: capture.cancelCapture
   };
 }
-const _sfc_main$2q = /* @__PURE__ */ defineComponent({
+const _sfc_main$2r = /* @__PURE__ */ defineComponent({
   __name: "PrimitivePreview",
   props: {
     kind: {},
@@ -130460,16 +130464,16 @@ const _sfc_main$2q = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$3W = ["onClick"];
-const _hoisted_2$2g = { class: "ctv:relative ctv:w-full ctv:h-[calc(100%-340px)] ctv:min-h-[240px] ctv:shrink-0 ctv:rounded-md ctv:overflow-hidden ctv:bg-black" };
-const _hoisted_3$2g = { class: "ctv:absolute ctv:bottom-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1" };
-const _hoisted_4$1U = ["onClick"];
-const _hoisted_5$1N = ["title"];
-const _hoisted_6$1C = ["checked", "onChange"];
-const _hoisted_7$1e = ["min", "max", "step", "value", "onInput"];
-const _hoisted_8$V = { class: "ctv:w-10 ctv:shrink-0 ctv:text-right ctv:text-2xs ctv:tabular-nums" };
-const _hoisted_9$N = { class: "ctv:shrink-0" };
-const _sfc_main$2p = /* @__PURE__ */ defineComponent({
+const _hoisted_1$3X = ["onClick"];
+const _hoisted_2$2h = { class: "ctv:relative ctv:w-full ctv:h-[calc(100%-340px)] ctv:min-h-[240px] ctv:shrink-0 ctv:rounded-md ctv:overflow-hidden ctv:bg-black" };
+const _hoisted_3$2h = { class: "ctv:absolute ctv:bottom-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1" };
+const _hoisted_4$1V = ["onClick"];
+const _hoisted_5$1O = ["title"];
+const _hoisted_6$1D = ["checked", "onChange"];
+const _hoisted_7$1f = ["min", "max", "step", "value", "onInput"];
+const _hoisted_8$W = { class: "ctv:w-10 ctv:shrink-0 ctv:text-right ctv:text-2xs ctv:tabular-nums" };
+const _hoisted_9$O = { class: "ctv:shrink-0" };
+const _sfc_main$2q = /* @__PURE__ */ defineComponent({
   __name: "MeshPrimitiveStageCard",
   props: {
     state: {},
@@ -130522,11 +130526,11 @@ const _sfc_main$2p = /* @__PURE__ */ defineComponent({
               type: "button",
               class: normalizeClass(kindBtnClass(k2 === unref(kind))),
               onClick: ($event) => unref(setKind)(k2)
-            }, toDisplayString$1(_ctx.$t("meshPrimitive.kind." + k2)), 11, _hoisted_1$3W);
+            }, toDisplayString$1(_ctx.$t("meshPrimitive.kind." + k2)), 11, _hoisted_1$3X);
           }), 128))
         ], 32),
-        createBaseVNode("div", _hoisted_2$2g, [
-          createVNode(_sfc_main$2q, {
+        createBaseVNode("div", _hoisted_2$2h, [
+          createVNode(_sfc_main$2r, {
             ref_key: "previewEl",
             ref: previewEl,
             kind: unref(kind),
@@ -130534,14 +130538,14 @@ const _sfc_main$2p = /* @__PURE__ */ defineComponent({
             channel: channel.value,
             onViewChanged: unref(scheduleCapture)
           }, null, 8, ["kind", "params", "channel", "onViewChanged"]),
-          createBaseVNode("div", _hoisted_3$2g, [
+          createBaseVNode("div", _hoisted_3$2h, [
             (openBlock(), createElementBlock(Fragment$1, null, renderList(PRIM_CHANNELS, (ch) => {
               return createBaseVNode("button", {
                 key: ch,
                 type: "button",
                 class: normalizeClass(chipClass2(channel.value === ch)),
                 onClick: withModifiers(($event) => channel.value = ch, ["stop"])
-              }, toDisplayString$1(_ctx.$t(`meshOps.channel.${ch}`)), 11, _hoisted_4$1U);
+              }, toDisplayString$1(_ctx.$t(`meshOps.channel.${ch}`)), 11, _hoisted_4$1V);
             }), 64))
           ])
         ]),
@@ -130562,14 +130566,14 @@ const _sfc_main$2p = /* @__PURE__ */ defineComponent({
               createBaseVNode("span", {
                 class: "ctv:w-24 ctv:shrink-0 ctv:truncate ctv:text-2xs ctv:text-muted-foreground",
                 title: _ctx.$t(def2.labelKey)
-              }, toDisplayString$1(_ctx.$t(def2.labelKey)), 9, _hoisted_5$1N),
+              }, toDisplayString$1(_ctx.$t(def2.labelKey)), 9, _hoisted_5$1O),
               def2.type === "bool" ? (openBlock(), createElementBlock("input", {
                 key: 0,
                 type: "checkbox",
                 class: "ctv:cursor-pointer",
                 checked: Boolean(unref(params)[def2.key]),
                 onChange: ($event) => unref(setParam)(def2, $event.target.checked)
-              }, null, 40, _hoisted_6$1C)) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
+              }, null, 40, _hoisted_6$1D)) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
                 createBaseVNode("input", {
                   type: "range",
                   class: "ctv:flex-1 ctv:cursor-pointer",
@@ -130578,13 +130582,13 @@ const _sfc_main$2p = /* @__PURE__ */ defineComponent({
                   step: def2.step,
                   value: Number(unref(params)[def2.key]),
                   onInput: ($event) => unref(setParam)(def2, Number($event.target.value))
-                }, null, 40, _hoisted_7$1e),
-                createBaseVNode("span", _hoisted_8$V, toDisplayString$1(fmt2(unref(params)[def2.key])), 1)
+                }, null, 40, _hoisted_7$1f),
+                createBaseVNode("span", _hoisted_8$W, toDisplayString$1(fmt2(unref(params)[def2.key])), 1)
               ], 64))
             ]);
           }), 128))
         ], 32),
-        createBaseVNode("div", _hoisted_9$N, [
+        createBaseVNode("div", _hoisted_9$O, [
           createVNode(StageCard, {
             state: __props.state,
             node: __props.node,
@@ -130699,43 +130703,43 @@ function useMeshBoolean(node, stageState) {
     clearTransformWidget
   };
 }
-const _hoisted_1$3V = {
+const _hoisted_1$3W = {
   key: 0,
   class: "ctv:absolute ctv:inset-0 ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50 ctv:pointer-events-none"
 };
-const _hoisted_2$2f = { class: "ctv:text-xs" };
-const _hoisted_3$2f = { class: "ctv:absolute ctv:top-1 ctv:left-1 ctv:z-10 ctv:flex ctv:flex-col ctv:items-start ctv:gap-1" };
-const _hoisted_4$1T = {
+const _hoisted_2$2g = { class: "ctv:text-xs" };
+const _hoisted_3$2g = { class: "ctv:absolute ctv:top-1 ctv:left-1 ctv:z-10 ctv:flex ctv:flex-col ctv:items-start ctv:gap-1" };
+const _hoisted_4$1U = {
   key: 0,
   class: "ctv:flex ctv:gap-1"
 };
-const _hoisted_5$1M = {
+const _hoisted_5$1N = {
   key: 1,
   class: "ctv:flex ctv:items-center ctv:gap-1"
 };
-const _hoisted_6$1B = { class: "ctv:px-1.5 ctv:py-0.5 ctv:rounded-sm ctv:bg-black/60 ctv:text-3xs ctv:text-white/80" };
-const _hoisted_7$1d = ["disabled", "onClick"];
-const _hoisted_8$U = {
+const _hoisted_6$1C = { class: "ctv:px-1.5 ctv:py-0.5 ctv:rounded-sm ctv:bg-black/60 ctv:text-3xs ctv:text-white/80" };
+const _hoisted_7$1e = ["disabled", "onClick"];
+const _hoisted_8$V = {
   key: 2,
   class: "ctv:flex ctv:items-center ctv:gap-1"
 };
-const _hoisted_9$M = ["onClick"];
-const _hoisted_10$F = {
+const _hoisted_9$N = ["onClick"];
+const _hoisted_10$G = {
   key: 1,
   class: "ctv:absolute ctv:top-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1 ctv:opacity-0 ctv:group-hover:opacity-100 ctv:transition-opacity"
 };
-const _hoisted_11$A = ["title"];
-const _hoisted_12$u = ["title"];
-const _hoisted_13$q = { class: "ctv:absolute ctv:bottom-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1" };
-const _hoisted_14$o = ["onClick"];
-const _hoisted_15$l = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
+const _hoisted_11$B = ["title"];
+const _hoisted_12$v = ["title"];
+const _hoisted_13$r = { class: "ctv:absolute ctv:bottom-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1" };
+const _hoisted_14$p = ["onClick"];
+const _hoisted_15$m = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
 const _hoisted_16$i = { class: "ctv:w-28 ctv:shrink-0 ctv:truncate ctv:text-2xs ctv:text-muted-foreground" };
 const _hoisted_17$h = ["onClick"];
 const _hoisted_18$g = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
 const _hoisted_19$f = { class: "ctv:w-28 ctv:shrink-0 ctv:truncate ctv:text-2xs ctv:text-muted-foreground" };
 const _hoisted_20$e = ["value"];
-const _hoisted_21$e = { class: "ctv:w-12 ctv:text-right ctv:text-2xs ctv:font-mono" };
-const _hoisted_22$d = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide ctv:shrink-0" };
+const _hoisted_21$d = { class: "ctv:w-12 ctv:text-right ctv:text-2xs ctv:font-mono" };
+const _hoisted_22$c = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide ctv:shrink-0" };
 const _hoisted_23$b = {
   key: 0,
   class: "ctv:text-muted-foreground"
@@ -130754,7 +130758,7 @@ const _hoisted_26$9 = {
 };
 const _hoisted_27$9 = { class: "ctv:shrink-0" };
 const PREVIEW_BTN_BASE = "ctv:relative ctv:inline-flex ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:appearance-none ctv:border-none ctv:transition-colors ctv:size-5 ctv:p-0 ctv:rounded-sm ctv:text-sm";
-const _sfc_main$2o = /* @__PURE__ */ defineComponent({
+const _sfc_main$2p = /* @__PURE__ */ defineComponent({
   __name: "MeshBooleanStageCard",
   props: {
     state: {},
@@ -131073,12 +131077,12 @@ const _sfc_main$2o = /* @__PURE__ */ defineComponent({
           class: "ctv:group ctv:relative ctv:w-full ctv:h-[calc(100%-190px)] ctv:min-h-[280px] ctv:shrink-0 ctv:rounded-md ctv:overflow-hidden ctv:bg-black ctv:touch-none ctv:outline-none",
           onPointerenter: onHostEnter
         }, [
-          !unref(modelAUrl) || !unref(modelBUrl) ? (openBlock(), createElementBlock("div", _hoisted_1$3V, [
+          !unref(modelAUrl) || !unref(modelBUrl) ? (openBlock(), createElementBlock("div", _hoisted_1$3W, [
             createVNode(unref(IconBox), { class: "ctv:size-8 ctv:opacity-60" }),
-            createBaseVNode("div", _hoisted_2$2f, toDisplayString$1(_ctx.$t("meshOps.needTwoModels")), 1)
+            createBaseVNode("div", _hoisted_2$2g, toDisplayString$1(_ctx.$t("meshOps.needTwoModels")), 1)
           ])) : createCommentVNode("", true),
-          createBaseVNode("div", _hoisted_3$2f, [
-            unref(resultUrl) ? (openBlock(), createElementBlock("div", _hoisted_4$1T, [
+          createBaseVNode("div", _hoisted_3$2g, [
+            unref(resultUrl) ? (openBlock(), createElementBlock("div", _hoisted_4$1U, [
               createBaseVNode("button", {
                 type: "button",
                 class: normalizeClass(chipClass2(!unref(viewingResult))),
@@ -131090,8 +131094,8 @@ const _sfc_main$2o = /* @__PURE__ */ defineComponent({
                 onClick: _cache2[1] || (_cache2[1] = withModifiers(($event) => showResult.value = true, ["stop"]))
               }, toDisplayString$1(_ctx.$t("meshOps.result")), 3)
             ])) : createCommentVNode("", true),
-            !unref(viewingResult) ? (openBlock(), createElementBlock("div", _hoisted_5$1M, [
-              createBaseVNode("span", _hoisted_6$1B, toDisplayString$1(_ctx.$t("meshOps.modelsConnected", { n: connectedCount.value })), 1),
+            !unref(viewingResult) ? (openBlock(), createElementBlock("div", _hoisted_5$1N, [
+              createBaseVNode("span", _hoisted_6$1C, toDisplayString$1(_ctx.$t("meshOps.modelsConnected", { n: connectedCount.value })), 1),
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(BOOLEAN_TARGETS), (tgt) => {
                 return openBlock(), createElementBlock("button", {
                   key: tgt,
@@ -131099,17 +131103,17 @@ const _sfc_main$2o = /* @__PURE__ */ defineComponent({
                   class: normalizeClass(chipClass2(activeTarget.value === tgt, !targetUrl(tgt))),
                   disabled: !targetUrl(tgt),
                   onClick: withModifiers(($event) => setTarget(tgt), ["stop"])
-                }, toDisplayString$1(_ctx.$t(`meshOps.target.${tgt}`)), 11, _hoisted_7$1d);
+                }, toDisplayString$1(_ctx.$t(`meshOps.target.${tgt}`)), 11, _hoisted_7$1e);
               }), 128))
             ])) : createCommentVNode("", true),
-            !unref(viewingResult) ? (openBlock(), createElementBlock("div", _hoisted_8$U, [
+            !unref(viewingResult) ? (openBlock(), createElementBlock("div", _hoisted_8$V, [
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(BOOLEAN_GIZMO_MODES), (m) => {
                 return openBlock(), createElementBlock("button", {
                   key: m,
                   type: "button",
                   class: normalizeClass(chipClass2(gizmoMode.value === m)),
                   onClick: withModifiers(($event) => setGizmoMode(m), ["stop"])
-                }, toDisplayString$1(_ctx.$t(`meshOps.gizmo.${m}`)), 11, _hoisted_9$M);
+                }, toDisplayString$1(_ctx.$t(`meshOps.gizmo.${m}`)), 11, _hoisted_9$N);
               }), 128)),
               _cache2[7] || (_cache2[7] = createBaseVNode("span", { class: "ctv:w-px ctv:h-4 ctv:bg-white/30" }, null, -1)),
               createBaseVNode("button", {
@@ -131119,7 +131123,7 @@ const _sfc_main$2o = /* @__PURE__ */ defineComponent({
               }, toDisplayString$1(_ctx.$t("meshOps.gizmo.reset")), 3)
             ])) : createCommentVNode("", true)
           ]),
-          unref(viewingResult) && unref(resultUrl) ? (openBlock(), createElementBlock("div", _hoisted_10$F, [
+          unref(viewingResult) && unref(resultUrl) ? (openBlock(), createElementBlock("div", _hoisted_10$G, [
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(downloadBtnClass),
@@ -131127,7 +131131,7 @@ const _sfc_main$2o = /* @__PURE__ */ defineComponent({
               onClick: withModifiers(onDownloadResult, ["stop"])
             }, [..._cache2[8] || (_cache2[8] = [
               createBaseVNode("i", { class: "pi pi-download" }, null, -1)
-            ])], 8, _hoisted_11$A),
+            ])], 8, _hoisted_11$B),
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(tagBtnClass.value),
@@ -131138,16 +131142,16 @@ const _sfc_main$2o = /* @__PURE__ */ defineComponent({
               }, ["stop"]))
             }, [..._cache2[9] || (_cache2[9] = [
               createBaseVNode("i", { class: "pi pi-tag" }, null, -1)
-            ])], 10, _hoisted_12$u)
+            ])], 10, _hoisted_12$v)
           ])) : createCommentVNode("", true),
-          createBaseVNode("div", _hoisted_13$q, [
+          createBaseVNode("div", _hoisted_13$r, [
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(BOOLEAN_CHANNELS), (ch) => {
               return openBlock(), createElementBlock("button", {
                 key: ch,
                 type: "button",
                 class: normalizeClass(chipClass2(channel.value === ch)),
                 onClick: withModifiers(($event) => setChannel(ch), ["stop"])
-              }, toDisplayString$1(_ctx.$t(`meshOps.channel.${ch}`)), 11, _hoisted_14$o);
+              }, toDisplayString$1(_ctx.$t(`meshOps.channel.${ch}`)), 11, _hoisted_14$p);
             }), 128))
           ])
         ], 544),
@@ -131158,7 +131162,7 @@ const _sfc_main$2o = /* @__PURE__ */ defineComponent({
           onMousedown: _cache2[5] || (_cache2[5] = withModifiers(() => {
           }, ["stop"]))
         }, [
-          createBaseVNode("div", _hoisted_15$l, [
+          createBaseVNode("div", _hoisted_15$m, [
             createBaseVNode("span", _hoisted_16$i, toDisplayString$1(_ctx.$t("meshOps.booleanOp")), 1),
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(BOOLEAN_OPERATIONS), (opt) => {
               return openBlock(), createElementBlock("button", {
@@ -131180,10 +131184,10 @@ const _sfc_main$2o = /* @__PURE__ */ defineComponent({
               value: unref(resolution),
               onInput: _cache2[3] || (_cache2[3] = ($event) => unref(setResolution)($event.target.value))
             }, null, 40, _hoisted_20$e),
-            createBaseVNode("span", _hoisted_21$e, toDisplayString$1(unref(resolution)), 1)
+            createBaseVNode("span", _hoisted_21$d, toDisplayString$1(unref(resolution)), 1)
           ])
         ], 32),
-        createBaseVNode("div", _hoisted_22$d, [
+        createBaseVNode("div", _hoisted_22$c, [
           !unref(modelAUrl) || !unref(modelBUrl) ? (openBlock(), createElementBlock("span", _hoisted_23$b, toDisplayString$1(_ctx.$t("meshOps.needTwoModels")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_24$a, toDisplayString$1(_ctx.$t("meshOps.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_25$a, toDisplayString$1(_ctx.$t("meshOps.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_26$9, toDisplayString$1(_ctx.$t("meshOps.placeThenRun")), 1))
         ]),
         createBaseVNode("div", _hoisted_27$9, [
@@ -131197,7 +131201,7 @@ const _sfc_main$2o = /* @__PURE__ */ defineComponent({
             "hide-output": ""
           }, null, 8, ["state", "node", "on-run-request", "on-cancel-request", "on-disconnect", "on-action"])
         ]),
-        createVNode(_sfc_main$2t, {
+        createVNode(_sfc_main$2u, {
           ref_key: "tagMenuEl",
           ref: tagMenuEl
         }, null, 512)
@@ -131505,44 +131509,44 @@ function useGridSplit(node, state2) {
     splitting
   };
 }
-const _hoisted_1$3U = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:grow" };
-const _hoisted_2$2e = { class: "ctv:absolute ctv:inset-0 ctv:flex ctv:items-center ctv:justify-center" };
-const _hoisted_3$2e = {
+const _hoisted_1$3V = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:grow" };
+const _hoisted_2$2f = { class: "ctv:absolute ctv:inset-0 ctv:flex ctv:items-center ctv:justify-center" };
+const _hoisted_3$2f = {
   key: 0,
   class: "ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50"
 };
-const _hoisted_4$1S = { class: "ctv:text-xs" };
-const _hoisted_5$1L = ["src"];
-const _hoisted_6$1A = { class: "ctv:absolute ctv:inset-0 ctv:pointer-events-none" };
-const _hoisted_7$1c = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5" };
-const _hoisted_8$T = {
+const _hoisted_4$1T = { class: "ctv:text-xs" };
+const _hoisted_5$1M = ["src"];
+const _hoisted_6$1B = { class: "ctv:absolute ctv:inset-0 ctv:pointer-events-none" };
+const _hoisted_7$1d = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5" };
+const _hoisted_8$U = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_9$L = {
+const _hoisted_9$M = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_10$E = {
+const _hoisted_10$F = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_11$z = {
+const _hoisted_11$A = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_12$t = { class: "ctv:flex ctv:gap-1 ctv:flex-wrap" };
-const _hoisted_13$p = ["onClick"];
-const _hoisted_14$n = { class: "ctv:flex ctv:gap-2" };
-const _hoisted_15$k = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_12$u = { class: "ctv:flex ctv:gap-1 ctv:flex-wrap" };
+const _hoisted_13$q = ["onClick"];
+const _hoisted_14$o = { class: "ctv:flex ctv:gap-2" };
+const _hoisted_15$l = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_16$h = ["onClick"];
 const _hoisted_17$g = { class: "ctv:ml-auto ctv:min-w-6 ctv:text-center ctv:font-mono ctv:text-xs ctv:text-base-foreground" };
 const _hoisted_18$f = ["onClick"];
 const _hoisted_19$e = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:py-0.5 ctv:px-1.5 ctv:rounded ctv:cursor-pointer ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:select-none" };
 const _hoisted_20$d = ["checked"];
-const _hoisted_21$d = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_21$c = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const BORDER_STEP = 2;
-const _sfc_main$2n = /* @__PURE__ */ defineComponent({
+const _sfc_main$2o = /* @__PURE__ */ defineComponent({
   __name: "GridSplitStageCard",
   props: {
     state: {},
@@ -131614,16 +131618,16 @@ const _sfc_main$2n = /* @__PURE__ */ defineComponent({
       return dividerBands("h", d, natH.value, rows.value, border.value, outerBorder.value);
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$3U, [
+      return openBlock(), createElementBlock("div", _hoisted_1$3V, [
         createBaseVNode("div", {
           ref_key: "containerEl",
           ref: containerEl,
           class: "ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[280px] ctv:rounded-md ctv:overflow-hidden ctv:border ctv:border-border-subtle ctv:bg-black"
         }, [
-          createBaseVNode("div", _hoisted_2$2e, [
-            !unref(sourceImageUrl) ? (openBlock(), createElementBlock("div", _hoisted_3$2e, [
+          createBaseVNode("div", _hoisted_2$2f, [
+            !unref(sourceImageUrl) ? (openBlock(), createElementBlock("div", _hoisted_3$2f, [
               _cache2[2] || (_cache2[2] = createBaseVNode("i", { class: "pi pi-th-large ctv:text-[32px] ctv:opacity-60" }, null, -1)),
-              createBaseVNode("div", _hoisted_4$1S, toDisplayString$1(_ctx.$t("gridSplit.connectImage")), 1)
+              createBaseVNode("div", _hoisted_4$1T, toDisplayString$1(_ctx.$t("gridSplit.connectImage")), 1)
             ])) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
               createBaseVNode("img", {
                 ref_key: "imgEl",
@@ -131634,8 +131638,8 @@ const _sfc_main$2n = /* @__PURE__ */ defineComponent({
                 onLoad: onImgLoad,
                 onDragstart: _cache2[0] || (_cache2[0] = withModifiers(() => {
                 }, ["prevent"]))
-              }, null, 40, _hoisted_5$1L),
-              createBaseVNode("div", _hoisted_6$1A, [
+              }, null, 40, _hoisted_5$1M),
+              createBaseVNode("div", _hoisted_6$1B, [
                 (openBlock(true), createElementBlock(Fragment$1, null, renderList(vBands.value, (style2, i) => {
                   return openBlock(), createElementBlock("div", {
                     key: `v${i}`,
@@ -131654,26 +131658,26 @@ const _sfc_main$2n = /* @__PURE__ */ defineComponent({
             ], 64))
           ])
         ], 512),
-        createBaseVNode("div", _hoisted_7$1c, [
-          !unref(sourceImageUrl) ? (openBlock(), createElementBlock("span", _hoisted_8$T, toDisplayString$1(_ctx.$t("gridSplit.connectImage")), 1)) : unref(splitting) ? (openBlock(), createElementBlock("span", _hoisted_9$L, toDisplayString$1(_ctx.$t("gridSplit.splitting", { n: unref(rows) * unref(cols) })), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_10$E, toDisplayString$1(_ctx.$t("gridSplit.done", { n: unref(rows) * unref(cols) })), 1)) : (openBlock(), createElementBlock("span", _hoisted_11$z, toDisplayString$1(_ctx.$t("gridSplit.pickGrid")), 1))
+        createBaseVNode("div", _hoisted_7$1d, [
+          !unref(sourceImageUrl) ? (openBlock(), createElementBlock("span", _hoisted_8$U, toDisplayString$1(_ctx.$t("gridSplit.connectImage")), 1)) : unref(splitting) ? (openBlock(), createElementBlock("span", _hoisted_9$M, toDisplayString$1(_ctx.$t("gridSplit.splitting", { n: unref(rows) * unref(cols) })), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_10$F, toDisplayString$1(_ctx.$t("gridSplit.done", { n: unref(rows) * unref(cols) })), 1)) : (openBlock(), createElementBlock("span", _hoisted_11$A, toDisplayString$1(_ctx.$t("gridSplit.pickGrid")), 1))
         ]),
-        createBaseVNode("div", _hoisted_12$t, [
+        createBaseVNode("div", _hoisted_12$u, [
           (openBlock(), createElementBlock(Fragment$1, null, renderList(PRESETS2, (p2) => {
             return createBaseVNode("button", {
               key: p2.label,
               type: "button",
               class: normalizeClass(["ctv:flex-1 ctv:min-w-[44px] ctv:py-1 ctv:px-1.5 ctv:rounded ctv:text-xs ctv:font-mono ctv:cursor-pointer ctv:border", unref(rows) === p2.r && unref(cols) === p2.c ? "ctv:bg-secondary-background-selected ctv:border-primary-background ctv:text-primary-background ctv:font-semibold" : "ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:bg-secondary-background-hover"]),
               onClick: ($event) => unref(setGrid)(p2.r, p2.c)
-            }, toDisplayString$1(p2.label), 11, _hoisted_13$p);
+            }, toDisplayString$1(p2.label), 11, _hoisted_13$q);
           }), 64))
         ]),
-        createBaseVNode("div", _hoisted_14$n, [
+        createBaseVNode("div", _hoisted_14$o, [
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(CONTROLS.value, (ctl) => {
             return openBlock(), createElementBlock("div", {
               key: ctl.label,
               class: "ctv:flex-1 ctv:flex ctv:items-center ctv:gap-1.5 ctv:py-0.5 ctv:px-1.5 ctv:rounded ctv:bg-secondary-background ctv:border ctv:border-border-subtle"
             }, [
-              createBaseVNode("span", _hoisted_15$k, toDisplayString$1(ctl.label), 1),
+              createBaseVNode("span", _hoisted_15$l, toDisplayString$1(ctl.label), 1),
               createBaseVNode("button", {
                 type: "button",
                 class: "ctv:size-5 ctv:rounded-sm ctv:border ctv:border-border-subtle ctv:bg-secondary-background ctv:text-base-foreground ctv:text-[13px] ctv:leading-none ctv:cursor-pointer ctv:hover:bg-secondary-background-hover",
@@ -131695,7 +131699,7 @@ const _sfc_main$2n = /* @__PURE__ */ defineComponent({
             checked: unref(outerBorder),
             onChange: _cache2[1] || (_cache2[1] = ($event) => unref(setOuterBorder)($event.target.checked))
           }, null, 40, _hoisted_20$d),
-          createBaseVNode("span", _hoisted_21$d, toDisplayString$1(_ctx.$t("gridSplit.outerBorder")), 1)
+          createBaseVNode("span", _hoisted_21$c, toDisplayString$1(_ctx.$t("gridSplit.outerBorder")), 1)
         ]),
         createVNode(StageCard, {
           state: __props.state,
@@ -131995,27 +131999,27 @@ function useTimelineEditor(node, state2, rootEl) {
     onAudioResizePointerDown
   };
 }
-const _hoisted_1$3T = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
-const _hoisted_2$2d = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_3$2d = {
+const _hoisted_1$3U = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
+const _hoisted_2$2e = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_3$2e = {
   key: 0,
   class: "ctv:text-xs ctv:text-muted-foreground/60 ctv:p-1"
 };
-const _hoisted_4$1R = {
+const _hoisted_4$1S = {
   key: 1,
   class: "ctv:flex ctv:gap-1 ctv:flex-wrap"
 };
-const _hoisted_5$1K = ["title", "onClick"];
-const _hoisted_6$1z = ["src", "alt"];
-const _hoisted_7$1b = { class: "ctv:absolute ctv:bottom-px ctv:left-0.5 ctv:text-3xs ctv:py-0 ctv:px-0.5 ctv:rounded-sm ctv:bg-black/70 ctv:text-white/90" };
-const _hoisted_8$S = { class: "ctv:shrink-0 ctv:overflow-x-auto ctv:overflow-y-hidden ctv:rounded-md ctv:border ctv:border-border-subtle ctv:bg-black" };
-const _hoisted_9$K = { class: "ctv:relative ctv:h-4 ctv:border-b ctv:border-white/10" };
-const _hoisted_10$D = { class: "ctv:text-[8px] ctv:text-white/40 ctv:ml-0.5" };
-const _hoisted_11$y = { class: "ctv:relative ctv:h-11 ctv:m-1 ctv:rounded ctv:bg-primary-background/5" };
-const _hoisted_12$s = ["onPointerdown"];
-const _hoisted_13$o = ["src"];
-const _hoisted_14$m = { class: "ctv:absolute ctv:bottom-px ctv:right-[14px] ctv:text-3xs ctv:py-0 ctv:px-0.5 ctv:rounded-sm ctv:bg-black/60 ctv:text-white ctv:pointer-events-none" };
-const _hoisted_15$j = ["onPointerdown"];
+const _hoisted_5$1L = ["title", "onClick"];
+const _hoisted_6$1A = ["src", "alt"];
+const _hoisted_7$1c = { class: "ctv:absolute ctv:bottom-px ctv:left-0.5 ctv:text-3xs ctv:py-0 ctv:px-0.5 ctv:rounded-sm ctv:bg-black/70 ctv:text-white/90" };
+const _hoisted_8$T = { class: "ctv:shrink-0 ctv:overflow-x-auto ctv:overflow-y-hidden ctv:rounded-md ctv:border ctv:border-border-subtle ctv:bg-black" };
+const _hoisted_9$L = { class: "ctv:relative ctv:h-4 ctv:border-b ctv:border-white/10" };
+const _hoisted_10$E = { class: "ctv:text-[8px] ctv:text-white/40 ctv:ml-0.5" };
+const _hoisted_11$z = { class: "ctv:relative ctv:h-11 ctv:m-1 ctv:rounded ctv:bg-primary-background/5" };
+const _hoisted_12$t = ["onPointerdown"];
+const _hoisted_13$p = ["src"];
+const _hoisted_14$n = { class: "ctv:absolute ctv:bottom-px ctv:right-[14px] ctv:text-3xs ctv:py-0 ctv:px-0.5 ctv:rounded-sm ctv:bg-black/60 ctv:text-white ctv:pointer-events-none" };
+const _hoisted_15$k = ["onPointerdown"];
 const _hoisted_16$g = {
   key: 0,
   class: "ctv:text-xs ctv:text-white/40 ctv:p-1"
@@ -132030,8 +132034,8 @@ const _hoisted_20$c = {
   key: 0,
   class: "ctv:flex ctv:flex-col ctv:gap-1"
 };
-const _hoisted_21$c = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
-const _hoisted_22$c = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_21$b = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
+const _hoisted_22$b = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_23$a = ["value", "placeholder"];
 const _hoisted_24$9 = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
 const _hoisted_25$9 = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
@@ -132042,7 +132046,7 @@ const _hoisted_29$7 = { class: "ctv:flex ctv:items-center ctv:gap-1" };
 const _hoisted_30$7 = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_31$5 = ["value"];
 const _hoisted_32$5 = { class: "ctv:ml-auto ctv:text-2xs ctv:font-mono ctv:text-muted-foreground" };
-const _sfc_main$2m = /* @__PURE__ */ defineComponent({
+const _sfc_main$2n = /* @__PURE__ */ defineComponent({
   __name: "DirectorTimelineStageCard",
   props: {
     state: {},
@@ -132086,9 +132090,9 @@ const _sfc_main$2m = /* @__PURE__ */ defineComponent({
         ref: rootEl,
         class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full"
       }, [
-        createBaseVNode("div", _hoisted_1$3T, [
-          createBaseVNode("span", _hoisted_2$2d, toDisplayString$1(_ctx.$t("timeline.keyframes")), 1),
-          unref(keyframes).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_3$2d, toDisplayString$1(_ctx.$t("timeline.connectImages")), 1)) : (openBlock(), createElementBlock("div", _hoisted_4$1R, [
+        createBaseVNode("div", _hoisted_1$3U, [
+          createBaseVNode("span", _hoisted_2$2e, toDisplayString$1(_ctx.$t("timeline.keyframes")), 1),
+          unref(keyframes).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_3$2e, toDisplayString$1(_ctx.$t("timeline.connectImages")), 1)) : (openBlock(), createElementBlock("div", _hoisted_4$1S, [
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(keyframes), (url, i) => {
               return openBlock(), createElementBlock("button", {
                 key: i,
@@ -132101,29 +132105,29 @@ const _sfc_main$2m = /* @__PURE__ */ defineComponent({
                   src: url,
                   alt: `#${i + 1}`,
                   class: "ctv:w-full ctv:h-full ctv:object-cover"
-                }, null, 8, _hoisted_6$1z),
-                createBaseVNode("span", _hoisted_7$1b, toDisplayString$1(i + 1), 1)
-              ], 8, _hoisted_5$1K);
+                }, null, 8, _hoisted_6$1A),
+                createBaseVNode("span", _hoisted_7$1c, toDisplayString$1(i + 1), 1)
+              ], 8, _hoisted_5$1L);
             }), 128))
           ]))
         ]),
-        createBaseVNode("div", _hoisted_8$S, [
+        createBaseVNode("div", _hoisted_8$T, [
           createBaseVNode("div", {
             class: "ctv:relative ctv:min-h-[116px]",
             style: normalizeStyle({ width: `${unref(trackWidthPx)}px` })
           }, [
-            createBaseVNode("div", _hoisted_9$K, [
+            createBaseVNode("div", _hoisted_9$L, [
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(ruler), (tick) => {
                 return openBlock(), createElementBlock("div", {
                   key: tick.frame,
                   class: "ctv:absolute ctv:top-0 ctv:h-4 ctv:border-l ctv:border-white/15",
                   style: normalizeStyle({ left: `${tick.frame * unref(PPF)}px` })
                 }, [
-                  createBaseVNode("span", _hoisted_10$D, toDisplayString$1(tick.label), 1)
+                  createBaseVNode("span", _hoisted_10$E, toDisplayString$1(tick.label), 1)
                 ], 4);
               }), 128))
             ]),
-            createBaseVNode("div", _hoisted_11$y, [
+            createBaseVNode("div", _hoisted_11$z, [
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(segments), (seg, idx) => {
                 var _a2;
                 return openBlock(), createElementBlock("div", {
@@ -132140,13 +132144,13 @@ const _sfc_main$2m = /* @__PURE__ */ defineComponent({
                     src: seg.imageUrl,
                     class: "ctv:h-full ctv:w-auto ctv:object-cover ctv:pointer-events-none",
                     draggable: "false"
-                  }, null, 8, _hoisted_13$o)) : createCommentVNode("", true),
-                  createBaseVNode("span", _hoisted_14$m, toDisplayString$1(seg.length) + "f", 1),
+                  }, null, 8, _hoisted_13$p)) : createCommentVNode("", true),
+                  createBaseVNode("span", _hoisted_14$n, toDisplayString$1(seg.length) + "f", 1),
                   createBaseVNode("div", {
                     class: "ctv:absolute ctv:top-0 ctv:right-0 ctv:w-2 ctv:h-full ctv:cursor-ew-resize ctv:bg-white/10 ctv:hover:bg-white/30",
                     onPointerdown: withModifiers(($event) => unref(onResizePointerDown)($event, seg), ["stop"])
-                  }, null, 40, _hoisted_15$j)
-                ], 46, _hoisted_12$s);
+                  }, null, 40, _hoisted_15$k)
+                ], 46, _hoisted_12$t);
               }), 128)),
               unref(segments).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_16$g, toDisplayString$1(_ctx.$t("timeline.clickKeyframe")), 1)) : createCommentVNode("", true)
             ]),
@@ -132179,8 +132183,8 @@ const _sfc_main$2m = /* @__PURE__ */ defineComponent({
           ], 4)
         ]),
         unref(selectedSeg) ? (openBlock(), createElementBlock("div", _hoisted_20$c, [
-          createBaseVNode("div", _hoisted_21$c, [
-            createBaseVNode("span", _hoisted_22$c, toDisplayString$1(_ctx.$t("timeline.segmentPrompt")), 1),
+          createBaseVNode("div", _hoisted_21$b, [
+            createBaseVNode("span", _hoisted_22$b, toDisplayString$1(_ctx.$t("timeline.segmentPrompt")), 1),
             createBaseVNode("button", {
               type: "button",
               class: "ctv:ml-auto ctv:bg-transparent ctv:border-0 ctv:cursor-pointer ctv:text-[13px]",
@@ -132402,22 +132406,22 @@ function useOutpaintCanvas(node, state2, canvasEl, rootEl) {
     onHandlePointerDown
   };
 }
-const _hoisted_1$3S = {
+const _hoisted_1$3T = {
   key: 0,
   class: "ctv:flex ctv:flex-col ctv:items-center ctv:gap-1.5 ctv:text-white/50"
 };
-const _hoisted_2$2c = { class: "ctv:text-xs" };
-const _hoisted_3$2c = ["src"];
-const _hoisted_4$1Q = ["onPointerdown"];
-const _hoisted_5$1J = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
-const _hoisted_6$1y = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-wrap" };
-const _hoisted_7$1a = { class: "ctv:text-3xs ctv:min-w-8 ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_8$R = ["value", "disabled", "onChange"];
-const _hoisted_9$J = ["disabled"];
-const _hoisted_10$C = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-wrap" };
-const _hoisted_11$x = { class: "ctv:text-2xs ctv:text-muted-foreground/60" };
-const _hoisted_12$r = { class: "ctv:text-[11px] ctv:font-mono ctv:text-base-foreground" };
-const _sfc_main$2l = /* @__PURE__ */ defineComponent({
+const _hoisted_2$2d = { class: "ctv:text-xs" };
+const _hoisted_3$2d = ["src"];
+const _hoisted_4$1R = ["onPointerdown"];
+const _hoisted_5$1K = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
+const _hoisted_6$1z = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-wrap" };
+const _hoisted_7$1b = { class: "ctv:text-3xs ctv:min-w-8 ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_8$S = ["value", "disabled", "onChange"];
+const _hoisted_9$K = ["disabled"];
+const _hoisted_10$D = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-wrap" };
+const _hoisted_11$y = { class: "ctv:text-2xs ctv:text-muted-foreground/60" };
+const _hoisted_12$s = { class: "ctv:text-[11px] ctv:font-mono ctv:text-base-foreground" };
+const _sfc_main$2m = /* @__PURE__ */ defineComponent({
   __name: "OutpaintStageCard",
   props: {
     state: {},
@@ -132455,9 +132459,9 @@ const _sfc_main$2l = /* @__PURE__ */ defineComponent({
           ref: canvasEl,
           class: normalizeClass(["ctv:relative ctv:flex-auto ctv:min-h-[280px] ctv:bg-black ctv:rounded-md ctv:overflow-hidden ctv:select-none ctv:border ctv:border-border-subtle", { "ctv:flex ctv:items-center ctv:justify-center": !unref(sourceImageUrl) }])
         }, [
-          !unref(sourceImageUrl) ? (openBlock(), createElementBlock("div", _hoisted_1$3S, [
+          !unref(sourceImageUrl) ? (openBlock(), createElementBlock("div", _hoisted_1$3T, [
             _cache2[3] || (_cache2[3] = createBaseVNode("i", { class: "pi pi-arrows-alt ctv:text-[28px] ctv:opacity-60" }, null, -1)),
-            createBaseVNode("div", _hoisted_2$2c, toDisplayString$1(_ctx.$t("outpaint.noInputImage")), 1)
+            createBaseVNode("div", _hoisted_2$2d, toDisplayString$1(_ctx.$t("outpaint.noInputImage")), 1)
           ])) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
             createBaseVNode("div", {
               class: "ctv:absolute ctv-pad-area",
@@ -132472,7 +132476,7 @@ const _sfc_main$2l = /* @__PURE__ */ defineComponent({
               (...args) => unref(onSourceLoaded) && unref(onSourceLoaded)(...args)),
               onDragstart: _cache2[1] || (_cache2[1] = withModifiers(() => {
               }, ["prevent"]))
-            }, null, 44, _hoisted_3$2c),
+            }, null, 44, _hoisted_3$2d),
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(SIDES), (side) => {
               return openBlock(), createElementBlock("div", {
                 key: side,
@@ -132484,7 +132488,7 @@ const _sfc_main$2l = /* @__PURE__ */ defineComponent({
                 onPointerdown: ($event) => unref(onHandlePointerDown)($event, side)
               }, [..._cache2[4] || (_cache2[4] = [
                 createBaseVNode("span", { class: "ctv:absolute ctv:size-3 ctv:rounded-full ctv:bg-primary-background ctv:border-2 ctv:border-white ctv:shadow-[0_1px_4px_rgb(0_0_0/0.5)]" }, null, -1)
-              ])], 46, _hoisted_4$1Q);
+              ])], 46, _hoisted_4$1R);
             }), 128)),
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(SIDES), (side) => {
               return openBlock(), createElementBlock("span", {
@@ -132495,14 +132499,14 @@ const _sfc_main$2l = /* @__PURE__ */ defineComponent({
             }), 128))
           ], 64))
         ], 2),
-        createBaseVNode("div", _hoisted_5$1J, [
-          createBaseVNode("div", _hoisted_6$1y, [
+        createBaseVNode("div", _hoisted_5$1K, [
+          createBaseVNode("div", _hoisted_6$1z, [
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(SIDES), (side) => {
               return openBlock(), createElementBlock("label", {
                 key: `in-${side}`,
                 class: "ctv:flex ctv:items-center ctv:gap-[3px] ctv:py-0.5 ctv:px-1 ctv:rounded-sm ctv:bg-secondary-background ctv:border ctv:border-border-subtle"
               }, [
-                createBaseVNode("span", _hoisted_7$1a, toDisplayString$1(_ctx.$t(`outpaint.${side}`)), 1),
+                createBaseVNode("span", _hoisted_7$1b, toDisplayString$1(_ctx.$t(`outpaint.${side}`)), 1),
                 createBaseVNode("input", {
                   type: "number",
                   min: "0",
@@ -132512,7 +132516,7 @@ const _sfc_main$2l = /* @__PURE__ */ defineComponent({
                   value: unref(pad)[side],
                   disabled: !unref(sourceImageUrl),
                   onChange: (e) => unref(setPad)(side, Number(e.target.value))
-                }, null, 40, _hoisted_8$R)
+                }, null, 40, _hoisted_8$S)
               ]);
             }), 128)),
             createBaseVNode("button", {
@@ -132521,11 +132525,11 @@ const _sfc_main$2l = /* @__PURE__ */ defineComponent({
               disabled: !unref(sourceImageUrl),
               onClick: _cache2[2] || (_cache2[2] = //@ts-ignore
               (...args) => unref(resetAll) && unref(resetAll)(...args))
-            }, toDisplayString$1(_ctx.$t("outpaint.reset")), 9, _hoisted_9$J)
+            }, toDisplayString$1(_ctx.$t("outpaint.reset")), 9, _hoisted_9$K)
           ]),
-          createBaseVNode("div", _hoisted_10$C, [
-            createBaseVNode("span", _hoisted_11$x, toDisplayString$1(_ctx.$t("outpaint.output")) + ":", 1),
-            createBaseVNode("span", _hoisted_12$r, toDisplayString$1(unref(outDims)), 1)
+          createBaseVNode("div", _hoisted_10$D, [
+            createBaseVNode("span", _hoisted_11$y, toDisplayString$1(_ctx.$t("outpaint.output")) + ":", 1),
+            createBaseVNode("span", _hoisted_12$s, toDisplayString$1(unref(outDims)), 1)
           ])
         ]),
         createVNode(StageCard, {
@@ -132541,7 +132545,7 @@ const _sfc_main$2l = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const OutpaintStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$2l, [["__scopeId", "data-v-05778c35"]]);
+const OutpaintStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$2m, [["__scopeId", "data-v-05778c35"]]);
 function newId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 }
@@ -132787,33 +132791,33 @@ function useStoryboardShots(node, state2) {
     onFilePicked
   };
 }
-const _hoisted_1$3R = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
-const _hoisted_2$2b = { class: "ctv:flex ctv:items-center ctv:gap-2" };
-const _hoisted_3$2b = { class: "ctv:text-[11px] ctv:font-semibold ctv:text-muted-foreground" };
-const _hoisted_4$1P = {
+const _hoisted_1$3S = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" };
+const _hoisted_2$2c = { class: "ctv:flex ctv:items-center ctv:gap-2" };
+const _hoisted_3$2c = { class: "ctv:text-[11px] ctv:font-semibold ctv:text-muted-foreground" };
+const _hoisted_4$1Q = {
   key: 0,
   class: "ctv:text-[11px] ctv:text-muted-foreground/60 ctv:p-3 ctv:text-center"
 };
-const _hoisted_5$1I = {
+const _hoisted_5$1J = {
   key: 1,
   class: "ctv:flex ctv:flex-col ctv:gap-1.5"
 };
-const _hoisted_6$1x = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-wrap" };
-const _hoisted_7$19 = { class: "ctv:text-[13px] ctv:font-bold ctv:text-base-foreground" };
-const _hoisted_8$Q = { class: "ctv:flex ctv:items-center ctv:gap-0.5 ctv:text-2xs ctv:text-muted-foreground" };
-const _hoisted_9$I = ["value", "onChange"];
-const _hoisted_10$B = {
+const _hoisted_6$1y = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-wrap" };
+const _hoisted_7$1a = { class: "ctv:text-[13px] ctv:font-bold ctv:text-base-foreground" };
+const _hoisted_8$R = { class: "ctv:flex ctv:items-center ctv:gap-0.5 ctv:text-2xs ctv:text-muted-foreground" };
+const _hoisted_9$J = ["value", "onChange"];
+const _hoisted_10$C = {
   key: 0,
   class: "ctv:py-px ctv:px-1.5 ctv:rounded-sm ctv:text-2xs ctv:bg-secondary-background ctv:text-base-foreground"
 };
-const _hoisted_11$w = {
+const _hoisted_11$x = {
   key: 1,
   class: "ctv:py-px ctv:px-1.5 ctv:rounded-sm ctv:text-2xs ctv:bg-success-background/15 ctv:text-success-background"
 };
-const _hoisted_12$q = { class: "ctv:flex ctv:flex-col ctv:gap-px ctv:ml-auto" };
-const _hoisted_13$n = ["disabled", "onClick", "title"];
-const _hoisted_14$l = ["disabled", "onClick", "title"];
-const _hoisted_15$i = ["disabled", "title", "onClick"];
+const _hoisted_12$r = { class: "ctv:flex ctv:flex-col ctv:gap-px ctv:ml-auto" };
+const _hoisted_13$o = ["disabled", "onClick", "title"];
+const _hoisted_14$m = ["disabled", "onClick", "title"];
+const _hoisted_15$j = ["disabled", "title", "onClick"];
 const _hoisted_16$f = { key: 0 };
 const _hoisted_17$e = {
   key: 1,
@@ -132822,8 +132826,8 @@ const _hoisted_17$e = {
 const _hoisted_18$d = ["title", "onClick"];
 const _hoisted_19$c = ["value", "placeholder", "onInput"];
 const _hoisted_20$b = { class: "ctv:flex ctv:gap-1.5" };
-const _hoisted_21$b = { class: "ctv:relative ctv:shrink-0 ctv:w-24 ctv:h-[72px] ctv:rounded ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle" };
-const _hoisted_22$b = ["src", "alt"];
+const _hoisted_21$a = { class: "ctv:relative ctv:shrink-0 ctv:w-24 ctv:h-[72px] ctv:rounded ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle" };
+const _hoisted_22$a = ["src", "alt"];
 const _hoisted_23$9 = {
   key: 1,
   class: "ctv:size-full ctv:flex ctv:items-center ctv:justify-center ctv:text-3xs ctv:text-white/35 ctv:text-center ctv:px-1"
@@ -132848,7 +132852,7 @@ const _hoisted_37$2 = ["open"];
 const _hoisted_38$2 = { class: "ctv:cursor-pointer ctv:opacity-75 ctv:select-none ctv:pb-1 ctv:hover:opacity-100" };
 const _hoisted_39$2 = ["value", "onInput"];
 const META_INPUT_BASE = "ctv:w-full ctv:box-border ctv:py-0.5 ctv:px-1.5 ctv:text-2xs ctv:leading-snug ctv:rounded-sm ctv:[font-family:inherit] ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-transparent ctv:hover:border-border-subtle ctv:focus:outline-none ctv:focus:border-primary-background/50 ctv:focus:bg-secondary-background-hover";
-const _sfc_main$2k = /* @__PURE__ */ defineComponent({
+const _sfc_main$2l = /* @__PURE__ */ defineComponent({
   __name: "StoryboardStageCard",
   props: {
     state: {},
@@ -132896,9 +132900,9 @@ const _sfc_main$2k = /* @__PURE__ */ defineComponent({
       return `${META_INPUT_BASE}${ml}${m}`;
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$3R, [
-        createBaseVNode("div", _hoisted_2$2b, [
-          createBaseVNode("span", _hoisted_3$2b, toDisplayString$1(_ctx.$t("storyboard.shots")) + " · " + toDisplayString$1(unref(shots).length), 1),
+      return openBlock(), createElementBlock("div", _hoisted_1$3S, [
+        createBaseVNode("div", _hoisted_2$2c, [
+          createBaseVNode("span", _hoisted_3$2c, toDisplayString$1(_ctx.$t("storyboard.shots")) + " · " + toDisplayString$1(unref(shots).length), 1),
           createBaseVNode("button", {
             type: "button",
             class: "ctv:ml-auto ctv:py-0.5 ctv:px-2.5 ctv:text-[11px] ctv:rounded ctv:cursor-pointer ctv:bg-primary-background/15 ctv:border ctv:border-primary-background/40 ctv:text-primary-background ctv:hover:bg-primary-background/25",
@@ -132906,15 +132910,15 @@ const _sfc_main$2k = /* @__PURE__ */ defineComponent({
             (...args) => unref(addShot) && unref(addShot)(...args))
           }, "+ " + toDisplayString$1(_ctx.$t("storyboard.addShot")), 1)
         ]),
-        unref(shots).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_4$1P, toDisplayString$1(_ctx.$t("storyboard.empty")), 1)) : (openBlock(), createElementBlock("div", _hoisted_5$1I, [
+        unref(shots).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_4$1Q, toDisplayString$1(_ctx.$t("storyboard.empty")), 1)) : (openBlock(), createElementBlock("div", _hoisted_5$1J, [
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(shots), (shot, idx) => {
             return openBlock(), createElementBlock("div", {
               key: shot.id,
               class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:p-2 ctv:rounded-md ctv:border ctv:border-border-subtle ctv:bg-base-foreground/5"
             }, [
-              createBaseVNode("header", _hoisted_6$1x, [
-                createBaseVNode("span", _hoisted_7$19, "#" + toDisplayString$1(idx + 1), 1),
-                createBaseVNode("label", _hoisted_8$Q, [
+              createBaseVNode("header", _hoisted_6$1y, [
+                createBaseVNode("span", _hoisted_7$1a, "#" + toDisplayString$1(idx + 1), 1),
+                createBaseVNode("label", _hoisted_8$R, [
                   createBaseVNode("input", {
                     type: "number",
                     min: "1",
@@ -132923,12 +132927,12 @@ const _sfc_main$2k = /* @__PURE__ */ defineComponent({
                     value: shot.duration,
                     class: "ctv:w-[38px] ctv:py-0.5 ctv:px-1 ctv:rounded-sm ctv:text-[11px] ctv:font-mono ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle",
                     onChange: (e) => unref(setDuration)(shot.id, Number(e.target.value))
-                  }, null, 40, _hoisted_9$I),
+                  }, null, 40, _hoisted_9$J),
                   _cache2[2] || (_cache2[2] = createBaseVNode("span", null, "s", -1))
                 ]),
-                shot.shot_size ? (openBlock(), createElementBlock("span", _hoisted_10$B, toDisplayString$1(shot.shot_size), 1)) : createCommentVNode("", true),
-                shot.character && shot.character !== "无" ? (openBlock(), createElementBlock("span", _hoisted_11$w, toDisplayString$1(shot.character), 1)) : createCommentVNode("", true),
-                createBaseVNode("div", _hoisted_12$q, [
+                shot.shot_size ? (openBlock(), createElementBlock("span", _hoisted_10$C, toDisplayString$1(shot.shot_size), 1)) : createCommentVNode("", true),
+                shot.character && shot.character !== "无" ? (openBlock(), createElementBlock("span", _hoisted_11$x, toDisplayString$1(shot.character), 1)) : createCommentVNode("", true),
+                createBaseVNode("div", _hoisted_12$r, [
                   createBaseVNode("button", {
                     type: "button",
                     class: normalizeClass(unref(moveBtn)),
@@ -132937,7 +132941,7 @@ const _sfc_main$2k = /* @__PURE__ */ defineComponent({
                     title: _ctx.$t("storyboard.moveUp")
                   }, [..._cache2[3] || (_cache2[3] = [
                     createBaseVNode("i", { class: "pi pi-chevron-up" }, null, -1)
-                  ])], 10, _hoisted_13$n),
+                  ])], 10, _hoisted_13$o),
                   createBaseVNode("button", {
                     type: "button",
                     class: normalizeClass(unref(moveBtn)),
@@ -132946,7 +132950,7 @@ const _sfc_main$2k = /* @__PURE__ */ defineComponent({
                     title: _ctx.$t("storyboard.moveDown")
                   }, [..._cache2[4] || (_cache2[4] = [
                     createBaseVNode("i", { class: "pi pi-chevron-down" }, null, -1)
-                  ])], 10, _hoisted_14$l)
+                  ])], 10, _hoisted_14$m)
                 ]),
                 createBaseVNode("button", {
                   type: "button",
@@ -132956,7 +132960,7 @@ const _sfc_main$2k = /* @__PURE__ */ defineComponent({
                   onClick: ($event) => unref(regenerateShot)(shot.id, idx + 1)
                 }, [
                   unref(regeneratingId) === shot.id ? (openBlock(), createElementBlock("span", _hoisted_16$f, "…")) : (openBlock(), createElementBlock("i", _hoisted_17$e))
-                ], 8, _hoisted_15$i),
+                ], 8, _hoisted_15$j),
                 createBaseVNode("button", {
                   type: "button",
                   class: "ctv:bg-transparent ctv:border-0 ctv:cursor-pointer ctv:text-[13px]",
@@ -132974,14 +132978,14 @@ const _sfc_main$2k = /* @__PURE__ */ defineComponent({
                 onInput: (e) => unref(setField)(shot.id, "scene_purpose", e.target.value)
               }, null, 40, _hoisted_19$c),
               createBaseVNode("div", _hoisted_20$b, [
-                createBaseVNode("div", _hoisted_21$b, [
+                createBaseVNode("div", _hoisted_21$a, [
                   shot.image_url ? (openBlock(), createElementBlock("img", {
                     key: 0,
                     src: shot.image_url,
                     alt: `shot ${idx + 1}`,
                     class: "ctv:size-full ctv:object-cover",
                     draggable: "false"
-                  }, null, 8, _hoisted_22$b)) : (openBlock(), createElementBlock("div", _hoisted_23$9, toDisplayString$1(_ctx.$t("storyboard.noRef")), 1)),
+                  }, null, 8, _hoisted_22$a)) : (openBlock(), createElementBlock("div", _hoisted_23$9, toDisplayString$1(_ctx.$t("storyboard.noRef")), 1)),
                   createBaseVNode("button", {
                     type: "button",
                     class: "ctv:absolute ctv:bottom-0.5 ctv:right-0.5 ctv:size-5 ctv:p-0 ctv:border-0 ctv:rounded ctv:cursor-pointer ctv:text-[11px] ctv:bg-black/60 ctv:text-white ctv:disabled:opacity-60",
@@ -133087,13 +133091,13 @@ const _sfc_main$2k = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$3Q = {
+const _hoisted_1$3R = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1z(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3Q, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3R, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -133111,13 +133115,13 @@ function render$1z(_ctx, _cache2) {
   ])]);
 }
 const IconBan = markRaw({ name: "lucide-ban", render: render$1z });
-const _hoisted_1$3P = {
+const _hoisted_1$3Q = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1y(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3P, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3Q, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -133135,13 +133139,13 @@ function render$1y(_ctx, _cache2) {
   ])]);
 }
 const IconCamera = markRaw({ name: "lucide-camera", render: render$1y });
-const _hoisted_1$3O = {
+const _hoisted_1$3P = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1x(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3O, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3P, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -133159,13 +133163,13 @@ function render$1x(_ctx, _cache2) {
   ])]);
 }
 const IconEye = markRaw({ name: "lucide-eye", render: render$1x });
-const _hoisted_1$3N = {
+const _hoisted_1$3O = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1w(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3N, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3O, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -133179,13 +133183,13 @@ function render$1w(_ctx, _cache2) {
   ])]);
 }
 const IconEyeOff = markRaw({ name: "lucide-eye-off", render: render$1w });
-const _hoisted_1$3M = {
+const _hoisted_1$3N = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1v(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3M, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3N, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -133205,13 +133209,13 @@ function render$1v(_ctx, _cache2) {
   ])]);
 }
 const IconVideo = markRaw({ name: "lucide-video", render: render$1v });
-const _hoisted_1$3L = {
+const _hoisted_1$3M = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1u(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3L, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3M, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -133223,13 +133227,13 @@ function render$1u(_ctx, _cache2) {
   ])]);
 }
 const IconLightbulb = markRaw({ name: "lucide-lightbulb", render: render$1u });
-const _hoisted_1$3K = {
+const _hoisted_1$3L = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1t(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3K, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3L, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -133243,13 +133247,13 @@ function render$1t(_ctx, _cache2) {
   ])]);
 }
 const IconMove3d = markRaw({ name: "lucide-move-3d", render: render$1t });
-const _hoisted_1$3J = {
+const _hoisted_1$3K = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1s(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3J, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3K, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -133267,13 +133271,13 @@ function render$1s(_ctx, _cache2) {
   ])]);
 }
 const IconPersonStanding = markRaw({ name: "lucide-person-standing", render: render$1s });
-const _hoisted_1$3I = {
+const _hoisted_1$3J = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1r(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3I, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3J, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -133287,13 +133291,13 @@ function render$1r(_ctx, _cache2) {
   ])]);
 }
 const IconRedo = markRaw({ name: "lucide-redo-2", render: render$1r });
-const _hoisted_1$3H = {
+const _hoisted_1$3I = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1q(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3H, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3I, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -133307,13 +133311,13 @@ function render$1q(_ctx, _cache2) {
   ])]);
 }
 const IconRotate3d = markRaw({ name: "lucide-rotate-3d", render: render$1q });
-const _hoisted_1$3G = {
+const _hoisted_1$3H = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1p(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3G, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3H, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -133336,13 +133340,13 @@ function render$1p(_ctx, _cache2) {
   ])]);
 }
 const IconScale3d = markRaw({ name: "lucide-scale-3d", render: render$1p });
-const _hoisted_1$3F = {
+const _hoisted_1$3G = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1o(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3F, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3G, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -133600,14 +133604,14 @@ function useScene3dTransformFields(getTransform, getHideScale, emitUpdate) {
   }
   return { fields, activeField, activeRow, round: round2, onTransformInput };
 }
-const _hoisted_1$3E = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
-const _hoisted_2$2a = { class: "ctv:flex ctv:h-7 ctv:items-center ctv:gap-0.5 ctv:rounded-lg ctv:bg-secondary-background ctv:p-0.5" };
-const _hoisted_3$2a = ["aria-pressed", "onClick"];
-const _hoisted_4$1O = { class: "ctv:flex ctv:items-center ctv:gap-2" };
-const _hoisted_5$1H = { class: "ctv:text-2xs ctv:uppercase ctv:text-muted-foreground" };
-const _hoisted_6$1w = ["step", "value", "onChange"];
+const _hoisted_1$3F = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
+const _hoisted_2$2b = { class: "ctv:flex ctv:h-7 ctv:items-center ctv:gap-0.5 ctv:rounded-lg ctv:bg-secondary-background ctv:p-0.5" };
+const _hoisted_3$2b = ["aria-pressed", "onClick"];
+const _hoisted_4$1P = { class: "ctv:flex ctv:items-center ctv:gap-2" };
+const _hoisted_5$1I = { class: "ctv:text-2xs ctv:uppercase ctv:text-muted-foreground" };
+const _hoisted_6$1x = ["step", "value", "onChange"];
 const fieldClass$2 = "ctv:w-full ctv:min-w-0 ctv:flex-1 ctv:rounded-lg ctv:border-0 ctv:bg-secondary-background ctv:px-2 ctv:py-1 ctv:text-xs ctv:text-base-foreground ctv:outline-none ctv:[font-family:inherit]";
-const _sfc_main$2j = /* @__PURE__ */ defineComponent({
+const _sfc_main$2k = /* @__PURE__ */ defineComponent({
   __name: "Scene3DTransformFields",
   props: {
     transform: {},
@@ -133625,8 +133629,8 @@ const _sfc_main$2j = /* @__PURE__ */ defineComponent({
       (next) => emit2("updateTransform", next)
     );
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$3E, [
-        createBaseVNode("div", _hoisted_2$2a, [
+      return openBlock(), createElementBlock("div", _hoisted_1$3F, [
+        createBaseVNode("div", _hoisted_2$2b, [
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(fields), (field) => {
             return openBlock(), createElementBlock("button", {
               key: field,
@@ -133634,23 +133638,23 @@ const _sfc_main$2j = /* @__PURE__ */ defineComponent({
               "aria-pressed": unref(activeField) === field,
               class: normalizeClass(segmentClass(unref(activeField) === field)),
               onClick: ($event) => activeField.value = field
-            }, toDisplayString$1(_ctx.$t(`scene3d.${field}`)), 11, _hoisted_3$2a);
+            }, toDisplayString$1(_ctx.$t(`scene3d.${field}`)), 11, _hoisted_3$2b);
           }), 128))
         ]),
-        createBaseVNode("div", _hoisted_4$1O, [
+        createBaseVNode("div", _hoisted_4$1P, [
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(TRANSFORM_AXES), (axis) => {
             return openBlock(), createElementBlock("label", {
               key: axis,
               class: "ctv:flex ctv:flex-1 ctv:min-w-0 ctv:items-center ctv:gap-1"
             }, [
-              createBaseVNode("span", _hoisted_5$1H, toDisplayString$1(axis), 1),
+              createBaseVNode("span", _hoisted_5$1I, toDisplayString$1(axis), 1),
               createBaseVNode("input", {
                 type: "number",
                 step: unref(activeRow).step,
                 value: unref(round2)(unref(activeRow).values[axis]),
                 class: normalizeClass(fieldClass$2),
                 onChange: ($event) => unref(onTransformInput)(unref(activeField), axis, $event)
-              }, null, 40, _hoisted_6$1w)
+              }, null, 40, _hoisted_6$1x)
             ]);
           }), 128))
         ])
@@ -133758,24 +133762,24 @@ function useScene3dCameraPanel(getCamera, getPresets, emit2) {
     resetTuning
   };
 }
-const _hoisted_1$3D = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:rounded-lg ctv:bg-node-background ctv:p-1.5 ctv:text-xs" };
-const _hoisted_2$29 = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
-const _hoisted_3$29 = { class: "ctv:shrink-0 ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_4$1N = ["aria-pressed", "title"];
-const _hoisted_5$1G = { class: "ctv:w-20 ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground" };
-const _hoisted_6$1v = { class: "ctv:w-12 ctv:shrink-0 ctv:text-right ctv:text-2xs ctv:text-muted-foreground" };
-const _hoisted_7$18 = { class: "ctv:flex ctv:items-center ctv:gap-2" };
-const _hoisted_8$P = { class: "ctv:w-20 ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground" };
-const _hoisted_9$H = { class: "ctv:text-2xs ctv:uppercase ctv:text-muted-foreground" };
-const _hoisted_10$A = ["value", "onChange"];
-const _hoisted_11$v = { class: "ctv:flex ctv:items-center ctv:gap-2" };
-const _hoisted_12$p = { class: "ctv:w-20 ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground" };
-const _hoisted_13$m = { class: "ctv:flex ctv:items-center ctv:gap-2" };
-const _hoisted_14$k = { class: "ctv:w-20 ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground" };
-const _hoisted_15$h = { class: "ctv:w-12 ctv:shrink-0 ctv:text-right ctv:text-2xs ctv:text-muted-foreground" };
+const _hoisted_1$3E = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:rounded-lg ctv:bg-node-background ctv:p-1.5 ctv:text-xs" };
+const _hoisted_2$2a = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
+const _hoisted_3$2a = { class: "ctv:shrink-0 ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_4$1O = ["aria-pressed", "title"];
+const _hoisted_5$1H = { class: "ctv:w-20 ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground" };
+const _hoisted_6$1w = { class: "ctv:w-12 ctv:shrink-0 ctv:text-right ctv:text-2xs ctv:text-muted-foreground" };
+const _hoisted_7$19 = { class: "ctv:flex ctv:items-center ctv:gap-2" };
+const _hoisted_8$Q = { class: "ctv:w-20 ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground" };
+const _hoisted_9$I = { class: "ctv:text-2xs ctv:uppercase ctv:text-muted-foreground" };
+const _hoisted_10$B = ["value", "onChange"];
+const _hoisted_11$w = { class: "ctv:flex ctv:items-center ctv:gap-2" };
+const _hoisted_12$q = { class: "ctv:w-20 ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground" };
+const _hoisted_13$n = { class: "ctv:flex ctv:items-center ctv:gap-2" };
+const _hoisted_14$l = { class: "ctv:w-20 ctv:shrink-0 ctv:text-2xs ctv:text-muted-foreground" };
+const _hoisted_15$i = { class: "ctv:w-12 ctv:shrink-0 ctv:text-right ctv:text-2xs ctv:text-muted-foreground" };
 const offsetFieldClass = "ctv:w-full ctv:min-w-0 ctv:flex-1 ctv:rounded-lg ctv:border-0 ctv:bg-secondary-background ctv:px-2 ctv:py-1 ctv:text-xs ctv:text-base-foreground ctv:outline-none ctv:[font-family:inherit]";
 const chipBtnClass$1 = "ctv:inline-flex ctv:items-center ctv:cursor-pointer ctv:[font-family:inherit] ctv:rounded-lg ctv:border ctv:border-border-subtle ctv:bg-secondary-background ctv:px-2 ctv:py-0.5 ctv:text-2xs ctv:text-muted-foreground ctv:transition-colors ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground";
-const _sfc_main$2i = /* @__PURE__ */ defineComponent({
+const _sfc_main$2j = /* @__PURE__ */ defineComponent({
   __name: "Scene3DCameraPanel",
   props: {
     camera: {},
@@ -133806,10 +133810,10 @@ const _sfc_main$2i = /* @__PURE__ */ defineComponent({
     }
     return (_ctx, _cache2) => {
       var _a2;
-      return openBlock(), createElementBlock("div", _hoisted_1$3D, [
-        createBaseVNode("div", _hoisted_2$29, [
-          createBaseVNode("span", _hoisted_3$29, toDisplayString$1(_ctx.$t("scene3d.cameraPreset")), 1),
-          createVNode(_sfc_main$3o, {
+      return openBlock(), createElementBlock("div", _hoisted_1$3E, [
+        createBaseVNode("div", _hoisted_2$2a, [
+          createBaseVNode("span", _hoisted_3$2a, toDisplayString$1(_ctx.$t("scene3d.cameraPreset")), 1),
+          createVNode(_sfc_main$3p, {
             class: "ctv:flex-1 ctv:min-w-0",
             "model-value": ((_a2 = __props.camera.preset) == null ? void 0 : _a2.presetId) ?? unref(FREE_PRESET_VALUE),
             options: unref(presetOptions),
@@ -133831,7 +133835,7 @@ const _sfc_main$2i = /* @__PURE__ */ defineComponent({
               key: 1,
               class: "ctv:size-3.5"
             }))
-          ], 10, _hoisted_4$1N)
+          ], 10, _hoisted_4$1O)
         ]),
         __props.camera.preset ? (openBlock(), createElementBlock(Fragment$1, { key: 0 }, [
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(tuningSliders), (control) => {
@@ -133839,8 +133843,8 @@ const _sfc_main$2i = /* @__PURE__ */ defineComponent({
               key: control.key,
               class: "ctv:flex ctv:items-center ctv:gap-2"
             }, [
-              createBaseVNode("span", _hoisted_5$1G, toDisplayString$1(control.label), 1),
-              createVNode(_sfc_main$38, {
+              createBaseVNode("span", _hoisted_5$1H, toDisplayString$1(control.label), 1),
+              createVNode(_sfc_main$39, {
                 class: "ctv:flex-1",
                 "model-value": control.value,
                 min: control.min,
@@ -133848,30 +133852,30 @@ const _sfc_main$2i = /* @__PURE__ */ defineComponent({
                 step: control.step,
                 "onUpdate:modelValue": control.update
               }, null, 8, ["model-value", "min", "max", "step", "onUpdate:modelValue"]),
-              createBaseVNode("span", _hoisted_6$1v, toDisplayString$1(control.format(control.value)), 1)
+              createBaseVNode("span", _hoisted_6$1w, toDisplayString$1(control.format(control.value)), 1)
             ]);
           }), 128)),
-          createBaseVNode("div", _hoisted_7$18, [
-            createBaseVNode("span", _hoisted_8$P, toDisplayString$1(_ctx.$t("scene3d.presetOffset")), 1),
+          createBaseVNode("div", _hoisted_7$19, [
+            createBaseVNode("span", _hoisted_8$Q, toDisplayString$1(_ctx.$t("scene3d.presetOffset")), 1),
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(OFFSET_AXES), (axis) => {
               return openBlock(), createElementBlock("label", {
                 key: axis,
                 class: "ctv:flex ctv:flex-1 ctv:min-w-0 ctv:items-center ctv:gap-1"
               }, [
-                createBaseVNode("span", _hoisted_9$H, toDisplayString$1(axis), 1),
+                createBaseVNode("span", _hoisted_9$I, toDisplayString$1(axis), 1),
                 createBaseVNode("input", {
                   type: "number",
                   step: "0.1",
                   value: unref(offsetValue)(axis),
                   class: normalizeClass(offsetFieldClass),
                   onChange: ($event) => unref(onOffsetInput)(axis, $event)
-                }, null, 40, _hoisted_10$A)
+                }, null, 40, _hoisted_10$B)
               ]);
             }), 128))
           ]),
-          createBaseVNode("div", _hoisted_11$v, [
-            createBaseVNode("span", _hoisted_12$p, toDisplayString$1(_ctx.$t("scene3d.presetReverse")), 1),
-            createVNode(_sfc_main$3m, {
+          createBaseVNode("div", _hoisted_11$w, [
+            createBaseVNode("span", _hoisted_12$q, toDisplayString$1(_ctx.$t("scene3d.presetReverse")), 1),
+            createVNode(_sfc_main$3n, {
               "model-value": __props.camera.preset.tuning.reverse ?? false,
               "onUpdate:modelValue": _cache2[1] || (_cache2[1] = (v) => emit2("updateTuning", { reverse: v }))
             }, null, 8, ["model-value"]),
@@ -133884,9 +133888,9 @@ const _sfc_main$2i = /* @__PURE__ */ defineComponent({
             }, toDisplayString$1(_ctx.$t("scene3d.resetTuning")), 1)
           ])
         ], 64)) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
-          createBaseVNode("label", _hoisted_13$m, [
-            createBaseVNode("span", _hoisted_14$k, toDisplayString$1(_ctx.$t("scene3d.cameraFov")), 1),
-            createVNode(_sfc_main$38, {
+          createBaseVNode("label", _hoisted_13$n, [
+            createBaseVNode("span", _hoisted_14$l, toDisplayString$1(_ctx.$t("scene3d.cameraFov")), 1),
+            createVNode(_sfc_main$39, {
               class: "ctv:flex-1",
               "model-value": __props.camera.fov,
               min: 10,
@@ -133894,9 +133898,9 @@ const _sfc_main$2i = /* @__PURE__ */ defineComponent({
               step: 1,
               "onUpdate:modelValue": _cache2[3] || (_cache2[3] = (v) => emit2("setFov", v))
             }, null, 8, ["model-value"]),
-            createBaseVNode("span", _hoisted_15$h, toDisplayString$1(Math.round(__props.camera.fov)) + "° ", 1)
+            createBaseVNode("span", _hoisted_15$i, toDisplayString$1(Math.round(__props.camera.fov)) + "° ", 1)
           ]),
-          createVNode(_sfc_main$2j, {
+          createVNode(_sfc_main$2k, {
             transform: unref(cameraTransform),
             "hide-scale": "",
             onUpdateTransform: _cache2[4] || (_cache2[4] = (t2) => emit2("updateTransform", t2))
@@ -133906,13 +133910,13 @@ const _sfc_main$2i = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$3C = {
+const _hoisted_1$3D = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1n(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3C, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3D, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -133926,26 +133930,26 @@ function render$1n(_ctx, _cache2) {
   ])]);
 }
 const IconScaling = markRaw({ name: "lucide-scaling", render: render$1n });
-const _hoisted_1$3B = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:rounded-lg ctv:bg-node-background ctv:p-1.5 ctv:text-xs" };
-const _hoisted_2$28 = { class: "ctv:flex ctv:min-w-0 ctv:items-center ctv:gap-1.5" };
-const _hoisted_3$28 = { class: "ctv:shrink-0 ctv:text-muted-foreground" };
-const _hoisted_4$1M = { class: "ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-x-3 ctv:gap-y-1.5" };
-const _hoisted_5$1F = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
-const _hoisted_6$1u = { class: "ctv:text-muted-foreground" };
-const _hoisted_7$17 = ["value"];
-const _hoisted_8$O = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
-const _hoisted_9$G = { class: "ctv:text-muted-foreground" };
-const _hoisted_10$z = ["value"];
-const _hoisted_11$u = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
-const _hoisted_12$o = { class: "ctv:text-muted-foreground" };
-const _hoisted_13$l = {
+const _hoisted_1$3C = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:rounded-lg ctv:bg-node-background ctv:p-1.5 ctv:text-xs" };
+const _hoisted_2$29 = { class: "ctv:flex ctv:min-w-0 ctv:items-center ctv:gap-1.5" };
+const _hoisted_3$29 = { class: "ctv:shrink-0 ctv:text-muted-foreground" };
+const _hoisted_4$1N = { class: "ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-x-3 ctv:gap-y-1.5" };
+const _hoisted_5$1G = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
+const _hoisted_6$1v = { class: "ctv:text-muted-foreground" };
+const _hoisted_7$18 = ["value"];
+const _hoisted_8$P = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
+const _hoisted_9$H = { class: "ctv:text-muted-foreground" };
+const _hoisted_10$A = ["value"];
+const _hoisted_11$v = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
+const _hoisted_12$p = { class: "ctv:text-muted-foreground" };
+const _hoisted_13$m = {
   key: 0,
   class: "ctv:flex ctv:justify-end"
 };
-const _hoisted_14$j = ["title"];
+const _hoisted_14$k = ["title"];
 const narrowFieldClass$1 = "ctv:w-14 ctv:flex-none ctv:rounded-lg ctv:border-0 ctv:bg-secondary-background ctv:px-2 ctv:py-1 ctv:text-xs ctv:text-base-foreground ctv:outline-none ctv:[font-family:inherit]";
 const chipBtnClass = "ctv:inline-flex ctv:items-center ctv:cursor-pointer ctv:[font-family:inherit] ctv:rounded-lg ctv:border ctv:border-border-subtle ctv:bg-secondary-background ctv:px-2 ctv:py-0.5 ctv:text-2xs ctv:text-muted-foreground ctv:transition-colors ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground";
-const _sfc_main$2h = /* @__PURE__ */ defineComponent({
+const _sfc_main$2i = /* @__PURE__ */ defineComponent({
   __name: "Scene3DCharacterPanel",
   props: {
     character: {},
@@ -133961,19 +133965,19 @@ const _sfc_main$2h = /* @__PURE__ */ defineComponent({
       emit2("updateAnimation", { [field]: value });
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$3B, [
-        createBaseVNode("label", _hoisted_2$28, [
-          createBaseVNode("span", _hoisted_3$28, toDisplayString$1(_ctx.$t("scene3d.animationClip")), 1),
-          createVNode(_sfc_main$3o, {
+      return openBlock(), createElementBlock("div", _hoisted_1$3C, [
+        createBaseVNode("label", _hoisted_2$29, [
+          createBaseVNode("span", _hoisted_3$29, toDisplayString$1(_ctx.$t("scene3d.animationClip")), 1),
+          createVNode(_sfc_main$3p, {
             class: "ctv:flex-1 ctv:min-w-0",
             "model-value": __props.character.animation.clip,
             options: __props.clipNames,
             "onUpdate:modelValue": _cache2[0] || (_cache2[0] = (v) => emit2("updateAnimation", { clip: String(v) }))
           }, null, 8, ["model-value", "options"])
         ]),
-        createBaseVNode("div", _hoisted_4$1M, [
-          createBaseVNode("label", _hoisted_5$1F, [
-            createBaseVNode("span", _hoisted_6$1u, toDisplayString$1(_ctx.$t("scene3d.speed")), 1),
+        createBaseVNode("div", _hoisted_4$1N, [
+          createBaseVNode("label", _hoisted_5$1G, [
+            createBaseVNode("span", _hoisted_6$1v, toDisplayString$1(_ctx.$t("scene3d.speed")), 1),
             createBaseVNode("input", {
               type: "number",
               min: "0.01",
@@ -133981,31 +133985,31 @@ const _sfc_main$2h = /* @__PURE__ */ defineComponent({
               value: __props.character.animation.speed,
               class: normalizeClass(narrowFieldClass$1),
               onChange: _cache2[1] || (_cache2[1] = ($event) => onAnimationNumber("speed", $event))
-            }, null, 40, _hoisted_7$17)
+            }, null, 40, _hoisted_7$18)
           ]),
-          createBaseVNode("label", _hoisted_8$O, [
-            createBaseVNode("span", _hoisted_9$G, toDisplayString$1(_ctx.$t("scene3d.startOffset")), 1),
+          createBaseVNode("label", _hoisted_8$P, [
+            createBaseVNode("span", _hoisted_9$H, toDisplayString$1(_ctx.$t("scene3d.startOffset")), 1),
             createBaseVNode("input", {
               type: "number",
               step: "0.1",
               value: __props.character.animation.startOffset,
               class: normalizeClass(narrowFieldClass$1),
               onChange: _cache2[2] || (_cache2[2] = ($event) => onAnimationNumber("startOffset", $event))
-            }, null, 40, _hoisted_10$z)
+            }, null, 40, _hoisted_10$A)
           ]),
-          createBaseVNode("label", _hoisted_11$u, [
-            createBaseVNode("span", _hoisted_12$o, toDisplayString$1(_ctx.$t("scene3d.loop")), 1),
-            createVNode(_sfc_main$3m, {
+          createBaseVNode("label", _hoisted_11$v, [
+            createBaseVNode("span", _hoisted_12$p, toDisplayString$1(_ctx.$t("scene3d.loop")), 1),
+            createVNode(_sfc_main$3n, {
               "model-value": __props.character.animation.loop,
               "onUpdate:modelValue": _cache2[3] || (_cache2[3] = (v) => emit2("updateAnimation", { loop: v }))
             }, null, 8, ["model-value"])
           ])
         ]),
-        createVNode(_sfc_main$2j, {
+        createVNode(_sfc_main$2k, {
           transform: __props.character.transform,
           onUpdateTransform: _cache2[4] || (_cache2[4] = ($event) => emit2("updateTransform", $event))
         }, null, 8, ["transform"]),
-        __props.fittable ? (openBlock(), createElementBlock("div", _hoisted_13$l, [
+        __props.fittable ? (openBlock(), createElementBlock("div", _hoisted_13$m, [
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(chipBtnClass),
@@ -134014,7 +134018,7 @@ const _sfc_main$2h = /* @__PURE__ */ defineComponent({
           }, [
             createVNode(unref(IconScaling), { class: "ctv:mr-1 ctv:size-3" }),
             createTextVNode(" " + toDisplayString$1(_ctx.$t("scene3d.fitToScene")), 1)
-          ], 8, _hoisted_14$j)
+          ], 8, _hoisted_14$k)
         ])) : createCommentVNode("", true)
       ]);
     };
@@ -134064,27 +134068,27 @@ function useScene3dLightPanel(getLight, emitUpdate) {
     onVectorInput
   };
 }
-const _hoisted_1$3A = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:rounded-lg ctv:bg-node-background ctv:p-1.5 ctv:text-xs" };
-const _hoisted_2$27 = { class: "ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-x-3 ctv:gap-y-1.5" };
-const _hoisted_3$27 = { class: "ctv:shrink-0 ctv:text-muted-foreground" };
-const _hoisted_4$1L = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
-const _hoisted_5$1E = { class: "ctv:text-muted-foreground" };
-const _hoisted_6$1t = ["value"];
-const _hoisted_7$16 = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
-const _hoisted_8$N = { class: "ctv:text-muted-foreground" };
-const _hoisted_9$F = ["value"];
-const _hoisted_10$y = {
+const _hoisted_1$3B = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:rounded-lg ctv:bg-node-background ctv:p-1.5 ctv:text-xs" };
+const _hoisted_2$28 = { class: "ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-x-3 ctv:gap-y-1.5" };
+const _hoisted_3$28 = { class: "ctv:shrink-0 ctv:text-muted-foreground" };
+const _hoisted_4$1M = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
+const _hoisted_5$1F = { class: "ctv:text-muted-foreground" };
+const _hoisted_6$1u = ["value"];
+const _hoisted_7$17 = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
+const _hoisted_8$O = { class: "ctv:text-muted-foreground" };
+const _hoisted_9$G = ["value"];
+const _hoisted_10$z = {
   key: 0,
   class: "ctv:flex ctv:items-center ctv:gap-1.5"
 };
-const _hoisted_11$t = { class: "ctv:text-muted-foreground" };
-const _hoisted_12$n = ["value"];
-const _hoisted_13$k = { class: "ctv:flex ctv:items-center ctv:gap-2" };
-const _hoisted_14$i = {
+const _hoisted_11$u = { class: "ctv:text-muted-foreground" };
+const _hoisted_12$o = ["value"];
+const _hoisted_13$l = { class: "ctv:flex ctv:items-center ctv:gap-2" };
+const _hoisted_14$j = {
   key: 0,
   class: "ctv:flex ctv:h-7 ctv:shrink-0 ctv:items-center ctv:gap-0.5 ctv:rounded-lg ctv:bg-secondary-background ctv:p-0.5"
 };
-const _hoisted_15$g = ["aria-pressed", "onClick"];
+const _hoisted_15$h = ["aria-pressed", "onClick"];
 const _hoisted_16$e = {
   key: 1,
   class: "ctv:w-14 ctv:shrink-0 ctv:text-muted-foreground"
@@ -134096,14 +134100,14 @@ const _hoisted_19$b = {
   class: "ctv:flex ctv:items-center ctv:gap-2"
 };
 const _hoisted_20$a = { class: "ctv:flex ctv:flex-1 ctv:items-center ctv:gap-1.5" };
-const _hoisted_21$a = { class: "ctv:text-muted-foreground" };
-const _hoisted_22$a = ["value"];
+const _hoisted_21$9 = { class: "ctv:text-muted-foreground" };
+const _hoisted_22$9 = ["value"];
 const _hoisted_23$8 = { class: "ctv:flex ctv:flex-1 ctv:items-center ctv:gap-1.5" };
 const _hoisted_24$7 = { class: "ctv:text-muted-foreground" };
 const _hoisted_25$7 = ["value"];
 const fieldClass$1 = "ctv:w-full ctv:min-w-0 ctv:flex-1 ctv:rounded-lg ctv:border-0 ctv:bg-secondary-background ctv:px-2 ctv:py-1 ctv:text-xs ctv:text-base-foreground ctv:outline-none ctv:[font-family:inherit]";
 const narrowFieldClass = "ctv:w-14 ctv:flex-none ctv:rounded-lg ctv:border-0 ctv:bg-secondary-background ctv:px-2 ctv:py-1 ctv:text-xs ctv:text-base-foreground ctv:outline-none ctv:[font-family:inherit]";
-const _sfc_main$2g = /* @__PURE__ */ defineComponent({
+const _sfc_main$2h = /* @__PURE__ */ defineComponent({
   __name: "Scene3DLightPanel",
   props: {
     light: {}
@@ -134126,21 +134130,21 @@ const _sfc_main$2g = /* @__PURE__ */ defineComponent({
       (patch) => emit2("updateLight", patch)
     );
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$3A, [
-        createBaseVNode("div", _hoisted_2$27, [
-          createBaseVNode("span", _hoisted_3$27, toDisplayString$1(_ctx.$t(`scene3d.${__props.light.type}`)), 1),
-          createBaseVNode("label", _hoisted_4$1L, [
-            createBaseVNode("span", _hoisted_5$1E, toDisplayString$1(_ctx.$t("scene3d.color")), 1),
+      return openBlock(), createElementBlock("div", _hoisted_1$3B, [
+        createBaseVNode("div", _hoisted_2$28, [
+          createBaseVNode("span", _hoisted_3$28, toDisplayString$1(_ctx.$t(`scene3d.${__props.light.type}`)), 1),
+          createBaseVNode("label", _hoisted_4$1M, [
+            createBaseVNode("span", _hoisted_5$1F, toDisplayString$1(_ctx.$t("scene3d.color")), 1),
             createBaseVNode("input", {
               type: "color",
               value: __props.light.color,
               class: "ctv:h-6 ctv:w-8 ctv:cursor-pointer ctv:rounded-md ctv:border-0 ctv:bg-transparent ctv:p-0",
               onInput: _cache2[0] || (_cache2[0] = //@ts-ignore
               (...args) => unref(onColorInput) && unref(onColorInput)(...args))
-            }, null, 40, _hoisted_6$1t)
+            }, null, 40, _hoisted_6$1u)
           ]),
-          createBaseVNode("label", _hoisted_7$16, [
-            createBaseVNode("span", _hoisted_8$N, toDisplayString$1(_ctx.$t("scene3d.intensity")), 1),
+          createBaseVNode("label", _hoisted_7$17, [
+            createBaseVNode("span", _hoisted_8$O, toDisplayString$1(_ctx.$t("scene3d.intensity")), 1),
             createBaseVNode("input", {
               type: "number",
               min: "0",
@@ -134148,10 +134152,10 @@ const _sfc_main$2g = /* @__PURE__ */ defineComponent({
               value: __props.light.intensity,
               class: normalizeClass(narrowFieldClass),
               onChange: _cache2[1] || (_cache2[1] = ($event) => unref(onNumber)("intensity", $event))
-            }, null, 40, _hoisted_9$F)
+            }, null, 40, _hoisted_9$G)
           ]),
-          __props.light.type !== "directional" ? (openBlock(), createElementBlock("label", _hoisted_10$y, [
-            createBaseVNode("span", _hoisted_11$t, toDisplayString$1(_ctx.$t("scene3d.range")), 1),
+          __props.light.type !== "directional" ? (openBlock(), createElementBlock("label", _hoisted_10$z, [
+            createBaseVNode("span", _hoisted_11$u, toDisplayString$1(_ctx.$t("scene3d.range")), 1),
             createBaseVNode("input", {
               type: "number",
               min: "0",
@@ -134159,11 +134163,11 @@ const _sfc_main$2g = /* @__PURE__ */ defineComponent({
               value: __props.light.range ?? 0,
               class: normalizeClass(narrowFieldClass),
               onChange: _cache2[2] || (_cache2[2] = ($event) => unref(onNumber)("range", $event))
-            }, null, 40, _hoisted_12$n)
+            }, null, 40, _hoisted_12$o)
           ])) : createCommentVNode("", true)
         ]),
-        createBaseVNode("div", _hoisted_13$k, [
-          __props.light.target ? (openBlock(), createElementBlock("div", _hoisted_14$i, [
+        createBaseVNode("div", _hoisted_13$l, [
+          __props.light.target ? (openBlock(), createElementBlock("div", _hoisted_14$j, [
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(LIGHT_VECTOR_FIELDS), (field) => {
               return openBlock(), createElementBlock("button", {
                 key: field,
@@ -134171,7 +134175,7 @@ const _sfc_main$2g = /* @__PURE__ */ defineComponent({
                 "aria-pressed": unref(activeVector) === field,
                 class: normalizeClass(segmentClass(unref(activeVector) === field)),
                 onClick: ($event) => activeVector.value = field
-              }, toDisplayString$1(_ctx.$t(`scene3d.${field}`)), 11, _hoisted_15$g);
+              }, toDisplayString$1(_ctx.$t(`scene3d.${field}`)), 11, _hoisted_15$h);
             }), 128))
           ])) : (openBlock(), createElementBlock("span", _hoisted_16$e, toDisplayString$1(_ctx.$t("scene3d.position")), 1)),
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(LIGHT_AXES), (axis) => {
@@ -134192,7 +134196,7 @@ const _sfc_main$2g = /* @__PURE__ */ defineComponent({
         ]),
         __props.light.type === "spot" ? (openBlock(), createElementBlock("div", _hoisted_19$b, [
           createBaseVNode("label", _hoisted_20$a, [
-            createBaseVNode("span", _hoisted_21$a, toDisplayString$1(_ctx.$t("scene3d.innerCone")), 1),
+            createBaseVNode("span", _hoisted_21$9, toDisplayString$1(_ctx.$t("scene3d.innerCone")), 1),
             createBaseVNode("input", {
               type: "number",
               min: "0",
@@ -134201,7 +134205,7 @@ const _sfc_main$2g = /* @__PURE__ */ defineComponent({
               value: __props.light.innerConeAngle ?? 30,
               class: normalizeClass(fieldClass$1),
               onChange: _cache2[3] || (_cache2[3] = ($event) => unref(onNumber)("innerConeAngle", $event))
-            }, null, 40, _hoisted_22$a)
+            }, null, 40, _hoisted_22$9)
           ]),
           createBaseVNode("label", _hoisted_23$8, [
             createBaseVNode("span", _hoisted_24$7, toDisplayString$1(_ctx.$t("scene3d.outerCone")), 1),
@@ -134220,13 +134224,13 @@ const _sfc_main$2g = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$3z = ["value", "placeholder", "onKeydown"];
-const _hoisted_2$26 = ["title"];
-const _hoisted_3$26 = ["title"];
-const _hoisted_4$1K = ["title"];
+const _hoisted_1$3A = ["value", "placeholder", "onKeydown"];
+const _hoisted_2$27 = ["title"];
+const _hoisted_3$27 = ["title"];
+const _hoisted_4$1L = ["title"];
 const chipClass = "ctv:flex ctv:shrink-0 ctv:cursor-pointer ctv:items-center ctv:justify-center ctv:rounded-full ctv:opacity-55 ctv:transition-opacity ctv:hover:opacity-100";
 const inputClass = "ctv:w-full ctv:min-w-0 ctv:rounded-md ctv:border-0 ctv:bg-secondary-background ctv:px-1.5 ctv:py-1 ctv:text-2xs ctv:text-base-foreground ctv:outline-none ctv:ring-1 ctv:ring-node-component-border ctv:[font-family:inherit]";
-const _sfc_main$2f = /* @__PURE__ */ defineComponent({
+const _sfc_main$2g = /* @__PURE__ */ defineComponent({
   __name: "Scene3DOutlinerRow",
   props: {
     label: {},
@@ -134282,7 +134286,7 @@ const _sfc_main$2f = /* @__PURE__ */ defineComponent({
         ],
         onBlur: commitEdit,
         onInput: _cache2[3] || (_cache2[3] = ($event) => draft.value = $event.target.value)
-      }, null, 40, _hoisted_1$3z)) : (openBlock(), createElementBlock("button", {
+      }, null, 40, _hoisted_1$3A)) : (openBlock(), createElementBlock("button", {
         key: 1,
         type: "button",
         class: normalizeClass(itemClass.value),
@@ -134298,7 +134302,7 @@ const _sfc_main$2f = /* @__PURE__ */ defineComponent({
         createBaseVNode("span", {
           class: normalizeClass(["ctv:flex-1 ctv:truncate ctv:text-left", __props.hidden ? "ctv:line-through ctv:opacity-50" : ""]),
           title: _ctx.$t("scene3d.renameHint")
-        }, toDisplayString$1(__props.label), 11, _hoisted_2$26),
+        }, toDisplayString$1(__props.label), 11, _hoisted_2$27),
         renderSlot(_ctx.$slots, "badge"),
         createBaseVNode("span", {
           class: normalizeClass(chipClass),
@@ -134312,7 +134316,7 @@ const _sfc_main$2f = /* @__PURE__ */ defineComponent({
             key: 1,
             class: "ctv:size-3"
           }))
-        ], 8, _hoisted_3$26),
+        ], 8, _hoisted_3$27),
         __props.removable && __props.selected ? (openBlock(), createElementBlock("span", {
           key: 1,
           class: normalizeClass(chipClass),
@@ -134320,7 +134324,7 @@ const _sfc_main$2f = /* @__PURE__ */ defineComponent({
           onClick: _cache2[5] || (_cache2[5] = withModifiers(($event) => emit2("remove"), ["stop"]))
         }, [
           createVNode(unref(IconX), { class: "ctv:size-3" })
-        ], 8, _hoisted_4$1K)) : createCommentVNode("", true)
+        ], 8, _hoisted_4$1L)) : createCommentVNode("", true)
       ], 34));
     };
   }
@@ -134668,25 +134672,25 @@ class ChannelRenderer {
     this.depthPixels = null;
   }
 }
-const _hoisted_1$3y = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:rounded-lg ctv:bg-node-background ctv:p-1.5 ctv:text-xs" };
-const _hoisted_2$25 = { class: "ctv:flex ctv:items-center ctv:gap-2" };
-const _hoisted_3$25 = { class: "ctv:flex ctv:flex-1 ctv:items-center ctv:gap-1.5" };
-const _hoisted_4$1J = { class: "ctv:shrink-0 ctv:text-muted-foreground" };
-const _hoisted_5$1D = { class: "ctv:flex ctv:flex-1 ctv:items-center ctv:gap-1.5" };
-const _hoisted_6$1s = { class: "ctv:shrink-0 ctv:text-muted-foreground" };
-const _hoisted_7$15 = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
-const _hoisted_8$M = { class: "ctv:shrink-0 ctv:text-muted-foreground" };
-const _hoisted_9$E = {
+const _hoisted_1$3z = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:rounded-lg ctv:bg-node-background ctv:p-1.5 ctv:text-xs" };
+const _hoisted_2$26 = { class: "ctv:flex ctv:items-center ctv:gap-2" };
+const _hoisted_3$26 = { class: "ctv:flex ctv:flex-1 ctv:items-center ctv:gap-1.5" };
+const _hoisted_4$1K = { class: "ctv:shrink-0 ctv:text-muted-foreground" };
+const _hoisted_5$1E = { class: "ctv:flex ctv:flex-1 ctv:items-center ctv:gap-1.5" };
+const _hoisted_6$1t = { class: "ctv:shrink-0 ctv:text-muted-foreground" };
+const _hoisted_7$16 = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
+const _hoisted_8$N = { class: "ctv:shrink-0 ctv:text-muted-foreground" };
+const _hoisted_9$F = {
   key: 0,
   class: "ctv:flex ctv:items-center ctv:gap-1.5"
 };
-const _hoisted_10$x = { class: "ctv:shrink-0 ctv:text-muted-foreground" };
-const _hoisted_11$s = { class: "ctv:flex ctv:items-center ctv:gap-2" };
-const _hoisted_12$m = { class: "ctv:flex ctv:flex-1 ctv:items-center ctv:gap-1.5" };
-const _hoisted_13$j = { class: "ctv:shrink-0 ctv:text-muted-foreground" };
-const _hoisted_14$h = { class: "ctv:flex ctv:flex-1 ctv:items-center ctv:gap-1.5" };
-const _hoisted_15$f = { class: "ctv:shrink-0 ctv:text-muted-foreground" };
-const _sfc_main$2e = /* @__PURE__ */ defineComponent({
+const _hoisted_10$y = { class: "ctv:shrink-0 ctv:text-muted-foreground" };
+const _hoisted_11$t = { class: "ctv:flex ctv:items-center ctv:gap-2" };
+const _hoisted_12$n = { class: "ctv:flex ctv:flex-1 ctv:items-center ctv:gap-1.5" };
+const _hoisted_13$k = { class: "ctv:shrink-0 ctv:text-muted-foreground" };
+const _hoisted_14$i = { class: "ctv:flex ctv:flex-1 ctv:items-center ctv:gap-1.5" };
+const _hoisted_15$g = { class: "ctv:shrink-0 ctv:text-muted-foreground" };
+const _sfc_main$2f = /* @__PURE__ */ defineComponent({
   __name: "Scene3DOutputPanel",
   props: {
     width: {},
@@ -134708,11 +134712,11 @@ const _sfc_main$2e = /* @__PURE__ */ defineComponent({
       }))
     );
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$3y, [
-        createBaseVNode("div", _hoisted_2$25, [
-          createBaseVNode("label", _hoisted_3$25, [
-            createBaseVNode("span", _hoisted_4$1J, toDisplayString$1(_ctx.$t("scene3d.width")), 1),
-            createVNode(_sfc_main$3n, {
+      return openBlock(), createElementBlock("div", _hoisted_1$3z, [
+        createBaseVNode("div", _hoisted_2$26, [
+          createBaseVNode("label", _hoisted_3$26, [
+            createBaseVNode("span", _hoisted_4$1K, toDisplayString$1(_ctx.$t("scene3d.width")), 1),
+            createVNode(_sfc_main$3o, {
               class: "ctv:flex-1 ctv:min-w-0",
               "model-value": __props.width,
               min: 64,
@@ -134723,9 +134727,9 @@ const _sfc_main$2e = /* @__PURE__ */ defineComponent({
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = (v) => emit2("setSize", v, null))
             }, null, 8, ["model-value"])
           ]),
-          createBaseVNode("label", _hoisted_5$1D, [
-            createBaseVNode("span", _hoisted_6$1s, toDisplayString$1(_ctx.$t("scene3d.height")), 1),
-            createVNode(_sfc_main$3n, {
+          createBaseVNode("label", _hoisted_5$1E, [
+            createBaseVNode("span", _hoisted_6$1t, toDisplayString$1(_ctx.$t("scene3d.height")), 1),
+            createVNode(_sfc_main$3o, {
               class: "ctv:flex-1 ctv:min-w-0",
               "model-value": __props.height,
               min: 64,
@@ -134737,28 +134741,28 @@ const _sfc_main$2e = /* @__PURE__ */ defineComponent({
             }, null, 8, ["model-value"])
           ])
         ]),
-        createBaseVNode("label", _hoisted_7$15, [
-          createBaseVNode("span", _hoisted_8$M, toDisplayString$1(_ctx.$t("scene3d.channel")), 1),
-          createVNode(_sfc_main$3o, {
+        createBaseVNode("label", _hoisted_7$16, [
+          createBaseVNode("span", _hoisted_8$N, toDisplayString$1(_ctx.$t("scene3d.channel")), 1),
+          createVNode(_sfc_main$3p, {
             class: "ctv:flex-1 ctv:min-w-0",
             "model-value": __props.channel,
             options: channelOptions.value,
             "onUpdate:modelValue": _cache2[2] || (_cache2[2] = (v) => emit2("setChannel", String(v)))
           }, null, 8, ["model-value", "options"])
         ]),
-        __props.cameras.length > 1 ? (openBlock(), createElementBlock("label", _hoisted_9$E, [
-          createBaseVNode("span", _hoisted_10$x, toDisplayString$1(_ctx.$t("scene3d.outputCamera")), 1),
-          createVNode(_sfc_main$3o, {
+        __props.cameras.length > 1 ? (openBlock(), createElementBlock("label", _hoisted_9$F, [
+          createBaseVNode("span", _hoisted_10$y, toDisplayString$1(_ctx.$t("scene3d.outputCamera")), 1),
+          createVNode(_sfc_main$3p, {
             class: "ctv:flex-1 ctv:min-w-0",
             "model-value": __props.cameraId,
             options: __props.cameras,
             "onUpdate:modelValue": _cache2[3] || (_cache2[3] = (v) => emit2("setCamera", String(v)))
           }, null, 8, ["model-value", "options"])
         ])) : createCommentVNode("", true),
-        createBaseVNode("div", _hoisted_11$s, [
-          createBaseVNode("label", _hoisted_12$m, [
-            createBaseVNode("span", _hoisted_13$j, toDisplayString$1(_ctx.$t("scene3d.fps")), 1),
-            createVNode(_sfc_main$3n, {
+        createBaseVNode("div", _hoisted_11$t, [
+          createBaseVNode("label", _hoisted_12$n, [
+            createBaseVNode("span", _hoisted_13$k, toDisplayString$1(_ctx.$t("scene3d.fps")), 1),
+            createVNode(_sfc_main$3o, {
               class: "ctv:flex-1 ctv:min-w-0",
               "model-value": __props.fps,
               min: 1,
@@ -134769,9 +134773,9 @@ const _sfc_main$2e = /* @__PURE__ */ defineComponent({
               "onUpdate:modelValue": _cache2[4] || (_cache2[4] = (v) => emit2("setFps", v))
             }, null, 8, ["model-value"])
           ]),
-          createBaseVNode("label", _hoisted_14$h, [
-            createBaseVNode("span", _hoisted_15$f, toDisplayString$1(_ctx.$t("scene3d.frameCount")), 1),
-            createVNode(_sfc_main$3n, {
+          createBaseVNode("label", _hoisted_14$i, [
+            createBaseVNode("span", _hoisted_15$g, toDisplayString$1(_ctx.$t("scene3d.frameCount")), 1),
+            createVNode(_sfc_main$3o, {
               class: "ctv:flex-1 ctv:min-w-0",
               "model-value": __props.frameCount,
               min: 0,
@@ -134787,13 +134791,13 @@ const _sfc_main$2e = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$3x = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:rounded-lg ctv:bg-node-background ctv:p-1.5 ctv:text-xs" };
-const _hoisted_2$24 = { class: "ctv:flex ctv:items-center ctv:gap-2" };
-const _hoisted_3$24 = { class: "ctv:w-14 ctv:shrink-0 ctv:text-muted-foreground" };
-const _hoisted_4$1I = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
-const _hoisted_5$1C = { class: "ctv:text-muted-foreground" };
-const _hoisted_6$1r = ["value"];
-const _sfc_main$2d = /* @__PURE__ */ defineComponent({
+const _hoisted_1$3y = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:rounded-lg ctv:bg-node-background ctv:p-1.5 ctv:text-xs" };
+const _hoisted_2$25 = { class: "ctv:flex ctv:items-center ctv:gap-2" };
+const _hoisted_3$25 = { class: "ctv:w-14 ctv:shrink-0 ctv:text-muted-foreground" };
+const _hoisted_4$1J = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
+const _hoisted_5$1D = { class: "ctv:text-muted-foreground" };
+const _hoisted_6$1s = ["value"];
+const _sfc_main$2e = /* @__PURE__ */ defineComponent({
   __name: "Scene3DPrimitivePanel",
   props: {
     primitive: {}
@@ -134805,20 +134809,20 @@ const _sfc_main$2d = /* @__PURE__ */ defineComponent({
       emit2("updateColor", event.target.value);
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$3x, [
-        createBaseVNode("div", _hoisted_2$24, [
-          createBaseVNode("span", _hoisted_3$24, toDisplayString$1(_ctx.$t(`scene3d.${__props.primitive.shape}`)), 1),
-          createBaseVNode("label", _hoisted_4$1I, [
-            createBaseVNode("span", _hoisted_5$1C, toDisplayString$1(_ctx.$t("scene3d.color")), 1),
+      return openBlock(), createElementBlock("div", _hoisted_1$3y, [
+        createBaseVNode("div", _hoisted_2$25, [
+          createBaseVNode("span", _hoisted_3$25, toDisplayString$1(_ctx.$t(`scene3d.${__props.primitive.shape}`)), 1),
+          createBaseVNode("label", _hoisted_4$1J, [
+            createBaseVNode("span", _hoisted_5$1D, toDisplayString$1(_ctx.$t("scene3d.color")), 1),
             createBaseVNode("input", {
               type: "color",
               value: __props.primitive.color,
               class: "ctv:h-6 ctv:w-8 ctv:cursor-pointer ctv:rounded-md ctv:border-0 ctv:bg-transparent ctv:p-0",
               onInput: onColorInput
-            }, null, 40, _hoisted_6$1r)
+            }, null, 40, _hoisted_6$1s)
           ])
         ]),
-        createVNode(_sfc_main$2j, {
+        createVNode(_sfc_main$2k, {
           transform: __props.primitive.transform,
           onUpdateTransform: _cache2[0] || (_cache2[0] = ($event) => emit2("updateTransform", $event))
         }, null, 8, ["transform"])
@@ -134826,13 +134830,13 @@ const _sfc_main$2d = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$3w = {
+const _hoisted_1$3x = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1m(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3w, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3x, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -134858,13 +134862,13 @@ function render$1m(_ctx, _cache2) {
   ])]);
 }
 const IconPause = markRaw({ name: "lucide-pause", render: render$1m });
-const _hoisted_1$3v = {
+const _hoisted_1$3w = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1l(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3v, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3w, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -134879,13 +134883,13 @@ function render$1l(_ctx, _cache2) {
   ])]);
 }
 const IconRepeat = markRaw({ name: "lucide-repeat", render: render$1l });
-const _hoisted_1$3u = {
+const _hoisted_1$3v = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1k(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3u, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3v, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -136795,19 +136799,19 @@ class Scene3dTimelineTracks {
 function clampSpeed(speed) {
   return Math.max(0.1, Math.min(10, Math.round(speed * 100) / 100));
 }
-const _hoisted_1$3t = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
-const _hoisted_2$23 = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
-const _hoisted_3$23 = ["aria-label"];
-const _hoisted_4$1H = ["aria-label", "title"];
-const _hoisted_5$1B = { class: "ctv:min-w-14 ctv:text-2xs ctv:text-muted-foreground" };
-const _hoisted_6$1q = { class: "ctv:flex ctv:w-full" };
-const _hoisted_7$14 = ["title", "onClick"];
-const _hoisted_8$L = { class: "ctv:truncate" };
+const _hoisted_1$3u = { class: "ctv:flex ctv:flex-col ctv:gap-1" };
+const _hoisted_2$24 = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
+const _hoisted_3$24 = ["aria-label"];
+const _hoisted_4$1I = ["aria-label", "title"];
+const _hoisted_5$1C = { class: "ctv:min-w-14 ctv:text-2xs ctv:text-muted-foreground" };
+const _hoisted_6$1r = { class: "ctv:flex ctv:w-full" };
+const _hoisted_7$15 = ["title", "onClick"];
+const _hoisted_8$M = { class: "ctv:truncate" };
 const MAX_VISIBLE_ROWS = 4;
 const HEADER_HEIGHT = 22;
 const ROW_STRIDE = 24;
 const LABEL_WIDTH = 92;
-const _sfc_main$2c = /* @__PURE__ */ defineComponent({
+const _sfc_main$2d = /* @__PURE__ */ defineComponent({
   __name: "Scene3DTimelineTracks",
   props: /* @__PURE__ */ mergeModels({
     data: {},
@@ -136888,8 +136892,8 @@ const _sfc_main$2c = /* @__PURE__ */ defineComponent({
       widget = null;
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$3t, [
-        createBaseVNode("div", _hoisted_2$23, [
+      return openBlock(), createElementBlock("div", _hoisted_1$3u, [
+        createBaseVNode("div", _hoisted_2$24, [
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(iconBtnClass2(false)),
@@ -136903,7 +136907,7 @@ const _sfc_main$2c = /* @__PURE__ */ defineComponent({
               key: 1,
               class: "ctv:size-3.5"
             }))
-          ], 10, _hoisted_3$23),
+          ], 10, _hoisted_3$24),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(iconBtnClass2(loop.value)),
@@ -136912,11 +136916,11 @@ const _sfc_main$2c = /* @__PURE__ */ defineComponent({
             onClick: _cache2[1] || (_cache2[1] = ($event) => loop.value = !loop.value)
           }, [
             createVNode(unref(IconRepeat), { class: "ctv:size-3.5" })
-          ], 10, _hoisted_4$1H),
-          createBaseVNode("span", _hoisted_5$1B, toDisplayString$1(__props.frame) + " / " + toDisplayString$1(totalFrames.value), 1),
+          ], 10, _hoisted_4$1I),
+          createBaseVNode("span", _hoisted_5$1C, toDisplayString$1(__props.frame) + " / " + toDisplayString$1(totalFrames.value), 1),
           _cache2[5] || (_cache2[5] = createBaseVNode("div", { class: "ctv:flex-1" }, null, -1)),
           createVNode(unref(IconZoomIn), { class: "ctv:size-3 ctv:shrink-0 ctv:text-muted-foreground" }),
-          createVNode(_sfc_main$38, {
+          createVNode(_sfc_main$39, {
             class: "ctv:flex-none",
             style: { "width": "88px" },
             "hide-value": "",
@@ -136927,7 +136931,7 @@ const _sfc_main$2c = /* @__PURE__ */ defineComponent({
             "onUpdate:modelValue": _cache2[2] || (_cache2[2] = (v) => zoomExp.value = v)
           }, null, 8, ["model-value"])
         ]),
-        createBaseVNode("div", _hoisted_6$1q, [
+        createBaseVNode("div", _hoisted_6$1r, [
           createBaseVNode("div", {
             class: "ctv:shrink-0 ctv:overflow-hidden",
             style: normalizeStyle({ width: `${LABEL_WIDTH}px`, height: `${containerHeight.value}px` })
@@ -136953,8 +136957,8 @@ const _sfc_main$2c = /* @__PURE__ */ defineComponent({
                     class: "ctv:size-2 ctv:shrink-0 ctv:rounded-full",
                     style: normalizeStyle({ backgroundColor: entry.color })
                   }, null, 4),
-                  createBaseVNode("span", _hoisted_8$L, toDisplayString$1(entry.label), 1)
-                ], 14, _hoisted_7$14);
+                  createBaseVNode("span", _hoisted_8$M, toDisplayString$1(entry.label), 1)
+                ], 14, _hoisted_7$15);
               }), 128))
             ], 512)
           ], 4),
@@ -145710,28 +145714,28 @@ function useScene3dPanels(stage2) {
     onBackgroundInput
   };
 }
-const _hoisted_1$3s = { class: "ctv:flex ctv:h-8 ctv:shrink-0 ctv:items-center ctv:gap-2" };
-const _hoisted_2$22 = ["title"];
-const _hoisted_3$22 = ["aria-pressed", "title", "disabled", "onClick"];
-const _hoisted_4$1G = ["disabled", "title"];
-const _hoisted_5$1A = ["disabled", "title"];
-const _hoisted_6$1p = ["disabled"];
-const _hoisted_7$13 = ["disabled", "title"];
-const _hoisted_8$K = ["title"];
-const _hoisted_9$D = { class: "ctv:flex ctv:min-h-0 ctv:flex-1 ctv:gap-1" };
-const _hoisted_10$w = { class: "ctv:flex-1" };
-const _hoisted_11$r = ["aria-label"];
-const _hoisted_12$l = ["value"];
-const _hoisted_13$i = { class: "ctv:flex-1" };
-const _hoisted_14$g = ["aria-label"];
-const _hoisted_15$e = ["value"];
+const _hoisted_1$3t = { class: "ctv:flex ctv:h-8 ctv:shrink-0 ctv:items-center ctv:gap-2" };
+const _hoisted_2$23 = ["title"];
+const _hoisted_3$23 = ["aria-pressed", "title", "disabled", "onClick"];
+const _hoisted_4$1H = ["disabled", "title"];
+const _hoisted_5$1B = ["disabled", "title"];
+const _hoisted_6$1q = ["disabled"];
+const _hoisted_7$14 = ["disabled", "title"];
+const _hoisted_8$L = ["title"];
+const _hoisted_9$E = { class: "ctv:flex ctv:min-h-0 ctv:flex-1 ctv:gap-1" };
+const _hoisted_10$x = { class: "ctv:flex-1" };
+const _hoisted_11$s = ["aria-label"];
+const _hoisted_12$m = ["value"];
+const _hoisted_13$j = { class: "ctv:flex-1" };
+const _hoisted_14$h = ["aria-label"];
+const _hoisted_15$f = ["value"];
 const _hoisted_16$d = { class: "ctv:flex-1" };
 const _hoisted_17$c = ["aria-label"];
 const _hoisted_18$b = ["value"];
 const _hoisted_19$a = { class: "ctv:flex-1" };
 const _hoisted_20$9 = ["aria-label", "title"];
-const _hoisted_21$9 = ["value"];
-const _hoisted_22$9 = ["aria-label"];
+const _hoisted_21$8 = ["value"];
+const _hoisted_22$8 = ["aria-label"];
 const _hoisted_23$7 = ["value"];
 const _hoisted_24$6 = { class: "ctv:flex-1" };
 const _hoisted_25$6 = ["aria-label"];
@@ -145763,7 +145767,7 @@ const iconToolBtnClass$1 = "ctv:inline-flex ctv:size-7 ctv:shrink-0 ctv:cursor-p
 const groupHeaderClass = "ctv:flex ctv:items-center ctv:gap-1 ctv:pt-1 ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground";
 const inspectorHeaderClass = "ctv:px-1 ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground";
 const addSelectClass = "ctv:h-5 ctv:max-w-16 ctv:shrink-0 ctv:cursor-pointer ctv:rounded-md ctv:border-0 ctv:bg-secondary-background ctv:px-1 ctv:text-2xs ctv:text-muted-foreground ctv:outline-none ctv:[font-family:inherit] ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground";
-const _sfc_main$2b = /* @__PURE__ */ defineComponent({
+const _sfc_main$2c = /* @__PURE__ */ defineComponent({
   __name: "Scene3DStageCard",
   props: {
     state: {},
@@ -145901,7 +145905,7 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
           onContextmenu: _cache2[30] || (_cache2[30] = withModifiers(() => {
           }, ["stop", "prevent"]))
         }, [
-          createBaseVNode("div", _hoisted_1$3s, [
+          createBaseVNode("div", _hoisted_1$3t, [
             createBaseVNode("div", {
               class: normalizeClass(["ctv:flex ctv:h-7 ctv:items-center ctv:gap-0.5 ctv:rounded-lg ctv:bg-secondary-background ctv:p-0.5", unref(allGizmoDisabled) ? "ctv:opacity-40" : ""]),
               title: unref(gizmoDisabledHint)
@@ -145918,9 +145922,9 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
                 }, [
                   (openBlock(), createBlock(resolveDynamicComponent(option.icon), { class: "ctv:size-3.5" })),
                   createTextVNode(" " + toDisplayString$1(_ctx.$t(option.labelKey)), 1)
-                ], 10, _hoisted_3$22);
+                ], 10, _hoisted_3$23);
               }), 64))
-            ], 10, _hoisted_2$22),
+            ], 10, _hoisted_2$23),
             _cache2[31] || (_cache2[31] = createBaseVNode("div", { class: "ctv:h-5 ctv:w-px ctv:bg-border-subtle" }, null, -1)),
             createBaseVNode("button", {
               type: "button",
@@ -145931,7 +145935,7 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
               (...args) => unref(undo2) && unref(undo2)(...args))
             }, [
               createVNode(unref(IconUndo), { class: "ctv:size-4" })
-            ], 8, _hoisted_4$1G),
+            ], 8, _hoisted_4$1H),
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(historyBtnClass),
@@ -145941,7 +145945,7 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
               (...args) => unref(redo2) && unref(redo2)(...args))
             }, [
               createVNode(unref(IconRedo), { class: "ctv:size-4" })
-            ], 8, _hoisted_5$1A),
+            ], 8, _hoisted_5$1B),
             _cache2[32] || (_cache2[32] = createBaseVNode("div", { class: "ctv:h-5 ctv:w-px ctv:bg-border-subtle" }, null, -1)),
             createBaseVNode("button", {
               type: "button",
@@ -145958,7 +145962,7 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
                 class: "ctv:size-3.5"
               })),
               createTextVNode(" " + toDisplayString$1(_ctx.$t("scene3d.capture")), 1)
-            ], 8, _hoisted_6$1p),
+            ], 8, _hoisted_6$1q),
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(actionBtnClass$1),
@@ -145975,7 +145979,7 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
                 class: "ctv:size-3.5"
               })),
               createTextVNode(" " + toDisplayString$1(unref(recording) ? unref(recordingLabel) : _ctx.$t("scene3d.record")), 1)
-            ], 8, _hoisted_7$13),
+            ], 8, _hoisted_7$14),
             _cache2[33] || (_cache2[33] = createBaseVNode("div", { class: "ctv:flex-1" }, null, -1)),
             createBaseVNode("button", {
               type: "button",
@@ -145991,9 +145995,9 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
                 key: 1,
                 class: "ctv:size-4"
               }))
-            ], 8, _hoisted_8$K)
+            ], 8, _hoisted_8$L)
           ]),
-          createBaseVNode("div", _hoisted_9$D, [
+          createBaseVNode("div", _hoisted_9$E, [
             createBaseVNode("div", {
               class: "ctv-scroll-thin ctv:flex ctv:w-44 ctv:shrink-0 ctv:flex-col ctv:gap-1 ctv:overflow-y-auto ctv:rounded-lg ctv:bg-node-background ctv:p-1.5",
               onWheel: _cache2[11] || (_cache2[11] = withModifiers(() => {
@@ -146002,7 +146006,7 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
               createBaseVNode("div", {
                 class: normalizeClass(groupHeaderClass)
               }, [
-                createBaseVNode("span", _hoisted_10$w, toDisplayString$1(_ctx.$t("scene3d.addCharacter")), 1),
+                createBaseVNode("span", _hoisted_10$x, toDisplayString$1(_ctx.$t("scene3d.addCharacter")), 1),
                 unref(availableModels).length > 0 ? (openBlock(), createElementBlock("select", {
                   key: 0,
                   value: "",
@@ -146019,12 +146023,12 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
                     return openBlock(), createElementBlock("option", {
                       key: model.id,
                       value: model.id
-                    }, toDisplayString$1(model.name), 9, _hoisted_12$l);
+                    }, toDisplayString$1(model.name), 9, _hoisted_12$m);
                   }), 128))
-                ], 40, _hoisted_11$r)) : createCommentVNode("", true)
+                ], 40, _hoisted_11$s)) : createCommentVNode("", true)
               ]),
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(state2).characters, (character, index) => {
-                return openBlock(), createBlock(_sfc_main$2f, {
+                return openBlock(), createBlock(_sfc_main$2g, {
                   key: character.id,
                   label: unref(characterDisplayLabel)(character),
                   name: character.name ?? "",
@@ -146045,7 +146049,7 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
               createBaseVNode("div", {
                 class: normalizeClass(groupHeaderClass)
               }, [
-                createBaseVNode("span", _hoisted_13$i, toDisplayString$1(_ctx.$t("scene3d.addObject")), 1),
+                createBaseVNode("span", _hoisted_13$j, toDisplayString$1(_ctx.$t("scene3d.addObject")), 1),
                 createBaseVNode("select", {
                   value: "",
                   class: normalizeClass(addSelectClass),
@@ -146061,12 +146065,12 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
                     return openBlock(), createElementBlock("option", {
                       key: shape,
                       value: shape
-                    }, toDisplayString$1(_ctx.$t(`scene3d.${shape}`)), 9, _hoisted_15$e);
+                    }, toDisplayString$1(_ctx.$t(`scene3d.${shape}`)), 9, _hoisted_15$f);
                   }), 128))
-                ], 40, _hoisted_14$g)
+                ], 40, _hoisted_14$h)
               ]),
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(state2).primitives, (primitive) => {
-                return openBlock(), createBlock(_sfc_main$2f, {
+                return openBlock(), createBlock(_sfc_main$2g, {
                   key: primitive.id,
                   label: unref(primitiveDisplayLabel)(primitive),
                   name: primitive.name ?? "",
@@ -146105,7 +146109,7 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
                   ], 40, _hoisted_17$c)) : createCommentVNode("", true)
                 ]),
                 (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(state2).models, (model, index) => {
-                  return openBlock(), createBlock(_sfc_main$2f, {
+                  return openBlock(), createBlock(_sfc_main$2g, {
                     key: model.id,
                     label: model.name || model.id,
                     name: model.name,
@@ -146144,7 +146148,7 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
                     return openBlock(), createElementBlock("option", {
                       key: preset2,
                       value: preset2
-                    }, toDisplayString$1(_ctx.$t(`scene3d.preset_${preset2}`)), 9, _hoisted_21$9);
+                    }, toDisplayString$1(_ctx.$t(`scene3d.preset_${preset2}`)), 9, _hoisted_21$8);
                   }), 128))
                 ], 40, _hoisted_20$9),
                 createBaseVNode("select", {
@@ -146164,10 +146168,10 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
                       value: type
                     }, toDisplayString$1(_ctx.$t(`scene3d.${type}`)), 9, _hoisted_23$7);
                   }), 128))
-                ], 40, _hoisted_22$9)
+                ], 40, _hoisted_22$8)
               ]),
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(state2).lights, (light) => {
-                return openBlock(), createBlock(_sfc_main$2f, {
+                return openBlock(), createBlock(_sfc_main$2g, {
                   key: light.id,
                   label: unref(lightDisplayLabel)(light),
                   name: light.name ?? "",
@@ -146200,7 +146204,7 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
                 }, "+", 8, _hoisted_25$6)
               ]),
               (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(state2).cameras, (cameraEntry, index) => {
-                return openBlock(), createBlock(_sfc_main$2f, {
+                return openBlock(), createBlock(_sfc_main$2g, {
                   key: cameraEntry.id,
                   label: unref(cameraDisplayLabel)(cameraEntry),
                   name: cameraEntry.name ?? "",
@@ -146237,7 +146241,7 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
               onMouseleave: _cache2[16] || (_cache2[16] = //@ts-ignore
               (...args) => unref(handleMouseLeave) && unref(handleMouseLeave)(...args))
             }, [
-              createVNode(_sfc_main$32, { "init-scene": unref(initScene) }, null, 8, ["init-scene"]),
+              createVNode(_sfc_main$33, { "init-scene": unref(initScene) }, null, 8, ["init-scene"]),
               unref(lookThroughId) ? (openBlock(), createElementBlock("button", {
                 key: 0,
                 type: "button",
@@ -146275,22 +146279,22 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
               createBaseVNode("span", {
                 class: normalizeClass(inspectorHeaderClass)
               }, toDisplayString$1(unref(objectsSummary)), 1),
-              unref(selectedCharacter) ? (openBlock(), createBlock(_sfc_main$2h, {
+              unref(selectedCharacter) ? (openBlock(), createBlock(_sfc_main$2i, {
                 key: 0,
                 character: unref(selectedCharacter),
                 "clip-names": unref(clipNamesForSelected),
                 onUpdateAnimation: unref(updateSelectedAnimation),
                 onUpdateTransform: unref(updateSelectedTransform)
-              }, null, 8, ["character", "clip-names", "onUpdateAnimation", "onUpdateTransform"])) : unref(selectedPrimitive) ? (openBlock(), createBlock(_sfc_main$2d, {
+              }, null, 8, ["character", "clip-names", "onUpdateAnimation", "onUpdateTransform"])) : unref(selectedPrimitive) ? (openBlock(), createBlock(_sfc_main$2e, {
                 key: 1,
                 primitive: unref(selectedPrimitive),
                 onUpdateColor: _cache2[17] || (_cache2[17] = (color) => unref(updateSelectedPrimitive)({ color })),
                 onUpdateTransform: unref(updateSelectedTransform)
-              }, null, 8, ["primitive", "onUpdateTransform"])) : unref(selectedLight) ? (openBlock(), createBlock(_sfc_main$2g, {
+              }, null, 8, ["primitive", "onUpdateTransform"])) : unref(selectedLight) ? (openBlock(), createBlock(_sfc_main$2h, {
                 key: 2,
                 light: unref(selectedLight),
                 onUpdateLight: unref(updateSelectedLight)
-              }, null, 8, ["light", "onUpdateLight"])) : unref(selectedModel) ? (openBlock(), createBlock(_sfc_main$2h, {
+              }, null, 8, ["light", "onUpdateLight"])) : unref(selectedModel) ? (openBlock(), createBlock(_sfc_main$2i, {
                 key: 3,
                 character: unref(selectedModel),
                 "clip-names": unref(clipNamesForSelected),
@@ -146298,7 +146302,7 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
                 onUpdateAnimation: unref(updateSelectedAnimation),
                 onUpdateTransform: unref(updateSelectedTransform),
                 onFit: unref(fitSelectedModel)
-              }, null, 8, ["character", "clip-names", "onUpdateAnimation", "onUpdateTransform", "onFit"])) : unref(selectedCamera) ? (openBlock(), createBlock(_sfc_main$2i, {
+              }, null, 8, ["character", "clip-names", "onUpdateAnimation", "onUpdateTransform", "onFit"])) : unref(selectedCamera) ? (openBlock(), createBlock(_sfc_main$2j, {
                 key: 4,
                 camera: unref(selectedCamera),
                 presets: unref(cameraPresets),
@@ -146316,21 +146320,21 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
               createBaseVNode("div", _hoisted_31$3, [
                 createBaseVNode("label", _hoisted_32$3, [
                   createBaseVNode("span", _hoisted_33$2, toDisplayString$1(_ctx.$t("scene3d.showGrid")), 1),
-                  createVNode(_sfc_main$3m, {
+                  createVNode(_sfc_main$3n, {
                     "model-value": unref(state2).environment.showGrid,
                     "onUpdate:modelValue": _cache2[22] || (_cache2[22] = (v) => unref(updateEnvironment)({ showGrid: v }))
                   }, null, 8, ["model-value"])
                 ]),
                 createBaseVNode("label", _hoisted_34$2, [
                   createBaseVNode("span", _hoisted_35$2, toDisplayString$1(_ctx.$t("scene3d.showRoom")), 1),
-                  createVNode(_sfc_main$3m, {
+                  createVNode(_sfc_main$3n, {
                     "model-value": unref(state2).environment.showRoom,
                     "onUpdate:modelValue": _cache2[23] || (_cache2[23] = (v) => unref(updateEnvironment)({ showRoom: v }))
                   }, null, 8, ["model-value"])
                 ]),
                 createBaseVNode("label", _hoisted_36$1, [
                   createBaseVNode("span", _hoisted_37$1, toDisplayString$1(_ctx.$t("scene3d.background")), 1),
-                  createVNode(_sfc_main$3m, {
+                  createVNode(_sfc_main$3n, {
                     "model-value": unref(state2).environment.background !== "",
                     "onUpdate:modelValue": _cache2[24] || (_cache2[24] = (v) => unref(updateEnvironment)({ background: v ? "#222222" : "" }))
                   }, null, 8, ["model-value"]),
@@ -146348,7 +146352,7 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
               createBaseVNode("span", {
                 class: normalizeClass(inspectorHeaderClass)
               }, toDisplayString$1(_ctx.$t("scene3d.sectionOutput")), 1),
-              createVNode(_sfc_main$2e, {
+              createVNode(_sfc_main$2f, {
                 width: unref(outputWidth),
                 height: unref(outputHeight),
                 channel: unref(channel),
@@ -146365,7 +146369,7 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
             ], 32)
           ]),
           unref(timelineData) && (unref(timelineData).cameras.length > 0 || unref(timelineData).characters.length > 0) ? (openBlock(), createElementBlock("div", _hoisted_39$1, [
-            createVNode(_sfc_main$2c, {
+            createVNode(_sfc_main$2d, {
               loop: unref(timelineLoop),
               "onUpdate:loop": _cache2[27] || (_cache2[27] = ($event) => /* @__PURE__ */ isRef(timelineLoop) ? timelineLoop.value = $event : null),
               data: unref(timelineData),
@@ -160249,12 +160253,12 @@ function useTextEditPopup(editor, textareaEl) {
     onFontChange
   };
 }
-const _hoisted_1$3r = {
+const _hoisted_1$3s = {
   key: 0,
   class: "ctv:absolute ctv:inset-0 ctv:z-10 ctv:flex ctv:items-center ctv:justify-center ctv:pointer-events-none ctv:border-2 ctv:border-dashed ctv:border-primary-background ctv:bg-primary-background/10 ctv:text-sm ctv:text-primary-background"
 };
 const floatBtnClass = "ctv:inline-flex ctv:h-6 ctv:items-center ctv:rounded-md ctv:border-0 ctv:bg-secondary-background ctv:px-2 ctv:text-2xs ctv:text-base-foreground ctv:cursor-pointer ctv:[font-family:inherit] ctv:transition-colors ctv:hover:bg-secondary-background-hover";
-const _sfc_main$2a = /* @__PURE__ */ defineComponent({
+const _sfc_main$2b = /* @__PURE__ */ defineComponent({
   __name: "LayerEditorCanvas",
   props: {
     editor: {}
@@ -160374,7 +160378,7 @@ const _sfc_main$2a = /* @__PURE__ */ defineComponent({
         ], 4), [
           [vShow, unref(brushCursorVisible)]
         ]),
-        unref(drop).dragActive.value ? (openBlock(), createElementBlock("div", _hoisted_1$3r, toDisplayString$1(_ctx.$t("pictor.dropHint")), 1)) : createCommentVNode("", true),
+        unref(drop).dragActive.value ? (openBlock(), createElementBlock("div", _hoisted_1$3s, toDisplayString$1(_ctx.$t("pictor.dropHint")), 1)) : createCommentVNode("", true),
         unref(editor).floating.value ? (openBlock(), createElementBlock("div", {
           key: 1,
           class: "ctv:absolute ctv:top-2 ctv:left-1/2 ctv:z-20 ctv:flex ctv:-translate-x-1/2 ctv:items-center ctv:gap-1 ctv:rounded-lg ctv:border ctv:border-border-subtle ctv:bg-base-background/95 ctv:p-1 ctv:text-2xs ctv:shadow-lg",
@@ -160401,13 +160405,13 @@ const _sfc_main$2a = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$3q = {
+const _hoisted_1$3r = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1j(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3q, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3r, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -160421,13 +160425,13 @@ function render$1j(_ctx, _cache2) {
   ])]);
 }
 const IconBrush = markRaw({ name: "lucide-brush", render: render$1j });
-const _hoisted_1$3p = {
+const _hoisted_1$3q = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1i(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3p, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3q, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("circle", {
       cx: "12",
       cy: "12",
@@ -160441,13 +160445,13 @@ function render$1i(_ctx, _cache2) {
   ])]);
 }
 const IconCircle = markRaw({ name: "lucide-circle", render: render$1i });
-const _hoisted_1$3o = {
+const _hoisted_1$3p = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1h(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3o, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3p, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -160459,13 +160463,13 @@ function render$1h(_ctx, _cache2) {
   ])]);
 }
 const IconEraser = markRaw({ name: "lucide-eraser", render: render$1h });
-const _hoisted_1$3n = {
+const _hoisted_1$3o = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1g(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3n, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3o, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -160479,13 +160483,13 @@ function render$1g(_ctx, _cache2) {
   ])]);
 }
 const IconFileDown = markRaw({ name: "lucide-file-down", render: render$1g });
-const _hoisted_1$3m = {
+const _hoisted_1$3n = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1f(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3m, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3n, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -160499,13 +160503,13 @@ function render$1f(_ctx, _cache2) {
   ])]);
 }
 const IconFileUp = markRaw({ name: "lucide-file-up", render: render$1f });
-const _hoisted_1$3l = {
+const _hoisted_1$3m = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1e(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3l, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3m, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -160525,13 +160529,13 @@ function render$1e(_ctx, _cache2) {
   ])]);
 }
 const IconGrid3x3 = markRaw({ name: "lucide-grid-3x3", render: render$1e });
-const _hoisted_1$3k = {
+const _hoisted_1$3l = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1d(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3k, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3l, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -160543,13 +160547,13 @@ function render$1d(_ctx, _cache2) {
   ])]);
 }
 const IconHexagon = markRaw({ name: "lucide-hexagon", render: render$1d });
-const _hoisted_1$3j = {
+const _hoisted_1$3k = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1c(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3j, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3k, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -160561,13 +160565,13 @@ function render$1c(_ctx, _cache2) {
   ])]);
 }
 const IconMinus = markRaw({ name: "lucide-minus", render: render$1c });
-const _hoisted_1$3i = {
+const _hoisted_1$3j = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1b(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3i, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3j, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -160579,13 +160583,13 @@ function render$1b(_ctx, _cache2) {
   ])]);
 }
 const IconCircleDashed = markRaw({ name: "lucide-circle-dashed", render: render$1b });
-const _hoisted_1$3h = {
+const _hoisted_1$3i = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$1a(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3h, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3i, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -160603,13 +160607,13 @@ function render$1a(_ctx, _cache2) {
   ])]);
 }
 const IconLasso = markRaw({ name: "lucide-lasso", render: render$1a });
-const _hoisted_1$3g = {
+const _hoisted_1$3h = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$19(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3g, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3h, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -160621,13 +160625,13 @@ function render$19(_ctx, _cache2) {
   ])]);
 }
 const IconMousePointer = markRaw({ name: "lucide-mouse-pointer-2", render: render$19 });
-const _hoisted_1$3f = {
+const _hoisted_1$3g = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$18(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3f, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3g, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -160639,13 +160643,13 @@ function render$18(_ctx, _cache2) {
   ])]);
 }
 const IconWandSparkles = markRaw({ name: "lucide-wand-sparkles", render: render$18 });
-const _hoisted_1$3e = {
+const _hoisted_1$3f = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$17(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3e, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3f, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -160657,13 +160661,13 @@ function render$17(_ctx, _cache2) {
   ])]);
 }
 const IconScan = markRaw({ name: "lucide-scan", render: render$17 });
-const _hoisted_1$3d = {
+const _hoisted_1$3e = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$16(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3d, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3e, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -160688,13 +160692,13 @@ function render$16(_ctx, _cache2) {
   ])]);
 }
 const IconShapes = markRaw({ name: "lucide-shapes", render: render$16 });
-const _hoisted_1$3c = {
+const _hoisted_1$3d = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$15(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3c, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3d, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -160706,13 +160710,13 @@ function render$15(_ctx, _cache2) {
   ])]);
 }
 const IconShell = markRaw({ name: "lucide-shell", render: render$15 });
-const _hoisted_1$3b = {
+const _hoisted_1$3c = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$14(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3b, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3c, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -160735,13 +160739,13 @@ function render$14(_ctx, _cache2) {
   ])]);
 }
 const IconSpline = markRaw({ name: "lucide-spline", render: render$14 });
-const _hoisted_1$3a = {
+const _hoisted_1$3b = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$13(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$3a, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3b, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("rect", {
       width: "18",
       height: "18",
@@ -160757,13 +160761,13 @@ function render$13(_ctx, _cache2) {
   ])]);
 }
 const IconSquare = markRaw({ name: "lucide-square", render: render$13 });
-const _hoisted_1$39 = {
+const _hoisted_1$3a = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$12(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$39, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$3a, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -160775,13 +160779,13 @@ function render$12(_ctx, _cache2) {
   ])]);
 }
 const IconStar = markRaw({ name: "lucide-star", render: render$12 });
-const _hoisted_1$38 = {
+const _hoisted_1$39 = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$11(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$38, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$39, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -160793,13 +160797,13 @@ function render$11(_ctx, _cache2) {
   ])]);
 }
 const IconSquareDashed = markRaw({ name: "lucide-square-dashed", render: render$11 });
-const _hoisted_1$37 = {
+const _hoisted_1$38 = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$10(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$37, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$38, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -160811,28 +160815,28 @@ function render$10(_ctx, _cache2) {
   ])]);
 }
 const IconType = markRaw({ name: "lucide-type", render: render$10 });
-const _hoisted_1$36 = { class: "ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1 ctv:text-[#d6d6d6]" };
-const _hoisted_2$21 = { class: "ctv:whitespace-nowrap" };
-const _hoisted_3$21 = { class: "ctv:flex ctv:h-6 ctv:items-center ctv:gap-0.5 ctv:rounded ctv:bg-[#1e1e1e] ctv:p-0.5" };
-const _hoisted_4$1F = ["aria-pressed", "onClick"];
-const _hoisted_5$1z = { class: "ctv:w-7 ctv:text-right ctv:font-mono" };
-const _hoisted_6$1o = { class: "ctv:flex ctv:h-6 ctv:items-center ctv:gap-0.5 ctv:rounded ctv:bg-[#1e1e1e] ctv:p-0.5" };
-const _hoisted_7$12 = ["aria-pressed", "title", "onClick"];
-const _hoisted_8$J = { class: "ctv:flex ctv:h-6 ctv:items-center ctv:gap-0.5 ctv:rounded ctv:bg-[#1e1e1e] ctv:p-0.5" };
-const _hoisted_9$C = ["aria-pressed"];
-const _hoisted_10$v = ["aria-pressed"];
-const _hoisted_11$q = { class: "ctv:w-5 ctv:text-right ctv:font-mono" };
-const _hoisted_12$k = { class: "ctv:w-7 ctv:text-right ctv:font-mono" };
-const _hoisted_13$h = { class: "ctv:w-5 ctv:text-right ctv:font-mono" };
-const _hoisted_14$f = ["disabled"];
-const _hoisted_15$d = ["disabled"];
+const _hoisted_1$37 = { class: "ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1 ctv:text-[#d6d6d6]" };
+const _hoisted_2$22 = { class: "ctv:whitespace-nowrap" };
+const _hoisted_3$22 = { class: "ctv:flex ctv:h-6 ctv:items-center ctv:gap-0.5 ctv:rounded ctv:bg-[#1e1e1e] ctv:p-0.5" };
+const _hoisted_4$1G = ["aria-pressed", "onClick"];
+const _hoisted_5$1A = { class: "ctv:w-7 ctv:text-right ctv:font-mono" };
+const _hoisted_6$1p = { class: "ctv:flex ctv:h-6 ctv:items-center ctv:gap-0.5 ctv:rounded ctv:bg-[#1e1e1e] ctv:p-0.5" };
+const _hoisted_7$13 = ["aria-pressed", "title", "onClick"];
+const _hoisted_8$K = { class: "ctv:flex ctv:h-6 ctv:items-center ctv:gap-0.5 ctv:rounded ctv:bg-[#1e1e1e] ctv:p-0.5" };
+const _hoisted_9$D = ["aria-pressed"];
+const _hoisted_10$w = ["aria-pressed"];
+const _hoisted_11$r = { class: "ctv:w-5 ctv:text-right ctv:font-mono" };
+const _hoisted_12$l = { class: "ctv:w-7 ctv:text-right ctv:font-mono" };
+const _hoisted_13$i = { class: "ctv:w-5 ctv:text-right ctv:font-mono" };
+const _hoisted_14$g = ["disabled"];
+const _hoisted_15$e = ["disabled"];
 const _hoisted_16$c = ["disabled"];
 const _hoisted_17$b = { class: "ctv:w-7 ctv:text-right ctv:font-mono" };
 const _hoisted_18$a = { class: "ctv:w-8 ctv:text-right ctv:font-mono" };
 const _hoisted_19$9 = ["disabled", "onClick"];
 const _hoisted_20$8 = ["disabled"];
-const _hoisted_21$8 = ["disabled"];
-const _hoisted_22$8 = { class: "ctv:whitespace-nowrap ctv:text-[10px] ctv:text-[#9b9b9b]/70" };
+const _hoisted_21$7 = ["disabled"];
+const _hoisted_22$7 = { class: "ctv:whitespace-nowrap ctv:text-[10px] ctv:text-[#9b9b9b]/70" };
 const _hoisted_23$6 = ["disabled"];
 const _hoisted_24$5 = ["disabled"];
 const _hoisted_25$5 = { class: "ctv:whitespace-nowrap ctv:text-[10px] ctv:text-[#9b9b9b]/70" };
@@ -160851,7 +160855,7 @@ const fieldClass = "ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1 ctv:whitesp
 const colorInputClass$1 = "ctv:size-6 ctv:cursor-pointer ctv:rounded ctv:border ctv:border-[#161616] ctv:bg-transparent ctv:p-0 ctv:disabled:opacity-30";
 const iconBtnClass = "ctv:inline-flex ctv:size-7 ctv:shrink-0 ctv:items-center ctv:justify-center ctv:rounded ctv:border-0 ctv:bg-transparent ctv:text-[#9b9b9b] ctv:cursor-pointer ctv:transition-colors ctv:hover:bg-[#3a3a3a] ctv:hover:text-[#d6d6d6] ctv:disabled:opacity-30 ctv:disabled:cursor-default ctv:disabled:hover:bg-transparent";
 const actionBtnClass = "ctv:inline-flex ctv:h-6 ctv:shrink-0 ctv:items-center ctv:gap-1 ctv:rounded ctv:border ctv:border-[#161616] ctv:bg-[#3a3a3a] ctv:px-2 ctv:text-[11px] ctv:text-[#d6d6d6] ctv:cursor-pointer ctv:[font-family:inherit] ctv:transition-colors ctv:hover:bg-[#4a4a4a] ctv:disabled:opacity-40 ctv:disabled:cursor-default";
-const _sfc_main$29 = /* @__PURE__ */ defineComponent({
+const _sfc_main$2a = /* @__PURE__ */ defineComponent({
   __name: "LayerEditorToolBar",
   props: {
     editor: {}
@@ -160923,15 +160927,15 @@ const _sfc_main$29 = /* @__PURE__ */ defineComponent({
         }, ["prevent"])),
         class: "ctv:flex ctv:h-9 ctv:shrink-0 ctv:items-center ctv:gap-2 ctv:overflow-x-auto ctv:rounded-md ctv:border ctv:border-[#161616] ctv:bg-[#2b2b2b] ctv:px-2 ctv:text-[11px] ctv:text-[#9b9b9b]"
       }, [
-        createBaseVNode("div", _hoisted_1$36, [
+        createBaseVNode("div", _hoisted_1$37, [
           (openBlock(), createBlock(resolveDynamicComponent(activeToolIcon.value), { class: "ctv:size-3.5" })),
-          createBaseVNode("span", _hoisted_2$21, toDisplayString$1(_ctx.$t(activeToolLabelKey.value)), 1)
+          createBaseVNode("span", _hoisted_2$22, toDisplayString$1(_ctx.$t(activeToolLabelKey.value)), 1)
         ]),
         createBaseVNode("div", {
           class: normalizeClass(dividerClass)
         }),
         isPaintTool.value ? (openBlock(), createElementBlock(Fragment$1, { key: 0 }, [
-          createBaseVNode("div", _hoisted_3$21, [
+          createBaseVNode("div", _hoisted_3$22, [
             (openBlock(), createElementBlock(Fragment$1, null, renderList(PAINT_TARGETS, (target) => {
               return createBaseVNode("button", {
                 key: target.id,
@@ -160939,7 +160943,7 @@ const _sfc_main$29 = /* @__PURE__ */ defineComponent({
                 class: normalizeClass(segBtnClass(unref(editor).paintTarget.value === target.id)),
                 "aria-pressed": unref(editor).paintTarget.value === target.id,
                 onClick: ($event) => unref(editor).paintTarget.value = target.id
-              }, toDisplayString$1(_ctx.$t(target.labelKey)), 11, _hoisted_4$1F);
+              }, toDisplayString$1(_ctx.$t(target.labelKey)), 11, _hoisted_4$1G);
             }), 64))
           ]),
           createBaseVNode("label", {
@@ -160961,7 +160965,7 @@ const _sfc_main$29 = /* @__PURE__ */ defineComponent({
                 { number: true }
               ]
             ]),
-            createBaseVNode("span", _hoisted_5$1z, toDisplayString$1(unref(editor).brushSize.value), 1)
+            createBaseVNode("span", _hoisted_5$1A, toDisplayString$1(unref(editor).brushSize.value), 1)
           ]),
           createBaseVNode("label", {
             class: normalizeClass(fieldClass)
@@ -161017,7 +161021,7 @@ const _sfc_main$29 = /* @__PURE__ */ defineComponent({
             ])
           ])) : createCommentVNode("", true)
         ], 64)) : isShapeTool.value ? (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
-          createBaseVNode("div", _hoisted_6$1o, [
+          createBaseVNode("div", _hoisted_6$1p, [
             (openBlock(), createElementBlock(Fragment$1, null, renderList(SHAPE_OPTIONS, (option) => {
               return createBaseVNode("button", {
                 key: option.id,
@@ -161028,22 +161032,22 @@ const _sfc_main$29 = /* @__PURE__ */ defineComponent({
                 onClick: ($event) => unref(editor).shapeKind.value = option.id
               }, [
                 (openBlock(), createBlock(resolveDynamicComponent(option.icon), { class: "ctv:size-3.5" }))
-              ], 10, _hoisted_7$12);
+              ], 10, _hoisted_7$13);
             }), 64))
           ]),
-          createBaseVNode("div", _hoisted_8$J, [
+          createBaseVNode("div", _hoisted_8$K, [
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(segBtnClass(!unref(editor).shapeCombine.value)),
               "aria-pressed": !unref(editor).shapeCombine.value,
               onClick: _cache2[4] || (_cache2[4] = ($event) => unref(editor).shapeCombine.value = false)
-            }, toDisplayString$1(_ctx.$t("pictor.shapeNewLayer")), 11, _hoisted_9$C),
+            }, toDisplayString$1(_ctx.$t("pictor.shapeNewLayer")), 11, _hoisted_9$D),
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(segBtnClass(unref(editor).shapeCombine.value)),
               "aria-pressed": unref(editor).shapeCombine.value,
               onClick: _cache2[5] || (_cache2[5] = ($event) => unref(editor).shapeCombine.value = true)
-            }, toDisplayString$1(_ctx.$t("pictor.shapeCombine")), 11, _hoisted_10$v)
+            }, toDisplayString$1(_ctx.$t("pictor.shapeCombine")), 11, _hoisted_10$w)
           ]),
           unref(editor).shapeKind.value === "polygon" || unref(editor).shapeKind.value === "star" ? (openBlock(), createElementBlock("label", {
             key: 0,
@@ -161065,7 +161069,7 @@ const _sfc_main$29 = /* @__PURE__ */ defineComponent({
                 { number: true }
               ]
             ]),
-            createBaseVNode("span", _hoisted_11$q, toDisplayString$1(unref(editor).shapeSides.value), 1)
+            createBaseVNode("span", _hoisted_11$r, toDisplayString$1(unref(editor).shapeSides.value), 1)
           ])) : createCommentVNode("", true),
           unref(editor).shapeKind.value === "star" ? (openBlock(), createElementBlock("label", {
             key: 1,
@@ -161087,7 +161091,7 @@ const _sfc_main$29 = /* @__PURE__ */ defineComponent({
                 { number: true }
               ]
             ]),
-            createBaseVNode("span", _hoisted_12$k, toDisplayString$1(unref(editor).shapeStarRatio.value.toFixed(2)), 1)
+            createBaseVNode("span", _hoisted_12$l, toDisplayString$1(unref(editor).shapeStarRatio.value.toFixed(2)), 1)
           ])) : createCommentVNode("", true),
           unref(editor).shapeKind.value === "spiral" ? (openBlock(), createElementBlock("label", {
             key: 2,
@@ -161109,7 +161113,7 @@ const _sfc_main$29 = /* @__PURE__ */ defineComponent({
                 { number: true }
               ]
             ]),
-            createBaseVNode("span", _hoisted_13$h, toDisplayString$1(unref(editor).shapeTurns.value), 1)
+            createBaseVNode("span", _hoisted_13$i, toDisplayString$1(unref(editor).shapeTurns.value), 1)
           ])) : createCommentVNode("", true),
           !strokeOnlyShape.value ? (openBlock(), createElementBlock("label", {
             key: 3,
@@ -161128,7 +161132,7 @@ const _sfc_main$29 = /* @__PURE__ */ defineComponent({
               type: "color",
               disabled: !unref(editor).shapeFillEnabled.value,
               class: normalizeClass(colorInputClass$1)
-            }, null, 8, _hoisted_14$f), [
+            }, null, 8, _hoisted_14$g), [
               [vModelText, unref(editor).shapeFillColor.value]
             ])
           ])) : createCommentVNode("", true),
@@ -161149,7 +161153,7 @@ const _sfc_main$29 = /* @__PURE__ */ defineComponent({
               type: "color",
               disabled: !strokeOnlyShape.value && !unref(editor).shapeStrokeEnabled.value,
               class: normalizeClass(colorInputClass$1)
-            }, null, 8, _hoisted_15$d), [
+            }, null, 8, _hoisted_15$e), [
               [vModelText, unref(editor).shapeStrokeColor.value]
             ])
           ]),
@@ -161277,7 +161281,7 @@ const _sfc_main$29 = /* @__PURE__ */ defineComponent({
               class: normalizeClass(actionBtnClass),
               disabled: !unref(editor).hasSelection(),
               onClick: _cache2[20] || (_cache2[20] = ($event) => unref(editor).strokeSelection())
-            }, toDisplayString$1(_ctx.$t("pictor.selStroke")), 9, _hoisted_21$8),
+            }, toDisplayString$1(_ctx.$t("pictor.selStroke")), 9, _hoisted_21$7),
             createBaseVNode("label", {
               class: normalizeClass(fieldClass)
             }, [
@@ -161290,7 +161294,7 @@ const _sfc_main$29 = /* @__PURE__ */ defineComponent({
                 [vModelText, unref(editor).brushColor.value]
               ])
             ]),
-            createBaseVNode("span", _hoisted_22$8, toDisplayString$1(_ctx.$t("pictor.selOpsHint")), 1)
+            createBaseVNode("span", _hoisted_22$7, toDisplayString$1(_ctx.$t("pictor.selOpsHint")), 1)
           ], 64)) : createCommentVNode("", true)
         ], 64)) : isTransformTool2.value ? (openBlock(), createElementBlock(Fragment$1, { key: 3 }, [
           createBaseVNode("button", {
@@ -161451,8 +161455,8 @@ const _sfc_main$29 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$35 = ["aria-pressed", "title", "onClick"];
-const _sfc_main$28 = /* @__PURE__ */ defineComponent({
+const _hoisted_1$36 = ["aria-pressed", "title", "onClick"];
+const _sfc_main$29 = /* @__PURE__ */ defineComponent({
   __name: "LayerEditorToolStrip",
   props: {
     editor: {}
@@ -161497,19 +161501,19 @@ const _sfc_main$28 = /* @__PURE__ */ defineComponent({
             onClick: ($event) => unref(editor).tool.value = option.id
           }, [
             (openBlock(), createBlock(resolveDynamicComponent(option.icon), { class: "ctv:size-4" }))
-          ], 10, _hoisted_1$35);
+          ], 10, _hoisted_1$36);
         }), 64))
       ], 32);
     };
   }
 });
-const _hoisted_1$34 = {
+const _hoisted_1$35 = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$$(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$34, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$35, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -161521,13 +161525,13 @@ function render$$(_ctx, _cache2) {
   ])]);
 }
 const IconArrowDownToLine = markRaw({ name: "lucide-arrow-down-to-line", render: render$$ });
-const _hoisted_1$33 = {
+const _hoisted_1$34 = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$_(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$33, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$34, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -161539,13 +161543,13 @@ function render$_(_ctx, _cache2) {
   ])]);
 }
 const IconChevronDown = markRaw({ name: "lucide-chevron-down", render: render$_ });
-const _hoisted_1$32 = {
+const _hoisted_1$33 = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$Z(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$32, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$33, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -161557,13 +161561,13 @@ function render$Z(_ctx, _cache2) {
   ])]);
 }
 const IconChevronRight = markRaw({ name: "lucide-chevron-right", render: render$Z });
-const _hoisted_1$31 = {
+const _hoisted_1$32 = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$Y(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$31, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$32, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -161575,13 +161579,13 @@ function render$Y(_ctx, _cache2) {
   ])]);
 }
 const IconChevronUp = markRaw({ name: "lucide-chevron-up", render: render$Y });
-const _hoisted_1$30 = {
+const _hoisted_1$31 = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$X(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$30, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$31, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -161593,13 +161597,13 @@ function render$X(_ctx, _cache2) {
   ])]);
 }
 const IconCircleOff = markRaw({ name: "lucide-circle-off", render: render$X });
-const _hoisted_1$2$ = {
+const _hoisted_1$30 = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$W(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$2$, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$30, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -161620,13 +161624,13 @@ function render$W(_ctx, _cache2) {
   ])]);
 }
 const IconCopy = markRaw({ name: "lucide-copy", render: render$W });
-const _hoisted_1$2_ = {
+const _hoisted_1$2$ = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$V(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$2_, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$2$, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -161638,13 +161642,13 @@ function render$V(_ctx, _cache2) {
   ])]);
 }
 const IconDroplet = markRaw({ name: "lucide-droplet", render: render$V });
-const _hoisted_1$2Z = {
+const _hoisted_1$2_ = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$U(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$2Z, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$2_, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -161656,13 +161660,13 @@ function render$U(_ctx, _cache2) {
   ])]);
 }
 const IconFolder = markRaw({ name: "lucide-folder", render: render$U });
-const _hoisted_1$2Y = {
+const _hoisted_1$2Z = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$T(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$2Y, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$2Z, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -161674,13 +161678,13 @@ function render$T(_ctx, _cache2) {
   ])]);
 }
 const IconFolderMinus = markRaw({ name: "lucide-folder-minus", render: render$T });
-const _hoisted_1$2X = {
+const _hoisted_1$2Y = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$S(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$2X, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$2Y, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -161692,13 +161696,13 @@ function render$S(_ctx, _cache2) {
   ])]);
 }
 const IconFolderPlus = markRaw({ name: "lucide-folder-plus", render: render$S });
-const _hoisted_1$2W = {
+const _hoisted_1$2X = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$R(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$2W, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$2X, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -161710,13 +161714,13 @@ function render$R(_ctx, _cache2) {
   ])]);
 }
 const IconFrame = markRaw({ name: "lucide-frame", render: render$R });
-const _hoisted_1$2V = {
+const _hoisted_1$2W = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$Q(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$2V, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$2W, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -161735,13 +161739,13 @@ function render$Q(_ctx, _cache2) {
   ])]);
 }
 const IconImagePlus = markRaw({ name: "lucide-image-plus", render: render$Q });
-const _hoisted_1$2U = {
+const _hoisted_1$2V = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$P(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$2U, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$2V, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -161756,13 +161760,13 @@ function render$P(_ctx, _cache2) {
   ])]);
 }
 const IconLayers = markRaw({ name: "lucide-layers", render: render$P });
-const _hoisted_1$2T = {
+const _hoisted_1$2U = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$O(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$2T, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$2U, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -161774,13 +161778,13 @@ function render$O(_ctx, _cache2) {
   ])]);
 }
 const IconMaximize = markRaw({ name: "lucide-maximize", render: render$O });
-const _hoisted_1$2S = {
+const _hoisted_1$2T = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$N(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$2S, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$2T, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -161792,13 +161796,13 @@ function render$N(_ctx, _cache2) {
   ])]);
 }
 const IconMove = markRaw({ name: "lucide-move", render: render$N });
-const _hoisted_1$2R = {
+const _hoisted_1$2S = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$M(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$2R, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$2S, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -161810,13 +161814,13 @@ function render$M(_ctx, _cache2) {
   ])]);
 }
 const IconSlidersHorizontal = markRaw({ name: "lucide-sliders-horizontal", render: render$M });
-const _hoisted_1$2Q = {
+const _hoisted_1$2R = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$L(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$2Q, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$2R, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -161836,13 +161840,13 @@ function render$L(_ctx, _cache2) {
   ])]);
 }
 const IconSquarePlus = markRaw({ name: "lucide-square-plus", render: render$L });
-const _hoisted_1$2P = {
+const _hoisted_1$2Q = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$K(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$2P, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$2Q, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -161854,10 +161858,10 @@ function render$K(_ctx, _cache2) {
   ])]);
 }
 const IconWand = markRaw({ name: "lucide-wand", render: render$K });
-const _hoisted_1$2O = ["title"];
-const _hoisted_2$20 = { class: "ctv:flex-1 ctv:text-[11px] ctv:font-semibold" };
-const _hoisted_3$20 = { class: "ctv:flex ctv:min-h-0 ctv:flex-1 ctv:flex-col ctv:overflow-hidden" };
-const _sfc_main$27 = /* @__PURE__ */ defineComponent({
+const _hoisted_1$2P = ["title"];
+const _hoisted_2$21 = { class: "ctv:flex-1 ctv:text-[11px] ctv:font-semibold" };
+const _hoisted_3$21 = { class: "ctv:flex ctv:min-h-0 ctv:flex-1 ctv:flex-col ctv:overflow-hidden" };
+const _sfc_main$28 = /* @__PURE__ */ defineComponent({
   __name: "PanelSection",
   props: {
     title: {},
@@ -161890,10 +161894,10 @@ const _sfc_main$27 = /* @__PURE__ */ defineComponent({
           createVNode(unref(IconChevronRight), {
             class: normalizeClass(["ctv:size-3 ctv:shrink-0 ctv:text-[#9b9b9b] ctv:transition-transform", collapsed.value ? "" : "ctv:rotate-90"])
           }, null, 8, ["class"]),
-          createBaseVNode("span", _hoisted_2$20, toDisplayString$1(__props.title), 1),
+          createBaseVNode("span", _hoisted_2$21, toDisplayString$1(__props.title), 1),
           !collapsed.value ? renderSlot(_ctx.$slots, "actions", { key: 0 }) : createCommentVNode("", true)
-        ], 8, _hoisted_1$2O),
-        withDirectives(createBaseVNode("div", _hoisted_3$20, [
+        ], 8, _hoisted_1$2P),
+        withDirectives(createBaseVNode("div", _hoisted_3$21, [
           renderSlot(_ctx.$slots, "default")
         ], 512), [
           [vShow, !collapsed.value]
@@ -161902,22 +161906,22 @@ const _sfc_main$27 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$2N = ["disabled", "aria-expanded"];
-const _hoisted_2$1$ = { class: "ctv:truncate ctv:text-left" };
-const _hoisted_3$1$ = {
+const _hoisted_1$2O = ["disabled", "aria-expanded"];
+const _hoisted_2$20 = { class: "ctv:truncate ctv:text-left" };
+const _hoisted_3$20 = {
   key: 0,
   class: "ctv:px-1 ctv:pb-2"
 };
-const _hoisted_4$1E = {
+const _hoisted_4$1F = {
   class: "ctv:max-h-60 ctv:overflow-y-auto",
   role: "presentation"
 };
-const _hoisted_5$1y = { class: "ctv:truncate" };
-const _hoisted_6$1n = {
+const _hoisted_5$1z = { class: "ctv:truncate" };
+const _hoisted_6$1o = {
   key: 0,
   class: "ctv:px-3 ctv:pb-2 ctv:text-xs ctv:text-muted-foreground"
 };
-const _sfc_main$26 = /* @__PURE__ */ defineComponent({
+const _sfc_main$27 = /* @__PURE__ */ defineComponent({
   __name: "PSelect",
   props: {
     modelValue: {},
@@ -161979,9 +161983,9 @@ const _sfc_main$26 = /* @__PURE__ */ defineComponent({
                     disabled: __props.disabled,
                     "aria-expanded": isOpen.value
                   }, [
-                    createBaseVNode("span", _hoisted_2$1$, toDisplayString$1(display.value), 1),
+                    createBaseVNode("span", _hoisted_2$20, toDisplayString$1(display.value), 1),
                     _cache2[2] || (_cache2[2] = createBaseVNode("i", { class: "pi pi-chevron-down ctv:shrink-0 ctv:text-muted-foreground ctv:text-2xs" }, null, -1))
-                  ], 8, _hoisted_1$2N)
+                  ], 8, _hoisted_1$2O)
                 ]),
                 _: 1
               })
@@ -161997,7 +162001,7 @@ const _sfc_main$26 = /* @__PURE__ */ defineComponent({
                 align: "start"
               }, {
                 default: withCtx(() => [
-                  filterable.value ? (openBlock(), createElementBlock("div", _hoisted_3$1$, [
+                  filterable.value ? (openBlock(), createElementBlock("div", _hoisted_3$20, [
                     createVNode(unref(ComboboxInput_default), {
                       modelValue: query.value,
                       "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => query.value = $event),
@@ -162007,7 +162011,7 @@ const _sfc_main$26 = /* @__PURE__ */ defineComponent({
                       class: "ctv:flex ctv:h-7 ctv:w-full ctv:min-w-0 ctv:appearance-none ctv:rounded-lg ctv:border-none ctv:bg-secondary-background ctv:px-3 ctv:py-1 ctv:text-xs ctv:text-base-foreground ctv:placeholder:text-muted-foreground ctv:focus-visible:ring-1 ctv:focus-visible:ring-border-default ctv:focus-visible:outline-none"
                     }, null, 8, ["modelValue", "placeholder"])
                   ])) : createCommentVNode("", true),
-                  createBaseVNode("div", _hoisted_4$1E, [
+                  createBaseVNode("div", _hoisted_4$1F, [
                     (openBlock(true), createElementBlock(Fragment$1, null, renderList(filteredOptions.value, (opt) => {
                       return openBlock(), createBlock(unref(ComboboxItem_default), {
                         key: opt.value,
@@ -162016,7 +162020,7 @@ const _sfc_main$26 = /* @__PURE__ */ defineComponent({
                         class: "ctv:relative ctv:flex ctv:w-full ctv:cursor-pointer ctv:items-center ctv:justify-between ctv:select-none ctv:gap-3 ctv:rounded-sm ctv:px-2 ctv:py-2 ctv:text-xs ctv:outline-none ctv:hover:bg-secondary-background-hover ctv:data-[highlighted]:bg-secondary-background-hover ctv:data-[state=checked]:bg-secondary-background-selected ctv:data-[state=checked]:hover:bg-secondary-background-selected"
                       }, {
                         default: withCtx(() => [
-                          createBaseVNode("span", _hoisted_5$1y, toDisplayString$1(opt.label), 1),
+                          createBaseVNode("span", _hoisted_5$1z, toDisplayString$1(opt.label), 1),
                           createVNode(unref(ComboboxItemIndicator_default), { class: "ctv:flex ctv:shrink-0 ctv:items-center ctv:justify-center ctv:text-base-foreground" }, {
                             default: withCtx(() => [..._cache2[3] || (_cache2[3] = [
                               createBaseVNode("i", { class: "pi pi-check" }, null, -1)
@@ -162027,7 +162031,7 @@ const _sfc_main$26 = /* @__PURE__ */ defineComponent({
                         _: 2
                       }, 1032, ["value", "text-value"]);
                     }), 128)),
-                    !filteredOptions.value.length ? (openBlock(), createElementBlock("div", _hoisted_6$1n, " no matches ")) : createCommentVNode("", true)
+                    !filteredOptions.value.length ? (openBlock(), createElementBlock("div", _hoisted_6$1o, " no matches ")) : createCommentVNode("", true)
                   ])
                 ]),
                 _: 1
@@ -162215,8 +162219,8 @@ function useCurvesCanvas$1(opts) {
   onMounted(draw);
   return { dragIdx, draw, onDown, onMove, onUp, onRightClick };
 }
-const _hoisted_1$2M = ["width", "height"];
-const _sfc_main$25 = /* @__PURE__ */ defineComponent({
+const _hoisted_1$2N = ["width", "height"];
+const _sfc_main$26 = /* @__PURE__ */ defineComponent({
   __name: "PCurves",
   props: {
     modelValue: {},
@@ -162255,7 +162259,7 @@ const _sfc_main$25 = /* @__PURE__ */ defineComponent({
           (...args) => unref(onRightClick) && unref(onRightClick)(...args),
           ["stop", "prevent"]
         ))
-      }, null, 40, _hoisted_1$2M);
+      }, null, 40, _hoisted_1$2N);
     };
   }
 });
@@ -162336,20 +162340,20 @@ function interpolateStops(stops, t2) {
   const [r, g, b] = stops[stops.length - 1].color;
   return `rgb(${r},${g},${b})`;
 }
-const _hoisted_1$2L = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
-const _hoisted_2$1_ = ["title"];
-const _hoisted_3$1_ = {
+const _hoisted_1$2M = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
+const _hoisted_2$1$ = ["title"];
+const _hoisted_3$1$ = {
   key: 0,
   class: "ctv-fx-gradwrap ctv:flex-1"
 };
-const _hoisted_4$1D = ["min", "max", "step", "value"];
-const _hoisted_5$1x = ["min", "max", "step", "value"];
-const _hoisted_6$1m = ["min", "max", "step", "value"];
-const _hoisted_7$11 = {
+const _hoisted_4$1E = ["min", "max", "step", "value"];
+const _hoisted_5$1y = ["min", "max", "step", "value"];
+const _hoisted_6$1n = ["min", "max", "step", "value"];
+const _hoisted_7$12 = {
   key: 2,
   class: "ctv:shrink-0 ctv:w-4 ctv:text-2xs ctv:text-muted-foreground"
 };
-const _sfc_main$24 = /* @__PURE__ */ defineComponent({
+const _sfc_main$25 = /* @__PURE__ */ defineComponent({
   __name: "PSlider",
   props: {
     modelValue: {},
@@ -162393,12 +162397,12 @@ const _sfc_main$24 = /* @__PURE__ */ defineComponent({
       if (props.resetTo !== void 0) emit2("update:modelValue", props.resetTo);
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$2L, [
+      return openBlock(), createElementBlock("div", _hoisted_1$2M, [
         createBaseVNode("span", {
           class: "ctv:min-w-16 ctv:shrink-0 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground ctv:truncate",
           title: __props.label
-        }, toDisplayString$1(__props.label), 9, _hoisted_2$1_),
-        __props.gradient && __props.gradient.length ? (openBlock(), createElementBlock("div", _hoisted_3$1_, [
+        }, toDisplayString$1(__props.label), 9, _hoisted_2$1$),
+        __props.gradient && __props.gradient.length ? (openBlock(), createElementBlock("div", _hoisted_3$1$, [
           createBaseVNode("div", {
             class: "ctv-fx-gradbar",
             style: normalizeStyle({ background: gradientCss.value })
@@ -162413,7 +162417,7 @@ const _sfc_main$24 = /* @__PURE__ */ defineComponent({
             value: __props.modelValue,
             onInput,
             onDblclick: reset
-          }, null, 44, _hoisted_4$1D)
+          }, null, 44, _hoisted_4$1E)
         ])) : (openBlock(), createElementBlock("input", {
           key: 1,
           type: "range",
@@ -162424,7 +162428,7 @@ const _sfc_main$24 = /* @__PURE__ */ defineComponent({
           value: __props.modelValue,
           onInput,
           onDblclick: reset
-        }, null, 40, _hoisted_5$1x)),
+        }, null, 40, _hoisted_5$1y)),
         createBaseVNode("input", {
           type: "number",
           min: __props.min,
@@ -162433,34 +162437,34 @@ const _sfc_main$24 = /* @__PURE__ */ defineComponent({
           class: "ctv-fx-num ctv:w-14 ctv:py-0.5 ctv:px-1 ctv:text-right ctv:text-[11px] ctv:font-mono ctv:rounded ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground",
           value: display.value,
           onChange: onNum
-        }, null, 40, _hoisted_6$1m),
-        __props.unit ? (openBlock(), createElementBlock("span", _hoisted_7$11, toDisplayString$1(__props.unit), 1)) : createCommentVNode("", true)
+        }, null, 40, _hoisted_6$1n),
+        __props.unit ? (openBlock(), createElementBlock("span", _hoisted_7$12, toDisplayString$1(__props.unit), 1)) : createCommentVNode("", true)
       ]);
     };
   }
 });
-const FxSlider$1 = /* @__PURE__ */ _export_sfc(_sfc_main$24, [["__scopeId", "data-v-a78880d6"]]);
-const _hoisted_1$2K = ["title"];
-const _hoisted_2$1Z = ["title"];
-const _hoisted_3$1Z = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:px-2 ctv:pt-1.5" };
-const _hoisted_4$1C = ["value"];
-const _hoisted_5$1w = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:px-2 ctv:py-1 ctv:text-[10px] ctv:text-[#9b9b9b]" };
-const _hoisted_6$1l = ["disabled", "title"];
-const _hoisted_7$10 = ["disabled", "title"];
-const _hoisted_8$I = ["disabled", "title"];
-const _hoisted_9$B = ["disabled", "title"];
-const _hoisted_10$u = {
+const FxSlider$1 = /* @__PURE__ */ _export_sfc(_sfc_main$25, [["__scopeId", "data-v-a78880d6"]]);
+const _hoisted_1$2L = ["title"];
+const _hoisted_2$1_ = ["title"];
+const _hoisted_3$1_ = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:px-2 ctv:pt-1.5" };
+const _hoisted_4$1D = ["value"];
+const _hoisted_5$1x = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:px-2 ctv:py-1 ctv:text-[10px] ctv:text-[#9b9b9b]" };
+const _hoisted_6$1m = ["disabled", "title"];
+const _hoisted_7$11 = ["disabled", "title"];
+const _hoisted_8$J = ["disabled", "title"];
+const _hoisted_9$C = ["disabled", "title"];
+const _hoisted_10$v = {
   key: 0,
   class: "ctv:py-4 ctv:text-center ctv:text-[10px] ctv:italic ctv:text-[#9b9b9b]/70"
 };
-const _hoisted_11$p = ["draggable", "onClick", "onDblclick", "onDragstart", "onDragover", "onDrop"];
-const _hoisted_12$j = ["title", "onClick"];
-const _hoisted_13$g = {
+const _hoisted_11$q = ["draggable", "onClick", "onDblclick", "onDragstart", "onDragover", "onDrop"];
+const _hoisted_12$k = ["title", "onClick"];
+const _hoisted_13$h = {
   key: 1,
   class: "ctv:size-3.5"
 };
-const _hoisted_14$e = ["onClick"];
-const _hoisted_15$c = ["title", "onClick"];
+const _hoisted_14$f = ["onClick"];
+const _hoisted_15$d = ["title", "onClick"];
 const _hoisted_16$b = ["title", "onClick", "onContextmenu"];
 const _hoisted_17$a = ["value", "onKeydown", "onBlur"];
 const _hoisted_18$9 = ["title"];
@@ -162469,8 +162473,8 @@ const _hoisted_19$8 = {
   class: "ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-0.5 ctv:px-1.5 ctv:py-0.5"
 };
 const _hoisted_20$7 = ["title"];
-const _hoisted_21$7 = ["title"];
-const _hoisted_22$7 = ["title"];
+const _hoisted_21$6 = ["title"];
+const _hoisted_22$6 = ["title"];
 const _hoisted_23$5 = ["title"];
 const _hoisted_24$4 = ["title"];
 const _hoisted_25$4 = ["title"];
@@ -162569,7 +162573,7 @@ const miniBtnClass$1 = "ctv:inline-flex ctv:size-6 ctv:shrink-0 ctv:items-center
 const numInputClass$1 = "ctv-num-input ctv:w-14 ctv:rounded-xs ctv:border ctv:border-[#3d3d3d] ctv:bg-[#1e1e1e] ctv:px-1 ctv:py-0.5 ctv:text-[11px] ctv:font-mono ctv:text-[#d6d6d6]";
 const presetSelectClass = "ctv:w-full ctv:cursor-pointer ctv:rounded-xs ctv:border ctv:border-[#3d3d3d] ctv:bg-[#1e1e1e] ctv:px-1 ctv:py-0.5 ctv:text-[10px] ctv:text-[#9b9b9b] ctv:[font-family:inherit]";
 const colorInputClass = "ctv:size-6 ctv:cursor-pointer ctv:rounded ctv:border ctv:border-[#161616] ctv:bg-transparent ctv:p-0 ctv:disabled:opacity-30";
-const _sfc_main$23 = /* @__PURE__ */ defineComponent({
+const _sfc_main$24 = /* @__PURE__ */ defineComponent({
   __name: "LayerListPanel",
   props: {
     editor: {}
@@ -162852,7 +162856,7 @@ const _sfc_main$23 = /* @__PURE__ */ defineComponent({
           class: "ctv:absolute ctv:left-0 ctv:top-0 ctv:z-10 ctv:h-full ctv:w-1.5 ctv:cursor-col-resize ctv:hover:bg-primary-background/40",
           onPointerdown: onResizeStart
         }, null, 32),
-        createVNode(_sfc_main$27, {
+        createVNode(_sfc_main$28, {
           title: _ctx.$t("pictor.layers"),
           "storage-key": "pictor.layerPanelCollapsed"
         }, {
@@ -162865,7 +162869,7 @@ const _sfc_main$23 = /* @__PURE__ */ defineComponent({
               onClick: _cache2[0] || (_cache2[0] = withModifiers(($event) => pickerOpen.value = !unref(pickerOpen), ["stop"]))
             }, [
               createVNode(unref(IconImagePlus), { class: "ctv:size-3.5" })
-            ], 8, _hoisted_1$2K)) : createCommentVNode("", true),
+            ], 8, _hoisted_1$2L)) : createCommentVNode("", true),
             createBaseVNode("button", {
               type: "button",
               class: normalizeClass(miniBtnClass$1),
@@ -162876,7 +162880,7 @@ const _sfc_main$23 = /* @__PURE__ */ defineComponent({
               }, ["stop"]))
             }, [
               createVNode(unref(IconUpload), { class: "ctv:size-3.5" })
-            ], 8, _hoisted_2$1Z),
+            ], 8, _hoisted_2$1_),
             createBaseVNode("input", {
               ref_key: "fileInput",
               ref: fileInput,
@@ -162898,11 +162902,11 @@ const _sfc_main$23 = /* @__PURE__ */ defineComponent({
                 onPick: unref(onMediaPicked),
                 onClose: _cache2[4] || (_cache2[4] = ($event) => pickerOpen.value = false)
               }, null, 40, ["onPick"])) : createCommentVNode("", true),
-              createBaseVNode("div", _hoisted_3$1Z, [
+              createBaseVNode("div", _hoisted_3$1_, [
                 createBaseVNode("div", {
                   class: normalizeClass(["ctv:min-w-0 ctv:flex-1", !blendEnabled.value ? "ctv:pointer-events-none ctv:opacity-40" : ""])
                 }, [
-                  createVNode(_sfc_main$26, {
+                  createVNode(_sfc_main$27, {
                     "model-value": ((_a3 = unref(active)) == null ? void 0 : _a3.mode.blend) ?? "normal",
                     options: unref(blendOptions),
                     "onUpdate:modelValue": _cache2[5] || (_cache2[5] = (v) => unref(active) && unref(editor).setBlendMode(unref(active).id, v))
@@ -162920,11 +162924,11 @@ const _sfc_main$23 = /* @__PURE__ */ defineComponent({
                     class: normalizeClass([numInputClass$1, "ctv:w-11!"]),
                     value: unref(active) ? Math.round(unref(active).opacity * 100) : 100,
                     onChange: _cache2[6] || (_cache2[6] = (e) => unref(active) && unref(editor).setOpacity(unref(active).id, Math.max(0, Math.min(100, Number(e.target.value))) / 100))
-                  }, null, 40, _hoisted_4$1C),
+                  }, null, 40, _hoisted_4$1D),
                   _cache2[69] || (_cache2[69] = createTextVNode("% ", -1))
                 ], 2)
               ]),
-              createBaseVNode("div", _hoisted_5$1w, [
+              createBaseVNode("div", _hoisted_5$1x, [
                 createBaseVNode("span", null, toDisplayString$1(_ctx.$t("pictor.lockLabel")), 1),
                 createBaseVNode("button", {
                   type: "button",
@@ -162934,7 +162938,7 @@ const _sfc_main$23 = /* @__PURE__ */ defineComponent({
                   onClick: _cache2[7] || (_cache2[7] = ($event) => unref(active) && unref(editor).toggleLockAlpha(unref(active).id))
                 }, [
                   createVNode(unref(IconDroplet), { class: "ctv:size-3.5" })
-                ], 10, _hoisted_6$1l),
+                ], 10, _hoisted_6$1m),
                 createBaseVNode("button", {
                   type: "button",
                   class: normalizeClass([miniBtnClass$1, ((_d = unref(active)) == null ? void 0 : _d.locks.content) ? "ctv:text-[#1473e6]" : ""]),
@@ -162943,7 +162947,7 @@ const _sfc_main$23 = /* @__PURE__ */ defineComponent({
                   onClick: _cache2[8] || (_cache2[8] = ($event) => unref(active) && unref(editor).toggleLock(unref(active).id))
                 }, [
                   createVNode(unref(IconBrush), { class: "ctv:size-3.5" })
-                ], 10, _hoisted_7$10),
+                ], 10, _hoisted_7$11),
                 createBaseVNode("button", {
                   type: "button",
                   class: normalizeClass([miniBtnClass$1, ((_f = unref(active)) == null ? void 0 : _f.locks.position) ? "ctv:text-[#1473e6]" : ""]),
@@ -162952,7 +162956,7 @@ const _sfc_main$23 = /* @__PURE__ */ defineComponent({
                   onClick: _cache2[9] || (_cache2[9] = ($event) => unref(active) && unref(editor).toggleLockPosition(unref(active).id))
                 }, [
                   createVNode(unref(IconMove), { class: "ctv:size-3.5" })
-                ], 10, _hoisted_8$I),
+                ], 10, _hoisted_8$J),
                 createBaseVNode("button", {
                   type: "button",
                   class: normalizeClass([miniBtnClass$1, ((_h = unref(active)) == null ? void 0 : _h.locks.content) && ((_i = unref(active)) == null ? void 0 : _i.locks.position) ? "ctv:text-[#1473e6]" : ""]),
@@ -162961,7 +162965,7 @@ const _sfc_main$23 = /* @__PURE__ */ defineComponent({
                   onClick: _cache2[10] || (_cache2[10] = ($event) => unref(active) && unref(editor).toggleLockAll(unref(active).id))
                 }, [
                   createVNode(unref(IconLock), { class: "ctv:size-3.5" })
-                ], 10, _hoisted_9$B)
+                ], 10, _hoisted_9$C)
               ]),
               createBaseVNode("div", {
                 class: "ctv:min-h-16 ctv:flex-1 ctv:overflow-y-auto ctv:border-y ctv:border-[#161616] ctv:bg-[#262626]",
@@ -162970,7 +162974,7 @@ const _sfc_main$23 = /* @__PURE__ */ defineComponent({
                 onDrop: _cache2[16] || (_cache2[16] = //@ts-ignore
                 (...args) => unref(onListDrop) && unref(onListDrop)(...args))
               }, [
-                unref(displayRows).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_10$u, toDisplayString$1(_ctx.$t("pictor.noLayers")), 1)) : createCommentVNode("", true),
+                unref(displayRows).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_10$v, toDisplayString$1(_ctx.$t("pictor.noLayers")), 1)) : createCommentVNode("", true),
                 (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(displayRows), (row) => {
                   return openBlock(), createElementBlock("div", {
                     key: row.node.id,
@@ -162997,8 +163001,8 @@ const _sfc_main$23 = /* @__PURE__ */ defineComponent({
                       row.node.visible ? (openBlock(), createBlock(unref(IconEye), {
                         key: 0,
                         class: "ctv:size-3.5"
-                      })) : (openBlock(), createElementBlock("span", _hoisted_13$g))
-                    ], 8, _hoisted_12$j),
+                      })) : (openBlock(), createElementBlock("span", _hoisted_13$h))
+                    ], 8, _hoisted_12$k),
                     createBaseVNode("div", {
                       class: "ctv:flex ctv:min-w-0 ctv:flex-1 ctv:items-center",
                       style: normalizeStyle({ paddingLeft: row.depth * 12 + "px" })
@@ -163016,7 +163020,7 @@ const _sfc_main$23 = /* @__PURE__ */ defineComponent({
                             key: 1,
                             class: "ctv:size-3.5"
                           }))
-                        ], 8, _hoisted_14$e),
+                        ], 8, _hoisted_14$f),
                         createVNode(unref(IconFolder), { class: "ctv:mx-1 ctv:size-4 ctv:shrink-0 ctv:text-[#9b9b9b]" })
                       ], 64)) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
                         createBaseVNode("canvas", {
@@ -163028,7 +163032,7 @@ const _sfc_main$23 = /* @__PURE__ */ defineComponent({
                           ref_for: true,
                           ref: (el) => unref(drawThumb)(el, row.node),
                           onClick: withModifiers(($event) => onContentThumbClick(row.node, $event), ["stop"])
-                        }, null, 10, _hoisted_15$c),
+                        }, null, 10, _hoisted_15$d),
                         row.node.mask ? (openBlock(), createElementBlock("canvas", {
                           key: 0,
                           width: "32",
@@ -163072,7 +163076,7 @@ const _sfc_main$23 = /* @__PURE__ */ defineComponent({
                         class: normalizeClass(["ctv:mr-1.5 ctv:size-3 ctv:shrink-0 ctv:self-center", fullyLocked(row.node) ? "ctv:text-[#d6d6d6]" : "ctv:text-[#9b9b9b] ctv:opacity-60"])
                       }, null, 8, ["class"])) : createCommentVNode("", true)
                     ], 4)
-                  ], 42, _hoisted_11$p);
+                  ], 42, _hoisted_11$q);
                 }), 128))
               ], 32),
               unref(active) ? (openBlock(), createElementBlock("div", _hoisted_19$8, [
@@ -163091,7 +163095,7 @@ const _sfc_main$23 = /* @__PURE__ */ defineComponent({
                   onClick: _cache2[18] || (_cache2[18] = ($event) => unref(editor).moveLayer(unref(active).id, -1))
                 }, [
                   createVNode(unref(IconChevronDown), { class: "ctv:size-3.5" })
-                ], 8, _hoisted_21$7),
+                ], 8, _hoisted_21$6),
                 createBaseVNode("button", {
                   type: "button",
                   class: normalizeClass(miniBtnClass$1),
@@ -163099,7 +163103,7 @@ const _sfc_main$23 = /* @__PURE__ */ defineComponent({
                   onClick: _cache2[19] || (_cache2[19] = ($event) => unref(editor).duplicateLayer(unref(active).id))
                 }, [
                   createVNode(unref(IconCopy), { class: "ctv:size-3.5" })
-                ], 8, _hoisted_22$7),
+                ], 8, _hoisted_22$6),
                 createBaseVNode("button", {
                   type: "button",
                   class: normalizeClass(miniBtnClass$1),
@@ -163260,7 +163264,7 @@ const _sfc_main$23 = /* @__PURE__ */ defineComponent({
                       class: normalizeClass(paramLabelClass$1)
                     }, toDisplayString$1(_ctx.$t("pictor.adjustmentOp")), 1),
                     createBaseVNode("div", _hoisted_42, [
-                      createVNode(_sfc_main$26, {
+                      createVNode(_sfc_main$27, {
                         "model-value": unref(active).op,
                         options: unref(adjustOptions),
                         "onUpdate:modelValue": _cache2[27] || (_cache2[27] = (v) => unref(editor).updateAdjustment(unref(active).id, { op: v }))
@@ -163295,7 +163299,7 @@ const _sfc_main$23 = /* @__PURE__ */ defineComponent({
                       }), 64))
                     ]),
                     createBaseVNode("div", _hoisted_45, [
-                      createVNode(_sfc_main$25, {
+                      createVNode(_sfc_main$26, {
                         "model-value": curvePoints.value,
                         color: curveColor.value,
                         "onUpdate:modelValue": onCurvePoints
@@ -163364,7 +163368,7 @@ const _sfc_main$23 = /* @__PURE__ */ defineComponent({
                       class: normalizeClass(paramLabelClass$1)
                     }, toDisplayString$1(_ctx.$t("pictor.fillType")), 1),
                     createBaseVNode("div", _hoisted_54, [
-                      createVNode(_sfc_main$26, {
+                      createVNode(_sfc_main$27, {
                         "model-value": unref(active).fill.type,
                         options: unref(fillTypeOptions),
                         "onUpdate:modelValue": _cache2[33] || (_cache2[33] = (v) => unref(onFillType)(v))
@@ -163696,13 +163700,13 @@ const _sfc_main$23 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$2J = {
+const _hoisted_1$2K = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$J(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$2J, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$2K, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -163714,13 +163718,13 @@ function render$J(_ctx, _cache2) {
   ])]);
 }
 const IconAlignCenter = markRaw({ name: "lucide-align-center", render: render$J });
-const _hoisted_1$2I = {
+const _hoisted_1$2J = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$I(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$2I, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$2J, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -163732,13 +163736,13 @@ function render$I(_ctx, _cache2) {
   ])]);
 }
 const IconAlignLeft = markRaw({ name: "lucide-align-left", render: render$I });
-const _hoisted_1$2H = {
+const _hoisted_1$2I = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$H(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$2H, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$2I, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -163750,29 +163754,29 @@ function render$H(_ctx, _cache2) {
   ])]);
 }
 const IconAlignRight = markRaw({ name: "lucide-align-right", render: render$H });
-const _hoisted_1$2G = { class: "ctv:flex ctv:items-center ctv:gap-1" };
-const _hoisted_2$1Y = { class: "ctv:flex-1 ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_3$1Y = ["title"];
-const _hoisted_4$1B = ["value", "placeholder"];
-const _hoisted_5$1v = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
-const _hoisted_6$1k = { class: "ctv:min-w-0 ctv:flex-1" };
-const _hoisted_7$$ = {
+const _hoisted_1$2H = { class: "ctv:flex ctv:items-center ctv:gap-1" };
+const _hoisted_2$1Z = { class: "ctv:flex-1 ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_3$1Z = ["title"];
+const _hoisted_4$1C = ["value", "placeholder"];
+const _hoisted_5$1w = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
+const _hoisted_6$1l = { class: "ctv:min-w-0 ctv:flex-1" };
+const _hoisted_7$10 = {
   key: 0,
   class: "ctv:text-2xs ctv:text-red-400"
 };
-const _hoisted_8$H = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
-const _hoisted_9$A = ["value"];
-const _hoisted_10$t = ["value"];
-const _hoisted_11$o = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
-const _hoisted_12$i = ["value"];
-const _hoisted_13$f = ["value"];
-const _hoisted_14$d = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
-const _hoisted_15$b = { class: "ctv:flex ctv:gap-0.5 ctv:rounded ctv:bg-secondary-background ctv:p-0.5" };
+const _hoisted_8$I = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
+const _hoisted_9$B = ["value"];
+const _hoisted_10$u = ["value"];
+const _hoisted_11$p = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
+const _hoisted_12$j = ["value"];
+const _hoisted_13$g = ["value"];
+const _hoisted_14$e = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
+const _hoisted_15$c = { class: "ctv:flex ctv:gap-0.5 ctv:rounded ctv:bg-secondary-background ctv:p-0.5" };
 const _hoisted_16$a = ["title", "onClick"];
 const labelClass = "ctv:shrink-0 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground";
 const numInputClass = "ctv-num-input ctv:w-14 ctv:min-w-0 ctv:rounded ctv:border ctv:border-border-subtle ctv:bg-secondary-background ctv:px-1 ctv:py-0.5 ctv:text-[11px] ctv:font-mono ctv:text-base-foreground";
 const miniBtnClass = "ctv:inline-flex ctv:size-5 ctv:items-center ctv:justify-center ctv:rounded ctv:border-0 ctv:bg-transparent ctv:p-0 ctv:text-muted-foreground ctv:cursor-pointer ctv:hover:bg-secondary-background ctv:hover:text-base-foreground";
-const _sfc_main$22 = /* @__PURE__ */ defineComponent({
+const _sfc_main$23 = /* @__PURE__ */ defineComponent({
   __name: "TextEditPopup",
   props: {
     editor: {}
@@ -163820,8 +163824,8 @@ const _sfc_main$22 = /* @__PURE__ */ defineComponent({
           ))
         ]
       }, [
-        createBaseVNode("div", _hoisted_1$2G, [
-          createBaseVNode("span", _hoisted_2$1Y, toDisplayString$1(_ctx.$t("pictor.sectionText")), 1),
+        createBaseVNode("div", _hoisted_1$2H, [
+          createBaseVNode("span", _hoisted_2$1Z, toDisplayString$1(_ctx.$t("pictor.sectionText")), 1),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(miniBtnClass),
@@ -163830,7 +163834,7 @@ const _sfc_main$22 = /* @__PURE__ */ defineComponent({
             (...args) => unref(close2) && unref(close2)(...args))
           }, [
             createVNode(unref(IconX), { class: "ctv:size-3.5" })
-          ], 8, _hoisted_3$1Y)
+          ], 8, _hoisted_3$1Z)
         ]),
         createBaseVNode("textarea", {
           ref_key: "textareaEl",
@@ -163840,21 +163844,21 @@ const _sfc_main$22 = /* @__PURE__ */ defineComponent({
           placeholder: _ctx.$t("pictor.textPlaceholder"),
           class: "ctv:w-full ctv:resize-y ctv:rounded ctv:border ctv:border-border-subtle ctv:bg-secondary-background ctv:box-border ctv:px-1.5 ctv:py-1 ctv:text-xs ctv:text-base-foreground ctv:outline-none ctv:[font-family:inherit] ctv:focus:border-primary-background",
           onInput: _cache2[1] || (_cache2[1] = (e) => unref(patch)({ text: e.target.value }))
-        }, null, 40, _hoisted_4$1B),
-        createBaseVNode("div", _hoisted_5$1v, [
+        }, null, 40, _hoisted_4$1C),
+        createBaseVNode("div", _hoisted_5$1w, [
           createBaseVNode("span", {
             class: normalizeClass(labelClass)
           }, toDisplayString$1(_ctx.$t("pictor.font")), 1),
-          createBaseVNode("div", _hoisted_6$1k, [
-            createVNode(_sfc_main$26, {
+          createBaseVNode("div", _hoisted_6$1l, [
+            createVNode(_sfc_main$27, {
               "model-value": unref(fontValue),
               options: unref(fontOptions),
               "onUpdate:modelValue": unref(onFontChange)
             }, null, 8, ["model-value", "options", "onUpdate:modelValue"])
           ])
         ]),
-        unref(fontFailed) ? (openBlock(), createElementBlock("div", _hoisted_7$$, toDisplayString$1(_ctx.$t("pictor.loadFontFailed")), 1)) : createCommentVNode("", true),
-        createBaseVNode("div", _hoisted_8$H, [
+        unref(fontFailed) ? (openBlock(), createElementBlock("div", _hoisted_7$10, toDisplayString$1(_ctx.$t("pictor.loadFontFailed")), 1)) : createCommentVNode("", true),
+        createBaseVNode("div", _hoisted_8$I, [
           createBaseVNode("span", {
             class: normalizeClass(labelClass)
           }, toDisplayString$1(_ctx.$t("pictor.fontSize")), 1),
@@ -163866,7 +163870,7 @@ const _sfc_main$22 = /* @__PURE__ */ defineComponent({
             class: normalizeClass(numInputClass),
             value: Math.round(unref(layer).fontSize),
             onChange: _cache2[2] || (_cache2[2] = (e) => unref(patch)({ fontSize: unref(clampNum)(e, 4, 2048) }))
-          }, null, 40, _hoisted_9$A),
+          }, null, 40, _hoisted_9$B),
           createBaseVNode("span", {
             class: normalizeClass(labelClass)
           }, toDisplayString$1(_ctx.$t("pictor.textColor")), 1),
@@ -163875,9 +163879,9 @@ const _sfc_main$22 = /* @__PURE__ */ defineComponent({
             class: "ctv:h-5 ctv:w-7 ctv:cursor-pointer ctv:rounded ctv:border-0 ctv:bg-transparent ctv:p-0",
             value: unref(layer).color,
             onInput: _cache2[3] || (_cache2[3] = (e) => unref(patch)({ color: e.target.value }))
-          }, null, 40, _hoisted_10$t)
+          }, null, 40, _hoisted_10$u)
         ]),
-        createBaseVNode("div", _hoisted_11$o, [
+        createBaseVNode("div", _hoisted_11$p, [
           createBaseVNode("span", {
             class: normalizeClass(labelClass)
           }, toDisplayString$1(_ctx.$t("pictor.letterSpacing")), 1),
@@ -163889,7 +163893,7 @@ const _sfc_main$22 = /* @__PURE__ */ defineComponent({
             class: normalizeClass(numInputClass),
             value: unref(layer).letterSpacing,
             onChange: _cache2[4] || (_cache2[4] = (e) => unref(patch)({ letterSpacing: unref(clampNum)(e, -50, 200) }))
-          }, null, 40, _hoisted_12$i),
+          }, null, 40, _hoisted_12$j),
           createBaseVNode("span", {
             class: normalizeClass(labelClass)
           }, toDisplayString$1(_ctx.$t("pictor.lineHeight")), 1),
@@ -163901,13 +163905,13 @@ const _sfc_main$22 = /* @__PURE__ */ defineComponent({
             class: normalizeClass(numInputClass),
             value: unref(layer).lineHeight,
             onChange: _cache2[5] || (_cache2[5] = (e) => unref(patch)({ lineHeight: unref(clampNum)(e, 0.5, 4) }))
-          }, null, 40, _hoisted_13$f)
+          }, null, 40, _hoisted_13$g)
         ]),
-        createBaseVNode("div", _hoisted_14$d, [
+        createBaseVNode("div", _hoisted_14$e, [
           createBaseVNode("span", {
             class: normalizeClass(labelClass)
           }, toDisplayString$1(_ctx.$t("pictor.align")), 1),
-          createBaseVNode("div", _hoisted_15$b, [
+          createBaseVNode("div", _hoisted_15$c, [
             (openBlock(), createElementBlock(Fragment$1, null, renderList(ALIGNS, (a2) => {
               return createBaseVNode("button", {
                 key: a2.value,
@@ -163925,13 +163929,13 @@ const _sfc_main$22 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$2F = {
+const _hoisted_1$2G = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$G(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$2F, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$2G, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -163943,7 +163947,7 @@ function render$G(_ctx, _cache2) {
   ])]);
 }
 const IconLibrary = markRaw({ name: "lucide-library", render: render$G });
-const _sfc_main$21 = /* @__PURE__ */ defineComponent({
+const _sfc_main$22 = /* @__PURE__ */ defineComponent({
   __name: "PictorAssetPicker",
   emits: ["pick", "close"],
   setup(__props, { emit: __emit }) {
@@ -163952,7 +163956,7 @@ const _sfc_main$21 = /* @__PURE__ */ defineComponent({
       emit2("pick", assetToMedia(asset));
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$3g, {
+      return openBlock(), createBlock(_sfc_main$3h, {
         onSelect,
         onClose: _cache2[0] || (_cache2[0] = ($event) => _ctx.$emit("close"))
       });
@@ -164007,7 +164011,7 @@ const pictorHost = {
     });
     if (!asset) throw new Error("asset create failed");
   },
-  components: { AssetPicker: markRaw(_sfc_main$21) },
+  components: { AssetPicker: markRaw(_sfc_main$22) },
   toolbarActions: [
     {
       id: "capture",
@@ -164064,11 +164068,11 @@ function useNodePictorEditor(node, opts) {
   onNodeConfigure(node, editor.reload);
   return editor;
 }
-const _hoisted_1$2E = ["title"];
-const _hoisted_2$1X = { class: "ctv:flex ctv:min-h-0 ctv:flex-1 ctv:gap-1" };
-const _hoisted_3$1X = { class: "ctv:relative ctv:min-w-0 ctv:flex-1" };
+const _hoisted_1$2F = ["title"];
+const _hoisted_2$1Y = { class: "ctv:flex ctv:min-h-0 ctv:flex-1 ctv:gap-1" };
+const _hoisted_3$1Y = { class: "ctv:relative ctv:min-w-0 ctv:flex-1" };
 const iconToolBtnClass = "ctv:inline-flex ctv:size-7 ctv:items-center ctv:justify-center ctv:rounded-md ctv:border-0 ctv:bg-transparent ctv:text-muted-foreground ctv:cursor-pointer ctv:transition-colors ctv:hover:bg-secondary-background ctv:hover:text-base-foreground";
-const _sfc_main$20 = /* @__PURE__ */ defineComponent({
+const _sfc_main$21 = /* @__PURE__ */ defineComponent({
   __name: "LayerEditorStageCard",
   props: {
     state: {},
@@ -164130,7 +164134,7 @@ const _sfc_main$20 = /* @__PURE__ */ defineComponent({
           onKeyup: _cache2[4] || (_cache2[4] = //@ts-ignore
           (...args) => unref(onKeyUp) && unref(onKeyUp)(...args))
         }, [
-          createVNode(unref(_sfc_main$29), { editor: unref(editor) }, {
+          createVNode(unref(_sfc_main$2a), { editor: unref(editor) }, {
             trailing: withCtx(() => [
               createBaseVNode("button", {
                 type: "button",
@@ -164145,21 +164149,21 @@ const _sfc_main$20 = /* @__PURE__ */ defineComponent({
                   key: 1,
                   class: "ctv:size-4"
                 }))
-              ], 8, _hoisted_1$2E)
+              ], 8, _hoisted_1$2F)
             ]),
             _: 1
           }, 8, ["editor"]),
-          createBaseVNode("div", _hoisted_2$1X, [
-            createVNode(unref(_sfc_main$28), { editor: unref(editor) }, null, 8, ["editor"]),
-            createBaseVNode("div", _hoisted_3$1X, [
-              createVNode(unref(_sfc_main$2a), {
+          createBaseVNode("div", _hoisted_2$1Y, [
+            createVNode(unref(_sfc_main$29), { editor: unref(editor) }, null, 8, ["editor"]),
+            createBaseVNode("div", _hoisted_3$1Y, [
+              createVNode(unref(_sfc_main$2b), {
                 ref_key: "canvasEl",
                 ref: canvasEl,
                 editor: unref(editor)
               }, null, 8, ["editor"]),
-              createVNode(unref(_sfc_main$22), { editor: unref(editor) }, null, 8, ["editor"])
+              createVNode(unref(_sfc_main$23), { editor: unref(editor) }, null, 8, ["editor"])
             ]),
-            createVNode(unref(_sfc_main$23), { editor: unref(editor) }, null, 8, ["editor"])
+            createVNode(unref(_sfc_main$24), { editor: unref(editor) }, null, 8, ["editor"])
           ]),
           createVNode(StageCard, {
             class: "ctv:h-auto! ctv:grow-0 ctv:shrink-0",
@@ -164343,21 +164347,21 @@ function boardsFromShotsJson(raw) {
     });
   });
 }
-const _hoisted_1$2D = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:overflow-y-auto ctv:p-1 ctv:text-2xs" };
-const _hoisted_2$1W = { class: "ctv:flex ctv:items-center ctv:gap-2" };
-const _hoisted_3$1W = { class: "ctv:text-sm ctv:font-bold ctv:font-mono ctv:text-base-foreground" };
-const _hoisted_4$1A = { class: "ctv:text-muted-foreground" };
-const _hoisted_5$1u = { class: "ctv:ml-auto ctv:flex ctv:items-center ctv:gap-1 ctv:cursor-pointer ctv:text-muted-foreground" };
-const _hoisted_6$1j = ["checked", "disabled"];
-const _hoisted_7$_ = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-muted-foreground" };
-const _hoisted_8$G = ["value", "placeholder"];
-const _hoisted_9$z = ["title"];
-const _hoisted_10$s = { class: "ctv:opacity-60" };
-const _hoisted_11$n = ["value", "rows", "onInput"];
-const _hoisted_12$h = { class: "ctv:flex ctv:flex-col ctv:gap-1 ctv:pt-1 ctv:border-t ctv:border-border-subtle" };
-const _hoisted_13$e = { class: "ctv:opacity-60" };
-const _hoisted_14$c = { class: "ctv:relative ctv:w-full ctv:aspect-video ctv:rounded ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle" };
-const _hoisted_15$a = ["src"];
+const _hoisted_1$2E = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:overflow-y-auto ctv:p-1 ctv:text-2xs" };
+const _hoisted_2$1X = { class: "ctv:flex ctv:items-center ctv:gap-2" };
+const _hoisted_3$1X = { class: "ctv:text-sm ctv:font-bold ctv:font-mono ctv:text-base-foreground" };
+const _hoisted_4$1B = { class: "ctv:text-muted-foreground" };
+const _hoisted_5$1v = { class: "ctv:ml-auto ctv:flex ctv:items-center ctv:gap-1 ctv:cursor-pointer ctv:text-muted-foreground" };
+const _hoisted_6$1k = ["checked", "disabled"];
+const _hoisted_7$$ = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-muted-foreground" };
+const _hoisted_8$H = ["value", "placeholder"];
+const _hoisted_9$A = ["title"];
+const _hoisted_10$t = { class: "ctv:opacity-60" };
+const _hoisted_11$o = ["value", "rows", "onInput"];
+const _hoisted_12$i = { class: "ctv:flex ctv:flex-col ctv:gap-1 ctv:pt-1 ctv:border-t ctv:border-border-subtle" };
+const _hoisted_13$f = { class: "ctv:opacity-60" };
+const _hoisted_14$d = { class: "ctv:relative ctv:w-full ctv:aspect-video ctv:rounded ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle" };
+const _hoisted_15$b = ["src"];
 const _hoisted_16$9 = {
   key: 1,
   class: "ctv:size-full ctv:flex ctv:items-center ctv:justify-center ctv:text-3xs ctv:text-white/30"
@@ -164366,7 +164370,7 @@ const _hoisted_17$9 = { class: "ctv:flex ctv:gap-1" };
 const _hoisted_18$8 = ["disabled"];
 const _hoisted_19$7 = { key: 0 };
 const btn$4 = "ctv:py-0.5 ctv:px-2 ctv:text-2xs ctv:rounded ctv:cursor-pointer ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground ctv:hover:bg-secondary-background-hover ctv:disabled:opacity-50";
-const _sfc_main$1$ = /* @__PURE__ */ defineComponent({
+const _sfc_main$20 = /* @__PURE__ */ defineComponent({
   __name: "StoryboardBoardPanel",
   props: {
     sb: {}
@@ -164415,21 +164419,21 @@ const _sfc_main$1$ = /* @__PURE__ */ defineComponent({
       }
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$2D, [
-        createBaseVNode("div", _hoisted_2$1W, [
-          createBaseVNode("span", _hoisted_3$1W, toDisplayString$1(__props.sb.labels.value[__props.sb.currentIndex.value]), 1),
-          createBaseVNode("span", _hoisted_4$1A, "#" + toDisplayString$1(__props.sb.currentIndex.value + 1), 1),
-          createBaseVNode("label", _hoisted_5$1u, [
+      return openBlock(), createElementBlock("div", _hoisted_1$2E, [
+        createBaseVNode("div", _hoisted_2$1X, [
+          createBaseVNode("span", _hoisted_3$1X, toDisplayString$1(__props.sb.labels.value[__props.sb.currentIndex.value]), 1),
+          createBaseVNode("span", _hoisted_4$1B, "#" + toDisplayString$1(__props.sb.currentIndex.value + 1), 1),
+          createBaseVNode("label", _hoisted_5$1v, [
             createBaseVNode("input", {
               type: "checkbox",
               checked: board.value.newShot,
               disabled: __props.sb.currentIndex.value === 0,
               onChange: _cache2[0] || (_cache2[0] = ($event) => __props.sb.toggleNewShot(board.value.uid))
-            }, null, 40, _hoisted_6$1j),
+            }, null, 40, _hoisted_6$1k),
             createTextVNode(" " + toDisplayString$1(_ctx.$t("storyboardEditor.newShot")), 1)
           ])
         ]),
-        createBaseVNode("label", _hoisted_7$_, [
+        createBaseVNode("label", _hoisted_7$$, [
           createTextVNode(toDisplayString$1(_ctx.$t("storyboardEditor.duration")) + " ", 1),
           createBaseVNode("input", {
             type: "number",
@@ -164439,7 +164443,7 @@ const _sfc_main$1$ = /* @__PURE__ */ defineComponent({
             placeholder: (__props.sb.doc.value.defaultBoardTimingMs / 1e3).toFixed(1),
             class: "ctv:w-16 ctv:py-0.5 ctv:px-1 ctv:rounded-sm ctv:font-mono ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle",
             onChange: onDuration
-          }, null, 40, _hoisted_8$G),
+          }, null, 40, _hoisted_8$H),
           _cache2[4] || (_cache2[4] = createBaseVNode("span", null, "s", -1)),
           suggestedS.value != null ? (openBlock(), createElementBlock("button", {
             key: 0,
@@ -164447,30 +164451,30 @@ const _sfc_main$1$ = /* @__PURE__ */ defineComponent({
             class: normalizeClass(btn$4),
             title: _ctx.$t("storyboardEditor.suggestDurationHint"),
             onClick: _cache2[1] || (_cache2[1] = ($event) => __props.sb.applySuggestedDuration(board.value.uid))
-          }, "≈ " + toDisplayString$1(suggestedS.value) + "s", 9, _hoisted_9$z)) : createCommentVNode("", true)
+          }, "≈ " + toDisplayString$1(suggestedS.value) + "s", 9, _hoisted_9$A)) : createCommentVNode("", true)
         ]),
         (openBlock(), createElementBlock(Fragment$1, null, renderList(FIELDS, (field) => {
           return openBlock(), createElementBlock(Fragment$1, {
             key: field.key
           }, [
-            createBaseVNode("label", _hoisted_10$s, toDisplayString$1(_ctx.$t(field.label)), 1),
+            createBaseVNode("label", _hoisted_10$t, toDisplayString$1(_ctx.$t(field.label)), 1),
             createBaseVNode("textarea", {
               value: board.value[field.key],
               rows: field.rows ?? 1,
               class: "ctv:w-full ctv:box-border ctv:resize-y ctv:py-1 ctv:px-1.5 ctv:rounded ctv:text-2xs ctv:leading-snug ctv:[font-family:inherit] ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-transparent ctv:min-h-[24px] ctv:hover:border-border-subtle ctv:focus:outline-none ctv:focus:border-primary-background/50",
               onInput: (e) => __props.sb.setBoardField(board.value.uid, field.key, e.target.value)
-            }, null, 40, _hoisted_11$n)
+            }, null, 40, _hoisted_11$o)
           ], 64);
         }), 64)),
-        createBaseVNode("div", _hoisted_12$h, [
-          createBaseVNode("span", _hoisted_13$e, toDisplayString$1(_ctx.$t("storyboardEditor.refImage")), 1),
-          createBaseVNode("div", _hoisted_14$c, [
+        createBaseVNode("div", _hoisted_12$i, [
+          createBaseVNode("span", _hoisted_13$f, toDisplayString$1(_ctx.$t("storyboardEditor.refImage")), 1),
+          createBaseVNode("div", _hoisted_14$d, [
             board.value.refUrl ? (openBlock(), createElementBlock("img", {
               key: 0,
               src: board.value.refUrl,
               class: "ctv:size-full ctv:object-contain",
               draggable: "false"
-            }, null, 8, _hoisted_15$a)) : (openBlock(), createElementBlock("div", _hoisted_16$9, toDisplayString$1(_ctx.$t("storyboardEditor.noRef")), 1))
+            }, null, 8, _hoisted_15$b)) : (openBlock(), createElementBlock("div", _hoisted_16$9, toDisplayString$1(_ctx.$t("storyboardEditor.noRef")), 1))
           ]),
           createBaseVNode("div", _hoisted_17$9, [
             createBaseVNode("button", {
@@ -164509,28 +164513,28 @@ const _sfc_main$1$ = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$2C = { class: "ctv:flex ctv:flex-col ctv:gap-1 ctv:shrink-0" };
-const _hoisted_2$1V = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-2xs ctv:text-muted-foreground ctv:flex-wrap" };
-const _hoisted_3$1V = { class: "ctv:font-semibold" };
-const _hoisted_4$1z = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:ml-1" };
-const _hoisted_5$1t = ["value"];
-const _hoisted_6$1i = ["disabled"];
-const _hoisted_7$Z = { key: 0 };
-const _hoisted_8$F = ["disabled"];
-const _hoisted_9$y = { key: 0 };
-const _hoisted_10$r = ["disabled"];
-const _hoisted_11$m = { key: 0 };
-const _hoisted_12$g = ["disabled"];
-const _hoisted_13$d = { key: 0 };
-const _hoisted_14$b = ["disabled"];
-const _hoisted_15$9 = { key: 0 };
+const _hoisted_1$2D = { class: "ctv:flex ctv:flex-col ctv:gap-1 ctv:shrink-0" };
+const _hoisted_2$1W = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-2xs ctv:text-muted-foreground ctv:flex-wrap" };
+const _hoisted_3$1W = { class: "ctv:font-semibold" };
+const _hoisted_4$1A = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:ml-1" };
+const _hoisted_5$1u = ["value"];
+const _hoisted_6$1j = ["disabled"];
+const _hoisted_7$_ = { key: 0 };
+const _hoisted_8$G = ["disabled"];
+const _hoisted_9$z = { key: 0 };
+const _hoisted_10$s = ["disabled"];
+const _hoisted_11$n = { key: 0 };
+const _hoisted_12$h = ["disabled"];
+const _hoisted_13$e = { key: 0 };
+const _hoisted_14$c = ["disabled"];
+const _hoisted_15$a = { key: 0 };
 const _hoisted_16$8 = ["disabled", "title"];
 const _hoisted_17$8 = { key: 0 };
 const _hoisted_18$7 = ["disabled", "title"];
 const _hoisted_19$6 = { key: 0 };
 const _hoisted_20$6 = { class: "ctv:flex ctv:gap-1.5 ctv:overflow-x-auto ctv:pb-1" };
-const _hoisted_21$6 = ["onClick", "onDragstart", "onDragover", "onDragleave", "onDrop"];
-const _hoisted_22$6 = { class: "ctv:aspect-video ctv:w-full" };
+const _hoisted_21$5 = ["onClick", "onDragstart", "onDragover", "onDragleave", "onDrop"];
+const _hoisted_22$5 = { class: "ctv:aspect-video ctv:w-full" };
 const _hoisted_23$4 = ["src"];
 const _hoisted_24$3 = {
   key: 1,
@@ -164544,7 +164548,7 @@ const _hoisted_29$2 = ["disabled", "title", "onClick"];
 const _hoisted_30$2 = ["title"];
 const stripBtn = "ctv:py-0.5 ctv:px-2 ctv:text-2xs ctv:rounded ctv:cursor-pointer ctv:bg-primary-background/15 ctv:border ctv:border-primary-background/40 ctv:text-primary-background ctv:hover:bg-primary-background/25 ctv:disabled:opacity-50";
 const tileBtn = "ctv:size-5 ctv:p-0 ctv:border-0 ctv:rounded ctv:cursor-pointer ctv:text-[9px] ctv:bg-black/70 ctv:text-white ctv:hover:bg-black/90 ctv:disabled:opacity-30 ctv:disabled:cursor-default";
-const _sfc_main$1_ = /* @__PURE__ */ defineComponent({
+const _sfc_main$1$ = /* @__PURE__ */ defineComponent({
   __name: "StoryboardTimelineStrip",
   props: {
     sb: {},
@@ -164611,11 +164615,11 @@ const _sfc_main$1_ = /* @__PURE__ */ defineComponent({
       el.addEventListener("pointercancel", onUp);
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$2C, [
-        createBaseVNode("div", _hoisted_2$1V, [
-          createBaseVNode("span", _hoisted_3$1V, toDisplayString$1(_ctx.$t("storyboardEditor.boards")) + " · " + toDisplayString$1(__props.sb.boards.value.length), 1),
+      return openBlock(), createElementBlock("div", _hoisted_1$2D, [
+        createBaseVNode("div", _hoisted_2$1W, [
+          createBaseVNode("span", _hoisted_3$1W, toDisplayString$1(_ctx.$t("storyboardEditor.boards")) + " · " + toDisplayString$1(__props.sb.boards.value.length), 1),
           createBaseVNode("span", null, toDisplayString$1((__props.sb.totalMs.value / 1e3).toFixed(1)) + "s", 1),
-          createBaseVNode("label", _hoisted_4$1z, [
+          createBaseVNode("label", _hoisted_4$1A, [
             createBaseVNode("span", null, toDisplayString$1(_ctx.$t("storyboardEditor.defaultDuration")), 1),
             createBaseVNode("input", {
               type: "number",
@@ -164624,7 +164628,7 @@ const _sfc_main$1_ = /* @__PURE__ */ defineComponent({
               value: __props.sb.doc.value.defaultBoardTimingMs / 1e3,
               class: "ctv:w-12 ctv:py-px ctv:px-1 ctv:rounded-sm ctv:text-2xs ctv:font-mono ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-subtle",
               onChange: _cache2[0] || (_cache2[0] = (e) => __props.sb.setDefaultTimingS(Number(e.target.value)))
-            }, null, 40, _hoisted_5$1t),
+            }, null, 40, _hoisted_5$1u),
             _cache2[15] || (_cache2[15] = createBaseVNode("span", null, "s", -1))
           ]),
           _cache2[16] || (_cache2[16] = createBaseVNode("span", { class: "ctv:ml-auto" }, null, -1)),
@@ -164649,10 +164653,10 @@ const _sfc_main$1_ = /* @__PURE__ */ defineComponent({
               return (_a2 = imagesInputEl.value) == null ? void 0 : _a2.click();
             })
           }, [
-            __props.sb.importingImages.value ? (openBlock(), createElementBlock("span", _hoisted_7$Z, "…")) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
+            __props.sb.importingImages.value ? (openBlock(), createElementBlock("span", _hoisted_7$_, "…")) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
               createTextVNode(toDisplayString$1(_ctx.$t("storyboardEditor.importImages")), 1)
             ], 64))
-          ], 8, _hoisted_6$1i),
+          ], 8, _hoisted_6$1j),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(stripBtn),
@@ -164668,40 +164672,40 @@ const _sfc_main$1_ = /* @__PURE__ */ defineComponent({
             disabled: __props.sb.exportingAnimatic.value,
             onClick: _cache2[5] || (_cache2[5] = ($event) => _ctx.$emit("export-animatic"))
           }, [
-            __props.sb.exportingAnimatic.value ? (openBlock(), createElementBlock("span", _hoisted_9$y, "…")) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
+            __props.sb.exportingAnimatic.value ? (openBlock(), createElementBlock("span", _hoisted_9$z, "…")) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
               createTextVNode(toDisplayString$1(_ctx.$t("storyboardEditor.exportAnimatic")), 1)
             ], 64))
-          ], 8, _hoisted_8$F),
+          ], 8, _hoisted_8$G),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(stripBtn),
             disabled: __props.sb.exportingGif.value,
             onClick: _cache2[6] || (_cache2[6] = ($event) => _ctx.$emit("export-gif"))
           }, [
-            __props.sb.exportingGif.value ? (openBlock(), createElementBlock("span", _hoisted_11$m, "…")) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
+            __props.sb.exportingGif.value ? (openBlock(), createElementBlock("span", _hoisted_11$n, "…")) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
               createTextVNode("GIF")
             ], 64))
-          ], 8, _hoisted_10$r),
+          ], 8, _hoisted_10$s),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(stripBtn),
             disabled: __props.exportingPdf,
             onClick: _cache2[7] || (_cache2[7] = ($event) => _ctx.$emit("export-pdf"))
           }, [
-            __props.exportingPdf ? (openBlock(), createElementBlock("span", _hoisted_13$d, "…")) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
+            __props.exportingPdf ? (openBlock(), createElementBlock("span", _hoisted_13$e, "…")) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
               createTextVNode(toDisplayString$1(_ctx.$t("storyboardEditor.exportPdf")), 1)
             ], 64))
-          ], 8, _hoisted_12$g),
+          ], 8, _hoisted_12$h),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(stripBtn),
             disabled: __props.sb.exportingZip.value,
             onClick: _cache2[8] || (_cache2[8] = ($event) => _ctx.$emit("export-zip"))
           }, [
-            __props.sb.exportingZip.value ? (openBlock(), createElementBlock("span", _hoisted_15$9, "…")) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
+            __props.sb.exportingZip.value ? (openBlock(), createElementBlock("span", _hoisted_15$a, "…")) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
               createTextVNode("PNG")
             ], 64))
-          ], 8, _hoisted_14$b),
+          ], 8, _hoisted_14$c),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(stripBtn),
@@ -164765,7 +164769,7 @@ const _sfc_main$1_ = /* @__PURE__ */ defineComponent({
               onDrop: withModifiers(($event) => onDrop(idx), ["prevent"]),
               onDragend: onDragEnd
             }, [
-              createBaseVNode("div", _hoisted_22$6, [
+              createBaseVNode("div", _hoisted_22$5, [
                 unref(boardImageUrl)(board) ? (openBlock(), createElementBlock("img", {
                   key: 0,
                   src: unref(boardImageUrl)(board),
@@ -164824,7 +164828,7 @@ const _sfc_main$1_ = /* @__PURE__ */ defineComponent({
                   createBaseVNode("i", { class: "pi pi-trash" }, null, -1)
                 ])], 8, _hoisted_29$2)
               ])
-            ], 42, _hoisted_21$6);
+            ], 42, _hoisted_21$5);
           }), 128)),
           createBaseVNode("button", {
             type: "button",
@@ -165903,28 +165907,28 @@ async function exportStoryboardAnimationPsd(doc2, labels, guides = { center: fal
   applyGuides(psd, doc2, guides, [0]);
   return writeBlob(psd);
 }
-const _hoisted_1$2B = ["title"];
-const _hoisted_2$1U = ["title"];
-const _hoisted_3$1U = ["title"];
-const _hoisted_4$1y = ["title"];
-const _hoisted_5$1s = ["title"];
-const _hoisted_6$1h = ["title"];
-const _hoisted_7$Y = ["title"];
-const _hoisted_8$E = ["title"];
-const _hoisted_9$x = ["title"];
-const _hoisted_10$q = ["title"];
-const _hoisted_11$l = ["title"];
-const _hoisted_12$f = { class: "ctv:flex ctv:min-h-0 ctv:flex-1 ctv:gap-1" };
-const _hoisted_13$c = { class: "ctv:relative ctv:min-w-0 ctv:flex-1" };
-const _hoisted_14$a = ["src"];
-const _hoisted_15$8 = ["src"];
+const _hoisted_1$2C = ["title"];
+const _hoisted_2$1V = ["title"];
+const _hoisted_3$1V = ["title"];
+const _hoisted_4$1z = ["title"];
+const _hoisted_5$1t = ["title"];
+const _hoisted_6$1i = ["title"];
+const _hoisted_7$Z = ["title"];
+const _hoisted_8$F = ["title"];
+const _hoisted_9$y = ["title"];
+const _hoisted_10$r = ["title"];
+const _hoisted_11$m = ["title"];
+const _hoisted_12$g = { class: "ctv:flex ctv:min-h-0 ctv:flex-1 ctv:gap-1" };
+const _hoisted_13$d = { class: "ctv:relative ctv:min-w-0 ctv:flex-1" };
+const _hoisted_14$b = ["src"];
+const _hoisted_15$9 = ["src"];
 const _hoisted_16$7 = ["viewBox"];
 const _hoisted_17$7 = ["stroke-width"];
 const _hoisted_18$6 = ["x1", "x2", "y2"];
 const _hoisted_19$5 = ["y1", "x2", "y2"];
 const _hoisted_20$5 = ["stroke-width"];
-const _hoisted_21$5 = ["x1", "x2", "y2"];
-const _hoisted_22$5 = ["y1", "x2", "y2"];
+const _hoisted_21$4 = ["x1", "x2", "y2"];
+const _hoisted_22$4 = ["y1", "x2", "y2"];
 const _hoisted_23$3 = ["stroke-width"];
 const _hoisted_24$2 = ["x1", "x2", "y2"];
 const _hoisted_25$2 = ["y1", "x2", "y2"];
@@ -165940,7 +165944,7 @@ const toggleBtnClass = "ctv:inline-flex ctv:size-7 ctv:items-center ctv:justify-
 const activeToggleClass = "ctv:bg-primary-background/20 ctv:text-primary-background";
 const tabBtnClass = "ctv:flex-1 ctv:py-1 ctv:px-2 ctv:text-2xs ctv:rounded ctv:border-0 ctv:cursor-pointer ctv:bg-transparent ctv:text-muted-foreground ctv:hover:text-base-foreground";
 const tabActiveClass = "ctv:bg-base-background ctv:text-base-foreground";
-const _sfc_main$1Z = /* @__PURE__ */ defineComponent({
+const _sfc_main$1_ = /* @__PURE__ */ defineComponent({
   __name: "StoryboardEditorStageCard",
   props: {
     state: {},
@@ -166124,7 +166128,7 @@ const _sfc_main$1Z = /* @__PURE__ */ defineComponent({
           onKeyup: _cache2[19] || (_cache2[19] = //@ts-ignore
           (...args) => unref(onKeyUp) && unref(onKeyUp)(...args))
         }, [
-          createVNode(unref(_sfc_main$29), { editor: unref(editor) }, {
+          createVNode(unref(_sfc_main$2a), { editor: unref(editor) }, {
             trailing: withCtx(() => [
               createBaseVNode("button", {
                 type: "button",
@@ -166133,7 +166137,7 @@ const _sfc_main$1Z = /* @__PURE__ */ defineComponent({
                 onClick: _cache2[0] || (_cache2[0] = ($event) => unref(sb).guideCenter.value = !unref(sb).guideCenter.value)
               }, [..._cache2[20] || (_cache2[20] = [
                 createBaseVNode("i", { class: "pi pi-plus ctv:text-[11px]" }, null, -1)
-              ])], 10, _hoisted_1$2B),
+              ])], 10, _hoisted_1$2C),
               createBaseVNode("button", {
                 type: "button",
                 class: normalizeClass([toggleBtnClass, unref(sb).guideThirds.value ? activeToggleClass : ""]),
@@ -166141,7 +166145,7 @@ const _sfc_main$1Z = /* @__PURE__ */ defineComponent({
                 onClick: _cache2[1] || (_cache2[1] = ($event) => unref(sb).guideThirds.value = !unref(sb).guideThirds.value)
               }, [..._cache2[21] || (_cache2[21] = [
                 createBaseVNode("i", { class: "pi pi-th-large ctv:text-[11px]" }, null, -1)
-              ])], 10, _hoisted_2$1U),
+              ])], 10, _hoisted_2$1V),
               createBaseVNode("button", {
                 type: "button",
                 class: normalizeClass([toggleBtnClass, unref(sb).guideGrid.value ? activeToggleClass : ""]),
@@ -166149,7 +166153,7 @@ const _sfc_main$1Z = /* @__PURE__ */ defineComponent({
                 onClick: _cache2[2] || (_cache2[2] = ($event) => unref(sb).guideGrid.value = !unref(sb).guideGrid.value)
               }, [..._cache2[22] || (_cache2[22] = [
                 createBaseVNode("i", { class: "pi pi-table ctv:text-[11px]" }, null, -1)
-              ])], 10, _hoisted_3$1U),
+              ])], 10, _hoisted_3$1V),
               createBaseVNode("button", {
                 type: "button",
                 class: normalizeClass(toggleBtnClass),
@@ -166157,7 +166161,7 @@ const _sfc_main$1Z = /* @__PURE__ */ defineComponent({
                 onClick: _cache2[3] || (_cache2[3] = ($event) => unref(sb).flipBoard("h"))
               }, [..._cache2[23] || (_cache2[23] = [
                 createBaseVNode("i", { class: "pi pi-arrows-h ctv:text-[11px]" }, null, -1)
-              ])], 8, _hoisted_4$1y),
+              ])], 8, _hoisted_4$1z),
               createBaseVNode("button", {
                 type: "button",
                 class: normalizeClass(toggleBtnClass),
@@ -166165,7 +166169,7 @@ const _sfc_main$1Z = /* @__PURE__ */ defineComponent({
                 onClick: _cache2[4] || (_cache2[4] = ($event) => unref(sb).flipBoard("v"))
               }, [..._cache2[24] || (_cache2[24] = [
                 createBaseVNode("i", { class: "pi pi-arrows-v ctv:text-[11px]" }, null, -1)
-              ])], 8, _hoisted_5$1s),
+              ])], 8, _hoisted_5$1t),
               _cache2[29] || (_cache2[29] = createBaseVNode("span", { class: "ctv:w-px ctv:h-4 ctv:bg-border-subtle ctv:mx-0.5" }, null, -1)),
               createBaseVNode("button", {
                 type: "button",
@@ -166174,7 +166178,7 @@ const _sfc_main$1Z = /* @__PURE__ */ defineComponent({
                 onClick: _cache2[5] || (_cache2[5] = ($event) => unref(sb).onionPrev.value = !unref(sb).onionPrev.value)
               }, [..._cache2[25] || (_cache2[25] = [
                 createBaseVNode("i", { class: "pi pi-step-backward ctv:text-[11px]" }, null, -1)
-              ])], 10, _hoisted_6$1h),
+              ])], 10, _hoisted_6$1i),
               createBaseVNode("button", {
                 type: "button",
                 class: normalizeClass([toggleBtnClass, unref(sb).onionNext.value ? activeToggleClass : ""]),
@@ -166182,7 +166186,7 @@ const _sfc_main$1Z = /* @__PURE__ */ defineComponent({
                 onClick: _cache2[6] || (_cache2[6] = ($event) => unref(sb).onionNext.value = !unref(sb).onionNext.value)
               }, [..._cache2[26] || (_cache2[26] = [
                 createBaseVNode("i", { class: "pi pi-step-forward ctv:text-[11px]" }, null, -1)
-              ])], 10, _hoisted_7$Y),
+              ])], 10, _hoisted_7$Z),
               createBaseVNode("button", {
                 type: "button",
                 class: normalizeClass([toggleBtnClass, unref(sb).captions.value ? activeToggleClass : ""]),
@@ -166190,7 +166194,7 @@ const _sfc_main$1Z = /* @__PURE__ */ defineComponent({
                 onClick: _cache2[7] || (_cache2[7] = ($event) => unref(sb).captions.value = !unref(sb).captions.value)
               }, [..._cache2[27] || (_cache2[27] = [
                 createBaseVNode("i", { class: "pi pi-comment ctv:text-[11px]" }, null, -1)
-              ])], 10, _hoisted_8$E),
+              ])], 10, _hoisted_8$F),
               createBaseVNode("button", {
                 type: "button",
                 class: normalizeClass([toggleBtnClass, unref(sb).loop.value ? activeToggleClass : ""]),
@@ -166198,7 +166202,7 @@ const _sfc_main$1Z = /* @__PURE__ */ defineComponent({
                 onClick: _cache2[8] || (_cache2[8] = ($event) => unref(sb).loop.value = !unref(sb).loop.value)
               }, [..._cache2[28] || (_cache2[28] = [
                 createBaseVNode("i", { class: "pi pi-replay ctv:text-[11px]" }, null, -1)
-              ])], 10, _hoisted_9$x),
+              ])], 10, _hoisted_9$y),
               createBaseVNode("button", {
                 type: "button",
                 class: normalizeClass(toggleBtnClass),
@@ -166208,7 +166212,7 @@ const _sfc_main$1Z = /* @__PURE__ */ defineComponent({
                 createBaseVNode("i", {
                   class: normalizeClass([unref(sb).playing.value ? "pi pi-stop" : "pi pi-play", "ctv:text-[11px]"])
                 }, null, 2)
-              ], 8, _hoisted_10$q),
+              ], 8, _hoisted_10$r),
               createBaseVNode("button", {
                 type: "button",
                 class: normalizeClass(toggleBtnClass),
@@ -166222,14 +166226,14 @@ const _sfc_main$1Z = /* @__PURE__ */ defineComponent({
                   key: 1,
                   class: "ctv:size-4"
                 }))
-              ], 8, _hoisted_11$l)
+              ], 8, _hoisted_11$m)
             ]),
             _: 1
           }, 8, ["editor"]),
-          createBaseVNode("div", _hoisted_12$f, [
-            createVNode(unref(_sfc_main$28), { editor: unref(editor) }, null, 8, ["editor"]),
-            createBaseVNode("div", _hoisted_13$c, [
-              createVNode(unref(_sfc_main$2a), {
+          createBaseVNode("div", _hoisted_12$g, [
+            createVNode(unref(_sfc_main$29), { editor: unref(editor) }, null, 8, ["editor"]),
+            createBaseVNode("div", _hoisted_13$d, [
+              createVNode(unref(_sfc_main$2b), {
                 ref_key: "canvasEl",
                 ref: canvasEl,
                 editor: unref(editor)
@@ -166241,14 +166245,14 @@ const _sfc_main$1Z = /* @__PURE__ */ defineComponent({
                     class: "ctv:absolute ctv:top-0 ctv:left-0 ctv:size-full ctv:pointer-events-none ctv:mix-blend-multiply ctv:opacity-40",
                     style: { "filter": "grayscale(1) sepia(1) saturate(3) hue-rotate(-30deg)" },
                     draggable: "false"
-                  }, null, 8, _hoisted_14$a)) : createCommentVNode("", true),
+                  }, null, 8, _hoisted_14$b)) : createCommentVNode("", true),
                   unref(sb).onionNextUrl.value ? (openBlock(), createElementBlock("img", {
                     key: 1,
                     src: unref(sb).onionNextUrl.value,
                     class: "ctv:absolute ctv:top-0 ctv:left-0 ctv:size-full ctv:pointer-events-none ctv:mix-blend-multiply ctv:opacity-30",
                     style: { "filter": "grayscale(1) sepia(1) saturate(3) hue-rotate(90deg)" },
                     draggable: "false"
-                  }, null, 8, _hoisted_15$8)) : createCommentVNode("", true),
+                  }, null, 8, _hoisted_15$9)) : createCommentVNode("", true),
                   unref(sb).guideCenter.value || unref(sb).guideThirds.value || unref(sb).guideGrid.value ? (openBlock(), createElementBlock("svg", {
                     key: 2,
                     class: "ctv:absolute ctv:top-0 ctv:left-0 ctv:size-full ctv:pointer-events-none",
@@ -166293,7 +166297,7 @@ const _sfc_main$1Z = /* @__PURE__ */ defineComponent({
                           y1: "0",
                           x2: guideSize.value.width * i / 3,
                           y2: guideSize.value.height
-                        }, null, 8, _hoisted_21$5);
+                        }, null, 8, _hoisted_21$4);
                       }), 64)),
                       (openBlock(), createElementBlock(Fragment$1, null, renderList(2, (i) => {
                         return createBaseVNode("line", {
@@ -166302,7 +166306,7 @@ const _sfc_main$1Z = /* @__PURE__ */ defineComponent({
                           y1: guideSize.value.height * i / 3,
                           x2: guideSize.value.width,
                           y2: guideSize.value.height * i / 3
-                        }, null, 8, _hoisted_22$5);
+                        }, null, 8, _hoisted_22$4);
                       }), 64))
                     ], 8, _hoisted_20$5)) : createCommentVNode("", true),
                     unref(sb).guideCenter.value ? (openBlock(), createElementBlock("g", {
@@ -166328,7 +166332,7 @@ const _sfc_main$1Z = /* @__PURE__ */ defineComponent({
                 ]),
                 _: 1
               }, 8, ["editor"]),
-              createVNode(unref(_sfc_main$22), { editor: unref(editor) }, null, 8, ["editor"]),
+              createVNode(unref(_sfc_main$23), { editor: unref(editor) }, null, 8, ["editor"]),
               unref(sb).playing.value ? (openBlock(), createElementBlock("div", {
                 key: 0,
                 class: "ctv:absolute ctv:inset-0 ctv:z-20 ctv:flex ctv:items-center ctv:justify-center ctv:bg-black ctv:cursor-pointer",
@@ -166357,13 +166361,13 @@ const _sfc_main$1Z = /* @__PURE__ */ defineComponent({
                   onClick: _cache2[12] || (_cache2[12] = ($event) => sideTab.value = "layers")
                 }, toDisplayString$1(_ctx.$t("storyboardEditor.tabLayers")), 3)
               ]),
-              withDirectives(createVNode(unref(_sfc_main$23), {
+              withDirectives(createVNode(unref(_sfc_main$24), {
                 editor: unref(editor),
                 class: "ctv:min-h-0 ctv:flex-1"
               }, null, 8, ["editor"]), [
                 [vShow, sideTab.value === "layers"]
               ]),
-              withDirectives(createVNode(_sfc_main$1$, {
+              withDirectives(createVNode(_sfc_main$20, {
                 sb: unref(sb),
                 class: "ctv:min-h-0 ctv:flex-1"
               }, null, 8, ["sb"]), [
@@ -166371,7 +166375,7 @@ const _sfc_main$1Z = /* @__PURE__ */ defineComponent({
               ])
             ])
           ]),
-          createVNode(_sfc_main$1_, {
+          createVNode(_sfc_main$1$, {
             sb: unref(sb),
             "has-upstream": hasUpstream.value,
             "has-upstream-images": hasUpstreamImages.value,
@@ -166504,7 +166508,7 @@ function createAreaLightMaterial(intensity2) {
   });
   return material;
 }
-const _sfc_main$1Y = /* @__PURE__ */ defineComponent({
+const _sfc_main$1Z = /* @__PURE__ */ defineComponent({
   __name: "MaterialSphere",
   props: {
     params: {}
@@ -166690,18 +166694,18 @@ function useMaterialStage(node, opts) {
     teardown
   };
 }
-const _hoisted_1$2A = { class: "ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[200px] ctv:rounded-lg ctv:overflow-hidden ctv:bg-black" };
-const _hoisted_2$1T = { class: "ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1" };
-const _hoisted_3$1T = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_4$1x = ["onClick"];
-const _hoisted_5$1r = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
-const _hoisted_6$1g = ["value"];
-const _hoisted_7$X = ["value"];
-const _hoisted_8$D = ["min", "max", "step", "value", "onInput"];
-const _hoisted_9$w = { class: "ctv:w-9 ctv:text-right ctv:text-2xs ctv:font-mono ctv:text-muted-foreground" };
+const _hoisted_1$2B = { class: "ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[200px] ctv:rounded-lg ctv:overflow-hidden ctv:bg-black" };
+const _hoisted_2$1U = { class: "ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1" };
+const _hoisted_3$1U = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_4$1y = ["onClick"];
+const _hoisted_5$1s = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
+const _hoisted_6$1h = ["value"];
+const _hoisted_7$Y = ["value"];
+const _hoisted_8$E = ["min", "max", "step", "value", "onInput"];
+const _hoisted_9$x = { class: "ctv:w-9 ctv:text-right ctv:text-2xs ctv:font-mono ctv:text-muted-foreground" };
 const paramLabelClass = "ctv:w-20 ctv:shrink-0 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground";
 const presetChipClass = "ctv:inline-flex ctv:items-center ctv:cursor-pointer ctv:[font-family:inherit] ctv:rounded-lg ctv:border ctv:border-border-subtle ctv:bg-secondary-background ctv:px-2 ctv:py-0.5 ctv:text-2xs ctv:text-muted-foreground ctv:transition-colors ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground";
-const _sfc_main$1X = /* @__PURE__ */ defineComponent({
+const _sfc_main$1Y = /* @__PURE__ */ defineComponent({
   __name: "MaterialStageCard",
   props: {
     state: {},
@@ -166741,8 +166745,8 @@ const _sfc_main$1X = /* @__PURE__ */ defineComponent({
         onContextmenu: _cache2[7] || (_cache2[7] = withModifiers(() => {
         }, ["stop", "prevent"]))
       }, [
-        createBaseVNode("div", _hoisted_1$2A, [
-          createVNode(_sfc_main$1Y, {
+        createBaseVNode("div", _hoisted_1$2B, [
+          createVNode(_sfc_main$1Z, {
             ref_key: "sphereEl",
             ref: sphereEl,
             class: "ctv:absolute! ctv:inset-0",
@@ -166750,15 +166754,15 @@ const _sfc_main$1X = /* @__PURE__ */ defineComponent({
             onRendered: unref(scheduleCapture)
           }, null, 8, ["params", "onRendered"])
         ]),
-        createBaseVNode("div", _hoisted_2$1T, [
-          createBaseVNode("span", _hoisted_3$1T, toDisplayString$1(_ctx.$t("materialStage.presets")), 1),
+        createBaseVNode("div", _hoisted_2$1U, [
+          createBaseVNode("span", _hoisted_3$1U, toDisplayString$1(_ctx.$t("materialStage.presets")), 1),
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(MATERIAL_PRESETS), (p2) => {
             return openBlock(), createElementBlock("button", {
               key: p2.key,
               type: "button",
               class: normalizeClass(presetChipClass),
               onClick: ($event) => unref(applyPreset)(p2)
-            }, toDisplayString$1(_ctx.$t(`materialStage.preset.${p2.key}`)), 9, _hoisted_4$1x);
+            }, toDisplayString$1(_ctx.$t(`materialStage.preset.${p2.key}`)), 9, _hoisted_4$1y);
           }), 128))
         ]),
         createBaseVNode("div", {
@@ -166770,7 +166774,7 @@ const _sfc_main$1X = /* @__PURE__ */ defineComponent({
           onPointerup: _cache2[4] || (_cache2[4] = withModifiers(() => {
           }, ["stop"]))
         }, [
-          createBaseVNode("div", _hoisted_5$1r, [
+          createBaseVNode("div", _hoisted_5$1s, [
             createBaseVNode("span", {
               class: normalizeClass(paramLabelClass)
             }, toDisplayString$1(_ctx.$t("materialStage.color")), 1),
@@ -166779,13 +166783,13 @@ const _sfc_main$1X = /* @__PURE__ */ defineComponent({
               class: "ctv:h-6 ctv:w-10 ctv:p-0 ctv:cursor-pointer ctv:rounded ctv:border ctv:border-border-subtle ctv:bg-transparent",
               value: unref(params).color,
               onInput: _cache2[0] || (_cache2[0] = (e) => unref(setColor)(e.target.value))
-            }, null, 40, _hoisted_6$1g),
+            }, null, 40, _hoisted_6$1h),
             createBaseVNode("input", {
               type: "text",
               class: "ctv-num-input ctv:w-20 ctv:py-0.5 ctv:px-1 ctv:text-[11px] ctv:font-mono ctv:rounded ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground",
               value: unref(params).color,
               onChange: _cache2[1] || (_cache2[1] = (e) => unref(setColor)(e.target.value))
-            }, null, 40, _hoisted_7$X)
+            }, null, 40, _hoisted_7$Y)
           ]),
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(MATERIAL_SLIDERS), (s) => {
             return openBlock(), createElementBlock("div", {
@@ -166803,8 +166807,8 @@ const _sfc_main$1X = /* @__PURE__ */ defineComponent({
                 class: "ctv:flex-1 ctv:accent-primary-background ctv:cursor-pointer",
                 value: unref(params)[s.key],
                 onInput: (e) => unref(setParam)(s.key, Number(e.target.value))
-              }, null, 40, _hoisted_8$D),
-              createBaseVNode("span", _hoisted_9$w, toDisplayString$1(unref(params)[s.key].toFixed(2)), 1)
+              }, null, 40, _hoisted_8$E),
+              createBaseVNode("span", _hoisted_9$x, toDisplayString$1(unref(params)[s.key].toFixed(2)), 1)
             ]);
           }), 128))
         ], 32),
@@ -167043,13 +167047,13 @@ function usePartAnnotation(opts) {
     onPointerUp: onPointerUp2
   };
 }
-const _hoisted_1$2z = {
+const _hoisted_1$2A = {
   key: 0,
   class: "ctv:absolute ctv:inset-0 ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50"
 };
-const _hoisted_2$1S = { class: "ctv:text-xs" };
-const _hoisted_3$1S = ["src"];
-const _sfc_main$1W = /* @__PURE__ */ defineComponent({
+const _hoisted_2$1T = { class: "ctv:text-xs" };
+const _hoisted_3$1T = ["src"];
+const _sfc_main$1X = /* @__PURE__ */ defineComponent({
   __name: "PartAnnotationCanvas",
   props: {
     sourceImageUrl: {},
@@ -167104,9 +167108,9 @@ const _sfc_main$1W = /* @__PURE__ */ defineComponent({
           onContextmenu: _cache2[5] || (_cache2[5] = withModifiers(() => {
           }, ["prevent"]))
         }, [
-          !__props.sourceImageUrl ? (openBlock(), createElementBlock("div", _hoisted_1$2z, [
+          !__props.sourceImageUrl ? (openBlock(), createElementBlock("div", _hoisted_1$2A, [
             _cache2[9] || (_cache2[9] = createBaseVNode("i", { class: "pi pi-image ctv:text-[32px] ctv:opacity-60" }, null, -1)),
-            createBaseVNode("div", _hoisted_2$1S, toDisplayString$1(_ctx.$t("splitPart.noInputImage")), 1)
+            createBaseVNode("div", _hoisted_2$1T, toDisplayString$1(_ctx.$t("splitPart.noInputImage")), 1)
           ])) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
             createBaseVNode("img", {
               ref_key: "imageEl",
@@ -167119,7 +167123,7 @@ const _sfc_main$1W = /* @__PURE__ */ defineComponent({
               (...args) => unref(onImageLoad) && unref(onImageLoad)(...args)),
               onDragstart: _cache2[1] || (_cache2[1] = withModifiers(() => {
               }, ["prevent"]))
-            }, null, 40, _hoisted_3$1S),
+            }, null, 40, _hoisted_3$1T),
             (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(boxOverlays), (b) => {
               return openBlock(), createElementBlock("div", {
                 key: `box-${b.id}`,
@@ -167212,12 +167216,12 @@ function useSplitPartPrompts(node, state2) {
     clearParts
   };
 }
-const _hoisted_1$2y = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:grow" };
-const _hoisted_2$1R = ["title", "onClick"];
-const _hoisted_3$1R = ["onClick"];
-const _hoisted_4$1w = ["onClick"];
-const _hoisted_5$1q = { class: "ctv:text-2xs ctv:text-muted-foreground ctv:px-0.5" };
-const _sfc_main$1V = /* @__PURE__ */ defineComponent({
+const _hoisted_1$2z = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:grow" };
+const _hoisted_2$1S = ["title", "onClick"];
+const _hoisted_3$1S = ["onClick"];
+const _hoisted_4$1x = ["onClick"];
+const _hoisted_5$1r = { class: "ctv:text-2xs ctv:text-muted-foreground ctv:px-0.5" };
+const _sfc_main$1W = /* @__PURE__ */ defineComponent({
   __name: "SplitPartStageCard",
   props: {
     state: {},
@@ -167249,8 +167253,8 @@ const _sfc_main$1V = /* @__PURE__ */ defineComponent({
       return "ctv:inline-flex ctv:items-center ctv:gap-1 ctv:cursor-pointer ctv:[font-family:inherit] ctv:rounded-lg ctv:border ctv:px-2 ctv:py-0.5 ctv:text-2xs ctv:transition-colors" + (selected ? " ctv:border-primary-background ctv:bg-primary-background/20 ctv:text-base-foreground" : " ctv:border-border-subtle ctv:bg-secondary-background ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground");
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$2y, [
-        createVNode(_sfc_main$1W, {
+      return openBlock(), createElementBlock("div", _hoisted_1$2z, [
+        createVNode(_sfc_main$1X, {
           "source-image-url": unref(sourceImageUrl),
           parts: unref(parts),
           "active-part-id": unref(activePartId),
@@ -167277,7 +167281,7 @@ const _sfc_main$1V = /* @__PURE__ */ defineComponent({
                 class: normalizeClass(["pi", t2.icon])
               }, null, 2),
               createTextVNode(" " + toDisplayString$1(_ctx.$t(`splitPart.tool.${t2.id}`)), 1)
-            ], 10, _hoisted_2$1R);
+            ], 10, _hoisted_2$1S);
           }), 64)),
           _cache2[8] || (_cache2[8] = createBaseVNode("span", { class: "ctv:mx-1 ctv:h-4 ctv:border-l ctv:border-border-subtle" }, null, -1)),
           createBaseVNode("button", {
@@ -167330,11 +167334,11 @@ const _sfc_main$1V = /* @__PURE__ */ defineComponent({
                 onClick: withModifiers(($event) => unref(removePart)(p2.id), ["stop"])
               }, [..._cache2[9] || (_cache2[9] = [
                 createBaseVNode("i", { class: "pi pi-times" }, null, -1)
-              ])], 8, _hoisted_4$1w)
-            ], 12, _hoisted_3$1R);
+              ])], 8, _hoisted_4$1x)
+            ], 12, _hoisted_3$1S);
           }), 128))
         ], 32)) : createCommentVNode("", true),
-        createBaseVNode("div", _hoisted_5$1q, toDisplayString$1(_ctx.$t("splitPart.hint")), 1),
+        createBaseVNode("div", _hoisted_5$1r, toDisplayString$1(_ctx.$t("splitPart.hint")), 1),
         createVNode(StageCard, {
           class: "ctv:h-auto! ctv:grow-0 ctv:shrink-0",
           state: __props.state,
@@ -167349,20 +167353,20 @@ const _sfc_main$1V = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$2x = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
-const _hoisted_2$1Q = ["title"];
-const _hoisted_3$1Q = {
+const _hoisted_1$2y = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
+const _hoisted_2$1R = ["title"];
+const _hoisted_3$1R = {
   key: 0,
   class: "ctv-fx-gradwrap ctv:flex-1"
 };
-const _hoisted_4$1v = ["min", "max", "step", "value"];
-const _hoisted_5$1p = ["min", "max", "step", "value"];
-const _hoisted_6$1f = ["min", "max", "step", "value"];
-const _hoisted_7$W = {
+const _hoisted_4$1w = ["min", "max", "step", "value"];
+const _hoisted_5$1q = ["min", "max", "step", "value"];
+const _hoisted_6$1g = ["min", "max", "step", "value"];
+const _hoisted_7$X = {
   key: 2,
   class: "ctv:shrink-0 ctv:w-4 ctv:text-2xs ctv:text-muted-foreground"
 };
-const _sfc_main$1U = /* @__PURE__ */ defineComponent({
+const _sfc_main$1V = /* @__PURE__ */ defineComponent({
   __name: "FxSlider",
   props: {
     modelValue: {},
@@ -167406,12 +167410,12 @@ const _sfc_main$1U = /* @__PURE__ */ defineComponent({
       if (props.resetTo !== void 0) emit2("update:modelValue", props.resetTo);
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$2x, [
+      return openBlock(), createElementBlock("div", _hoisted_1$2y, [
         createBaseVNode("span", {
           class: "ctv:min-w-16 ctv:shrink-0 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground ctv:truncate",
           title: __props.label
-        }, toDisplayString$1(__props.label), 9, _hoisted_2$1Q),
-        __props.gradient && __props.gradient.length ? (openBlock(), createElementBlock("div", _hoisted_3$1Q, [
+        }, toDisplayString$1(__props.label), 9, _hoisted_2$1R),
+        __props.gradient && __props.gradient.length ? (openBlock(), createElementBlock("div", _hoisted_3$1R, [
           createBaseVNode("div", {
             class: "ctv-fx-gradbar",
             style: normalizeStyle({ background: gradientCss.value })
@@ -167426,7 +167430,7 @@ const _sfc_main$1U = /* @__PURE__ */ defineComponent({
             value: __props.modelValue,
             onInput,
             onDblclick: reset
-          }, null, 44, _hoisted_4$1v)
+          }, null, 44, _hoisted_4$1w)
         ])) : (openBlock(), createElementBlock("input", {
           key: 1,
           type: "range",
@@ -167437,7 +167441,7 @@ const _sfc_main$1U = /* @__PURE__ */ defineComponent({
           value: __props.modelValue,
           onInput,
           onDblclick: reset
-        }, null, 40, _hoisted_5$1p)),
+        }, null, 40, _hoisted_5$1q)),
         createBaseVNode("input", {
           type: "number",
           min: __props.min,
@@ -167446,13 +167450,13 @@ const _sfc_main$1U = /* @__PURE__ */ defineComponent({
           class: "ctv-fx-num ctv:w-14 ctv:py-0.5 ctv:px-1 ctv:text-right ctv:text-[11px] ctv:font-mono ctv:rounded ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground",
           value: display.value,
           onChange: onNum
-        }, null, 40, _hoisted_6$1f),
-        __props.unit ? (openBlock(), createElementBlock("span", _hoisted_7$W, toDisplayString$1(__props.unit), 1)) : createCommentVNode("", true)
+        }, null, 40, _hoisted_6$1g),
+        __props.unit ? (openBlock(), createElementBlock("span", _hoisted_7$X, toDisplayString$1(__props.unit), 1)) : createCommentVNode("", true)
       ]);
     };
   }
 });
-const FxSlider = /* @__PURE__ */ _export_sfc(_sfc_main$1U, [["__scopeId", "data-v-a7c2c51e"]]);
+const FxSlider = /* @__PURE__ */ _export_sfc(_sfc_main$1V, [["__scopeId", "data-v-a7c2c51e"]]);
 const AX = [
   { x: Math.cos(Math.PI / 2), y: -Math.sin(Math.PI / 2) },
   { x: Math.cos(210 * Math.PI / 180), y: -Math.sin(210 * Math.PI / 180) },
@@ -167561,11 +167565,11 @@ function useColorWheel(opts) {
   onMounted(draw);
   return { dragging, draw, onDown, onMove, onUp };
 }
-const _hoisted_1$2w = { class: "ctv:flex ctv:flex-col ctv:items-center ctv:gap-0.5 ctv:select-none" };
-const _hoisted_2$1P = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_3$1P = ["width", "height"];
-const _hoisted_4$1u = { class: "ctv:text-2xs ctv:font-mono ctv:text-muted-foreground" };
-const _sfc_main$1T = /* @__PURE__ */ defineComponent({
+const _hoisted_1$2x = { class: "ctv:flex ctv:flex-col ctv:items-center ctv:gap-0.5 ctv:select-none" };
+const _hoisted_2$1Q = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_3$1Q = ["width", "height"];
+const _hoisted_4$1v = { class: "ctv:text-2xs ctv:font-mono ctv:text-muted-foreground" };
+const _sfc_main$1U = /* @__PURE__ */ defineComponent({
   __name: "ColorWheel",
   props: {
     modelValue: {},
@@ -167587,8 +167591,8 @@ const _sfc_main$1T = /* @__PURE__ */ defineComponent({
       emit2("update:modelValue", { r: 0, g: 0, b: 0 });
     }
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$2w, [
-        createBaseVNode("span", _hoisted_2$1P, toDisplayString$1(__props.label), 1),
+      return openBlock(), createElementBlock("div", _hoisted_1$2x, [
+        createBaseVNode("span", _hoisted_2$1Q, toDisplayString$1(__props.label), 1),
         createBaseVNode("canvas", {
           ref_key: "cv",
           ref: cv2,
@@ -167605,8 +167609,8 @@ const _sfc_main$1T = /* @__PURE__ */ defineComponent({
           onPointercancel: _cache2[3] || (_cache2[3] = //@ts-ignore
           (...args) => unref(onUp) && unref(onUp)(...args)),
           onDblclick: resetWheel
-        }, null, 44, _hoisted_3$1P),
-        createBaseVNode("span", _hoisted_4$1u, toDisplayString$1(unref(fmtOffset)(__props.modelValue.r)) + " " + toDisplayString$1(unref(fmtOffset)(__props.modelValue.g)) + " " + toDisplayString$1(unref(fmtOffset)(__props.modelValue.b)), 1)
+        }, null, 44, _hoisted_3$1Q),
+        createBaseVNode("span", _hoisted_4$1v, toDisplayString$1(unref(fmtOffset)(__props.modelValue.r)) + " " + toDisplayString$1(unref(fmtOffset)(__props.modelValue.g)) + " " + toDisplayString$1(unref(fmtOffset)(__props.modelValue.b)), 1)
       ]);
     };
   }
@@ -167625,27 +167629,27 @@ function colorPreviewStyle(v) {
   if (parts.length) style2.filter = parts.join(" ");
   return style2;
 }
-const _hoisted_1$2v = { class: "ctv:flex ctv:items-start ctv:justify-around ctv:gap-1 ctv:pt-1" };
-const _hoisted_2$1O = { class: "ctv:flex ctv:items-center ctv:justify-between ctv:gap-1 ctv:text-2xs" };
-const _hoisted_3$1O = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-muted-foreground ctv:cursor-pointer" };
-const _hoisted_4$1t = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_5$1o = {
+const _hoisted_1$2w = { class: "ctv:flex ctv:items-start ctv:justify-around ctv:gap-1 ctv:pt-1" };
+const _hoisted_2$1P = { class: "ctv:flex ctv:items-center ctv:justify-between ctv:gap-1 ctv:text-2xs" };
+const _hoisted_3$1P = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-muted-foreground ctv:cursor-pointer" };
+const _hoisted_4$1u = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_5$1p = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_6$1e = {
+const _hoisted_6$1f = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_7$V = {
+const _hoisted_7$W = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_8$C = {
+const _hoisted_8$D = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
-const _sfc_main$1S = /* @__PURE__ */ defineComponent({
+const _sfc_main$1T = /* @__PURE__ */ defineComponent({
   __name: "VideoColorStageCard",
   props: {
     state: {},
@@ -167732,7 +167736,7 @@ const _sfc_main$1S = /* @__PURE__ */ defineComponent({
       temperature: temperature.value
     }));
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -167846,25 +167850,25 @@ const _sfc_main$1S = /* @__PURE__ */ defineComponent({
               "reset-to": 1,
               gradient: unref(LUMA_STOPS$1)
             }, null, 8, ["modelValue", "gradient"]),
-            createBaseVNode("div", _hoisted_1$2v, [
-              createVNode(_sfc_main$1T, {
+            createBaseVNode("div", _hoisted_1$2w, [
+              createVNode(_sfc_main$1U, {
                 modelValue: unref(shadows2),
                 "onUpdate:modelValue": _cache2[8] || (_cache2[8] = ($event) => /* @__PURE__ */ isRef(shadows2) ? shadows2.value = $event : null),
                 label: _ctx.$t("fx.shadows")
               }, null, 8, ["modelValue", "label"]),
-              createVNode(_sfc_main$1T, {
+              createVNode(_sfc_main$1U, {
                 modelValue: unref(midtones),
                 "onUpdate:modelValue": _cache2[9] || (_cache2[9] = ($event) => /* @__PURE__ */ isRef(midtones) ? midtones.value = $event : null),
                 label: _ctx.$t("fx.midtones")
               }, null, 8, ["modelValue", "label"]),
-              createVNode(_sfc_main$1T, {
+              createVNode(_sfc_main$1U, {
                 modelValue: unref(highlights2),
                 "onUpdate:modelValue": _cache2[10] || (_cache2[10] = ($event) => /* @__PURE__ */ isRef(highlights2) ? highlights2.value = $event : null),
                 label: _ctx.$t("fx.highlights")
               }, null, 8, ["modelValue", "label"])
             ]),
-            createBaseVNode("div", _hoisted_2$1O, [
-              createBaseVNode("label", _hoisted_3$1O, [
+            createBaseVNode("div", _hoisted_2$1P, [
+              createBaseVNode("label", _hoisted_3$1P, [
                 withDirectives(createBaseVNode("input", {
                   type: "checkbox",
                   "onUpdate:modelValue": _cache2[11] || (_cache2[11] = ($event) => /* @__PURE__ */ isRef(preserveLightness) ? preserveLightness.value = $event : null),
@@ -167881,8 +167885,8 @@ const _sfc_main$1S = /* @__PURE__ */ defineComponent({
               }, toDisplayString$1(_ctx.$t("fx.resetWheels")), 1)
             ])
           ], 32),
-          createBaseVNode("div", _hoisted_4$1t, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_5$1o, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_6$1e, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_7$V, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_8$C, toDisplayString$1(_ctx.$t("fx.previewNote")), 1))
+          createBaseVNode("div", _hoisted_4$1u, [
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_5$1p, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_6$1f, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_7$W, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_8$D, toDisplayString$1(_ctx.$t("fx.previewNote")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
@@ -167899,13 +167903,13 @@ const _sfc_main$1S = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$2u = { class: "ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1" };
-const _hoisted_2$1N = ["title", "onClick"];
-const _hoisted_3$1N = {
+const _hoisted_1$2v = { class: "ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1" };
+const _hoisted_2$1O = ["title", "onClick"];
+const _hoisted_3$1O = {
   key: 0,
   class: "ctv:inline-flex ctv:items-center ctv:justify-center ctv:gap-1 ctv:align-middle"
 };
-const _sfc_main$1R = /* @__PURE__ */ defineComponent({
+const _sfc_main$1S = /* @__PURE__ */ defineComponent({
   __name: "FxChips",
   props: {
     modelValue: {},
@@ -167914,7 +167918,7 @@ const _sfc_main$1R = /* @__PURE__ */ defineComponent({
   emits: ["update:modelValue"],
   setup(__props) {
     return (_ctx, _cache2) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$2u, [
+      return openBlock(), createElementBlock("div", _hoisted_1$2v, [
         (openBlock(true), createElementBlock(Fragment$1, null, renderList(__props.options, (opt) => {
           return openBlock(), createElementBlock("button", {
             key: opt.value,
@@ -167923,13 +167927,13 @@ const _sfc_main$1R = /* @__PURE__ */ defineComponent({
             title: opt.title ?? opt.label,
             onClick: ($event) => _ctx.$emit("update:modelValue", opt.value)
           }, [
-            opt.icon ? (openBlock(), createElementBlock("span", _hoisted_3$1N, [
+            opt.icon ? (openBlock(), createElementBlock("span", _hoisted_3$1O, [
               (openBlock(), createBlock(resolveDynamicComponent(opt.icon), { class: "ctv:size-3 ctv:shrink-0" })),
               createBaseVNode("span", null, toDisplayString$1(opt.label), 1)
             ])) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
               createTextVNode(toDisplayString$1(opt.label), 1)
             ], 64))
-          ], 10, _hoisted_2$1N);
+          ], 10, _hoisted_2$1O);
         }), 128))
       ]);
     };
@@ -168109,8 +168113,8 @@ function useCurvesCanvas(opts) {
   onMounted(draw);
   return { dragIdx, draw, onDown, onMove, onUp, onRightClick };
 }
-const _hoisted_1$2t = ["width", "height"];
-const _sfc_main$1Q = /* @__PURE__ */ defineComponent({
+const _hoisted_1$2u = ["width", "height"];
+const _sfc_main$1R = /* @__PURE__ */ defineComponent({
   __name: "CurvesCanvas",
   props: {
     modelValue: {},
@@ -168149,7 +168153,7 @@ const _sfc_main$1Q = /* @__PURE__ */ defineComponent({
           (...args) => unref(onRightClick) && unref(onRightClick)(...args),
           ["stop", "prevent"]
         ))
-      }, null, 40, _hoisted_1$2t);
+      }, null, 40, _hoisted_1$2u);
     };
   }
 });
@@ -168184,26 +168188,26 @@ function useCurveChannels(node) {
   }
   return { channel, activeCurve, resetActive, widgets };
 }
-const _hoisted_1$2s = { class: "ctv:flex ctv:items-center ctv:gap-1" };
-const _hoisted_2$1M = { class: "ctv:flex-1 ctv:text-2xs ctv:text-center ctv:text-muted-foreground" };
-const _hoisted_3$1M = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_4$1s = {
+const _hoisted_1$2t = { class: "ctv:flex ctv:items-center ctv:gap-1" };
+const _hoisted_2$1N = { class: "ctv:flex-1 ctv:text-2xs ctv:text-center ctv:text-muted-foreground" };
+const _hoisted_3$1N = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_4$1t = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_5$1n = {
+const _hoisted_5$1o = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_6$1d = {
+const _hoisted_6$1e = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_7$U = {
+const _hoisted_7$V = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
-const _sfc_main$1P = /* @__PURE__ */ defineComponent({
+const _sfc_main$1Q = /* @__PURE__ */ defineComponent({
   __name: "VideoCurvesStageCard",
   props: {
     state: {},
@@ -168256,7 +168260,7 @@ const _sfc_main$1P = /* @__PURE__ */ defineComponent({
       params: previewParams
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -168285,18 +168289,18 @@ const _sfc_main$1P = /* @__PURE__ */ defineComponent({
             onPointerup: _cache2[5] || (_cache2[5] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(channel),
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(channel) ? channel.value = $event : null),
               options: CHANNELS
             }, null, 8, ["modelValue"]),
-            createVNode(_sfc_main$1Q, {
+            createVNode(_sfc_main$1R, {
               modelValue: unref(activeCurve),
               "onUpdate:modelValue": _cache2[1] || (_cache2[1] = ($event) => /* @__PURE__ */ isRef(activeCurve) ? activeCurve.value = $event : null),
               color: CHANNEL_COLORS[unref(channel)]
             }, null, 8, ["modelValue", "color"]),
-            createBaseVNode("div", _hoisted_1$2s, [
-              createBaseVNode("div", _hoisted_2$1M, toDisplayString$1(_ctx.$t("fx.curveHint")), 1),
+            createBaseVNode("div", _hoisted_1$2t, [
+              createBaseVNode("div", _hoisted_2$1N, toDisplayString$1(_ctx.$t("fx.curveHint")), 1),
               createBaseVNode("button", {
                 type: "button",
                 class: "ctv:py-0.5 ctv:px-1.5 ctv:text-2xs ctv:rounded ctv:cursor-pointer ctv:border ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background",
@@ -168305,8 +168309,8 @@ const _sfc_main$1P = /* @__PURE__ */ defineComponent({
               }, toDisplayString$1(_ctx.$t("fx.resetCurve")), 1)
             ])
           ], 32),
-          createBaseVNode("div", _hoisted_3$1M, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_4$1s, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_5$1n, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_6$1d, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_7$U, toDisplayString$1(_ctx.$t("fx.chainMode")), 1))
+          createBaseVNode("div", _hoisted_3$1N, [
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_4$1t, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_5$1o, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_6$1e, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_7$V, toDisplayString$1(_ctx.$t("fx.chainMode")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
@@ -168353,37 +168357,37 @@ function useLutLibrary(lutFile) {
   onMounted(refreshLuts);
   return { luts: luts2, lutUrls, refreshLuts, onFilePicked };
 }
-const _hoisted_1$2r = ["value"];
-const _hoisted_2$1L = {
+const _hoisted_1$2s = ["value"];
+const _hoisted_2$1M = {
   key: 1,
   class: "ctv:text-2xs ctv:text-center ctv:text-muted-foreground ctv:py-0.5"
 };
-const _hoisted_3$1L = { class: "ctv:flex ctv:items-center ctv:gap-1" };
-const _hoisted_4$1r = ["title"];
-const _hoisted_5$1m = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_6$1c = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_7$T = {
+const _hoisted_3$1M = { class: "ctv:flex ctv:items-center ctv:gap-1" };
+const _hoisted_4$1s = ["title"];
+const _hoisted_5$1n = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_6$1d = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_7$U = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_8$B = {
+const _hoisted_8$C = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_9$v = {
+const _hoisted_9$w = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_10$p = {
+const _hoisted_10$q = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_11$k = {
+const _hoisted_11$l = {
   key: 4,
   class: "ctv:text-muted-foreground"
 };
 const btnClass = "ctv:py-0.5 ctv:px-1.5 ctv:text-2xs ctv:rounded ctv:cursor-pointer ctv:border ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background";
-const _sfc_main$1O = /* @__PURE__ */ defineComponent({
+const _sfc_main$1P = /* @__PURE__ */ defineComponent({
   __name: "VideoLUTStageCard",
   props: {
     state: {},
@@ -168430,7 +168434,7 @@ const _sfc_main$1O = /* @__PURE__ */ defineComponent({
     const lutReady = computed(() => !!lutFile.value && isPreviewableLutFile(lutFile.value));
     const lutUnsupported = computed(() => !!lutFile.value && !isPreviewableLutFile(lutFile.value));
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -168468,12 +168472,12 @@ const _sfc_main$1O = /* @__PURE__ */ defineComponent({
                 return openBlock(), createElementBlock("option", {
                   key: l,
                   value: l
-                }, toDisplayString$1(l), 9, _hoisted_1$2r);
+                }, toDisplayString$1(l), 9, _hoisted_1$2s);
               }), 128))
             ], 512)), [
               [vModelSelect, unref(lutFile)]
-            ]) : (openBlock(), createElementBlock("div", _hoisted_2$1L, toDisplayString$1(_ctx.$t("fx.noLuts")), 1)),
-            createBaseVNode("div", _hoisted_3$1L, [
+            ]) : (openBlock(), createElementBlock("div", _hoisted_2$1M, toDisplayString$1(_ctx.$t("fx.noLuts")), 1)),
+            createBaseVNode("div", _hoisted_3$1M, [
               createBaseVNode("button", {
                 type: "button",
                 class: normalizeClass(btnClass),
@@ -168493,7 +168497,7 @@ const _sfc_main$1O = /* @__PURE__ */ defineComponent({
                 (...args) => unref(refreshLuts) && unref(refreshLuts)(...args))
               }, [..._cache2[9] || (_cache2[9] = [
                 createBaseVNode("i", { class: "pi pi-refresh" }, null, -1)
-              ])], 8, _hoisted_4$1r),
+              ])], 8, _hoisted_4$1s),
               createBaseVNode("input", {
                 ref_key: "fileEl",
                 ref: fileEl,
@@ -168504,15 +168508,15 @@ const _sfc_main$1O = /* @__PURE__ */ defineComponent({
                 (...args) => unref(onFilePicked) && unref(onFilePicked)(...args))
               }, null, 544)
             ]),
-            createBaseVNode("span", _hoisted_5$1m, toDisplayString$1(_ctx.$t("fx.interp")), 1),
-            createVNode(_sfc_main$1R, {
+            createBaseVNode("span", _hoisted_5$1n, toDisplayString$1(_ctx.$t("fx.interp")), 1),
+            createVNode(_sfc_main$1S, {
               modelValue: unref(interp),
               "onUpdate:modelValue": _cache2[4] || (_cache2[4] = ($event) => /* @__PURE__ */ isRef(interp) ? interp.value = $event : null),
               options: INTERPS
             }, null, 8, ["modelValue"])
           ], 32),
-          createBaseVNode("div", _hoisted_6$1c, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_7$T, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_8$B, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_9$v, toDisplayString$1(_ctx.$t("fx.done")), 1)) : lutUnsupported.value ? (openBlock(), createElementBlock("span", _hoisted_10$p, toDisplayString$1(_ctx.$t("fx.lutPreviewUnavailable")), 1)) : (openBlock(), createElementBlock("span", _hoisted_11$k, toDisplayString$1(_ctx.$t("fx.chainMode")), 1))
+          createBaseVNode("div", _hoisted_6$1d, [
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_7$U, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_8$C, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_9$w, toDisplayString$1(_ctx.$t("fx.done")), 1)) : lutUnsupported.value ? (openBlock(), createElementBlock("span", _hoisted_10$q, toDisplayString$1(_ctx.$t("fx.lutPreviewUnavailable")), 1)) : (openBlock(), createElementBlock("span", _hoisted_11$l, toDisplayString$1(_ctx.$t("fx.chainMode")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
@@ -168529,24 +168533,24 @@ const _sfc_main$1O = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$2q = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_2$1K = {
+const _hoisted_1$2r = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_2$1L = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_3$1K = {
+const _hoisted_3$1L = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_4$1q = {
+const _hoisted_4$1r = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_5$1l = {
+const _hoisted_5$1m = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
-const _sfc_main$1N = /* @__PURE__ */ defineComponent({
+const _sfc_main$1O = /* @__PURE__ */ defineComponent({
   __name: "VideoBlurSharpenStageCard",
   props: {
     state: {},
@@ -168594,7 +168598,7 @@ const _sfc_main$1N = /* @__PURE__ */ defineComponent({
       params: previewParams
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -168623,7 +168627,7 @@ const _sfc_main$1N = /* @__PURE__ */ defineComponent({
             onPointerup: _cache2[6] || (_cache2[6] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(mode),
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(mode) ? mode.value = $event : null),
               options: MODES
@@ -168659,8 +168663,8 @@ const _sfc_main$1N = /* @__PURE__ */ defineComponent({
               "reset-to": 0.1
             }, null, 8, ["modelValue", "label"])) : createCommentVNode("", true)
           ], 32),
-          createBaseVNode("div", _hoisted_1$2q, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_2$1K, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_3$1K, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_4$1q, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_5$1l, toDisplayString$1(_ctx.$t("fx.previewNote")), 1))
+          createBaseVNode("div", _hoisted_1$2r, [
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_2$1L, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_3$1L, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_4$1r, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_5$1m, toDisplayString$1(_ctx.$t("fx.previewNote")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
@@ -168718,42 +168722,42 @@ function useFxClipPreview(options) {
   }
   return { state: state2, request };
 }
-const _hoisted_1$2p = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-2xs" };
-const _hoisted_2$1J = ["disabled"];
-const _hoisted_3$1J = {
+const _hoisted_1$2q = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-2xs" };
+const _hoisted_2$1K = ["disabled"];
+const _hoisted_3$1K = {
   key: 0,
   class: "ctv:text-destructive-background ctv:truncate"
 };
-const _hoisted_4$1p = {
+const _hoisted_4$1q = {
   key: 1,
   class: "ctv:text-warning-background"
 };
-const _hoisted_5$1k = {
+const _hoisted_5$1l = {
   key: 2,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_6$1b = {
+const _hoisted_6$1c = {
   key: 0,
   class: "ctv:h-40 ctv:flex ctv:flex-col"
 };
-const _hoisted_7$S = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_8$A = {
+const _hoisted_7$T = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_8$B = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_9$u = {
+const _hoisted_9$v = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_10$o = {
+const _hoisted_10$p = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_11$j = {
+const _hoisted_11$k = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
-const _sfc_main$1M = /* @__PURE__ */ defineComponent({
+const _sfc_main$1N = /* @__PURE__ */ defineComponent({
   __name: "VideoDenoiseStageCard",
   props: {
     state: {},
@@ -168791,7 +168795,7 @@ const _sfc_main$1M = /* @__PURE__ */ defineComponent({
     });
     const previewWindowLabel = computed(() => (preview.state.t1 - preview.state.t0).toFixed(1));
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -168809,7 +168813,7 @@ const _sfc_main$1M = /* @__PURE__ */ defineComponent({
             onPointerup: _cache2[5] || (_cache2[5] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(method),
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(method) ? method.value = $event : null),
               options: METHODS
@@ -168823,7 +168827,7 @@ const _sfc_main$1M = /* @__PURE__ */ defineComponent({
               step: 0.01,
               "reset-to": 0.3
             }, null, 8, ["modelValue", "label"]),
-            createBaseVNode("div", _hoisted_1$2p, [
+            createBaseVNode("div", _hoisted_1$2q, [
               createBaseVNode("button", {
                 type: "button",
                 class: "ctv:flex ctv:items-center ctv:gap-1 ctv:px-2 ctv:h-6 ctv:rounded ctv:cursor-pointer ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background ctv:disabled:opacity-40 ctv:disabled:cursor-default",
@@ -168834,17 +168838,17 @@ const _sfc_main$1M = /* @__PURE__ */ defineComponent({
                   class: normalizeClass(["pi", unref(preview).state.loading ? "pi-spinner pi-spin" : "pi-eye"])
                 }, null, 2),
                 createTextVNode(" " + toDisplayString$1(_ctx.$t("fxPreview.run")), 1)
-              ], 8, _hoisted_2$1J),
-              unref(preview).state.error ? (openBlock(), createElementBlock("span", _hoisted_3$1J, toDisplayString$1(_ctx.$t("fxPreview.failed")), 1)) : unref(preview).state.stale ? (openBlock(), createElementBlock("span", _hoisted_4$1p, toDisplayString$1(_ctx.$t("fxPreview.stale")), 1)) : unref(preview).state.url ? (openBlock(), createElementBlock("span", _hoisted_5$1k, toDisplayString$1(_ctx.$t("fxPreview.window", { s: previewWindowLabel.value })), 1)) : createCommentVNode("", true)
+              ], 8, _hoisted_2$1K),
+              unref(preview).state.error ? (openBlock(), createElementBlock("span", _hoisted_3$1K, toDisplayString$1(_ctx.$t("fxPreview.failed")), 1)) : unref(preview).state.stale ? (openBlock(), createElementBlock("span", _hoisted_4$1q, toDisplayString$1(_ctx.$t("fxPreview.stale")), 1)) : unref(preview).state.url ? (openBlock(), createElementBlock("span", _hoisted_5$1l, toDisplayString$1(_ctx.$t("fxPreview.window", { s: previewWindowLabel.value })), 1)) : createCommentVNode("", true)
             ]),
-            unref(preview).state.url ? (openBlock(), createElementBlock("div", _hoisted_6$1b, [
+            unref(preview).state.url ? (openBlock(), createElementBlock("div", _hoisted_6$1c, [
               createVNode(VideoPlayerLite, {
                 "source-video-url": unref(preview).state.url
               }, null, 8, ["source-video-url"])
             ])) : createCommentVNode("", true)
           ], 32),
-          createBaseVNode("div", _hoisted_7$S, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_8$A, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_9$u, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_10$o, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_11$j, toDisplayString$1(_ctx.$t("fx.chainMode")), 1))
+          createBaseVNode("div", _hoisted_7$T, [
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_8$B, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_9$v, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_10$p, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_11$k, toDisplayString$1(_ctx.$t("fx.chainMode")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
@@ -169018,28 +169022,28 @@ function useChromaKeyPicker(opts) {
   });
   return { picking, playing, startLoop, togglePlay, onCanvasClick };
 }
-const _hoisted_1$2o = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
-const _hoisted_2$1I = { class: "ctv:min-w-16 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_3$1I = ["value"];
-const _hoisted_4$1o = { class: "ctv:font-mono ctv:text-2xs ctv:text-muted-foreground" };
-const _hoisted_5$1j = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_6$1a = {
+const _hoisted_1$2p = { class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
+const _hoisted_2$1J = { class: "ctv:min-w-16 ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_3$1J = ["value"];
+const _hoisted_4$1p = { class: "ctv:font-mono ctv:text-2xs ctv:text-muted-foreground" };
+const _hoisted_5$1k = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_6$1b = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_7$R = {
+const _hoisted_7$S = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_8$z = {
+const _hoisted_8$A = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_9$t = {
+const _hoisted_9$u = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
-const _sfc_main$1L = /* @__PURE__ */ defineComponent({
+const _sfc_main$1M = /* @__PURE__ */ defineComponent({
   __name: "VideoChromaKeyStageCard",
   props: {
     state: {},
@@ -169085,7 +169089,7 @@ const _sfc_main$1L = /* @__PURE__ */ defineComponent({
       if (v) startLoop();
     }, { immediate: true });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -169114,15 +169118,15 @@ const _sfc_main$1L = /* @__PURE__ */ defineComponent({
             onPointerup: _cache2[10] || (_cache2[10] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createBaseVNode("div", _hoisted_1$2o, [
-              createBaseVNode("span", _hoisted_2$1I, toDisplayString$1(_ctx.$t("fx.keyColor")), 1),
+            createBaseVNode("div", _hoisted_1$2p, [
+              createBaseVNode("span", _hoisted_2$1J, toDisplayString$1(_ctx.$t("fx.keyColor")), 1),
               createBaseVNode("input", {
                 type: "color",
                 value: unref(keyColor),
                 class: "ctv:w-8 ctv:h-6 ctv:p-0 ctv:border ctv:border-border-subtle ctv:rounded ctv:cursor-pointer ctv:bg-transparent",
                 onInput: _cache2[1] || (_cache2[1] = (e) => keyColor.value = e.target.value)
-              }, null, 40, _hoisted_3$1I),
-              createBaseVNode("span", _hoisted_4$1o, toDisplayString$1(unref(keyColor)), 1),
+              }, null, 40, _hoisted_3$1J),
+              createBaseVNode("span", _hoisted_4$1p, toDisplayString$1(unref(keyColor)), 1),
               createBaseVNode("button", {
                 type: "button",
                 class: normalizeClass(["ctv:ml-auto ctv:py-0.5 ctv:px-1.5 ctv:text-2xs ctv:rounded ctv:cursor-pointer ctv:border ctv:transition-colors", unref(picking) ? "ctv:bg-secondary-background-selected ctv:border-primary-background ctv:text-primary-background" : "ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background"]),
@@ -169172,14 +169176,14 @@ const _sfc_main$1L = /* @__PURE__ */ defineComponent({
                 "reset-to": 0
               }, null, 8, ["modelValue", "label"])
             ], 2),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(output),
               "onUpdate:modelValue": _cache2[7] || (_cache2[7] = ($event) => /* @__PURE__ */ isRef(output) ? output.value = $event : null),
               options: unref(OUTPUTS)
             }, null, 8, ["modelValue", "options"])
           ], 32),
-          createBaseVNode("div", _hoisted_5$1j, [
-            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_6$1a, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_7$R, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_8$z, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_9$t, toDisplayString$1(_ctx.$t("fx.previewNote")), 1))
+          createBaseVNode("div", _hoisted_5$1k, [
+            !sourceVideoUrl.value ? (openBlock(), createElementBlock("span", _hoisted_6$1b, toDisplayString$1(_ctx.$t("videoTrim.noInputVideo")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_7$S, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_8$A, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_9$u, toDisplayString$1(_ctx.$t("fx.previewNote")), 1))
           ]),
           createVNode(StageCard, {
             state: __props.state,
@@ -169195,14 +169199,14 @@ const _sfc_main$1L = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const VideoChromaKeyStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$1L, [["__scopeId", "data-v-bf86999a"]]);
-const _hoisted_1$2n = {
+const VideoChromaKeyStageCard = /* @__PURE__ */ _export_sfc(_sfc_main$1M, [["__scopeId", "data-v-bf86999a"]]);
+const _hoisted_1$2o = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$F(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$2n, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$2o, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -169224,13 +169228,13 @@ function render$F(_ctx, _cache2) {
   ])]);
 }
 const IconBlend = markRaw({ name: "lucide-blend", render: render$F });
-const _hoisted_1$2m = {
+const _hoisted_1$2n = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$E(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$2m, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$2n, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -169248,13 +169252,13 @@ function render$E(_ctx, _cache2) {
   ])]);
 }
 const IconSparkles = markRaw({ name: "lucide-sparkles", render: render$E });
-const _hoisted_1$2l = {
+const _hoisted_1$2m = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$D(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$2l, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$2m, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -169266,13 +169270,13 @@ function render$D(_ctx, _cache2) {
   ])]);
 }
 const IconMoon = markRaw({ name: "lucide-moon", render: render$D });
-const _hoisted_1$2k = {
+const _hoisted_1$2l = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$C(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$2k, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$2l, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -169290,13 +169294,13 @@ function render$C(_ctx, _cache2) {
   ])]);
 }
 const IconSun = markRaw({ name: "lucide-sun", render: render$C });
-const _hoisted_1$2j = {
+const _hoisted_1$2k = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$B(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$2j, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$2k, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -169314,13 +169318,13 @@ function render$B(_ctx, _cache2) {
   ])]);
 }
 const IconContrast = markRaw({ name: "lucide-contrast", render: render$B });
-const _hoisted_1$2i = {
+const _hoisted_1$2j = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$A(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$2i, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$2j, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -169332,13 +169336,13 @@ function render$A(_ctx, _cache2) {
   ])]);
 }
 const IconGauge = markRaw({ name: "lucide-gauge", render: render$A });
-const _hoisted_1$2h = {
+const _hoisted_1$2i = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$z(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$2h, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$2i, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -169356,13 +169360,13 @@ function render$z(_ctx, _cache2) {
   ])]);
 }
 const IconTimer = markRaw({ name: "lucide-timer", render: render$z });
-const _hoisted_1$2g = {
+const _hoisted_1$2h = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$y(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$2g, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$2h, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -169374,13 +169378,13 @@ function render$y(_ctx, _cache2) {
   ])]);
 }
 const IconArrowLeft = markRaw({ name: "lucide-arrow-left", render: render$y });
-const _hoisted_1$2f = {
+const _hoisted_1$2g = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$x(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$2f, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$2g, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -169392,13 +169396,13 @@ function render$x(_ctx, _cache2) {
   ])]);
 }
 const IconArrowRight = markRaw({ name: "lucide-arrow-right", render: render$x });
-const _hoisted_1$2e = {
+const _hoisted_1$2f = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$w(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$2e, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$2f, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -169410,13 +169414,13 @@ function render$w(_ctx, _cache2) {
   ])]);
 }
 const IconArrowUp = markRaw({ name: "lucide-arrow-up", render: render$w });
-const _hoisted_1$2d = {
+const _hoisted_1$2e = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$v(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$2d, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$2e, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -169428,13 +169432,13 @@ function render$v(_ctx, _cache2) {
   ])]);
 }
 const IconArrowDown = markRaw({ name: "lucide-arrow-down", render: render$v });
-const _hoisted_1$2c = {
+const _hoisted_1$2d = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$u(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$2c, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$2d, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -169446,13 +169450,13 @@ function render$u(_ctx, _cache2) {
   ])]);
 }
 const IconArrowUpLeft = markRaw({ name: "lucide-arrow-up-left", render: render$u });
-const _hoisted_1$2b = {
+const _hoisted_1$2c = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$t(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$2b, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$2c, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -169464,13 +169468,13 @@ function render$t(_ctx, _cache2) {
   ])]);
 }
 const IconArrowUpRight = markRaw({ name: "lucide-arrow-up-right", render: render$t });
-const _hoisted_1$2a = {
+const _hoisted_1$2b = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$s(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$2a, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$2b, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -169482,13 +169486,13 @@ function render$s(_ctx, _cache2) {
   ])]);
 }
 const IconArrowDownLeft = markRaw({ name: "lucide-arrow-down-left", render: render$s });
-const _hoisted_1$29 = {
+const _hoisted_1$2a = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$r(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$29, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$2a, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -169500,13 +169504,13 @@ function render$r(_ctx, _cache2) {
   ])]);
 }
 const IconArrowDownRight = markRaw({ name: "lucide-arrow-down-right", render: render$r });
-const _hoisted_1$28 = {
+const _hoisted_1$29 = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$q(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$28, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$29, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -169518,13 +169522,13 @@ function render$q(_ctx, _cache2) {
   ])]);
 }
 const IconChevronsLeft = markRaw({ name: "lucide-chevrons-left", render: render$q });
-const _hoisted_1$27 = {
+const _hoisted_1$28 = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$p(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$27, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$28, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -169536,13 +169540,13 @@ function render$p(_ctx, _cache2) {
   ])]);
 }
 const IconChevronsRight = markRaw({ name: "lucide-chevrons-right", render: render$p });
-const _hoisted_1$26 = {
+const _hoisted_1$27 = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$o(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$26, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$27, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -169554,13 +169558,13 @@ function render$o(_ctx, _cache2) {
   ])]);
 }
 const IconChevronsUp = markRaw({ name: "lucide-chevrons-up", render: render$o });
-const _hoisted_1$25 = {
+const _hoisted_1$26 = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$n(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$25, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$26, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -169572,13 +169576,13 @@ function render$n(_ctx, _cache2) {
   ])]);
 }
 const IconChevronsDown = markRaw({ name: "lucide-chevrons-down", render: render$n });
-const _hoisted_1$24 = {
+const _hoisted_1$25 = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$m(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$24, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$25, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -169590,13 +169594,13 @@ function render$m(_ctx, _cache2) {
   ])]);
 }
 const IconChevronLeft = markRaw({ name: "lucide-chevron-left", render: render$m });
-const _hoisted_1$23 = {
+const _hoisted_1$24 = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$l(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$23, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$24, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -169618,13 +169622,13 @@ function render$l(_ctx, _cache2) {
   ])]);
 }
 const IconCircleDot = markRaw({ name: "lucide-circle-dot", render: render$l });
-const _hoisted_1$22 = {
+const _hoisted_1$23 = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$k(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$22, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$23, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -169636,13 +169640,13 @@ function render$k(_ctx, _cache2) {
   ])]);
 }
 const IconUnfoldHorizontal = markRaw({ name: "lucide-unfold-horizontal", render: render$k });
-const _hoisted_1$21 = {
+const _hoisted_1$22 = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$j(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$21, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$22, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -169654,13 +169658,13 @@ function render$j(_ctx, _cache2) {
   ])]);
 }
 const IconFoldHorizontal = markRaw({ name: "lucide-fold-horizontal", render: render$j });
-const _hoisted_1$20 = {
+const _hoisted_1$21 = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$i(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$20, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$21, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -169672,13 +169676,13 @@ function render$i(_ctx, _cache2) {
   ])]);
 }
 const IconUnfoldVertical = markRaw({ name: "lucide-unfold-vertical", render: render$i });
-const _hoisted_1$1$ = {
+const _hoisted_1$20 = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$h(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$1$, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$20, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -169690,13 +169694,13 @@ function render$h(_ctx, _cache2) {
   ])]);
 }
 const IconFoldVertical = markRaw({ name: "lucide-fold-vertical", render: render$h });
-const _hoisted_1$1_ = {
+const _hoisted_1$1$ = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$g(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$1_, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$1$, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -169708,13 +169712,13 @@ function render$g(_ctx, _cache2) {
   ])]);
 }
 const IconMoveDiagonal = markRaw({ name: "lucide-move-diagonal", render: render$g });
-const _hoisted_1$1Z = {
+const _hoisted_1$1_ = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$f(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$1Z, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$1_, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -169726,13 +169730,13 @@ function render$f(_ctx, _cache2) {
   ])]);
 }
 const IconMoveDiagonal2 = markRaw({ name: "lucide-move-diagonal-2", render: render$f });
-const _hoisted_1$1Y = {
+const _hoisted_1$1Z = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$e(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$1Y, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$1Z, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -169752,13 +169756,13 @@ function render$e(_ctx, _cache2) {
   ])]);
 }
 const IconColumns3 = markRaw({ name: "lucide-columns-3", render: render$e });
-const _hoisted_1$1X = {
+const _hoisted_1$1Y = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$d(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$1X, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$1Y, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("g", {
       fill: "none",
       stroke: "currentColor",
@@ -169778,13 +169782,13 @@ function render$d(_ctx, _cache2) {
   ])]);
 }
 const IconRows3 = markRaw({ name: "lucide-rows-3", render: render$d });
-const _hoisted_1$1W = {
+const _hoisted_1$1X = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$c(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$1W, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$1X, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -169796,13 +169800,13 @@ function render$c(_ctx, _cache2) {
   ])]);
 }
 const IconWind = markRaw({ name: "lucide-wind", render: render$c });
-const _hoisted_1$1V = {
+const _hoisted_1$1W = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$b(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$1V, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$1W, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -169814,13 +169818,13 @@ function render$b(_ctx, _cache2) {
   ])]);
 }
 const IconArrowLeftToLine = markRaw({ name: "lucide-arrow-left-to-line", render: render$b });
-const _hoisted_1$1U = {
+const _hoisted_1$1V = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$a(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$1U, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$1V, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -169832,13 +169836,13 @@ function render$a(_ctx, _cache2) {
   ])]);
 }
 const IconArrowRightToLine = markRaw({ name: "lucide-arrow-right-to-line", render: render$a });
-const _hoisted_1$1T = {
+const _hoisted_1$1U = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$9(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$1T, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$1U, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -169850,13 +169854,13 @@ function render$9(_ctx, _cache2) {
   ])]);
 }
 const IconArrowUpToLine = markRaw({ name: "lucide-arrow-up-to-line", render: render$9 });
-const _hoisted_1$1S = {
+const _hoisted_1$1T = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$8(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$1S, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$1T, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -169868,13 +169872,13 @@ function render$8(_ctx, _cache2) {
   ])]);
 }
 const IconArrowLeftFromLine = markRaw({ name: "lucide-arrow-left-from-line", render: render$8 });
-const _hoisted_1$1R = {
+const _hoisted_1$1S = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$7(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$1R, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$1S, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -169886,13 +169890,13 @@ function render$7(_ctx, _cache2) {
   ])]);
 }
 const IconArrowRightFromLine = markRaw({ name: "lucide-arrow-right-from-line", render: render$7 });
-const _hoisted_1$1Q = {
+const _hoisted_1$1R = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$6(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$1Q, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$1R, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -169904,13 +169908,13 @@ function render$6(_ctx, _cache2) {
   ])]);
 }
 const IconArrowUpFromLine = markRaw({ name: "lucide-arrow-up-from-line", render: render$6 });
-const _hoisted_1$1P = {
+const _hoisted_1$1Q = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$5(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$1P, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$1Q, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -169922,13 +169926,13 @@ function render$5(_ctx, _cache2) {
   ])]);
 }
 const IconArrowDownFromLine = markRaw({ name: "lucide-arrow-down-from-line", render: render$5 });
-const _hoisted_1$1O = {
+const _hoisted_1$1P = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$4(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$1O, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$1P, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -169940,13 +169944,13 @@ function render$4(_ctx, _cache2) {
   ])]);
 }
 const IconChevronsDownUp = markRaw({ name: "lucide-chevrons-down-up", render: render$4 });
-const _hoisted_1$1N = {
+const _hoisted_1$1O = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$3(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$1N, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$1O, [..._cache2[0] || (_cache2[0] = [
     createBaseVNode("path", {
       fill: "none",
       stroke: "currentColor",
@@ -169958,13 +169962,13 @@ function render$3(_ctx, _cache2) {
   ])]);
 }
 const IconChevronsRightLeft = markRaw({ name: "lucide-chevrons-right-left", render: render$3 });
-const _hoisted_1$1M = {
+const _hoisted_1$1N = {
   viewBox: "0 0 24 24",
   width: "1.2em",
   height: "1.2em"
 };
 function render$2(_ctx, _cache2) {
-  return openBlock(), createElementBlock("svg", _hoisted_1$1M, [..._cache2[0] || (_cache2[0] = [
+  return openBlock(), createElementBlock("svg", _hoisted_1$1N, [..._cache2[0] || (_cache2[0] = [
     createStaticVNode('<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M22 12a1 1 0 0 1-10 0a1 1 0 0 0-10 0"></path><path d="M7 20.7a1 1 0 1 1 5-8.7a1 1 0 1 0 5-8.6"></path><path d="M7 3.3a1 1 0 1 1 5 8.6a1 1 0 1 0 5 8.6"></path><circle cx="12" cy="12" r="10"></circle></g>', 1)
   ])]);
 }
@@ -170206,9 +170210,9 @@ function timelineToSeeks(t2, window2, timeline2) {
   }
   return { p: 1, aTime: offset2 + duration2, bTime: tc - lead, aActive: false, bActive: true };
 }
-const videoTransitionFrag = "#version 300 es\r\nprecision highp float;\r\n\r\nuniform sampler2D u_image0;\r\nuniform sampler2D u_image1;\r\nuniform vec2 u_resolution;\r\nuniform float u_float0;\r\nuniform int u_int0;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nconst float PI = 3.14159265358979;\r\n\r\nvec4 srcA(vec2 p) {\r\n    return texture(u_image0, vec2((p.x + 0.5) / u_resolution.x, 1.0 - (p.y + 0.5) / u_resolution.y));\r\n}\r\n\r\nvec4 srcB(vec2 p) {\r\n    return texture(u_image1, vec2((p.x + 0.5) / u_resolution.x, 1.0 - (p.y + 0.5) / u_resolution.y));\r\n}\r\n\r\nvec4 cmix(vec4 a, vec4 b, float m) {\r\n    return mix(b, a, m);\r\n}\r\n\r\nfloat frand(float x, float y) {\r\n    float r = sin(x * 12.9898 + y * 78.233) * 43758.545;\r\n    return r - floor(r);\r\n}\r\n\r\nvec4 fadeMeta(vec4 a, vec4 b, vec4 bg0, vec4 bg1, float P) {\r\n    return cmix(cmix(a, bg0, smoothstep(0.8, 1.0, P)),\r\n                cmix(bg1, b, smoothstep(0.2, 1.0, P)), P);\r\n}\r\n\r\nvoid main() {\r\n    float w = u_resolution.x;\r\n    float h = u_resolution.y;\r\n    float P = clamp(u_float0, 0.0, 1.0);\r\n    int m = u_int0;\r\n    float xi = floor(v_texCoord.x * w);\r\n    float yi = floor((1.0 - v_texCoord.y) * h);\r\n    vec2 p0 = vec2(xi, yi);\r\n    vec4 A = texture(u_image0, v_texCoord);\r\n    vec4 B = texture(u_image1, v_texCoord);\r\n    vec4 outc = A;\r\n\r\n    if (m == 0) {\r\n        outc = cmix(A, B, P);\r\n    } else if (m == 1) {\r\n        float smoothv = frand(xi, yi) * 2.0 + P * 2.0 - 1.5;\r\n        outc = smoothv >= 0.5 ? A : B;\r\n    } else if (m == 2) {\r\n        outc = fadeMeta(A, B, vec4(0.0, 0.0, 0.0, 1.0), vec4(0.0, 0.0, 0.0, 1.0), P);\r\n    } else if (m == 3) {\r\n        outc = fadeMeta(A, B, vec4(1.0), vec4(1.0), P);\r\n    } else if (m == 4) {\r\n        vec4 g0 = vec4(vec3(dot(A.rgb, vec3(1.0 / 3.0))), A.a);\r\n        vec4 g1 = vec4(vec3(dot(B.rgb, vec3(1.0 / 3.0))), B.a);\r\n        outc = fadeMeta(A, B, g0, g1, P);\r\n    } else if (m == 5) {\r\n        vec4 e = pow(vec4(P), vec4(1.0) + log(vec4(1.0) + abs(A - B)));\r\n        outc = A * e + B * (vec4(1.0) - e);\r\n    } else if (m == 6) {\r\n        vec4 e = pow(vec4(P), vec4(1.0) + log(vec4(2.0) - abs(A - B)));\r\n        outc = A * e + B * (vec4(1.0) - e);\r\n    } else if (m == 7) {\r\n        outc = xi > floor(w * P) ? B : A;\r\n    } else if (m == 8) {\r\n        outc = xi > floor(w * (1.0 - P)) ? A : B;\r\n    } else if (m == 9) {\r\n        outc = yi > floor(h * P) ? B : A;\r\n    } else if (m == 10) {\r\n        outc = yi > floor(h * (1.0 - P)) ? A : B;\r\n    } else if (m == 11) {\r\n        outc = (yi <= floor(h * P) && xi <= floor(w * P)) ? A : B;\r\n    } else if (m == 12) {\r\n        outc = (yi <= floor(h * P) && xi > floor(w * (1.0 - P))) ? A : B;\r\n    } else if (m == 13) {\r\n        outc = (yi > floor(h * (1.0 - P)) && xi <= floor(w * P)) ? A : B;\r\n    } else if (m == 14) {\r\n        outc = (yi > floor(h * (1.0 - P)) && xi > floor(w * (1.0 - P))) ? A : B;\r\n    } else if (m == 15 || m == 16) {\r\n        float z = (m == 15 ? -P : P) * w;\r\n        float zx = floor(z) + xi;\r\n        vec2 s = vec2(mod(zx, w), yi);\r\n        outc = (zx >= 0.0 && zx < w) ? srcB(s) : srcA(s);\r\n    } else if (m == 17 || m == 18) {\r\n        float z = (m == 17 ? -P : P) * h;\r\n        float zy = floor(z) + yi;\r\n        vec2 s = vec2(xi, mod(zy, h));\r\n        outc = (zy >= 0.0 && zy < h) ? srcB(s) : srcA(s);\r\n    } else if (m == 19) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + xi / w - P * 2.0));\r\n    } else if (m == 20) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + (w - 1.0 - xi) / w - P * 2.0));\r\n    } else if (m == 21) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + yi / h - P * 2.0));\r\n    } else if (m == 22) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + (h - 1.0 - yi) / h - P * 2.0));\r\n    } else if (m == 23) {\r\n        float z = pow(2.0 * abs(P - 0.5), 3.0) * length(vec2(w, h) * 0.5);\r\n        float dist = length(p0 - vec2(w, h) * 0.5);\r\n        outc = z < dist ? vec4(0.0, 0.0, 0.0, 1.0) : (P < 0.5 ? B : A);\r\n    } else if (m == 24) {\r\n        bool inside = abs(xi - w * 0.5) < abs(P - 0.5) * w\r\n                   && abs(yi - h * 0.5) < abs(P - 0.5) * h;\r\n        outc = inside ? (P < 0.5 ? B : A) : vec4(0.0, 0.0, 0.0, 1.0);\r\n    } else if (m == 25) {\r\n        float z = length(vec2(w, h) * 0.5);\r\n        float smoothv = length(p0 - vec2(w, h) * 0.5) / z + (P - 0.5) * 3.0;\r\n        outc = cmix(A, B, smoothstep(0.0, 1.0, smoothv));\r\n    } else if (m == 26) {\r\n        float z = length(vec2(w, h) * 0.5);\r\n        float smoothv = length(p0 - vec2(w, h) * 0.5) / z + (0.5 - P) * 3.0;\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, smoothv));\r\n    } else if (m == 27) {\r\n        float w2 = w * 0.5;\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 2.0 - abs((xi - w2) / w2) - P * 2.0));\r\n    } else if (m == 28) {\r\n        float w2 = w * 0.5;\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + abs((xi - w2) / w2) - P * 2.0));\r\n    } else if (m == 29) {\r\n        float h2 = h * 0.5;\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 2.0 - abs((yi - h2) / h2) - P * 2.0));\r\n    } else if (m == 30) {\r\n        float h2 = h * 0.5;\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + abs((yi - h2) / h2) - P * 2.0));\r\n    } else if (m == 31) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + xi / w * yi / h - P * 2.0));\r\n    } else if (m == 32) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + (w - 1.0 - xi) / w * yi / h - P * 2.0));\r\n    } else if (m == 33) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + xi / w * (h - 1.0 - yi) / h - P * 2.0));\r\n    } else if (m == 34) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + (w - 1.0 - xi) / w * (h - 1.0 - yi) / h - P * 2.0));\r\n    } else if (m >= 35 && m <= 38) {\r\n        float c = m == 35 ? xi / w\r\n                : m == 36 ? (w - 1.0 - xi) / w\r\n                : m == 37 ? yi / h\r\n                : (h - 1.0 - yi) / h;\r\n        float smoothv = smoothstep(-0.5, 0.0, c - P * 1.5);\r\n        float ss = smoothv <= fract(10.0 * c) ? 0.0 : 1.0;\r\n        outc = mix(A, B, ss);\r\n    } else if (m >= 39 && m <= 42) {\r\n        float c = m == 39 ? 1.0 - xi / w\r\n                : m == 40 ? xi / w\r\n                : m == 41 ? 1.0 - yi / h\r\n                : yi / h;\r\n        float r = (m <= 40) ? frand(0.0, yi) : frand(xi, 0.0);\r\n        float ss = 1.0 - smoothstep(-0.2, 0.0, c * 0.8 + 0.2 * r - (1.0 - P) * 1.2);\r\n        outc = mix(A, B, ss);\r\n    } else if (m == 43 || m == 44) {\r\n        float z = (m == 43 ? -P : P) * w;\r\n        float zx = floor(z) + xi;\r\n        outc = (zx >= 0.0 && zx < w) ? srcB(vec2(mod(zx, w), yi)) : A;\r\n    } else if (m == 45 || m == 46) {\r\n        float z = (m == 45 ? -P : P) * h;\r\n        float zy = floor(z) + yi;\r\n        outc = (zy >= 0.0 && zy < h) ? srcB(vec2(xi, mod(zy, h))) : A;\r\n    } else if (m == 47 || m == 48) {\r\n        float z = (m == 47 ? -P : P) * w;\r\n        float zx = floor(z) + xi;\r\n        outc = (zx >= 0.0 && zx < w) ? B : srcA(vec2(mod(zx, w), yi));\r\n    } else if (m == 49 || m == 50) {\r\n        float z = (m == 49 ? -P : P) * h;\r\n        float zy = floor(z) + yi;\r\n        outc = (zy >= 0.0 && zy < h) ? B : srcA(vec2(xi, mod(zy, h)));\r\n    } else if (m == 51) {\r\n        float z = 0.5 + (yi / h - 0.5) / max(P, 0.001);\r\n        outc = (P <= 0.001 || z < 0.0 || z > 1.0) ? B : srcA(vec2(xi, floor(z * (h - 1.0) + 0.5)));\r\n    } else if (m == 52) {\r\n        float z = 0.5 + (xi / w - 0.5) / max(P, 0.001);\r\n        outc = (P <= 0.001 || z < 0.0 || z > 1.0) ? B : srcA(vec2(floor(z * (w - 1.0) + 0.5), yi));\r\n    } else if (m == 53) {\r\n        float zf = smoothstep(0.5, 1.0, P);\r\n        vec2 uv = vec2(xi / w, yi / h);\r\n        uv = vec2(0.5) + (uv - vec2(0.5)) * zf;\r\n        vec2 s = ceil(uv * (vec2(w, h) - 1.0));\r\n        outc = mix(B, srcA(s), smoothstep(0.0, 0.5, P));\r\n    } else if (m == 54) {\r\n        vec3 d = A.rgb - B.rgb;\r\n        float flag = sqrt(dot(d, d)) <= P ? 1.0 : 0.0;\r\n        outc = mix(B, cmix(A, B, flag), P);\r\n    } else if (m == 55) {\r\n        float d = min(P, 1.0 - P);\r\n        float dist = ceil(d * 50.0) / 50.0;\r\n        float sq = 2.0 * dist * min(w, h) / 20.0;\r\n        vec2 s = dist > 0.0\r\n            ? min((floor(p0 / sq) + 0.5) * sq, vec2(w, h) - 1.0)\r\n            : p0;\r\n        outc = cmix(srcA(s), srcB(s), P);\r\n    } else if (m == 56) {\r\n        vec2 rd = vec2(xi - w * 0.5, yi - h * 0.5);\r\n        if (rd == vec2(0.0)) rd = vec2(0.0, 1.0);\r\n        float smoothv = atan(rd.x, rd.y) - (P - 0.5) * (PI * 2.5);\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, smoothv));\r\n    } else if (m == 57) {\r\n        float prog = P <= 0.5 ? P * 2.0 : (1.0 - P) * 2.0;\r\n        float size = 1.0 + floor(w * 0.5) * prog;\r\n        const int TAPS = 24;\r\n        float stride = size / float(TAPS);\r\n        vec4 sum0 = vec4(0.0);\r\n        vec4 sum1 = vec4(0.0);\r\n        for (int k = 0; k < TAPS; k++) {\r\n            float sx = min(xi + (float(k) + 0.5) * stride, w - 1.0);\r\n            vec2 s = vec2(sx, yi);\r\n            sum0 += srcA(s);\r\n            sum1 += srcB(s);\r\n        }\r\n        outc = cmix(sum0 / float(TAPS), sum1 / float(TAPS), P);\r\n    }\r\n\r\n    fragColor = vec4(outc.rgb, 1.0);\r\n}\r\n";
+const videoTransitionFrag = "#version 300 es\r\nprecision highp float;\r\n\r\nuniform sampler2D u_image0;\r\nuniform sampler2D u_image1;\r\nuniform sampler2D u_image2;\r\nuniform vec2 u_resolution;\r\nuniform float u_float0;\r\nuniform float u_float1;\r\nuniform int u_int0;\r\nuniform int u_int1;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nconst float PI = 3.14159265358979;\r\n\r\nvec4 srcA(vec2 p) {\r\n    return texture(u_image0, vec2((p.x + 0.5) / u_resolution.x, 1.0 - (p.y + 0.5) / u_resolution.y));\r\n}\r\n\r\nvec4 srcB(vec2 p) {\r\n    return texture(u_image1, vec2((p.x + 0.5) / u_resolution.x, 1.0 - (p.y + 0.5) / u_resolution.y));\r\n}\r\n\r\nvec4 cmix(vec4 a, vec4 b, float m) {\r\n    return mix(b, a, m);\r\n}\r\n\r\nfloat frand(float x, float y) {\r\n    float r = sin(x * 12.9898 + y * 78.233) * 43758.545;\r\n    return r - floor(r);\r\n}\r\n\r\nvec4 fadeMeta(vec4 a, vec4 b, vec4 bg0, vec4 bg1, float P) {\r\n    return cmix(cmix(a, bg0, smoothstep(0.8, 1.0, P)),\r\n                cmix(bg1, b, smoothstep(0.2, 1.0, P)), P);\r\n}\r\n\r\nvoid main() {\r\n    float w = u_resolution.x;\r\n    float h = u_resolution.y;\r\n    float P = clamp(u_float0, 0.0, 1.0);\r\n    int m = u_int0;\r\n    float xi = floor(v_texCoord.x * w);\r\n    float yi = floor((1.0 - v_texCoord.y) * h);\r\n    vec2 p0 = vec2(xi, yi);\r\n    vec4 A = texture(u_image0, v_texCoord);\r\n    vec4 B = texture(u_image1, v_texCoord);\r\n    vec4 outc = A;\r\n\r\n    if (u_int1 != 0) {\r\n        vec3 lc = texture(u_image2, v_texCoord).rgb;\r\n        float weight = dot(lc, vec3(0.2126, 0.7152, 0.0722));\r\n        if (u_int1 == 2) weight = 1.0 - weight;\r\n        float pos = 1.0 - P;\r\n        float soft = max(u_float1, 1e-6);\r\n        float x = pos * (1.0 + soft);\r\n        float a = clamp((x - weight) / soft, 0.0, 1.0);\r\n        a = a * a * (3.0 - 2.0 * a);\r\n        vec4 lw = mix(A, B, a);\r\n        fragColor = vec4(lw.rgb, 1.0);\r\n        return;\r\n    }\r\n\r\n    if (m == 0) {\r\n        outc = cmix(A, B, P);\r\n    } else if (m == 1) {\r\n        float smoothv = frand(xi, yi) * 2.0 + P * 2.0 - 1.5;\r\n        outc = smoothv >= 0.5 ? A : B;\r\n    } else if (m == 2) {\r\n        outc = fadeMeta(A, B, vec4(0.0, 0.0, 0.0, 1.0), vec4(0.0, 0.0, 0.0, 1.0), P);\r\n    } else if (m == 3) {\r\n        outc = fadeMeta(A, B, vec4(1.0), vec4(1.0), P);\r\n    } else if (m == 4) {\r\n        vec4 g0 = vec4(vec3(dot(A.rgb, vec3(1.0 / 3.0))), A.a);\r\n        vec4 g1 = vec4(vec3(dot(B.rgb, vec3(1.0 / 3.0))), B.a);\r\n        outc = fadeMeta(A, B, g0, g1, P);\r\n    } else if (m == 5) {\r\n        vec4 e = pow(vec4(P), vec4(1.0) + log(vec4(1.0) + abs(A - B)));\r\n        outc = A * e + B * (vec4(1.0) - e);\r\n    } else if (m == 6) {\r\n        vec4 e = pow(vec4(P), vec4(1.0) + log(vec4(2.0) - abs(A - B)));\r\n        outc = A * e + B * (vec4(1.0) - e);\r\n    } else if (m == 7) {\r\n        outc = xi > floor(w * P) ? B : A;\r\n    } else if (m == 8) {\r\n        outc = xi > floor(w * (1.0 - P)) ? A : B;\r\n    } else if (m == 9) {\r\n        outc = yi > floor(h * P) ? B : A;\r\n    } else if (m == 10) {\r\n        outc = yi > floor(h * (1.0 - P)) ? A : B;\r\n    } else if (m == 11) {\r\n        outc = (yi <= floor(h * P) && xi <= floor(w * P)) ? A : B;\r\n    } else if (m == 12) {\r\n        outc = (yi <= floor(h * P) && xi > floor(w * (1.0 - P))) ? A : B;\r\n    } else if (m == 13) {\r\n        outc = (yi > floor(h * (1.0 - P)) && xi <= floor(w * P)) ? A : B;\r\n    } else if (m == 14) {\r\n        outc = (yi > floor(h * (1.0 - P)) && xi > floor(w * (1.0 - P))) ? A : B;\r\n    } else if (m == 15 || m == 16) {\r\n        float z = (m == 15 ? -P : P) * w;\r\n        float zx = floor(z) + xi;\r\n        vec2 s = vec2(mod(zx, w), yi);\r\n        outc = (zx >= 0.0 && zx < w) ? srcB(s) : srcA(s);\r\n    } else if (m == 17 || m == 18) {\r\n        float z = (m == 17 ? -P : P) * h;\r\n        float zy = floor(z) + yi;\r\n        vec2 s = vec2(xi, mod(zy, h));\r\n        outc = (zy >= 0.0 && zy < h) ? srcB(s) : srcA(s);\r\n    } else if (m == 19) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + xi / w - P * 2.0));\r\n    } else if (m == 20) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + (w - 1.0 - xi) / w - P * 2.0));\r\n    } else if (m == 21) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + yi / h - P * 2.0));\r\n    } else if (m == 22) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + (h - 1.0 - yi) / h - P * 2.0));\r\n    } else if (m == 23) {\r\n        float z = pow(2.0 * abs(P - 0.5), 3.0) * length(vec2(w, h) * 0.5);\r\n        float dist = length(p0 - vec2(w, h) * 0.5);\r\n        outc = z < dist ? vec4(0.0, 0.0, 0.0, 1.0) : (P < 0.5 ? B : A);\r\n    } else if (m == 24) {\r\n        bool inside = abs(xi - w * 0.5) < abs(P - 0.5) * w\r\n                   && abs(yi - h * 0.5) < abs(P - 0.5) * h;\r\n        outc = inside ? (P < 0.5 ? B : A) : vec4(0.0, 0.0, 0.0, 1.0);\r\n    } else if (m == 25) {\r\n        float z = length(vec2(w, h) * 0.5);\r\n        float smoothv = length(p0 - vec2(w, h) * 0.5) / z + (P - 0.5) * 3.0;\r\n        outc = cmix(A, B, smoothstep(0.0, 1.0, smoothv));\r\n    } else if (m == 26) {\r\n        float z = length(vec2(w, h) * 0.5);\r\n        float smoothv = length(p0 - vec2(w, h) * 0.5) / z + (0.5 - P) * 3.0;\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, smoothv));\r\n    } else if (m == 27) {\r\n        float w2 = w * 0.5;\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 2.0 - abs((xi - w2) / w2) - P * 2.0));\r\n    } else if (m == 28) {\r\n        float w2 = w * 0.5;\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + abs((xi - w2) / w2) - P * 2.0));\r\n    } else if (m == 29) {\r\n        float h2 = h * 0.5;\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 2.0 - abs((yi - h2) / h2) - P * 2.0));\r\n    } else if (m == 30) {\r\n        float h2 = h * 0.5;\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + abs((yi - h2) / h2) - P * 2.0));\r\n    } else if (m == 31) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + xi / w * yi / h - P * 2.0));\r\n    } else if (m == 32) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + (w - 1.0 - xi) / w * yi / h - P * 2.0));\r\n    } else if (m == 33) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + xi / w * (h - 1.0 - yi) / h - P * 2.0));\r\n    } else if (m == 34) {\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, 1.0 + (w - 1.0 - xi) / w * (h - 1.0 - yi) / h - P * 2.0));\r\n    } else if (m >= 35 && m <= 38) {\r\n        float c = m == 35 ? xi / w\r\n                : m == 36 ? (w - 1.0 - xi) / w\r\n                : m == 37 ? yi / h\r\n                : (h - 1.0 - yi) / h;\r\n        float smoothv = smoothstep(-0.5, 0.0, c - P * 1.5);\r\n        float ss = smoothv <= fract(10.0 * c) ? 0.0 : 1.0;\r\n        outc = mix(A, B, ss);\r\n    } else if (m >= 39 && m <= 42) {\r\n        float c = m == 39 ? 1.0 - xi / w\r\n                : m == 40 ? xi / w\r\n                : m == 41 ? 1.0 - yi / h\r\n                : yi / h;\r\n        float r = (m <= 40) ? frand(0.0, yi) : frand(xi, 0.0);\r\n        float ss = 1.0 - smoothstep(-0.2, 0.0, c * 0.8 + 0.2 * r - (1.0 - P) * 1.2);\r\n        outc = mix(A, B, ss);\r\n    } else if (m == 43 || m == 44) {\r\n        float z = (m == 43 ? -P : P) * w;\r\n        float zx = floor(z) + xi;\r\n        outc = (zx >= 0.0 && zx < w) ? srcB(vec2(mod(zx, w), yi)) : A;\r\n    } else if (m == 45 || m == 46) {\r\n        float z = (m == 45 ? -P : P) * h;\r\n        float zy = floor(z) + yi;\r\n        outc = (zy >= 0.0 && zy < h) ? srcB(vec2(xi, mod(zy, h))) : A;\r\n    } else if (m == 47 || m == 48) {\r\n        float z = (m == 47 ? -P : P) * w;\r\n        float zx = floor(z) + xi;\r\n        outc = (zx >= 0.0 && zx < w) ? B : srcA(vec2(mod(zx, w), yi));\r\n    } else if (m == 49 || m == 50) {\r\n        float z = (m == 49 ? -P : P) * h;\r\n        float zy = floor(z) + yi;\r\n        outc = (zy >= 0.0 && zy < h) ? B : srcA(vec2(xi, mod(zy, h)));\r\n    } else if (m == 51) {\r\n        float z = 0.5 + (yi / h - 0.5) / max(P, 0.001);\r\n        outc = (P <= 0.001 || z < 0.0 || z > 1.0) ? B : srcA(vec2(xi, floor(z * (h - 1.0) + 0.5)));\r\n    } else if (m == 52) {\r\n        float z = 0.5 + (xi / w - 0.5) / max(P, 0.001);\r\n        outc = (P <= 0.001 || z < 0.0 || z > 1.0) ? B : srcA(vec2(floor(z * (w - 1.0) + 0.5), yi));\r\n    } else if (m == 53) {\r\n        float zf = smoothstep(0.5, 1.0, P);\r\n        vec2 uv = vec2(xi / w, yi / h);\r\n        uv = vec2(0.5) + (uv - vec2(0.5)) * zf;\r\n        vec2 s = ceil(uv * (vec2(w, h) - 1.0));\r\n        outc = mix(B, srcA(s), smoothstep(0.0, 0.5, P));\r\n    } else if (m == 54) {\r\n        vec3 d = A.rgb - B.rgb;\r\n        float flag = sqrt(dot(d, d)) <= P ? 1.0 : 0.0;\r\n        outc = mix(B, cmix(A, B, flag), P);\r\n    } else if (m == 55) {\r\n        float d = min(P, 1.0 - P);\r\n        float dist = ceil(d * 50.0) / 50.0;\r\n        float sq = 2.0 * dist * min(w, h) / 20.0;\r\n        vec2 s = dist > 0.0\r\n            ? min((floor(p0 / sq) + 0.5) * sq, vec2(w, h) - 1.0)\r\n            : p0;\r\n        outc = cmix(srcA(s), srcB(s), P);\r\n    } else if (m == 56) {\r\n        vec2 rd = vec2(xi - w * 0.5, yi - h * 0.5);\r\n        if (rd == vec2(0.0)) rd = vec2(0.0, 1.0);\r\n        float smoothv = atan(rd.x, rd.y) - (P - 0.5) * (PI * 2.5);\r\n        outc = mix(A, B, smoothstep(0.0, 1.0, smoothv));\r\n    } else if (m == 57) {\r\n        float prog = P <= 0.5 ? P * 2.0 : (1.0 - P) * 2.0;\r\n        float size = 1.0 + floor(w * 0.5) * prog;\r\n        const int TAPS = 24;\r\n        float stride = size / float(TAPS);\r\n        vec4 sum0 = vec4(0.0);\r\n        vec4 sum1 = vec4(0.0);\r\n        for (int k = 0; k < TAPS; k++) {\r\n            float sx = min(xi + (float(k) + 0.5) * stride, w - 1.0);\r\n            vec2 s = vec2(sx, yi);\r\n            sum0 += srcA(s);\r\n            sum1 += srcB(s);\r\n        }\r\n        outc = cmix(sum0 / float(TAPS), sum1 / float(TAPS), P);\r\n    }\r\n\r\n    fragColor = vec4(outc.rgb, 1.0);\r\n}\r\n";
 const RENDER_CONFIG = {
-  maxInputs: 2,
+  maxInputs: 3,
   maxCurves: 0
 };
 class VideoTransitionRenderer {
@@ -170220,7 +170224,7 @@ class VideoTransitionRenderer {
   get error() {
     return this._error;
   }
-  renderToCanvas(videoA, videoB, transition, progress, target) {
+  renderToCanvas(videoA, videoB, transition, progress, target, luma) {
     const w = Math.max(2, videoA.videoWidth);
     const h2 = Math.max(2, videoA.videoHeight);
     try {
@@ -170240,6 +170244,13 @@ class VideoTransitionRenderer {
       this.renderer.setResolution(w, h2);
       this.renderer.bindInputImage(0, videoA);
       this.renderer.bindInputImage(1, videoB);
+      if (luma && luma.mode !== 0) {
+        this.renderer.bindInputImage(2, luma.image);
+        this.renderer.setFloatUniform(1, luma.softness);
+        this.renderer.setIntUniform(1, luma.mode);
+      } else {
+        this.renderer.setIntUniform(1, 0);
+      }
       this.renderer.setIntUniform(0, transitionModeIndex(transition));
       this.renderer.setFloatUniform(0, 1 - clampProgress(progress));
       this.renderer.render();
@@ -170301,6 +170312,14 @@ function useVideoTransitionPreview(opts) {
   let flushTimer = null;
   let rafId = 0;
   let playT0 = 0;
+  function currentLuma(p2) {
+    var _a2;
+    const mode = p2.lumaMode ?? 0;
+    if (!mode) return null;
+    const img = (_a2 = opts.lumaEl) == null ? void 0 : _a2.value;
+    if (!img || !img.complete || img.naturalWidth === 0) return null;
+    return { image: img, mode, softness: p2.lumaSoftness ?? 0.1 };
+  }
   function renderOnce() {
     if (!supported.value) return;
     const a2 = opts.videoAEl.value;
@@ -170308,12 +170327,14 @@ function useVideoTransitionPreview(opts) {
     const c2 = opts.canvasEl.value;
     if (!a2 || !b || !c2 || a2.readyState < 2 || b.readyState < 2) return;
     renderer2 ?? (renderer2 = (opts.createRenderer ?? (() => new VideoTransitionRenderer()))());
+    const p2 = opts.params();
     const ok = renderer2.renderToCanvas(
       a2,
       b,
-      opts.params().transition,
+      p2.transition,
       progress.value,
-      c2
+      c2,
+      currentLuma(p2)
     );
     if (!ok) {
       supported.value = false;
@@ -170490,47 +170511,42 @@ function useVideoTransitionPreview(opts) {
     renderOnce
   };
 }
-const _hoisted_1$1L = { class: "ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[140px] ctv:rounded-md ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle" };
-const _hoisted_2$1H = ["src"];
-const _hoisted_3$1H = ["src"];
-const _hoisted_4$1n = { class: "ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
-const _hoisted_5$1i = ["disabled", "title"];
-const _hoisted_6$19 = { class: "ctv:shrink-0 ctv:font-mono ctv:text-muted-foreground" };
-const _hoisted_7$Q = {
-  key: 0,
-  class: "ctv:text-2xs ctv:text-muted-foreground"
-};
-const _hoisted_8$y = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_9$s = ["onClick"];
-const _hoisted_10$n = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_11$i = { class: "ctv:text-3xs ctv:font-mono ctv:text-muted-foreground" };
-const _hoisted_12$e = {
+const _hoisted_1$1M = { class: "ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[140px] ctv:rounded-md ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle" };
+const _hoisted_2$1I = ["src"];
+const _hoisted_3$1I = ["src"];
+const _hoisted_4$1o = { class: "ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
+const _hoisted_5$1j = ["disabled", "title"];
+const _hoisted_6$1a = { class: "ctv:shrink-0 ctv:font-mono ctv:text-muted-foreground" };
+const _hoisted_7$R = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_8$z = ["onClick"];
+const _hoisted_9$t = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_10$o = { class: "ctv:text-3xs ctv:font-mono ctv:text-muted-foreground" };
+const _hoisted_11$j = {
   key: 0,
   class: "ctv:ml-auto ctv:text-2xs ctv:text-primary-background ctv:font-mono"
 };
-const _hoisted_13$b = { class: "ctv:grid ctv:grid-cols-3 ctv:gap-1" };
-const _hoisted_14$9 = ["title", "onClick"];
-const _hoisted_15$7 = { class: "ctv:truncate" };
-const _hoisted_16$6 = { class: "ctv:text-2xs ctv:text-muted-foreground" };
-const _hoisted_17$6 = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs ctv:text-muted-foreground ctv:cursor-pointer" };
-const _hoisted_18$5 = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
-const _hoisted_19$4 = {
+const _hoisted_12$f = { class: "ctv:grid ctv:grid-cols-3 ctv:gap-1" };
+const _hoisted_13$c = ["title", "onClick"];
+const _hoisted_14$a = { class: "ctv:truncate" };
+const _hoisted_15$8 = { class: "ctv:text-2xs ctv:text-muted-foreground" };
+const _hoisted_16$6 = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_17$6 = {
   key: 0,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_20$4 = {
+const _hoisted_18$5 = {
   key: 1,
   class: "ctv:text-muted-foreground"
 };
-const _hoisted_21$4 = {
+const _hoisted_19$4 = {
   key: 2,
   class: "ctv:text-success-background"
 };
-const _hoisted_22$4 = {
+const _hoisted_20$4 = {
   key: 3,
   class: "ctv:text-muted-foreground"
 };
-const _sfc_main$1K = /* @__PURE__ */ defineComponent({
+const _sfc_main$1L = /* @__PURE__ */ defineComponent({
   __name: "VideoTransitionStageCard",
   props: {
     state: {},
@@ -170555,29 +170571,6 @@ const _sfc_main$1K = /* @__PURE__ */ defineComponent({
     }
     const duration2 = useNumWidget(props.node, "duration", 1);
     const offset2 = useNumWidget(props.node, "offset", 0);
-    const lumaWired = computed(() => Boolean(pickSourceImageUrl(props.state.inputs, "luma_image")));
-    const lumaSoftness = useNumWidget(props.node, "luma_softness", 0.1);
-    const lumaInvert = useBoolWidget(props.node, "luma_invert", false);
-    const lumaMap = useStrWidget(props.node, "luma_map", "none");
-    const LUMA_MAP_OPTS = [
-      "none",
-      "linear_x",
-      "linear_y",
-      "bilinear_x",
-      "bilinear_y",
-      "radial",
-      "square",
-      "diamond",
-      "clock",
-      "symmetric_clock",
-      "spiral",
-      "burst",
-      "curtain",
-      "blinds_h",
-      "blinds_v",
-      "checker",
-      "cloud"
-    ].map((v) => ({ value: v, label: v.replace("_", " ") }));
     const canvasEl = /* @__PURE__ */ ref(null);
     const videoAEl = /* @__PURE__ */ ref(null);
     const videoBEl = /* @__PURE__ */ ref(null);
@@ -170587,7 +170580,7 @@ const _sfc_main$1K = /* @__PURE__ */ defineComponent({
       canvasEl,
       nodeId: String(props.node.id),
       params: () => ({
-        transition: lumaWired.value ? "fade" : transition.value,
+        transition: transition.value,
         duration: duration2.value,
         offset: offset2.value
       })
@@ -170640,7 +170633,7 @@ const _sfc_main$1K = /* @__PURE__ */ defineComponent({
     return (_ctx, _cache2) => {
       return openBlock(), createElementBlock("div", {
         class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full",
-        onContextmenu: _cache2[18] || (_cache2[18] = withModifiers(() => {
+        onContextmenu: _cache2[14] || (_cache2[14] = withModifiers(() => {
         }, ["stop", "prevent"]))
       }, [
         showGlslPreview.value ? (openBlock(), createElementBlock("div", {
@@ -170651,6 +170644,319 @@ const _sfc_main$1K = /* @__PURE__ */ defineComponent({
           onPointermove: _cache2[2] || (_cache2[2] = withModifiers(() => {
           }, ["stop"])),
           onPointerup: _cache2[3] || (_cache2[3] = withModifiers(() => {
+          }, ["stop"]))
+        }, [
+          createBaseVNode("div", _hoisted_1$1M, [
+            createBaseVNode("canvas", {
+              ref_key: "canvasEl",
+              ref: canvasEl,
+              class: "ctv:block ctv:size-full ctv:object-contain"
+            }, null, 512),
+            createBaseVNode("video", {
+              ref_key: "videoAEl",
+              ref: videoAEl,
+              src: srcA.value ?? void 0,
+              class: "ctv:hidden",
+              muted: "",
+              playsinline: "",
+              preload: "metadata"
+            }, null, 8, _hoisted_2$1I),
+            createBaseVNode("video", {
+              ref_key: "videoBEl",
+              ref: videoBEl,
+              src: srcB.value ?? void 0,
+              class: "ctv:hidden",
+              muted: "",
+              playsinline: "",
+              preload: "metadata"
+            }, null, 8, _hoisted_3$1I)
+          ]),
+          createBaseVNode("div", _hoisted_4$1o, [
+            createBaseVNode("button", {
+              type: "button",
+              class: "ctv:flex ctv:items-center ctv:justify-center ctv:w-7 ctv:h-6 ctv:text-xs ctv:rounded ctv:cursor-pointer ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background ctv:disabled:opacity-40 ctv:disabled:cursor-default",
+              disabled: !unref(preview).ready.value,
+              title: unref(preview).playing.value ? _ctx.$t("videoTrim.pause") : _ctx.$t("videoCrop.play"),
+              onClick: _cache2[0] || (_cache2[0] = ($event) => unref(preview).togglePlay())
+            }, [
+              createBaseVNode("i", {
+                class: normalizeClass(["pi", unref(preview).playing.value ? "pi-pause" : "pi-play"])
+              }, null, 2)
+            ], 8, _hoisted_5$1j),
+            createBaseVNode("div", {
+              class: normalizeClass(["ctv:relative ctv:flex-1 ctv:h-2 ctv:rounded-full ctv:overflow-hidden ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:touch-none", unref(preview).ready.value ? "ctv:cursor-pointer" : "ctv:cursor-default"]),
+              onPointerdown: onScrubStart,
+              onPointermove: onScrubMove,
+              onPointerup: onScrubEnd,
+              onPointercancel: onScrubEnd
+            }, [
+              createBaseVNode("div", {
+                class: "ctv:absolute ctv:inset-y-0 ctv:left-0 ctv:bg-primary-background ctv:pointer-events-none",
+                style: normalizeStyle({ width: `${fillPct.value}%` })
+              }, null, 4),
+              createBaseVNode("div", {
+                class: "ctv:absolute ctv:inset-y-0 ctv:bg-primary-background/20 ctv:border-x ctv:border-primary-background/45 ctv:pointer-events-none",
+                style: normalizeStyle({ left: `${bandLeftPct.value}%`, width: `${bandWidthPct.value}%` })
+              }, null, 4)
+            ], 34),
+            createBaseVNode("span", _hoisted_6$1a, toDisplayString$1(timelineTime.value) + " / " + toDisplayString$1(timelineTotal.value), 1)
+          ])
+        ], 32)) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
+          createBaseVNode("div", {
+            class: "ctv:flex ctv:flex-col ctv:gap-1",
+            onPointerdown: _cache2[5] || (_cache2[5] = withModifiers(() => {
+            }, ["stop"])),
+            onPointermove: _cache2[6] || (_cache2[6] = withModifiers(() => {
+            }, ["stop"])),
+            onPointerup: _cache2[7] || (_cache2[7] = withModifiers(() => {
+            }, ["stop"]))
+          }, [
+            createVNode(_sfc_main$1S, {
+              modelValue: previewSide.value,
+              "onUpdate:modelValue": _cache2[4] || (_cache2[4] = ($event) => previewSide.value = $event),
+              options: [
+                { value: "A", label: "A" },
+                { value: "B", label: "B" }
+              ]
+            }, null, 8, ["modelValue"])
+          ], 32),
+          createVNode(VideoPlayerLite, {
+            "source-video-url": previewSide.value === "A" ? srcA.value : srcB.value
+          }, null, 8, ["source-video-url"])
+        ], 64)),
+        createBaseVNode("div", {
+          class: "ctv:flex ctv:flex-col ctv:gap-1",
+          onPointerdown: _cache2[11] || (_cache2[11] = withModifiers(() => {
+          }, ["stop"])),
+          onPointermove: _cache2[12] || (_cache2[12] = withModifiers(() => {
+          }, ["stop"])),
+          onPointerup: _cache2[13] || (_cache2[13] = withModifiers(() => {
+          }, ["stop"]))
+        }, [
+          createBaseVNode("span", _hoisted_7$R, toDisplayString$1(_ctx.$t("fx.transition")), 1),
+          createBaseVNode("div", {
+            class: "ctv-scroll-thin ctv:h-56 ctv:shrink-0 ctv:overflow-y-auto ctv:flex ctv:flex-col ctv:gap-0.5",
+            onWheel: _cache2[8] || (_cache2[8] = withModifiers(() => {
+            }, ["stop"]))
+          }, [
+            (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(TRANSITION_GROUPS), (grp) => {
+              return openBlock(), createElementBlock("div", {
+                key: grp.id,
+                class: "ctv:flex ctv:flex-col ctv:gap-0.5"
+              }, [
+                createBaseVNode("button", {
+                  type: "button",
+                  class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:py-0.5 ctv:px-0 ctv:bg-transparent ctv:border-0 ctv:cursor-pointer ctv:text-left",
+                  onClick: ($event) => toggleGroup(grp.id)
+                }, [
+                  createBaseVNode("i", {
+                    class: normalizeClass(["pi", expandedGroups.value.has(grp.id) ? "pi-chevron-down" : "pi-chevron-right", "ctv:w-2.5 ctv:text-2xs ctv:text-muted-foreground"])
+                  }, null, 2),
+                  createBaseVNode("span", _hoisted_9$t, toDisplayString$1(_ctx.$t(`fx.transitionGroup.${grp.id}`)), 1),
+                  createBaseVNode("span", _hoisted_10$o, toDisplayString$1(grp.names.length), 1),
+                  !expandedGroups.value.has(grp.id) && grp.names.includes(unref(transition)) ? (openBlock(), createElementBlock("span", _hoisted_11$j, toDisplayString$1(unref(transition)), 1)) : createCommentVNode("", true)
+                ], 8, _hoisted_8$z),
+                withDirectives(createBaseVNode("div", _hoisted_12$f, [
+                  (openBlock(true), createElementBlock(Fragment$1, null, renderList(grp.names, (name) => {
+                    return openBlock(), createElementBlock("button", {
+                      key: name,
+                      type: "button",
+                      class: normalizeClass(["ctv:flex ctv:items-center ctv:gap-1 ctv:py-0.5 ctv:px-1.5 ctv:text-2xs ctv:rounded ctv:cursor-pointer ctv:border ctv:transition-colors ctv:min-w-0", unref(transition) === name ? "ctv:bg-secondary-background-selected ctv:border-primary-background ctv:text-primary-background" : "ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background"]),
+                      title: name,
+                      onClick: ($event) => transition.value = name
+                    }, [
+                      (openBlock(), createBlock(resolveDynamicComponent(unref(getTransitionIcon)(name)), { class: "ctv:size-3 ctv:shrink-0" })),
+                      createBaseVNode("span", _hoisted_14$a, toDisplayString$1(name), 1)
+                    ], 10, _hoisted_13$c);
+                  }), 128))
+                ], 512), [
+                  [vShow, expandedGroups.value.has(grp.id)]
+                ])
+              ]);
+            }), 128))
+          ], 32),
+          createVNode(FxSlider, {
+            modelValue: unref(duration2),
+            "onUpdate:modelValue": _cache2[9] || (_cache2[9] = ($event) => /* @__PURE__ */ isRef(duration2) ? duration2.value = $event : null),
+            label: _ctx.$t("fx.duration"),
+            min: 0.1,
+            max: 5,
+            step: 0.05,
+            unit: "s",
+            "reset-to": 1
+          }, null, 8, ["modelValue", "label"]),
+          createVNode(FxSlider, {
+            modelValue: unref(offset2),
+            "onUpdate:modelValue": _cache2[10] || (_cache2[10] = ($event) => /* @__PURE__ */ isRef(offset2) ? offset2.value = $event : null),
+            label: _ctx.$t("fx.offset"),
+            min: 0,
+            max: offsetMax.value,
+            step: 0.1,
+            unit: "s",
+            "reset-to": 0
+          }, null, 8, ["modelValue", "label", "max"]),
+          createBaseVNode("div", _hoisted_15$8, toDisplayString$1(_ctx.$t("fx.offsetAuto")), 1)
+        ], 32),
+        createBaseVNode("div", _hoisted_16$6, [
+          !srcA.value || !srcB.value ? (openBlock(), createElementBlock("span", _hoisted_17$6, toDisplayString$1(_ctx.$t("fx.needsTwoInputs")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_18$5, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_19$4, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_20$4, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+        ]),
+        createVNode(StageCard, {
+          state: __props.state,
+          node: __props.node,
+          "on-run-request": __props.onRunRequest,
+          "on-cancel-request": __props.onCancelRequest,
+          "on-disconnect": __props.onDisconnect,
+          "on-action": __props.onAction
+        }, null, 8, ["state", "node", "on-run-request", "on-cancel-request", "on-disconnect", "on-action"])
+      ], 32);
+    };
+  }
+});
+const _hoisted_1$1L = { class: "ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[140px] ctv:rounded-md ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle" };
+const _hoisted_2$1H = ["src"];
+const _hoisted_3$1H = ["src"];
+const _hoisted_4$1n = ["src"];
+const _hoisted_5$1i = { class: "ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1.5 ctv:text-[11px]" };
+const _hoisted_6$19 = ["disabled", "title"];
+const _hoisted_7$Q = { class: "ctv:shrink-0 ctv:font-mono ctv:text-muted-foreground" };
+const _hoisted_8$y = { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_9$s = {
+  key: 1,
+  class: "ctv:text-2xs ctv:text-muted-foreground"
+};
+const _hoisted_10$n = { class: "ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs ctv:text-muted-foreground ctv:cursor-pointer" };
+const _hoisted_11$i = { class: "ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide" };
+const _hoisted_12$e = {
+  key: 0,
+  class: "ctv:text-muted-foreground"
+};
+const _hoisted_13$b = {
+  key: 1,
+  class: "ctv:text-muted-foreground"
+};
+const _hoisted_14$9 = {
+  key: 2,
+  class: "ctv:text-success-background"
+};
+const _hoisted_15$7 = {
+  key: 3,
+  class: "ctv:text-muted-foreground"
+};
+const _sfc_main$1K = /* @__PURE__ */ defineComponent({
+  __name: "VideoLumaWipeStageCard",
+  props: {
+    state: {},
+    onRunRequest: { type: Function },
+    onCancelRequest: { type: Function },
+    onDisconnect: { type: Function },
+    onAction: { type: Function },
+    node: {}
+  },
+  setup(__props) {
+    const props = __props;
+    const srcA = computed(() => pickSourceImageUrl(props.state.inputs, "video_a"));
+    const srcB = computed(() => pickSourceImageUrl(props.state.inputs, "video_b"));
+    const previewSide = /* @__PURE__ */ ref("A");
+    const duration2 = useNumWidget(props.node, "duration", 1);
+    const softness = useNumWidget(props.node, "softness", 0.1);
+    const invert = useBoolWidget(props.node, "invert", false);
+    const lumaMap = useStrWidget(props.node, "luma_map", "radial");
+    const lumaImageUrl = computed(() => pickSourceImageUrl(props.state.inputs, "luma_image"));
+    const lumaWired = computed(() => Boolean(lumaImageUrl.value));
+    const lumaSrc = computed(() => {
+      if (lumaImageUrl.value) return lumaImageUrl.value;
+      return `/comfytv/luma_map?kind=${encodeURIComponent(lumaMap.value)}&w=320&h=180`;
+    });
+    const LUMA_MAP_OPTS = [
+      "linear_x",
+      "linear_y",
+      "bilinear_x",
+      "bilinear_y",
+      "radial",
+      "square",
+      "diamond",
+      "clock",
+      "symmetric_clock",
+      "spiral",
+      "burst",
+      "curtain",
+      "blinds_h",
+      "blinds_v",
+      "checker",
+      "cloud"
+    ].map((v) => ({ value: v, label: v.replace("_", " ") }));
+    const canvasEl = /* @__PURE__ */ ref(null);
+    const videoAEl = /* @__PURE__ */ ref(null);
+    const videoBEl = /* @__PURE__ */ ref(null);
+    const lumaEl = /* @__PURE__ */ ref(null);
+    const preview = useVideoTransitionPreview({
+      videoAEl,
+      videoBEl,
+      canvasEl,
+      lumaEl,
+      nodeId: String(props.node.id),
+      params: () => ({
+        transition: "fade",
+        duration: duration2.value,
+        offset: 0,
+        lumaMode: invert.value ? 2 : 1,
+        lumaSoftness: softness.value
+      })
+    });
+    const showGlslPreview = computed(
+      () => preview.supported.value && Boolean(srcA.value) && Boolean(srcB.value)
+    );
+    const timelineTime = computed(() => `${preview.time.value.toFixed(2)}s`);
+    const timelineTotal = computed(() => `${preview.timeline.value.total.toFixed(2)}s`);
+    const fillPct = computed(
+      () => Math.min(100, preview.time.value / preview.timeline.value.total * 100)
+    );
+    const bandLeftPct = computed(
+      () => preview.timeline.value.lead / preview.timeline.value.total * 100
+    );
+    const bandWidthPct = computed(
+      () => preview.window.value.duration / preview.timeline.value.total * 100
+    );
+    let scrubbing = false;
+    function scrubTo(e) {
+      const el = e.currentTarget;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      if (rect.width <= 0) return;
+      preview.scrub((e.clientX - rect.left) / rect.width);
+    }
+    function onScrubStart(e) {
+      var _a2, _b2;
+      if (!preview.ready.value) return;
+      scrubbing = true;
+      preview.pause();
+      (_b2 = (_a2 = e.currentTarget) == null ? void 0 : _a2.setPointerCapture) == null ? void 0 : _b2.call(_a2, e.pointerId);
+      scrubTo(e);
+    }
+    function onScrubMove(e) {
+      if (!scrubbing) return;
+      scrubTo(e);
+    }
+    function onScrubEnd(e) {
+      var _a2, _b2;
+      if (!scrubbing) return;
+      scrubbing = false;
+      (_b2 = (_a2 = e.currentTarget) == null ? void 0 : _a2.releasePointerCapture) == null ? void 0 : _b2.call(_a2, e.pointerId);
+    }
+    return (_ctx, _cache2) => {
+      return openBlock(), createElementBlock("div", {
+        class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full",
+        onContextmenu: _cache2[17] || (_cache2[17] = withModifiers(() => {
+        }, ["stop", "prevent"]))
+      }, [
+        showGlslPreview.value ? (openBlock(), createElementBlock("div", {
+          key: 0,
+          class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:w-full ctv:flex-1",
+          onPointerdown: _cache2[2] || (_cache2[2] = withModifiers(() => {
+          }, ["stop"])),
+          onPointermove: _cache2[3] || (_cache2[3] = withModifiers(() => {
+          }, ["stop"])),
+          onPointerup: _cache2[4] || (_cache2[4] = withModifiers(() => {
           }, ["stop"]))
         }, [
           createBaseVNode("div", _hoisted_1$1L, [
@@ -170676,20 +170982,28 @@ const _sfc_main$1K = /* @__PURE__ */ defineComponent({
               muted: "",
               playsinline: "",
               preload: "metadata"
-            }, null, 8, _hoisted_3$1H)
+            }, null, 8, _hoisted_3$1H),
+            createBaseVNode("img", {
+              ref_key: "lumaEl",
+              ref: lumaEl,
+              src: lumaSrc.value || void 0,
+              crossorigin: "anonymous",
+              class: "ctv:hidden",
+              onLoad: _cache2[0] || (_cache2[0] = ($event) => unref(preview).renderOnce())
+            }, null, 40, _hoisted_4$1n)
           ]),
-          createBaseVNode("div", _hoisted_4$1n, [
+          createBaseVNode("div", _hoisted_5$1i, [
             createBaseVNode("button", {
               type: "button",
               class: "ctv:flex ctv:items-center ctv:justify-center ctv:w-7 ctv:h-6 ctv:text-xs ctv:rounded ctv:cursor-pointer ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background ctv:disabled:opacity-40 ctv:disabled:cursor-default",
               disabled: !unref(preview).ready.value,
               title: unref(preview).playing.value ? _ctx.$t("videoTrim.pause") : _ctx.$t("videoCrop.play"),
-              onClick: _cache2[0] || (_cache2[0] = ($event) => unref(preview).togglePlay())
+              onClick: _cache2[1] || (_cache2[1] = ($event) => unref(preview).togglePlay())
             }, [
               createBaseVNode("i", {
                 class: normalizeClass(["pi", unref(preview).playing.value ? "pi-pause" : "pi-play"])
               }, null, 2)
-            ], 8, _hoisted_5$1i),
+            ], 8, _hoisted_6$19),
             createBaseVNode("div", {
               class: normalizeClass(["ctv:relative ctv:flex-1 ctv:h-2 ctv:rounded-full ctv:overflow-hidden ctv:bg-secondary-background ctv:border ctv:border-border-subtle ctv:touch-none", unref(preview).ready.value ? "ctv:cursor-pointer" : "ctv:cursor-default"]),
               onPointerdown: onScrubStart,
@@ -170706,22 +171020,21 @@ const _sfc_main$1K = /* @__PURE__ */ defineComponent({
                 style: normalizeStyle({ left: `${bandLeftPct.value}%`, width: `${bandWidthPct.value}%` })
               }, null, 4)
             ], 34),
-            createBaseVNode("span", _hoisted_6$19, toDisplayString$1(timelineTime.value) + " / " + toDisplayString$1(timelineTotal.value), 1)
-          ]),
-          lumaWired.value ? (openBlock(), createElementBlock("div", _hoisted_7$Q, toDisplayString$1(_ctx.$t("fx.lumaPreviewHint")), 1)) : createCommentVNode("", true)
+            createBaseVNode("span", _hoisted_7$Q, toDisplayString$1(timelineTime.value) + " / " + toDisplayString$1(timelineTotal.value), 1)
+          ])
         ], 32)) : (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
           createBaseVNode("div", {
             class: "ctv:flex ctv:flex-col ctv:gap-1",
-            onPointerdown: _cache2[5] || (_cache2[5] = withModifiers(() => {
+            onPointerdown: _cache2[6] || (_cache2[6] = withModifiers(() => {
             }, ["stop"])),
-            onPointermove: _cache2[6] || (_cache2[6] = withModifiers(() => {
+            onPointermove: _cache2[7] || (_cache2[7] = withModifiers(() => {
             }, ["stop"])),
-            onPointerup: _cache2[7] || (_cache2[7] = withModifiers(() => {
+            onPointerup: _cache2[8] || (_cache2[8] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: previewSide.value,
-              "onUpdate:modelValue": _cache2[4] || (_cache2[4] = ($event) => previewSide.value = $event),
+              "onUpdate:modelValue": _cache2[5] || (_cache2[5] = ($event) => previewSide.value = $event),
               options: [
                 { value: "A", label: "A" },
                 { value: "B", label: "B" }
@@ -170734,60 +171047,30 @@ const _sfc_main$1K = /* @__PURE__ */ defineComponent({
         ], 64)),
         createBaseVNode("div", {
           class: "ctv:flex ctv:flex-col ctv:gap-1",
-          onPointerdown: _cache2[15] || (_cache2[15] = withModifiers(() => {
+          onPointerdown: _cache2[14] || (_cache2[14] = withModifiers(() => {
           }, ["stop"])),
-          onPointermove: _cache2[16] || (_cache2[16] = withModifiers(() => {
+          onPointermove: _cache2[15] || (_cache2[15] = withModifiers(() => {
           }, ["stop"])),
-          onPointerup: _cache2[17] || (_cache2[17] = withModifiers(() => {
+          onPointerup: _cache2[16] || (_cache2[16] = withModifiers(() => {
           }, ["stop"]))
         }, [
           !lumaWired.value ? (openBlock(), createElementBlock(Fragment$1, { key: 0 }, [
-            createBaseVNode("span", _hoisted_8$y, toDisplayString$1(_ctx.$t("fx.transition")), 1),
+            createBaseVNode("span", _hoisted_8$y, toDisplayString$1(_ctx.$t("fx.lumaPattern")), 1),
             createBaseVNode("div", {
-              class: "ctv-scroll-thin ctv:h-56 ctv:shrink-0 ctv:overflow-y-auto ctv:flex ctv:flex-col ctv:gap-0.5",
-              onWheel: _cache2[8] || (_cache2[8] = withModifiers(() => {
+              class: "ctv-scroll-thin ctv:max-h-24 ctv:overflow-y-auto",
+              onWheel: _cache2[10] || (_cache2[10] = withModifiers(() => {
               }, ["stop"]))
             }, [
-              (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(TRANSITION_GROUPS), (grp) => {
-                return openBlock(), createElementBlock("div", {
-                  key: grp.id,
-                  class: "ctv:flex ctv:flex-col ctv:gap-0.5"
-                }, [
-                  createBaseVNode("button", {
-                    type: "button",
-                    class: "ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:py-0.5 ctv:px-0 ctv:bg-transparent ctv:border-0 ctv:cursor-pointer ctv:text-left",
-                    onClick: ($event) => toggleGroup(grp.id)
-                  }, [
-                    createBaseVNode("i", {
-                      class: normalizeClass(["pi", expandedGroups.value.has(grp.id) ? "pi-chevron-down" : "pi-chevron-right", "ctv:w-2.5 ctv:text-2xs ctv:text-muted-foreground"])
-                    }, null, 2),
-                    createBaseVNode("span", _hoisted_10$n, toDisplayString$1(_ctx.$t(`fx.transitionGroup.${grp.id}`)), 1),
-                    createBaseVNode("span", _hoisted_11$i, toDisplayString$1(grp.names.length), 1),
-                    !expandedGroups.value.has(grp.id) && grp.names.includes(unref(transition)) ? (openBlock(), createElementBlock("span", _hoisted_12$e, toDisplayString$1(unref(transition)), 1)) : createCommentVNode("", true)
-                  ], 8, _hoisted_9$s),
-                  withDirectives(createBaseVNode("div", _hoisted_13$b, [
-                    (openBlock(true), createElementBlock(Fragment$1, null, renderList(grp.names, (name) => {
-                      return openBlock(), createElementBlock("button", {
-                        key: name,
-                        type: "button",
-                        class: normalizeClass(["ctv:flex ctv:items-center ctv:gap-1 ctv:py-0.5 ctv:px-1.5 ctv:text-2xs ctv:rounded ctv:cursor-pointer ctv:border ctv:transition-colors ctv:min-w-0", unref(transition) === name ? "ctv:bg-secondary-background-selected ctv:border-primary-background ctv:text-primary-background" : "ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background"]),
-                        title: name,
-                        onClick: ($event) => transition.value = name
-                      }, [
-                        (openBlock(), createBlock(resolveDynamicComponent(unref(getTransitionIcon)(name)), { class: "ctv:size-3 ctv:shrink-0" })),
-                        createBaseVNode("span", _hoisted_15$7, toDisplayString$1(name), 1)
-                      ], 10, _hoisted_14$9);
-                    }), 128))
-                  ], 512), [
-                    [vShow, expandedGroups.value.has(grp.id)]
-                  ])
-                ]);
-              }), 128))
+              createVNode(_sfc_main$1S, {
+                modelValue: unref(lumaMap),
+                "onUpdate:modelValue": _cache2[9] || (_cache2[9] = ($event) => /* @__PURE__ */ isRef(lumaMap) ? lumaMap.value = $event : null),
+                options: unref(LUMA_MAP_OPTS)
+              }, null, 8, ["modelValue", "options"])
             ], 32)
-          ], 64)) : createCommentVNode("", true),
+          ], 64)) : (openBlock(), createElementBlock("div", _hoisted_9$s, toDisplayString$1(_ctx.$t("fx.lumaWiredHint")), 1)),
           createVNode(FxSlider, {
             modelValue: unref(duration2),
-            "onUpdate:modelValue": _cache2[9] || (_cache2[9] = ($event) => /* @__PURE__ */ isRef(duration2) ? duration2.value = $event : null),
+            "onUpdate:modelValue": _cache2[11] || (_cache2[11] = ($event) => /* @__PURE__ */ isRef(duration2) ? duration2.value = $event : null),
             label: _ctx.$t("fx.duration"),
             min: 0.1,
             max: 5,
@@ -170795,57 +171078,28 @@ const _sfc_main$1K = /* @__PURE__ */ defineComponent({
             unit: "s",
             "reset-to": 1
           }, null, 8, ["modelValue", "label"]),
-          !lumaWired.value ? (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
-            createVNode(FxSlider, {
-              modelValue: unref(offset2),
-              "onUpdate:modelValue": _cache2[10] || (_cache2[10] = ($event) => /* @__PURE__ */ isRef(offset2) ? offset2.value = $event : null),
-              label: _ctx.$t("fx.offset"),
-              min: 0,
-              max: offsetMax.value,
-              step: 0.1,
-              unit: "s",
-              "reset-to": 0
-            }, null, 8, ["modelValue", "label", "max"]),
-            createBaseVNode("div", _hoisted_16$6, toDisplayString$1(_ctx.$t("fx.offsetAuto")), 1)
-          ], 64)) : createCommentVNode("", true),
-          !lumaWired.value ? (openBlock(), createElementBlock(Fragment$1, { key: 2 }, [
-            _cache2[19] || (_cache2[19] = createBaseVNode("div", { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" }, "Luma wipe", -1)),
-            createBaseVNode("div", {
-              class: "ctv-scroll-thin ctv:max-h-20 ctv:overflow-y-auto",
-              onWheel: _cache2[12] || (_cache2[12] = withModifiers(() => {
-              }, ["stop"]))
-            }, [
-              createVNode(_sfc_main$1R, {
-                modelValue: unref(lumaMap),
-                "onUpdate:modelValue": _cache2[11] || (_cache2[11] = ($event) => /* @__PURE__ */ isRef(lumaMap) ? lumaMap.value = $event : null),
-                options: unref(LUMA_MAP_OPTS)
-              }, null, 8, ["modelValue", "options"])
-            ], 32)
-          ], 64)) : createCommentVNode("", true),
-          lumaWired.value || unref(lumaMap) !== "none" ? (openBlock(), createElementBlock(Fragment$1, { key: 3 }, [
-            createVNode(FxSlider, {
-              modelValue: unref(lumaSoftness),
-              "onUpdate:modelValue": _cache2[13] || (_cache2[13] = ($event) => /* @__PURE__ */ isRef(lumaSoftness) ? lumaSoftness.value = $event : null),
-              label: "Softness",
-              min: 0,
-              max: 1,
-              step: 0.01,
-              "reset-to": 0.1
-            }, null, 8, ["modelValue"]),
-            createBaseVNode("label", _hoisted_17$6, [
-              withDirectives(createBaseVNode("input", {
-                type: "checkbox",
-                "onUpdate:modelValue": _cache2[14] || (_cache2[14] = ($event) => /* @__PURE__ */ isRef(lumaInvert) ? lumaInvert.value = $event : null),
-                class: "ctv:accent-primary-background"
-              }, null, 512), [
-                [vModelCheckbox, unref(lumaInvert)]
-              ]),
-              _cache2[20] || (_cache2[20] = createTextVNode(" Invert ", -1))
-            ])
-          ], 64)) : createCommentVNode("", true)
+          createVNode(FxSlider, {
+            modelValue: unref(softness),
+            "onUpdate:modelValue": _cache2[12] || (_cache2[12] = ($event) => /* @__PURE__ */ isRef(softness) ? softness.value = $event : null),
+            label: _ctx.$t("fx.softness"),
+            min: 0,
+            max: 1,
+            step: 0.01,
+            "reset-to": 0.1
+          }, null, 8, ["modelValue", "label"]),
+          createBaseVNode("label", _hoisted_10$n, [
+            withDirectives(createBaseVNode("input", {
+              type: "checkbox",
+              "onUpdate:modelValue": _cache2[13] || (_cache2[13] = ($event) => /* @__PURE__ */ isRef(invert) ? invert.value = $event : null),
+              class: "ctv:accent-primary-background"
+            }, null, 512), [
+              [vModelCheckbox, unref(invert)]
+            ]),
+            createTextVNode(" " + toDisplayString$1(_ctx.$t("fx.invert")), 1)
+          ])
         ], 32),
-        createBaseVNode("div", _hoisted_18$5, [
-          !srcA.value || !srcB.value ? (openBlock(), createElementBlock("span", _hoisted_19$4, toDisplayString$1(_ctx.$t("fx.needsTwoInputs")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_20$4, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_21$4, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_22$4, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
+        createBaseVNode("div", _hoisted_11$i, [
+          !srcA.value || !srcB.value ? (openBlock(), createElementBlock("span", _hoisted_12$e, toDisplayString$1(_ctx.$t("fx.needsTwoInputs")), 1)) : __props.state.running ? (openBlock(), createElementBlock("span", _hoisted_13$b, toDisplayString$1(_ctx.$t("fx.processing")), 1)) : __props.state.output ? (openBlock(), createElementBlock("span", _hoisted_14$9, toDisplayString$1(_ctx.$t("fx.done")), 1)) : (openBlock(), createElementBlock("span", _hoisted_15$7, toDisplayString$1(_ctx.$t("fx.adjustThenRun")), 1))
         ]),
         createVNode(StageCard, {
           state: __props.state,
@@ -170900,7 +171154,7 @@ const _sfc_main$1J = /* @__PURE__ */ defineComponent({
     const rangeY = useNumWidget(props.node, "range_y", 16);
     const edge = useStrWidget(props.node, "edge", "mirror");
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, { "source-video-url": sourceVideoUrl.value }, null, 8, ["source-video-url"])
         ]),
@@ -170935,7 +171189,7 @@ const _sfc_main$1J = /* @__PURE__ */ defineComponent({
               "reset-to": 16
             }, null, 8, ["modelValue", "label"]),
             createBaseVNode("span", _hoisted_1$1K, toDisplayString$1(_ctx.$t("fx.edgeMode")), 1),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(edge),
               "onUpdate:modelValue": _cache2[2] || (_cache2[2] = ($event) => /* @__PURE__ */ isRef(edge) ? edge.value = $event : null),
               options: EDGES
@@ -171017,7 +171271,7 @@ const _sfc_main$1I = /* @__PURE__ */ defineComponent({
       }
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, { "source-video-url": sourceVideoUrl.value }, null, 8, ["source-video-url"])
         ]),
@@ -171050,7 +171304,7 @@ const _sfc_main$1I = /* @__PURE__ */ defineComponent({
               unit: "s",
               "reset-to": 1
             }, null, 8, ["modelValue", "label"]),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(outputMode),
               "onUpdate:modelValue": _cache2[2] || (_cache2[2] = ($event) => /* @__PURE__ */ isRef(outputMode) ? outputMode.value = $event : null),
               options: [
@@ -171058,7 +171312,7 @@ const _sfc_main$1I = /* @__PURE__ */ defineComponent({
                 { value: "clips", label: _ctx.$t("fx.sceneClips") }
               ]
             }, null, 8, ["modelValue", "options"]),
-            unref(outputMode) === "clips" ? (openBlock(), createBlock(_sfc_main$1R, {
+            unref(outputMode) === "clips" ? (openBlock(), createBlock(_sfc_main$1S, {
               key: 0,
               modelValue: unref(cutMode),
               "onUpdate:modelValue": _cache2[3] || (_cache2[3] = ($event) => /* @__PURE__ */ isRef(cutMode) ? cutMode.value = $event : null),
@@ -171173,7 +171427,7 @@ const _sfc_main$1H = /* @__PURE__ */ defineComponent({
     const slowFactor = useNumWidget(props.node, "slow_factor", 2);
     const miMode = useStrWidget(props.node, "mi_mode", "mci");
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, { "source-video-url": sourceVideoUrl.value }, null, 8, ["source-video-url"])
         ]),
@@ -171188,7 +171442,7 @@ const _sfc_main$1H = /* @__PURE__ */ defineComponent({
             }, ["stop"]))
           }, [
             createBaseVNode("span", _hoisted_1$1I, toDisplayString$1(_ctx.$t("fx.mode")), 1),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(mode),
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(mode) ? mode.value = $event : null),
               options: [
@@ -171218,7 +171472,7 @@ const _sfc_main$1H = /* @__PURE__ */ defineComponent({
               "reset-to": 2
             }, null, 8, ["modelValue", "label"])) : createCommentVNode("", true),
             createBaseVNode("span", _hoisted_2$1E, toDisplayString$1(_ctx.$t("fx.miMode")), 1),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(miMode),
               "onUpdate:modelValue": _cache2[3] || (_cache2[3] = ($event) => /* @__PURE__ */ isRef(miMode) ? miMode.value = $event : null),
               options: [
@@ -171322,7 +171576,7 @@ const _sfc_main$1G = /* @__PURE__ */ defineComponent({
     });
     const previewWindowLabel = computed(() => (preview.state.t1 - preview.state.t0).toFixed(1));
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -171340,12 +171594,12 @@ const _sfc_main$1G = /* @__PURE__ */ defineComponent({
             onPointerup: _cache2[5] || (_cache2[5] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(method),
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(method) ? method.value = $event : null),
               options: METHODS
             }, null, 8, ["modelValue"]),
-            unref(method) !== "w3fdif" ? (openBlock(), createBlock(_sfc_main$1R, {
+            unref(method) !== "w3fdif" ? (openBlock(), createBlock(_sfc_main$1S, {
               key: 0,
               modelValue: unref(rate),
               "onUpdate:modelValue": _cache2[1] || (_cache2[1] = ($event) => /* @__PURE__ */ isRef(rate) ? rate.value = $event : null),
@@ -171456,7 +171710,7 @@ const _sfc_main$1F = /* @__PURE__ */ defineComponent({
       params: previewParams
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -171485,7 +171739,7 @@ const _sfc_main$1F = /* @__PURE__ */ defineComponent({
             onPointerup: _cache2[5] || (_cache2[5] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(effect3),
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(effect3) ? effect3.value = $event : null),
               options: EFFECTS
@@ -171608,7 +171862,7 @@ const _sfc_main$1E = /* @__PURE__ */ defineComponent({
           }, ["stop"]))
         }, [
           createBaseVNode("span", _hoisted_1$1F, toDisplayString$1(_ctx.$t("fx.scope")), 1),
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: unref(scope),
             "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(scope) ? scope.value = $event : null),
             options: [
@@ -171899,7 +172153,7 @@ const _sfc_main$1C = /* @__PURE__ */ defineComponent({
           }, ["stop"]))
         }, [
           createBaseVNode("span", _hoisted_1$1D, toDisplayString$1(_ctx.$t("fx.mode")), 1),
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: unref(mode),
             "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(mode) ? mode.value = $event : null),
             options: [
@@ -172447,7 +172701,7 @@ const _sfc_main$1z = /* @__PURE__ */ defineComponent({
           }, ["stop"]))
         }, [
           createBaseVNode("span", _hoisted_2$1y, toDisplayString$1(_ctx.$t("fx.mode")), 1),
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: unref(mode),
             "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(mode) ? mode.value = $event : null),
             options: [
@@ -172508,7 +172762,7 @@ const _sfc_main$1z = /* @__PURE__ */ defineComponent({
             }, null, 8, ["modelValue", "label"])
           ], 64)) : createCommentVNode("", true),
           unref(mode) === "normalize" ? (openBlock(), createElementBlock(Fragment$1, { key: 2 }, [
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(peakMode),
               "onUpdate:modelValue": _cache2[6] || (_cache2[6] = ($event) => /* @__PURE__ */ isRef(peakMode) ? peakMode.value = $event : null),
               options: [
@@ -172638,7 +172892,7 @@ const _sfc_main$1y = /* @__PURE__ */ defineComponent({
           }, ["stop"]))
         }, [
           createBaseVNode("span", _hoisted_2$1x, toDisplayString$1(_ctx.$t("fx.method")), 1),
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: unref(method),
             "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(method) ? method.value = $event : null),
             options: [
@@ -172762,7 +173016,7 @@ const _sfc_main$1x = /* @__PURE__ */ defineComponent({
           }, ["stop"]))
         }, [
           createBaseVNode("span", _hoisted_2$1w, toDisplayString$1(_ctx.$t("fx.preset")), 1),
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: unref(preset2),
             "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(preset2) ? preset2.value = $event : null),
             options: [
@@ -172898,7 +173152,7 @@ const _sfc_main$1w = /* @__PURE__ */ defineComponent({
           }, ["stop"]))
         }, [
           createBaseVNode("span", _hoisted_2$1v, toDisplayString$1(_ctx.$t("fx.mode")), 1),
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: unref(mode),
             "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(mode) ? mode.value = $event : null),
             options: [
@@ -172940,7 +173194,7 @@ const _sfc_main$1w = /* @__PURE__ */ defineComponent({
               unit: "Hz",
               "reset-to": 0.5
             }, null, 8, ["modelValue", "label"]),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(phType),
               "onUpdate:modelValue": _cache2[4] || (_cache2[4] = ($event) => /* @__PURE__ */ isRef(phType) ? phType.value = $event : null),
               options: [
@@ -172998,7 +173252,7 @@ const _sfc_main$1w = /* @__PURE__ */ defineComponent({
               unit: "Hz",
               "reset-to": 0.5
             }, null, 8, ["modelValue", "label"])
-          ], 64)) : unref(mode) === "chorus" ? (openBlock(), createBlock(_sfc_main$1R, {
+          ], 64)) : unref(mode) === "chorus" ? (openBlock(), createBlock(_sfc_main$1S, {
             key: 2,
             modelValue: unref(chorusPreset),
             "onUpdate:modelValue": _cache2[10] || (_cache2[10] = ($event) => /* @__PURE__ */ isRef(chorusPreset) ? chorusPreset.value = $event : null),
@@ -173056,7 +173310,7 @@ const _sfc_main$1w = /* @__PURE__ */ defineComponent({
               step: 0.01,
               "reset-to": 1
             }, null, 8, ["modelValue", "label"]),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(puMode),
               "onUpdate:modelValue": _cache2[16] || (_cache2[16] = ($event) => /* @__PURE__ */ isRef(puMode) ? puMode.value = $event : null),
               options: [
@@ -173144,7 +173398,7 @@ const _sfc_main$1v = /* @__PURE__ */ defineComponent({
           }, ["stop"]))
         }, [
           createBaseVNode("span", _hoisted_2$1u, toDisplayString$1(_ctx.$t("fx.mode")), 1),
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: unref(mode),
             "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(mode) ? mode.value = $event : null),
             options: [
@@ -173343,7 +173597,7 @@ const _sfc_main$1u = /* @__PURE__ */ defineComponent({
           }, ["stop"]))
         }, [
           createBaseVNode("span", _hoisted_2$1t, toDisplayString$1(_ctx.$t("fx.mode")), 1),
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: unref(mode),
             "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(mode) ? mode.value = $event : null),
             options: [
@@ -173461,7 +173715,7 @@ const _sfc_main$1t = /* @__PURE__ */ defineComponent({
           }, ["stop"]))
         }, [
           createBaseVNode("span", _hoisted_2$1s, toDisplayString$1(_ctx.$t("fx.method")), 1),
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: unref(method),
             "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(method) ? method.value = $event : null),
             options: [
@@ -173568,7 +173822,7 @@ const _sfc_main$1t = /* @__PURE__ */ defineComponent({
               "reset-to": 10
             }, null, 8, ["modelValue", "label"])
           ], 64)) : unref(method) === "hum" ? (openBlock(), createElementBlock(Fragment$1, { key: 4 }, [
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: humPreset.value,
               "onUpdate:modelValue": _cache2[10] || (_cache2[10] = ($event) => humPreset.value = $event),
               options: [
@@ -173685,7 +173939,7 @@ const _sfc_main$1s = /* @__PURE__ */ defineComponent({
           }, ["stop"]))
         }, [
           createBaseVNode("span", _hoisted_2$1r, toDisplayString$1(_ctx.$t("fx.mode")), 1),
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: unref(mode),
             "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(mode) ? mode.value = $event : null),
             options: [
@@ -173702,7 +173956,7 @@ const _sfc_main$1s = /* @__PURE__ */ defineComponent({
               onWheel: _cache2[2] || (_cache2[2] = withModifiers(() => {
               }, ["stop"]))
             }, [
-              createVNode(_sfc_main$1R, {
+              createVNode(_sfc_main$1S, {
                 modelValue: unref(scType),
                 "onUpdate:modelValue": _cache2[1] || (_cache2[1] = ($event) => /* @__PURE__ */ isRef(scType) ? scType.value = $event : null),
                 options: unref(softclipTypes)
@@ -173755,7 +174009,7 @@ const _sfc_main$1s = /* @__PURE__ */ defineComponent({
               step: 0.01,
               "reset-to": 0.5
             }, null, 8, ["modelValue", "label"]),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(crMode),
               "onUpdate:modelValue": _cache2[8] || (_cache2[8] = ($event) => /* @__PURE__ */ isRef(crMode) ? crMode.value = $event : null),
               options: [
@@ -173901,7 +174155,7 @@ const _sfc_main$1r = /* @__PURE__ */ defineComponent({
           onPointerup: _cache2[3] || (_cache2[3] = withModifiers(() => {
           }, ["stop"]))
         }, [
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: previewSide.value,
             "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => previewSide.value = $event),
             options: [
@@ -173939,7 +174193,7 @@ const _sfc_main$1r = /* @__PURE__ */ defineComponent({
             onWheel: _cache2[6] || (_cache2[6] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(curve1),
               "onUpdate:modelValue": _cache2[5] || (_cache2[5] = ($event) => /* @__PURE__ */ isRef(curve1) ? curve1.value = $event : null),
               options: unref(curveOptions)
@@ -173951,7 +174205,7 @@ const _sfc_main$1r = /* @__PURE__ */ defineComponent({
             onWheel: _cache2[8] || (_cache2[8] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(curve2),
               "onUpdate:modelValue": _cache2[7] || (_cache2[7] = ($event) => /* @__PURE__ */ isRef(curve2) ? curve2.value = $event : null),
               options: unref(curveOptions)
@@ -174099,7 +174353,7 @@ const _sfc_main$1q = /* @__PURE__ */ defineComponent({
           }, ["stop"]))
         }, [
           createBaseVNode("span", _hoisted_2$1p, toDisplayString$1(_ctx.$t("fx.mode")), 1),
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: unref(mode),
             "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(mode) ? mode.value = $event : null),
             options: [
@@ -174268,7 +174522,7 @@ const _sfc_main$1p = /* @__PURE__ */ defineComponent({
           }, ["stop"]))
         }, [
           createBaseVNode("span", _hoisted_2$1o, toDisplayString$1(_ctx.$t("fx.mode")), 1),
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: unref(mode),
             "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(mode) ? mode.value = $event : null),
             options: [
@@ -174293,7 +174547,7 @@ const _sfc_main$1p = /* @__PURE__ */ defineComponent({
               onWheel: _cache2[3] || (_cache2[3] = withModifiers(() => {
               }, ["stop"]))
             }, [
-              createVNode(_sfc_main$1R, {
+              createVNode(_sfc_main$1S, {
                 modelValue: unref(color),
                 "onUpdate:modelValue": _cache2[2] || (_cache2[2] = ($event) => /* @__PURE__ */ isRef(color) ? color.value = $event : null),
                 options: unref(colorOptions)
@@ -174341,7 +174595,7 @@ const _sfc_main$1p = /* @__PURE__ */ defineComponent({
               createTextVNode(" " + toDisplayString$1(_ctx.$t("afx.dbAxis")), 1)
             ])
           ], 64)) : (openBlock(), createElementBlock(Fragment$1, { key: 3 }, [
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(proScale),
               "onUpdate:modelValue": _cache2[8] || (_cache2[8] = ($event) => /* @__PURE__ */ isRef(proScale) ? proScale.value = $event : null),
               options: [
@@ -174350,7 +174604,7 @@ const _sfc_main$1p = /* @__PURE__ */ defineComponent({
                 { value: "mel", label: "Mel" }
               ]
             }, null, 8, ["modelValue"]),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(proColormap),
               "onUpdate:modelValue": _cache2[9] || (_cache2[9] = ($event) => /* @__PURE__ */ isRef(proColormap) ? proColormap.value = $event : null),
               options: [
@@ -174470,7 +174724,7 @@ const _sfc_main$1o = /* @__PURE__ */ defineComponent({
           onPointerup: _cache2[3] || (_cache2[3] = withModifiers(() => {
           }, ["stop"]))
         }, [
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: previewCh.value,
             "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => previewCh.value = $event),
             options: channelChips.value
@@ -174514,7 +174768,7 @@ const _sfc_main$1o = /* @__PURE__ */ defineComponent({
             ], 64);
           }), 128)),
           createBaseVNode("span", _hoisted_3$1n, toDisplayString$1(_ctx.$t("afx.panLaw")), 1),
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: unref(panLaw),
             "onUpdate:modelValue": _cache2[4] || (_cache2[4] = ($event) => /* @__PURE__ */ isRef(panLaw) ? panLaw.value = $event : null),
             options: [
@@ -174523,7 +174777,7 @@ const _sfc_main$1o = /* @__PURE__ */ defineComponent({
             ]
           }, null, 8, ["modelValue", "options"]),
           createBaseVNode("span", _hoisted_4$13, toDisplayString$1(_ctx.$t("afx.dither")), 1),
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: unref(dither),
             "onUpdate:modelValue": _cache2[5] || (_cache2[5] = ($event) => /* @__PURE__ */ isRef(dither) ? dither.value = $event : null),
             options: [
@@ -174617,7 +174871,7 @@ const _sfc_main$1n = /* @__PURE__ */ defineComponent({
           }, ["stop"]))
         }, [
           createBaseVNode("span", _hoisted_2$1m, toDisplayString$1(_ctx.$t("afx.detect")), 1),
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: unref(detect),
             "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(detect) ? detect.value = $event : null),
             options: [
@@ -174669,7 +174923,7 @@ const _sfc_main$1n = /* @__PURE__ */ defineComponent({
             "reset-to": 1.45
           }, null, 8, ["modelValue", "label"]),
           createBaseVNode("span", _hoisted_3$1m, toDisplayString$1(_ctx.$t("afx.namingLbl")), 1),
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: unref(naming),
             "onUpdate:modelValue": _cache2[5] || (_cache2[5] = ($event) => /* @__PURE__ */ isRef(naming) ? naming.value = $event : null),
             options: [
@@ -174768,7 +175022,7 @@ const _sfc_main$1m = /* @__PURE__ */ defineComponent({
           onPointerup: _cache2[3] || (_cache2[3] = withModifiers(() => {
           }, ["stop"]))
         }, [
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: previewSide.value,
             "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => previewSide.value = $event),
             options: [
@@ -175703,7 +175957,7 @@ const _sfc_main$1h = /* @__PURE__ */ defineComponent({
       createRenderer: () => new VideoTransformRenderer()
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -175801,7 +176055,7 @@ const _sfc_main$1h = /* @__PURE__ */ defineComponent({
                 step: 0.05,
                 "reset-to": 0.5
               }, null, 8, ["modelValue"]),
-              createVNode(_sfc_main$1R, {
+              createVNode(_sfc_main$1S, {
                 modelValue: unref(shutterType),
                 "onUpdate:modelValue": _cache2[8] || (_cache2[8] = ($event) => /* @__PURE__ */ isRef(shutterType) ? shutterType.value = $event : null),
                 options: unref(SHUTTER_TYPES)
@@ -176644,7 +176898,7 @@ const _sfc_main$1e = /* @__PURE__ */ defineComponent({
               (...args) => unref(clearPoints) && unref(clearPoints)(...args))
             }, "Clear")
           ]),
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: unref(solve),
             "onUpdate:modelValue": _cache2[4] || (_cache2[4] = ($event) => /* @__PURE__ */ isRef(solve) ? solve.value = $event : null),
             options: SOLVES
@@ -176784,7 +177038,7 @@ const _sfc_main$1d = /* @__PURE__ */ defineComponent({
       { value: "line", label: "Lines" }
     ];
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -176811,7 +177065,7 @@ const _sfc_main$1d = /* @__PURE__ */ defineComponent({
               [vModelText, unref(text)]
             ]),
             createBaseVNode("div", _hoisted_2$1c, toDisplayString$1(_ctx.$t("fx.fontLbl")), 1),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(font2),
               "onUpdate:modelValue": _cache2[1] || (_cache2[1] = ($event) => /* @__PURE__ */ isRef(font2) ? font2.value = $event : null),
               options: FONTS
@@ -176857,17 +177111,17 @@ const _sfc_main$1d = /* @__PURE__ */ defineComponent({
               decimals: 0
             }, null, 8, ["modelValue", "label"]),
             createBaseVNode("div", _hoisted_8$h, toDisplayString$1(_ctx.$t("fx.anchor")), 1),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(anchor2),
               "onUpdate:modelValue": _cache2[6] || (_cache2[6] = ($event) => /* @__PURE__ */ isRef(anchor2) ? anchor2.value = $event : null),
               options: ANCHORS_TOP
             }, null, 8, ["modelValue"]),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(anchor2),
               "onUpdate:modelValue": _cache2[7] || (_cache2[7] = ($event) => /* @__PURE__ */ isRef(anchor2) ? anchor2.value = $event : null),
               options: ANCHORS_BOTTOM
             }, null, 8, ["modelValue"]),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(anchor2),
               "onUpdate:modelValue": _cache2[8] || (_cache2[8] = ($event) => /* @__PURE__ */ isRef(anchor2) ? anchor2.value = $event : null),
               options: ANCHORS_CENTER
@@ -176898,7 +177152,7 @@ const _sfc_main$1d = /* @__PURE__ */ defineComponent({
               step: 0.1
             }, null, 8, ["modelValue", "label"]),
             _cache2[17] || (_cache2[17] = createBaseVNode("div", { class: "ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" }, "Typewriter", -1)),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(typewriter),
               "onUpdate:modelValue": _cache2[12] || (_cache2[12] = ($event) => /* @__PURE__ */ isRef(typewriter) ? typewriter.value = $event : null),
               options: TYPEWRITERS
@@ -177055,7 +177309,7 @@ const _sfc_main$1c = /* @__PURE__ */ defineComponent({
     const anchor2 = useStrWidget(props.node, "anchor", "bottom");
     const { cues, addCue, removeCue, onCueNum, onCueText } = useSubtitleCues(subs);
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, { "source-video-url": sourceVideoUrl.value }, null, 8, ["source-video-url"])
         ]),
@@ -177130,7 +177384,7 @@ const _sfc_main$1c = /* @__PURE__ */ defineComponent({
               ])
             ]),
             createBaseVNode("div", _hoisted_8$g, toDisplayString$1(_ctx.$t("fx.fontLbl")), 1),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(font2),
               "onUpdate:modelValue": _cache2[3] || (_cache2[3] = ($event) => /* @__PURE__ */ isRef(font2) ? font2.value = $event : null),
               options: FONTS
@@ -177166,7 +177420,7 @@ const _sfc_main$1c = /* @__PURE__ */ defineComponent({
               decimals: 0
             }, null, 8, ["modelValue", "label"]),
             createBaseVNode("div", _hoisted_12$7, toDisplayString$1(_ctx.$t("fx.anchor")), 1),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(anchor2),
               "onUpdate:modelValue": _cache2[7] || (_cache2[7] = ($event) => /* @__PURE__ */ isRef(anchor2) ? anchor2.value = $event : null),
               options: ANCHORS
@@ -177260,7 +177514,7 @@ const _sfc_main$1b = /* @__PURE__ */ defineComponent({
       followMove: true
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             "source-video-url": sourceVideoUrl.value,
@@ -177277,7 +177531,7 @@ const _sfc_main$1b = /* @__PURE__ */ defineComponent({
             onPointerup: _cache2[10] || (_cache2[10] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(mode),
               "onUpdate:modelValue": _cache2[1] || (_cache2[1] = ($event) => /* @__PURE__ */ isRef(mode) ? mode.value = $event : null),
               options: MODES
@@ -177667,7 +177921,7 @@ const _sfc_main$19 = /* @__PURE__ */ defineComponent({
     const optZoom = useBoolWidget(props.node, "opt_zoom", true);
     const extraZoom = useNumWidget(props.node, "extra_zoom", 0);
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, { "source-video-url": sourceVideoUrl.value }, null, 8, ["source-video-url"])
         ]),
@@ -178039,7 +178293,7 @@ const _sfc_main$18 = /* @__PURE__ */ defineComponent({
           onPointerup: _cache2[21] || (_cache2[21] = withModifiers(() => {
           }, ["stop"]))
         }, [
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: unref(mode),
             "onUpdate:modelValue": _cache2[8] || (_cache2[8] = ($event) => /* @__PURE__ */ isRef(mode) ? mode.value = $event : null),
             options: MODES
@@ -178218,7 +178472,7 @@ const _sfc_main$17 = /* @__PURE__ */ defineComponent({
     const uScale = useNumWidget(props.node, "u_scale", 1);
     const vScale = useNumWidget(props.node, "v_scale", 1);
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, { "source-video-url": sourceVideoUrl.value }, null, 8, ["source-video-url"])
         ]),
@@ -178232,12 +178486,12 @@ const _sfc_main$17 = /* @__PURE__ */ defineComponent({
             onPointerup: _cache2[10] || (_cache2[10] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(mode),
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(mode) ? mode.value = $event : null),
               options: MODES
             }, null, 8, ["modelValue"]),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(wrap2),
               "onUpdate:modelValue": _cache2[1] || (_cache2[1] = ($event) => /* @__PURE__ */ isRef(wrap2) ? wrap2.value = $event : null),
               options: WRAPS
@@ -178370,7 +178624,7 @@ const _sfc_main$16 = /* @__PURE__ */ defineComponent({
     const maxPoints = useNumWidget(props.node, "max_points", 24);
     const invert = useBoolWidget(props.node, "invert", false);
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -178393,7 +178647,7 @@ const _sfc_main$16 = /* @__PURE__ */ defineComponent({
               src: maskUrl.value,
               class: "ctv:w-full ctv:max-h-24 ctv:object-contain ctv:rounded ctv:border ctv:border-border-subtle"
             }, null, 8, _hoisted_1$17)) : createCommentVNode("", true),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(model),
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(model) ? model.value = $event : null),
               options: MODELS
@@ -178550,7 +178804,7 @@ const _sfc_main$15 = /* @__PURE__ */ defineComponent({
     });
     return (_ctx, _cache2) => {
       const _component_FxSlider = resolveComponent("FxSlider");
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -178579,7 +178833,7 @@ const _sfc_main$15 = /* @__PURE__ */ defineComponent({
             onPointerup: _cache2[6] || (_cache2[6] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: channel.value,
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => channel.value = $event),
               options: CHANNELS
@@ -178588,7 +178842,7 @@ const _sfc_main$15 = /* @__PURE__ */ defineComponent({
               class: "ctv:h-2 ctv:rounded",
               style: { "background": "linear-gradient(to right, #d0d 0%, #f00 16.7%, #ff0 33.3%, #0f0 50%, #0ff 66.7%, #00f 83.3%, #d0d 100%)" }
             }, null, -1)),
-            createVNode(_sfc_main$1Q, {
+            createVNode(_sfc_main$1R, {
               modelValue: unref(activeCurve),
               "onUpdate:modelValue": _cache2[1] || (_cache2[1] = ($event) => /* @__PURE__ */ isRef(activeCurve) ? activeCurve.value = $event : null),
               color: CHANNEL_COLORS[channel.value]
@@ -178666,7 +178920,7 @@ const _sfc_main$14 = /* @__PURE__ */ defineComponent({
     const gain = useNumWidget(props.node, "gain", 1);
     const mix = useNumWidget(props.node, "mix", 1);
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, { "source-video-url": sourceVideoUrl.value }, null, 8, ["source-video-url"])
         ]),
@@ -178794,7 +179048,7 @@ const _sfc_main$13 = /* @__PURE__ */ defineComponent({
     const mix = useNumWidget(props.node, "mix", 1);
     const maxMode = useBoolWidget(props.node, "max_mode", false);
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, { "source-video-url": sourceVideoUrl.value }, null, 8, ["source-video-url"])
         ]),
@@ -179138,7 +179392,7 @@ const _sfc_main$12 = /* @__PURE__ */ defineComponent({
           onPointerup: _cache2[25] || (_cache2[25] = withModifiers(() => {
           }, ["stop"]))
         }, [
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: unref(kind),
             "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(kind) ? kind.value = $event : null),
             options: KINDS
@@ -179241,7 +179495,7 @@ const _sfc_main$12 = /* @__PURE__ */ defineComponent({
             step: 0.01,
             "reset-to": 1
           }, null, 8, ["modelValue"]),
-          unref(kind) === "ramp" || unref(kind) === "radial" ? (openBlock(), createBlock(_sfc_main$1R, {
+          unref(kind) === "ramp" || unref(kind) === "radial" ? (openBlock(), createBlock(_sfc_main$1S, {
             key: 0,
             modelValue: unref(interp),
             "onUpdate:modelValue": _cache2[11] || (_cache2[11] = ($event) => /* @__PURE__ */ isRef(interp) ? interp.value = $event : null),
@@ -179345,12 +179599,12 @@ const _sfc_main$12 = /* @__PURE__ */ defineComponent({
             }, null, 8, ["modelValue"])
           ], 64)) : createCommentVNode("", true),
           unref(kind) === "count" ? (openBlock(), createElementBlock(Fragment$1, { key: 6 }, [
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(countStyle),
               "onUpdate:modelValue": _cache2[21] || (_cache2[21] = ($event) => /* @__PURE__ */ isRef(countStyle) ? countStyle.value = $event : null),
               options: COUNT_STYLES
             }, null, 8, ["modelValue"]),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(countDirection),
               "onUpdate:modelValue": _cache2[22] || (_cache2[22] = ($event) => /* @__PURE__ */ isRef(countDirection) ? countDirection.value = $event : null),
               options: COUNT_DIRECTIONS
@@ -179477,7 +179731,7 @@ const _sfc_main$11 = /* @__PURE__ */ defineComponent({
       createRenderer: () => new VideoPikRenderer()
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -179506,7 +179760,7 @@ const _sfc_main$11 = /* @__PURE__ */ defineComponent({
             onPointerup: _cache2[15] || (_cache2[15] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(screen),
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(screen) ? screen.value = $event : null),
               options: SCREENS
@@ -179599,7 +179853,7 @@ const _sfc_main$11 = /* @__PURE__ */ defineComponent({
               ]),
               _cache2[20] || (_cache2[20] = createTextVNode(" Despill bias ", -1))
             ])) : createCommentVNode("", true),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(replaceMode),
               "onUpdate:modelValue": _cache2[10] || (_cache2[10] = ($event) => /* @__PURE__ */ isRef(replaceMode) ? replaceMode.value = $event : null),
               options: REPLACES
@@ -179614,7 +179868,7 @@ const _sfc_main$11 = /* @__PURE__ */ defineComponent({
               ]),
               _cache2[21] || (_cache2[21] = createTextVNode(" Replace color ", -1))
             ])) : createCommentVNode("", true),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(output),
               "onUpdate:modelValue": _cache2[12] || (_cache2[12] = ($event) => /* @__PURE__ */ isRef(output) ? output.value = $event : null),
               options: OUTPUTS
@@ -179722,7 +179976,7 @@ const _sfc_main$10 = /* @__PURE__ */ defineComponent({
       createRenderer: () => new VideoKeyerRenderer()
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -179751,7 +180005,7 @@ const _sfc_main$10 = /* @__PURE__ */ defineComponent({
             onPointerup: _cache2[12] || (_cache2[12] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(mode),
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(mode) ? mode.value = $event : null),
               options: MODES
@@ -179834,7 +180088,7 @@ const _sfc_main$10 = /* @__PURE__ */ defineComponent({
                 "reset-to": 120
               }, null, 8, ["modelValue"])
             ], 64)) : createCommentVNode("", true),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(output),
               "onUpdate:modelValue": _cache2[9] || (_cache2[9] = ($event) => /* @__PURE__ */ isRef(output) ? output.value = $event : null),
               options: OUTPUTS
@@ -179926,7 +180180,7 @@ const _sfc_main$$ = /* @__PURE__ */ defineComponent({
       createRenderer: () => new VideoDespillRenderer()
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -179955,7 +180209,7 @@ const _sfc_main$$ = /* @__PURE__ */ defineComponent({
             onPointerup: _cache2[10] || (_cache2[10] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(screen),
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(screen) ? screen.value = $event : null),
               options: SCREENS
@@ -180114,7 +180368,7 @@ const _sfc_main$_ = /* @__PURE__ */ defineComponent({
       createRenderer: () => new VideoColorSuppressRenderer()
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -180213,7 +180467,7 @@ const _sfc_main$_ = /* @__PURE__ */ defineComponent({
               ]),
               _cache2[11] || (_cache2[11] = createTextVNode(" Preserve luminance ", -1))
             ]),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(output),
               "onUpdate:modelValue": _cache2[7] || (_cache2[7] = ($event) => /* @__PURE__ */ isRef(output) ? output.value = $event : null),
               options: OUTPUTS
@@ -180285,7 +180539,7 @@ const _sfc_main$Z = /* @__PURE__ */ defineComponent({
     const invertMask = useBoolWidget(props.node, "invert_mask", false);
     const alphaOp = useStrWidget(props.node, "alpha_op", "over");
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, { "source-video-url": sourceAUrl.value }, null, 8, ["source-video-url"])
         ]),
@@ -180308,7 +180562,7 @@ const _sfc_main$Z = /* @__PURE__ */ defineComponent({
               step: 0.01,
               "reset-to": 1
             }, null, 8, ["modelValue"]),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(alphaOp),
               "onUpdate:modelValue": _cache2[1] || (_cache2[1] = ($event) => /* @__PURE__ */ isRef(alphaOp) ? alphaOp.value = $event : null),
               options: OP_OPTS
@@ -180373,7 +180627,7 @@ const _sfc_main$Y = /* @__PURE__ */ defineComponent({
     const sourceVideoUrl = computed(() => pickSourceImageUrl(props.state.inputs, "video"));
     const slope = useNumWidget(props.node, "slope", 0.5);
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, { "source-video-url": sourceVideoUrl.value }, null, 8, ["source-video-url"])
         ]),
@@ -180455,7 +180709,7 @@ const _sfc_main$X = /* @__PURE__ */ defineComponent({
     const sizeX = useNumWidget(props.node, "size_x", 1);
     const sizeY = useNumWidget(props.node, "size_y", 1);
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, { "source-video-url": sourceVideoUrl.value }, null, 8, ["source-video-url"])
         ]),
@@ -180469,7 +180723,7 @@ const _sfc_main$X = /* @__PURE__ */ defineComponent({
             onPointerup: _cache2[5] || (_cache2[5] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(op),
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(op) ? op.value = $event : null),
               options: OPS
@@ -180560,7 +180814,7 @@ const _sfc_main$W = /* @__PURE__ */ defineComponent({
     const shutterOffset = useNumWidget(props.node, "shutter_offset", 0);
     const divisions = useNumWidget(props.node, "divisions", 10);
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, { "source-video-url": sourceVideoUrl.value }, null, 8, ["source-video-url"])
         ]),
@@ -180574,7 +180828,7 @@ const _sfc_main$W = /* @__PURE__ */ defineComponent({
             onPointerup: _cache2[12] || (_cache2[12] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(mode),
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(mode) ? mode.value = $event : null),
               options: MODES
@@ -180610,7 +180864,7 @@ const _sfc_main$W = /* @__PURE__ */ defineComponent({
                 decimals: 0,
                 "reset-to": 1
               }, null, 8, ["modelValue"]),
-              createVNode(_sfc_main$1R, {
+              createVNode(_sfc_main$1S, {
                 modelValue: unref(operation),
                 "onUpdate:modelValue": _cache2[4] || (_cache2[4] = ($event) => /* @__PURE__ */ isRef(operation) ? operation.value = $event : null),
                 options: unref(OPERATIONS)
@@ -180634,7 +180888,7 @@ const _sfc_main$W = /* @__PURE__ */ defineComponent({
                 step: 0.05,
                 "reset-to": 0.5
               }, null, 8, ["modelValue"]),
-              createVNode(_sfc_main$1R, {
+              createVNode(_sfc_main$1S, {
                 modelValue: unref(shutterType),
                 "onUpdate:modelValue": _cache2[7] || (_cache2[7] = ($event) => /* @__PURE__ */ isRef(shutterType) ? shutterType.value = $event : null),
                 options: unref(SHUTTER_TYPES)
@@ -180730,7 +180984,7 @@ const _sfc_main$V = /* @__PURE__ */ defineComponent({
       createRenderer: () => new VideoSelectiveColorRenderer()
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -180759,7 +181013,7 @@ const _sfc_main$V = /* @__PURE__ */ defineComponent({
             onPointerup: _cache2[4] || (_cache2[4] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(scMethod),
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(scMethod) ? scMethod.value = $event : null),
               options: METHODS
@@ -180854,7 +181108,7 @@ const _sfc_main$U = /* @__PURE__ */ defineComponent({
       createRenderer: () => new VideoChromaShiftRenderer()
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -180923,7 +181177,7 @@ const _sfc_main$U = /* @__PURE__ */ defineComponent({
               decimals: 0,
               "reset-to": 0
             }, null, 8, ["modelValue"]),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(shiftEdge),
               "onUpdate:modelValue": _cache2[4] || (_cache2[4] = ($event) => /* @__PURE__ */ isRef(shiftEdge) ? shiftEdge.value = $event : null),
               options: EDGES
@@ -181004,7 +181258,7 @@ const _sfc_main$T = /* @__PURE__ */ defineComponent({
       createRenderer: () => new VideoPseudocolorRenderer()
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -181038,7 +181292,7 @@ const _sfc_main$T = /* @__PURE__ */ defineComponent({
               onWheel: _cache2[1] || (_cache2[1] = withModifiers(() => {
               }, ["stop"]))
             }, [
-              createVNode(_sfc_main$1R, {
+              createVNode(_sfc_main$1S, {
                 modelValue: unref(pseudoPreset),
                 "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(pseudoPreset) ? pseudoPreset.value = $event : null),
                 options: unref(PRESETS2)
@@ -181166,7 +181420,7 @@ const _sfc_main$R = /* @__PURE__ */ defineComponent({
       getPlayhead: playhead
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -181264,7 +181518,7 @@ const _sfc_main$Q = /* @__PURE__ */ defineComponent({
       getPlayhead: playhead
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -181365,7 +181619,7 @@ const _sfc_main$P = /* @__PURE__ */ defineComponent({
       getPlayhead: playhead
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -181562,7 +181816,7 @@ const _sfc_main$O = /* @__PURE__ */ defineComponent({
       getPlayhead: playhead
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -181685,7 +181939,7 @@ const _sfc_main$N = /* @__PURE__ */ defineComponent({
       getPlayhead: playhead
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -181711,7 +181965,7 @@ const _sfc_main$N = /* @__PURE__ */ defineComponent({
               onWheel: _cache2[1] || (_cache2[1] = withModifiers(() => {
               }, ["stop"]))
             }, [
-              createVNode(_sfc_main$1R, {
+              createVNode(_sfc_main$1S, {
                 modelValue: unref(projIn),
                 "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(projIn) ? projIn.value = $event : null),
                 options: unref(PROJ_OPTS)
@@ -181725,7 +181979,7 @@ const _sfc_main$N = /* @__PURE__ */ defineComponent({
               onWheel: _cache2[3] || (_cache2[3] = withModifiers(() => {
               }, ["stop"]))
             }, [
-              createVNode(_sfc_main$1R, {
+              createVNode(_sfc_main$1S, {
                 modelValue: unref(projOut),
                 "onUpdate:modelValue": _cache2[2] || (_cache2[2] = ($event) => /* @__PURE__ */ isRef(projOut) ? projOut.value = $event : null),
                 options: unref(PROJ_OPTS)
@@ -181877,7 +182131,7 @@ const _sfc_main$M = /* @__PURE__ */ defineComponent({
       getPlayhead: playhead
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -181900,7 +182154,7 @@ const _sfc_main$M = /* @__PURE__ */ defineComponent({
               onWheel: _cache2[1] || (_cache2[1] = withModifiers(() => {
               }, ["stop"]))
             }, [
-              createVNode(_sfc_main$1R, {
+              createVNode(_sfc_main$1S, {
                 modelValue: unref(mapKind),
                 "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(mapKind) ? mapKind.value = $event : null),
                 options: unref(MAP_OPTS)
@@ -181924,12 +182178,12 @@ const _sfc_main$M = /* @__PURE__ */ defineComponent({
               step: 0.01,
               "reset-to": 0.1
             }, null, 8, ["modelValue"]),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(animate),
               "onUpdate:modelValue": _cache2[4] || (_cache2[4] = ($event) => /* @__PURE__ */ isRef(animate) ? animate.value = $event : null),
               options: ANIMATE_OPTS
             }, null, 8, ["modelValue"]),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(output),
               "onUpdate:modelValue": _cache2[5] || (_cache2[5] = ($event) => /* @__PURE__ */ isRef(output) ? output.value = $event : null),
               options: OUTPUT_OPTS
@@ -182063,7 +182317,7 @@ const _sfc_main$L = /* @__PURE__ */ defineComponent({
       getPlayhead: playhead
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -182086,13 +182340,13 @@ const _sfc_main$L = /* @__PURE__ */ defineComponent({
               onWheel: _cache2[1] || (_cache2[1] = withModifiers(() => {
               }, ["stop"]))
             }, [
-              createVNode(_sfc_main$1R, {
+              createVNode(_sfc_main$1S, {
                 modelValue: unref(model),
                 "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(model) ? model.value = $event : null),
                 options: MODEL_OPTS
               }, null, 8, ["modelValue"])
             ], 32),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(direction),
               "onUpdate:modelValue": _cache2[2] || (_cache2[2] = ($event) => /* @__PURE__ */ isRef(direction) ? direction.value = $event : null),
               options: DIR_OPTS
@@ -182213,7 +182467,7 @@ const _sfc_main$L = /* @__PURE__ */ defineComponent({
               step: 0.01,
               "reset-to": 1
             }, null, 8, ["modelValue"]),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(edge),
               "onUpdate:modelValue": _cache2[15] || (_cache2[15] = ($event) => /* @__PURE__ */ isRef(edge) ? edge.value = $event : null),
               options: EDGE_OPTS
@@ -182287,7 +182541,7 @@ const _sfc_main$K = /* @__PURE__ */ defineComponent({
       getPlayhead: playhead
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -182415,7 +182669,7 @@ const _sfc_main$J = /* @__PURE__ */ defineComponent({
       getPlayhead: playhead
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -182673,7 +182927,7 @@ const _sfc_main$I = /* @__PURE__ */ defineComponent({
       createRenderer: () => new ParticlesPreviewRenderer()
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -182702,7 +182956,7 @@ const _sfc_main$I = /* @__PURE__ */ defineComponent({
             onPointerup: _cache2[45] || (_cache2[45] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(emitter),
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(emitter) ? emitter.value = $event : null),
               options: EMITTER_OPTS
@@ -182902,7 +183156,7 @@ const _sfc_main$I = /* @__PURE__ */ defineComponent({
               createBaseVNode("span", {
                 class: normalizeClass(lbl)
               }, "Collision"),
-              createVNode(_sfc_main$1R, {
+              createVNode(_sfc_main$1S, {
                 modelValue: unref(collide),
                 "onUpdate:modelValue": _cache2[20] || (_cache2[20] = ($event) => /* @__PURE__ */ isRef(collide) ? collide.value = $event : null),
                 options: COLLIDE_OPTS
@@ -182931,7 +183185,7 @@ const _sfc_main$I = /* @__PURE__ */ defineComponent({
               createBaseVNode("span", {
                 class: normalizeClass(lbl)
               }, "Sub-emitter"),
-              createVNode(_sfc_main$1R, {
+              createVNode(_sfc_main$1S, {
                 modelValue: unref(subMode),
                 "onUpdate:modelValue": _cache2[23] || (_cache2[23] = ($event) => /* @__PURE__ */ isRef(subMode) ? subMode.value = $event : null),
                 options: SUB_OPTS
@@ -183089,19 +183343,19 @@ const _sfc_main$I = /* @__PURE__ */ defineComponent({
                   [vModelText, unref(color1)]
                 ])
               ]),
-              createVNode(_sfc_main$1R, {
+              createVNode(_sfc_main$1S, {
                 modelValue: unref(sprite),
                 "onUpdate:modelValue": _cache2[40] || (_cache2[40] = ($event) => /* @__PURE__ */ isRef(sprite) ? sprite.value = $event : null),
                 options: SPRITE_OPTS,
                 class: "ctv:flex-1"
               }, null, 8, ["modelValue"])
             ]),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(renderer2),
               "onUpdate:modelValue": _cache2[41] || (_cache2[41] = ($event) => /* @__PURE__ */ isRef(renderer2) ? renderer2.value = $event : null),
               options: RENDERER_OPTS
             }, null, 8, ["modelValue"]),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(blend2),
               "onUpdate:modelValue": _cache2[42] || (_cache2[42] = ($event) => /* @__PURE__ */ isRef(blend2) ? blend2.value = $event : null),
               options: BLEND_OPTS
@@ -183169,7 +183423,7 @@ const _sfc_main$H = /* @__PURE__ */ defineComponent({
     const shape = useStrWidget(props.node, "shape", "disc");
     const invertDepth = useBoolWidget(props.node, "invert_depth", false);
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, { "source-video-url": sourceVideoUrl.value }, null, 8, ["source-video-url"])
         ]),
@@ -183230,7 +183484,7 @@ const _sfc_main$H = /* @__PURE__ */ defineComponent({
               step: 0.05,
               "reset-to": 0
             }, null, 8, ["modelValue"]),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(shape),
               "onUpdate:modelValue": _cache2[5] || (_cache2[5] = ($event) => /* @__PURE__ */ isRef(shape) ? shape.value = $event : null),
               options: SHAPE_OPTS
@@ -183304,7 +183558,7 @@ const _sfc_main$G = /* @__PURE__ */ defineComponent({
     const recheck = useNumWidget(props.node, "recheck", 12);
     const minSize = useNumWidget(props.node, "min_size", 24);
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, { "source-video-url": sourceVideoUrl.value }, null, 8, ["source-video-url"])
         ]),
@@ -183318,12 +183572,12 @@ const _sfc_main$G = /* @__PURE__ */ defineComponent({
             onPointerup: _cache2[7] || (_cache2[7] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(mode),
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(mode) ? mode.value = $event : null),
               options: MODE_OPTS
             }, null, 8, ["modelValue"]),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(shape),
               "onUpdate:modelValue": _cache2[1] || (_cache2[1] = ($event) => /* @__PURE__ */ isRef(shape) ? shape.value = $event : null),
               options: SHAPE_OPTS
@@ -183419,7 +183673,7 @@ const _sfc_main$F = /* @__PURE__ */ defineComponent({
       height: `${rectH.value * 100}%`
     }));
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, { "source-video-url": sourceVideoUrl.value }, {
             overlay: withCtx(() => [
@@ -183442,7 +183696,7 @@ const _sfc_main$F = /* @__PURE__ */ defineComponent({
             onPointerup: _cache2[8] || (_cache2[8] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(method),
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(method) ? method.value = $event : null),
               options: METHOD_OPTS
@@ -183811,7 +184065,7 @@ const _sfc_main$D = /* @__PURE__ */ defineComponent({
             step: 0.01,
             "reset-to": 0.5
           }, null, 8, ["modelValue"]),
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: unref(interp),
             "onUpdate:modelValue": _cache2[10] || (_cache2[10] = ($event) => /* @__PURE__ */ isRef(interp) ? interp.value = $event : null),
             options: unref(INTERPS)
@@ -183878,7 +184132,7 @@ const _sfc_main$C = /* @__PURE__ */ defineComponent({
     const weaveY = useNumWidget(props.node, "weave_y", 0);
     const weaveInterval = useNumWidget(props.node, "weave_interval", 0.6);
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, { "source-video-url": sourceVideoUrl.value }, null, 8, ["source-video-url"])
         ]),
@@ -184110,7 +184364,7 @@ const _sfc_main$B = /* @__PURE__ */ defineComponent({
     const scrollH = useNumWidget(props.node, "scroll_h", 0);
     const scrollV = useNumWidget(props.node, "scroll_v", 0);
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, { "source-video-url": sourceVideoUrl.value }, null, 8, ["source-video-url"])
         ]),
@@ -184124,7 +184378,7 @@ const _sfc_main$B = /* @__PURE__ */ defineComponent({
             onPointerup: _cache2[14] || (_cache2[14] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(mode),
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(mode) ? mode.value = $event : null),
               options: MODES
@@ -184198,7 +184452,7 @@ const _sfc_main$B = /* @__PURE__ */ defineComponent({
                 "reset-to": 1
               }, null, 8, ["modelValue"])
             ], 64)) : unref(mode) === "fillborders" ? (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
-              createVNode(_sfc_main$1R, {
+              createVNode(_sfc_main$1S, {
                 modelValue: unref(borderMode),
                 "onUpdate:modelValue": _cache2[8] || (_cache2[8] = ($event) => /* @__PURE__ */ isRef(borderMode) ? borderMode.value = $event : null),
                 options: unref(BORDER_MODES)
@@ -184305,7 +184559,7 @@ const _sfc_main$A = /* @__PURE__ */ defineComponent({
           onPointerup: _cache2[12] || (_cache2[12] = withModifiers(() => {
           }, ["stop"]))
         }, [
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: unref(band),
             "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(band) ? band.value = $event : null),
             options: unref(BANDS)
@@ -184391,7 +184645,7 @@ const _sfc_main$A = /* @__PURE__ */ defineComponent({
             step: 0.1,
             "reset-to": 1
           }, null, 8, ["modelValue"]),
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: unref(field),
             "onUpdate:modelValue": _cache2[9] || (_cache2[9] = ($event) => /* @__PURE__ */ isRef(field) ? field.value = $event : null),
             options: unref(FIELDS)
@@ -184486,7 +184740,7 @@ const _sfc_main$z = /* @__PURE__ */ defineComponent({
             decimals: 0,
             "reset-to": 20
           }, null, 8, ["modelValue"]),
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: unref(corner),
             "onUpdate:modelValue": _cache2[2] || (_cache2[2] = ($event) => /* @__PURE__ */ isRef(corner) ? corner.value = $event : null),
             options: CORNERS
@@ -184590,7 +184844,7 @@ const _sfc_main$y = /* @__PURE__ */ defineComponent({
       createRenderer: () => new ChainBlitRenderer()
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -184651,7 +184905,7 @@ const _sfc_main$y = /* @__PURE__ */ defineComponent({
             createBaseVNode("div", {
               class: normalizeClass(rowLabel)
             }, toDisplayString$1(_ctx.$t("fxChain.dSize")), 1),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(outSize),
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(outSize) ? outSize.value = $event : null),
               options: SIZES.value
@@ -184659,7 +184913,7 @@ const _sfc_main$y = /* @__PURE__ */ defineComponent({
             createBaseVNode("div", {
               class: normalizeClass(rowLabel)
             }, toDisplayString$1(_ctx.$t("fxChain.dFps")), 1),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(outFps),
               "onUpdate:modelValue": _cache2[1] || (_cache2[1] = ($event) => /* @__PURE__ */ isRef(outFps) ? outFps.value = $event : null),
               options: FPS_OPTS.value
@@ -184667,7 +184921,7 @@ const _sfc_main$y = /* @__PURE__ */ defineComponent({
             createBaseVNode("div", {
               class: normalizeClass(rowLabel)
             }, toDisplayString$1(_ctx.$t("fxChain.dCodec")), 1),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(outCodec),
               "onUpdate:modelValue": _cache2[2] || (_cache2[2] = ($event) => /* @__PURE__ */ isRef(outCodec) ? outCodec.value = $event : null),
               options: CODECS
@@ -184675,7 +184929,7 @@ const _sfc_main$y = /* @__PURE__ */ defineComponent({
             createBaseVNode("div", {
               class: normalizeClass(rowLabel)
             }, toDisplayString$1(_ctx.$t("fxChain.dQuality")), 1),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(outQuality),
               "onUpdate:modelValue": _cache2[3] || (_cache2[3] = ($event) => /* @__PURE__ */ isRef(outQuality) ? outQuality.value = $event : null),
               options: QUALITIES.value
@@ -184683,7 +184937,7 @@ const _sfc_main$y = /* @__PURE__ */ defineComponent({
             createBaseVNode("div", {
               class: normalizeClass(rowLabel)
             }, toDisplayString$1(_ctx.$t("fxChain.dColorspace")), 1),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(outColorspace),
               "onUpdate:modelValue": _cache2[4] || (_cache2[4] = ($event) => /* @__PURE__ */ isRef(outColorspace) ? outColorspace.value = $event : null),
               options: unref(CS_TARGETS)
@@ -184750,7 +185004,7 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
     const filterMode = useStrWidget(props.node, "filter_mode", "linear");
     const invert = useBoolWidget(props.node, "invert", false);
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, { "source-video-url": sourceVideoUrl.value }, null, 8, ["source-video-url"])
         ]),
@@ -184764,7 +185018,7 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
             onPointerup: _cache2[7] || (_cache2[7] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(mode),
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(mode) ? mode.value = $event : null),
               options: MODE_OPTS
@@ -184788,7 +185042,7 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
               step: 0.5,
               "reset-to": 0
             }, null, 8, ["modelValue"]),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(filterMode),
               "onUpdate:modelValue": _cache2[3] || (_cache2[3] = ($event) => /* @__PURE__ */ isRef(filterMode) ? filterMode.value = $event : null),
               options: FILTER_OPTS
@@ -184886,7 +185140,7 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
       getPlayhead: playhead
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -184904,7 +185158,7 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
             onPointerup: _cache2[9] || (_cache2[9] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(mode),
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(mode) ? mode.value = $event : null),
               options: MODE_OPTS
@@ -184938,7 +185192,7 @@ const _sfc_main$w = /* @__PURE__ */ defineComponent({
                 "reset-to": 0.75
               }, null, 8, ["modelValue"])
             ], 64)) : unref(mode) === "nervous" ? (openBlock(), createElementBlock(Fragment$1, { key: 1 }, [
-              createVNode(_sfc_main$1R, {
+              createVNode(_sfc_main$1S, {
                 modelValue: unref(style2),
                 "onUpdate:modelValue": _cache2[4] || (_cache2[4] = ($event) => /* @__PURE__ */ isRef(style2) ? style2.value = $event : null),
                 options: STYLE_OPTS
@@ -185037,7 +185291,7 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
       getPlayhead: playhead
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -185065,7 +185319,7 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
               decimals: 0,
               "reset-to": 3
             }, null, 8, ["modelValue"]),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(strobeMode),
               "onUpdate:modelValue": _cache2[1] || (_cache2[1] = ($event) => /* @__PURE__ */ isRef(strobeMode) ? strobeMode.value = $event : null),
               options: MODE_OPTS
@@ -185222,7 +185476,7 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
     watch([expression, duration2, rate, seed], scheduleEval);
     onMounted(runEval);
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         default: withCtx(() => [
           createBaseVNode("div", {
             class: "ctv:flex ctv:flex-col ctv:gap-1",
@@ -185252,7 +185506,7 @@ const _sfc_main$u = /* @__PURE__ */ defineComponent({
               }, null, 512),
               evalError.value ? (openBlock(), createElementBlock("span", _hoisted_2$t, toDisplayString$1(evalError.value), 1)) : createCommentVNode("", true)
             ]),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(field),
               "onUpdate:modelValue": _cache2[2] || (_cache2[2] = ($event) => /* @__PURE__ */ isRef(field) ? field.value = $event : null),
               options: unref(FIELD_OPTS)
@@ -185396,7 +185650,7 @@ const _sfc_main$t = /* @__PURE__ */ defineComponent({
       getPlayhead: playhead
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -185424,17 +185678,17 @@ const _sfc_main$t = /* @__PURE__ */ defineComponent({
               }, null, 40, _hoisted_3$s),
               createBaseVNode("span", _hoisted_4$j, toDisplayString$1(unref(keyColor)), 1)
             ]),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(space),
               "onUpdate:modelValue": _cache2[1] || (_cache2[1] = ($event) => /* @__PURE__ */ isRef(space) ? space.value = $event : null),
               options: SPACE_OPTS
             }, null, 8, ["modelValue"]),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(shape),
               "onUpdate:modelValue": _cache2[2] || (_cache2[2] = ($event) => /* @__PURE__ */ isRef(shape) ? shape.value = $event : null),
               options: SHAPE_OPTS
             }, null, 8, ["modelValue"]),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(edge),
               "onUpdate:modelValue": _cache2[3] || (_cache2[3] = ($event) => /* @__PURE__ */ isRef(edge) ? edge.value = $event : null),
               options: EDGE_OPTS
@@ -185487,7 +185741,7 @@ const _sfc_main$t = /* @__PURE__ */ defineComponent({
                 ]),
                 _cache2[13] || (_cache2[13] = createTextVNode(" Invert ", -1))
               ]),
-              createVNode(_sfc_main$1R, {
+              createVNode(_sfc_main$1S, {
                 modelValue: unref(output),
                 "onUpdate:modelValue": _cache2[9] || (_cache2[9] = ($event) => /* @__PURE__ */ isRef(output) ? output.value = $event : null),
                 options: OUT_OPTS,
@@ -185592,7 +185846,7 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
       getPlayhead: playhead
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -185610,7 +185864,7 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
             onPointerup: _cache2[17] || (_cache2[17] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(mode),
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(mode) ? mode.value = $event : null),
               options: MODE_OPTS
@@ -185826,7 +186080,7 @@ const _sfc_main$r = /* @__PURE__ */ defineComponent({
       getPlayhead: playhead
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -185962,7 +186216,7 @@ const _sfc_main$q = /* @__PURE__ */ defineComponent({
       getPlayhead: playhead
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -186108,7 +186362,7 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
       getPlayhead: playhead
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -186154,12 +186408,12 @@ const _sfc_main$p = /* @__PURE__ */ defineComponent({
               step: 0.05,
               "reset-to": 0.5
             }, null, 8, ["modelValue"]),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(axis),
               "onUpdate:modelValue": _cache2[3] || (_cache2[3] = ($event) => /* @__PURE__ */ isRef(axis) ? axis.value = $event : null),
               options: AXIS_OPTS
             }, null, 8, ["modelValue"]),
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(envelope),
               "onUpdate:modelValue": _cache2[4] || (_cache2[4] = ($event) => /* @__PURE__ */ isRef(envelope) ? envelope.value = $event : null),
               options: ENV_OPTS
@@ -186250,7 +186504,7 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
       getPlayhead: playhead
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -186268,7 +186522,7 @@ const _sfc_main$o = /* @__PURE__ */ defineComponent({
             onPointerup: _cache2[10] || (_cache2[10] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(physics),
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(physics) ? physics.value = $event : null),
               options: PHYSICS_OPTS
@@ -186414,7 +186668,7 @@ const _sfc_main$n = /* @__PURE__ */ defineComponent({
       getPlayhead: playhead
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -186545,7 +186799,7 @@ const _sfc_main$m = /* @__PURE__ */ defineComponent({
       getPlayhead: playhead
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -186709,7 +186963,7 @@ const _sfc_main$l = /* @__PURE__ */ defineComponent({
       getPlayhead: playhead
     });
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, {
             ref_key: "playerRef",
@@ -186835,7 +187089,7 @@ const _sfc_main$k = /* @__PURE__ */ defineComponent({
     const smoothing = useNumWidget(props.node, "smoothing", 15);
     const strength = useNumWidget(props.node, "strength", 1);
     return (_ctx, _cache2) => {
-      return openBlock(), createBlock(_sfc_main$2P, { node: __props.node }, {
+      return openBlock(), createBlock(_sfc_main$2Q, { node: __props.node }, {
         player: withCtx(() => [
           createVNode(VideoPlayerLite, { "source-video-url": sourceVideoUrl.value }, null, 8, ["source-video-url"])
         ]),
@@ -187082,13 +187336,13 @@ const _sfc_main$i = /* @__PURE__ */ defineComponent({
             onWheel: _cache2[1] || (_cache2[1] = withModifiers(() => {
             }, ["stop"]))
           }, [
-            createVNode(_sfc_main$1R, {
+            createVNode(_sfc_main$1S, {
               modelValue: unref(model),
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(model) ? model.value = $event : null),
               options: MODEL_OPTS
             }, null, 8, ["modelValue"])
           ], 32),
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: unref(direction),
             "onUpdate:modelValue": _cache2[2] || (_cache2[2] = ($event) => /* @__PURE__ */ isRef(direction) ? direction.value = $event : null),
             options: DIR_OPTS
@@ -187436,7 +187690,7 @@ const _sfc_main$f = /* @__PURE__ */ defineComponent({
           onPointerup: _cache2[6] || (_cache2[6] = withModifiers(() => {
           }, ["stop"]))
         }, [
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: unref(mode),
             "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => /* @__PURE__ */ isRef(mode) ? mode.value = $event : null),
             options: [
@@ -187466,7 +187720,7 @@ const _sfc_main$f = /* @__PURE__ */ defineComponent({
               "reset-to": 0.05
             }, null, 8, ["modelValue", "label"])
           ], 64)) : createCommentVNode("", true),
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: unref(field),
             "onUpdate:modelValue": _cache2[3] || (_cache2[3] = ($event) => /* @__PURE__ */ isRef(field) ? field.value = $event : null),
             options: unref(FIELD_OPTS)
@@ -187941,7 +188195,7 @@ const _sfc_main$d = /* @__PURE__ */ defineComponent({
             decimals: 0,
             "reset-to": 50
           }, null, 8, ["modelValue", "label"]),
-          unref(swingRatio) > 50 ? (openBlock(), createBlock(_sfc_main$1R, {
+          unref(swingRatio) > 50 ? (openBlock(), createBlock(_sfc_main$1S, {
             key: 0,
             modelValue: unref(swingUnit),
             "onUpdate:modelValue": _cache2[1] || (_cache2[1] = ($event) => /* @__PURE__ */ isRef(swingUnit) ? swingUnit.value = $event : null),
@@ -187956,12 +188210,12 @@ const _sfc_main$d = /* @__PURE__ */ defineComponent({
             step: 0.01,
             "reset-to": 0
           }, null, 8, ["modelValue", "label"]),
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: unref(profile),
             "onUpdate:modelValue": _cache2[3] || (_cache2[3] = ($event) => /* @__PURE__ */ isRef(profile) ? profile.value = $event : null),
             options: unref(PROFILE_OPTS)
           }, null, 8, ["modelValue", "options"]),
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: unref(easing),
             "onUpdate:modelValue": _cache2[4] || (_cache2[4] = ($event) => /* @__PURE__ */ isRef(easing) ? easing.value = $event : null),
             options: unref(EASING_OPTS)
@@ -191272,12 +191526,12 @@ const _sfc_main$8 = /* @__PURE__ */ defineComponent({
           }, null, 40, _hoisted_1$9), [
             [vModelText, unref(progression)]
           ]),
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: unref(pattern),
             "onUpdate:modelValue": _cache2[2] || (_cache2[2] = ($event) => /* @__PURE__ */ isRef(pattern) ? pattern.value = $event : null),
             options: unref(PATTERN_OPTS)
           }, null, 8, ["modelValue", "options"]),
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: unref(voicing),
             "onUpdate:modelValue": _cache2[3] || (_cache2[3] = ($event) => /* @__PURE__ */ isRef(voicing) ? voicing.value = $event : null),
             options: unref(VOICING_OPTS)
@@ -191517,7 +191771,7 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
             decimals: 0,
             "reset-to": 100
           }, null, 8, ["modelValue", "label"]),
-          createVNode(_sfc_main$1R, {
+          createVNode(_sfc_main$1S, {
             modelValue: unref(quality),
             "onUpdate:modelValue": _cache2[10] || (_cache2[10] = ($event) => /* @__PURE__ */ isRef(quality) ? quality.value = $event : null),
             options: QUALITY_OPTS
@@ -193799,54 +194053,55 @@ const RICH_STAGE_CARDS = {
   "ComfyTV.ClickTrackStage": _sfc_main$9,
   "ComfyTV.ChordAccompStage": _sfc_main$8,
   "ComfyTV.MuseReverbStage": _sfc_main$7,
-  "ComfyTV.MultiangleStage": _sfc_main$30,
-  "ComfyTV.RelightStage": _sfc_main$2Y,
-  "ComfyTV.InpaintStage": _sfc_main$2_,
-  "ComfyTV.EraseStage": _sfc_main$2_,
-  "ComfyTV.CropStage": _sfc_main$2W,
-  "ComfyTV.VideoClipStage": _sfc_main$2U,
-  "ComfyTV.VideoCropStage": _sfc_main$2S,
-  "ComfyTV.VideoConcatStage": _sfc_main$2R,
-  "ComfyTV.VideoSpeedStage": _sfc_main$2N,
-  "ComfyTV.VideoRotateStage": _sfc_main$2M,
-  "ComfyTV.VideoSplitStage": _sfc_main$2L,
+  "ComfyTV.MultiangleStage": _sfc_main$31,
+  "ComfyTV.RelightStage": _sfc_main$2Z,
+  "ComfyTV.InpaintStage": _sfc_main$2$,
+  "ComfyTV.EraseStage": _sfc_main$2$,
+  "ComfyTV.CropStage": _sfc_main$2X,
+  "ComfyTV.VideoClipStage": _sfc_main$2V,
+  "ComfyTV.VideoCropStage": _sfc_main$2T,
+  "ComfyTV.VideoConcatStage": _sfc_main$2S,
+  "ComfyTV.VideoSpeedStage": _sfc_main$2O,
+  "ComfyTV.VideoRotateStage": _sfc_main$2N,
+  "ComfyTV.VideoSplitStage": _sfc_main$2M,
   "ComfyTV.VideoVolumeStage": VideoVolumeStageCard,
   "ComfyTV.VideoMuxAudioStage": VideoMuxAudioStageCard,
   "ComfyTV.VideoFramesStage": VideoFramesStageCard,
   "ComfyTV.VideoResizeStage": VideoResizeStageCard,
-  "ComfyTV.RotateStage": _sfc_main$2G,
-  "ComfyTV.MirrorStage": _sfc_main$2F,
-  "ComfyTV.ColorGradeStage": _sfc_main$2C,
-  "ComfyTV.PanoramaStage": _sfc_main$2A,
+  "ComfyTV.RotateStage": _sfc_main$2H,
+  "ComfyTV.MirrorStage": _sfc_main$2G,
+  "ComfyTV.ColorGradeStage": _sfc_main$2D,
+  "ComfyTV.PanoramaStage": _sfc_main$2B,
   "ComfyTV.PanoramaCurrentViewStage": PanoramaCurrentViewStageCard,
   "ComfyTV.PanoramaMultiViewStage": PanoramaMultiViewStageCard,
-  "ComfyTV.CompareStage": _sfc_main$2w,
-  "ComfyTV.AssetImageLoaderStage": _sfc_main$2v,
-  "ComfyTV.AssetVideoLoaderStage": _sfc_main$2v,
-  "ComfyTV.AssetAudioLoaderStage": _sfc_main$2v,
-  "ComfyTV.AssetModelLoaderStage": _sfc_main$2v,
-  "ComfyTV.ModelLoaderStage": _sfc_main$2u,
-  "ComfyTV.MeshOpStage": _sfc_main$2r,
-  "ComfyTV.MeshBakeMapsStage": _sfc_main$2r,
-  "ComfyTV.MeshPrimitiveStage": _sfc_main$2p,
-  "ComfyTV.MeshBooleanStage": _sfc_main$2o,
-  "ComfyTV.LineArtStage": _sfc_main$2s,
-  "ComfyTV.GridSplitStage": _sfc_main$2n,
-  "ComfyTV.DirectorTimelineStage": _sfc_main$2m,
+  "ComfyTV.CompareStage": _sfc_main$2x,
+  "ComfyTV.AssetImageLoaderStage": _sfc_main$2w,
+  "ComfyTV.AssetVideoLoaderStage": _sfc_main$2w,
+  "ComfyTV.AssetAudioLoaderStage": _sfc_main$2w,
+  "ComfyTV.AssetModelLoaderStage": _sfc_main$2w,
+  "ComfyTV.ModelLoaderStage": _sfc_main$2v,
+  "ComfyTV.MeshOpStage": _sfc_main$2s,
+  "ComfyTV.MeshBakeMapsStage": _sfc_main$2s,
+  "ComfyTV.MeshPrimitiveStage": _sfc_main$2q,
+  "ComfyTV.MeshBooleanStage": _sfc_main$2p,
+  "ComfyTV.LineArtStage": _sfc_main$2t,
+  "ComfyTV.GridSplitStage": _sfc_main$2o,
+  "ComfyTV.DirectorTimelineStage": _sfc_main$2n,
   "ComfyTV.OutpaintStage": OutpaintStageCard,
-  "ComfyTV.StoryboardStage": _sfc_main$2k,
-  "ComfyTV.Scene3DStage": _sfc_main$2b,
-  "ComfyTV.LayerEditorStage": _sfc_main$20,
-  "ComfyTV.StoryboardEditorStage": _sfc_main$1Z,
-  "ComfyTV.MaterialStage": _sfc_main$1X,
-  "ComfyTV.SplitPartStage": _sfc_main$1V,
-  "ComfyTV.VideoColorStage": _sfc_main$1S,
-  "ComfyTV.VideoCurvesStage": _sfc_main$1P,
-  "ComfyTV.VideoLUTStage": _sfc_main$1O,
-  "ComfyTV.VideoBlurSharpenStage": _sfc_main$1N,
-  "ComfyTV.VideoDenoiseStage": _sfc_main$1M,
+  "ComfyTV.StoryboardStage": _sfc_main$2l,
+  "ComfyTV.Scene3DStage": _sfc_main$2c,
+  "ComfyTV.LayerEditorStage": _sfc_main$21,
+  "ComfyTV.StoryboardEditorStage": _sfc_main$1_,
+  "ComfyTV.MaterialStage": _sfc_main$1Y,
+  "ComfyTV.SplitPartStage": _sfc_main$1W,
+  "ComfyTV.VideoColorStage": _sfc_main$1T,
+  "ComfyTV.VideoCurvesStage": _sfc_main$1Q,
+  "ComfyTV.VideoLUTStage": _sfc_main$1P,
+  "ComfyTV.VideoBlurSharpenStage": _sfc_main$1O,
+  "ComfyTV.VideoDenoiseStage": _sfc_main$1N,
   "ComfyTV.VideoChromaKeyStage": VideoChromaKeyStageCard,
-  "ComfyTV.VideoTransitionStage": _sfc_main$1K,
+  "ComfyTV.VideoTransitionStage": _sfc_main$1L,
+  "ComfyTV.VideoLumaWipeStage": _sfc_main$1K,
   "ComfyTV.VideoStabilizeStage": _sfc_main$1J,
   "ComfyTV.SceneDetectStage": _sfc_main$1I,
   "ComfyTV.VideoInterpolateStage": _sfc_main$1H,
@@ -193979,6 +194234,7 @@ const RICH_STAGE_MIN_HEIGHTS = {
   "ComfyTV.VideoDenoiseStage": 640,
   "ComfyTV.VideoChromaKeyStage": 780,
   "ComfyTV.VideoTransitionStage": 780,
+  "ComfyTV.VideoLumaWipeStage": 780,
   "ComfyTV.VideoStabilizeStage": 640,
   "ComfyTV.SceneDetectStage": 700,
   "ComfyTV.VideoInterpolateStage": 660,
@@ -194430,4 +194686,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-DygZsV9E.mjs.map
+//# sourceMappingURL=main-CNrTPcW_.mjs.map

@@ -250,8 +250,8 @@ class TestLumaMaps:
 
     @needs_torch
     def test_transition_builtin_luma(self, clip, voice_clip):
-        from ComfyTV.nodes.stages.video_timeline import VideoTransitionStage
-        out = VideoTransitionStage.execute(
+        from ComfyTV.nodes.stages.video_timeline import VideoLumaWipeStage
+        out = VideoLumaWipeStage.execute(
             project_id='p1', luma_map='clock', duration=0.5,
             video_a=clip, video_b=voice_clip)
         assert out.values[0].startswith('/view?')

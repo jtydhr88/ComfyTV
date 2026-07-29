@@ -3,9 +3,12 @@ precision highp float;
 
 uniform sampler2D u_image0;
 uniform sampler2D u_image1;
+uniform sampler2D u_image2;
 uniform vec2 u_resolution;
 uniform float u_float0;
+uniform float u_float1;
 uniform int u_int0;
+uniform int u_int1;
 
 in vec2 v_texCoord;
 out vec4 fragColor;
@@ -45,6 +48,20 @@ void main() {
     vec4 A = texture(u_image0, v_texCoord);
     vec4 B = texture(u_image1, v_texCoord);
     vec4 outc = A;
+
+    if (u_int1 != 0) {
+        vec3 lc = texture(u_image2, v_texCoord).rgb;
+        float weight = dot(lc, vec3(0.2126, 0.7152, 0.0722));
+        if (u_int1 == 2) weight = 1.0 - weight;
+        float pos = 1.0 - P;
+        float soft = max(u_float1, 1e-6);
+        float x = pos * (1.0 + soft);
+        float a = clamp((x - weight) / soft, 0.0, 1.0);
+        a = a * a * (3.0 - 2.0 * a);
+        vec4 lw = mix(A, B, a);
+        fragColor = vec4(lw.rgb, 1.0);
+        return;
+    }
 
     if (m == 0) {
         outc = cmix(A, B, P);

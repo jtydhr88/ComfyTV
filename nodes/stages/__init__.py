@@ -62,7 +62,9 @@ from .video_masking import (
     AnnotateStage, ShapeMaskStage, FaceBlurStage, SpotRemoverStage,
 )
 from .video_text import TitleStage, SubtitleStage, SubtitleGenStage
-from .video_timeline import VideoTransitionStage, TimeRemapStage, SequenceStage
+from .video_timeline import (
+    VideoTransitionStage, VideoLumaWipeStage, TimeRemapStage, SequenceStage,
+)
 from .video_analysis import (
     VideoScopesStage, SceneDetectStage, ContactSheetStage,
 )
@@ -130,7 +132,8 @@ class ComfyTVExtension(ComfyExtension):
             AudioVideoDemuxAudioStage, AudioVideoDemuxVideoStage,
             VideoColorStage, VideoCurvesStage, VideoLUTStage,
             VideoBlurSharpenStage, VideoDenoiseStage, VideoChromaKeyStage,
-            VideoTransitionStage, VideoStabilizeStage, SceneDetectStage,
+            VideoTransitionStage, VideoLumaWipeStage,
+            VideoStabilizeStage, SceneDetectStage,
             VideoInterpolateStage, VideoDeinterlaceStage, VideoStylizeStage,
             VideoScopesStage,
             FXChainStage,

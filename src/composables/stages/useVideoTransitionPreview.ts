@@ -8,7 +8,10 @@ import {
   type PreviewTimeline,
   type TransitionWindow,
 } from '@/composables/stages/videoTransitionMath'
-import { VideoTransitionRenderer } from '@/widgets/glsl/videoTransitionRenderer'
+import {
+  VideoTransitionRenderer,
+  type LumaWipe,
+} from '@/widgets/glsl/videoTransitionRenderer'
 
 export interface VideoTransitionRendererLike {
   renderToCanvas(
@@ -17,6 +20,7 @@ export interface VideoTransitionRendererLike {
     transition: string,
     progress: number,
     target: HTMLCanvasElement,
+    luma?: LumaWipe | null,
   ): boolean
   dispose(): void
 }
@@ -25,12 +29,15 @@ export interface VideoTransitionPreviewParams {
   transition: string
   duration: number
   offset: number
+  lumaMode?: number
+  lumaSoftness?: number
 }
 
 export interface UseVideoTransitionPreviewOptions {
   videoAEl: Ref<HTMLVideoElement | null>
   videoBEl: Ref<HTMLVideoElement | null>
   canvasEl: Ref<HTMLCanvasElement | null>
+  lumaEl?: Ref<HTMLImageElement | null>
   nodeId?: string
   params: () => VideoTransitionPreviewParams
   createRenderer?: () => VideoTransitionRendererLike
@@ -75,6 +82,14 @@ export function useVideoTransitionPreview(opts: UseVideoTransitionPreviewOptions
   let rafId = 0
   let playT0 = 0
 
+  function currentLuma(p: VideoTransitionPreviewParams): LumaWipe | null {
+    const mode = p.lumaMode ?? 0
+    if (!mode) return null
+    const img = opts.lumaEl?.value
+    if (!img || !img.complete || img.naturalWidth === 0) return null
+    return { image: img, mode, softness: p.lumaSoftness ?? 0.1 }
+  }
+
   function renderOnce(): void {
     if (!supported.value) return
     const a = opts.videoAEl.value
@@ -82,8 +97,9 @@ export function useVideoTransitionPreview(opts: UseVideoTransitionPreviewOptions
     const c = opts.canvasEl.value
     if (!a || !b || !c || a.readyState < 2 || b.readyState < 2) return
     renderer ??= (opts.createRenderer ?? (() => new VideoTransitionRenderer()))()
+    const p = opts.params()
     const ok = renderer.renderToCanvas(
-      a, b, opts.params().transition, progress.value, c,
+      a, b, p.transition, progress.value, c, currentLuma(p),
     )
     if (!ok) {
       supported.value = false

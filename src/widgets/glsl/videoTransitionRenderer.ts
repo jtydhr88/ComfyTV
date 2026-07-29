@@ -6,11 +6,17 @@ import {
 } from '@/composables/stages/videoTransitionMath'
 
 const RENDER_CONFIG = {
-  maxInputs: 2,
-  maxFloatUniforms: 1,
-  maxIntUniforms: 1,
+  maxInputs: 3,
+  maxFloatUniforms: 2,
+  maxIntUniforms: 2,
   maxBoolUniforms: 0,
   maxCurves: 0,
+}
+
+export interface LumaWipe {
+  image: TexImageSource
+  mode: number
+  softness: number
 }
 
 export class VideoTransitionRenderer {
@@ -28,6 +34,7 @@ export class VideoTransitionRenderer {
     transition: string,
     progress: number,
     target: HTMLCanvasElement,
+    luma?: LumaWipe | null,
   ): boolean {
     const w = Math.max(2, videoA.videoWidth)
     const h = Math.max(2, videoA.videoHeight)
@@ -51,6 +58,13 @@ export class VideoTransitionRenderer {
       this.renderer.setResolution(w, h)
       this.renderer.bindInputImage(0, videoA)
       this.renderer.bindInputImage(1, videoB)
+      if (luma && luma.mode !== 0) {
+        this.renderer.bindInputImage(2, luma.image)
+        this.renderer.setFloatUniform(1, luma.softness)
+        this.renderer.setIntUniform(1, luma.mode)
+      } else {
+        this.renderer.setIntUniform(1, 0)
+      }
       this.renderer.setIntUniform(0, transitionModeIndex(transition))
       this.renderer.setFloatUniform(0, 1 - clampProgress(progress))
       this.renderer.render()

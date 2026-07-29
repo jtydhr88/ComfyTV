@@ -114,7 +114,7 @@ describe('useVideoTransitionPreview', () => {
     expect(b!.seeks).toEqual([])
     expect(renderer.renderToCanvas).toHaveBeenCalledTimes(1)
     expect(renderer.renderToCanvas).toHaveBeenCalledWith(
-      videoAEl.value, videoBEl.value, 'fade', 0, canvasEl.value,
+      videoAEl.value, videoBEl.value, 'fade', 0, canvasEl.value, null,
     )
     expect(api.time.value).toBe(0)
     expect(api.progress.value).toBe(0)
@@ -151,7 +151,7 @@ describe('useVideoTransitionPreview', () => {
     a!.fireSeeked()
     expect(renderer.renderToCanvas).toHaveBeenCalledTimes(2)
     expect(renderer.renderToCanvas).toHaveBeenLastCalledWith(
-      expect.anything(), expect.anything(), 'fade', 0, expect.anything(),
+      expect.anything(), expect.anything(), 'fade', 0, expect.anything(), null,
     )
   })
 
@@ -166,7 +166,7 @@ describe('useVideoTransitionPreview', () => {
     b!.fireSeeked()
     expect(renderer.renderToCanvas).toHaveBeenCalledTimes(2)
     expect(renderer.renderToCanvas).toHaveBeenLastCalledWith(
-      expect.anything(), expect.anything(), 'fade', 1, expect.anything(),
+      expect.anything(), expect.anything(), 'fade', 1, expect.anything(), null,
     )
   })
 
@@ -263,7 +263,7 @@ describe('useVideoTransitionPreview', () => {
     expect(b!.seeks).toEqual([0.5])
     expect(renderer.renderToCanvas).toHaveBeenCalledTimes(3)
     expect(renderer.renderToCanvas).toHaveBeenLastCalledWith(
-      expect.anything(), expect.anything(), 'fade', 1, expect.anything(),
+      expect.anything(), expect.anything(), 'fade', 1, expect.anything(), null,
     )
   })
 

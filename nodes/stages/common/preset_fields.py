@@ -17,9 +17,8 @@ PRESET_FIELDS: dict[str, tuple[str, ...]] = {
         "key_color", "similarity", "blend", "despill_mix", "despill_expand",
         "output",
     ),
-    "ComfyTV.VideoTransitionStage": (
-        "transition", "duration", "luma_softness", "luma_invert",
-    ),
+    "ComfyTV.VideoTransitionStage": ("transition", "duration"),
+    "ComfyTV.VideoLumaWipeStage": ("luma_map", "duration", "softness", "invert"),
     "ComfyTV.VideoStabilizeStage": ("range_x", "range_y", "edge"),
     "ComfyTV.VideoStabilizeV2Stage": (
         "smoothing", "accuracy", "opt_zoom", "extra_zoom",

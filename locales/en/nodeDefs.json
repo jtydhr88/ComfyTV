@@ -240,6 +240,9 @@
     "VideoTransitionStage": {
       "display_name": "Video Transition"
     },
+    "VideoLumaWipeStage": {
+      "display_name": "Luma Wipe"
+    },
     "VideoStabilizeStage": {
       "display_name": "Video Stabilize"
     },
@@ -2126,6 +2129,9 @@
   },
   "ComfyTV_VideoTransitionStage": {
     "display_name": "Video Transition"
+  },
+  "ComfyTV_VideoLumaWipeStage": {
+    "display_name": "Luma Wipe"
   },
   "ComfyTV_VideoStabilizeStage": {
     "display_name": "Video Stabilize"

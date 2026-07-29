@@ -158,6 +158,7 @@ EXPECTED_NODE_IDS = [
     'ComfyTV.VideoInterpolateStage',
     'ComfyTV.VideoLUTStage',
     'ComfyTV.VideoLoaderStage',
+    'ComfyTV.VideoLumaWipeStage',
     'ComfyTV.VideoMuxAudioStage',
     'ComfyTV.VideoPickerStage',
     'ComfyTV.VideoResizeStage',

@@ -21,6 +21,13 @@
             class="ctv:hidden"
             muted playsinline preload="metadata"
           />
+          <img
+            ref="lumaEl"
+            :src="lumaSrc || undefined"
+            crossorigin="anonymous"
+            class="ctv:hidden"
+            @load="preview.renderOnce()"
+          />
         </div>
 
         <div class="ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1.5 ctv:text-[11px]">
@@ -75,40 +82,13 @@
     </template>
 
     <div class="ctv:flex ctv:flex-col ctv:gap-1" @pointerdown.stop @pointermove.stop @pointerup.stop>
-      <span class="ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">{{ $t('fx.transition') }}</span>
-      <div class="ctv-scroll-thin ctv:h-56 ctv:shrink-0 ctv:overflow-y-auto ctv:flex ctv:flex-col ctv:gap-0.5" @wheel.stop>
-        <div v-for="grp in TRANSITION_GROUPS" :key="grp.id" class="ctv:flex ctv:flex-col ctv:gap-0.5">
-          <button
-            type="button"
-            class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:w-full ctv:py-0.5 ctv:px-0 ctv:bg-transparent ctv:border-0 ctv:cursor-pointer ctv:text-left"
-            @click="toggleGroup(grp.id)"
-          >
-            <i :class="['pi', expandedGroups.has(grp.id) ? 'pi-chevron-down' : 'pi-chevron-right', 'ctv:w-2.5 ctv:text-2xs ctv:text-muted-foreground']" />
-            <span class="ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">{{ $t(`fx.transitionGroup.${grp.id}`) }}</span>
-            <span class="ctv:text-3xs ctv:font-mono ctv:text-muted-foreground">{{ grp.names.length }}</span>
-            <span
-              v-if="!expandedGroups.has(grp.id) && grp.names.includes(transition)"
-              class="ctv:ml-auto ctv:text-2xs ctv:text-primary-background ctv:font-mono"
-            >{{ transition }}</span>
-          </button>
-          <div v-show="expandedGroups.has(grp.id)" class="ctv:grid ctv:grid-cols-3 ctv:gap-1">
-            <button
-              v-for="name in grp.names"
-              :key="name"
-              type="button"
-              class="ctv:flex ctv:items-center ctv:gap-1 ctv:py-0.5 ctv:px-1.5 ctv:text-2xs ctv:rounded ctv:cursor-pointer ctv:border ctv:transition-colors ctv:min-w-0"
-              :class="transition === name
-                ? 'ctv:bg-secondary-background-selected ctv:border-primary-background ctv:text-primary-background'
-                : 'ctv:bg-secondary-background ctv:border-border-subtle ctv:text-base-foreground ctv:hover:border-primary-background'"
-              :title="name"
-              @click="transition = name"
-            >
-              <component :is="getTransitionIcon(name)" class="ctv:size-3 ctv:shrink-0" />
-              <span class="ctv:truncate">{{ name }}</span>
-            </button>
-          </div>
+      <template v-if="!lumaWired">
+        <span class="ctv:text-2xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">{{ $t('fx.lumaPattern') }}</span>
+        <div class="ctv-scroll-thin ctv:max-h-24 ctv:overflow-y-auto" @wheel.stop>
+          <FxChips v-model="lumaMap" :options="LUMA_MAP_OPTS" />
         </div>
-      </div>
+      </template>
+      <div v-else class="ctv:text-2xs ctv:text-muted-foreground">{{ $t('fx.lumaWiredHint') }}</div>
 
       <FxSlider
         v-model="duration"
@@ -117,12 +97,15 @@
         unit="s" :reset-to="1.0"
       />
       <FxSlider
-        v-model="offset"
-        :label="$t('fx.offset')"
-        :min="0" :max="offsetMax" :step="0.1"
-        unit="s" :reset-to="0"
+        v-model="softness"
+        :label="$t('fx.softness')"
+        :min="0" :max="1" :step="0.01"
+        :reset-to="0.1"
       />
-      <div class="ctv:text-2xs ctv:text-muted-foreground">{{ $t('fx.offsetAuto') }}</div>
+      <label class="ctv:flex ctv:items-center ctv:gap-1 ctv:text-2xs ctv:text-muted-foreground ctv:cursor-pointer">
+        <input type="checkbox" v-model="invert" class="ctv:accent-primary-background" />
+        {{ $t('fx.invert') }}
+      </label>
     </div>
 
     <div class="ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide">
@@ -152,10 +135,8 @@ import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'
-import { getTransitionIcon } from '@/composables/stages/transitionIcons'
-import { TRANSITION_GROUPS, transitionGroupOf } from '@/composables/stages/transitionCatalog'
 import { useVideoTransitionPreview } from '@/composables/stages/useVideoTransitionPreview'
-import { useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
+import { useBoolWidget, useNumWidget, useStrWidget } from '@/composables/widgets/useWidgetModel'
 
 const props = defineProps<{
   state: StageState
@@ -171,39 +152,41 @@ const srcB = computed(() => pickSourceImageUrl(props.state.inputs, 'video_b'))
 
 const previewSide = ref<'A' | 'B'>('A')
 
-const transition = useStrWidget(props.node, 'transition', 'fade')
-
-const expandedGroups = ref(new Set<string>([transitionGroupOf(transition.value)]))
-
-function toggleGroup(id: string) {
-  const next = new Set(expandedGroups.value)
-  if (next.has(id)) next.delete(id)
-  else next.add(id)
-  expandedGroups.value = next
-}
 const duration = useNumWidget(props.node, 'duration', 1.0)
-const offset = useNumWidget(props.node, 'offset', 0)
+const softness = useNumWidget(props.node, 'softness', 0.1)
+const invert = useBoolWidget(props.node, 'invert', false)
+const lumaMap = useStrWidget(props.node, 'luma_map', 'radial')
+
+const lumaImageUrl = computed(() => pickSourceImageUrl(props.state.inputs, 'luma_image'))
+const lumaWired = computed(() => Boolean(lumaImageUrl.value))
+const lumaSrc = computed(() => {
+  if (lumaImageUrl.value) return lumaImageUrl.value
+  return `/comfytv/luma_map?kind=${encodeURIComponent(lumaMap.value)}&w=320&h=180`
+})
+
+const LUMA_MAP_OPTS = ['linear_x', 'linear_y', 'bilinear_x', 'bilinear_y',
+  'radial', 'square', 'diamond', 'clock', 'symmetric_clock', 'spiral',
+  'burst', 'curtain', 'blinds_h', 'blinds_v', 'checker', 'cloud']
+  .map(v => ({ value: v, label: v.replace('_', ' ') }))
 
 const canvasEl = ref<HTMLCanvasElement | null>(null)
 const videoAEl = ref<HTMLVideoElement | null>(null)
 const videoBEl = ref<HTMLVideoElement | null>(null)
+const lumaEl = ref<HTMLImageElement | null>(null)
 
 const preview = useVideoTransitionPreview({
   videoAEl,
   videoBEl,
   canvasEl,
+  lumaEl,
   nodeId: String(props.node.id),
   params: () => ({
-    transition: transition.value,
+    transition: 'fade',
     duration: duration.value,
-    offset: offset.value,
+    offset: 0,
+    lumaMode: invert.value ? 2 : 1,
+    lumaSoftness: softness.value,
   }),
-})
-
-const offsetMax = computed(() => {
-  const a = preview.durA.value
-  if (a <= 0) return 3600
-  return Math.max(0.1, Math.round((a - duration.value) * 10) / 10)
 })
 
 const showGlslPreview = computed(() =>

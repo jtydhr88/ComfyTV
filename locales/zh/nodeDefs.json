@@ -240,6 +240,9 @@
     "VideoTransitionStage": {
       "display_name": "视频转场"
     },
+    "VideoLumaWipeStage": {
+      "display_name": "亮度擦除"
+    },
     "VideoStabilizeStage": {
       "display_name": "视频防抖"
     },
@@ -2126,6 +2129,9 @@
   },
   "ComfyTV_VideoTransitionStage": {
     "display_name": "视频转场"
+  },
+  "ComfyTV_VideoLumaWipeStage": {
+    "display_name": "亮度擦除"
   },
   "ComfyTV_VideoStabilizeStage": {
     "display_name": "视频防抖"

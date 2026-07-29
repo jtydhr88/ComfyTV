@@ -46,6 +46,7 @@ import VideoBlurSharpenStageCard from '@/components/stages/VideoBlurSharpenStage
 import VideoDenoiseStageCard from '@/components/stages/VideoDenoiseStageCard.vue'
 import VideoChromaKeyStageCard from '@/components/stages/VideoChromaKeyStageCard.vue'
 import VideoTransitionStageCard from '@/components/stages/VideoTransitionStageCard.vue'
+import VideoLumaWipeStageCard from '@/components/stages/VideoLumaWipeStageCard.vue'
 import VideoStabilizeStageCard from '@/components/stages/VideoStabilizeStageCard.vue'
 import SceneDetectStageCard from '@/components/stages/SceneDetectStageCard.vue'
 import VideoInterpolateStageCard from '@/components/stages/VideoInterpolateStageCard.vue'
@@ -287,6 +288,7 @@ const RICH_STAGE_CARDS: Record<string, any> = {
   'ComfyTV.VideoDenoiseStage':        VideoDenoiseStageCard,
   'ComfyTV.VideoChromaKeyStage':      VideoChromaKeyStageCard,
   'ComfyTV.VideoTransitionStage':     VideoTransitionStageCard,
+  'ComfyTV.VideoLumaWipeStage':       VideoLumaWipeStageCard,
   'ComfyTV.VideoStabilizeStage':      VideoStabilizeStageCard,
   'ComfyTV.SceneDetectStage':         SceneDetectStageCard,
   'ComfyTV.VideoInterpolateStage':    VideoInterpolateStageCard,
@@ -421,6 +423,7 @@ const RICH_STAGE_MIN_HEIGHTS: Record<string, number> = {
   'ComfyTV.VideoDenoiseStage':        640,
   'ComfyTV.VideoChromaKeyStage':      780,
   'ComfyTV.VideoTransitionStage':     780,
+  'ComfyTV.VideoLumaWipeStage':       780,
   'ComfyTV.VideoStabilizeStage':      640,
   'ComfyTV.SceneDetectStage':         700,
   'ComfyTV.VideoInterpolateStage':    660,

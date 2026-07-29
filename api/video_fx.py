@@ -28,6 +28,31 @@ async def get_lut(request: web.Request) -> web.Response:
     return web.FileResponse(path)
 
 
+@routes.get('/comfytv/luma_map')
+async def get_luma_map(request: web.Request) -> web.Response:
+    import io as _io
+
+    import numpy as np
+    from PIL import Image
+
+    from ..runners.luma_maps import LUMA_MAP_KINDS, luma_map
+
+    kind = request.query.get('kind', '')
+    if kind not in LUMA_MAP_KINDS:
+        return web.json_response({'error': f'unknown luma map {kind!r}'},
+                                 status=404)
+    try:
+        w = max(16, min(1024, int(request.query.get('w', 320))))
+        h = max(16, min(1024, int(request.query.get('h', 180))))
+    except ValueError:
+        w, h = 320, 180
+    arr = (luma_map(kind, w, h) * 255).astype(np.uint8)
+    buf = _io.BytesIO()
+    Image.fromarray(arr, mode='L').save(buf, format='PNG')
+    return web.Response(body=buf.getvalue(), content_type='image/png',
+                        headers={'Cache-Control': 'public, max-age=86400'})
+
+
 @routes.post('/comfytv/luts')
 async def upload_lut(request: web.Request) -> web.Response:
     row, err = await res.save_upload(request, forced_kind='lut', overwrite=True)

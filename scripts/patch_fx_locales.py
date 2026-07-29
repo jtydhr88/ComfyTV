@@ -11,6 +11,7 @@ NODES = {
     'VideoDenoiseStage':     ('Video Denoise', '视频降噪'),
     'VideoChromaKeyStage':   ('Chroma Key', '色度抠像'),
     'VideoTransitionStage':  ('Video Transition', '视频转场'),
+    'VideoLumaWipeStage':    ('Luma Wipe', '亮度擦除'),
     'VideoStabilizeStage':   ('Video Stabilize', '视频防抖'),
     'SceneDetectStage':      ('Scene Detect', '场景检测'),
     'VideoInterpolateStage': ('Frame Interpolate', '光流补帧'),

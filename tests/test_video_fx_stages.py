@@ -11,7 +11,8 @@ from test_media_concat import _write_clip  # noqa: E402
 ALL_FX_CLASSES = [
     "VideoColorStage", "VideoCurvesStage", "VideoLUTStage",
     "VideoBlurSharpenStage", "VideoDenoiseStage", "VideoChromaKeyStage",
-    "VideoTransitionStage", "VideoStabilizeStage", "SceneDetectStage",
+    "VideoTransitionStage", "VideoLumaWipeStage",
+    "VideoStabilizeStage", "SceneDetectStage",
     "VideoInterpolateStage", "VideoDeinterlaceStage", "VideoStylizeStage",
     "VideoScopesStage",
     "AudioDynamicsStage", "AudioEQStage", "AudioLoudnessStage",
