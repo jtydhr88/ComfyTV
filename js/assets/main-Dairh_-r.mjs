@@ -56179,7 +56179,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-DpJ2lwex.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-B_yZYKGx.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -128480,7 +128480,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-BnPdXfun.mjs");
+    const { STLLoader } = await import("./STLLoader-DHViUlgC.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -128488,7 +128488,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-Ct12kJrR.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-BEiAh3DV.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -193451,7 +193451,7 @@ function inputFileUrl(value) {
   return `/view?${params.toString()}`;
 }
 function useStageNode(node, kind, variant = "generator") {
-  var _a2, _b2, _c, _d, _e2, _f, _g, _h;
+  var _a2, _b2, _c, _d, _e2, _f, _g, _h, _i;
   const store2 = useStageStore();
   const executionStore = useExecutionStore();
   const state2 = store2.registerStage(node, kind, variant);
@@ -193502,9 +193502,19 @@ function useStageNode(node, kind, variant = "generator") {
       sync();
       recipeWidget.callback = useChainCallback(recipeWidget.callback, sync);
       if (kindWidget) kindWidget.callback = useChainCallback(kindWidget.callback, sync);
+    } else if (kind === "text") {
+      const textWidget = (_f = node.widgets) == null ? void 0 : _f.find((w) => w.name === "text");
+      if (textWidget) {
+        const sync = () => {
+          const v = String(textWidget.value ?? "");
+          store2.setOutputSlot(state2, 0, v ? v : null);
+        };
+        sync();
+        textWidget.callback = useChainCallback(textWidget.callback, sync);
+      }
     } else {
       const widgetName = kind === "image" ? "image" : kind === "video" ? "video" : kind === "audio" ? "audio" : kind === "model" ? "model" : null;
-      const uploadWidget = widgetName ? (_f = node.widgets) == null ? void 0 : _f.find((w) => w.name === widgetName) : null;
+      const uploadWidget = widgetName ? (_g = node.widgets) == null ? void 0 : _g.find((w) => w.name === widgetName) : null;
       if (uploadWidget) {
         const sync = () => {
           const v = String(uploadWidget.value ?? "");
@@ -193551,7 +193561,7 @@ function useStageNode(node, kind, variant = "generator") {
     });
   }
   if (variant === "generator") {
-    const wfWidget = (_g = node.widgets) == null ? void 0 : _g.find((w) => w.name === "workflow");
+    const wfWidget = (_h = node.widgets) == null ? void 0 : _h.find((w) => w.name === "workflow");
     if (wfWidget) {
       const selectionStore = useSelectionStore();
       wfWidget.callback = useChainCallback(wfWidget.callback, () => {
@@ -193602,7 +193612,7 @@ function useStageNode(node, kind, variant = "generator") {
     { immediate: true }
   ) : null;
   const onRunRequest = async () => {
-    var _a3, _b3, _c2, _d2, _e3, _f3, _g2, _h2, _i, _j, _k, _l, _m2, _n2, _o, _p, _q, _r, _s, _t, _u, _v4, _w, _x2, _y2, _z2, _A, _B, _C, _D;
+    var _a3, _b3, _c2, _d2, _e3, _f3, _g2, _h2, _i2, _j, _k, _l, _m2, _n2, _o, _p, _q, _r, _s, _t, _u, _v4, _w, _x2, _y2, _z2, _A, _B, _C, _D;
     if (state2.running) return;
     if (variant === "loader") return;
     if (state2.preparingWorkflow) {
@@ -193637,7 +193647,7 @@ function useStageNode(node, kind, variant = "generator") {
           const upstreamId = val[0];
           if (!isBridgeIn && ((_g2 = pm == null ? void 0 : pm.output) == null ? void 0 : _g2[String(upstreamId)])) continue;
           const upstreamSlot = Number(val[1]) || 0;
-          const upstreamNode = ((_i = (_h2 = a2.graph) == null ? void 0 : _h2.getNodeById) == null ? void 0 : _i.call(_h2, Number(upstreamId))) ?? ((_k = (_j = a2.graph) == null ? void 0 : _j.getNodeById) == null ? void 0 : _k.call(_j, String(upstreamId)));
+          const upstreamNode = ((_i2 = (_h2 = a2.graph) == null ? void 0 : _h2.getNodeById) == null ? void 0 : _i2.call(_h2, Number(upstreamId))) ?? ((_k = (_j = a2.graph) == null ? void 0 : _j.getNodeById) == null ? void 0 : _k.call(_j, String(upstreamId)));
           if (!upstreamNode) continue;
           const upstreamState = store2.getStage(upstreamNode);
           let snapshot;
@@ -193946,7 +193956,7 @@ function useStageNode(node, kind, variant = "generator") {
     queueMicrotask(() => attemptRemoteRestore());
   }
   const projectStore = useProjectStore();
-  const projectIdWidget = (_h = node.widgets) == null ? void 0 : _h.find((w) => w.name === "project_id");
+  const projectIdWidget = (_i = node.widgets) == null ? void 0 : _i.find((w) => w.name === "project_id");
   if (projectIdWidget) {
     projectIdWidget.value = projectStore.currentProjectId;
   }
@@ -194734,6 +194744,10 @@ const extension = {
       console.warn("[ComfyTV] unknown stage kind:", entry.kind, "for", node.comfyClass);
       return;
     }
+    if (node.comfyClass === "ComfyTV.TextLoaderStage") {
+      useStageNode(node, "text", "loader");
+      return;
+    }
     mountStage(node, entry.kind, entry.variant ?? "generator");
     const richMin = RICH_STAGE_MIN_HEIGHTS[node.comfyClass];
     const minH = richMin ?? 140;
@@ -194829,4 +194843,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-GvigwVEs.mjs.map
+//# sourceMappingURL=main-Dairh_-r.mjs.map

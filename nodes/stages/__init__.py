@@ -99,6 +99,7 @@ from .panorama import (
     PanoramaStage, PanoramaCurrentViewStage, PanoramaMultiViewStage,
 )
 from .loaders import (
+    TextLoaderStage,
     ImageLoaderStage, VideoLoaderStage, AudioLoaderStage,
     AssetImageLoaderStage, AssetVideoLoaderStage, AssetAudioLoaderStage,
     ModelLoaderStage, AssetModelLoaderStage,
@@ -166,6 +167,7 @@ class ComfyTVExtension(ComfyExtension):
             ScoreStage, ScoreEditorStage, MidiEditorStage, ScoreToMidiStage,
             SF2SynthStage, ClickTrackStage, ChordAccompStage, MuseReverbStage,
             AnnotateStage, AudioReactiveStage, AudioMeterStage,
+            TextLoaderStage,
             ImageLoaderStage, VideoLoaderStage, AudioLoaderStage,
             AssetImageLoaderStage, AssetVideoLoaderStage, AssetAudioLoaderStage,
             Model3DStage, ModelLoaderStage, AssetModelLoaderStage,

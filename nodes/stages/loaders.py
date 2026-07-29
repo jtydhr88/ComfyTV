@@ -60,6 +60,35 @@ def _asset_loader_inputs() -> list:
     ]
 
 
+class TextLoaderStage(io.ComfyNode):
+
+    @classmethod
+    def define_schema(cls):
+        return io.Schema(
+            node_id="ComfyTV.TextLoaderStage",
+            display_name="Input Text",
+            category="ComfyTV/Input",
+            inputs=[
+                _project_id_input(),
+                _parent_output_id_input(),
+                io.String.Input(
+                    "text",
+                    default="", multiline=True,
+                    tooltip="Type text here. It becomes this stage's output and is passed "
+                            "to downstream stages in real time as you edit.",
+                ),
+            ],
+            outputs=[COMFYTV_TEXT.Output("text")],
+            is_output_node=True,
+            hidden=[io.Hidden.unique_id],
+        )
+
+    @classmethod
+    def execute(cls, project_id="", parent_output_id=0, text=""):
+        return _stage_emit_auto(cls, project_id=project_id, payload_str=text or "",
+                                parent_output_id=parent_output_id)
+
+
 class ImageLoaderStage(io.ComfyNode):
 
     @classmethod

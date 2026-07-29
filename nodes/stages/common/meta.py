@@ -162,6 +162,7 @@ STAGE_META: dict[str, dict] = {
     'PanoramaCurrentViewStage':     {'kind': 'image',       'variant': 'transform'},
     'PanoramaMultiViewStage':       {'kind': 'image-batch', 'variant': 'transform'},
     'StoryboardStage':              {'kind': 'storyboard',   'workflow_kind': 'storyboard'},
+    'TextLoaderStage':              {'kind': 'text',        'variant': 'loader'},
     'ImageLoaderStage':             {'kind': 'image',       'variant': 'loader'},
     'VideoLoaderStage':             {'kind': 'video',       'variant': 'loader'},
     'AudioLoaderStage':             {'kind': 'audio',       'variant': 'loader'},

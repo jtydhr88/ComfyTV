@@ -794,6 +794,11 @@ const extension: ComfyExtension = {
       return
     }
 
+    if (node.comfyClass === 'ComfyTV.TextLoaderStage') {
+      useStageNode(node, 'text', 'loader')
+      return
+    }
+
     mountStage(node, entry.kind, (entry.variant ?? 'generator') as StageVariant)
 
     const richMin = RICH_STAGE_MIN_HEIGHTS[node.comfyClass]

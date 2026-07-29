@@ -473,6 +473,16 @@ export function useStageNode(
       sync()
       recipeWidget.callback = useChainCallback(recipeWidget.callback, sync)
       if (kindWidget) kindWidget.callback = useChainCallback(kindWidget.callback, sync)
+    } else if (kind === 'text') {
+      const textWidget = node.widgets?.find((w: any) => w.name === 'text')
+      if (textWidget) {
+        const sync = () => {
+          const v = String(textWidget.value ?? '')
+          store.setOutputSlot(state, 0, v ? v : null)
+        }
+        sync()
+        textWidget.callback = useChainCallback(textWidget.callback, sync)
+      }
     } else {
       const widgetName = kind === 'image' ? 'image'
                        : kind === 'video' ? 'video'
