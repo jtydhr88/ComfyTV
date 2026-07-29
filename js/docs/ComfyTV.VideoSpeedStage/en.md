@@ -1,0 +1,56 @@
+# Video Speed
+
+> Speed a clip up or slow it down (with optional reverse), keeping the audio in tune.
+
+## What this node does
+
+**Video Speed** retimes a clip by a **speed** factor and can play it **reverse**. It's a real
+re-encode on the server (PyAV / ffmpeg), so it runs on **▶ Run** and saves the result as a
+project snapshot. Input and output are `COMFYTV_VIDEO`.
+
+If you leave **speed** at 1x and don't enable **reverse**, there's nothing to do and the run
+errors out — change the speed or flip reverse on.
+
+## When to use it
+
+- Slow-motion emphasis on a moment, or a fast-forward montage.
+- Play a clip backwards for a rewind or loop effect.
+- Nudge a clip's duration to fit a music beat or a target length.
+
+## Parameters
+
+### speed
+The playback rate multiplier. Range **0.1–10.0**, default **1.0**, step 0.05. Above 1.0 is
+faster (shorter clip); below 1.0 is slower (longer clip). 2.0 = double speed, 0.5 = half
+speed.
+
+### reverse
+Play the clip backwards. Default **off**. Can be combined with a speed change.
+
+### pitch_compensate
+Default **on**. When on, the audio is time-stretched so voices/music keep their original
+pitch instead of turning chipmunk-high (fast) or low (slow). Turn it off if you want the
+classic tape-style pitch shift that follows the speed.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The retimed (and optionally reversed) clip, saved as a snapshot. |
+
+## Tips
+
+- speed = 1x with reverse off does nothing and raises an error — set one of them.
+- Extreme slow-motion (very small speed) does not synthesize new in-between frames; it
+  stretches existing ones. Use a dedicated interpolation step first if you need smoothness.
+
+## Bridge note
+
+`COMFYTV_VIDEO` is a project snapshot reference, not a native ComfyUI tensor. To move
+between ComfyTV and native ComfyUI nodes, insert a **Bridge** (`ComfyTV/Bridge`). See
+<https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md>.
+
+## Related nodes
+
+- **Video Clip** — trim before or after retiming.
+- **Video Volume** — fine-tune audio level after a speed change.

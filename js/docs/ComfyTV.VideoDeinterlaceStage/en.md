@@ -1,0 +1,39 @@
+# Deinterlace
+
+> Converts interlaced footage to clean progressive frames, removing the comb/tear artifacts.
+
+## What this node does
+
+**Deinterlace** runs one of four ffmpeg deinterlacers on a `COMFYTV_VIDEO` clip to turn interlaced fields into full progressive frames, removing the horizontal "comb" tearing you see on motion in old TV/camcorder footage. It processes on **▶ Run** and writes a new video snapshot.
+
+In and out are both `COMFYTV_VIDEO`. To interoperate with native ComfyUI nodes, insert a **Bridge** — see the [bridge guide](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Clean up old interlaced DV/DVD/broadcast footage before editing or upscaling.
+- Remove comb artifacts on motion that appear when interlaced material is shown progressively.
+- Prepare interlaced sources for frame interpolation or web export.
+
+## Parameters
+
+### method
+Which deinterlacer to use. Options: `bwdif` (Bob Weaver, high quality, default), `yadif` (classic, fast), `estdif` (edge-slope estimation), `w3fdif` (weighted three-field). Default `bwdif`.
+
+### rate
+Output cadence: `frame` (default) produces one progressive frame per input frame; `field` produces one frame per field, which **doubles the output frame rate** (smoother motion). Note `estdif` maps this to its own `frame`/`field` mode, `w3fdif` ignores it.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The deinterlaced progressive clip as a new project snapshot |
+
+## Tips
+
+- `rate = field` (and always `w3fdif`) doubles the frame count/rate — expect a longer render and a higher-fps result.
+- `bwdif` is the best all-round default; `yadif` is faster if you're batch-processing a lot.
+
+## Related nodes
+
+- **Frame Interpolate** — smooth or slow the footage after deinterlacing.
+- **Video Denoise** — old interlaced sources are often grainy; clean up afterward.

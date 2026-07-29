@@ -1,0 +1,44 @@
+# Audio Crossfade
+
+> 让一段素材的尾部与下一段的头部交叉淡变,避免生硬的切点。
+
+## 本节点的作用
+
+**Audio Crossfade(音频交叉淡变)** 把两个音频源(先 A 后 B)以重叠淡变方式衔接:在设定的 **duration** 时长内,A 淡出的同时 B 淡入,得到平滑过渡而非硬切。相当于两个镜头之间的叠化,但用于音频。
+
+每一侧都接受 `COMFYTV_AUDIO` 快照,或使用其音轨的 `COMFYTV_VIDEO`(两者都接时以 audio 输入优先)。输出单个 `COMFYTV_AUDIO` 快照,并带有 ▶ **Run**(由 FFmpeg 完成混合)。
+
+若要与原生 ComfyUI 的 `AUDIO` 互通,请插入 **Bridge** — 见 [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 何时使用
+
+- 把两条录音或两首歌拼接起来而不留突兀接缝。
+- 让背景音乐以 DJ 风格淡入下一段落。
+- 平滑两段对白录音之间的剪辑点。
+
+## 参数
+
+### duration
+淡变时长,单位秒。范围 **0.01 到 60**,默认 **1.0**。越长过渡越渐进。
+
+### curve1 / curve2
+A 的淡出曲线(`curve1`)与 B 的淡入曲线(`curve2`)。默认 **`tri`**(线性三角)。可选项为 FFmpeg `afade` 曲线:`tri`、`qsin`、`hsin`、`esin`、`log`、`ipar`、`qua`、`cub`、`squ`、`cbr`、`par`、`exp`、`iqsin`、`ihsin`、`dese`、`desi`、`losi`、`sinc`、`isinc`、`nofade`。`qsin`/`hsin` 在音乐上更自然;`tri` 是稳妥的默认。
+
+### overlap
+**开启**(默认)时,两段在淡变期间重叠(真正的交叉淡变),总长约为 A + B − duration。**关闭**时,A 淡出与 B 淡入首尾相接,不重叠。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **audio** | `COMFYTV_AUDIO` | 经交叉淡变衔接后的两段音频 |
+
+## 提示
+
+- **duration** 要短于任一段素材 — 重叠时长不能超过实际存在的音频。
+- 对音乐可试试两条曲线都用 `qsin` 或 `hsin`;线性 `tri` 在中点处可能出现响度下陷。
+
+## 相关节点
+
+- **Audio Mix** — 一次叠加最多四条轨,带增益与声像,而非顺序衔接两段。
+- **Audio Split Export** — 相反操作:把一条轨切成多个片段。

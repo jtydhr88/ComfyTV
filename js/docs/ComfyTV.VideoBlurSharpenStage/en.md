@@ -1,0 +1,45 @@
+# Blur / Sharpen
+
+> Softens or sharpens footage with a choice of blur kernels or an unsharp mask, in one ▶ Run.
+
+## What this node does
+
+**Blur / Sharpen** applies one of four spatial filters to a whole `COMFYTV_VIDEO` clip: a Gaussian blur, a fast box blur, an edge-preserving bilateral blur, or an unsharp-mask sharpen. It runs through ffmpeg on **▶ Run** and writes a new video snapshot; the input clip is unchanged.
+
+In and out are both `COMFYTV_VIDEO`. To feed native ComfyUI nodes, insert a **Bridge** — see the [bridge guide](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Knock down noise or diffuse a background with a soft Gaussian or box blur.
+- Blur while keeping edges crisp (skin, product outlines) with the bilateral mode.
+- Add bite back to slightly soft footage with the sharpen mode before export.
+
+## Parameters
+
+### mode
+Which filter to run. Options: `gaussian` (smooth blur), `box` (fast average blur), `bilateral` (edge-preserving blur), `sharpen` (unsharp mask). Default `gaussian`.
+
+### amount
+The main strength dial, `0.0`–`20.0`, default `2.0`. Its meaning depends on **mode**: it is the Gaussian sigma, the box kernel size, the bilateral spatial sigma, or (for sharpen, clamped internally to 0–5) the unsharp amount. For `gaussian` and `sharpen` it must be above 0. Start around `2.0` and adjust to taste.
+
+### size
+Odd kernel size, `3`–`13`, default `5`. Only used by the **sharpen** mode (the unsharp luma matrix); larger sizes sharpen coarser detail. Even values are nudged to the next odd number.
+
+### edge_preserve
+Bilateral color sigma (`sigmaR`), `0.01`–`1.0`, default `0.1`. Only used by the **bilateral** mode. Lower values keep edges harder (less color bleed across contrast); higher values blur more freely.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The filtered clip as a new project snapshot |
+
+## Tips
+
+- **size** and **edge_preserve** only do something in their respective modes (`sharpen`, `bilateral`); changing them in other modes has no effect.
+- `box` reads **amount** as a pixel kernel size, so it climbs in strength differently from `gaussian`.
+
+## Related nodes
+
+- **Video Denoise** — remove grain/noise rather than softening detail.
+- **Video Stabilize / Stabilize Pro** — steady the camera before or after filtering.

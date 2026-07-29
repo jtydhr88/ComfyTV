@@ -1,0 +1,61 @@
+# 镜头畸变 (Lens Distort)
+
+> 用真实的相机镜头模型添加或去除桶形/枕形畸变——与 Nuke、3DEqualizer 等 VFX 工具所用的数学一致。
+
+## 这个节点做什么
+
+本节点按所选的镜头畸变模型对 `COMFYTV_VIDEO` 素材进行扭曲，可以**去畸变** (undistort)（把广角/鱼眼镜头拍出的弯曲线条拉直），也可以**加畸变** (distort)（加上弯曲以匹配底板）。它在 Torch 后端作为 fx-spec 处理。若模型为默认的 `nuke_k1k2` 且所有系数都处于中性值（无 k1/k2、无 squeeze、无缩放、无重定中心），则原样透传。
+
+它带有 ▶ Run。输入与输出都是 `COMFYTV_VIDEO`。要把结果交给原生 ComfyUI 节点，请插入 **Bridge**——见[桥接说明](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 何时使用
+
+- 去除 GoPro/广角素材的桶形畸变，让线条变直。
+- 把某底板的精确镜头畸变重新施加到 CG 或干净合成上，使二者匹配。
+- 匹配来自解算器的特定镜头配置（3DEqualizer / PanoTools 类模型）。
+
+## 参数
+
+### model
+畸变数学模型。选项：`nuke_k1k2`、`pf_barrel`、`3de_classic`、`3de_radial`、`panotools`、`fisheye_equidistant`、`fisheye_orthographic`、`fisheye_equisolid`、`fisheye_stereographic`。默认 `nuke_k1k2`（Nuke 经典径向 k1/k2 模型）。请选与你的畸变测量方式相匹配的模型；`fisheye_*` 系列基于投影而非多项式。
+
+### direction
+`undistort`（拉直——去除镜头弯曲）或 `distort`（添加弯曲）。默认 `undistort`。
+
+### k1 / k2
+径向畸变系数，各自范围 -1.0 到 1.0（默认 0，步长 0.005）。k1 是主桶形/枕形项；k2 是高阶修正。正负值在桶形与枕形之间切换（取决于模型）。这是多项式模型的主要旋钮。
+
+### fov
+视场角，单位为度，范围 20 到 180（默认 140）。鱼眼投影模型用它得知镜头的覆盖范围。
+
+### center_x / center_y
+光心偏移，各自范围 -0.5 到 0.5（默认 0），以画面比例表示。若镜头真实中心不在图像正中，就偏移这两个值。
+
+### squeeze
+变形镜头压缩系数，范围 0.5 到 2.0（默认 1.0）。用于处理在某一轴拉伸的变形 (anamorphic) 镜头。
+
+### lens_scale
+扭曲后图像的整体缩放，范围 0.25 到 4.0（默认 1.0）。放大或缩小结果，控制去畸变后有效图像充满画面的程度。
+
+### cx_curv / cy_curv / tang_u / tang_v / pt_c
+用于 3DE 和 PanoTools 模型的高级逐模型项。`cx_curv` / `cy_curv` 是非对称曲率项（-0.5 到 0.5）；`tang_u` / `tang_v` 是切向（偏心）项（-0.5 到 0.5）；`pt_c` 是 PanoTools 三次项（-1.0 到 1.0）。默认均为 0。除非你的解算器给出了这些值，否则保持 0。
+
+### edge
+如何填充从画面之外拉进来的区域：`blank`（黑）、`clamp`（拉伸边缘像素）、`mirror`（镜像反射）。默认 `clamp`。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | 扭曲后的素材 |
+
+## 提示
+
+- 让 `model` 与你的系数来源匹配——把 Nuke 的 k1/k2 值用在 3DE 模型里（或反之）不会对齐。
+- `undistort` 之后，用 `lens_scale` 在保留全部像素（缩小、黑角）与充满画面（放大、裁切）之间权衡。
+- 若想让加畸变/去畸变往返保持精确对齐，改用 **STMap Generate** 把同一模型烘焙成 STMap。
+
+## 相关节点
+
+- **STMap Generate** — 把这个精确的畸变模型烘焙成可复用的 STMap 图像。
+- **360 Projection** — 用于球面/等距柱状重投影而非镜头畸变。

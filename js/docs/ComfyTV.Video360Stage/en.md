@@ -1,0 +1,49 @@
+# 360 Projection
+
+> Reproject 360°/equirectangular footage — turn a full panorama into a flat "little planet" view, unwrap a fisheye, or re-aim the virtual camera.
+
+## What this node does
+
+This node runs FFmpeg's `v360` filter to convert between spherical/panoramic projection formats. Feed it a `COMFYTV_VIDEO` clip in one projection (say equirectangular 360 footage from a 360 camera) and it outputs the same footage remapped into another projection, optionally rotated by yaw/pitch/roll so you can pick which part of the sphere the "camera" looks at.
+
+It has a ▶ Run (FFmpeg does the reprojection). If input and output projections match and there is no rotation or FOV change, it passes the clip through untouched. Input and output are both `COMFYTV_VIDEO`. To hand the result to native ComfyUI nodes, insert a **Bridge** — see the [bridge note](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Extract a normal flat shot out of a 360 recording, aimed wherever you want with yaw/pitch/roll.
+- Make a "tiny planet" / stereographic look from equirectangular footage.
+- Convert between delivery formats (equirect ↔ cubemap-style EAC, fisheye, etc.).
+
+## Parameters
+
+### proj_in
+The projection your source footage is already in. Options: `equirect`, `flat`, `fisheye`, `dfisheye`, `sg`, `eac`, `ball`, `hammer`, `cylindrical`, `pannini`, `barrel`. Default `equirect` (standard 360 monoscopic panorama).
+
+### proj_out
+The projection to convert to. Same option list as above. Default `flat` (a normal rectilinear shot). `sg` (stereographic) gives the little-planet look.
+
+### v360_yaw / v360_pitch / v360_roll
+Rotate the virtual camera on the sphere before reprojecting, in degrees, each from -180 to 180 (default 0). Yaw pans left/right, pitch tilts up/down, roll rotates the horizon. Use these to aim a flat output at a specific part of a 360 scene.
+
+### v360_fov
+Output horizontal field of view in degrees, 0 to 360 (default 0 = filter's default FOV for the chosen output). When non-zero, the vertical FOV is derived at a 16:9 ratio automatically.
+
+### v360_interp
+Resampling quality when remapping pixels: `linear`, `cubic`, `lanczos`, `nearest`. Default `cubic` — a good speed/quality balance. Use `lanczos` for the sharpest result, `nearest` only for masks/hard edges.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The reprojected clip |
+
+## Tips
+
+- For the classic tiny-planet effect: `proj_in = equirect`, `proj_out = sg`.
+- `flat` output is your friend for pulling a usable shot out of 360 footage; aim it with yaw/pitch.
+- Bump `v360_interp` to `lanczos` if reprojected edges look soft; drop to `nearest` if you must preserve a hard mask.
+
+## Related nodes
+
+- **360 Stabilize** — smooth out camera shake in 360 footage before or after reprojecting.
+- **Lens Distort** — for ordinary (non-360) lens undistort/distort work.

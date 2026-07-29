@@ -1,0 +1,50 @@
+# Contact Sheet
+
+> Lay out evenly-sampled frames from a video into a single grid image — a review "宫格" / contact sheet for scanning a clip at a glance.
+
+## What this node does
+
+**Contact Sheet** samples frames across a `COMFYTV_VIDEO` and tiles them into one grid `COMFYTV_IMAGE`. You choose the grid size and output width and whether to stamp timecodes, then press **▶ Run** (an ffmpeg pass on the server). The result is a single image you can review, save, or export.
+
+The number of tiles is `cols × rows`, sampled evenly across the clip's duration.
+
+## When to use it
+
+- Get a one-image overview of a whole clip for review or approval.
+- Build a quick storyboard-style sheet from footage.
+- Compare framing/lighting across a scene at a glance.
+
+## Parameters
+
+### cols
+Number of columns in the grid, 1–12, default 4.
+
+### rows
+Number of rows in the grid, 1–12, default 4. With the default, that's 16 frames sampled evenly.
+
+### sheet_width
+Output image width in pixels, 320–8192, default 1920. Tile size follows from this and the column count.
+
+### timecode
+Boolean, default on. When on, each tile is stamped with its source timecode.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **image** | `COMFYTV_IMAGE` | The assembled contact-sheet grid |
+
+## Tips
+
+- More tiles (higher cols × rows) means finer coverage but smaller thumbnails — raise `sheet_width` to keep them readable.
+- Keep `timecode` on for review sheets so you can jump back to the exact moment in the source clip.
+- This samples evenly across the full duration; for one frame per *shot* instead, use **Scene Detect** and then a sheet of those.
+
+## Types and bridges
+
+`COMFYTV_VIDEO` / `COMFYTV_IMAGE` are ComfyTV project snapshots, not native ComfyUI types. Use a **Bridge** (`ComfyTV/Bridge`) to interoperate with native nodes. See [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## Related nodes
+
+- **Scene Detect** — one thumbnail per detected shot instead of even sampling.
+- **Video Scopes** — measurement scopes for a single frame.

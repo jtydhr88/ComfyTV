@@ -1,0 +1,49 @@
+# Lens Flare
+
+> Drop a procedural lens flare — glow, streaks, and ghost blobs — anywhere in frame, aimed at a bright light source.
+
+## What this node does
+
+This node composites a synthetic lens flare over a `COMFYTV_VIDEO` clip: a central glow at a chosen position, optional horizontal anamorphic streak, and a chain of "ghost" reflections marching across the frame. It runs on a Torch backend as an fx-spec pass and passes the clip through untouched when `intensity` is 0.
+
+It has a ▶ Run. Input and output are both `COMFYTV_VIDEO`. To hand the result to native ComfyUI nodes, insert a **Bridge** — see the [bridge note](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Add a flare pointing back at the sun/practical light for a cinematic or sci-fi feel.
+- Sell a hero shot or lens-driven transition.
+- Fake a light source reaction the original footage lacked.
+
+## Parameters
+
+### pos_x / pos_y
+Where the flare's bright source sits, each 0.0 to 1.0 across the frame (default `pos_x` 0.75, `pos_y` 0.25 — upper-right). The ghost chain runs from this point through the frame center.
+
+### intensity
+Overall brightness of the flare, 0.0 to 3.0 (default 0.8). 0 disables the effect entirely.
+
+### size
+Size of the central glow, 0.05 to 1.0 (default 0.25) as a fraction of the frame.
+
+### streak
+Strength of the horizontal anamorphic streak through the flare center, 0.0 to 1.0 (default 0.5). Turn to 0 for a round flare with no streak.
+
+### ghosts
+Number of secondary ghost reflections along the flare axis, integer 0 to 8 (default 5). More ghosts = a busier lens-reflection chain; 0 gives just the glow and streak.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The clip with the flare composited on top |
+
+## Tips
+
+- Place `pos_x/pos_y` right on the brightest light in the shot so the flare reads as motivated.
+- Lower `streak` and `ghosts` for a subtle glow; raise both for a stylized, obvious flare.
+- Keep `intensity` moderate over bright backgrounds so the flare doesn't blow out the whole frame.
+
+## Related nodes
+
+- **Chromatic Aberration** — pairs well for a full lens-character pass.
+- **Lens Distort** — the geometric lens counterpart.

@@ -1,0 +1,52 @@
+# Despill
+
+> Strip the green or blue screen color that bleeds onto your subject, without touching the key itself.
+
+## What this node does
+
+Despill removes the leftover screen tint (green or blue spill) that reflects onto hair, skin, and edges after — or independent of — a chroma key. It rebalances the offending channel using neighboring channels and can optionally output the spill map it computed instead of the corrected image, so you can see exactly what it's fixing.
+
+Input and output are `COMFYTV_VIDEO`. This node runs as a live fx-preview filter (it emits an fx spec and passes through), so you can see the result without a full render.
+
+## When to use it
+
+- Your subject looks green/blue around the edges after keying.
+- You want to clean spill before keying so the key itself is easier.
+- You need to inspect where spill lives, using the spill-map output.
+
+## Parameters
+
+### screen
+The spill color to remove: `green` (default) or `blue`.
+
+### spill_mix
+How strongly to apply the correction. Range `0.0`–`1.0`, default `0.5`. Turn up if fringe remains; down if the subject turns gray.
+
+### expand
+Grows the affected region outward so spill beyond the immediate edge is caught. Range `0.0`–`1.0`, default `0.0`.
+
+### red_scale / green_scale / blue_scale
+Per-channel scaling used when rebuilding the suppressed color. Each ranges `-2.0`–`2.0`. Defaults: `red_scale` `0.0`, `green_scale` `-1.0`, `blue_scale` `0.0`. These bias how the screen channel is replaced from the others; the defaults suit green spill.
+
+### brightness
+Adjusts brightness of the corrected pixels to compensate for the removed color. Range `-1.0`–`1.0`, default `0.0`.
+
+### output_spillmap
+When on, outputs the computed spill map (a visualization of where and how much spill was found) instead of the despilled image. Default off. Use it to tune the other controls, then turn it off.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The despilled clip, or the spill map when `output_spillmap` is on. |
+
+## Tips
+
+- Despill doesn't create transparency — it only fixes color. Pair it with a keyer for the actual matte.
+- Turn on `output_spillmap` while dialing `spill_mix`/`expand`, then turn it off to render clean.
+- To interoperate with native ComfyUI nodes, insert a **Bridge**. See [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## Related nodes
+
+- **Chroma Key** / **Keyer** / **PIK Keyer** — keyers that produce the matte Despill complements.
+- **Color Suppress** — suppress any of six primary/secondary colors, not just screen spill.

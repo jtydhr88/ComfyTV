@@ -1,0 +1,70 @@
+# Audio Repair
+
+> Fix specific audio defects — clicks and pops, clipped/distorted peaks, denormals, and mains-frequency hum — with targeted restoration filters.
+
+## What this node does
+
+**Audio Repair** applies one restoration processor to an audio track, chosen by **method**:
+
+- **declick** — removes impulsive clicks and pops (FFmpeg `adeclick`), e.g. vinyl crackle or edit ticks.
+- **declip** — reconstructs clipped/flat-topped peaks from distorted, over-loud recordings (FFmpeg `adeclip`).
+- **denorm** — remedies denormal-number issues (FFmpeg `adenorm`) that can cause CPU spikes or subtle artifacts in very quiet passages.
+- **wavelet** — wavelet-domain denoiser (FFmpeg `afwtdn`) for broadband noise, with fine control over strength and detail.
+- **hum** — removes mains hum by notching out a fundamental frequency and its harmonics (a stack of FFmpeg `bandreject` filters).
+
+It takes a `COMFYTV_AUDIO` snapshot (or a `COMFYTV_VIDEO`, whose audio track is used) and outputs processed `COMFYTV_AUDIO` plus an `fx_spec`. It has a ▶ **Run** (FFmpeg does the work). If no source is wired, it emits just the `fx_spec` for chaining.
+
+To feed native ComfyUI `AUDIO` in or out, insert a **Bridge** — see [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Clean crackle and pops off a digitized vinyl or old tape (**declick**).
+- Rescue a recording that was tracked too hot and is clipping (**declip**).
+- Notch out a 50 Hz or 60 Hz electrical buzz and its harmonics (**hum**).
+- Apply a controlled, high-quality denoise pass when broadband methods sound too soft (**wavelet**).
+
+## Parameters
+
+### method
+Which processor to run: `declick` (default), `declip`, `denorm`, `wavelet`, or `hum`. The parameters below are grouped by the method they belong to.
+
+### declick parameters (`dk_*`)
+- **dk_window** — detection window size. Range **10–100**, default **55**.
+- **dk_threshold** — click-detection sensitivity. Range **1–100**, default **2**. Lower catches more (and risks false positives).
+- **dk_burst** — how aggressively bursts of clicks are treated. Range **0–10**, default **2**.
+
+### declip parameters (`dc_*`)
+- **dc_threshold** — clip-detection threshold. Range **1–100**, default **10**.
+- **dc_hsize** — reconstruction window (history size). Range **100–9999**, default **1000**.
+
+### denorm parameter (`dn_*`)
+- **dn_level** — denormal treatment level in dB. Range **-451 to -90**, default **-351**.
+
+### wavelet parameters (`wt_*`)
+- **wt_sigma** — noise strength. Range **0–1**, default **0**. **Must be greater than 0** — the node raises an error if you leave it at 0 in wavelet mode.
+- **wt_percent** — how much of the detected noise to remove, as a percentage. Range **0–100**, default **85**.
+- **wt_levels** — number of wavelet decomposition levels. Range **1–12**, default **10**.
+
+### hum parameters (`hum_*`)
+- **hum_freq** — fundamental hum frequency in Hz (e.g. 50 or 60 for mains). Range **10–2000**, default **50**.
+- **hum_harmonics** — how many harmonics of the fundamental to notch out. Range **1–16**, default **8**. Harmonics that would exceed the Nyquist limit are skipped.
+- **hum_q** — notch width (Q) for the reject filters. Range **1–100**, default **8**. The Q widens progressively for higher harmonics.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **audio** | `COMFYTV_AUDIO` | The repaired audio snapshot |
+| **fx_spec** | `COMFYTV_FXSPEC` | The step as a spec, for chaining into an FX Chain |
+
+## Tips
+
+- **Wavelet needs `wt_sigma` > 0**, otherwise the node errors — it won't silently do nothing.
+- Match **hum_freq** to your local mains: **50** Hz in most of the world, **60** Hz in North America and parts of Asia.
+- `declip` reconstructs waveform; it can't recover detail that was truly lost to hard clipping, but it removes the harsh buzz.
+
+## Related nodes
+
+- **Audio Denoise** — broadband hiss/hum reduction and silence trimming (`afftdn` / `anlmdn` / `silenceremove`).
+- **Audio EQ** — a peak cut is an alternative way to attack a single resonant frequency.
+- **FX Chain** — renders multiple `fx_spec` steps (including this one) in a single pass.

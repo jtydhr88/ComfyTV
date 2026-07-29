@@ -1,0 +1,71 @@
+# 图案 (Pattern)
+
+> 程序化片段生成器——渐变、噪声、彩条、测试色轮、倒计时等，一次 ▶ Run 完成。
+
+## 这个节点做什么
+
+**图案 (Pattern)** 从零合成一段 `COMFYTV_VIDEO`（无需输入片段）——你选择一种 **kind** 及分辨率／帧率／时长，它便在 **▶ Run** 时渲染出程序化片段。每种 kind 只使用下面参数中属于自己的那一部分。
+
+输出是 `COMFYTV_VIDEO`。若要对接原生 ComfyUI 节点，请插入 **Bridge**——见[桥接指南](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 何时使用
+
+- 生成背景、遮罩或转场填充（渐变、径向、噪声、等离子）。
+- 制作广播测试图——`colorbars`、`colorwheel`。
+- 在片段前插入倒计时／正计时片头。
+- 产生运动噪声/湍流源以驱动其他效果。
+
+## 参数
+
+### kind
+要生成的图案。选项：`ramp`、`radial`、`rectangle`、`noise`、`perlin`、`turbulence`、`cellular`、`plasma`、`checkerboard`、`colorbars`、`colorwheel`、`count`。默认 `ramp`。
+
+### width / height / fps / duration
+输出尺寸（`16`–`4096`，默认 `1280` × `720`）、帧率（`1`–`120`，默认 `24`）、时长秒数（`0.5`–`120.0` 步长 `0.5`，默认 `5.0`）。
+
+### color0 / color1
+双色图案（ramp/radial/rectangle/checkerboard）所用的两种颜色。十六进制字符串，默认 `#000000`（color0）与 `#FFFFFF`（color1）。
+
+### p0_x / p0_y 与 p1_x / p1_y
+**ramp** 渐变的起点与终点，归一化 `0.0`–`1.0`。默认将其置为从左到右的水平渐变（`p0` = `0.0, 0.5`，`p1` = `1.0, 0.5`）。移动它们可倾斜或重新定位渐变。
+
+### interp
+渐变缓动。选项：`linear`、`smooth`、`ease_in`、`ease_out`。默认 `linear`。
+
+### softness
+形状图案（radial/rectangle）的边缘柔和度，`0.0`–`1.0`，默认 `0.0`。越高形状边缘越羽化。
+
+### noise_scale / noise_octaves / noise_speed
+噪声族 kind（`noise`、`perlin`、`turbulence`、`cellular`、`plasma`）的控制。**noise_scale** 特征尺寸 `4`–`512`（默认 `64`），**noise_octaves** 细节层数 `1`–`8`（默认 `4`），**noise_speed** 动画速率 `0.0`–`10.0`（默认 `1.0`）。
+
+### seed
+噪声族图案的随机种子，`0`–`99999`，默认 `7`。
+
+### box_size
+`rectangle` 与 `checkerboard` 的格子/方块尺寸（像素），`2`–`1024`，默认 `64`。
+
+### bar_intensity
+`colorbars` 图案的亮度，`1.0`–`100.0`（步长 `1`），默认 `75.0`（标准 75% 彩条）。
+
+### wheel_gamma / wheel_rotate
+用于 `colorwheel`：**wheel_gamma** `0.0`–`4.0`（默认 `0.45`）塑造亮度衰减；**wheel_rotate** `-180`–`180°`（步长 `1`，默认 `0`）旋转色相轮。
+
+### count_style / count_direction
+用于 `count` 片头：**count_style** 显示 `seconds` 或 `frames`（默认 `seconds`）；**count_direction** 为 `down`（倒数）或 `up`（正数）（默认 `down`）。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | 生成的图案片段 |
+
+## 提示
+
+- 多数参数只对自己的图案族有效——例如 `wheel_gamma`/`wheel_rotate` 在 `colorwheel` 之外无效，`box_size` 仅影响 `rectangle`/`checkerboard`。
+- 设一个较长的 **duration** 并动画化 `noise_speed` 即可得到运动纹理；静态 kind（如 `colorbars`）忽略时间。
+- 制作倒计时片头：选 `kind = count`、`count_direction = down`，并把 **duration** 设为计数长度。
+
+## 相关节点
+
+- **肯·伯恩斯 (Ken Burns)** — 把静态图像动画为视频，而非生成图案。
+- **波形扭曲 (Wave Warp) / 反馈特效 (Feedback FX)** — 把生成的图案喂给它们以获得演变的视觉。

@@ -1,0 +1,56 @@
+# Mesh Boolean
+
+> Combine two meshes with CSG — union to merge, difference to cut one out of the other, intersect to keep only the overlap — positioned with an on-card gizmo.
+
+## What this node does
+
+Mesh Boolean takes two `COMFYTV_MODEL` inputs (`model` = A, `model_b` = B) and combines them on a signed-distance voxel grid, returning one new model. Choose the `operation` and position B (and A) with the gizmo in the node body; the transforms are stored internally and applied before the cut.
+
+Because it works on an SDF grid, the result is watertight but its face count depends on `resolution` — a higher grid gives a sharper cut with more faces. It runs the vendored mesh3d backend (▶ Run). Both inputs are required: the stage errors if `model` or `model_b` is empty. The card's 3D preview snapshot becomes the `image` output.
+
+Outputs are ComfyTV snapshots, not native tensors — insert a **Bridge** to feed native ComfyUI nodes ([bridges docs](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)).
+
+## When to use it
+
+- Drill holes or cut slots — subtract a cylinder or cube (B) from a body (A) with `difference`.
+- Weld two overlapping shapes into one solid with `union`.
+- Keep only the shared volume of two shapes with `intersect` (e.g. carve a shape to a mold).
+
+## Parameters
+
+### operation
+The CSG operation: `union` (merge both), `difference` (remove B's volume from A), `intersect` (keep only the overlap). Default `union`.
+
+### resolution
+SDF voxel grid resolution. Default `256`, range `32`–`1024`. Higher = sharper cut and more faces; follow with a **decimate** in **Mesh Ops** if you need an exact face count.
+
+### smooth_iters
+Taubin smoothing iterations applied to the result. Default `0`, range `0`–`20`. A few passes soften the stair-stepping that a low `resolution` can leave along the cut.
+
+### model (A) / model_b (B)
+The two `COMFYTV_MODEL` inputs. `model` is A, `model_b` is B. For `difference`, B's volume is removed from A. Both are required at run time.
+
+### transform_a / transform_b
+Internal (hidden). The position / rotation / scale (TRS) of each model, set by the gizmo in the node body. You place the meshes visually; you never edit this JSON by hand.
+
+### captured_image
+Internal (hidden). The 3D preview snapshot URL that becomes the `image` output.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **model** | `COMFYTV_MODEL` | The combined mesh (GLB) |
+| **image** | `COMFYTV_IMAGE` | Snapshot of the 3D preview |
+
+## Tips
+
+- Order matters for `difference`: A is the body, B is the tool removed from it. Swap the wires if the cut is inverted.
+- The output can carry more faces than you want; chain a **Mesh Ops** decimate to bring it to a budget.
+- If a thin cut looks jagged, raise `resolution` or add a couple of `smooth_iters` rather than both at once.
+
+## Related nodes
+
+- **Mesh Primitive** — make the cutting tool (cylinder for a hole, cube for a slot).
+- **Mesh Ops** — decimate / remesh / weld the boolean result.
+- **Mesh Bake Maps** — bake detail after cleanup and unwrap.

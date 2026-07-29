@@ -1,0 +1,90 @@
+# Material
+
+> A PBR material-ball editor in a node: spin a live WebGL sphere, dial in physically-based surface properties (metal, glass, plastic, ceramic…), and emit both a reusable material and a snapshot preview image.
+
+## What this node does
+
+**Material** is a small material-authoring studio. You edit a live physically-based (PBR) material on a rotating preview sphere — pick a base color, drag sliders for metalness, roughness, transmission and more, or start from a preset like *Polished metal* or *Clear glass*. The sphere re-renders instantly as you tweak, and a snapshot of it is auto-captured as an image output.
+
+Everything happens browser-side and updates live; there is no ▶ Run needed just to author a material. The exception is the **image** input: if you connect a reference image, running the node sends it to a VLM (vision) workflow that *estimates* PBR parameters from the photo and merges them into your material — a quick way to match a real surface.
+
+The node produces two outputs: a `COMFYTV_MATERIAL` you can bind to model parts elsewhere, and a `COMFYTV_IMAGE` snapshot of the ball for previews and thumbnails.
+
+## When to use it
+
+- Author a reusable PBR material (chrome, frosted glass, matte rubber, glazed ceramic) to bind onto an imported model's parts.
+- Quickly estimate a material from a reference photo via a VLM workflow, then hand-tune it.
+- Build a small library of look presets to keep surfaces consistent across a project.
+- Produce a clean material-ball thumbnail for documentation or comparison.
+
+## The editor
+
+The node is a stacked panel, top to bottom:
+
+**Preview sphere.** A live WebGL material ball fills the top of the node. It re-renders on every change; shortly after you stop editing, a snapshot is captured and uploaded as the `image` output automatically (no button to press).
+
+**Preset row.** A row of one-click chips that load a full look. The built-in presets are:
+- **Glossy plastic** — low roughness with a clearcoat.
+- **Matte plastic** — high roughness, no coat.
+- **Polished metal** — full metalness, near-mirror roughness.
+- **Brushed metal** — full metalness, medium roughness.
+- **Clear glass** — very low roughness, full transmission.
+- **Frosted glass** — mid roughness, full transmission.
+- **Rubber** — very high roughness.
+- **Ceramic** — glazed clearcoat over a smooth base.
+
+Clicking a preset overwrites the numeric sliders (metalness, roughness, transmission, opacity, clearcoat, IOR, etc.) but leaves your chosen **color** alone.
+
+**Color.** A color swatch plus a hex text field set the base albedo of the material.
+
+**Sliders.** Six live sliders, each with a numeric readout:
+- **metalness** — 0–1. How metallic the surface reads (0 = dielectric/plastic, 1 = metal).
+- **roughness** — 0–1. Microsurface roughness; low is mirror-sharp, high is diffuse.
+- **transmission** — 0–1. See-through refraction; raise it for glass and liquids.
+- **opacity** — 0–1. Overall alpha of the surface.
+- **clearcoat** — 0–1. A glossy lacquer layer on top (car paint, ceramic glaze).
+- **ior** — 1–2.333. Index of refraction, driving how strongly transmission bends light (≈1.5 for glass).
+
+The material model also carries `clearcoatRoughness`, `emissive` color and `emissiveIntensity`; these are part of the stored material and are set by presets and the VLM estimate, though the panel's direct controls are the color plus the six sliders above.
+
+## Workflow / step by step
+
+1. Add a **Project** node, then **Add Node → ComfyTV → Input → Material**.
+2. Click a preset chip (e.g. **Polished metal**) to get in the ballpark.
+3. Set the **color** swatch to your base tint.
+4. Fine-tune with the **roughness**, **metalness**, **clearcoat** and other sliders while watching the sphere.
+5. The snapshot uploads on its own — the **image** output updates a moment after you stop dragging.
+6. Wire **material** into a model/part-binding node to apply the look; use **image** as a thumbnail.
+
+**Estimate from a photo:** connect a reference to the **image** input, pick a **workflow** (the material-estimate VLM), and Run. The model reads PBR values off the photo and merges them into the current material; keep tuning from there.
+
+## Inputs and outputs
+
+| Input | Type | Meaning |
+|---|---|---|
+| **workflow** | Combo | The VLM workflow used to estimate PBR parameters when an **image** is connected (options come from the `material-estimate` workflow set). |
+| **image** | `COMFYTV_IMAGE` (optional) | A reference photo; on Run its estimated PBR values are merged into the material. |
+
+The live material and the captured snapshot are stored internally and driven by the editor, not by exposed widgets.
+
+| Output | Type | Meaning |
+|---|---|---|
+| **material** | `COMFYTV_MATERIAL` | The authored PBR material (color + all PBR params) to bind onto model parts. |
+| **image** | `COMFYTV_IMAGE` | Auto-captured snapshot of the preview sphere. |
+
+`COMFYTV_*` outputs are project references, not native ComfyUI tensors. To use the snapshot with native nodes, add a **Bridge** — see the [bridges guide](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## Tips
+
+- You don't need to Run just to author a material — sliders and the snapshot update live. Run is only for the **image**-input VLM estimate.
+- Presets overwrite the sliders but **preserve your color**, so pick a preset first, then set the color.
+- For believable glass, pair high **transmission** with low **roughness** and an **ior** near 1.5; frosted glass is the same but with mid roughness.
+- **clearcoat** sits on top of the base — great for car paint and ceramic glaze without changing the underlying metalness/roughness.
+- The snapshot is captured a short moment after your last edit, so let the sphere settle before wiring the **image** downstream.
+
+## Related nodes
+
+- **Model Loader / part-material binding** — apply the `COMFYTV_MATERIAL` onto a model's parts.
+- **3D Scene** — stage and shoot the model the material is applied to.
+- **Image Stage** — a reference photo source for the VLM estimate.
+- **Bridge → / ← ComfyTV Image** — convert the snapshot to/from native ComfyUI tensors.

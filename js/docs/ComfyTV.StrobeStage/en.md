@@ -1,0 +1,43 @@
+# Strobe
+
+> Replaces frames on a regular interval with black, white, or a held frame for a strobing pulse, in one ▶ Run.
+
+## What this node does
+
+**Strobe** punches a repeating pattern into a `COMFYTV_VIDEO`: every Nth frame is swapped for solid black, solid white, or a held copy of a frame, giving a flicker/strobe rhythm. It writes a new snapshot on **▶ Run**.
+
+In and out are both `COMFYTV_VIDEO`. To feed native ComfyUI nodes, insert a **Bridge** — see the [bridge guide](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Add a rhythmic flicker synced to a beat or an edit accent.
+- Create a stuttering hold effect (freeze every few frames).
+- Build a hard black/white strobe for a club or horror moment.
+
+## Parameters
+
+### interval
+Frames between strobe hits, `1`–`120`, default `3`. Smaller = faster, more frequent strobing; `1` affects every frame.
+
+### strobe_mode
+What the struck frames become. Options: `black` (solid black), `hold` (freeze/hold a frame), `white` (solid white). Default `black`.
+
+### invert
+Flips which frames are struck versus passed through (inverts the on/off phase of the pattern). Default off.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The strobed clip as a new project snapshot |
+
+## Tips
+
+- Match **interval** to your frame rate and beat to lock the flicker to music.
+- Use **invert** to swap which frames flash without changing **interval**.
+- `hold` gives a stutter-freeze feel, while `black`/`white` give a hard flash.
+
+## Related nodes
+
+- **Glitch FX** — random digital corruption instead of a regular pulse.
+- **Feedback FX** — trailing/echo motion for a different temporal effect.

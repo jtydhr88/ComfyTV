@@ -1,0 +1,53 @@
+# Video Split
+
+> Cut one clip into two pieces at a single point in time.
+
+## What this node does
+
+**Video Split** splits a clip into a **before** part and an **after** part at the timestamp
+**split_s**. It's a real re-encode on the server (PyAV / ffmpeg): on **▶ Run** it trims the
+clip twice (0 → split, and split → end) and saves both as project snapshots. Input is
+`COMFYTV_VIDEO`; it has two `COMFYTV_VIDEO` outputs.
+
+The split point must fall inside the clip — roughly between 0.05s and (duration − 0.05s) —
+or the run errors out.
+
+## When to use it
+
+- Break a long take into two shots so you can treat each one separately (retime, color, etc.).
+- Isolate a section, then feed one half into Video Concat with other material.
+- Drop a mid-clip transition point.
+
+## Parameters
+
+### split_s
+The cut point, in seconds. Range **0–3600**, step 0.01, default **0.0**. Must land strictly
+inside the clip; a value at or beyond the ends is rejected. Everything before this time goes
+to **video_a**, everything from it to the end goes to **video_b**.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video_a** | `COMFYTV_VIDEO` | The part before the split point (0 → split_s). |
+| **video_b** | `COMFYTV_VIDEO` | The part from the split point to the end (split_s → duration). |
+
+Both parts are persisted as snapshots; **video_b** is emitted as the "picked" side of the
+same run.
+
+## Tips
+
+- The default 0.0 is not a valid split — set a real timestamp inside the clip.
+- Duration is read from the clip automatically; the split must sit at least ~0.05s away from
+  either end.
+
+## Bridge note
+
+`COMFYTV_VIDEO` is a project snapshot reference, not a native ComfyUI tensor. To move
+between ComfyTV and native ComfyUI nodes, insert a **Bridge** (`ComfyTV/Bridge`). See
+<https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md>.
+
+## Related nodes
+
+- **Video Clip** — trim to an arbitrary in/out range instead of a single cut.
+- **Video Concat** — rejoin the two halves (with or without other clips).

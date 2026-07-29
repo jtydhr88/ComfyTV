@@ -1,0 +1,58 @@
+# Load 3D Model
+
+> Load a 3D model file from ComfyUI's `input/3d` folder, orbit it in-body, and optionally bind materials onto individual mesh parts.
+
+## What this node does
+
+**Load 3D Model** is an **Input** stage (`ComfyTV/Input`). It has **no ▶ Run**: you pick a model in the node body (from files under ComfyUI's `input/3d` folder) and its snapshot becomes the output immediately. Supported file types include GLB, GLTF, FBX, OBJ, PLY, SPZ, SPLAT, and KSPLAT.
+
+Beyond simple loading, the node's 3D preview lets you **orbit** the model and, when you wire in materials, **bind them onto individual mesh parts** by clicking (raycast) the part you want. It emits the `COMFYTV_MODEL` plus a `COMFYTV_IMAGE` snapshot captured from the preview viewport.
+
+Media flows as ComfyTV project snapshots, not native ComfyUI tensors. To interoperate with native ComfyUI 3D nodes, insert a **Bridge** — see [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Bring an existing GLB/GLTF/FBX/OBJ (etc.) file into the pipeline without generating one.
+- Re-texture a model by binding **Material Stage** outputs onto specific parts.
+- Produce a framed thumbnail of a model via the captured preview image.
+
+## Parameters
+
+### model (node body)
+
+Hidden dropdown driven by the card's thumbnail picker; its options carry the server-side list of files found under ComfyUI's `input/3d` folder. The picked file (an `input/3d`-relative path) becomes the **model** output.
+
+### materials (autogrow)
+
+Optional `COMFYTV_MATERIAL` inputs (grows up to 4 slots). Wire **Material Stage** outputs here to make them available for part binding.
+
+### material_bindings (internal)
+
+Hidden JSON map of **mesh-part key → material input slot**, written by the part-binding UI in the node body when you click a part and assign a wired material. On Run, if bindings exist they are passed along with the material values so downstream sees the re-textured model.
+
+### captured_image (internal)
+
+Hidden. The `/view?` URL of the preview-viewport snapshot, written by the 3D preview in the node body; it becomes the **image** output.
+
+### project_id / parent_output_id (internal)
+
+Hidden; maintained by the **Project** node and graph wiring. You rarely touch these.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **model** | `COMFYTV_MODEL` | The loaded model snapshot (with any material bindings) |
+| **image** | `COMFYTV_IMAGE` | Snapshot captured from the preview viewport |
+
+## Tips
+
+- Files must live under ComfyUI's `input/3d` folder to appear in the picker. To load from the project library instead, use **Load 3D Model from Asset**.
+- Part binding needs materials wired into the **materials** slots first; then click a mesh part in the preview to assign one.
+- Orbit the preview to frame a good angle before relying on the captured **image** output.
+
+## Related nodes
+
+- **Load 3D Model from Asset** — pick a model from the project asset library instead of `input/3d`.
+- **Material Stage** — author PBR materials to bind onto parts here.
+- **3D Model Stage** — generate a model rather than load one.

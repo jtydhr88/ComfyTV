@@ -1,0 +1,71 @@
+# Pattern
+
+> A procedural clip generator — gradients, noise, color bars, test wheels, countdowns and more, in one ▶ Run.
+
+## What this node does
+
+**Pattern** synthesizes a `COMFYTV_VIDEO` from scratch (no input clip) — you choose a **kind** and a resolution/frame rate/duration, and it renders a procedural clip on **▶ Run**. Each kind uses its own subset of the parameters below.
+
+Output is `COMFYTV_VIDEO`. To feed native ComfyUI nodes, insert a **Bridge** — see the [bridge guide](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Generate backgrounds, mattes, or transition fills (ramps, radial, noise, plasma).
+- Make broadcast test patterns — `colorbars`, `colorwheel`.
+- Drop in a countdown/count-up leader before a clip.
+- Produce a moving noise/turbulence source to drive other effects.
+
+## Parameters
+
+### kind
+Which pattern to generate. Options: `ramp`, `radial`, `rectangle`, `noise`, `perlin`, `turbulence`, `cellular`, `plasma`, `checkerboard`, `colorbars`, `colorwheel`, `count`. Default `ramp`.
+
+### width / height / fps / duration
+Output size (`16`–`4096`, default `1280` × `720`), frame rate (`1`–`120`, default `24`), and length in seconds (`0.5`–`120.0` step `0.5`, default `5.0`).
+
+### color0 / color1
+The two colors used by two-color patterns (ramp/radial/rectangle/checkerboard). Hex strings, defaults `#000000` (color0) and `#FFFFFF` (color1).
+
+### p0_x / p0_y and p1_x / p1_y
+Start and end points of the **ramp** gradient, normalized `0.0`–`1.0`. Defaults place it as a left-to-right horizontal ramp (`p0` = `0.0, 0.5`, `p1` = `1.0, 0.5`). Move them to angle or reposition the gradient.
+
+### interp
+Ramp gradient easing. Options: `linear`, `smooth`, `ease_in`, `ease_out`. Default `linear`.
+
+### softness
+Edge softness for shape patterns (radial/rectangle), `0.0`–`1.0`, default `0.0`. Higher feathers the shape edge.
+
+### noise_scale / noise_octaves / noise_speed
+Controls for the noise-family kinds (`noise`, `perlin`, `turbulence`, `cellular`, `plasma`). **noise_scale** feature size `4`–`512` (default `64`), **noise_octaves** detail layers `1`–`8` (default `4`), **noise_speed** animation rate `0.0`–`10.0` (default `1.0`).
+
+### seed
+Random seed for noise-family patterns, `0`–`99999`, default `7`.
+
+### box_size
+Cell/box size in pixels for `rectangle` and `checkerboard`, `2`–`1024`, default `64`.
+
+### bar_intensity
+Brightness of the `colorbars` pattern, `1.0`–`100.0` (step `1`), default `75.0` (standard 75% bars).
+
+### wheel_gamma / wheel_rotate
+For `colorwheel`: **wheel_gamma** `0.0`–`4.0` (default `0.45`) shapes brightness falloff; **wheel_rotate** `-180`–`180°` (step `1`, default `0`) spins the hue wheel.
+
+### count_style / count_direction
+For the `count` leader: **count_style** displays `seconds` or `frames` (default `seconds`); **count_direction** counts `down` or `up` (default `down`).
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The generated pattern clip |
+
+## Tips
+
+- Most parameters only apply to their pattern family — e.g. `wheel_gamma`/`wheel_rotate` do nothing outside `colorwheel`, `box_size` only affects `rectangle`/`checkerboard`.
+- Set a long **duration** and animate `noise_speed` to get a moving texture; static kinds (like `colorbars`) ignore time.
+- For a countdown leader, pick `kind = count`, `count_direction = down`, and set **duration** to the count length.
+
+## Related nodes
+
+- **Ken Burns** — animate a still image into video instead of generating a pattern.
+- **Wave Warp / Feedback FX** — feed a generated pattern into these for evolving visuals.

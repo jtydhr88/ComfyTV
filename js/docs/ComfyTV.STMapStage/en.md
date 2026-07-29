@@ -1,0 +1,62 @@
+# UV Remap
+
+> Warp a clip by an ST-map / distortion map — the standard way to re-apply lens distortion, screen warps, or any per-pixel displacement.
+
+## What this node does
+
+UV Remap re-samples a source `COMFYTV_VIDEO` through a UV / displacement map, moving each pixel to the coordinate the map points at. In **stmap** mode the map's red/green channels are absolute UV coordinates (0–1) — a classic ST-map. In **idistort** mode the map's channels are relative displacements added to each pixel's own position. The map can be a `COMFYTV_VIDEO` (animated) or a still `COMFYTV_IMAGE`.
+
+It runs on **▶ Run**. The `video` input and a UV source (`uv_video` or `uv_image`) are both required — the node errors if the UV source is missing. Output is `COMFYTV_VIDEO`.
+
+To hand the result to a native ComfyUI node, insert a **Bridge** (`ComfyTV/Bridge`). See <https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md>.
+
+## When to use it
+
+- Re-apply (or remove) lens distortion using an ST-map baked from your lens.
+- Drive a screen/heat-haze/glass warp from a rendered distortion pass.
+- Do arbitrary per-pixel displacements that pan/scale/corner-pin can't express.
+
+## Parameters
+
+### mode
+How the UV map is interpreted: `stmap` (absolute UV coordinates in R/G) or `idistort` (relative displacement added to each pixel). Default `stmap`.
+
+### wrap
+How samples that fall outside the frame are handled: `clamp`, `repeat`, or `mirror`. Default `clamp`.
+
+### flip_v
+Boolean, default **on**. Flips the map's V axis so bottom-left-origin maps line up with the footage (common ST-map convention).
+
+### amount
+Displacement strength, `0.0`–`512.0`, step `1`, default `32.0`. In `idistort` mode this scales how far pixels are pushed; higher = stronger warp.
+
+### u_offset / v_offset
+Shifts the sampled UV coordinates, `-1.0`–`1.0` each, default `0.0`. Slides the remap horizontally / vertically.
+
+### u_scale / v_scale
+Scales the sampled UV coordinates, `-4.0`–`4.0` each, default `1.0`. Negative values flip that axis.
+
+### video (input, optional)
+The `COMFYTV_VIDEO` to be warped. Required.
+
+### uv_video (input, optional)
+An animated `COMFYTV_VIDEO` UV/displacement map.
+
+### uv_image (input, optional)
+A still `COMFYTV_IMAGE` UV/displacement map. Provide either `uv_video` or `uv_image` — at least one UV source is required.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The remapped (warped) clip. |
+
+## Tips
+
+- Match the map's orientation with `flip_v`; if the warp looks mirrored top-to-bottom, toggle it.
+- ST-maps must be full-precision to avoid banding — an 8-bit map will quantize the warp.
+
+## Related nodes
+
+- **Corner Pin** — perspective warp from four corners, not a per-pixel map.
+- **Video Transform** — pan/scale/rotate/skew for simple reframes.
