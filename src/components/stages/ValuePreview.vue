@@ -36,18 +36,17 @@
         draggable="false"
       />
       <div :class="imgActionsClass">
-        <button type="button" :class="imgActionBtn"
-                :title="$t('stage.action.viewFull')"
-                @click.stop="openViewer(String(content))"><i class="pi pi-window-maximize" /></button>
-        <button type="button" :class="imgActionBtn"
-                :title="$t('stage.action.download')"
-                @click.stop="onDownload(String(content))"><i class="pi pi-download" /></button>
-        <button type="button" :class="tagActionBtn(String(content))"
-                :title="$t('stage.action.addTag')"
-                @click.stop="openTagMenu(String(content), nameFromUrl(String(content)), $event, previewMediaType)"><i class="pi pi-tag" /></button>
-        <button type="button" :class="imgActionBtn"
-                :title="$t('stage.action.loadAsset')"
-                @click.stop="onLoadAsset(String(content), nameFromUrl(String(content)))"><i class="pi pi-bookmark" /></button>
+        <MediaActionBar
+          :url="String(content)"
+          :label="nameFromUrl(String(content))"
+          :media-type="previewMediaType"
+          :saved="isSaved(String(content))"
+          show-view
+          @view="openViewer(String(content))"
+          @download="onDownload"
+          @tag="onTagFromBar"
+          @load-asset="onLoadAssetFromBar"
+        />
       </div>
     </div>
     <img
@@ -67,15 +66,15 @@
         controls muted playsinline preload="metadata"
       />
       <div :class="imgActionsClass">
-        <button type="button" :class="imgActionBtn"
-                :title="$t('stage.action.download')"
-                @click.stop="onDownload(String(content))"><i class="pi pi-download" /></button>
-        <button type="button" :class="tagActionBtn(String(content))"
-                :title="$t('stage.action.addTag')"
-                @click.stop="openTagMenu(String(content), nameFromUrl(String(content)), $event, previewMediaType)"><i class="pi pi-tag" /></button>
-        <button type="button" :class="imgActionBtn"
-                :title="$t('stage.action.loadAsset')"
-                @click.stop="onLoadAsset(String(content), nameFromUrl(String(content)))"><i class="pi pi-bookmark" /></button>
+        <MediaActionBar
+          :url="String(content)"
+          :label="nameFromUrl(String(content))"
+          :media-type="previewMediaType"
+          :saved="isSaved(String(content))"
+          @download="onDownload"
+          @tag="onTagFromBar"
+          @load-asset="onLoadAssetFromBar"
+        />
       </div>
     </div>
     <ProxiedVideo
@@ -113,15 +112,15 @@
           @view-changed="scheduleModelCapture"
         />
         <div :class="imgActionsClass">
-          <button type="button" :class="imgActionBtn"
-                  :title="$t('stage.action.download')"
-                  @click.stop="onDownload(String(content))"><i class="pi pi-download" /></button>
-          <button type="button" :class="tagActionBtn(String(content))"
-                  :title="$t('stage.action.addTag')"
-                  @click.stop="openTagMenu(String(content), nameFromUrl(String(content)), $event, previewMediaType)"><i class="pi pi-tag" /></button>
-          <button type="button" :class="imgActionBtn"
-                  :title="$t('stage.action.loadAsset')"
-                  @click.stop="onLoadAsset(String(content), nameFromUrl(String(content)))"><i class="pi pi-bookmark" /></button>
+          <MediaActionBar
+            :url="String(content)"
+            :label="nameFromUrl(String(content))"
+            :media-type="previewMediaType"
+            :saved="isSaved(String(content))"
+            @download="onDownload"
+            @tag="onTagFromBar"
+            @load-asset="onLoadAssetFromBar"
+          />
         </div>
       </div>
     </template>
@@ -250,21 +249,19 @@
             <i :class="clickHintIcon" />
           </span>
           <div :class="imgActionsClass">
-            <button type="button" :class="imgActionBtn"
-                    :title="$t('stage.action.viewFull')"
-                    @click.stop="openBatchViewer(i)"><i class="pi pi-window-maximize" /></button>
-            <button type="button" :class="imgActionBtn"
-                    :title="$t('stage.action.download')"
-                    @click.stop="onDownload(img.image_url)"><i class="pi pi-download" /></button>
-            <button type="button" :class="tagActionBtn(img.image_url)"
-                    :title="$t('stage.action.addTag')"
-                    @click.stop="openTagMenu(img.image_url, img.label || img.prompt || nameFromUrl(img.image_url), $event, previewMediaType)"><i class="pi pi-tag" /></button>
-            <button type="button" :class="imgActionBtn"
-                    :title="$t('stage.action.loadAsset')"
-                    @click.stop="onLoadAsset(img.image_url, img.label || img.prompt || nameFromUrl(img.image_url))"><i class="pi pi-bookmark" /></button>
-            <button v-if="canRemoveItem(img, i)" type="button" :class="removeActionBtn"
-                    :title="$t('stage.action.removeFromPicker')"
-                    @click.stop="onItemRemove(img, i)"><i class="pi pi-times" /></button>
+            <MediaActionBar
+              :url="img.image_url"
+              :label="img.label || img.prompt || nameFromUrl(img.image_url)"
+              :media-type="previewMediaType"
+              :saved="isSaved(img.image_url)"
+              show-view
+              :show-remove="canRemoveItem(img, i)"
+              @view="openBatchViewer(i)"
+              @download="onDownload"
+              @tag="onTagFromBar"
+              @load-asset="onLoadAssetFromBar"
+              @remove="onItemRemove(img, i)"
+            />
           </div>
         </div>
       </div>
@@ -306,18 +303,17 @@
           <audio :src="track.image_url" class="ctv:block ctv:w-full ctv:h-8" controls preload="metadata"
                  @click.stop />
           <div :class="imgActionsClass">
-            <button type="button" :class="imgActionBtn"
-                    :title="$t('stage.action.download')"
-                    @click.stop="onDownload(track.image_url)"><i class="pi pi-download" /></button>
-            <button type="button" :class="tagActionBtn(track.image_url)"
-                    :title="$t('stage.action.addTag')"
-                    @click.stop="openTagMenu(track.image_url, track.label || track.prompt || nameFromUrl(track.image_url), $event, previewMediaType)"><i class="pi pi-tag" /></button>
-            <button type="button" :class="imgActionBtn"
-                    :title="$t('stage.action.loadAsset')"
-                    @click.stop="onLoadAsset(track.image_url, track.label || track.prompt || nameFromUrl(track.image_url))"><i class="pi pi-bookmark" /></button>
-            <button v-if="canRemoveItem(track, i)" type="button" :class="removeActionBtn"
-                    :title="$t('stage.action.removeFromPicker')"
-                    @click.stop="onItemRemove(track, i)"><i class="pi pi-times" /></button>
+            <MediaActionBar
+              :url="track.image_url"
+              :label="track.label || track.prompt || nameFromUrl(track.image_url)"
+              :media-type="previewMediaType"
+              :saved="isSaved(track.image_url)"
+              :show-remove="canRemoveItem(track, i)"
+              @download="onDownload"
+              @tag="onTagFromBar"
+              @load-asset="onLoadAssetFromBar"
+              @remove="onItemRemove(track, i)"
+            />
           </div>
         </div>
       </div>
@@ -360,18 +356,17 @@
                  controls muted playsinline preload="metadata"
                  @click.stop />
           <div :class="imgActionsClass">
-            <button type="button" :class="imgActionBtn"
-                    :title="$t('stage.action.download')"
-                    @click.stop="onDownload(clip.image_url)"><i class="pi pi-download" /></button>
-            <button type="button" :class="tagActionBtn(clip.image_url)"
-                    :title="$t('stage.action.addTag')"
-                    @click.stop="openTagMenu(clip.image_url, clip.label || clip.prompt || nameFromUrl(clip.image_url), $event, previewMediaType)"><i class="pi pi-tag" /></button>
-            <button type="button" :class="imgActionBtn"
-                    :title="$t('stage.action.loadAsset')"
-                    @click.stop="onLoadAsset(clip.image_url, clip.label || clip.prompt || nameFromUrl(clip.image_url))"><i class="pi pi-bookmark" /></button>
-            <button v-if="canRemoveItem(clip, i)" type="button" :class="removeActionBtn"
-                    :title="$t('stage.action.removeFromPicker')"
-                    @click.stop="onItemRemove(clip, i)"><i class="pi pi-times" /></button>
+            <MediaActionBar
+              :url="clip.image_url"
+              :label="clip.label || clip.prompt || nameFromUrl(clip.image_url)"
+              :media-type="previewMediaType"
+              :saved="isSaved(clip.image_url)"
+              :show-remove="canRemoveItem(clip, i)"
+              @download="onDownload"
+              @tag="onTagFromBar"
+              @load-asset="onLoadAssetFromBar"
+              @remove="onItemRemove(clip, i)"
+            />
           </div>
         </div>
       </div>
@@ -436,6 +431,7 @@
 import { computed, onBeforeUnmount, onMounted, ref, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import ModelPreview from './ModelPreview.vue'
+import MediaActionBar from './MediaActionBar.vue'
 import ModelThumb from '@/components/widgets/ModelThumb.vue'
 import ProxiedVideo from '@/components/widgets/ProxiedVideo.vue'
 import { askText } from '@/composables/dialog/useTextInputDialog'
@@ -584,6 +580,14 @@ function onLoadAsset(url: string, label: string) {
   emit('load-asset', { index: '', imageUrl: url, label, mediaType: previewMediaType.value })
 }
 
+function onTagFromBar(p: { url: string; label: string; mediaType: string; event: MouseEvent }) {
+  openTagMenu(p.url, p.label, p.event, p.mediaType)
+}
+
+function onLoadAssetFromBar(p: { url: string; label: string }) {
+  onLoadAsset(p.url, p.label)
+}
+
 const {
   textCopied,
   copyText: onCopyText,
@@ -697,19 +701,6 @@ const imgActionsClass = 'vp-img-actions ctv:absolute ctv:top-1 ctv:right-1 ctv:z
 const imgActionBtn = COMFY_BTN_BASE
   + ' ctv:size-5 ctv:p-0 ctv:rounded-sm ctv:text-sm'
   + ' ctv:bg-white ctv:text-gray-600 ctv:hover:bg-white/90'
-
-const removeActionBtn = COMFY_BTN_BASE
-  + ' ctv:size-5 ctv:p-0 ctv:rounded-sm ctv:text-xs'
-  + ' ctv:bg-white ctv:text-gray-600 ctv:hover:bg-destructive-background ctv:hover:text-white'
-
-function tagActionBtn(url: string) {
-  const saved = isSaved(url)
-  return COMFY_BTN_BASE
-    + ' ctv:size-5 ctv:p-0 ctv:rounded-sm ctv:text-sm'
-    + (saved
-      ? ' ctv:bg-primary-background ctv:text-white ctv:hover:bg-primary-background/90'
-      : ' ctv:bg-white ctv:text-gray-600 ctv:hover:bg-white/90')
-}
 
 function batchCellClass(selected: boolean) {
   const base = 'vp-img-host ctv:group ctv:relative ctv:aspect-video ctv:rounded-sm ctv:overflow-hidden ctv:p-0 ctv:bg-black ctv:border ctv:transition-colors'
