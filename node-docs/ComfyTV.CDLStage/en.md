@@ -1,0 +1,50 @@
+# CDL Grade
+
+> An ASC-CDL primary grade — slope, offset, power per channel plus saturation, the portable grade format every finishing suite understands.
+
+## What this node does
+
+**CDL Grade** applies an ASC Color Decision List grade: the standardized `slope / offset / power` model used across on-set and post color pipelines. For each RGB channel you set a **slope** (gain — multiplies the value, like lift on the highlights), an **offset** (adds a constant — shifts the whole channel), and a **power** (gamma exponent — bends the midtones), then an overall **saturation**. The math is the industry-standard `(pixel × slope + offset) ^ power`.
+
+It takes `COMFYTV_VIDEO` in and out and renders on a torch backend (`cdl`), so it has a **▶ Run** with a live preview on the card. A fully neutral setting (all slopes/powers/sat = 1, all offsets = 0) passes the clip through untouched.
+
+To interoperate with native ComfyUI nodes, add a **Bridge** (see the [Bridge guide](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)).
+
+## When to use it
+
+- Apply a grade in the same numeric language a colorist or on-set DIT uses
+- Match a look defined by CDL values from another stage of the pipeline
+- Do a clean primary balance (slope/offset/power) before creative grading
+- Keep a grade portable — CDL is just ten numbers, not a baked LUT
+
+## Parameters
+
+### slope_r / slope_g / slope_b
+Per-channel gain, each default 1.0, range 0.0…4.0. Multiplies the channel; raising slope brightens and adds contrast toward the highlights. 1.0 is neutral.
+
+### offset_r / offset_g / offset_b
+Per-channel offset, each default 0.0, range −1.0…1.0. Adds a constant to the whole channel, shifting it up or down (mostly visible in shadows). 0.0 is neutral.
+
+### power_r / power_g / power_b
+Per-channel power (gamma), each default 1.0, range 0.1…4.0. Applies an exponent to bend the midtones — below 1.0 brightens mids, above 1.0 darkens them. 1.0 is neutral.
+
+### cdl_sat
+Overall saturation applied after slope/offset/power, default 1.0, range 0.0…4.0. 1.0 leaves saturation unchanged; 0.0 is fully desaturated; above 1.0 boosts it.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The CDL-graded clip snapshot |
+
+## Tips
+
+- If nothing changes on Run, at least one value must be off neutral (slopes/powers/sat ≠ 1 or an offset ≠ 0).
+- Order matters in CDL: slope and offset act first, power last, then saturation — set your balance with slope/offset before shaping mids with power.
+- For hands-on slider grading with wheels and levels, use **Video Color**; reach for CDL when you specifically want the SOP model.
+
+## Related nodes
+
+- **Video Color** — slider-based primary grade with three-way wheels
+- **Video Curves** — freeform tone curves instead of the SOP model
+- **Video LUT** — bake a finished look as a `.cube` table

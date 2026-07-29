@@ -1,0 +1,54 @@
+---
+title: "Corner Pin"
+description: "Warp a clip by dragging its four corners — for screen replacements, sign inserts, and perspective fits."
+sidebarTitle: "Corner Pin"
+---
+
+<Frame caption="Corner Pin · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Corner Pin" />
+</Frame>
+
+## What this node does
+
+Corner Pin maps the four corners of a `COMFYTV_VIDEO` to four arbitrary destination points, applying a perspective (homographic) warp. You set the corners by dragging the four handles right on the node; the values are stored as `[[x1,y1],[x2,y2],[x3,y3],[x4,y4]]` in TL, TR, BR, BL order. It can also be animated with keyframes or driven by a corner-tracking `track` input.
+
+It runs on **▶ Run** (renders the warp). Input and output are `COMFYTV_VIDEO`. The node errors if you haven't set four corners and there are no keyframes yet — drag the corners first.
+
+To hand the result to a native ComfyUI node, insert a **Bridge** (`ComfyTV/Bridge`). See https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md.
+
+## When to use it
+
+- Replace the content of a screen, phone, monitor, or billboard in a shot.
+- Fit footage onto an angled surface with correct perspective.
+- Track a moving surface and pin a layer onto it via the `track` input.
+
+## Parameters
+
+### corners
+The four destination corners as JSON `[[x1,y1],[x2,y2],[x3,y3],[x4,y4]]` in TL, TR, BR, BL order. Normally set by dragging the four handles on the node rather than typed.
+
+### keyframes
+Advanced: JSON array `[{t, corners}]` animating the four corners over time (for a moving surface). Usually authored via the node UI.
+
+### video (input, optional)
+The `COMFYTV_VIDEO` to warp. Required.
+
+### track (input, optional)
+A `COMFYTV_TEXT` track carrying corner keyframes (e.g. from a planar tracker). When it contains corner data it overrides the manual `keyframes`.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The corner-pinned (perspective-warped) clip. |
+
+## Tips
+
+- You must place four corners (or supply keyframes) before running — otherwise the node stops and asks you to drag the corners.
+- Corner order is fixed: top-left, top-right, bottom-right, bottom-left. Crossed corners produce a folded/degenerate warp.
+
+## Related nodes
+
+- **Video Transform** — pan/scale/rotate/skew when you don't need free perspective.
+- **UV Remap** — arbitrary per-pixel distortion from a UV map.
+- **Video Composite** — layer the warped clip onto a background.

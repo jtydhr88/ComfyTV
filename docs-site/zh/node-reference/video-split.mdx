@@ -1,0 +1,55 @@
+---
+title: "视频分割 (Video Split)"
+description: "在某一个时间点把一个片段切成两段。"
+sidebarTitle: "视频分割"
+translationSourceHash: "0165bc08242e2a63"
+---
+
+<Frame caption="视频分割 (Video Split) · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="视频分割 (Video Split)" />
+</Frame>
+
+## 这个节点是做什么的
+
+**Video Split** 在时间戳 **split_s** 处把片段切成**前段**和**后段**。这是服务端的真实重新编码
+（PyAV / ffmpeg）：点 **▶ 运行**后，它对片段裁剪两次（0 → 分割点，分割点 → 结尾），并把两段都保存为项目快照。
+输入为 `COMFYTV_VIDEO`；它有两个 `COMFYTV_VIDEO` 输出。
+
+分割点必须落在片段内部——大致在 0.05s 到（时长 − 0.05s）之间——否则运行会报错。
+
+## 适用场景
+
+- 把一条长镜头拆成两个镜头，以便分别处理（变速、调色等）。
+- 隔离某一段，再把其中一半与其它素材接入 Video Concat。
+- 在片段中间设一个转场切点。
+
+## 参数说明
+
+### split_s（分割点）
+切点，单位秒。范围 **0–3600**，步进 0.01，默认 **0.0**。必须严格落在片段内部；处于两端或超出者会被拒绝。
+该时间之前的一切归 **video_a**，从该时间到结尾的一切归 **video_b**。
+
+## 输出说明
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **video_a** | `COMFYTV_VIDEO` | 分割点之前的部分（0 → split_s）。 |
+| **video_b** | `COMFYTV_VIDEO` | 从分割点到结尾的部分（split_s → 时长）。 |
+
+两段都会保存为快照；**video_b** 作为同一次运行的「picked」一侧发出。
+
+## 小贴士
+
+- 默认值 0.0 不是有效的分割点——请设置片段内的真实时间戳。
+- 时长会自动从片段读取；分割点必须距两端至少约 0.05s。
+
+## Bridge 说明
+
+`COMFYTV_VIDEO` 是项目快照引用，不是 ComfyUI 原生张量。要在 ComfyTV 与原生 ComfyUI 节点之间互通，
+请插入 **Bridge**（`ComfyTV/Bridge`）。详见
+https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md。
+
+## 相关节点
+
+- **Video Clip**——裁到任意入/出点范围，而非单一切点。
+- **Video Concat**——把两段重新拼合（可搭配其它片段）。

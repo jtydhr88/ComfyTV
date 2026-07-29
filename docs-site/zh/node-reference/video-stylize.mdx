@@ -1,0 +1,60 @@
+---
+title: "Video Stylize"
+description: "一键风格化预设合集 —— 暗角、胶片颗粒、像素化、边缘检测、棕褐、单色，或组合式老电影处理。"
+sidebarTitle: "Video Stylize"
+translationSourceHash: "df9039884fae8c5e"
+---
+
+<Frame caption="Video Stylize · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="Video Stylize" />
+</Frame>
+
+## 这个节点做什么
+
+**Video Stylize（视频风格化）** 对 `COMFYTV_VIDEO` 片段应用单个预设风格化效果。你从下拉菜单选一种效果并设置强度；节点底层用 ffmpeg 滤镜渲染该效果。
+
+这是一个需要渲染的节点 —— 必须 **▶ Run** 才能产出结果。输入 `COMFYTV_VIDEO`，输出 `COMFYTV_VIDEO`。
+
+要把结果交给原生 ComfyUI 节点，请插入 **Bridge**。参见 [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 何时使用
+
+- 无需串联多个独立 FX 节点，快速做旧或加纹理。
+- 作为收尾添加暗角或胶片颗粒。
+- 获得像素化 / 边缘 / 棕褐 / 单色风格用于风格化片段。
+
+## 参数
+
+### effect
+要应用的效果，取值之一：`vignette`、`grain`、`pixelize`、`edge`、`sepia`、`monochrome`、`old_film`。默认 `vignette`。
+
+- **vignette（暗角）** —— 压暗画面四角；`strength` 控制衰减角度。
+- **grain（颗粒）** —— 添加动态的亮度/色度噪声；`strength` 控制强度。
+- **pixelize（像素化）** —— 把画面打成方块马赛克；使用 `block` 块大小（见下）。
+- **edge（边缘）** —— 彩色边缘检测风格；`strength` 缩放检测阈值。
+- **sepia（棕褐）** —— 固定的暖色棕褐调色（忽略 strength）。
+- **monochrome（单色）** —— 去饱和为黑白（忽略 strength）。
+- **old_film（老电影）** —— 组合处理：复古曲线 + 颗粒 + 暗角，全部由 `strength` 缩放。
+
+### strength
+`0.0`–`1.0`，默认 `0.5`。对使用它的效果（vignette、grain、edge、old_film）的整体强度。对 sepia、monochrome、pixelize 无效。从 `0.5` 左右开始。
+
+### block
+`2`–`64`，默认 `8`。像素化块大小（像素）—— 仅当 `effect` 为 `pixelize` 时使用。块越大马赛克越粗。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | 风格化后的片段 |
+
+## 提示
+
+- 对 `sepia`、`monochrome`、`pixelize`，`strength` 会被忽略 —— 这些效果用 `block`（像素化）或直接的固定观感。
+- 若想要带损伤线和闪烁的完整做旧效果，请使用专门的 **Old Film** 节点；这里的 `old_film` 是更轻量、更快的预设组合。
+
+## 相关节点
+
+- **Old Film（老电影）** —— 完整的胶片损伤模拟（尘线、亮度闪烁、抖动）。
+- **Regrain（重加颗粒）** —— 按色调范围控制的物理建模胶片颗粒。
+- **Posterize（色调分离）** —— 把片段缩减为有限调色板。

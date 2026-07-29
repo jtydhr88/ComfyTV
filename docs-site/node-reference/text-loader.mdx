@@ -1,0 +1,49 @@
+---
+title: "Input Text"
+description: "Type or paste text and feed it into your pipeline as a `COMFYTV_TEXT`—the simplest way to author prompts, captions, or notes on the canvas."
+sidebarTitle: "Input Text"
+---
+
+<Frame caption="Input Text · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Input Text" />
+</Frame>
+
+## What this node does
+
+**Input Text** is an **Input** stage (`ComfyTV/Input`). It has no AI model and **no ▶ Run**: you type into its multiline text box and the value becomes this stage's output, passed to downstream stages **in real time as you edit**.
+
+Use it wherever a stage takes a `COMFYTV_TEXT` input—prompts for Image / Video / 3D Model stages, extra context, lyrics, captions, or notes you want to route into the graph.
+
+Text flows as a ComfyTV `COMFYTV_TEXT` snapshot. To interoperate with native ComfyUI string nodes, insert a **Bridge** — see [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Author a shared prompt once and fan it out to several generation stages.
+- Provide extra textual context (style notes, constraints) to an Image / Video / 3D Model stage's `texts` inputs.
+- Keep an editable caption or note as a wired node rather than retyping it per stage.
+
+## Parameters
+
+### text
+
+Multiline text box (default empty). Whatever you type here becomes the **text** output. It updates downstream live as you edit—no Run needed.
+
+### project_id / parent_output_id (internal)
+
+Hidden; maintained by the **Project** node and graph wiring. You rarely touch these.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **text** | `COMFYTV_TEXT` | The entered text, passed downstream in real time |
+
+## Tips
+
+- No ▶ Run button is normal for Input stages—editing the box is the action.
+- One Input Text can feed many stages; edit it once to update them all.
+
+## Related nodes
+
+- **3D Model Stage** / **Image Stage** / **Video Stage** — common downstream; accept `COMFYTV_TEXT` context.
+- **Load Image** / **Load Video** / **Load Audio** — same Input family for media files.

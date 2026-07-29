@@ -1,0 +1,41 @@
+# Video Stabilize
+
+> Fast single-pass shake reduction using ffmpeg's deshake filter.
+
+## What this node does
+
+**Video Stabilize** smooths out camera shake in a `COMFYTV_VIDEO` clip using ffmpeg's `deshake` filter. It searches each frame for the best matching shift and counter-moves the image to hold it steady. This is the fast, single-pass stabilizer; for stronger results use **Stabilize Pro**. It processes on **▶ Run** and writes a new video snapshot.
+
+A source clip on **video** is required. In and out are both `COMFYTV_VIDEO`. To interoperate with native ComfyUI nodes, insert a **Bridge** — see the [bridge guide](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Quickly calm handheld jitter on a clip without a full two-pass analysis.
+- Steady mild shake where you don't want the heavier processing of **Stabilize Pro**.
+
+## Parameters
+
+### range_x
+Maximum horizontal shift searched, in pixels, `8`–`64`, default `16` (rounded to a multiple of 16 internally). Larger allows correcting bigger horizontal shake but costs more compute.
+
+### range_y
+Maximum vertical shift searched, in pixels, `8`–`64`, default `16`. Larger corrects bigger vertical shake.
+
+### edge
+How to fill the borders exposed when the frame is shifted. Options: `mirror` (default, reflect the edge), `blank` (black borders), `original` (keep original edge pixels), `clamp` (extend edge pixels). `mirror` usually hides the shift best.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The stabilized clip as a new project snapshot |
+
+## Tips
+
+- For heavy or rolling shake, **Stabilize Pro** (two-pass, with camera-path smoothing and auto-zoom) gives noticeably better results.
+- `blank` edges reveal the correction as black margins; `mirror` or `clamp` hide it, at the cost of some edge distortion.
+
+## Related nodes
+
+- **Stabilize Pro** — stronger two-pass stabilization with smoothing and auto-zoom.
+- **Blur / Sharpen** — re-sharpen if stabilization softens the frame.

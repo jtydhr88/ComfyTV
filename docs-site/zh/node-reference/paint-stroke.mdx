@@ -1,0 +1,59 @@
+---
+title: "Paint Strokes"
+description: "在视频上直接画克隆、模糊或上色的笔触，在一段时间窗口内做修饰或揭示。"
+sidebarTitle: "Paint Strokes"
+translationSourceHash: "c34cfa07d3b1ec90"
+---
+
+<Frame caption="Paint Strokes · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="Paint Strokes" />
+</Frame>
+
+## 这个节点是做什么的
+
+**Paint Strokes（绘画笔触）** 让你在节点的视频预览上画笔触；点 ▶ 运行后，在选定的时间窗口内把它们应用到片段上。每条笔触有一个画笔 **mode（模式）**——clone（克隆，用偏移的像素盖住某物）、blur（模糊某区域）、color（涂平色）——外加半径和硬度。可选的第二段视频可作为 clone/揭示笔触取样的来源。
+
+视频输入/输出都是 `COMFYTV_VIDEO`。第二个可选的 `COMFYTV_VIDEO`——**reveal_video**——为揭示式绘画提供像素。通过 `ComfyTV/Bridge` 桥接到 ComfyUI 原生节点——详见 https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md。
+
+## 节点上的编辑器
+
+卡片在视频上叠一层绘画画布：
+
+- 选一个画笔 **mode**（clone / blur / color），设 **radius（半径）**、**hardness（硬度）**。
+- clone 模式用偏移（**dx**、**dy**）；blur 用 **sigma**；color 用一个 **color** 色块。
+- **按住拖动** 画一条笔触；若设备支持，会逐点记录笔 **压力**。
+- **Undo（撤销）** 删掉上一条笔触；**Clear（清除）** 全抹。
+
+运行前必须至少画一条笔触，否则节点会报「draw a stroke on the node first」。
+
+## 参数
+
+### strokes
+画出的笔触，存为 JSON——每条含 `mode`、`points:[{x,y,p}]`、`radius`、`hardness`，以及模式专属字段（clone 的 `dx,dy`、blur 的 `sigma`、color 的 `color`），外加可选的 `life_start`/`life_end`。由节点上的编辑器在你绘制时写入。默认空。
+
+### t_start / t_end
+笔触生效的时间窗口（秒）。`t_start` 范围 `0`–`3600`，默认 `0`；`t_end` 默认 `-1`（到片尾），范围 `-1`–`3600`，步进 `0.05`。
+
+### video（输入）
+要绘制的片段。
+
+### reveal_video（输入，可选）
+用作揭示/克隆绘画来源的第二段片段。留空则在本片段内克隆。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | 烘焙进笔触后的片段 |
+
+## 小贴士
+
+- 笔触画在固定位置，不跟随运动。要修运动物体，把窗口调短或把镜头拆开。
+- 用小的 **dx/dy** 偏移克隆，用附近干净像素盖住污点；干净像素来自另一素材时用 **reveal_video**。
+- **hardness** 越高笔刷边缘越清晰；越低越融入周围。
+
+## 相关节点
+
+- **Spot Remover** — 基于矩形框移除静态污点/线缆
+- **Face Blur** — 自动检测并遮挡人脸
+- **Roto Mask** — 画遮罩而非直接绘制像素

@@ -1,0 +1,61 @@
+---
+title: "Hue Correct"
+description: "Retune specific hues without touching the rest — bend saturation, luminance, or a channel as a function of hue."
+sidebarTitle: "Hue Correct"
+---
+
+<Frame caption="Hue Correct · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Hue Correct" />
+</Frame>
+
+## What this node does
+
+**Hue Correct** is a hue-vs-X grading tool, like the Hue Correct nodes in compositing apps (Nuke, Fusion). Instead of moving one global slider, you draw a curve *along the hue wheel*: for each hue (reds, yellows, greens…) you decide how much to change saturation, luminance, a specific color channel, or the hue itself. Great for surgical fixes — desaturate just the reds, cool only the greens — while leaving everything else alone.
+
+It takes `COMFYTV_VIDEO` in and out and renders on a torch backend (`hue_correct`), so it has a **▶ Run** with a live preview on the card. All the curves live in one JSON object; if no curve has at least two points, the clip passes through unchanged.
+
+To interoperate with native ComfyUI nodes, add a **Bridge** (see the [Bridge guide](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)).
+
+## When to use it
+
+- Desaturate only one problem color (e.g. an over-red skin tone)
+- Shift the hue of a specific range without a global rotation
+- Boost or cut luminance for one band of colors
+- Suppress a single channel within a hue range (the `*_sup` curves)
+
+## Parameters
+
+### curves
+A JSON object of hue-driven curves. Each key maps to a list of `[x, y]` points over hue (x = position on the hue wheel, 0…1). Recognized keys:
+
+- `sat` — saturation vs hue
+- `lum` — luminance vs hue
+- `red`, `green`, `blue` — each color channel vs hue
+- `r_sup`, `g_sup`, `b_sup` — per-channel suppression vs hue
+- `hue` — hue shift vs hue
+
+A curve only takes effect if it has at least two points. Leave the whole object empty (or with only single-point curves) and the node is a pass-through.
+
+### sat_thrsh
+Saturation threshold, default 0.0, range 0.0…1.0. Gates the correction by how saturated a pixel already is, so nearly-gray pixels are affected less — this keeps hue tweaks from smearing into neutral areas.
+
+### luminance_mix
+Default 0.0, range 0.0…1.0. Blends in a luminance-weighted response so the correction respects brightness, softening its effect on very dark or very bright pixels.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The hue-corrected clip snapshot |
+
+## Tips
+
+- Every curve needs two or more points to register; a lone point does nothing.
+- Raise `sat_thrsh` when a hue tweak is bleeding into gray/neutral regions.
+- This is for targeted hue work — for a global hue/saturation move, use **Video Color** instead.
+
+## Related nodes
+
+- **Selective Color** — nudge fixed color families (reds, cyans, neutrals…) with sliders
+- **Video Color** — global hue and saturation in one step
+- **Video Curves** — per-channel tone curves rather than hue-driven curves

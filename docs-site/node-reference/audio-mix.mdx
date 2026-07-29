@@ -1,0 +1,54 @@
+---
+title: "Audio Mix"
+description: "Layer up to four audio tracks into one, each with its own volume and stereo position — a mini mixing desk."
+sidebarTitle: "Audio Mix"
+---
+
+<Frame caption="Audio Mix · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Audio Mix" />
+</Frame>
+
+## What this node does
+
+**Audio Mix** sums up to four `COMFYTV_AUDIO` sources (A, B, C, D) into a single stereo track. Each channel has independent **gain** and **pan**, so you can balance a voiceover against music and sound effects in one node. At least one source must be wired; empty inputs are skipped.
+
+It outputs one `COMFYTV_AUDIO` snapshot and has a ▶ **Run** (FFmpeg does the mix).
+
+To feed native ComfyUI `AUDIO` in or out, insert a **Bridge** — see [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Combine narration, a music bed, and SFX into a finished mix.
+- Set relative levels between tracks and spread them across the stereo field.
+- Re-assemble stems (from **Audio Stem Split**) after processing them individually.
+
+## Parameters
+
+### pan_law
+How panning affects loudness across the stereo field: `audacity` (default) or `constant_power`. `constant_power` keeps perceived loudness steadier as a source moves left/right; `audacity` matches Audacity's convention.
+
+### dither
+Dithering applied when reducing bit depth: `none` (default), `tpdf`, or `shaped`. Add dither (`tpdf` is a safe general choice) when exporting to a lower bit depth to avoid quantization artifacts.
+
+### gain_a / gain_b / gain_c / gain_d
+Level for each source in decibels. Range **-60 to +12 dB**, default **0** (unchanged). Set unwired channels are ignored.
+
+### pan_a / pan_b / pan_c / pan_d
+Stereo position for each source. Range **-1 to +1**, default **0** (center). **-1** = hard left, **+1** = hard right.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **audio** | `COMFYTV_AUDIO` | The four sources summed into one stereo track |
+
+## Tips
+
+- Watch the summed level: several tracks at 0 dB can clip. Pull individual gains down a few dB if the mix distorts.
+- Only wired inputs count — you can use just two or three sources without touching the others.
+
+## Related nodes
+
+- **Audio Duck** — automatically dip one track under another instead of setting fixed levels.
+- **Audio Stem Split** — separates a mix into stems that you can reprocess and re-mix here.
+- **Audio Crossfade** — join two clips in sequence rather than layering them.

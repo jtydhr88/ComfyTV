@@ -1,0 +1,60 @@
+---
+title: "亮度划像 (Luma Wipe)"
+description: "用灰度渐变图案在两段片段间过渡——经典的\"渐变划像\"揭示效果。"
+sidebarTitle: "亮度划像"
+translationSourceHash: "89ac868e76658d85"
+---
+
+<Frame caption="亮度划像 (Luma Wipe) · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="亮度划像 (Luma Wipe)" />
+</Frame>
+
+## 这个节点做什么
+
+亮度划像 (Luma Wipe) 通过在灰度亮度图案上扫过一个阈值，把 **video_a** 混合进 **video_b**：图案的暗部先揭示、亮部后揭示（或反过来）。选择内置图案之一（radial、clock、blinds、spiral、cloud 等），或接入你自己的灰度 `luma_image`。柔和度控制羽化划像边缘。
+
+它在 **▶ Run** 时运行。`video_a` 与 `video_b` 均为必填的 `COMFYTV_VIDEO` 输入。若未连接 `luma_image`，节点会按 video_a 的分辨率生成所选的 `luma_map`。输出为 `COMFYTV_VIDEO`。
+
+要把结果交给原生 ComfyUI 节点，请插入 **Bridge**（`ComfyTV/Bridge`）。参见 https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md。
+
+## 何时使用
+
+- 两个镜头间的形状化揭示（放射光圈、时钟划像、百叶窗等）。
+- 由你自己的灰度图稿驱动的自定义转场。
+- 比直接交叉淡化或硬切更柔和、更风格化的替代方案。
+
+## 参数
+
+### luma_map
+驱动划像顺序的内置灰度图案。选项：`none` 以及 `linear_x`、`linear_y`、`bilinear_x`、`bilinear_y`、`radial`、`square`、`diamond`、`clock`、`symmetric_clock`、`spiral`、`burst`、`curtain`、`blinds_h`、`blinds_v`、`checker`、`cloud`。默认 `radial`。若接入 `luma_image` 则忽略；若设为 `none` 则必须提供 `luma_image`。
+
+### duration
+过渡时长，单位秒，`0.1`–`5.0`，步长 `0.05`，默认 `1.0`。
+
+### softness
+划像边缘的羽化，`0.0`–`1.0`，默认 `0.1`。`0` = 硬边，越大越柔和、越渐进。
+
+### invert
+布尔，默认**关**。反转划像方向（亮部先揭示，而非暗部）。
+
+### video_a / video_b（输入）
+切出（`video_a`）与切入（`video_b`）的 `COMFYTV_VIDEO` 片段。两者均必填。
+
+### luma_image（输入，可选）
+你自己的灰度 `COMFYTV_IMAGE`，用作划像图案而非内置 `luma_map`。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | 由亮度划像转场连接的两段片段。 |
+
+## 提示
+
+- 接入的 `luma_image` 会覆盖 `luma_map`。若把 `luma_map` 设为 `none` 又不提供图像，节点会停下并要求提供。
+- 更高的 `softness` 能掩盖手绘图的接缝；`0` 保持利落的图形化边缘。
+
+## 相关节点
+
+- **Video Transition** — 两段片段间的 ffmpeg xfade 转场（淡化、滑动、划像）。
+- **Sequence** — 在一个节点里用转场组装多段片段。

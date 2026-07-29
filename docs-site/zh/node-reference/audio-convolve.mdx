@@ -1,0 +1,53 @@
+---
+title: "Audio Convolve (IR)（音频卷积混响）"
+description: "卷积混响——把真实空间（或任意脉冲响应）的声学特性盖印到你的音频上。"
+sidebarTitle: "Audio Convolve (IR)（音频卷积混响）"
+translationSourceHash: "3f527a7277d975f7"
+---
+
+<Frame caption="Audio Convolve (IR)（音频卷积混响） · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="Audio Convolve (IR)（音频卷积混响）" />
+</Frame>
+
+## 这个节点是做什么的
+
+**音频卷积 (Audio Convolve (IR))** 把一条音轨与作为**脉冲响应 (IR)** 的第二段音频卷积——IR 记录了某个空间或设备对短促脉冲的响应。结果会带上该 IR 中蕴含的混响尾音、音染或滤波。这是卷积混响与音箱/扬声器模拟背后的经典技术。
+
+**audio** 输入接 `COMFYTV_AUDIO` 快照（也可接 `COMFYTV_VIDEO`，会取其音轨），**ir** 输入接第二段 `COMFYTV_AUDIO`，输出处理后的 `COMFYTV_AUDIO`。它带有 ▶ **运行**。**ir** 输入上必须接入脉冲响应——为空时节点会报错。
+
+要与 ComfyUI 原生 `AUDIO` 互通，请插入 **Bridge**——见 [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 适用场景
+
+- 把干声人声或乐器置入采集为 IR 的真实大厅、教堂或房间。
+- 从脉冲响应模拟吉他音箱或硬件设备。
+- 先用 **Audio Deconvolve** 提取 IR，再在此应用到任意源。
+
+## 参数说明
+
+### wet
+卷积（处理后）信号的电平，**0.0–2.0**（默认 **1.0**）。大于 1 会放大湿信号通路。
+
+### dry
+混回的原始（未处理）信号电平，**0.0–2.0**（默认 **0.0**）。提高可得到干+混响的混合；保持 0 则全湿。
+
+### normalize
+布尔值，默认**开**。对脉冲响应做归一化，避免响亮的 IR 撑爆输出电平。
+
+## 输出说明
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **audio** | `COMFYTV_AUDIO` | 卷积后的音频快照 |
+
+## 小贴士
+
+- **ir** 输入必填——把脉冲响应片段（采集的混响或合成 IR）接进去。
+- 想要自然的混响混合，把 **dry** 保持在接近源电平，再按口味加 **wet**，而非全湿。
+- 只有当你想让 IR 的原始增益直接通过时才关掉 **normalize**。
+
+## 相关节点
+
+- **Audio Deconvolve (IR)** —— 从扫频正弦录音中恢复脉冲响应。
+- **Audio Sweep (ESS)** —— 生成用于采集 IR 的正弦扫频。
+- **Muse Reverb (FDN)** —— 无需 IR 的算法混响替代方案。

@@ -1,0 +1,44 @@
+# Video LUT
+
+> 用库中的 `.cube` 3D LUT 为片段套用成品调色风格。
+
+## 节点用途
+
+**Video LUT（视频 LUT）** 让片段通过一张 3D 查找表 —— 这是业界标准的成品"风格"发行方式（胶片模拟、剧集 LUT、创意调色）。从 ComfyTV 的 LUT 库中选择一个 LUT 文件，它就会被应用到每一帧。
+
+它输入输出均为 `COMFYTV_VIDEO`，通过 ffmpeg 的 `lut3d` 滤镜渲染。由于需要重新编码，它带有 **▶ Run**。所选文件按文件名在 LUT 资源库中解析；若名称找不到，节点会抛出错误，而不是默默不做任何事。留空文件时，片段原样通过。
+
+要把调色后的片段接入原生 ComfyUI 节点，请加一个 **Bridge**（见 [Bridge 指南](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)）。
+
+## 何时使用
+
+- 在多个镜头间套用统一的创意风格
+- 模拟某种胶片或做相机原生到 Rec.709 的转换
+- 交付客户提供的剧集 LUT
+- 把成品调色烘焙进输出用于审片
+
+## 参数
+
+### lut_file
+要从 ComfyTV LUT 库加载的 LUT 文件名（只取基础文件名）。它必须能在库中解析到真实文件，否则节点报错。这里**不支持** Hald `.png` LUT —— 它们需要第二个输入；请改用 `.cube`（或其他 `lut3d` 兼容格式），若你喂入 `.png`，节点会抛出清晰的错误。
+
+### interp
+在 3D LUT 网格点之间采样时使用的插值方法。默认 `tetrahedral`。选项：`tetrahedral`、`trilinear`、`nearest`、`pyramid`、`prism`。`tetrahedral` 是常用的高质量默认值；`nearest` 最快但最块状。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | 应用了 LUT 的片段 |
+
+## 提示
+
+- 从 ComfyTV 资源/LUT 库管理 LUT；本节点只按名称引用其中的文件。
+- 若报"not found"错误，请确认该确切文件名存在于 LUT 库中。
+- LUT 假定特定的输入色彩空间 —— 把 Rec.709 风格 LUT 用在 log 素材上（或反之）会看起来不对。让 LUT 与你的素材匹配。
+
+## 相关节点
+
+- **Video Color** —— 在套 LUT 前或代替 LUT 做一级调色
+- **Video Curves** —— 没有合适 LUT 时手工塑造影调
+- **CDL Grade** —— 一种可移植的 slope/offset/power 调色，以数值而非查找表传递

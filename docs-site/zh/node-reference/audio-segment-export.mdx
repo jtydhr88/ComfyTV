@@ -1,0 +1,67 @@
+---
+title: "Audio Split Export"
+description: "把一段录音切成多个独立音频文件 — 或按自动检测的静音处切分,或按你指定的时间范围切分。"
+sidebarTitle: "Audio Split Export"
+translationSourceHash: "d04d9ad9088ed02b"
+---
+
+<Frame caption="Audio Split Export · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="Audio Split Export" />
+</Frame>
+
+## 本节点的作用
+
+**Audio Split Export(音频分段导出)** 接收单个音频源,输出多个音频文件,每段一个。分段来自两种模式之一:可**检测静音**并在空隙处切分,或使用一份显式的**JSON 列表**给出起止时间。每个导出片段都会加一小段淡变以避免爆音,文件按所选方案命名。
+
+它接受 `COMFYTV_AUDIO` 快照或 `COMFYTV_VIDEO`(使用其音轨;audio 优先)。输出列出导出文件的 `COMFYTV_TEXT`,并带有 ▶ **Run**(由 FFmpeg 完成切割)。
+
+若要与原生 ComfyUI 的 `AUDIO` 互通,请插入 **Bridge** — 见 [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 何时使用
+
+- 把包含多个短句或音效的长录音拆成一个个独立片段。
+- 按停顿处切分,自动把一条人声录音分成句子。
+- 把精确的时间范围(如来自提示表)各导出为独立文件。
+
+## 参数
+
+### detect
+如何确定分段边界:`silence`(默认)按安静空隙自动切分;`json` 使用你在 **segments** 中提供的范围。
+
+### threshold_db
+低于该响度即视为静音,单位 dB。范围 **-90 到 -20**,默认 **-60**。仅 `silence` 模式。若安静段被当作有声而未切分,可调高(向 -20)。
+
+### min_silence_s
+安静空隙至少要持续多久才作为切分点,单位秒。范围 **0.01 到 5**,默认 **0.5**。仅 `silence` 模式。
+
+### min_segment_s
+片段至少要有多长才导出,单位秒。范围 **0.01 到 10**,默认 **0.1**。丢弃极短碎片。
+
+### fade_ms
+对每个导出片段施加的淡入/淡出,单位毫秒。范围 **0 到 500**,默认 **1.45**。极短的淡变可防止切口处爆音。
+
+### naming
+导出文件的命名方式:`num_and_prefix`(默认,序号 + **prefix**)、`num_and_name`(序号 + 源名)或 `name`(仅源名)。
+
+### prefix
+当 **naming** 为 `num_and_prefix` 时用于文件名的文本。默认 **`segment`**。
+
+### segments
+`json` 模式下的范围 JSON 列表,形如 `[{"start": s, "end": s}, ...]`(时间单位秒)。`silence` 模式下忽略。当 **detect** 为 `json` 时必填(不可为空)。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **files** | `COMFYTV_TEXT` | 导出的分段文件列表 |
+
+## 提示
+
+- `silence` 模式下若切得过碎,调高 **min_silence_s** 并/或降低 **threshold_db**;若切得不够,反向操作。
+- 调高 **min_segment_s** 可丢弃呼吸声与杂音,否则它们会各自成为很小的文件。
+- `json` 模式精确且可复现 — 当你已知切点时使用。
+
+## 相关节点
+
+- **Audio Crossfade** — 相反操作:以平滑淡变把片段重新拼接。
+- **Audio Mix** — 把片段重新叠合为混音。

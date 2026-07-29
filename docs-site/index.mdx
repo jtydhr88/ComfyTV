@@ -1,0 +1,38 @@
+---
+title: "ComfyTV"
+description: "Turn ComfyUI into a TapNow / LibTV-style canvas app. Every operation is a node; results flow downstream automatically."
+mode: "wide"
+---
+
+# ComfyTV
+
+ComfyTV turns ComfyUI into a **canvas app for making media**. Every operation is its own node, and results flow downstream automatically. Chain stages into a complete pipeline: **generate → pick → edit → compose**, across image, video, audio, panorama, and 3D.
+
+<CardGroup cols={2}>
+  <Card title="Getting Started" icon="rocket" href="/guides/getting-started">
+    Install ComfyTV, run your first Image Stage, and learn how stages flow into each other.
+  </Card>
+  <Card title="Node Reference" icon="cubes" href="/node-reference/image">
+    Per-node docs for every ComfyTV stage: what it does, when to use it, inputs and outputs.
+  </Card>
+  <Card title="Generate" icon="wand-magic-sparkles" href="/guides/generate">
+    Text, image, video, and audio generators, plus how to wire your own workflows.
+  </Card>
+  <Card title="Video & Audio" icon="film" href="/guides/video-and-audio">
+    Trim, crop, upscale, de-subtitle, extract audio, and compose timelines.
+  </Card>
+</CardGroup>
+
+## What makes ComfyTV different
+
+<CardGroup cols={3}>
+  <Card title="Per-node Run" icon="play">
+    Most stages have their own Run button. Running one stage does not re-run the whole graph.
+  </Card>
+  <Card title="Snapshots flow downstream" icon="diagram-project">
+    Once a stage runs, its result is saved as a snapshot and reused by downstream stages.
+  </Card>
+  <Card title="Rich in-node UI" icon="sliders">
+    Crop, rotate, mirror, panorama viewports, timelines, and editors run right in the browser.
+  </Card>
+</CardGroup>

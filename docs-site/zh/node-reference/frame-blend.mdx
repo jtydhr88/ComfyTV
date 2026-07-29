@@ -1,0 +1,66 @@
+---
+title: "Frame Blend"
+description: "把相邻帧混合在一起，做运动拖尾、残影或运动模糊 —— 就像合成软件里的帧混合 / 运动模糊。"
+sidebarTitle: "Frame Blend"
+translationSourceHash: "f6d8845dc1002fb3"
+---
+
+<Frame caption="Frame Blend · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="Frame Blend" />
+</Frame>
+
+## 这个节点做什么
+
+**Frame Blend（帧混合）** 把每个输出帧与其时间上的相邻帧组合。它有两种模式：
+
+- **window（窗口）** —— 对当前帧周围的一段帧做平均（或 min/max/sum/product），可选衰减加权。适合运动拖尾、残影和长曝光观感。
+- **shutter（快门）** —— 通过在时间窗口内采样并平均来模拟虚拟快门，产生平滑的合成运动模糊。
+
+这是一个需要渲染的节点 —— 必须 **▶ Run**（torch/GPU 后端），且需要连接 `video`。输入 `COMFYTV_VIDEO`，输出 `COMFYTV_VIDEO`。
+
+要把结果交给原生 ComfyUI 节点，请插入 **Bridge**。参见 [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 何时使用
+
+- 为运动主体添加运动拖尾或残影。
+- 伪造长曝光 / 光轨观感。
+- 为渲染时未带运动模糊的片段添加平滑运动模糊。
+
+## 参数
+
+### mode
+`window` 或 `shutter`，默认 `window`。选择使用下面哪组控制。`window`/`shutter` 模式会忽略另一模式的参数。
+
+### 窗口模式参数
+当 `mode` 为 `window` 时使用。
+
+- **frame_min** `-60`–`0`，默认 `-5` —— 混合窗口的起始帧，相对当前帧（负 = 更早的帧）。
+- **frame_max** `0`–`60`，默认 `0` —— 窗口的结束帧，相对当前帧（正 = 更晚的帧）。
+- **interval** `1`–`10`，默认 `1` —— 窗口内采样帧之间的步进；`2` 表示隔帧取，以此类推。
+- **operation** 取值 `average`、`min`、`max`、`sum`、`product` 之一，默认 `average` —— 采样帧如何组合。
+- **decay** `0.0`–`1.0`，默认 `0.0` —— 加权衰减，使更远的帧贡献更少（`0.0` = 等权，即无衰减）。
+
+### 快门模式参数
+当 `mode` 为 `shutter` 时使用。
+
+- **shutter** `0.0`–`8.0`（步长 `0.05`），默认 `0.5` —— 快门角度 / 开启时长；越大运动模糊越多。
+- **shutter_type** 取值 `centered`、`start`、`end`、`custom` 之一，默认 `centered` —— 快门窗口相对帧的位置。
+- **shutter_offset** `-8.0`–`8.0`（步长 `0.05`），默认 `0.0` —— 在时间上偏移快门窗口（配合 `custom` 使用）。
+- **divisions** `1`–`64`，默认 `10` —— 在快门窗口内采样的子样本数；越多模糊越平滑、渲染越慢。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | 帧混合后的片段 |
+
+## 提示
+
+- 经典运动拖尾用 `window`，`frame_min` 取负、`frame_max` 取 `0`，使其只向过去回看。
+- 平滑运动模糊用 `shutter`，若模糊里出现阶梯就调高 `divisions`。
+- `interval` 大于 `1` 会跳帧 —— 适合频闪式拖尾。
+
+## 相关节点
+
+- **Glow（辉光）** —— 泛光，而非时间拖尾。
+- **Old Film（老电影）** —— 时间闪烁，而非运动混合。

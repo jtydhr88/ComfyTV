@@ -1,0 +1,60 @@
+---
+title: "Chroma Key"
+description: "Pull a green- or blue-screen key out of a clip with built-in spill suppression, in one pass."
+sidebarTitle: "Chroma Key"
+---
+
+<Frame caption="Chroma Key · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Chroma Key" />
+</Frame>
+
+## What this node does
+
+Chroma Key removes a solid backdrop color (green screen, blue screen, or any custom color you pick) from a video and turns it into transparency or a matte. It works like a fast chroma keyer in After Effects or Premiere: pick the screen color, widen or tighten how much of that color is treated as "background", soften the edge, and clean up the green/blue fringe (spill) that bleeds onto your subject.
+
+Input and output are `COMFYTV_VIDEO`. It has a ▶ Run — the key is computed by ffmpeg/PyAV, so processing happens when you run the node, not live.
+
+## When to use it
+
+- You shot a person or product on a green/blue screen and want to drop them onto a new background.
+- You need a quick, reliable key without the extra controls of a full keyer.
+- You want a matte (grayscale mask) to feed a compositing or mixing step downstream.
+
+## Parameters
+
+### key_color
+The backdrop color to remove, as a hex string. Default `#00FF00` (pure green). Set it to your actual screen color — use `#0000FF`-ish for a blue screen, or sample the exact green from your footage for a cleaner key.
+
+### similarity
+How close a pixel's color must be to `key_color` to count as background. Range `0.01`–`1.0`, default `0.1`. Raise it if parts of the screen are left behind; lower it if it starts eating into your subject.
+
+### blend
+Edge softness — how gradually pixels near the threshold fade from opaque to transparent. Range `0.0`–`1.0`, default `0.05`. A little blend gives a smoother, less jagged edge; too much makes the whole edge hazy.
+
+### despill_mix
+How strongly to remove the leftover screen color that reflects onto your subject (green/blue fringe on hair and edges). Range `0.0`–`1.0`, default `0.5`. Turn it up if edges look green; turn it down if skin tones go too gray.
+
+### despill_expand
+Grows the despill region outward from the keyed edge so more of the fringe is treated. Range `0.0`–`1.0`, default `0.0`. Nudge up when spill reaches beyond the immediate edge.
+
+### output
+What the node emits. `alpha` (default) produces a video with a real transparency channel; `matte` produces a grayscale mask (white = keep, black = remove). Note that `alpha` output needs a PyAV build with the VP9 encoder; if it errors, switch to `matte`.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The keyed clip: transparent (`alpha`) or grayscale matte (`matte`). |
+
+## Tips
+
+- If `alpha` output fails with an encoder error, use `matte` and combine it downstream with **Key Mix**.
+- For difficult keys (uneven lighting, fine hair, motion blur) reach for **PIK Keyer** or **Keyer**, which expose finer controls.
+- To interoperate with native ComfyUI nodes, insert a **Bridge**. See [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## Related nodes
+
+- **PIK Keyer** — image-based (IBK-style) keyer with clean-plate and garbage-mask inputs for tougher shots.
+- **Keyer** — luma/chroma keyer with independent tolerance and softness on both sides.
+- **Despill** — dedicated spill suppression when you only need to clean fringe.
+- **Key Mix** — composite the keyed foreground over a new background using the matte.

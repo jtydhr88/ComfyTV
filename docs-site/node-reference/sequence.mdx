@@ -1,0 +1,48 @@
+---
+title: "Sequence"
+description: "Assemble multiple clips end-to-end into one edit, with per-cut in/out trims and optional transitions."
+sidebarTitle: "Sequence"
+---
+
+<Frame caption="Sequence · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Sequence" />
+</Frame>
+
+## What this node does
+
+Sequence is a mini edit-assembly node. Wire up to twelve `COMFYTV_VIDEO` clips into its auto-growing **videos** input, then arrange them into a playback order with the on-node segment list. Each segment can carry an in-point, an out-point, a transition type, and a transition duration; the node concatenates them into a single clip in that order.
+
+If you don't define any segments, Sequence simply strings the connected clips together, in slot order, with hard cuts. It runs on **▶ Run** (renders the assembled sequence) and needs at least one connected clip. Output is a single `COMFYTV_VIDEO`.
+
+To hand the result to a native ComfyUI node, insert a **Bridge** (`ComfyTV/Bridge`). See https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md.
+
+## When to use it
+
+- Build a rough cut from a handful of shots without leaving ComfyTV.
+- Trim each clip's in/out and drop a fade or wipe between selected cuts.
+- Concatenate render passes or takes into one continuous file.
+
+## Parameters
+
+### segments
+JSON `[{slot, in_s, out_s, transition, trans_dur}]` describing, in playback order, which slot plays, its in/out trim points (seconds), and the transition into it plus its duration. Driven by the on-node segment-list UI, not typed by hand. Leave empty to just concatenate all connected clips with cuts.
+
+### videos (input)
+An auto-growing set of `COMFYTV_VIDEO` slots (`video0`, `video1`, …), up to 12. Connect one clip per slot; the `segments` list references these by slot name.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The assembled sequence (all chosen segments concatenated in order). |
+
+## Tips
+
+- With an empty `segments` list you get a plain concatenation of every connected slot, in order, with hard cuts — a fast way to join clips.
+- The segment list references slots by name, so leaving a middle slot empty just means that slot isn't included; it doesn't shift the others.
+
+## Related nodes
+
+- **Video Transition** — a single crossfade/transition between exactly two clips.
+- **Luma Wipe** — a pattern-driven wipe between two clips.
+- **Time Remap** — retime a single clip before dropping it into the sequence.

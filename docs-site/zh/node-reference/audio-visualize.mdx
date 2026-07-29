@@ -1,0 +1,68 @@
+---
+title: "Audio Visualize（音频可视化）"
+description: "把音轨渲染成图片——波形或频谱图，可选快速的 FFmpeg 风格或更高细节的「pro」渲染。"
+sidebarTitle: "Audio Visualize（音频可视化）"
+translationSourceHash: "fc877ea0011add15"
+---
+
+<Frame caption="Audio Visualize（音频可视化） · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="Audio Visualize（音频可视化）" />
+</Frame>
+
+## 这个节点是做什么的
+
+**音频可视化 (Audio Visualize)** 把音轨变成一张静态图。两个快速模式使用 FFmpeg（`showwavespic`、`showspectrumpic`）；两个 **pro** 模式使用 ComfyTV 自己的更高细节波形与频谱图渲染器，并带有仪表叠加。它不改变音频。
+
+输入为 `COMFYTV_AUDIO` 快照（也可接 `COMFYTV_VIDEO`，会取其音轨），输出 `COMFYTV_IMAGE`。它带有 ▶ **运行**。必须接入源音频。
+
+要接入 ComfyUI 原生 `AUDIO`，请插入 **Bridge**——见 [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 适用场景
+
+- 为故事板或导出中的片段生成波形缩略图。
+- 检查音轨的频谱内容（找出嘶声、哼声或音色平衡）。
+- 产出带标注的「pro」频谱图或带仪表的波形供分析。
+
+## 参数说明
+
+### mode
+渲染哪种。可选：`waveform`（默认）、`spectrum`、`waveform_pro`、`spectrum_pro`。
+
+### width / height
+输出图像尺寸（像素）。**width** **240–4096**（默认 **1200**），**height** **120–2048**（默认 **480**）。
+
+### 波形（快速）—— `split_channels`
+布尔值，默认**关**。开启时把每个声道画在各自的通道里，而非叠加。`waveform` 模式使用。
+
+### 频谱（快速）—— `color`、`legend`
+- **color** —— 频谱图色彩映射：`intensity`（默认）、`channel`、`rainbow`、`moreland`、`nebulae`、`fire`、`fiery`、`fruit`、`cool`、`magma`、`green`、`viridis`、`plasma`、`cividis`、`terrain`。
+- **legend** —— 布尔值，默认**开**；绘制频率/时间坐标轴标签。`spectrum` 模式使用。
+
+### Pro 频谱图 —— `pro_scale`、`pro_colormap`、`range_db`、`gain_db`、`freq_gain`
+- **pro_scale** —— 频率刻度：`log`（默认）、`linear`、`mel`。
+- **pro_colormap** —— `roseus`（默认）或 `gray`。
+- **range_db** —— 显示的动态范围，**20–120 dB**（默认 **80**）。
+- **gain_db** —— 亮度/增益，**0–60 dB**（默认 **20**）。
+- **freq_gain** —— 频率倾斜增益，**-10 到 +10 dB/oct**（默认 **0**）。`spectrum_pro` 模式使用。
+
+### Pro 波形 —— `show_rms`、`show_clipping`、`db_axis`
+- **show_rms** —— 布尔值，默认**开**；叠加 RMS 包络。
+- **show_clipping** —— 布尔值，默认**开**；高亮削波采样。
+- **db_axis** —— 布尔值，默认**关**；将幅度轴以 dB 标注。`waveform_pro` 模式使用。
+
+## 输出说明
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **image** | `COMFYTV_IMAGE` | 渲染出的波形/频谱图 |
+
+## 小贴士
+
+- 快速模式用于快速缩略图；**pro** 模式用于可读、带仪表的分析图。
+- 只有所选 **mode** 对应的参数组才生效——其余不起作用。
+- 提高 pro 频谱图的 **gain_db** 可显现安静的细节；降低 **range_db** 可增强对比。
+
+## 相关节点
+
+- **Audio Analyze** —— 数值测量而非图片。
+- **Audio Sweep (ESS)** —— 生成测试信号以可视化系统响应。

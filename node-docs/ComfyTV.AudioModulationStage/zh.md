@@ -1,0 +1,70 @@
+# Audio Modulation（音频调制）
+
+> 经典的时间调制效果——移相（phaser）、镶边（flanger）、合唱（chorus）、颤音（vibrato）、颤幅（tremolo）与脉冲（pulsator）——集于一个节点。
+
+## 这个节点是做什么的
+
+**音频调制 (Audio Modulation)** 对音轨施加六种 LFO 驱动的调制效果之一，使用对应的 FFmpeg 滤镜（`aphaser`、`flanger`、`chorus`、`vibrato`、`tremolo`、`apulsator`）。你选择一个**模式 (mode)**，只需调节属于该模式的参数；其余会被忽略。
+
+输入为 `COMFYTV_AUDIO` 快照（也可接 `COMFYTV_VIDEO`，会取其音轨），输出处理后的 `COMFYTV_AUDIO` 以及一个 `fx_spec`。它带有 ▶ **运行**（由 FFmpeg 完成）。若未接源音频，只发出 `fx_spec` 以便串联。
+
+要与 ComfyUI 原生 `AUDIO` 互通，请插入 **Bridge**——见 [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 适用场景
+
+- 用合唱或镶边给合成器、吉他增添运动感与宽度。
+- 用迷幻的移相扫过铺底音色或鼓循环。
+- 加入音高抖动（颤音）或音量脉动（颤幅/脉冲）营造节奏性质感。
+
+## 参数说明
+
+### mode
+应用哪种效果。可选：`phaser`（默认）、`flanger`、`chorus`、`vibrato`、`tremolo`、`pulsator`。下面各参数组按模式生效。
+
+### Phaser 移相（`ph_*`）
+- **ph_delay** —— 扫描延迟，**0.0–5.0**（默认 **3.0**）。
+- **ph_decay** —— 反馈衰减，**0.0–0.99**（默认 **0.4**）。
+- **ph_speed** —— LFO 速度（Hz），**0.1–2.0**（默认 **0.5**）。
+- **ph_type** —— LFO 波形，`triangular`（默认）或 `sinusoidal`。
+
+### Flanger 镶边（`fl_*`）
+- **fl_delay** —— 基础延迟（ms），**0.0–30.0**（默认 **0.0**）。
+- **fl_depth** —— 扫描深度（ms），**0.0–10.0**（默认 **2.0**）。
+- **fl_regen** —— 再生/反馈 %，**-95 到 95**（默认 **0**）。
+- **fl_width** —— 调制延迟宽度 %，**0–100**（默认 **71**）。
+- **fl_speed** —— LFO 速度（Hz），**0.1–10.0**（默认 **0.5**）。
+- **fl_shape** —— LFO 波形，`sinusoidal`（默认）或 `triangular`。
+- **fl_phase** —— 左右相位偏移 %，**0–100**（默认 **25**）。
+
+### Chorus 合唱（`chorus_preset`）
+内置声部预设：`single`（默认）、`double`、`triple`——一、二、三个延迟声部。
+
+### Vibrato / Tremolo 颤音/颤幅（`lfo_*`）
+两模式共用：
+- **lfo_f** —— 调制频率（Hz），**0.1–20000**（默认 **5.0**）。
+- **lfo_d** —— 调制深度，**0.0–1.0**（默认 **0.5**）。颤音调制音高；颤幅调制音量。
+
+### Pulsator 脉冲（`pu_*`）
+- **pu_hz** —— 脉冲速率（Hz），**0.01–100**（默认 **2.0**）。
+- **pu_amount** —— 效果量，**0.0–1.0**（默认 **1.0**）。
+- **pu_width** —— 脉冲宽度，**0.0–2.0**（默认 **1.0**）。
+- **pu_mode** —— LFO 波形：`sine`（默认）、`triangle`、`square`、`sawup`、`sawdown`。
+
+## 输出说明
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **audio** | `COMFYTV_AUDIO` | 调制后的音频快照 |
+| **fx_spec** | `COMFYTV_FXSPEC` | 该效果的 spec，可串入 FX Chain |
+
+## 小贴士
+
+- 只有所选 **mode** 对应的参数才起作用——其余虽无害但不生效。
+- 移相在内部固定其增益（`in_gain=0.4`、`out_gain=0.74`）；你通过延迟/衰减/速度来控制它。
+- 想要轻微加宽，合唱 `single` 最柔和；`triple` 最丰润。
+
+## 相关节点
+
+- **Audio Echo** —— 离散延迟/回声，另一种增添空间的方式。
+- **Audio Stereo** —— 加宽或收窄立体声声场。
+- **FX Chain** —— 把多个 `fx_spec` 步骤（含本节点）一趟渲染完成。

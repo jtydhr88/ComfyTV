@@ -1,0 +1,67 @@
+# Click Track
+
+> Generate a metronome click as audio — set a tempo and meter, or build the click from labels.
+
+## What this node does
+
+**Click Track** produces a metronome. Give it a tempo, a time signature and a
+number of bars, and it renders a click audio track (accented downbeat, plain
+off-beats) through the same SoundFont synthesizer the rest of the music lane
+uses. Optionally, wire in a `labels` text input to place the clicks at specific
+labelled points instead of on a fixed grid.
+
+Press **▶ Run** to render on the backend. The node emits two outputs: the
+`audio` click track, and a `performance` payload describing the clicks — the
+same kind of performance **Score Synth** and other stages consume, so the click
+can double as a timing reference for other renders.
+
+## When to use it
+
+- You need a metronome track to record or align against.
+- You want a count-in or timing bed at a specific BPM and meter.
+- You have timing labels and want clicks placed at exactly those points.
+
+## Parameters
+
+### bpm
+Tempo in beats per minute, **20–400** (default **120**), in 0.5 steps. Ignored
+when a `labels` input drives the clicks instead.
+
+### beats_per_bar
+Beats per bar (the top of the time signature), **1–12** (default **4**). The
+first beat of each bar is accented.
+
+### bars
+How many bars to generate, **1–256** (default **8**).
+
+### soundfont
+Optional SoundFont file name from the resource library used to voice the click.
+If blank (or not found), the synth's built-in click voices are used.
+
+### labels (optional input)
+An optional text input, type `COMFYTV_TEXT`. When present, the click track is
+built from these labels (clicks land at the labelled positions) instead of from
+`bpm`/`beats_per_bar`/`bars`.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **audio** | `COMFYTV_AUDIO` | The rendered metronome click track |
+| **performance** | `COMFYTV_TEXT` | The click performance (JSON), reusable as a timing reference |
+
+## Tips
+
+- Leave `labels` unwired for a plain grid click; wire it when you need clicks at
+  irregular, labelled points.
+- The `performance` output can be fed to **Score Synth** or used to line up
+  other stages to the same grid.
+- Add a SoundFont only if you want a specific click sound; the default works
+  out of the box.
+
+## Related nodes
+
+- **Score Synth** — can render the click `performance`, and shares its synth.
+- **Score Performer** — produces musical performances the same way.
+- **Bridge** — convert `COMFYTV_AUDIO` to/from native ComfyUI audio. See
+  https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md

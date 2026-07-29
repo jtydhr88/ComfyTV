@@ -1,0 +1,70 @@
+---
+title: "Mesh Bake Maps"
+description: "Bake a high-poly mesh's detail onto a low-poly one — a tangent-space normal map and/or an ambient-occlusion map — so a light model still reads as if it had all the geometry."
+sidebarTitle: "Mesh Bake Maps"
+---
+
+<Frame caption="Mesh Bake Maps · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Mesh Bake Maps" />
+</Frame>
+
+## What this node does
+
+Mesh Bake Maps projects surface detail from a **high-poly** source onto a **UV-unwrapped low-poly** target and writes the result as texture maps packed into the returned GLB. It can bake a tangent-space normal map (glTF/OpenGL +Y) that captures detail lost to decimation, and an ambient-occlusion map packed into the glTF ORM / occlusionTexture. It runs the vendored mesh3d backend (▶ Run).
+
+Both inputs are required: the `model` (the low-poly to bake onto, which must be UV-unwrapped) and `high_poly` (the pre-decimation mesh that holds the detail). The stage errors if either is missing. A preview of the baked maps becomes the `maps` image output.
+
+This is the classic fix when a GLB round-trip or a decimate loses a normal map: unwrap the low-poly in **Mesh Ops**, then bake the original high-poly back onto it here.
+
+Outputs are ComfyTV snapshots, not native tensors — insert a **Bridge** to feed native ComfyUI nodes ([bridges docs](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)).
+
+## When to use it
+
+- Restore surface detail after decimating a dense sculpt to a game-ready low-poly.
+- Rebuild a normal map lost in a GLB import/export round-trip.
+- Add baked contact shadows / crevice darkening (AO) to a model that has none.
+
+## Parameters
+
+### bake_normal
+Bake a tangent-space normal map (glTF/OpenGL +Y) capturing high-poly detail. Default `on`.
+
+### bake_ao
+Bake an ambient-occlusion map (white = open, dark = crevices), packed into the glTF ORM / occlusionTexture. Default `on`.
+
+### resolution
+Baked map resolution in pixels. Default `1024`, range `256`–`4096` (step 256).
+
+### cage_distance
+Normal bake only — the surface search band as a fraction of the bounding-box diagonal. Default `0.05`, range `0.001`–`0.5`. Raise it if the bake has missing patches; lower it if it grabs detail across gaps between separate parts.
+
+### ao_samples
+AO rays cast per texel. Default `64`, range `4`–`512` (step 4). More = smoother AO, slower bake.
+
+### ao_strength
+Scales the occlusion. Default `1.0`, range `0`–`2`. Above 1 darkens the AO; below 1 lightens it.
+
+### model
+The UV-unwrapped low-poly `COMFYTV_MODEL` to bake onto. Required.
+
+### high_poly
+The high-poly `COMFYTV_MODEL` that holds the detail — the mesh the low-poly was decimated from. Required.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **model** | `COMFYTV_MODEL` | The low-poly with baked maps packed into the GLB |
+| **maps** | `COMFYTV_IMAGE` | A preview of the baked normal / AO maps |
+
+## Tips
+
+- The low-poly must have UVs first — run **Mesh Ops** `unwrap` before baking, or the maps have nowhere to land.
+- If the normal bake shows holes or bleeds across a seam, tune `cage_distance`: raise for missing coverage, lower for cross-gap bleed.
+- Grainy AO means too few rays — raise `ao_samples`. Adjust the overall look with `ao_strength` rather than re-baking at a higher sample count when you only need it darker/lighter.
+
+## Related nodes
+
+- **Mesh Ops** — `unwrap` the low-poly (required first) and `decimate` it from the high-poly.
+- **Mesh Primitive** — generate base meshes to build the high-poly from.
+- **Mesh Boolean** — construct the high-poly detail before baking it down.

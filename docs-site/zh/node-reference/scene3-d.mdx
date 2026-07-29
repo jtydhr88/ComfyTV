@@ -1,0 +1,103 @@
+---
+title: "3D 场景 (3D Scene)"
+description: "节点内置的 DCC 风格 3D 工作台：用角色、几何基元、导入模型、灯光和相机搭建场景，然后捕获一张静帧、一批多相机图，或录制一段视频——支持 color、depth、normal、openpose 四种通道。"
+sidebarTitle: "3D 场景"
+translationSourceHash: "f3b00f5acf4ce44a"
+---
+
+<Frame caption="3D 场景 (3D Scene)（ComfyTV）">
+  <img src="/images/nodes/scene3-d.png" alt="3D 场景 (3D Scene)" />
+</Frame>
+
+## 这个节点是做什么的
+
+**3D Scene** 是一个完整的浏览器内 3D 摆场工具。你在实时 WebGL 视口里搭建场景——放入带动画的角色、几何基元、你自己导入的模型、灯光和相机——用移动/旋转/缩放 gizmo 摆好一切，再用工具栏 **Capture（捕获）** 一帧或 **Record（录制）** 一段。你拍下的画面会成为节点的项目快照。
+
+它不是「文生 3D」生成器，而是一个供你布置和拍摄的**片场**。视口与其它 3D 节点共用 ComfyTV 唯一的 WebGL 渲染器，因此画布上放多个场景也依然轻量。
+
+创作者的所有产出汇集为三个输出：点选的静帧 **image**、录制的 **video**、以及多相机批次 **images**。所有几何、相机和输出设置都以 scene state JSON 形式存在内部；节点上没有暴露的数值控件——一切都通过编辑器 UI 驱动。
+
+## 适用场景
+
+- 搭一个可控的 3D 参考（角色 + 相机角度），通过 depth、normal 或 openpose 通道喂给 ControlNet 式的图像/视频工作流。
+- 用多个相机分镜，在一次 **Capture** 里为每个相机各出一张干净的渲染。
+- 让角色动画沿相机路径播放，**Record** 一小段运动视频用于 I2V/V2V。
+- 摆放道具和灯光，在生成前先艺术指导光影或剪影。
+
+## 编辑器
+
+节点是一个三栏工作台：顶部工具栏，底部可选时间线条。
+
+**顶部工具栏（从左到右）：**
+- **Gizmo 模式** —— None、Translate、Rotate、Scale。选一个，拖拽屏幕上的 gizmo 变换选中对象。当前选择不适用的模式会变灰。
+- **Undo / Redo（撤销/重做）** —— 场景编辑的完整历史。
+- **Capture（捕获）** —— 用所选通道渲染当前帧并上传为静帧 `image`。若场景有多个相机，还会生成 `images` 批次，每个相机一张。
+- **Record（录制）** —— 把动画片段录到 `video` 输出。仅当场景有可录制时长（有动画的角色或运动相机）且浏览器支持录制时可用。
+- **Fullscreen（全屏）** —— 把编辑器弹出铺满屏幕（Esc 退出）。
+
+**左栏——大纲（outliner）。** 分组的「添加」行用于填充场景，每个添加的对象都有一行，可选中、重命名、隐藏（眼睛开关）或删除：
+- **Add Character（添加角色）** —— 从可用的绑定模型库中挑选；角色自带动画片段。
+- **Add Object（添加物体）** —— 几何基元：`cube`、`sphere`、`cylinder`、`plane`（每个都有可编辑颜色）。
+- **Add Model（添加模型）** —— 插入你导入/上传的某个 GLB 模型资产。
+- **Add Light（添加灯光）** —— `directional`、`point` 或 `spot`，另有灯光预设下拉（如三点布光），一次布好整套。
+- **Add Camera（添加相机）** —— 新增一个场景相机。当前用于输出的相机在列表里标记 **REC**。
+
+**中栏——视口。** 支持轨道（orbit）导航的实时 3D 视图。选中对象会显示其 gizmo。相机可被 **look through（透视）**（眼睛按钮）以从它的镜头取景；第二个相机可钉在角落作小窗画中画（PIP）预览。
+
+**右栏——检视器（inspector）**，随选择变化：
+- **角色 / 模型面板** —— 选动画片段，设置速度、起始偏移和循环，编辑位置/旋转/缩放。模型多一个 **Fit to scene（适配场景）** 按钮。
+- **基元面板** —— 颜色加变换。
+- **灯光面板** —— 颜色、强度，以及灯光类型专有设置（范围、锥角）。
+- **相机面板** —— 绑定 **camera preset（相机预设，一段成品运镜）** 或保持自由相机；自由相机暴露 **FOV** 滑块（10–140°）和位置/旋转；预设相机暴露调节滑块、X/Y/Z 位置 **offset（偏移）**、**reverse（反向）** 开关和 **Reset（重置）**。眼睛按钮透视该相机。
+
+检视器下方是常驻区块：**Environment（环境）**（显示网格、显示房间、背景色）和 **Output（输出）**。
+
+**输出面板：** 宽和高（64–4096，步长 8）、**Channel（通道）** 下拉、**Output Camera（输出相机）** 选择器（相机多于一个时显示），以及录制用的 **FPS** 和 **Frame count（帧数）**。
+
+**时间线条（底部）：** 当场景有动画相机或角色时出现。显示逐对象轨道、播放/拖拽头、循环开关，可直接改相机速度和角色动画。
+
+### 四种捕获通道
+
+**Channel** 下拉决定渲染 pass 输出什么——Capture 与 Record 相同：
+
+- **color** —— 正常打光的美术渲染（beauty）。
+- **depth** —— 归一化灰度深度图（近处更亮），可直接作深度条件。
+- **normal** —— 法线图（经典蓝紫色法线渲染）。
+- **openpose** —— 从每个角色骨架投影出的 OpenPose 骨骼叠加图，用于姿态条件生成。
+
+## 工作流程（分步）
+
+1. 放一个 **Project** 节点，再 **Add Node → ComfyTV → Input → 3D Scene**。
+2. 从 **Add Character**（或 **Add Model**）放入一个角色；从 **Add Light** 应用一套灯光预设。
+3. 轨道旋转视口取景，或 **Add Camera** 后选中并 **look through** 它。
+4. 在检视器里设置角色的动画片段、速度和循环。
+5. 在 **Output** 里设好宽/高并选一个 **Channel**（如用 `depth` 出深度条件）。
+6. 点 **Capture** 出静帧；或设好 **FPS**/**Frame count** 后点 **Record** 出片段。
+7. 把 **image** / **video** / **images** 接向下游——插入 **Bridge** 转成原生 ComfyUI 张量用于 ControlNet 工作流。
+
+## 输入与输出
+
+节点没有面向用户的输入控件——场景、通道、尺寸和捕获媒体都存在内部并由编辑器驱动。输出为项目快照：
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **image** | `COMFYTV_IMAGE` | 最近一次 **Capture** 的静帧（所选通道）。 |
+| **video** | `COMFYTV_VIDEO` | 最近一次 **Record** 的片段。 |
+| **images** | `COMFYTV_IMAGES` | Capture 的多相机批次——每个场景相机一张（仅当相机多于一个时）。 |
+
+`COMFYTV_*` 输出是项目引用，不是原生 ComfyUI 张量。要接入原生节点（ControlNet 等），加一个 **Bridge**——见 [bridges 指南](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 小贴士
+
+- 场景里真正有动画之前（正在播放的片段或运动/预设相机），**Record** 是禁用的——先加运动。
+- **images** 批次只在有两个及以上相机时出现；单相机时用 **image**。
+- 捕获前先对相机 **look through**，让你拍到的构图与看到的一致。
+- `depth`、`normal`、`openpose` 是给条件用的贴图——在下游工作流里配对应的 ControlNet。
+- 视口在所有 3D 节点间共用一个 WebGL 上下文；若大量画布编辑后场景看起来空白，重新选中一个对象强制重绘。
+
+## 相关节点
+
+- **Model 3D / Model Loader** —— 准备 `COMFYTV_MODEL` GLB，经 **Add Model** 引入。
+- **Material** —— 制作 PBR 材质应用到导入部件上。
+- **Bridge → / ← ComfyTV Image/Video** —— 把捕获在原生 ComfyUI 张量间来回转换以用于 ControlNet。
+- **Image / Video Stage** —— 把捕获的静帧或片段作为生成条件消费。

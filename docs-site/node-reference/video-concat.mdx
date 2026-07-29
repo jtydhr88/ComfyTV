@@ -1,0 +1,62 @@
+---
+title: "Video Concat"
+description: "Join two or more clips end-to-end into a single continuous video, in an order you control."
+sidebarTitle: "Video Concat"
+---
+
+<Frame caption="Video Concat · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Video Concat" />
+</Frame>
+
+## What this node does
+
+**Video Concat** takes several upstream clips and stitches them into one clip. It has an
+autogrow **videos** input (up to 12 slots) plus a reorder strip in the node body: drag the
+clips into the sequence you want, and that order is stored in the hidden **clip_order**
+field. Slots you leave empty are skipped.
+
+This is a real render, not a browser-side trick. On **▶ Run** the server re-encodes the
+clips (PyAV / ffmpeg) into one MP4 and saves it as a project snapshot. You need at least
+**two** non-empty clips or the run errors out. The input and output are `COMFYTV_VIDEO`.
+
+## When to use it
+
+- Assemble separately generated shots (e.g. several Video Stage results) into one sequence.
+- Put an intro, a main clip, and an outro together into one deliverable.
+- Chain trimmed pieces from Video Split / Video Clip back into a single timeline.
+
+## Parameters
+
+### videos
+Autogrow list of clip slots (up to 12). Wire each upstream `COMFYTV_VIDEO` into a slot; new
+slots appear as you fill them. Empty slots are ignored.
+
+### clip_order (hidden)
+A JSON list of the video slot keys in concat order. You don't edit this by hand — it is
+driven by the reorder strip in the node body. Any wired clip not listed there is appended
+after the ordered ones.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The single joined clip, saved as a project snapshot. |
+
+## Tips
+
+- Clips with different resolutions/frame rates are normalized during the re-encode; for the
+  cleanest result, feed clips that already share a size and fps.
+- Order comes from the reorder strip, not from the slot numbers — rearrange there.
+- Fewer than two non-empty clips is an error; wire at least two.
+
+## Bridge note
+
+`COMFYTV_VIDEO` is a project snapshot reference, not a native ComfyUI tensor. To move
+between ComfyTV and native ComfyUI video nodes, insert a **Bridge** (`ComfyTV/Bridge`). See
+https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md.
+
+## Related nodes
+
+- **Video Clip** — trim a single clip before concatenating.
+- **Video Split** — cut one clip into two pieces you can rejoin.
+- **Mux Audio** — replace or mix the audio track after assembling the sequence.

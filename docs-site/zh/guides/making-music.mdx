@@ -1,0 +1,202 @@
+---
+title: "在 ComfyTV/ComfyUI 里做音乐"
+description: "从一份乐谱(或一段让 LLM 写谱的提示词)到一首带混响的成品音频,全程在一张画布上完成,不用切换任何外部软件。本页把**作曲 → 演奏 → 合成 → 混音**四个环节的音乐概念和对应节点的每个参数讲清楚。"
+translationSourceHash: "7b6b4d5cbb48b15a"
+---
+
+链路总览(**ComfyTV / Music** + **ComfyTV / Audio**):
+
+```
+Score(乐谱)──▶ Score Performer(演奏)──▶ Score Synth(合成)──▶ Muse Reverb(空间)──▶ 成品音频
+```
+
+先分清三个词,每个词对应链上一段:
+
+| 环节 | 音乐里指什么 | 在这里由谁负责 |
+|---|---|---|
+| **作曲** | 决定**音符本身**:旋律、和声、节奏 | 乐谱(MusicXML)+ Score |
+| **编曲 / 演奏** | 决定**怎么弹**:乐器、奏法、强弱起伏、摇摆感 | Score Performer、音色选择 |
+| **混音** | 决定**听感**:音量平衡、空间感、频率修饰 | Muse Reverb 及其他 Audio 节点 |
+
+---
+
+## 第 1 站:乐谱从哪来 —— MusicXML
+
+**MusicXML** 是乐谱的通用交换格式,MuseScore、Finale、Sibelius 都能导出。它用文字描述"第几小节有哪些音、几分音符、什么奏法"。一个最小可用的谱长这样:
+
+```xml
+<?xml version="1.0"?>
+<score-partwise version="4.0">
+  <part-list>
+    <score-part id="P1"><part-name>Piano</part-name></score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes>
+        <divisions>2</divisions>
+        <time><beats>4</beats><beat-type>4</beat-type></time>
+      </attributes>
+      <direction><sound tempo="100"/></direction>
+      <note><pitch><step>C</step><octave>4</octave></pitch>
+            <duration>2</duration><type>quarter</type></note>
+      <note><pitch><step>E</step><octave>4</octave></pitch>
+            <duration>2</duration><type>quarter</type></note>
+      <note><pitch><step>G</step><octave>4</octave></pitch>
+            <duration>2</duration><type>quarter</type></note>
+      <note><pitch><step>C</step><octave>5</octave></pitch>
+            <duration>2</duration><type>quarter</type></note>
+    </measure>
+  </part>
+</score-partwise>
+```
+
+看懂三个关键字段就能读谱了:
+
+- `divisions` — 一个四分音符切成几份,后面所有 `duration` 都以它为单位(上例 `divisions=2`,`duration=2` 就是四分音符);
+- `step` + `octave`(+可选 `alter`)— 音名 + 八度 + 升降(`alter=1` 升半音,`-1` 降半音);
+- `measure` — 小节;多声部(左右手)就是多个 `<part>`。
+
+### 途径一:让 LLM 写谱
+
+Score 节点是**容错**的:把 LLM 的整段回答原样粘进去即可,它会自动从散文里抠出 `<score-partwise>…</score-partwise>` 部分。提示词模板:
+
+> 请用 MusicXML(score-partwise 4.0)写一段 8 小节的 C 大调钢琴独奏,4/4 拍,速度 100,右手旋律 + 左手柱式和弦,两个 part。只要求音符正确,不需要排版信息。
+
+想要双声部、指定和弦进行、加力度记号(`<dynamics>`)、渐强(`<wedge>`)、断奏(`<articulations>`)都可以直接在提示词里提——解析器支持这些记号,演奏环节会真的把它们弹出来。
+
+### 途径二:自己打谱 —— Score Editor
+
+**Score Editor** 节点是画布上的钢琴卷帘打谱器,不写一行 XML 也能出谱:
+
+- **三种输入方式**:画音符(按下拖出时值)、选择(拖拽框选、整体移动、两端拉长短)、**键入**(MuseScore 式 step-time:A-G 进音、7-2 选时值、`.` 附点、0/空格休止,光标自动前进,键盘打谱比鼠标快一个数量级)
+- **最多 4 个声部**,每个声部可以**直接选乐器**(GM 音色,写进谱里,下游 Score Synth 自动采用)或切成**鼓声部**(侧栏变成 GM 鼓件名,Kick/Snare/HH 直接画)
+- **力度条**:网格下方像 DAW 一样涂抹每个音的强弱,会真实反映到最终演奏
+- **播放试听**:▶ 直接在编辑器里听草稿(声部分波形,鼓有合成鼓声),定稿后走正式链路出真音色
+- 输出标准 MusicXML,接 Score 可看刻谱、接 Score Performer → Score Synth 出成品;也能把上游(LLM 写的或下载的)谱**导入卷帘继续改**
+
+### 途径三:公开下载
+
+| 站点 | 内容 | 说明 |
+|---|---|---|
+| [MuseScore.com](https://musescore.com) | 社区上传的各种谱 | 质量最好,部分需登录 |
+| [abcnotation.com](https://abcnotation.com) | 民谣/古典,ABC 记谱机转 | 免登录直链下载;机转文件偶有不规范,解析器按 MuseScore/OSMD 语义容错 |
+| [IMSLP](https://imslp.org) | 古典公版乐谱库 | 以 PDF 为主,部分带 XML |
+| [Mutopia](https://www.mutopiaproject.org) | 古典公版 | LilyPond 源,部分有 XML |
+
+注意:下载时选**未压缩**的 `.musicxml` / `.xml`;`.mxl` 是 zip 压缩包,需要先解压出里面的 XML。
+
+---
+
+## 第 2 站:Score(乐谱)
+
+把 MusicXML 粘进节点(或从上游 LLM 文本节点接入 `text`),它做三件事:
+
+1. **验证与清洗** — 解析失败会直接报错并说明原因,不让坏谱流向下游;
+2. **专业刻谱显示** — 节点卡片上直接渲染多行总谱(含打击乐谱表),可缩放,XML 可展开编辑、改完实时重刻;
+3. **输出干净的乐谱文本**给下游。
+
+没有演奏参数——**谱面是"事实"**,后面所有环节都不改谱,只改"怎么弹"。
+
+---
+
+## 第 3 站:Score Performer(演奏)
+
+乐谱写的是"什么音",MIDI 事件是"何时、多响地弹下去"。直接按谱面机械回放就是人们说的"死板 MIDI";真人演奏的区别在于**奏法**(音的实际长短)、**力度曲线**(渐强渐弱怎么走)和**微小的时间差**。这个节点把 MuseScore 的演奏规则搬了过来,逐条应用谱上的断奏/保持音/重音/力度/渐强渐弱/颤音/倚音记号。
+
+| 参数 | 范围(默认) | 音乐里是什么 | 拧了会怎样 |
+|---|---|---|---|
+| `swing_ratio` | 50–75(50) | **摇摆比**:反拍往后拖多少 | 50 = 平直(古典/流行);62–66 ≈ 爵士三连音感;75 = 极限跳跃。只作用于反拍——全是四分音符的谱听不出任何变化 |
+| `swing_unit` | eighth / sixteenth | 摇摆作用在哪一级反拍 | 爵士常规摇摆用 `eighth`;funk / hip-hop 的十六分摇摆用 `sixteenth` |
+| `humanize` | 0–1(0) | **拟人化**:微小的时间和力度抖动 | 0.2–0.35 自然;0.6 以上开始像喝多了。确定性算法,同 seed 出同一版 |
+| `easing` | 5 种(normal) | 渐强渐弱(hairpin)的**力度曲线形状** | `normal` 线性;`ease_in` 憋到后段猛放;`ease_out` 开头就冲;`ease_in_out` 两头缓;`exponential` 最戏剧化。曲线公式与 MuseScore 一致 |
+| `profile` | 5 套(keyboard) | **乐器演奏模型** | keyboard / strings / winds / voice / percussion。同一个断奏记号在钢琴和小提琴上的实际发音长度、重音的力度包络都不同——常数提取自 MuseScore 的演奏 profile。打击乐分谱会自动强制 percussion |
+| `seed` | 0–99999(7) | humanize 的随机种子 | 换个数 = 换一版演奏,方便挑一版最顺耳的 |
+
+输出两个:`performance`(演奏 JSON:速度地图 + 事件流,接 Score Synth)和 `midi_url`(**标准 .mid 文件**,可直接下载丢进任何 DAW 继续加工)。
+
+> 💡 改了 Performer 参数后,下游卡片上的**谱面显示不会变**——谱面画的是乐谱,不是演奏。要"听"到差别,重新 Run 下游的 Score Synth。
+
+---
+
+## 第 4 站:Score Synth(合成)
+
+演奏事件要变成声音,需要**音色**。这里用的是 **SoundFont**(`.sf2` / `.sf3`)——采样音色库,按 General MIDI 标准组织 128 种乐器。免费的 FluidR3_GM 就能覆盖全部 GM 音色,把文件导入侧边栏 **Resources → soundfont** 即可。
+
+| 参数 | 范围(默认) | 干什么 |
+|---|---|---|
+| `soundfont` | 资源库文件名(空) | 选音色库。**留空 = 内置简易合成器**,链路永远能出声,但音色朴素——正式出片请装 SoundFont |
+| `program` | 37 个 GM 常用名(piano) | **主音色**,所有没被单独指定的轨都用它 |
+| `channel_programs` | 行编辑器 | **分轨乐器**:每行选一个 channel + 一个音色。MusicXML 的每个 `<part>` 按出现顺序对应 channel 0、1、2…(鼓走 GM 惯例的 9 号道)。例:ch 0 = piano,ch 1 = acoustic_bass |
+| `gain` | 0.1–2(1) | 总音量 |
+
+卡片上会渲染整份总谱,**播放时光标逐音符实时跟随**(反复记号、一二房子都能正确跟)。输出是标准音频,可以继续接任何 Audio 节点,也能接 Video Stage 的 `audio` 输入去驱动音频生视频。
+
+---
+
+## 第 5 站:混音 —— Muse Reverb (FDN)
+
+不加混响的合成音"贴在脸上";**混响**把声音放进一个房间。物理上分三层:**直达声**(dry)→ **早反射**(墙面第一轮反弹,决定"房间多大的直觉")→ **晚期混响**(密集的尾巴,决定"多湿")。这个节点是 MuseScore 混响的同款 FDN(反馈延迟网络)算法。
+
+| 参数 | 范围(默认) | 干什么 | 实用建议 |
+|---|---|---|---|
+| `reverb_time_ms` | 100–10000(2200) | **RT60**:声音衰减 60dB 的时间 | 小房间 400–800;音乐厅 1500–2500;教堂 4000+ |
+| `room_scale` | 0.5–4(0.8) | 房间尺寸(缩放内部延迟线) | 越大越"远"、越空旷 |
+| `predelay_ms` | 0–500(10) | 干声与首个反射之间的间隔 | 30–80 可以让主奏"站在前面"同时保留空间感 |
+| `dry_db` | -60–6(0) | 直达声电平 | 一般保持 0,做"全湿"特效时才拉低 |
+| `er_db` | -60–6(-14) | 早反射电平 | 抬高 = 房间感更明确 |
+| `late_db` | -60–6(-14) | 晚期混响电平 | **最主要的"湿度"旋钮**,往上 = 更湿 |
+| `time_low` | 50–200%(100) | 低频衰减时间倍率 | >100 低频尾巴更长(更暖,但易浑);&lt;100 收紧低频 |
+| `time_high` | 50–200%(60) | 高频衰减时间倍率 | 通常 &lt;100——真实房间里高频最先消失 |
+| `xover_low_mid` | 50–500(400) | 低/中分频点(Hz) | 配合上面两个用 |
+| `xover_mid_high` | 1000–10000(4000) | 中/高分频点(Hz) | 同上 |
+| `feedback_top` | 500–20000(8000) | 反馈环内的高频阻尼截止 | 越低混响越"暗"、越复古 |
+| `mod_freq` / `mod_amp` | 0–10 / 0–1(1 / 0.2) | 延迟线调制 | 微量(amp ≈ 0.2)即可消除金属感;拉大出合唱式摆动 |
+| `stereo_spread` | 0–150(100) | 立体声宽度 | 0 = 单声道混响 |
+| `quality` | 8 / 16(16) | FDN 延迟线数量 | 16 更密更平滑,8 省算力 |
+
+三组起手参数:
+
+| 场景 | reverb_time_ms | room_scale | predelay_ms | late_db |
+|---|---|---|---|---|
+| 房间(流行伴奏) | 700 | 0.7 | 10 | -18 |
+| 音乐厅(钢琴独奏) | 2200 | 1.2 | 20 | -14 |
+| 教堂(合唱/氛围) | 4500 | 2.5 | 40 | -10 |
+
+---
+
+## 第 6 站:再往后 —— 其他音频节点速查
+
+合成出来的是标准音轨,整个 **ComfyTV / Audio** 工具箱都能继续接:
+
+| 节点 | 一句话用途 |
+|---|---|
+| **Audio EQ** | 频率平衡(高低频增减) |
+| **Audio Dynamics** | 压缩/限制,抹平音量起伏 |
+| **Audio Loudness** | 响度标准化(流媒体标准 -14 LUFS) |
+| **Audio Time / Pitch** | 变速不变调 / 变调不变速(`pitch_hq` 走高品质相位声码器) |
+| **Audio Echo** | 回声/延迟 |
+| **Audio Modulation** | 合唱、镶边、相位、颤音 |
+| **Audio Stereo** | 立体声加宽、Haas 效应、声像 |
+| **Audio Saturate** | 饱和/失真/比特压碎 |
+| **Audio Convolve (IR)** | 卷积混响——用真实空间的脉冲响应 |
+| **Muse Reverb (FDN)** | 算法混响(本页第 5 站) |
+| **Audio Stem Split** | 整首歌分轨:人声/鼓/贝斯/其他(HDemucs) |
+| **Noise Reduction (Spectral)** | 谱门控降噪 |
+| **Audio Beats & Notes** | 节拍/音符分析,输出拍点/音符标签 |
+| **Audio Mix / Crossfade / Duck** | 多轨混合 / 交叉淡化 / 闪避(背景乐给人声让路) |
+
+---
+
+## 完整示例 1:弹《致爱丽丝》
+
+1. 下载公版 MusicXML(如 [abcnotation 的 Für Elise](https://abcnotation.com/tunePage?a=trillian.mit.edu%2F~jc%2Fmusic%2Fabc%2Fmirror%2Fmusicaviva.com%2Fbeethoven-ludwig-van%2Fbe059%2Fbe059-pno2%2F0000)),粘进 **Score**;
+2. **Score Performer**:`profile = keyboard`,`humanize = 0.25`,其余默认;
+3. **Score Synth**:soundfont 选 FluidR3,`program = piano`,点 Run,播放时看光标跟着谱走;
+4. **Muse Reverb**:用上面"音乐厅"一组参数,出片。
+
+## 完整示例 2:让 LLM 写一段爵士
+
+1. 用第 1 站的提示词模板让 LLM 写谱,提示词里明确要**两个 part**:"D 小调,摇摆感,8 小节;Part 1 是右手旋律,Part 2 是左手伴奏和弦(每小节一到两个和弦)",粘进 **Score**;
+2. **Score Performer**:`swing_ratio = 63`,`profile = keyboard`,`humanize = 0.3`;
+3. **Score Synth**:在 channel_programs 里给两个声部配不同乐器——ch 0 = piano(旋律)、ch 1 = e_piano 或 jazz_guitar(伴奏);
+4. **Muse Reverb**("房间"参数)→ 完成。

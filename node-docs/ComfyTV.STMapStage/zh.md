@@ -1,0 +1,62 @@
+# UV 重映射 (UV Remap)
+
+> 用 ST-map / 畸变图扭曲片段——重新施加镜头畸变、屏幕扭曲或任意逐像素位移的标准方式。
+
+## 这个节点做什么
+
+UV 重映射 (UV Remap) 通过一张 UV / 位移图对源 `COMFYTV_VIDEO` 重新采样，把每个像素移到图所指向的坐标。在 **stmap** 模式下，图的红/绿通道是绝对 UV 坐标（0–1）——经典的 ST-map。在 **idistort** 模式下，图的通道是加到每个像素自身位置上的相对位移。这张图可以是 `COMFYTV_VIDEO`（动画）或静态 `COMFYTV_IMAGE`。
+
+它在 **▶ Run** 时运行。`video` 输入与一个 UV 源（`uv_video` 或 `uv_image`）都必填——缺少 UV 源时节点会报错。输出为 `COMFYTV_VIDEO`。
+
+要把结果交给原生 ComfyUI 节点，请插入 **Bridge**（`ComfyTV/Bridge`）。参见 <https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md>。
+
+## 何时使用
+
+- 用从镜头烘焙出的 ST-map 重新施加（或去除）镜头畸变。
+- 用渲染出的畸变通道驱动屏幕/热浪/玻璃扭曲。
+- 做平移/缩放/四角定位无法表达的任意逐像素位移。
+
+## 参数
+
+### mode
+如何解释 UV 图：`stmap`（R/G 中为绝对 UV 坐标）或 `idistort`（加到每个像素上的相对位移）。默认 `stmap`。
+
+### wrap
+落在画面外的采样如何处理：`clamp`、`repeat` 或 `mirror`。默认 `clamp`。
+
+### flip_v
+布尔，默认**开**。翻转图的 V 轴，使左下为原点的图与素材对齐（常见的 ST-map 约定）。
+
+### amount
+位移强度，`0.0`–`512.0`，步长 `1`，默认 `32.0`。在 `idistort` 模式下，它缩放像素被推动的距离；越大扭曲越强。
+
+### u_offset / v_offset
+平移采样的 UV 坐标，各为 `-1.0`–`1.0`，默认 `0.0`。让重映射水平/垂直滑动。
+
+### u_scale / v_scale
+缩放采样的 UV 坐标，各为 `-4.0`–`4.0`，默认 `1.0`。负值翻转该轴。
+
+### video（输入，可选）
+要扭曲的 `COMFYTV_VIDEO`。必填。
+
+### uv_video（输入，可选）
+动画的 `COMFYTV_VIDEO` UV/位移图。
+
+### uv_image（输入，可选）
+静态 `COMFYTV_IMAGE` UV/位移图。`uv_video` 与 `uv_image` 提供其一即可——至少需要一个 UV 源。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | 重映射（扭曲）后的片段。 |
+
+## 提示
+
+- 用 `flip_v` 匹配图的朝向；若扭曲看起来上下镜像，就切换它。
+- ST-map 应为全精度以避免条带——8 位图会把扭曲量化。
+
+## 相关节点
+
+- **Corner Pin** — 由四角产生的透视扭曲，而非逐像素图。
+- **Video Transform** — 简单重构图的平移/缩放/旋转/斜切。

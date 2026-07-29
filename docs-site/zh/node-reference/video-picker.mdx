@@ -1,0 +1,60 @@
+---
+title: "Video Picker"
+description: "从一批生成的视频里**只选一段**继续往下游传——Image Picker 的视频版。"
+sidebarTitle: "Video Picker"
+translationSourceHash: "6f5881de5f32ecf8"
+---
+
+<Frame caption="Video Picker · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="Video Picker" />
+</Frame>
+
+## 这个节点是做什么的
+
+**视频选择器**（Video Picker）属于 **Compose** 分类（`ComfyTV/Compose`）。上游产出视频的 stage——**Video Stage**，或任何多次运行会累积多段片段的节点——接入本节点。节点体里展示累积的片段，你点哪一段，**video** 输出口就只向下游传递那一段 `COMFYTV_VIDEO`。
+
+本节点**无 ▶ 运行**。点某段片段即更新隐藏的 `selected_index` 并立即重新发出输出快照，下游 stage 会即时看到你的选择。
+
+媒体以 ComfyTV 项目快照的形式流动，而非原生 ComfyUI 张量。若要把选中的片段交给原生 ComfyUI 节点，请插入 **Bridge** —— 见 [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 适用场景
+
+- **Video Stage** 多次 Run 出了几段片段，想审看并保留其中一段。
+- 生成了几段变体片段（不同 seed / prompt），需要挑出运动效果最好的一段。
+- 希望把多次 Run 的片段**累积**进一个池子，慢慢挑而不丢旧结果。
+
+## 参数
+
+### batch（上游）
+
+已接线的输入，类型为 `COMFYTV_VIDEO`，可选。到达这里的每段生成片段都会被追加进池子。从 Video Stage 的 `video` 输出接过来。
+
+### selected_index（隐藏）
+
+要提取的片段序号，1 起（默认 `1`，范围 `1`–`999`）。你无需手填——它由在节点体里**点击某段片段**设置。
+
+### pool（隐藏）
+
+累积的视频池，以 JSON 存在节点上。UI 会把新到的上游片段追加进来（按 URL 去重），使其在重生成、断连后依然存在，并通过 **Clear** 按钮清空。池子非空时以池子为源，否则使用实时的 `batch` 输入。
+
+### project_id / parent_output_id（内部）
+
+隐藏，由 **Project** 节点与连线维护，一般无需理会。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | 供下游 stage 使用的单段选中片段快照 |
+
+## 小贴士
+
+- 只有真正**点击**某段片段后才会有输出——是「选中」而非「悬停」触发输出。
+- 池子里旧片段太乱？用节点体里的 **Clear**，或新拖一个 Video Picker。
+- 池子会把选择与片段随项目一起持久化，而原生的内存张量做不到——只在跨到原生节点时才用 Bridge。
+
+## 相关节点
+
+- **Video Stage** —— 常见上游，从文本 / 图片生成片段。
+- **Image Picker** / **Audio Picker** —— 面向其他媒体的同款「从池子里选一个」模式。
+- **Load Video from Asset** —— 从项目资产库取一段现成片段，而非从池子里挑。

@@ -1,0 +1,50 @@
+# CDL Grade
+
+> ASC-CDL 一级调色 —— 逐通道 slope、offset、power 加饱和度，每个后期套件都能识别的可移植调色格式。
+
+## 节点用途
+
+**CDL Grade（CDL 调色）** 应用 ASC Color Decision List 调色：这是贯穿现场与后期色彩管线的标准化 `slope / offset / power` 模型。对每个 RGB 通道设定 **slope**（增益 —— 乘以数值，类似对高光的提升）、**offset**（加常量 —— 平移整个通道）和 **power**（gamma 指数 —— 弯折中间调），再加一个整体 **saturation**。数学公式为业界标准的 `(pixel × slope + offset) ^ power`。
+
+它输入输出均为 `COMFYTV_VIDEO`，在 torch 后端（`cdl`）上渲染，因此带有 **▶ Run**，卡片上有实时预览。完全中性的设置（所有 slope/power/sat = 1、所有 offset = 0）会原样放行片段。
+
+要与原生 ComfyUI 节点互通，请加一个 **Bridge**（见 [Bridge 指南](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)）。
+
+## 何时使用
+
+- 用调色师或现场 DIT 所用的同一套数值语言来调色
+- 匹配由管线其他阶段的 CDL 数值定义的风格
+- 在创意调色前做干净的一级平衡（slope/offset/power）
+- 让调色保持可移植 —— CDL 只是十个数字，而非烘焙的 LUT
+
+## 参数
+
+### slope_r / slope_g / slope_b
+逐通道增益，各默认 1.0，范围 0.0…4.0。乘以该通道；提高 slope 会提亮并向高光增加对比。1.0 为中性。
+
+### offset_r / offset_g / offset_b
+逐通道偏移，各默认 0.0，范围 −1.0…1.0。对整个通道加一个常量，将其上移或下移（多在暗部可见）。0.0 为中性。
+
+### power_r / power_g / power_b
+逐通道 power（gamma），各默认 1.0，范围 0.1…4.0。施加指数以弯折中间调 —— 小于 1.0 提亮中间调，大于 1.0 压暗中间调。1.0 为中性。
+
+### cdl_sat
+在 slope/offset/power 之后应用的整体饱和度，默认 1.0，范围 0.0…4.0。1.0 保持饱和度不变；0.0 完全去饱和；大于 1.0 则增强。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | 经 CDL 调色的片段快照 |
+
+## 提示
+
+- 若 Run 后毫无变化，至少要有一个值偏离中性（slope/power/sat ≠ 1 或某个 offset ≠ 0）。
+- CDL 中顺序很重要：slope 与 offset 先作用，power 最后，然后是饱和度 —— 先用 slope/offset 定平衡，再用 power 塑造中间调。
+- 若想用色轮和色阶做上手的滑块调色，请用 **Video Color**；当你明确需要 SOP 模型时才用 CDL。
+
+## 相关节点
+
+- **Video Color** —— 带三向色轮的滑块式一级调色
+- **Video Curves** —— 自由影调曲线，而非 SOP 模型
+- **Video LUT** —— 把成品风格烘焙为 `.cube` 表

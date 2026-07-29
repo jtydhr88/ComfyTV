@@ -1,0 +1,72 @@
+---
+title: "Muse Reverb (FDN)"
+description: "An algorithmic feedback-delay-network reverb with fine control over decay, tone, room size, and stereo spread."
+sidebarTitle: "Muse Reverb"
+---
+
+<Frame caption="Muse Reverb (FDN) · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Muse Reverb (FDN)" />
+</Frame>
+
+## What this node does
+
+**Muse Reverb (FDN)** adds artificial reverberation using a Feedback Delay Network — a bank of delay lines with feedback that produces a dense, natural-sounding tail without needing an impulse response. You control reverb time, room scale, pre-delay, the balance of dry/early-reflection/late energy, frequency-dependent decay, modulation, and stereo width.
+
+It takes a `COMFYTV_AUDIO` snapshot (or a `COMFYTV_VIDEO`, whose audio track is used) and outputs processed `COMFYTV_AUDIO`. It has a ▶ **Run**. A source is required.
+
+To feed native ComfyUI `AUDIO` in or out, insert a **Bridge** — see [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Add hall, room, or chamber ambience to dry recordings without hunting for an IR.
+- Sit a vocal or instrument in a defined space with controllable size and decay.
+- Sculpt the reverb tone by making highs decay faster than lows (or vice versa).
+
+## Parameters
+
+### reverb_time_ms
+Overall decay time (RT) in ms, **100–10000** (default **2200**). Longer = bigger, more sustained space.
+
+### room_scale
+Size scaling of the delay network, **0.5–4.0** (default **0.8**). Larger values spread the reflections out for a bigger room feel.
+
+### predelay_ms
+Gap before the reverb begins, in ms, **0–500** (default **10**). Adds a sense of distance from the walls and keeps the dry signal clear.
+
+### Levels
+- **dry_db** — dry (unprocessed) level, **-60 to +6 dB** (default **0**).
+- **late_db** — late reverberation level, **-60 to +6 dB** (default **-14**).
+- **er_db** — early-reflections level, **-60 to +6 dB** (default **-14**).
+
+### Frequency-dependent decay
+- **time_low** — low-band decay scaling %, **50–200** (default **100**).
+- **time_high** — high-band decay scaling %, **50–200** (default **60**). Lower = brighter highs die faster (more natural).
+- **xover_low_mid** — low/mid crossover Hz, **50–500** (default **400**).
+- **xover_mid_high** — mid/high crossover Hz, **1000–10000** (default **4000**).
+- **feedback_top** — top-end damping frequency Hz, **500–20000** (default **8000**).
+
+### Modulation & width
+- **mod_freq** — tail modulation rate Hz, **0–10** (default **1.0**).
+- **mod_amp** — modulation amount, **0.0–1.0** (default **0.2**). Adds subtle movement to avoid a static, metallic tail.
+- **stereo_spread** — stereo width %, **0–150** (default **100**).
+
+### quality
+Network size: `8` or `16` delay lines (default **16**). 16 is denser and smoother; 8 is faster.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **audio** | `COMFYTV_AUDIO` | The reverberated audio snapshot |
+
+## Tips
+
+- Keep the highs decaying faster than the lows (**time_high** below **time_low**) for a natural room; equal values sound artificial.
+- A little **mod_amp** (~0.2) stops long tails from ringing metallically.
+- If the reverb muddies the mix, raise **predelay_ms** or lower **late_db** to keep the dry signal forward.
+
+## Related nodes
+
+- **Audio Convolve (IR)** — reverb from a real recorded space instead of an algorithm.
+- **Audio Echo** — discrete echoes rather than a dense tail.
+- **Audio EQ** — carve space for the reverb, or de-mud it after the fact.

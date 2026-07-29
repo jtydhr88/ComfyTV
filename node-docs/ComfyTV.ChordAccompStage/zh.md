@@ -1,0 +1,75 @@
+# Chord Accompaniment
+
+> 输入一段和弦进行，得到弹出来的伴奏声部 —— 带 voicing、带节奏型，并导出为 MIDI。
+
+## 这个节点做什么
+
+**Chord Accompaniment（和弦伴奏）** 把一段和弦符号进行（如 `Am7 | Dm7 | G7 | Cmaj7`）
+变成实际伴奏：它把每个和弦实音化为真实音符，施加一种 voicing，并用一种节奏型（柱式和弦、
+琶音等）铺开。这是不必逐音写谱就能快速得到伴奏/comping 声部的办法。
+
+按 **▶ Run** 在后端生成。节点输出两样：一个 `performance` 负载（喂给 **Score Synth** 就能
+听到）和一个指向导出标准 MIDI 文件的 `midi_url`。
+
+在节点的 `progression` 字段里输入进行，或接一个 `progression_text` 输入从上游驱动。和弦用
+空格分隔；`|` 标记小节线。
+
+## 什么时候用它
+
+- 你想为旋律或练习即时加一个伴奏声部。
+- 你有一张和弦谱，需要把它实音化为可弹的音符/MIDI。
+- 你想为一段进行试听不同的 voicing 与节奏感。
+
+## 参数
+
+### progression
+和弦进行文本，默认 `Am7 | Dm7 | G7 | Cmaj7`。和弦以空格分隔；`|` 标记小节。当没有接入
+`progression_text` 输入时使用。
+
+### bpm
+速度，每分钟拍数，**20–300**（默认 **100**），步进 0.5。
+
+### beats_per_bar
+每小节拍数，**1–12**（默认 **4**）。
+
+### pattern
+节奏伴奏型，默认 **block**（所有和弦音同时奏出）。其它选项来自伴奏型集合（例如琶音风格）。
+
+### voicing
+和弦音如何排布，默认 **close**（音紧密叠放）。其它选项来自 voicing 集合（例如更宽的开放
+voicing）。
+
+### octave_shift
+把整个声部上下移动八度，**-2 到 +2**（默认 **0**）。
+
+### velocity
+音符力度（响度/触键），**20–127**（默认 **88**）。
+
+### repeats
+整段进行重复多少次，**1–16**（默认 **1**）。
+
+### progression_text（可选输入）
+一个可选文本输入，类型 `COMFYTV_TEXT`，携带进行。接入时优先于 `progression` 字段。完全没有
+进行就运行会以 “needs a progression” 的提示失败。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **performance** | `COMFYTV_TEXT` | 实音化的伴奏（JSON），供 Score Synth 使用 |
+| **midi_url** | `COMFYTV_TEXT` | 导出的标准 MIDI 文件（`.mid`）的 URL |
+
+## 提示
+
+- 用 `|` 划分小节；不写小节线时整行会被当作一串顺序和弦读取。
+- 试试 `close` 与更宽的 voicing，并在 block 与琶音之间切换 `pattern`，无需重打和弦就能改变
+  感觉。
+- 用 `repeats` 把一段短进行循环成更长的垫底。
+
+## 相关节点
+
+- **Score Synth** —— 把 `performance` 渲染成音频。
+- **Score Performer** —— 旋律侧对应物（演奏写好的乐谱）。
+- **Click Track** —— 配上节拍器组成完整的伴奏垫底。
+- **Bridge** —— 与原生 ComfyUI 类型互转。见
+  https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md

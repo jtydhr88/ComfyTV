@@ -1,0 +1,59 @@
+---
+title: "Luma Wipe"
+description: "Transition between two clips using a grayscale gradient pattern — the classic \"gradient wipe\" reveal."
+sidebarTitle: "Luma Wipe"
+---
+
+<Frame caption="Luma Wipe · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Luma Wipe" />
+</Frame>
+
+## What this node does
+
+Luma Wipe blends **video_a** into **video_b** by sweeping a threshold across a grayscale luma pattern: dark areas of the map reveal first, bright areas last (or the reverse). Pick one of the built-in patterns (radial, clock, blinds, spiral, cloud, and more) or wire your own grayscale `luma_image`. A softness control feathers the wipe edge.
+
+It runs on **▶ Run**. Both `video_a` and `video_b` are required `COMFYTV_VIDEO` inputs. If no `luma_image` is connected, the node generates the chosen `luma_map` at video_a's resolution. Output is `COMFYTV_VIDEO`.
+
+To hand the result to a native ComfyUI node, insert a **Bridge** (`ComfyTV/Bridge`). See https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md.
+
+## When to use it
+
+- A shaped reveal between two shots (radial iris, clock wipe, blinds, etc.).
+- A custom transition driven by your own grayscale artwork.
+- A softer, more stylized alternative to a straight crossfade or hard cut.
+
+## Parameters
+
+### luma_map
+The built-in grayscale pattern that drives the wipe order. Options: `none` plus `linear_x`, `linear_y`, `bilinear_x`, `bilinear_y`, `radial`, `square`, `diamond`, `clock`, `symmetric_clock`, `spiral`, `burst`, `curtain`, `blinds_h`, `blinds_v`, `checker`, `cloud`. Default `radial`. Ignored if you wire a `luma_image`; if set to `none` you must provide a `luma_image`.
+
+### duration
+Transition length in seconds, `0.1`–`5.0`, step `0.05`, default `1.0`.
+
+### softness
+Feathering of the wipe edge, `0.0`–`1.0`, default `0.1`. `0` = a hard edge, higher = a softer, more gradual blend.
+
+### invert
+Boolean, default **off**. Reverses the wipe direction (bright areas reveal first instead of dark).
+
+### video_a / video_b (inputs)
+The outgoing (`video_a`) and incoming (`video_b`) `COMFYTV_VIDEO` clips. Both required.
+
+### luma_image (input, optional)
+Your own grayscale `COMFYTV_IMAGE` to use as the wipe pattern instead of a built-in `luma_map`.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The two clips joined by the luma-wipe transition. |
+
+## Tips
+
+- A wired `luma_image` overrides `luma_map`. If you set `luma_map` to `none` without supplying an image, the node stops and asks for one.
+- Higher `softness` hides seams in a hand-drawn map; `0` keeps a crisp, graphic edge.
+
+## Related nodes
+
+- **Video Transition** — ffmpeg xfade transitions (fades, slides, wipes) between two clips.
+- **Sequence** — assemble multiple clips with transitions in one node.

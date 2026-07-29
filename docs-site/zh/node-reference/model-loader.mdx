@@ -1,0 +1,65 @@
+---
+title: "Load 3D Model"
+description: "从 ComfyUI 的 `input/3d` 文件夹加载 3D 模型文件，在节点体内环绕查看，并可选地把材质绑定到单个网格部件上。"
+sidebarTitle: "Load 3D Model"
+translationSourceHash: "13e6d692542bc00a"
+---
+
+<Frame caption="Load 3D Model · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="Load 3D Model" />
+</Frame>
+
+## 这个节点是做什么的
+
+**加载 3D 模型**（Load 3D Model）属于 **Input** 分类（`ComfyTV/Input`）。它**无 ▶ 运行**：你在节点体里挑一个模型（来自 ComfyUI `input/3d` 文件夹下的文件），其快照即刻成为输出。支持的文件类型包括 GLB、GLTF、FBX、OBJ、PLY、SPZ、SPLAT、KSPLAT。
+
+除简单加载外，节点的 3D 预览还可让你**环绕**模型，并在接入材质后通过点击（raycast）你想要的部件，把材质**绑定到单个网格部件上**。它发出 `COMFYTV_MODEL` 以及从预览视口截取的 `COMFYTV_IMAGE` 快照。
+
+媒体以 ComfyTV 项目快照的形式流动，而非原生 ComfyUI 张量。若要与原生 ComfyUI 3D 节点互通，请插入 **Bridge** —— 见 [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 适用场景
+
+- 把现成的 GLB/GLTF/FBX/OBJ（等）文件引入管线，而无需生成。
+- 通过把 **Material Stage** 输出绑定到特定部件，为模型重新贴图。
+- 借助截取的预览图，为模型生成一张摆好角度的缩略图。
+
+## 参数
+
+### model（节点体）
+
+隐藏下拉框，由卡片的缩略图选择器驱动；其选项携带服务端在 ComfyUI `input/3d` 文件夹下找到的文件列表。所选文件（相对 `input/3d` 的路径）成为 **model** 输出。
+
+### materials（autogrow）
+
+可选的 `COMFYTV_MATERIAL` 输入（最多可增长到 4 个槽）。把 **Material Stage** 输出接到这里，即可用于部件绑定。
+
+### material_bindings（内部）
+
+隐藏的 JSON 映射：**网格部件键 → 材质输入槽**，当你在节点体里点选某部件并指派一个已接材质时由部件绑定 UI 写入。运行时若存在绑定，会与材质值一并传下去，让下游看到重新贴图后的模型。
+
+### captured_image（内部）
+
+隐藏。预览视口快照的 `/view?` URL，由节点体内的 3D 预览写入，成为 **image** 输出。
+
+### project_id / parent_output_id（内部）
+
+隐藏，由 **Project** 节点与连线维护，一般无需理会。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **model** | `COMFYTV_MODEL` | 加载的模型快照（含任意材质绑定） |
+| **image** | `COMFYTV_IMAGE` | 从预览视口截取的快照 |
+
+## 小贴士
+
+- 文件必须位于 ComfyUI 的 `input/3d` 文件夹下才会出现在选择器里。若要从项目库加载，请用 **Load 3D Model from Asset**。
+- 部件绑定需先把材质接进 **materials** 槽；再在预览里点击某网格部件来指派。
+- 依赖 **image** 输出前，先环绕预览摆好一个合适的角度。
+
+## 相关节点
+
+- **Load 3D Model from Asset** —— 从项目资产库挑模型，而非 `input/3d`。
+- **Material Stage** —— 制作 PBR 材质，绑定到这里的部件上。
+- **3D Model Stage** —— 生成模型而非加载。

@@ -1,0 +1,54 @@
+---
+title: "Noise Reduction (Spectral)"
+description: "Learn the sound of steady background noise and subtract it, spectrally — like Audacity's Noise Reduction."
+sidebarTitle: "Noise Reduction"
+---
+
+<Frame caption="Noise Reduction (Spectral) · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Noise Reduction (Spectral)" />
+</Frame>
+
+## What this node does
+
+**Noise Reduction (Spectral)** removes broadband, steady-state noise (hiss, hum, air-con drone) using a spectral-gate approach: it builds a noise profile and attenuates frequency content that matches it, leaving the wanted signal. You can either let it estimate the noise from the track itself, or hand it a dedicated **noise_sample** (a snippet of noise-only audio) for a cleaner profile.
+
+It accepts a `COMFYTV_AUDIO` snapshot or a `COMFYTV_VIDEO` (its audio track is used; audio takes priority), with an optional second `COMFYTV_AUDIO` for the noise sample. It outputs processed `COMFYTV_AUDIO` and has a ▶ **Run**.
+
+To feed native ComfyUI `AUDIO` in or out, insert a **Bridge** — see [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Clean up hiss or steady room tone under a voice or music recording.
+- Remove air-conditioner or fan drone captured during a take.
+- Use a silent-but-noisy passage as a **noise_sample** to precisely target that noise.
+
+## Parameters
+
+### reduction_db
+How much the matched noise is attenuated, in dB. Range **1 to 48**, default **12**. Higher removes more noise but risks artifacts and a hollow, "underwater" sound.
+
+### sensitivity
+How aggressively frequency content is judged to be noise. Range **0.5 to 24**, default **6**. Higher classifies more as noise (more removed); lower is more conservative and preserves detail.
+
+### freq_smooth_bands
+Smoothing of the noise gate across neighboring frequency bands. Range **0 to 12**, default **6**. More smoothing reduces "musical noise" (tinkling artifacts) at the cost of some sharpness.
+
+### noise_sample
+Optional second audio input: a snippet containing only the noise. When provided, the profile is built from it instead of estimated from the main track, usually giving a cleaner result.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **audio** | `COMFYTV_AUDIO` | The denoised audio snapshot |
+
+## Tips
+
+- Start with **reduction_db** around 12 and raise only as needed; over-reduction sounds artificial.
+- If you hear tinkly "musical noise" artifacts, increase **freq_smooth_bands**.
+- A dedicated **noise_sample** almost always beats self-estimation — grab a second of the room tone before/after the take.
+
+## Related nodes
+
+- **Audio Denoise** — FFmpeg-based `afftdn`/`anlmdn` denoisers and a silence trimmer, an alternative approach.
+- **Audio Stem Split** — isolate the wanted stem, which can be a cleaner starting point than denoising a full mix.

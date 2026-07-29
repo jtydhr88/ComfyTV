@@ -1,0 +1,52 @@
+---
+title: "Card 3D"
+description: "Treat your footage as a flat \"card\" floating in 3D space — move it, rotate it, and push it toward or away from the camera with real perspective."
+sidebarTitle: "Card 3D"
+---
+
+<Frame caption="Card 3D · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Card 3D" />
+</Frame>
+
+## What this node does
+
+This node maps a `COMFYTV_VIDEO` clip onto a flat plane and transforms that plane in 3D — translating, rotating, and scaling it under a perspective camera — then renders the result back to 2D. Because it's a true 3D projection (not a flat 2D warp), tilting the card produces correct perspective foreshortening, like the Card node in Nuke or a 3D layer in After Effects.
+
+It runs on a Torch backend as an fx-spec pass. If there's no translation, no rotation, and scale is 1.0, it passes the clip through untouched. Input and output are both `COMFYTV_VIDEO`. To hand the result to native ComfyUI nodes, insert a **Bridge** — see the [bridge note](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Fake a 3D camera move — swing footage in perspective for a title card or reveal.
+- Tilt a plate to sit on a virtual floor/wall in a composite.
+- Build a simple parallax or "photo in space" look.
+
+## Parameters
+
+### fov
+Camera field of view in degrees, 5 to 140 (default 40). Lower is a longer/telephoto lens (flatter perspective); higher is wide-angle (stronger perspective as the card tilts).
+
+### tx / ty / tz
+Translate the card in 3D. `tx` and `ty` move it horizontally/vertically, each -4.0 to 4.0 (default 0). `tz` moves it toward or away from the camera, -0.95 to 6.0 (default 0) — negative pulls it closer (bigger), positive pushes it back (smaller).
+
+### rx / ry / rz
+Rotate the card in degrees. `rx` (pitch) and `ry` (yaw) each -89 to 89 (default 0) tilt the card in perspective; `rz` (roll) -180 to 180 (default 0) spins it in-plane.
+
+### card_scale
+Overall scale of the card, 0.05 to 8.0 (default 1.0). Resize the plane before it's placed in the scene.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The 3D-transformed clip rendered back to 2D |
+
+## Tips
+
+- Keep `rx`/`ry` within ±89 — the card can't rotate to fully edge-on.
+- Use a lower `fov` (longer lens) when you want subtle perspective, higher `fov` for a dramatic tilt.
+- Combine `tz` with rotation to sell a card swinging in from depth.
+
+## Related nodes
+
+- **Z Defocus** — add depth-of-field so a tilted card reads even more 3D.
+- **360 Projection** — for spherical rather than flat-plane 3D transforms.

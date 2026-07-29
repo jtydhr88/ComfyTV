@@ -1,0 +1,54 @@
+# Audio Picker
+
+> Pick **one** audio track out of a pool of generated clips to send downstream—the audio counterpart of Image Picker.
+
+## What this node does
+
+**Audio Picker** is a **Compose** stage (`ComfyTV/Compose`). Upstream stages that produce audio—**Music Stage**, **Speech Stage**, or any node whose runs pile up multiple takes—feed into this node. The node body shows the accumulated tracks; whichever one you click becomes the sole **`COMFYTV_AUDIO`** on the **audio** output.
+
+There is **no ▶ Run**. Clicking a track updates the hidden `selected_index` and re-emits the output snapshot instantly, so downstream stages immediately see your pick.
+
+Media flows as ComfyTV project snapshots, not native ComfyUI tensors. To hand a picked track to native ComfyUI audio nodes, insert a **Bridge** — see [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- A **Music Stage** returns several takes across multiple Runs and you want to audition and keep one.
+- You generated a few **Speech** reads of the same line and need to choose the best delivery.
+- You want to **accumulate** takes across Runs into one pool and pick without losing earlier ones.
+
+## Parameters
+
+### batch (upstream)
+
+The wired input, of type `COMFYTV_AUDIO` and optional. Each generated track that arrives here is appended to the pool. Wire it from a Music Stage or Speech Stage `audio` output.
+
+### selected_index (hidden)
+
+1-based index of the track to extract (default `1`, range `1`–`999`). You never type this—it is set by **clicking a track** in the node body.
+
+### pool (hidden)
+
+Accumulated audio pool, stored as JSON on the node. The UI appends new upstream tracks (deduped by URL) so they survive regeneration and disconnect, and empties it via the **Clear** button. When the pool is non-empty it is the source; otherwise the live `batch` input is used.
+
+### project_id / parent_output_id (internal)
+
+Hidden; maintained by the **Project** node and graph wiring. You rarely touch these.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **audio** | `COMFYTV_AUDIO` | The single selected track snapshot for downstream stages |
+
+## Tips
+
+- Nothing appears until you actually **click** a track—selection, not hover, sets the output.
+- Pool cluttered with old takes? Use **Clear** in the node body, or drop in a fresh Audio Picker.
+- The pool persists selections and takes with the project, which native in-memory audio tensors cannot—use a Bridge only when crossing to native nodes.
+
+## Related nodes
+
+- **Music Stage** — common upstream; generates instrumental / vocal tracks.
+- **Speech Stage** — text-to-speech upstream.
+- **Image Picker** / **Video Picker** — same pick-one-from-a-pool pattern for other media.
+- **Load Audio from Asset** — pull an existing track from the project asset library instead of picking from a pool.

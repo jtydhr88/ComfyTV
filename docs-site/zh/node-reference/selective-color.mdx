@@ -1,0 +1,51 @@
+---
+title: "Selective Color"
+description: "Photoshop 式的可选颜色 —— 无需蒙版即可逐个调整某一色族。"
+sidebarTitle: "Selective Color"
+translationSourceHash: "de8f59ab5ad94f21"
+---
+
+<Frame caption="Selective Color · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="Selective Color" />
+</Frame>
+
+## 节点用途
+
+**Selective Color（可选颜色）** 让你独立微调九个固定色族 —— 红、黄、绿、青、蓝、品红，外加白、中性、黑。它就是 Photoshop"可选颜色"调整的直接对应：选一个色族、推动其数值，只有该色族内的像素会发生偏移。
+
+它输入输出均为 `COMFYTV_VIDEO`，通过 ffmpeg 的 `selectivecolor` 滤镜渲染，因此带有 **▶ Run**，卡片上有实时预览。只有你实际改动的色族才会送入滤镜；九个都为零时，片段原样通过。
+
+要把结果接入原生 ComfyUI 节点，请加一个 **Bridge**（见 [Bridge 指南](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)）。
+
+## 何时使用
+
+- 加深蓝天而不影响肤色
+- 给中性色和黑色加暖，打底一个电影感基调
+- 从暗部或植被中抽出绿色
+- 任何"只改这个颜色"的调色，否则就得靠蒙版
+
+## 参数
+
+### sc_method
+校正方法，默认 `absolute`。选项：`absolute`、`relative`。以 `correction_method` 传给滤镜。`relative` 按已有的颜色量缩放调整（更柔和）；`absolute` 施加固定偏移。
+
+### sc_reds / sc_yellows / sc_greens / sc_cyans / sc_blues / sc_magentas / sc_whites / sc_neutrals / sc_blacks
+每个色族一个值（各默认 0.0，范围 −1.0…1.0）。正负值把该色族的色彩平衡推向相反方向。任何仍为 0.0 的色族会被跳过，因此未改动的颜色保持原样。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | 经可选颜色调色的片段快照 |
+
+## 提示
+
+- 若每个色族都仍为 0.0，Run 后什么都不会变 —— 至少移动一个。
+- 先试 `relative` 做柔和、自限的调整；需要更强、更均匀的推动时再切到 `absolute`。
+- `whites`、`neutrals`、`blacks` 是影调色族 —— 用它们给暗部/中间调/高光上色，而不影响基于色相的范围。
+
+## 相关节点
+
+- **Hue Correct** —— 九个固定色族不够精确时，用基于曲线的色相定向
+- **Video Color** —— 全局色相/饱和度与三向色轮
+- **Video Curves** —— 逐通道影调曲线

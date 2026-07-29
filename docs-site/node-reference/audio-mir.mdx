@@ -1,0 +1,55 @@
+---
+title: "Audio Beats & Notes"
+description: "Analyze a track for its beats, onsets, or note events and turn them into keyframes and labels — so animation can move to the music."
+sidebarTitle: "Audio Beats & Notes"
+---
+
+<Frame caption="Audio Beats & Notes · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Audio Beats & Notes" />
+</Frame>
+
+## What this node does
+
+**Audio Beats & Notes** does music-information-retrieval (MIR) on an audio track: it detects rhythmic events and emits them as animation **keyframes** (each event sets a chosen field to a value) plus text **labels** (markers at each event time). Choose what to detect with **mode**: beats, onsets, or note events. The keyframes let downstream nodes pulse a parameter on every beat; the labels can drive markers or cuts.
+
+It accepts a `COMFYTV_AUDIO` snapshot or a `COMFYTV_VIDEO` (its audio track is used; audio takes priority). It outputs two `COMFYTV_TEXT` streams (keyframes and labels) and has a ▶ **Run**.
+
+To feed native ComfyUI `AUDIO` in or out, insert a **Bridge** — see [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Make an element pulse, scale, or flash on every beat of a music track.
+- Place edit markers or labels at each drum hit / onset for a music-video cut.
+- Extract note-event timings from a melodic line.
+
+## Parameters
+
+### mode
+What to detect: `beats` (default) — the steady rhythmic pulse; `onsets` — every note/percussive attack; `notes` — discrete note events.
+
+### threshold
+Detection sensitivity — how strong an event must be to count. Range **0.05 to 1.0**, default **0.3**. Lower catches more (and softer) events; higher keeps only prominent ones.
+
+### min_gap_s
+Minimum spacing between detected events, in seconds. Range **0.01 to 1.0**, default **0.05**. Raise it to avoid double-triggering on a single hit.
+
+### field
+Which animation field the generated keyframes drive: `v` (default, a generic value), `scale`, `opacity`, `x`, `y`, or `rotation`. This is the property each detected event will key.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **keyframes** | `COMFYTV_TEXT` | Keyframe data: the chosen **field** keyed at each detected event |
+| **labels** | `COMFYTV_TEXT` | Text markers at each detected event time |
+
+## Tips
+
+- If detection is too busy, raise **threshold** and/or **min_gap_s**; if it misses hits, lower them.
+- `beats` follows the tempo grid; `onsets` fires on every attack (denser). Pick by what you want to drive.
+- Cleaner input helps a lot — run **Audio Stem Split** first and analyze the isolated drums for tighter beat detection.
+
+## Related nodes
+
+- **Audio Reactive** — drive a field from a continuous audio envelope instead of discrete events.
+- **Audio Stem Split** — isolate drums to improve beat/onset accuracy.

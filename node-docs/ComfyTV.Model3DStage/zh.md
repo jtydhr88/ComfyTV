@@ -1,0 +1,66 @@
+# 3D Model Stage
+
+> 从提示词、参考图和/或现有模型生成 3D 模型（GLB）——文生/图生 3D 的生成 stage。
+
+## 这个节点是做什么的
+
+**3D 模型 Stage**（3D Model Stage）属于 **Generate** 分类（`ComfyTV/Generate`）。你给它一段提示词（可选再加参考文本、图片或模型），选一个后端 **workflow**，点 **▶ 运行**。被包裹的 workflow —— 必须以 **SaveGLB**（或兼容）节点收尾 —— 产出一个 `COMFYTV_MODEL`，节点体内的 3D 预览可让你环绕查看结果。
+
+本节点**带 ▶ 运行**（它会调用真实的生成后端 / GPU）。除模型外还会发出一个 `COMFYTV_IMAGE`：从预览视口截取的快照，可作缩略图或供下游基于图片的后续 stage 使用。
+
+媒体以 ComfyTV 项目快照的形式流动，而非原生 ComfyUI 张量。若要与原生 ComfyUI 3D 节点互通，请插入 **Bridge** —— 见 [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 适用场景
+
+- 把文本提示词转成初版 3D 资产（文生 3D）。
+- 把一张或多张参考图转成网格（图生 3D）。
+- 把现有模型作为参考回喂，重新生成或做变体。
+
+## 参数
+
+### workflow
+
+下拉框，选择运行时调用哪个后端 3D 生成 workflow。选项来自已安装的 `model` 类 workflow；该 workflow 必须以 **SaveGLB**（或兼容）节点收尾。默认取 `model` 类的默认配置。
+
+### main_prompt
+
+描述你想要的模型的主提示词。上游文本输入会被当作附加上下文与之合并。节点体内编辑的隐藏文本框（多行）。
+
+### texts（autogrow）
+
+可选的 `COMFYTV_TEXT` 输入（最多可增长到 4 个槽），为提示词补充额外文本上下文。
+
+### images（autogrow）
+
+可选的 `COMFYTV_IMAGE` 输入（最多可增长到 4 个槽）—— 图生 3D 的参考图。
+
+### models（autogrow）
+
+可选的 `COMFYTV_MODEL` 输入（最多可增长到 4 个槽）—— 作为参考回喂的现有模型。
+
+### captured_image（内部）
+
+隐藏。最新预览视口快照的 `/view?` URL，由节点体内的 3D 预览写入，成为 **image** 输出。
+
+### custom_params / project_id / parent_output_id / force_run_token（内部）
+
+隐藏管线—— 用户自定义参数附件、项目归属、血缘、运行触发。一般无需理会。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **model** | `COMFYTV_MODEL` | 生成的 3D 模型（GLB）快照 |
+| **image** | `COMFYTV_IMAGE` | 从预览视口截取的快照 |
+
+## 小贴士
+
+- 所选 **workflow** 必须以 SaveGLB 兼容节点收尾，否则本 stage 没有可发出的内容。
+- 图生 3D 请把干净的参考图接进 **images** 槽；文生 3D 则依赖 **main_prompt**。
+- 依赖 **image** 输出前，先环绕节点体内的预览，摆好一个合适的角度。
+
+## 相关节点
+
+- **Load 3D Model** —— 把现成的 GLB/GLTF/FBX/OBJ 文件引入管线，而非生成。
+- **Load 3D Model from Asset** —— 从项目资产库加载模型。
+- **Material Stage** —— 制作 PBR 材质并绑定到已加载的模型上。

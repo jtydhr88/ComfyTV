@@ -1,0 +1,66 @@
+---
+title: "深度散焦 (Z Defocus)"
+description: "基于深度的散焦——用深度图按距离模糊素材，让前景或背景带着真实散景圆变虚。"
+sidebarTitle: "深度散焦"
+translationSourceHash: "d4ee6c8459c59135"
+---
+
+<Frame caption="深度散焦 (Z Defocus) · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="深度散焦 (Z Defocus)" />
+</Frame>
+
+## 这个节点做什么
+
+本节点用**深度图**按每处画面与所选对焦距离的远近来模糊它，产生带形状散景的真实景深，而非平面模糊。接近对焦深度的像素保持锐利；远离的像素变模糊，越远越模糊。可增强高光，使亮点绽放成散景形状。
+
+它需要深度图——请接入 `depth_image` 或 `depth_video`（例如来自 Depth Anything 工作流）。若两者都未连接则报错。它带有 ▶ Run（散焦在后端计算）。主输入与输出为 `COMFYTV_VIDEO`。要与原生 ComfyUI 节点互操作，请插入 **Bridge**——见[桥接说明](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 何时使用
+
+- 给平面/全焦素材添加电影感浅景深。
+- 通过对焦深度动画在后期做变焦 (rack focus)。
+- 把明亮的背景点变成风格化散景圆盘或六边形。
+
+## 参数
+
+### focus_depth
+保持合焦的深度值，范围 0.0 到 1.0（默认 0.5），其中 0 和 1 为深度图的近/远两端。把它设为你的主体所在深度。
+
+### focus_range
+`focus_depth` 周围合焦带的宽度，范围 0.0 到 1.0（默认 0.15）。越宽保持场景锐利的部分越多；越窄向模糊的过渡越激进。
+
+### max_radius
+最失焦区域的最大模糊半径（像素），整数 1 到 48（默认 16）。越高背景模糊越强、越柔（也越慢）。
+
+### layers
+用于构建效果的深度切片数，整数 3 到 12（默认 8）。层数越多合焦与模糊之间过渡越平滑，代价越高。
+
+### shape
+散景光圈形状：`disc`（圆形）或 `hex`（六边形）。默认 `disc`。`hex` 模拟带叶片的光圈。
+
+### highlight_boost
+模糊前额外推入高光的亮度，范围 0.0 到 3.0（默认 0.0）。调高它使亮点绽放成可见的散景形状。
+
+### invert_depth
+布尔值（默认关）。若深度图的近/远相对于效果预期是反的，翻转其含义。
+
+### depth_image / depth_video
+深度图来源——二者需其一。`depth_image` 是单张 `COMFYTV_IMAGE` 深度帧；`depth_video` 是 `COMFYTV_VIDEO` 深度序列（深度随时间变化时用它）。若两者都存在，使用视频。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | 散焦后的素材 |
+
+## 提示
+
+- 结果好坏取决于深度图——干净、时间上稳定的深度视频可避免模糊闪烁。
+- 若前景与背景模糊与你想要的相反，切换 `invert_depth`。
+- 当镜头中有想绽放成散景的明亮高光点或灯光时，调高 `highlight_boost`。
+- `max_radius` 与 `layers` 越高效果越好但越慢；预览时调低。
+
+## 相关节点
+
+- 上游的深度估计工作流（如 Depth Anything）用于生成深度图。
+- **Card 3D** — 另一种通过在 3D 中变换画面来添加深度/透视的方式。

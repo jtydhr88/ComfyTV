@@ -1,0 +1,62 @@
+---
+title: "FX 链 (FX Chain)"
+description: "把上游一整串 FX 阶段在单次转码里烧进视频，并设定交付格式。"
+sidebarTitle: "FX 链"
+translationSourceHash: "dbf7b080e2b208ff"
+---
+
+<Frame caption="FX 链 (FX Chain) · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="FX 链 (FX Chain)" />
+</Frame>
+
+## 这个节点是做什么的
+
+**FX Chain（FX 链）** 是视频 FX 链末端的「渲染」节点。沿视频线串接的各个 FX 阶段并不各自重编码——它们把 `fx_spec` 沿线往下传。FX Chain 解包这条链，在一次 ffmpeg 转码里应用所有效果，然后按你选的交付设置编码。点 **▶ 运行** 渲染；输出是新的 `COMFYTV_VIDEO`。
+
+卡片按顺序列出链中的各个 FX（有预览的会显示每行预览），让你清楚看到将要烧进去的内容。FX Chain 需要上游有视频**且**链中至少有一个 FX 阶段；链为空或无视频时运行会报错。
+
+## 适用场景
+
+- 把一叠 FX 阶段（调色、模糊、抠像等）合成一个输出，中间不重编码。
+- 设定导出的最终交付分辨率、帧率、编码器和质量。
+- 从你一直在实时预览的链产出一个干净的成片。
+
+## 参数说明
+
+### out_colorspace（输出色彩空间）
+输出色彩空间：`bt709`（默认）、`bt601-6-625`、`bt2020`、`smpte170m`。
+
+### out_size（输出尺寸）
+交付短边分辨率：`source`（默认，保持原样）、`2160`、`1440`、`1080`、`720`、`540`、`480`。
+
+### out_fps（输出帧率）
+交付帧率：`source`（默认）、`24`、`25`、`30`、`50`、`60`。
+
+### out_codec（输出编码器）
+输出编码器：`h264`（默认）、`hevc`、`prores`。
+
+### out_quality（输出质量）
+编码质量：`draft`、`standard`（默认）、`high`。
+
+## 输入与输出
+
+| 接口 | 类型 | 含义 |
+|---|---|---|
+| **video**（输入） | `COMFYTV_VIDEO` | 携带 FX 链（`fx_spec`）的上游视频 |
+| **video**（输出） | `COMFYTV_VIDEO` | 已烧录、已交付的片段 |
+
+## 使用提示
+
+- 把 FX Chain 放在视频线的最后——上游全是 spec，真正渲染发生在本节点。
+- 单次转码比在每个 FX 阶段各自重编码质量更好、更快；代价是各效果之间没有中间文件。
+- 用 `source` 的尺寸/帧率保留原样；只在这里为最终交付做降分辨率或改帧率。
+- `prores` 用于剪辑/母带交付；`h264`/`hevc` 用于分发。
+
+## 类型与 Bridge
+
+`COMFYTV_VIDEO` 是 ComfyTV 项目快照，不是 ComfyUI 原生 `VIDEO`。用 **Bridge**（`ComfyTV/Bridge`）与原生节点互通。详见 [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 相关节点
+
+- 任意 ComfyTV **VideoFX** 阶段——它们构成 FX Chain 要烧录的链。
+- **Expression（表达式）**——用逐帧表达式驱动某个 FX 参数。

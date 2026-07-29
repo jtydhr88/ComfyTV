@@ -1,0 +1,66 @@
+---
+title: "Shape Mask"
+description: "Generate a matte from a procedural gradient shape — radial, linear, clock wipe, checker and more — or from a luminance image."
+sidebarTitle: "Shape Mask"
+---
+
+<Frame caption="Shape Mask · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Shape Mask" />
+</Frame>
+
+## What this node does
+
+**Shape Mask** builds a mask from a chosen gradient/geometric pattern (`map_kind`), then thresholds and softens it into a matte. There is no drawing: you pick a shape type and dial in the threshold and softness. On ▶ Run it renders the mask across the whole clip.
+
+It has two paths. If you leave the optional **shape_image** input empty, the shape is generated procedurally from `map_kind` and runs as a torch FX pass. If you wire in a **shape_image** (a `COMFYTV_IMAGE`), the node instead uses that image's luminance as the mask source and runs a dedicated shape-mask video pass.
+
+Video in/out is `COMFYTV_VIDEO`. To bridge to native ComfyUI nodes, use `ComfyTV/Bridge` — see https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md.
+
+## When to use it
+
+- Vignettes, spotlights and radial falloffs to focus attention
+- Wipe transitions (clock, blinds, curtain, burst) as animated mattes
+- A quick geometric matte to limit a grade or effect without hand-drawing
+
+## Parameters
+
+### map_kind
+The gradient/shape pattern. Options: `linear_x`, `linear_y`, `bilinear_x`, `bilinear_y`, `radial`, `square`, `diamond`, `clock`, `symmetric_clock`, `spiral`, `burst`, `curtain`, `blinds_h`, `blinds_v`, `checker`, `cloud`. Default `radial`. This is the raw grayscale field that threshold/softness then shape into a matte.
+
+### threshold
+The cut level applied to the pattern, `0`–`1`, default `0.5`. Pixels above become opaque; below become transparent. Lower it to grow the masked area, raise it to shrink.
+
+### softness
+Edge feather of the threshold, `0`–`1`, default `0.1`. `0` gives a hard edge; higher values blend the boundary.
+
+### invert
+Swap masked and unmasked regions. Boolean, default off.
+
+### animate
+How the mask moves over the clip. Options: `static`, `sweep_in`, `sweep_out`. Default `static`. `sweep_in`/`sweep_out` animate the threshold over time to reveal or conceal, making wipe transitions.
+
+### output
+`stencil` (default) or `matte`. Selects whether the result is delivered as a stencil or a matte.
+
+### seed
+Randomization seed for patterns that use noise (e.g. `cloud`). Integer `0`–`99999`, default `7`.
+
+### shape_image (optional)
+A `COMFYTV_IMAGE`. When provided, the mask is derived from this image's luminance instead of the procedural `map_kind`, and threshold/softness/invert/animate/output still apply.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The rendered mask clip (stencil or matte) |
+
+## Tips
+
+- `map_kind`, `seed` and the procedural path only apply when **shape_image** is empty; wiring an image switches the node to luminance-mask mode.
+- For a transition, set `animate` to `sweep_in`/`sweep_out` and pick a directional `map_kind` (linear, clock, blinds, curtain).
+
+## Related nodes
+
+- **Roto Mask** — hand-drawn spline mattes
+- **Mask Propagate** — animate a mask to follow motion
+- **Cutout / Erase** — apply the mask to isolate or remove content

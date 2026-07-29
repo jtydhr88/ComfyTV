@@ -1,0 +1,57 @@
+---
+title: "视频拼接 (Video Concat)"
+description: "把两个或更多片段首尾相接拼成一段连续视频，顺序由你控制。"
+sidebarTitle: "视频拼接"
+translationSourceHash: "fd81a6d60f888c3c"
+---
+
+<Frame caption="视频拼接 (Video Concat) · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="视频拼接 (Video Concat)" />
+</Frame>
+
+## 这个节点是做什么的
+
+**Video Concat** 把多个上游片段拼成一整段。它有一个可增长的 **videos** 输入（最多 12 个槽），
+节点体内还有一条重排条：把片段拖成你想要的顺序，该顺序会存进隐藏字段 **clip_order**。空着的槽会被跳过。
+
+这是真正的重新渲染，不是浏览器端的小把戏。点 **▶ 运行**后，服务端会用 PyAV / ffmpeg 把这些片段
+重新编码成一个 MP4，并保存为项目快照。至少需要**两个**非空片段，否则运行会报错。输入输出均为 `COMFYTV_VIDEO`。
+
+## 适用场景
+
+- 把分别生成的镜头（例如多个 Video Stage 的结果）拼成一段序列。
+- 把片头、正片、片尾拼成一个成片。
+- 把 Video Split / Video Clip 裁出来的片段重新拼回一条时间线。
+
+## 参数说明
+
+### videos（片段列表）
+可增长的片段槽列表（最多 12 个）。把每个上游 `COMFYTV_VIDEO` 接到一个槽，填满后会自动出现新槽。空槽会被忽略。
+
+### clip_order（拼接顺序，隐藏）
+一个记录各视频槽键值的 JSON 列表，表示拼接顺序。你不用手动编辑——它由节点体内的重排条驱动。
+任何已接线但未列入其中的片段，会被追加到已排序片段之后。
+
+## 输出说明
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | 拼接后的单个片段，保存为项目快照。 |
+
+## 小贴士
+
+- 分辨率/帧率不同的片段会在重新编码时统一处理；想得到最干净的结果，请喂入本就同尺寸、同 fps 的片段。
+- 顺序取自重排条，而非槽位序号——请在重排条里调整。
+- 非空片段少于两个会报错；请至少接两个。
+
+## Bridge 说明
+
+`COMFYTV_VIDEO` 是项目快照引用，不是 ComfyUI 原生张量。要在 ComfyTV 与原生 ComfyUI 视频节点之间互通，
+请插入 **Bridge**（`ComfyTV/Bridge`）。详见
+https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md。
+
+## 相关节点
+
+- **Video Clip**——拼接前先裁剪单个片段。
+- **Video Split**——把一个片段切成两段，可再拼回。
+- **Mux Audio**——拼好序列后替换或混合音轨。

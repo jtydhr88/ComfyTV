@@ -1,0 +1,54 @@
+# Audio Picker
+
+> 从一批生成的音频里**只选一条**继续往下游传——Image Picker 的音频版。
+
+## 这个节点是做什么的
+
+**音频选择器**（Audio Picker）属于 **Compose** 分类（`ComfyTV/Compose`）。上游产出音频的 stage——**Music Stage**、**Speech Stage**，或任何多次运行会累积多条 take 的节点——接入本节点。节点体里展示累积的音轨，你点哪一条，**audio** 输出口就只向下游传递那一条 `COMFYTV_AUDIO`。
+
+本节点**无 ▶ 运行**。点某条音轨即更新隐藏的 `selected_index` 并立即重新发出输出快照，下游 stage 会即时看到你的选择。
+
+媒体以 ComfyTV 项目快照的形式流动，而非原生 ComfyUI 张量。若要把选中的音轨交给原生 ComfyUI 音频节点，请插入 **Bridge** —— 见 [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 适用场景
+
+- **Music Stage** 多次 Run 出了几条 take，想试听并保留其中一条。
+- 对同一句台词生成了几版 **Speech** 朗读，需要挑出最好的一版。
+- 希望把多次 Run 的 take **累积**进一个池子，慢慢挑而不丢旧结果。
+
+## 参数
+
+### batch（上游）
+
+已接线的输入，类型为 `COMFYTV_AUDIO`，可选。到达这里的每条生成音轨都会被追加进池子。从 Music Stage 或 Speech Stage 的 `audio` 输出接过来。
+
+### selected_index（隐藏）
+
+要提取的音轨序号，1 起（默认 `1`，范围 `1`–`999`）。你无需手填——它由在节点体里**点击某条音轨**设置。
+
+### pool（隐藏）
+
+累积的音频池，以 JSON 存在节点上。UI 会把新到的上游音轨追加进来（按 URL 去重），使其在重生成、断连后依然存在，并通过 **Clear** 按钮清空。池子非空时以池子为源，否则使用实时的 `batch` 输入。
+
+### project_id / parent_output_id（内部）
+
+隐藏，由 **Project** 节点与连线维护，一般无需理会。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **audio** | `COMFYTV_AUDIO` | 供下游 stage 使用的单条选中音轨快照 |
+
+## 小贴士
+
+- 只有真正**点击**某条音轨后才会有输出——是「选中」而非「悬停」触发输出。
+- 池子里旧 take 太乱？用节点体里的 **Clear**，或新拖一个 Audio Picker。
+- 池子会把选择与 take 随项目一起持久化，而原生的内存音频张量做不到——只在跨到原生节点时才用 Bridge。
+
+## 相关节点
+
+- **Music Stage** —— 常见上游，生成器乐 / 人声音轨。
+- **Speech Stage** —— 文本转语音上游。
+- **Image Picker** / **Video Picker** —— 面向其他媒体的同款「从池子里选一个」模式。
+- **Load Audio from Asset** —— 从项目资产库取一条现成音轨，而非从池子里挑。

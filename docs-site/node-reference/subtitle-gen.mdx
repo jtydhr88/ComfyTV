@@ -1,0 +1,49 @@
+---
+title: "Subtitles · Speech-to-Text"
+description: "Auto-transcribe the speech in a video or audio clip into subtitle text, ready to feed the Subtitles node."
+sidebarTitle: "Subtitles · Speech-to-Text"
+---
+
+<Frame caption="Subtitles · Speech-to-Text · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Subtitles · Speech-to-Text" />
+</Frame>
+
+## What this node does
+
+**Subtitles · Speech-to-Text** runs a speech-to-text workflow over an upstream **video** or **audio** and returns the transcription as `COMFYTV_TEXT` (subtitle cues). Pick a **workflow**, wire a clip, press **▶ Run**; the transcription runs as a backend workflow (a real model pass on the server), so it needs the corresponding model installed.
+
+You must provide either an **audio** or a **video** input. If **audio** is wired it is transcribed directly; otherwise the **video** is used. Running with neither raises an error.
+
+## When to use it
+
+- Generate captions for a talking-head clip, then burn them with **Subtitles**.
+- Get a rough transcript of a voiceover or interview for editing.
+- Kick off a caption workflow without hand-typing an SRT.
+
+## Parameters
+
+### workflow
+Which speech-to-text workflow to run. The dropdown lists the installed `speech-to-text` workflows (`labels_for('speech-to-text')`), with a sensible default. Each option maps to a backend workflow JSON and its required model.
+
+## Inputs and outputs
+
+| Slot | Type | Meaning |
+|---|---|---|
+| **audio** (in) | `COMFYTV_AUDIO` | Optional audio to transcribe (used first if present) |
+| **video** (in) | `COMFYTV_VIDEO` | Optional video to transcribe (used if no audio) |
+| **subtitles** (out) | `COMFYTV_TEXT` | The transcription / subtitle cue text |
+
+## Tips
+
+- Wire **subtitles** → the **subs_text** input of the **Subtitles** node to go straight from speech to burned-in captions.
+- Provide **audio** when you have a clean audio track — it skips using the video's soundtrack.
+- The available workflows and their models depend on your install; if the dropdown is empty or Run fails, check the speech-to-text workflow/model is present.
+
+## Types and bridges
+
+`COMFYTV_TEXT`, `COMFYTV_VIDEO` and `COMFYTV_AUDIO` are ComfyTV project snapshots, not native ComfyUI types. To interoperate with native ComfyUI nodes, insert a **Bridge** (`ComfyTV/Bridge`). See [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## Related nodes
+
+- **Subtitles** — burns the generated cues onto the video.
+- **Title** — a single styled title card.

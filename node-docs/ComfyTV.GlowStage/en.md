@@ -1,0 +1,53 @@
+# Glow
+
+> Bloom / glow that makes bright areas bleed light — like a lens bloom or After Effects "Glow", with a multi-blur soft falloff.
+
+## What this node does
+
+**Glow** isolates the bright parts of each frame (above a threshold), blurs them across several radii, and adds that soft light back over the picture. The result is a filmic bloom around highlights — neon signs, sun glints, bright skin, glowing screens.
+
+This is a rendered stage — it needs a **▶ Run**. It uses a torch (GPU) backend. In goes `COMFYTV_VIDEO`, out comes `COMFYTV_VIDEO`.
+
+To hand the result to a native ComfyUI node, insert a **Bridge**. See [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Add a dreamy, ethereal bloom to bright highlights.
+- Make neon, lights, or emissive surfaces glow.
+- Soften a harsh, digital-looking render.
+
+## Parameters
+
+### threshold
+`0.0`–`0.99`, default `0.7`. Brightness cutoff — only pixels brighter than this contribute to the glow. Lower it to make more of the frame glow; raise it to restrict glow to the brightest highlights.
+
+### size
+`0.5`–`50.0` (step `0.5`), default `4.0`. Base blur radius for the glow. Larger = wider, softer halo.
+
+### bloom_ratio
+`1.1`–`4.0`, default `2.0`. How much each successive blur layer grows relative to the previous one. Higher values spread the bloom over a wider range of sizes.
+
+### bloom_count
+`1`–`8`, default `5`. Number of blur layers combined to build the glow. More layers = smoother, more graduated falloff.
+
+### gain
+`0.0`–`8.0`, default `1.0`. Brightness of the added glow. Push above `1.0` for a stronger, blown-out bloom.
+
+### mix
+`0.0`–`1.0`, default `1.0`. Blend of the glowed result over the original. `1.0` is full effect; lower it to dial the glow back.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The clip with bloom added |
+
+## Tips
+
+- If the whole frame glows, raise `threshold`; if only tiny specks glow, lower it.
+- `size` and `bloom_ratio` together control the shape of the halo — `size` sets the base, `bloom_ratio`/`bloom_count` set how far it spreads.
+
+## Related nodes
+
+- **God Rays** — volumetric light shafts radiating from a source.
+- **Video Stylize** — simpler one-click looks.

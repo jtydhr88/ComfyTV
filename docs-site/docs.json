@@ -1,0 +1,740 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "almond",
+  "name": "ComfyTV",
+  "colors": {
+    "primary": "#4F46E5",
+    "light": "#A5B4FC",
+    "dark": "#4F46E5"
+  },
+  "favicon": "/favicon.svg",
+  "logo": {
+    "light": "/logo.svg",
+    "dark": "/logo.svg"
+  },
+  "appearance": {
+    "default": "system"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "GitHub",
+        "href": "https://github.com/jtydhr88/ComfyTV"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Install",
+      "href": "https://github.com/jtydhr88/ComfyTV#install"
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/jtydhr88/ComfyTV"
+    }
+  },
+  "contextual": {
+    "options": [
+      "copy",
+      "view",
+      "chatgpt",
+      "claude"
+    ]
+  },
+  "navigation": {
+    "languages": [
+      {
+        "language": "en",
+        "tabs": [
+          {
+            "tab": "Guides",
+            "pages": [
+              {
+                "group": "Guides",
+                "pages": [
+                  "index",
+                  "guides/getting-started",
+                  "guides/generate",
+                  "guides/image-tools",
+                  "guides/panorama",
+                  "guides/video-and-audio",
+                  "guides/making-music",
+                  "guides/compose",
+                  "guides/models",
+                  "guides/bridges",
+                  "guides/custom-workflows",
+                  "guides/sidebar-config-editor"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Node Reference",
+            "pages": [
+              {
+                "group": "Project & Timeline",
+                "pages": [
+                  "node-reference/project",
+                  "node-reference/director-timeline",
+                  "node-reference/timeline-video",
+                  "node-reference/sequence"
+                ]
+              },
+              {
+                "group": "Input & Loaders",
+                "pages": [
+                  "node-reference/image-loader",
+                  "node-reference/video-loader",
+                  "node-reference/audio-loader",
+                  "node-reference/text-loader",
+                  "node-reference/model-loader",
+                  "node-reference/asset-image-loader",
+                  "node-reference/asset-video-loader",
+                  "node-reference/asset-audio-loader",
+                  "node-reference/asset-model-loader"
+                ]
+              },
+              {
+                "group": "Generate",
+                "pages": [
+                  "node-reference/text",
+                  "node-reference/image",
+                  "node-reference/video",
+                  "node-reference/audio",
+                  "node-reference/speech",
+                  "node-reference/model3-d",
+                  "node-reference/shot-images",
+                  "node-reference/storyboard"
+                ]
+              },
+              {
+                "group": "Pick & Compare",
+                "pages": [
+                  "node-reference/image-picker",
+                  "node-reference/audio-picker",
+                  "node-reference/video-picker",
+                  "node-reference/compare",
+                  "node-reference/contact-sheet"
+                ]
+              },
+              {
+                "group": "Image · Edit",
+                "pages": [
+                  "node-reference/image-edit",
+                  "node-reference/inpaint",
+                  "node-reference/outpaint",
+                  "node-reference/erase",
+                  "node-reference/cutout",
+                  "node-reference/upscale",
+                  "node-reference/relight",
+                  "node-reference/image-variations",
+                  "node-reference/multiangle",
+                  "node-reference/split-part"
+                ]
+              },
+              {
+                "group": "Image · Transform",
+                "pages": [
+                  "node-reference/crop",
+                  "node-reference/rotate",
+                  "node-reference/mirror",
+                  "node-reference/grid-split",
+                  "node-reference/color-grade"
+                ]
+              },
+              {
+                "group": "2D Editors",
+                "pages": [
+                  "node-reference/layer-editor",
+                  "node-reference/storyboard-editor"
+                ]
+              },
+              {
+                "group": "Panorama",
+                "pages": [
+                  "node-reference/panorama",
+                  "node-reference/panorama-current-view",
+                  "node-reference/panorama-multi-view"
+                ]
+              },
+              {
+                "group": "3D",
+                "pages": [
+                  "node-reference/scene3-d",
+                  "node-reference/material",
+                  "node-reference/mesh-primitive",
+                  "node-reference/mesh-op",
+                  "node-reference/mesh-boolean",
+                  "node-reference/mesh-bake-maps",
+                  "node-reference/line-art"
+                ]
+              },
+              {
+                "group": "Video · Edit",
+                "pages": [
+                  "node-reference/video-clip",
+                  "node-reference/video-crop",
+                  "node-reference/video-resize",
+                  "node-reference/video-concat",
+                  "node-reference/video-speed",
+                  "node-reference/video-rotate",
+                  "node-reference/video-split",
+                  "node-reference/video-volume",
+                  "node-reference/video-mux-audio",
+                  "node-reference/video-extract-frame",
+                  "node-reference/video-frames",
+                  "node-reference/video-upscale",
+                  "node-reference/make-proxy"
+                ]
+              },
+              {
+                "group": "Video · Color",
+                "pages": [
+                  "node-reference/video-color",
+                  "node-reference/video-curves",
+                  "node-reference/video-lut",
+                  "node-reference/hue-correct",
+                  "node-reference/selective-color",
+                  "node-reference/gray-world",
+                  "node-reference/cdl",
+                  "node-reference/histogram-eq"
+                ]
+              },
+              {
+                "group": "Video · Keying & Matte",
+                "pages": [
+                  "node-reference/video-chroma-key",
+                  "node-reference/pik",
+                  "node-reference/keyer",
+                  "node-reference/despill",
+                  "node-reference/color-suppress",
+                  "node-reference/key-mix",
+                  "node-reference/matte-monitor",
+                  "node-reference/matte-morph",
+                  "node-reference/select0r",
+                  "node-reference/roto-mask",
+                  "node-reference/shape-mask",
+                  "node-reference/mask-propagate",
+                  "node-reference/motion-track",
+                  "node-reference/mask-cleanup"
+                ]
+              },
+              {
+                "group": "Video · Compositing",
+                "pages": [
+                  "node-reference/video-composite",
+                  "node-reference/video-transform",
+                  "node-reference/corner-pin",
+                  "node-reference/stmap",
+                  "node-reference/card3-d"
+                ]
+              },
+              {
+                "group": "Video · Enhance & Restore",
+                "pages": [
+                  "node-reference/video-blur-sharpen",
+                  "node-reference/video-denoise",
+                  "node-reference/video-interpolate",
+                  "node-reference/video-deinterlace",
+                  "node-reference/video-stabilize",
+                  "node-reference/video-stabilize-v2",
+                  "node-reference/face-blur",
+                  "node-reference/spot-remover"
+                ]
+              },
+              {
+                "group": "Video · Optics & Lens",
+                "pages": [
+                  "node-reference/video360",
+                  "node-reference/video360-stabilize",
+                  "node-reference/lens-distort",
+                  "node-reference/chromatic-aberration",
+                  "node-reference/lens-flare",
+                  "node-reference/zdefocus",
+                  "node-reference/stmap-gen"
+                ]
+              },
+              {
+                "group": "Video · Stylize",
+                "pages": [
+                  "node-reference/video-stylize",
+                  "node-reference/glow",
+                  "node-reference/god-rays",
+                  "node-reference/old-film",
+                  "node-reference/frame-blend",
+                  "node-reference/chroma-shift",
+                  "node-reference/pseudocolor",
+                  "node-reference/posterize",
+                  "node-reference/regrain"
+                ]
+              },
+              {
+                "group": "Video · Art & Time FX",
+                "pages": [
+                  "node-reference/art-fx",
+                  "node-reference/glitch-fx",
+                  "node-reference/kaleidoscope",
+                  "node-reference/wave-warp",
+                  "node-reference/water",
+                  "node-reference/light-graffiti",
+                  "node-reference/slit-scan",
+                  "node-reference/feedback-fx",
+                  "node-reference/strobe",
+                  "node-reference/particles",
+                  "node-reference/pattern"
+                ]
+              },
+              {
+                "group": "Video · Transitions",
+                "pages": [
+                  "node-reference/video-transition",
+                  "node-reference/video-luma-wipe",
+                  "node-reference/time-remap",
+                  "node-reference/ken-burns"
+                ]
+              },
+              {
+                "group": "Video · Text & Annotate",
+                "pages": [
+                  "node-reference/title",
+                  "node-reference/subtitle",
+                  "node-reference/subtitle-gen",
+                  "node-reference/video-subtitle-smart-erase",
+                  "node-reference/video-subtitle-select-erase",
+                  "node-reference/annotate",
+                  "node-reference/paint-stroke"
+                ]
+              },
+              {
+                "group": "Video · Analysis & Chain",
+                "pages": [
+                  "node-reference/scene-detect",
+                  "node-reference/video-scopes",
+                  "node-reference/fxchain",
+                  "node-reference/expression"
+                ]
+              },
+              {
+                "group": "Audio · Edit & Mix",
+                "pages": [
+                  "node-reference/audio-extract-vocal",
+                  "node-reference/audio-extract-bg",
+                  "node-reference/audio-crossfade",
+                  "node-reference/audio-mix",
+                  "node-reference/audio-duck",
+                  "node-reference/audio-segment-export",
+                  "node-reference/audio-video-demux-audio",
+                  "node-reference/audio-video-demux-video"
+                ]
+              },
+              {
+                "group": "Audio · Process & FX",
+                "pages": [
+                  "node-reference/audio-dynamics",
+                  "node-reference/audio-eq",
+                  "node-reference/audio-loudness",
+                  "node-reference/audio-denoise",
+                  "node-reference/audio-repair",
+                  "node-reference/audio-echo",
+                  "node-reference/audio-modulation",
+                  "node-reference/audio-stereo",
+                  "node-reference/audio-time-pitch",
+                  "node-reference/audio-saturate",
+                  "node-reference/audio-convolve",
+                  "node-reference/muse-reverb"
+                ]
+              },
+              {
+                "group": "Audio · Analyze & React",
+                "pages": [
+                  "node-reference/audio-analyze",
+                  "node-reference/audio-visualize",
+                  "node-reference/audio-sweep",
+                  "node-reference/audio-deconvolve",
+                  "node-reference/audio-mir",
+                  "node-reference/audio-noise-reduction",
+                  "node-reference/audio-stem-split",
+                  "node-reference/audio-reactive",
+                  "node-reference/audio-meter"
+                ]
+              },
+              {
+                "group": "Music (Symbolic)",
+                "pages": [
+                  "node-reference/score",
+                  "node-reference/score-editor",
+                  "node-reference/midi-editor",
+                  "node-reference/score-to-midi",
+                  "node-reference/sf2-synth",
+                  "node-reference/click-track",
+                  "node-reference/chord-accomp"
+                ]
+              },
+              {
+                "group": "Bridges",
+                "pages": [
+                  "node-reference/bridge-from-image",
+                  "node-reference/bridge-to-image",
+                  "node-reference/bridge-to-images",
+                  "node-reference/bridge-from-video",
+                  "node-reference/bridge-to-video",
+                  "node-reference/bridge-from-audio",
+                  "node-reference/bridge-to-audio",
+                  "node-reference/bridge-from-text",
+                  "node-reference/bridge-to-text",
+                  "node-reference/bridge-from-mask"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "language": "zh",
+        "tabs": [
+          {
+            "tab": "指南",
+            "pages": [
+              {
+                "group": "指南",
+                "pages": [
+                  "zh/index",
+                  "zh/guides/getting-started",
+                  "zh/guides/generate",
+                  "zh/guides/image-tools",
+                  "zh/guides/panorama",
+                  "zh/guides/video-and-audio",
+                  "zh/guides/making-music",
+                  "zh/guides/compose",
+                  "zh/guides/models",
+                  "zh/guides/bridges",
+                  "zh/guides/custom-workflows",
+                  "zh/guides/sidebar-config-editor"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "节点参考",
+            "pages": [
+              {
+                "group": "Project & Timeline",
+                "pages": [
+                  "zh/node-reference/project",
+                  "zh/node-reference/director-timeline",
+                  "zh/node-reference/timeline-video",
+                  "zh/node-reference/sequence"
+                ]
+              },
+              {
+                "group": "Input & Loaders",
+                "pages": [
+                  "zh/node-reference/image-loader",
+                  "zh/node-reference/video-loader",
+                  "zh/node-reference/audio-loader",
+                  "zh/node-reference/text-loader",
+                  "zh/node-reference/model-loader",
+                  "zh/node-reference/asset-image-loader",
+                  "zh/node-reference/asset-video-loader",
+                  "zh/node-reference/asset-audio-loader",
+                  "zh/node-reference/asset-model-loader"
+                ]
+              },
+              {
+                "group": "Generate",
+                "pages": [
+                  "zh/node-reference/text",
+                  "zh/node-reference/image",
+                  "zh/node-reference/video",
+                  "zh/node-reference/audio",
+                  "zh/node-reference/speech",
+                  "zh/node-reference/model3-d",
+                  "zh/node-reference/shot-images",
+                  "zh/node-reference/storyboard"
+                ]
+              },
+              {
+                "group": "Pick & Compare",
+                "pages": [
+                  "zh/node-reference/image-picker",
+                  "zh/node-reference/audio-picker",
+                  "zh/node-reference/video-picker",
+                  "zh/node-reference/compare",
+                  "zh/node-reference/contact-sheet"
+                ]
+              },
+              {
+                "group": "Image · Edit",
+                "pages": [
+                  "zh/node-reference/image-edit",
+                  "zh/node-reference/inpaint",
+                  "zh/node-reference/outpaint",
+                  "zh/node-reference/erase",
+                  "zh/node-reference/cutout",
+                  "zh/node-reference/upscale",
+                  "zh/node-reference/relight",
+                  "zh/node-reference/image-variations",
+                  "zh/node-reference/multiangle",
+                  "zh/node-reference/split-part"
+                ]
+              },
+              {
+                "group": "Image · Transform",
+                "pages": [
+                  "zh/node-reference/crop",
+                  "zh/node-reference/rotate",
+                  "zh/node-reference/mirror",
+                  "zh/node-reference/grid-split",
+                  "zh/node-reference/color-grade"
+                ]
+              },
+              {
+                "group": "2D Editors",
+                "pages": [
+                  "zh/node-reference/layer-editor",
+                  "zh/node-reference/storyboard-editor"
+                ]
+              },
+              {
+                "group": "Panorama",
+                "pages": [
+                  "zh/node-reference/panorama",
+                  "zh/node-reference/panorama-current-view",
+                  "zh/node-reference/panorama-multi-view"
+                ]
+              },
+              {
+                "group": "3D",
+                "pages": [
+                  "zh/node-reference/scene3-d",
+                  "zh/node-reference/material",
+                  "zh/node-reference/mesh-primitive",
+                  "zh/node-reference/mesh-op",
+                  "zh/node-reference/mesh-boolean",
+                  "zh/node-reference/mesh-bake-maps",
+                  "zh/node-reference/line-art"
+                ]
+              },
+              {
+                "group": "Video · Edit",
+                "pages": [
+                  "zh/node-reference/video-clip",
+                  "zh/node-reference/video-crop",
+                  "zh/node-reference/video-resize",
+                  "zh/node-reference/video-concat",
+                  "zh/node-reference/video-speed",
+                  "zh/node-reference/video-rotate",
+                  "zh/node-reference/video-split",
+                  "zh/node-reference/video-volume",
+                  "zh/node-reference/video-mux-audio",
+                  "zh/node-reference/video-extract-frame",
+                  "zh/node-reference/video-frames",
+                  "zh/node-reference/video-upscale",
+                  "zh/node-reference/make-proxy"
+                ]
+              },
+              {
+                "group": "Video · Color",
+                "pages": [
+                  "zh/node-reference/video-color",
+                  "zh/node-reference/video-curves",
+                  "zh/node-reference/video-lut",
+                  "zh/node-reference/hue-correct",
+                  "zh/node-reference/selective-color",
+                  "zh/node-reference/gray-world",
+                  "zh/node-reference/cdl",
+                  "zh/node-reference/histogram-eq"
+                ]
+              },
+              {
+                "group": "Video · Keying & Matte",
+                "pages": [
+                  "zh/node-reference/video-chroma-key",
+                  "zh/node-reference/pik",
+                  "zh/node-reference/keyer",
+                  "zh/node-reference/despill",
+                  "zh/node-reference/color-suppress",
+                  "zh/node-reference/key-mix",
+                  "zh/node-reference/matte-monitor",
+                  "zh/node-reference/matte-morph",
+                  "zh/node-reference/select0r",
+                  "zh/node-reference/roto-mask",
+                  "zh/node-reference/shape-mask",
+                  "zh/node-reference/mask-propagate",
+                  "zh/node-reference/motion-track",
+                  "zh/node-reference/mask-cleanup"
+                ]
+              },
+              {
+                "group": "Video · Compositing",
+                "pages": [
+                  "zh/node-reference/video-composite",
+                  "zh/node-reference/video-transform",
+                  "zh/node-reference/corner-pin",
+                  "zh/node-reference/stmap",
+                  "zh/node-reference/card3-d"
+                ]
+              },
+              {
+                "group": "Video · Enhance & Restore",
+                "pages": [
+                  "zh/node-reference/video-blur-sharpen",
+                  "zh/node-reference/video-denoise",
+                  "zh/node-reference/video-interpolate",
+                  "zh/node-reference/video-deinterlace",
+                  "zh/node-reference/video-stabilize",
+                  "zh/node-reference/video-stabilize-v2",
+                  "zh/node-reference/face-blur",
+                  "zh/node-reference/spot-remover"
+                ]
+              },
+              {
+                "group": "Video · Optics & Lens",
+                "pages": [
+                  "zh/node-reference/video360",
+                  "zh/node-reference/video360-stabilize",
+                  "zh/node-reference/lens-distort",
+                  "zh/node-reference/chromatic-aberration",
+                  "zh/node-reference/lens-flare",
+                  "zh/node-reference/zdefocus",
+                  "zh/node-reference/stmap-gen"
+                ]
+              },
+              {
+                "group": "Video · Stylize",
+                "pages": [
+                  "zh/node-reference/video-stylize",
+                  "zh/node-reference/glow",
+                  "zh/node-reference/god-rays",
+                  "zh/node-reference/old-film",
+                  "zh/node-reference/frame-blend",
+                  "zh/node-reference/chroma-shift",
+                  "zh/node-reference/pseudocolor",
+                  "zh/node-reference/posterize",
+                  "zh/node-reference/regrain"
+                ]
+              },
+              {
+                "group": "Video · Art & Time FX",
+                "pages": [
+                  "zh/node-reference/art-fx",
+                  "zh/node-reference/glitch-fx",
+                  "zh/node-reference/kaleidoscope",
+                  "zh/node-reference/wave-warp",
+                  "zh/node-reference/water",
+                  "zh/node-reference/light-graffiti",
+                  "zh/node-reference/slit-scan",
+                  "zh/node-reference/feedback-fx",
+                  "zh/node-reference/strobe",
+                  "zh/node-reference/particles",
+                  "zh/node-reference/pattern"
+                ]
+              },
+              {
+                "group": "Video · Transitions",
+                "pages": [
+                  "zh/node-reference/video-transition",
+                  "zh/node-reference/video-luma-wipe",
+                  "zh/node-reference/time-remap",
+                  "zh/node-reference/ken-burns"
+                ]
+              },
+              {
+                "group": "Video · Text & Annotate",
+                "pages": [
+                  "zh/node-reference/title",
+                  "zh/node-reference/subtitle",
+                  "zh/node-reference/subtitle-gen",
+                  "zh/node-reference/video-subtitle-smart-erase",
+                  "zh/node-reference/video-subtitle-select-erase",
+                  "zh/node-reference/annotate",
+                  "zh/node-reference/paint-stroke"
+                ]
+              },
+              {
+                "group": "Video · Analysis & Chain",
+                "pages": [
+                  "zh/node-reference/scene-detect",
+                  "zh/node-reference/video-scopes",
+                  "zh/node-reference/fxchain",
+                  "zh/node-reference/expression"
+                ]
+              },
+              {
+                "group": "Audio · Edit & Mix",
+                "pages": [
+                  "zh/node-reference/audio-extract-vocal",
+                  "zh/node-reference/audio-extract-bg",
+                  "zh/node-reference/audio-crossfade",
+                  "zh/node-reference/audio-mix",
+                  "zh/node-reference/audio-duck",
+                  "zh/node-reference/audio-segment-export",
+                  "zh/node-reference/audio-video-demux-audio",
+                  "zh/node-reference/audio-video-demux-video"
+                ]
+              },
+              {
+                "group": "Audio · Process & FX",
+                "pages": [
+                  "zh/node-reference/audio-dynamics",
+                  "zh/node-reference/audio-eq",
+                  "zh/node-reference/audio-loudness",
+                  "zh/node-reference/audio-denoise",
+                  "zh/node-reference/audio-repair",
+                  "zh/node-reference/audio-echo",
+                  "zh/node-reference/audio-modulation",
+                  "zh/node-reference/audio-stereo",
+                  "zh/node-reference/audio-time-pitch",
+                  "zh/node-reference/audio-saturate",
+                  "zh/node-reference/audio-convolve",
+                  "zh/node-reference/muse-reverb"
+                ]
+              },
+              {
+                "group": "Audio · Analyze & React",
+                "pages": [
+                  "zh/node-reference/audio-analyze",
+                  "zh/node-reference/audio-visualize",
+                  "zh/node-reference/audio-sweep",
+                  "zh/node-reference/audio-deconvolve",
+                  "zh/node-reference/audio-mir",
+                  "zh/node-reference/audio-noise-reduction",
+                  "zh/node-reference/audio-stem-split",
+                  "zh/node-reference/audio-reactive",
+                  "zh/node-reference/audio-meter"
+                ]
+              },
+              {
+                "group": "Music (Symbolic)",
+                "pages": [
+                  "zh/node-reference/score",
+                  "zh/node-reference/score-editor",
+                  "zh/node-reference/midi-editor",
+                  "zh/node-reference/score-to-midi",
+                  "zh/node-reference/sf2-synth",
+                  "zh/node-reference/click-track",
+                  "zh/node-reference/chord-accomp"
+                ]
+              },
+              {
+                "group": "Bridges",
+                "pages": [
+                  "zh/node-reference/bridge-from-image",
+                  "zh/node-reference/bridge-to-image",
+                  "zh/node-reference/bridge-to-images",
+                  "zh/node-reference/bridge-from-video",
+                  "zh/node-reference/bridge-to-video",
+                  "zh/node-reference/bridge-from-audio",
+                  "zh/node-reference/bridge-to-audio",
+                  "zh/node-reference/bridge-from-text",
+                  "zh/node-reference/bridge-to-text",
+                  "zh/node-reference/bridge-from-mask"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

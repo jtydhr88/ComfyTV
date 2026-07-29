@@ -1,0 +1,53 @@
+# Video Picker
+
+> Pick **one** clip out of a pool of generated videos to send downstream—the video counterpart of Image Picker.
+
+## What this node does
+
+**Video Picker** is a **Compose** stage (`ComfyTV/Compose`). Upstream stages that produce video—**Video Stage** and any node whose runs accumulate multiple clips—feed into this node. The node body shows the accumulated clips; whichever one you click becomes the sole **`COMFYTV_VIDEO`** on the **video** output.
+
+There is **no ▶ Run**. Clicking a clip updates the hidden `selected_index` and re-emits the output snapshot instantly, so downstream stages immediately see your pick.
+
+Media flows as ComfyTV project snapshots, not native ComfyUI tensors. To hand a picked clip to native ComfyUI nodes, insert a **Bridge** — see [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- A **Video Stage** returns several clips across multiple Runs and you want to review and keep one.
+- You generated variant clips (different seeds/prompts) and need to choose the best motion.
+- You want to **accumulate** clips across Runs into one pool and pick without losing earlier ones.
+
+## Parameters
+
+### batch (upstream)
+
+The wired input, of type `COMFYTV_VIDEO` and optional. Each generated clip that arrives here is appended to the pool. Wire it from a Video Stage `video` output.
+
+### selected_index (hidden)
+
+1-based index of the clip to extract (default `1`, range `1`–`999`). You never type this—it is set by **clicking a clip** in the node body.
+
+### pool (hidden)
+
+Accumulated video pool, stored as JSON on the node. The UI appends new upstream clips (deduped by URL) so they survive regeneration and disconnect, and empties it via the **Clear** button. When the pool is non-empty it is the source; otherwise the live `batch` input is used.
+
+### project_id / parent_output_id (internal)
+
+Hidden; maintained by the **Project** node and graph wiring. You rarely touch these.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The single selected clip snapshot for downstream stages |
+
+## Tips
+
+- Nothing appears until you actually **click** a clip—selection, not hover, sets the output.
+- Pool cluttered with old clips? Use **Clear** in the node body, or drop in a fresh Video Picker.
+- The pool persists selections and clips with the project, which native in-memory tensors cannot—use a Bridge only when crossing to native nodes.
+
+## Related nodes
+
+- **Video Stage** — common upstream; generates clips from text/image.
+- **Image Picker** / **Audio Picker** — same pick-one-from-a-pool pattern for other media.
+- **Load Video from Asset** — pull an existing clip from the project asset library instead of picking from a pool.

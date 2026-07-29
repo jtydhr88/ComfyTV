@@ -1,0 +1,64 @@
+---
+title: "Motion Track"
+description: "Click points on the video to track them frame-by-frame, and optionally solve a transform you can pin things to."
+sidebarTitle: "Motion Track"
+---
+
+<Frame caption="Motion Track · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Motion Track" />
+</Frame>
+
+## What this node does
+
+**Motion Track** follows one or more points across your clip. You click points directly on the node's video preview; on ▶ Run it does pattern-matching from frame to frame and returns the tracked paths as text data. Optionally it also solves a single motion transform (translation, similarity, or perspective corners) from those points so downstream nodes can pin, stabilize, or corner-pin to the motion.
+
+Unlike the other masking nodes, its output is `COMFYTV_TEXT` (track data as JSON), not a video. Video in is `COMFYTV_VIDEO`. To use track text with native ComfyUI nodes, bridge via `ComfyTV/Bridge` — see https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md.
+
+## The on-node editor
+
+The card overlays a canvas on the video:
+
+- **Click** empty space to add a track point (a green cross with a numbered pattern box).
+- **Double-click** a point to remove it.
+- The **first point** also shows a dashed yellow **search** box.
+- The overlay draws each point's **pattern** box (the template being matched) and, for point 1, the **search** box (how far it hunts each frame).
+- A **Clear** action removes all points.
+
+You must place at least one point before running, or the node raises "click at least one point on the node first."
+
+## Parameters
+
+### points
+The clicked track points, stored as JSON `[{x,y},...]`. Written by the on-node editor as you click. Default empty. (If `points` is empty but `point_x`/`point_y` are set, a single point is used.)
+
+### point_x / point_y
+The first point's coordinates, `0`–`8192`, default `0`. These mirror point 1 from the editor.
+
+### solve
+What transform to fit from the tracked points. Options: `none`, `translation`, `similarity`, `perspective`. Default `none`. `similarity` needs 2+ points and feeds Transform/Composite; `perspective` needs 4+ points and feeds Corner Pin. `none` returns raw tracks only.
+
+### t_start / t_end
+The time window (seconds) to track. `t_start` `0`–`3600` default `0`; `t_end` default `-1` (meaning end of clip), range `-1`–`3600`, step `0.05`.
+
+### pattern
+Pattern half-size in pixels — the template box matched each frame. Range `4`–`64`, default `12`. Larger patterns are more distinctive but slower and less tolerant of deformation.
+
+### search
+Search radius in pixels — how far the tracker looks for the pattern each frame. Range `8`–`128`, default `24`. Increase for fast motion.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **track** | `COMFYTV_TEXT` | JSON track data: per-point paths with confidence, plus (if solved) a `transform` keyframe list or `corners` for perspective |
+
+## Tips
+
+- Pick a high-contrast, non-repeating feature to track; flat or repetitive areas cause jitter (watch the confidence in the result).
+- Match `search` to the motion speed — too small and the tracker loses fast movement, too large and it slows down and may lock onto the wrong feature.
+- For `perspective` corner-pin, place points on the four corners of the planar surface.
+
+## Related nodes
+
+- **Mask Propagate** — carries a mask across motion (uses a similar solve internally)
+- **Roto Mask / Shape Mask** — produce mattes you might pin using this track

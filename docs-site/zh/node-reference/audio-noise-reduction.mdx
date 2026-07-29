@@ -1,0 +1,55 @@
+---
+title: "Noise Reduction (Spectral)"
+description: "学习稳定背景噪声的声纹并按频谱将其减去 — 类似 Audacity 的 Noise Reduction。"
+sidebarTitle: "Noise Reduction"
+translationSourceHash: "ad595ff398bc70e4"
+---
+
+<Frame caption="Noise Reduction (Spectral) · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="Noise Reduction (Spectral)" />
+</Frame>
+
+## 本节点的作用
+
+**Noise Reduction (Spectral)(频谱降噪)** 用频谱门控法去除宽带、稳态噪声(嘶声、嗡声、空调轰鸣):它建立噪声特征并衰减与之匹配的频率内容,保留所需信号。你可以让它从音轨自身估计噪声,或给它一段专门的 **noise_sample**(仅含噪声的片段)以获得更干净的特征。
+
+它接受 `COMFYTV_AUDIO` 快照或 `COMFYTV_VIDEO`(使用其音轨;audio 优先),外加一个可选的第二 `COMFYTV_AUDIO` 作噪声样本。输出处理后的 `COMFYTV_AUDIO`,并带有 ▶ **Run**。
+
+若要与原生 ComfyUI 的 `AUDIO` 互通,请插入 **Bridge** — 见 [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 何时使用
+
+- 清理人声或音乐录音下的嘶声或稳定房间底噪。
+- 去除录制时混入的空调或风扇轰鸣。
+- 用一段安静但有噪的段落作 **noise_sample** 以精准针对该噪声。
+
+## 参数
+
+### reduction_db
+匹配到的噪声被衰减的量,单位 dB。范围 **1 到 48**,默认 **12**。越高去噪越多,但有伪影与空洞"水下"声的风险。
+
+### sensitivity
+判定频率内容为噪声的激进程度。范围 **0.5 到 24**,默认 **6**。越高判为噪声的越多(去除更多);越低越保守,保留更多细节。
+
+### freq_smooth_bands
+噪声门在相邻频带间的平滑。范围 **0 到 12**,默认 **6**。平滑越多越能减少"音乐噪声"(叮当伪影),代价是损失一些清晰度。
+
+### noise_sample
+可选的第二音频输入:仅含噪声的片段。提供后,特征从它构建而非从主轨估计,通常结果更干净。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **audio** | `COMFYTV_AUDIO` | 降噪后的音频快照 |
+
+## 提示
+
+- 从 **reduction_db** 约 12 起步,仅按需调高;过度降噪听起来不自然。
+- 若听到叮当的"音乐噪声"伪影,增大 **freq_smooth_bands**。
+- 专门的 **noise_sample** 几乎总优于自估计 — 在录制前后抓一秒房间底噪。
+
+## 相关节点
+
+- **Audio Denoise** — 基于 FFmpeg 的 `afftdn`/`anlmdn` 降噪器与静音修剪,另一种思路。
+- **Audio Stem Split** — 抽出所需 stem,往往比对整段混音降噪更干净的起点。

@@ -1,0 +1,53 @@
+---
+title: "Video Transition"
+description: "Join two clips with an ffmpeg xfade transition — fades, dissolves, slides, wipes, and dozens more."
+sidebarTitle: "Video Transition"
+---
+
+<Frame caption="Video Transition · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Video Transition" />
+</Frame>
+
+## What this node does
+
+Video Transition crossfades **video_a** into **video_b** using ffmpeg's `xfade` transitions. Pick from a large menu of named transitions (plain fade, dissolve, directional wipes and slides, circle/rect reveals, radial, pixelize, and more), set how long the transition lasts, and optionally where in clip A it begins.
+
+It runs on **▶ Run**. Both `video_a` and `video_b` are required `COMFYTV_VIDEO` inputs — the node errors if either is missing. Output is a single `COMFYTV_VIDEO`.
+
+To hand the result to a native ComfyUI node, insert a **Bridge** (`ComfyTV/Bridge`). See https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md.
+
+## When to use it
+
+- Put a clean fade or dissolve between two shots.
+- Use a directional slide/wipe to move from scene to scene.
+- Add a stylized reveal (circle open/close, radial, pixelize) between clips.
+
+## Parameters
+
+### transition
+The xfade transition style. Options (from `XFADE_TRANSITIONS`): `fade`, `dissolve`, `fadeblack`, `fadewhite`, `fadegrays`, `fadefast`, `fadeslow`, `wipeleft`, `wiperight`, `wipeup`, `wipedown`, `wipetl`, `wipetr`, `wipebl`, `wipebr`, `slideleft`, `slideright`, `slideup`, `slidedown`, `smoothleft`, `smoothright`, `smoothup`, `smoothdown`, `circlecrop`, `rectcrop`, `circleopen`, `circleclose`, `vertopen`, `vertclose`, `horzopen`, `horzclose`, `diagtl`, `diagtr`, `diagbl`, `diagbr`, `hlslice`, `hrslice`, `vuslice`, `vdslice`, `hlwind`, `hrwind`, `vuwind`, `vdwind`, `coverleft`, `coverright`, `coverup`, `coverdown`, `revealleft`, `revealright`, `revealup`, `revealdown`, `squeezeh`, `squeezev`, `zoomin`, `distance`, `pixelize`, `radial`, `hblur`. Default `fade`.
+
+### duration
+Transition length in seconds, `0.1`–`5.0`, step `0.05`, default `1.0`.
+
+### offset
+Seconds into clip A where the transition starts, `0.0`–`3600.0`, default `0.0` (auto — the transition ends clip A, so it begins `duration` before A's end).
+
+### video_a / video_b (inputs)
+The outgoing (`video_a`) and incoming (`video_b`) `COMFYTV_VIDEO` clips. Both required.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The two clips joined by the chosen transition. |
+
+## Tips
+
+- Leave `offset` at `0` for the usual behavior — the transition auto-places at the tail of clip A. Set it only when you need the transition to start earlier inside A.
+- For a grayscale-pattern (gradient) wipe or your own custom shape, use **Luma Wipe** instead.
+
+## Related nodes
+
+- **Luma Wipe** — pattern/gradient-driven wipes and custom-image transitions.
+- **Sequence** — assemble several clips with per-cut transitions in one node.

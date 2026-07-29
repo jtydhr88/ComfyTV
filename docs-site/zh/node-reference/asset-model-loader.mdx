@@ -1,0 +1,68 @@
+---
+title: "Load 3D Model from Asset"
+description: "从项目资产库里挑一个 3D 模型引入管线——无需上传，无需生成。"
+sidebarTitle: "Load 3D Model from Asset"
+translationSourceHash: "431f4a46dcc05117"
+---
+
+<Frame caption="Load 3D Model from Asset · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="Load 3D Model from Asset" />
+</Frame>
+
+## 这个节点是做什么的
+
+**从资产加载 3D 模型**（Load 3D Model from Asset）属于 **Input** 分类（`ComfyTV/Input`）。它**无 ▶ 运行**：你在节点体里从 ComfyTV **资产库**挑一个模型，其快照即刻成为输出。与 **Load 3D Model**（读取 ComfyUI `input/3d` 文件夹里的原始文件）不同，本节点取自项目库里已登记的条目——stage 运行结果或侧边栏导入。
+
+它发出两个输出：`COMFYTV_MODEL` 本身，以及从节点体内 3D 预览视口截取的 `COMFYTV_IMAGE` 快照（可作缩略图）。
+
+媒体以 ComfyTV 项目快照的形式流动，而非原生 ComfyUI 张量。若要与原生 ComfyUI 3D 节点互通，请插入 **Bridge** —— 见 [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 适用场景
+
+- 复用早先（通过 **3D Model Stage**）生成的模型，而无需重新生成。
+- 引入你从侧边栏导入资产库的模型。
+- 保留一个随项目一起持久化的稳定库引用。
+
+## 参数
+
+### 资产选择器（节点体）
+
+你在节点体里选一个模型；所选驱动下面的隐藏字段。分类筛选可缩小库视图并会被记住。
+
+### asset_url（内部）
+
+隐藏。所选资产的载荷 URL，成为本 stage 的 **model** 输出。
+
+### asset_id（内部）
+
+隐藏。所选资产的库 id，仅用于血缘 / 调试。
+
+### category（内部）
+
+隐藏。上次选中的分类筛选，持久化以便节点记住。
+
+### captured_image（内部）
+
+隐藏。预览视口快照的 `/view?` URL，由节点体内的 3D 预览写入，成为 **image** 输出。
+
+### project_id / parent_output_id（内部）
+
+隐藏，由 **Project** 节点与连线维护，一般无需理会。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **model** | `COMFYTV_MODEL` | 选中的模型快照 |
+| **image** | `COMFYTV_IMAGE` | 从预览视口截取的快照 |
+
+## 小贴士
+
+- 这里既不上传也不生成——若文件在 ComfyUI 的 `input/3d` 文件夹而非库中，请用 **Load 3D Model**。
+- 依赖 **image** 输出前，先环绕预览摆好一个合适的角度。
+
+## 相关节点
+
+- **Load 3D Model** —— 从 ComfyUI `input/3d` 文件夹加载原始模型文件（带材质绑定）。
+- **3D Model Stage** —— 生成新模型；其结果可落入资产库。
+- **Load Image from Asset** / **Load Video from Asset** / **Load Audio from Asset** —— 面向其他媒体的同款库模式。

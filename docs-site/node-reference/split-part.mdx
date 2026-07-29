@@ -1,0 +1,65 @@
+---
+title: "Split Parts"
+description: "Segment an image into separate part cutouts — click or box the pieces you want (a strap, a buckle, a logo), or name them by text — and get each one back as its own image."
+sidebarTitle: "Split Parts"
+---
+
+<Frame caption="Split Parts · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Split Parts" />
+</Frame>
+
+## What this node does
+
+Split Parts runs a segmentation workflow (backed by a SAM-style model) to cut an image into individual parts. You tell it what to isolate in one of two ways:
+
+- **On the card**, click points on the parts you want (positive/negative point prompts) or draw boxes around them. Those prompts are stored as JSON in `parts_data`.
+- **By text** (with a text-driven workflow), type a concept in `main_prompt` such as `strap`, `buckle`, or `logo`.
+
+Each point group or box becomes a separate segmentation call, and the resulting part images are merged into one numbered batch. This is a ▶ Run stage: it dispatches the chosen `workflow` to a Runner (local ComfyUI or a remote server) and needs a GPU pass, so it is not instant. After a successful run the parts appear as a numbered grid on the node; clicking a thumbnail sets `selected_index` to pick one for the single-image output.
+
+Outputs are ComfyTV snapshots, not native tensors — insert a **Bridge** to feed native ComfyUI nodes ([bridges docs](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)).
+
+## When to use it
+
+- Break a product photo into components (buckle, strap, sole) to edit or re-texture each separately.
+- Isolate a logo or badge from a garment for cleanup or replacement.
+- Pull several named objects out of one frame in a single pass, then pick the one you need downstream.
+
+## Parameters
+
+### workflow
+Which segmentation workflow to run (dropdown, options from the `split-part` workflow set, with a default). Text-prompt-driven workflows use `main_prompt`; point/box workflows use what you draw on the card.
+
+### main_prompt
+The concept to segment when using a text workflow — e.g. `strap`, `buckle`, `logo`. If you neither drew points/boxes nor typed a prompt, the stage errors and asks you to do one of them.
+
+### image
+Optional `COMFYTV_IMAGE` input — the source image to split. Connect the picture whose parts you want to separate.
+
+### parts_data
+Internal (hidden). JSON of the point groups and boxes you drew on the card, in source-image pixel coordinates. You never edit this by hand; the card UI writes it.
+
+### selected_index
+Internal (hidden), default `1`, 1-indexed. Which part from the batch feeds the single-image output. Set by clicking a thumbnail in the node's output grid.
+
+### custom_params
+Internal (hidden). JSON of any user-defined parameter attachments for this node.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **images** | `COMFYTV_IMAGES` | All segmented part images, numbered `#1`, `#2`, … |
+| **image** | `COMFYTV_IMAGE` | The single part chosen by `selected_index` |
+
+## Tips
+
+- Multiple point groups / boxes each run as a separate segmentation, so you can pull out several parts in one Run; they come back merged and renumbered.
+- Positive vs negative points matter: negative clicks tell the model what to exclude, which helps carve one part cleanly away from a neighboring one.
+- If segmentation runs but returns nothing, the stage reports an empty result — try different points/boxes or a lower threshold in the workflow's params.
+
+## Related nodes
+
+- **Mask Cleanup** — tidy the alpha of a part cutout before compositing.
+- **Image Picker** — an alternate way to pick one image out of a batch downstream.
+- **Cutout** — subject-vs-background separation when you want one foreground, not per-part pieces.

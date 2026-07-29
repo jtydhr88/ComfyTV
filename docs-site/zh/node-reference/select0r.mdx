@@ -1,0 +1,68 @@
+---
+title: "Select0r"
+description: "一款颜色区域抠像器，在所选色彩空间中以可调形状与边缘衰减切出遮罩。"
+sidebarTitle: "Select0r"
+translationSourceHash: "be919c1839d9f2c8"
+---
+
+<Frame caption="Select0r · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="Select0r" />
+</Frame>
+
+## 这个节点做什么
+
+Select0r 通过在所选色彩空间中选取围绕某个键控颜色的一块颜色区域来拉出遮罩。它不是单一阈值，而是定义一个三维选区体 —— 盒（box）、椭球（ellipsoid）或八面体（octahedron）—— 每个轴独立设定大小，并有可控的边缘衰减。这使它擅长以柔和、可塑形的边界隔离特定颜色范围（幕布、衣服、天空）。
+
+输入与输出都是 `COMFYTV_VIDEO`。它作为实时 fx 预览滤镜运行（输出一个 fx spec 并直通），因此无需完整渲染即可预览结果。
+
+## 何时使用
+
+- 你想按颜色范围抠像（而不只是一块平幕），并需要控制区域形状。
+- 简单色度抠像的球形容差太粗糙 —— 你需要逐轴设定大小。
+- 你在为二级调色或选择性效果隔离某种颜色。
+
+## 参数
+
+### key_color
+选区的中心颜色。十六进制，默认 `#00FF00`。
+
+### space
+选区所在的色彩空间：`rgb`（默认）、`abi` 或 `hci`。不同空间对颜色与亮度的分离方式不同 —— 若在某个空间里更容易隔离就切换过去。
+
+### shape
+选区体的几何形状：`box`、`ellipsoid`（默认）或 `octahedron`。椭球给出平滑衰减；盒为硬棱角；八面体介于两者之间。
+
+### edge
+边缘衰减轮廓：`hard`、`fat`、`normal`（默认）、`skiny` 或 `slope`。控制遮罩在区域边界处的过渡 —— 从锐利到羽化。
+
+### delta_1 / delta_2 / delta_3
+选区区域沿所选色彩空间三个轴各自的大小。各范围 `0.001`–`2.0`（步进 `0.005`），默认 `0.2`。delta 越大，该轴上选取的颜色范围越宽。
+
+### slope
+边缘过渡的柔度。范围 `0.001`–`1.0`（步进 `0.005`），默认 `0.2`。值越高遮罩边界羽化越多。
+
+### invert
+开启时反转遮罩（选取颜色区域之外的一切）。默认关闭。
+
+### output
+`matte`（默认）返回灰度遮罩；`image` 返回携带选区的画面。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | 选区遮罩；`output` 为 `image` 时为图像。 |
+
+## 提示
+
+- 先用 `ellipsoid` + `normal` 边缘，然后增大 `delta_1/2/3` 直到颜色被完全覆盖又不溢入相邻色。
+- 当 RGB 无法干净分离目标色与相似色时，试试 `abi` 或 `hci` 空间。
+- 当描述"要保留什么"比"要去除什么"更容易时，开启 `invert`。
+- 要与原生 ComfyUI 节点互通，请插入 **Bridge**。见 [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 相关节点
+
+- **Keyer** / **PIK Keyer** / **Chroma Key** —— 其他产生遮罩的抠像器。
+- **Matte Morphology** —— 清理 Select0r 遮罩。
+- **Key Mix** —— 通过遮罩合成。
+- **Matte Monitor** —— 检查遮罩质量。

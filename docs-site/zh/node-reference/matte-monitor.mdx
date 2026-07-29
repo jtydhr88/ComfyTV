@@ -1,0 +1,43 @@
+---
+title: "Matte Monitor（遮罩监视器）"
+description: "一个质检视图，夸大遮罩的灰色地带，让你一眼看出漏光和软边。"
+sidebarTitle: "Matte Monitor（遮罩监视器）"
+translationSourceHash: "4486daeb3a309176"
+---
+
+<Frame caption="Matte Monitor（遮罩监视器） · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="Matte Monitor（遮罩监视器）" />
+</Frame>
+
+## 这个节点做什么
+
+Matte Monitor（遮罩监视器）是遮罩的质检显示。它接收一个遮罩并重新映射其数值，使中间灰 —— 那些既非纯黑也非纯白的区域 —— 在视觉上凸显。这让你能轻松看到抠像在哪里漏光（背景从主体中透出）或错误地保留了不该保留的细节。可以把它想成专业合成软件里的"遮罩视图"开关。
+
+输入与输出都是 `COMFYTV_VIDEO`。它带有 ▶ Run。它是诊断工具 —— 把遮罩喂给它、查看，然后在最终渲染前移除或旁路它。
+
+## 何时使用
+
+- 你抠出了遮罩，想检查其中的孔洞、光晕或软点。
+- 你在调抠像器，需要看到在正常对比度下不可见的小错误。
+
+## 参数
+
+### slope
+控制中灰值为显示而被拉伸的强度。范围 `0.0`–`1.0`，默认 `0.5`。值越高越夸大偏离纯黑/纯白的小偏差，使细微遮罩问题更易察觉。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | 为视觉检查而重新映射的遮罩。 |
+
+## 提示
+
+- 这是查看器而非修复器 —— 用 **Matte Morphology** 或抠像器控件来真正清理遮罩。
+- 调高 `slope` 以搜寻微弱漏光；调低以获得更柔和的视图。
+- 要与原生 ComfyUI 节点互通，请插入 **Bridge**。见 [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 相关节点
+
+- **Keyer** / **PIK Keyer** / **Select0r** —— 输出你在此检查的遮罩。
+- **Matte Morphology** —— 腐蚀/膨胀/模糊，修复 Matte Monitor 揭示的问题。

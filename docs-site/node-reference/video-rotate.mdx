@@ -1,0 +1,59 @@
+---
+title: "Video Rotate"
+description: "Rotate a clip in 90° steps and/or mirror it horizontally or vertically."
+sidebarTitle: "Video Rotate"
+---
+
+<Frame caption="Video Rotate · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Video Rotate" />
+</Frame>
+
+## What this node does
+
+**Video Rotate** turns a clip by a multiple of 90 degrees and can flip (mirror) it on either
+axis. It's a real re-encode on the server (PyAV / ffmpeg), so it runs on **▶ Run** and saves
+the result as a project snapshot. Input and output are `COMFYTV_VIDEO`.
+
+## When to use it
+
+- Fix footage shot in the wrong orientation (phone video that came in sideways).
+- Convert between landscape and portrait framing by rotating 90°.
+- Mirror a shot for a symmetric composition or to flip a subject's facing direction.
+
+## Parameters
+
+### rotate_deg
+Rotation in degrees. Range **0–270**, step **90**, default **0** — so the only valid values
+are 0, 90, 180, and 270. 90 rotates a landscape clip into portrait and vice versa.
+
+### flip_h
+Mirror the clip left-to-right (horizontal flip). Default **off**.
+
+### flip_v
+Mirror the clip top-to-bottom (vertical flip). Default **off**.
+
+Rotation and flips can be combined in a single pass.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The rotated/flipped clip, saved as a project snapshot. |
+
+## Tips
+
+- Only 90° multiples are allowed; there is no arbitrary-angle rotation here.
+- 90° or 270° swaps the clip's width and height (aspect ratio changes accordingly).
+- With all defaults (0°, no flips) the clip is re-encoded unchanged — set at least one option
+  for a visible effect.
+
+## Bridge note
+
+`COMFYTV_VIDEO` is a project snapshot reference, not a native ComfyUI tensor. To move
+between ComfyTV and native ComfyUI nodes, insert a **Bridge** (`ComfyTV/Bridge`). See
+https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md.
+
+## Related nodes
+
+- **Video Crop** — trim edges after reorienting.
+- **Video Resize** — set a target size after a 90°/270° rotation swaps dimensions.

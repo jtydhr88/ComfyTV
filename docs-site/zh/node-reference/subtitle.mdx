@@ -1,0 +1,65 @@
+---
+title: "字幕 (Subtitles)"
+description: "把 SRT 或 WebVTT 文本中带时间的字幕逐条烧录到视频上——直接渲染进画面的硬字幕。"
+sidebarTitle: "字幕"
+translationSourceHash: "099296964c9aa879"
+---
+
+<Frame caption="字幕 (Subtitles) · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="字幕 (Subtitles)" />
+</Frame>
+
+## 这个节点是做什么的
+
+**Subtitles（字幕）** 读取 SRT/WebVTT 字幕文本，按各条正确的时间逐条烧录到 `COMFYTV_VIDEO` 上。你粘贴字幕文本（或接入 `COMFYTV_TEXT` 输入），设置字体样式，然后点 **▶ 运行**；它在服务器端做一次 ffmpeg 渲染，返回新的 `COMFYTV_VIDEO`。
+
+字幕来源有两种：粘贴到 **subs** 文本框，或连接 **subs_text**（`COMFYTV_TEXT`）输入——例如 **Subtitles · Speech-to-Text** 的输出。两者都有时，接入的 **subs_text** 优先。本节点需要 **video** 和非空字幕文本，否则运行报错。
+
+## 适用场景
+
+- 给片段加硬字幕（烧录字幕），适配社交平台。
+- 一根线把 **Subtitles · Speech-to-Text** 的转写变成屏幕字幕。
+- 粘贴翻译好的 SRT 做本地化。
+
+## 参数说明
+
+### subs（字幕文本）
+多行 SRT 或 WebVTT 文本，直接粘贴。未接入 **subs_text** 时使用。
+
+### font（字体）
+服务器字体下拉框（来自 `list_fonts()`，无字体时回退 `default`）。默认为第一个已安装字体。
+
+### size（字号）
+字幕字号（像素）。范围 8–200，默认 36。
+
+### color（颜色）
+字幕填充色，十六进制。默认 `#FFFFFF`。
+
+### stroke（描边）
+描边粗细（像素），0–20，默认 2。轻微描边保证字幕可读。
+
+### anchor（锚点）
+字幕位置：`bottom` 或 `top`。默认 `bottom`。
+
+## 输入与输出
+
+| 接口 | 类型 | 含义 |
+|---|---|---|
+| **video**（输入） | `COMFYTV_VIDEO` | 要加字幕的片段（必填） |
+| **subs_text**（输入） | `COMFYTV_TEXT` | 可选 SRT/VTT 文本；覆盖粘贴的 **subs** |
+| **video**（输出） | `COMFYTV_VIDEO` | 已烧录字幕的片段 |
+
+## 使用提示
+
+- 把 **Subtitles · Speech-to-Text** → **subs_text** 连起来，从音频到屏幕字幕无需复制粘贴。
+- 接入的 **subs_text** 优先于粘贴的 **subs**；若要用文本框请先清空线缆。
+- 各条的时间来自 SRT/VTT 本身——本节点不重新计时，按原样渲染。
+
+## 类型与 Bridge
+
+`COMFYTV_VIDEO` 和 `COMFYTV_TEXT` 是 ComfyTV 项目快照，不是 ComfyUI 原生类型。要与原生 ComfyUI 节点互通，请插入 **Bridge**（`ComfyTV/Bridge`）。详见 [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 相关节点
+
+- **Subtitles · Speech-to-Text（语音转字幕）**——从语音生成 SRT/VTT，喂给 **subs_text**。
+- **Title（标题）**——单条带样式标题卡，而非多条带时间字幕。

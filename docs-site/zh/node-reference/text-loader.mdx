@@ -1,0 +1,50 @@
+---
+title: "Input Text"
+description: "输入或粘贴文本，作为 `COMFYTV_TEXT` 送入管线——在画布上撰写提示词、字幕或备注的最简方式。"
+sidebarTitle: "Input Text"
+translationSourceHash: "92716db38496ae34"
+---
+
+<Frame caption="Input Text · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="Input Text" />
+</Frame>
+
+## 这个节点是做什么的
+
+**输入文本**（Input Text）属于 **Input** 分类（`ComfyTV/Input`）。它不含 AI 模型，也**无 ▶ 运行**：你在多行文本框里打字，其值即成为本 stage 的输出，并在**编辑时实时**传给下游 stage。
+
+凡是接受 `COMFYTV_TEXT` 输入的 stage 都可用它——Image / Video / 3D Model stage 的提示词、附加上下文、歌词、字幕，或你想接入图中的备注。
+
+文本以 ComfyTV 的 `COMFYTV_TEXT` 快照形式流动。若要与原生 ComfyUI 字符串节点互通，请插入 **Bridge** —— 见 [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 适用场景
+
+- 一次撰写共享提示词，扇出给多个生成 stage。
+- 给 Image / Video / 3D Model stage 的 `texts` 输入提供额外文本上下文（风格说明、约束）。
+- 把可编辑的字幕或备注保留成一个接线节点，而不必每个 stage 重打一遍。
+
+## 参数
+
+### text
+
+多行文本框（默认空）。你在此输入的内容即成为 **text** 输出。编辑时下游实时更新——无需 Run。
+
+### project_id / parent_output_id（内部）
+
+隐藏，由 **Project** 节点与连线维护，一般无需理会。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **text** | `COMFYTV_TEXT` | 输入的文本，实时传给下游 |
+
+## 小贴士
+
+- Input 类 stage 没有 ▶ 运行按钮是正常的——编辑文本框就是操作。
+- 一个 Input Text 可喂多个 stage；改一次即可同步更新全部。
+
+## 相关节点
+
+- **3D Model Stage** / **Image Stage** / **Video Stage** —— 常见下游，接受 `COMFYTV_TEXT` 上下文。
+- **Load Image** / **Load Video** / **Load Audio** —— 面向媒体文件的同族 Input 节点。

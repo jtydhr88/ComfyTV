@@ -1,0 +1,50 @@
+# Audio Analyze（音频分析）
+
+> 测量音轨——集成响度（LUFS）、峰值/平均音量、统计数据或静音片段——并给出结构化报告。
+
+## 这个节点是做什么的
+
+**音频分析 (Audio Analyze)** 对音轨跑一趟 FFmpeg 测量，并以文本形式返回 JSON 报告。它不改变音频。视**模式 (mode)** 而定，使用 `ebur128`（广播响度）、`volumedetect`（峰值/平均 dB）、`astats`（详细统计）或 `silencedetect`（静音片段）。在响度模式下，它还会把结果与常见平台的投放目标对照。
+
+输入为 `COMFYTV_AUDIO` 快照（也可接 `COMFYTV_VIDEO`，会取其音轨），输出 `COMFYTV_TEXT`。它带有 ▶ **运行**。必须接入源音频。
+
+要接入 ComfyUI 原生 `AUDIO`，请插入 **Bridge**——见 [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 适用场景
+
+- 在投放到 YouTube、Spotify 等之前检查混音的集成响度（LUFS）与真峰值。
+- 查看峰值与平均音量以规划增益/归一化。
+- 定位录音中的静默间隙（便于修剪或分割）。
+
+## 参数说明
+
+### mode
+测量什么。可选：
+- **loudness**（默认）—— EBU R128 集成 LUFS、LRA、阈值与真峰值；附带 **platforms** 合规拆解。需要片段至少约 400 ms。
+- **volume** —— 平均与最大音量（dB），外加采样数。
+- **stats** —— 整体统计：DC 偏移、峰值/RMS 电平、平坦因子、峰值计数。
+- **silence** —— 静音片段列表（起/止/时长）外加计数。
+
+### silence_noise_db
+静音检测阈值（dB），**-100 到 0**（默认 **-60**）。低于此值即算静音。仅 `silence` 模式使用。
+
+### silence_duration
+一段安静必须持续多久（秒）才算静音，**0.01–60**（默认 **2.0**）。仅 `silence` 模式使用。
+
+## 输出说明
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **report** | `COMFYTV_TEXT` | 测量值的 JSON 报告（字段取决于 **mode**） |
+
+## 小贴士
+
+- **loudness** 需要足够长的片段（约 400 ms 起），否则 `ebur128` 不产生摘要，节点会报错。
+- 响度模式下的 **platforms** 字段可让你一眼看出音轨是否达到典型流媒体目标。
+- 本节点只读——搭配 **Audio Loudness** 或 **Audio Dynamics** 才能真正修正它报告的电平。
+
+## 相关节点
+
+- **Audio Loudness** —— 在此测量后归一化到目标 LUFS。
+- **Audio Visualize** —— 看波形或频谱而非数字。
+- **Audio Dynamics** —— 压缩/限幅以控制本节点揭示的峰值。

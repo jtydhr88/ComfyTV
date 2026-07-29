@@ -1,0 +1,48 @@
+# Wave Warp
+
+> Ripples the image with a traveling sine wave for a watery/heat-haze distortion, in one ▶ Run.
+
+## What this node does
+
+**Wave Warp** displaces pixels of a `COMFYTV_VIDEO` clip along a sine wave that travels over time, then writes a new snapshot on **▶ Run**. The wave can run horizontally, vertically, or both, and its strength can taper across the frame with an envelope.
+
+In and out are both `COMFYTV_VIDEO`. To feed native ComfyUI nodes, insert a **Bridge** — see the [bridge guide](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Add a watery reflection, heat-haze shimmer, or underwater wobble.
+- Animate a title or graphic with a gentle rippling motion.
+- Create a dreamy, unstable feel for a transition or flashback.
+
+## Parameters
+
+### amplitude
+Displacement strength in pixels, `0.0`–`200.0` (step `1`), default `16.0`. At `0` the node passes the clip through untouched. Higher = bigger, more obvious waves.
+
+### frequency
+How many wave cycles fit across the frame, `0.1`–`40.0` (step `0.1`), default `3.0`. Higher = tighter ripples.
+
+### speed
+Wave travel speed over time, `-8.0`–`8.0` (step `0.05`), default `0.5`. Negative reverses the direction; `0` freezes the wave.
+
+### axis
+Which direction(s) the wave displaces. Options: `both`, `horizontal`, `vertical`. Default `both`.
+
+### envelope
+How amplitude tapers across the frame. Options: `parabolic` (strongest toward the middle, fading at edges) or `uniform` (even everywhere). Default `parabolic`.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The warped clip as a new project snapshot |
+
+## Tips
+
+- Set **amplitude** to `0` to bypass the effect without unwiring.
+- Small **amplitude** + high **frequency** reads as heat-haze shimmer; large **amplitude** + low **frequency** reads as a slow watery swell.
+
+## Related nodes
+
+- **Water** — physics-driven ripples (rain/swirl) rather than a fixed sine.
+- **Kaleidoscope** — mirror the frame for symmetric distortion.

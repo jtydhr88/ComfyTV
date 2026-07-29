@@ -1,0 +1,56 @@
+---
+title: "Audio Analyze"
+description: "Measure a track — integrated loudness (LUFS), peak/mean volume, statistical stats, or silence segments — and get a structured report."
+sidebarTitle: "Audio Analyze"
+---
+
+<Frame caption="Audio Analyze · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Audio Analyze" />
+</Frame>
+
+## What this node does
+
+**Audio Analyze** runs an FFmpeg measurement pass over a track and returns a JSON report as text. It does not change the audio. Depending on **mode** it uses `ebur128` (broadcast loudness), `volumedetect` (peak/mean dB), `astats` (detailed statistics), or `silencedetect` (silence segments). In loudness mode it also compares the result against common platform delivery targets.
+
+It takes a `COMFYTV_AUDIO` snapshot (or a `COMFYTV_VIDEO`, whose audio track is used) and outputs `COMFYTV_TEXT`. It has a ▶ **Run**. A source is required.
+
+To feed native ComfyUI `AUDIO` in, insert a **Bridge** — see [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Check a mix's integrated loudness (LUFS) and true peak before delivery to YouTube, Spotify, etc.
+- Find the peak and mean volume to plan gain/normalization.
+- Locate silent gaps in a recording (for trimming or splitting).
+
+## Parameters
+
+### mode
+What to measure. Options:
+- **loudness** (default) — EBU R128 integrated LUFS, LRA, thresholds, and true peak; adds a **platforms** compliance breakdown. Requires a clip of at least ~400 ms.
+- **volume** — mean and max volume in dB, plus sample count.
+- **stats** — overall statistics: DC offset, peak/RMS levels, flat factor, peak count.
+- **silence** — a list of silence segments (start/end/duration) plus a count.
+
+### silence_noise_db
+Silence detection threshold in dB, **-100 to 0** (default **-60**). Anything quieter than this counts as silence. Used only in `silence` mode.
+
+### silence_duration
+Minimum length (seconds) a quiet stretch must last to count as silence, **0.01–60** (default **2.0**). Used only in `silence` mode.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **report** | `COMFYTV_TEXT` | A JSON report of the measured values (fields depend on **mode**) |
+
+## Tips
+
+- **loudness** needs a clip long enough (≈400 ms minimum) or `ebur128` produces no summary and the node errors.
+- The **platforms** field in loudness mode tells you whether the track meets typical streaming targets at a glance.
+- This node is read-only — pair it with **Audio Loudness** or **Audio Dynamics** to actually correct the levels it reports.
+
+## Related nodes
+
+- **Audio Loudness** — normalize to a target LUFS after measuring here.
+- **Audio Visualize** — see the waveform or spectrum instead of numbers.
+- **Audio Dynamics** — compress/limit to control peaks this node reveals.

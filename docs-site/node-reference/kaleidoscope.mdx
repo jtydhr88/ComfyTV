@@ -1,0 +1,51 @@
+---
+title: "Kaleidoscope"
+description: "Mirrors the frame into radial wedges for a symmetric kaleidoscope pattern, in one ▶ Run."
+sidebarTitle: "Kaleidoscope"
+---
+
+<Frame caption="Kaleidoscope · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Kaleidoscope" />
+</Frame>
+
+## What this node does
+
+**Kaleidoscope** folds a `COMFYTV_VIDEO` clip into a number of mirrored radial segments around a center point, producing rotationally symmetric visuals, then writes a new snapshot on **▶ Run**.
+
+In and out are both `COMFYTV_VIDEO`. To feed native ComfyUI nodes, insert a **Bridge** — see the [bridge guide](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Turn moving footage into hypnotic, symmetric mandala visuals for music or VJ loops.
+- Abstract a busy shot into a clean geometric pattern.
+- Create seamless-feeling looping backgrounds from arbitrary source video.
+
+## Parameters
+
+### segments
+Number of mirrored wedges, `1`–`64`, default `6`. More segments = finer, busier symmetry; `1` is effectively a single slice.
+
+### angle
+Rotation of the whole kaleidoscope, `-180°`–`180°` (step `1`), default `0`. Spins the assembled pattern.
+
+### source_angle
+Rotation of the sampled source before mirroring, `-180°`–`180°` (step `1`), default `0`. Changes which part of the frame feeds each wedge.
+
+### center_x / center_y
+The mirror center as normalized coordinates, each `0.0`–`1.0`, defaults `0.5` / `0.5` (frame center). Move it to pivot the symmetry off-center.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The kaleidoscoped clip as a new project snapshot |
+
+## Tips
+
+- Animate the feel by combining a low **segments** count with a non-zero **angle** for a slow spin, or use **source_angle** to shift what's sampled.
+- Off-center the pattern with **center_x/y** when the natural subject sits away from the middle.
+
+## Related nodes
+
+- **Wave Warp** — displace the frame with a wave instead of mirroring it.
+- **Feedback FX** — recursive echo/vertigo trails for another psychedelic look.

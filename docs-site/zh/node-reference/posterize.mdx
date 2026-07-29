@@ -1,0 +1,48 @@
+---
+title: "Posterize"
+description: "把片段缩减到少量平涂色调色板 —— 通过颜色量化得到海报 / 丝网印刷 / 卡通渲染观感。"
+sidebarTitle: "Posterize"
+translationSourceHash: "f0eb515c1553979b"
+---
+
+<Frame caption="Posterize · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="Posterize" />
+</Frame>
+
+## 这个节点做什么
+
+**Posterize（色调分离）** 用 ffmpeg 的 `elbg`（增强 LBG 矢量量化）把每帧量化到有限数量的颜色。平滑渐变被替换为平涂的色带，像丝网海报或漫画。调色板越紧凑图形感越强；越大则保留更多细节。
+
+这是一个需要渲染的节点 —— 必须 **▶ Run**，使用 ffmpeg 的 `elbg` 滤镜。输入 `COMFYTV_VIDEO`，输出 `COMFYTV_VIDEO`。
+
+要把结果交给原生 ComfyUI 节点，请插入 **Bridge**。参见 [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 何时使用
+
+- 海报 / 丝网印刷 / 波普艺术风格化。
+- 把渲染压平为卡通渲染、动画式观感。
+- 把繁杂的片段缩减为几种图形色。
+
+## 参数
+
+### elbg_colors
+`1`–`50`，默认 `9`。调色板大小（codebook 长度）—— 帧被缩减到的不同颜色数量。颜色越少色调分离越强越平；越多越微妙、越接近原图。
+
+### elbg_steps
+`1`–`10`，默认 `1`。量化器为拟合调色板运行的优化迭代次数。值越高越能精修配色（色带更干净），代价是更多计算。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | 颜色量化后的片段 |
+
+## 提示
+
+- `elbg_colors` 从 `6`–`12` 起步；要醒目的图形海报可降到 `3`–`5`。
+- 若缩减后的颜色在帧间显得嘈杂或不稳定，调高 `elbg_steps`。
+
+## 相关节点
+
+- **Pseudocolor（伪彩色）** —— 把亮度映射到调色板（假彩色）。
+- **Video Stylize（视频风格化）** —— 其他一键风格化观感（边缘、单色……）。

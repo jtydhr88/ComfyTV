@@ -1,0 +1,55 @@
+# Feedback FX
+
+> Recursive video feedback — vertigo zoom, echo trails, or nervous jitter, in one ▶ Run.
+
+## What this node does
+
+**Feedback FX** blends each frame with a transformed version of the previous output, the way a camera pointed at its own monitor creates infinite tunnels. Depending on **mode** you get a spiraling vertigo zoom, layered echo trails, or a jittery "nervous" stutter. It writes a new `COMFYTV_VIDEO` snapshot on **▶ Run**.
+
+In and out are both `COMFYTV_VIDEO`. To feed native ComfyUI nodes, insert a **Bridge** — see the [bridge guide](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Create psychedelic tunnels and infinite-zoom vertigo visuals.
+- Leave motion echo/ghost trails behind moving subjects.
+- Add a nervous, glitchy stutter to a clip for tension.
+
+## Parameters
+
+### mode
+The feedback behavior. Options: `vertigo` (zoom/rotate spiral), `echo` (layered motion trails), `nervous` (jittery stutter). Default `vertigo`.
+
+### phase_increment
+Rotation/phase advance per frame, `0.0`–`1.0` (step `0.005`), default `0.08`. Higher spins or shifts the feedback faster.
+
+### zoom
+Per-frame zoom of the fed-back layer, `-0.5`–`0.5` (step `0.005`), default `0.06`. Positive zooms in (tunnel inward), negative zooms out.
+
+### feedback_mix
+How much of the previous output survives into the next frame, `0.0`–`0.98` (step `0.01`), default `0.75`. Higher = longer-lasting, deeper trails; near `0.98` the feedback almost never fades.
+
+### style
+Sub-style for the **nervous** mode. Options: `shuffle` or `scratch`. Default `shuffle`. (Only affects `nervous`.)
+
+### frames
+Frame window used to build the effect, `2`–`32`, default `32`. Larger uses more history.
+
+### seed
+Random seed, `0`–`99999`, default `7`. Same seed = repeatable jitter (mainly for `nervous`).
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The feedback-processed clip as a new project snapshot |
+
+## Tips
+
+- Keep **feedback_mix** high for long, painterly trails; lower it if the image saturates or smears into mush.
+- **style** and **seed** mainly matter in `nervous` mode.
+- Small **zoom** + steady **phase_increment** gives a smooth infinite-tunnel; larger values get chaotic fast.
+
+## Related nodes
+
+- **Light Graffiti** — trails built from bright pixels rather than full-frame feedback.
+- **Slit Scan** — time-smear across rows/columns.

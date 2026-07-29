@@ -1,0 +1,57 @@
+# Roto Mask
+
+> Draw a spline shape on the video and bake it into an animated mask, right on the node.
+
+## What this node does
+
+**Roto Mask** turns a hand-drawn polygon into a matte for your clip. You draw a closed shape (3 or more points) directly on the video preview inside the node; on ▶ Run it rasterizes that shape across the whole clip and outputs a mask video.
+
+The shape lives in the node's `shape_keys` widget as spline data (each vertex carries left/right tangent handles, so a smoothed shape follows Bézier curves rather than straight lines). Editing is browser-side and instant; the actual masking pass runs on ▶ Run (ffmpeg/CPU) and produces a new video.
+
+Input and output are `COMFYTV_VIDEO`. The output is a mask clip (white inside the shape, black outside — or inverted). To hand it to native ComfyUI nodes, insert a **Bridge** (`ComfyTV/Bridge`). See https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md.
+
+## When to use it
+
+- Isolate a subject or region that has no clean color to key on
+- Create a garbage matte to trim junk out of a keyed edge
+- Make a quick shape mask to limit a color grade or blur to one area
+
+## The on-node editor
+
+The card shows the video with a canvas overlay:
+
+- **Click** on empty space to drop a new vertex; the shape closes automatically once you have 3+ points.
+- **Drag** a vertex to move it.
+- **Double-click** a vertex to delete it.
+- A **smooth** toggle controls whether vertices connect with straight edges or Bézier tangents (smoothing derives handles from neighboring points).
+- **Clear** wipes the shape.
+
+You must draw a shape with at least 3 points before running, or the node raises "draw a shape (3+ points) on the node first."
+
+## Parameters
+
+### shape_keys
+The drawn spline, stored as JSON `[{t, points:[{x,y,lx,ly,rx,ry}]}]`. You do not type this — it is written by the on-node editor as you draw. Default empty.
+
+### feather
+Edge softness in pixels. Range `0`–`200`, default `0`. Higher values blur the mask edge for a gentler transition. Start at `0` for a hard matte; raise to a few pixels to avoid a razor edge on composites.
+
+### invert
+Flip the mask so the area *outside* the shape becomes white. Boolean, default off.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **mask** | `COMFYTV_VIDEO` | A mask clip matching the source length; white where the shape covers, black elsewhere (or inverted) |
+
+## Tips
+
+- The current shape is placed at time 0 as a single keyframe; the same shape is used for the whole clip. For a mask that follows motion, mask one frame and feed it to **Mask Propagate**.
+- Feather is measured in source pixels, so its visual softness scales with output resolution.
+
+## Related nodes
+
+- **Mask Propagate** — carries a first-frame mask across a moving clip
+- **Shape Mask** — parametric gradient/geometric masks without hand-drawing
+- **Cutout / Erase** — consume a mask to isolate or remove content

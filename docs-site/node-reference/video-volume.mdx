@@ -1,0 +1,60 @@
+---
+title: "Video Volume"
+description: "Adjust a clip's audio level and add fade-in / fade-out at the head and tail."
+sidebarTitle: "Video Volume"
+---
+
+<Frame caption="Video Volume · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Video Volume" />
+</Frame>
+
+## What this node does
+
+**Video Volume** changes the loudness of a clip's audio track and can ramp it up at the start
+(**fade_in_s**) and down at the end (**fade_out_s**). The picture is untouched. It's a real
+re-encode on the server (PyAV / ffmpeg), so it runs on **▶ Run** and saves the result as a
+project snapshot. Input and output are `COMFYTV_VIDEO`.
+
+## When to use it
+
+- Bring a too-quiet or too-loud clip to a usable level before mixing.
+- Add a gentle fade-in at the start and fade-out at the end so cuts don't pop.
+- Duck a clip's own audio (volume below 1.0) before layering music with Mux Audio.
+
+## Parameters
+
+### volume
+Gain multiplier applied to the audio. Range **0.0–8.0**, step 0.05, default **1.0**. 1.0
+leaves the level unchanged; 0.0 mutes; 2.0 is roughly twice as loud. Large values can clip —
+push carefully.
+
+### fade_in_s
+Length of the fade-in ramp at the start, in seconds. Range **0–60**, step 0.1, default
+**0.0** (no fade). The audio rises from silence to the target level over this time.
+
+### fade_out_s
+Length of the fade-out ramp at the end, in seconds. Range **0–60**, step 0.1, default **0.0**
+(no fade). The audio falls to silence over this time before the clip ends.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The same picture with adjusted / faded audio, saved as a snapshot. |
+
+## Tips
+
+- volume = 0.0 fully mutes the track (useful for silencing while keeping the fades slots).
+- Fades apply to the clip's own edges; if you want them to line up with a cut, split/trim
+  first, then fade.
+
+## Bridge note
+
+`COMFYTV_VIDEO` is a project snapshot reference, not a native ComfyUI tensor. To move
+between ComfyTV and native ComfyUI nodes, insert a **Bridge** (`ComfyTV/Bridge`). See
+https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md.
+
+## Related nodes
+
+- **Mux Audio** — replace or mix in a different audio track.
+- **Video Speed** — retime the clip (with pitch-compensated audio).

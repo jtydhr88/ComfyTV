@@ -1,0 +1,62 @@
+---
+title: "反馈特效 (Feedback FX)"
+description: "递归视频反馈——眩晕缩放、回声拖影或神经质抖动，一次 ▶ Run 完成。"
+sidebarTitle: "反馈特效"
+translationSourceHash: "3aeb22338547bb44"
+---
+
+<Frame caption="反馈特效 (Feedback FX) · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="反馈特效 (Feedback FX)" />
+</Frame>
+
+## 这个节点做什么
+
+**反馈特效 (Feedback FX)** 把每一帧与上一帧输出的变换版本混合，就像摄像机对着自己的监视器会产生无限隧道那样。取决于 **mode**，你会得到螺旋眩晕缩放、层叠回声拖影，或抖动的「神经质」卡顿。它在 **▶ Run** 时写出新的 `COMFYTV_VIDEO` 快照。
+
+输入与输出都是 `COMFYTV_VIDEO`。若要对接原生 ComfyUI 节点，请插入 **Bridge**——见[桥接指南](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 何时使用
+
+- 制作迷幻隧道与无限缩放的眩晕视觉。
+- 在运动主体之后留下运动回声/残影拖尾。
+- 为片段加入神经质、故障感的卡顿以营造张力。
+
+## 参数
+
+### mode
+反馈行为。选项：`vertigo`（缩放/旋转螺旋）、`echo`（层叠运动拖影）、`nervous`（抖动卡顿）。默认 `vertigo`。
+
+### phase_increment
+每帧的旋转/相位推进，`0.0`–`1.0`（步长 `0.005`），默认 `0.08`。越高反馈旋转或位移越快。
+
+### zoom
+反馈层的逐帧缩放，`-0.5`–`0.5`（步长 `0.005`），默认 `0.06`。正值放大（向内成隧道），负值缩小。
+
+### feedback_mix
+上一帧输出有多少延续到下一帧，`0.0`–`0.98`（步长 `0.01`），默认 `0.75`。越高拖影越持久、越深；接近 `0.98` 时反馈几乎不消退。
+
+### style
+**nervous** 模式的子风格。选项：`shuffle` 或 `scratch`。默认 `shuffle`。（仅影响 `nervous`。）
+
+### frames
+用于构建效果的帧窗口，`2`–`32`，默认 `32`。越大使用越多历史帧。
+
+### seed
+随机种子，`0`–`99999`，默认 `7`。相同种子 = 可复现的抖动（主要用于 `nervous`）。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | 经反馈处理后的片段，作为新的项目快照 |
+
+## 提示
+
+- 想要长而有绘画感的拖影就把 **feedback_mix** 调高；若画面过饱和或涂成糊状则调低。
+- **style** 与 **seed** 主要在 `nervous` 模式下起作用。
+- 小 **zoom** + 平稳的 **phase_increment** 给出平滑的无限隧道；数值偏大很快就变得混乱。
+
+## 相关节点
+
+- **光绘 (Light Graffiti)** — 由明亮像素而非整帧反馈构建的拖影。
+- **狭缝扫描 (Slit Scan)** — 跨行／列的时间涂抹。

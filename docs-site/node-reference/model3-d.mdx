@@ -1,0 +1,72 @@
+---
+title: "3D Model Stage"
+description: "Generate a 3D model (GLB) from a prompt, reference images, and/or existing models—your text/image-to-3D generation stage."
+sidebarTitle: "3D Model Stage"
+---
+
+<Frame caption="3D Model Stage · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="3D Model Stage" />
+</Frame>
+
+## What this node does
+
+**3D Model Stage** is a **Generate** stage (`ComfyTV/Generate`). You give it a prompt (and optionally reference text, images, or models), pick a backend **workflow**, and click **▶ Run**. The wrapped workflow—which must end in a **SaveGLB** (or compatible) node—produces a `COMFYTV_MODEL`, and the node's in-body 3D preview lets you orbit the result.
+
+This node **has a ▶ Run** (it invokes a real generation backend / GPU). Alongside the model it also emits a `COMFYTV_IMAGE`: a snapshot captured from the preview viewport, useful downstream as a thumbnail or for image-based follow-up stages.
+
+Media flows as ComfyTV project snapshots, not native ComfyUI tensors. To interoperate with native ComfyUI 3D nodes, insert a **Bridge** — see [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Turn a text prompt into a first-pass 3D asset (text-to-3D).
+- Turn one or more reference images into a mesh (image-to-3D).
+- Re-generate or vary from existing models by feeding them back in as references.
+
+## Parameters
+
+### workflow
+
+Combo selecting which backend 3D-generation workflow to invoke on Run. Options come from the installed `model`-kind workflows; the workflow must end in a **SaveGLB** (or compatible) node. Defaults to the configured default for the `model` kind.
+
+### main_prompt
+
+The primary prompt describing the model you want. Upstream text inputs are treated as additional context and combined with this. Hidden text field edited in the node body (multiline).
+
+### texts (autogrow)
+
+Optional `COMFYTV_TEXT` inputs (grows up to 4 slots) that add extra textual context to the prompt.
+
+### images (autogrow)
+
+Optional `COMFYTV_IMAGE` inputs (grows up to 4 slots)—reference images for image-to-3D generation.
+
+### models (autogrow)
+
+Optional `COMFYTV_MODEL` inputs (grows up to 4 slots)—existing models fed back in as references.
+
+### captured_image (internal)
+
+Hidden. The `/view?` URL of the latest preview-viewport snapshot, written by the 3D preview in the node body; it becomes the **image** output.
+
+### custom_params / project_id / parent_output_id / force_run_token (internal)
+
+Hidden plumbing—user-defined parameter attachments, project scoping, lineage, and the Run trigger. You rarely touch these.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **model** | `COMFYTV_MODEL` | The generated 3D model (GLB) snapshot |
+| **image** | `COMFYTV_IMAGE` | Snapshot captured from the preview viewport |
+
+## Tips
+
+- The selected **workflow** must terminate in a SaveGLB-compatible node, or the stage has nothing to emit.
+- For image-to-3D, wire clean reference images into the **images** slots; for text-to-3D, lean on **main_prompt**.
+- Orbit the in-body preview to frame a good angle before relying on the captured **image** output.
+
+## Related nodes
+
+- **Load 3D Model** — bring an existing GLB/GLTF/FBX/OBJ file into the pipeline instead of generating.
+- **Load 3D Model from Asset** — load a model from the project asset library.
+- **Material Stage** — author PBR materials to bind onto a loaded model.

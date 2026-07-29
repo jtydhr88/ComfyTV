@@ -1,0 +1,61 @@
+---
+title: "Mux Audio"
+description: "Attach an audio track to a clip — either replacing the original sound or mixing on top of it."
+sidebarTitle: "Mux Audio"
+---
+
+<Frame caption="Mux Audio · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Mux Audio" />
+</Frame>
+
+## What this node does
+
+**Mux Audio** combines a video with a separate audio source into one clip. It takes a
+`COMFYTV_VIDEO` and a `COMFYTV_AUDIO` and, on **▶ Run**, muxes them (PyAV / ffmpeg) into a new
+MP4 saved as a project snapshot. It needs **both** an upstream video and an upstream audio, or
+the run errors out. The output is `COMFYTV_VIDEO`.
+
+## When to use it
+
+- Drop a music bed or voice-over onto a silent (or to-be-replaced) clip.
+- Swap a clip's original audio for a cleaned-up or dubbed track.
+- Mix generated speech / sound design over existing footage audio.
+
+## Parameters
+
+### mode
+How the incoming audio meets the clip's existing audio:
+
+- **replace** (default) — discard the clip's original audio and use the incoming track only.
+- **mix** — blend the incoming track together with the clip's original audio.
+
+### offset_s
+Shift the incoming audio in time, in seconds. Range **−600 to 600**, step 0.05, default
+**0.0**. Positive delays the audio (starts later); negative pushes it earlier. Use this to
+sync a voice-over or music to the picture.
+
+## Inputs and outputs
+
+| Port | Type | Meaning |
+|---|---|---|
+| **video** (in) | `COMFYTV_VIDEO` | The clip whose picture you keep. |
+| **audio** (in) | `COMFYTV_AUDIO` | The audio track to attach. |
+| **video** (out) | `COMFYTV_VIDEO` | The clip with the new/mixed audio, saved as a snapshot. |
+
+## Tips
+
+- Both inputs are required — a missing video or audio raises an error.
+- Use **replace** when the source audio is unwanted; use **mix** to keep both (e.g. ambience
+  plus a music bed).
+- Nudge **offset_s** in small steps to line up speech with lip movement.
+
+## Bridge note
+
+`COMFYTV_VIDEO` and `COMFYTV_AUDIO` are project snapshot references, not native ComfyUI
+tensors. To move between ComfyTV and native ComfyUI nodes, insert a **Bridge**
+(`ComfyTV/Bridge`). See https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md.
+
+## Related nodes
+
+- **Video Volume** — set the clip's own audio level before mixing.
+- **Video Concat** — assemble the sequence, then mux a single soundtrack across it.

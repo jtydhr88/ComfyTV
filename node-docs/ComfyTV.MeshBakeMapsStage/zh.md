@@ -1,0 +1,64 @@
+# 网格烘焙贴图 (Mesh Bake Maps)
+
+> 把高模的细节烘焙到低模上——切线空间法线贴图和/或环境光遮蔽贴图——让轻量模型看起来仍像拥有全部几何细节。
+
+## 这个节点是做什么的
+
+**Mesh Bake Maps** 把表面细节从**高模**源投射到**已 UV 展开的低模**目标上，并把结果作为纹理贴图打包进返回的 GLB。它可以烘焙一张切线空间法线贴图（glTF/OpenGL +Y），捕捉因 decimate 丢失的细节；以及一张环境光遮蔽贴图，打包进 glTF ORM / occlusionTexture。它运行内置的 mesh3d 后端（**▶ 运行**）。
+
+两个输入都必需：`model`（要烘焙到的低模，必须已 UV 展开）和 `high_poly`（保有细节的 decimate 前网格）。缺任一个阶段都会报错。烘焙贴图的预览成为 `maps` 图像输出。
+
+当 GLB 往返或 decimate 丢失法线贴图时，这是经典的补救：在 **Mesh Ops** 里给低模 unwrap，然后在这里把原始高模烘焙回去。
+
+输出是 ComfyTV 快照，而非原生张量——要接原生 ComfyUI 节点需插入 **Bridge**（[Bridge 文档](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)）。
+
+## 适用场景
+
+- 把密集雕刻 decimate 成游戏可用低模后，恢复表面细节。
+- 重建在 GLB 导入/导出往返中丢失的法线贴图。
+- 给完全没有 AO 的模型加上烘焙的接触阴影 / 缝隙变暗（AO）。
+
+## 参数
+
+### bake_normal
+烘焙一张捕捉高模细节的切线空间法线贴图（glTF/OpenGL +Y）。默认**开**。
+
+### bake_ao
+烘焙一张环境光遮蔽贴图（白 = 开阔，暗 = 缝隙），打包进 glTF ORM / occlusionTexture。默认**开**。
+
+### resolution
+烘焙贴图的像素分辨率。默认 `1024`，范围 `256`–`4096`（步进 256）。
+
+### cage_distance
+仅法线烘焙——表面搜索带宽，以包围盒对角线的比例表示。默认 `0.05`，范围 `0.001`–`0.5`。烘焙有缺块时调高；跨越分离部件间隙误抓细节时调低。
+
+### ao_samples
+每个纹素投射的 AO 射线数。默认 `64`，范围 `4`–`512`（步进 4）。越多 = AO 越平滑、烘焙越慢。
+
+### ao_strength
+缩放遮蔽强度。默认 `1.0`，范围 `0`–`2`。大于 1 使 AO 变暗；小于 1 使其变亮。
+
+### model
+要烘焙到的、已 UV 展开的低模 `COMFYTV_MODEL`。必需。
+
+### high_poly
+保有细节的高模 `COMFYTV_MODEL`——即低模从中 decimate 而来的网格。必需。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **model** | `COMFYTV_MODEL` | 打包了烘焙贴图的低模 GLB |
+| **maps** | `COMFYTV_IMAGE` | 烘焙的法线 / AO 贴图预览 |
+
+## 使用技巧
+
+- 低模必须先有 UV——烘焙前先在 **Mesh Ops** 里运行 `unwrap`，否则贴图无处落脚。
+- 若法线烘焙出现孔洞或跨接缝溢色，调 `cage_distance`：覆盖缺失就调高，跨间隙溢色就调低。
+- AO 有颗粒感说明射线太少——调高 `ao_samples`。只想让它更暗/更亮时，用 `ao_strength` 调整整体观感，而不必以更高采样数重烘。
+
+## 相关节点
+
+- **Mesh Ops（网格操作）** — 给低模 `unwrap`（必须先做）并从高模 `decimate`。
+- **Mesh Primitive（网格基元）** — 生成基础网格来构建高模。
+- **Mesh Boolean（网格布尔）** — 在烘焙前构造高模细节。

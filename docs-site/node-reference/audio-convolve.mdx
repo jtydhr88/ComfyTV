@@ -1,0 +1,52 @@
+---
+title: "Audio Convolve (IR)"
+description: "Convolution reverb — stamp the acoustic character of a real space (or any impulse response) onto your audio."
+sidebarTitle: "Audio Convolve"
+---
+
+<Frame caption="Audio Convolve (IR) · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Audio Convolve (IR)" />
+</Frame>
+
+## What this node does
+
+**Audio Convolve (IR)** convolves an audio track with a second audio clip used as an **impulse response** (IR) — a recording of how a space or device responds to a short impulse. The result carries the reverb tail, coloration, or filtering baked into that IR. This is the classic technique behind convolution reverbs and cabinet/speaker simulation.
+
+It takes a `COMFYTV_AUDIO` snapshot on **audio** (or a `COMFYTV_VIDEO`, whose audio track is used) and a second `COMFYTV_AUDIO` on **ir**, and outputs processed `COMFYTV_AUDIO`. It has a ▶ **Run**. An impulse response on the **ir** input is required — the node errors if it's empty.
+
+To feed native ComfyUI `AUDIO` in or out, insert a **Bridge** — see [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Place a dry vocal or instrument inside a real hall, church, or room captured as an IR.
+- Simulate a guitar cabinet or hardware device from its impulse response.
+- Extract an IR with **Audio Deconvolve** first, then apply it to any source here.
+
+## Parameters
+
+### wet
+Level of the convolved (processed) signal, **0.0–2.0** (default **1.0**). Values above 1 amplify the wet path.
+
+### dry
+Level of the original (unprocessed) signal mixed back in, **0.0–2.0** (default **0.0**). Raise for a mix of dry + reverberant sound; leave at 0 for fully wet.
+
+### normalize
+Boolean, default **on**. Normalizes the impulse response so a loud IR doesn't blow out the output level.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **audio** | `COMFYTV_AUDIO` | The convolved audio snapshot |
+
+## Tips
+
+- The **ir** input is mandatory — wire an impulse-response clip (a captured reverb or a synthetic IR) into it.
+- For a natural reverb blend, keep **dry** near the source level and add **wet** to taste rather than going fully wet.
+- Turn **normalize** off only if you want the IR's raw gain to pass through.
+
+## Related nodes
+
+- **Audio Deconvolve (IR)** — recovers an impulse response from a swept-sine recording.
+- **Audio Sweep (ESS)** — generates the sine sweep used to capture an IR.
+- **Muse Reverb (FDN)** — an algorithmic reverb alternative that needs no IR.

@@ -1,0 +1,50 @@
+# 视频示波器 (Video Scopes)
+
+> 为视频的某一帧渲染一张广播级示波器——波形、RGB 分量、矢量示波器、直方图或 CIE——用来检查曝光和颜色。
+
+## 这个节点是做什么的
+
+**Video Scopes（视频示波器）** 采样 `COMFYTV_VIDEO` 的某一帧，把所选示波器渲染成 `COMFYTV_IMAGE`。你选 **scope** 和帧时间，然后点 **▶ 运行**（服务器端一次 ffmpeg 处理）即可得到示波器图。这些正是调色师用来判断曝光、对比和色相的测量示波器。
+
+## 适用场景
+
+- 检查高光是否过曝、暗部是否死黑（波形）。
+- 核对白平衡和通道平衡（RGB 分量 parade）。
+- 判断饱和度和色相分布（矢量示波器）。
+- 查看整体影调分布（直方图）或色域覆盖（CIE）。
+
+## 参数说明
+
+### scope（示波器）
+要渲染哪种示波器：
+- `waveform` —— 亮度波形，绿色刻度线带数字。
+- `waveform_parade` —— RGB 分量波形（三通道并排）。
+- `vectorscope` —— 颜色矢量示波器（color3 模式），带命名目标。
+- `histogram` —— 影调直方图。
+- `cie` —— CIE 色度图（HDTV 系统/色域，显示白点）。
+
+默认 `waveform`。
+
+### at_seconds（帧时间）
+测量哪一帧，单位秒。范围 −1 到 3600，默认 `-1`，`-1` 表示片段中点。
+
+## 输出说明
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **image** | `COMFYTV_IMAGE` | 所采样帧渲染出的示波器图 |
+
+## 使用提示
+
+- `at_seconds` 保持 `-1` 即测中间帧；设具体时间可检查已知的棘手时刻（过曝窗户、肤色）。
+- `waveform_parade` 最适合发现偏色；`vectorscope` 适合让肤色对齐 I 线。
+- 这只测单个静止帧，不是整段——若镜头内曝光变化，请多采几次。
+
+## 类型与 Bridge
+
+`COMFYTV_VIDEO` / `COMFYTV_IMAGE` 是 ComfyTV 项目快照，不是 ComfyUI 原生类型。用 **Bridge**（`ComfyTV/Bridge`）与原生节点互通。详见 [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 相关节点
+
+- **Contact Sheet（审片宫格）**——一张采样帧网格，而非单个示波器。
+- **Scene Detect（场景检测）**——先找切点，再为每镜头代表帧测示波器。

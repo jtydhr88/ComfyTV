@@ -1,0 +1,56 @@
+---
+title: "360 投影 (360 Projection)"
+description: "重新投影 360°/等距柱状 (equirectangular) 素材——把全景画面变成平面的「小行星」视图、展开鱼眼，或重新对准虚拟相机。"
+sidebarTitle: "360 投影"
+translationSourceHash: "981b6e23c1418e6a"
+---
+
+<Frame caption="360 投影 (360 Projection) · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="360 投影 (360 Projection)" />
+</Frame>
+
+## 这个节点做什么
+
+本节点调用 FFmpeg 的 `v360` 滤镜，在球面/全景投影格式之间转换。给它一段某种投影的 `COMFYTV_VIDEO` 素材（比如 360 相机拍摄的等距柱状 360 素材），它会输出重新映射到另一种投影的同一段素材，并可按偏航/俯仰/滚转 (yaw/pitch/roll) 旋转，让你决定「相机」看向球面的哪个方向。
+
+它带有 ▶ Run（由 FFmpeg 完成重投影）。若输入与输出投影相同且没有旋转或 FOV 改变，则原样透传。输入与输出都是 `COMFYTV_VIDEO`。要把结果交给原生 ComfyUI 节点，请插入 **Bridge**——见[桥接说明](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 何时使用
+
+- 从一段 360 录制中提取一个普通平面镜头，用 yaw/pitch/roll 对准任意方向。
+- 从等距柱状素材制作「小行星」/立体投影 (stereographic) 效果。
+- 在交付格式之间转换（等距柱状 ↔ 类立方体贴图 EAC、鱼眼等）。
+
+## 参数
+
+### proj_in
+你的源素材当前所处的投影。选项：`equirect`、`flat`、`fisheye`、`dfisheye`、`sg`、`eac`、`ball`、`hammer`、`cylindrical`、`pannini`、`barrel`。默认 `equirect`（标准 360 单目全景）。
+
+### proj_out
+要转换到的目标投影。选项同上。默认 `flat`（普通直线校正镜头）。`sg`（立体投影）产生小行星外观。
+
+### v360_yaw / v360_pitch / v360_roll
+在重投影之前旋转球面上的虚拟相机，单位为度，各自范围 -180 到 180（默认 0）。yaw 左右平移、pitch 上下俯仰、roll 旋转地平线。用它们把平面输出对准 360 场景的特定部位。
+
+### v360_fov
+输出水平视场角，单位为度，范围 0 到 360（默认 0 = 所选输出的滤镜默认 FOV）。非零时，垂直 FOV 会按 16:9 比例自动推导。
+
+### v360_interp
+重映射像素时的重采样质量：`linear`、`cubic`、`lanczos`、`nearest`。默认 `cubic`——速度与质量的良好平衡。要最锐利用 `lanczos`，`nearest` 仅用于蒙版/硬边。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | 重投影后的素材 |
+
+## 提示
+
+- 经典小行星效果：`proj_in = equirect`，`proj_out = sg`。
+- `flat` 输出很适合从 360 素材里拉出可用镜头；用 yaw/pitch 对准它。
+- 若重投影后的边缘发糊，把 `v360_interp` 提到 `lanczos`；若必须保留硬蒙版，降到 `nearest`。
+
+## 相关节点
+
+- **360 Stabilize** — 在重投影之前或之后消除 360 素材中的相机抖动。
+- **Lens Distort** — 用于普通（非 360）镜头的去畸变/加畸变。

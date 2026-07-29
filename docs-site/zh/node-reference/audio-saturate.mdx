@@ -1,0 +1,70 @@
+---
+title: "Audio Saturate（音频饱和）"
+description: "增添温暖、颗粒或 lo-fi 质感——软削波、心理声学削波、比特压缩、谐波激励与 crystalizer。"
+sidebarTitle: "Audio Saturate（音频饱和）"
+translationSourceHash: "cf296f173cf21a81"
+---
+
+<Frame caption="Audio Saturate（音频饱和） · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="Audio Saturate（音频饱和）" />
+</Frame>
+
+## 这个节点是做什么的
+
+**音频饱和 (Audio Saturate)** 对音轨施加五种失真/饱和效果之一，使用对应的 FFmpeg 滤镜（`asoftclip`、`apsyclip`、`acrusher`、`aexciter`、`crystalizer`）。你选择一个**模式 (mode)**，只调节属于该模式的参数。
+
+输入为 `COMFYTV_AUDIO` 快照（也可接 `COMFYTV_VIDEO`，会取其音轨），输出处理后的 `COMFYTV_AUDIO` 以及一个 `fx_spec`。它带有 ▶ **运行**（由 FFmpeg 完成）。若未接源音频，只发出 `fx_spec` 以便串联。
+
+要与 ComfyUI 原生 `AUDIO` 互通，请插入 **Bridge**——见 [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 适用场景
+
+- 用软削波或激励谐波给冷硬的数字素材增添温暖。
+- 用比特压缩给鼓或合成器加入激进的颗粒感或 lo-fi 嘎吱声。
+- 用心理声学削波在不产生硬数字削波的情况下提升响度。
+
+## 参数说明
+
+### mode
+应用哪种效果。可选：`softclip`（默认）、`psyclip`、`crush`、`exciter`、`crystalizer`。
+
+### Soft Clip 软削波（`sc_*`）
+- **sc_type** —— 削波曲线：`hard`（默认）、`tanh`、`atan`、`cubic`、`exp`、`alg`、`quintic`、`sin`、`erf`。
+- **sc_threshold** —— 削波阈值，**0.01–1.0**（默认 **1.0**）。
+
+### Psy Clip 心理声学削波（`py_*`）
+- **py_clip** —— 削波电平，**0.015625–1.0**（默认 **1.0**）。
+- **py_adaptive** —— 自适应量，**0.0–1.0**（默认 **0.5**）。
+
+### Crush 比特压缩（`cr_*`）
+- **cr_bits** —— 压缩到的比特深度，**1–64**（默认 **8**）。
+- **cr_mix** —— 干湿混合，**0.0–1.0**（默认 **0.5**）。
+- **cr_mode** —— `lin`（默认）或 `log` 缩减。
+
+### Exciter 激励（`ex_*`）
+- **ex_amount** —— 效果量，**0.0–64.0**（默认 **1.0**）。
+- **ex_drive** —— 谐波驱动，**0.1–10.0**（默认 **8.5**）。
+- **ex_blend** —— 谐波混合，**-10.0 到 10.0**（默认 **0.0**）。
+- **ex_freq** —— 截止频率（Hz），**2000–12000**（默认 **7500**）。
+
+### Crystalizer
+- **cz_i** —— 强度，**-10.0 到 10.0**（默认 **2.0**）。正值锐化；负值柔化。
+
+## 输出说明
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **audio** | `COMFYTV_AUDIO` | 饱和处理后的音频快照 |
+| **fx_spec** | `COMFYTV_FXSPEC` | 该效果的 spec，可串入 FX Chain |
+
+## 小贴士
+
+- 只有所选 **mode** 对应的参数才起作用——其余不生效。
+- 软削波从 `tanh`/`atan` 起步获得乐感温暖；`hard` 最激进。
+- 高比特数的比特压缩很微妙；降到 4–8 比特才有明显的 lo-fi 质感。
+
+## 相关节点
+
+- **Audio EQ** —— 驯服或强调饱和带来的额外谐波。
+- **Audio Dynamics** —— 搭配压缩控制新增的能量。
+- **FX Chain** —— 把多个 `fx_spec` 步骤（含本节点）一趟渲染完成。

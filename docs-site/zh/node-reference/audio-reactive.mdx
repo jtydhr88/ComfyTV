@@ -1,0 +1,67 @@
+---
+title: "Audio Reactive"
+description: "把某个频段随时间的响度转为动画关键帧 — 让参数跟随音乐能量。"
+sidebarTitle: "Audio Reactive"
+translationSourceHash: "8a6d746ed4ea5ee5"
+---
+
+<Frame caption="Audio Reactive · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="Audio Reactive" />
+</Frame>
+
+## 本节点的作用
+
+**Audio Reactive(音频反应)** 在整段音轨上跟踪所选频段(低频、中频、高频、全频段或自定义范围)的响度包络,并将其转为一串动画**关键帧**。随着低音敲击,被映射的字段随之起伏。与 **Audio Beats & Notes**(在离散事件上触发)不同,本节点产生平滑连续的曲线,可做 attack/release 塑形并重映射到任意范围。
+
+它接受 `COMFYTV_AUDIO` 快照或 `COMFYTV_VIDEO`(使用其音轨;audio 优先)。输出 `COMFYTV_TEXT` 关键帧,并带有 ▶ **Run**。
+
+若要与原生 ComfyUI 的 `AUDIO` 互通,请插入 **Bridge** — 见 [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 何时使用
+
+- 让物体的缩放随音乐低音"呼吸"。
+- 用混音整体能量驱动不透明度、位置或旋转。
+- 制造连续的音频驱动运动,而非逐拍脉冲。
+
+## 参数
+
+### band
+跟随哪个频率范围:`bass`(默认,20–160 Hz)、`mid`(160–2000 Hz)、`high`(2000–8000 Hz)、`full`(20–16000 Hz)或 `custom`(使用 **freq_lo**/**freq_hi**)。
+
+### freq_lo / freq_hi
+自定义频段边界,单位 Hz,仅当 **band** 为 `custom` 时使用。**freq_lo** 范围 **10 到 16000**,默认 **40**;**freq_hi** 范围 **20 到 16000**,默认 **200**。
+
+### attack
+能量上升时包络的上升速度,单位秒。范围 **0.001 到 1.0**,默认 **0.02**。越短对瞬态响应越灵敏。
+
+### release
+能量下降时包络的下降速度,单位秒。范围 **0.01 到 2.0**,默认 **0.25**。越长运动越平滑、越持续。
+
+### rate
+每秒生成的关键帧数(曲线的时间分辨率)。范围 **1 到 60**,默认 **10**。与输出帧率匹配以获得平滑运动。
+
+### min_value / max_value
+包络被重映射到的输出范围:最安静映射到 **min_value**,最响映射到 **max_value**。两者范围均 **-1000 到 1000**;默认 **0** 与 **1**。互换二者可反转响应。
+
+### gain
+重映射前对包络施加的倍率。范围 **0.1 到 8**,默认 **1.0**。调高可让安静的音轨驱动整个范围。
+
+### field
+关键帧驱动哪个动画字段:`v`(默认)、`scale`、`opacity`、`x`、`y` 或 `rotation`。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **keyframes** | `COMFYTV_TEXT` | 对所选 **field** 打帧,使其跟随该频段的响度包络 |
+
+## 提示
+
+- 调低 **attack** 获得干脆、跟随瞬态的运动;调高 **release** 以避免抖动闪烁。
+- 若安静的混音几乎不动字段,调高 **gain** 或收窄 **min/max** — 或选更活跃的频段。
+- 把 **rate** 设为项目 fps,使关键帧落在帧上。
+
+## 相关节点
+
+- **Audio Beats & Notes** — 离散节拍/起音事件,而非连续包络。
+- **Audio Meter Overlay** — 把实时电平表烧录到视频上作参考。

@@ -1,0 +1,69 @@
+---
+title: "Expression"
+description: "Turn a math expression into an animation curve — a per-frame value track you can drive an FX parameter with, like a Nuke/AE expression or a wiggle."
+sidebarTitle: "Expression"
+---
+
+<Frame caption="Expression · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Expression" />
+</Frame>
+
+## What this node does
+
+**Expression** evaluates a math expression over time and outputs a keyframe track (`COMFYTV_TEXT`). You write something like `sin(t*2)*10` or `noise(t*2)*20`, pick which field it drives, set the sample rate and duration, then it samples the curve. The card draws a live preview graph of the curve as you type (debounced, with an error message if the expression is invalid). Press **▶ Run** to emit the keyframes.
+
+The expression is evaluated in a safe sandbox: only numeric literals, arithmetic/comparison/boolean operators, the built-in variables, and the built-in functions are allowed (no attribute access, no keyword args, max 2000 chars).
+
+### Variables and functions you can use
+
+- **Variables:** `frame`, `t` (seconds), `duration`, `fps`, plus constants `pi`, `e`.
+- **Functions:** `sin cos tan asin acos atan atan2 exp log sqrt pow abs floor ceil round min max sign degrees radians`; steps/interpolation `boxstep linearstep smoothstep gaussstep remap mix clamp`; and noise `noise snoise fbm turbulence cellnoise pnoise cellnoise random hash`. The `seed` parameter seeds the noise/random functions.
+
+## When to use it
+
+- Add organic wobble to a parameter (`noise(t*3)*5`) instead of hand-keying it.
+- Drive a cyclic motion (`sin(t*2)*30`) for a bob, sway, or pulse.
+- Generate a ramp or eased curve to feed an FX stage's keyframe input.
+
+## Parameters
+
+### expression
+The math expression to evaluate. Default `sin(t*2)*10`. Uses the variables/functions above.
+
+### field
+Which animation field the curve targets: `v`, `scale`, `opacity`, `x`, `y`, `rotation`. Default `v`. This is the key name written into the output track.
+
+### rate
+Keyframes per second sampled from the curve, 1–60, default 10. Higher = smoother track, more keys.
+
+### duration
+Curve length in seconds, 0.05–3600, default 5. **If a video is wired, its real duration overrides this** (and the card hides the Duration slider).
+
+### fps
+Frames per second used to compute the `frame` variable, 1–120, default 24. **A wired video's real fps overrides this.**
+
+### seed
+Seed for the noise/random functions, 0–99999, default 0. Change it for a different random pattern.
+
+## Inputs and outputs
+
+| Slot | Type | Meaning |
+|---|---|---|
+| **video** (in) | `COMFYTV_VIDEO` | Optional; if present, its duration and fps override the sliders |
+| **keyframes** (out) | `COMFYTV_TEXT` | The sampled keyframe track (`{t, <field>, interp:"linear"}` per key) |
+
+## Tips
+
+- Wire a video to lock the curve to that clip's exact duration and fps — the Duration slider disappears when a video is connected.
+- Raise `rate` for smoother, denser keys on fast-moving curves; lower it for lighter tracks.
+- Only the listed names are allowed — an unknown name, keyword argument, or non-numeric constant makes the expression error (shown in the preview).
+- `t` is seconds and `frame` is `t*fps`; use whichever your expression reads more naturally.
+
+## Types and bridges
+
+`COMFYTV_TEXT` / `COMFYTV_VIDEO` are ComfyTV project snapshots, not native ComfyUI types. Use a **Bridge** (`ComfyTV/Bridge`) to interoperate with native nodes. See [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## Related nodes
+
+- **FX Chain** — bakes the FX chain whose parameters an expression track can animate.
+- Any ComfyTV **VideoFX** stage that accepts a keyframe track.

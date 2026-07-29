@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="132" height="28" viewBox="0 0 132 28" fill="none">
+  <rect x="1" y="4" width="26" height="20" rx="4" fill="#4F46E5"/>
+  <path d="M10 10l7 4-7 4v-8z" fill="#fff"/>
+  <text x="34" y="20" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700" fill="currentColor">ComfyTV</text>
+</svg>

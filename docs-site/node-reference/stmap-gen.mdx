@@ -1,0 +1,66 @@
+---
+title: "STMap Generate"
+description: "Bake a lens-distortion model into an STMap image — a reusable UV displacement map you can apply anywhere, in ComfyTV or any tool that reads STMaps."
+sidebarTitle: "STMap Generate"
+---
+
+<Frame caption="STMap Generate · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="STMap Generate" />
+</Frame>
+
+## What this node does
+
+This node generates an **STMap** (a red/green UV coordinate map) from a lens-distortion model, without touching any footage's content. The resulting image encodes, per pixel, where to sample from — so applying it as a warp reproduces the exact distortion the model describes. Because it's baked once, it's fast to reuse and portable to other STMap-aware tools.
+
+You can optionally wire a `video` input purely to auto-match the output resolution: if a clip is connected, its width/height override the `width`/`height` fields. It has a ▶ Run. The output is a `COMFYTV_IMAGE` (not a video). To hand it to native ComfyUI nodes, insert a **Bridge** — see the [bridge note](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Pre-bake a lens distort/undistort so you can apply the same warp repeatedly without recomputing.
+- Export a portable distortion map to use in another STMap-aware application.
+- Round-trip: undistort with one STMap for cleanup, re-distort with its inverse to match the plate.
+
+## Parameters
+
+### width / height
+Output STMap resolution in pixels, each 8 to 8192 (default 1920 × 1080). If a `video` is connected, its resolution overrides these.
+
+### model
+The lens-distortion model to bake. Options: `nuke_k1k2`, `pf_barrel`, `3de_classic`, `3de_radial`, `panotools`, `fisheye_equidistant`, `fisheye_orthographic`, `fisheye_equisolid`, `fisheye_stereographic`. Default `nuke_k1k2`.
+
+### direction
+`undistort` or `distort`. Default `undistort`. This sets which way the baked STMap warps.
+
+### k1 / k2
+Radial distortion coefficients, each -1.0 to 1.0 (default 0, step 0.005). Primary and higher-order radial terms for the polynomial models.
+
+### fov
+Field of view in degrees, 20 to 180 (default 140). Used by the fisheye projection models.
+
+### center_x / center_y
+Optical-center offset, each -0.5 to 0.5 (default 0), as a fraction of the frame.
+
+### squeeze
+Anamorphic squeeze factor, 0.5 to 2.0 (default 1.0).
+
+### lens_scale
+Overall scale of the mapping, 0.25 to 4.0 (default 1.0).
+
+### cx_curv / cy_curv / tang_u / tang_v / pt_c
+Advanced per-model terms. `cx_curv` / `cy_curv` asymmetric curvature (-0.5 to 0.5); `tang_u` / `tang_v` tangential/decentering (-0.5 to 0.5); `pt_c` PanoTools cubic term (-1.0 to 1.0). All default 0.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **stmap** | `COMFYTV_IMAGE` | The baked UV displacement (STMap) image |
+
+## Tips
+
+- These are the same distortion parameters as **Lens Distort** — dial them in there interactively, then bake the final look into an STMap here for repeatable use.
+- Connect a `video` so the STMap matches its exact resolution instead of hand-setting `width`/`height`.
+- Set `direction` to match the warp you need — an undistort STMap and a distort STMap of the same model are inverses of each other.
+
+## Related nodes
+
+- **Lens Distort** — apply the distortion directly to footage instead of baking a map.

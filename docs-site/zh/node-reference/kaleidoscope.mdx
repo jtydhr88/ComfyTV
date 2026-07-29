@@ -1,0 +1,52 @@
+---
+title: "万花筒 (Kaleidoscope)"
+description: "将画面镜像成放射状楔形，得到对称的万花筒图案，一次 ▶ Run 完成。"
+sidebarTitle: "万花筒"
+translationSourceHash: "77ac57abfa8a3afe"
+---
+
+<Frame caption="万花筒 (Kaleidoscope) · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="万花筒 (Kaleidoscope)" />
+</Frame>
+
+## 这个节点做什么
+
+**万花筒 (Kaleidoscope)** 把一段 `COMFYTV_VIDEO` 围绕一个中心点折叠成若干个镜像放射扇区，生成旋转对称的视觉效果，并在 **▶ Run** 时写出新快照。
+
+输入与输出都是 `COMFYTV_VIDEO`。若要对接原生 ComfyUI 节点，请插入 **Bridge**——见[桥接指南](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 何时使用
+
+- 把运动画面变成催眠般对称的曼陀罗视觉，用于音乐或 VJ 循环。
+- 把杂乱的镜头抽象成干净的几何图案。
+- 用任意源视频制作观感无缝的循环背景。
+
+## 参数
+
+### segments
+镜像楔形数量，`1`–`64`，默认 `6`。楔形越多对称越细、越繁复；`1` 实际上是单一切片。
+
+### angle
+整个万花筒的旋转，`-180°`–`180°`（步长 `1`），默认 `0`。旋转组合后的图案。
+
+### source_angle
+镜像前对采样源的旋转，`-180°`–`180°`（步长 `1`），默认 `0`。改变画面的哪一部分喂给每个楔形。
+
+### center_x / center_y
+镜像中心，归一化坐标，各为 `0.0`–`1.0`，默认 `0.5` / `0.5`（画面中心）。移动它可让对称轴心偏离中央。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | 万花筒化后的片段，作为新的项目快照 |
+
+## 提示
+
+- 用较少的 **segments** 搭配非零的 **angle** 做缓慢旋转以增添动感，或用 **source_angle** 改变采样内容。
+- 当主体天然偏离中央时，用 **center_x/y** 让图案偏心。
+
+## 相关节点
+
+- **波形扭曲 (Wave Warp)** — 用波形位移画面，而非镜像。
+- **反馈特效 (Feedback FX)** — 递归回声/眩晕拖影，另一种迷幻外观。

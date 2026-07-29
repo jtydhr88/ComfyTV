@@ -1,0 +1,71 @@
+---
+title: "Score Synth"
+description: "用 SoundFont 把演奏渲染成真实音频 —— ComfyTV 自带的 SF2/SF3 合成器。"
+sidebarTitle: "Score Synth"
+translationSourceHash: "5711c61b7bfa93ba"
+---
+
+<Frame caption="Score Synth · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="Score Synth" />
+</Frame>
+
+## 这个节点做什么
+
+**Score Synth（合成器）** 是符号音乐车道的音频末端。它接收一个 `performance`（来自
+**Score Performer** 或 **Click Track**），并用 ComfyTV 自研的 SoundFont 合成器把它合成成
+音频 —— 无需外部播放器。指向资源库里的一个 `.sf2`/`.sf3` SoundFont，它就用那套乐器采样
+演奏这些音符。
+
+按 **▶ Run** 在后端渲染；过程中会报告进度。输出是一段 `COMFYTV_AUDIO`，可预览、送给音频
+stage，或经 Bridge 转入原生 ComfyUI。
+
+你选择一个默认的 General MIDI 乐器（`program`），并可用一小段 JSON 映射按 MIDI 通道逐一
+覆盖乐器 —— 对于每个通道是不同乐器的多声部演奏很方便。
+
+## 什么时候用它
+
+- 你有一段演奏（来自 Score Performer 或 click track），想把它当作音频听到，而不只是 MIDI。
+- 你想要来自某个已加入资源库的 SoundFont 的特定乐器音色。
+- 你需要在一次渲染中让不同通道用不同乐器（例如钢琴 + 贝斯 + 鼓）。
+
+## 参数
+
+### soundfont
+资源库里的 SoundFont 文件名（一个 `.sf2`/`.sf3`）。留空时合成器使用其内置的回退音色。
+如果你写的文件名不在库里，运行会以 “soundfont … not found” 的提示失败。
+
+### program
+默认的 General MIDI 乐器，默认 **piano**。可选项是 GM 程序名；这个乐器演奏任何你没有在下方
+覆盖的通道。
+
+### channel_programs
+一个可选的 JSON 映射，MIDI 通道 → GM 程序，例如
+`{"0": "piano", "1": "acoustic_bass"}`。用它为多声部演奏的不同通道指定不同乐器。值可以是
+GM 程序名或原始程序号。无效 JSON 会被忽略。
+
+### gain
+输出电平倍数，**0.1–2.0**（默认 **1.0**）。小于 1 衰减，大于 1 增强；渲染爆音时往回调。
+
+### performance（可选输入）
+要渲染的演奏，类型 `COMFYTV_TEXT` —— 从 **Score Performer** 或 **Click Track** 接入。
+什么都不接就运行会以 “Score Synth needs a performance” 失败。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **audio** | `COMFYTV_AUDIO` | 渲染出的音频片段 |
+
+## 提示
+
+- SoundFont 存放在资源库 —— 先把你的 `.sf2`/`.sf3` 加进去，再把它的文件名填进 `soundfont`。
+- 做多乐器混音时，把 `program` 设为最常见的音色，只对不同的通道使用 `channel_programs`。
+- 如果结果听起来过大或失真，重渲染前把 `gain` 稍微调低。
+
+## 相关节点
+
+- **Score Performer** —— 产出本节点渲染的 `performance`。
+- **Click Track** —— 节拍器，其咔哒声也能喂给本合成器。
+- **Chord Accompaniment** —— 由和弦符号生成演奏。
+- **Bridge** —— 把 `COMFYTV_AUDIO` 与原生 ComfyUI 音频互转。见
+  https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md

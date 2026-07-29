@@ -1,0 +1,80 @@
+---
+title: "PIK Keyer（PIK 抠像器）"
+description: "一款 IBK 风格、基于图像的 Primatte 抠像器，专治难抠镜头 —— 喂它一张干净背景板和垃圾遮罩，就能保住连普通色度抠像都守不住的边缘。"
+sidebarTitle: "PIK Keyer（PIK 抠像器）"
+translationSourceHash: "fa9e1bdad4480e77"
+---
+
+<Frame caption="PIK Keyer（PIK 抠像器） · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="PIK Keyer（PIK 抠像器）" />
+</Frame>
+
+## 这个节点做什么
+
+PIK Keyer（PIK 抠像器）是一款专业绿/蓝幕抠像器，仿照经典的 IBK（基于图像的抠像器）/ Primatte 思路。它不只按单一幕布颜色判断每个像素，而是可以把素材与一张**干净背景板**（空幕）比对，并用**垃圾遮罩**强制某些区域完全保留或完全去除。它还内置去溢色，以及用指定颜色或背景填补被去除溢色的"replace"阶段。
+
+输入与输出都是 `COMFYTV_VIDEO`。它带有 ▶ Run。
+
+有两种自动选择的工作模式：若你接了任一侧输入（干净背景板、in/out 遮罩，或背景视频），则运行完整的背景板抠像；若全部留空，则回退为仅用幕布设置的、可实时预览的快速单图抠像。
+
+## 何时使用
+
+- 幕布打光不均或有阴影/褶皱，普通抠像搞不定 —— 干净背景板可以解决。
+- 你需要用垃圾遮罩手动处理问题区域（要保留的绿色道具、要打穿的洞）。
+- 你想在一个节点里直接合成到背景片段上。
+
+## 参数
+
+### screen
+要抠的背景：`green`（默认）、`blue`，或 `pick` 以使用你自己的 `pick_color`。
+
+### pick_color
+当 `screen` 为 `pick` 时的自定义幕布颜色。十六进制，默认 `#00FF00`。
+
+### red_weight / blue_green_weight
+控制如何把幕布通道从图像其余部分中分离出来的平衡控件。两者范围均为 `-1.0`–`2.0`，默认 `0.5`。调整以稳固遮罩而不吃掉主体。
+
+### alpha_bias / despill_bias
+中性色参考（十六进制，默认 `#808080` 灰），偏置 alpha 的生成方式与去溢色的施加方式。将其设向主体的中性色调，可减少溢色瑕疵。
+
+### use_alpha_bias
+开启时（默认），alpha bias 也驱动去溢色。关闭则将两者解耦。
+
+### screen_subtraction
+开启时（默认），从图像中减去幕布分量，得到更干净的核心遮罩。
+
+### clip_black / clip_white
+遮罩的黑点与白点。`clip_black`（默认 `0.0`）把接近透明的值压成完全透明；`clip_white`（默认 `1.0`）把接近不透明的值抬成完全不透明。两者范围 `0.0`–`1.0`。略微收紧以压掉遮罩噪点。
+
+### replace_mode / replace_color
+如何填补被去除溢色的位置。`replace_mode` 为 `none`、`source`、`hard` 或 `soft`（默认 `soft`）。`replace_color`（十六进制，默认 `#808080`）是 hard/soft 模式使用的填充色。
+
+### output
+`alpha`（默认）为真实透明，`matte` 为灰度蒙版，`premult` 为预乘 RGB，`composite` 为直接叠在背景上渲染。（`alpha` 需要 VP9 编码器 —— 报错就用 `matte`。）
+
+### 侧输入（可选）
+- **video** —— 要抠的画面。
+- **clean_plate_video** / **clean_plate** —— 空幕视频或静帧图片；启用完整 IBK 抠像。
+- **in_mask** —— 标记强制完全不透明（保留）区域的垃圾遮罩。
+- **out_mask** —— 标记强制完全透明（去除）区域的垃圾遮罩。
+- **bg_video** —— 当 `output` 为 `composite` 时使用的背景片段。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | 按所选输出形式的抠像结果。 |
+
+## 提示
+
+- 接入任一侧输入会把此节点切换为完整渲染模式（一次 ▶ Run）。不接侧输入时保持快速可预览的单图抠像。
+- 干净背景板是不均匀幕布上最大的质量提升 —— 有条件就拍一张。
+- 用 **in_mask** 保护绿色道具，用 **out_mask** 打掉反光或穿帮孔洞。
+- 要与原生 ComfyUI 节点互通，请插入 **Bridge**。见 [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 相关节点
+
+- **Chroma Key** —— 不需要背景板或遮罩时的更简单单色抠像。
+- **Keyer** —— 带双侧容差/柔度的亮度/色度抠像器。
+- **Despill** —— 独立的溢色清理。
+- **Key Mix** —— 用遮罩把前景合成到背景上。

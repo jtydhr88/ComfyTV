@@ -1,0 +1,46 @@
+---
+title: "反交错 (Deinterlace)"
+description: "把隔行素材转成干净的逐行帧，去除梳状/撕裂伪影。"
+sidebarTitle: "反交错"
+translationSourceHash: "6ddb6d78f293cabb"
+---
+
+<Frame caption="反交错 (Deinterlace) · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="反交错 (Deinterlace)" />
+</Frame>
+
+## 这个节点是做什么的
+
+**Deinterlace** 对 `COMFYTV_VIDEO` 运行四种 ffmpeg 反交错器之一，把隔行场转成完整逐行帧，去除旧电视/摄像机素材在运动处出现的水平「梳状」撕裂。点 **▶ 运行** 处理并写出新的视频快照。
+
+输入输出都是 `COMFYTV_VIDEO`。要与原生 ComfyUI 节点互通，请插入 **Bridge** — 见[桥接说明](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 适用场景
+
+- 编辑或放大前清理旧的隔行 DV/DVD/广播素材。
+- 去除隔行素材以逐行方式播放时运动处出现的梳状伪影。
+- 为帧插值或网络导出准备隔行素材。
+
+## 参数说明
+
+### method（方法）
+使用哪种反交错器。选项：`bwdif`（Bob Weaver，高质量，默认）、`yadif`（经典，快速）、`estdif`（边缘斜率估计）、`w3fdif`（加权三场）。默认 `bwdif`。
+
+### rate（节奏）
+输出节奏：`frame`（默认）每输入帧产出一逐行帧；`field` 每场产出一帧，**使输出帧率翻倍**（运动更平滑）。注意 `estdif` 将其映射为自身的 `frame`/`field` 模式，`w3fdif` 会忽略此项。
+
+## 输出说明
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | 反交错后的逐行素材，作为新项目快照 |
+
+## 使用提示
+
+- `rate = field`（以及始终的 `w3fdif`）会使帧数/帧率翻倍——渲染更久、结果帧率更高。
+- `bwdif` 是最全能的默认选择；批量处理大量素材时 `yadif` 更快。
+
+## 相关节点
+
+- **Frame Interpolate**——反交错后让素材更平滑或变慢。
+- **Video Denoise**——旧隔行素材常有颗粒；之后可清理。

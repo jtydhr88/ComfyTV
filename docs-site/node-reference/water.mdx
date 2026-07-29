@@ -1,0 +1,63 @@
+---
+title: "Water"
+description: "Simulates a rippling fluid surface over the footage — rain drops and swirl currents, in one ▶ Run."
+sidebarTitle: "Water"
+---
+
+<Frame caption="Water · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Water" />
+</Frame>
+
+## What this node does
+
+**Water** runs a fluid-surface simulation over a `COMFYTV_VIDEO` clip and refracts the image through the resulting ripples, then writes a new snapshot on **▶ Run**. Ripples come from periodic rain drops and/or a directional swirl current, and the fluid's viscosity is chosen with a **physics** preset.
+
+In and out are both `COMFYTV_VIDEO`. To feed native ComfyUI nodes, insert a **Bridge** — see the [bridge guide](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Put the shot "under water" or behind a rain-struck pane of glass.
+- Add living, physics-based ripples that a fixed sine wave can't fake.
+- Create a viscous, gooey distortion with the sludge presets.
+
+## Parameters
+
+### physics
+Fluid behavior preset. Options: `water` (light, fast ripples), `jelly`, `sludge`, `super_sludge` (progressively thicker, slower, more viscous). Default `water`.
+
+### rain
+Spawn periodic rain-drop ripples. Default on.
+
+### swirl
+Add a directional swirling current. Default off.
+
+> If both **rain** and **swirl** are off, the node passes the clip through untouched.
+
+### rain_every
+Frames between rain drops, `1`–`24`, default `4`. Smaller = more frequent drops (busier surface).
+
+### amplitude
+Ripple/refraction strength, `0.0`–`1.0`, default `0.5`. Higher = deeper distortion.
+
+### swirl_x / swirl_y
+Swirl current direction/strength, each `-0.5`–`0.5`, defaults `0.0`. Only used when **swirl** is on; push the values to steer the current.
+
+### seed
+Random seed for drop placement, `0`–`99999`, default `7`. Same seed = same ripple pattern.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The rippled clip as a new project snapshot |
+
+## Tips
+
+- Turn both **rain** and **swirl** off to bypass the effect without unwiring.
+- **swirl_x/swirl_y** only do something when **swirl** is enabled.
+- Thicker **physics** presets hold ripples longer, giving a slower, more syrupy motion.
+
+## Related nodes
+
+- **Wave Warp** — a simpler, deterministic sine ripple.
+- **Feedback FX** — recursive trails for a different flowing look.

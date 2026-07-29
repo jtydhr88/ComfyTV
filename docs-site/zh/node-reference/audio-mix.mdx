@@ -1,0 +1,55 @@
+---
+title: "Audio Mix"
+description: "将最多四条音频轨合为一条,每条都有独立音量与立体声位置 — 一台迷你调音台。"
+sidebarTitle: "Audio Mix"
+translationSourceHash: "f94a8c1168c98bc6"
+---
+
+<Frame caption="Audio Mix · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="Audio Mix" />
+</Frame>
+
+## 本节点的作用
+
+**Audio Mix(音频混合)** 把最多四个 `COMFYTV_AUDIO` 源(A、B、C、D)相加为单条立体声轨。每个通道有独立的 **gain**(增益)与 **pan**(声像),因此可在一个节点里平衡旁白、音乐与音效。至少要接一个源;空输入会被跳过。
+
+输出单个 `COMFYTV_AUDIO` 快照,并带有 ▶ **Run**(由 FFmpeg 完成混合)。
+
+若要与原生 ComfyUI 的 `AUDIO` 互通,请插入 **Bridge** — 见 [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 何时使用
+
+- 把旁白、音乐床与音效合成成品混音。
+- 设定各轨之间的相对电平,并在立体声声场中铺开。
+- 单独处理完 stems(来自 **Audio Stem Split**)后再重新拼合。
+
+## 参数
+
+### pan_law
+声像如何影响立体声声场中的响度:`audacity`(默认)或 `constant_power`。`constant_power` 在源左右移动时保持感知响度更稳定;`audacity` 匹配 Audacity 的惯例。
+
+### dither
+在降低位深时施加的抖动:`none`(默认)、`tpdf` 或 `shaped`。导出到较低位深时加入抖动(`tpdf` 是通用稳妥选择)可避免量化伪影。
+
+### gain_a / gain_b / gain_c / gain_d
+每个源的电平,单位分贝。范围 **-60 到 +12 dB**,默认 **0**(不变)。未接入的通道被忽略。
+
+### pan_a / pan_b / pan_c / pan_d
+每个源的立体声位置。范围 **-1 到 +1**,默认 **0**(居中)。**-1** = 完全左,**+1** = 完全右。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **audio** | `COMFYTV_AUDIO` | 四个源相加为单条立体声轨 |
+
+## 提示
+
+- 注意相加后的电平:多条 0 dB 轨相加可能削波。若混音失真,把个别增益下调几 dB。
+- 只有已接入的输入才计入 — 可只用两三个源而不动其余。
+
+## 相关节点
+
+- **Audio Duck** — 自动让一条轨在另一条下闪避,而非设定固定电平。
+- **Audio Stem Split** — 把混音分离为 stems,可在此重新处理与混合。
+- **Audio Crossfade** — 顺序衔接两段,而非叠层。

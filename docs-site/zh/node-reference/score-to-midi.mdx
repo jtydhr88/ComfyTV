@@ -1,0 +1,80 @@
+---
+title: "Score Performer"
+description: "把写好的乐谱变成有表现力的演奏 —— 摇摆、人味、按乐器的分句 —— 并输出一个 MIDI 文件。"
+sidebarTitle: "Score Performer"
+translationSourceHash: "f5861178e4d3f6c6"
+---
+
+<Frame caption="Score Performer · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="Score Performer" />
+</Frame>
+
+## 这个节点做什么
+
+**Score Performer（演奏器）** 接收一份 MusicXML 乐谱（从 **Score** stage 接入），并对它
+进行 “演奏”：把平直、量化的谱面转换成带摇摆、拟人化时值、诠释性缓动曲线以及针对乐器的演奏
+profile 的定时演奏。可以把它理解为 —— 机械的 MIDI 导入与真人演奏之间的差别。
+
+按 **▶ Run** 在后端进行演奏。节点输出两样东西：一个 `performance` 负载（结构化、带时值的
+演奏，供 **Score Synth** 渲染音频），以及一个指向已渲染标准 MIDI 文件的 `midi_url`，可下载
+或送给其它支持 MIDI 的 stage。
+
+两个输出都是 `COMFYTV_TEXT`。`performance` 是 JSON 负载；`midi_url` 是导出 `.mid` 的
+URL 字符串。
+
+## 什么时候用它
+
+- 你从 **Score** 得到了干净的乐谱，想让它在合成前 “呼吸” 起来。
+- 你需要这首曲子的 `.mid` 文件以便在别处复用。
+- 你想在整份乐谱上一致地施加摇摆/律动。
+
+## 参数
+
+### swing_ratio
+施加多少摇摆，百分比范围 **50**（平直，默认）到 **75**（强 shuffle）。50 时不摇摆；数值越高，
+正拍细分越长、反拍细分越短。
+
+### swing_unit
+摇摆作用在哪个细分上：**eighth**（八分，默认）或 **sixteenth**（十六分）。八分摇摆是经典的
+爵士/shuffle 感；十六分摇摆更细，适合更快的律动。
+
+### humanize
+时值/力度的随机松紧度，从 **0.0**（严丝合缝地量化，默认）到 **1.0**（最松）。小数值
+（0.1–0.3）带来自然、不机械的感觉；高数值是有意做出的散拍。
+
+### easing
+施加到演奏上的诠释性时值曲线。默认 **normal**。可选项来自演奏器的缓动表；`normal` 就是
+平直演奏。
+
+### profile
+乐器演奏 profile，默认 **keyboard**。它按乐器族塑造分句与发音（可选项来自演奏器的 profile
+表）。选与你声部匹配的那个。
+
+### seed
+拟人化的随机种子，**0–99999**（默认 **7**）。相同种子 + 相同设置 = 每次运行都得到同一份
+演奏，因此你可以复现喜欢的一遍。
+
+### score（可选输入）
+要演奏的 MusicXML，类型 `COMFYTV_TEXT` —— 从 **Score** stage 接入。什么都不接就运行会以
+“Score Performer needs a score” 失败。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **performance** | `COMFYTV_TEXT` | 带时值、有表现力的演奏（JSON），供 Score Synth 使用 |
+| **midi_url** | `COMFYTV_TEXT` | 导出的标准 MIDI 文件（`.mid`）的 URL |
+
+## 提示
+
+- 为求真实感，把 `humanize` 保持适度（约 0.15）；只有想要明显松散、现场感时才往上推。
+- 一旦满意某一遍，就锁定 `seed` —— 否则重跑会重新随机拟人时值。
+- `performance` 输出是给 **Score Synth** 用的；`midi_url` 是给导出或支持 MIDI 的 stage 用的。
+
+## 相关节点
+
+- **Score** —— 产出本节点要演奏的 MusicXML。
+- **Score Synth** —— 用 SoundFont 把 `performance` 渲染成音频。
+- **MIDI Editor** —— 在钢琴卷帘里打开 MIDI 文件动手编辑。
+- **Bridge** —— 与原生 ComfyUI 类型互转。见
+  https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md

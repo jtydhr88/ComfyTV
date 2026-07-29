@@ -1,0 +1,60 @@
+# STMap 生成 (STMap Generate)
+
+> 把镜头畸变模型烘焙成 STMap 图像——一张可复用的 UV 位移图，可在 ComfyTV 或任何能读 STMap 的工具中随处应用。
+
+## 这个节点做什么
+
+本节点从镜头畸变模型生成一张 **STMap**（红/绿 UV 坐标图），不触碰任何素材内容。生成的图像逐像素编码「从何处采样」——因此把它作为扭曲应用即可复现模型所描述的精确畸变。由于只烘焙一次，复用很快，且可移植到其他支持 STMap 的工具。
+
+你可以选择性地接入 `video` 输入，仅用于自动匹配输出分辨率：若连接了素材，其宽/高会覆盖 `width`/`height` 字段。它带有 ▶ Run。输出是 `COMFYTV_IMAGE`（不是视频）。要把它交给原生 ComfyUI 节点，请插入 **Bridge**——见[桥接说明](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 何时使用
+
+- 预烘焙一个镜头去畸变/加畸变，以便反复应用同一扭曲而无需重新计算。
+- 导出一张可移植的畸变图，用于另一个支持 STMap 的应用。
+- 往返处理：用一张 STMap 去畸变做清理，用其逆向重新加畸变以匹配底板。
+
+## 参数
+
+### width / height
+输出 STMap 分辨率（像素），各自范围 8 到 8192（默认 1920 × 1080）。若连接了 `video`，其分辨率会覆盖这两项。
+
+### model
+要烘焙的镜头畸变模型。选项：`nuke_k1k2`、`pf_barrel`、`3de_classic`、`3de_radial`、`panotools`、`fisheye_equidistant`、`fisheye_orthographic`、`fisheye_equisolid`、`fisheye_stereographic`。默认 `nuke_k1k2`。
+
+### direction
+`undistort` 或 `distort`。默认 `undistort`。它决定烘焙出的 STMap 向哪个方向扭曲。
+
+### k1 / k2
+径向畸变系数，各自范围 -1.0 到 1.0（默认 0，步长 0.005）。多项式模型的主径向项与高阶项。
+
+### fov
+视场角，单位为度，范围 20 到 180（默认 140）。供鱼眼投影模型使用。
+
+### center_x / center_y
+光心偏移，各自范围 -0.5 到 0.5（默认 0），以画面比例表示。
+
+### squeeze
+变形镜头压缩系数，范围 0.5 到 2.0（默认 1.0）。
+
+### lens_scale
+映射的整体缩放，范围 0.25 到 4.0（默认 1.0）。
+
+### cx_curv / cy_curv / tang_u / tang_v / pt_c
+高级逐模型项。`cx_curv` / `cy_curv` 非对称曲率（-0.5 到 0.5）；`tang_u` / `tang_v` 切向/偏心（-0.5 到 0.5）；`pt_c` PanoTools 三次项（-1.0 到 1.0）。默认均为 0。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **stmap** | `COMFYTV_IMAGE` | 烘焙出的 UV 位移 (STMap) 图像 |
+
+## 提示
+
+- 这些畸变参数与 **Lens Distort** 完全相同——在那里交互式调好，然后在这里把最终效果烘焙成 STMap 以便可重复使用。
+- 接入 `video` 让 STMap 匹配其精确分辨率，而不必手动设置 `width`/`height`。
+- 设置 `direction` 以匹配你所需的扭曲——同一模型的去畸变 STMap 与加畸变 STMap 互为逆向。
+
+## 相关节点
+
+- **Lens Distort** — 直接把畸变应用到素材，而非烘焙成图。

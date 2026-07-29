@@ -1,0 +1,54 @@
+---
+title: "Audio Meter Overlay"
+description: "Burn a live level (VU) meter onto a video that moves with its own audio — great for showing loudness on screen."
+sidebarTitle: "Audio Meter Overlay"
+---
+
+<Frame caption="Audio Meter Overlay · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Audio Meter Overlay" />
+</Frame>
+
+## What this node does
+
+**Audio Meter Overlay** renders an animated audio-level meter into a video, reading the video's own audio track and drawing a moving bar in a corner of the frame. The result is a new video with the meter composited on top — handy for reaction videos, tutorials, or any clip where you want the audio level visible.
+
+It takes a `COMFYTV_VIDEO` (which must have audio) and outputs a `COMFYTV_VIDEO`. It has a ▶ **Run** (FFmpeg renders the overlay).
+
+To feed native ComfyUI `IMAGE`/`VIDEO` in or out, insert a **Bridge** — see [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Show a visible loudness meter on a talking-head or music clip.
+- Add a broadcast-style level indicator to a stream recording.
+- Give viewers a visual cue of audio dynamics.
+
+## Parameters
+
+### meter_w
+Meter width in pixels. Range **80 to 1920**, default **400**.
+
+### meter_h
+Meter height in pixels. Range **8 to 120**, default **20**.
+
+### corner
+Which corner of the frame the meter sits in: `bottom-left` (default), `bottom-right`, `top-left`, or `top-right`.
+
+### margin
+Padding in pixels between the meter and the frame edges. Range **0 to 200**, default **16**.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The input video with the level meter overlaid |
+
+## Tips
+
+- The meter reads the video's embedded audio — make sure the clip actually has an audio track, or there's nothing to display.
+- Size the meter relative to your frame: 400×20 suits 1080p; scale up for 4K.
+- Keep **margin** clear of any lower-thirds or captions so the meter doesn't overlap them.
+
+## Related nodes
+
+- **Audio Reactive** — drive scene parameters from audio energy instead of just displaying a meter.
+- **Audio Beats & Notes** — detect beats/onsets for on-beat visual events.

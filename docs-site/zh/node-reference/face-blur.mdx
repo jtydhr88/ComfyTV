@@ -1,0 +1,62 @@
+---
+title: "Face Blur"
+description: "自动检测片段中的人脸，用模糊、马赛克或方块遮挡。"
+sidebarTitle: "Face Blur"
+translationSourceHash: "564e30c342760990"
+---
+
+<Frame caption="Face Blur · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="Face Blur" />
+</Frame>
+
+## 这个节点是做什么的
+
+**Face Blur（人脸模糊）** 在视频上跑人脸检测器，用选定的遮挡效果盖住每张检测到的脸。点 ▶ 运行后，它检测人脸（周期性重新检测以跟随移动），再对其做模糊、马赛克或加方块，生成一段新视频。无需绘制——检测是自动的。
+
+视频输入/输出都是 `COMFYTV_VIDEO`。通过 `ComfyTV/Bridge` 桥接到 ComfyUI 原生节点——详见 https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md。
+
+## 适用场景
+
+- 发布前对路人打码保护隐私
+- 在评审或参考素材中遮蔽身份
+- 对人脸快速做审查处理，不用 roto
+
+## 参数
+
+### mode
+如何遮挡每张脸。可选：`blur`、`pixelate`、`box`。默认 `blur`。
+
+### shape
+每张脸覆盖的区域形状。可选：`rect`、`ellipse`。默认 `ellipse`。
+
+### strength
+效果强度（模糊量 / 马赛克块大小）。范围 `4`–`64`，步进 `1`，默认 `24`。越高隐藏的细节越多。
+
+### recheck
+每 N 帧重新检测一次人脸。范围 `1`–`120`，默认 `12`。数值越小越贴合快速移动但开销更大；越大越快但快速运动时可能滞后。
+
+### search_scale
+检测器缩放系数。范围 `1.05`–`2.0`，默认 `1.2`。越小扫描越彻底（找到更多/更小的脸）但更慢；越大越快但可能漏脸。
+
+### neighbors
+检测器的最小邻居阈值。范围 `1`–`10`，默认 `4`。越高越排斥弱检测（误报更少，但可能漏掉边缘脸）；越低越宽松。
+
+### min_size
+要检测的最小人脸尺寸（像素）。范围 `8`–`400`，默认 `24`。调高可忽略背景里的微小脸。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | 检测到的人脸被遮挡后的片段 |
+
+## 小贴士
+
+- 若人脸时隐时现，调低 `recheck` 和/或 `search_scale`，或为小脸调低 `min_size`。
+- 把非人脸误检成脸？调高 `neighbors`。
+- 检测只在重检之间跟随运动，所以极快的移动可能短暂露脸——用较低的 `recheck`。
+
+## 相关节点
+
+- **Spot Remover** — 遮盖固定污点/物体而非人脸
+- **Paint Strokes** — 手动遮挡检测器漏掉的区域

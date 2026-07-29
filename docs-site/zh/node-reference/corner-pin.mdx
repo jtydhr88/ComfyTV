@@ -1,0 +1,55 @@
+---
+title: "四角定位 (Corner Pin)"
+description: "通过拖动片段的四个角来扭曲画面——用于屏幕替换、招牌植入和透视贴合。"
+sidebarTitle: "四角定位"
+translationSourceHash: "32838323b1a829fc"
+---
+
+<Frame caption="四角定位 (Corner Pin) · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="四角定位 (Corner Pin)" />
+</Frame>
+
+## 这个节点做什么
+
+四角定位 (Corner Pin) 将 `COMFYTV_VIDEO` 的四个角映射到任意四个目标点，施加透视（单应）扭曲。你直接在节点上拖动四个手柄来设定角点；数值以 TL、TR、BR、BL 顺序存为 `[[x1,y1],[x2,y2],[x3,y3],[x4,y4]]`。它也可用关键帧做动画，或由跟角的 `track` 输入驱动。
+
+它在 **▶ Run** 时运行（渲染扭曲）。输入与输出均为 `COMFYTV_VIDEO`。如果尚未设定四个角且没有关键帧，节点会报错——请先拖动角点。
+
+要把结果交给原生 ComfyUI 节点，请插入 **Bridge**（`ComfyTV/Bridge`）。参见 https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md。
+
+## 何时使用
+
+- 替换镜头中屏幕、手机、显示器或广告牌里的内容。
+- 以正确透视把素材贴到倾斜的表面上。
+- 跟踪运动的平面，并通过 `track` 输入把某层钉在其上。
+
+## 参数
+
+### corners
+四个目标角点，JSON `[[x1,y1],[x2,y2],[x3,y3],[x4,y4]]`，顺序为 TL、TR、BR、BL。通常靠在节点上拖动四个手柄设定，而非手动输入。
+
+### keyframes
+高级项：JSON 数组 `[{t, corners}]`，让四个角点随时间产生动画（用于运动表面）。通常经由节点 UI 编写。
+
+### video（输入，可选）
+要扭曲的 `COMFYTV_VIDEO`。必填。
+
+### track（输入，可选）
+一个携带角点关键帧的 `COMFYTV_TEXT` 轨道（例如来自平面跟踪器）。当其中含有角点数据时会覆盖手动的 `keyframes`。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | 四角定位（透视扭曲）后的片段。 |
+
+## 提示
+
+- 运行前必须放置四个角点（或提供关键帧）——否则节点会停下并提示你拖动角点。
+- 角点顺序固定：左上、右上、右下、左下。交叉的角点会产生折叠/退化的扭曲。
+
+## 相关节点
+
+- **Video Transform** — 无需自由透视时做平移/缩放/旋转/斜切。
+- **UV Remap** — 由 UV 图产生的任意逐像素畸变。
+- **Video Composite** — 把扭曲后的片段叠到背景上。

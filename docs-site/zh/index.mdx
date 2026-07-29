@@ -1,0 +1,38 @@
+---
+title: "ComfyTV"
+description: "把 ComfyUI 变成 TapNow / LibTV 风格的画布应用。每个操作都是一个节点，结果自动向下游流动。"
+mode: "wide"
+---
+
+# ComfyTV
+
+ComfyTV 把 ComfyUI 变成一个**做媒体的画布应用**。每个操作都是独立节点，结果自动向下游流动。把各个阶段串成完整流水线：**生成 → 挑选 → 编辑 → 合成**，覆盖图像、视频、音频、全景和 3D。
+
+<CardGroup cols={2}>
+  <Card title="快速开始" icon="rocket" href="/zh/guides/getting-started">
+    安装 ComfyTV，运行你的第一个图像阶段，了解阶段之间如何衔接。
+  </Card>
+  <Card title="节点参考" icon="cubes" href="/zh/node-reference/image">
+    每个 ComfyTV 节点的独立文档：做什么、何时用、输入输出。
+  </Card>
+  <Card title="生成" icon="wand-magic-sparkles" href="/zh/guides/generate">
+    文本、图像、视频、音频生成器，以及如何接入自定义 workflow。
+  </Card>
+  <Card title="视频与音频" icon="film" href="/zh/guides/video-and-audio">
+    裁剪、缩放、放大、去字幕、抽取音频、合成时间线。
+  </Card>
+</CardGroup>
+
+## ComfyTV 的独特之处
+
+<CardGroup cols={3}>
+  <Card title="逐节点运行" icon="play">
+    大多数阶段有自己的运行按钮。运行单个阶段不会重跑整张图。
+  </Card>
+  <Card title="快照向下游流动" icon="diagram-project">
+    阶段一旦运行，结果保存为快照，供下游阶段直接复用。
+  </Card>
+  <Card title="节点内富交互" icon="sliders">
+    裁剪、旋转、镜像、全景视口、时间线、编辑器都在浏览器里实时运行。
+  </Card>
+</CardGroup>

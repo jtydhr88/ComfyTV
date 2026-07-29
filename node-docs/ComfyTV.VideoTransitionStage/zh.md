@@ -1,0 +1,47 @@
+# 视频转场 (Video Transition)
+
+> 用 ffmpeg xfade 转场连接两段片段——淡化、溶解、滑动、划像及数十种更多样式。
+
+## 这个节点做什么
+
+视频转场 (Video Transition) 用 ffmpeg 的 `xfade` 转场把 **video_a** 交叉淡化进 **video_b**。从大量具名转场中选择（普通 fade、dissolve、方向性 wipe 与 slide、圆形/矩形揭示、radial、pixelize 等），设定转场持续多久，并可选它在片段 A 的何处开始。
+
+它在 **▶ Run** 时运行。`video_a` 与 `video_b` 均为必填的 `COMFYTV_VIDEO` 输入——缺任一个都会报错。输出为单个 `COMFYTV_VIDEO`。
+
+要把结果交给原生 ComfyUI 节点，请插入 **Bridge**（`ComfyTV/Bridge`）。参见 <https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md>。
+
+## 何时使用
+
+- 在两个镜头间做干净的淡化或溶解。
+- 用方向性滑动/划像从一场戏切到另一场。
+- 在片段间加入风格化揭示（圆形开/合、radial、pixelize）。
+
+## 参数
+
+### transition
+xfade 转场样式。选项（来自 `XFADE_TRANSITIONS`）：`fade`、`dissolve`、`fadeblack`、`fadewhite`、`fadegrays`、`fadefast`、`fadeslow`、`wipeleft`、`wiperight`、`wipeup`、`wipedown`、`wipetl`、`wipetr`、`wipebl`、`wipebr`、`slideleft`、`slideright`、`slideup`、`slidedown`、`smoothleft`、`smoothright`、`smoothup`、`smoothdown`、`circlecrop`、`rectcrop`、`circleopen`、`circleclose`、`vertopen`、`vertclose`、`horzopen`、`horzclose`、`diagtl`、`diagtr`、`diagbl`、`diagbr`、`hlslice`、`hrslice`、`vuslice`、`vdslice`、`hlwind`、`hrwind`、`vuwind`、`vdwind`、`coverleft`、`coverright`、`coverup`、`coverdown`、`revealleft`、`revealright`、`revealup`、`revealdown`、`squeezeh`、`squeezev`、`zoomin`、`distance`、`pixelize`、`radial`、`hblur`。默认 `fade`。
+
+### duration
+转场时长，单位秒，`0.1`–`5.0`，步长 `0.05`，默认 `1.0`。
+
+### offset
+转场在片段 A 中开始的秒数，`0.0`–`3600.0`，默认 `0.0`（自动——转场收尾于片段 A，因此它在 A 结束前 `duration` 处开始）。
+
+### video_a / video_b（输入）
+切出（`video_a`）与切入（`video_b`）的 `COMFYTV_VIDEO` 片段。两者均必填。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | 由所选转场连接的两段片段。 |
+
+## 提示
+
+- `offset` 保持 `0` 即为常规行为——转场自动放在片段 A 的尾部。仅当需要转场在 A 内更早开始时才设置它。
+- 需要灰度图案（渐变）划像或你自己的自定义形状时，请改用 **Luma Wipe**。
+
+## 相关节点
+
+- **Luma Wipe** — 图案/渐变驱动的划像与自定义图像转场。
+- **Sequence** — 在一个节点里用每段转场组装多段片段。

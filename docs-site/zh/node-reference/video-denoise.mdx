@@ -1,0 +1,47 @@
+---
+title: "视频降噪 (Video Denoise)"
+description: "用多种降噪算法清除整段素材的颗粒、传感器噪点和色带。"
+sidebarTitle: "视频降噪"
+translationSourceHash: "807ca8e4808cfffb"
+---
+
+<Frame caption="视频降噪 (Video Denoise) · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="视频降噪 (Video Denoise)" />
+</Frame>
+
+## 这个节点是做什么的
+
+**Video Denoise** 对 `COMFYTV_VIDEO` 运行五种 ffmpeg 降噪/清理滤镜之一。单一的 **strength** 旋钮会在内部映射为各滤镜的合理设置，因此你只需选方法、推一根滑块。点 **▶ 运行** 处理并写出新的视频快照；原始素材不变。
+
+输入输出都是 `COMFYTV_VIDEO`。要与原生 ComfyUI 节点互通，请插入 **Bridge** — 见[桥接说明](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 适用场景
+
+- 清除弱光或高增益素材的 ISO/传感器颗粒。
+- 消除天空或柔和背景的渐变色带（用 `deband` 或 `gradfun`）。
+- 在锐化、放大或重度调色前预清理，避免放大噪点。
+
+## 参数说明
+
+### method（方法）
+使用哪种降噪器。选项：`atadenoise`（自适应时域，默认）、`nlmeans`（非局部均值，效果强但慢）、`fftdnoiz`（频域）、`deband`（去色带）、`gradfun`（平滑渐变色带）。默认 `atadenoise`。
+
+### strength（强度）
+归一化强度，`0.0`–`1.0`，默认 `0.3`。必须大于 0。此单值会按方法重新映射为底层滤镜参数（时域阈值、非局部 sigma、FFT sigma、deband 阈值或 gradfun 强度）。建议从低（约 `0.3`）起步，逐步提高到噪点消失但细节不糊。
+
+## 输出说明
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | 降噪后的新项目快照 |
+
+## 使用提示
+
+- `nlmeans` 效果最干净但最慢；`atadenoise` 是快速好用的默认选择。
+- 专门处理色带（天空、渐变）请用 `deband` 或 `gradfun`，而非通用降噪器。
+- **strength** 过高会糊掉细节——先降噪再锐化，而非反过来。
+
+## 相关节点
+
+- **Blur / Sharpen**——清理后柔化或重新锐化。
+- **Frame Interpolate**——清理后再变速，避免噪点被抹进插补帧。

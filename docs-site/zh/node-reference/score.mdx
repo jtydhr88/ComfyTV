@@ -1,0 +1,61 @@
+---
+title: "Score"
+description: "把 MusicXML 变成可刻谱、可试听的乐谱，并送入音乐链的下游。"
+sidebarTitle: "Score"
+translationSourceHash: "4648c2aa9e2b3e04"
+---
+
+<Frame caption="Score · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="Score" />
+</Frame>
+
+## 这个节点做什么
+
+**Score（乐谱）** 是 ComfyTV 符号音乐车道的入口。你提供一份 MusicXML —— 可以粘贴进
+节点、在内置的 XML 编辑器里输入，或从文本源接入（例如一个 LLM Text stage）—— 节点会解析、
+校验并重新输出一份干净的乐谱。卡片用 OSMD 刻谱引擎实时渲染五线谱（可缩放、可切换原始 XML
+编辑器），因此你看到的是真正的谱面，而不仅仅是文本。
+
+按 **▶ Run** 在后端解析乐谱。解析很快；运行会校验 MusicXML，计算摘要（拍号与音符总数，
+显示在进度行里），并把原始 MusicXML 通过 `score` 输出向下游传递。如果 XML 嵌在更大的一段
+文本里，节点会自动抽取 `<score-partwise>` … `</score-partwise>` 部分。
+
+输出是携带 MusicXML 的 `COMFYTV_TEXT` 负载。把它接给 **Score Performer**（加入时值/律动
+并得到 MIDI），再接 **Score Synth**（渲染成音频）。
+
+## 什么时候用它
+
+- 你已有（或让 LLM 生成了）MusicXML，想把它刻成谱并以此驱动后续音乐链。
+- 你希望为一首曲子提供唯一、干净的真相源，供多个下游 stage（演奏、合成）消费。
+- 你想手改 MusicXML，并在确定前先预览谱面。
+
+## 参数
+
+### text（可选输入）
+一个可选的、携带 MusicXML 的文本输入。连接后它优先于粘贴的 `musicxml` 字段，卡上的 XML
+编辑器会被禁用 —— 乐谱来自上游（例如一个 LLM Text stage）。类型：`COMFYTV_TEXT`。
+
+### musicxml（卡上 XML 编辑器）
+MusicXML 文档本身，在节点可折叠的 XML 文本区里编辑。当没有接入 `text` 输入时使用。在此
+粘贴完整的 `<score-partwise>` 文档。如果输入和此字段都为空，运行会以 “Score needs
+MusicXML” 的提示失败。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **score** | `COMFYTV_TEXT` | 校验后的 MusicXML，可供 Score Performer 或任意音乐 stage 使用 |
+
+## 提示
+
+- 卡片里的刻谱是预览；真正把乐谱送往下游的是运行本身。不按 ▶ Run 就不会有数据流动。
+- 粘贴带有多余外围文本的文档没问题 —— 节点会裁掉 `<score-partwise>` 元素之外的内容。
+- 进度行会报告识别到的拍号与音符总数；把它当作一个快速检查，确认 XML 按你预期解析了。
+
+## 相关节点
+
+- **Score Editor** —— 用钢琴卷帘画谱，而不必手写 MusicXML。
+- **Score Performer** —— 加入摇摆、拟人化与乐器 profile，并得到 MIDI 文件。
+- **Score Synth** —— 用 SoundFont 把演奏渲染成音频。
+- **Bridge** —— 与原生 ComfyUI 类型互转。见
+  https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md

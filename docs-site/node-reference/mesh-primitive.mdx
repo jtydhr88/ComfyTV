@@ -1,0 +1,52 @@
+---
+title: "Mesh Primitive"
+description: "Generate a clean base mesh — cube, sphere, cylinder, cone, plane, or torus — to start a 3D build or feed the rest of the geometry workshop."
+sidebarTitle: "Mesh Primitive"
+---
+
+<Frame caption="Mesh Primitive · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Mesh Primitive" />
+</Frame>
+
+## What this node does
+
+Mesh Primitive is the starting block of ComfyTV's 3D geometry workshop. Pick a shape and it builds a fresh, well-formed mesh from a three.js geometry recipe (dimensions, radii, segment counts, arc/sweep angles). The result is a `COMFYTV_MODEL` (a GLB), ready to wire into **Mesh Ops**, **Mesh Boolean**, **Mesh Bake Maps**, or **Line Art**.
+
+The card shows a live 3D preview of the shape you selected. You never touch the raw recipe — the node body fills it in for the chosen `kind`, and the preview writes a snapshot that becomes the `image` output. This is a fast, backend-generated stage (it runs the vendored mesh3d builder), not a GPU model pass.
+
+Outputs are ComfyTV snapshots, not native tensors — insert a **Bridge** to feed native ComfyUI nodes ([bridges docs](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)).
+
+## When to use it
+
+- Start any 3D build from a primitive instead of loading a model from disk.
+- Make a boolean tool — e.g. a cylinder to drill a hole, a cube to cut a slot — to wire into **Mesh Boolean**.
+- Create a quick base shape (sphere, torus) to test **Line Art** framing or a bake before you have a final asset.
+
+## Parameters
+
+### kind
+The primitive to build. One of `cube`, `sphere`, `cylinder`, `cone`, `plane`, `torus` (default `cube`). Selecting a kind reshapes the recipe and the live preview.
+
+### recipe
+Internal (hidden). The three.js `geometry.parameters` JSON for the selected `kind` — width, radiusTop, phiLength, arc, and so on. The node body fills this in from the card; you do not edit it by hand. Downstream ops generate the actual mesh from this recipe.
+
+### captured_image
+Internal (hidden). The `/view?` URL of the 3D preview snapshot, written by the preview in the node body. It becomes the `image` output so you can see the mesh downstream.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **model** | `COMFYTV_MODEL` | The generated base mesh (GLB) |
+| **image** | `COMFYTV_IMAGE` | Snapshot of the 3D preview |
+
+## Tips
+
+- The mesh is generated fresh and clean, so it welds and unwraps predictably in **Mesh Ops** — a good habit is primitive → op, rather than importing messy geometry.
+- Higher segment counts in the recipe make smoother spheres/cylinders but more faces; decimate afterward in **Mesh Ops** if you need an exact face budget.
+
+## Related nodes
+
+- **Mesh Ops** — decimate, remesh, weld, subdivide, unwrap, smooth, or export the primitive.
+- **Mesh Boolean** — combine two meshes with union / difference / intersect.
+- **Line Art** — render the mesh to a line-art image.

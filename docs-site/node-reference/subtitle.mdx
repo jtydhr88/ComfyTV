@@ -1,0 +1,64 @@
+---
+title: "Subtitles"
+description: "Burn timed caption cues from SRT or WebVTT text onto a video — open captions rendered directly into the picture."
+sidebarTitle: "Subtitles"
+---
+
+<Frame caption="Subtitles · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Subtitles" />
+</Frame>
+
+## What this node does
+
+**Subtitles** takes SRT/WebVTT cue text and burns it, cue by cue with the right timing, onto a `COMFYTV_VIDEO`. You paste subtitle text (or wire a `COMFYTV_TEXT` input), style the font, then press **▶ Run**; it renders with an ffmpeg pass on the server and returns a new `COMFYTV_VIDEO`.
+
+You can supply the cues two ways: paste into the **subs** text box, or connect a **subs_text** (`COMFYTV_TEXT`) input — for example the output of **Subtitles · Speech-to-Text**. If both are present, the wired **subs_text** wins. The node needs a **video** and non-empty cue text, or Run errors.
+
+## When to use it
+
+- Add open captions (baked-in subtitles) to a clip for social platforms.
+- Turn a transcript from **Subtitles · Speech-to-Text** into on-screen captions in one wire.
+- Localize a clip by pasting a translated SRT.
+
+## Parameters
+
+### subs
+Multiline SRT or WebVTT cue text, pasted directly. Used if no **subs_text** input is wired.
+
+### font
+Dropdown of server fonts (from `list_fonts()`, falls back to `default`). Default is the first installed font.
+
+### size
+Caption font size in pixels. Range 8–200, default 36.
+
+### color
+Caption fill color, hex string. Default `#FFFFFF`.
+
+### stroke
+Outline thickness in pixels, 0–20, default 2. A small stroke keeps captions readable.
+
+### anchor
+Caption placement: `bottom` or `top`. Default `bottom`.
+
+## Inputs and outputs
+
+| Slot | Type | Meaning |
+|---|---|---|
+| **video** (in) | `COMFYTV_VIDEO` | Clip to caption (required) |
+| **subs_text** (in) | `COMFYTV_TEXT` | Optional SRT/VTT text; overrides the pasted **subs** box |
+| **video** (out) | `COMFYTV_VIDEO` | The clip with captions burned in |
+
+## Tips
+
+- Wire **Subtitles · Speech-to-Text** → **subs_text** to go from audio to on-screen captions without copy-paste.
+- The wired **subs_text** takes priority over the pasted **subs** box; clear the box if you meant to use the wire.
+- Cue timing comes from the SRT/VTT itself — this node does not re-time cues, it renders them as given.
+
+## Types and bridges
+
+`COMFYTV_VIDEO` and `COMFYTV_TEXT` are ComfyTV project snapshots, not native ComfyUI types. To interoperate with native ComfyUI nodes, insert a **Bridge** (`ComfyTV/Bridge`). See [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## Related nodes
+
+- **Subtitles · Speech-to-Text** — generate the SRT/VTT cues from speech to feed **subs_text**.
+- **Title** — a single styled title card instead of many timed cues.

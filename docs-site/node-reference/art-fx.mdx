@@ -1,0 +1,75 @@
+---
+title: "Art FX"
+description: "Stylizes footage into a cartoon, charcoal, emboss, or halftone look, in one ▶ Run."
+sidebarTitle: "Art FX"
+---
+
+<Frame caption="Art FX · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Art FX" />
+</Frame>
+
+## What this node does
+
+**Art FX** runs a GPU (torch) art-style filter over a whole `COMFYTV_VIDEO` clip and writes a new snapshot on **▶ Run**; the source clip is untouched. Pick one of four looks with **mode** — each look reads its own subset of the parameters below.
+
+In and out are both `COMFYTV_VIDEO`. To feed native ComfyUI nodes, insert a **Bridge** — see the [bridge guide](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Turn live-action into a flat, posterized **cartoon** with inked edges.
+- Give a clip a hand-drawn **charcoal** or **emboss** treatment.
+- Apply a print-style **halftone** dot screen for a comic or retro poster feel.
+
+## Parameters
+
+### mode
+The look. Options: `cartoon`, `charcoal`, `emboss`, `halftone`. Default `cartoon`.
+
+### threshold
+Edge / line sensitivity, `0.01`–`1.0` (step `0.005`), default `0.12`. Lower catches finer, more numerous edges; higher keeps only strong contours. Used by the edge-driven looks (cartoon/charcoal).
+
+### levels
+Color posterization steps, `2`–`32`, default `8`. Fewer levels = flatter, more graphic banding (cartoon).
+
+### diff_space
+Edge-detection spacing, `1`–`4`, default `1`. Larger values sample edges over a wider pixel gap for thicker/coarser lines.
+
+### edge_scale
+Edge line strength / thickness multiplier, `0.1`–`8.0` (step `0.05`), default `1.5`. Raise for bolder outlines.
+
+### scatter
+Stroke scatter / jitter, `1`–`4`, default `1`. Higher adds a rougher, less uniform stroke (charcoal-style).
+
+### color_mix
+How much of the original color bleeds back into the stylized result, `0.0`–`1.0`, default `0.0`. At `0` the look is fully stylized; raise toward `1` to blend the source color back in.
+
+### invert
+Flips the light/dark polarity of the line or emboss result. Default off.
+
+### azimuth / elevation
+Emboss light direction. **azimuth** `0`–`360°` (step `1`, default `135`) is the light angle around the frame; **elevation** `0`–`90°` (step `1`, default `30`) is its height. Used by the **emboss** look.
+
+### emboss_width
+Emboss relief width in pixels, `1.0`–`40.0` (step `0.5`), default `10.0`. Wider = a deeper, more sculpted relief.
+
+### dot_radius
+Halftone dot radius in pixels, `1.0`–`10.0` (step `0.5`), default `4.0`. Larger dots = coarser screen.
+
+### angle_c / angle_m / angle_y
+Halftone screen angles per channel, each `0`–`360°` (step `1`). Defaults `15` (cyan), `45` (magenta), `0` (yellow). Offset them to avoid moiré and get a classic CMY rosette.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The stylized clip as a new project snapshot |
+
+## Tips
+
+- Many parameters only matter for their own look: **emboss_width**/**azimuth**/**elevation** are emboss-only; **dot_radius**/**angle_c/m/y** are halftone-only; **levels** is mainly cartoon. Changing them in the wrong mode does nothing.
+- Nudge **color_mix** up a little if a stylized clip feels too monochrome.
+
+## Related nodes
+
+- **Glitch FX** — digital datamosh damage instead of a hand-drawn look.
+- **Color Grade** — grade the result afterward for mood.

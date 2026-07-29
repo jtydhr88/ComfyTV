@@ -1,0 +1,62 @@
+# Audio Stereo（音频立体声）
+
+> 重塑立体声声场——加宽、收窄、交叉馈送、Haas 延迟、平衡、并为单声道，或交换声道。
+
+## 这个节点是做什么的
+
+**音频立体声 (Audio Stereo)** 对音轨施加七种立体声声场操作之一，使用对应的 FFmpeg 滤镜（`stereowiden`、`extrastereo`、`crossfeed`、`haas`、`stereotools`、`pan`）。你选择一个**模式 (mode)**，只调节属于该模式的参数。
+
+输入为 `COMFYTV_AUDIO` 快照（也可接 `COMFYTV_VIDEO`，会取其音轨），输出处理后的 `COMFYTV_AUDIO` 以及一个 `fx_spec`。它带有 ▶ **运行**（由 FFmpeg 完成）。若未接源音频，只发出 `fx_spec` 以便串联。
+
+要与 ComfyUI 原生 `AUDIO` 互通，请插入 **Bridge**——见 [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 适用场景
+
+- 加宽平淡的立体声混音，让它填满音箱。
+- 用交叉馈送驯服过宽的素材，适合舒适的耳机聆听。
+- 并为单声道以检查相位，或交换左右声道来修正反接的录音。
+
+## 参数说明
+
+### mode
+应用哪种操作。可选：`widen`（默认）、`extrastereo`、`crossfeed`、`haas`、`balance`、`mono`、`swap`。`mono` 与 `swap` 无额外参数。
+
+### Widen 加宽（`sw_*`）
+- **sw_delay** —— 延迟（ms），**1–100**（默认 **20**）。
+- **sw_feedback** —— 反馈量，**0.0–0.9**（默认 **0.3**）。
+- **sw_crossfeed** —— 交叉馈送量，**0.0–0.8**（默认 **0.3**）。
+- **sw_drymix** —— 干信号混合，**0.0–1.0**（默认 **0.8**）。
+
+### Extra Stereo 加强立体声
+- **es_m** —— 立体声扩展系数，**-10.0 到 10.0**（默认 **2.5**）。大于 1 加宽；小于 0 反相。
+
+### Crossfeed 交叉馈送
+- **cf_strength** —— 交叉馈送强度，**0.0–1.0**（默认 **0.2**）。
+- **cf_range** —— 声场范围，**0.0–1.0**（默认 **0.5**）。
+
+### Haas
+- **haas_side_gain** —— 侧声道增益，**0.06–12.0**（默认 **1.0**）。
+- **haas_left_delay** —— 左声道延迟（ms），**0.0–40.0**（默认 **2.05**）。
+- **haas_right_delay** —— 右声道延迟（ms），**0.0–40.0**（默认 **2.12**）。
+
+### Balance 平衡
+- **balance** —— 左右平衡，**-1.0 到 1.0**（默认 **0.0**），送入 `stereotools` 的 `balance_out`。
+
+## 输出说明
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **audio** | `COMFYTV_AUDIO` | 处理后的音频快照 |
+| **fx_spec** | `COMFYTV_FXSPEC` | 该效果的 spec，可串入 FX Chain |
+
+## 小贴士
+
+- 只有所选 **mode** 对应的参数才起作用——其余不生效。
+- 过大的 `extrastereo` 值可能造成单声道兼容问题；提交前先用 `mono` 模式检查。
+- `swap` 与 `mono` 是纯声道运算、无可调旋钮——即时修正。
+
+## 相关节点
+
+- **Audio Modulation** —— 合唱/镶边也能增加感知宽度。
+- **Audio Analyze** —— 重塑声场后检查响度/电平。
+- **FX Chain** —— 把多个 `fx_spec` 步骤（含本节点）一趟渲染完成。

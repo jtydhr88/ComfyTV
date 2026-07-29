@@ -1,0 +1,44 @@
+# Selective Color
+
+> Photoshop-style Selective Color — adjust one color family at a time without a mask.
+
+## What this node does
+
+**Selective Color** lets you tweak nine fixed color families independently — reds, yellows, greens, cyans, blues, magentas, plus whites, neutrals, and blacks. It's the direct equivalent of Photoshop's Selective Color adjustment: pick a family, push its value, and only pixels in that family shift.
+
+It takes `COMFYTV_VIDEO` in and out and renders through ffmpeg's `selectivecolor` filter, so it has a **▶ Run** with a live preview on the card. Only families you actually move are sent to the filter; with all nine at zero the clip passes through unchanged.
+
+To send the result into native ComfyUI nodes, add a **Bridge** (see the [Bridge guide](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)).
+
+## When to use it
+
+- Deepen a blue sky without touching skin tones
+- Warm up neutrals and blacks for a filmic base
+- Pull green out of shadows or foliage
+- Any "change just this color" grade that would otherwise need a mask
+
+## Parameters
+
+### sc_method
+Correction method, default `absolute`. Options: `absolute`, `relative`. This is passed to the filter as `correction_method`. `relative` scales adjustments by the existing amount of color present (gentler); `absolute` applies a fixed shift.
+
+### sc_reds / sc_yellows / sc_greens / sc_cyans / sc_blues / sc_magentas / sc_whites / sc_neutrals / sc_blacks
+One value per color family (each default 0.0, range −1.0…1.0). Positive and negative values push that family's color balance in opposite directions. Any family left at 0.0 is skipped, so untouched colors stay exactly as they were.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The selectively-graded clip snapshot |
+
+## Tips
+
+- Nothing happens on Run if every family is still at 0.0 — move at least one.
+- Try `relative` first for a subtle, self-limiting adjustment; switch to `absolute` when you need a stronger, uniform push.
+- `whites`, `neutrals`, and `blacks` are the tonal families — use them to tone shadows/midtones/highlights without affecting hue-based ranges.
+
+## Related nodes
+
+- **Hue Correct** — curve-based hue targeting when nine fixed families aren't precise enough
+- **Video Color** — global hue/saturation and three-way wheels
+- **Video Curves** — per-channel tone curves

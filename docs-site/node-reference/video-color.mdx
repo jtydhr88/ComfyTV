@@ -1,0 +1,66 @@
+---
+title: "Video Color"
+description: "A full primary color-corrector for clips — exposure, white balance, hue/sat, levels and three-way color wheels in one node."
+sidebarTitle: "Video Color"
+---
+
+<Frame caption="Video Color · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Video Color" />
+</Frame>
+
+## What this node does
+
+**Video Color** is your everyday grading panel for a video clip. It bundles the most common primary corrections — brightness/exposure, color temperature, hue and saturation, black/white levels, and shadow/midtone/highlight color wheels — into a single card of sliders.
+
+It works on `COMFYTV_VIDEO` in and out, and renders with ffmpeg color filters (`exposure`, `colortemperature`, `huesaturation`, `vibrance`, `colorlevels`, `colorbalance`). Because it re-encodes frames, it has a **▶ Run**; the card shows a live clip preview so you can dial values in before committing. Only the controls you actually move are baked into the render — leaving everything neutral passes the clip straight through.
+
+To send the result into native ComfyUI nodes, insert a **Bridge** (see the [Bridge guide](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)).
+
+## When to use it
+
+- Fix a flat, dark, or wrongly-white-balanced generation in one pass
+- Warm or cool a shot to match the rest of a sequence
+- Punch up (or calm down) saturation and vibrance
+- Split-tone with the three-way wheels — teal shadows, warm highlights, etc.
+
+## Parameters
+
+### exposure / black
+`exposure` (default 0.0, range −3.0…3.0) brightens or darkens the whole image in stops. `black` (default 0.0, range −0.1…0.1) shifts the black level. Together they map to ffmpeg's `exposure` filter. Start with exposure and only nudge black if the shadows need lifting or crushing.
+
+### temperature / temp_mix
+`temperature` (default 6500 K, range 1000…40000) sets a target white-balance color temperature; lower is warmer, higher is cooler. `temp_mix` (default 1.0, range 0.0…1.0) controls how strongly the shift is applied. The temperature filter is only added when `temperature` differs from the neutral 6500 K.
+
+### hue / saturation
+`hue` (default 0.0, range −180…180 degrees) rotates all colors around the wheel. `saturation` (default 0.0, range −1.0…1.0) makes colors more or less vivid. These drive the `huesaturation` filter.
+
+### vibrance
+`vibrance` (default 0.0, range −2.0…2.0) boosts weaker colors more than already-saturated ones, protecting skin tones better than a flat saturation lift.
+
+### blackpoint / whitepoint
+`blackpoint` (default 0.0, range −0.5…0.5) and `whitepoint` (default 1.0, range 0.5…2.0) set input levels per RGB channel, like the black/white points in a Levels tool. Raising blackpoint deepens shadows; lowering whitepoint (or pushing it above 1.0) stretches the highlights. Applied via `colorlevels`.
+
+### shadows_r / shadows_g / shadows_b, midtones_r/g/b, highlights_r/g/b
+Nine values (each default 0.0, range −1.0…1.0) forming a classic three-way color-wheel grade. Positive R/G/B pushes that tonal zone toward red/green/blue, negative pushes toward cyan/magenta/yellow. These feed the `colorbalance` filter.
+
+### preserve_lightness
+Boolean (default on). When enabled (`pl=1`), the color-wheel balancing keeps overall lightness steady so tinting the shadows/highlights doesn't also change exposure.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The graded clip snapshot for downstream stages |
+
+## Tips
+
+- If nothing changes on Run, check that at least one control is off its neutral value — an all-neutral node passes the clip through untouched.
+- Use `vibrance` before pushing `saturation` hard; it looks more natural on faces.
+- `whitepoint` above 1.0 stretches highlights (adds output headroom); values at or below 1.0 just remap input levels.
+
+## Related nodes
+
+- **Video Curves** — precise per-channel tone shaping when sliders aren't enough
+- **CDL Grade** — slope/offset/power grade in the ASC-CDL convention
+- **Video LUT** — apply a finished `.cube` look on top of a primary grade
+- **Auto White Balance** — one-click neutral instead of manual temperature

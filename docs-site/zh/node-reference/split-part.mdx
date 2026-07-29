@@ -1,0 +1,66 @@
+---
+title: "部件分割 (Split Parts)"
+description: "把一张图分割成一个个独立的部件抠图——点选或框选你要的部分（表带、扣具、logo），或用文字命名——每个部件单独作为一张图返回。"
+sidebarTitle: "部件分割"
+translationSourceHash: "42f411da0cdc7479"
+---
+
+<Frame caption="部件分割 (Split Parts) · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="部件分割 (Split Parts)" />
+</Frame>
+
+## 这个节点是做什么的
+
+**Split Parts** 运行一个分割 workflow（底层是 SAM 类模型），把图片切成一个个部件。你可以用两种方式告诉它要分离什么：
+
+- **在卡片上**点选你想要的部件（正/负点提示），或围绕它们画框。这些提示会以 JSON 存进 `parts_data`。
+- **用文字**（配文本驱动的 workflow），在 `main_prompt` 里写一个概念，例如 `strap`、`buckle`、`logo`。
+
+每一组点或每个框都会成为一次独立的分割调用，得到的各个部件图会合并成一个带编号的批次。这是一个 **▶ 运行**阶段：它把选定的 `workflow` 派发给 Runner（本地 ComfyUI 或远端服务器），需要 GPU 处理，因此**并非即时**。运行成功后，各部件会以带编号的网格显示在节点上；点击某个缩略图即把 `selected_index` 设为它，作为单图输出。
+
+输出是 ComfyTV 快照，而非原生张量——要接原生 ComfyUI 节点需插入 **Bridge**（[Bridge 文档](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)）。
+
+## 适用场景
+
+- 把产品照拆成部件（扣具、表带、鞋底），分别编辑或重新贴图。
+- 从服装上分离出 logo 或徽标，用于清理或替换。
+- 一次处理就从一帧里抽出多个命名对象，之后在下游挑你要的那个。
+
+## 参数
+
+### workflow
+要运行哪个分割 workflow（下拉框，选项来自 `split-part` workflow 集，带默认值）。文本提示驱动的 workflow 用 `main_prompt`；点/框驱动的 workflow 用你在卡片上画的内容。
+
+### main_prompt
+用文本 workflow 时要分割的概念——例如 `strap`、`buckle`、`logo`。如果你既没画点/框、也没写提示，阶段会报错，要求你至少做其中一件。
+
+### image
+可选的 `COMFYTV_IMAGE` 输入——要分割的源图。把你想拆部件的图片接到这里。
+
+### parts_data
+内部（隐藏）。你在卡片上画的点组和框的 JSON，坐标是源图像素坐标。你无需手动编辑，由卡片 UI 写入。
+
+### selected_index
+内部（隐藏），默认 `1`，从 1 起计。批次里的哪个部件作为单图输出。通过点击节点输出网格中的缩略图来设置。
+
+### custom_params
+内部（隐藏）。本节点任何用户自定义参数附件的 JSON。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **images** | `COMFYTV_IMAGES` | 所有分割出的部件图，编号 `#1`、`#2`…… |
+| **image** | `COMFYTV_IMAGE` | 由 `selected_index` 选中的单个部件 |
+
+## 使用技巧
+
+- 多组点 / 多个框各自作为独立分割运行，因此一次 Run 就能抽出多个部件；返回时会合并并重新编号。
+- 正点与负点很重要：负点告诉模型要排除什么，有助于把一个部件从相邻部件中干净地切开。
+- 若分割运行了却什么都没返回，阶段会报告空结果——换点/框，或在 workflow 参数里调低阈值再试。
+
+## 相关节点
+
+- **Mask Cleanup（蒙版清理）** — 合成前整理部件抠图的 alpha。
+- **Image Picker（图片选择器）** — 下游从批次里挑一张图的另一种方式。
+- **Cutout（抠像）** — 只要一个前景（主体 vs 背景），而非逐部件切分时使用。

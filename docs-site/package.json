@@ -1,0 +1,14 @@
+{
+  "name": "comfytv-docs",
+  "private": true,
+  "description": "ComfyTV documentation site (Mintlify).",
+  "scripts": {
+    "dev": "npx mint dev",
+    "sync": "node scripts/sync-content.mjs",
+    "sync:dry-run": "node scripts/sync-content.mjs --dry-run",
+    "check": "npx mint broken-links"
+  },
+  "dependencies": {
+    "mint": "^4.2.700"
+  }
+}

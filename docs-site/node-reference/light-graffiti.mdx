@@ -1,0 +1,51 @@
+---
+title: "Light Graffiti"
+description: "Paints with light — bright pixels leave glowing trails across the clip, in one ▶ Run."
+sidebarTitle: "Light Graffiti"
+---
+
+<Frame caption="Light Graffiti · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Light Graffiti" />
+</Frame>
+
+## What this node does
+
+**Light Graffiti** accumulates the brightest parts of a `COMFYTV_VIDEO` over time, so moving light sources (sparklers, phone screens, headlights) smear into persistent glowing streaks, like a long-exposure light-painting photograph. It writes a new snapshot on **▶ Run**.
+
+In and out are both `COMFYTV_VIDEO`. To feed native ComfyUI nodes, insert a **Bridge** — see the [bridge guide](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Turn a sparkler, flashlight, or LED wand into drawn strokes of light.
+- Build up neon-trail visuals from moving highlights in a night shot.
+- Emulate a long-exposure light-painting effect from ordinary video.
+
+## Parameters
+
+### threshold
+Per-channel brightness above which a pixel counts as "light," `0.5`–`1.0` (step `0.005`), default `0.9`. Lower catches dimmer highlights; higher keeps only the brightest points.
+
+### sum_threshold
+Combined R+G+B brightness gate, `0.0`–`3.0` (step `0.05`), default `2.2`. A second, total-brightness test so only genuinely bright (not just one hot channel) pixels paint.
+
+### decay
+How fast the accumulated trail fades over time, `0.0`–`1.0` (step `0.005`), default `0.0`. At `0` trails persist for the whole clip; raise it to make streaks fade behind the moving light.
+
+### gain
+Brightness boost applied to the accumulated trails, `0.1`–`4.0` (step `0.05`), default `1.0`. Higher makes the light-painting glow more intense.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The light-painted clip as a new project snapshot |
+
+## Tips
+
+- If nothing is trailing, lower **threshold** and/or **sum_threshold** so more pixels qualify as light.
+- Keep **decay** at `0` for permanent strokes; add a little to let older trails dim behind the source.
+
+## Related nodes
+
+- **Feedback FX** — recursive echo/vertigo trails driven by feedback mixing.
+- **Strobe** — punctuate the light with interval flashes.

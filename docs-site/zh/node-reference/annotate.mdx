@@ -1,0 +1,68 @@
+---
+title: "Annotate"
+description: "在画面上画方框和网格、填充或镜像边框、或滚动画面——烧录进视频。"
+sidebarTitle: "Annotate"
+translationSourceHash: "b50ac86acdb6bd3d"
+---
+
+<Frame caption="Annotate · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="Annotate" />
+</Frame>
+
+## 这个节点是做什么的
+
+**Annotate（标注）** 用 ffmpeg 的绘制/边框/滚动滤镜把选定图形叠加到片段上。选一个 **mode（模式）** 及其参数；点 ▶ 运行后把结果烧录进一段新视频。这是单滤镜处理，不是绘图面板——你设数值型的位置/尺寸，而非在画面上点击。
+
+视频输入/输出都是 `COMFYTV_VIDEO`。通过 `ComfyTV/Bridge` 桥接到 ComfyUI 原生节点——详见 https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md。
+
+## 适用场景
+
+- 用彩色方框圈出某区域，做教程或评审
+- 叠一个参考网格（三分法、安全框）
+- 裁切后填充或镜像黑边，或滚动画面内容
+
+## 参数
+
+### mode
+画哪种叠加。可选：`box`、`grid`、`fillborders`、`scroll`。默认 `box`。其余参数依模式而显示。
+
+### x / y（box 模式）
+方框左上角，占画面尺寸的比例，`0`–`1`，默认 `0.25`。仅 `box` 模式使用。
+
+### w / h（box 与 grid）
+方框尺寸（box 模式）或网格间距（grid 模式），占画面尺寸的比例，`0`–`1`，默认 `0.5`。
+
+### color（box 与 grid）
+线条颜色。十六进制字符串，默认 `#4ADE80`。用卡片上的色块设定。
+
+### thickness（box 与 grid）
+线条粗细（像素），`1`–`40`，默认 `3`。
+
+### opacity（box 与 grid）
+线条不透明度，`0`–`1`，默认 `1`。
+
+### border_mode（fillborders 模式）
+边框像素如何填充。可选：`smear`、`mirror`、`fixed`、`reflect`、`wrap`、`fade`。默认 `mirror`。仅 `fillborders` 模式使用。
+
+### border_px（fillborders 模式）
+四边各填充的边框宽度（像素），`0`–`512`，默认 `32`。会被限制到最多画面一半。为零会报错。
+
+### scroll_h / scroll_v（scroll 模式）
+水平和垂直滚动速度，`-1`–`1`，默认 `0`。仅 `scroll` 模式使用；两者都为零会报错。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | 烧录进标注后的片段 |
+
+## 小贴士
+
+- `box`/`grid` 共用 color、thickness、opacity；`fillborders` 用 border_mode + border_px；`scroll` 用 scroll_h/scroll_v——卡片只显示当前模式的控件。
+- 叠加是永久烧录的；若之后可能需要干净画面，请留一份未标注的版本。
+- `fillborders` 是裁切留下黑边后的天然补救。
+
+## 相关节点
+
+- **Crop** — 去掉边缘（再用 fillborders 填充留白）
+- **Paint Strokes** — 手绘标记而非固定的框/网格

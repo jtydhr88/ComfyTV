@@ -1,0 +1,49 @@
+---
+title: "Audio Stem Split"
+description: "Separate a finished mix into its parts — vocals, drums, bass, and everything else — for remixing or clean-up."
+sidebarTitle: "Audio Stem Split"
+---
+
+<Frame caption="Audio Stem Split · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Audio Stem Split" />
+</Frame>
+
+## What this node does
+
+**Audio Stem Split** runs source separation on a mixed track and hands back individual stems. It uses an HDemucs model to pull apart the mix into vocals, drums, bass, and "other", plus an accompaniment stem (the full mix minus vocals). You can then process or re-mix each part on its own.
+
+It accepts a `COMFYTV_AUDIO` snapshot or a `COMFYTV_VIDEO` (its audio track is used; audio takes priority). It outputs five `COMFYTV_AUDIO` stems and has a ▶ **Run** — separation is a neural model, so the first run downloads weights and each run takes real compute time.
+
+To feed native ComfyUI `AUDIO` in or out, insert a **Bridge** — see [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Pull an isolated vocal out of a song for a remix or acapella.
+- Remove vocals to make a karaoke/instrumental version (**accompaniment**).
+- Re-balance drums or bass independently of the rest of the mix.
+
+## Parameters
+
+This node has no adjustable parameters — wire in a source and run. The separation model does the rest.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **vocals** | `COMFYTV_AUDIO` | Isolated vocal stem |
+| **accompaniment** | `COMFYTV_AUDIO` | The mix with vocals removed (drums + bass + other) |
+| **drums** | `COMFYTV_AUDIO` | Isolated drum stem |
+| **bass** | `COMFYTV_AUDIO` | Isolated bass stem |
+| **other** | `COMFYTV_AUDIO` | Everything not classified as vocals, drums, or bass |
+
+## Tips
+
+- Separation is never perfect — expect some bleed between stems, especially on dense or heavily-processed mixes.
+- The first run downloads the model; later runs are faster but still compute-heavy. Longer tracks take proportionally longer.
+- Feed the stems back into **Audio Mix** to rebuild a mix with your changes.
+
+## Related nodes
+
+- **Audio Mix** — recombine the stems (with new levels/pan) into a fresh mix.
+- **Noise Reduction (Spectral)** — clean up a stem after separation.
+- **Audio Beats & Notes** — analyze the isolated drum stem for tighter beat detection.

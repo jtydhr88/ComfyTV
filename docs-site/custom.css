@@ -1,0 +1,14 @@
+:root {
+  --ctv-accent: #4f46e5;
+  --ctv-ink: #14131a;
+}
+
+html.dark #navbar,
+html.dark #sidebar,
+html.dark #sidebar-content {
+  background-color: var(--ctv-ink) !important;
+}
+
+.prose pre {
+  border-radius: 10px;
+}

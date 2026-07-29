@@ -1,0 +1,68 @@
+# Title
+
+> Burn a styled text title card onto a video — like a lower-third or opening title, with fonts, stroke, placement, timing, fade and typewriter reveal.
+
+## What this node does
+
+**Title** overlays a single block of text on a `COMFYTV_VIDEO` and re-renders it to a new video. You type the text, pick a font and color, choose where it sits and when it appears, then press **▶ Run**; rendering is an ffmpeg pass on the server (not instant/browser-side). The output is a new `COMFYTV_VIDEO`.
+
+The card shows a live video player so you can preview placement, and the text supports substitution tokens `#timecode#`, `#shorttimecode#` and `#frame#`, which are replaced with the running timecode/frame as the clip plays.
+
+This node needs both a wired **video** input and non-empty **text** — running with either missing raises an error.
+
+## When to use it
+
+- Add an opening title or end card to a clip.
+- Place a lower-third caption (name/role) with a stroke for legibility.
+- Reveal text with a typewriter effect for a kinetic intro.
+- Stamp a live timecode or frame counter for review copies.
+
+## Parameters
+
+### text
+The title text to burn in. Supports the tokens `#timecode#`, `#shorttimecode#`, `#frame#`. Required (leave it empty and Run errors).
+
+### font
+Dropdown of fonts available on the server (from `list_fonts()`; falls back to `default`). Default is the first installed font.
+
+### size
+Font size in pixels. Range 8–400, default 48.
+
+### color
+Fill color of the text as a hex string. Default `#FFFFFF` (white).
+
+### stroke / stroke_color
+Outline thickness in pixels (0–20, default 0) and its hex color (default `#000000`). A small stroke keeps text readable over busy footage.
+
+### anchor
+Where the text sits: `bottom`, `top`, `center`, `top-left`, `top-right`, `bottom-left`, `bottom-right`. Default `bottom`.
+
+### t_start / t_end
+Start and end time in seconds. `t_start` default 0.0 (0–3600). `t_end` default `-1.0`, where `-1` means "until the end of the clip" (range −1 to 3600).
+
+### fade_s
+Fade in/out duration in seconds, 0–10, default 0 (no fade).
+
+### typewriter / type_step
+Reveal mode: `off`, `char`, `word`, or `line` (default `off`). When not `off`, `type_step` is the seconds between each revealed unit (0.02–2.0, default 0.1).
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The source clip with the title burned in |
+
+## Tips
+
+- A stroke of 2–4px in a contrasting color is the cheapest way to keep titles legible over any background.
+- `t_end = -1` is the "hold to end" default; only set a positive value to remove the title before the clip ends.
+- Fonts come from the server; install fonts (or add them to ComfyTV resources) if your choice is missing from the dropdown.
+
+## Types and bridges
+
+`COMFYTV_VIDEO` is a ComfyTV project snapshot, not a native ComfyUI `VIDEO`. To hand off to native ComfyUI nodes, insert a **Bridge** (`ComfyTV/Bridge`). See [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## Related nodes
+
+- **Subtitles** — burn timed SRT/VTT caption cues (many cues over time) instead of one title.
+- **Subtitles · Speech-to-Text** — auto-generate the subtitle text to feed into Subtitles.

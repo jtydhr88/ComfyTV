@@ -1,0 +1,46 @@
+# Frame Interpolate
+
+> Generates in-between frames to raise the frame rate or create smooth slow motion.
+
+## What this node does
+
+**Frame Interpolate** uses ffmpeg's motion-compensated interpolation to synthesize new frames. In `retime_fps` mode it raises the clip to a target frame rate for smoother playback; in `slowmo` mode it stretches time and slows the clip down (also time-stretching the audio to match). It processes on **▶ Run** and writes a new video snapshot.
+
+A source clip on **video** is required. In and out are both `COMFYTV_VIDEO`. To interoperate with native ComfyUI nodes, insert a **Bridge** — see the [bridge guide](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Make choppy 24/30 fps footage play smoother at 60 fps.
+- Turn normal-speed footage into clean slow motion without a high-fps camera.
+- Fill in missing frames so downstream motion looks fluid.
+
+## Parameters
+
+### mode
+`retime_fps` (default) changes the output frame rate; `slowmo` slows the clip down and stretches audio to match.
+
+### target_fps
+Target frame rate for `retime_fps`, `24`–`120`, default `60`. Ignored in `slowmo` mode.
+
+### slow_factor
+How much to slow down in `slowmo` mode, `2.0`–`8.0` (step `0.5`), default `2.0`. `2.0` means half speed. Ignored in `retime_fps` mode. In slow-mo the interpolator generates `source_fps × slow_factor` intermediate frames.
+
+### mi_mode
+Interpolation method: `mci` (motion-compensated, smoothest, default), `blend` (crossfade between frames), `dup` (duplicate frames — no true interpolation). Use `mci` for the cleanest result; drop to `blend`/`dup` if `mci` produces artifacts.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The retimed / slowed clip as a new project snapshot |
+
+## Tips
+
+- `mci` can smear on fast, chaotic motion or heavy occlusion; try `blend` there.
+- `slowmo` retimes audio too (via chained atempo), so speech and music stay in sync at the slower speed.
+- Denoise before interpolating — the motion estimator handles clean footage better.
+
+## Related nodes
+
+- **Video Denoise** — clean footage before interpolation for better motion estimates.
+- **Deinterlace** — for interlaced sources, deinterlace first (its `field` rate already doubles frames).

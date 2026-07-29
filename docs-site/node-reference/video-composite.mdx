@@ -1,0 +1,68 @@
+---
+title: "Video Composite"
+description: "Layer one video over another with a blend mode, opacity, a 2D transform, an optional mask, and animatable keyframes."
+sidebarTitle: "Video Composite"
+---
+
+<Frame caption="Video Composite · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Video Composite" />
+</Frame>
+
+## What this node does
+
+Video Composite takes a **background** and a **foreground** video and merges them into a single clip. The foreground can be blended with any of the professional merge operators (`over`, `screen`, `multiply`, Porter-Duff ops, HSL modes, and more), faded with an opacity value, and repositioned/scaled/rotated in 2D before it lands on the background. An optional **mask** limits where the foreground shows, and an optional keyframe track animates the transform over time.
+
+It runs on **▶ Run** (GPU/torch compositing). Both `background` and `foreground` are `COMFYTV_VIDEO` and must be wired — the node errors if either is missing. Output is a single `COMFYTV_VIDEO`.
+
+ComfyTV media flows as project snapshots, not native ComfyUI tensors. To hand the result to a stock ComfyUI node, insert a **Bridge** (`ComfyTV/Bridge`). See https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md.
+
+## When to use it
+
+- Drop a green-screen subject (already keyed) or a logo over a background plate.
+- Add a screen/plus glow layer, a multiply shadow, or a texture pass over footage.
+- Place a picture-in-picture insert and animate it flying in with keyframes.
+
+## Parameters
+
+### operator
+The blend/merge mode used to combine foreground over background. Options (from `MERGE_OPERATORS`): `atop`, `average`, `color`, `color-burn`, `color-dodge`, `conjoint-over`, `copy`, `difference`, `disjoint-over`, `divide`, `exclusion`, `freeze`, `from`, `geometric`, `grain-extract`, `grain-merge`, `hard-light`, `hue`, `hypot`, `in`, `luminosity`, `mask`, `matte`, `max`, `min`, `minus`, `multiply`, `out`, `over`, `overlay`, `pinlight`, `plus`, `reflect`, `saturation`, `screen`, `soft-light`, `stencil`, `under`, `xor`. Default `over` (standard alpha composite).
+
+### opacity
+Foreground opacity, `0.0`–`1.0`, default `1.0`. Fades the whole foreground layer toward transparent.
+
+### pos_x / pos_y
+Translation of the foreground in pixels. Range `-8192`–`8192`, step `1`, default `0`. Positive `pos_x` moves right; positive `pos_y` moves down.
+
+### scale
+Uniform scale of the foreground, `0.01`–`10.0`, default `1.0` (100%).
+
+### rotation
+Rotation of the foreground in degrees, `-360`–`360`, step `0.5`, default `0`.
+
+### keyframes
+Advanced: a JSON array `[{t, x, y, scale, rotation, opacity, interp}]` that animates the transform over time. Normally driven by the node's on-canvas keyframe UI rather than typed by hand.
+
+### background / foreground (inputs)
+The two `COMFYTV_VIDEO` layers. `background` sits behind, `foreground` is blended on top. Both required.
+
+### mask (input, optional)
+A `COMFYTV_VIDEO` mask that restricts where the foreground is visible.
+
+### track (input, optional)
+A `COMFYTV_TEXT` motion/transform track (e.g. from a tracker). When connected, its keyframes drive the foreground transform, overriding the manual `keyframes`.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The composited clip: foreground merged onto background. |
+
+## Tips
+
+- The foreground is not chroma-keyed here — key or cut it out upstream (or feed a `mask`) so only the intended pixels merge.
+- HSL operators (`hue`, `saturation`, `color`, `luminosity`) and Porter-Duff ops (`in`, `out`, `atop`, `xor`, `stencil`, etc.) behave differently from the everyday `over`/`screen`/`multiply` — pick deliberately.
+
+## Related nodes
+
+- **Video Transform** — the same 2D transform on a single clip, without a second layer.
+- **Video Transition** / **Luma Wipe** — blend two clips over time instead of stacking them.

@@ -1,0 +1,52 @@
+---
+title: "Chroma Shift"
+description: "独立偏移红蓝通道，做色散 / RGB 分离 / 故障（glitch）效果。"
+sidebarTitle: "Chroma Shift"
+translationSourceHash: "1549a376728b21f0"
+---
+
+<Frame caption="Chroma Shift · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="Chroma Shift" />
+</Frame>
+
+## 这个节点做什么
+
+**Chroma Shift（色偏移）** 让红色和蓝色通道相对绿色通道在水平和垂直方向错位。小偏移读作镜头色散；大偏移给出醒目的 RGB 分离故障效果。若四个偏移量全为零，片段原样穿过。
+
+这是一个需要渲染的节点 —— 必须 **▶ Run**，使用 ffmpeg 的 `chromashift` 滤镜。输入 `COMFYTV_VIDEO`，输出 `COMFYTV_VIDEO`。
+
+要把结果交给原生 ComfyUI 节点，请插入 **Bridge**。参见 [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 何时使用
+
+- 在画面边缘伪造镜头色散。
+- 制造 RGB 分离故障 / 复古 VHS 观感。
+- 为风格化调色添加微妙的色边。
+
+## 参数
+
+### shift_rh / shift_rv
+各 `-255.0`–`255.0`（步长 `1.0`），默认 `0.0`。**红**通道的水平（`rh`）与垂直（`rv`）偏移，单位像素。
+
+### shift_bh / shift_bv
+各 `-255.0`–`255.0`（步长 `1.0`），默认 `0.0`。**蓝**通道的水平（`bh`）与垂直（`bv`）偏移，单位像素。
+
+### shift_edge
+`smear` 或 `wrap`，默认 `smear`。通道偏移后露出的边缘如何填充 —— `smear` 拉伸边缘像素，`wrap` 从对侧环绕补上该通道。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | 通道错位后的片段 |
+
+## 提示
+
+- 让红色朝一个方向、蓝色朝相反方向偏移，得到对称、可信的色散。
+- 四个值都留 `0` 时，节点为空操作（原样穿过）。
+- 只有红和蓝可偏移 —— 绿色作为参考通道保持不动。
+
+## 相关节点
+
+- **Pseudocolor（伪彩色）** —— 把亮度映射到调色板（假彩色）。
+- **Video Stylize（视频风格化）** —— 其他一键风格化观感。

@@ -1,0 +1,56 @@
+---
+title: "Key Mix（键控混合）"
+description: "通过遮罩把一个片段合成到另一个之上 —— 也就是\"把抠出的主体放到新背景上\"这一步。"
+sidebarTitle: "Key Mix（键控混合）"
+translationSourceHash: "5b0bef11ccce5676"
+---
+
+<Frame caption="Key Mix（键控混合） · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="Key Mix（键控混合）" />
+</Frame>
+
+## 这个节点做什么
+
+Key Mix（键控混合）用一个蒙版混合两个视频：遮罩为白的地方，视频 A 叠在视频 B 上。这是抠像流程中经典的混合/合并阶段 —— 你用抠像器拉出遮罩后，Key Mix 用这个遮罩把前景铺到背景上。你可以选择 alpha 如何组合（合成运算）以及整体混合的强度。
+
+输入与输出都是 `COMFYTV_VIDEO`（蒙版可以是 `COMFYTV_VIDEO` 遮罩或 `COMFYTV_IMAGE` 静帧）。它带有 ▶ Run。视频 A、视频 B 和一个蒙版都是**必需**的 —— 缺任一节点会报错。
+
+## 何时使用
+
+- 你抠出了主体，现在想把它合成到新的背景片段上。
+- 你有一个遮罩（来自 Keyer/PIK/Select0r 或蒙版图片）和两层要合并。
+- 你需要在两层间使用特定的 alpha 运算（over/add/subtract/max/min）。
+
+## 参数
+
+### mix
+混合的整体强度。范围 `0.0`–`1.0`，默认 `1.0`。为 1.0 时蒙版完全驱动混合；调低则把效果溶回 B。
+
+### invert_mask
+开启时翻转蒙版，使白色变为显示 B（而非 A）的区域。默认关闭。当你的遮罩方向反了时使用。
+
+### alpha_op
+A 的 alpha 如何与合成结果组合：`over`（默认）、`add`、`subtract`、`max` 或 `min`。`over` 是标准合成；其余适合组合遮罩或叠加效果。
+
+### 输入（除注明外均必需）
+- **video_a** —— 前景，放在遮罩为白处。
+- **video_b** —— 背景，显示在遮罩为黑处。
+- **mask_video** —— 遮罩视频，或……
+- **mask** —— 静帧蒙版图片（未接遮罩视频时使用）。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | 通过蒙版把 A 合成到 B 之上的结果。 |
+
+## 提示
+
+- 白色蒙版=显示 A；若前景与背景看起来对调了，切换 `invert_mask`。
+- 抠像器的 `matte` 输出可直接接入 `mask_video`。
+- 要与原生 ComfyUI 节点互通，请插入 **Bridge**。见 [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 相关节点
+
+- **Chroma Key** / **Keyer** / **PIK Keyer** / **Select0r** —— 产生 Key Mix 所用遮罩。
+- **Matte Morphology** —— 混合前清理遮罩边缘。

@@ -1,0 +1,56 @@
+# Regrain
+
+> Add realistic film grain with separate control over shadows, midtones, and highlights — for regraining a clean render or matching real film stock.
+
+## What this node does
+
+**Regrain** overlays synthetic film grain onto a clip. Unlike a flat noise pass, you set how much grain lands in the **shadows**, **midtones**, and **highlights** independently, plus its size and color saturation — mirroring how real film grain varies across the tonal range. This is the tool for a convincing organic film texture.
+
+This is a rendered stage — it needs a **▶ Run** (torch/GPU backend). In goes `COMFYTV_VIDEO`, out comes `COMFYTV_VIDEO`.
+
+If all three tonal amounts (`shadows`, `midtones`, `highlights`) are zero, the node passes the clip through unchanged (no grain to add).
+
+To hand the result to a native ComfyUI node, insert a **Bridge**. See [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Add organic film grain to a clean AI/CG render so it blends with real footage.
+- Match the grain character of a specific film stock.
+- Restore grain after denoising or upscaling flattened it out.
+
+## Parameters
+
+### grain_size
+`0.0`–`4.0` (step `0.05`), default `0.8`. Size of the grain particles. Smaller = fine, tight grain; larger = coarse, chunky grain.
+
+### shadows
+`0.0`–`1.0`, default `0.3`. Amount of grain in the darkest tones.
+
+### midtones
+`0.0`–`1.0`, default `0.15`. Amount of grain in the mid tones.
+
+### highlights
+`0.0`–`1.0`, default `0.05`. Amount of grain in the brightest tones. (Real film usually shows the least grain in highlights, hence the low default.)
+
+### grain_sat
+`0.0`–`1.0`, default `0.4`. Color saturation of the grain. `0.0` is monochrome (luma-only) grain; higher adds colored grain.
+
+### seed
+`0`–`99999`, default `7`. Random seed for the grain pattern. Change it for a different grain distribution; keep it fixed for a repeatable result.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The regrained clip |
+
+## Tips
+
+- Follow the film convention: most grain in shadows, less in midtones, least in highlights (the defaults already do this).
+- Keep `grain_sat` low for a classic monochrome film-grain feel; raise it only if you want visible color noise.
+- Set all three tonal amounts to `0` and the node does nothing (identity pass-through).
+
+## Related nodes
+
+- **Old Film** — full film-damage simulation (grain plus scratches, flicker, weave).
+- **Video Stylize** — includes a simpler `grain` preset.

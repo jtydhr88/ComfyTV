@@ -1,0 +1,70 @@
+---
+title: "Audio Dynamics（音频动态）"
+description: "用压缩器、噪声门、限制器或齿音消除器控制或塑造音轨的电平——就是你在 DAW 里会用到的那套动态处理工具。"
+sidebarTitle: "Audio Dynamics（音频动态）"
+translationSourceHash: "a626368d86aa23b5"
+---
+
+<Frame caption="Audio Dynamics（音频动态） · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="Audio Dynamics（音频动态）" />
+</Frame>
+
+## 这个节点是做什么的
+
+**音频动态 (Audio Dynamics)** 对一条音轨施加一种动态处理，由 **mode** 决定：**compressor**（压缩器，拉平大小声）、**gate**（噪声门，静音低于阈值的部分，比如说话间隙的房间底噪）、**limiter**（限制器，一道硬天花板，防止峰值削波）、或 **deesser**（齿音消除器，压掉刺耳的「嘶嘶」声）。
+
+输入为 `COMFYTV_AUDIO` 快照（也可接 `COMFYTV_VIDEO`，会取其音轨），输出处理后的 `COMFYTV_AUDIO` 以及一个 `fx_spec`。它带有 ▶ **运行**：实际处理由 FFmpeg 完成（`acompressor` / `agate` / `alimiter` / `deesser`）。若未接源音频，节点仍会只发出 `fx_spec`，以便串入 FX Chain 稍后统一渲染。
+
+要与 ComfyUI 原生 `AUDIO` 互通，请插入 **Bridge**——见 [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 适用场景
+
+- 拉平旁白：有些句子很响、有些几乎听不见（compressor）。
+- 消掉说话间隙的底噪或呼吸声（gate）。
+- 导出前确保音轨永远不越过安全天花板（limiter）。
+- 柔化人声录音里刺耳的「s」「t」音（deesser）。
+
+## 参数说明
+
+### mode
+选择处理器：`compressor`（默认）、`gate`、`limiter`、`deesser`。下方参数在不同 mode 下作用不同，见各条说明。
+
+### threshold_db
+效果开始起作用的电平（dB）。范围 **-60 到 0 dB**，默认 **-20**。压缩器与噪声门以此为触发阈值，限制器则以此作为输出天花板。齿音消除器不使用此项。越低（越负）= 越安静的素材也会被处理。
+
+### ratio
+压缩器或噪声门越过阈值后的作用强度。范围 **1 到 20**，默认 **4**。越高 = 增益压制越强（如 4:1 压缩）。限制器与齿音消除器不使用此项。
+
+### attack_ms
+信号越过阈值后处理器反应的速度（毫秒）。范围 **0.01 到 2000**，默认 **20**。越短 = 越快钳住瞬态；越长 = 保留起音冲击力。压缩器、噪声门、限制器都用（限制器内部会钳到 0.1–80 ms）。
+
+### release_ms
+信号回落后处理器松开的速度。范围 **0.01 到 9000**，默认 **250**。压缩器、噪声门、限制器都用（限制器内部会钳到 1–8000 ms）。
+
+### makeup_db
+压缩后额外补偿的输出增益（dB），把电平拉回来。范围 **0 到 24**，默认 **0**。仅压缩器使用。
+
+### knee
+压缩器/噪声门在阈值附近过渡的柔和程度。范围 **1 到 8**，默认 **2.83**。越高 = 起效越平滑柔和。压缩器与噪声门使用。
+
+### intensity
+齿音消除强度。范围 **0 到 1**，默认 **0.5**。越高去除的齿音越多。仅当 **mode** 为 `deesser` 时使用。
+
+## 输出说明
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **audio** | `COMFYTV_AUDIO` | 处理后的音频快照 |
+| **fx_spec** | `COMFYTV_FXSPEC` | 本动态处理步骤的 spec，可串入 FX Chain |
+
+## 小贴士
+
+- **限制器需要 `alimiter`。** 部分 FFmpeg 版本编译时未包含它；缺失时节点会抛出明确报错。
+- 所选 mode 决定哪些旋钮生效——例如 `ratio`、`makeup_db`、`knee` 在限制器或齿音消除模式下不起作用。
+- 想做「安全导出」，可把限制器放在链尾，`threshold_db` 设在 -1 到 -3 附近。
+
+## 相关节点
+
+- **Audio Loudness** —— 做目标电平归一（EBU R128 / 峰值 / RMS），而非逐刻的动态控制。
+- **Audio EQ** —— 音色塑形；常放在压缩之前。
+- **FX Chain** —— 把多个 `fx_spec` 步骤（含本节点）一趟渲染完成。

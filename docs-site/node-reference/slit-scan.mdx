@@ -1,0 +1,60 @@
+---
+title: "Slit Scan"
+description: "Time-smears a clip so different rows/columns come from different moments — the classic slit-scan look, in one ▶ Run."
+sidebarTitle: "Slit Scan"
+---
+
+<Frame caption="Slit Scan · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Slit Scan" />
+</Frame>
+
+## What this node does
+
+**Slit Scan** rebuilds each output frame from different points in time across the video: one band of the image reads "the past," another reads "the future," so motion drips and stretches through the frame. It runs on **▶ Run** and writes a new `COMFYTV_VIDEO` snapshot.
+
+The offset can sweep **horizontal**ly, **vertical**ly, or follow a grayscale **map** image you supply (dark = one time, bright = another). Wiring an image into **retime_image** automatically switches the node into `map` mode.
+
+In and out are `COMFYTV_VIDEO`; the optional map is `COMFYTV_IMAGE`. To feed native ComfyUI nodes, insert a **Bridge** — see the [bridge guide](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Get the signature "time slice" / smear effect on a moving subject.
+- Make a waterfall of motion where the top and bottom of the frame are seconds apart.
+- Drive a custom retime pattern from a grayscale map (e.g. a gradient or shape).
+
+## Parameters
+
+### mode
+How the per-pixel time offset is laid out. Options: `horizontal`, `vertical`, `map`. Default `horizontal`. If a **retime_image** is wired, the node forces `map` mode; if you pick `map` with no image wired, Run errors and asks for a map.
+
+### gain
+Time-spread strength, `-120`–`120` (step `1`), default `24.0`. Larger magnitude pulls the frame's rows/columns further apart in time; negative flips which end is "past."
+
+### offset
+Baseline time shift, `-60`–`60` (step `0.5`), default `0.0`. Slides the whole slit window earlier or later.
+
+### filter_mode
+How in-between times are sampled. Options: `nearest` (snap to the closest frame — sharper, blockier) or `linear` (blend between frames — smoother). Default `linear`.
+
+### invert
+Flips the direction of the time gradient (swaps past/future ends, or inverts the map reading). Default off.
+
+### retime_image (optional, `COMFYTV_IMAGE`)
+A grayscale map that assigns a time offset per pixel. Wiring it switches the node to `map` mode automatically. Required if **mode** is `map`.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | The slit-scanned clip as a new project snapshot |
+
+## Tips
+
+- The effect only shows where there's motion — a static shot barely changes.
+- Use `linear` **filter_mode** for smooth smears, `nearest` for a crisper, stepped time-slice.
+- For **map** mode, feed a clean grayscale image; its brightness picks the time per pixel, so gradients give sweeping smears and shapes give localized ones.
+
+## Related nodes
+
+- **Feedback FX** — recursive echo/vertigo trails, another temporal look.
+- **Strobe** — hold or flash frames on an interval.

@@ -1,0 +1,59 @@
+---
+title: "肯·伯恩斯 (Ken Burns)"
+description: "把一张静态图像变成带缓慢平移缩放运动的视频，一次 ▶ Run 完成。"
+sidebarTitle: "肯·伯恩斯"
+translationSourceHash: "e9e629fcbee3d3c9"
+---
+
+<Frame caption="肯·伯恩斯 (Ken Burns) · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="肯·伯恩斯 (Ken Burns)" />
+</Frame>
+
+## 这个节点做什么
+
+**肯·伯恩斯 (Ken Burns)** 把一张静态图像（`COMFYTV_IMAGE`）动画化为 `COMFYTV_VIDEO`：从起始构图到结束构图平滑插值一个裁切窗口——即经典的纪录片式平移缩放。你设置输出尺寸、帧率、时长、起止缩放与中心以及缓动曲线；它在 **▶ Run** 时渲染。必须往 **image** 输入接入一张图像，否则 Run 会报错。
+
+输出是 `COMFYTV_VIDEO`。若要对接原生 ComfyUI 节点，请插入 **Bridge**——见[桥接指南](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)。
+
+## 何时使用
+
+- 让照片、静帧或生成图像「活」起来，用于幻灯或片头。
+- 在标题、引言或采访插入镜头后面加入细微运动。
+- 用几秒钟推近某个细节（向脸部或物体缩放）。
+
+## 参数
+
+### width / height
+输出分辨率（像素），各为 `16`–`4096`，默认 `1280` × `720`。
+
+### fps
+输出帧率，`1`–`120`，默认 `24`。
+
+### duration
+片段时长（秒），`0.5`–`120.0`（步长 `0.5`），默认 `5.0`。
+
+### start_zoom / end_zoom
+运动起点与终点的缩放系数，各为 `1.0`–`6.0`，默认 `1.0`（起）与 `1.3`（止）。`1.0` 框住整幅图像；越高裁切越紧。起止值不同即产生推近或拉远。
+
+### start_x / start_y 与 end_x / end_y
+起点与终点的裁切中心，归一化坐标 `0.0`–`1.0`。默认全为 `0.5`（图像中心）。改变起止即可在图像上平移。
+
+### interp
+运动缓动。选项：`linear`（匀速）、`smooth`（缓入缓出）、`ease_in`、`ease_out`。默认 `smooth`。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | 动画化的平移缩放片段 |
+
+## 提示
+
+- 纯缩放：保持中心相同，只改变 **start_zoom**/**end_zoom**；纯平移：保持缩放相同，移动中心。
+- 让 **end_zoom** 不低于 **start_zoom**（两者均 ≥ `1.0`），使裁切保持在图像内部。
+- `smooth` 缓动对幻灯最自然；`linear` 更机械。
+
+## 相关节点
+
+- **图案 (Pattern)** — 生成程序化片段，而非动画化静图。
+- **图像节点／加载器** — 生成或引入这里所喂的静图。

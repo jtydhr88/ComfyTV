@@ -1,0 +1,63 @@
+---
+title: "Audio Duck"
+description: "Automatically dip a music or background track whenever a voice (or other sidechain) is present — sidechain compression."
+sidebarTitle: "Audio Duck"
+---
+
+<Frame caption="Audio Duck · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Audio Duck" />
+</Frame>
+
+## What this node does
+
+**Audio Duck** lowers a main track's volume in response to a second "sidechain" track, so the main audio ducks out of the way when the sidechain gets loud. It is classic sidechain ducking: point the sidechain at your narration and the music underneath automatically drops during speech, then recovers in the gaps.
+
+Both the main and sidechain inputs accept a `COMFYTV_AUDIO` snapshot or a `COMFYTV_VIDEO` (its audio track is used; the audio input takes priority). It outputs the processed main track as `COMFYTV_AUDIO` and has a ▶ **Run** (FFmpeg does the work).
+
+To feed native ComfyUI `AUDIO` in or out, insert a **Bridge** — see [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Duck a music bed under a voiceover so narration stays intelligible.
+- Drop ambience or SFX whenever dialogue plays.
+- Podcast/vlog mixing where the backing track should yield to speech.
+
+## Parameters
+
+### threshold
+Sidechain level at which ducking begins. Range **0.001 to 1.0**, default **0.05**. Lower = the ducker triggers on quieter speech.
+
+### ratio
+How hard the main track is pushed down once the threshold is crossed. Range **1 to 20**, default **8.0**. Higher = deeper ducking.
+
+### attack
+How fast ducking engages when the sidechain gets loud, in milliseconds. Range **1 to 2000**, default **20**. Short = the music drops almost instantly.
+
+### release
+How fast the main track recovers after the sidechain goes quiet, in milliseconds. Range **10 to 9000**, default **400**. Longer = smoother, slower return.
+
+### makeup
+Make-up gain applied to compensate for the level lost to ducking. Range **1 to 8**, default **1.0** (no boost).
+
+### mix_back
+When **on** (default), the processed (ducked) main track is the result. This controls whether the ducked signal is mixed back into the output.
+
+### side_gain
+Gain applied to the sidechain before it drives the ducker. Range **0 to 4**, default **1.0**. Raise it if a quiet voice isn't triggering enough ducking.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **audio** | `COMFYTV_AUDIO` | The main track, ducked against the sidechain |
+
+## Tips
+
+- If the music "pumps" audibly, lengthen **release** and/or lower **ratio**.
+- If ducking lags behind the voice, shorten **attack**.
+- No separate sidechain? Wire the same voice track into both the main mix (via **Audio Mix**) and this node's sidechain input.
+
+## Related nodes
+
+- **Audio Mix** — combine the ducked music with the voice into a final stereo mix.
+- **Audio Crossfade** — blend two clips in sequence rather than duck one under another.

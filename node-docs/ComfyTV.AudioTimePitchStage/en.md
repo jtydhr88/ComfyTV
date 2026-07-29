@@ -1,0 +1,51 @@
+# Audio Time / Pitch
+
+> Change speed, shift pitch, or time-stretch a track — with a high-quality phase-vocoder option that keeps pitch and tempo independent.
+
+## What this node does
+
+**Audio Time / Pitch** re-times or re-pitches audio. In the fast FFmpeg modes it uses `atempo`, `asetrate`/`aresample`, and `areverse`. In the two **HQ** modes it uses a StaffPad-style phase vocoder that stretches time or shifts pitch without the "chipmunk" side effect of naive resampling.
+
+It takes a `COMFYTV_AUDIO` snapshot (or a `COMFYTV_VIDEO`, whose audio track is used) and outputs processed `COMFYTV_AUDIO` plus an `fx_spec`. It has a ▶ **Run**. The HQ modes require an audio input and refuse to run when the change would be a no-op.
+
+To feed native ComfyUI `AUDIO` in or out, insert a **Bridge** — see [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Speed a clip up or slow it down while keeping the pitch natural (`pitch_hq` isn't needed — use `stretch_hq`).
+- Transpose a vocal or instrument by a musical interval without changing its length (`pitch`/`pitch_hq`).
+- Reverse a track for a whoosh/riser effect.
+
+## Parameters
+
+### mode
+Which operation to run. Options:
+- **speed** (default) — change tempo *and* pitch together (via `atempo`), like playing a record faster.
+- **pitch** — shift pitch by semitones while preserving length (resample + `atempo`).
+- **pitch_hq** — same, but via a phase vocoder for higher quality. Requires audio; errors if **semitones = 0**.
+- **stretch_hq** — change tempo only, preserving pitch, via phase vocoder. Requires audio; errors if **tempo = 1.0**.
+- **reverse** — play the track backwards.
+
+### tempo
+Playback speed multiplier, **0.25–4.0** (default **1.0**). Used by `speed` and `stretch_hq`. 2.0 = twice as fast, 0.5 = half speed. Errors if left at 1.0 in those modes (nothing to do).
+
+### semitones
+Pitch shift in semitones, **-24 to +24** in 0.5 steps (default **0.0**). Used by `pitch` and `pitch_hq`. +12 = one octave up. Errors if left at 0 in those modes.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **audio** | `COMFYTV_AUDIO` | The re-timed / re-pitched audio |
+| **fx_spec** | `COMFYTV_FXSPEC` | The effect as a spec (FFmpeg modes only); HQ modes emit an empty extra output |
+
+## Tips
+
+- `speed` is the fast, "record-player" behavior; use `stretch_hq` when you need to keep the pitch musical.
+- `pitch` (FFmpeg) is quick but can smear transients; `pitch_hq` sounds cleaner at the cost of processing time.
+- Only the FFmpeg modes produce a usable `fx_spec` for chaining — the HQ modes render directly.
+
+## Related nodes
+
+- **Audio Modulation** — vibrato for continuous pitch wobble rather than a fixed shift.
+- **FX Chain** — renders multiple `fx_spec` steps (the FFmpeg modes) in a single pass.

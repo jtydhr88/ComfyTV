@@ -1,0 +1,45 @@
+---
+title: "Auto White Balance"
+description: "一键中性色彩 —— 基于灰世界假设自动去除偏色。"
+sidebarTitle: "Auto White Balance"
+translationSourceHash: "665408b6c6f16ce4"
+---
+
+<Frame caption="Auto White Balance · 截图待补">
+  <img src="/images/nodes/_placeholder.svg" alt="Auto White Balance" />
+</Frame>
+
+## 节点用途
+
+**Auto White Balance（自动白平衡）** 无需任何控件即可校正片段的偏色。它使用经典的**灰世界（gray-world）**算法：假设场景的平均颜色应为中性灰，然后缩放各通道使之成立。输入偏橙、偏蓝或偏白的素材，它会把整帧拉回中性。
+
+它输入输出均为 `COMFYTV_VIDEO`，通过 ffmpeg 的 `grayworld` 滤镜渲染，因此带有 **▶ Run**，卡片上有实时预览。它没有参数 —— 一旦 Run 就总是执行该平衡。
+
+要把校正后的片段接入原生 ComfyUI 节点，请加一个 **Bridge**（见 [Bridge 指南](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md)）。
+
+## 何时使用
+
+- 无需拨色温即可快速修正错误的白平衡
+- 中和混合光源造成的偏色作为起点
+- 在统一的创意调色前批量归一化片段
+
+## 参数
+
+本节点没有可调参数 —— Run 时直接应用灰世界白平衡。
+
+## 输出
+
+| 输出 | 类型 | 含义 |
+|---|---|---|
+| **video** | `COMFYTV_VIDEO` | 白平衡后的片段快照 |
+
+## 提示
+
+- 灰世界假设场景平均为中性，因此被某种强烈颜色主导的镜头（红色日落、绿色田野）可能过度校正 —— 检查结果，若看起来不对，回退到 **Video Color** 的手动色温。
+- 把它当作第一遍，然后在其上做创意调色（色温、色轮、LUT）。
+
+## 相关节点
+
+- **Video Color** —— 当灰世界猜错时，通过色温手动白平衡
+- **Histogram Equalize** —— 另一个自动单旋钮校正器（对比）
+- **CDL Grade** —— 可移植的数值化一级调色

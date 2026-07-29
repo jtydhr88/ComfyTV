@@ -1,0 +1,82 @@
+---
+title: "Score Synth"
+description: "Render a performance to real audio with a SoundFont — ComfyTV's built-in SF2/SF3 synthesizer."
+sidebarTitle: "Score Synth"
+---
+
+<Frame caption="Score Synth · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Score Synth" />
+</Frame>
+
+## What this node does
+
+**Score Synth** is the audio end of the symbolic-music lane. It takes a
+`performance` (from **Score Performer** or **Click Track**) and synthesizes it
+into audio using ComfyTV's own SoundFont synthesizer — no external player
+required. Point it at a `.sf2`/`.sf3` SoundFont from your resource library and
+it plays the notes with those instrument samples.
+
+Press **▶ Run** to render on the backend; progress is reported as it works. The
+output is a `COMFYTV_AUDIO` clip you can preview, pass to audio stages, or
+Bridge into native ComfyUI.
+
+You choose a default General MIDI instrument (`program`), and optionally
+override the instrument per MIDI channel with a small JSON map — handy for
+multi-part performances where each channel is a different instrument.
+
+## When to use it
+
+- You have a performance (from Score Performer or a click track) and want to
+  hear it as audio, not just MIDI.
+- You want a specific instrument sound from a SoundFont you've added to the
+  resource library.
+- You need per-channel instruments in one render (e.g. piano + bass + drums).
+
+## Parameters
+
+### soundfont
+The SoundFont file name from your resource library (a `.sf2`/`.sf3`). If left
+blank, the synth uses its built-in fallback voices. If you name a file that
+isn't in the library, the run fails with a "soundfont … not found" message.
+
+### program
+The default General MIDI instrument, default **piano**. The options are the GM
+program names; this instrument plays any channel you don't override below.
+
+### channel_programs
+An optional JSON map of MIDI channel → GM program, e.g.
+`{"0": "piano", "1": "acoustic_bass"}`. Use it to assign different instruments
+to different channels of a multi-part performance. Values can be GM program
+names or raw program numbers. Invalid JSON is ignored.
+
+### gain
+Output level multiplier, **0.1–2.0** (default **1.0**). Below 1 attenuates,
+above 1 boosts; back off if the render clips.
+
+### performance (optional input)
+The performance to render, type `COMFYTV_TEXT` — wire this from **Score
+Performer** or **Click Track**. Running with nothing wired fails with "Score
+Synth needs a performance".
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **audio** | `COMFYTV_AUDIO` | The rendered audio clip |
+
+## Tips
+
+- SoundFonts live in the resource library — add your `.sf2`/`.sf3` there first,
+  then type its file name into `soundfont`.
+- For a multi-instrument mix, set `program` to the most common voice and use
+  `channel_programs` only for the channels that differ.
+- If the result sounds hot or distorted, lower `gain` a little before
+  re-rendering.
+
+## Related nodes
+
+- **Score Performer** — produces the `performance` this node renders.
+- **Click Track** — a metronome whose click also feeds this synth.
+- **Chord Accompaniment** — generates a performance from chord symbols.
+- **Bridge** — convert `COMFYTV_AUDIO` to/from native ComfyUI audio. See
+  https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md

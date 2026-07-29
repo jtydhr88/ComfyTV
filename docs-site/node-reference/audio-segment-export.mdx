@@ -1,0 +1,66 @@
+---
+title: "Audio Split Export"
+description: "Cut one recording into many separate audio files — either at silences it detects automatically, or at time ranges you specify."
+sidebarTitle: "Audio Split Export"
+---
+
+<Frame caption="Audio Split Export · screenshot coming soon">
+  <img src="/images/nodes/_placeholder.svg" alt="Audio Split Export" />
+</Frame>
+
+## What this node does
+
+**Audio Split Export** takes a single audio source and writes out multiple audio files, one per segment. Segments come from one of two modes: it can **detect silence** and split on the gaps, or take an explicit **JSON list** of start/end times. Each exported piece gets a short fade to avoid clicks, and the files are named by a chosen scheme.
+
+It accepts a `COMFYTV_AUDIO` snapshot or a `COMFYTV_VIDEO` (its audio track is used; audio takes priority). It outputs a `COMFYTV_TEXT` listing the exported files and has a ▶ **Run** (FFmpeg does the cutting).
+
+To feed native ComfyUI `AUDIO` in or out, insert a **Bridge** — see [bridges.md](https://github.com/jtydhr88/ComfyTV/blob/main/docs/bridges.md).
+
+## When to use it
+
+- Break a long recording of separate phrases or sound effects into individual clips.
+- Auto-split a voice take into sentences by trimming on the pauses.
+- Export exact time ranges (e.g. from a cue sheet) as their own files.
+
+## Parameters
+
+### detect
+How segment boundaries are found: `silence` (default) splits automatically on quiet gaps; `json` uses the ranges you provide in **segments**.
+
+### threshold_db
+Loudness below which audio counts as silence, in dB. Range **-90 to -20**, default **-60**. `silence` mode only. Raise it (toward -20) if quiet passages are being treated as sound and not split.
+
+### min_silence_s
+Minimum length a quiet gap must last to be treated as a split point, in seconds. Range **0.01 to 5**, default **0.5**. `silence` mode only.
+
+### min_segment_s
+Minimum length a segment must have to be exported, in seconds. Range **0.01 to 10**, default **0.1**. Discards tiny slivers.
+
+### fade_ms
+Fade in/out applied to each exported segment, in milliseconds. Range **0 to 500**, default **1.45**. A tiny fade prevents clicks at the cut edges.
+
+### naming
+How exported files are named: `num_and_prefix` (default, number + the **prefix**), `num_and_name` (number + source name), or `name` (source name only).
+
+### prefix
+The text used in the filename when **naming** is `num_and_prefix`. Default **`segment`**.
+
+### segments
+A JSON list of ranges for `json` mode, in the form `[{"start": s, "end": s}, ...]` (times in seconds). Ignored in `silence` mode. Required (non-empty) when **detect** is `json`.
+
+## Outputs
+
+| Output | Type | Meaning |
+|---|---|---|
+| **files** | `COMFYTV_TEXT` | A list of the exported segment files |
+
+## Tips
+
+- In `silence` mode, if it splits too much, raise **min_silence_s** and/or lower **threshold_db**; if it doesn't split enough, do the opposite.
+- Increase **min_segment_s** to throw away breaths and stray noises that would otherwise become their own tiny files.
+- `json` mode is exact and repeatable — use it when you already know the cut points.
+
+## Related nodes
+
+- **Audio Crossfade** — the inverse: join clips back together with a smooth blend.
+- **Audio Mix** — recombine segments into a layered mix.
