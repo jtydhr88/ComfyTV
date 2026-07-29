@@ -406,7 +406,7 @@ class TestResolver:
     def test_upstream_image_masked(self, monkeypatch):
         calls = []
         monkeypatch.setattr(
-            lc, "_composite_masked_image",
+            "ComfyTV.runners._workflow_resolve._composite_masked_image",
             lambda url, mask: calls.append((url, mask)) or "painter/combined.png [input]",
         )
         r = self._r(self._ctx(
@@ -422,7 +422,7 @@ class TestResolver:
     def test_upstream_image_masked_caches_composite(self, monkeypatch):
         calls = []
         monkeypatch.setattr(
-            lc, "_composite_masked_image",
+            "ComfyTV.runners._workflow_resolve._composite_masked_image",
             lambda url, mask: calls.append(url) or "painter/combined.png [input]",
         )
         r = self._r(self._ctx(
