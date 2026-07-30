@@ -55,8 +55,16 @@ export const WorkflowOverviewSchema = z.object({
   file_mtime: z.number().nullable().optional(),
   has_api: z.boolean(),
   gui_valid: z.boolean().nullable().optional(),
+  is_default: z.boolean().optional(),
 })
 export type WorkflowOverview = z.infer<typeof WorkflowOverviewSchema>
+export const SetDefaultWorkflowResultSchema = z.object({
+  ok: z.boolean(),
+  kind: z.string(),
+  label: z.string(),
+  is_default: z.boolean(),
+})
+export type SetDefaultWorkflowResult = z.infer<typeof SetDefaultWorkflowResultSchema>
 export const WorkflowRefSchema = z.object({
   kind: z.string(),
   label: z.string(),

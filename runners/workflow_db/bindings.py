@@ -214,6 +214,45 @@ def update_workflow_meta(
     return True
 
 
+def set_default_workflow(workflow_id: int, default: bool) -> Optional[dict]:
+    db.init()
+    with db.get_session() as s:
+        row = s.get(db.Workflow, workflow_id)
+        if row is None:
+            return None
+        if default:
+            for other in s.execute(
+                select(db.Workflow).where(
+                    db.Workflow.kind == row.kind,
+                    db.Workflow.is_default,
+                    db.Workflow.id != row.id,
+                )
+            ).scalars():
+                other.is_default = False
+        row.is_default = default
+        s.commit()
+        result = {"ok": True, "kind": row.kind, "label": row.label,
+                  "is_default": row.is_default}
+    _log.info("[ComfyTV/workflow_db] default for %s: %s",
+              result["kind"], result["label"] if default else "(cleared)")
+    return result
+
+
+def get_default_label(kind: str) -> Optional[str]:
+    db.init()
+    with db.get_session() as s:
+        row = s.execute(
+            select(db.Workflow).where(
+                db.Workflow.kind == kind, db.Workflow.is_default
+            )
+        ).scalars().first()
+        if row is None:
+            return None
+        if not row.file_path or not Path(row.file_path).exists():
+            return None
+        return row.label
+
+
 def list_workflow_bindings() -> list[dict]:
     db.init()
     with db.get_session() as s:
@@ -297,6 +336,7 @@ def list_workflows_overview(kind: Optional[str] = None) -> list[dict]:
                 "file_mtime":  r.file_mtime,
                 "has_api":     bool(r.api_json),
                 "gui_valid":   _gui_valid_for(path) if path else None,
+                "is_default":  bool(getattr(r, "is_default", False)),
             })
         return out
 

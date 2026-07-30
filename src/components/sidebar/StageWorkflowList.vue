@@ -30,10 +30,15 @@
     <div
       v-for="w in rows"
       :key="w.id"
-      class="ctv:flex ctv:flex-col ctv:gap-0.5 ctv:py-1.5 ctv:px-2 ctv:rounded ctv:border ctv:border-border-subtle"
+      class="ctv-hover-host ctv:flex ctv:flex-col ctv:gap-0.5 ctv:py-1.5 ctv:px-2 ctv:rounded ctv:border ctv:border-border-subtle"
     >
       <div class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:flex-wrap">
         <span class="ctv:font-semibold ctv:truncate">{{ w.label }}</span>
+        <span v-if="w.is_default"
+              :class="[badge, 'ctv:bg-warning-background/15 ctv:text-warning-background']"
+              :title="$t('stageManager.badge.defaultHint')">
+          <i class="pi pi-star-fill ctv:text-3xs" /> {{ $t('stageManager.badge.default') }}
+        </span>
         <span v-if="recentAdded.has(w.label)"
               :class="[badge, 'ctv:bg-success-background/15 ctv:text-success-background']"
               :title="$t('stageManager.badge.newHint')">
@@ -64,6 +69,15 @@
               :title="$t('stageManager.badge.noApiHint')">
           {{ $t('stageManager.badge.noApi') }}
         </span>
+        <span class="ctv:flex-1"></span>
+        <button
+          :class="['ctv-hover-reveal', iconBtn, w.is_default ? 'ctv:text-warning-background' : '']"
+          :title="w.is_default ? $t('stageManager.unsetDefault') : $t('stageManager.setDefault')"
+          :disabled="defaultBusyId === w.id || (!w.is_default && !w.file_exists)"
+          @click="onSetDefault(w, !w.is_default)"
+        >
+          <i :class="['pi', w.is_default ? 'pi-star-fill' : 'pi-star']" />
+        </button>
       </div>
       <div class="ctv:text-3xs ctv:font-mono ctv:text-muted-foreground ctv:truncate" :title="w.file_path">
         {{ fileName(w.file_path) }}
@@ -93,10 +107,12 @@ const {
   loadError,
   importBusy,
   rescanBusy,
+  defaultBusyId,
   recentAdded,
   reload,
   onRescan,
   onImport,
+  onSetDefault,
 } = useStageWorkflowList(
   computed(() => props.kind),
   () => props.active,

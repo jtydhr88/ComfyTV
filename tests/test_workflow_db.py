@@ -1257,3 +1257,86 @@ class TestProvidedApiSidecar:
         self._seed(monkeypatch, tmp_path, with_sidecar=False)
         with pytest.raises(ValueError, match="not found"):
             wdb.save_api_sidecar("image", "Nope", json.dumps(self._API))
+
+
+class TestDefaultWorkflow:
+    def _seed_two(self, tmp_path, monkeypatch, kind="image"):
+        from pathlib import Path
+        wdir = tmp_path / "workflows"
+        kind_dir = wdir / kind
+        kind_dir.mkdir(parents=True, exist_ok=True)
+        (kind_dir / "aaa.json").write_text(json.dumps({"nodes": []}))
+        (kind_dir / "bbb.json").write_text(json.dumps({"nodes": []}))
+        monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
+        wdb.seed_workflows_from_disk((kind,))
+        rows = [r for r in wdb.list_workflows_overview(kind)]
+        return wdir, {r["label"]: r["id"] for r in rows}
+
+    def test_set_default_marks_single_row(self, reset_db, tmp_path, monkeypatch):
+        _, ids = self._seed_two(tmp_path, monkeypatch)
+        res = wdb.set_default_workflow(ids["bbb"], True)
+        assert res == {"ok": True, "kind": "image", "label": "bbb", "is_default": True}
+        assert wdb.get_default_label("image") == "bbb"
+
+        overview = {r["label"]: r["is_default"] for r in wdb.list_workflows_overview("image")}
+        assert overview == {"aaa": False, "bbb": True}
+
+    def test_setting_another_clears_previous(self, reset_db, tmp_path, monkeypatch):
+        _, ids = self._seed_two(tmp_path, monkeypatch)
+        wdb.set_default_workflow(ids["bbb"], True)
+        wdb.set_default_workflow(ids["aaa"], True)
+        overview = {r["label"]: r["is_default"] for r in wdb.list_workflows_overview("image")}
+        assert overview == {"aaa": True, "bbb": False}
+
+    def test_unset_default(self, reset_db, tmp_path, monkeypatch):
+        _, ids = self._seed_two(tmp_path, monkeypatch)
+        wdb.set_default_workflow(ids["bbb"], True)
+        res = wdb.set_default_workflow(ids["bbb"], False)
+        assert res["is_default"] is False
+        assert wdb.get_default_label("image") is None
+
+    def test_default_is_per_kind(self, reset_db, tmp_path, monkeypatch):
+        from pathlib import Path
+        wdir = tmp_path / "workflows"
+        for kind, name in (("image", "img"), ("video", "vid")):
+            kd = wdir / kind
+            kd.mkdir(parents=True, exist_ok=True)
+            (kd / f"{name}.json").write_text(json.dumps({"nodes": []}))
+        monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
+        wdb.seed_workflows_from_disk(("image", "video"))
+        img_id = wdb.list_workflows_overview("image")[0]["id"]
+        wdb.set_default_workflow(img_id, True)
+        assert wdb.get_default_label("image") == "img"
+        assert wdb.get_default_label("video") is None
+
+    def test_unknown_id_returns_none(self, reset_db):
+        assert wdb.set_default_workflow(99999, True) is None
+
+    def test_default_ignored_when_file_deleted(self, reset_db, tmp_path, monkeypatch):
+        wdir, ids = self._seed_two(tmp_path, monkeypatch)
+        wdb.set_default_workflow(ids["bbb"], True)
+        (wdir / "image" / "bbb.json").unlink()
+        assert wdb.get_default_label("image") is None
+
+    def test_default_gone_after_rescan_prunes_row(self, reset_db, tmp_path, monkeypatch):
+        wdir, ids = self._seed_two(tmp_path, monkeypatch)
+        wdb.set_default_workflow(ids["bbb"], True)
+        (wdir / "image" / "bbb.json").unlink()
+        wdb.seed_workflows_from_disk(("image",))
+        labels = [r["label"] for r in wdb.list_workflows_overview("image")]
+        assert labels == ["aaa"]
+        assert wdb.get_default_label("image") is None
+
+    def test_default_for_prefers_chosen_then_falls_back(self, reset_db, tmp_path, monkeypatch):
+        from ComfyTV.runners import refresh_registry
+        from ComfyTV.nodes.stages.common.workflow_lists import default_for
+
+        wdir, ids = self._seed_two(tmp_path, monkeypatch)
+        refresh_registry()
+        assert default_for("image") == "aaa"
+
+        wdb.set_default_workflow(ids["bbb"], True)
+        assert default_for("image") == "bbb"
+
+        (wdir / "image" / "bbb.json").unlink()
+        assert default_for("image") == "aaa"

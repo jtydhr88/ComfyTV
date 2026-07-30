@@ -1,7 +1,7 @@
 import { onBeforeUnmount, onMounted, ref, watch, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { importWorkflow, listWorkflowOverview, rescanWorkflows } from '@/api'
+import { importWorkflow, listWorkflowOverview, rescanWorkflows, setDefaultWorkflow } from '@/api'
 import type { WorkflowOverview } from '@/api'
 import { addOptionEverywhere } from '@/composables/stages/workflowCombo'
 import { app } from '@/lib/comfyApp'
@@ -28,6 +28,7 @@ export function useStageWorkflowList(
   const loadError = ref('')
   const importBusy = ref(false)
   const rescanBusy = ref(false)
+  const defaultBusyId = ref<number | null>(null)
   const recentAdded = ref<Set<string>>(new Set())
 
   async function reload() {
@@ -67,6 +68,21 @@ export function useStageWorkflowList(
       toast('error', t('stageManager.rescanFailed'), String(e?.message || e))
     } finally {
       rescanBusy.value = false
+    }
+  }
+
+  async function onSetDefault(row: WorkflowOverview, isDefault: boolean) {
+    defaultBusyId.value = row.id
+    try {
+      await setDefaultWorkflow(row.id, isDefault)
+      for (const r of rows.value) r.is_default = isDefault && r.id === row.id
+      void (app as any)?.refreshComboInNodes?.()
+      if (isDefault) toast('success', t('stageManager.defaultSet', { label: row.label }))
+      else toast('info', t('stageManager.defaultCleared', { label: row.label }))
+    } catch (e: any) {
+      toast('error', t('stageManager.defaultFailed'), String(e?.message || e))
+    } finally {
+      defaultBusyId.value = null
     }
   }
 
@@ -123,10 +139,12 @@ export function useStageWorkflowList(
     loadError,
     importBusy,
     rescanBusy,
+    defaultBusyId,
     recentAdded,
     reload,
     onRescan,
     onImport,
+    onSetDefault,
     importFile,
   }
 }

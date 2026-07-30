@@ -1,4 +1,4 @@
-from ....runners import RUNNER_REGISTRY
+from ....runners import RUNNER_REGISTRY, workflow_db
 
 
 def labels_for(kind: str) -> list[str]:
@@ -7,4 +7,12 @@ def labels_for(kind: str) -> list[str]:
 
 def default_for(kind: str) -> str:
     labels = RUNNER_REGISTRY.labels_for_kind(kind)
-    return labels[0] if labels else ""
+    if not labels:
+        return ""
+    try:
+        chosen = workflow_db.get_default_label(kind)
+    except Exception:
+        chosen = None
+    if chosen and chosen in labels:
+        return chosen
+    return labels[0]

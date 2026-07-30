@@ -28,6 +28,7 @@ import {
   ScoreEditorImportSchema,
   RemoteRunResultSchema,
   RescanResultSchema,
+  SetDefaultWorkflowResultSchema,
   StageDefaultsSchema,
   TestServerResultSchema,
   UnlinkWorkflowResultSchema,
@@ -48,6 +49,7 @@ import type {
   ProxyEnsureResult,
   RescanResult,
   ScoreEditorImport,
+  SetDefaultWorkflowResult,
   TestServerResult,
 } from './schemas'
 
@@ -147,6 +149,13 @@ export function linkWorkflow(
 
 export function unlinkWorkflow(id: number): Promise<z.infer<typeof UnlinkWorkflowResultSchema>> {
   return apiSend(`/comfytv/workflows/${id}/unlink`, 'POST', UnlinkWorkflowResultSchema)
+}
+
+export function setDefaultWorkflow(
+  id: number, isDefault: boolean,
+): Promise<SetDefaultWorkflowResult> {
+  return apiSend(`/comfytv/workflows/${id}/set_default`, 'POST',
+    SetDefaultWorkflowResultSchema, { default: isDefault })
 }
 
 export function listServers(): Promise<z.infer<typeof ListServersSchema>> {

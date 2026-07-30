@@ -157,6 +157,11 @@
     "rescanNone": "没有发现新工作流",
     "rescanNoneDetail": "请确认文件是 .json 且放在 ComfyTV/workflows/对应类别目录下（preset 和 .api.json 附属文件不算）。",
     "rescanFailed": "重新扫描失败",
+    "setDefault": "设为默认",
+    "unsetDefault": "取消默认",
+    "defaultSet": "{label} 已设为该 Stage 的默认工作流",
+    "defaultCleared": "{label} 已取消默认 —— 将使用列表中的第一个工作流",
+    "defaultFailed": "修改默认工作流失败",
     "section": {
       "workflows": "工作流",
       "params": "参数"
@@ -174,7 +179,9 @@
       "new": "新",
       "newHint": "最近一次扫描（启动或重新扫描）新发现的工作流",
       "builtin": "内置",
-      "builtinHint": "ComfyTV 自带的工作流（git 跟踪）。没有此标记的是用户导入或手动放入的。"
+      "builtinHint": "ComfyTV 自带的工作流（git 跟踪）。没有此标记的是用户导入或手动放入的。",
+      "default": "默认",
+      "defaultHint": "新添加的该类 Stage 节点会预选此工作流。若它被删除或取消链接，则回退到列表中的第一个。"
     }
   },
   "assets": {

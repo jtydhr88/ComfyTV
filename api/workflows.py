@@ -174,6 +174,22 @@ async def workflow_link(request: web.Request) -> web.Response:
     return web.json_response({"ok": True, **result})
 
 
+@routes.post("/comfytv/workflows/{wid}/set_default")
+async def workflow_set_default(request: web.Request) -> web.Response:
+    try:
+        wid = int(request.match_info["wid"])
+    except (KeyError, ValueError):
+        return web.json_response({"error": "invalid workflow id"}, status=400)
+    try:
+        body = await request.json()
+    except Exception:
+        body = {}
+    result = workflow_db.set_default_workflow(wid, bool(body.get("default", True)))
+    if result is None:
+        return web.json_response({"error": "workflow not found"}, status=404)
+    return web.json_response(result)
+
+
 @routes.post("/comfytv/workflows/{wid}/unlink")
 async def workflow_unlink(request: web.Request) -> web.Response:
     try:

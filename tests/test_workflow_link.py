@@ -168,3 +168,14 @@ class TestLinkedMtimeSync:
 
         st2 = wdb.get_workflow_state("image", "a")
         assert st2 and st2["has_api"] is False
+
+
+class TestUnlinkClearsDefault:
+    def test_unlinked_default_falls_back(self, reset_db, native_dir):
+        (native_dir / "fav.json").write_text(GUI, encoding="utf-8")
+        res = wdb.link_workflow("image", "fav.json")
+        wdb.set_default_workflow(res["id"], True)
+        assert wdb.get_default_label("image") == "fav"
+
+        wdb.unlink_workflow(res["id"])
+        assert wdb.get_default_label("image") is None

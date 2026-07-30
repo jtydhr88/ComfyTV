@@ -157,6 +157,11 @@
     "rescanNone": "No new workflows found",
     "rescanNoneDetail": "Make sure the file is a .json inside ComfyTV/workflows/<kind>/ (preset and .api.json sidecars don't count).",
     "rescanFailed": "Rescan failed",
+    "setDefault": "Set as default",
+    "unsetDefault": "Unset default",
+    "defaultSet": "{label} is now the default workflow for this stage",
+    "defaultCleared": "{label} is no longer the default — the first listed workflow is used",
+    "defaultFailed": "Could not change the default workflow",
     "section": {
       "workflows": "Workflows",
       "params": "Parameters"
@@ -174,7 +179,9 @@
       "new": "new",
       "newHint": "Discovered in the most recent scan (startup or rescan)",
       "builtin": "built-in",
-      "builtinHint": "Ships with ComfyTV (tracked in git). Workflows without this badge were imported or dropped in by a user."
+      "builtinHint": "Ships with ComfyTV (tracked in git). Workflows without this badge were imported or dropped in by a user.",
+      "default": "default",
+      "defaultHint": "Newly added stage nodes of this kind start with this workflow selected. If it is deleted or unlinked, the first listed workflow is used instead."
     }
   },
   "assets": {

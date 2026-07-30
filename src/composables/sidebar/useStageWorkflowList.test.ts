@@ -6,10 +6,12 @@ import { app } from '@/lib/comfyApp'
 const listWorkflowOverview = vi.fn()
 const rescanWorkflows = vi.fn()
 const importWorkflow = vi.fn()
+const setDefaultWorkflow = vi.fn()
 vi.mock('@/api', () => ({
   listWorkflowOverview: (...a: any[]) => listWorkflowOverview(...a),
   rescanWorkflows: (...a: any[]) => rescanWorkflows(...a),
   importWorkflow: (...a: any[]) => importWorkflow(...a),
+  setDefaultWorkflow: (...a: any[]) => setDefaultWorkflow(...a),
 }))
 
 const addOptionEverywhere = vi.fn()
@@ -190,6 +192,49 @@ describe('useStageWorkflowList', () => {
       severity: 'error',
       detail: 'denied',
     }))
+  })
+
+  it('onSetDefault marks the row, clears others, and toasts', async () => {
+    listWorkflowOverview.mockResolvedValue(overview({
+      workflows: [
+        { id: 1, label: 'A', has_api: false, is_default: true },
+        { id: 2, label: 'B', has_api: false, is_default: false },
+      ],
+    }))
+    setDefaultWorkflow.mockResolvedValue({ ok: true, kind: 'image', label: 'B', is_default: true })
+    const list = withSetup(() => useStageWorkflowList(ref('image'), () => false, vi.fn()))
+    await flush()
+    await list.onSetDefault(list.rows.value[1] as any, true)
+    expect(setDefaultWorkflow).toHaveBeenCalledWith(2, true)
+    expect(list.rows.value.map(r => r.is_default)).toEqual([false, true])
+    expect(toastAdd).toHaveBeenCalledWith(expect.objectContaining({ severity: 'success' }))
+    expect(list.defaultBusyId.value).toBe(null)
+  })
+
+  it('onSetDefault(false) clears the default and toasts info', async () => {
+    listWorkflowOverview.mockResolvedValue(overview({
+      workflows: [{ id: 1, label: 'A', has_api: false, is_default: true }],
+    }))
+    setDefaultWorkflow.mockResolvedValue({ ok: true, kind: 'image', label: 'A', is_default: false })
+    const list = withSetup(() => useStageWorkflowList(ref('image'), () => false, vi.fn()))
+    await flush()
+    await list.onSetDefault(list.rows.value[0] as any, false)
+    expect(setDefaultWorkflow).toHaveBeenCalledWith(1, false)
+    expect(list.rows.value[0].is_default).toBe(false)
+    expect(toastAdd).toHaveBeenCalledWith(expect.objectContaining({ severity: 'info' }))
+  })
+
+  it('onSetDefault failure toasts an error and leaves rows untouched', async () => {
+    setDefaultWorkflow.mockRejectedValue(new Error('nope'))
+    const list = withSetup(() => useStageWorkflowList(ref('image'), () => false, vi.fn()))
+    await flush()
+    await list.onSetDefault(list.rows.value[0] as any, true)
+    expect(list.rows.value[0].is_default).toBeUndefined()
+    expect(toastAdd).toHaveBeenCalledWith(expect.objectContaining({
+      severity: 'error',
+      detail: 'nope',
+    }))
+    expect(list.defaultBusyId.value).toBe(null)
   })
 
   it('marks the matching row when its API sidecar is generated', async () => {
