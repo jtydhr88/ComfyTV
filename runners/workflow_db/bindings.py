@@ -12,10 +12,10 @@ from ... import db
 _log = logging.getLogger(__name__)
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
-_git_tracked_cache: Optional[set[str]] = None
+_git_tracked_cache: Optional[tuple[frozenset[str], frozenset[str]]] = None
 
 
-def _git_tracked_workflow_paths() -> set[str]:
+def _git_tracked_workflow_paths() -> tuple[frozenset[str], frozenset[str]]:
     global _git_tracked_cache
     if _git_tracked_cache is not None:
         return _git_tracked_cache
@@ -24,14 +24,15 @@ def _git_tracked_workflow_paths() -> set[str]:
             ["git", "-C", str(_REPO_ROOT), "ls-files", "-z", "--", "workflows"],
             capture_output=True, check=True, timeout=10,
         )
-        rels = out.stdout.decode("utf-8", "replace").split("\0")
-        _git_tracked_cache = {
-            str((_REPO_ROOT / r).resolve()) for r in rels if r
-        }
+        rels = [r for r in out.stdout.decode("utf-8", "replace").split("\0") if r]
+        _git_tracked_cache = (
+            frozenset(str((_REPO_ROOT / r).resolve()) for r in rels),
+            frozenset(Path(r).relative_to("workflows").as_posix() for r in rels),
+        )
     except Exception as e:
         _log.info("[ComfyTV/workflow_db] git ls-files unavailable (%s); "
                   "no workflows will be marked built-in", e)
-        _git_tracked_cache = set()
+        _git_tracked_cache = (frozenset(), frozenset())
     return _git_tracked_cache
 
 
@@ -314,15 +315,30 @@ def list_workflows_overview(kind: Optional[str] = None) -> list[dict]:
             stmt = stmt.where(db.Workflow.kind == kind)
         rows = s.execute(stmt).scalars().all()
 
-        tracked = _git_tracked_workflow_paths()
+        tracked_abs, tracked_rel = _git_tracked_workflow_paths()
+        from .seed import _workflows_dir
+        try:
+            managed_root: Optional[Path] = _workflows_dir().resolve()
+        except Exception:
+            managed_root = None
         out: list[dict] = []
         for r in rows:
             path = Path(r.file_path) if r.file_path else None
             file_exists = bool(path and path.exists())
-            try:
-                builtin = bool(path) and str(path.resolve()) in tracked
-            except OSError:
-                builtin = False
+            builtin = False
+            if path is not None:
+                try:
+                    rp = path.resolve()
+                except OSError:
+                    rp = None
+                if rp is not None:
+                    builtin = str(rp) in tracked_abs
+                    if not builtin and managed_root is not None:
+                        try:
+                            rel = rp.relative_to(managed_root).as_posix()
+                        except ValueError:
+                            rel = None
+                        builtin = rel is not None and rel in tracked_rel
             out.append({
                 "builtin":     builtin,
                 "id":          r.id,

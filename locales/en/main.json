@@ -152,10 +152,10 @@
     "refresh": "Refresh list",
     "import": "Import",
     "rescan": "Rescan",
-    "rescanTooltip": "Scan ComfyTV/workflows/ on disk for new, changed, or removed workflow files — no backend restart needed",
+    "rescanTooltip": "Scan the workflow library on disk (comfytv/workflows/ in the ComfyUI user directory) for new, changed, or removed files — no backend restart needed",
     "rescanFound": "Found {n} new workflow(s)",
     "rescanNone": "No new workflows found",
-    "rescanNoneDetail": "Make sure the file is a .json inside ComfyTV/workflows/<kind>/ (preset and .api.json sidecars don't count).",
+    "rescanNoneDetail": "Make sure the file is a .json inside comfytv/workflows/<kind>/ in the ComfyUI user directory (preset and .api.json sidecars don't count).",
     "rescanFailed": "Rescan failed",
     "setDefault": "Set as default",
     "unsetDefault": "Unset default",
@@ -166,7 +166,7 @@
       "workflows": "Workflows",
       "params": "Parameters"
     },
-    "emptyWorkflows": "No workflows registered for this stage yet — import one here, or drop a .json into ComfyTV/workflows/<kind>/ and hit Rescan.",
+    "emptyWorkflows": "No workflows registered for this stage yet — import one here, or drop a .json into comfytv/workflows/<kind>/ in the ComfyUI user directory and hit Rescan.",
     "hint": "Workflows listed here are picked from the workflow dropdown on the matching stage node on the canvas.",
     "badge": {
       "linked": "linked",

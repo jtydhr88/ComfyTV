@@ -81,6 +81,8 @@ export const RescanResultSchema = z.object({
   added: z.array(WorkflowRefSchema),
   pruned: z.number(),
   total: z.number(),
+  synced: z.array(z.string()).optional(),
+  updated: z.array(z.string()).optional(),
 })
 export type RescanResult = z.infer<typeof RescanResultSchema>
 export const WorkflowStateSchema = z.object({

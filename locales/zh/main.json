@@ -152,10 +152,10 @@
     "refresh": "刷新列表",
     "import": "导入",
     "rescan": "重新扫描",
-    "rescanTooltip": "扫描磁盘上的 ComfyTV/workflows/ 目录，发现新增、变更或删除的工作流文件 —— 无需重启后端",
+    "rescanTooltip": "扫描磁盘上的工作流库（ComfyUI user 目录下的 comfytv/workflows/），发现新增、变更或删除的文件 —— 无需重启后端",
     "rescanFound": "发现 {n} 个新工作流",
     "rescanNone": "没有发现新工作流",
-    "rescanNoneDetail": "请确认文件是 .json 且放在 ComfyTV/workflows/对应类别目录下（preset 和 .api.json 附属文件不算）。",
+    "rescanNoneDetail": "请确认文件是 .json 且放在 ComfyUI user 目录下的 comfytv/workflows/对应类别目录中（preset 和 .api.json 附属文件不算）。",
     "rescanFailed": "重新扫描失败",
     "setDefault": "设为默认",
     "unsetDefault": "取消默认",
@@ -166,7 +166,7 @@
       "workflows": "工作流",
       "params": "参数"
     },
-    "emptyWorkflows": "该 Stage 下还没有已注册的工作流 —— 点「导入」上传，或把 .json 放入 ComfyTV/workflows/对应类别目录后点「重新扫描」。",
+    "emptyWorkflows": "该 Stage 下还没有已注册的工作流 —— 点「导入」上传，或把 .json 放入 ComfyUI user 目录下的 comfytv/workflows/对应类别目录后点「重新扫描」。",
     "hint": "这里列出的工作流，在画布上对应 Stage 节点的 workflow 下拉框中选用。",
     "badge": {
       "linked": "外链",

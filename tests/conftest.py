@@ -256,6 +256,9 @@ def reset_db(tmp_path, monkeypatch):
     import folder_paths
     monkeypatch.setattr(folder_paths, "get_user_directory", lambda: str(user_dir))
 
+    from ComfyTV.runners.workflow_db import seed as wdb_seed
+    monkeypatch.setattr(wdb_seed, "_LEGACY_WORKFLOWS_DIR", tmp_path / "legacy-unused")
+
     comfytv_db.init()
     yield comfytv_db
 
