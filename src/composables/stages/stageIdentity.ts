@@ -26,6 +26,34 @@ export function getStageUid(node: any): string {
   return typeof uid === 'string' ? uid : ''
 }
 
+const liveUids = new Map<string, any>()
+
+export function claimStageUid(node: any): string {
+  if (!node) return ''
+  const prev = typeof node.__comfytvClaimedUid === 'string' ? node.__comfytvClaimedUid : ''
+  let uid = ensureStageUid(node)
+  if (prev && prev !== uid && liveUids.get(prev) === node) liveUids.delete(prev)
+  const owner = liveUids.get(uid)
+  if (owner && owner !== node) {
+    uid = genUid()
+    node.properties[PROP] = uid
+    console.warn(
+      `[ComfyTV/stage] node #${node.id}: stage uid already claimed by node #${owner.id} — regenerated`,
+    )
+  }
+  liveUids.set(uid, node)
+  node.__comfytvClaimedUid = uid
+  return uid
+}
+
+export function releaseStageUid(node: any): void {
+  if (!node) return
+  const claimed = typeof node.__comfytvClaimedUid === 'string' ? node.__comfytvClaimedUid : ''
+  const uid = claimed || getStageUid(node)
+  if (uid && liveUids.get(uid) === node) liveUids.delete(uid)
+  delete node.__comfytvClaimedUid
+}
+
 export function stageClassName(node: any): string {
   const cc = String(node?.comfyClass ?? node?.type ?? '')
   const dot = cc.lastIndexOf('.')

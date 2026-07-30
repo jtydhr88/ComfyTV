@@ -56179,7 +56179,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-DE_sNOdS.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-BxIsznRH.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -128406,7 +128406,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-B7g4nUI1.mjs");
+    const { STLLoader } = await import("./STLLoader-C40jiP3z.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -128414,7 +128414,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-CRjCbh-k.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-B2k3II6f.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -193439,6 +193439,36 @@ function ensureStageUid(node) {
   }
   return uid2;
 }
+function getStageUid(node) {
+  var _a2;
+  const uid2 = (_a2 = node == null ? void 0 : node.properties) == null ? void 0 : _a2[PROP];
+  return typeof uid2 === "string" ? uid2 : "";
+}
+const liveUids = /* @__PURE__ */ new Map();
+function claimStageUid(node) {
+  if (!node) return "";
+  const prev = typeof node.__comfytvClaimedUid === "string" ? node.__comfytvClaimedUid : "";
+  let uid2 = ensureStageUid(node);
+  if (prev && prev !== uid2 && liveUids.get(prev) === node) liveUids.delete(prev);
+  const owner = liveUids.get(uid2);
+  if (owner && owner !== node) {
+    uid2 = genUid();
+    node.properties[PROP] = uid2;
+    console.warn(
+      `[ComfyTV/stage] node #${node.id}: stage uid already claimed by node #${owner.id} — regenerated`
+    );
+  }
+  liveUids.set(uid2, node);
+  node.__comfytvClaimedUid = uid2;
+  return uid2;
+}
+function releaseStageUid(node) {
+  if (!node) return;
+  const claimed = typeof node.__comfytvClaimedUid === "string" ? node.__comfytvClaimedUid : "";
+  const uid2 = claimed || getStageUid(node);
+  if (uid2 && liveUids.get(uid2) === node) liveUids.delete(uid2);
+  delete node.__comfytvClaimedUid;
+}
 function stageClassName(node) {
   const cc = String((node == null ? void 0 : node.comfyClass) ?? (node == null ? void 0 : node.type) ?? "");
   const dot = cc.lastIndexOf(".");
@@ -193608,6 +193638,13 @@ function useStageNode(node, kind, variant = "generator") {
   const store2 = useStageStore();
   const executionStore = useExecutionStore();
   const state2 = store2.registerStage(node, kind, variant);
+  const usesStageUid = variant !== "loader" && !isPoolPickerKind(kind);
+  if (usesStageUid) {
+    claimStageUid(node);
+    node.onConfigure = useChainCallback(node.onConfigure, () => {
+      claimStageUid(node);
+    });
+  }
   if (variant === "generator") {
     const promptWidget = (_a2 = node.widgets) == null ? void 0 : _a2.find((w) => w.name === "main_prompt");
     if (promptWidget) {
@@ -194200,6 +194237,7 @@ function useStageNode(node, kind, variant = "generator") {
     executionStore.unregisterNodeHandlers(nodeRunHandlers);
     clearWatchdog();
     _prepUnsub == null ? void 0 : _prepUnsub();
+    releaseStageUid(node);
     store2.unregisterStage(node);
   });
   return { state: state2, onRunRequest, onCancelRequest, onDisconnect, onAction };
@@ -194669,4 +194707,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-DiQsc9gG.mjs.map
+//# sourceMappingURL=main-DbXBIve6.mjs.map

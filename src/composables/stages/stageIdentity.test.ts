@@ -1,6 +1,12 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
-import { ensureStageUid, getStageUid, stageClassName } from './stageIdentity'
+import {
+  claimStageUid,
+  ensureStageUid,
+  getStageUid,
+  releaseStageUid,
+  stageClassName,
+} from './stageIdentity'
 
 describe('ensureStageUid', () => {
   it('returns empty string for a missing node', () => {
@@ -41,6 +47,85 @@ describe('getStageUid', () => {
     expect(getStageUid({})).toBe('')
     expect(getStageUid(null)).toBe('')
     expect(getStageUid({ properties: { comfytv_stage_uid: 7 } })).toBe('')
+  })
+})
+
+describe('claimStageUid / releaseStageUid', () => {
+  it('returns empty string for a missing node', () => {
+    expect(claimStageUid(null)).toBe('')
+    expect(claimStageUid(undefined)).toBe('')
+  })
+
+  it('generates and claims a uid for a fresh node', () => {
+    const node: any = { id: 1 }
+    const uid = claimStageUid(node)
+    expect(uid).toBeTruthy()
+    expect(node.properties.comfytv_stage_uid).toBe(uid)
+  })
+
+  it('is stable across repeated claims by the same node', () => {
+    const node: any = { id: 1 }
+    const uid = claimStageUid(node)
+    expect(claimStageUid(node)).toBe(uid)
+    expect(claimStageUid(node)).toBe(uid)
+  })
+
+  it('regenerates the uid for a clone claiming an already-owned uid', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const original: any = { id: 1 }
+    const uid = claimStageUid(original)
+    const clone: any = { id: 2, properties: { comfytv_stage_uid: uid } }
+    const cloneUid = claimStageUid(clone)
+    expect(cloneUid).not.toBe(uid)
+    expect(clone.properties.comfytv_stage_uid).toBe(cloneUid)
+    expect(original.properties.comfytv_stage_uid).toBe(uid)
+    expect(claimStageUid(original)).toBe(uid)
+    warn.mockRestore()
+  })
+
+  it('keeps the uid across release + re-claim (tab switch)', () => {
+    const node: any = { id: 1 }
+    const uid = claimStageUid(node)
+    releaseStageUid(node)
+    const reloaded: any = { id: 1, properties: { comfytv_stage_uid: uid } }
+    expect(claimStageUid(reloaded)).toBe(uid)
+  })
+
+  it('survives repeated clear + reconfigure cycles without drift', () => {
+    let node: any = { id: 7 }
+    const uid = claimStageUid(node)
+    for (let i = 0; i < 5; i++) {
+      releaseStageUid(node)
+      node = { id: 7, properties: { comfytv_stage_uid: uid } }
+      expect(claimStageUid(node)).toBe(uid)
+    }
+  })
+
+  it('releases a stale claim when configure replaced the uid', () => {
+    const node: any = { id: 1 }
+    const first = claimStageUid(node)
+    node.properties.comfytv_stage_uid = 'configured-uid-a'
+    expect(claimStageUid(node)).toBe('configured-uid-a')
+    const other: any = { id: 2, properties: { comfytv_stage_uid: first } }
+    expect(claimStageUid(other)).toBe(first)
+  })
+
+  it('release is a no-op for a node that never claimed', () => {
+    expect(() => releaseStageUid(null)).not.toThrow()
+    expect(() => releaseStageUid({ id: 9 })).not.toThrow()
+  })
+
+  it('releasing a regenerated clone does not free the original uid', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const original: any = { id: 1 }
+    const uid = claimStageUid(original)
+    const clone: any = { id: 2, properties: { comfytv_stage_uid: uid } }
+    const cloneUid = claimStageUid(clone)
+    releaseStageUid(clone)
+    const intruder: any = { id: 3, properties: { comfytv_stage_uid: uid } }
+    expect(claimStageUid(intruder)).not.toBe(uid)
+    expect(cloneUid).not.toBe(uid)
+    warn.mockRestore()
   })
 })
 

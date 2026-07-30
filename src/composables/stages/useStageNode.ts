@@ -36,7 +36,12 @@ import {
 } from '@/composables/stages/useWorkflowPrep'
 import { getStageMeta } from '@/composables/stages/stageMeta'
 import { addWorkflowUploadButton } from '@/composables/stages/workflowUpload'
-import { ensureStageUid, stageClassName } from '@/composables/stages/stageIdentity'
+import {
+  claimStageUid,
+  ensureStageUid,
+  releaseStageUid,
+  stageClassName,
+} from '@/composables/stages/stageIdentity'
 import { outputTypeForKind } from '@/composables/stages/stageOutputType'
 import { t } from '@/i18n'
 import { useSelectionStore } from '@/stores/selectionStore'
@@ -87,6 +92,14 @@ export function useStageNode(
   const store = useStageStore()
   const executionStore = useExecutionStore()
   const state = store.registerStage(node, kind, variant)
+
+  const usesStageUid = variant !== 'loader' && !isPoolPickerKind(kind)
+  if (usesStageUid) {
+    claimStageUid(node)
+    node.onConfigure = useChainCallback(node.onConfigure, () => {
+      claimStageUid(node)
+    })
+  }
 
   if (variant === 'generator') {
     const promptWidget = node.widgets?.find((w: any) => w.name === 'main_prompt')
@@ -740,6 +753,7 @@ export function useStageNode(
     executionStore.unregisterNodeHandlers(nodeRunHandlers)
     clearWatchdog()
     _prepUnsub?.()
+    releaseStageUid(node)
     store.unregisterStage(node)
   })
 
