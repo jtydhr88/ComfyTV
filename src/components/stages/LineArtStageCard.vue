@@ -3,7 +3,7 @@
     class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full ctv:p-2 ctv:box-border ctv:text-xs ctv:text-base-foreground"
     @contextmenu.stop.prevent
   >
-    <div class="ctv:group ctv:relative ctv:w-full ctv:h-[calc(100%-320px)] ctv:min-h-[240px] ctv:shrink-0 ctv:rounded-md ctv:overflow-hidden ctv:bg-black">
+    <div class="ctv-hover-host ctv:relative ctv:w-full ctv:h-[calc(100%-320px)] ctv:min-h-[240px] ctv:shrink-0 ctv:rounded-md ctv:overflow-hidden ctv:bg-black">
       <img
         v-if="showResult && resultUrl"
         :src="assetUrl(resultUrl)"
@@ -33,8 +33,7 @@
       </div>
 
       <div v-if="showResult && resultUrl"
-           class="ctv:absolute ctv:top-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1 ctv:opacity-0
-                  ctv:group-hover:opacity-100 ctv:transition-opacity">
+           class="ctv-hover-reveal ctv:absolute ctv:top-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1">
         <button type="button" :class="downloadBtnClass"
                 :title="$t('stage.action.download')"
                 @click.stop="onDownloadResult"><i class="pi pi-download" /></button>

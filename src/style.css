@@ -207,6 +207,26 @@ body > .p-overlay-mask.p-blockui-mask-document.p-overlay-mask-leave:empty {
   pointer-events: none !important;
 }
 
+/* Hover-revealed overlay actions. Tailwind gates hover:/group-hover: behind
+   @media (hover: hover), which is false on touch-primary devices (incl. many
+   Windows touchscreen laptops) — so essential controls must not rely on it. */
+.ctv-hover-reveal {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+.ctv-hover-host:hover .ctv-hover-reveal,
+.ctv-hover-host:focus-within .ctv-hover-reveal {
+  opacity: 1;
+  pointer-events: auto;
+}
+@media (hover: none), (pointer: coarse) {
+  .ctv-hover-reveal {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
 .ctv-scroll-thin {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.35) transparent;

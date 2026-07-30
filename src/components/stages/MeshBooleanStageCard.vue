@@ -7,7 +7,7 @@
       ref="hostEl"
       data-capture-wheel="true"
       tabindex="-1"
-      class="ctv:group ctv:relative ctv:w-full ctv:h-[calc(100%-190px)] ctv:min-h-[280px] ctv:shrink-0 ctv:rounded-md ctv:overflow-hidden
+      class="ctv-hover-host ctv:relative ctv:w-full ctv:h-[calc(100%-190px)] ctv:min-h-[280px] ctv:shrink-0 ctv:rounded-md ctv:overflow-hidden
              ctv:bg-black ctv:touch-none ctv:outline-none"
       @pointerenter="onHostEnter"
     >
@@ -47,8 +47,7 @@
       </div>
 
       <div v-if="viewingResult && resultUrl"
-           class="ctv:absolute ctv:top-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1 ctv:opacity-0
-                  ctv:group-hover:opacity-100 ctv:transition-opacity">
+           class="ctv-hover-reveal ctv:absolute ctv:top-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1">
         <button type="button" :class="downloadBtnClass"
                 :title="$t('stage.action.download')"
                 @click.stop="onDownloadResult"><i class="pi pi-download" /></button>

@@ -56179,7 +56179,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-CS55W5-V.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-BukYEkIz.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -128407,7 +128407,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-Cxcqt9EE.mjs");
+    const { STLLoader } = await import("./STLLoader-wmOaej_F.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -128415,7 +128415,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-DD4SJ6KD.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-CAXnbG1d.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -128662,7 +128662,7 @@ const _hoisted_2$2l = {
   key: 1,
   class: "ctv:flex ctv:size-full ctv:items-center ctv:justify-center ctv:text-muted-foreground"
 };
-const _hoisted_3$2l = { class: "ctv:group ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[280px] ctv:rounded-md ctv:overflow-hidden ctv:bg-black" };
+const _hoisted_3$2l = { class: "ctv-hover-host ctv:relative ctv:w-full ctv:flex-1 ctv:min-h-[280px] ctv:rounded-md ctv:overflow-hidden ctv:bg-black" };
 const _hoisted_4$1Z = {
   key: 1,
   class: "ctv:h-full ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50"
@@ -128724,7 +128724,7 @@ const _hoisted_35$4 = {
 };
 const _hoisted_36$3 = { class: "ctv:flex-1 ctv:truncate" };
 const PREVIEW_BTN_BASE$3 = "ctv:relative ctv:inline-flex ctv:items-center ctv:justify-center ctv:cursor-pointer ctv:appearance-none ctv:border-none ctv:transition-colors ctv:size-5 ctv:p-0 ctv:rounded-sm ctv:text-sm";
-const previewActionsClass = "ctv:absolute ctv:top-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1 ctv:opacity-0 ctv:group-hover:opacity-100 ctv:transition-opacity";
+const previewActionsClass = "ctv-hover-reveal ctv:absolute ctv:top-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1";
 const uploadBtnClass = "ctv:relative ctv:inline-flex ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:cursor-pointer ctv:whitespace-nowrap ctv:appearance-none ctv:border-none ctv:transition-colors ctv:disabled:pointer-events-none ctv:disabled:opacity-50 ctv:h-6 ctv:rounded-sm ctv:px-2 ctv:py-1 ctv:text-xs ctv:font-medium ctv:shrink-0 ctv:bg-secondary-background ctv:text-secondary-foreground ctv:hover:bg-secondary-background-hover";
 const _sfc_main$2v = /* @__PURE__ */ defineComponent({
   __name: "ModelLoaderCard",
@@ -129384,7 +129384,7 @@ function useLineArt(node, stageState) {
     onDownloadResult
   };
 }
-const _hoisted_1$3Z = { class: "ctv:group ctv:relative ctv:w-full ctv:h-[calc(100%-320px)] ctv:min-h-[240px] ctv:shrink-0 ctv:rounded-md ctv:overflow-hidden ctv:bg-black" };
+const _hoisted_1$3Z = { class: "ctv-hover-host ctv:relative ctv:w-full ctv:h-[calc(100%-320px)] ctv:min-h-[240px] ctv:shrink-0 ctv:rounded-md ctv:overflow-hidden ctv:bg-black" };
 const _hoisted_2$2j = ["src", "alt"];
 const _hoisted_3$2j = {
   key: 2,
@@ -129397,7 +129397,7 @@ const _hoisted_5$1Q = {
 };
 const _hoisted_6$1F = {
   key: 4,
-  class: "ctv:absolute ctv:top-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1 ctv:opacity-0 ctv:group-hover:opacity-100 ctv:transition-opacity"
+  class: "ctv-hover-reveal ctv:absolute ctv:top-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1"
 };
 const _hoisted_7$1h = ["title"];
 const _hoisted_8$Y = ["title"];
@@ -129838,7 +129838,7 @@ function useMeshOp(node, stageState) {
     onDownloadModel
   };
 }
-const _hoisted_1$3Y = { class: "ctv:group ctv:relative ctv:w-full ctv:h-[calc(100%-320px)] ctv:min-h-[240px] ctv:shrink-0 ctv:rounded-md ctv:overflow-hidden ctv:bg-black" };
+const _hoisted_1$3Y = { class: "ctv-hover-host ctv:relative ctv:w-full ctv:h-[calc(100%-320px)] ctv:min-h-[240px] ctv:shrink-0 ctv:rounded-md ctv:overflow-hidden ctv:bg-black" };
 const _hoisted_2$2i = {
   key: 1,
   class: "ctv:h-full ctv:flex ctv:flex-col ctv:items-center ctv:justify-center ctv:gap-1.5 ctv:text-white/50"
@@ -129850,7 +129850,7 @@ const _hoisted_4$1W = {
 };
 const _hoisted_5$1P = {
   key: 3,
-  class: "ctv:absolute ctv:top-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1 ctv:opacity-0 ctv:group-hover:opacity-100 ctv:transition-opacity"
+  class: "ctv-hover-reveal ctv:absolute ctv:top-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1"
 };
 const _hoisted_6$1E = ["title"];
 const _hoisted_7$1g = ["title"];
@@ -130653,7 +130653,7 @@ const _hoisted_8$V = {
 const _hoisted_9$N = ["onClick"];
 const _hoisted_10$G = {
   key: 1,
-  class: "ctv:absolute ctv:top-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1 ctv:opacity-0 ctv:group-hover:opacity-100 ctv:transition-opacity"
+  class: "ctv-hover-reveal ctv:absolute ctv:top-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1"
 };
 const _hoisted_11$B = ["title"];
 const _hoisted_12$v = ["title"];
@@ -131001,7 +131001,7 @@ const _sfc_main$2p = /* @__PURE__ */ defineComponent({
           ref: hostEl,
           "data-capture-wheel": "true",
           tabindex: "-1",
-          class: "ctv:group ctv:relative ctv:w-full ctv:h-[calc(100%-190px)] ctv:min-h-[280px] ctv:shrink-0 ctv:rounded-md ctv:overflow-hidden ctv:bg-black ctv:touch-none ctv:outline-none",
+          class: "ctv-hover-host ctv:relative ctv:w-full ctv:h-[calc(100%-190px)] ctv:min-h-[280px] ctv:shrink-0 ctv:rounded-md ctv:overflow-hidden ctv:bg-black ctv:touch-none ctv:outline-none",
           onPointerenter: onHostEnter
         }, [
           !unref(modelAUrl) || !unref(modelBUrl) ? (openBlock(), createElementBlock("div", _hoisted_1$3W, [
@@ -164826,7 +164826,7 @@ const _sfc_main$1$ = /* @__PURE__ */ defineComponent({
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(__props.sb.boards.value, (board, idx) => {
             return openBlock(), createElementBlock("div", {
               key: board.uid,
-              class: normalizeClass(["ctv:group ctv:relative ctv:shrink-0 ctv:w-28 ctv:cursor-pointer ctv:rounded ctv:overflow-hidden ctv:border ctv:bg-black", [
+              class: normalizeClass(["ctv-hover-host ctv:relative ctv:shrink-0 ctv:w-28 ctv:cursor-pointer ctv:rounded ctv:overflow-hidden ctv:border ctv:bg-black", [
                 board.uid === __props.sb.currentUid.value ? "ctv:border-primary-background ctv:ring-1 ctv:ring-primary-background" : "ctv:border-border-subtle",
                 __props.sb.playing.value && idx === __props.sb.playIndex.value ? "ctv:outline ctv:outline-1 ctv:outline-success-background" : "",
                 dropIndex.value === idx ? "ctv:ring-2 ctv:ring-warning-background" : ""
@@ -164858,7 +164858,7 @@ const _sfc_main$1$ = /* @__PURE__ */ defineComponent({
                 }, ["stop"]))
               }, toDisplayString$1((unref(boardDurationMs)(__props.sb.doc.value, board) / 1e3).toFixed(1)) + "s", 41, _hoisted_25$3),
               createBaseVNode("div", {
-                class: "ctv:absolute ctv:bottom-0.5 ctv:right-0.5 ctv:hidden ctv:group-hover:flex ctv:gap-px",
+                class: "ctv-hover-reveal ctv:absolute ctv:bottom-0.5 ctv:right-0.5 ctv:flex ctv:gap-px",
                 onClick: _cache2[13] || (_cache2[13] = withModifiers(() => {
                 }, ["stop"]))
               }, [
@@ -194708,4 +194708,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-By_8roy8.mjs.map
+//# sourceMappingURL=main-BVA7ljL2.mjs.map

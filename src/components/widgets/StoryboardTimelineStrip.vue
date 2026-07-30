@@ -100,7 +100,7 @@
       <div
         v-for="(board, idx) in sb.boards.value"
         :key="board.uid"
-        class="ctv:group ctv:relative ctv:shrink-0 ctv:w-28 ctv:cursor-pointer ctv:rounded ctv:overflow-hidden
+        class="ctv-hover-host ctv:relative ctv:shrink-0 ctv:w-28 ctv:cursor-pointer ctv:rounded ctv:overflow-hidden
                ctv:border ctv:bg-black"
         :class="[
           board.uid === sb.currentUid.value
@@ -143,7 +143,7 @@
         >{{ (boardDurationMs(sb.doc.value, board) / 1000).toFixed(1) }}s</span>
 
         <div
-          class="ctv:absolute ctv:bottom-0.5 ctv:right-0.5 ctv:hidden ctv:group-hover:flex ctv:gap-px"
+          class="ctv-hover-reveal ctv:absolute ctv:bottom-0.5 ctv:right-0.5 ctv:flex ctv:gap-px"
           @click.stop
         >
           <button type="button" :class="tileBtn"
