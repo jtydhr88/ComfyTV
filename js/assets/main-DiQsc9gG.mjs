@@ -56179,7 +56179,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-TVSXj_DT.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-DE_sNOdS.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -121662,14 +121662,14 @@ const _sfc_main$2G = /* @__PURE__ */ defineComponent({
   }
 });
 const GRAY$1 = [128, 128, 128];
-const BLACK$1 = [0, 0, 0];
+const BLACK$2 = [0, 0, 0];
 const WHITE$1 = [255, 255, 255];
 const LUMA_STOPS$1 = [
-  { offset: 0, color: BLACK$1 },
+  { offset: 0, color: BLACK$2 },
   { offset: 1, color: WHITE$1 }
 ];
 const GAMMA_STOPS$1 = [
-  { offset: 0, color: BLACK$1 },
+  { offset: 0, color: BLACK$2 },
   { offset: 0.5, color: GRAY$1 },
   { offset: 1, color: WHITE$1 }
 ];
@@ -121677,7 +121677,7 @@ const CONTRAST_STOPS$1 = [
   { offset: 0, color: [136, 136, 136] },
   { offset: 0.4, color: [68, 68, 68] },
   { offset: 0.6, color: [187, 187, 187] },
-  { offset: 0.8, color: BLACK$1 },
+  { offset: 0.8, color: BLACK$2 },
   { offset: 1, color: WHITE$1 }
 ];
 const SAT_STOPS$1 = [
@@ -121731,7 +121731,7 @@ const CHANNEL_STOPS = {
   magenta: [{ offset: 0, color: GRAY$1 }, { offset: 1, color: [255, 0, 255] }],
   yellow: [{ offset: 0, color: GRAY$1 }, { offset: 1, color: [255, 255, 0] }],
   white: [{ offset: 0, color: GRAY$1 }, { offset: 1, color: WHITE$1 }],
-  black: [{ offset: 0, color: GRAY$1 }, { offset: 1, color: BLACK$1 }],
+  black: [{ offset: 0, color: GRAY$1 }, { offset: 1, color: BLACK$2 }],
   neutral: [{ offset: 0, color: [96, 96, 96] }, { offset: 1, color: [192, 192, 192] }]
 };
 function channelStops(name) {
@@ -128406,7 +128406,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-Do7kpN39.mjs");
+    const { STLLoader } = await import("./STLLoader-B7g4nUI1.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -128414,7 +128414,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader--Fif1gC8.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-CRjCbh-k.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -162333,14 +162333,14 @@ const _sfc_main$26 = /* @__PURE__ */ defineComponent({
   }
 });
 const GRAY = [128, 128, 128];
-const BLACK = [0, 0, 0];
+const BLACK$1 = [0, 0, 0];
 const WHITE = [255, 255, 255];
 const LUMA_STOPS = [
-  { offset: 0, color: BLACK },
+  { offset: 0, color: BLACK$1 },
   { offset: 1, color: WHITE }
 ];
 const GAMMA_STOPS = [
-  { offset: 0, color: BLACK },
+  { offset: 0, color: BLACK$1 },
   { offset: 0.5, color: GRAY },
   { offset: 1, color: WHITE }
 ];
@@ -162348,7 +162348,7 @@ const CONTRAST_STOPS = [
   { offset: 0, color: [136, 136, 136] },
   { offset: 0.4, color: [68, 68, 68] },
   { offset: 0.6, color: [187, 187, 187] },
-  { offset: 0.8, color: BLACK },
+  { offset: 0.8, color: BLACK$1 },
   { offset: 1, color: WHITE }
 ];
 const SAT_STOPS = [
@@ -188416,6 +188416,49 @@ function gmNameForProgram(program) {
   }
   return null;
 }
+const GM_DRUMS = {
+  35: "Kick 2",
+  36: "Kick",
+  37: "Stick",
+  38: "Snare",
+  39: "Clap",
+  40: "Snare 2",
+  41: "Tom Lo2",
+  42: "HH Cl",
+  43: "Tom Lo",
+  44: "HH Pedal",
+  45: "Tom Mid",
+  46: "HH Open",
+  47: "Tom Mid2",
+  48: "Tom Hi",
+  49: "Crash",
+  50: "Tom Hi2",
+  51: "Ride",
+  52: "China",
+  53: "Ride Bell",
+  54: "Tamb",
+  55: "Splash",
+  56: "Cowbell",
+  57: "Crash 2",
+  58: "Vibraslap",
+  59: "Ride 2",
+  60: "Bongo Hi",
+  61: "Bongo Lo",
+  62: "Conga Mute",
+  63: "Conga Hi",
+  64: "Conga Lo",
+  65: "Timbale Hi",
+  66: "Timbale Lo",
+  67: "Agogo Hi",
+  68: "Agogo Lo",
+  69: "Cabasa",
+  70: "Maracas",
+  75: "Claves",
+  76: "Woodblk Hi",
+  77: "Woodblk Lo",
+  80: "Tri Mute",
+  81: "Tri Open"
+};
 const _hoisted_1$d = { class: "ctv:font-mono ctv:text-muted-foreground ctv:min-w-9 ctv:text-center" };
 const _hoisted_2$b = {
   key: 0,
@@ -189180,6 +189223,77 @@ function usePianoRoll(opts) {
     snapshot
   };
 }
+function makeNoiseBuffer(ctx) {
+  const buf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  return buf;
+}
+function playDrum(ctx, dest, midi, when, amp, noise2) {
+  if (midi === 35 || midi === 36) {
+    const osc = ctx.createOscillator();
+    const g2 = ctx.createGain();
+    osc.frequency.setValueAtTime(120, when);
+    osc.frequency.exponentialRampToValueAtTime(45, when + 0.12);
+    g2.gain.setValueAtTime(0.5 * amp, when);
+    g2.gain.exponentialRampToValueAtTime(1e-3, when + 0.15);
+    osc.connect(g2).connect(dest);
+    osc.start(when);
+    osc.stop(when + 0.16);
+    return;
+  }
+  const len = midi === 42 || midi === 44 ? 0.05 : midi === 46 ? 0.25 : midi === 49 || midi === 52 || midi === 55 || midi === 57 ? 0.6 : midi === 51 || midi === 53 || midi === 59 ? 0.35 : 0.12;
+  const src = ctx.createBufferSource();
+  src.buffer = noise2;
+  const filter = ctx.createBiquadFilter();
+  filter.type = "highpass";
+  filter.frequency.value = midi === 38 || midi === 39 || midi === 40 ? 1200 : 4e3;
+  const g = ctx.createGain();
+  g.gain.setValueAtTime(0.3 * amp, when);
+  g.gain.exponentialRampToValueAtTime(1e-3, when + len);
+  src.connect(filter).connect(g).connect(dest);
+  src.start(when);
+  src.stop(when + len + 0.02);
+}
+function playTone(ctx, dest, midi, on, off, amp, wave) {
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = wave;
+  osc.frequency.value = 440 * Math.pow(2, (midi - 69) / 12);
+  gain.gain.setValueAtTime(1e-4, on);
+  gain.gain.exponentialRampToValueAtTime(amp, on + 0.01);
+  gain.gain.setValueAtTime(amp, Math.max(on + 0.01, off - 0.04));
+  gain.gain.exponentialRampToValueAtTime(1e-4, off);
+  osc.connect(gain).connect(dest);
+  osc.start(on);
+  osc.stop(off + 0.02);
+}
+const BLACK = /* @__PURE__ */ new Set([1, 3, 6, 8, 10]);
+function buildPianoKeys(noteHeight, perc) {
+  const out = [];
+  for (let midi = 127; midi >= 0; midi--) {
+    const semi = midi % 12;
+    out.push({
+      midi,
+      y: (127 - midi) * noteHeight,
+      black: perc ? !(midi in GM_DRUMS) : BLACK.has(semi),
+      label: perc ? GM_DRUMS[midi] ?? "" : semi === 0 ? `C${Math.floor(midi / 12) - 1}` : ""
+    });
+  }
+  return out;
+}
+function blackRowsGradient(noteHeight) {
+  const dark = [1, 4, 6, 9, 11];
+  const stops = [];
+  let pos = 0;
+  for (let r = 0; r < 12; r++) {
+    const end2 = (r + 1) * noteHeight;
+    const color = dark.includes(r) ? "rgba(0,0,0,0.28)" : "transparent";
+    stops.push(`${color} ${pos}px ${end2}px`);
+    pos = end2;
+  }
+  return `repeating-linear-gradient(to bottom, ${stops.join(", ")})`;
+}
 const _hoisted_1$c = ["title", "onClick"];
 const _hoisted_2$a = ["title"];
 const _hoisted_3$a = { class: "ctv:text-muted-foreground" };
@@ -189244,78 +189358,10 @@ const _sfc_main$b = /* @__PURE__ */ defineComponent({
     const contentEl = /* @__PURE__ */ ref(null);
     const scrollTop = /* @__PURE__ */ ref(0);
     const scrollLeft = /* @__PURE__ */ ref(0);
-    const BLACK2 = /* @__PURE__ */ new Set([1, 3, 6, 8, 10]);
-    const GM_DRUMS = {
-      35: "Kick 2",
-      36: "Kick",
-      37: "Stick",
-      38: "Snare",
-      39: "Clap",
-      40: "Snare 2",
-      41: "Tom Lo2",
-      42: "HH Cl",
-      43: "Tom Lo",
-      44: "HH Pedal",
-      45: "Tom Mid",
-      46: "HH Open",
-      47: "Tom Mid2",
-      48: "Tom Hi",
-      49: "Crash",
-      50: "Tom Hi2",
-      51: "Ride",
-      52: "China",
-      53: "Ride Bell",
-      54: "Tamb",
-      55: "Splash",
-      56: "Cowbell",
-      57: "Crash 2",
-      58: "Vibraslap",
-      59: "Ride 2",
-      60: "Bongo Hi",
-      61: "Bongo Lo",
-      62: "Conga Mute",
-      63: "Conga Hi",
-      64: "Conga Lo",
-      65: "Timbale Hi",
-      66: "Timbale Lo",
-      67: "Agogo Hi",
-      68: "Agogo Lo",
-      69: "Cabasa",
-      70: "Maracas",
-      75: "Claves",
-      76: "Woodblk Hi",
-      77: "Woodblk Lo",
-      80: "Tri Mute",
-      81: "Tri Open"
-    };
     const isPercPart = computed(() => !!roll.current.value.percussion);
-    const keys2 = computed(() => {
-      const perc = isPercPart.value;
-      const out = [];
-      for (let midi = 127; midi >= 0; midi--) {
-        const semi = midi % 12;
-        out.push({
-          midi,
-          y: (127 - midi) * NOTE_HEIGHT$1,
-          black: perc ? !(midi in GM_DRUMS) : BLACK2.has(semi),
-          label: perc ? GM_DRUMS[midi] ?? "" : semi === 0 ? `C${Math.floor(midi / 12) - 1}` : ""
-        });
-      }
-      return out;
-    });
+    const keys2 = computed(() => buildPianoKeys(NOTE_HEIGHT$1, isPercPart.value));
     const barPx = computed(() => roll.pxPerBeat.value * roll.beatsPerBar.value);
-    const blackRows = (() => {
-      const dark = [1, 4, 6, 9, 11];
-      const stops = [];
-      let pos = 0;
-      for (let r = 0; r < 12; r++) {
-        const end2 = (r + 1) * NOTE_HEIGHT$1;
-        const color = dark.includes(r) ? "rgba(0,0,0,0.28)" : "transparent";
-        stops.push(`${color} ${pos}px ${end2}px`);
-        pos = end2;
-      }
-      return `repeating-linear-gradient(to bottom, ${stops.join(", ")})`;
-    })();
+    const blackRows = blackRowsGradient(NOTE_HEIGHT$1);
     const gridStyle = computed(() => {
       const pb = roll.pxPerBeat.value;
       return {
@@ -189365,41 +189411,12 @@ const _sfc_main$b = /* @__PURE__ */ defineComponent({
     });
     let audioCtx = null;
     let noiseBuf = null;
-    function noiseBuffer(ctx) {
-      if (!noiseBuf) {
-        noiseBuf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
-        const d = noiseBuf.getChannelData(0);
-        for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
-      }
+    function noise2() {
+      noiseBuf ?? (noiseBuf = makeNoiseBuffer(audioCtx));
       return noiseBuf;
     }
     function drumHit(midi, when, dest, vel = 0.8) {
-      const ctx = audioCtx;
-      const amp = vel / 0.8;
-      if (midi === 35 || midi === 36) {
-        const osc = ctx.createOscillator();
-        const g2 = ctx.createGain();
-        osc.frequency.setValueAtTime(120, when);
-        osc.frequency.exponentialRampToValueAtTime(45, when + 0.12);
-        g2.gain.setValueAtTime(0.5 * amp, when);
-        g2.gain.exponentialRampToValueAtTime(1e-3, when + 0.15);
-        osc.connect(g2).connect(dest);
-        osc.start(when);
-        osc.stop(when + 0.16);
-        return;
-      }
-      const len = midi === 42 || midi === 44 ? 0.05 : midi === 46 ? 0.25 : midi === 49 || midi === 52 || midi === 55 || midi === 57 ? 0.6 : midi === 51 || midi === 53 || midi === 59 ? 0.35 : 0.12;
-      const src = ctx.createBufferSource();
-      src.buffer = noiseBuffer(ctx);
-      const filter = ctx.createBiquadFilter();
-      filter.type = "highpass";
-      filter.frequency.value = midi === 38 || midi === 39 || midi === 40 ? 1200 : 4e3;
-      const g = ctx.createGain();
-      g.gain.setValueAtTime(0.3 * amp, when);
-      g.gain.exponentialRampToValueAtTime(1e-3, when + len);
-      src.connect(filter).connect(g).connect(dest);
-      src.start(when);
-      src.stop(when + len + 0.02);
+      playDrum(audioCtx, dest, midi, when, vel / 0.8, noise2());
     }
     function beep(midi) {
       try {
@@ -189481,17 +189498,7 @@ const _sfc_main$b = /* @__PURE__ */ defineComponent({
           }
           const off = on + Math.max(0.05, n.dur * secPerBeat);
           const amp = 0.125 * (n.vel ?? 0.8);
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-          osc.type = wave;
-          osc.frequency.value = 440 * Math.pow(2, (n.midi - 69) / 12);
-          gain.gain.setValueAtTime(1e-4, on);
-          gain.gain.exponentialRampToValueAtTime(amp, on + 0.01);
-          gain.gain.setValueAtTime(amp, Math.max(on + 0.01, off - 0.04));
-          gain.gain.exponentialRampToValueAtTime(1e-4, off);
-          osc.connect(gain).connect(playMaster);
-          osc.start(on);
-          osc.stop(off + 0.02);
+          playTone(audioCtx, playMaster, n.midi, on, off, amp, wave);
         }
       });
       if (playEndBeat === 0) {
@@ -190542,50 +190549,6 @@ const _sfc_main$a = /* @__PURE__ */ defineComponent({
     const contentEl = /* @__PURE__ */ ref(null);
     const scrollTop = /* @__PURE__ */ ref(0);
     const scrollLeft = /* @__PURE__ */ ref(0);
-    const BLACK2 = /* @__PURE__ */ new Set([1, 3, 6, 8, 10]);
-    const GM_DRUMS = {
-      35: "Kick 2",
-      36: "Kick",
-      37: "Stick",
-      38: "Snare",
-      39: "Clap",
-      40: "Snare 2",
-      41: "Tom Lo2",
-      42: "HH Cl",
-      43: "Tom Lo",
-      44: "HH Pedal",
-      45: "Tom Mid",
-      46: "HH Open",
-      47: "Tom Mid2",
-      48: "Tom Hi",
-      49: "Crash",
-      50: "Tom Hi2",
-      51: "Ride",
-      52: "China",
-      53: "Ride Bell",
-      54: "Tamb",
-      55: "Splash",
-      56: "Cowbell",
-      57: "Crash 2",
-      58: "Vibraslap",
-      59: "Ride 2",
-      60: "Bongo Hi",
-      61: "Bongo Lo",
-      62: "Conga Mute",
-      63: "Conga Hi",
-      64: "Conga Lo",
-      65: "Timbale Hi",
-      66: "Timbale Lo",
-      67: "Agogo Hi",
-      68: "Agogo Lo",
-      69: "Cabasa",
-      70: "Maracas",
-      75: "Claves",
-      76: "Woodblk Hi",
-      77: "Woodblk Lo",
-      80: "Tri Mute",
-      81: "Tri Open"
-    };
     const isDrumChannel = computed(() => roll.current.value.ch === 9);
     const hasDrums = computed(() => roll.channels.some((c2) => c2.ch === 9));
     const mutedCh = /* @__PURE__ */ ref(/* @__PURE__ */ new Set());
@@ -190629,20 +190592,7 @@ const _sfc_main$a = /* @__PURE__ */ defineComponent({
       const num2 = GM_PROGRAM_NUMBERS[v];
       if (num2 !== void 0) roll.setProgram(roll.activeChannel.value, num2);
     }
-    const keys2 = computed(() => {
-      const perc = isDrumChannel.value;
-      const out = [];
-      for (let midi = 127; midi >= 0; midi--) {
-        const semi = midi % 12;
-        out.push({
-          midi,
-          y: (127 - midi) * NOTE_HEIGHT,
-          black: perc ? !(midi in GM_DRUMS) : BLACK2.has(semi),
-          label: perc ? GM_DRUMS[midi] ?? "" : semi === 0 ? `C${Math.floor(midi / 12) - 1}` : ""
-        });
-      }
-      return out;
-    });
+    const keys2 = computed(() => buildPianoKeys(NOTE_HEIGHT, isDrumChannel.value));
     const rulerTicks = computed(() => {
       const px2 = roll.pxPerSec.value;
       const step = px2 >= 48 ? 1 : px2 >= 16 ? 5 : px2 >= 4 ? 15 : 60;
@@ -190650,18 +190600,7 @@ const _sfc_main$a = /* @__PURE__ */ defineComponent({
       for (let s = 0; s <= roll.totalSec.value; s += step) out.push(s);
       return out;
     });
-    const blackRows = (() => {
-      const dark = [1, 4, 6, 9, 11];
-      const stops = [];
-      let pos = 0;
-      for (let r = 0; r < 12; r++) {
-        const end2 = (r + 1) * NOTE_HEIGHT;
-        const color = dark.includes(r) ? "rgba(0,0,0,0.28)" : "transparent";
-        stops.push(`${color} ${pos}px ${end2}px`);
-        pos = end2;
-      }
-      return `repeating-linear-gradient(to bottom, ${stops.join(", ")})`;
-    })();
+    const blackRows = blackRowsGradient(NOTE_HEIGHT);
     const gridStyle = computed(() => {
       const px2 = roll.pxPerSec.value;
       return {
@@ -190726,41 +190665,12 @@ const _sfc_main$a = /* @__PURE__ */ defineComponent({
     });
     let audioCtx = null;
     let noiseBuf = null;
-    function noiseBuffer(ctx) {
-      if (!noiseBuf) {
-        noiseBuf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
-        const d = noiseBuf.getChannelData(0);
-        for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
-      }
+    function noise2() {
+      noiseBuf ?? (noiseBuf = makeNoiseBuffer(audioCtx));
       return noiseBuf;
     }
     function drumHit(midi, when, dest, vel = 100) {
-      const ctx = audioCtx;
-      const amp = vel / 100;
-      if (midi === 35 || midi === 36) {
-        const osc = ctx.createOscillator();
-        const g2 = ctx.createGain();
-        osc.frequency.setValueAtTime(120, when);
-        osc.frequency.exponentialRampToValueAtTime(45, when + 0.12);
-        g2.gain.setValueAtTime(0.5 * amp, when);
-        g2.gain.exponentialRampToValueAtTime(1e-3, when + 0.15);
-        osc.connect(g2).connect(dest);
-        osc.start(when);
-        osc.stop(when + 0.16);
-        return;
-      }
-      const len = midi === 42 || midi === 44 ? 0.05 : midi === 46 ? 0.25 : midi === 49 || midi === 52 || midi === 55 || midi === 57 ? 0.6 : midi === 51 || midi === 53 || midi === 59 ? 0.35 : 0.12;
-      const src = ctx.createBufferSource();
-      src.buffer = noiseBuffer(ctx);
-      const filter = ctx.createBiquadFilter();
-      filter.type = "highpass";
-      filter.frequency.value = midi === 38 || midi === 39 || midi === 40 ? 1200 : 4e3;
-      const g = ctx.createGain();
-      g.gain.setValueAtTime(0.3 * amp, when);
-      g.gain.exponentialRampToValueAtTime(1e-3, when + len);
-      src.connect(filter).connect(g).connect(dest);
-      src.start(when);
-      src.stop(when + len + 0.02);
+      playDrum(audioCtx, dest, midi, when, vel / 100, noise2());
     }
     function beep(midi) {
       try {
@@ -190820,17 +190730,7 @@ const _sfc_main$a = /* @__PURE__ */ defineComponent({
         }
         const off = on + Math.max(0.05, n.dur);
         const amp = 0.125 * (n.vel / 100);
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = n.wave;
-        osc.frequency.value = 440 * Math.pow(2, (n.midi - 69) / 12);
-        gain.gain.setValueAtTime(1e-4, on);
-        gain.gain.exponentialRampToValueAtTime(amp, on + 0.01);
-        gain.gain.setValueAtTime(amp, Math.max(on + 0.01, off - 0.04));
-        gain.gain.exponentialRampToValueAtTime(1e-4, off);
-        osc.connect(gain).connect(playMaster);
-        osc.start(on);
-        osc.stop(off + 0.02);
+        playTone(audioCtx, playMaster, n.midi, on, off, amp, n.wave);
       }
     }
     function playTick() {
@@ -194769,4 +194669,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-RNYDL-X1.mjs.map
+//# sourceMappingURL=main-DiQsc9gG.mjs.map

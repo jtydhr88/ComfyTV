@@ -227,6 +227,8 @@ import { useStrWidget } from '@/composables/widgets/useWidgetModel'
 import { midiEvents } from '@/api'
 import { rollColor } from '@/utils/midiRoll'
 import { GM_NAMES, GM_PROGRAM_NUMBERS, gmNameForProgram } from '@/constants/gmPrograms'
+import { makeNoiseBuffer, playDrum, playTone } from '@/composables/stages/midiSynth'
+import { buildPianoKeys, blackRowsGradient } from '@/composables/stages/pianoRollView'
 import { useI18n } from 'vue-i18n'
 
 const props = defineProps<{
@@ -252,20 +254,6 @@ const scrollEl = ref<HTMLElement | null>(null)
 const contentEl = ref<HTMLElement | null>(null)
 const scrollTop = ref(0)
 const scrollLeft = ref(0)
-
-const BLACK = new Set([1, 3, 6, 8, 10])
-
-const GM_DRUMS: Record<number, string> = {
-  35: 'Kick 2', 36: 'Kick', 37: 'Stick', 38: 'Snare', 39: 'Clap',
-  40: 'Snare 2', 41: 'Tom Lo2', 42: 'HH Cl', 43: 'Tom Lo', 44: 'HH Pedal',
-  45: 'Tom Mid', 46: 'HH Open', 47: 'Tom Mid2', 48: 'Tom Hi', 49: 'Crash',
-  50: 'Tom Hi2', 51: 'Ride', 52: 'China', 53: 'Ride Bell', 54: 'Tamb',
-  55: 'Splash', 56: 'Cowbell', 57: 'Crash 2', 58: 'Vibraslap', 59: 'Ride 2',
-  60: 'Bongo Hi', 61: 'Bongo Lo', 62: 'Conga Mute', 63: 'Conga Hi',
-  64: 'Conga Lo', 65: 'Timbale Hi', 66: 'Timbale Lo', 67: 'Agogo Hi',
-  68: 'Agogo Lo', 69: 'Cabasa', 70: 'Maracas', 75: 'Claves',
-  76: 'Woodblk Hi', 77: 'Woodblk Lo', 80: 'Tri Mute', 81: 'Tri Open',
-}
 
 const isDrumChannel = computed(() => roll.current.value.ch === 9)
 const hasDrums = computed(() => roll.channels.some((c) => c.ch === 9))
@@ -317,22 +305,7 @@ function onProgramChange(e: Event): void {
   if (num !== undefined) roll.setProgram(roll.activeChannel.value, num)
 }
 
-const keys = computed(() => {
-  const perc = isDrumChannel.value
-  const out: Array<{ midi: number; y: number; black: boolean; label: string }> = []
-  for (let midi = 127; midi >= 0; midi--) {
-    const semi = midi % 12
-    out.push({
-      midi,
-      y: (127 - midi) * NOTE_HEIGHT,
-      black: perc ? !(midi in GM_DRUMS) : BLACK.has(semi),
-      label: perc
-        ? (GM_DRUMS[midi] ?? '')
-        : (semi === 0 ? `C${Math.floor(midi / 12) - 1}` : ''),
-    })
-  }
-  return out
-})
+const keys = computed(() => buildPianoKeys(NOTE_HEIGHT, isDrumChannel.value))
 
 const rulerTicks = computed(() => {
   const px = roll.pxPerSec.value
@@ -342,18 +315,7 @@ const rulerTicks = computed(() => {
   return out
 })
 
-const blackRows = (() => {
-  const dark = [1, 4, 6, 9, 11]
-  const stops: string[] = []
-  let pos = 0
-  for (let r = 0; r < 12; r++) {
-    const end = (r + 1) * NOTE_HEIGHT
-    const color = dark.includes(r) ? 'rgba(0,0,0,0.28)' : 'transparent'
-    stops.push(`${color} ${pos}px ${end}px`)
-    pos = end
-  }
-  return `repeating-linear-gradient(to bottom, ${stops.join(', ')})`
-})()
+const blackRows = blackRowsGradient(NOTE_HEIGHT)
 
 const gridStyle = computed(() => {
   const px = roll.pxPerSec.value
@@ -424,47 +386,13 @@ const ghostBlocks = computed(() => {
 let audioCtx: AudioContext | null = null
 let noiseBuf: AudioBuffer | null = null
 
-function noiseBuffer(ctx: AudioContext): AudioBuffer {
-  if (!noiseBuf) {
-    noiseBuf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate)
-    const d = noiseBuf.getChannelData(0)
-    for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1
-  }
+function noise(): AudioBuffer {
+  noiseBuf ??= makeNoiseBuffer(audioCtx!)
   return noiseBuf
 }
 
 function drumHit(midi: number, when: number, dest: AudioNode, vel = 100): void {
-  const ctx = audioCtx!
-  const amp = vel / 100
-  if (midi === 35 || midi === 36) {
-    const osc = ctx.createOscillator()
-    const g = ctx.createGain()
-    osc.frequency.setValueAtTime(120, when)
-    osc.frequency.exponentialRampToValueAtTime(45, when + 0.12)
-    g.gain.setValueAtTime(0.5 * amp, when)
-    g.gain.exponentialRampToValueAtTime(0.001, when + 0.15)
-    osc.connect(g).connect(dest)
-    osc.start(when)
-    osc.stop(when + 0.16)
-    return
-  }
-  const len = midi === 42 || midi === 44 ? 0.05
-    : midi === 46 ? 0.25
-    : midi === 49 || midi === 52 || midi === 55 || midi === 57 ? 0.6
-    : midi === 51 || midi === 53 || midi === 59 ? 0.35
-    : 0.12
-  const src = ctx.createBufferSource()
-  src.buffer = noiseBuffer(ctx)
-  const filter = ctx.createBiquadFilter()
-  filter.type = 'highpass'
-  filter.frequency.value =
-    midi === 38 || midi === 39 || midi === 40 ? 1200 : 4000
-  const g = ctx.createGain()
-  g.gain.setValueAtTime(0.3 * amp, when)
-  g.gain.exponentialRampToValueAtTime(0.001, when + len)
-  src.connect(filter).connect(g).connect(dest)
-  src.start(when)
-  src.stop(when + len + 0.02)
+  playDrum(audioCtx!, dest, midi, when, vel / 100, noise())
 }
 
 function beep(midi: number): void {
@@ -528,17 +456,7 @@ function scheduleAhead(): void {
     }
     const off = on + Math.max(0.05, n.dur)
     const amp = 0.125 * (n.vel / 100)
-    const osc = audioCtx.createOscillator()
-    const gain = audioCtx.createGain()
-    osc.type = n.wave
-    osc.frequency.value = 440 * Math.pow(2, (n.midi - 69) / 12)
-    gain.gain.setValueAtTime(0.0001, on)
-    gain.gain.exponentialRampToValueAtTime(amp, on + 0.01)
-    gain.gain.setValueAtTime(amp, Math.max(on + 0.01, off - 0.04))
-    gain.gain.exponentialRampToValueAtTime(0.0001, off)
-    osc.connect(gain).connect(playMaster)
-    osc.start(on)
-    osc.stop(off + 0.02)
+    playTone(audioCtx, playMaster, n.midi, on, off, amp, n.wave)
   }
 }
 

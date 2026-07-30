@@ -27,3 +27,15 @@ export function gmNameForProgram(program: number): string | null {
   }
   return null
 }
+
+export const GM_DRUMS: Record<number, string> = {
+  35: 'Kick 2', 36: 'Kick', 37: 'Stick', 38: 'Snare', 39: 'Clap',
+  40: 'Snare 2', 41: 'Tom Lo2', 42: 'HH Cl', 43: 'Tom Lo', 44: 'HH Pedal',
+  45: 'Tom Mid', 46: 'HH Open', 47: 'Tom Mid2', 48: 'Tom Hi', 49: 'Crash',
+  50: 'Tom Hi2', 51: 'Ride', 52: 'China', 53: 'Ride Bell', 54: 'Tamb',
+  55: 'Splash', 56: 'Cowbell', 57: 'Crash 2', 58: 'Vibraslap', 59: 'Ride 2',
+  60: 'Bongo Hi', 61: 'Bongo Lo', 62: 'Conga Mute', 63: 'Conga Hi',
+  64: 'Conga Lo', 65: 'Timbale Hi', 66: 'Timbale Lo', 67: 'Agogo Hi',
+  68: 'Agogo Lo', 69: 'Cabasa', 70: 'Maracas', 75: 'Claves',
+  76: 'Woodblk Hi', 77: 'Woodblk Lo', 80: 'Tri Mute', 81: 'Tri Open',
+}
