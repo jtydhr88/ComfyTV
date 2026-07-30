@@ -56179,7 +56179,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-DIH0SkyM.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-TVSXj_DT.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -106189,13 +106189,6 @@ void main() {
 }
 `;
 const MAX_PASSES = 32;
-const DEFAULT_CONFIG = {
-  maxInputs: 5,
-  maxFloatUniforms: 20,
-  maxIntUniforms: 20,
-  maxBoolUniforms: 10,
-  maxCurves: 4
-};
 let shared = null;
 let sharedSeq = 0;
 let instanceCount = 0;
@@ -106298,6 +106291,13 @@ function getSharedProgram(s, source) {
   s.programs.set(source, entry);
   return entry;
 }
+const DEFAULT_CONFIG = {
+  maxInputs: 5,
+  maxFloatUniforms: 20,
+  maxIntUniforms: 20,
+  maxBoolUniforms: 10,
+  maxCurves: 4
+};
 function useGLSLRenderer(config2 = DEFAULT_CONFIG) {
   const { maxInputs, maxCurves } = config2;
   let ref2 = null;
@@ -106317,7 +106317,7 @@ function useGLSLRenderer(config2 = DEFAULT_CONFIG) {
     length: maxCurves
   }).fill(null);
   let disposed = false;
-  instanceCount++;
+  const untrack = trackSharedInstance();
   function resetLocalHandles() {
     pingPong = null;
     fallbackTexture = null;
@@ -106375,7 +106375,7 @@ function useGLSLRenderer(config2 = DEFAULT_CONFIG) {
   }
   function live() {
     if (disposed) return null;
-    const s = healthyShared();
+    const s = acquireSharedGL();
     if (!s) return null;
     if (ref2 !== s) {
       resetLocalHandles();
@@ -106607,7 +106607,6 @@ function useGLSLRenderer(config2 = DEFAULT_CONFIG) {
   function dispose() {
     if (disposed) return;
     disposed = true;
-    instanceCount--;
     const s = ref2;
     ref2 = null;
     if (s && !s.lost && !s.gl.isContextLost()) {
@@ -106621,7 +106620,7 @@ function useGLSLRenderer(config2 = DEFAULT_CONFIG) {
       destroyPingPong(s);
     }
     resetLocalHandles();
-    releaseSharedIfIdle();
+    untrack();
   }
   return {
     init,
@@ -108620,7 +108619,6 @@ class VideoSelectiveColorRenderer extends FxPreviewRenderer {
     });
   }
 }
-const TRAIL_LEN = 5;
 const MASK64 = (1n << 64n) - 1n;
 const MASK24 = 16777215;
 function permTable(seed) {
@@ -108760,6 +108758,7 @@ function hexRgb(s, fallback) {
     parseInt(c2.slice(4, 6), 16) / 255
   ];
 }
+const TRAIL_LEN = 5;
 class ParticleSimTs {
   constructor(params, w, h2, fps) {
     __publicField(this, "p");
@@ -128407,7 +128406,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-CcWO0_di.mjs");
+    const { STLLoader } = await import("./STLLoader-Do7kpN39.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -128415,7 +128414,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-Bjy3Apfk.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader--Fif1gC8.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -194770,4 +194769,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-epfd4ZjY.mjs.map
+//# sourceMappingURL=main-RNYDL-X1.mjs.map

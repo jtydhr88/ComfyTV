@@ -1,3 +1,10 @@
+export * from './particles/noise'
+export * from './particles/curves'
+export * from './particles/color'
+import { permTable, hashU, fbm3 } from './particles/noise'
+import { parseCurve, curveLut } from './particles/curves'
+import { hexRgb } from './particles/color'
+
 export interface ParticleParams {
   emitter?: string
   e_x0?: number
@@ -46,156 +53,6 @@ export interface ParticleParams {
 }
 
 export const TRAIL_LEN = 5
-
-const MASK64 = (1n << 64n) - 1n
-const MASK24 = 0xffffff
-
-export function permTable(seed: number): Int32Array {
-  let state = BigInt((Math.trunc(seed) & 0x7fffffff) || 1)
-  const p: number[] = []
-  for (let i = 0; i < 256; i++) p.push(i)
-  for (let i = 255; i > 0; i--) {
-    state = (state + 0x9e3779b97f4a7c15n) & MASK64
-    let z = state
-    z = ((z ^ (z >> 30n)) * 0xbf58476d1ce4e5b9n) & MASK64
-    z = ((z ^ (z >> 27n)) * 0x94d049bb133111ebn) & MASK64
-    z = z ^ (z >> 31n)
-    const j = Number(z % BigInt(i + 1))
-    const tmp = p[i]
-    p[i] = p[j]
-    p[j] = tmp
-  }
-  const out = new Int32Array(512)
-  for (let i = 0; i < 256; i++) {
-    out[i] = p[i]
-    out[i + 256] = p[i]
-  }
-  return out
-}
-
-export function hashU(id: number, seed: number, k: number): number {
-  let h = (BigInt(id) * 2654435761n) & MASK64
-  h ^= (BigInt(Math.trunc(seed) + 1) * 40503n) & MASK64
-  h ^= (BigInt(k + 1) * 2246822519n) & MASK64
-  h = ((h ^ (h >> 13n)) * 0x5bd1e995n) & MASK64
-  h = h ^ (h >> 15n)
-  return Number(h & BigInt(MASK24)) / MASK24
-}
-
-const GRAD3 = [
-  [1, 1, 0], [-1, 1, 0], [1, -1, 0], [-1, -1, 0],
-  [1, 0, 1], [-1, 0, 1], [1, 0, -1], [-1, 0, -1],
-  [0, 1, 1], [0, -1, 1], [0, 1, -1], [0, -1, -1],
-]
-
-function fade(t: number): number {
-  return t * t * t * (t * (t * 6 - 15) + 10)
-}
-
-export function perlin3(x: number, y: number, z: number,
-                        perm: Int32Array): number {
-  const xf0 = Math.floor(x)
-  const yf0 = Math.floor(y)
-  const zf0 = Math.floor(z)
-  const xi = xf0 & 255
-  const yi = yf0 & 255
-  const zi = zf0 & 255
-  const xf = x - xf0
-  const yf = y - yf0
-  const zf = z - zf0
-  const u = fade(xf)
-  const v = fade(yf)
-  const w = fade(zf)
-
-  const corner = (ox: number, oy: number, oz: number): number => {
-    const hsh = perm[perm[perm[(xi + ox) & 255] + ((yi + oy) & 255)]
-      + ((zi + oz) & 255)] % 12
-    const g = GRAD3[hsh]
-    return g[0] * (xf - ox) + g[1] * (yf - oy) + g[2] * (zf - oz)
-  }
-  const lerp = (a: number, b: number, t: number): number => a + t * (b - a)
-
-  const x00 = lerp(corner(0, 0, 0), corner(1, 0, 0), u)
-  const x10 = lerp(corner(0, 1, 0), corner(1, 1, 0), u)
-  const x01 = lerp(corner(0, 0, 1), corner(1, 0, 1), u)
-  const x11 = lerp(corner(0, 1, 1), corner(1, 1, 1), u)
-  return lerp(lerp(x00, x10, v), lerp(x01, x11, v), w)
-}
-
-export function fbm3(x: number, y: number, z: number, perm: Int32Array,
-                     octaves = 4, lacunarity = 2.0, gain = 0.5,
-                     turbulence = false): number {
-  let out = 0
-  let amp = 1
-  let total = 0
-  let px = x
-  let py = y
-  let pz = z
-  for (let o = 0; o < Math.max(1, octaves); o++) {
-    const val = perlin3(px, py, pz, perm)
-    out += (turbulence ? Math.abs(val) : val) * amp
-    total += amp
-    amp *= gain
-    px = px * lacunarity + 1234
-    py = py * lacunarity + 1234
-    pz = pz * lacunarity + 1234
-  }
-  return out / Math.max(1e-6, total)
-}
-
-export type CurveKeys = Array<[number, number]>
-
-export function parseCurve(raw: unknown): CurveKeys | null {
-  let keys: unknown = raw
-  if (typeof raw === 'string') {
-    if (!raw.trim()) return null
-    try {
-      keys = JSON.parse(raw)
-    } catch {
-      return null
-    }
-  }
-  if (!Array.isArray(keys)) return null
-  const out: CurveKeys = []
-  for (const k of keys) {
-    const t = Number((k as { t?: unknown })?.t)
-    const v = Number((k as { v?: unknown })?.v)
-    if (Number.isFinite(t) && Number.isFinite(v)) out.push([t, v])
-  }
-  if (out.length < 2) return null
-  return out.sort((a, b) => a[0] - b[0])
-}
-
-export function sampleCurve(keys: CurveKeys, frac: number): number {
-  if (frac <= keys[0][0]) return keys[0][1]
-  if (frac >= keys[keys.length - 1][0]) return keys[keys.length - 1][1]
-  for (let i = 0; i < keys.length - 1; i++) {
-    const [t0, v0] = keys[i]
-    const [t1, v1] = keys[i + 1]
-    if (t0 <= frac && frac <= t1) {
-      const u = (frac - t0) / Math.max(1e-9, t1 - t0)
-      const s = u * u * (3 - 2 * u)
-      return v0 + (v1 - v0) * s
-    }
-  }
-  return keys[keys.length - 1][1]
-}
-
-function curveLut(keys: CurveKeys, n = 64): Float64Array {
-  const out = new Float64Array(n)
-  for (let i = 0; i < n; i++) out[i] = sampleCurve(keys, i / (n - 1))
-  return out
-}
-
-export function hexRgb(s: string | undefined,
-                       fallback: string): [number, number, number] {
-  const c = (s || fallback).replace('#', '')
-  return [
-    parseInt(c.slice(0, 2), 16) / 255,
-    parseInt(c.slice(2, 4), 16) / 255,
-    parseInt(c.slice(4, 6), 16) / 255,
-  ]
-}
 
 interface Particle {
   x: number

@@ -13,7 +13,7 @@ import {
   trackSharedInstance,
   type ProgramEntry,
   type SharedGL,
-} from '@/widgets/glsl/useGLSLRenderer'
+} from '@/widgets/glsl/sharedGLContext'
 
 export interface VideoLutRenderParams {
   lut: ParsedLut | null
