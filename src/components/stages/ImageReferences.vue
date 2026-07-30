@@ -34,7 +34,7 @@
       <div
         v-for="(ref, i) in refs"
         :key="ref.asset_id"
-        class="ctv:group ctv:relative ctv:w-[76px] ctv:h-[76px] ctv:rounded-sm ctv:overflow-hidden ctv:cursor-pointer
+        class="imgref-tile ctv:relative ctv:w-[76px] ctv:h-[76px] ctv:rounded-sm ctv:overflow-hidden ctv:cursor-pointer
                ctv:bg-black/30 ctv:border"
         :style="{ borderColor: slotColor(ref.slot) }"
         :title="tileTooltip(ref)"
@@ -135,8 +135,28 @@ const plusBtnClass = [
 ].join(' ')
 
 const removeBtn = [
-  'ctv:absolute ctv:top-0.5 ctv:right-0.5 ctv:hidden ctv:group-hover:flex ctv:items-center ctv:justify-center',
+  'imgref-remove ctv:absolute ctv:top-0.5 ctv:right-0.5 ctv:flex ctv:items-center ctv:justify-center',
   'ctv:size-4 ctv:rounded-sm ctv:cursor-pointer ctv:text-2xs ctv:leading-none ctv:[font-family:inherit]',
   'ctv:bg-black/60 ctv:text-white ctv:border ctv:border-white/30 ctv:hover:bg-destructive-background/80',
 ].join(' ')
 </script>
+
+<style scoped>
+.imgref-remove {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+.imgref-tile:hover .imgref-remove,
+.imgref-tile:focus-within .imgref-remove {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .imgref-remove {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+</style>

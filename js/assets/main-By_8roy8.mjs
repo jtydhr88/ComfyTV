@@ -56179,7 +56179,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-BxIsznRH.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-CS55W5-V.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -72416,7 +72416,7 @@ const _sfc_main$3g = /* @__PURE__ */ defineComponent({
       "ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground"
     ].join(" ");
     const removeBtn2 = [
-      "ctv:absolute ctv:top-0.5 ctv:right-0.5 ctv:hidden ctv:group-hover:flex ctv:items-center ctv:justify-center",
+      "imgref-remove ctv:absolute ctv:top-0.5 ctv:right-0.5 ctv:flex ctv:items-center ctv:justify-center",
       "ctv:size-4 ctv:rounded-sm ctv:cursor-pointer ctv:text-2xs ctv:leading-none ctv:[font-family:inherit]",
       "ctv:bg-black/60 ctv:text-white ctv:border ctv:border-white/30 ctv:hover:bg-destructive-background/80"
     ].join(" ");
@@ -72462,7 +72462,7 @@ const _sfc_main$3g = /* @__PURE__ */ defineComponent({
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(refs), (ref2, i) => {
             return openBlock(), createElementBlock("div", {
               key: ref2.asset_id,
-              class: "ctv:group ctv:relative ctv:w-[76px] ctv:h-[76px] ctv:rounded-sm ctv:overflow-hidden ctv:cursor-pointer ctv:bg-black/30 ctv:border",
+              class: "imgref-tile ctv:relative ctv:w-[76px] ctv:h-[76px] ctv:rounded-sm ctv:overflow-hidden ctv:cursor-pointer ctv:bg-black/30 ctv:border",
               style: normalizeStyle({ borderColor: unref(slotColor)(ref2.slot) }),
               title: unref(tileTooltip)(ref2),
               onClick: ($event) => unref(openSlotPicker)(i, $event)
@@ -72514,6 +72514,7 @@ const _sfc_main$3g = /* @__PURE__ */ defineComponent({
     };
   }
 });
+const ImageReferences = /* @__PURE__ */ _export_sfc(_sfc_main$3g, [["__scopeId", "data-v-31c3276c"]]);
 function OrderedMap(content) {
   this.content = content;
 }
@@ -111566,7 +111567,7 @@ const _sfc_main$34 = /* @__PURE__ */ defineComponent({
           key: 0,
           node: __props.node
         }, null, 8, ["node"])) : createCommentVNode("", true),
-        !__props.hideContext && __props.state.variant !== "loader" ? (openBlock(), createBlock(_sfc_main$3g, {
+        !__props.hideContext && __props.state.variant !== "loader" ? (openBlock(), createBlock(ImageReferences, {
           key: 1,
           node: __props.node
         }, null, 8, ["node"])) : createCommentVNode("", true),
@@ -128406,7 +128407,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-C40jiP3z.mjs");
+    const { STLLoader } = await import("./STLLoader-Cxcqt9EE.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -128414,7 +128415,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-B2k3II6f.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-DD4SJ6KD.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -194707,4 +194708,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-DbXBIve6.mjs.map
+//# sourceMappingURL=main-By_8roy8.mjs.map
