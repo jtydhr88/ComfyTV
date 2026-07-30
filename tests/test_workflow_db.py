@@ -1498,3 +1498,78 @@ class TestLegacyMigration:
         assert result["synced"] == []
         assert result["updated"] == []
         assert (user_root / "image" / "wf.json").read_text() == pre_existing
+
+    def test_user_dir_move_repoints_rows(self, reset_db, tmp_path, monkeypatch):
+        from ComfyTV import db
+        legacy, user_root = self._setup_dirs(tmp_path, monkeypatch)
+        old_user = tmp_path / "old-user" / "comfytv" / "workflows" / "image"
+        old_user.mkdir(parents=True)
+        content = json.dumps({"nodes": []})
+        (old_user / "wf.json").write_text(content)
+        (user_root / "image").mkdir(parents=True)
+        (user_root / "image" / "wf.json").write_text(content)
+
+        with db.get_session() as s:
+            row = db.Workflow(kind="image", label="wf",
+                              file_path=str(old_user / "wf.json"),
+                              is_default=True, order_=100)
+            s.add(row)
+            s.commit()
+            row_id = row.id
+
+        wdb.seed_workflows_from_disk(("image",))
+
+        rows = wdb.list_workflows_overview("image")
+        assert len(rows) == 1
+        assert rows[0]["id"] == row_id
+        assert str(user_root) in rows[0]["file_path"]
+        assert rows[0]["is_default"] is True
+
+    def test_user_dir_move_keeps_preset_label_and_id(self, reset_db, tmp_path, monkeypatch):
+        from ComfyTV import db
+        legacy, user_root = self._setup_dirs(tmp_path, monkeypatch)
+        old_user = tmp_path / "prev" / "comfytv" / "workflows" / "image"
+        old_user.mkdir(parents=True)
+        content = json.dumps({"nodes": []})
+        (old_user / "sd15.json").write_text(content)
+        (user_root / "image").mkdir(parents=True)
+        (user_root / "image" / "sd15.json").write_text(content)
+        (user_root / "image" / "sd15_preset.json").write_text(
+            json.dumps({"label": "SD 1.5"}))
+
+        with db.get_session() as s:
+            row = db.Workflow(kind="image", label="SD 1.5",
+                              file_path=str(old_user / "sd15.json"), order_=100)
+            s.add(row)
+            s.commit()
+            row_id = row.id
+
+        wdb.seed_workflows_from_disk(("image",))
+
+        rows = wdb.list_workflows_overview("image")
+        assert len(rows) == 1
+        assert rows[0]["id"] == row_id
+        assert rows[0]["label"] == "SD 1.5"
+        assert str(user_root) in rows[0]["file_path"]
+
+    def test_two_stale_rows_for_same_rel_do_not_collide(self, reset_db, tmp_path, monkeypatch):
+        from ComfyTV import db
+        legacy, user_root = self._setup_dirs(tmp_path, monkeypatch)
+        content = json.dumps({"nodes": []})
+        (legacy / "image" / "wf.json").write_text(content)
+        old_user = tmp_path / "prev" / "comfytv" / "workflows" / "image"
+        old_user.mkdir(parents=True)
+        (old_user / "wf.json").write_text(content)
+
+        with db.get_session() as s:
+            s.add(db.Workflow(kind="image", label="wf",
+                              file_path=str(legacy / "image" / "wf.json")))
+            s.add(db.Workflow(kind="image", label="wf (old)",
+                              file_path=str(old_user / "wf.json")))
+            s.commit()
+
+        wdb.seed_workflows_from_disk(("image",))
+
+        rows = wdb.list_workflows_overview("image")
+        under_new = [r for r in rows if str(user_root) in r["file_path"]]
+        assert len(under_new) == 1

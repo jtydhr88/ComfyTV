@@ -179,3 +179,47 @@ class TestUnlinkClearsDefault:
 
         wdb.unlink_workflow(res["id"])
         assert wdb.get_default_label("image") is None
+
+
+class TestNativeRepointOnUserDirMove:
+    def test_native_rows_follow_user_dir(self, reset_db, native_dir, tmp_path, monkeypatch):
+        from ComfyTV import db
+        (native_dir / "fav.json").write_text(GUI, encoding="utf-8")
+        old = tmp_path / "old-user" / "default" / "workflows"
+        old.mkdir(parents=True)
+        (old / "fav.json").write_text(GUI, encoding="utf-8")
+        with db.get_session() as s:
+            s.add(db.Workflow(kind="image", label="fav",
+                              file_path=str(old / "fav.json"),
+                              link_type=db.LINK_TYPE_NATIVE))
+            s.commit()
+
+        wroot = tmp_path / "wroot"
+        wroot.mkdir()
+        monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", wroot)
+        wdb.seed_workflows_from_disk(("image",))
+
+        rows = wdb.list_workflows_overview("image")
+        assert len(rows) == 1
+        assert str(native_dir) in rows[0]["file_path"]
+        assert rows[0]["link_type"] == db.LINK_TYPE_NATIVE
+
+    def test_native_row_untouched_when_new_copy_missing(self, reset_db, native_dir, tmp_path, monkeypatch):
+        from ComfyTV import db
+        old = tmp_path / "old-user" / "default" / "workflows"
+        old.mkdir(parents=True)
+        (old / "keep.json").write_text(GUI, encoding="utf-8")
+        with db.get_session() as s:
+            s.add(db.Workflow(kind="image", label="keep",
+                              file_path=str(old / "keep.json"),
+                              link_type=db.LINK_TYPE_NATIVE))
+            s.commit()
+
+        wroot = tmp_path / "wroot"
+        wroot.mkdir()
+        monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", wroot)
+        wdb.seed_workflows_from_disk(("image",))
+
+        rows = wdb.list_workflows_overview("image")
+        assert len(rows) == 1
+        assert str(old) in rows[0]["file_path"]

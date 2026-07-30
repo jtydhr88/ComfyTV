@@ -112,24 +112,87 @@ def _sync_legacy_workflows(root: Path) -> tuple[list[str], list[str]]:
     return copied, updated
 
 
+def _marker_rel(p: Path, parent_marker: str) -> Optional[Path]:
+    parts = p.parts
+    for i in range(len(parts) - 2, 0, -1):
+        if parts[i].lower() == "workflows" and parts[i - 1].lower() == parent_marker:
+            tail = parts[i + 1:]
+            return Path(*tail) if tail else None
+    return None
+
+
 def _repoint_legacy_rows(s, root: Path) -> int:
-    if _LEGACY_WORKFLOWS_DIR is None:
+    try:
+        root_resolved = root.resolve()
+    except OSError:
         return 0
-    legacy_root = Path(_LEGACY_WORKFLOWS_DIR).resolve()
-    moved = 0
-    for row in s.execute(select(db.Workflow)).scalars().all():
+    legacy_root = None
+    if _LEGACY_WORKFLOWS_DIR is not None:
         try:
-            rel = Path(row.file_path).resolve().relative_to(legacy_root)
-        except (ValueError, OSError):
+            legacy_root = Path(_LEGACY_WORKFLOWS_DIR).resolve()
+        except OSError:
+            legacy_root = None
+    from .link import _native_workflows_dir
+    native_root = _native_workflows_dir()
+    native_resolved = None
+    if native_root is not None:
+        try:
+            native_resolved = Path(native_root).resolve()
+        except OSError:
+            native_resolved = None
+
+    rows = s.execute(select(db.Workflow)).scalars().all()
+    taken = {r.file_path for r in rows}
+    moved = 0
+    for row in rows:
+        try:
+            rp = Path(row.file_path).resolve()
+        except (OSError, ValueError):
             continue
-        new_path = root / rel
-        if new_path.exists():
-            row.file_path = str(new_path)
-            moved += 1
+
+        link_type = getattr(row, "link_type", db.LINK_TYPE_MANAGED) or db.LINK_TYPE_MANAGED
+        if link_type == db.LINK_TYPE_NATIVE:
+            if native_resolved is None:
+                continue
+            try:
+                rp.relative_to(native_resolved)
+                continue
+            except ValueError:
+                pass
+            rel = _marker_rel(rp, "default")
+            target_root = Path(native_root)
+        else:
+            try:
+                rp.relative_to(root_resolved)
+                continue
+            except ValueError:
+                pass
+            rel = None
+            if legacy_root is not None:
+                try:
+                    rel = rp.relative_to(legacy_root)
+                except ValueError:
+                    rel = None
+            if rel is None:
+                rel = _marker_rel(rp, "comfytv")
+            target_root = root
+
+        if rel is None:
+            continue
+        new_path = target_root / rel
+        if not new_path.exists():
+            continue
+        np_str = str(new_path)
+        if np_str in taken:
+            continue
+        taken.discard(row.file_path)
+        row.file_path = np_str
+        taken.add(np_str)
+        moved += 1
     if moved:
         s.flush()
-        _log.info("[ComfyTV/workflow_db] repointed %d workflow row(s) from the "
-                  "legacy directory to %s", moved, root)
+        _log.info("[ComfyTV/workflow_db] repointed %d workflow row(s) from a "
+                  "previous workflows location to %s", moved, root)
     return moved
 
 
