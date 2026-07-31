@@ -125,7 +125,7 @@ A few workflows rely on a third-party ComfyUI custom node:
 
 - **LaMa Erase** → [`Acly/comfyui-inpaint-nodes`](https://github.com/Acly/comfyui-inpaint-nodes)
 - **Fooocus SDXL Inpaint / Outpaint** → uses the same `comfyui-inpaint-nodes` plugin for its `INPAINT_*` nodes.
-- *(Planned, not shipped)* **Demucs Vocals / Background** → [`lum3on/ComfyUI_AudioTools`](https://github.com/lum3on/ComfyUI_AudioTools) for the `AudioStemSeparate` node.
+- **Audio Stem Split** (vocals / drums / bass / …) is **built in** — no third-party node or model download needed.
 
 All other workflows use only ComfyUI core nodes.
 

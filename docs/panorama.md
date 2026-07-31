@@ -54,3 +54,9 @@ Image Stage → Image Picker → Panorama (upload or generate)
                                   ├── Current View → (edit / video)
                                   └── Multi-View   → Image Picker → (edit)
 ```
+
+---
+
+## 360° video
+
+Moving 360° footage has its own nodes in **ComfyTV / VideoFX**: **360 Projection** (re-project equirectangular ↔ flat views) and **360 Stabilize** (horizon-locked stabilization for 360 clips). See [video-and-audio.md](video-and-audio.md).

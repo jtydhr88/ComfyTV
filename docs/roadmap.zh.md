@@ -26,7 +26,7 @@ ComfyTV 还是 pre-release 状态。
 | **Upscale · Ultrasharp 4x** | 基于 4x-UltraSharp GAN 的放大。 |
 | **Multiangle · Qwen Edit 2511 Multiangle** | Qwen Image-Edit + Multiangle LoRA,由 3D 相机驱动。 |
 | **Video · Local LTX 2.3**(T2V + I2V + FLF2V + IA2V) | 快;推荐默认。T2V 纯文本;I2V 要一张图;FLF2V 在两张关键帧之间插值;IA2V 跟随音轨节拍(对口型/MV/音效对齐镜头)。 |
-| **Video 编辑 · 剪辑 / 裁剪 / 缩放 / 抽帧 / 音视频分离** | 基于 PyAV 的真实编辑 , 起止剪、裁剪区域、改尺寸、抽一帧、把视频拆成音轨 + 静音视频。不占 GPU,直接在磁盘原片上跑。 |
+| **Video 编辑 · 剪辑 / 裁剪 / 缩放 / 抽帧 / 音视频分离** | 对原片的真实编辑 , 起止剪、裁剪区域、改尺寸、抽一帧、把视频拆成音轨 + 静音视频。不占 GPU、不需要模型。 |
 | **视频续接(↪ 动作)** | 一键链:抽源片末帧 → 生成一个新的 Video Stage,把那帧接为 I2V 起始图,后面填提示词点运行即可。 |
 | **Text · Qwen3 4B** | 本地 LLM 文本生成。 |
 | **Audio Stage · ACE-Step v1 Music** | 文生音乐,走 ACE-Step v1 3.5B(ComfyUI 原生支持)。自由 tags + 可选歌词触发人声 + 每 stage 时长滑块。 |
@@ -40,6 +40,17 @@ ComfyTV 还是 pre-release 状态。
 | **Bridge 节点**(5 个入桥) | 任何第三方 ComfyUI 插件都能接入 ComfyTV 流水线。 |
 | **持久化** | 编辑器状态 + 上传文件持久化。 |
 
+### ✅ 各大套件(不需要 AI 模型 —— 直接作用在素材上)
+
+| 套件 | 备注 |
+|---------|-------|
+| **视频套件(约 100 个节点)** | 剪辑、调色(曲线/LUT/CDL/HueCorrect)、整套抠像台(PIK/Keyer/Despill/KeyMix/…)、roto + 跟踪 + 蒙版传播、合成(39 混合模式、57 xfade)、粒子、镜头光学、风格化、表达式、示波器、**FX Chain** 一趟渲染。见 [video-and-audio.zh.md](video-and-audio.zh.md)。 |
+| **音频套件(30+ 个节点)** | 动态/均衡/响度/降噪/修复、**分轨**(内置能力、无需安装)、噪声抑制、节拍音符提取、卷积 + 算法混响、侧链闪避、音频响应自动化。 |
+| **音乐(符号音乐)** | MusicXML 乐谱 + 刻谱、钢琴卷帘打谱器/MIDI 编辑器、演奏 profile、SoundFont 合成器、节拍器、和弦伴奏。见 [making-music.zh.md](making-music.zh.md)。 |
+| **2D 图层编辑器 + 故事板** | raster/文字/矢量/调整/填充图层、蒙版、魔棒选区、**PSD 导入导出**;故事板工作台带洋葱皮 + 动画稿/GIF/PDF 导出。 |
+| **3D** | Scene3D 工作台(相机关键帧)、几何工坊(网格操作/布尔/烘焙)、PBR 材质 + 按部件绑定、3D 转线稿。 |
+| **双库与 Runner** | 资产库、资源库(LUT/字体/SoundFont)、按 stage 预设 + 默认工作流、**远程 ComfyUI 机器作为 Runner**(Servers 页签)带能力预检。 |
+
 ---
 
 ## ⏳ 待支持
@@ -49,7 +60,7 @@ ComfyTV 还是 pre-release 状态。
 - [ ] **Subtitle Erase (Smart) / (Region)** , Region 版还需要按帧的区域框选 UI。
 
 ### 音频
-- [ ] **Vocals Only / Background Only (Demucs)** , 走 `lum3on/ComfyUI_AudioTools` 的 `AudioStemSeparate`。
+- [ ] **Vocals Only / Background Only** 便捷 stage , 内置的 **Audio Stem Split** 已覆盖同样能力;这两个工具栏 stage 还需改接到它上面。
 
 ### 分镜 & 出图
 - [ ] **Storyboard + Shot Images** , Storyboard 跑 LLM 分镜表,Shot Images 逐 shot 出图。
@@ -63,4 +74,4 @@ ComfyTV 还是 pre-release 状态。
 ### 其它
 - [ ] 框选式区域选择 UI(Subtitle Erase / 其它区域类工具)。
 - [ ] 大视频模型的"快速"预设。
-- [ ] 云端 / 远程生成(现在所有东西都跑你本地模型)。
+- [ ] 云端生成(远程**自建** ComfyUI 机器已可通过 Servers 页签作为 Runner 使用;托管/云后端仍待做)。

@@ -140,10 +140,11 @@ for (const [label, ids] of CATEGORY_GROUPS) {
   if (zhPages.length) zhNodeGroups.push({ group: label, pages: zhPages });
 }
 
-const GUIDE_ORDER = ['getting-started', 'generate', 'image-tools', 'panorama', 'video-and-audio', 'making-music', 'compose', 'models', 'bridges', 'custom-workflows', 'sidebar-config-editor'];
+const GUIDE_ORDER = ['getting-started', 'sidebar', 'generate', 'image-tools', 'panorama', 'video-and-audio', 'making-music', 'compose', 'models', 'bridges', 'custom-workflows', 'sidebar-config-editor'];
 
 function cleanGuide(md, locale) {
   let text = md.replace(/\r\n/g, '\n');
+  text = text.replace(/<!--[\s\S]*?-->[ \t]*\n?/g, '');
   text = text.replace(/^\*\*[^\n]*\|[^\n]*\n/, '').replace(/^\s+/, '');
   const { title, desc, body } = parseDoc(text);
   const base = locale === 'zh' ? '/zh/guides/' : '/guides/';

@@ -2,7 +2,7 @@
 
 # 入门
 
-ComfyTV 把 ComfyUI 变成一个**类 TapNow / LibTV 型的画布式应用**。每一步操作是一个独立节点,结果自动传播到下游。用 stage 连成完整流程:生成 → 挑选 → 编辑 → 拼接。
+ComfyTV 把 ComfyUI 变成一个**做媒体的画布式应用**——生成、挑选、编辑、合成、导出，覆盖图像、视频、音频、音乐、全景、2D 图层和 3D，共约 190 个 stage。每一步操作是一个独立节点，结果自动传播到下游。
 
 ![ComfyTV 画布](images/overview.png)
 
@@ -15,52 +15,62 @@ cd ComfyUI/custom_nodes
 git clone https://github.com/jtydhr88/ComfyTV
 ```
 
-重启 ComfyUI。打开 **Add Node** 菜单(双击画布或右键),找 **`ComfyTV`** 分类。它分成几个子菜单:Project、Input、Generate、Image、Panorama、Video、Audio、Compose。
+重启 ComfyUI。打开 **Add Node** 菜单（双击画布或右键），找到 **`ComfyTV`** 分类。它分成若干子菜单：Project、Input、Generate、Image、Panorama、Video、VideoFX、Keying、Compose、Timeline、Audio、AudioFX、Music、3D、Material、Storyboard、Bridge。
 
+<!-- TODO(screenshot): 用当前的子分类列表重新截图（VideoFX / Keying / Music / …） -->
 ![Add-node 菜单](images/node-groups.png)
 
 ---
 
 ## 基础概念
 
-### 每个节点有自己的运行按钮
-大部分 stage 自带一个 **▶ 运行** 按钮。点它**只跑这一个 stage** , **不会**重跑整张图。结果出现在节点自己的输出预览里。
+### 每个节点有自己的 Run 按钮
+大多数 stage 的面板里有 **▶ Run** 按钮。点它只跑*这一个 stage*——**不会**重跑整张图。结果出现在节点的输出预览里。
 
-> 有些 stage(Crop、Rotate、Mirror、Grid Split、Panorama 视口) **没有运行按钮** , 它们完全在浏览器里跑,改参数实时更新。
+> 很多 stage **根本没有 Run 按钮**——裁剪、旋转、镜像、宫格切分、全景视口、图层编辑器、钢琴卷帘、以及多数特效预览完全在浏览器里跑，调参即时生效。只有需要产出文件时才要 Run（或像 FX Chain 那样的最终渲染）。
 
-### 结果以快照向下游流动
-上游 stage 跑完后,结果存为快照;下游 stage 再跑时直接用这个快照,不会回过头重新跑上游。
+### 结果以快照流向下游
+上游 stage 一旦运行，结果保存为快照；下游 stage 运行时直接用这个快照，不会重跑上游。
 
 ### 项目选择器
-拖一个 **Project** 节点,给当前项目命名/切换。你生成的所有东西都归入该项目,工作流加载时也会自动恢复。
+放一个 **Project** 节点来命名/切换当前项目。你生成的一切都归档在项目下——带完整输出历史——重新加载工作流时自动恢复。
+
+### 侧边栏
+左侧 **ComfyTV** 侧边栏有七个页签：**工作流**（选中 stage 的配置编辑器）、**资产库**（媒体库）、**条目**（可复用提示词片段，用 `@label` 引用）、**Stage 管理**（按 kind 的工作流 + 自定义参数、★ 默认）、**预设**、**资源**（LUT/字体/SoundFont）、**服务器**（让 stage 跑在别的机器上）。完整导览：[sidebar.zh.md](sidebar.zh.md)。
 
 ---
 
-## 简单运行
+## 快速上手
 
 1. 加一个 **Generate → Image Stage**。
-2. 在节点的文本框里输入提示词(比如 `a red apple on a wooden table`)。
-3. **workflow** 下拉框里选内置的工作流 **`Local SD1.5`**。
-4. 点 **▶ 运行**。
+2. 在节点文本框输入提示词（例如 `a red apple on a wooden table`）。
+3. 在 **workflow** 下拉框选模型——先用 **`Local SD1.5`**。
+4. 点 **▶ Run**。
 
-![Image stage 运行](images/image-run.png)
+![Image stage 运行中](images/image-run.png)
 
-Image Stage 产出**一组图片**(一个工作流可以有多个输出)。**第一次运行时**, ComfyTV **会自动加一个 Image Picker**,接在它的输出后面。
+Image Stage 产出**一组图片**（工作流可以输出多张）。第一次 Run 时，ComfyTV 会**自动加一个 Image Picker** 接在它的输出上。
 
-### 选择结果
-直接点 Image Stage 上的缩略图,或者点自动生成的 Image Picker 上的缩略图。两种方式都会让选中那帧旁边出现**操作工具栏**(`✏️ Edit`、`🌐 Panorama`、`📐 Multiangle` 等)。
+### 挑一张结果
+在 Image Stage 本体或自动生成的 Image Picker 上点缩略图。选中后旁边会出现**操作工具栏**（`✏️ Edit`、`🌐 Panorama`、`📐 Multiangle`……）。
 
-![Image picker 工具栏](images/picker-toolbar.png)
-
----
-
-## 放大查看预览
-鼠标移到任何输出图上,**滚轮**缩放(1×–6×),**拖动**平移,**双击**复位。所有图片输出预览都支持。
+![带工具栏的 Image picker](images/picker-toolbar.png)
 
 ---
 
-## 接下来
+## 预览缩放
+悬停任何输出图片，**滚轮**缩放（1×–6×），**拖拽**平移，**双击**复位。所有图片输出预览都支持。
 
-- [generate.zh.md](generate.zh.md),生成器(文/图/视频/音频)
-- [image-tools.zh.md](image-tools.zh.md),裁剪、旋转、Inpaint 以及其它编辑工具
-- [compose.zh.md](compose.zh.md),Picker、A/B 对比
+---
+
+## 接下来去哪
+
+- [sidebar.zh.md](sidebar.zh.md) —— 七页签侧边栏与 `@` 提示词引用
+- [generate.zh.md](generate.zh.md) —— 生成器（文本/图/视频/音乐/语音/3D 模型）
+- [image-tools.zh.md](image-tools.zh.md) —— 裁剪、旋转、镜像、Inpaint、擦除、抠图、放大、扩图、宫格切分、变体、多视角、重打光
+- [video-and-audio.zh.md](video-and-audio.zh.md) —— 视频与音频套件（约 100 个视频节点、30+ 音频节点）
+- [making-music.zh.md](making-music.zh.md) —— 乐谱、钢琴卷帘、SoundFont 合成
+- [compose.zh.md](compose.zh.md) —— 挑选器、A/B 对比、故事板、时间线
+- [custom-workflows.zh.md](custom-workflows.zh.md) —— **🔗 Link workflow**（推荐）、上传、以及库目录
+
+完整文档——包括每个节点的参考页——在 **[comfytv.org](https://comfytv.org)**。

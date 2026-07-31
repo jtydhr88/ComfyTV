@@ -1,13 +1,13 @@
 ---
 title: "Bridge 节点 , 接入其它 ComfyUI 插件"
-translationSourceHash: "f8eeffe932ae304a"
+translationSourceHash: "4d05684a6458be91"
 ---
 
 任何输出 `IMAGE` / `VIDEO` / `AUDIO` 的 ComfyUI 插件(mesh2motion、IPAdapter、ControlNet preprocessor、3D 节点、未来的任何插件等)都可以通过 **bridge** 节点接入 ComfyTV 流水线。
 
 ```
 [任何插件]   IMAGE          [ComfyTV → Image]   COMFYTV_IMAGE        [Image Picker / Upscale / …]
-  输出     ────tensor─────→     桥 stage        ─────/view URL─────→     ComfyTV stage
+  输出     ──────────────→     桥 stage        ──────────────────→     ComfyTV stage
                               (运行 + snapshot)
 ```
 
@@ -27,11 +27,30 @@ translationSourceHash: "f8eeffe932ae304a"
 
 入桥自带运行按钮,输出会跟项目一起持久化。
 
+## 出桥
+
+反方向也有:5 个出桥节点把 ComfyTV 快照转回 ComfyUI 原生类型,让任何插件都能消费 ComfyTV 流水线的产物:
+
+| 节点 | 输入 | 输出 |
+|---|---|---|
+| `← ComfyTV Text`  | COMFYTV_TEXT  | STRING |
+| `← ComfyTV Image` | COMFYTV_IMAGE | IMAGE  |
+| `← ComfyTV Mask`  | COMFYTV_IMAGE | MASK   |
+| `← ComfyTV Video` | COMFYTV_VIDEO | VIDEO  |
+| `← ComfyTV Audio` | COMFYTV_AUDIO | AUDIO  |
+
+`← ComfyTV Mask` 把图片的 alpha 通道读成 mask——把 Cutout 或画笔的结果喂给原生 inpaint 节点时很好用。
+
 ## 常见用法
 
 ### 插件输出 → ComfyTV 下游
 ```
-[mesh2motion] ─VIDEO─→ [→ ComfyTV Video] ─COMFYTV_VIDEO─→ [Video Upscale] → …
+[mesh2motion] ─VIDEO─→ [→ ComfyTV Video] ─COMFYTV_VIDEO─→ [Video Color / Stabilize / …] → …
+```
+
+### 往返:ComfyTV 结果 → 原生插件 → 再回来
+```
+[Image Stage] → [← ComfyTV Image] ─IMAGE─→ [任何原生插件] ─IMAGE─→ [→ ComfyTV Image] → …
 ```
 
 ### 插件输出是多帧 IMAGE batch

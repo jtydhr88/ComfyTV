@@ -26,7 +26,7 @@ Legend: ✅ done · ⏳ pending.
 | **Upscale · Ultrasharp 4x** | 4x-UltraSharp GAN upscale. |
 | **Multiangle · Qwen Edit 2511 Multiangle** | Qwen Image-Edit + Multiangle LoRA, driven by the 3D camera. |
 | **Video · Local LTX 2.3** (T2V + I2V + FLF2V + IA2V) | Fast; recommended default. T2V from text only; I2V needs an image; FLF2V interpolates between two keyframes; IA2V follows an audio track. |
-| **Video editing · Clip / Crop / Resize / Extract Frame / Demux** | Real PyAV-based edits — trim to range, crop a region, resize, pull a still, split audio from video. No GPU; runs against the source clip on disk. |
+| **Video editing · Clip / Crop / Resize / Extract Frame / Demux** | Real edits on the source clip — trim to range, crop a region, resize, pull a still, split audio from video. No GPU or model needed. |
 | **Extend a video** (↪ action) | One-click chain: extract the source's last frame → spawn a new Video Stage with that frame as the I2V starting image, fill prompt and Run. |
 | **Text · Qwen3 4B** | Local LLM text generation. |
 | **Audio Stage · ACE-Step v1 Music** | Text-to-music via ACE-Step v1 3.5B (native to ComfyUI core). Free-form tags + optional lyrics for vocal tracks + per-stage duration slider. |
@@ -40,6 +40,17 @@ Legend: ✅ done · ⏳ pending.
 | **Bridge nodes** (5 into-bridges) | Any third-party ComfyUI plugin can plug into a ComfyTV pipeline. |
 | **Persistence** | Editor state + uploads persist. |
 
+### ✅ Suites (no AI model needed — work instantly on your footage)
+
+| Suite | Notes |
+|---------|-------|
+| **Video suite (~100 nodes)** | Editing, color (curves/LUT/CDL/HueCorrect), full keying bench (PIK/Keyer/Despill/KeyMix/…), roto + tracking + mask propagation, compositing (39 blend modes, 57 xfades), particles, lens optics, stylize, expressions, scopes, **FX Chain** single-pass rendering. See [video-and-audio.md](video-and-audio.md). |
+| **Audio suite (30+ nodes)** | Dynamics/EQ/loudness/denoise/repair, **stem split** (built in, nothing to install), noise reduction, beats & notes extraction, convolution + algorithmic reverb, sidechain ducking, audio-reactive automation. |
+| **Music (symbolic)** | MusicXML score + notation, piano-roll score/MIDI editors, performance profiles, SoundFont synth, click track, chord accompaniment. See [making-music.md](making-music.md). |
+| **2D layer editor + storyboard** | Raster/text/vector/adjustment/fill layers, masks, magic-wand selections, **PSD import/export**; storyboard workbench with onion skin + animatic/GIF/PDF export. |
+| **3D** | Scene3D workbench (keyframed cameras), geometry workshop (mesh ops/boolean/bake), PBR materials + per-part binding, line art from 3D. |
+| **Libraries & runners** | Asset library, resource library (LUTs/fonts/SoundFonts), per-stage presets + default workflows, **remote ComfyUI machines as runners** (Servers tab) with capability preflight. |
+
 ---
 
 ## ⏳ Pending
@@ -49,7 +60,7 @@ Legend: ✅ done · ⏳ pending.
 - [ ] **Subtitle Erase (Smart) / (Region)** — the Region variant also needs a frame-region box-selection UI.
 
 ### Audio
-- [ ] **Vocals Only / Background Only (Demucs)** — via `lum3on/ComfyUI_AudioTools`'s `AudioStemSeparate`.
+- [ ] **Vocals Only / Background Only** convenience stages — the built-in **Audio Stem Split** already covers this; the dedicated toolbar stages still need rewiring onto it.
 
 ### Storyboard & shots
 - [ ] **Storyboard + Shot Images** — Storyboard runs the LLM shot-list, Shot Images iterates it per shot.
@@ -63,4 +74,4 @@ Legend: ✅ done · ⏳ pending.
 ### Other
 - [ ] Box-region selection UI (for Subtitle Erase / other region-based tools).
 - [ ] "Fast" presets for the heavy video models.
-- [ ] Cloud / remote generation (today everything runs against your local models).
+- [ ] Cloud generation (remote **self-hosted** ComfyUI machines already work as runners via the Servers tab; hosted/cloud backends are still pending).

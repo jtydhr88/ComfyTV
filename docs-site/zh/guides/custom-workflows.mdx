@@ -1,70 +1,90 @@
 ---
 title: "自定义工作流"
-translationSourceHash: "1492c6cd25bd1bdf"
+translationSourceHash: "106b448f4519ba3c"
 ---
 
-ComfyTV 每个 阶段 的 **workflow** 下拉框，背后都是 `custom_nodes/ComfyTV/workflows/<kind>/` 目录下的一个 JSON 文件。把文件放进去，重启 ComfyUI。**无需改 Python 代码。**
+ComfyTV 每个 stage 的 **workflow** 下拉框，背后都是一个普通的 ComfyUI 工作流（GUI 格式）。接入自己的工作流有三条路——都**不用改 Python 代码**。
+
+## 🔗 Link workflow —— 推荐方式
+
+![Link Workflow 对话框](/images/link-workflow.png)
+
+每个 stage 的 **workflow** 下拉框下面都有一个 **🔗 Link workflow** 按钮。点开是 ComfyUI **自己的工作流库**（你在 ComfyUI 工作流面板里保存的那些），以可搜索的目录树呈现。在某个工作流旁点 **Link**，它立刻出现在下拉框里并被选中。
+
+为什么推荐这条路：
+
+- **实时编辑。** stage 引用的是工作流文件本身，不是副本。在 ComfyUI 里打开工作流、正常编辑、保存——下次 Run 时 ComfyTV 自动读到最新版。不用重导出、不用重导入、不用重启。
+- **单一事实源。** 工作流继续放在 ComfyUI 的库里、按你原来的习惯管理；ComfyTV 只是指过去。
+- 已链接的条目在对话框里带 **Linked** 徽章，也可以在那里 **Unlink** 解除（只删除条目和绑定，不动文件）。
+
+文件必须是 **GUI 格式**工作流（普通的 *Workflow → Save*；**不是** "Save (API Format)"）。
+
+## ⬆ Upload workflow
+
+Link 按钮旁边的 **⬆ Upload workflow** 从磁盘导入一个 `.json`。工作流被复制进 ComfyTV 的库并立刻出现在下拉框里——不用重启。适合别人发给你的文件；如果是你自己会持续迭代的工作流，优先用 Link。
+
+## 把文件放进库目录
+
+ComfyTV 的工作流库在 ComfyUI 的 user 目录下：
 
 ```
-workflows/
+user/comfytv/workflows/
   image/                                ← Image Stage
     my-workflow.json                    GUI 工作流导出
-    my-workflow_preset.json             可选 preset (内置默认绑定)
+    my-workflow_preset.json             可选预设（绑定）
   image-edit/   inpaint/   erase/   outpaint/   upscale/   multiangle/
-  relight/   cutout/   multiview/   sequence/
-  video/        text/       audio/      audio-vocal/    audio-bg/
-  shot-images/  storyboard/  panorama/  timeline/
+  cutout/   multiview/   sequence/   speech/
+  video/   text/   audio/   audio-vocal/   audio-bg/
+  shot-images/  storyboard/  panorama/  timeline/  model/
+  split-part/   material-estimate/   speech-to-text/
 ```
 
-完整 类别 列表：`text, image, shot-images, video, audio, storyboard, panorama, timeline, upscale, outpaint, inpaint, erase, image-edit, multiangle, relight, cutout, multiview, sequence, audio-vocal, audio-bg`。
+**目录决定 kind。** 把 JSON 拷进去，重启 ComfyUI（或在侧边栏触发 rescan），它就会出现在对应 stage 的下拉框里。自带工作流在启动时会播种到这个目录；随 ComfyTV 发布的条目带 **builtin** 徽章，你改过的文件永远不会被更新覆盖。
 
-**文件放在哪个文件夹就属于哪个 类别**。每个已上线 类别 在自己目录下有 `README.md` 说明运行时输入和工作流需要的节点。请先看相关的 per-kind README：
+kind 全集：`text, image, shot-images, video, audio, speech, storyboard, panorama, timeline, upscale, outpaint, inpaint, erase, image-edit, multiangle, cutout, multiview, sequence, audio-vocal, audio-bg, model, split-part, material-estimate, speech-to-text`。
 
-- [`workflows/audio/README.zh.md`](../workflows/audio/README.zh.md)
-- [`workflows/image/README.zh.md`](../workflows/image/README.zh.md)
-- [`workflows/image-edit/README.zh.md`](../workflows/image-edit/README.zh.md)
-- [`workflows/inpaint/README.zh.md`](../workflows/inpaint/README.zh.md)
-- [`workflows/outpaint/README.zh.md`](../workflows/outpaint/README.zh.md)
-- [`workflows/upscale/README.zh.md`](../workflows/upscale/README.zh.md)
-- [`workflows/cutout/README.zh.md`](../workflows/cutout/README.zh.md)
-- [`workflows/erase/README.zh.md`](../workflows/erase/README.zh.md)
-- [`workflows/relight/README.zh.md`](../workflows/relight/README.zh.md)
-- [`workflows/multiangle/README.zh.md`](../workflows/multiangle/README.zh.md)
-- [`workflows/multiview/README.zh.md`](../workflows/multiview/README.zh.md)
-- [`workflows/sequence/README.zh.md`](../workflows/sequence/README.zh.md)
+每个自带 kind 的 JSON 旁都有一个 `README.md`，写明运行时输入和工作流通常需要的节点。先读对应 kind 的 README：
 
----
-
-## 如何使用自定义工作流
-
-1. **ComfyUI 里 Workflow → 导出**(默认 GUI 格式,**不要**用 "Save (API Format)")。
-2. 保存为 `workflows/<kind>/<name>.json`。
-3. **重启 ComfyUI**。下拉框里就会出现这个新工作流。
-
-ComfyTV 自动:把文件名人化作为下拉框标签(`my-workflow` → "My Workflow")、用文件夹名注册 kind、检测 `SaveImage` / `SaveVideo` / `PreviewImage` 节点作为结果出口。
+- [`workflows/audio/README.md`](../workflows/audio/README.zh.md)
+- [`workflows/image/README.md`](../workflows/image/README.zh.md)
+- [`workflows/image-edit/README.md`](../workflows/image-edit/README.zh.md)
+- [`workflows/inpaint/README.md`](../workflows/inpaint/README.zh.md)
+- [`workflows/outpaint/README.md`](../workflows/outpaint/README.zh.md)
+- [`workflows/upscale/README.md`](../workflows/upscale/README.zh.md)
+- [`workflows/cutout/README.md`](../workflows/cutout/README.zh.md)
+- [`workflows/erase/README.md`](../workflows/erase/README.zh.md)
+- [`workflows/multiangle/README.md`](../workflows/multiangle/README.zh.md)
+- [`workflows/multiview/README.md`](../workflows/multiview/README.zh.md)
+- [`workflows/sequence/README.md`](../workflows/sequence/README.zh.md)
+- [`workflows/panorama/README.md`](../workflows/panorama/README.zh.md)
+- [`workflows/speech/README.md`](../workflows/speech/README.zh.md)
+- [`workflows/text/README.md`](../workflows/text/README.zh.md)
+- [`workflows/video/README.md`](../workflows/video/README.zh.md)
+- [`workflows/shot-images/README.md`](../workflows/shot-images/README.zh.md)
+- [`workflows/storyboard/README.md`](../workflows/storyboard/README.zh.md)
 
 ---
 
-## 配置 stage 输入怎么接
+## 给 stage 输入接线
 
-工作流接进来之后,大多数情况下你需要告诉 ComfyTV:stage 面板里输入的提示词接到哪个节点、上游的图接到哪个 LoadImage、seed 用什么。
+工作流进来之后（Link、Upload 或手动拷贝），通常还要告诉 ComfyTV：哪个节点收 stage 的提示词、哪个 `LoadImage` 吃上游图片、种子从哪来，等等。
 
-**通过侧边栏改**:画布上点中 stage,左侧 **ComfyTV** 侧边栏里逐个 widget 设。改完即生效,不必重启。详细操作见 [sidebar-config-editor.zh.md](/zh/guides/sidebar-config-editor)。
+**用侧边栏**：点画布上的 stage，在左侧 **ComfyTV** 侧边栏里逐项填。改动即时生效，不用重启。编辑器界面见 [sidebar-config-editor.zh.md](/zh/guides/sidebar-config-editor)。
 
-**想分享给别人**:侧边栏底部有 **⇩ 导出 preset.json** 按钮,把当前绑定打包成 `<name>_preset.json`。和工作流 JSON 一起发出去,对方第一次加载就会自动应用你的绑定。
+**要分享给别人**：侧边栏底部有 **⇩ Export preset.json** 按钮，把当前绑定打包成 `<name>_preset.json`。连同工作流 JSON 一起发出去；对方第一次加载时绑定自动生效。
 
-> 一般情况下你**不需要手写** `_preset.json`，用侧边栏配,要分享就导出。如果你确实想知道 `_preset.json` 的 JSON 格式,参考内置的例子: `workflows/inpaint/flux-fill-inpaint_preset.json`、`workflows/video/local-ltx-2.3-t2v_preset.json`。
-
----
-
-## 重新导出后更新
-
-ComfyUI 里重新导出工作流(换模型版本、加一步),**直接覆盖 `workflows/<kind>/<name>.json` 就行**。ComfyTV 检测到文件修改时间变了,下次该 stage 用这个工作流时会重新读一遍。
-
-只要绑定引用的节点 ID 还存在,绑定继续工作。重命名或删除了节点,运行时会报:
-
-> `inputs references missing workflow node "X",did the API workflow get re-exported with different node ids?`
-
-打开侧边栏,把指向旧 id 的绑定改到新 id 上。
+> 通常**不用手写 `_preset.json`**——在侧边栏配置好再导出分享。想看原始 JSON 结构的话，参考自带示例：`workflows/inpaint/flux-fill-inpaint_preset.json`、`workflows/video/local-ltx-2.3-t2v_preset.json`。
 
 ---
+
+## 更新工作流
+
+**Linked 工作流**：直接在 ComfyUI 里改、保存即可。ComfyTV 发现文件变了，下次 Run 自动重读——别的什么都不用做。
+
+**Upload / 手动拷贝的工作流**：覆盖 `user/comfytv/workflows/<kind>/` 下的 JSON。ComfyTV 检测到文件修改时间变化，下次使用时重读。
+
+无论哪种方式，只要绑定引用的节点 ID 还在，绑定就继续有效。如果你重命名或删除了节点，runner 会报错：
+
+> `inputs references missing workflow node "X" — did the API workflow get re-exported with different node ids?`
+
+打开侧边栏，把绑定改指到新 ID 即可。

@@ -6,7 +6,7 @@ Any ComfyUI plugin that outputs `IMAGE` / `VIDEO` / `AUDIO` (mesh2motion, IPAdap
 
 ```
 [any plugin]   IMAGE          [ComfyTV → Image]   COMFYTV_IMAGE        [Image Picker / Upscale / …]
-  output    ────tensor─────→     bridge stage    ─────/view URL─────→     ComfyTV stages
+  output    ──────────────→     bridge stage    ──────────────────→     ComfyTV stages
                               (Run + snapshot)
 ```
 
@@ -26,11 +26,30 @@ The bridge is itself a **ComfyTV stage** with its own Run button. Click Run, the
 
 Into-bridges have a Run; their output persists with the project.
 
+## Out-bridges
+
+The reverse direction also exists: 5 out-bridge nodes turn a ComfyTV snapshot back into native ComfyUI types, so any plugin can consume what a ComfyTV pipeline produced:
+
+| Node | Input | Output |
+|---|---|---|
+| `← ComfyTV Text`  | COMFYTV_TEXT  | STRING |
+| `← ComfyTV Image` | COMFYTV_IMAGE | IMAGE  |
+| `← ComfyTV Mask`  | COMFYTV_IMAGE | MASK   |
+| `← ComfyTV Video` | COMFYTV_VIDEO | VIDEO  |
+| `← ComfyTV Audio` | COMFYTV_AUDIO | AUDIO  |
+
+`← ComfyTV Mask` reads the image's alpha channel as a mask — handy for feeding a Cutout or painter result into native inpainting nodes.
+
 ## Common patterns
 
 ### Plugin output → ComfyTV downstream
 ```
-[mesh2motion] ─VIDEO─→ [→ ComfyTV Video] ─COMFYTV_VIDEO─→ [Video Upscale] → …
+[mesh2motion] ─VIDEO─→ [→ ComfyTV Video] ─COMFYTV_VIDEO─→ [Video Color / Stabilize / …] → …
+```
+
+### Round trip: ComfyTV result → native plugin → back
+```
+[Image Stage] → [← ComfyTV Image] ─IMAGE─→ [any native plugin] ─IMAGE─→ [→ ComfyTV Image] → …
 ```
 
 ### Plugin output is a multi-frame IMAGE batch

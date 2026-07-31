@@ -2,40 +2,80 @@
 
 # 视频和音频
 
-> 视频**生成**在 Generate 分组里(见 [generate.zh.md](generate.zh.md))。本页讲 **ComfyTV / Video** 里的**编辑** stage 和 **ComfyTV / Audio** 里的分离 stage。Video Upscale、Subtitle Erase、Demucs 人声/伴奏分离 待支持,见 [roadmap.zh.md](roadmap.zh.md)。
+> 视频**生成**在 Generate 分组里（见 [generate.zh.md](generate.zh.md)）。本页带你逛一遍**视频与音频全家桶**——约 100 个视频节点和 30+ 个音频节点。以下所有能力都直接作用在素材本身，不需要下载任何 AI 模型；许多节点在浏览器里就有实时预览。每个节点的参数详解见 [comfytv.org](https://comfytv.org) 的**节点参考**。
 
 ![视频编辑 stage](images/video-tools.png)
 
 ---
 
-## 视频编辑(ComfyTV / Video)
+## 视频剪辑（ComfyTV / Video）
 
-把一个视频(来自 **Generate → Video** stage 或 **Load Video** 节点)接到这些其中任意一个:
+把视频（来自 **Generate → Video** stage 或 **Load Video** 节点）接进这些节点：
 
-| Stage | 干啥 | 状态 |
-|---|---|---|
-| **Video Clip** | 剪到一段起止时间范围。 | ✅ PyAV |
-| **Video Crop** | 裁剪一个矩形区域。 | ✅ PyAV |
-| **Video Resize** | 改尺寸(宽 / 高),帧率不变。 | ✅ PyAV |
-| **Video Extract Frame** | 抽出一帧静态图(首/末帧 / 指定时间点)。输出是 `COMFYTV_IMAGE`。 | ✅ PyAV |
-| **↪ Extend**(工具栏动作) | 一键链 , 抽源片末帧,生成一个新的 Video Stage,把那帧接为 I2V 起始图。 | ✅ |
-| **Video Upscale** | 逐帧放大。 | ⏳ 待支持 |
-| **Subtitle Erase (Smart)** | 自动识别并去除内嵌字幕。 | ⏳ 待支持 |
-| **Subtitle Erase (Region)** | 在你框选的区域内去字幕。 | ⏳ 待支持 |
+- **Clip / Split / Concat** —— 按时间范围剪辑、在时间点切成两段、多段拼接。
+- **Crop / Resize / Rotate / Speed** —— 区域裁剪、改分辨率、90° 步进旋转、变速与倒放。
+- **Extract Frame / Extract Frames** —— 抽一帧，或在时间线上打点批量导出。
+- **Scene Detect** —— 检测镜头切换，逐镜头预览，并可在检测点精确切割。
+- **Make Proxy** —— 生成轻量代理；播放器自动透明换源，重素材也能流畅拖动。
+- **Volume / Mux Audio / Demux** —— 淡入淡出、替换或叠加音轨、把视频拆成音轨 + 无声视频（🔀 **Demux** 工具栏动作会同时生成两个节点）。
+- **↪ Extend**（工具栏动作）—— 一键成链：抽出源视频最后一帧，spawn 新 Video Stage 并把这帧接成 I2V 起始图。
+
+后端还没接上的：**Video Upscale**、**Subtitle Erase（Smart / Region）**——见 [roadmap.zh.md](roadmap.zh.md)。
+
+## 调色（ComfyTV / VideoFX）
+
+带 lift-gamma-gain 色轮的 **Video Color**、**Curves** 曲线、**LUT**（实时预览，LUT 文件来自资源库）、**ASC CDL**、**HueCorrect**、**Selective Color** 可选颜色、**Histogram EQ** 直方图均衡、**Gray World** 自动白平衡。
+
+## 抠像与 matte（ComfyTV / Keying）
+
+<!-- TODO(screenshot): 抠像工作台——比如绿幕素材上的 PIK + Matte Monitor -->
+![抠像工作台](images/keying-bench.png)
+
+对标专业合成软件的整套 keyer 工作台：**Chroma Key**、**PIK**（基于取样图的 keyer）、**Keyer**、**Despill**、**Color Suppress**、**Select0r**、**KeyMix**、**Matte Monitor**、以及做 matte 扩收缩/羽化的 **Matte Morphology**。
+
+## Roto、跟踪与绘画
+
+**Roto Mask**（带羽化的贝塞尔形状，可打关键帧）、**Shape Mask**、**Motion Track**（点跟踪，可驱动变换或 Corner Pin）、**Mask Propagate**（光流把蒙版逐帧传播）、**Paint Strokes**（跨时间的绘画/克隆笔刷）、**Face Blur** 与 **Spot Remover**。
+
+## 合成与转场（ComfyTV / Compose）
+
+**Video Composite**（39 种混合模式、不透明度、蒙版）、**Video Transform** 与 **Corner Pin**（可打关键帧）、**Video Transition**（57 个 xfade 家族）、**Luma Wipe**（渐变图擦除）、**Time Remap**（速度曲线）、**Sequence**（轨道式拼装）。
+
+## 特效（ComfyTV / VideoFX）
+
+光学：**Glow** 辉光、**God Rays** 体积光、**Lens Distort** 镜头畸变（多套镜头模型）、**Chromatic Aberration** 色差、**Lens Flare** 光晕、**Z-Defocus** 景深。
+质感与年代：**Old Film** 老电影、**Regrain** 颗粒、**Frame Blend** 帧混合、**Posterize**、**Pseudocolor** 伪彩、**Chroma Shift**。
+艺术与扭曲：**Particles** 粒子、**Glitch FX** 故障、**Art FX**、**Kaleidoscope** 万花筒、**Wave Warp** 波浪、**Water** 水波、**Light Graffiti** 光涂鸦、**Slit Scan**、**Feedback FX** 反馈、**Strobe** 频闪、**Stylize** 风格化、**Ken Burns**。
+360 与投影：**360 Projection**、**360 Stabilize**、**Card 3D**、**UV Remap（STMap）** + **STMap Generate**。
+增强：**Denoise** 降噪、**Blur / Sharpen**、**Deinterlace** 去隔行、**Frame Interpolate** 补帧、**Stabilize** / **Stabilize Pro** 防抖。
+
+## 文字、分析与基建
+
+- **Title / Subtitles / Annotate** —— 文字叠加、字幕轨、审片标注（框/箭头/网格）。
+- **Subtitles · Speech-to-Text** —— 从音轨语音识别生成字幕。
+- **Video Scopes** —— 波形/矢量示波/直方图/RGB parade，做质检。
+- **Expression** —— 用数学表达式驱动任意数值参数。
+- **FX Chain** —— 把多个特效节点串起来一趟渲染完，并能实时预览叠加后的整体效果。
+
+<!-- TODO(screenshot): 串了几个特效的 FX Chain 及其实时预览 -->
+![FX Chain](images/fx-chain.png)
 
 ---
 
-## 音频(ComfyTV / Audio)
+## 音频（ComfyTV / Audio · AudioFX）
 
-拿一段视频或音轨,拆分:
+<!-- TODO(screenshot): 几个音频节点成链——比如 Stem Split → EQ（图形界面）→ Loudness -->
+![音频套件](images/audio-fx.png)
 
-| Stage | 输出 | 状态 |
-|-------|--------|------|
-| **Demux · Audio Track** | 从视频里提取出的音轨。 | ✅ PyAV |
-| **Demux · Silent Video** | 抽掉音轨的视频。 | ✅ PyAV |
-| **Audio · Vocals Only** | 分离出来的人声(Demucs)。 | ⏳ 待支持 |
-| **Audio · Background Only** | 伴奏 / 环境音(Demucs)。 | ⏳ 待支持 |
+- **Stem Split 分轨** —— 把一条音轨分成 人声/伴奏/鼓/贝斯/其他。内置能力、无需额外安装；音频或视频的音轨都能吃。
+- **Dynamics 动态**（压缩、门限、限制器、去齿音）、**EQ**（参数均衡，带图形界面）、**Loudness**（LUFS 响度标准化）。
+- **Denoise** / **Noise Reduction (Spectral)** / **Repair** —— 宽带与谱门控降噪、爆音与瑕疵修复。
+- **Time / Pitch** —— 变速与移调；**Saturate** 饱和、**Echo** 回声、**Modulation** 调制（颤音/镶边等）、**Stereo** 立体声工具。
+- **混响** —— **Audio Convolve (IR)** 卷积混响，配 **Audio Sweep** + **Audio Deconvolve** 可以采录真实房间的声音特征拿来复用；**Muse Reverb** 算法混响。
+- **Mix / Crossfade / Duck** —— 多轨混音、交叉淡化、人声侧链闪避。
+- **Beats & Notes** —— 自动检测音轨的节拍网格和逐个音符；**Analyze** / **Visualize** 用于检查；**Split Export** 分段导出。
+- **Audio Reactive** + **Audio Meter Overlay** —— 把音频包络变成视频特效的参数自动化，或把电平表烧进画面。
 
-demux 一对节点用同一段源视频:一个抽音轨,一个出无声视频。工具栏的 🔀 **Demux** 一键同时生成两个。
+分离/抽出的音轨可以接进 **Video Stage** 的可选 `audio` 输入做音频驱动视频（配合 LTX 2.3 IA2V）。
 
-分离/提取出来的音轨可以接到 **Video Stage** 的可选 `audio` 输入做音频驱动视频生成(可以配 LTX 2.3 IA2V)。
+**音乐创作**（乐谱、钢琴卷帘、SoundFont 合成）见 [making-music.zh.md](making-music.zh.md)。

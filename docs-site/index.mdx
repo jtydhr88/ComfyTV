@@ -1,12 +1,14 @@
 ---
 title: "ComfyTV"
-description: "Turn ComfyUI into a TapNow / LibTV-style canvas app. Every operation is a node; results flow downstream automatically."
+description: "Turn ComfyUI into a canvas-based media workbench. ~190 stages across image, video, audio, music, panorama, 2D layers and 3D — every operation is a node; results flow downstream automatically."
 mode: "wide"
 ---
 
 # ComfyTV
 
-ComfyTV turns ComfyUI into a **canvas app for making media**. Every operation is its own node, and results flow downstream automatically. Chain stages into a complete pipeline: **generate → pick → edit → compose**, across image, video, audio, panorama, and 3D.
+ComfyTV turns ComfyUI into a **canvas app for making media** — and keeps going, all the way to a full media workbench. Every operation is its own node, and results flow downstream automatically. Chain stages into a complete pipeline: **generate → pick → edit → composite → export**, across image, video, audio, music, panorama, 2D layers, and 3D.
+
+**~190 stages** ship today. Every one of them has its own page in the Node Reference.
 
 <CardGroup cols={2}>
   <Card title="Getting Started" icon="rocket" href="/guides/getting-started">
@@ -15,11 +17,34 @@ ComfyTV turns ComfyUI into a **canvas app for making media**. Every operation is
   <Card title="Node Reference" icon="cubes" href="/node-reference/image">
     Per-node docs for every ComfyTV stage: what it does, when to use it, inputs and outputs.
   </Card>
-  <Card title="Generate" icon="wand-magic-sparkles" href="/guides/generate">
-    Text, image, video, and audio generators, plus how to wire your own workflows.
+  <Card title="The Sidebar" icon="table-columns" href="/guides/sidebar">
+    Seven tabs: workflow config, asset library, prompt fragments, stage manager, presets, resources, remote servers — plus @ references in prompts.
   </Card>
-  <Card title="Video & Audio" icon="film" href="/guides/video-and-audio">
-    Trim, crop, upscale, de-subtitle, extract audio, and compose timelines.
+  <Card title="Custom Workflows" icon="link" href="/guides/custom-workflows">
+    🔗 Link a workflow straight from ComfyUI's own library — edit it there, ComfyTV picks up changes automatically.
+  </Card>
+</CardGroup>
+
+## Explore by area
+
+<CardGroup cols={3}>
+  <Card title="Generate" icon="wand-magic-sparkles" href="/guides/generate">
+    Text, image, video, speech, music, and 3D-model generators — all running against your own local models, plus custom workflow import.
+  </Card>
+  <Card title="Image Tools" icon="image" href="/guides/image-tools">
+    Inpaint, outpaint, erase, upscale, relight, variations, multi-angle — plus instant browser-side crop / rotate / mirror / grid split.
+  </Card>
+  <Card title="Video Suite" icon="film" href="/guides/video-and-audio">
+    ~100 nodes: editing, color grading, a full keying suite, roto and tracking, compositing with 39 blend modes, particles, lens FX, expressions, and single-pass FX Chain rendering.
+  </Card>
+  <Card title="Audio Suite" icon="waveform-lines" href="/guides/video-and-audio">
+    Dynamics, EQ, loudness, denoise, stem split, convolution and algorithmic reverb, beats-and-notes analysis, audio-reactive automation.
+  </Card>
+  <Card title="Making Music" icon="music" href="/guides/making-music">
+    Composition → performance → synthesis → mixing on one canvas: MusicXML scores, piano-roll editors, SoundFont synth, click track, chord accompaniment.
+  </Card>
+  <Card title="Panorama & 3D" icon="cube" href="/guides/panorama">
+    360° panorama viewer and capture, Scene3D workbench with keyframed cameras, geometry workshop, PBR materials, line-art from 3D.
   </Card>
 </CardGroup>
 
@@ -27,12 +52,21 @@ ComfyTV turns ComfyUI into a **canvas app for making media**. Every operation is
 
 <CardGroup cols={3}>
   <Card title="Per-node Run" icon="play">
-    Most stages have their own Run button. Running one stage does not re-run the whole graph.
+    Most stages have their own Run button. Running one stage does not re-run the whole graph — downstream stages consume the snapshot of the last output.
   </Card>
-  <Card title="Snapshots flow downstream" icon="diagram-project">
-    Once a stage runs, its result is saved as a snapshot and reused by downstream stages.
+  <Card title="Project-centric" icon="floppy-disk">
+    Stages belong to a project. Every output is kept with full history and restores on reload.
   </Card>
-  <Card title="Rich in-node UI" icon="sliders">
-    Crop, rotate, mirror, panorama viewports, timelines, and editors run right in the browser.
+  <Card title="Rich in-node editors" icon="sliders">
+    A layered 2D editor with PSD import/export, a storyboard workbench, piano rolls, 3D viewports, scopes — plus live previews on most video effects.
+  </Card>
+  <Card title="Your workflows, bound in a GUI" icon="diagram-project" href="/guides/custom-workflows">
+    Import any ComfyUI workflow as JSON, bind its inputs in the sidebar editor, save presets, and star a default per stage.
+  </Card>
+  <Card title="Part of the ecosystem" icon="puzzle-piece" href="/guides/bridges">
+    Subgraphs and third-party plugins just work; Bridge nodes connect any plugin, and remote ComfyUI machines can run stages for you.
+  </Card>
+  <Card title="Built-in libraries" icon="box-archive" href="/guides/sidebar">
+    A project asset library (image / video / audio / 3D) and a resource library (LUTs, fonts, SoundFonts), each with its own sidebar panel.
   </Card>
 </CardGroup>

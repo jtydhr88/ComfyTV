@@ -2,22 +2,47 @@
 title: "Custom workflows"
 ---
 
-Every option in a ComfyTV stage's **workflow** dropdown is a JSON file under `custom_nodes/ComfyTV/workflows/<kind>/`. Drop your file in, restart ComfyUI, done. **No Python edits.**
+Every option in a ComfyTV stage's **workflow** dropdown is a regular ComfyUI workflow (GUI format). There are three ways to add your own — **no Python edits** in any of them.
+
+## 🔗 Link workflow — recommended
+
+![Link Workflow dialog](/images/link-workflow.png)
+
+Under every stage's **workflow** dropdown there is a **🔗 Link workflow** button. It opens ComfyUI's **own workflow library** (the workflows you save in ComfyUI's Workflows panel) as a searchable folder tree. Click **Link** next to a workflow and it immediately appears in the dropdown, selected.
+
+Why this is the recommended path:
+
+- **Live editing.** The stage references the workflow file itself, not a copy. Open the workflow in ComfyUI, edit it, hit save — ComfyTV picks up the change automatically on the next Run. No re-export, no re-import, no restart.
+- **One source of truth.** You keep organizing your workflows in ComfyUI's library like you always did; ComfyTV just points at them.
+- Linked entries show a **Linked** badge in the dialog, where you can also **Unlink** them again (this removes the entry and its bindings, not the file).
+
+The file must be a **GUI-format** workflow (a normal *Workflow → Save*; **not** "Save (API Format)").
+
+## ⬆ Upload workflow
+
+Next to the link button, **⬆ Upload workflow** imports a `.json` file from disk. The workflow is copied into ComfyTV's library and appears in the dropdown right away — no restart. Use this for a file someone sent you; if it's a workflow you'll keep iterating on, prefer linking it instead.
+
+## Drop files into the library folder
+
+ComfyTV's workflow library lives in ComfyUI's user directory:
 
 ```
-workflows/
+user/comfytv/workflows/
   image/                                ← Image Stage
     my-workflow.json                    GUI workflow export
-    my-workflow_preset.json             optional preset (shipped defaults)
+    my-workflow_preset.json             optional preset (bindings)
   image-edit/   inpaint/   erase/   outpaint/   upscale/   multiangle/
-  relight/   cutout/   multiview/   sequence/
-  video/        text/       audio/      audio-vocal/    audio-bg/
-  shot-images/  storyboard/  panorama/  timeline/
+  cutout/   multiview/   sequence/   speech/
+  video/   text/   audio/   audio-vocal/   audio-bg/
+  shot-images/  storyboard/  panorama/  timeline/  model/
+  split-part/   material-estimate/   speech-to-text/
 ```
 
-The full list of kinds: `text, image, shot-images, video, audio, storyboard, panorama, timeline, upscale, outpaint, inpaint, erase, image-edit, multiangle, relight, cutout, multiview, sequence, audio-vocal, audio-bg`.
+**The folder decides the kind.** Copy a JSON in and restart ComfyUI (or trigger a rescan from the sidebar) and it shows up in the matching stage's dropdown. The shipped workflows are seeded into this directory on startup; entries that came with ComfyTV carry a **builtin** badge, and files you've edited are never overwritten by updates.
 
-**The folder decides the kind.** Each shipped kind has a `README.md` next to its JSONs documenting the run-time inputs and the nodes a workflow typically needs. Read the relevant per-kind README first:
+The full list of kinds: `text, image, shot-images, video, audio, speech, storyboard, panorama, timeline, upscale, outpaint, inpaint, erase, image-edit, multiangle, cutout, multiview, sequence, audio-vocal, audio-bg, model, split-part, material-estimate, speech-to-text`.
+
+Each shipped kind has a `README.md` next to its JSONs documenting the run-time inputs and the nodes a workflow typically needs. Read the relevant per-kind README first:
 
 - [`workflows/audio/README.md`](../workflows/audio/README.md)
 - [`workflows/image/README.md`](../workflows/image/README.md)
@@ -27,11 +52,11 @@ The full list of kinds: `text, image, shot-images, video, audio, storyboard, pan
 - [`workflows/upscale/README.md`](../workflows/upscale/README.md)
 - [`workflows/cutout/README.md`](../workflows/cutout/README.md)
 - [`workflows/erase/README.md`](../workflows/erase/README.md)
-- [`workflows/relight/README.md`](../workflows/relight/README.md)
 - [`workflows/multiangle/README.md`](../workflows/multiangle/README.md)
 - [`workflows/multiview/README.md`](../workflows/multiview/README.md)
 - [`workflows/sequence/README.md`](../workflows/sequence/README.md)
 - [`workflows/panorama/README.md`](../workflows/panorama/README.md)
+- [`workflows/speech/README.md`](../workflows/speech/README.md)
 - [`workflows/text/README.md`](../workflows/text/README.md)
 - [`workflows/video/README.md`](../workflows/video/README.md)
 - [`workflows/shot-images/README.md`](../workflows/shot-images/README.md)
@@ -39,19 +64,9 @@ The full list of kinds: `text, image, shot-images, video, audio, storyboard, pan
 
 ---
 
-## How to add a custom workflow
-
-1. **Workflow → Save** in ComfyUI (the default GUI format, **not** "Save (API Format)").
-2. Save as `workflows/<kind>/<name>.json`.
-3. **Restart ComfyUI**. Your new workflow appears in the dropdown.
-
-ComfyTV will humanize the filename for the combo label (`my-workflow` → "My Workflow"), register the workflow under the folder's kind, and auto-detect a `SaveImage` / `SaveVideo` / `PreviewImage` node as the result endpoint.
-
----
-
 ## Wiring stage inputs
 
-Once the workflow is in, you usually need to tell ComfyTV which node receives the stage's prompt, which `LoadImage` takes the upstream image, where the seed comes from, etc.
+Once the workflow is in (linked, uploaded, or dropped), you usually need to tell ComfyTV which node receives the stage's prompt, which `LoadImage` takes the upstream image, where the seed comes from, etc.
 
 **Use the sidebar**: click a stage on the canvas, fill in each widget in the **ComfyTV** sidebar on the left. Changes apply immediately, no restart. See [sidebar-config-editor.md](/guides/sidebar-config-editor) for the editor UI.
 
@@ -61,11 +76,13 @@ Once the workflow is in, you usually need to tell ComfyTV which node receives th
 
 ---
 
-## Updating after re-export
+## Updating a workflow
 
-When you re-export the workflow from ComfyUI (bumped a model version, added a step), **just overwrite `workflows/<kind>/<name>.json`**. ComfyTV detects the file modification time has changed; the next time a stage uses this workflow it re-reads the file.
+**Linked workflow**: just edit and save it in ComfyUI. ComfyTV notices the file changed and re-reads it on the next Run — nothing else to do.
 
-Bindings keep working as long as the node IDs they reference still exist. If you renamed or removed a node, the runner errors:
+**Uploaded / dropped workflow**: overwrite the JSON under `user/comfytv/workflows/<kind>/`. ComfyTV detects the file modification time has changed and re-reads it the next time a stage uses it.
+
+Either way, bindings keep working as long as the node IDs they reference still exist. If you renamed or removed a node, the runner errors:
 
 > `inputs references missing workflow node "X" — did the API workflow get re-exported with different node ids?`
 

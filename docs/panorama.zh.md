@@ -55,3 +55,9 @@ Image Stage → Image Picker → Panorama (上传或生成)
                                   └── Multi-View   → Image Picker → (编辑)
 ```
 
+---
+
+## 360° 视频
+
+动态的 360° 素材在 **ComfyTV / VideoFX** 里有专门节点:**360 Projection**(equirectangular ↔ 平面视图重投影)和 **360 Stabilize**(360 片段的水平线锁定防抖)。见 [video-and-audio.zh.md](video-and-audio.zh.md)。
+

@@ -1,11 +1,18 @@
 ---
 title: "生成内容"
-translationSourceHash: "862af0b080d9bbae"
+translationSourceHash: "2ba05d5a752efd20"
 ---
 
-**ComfyTV / Generate** 分组里都是从提示词创建新内容的 stage:Text、Image、Video、Audio。
+**ComfyTV / Generate** 分组里都是从提示词创建新内容的 stage：Text、Image、Video、Music、Speech、3D Model。
 
-每个生成器用法都一样:输入提示词,从下拉框里选一个 **workflow**(模型),点 **▶ 运行**。结果显示在节点预览里,通过连线流到下游任何东西。
+所有生成器的用法一致：输入提示词，在下拉框选一个 **workflow**（模型），点 **▶ Run**。结果显示在节点预览里，并流向下游接线的任何节点。
+
+每个 workflow 下拉框下面都有两个按钮：
+
+- **🔗 Link workflow** —— *使用自定义工作流的推荐方式。*直接从 ComfyUI 自己的工作流库里挑一个链接进来；在 ComfyUI 里编辑保存，ComfyTV 自动读到最新版。见 [custom-workflows.zh.md](/zh/guides/custom-workflows)。
+- **⬆ Upload workflow** —— 从磁盘导入 `.json` 文件，不用重启。
+
+在 stage 管理器里悬停某个工作流可以 **★ 星标设为该 kind 的默认**；stage 卡片上的**预设条**可以保存/调用参数预设。
 
 ---
 
@@ -13,14 +20,14 @@ translationSourceHash: "862af0b080d9bbae"
 
 ![Image stage](/images/image-run.png)
 
-- **提示词**:主文本框。上游 **Text** 节点会拼到提示词后面;上游 **图片** 传给当前工作流的 LoadImage(只有 i2i 工作流会用到)。
-- **workflow** 下拉列表 `workflows/image/` 里提供的工作流,现在是**Local SD1.5**(文生图)、**Local SD1.5 I2I**(图生图)、**Image Ideogram4 T2I**。
-- **resolution / aspect_ratio / batch_size**:目标分辨率、比例、每次运行的张数。
+- **提示词**：主文本框。上游 **Text** 节点内容会追加进来；上游**图片**喂给当前工作流的 `LoadImage`（只有 i2i 工作流会消费）。`@image_N` 记号可以在文中内联引用接进来的图片槽位。
+- **workflow** —— 自带：**Local SD1.5**（文生图）、**Local SD1.5 I2I**（图生图）、**Image Ideogram4 T2I**——加上你 Link 或 Upload 进来的任何工作流。
+- **resolution / aspect_ratio / batch_size**：目标尺寸档位、画幅、每次 Run 出几张。
 
-**输出两路**:`images` 是这次运行的整套图,`image` 是你在节点上点中的那一张。
+**两个输出**：`images` 是本次 Run 的整批；`image` 是你在节点上点选的单张（没点之前默认第一张）。
 
 ### 图生图
-workflow 选 `Local SD1.5 I2I`,把参考图接到 **images** 槽,提示词写你想改成什么样,运行。
+选 `Local SD1.5 I2I`，把参考图接进 **images** 槽，写提示词，Run。
 
 ---
 
@@ -28,33 +35,50 @@ workflow 选 `Local SD1.5 I2I`,把参考图接到 **images** 槽,提示词写你
 
 ![Video stage](/images/video-run.png)
 
-- **workflow** , LTX 2.3 的 4 个变体都已提供:
-  - `Local LTX 2.3 T2V` , 文生视频。
-  - `Local LTX 2.3 I2V` , 图生视频。
-  - `Local LTX 2.3 FLF2V` , 首末帧生视频。在 **images** 上接 **两张**(起始 + 结尾关键帧)。
-  - `Local LTX 2.3 IA2V` , 图 + 音频生视频。
-- **resolution / aspect_ratio / duration**:输出尺寸、比例、时长。
-- **audio** 输入 , IA2V 必填,其它 LTX 工作流不用音频。
+- **workflow** —— LTX 2.3 四个变体全部自带：
+  - `Local LTX 2.3 T2V` —— 文生视频。
+  - `Local LTX 2.3 I2V` —— 图生视频。
+  - `Local LTX 2.3 FLF2V` —— 首尾帧生视频。在 **images** 上接**两张**图（起始 + 结束关键帧）。
+  - `Local LTX 2.3 IA2V` —— 图 + 音频生视频。
+- **resolution / aspect_ratio / duration**：输出尺寸、画幅、时长。
+- **audio** 输入 —— IA2V 必需；其他 LTX 工作流不用音频。
+
+出片之后，整个[视频套件](/zh/guides/video-and-audio)——剪辑、调色、抠像、合成、特效——就接手了。
 
 ---
 
 ## Text Stage
 
-![Video stage](/images/text-run.png)
+![Text stage](/images/text-run.png)
 
-通过本地 LLM 生成文本(内置 **Qwen3 4B**)。用它扩写 提示词、写描述, 或其它 stage 的 context 槽。
+本地 LLM 文本生成（内置 **Qwen3 4B**）。用来扩写提示词、写描述、或喂其他 stage 的上下文槽。
+
+---
+
+## Music Stage
+
+![Music stage](/images/audio-run.png)
+
+文生音乐，走 **ACE-Step v1 3.5B**：
+
+- **提示词**：自由 tags——曲风、情绪、BPM、乐器编制。
+- **歌词**（可选）：留空 = 纯器乐；非空 = 人声曲目。
+- **时长**：滑块（1–240 秒，默认 30）。
+
+输出是一个 FLAC 音频文件。之后[音频套件](/zh/guides/video-and-audio)（均衡、分轨、混响……）和 [Music 节点](/zh/guides/making-music)都能接手。
 
 ---
 
-## Audio Stage
-![Video stage](/images/audio-run.png)
+## Speech Stage
 
-文生音乐,走 **ACE-Step v1 3.5B**;
+![Speech stage](/images/speech-run.png)
 
-- **提示词**:自由 tags , 流派、情绪、BPM、乐器。
-- **Lyrics**(可选):空 = 纯器乐;有内容 = 带人声。
-- **Duration**:滑块(1–240 秒,默认 30)。
-
-输出一个 FLAC 音频。
+文字转语音。自带 **Kokoro TTS** 工作流：输入要念的台词，在工作流参数里选音色，Run。输出是一段音频——可以接进 Video Stage 的 `audio` 输入（IA2V）、Mux Audio 节点或音频套件。
 
 ---
+
+## 3D Model Stage
+
+![3D model stage](/images/model3d-run.png)
+
+通过 `model` kind 的工作流生成 **3D 模型（GLB）**——Link 或 Upload 你自己的工作流（例如 Hunyuan3D 的图）；默认不自带。节点内嵌轨道预览；旋转视角后会自动截图进它的图片输出，下游图像 stage 可以直接消费模型的外观。GLB 本体流向 3D 节点——Scene3D、网格操作、材质，详见节点参考。

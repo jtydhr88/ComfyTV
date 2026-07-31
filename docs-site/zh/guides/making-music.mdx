@@ -1,7 +1,7 @@
 ---
 title: "在 ComfyTV/ComfyUI 里做音乐"
 description: "从一份乐谱(或一段让 LLM 写谱的提示词)到一首带混响的成品音频,全程在一张画布上完成,不用切换任何外部软件。本页把**作曲 → 演奏 → 合成 → 混音**四个环节的音乐概念和对应节点的每个参数讲清楚。"
-translationSourceHash: "7b6b4d5cbb48b15a"
+translationSourceHash: "eb8307c1ba0851eb"
 ---
 
 链路总览(**ComfyTV / Music** + **ComfyTV / Audio**):
@@ -180,7 +180,7 @@ Score 节点是**容错**的:把 LLM 的整段回答原样粘进去即可,它会
 | **Audio Saturate** | 饱和/失真/比特压碎 |
 | **Audio Convolve (IR)** | 卷积混响——用真实空间的脉冲响应 |
 | **Muse Reverb (FDN)** | 算法混响(本页第 5 站) |
-| **Audio Stem Split** | 整首歌分轨:人声/鼓/贝斯/其他(HDemucs) |
+| **Audio Stem Split** | 整首歌分轨:人声/鼓/贝斯/其他 |
 | **Noise Reduction (Spectral)** | 谱门控降噪 |
 | **Audio Beats & Notes** | 节拍/音符分析,输出拍点/音符标签 |
 | **Audio Mix / Crossfade / Duck** | 多轨混合 / 交叉淡化 / 闪避(背景乐给人声让路) |

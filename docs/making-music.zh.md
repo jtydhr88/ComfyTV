@@ -180,7 +180,7 @@ Score 节点是**容错**的:把 LLM 的整段回答原样粘进去即可,它会
 | **Audio Saturate** | 饱和/失真/比特压碎 |
 | **Audio Convolve (IR)** | 卷积混响——用真实空间的脉冲响应 |
 | **Muse Reverb (FDN)** | 算法混响(本页第 5 站) |
-| **Audio Stem Split** | 整首歌分轨:人声/鼓/贝斯/其他(HDemucs) |
+| **Audio Stem Split** | 整首歌分轨:人声/鼓/贝斯/其他 |
 | **Noise Reduction (Spectral)** | 谱门控降噪 |
 | **Audio Beats & Notes** | 节拍/音符分析,输出拍点/音符标签 |
 | **Audio Mix / Crossfade / Duck** | 多轨混合 / 交叉淡化 / 闪避(背景乐给人声让路) |

@@ -125,7 +125,7 @@ ACE-Step v1 是 ComfyUI 核心原生支持,不需要装额外的 custom node。
 
 - **LaMa Erase** → [`Acly/comfyui-inpaint-nodes`](https://github.com/Acly/comfyui-inpaint-nodes)
 - **Fooocus SDXL Inpaint / Outpaint** → 用的 `INPAINT_*` 节点也由`comfyui-inpaint-nodes` 提供。
-- *(规划中,未提供)***Demucs Vocals / Background** →[`lum3on/ComfyUI_AudioTools`](https://github.com/lum3on/ComfyUI_AudioTools)提供 `AudioStemSeparate` 节点。
+- **Audio Stem Split** 分轨(人声/鼓/贝斯/……)是**内置能力**——不需要第三方节点,也不需要下载模型。
 
 其它工作流只用 ComfyUI 核心节点。
 

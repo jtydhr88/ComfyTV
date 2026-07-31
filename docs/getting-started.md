@@ -2,7 +2,7 @@
 
 # Getting started
 
-ComfyTV turns ComfyUI into a **TapNow / LibTV-style canvas app**. Every operation is its own node; results flow downstream automatically. Chain stages into a complete flow: generate → pick → edit → compose.
+ComfyTV turns ComfyUI into a **canvas app for making media** — generate, pick, edit, composite, and export across image, video, audio, music, panorama, 2D layers, and 3D, with ~190 stages. Every operation is its own node; results flow downstream automatically.
 
 ![The ComfyTV canvas](images/overview.png)
 
@@ -15,8 +15,9 @@ cd ComfyUI/custom_nodes
 git clone https://github.com/jtydhr88/ComfyTV
 ```
 
-Restart ComfyUI. Open the **Add Node** menu (double-click the canvas or right-click) and look for the **`ComfyTV`** category. It's split into sub-menus: Project, Input, Generate, Image, Panorama, Video, Audio, Compose.
+Restart ComfyUI. Open the **Add Node** menu (double-click the canvas or right-click) and look for the **`ComfyTV`** category. It's split into sub-menus: Project, Input, Generate, Image, Panorama, Video, VideoFX, Keying, Compose, Timeline, Audio, AudioFX, Music, 3D, Material, Storyboard, Bridge.
 
+<!-- TODO(screenshot): re-capture with the current sub-category list (VideoFX / Keying / Music / …) -->
 ![Add-node menu](images/node-groups.png)
 
 ---
@@ -26,13 +27,16 @@ Restart ComfyUI. Open the **Add Node** menu (double-click the canvas or right-cl
 ### Each node has its own Run button
 Most stages have a **▶ Run** button inside their panel. Clicking it runs *just that stage* — it does **not** re-run the whole graph. The result appears in the node's output preview.
 
-> Some stages (Crop, Rotate, Mirror, Grid Split, Panorama viewports) **have no Run button** — they work entirely in your browser and update instantly as you adjust them.
+> Many stages **have no Run button at all** — crop, rotate, mirror, grid split, panorama viewports, the layer editor, piano rolls, and most FX previews work entirely in your browser and update instantly as you adjust them. A Run (or a final render like FX Chain) is only needed when a file has to be produced.
 
 ### Results flow downstream as snapshots
 Once an upstream stage runs, its result is saved as a snapshot; downstream stages use that snapshot directly when they run, without re-running the upstream.
 
 ### Project selector
-Drop a **Project** node to name/switch the current project. Everything you generate is filed under it and restored when you reload the workflow.
+Drop a **Project** node to name/switch the current project. Everything you generate is filed under it — with full output history — and restored when you reload the workflow.
+
+### The sidebar
+The **ComfyTV** sidebar on the left has seven tabs: **Workflow** (config editor for the selected stage), **Assets** (media library), **Entries** (reusable prompt fragments, referenced with `@label`), **Stages** (workflows + custom parameters per stage kind, ★ default), **Presets**, **Resources** (LUTs / fonts / SoundFonts), and **Servers** (run stages on other machines). Full tour: [sidebar.md](sidebar.md).
 
 ---
 
@@ -61,6 +65,12 @@ Hover any output image and use the **mouse wheel** to zoom (1×–6×), **drag**
 
 ## Where to next
 
-- [generate.md](generate.md) — generators (text / image / video / audio)
-- [image-tools.md](image-tools.md) — crop, rotate, mirror, inpaint, erase, cutout, upscale, outpaint, grid split, variations, multi-angle
-- [compose.md](compose.md) — Image Picker, A/B compare
+- [sidebar.md](sidebar.md) — the 7-tab sidebar and `@` prompt references
+- [generate.md](generate.md) — generators (text / image / video / music / speech / 3D model)
+- [image-tools.md](image-tools.md) — crop, rotate, mirror, inpaint, erase, cutout, upscale, outpaint, grid split, variations, multi-angle, relight
+- [video-and-audio.md](video-and-audio.md) — the video & audio suites (~100 video nodes, 30+ audio nodes)
+- [making-music.md](making-music.md) — scores, piano rolls, SoundFont synthesis
+- [compose.md](compose.md) — pickers, A/B compare, storyboard, timeline
+- [custom-workflows.md](custom-workflows.md) — **🔗 Link workflow** (recommended), upload, and the library folder
+
+The full documentation — including a reference page for every node — lives at **[comfytv.org](https://comfytv.org)**.

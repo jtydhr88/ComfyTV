@@ -54,6 +54,7 @@
                 "pages": [
                   "index",
                   "guides/getting-started",
+                  "guides/sidebar",
                   "guides/generate",
                   "guides/image-tools",
                   "guides/panorama",
@@ -400,6 +401,7 @@
                 "pages": [
                   "zh/index",
                   "zh/guides/getting-started",
+                  "zh/guides/sidebar",
                   "zh/guides/generate",
                   "zh/guides/image-tools",
                   "zh/guides/panorama",

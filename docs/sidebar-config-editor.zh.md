@@ -63,7 +63,7 @@
 
 ## 修改工作流本身
 
-侧边栏**只改绑定**。要改工作流本身(重命名节点、加一步、换个 model loader),在 ComfyUI 主画布打开 `workflows/<kind>/<name>.json`,可视化编辑,保存覆盖原文件。下次再有 stage 选中这个工作流时,ComfyTV 检测到文件修改时间变了会自动重新读一遍,新结构立刻可用,不用重启。现有绑定只要引用的节点 ID 还存在就继续工作。
+侧边栏**只改绑定**。要改工作流本身(重命名节点、加一步、换个 model loader),在 ComfyUI 主画布里编辑并保存即可。🔗 **链接**的工作流到此为止——它本来就住在 ComfyUI 自己的库里;上传/手动放入的则保存覆盖 `user/comfytv/workflows/<kind>/` 下的原文件。无论哪种,ComfyTV 发现文件变了会自动重读,新结构立刻可用,不用重启。现有绑定只要引用的节点 ID 还存在就继续工作。
 
 ---
 
@@ -73,7 +73,7 @@
 
 下载下来的文件就是标准 `_preset.json` 格式(详见 [custom-workflows.zh.md](custom-workflows.zh.md#配置-stage-输入怎么接))。典型流程:
 
-1. 把工作流 JSON 放进 `workflows/<kind>/`。
+1. 加一个工作流——🔗 链接、⬆ 上传,或把 JSON 放进库目录(见 [custom-workflows.zh.md](custom-workflows.zh.md))。
 2. 在某个 stage 上选中它、准备完成,在侧边栏里调整绑定到你满意。
 3. 点 **导出 preset.json**。
 4. 把下载到的文件存到工作流 JSON 同目录,命名为 `<name>_preset.json`。

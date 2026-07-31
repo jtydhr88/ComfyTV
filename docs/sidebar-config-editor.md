@@ -67,7 +67,7 @@ A save that fails shows an inline error.
 
 ## Editing the workflow itself
 
-The sidebar **only edits bindings**. To change the workflow itself (rename a node, add a step, swap a model loader), open `workflows/<kind>/<name>.json` in ComfyUI's main canvas, edit visually, and save back over the file. The next time a stage picks this workflow, ComfyTV detects the modification-time change and re-reads it — the new structure is immediately usable, no restart needed. Existing bindings keep working as long as the node IDs they reference still exist.
+The sidebar **only edits bindings**. To change the workflow itself (rename a node, add a step, swap a model loader), edit it in ComfyUI's main canvas and save. For a 🔗 **linked** workflow that's all there is to it — it lives in ComfyUI's own library. For an uploaded/dropped one, save back over the file in `user/comfytv/workflows/<kind>/`. Either way ComfyTV notices the file changed and re-reads it — the new structure is immediately usable, no restart needed. Existing bindings keep working as long as the node IDs they reference still exist.
 
 ---
 
@@ -77,7 +77,7 @@ At the bottom of the sidebar there's an **⇩ Export preset.json** button. Click
 
 The file you get is the standard `_preset.json` format (see [custom-workflows.md](custom-workflows.md#wiring-stage-inputs)). Typical flow:
 
-1. Drop a workflow JSON into `workflows/<kind>/`.
+1. Add a workflow — 🔗 link, ⬆ upload, or drop a JSON into the library folder (see [custom-workflows.md](custom-workflows.md)).
 2. Open it on a stage, prep it, and tweak bindings in the sidebar until you're happy.
 3. Click **Export preset.json**.
 4. Save the downloaded file next to the workflow JSON, named `<name>_preset.json`.

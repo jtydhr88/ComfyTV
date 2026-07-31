@@ -180,7 +180,7 @@ The synth output is a standard audio track; the whole **ComfyTV / Audio** toolbo
 | **Audio Saturate** | Saturation/distortion/bit-crush |
 | **Audio Convolve (IR)** | Convolution reverb — impulse responses of real spaces |
 | **Muse Reverb (FDN)** | Algorithmic reverb (Stop 5 above) |
-| **Audio Stem Split** | Split a full song into vocals/drums/bass/other (HDemucs) |
+| **Audio Stem Split** | Split a full song into vocals/drums/bass/other |
 | **Noise Reduction (Spectral)** | Spectral-gating denoise |
 | **Audio Beats & Notes** | Beat/note analysis, outputs beat/note labels |
 | **Audio Mix / Crossfade / Duck** | Multi-track mixing / crossfades / ducking (background yields to voice) |
