@@ -9,6 +9,7 @@
     @dragover="fileDrop.onDragOver"
     @dragleave="fileDrop.onDragLeave"
     @drop="fileDrop.onDrop"
+    @keydown="onNavKeydown"
   >
     <div class="ctv:shrink-0 ctv:flex ctv:flex-wrap ctv:items-center ctv:gap-1">
       <button :class="chipClass(activeFilter === 'all')" @click="setFilter('all')">
@@ -53,7 +54,7 @@
         {{ activeFilter === 'all' ? $t('assetLoader.empty') : $t('assets.emptyCategory') }}
       </div>
 
-      <div v-else class="ctv:grid ctv:grid-cols-[repeat(auto-fill,minmax(80px,1fr))] ctv:gap-1.5">
+      <div v-else ref="gridEl" class="ctv:grid ctv:grid-cols-[repeat(auto-fill,minmax(80px,1fr))] ctv:gap-1.5">
         <button
           v-for="asset in visibleAssets"
           :key="asset.id"
@@ -147,7 +148,7 @@
 
 <script setup lang="ts">
 import IconUpload from '~icons/lucide/upload'
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 
 import type { LGraphNode } from '@/lib/comfyApp'
 import ModelThumb from '@/components/widgets/ModelThumb.vue'
@@ -178,9 +179,29 @@ const {
   selectedAsset,
   setFilter,
   selectAsset,
+  selectRelative,
   importFiles,
   fileDrop,
 } = useAssetLoaderCard(props.node, () => props.state)
+
+const gridEl = ref<HTMLElement | null>(null)
+
+function onNavKeydown(e: KeyboardEvent) {
+  if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return
+  const t = e.target as HTMLElement | null
+  const tag = t?.tagName.toLowerCase()
+  if (tag === 'video' || tag === 'audio' || tag === 'input' || tag === 'textarea'
+    || tag === 'select' || t?.isContentEditable) return
+  if (selectedId.value == null) return
+  e.preventDefault()
+  e.stopPropagation()
+  const moved = selectRelative(e.key === 'ArrowRight' ? 1 : -1)
+  if (!moved) return
+  void nextTick(() => {
+    const idx = visibleAssets.value.findIndex(a => a.id === moved.id)
+    gridEl.value?.children[idx]?.scrollIntoView({ block: 'nearest', inline: 'nearest' })
+  })
+}
 
 const fileInput = ref<HTMLInputElement | null>(null)
 

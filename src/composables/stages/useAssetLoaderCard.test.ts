@@ -146,6 +146,47 @@ describe('useAssetLoaderCard — selection', () => {
   })
 })
 
+describe('useAssetLoaderCard — relative selection', () => {
+  const IMG_B = { ...IMG_ASSET, id: 3, name: 'pic-b', payload_url: '/a/pic-b.png' }
+  const IMG_C = { ...IMG_ASSET, id: 4, name: 'pic-c', payload_url: '/a/pic-c.png' }
+
+  beforeEach(() => {
+    fakeAssetStore.listByCategory.mockReturnValue([IMG_ASSET, IMG_B, IMG_C, VID_ASSET])
+  })
+
+  it('moves selection forward and backward through visible assets', async () => {
+    const { api } = await setup()
+    api.selectAsset(IMG_ASSET)
+    expect(api.selectRelative(1)).toEqual(IMG_B)
+    expect(api.selectedId.value).toBe(3)
+    expect(api.selectRelative(-1)).toEqual(IMG_ASSET)
+    expect(api.selectedId.value).toBe(1)
+  })
+
+  it('clamps at both ends without wrapping', async () => {
+    const { api } = await setup()
+    api.selectAsset(IMG_ASSET)
+    expect(api.selectRelative(-1)).toBeNull()
+    expect(api.selectedId.value).toBe(1)
+    api.selectAsset(IMG_C)
+    expect(api.selectRelative(1)).toBeNull()
+    expect(api.selectedId.value).toBe(4)
+  })
+
+  it('falls back to a list edge when the selection is not visible', async () => {
+    const { api } = await setup()
+    expect(api.selectRelative(1)).toEqual(IMG_ASSET)
+    api.selectedId.value = 999
+    expect(api.selectRelative(-1)).toEqual(IMG_C)
+  })
+
+  it('returns null for an empty list', async () => {
+    fakeAssetStore.listByCategory.mockReturnValue([])
+    const { api } = await setup()
+    expect(api.selectRelative(1)).toBeNull()
+  })
+})
+
 describe('useAssetLoaderCard — mount restore', () => {
   it('restores the saved asset by id and heals a stale url', async () => {
     fakeAssetStore.byId.mockImplementation((id: number) => (id === 1 ? IMG_ASSET : undefined))

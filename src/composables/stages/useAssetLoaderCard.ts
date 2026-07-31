@@ -59,6 +59,16 @@ export function useAssetLoaderCard(node: LGraphNode, getState: () => StageState)
     stageStore.setOutputSlot(getState(), 0, asset.payload_url)
   }
 
+  function selectRelative(dir: -1 | 1): Asset | null {
+    const list = visibleAssets.value
+    if (!list.length) return null
+    const idx = list.findIndex(a => a.id === selectedId.value)
+    const next = idx < 0 ? (dir > 0 ? 0 : list.length - 1) : idx + dir
+    if (next < 0 || next >= list.length || next === idx) return null
+    selectAsset(list[next])
+    return list[next]
+  }
+
   async function importFiles(files: File[]): Promise<void> {
     try {
       const created = await importAssetFiles(files, {
@@ -110,6 +120,7 @@ export function useAssetLoaderCard(node: LGraphNode, getState: () => StageState)
     selectedAsset,
     setFilter,
     selectAsset,
+    selectRelative,
     importFiles,
     fileDrop,
   }
