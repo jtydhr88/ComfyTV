@@ -47,7 +47,7 @@
       />
     </div>
 
-    <div class="ctv-scroll-thin ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:rounded-md ctv:border ctv:border-border-subtle ctv:bg-black/20 ctv:p-1.5" @wheel.stop>
+    <div class="ctv-scroll-thin ctv:flex-1 ctv:min-h-0 ctv:max-h-80 ctv:overflow-y-auto ctv:rounded-md ctv:border ctv:border-border-subtle ctv:bg-black/20 ctv:p-1.5" @wheel.stop>
       <div v-if="visibleAssets.length === 0"
            class="ctv:py-5 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60">
         {{ activeFilter === 'all' ? $t('assetLoader.empty') : $t('assets.emptyCategory') }}
@@ -110,6 +110,19 @@
       </div>
     </div>
 
+    <div
+      v-if="mediaType !== 'model' && previewContent"
+      :class="mediaType === 'audio'
+        ? 'ctv:shrink-0'
+        : 'ctv-al-fill ctv:flex-1 ctv:min-h-0'"
+    >
+      <ValuePreview
+        :class="mediaType !== 'audio' && 'ctv:h-full'"
+        :type="state.outputType"
+        :content="previewContent"
+      />
+    </div>
+
     <div class="ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:text-2xs ctv:text-muted-foreground">
       <span v-if="selectedAsset" class="ctv:flex-1 ctv:truncate ctv:text-success-background">
         {{ $t('assetLoader.selected', { name: selectedAsset.name || '—' }) }}
@@ -117,7 +130,7 @@
       <span v-else class="ctv:flex-1 ctv:truncate">{{ $t('assetLoader.pickHint') }}</span>
     </div>
 
-    <div class="ctv:shrink-0">
+    <div :class="mediaType === 'model' ? 'ctv:flex-1 ctv:min-h-0 ctv:flex ctv:flex-col' : 'ctv:shrink-0'">
       <StageCard
         :state="state"
         :node="node"
@@ -140,6 +153,7 @@ import type { LGraphNode } from '@/lib/comfyApp'
 import ModelThumb from '@/components/widgets/ModelThumb.vue'
 import ProxiedVideo from '@/components/widgets/ProxiedVideo.vue'
 import StageCard from '@/components/stages/StageCard.vue'
+import ValuePreview from '@/components/stages/ValuePreview.vue'
 import { assetTooltipOf as assetTooltip, useAssetLoaderCard } from '@/composables/stages/useAssetLoaderCard'
 import { assetPreviewUrl } from '@/utils/assetMedia'
 import type { StageState } from '@/stores/stageStore'
@@ -169,6 +183,12 @@ const {
 } = useAssetLoaderCard(props.node, () => props.state)
 
 const fileInput = ref<HTMLInputElement | null>(null)
+
+const previewContent = computed(() => {
+  if (mediaType.value === 'image' && selectedAsset.value)
+    return assetPreviewUrl(selectedAsset.value)
+  return props.state.output
+})
 
 const fileAccept = computed(() =>
   mediaType.value === 'model' ? MODEL_FILE_EXTENSIONS.join(',') : `${mediaType.value}/*`)
@@ -201,3 +221,15 @@ function chipClass(active: boolean) {
 
 const chipCountClass = 'ctv:py-0 ctv:px-1 ctv:rounded-lg ctv:text-3xs ctv:bg-base-foreground/10'
 </script>
+
+<style scoped>
+.ctv-al-fill :deep(.vp-img-host) {
+  flex: 1 1 0%;
+  min-height: 0;
+}
+.ctv-al-fill :deep(.vp-img-host > video) {
+  height: 100%;
+  max-height: none;
+  object-fit: contain;
+}
+</style>
