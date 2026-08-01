@@ -26,6 +26,9 @@ import { groupKind } from '../kinds/group'
 import { DEFAULT_SHAPE_OPTIONS, type ShapeToolOptions } from '../tools/shapeTool'
 import { DEFAULT_WARP_OPTIONS, isWarpTool, type WarpToolOptions } from '../tools/warpTool'
 import { isTransformTool } from '../tools/transformTool'
+import { arrangeNodes, type ArrangeOp } from './arrangeOps'
+import { guideAddLive, guideEndDrag, guideMoveLive, sanitizeGuides, type GuideDragEnd } from './guideOps'
+import type { DocGuide } from '../document'
 import { SetSelectionCommand, snapshotSelection } from '../commands/selection'
 import { generateId } from '../id'
 import type { ChannelData, Rect } from '../node'
@@ -111,6 +114,13 @@ export interface Editor {
   transformApply(): boolean
   transformCancel(): boolean
   transformDirty(): boolean
+  arrangeSelected(op: ArrangeOp): boolean
+  setSnapGrid(size: number): void
+  snapGrid(): number
+  guides(): DocGuide[]
+  guideAddLive(axis: 'x' | 'y', pos: number): number
+  guideMoveLive(index: number, pos: number): void
+  guideEndDrag(index: number, end: GuideDragEnd): void
   activeNodeId(): string | null
   setActiveNode(id: string | null): void
   selectedNodeIds(): string[]
@@ -168,6 +178,7 @@ export function createEditor(opts: EditorOptions): Editor {
   let tool: Tool | null = null
   let selectedIds: string[] = []
   let zoomLevel = 1
+  let snapGridSize = 0
   let brush: BrushParams = { ...DEFAULT_BRUSH }
   let shape: ShapeToolOptions = { ...DEFAULT_SHAPE_OPTIONS }
   let warp: WarpToolOptions = { ...DEFAULT_WARP_OPTIONS }
@@ -219,6 +230,13 @@ export function createEditor(opts: EditorOptions): Editor {
 
   function buildOverlay(): void {
     overlay.clear()
+    for (const g of doc.guides ?? []) {
+      if (g.axis === 'x') {
+        overlay.add({ type: 'line', a: { x: g.pos, y: 0 }, b: { x: g.pos, y: doc.height } })
+      } else {
+        overlay.add({ type: 'line', a: { x: 0, y: g.pos }, b: { x: doc.width, y: g.pos } })
+      }
+    }
     const sel = selectionChannel()
     if (sel?.bounds) {
       const outlines = selectionOutlines(sel)
@@ -325,6 +343,7 @@ export function createEditor(opts: EditorOptions): Editor {
       return img
     },
     zoom: () => zoomLevel,
+    snapGrid: () => snapGridSize,
     requestRender: refresh,
     options: <T,>() =>
       (toolId === 'shape'
@@ -347,6 +366,13 @@ export function createEditor(opts: EditorOptions): Editor {
     const id = activeNodeIdOf()
     if (!id) return null
     return findNode(doc.root, id)
+  }
+
+  function arrangeSelectedImpl(op: ArrangeOp): boolean {
+    if (isTransformTool(tool)) tool.apply()
+    const ok = arrangeNodes(doc.root, liveSelectedIds(), op, history)
+    if (ok) refresh()
+    return ok
   }
 
   function removeNodesImpl(ids: string[]): boolean {
@@ -627,6 +653,7 @@ export function createEditor(opts: EditorOptions): Editor {
         root: getNodeKind(doc.root.kind).serialize(doc.root),
         channels: doc.channels,
         selectionId: doc.selectionId,
+        guides: doc.guides?.length ? doc.guides.map((g) => ({ ...g })) : undefined,
         floating: floating
           ? {
               contentId: floating.contentId,
@@ -648,13 +675,17 @@ export function createEditor(opts: EditorOptions): Editor {
       const o = obj as Record<string, unknown>
       const rootRaw = (o.root as unknown) ?? obj
       const root = getNodeKind('group').normalize(rootRaw) as GroupData
+      const w = Number(o.width) || doc.width
+      const h = Number(o.height) || doc.height
+      const loadedGuides = sanitizeGuides(o.guides, w, h)
       doc = {
         version: 2,
-        width: Number(o.width) || doc.width,
-        height: Number(o.height) || doc.height,
+        width: w,
+        height: h,
         root,
         channels: Array.isArray(o.channels) ? (o.channels as Document['channels']) : [],
         selectionId: typeof o.selectionId === 'string' ? o.selectionId : undefined,
+        guides: loadedGuides.length ? loadedGuides : undefined,
       }
       selectedIds = []
       floating = null
@@ -808,6 +839,7 @@ export function createEditor(opts: EditorOptions): Editor {
     transformApply: () => (isTransformTool(tool) ? tool.apply() : false),
     transformCancel: () => (isTransformTool(tool) ? tool.cancel() : false),
     transformDirty: () => (isTransformTool(tool) ? tool.isDirty() : false),
+    arrangeSelected: arrangeSelectedImpl,
     activeNodeId: activeNodeIdOf,
     setActiveNode: setActive,
     selectedNodeIds: liveSelectedIds,
@@ -935,6 +967,27 @@ export function createEditor(opts: EditorOptions): Editor {
       zoomLevel = z
     },
     zoom: () => zoomLevel,
+    setSnapGrid(size: number) {
+      snapGridSize = Math.max(0, size || 0)
+      refresh()
+    },
+    snapGrid: () => snapGridSize,
+    guides: () => (doc.guides ?? []).map((g) => ({ ...g })),
+    guideAddLive(axis, pos) {
+      const idx = guideAddLive(doc, axis, pos)
+      buildOverlay()
+      notify()
+      return idx
+    },
+    guideMoveLive(index, pos) {
+      guideMoveLive(doc, index, pos)
+      buildOverlay()
+      notify()
+    },
+    guideEndDrag(index, end) {
+      guideEndDrag(doc, history, index, end)
+      refresh()
+    },
     render,
     buildOverlay,
     invalidate: refresh,

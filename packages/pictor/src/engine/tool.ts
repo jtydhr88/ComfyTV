@@ -74,6 +74,7 @@ export interface ToolContext {
   compositePixels(): ImageData | null
   floatSelection(): boolean
   zoom(): number
+  snapGrid(): number
   requestRender(): void
 
   options<T = unknown>(): T

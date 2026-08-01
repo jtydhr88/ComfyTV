@@ -31,6 +31,7 @@ import OutpaintStageCard from '@/components/stages/OutpaintStageCard.vue'
 import StoryboardStageCard from '@/components/stages/StoryboardStageCard.vue'
 import Scene3DStageCard from '@/components/stages/Scene3DStageCard.vue'
 import LayerEditorStageCard from '@/components/stages/LayerEditorStageCard.vue'
+import PosterStageCard from '@/components/stages/PosterStageCard.vue'
 import StoryboardEditorStageCard from '@/components/stages/StoryboardEditorStageCard.vue'
 import MaterialStageCard from '@/components/stages/MaterialStageCard.vue'
 import SplitPartStageCard from '@/components/stages/SplitPartStageCard.vue'
@@ -220,6 +221,7 @@ export const RICH_STAGE_CARDS: Record<string, any> = {
   'ComfyTV.StoryboardStage':          StoryboardStageCard,
   'ComfyTV.Scene3DStage':             Scene3DStageCard,
   'ComfyTV.LayerEditorStage':         LayerEditorStageCard,
+  'ComfyTV.PosterStage':              PosterStageCard,
   'ComfyTV.StoryboardEditorStage':    StoryboardEditorStageCard,
   'ComfyTV.MaterialStage':            MaterialStageCard,
   'ComfyTV.SplitPartStage':           SplitPartStageCard,
@@ -318,6 +320,7 @@ export const FLEX_FILL_STAGES = new Set([
 ])
 
 export const RICH_STAGE_MIN_HEIGHTS: Record<string, number> = {
+  'ComfyTV.PosterStage':     760,
   'ComfyTV.MultiangleStage': 640,
   'ComfyTV.RelightStage':    640,
   'ComfyTV.InpaintStage':    640,
@@ -468,6 +471,7 @@ export const RICH_STAGE_MIN_HEIGHTS: Record<string, number> = {
 }
 
 export const RICH_STAGE_MIN_WIDTHS: Record<string, number> = {
+  'ComfyTV.PosterStage': 640,
   'ComfyTV.Scene3DStage': 960,
   'ComfyTV.LayerEditorStage': 960,
   'ComfyTV.StoryboardEditorStage': 1080,

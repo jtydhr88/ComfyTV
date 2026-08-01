@@ -1,8 +1,9 @@
 import { SetTransformCommand } from '../commands/setTransform'
-import { filterTopmost, findNode } from '../document'
+import { filterTopmost, findNode, flattenTree } from '../document'
 import { CommandGroup, Dirty, type Command } from '../history'
 import type { SceneNode, Transform, Vec2 } from '../node'
 import { getNodeKind } from '../nodeKind'
+import { applySnap, buildSnapTargets, type Guide, type SnapTargets } from '../snapping'
 import { defaultControl, type Overlay, type Tool, type ToolContext, type ToolControl, type ToolDef } from '../tool'
 import { addTransformBox } from './overlayBox'
 import {
@@ -63,6 +64,7 @@ class TransformTool implements Tool, TransformToolApi {
   readonly control: ToolControl
   private session: TransformSession | null = null
   private drag: Drag = { mode: 'idle' }
+  private snapGuides: Guide[] = []
 
   constructor(
     readonly id: string,
@@ -73,6 +75,49 @@ class TransformTool implements Tool, TransformToolApi {
 
   private tol(): number {
     return 8 / Math.max(1e-3, this.ctx.zoom())
+  }
+
+  private snapContext(excludeIds: Set<string>): { targets: SnapTargets; rects: Transform[] } {
+    const doc = this.ctx.document()
+    const rects = flattenTree(doc.root)
+      .filter((n) => n.visible && TRANSFORMABLE_KINDS.has(n.kind) && !excludeIds.has(n.id))
+      .map((n) => unionBounds([n.transform]))
+    const grid = this.ctx.snapGrid()
+    const guides = doc.guides ?? []
+    const targets = buildSnapTargets(rects, { w: doc.width, h: doc.height }, {
+      gridX: grid > 0 ? grid : undefined,
+      gridY: grid > 0 ? grid : undefined,
+      guideXs: guides.filter((g) => g.axis === 'x').map((g) => g.pos),
+      guideYs: guides.filter((g) => g.axis === 'y').map((g) => g.pos),
+    })
+    return { targets, rects }
+  }
+
+  private snapMove(gizmo: Transform, excludeIds: Set<string>): { dx: number; dy: number } {
+    const doc = this.ctx.document()
+    const aabb = unionBounds([gizmo])
+    const thr = this.tol()
+    const { targets, rects } = this.snapContext(excludeIds)
+    const res = applySnap('move', aabb, targets, {
+      thrX: thr, thrY: thr, minWH: 1,
+      boundsW: doc.width, boundsH: doc.height, clamp: false,
+      eqRects: rects,
+    })
+    this.snapGuides = res.guides
+    return { dx: res.rect.x - aabb.x, dy: res.rect.y - aabb.y }
+  }
+
+  private snapResize(next: Transform, handle: HandleId, excludeIds: Set<string>): Transform {
+    if (handle === 'rotate' || Math.abs(next.rotation) > 1e-6) return next
+    const doc = this.ctx.document()
+    const thr = this.tol()
+    const aabb = unionBounds([next])
+    const res = applySnap(handle, aabb, this.snapContext(excludeIds).targets, {
+      thrX: thr, thrY: thr, minWH: 1,
+      boundsW: doc.width, boundsH: doc.height, clamp: false,
+    })
+    this.snapGuides = res.guides
+    return { ...next, x: res.rect.x, y: res.rect.y, w: res.rect.w, h: res.rect.h }
   }
 
   private eligibleTargets(): SceneNode[] {
@@ -148,14 +193,23 @@ class TransformTool implements Tool, TransformToolApi {
     const d = this.drag
     if (!s || d.mode === 'idle') return
     const single = d.bases.size === 1
+    this.snapGuides = []
     if (d.mode === 'move') {
-      const dx = pt.x - d.start.x
-      const dy = pt.y - d.start.y
+      let dx = pt.x - d.start.x
+      let dy = pt.y - d.start.y
+      if (!e.altKey) {
+        const adj = this.snapMove(applyMove(d.gizmoBase, dx, dy), new Set(d.bases.keys()))
+        dx += adj.dx
+        dy += adj.dy
+      }
       s.gizmo = applyMove(d.gizmoBase, dx, dy)
       for (const [id, base] of d.bases) this.setTransform(id, applyMove(base, dx, dy))
     } else if (d.mode === 'resize') {
       if (single) {
-        const next = applyResize(d.gizmoBase, d.handle, pt, 1, e.shiftKey)
+        let next = applyResize(d.gizmoBase, d.handle, pt, 1, e.shiftKey)
+        if (!e.altKey && !e.shiftKey) {
+          next = this.snapResize(next, d.handle, new Set(d.bases.keys()))
+        }
         s.gizmo = next
         for (const [id] of d.bases) this.setTransform(id, next)
       } else {
@@ -183,6 +237,8 @@ class TransformTool implements Tool, TransformToolApi {
 
   onButtonRelease(): void {
     this.drag = { mode: 'idle' }
+    this.snapGuides = []
+    this.ctx.requestRender()
   }
 
   onHover(): void {
@@ -214,6 +270,29 @@ class TransformTool implements Tool, TransformToolApi {
       }
     }
     addTransformBox(overlay, gizmo, true)
+    const doc = this.ctx.document()
+    const tick = 4 / Math.max(1e-3, this.ctx.zoom())
+    for (const g of this.snapGuides) {
+      if (g.kind === 'gap' && g.spans && g.cross != null) {
+        for (const [a, b] of g.spans) {
+          if (g.axis === 'x') {
+            overlay.add({ type: 'line', a: { x: a, y: g.cross }, b: { x: b, y: g.cross } })
+            overlay.add({ type: 'line', a: { x: a, y: g.cross - tick }, b: { x: a, y: g.cross + tick } })
+            overlay.add({ type: 'line', a: { x: b, y: g.cross - tick }, b: { x: b, y: g.cross + tick } })
+          } else {
+            overlay.add({ type: 'line', a: { x: g.cross, y: a }, b: { x: g.cross, y: b } })
+            overlay.add({ type: 'line', a: { x: g.cross - tick, y: a }, b: { x: g.cross + tick, y: a } })
+            overlay.add({ type: 'line', a: { x: g.cross - tick, y: b }, b: { x: g.cross + tick, y: b } })
+          }
+        }
+        continue
+      }
+      if (g.axis === 'x') {
+        overlay.add({ type: 'line', a: { x: g.pos, y: 0 }, b: { x: g.pos, y: doc.height } })
+      } else {
+        overlay.add({ type: 'line', a: { x: 0, y: g.pos }, b: { x: doc.width, y: g.pos } })
+      }
+    }
   }
 
   isDirty(): boolean {
@@ -242,6 +321,7 @@ class TransformTool implements Tool, TransformToolApi {
     const s = this.session
     this.session = null
     this.drag = { mode: 'idle' }
+    this.snapGuides = []
     if (!s) return false
     const cmds = this.buildCommands(s)
     if (!cmds.length) return false
@@ -260,6 +340,7 @@ class TransformTool implements Tool, TransformToolApi {
     const s = this.session
     this.session = null
     this.drag = { mode: 'idle' }
+    this.snapGuides = []
     if (!s) return false
     let changed = false
     for (const [id, before] of s.before) {

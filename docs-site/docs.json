@@ -147,6 +147,7 @@
                 "group": "2D Editors",
                 "pages": [
                   "node-reference/layer-editor",
+                  "node-reference/poster",
                   "node-reference/storyboard-editor"
                 ]
               },
@@ -494,6 +495,7 @@
                 "group": "2D Editors",
                 "pages": [
                   "zh/node-reference/layer-editor",
+                  "zh/node-reference/poster",
                   "zh/node-reference/storyboard-editor"
                 ]
               },

@@ -1,0 +1,15 @@
+{
+  "label": "图文说明栏 Sidebar",
+  "image_slots": 1,
+  "description": "左侧竖向主视觉 + 右侧说明栏 + 印章。全部可在画布上拖拽/编辑/选图。",
+  "elements": [
+    { "id": "title",    "type": "text",  "text": "标题",    "label": "标题",     "x": 0.065, "y": 0.06, "w": 0.55, "h": 0.12, "font": "title", "font_size": 110, "align": "left" },
+    { "id": "subtitle", "type": "text",  "text": "副标题", "label": "副标题",   "x": 0.55, "y": 0.10, "w": 0.385, "h": 0.05, "font": "title", "font_size": 24, "color": "accent", "align": "right" },
+    { "id": "headrule", "type": "shape", "shape": "line",    "label": "标题分割", "x": 0.065, "y": 0.195, "w": 0.87, "h": 0.005, "stroke": "primary", "stroke_width": 4 },
+    { "id": "visual",   "type": "image", "bind": "image:0",  "label": "主视觉",   "x": 0.065, "y": 0.225, "w": 0.46, "h": 0.61 },
+    { "id": "body",     "type": "text",  "text": "双击编辑正文。空一行分段。",     "label": "正文",     "x": 0.55, "y": 0.225, "w": 0.385, "h": 0.34, "font": "body", "font_size": 20, "line_height": 1.95, "align": "justify" },
+    { "id": "divider",  "type": "shape", "shape": "line",    "label": "小分割",   "x": 0.55, "y": 0.58, "w": 0.05, "h": 0.003, "stroke": "accent", "stroke_width": 2 },
+    { "id": "subtext",  "type": "text",  "text": "次要说明文字", "label": "次要文本",     "x": 0.55, "y": 0.60, "w": 0.385, "h": 0.18, "font": "body", "font_size": 15, "line_height": 1.75, "color": "muted", "align": "justify" },
+    { "id": "seal",     "type": "text",  "text": "印",        "label": "印章",     "x": 0.86, "y": 0.795, "w": 0.072, "h": 0.051, "font": "title", "font_size": 30, "color": "accent", "center": true, "border": "accent", "border_width": 3, "radius": 6 }
+  ]
+}

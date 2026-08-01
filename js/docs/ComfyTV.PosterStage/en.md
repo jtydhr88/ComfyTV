@@ -1,0 +1,38 @@
+# Poster
+
+> Compose a finished poster from upstream images plus pixel-accurate text — typography rendered by a real browser engine, not diffusion. Pick a layout template, drag every element right on the card, and Run to get the final image.
+
+Diffusion models smear dense or bilingual text. This stage splits the work: the AI generates the visuals upstream, and the Poster stage lays out titles, body copy, shapes, and image boxes with real typography. What you see in the live preview is exactly what Run produces.
+
+## Inputs
+
+| Input | Type | Description |
+|---|---|---|
+| `images` | Image (autogrow) | Connect one image and the next slot appears. Poster elements reference these by slot number; double-click an image box on the card to re-pin which connected image it shows. |
+
+## Card controls
+
+- **Template** — layout presets (Hero, Sidebar, Infographic). Every element of every template can be dragged, resized, and edited.
+- **Size preset** — A4 / A3 / square / 9:16 story / 16:9 wide / 2:3 poster. Changing size reflows the design proportionally (positions are normalized; font sizes scale with height).
+- **Colors** — primary / accent / background color pickers. Elements reference these tokens, so one change restyles the whole poster.
+- **Fonts** — title and body font dropdowns, fed from the [resource library](/guides/sidebar)'s font collection. Fonts are embedded into the render, so results are identical on every machine.
+- **✎ Layout** — toggle the drag editor: move and 8-way-resize any element over the live preview, with snapping to other elements and canvas edges/centers (hold `Alt` to bypass). `Delete` removes the selected elements.
+- **Multi-select** — `Shift`-click to add/remove elements, or drag on empty canvas to marquee-select. A selection of 2+ moves as a group and gets an **align & distribute** toolbar: left/center/right, top/middle/bottom, plus even-spread and equal-gap distribution (3+ elements).
+- **Rotate** — a single selected element shows a round handle above its box; drag it to rotate (`Shift` = 15° steps). Rotated elements still move and re-rotate freely; resize handles return once rotation is back to 0.
+- **Guides & grid** — `┊+` / `┄+` drop vertical/horizontal guides (drag to place, drag off-canvas to delete); `⌗` toggles a 12-column grid. Both are snapping targets and never appear in the rendered poster.
+- **Equal-spacing snap** — while dragging between two neighbors (or alongside an evenly spaced row), the element snaps to the position where the gaps become equal, shown with gap markers.
+- **➕ Add** — add a text, image, or shape element.
+- Double-click a **text** element to edit its content inline; an **image** element to pick its source slot; a **shape** element to switch rectangle / ellipse / line and fill/stroke tokens.
+- Selected **text** elements get a mini toolbar: title/body font, size, alignment, color token. Selected **image** elements get ✥ pan + a zoom slider to frame the picture inside its box.
+
+## Output
+
+| Output | Type | Description |
+|---|---|---|
+| `image` | Image | The rendered poster (PNG). |
+
+## Notes
+
+- Positioned text auto-shrinks (down to ~8 px) so content never silently clips when it overflows its box.
+- The live preview runs entirely in your browser. The final Run renders the same HTML in headless Chromium, which requires a one-time install in the ComfyUI environment: `pip install playwright` then `playwright install chromium`. Until then the stage previews fine but Run reports the missing dependency.
+- Drop extra template folders into `nodes/poster/templates/<name>/` (`template.html` + `meta.json`) to add your own layouts.

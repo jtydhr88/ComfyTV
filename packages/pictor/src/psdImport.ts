@@ -37,6 +37,7 @@ export interface PsdImportResult {
   height: number
   nodes: SceneNode[]
   warnings: string[]
+  guides: Array<{ axis: 'x' | 'y'; pos: number }>
 }
 
 const num = (v: unknown, d: number): number => (typeof v === 'number' && isFinite(v) ? v : d)
@@ -300,10 +301,17 @@ export async function psdToNodes(psd: Psd, deps: PsdImportDeps): Promise<PsdImpo
     const node = await importLayer(layer, ctx)
     if (node) nodes.push(node)
   }
+  const guides: PsdImportResult['guides'] = []
+  for (const g of psd.imageResources?.gridAndGuidesInformation?.guides ?? []) {
+    const pos = num(g.location, NaN)
+    if (!isFinite(pos)) continue
+    guides.push({ axis: g.direction === 'vertical' ? 'x' : 'y', pos })
+  }
   return {
     width: Math.max(1, num(psd.width, 1)),
     height: Math.max(1, num(psd.height, 1)),
     nodes,
     warnings: ctx.warnings,
+    guides,
   }
 }

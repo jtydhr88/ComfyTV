@@ -71,6 +71,7 @@ function harness(doc: Document, content: DefaultContentStore, createPaintCore: (
     compositePixels: () => null,
     floatSelection: () => false,
     zoom: () => 1,
+    snapGrid: () => 0,
     requestRender: vi.fn(),
     options: <T,>() => ({}) as T,
   }
@@ -339,5 +340,46 @@ describe('TransformTool — unified gizmo over a multi-layer selection', () => {
     expect(a.transform).toMatchObject({ x: 0, y: 0, rotation: 0 })
     expect(b.transform).toMatchObject({ x: 100, y: 0, rotation: 0 })
     expect(h.history.canUndo()).toBe(false)
+  })
+})
+
+describe('TransformTool — guide snapping', () => {
+  function setup(guides: Array<{ axis: 'x' | 'y'; pos: number }>) {
+    const content = new DefaultContentStore()
+    const raster = rasterKind.create({ transform: { x: 0, y: 0, w: 50, h: 50, rotation: 0 } })
+    const doc: Document = {
+      version: 2, width: 800, height: 600, root: root([raster]), channels: [],
+      guides,
+    }
+    const h = harness(doc, content, () => ({}) as PaintCore)
+    h.ctx.setActiveNode(raster.id)
+    const tool = makeTransformToolDef().create(h.ctx)
+    tool.onActivate?.()
+    return { h, raster, tool }
+  }
+
+  it('snaps a moved layer edge onto a document guide', () => {
+    const { raster, tool } = setup([{ axis: 'x', pos: 100 }])
+    tool.onButtonPress(ev, { x: 25, y: 25 })
+    tool.onMotion(ev, { x: 72, y: 25 })
+    expect(raster.transform.x).toBeCloseTo(50, 6)
+    tool.onButtonRelease(ev, { x: 72, y: 25 })
+  })
+
+  it('Alt bypasses guide snapping', () => {
+    const { raster, tool } = setup([{ axis: 'x', pos: 100 }])
+    const altEv = { pressure: 0.5, shiftKey: false, altKey: true } as unknown as PointerEvent
+    tool.onButtonPress(altEv, { x: 25, y: 25 })
+    tool.onMotion(altEv, { x: 72, y: 25 })
+    expect(raster.transform.x).toBeCloseTo(47, 6)
+    tool.onButtonRelease(altEv, { x: 72, y: 25 })
+  })
+
+  it('snaps to a horizontal guide on the y axis', () => {
+    const { raster, tool } = setup([{ axis: 'y', pos: 200 }])
+    tool.onButtonPress(ev, { x: 25, y: 25 })
+    tool.onMotion(ev, { x: 25, y: 172 })
+    expect(raster.transform.y).toBeCloseTo(150, 6)
+    tool.onButtonRelease(ev, { x: 25, y: 172 })
   })
 })

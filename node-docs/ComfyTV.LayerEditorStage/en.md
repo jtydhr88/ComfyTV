@@ -19,6 +19,10 @@ Because it sits in the `ComfyTV/Input` category, it is a starting point: draw or
 
 The card is a three-zone editor with a top toolbar, a left tool strip, the canvas, and a right layers panel. A maximize button (top-right) blows it up to fullscreen; the same button toggles back.
 
+**Rulers.** Pixel rulers run along the top and left of the canvas. They follow pan and zoom, adapt their tick density automatically (labels never overlap, finer subdivisions appear as you zoom in), and a small arrow marker tracks the pointer on both axes.
+
+**Guides.** Drag out of the top ruler for a horizontal guide, out of the left ruler for a vertical one. Drag a guide to reposition it, drag it off the canvas to delete it — every step is undoable. Guides snap the transform tool, persist with the document, and round-trip through PSD export/import as real Photoshop guides.
+
 **Tool strip (left).** One button per tool: **Select** (move layers), **Transform** (scale/rotate), **Marquee** and **Ellipse marquee**, **Lasso**, **Magic wand**, **Brush**, **Eraser**, **Paint bucket**, **Shape**, **Warp**, and **Text**.
 
 **Context toolbar (top).** Shows the active tool's name and its options, which change per tool:

@@ -110,6 +110,7 @@ EXPECTED_NODE_IDS = [
     'ComfyTV.PanoramaStage',
     'ComfyTV.ParticlesStage',
     'ComfyTV.PatternStage',
+    'ComfyTV.PosterStage',
     'ComfyTV.PosterizeStage',
     'ComfyTV.ProjectStage',
     'ComfyTV.PseudocolorStage',

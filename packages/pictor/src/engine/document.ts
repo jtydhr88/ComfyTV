@@ -1,5 +1,10 @@
 import type { ChannelData, GroupData, NodeBase, SceneNode } from './node'
 
+export interface DocGuide {
+  axis: 'x' | 'y'
+  pos: number
+}
+
 export interface Document {
   version: 2
   width: number
@@ -7,6 +12,7 @@ export interface Document {
   root: GroupData
   channels: ChannelData[]
   selectionId?: string
+  guides?: DocGuide[]
 }
 
 export interface NodeLocation {

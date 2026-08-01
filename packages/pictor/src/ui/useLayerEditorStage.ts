@@ -1,5 +1,7 @@
 import { computed, onBeforeUnmount, ref, shallowRef, watch } from 'vue'
 
+import type { ArrangeOp } from '../engine'
+
 import {
   isPsdMedia,
   PSD_MIME,
@@ -545,10 +547,17 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
 
   async function buildPsdForExport(): Promise<import('ag-psd').Psd> {
     if (editor.floating()) editor.anchorFloating()
+    const gs = editor.guides()
     return buildPsdFromEditor(
       { document: () => editor.document(), render: () => editor.render(), readbackCanvas },
       content,
-      { fontName: (n) => fontDisplayName(n.fontRef) }
+      {
+        fontName: (n) => fontDisplayName(n.fontRef),
+        guides: {
+          horizontal: gs.filter((g) => g.axis === 'y').map((g) => g.pos),
+          vertical: gs.filter((g) => g.axis === 'x').map((g) => g.pos),
+        },
+      }
     )
   }
 
@@ -625,6 +634,13 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
       }))
     }
     registry.commit((canvas, id) => content.register(canvas, { id }))
+    if (result.guides.length && editor.guides().length === 0) {
+      const size = editor.document()
+      for (const g of result.guides) {
+        const max = g.axis === 'x' ? size.width : size.height
+        if (g.pos >= 0 && g.pos <= max) editor.guideAddLive(g.axis, g.pos)
+      }
+    }
     editor.invalidate()
     if (result.warnings.length) {
       console.warn('[pictor] PSD import warnings', result.warnings)
@@ -1419,6 +1435,18 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
     }),
     transformApply: () => { editor.transformApply() },
     transformCancel: () => { editor.transformCancel() },
+    arrangeSelected: (op: ArrangeOp) => { editor.arrangeSelected(op) },
+    snapGridSize: computed(() => {
+      void version.value
+      return editor.snapGrid()
+    }),
+    setSnapGrid: (size: number) => { editor.setSnapGrid(size) },
+    guides: () => editor.guides(),
+    guideAddLive: (axis: 'x' | 'y', pos: number) => editor.guideAddLive(axis, pos),
+    guideMoveLive: (index: number, pos: number) => { editor.guideMoveLive(index, pos) },
+    guideEndDrag: (index: number, end: { added: boolean; beforePos?: number; keep: boolean }) => {
+      editor.guideEndDrag(index, end)
+    },
     canTransformActive: () => canTransformNode(activeNode.value),
     startTransform: () => {
       if (canTransformNode(activeNode.value)) tool.value = 'transform'

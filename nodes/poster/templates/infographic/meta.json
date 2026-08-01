@@ -1,0 +1,13 @@
+{
+  "label": "信息图海报 Infographic",
+  "image_slots": 1,
+  "description": "标题 + 分割线 + 主视觉 + 正文,全部可拖。适合带图示的学术海报。",
+  "elements": [
+    { "id": "title",    "type": "text",  "text": "标题",    "label": "标题",   "x": 0.06, "y": 0.05, "w": 0.88, "h": 0.10, "font": "title", "font_size": 80, "align": "left" },
+    { "id": "subtitle", "type": "text",  "text": "副标题", "label": "副标题", "x": 0.06, "y": 0.155, "w": 0.88, "h": 0.04, "font": "title", "font_size": 26, "align": "left", "color": "accent" },
+    { "id": "rule",     "type": "shape", "shape": "line",    "label": "分割线", "x": 0.06, "y": 0.205, "w": 0.88, "h": 0.008, "stroke": "accent", "stroke_width": 3 },
+    { "id": "visual",   "type": "image", "bind": "image:0",  "label": "主视觉", "x": 0.06, "y": 0.235, "w": 0.52, "h": 0.46 },
+    { "id": "body",     "type": "text",  "text": "双击编辑正文。空一行分段。",     "label": "正文",   "x": 0.63, "y": 0.235, "w": 0.31, "h": 0.46, "font": "body", "font_size": 18, "line_height": 1.8, "align": "justify" },
+    { "id": "subtext",  "type": "text",  "text": "次要说明文字", "label": "次要文本",   "x": 0.06, "y": 0.72, "w": 0.52, "h": 0.16, "font": "body", "font_size": 14, "line_height": 1.7, "align": "justify", "color": "muted" }
+  ]
+}

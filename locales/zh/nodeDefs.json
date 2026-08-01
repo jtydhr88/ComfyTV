@@ -1942,6 +1942,21 @@
       }
     }
   },
+  "ComfyTV_PosterStage": {
+    "display_name": "排版海报",
+    "inputs": {
+      "images": {
+        "name": "图组",
+        "tooltip": "接入的图片按槽位供海报元素取用；在卡片上双击图片框可改选图源。"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "图像",
+        "tooltip": "渲染完成的海报。"
+      }
+    }
+  },
   "ComfyTV_StoryboardEditorStage": {
     "display_name": "故事板工作台",
     "inputs": {

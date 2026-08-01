@@ -109,6 +109,7 @@ from .geometry import (
 )
 from .scene3d import Scene3DStage
 from .layer_editor import LayerEditorStage
+from .poster import PosterStage
 from .storyboard_editor import StoryboardEditorStage
 from .material import MaterialStage
 from .split_part import SplitPartStage, MaskCleanup
@@ -175,6 +176,7 @@ class ComfyTVExtension(ComfyExtension):
             LineArtStage,
             Scene3DStage,
             LayerEditorStage,
+            PosterStage,
             StoryboardEditorStage,
             MaterialStage,
             SplitPartStage, MaskCleanup,

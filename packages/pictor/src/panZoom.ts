@@ -11,6 +11,7 @@ export interface PanZoom {
   panBy: (dx: number, dy: number) => void
   handleWheel: (e: WheelEvent) => void
   screenToArtboard: (clientX: number, clientY: number) => { x: number; y: number }
+  onChange: (fn: () => void) => () => void
 }
 
 export function createPanZoom(getEls: () => PanZoomEls | null): PanZoom {
@@ -19,6 +20,7 @@ export function createPanZoom(getEls: () => PanZoomEls | null): PanZoom {
   let panY = 0
   let artW = 1024
   let artH = 1024
+  const listeners = new Set<() => void>()
 
   function invalidate(): void {
     const els = getEls()
@@ -29,6 +31,7 @@ export function createPanZoom(getEls: () => PanZoomEls | null): PanZoom {
       left: `${panX}px`,
       top: `${panY}px`,
     })
+    for (const fn of listeners) fn()
   }
 
   function fit(w: number, h: number): void {
@@ -85,5 +88,9 @@ export function createPanZoom(getEls: () => PanZoomEls | null): PanZoom {
     panBy,
     handleWheel,
     screenToArtboard,
+    onChange(fn: () => void) {
+      listeners.add(fn)
+      return () => listeners.delete(fn)
+    },
   }
 }

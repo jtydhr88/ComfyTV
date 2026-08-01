@@ -226,6 +226,15 @@
         <IconX class="ctv:size-3.5" />
         {{ $t('pictor.transformCancel') }}
       </button>
+      <label :class="fieldClass" :title="$t('pictor.snapGridHint')">
+        {{ $t('pictor.snapGrid') }}
+        <input
+          type="number" min="0" max="512" step="8"
+          :value="editor.snapGridSize.value"
+          class="ctv:w-14 ctv:rounded-xs ctv:border ctv:border-[#3d3d3d] ctv:bg-[#1e1e1e] ctv:px-1 ctv:py-0.5 ctv:font-mono ctv:text-[11px] ctv:text-[#d6d6d6]"
+          @change="editor.setSnapGrid(Number(($event.target as HTMLInputElement).value) || 0)"
+        />
+      </label>
       <span class="ctv:whitespace-nowrap ctv:text-[10px] ctv:text-[#9b9b9b]/70">
         {{ $t('pictor.transformHint') }}
       </span>
@@ -263,6 +272,23 @@
         <IconX class="ctv:size-3.5" />
         {{ $t('pictor.warpCancel') }}
       </button>
+    </template>
+
+    <template v-if="multiSelected">
+      <div :class="dividerClass" />
+      <div class="ctv:flex ctv:h-6 ctv:items-center ctv:gap-0.5 ctv:rounded ctv:bg-[#1e1e1e] ctv:p-0.5">
+        <button
+          v-for="a in ARRANGE_ACTIONS"
+          :key="a.op"
+          type="button"
+          :class="segBtnClass(false)"
+          :disabled="a.needsThree && editor.selectedIdList.value.length < 3"
+          :title="$t(a.labelKey)"
+          @click="editor.arrangeSelected(a.op)"
+        >
+          <component :is="a.icon" class="ctv:size-3.5 ctv:disabled:opacity-30" />
+        </button>
+      </div>
     </template>
 
     <div class="ctv:flex-1" />
@@ -348,6 +374,16 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import IconAlignStartVertical from '~icons/lucide/align-start-vertical'
+import IconAlignCenterVertical from '~icons/lucide/align-center-vertical'
+import IconAlignEndVertical from '~icons/lucide/align-end-vertical'
+import IconAlignStartHorizontal from '~icons/lucide/align-start-horizontal'
+import IconAlignCenterHorizontal from '~icons/lucide/align-center-horizontal'
+import IconAlignEndHorizontal from '~icons/lucide/align-end-horizontal'
+import IconDistributeH from '~icons/lucide/align-horizontal-distribute-center'
+import IconDistributeV from '~icons/lucide/align-vertical-distribute-center'
+import IconSpaceH from '~icons/lucide/align-horizontal-space-between'
+import IconSpaceV from '~icons/lucide/align-vertical-space-between'
 import IconBrush from '~icons/lucide/brush'
 import IconCheck from '~icons/lucide/check'
 import IconCircle from '~icons/lucide/circle'
@@ -377,7 +413,7 @@ import IconUndo from '~icons/lucide/undo-2'
 import IconX from '~icons/lucide/x'
 
 import type { LayerEditorController } from './useLayerEditorStage'
-import { STROKE_ONLY_SHAPES, type ShapeKind } from '../engine'
+import { STROKE_ONLY_SHAPES, type ArrangeOp, type ShapeKind } from '../engine'
 import type { ToolId } from '../types'
 
 const props = defineProps<{
@@ -426,6 +462,21 @@ const PAINT_TARGETS: Array<{ id: 'content' | 'mask'; labelKey: string }> = [
   { id: 'content', labelKey: 'pictor.targetContent' },
   { id: 'mask', labelKey: 'pictor.targetMask' },
 ]
+
+const ARRANGE_ACTIONS: Array<{ op: ArrangeOp; labelKey: string; icon: unknown; needsThree?: boolean }> = [
+  { op: 'left', labelKey: 'pictor.arrangeLeft', icon: IconAlignStartVertical },
+  { op: 'hcenter', labelKey: 'pictor.arrangeHCenter', icon: IconAlignCenterVertical },
+  { op: 'right', labelKey: 'pictor.arrangeRight', icon: IconAlignEndVertical },
+  { op: 'top', labelKey: 'pictor.arrangeTop', icon: IconAlignStartHorizontal },
+  { op: 'vcenter', labelKey: 'pictor.arrangeVCenter', icon: IconAlignCenterHorizontal },
+  { op: 'bottom', labelKey: 'pictor.arrangeBottom', icon: IconAlignEndHorizontal },
+  { op: 'hspread', labelKey: 'pictor.arrangeHSpread', icon: IconDistributeH, needsThree: true },
+  { op: 'vspread', labelKey: 'pictor.arrangeVSpread', icon: IconDistributeV, needsThree: true },
+  { op: 'hgap', labelKey: 'pictor.arrangeHGap', icon: IconSpaceH, needsThree: true },
+  { op: 'vgap', labelKey: 'pictor.arrangeVGap', icon: IconSpaceV, needsThree: true },
+]
+
+const multiSelected = computed(() => editor.selectedIdList.value.length >= 2)
 
 const activeToolIcon = computed(() => TOOL_META[editor.tool.value].icon)
 const activeToolLabelKey = computed(() => TOOL_META[editor.tool.value].labelKey)

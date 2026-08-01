@@ -1942,6 +1942,21 @@
       }
     }
   },
+  "ComfyTV_PosterStage": {
+    "display_name": "Poster",
+    "inputs": {
+      "images": {
+        "name": "Images",
+        "tooltip": "Connected images fill the poster's image slots; double-click an image box on the card to re-pin its source."
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "Image",
+        "tooltip": "The rendered poster."
+      }
+    }
+  },
   "ComfyTV_StoryboardEditorStage": {
     "display_name": "Storyboard Editor",
     "inputs": {

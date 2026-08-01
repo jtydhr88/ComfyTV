@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<style>
+${font_title_face}
+${font_body_face}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { margin: 0; }
+.stage {
+  position: relative;
+  width: ${width}px; height: ${height}px;
+  background: ${bg_color};
+  color: ${primary_color};
+  overflow: hidden;
+}
+.pm-el { box-sizing: border-box; }
+.pm-text p { margin: 0 0 .5em; }
+</style>
+</head>
+<body>
+<div class="stage">
+  ${elements_html}
+</div>
+</body>
+</html>
