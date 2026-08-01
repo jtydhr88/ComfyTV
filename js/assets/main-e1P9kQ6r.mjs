@@ -56196,7 +56196,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-B5He8ipj.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-t0Jks2MS.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -128568,7 +128568,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-c6Wo8UKC.mjs");
+    const { STLLoader } = await import("./STLLoader-BO7RREY6.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -128576,7 +128576,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-DIDfdNxT.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-DYJqZIso.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -157285,6 +157285,72 @@ class PaintTool {
 function makePaintToolDef(id, coreId, channel = "content") {
   return { id, create: (ctx) => new PaintTool(id, ctx, coreId, channel) };
 }
+const PICK_OPACITY_THRESHOLD = 0.25;
+const sampleCache = /* @__PURE__ */ new WeakMap();
+function defaultAlphaSampler(canvas, x, y) {
+  let ctx = sampleCache.get(canvas);
+  if (ctx === void 0) {
+    try {
+      ctx = canvas.getContext("2d", { willReadFrequently: true });
+    } catch {
+      ctx = null;
+    }
+    sampleCache.set(canvas, ctx);
+  }
+  if (!ctx) return 1;
+  try {
+    const px2 = Math.max(0, Math.min(canvas.width - 1, Math.floor(x)));
+    const py2 = Math.max(0, Math.min(canvas.height - 1, Math.floor(y)));
+    const data = ctx.getImageData(px2, py2, 1, 1).data;
+    return (data[3] ?? 255) / 255;
+  } catch {
+    return 1;
+  }
+}
+function rasterAlphaAt(node, pt2, content, sample2) {
+  var _a2;
+  const t2 = node.transform;
+  if (t2.w <= 0 || t2.h <= 0) return 0;
+  const local = toLocalFrame(t2, pt2);
+  if (Math.abs(local.x) > t2.w / 2 || Math.abs(local.y) > t2.h / 2) return 0;
+  const canvas = (_a2 = content.get(node.contentId)) == null ? void 0 : _a2.canvas;
+  if (!canvas || canvas.width <= 0 || canvas.height <= 0) return 1;
+  const cx = (local.x + t2.w / 2) / t2.w * canvas.width;
+  const cy = (local.y + t2.h / 2) / t2.h * canvas.height;
+  return sample2(canvas, cx, cy);
+}
+function boxAlphaAt(node, pt2) {
+  const t2 = node.transform;
+  if (t2.w <= 0 || t2.h <= 0) return 0;
+  const local = toLocalFrame(t2, pt2);
+  return Math.abs(local.x) <= t2.w / 2 && Math.abs(local.y) <= t2.h / 2 ? 1 : 0;
+}
+function layerOpacityAt(node, pt2, content, sample2 = defaultAlphaSampler) {
+  if (!node.visible || node.opacity <= 0) return 0;
+  switch (node.kind) {
+    case "group": {
+      let best = 0;
+      for (const child of node.children) {
+        best = Math.max(best, layerOpacityAt(child, pt2, content, sample2));
+        if (best >= 1) break;
+      }
+      return best;
+    }
+    case "raster":
+      return rasterAlphaAt(node, pt2, content, sample2);
+    case "adjustment":
+      return 0;
+    default:
+      return boxAlphaAt(node, pt2);
+  }
+}
+function pickLayerAt(layers2, pt2, content, sample2 = defaultAlphaSampler) {
+  for (let i = layers2.length - 1; i >= 0; i--) {
+    const node = layers2[i];
+    if (layerOpacityAt(node, pt2, content, sample2) > PICK_OPACITY_THRESHOLD) return node;
+  }
+  return null;
+}
 function nodeBounds(node) {
   if (node.kind !== "group") return node.transform;
   const b = getNodeKind("group").bbox(node);
@@ -157338,7 +157404,7 @@ class SelectTool {
       }
     }
     const selected = this.selectedNodes();
-    if (selected.some((n) => insideBox(nodeBounds(n), pt2))) {
+    if (selected.some((n) => layerOpacityAt(n, pt2, this.ctx.content) > PICK_OPACITY_THRESHOLD)) {
       this.startMove(selected, pt2);
       return;
     }
@@ -157388,7 +157454,9 @@ class SelectTool {
   }
   cursorFor(pt2) {
     for (const n of this.selectedNodes()) {
-      if (insideBox(nodeBounds(n), pt2)) return n.locks.position ? "not-allowed" : "move";
+      if (layerOpacityAt(n, pt2, this.ctx.content) > PICK_OPACITY_THRESHOLD) {
+        return n.locks.position ? "not-allowed" : "move";
+      }
     }
     return "default";
   }
@@ -157400,11 +157468,7 @@ class SelectTool {
     }
   }
   pick(pt2) {
-    const children = this.ctx.document().root.children;
-    for (let i = children.length - 1; i >= 0; i--) {
-      if (insideBox(nodeBounds(children[i]), pt2)) return children[i];
-    }
-    return null;
+    return pickLayerAt(this.ctx.document().root.children, pt2, this.ctx.content);
   }
 }
 function makeSelectToolDef() {
@@ -198299,4 +198363,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-CG_fH1Hl.mjs.map
+//# sourceMappingURL=main-e1P9kQ6r.mjs.map

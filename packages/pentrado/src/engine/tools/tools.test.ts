@@ -170,9 +170,9 @@ describe('SelectTool — pure select + move, no handles', () => {
     h.ctx.setActiveNode(group.id)
     const tool = makeSelectToolDef().create(h.ctx)
 
-    tool.onButtonPress(ev, { x: 55, y: 25 })
-    tool.onMotion(ev, { x: 75, y: 35 })
-    tool.onButtonRelease(ev, { x: 75, y: 35 })
+    tool.onButtonPress(ev, { x: 25, y: 25 })
+    tool.onMotion(ev, { x: 45, y: 35 })
+    tool.onButtonRelease(ev, { x: 45, y: 35 })
     expect(a.transform).toMatchObject({ x: 20, y: 10 })
     expect(b.transform).toMatchObject({ x: 80, y: 10 })
 

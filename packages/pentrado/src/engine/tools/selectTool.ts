@@ -4,8 +4,9 @@ import { CommandGroup, Dirty, type Command } from '../history'
 import type { GroupData, SceneNode, Transform, Vec2 } from '../node'
 import { getNodeKind } from '../nodeKind'
 import { defaultControl, type Overlay, type Tool, type ToolContext, type ToolControl, type ToolDef } from '../tool'
+import { PICK_OPACITY_THRESHOLD, layerOpacityAt, pickLayerAt } from '../editor/pickOps'
 import { addTransformBox } from './overlayBox'
-import { applyMove, insideBox } from './transformMath'
+import { applyMove } from './transformMath'
 
 interface MoveTarget {
   node: SceneNode
@@ -79,7 +80,7 @@ class SelectTool implements Tool {
       }
     }
     const selected = this.selectedNodes()
-    if (selected.some((n) => insideBox(nodeBounds(n), pt))) {
+    if (selected.some((n) => layerOpacityAt(n, pt, this.ctx.content) > PICK_OPACITY_THRESHOLD)) {
       this.startMove(selected, pt)
       return
     }
@@ -132,7 +133,9 @@ class SelectTool implements Tool {
 
   cursorFor(pt: Vec2): string {
     for (const n of this.selectedNodes()) {
-      if (insideBox(nodeBounds(n), pt)) return n.locks.position ? 'not-allowed' : 'move'
+      if (layerOpacityAt(n, pt, this.ctx.content) > PICK_OPACITY_THRESHOLD) {
+        return n.locks.position ? 'not-allowed' : 'move'
+      }
     }
     return 'default'
   }
@@ -146,11 +149,7 @@ class SelectTool implements Tool {
   }
 
   private pick(pt: Vec2): SceneNode | null {
-    const children = this.ctx.document().root.children
-    for (let i = children.length - 1; i >= 0; i--) {
-      if (insideBox(nodeBounds(children[i]), pt)) return children[i]
-    }
-    return null
+    return pickLayerAt(this.ctx.document().root.children, pt, this.ctx.content)
   }
 }
 
