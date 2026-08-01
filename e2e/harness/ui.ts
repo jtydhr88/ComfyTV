@@ -10,14 +10,14 @@ import {
   LayerListPanel,
   useLayerEditorStage,
   type LayerEditorController,
-} from '@jtydhr88/pictor'
+} from '@jtydhr88/pentrado'
 import { i18n } from '@/i18n'
 
 function memoryStorage() {
   let state = '{}'
   let captured = ''
   return {
-    subfolder: 'pictor-harness',
+    subfolder: 'pentrado-harness',
     readState: () => state,
     writeState: (json: string) => { state = json },
     readCapturedImage: () => captured,

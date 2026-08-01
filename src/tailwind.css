@@ -7,7 +7,7 @@
 @source './composables';
 @source './stores';
 @source './main.ts';
-@source '../packages/pictor/src';
+@source '../packages/pentrado/src';
 
 @theme inline {
   --color-base-foreground: var(--base-foreground, #e0e0e0);

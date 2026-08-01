@@ -29,7 +29,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@jtydhr88/pictor': resolve(__dirname, './packages/pictor/src'),
+      '@jtydhr88/pentrado': resolve(__dirname, './packages/pentrado/src'),
       '@': resolve(__dirname, './src')
     }
   },

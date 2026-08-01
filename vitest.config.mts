@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [vue(), Icons({ compiler: 'vue3', autoInstall: false })],
   resolve: {
     alias: {
-      '@jtydhr88/pictor': resolve(__dirname, './packages/pictor/src'),
+      '@jtydhr88/pentrado': resolve(__dirname, './packages/pentrado/src'),
       '@': resolve(__dirname, './src')
     }
   },
@@ -24,7 +24,7 @@ export default defineConfig({
       include: ['src/**/*.ts', 'src/**/*.vue', 'packages/*/src/**/*.ts'],
       exclude: [
         'packages/*/src/**/*.vue',
-        'packages/pictor/src/vendor/**',
+        'packages/pentrado/src/vendor/**',
         'src/widgets/three/**',
         'src/widgets/glsl/**',
         'src/composables/widgets/useLightBall.ts',

@@ -1,6 +1,6 @@
 import { createI18n } from 'vue-i18n'
 
-import { messages as pictorMessages } from '@jtydhr88/pictor/locales'
+import { messages as pentradoMessages } from '@jtydhr88/pentrado/locales'
 
 import { app } from '@/lib/comfyApp'
 
@@ -27,8 +27,8 @@ export const i18n = createI18n({
   locale: pickLocale(),
   fallbackLocale: 'en',
   messages: {
-    en: { ...en, ...pictorMessages.en },
-    zh: { ...zh, ...pictorMessages.zh },
+    en: { ...en, ...pentradoMessages.en },
+    zh: { ...zh, ...pentradoMessages.zh },
   },
   missingWarn: false,
   fallbackWarn: false,

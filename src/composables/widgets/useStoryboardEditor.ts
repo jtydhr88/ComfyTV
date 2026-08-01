@@ -27,9 +27,9 @@ import { uploadBlob } from '@/utils/uploadCanvas'
 import {
   useLayerEditorStage,
   type LayerEditorStorage,
-} from '@jtydhr88/pictor'
+} from '@jtydhr88/pentrado'
 
-import { pictorHost } from '@/lib/pictorHost'
+import { pentradoHost } from '@/lib/pentradoHost'
 
 const STATE_WIDGET = 'board_state'
 const WIDTH_WIDGET = 'width'
@@ -160,7 +160,7 @@ export function useStoryboardEditor(node: LGraphNode, state: StageState, opts?: 
     commitBatch: () => {},
   }
 
-  const editor = useLayerEditorStage({ storage, instanceId: node.id, host: pictorHost })
+  const editor = useLayerEditorStage({ storage, instanceId: node.id, host: pentradoHost })
 
   function seedReference(): void {
     const b = currentBoard.value

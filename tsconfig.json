@@ -17,8 +17,8 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
     "paths": {
-      "@jtydhr88/pictor": ["packages/pictor/src/index.ts"],
-      "@jtydhr88/pictor/*": ["packages/pictor/src/*"],
+      "@jtydhr88/pentrado": ["packages/pentrado/src/index.ts"],
+      "@jtydhr88/pentrado/*": ["packages/pentrado/src/*"],
       "@/*": ["src/*"]
     }
   },

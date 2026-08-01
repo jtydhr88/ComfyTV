@@ -78,7 +78,7 @@
           <button
             type="button"
             :class="toggleBtnClass"
-            :title="$t(fullscreen ? 'pictor.exitFullscreen' : 'pictor.fullscreen')"
+            :title="$t(fullscreen ? 'pentrado.exitFullscreen' : 'pentrado.fullscreen')"
             @click="toggleFullscreen"
           >
             <IconMinimize v-if="fullscreen" class="ctv:size-4" />
@@ -218,7 +218,7 @@ import {
   LayerListPanel,
   TextEditPopup,
   useLayerEditorHotkeys,
-} from '@jtydhr88/pictor'
+} from '@jtydhr88/pentrado'
 
 import StageCard from '@/components/stages/StageCard.vue'
 import StoryboardBoardPanel from '@/components/widgets/StoryboardBoardPanel.vue'

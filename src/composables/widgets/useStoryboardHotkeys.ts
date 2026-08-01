@@ -1,4 +1,4 @@
-import { isTextEditingTarget } from '@jtydhr88/pictor'
+import { isTextEditingTarget } from '@jtydhr88/pentrado'
 import type { StoryboardEditorController } from '@/composables/widgets/useStoryboardEditor'
 
 /**

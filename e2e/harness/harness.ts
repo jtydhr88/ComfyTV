@@ -1,4 +1,4 @@
-﻿import { readPsd, writePsd } from 'ag-psd'
+import { readPsd, writePsd } from 'ag-psd'
 
 import {
   blendComposite,
@@ -24,13 +24,13 @@ import {
   type RGBA,
   type SceneNode,
   type VectorData,
-} from '@jtydhr88/pictor'
+} from '@jtydhr88/pentrado'
 import {
   buildPsdFromEditor,
   bufferedContentRegistry,
   decodePngBytes,
   psdToNodes,
-} from '@jtydhr88/pictor'
+} from '@jtydhr88/pentrado'
 import { uploadBlob } from '@/utils/uploadCanvas'
 
 const W = 64

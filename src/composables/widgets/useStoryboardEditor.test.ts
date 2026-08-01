@@ -5,7 +5,7 @@ import { defineComponent } from 'vue'
 vi.mock('@/i18n', () => ({ t: (k: string) => k }))
 
 const fontState = vi.hoisted(() => ({ readyCbs: new Set<() => void>() }))
-vi.mock('@jtydhr88/pictor/fontStore', () => ({
+vi.mock('@jtydhr88/pentrado/fontStore', () => ({
   getFontStore: () => ({
     builtins: () => [],
     getFontSync: () => null,
@@ -18,7 +18,7 @@ vi.mock('@jtydhr88/pictor/fontStore', () => ({
   }),
 }))
 
-vi.mock('@jtydhr88/pictor/textRender', () => ({
+vi.mock('@jtydhr88/pentrado/textRender', () => ({
   measureText: vi.fn(() => ({ w: 200, h: 60 })),
   renderTextToCanvas: vi.fn(() => document.createElement('canvas')),
   TextRenderCache: class {

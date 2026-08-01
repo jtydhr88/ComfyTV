@@ -17,7 +17,7 @@
           <button
             type="button"
             :class="iconToolBtnClass"
-            :title="$t(fullscreen ? 'pictor.exitFullscreen' : 'pictor.fullscreen')"
+            :title="$t(fullscreen ? 'pentrado.exitFullscreen' : 'pentrado.fullscreen')"
             @click="toggleFullscreen"
           >
             <IconMinimize v-if="fullscreen" class="ctv:size-4" />
@@ -63,11 +63,11 @@ import {
   LayerListPanel,
   TextEditPopup,
   useLayerEditorHotkeys,
-} from '@jtydhr88/pictor'
+} from '@jtydhr88/pentrado'
 
 import type { LGraphNode } from '@/lib/comfyApp'
 import StageCard from '@/components/stages/StageCard.vue'
-import { useNodePictorEditor } from '@/lib/pictorHost'
+import { useNodePentradoEditor } from '@/lib/pentradoHost'
 import { useStageStore, type StageState } from '@/stores/stageStore'
 import { onNodeConfigure, readWidgetStr } from '@/utils/widget'
 
@@ -85,7 +85,7 @@ const stageStore = useStageStore()
 const canvasEl = ref<InstanceType<typeof LayerEditorCanvas> | null>(null)
 const fullscreen = ref(false)
 
-const editor = useNodePictorEditor(props.node, {
+const editor = useNodePentradoEditor(props.node, {
   onCaptured: (url) => stageStore.setOutputSlot(stageState, 0, url),
   onBatchCaptured: (json) => stageStore.setOutputSlot(stageState, 1, json),
 })
