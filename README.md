@@ -32,6 +32,8 @@ Generation (text-to-image, image-to-image, edit, inpaint, outpaint, erase, upsca
 ### 2D layer editor & storyboard
 A full layered editor inside a node: raster, text (real font parsing), vector-shape, parametric-fill (solid / gradient), and adjustment layers; per-layer masks; selections with magic wand, boolean ops and morphology; non-destructive transforms; undo; **PSD import & export**. The storyboard workbench reuses the same engine per board and adds onion skin, timeline playback, animatic / GIF / PDF / ZIP export, and Fountain script import.
 
+The editor engine is developed as its own project, **[Pentrado](https://github.com/jtydhr88/pentrado)** — try it standalone in your browser at **[pentrado.com](https://pentrado.com)**.
+
 ### Video (~100 nodes)
 - **Edit**: clip, split, concat, crop, resize, speed / reverse, rotate, scene detect, frame extraction, proxy generation with transparent proxy playback.
 - **Color**: color wheels / curves / LUT / ASC CDL / HueCorrect / selective color / histogram EQ / gray world.

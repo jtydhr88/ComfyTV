@@ -70,6 +70,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "e2e:build": "vite build --config vite.harness.config.mts",
+    "pentrado:sync": "node scripts/sync-pentrado.mjs",
     "e2e": "npm run e2e:build && playwright test"
   }
 }
