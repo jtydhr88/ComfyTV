@@ -11,25 +11,30 @@ export interface UploadJob {
 
 export function pendingUploads(doc: Document, content: ContentStore): UploadJob[] {
   const jobs: UploadJob[] = []
+
+  const push = (contentId: string, channel: UploadJob['channel'], commitUrl: (u: string) => void) => {
+    if (!content.has(contentId)) return
+    jobs.push({
+      contentId,
+      channel,
+      get canvas() {
+        return content.exportCanvas?.(contentId) ?? content.get(contentId)!.canvas
+      },
+      commitUrl,
+    })
+  }
   walk(doc.root, (node) => {
     if (node.kind === 'raster') {
       const r = node as RasterData
-      if (r.contentId && !r.url) {
-        const e = content.get(r.contentId)
-        if (e) jobs.push({ contentId: r.contentId, channel: 'content', canvas: e.canvas, commitUrl: (u) => (r.url = u) })
-      }
+      if (r.contentId && !r.url) push(r.contentId, 'content', (u) => (r.url = u))
     }
     const m = node.mask
     if (m && m.contentId && !m.url && m.enabled !== undefined) {
-      const e = content.get(m.contentId)
-      if (e) jobs.push({ contentId: m.contentId, channel: 'mask', canvas: e.canvas, commitUrl: (u) => (m.url = u) })
+      push(m.contentId, 'mask', (u) => (m.url = u))
     }
   })
   for (const ch of doc.channels) {
-    if (ch.contentId && !ch.url) {
-      const e = content.get(ch.contentId)
-      if (e) jobs.push({ contentId: ch.contentId, channel: 'mask', canvas: e.canvas, commitUrl: (u) => (ch.url = u) })
-    }
+    if (ch.contentId && !ch.url) push(ch.contentId, 'mask', (u) => (ch.url = u))
   }
   return jobs
 }

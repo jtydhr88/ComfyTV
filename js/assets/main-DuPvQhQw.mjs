@@ -56196,7 +56196,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-BTX_mtJK.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-D6j5d4JJ.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -128682,7 +128682,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-DcLsKhKl.mjs");
+    const { STLLoader } = await import("./STLLoader-7dSrKkxj.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -128690,7 +128690,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-DtMNICZh.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-V9f2gAZ6.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -147430,7 +147430,433 @@ function modeUniforms(mode) {
     legacy: mode.legacy
   };
 }
-const LAYER_BLEND_FRAG = "#version 300 es\r\n\r\nprecision highp float;\r\n\r\nuniform sampler2D u_backdrop;\r\nuniform sampler2D u_layer;\r\nuniform sampler2D u_mask;\r\nuniform bool  u_hasMask;\r\nuniform bool  u_srgbLayer;\r\nuniform float u_opacity;\r\nuniform int   u_blend;\r\nuniform int   u_composite;\r\nuniform int   u_blendSpace;\r\nuniform int   u_compositeSpace;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nconst float EPS = 1e-6;\r\n\r\nfloat safeDiv(float a, float b) {\r\n  return abs(a) <= EPS ? 0.0 : clamp(a / b, -1e6, 1e6);\r\n}\r\n\r\nfloat srgbToLinear(float c) {\r\n  return c <= 0.04045 ? c / 12.92 : pow((c + 0.055) / 1.055, 2.4);\r\n}\r\nfloat linearToSrgb(float c) {\r\n  return c <= 0.0031308 ? 12.92 * c : 1.055 * pow(c, 1.0 / 2.4) - 0.055;\r\n}\r\nvec3 srgbToLinear(vec3 c) { return vec3(srgbToLinear(c.r), srgbToLinear(c.g), srgbToLinear(c.b)); }\r\nvec3 linearToSrgb(vec3 c) { return vec3(linearToSrgb(c.r), linearToSrgb(c.g), linearToSrgb(c.b)); }\r\n\r\nvec3 toSpace(vec3 c, int space)   { return space == 0 ? c : linearToSrgb(c); }\r\nvec3 fromSpace(vec3 c, int space) { return space == 0 ? c : srgbToLinear(c); }\r\n\r\nfloat luminance(vec3 c) { return dot(c, vec3(0.22248840, 0.71690369, 0.06060791)); }\r\n\r\nfloat blendChannel(int mode, float i, float l) {\r\n  if (mode == 1)  return i * l;\r\n  if (mode == 2)  return 1.0 - (1.0 - i) * (1.0 - l);\r\n  if (mode == 3)  return i < 0.5 ? 2.0*i*l : 1.0 - 2.0*(1.0-l)*(1.0-i);\r\n  if (mode == 4)  return min(i, l);\r\n  if (mode == 5)  return max(i, l);\r\n  if (mode == 6)  return safeDiv(i, 1.0 - l);\r\n  if (mode == 7)  return 1.0 - safeDiv(1.0 - i, l);\r\n  if (mode == 8)  return l > 0.5 ? min(1.0 - (1.0-i)*(1.0-(l-0.5)*2.0), 1.0)\r\n                                 : min(i*(l*2.0), 1.0);\r\n  if (mode == 9) {\r\n    float m = i * l;\r\n    float s = 1.0 - (1.0 - i) * (1.0 - l);\r\n    return (1.0 - i) * m + i * s;\r\n  }\r\n  if (mode == 10) return abs(i - l);\r\n  if (mode == 11) return 0.5 - 2.0*(i-0.5)*(l-0.5);\r\n  if (mode == 12) return i + l;\r\n  if (mode == 13) return i + l - 1.0;\r\n  if (mode == 14) return l <= 0.5 ? max(1.0 - safeDiv(1.0-i, 2.0*l), 0.0)\r\n                                  : min(safeDiv(i, 2.0*(1.0-l)), 1.0);\r\n  if (mode == 15) return l > 0.5 ? max(i, 2.0*(l-0.5)) : min(i, 2.0*l);\r\n  if (mode == 20) return i + 2.0*l - 1.0;\r\n  if (mode == 21) return i + l < 1.0 ? 0.0 : 1.0;\r\n  if (mode == 22) return i - l;\r\n  if (mode == 23) return safeDiv(i, l);\r\n  if (mode == 24) return i - l + 0.5;\r\n  if (mode == 25) return i + l - 0.5;\r\n  return l;\r\n}\r\n\r\nvec3 blendHue(vec3 i, vec3 l) {\r\n  float sMin = min(min(l.r, l.g), l.b), sMax = max(max(l.r, l.g), l.b);\r\n  float sDelta = sMax - sMin;\r\n  if (sDelta <= EPS) return i;\r\n  float dMin = min(min(i.r, i.g), i.b), dMax = max(max(i.r, i.g), i.b);\r\n  float dDelta = dMax - dMin;\r\n  float dS = dMax != 0.0 ? dDelta / dMax : 0.0;\r\n  float ratio = (dS * dMax) / sDelta;\r\n  float offset = dMax - sMax * ratio;\r\n  return l * ratio + offset;\r\n}\r\nvec3 blendSaturation(vec3 i, vec3 l) {\r\n  float dMin = min(min(i.r, i.g), i.b), dMax = max(max(i.r, i.g), i.b);\r\n  float dDelta = dMax - dMin;\r\n  if (dDelta <= EPS) return vec3(dMax);\r\n  float sMin = min(min(l.r, l.g), l.b), sMax = max(max(l.r, l.g), l.b);\r\n  float sDelta = sMax - sMin;\r\n  float sS = sMax != 0.0 ? sDelta / sMax : 0.0;\r\n  float ratio = (sS * dMax) / dDelta;\r\n  float offset = (1.0 - ratio) * dMax;\r\n  return i * ratio + offset;\r\n}\r\nvec3 blendColor(vec3 i, vec3 l) {\r\n  float dMin = min(min(i.r, i.g), i.b), dMax = max(max(i.r, i.g), i.b);\r\n  float dL = (dMin + dMax) * 0.5;\r\n  float sMin = min(min(l.r, l.g), l.b), sMax = max(max(l.r, l.g), l.b);\r\n  float sL = (sMin + sMax) * 0.5;\r\n  if (abs(sL) <= EPS || abs(1.0 - sL) <= EPS) return vec3(dL);\r\n  bool dHigh = dL > 0.5, sHigh = sL > 0.5;\r\n  dL = min(dL, 1.0 - dL);\r\n  sL = min(sL, 1.0 - sL);\r\n  float ratio = dL / sL;\r\n  float offset = 0.0;\r\n  if (dHigh) offset += 1.0 - 2.0 * dL;\r\n  if (sHigh) offset += 2.0 * dL - ratio;\r\n  return l * ratio + offset;\r\n}\r\nvec3 blendLuminosity(vec3 i, vec3 l) {\r\n  return i * safeDiv(luminance(l), luminance(i));\r\n}\r\n\r\nvec3 blendPixel(int mode, vec3 i, vec3 l) {\r\n  if (mode == 16) return blendHue(i, l);\r\n  if (mode == 17) return blendSaturation(i, l);\r\n  if (mode == 18) return blendColor(i, l);\r\n  if (mode == 19) return blendLuminosity(i, l);\r\n  return vec3(blendChannel(mode, i.r, l.r), blendChannel(mode, i.g, l.g), blendChannel(mode, i.b, l.b));\r\n}\r\n\r\nvec4 composite(int mode, vec4 bg, vec4 layer, vec3 comp, float cov) {\r\n  float inA = bg.a;\r\n  float layerA = layer.a * cov;\r\n  if (mode == 1) {\r\n    if (inA == 0.0 || layerA == 0.0) return vec4(bg.rgb, inA);\r\n    return vec4(comp * layerA + bg.rgb * (1.0 - layerA), inA);\r\n  }\r\n  if (mode == 2) {\r\n    if (layerA == 0.0) return vec4(bg.rgb, layerA);\r\n    if (inA == 0.0)    return vec4(layer.rgb, layerA);\r\n    return vec4(comp * inA + layer.rgb * (1.0 - inA), layerA);\r\n  }\r\n  if (mode == 3) {\r\n    float newA = inA * layer.a * cov;\r\n    return newA == 0.0 ? vec4(bg.rgb, 0.0) : vec4(comp, newA);\r\n  }\r\n\r\n  float newA = layerA + (1.0 - layerA) * inA;\r\n  if (layerA == 0.0 || newA == 0.0) return vec4(bg.rgb, newA);\r\n  if (inA == 0.0)                   return vec4(layer.rgb, newA);\r\n  float ratio = layerA / newA;\r\n  vec3 outRgb = ratio * (inA * (comp - layer.rgb) + layer.rgb - bg.rgb) + bg.rgb;\r\n  return vec4(outRgb, newA);\r\n}\r\n\r\nvoid main() {\r\n  vec4 bg = texture(u_backdrop, v_texCoord);\r\n  vec4 layer = texture(u_layer, v_texCoord);\r\n  if (u_srgbLayer) layer.rgb = srgbToLinear(layer.rgb);\r\n\r\n  float cov = u_opacity;\r\n  if (u_hasMask) cov *= texture(u_mask, v_texCoord).r;\r\n\r\n  vec3 comp = fromSpace(blendPixel(u_blend, toSpace(bg.rgb, u_blendSpace), toSpace(layer.rgb, u_blendSpace)), u_blendSpace);\r\n\r\n  vec4 outc;\r\n  if (u_compositeSpace == 0) {\r\n    outc = composite(u_composite, bg, layer, comp, cov);\r\n  } else {\r\n    vec4 bgC = vec4(toSpace(bg.rgb, u_compositeSpace), bg.a);\r\n    vec4 lyC = vec4(toSpace(layer.rgb, u_compositeSpace), layer.a);\r\n    vec4 r = composite(u_composite, bgC, lyC, toSpace(comp, u_compositeSpace), cov);\r\n    outc = vec4(fromSpace(r.rgb, u_compositeSpace), r.a);\r\n  }\r\n\r\n  fragColor = outc;\r\n}\r\n";
+const TILE_SIZE = 256;
+let lruGen = 0;
+function nextGen() {
+  return ++lruGen;
+}
+function uniformKey(r, g, b, a2) {
+  return (a2 << 24 | b << 16 | g << 8 | r) >>> 0;
+}
+function acquireUniform(pool, r, g, b, a2) {
+  const key = uniformKey(r, g, b, a2);
+  let tile = pool.get(key);
+  if (!tile) {
+    tile = { bytes: null, uniform: new Uint8Array([r, g, b, a2]), refs: 0, gen: nextGen(), swapId: -1, swapPending: false };
+    pool.set(key, tile);
+  }
+  tile.refs += 1;
+  return tile;
+}
+function makeByteTile(bytes) {
+  return { bytes, uniform: null, refs: 1, gen: nextGen(), swapId: -1, swapPending: false };
+}
+function detectUniform(bytes, w = TILE_SIZE, h2 = TILE_SIZE) {
+  const u32 = new Uint32Array(bytes.buffer, bytes.byteOffset, bytes.byteLength >> 2);
+  const first2 = u32[0];
+  if (w === TILE_SIZE) {
+    const n = h2 * TILE_SIZE;
+    for (let i = 1; i < n; i++) if (u32[i] !== first2) return null;
+  } else {
+    for (let y = 0; y < h2; y++) {
+      const row = y * TILE_SIZE;
+      for (let x = 0; x < w; x++) if (u32[row + x] !== first2) return null;
+    }
+  }
+  return [bytes[0], bytes[1], bytes[2], bytes[3]];
+}
+function gridDims(width, height) {
+  return { cols: Math.ceil(width / TILE_SIZE), rows: Math.ceil(height / TILE_SIZE) };
+}
+function tileifyPixels(data, width, height, pool) {
+  const { cols, rows } = gridDims(width, height);
+  const tiles = new Array(cols * rows);
+  const tileRow = TILE_SIZE * 4;
+  for (let ty = 0; ty < rows; ty++) {
+    for (let tx = 0; tx < cols; tx++) {
+      const x0 = tx * TILE_SIZE;
+      const y0 = ty * TILE_SIZE;
+      const w = Math.min(TILE_SIZE, width - x0);
+      const h2 = Math.min(TILE_SIZE, height - y0);
+      const bytes = new Uint8Array(TILE_SIZE * TILE_SIZE * 4);
+      for (let y = 0; y < h2; y++) {
+        const src = ((y0 + y) * width + x0) * 4;
+        bytes.set(data.subarray(src, src + w * 4), y * tileRow);
+      }
+      const uni = detectUniform(bytes, w, h2);
+      tiles[ty * cols + tx] = uni ? acquireUniform(pool, uni[0], uni[1], uni[2], uni[3]) : makeByteTile(bytes);
+    }
+  }
+  return { width, height, cols, rows, tiles };
+}
+function uniformGrid(width, height, pool, r = 0, g = 0, b = 0, a2 = 0) {
+  const { cols, rows } = gridDims(width, height);
+  const tiles = new Array(cols * rows);
+  for (let i = 0; i < tiles.length; i++) tiles[i] = acquireUniform(pool, r, g, b, a2);
+  return { width, height, cols, rows, tiles };
+}
+function isBlankGrid(grid) {
+  for (const t2 of grid.tiles) {
+    if (!t2.uniform || t2.uniform[3] !== 0 || t2.uniform[0] !== 0 || t2.uniform[1] !== 0 || t2.uniform[2] !== 0) return false;
+  }
+  return true;
+}
+function scatterTile(grid, index, out) {
+  const tile = grid.tiles[index];
+  const tx = index % grid.cols;
+  const ty = index / grid.cols | 0;
+  const x0 = tx * TILE_SIZE;
+  const y0 = ty * TILE_SIZE;
+  const w = Math.min(TILE_SIZE, grid.width - x0);
+  const h2 = Math.min(TILE_SIZE, grid.height - y0);
+  if (tile.uniform) {
+    const [r, g, b, a2] = tile.uniform;
+    if (r === 0 && g === 0 && b === 0 && a2 === 0) return;
+    for (let y = 0; y < h2; y++) {
+      let off = ((y0 + y) * grid.width + x0) * 4;
+      for (let x = 0; x < w; x++, off += 4) {
+        out[off] = r;
+        out[off + 1] = g;
+        out[off + 2] = b;
+        out[off + 3] = a2;
+      }
+    }
+    return;
+  }
+  if (!tile.bytes) return;
+  const tileRow = TILE_SIZE * 4;
+  for (let y = 0; y < h2; y++) {
+    const src = y * tileRow;
+    out.set(tile.bytes.subarray(src, src + w * 4), ((y0 + y) * grid.width + x0) * 4);
+  }
+}
+function gatherPixels(grid) {
+  const out = new Uint8ClampedArray(grid.width * grid.height * 4);
+  const gen = nextGen();
+  for (let i = 0; i < grid.tiles.length; i++) {
+    grid.tiles[i].gen = gen;
+    scatterTile(grid, i, out);
+  }
+  return out;
+}
+function tilesInRect(grid, x, y, w, h2) {
+  const tx0 = Math.max(0, Math.floor(x / TILE_SIZE));
+  const ty0 = Math.max(0, Math.floor(y / TILE_SIZE));
+  const tx1 = Math.min(grid.cols - 1, Math.floor((x + w - 1) / TILE_SIZE));
+  const ty1 = Math.min(grid.rows - 1, Math.floor((y + h2 - 1) / TILE_SIZE));
+  const out = [];
+  for (let ty = ty0; ty <= ty1; ty++) for (let tx = tx0; tx <= tx1; tx++) out.push(ty * grid.cols + tx);
+  return out;
+}
+function deriveGrid(base2, edits, pool) {
+  const tiles = base2.tiles.slice();
+  const touched = /* @__PURE__ */ new Set();
+  for (const e of edits) for (const i of tilesInRect(base2, e.x, e.y, e.w, e.h)) touched.add(i);
+  const gen = nextGen();
+  for (let i = 0; i < tiles.length; i++) {
+    if (!touched.has(i)) {
+      tiles[i].refs += 1;
+      continue;
+    }
+    const srcTile = tiles[i];
+    const bytes = new Uint8Array(TILE_SIZE * TILE_SIZE * 4);
+    if (srcTile.uniform) {
+      const [r, g, b, a2] = srcTile.uniform;
+      if ((r | g | b | a2) !== 0) {
+        const u32 = new Uint32Array(bytes.buffer);
+        u32.fill(uniformKey(r, g, b, a2));
+      }
+    } else if (srcTile.bytes) {
+      bytes.set(srcTile.bytes);
+    }
+    const tx = i % base2.cols;
+    const ty = i / base2.cols | 0;
+    const x0 = tx * TILE_SIZE;
+    const y0 = ty * TILE_SIZE;
+    const tileRow = TILE_SIZE * 4;
+    for (const e of edits) {
+      const ix0 = Math.max(x0, e.x);
+      const iy0 = Math.max(y0, e.y);
+      const ix1 = Math.min(x0 + TILE_SIZE, e.x + e.w, base2.width);
+      const iy1 = Math.min(y0 + TILE_SIZE, e.y + e.h, base2.height);
+      if (ix1 <= ix0 || iy1 <= iy0) continue;
+      const rowBytes = (ix1 - ix0) * 4;
+      for (let y = iy0; y < iy1; y++) {
+        const src = ((y - e.y) * e.w + (ix0 - e.x)) * 4;
+        const dst = (y - y0) * tileRow + (ix0 - x0) * 4;
+        bytes.set(e.pixels.subarray(src, src + rowBytes), dst);
+      }
+    }
+    const vw = Math.min(TILE_SIZE, base2.width - x0);
+    const vh = Math.min(TILE_SIZE, base2.height - y0);
+    const uni = detectUniform(bytes, vw, vh);
+    const next = uni ? acquireUniform(pool, uni[0], uni[1], uni[2], uni[3]) : makeByteTile(bytes);
+    next.gen = gen;
+    tiles[i] = next;
+  }
+  return { width: base2.width, height: base2.height, cols: base2.cols, rows: base2.rows, tiles };
+}
+function releaseGrid(grid, pool) {
+  const dead = [];
+  const seenThisCall = /* @__PURE__ */ new Map();
+  for (const t2 of grid.tiles) seenThisCall.set(t2, (seenThisCall.get(t2) ?? 0) + 1);
+  for (const [t2, count2] of seenThisCall) {
+    t2.refs -= count2;
+    if (t2.refs <= 0) {
+      if (t2.uniform) {
+        pool.delete(uniformKey(t2.uniform[0], t2.uniform[1], t2.uniform[2], t2.uniform[3]));
+      }
+      dead.push(t2);
+    }
+  }
+  return dead;
+}
+function residentTileBytes(grids, seen = /* @__PURE__ */ new Set()) {
+  let n = 0;
+  for (const g of grids) {
+    for (const t2 of g.tiles) {
+      if (t2.bytes && !seen.has(t2)) {
+        seen.add(t2);
+        n += t2.bytes.byteLength;
+      }
+    }
+  }
+  return n;
+}
+const GUTTER = 8;
+const SLOT_SIZE = TILE_SIZE + GUTTER * 2;
+const ATLAS_SIZE = 4096;
+const SLOTS_PER_ROW = Math.floor(ATLAS_SIZE / SLOT_SIZE);
+const SLOTS_PER_ATLAS = SLOTS_PER_ROW * SLOTS_PER_ROW;
+class TileAtlas {
+  constructor(gl) {
+    __publicField(this, "gl");
+    __publicField(this, "atlases", []);
+    __publicField(this, "slots", /* @__PURE__ */ new Map());
+    __publicField(this, "freeSlots", []);
+    __publicField(this, "scratch", new Uint8Array(SLOT_SIZE * SLOT_SIZE * 4));
+    __publicField(this, "generation", 0);
+    __publicField(this, "epoch", 0);
+    __publicField(this, "maxAtlases", 24);
+    this.gl = gl;
+  }
+  beginFrame() {
+    this.generation += 1;
+  }
+  texture(atlas) {
+    var _a2;
+    return ((_a2 = this.atlases[atlas]) == null ? void 0 : _a2.tex) ?? null;
+  }
+  acquire(grid, index) {
+    const tile = grid.tiles[index];
+    if (!tile.bytes) return null;
+    const hit = this.slots.get(tile);
+    if (hit) {
+      hit.gen = this.generation;
+      return hit;
+    }
+    const pos = this.allocSlot();
+    if (!pos) return null;
+    this.fillScratch(grid, index);
+    const g = this.gl;
+    g.bindTexture(g.TEXTURE_2D, this.atlases[pos.atlas].tex);
+    g.texSubImage2D(g.TEXTURE_2D, 0, pos.x, pos.y, SLOT_SIZE, SLOT_SIZE, g.RGBA, g.UNSIGNED_BYTE, this.scratch);
+    const slot = { atlas: pos.atlas, x: pos.x, y: pos.y, gen: this.generation };
+    this.slots.set(tile, slot);
+    return slot;
+  }
+  allocSlot() {
+    const free = this.freeSlots.pop();
+    if (free) return free;
+    for (let a2 = 0; a2 < this.atlases.length; a2++) {
+      const at2 = this.atlases[a2];
+      if (at2.used < SLOTS_PER_ATLAS) {
+        const i = at2.used++;
+        return { atlas: a2, x: i % SLOTS_PER_ROW * SLOT_SIZE, y: Math.floor(i / SLOTS_PER_ROW) * SLOT_SIZE };
+      }
+    }
+    if (this.atlases.length < this.maxAtlases) {
+      const g = this.gl;
+      const tex = g.createTexture();
+      if (!tex) return null;
+      g.bindTexture(g.TEXTURE_2D, tex);
+      g.texImage2D(g.TEXTURE_2D, 0, g.RGBA8, ATLAS_SIZE, ATLAS_SIZE, 0, g.RGBA, g.UNSIGNED_BYTE, null);
+      g.texParameteri(g.TEXTURE_2D, g.TEXTURE_MIN_FILTER, g.LINEAR);
+      g.texParameteri(g.TEXTURE_2D, g.TEXTURE_MAG_FILTER, g.LINEAR);
+      g.texParameteri(g.TEXTURE_2D, g.TEXTURE_WRAP_S, g.CLAMP_TO_EDGE);
+      g.texParameteri(g.TEXTURE_2D, g.TEXTURE_WRAP_T, g.CLAMP_TO_EDGE);
+      this.atlases.push({ tex, used: 1 });
+      return { atlas: this.atlases.length - 1, x: 0, y: 0 };
+    }
+    return this.evictOne() ? this.allocSlot() : null;
+  }
+  evictOne() {
+    let victim = null;
+    let victimSlot = null;
+    for (const [tile, slot] of this.slots) {
+      if (slot.gen >= this.generation) continue;
+      if (!victimSlot || slot.gen < victimSlot.gen) {
+        victim = tile;
+        victimSlot = slot;
+      }
+    }
+    if (!victim || !victimSlot) return false;
+    this.slots.delete(victim);
+    this.freeSlots.push({ atlas: victimSlot.atlas, x: victimSlot.x, y: victimSlot.y });
+    this.epoch += 1;
+    return true;
+  }
+  sweepDead() {
+    for (const [tile, slot] of this.slots) {
+      if (tile.refs <= 0) {
+        this.slots.delete(tile);
+        this.freeSlots.push({ atlas: slot.atlas, x: slot.x, y: slot.y });
+        this.epoch += 1;
+      }
+    }
+  }
+  fillScratch(grid, index) {
+    const scratchRow = SLOT_SIZE * 4;
+    const cx = index % grid.cols;
+    const cy = index / grid.cols | 0;
+    for (let sy = 0; sy < SLOT_SIZE; sy++) {
+      const gy = Math.max(0, Math.min(grid.height - 1, cy * TILE_SIZE + sy - GUTTER));
+      const trow = Math.min(grid.rows - 1, Math.floor(gy / TILE_SIZE));
+      const ly = gy - trow * TILE_SIZE;
+      const own = grid.tiles[trow * grid.cols + cx];
+      const validW = Math.min(TILE_SIZE, grid.width - cx * TILE_SIZE);
+      const dst = sy * scratchRow + GUTTER * 4;
+      if (own.bytes) {
+        const src = ly * TILE_SIZE * 4;
+        this.scratch.set(own.bytes.subarray(src, src + validW * 4), dst);
+        for (let i = validW; i < TILE_SIZE; i++) this.copyPixelWithin(dst + (validW - 1) * 4, dst + i * 4);
+      } else {
+        for (let i = 0; i < TILE_SIZE; i++) this.writePixel(own, Math.min(i, validW - 1), ly, dst + i * 4);
+      }
+      for (let i = 0; i < GUTTER; i++) {
+        this.gutterPixel(grid, cx * TILE_SIZE - GUTTER + i, gy, sy * scratchRow + i * 4);
+        this.gutterPixel(grid, (cx + 1) * TILE_SIZE + i, gy, sy * scratchRow + (GUTTER + TILE_SIZE + i) * 4);
+      }
+    }
+  }
+  gutterPixel(grid, gxRaw, gy, off) {
+    const gx = Math.max(0, Math.min(grid.width - 1, gxRaw));
+    const tcol = Math.min(grid.cols - 1, Math.floor(gx / TILE_SIZE));
+    const trow = Math.min(grid.rows - 1, Math.floor(gy / TILE_SIZE));
+    const tile = grid.tiles[trow * grid.cols + tcol];
+    this.writePixel(tile, gx - tcol * TILE_SIZE, gy - trow * TILE_SIZE, off);
+  }
+  copyPixelWithin(from2, to) {
+    this.scratch[to] = this.scratch[from2];
+    this.scratch[to + 1] = this.scratch[from2 + 1];
+    this.scratch[to + 2] = this.scratch[from2 + 2];
+    this.scratch[to + 3] = this.scratch[from2 + 3];
+  }
+  writePixel(tile, lx, ly, off) {
+    if (tile.uniform) {
+      this.scratch[off] = tile.uniform[0];
+      this.scratch[off + 1] = tile.uniform[1];
+      this.scratch[off + 2] = tile.uniform[2];
+      this.scratch[off + 3] = tile.uniform[3];
+      return;
+    }
+    if (!tile.bytes) {
+      this.scratch[off] = this.scratch[off + 1] = this.scratch[off + 2] = this.scratch[off + 3] = 0;
+      return;
+    }
+    const src = (ly * TILE_SIZE + lx) * 4;
+    this.scratch[off] = tile.bytes[src];
+    this.scratch[off + 1] = tile.bytes[src + 1];
+    this.scratch[off + 2] = tile.bytes[src + 2];
+    this.scratch[off + 3] = tile.bytes[src + 3];
+  }
+  stats() {
+    return {
+      atlases: this.atlases.length,
+      residentSlots: this.slots.size,
+      vramBytes: this.atlases.length * ATLAS_SIZE * ATLAS_SIZE * 4
+    };
+  }
+  dispose() {
+    for (const a2 of this.atlases) this.gl.deleteTexture(a2.tex);
+    this.atlases = [];
+    this.slots.clear();
+    this.freeSlots = [];
+  }
+}
+const LAYER_BLEND_FRAG = "#version 300 es\r\n\r\nprecision highp float;\r\n\r\nuniform sampler2D u_backdrop;\r\nuniform sampler2D u_layer;\r\nuniform sampler2D u_mask;\r\nuniform bool  u_hasMask;\r\nuniform bool  u_srgbLayer;\r\nuniform float u_opacity;\r\nuniform int   u_blend;\r\nuniform int   u_composite;\r\nuniform int   u_blendSpace;\r\nuniform int   u_compositeSpace;\r\n\r\nuniform vec2  u_docSize;\r\nuniform bool  u_hasQuad;\r\nuniform vec2  u_quadCenter;\r\nuniform vec2  u_quadRot;\r\nuniform vec2  u_quadSize;\r\nuniform vec2  u_srcSize;\r\nuniform bool  u_maskHasQuad;\r\nuniform vec2  u_maskQuadCenter;\r\nuniform vec2  u_maskQuadRot;\r\nuniform vec2  u_maskQuadSize;\r\nuniform vec2  u_maskSrcSize;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\n/* Sample a content-sized texture placed as a doc-space quad. The last\r\n   component of the return carries edge coverage in [0,1] (1px AA ramp). */\r\nvec4 sampleQuad(sampler2D tex, vec2 center, vec2 rot, vec2 size, vec2 srcSize, out float cov) {\r\n  vec2 docPx = vec2(v_texCoord.x * u_docSize.x, (1.0 - v_texCoord.y) * u_docSize.y);\r\n  vec2 d = docPx - center;\r\n  vec2 r = vec2(rot.x * d.x + rot.y * d.y, -rot.y * d.x + rot.x * d.y);\r\n  vec2 local = r / size + 0.5;\r\n  vec2 px = local * srcSize;\r\n  vec2 c2 = clamp(min(px, srcSize - px) + 0.5, 0.0, 1.0);\r\n  cov = c2.x * c2.y;\r\n  return texture(tex, vec2(local.x, 1.0 - local.y));\r\n}\r\n\r\nconst float EPS = 1e-6;\r\n\r\nfloat safeDiv(float a, float b) {\r\n  return abs(a) <= EPS ? 0.0 : clamp(a / b, -1e6, 1e6);\r\n}\r\n\r\nfloat srgbToLinear(float c) {\r\n  return c <= 0.04045 ? c / 12.92 : pow((c + 0.055) / 1.055, 2.4);\r\n}\r\nfloat linearToSrgb(float c) {\r\n  return c <= 0.0031308 ? 12.92 * c : 1.055 * pow(c, 1.0 / 2.4) - 0.055;\r\n}\r\nvec3 srgbToLinear(vec3 c) { return vec3(srgbToLinear(c.r), srgbToLinear(c.g), srgbToLinear(c.b)); }\r\nvec3 linearToSrgb(vec3 c) { return vec3(linearToSrgb(c.r), linearToSrgb(c.g), linearToSrgb(c.b)); }\r\n\r\nvec3 toSpace(vec3 c, int space)   { return space == 0 ? c : linearToSrgb(c); }\r\nvec3 fromSpace(vec3 c, int space) { return space == 0 ? c : srgbToLinear(c); }\r\n\r\nfloat luminance(vec3 c) { return dot(c, vec3(0.22248840, 0.71690369, 0.06060791)); }\r\n\r\nfloat blendChannel(int mode, float i, float l) {\r\n  if (mode == 1)  return i * l;\r\n  if (mode == 2)  return 1.0 - (1.0 - i) * (1.0 - l);\r\n  if (mode == 3)  return i < 0.5 ? 2.0*i*l : 1.0 - 2.0*(1.0-l)*(1.0-i);\r\n  if (mode == 4)  return min(i, l);\r\n  if (mode == 5)  return max(i, l);\r\n  if (mode == 6)  return safeDiv(i, 1.0 - l);\r\n  if (mode == 7)  return 1.0 - safeDiv(1.0 - i, l);\r\n  if (mode == 8)  return l > 0.5 ? min(1.0 - (1.0-i)*(1.0-(l-0.5)*2.0), 1.0)\r\n                                 : min(i*(l*2.0), 1.0);\r\n  if (mode == 9) {\r\n    float m = i * l;\r\n    float s = 1.0 - (1.0 - i) * (1.0 - l);\r\n    return (1.0 - i) * m + i * s;\r\n  }\r\n  if (mode == 10) return abs(i - l);\r\n  if (mode == 11) return 0.5 - 2.0*(i-0.5)*(l-0.5);\r\n  if (mode == 12) return i + l;\r\n  if (mode == 13) return i + l - 1.0;\r\n  if (mode == 14) return l <= 0.5 ? max(1.0 - safeDiv(1.0-i, 2.0*l), 0.0)\r\n                                  : min(safeDiv(i, 2.0*(1.0-l)), 1.0);\r\n  if (mode == 15) return l > 0.5 ? max(i, 2.0*(l-0.5)) : min(i, 2.0*l);\r\n  if (mode == 20) return i + 2.0*l - 1.0;\r\n  if (mode == 21) return i + l < 1.0 ? 0.0 : 1.0;\r\n  if (mode == 22) return i - l;\r\n  if (mode == 23) return safeDiv(i, l);\r\n  if (mode == 24) return i - l + 0.5;\r\n  if (mode == 25) return i + l - 0.5;\r\n  return l;\r\n}\r\n\r\nvec3 blendHue(vec3 i, vec3 l) {\r\n  float sMin = min(min(l.r, l.g), l.b), sMax = max(max(l.r, l.g), l.b);\r\n  float sDelta = sMax - sMin;\r\n  if (sDelta <= EPS) return i;\r\n  float dMin = min(min(i.r, i.g), i.b), dMax = max(max(i.r, i.g), i.b);\r\n  float dDelta = dMax - dMin;\r\n  float dS = dMax != 0.0 ? dDelta / dMax : 0.0;\r\n  float ratio = (dS * dMax) / sDelta;\r\n  float offset = dMax - sMax * ratio;\r\n  return l * ratio + offset;\r\n}\r\nvec3 blendSaturation(vec3 i, vec3 l) {\r\n  float dMin = min(min(i.r, i.g), i.b), dMax = max(max(i.r, i.g), i.b);\r\n  float dDelta = dMax - dMin;\r\n  if (dDelta <= EPS) return vec3(dMax);\r\n  float sMin = min(min(l.r, l.g), l.b), sMax = max(max(l.r, l.g), l.b);\r\n  float sDelta = sMax - sMin;\r\n  float sS = sMax != 0.0 ? sDelta / sMax : 0.0;\r\n  float ratio = (sS * dMax) / dDelta;\r\n  float offset = (1.0 - ratio) * dMax;\r\n  return i * ratio + offset;\r\n}\r\nvec3 blendColor(vec3 i, vec3 l) {\r\n  float dMin = min(min(i.r, i.g), i.b), dMax = max(max(i.r, i.g), i.b);\r\n  float dL = (dMin + dMax) * 0.5;\r\n  float sMin = min(min(l.r, l.g), l.b), sMax = max(max(l.r, l.g), l.b);\r\n  float sL = (sMin + sMax) * 0.5;\r\n  if (abs(sL) <= EPS || abs(1.0 - sL) <= EPS) return vec3(dL);\r\n  bool dHigh = dL > 0.5, sHigh = sL > 0.5;\r\n  dL = min(dL, 1.0 - dL);\r\n  sL = min(sL, 1.0 - sL);\r\n  float ratio = dL / sL;\r\n  float offset = 0.0;\r\n  if (dHigh) offset += 1.0 - 2.0 * dL;\r\n  if (sHigh) offset += 2.0 * dL - ratio;\r\n  return l * ratio + offset;\r\n}\r\nvec3 blendLuminosity(vec3 i, vec3 l) {\r\n  return i * safeDiv(luminance(l), luminance(i));\r\n}\r\n\r\nvec3 blendPixel(int mode, vec3 i, vec3 l) {\r\n  if (mode == 16) return blendHue(i, l);\r\n  if (mode == 17) return blendSaturation(i, l);\r\n  if (mode == 18) return blendColor(i, l);\r\n  if (mode == 19) return blendLuminosity(i, l);\r\n  return vec3(blendChannel(mode, i.r, l.r), blendChannel(mode, i.g, l.g), blendChannel(mode, i.b, l.b));\r\n}\r\n\r\nvec4 composite(int mode, vec4 bg, vec4 layer, vec3 comp, float cov) {\r\n  float inA = bg.a;\r\n  float layerA = layer.a * cov;\r\n  if (mode == 1) {\r\n    if (inA == 0.0 || layerA == 0.0) return vec4(bg.rgb, inA);\r\n    return vec4(comp * layerA + bg.rgb * (1.0 - layerA), inA);\r\n  }\r\n  if (mode == 2) {\r\n    if (layerA == 0.0) return vec4(bg.rgb, layerA);\r\n    if (inA == 0.0)    return vec4(layer.rgb, layerA);\r\n    return vec4(comp * inA + layer.rgb * (1.0 - inA), layerA);\r\n  }\r\n  if (mode == 3) {\r\n    float newA = inA * layer.a * cov;\r\n    return newA == 0.0 ? vec4(bg.rgb, 0.0) : vec4(comp, newA);\r\n  }\r\n\r\n  float newA = layerA + (1.0 - layerA) * inA;\r\n  if (layerA == 0.0 || newA == 0.0) return vec4(bg.rgb, newA);\r\n  if (inA == 0.0)                   return vec4(layer.rgb, newA);\r\n  float ratio = layerA / newA;\r\n  vec3 outRgb = ratio * (inA * (comp - layer.rgb) + layer.rgb - bg.rgb) + bg.rgb;\r\n  return vec4(outRgb, newA);\r\n}\r\n\r\nvoid main() {\r\n  vec4 bg = texture(u_backdrop, v_texCoord);\r\n  vec4 layer;\r\n  if (u_hasQuad) {\r\n    float edge;\r\n    layer = sampleQuad(u_layer, u_quadCenter, u_quadRot, u_quadSize, u_srcSize, edge);\r\n    layer.a *= edge;\r\n  } else {\r\n    layer = texture(u_layer, v_texCoord);\r\n  }\r\n  if (u_srgbLayer) layer.rgb = srgbToLinear(layer.rgb);\r\n\r\n  float cov = u_opacity;\r\n  if (u_hasMask) {\r\n    if (u_maskHasQuad) {\r\n      float medge;\r\n      cov *= sampleQuad(u_mask, u_maskQuadCenter, u_maskQuadRot, u_maskQuadSize, u_maskSrcSize, medge).r * medge;\r\n    } else {\r\n      cov *= texture(u_mask, v_texCoord).r;\r\n    }\r\n  }\r\n\r\n  vec3 comp = fromSpace(blendPixel(u_blend, toSpace(bg.rgb, u_blendSpace), toSpace(layer.rgb, u_blendSpace)), u_blendSpace);\r\n\r\n  vec4 outc;\r\n  if (u_compositeSpace == 0) {\r\n    outc = composite(u_composite, bg, layer, comp, cov);\r\n  } else {\r\n    vec4 bgC = vec4(toSpace(bg.rgb, u_compositeSpace), bg.a);\r\n    vec4 lyC = vec4(toSpace(layer.rgb, u_compositeSpace), layer.a);\r\n    vec4 r = composite(u_composite, bgC, lyC, toSpace(comp, u_compositeSpace), cov);\r\n    outc = vec4(fromSpace(r.rgb, u_compositeSpace), r.a);\r\n  }\r\n\r\n  fragColor = outc;\r\n}\r\n";
+const BLEND_COMMON = LAYER_BLEND_FRAG.slice(0, LAYER_BLEND_FRAG.indexOf("void main"));
+const TILE_VERT = `#version 300 es
+layout(location=0) in vec4 a_rect;
+layout(location=1) in vec4 a_slot;
+layout(location=2) in vec4 a_color;
+uniform vec2 u_docSize;
+uniform vec2 u_tQuadCenter;
+uniform vec2 u_tQuadRot;
+uniform vec2 u_tQuadSize;
+uniform vec2 u_tSrcSize;
+out vec2 v_texCoord;
+out vec2 v_content;
+flat out vec4 v_slotv;
+flat out vec4 v_colorv;
+flat out vec2 v_tileOrigin;
+void main() {
+  vec2 corner = vec2(float(gl_VertexID & 1), float((gl_VertexID >> 1) & 1));
+  vec2 c = a_rect.xy + corner * a_rect.zw;
+  v_content = c;
+  v_slotv = a_slot;
+  v_colorv = a_color;
+  v_tileOrigin = a_rect.xy;
+  vec2 scaled = (c / u_tSrcSize - 0.5) * u_tQuadSize;
+  vec2 doc = vec2(u_tQuadRot.x * scaled.x - u_tQuadRot.y * scaled.y,
+                  u_tQuadRot.y * scaled.x + u_tQuadRot.x * scaled.y) + u_tQuadCenter;
+  v_texCoord = vec2(doc.x / u_docSize.x, 1.0 - doc.y / u_docSize.y);
+  gl_Position = vec4(doc.x / u_docSize.x * 2.0 - 1.0, 1.0 - doc.y / u_docSize.y * 2.0, 0.0, 1.0);
+}`;
+const TILE_MAIN = `
+uniform sampler2D u_atlas;
+uniform vec2 u_atlasSize;
+uniform float u_gutter;
+in vec2 v_content;
+flat in vec4 v_slotv;
+flat in vec4 v_colorv;
+flat in vec2 v_tileOrigin;
+
+void main() {
+  vec4 bg = texture(u_backdrop, v_texCoord);
+  vec4 layer;
+  if (v_slotv.x < 0.0) {
+    layer = v_colorv;
+  } else {
+    vec2 px = v_slotv.xy + vec2(u_gutter) + (v_content - v_tileOrigin);
+    layer = texture(u_atlas, px / u_atlasSize);
+  }
+  if (u_srgbLayer) layer.rgb = srgbToLinear(layer.rgb);
+  vec2 edge = clamp(min(v_content, u_srcSize - v_content) + 0.5, 0.0, 1.0);
+  layer.a *= edge.x * edge.y;
+
+  float cov = u_opacity;
+  if (u_hasMask) {
+    if (u_maskHasQuad) {
+      float medge;
+      cov *= sampleQuad(u_mask, u_maskQuadCenter, u_maskQuadRot, u_maskQuadSize, u_maskSrcSize, medge).r * medge;
+    } else {
+      cov *= texture(u_mask, v_texCoord).r;
+    }
+  }
+
+  vec3 comp = fromSpace(blendPixel(u_blend, toSpace(bg.rgb, u_blendSpace), toSpace(layer.rgb, u_blendSpace)), u_blendSpace);
+  vec4 outc;
+  if (u_compositeSpace == 0) {
+    outc = composite(u_composite, bg, layer, comp, cov);
+  } else {
+    vec4 bgC = vec4(toSpace(bg.rgb, u_compositeSpace), bg.a);
+    vec4 lyC = vec4(toSpace(layer.rgb, u_compositeSpace), layer.a);
+    vec4 r = composite(u_composite, bgC, lyC, toSpace(comp, u_compositeSpace), cov);
+    outc = vec4(fromSpace(r.rgb, u_compositeSpace), r.a);
+  }
+  fragColor = outc;
+}`;
 const VERT$1 = `#version 300 es
 out vec2 v_texCoord;
 void main() {
@@ -147465,8 +147891,25 @@ uniform int u_op;
 uniform vec4 u_p0;
 uniform vec4 u_p1;
 uniform vec4 u_p2;
+uniform vec2 u_docSize;
+uniform bool u_maskHasQuad;
+uniform vec2 u_maskQuadCenter;
+uniform vec2 u_maskQuadRot;
+uniform vec2 u_maskQuadSize;
+uniform vec2 u_maskSrcSize;
 in vec2 v_texCoord;
 out vec4 fragColor;
+
+float maskSample(){
+  if (!u_maskHasQuad) return texture(u_mask, v_texCoord).r;
+  vec2 docPx = vec2(v_texCoord.x * u_docSize.x, (1.0 - v_texCoord.y) * u_docSize.y);
+  vec2 d = docPx - u_maskQuadCenter;
+  vec2 r = vec2(u_maskQuadRot.x * d.x + u_maskQuadRot.y * d.y, -u_maskQuadRot.y * d.x + u_maskQuadRot.x * d.y);
+  vec2 local = r / u_maskQuadSize + 0.5;
+  vec2 px = local * u_maskSrcSize;
+  vec2 c2 = clamp(min(px, u_maskSrcSize - px) + 0.5, 0.0, 1.0);
+  return texture(u_mask, vec2(local.x, 1.0 - local.y)).r * c2.x * c2.y;
+}
 
 float s2l(float c){ return c <= 0.04045 ? c / 12.92 : pow((c + 0.055) / 1.055, 2.4); }
 float l2s(float c){ c = clamp(c, 0.0, 1.0); return c <= 0.0031308 ? 12.92*c : 1.055*pow(c,1.0/2.4)-0.055; }
@@ -147598,7 +148041,7 @@ void main(){
     }
     adjusted = s2l(clamp(o, 0.0, 1.0));
   }
-  float t = u_opacity * (u_hasMask ? texture(u_mask, v_texCoord).r : 1.0);
+  float t = u_opacity * (u_hasMask ? maskSample() : 1.0);
   fragColor = vec4(mix(bg.rgb, adjusted, t), bg.a);
 }`;
 function compile$1(gl, type, src) {
@@ -147628,9 +148071,11 @@ function createWebGLCompositor() {
   let canvas = null;
   let gl = null;
   let blendProg = null;
+  let tileProg = null;
   let presentProg = null;
   let copyProg = null;
   let adjustProg = null;
+  let atlas = null;
   let ping = null;
   let pong = null;
   let result = null;
@@ -147650,6 +148095,9 @@ function createWebGLCompositor() {
   const targets = /* @__PURE__ */ new Map();
   const texCache = /* @__PURE__ */ new Map();
   let uniformCache = /* @__PURE__ */ new WeakMap();
+  const instanceCache = /* @__PURE__ */ new Map();
+  const FLOATS_PER_INSTANCE = 12;
+  let tilePasses = 0;
   function loc2(prog, name) {
     let m = uniformCache.get(prog);
     if (!m) {
@@ -147681,28 +148129,203 @@ function createWebGLCompositor() {
   function drawFullscreen() {
     gl.drawArrays(gl.TRIANGLES, 0, 3);
   }
+  function bindQuadUniforms(prog, nt2, names) {
+    const g = gl;
+    const q = nt2 == null ? void 0 : nt2.quad;
+    if (!nt2 || !q || nt2.source instanceof WebGLTexture) {
+      g.uniform1i(loc2(prog, names.has), 0);
+      return;
+    }
+    g.uniform1i(loc2(prog, names.has), 1);
+    g.uniform2f(loc2(prog, names.center), q.x + q.w / 2, q.y + q.h / 2);
+    g.uniform2f(loc2(prog, names.rot), Math.cos(q.rotation), Math.sin(q.rotation));
+    g.uniform2f(loc2(prog, names.size), Math.max(1e-6, q.w), Math.max(1e-6, q.h));
+    g.uniform2f(loc2(prog, names.src), Math.max(1, nt2.source.width), Math.max(1, nt2.source.height));
+  }
+  const LAYER_QUAD = { has: "u_hasQuad", center: "u_quadCenter", rot: "u_quadRot", size: "u_quadSize", src: "u_srcSize" };
+  const MASK_QUAD = {
+    has: "u_maskHasQuad",
+    center: "u_maskQuadCenter",
+    rot: "u_maskQuadRot",
+    size: "u_maskQuadSize",
+    src: "u_maskSrcSize"
+  };
+  function buildInstances(input) {
+    const g = gl;
+    const grid = input.tiles.grid;
+    const drawZero = input.tiles.drawZero;
+    const cached2 = instanceCache.get(grid);
+    if (cached2 && cached2.epoch === atlas.epoch && cached2.drawZero === drawZero) {
+      cached2.gen = generation;
+      return cached2;
+    }
+    const byAtlas = /* @__PURE__ */ new Map();
+    const push = (atlasIdx, rec) => {
+      let arr = byAtlas.get(atlasIdx);
+      if (!arr) {
+        arr = [];
+        byAtlas.set(atlasIdx, arr);
+      }
+      arr.push(...rec);
+    };
+    for (let i = 0; i < grid.tiles.length; i++) {
+      const tile = grid.tiles[i];
+      const tx = i % grid.cols;
+      const ty = i / grid.cols | 0;
+      const x = tx * TILE_SIZE;
+      const y = ty * TILE_SIZE;
+      const w = Math.min(TILE_SIZE, grid.width - x);
+      const h2 = Math.min(TILE_SIZE, grid.height - y);
+      if (tile.uniform) {
+        const [r, gg, b, a2] = tile.uniform;
+        if (!drawZero && r === 0 && gg === 0 && b === 0 && a2 === 0) continue;
+        push(-1, [x, y, w, h2, -1, 0, 0, 0, r / 255, gg / 255, b / 255, a2 / 255]);
+        continue;
+      }
+      const slot = tile.bytes ? atlas.acquire(grid, i) : null;
+      if (!slot) {
+        if (drawZero) push(-1, [x, y, w, h2, -1, 0, 0, 0, 0, 0, 0, 0]);
+        continue;
+      }
+      push(slot.atlas, [x, y, w, h2, slot.x, slot.y, 0, 0, 0, 0, 0, 0]);
+    }
+    const total2 = [...byAtlas.values()].reduce((n, a2) => n + a2.length, 0);
+    const data = new Float32Array(total2);
+    const batches = [];
+    let cursor = 0;
+    for (const [atlasIdx, arr] of byAtlas) {
+      batches.push({ atlas: atlasIdx, offset: cursor / FLOATS_PER_INSTANCE, count: arr.length / FLOATS_PER_INSTANCE });
+      data.set(arr, cursor);
+      cursor += arr.length;
+    }
+    const buffer = (cached2 == null ? void 0 : cached2.buffer) ?? g.createBuffer();
+    if (!buffer) return null;
+    g.bindBuffer(g.ARRAY_BUFFER, buffer);
+    g.bufferData(g.ARRAY_BUFFER, data, g.DYNAMIC_DRAW);
+    const entry = { buffer, batches, epoch: atlas.epoch, drawZero, gen: generation };
+    instanceCache.set(grid, entry);
+    return entry;
+  }
+  function drawTileInput(input, read2, write2, temps) {
+    const g = gl;
+    if (!tileProg || !atlas) return;
+    tilePasses += 1;
+    blit(read2, write2);
+    const inst = buildInstances(input);
+    g.bindFramebuffer(g.FRAMEBUFFER, write2.fbo);
+    g.viewport(0, 0, write2.width, write2.height);
+    if (!inst || !inst.batches.length) return;
+    g.useProgram(tileProg);
+    g.activeTexture(g.TEXTURE0);
+    g.bindTexture(g.TEXTURE_2D, read2.tex);
+    g.uniform1i(loc2(tileProg, "u_backdrop"), 0);
+    g.activeTexture(g.TEXTURE2);
+    g.bindTexture(g.TEXTURE_2D, input.mask ? resolveTexture(input.mask, temps) : getFallback());
+    g.uniform1i(loc2(tileProg, "u_mask"), 2);
+    g.uniform1i(loc2(tileProg, "u_hasMask"), input.mask ? 1 : 0);
+    g.uniform2f(loc2(tileProg, "u_docSize"), width, height);
+    bindQuadUniforms(tileProg, input.mask, MASK_QUAD);
+    g.uniform1i(loc2(tileProg, "u_hasQuad"), 0);
+    const q = input.tiles.quad;
+    g.uniform2f(loc2(tileProg, "u_tQuadCenter"), q.x + q.w / 2, q.y + q.h / 2);
+    g.uniform2f(loc2(tileProg, "u_tQuadRot"), Math.cos(q.rotation), Math.sin(q.rotation));
+    g.uniform2f(loc2(tileProg, "u_tQuadSize"), Math.max(1e-6, q.w), Math.max(1e-6, q.h));
+    const grid = input.tiles.grid;
+    g.uniform2f(loc2(tileProg, "u_tSrcSize"), Math.max(1, grid.width), Math.max(1, grid.height));
+    g.uniform2f(loc2(tileProg, "u_srcSize"), Math.max(1, grid.width), Math.max(1, grid.height));
+    g.uniform2f(loc2(tileProg, "u_atlasSize"), ATLAS_SIZE, ATLAS_SIZE);
+    g.uniform1f(loc2(tileProg, "u_gutter"), GUTTER);
+    g.uniform1i(loc2(tileProg, "u_srgbLayer"), input.tiles.linear ? 0 : 1);
+    g.uniform1f(loc2(tileProg, "u_opacity"), input.opacity);
+    const u = modeUniforms(input.mode);
+    g.uniform1i(loc2(tileProg, "u_blend"), u.blend);
+    g.uniform1i(loc2(tileProg, "u_composite"), u.composite);
+    g.uniform1i(loc2(tileProg, "u_blendSpace"), u.blendSpace);
+    g.uniform1i(loc2(tileProg, "u_compositeSpace"), u.compositeSpace);
+    g.uniform1i(loc2(tileProg, "u_atlas"), 1);
+    g.bindBuffer(g.ARRAY_BUFFER, inst.buffer);
+    const stride = FLOATS_PER_INSTANCE * 4;
+    for (const attr of [0, 1, 2]) {
+      g.enableVertexAttribArray(attr);
+      g.vertexAttribDivisor(attr, 1);
+    }
+    for (const b of inst.batches) {
+      const base2 = b.offset * stride;
+      g.vertexAttribPointer(0, 4, g.FLOAT, false, stride, base2);
+      g.vertexAttribPointer(1, 4, g.FLOAT, false, stride, base2 + 16);
+      g.vertexAttribPointer(2, 4, g.FLOAT, false, stride, base2 + 32);
+      g.activeTexture(g.TEXTURE1);
+      g.bindTexture(g.TEXTURE_2D, (b.atlas >= 0 ? atlas.texture(b.atlas) : null) ?? getFallback());
+      g.drawArraysInstanced(g.TRIANGLE_STRIP, 0, 4, b.count);
+    }
+    for (const attr of [0, 1, 2]) {
+      g.vertexAttribDivisor(attr, 0);
+      g.disableVertexAttribArray(attr);
+    }
+  }
+  function sweepInstanceCache() {
+    for (const [grid, entry] of instanceCache) {
+      if (entry.gen < generation - 3) {
+        gl == null ? void 0 : gl.deleteBuffer(entry.buffer);
+        instanceCache.delete(grid);
+      }
+    }
+  }
   function resolveTexture(nt2, temps) {
     if (nt2.source instanceof WebGLTexture) return nt2.source;
+    const wantMips = nt2.quad != null && Math.min(nt2.quad.w / Math.max(1, nt2.source.width), nt2.quad.h / Math.max(1, nt2.source.height)) < 0.75;
     if (nt2.key) {
       const hit = texCache.get(nt2.key);
-      if (hit) {
-        hit.gen = generation;
-        if (nt2.version === void 0 || hit.version === nt2.version) return hit.tex;
-        if (hit.version === nt2.version - 1 && nt2.dirtyRects && partialUploadAll(hit.tex, nt2.source, nt2.dirtyRects)) {
-          hit.version = nt2.version;
-          return hit.tex;
+      const entry = hit ?? null;
+      if (entry) {
+        entry.gen = generation;
+        const stampSame = nt2.stamp === void 0 || entry.stamp === nt2.stamp;
+        if (!stampSame) {
+          uploadInto(entry.tex, nt2.source);
+          entry.stamp = nt2.stamp;
+          entry.version = nt2.version;
+          entry.mipDirty = true;
+        } else if (nt2.version !== void 0 && entry.version !== nt2.version) {
+          if (entry.version === nt2.version - 1 && nt2.dirtyRects && partialUploadAll(entry.tex, nt2.source, nt2.dirtyRects)) {
+            entry.version = nt2.version;
+          } else {
+            uploadInto(entry.tex, nt2.source);
+            entry.version = nt2.version;
+          }
+          entry.mipDirty = true;
         }
-        uploadInto(hit.tex, nt2.source);
-        hit.version = nt2.version;
-        return hit.tex;
+        finishMips(entry, wantMips);
+        return entry.tex;
       }
       const tex2 = uploadSource(nt2.source);
-      texCache.set(nt2.key, { tex: tex2, gen: generation, version: nt2.version });
+      const fresh = { tex: tex2, gen: generation, version: nt2.version, stamp: nt2.stamp, mipDirty: true, hasMips: false };
+      finishMips(fresh, wantMips);
+      texCache.set(nt2.key, fresh);
       return tex2;
     }
     const tex = uploadSource(nt2.source);
+    if (wantMips) {
+      const g = gl;
+      g.bindTexture(g.TEXTURE_2D, tex);
+      g.generateMipmap(g.TEXTURE_2D);
+      g.texParameteri(g.TEXTURE_2D, g.TEXTURE_MIN_FILTER, g.LINEAR_MIPMAP_LINEAR);
+    }
     temps.push(tex);
     return tex;
+  }
+  function finishMips(entry, wantMips) {
+    const g = gl;
+    g.bindTexture(g.TEXTURE_2D, entry.tex);
+    if (wantMips && entry.mipDirty) {
+      g.generateMipmap(g.TEXTURE_2D);
+      entry.mipDirty = false;
+      entry.hasMips = true;
+    }
+    g.texParameteri(
+      g.TEXTURE_2D,
+      g.TEXTURE_MIN_FILTER,
+      entry.hasMips && !entry.mipDirty ? g.LINEAR_MIPMAP_LINEAR : g.LINEAR
+    );
   }
   function partialUploadAll(tex, src, rects) {
     let area2 = 0;
@@ -147798,12 +148421,14 @@ function createWebGLCompositor() {
   function dropContextState() {
     targets.clear();
     texCache.clear();
+    instanceCache.clear();
     uniformCache = /* @__PURE__ */ new WeakMap();
     ping = pong = result = null;
     resultValid = false;
     fallback = null;
     lutTex = null;
-    blendProg = presentProg = copyProg = adjustProg = null;
+    blendProg = presentProg = copyProg = adjustProg = tileProg = null;
+    atlas = null;
     gl = null;
     canvas = null;
   }
@@ -147838,6 +148463,12 @@ function createWebGLCompositor() {
       presentProg = link(gl, vs, compile$1(gl, gl.FRAGMENT_SHADER, PRESENT_FRAG));
       copyProg = link(gl, vs, compile$1(gl, gl.FRAGMENT_SHADER, COPY_FRAG));
       adjustProg = link(gl, vs, compile$1(gl, gl.FRAGMENT_SHADER, ADJUST_FRAG));
+      tileProg = link(
+        gl,
+        compile$1(gl, gl.VERTEX_SHADER, TILE_VERT),
+        compile$1(gl, gl.FRAGMENT_SHADER, BLEND_COMMON + TILE_MAIN)
+      );
+      atlas = new TileAtlas(gl);
       ping = makeTarget(width, height);
       pong = makeTarget(width, height);
       return true;
@@ -147875,6 +148506,8 @@ function createWebGLCompositor() {
     },
     beginFrame() {
       generation += 1;
+      atlas == null ? void 0 : atlas.beginFrame();
+      if (generation % 16 === 0) atlas == null ? void 0 : atlas.sweepDead();
     },
     resize(w, h2) {
       if (w === width && h2 === height) return;
@@ -147919,6 +148552,13 @@ function createWebGLCompositor() {
         clearTarget(write2);
         g.bindFramebuffer(g.FRAMEBUFFER, write2.fbo);
         g.viewport(0, 0, write2.width, write2.height);
+        if ("tiles" in input) {
+          drawTileInput(input, read2, write2, temps);
+          const t2 = read2;
+          read2 = write2;
+          write2 = t2;
+          continue;
+        }
         if ("adjust" in input) {
           if (!adjustProg) continue;
           g.useProgram(adjustProg);
@@ -147929,6 +148569,8 @@ function createWebGLCompositor() {
           g.bindTexture(g.TEXTURE_2D, input.mask ? resolveTexture(input.mask, temps) : getFallback());
           g.uniform1i(loc2(adjustProg, "u_mask"), 2);
           g.uniform1i(loc2(adjustProg, "u_hasMask"), input.mask ? 1 : 0);
+          g.uniform2f(loc2(adjustProg, "u_docSize"), width, height);
+          bindQuadUniforms(adjustProg, input.mask, MASK_QUAD);
           g.uniform1f(loc2(adjustProg, "u_opacity"), input.opacity);
           g.uniform1i(loc2(adjustProg, "u_op"), input.adjust.op);
           const p2 = input.adjust.params;
@@ -147950,6 +148592,9 @@ function createWebGLCompositor() {
           g.bindTexture(g.TEXTURE_2D, input.mask ? resolveTexture(input.mask, temps) : getFallback());
           g.uniform1i(loc2(blendProg, "u_mask"), 2);
           g.uniform1i(loc2(blendProg, "u_hasMask"), input.mask ? 1 : 0);
+          g.uniform2f(loc2(blendProg, "u_docSize"), width, height);
+          bindQuadUniforms(blendProg, input.texture, LAYER_QUAD);
+          bindQuadUniforms(blendProg, input.mask, MASK_QUAD);
           g.uniform1i(loc2(blendProg, "u_srgbLayer"), input.texture.linear ? 0 : 1);
           g.uniform1f(loc2(blendProg, "u_opacity"), input.opacity);
           const u = modeUniforms(input.mode);
@@ -147965,6 +148610,7 @@ function createWebGLCompositor() {
       }
       for (const tex of temps) g.deleteTexture(tex);
       sweepTexCache();
+      sweepInstanceCache();
       if (target) {
         const dst = targets.get(target.id);
         if (dst) blit(read2, dst);
@@ -148028,6 +148674,20 @@ function createWebGLCompositor() {
       flipRows(px2, width, height);
       return new ImageData(px2, width, height);
     },
+    presentCanvas(clip) {
+      if (!ensureHealthy() || !gl || !ping) return null;
+      let c2 = null;
+      if (clip) {
+        const x = Math.max(0, Math.floor(clip.x));
+        const y = Math.max(0, Math.floor(clip.y));
+        const w = Math.min(width, Math.ceil(clip.x + clip.w)) - x;
+        const h2 = Math.min(height, Math.ceil(clip.y + clip.h)) - y;
+        if (w <= 0 || h2 <= 0) return canvas;
+        if (w < width || h2 < height) c2 = { x, y, w, h: h2 };
+      }
+      presentToDefault(result ?? ping, c2);
+      return canvas;
+    },
     async toBlob() {
       const data = this.readback();
       const c2 = document.createElement("canvas");
@@ -148040,6 +148700,16 @@ function createWebGLCompositor() {
     },
     getCanvas() {
       return canvas;
+    },
+    debugStats() {
+      const a2 = (atlas == null ? void 0 : atlas.stats()) ?? { atlases: 0, residentSlots: 0, vramBytes: 0 };
+      return {
+        tilePasses,
+        atlases: a2.atlases,
+        atlasSlots: a2.residentSlots,
+        atlasVramBytes: a2.vramBytes,
+        texCacheEntries: texCache.size
+      };
     },
     dispose() {
       var _a2;
@@ -148054,6 +148724,12 @@ function createWebGLCompositor() {
       texCache.clear();
       if (fallback) gl.deleteTexture(fallback);
       if (lutTex) gl.deleteTexture(lutTex);
+      for (const entry of instanceCache.values()) gl.deleteBuffer(entry.buffer);
+      instanceCache.clear();
+      atlas == null ? void 0 : atlas.dispose();
+      atlas = null;
+      if (tileProg) gl.deleteProgram(tileProg);
+      tileProg = null;
       if (blendProg) gl.deleteProgram(blendProg);
       if (presentProg) gl.deleteProgram(presentProg);
       if (copyProg) gl.deleteProgram(copyProg);
@@ -148337,46 +149013,467 @@ function getTool(id) {
   if (!def2) throw new Error(`Unknown tool: ${id}`);
   return def2;
 }
-class DefaultContentStore {
+const TILE_THRESHOLD_PX = 2048 * 2048;
+function singleUniform(grid) {
+  const first2 = grid.tiles[0];
+  if (!first2.uniform) return null;
+  for (const t2 of grid.tiles) if (t2 !== first2) return null;
+  return first2.uniform;
+}
+class HybridContentStore {
   constructor() {
-    __publicField(this, "entries", /* @__PURE__ */ new Map());
+    __publicField(this, "records", /* @__PURE__ */ new Map());
+    __publicField(this, "pool", /* @__PURE__ */ new Map());
+    __publicField(this, "swap", null);
+    __publicField(this, "onRestored", null);
+    __publicField(this, "tileBudget", 512 * 1024 * 1024);
+    __publicField(this, "thumbScratch", null);
+  }
+  configureSwap(opts) {
+    this.swap = opts.swap;
+    this.onRestored = opts.onRestored ?? null;
+    if (opts.tileBudgetBytes != null) this.tileBudget = opts.tileBudgetBytes;
+  }
+  setTileBudget(bytes) {
+    this.tileBudget = bytes;
+  }
+  hasSwap() {
+    return this.swap != null;
   }
   register(canvas, opts) {
+    var _a2;
     const id = (opts == null ? void 0 : opts.id) ?? generateId("content");
-    this.entries.set(id, {
+    const w = canvas.width;
+    const h2 = canvas.height;
+    if ((opts == null ? void 0 : opts.transient) || w * h2 < TILE_THRESHOLD_PX) {
+      this.records.set(id, {
+        kind: "plain",
+        entry: { id, canvas, width: w, height: h2, uploadedUrl: (opts == null ? void 0 : opts.uploadedUrl) ?? null }
+      });
+      return id;
+    }
+    let grid = null;
+    if (opts == null ? void 0 : opts.uniform) {
+      const [r, g, b, a2] = opts.uniform;
+      grid = uniformGrid(w, h2, this.pool, r, g, b, a2);
+    } else {
+      const data = (opts == null ? void 0 : opts.pixels) ?? ((_a2 = canvas.getContext("2d")) == null ? void 0 : _a2.getImageData(0, 0, w, h2).data);
+      if (data) grid = tileifyPixels(data, w, h2, this.pool);
+    }
+    if (!grid) {
+      this.records.set(id, {
+        kind: "plain",
+        entry: { id, canvas, width: w, height: h2, uploadedUrl: (opts == null ? void 0 : opts.uploadedUrl) ?? null }
+      });
+      return id;
+    }
+    const allUniform = singleUniform(grid) != null;
+    const rec = {
+      kind: "tiled",
+      grid,
+      material: allUniform ? null : canvas,
+      thumb: null,
+      entry: this.makeTiledEntry(id, grid, (opts == null ? void 0 : opts.uploadedUrl) ?? null)
+    };
+    this.records.set(id, rec);
+    return id;
+  }
+  makeTiledEntry(id, grid, uploadedUrl) {
+    const store2 = this;
+    const entry = {
       id,
-      canvas,
-      width: canvas.width,
-      height: canvas.height,
-      uploadedUrl: (opts == null ? void 0 : opts.uploadedUrl) ?? null
+      width: grid.width,
+      height: grid.height,
+      uploadedUrl,
+      isBlank: isBlankGrid(grid),
+      get canvas() {
+        return store2.materialize(id);
+      }
+    };
+    return entry;
+  }
+  materialize(id) {
+    const rec = this.records.get(id);
+    if (!rec || rec.kind !== "tiled") throw new Error(`materialize: not tiled: ${id}`);
+    if (rec.material) return rec.material;
+    const complete = this.ensureResident(rec.grid);
+    const canvas = this.buildDense(rec.grid);
+    if (complete) rec.material = canvas;
+    return canvas;
+  }
+  buildDense(grid) {
+    const canvas = document.createElement("canvas");
+    canvas.width = grid.width;
+    canvas.height = grid.height;
+    const g = canvas.getContext("2d");
+    if (g) {
+      const uni = singleUniform(grid);
+      if (uni) {
+        if (uni[3] !== 0 || uni[0] !== 0 || uni[1] !== 0 || uni[2] !== 0) {
+          g.fillStyle = `rgba(${uni[0]},${uni[1]},${uni[2]},${uni[3] / 255})`;
+          g.fillRect(0, 0, canvas.width, canvas.height);
+        }
+      } else {
+        const pixels = gatherPixels(grid);
+        g.putImageData(new ImageData(pixels, grid.width, grid.height), 0, 0);
+      }
+    }
+    return canvas;
+  }
+  /** Transient dense canvas for one-shot export paths — never cached. */
+  exportCanvas(id) {
+    const rec = this.records.get(id);
+    if (!rec) return null;
+    if (rec.kind === "plain") return rec.entry.canvas;
+    if (rec.material) return rec.material;
+    this.ensureResident(rec.grid);
+    return this.buildDense(rec.grid);
+  }
+  /** Kick async restores for swapped-out tiles; true when everything is resident. */
+  ensureResident(grid) {
+    let complete = true;
+    for (const t2 of new Set(grid.tiles)) {
+      if (t2.bytes || t2.uniform) continue;
+      complete = false;
+      if (t2.swapId < 0 || t2.swapPending || !this.swap) continue;
+      t2.swapPending = true;
+      const slot = t2.swapId;
+      this.swap.read(slot).then((bytes) => {
+        var _a2, _b2, _c;
+        t2.swapPending = false;
+        if (t2.refs <= 0 || t2.bytes) {
+          (_a2 = this.swap) == null ? void 0 : _a2.free(slot);
+          return;
+        }
+        t2.bytes = bytes;
+        t2.gen = nextGen();
+        t2.swapId = -1;
+        (_b2 = this.swap) == null ? void 0 : _b2.free(slot);
+        (_c = this.onRestored) == null ? void 0 : _c.call(this);
+      }).catch(() => {
+        t2.swapPending = false;
+      });
+    }
+    return complete;
+  }
+  /**
+   * Memory pressure valve, called after history changes: drop dense material
+   * caches (the GPU composites tiled contents straight from the atlas, so
+   * only actively-edited contents keep theirs for paint checkouts), then swap
+   * the least-recently-used history tiles out to OPFS until under budget.
+   * Pinned (live) contents are never swapped — derivation and painting need
+   * their tiles synchronously.
+   */
+  trim(pinned, keepMaterial) {
+    const keep = keepMaterial ?? pinned;
+    for (const [id, rec] of this.records) {
+      if (rec.kind === "tiled" && rec.material && !keep.has(id)) rec.material = null;
+    }
+    if (!this.swap) return;
+    const pinnedTiles = /* @__PURE__ */ new Set();
+    for (const id of pinned) {
+      const r = this.records.get(id);
+      if ((r == null ? void 0 : r.kind) === "tiled") for (const t2 of r.grid.tiles) pinnedTiles.add(t2);
+    }
+    const seen = /* @__PURE__ */ new Set();
+    const candidates = [];
+    let resident = 0;
+    for (const rec of this.records.values()) {
+      if (rec.kind !== "tiled") continue;
+      for (const t2 of rec.grid.tiles) {
+        if (!t2.bytes || seen.has(t2)) continue;
+        seen.add(t2);
+        resident += t2.bytes.byteLength;
+        if (!pinnedTiles.has(t2) && !t2.swapPending) candidates.push(t2);
+      }
+    }
+    if (resident <= this.tileBudget) return;
+    candidates.sort((a2, b) => a2.gen - b.gen);
+    let excess = resident - this.tileBudget;
+    for (const t2 of candidates) {
+      if (excess <= 0) break;
+      excess -= t2.bytes.byteLength;
+      this.swapOut(t2);
+    }
+  }
+  swapOut(t2) {
+    const bytes = t2.bytes;
+    const genAt = t2.gen;
+    t2.swapPending = true;
+    this.swap.write(bytes).then((slot) => {
+      var _a2;
+      t2.swapPending = false;
+      if (t2.refs <= 0 || t2.bytes !== bytes || t2.gen !== genAt) {
+        (_a2 = this.swap) == null ? void 0 : _a2.free(slot);
+        return;
+      }
+      t2.swapId = slot;
+      t2.bytes = null;
+    }).catch(() => {
+      t2.swapPending = false;
+    });
+  }
+  derive(baseId, edits, opts) {
+    const base2 = this.records.get(baseId);
+    if (!base2 || base2.kind !== "tiled") return null;
+    const grid = deriveGrid(base2.grid, edits, this.pool);
+    const id = generateId("content");
+    let material = null;
+    if (base2.material) {
+      material = base2.material;
+      base2.material = null;
+      const g = material.getContext("2d");
+      if (g) {
+        for (const e of edits) {
+          g.putImageData(new ImageData(e.pixels, e.w, e.h), e.x, e.y);
+        }
+      } else {
+        material = null;
+      }
+    }
+    const rec = {
+      kind: "tiled",
+      grid,
+      material,
+      thumb: null,
+      entry: this.makeTiledEntry(id, grid, (opts == null ? void 0 : opts.uploadedUrl) ?? null)
+    };
+    this.records.set(id, rec);
+    return id;
+  }
+  registerUniform(width, height, rgba) {
+    if (width * height < TILE_THRESHOLD_PX) {
+      const c2 = document.createElement("canvas");
+      c2.width = width;
+      c2.height = height;
+      const g = c2.getContext("2d");
+      if (g && rgba[3] > 0) {
+        g.fillStyle = `rgba(${rgba[0]},${rgba[1]},${rgba[2]},${rgba[3] / 255})`;
+        g.fillRect(0, 0, width, height);
+      }
+      return this.register(c2);
+    }
+    const id = generateId("content");
+    const grid = uniformGrid(width, height, this.pool, rgba[0], rgba[1], rgba[2], rgba[3]);
+    this.records.set(id, {
+      kind: "tiled",
+      grid,
+      material: null,
+      thumb: null,
+      entry: this.makeTiledEntry(id, grid, null)
     });
     return id;
   }
+  /**
+   * The CPU tile grid backing a tiled content, for direct GPU-atlas
+   * compositing. Also kicks async restores for any swapped-out tiles so the
+   * compositor can render partial now and be invalidated when they land.
+   */
+  tileGridOf(id) {
+    const rec = this.records.get(id);
+    if (!rec || rec.kind !== "tiled") return null;
+    this.ensureResident(rec.grid);
+    return rec.grid;
+  }
+  /** Alpha at a content pixel without materializing (layer picking). */
+  alphaAt(id, x, y) {
+    const rec = this.records.get(id);
+    if (!rec || rec.kind !== "tiled") return null;
+    const grid = rec.grid;
+    if (x < 0 || y < 0 || x >= grid.width || y >= grid.height) return 0;
+    const tile = grid.tiles[Math.floor(y / TILE_SIZE) * grid.cols + Math.floor(x / TILE_SIZE)];
+    if (tile.uniform) return tile.uniform[3] / 255;
+    if (!tile.bytes) return 1;
+    const lx = x % TILE_SIZE;
+    const ly = y % TILE_SIZE;
+    return tile.bytes[(ly * TILE_SIZE + lx) * 4 + 3] / 255;
+  }
+  /** Tile-native thumbnail — never materializes the dense content. */
+  thumbnailCanvas(id, maxDim) {
+    const rec = this.records.get(id);
+    if (!rec) return null;
+    if (rec.kind === "plain") return rec.entry.canvas;
+    if (rec.thumb && Math.max(rec.thumb.width, rec.thumb.height) >= Math.min(maxDim, 256)) return rec.thumb;
+    const grid = rec.grid;
+    const scale = Math.min(1, maxDim / Math.max(grid.width, grid.height));
+    const tw = Math.max(1, Math.round(grid.width * scale));
+    const th = Math.max(1, Math.round(grid.height * scale));
+    const out = document.createElement("canvas");
+    out.width = tw;
+    out.height = th;
+    const g = out.getContext("2d");
+    if (!g) return null;
+    g.imageSmoothingEnabled = true;
+    g.imageSmoothingQuality = "medium";
+    if (!this.thumbScratch) this.thumbScratch = document.createElement("canvas");
+    const scratch = this.thumbScratch;
+    scratch.width = TILE_SIZE;
+    scratch.height = TILE_SIZE;
+    const sg = scratch.getContext("2d");
+    for (let i = 0; i < grid.tiles.length; i++) {
+      const tile = grid.tiles[i];
+      const x = i % grid.cols * TILE_SIZE;
+      const y = (i / grid.cols | 0) * TILE_SIZE;
+      const w = Math.min(TILE_SIZE, grid.width - x);
+      const h2 = Math.min(TILE_SIZE, grid.height - y);
+      const dx = x * scale;
+      const dy = y * scale;
+      const dw = w * scale;
+      const dh = h2 * scale;
+      if (tile.uniform) {
+        if (tile.uniform[3] === 0) continue;
+        g.fillStyle = `rgba(${tile.uniform[0]},${tile.uniform[1]},${tile.uniform[2]},${tile.uniform[3] / 255})`;
+        g.fillRect(dx, dy, dw, dh);
+        continue;
+      }
+      if (!tile.bytes || !sg) continue;
+      sg.putImageData(new ImageData(new Uint8ClampedArray(tile.bytes), TILE_SIZE, TILE_SIZE), 0, 0);
+      g.drawImage(scratch, 0, 0, w, h2, dx, dy, dw, dh);
+    }
+    rec.thumb = out;
+    return out;
+  }
+  /** Drop dense material caches, keeping tiles as the source of truth. */
+  dropMaterials(keep) {
+    let freed = 0;
+    for (const [id, rec] of this.records) {
+      if (rec.kind !== "tiled" || !rec.material || keep.has(id)) continue;
+      freed += rec.material.width * rec.material.height * 4;
+      rec.material = null;
+    }
+    return freed;
+  }
   get(id) {
-    return this.entries.get(id);
+    var _a2;
+    return (_a2 = this.records.get(id)) == null ? void 0 : _a2.entry;
   }
   has(id) {
-    return this.entries.has(id);
+    return this.records.has(id);
   }
   dirtyIds() {
     const out = [];
-    for (const e of this.entries.values()) if (e.uploadedUrl === null) out.push(e.id);
+    for (const r of this.records.values()) if (r.entry.uploadedUrl === null) out.push(r.entry.id);
     return out;
   }
   markUploaded(id, url) {
-    const e = this.entries.get(id);
-    if (e) e.uploadedUrl = url;
+    const r = this.records.get(id);
+    if (r) r.entry.uploadedUrl = url;
   }
   collectGarbage(liveIds) {
-    for (const id of [...this.entries.keys()]) {
-      if (!liveIds.has(id)) this.entries.delete(id);
+    for (const [id, rec] of [...this.records]) {
+      if (liveIds.has(id)) continue;
+      if (rec.kind === "tiled") this.releaseTiles(releaseGrid(rec.grid, this.pool));
+      this.records.delete(id);
+    }
+  }
+  releaseTiles(dead) {
+    var _a2;
+    for (const t2 of dead) {
+      t2.bytes = null;
+      if (t2.swapId >= 0) {
+        (_a2 = this.swap) == null ? void 0 : _a2.free(t2.swapId);
+        t2.swapId = -1;
+      }
     }
   }
   totalBytes() {
     let n = 0;
-    for (const e of this.entries.values()) n += e.width * e.height * 4;
-    return n;
+    const grids = [];
+    for (const r of this.records.values()) {
+      if (r.kind === "plain") {
+        n += r.entry.width * r.entry.height * 4;
+      } else {
+        grids.push(r.grid);
+        if (r.material) n += r.material.width * r.material.height * 4;
+      }
+    }
+    return n + residentTileBytes(grids);
   }
+  /** Introspection for tests and the memory panel. */
+  stats() {
+    let plain = 0;
+    let tiled = 0;
+    let materialBytes = 0;
+    let swappedOut = 0;
+    const grids = [];
+    const seen = /* @__PURE__ */ new Set();
+    for (const r of this.records.values()) {
+      if (r.kind === "plain") {
+        plain++;
+      } else {
+        tiled++;
+        grids.push(r.grid);
+        if (r.material) materialBytes += r.material.width * r.material.height * 4;
+        for (const t2 of r.grid.tiles) {
+          if (!seen.has(t2)) {
+            seen.add(t2);
+            if (t2.swapId >= 0 && !t2.bytes) swappedOut++;
+          }
+        }
+      }
+    }
+    return { plain, tiled, tileBytes: residentTileBytes(grids), materialBytes, poolSize: this.pool.size, swappedOut };
+  }
+}
+function createSwapClient() {
+  var _a2;
+  if (typeof Worker === "undefined" || typeof navigator === "undefined") return null;
+  if (!("storage" in navigator) || typeof ((_a2 = navigator.storage) == null ? void 0 : _a2.getDirectory) !== "function") return null;
+  let worker;
+  try {
+    worker = new Worker(new URL(
+      /* @vite-ignore */
+      "/assets/swapWorker-D4EXzaxS.js",
+      import.meta.url
+    ), { type: "module" });
+  } catch {
+    return null;
+  }
+  let nextReq = 1;
+  const pending = /* @__PURE__ */ new Map();
+  worker.onmessage = (e) => {
+    const { reqId, error: error2 } = e.data;
+    const p2 = pending.get(reqId);
+    if (!p2) return;
+    pending.delete(reqId);
+    if (error2) p2.reject(new Error(error2));
+    else p2.resolve(e.data);
+  };
+  worker.onerror = () => {
+    for (const p2 of pending.values()) p2.reject(new Error("swap worker error"));
+    pending.clear();
+  };
+  function call(msg, transfer) {
+    const reqId = nextReq++;
+    return new Promise((resolve2, reject) => {
+      pending.set(reqId, { resolve: resolve2, reject });
+      worker.postMessage({ ...msg, reqId }, transfer ?? []);
+    });
+  }
+  const ready = call({ op: "init" }).then((r) => {
+    if (!r.ok) throw new Error("OPFS unavailable");
+  });
+  ready.catch(() => {
+  });
+  return {
+    async write(bytes) {
+      await ready;
+      const copy2 = bytes.slice();
+      const r = await call({ op: "write", bytes: copy2.buffer }, [copy2.buffer]);
+      return r.slot;
+    },
+    async read(slot) {
+      await ready;
+      const r = await call({ op: "read", slot });
+      return new Uint8Array(r.bytes);
+    },
+    free(slot) {
+      void ready.then(() => worker.postMessage({ op: "free", slot }));
+    },
+    dispose() {
+      void call({ op: "dispose" }).finally(() => worker.terminate());
+    }
+  };
 }
 const num$9 = (v, d) => typeof v === "number" && isFinite(v) ? v : d;
 const str$5 = (v, d) => typeof v === "string" ? v : d;
@@ -149610,14 +150707,18 @@ const rasterKind = {
   renderNode(node, ctx) {
     const entry = ctx.content.get(node.contentId);
     if (!entry) return null;
+    if (entry.isBlank) return null;
     return ctx.placed(`content:${node.id}`, node.contentId, entry.canvas, node.transform);
   },
   bbox(node) {
     return { x: node.transform.x, y: node.transform.y, w: node.transform.w, h: node.transform.h };
   },
   thumbnail(node, deps) {
-    const entry = deps.content.get(node.contentId);
-    return (entry == null ? void 0 : entry.canvas) ?? null;
+    var _a2, _b2, _c;
+    if (!deps.content.has(node.contentId)) return null;
+    const small = (_b2 = (_a2 = deps.content).thumbnailCanvas) == null ? void 0 : _b2.call(_a2, node.contentId, deps.size * 2);
+    if (small) return small;
+    return ((_c = deps.content.get(node.contentId)) == null ? void 0 : _c.canvas) ?? null;
   },
   hitTest(node, pt2) {
     const b = this.bbox(node);
@@ -153414,7 +154515,6 @@ function mipForScale(bitmap, scale) {
 }
 function placeBitmap(bitmap, transform2, docWidth, docHeight, scratch, clipRect, noMip = false) {
   const canvas = scratch ?? document.createElement("canvas");
-  const clip = clipRect && scratch && canvas.width === docWidth && canvas.height === docHeight ? clipRect : null;
   if (canvas.width !== docWidth) canvas.width = docWidth;
   if (canvas.height !== docHeight) canvas.height = docHeight;
   const ctx = canvas.getContext("2d");
@@ -153425,12 +154525,7 @@ function placeBitmap(bitmap, transform2, docWidth, docHeight, scratch, clipRect,
   );
   const src = noMip ? bitmap : mipForScale(bitmap, scale);
   ctx.save();
-  if (clip) {
-    ctx.beginPath();
-    ctx.rect(clip.x, clip.y, clip.w, clip.h);
-    ctx.clip();
-    ctx.clearRect(clip.x, clip.y, clip.w, clip.h);
-  } else {
+  {
     ctx.clearRect(0, 0, docWidth, docHeight);
   }
   ctx.imageSmoothingEnabled = true;
@@ -153441,10 +154536,42 @@ function placeBitmap(bitmap, transform2, docWidth, docHeight, scratch, clipRect,
   ctx.restore();
   return canvas;
 }
-function transformStamp(t2) {
-  return `${t2.x},${t2.y},${t2.w},${t2.h},${t2.rotation}`;
+function docRectToSourceRect(r, q, srcW, srcH) {
+  const cx = q.x + q.w / 2;
+  const cy = q.y + q.h / 2;
+  const cos = Math.cos(q.rotation);
+  const sin = Math.sin(q.rotation);
+  const sx = srcW / Math.max(1e-6, q.w);
+  const sy = srcH / Math.max(1e-6, q.h);
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+  for (const [px2, py2] of [
+    [r.x, r.y],
+    [r.x + r.w, r.y],
+    [r.x, r.y + r.h],
+    [r.x + r.w, r.y + r.h]
+  ]) {
+    const dx = px2 - cx;
+    const dy = py2 - cy;
+    const lx = (cos * dx + sin * dy + q.w / 2) * sx;
+    const ly = (-sin * dx + cos * dy + q.h / 2) * sy;
+    minX = Math.min(minX, lx);
+    minY = Math.min(minY, ly);
+    maxX = Math.max(maxX, lx);
+    maxY = Math.max(maxY, ly);
+  }
+  const x = Math.max(0, Math.floor(minX) - 1);
+  const y = Math.max(0, Math.floor(minY) - 1);
+  return {
+    x,
+    y,
+    w: Math.min(srcW, Math.ceil(maxX) + 1) - x,
+    h: Math.min(srcH, Math.ceil(maxY) + 1) - y
+  };
 }
-function makePlaced(deps, region, used, fxRef) {
+function makePlaced(deps, region, fxRef) {
   return (cacheKey, contentStamp, bitmap, transform2, linear = false) => {
     let fxTag = "";
     const fx2 = fxRef.current;
@@ -153464,97 +154591,78 @@ function makePlaced(deps, region, used, fxRef) {
         fxTag = `|${fxStamp(fx2)}`;
       }
     }
-    const stamp = `${contentStamp}|${transformStamp(transform2)}|${region.w}x${region.h}${fxTag}`;
-    const cache2 = deps.placedCache;
-    if (!cache2) {
-      const canvas2 = placeBitmap(bitmap, transform2, region.w, region.h);
-      return canvas2 ? { source: canvas2, rect: region, linear, key: stamp } : null;
-    }
-    used.add(cacheKey);
-    const entry = cache2.get(cacheKey);
-    if (entry && entry.stamp === stamp) {
-      return { source: entry.canvas, rect: region, linear, key: stamp };
-    }
-    const canvas = placeBitmap(bitmap, transform2, region.w, region.h, entry == null ? void 0 : entry.canvas);
-    if (!canvas) return null;
-    cache2.set(cacheKey, { stamp, canvas });
-    return { source: canvas, rect: region, linear, key: stamp };
+    const stamp = `tex:${contentStamp}|${bitmap.width}x${bitmap.height}${fxTag}`;
+    return {
+      source: bitmap,
+      rect: region,
+      linear,
+      quad: transform2,
+      key: stamp,
+      stamp
+    };
   };
 }
-function renderMaskTexture(node, region, deps, placed, used) {
+function renderMaskTexture(node, region, deps, placed) {
   var _a2, _b2;
   const m = node.mask;
   if (!m || !m.enabled) return void 0;
   const tf = node.transform.w > 0 && node.transform.h > 0 ? node.transform : { x: 0, y: 0, w: region.w, h: region.h, rotation: 0 };
   const override = (_a2 = deps.overrides) == null ? void 0 : _a2.get(`mask:${node.id}`);
   if (override) {
-    return renderPreviewTexture(`preview:mask:${node.id}`, override, tf, region, deps, used, true) ?? void 0;
+    return renderPreviewTexture(`preview:mask:${node.id}`, override, tf, region, true) ?? void 0;
   }
   const bitmap = (_b2 = deps.content.get(m.contentId)) == null ? void 0 : _b2.canvas;
   if (!bitmap) return void 0;
   return placed(`mask:${node.id}`, m.contentId, bitmap, tf, true) ?? void 0;
 }
-function renderLeafTexture(node, ctx, deps, used) {
+function tryTileInput(node, region, deps, placed) {
+  var _a2, _b2, _c, _d, _e2;
+  if (node.kind !== "raster" || ((_a2 = node.fx) == null ? void 0 : _a2.length)) return null;
+  if ((_b2 = deps.overrides) == null ? void 0 : _b2.get(`content:${node.id}`)) return null;
+  const raster = node;
+  if ((_c = deps.content.get(raster.contentId)) == null ? void 0 : _c.isBlank) return null;
+  const grid = (_e2 = (_d = deps.content).tileGridOf) == null ? void 0 : _e2.call(_d, raster.contentId);
+  if (!grid) return null;
+  const t2 = node.transform;
+  const scale = Math.min(t2.w / Math.max(1, grid.width), t2.h / Math.max(1, grid.height));
+  if (scale < 0.5) return null;
+  const mode = resolveMode(node.mode);
+  return {
+    tiles: { grid, quad: t2, linear: false, drawZero: mode.composite !== "union" },
+    mode,
+    opacity: node.opacity,
+    mask: renderMaskTexture(node, region, deps, placed)
+  };
+}
+function renderLeafTexture(node, ctx, deps) {
   var _a2;
   const override = (_a2 = deps.overrides) == null ? void 0 : _a2.get(`content:${node.id}`);
   if (override) {
-    const texture = renderPreviewTexture(
-      `preview:content:${node.id}`,
-      override,
-      node.transform,
-      ctx.region,
-      deps,
-      used,
-      false
-    );
+    const texture = renderPreviewTexture(`preview:content:${node.id}`, override, node.transform, ctx.region, false);
     if (texture) return texture;
   }
   return getNodeKind(node.kind).renderNode(node, ctx);
 }
-function renderPreviewTexture(cacheKey, override, transform2, region, deps, used, linear) {
-  var _a2;
-  const cache2 = deps.placedCache;
-  if (!cache2) {
-    const canvas2 = placeBitmap(override.canvas, transform2, region.w, region.h, void 0, null, true);
-    return canvas2 ? { source: canvas2, rect: region, linear } : null;
-  }
-  used.add(cacheKey);
-  const meta = `${transformStamp(transform2)}|${region.w}x${region.h}`;
-  const stamp = `v${override.version}|${meta}`;
-  const entry = cache2.get(cacheKey);
-  if (entry && entry.stamp === stamp) {
-    return { source: entry.canvas, rect: region, linear, key: cacheKey, version: override.version };
-  }
-  const prevVersion = entry ? Number(((_a2 = /^v(\d+)\|/.exec(entry.stamp)) == null ? void 0 : _a2[1]) ?? NaN) : NaN;
-  const partial2 = entry && entry.stamp.endsWith(`|${meta}`) && prevVersion === override.version - 1 ? override.rects ?? null : null;
-  let canvas;
-  if (partial2 && entry) {
-    canvas = entry.canvas;
-    for (const r of partial2) {
-      canvas = placeBitmap(override.canvas, transform2, region.w, region.h, canvas ?? void 0, r, true);
-      if (!canvas) break;
-    }
-  } else {
-    canvas = placeBitmap(override.canvas, transform2, region.w, region.h, entry == null ? void 0 : entry.canvas, null, true);
-  }
-  if (!canvas) return null;
-  cache2.set(cacheKey, { stamp, canvas });
+function renderPreviewTexture(cacheKey, override, transform2, region, linear) {
+  const src = override.canvas;
+  const dirty = override.rects ? override.rects.map((r) => docRectToSourceRect(r, transform2, src.width, src.height)) : void 0;
   return {
-    source: canvas,
+    source: src,
     rect: region,
     linear,
+    quad: transform2,
     key: cacheKey,
     version: override.version,
-    dirtyRects: partial2 ?? void 0
+    dirtyRects: dirty
   };
 }
-function buildInputs(group, doc2, deps, used) {
+function buildInputs(group, doc2, deps) {
   var _a2;
   const region = { x: 0, y: 0, w: doc2.width, h: doc2.height };
   const inputs = [];
   const cleanups = [];
   const fxRef = { current: null };
-  const placed = makePlaced(deps, region, used, fxRef);
+  const placed = makePlaced(deps, region, fxRef);
   const ctx = {
     compositor: deps.compositor,
     content: deps.content,
@@ -153575,13 +154683,13 @@ function buildInputs(group, doc2, deps, used) {
           lut: adj.op === "curves" ? curvesLutData(adj.curves) : void 0
         },
         opacity: node.opacity,
-        mask: renderMaskTexture(docSpace, region, deps, placed, used)
+        mask: renderMaskTexture(docSpace, region, deps, placed)
       });
       continue;
     }
     if (node.kind === "group") {
       const g = node;
-      const sub = buildInputs(g, doc2, deps, used);
+      const sub = buildInputs(g, doc2, deps);
       if (g.passThrough) {
         inputs.push(...sub.inputs);
         cleanups.push(sub.cleanup);
@@ -153595,19 +154703,24 @@ function buildInputs(group, doc2, deps, used) {
         texture: { source: deps.compositor.targetTexture(handle), rect: region, linear: true },
         opacity: node.opacity,
         mode: resolveMode(node.mode),
-        mask: renderMaskTexture(node, region, deps, placed, used)
+        mask: renderMaskTexture(node, region, deps, placed)
       });
       continue;
     }
+    const tileInput = tryTileInput(node, region, deps, placed);
+    if (tileInput) {
+      inputs.push(tileInput);
+      continue;
+    }
     fxRef.current = ((_a2 = node.fx) == null ? void 0 : _a2.length) ? node.fx : null;
-    const texture = renderLeafTexture(node, ctx, deps, used);
+    const texture = renderLeafTexture(node, ctx, deps);
     fxRef.current = null;
     if (!texture) continue;
     inputs.push({
       texture,
       opacity: node.opacity,
       mode: resolveMode(node.mode),
-      mask: renderMaskTexture(node, region, deps, placed, used)
+      mask: renderMaskTexture(node, region, deps, placed)
     });
   }
   return { inputs, cleanup: () => cleanups.forEach((fn3) => fn3()) };
@@ -153615,14 +154728,188 @@ function buildInputs(group, doc2, deps, used) {
 function renderDocument(doc2, deps, extra, region) {
   var _a2, _b2;
   (_b2 = (_a2 = deps.compositor).beginFrame) == null ? void 0 : _b2.call(_a2);
-  const used = /* @__PURE__ */ new Set();
-  const { inputs, cleanup } = buildInputs(doc2.root, doc2, deps, used);
+  const { inputs, cleanup } = buildInputs(doc2.root, doc2, deps);
   deps.compositor.composite((extra == null ? void 0 : extra.length) ? [...inputs, ...extra] : inputs, null, region ?? void 0);
   cleanup();
-  if (deps.placedCache) {
-    for (const key of [...deps.placedCache.keys()]) {
-      if (!used.has(key)) deps.placedCache.delete(key);
+}
+function createMergeCache() {
+  return { below: null, above: null, belowStamp: null, aboveStamp: null };
+}
+function invalidateMergeCache(cache2, compositor) {
+  if (compositor) {
+    if (cache2.below) compositor.freeTarget(cache2.below);
+    if (cache2.above) compositor.freeTarget(cache2.above);
+  }
+  cache2.below = cache2.above = null;
+  cache2.belowStamp = cache2.aboveStamp = null;
+}
+const MERGE_MIN_SIBLINGS = 6;
+function subtreeContains(node, id) {
+  if (node.id === id) return true;
+  if (node.kind !== "group") return false;
+  return node.children.some((c2) => subtreeContains(c2, id));
+}
+function collectIds(node, out) {
+  out.push(node.id);
+  if (node.kind === "group") for (const c2 of node.children) collectIds(c2, out);
+}
+const stampMemo = /* @__PURE__ */ new WeakMap();
+function nodeStamp(n) {
+  var _a2, _b2;
+  const childStamps = n.kind === "group" ? n.children.map(nodeStamp) : null;
+  const t2 = n.transform;
+  const a2 = n;
+  const deps = [
+    n.visible,
+    n.opacity,
+    n.mode,
+    t2.x,
+    t2.y,
+    t2.w,
+    t2.h,
+    t2.rotation,
+    (_a2 = n.mask) == null ? void 0 : _a2.contentId,
+    (_b2 = n.mask) == null ? void 0 : _b2.enabled,
+    n.fx,
+    a2.contentId,
+    a2.lockAlpha,
+    a2.text,
+    a2.fontSize,
+    a2.color,
+    a2.letterSpacing,
+    a2.lineHeight,
+    a2.align,
+    a2.fontRef,
+    a2.path,
+    a2.fill,
+    a2.stroke,
+    a2.op,
+    a2.params,
+    a2.curves,
+    a2.passThrough
+  ];
+  if (childStamps) deps.push(childStamps.length, childStamps.join(""));
+  const hit = stampMemo.get(n);
+  if (hit && hit.deps.length === deps.length && hit.deps.every((v, i) => v === deps[i])) return hit.stamp;
+  const stamp = JSON.stringify(getNodeKind(n.kind).serialize(n));
+  stampMemo.set(n, { deps, stamp });
+  return stamp;
+}
+function sliceStamp(nodes, deps, doc2) {
+  var _a2;
+  const parts = [`${doc2.width}x${doc2.height}`];
+  const ids = [];
+  for (const n of nodes) {
+    parts.push(nodeStamp(n));
+    collectIds(n, ids);
+  }
+  if ((_a2 = deps.overrides) == null ? void 0 : _a2.size) {
+    for (const id of ids) {
+      const c2 = deps.overrides.get(`content:${id}`);
+      if (c2) parts.push(`ov:${id}:${c2.version}`);
+      const m = deps.overrides.get(`mask:${id}`);
+      if (m) parts.push(`ovm:${id}:${m.version}`);
     }
+  }
+  return parts.join("|");
+}
+function mergeableAbove(nodes) {
+  for (const n of nodes) {
+    if (!n.visible || n.opacity <= 0) continue;
+    if (n.kind === "adjustment") return false;
+    const m = resolveMode(n.mode);
+    if (m.blend !== "normal" || m.composite !== "union" || m.compositeSpace !== "linear") return false;
+    if (n.kind === "group" && n.passThrough && !mergeableAbove(n.children)) return false;
+  }
+  return true;
+}
+function compositeSlice(nodes, doc2, deps, target) {
+  const synthetic = { ...doc2.root, children: nodes };
+  const { inputs, cleanup } = buildInputs(synthetic, doc2, deps);
+  deps.compositor.composite(inputs, target);
+  cleanup();
+}
+function sliceInput(deps, handle, doc2) {
+  return {
+    texture: {
+      source: deps.compositor.targetTexture(handle),
+      rect: { x: 0, y: 0, w: doc2.width, h: doc2.height },
+      linear: true
+    },
+    opacity: 1,
+    mode: resolveMode(defaultMode("normal"))
+  };
+}
+function renderDocumentCached(doc2, deps, activeId, cache2, extra, region) {
+  var _a2, _b2;
+  const children = doc2.root.children;
+  const pivotIndex = activeId ? children.findIndex((c2) => subtreeContains(c2, activeId)) : -1;
+  if (pivotIndex < 0 || children.length < MERGE_MIN_SIBLINGS) {
+    invalidateMergeCache(cache2, deps.compositor);
+    renderDocument(doc2, deps, extra, region);
+    return;
+  }
+  const below = children.slice(0, pivotIndex);
+  const pivot = children[pivotIndex];
+  const above = children.slice(pivotIndex + 1);
+  const aboveOk = mergeableAbove(above);
+  try {
+    (_b2 = (_a2 = deps.compositor).beginFrame) == null ? void 0 : _b2.call(_a2);
+    const finalInputs = [];
+    if (below.length) {
+      const stamp = sliceStamp(below, deps, doc2);
+      const sizeOk = cache2.below != null && cache2.below.width === doc2.width && cache2.below.height === doc2.height;
+      if (!sizeOk) {
+        if (cache2.below) deps.compositor.freeTarget(cache2.below);
+        cache2.below = deps.compositor.allocTarget(doc2.width, doc2.height);
+        cache2.belowStamp = null;
+      }
+      if (cache2.belowStamp !== stamp) {
+        compositeSlice(below, doc2, deps, cache2.below);
+        cache2.belowStamp = stamp;
+      }
+      finalInputs.push(sliceInput(deps, cache2.below, doc2));
+    } else if (cache2.below) {
+      deps.compositor.freeTarget(cache2.below);
+      cache2.below = null;
+      cache2.belowStamp = null;
+    }
+    const pivotBuilt = buildInputs({ ...doc2.root, children: [pivot] }, doc2, deps);
+    finalInputs.push(...pivotBuilt.inputs);
+    let aboveCleanup = null;
+    if (above.length && aboveOk) {
+      const stamp = sliceStamp(above, deps, doc2);
+      const sizeOk = cache2.above != null && cache2.above.width === doc2.width && cache2.above.height === doc2.height;
+      if (!sizeOk) {
+        if (cache2.above) deps.compositor.freeTarget(cache2.above);
+        cache2.above = deps.compositor.allocTarget(doc2.width, doc2.height);
+        cache2.aboveStamp = null;
+      }
+      if (cache2.aboveStamp !== stamp) {
+        compositeSlice(above, doc2, deps, cache2.above);
+        cache2.aboveStamp = stamp;
+      }
+      finalInputs.push(sliceInput(deps, cache2.above, doc2));
+    } else {
+      if (cache2.above) {
+        deps.compositor.freeTarget(cache2.above);
+        cache2.above = null;
+        cache2.aboveStamp = null;
+      }
+      if (above.length) {
+        const built = buildInputs({ ...doc2.root, children: above }, doc2, deps);
+        finalInputs.push(...built.inputs);
+        aboveCleanup = built.cleanup;
+      }
+    }
+    if (extra == null ? void 0 : extra.length) finalInputs.push(...extra);
+    deps.compositor.composite(finalInputs, null, region ?? void 0);
+    pivotBuilt.cleanup();
+    aboveCleanup == null ? void 0 : aboveCleanup();
+  } catch (e) {
+    console.warn("[pentrado] merge-cache render failed, falling back to full render", e);
+    invalidateMergeCache(cache2, deps.compositor);
+    renderDocument(doc2, deps, extra, region);
   }
 }
 function extractPatch(src, srcWidth, rect) {
@@ -153676,6 +154963,21 @@ class SetContentRegionCommand {
     this.beforeUrl = beforeUrl;
   }
   apply(dir) {
+    var _a2, _b2;
+    const url = dir === "undo" ? this.beforeUrl : void 0;
+    const edits = this.patches.map((p2) => ({
+      x: p2.rect.x,
+      y: p2.rect.y,
+      w: p2.rect.w,
+      h: p2.rect.h,
+      pixels: dir === "undo" ? p2.before : p2.after
+    }));
+    const derived = (_b2 = (_a2 = this.store).derive) == null ? void 0 : _b2.call(_a2, this.slot.contentId, edits, url ? { uploadedUrl: url } : void 0);
+    if (derived) {
+      this.slot.contentId = derived;
+      this.slot.url = url;
+      return;
+    }
     const entry = this.store.get(this.slot.contentId);
     if (!entry) return;
     const next = document.createElement("canvas");
@@ -153689,7 +154991,6 @@ class SetContentRegionCommand {
       img.data.set(dir === "undo" ? p2.before : p2.after);
       g.putImageData(img, p2.rect.x, p2.rect.y);
     }
-    const url = dir === "undo" ? this.beforeUrl : void 0;
     this.slot.contentId = this.store.register(next, url ? { uploadedUrl: url } : void 0);
     this.slot.url = url;
   }
@@ -157011,10 +158312,10 @@ function cloneContent(node, entry) {
   g.drawImage(entry.canvas, 0, 0, c2.width, c2.height);
   return { canvas: c2, g };
 }
-function commitContent(deps, node, label, canvas) {
+function commitContent(deps, node, label, canvas, pixels) {
   const beforeId = node.contentId;
   const beforeUrl = node.url;
-  const afterId = deps.content.register(canvas);
+  const afterId = deps.content.register(canvas, pixels ? { pixels } : void 0);
   node.contentId = afterId;
   node.url = void 0;
   deps.push(new SetContentCommand(label, node, beforeId, afterId, deps.content, beforeUrl));
@@ -157037,7 +158338,7 @@ function clearSelectedPixels(deps, node, selCanvas) {
   }
   if (!touched) return false;
   copy2.g.putImageData(img, 0, 0);
-  commitContent(deps, node, "Clear Selection", copy2.canvas);
+  commitContent(deps, node, "Clear Selection", copy2.canvas, img.data);
   return true;
 }
 function fillSelectedPixels(deps, node, selCanvas, color) {
@@ -157066,7 +158367,7 @@ function fillSelectedPixels(deps, node, selCanvas, color) {
   }
   if (!touched) return false;
   copy2.g.putImageData(img, 0, 0);
-  commitContent(deps, node, "Fill Selection", copy2.canvas);
+  commitContent(deps, node, "Fill Selection", copy2.canvas, img.data);
   return true;
 }
 function strokeSelectedPixels(deps, node, selCanvas, color, width, outlines) {
@@ -157153,7 +158454,7 @@ function emptyDocument(width, height) {
 }
 function createEditor(opts) {
   const compositor = opts.compositor;
-  const content = opts.content ?? new DefaultContentStore();
+  const content = opts.content ?? new HybridContentStore();
   const history2 = new History();
   const notify = opts.onChange ?? (() => {
   });
@@ -157170,7 +158471,6 @@ function createEditor(opts) {
   let wand = { ...DEFAULT_WAND_OPTIONS };
   let gradient = { ...DEFAULT_GRADIENT_OPTIONS };
   const overrides = /* @__PURE__ */ new Map();
-  const placedCache = /* @__PURE__ */ new Map();
   let previewVersion = 0;
   let pendingDamage = null;
   let presentFull = true;
@@ -157213,18 +158513,31 @@ function createEditor(opts) {
     if (!floating) return [];
     const entry = content.get(floating.contentId);
     if (!entry) return [];
-    const canvas = placeBitmap(entry.canvas, floating.transform, doc2.width, doc2.height);
-    if (!canvas) return [];
     return [
       {
-        texture: { source: canvas, rect: { x: 0, y: 0, w: doc2.width, h: doc2.height }, linear: false },
+        texture: {
+          source: entry.canvas,
+          rect: { x: 0, y: 0, w: doc2.width, h: doc2.height },
+          linear: false,
+          quad: { ...floating.transform },
+          key: `tex:${floating.contentId}|${entry.canvas.width}x${entry.canvas.height}`,
+          stamp: `tex:${floating.contentId}|${entry.canvas.width}x${entry.canvas.height}`
+        },
         opacity: 1,
         mode: resolveMode(defaultMode("normal"))
       }
     ];
   }
+  const mergeCache = createMergeCache();
   function render2(region) {
-    renderDocument(doc2, { content, compositor, devicePixelRatio: 1, overrides, placedCache }, floatingInputs(), region);
+    renderDocumentCached(
+      doc2,
+      { content, compositor, devicePixelRatio: 1, overrides },
+      activeNodeIdOf(),
+      mergeCache,
+      floatingInputs(),
+      region
+    );
   }
   function visibleComposite() {
     if (!compositor.getCanvas()) return null;
@@ -157316,12 +158629,21 @@ function createEditor(opts) {
     setSelected2(id ? [id] : []);
   }
   function collectGarbage() {
-    const live = /* @__PURE__ */ new Set();
-    for (const id of getNodeKind(doc2.root.kind).contentIds(doc2.root)) live.add(id);
-    for (const ch of doc2.channels) live.add(ch.contentId);
+    var _a2, _b2;
+    const pinned = /* @__PURE__ */ new Set();
+    for (const id of getNodeKind(doc2.root.kind).contentIds(doc2.root)) pinned.add(id);
+    for (const ch of doc2.channels) pinned.add(ch.contentId);
+    if (floating) pinned.add(floating.contentId);
+    const live = new Set(pinned);
     for (const id of history2.contentRefs()) live.add(id);
-    if (floating) live.add(floating.contentId);
     content.collectGarbage(live);
+    const keepMaterial = /* @__PURE__ */ new Set();
+    const activeNode = activeNodeIdOf() ? (_a2 = findNode(doc2.root, activeNodeIdOf())) == null ? void 0 : _a2.node : null;
+    if (activeNode) {
+      if ("contentId" in activeNode) keepMaterial.add(activeNode.contentId);
+      if (activeNode.mask) keepMaterial.add(activeNode.mask.contentId);
+    }
+    (_b2 = content.trim) == null ? void 0 : _b2.call(content, pinned, keepMaterial);
   }
   history2.onChange(collectGarbage);
   const ctx = {
@@ -157464,7 +158786,7 @@ function createEditor(opts) {
       const channel = {
         id: generateId("sel"),
         role: "selection",
-        contentId: content.register(canvas),
+        contentId: content.register(canvas, { transient: true }),
         enabled: true,
         bounds
       };
@@ -157717,7 +159039,7 @@ function createEditor(opts) {
         if (ch.url && !content.has(ch.contentId)) {
           try {
             const canvas = await loadUrl(ch.url);
-            content.register(canvas, { id: ch.contentId, uploadedUrl: ch.url });
+            content.register(canvas, { id: ch.contentId, uploadedUrl: ch.url, transient: true });
           } catch {
           }
         }
@@ -158129,7 +159451,10 @@ function createEditor(opts) {
       return dmg;
     },
     buildOverlay,
-    invalidate: refresh,
+    invalidate() {
+      invalidateMergeCache(mergeCache, compositor);
+      refresh();
+    },
     undo() {
       history2.undo();
       refresh();
@@ -158375,25 +159700,30 @@ function createEditor(opts) {
 }
 function pendingUploads(doc2, content) {
   const jobs = [];
+  const push = (contentId, channel, commitUrl) => {
+    if (!content.has(contentId)) return;
+    jobs.push({
+      contentId,
+      channel,
+      get canvas() {
+        var _a2;
+        return ((_a2 = content.exportCanvas) == null ? void 0 : _a2.call(content, contentId)) ?? content.get(contentId).canvas;
+      },
+      commitUrl
+    });
+  };
   walk(doc2.root, (node) => {
     if (node.kind === "raster") {
       const r = node;
-      if (r.contentId && !r.url) {
-        const e = content.get(r.contentId);
-        if (e) jobs.push({ contentId: r.contentId, channel: "content", canvas: e.canvas, commitUrl: (u) => r.url = u });
-      }
+      if (r.contentId && !r.url) push(r.contentId, "content", (u) => r.url = u);
     }
     const m = node.mask;
     if (m && m.contentId && !m.url && m.enabled !== void 0) {
-      const e = content.get(m.contentId);
-      if (e) jobs.push({ contentId: m.contentId, channel: "mask", canvas: e.canvas, commitUrl: (u) => m.url = u });
+      push(m.contentId, "mask", (u) => m.url = u);
     }
   });
   for (const ch of doc2.channels) {
-    if (ch.contentId && !ch.url) {
-      const e = content.get(ch.contentId);
-      if (e) jobs.push({ contentId: ch.contentId, channel: "mask", canvas: e.canvas, commitUrl: (u) => ch.url = u });
-    }
+    if (ch.contentId && !ch.url) push(ch.contentId, "mask", (u) => ch.url = u);
   }
   return jobs;
 }
@@ -158764,6 +160094,7 @@ class BasePaintCore {
     __publicField(this, "params");
     __publicField(this, "cov");
     __publicField(this, "base", new Uint8ClampedArray(0));
+    __publicField(this, "baseRows", new Uint8Array(0));
     __publicField(this, "previewCanvas", null);
     __publicField(this, "previewData", null);
     __publicField(this, "w", 0);
@@ -158787,8 +160118,8 @@ class BasePaintCore {
     this.painted = false;
     this.beforeUrl = target.slot.url;
     this.scale = target.scale > 0 ? target.scale : 1;
-    const ctx = target.bitmap.getContext("2d");
-    this.base = ctx ? ctx.getImageData(0, 0, this.w, this.h).data.slice() : new Uint8ClampedArray(this.w * this.h * 4);
+    this.base = new Uint8ClampedArray(this.w * this.h * 4);
+    this.baseRows = new Uint8Array(this.h);
     this.previewCanvas = document.createElement("canvas");
     this.previewCanvas.width = this.w;
     this.previewCanvas.height = this.h;
@@ -158798,6 +160129,27 @@ class BasePaintCore {
       this.stamp(p2);
       return { transform: transform2, queue: [p2], drawnTo: 0, carry: 0 };
     });
+  }
+  ensureBaseRows(y0, y1) {
+    const lo = Math.max(0, y0);
+    const hi = Math.min(this.h - 1, y1);
+    let ctx;
+    let y = lo;
+    while (y <= hi) {
+      if (this.baseRows[y]) {
+        y++;
+        continue;
+      }
+      let end2 = y;
+      while (end2 <= hi && !this.baseRows[end2]) end2++;
+      if (ctx === void 0) ctx = this.target.bitmap.getContext("2d");
+      if (ctx) {
+        const img = ctx.getImageData(0, y, this.w, end2 - y);
+        this.base.set(img.data, y * this.w * 4);
+      }
+      this.baseRows.fill(1, y, end2);
+      y = end2;
+    }
   }
   motion(sample2) {
     for (const sub of this.subs) {
@@ -158861,12 +160213,11 @@ class BasePaintCore {
     const rects = this.cov.takeRecentRects();
     this.lastDelta = rects;
     if (!this.previewData) {
-      const img = ctx.createImageData(this.w, this.h);
-      img.data.set(this.base);
-      this.previewData = img;
-      ctx.putImageData(img, 0, 0);
+      ctx.drawImage(this.target.bitmap, 0, 0);
+      this.previewData = ctx.createImageData(this.w, this.h);
     }
     for (const rect of rects) {
+      this.ensureBaseRows(rect.y0, rect.y1);
       compositeStrokeRect(
         this.previewData.data,
         this.base,
@@ -158907,37 +160258,33 @@ class BasePaintCore {
     }
   }
   finish() {
+    var _a2;
     this.flushTail();
     const dirtyRects = this.cov.dirtyRects();
     if (!this.painted || !unionOfRects(dirtyRects)) return null;
-    const bytes = this.base.slice();
-    for (const r of dirtyRects) {
+    let scratch = this.previewData;
+    if (!scratch) {
+      const ctx = (_a2 = this.previewCanvas) == null ? void 0 : _a2.getContext("2d");
+      scratch = ctx ? ctx.createImageData(this.w, this.h) : null;
+      if (!scratch) scratch = { data: new Uint8ClampedArray(this.w * this.h * 4) };
+    }
+    const patches = dirtyRects.map((d) => {
+      this.ensureBaseRows(d.y0, d.y1);
       compositeStrokeRect(
-        bytes,
+        scratch.data,
         this.base,
         (x, y) => this.cov.valueAt(x, y),
         this.strokeParams(),
         this.w,
-        r,
+        d,
         this.target.selection
       );
-    }
-    const final = document.createElement("canvas");
-    final.width = this.w;
-    final.height = this.h;
-    const ctx = final.getContext("2d");
-    if (!ctx) return null;
-    const img = ctx.createImageData(this.w, this.h);
-    img.data.set(bytes);
-    ctx.putImageData(img, 0, 0);
-    const afterId = this.target.content.register(final);
-    this.target.slot.contentId = afterId;
-    this.target.slot.url = void 0;
-    const patches = dirtyRects.map((d) => {
       const rect = { x: d.x0, y: d.y0, w: d.x1 - d.x0 + 1, h: d.y1 - d.y0 + 1 };
-      return { rect, before: extractPatch(this.base, this.w, rect), after: extractPatch(bytes, this.w, rect) };
+      return { rect, before: extractPatch(this.base, this.w, rect), after: extractPatch(scratch.data, this.w, rect) };
     });
-    return new SetContentRegionCommand(this.label, this.target.slot, patches, this.target.content, this.beforeUrl);
+    const cmd = new SetContentRegionCommand(this.label, this.target.slot, patches, this.target.content, this.beforeUrl);
+    cmd.apply("redo");
+    return cmd;
   }
   cancel() {
     this.painted = false;
@@ -159576,16 +160923,21 @@ function defaultAlphaSampler(canvas, x, y) {
   }
 }
 function rasterAlphaAt(node, pt2, content, sample2) {
-  var _a2;
+  var _a2, _b2, _c;
   const t2 = node.transform;
   if (t2.w <= 0 || t2.h <= 0) return 0;
   const local = toLocalFrame(t2, pt2);
   if (Math.abs(local.x) > t2.w / 2 || Math.abs(local.y) > t2.h / 2) return 0;
-  const canvas = (_a2 = content.get(node.contentId)) == null ? void 0 : _a2.canvas;
-  if (!canvas || canvas.width <= 0 || canvas.height <= 0) return 1;
-  const cx = (local.x + t2.w / 2) / t2.w * canvas.width;
-  const cy = (local.y + t2.h / 2) / t2.h * canvas.height;
-  return sample2(canvas, cx, cy);
+  const entry = content.get(node.contentId);
+  if (!entry) return 1;
+  const w = entry.width ?? ((_a2 = entry.canvas) == null ? void 0 : _a2.width) ?? 0;
+  const h2 = entry.height ?? ((_b2 = entry.canvas) == null ? void 0 : _b2.height) ?? 0;
+  if (w <= 0 || h2 <= 0) return 1;
+  const cx = (local.x + t2.w / 2) / t2.w * w;
+  const cy = (local.y + t2.h / 2) / t2.h * h2;
+  const tiled = (_c = content.alphaAt) == null ? void 0 : _c.call(content, node.contentId, Math.floor(cx), Math.floor(cy));
+  if (tiled != null) return tiled;
+  return sample2(entry.canvas, cx, cy);
 }
 function boxAlphaAt(node, pt2) {
   const t2 = node.transform;
@@ -161255,6 +162607,10 @@ function useLayerEditorStage(opts) {
   });
   const editor = createEditor({ compositor, onChange });
   onContextRestored = () => editor.invalidate();
+  const swapClient = createSwapClient();
+  if (swapClient && editor.content instanceof HybridContentStore) {
+    editor.content.configureSwap({ swap: swapClient, onRestored: () => editor.invalidate() });
+  }
   let lastPersisted = null;
   let mainCanvas = null;
   let overlayCanvas = null;
@@ -161341,14 +162697,22 @@ function useLayerEditorStage(opts) {
     const clean = !dmg.full && !dmg.rect;
     if (clean && !resized && !lastPresentWasMask) return;
     if (dmg.rect && !dmg.full && !resized && !lastPresentWasMask) {
-      const img = compositor.readback(dmg.rect);
-      ctx.putImageData(img, Math.max(0, Math.floor(dmg.rect.x)), Math.max(0, Math.floor(dmg.rect.y)));
+      const gc2 = compositor.presentCanvas(dmg.rect);
+      if (!gc2) return;
+      const x = Math.max(0, Math.floor(dmg.rect.x));
+      const y = Math.max(0, Math.floor(dmg.rect.y));
+      const w = Math.min(width, Math.ceil(dmg.rect.x + dmg.rect.w)) - x;
+      const h2 = Math.min(height, Math.ceil(dmg.rect.y + dmg.rect.h)) - y;
+      if (w <= 0 || h2 <= 0) return;
+      ctx.clearRect(x, y, w, h2);
+      ctx.drawImage(gc2, x, y, w, h2, x, y, w, h2);
       return;
     }
     lastPresentWasMask = false;
     ctx.clearRect(0, 0, width, height);
     editor.render();
-    ctx.putImageData(compositor.readback(), 0, 0);
+    const gc = compositor.presentCanvas();
+    if (gc) ctx.drawImage(gc, 0, 0);
   }
   function drawOverlayCanvas() {
     if (!overlayCanvas || !viewportEl || !containerEl) return;
@@ -161520,6 +162884,7 @@ function useLayerEditorStage(opts) {
   let captureTimer = null;
   let captureSeq = 0;
   function scheduleCapture() {
+    if (!(opts == null ? void 0 : opts.onCaptured)) return;
     if (captureTimer != null) window.clearTimeout(captureTimer);
     captureTimer = window.setTimeout(runCapture, CAPTURE_DEBOUNCE_MS);
   }
@@ -161738,17 +163103,57 @@ function useLayerEditorStage(opts) {
     if (isPsdMedia(media)) return importPsdFromUrl(media.url, media.name || "PSD");
     return addImageFromUrl(media.url, media.name || "Image");
   }
+  const PERSIST_DEBOUNCE_MS = 250;
+  let persistTimer = null;
+  function persistNow() {
+    if (lastPersisted === null) return;
+    if (capturing.value) {
+      schedulePersist();
+      return;
+    }
+    const json = JSON.stringify(editor.serialize());
+    if (json === lastPersisted) return;
+    persistRaw(json);
+    scheduleUpload();
+    scheduleCapture();
+  }
+  function schedulePersist() {
+    if (persistTimer != null) window.clearTimeout(persistTimer);
+    persistTimer = window.setTimeout(() => {
+      persistTimer = null;
+      persistNow();
+    }, PERSIST_DEBOUNCE_MS);
+  }
+  function flushPersist() {
+    if (persistTimer != null) {
+      window.clearTimeout(persistTimer);
+      persistTimer = null;
+    }
+    persistNow();
+  }
+  let interactionDepth = 0;
+  let persistAfterInteraction = false;
+  function beginInteraction() {
+    interactionDepth += 1;
+  }
+  function endInteraction() {
+    interactionDepth = Math.max(0, interactionDepth - 1);
+    if (interactionDepth === 0 && persistAfterInteraction) {
+      persistAfterInteraction = false;
+      schedulePersist();
+    }
+  }
   function onChange() {
     version2.value += 1;
     activeId.value = editor.activeNodeId();
     requestRender();
     if (capturing.value) return;
     if (lastPersisted === null) return;
-    const json = JSON.stringify(editor.serialize());
-    if (json === lastPersisted) return;
-    persistRaw(json);
-    scheduleUpload();
-    scheduleCapture();
+    if (interactionDepth > 0) {
+      persistAfterInteraction = true;
+      return;
+    }
+    schedulePersist();
   }
   function editProp(label, dirty, get2, set, value, mergeKey) {
     const before = get2();
@@ -161974,9 +163379,14 @@ function useLayerEditorStage(opts) {
   function addEmptyLayer() {
     var _a2;
     const d = editor.document();
-    const c2 = newCanvas(d.width, d.height);
-    (_a2 = c2.getContext("2d")) == null ? void 0 : _a2.clearRect(0, 0, d.width, d.height);
-    const cid = content.register(c2);
+    let cid;
+    if (content.registerUniform) {
+      cid = content.registerUniform(d.width, d.height, [0, 0, 0, 0]);
+    } else {
+      const c2 = newCanvas(d.width, d.height);
+      (_a2 = c2.getContext("2d")) == null ? void 0 : _a2.clearRect(0, 0, d.width, d.height);
+      cid = content.register(c2, { uniform: [0, 0, 0, 0] });
+    }
     const count2 = d.root.children.length + 1;
     editor.addNode(rasterKind.create({
       name: `Layer ${count2}`,
@@ -162595,6 +164005,9 @@ function useLayerEditorStage(opts) {
   void hydrate();
   const unsubscribeFontReady = fontStore.onFontReady(() => editor.invalidate());
   onBeforeUnmount(() => {
+    flushPersist();
+    if (persistTimer != null) window.clearTimeout(persistTimer);
+    swapClient == null ? void 0 : swapClient.dispose();
     unsubscribeFontReady();
     if (rafId != null) cancelAnimationFrame(rafId);
     if (uploadTimer != null) window.clearTimeout(uploadTimer);
@@ -162736,7 +164149,10 @@ function useLayerEditorStage(opts) {
     captureBatch,
     flushCapture,
     cancelPendingCapture,
+    flushPersist,
     reload: loadFromStorage,
+    beginInteraction,
+    endInteraction,
     exportPsd: exportPsd2,
     exportPsdToLibrary,
     canExportToLibrary,
@@ -162796,7 +164212,11 @@ function useLayerEditorStage(opts) {
     updateFillLayer,
     content,
     fontStore,
-    host
+    host,
+    glStats: () => {
+      var _a2;
+      return ((_a2 = compositor.debugStats) == null ? void 0 : _a2.call(compositor)) ?? null;
+    }
   };
 }
 function hexToRgb$2(hex) {
@@ -162858,7 +164278,7 @@ function useLayerEditorCanvas(editor, viewportEl) {
     return coalesced.length ? coalesced : [e];
   }
   function onPointerDown2(e) {
-    var _a2;
+    var _a2, _b2;
     const zone = viewportEl.value;
     if (!zone) return;
     (_a2 = zone.focus) == null ? void 0 : _a2.call(zone);
@@ -162891,6 +164311,7 @@ function useLayerEditorCanvas(editor, viewportEl) {
     const handled = editor.activeToolHandler().onPointerDown(e, artboardPt(e));
     if (handled) {
       toolActive = true;
+      (_b2 = editor.beginInteraction) == null ? void 0 : _b2.call(editor);
       try {
         zone.setPointerCapture(e.pointerId);
       } catch {
@@ -162941,7 +164362,7 @@ function useLayerEditorCanvas(editor, viewportEl) {
     if (moveRaf == null) moveRaf = requestAnimationFrame(flushMove);
   }
   function onPointerUp2(e) {
-    var _a2;
+    var _a2, _b2;
     if (moveRaf != null) {
       cancelAnimationFrame(moveRaf);
       flushMove();
@@ -162953,9 +164374,10 @@ function useLayerEditorCanvas(editor, viewportEl) {
     } else if (toolActive) {
       editor.activeToolHandler().onPointerUp(e, artboardPt(e));
       toolActive = false;
+      (_a2 = editor.endInteraction) == null ? void 0 : _a2.call(editor);
     }
     try {
-      (_a2 = viewportEl.value) == null ? void 0 : _a2.releasePointerCapture(e.pointerId);
+      (_b2 = viewportEl.value) == null ? void 0 : _b2.releasePointerCapture(e.pointerId);
     } catch {
     }
   }
@@ -163492,16 +164914,16 @@ function useLayerListPanel(editor) {
       return;
     }
     if (node.kind !== "raster") return;
-    const entry = editor.content.get(node.contentId);
+    drawContentThumb(ctx, el, node.contentId);
+  }
+  function drawContentThumb(ctx, el, contentId) {
+    var _a2, _b2;
+    const entry = editor.content.get(contentId);
     if (!entry) return;
+    const small = (_b2 = (_a2 = editor.content).thumbnailCanvas) == null ? void 0 : _b2.call(_a2, contentId, Math.max(el.width, el.height) * 2);
+    const src = small ?? entry.canvas;
     const fit = computeFit(el.width, el.height, entry.width, entry.height);
-    ctx.drawImage(
-      entry.canvas,
-      fit.offX,
-      fit.offY,
-      entry.width * fit.scale,
-      entry.height * fit.scale
-    );
+    ctx.drawImage(src, fit.offX, fit.offY, entry.width * fit.scale, entry.height * fit.scale);
   }
   function drawMaskThumb(el, node) {
     if (!el || !node.mask) return;
@@ -163509,16 +164931,7 @@ function useLayerListPanel(editor) {
     if (!ctx) return;
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, el.width, el.height);
-    const entry = editor.content.get(node.mask.contentId);
-    if (!entry) return;
-    const fit = computeFit(el.width, el.height, entry.width, entry.height);
-    ctx.drawImage(
-      entry.canvas,
-      fit.offX,
-      fit.offY,
-      entry.width * fit.scale,
-      entry.height * fit.scale
-    );
+    drawContentThumb(ctx, el, node.mask.contentId);
   }
   return {
     pickerOpen,
@@ -164092,6 +165505,7 @@ const _sfc_main$2c = /* @__PURE__ */ defineComponent({
           onPointerdown: onPointerDownWrapped,
           onPointermove: onPointerMoveWrapped,
           onPointerup: onPointerUpWrapped,
+          onPointercancel: onPointerUpWrapped,
           onPointerenter: _cache2[6] || (_cache2[6] = //@ts-ignore
           (...args) => unref(onPointerEnter) && unref(onPointerEnter)(...args)),
           onPointerleave: onPointerLeaveWrapped,
@@ -171954,6 +173368,7 @@ function useStoryboardEditor(node, state2, opts) {
     if (uid2 === currentUid.value) return;
     if (!doc2.value.boards.some((b) => b.uid === uid2)) return;
     stopPlayback();
+    editor.flushPersist();
     editor.flushCapture();
     currentUid.value = uid2;
     editor.reload();
@@ -172002,6 +173417,7 @@ function useStoryboardEditor(node, state2, opts) {
   function duplicateBoard(uid2) {
     const idx = doc2.value.boards.findIndex((b) => b.uid === uid2);
     if (idx < 0) return null;
+    editor.flushPersist();
     const copy2 = duplicateBoardData(doc2.value.boards[idx]);
     doc2.value.boards.splice(idx + 1, 0, copy2);
     commit();
@@ -172103,6 +173519,7 @@ function useStoryboardEditor(node, state2, opts) {
   async function exportAnimatic() {
     var _a2;
     if (exportingAnimatic.value) return "";
+    editor.flushPersist();
     editor.flushCapture();
     exportingAnimatic.value = true;
     try {
@@ -172144,6 +173561,7 @@ function useStoryboardEditor(node, state2, opts) {
   const exportingGif = /* @__PURE__ */ ref(false);
   async function exportGif() {
     if (exportingGif.value) return "";
+    editor.flushPersist();
     editor.flushCapture();
     exportingGif.value = true;
     try {
@@ -172208,6 +173626,7 @@ function useStoryboardEditor(node, state2, opts) {
   }
   function play() {
     if (playing.value || doc2.value.boards.length === 0) return;
+    editor.flushPersist();
     editor.flushCapture();
     playIndex.value = currentIndex.value;
     playing.value = true;
@@ -201384,4 +202803,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-_rdAHwW4.mjs.map
+//# sourceMappingURL=main-DuPvQhQw.mjs.map

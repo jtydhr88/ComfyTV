@@ -33,6 +33,7 @@
     @pointerdown="onPointerDownWrapped"
     @pointermove="onPointerMoveWrapped"
     @pointerup="onPointerUpWrapped"
+    @pointercancel="onPointerUpWrapped"
     @pointerenter="onPointerEnter"
     @pointerleave="onPointerLeaveWrapped"
     @wheel.prevent="onWheel"

@@ -6,13 +6,27 @@ import { defaultMode } from '../mode'
 import type { Document } from '../document'
 import type { GroupData, Rect, SceneNode, Transform } from '../node'
 import { registerNodeKind, type NodeKind } from '../nodeKind'
-import { renderDocument, type PlacedEntry, type PreviewOverride, type RenderDeps } from './renderStack'
+import {
+  createMergeCache,
+  docRectToSourceRect,
+  renderDocument,
+  renderDocumentCached,
+  type PreviewOverride,
+  type RenderDeps,
+} from './renderStack'
 
 const T: Transform = { x: 0, y: 0, w: 10, h: 10, rotation: 0 }
 const LOCKS = { content: false, position: false, visibility: false }
 
 const stubKind = {
   kind: 'stub',
+  serialize: (node: SceneNode) => ({
+    id: node.id,
+    visible: node.visible,
+    opacity: node.opacity,
+    mode: node.mode,
+    transform: node.transform,
+  }),
   renderNode: (_node: unknown, ctx: { region: unknown }) => ({
     source: document.createElement('canvas'),
     rect: ctx.region,
@@ -22,10 +36,10 @@ const stubKind = {
 
 beforeAll(() => registerNodeKind(stubKind))
 
-function leaf(opacity = 1, visible = true): SceneNode {
+function leaf(opacity = 1, visible = true, id?: string): SceneNode {
   return {
     kind: 'stub',
-    id: `l${opacity}`,
+    id: id ?? `l${opacity}`,
     name: 'l',
     visible,
     opacity,
@@ -83,6 +97,9 @@ class FakeCompositor implements Compositor {
   }
   readback(): ImageData {
     return new ImageData(1, 1)
+  }
+  presentCanvas() {
+    return null
   }
   async toBlob(): Promise<Blob> {
     return new Blob()
@@ -167,27 +184,9 @@ describe('renderDocument', () => {
   })
 })
 
-describe('paint preview overrides (incremental placed cache)', () => {
-  let restoreGetContext: (() => void) | null = null
-
-  beforeAll(() => {
-    const proto = HTMLCanvasElement.prototype as { getContext: unknown }
-    const original = proto.getContext
-    const stub = {
-      clearRect() {}, save() {}, restore() {}, translate() {}, rotate() {},
-      drawImage() {}, beginPath() {}, rect() {}, clip() {},
-      imageSmoothingEnabled: false, imageSmoothingQuality: 'low',
-    }
-    proto.getContext = () => stub
-    restoreGetContext = () => {
-      proto.getContext = original
-    }
-  })
-
-  afterAll(() => restoreGetContext?.())
-
-  function previewDeps(c: Compositor, overrides: Map<string, PreviewOverride>, placedCache: Map<string, PlacedEntry>): RenderDeps {
-    return { content: new DefaultContentStore(), compositor: c, overrides, placedCache }
+describe('paint preview overrides (quad textures)', () => {
+  function previewDeps(c: Compositor, overrides: Map<string, PreviewOverride>): RenderDeps {
+    return { content: new DefaultContentStore(), compositor: c, overrides }
   }
 
   function previewCanvas(): HTMLCanvasElement {
@@ -197,34 +196,34 @@ describe('paint preview overrides (incremental placed cache)', () => {
     return cv
   }
 
-  it('reuses the placed canvas and versions the texture across renders', () => {
+  it('emits the override canvas as a versioned quad texture', () => {
     const c = new FakeCompositor()
     const overrides = new Map<string, PreviewOverride>()
-    const placedCache = new Map<string, PlacedEntry>()
     const node = leaf(1)
     const cv = previewCanvas()
     overrides.set(`content:${node.id}`, { canvas: cv, version: 1, rects: null })
 
-    const d = previewDeps(c, overrides, placedCache)
+    const d = previewDeps(c, overrides)
     renderDocument(doc([node]), d)
     const t1 = (c.composites[0].inputs[0] as { texture: NodeTexture }).texture
     expect(t1.key).toBe(`preview:content:${node.id}`)
     expect(t1.version).toBe(1)
+    expect(t1.source).toBe(cv)
+    expect(t1.quad).toEqual(node.transform)
+    expect(t1.dirtyRects).toBeUndefined()
 
     renderDocument(doc([node]), d)
     const t2 = (c.composites[1].inputs[0] as { texture: NodeTexture }).texture
     expect(t2.version).toBe(1)
-    expect(t2.source).toBe(t1.source)
-    expect(t2.dirtyRects).toBeUndefined()
+    expect(t2.source).toBe(cv)
   })
 
-  it('a version bump with a rect flows through as dirtyRect for partial upload', () => {
+  it('a version bump with a rect flows through as a source-space dirtyRect', () => {
     const c = new FakeCompositor()
     const overrides = new Map<string, PreviewOverride>()
-    const placedCache = new Map<string, PlacedEntry>()
     const node = leaf(1)
     const cv = previewCanvas()
-    const d = previewDeps(c, overrides, placedCache)
+    const d = previewDeps(c, overrides)
 
     overrides.set(`content:${node.id}`, { canvas: cv, version: 1, rects: null })
     renderDocument(doc([node]), d)
@@ -233,41 +232,117 @@ describe('paint preview overrides (incremental placed cache)', () => {
 
     const t2 = (c.composites[1].inputs[0] as { texture: NodeTexture }).texture
     expect(t2.version).toBe(2)
-    expect(t2.dirtyRects).toEqual([{ x: 1, y: 2, w: 3, h: 4 }])
-    expect(t2.source).toBe((c.composites[0].inputs[0] as { texture: NodeTexture }).texture.source)
+    // Identity 10x10 placement: doc rect maps 1:1, padded by one texel and clamped.
+    expect(t2.dirtyRects).toEqual([{ x: 0, y: 1, w: 5, h: 6 }])
   })
 
-  it('a skipped version falls back to a full redraw (no dirtyRect)', () => {
+  it('falls back to the node kind render once the override is gone', () => {
     const c = new FakeCompositor()
     const overrides = new Map<string, PreviewOverride>()
-    const placedCache = new Map<string, PlacedEntry>()
     const node = leaf(1)
-    const cv = previewCanvas()
-    const d = previewDeps(c, overrides, placedCache)
+    const d = previewDeps(c, overrides)
 
-    overrides.set(`content:${node.id}`, { canvas: cv, version: 1, rects: null })
+    overrides.set(`content:${node.id}`, { canvas: previewCanvas(), version: 5, rects: null })
     renderDocument(doc([node]), d)
-    overrides.set(`content:${node.id}`, { canvas: cv, version: 3, rects: [{ x: 1, y: 2, w: 3, h: 4 }] })
-    renderDocument(doc([node]), d)
-
-    const t2 = (c.composites[1].inputs[0] as { texture: NodeTexture }).texture
-    expect(t2.version).toBe(3)
-    expect(t2.dirtyRects).toBeUndefined()
-  })
-
-  it('drops the preview cache entry once the override is gone', () => {
-    const c = new FakeCompositor()
-    const overrides = new Map<string, PreviewOverride>()
-    const placedCache = new Map<string, PlacedEntry>()
-    const node = leaf(1)
-    const d = previewDeps(c, overrides, placedCache)
-
-    overrides.set(`content:${node.id}`, { canvas: previewCanvas(), version: 1, rects: null })
-    renderDocument(doc([node]), d)
-    expect(placedCache.has(`preview:content:${node.id}`)).toBe(true)
+    expect((c.composites[0].inputs[0] as { texture: NodeTexture }).texture.version).toBe(5)
 
     overrides.delete(`content:${node.id}`)
     renderDocument(doc([node]), d)
-    expect(placedCache.has(`preview:content:${node.id}`)).toBe(false)
+    expect((c.composites[1].inputs[0] as { texture: NodeTexture }).texture.version).toBeUndefined()
+  })
+})
+
+describe('merge caches (renderDocumentCached)', () => {
+  function eightLeaves(): SceneNode[] {
+    return Array.from({ length: 8 }, (_, i) => leaf(1, true, `n${i}`))
+  }
+
+  it('splits below/active/above into cached targets and reuses them next frame', () => {
+    const c = new FakeCompositor()
+    const cache = createMergeCache()
+    const d = doc(eightLeaves())
+
+    renderDocumentCached(d, deps(c), 'n3', cache)
+    // below → target, above → target, final → null target
+    expect(c.composites).toHaveLength(3)
+    expect(c.composites[0].target).not.toBeNull()
+    expect(c.composites[0].inputs).toHaveLength(3)
+    expect(c.composites[1].target).not.toBeNull()
+    expect(c.composites[1].inputs).toHaveLength(4)
+    expect(c.composites[2].target).toBeNull()
+    expect(c.composites[2].inputs).toHaveLength(3)
+
+    renderDocumentCached(d, deps(c), 'n3', cache)
+    expect(c.composites).toHaveLength(4)
+    expect(c.composites[3].target).toBeNull()
+  })
+
+  it('a change below rebuilds only the below cache', () => {
+    const c = new FakeCompositor()
+    const cache = createMergeCache()
+    const kids = eightLeaves()
+    const d = doc(kids)
+
+    renderDocumentCached(d, deps(c), 'n3', cache)
+    kids[1].opacity = 0.5
+    renderDocumentCached(d, deps(c), 'n3', cache)
+    // one rebuild (below target) + final
+    expect(c.composites).toHaveLength(5)
+    expect(c.composites[3].target).not.toBeNull()
+    expect(c.composites[3].inputs.map((i) => i.opacity)).toEqual([1, 0.5, 1])
+    expect(c.composites[4].target).toBeNull()
+  })
+
+  it('non-associative modes above disable the above cache but keep the below cache', () => {
+    const c = new FakeCompositor()
+    const cache = createMergeCache()
+    const kids = eightLeaves()
+    ;(kids[6] as { mode: unknown }).mode = { ...defaultMode('multiply') }
+    const d = doc(kids)
+
+    renderDocumentCached(d, deps(c), 'n3', cache)
+    // below cached; above composited inline every frame
+    expect(c.composites).toHaveLength(2)
+    expect(c.composites[0].target).not.toBeNull()
+    expect(c.composites[1].target).toBeNull()
+    expect(c.composites[1].inputs).toHaveLength(1 + 1 + 4)
+  })
+
+  it('an active node nested in a root group pivots on that group', () => {
+    const c = new FakeCompositor()
+    const cache = createMergeCache()
+    const inner = leaf(1, true, 'deep')
+    const kids = [...eightLeaves().slice(0, 4), group([inner], { id: 'wrap' }), ...eightLeaves().slice(4).map((n) => ({ ...n, id: `${n.id}b` }))]
+    const d = doc(kids)
+
+    renderDocumentCached(d, deps(c), 'deep', cache)
+    // below target, group isolation target, above target, final
+    expect(c.composites.filter((x) => x.target === null)).toHaveLength(1)
+    const final = c.composites[c.composites.length - 1]
+    expect(final.target).toBeNull()
+    expect(final.inputs).toHaveLength(3)
+  })
+
+  it('falls back to a plain render for small documents and no active id', () => {
+    const c = new FakeCompositor()
+    const cache = createMergeCache()
+    renderDocumentCached(doc([leaf(1), leaf(0.8)]), deps(c), null, cache)
+    expect(c.composites).toHaveLength(1)
+    expect(c.composites[0].target).toBeNull()
+  })
+})
+
+describe('docRectToSourceRect', () => {
+  it('maps through scale and offset with a one-texel pad', () => {
+    // 20x20 source shown at 2x covering doc (100,100)-(140,140)
+    const q: Transform = { x: 100, y: 100, w: 40, h: 40, rotation: 0 }
+    const r = docRectToSourceRect({ x: 110, y: 120, w: 8, h: 4 }, q, 20, 20)
+    expect(r).toEqual({ x: 4, y: 9, w: 6, h: 4 })
+  })
+
+  it('takes the bbox of rotated rects and clamps to the source', () => {
+    const q: Transform = { x: 0, y: 0, w: 10, h: 10, rotation: Math.PI / 2 }
+    const r = docRectToSourceRect({ x: 0, y: 0, w: 10, h: 10 }, q, 10, 10)
+    expect(r).toEqual({ x: 0, y: 0, w: 10, h: 10 })
   })
 })

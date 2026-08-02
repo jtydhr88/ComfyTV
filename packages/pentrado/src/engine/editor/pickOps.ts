@@ -36,11 +36,17 @@ function rasterAlphaAt(
   if (t.w <= 0 || t.h <= 0) return 0
   const local = toLocalFrame(t, pt)
   if (Math.abs(local.x) > t.w / 2 || Math.abs(local.y) > t.h / 2) return 0
-  const canvas = content.get(node.contentId)?.canvas
-  if (!canvas || canvas.width <= 0 || canvas.height <= 0) return 1
-  const cx = ((local.x + t.w / 2) / t.w) * canvas.width
-  const cy = ((local.y + t.h / 2) / t.h) * canvas.height
-  return sample(canvas, cx, cy)
+  const entry = content.get(node.contentId)
+  if (!entry) return 1
+
+  const w = entry.width ?? entry.canvas?.width ?? 0
+  const h = entry.height ?? entry.canvas?.height ?? 0
+  if (w <= 0 || h <= 0) return 1
+  const cx = ((local.x + t.w / 2) / t.w) * w
+  const cy = ((local.y + t.h / 2) / t.h) * h
+  const tiled = content.alphaAt?.(node.contentId, Math.floor(cx), Math.floor(cy))
+  if (tiled != null) return tiled
+  return sample(entry.canvas, cx, cy)
 }
 
 function boxAlphaAt(node: SceneNode, pt: Vec2): number {

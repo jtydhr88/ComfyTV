@@ -112,6 +112,7 @@ export const rasterKind: NodeKind<RasterData> = {
   renderNode(node: RasterData, ctx): NodeTexture | null {
     const entry = ctx.content.get(node.contentId)
     if (!entry) return null
+    if (entry.isBlank) return null
     return ctx.placed(`content:${node.id}`, node.contentId, entry.canvas, node.transform)
   },
 
@@ -120,8 +121,10 @@ export const rasterKind: NodeKind<RasterData> = {
   },
 
   thumbnail(node: RasterData, deps): HTMLCanvasElement | null {
-    const entry = deps.content.get(node.contentId)
-    return entry?.canvas ?? null
+    if (!deps.content.has(node.contentId)) return null
+    const small = deps.content.thumbnailCanvas?.(node.contentId, deps.size * 2)
+    if (small) return small
+    return deps.content.get(node.contentId)?.canvas ?? null
   },
 
   hitTest(node: RasterData, pt: Vec2): boolean {

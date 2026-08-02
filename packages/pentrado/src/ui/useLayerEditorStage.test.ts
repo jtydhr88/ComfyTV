@@ -202,6 +202,7 @@ describe('v1 document migration', () => {
   it('round-trips: persisted engine JSON reloads via onConfigure', () => {
     const { node, s } = setup(V1_STATE)
     s.addTextLayerAt({ x: 5, y: 5 })
+    s.flushPersist()
     const persisted = widgetVal(node, 'layer_state')
     expect(JSON.parse(persisted).root.children).toHaveLength(3)
 
@@ -240,11 +241,13 @@ describe('layer operations + undo (engine-backed)', () => {
   it('setBlendMode uses engine mode names end to end', () => {
     const { s, node } = setup(V1_STATE)
     s.setBlendMode('t1', 'screen')
+    s.flushPersist()
     expect(nodes(s)[1].mode.blend).toBe('screen')
     const persisted = JSON.parse(widgetVal(node, 'layer_state'))
     expect(persisted.root.children[1].mode.blend).toBe('screen')
 
     s.setBlendMode('t1', 'luminosity')
+    s.flushPersist()
     expect(JSON.parse(widgetVal(node, 'layer_state')).root.children[1].mode.blend).toBe('luminosity')
   })
 
@@ -461,6 +464,7 @@ describe('artboard + persistence', () => {
   it('setArtboardSize resizes, persists width/height widgets, and is undoable', () => {
     const { s, node } = setup(V1_STATE)
     s.setArtboardSize(800, 600)
+    s.flushPersist()
     expect(s.canvasSize.value.width).toBe(800)
     expect(widgetVal(node, 'width')).toBe(800)
     expect(widgetVal(node, 'height')).toBe(600)
@@ -471,6 +475,7 @@ describe('artboard + persistence', () => {
   it('edits persist engine-format layer_state with width/height', () => {
     const { s, node } = setup()
     s.addTextLayerAt({ x: 0, y: 0 })
+    s.flushPersist()
     const persisted = JSON.parse(widgetVal(node, 'layer_state'))
     expect(persisted.root.kind).toBe('group')
     expect(persisted.width).toBe(1024)

@@ -29,8 +29,10 @@ import {
   LAYER_MODES,
   PropCommand,
   createEditor,
+  createSwapClient,
   createWebGLCompositor,
   defaultMode,
+  HybridContentStore,
   filterTopmost,
   findNode,
   generateId,
@@ -230,6 +232,11 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
   const editor = createEditor({ compositor, onChange })
   onContextRestored = () => editor.invalidate()
 
+  const swapClient = createSwapClient()
+  if (swapClient && editor.content instanceof HybridContentStore) {
+    editor.content.configureSwap({ swap: swapClient, onRestored: () => editor.invalidate() })
+  }
+
   let lastPersisted: string | null = null
 
   let mainCanvas: HTMLCanvasElement | null = null
@@ -319,14 +326,22 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
     const clean = !dmg.full && !dmg.rect
     if (clean && !resized && !lastPresentWasMask) return
     if (dmg.rect && !dmg.full && !resized && !lastPresentWasMask) {
-      const img = compositor.readback(dmg.rect)
-      ctx.putImageData(img, Math.max(0, Math.floor(dmg.rect.x)), Math.max(0, Math.floor(dmg.rect.y)))
+      const gc = compositor.presentCanvas(dmg.rect)
+      if (!gc) return
+      const x = Math.max(0, Math.floor(dmg.rect.x))
+      const y = Math.max(0, Math.floor(dmg.rect.y))
+      const w = Math.min(width, Math.ceil(dmg.rect.x + dmg.rect.w)) - x
+      const h = Math.min(height, Math.ceil(dmg.rect.y + dmg.rect.h)) - y
+      if (w <= 0 || h <= 0) return
+      ctx.clearRect(x, y, w, h)
+      ctx.drawImage(gc, x, y, w, h, x, y, w, h)
       return
     }
     lastPresentWasMask = false
     ctx.clearRect(0, 0, width, height)
     editor.render()
-    ctx.putImageData(compositor.readback(), 0, 0)
+    const gc = compositor.presentCanvas()
+    if (gc) ctx.drawImage(gc, 0, 0)
   }
   function drawOverlayCanvas(): void {
     if (!overlayCanvas || !viewportEl || !containerEl) return
@@ -484,6 +499,9 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
   let captureTimer: number | null = null
   let captureSeq = 0
   function scheduleCapture(): void {
+    // Auto-capture composites, reads back and PNG-encodes the whole document
+    // — skip it entirely when nothing consumes the captures (standalone site).
+    if (!opts?.onCaptured) return
     if (captureTimer != null) window.clearTimeout(captureTimer)
     captureTimer = window.setTimeout(runCapture, CAPTURE_DEBOUNCE_MS)
   }
@@ -715,17 +733,65 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
     return addImageFromUrl(media.url, media.name || 'Image')
   }
 
+  // Serializing the whole document is O(doc) and used to run synchronously on
+  // every change — debounce it off the commit frame (stroke-end hitch).
+  const PERSIST_DEBOUNCE_MS = 250
+  let persistTimer: number | null = null
+  function persistNow(): void {
+    if (lastPersisted === null) return
+    if (capturing.value) {
+      schedulePersist()
+      return
+    }
+    const json = JSON.stringify(editor.serialize())
+    if (json === lastPersisted) return
+    persistRaw(json)
+    scheduleUpload()
+    scheduleCapture()
+  }
+  function schedulePersist(): void {
+    if (persistTimer != null) window.clearTimeout(persistTimer)
+    persistTimer = window.setTimeout(() => {
+      persistTimer = null
+      persistNow()
+    }, PERSIST_DEBOUNCE_MS)
+  }
+  function flushPersist(): void {
+    if (persistTimer != null) {
+      window.clearTimeout(persistTimer)
+      persistTimer = null
+    }
+    persistNow()
+  }
+
+  // Pointer interactions fire changes at frame rate — persistence (an O(doc)
+  // serialize, tens of MB with embedded contents) and auto-capture (full
+  // readback + encode) must never land mid-drag. Suspend them while any
+  // pointer session is active; the trailing schedule runs on release.
+  let interactionDepth = 0
+  let persistAfterInteraction = false
+  function beginInteraction(): void {
+    interactionDepth += 1
+  }
+  function endInteraction(): void {
+    interactionDepth = Math.max(0, interactionDepth - 1)
+    if (interactionDepth === 0 && persistAfterInteraction) {
+      persistAfterInteraction = false
+      schedulePersist()
+    }
+  }
+
   function onChange(): void {
     version.value += 1
     activeId.value = editor.activeNodeId()
     requestRender()
     if (capturing.value) return
     if (lastPersisted === null) return
-    const json = JSON.stringify(editor.serialize())
-    if (json === lastPersisted) return
-    persistRaw(json)
-    scheduleUpload()
-    scheduleCapture()
+    if (interactionDepth > 0) {
+      persistAfterInteraction = true
+      return
+    }
+    schedulePersist()
   }
 
   function editProp<T>(label: string, dirty: number, get: () => T, set: (v: T) => void, value: T, mergeKey?: string): void {
@@ -932,9 +998,14 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
 
   function addEmptyLayer(): void {
     const d = editor.document()
-    const c = newCanvas(d.width, d.height)
-    c.getContext('2d')?.clearRect(0, 0, d.width, d.height)
-    const cid = content.register(c)
+    let cid: string
+    if (content.registerUniform) {
+      cid = content.registerUniform(d.width, d.height, [0, 0, 0, 0])
+    } else {
+      const c = newCanvas(d.width, d.height)
+      c.getContext('2d')?.clearRect(0, 0, d.width, d.height)
+      cid = content.register(c, { uniform: [0, 0, 0, 0] })
+    }
     const count = d.root.children.length + 1
     editor.addNode(rasterKind.create({
       name: `Layer ${count}`, contentId: cid, naturalWidth: d.width, naturalHeight: d.height,
@@ -1524,6 +1595,9 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
   const unsubscribeFontReady = fontStore.onFontReady(() => editor.invalidate())
 
   onBeforeUnmount(() => {
+    flushPersist()
+    if (persistTimer != null) window.clearTimeout(persistTimer)
+    swapClient?.dispose()
     unsubscribeFontReady()
     if (rafId != null) cancelAnimationFrame(rafId)
     if (uploadTimer != null) window.clearTimeout(uploadTimer)
@@ -1592,7 +1666,8 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
     filterSession, startFilter, updateFilterParam, applyFilter, cancelFilter,
     updateTextLayer,
     setArtboardSize, nudgeActive,
-    captureBatch, flushCapture, cancelPendingCapture, reload: loadFromStorage,
+    captureBatch, flushCapture, cancelPendingCapture, flushPersist, reload: loadFromStorage,
+    beginInteraction, endInteraction,
     exportPsd, exportPsdToLibrary, canExportToLibrary, importPsdFile, importPsdFromUrl, addMedia, exportingPsd, importingPsd,
     documentIsEmpty: () => editor.document().root.children.length === 0,
     addEmptyLayer, floating, anchorFloating, cancelFloating,
@@ -1615,5 +1690,6 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
     addAdjustmentLayer, updateAdjustment, updateVectorStyle,
     addFillLayer, updateFillLayer,
     content, fontStore, host,
+    glStats: () => compositor.debugStats?.() ?? null,
   }
 }
