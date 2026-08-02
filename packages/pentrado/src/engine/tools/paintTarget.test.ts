@@ -5,7 +5,7 @@ import { DefaultContentStore } from '../impl/contentStore'
 import { rasterKind } from '../kinds/raster'
 import { defaultMode } from '../mode'
 import type { GroupData, RasterData, Transform } from '../node'
-import { displayScale, makeToLocal, resolvePaintTarget } from './paintTarget'
+import { displayScale, makeLocalRectToDoc, makeToLocal, resolvePaintTarget } from './paintTarget'
 
 describe('makeToLocal (inverse of placeBitmap)', () => {
   it('maps doc → bitmap px for an axis-aligned layer, scaling to natural size', () => {
@@ -29,6 +29,37 @@ describe('makeToLocal (inverse of placeBitmap)', () => {
     const c = toLocal({ x: 50, y: 50 })
     expect(c.x).toBeCloseTo(50)
     expect(c.y).toBeCloseTo(50)
+  })
+})
+
+describe('makeLocalRectToDoc (forward map for preview damage rects)', () => {
+  it('covers the rect in doc space for an identity placement', () => {
+    const toDoc = makeLocalRectToDoc({ x: 0, y: 0, w: 100, h: 100, rotation: 0 }, 100, 100)
+    const r = toDoc({ x0: 10, y0: 20, x1: 19, y1: 29 })
+    expect(r.x).toBeLessThanOrEqual(10)
+    expect(r.y).toBeLessThanOrEqual(20)
+    expect(r.x + r.w).toBeGreaterThanOrEqual(20)
+    expect(r.y + r.h).toBeGreaterThanOrEqual(30)
+    expect(r.w).toBeLessThan(25)
+  })
+
+  it('scales local pixels up to the displayed size', () => {
+    const toDoc = makeLocalRectToDoc({ x: 50, y: 50, w: 200, h: 200, rotation: 0 }, 100, 100)
+    const r = toDoc({ x0: 0, y0: 0, x1: 49, y1: 49 })
+    expect(r.x).toBeLessThanOrEqual(50)
+    expect(r.x + r.w).toBeGreaterThanOrEqual(150)
+  })
+
+  it('is consistent with toLocal under rotation', () => {
+    const tf = { x: 10, y: 20, w: 100, h: 100, rotation: Math.PI / 5 }
+    const toLocal = makeToLocal(tf, 100, 100)
+    const toDoc = makeLocalRectToDoc(tf, 100, 100)
+    const r = toDoc({ x0: 30, y0: 40, x1: 60, y1: 70 })
+    const center = toLocal({ x: r.x + r.w / 2, y: r.y + r.h / 2 })
+    expect(center.x).toBeGreaterThan(30 - 5)
+    expect(center.x).toBeLessThan(61 + 5)
+    expect(center.y).toBeGreaterThan(40 - 5)
+    expect(center.y).toBeLessThan(71 + 5)
   })
 })
 

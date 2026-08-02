@@ -94,6 +94,31 @@ describe('morphology (GIMP grow/shrink/border, elliptical SE)', () => {
   })
 })
 
+describe('bounds-limited morphology matches the full-image result', () => {
+  const eq = (a: GrayMask, b: GrayMask) => {
+    for (let p = 0; p < a.data.length; p++) {
+      if (Math.abs(a.data[p] - b.data[p]) > 1e-6) return false
+    }
+    return true
+  }
+
+  it('grow/shrink/border/feather with a bounds hint equal the unbounded ops', () => {
+    const m = rectMask(64, 64, { x: 20, y: 24, w: 12, h: 10 })
+    const bounds = maskBounds(m)!
+    expect(eq(growMask(m, 3, bounds), growMask(m, 3))).toBe(true)
+    expect(eq(shrinkMask(m, 3, bounds), shrinkMask(m, 3))).toBe(true)
+    expect(eq(borderMask(m, 3, bounds), borderMask(m, 3))).toBe(true)
+    expect(eq(featherMask(m, 6, bounds), featherMask(m, 6))).toBe(true)
+  })
+
+  it('edge-lock still holds when the bounded selection touches the image edge', () => {
+    const m = rectMask(32, 32, { x: 0, y: 0, w: 32, h: 12 })
+    const bounds = maskBounds(m)!
+    expect(eq(shrinkMask(m, 2, bounds), shrinkMask(m, 2))).toBe(true)
+    expect(shrinkMask(m, 2, bounds).data[0]).toBe(1)
+  })
+})
+
 describe('featherMask', () => {
   it('softens a hard edge into a gradient without moving its center', () => {
     const m = rectMask(40, 40, { x: 10, y: 10, w: 20, h: 20 })

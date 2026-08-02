@@ -1,4 +1,4 @@
-import type { Transform } from '../node'
+import type { Rect, Transform } from '../node'
 
 export type Bitmap = HTMLCanvasElement | ImageBitmap | OffscreenCanvas
 
@@ -46,9 +46,12 @@ export function placeBitmap(
   transform: Transform,
   docWidth: number,
   docHeight: number,
-  scratch?: HTMLCanvasElement
+  scratch?: HTMLCanvasElement,
+  clipRect?: Rect | null,
+  noMip = false
 ): HTMLCanvasElement | null {
   const canvas = scratch ?? document.createElement('canvas')
+  const clip = clipRect && scratch && canvas.width === docWidth && canvas.height === docHeight ? clipRect : null
   if (canvas.width !== docWidth) canvas.width = docWidth
   if (canvas.height !== docHeight) canvas.height = docHeight
   const ctx = canvas.getContext('2d')
@@ -57,9 +60,16 @@ export function placeBitmap(
     transform.w / Math.max(1, bitmap.width),
     transform.h / Math.max(1, bitmap.height)
   )
-  const src = mipForScale(bitmap, scale)
-  ctx.clearRect(0, 0, docWidth, docHeight)
+  const src = noMip ? bitmap : mipForScale(bitmap, scale)
   ctx.save()
+  if (clip) {
+    ctx.beginPath()
+    ctx.rect(clip.x, clip.y, clip.w, clip.h)
+    ctx.clip()
+    ctx.clearRect(clip.x, clip.y, clip.w, clip.h)
+  } else {
+    ctx.clearRect(0, 0, docWidth, docHeight)
+  }
   ctx.imageSmoothingEnabled = true
   ctx.imageSmoothingQuality = 'high'
   ctx.translate(transform.x + transform.w / 2, transform.y + transform.h / 2)

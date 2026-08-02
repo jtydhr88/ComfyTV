@@ -1,12 +1,12 @@
-import { beforeAll, describe, expect, it } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
-import type { Compositor, CompositeInput, FBOHandle } from '../compositor'
+import type { Compositor, CompositeInput, FBOHandle, NodeTexture } from '../compositor'
 import { DefaultContentStore } from '../impl/contentStore'
 import { defaultMode } from '../mode'
 import type { Document } from '../document'
-import type { GroupData, SceneNode, Transform } from '../node'
+import type { GroupData, Rect, SceneNode, Transform } from '../node'
 import { registerNodeKind, type NodeKind } from '../nodeKind'
-import { renderDocument, type RenderDeps } from './renderStack'
+import { renderDocument, type PlacedEntry, type PreviewOverride, type RenderDeps } from './renderStack'
 
 const T: Transform = { x: 0, y: 0, w: 10, h: 10, rotation: 0 }
 const LOCKS = { content: false, position: false, visibility: false }
@@ -56,7 +56,7 @@ function doc(children: SceneNode[]): Document {
 }
 
 class FakeCompositor implements Compositor {
-  composites: Array<{ inputs: CompositeInput[]; target: FBOHandle | null }> = []
+  composites: Array<{ inputs: CompositeInput[]; target: FBOHandle | null; region: Rect | null }> = []
   allocated: FBOHandle[] = []
   freed: number[] = []
   private nextId = 1
@@ -64,8 +64,8 @@ class FakeCompositor implements Compositor {
     return true
   }
   resize() {}
-  composite(inputs: CompositeInput[], target?: FBOHandle | null) {
-    this.composites.push({ inputs: [...inputs], target: target ?? null })
+  composite(inputs: CompositeInput[], target?: FBOHandle | null, region?: Rect) {
+    this.composites.push({ inputs: [...inputs], target: target ?? null, region: region ?? null })
   }
   allocTarget(width: number, height: number): FBOHandle {
     const h = { id: this.nextId++, width, height }
@@ -153,5 +153,121 @@ describe('renderDocument', () => {
     expect(a.adjust.op).toBe(1)
     expect(a.adjust.params).toEqual([0.25, 0.5, 0, 0])
     expect(a.opacity).toBe(0.8)
+  })
+
+  it('forwards the damage region to the main composite only', () => {
+    const c = new FakeCompositor()
+    const g = group([leaf(1)], { id: 'grp' })
+    const region = { x: 5, y: 6, w: 7, h: 8 }
+    renderDocument(doc([leaf(1), g]), deps(c), undefined, region)
+    expect(c.composites[0].target).not.toBeNull()
+    expect(c.composites[0].region).toBeNull()
+    expect(c.composites[1].target).toBeNull()
+    expect(c.composites[1].region).toEqual(region)
+  })
+})
+
+describe('paint preview overrides (incremental placed cache)', () => {
+  let restoreGetContext: (() => void) | null = null
+
+  beforeAll(() => {
+    const proto = HTMLCanvasElement.prototype as { getContext: unknown }
+    const original = proto.getContext
+    const stub = {
+      clearRect() {}, save() {}, restore() {}, translate() {}, rotate() {},
+      drawImage() {}, beginPath() {}, rect() {}, clip() {},
+      imageSmoothingEnabled: false, imageSmoothingQuality: 'low',
+    }
+    proto.getContext = () => stub
+    restoreGetContext = () => {
+      proto.getContext = original
+    }
+  })
+
+  afterAll(() => restoreGetContext?.())
+
+  function previewDeps(c: Compositor, overrides: Map<string, PreviewOverride>, placedCache: Map<string, PlacedEntry>): RenderDeps {
+    return { content: new DefaultContentStore(), compositor: c, overrides, placedCache }
+  }
+
+  function previewCanvas(): HTMLCanvasElement {
+    const cv = document.createElement('canvas')
+    cv.width = 10
+    cv.height = 10
+    return cv
+  }
+
+  it('reuses the placed canvas and versions the texture across renders', () => {
+    const c = new FakeCompositor()
+    const overrides = new Map<string, PreviewOverride>()
+    const placedCache = new Map<string, PlacedEntry>()
+    const node = leaf(1)
+    const cv = previewCanvas()
+    overrides.set(`content:${node.id}`, { canvas: cv, version: 1, rects: null })
+
+    const d = previewDeps(c, overrides, placedCache)
+    renderDocument(doc([node]), d)
+    const t1 = (c.composites[0].inputs[0] as { texture: NodeTexture }).texture
+    expect(t1.key).toBe(`preview:content:${node.id}`)
+    expect(t1.version).toBe(1)
+
+    renderDocument(doc([node]), d)
+    const t2 = (c.composites[1].inputs[0] as { texture: NodeTexture }).texture
+    expect(t2.version).toBe(1)
+    expect(t2.source).toBe(t1.source)
+    expect(t2.dirtyRects).toBeUndefined()
+  })
+
+  it('a version bump with a rect flows through as dirtyRect for partial upload', () => {
+    const c = new FakeCompositor()
+    const overrides = new Map<string, PreviewOverride>()
+    const placedCache = new Map<string, PlacedEntry>()
+    const node = leaf(1)
+    const cv = previewCanvas()
+    const d = previewDeps(c, overrides, placedCache)
+
+    overrides.set(`content:${node.id}`, { canvas: cv, version: 1, rects: null })
+    renderDocument(doc([node]), d)
+    overrides.set(`content:${node.id}`, { canvas: cv, version: 2, rects: [{ x: 1, y: 2, w: 3, h: 4 }] })
+    renderDocument(doc([node]), d)
+
+    const t2 = (c.composites[1].inputs[0] as { texture: NodeTexture }).texture
+    expect(t2.version).toBe(2)
+    expect(t2.dirtyRects).toEqual([{ x: 1, y: 2, w: 3, h: 4 }])
+    expect(t2.source).toBe((c.composites[0].inputs[0] as { texture: NodeTexture }).texture.source)
+  })
+
+  it('a skipped version falls back to a full redraw (no dirtyRect)', () => {
+    const c = new FakeCompositor()
+    const overrides = new Map<string, PreviewOverride>()
+    const placedCache = new Map<string, PlacedEntry>()
+    const node = leaf(1)
+    const cv = previewCanvas()
+    const d = previewDeps(c, overrides, placedCache)
+
+    overrides.set(`content:${node.id}`, { canvas: cv, version: 1, rects: null })
+    renderDocument(doc([node]), d)
+    overrides.set(`content:${node.id}`, { canvas: cv, version: 3, rects: [{ x: 1, y: 2, w: 3, h: 4 }] })
+    renderDocument(doc([node]), d)
+
+    const t2 = (c.composites[1].inputs[0] as { texture: NodeTexture }).texture
+    expect(t2.version).toBe(3)
+    expect(t2.dirtyRects).toBeUndefined()
+  })
+
+  it('drops the preview cache entry once the override is gone', () => {
+    const c = new FakeCompositor()
+    const overrides = new Map<string, PreviewOverride>()
+    const placedCache = new Map<string, PlacedEntry>()
+    const node = leaf(1)
+    const d = previewDeps(c, overrides, placedCache)
+
+    overrides.set(`content:${node.id}`, { canvas: previewCanvas(), version: 1, rects: null })
+    renderDocument(doc([node]), d)
+    expect(placedCache.has(`preview:content:${node.id}`)).toBe(true)
+
+    overrides.delete(`content:${node.id}`)
+    renderDocument(doc([node]), d)
+    expect(placedCache.has(`preview:content:${node.id}`)).toBe(false)
   })
 })

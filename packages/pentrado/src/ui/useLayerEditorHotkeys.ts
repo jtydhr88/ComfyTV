@@ -102,6 +102,16 @@ export function useLayerEditorHotkeys(
       editor.pasteClipboard()
       return
     }
+    if (!ctrl && e.code === 'KeyX') {
+      e.preventDefault()
+      editor.swapColors()
+      return
+    }
+    if (!ctrl && e.code === 'KeyD') {
+      e.preventDefault()
+      editor.resetColors()
+      return
+    }
     if ((e.key === 'Delete' || e.key === 'Backspace') && editor.activeId.value) {
       e.preventDefault()
       if (editor.hasSelection()) editor.clearSelectionPixels()

@@ -6,6 +6,8 @@ export interface NodeTexture {
   rect: Rect
   linear: boolean
   key?: string
+  version?: number
+  dirtyRects?: Rect[]
 }
 
 export interface LayerInput {

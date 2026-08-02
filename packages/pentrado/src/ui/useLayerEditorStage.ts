@@ -175,6 +175,7 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
   const brushOpacity = ref(1)
   const brushHardness = ref(1)
   const brushColor = ref('#ff4444')
+  const backgroundColor = ref('#ffffff')
   const paintTarget = ref<'content' | 'mask'>('content')
   const shapeKind = ref<ShapeKind>('rect')
   const shapeFillEnabled = ref(true)
@@ -191,6 +192,21 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
   const wandAntialias = ref(true)
   const wandContiguous = ref(true)
   const selectionRadius = ref(10)
+  const symmetryMode = ref<'none' | 'mirror-h' | 'mirror-v' | 'mirror-both' | 'mandala'>('none')
+  const symmetrySectors = ref(6)
+  const gradientShape = ref<'linear' | 'radial'>('linear')
+  const gradientToTransparent = ref(true)
+  const gradientReverse = ref(false)
+
+  function swapColors(): void {
+    const fg = brushColor.value
+    brushColor.value = backgroundColor.value
+    backgroundColor.value = fg
+  }
+  function resetColors(): void {
+    brushColor.value = '#000000'
+    backgroundColor.value = '#ffffff'
+  }
   const editingTextId = ref<string | null>(null)
   const maskView = ref(false)
   const capturing = ref(false)
@@ -277,20 +293,38 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
     ctx.restore()
     return true
   }
+  let lastPresentWasMask = false
   function present(): void {
     if (!mainCanvas) return
     const { width, height } = editor.document()
-    if (mainCanvas.width !== width) mainCanvas.width = width
-    if (mainCanvas.height !== height) mainCanvas.height = height
+    const resized = mainCanvas.width !== width || mainCanvas.height !== height
+    if (resized) {
+      mainCanvas.width = width
+      mainCanvas.height = height
+    }
     const ctx = mainCanvas.getContext('2d')
     if (!ctx) return
-    ctx.clearRect(0, 0, width, height)
-    if (maskView.value && presentMaskView(ctx, width, height)) return
-    if (glOk.value) {
-      editor.setZoom(Math.max(0.01, panZoom.zoom()))
-      editor.render()
-      ctx.putImageData(compositor.readback(), 0, 0)
+    if (maskView.value && presentMaskView(ctx, width, height)) {
+      lastPresentWasMask = true
+      return
     }
+    if (!glOk.value) {
+      ctx.clearRect(0, 0, width, height)
+      return
+    }
+    editor.setZoom(Math.max(0.01, panZoom.zoom()))
+    const dmg = editor.takePresentDamage()
+    const clean = !dmg.full && !dmg.rect
+    if (clean && !resized && !lastPresentWasMask) return
+    if (dmg.rect && !dmg.full && !resized && !lastPresentWasMask) {
+      const img = compositor.readback(dmg.rect)
+      ctx.putImageData(img, Math.max(0, Math.floor(dmg.rect.x)), Math.max(0, Math.floor(dmg.rect.y)))
+      return
+    }
+    lastPresentWasMask = false
+    ctx.clearRect(0, 0, width, height)
+    editor.render()
+    ctx.putImageData(compositor.readback(), 0, 0)
   }
   function drawOverlayCanvas(): void {
     if (!overlayCanvas || !viewportEl || !containerEl) return
@@ -1223,6 +1257,7 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
       renderFilterPreview()
     })
   }
+  const lastFilter = ref<{ op: FilterOp; params: Record<string, number> } | null>(null)
   function startFilter(op: FilterOp): void {
     if (!activeId.value) return
     const n = engineNode(activeId.value)
@@ -1231,6 +1266,15 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
     cancelFilter()
     filterSession.value = { nodeId: n.id, op, params: defaultFilterParams(op) }
     renderFilterPreview()
+  }
+  function repeatLastFilter(): void {
+    const last = lastFilter.value
+    if (!last || !activeId.value) return
+    const n = engineNode(activeId.value)
+    if (!n || n.kind !== 'raster' || n.locks.content) return
+    cancelFilter()
+    filterSession.value = { nodeId: n.id, op: last.op, params: { ...last.params } }
+    applyFilter()
   }
   function updateFilterParam(key: string, value: number): void {
     const s = filterSession.value
@@ -1287,6 +1331,7 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
     r.contentId = afterId
     r.url = undefined
     editor.history.push(new SetContentCommand('Filter', r, beforeId, afterId, content, beforeUrl))
+    lastFilter.value = { op: s.op, params: { ...s.params } }
     editor.setPaintPreview(`content:${s.nodeId}`, null)
     filterSession.value = null
     editor.invalidate()
@@ -1301,7 +1346,20 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
   watch(activeId, () => cancelFilter())
 
   function syncEngineTool(): void {
-    editor.setBrush({ size: brushSize.value, hardness: brushHardness.value, opacity: brushOpacity.value, flow: 1, color: brushColor.value, spacing: 0.1 })
+    const d = editor.document()
+    editor.setBrush({
+      size: brushSize.value, hardness: brushHardness.value, opacity: brushOpacity.value,
+      flow: 1, color: brushColor.value, spacing: 0.1,
+      symmetry: symmetryMode.value === 'none'
+        ? undefined
+        : { mode: symmetryMode.value, sectors: symmetrySectors.value, cx: d.width / 2, cy: d.height / 2 },
+    })
+    editor.setGradientOptions({
+      shape: gradientShape.value,
+      color: brushColor.value,
+      endColor: gradientToTransparent.value ? null : backgroundColor.value,
+      reverse: gradientReverse.value,
+    })
     editor.setShapeOptions({
       shape: shapeKind.value,
       fill: shapeFillEnabled.value ? { color: shapeFillColor.value } : null,
@@ -1316,13 +1374,14 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
     let id: string = tool.value
     if (tool.value === 'brush') id = paintTarget.value === 'mask' ? 'mask-brush' : 'brush'
     else if (tool.value === 'eraser') id = paintTarget.value === 'mask' ? 'mask-eraser' : 'eraser'
-    else if (tool.value === 'text') id = 'select'
+    else if (tool.value === 'text' || tool.value === 'picker') id = 'select'
     if (editor.activeToolId() !== id) editor.setTool(id)
   }
   watch(
     [tool, paintTarget, brushSize, brushHardness, brushOpacity, brushColor,
      shapeKind, shapeFillEnabled, shapeFillColor, shapeStrokeEnabled, shapeStrokeColor, shapeStrokeWidth, shapeCombine,
-     shapeSides, shapeStarRatio, shapeTurns],
+     shapeSides, shapeStarRatio, shapeTurns,
+     symmetryMode, symmetrySectors, gradientShape, gradientToTransparent, backgroundColor, gradientReverse],
     syncEngineTool
   )
   watch(maskView, () => requestRender())
@@ -1360,9 +1419,36 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
     onPointerUp: (e, pt) => editor.pointerUp(e, pt),
     cursorFor: (pt) => editor.cursorAt(pt),
   }
+  function pickColorAt(pt: { x: number; y: number }, target: 'fg' | 'bg' = 'fg'): boolean {
+    if (!mainCanvas) return false
+    const g = mainCanvas.getContext('2d')
+    if (!g) return false
+    const { width, height } = editor.document()
+    const x = Math.max(0, Math.min(width - 1, Math.floor(pt.x)))
+    const y = Math.max(0, Math.min(height - 1, Math.floor(pt.y)))
+    const d = g.getImageData(x, y, 1, 1).data
+    if (d[3] === 0) return false
+    const hex = `#${((d[0] << 16) | (d[1] << 8) | d[2]).toString(16).padStart(6, '0')}`
+    if (target === 'bg') backgroundColor.value = hex
+    else brushColor.value = hex
+    return true
+  }
+  const pickerToolHandler: ToolHandler = {
+    onPointerDown: (e, pt) => {
+      pickColorAt(pt, e.ctrlKey || e.metaKey ? 'bg' : 'fg')
+      return true
+    },
+    onPointerMove: (e, pt) => {
+      pickColorAt(pt, e.ctrlKey || e.metaKey ? 'bg' : 'fg')
+    },
+    onPointerUp: () => {},
+    cursorFor: () => 'crosshair',
+  }
   function activeToolHandler(): ToolHandler {
     if (editor.floating()) return engineToolHandler
-    return tool.value === 'text' ? textToolHandler : engineToolHandler
+    if (tool.value === 'text') return textToolHandler
+    if (tool.value === 'picker') return pickerToolHandler
+    return engineToolHandler
   }
 
   function loadUrlToCanvas(url: string): Promise<HTMLCanvasElement> {
@@ -1411,6 +1497,14 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
     tool, brushSize, brushOpacity, brushHardness, brushColor, paintTarget,
     shapeKind, shapeFillEnabled, shapeFillColor, shapeStrokeEnabled, shapeStrokeColor, shapeStrokeWidth, shapeCombine,
     shapeSides, shapeStarRatio, shapeTurns,
+    symmetryMode, symmetrySectors,
+    gradientShape, gradientToTransparent, gradientReverse,
+    backgroundColor, swapColors, resetColors,
+    pickColorAt,
+    copyVisible: () => editor.copyVisible(),
+    newFromVisible: () => editor.newFromVisible(),
+    mergeVisible: () => editor.mergeVisible(),
+    lastFilter, repeatLastFilter,
     editingTextId, capturing, capturedImageUrl,
     canUndo, canRedo,
     panZoom, setElements, fitView, requestRender, requestOverlayRender,

@@ -1,12 +1,31 @@
-import { describe, expect, it } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import { DefaultContentStore } from '../impl/contentStore'
 import { getPaintCore } from '../paint'
 import { brushProfile } from './brushProfile'
 import { compositeStroke } from './blendStroke'
 import { CoverageBuffer } from './coverage'
-import { stepStroke } from './interpolate'
+import { flattenCatmullRom, stepDabs, stepStroke, type StrokePoint } from './interpolate'
 import { registerBuiltinPaintCores } from './paintCore'
+import { clearStampCache, getStamp, stampCacheSize } from './stampCache'
+
+// happy-dom has no 2d context; finish() bails without one, so stub enough of
+// it for the stroke-lifecycle tests.
+let restoreGetContext: (() => void) | null = null
+beforeAll(() => {
+  const proto = HTMLCanvasElement.prototype as { getContext: unknown }
+  const original = proto.getContext
+  proto.getContext = () => ({
+    drawImage() {},
+    putImageData() {},
+    createImageData: (w: number, h: number) => ({ width: w, height: h, data: new Uint8ClampedArray(w * h * 4) }),
+    getImageData: (_x: number, _y: number, w: number, h: number) => ({ width: w, height: h, data: new Uint8ClampedArray(w * h * 4) }),
+  })
+  restoreGetContext = () => {
+    proto.getContext = original
+  }
+})
+afterAll(() => restoreGetContext?.())
 
 describe('brushProfile (GIMP generated brush)', () => {
   it('is 1 at the centre and 0 at the edge for any hardness', () => {
@@ -71,6 +90,137 @@ describe('CoverageBuffer — anti-darkening (MAX accumulation)', () => {
     buf.stampCircle(10, 10, 5, 0.3, 1)
     expect(buf.maxAt(10, 10)).toBeGreaterThan(buf.maxAt(14, 10))
     expect(buf.dirty).not.toBeNull()
+  })
+})
+
+describe('stamp cache', () => {
+  it('caches stamps by size/hardness/subpixel and reuses them', () => {
+    clearStampCache()
+    const a = getStamp(8, 0.5, false, 0, 0)
+    const b = getStamp(8, 0.5, false, 0, 0)
+    expect(b).toBe(a)
+    expect(stampCacheSize()).toBe(1)
+    getStamp(8, 0.5, false, 0.25, 0)
+    expect(stampCacheSize()).toBe(2)
+  })
+
+  it('stamp values match the direct brush profile computation', () => {
+    clearStampCache()
+    const radius = 5
+    const stamp = getStamp(radius, 0.3, false, 0, 0)
+    const c = stamp.center
+    for (const [dx, dy] of [[0, 0], [2, 0], [0, 3], [3, 3]]) {
+      const d = Math.hypot(dx, dy)
+      const want = d > radius ? 0 : brushProfile(d / radius, 0.3)
+      expect(stamp.data[(c + dy) * stamp.size + (c + dx)]).toBeCloseTo(want, 6)
+    }
+  })
+
+  it('subpixel offsets shift the stamp centre', () => {
+    clearStampCache()
+    const on = getStamp(4, 0.5, false, 0, 0)
+    const off = getStamp(4, 0.5, false, 0.5, 0)
+    const c = on.center
+    expect(off.data[c * off.size + c + 4]).toBeGreaterThan(on.data[c * on.size + c + 4])
+  })
+})
+
+describe('CoverageBuffer — extent allocation', () => {
+  it('allocates storage for the stroked area, not the whole layer', () => {
+    const buf = new CoverageBuffer(4096, 4096)
+    buf.stampCircle(100, 100, 8, 1, 1)
+    expect(buf.allocatedLength()).toBeGreaterThan(0)
+    expect(buf.allocatedLength()).toBeLessThan(200 * 200)
+  })
+
+  it('grows the extent as the stroke moves and keeps earlier coverage', () => {
+    const buf = new CoverageBuffer(1024, 1024)
+    buf.stampCircle(50, 50, 4, 1, 0.5)
+    const at50 = buf.valueAt(50, 50)
+    buf.stampCircle(500, 500, 4, 1, 0.8)
+    expect(buf.valueAt(50, 50)).toBe(at50)
+    expect(buf.valueAt(500, 500)).toBeCloseTo(0.8, 6)
+  })
+
+  it('reads 0 outside the allocated extent', () => {
+    const buf = new CoverageBuffer(1024, 1024)
+    buf.stampCircle(50, 50, 4, 1, 1)
+    expect(buf.valueAt(900, 900)).toBe(0)
+    expect(buf.valueAt(-1, 5)).toBe(0)
+  })
+})
+
+describe('catmull-rom stroke interpolation', () => {
+  const p = (x: number, y: number, pressure = 1): StrokePoint => ({ x, y, pressure })
+
+  it('collinear points flatten to the straight segment', () => {
+    const pts = flattenCatmullRom(p(0, 0), p(10, 0), p(20, 0), p(30, 0))
+    expect(pts[pts.length - 1]).toMatchObject({ x: 20, y: 0 })
+    for (const q of pts) expect(Math.abs(q.y)).toBeLessThan(1e-9)
+  })
+
+  it('a corner is rounded through intermediate points off the chord', () => {
+    const pts = flattenCatmullRom(p(0, 0), p(10, 0), p(10, 10), p(10, 20))
+    expect(pts.length).toBeGreaterThan(1)
+    const mid = pts[Math.floor(pts.length / 2)]
+    const chordDist = Math.abs((mid.x - 10) * (10 - 0) - (mid.y - 0) * (10 - 10)) / 10
+    expect(chordDist).toBeGreaterThan(0.05)
+  })
+
+  it('interpolates pressure from segment start to end', () => {
+    const pts = flattenCatmullRom(p(0, 0, 0.2), p(10, 0, 0.2), p(20, 0, 0.8), p(30, 0, 0.8))
+    expect(pts[pts.length - 1].pressure).toBeCloseTo(0.8, 6)
+    for (let i = 1; i < pts.length; i++) {
+      expect(pts[i].pressure).toBeGreaterThanOrEqual(pts[i - 1].pressure - 1e-9)
+    }
+  })
+
+  it('stepDabs lerps pressure along the segment', () => {
+    const { dabs } = stepDabs({ x: 0, y: 0, pressure: 0 }, { x: 10, y: 0, pressure: 1 }, 5, 0)
+    expect(dabs.map((d) => d.x)).toEqual([5, 10])
+    expect(dabs[0].pressure).toBeCloseTo(0.5, 6)
+    expect(dabs[1].pressure).toBeCloseTo(1, 6)
+  })
+})
+
+describe('pressure dynamics', () => {
+  function strokeWith(dynamics: { size?: boolean; opacity?: boolean } | undefined, pressure: number) {
+    registerBuiltinPaintCores()
+    const content = new DefaultContentStore()
+    const bitmap = document.createElement('canvas')
+    bitmap.width = 64
+    bitmap.height = 64
+    const slot = { contentId: content.register(bitmap) }
+    const core = getPaintCore('brush').create()
+    core.start(
+      {
+        drawable: {} as never,
+        channel: 'content',
+        bitmap,
+        slot,
+        content,
+        toLocal: (pt) => pt,
+        selection: null,
+        scale: 1,
+      },
+      { size: 16, hardness: 1, spacing: 0.1, opacity: 1, flow: 1, color: '#ff0000', dynamics },
+      { x: 32, y: 32, pressure, time: 0 }
+    )
+    return core as unknown as { cov: CoverageBuffer }
+  }
+
+  it('size dynamics shrink the dab with light pressure', () => {
+    const light = strokeWith({ size: true }, 0.25)
+    const full = strokeWith({ size: true }, 1)
+    expect(light.cov.valueAt(32 + 6, 32)).toBe(0)
+    expect(full.cov.valueAt(32 + 6, 32)).toBeGreaterThan(0)
+  })
+
+  it('opacity dynamics scale the flow; disabled dynamics ignore pressure', () => {
+    const half = strokeWith({ opacity: true }, 0.5)
+    expect(half.cov.valueAt(32, 32)).toBeCloseTo(0.5, 6)
+    const off = strokeWith(undefined, 0.5)
+    expect(off.cov.valueAt(32, 32)).toBeCloseTo(1, 6)
   })
 })
 
@@ -226,14 +376,44 @@ describe('paint stroke lifecycle (url dirtiness for re-upload)', () => {
     )
     const cmd = core.finish()
     expect(cmd).not.toBeNull()
-    expect(slot.contentId).not.toBe(beforeId)
+    const afterId = slot.contentId
+    expect(afterId).not.toBe(beforeId)
     expect(slot.url).toBeUndefined()
-    expect(cmd!.contentRefs?.()).toContain(beforeId)
+    expect(cmd!.contentRefs?.()).toBeUndefined()
 
     cmd!.apply('undo')
-    expect(slot.contentId).toBe(beforeId)
+    expect(slot.contentId).not.toBe(afterId)
     expect(slot.url).toBe('http://x/old.png')
+    expect(content.get(slot.contentId)?.uploadedUrl).toBe('http://x/old.png')
     cmd!.apply('redo')
     expect(slot.url).toBeUndefined()
+  })
+
+  it('region undo keeps the history budget at patch size, not layer size', () => {
+    registerBuiltinPaintCores()
+    const content = new DefaultContentStore()
+    const bitmap = document.createElement('canvas')
+    bitmap.width = 256
+    bitmap.height = 256
+    const beforeId = content.register(bitmap)
+    const slot = { contentId: beforeId }
+    const core = getPaintCore('brush').create()
+    core.start(
+      {
+        drawable: {} as never,
+        channel: 'content',
+        bitmap,
+        slot,
+        content,
+        toLocal: (pt) => pt,
+        selection: null,
+        scale: 1,
+      },
+      { size: 8, hardness: 1, spacing: 0.1, opacity: 1, flow: 1, color: '#ff0000' },
+      { x: 10, y: 10, pressure: 1, time: 0 }
+    )
+    const cmd = core.finish()
+    expect(cmd).not.toBeNull()
+    expect(cmd!.sizeBytes()).toBeLessThan(256 * 256 * 4)
   })
 })

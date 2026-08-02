@@ -194,7 +194,34 @@ describe('useLayerEditorCanvas gestures', () => {
     expect(api.viewportCursor.value).toBe('move')
   })
 
-  it('collapses rapid moves into one flush per frame', () => {
+  it('delivers every queued move sample in a single flush per frame (paint tools)', () => {
+    const { api, handler, editor } = setup()
+    editor.tool.value = 'brush'
+    api.onPointerDown(ptr())
+    api.onPointerMove(ptr({ clientX: 1 }))
+    api.onPointerMove(ptr({ clientX: 2 }))
+    api.onPointerMove(ptr({ clientX: 3 }))
+    flushRaf()
+    expect(handler.onPointerMove).toHaveBeenCalledTimes(3)
+    flushRaf()
+    expect(handler.onPointerMove).toHaveBeenCalledTimes(3)
+  })
+
+  it('expands coalesced pointer samples during a paint drag', () => {
+    const { api, handler, editor } = setup()
+    editor.tool.value = 'brush'
+    api.onPointerDown(ptr())
+    const e = ptr({ clientX: 5 })
+    ;(e as unknown as { getCoalescedEvents: () => PointerEvent[] }).getCoalescedEvents = () => [
+      ptr({ clientX: 4 }),
+      ptr({ clientX: 5 }),
+    ]
+    api.onPointerMove(e)
+    flushRaf()
+    expect(handler.onPointerMove).toHaveBeenCalledTimes(2)
+  })
+
+  it('non-paint tools still collapse to the last sample per frame', () => {
     const { api, handler } = setup()
     api.onPointerDown(ptr())
     api.onPointerMove(ptr({ clientX: 1 }))
@@ -202,6 +229,16 @@ describe('useLayerEditorCanvas gestures', () => {
     api.onPointerMove(ptr({ clientX: 3 }))
     flushRaf()
     expect(handler.onPointerMove).toHaveBeenCalledTimes(1)
+  })
+
+  it('discards hover moves queued before the press instead of replaying them into the stroke', () => {
+    const { api, handler, editor } = setup()
+    editor.tool.value = 'brush'
+    api.onPointerMove(ptr({ clientX: 1 }))
+    api.onPointerMove(ptr({ clientX: 2 }))
+    api.onPointerDown(ptr({ clientX: 3 }))
+    flushRaf()
+    expect(handler.onPointerMove).not.toHaveBeenCalled()
   })
 
   it('adjusts brush size and hardness on alt-drag with a paint tool', () => {

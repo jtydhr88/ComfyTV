@@ -18,7 +18,8 @@ export interface LayerRow {
 export type ToolId =
   | 'select' | 'transform'
   | 'marquee' | 'marquee-ellipse' | 'lasso' | 'wand'
-  | 'brush' | 'eraser' | 'bucket' | 'text' | 'shape' | 'warp'
+  | 'brush' | 'eraser' | 'airbrush' | 'smudge' | 'clone' | 'dodge' | 'burn'
+  | 'picker' | 'gradient' | 'bucket' | 'text' | 'shape' | 'warp'
 
 export interface ToolHandler {
   onPointerDown: (e: PointerEvent, pt: Point) => boolean

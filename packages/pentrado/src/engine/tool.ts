@@ -65,7 +65,7 @@ export interface ToolContext {
   setSelectedNodes(ids: string[]): void
   createPaintCore(id: string): PaintCore
 
-  setPaintPreview(key: string, canvas: HTMLCanvasElement | null): void
+  setPaintPreview(key: string, canvas: HTMLCanvasElement | null, rects?: Rect[] | Rect | null): void
   selection: {
     combineShape(label: string, mask: import('./editor/selectionMath').GrayMask, op: import('./editor/selectionMath').SelectionOp): void
     currentMask(): import('./editor/selectionMath').GrayMask | null

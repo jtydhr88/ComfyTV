@@ -14,7 +14,7 @@ export const DEFAULT_BRUSH: BrushParams = {
 }
 
 function sample(e: PointerEvent | null, pt: Vec2): CoordSample {
-  const pressure = e && e.pressure > 0 ? e.pressure : 1
+  const pressure = e && e.pointerType === 'pen' && e.pressure > 0 ? e.pressure : 1
   return { x: pt.x, y: pt.y, pressure, time: 0 }
 }
 
@@ -23,6 +23,7 @@ class PaintTool implements Tool {
   private core: PaintCore | null = null
   private lastPt: Vec2 | null = null
   private previewKey: string | null = null
+  private tickTimer: ReturnType<typeof setInterval> | null = null
 
   constructor(
     readonly id: string,
@@ -40,17 +41,33 @@ class PaintTool implements Tool {
   private pushPreview(): void {
     if (!this.core || !this.previewKey) return
     const canvas = this.core.preview()
-    if (canvas) this.ctx.setPaintPreview(this.previewKey, canvas)
+    if (canvas) this.ctx.setPaintPreview(this.previewKey, canvas, this.core.previewDocRects?.())
+  }
+
+  private stopTicking(): void {
+    if (this.tickTimer != null) {
+      clearInterval(this.tickTimer)
+      this.tickTimer = null
+    }
   }
 
   onButtonPress(e: PointerEvent, pt: Vec2): void {
     const target = resolvePaintTarget(this.ctx.document(), this.ctx.content, this.ctx.activeNodeId(), this.channel)
     if (!target) return
-    this.core = this.ctx.createPaintCore(this.coreId)
+    const core = this.ctx.createPaintCore(this.coreId)
+    if (e.altKey && core.modifierPress?.(pt)) return
+    this.core = core
     this.control.active = true
     this.lastPt = pt
     this.previewKey = `${this.channel}:${target.drawable.id}`
     this.core.start(target, this.params(), sample(e, pt))
+    if (this.core.tick && this.coreId === 'airbrush') {
+      this.tickTimer = setInterval(() => {
+        this.core?.tick?.()
+        this.pushPreview()
+        this.ctx.requestRender()
+      }, 50)
+    }
     this.pushPreview()
     this.ctx.requestRender()
   }
@@ -64,6 +81,7 @@ class PaintTool implements Tool {
   }
 
   onButtonRelease(): void {
+    this.stopTicking()
     if (!this.core) return
     if (this.previewKey) {
       this.ctx.setPaintPreview(this.previewKey, null)

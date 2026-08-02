@@ -23,6 +23,8 @@ function makeEditor() {
     cutSelection: vi.fn(),
     copySelection: vi.fn(),
     pasteClipboard: vi.fn(),
+    swapColors: vi.fn(),
+    resetColors: vi.fn(),
   }
 }
 
@@ -158,6 +160,18 @@ describe('useLayerEditorHotkeys', () => {
     api.onKeyDown(key({ key: 'Escape' }))
     expect(editor.transformCancel).toHaveBeenCalled()
     expect(editor.tool.value).toBe('select')
+  })
+
+  it('x swaps colors and d resets them (no ctrl)', () => {
+    const { api, editor } = setup()
+    api.onKeyDown(key({ code: 'KeyX' }))
+    expect(editor.swapColors).toHaveBeenCalled()
+    expect(editor.cutSelection).not.toHaveBeenCalled()
+    api.onKeyDown(key({ code: 'KeyD' }))
+    expect(editor.resetColors).toHaveBeenCalled()
+    api.onKeyDown(key({ code: 'KeyX', ctrlKey: true }))
+    expect(editor.cutSelection).toHaveBeenCalled()
+    expect(editor.swapColors).toHaveBeenCalledTimes(1)
   })
 
   it('leaves unrelated keys alone', () => {

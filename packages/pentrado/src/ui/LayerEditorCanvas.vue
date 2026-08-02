@@ -26,6 +26,7 @@
   <div
     ref="viewportRef"
     data-capture-wheel="true"
+    data-testid="pentrado-viewport"
     tabindex="-1"
     class="ctv:relative ctv:size-full ctv:min-h-0 ctv:overflow-hidden ctv:bg-[#141414] ctv:outline-none"
     :style="{ cursor: guideHoverAxis ? (guideHoverAxis === 'x' ? 'ew-resize' : 'ns-resize') : viewportCursor }"
@@ -46,7 +47,7 @@
       class="ctv:absolute ctv:top-0 ctv:left-0 ctv:pointer-events-none"
       :style="canvasBackdropStyle"
     >
-      <canvas ref="mainRef" class="ctv:absolute ctv:top-0 ctv:left-0 ctv:size-full" />
+      <canvas ref="mainRef" data-testid="pentrado-main-canvas" class="ctv:absolute ctv:top-0 ctv:left-0 ctv:size-full" />
       <slot name="onion" />
     </div>
     <canvas ref="overlayRef" class="ctv:absolute ctv:inset-0 ctv:size-full ctv:pointer-events-none" />

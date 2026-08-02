@@ -78,17 +78,24 @@ export function useLayerEditorCanvas(
   let panning = false
   let panLast = { x: 0, y: 0 }
   let toolActive = false
-  let pendingMove: PointerEvent | null = null
+  let pendingMoves: PointerEvent[] = []
   let moveRaf: number | null = null
 
   function artboardPt(e: PointerEvent) {
     return editor.panZoom.screenToArtboard(e.clientX, e.clientY)
   }
 
+  function inputSamples(e: PointerEvent): PointerEvent[] {
+    if (typeof e.getCoalescedEvents !== 'function') return [e]
+    const coalesced = e.getCoalescedEvents()
+    return coalesced.length ? coalesced : [e]
+  }
+
   function onPointerDown(e: PointerEvent): void {
     const zone = viewportEl.value
     if (!zone) return
     zone.focus?.()
+    pendingMoves = []
 
     if (e.button === 1 || e.button === 2 || (e.button === 0 && spaceDown.value)) {
       panning = true
@@ -98,7 +105,11 @@ export function useLayerEditorCanvas(
     }
     if (e.button !== 0) return
 
-    if (isPaintTool.value && e.altKey) {
+    if (isPaintTool.value && e.ctrlKey) {
+      editor.pickColorAt(artboardPt(e))
+      return
+    }
+    if (isPaintTool.value && e.altKey && editor.tool.value !== 'clone') {
       adjusting.value = {
         x0: e.offsetX,
         y0: e.offsetY,
@@ -127,8 +138,9 @@ export function useLayerEditorCanvas(
 
   function flushMove(): void {
     moveRaf = null
-    const e = pendingMove
-    pendingMove = null
+    const events = pendingMoves
+    pendingMoves = []
+    const e = events[events.length - 1]
     if (!e) return
     if (panning) {
       editor.panZoom.panBy(e.offsetX - panLast.x, e.offsetY - panLast.y)
@@ -141,7 +153,14 @@ export function useLayerEditorCanvas(
       return
     }
     if (toolActive) {
-      editor.activeToolHandler().onPointerMove(e, artboardPt(e))
+      const handler = editor.activeToolHandler()
+      if (wantsAllSamples.value) {
+        for (const ev of events) {
+          for (const s of inputSamples(ev)) handler.onPointerMove(s, artboardPt(s))
+        }
+      } else {
+        handler.onPointerMove(e, artboardPt(e))
+      }
     } else {
       hoverCursor.value = editor.activeToolHandler().cursorFor(artboardPt(e))
     }
@@ -151,7 +170,7 @@ export function useLayerEditorCanvas(
     if (!adjusting.value) {
       cursorPos.value = { x: e.offsetX, y: e.offsetY }
     }
-    pendingMove = e
+    pendingMoves.push(e)
     if (moveRaf == null) moveRaf = requestAnimationFrame(flushMove)
   }
 
@@ -194,8 +213,12 @@ export function useLayerEditorCanvas(
     spaceDown.value = v
   }
 
-  const isPaintTool = computed(
-    () => editor.tool.value === 'brush' || editor.tool.value === 'eraser',
+  const isPaintTool = computed(() =>
+    ['brush', 'eraser', 'airbrush', 'smudge', 'clone', 'dodge', 'burn'].includes(editor.tool.value),
+  )
+
+  const wantsAllSamples = computed(() =>
+    ['brush', 'eraser', 'pencil', 'airbrush', 'smudge', 'clone', 'dodge', 'burn', 'mask-brush', 'mask-eraser', 'lasso'].includes(editor.tool.value),
   )
 
   const viewportCursor = computed(() => {

@@ -224,6 +224,9 @@ export function createWebGLCompositor(): Compositor {
   let ping: Target | null = null
   let pong: Target | null = null
   let result: Target | null = null
+  let resultValid = false
+  let scratch2d: HTMLCanvasElement | null = null
+  let lastSweepGen = 0
   let fallback: WebGLTexture | null = null
   let lutTex: WebGLTexture | null = null
   let width = 0
@@ -235,7 +238,7 @@ export function createWebGLCompositor(): Compositor {
   let lastRecover = -Infinity
   let onRestored: (() => void) | undefined
   const targets = new Map<number, Target>()
-  const texCache = new Map<string, { tex: WebGLTexture; gen: number }>()
+  const texCache = new Map<string, { tex: WebGLTexture; gen: number; version?: number }>()
   let uniformCache = new WeakMap<WebGLProgram, Map<string, WebGLUniformLocation | null>>()
 
   function loc(prog: WebGLProgram, name: string): WebGLUniformLocation | null {
@@ -279,10 +282,17 @@ export function createWebGLCompositor(): Compositor {
       const hit = texCache.get(nt.key)
       if (hit) {
         hit.gen = generation
+        if (nt.version === undefined || hit.version === nt.version) return hit.tex
+        if (hit.version === nt.version - 1 && nt.dirtyRects && partialUploadAll(hit.tex, nt.source, nt.dirtyRects)) {
+          hit.version = nt.version
+          return hit.tex
+        }
+        uploadInto(hit.tex, nt.source)
+        hit.version = nt.version
         return hit.tex
       }
       const tex = uploadSource(nt.source)
-      texCache.set(nt.key, { tex, gen: generation })
+      texCache.set(nt.key, { tex, gen: generation, version: nt.version })
       return tex
     }
     const tex = uploadSource(nt.source)
@@ -290,7 +300,56 @@ export function createWebGLCompositor(): Compositor {
     return tex
   }
 
+  function partialUploadAll(
+    tex: WebGLTexture,
+    src: HTMLCanvasElement | ImageBitmap | OffscreenCanvas,
+    rects: Rect[]
+  ): boolean {
+    let area = 0
+    for (const r of rects) area += Math.max(0, r.w) * Math.max(0, r.h)
+    if (area > (src.width * src.height) / 2) return false
+    for (const r of rects) {
+      if (!partialUpload(tex, src, r)) return false
+    }
+    return true
+  }
+
+  function partialUpload(
+    tex: WebGLTexture,
+    src: HTMLCanvasElement | ImageBitmap | OffscreenCanvas,
+    rect: Rect
+  ): boolean {
+    const g = gl!
+    const x = Math.max(0, Math.floor(rect.x))
+    const y = Math.max(0, Math.floor(rect.y))
+    const w = Math.min(src.width, Math.ceil(rect.x + rect.w)) - x
+    const h = Math.min(src.height, Math.ceil(rect.y + rect.h)) - y
+    if (w <= 0 || h <= 0) return true
+    if (!scratch2d) scratch2d = document.createElement('canvas')
+    scratch2d.width = w
+    scratch2d.height = h
+    const sctx = scratch2d.getContext('2d')
+    if (!sctx) return false
+    sctx.clearRect(0, 0, w, h)
+    sctx.drawImage(src, x, y, w, h, 0, 0, w, h)
+    g.bindTexture(g.TEXTURE_2D, tex)
+    g.pixelStorei(g.UNPACK_FLIP_Y_WEBGL, true)
+    g.texSubImage2D(g.TEXTURE_2D, 0, x, src.height - (y + h), g.RGBA, g.UNSIGNED_BYTE, scratch2d)
+    g.pixelStorei(g.UNPACK_FLIP_Y_WEBGL, false)
+    return true
+  }
+
+  function uploadInto(tex: WebGLTexture, src: HTMLCanvasElement | ImageBitmap | OffscreenCanvas): void {
+    const g = gl!
+    g.bindTexture(g.TEXTURE_2D, tex)
+    g.pixelStorei(g.UNPACK_FLIP_Y_WEBGL, true)
+    g.texImage2D(g.TEXTURE_2D, 0, g.RGBA, g.RGBA, g.UNSIGNED_BYTE, src)
+    g.pixelStorei(g.UNPACK_FLIP_Y_WEBGL, false)
+  }
+
   function sweepTexCache(): void {
+    if (generation - lastSweepGen < 8) return
+    lastSweepGen = generation
     for (const [key, entry] of texCache) {
       if (entry.gen < generation - 3) {
         gl?.deleteTexture(entry.tex)
@@ -353,6 +412,7 @@ export function createWebGLCompositor(): Compositor {
     texCache.clear()
     uniformCache = new WeakMap()
     ping = pong = result = null
+    resultValid = false
     fallback = null
     lutTex = null
     blendProg = presentProg = copyProg = adjustProg = null
@@ -423,6 +483,7 @@ export function createWebGLCompositor(): Compositor {
 
   return {
     init(opts: CompositorInit): boolean {
+      if (gl) dropContextState()
       width = opts.width
       height = opts.height
       onRestored = opts.onContextRestored
@@ -447,15 +508,33 @@ export function createWebGLCompositor(): Compositor {
       }
       if (ping) freeTargetObj(ping)
       if (pong) freeTargetObj(pong)
+      if (result) freeTargetObj(result)
       ping = makeTarget(w, h)
       pong = makeTarget(w, h)
       result = null
+      resultValid = false
     },
 
-    composite(inputs: CompositeInput[], target?: FBOHandle | null, _region?: Rect): void {
+    composite(inputs: CompositeInput[], target?: FBOHandle | null, region?: Rect): void {
       if (!ensureHealthy()) return
       if (!gl || !blendProg || !ping || !pong) return
       const g = gl
+      g.disable(g.SCISSOR_TEST)
+
+      let clip: Rect | null = null
+      if (!target && region && resultValid && result) {
+        const x = Math.max(0, Math.floor(region.x))
+        const y = Math.max(0, Math.floor(region.y))
+        const w = Math.min(width, Math.ceil(region.x + region.w)) - x
+        const h = Math.min(height, Math.ceil(region.y + region.h)) - y
+        if (w <= 0 || h <= 0) return
+        if (w < width || h < height) clip = { x, y, w, h }
+      }
+      if (clip) {
+        g.enable(g.SCISSOR_TEST)
+        g.scissor(clip.x, height - (clip.y + clip.h), clip.w, clip.h)
+      }
+
       let read = ping
       let write = pong
       clearTarget(read)
@@ -518,11 +597,20 @@ export function createWebGLCompositor(): Compositor {
       for (const tex of temps) g.deleteTexture(tex)
       sweepTexCache()
 
-      result = read
       if (target) {
         const dst = targets.get(target.id)
         if (dst) blit(read, dst)
+        return
       }
+
+      if (!result || result.width !== width || result.height !== height) {
+        if (result) freeTargetObj(result)
+        result = makeTarget(width, height)
+        resultValid = false
+      }
+      blit(read, result)
+      if (clip) g.disable(g.SCISSOR_TEST)
+      resultValid = true
     },
 
     allocTarget(w: number, h: number): FBOHandle {
@@ -552,13 +640,29 @@ export function createWebGLCompositor(): Compositor {
       return uploadSource(source)
     },
 
-    readback(_region?: Rect): ImageData {
+    readback(region?: Rect): ImageData {
       const empty = () => new ImageData(Math.max(1, width), Math.max(1, height))
       if (!ensureHealthy() || !gl || !ping) return empty()
       const g = gl
 
-      presentToDefault(result ?? ping)
+      let clip: Rect | null = null
+      if (region) {
+        const x = Math.max(0, Math.floor(region.x))
+        const y = Math.max(0, Math.floor(region.y))
+        const w = Math.min(width, Math.ceil(region.x + region.w)) - x
+        const h = Math.min(height, Math.ceil(region.y + region.h)) - y
+        if (w <= 0 || h <= 0) return new ImageData(1, 1)
+        if (w < width || h < height) clip = { x, y, w, h }
+      }
+
+      presentToDefault(result ?? ping, clip)
       g.bindFramebuffer(g.FRAMEBUFFER, null)
+      if (clip) {
+        const px = new Uint8ClampedArray(clip.w * clip.h * 4)
+        g.readPixels(clip.x, height - (clip.y + clip.h), clip.w, clip.h, g.RGBA, g.UNSIGNED_BYTE, px)
+        flipRows(px, clip.w, clip.h)
+        return new ImageData(px, clip.w, clip.h)
+      }
       const px = new Uint8ClampedArray(width * height * 4)
       g.readPixels(0, 0, width, height, g.RGBA, g.UNSIGNED_BYTE, px)
       flipRows(px, width, height)
@@ -585,6 +689,7 @@ export function createWebGLCompositor(): Compositor {
       if (!gl) return
       if (ping) freeTargetObj(ping)
       if (pong) freeTargetObj(pong)
+      if (result) freeTargetObj(result)
       for (const t of targets.values()) freeTargetObj(t)
       targets.clear()
       for (const entry of texCache.values()) gl.deleteTexture(entry.tex)
@@ -603,8 +708,13 @@ export function createWebGLCompositor(): Compositor {
     },
   }
 
-  function presentToDefault(src: Target): void {
+  function presentToDefault(src: Target, clip?: Rect | null): void {
     const g = gl!
+    g.disable(g.SCISSOR_TEST)
+    if (clip) {
+      g.enable(g.SCISSOR_TEST)
+      g.scissor(clip.x, height - (clip.y + clip.h), clip.w, clip.h)
+    }
     g.useProgram(presentProg!)
     g.bindFramebuffer(g.FRAMEBUFFER, null)
     g.viewport(0, 0, width, height)
@@ -614,6 +724,7 @@ export function createWebGLCompositor(): Compositor {
     g.bindTexture(g.TEXTURE_2D, src.tex)
     g.uniform1i(loc(presentProg!, 'u_tex'), 0)
     drawFullscreen()
+    if (clip) g.disable(g.SCISSOR_TEST)
   }
 
   function blit(src: Target, dst: Target): void {

@@ -1,7 +1,7 @@
 import type { ContentStore } from '../content'
 import type { Document } from '../document'
 import { findNode } from '../document'
-import type { RasterData, Transform, Vec2 } from '../node'
+import type { RasterData, Rect, Transform, Vec2 } from '../node'
 import type { PaintTarget } from '../paint'
 
 export function displayScale(transform: Transform, bitmapW: number, bitmapH: number): number {
@@ -23,6 +23,44 @@ export function makeToLocal(transform: Transform, naturalW: number, naturalH: nu
     const lx = dx * c - dy * s
     const ly = dx * s + dy * c
     return { x: (lx + transform.w / 2) * sx, y: (ly + transform.h / 2) * sy }
+  }
+}
+
+export function makeLocalRectToDoc(
+  transform: Transform,
+  naturalW: number,
+  naturalH: number
+): (r: { x0: number; y0: number; x1: number; y1: number }) => Rect {
+  const cx = transform.x + transform.w / 2
+  const cy = transform.y + transform.h / 2
+  const c = Math.cos(transform.rotation)
+  const s = Math.sin(transform.rotation)
+  const sx = (transform.w || 1) / Math.max(1, naturalW)
+  const sy = (transform.h || 1) / Math.max(1, naturalH)
+  const pad = Math.ceil(2 * Math.max(1, sx, sy)) + 1
+  return (r): Rect => {
+    let minX = Infinity
+    let minY = Infinity
+    let maxX = -Infinity
+    let maxY = -Infinity
+    for (const [px, py] of [[r.x0, r.y0], [r.x1 + 1, r.y0], [r.x0, r.y1 + 1], [r.x1 + 1, r.y1 + 1]]) {
+      const lx = px * sx - transform.w / 2
+      const ly = py * sy - transform.h / 2
+      const dx = lx * c - ly * s
+      const dy = lx * s + ly * c
+      const x = cx + dx
+      const y = cy + dy
+      if (x < minX) minX = x
+      if (x > maxX) maxX = x
+      if (y < minY) minY = y
+      if (y > maxY) maxY = y
+    }
+    return {
+      x: Math.floor(minX) - pad,
+      y: Math.floor(minY) - pad,
+      w: Math.ceil(maxX - minX) + 2 * pad + 1,
+      h: Math.ceil(maxY - minY) + 2 * pad + 1,
+    }
   }
 }
 
@@ -92,6 +130,7 @@ export function resolvePaintTarget(
       slot: node.mask,
       content,
       toLocal: makeToLocal(tf, entry.width, entry.height),
+      toDocRect: makeLocalRectToDoc(tf, entry.width, entry.height),
       selection: resolveSelection(doc, content, tf, entry.width, entry.height),
       scale: displayScale(tf, entry.width, entry.height),
     }
@@ -108,6 +147,7 @@ export function resolvePaintTarget(
     slot: raster,
     content,
     toLocal: makeToLocal(raster.transform, raster.naturalWidth, raster.naturalHeight),
+    toDocRect: makeLocalRectToDoc(raster.transform, raster.naturalWidth, raster.naturalHeight),
     selection: resolveSelection(doc, content, raster.transform, raster.naturalWidth, raster.naturalHeight),
     lockAlpha: raster.lockAlpha === true,
     scale: displayScale(raster.transform, raster.naturalWidth, raster.naturalHeight),

@@ -1,4 +1,5 @@
 import { generateId } from '../id'
+import { applyLayerFxChainGpu } from './fxGpu'
 import type { Bitmap } from './place'
 
 export type LayerFxOp =
@@ -99,6 +100,11 @@ function fxPad(f: LayerFxData): number {
   }
   if (f.op === 'gaussian-blur') return Math.ceil(3 * (f.params.stdDev ?? 0))
   return 0
+}
+
+export function gaussianIsNoop(sigma: number): boolean {
+  if (sigma <= 0) return true
+  return boxSizes(sigma).every((size) => Math.round((size - 1) / 2) < 1)
 }
 
 function boxSizes(sigma: number): number[] {
@@ -470,7 +476,13 @@ export function getFxProcessed(
   const stamp = `${contentStamp}|${bitmap.width}x${bitmap.height}|${fxStamp(fx)}`
   const entry = fxCache.get(cacheKey)
   if (entry && entry.stamp === stamp) return { canvas: entry.canvas, pad: entry.pad }
-  const result = applyLayerFxChain(bitmap, fx)
+  const active = fx.filter((f) => f.enabled)
+  const pad = active.reduce((n, f) => n + fxPad(f), 0)
+  const gpuCanvas =
+    bitmap.width + 2 * pad <= 16384 && bitmap.height + 2 * pad <= 16384
+      ? applyLayerFxChainGpu(bitmap, active, pad)
+      : null
+  const result = gpuCanvas ? { canvas: gpuCanvas, pad } : applyLayerFxChain(bitmap, fx)
   if (!result) return null
   if (fxCache.size >= FX_CACHE_MAX && !fxCache.has(cacheKey)) {
     const first = fxCache.keys().next().value

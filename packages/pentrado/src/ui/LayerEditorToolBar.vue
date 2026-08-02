@@ -11,7 +11,7 @@
     <div :class="dividerClass" />
 
     <template v-if="isPaintTool">
-      <div class="ctv:flex ctv:h-6 ctv:items-center ctv:gap-0.5 ctv:rounded ctv:bg-[#1e1e1e] ctv:p-0.5">
+      <div v-if="showPaintTargetSeg" class="ctv:flex ctv:h-6 ctv:items-center ctv:gap-0.5 ctv:rounded ctv:bg-[#1e1e1e] ctv:p-0.5">
         <button
           v-for="target in PAINT_TARGETS"
           :key="target.id"
@@ -43,6 +43,58 @@
       <label v-if="showBrushColor" :class="fieldClass">
         {{ $t('pentrado.brushColor') }}
         <input v-model="editor.brushColor.value" type="color" :class="colorInputClass" />
+      </label>
+
+      <template v-if="showSymmetry">
+        <div :class="dividerClass" />
+        <div class="ctv:flex ctv:h-6 ctv:items-center ctv:gap-0.5 ctv:rounded ctv:bg-[#1e1e1e] ctv:p-0.5">
+          <button
+            v-for="mode in SYMMETRY_MODES"
+            :key="mode"
+            type="button"
+            :class="segBtnClass(editor.symmetryMode.value === mode)"
+            :aria-pressed="editor.symmetryMode.value === mode"
+            :title="$t(`pentrado.symmetry_${mode}`)"
+            @click="editor.symmetryMode.value = mode"
+          >
+            {{ $t(`pentrado.symmetry_${mode}`) }}
+          </button>
+        </div>
+        <label v-if="editor.symmetryMode.value === 'mandala'" :class="fieldClass">
+          {{ $t('pentrado.symmetrySectors') }}
+          <input v-model.number="editor.symmetrySectors.value" type="number" min="2" max="16" step="1" class="ctv:w-12" />
+        </label>
+      </template>
+    </template>
+
+    <template v-else-if="isGradientTool">
+      <div class="ctv:flex ctv:h-6 ctv:items-center ctv:gap-0.5 ctv:rounded ctv:bg-[#1e1e1e] ctv:p-0.5">
+        <button
+          v-for="shape in (['linear', 'radial'] as const)"
+          :key="shape"
+          type="button"
+          :class="segBtnClass(editor.gradientShape.value === shape)"
+          :aria-pressed="editor.gradientShape.value === shape"
+          @click="editor.gradientShape.value = shape"
+        >
+          {{ $t(`pentrado.gradient_${shape}`) }}
+        </button>
+      </div>
+      <label :class="fieldClass">
+        {{ $t('pentrado.brushColor') }}
+        <input v-model="editor.brushColor.value" type="color" :class="colorInputClass" />
+      </label>
+      <label :class="fieldClass">
+        <input v-model="editor.gradientToTransparent.value" type="checkbox" />
+        {{ $t('pentrado.gradientToTransparent') }}
+      </label>
+      <label v-if="!editor.gradientToTransparent.value" :class="fieldClass">
+        {{ $t('pentrado.backgroundColor') }}
+        <input v-model="editor.backgroundColor.value" type="color" :class="colorInputClass" />
+      </label>
+      <label :class="fieldClass">
+        <input v-model="editor.gradientReverse.value" type="checkbox" />
+        {{ $t('pentrado.gradientReverse') }}
       </label>
     </template>
 
@@ -384,10 +436,17 @@ import IconDistributeH from '~icons/lucide/align-horizontal-distribute-center'
 import IconDistributeV from '~icons/lucide/align-vertical-distribute-center'
 import IconSpaceH from '~icons/lucide/align-horizontal-space-between'
 import IconSpaceV from '~icons/lucide/align-vertical-space-between'
+import IconBlend from '~icons/lucide/blend'
 import IconBrush from '~icons/lucide/brush'
 import IconCheck from '~icons/lucide/check'
 import IconCircle from '~icons/lucide/circle'
 import IconEraser from '~icons/lucide/eraser'
+import IconFlame from '~icons/lucide/flame'
+import IconHand from '~icons/lucide/hand'
+import IconPipette from '~icons/lucide/pipette'
+import IconSprayCan from '~icons/lucide/spray-can'
+import IconStamp from '~icons/lucide/stamp'
+import IconSun from '~icons/lucide/sun'
 import IconFileDown from '~icons/lucide/file-down'
 import IconFileUp from '~icons/lucide/file-up'
 import IconGrid from '~icons/lucide/grid-3x3'
@@ -441,6 +500,13 @@ const TOOL_META: Record<ToolId, { labelKey: string; icon: unknown }> = {
   bucket: { labelKey: 'pentrado.toolBucket', icon: IconPaintBucket },
   brush: { labelKey: 'pentrado.toolBrush', icon: IconBrush },
   eraser: { labelKey: 'pentrado.toolEraser', icon: IconEraser },
+  airbrush: { labelKey: 'pentrado.toolAirbrush', icon: IconSprayCan },
+  smudge: { labelKey: 'pentrado.toolSmudge', icon: IconHand },
+  clone: { labelKey: 'pentrado.toolClone', icon: IconStamp },
+  dodge: { labelKey: 'pentrado.toolDodge', icon: IconSun },
+  burn: { labelKey: 'pentrado.toolBurn', icon: IconFlame },
+  picker: { labelKey: 'pentrado.toolPicker', icon: IconPipette },
+  gradient: { labelKey: 'pentrado.toolGradient', icon: IconBlend },
   text: { labelKey: 'pentrado.toolText', icon: IconType },
   shape: { labelKey: 'pentrado.toolShape', icon: IconShapes },
   warp: { labelKey: 'pentrado.toolWarp', icon: IconGrid },
@@ -480,7 +546,11 @@ const multiSelected = computed(() => editor.selectedIdList.value.length >= 2)
 
 const activeToolIcon = computed(() => TOOL_META[editor.tool.value].icon)
 const activeToolLabelKey = computed(() => TOOL_META[editor.tool.value].labelKey)
-const isPaintTool = computed(() => editor.tool.value === 'brush' || editor.tool.value === 'eraser')
+const isPaintTool = computed(() =>
+  ['brush', 'eraser', 'airbrush', 'smudge', 'clone', 'dodge', 'burn'].includes(editor.tool.value)
+)
+const showSymmetry = computed(() => ['brush', 'eraser', 'airbrush'].includes(editor.tool.value))
+const isGradientTool = computed(() => editor.tool.value === 'gradient')
 const isShapeTool = computed(() => editor.tool.value === 'shape')
 const isWarpTool = computed(() => editor.tool.value === 'warp')
 const isTransformTool = computed(() => editor.tool.value === 'transform')
@@ -491,8 +561,10 @@ const isWandLike = computed(() => editor.tool.value === 'wand' || editor.tool.va
 const SELECTION_MODS = ['feather', 'grow', 'shrink', 'border'] as const
 const WARP_GRID_SIZES = [3, 4, 5]
 const showBrushColor = computed(
-  () => editor.tool.value === 'brush' && editor.paintTarget.value === 'content'
+  () => (editor.tool.value === 'brush' || editor.tool.value === 'airbrush') && editor.paintTarget.value === 'content'
 )
+const showPaintTargetSeg = computed(() => editor.tool.value === 'brush' || editor.tool.value === 'eraser')
+const SYMMETRY_MODES = ['none', 'mirror-h', 'mirror-v', 'mirror-both', 'mandala'] as const
 
 const dividerClass = 'ctv:h-5 ctv:w-px ctv:shrink-0 ctv:bg-[#161616]'
 const fieldClass = 'ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1 ctv:whitespace-nowrap'

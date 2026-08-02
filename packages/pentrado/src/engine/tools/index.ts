@@ -1,6 +1,8 @@
 import { registerBuiltinPaintCores } from '../paint/paintCore'
+import { registerPixelPaintCores } from '../paint/pixelPaintCore'
 import { registerTool } from '../tool'
 import { makeBucketToolDef } from './bucketTool'
+import { makeGradientToolDef } from './gradientTool'
 import { makeLassoToolDef } from './lassoTool'
 import { makeEllipseMarqueeToolDef, makeMarqueeToolDef } from './marqueeTool'
 import { makePaintToolDef } from './paintTool'
@@ -30,6 +32,8 @@ export {
 export type { WarpToolOptions, WarpToolApi } from './warpTool'
 export * from './transformMath'
 export { resolvePaintTarget, makeToLocal, rasterizeSelectionToLocal } from './paintTarget'
+export { makeGradientToolDef, DEFAULT_GRADIENT_OPTIONS, renderGradientPixels } from './gradientTool'
+export type { GradientToolOptions } from './gradientTool'
 
 let registered = false
 
@@ -37,6 +41,7 @@ export function registerBuiltinTools(): void {
   if (registered) return
   registered = true
   registerBuiltinPaintCores()
+  registerPixelPaintCores()
   registerTool(makeSelectToolDef())
   registerTool(makeTransformToolDef())
   registerTool(makeMarqueeToolDef())
@@ -46,9 +51,15 @@ export function registerBuiltinTools(): void {
   registerTool(makeBucketToolDef())
   registerTool(makeShapeToolDef())
   registerTool(makeWarpToolDef())
+  registerTool(makeGradientToolDef())
   registerTool(makePaintToolDef('brush', 'brush', 'content'))
   registerTool(makePaintToolDef('eraser', 'eraser', 'content'))
   registerTool(makePaintToolDef('pencil', 'pencil', 'content'))
+  registerTool(makePaintToolDef('airbrush', 'airbrush', 'content'))
+  registerTool(makePaintToolDef('smudge', 'smudge', 'content'))
+  registerTool(makePaintToolDef('clone', 'clone', 'content'))
+  registerTool(makePaintToolDef('dodge', 'dodge', 'content'))
+  registerTool(makePaintToolDef('burn', 'burn', 'content'))
 
   registerTool(makePaintToolDef('mask-brush', 'brush', 'mask'))
   registerTool(makePaintToolDef('mask-eraser', 'eraser', 'mask'))

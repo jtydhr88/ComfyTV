@@ -246,6 +246,24 @@
       <button type="button" :class="miniBtnClass" :title="$t('pentrado.mergeDown')" @click="editor.mergeDown(active.id)">
         <IconArrowDownToLine class="ctv:size-3.5" />
       </button>
+      <button type="button" :class="miniBtnClass" :title="$t('pentrado.mergeVisible')" @click="editor.mergeVisible()">
+        <IconCombine class="ctv:size-3.5" />
+      </button>
+      <button type="button" :class="miniBtnClass" :title="$t('pentrado.newFromVisible')" @click="editor.newFromVisible()">
+        <IconImagePlus class="ctv:size-3.5" />
+      </button>
+      <button type="button" :class="miniBtnClass" :title="$t('pentrado.copyVisible')" @click="editor.copyVisible()">
+        <IconClipboardCopy class="ctv:size-3.5" />
+      </button>
+      <button
+        v-if="editor.lastFilter.value"
+        type="button"
+        :class="miniBtnClass"
+        :title="`${$t('pentrado.repeatFilter')}: ${$t(`pentrado.filter_${editor.lastFilter.value.op}`)}`"
+        @click="editor.repeatLastFilter()"
+      >
+        <IconRepeat class="ctv:size-3.5" />
+      </button>
       <template v-if="active.kind === 'raster'">
         <button type="button" :class="miniBtnClass" :title="$t('pentrado.cropToContent')" @click="editor.cropToContent(active.id)">
           <IconCrop class="ctv:size-3.5" />
@@ -715,6 +733,9 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import IconArrowDownToLine from '~icons/lucide/arrow-down-to-line'
+import IconClipboardCopy from '~icons/lucide/clipboard-copy'
+import IconCombine from '~icons/lucide/combine'
+import IconRepeat from '~icons/lucide/repeat'
 import IconBrush from '~icons/lucide/brush'
 import IconCheck from '~icons/lucide/check'
 import IconChevronDown from '~icons/lucide/chevron-down'

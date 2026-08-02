@@ -14,7 +14,7 @@ import type { BrushParams } from '../paint'
 import { getPaintCore } from '../paint'
 import { bakeMaskInto, bakePlaced, drawPlacedInto, isIdentityPlacement, placedBounds } from '../render/bake'
 import { placeBitmap } from '../render/place'
-import { renderDocument, type PlacedEntry } from '../render/renderStack'
+import { renderDocument, type PlacedEntry, type PreviewOverride } from '../render/renderStack'
 import { getTool, type Tool, type ToolContext } from '../tool'
 import { addTransformBox } from '../tools/overlayBox'
 import { angleTo, applyMove, applyResize, applyRotate, hitHandle, insideBox, type HandleId } from '../tools/transformMath'
@@ -39,6 +39,7 @@ import {
   shrinkMask, type GrayMask, type SelectionOp,
 } from './selectionMath'
 import { DEFAULT_WAND_OPTIONS, type WandToolOptions } from '../tools/wandTool'
+import { DEFAULT_GRADIENT_OPTIONS, type GradientToolOptions } from '../tools/gradientTool'
 import {
   clearSelectedPixels, extractSelectedPixels, fillSelectedPixels, strokeSelectedPixels,
   type SelectionClipboard,
@@ -108,6 +109,11 @@ export interface Editor {
   cutSelection(): boolean
   pasteClipboard(): boolean
   hasClipboard(): boolean
+  copyVisible(): boolean
+  newFromVisible(): boolean
+  mergeVisible(): boolean
+  setGradientOptions(opts: Partial<GradientToolOptions>): void
+  gradientOptions(): GradientToolOptions
   warpApply(): boolean
   warpCancel(): boolean
   warpDirty(): boolean
@@ -140,7 +146,8 @@ export interface Editor {
   ungroupActive(): boolean
   setZoom(z: number): void
   zoom(): number
-  render(): void
+  render(region?: Rect | null): void
+  takePresentDamage(): { full: boolean; rect: Rect | null }
   buildOverlay(): void
   invalidate(): void
   undo(): void
@@ -183,9 +190,42 @@ export function createEditor(opts: EditorOptions): Editor {
   let shape: ShapeToolOptions = { ...DEFAULT_SHAPE_OPTIONS }
   let warp: WarpToolOptions = { ...DEFAULT_WARP_OPTIONS }
   let wand: WandToolOptions = { ...DEFAULT_WAND_OPTIONS }
+  let gradient: GradientToolOptions = { ...DEFAULT_GRADIENT_OPTIONS }
 
-  const overrides = new Map<string, HTMLCanvasElement>()
+  const overrides = new Map<string, PreviewOverride>()
   const placedCache = new Map<string, PlacedEntry>()
+  let previewVersion = 0
+  let pendingDamage: Rect | null = null
+  let presentFull = true
+  let presentRect: Rect | null = null
+
+  function setPreviewOverride(key: string, canvas: HTMLCanvasElement | null, rects?: Rect[] | Rect | null): void {
+    if (!canvas) {
+      overrides.delete(key)
+      pendingDamage = null
+      return
+    }
+    const list = !rects ? null : Array.isArray(rects) ? (rects.length ? rects : null) : [rects]
+    overrides.set(key, { canvas, version: ++previewVersion, rects: list })
+    if (list) {
+      let u = pendingDamage
+      for (const r of list) u = u ? unionRects(u, r) : r
+      pendingDamage = u
+    } else {
+      pendingDamage = null
+    }
+  }
+
+  function unionRects(a: Rect, b: Rect): Rect {
+    const x = Math.min(a.x, b.x)
+    const y = Math.min(a.y, b.y)
+    return {
+      x,
+      y,
+      w: Math.max(a.x + a.w, b.x + b.w) - x,
+      h: Math.max(a.y + a.h, b.y + b.h) - y,
+    }
+  }
   let floating: FloatingItem | null = null
   let floatSession: FloatSession = { mode: 'idle' }
   let clipboard: SelectionClipboard | null = null
@@ -210,8 +250,22 @@ export function createEditor(opts: EditorOptions): Editor {
       },
     ]
   }
-  function render(): void {
-    renderDocument(doc, { content, compositor, devicePixelRatio: 1, overrides, placedCache }, floatingInputs())
+  function render(region?: Rect | null): void {
+    renderDocument(doc, { content, compositor, devicePixelRatio: 1, overrides, placedCache }, floatingInputs(), region)
+  }
+  function visibleComposite(): HTMLCanvasElement | null {
+    if (!compositor.getCanvas()) return null
+    if (doc.root.children.length === 0) return null
+    render()
+    const img = compositor.readback()
+    if (img.width !== doc.width || img.height !== doc.height) return null
+    const canvas = document.createElement('canvas')
+    canvas.width = doc.width
+    canvas.height = doc.height
+    const g = canvas.getContext('2d')
+    if (!g) return null
+    g.putImageData(img, 0, 0)
+    return canvas
   }
   function selectionChannel(): ChannelData | null {
     if (!doc.selectionId) return null
@@ -253,7 +307,15 @@ export function createEditor(opts: EditorOptions): Editor {
     tool?.drawOverlay(overlay)
   }
   function refresh(): void {
-    render()
+    const region = pendingDamage
+    pendingDamage = null
+    if (region) {
+      if (!presentFull) presentRect = presentRect ? unionRects(presentRect, region) : region
+    } else {
+      presentFull = true
+      presentRect = null
+    }
+    render(region)
     buildOverlay()
     notify()
   }
@@ -303,9 +365,8 @@ export function createEditor(opts: EditorOptions): Editor {
     selectedNodeIds: liveSelectedIds,
     setSelectedNodes: setSelected,
     createPaintCore: (id) => getPaintCore(id).create(),
-    setPaintPreview: (key, canvas) => {
-      if (canvas) overrides.set(key, canvas)
-      else overrides.delete(key)
+    setPaintPreview: (key, canvas, rect) => {
+      setPreviewOverride(key, canvas, rect)
     },
     selection: {
       combineShape: (label, mask, op) => {
@@ -352,7 +413,9 @@ export function createEditor(opts: EditorOptions): Editor {
           ? warp
           : toolId === 'wand' || toolId === 'bucket'
             ? { ...wand, color: brush.color }
-            : brush) as unknown as T,
+            : toolId === 'gradient'
+              ? { ...gradient, color: gradient.color || brush.color }
+              : brush) as unknown as T,
   }
 
   function makeTool(): void {
@@ -813,6 +876,61 @@ export function createEditor(opts: EditorOptions): Editor {
       return true
     },
     hasClipboard: () => clipboard !== null,
+    copyVisible() {
+      const canvas = visibleComposite()
+      if (!canvas) return false
+      clipboard = { canvas, bounds: { x: 0, y: 0, w: doc.width, h: doc.height } }
+      return true
+    },
+    newFromVisible() {
+      const canvas = visibleComposite()
+      if (!canvas) return false
+      const node = getNodeKind('raster').create({
+        name: 'Visible',
+        contentId: content.register(canvas),
+        naturalWidth: doc.width,
+        naturalHeight: doc.height,
+        transform: { x: 0, y: 0, w: doc.width, h: doc.height, rotation: 0 },
+      } as Partial<RasterData>) as SceneNode
+      doc.root.children.push(node)
+      history.push(new AddNodeCommand('New From Visible', doc.root, node, doc.root.children.length - 1))
+      selectedIds = [node.id]
+      refresh()
+      return true
+    },
+    mergeVisible() {
+      const children = doc.root.children
+      const visible = children.filter((n) => n.visible && n.opacity > 0)
+      if (visible.length < 2) return false
+      const canvas = visibleComposite()
+      if (!canvas) return false
+      const group = new CommandGroup('Merge Visible')
+      const bottomIndex = children.indexOf(visible[0])
+      for (let i = children.length - 1; i >= 0; i--) {
+        const node = children[i]
+        if (!node.visible || node.opacity <= 0) continue
+        children.splice(i, 1)
+        group.children.push(new RemoveNodeCommand(`Merge ${node.name}`, doc.root, node, i))
+      }
+      const merged = getNodeKind('raster').create({
+        name: 'Merged',
+        contentId: content.register(canvas),
+        naturalWidth: doc.width,
+        naturalHeight: doc.height,
+        transform: { x: 0, y: 0, w: doc.width, h: doc.height, rotation: 0 },
+      } as Partial<RasterData>) as SceneNode
+      const at = Math.min(bottomIndex, children.length)
+      children.splice(at, 0, merged)
+      group.children.push(new AddNodeCommand('Merged Result', doc.root, merged, at))
+      selectedIds = [merged.id]
+      history.push(group)
+      refresh()
+      return true
+    },
+    setGradientOptions(opts) {
+      gradient = { ...gradient, ...opts }
+    },
+    gradientOptions: () => ({ ...gradient }),
     setWandOptions(opts) {
       wand = { ...wand, ...opts }
     },
@@ -821,11 +939,12 @@ export function createEditor(opts: EditorOptions): Editor {
       const mask = currentSelectionMask()
       if (!mask) return false
       const r = Math.max(1, Math.round(radius))
+      const selBounds = selectionChannel()?.bounds ?? null
       const next =
-        kind === 'feather' ? featherMask(mask, r)
-        : kind === 'grow' ? growMask(mask, r)
-        : kind === 'shrink' ? shrinkMask(mask, r)
-        : borderMask(mask, r)
+        kind === 'feather' ? featherMask(mask, r, selBounds)
+        : kind === 'grow' ? growMask(mask, r, selBounds)
+        : kind === 'shrink' ? shrinkMask(mask, r, selBounds)
+        : borderMask(mask, r, selBounds)
       const bounds = maskBounds(next)
       if (!bounds) return commitSelection('Select None', null, null)
       const canvas = maskToCanvas(next)
@@ -989,6 +1108,12 @@ export function createEditor(opts: EditorOptions): Editor {
       refresh()
     },
     render,
+    takePresentDamage() {
+      const dmg = { full: presentFull, rect: presentRect }
+      presentFull = false
+      presentRect = null
+      return dmg
+    },
     buildOverlay,
     invalidate: refresh,
     undo() {
@@ -1160,11 +1285,10 @@ export function createEditor(opts: EditorOptions): Editor {
       return commitSelection('Select None', null, null)
     },
     paintPreview(key) {
-      return overrides.get(key) ?? null
+      return overrides.get(key)?.canvas ?? null
     },
     setPaintPreview(key, canvas) {
-      if (canvas) overrides.set(key, canvas)
-      else overrides.delete(key)
+      setPreviewOverride(key, canvas)
     },
     maskToSelection(id) {
       const node = findNode(doc.root, id)?.node

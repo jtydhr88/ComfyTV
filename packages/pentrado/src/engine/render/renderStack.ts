@@ -13,11 +13,17 @@ export interface PlacedEntry {
   canvas: HTMLCanvasElement
 }
 
+export interface PreviewOverride {
+  canvas: HTMLCanvasElement
+  version: number
+  rects?: Rect[] | null
+}
+
 export interface RenderDeps {
   content: ContentStore
   compositor: Compositor
   devicePixelRatio?: number
-  overrides?: Map<string, HTMLCanvasElement>
+  overrides?: Map<string, PreviewOverride>
   placedCache?: Map<string, PlacedEntry>
 }
 
@@ -80,7 +86,8 @@ function renderMaskTexture(
   node: SceneNode,
   region: Rect,
   deps: RenderDeps,
-  placed: PlacedFn
+  placed: PlacedFn,
+  used: Set<string>
 ): NodeTexture | undefined {
   const m = node.mask
   if (!m || !m.enabled) return undefined
@@ -90,21 +97,75 @@ function renderMaskTexture(
       : { x: 0, y: 0, w: region.w, h: region.h, rotation: 0 }
   const override = deps.overrides?.get(`mask:${node.id}`)
   if (override) {
-    const canvas = placeBitmap(override, tf, region.w, region.h)
-    return canvas ? { source: canvas, rect: region, linear: true } : undefined
+    return renderPreviewTexture(`preview:mask:${node.id}`, override, tf, region, deps, used, true) ?? undefined
   }
   const bitmap = deps.content.get(m.contentId)?.canvas
   if (!bitmap) return undefined
   return placed(`mask:${node.id}`, m.contentId, bitmap, tf, true) ?? undefined
 }
 
-function renderLeafTexture(node: SceneNode, ctx: RenderNodeCtx, deps: RenderDeps): NodeTexture | null {
+function renderLeafTexture(
+  node: SceneNode,
+  ctx: RenderNodeCtx,
+  deps: RenderDeps,
+  used: Set<string>
+): NodeTexture | null {
   const override = deps.overrides?.get(`content:${node.id}`)
   if (override) {
-    const canvas = placeBitmap(override, node.transform, ctx.region.w, ctx.region.h)
-    if (canvas) return { source: canvas, rect: ctx.region, linear: false }
+    const texture = renderPreviewTexture(
+      `preview:content:${node.id}`, override, node.transform, ctx.region, deps, used, false
+    )
+    if (texture) return texture
   }
   return getNodeKind(node.kind).renderNode(node, ctx)
+}
+
+function renderPreviewTexture(
+  cacheKey: string,
+  override: PreviewOverride,
+  transform: Transform,
+  region: Rect,
+  deps: RenderDeps,
+  used: Set<string>,
+  linear: boolean
+): NodeTexture | null {
+  const cache = deps.placedCache
+  if (!cache) {
+    const canvas = placeBitmap(override.canvas, transform, region.w, region.h, undefined, null, true)
+    return canvas ? { source: canvas, rect: region, linear } : null
+  }
+  used.add(cacheKey)
+  const meta = `${transformStamp(transform)}|${region.w}x${region.h}`
+  const stamp = `v${override.version}|${meta}`
+  const entry = cache.get(cacheKey)
+  if (entry && entry.stamp === stamp) {
+    return { source: entry.canvas, rect: region, linear, key: cacheKey, version: override.version }
+  }
+  const prevVersion = entry ? Number(/^v(\d+)\|/.exec(entry.stamp)?.[1] ?? NaN) : NaN
+  const partial =
+    entry && entry.stamp.endsWith(`|${meta}`) && prevVersion === override.version - 1
+      ? override.rects ?? null
+      : null
+  let canvas: HTMLCanvasElement | null
+  if (partial && entry) {
+    canvas = entry.canvas
+    for (const r of partial) {
+      canvas = placeBitmap(override.canvas, transform, region.w, region.h, canvas ?? undefined, r, true)
+      if (!canvas) break
+    }
+  } else {
+    canvas = placeBitmap(override.canvas, transform, region.w, region.h, entry?.canvas, null, true)
+  }
+  if (!canvas) return null
+  cache.set(cacheKey, { stamp, canvas })
+  return {
+    source: canvas,
+    rect: region,
+    linear,
+    key: cacheKey,
+    version: override.version,
+    dirtyRects: partial ?? undefined,
+  }
 }
 
 function buildInputs(group: GroupData, doc: Document, deps: RenderDeps, used: Set<string>): BuiltInputs {
@@ -135,7 +196,7 @@ function buildInputs(group: GroupData, doc: Document, deps: RenderDeps, used: Se
           lut: adj.op === 'curves' ? curvesLutData(adj.curves) : undefined,
         },
         opacity: node.opacity,
-        mask: renderMaskTexture(docSpace, region, deps, placed),
+        mask: renderMaskTexture(docSpace, region, deps, placed, used),
       })
       continue
     }
@@ -156,20 +217,20 @@ function buildInputs(group: GroupData, doc: Document, deps: RenderDeps, used: Se
         texture: { source: deps.compositor.targetTexture(handle), rect: region, linear: true },
         opacity: node.opacity,
         mode: resolveMode(node.mode),
-        mask: renderMaskTexture(node, region, deps, placed),
+        mask: renderMaskTexture(node, region, deps, placed, used),
       })
       continue
     }
 
     fxRef.current = node.fx?.length ? node.fx : null
-    const texture = renderLeafTexture(node, ctx, deps)
+    const texture = renderLeafTexture(node, ctx, deps, used)
     fxRef.current = null
     if (!texture) continue
     inputs.push({
       texture,
       opacity: node.opacity,
       mode: resolveMode(node.mode),
-      mask: renderMaskTexture(node, region, deps, placed),
+      mask: renderMaskTexture(node, region, deps, placed, used),
     })
   }
 
@@ -180,11 +241,11 @@ export function buildDocumentInputs(doc: Document, deps: RenderDeps): BuiltInput
   return buildInputs(doc.root, doc, deps, new Set())
 }
 
-export function renderDocument(doc: Document, deps: RenderDeps, extra?: CompositeInput[]): void {
+export function renderDocument(doc: Document, deps: RenderDeps, extra?: CompositeInput[], region?: Rect | null): void {
   deps.compositor.beginFrame?.()
   const used = new Set<string>()
   const { inputs, cleanup } = buildInputs(doc.root, doc, deps, used)
-  deps.compositor.composite(extra?.length ? [...inputs, ...extra] : inputs, null)
+  deps.compositor.composite(extra?.length ? [...inputs, ...extra] : inputs, null, region ?? undefined)
   cleanup()
   if (deps.placedCache) {
     for (const key of [...deps.placedCache.keys()]) {

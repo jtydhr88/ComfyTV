@@ -61,6 +61,8 @@ export class History {
   private readonly byteBudget: number
   private readonly minSteps: number
   private listeners = new Set<(mask: number) => void>()
+  private undoBytes = 0
+  private sizes = new WeakMap<Command, number>()
 
   constructor(opts: HistoryOptions = {}) {
     this.byteBudget = opts.byteBudget ?? 256 * 1024 * 1024
@@ -95,6 +97,8 @@ export class History {
 
     const top = this.undoStack[this.undoStack.length - 1]
     if (top && this.redoStack.length === 0 && cmd.tryMerge?.(top)) {
+      this.undoBytes += top.sizeBytes() - (this.sizes.get(top) ?? 0)
+      this.sizes.set(top, top.sizeBytes())
       this.bumpDirty()
       this.emit(cmd.dirtyMask)
       return
@@ -104,6 +108,8 @@ export class History {
 
   private commit(cmd: Command): void {
     this.undoStack.push(cmd)
+    this.sizes.set(cmd, cmd.sizeBytes())
+    this.undoBytes += this.sizes.get(cmd) ?? 0
     this.redoStack = []
     this.bumpDirty()
     this.evict()
@@ -114,6 +120,7 @@ export class History {
     const cmd = this.undoStack.pop()
     if (!cmd) return
     cmd.apply('undo')
+    this.undoBytes -= this.sizes.get(cmd) ?? 0
     this.redoStack.push(cmd)
     this.dirtyCount -= 1
     this.emit(cmd.dirtyMask)
@@ -124,6 +131,7 @@ export class History {
     if (!cmd) return
     cmd.apply('redo')
     this.undoStack.push(cmd)
+    this.undoBytes += this.sizes.get(cmd) ?? 0
     this.dirtyCount += 1
     this.emit(cmd.dirtyMask)
   }
@@ -137,6 +145,7 @@ export class History {
     this.redoStack = []
     this.groupStack = []
     this.dirtyCount = 0
+    this.undoBytes = 0
     this.cleanReachable = true
     this.emit(DIRTY_ALL)
   }
@@ -169,11 +178,10 @@ export class History {
   }
 
   private evict(): void {
-    let total = this.undoStack.reduce((n, c) => n + c.sizeBytes(), 0)
-    while (this.undoStack.length > this.minSteps && total > this.byteBudget) {
+    while (this.undoStack.length > this.minSteps && this.undoBytes > this.byteBudget) {
       const dropped = this.undoStack.shift()
       if (!dropped) break
-      total -= dropped.sizeBytes()
+      this.undoBytes -= this.sizes.get(dropped) ?? 0
       this.cleanReachable = false
     }
   }

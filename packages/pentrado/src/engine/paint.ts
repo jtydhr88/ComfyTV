@@ -1,6 +1,6 @@
 import type { ContentStore } from './content'
 import type { Command } from './history'
-import type { DrawableData, Vec2 } from './node'
+import type { DrawableData, Rect, Vec2 } from './node'
 
 export interface CoordSample {
   x: number
@@ -19,6 +19,15 @@ export interface Dynamics {
   angle?: boolean
 }
 
+export type SymmetryMode = 'none' | 'mirror-h' | 'mirror-v' | 'mirror-both' | 'mandala'
+
+export interface SymmetrySpec {
+  mode: SymmetryMode
+  sectors?: number
+  cx: number
+  cy: number
+}
+
 export interface BrushParams {
   size: number
   hardness: number
@@ -27,6 +36,7 @@ export interface BrushParams {
   flow: number
   color: string
   dynamics?: Dynamics
+  symmetry?: SymmetrySpec
 }
 
 export interface PaintTarget {
@@ -36,6 +46,7 @@ export interface PaintTarget {
   slot: { contentId: string; url?: string }
   content: ContentStore
   toLocal(pt: Vec2): Vec2
+  toDocRect?(r: { x0: number; y0: number; x1: number; y1: number }): Rect
   selection?: Float32Array | null
   lockAlpha?: boolean
 
@@ -50,6 +61,9 @@ export interface PaintCore {
   cancel(): void
 
   preview(): HTMLCanvasElement | null
+  previewDocRects?(): Rect[] | null
+  tick?(): void
+  modifierPress?(pt: Vec2): boolean
 }
 
 export interface PaintCoreDef {

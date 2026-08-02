@@ -82,7 +82,7 @@ export function compositeStroke(
 export function compositeStrokeRect(
   out: Uint8ClampedArray,
   base: Uint8ClampedArray,
-  cov: Float32Array,
+  covAt: (x: number, y: number) => number,
   params: StrokeParams,
   width: number,
   rect: StrokeRect,
@@ -91,7 +91,7 @@ export function compositeStrokeRect(
   for (let y = rect.y0; y <= rect.y1; y++) {
     for (let x = rect.x0; x <= rect.x1; x++) {
       const p = y * width + x
-      const a = cov[p] * params.opacity * (selection ? selection[p] : 1)
+      const a = covAt(x, y) * params.opacity * (selection ? selection[p] : 1)
       blendPixel(out, base, p * 4, a, params)
     }
   }

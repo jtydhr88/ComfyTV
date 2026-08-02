@@ -141,22 +141,58 @@ function ellipticalFilter(mask: GrayMask, radius: number, pick: (a: number, b: n
   return out
 }
 
-export function growMask(mask: GrayMask, radius: number): GrayMask {
-  return ellipticalFilter(mask, radius, Math.max, 0)
-}
-
-export function shrinkMask(mask: GrayMask, radius: number): GrayMask {
-  return ellipticalFilter(mask, radius, Math.min, 1)
-}
-
-export function borderMask(mask: GrayMask, radius: number): GrayMask {
-  const grown = growMask(mask, radius)
-  const shrunk = shrinkMask(mask, radius)
-  const out = emptyMask(mask.width, mask.height)
-  for (let p = 0; p < out.data.length; p++) {
-    out.data[p] = Math.max(grown.data[p] - shrunk.data[p], 0)
+function cropMask(mask: GrayMask, r: Rect): GrayMask {
+  const out = emptyMask(r.w, r.h)
+  for (let y = 0; y < r.h; y++) {
+    const src = (r.y + y) * mask.width + r.x
+    out.data.set(mask.data.subarray(src, src + r.w), y * r.w)
   }
   return out
+}
+
+function pasteMask(sub: GrayMask, r: Rect, width: number, height: number): GrayMask {
+  const out = emptyMask(width, height)
+  for (let y = 0; y < r.h; y++) {
+    out.data.set(sub.data.subarray(y * r.w, y * r.w + r.w), (r.y + y) * width + r.x)
+  }
+  return out
+}
+
+function withBounds(
+  mask: GrayMask,
+  bounds: Rect | null | undefined,
+  pad: number,
+  run: (m: GrayMask) => GrayMask
+): GrayMask {
+  if (!bounds) return run(mask)
+  const x0 = Math.max(0, Math.floor(bounds.x - pad))
+  const y0 = Math.max(0, Math.floor(bounds.y - pad))
+  const x1 = Math.min(mask.width, Math.ceil(bounds.x + bounds.w + pad))
+  const y1 = Math.min(mask.height, Math.ceil(bounds.y + bounds.h + pad))
+  if (x1 <= x0 || y1 <= y0) return emptyMask(mask.width, mask.height)
+  const rect: Rect = { x: x0, y: y0, w: x1 - x0, h: y1 - y0 }
+  if (rect.x === 0 && rect.y === 0 && rect.w === mask.width && rect.h === mask.height) return run(mask)
+  return pasteMask(run(cropMask(mask, rect)), rect, mask.width, mask.height)
+}
+
+export function growMask(mask: GrayMask, radius: number, bounds: Rect | null = null): GrayMask {
+  return withBounds(mask, bounds, Math.round(radius) + 1, (m) => ellipticalFilter(m, radius, Math.max, 0))
+}
+
+export function shrinkMask(mask: GrayMask, radius: number, bounds: Rect | null = null): GrayMask {
+  return withBounds(mask, bounds, Math.round(radius) + 1, (m) => ellipticalFilter(m, radius, Math.min, 1))
+}
+
+export function borderMask(mask: GrayMask, radius: number, bounds: Rect | null = null): GrayMask {
+  return withBounds(mask, bounds, Math.round(radius) + 1, (m) => {
+    const grown = ellipticalFilter(m, radius, Math.max, 0)
+    const shrunk = ellipticalFilter(m, radius, Math.min, 1)
+    const out = emptyMask(m.width, m.height)
+    for (let p = 0; p < out.data.length; p++) {
+      out.data[p] = Math.max(grown.data[p] - shrunk.data[p], 0)
+    }
+    return out
+  })
 }
 
 function boxBlurPass(src: Float32Array, dst: Float32Array, w: number, h: number, r: number): void {
@@ -196,7 +232,11 @@ function boxesForGauss(sigma: number, n: number): number[] {
   return sizes
 }
 
-export function featherMask(mask: GrayMask, radius: number): GrayMask {
+export function featherMask(mask: GrayMask, radius: number, bounds: Rect | null = null): GrayMask {
+  return withBounds(mask, bounds, Math.ceil(radius) + 2, (m) => featherMaskFull(m, radius))
+}
+
+function featherMaskFull(mask: GrayMask, radius: number): GrayMask {
   const sigma = radius / 3.5
   if (sigma <= 0) return mask
   const sizes = boxesForGauss(sigma, 3)
