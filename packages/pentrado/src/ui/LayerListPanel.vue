@@ -154,7 +154,12 @@
           <span v-else class="ctv:size-3.5" />
         </button>
 
-        <div class="ctv:flex ctv:min-w-0 ctv:flex-1 ctv:items-center" :style="{ paddingLeft: row.depth * 12 + 'px' }">
+        <div class="ctv:flex ctv:min-w-0 ctv:flex-1 ctv:items-center" :style="{ paddingLeft: row.depth * 12 + (row.node.clip ? 10 : 0) + 'px' }">
+          <IconCornerDownRight
+            v-if="row.node.clip"
+            class="ctv:mr-0.5 ctv:size-3.5 ctv:shrink-0 ctv:text-[#7a7a7a]"
+            :title="$t('pentrado.clipMask')"
+          />
           <template v-if="row.node.kind === 'group'">
             <button
               type="button"
@@ -233,6 +238,15 @@
       </button>
       <button type="button" :class="miniBtnClass" :title="$t('pentrado.groupLayers')" @click="editor.groupActiveLayer()">
         <IconFolderPlus class="ctv:size-3.5" />
+      </button>
+      <button
+        v-if="editor.canClipMask(active.id)"
+        type="button"
+        :class="[miniBtnClass, active.clip ? 'ctv:text-[#1473e6]' : '']"
+        :title="$t('pentrado.clipMask')"
+        @click="editor.toggleClipMask(active.id)"
+      >
+        <IconCornerDownRight class="ctv:size-3.5" />
       </button>
       <button
         v-if="active.kind === 'group'"
@@ -370,20 +384,30 @@
             />
           </div>
         </div>
-        <FxSlider
-          v-for="def in adjustParamDefs"
-          :key="def.key"
-          class="ctv:px-2 ctv:pt-1"
-          :model-value="(active as any).params[def.key] ?? def.default"
-          :label="$t(`pentrado.adj_${def.key}`)"
-          :min="def.min"
-          :max="def.max"
-          :step="def.step ?? (def.max - def.min) / 200"
-          :decimals="def.max > 10 ? 0 : 2"
-          :reset-to="def.default"
-          :gradient="ADJ_GRADIENTS[def.key]"
-          @update:model-value="(v) => editor.updateAdjustment(active!.id, { params: { [def.key]: v } })"
-        />
+        <template v-for="def in adjustParamDefs" :key="def.key">
+          <div v-if="def.color" class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:px-2 ctv:pt-1">
+            <span :class="paramLabelClass">{{ $t(`pentrado.adj_${def.key}`) }}</span>
+            <input
+              type="color"
+              :class="colorInputClass"
+              :value="adjColorHex(def.key)"
+              @input="(e) => onAdjColor(def.key, (e.target as HTMLInputElement).value)"
+            />
+          </div>
+          <FxSlider
+            v-else
+            class="ctv:px-2 ctv:pt-1"
+            :model-value="(active as any).params[def.key] ?? def.default"
+            :label="$t(`pentrado.adj_${def.key}`)"
+            :min="def.min"
+            :max="def.max"
+            :step="def.step ?? (def.max - def.min) / 200"
+            :decimals="def.max > 10 ? 0 : 2"
+            :reset-to="def.default"
+            :gradient="ADJ_GRADIENTS[def.key]"
+            @update:model-value="(v) => editor.updateAdjustment(active!.id, { params: { [def.key]: v } })"
+          />
+        </template>
 
         <template v-if="active.op === 'curves'">
           <div class="ctv:flex ctv:items-center ctv:gap-0.5 ctv:px-2 ctv:pt-1">
@@ -752,6 +776,7 @@ import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import IconArrowDownToLine from '~icons/lucide/arrow-down-to-line'
 import IconBoxSelect from '~icons/lucide/box-select'
 import IconClipboardCopy from '~icons/lucide/clipboard-copy'
+import IconCornerDownRight from '~icons/lucide/corner-down-right'
 import IconCombine from '~icons/lucide/combine'
 import IconRepeat from '~icons/lucide/repeat'
 import IconSpline from '~icons/lucide/spline'
@@ -940,6 +965,14 @@ function fxColorHex(f: LayerFxData, key: string): string {
 }
 function onFxColor(i: number, key: string, hex: string): void {
   setFxParamRow(i, key, parseInt(hex.replace('#', ''), 16))
+}
+function adjColorHex(key: string): string {
+  const a = active.value as any
+  const v = Math.max(0, Math.min(0xffffff, Math.round(a?.params?.[key] ?? 0)))
+  return `#${v.toString(16).padStart(6, '0')}`
+}
+function onAdjColor(key: string, hex: string): void {
+  if (active.value) editor.updateAdjustment(active.value.id, { params: { [key]: parseInt(hex.replace('#', ''), 16) } })
 }
 
 function onRowClick(node: SceneNode, e: MouseEvent): void {

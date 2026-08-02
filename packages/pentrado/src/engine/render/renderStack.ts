@@ -1,4 +1,4 @@
-import { ADJUST_CODE, curvesLutData, packParams, type AdjustmentOp } from '../adjust'
+import { ADJUST_CODE, lutDataFor, packParams, type AdjustmentOp } from '../adjust'
 import type { Compositor, CompositeInput, FBOHandle, NodeTexture, TileLayerInput } from '../compositor'
 import type { ContentStore } from '../content'
 import type { Document } from '../document'
@@ -188,6 +188,11 @@ function renderPreviewTexture(
   }
 }
 
+/** True when a node is a clipping-mask member (clips to the layer below). */
+function isClip(node: SceneNode): boolean {
+  return node.clip === true
+}
+
 function buildInputs(group: GroupData, doc: Document, deps: RenderDeps): BuiltInputs {
   const region: Rect = { x: 0, y: 0, w: doc.width, h: doc.height }
   const inputs: CompositeInput[] = []
@@ -203,64 +208,102 @@ function buildInputs(group: GroupData, doc: Document, deps: RenderDeps): BuiltIn
     devicePixelRatio: deps.devicePixelRatio ?? 1,
   }
 
-  for (const node of group.children) {
-    if (!node.visible || node.opacity <= 0) continue
-
-    if (node.kind === 'adjustment') {
-      const adj = node as AdjustmentData
-      const docSpace = { ...node, transform: { x: 0, y: 0, w: region.w, h: region.h, rotation: 0 } } as SceneNode
-      inputs.push({
-        adjust: {
-          op: ADJUST_CODE[adj.op as AdjustmentOp] ?? 0,
-          params: packParams(adj.op as AdjustmentOp, adj.params),
-          lut: adj.op === 'curves' ? curvesLutData(adj.curves) : undefined,
-        },
-        opacity: node.opacity,
-        mask: renderMaskTexture(docSpace, region, deps, placed),
-      })
-      continue
-    }
-
-    if (node.kind === 'group') {
-      const g = node as GroupData
-      const sub = buildInputs(g, doc, deps)
-      if (g.passThrough) {
-        inputs.push(...sub.inputs)
-        cleanups.push(sub.cleanup)
-        continue
-      }
-      const handle = deps.compositor.allocTarget(doc.width, doc.height)
-      deps.compositor.composite(sub.inputs, handle)
-      sub.cleanup()
-      cleanups.push(() => deps.compositor.freeTarget(handle))
-      inputs.push({
-        texture: { source: deps.compositor.targetTexture(handle), rect: region, linear: true },
-        opacity: node.opacity,
-        mode: resolveMode(node.mode),
-        mask: renderMaskTexture(node, region, deps, placed),
-      })
-      continue
-    }
-
+  // A layer with visible clipping children forms a clip group: composite the
+  // base + clipped members into an isolated target (clipped members' coverage
+  // times the accumulated base alpha), then blend that as one input with the
+  // base's own mode/opacity — matching Photoshop's isolated clip semantics.
+  const children = group.children
+  // Emit one node's composite input(s) into `out`. Does NOT re-detect clip
+  // groups — the caller handles clip grouping so this never recurses on clips.
+  const emitNode = (node: SceneNode, out: CompositeInput[]): void => {
+    if (node.kind === 'adjustment') { emitAdjustment(node, out, region, deps, placed); return }
+    if (node.kind === 'group') { emitGroup(node as GroupData, doc, deps, out, cleanups, region, placed); return }
     const tileInput = tryTileInput(node, region, deps, placed)
-    if (tileInput) {
-      inputs.push(tileInput)
-      continue
-    }
-
+    if (tileInput) { out.push(tileInput); return }
     fxRef.current = node.fx?.length ? node.fx : null
     const texture = renderLeafTexture(node, ctx, deps)
     fxRef.current = null
-    if (!texture) continue
+    if (!texture) return
+    out.push({ texture, opacity: node.opacity, mode: resolveMode(node.mode), mask: renderMaskTexture(node, region, deps, placed) })
+  }
+
+  for (let i = 0; i < children.length; i++) {
+    const node = children[i]
+    if (!node.visible || node.opacity <= 0) continue
+    // Clip members with no visible base are orphans — treat as normal layers.
+    if (isClip(node)) { emitNode(node, inputs); continue }
+
+    // Does a clip group start here? (base + one or more clipping members above)
+    let j = i + 1
+    while (j < children.length && isClip(children[j])) j++
+    const clipMembers = children.slice(i + 1, j).filter((n) => n.visible && n.opacity > 0)
+    if (!clipMembers.length) { emitNode(node, inputs); continue }
+
+    // Isolate: composite base (as normal onto transparent) + clipped members
+    // (each clipped to the accumulated base alpha) into one target, then blend
+    // that with the base's own mode/opacity — Photoshop clip semantics.
+    const handle = deps.compositor.allocTarget(doc.width, doc.height)
+    const sub: CompositeInput[] = []
+    emitNode({ ...node, mode: defaultMode('normal'), opacity: 1 } as SceneNode, sub)
+    const baseCount = sub.length
+    for (const member of clipMembers) emitNode(member, sub)
+    for (let k = baseCount; k < sub.length; k++) {
+      const inp = sub[k]
+      if ('texture' in inp || 'tiles' in inp) (inp as { clipToBackdrop?: boolean }).clipToBackdrop = true
+    }
+    deps.compositor.composite(sub, handle)
+    cleanups.push(() => deps.compositor.freeTarget(handle))
     inputs.push({
-      texture,
+      texture: { source: deps.compositor.targetTexture(handle), rect: region, linear: true },
       opacity: node.opacity,
       mode: resolveMode(node.mode),
       mask: renderMaskTexture(node, region, deps, placed),
     })
+    i = j - 1
   }
 
   return { inputs, cleanup: () => cleanups.forEach((fn) => fn()) }
+}
+
+function emitAdjustment(node: SceneNode, inputs: CompositeInput[], region: Rect, deps: RenderDeps, placed: PlacedFn): void {
+  const adj = node as AdjustmentData
+  const docSpace = { ...node, transform: { x: 0, y: 0, w: region.w, h: region.h, rotation: 0 } } as SceneNode
+  inputs.push({
+    adjust: {
+      op: ADJUST_CODE[adj.op as AdjustmentOp] ?? 0,
+      params: packParams(adj.op as AdjustmentOp, adj.params),
+      lut: lutDataFor(adj.op as AdjustmentOp, adj.params, adj.curves),
+    },
+    opacity: node.opacity,
+    mask: renderMaskTexture(docSpace, region, deps, placed),
+  })
+}
+
+function emitGroup(
+  g: GroupData,
+  doc: Document,
+  deps: RenderDeps,
+  inputs: CompositeInput[],
+  cleanups: Array<() => void>,
+  region: Rect,
+  placed: PlacedFn
+): void {
+  const sub = buildInputs(g, doc, deps)
+  if (g.passThrough) {
+    inputs.push(...sub.inputs)
+    cleanups.push(sub.cleanup)
+    return
+  }
+  const handle = deps.compositor.allocTarget(doc.width, doc.height)
+  deps.compositor.composite(sub.inputs, handle)
+  sub.cleanup()
+  cleanups.push(() => deps.compositor.freeTarget(handle))
+  inputs.push({
+    texture: { source: deps.compositor.targetTexture(handle), rect: region, linear: true },
+    opacity: g.opacity,
+    mode: resolveMode(g.mode),
+    mask: renderMaskTexture(g, region, deps, placed),
+  })
 }
 
 export function buildDocumentInputs(doc: Document, deps: RenderDeps): BuiltInputs {

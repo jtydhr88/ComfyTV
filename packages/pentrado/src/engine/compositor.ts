@@ -21,6 +21,8 @@ export interface LayerInput {
   mode: EffectiveMode
   opacity: number
   mask?: NodeTexture
+  /** Clip coverage to the current backdrop's alpha (clipping-mask groups). */
+  clipToBackdrop?: boolean
 }
 
 export interface AdjustmentInput {
@@ -39,6 +41,7 @@ export interface TileLayerInput {
   mode: EffectiveMode
   opacity: number
   mask?: NodeTexture
+  clipToBackdrop?: boolean
 }
 
 export type CompositeInput = LayerInput | AdjustmentInput | TileLayerInput

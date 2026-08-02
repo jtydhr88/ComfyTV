@@ -110,6 +110,7 @@ function baseProps(layer: Layer) {
     opacity: num(layer.opacity, 1),
     mode: defaultMode(blendFromPsd(layer.blendMode)),
     fx: psdEffectsToFx(layer.effects),
+    clip: layer.clipping === true ? true : undefined,
   }
 }
 

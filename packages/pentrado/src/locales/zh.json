@@ -291,8 +291,18 @@
     "color-balance": "色彩平衡",
     "vibrance": "自然饱和度",
     "posterize": "色调分离",
-    "threshold": "阈值"
+    "threshold": "阈值",
+    "channel-mixer": "通道混合器",
+    "black-white": "黑白",
+    "photo-filter": "照片滤镜",
+    "gradient-map": "渐变映射"
   },
+  "adj_rr": "红 → R", "adj_rg": "绿 → R", "adj_rb": "蓝 → R",
+  "adj_gr": "红 → G", "adj_gg": "绿 → G", "adj_gb": "蓝 → G",
+  "adj_br": "红 → B", "adj_bg": "绿 → B", "adj_bb": "蓝 → B",
+  "adj_red": "红", "adj_yellow": "黄", "adj_green": "绿",
+  "adj_cyan": "青", "adj_blue": "蓝", "adj_magenta": "洋红",
+  "adj_color": "颜色", "adj_density": "浓度", "adj_from": "起始", "adj_to": "结束",
   "curveCh_master": "主",
   "curveCh_red": "红",
   "curveCh_green": "绿",
@@ -312,5 +322,6 @@
   "filterParam_angle": "角度",
   "filterParam_size": "大小",
   "collapsePanel": "收起面板",
-  "expandPanel": "展开面板"
+  "expandPanel": "展开面板",
+  "clipMask": "剪贴蒙版 (Alt+Ctrl+G)"
 }

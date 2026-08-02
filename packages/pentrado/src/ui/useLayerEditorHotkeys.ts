@@ -85,6 +85,11 @@ export function useLayerEditorHotkeys(
       editor.startTransform()
       return
     }
+    if (ctrl && e.altKey && e.code === 'KeyG' && editor.activeId.value) {
+      e.preventDefault()
+      editor.toggleClipMask(editor.activeId.value)
+      return
+    }
     if (ctrl && e.code === 'KeyA') {
       e.preventDefault()
       editor.selectAll()

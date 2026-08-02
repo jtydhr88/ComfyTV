@@ -186,6 +186,7 @@ async function buildLayer(
     blendMode: PSD_BLEND_MODES[node.mode.blend] ?? 'normal',
     mask: maskData(node, deps),
     effects: fxToPsdEffects(node.fx),
+    clipping: node.clip === true,
   }
   if (node.kind === 'group') {
     const g = node as GroupData

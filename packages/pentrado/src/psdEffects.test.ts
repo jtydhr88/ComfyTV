@@ -68,3 +68,16 @@ describe('fx -> PSD -> fx roundtrip', () => {
     expect(psdEffectsToFx(undefined)).toBeUndefined()
   })
 })
+
+describe('clip flag round-trips node kinds', () => {
+  it('rasterKind carries clip through create / normalize / serialize', async () => {
+    const { rasterKind } = await import('./engine')
+    const node = rasterKind.create({ clip: true, contentId: 'x' })
+    expect(node.clip).toBe(true)
+    expect((rasterKind.serialize(node) as { clip?: boolean }).clip).toBe(true)
+    const back = rasterKind.normalize({ kind: 'raster', clip: true, contentId: 'x' })
+    expect(back.clip).toBe(true)
+    const off = rasterKind.normalize({ kind: 'raster', contentId: 'x' })
+    expect(off.clip).toBeUndefined()
+  })
+})

@@ -12,6 +12,7 @@ uniform int   u_blend;
 uniform int   u_composite;
 uniform int   u_blendSpace;
 uniform int   u_compositeSpace;
+uniform bool  u_clip;
 
 uniform vec2  u_docSize;
 uniform bool  u_hasQuad;
@@ -187,6 +188,7 @@ void main() {
       cov *= texture(u_mask, v_texCoord).r;
     }
   }
+  if (u_clip) cov *= bg.a;
 
   vec3 comp = fromSpace(blendPixel(u_blend, toSpace(bg.rgb, u_blendSpace), toSpace(layer.rgb, u_blendSpace)), u_blendSpace);
 

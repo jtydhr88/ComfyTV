@@ -73,6 +73,7 @@ void main() {
       cov *= texture(u_mask, v_texCoord).r;
     }
   }
+  if (u_clip) cov *= bg.a;
 
   vec3 comp = fromSpace(blendPixel(u_blend, toSpace(bg.rgb, u_blendSpace), toSpace(layer.rgb, u_blendSpace)), u_blendSpace);
   vec4 outc;
@@ -269,6 +270,25 @@ void main(){
       float s = u_p0.x > 0.0 ? 1.0 : -1.0;
       float k = 1.0 + u_p0.x * (1.0 + s * sat);
       o = clamp(vec3(luma) + (g - vec3(luma)) * k, 0.0, 1.0);
+    } else if (u_op == 11) {
+      o = clamp(vec3(
+        dot(g, u_p0.xyz),
+        dot(g, vec3(u_p0.w, u_p1.xy)),
+        dot(g, vec3(u_p1.zw, u_p2.x))), 0.0, 1.0);
+    } else if (u_op == 12) {
+      float gray = clamp(
+        g.r*u_p0.x + (g.r+g.g)*0.5*u_p0.y + g.g*u_p0.z + (g.g+g.b)*0.5*u_p0.w + g.b*u_p1.x + (g.r+g.b)*0.5*u_p1.y,
+        0.0, 1.0);
+      o = vec3(gray);
+    } else if (u_op == 13) {
+      vec3 filt = g * u_p0.xyz;
+      float lo = dot(g, vec3(0.2126, 0.7152, 0.0722));
+      float ln = dot(filt, vec3(0.2126, 0.7152, 0.0722));
+      filt *= ln > 1e-4 ? lo / ln : 1.0;
+      o = clamp(mix(g, filt, u_p0.w), 0.0, 1.0);
+    } else if (u_op == 14) {
+      float y = dot(g, vec3(0.2126, 0.7152, 0.0722));
+      o = vec3(lutAt(y, 0), lutAt(y, 1), lutAt(y, 2));
     } else {
       o = vec3(lutAt(g.r, 0), lutAt(g.g, 1), lutAt(g.b, 2));
     }
@@ -523,6 +543,7 @@ export function createWebGLCompositor(): Compositor {
     g.uniform1i(loc(tileProg, 'u_composite'), u.composite)
     g.uniform1i(loc(tileProg, 'u_blendSpace'), u.blendSpace)
     g.uniform1i(loc(tileProg, 'u_compositeSpace'), u.compositeSpace)
+    g.uniform1i(loc(tileProg, 'u_clip'), input.clipToBackdrop ? 1 : 0)
     g.uniform1i(loc(tileProg, 'u_atlas'), 1)
 
     g.bindBuffer(g.ARRAY_BUFFER, inst.buffer)
@@ -925,6 +946,7 @@ export function createWebGLCompositor(): Compositor {
           g.uniform1i(loc(blendProg, 'u_composite'), u.composite)
           g.uniform1i(loc(blendProg, 'u_blendSpace'), u.blendSpace)
           g.uniform1i(loc(blendProg, 'u_compositeSpace'), u.compositeSpace)
+          g.uniform1i(loc(blendProg, 'u_clip'), input.clipToBackdrop ? 1 : 0)
         }
 
         drawFullscreen()

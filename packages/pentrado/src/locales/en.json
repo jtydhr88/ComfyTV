@@ -291,8 +291,18 @@
     "color-balance": "Color balance",
     "vibrance": "Vibrance",
     "posterize": "Posterize",
-    "threshold": "Threshold"
+    "threshold": "Threshold",
+    "channel-mixer": "Channel mixer",
+    "black-white": "Black & White",
+    "photo-filter": "Photo filter",
+    "gradient-map": "Gradient map"
   },
+  "adj_rr": "Red → R", "adj_rg": "Green → R", "adj_rb": "Blue → R",
+  "adj_gr": "Red → G", "adj_gg": "Green → G", "adj_gb": "Blue → G",
+  "adj_br": "Red → B", "adj_bg": "Green → B", "adj_bb": "Blue → B",
+  "adj_red": "Reds", "adj_yellow": "Yellows", "adj_green": "Greens",
+  "adj_cyan": "Cyans", "adj_blue": "Blues", "adj_magenta": "Magentas",
+  "adj_color": "Color", "adj_density": "Density", "adj_from": "From", "adj_to": "To",
   "curveCh_master": "Master",
   "curveCh_red": "R",
   "curveCh_green": "G",
@@ -312,5 +322,6 @@
   "filterParam_angle": "Angle",
   "filterParam_size": "Size",
   "collapsePanel": "Collapse panel",
-  "expandPanel": "Expand panel"
+  "expandPanel": "Expand panel",
+  "clipMask": "Clipping mask (Alt+Ctrl+G)"
 }

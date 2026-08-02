@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { applyAdjustment, curvesLutData, defaultParams, packParams } from './adjust'
+import { applyAdjustment, curvesLutData, defaultParams, gradientMapLutData, packParams } from './adjust'
 import { linearToSrgb, srgbToLinear } from './color'
 import type { RGBA } from './blend'
 
@@ -68,6 +68,42 @@ describe('new adjustment ops', () => {
     const boosted = curvesLutData({ master: '[[0,0],[0.5,0.75],[1,1]]' })
     expect(boosted[128 * 4]).toBeGreaterThan(160)
     expect(boosted[128 * 4]).toBe(boosted[128 * 4 + 1])
+  })
+
+  it('channel-mixer swaps and scales channels', () => {
+    // Route green into red, zero the rest.
+    const p = packParams('channel-mixer', { rr: 0, rg: 1, rb: 0, gr: 0, gg: 0, gb: 0, br: 0, bg: 0, bb: 0 })
+    const out = gamma(applyAdjustment('channel-mixer', p, px(0.2, 0.9, 0.4)))
+    expect(out[0]).toBeCloseTo(0.9, 1)
+    expect(out[1]).toBeCloseTo(0, 1)
+    expect(out[2]).toBeCloseTo(0, 1)
+  })
+
+  it('black-white produces neutral gray weighted toward the sliders', () => {
+    const p = packParams('black-white', { red: 1, yellow: 0, green: 0, cyan: 0, blue: 0, magenta: 0 })
+    const out = gamma(applyAdjustment('black-white', p, px(0.8, 0.2, 0.2)))
+    expect(out[0]).toBeCloseTo(out[1], 3)
+    expect(out[1]).toBeCloseTo(out[2], 3)
+    // Reds-only weight follows the red channel.
+    expect(out[0]).toBeCloseTo(0.8, 1)
+  })
+
+  it('photo-filter warms toward its color and density scales the effect', () => {
+    const p = packParams('photo-filter', { color: 0xff6600, density: 1 })
+    const warm = gamma(applyAdjustment('photo-filter', p, px(0.5, 0.5, 0.5)))
+    expect(warm[0]).toBeGreaterThan(warm[2])
+    const p0 = packParams('photo-filter', { color: 0xff6600, density: 0 })
+    const none = gamma(applyAdjustment('photo-filter', p0, px(0.5, 0.5, 0.5)))
+    expect(none[0]).toBeCloseTo(0.5, 2)
+  })
+
+  it('gradient-map maps luminance through the from→to gradient', () => {
+    const lut = gradientMapLutData({ from: 0x000000, to: 0xff0000 })
+    const dark = gamma(applyAdjustment('gradient-map', [], px(0.05, 0.05, 0.05), lut))
+    const bright = gamma(applyAdjustment('gradient-map', [], px(0.95, 0.95, 0.95), lut))
+    expect(dark[0]).toBeLessThan(0.2)
+    expect(bright[0]).toBeGreaterThan(0.8)
+    expect(bright[1]).toBeLessThan(0.1)
   })
 })
 

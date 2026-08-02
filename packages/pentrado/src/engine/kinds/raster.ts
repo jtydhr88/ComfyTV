@@ -35,6 +35,7 @@ export const rasterKind: NodeKind<RasterData> = {
       lockAlpha: init.lockAlpha ?? false,
       mask: init.mask,
       fx: init.fx,
+      clip: init.clip,
     }
   },
 
@@ -70,6 +71,7 @@ export const rasterKind: NodeKind<RasterData> = {
       lockAlpha: r.lockAlpha === true,
       mask: r.mask as RasterData['mask'],
       fx: normalizeLayerFx(r.fx),
+      clip: r.clip === true ? true : undefined,
     }
   },
 
@@ -90,6 +92,7 @@ export const rasterKind: NodeKind<RasterData> = {
       lockAlpha: node.lockAlpha ?? false,
       mask: node.mask,
       fx: node.fx,
+      clip: node.clip,
     }
   },
 

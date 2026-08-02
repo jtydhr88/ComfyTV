@@ -838,6 +838,20 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
     const n = engineNode(id); if (!n) return
     editProp('Visibility', Dirty.META, () => n.visible, (x) => (n.visible = x), !n.visible)
   }
+  function siblingsOf(id: string): SceneNode[] {
+    const d = editor.document()
+    const loc = findNode(d.root, id)
+    return ((loc?.parent as { children?: SceneNode[] })?.children ?? d.root.children)
+  }
+  function canClipMask(id: string): boolean {
+    return siblingsOf(id).findIndex((n) => n.id === id) > 0
+  }
+  /** Toggle clipping mask: the layer clips to the layer directly below it. */
+  function toggleClipMask(id: string): void {
+    if (!canClipMask(id)) return
+    const n = engineNode(id); if (!n) return
+    editProp('Clipping Mask', Dirty.DRAWABLE, () => n.clip === true, (v) => (n.clip = v ? true : undefined), !n.clip)
+  }
   function toggleLock(id: string): void {
     const base = engineNode(id); if (!base) return
     const target = !base.locks.content
@@ -1060,8 +1074,10 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
       editProp('Lock Alpha', Dirty.META, () => r.lockAlpha === true, (v) => (r.lockAlpha = v), target)
     })
   }
-  function addAdjustmentLayer(op: AdjustmentOp = 'brightness-contrast'): void {
-    editor.addNode(adjustmentKind.create({ op, params: defaultParams(op) }))
+  function addAdjustmentLayer(op: AdjustmentOp = 'brightness-contrast'): string {
+    const node = adjustmentKind.create({ op, params: defaultParams(op) })
+    editor.addNode(node)
+    return node.id
   }
   function addFillLayer(spec?: FillSpec): void {
     editor.addNode(fillKind.create(spec ? { fill: spec } : {}), 0)
@@ -1677,6 +1693,7 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
     addImageFromUrl, addImageFromFile, addTextLayerAt,
     removeLayer, moveLayer, moveLayerRelative, duplicateLayer,
     groupActiveLayer, ungroupActiveLayer,
+    toggleClipMask, canClipMask,
     setActiveLayer, setSelectedLayers, setOpacity, setBlendMode, toggleVisible, toggleLock, renameLayer,
     addMask, removeMask, toggleMaskEnabled, invertMask, applyMask, maskToSelection, maskView,
     hasSelection: () => editor.selectionBounds() != null,
