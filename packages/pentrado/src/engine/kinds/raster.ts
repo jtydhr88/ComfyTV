@@ -34,6 +34,7 @@ export const rasterKind: NodeKind<RasterData> = {
       naturalHeight: nh,
       lockAlpha: init.lockAlpha ?? false,
       mask: init.mask,
+      fx: init.fx,
     }
   },
 

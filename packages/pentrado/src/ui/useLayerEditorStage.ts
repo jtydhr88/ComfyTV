@@ -44,6 +44,7 @@ import {
   registerBuiltinKinds,
   registerBuiltinTools,
   SetContentCommand,
+  SetTransformCommand,
   STROKE_ONLY_SHAPES,
   textKind,
   transformPath,
@@ -1160,6 +1161,9 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
       d.width = v.w
       d.height = v.h
       if (glOk.value) compositor.resize(v.w, v.h)
+      // Undo/redo of an artboard resize must resync the view mapping too,
+      // or screenToArtboard keeps the stale dimensions and picking desyncs.
+      panZoom.setArtboardSize(v.w, v.h)
     }
     apply({ w, h })
     editor.history.push(
@@ -1168,6 +1172,42 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
     editor.invalidate()
     fitView()
   }
+  /** Apply the crop tool's pending rect: one undoable group that resizes the
+   *  artboard and shifts every root layer and guide into the new origin. */
+  function applyCrop(): boolean {
+    const rect = editor.cropRect()
+    if (!rect) return false
+    const d = editor.document()
+    if (rect.x === 0 && rect.y === 0 && rect.w === d.width && rect.h === d.height) {
+      editor.cropClear()
+      return false
+    }
+    editor.history.beginGroup('Crop')
+    editor.selectNone()
+    for (const node of [...d.root.children]) {
+      const before = { ...node.transform }
+      const after = { ...before, x: before.x - rect.x, y: before.y - rect.y }
+      node.transform = after
+      editor.history.push(new SetTransformCommand('Crop Move', node, before, after))
+    }
+    const guidesBefore = d.guides ? d.guides.map((g) => ({ ...g })) : []
+    if (guidesBefore.length) {
+      const shift = (gs: Array<{ axis: 'x' | 'y'; pos: number }>): Array<{ axis: 'x' | 'y'; pos: number }> =>
+        gs.map((g) => ({ axis: g.axis, pos: g.pos - (g.axis === 'x' ? rect.x : rect.y) }))
+      const after = shift(guidesBefore)
+      editor.history.push(
+        new PropCommand('Crop Guides', Dirty.META, () => d.guides ?? [], (v) => (d.guides = v), guidesBefore, after)
+      )
+      d.guides = after
+    }
+    setArtboardSize(rect.w, rect.h)
+    editor.history.endGroup()
+    editor.cropClear()
+    editor.invalidate()
+    fitView()
+    return true
+  }
+
   function nudgeActive(dx: number, dy: number): void {
     const id = activeId.value; if (!id) return
     const targets = filterTopmost(editor.document().root, selectionTargets(id)).filter((tid) => {
@@ -1623,6 +1663,12 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
     penCommit: () => editor.penCommit(),
     penCancel: () => editor.penCancel(),
     penDrafting: () => editor.penDrafting(),
+    applyCrop,
+    cancelCrop: () => editor.cropClear(),
+    cropPending: computed(() => {
+      void version.value
+      return editor.cropRect() != null
+    }),
     editingTextId, capturing, capturedImageUrl,
     canUndo, canRedo,
     panZoom, setElements, fitView, requestRender, requestOverlayRender,

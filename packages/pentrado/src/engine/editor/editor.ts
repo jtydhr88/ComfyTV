@@ -40,6 +40,7 @@ import {
 import { DEFAULT_WAND_OPTIONS, type WandToolOptions } from '../tools/wandTool'
 import { DEFAULT_GRADIENT_OPTIONS, type GradientToolOptions } from '../tools/gradientTool'
 import { isPenTool } from '../tools/penTool'
+import { isCropTool } from '../tools/cropTool'
 import { resolvePaintTarget } from '../tools/paintTarget'
 import { flattenStrokeAdaptive, resamplePolyline } from '../pathEdit'
 import {
@@ -122,6 +123,8 @@ export interface Editor {
   penCommit(): boolean
   penCancel(): boolean
   penDrafting(): boolean
+  cropRect(): Rect | null
+  cropClear(): boolean
   pathToSelection(id: string, op: SelectionOp): boolean
   strokePathWithBrush(id: string): boolean
   transformApply(): boolean
@@ -1007,6 +1010,12 @@ export function createEditor(opts: EditorOptions): Editor {
     penCommit: () => (isPenTool(tool) ? tool.commit() : false),
     penCancel: () => (isPenTool(tool) ? tool.cancel() : false),
     penDrafting: () => (isPenTool(tool) ? tool.isDrafting() : false),
+    cropRect: () => (isCropTool(tool) ? tool.cropRect() : null),
+    cropClear: () => {
+      if (!isCropTool(tool)) return false
+      tool.clear()
+      return true
+    },
     pathToSelection(id, op) {
       const node = findNode(doc.root, id)?.node
       if (!node || node.kind !== 'vector') return false

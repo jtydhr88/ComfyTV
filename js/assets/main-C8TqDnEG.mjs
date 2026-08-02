@@ -36330,7 +36330,7 @@ function CubicPoly() {
 }
 const tmp = /* @__PURE__ */ new Vector3();
 const tmp2 = /* @__PURE__ */ new Vector3();
-const px = /* @__PURE__ */ new CubicPoly();
+const px$1 = /* @__PURE__ */ new CubicPoly();
 const py = /* @__PURE__ */ new CubicPoly();
 const pz = /* @__PURE__ */ new CubicPoly();
 class CatmullRomCurve3 extends Curve {
@@ -36394,16 +36394,16 @@ class CatmullRomCurve3 extends Curve {
       if (dt1 < 1e-4) dt1 = 1;
       if (dt0 < 1e-4) dt0 = dt1;
       if (dt2 < 1e-4) dt2 = dt1;
-      px.initNonuniformCatmullRom(p0.x, p1.x, p22.x, p3.x, dt0, dt1, dt2);
+      px$1.initNonuniformCatmullRom(p0.x, p1.x, p22.x, p3.x, dt0, dt1, dt2);
       py.initNonuniformCatmullRom(p0.y, p1.y, p22.y, p3.y, dt0, dt1, dt2);
       pz.initNonuniformCatmullRom(p0.z, p1.z, p22.z, p3.z, dt0, dt1, dt2);
     } else if (this.curveType === "catmullrom") {
-      px.initCatmullRom(p0.x, p1.x, p22.x, p3.x, this.tension);
+      px$1.initCatmullRom(p0.x, p1.x, p22.x, p3.x, this.tension);
       py.initCatmullRom(p0.y, p1.y, p22.y, p3.y, this.tension);
       pz.initCatmullRom(p0.z, p1.z, p22.z, p3.z, this.tension);
     }
     point.set(
-      px.calc(weight),
+      px$1.calc(weight),
       py.calc(weight),
       pz.calc(weight)
     );
@@ -56196,7 +56196,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-D6j5d4JJ.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-DxaQpCqe.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -57565,6 +57565,10 @@ const toolBurn$1 = "Burn";
 const toolPicker$1 = "Color picker";
 const toolGradient$1 = "Gradient";
 const toolPen$1 = "Pen (paths)";
+const toolCrop$1 = "Crop";
+const cropHint$1 = "Drag to frame the crop · drag inside to move it";
+const cropApply$1 = "Apply crop";
+const cropCancel$1 = "Cancel";
 const penHint$1 = "Click to add anchors · drag for curves · click first anchor or Enter to finish · Esc cancels · Alt-click deletes an anchor";
 const pathToSelection$1 = "Path to selection";
 const strokePath$1 = "Stroke path with brush";
@@ -57612,6 +57616,8 @@ const fx_emboss$1 = "Emboss";
 const fx_pixelate$1 = "Pixelate";
 const fx_noise$1 = "Noise";
 const fx_desaturate$1 = "Desaturate";
+const fx_stroke$1 = "Stroke";
+const fx_bevel$1 = "Bevel";
 const fxParam_x$1 = "Offset X";
 const fxParam_y$1 = "Offset Y";
 const fxParam_stdDev$1 = "Blur";
@@ -57626,6 +57632,11 @@ const fxParam_elevation$1 = "Elevation";
 const fxParam_depth$1 = "Depth";
 const fxParam_size$1 = "Size";
 const fxParam_amount$1 = "Amount";
+const fxParam_position$1 = "Position";
+const fxParam_strokeOpacity$1 = "Stroke opacity";
+const fxParam_glowOpacity$1 = "Glow opacity";
+const fxParam_overlayOpacity$1 = "Overlay opacity";
+const fxParam_angle$1 = "Angle";
 const shapeRect$1 = "Rectangle";
 const shapeEllipse$1 = "Ellipse";
 const shapeLine$1 = "Line";
@@ -57817,6 +57828,10 @@ const en$1 = {
   toolPicker: toolPicker$1,
   toolGradient: toolGradient$1,
   toolPen: toolPen$1,
+  toolCrop: toolCrop$1,
+  cropHint: cropHint$1,
+  cropApply: cropApply$1,
+  cropCancel: cropCancel$1,
   penHint: penHint$1,
   pathToSelection: pathToSelection$1,
   strokePath: strokePath$1,
@@ -57871,6 +57886,12 @@ const en$1 = {
   fx_pixelate: fx_pixelate$1,
   fx_noise: fx_noise$1,
   fx_desaturate: fx_desaturate$1,
+  fx_stroke: fx_stroke$1,
+  "fx_outer-glow": "Outer glow",
+  "fx_inner-glow": "Inner glow",
+  "fx_inner-shadow": "Inner shadow",
+  "fx_color-overlay": "Color overlay",
+  fx_bevel: fx_bevel$1,
   fxParam_x: fxParam_x$1,
   fxParam_y: fxParam_y$1,
   fxParam_stdDev: fxParam_stdDev$1,
@@ -57885,6 +57906,11 @@ const en$1 = {
   fxParam_depth: fxParam_depth$1,
   fxParam_size: fxParam_size$1,
   fxParam_amount: fxParam_amount$1,
+  fxParam_position: fxParam_position$1,
+  fxParam_strokeOpacity: fxParam_strokeOpacity$1,
+  fxParam_glowOpacity: fxParam_glowOpacity$1,
+  fxParam_overlayOpacity: fxParam_overlayOpacity$1,
+  fxParam_angle: fxParam_angle$1,
   shapeRect: shapeRect$1,
   shapeEllipse: shapeEllipse$1,
   shapeLine: shapeLine$1,
@@ -58078,6 +58104,10 @@ const toolBurn = "加深";
 const toolPicker = "取色器";
 const toolGradient = "渐变";
 const toolPen = "钢笔（路径）";
+const toolCrop = "裁剪";
+const cropHint = "拖拽框选裁剪范围 · 框内拖动可移动";
+const cropApply = "应用裁剪";
+const cropCancel = "取消";
 const penHint = "点击加锚点 · 拖动出曲线 · 点首锚或 Enter 完成 · Esc 取消 · Alt 点击删锚点";
 const pathToSelection = "路径转选区";
 const strokePath = "沿路径描边（画笔）";
@@ -58125,6 +58155,8 @@ const fx_emboss = "浮雕";
 const fx_pixelate = "像素化";
 const fx_noise = "噪点";
 const fx_desaturate = "去色";
+const fx_stroke = "描边";
+const fx_bevel = "斜面";
 const fxParam_x = "偏移 X";
 const fxParam_y = "偏移 Y";
 const fxParam_stdDev = "模糊";
@@ -58139,6 +58171,11 @@ const fxParam_elevation = "光照高度";
 const fxParam_depth = "深度";
 const fxParam_size = "尺寸";
 const fxParam_amount = "数量";
+const fxParam_position = "位置";
+const fxParam_strokeOpacity = "描边不透明度";
+const fxParam_glowOpacity = "发光不透明度";
+const fxParam_overlayOpacity = "叠加不透明度";
+const fxParam_angle = "角度";
 const shapeRect = "矩形";
 const shapeEllipse = "椭圆";
 const shapeLine = "直线";
@@ -58330,6 +58367,10 @@ const zh$1 = {
   toolPicker,
   toolGradient,
   toolPen,
+  toolCrop,
+  cropHint,
+  cropApply,
+  cropCancel,
   penHint,
   pathToSelection,
   strokePath,
@@ -58384,6 +58425,12 @@ const zh$1 = {
   fx_pixelate,
   fx_noise,
   fx_desaturate,
+  fx_stroke,
+  "fx_outer-glow": "外发光",
+  "fx_inner-glow": "内发光",
+  "fx_inner-shadow": "内阴影",
+  "fx_color-overlay": "颜色叠加",
+  fx_bevel,
   fxParam_x,
   fxParam_y,
   fxParam_stdDev,
@@ -58398,6 +58445,11 @@ const zh$1 = {
   fxParam_depth,
   fxParam_size,
   fxParam_amount,
+  fxParam_position,
+  fxParam_strokeOpacity,
+  fxParam_glowOpacity,
+  fxParam_overlayOpacity,
+  fxParam_angle,
   shapeRect,
   shapeEllipse,
   shapeLine,
@@ -70744,12 +70796,12 @@ const _hoisted_41$4 = {
 const _hoisted_42$4 = { key: 4 };
 const _hoisted_43$4 = { class: "ctv:flex ctv:flex-col ctv:gap-1.5 ctv:px-1" };
 const _hoisted_44$3 = { class: "ctv:grid ctv:grid-cols-[42px_1fr] ctv:items-center ctv:gap-1.5" };
-const _hoisted_45$2 = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
-const _hoisted_46$2 = {
+const _hoisted_45$3 = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_46$3 = {
   key: 0,
   class: "ctv:grid ctv:grid-cols-[42px_1fr] ctv:items-center ctv:gap-1.5"
 };
-const _hoisted_47$2 = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
+const _hoisted_47$3 = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_48$2 = { class: "ctv:m-0 ctv:text-2xs ctv:italic ctv:text-muted-foreground/60" };
 const _hoisted_49$2 = { key: 5 };
 const _hoisted_50$2 = { class: "ctv:m-0 ctv:text-xs ctv:whitespace-pre-wrap ctv:text-muted-foreground" };
@@ -71071,15 +71123,15 @@ const _sfc_main$3o = /* @__PURE__ */ defineComponent({
             }, toDisplayString$1(_ctx.$t("configSidebar.section.result")), 1),
             createBaseVNode("div", _hoisted_43$4, [
               createBaseVNode("div", _hoisted_44$3, [
-                createBaseVNode("span", _hoisted_45$2, toDisplayString$1(_ctx.$t("configSidebar.resultNode")), 1),
+                createBaseVNode("span", _hoisted_45$3, toDisplayString$1(_ctx.$t("configSidebar.resultNode")), 1),
                 createVNode(_sfc_main$3s, {
                   "model-value": unref(resultNodeModel),
                   options: unref(resultNodeOptions),
                   "onUpdate:modelValue": _cache2[5] || (_cache2[5] = ($event) => unref(onResultNodeChange)($event))
                 }, null, 8, ["model-value", "options"])
               ]),
-              unref(hasResultNode) && unref(resultTypeOptions).length > 1 ? (openBlock(), createElementBlock("div", _hoisted_46$2, [
-                createBaseVNode("span", _hoisted_47$2, toDisplayString$1(_ctx.$t("configSidebar.resultType.label")), 1),
+              unref(hasResultNode) && unref(resultTypeOptions).length > 1 ? (openBlock(), createElementBlock("div", _hoisted_46$3, [
+                createBaseVNode("span", _hoisted_47$3, toDisplayString$1(_ctx.$t("configSidebar.resultType.label")), 1),
                 createVNode(_sfc_main$3s, {
                   "model-value": unref(resultType),
                   options: unref(resultTypeOptions),
@@ -110312,15 +110364,15 @@ const _hoisted_41$3 = {
 const _hoisted_42$3 = ["title"];
 const _hoisted_43$3 = { class: "ctv:min-w-0 ctv:flex-1 ctv:truncate ctv:text-3xs ctv:font-bold ctv:text-[#ffb0d8]" };
 const _hoisted_44$2 = ["src"];
-const _hoisted_45$1 = {
+const _hoisted_45$2 = {
   key: 0,
   class: "vp-compact-count-text ctv:text-sm ctv:font-bold ctv:text-[#d8b0ff]"
 };
-const _hoisted_46$1 = {
+const _hoisted_46$2 = {
   key: 1,
   class: "ctv:flex ctv:flex-col ctv:gap-1"
 };
-const _hoisted_47$1 = ["title"];
+const _hoisted_47$2 = ["title"];
 const _hoisted_48$1 = ["role", "tabindex", "onClick", "onKeydown"];
 const _hoisted_49$1 = {
   key: 0,
@@ -110957,8 +111009,8 @@ const _sfc_main$37 = /* @__PURE__ */ defineComponent({
             _cache2[25] || (_cache2[25] = createBaseVNode("span", { class: "ctv:text-[22px] ctv:leading-none" }, [
               createBaseVNode("i", { class: "pi pi-video" })
             ], -1)),
-            unref(batchImages).length ? (openBlock(), createElementBlock("span", _hoisted_45$1, toDisplayString$1(unref(batchImages).length), 1)) : createCommentVNode("", true)
-          ])) : (openBlock(), createElementBlock("div", _hoisted_46$1, [
+            unref(batchImages).length ? (openBlock(), createElementBlock("span", _hoisted_45$2, toDisplayString$1(unref(batchImages).length), 1)) : createCommentVNode("", true)
+          ])) : (openBlock(), createElementBlock("div", _hoisted_46$2, [
             unref(batchImages).length === 0 ? (openBlock(), createElementBlock("div", {
               key: 0,
               class: normalizeClass(emptyClass2.value)
@@ -111013,7 +111065,7 @@ const _sfc_main$37 = /* @__PURE__ */ defineComponent({
                     onRemove: ($event) => onItemRemove(clip, i)
                   }, null, 8, ["url", "label", "media-type", "saved", "show-remove", "onRemove"])
                 ])
-              ], 10, _hoisted_47$1);
+              ], 10, _hoisted_47$2);
             }), 128))
           ]))
         ], 64)) : (openBlock(), createElementBlock("div", {
@@ -128682,7 +128734,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-7dSrKkxj.mjs");
+    const { STLLoader } = await import("./STLLoader-BCQdFsEM.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -128690,7 +128742,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-V9f2gAZ6.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-C54QwECj.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -149798,9 +149850,18 @@ function ensureTargets(fx2, w, h2) {
 function loc(gl, prog, name) {
   return gl.getUniformLocation(prog, name);
 }
+const GPU_UNSUPPORTED = /* @__PURE__ */ new Set([
+  "median-blur",
+  "stroke",
+  "outer-glow",
+  "inner-glow",
+  "inner-shadow",
+  "color-overlay",
+  "bevel"
+]);
 function applyLayerFxChainGpu(bitmap, active, pad) {
   var _a2;
-  if (active.some((f2) => f2.op === "median-blur")) return null;
+  if (active.some((f2) => GPU_UNSUPPORTED.has(f2.op))) return null;
   if (instance === void 0) instance = setup();
   if (!instance) return null;
   const fx2 = instance;
@@ -149955,6 +150016,257 @@ function applyLayerFxChainGpu(bitmap, active, pad) {
     return null;
   }
 }
+const INF = 1e20;
+function edt1d(f2, out, v, z2, n) {
+  let k2 = 0;
+  v[0] = 0;
+  z2[0] = -INF;
+  z2[1] = INF;
+  for (let q = 1; q < n; q++) {
+    let s = (f2[q] + q * q - (f2[v[k2]] + v[k2] * v[k2])) / (2 * q - 2 * v[k2]);
+    while (s <= z2[k2]) {
+      k2--;
+      s = (f2[q] + q * q - (f2[v[k2]] + v[k2] * v[k2])) / (2 * q - 2 * v[k2]);
+    }
+    k2++;
+    v[k2] = q;
+    z2[k2] = s;
+    z2[k2 + 1] = INF;
+  }
+  k2 = 0;
+  for (let q = 0; q < n; q++) {
+    while (z2[k2 + 1] < q) k2++;
+    out[q] = (q - v[k2]) * (q - v[k2]) + f2[v[k2]];
+  }
+}
+function distanceToShape(alpha, w, h2) {
+  const n = w * h2;
+  const f2 = new Float32Array(Math.max(w, h2));
+  const d = new Float32Array(n);
+  for (let p2 = 0; p2 < n; p2++) {
+    const a2 = alpha[p2];
+    d[p2] = a2 >= 0.5 ? 0 : a2 > 0 ? (0.5 - a2) * (0.5 - a2) : INF;
+  }
+  const out = new Float32Array(Math.max(w, h2));
+  const v = new Int32Array(Math.max(w, h2) + 1);
+  const z2 = new Float32Array(Math.max(w, h2) + 2);
+  for (let x = 0; x < w; x++) {
+    for (let y = 0; y < h2; y++) f2[y] = d[y * w + x];
+    edt1d(f2, out, v, z2, h2);
+    for (let y = 0; y < h2; y++) d[y * w + x] = out[y];
+  }
+  for (let y = 0; y < h2; y++) {
+    for (let x = 0; x < w; x++) f2[x] = d[y * w + x];
+    edt1d(f2, out, v, z2, w);
+    for (let x = 0; x < w; x++) d[y * w + x] = Math.sqrt(out[x]);
+  }
+  return d;
+}
+function alphaOf(img) {
+  const n = img.width * img.height;
+  const a2 = new Float32Array(n);
+  for (let p2 = 0; p2 < n; p2++) a2[p2] = img.data[p2 * 4 + 3] / 255;
+  return a2;
+}
+function invert(a2) {
+  const out = new Float32Array(a2.length);
+  for (let p2 = 0; p2 < a2.length; p2++) out[p2] = 1 - a2[p2];
+  return out;
+}
+function unpackColor(color) {
+  return [color >> 16 & 255, color >> 8 & 255, color & 255];
+}
+function overInPlace(img, srcA, cr2, cg, cb) {
+  const d = img.data;
+  for (let p2 = 0; p2 < srcA.length; p2++) {
+    const sa = srcA[p2];
+    if (sa <= 0) continue;
+    const i = p2 * 4;
+    const da = d[i + 3] / 255;
+    const oa = sa + da * (1 - sa);
+    if (oa <= 0) continue;
+    d[i] = Math.round((cr2 * sa + d[i] * da * (1 - sa)) / oa);
+    d[i + 1] = Math.round((cg * sa + d[i + 1] * da * (1 - sa)) / oa);
+    d[i + 2] = Math.round((cb * sa + d[i + 2] * da * (1 - sa)) / oa);
+    d[i + 3] = Math.round(oa * 255);
+  }
+}
+function underInPlace(img, srcA, cr2, cg, cb) {
+  const d = img.data;
+  for (let p2 = 0; p2 < srcA.length; p2++) {
+    const sa = srcA[p2];
+    if (sa <= 0) continue;
+    const i = p2 * 4;
+    const da = d[i + 3] / 255;
+    const oa = da + sa * (1 - da);
+    if (oa <= 0) continue;
+    d[i] = Math.round((d[i] * da + cr2 * sa * (1 - da)) / oa);
+    d[i + 1] = Math.round((d[i + 1] * da + cg * sa * (1 - da)) / oa);
+    d[i + 2] = Math.round((d[i + 2] * da + cb * sa * (1 - da)) / oa);
+    d[i + 3] = Math.round(oa * 255);
+  }
+}
+function applyStroke(img, params) {
+  const w = img.width;
+  const h2 = img.height;
+  const size2 = Math.max(0, params.size ?? 4);
+  if (size2 <= 0) return;
+  const position = Math.round(params.position ?? 0);
+  const [cr2, cg, cb] = unpackColor(params.color ?? 0);
+  const opacity2 = Math.max(0, Math.min(1, params.strokeOpacity ?? 1));
+  const alpha = alphaOf(img);
+  const distOut = distanceToShape(alpha, w, h2);
+  const distIn = distanceToShape(invert(alpha), w, h2);
+  const band = new Float32Array(w * h2);
+  for (let p2 = 0; p2 < band.length; p2++) {
+    const sd = alpha[p2] >= 0.5 ? -distIn[p2] : distOut[p2];
+    let lo;
+    let hi;
+    if (position === 1) {
+      lo = -size2;
+      hi = 0;
+    } else if (position === 2) {
+      lo = -size2 / 2;
+      hi = size2 / 2;
+    } else {
+      lo = 0;
+      hi = size2;
+    }
+    const cov = Math.min(sd - lo + 0.5, hi - sd + 0.5);
+    band[p2] = Math.max(0, Math.min(1, cov)) * opacity2;
+  }
+  overInPlace(img, band, cr2, cg, cb);
+}
+function applyColorOverlay(img, params) {
+  const [cr2, cg, cb] = unpackColor(params.color ?? 16711680);
+  const t2 = Math.max(0, Math.min(1, params.overlayOpacity ?? 1));
+  const d = img.data;
+  for (let p2 = 0; p2 < img.width * img.height; p2++) {
+    const i = p2 * 4;
+    if (d[i + 3] === 0) continue;
+    d[i] = Math.round(d[i] + (cr2 - d[i]) * t2);
+    d[i + 1] = Math.round(d[i + 1] + (cg - d[i + 1]) * t2);
+    d[i + 2] = Math.round(d[i + 2] + (cb - d[i + 2]) * t2);
+  }
+}
+function glowBand(dist2, size2, opacity2) {
+  const out = new Float32Array(dist2.length);
+  const s = Math.max(0.01, size2);
+  for (let p2 = 0; p2 < dist2.length; p2++) {
+    const d = dist2[p2];
+    if (d <= 0 || d >= s) continue;
+    const t2 = 1 - d / s;
+    out[p2] = t2 * t2 * opacity2;
+  }
+  return out;
+}
+function applyOuterGlow(img, params) {
+  const size2 = Math.max(0, params.size ?? 12);
+  if (size2 <= 0) return;
+  const [cr2, cg, cb] = unpackColor(params.color ?? 16770688);
+  const opacity2 = Math.max(0, Math.min(1, params.glowOpacity ?? 0.75));
+  const alpha = alphaOf(img);
+  const dist2 = distanceToShape(alpha, img.width, img.height);
+  underInPlace(img, glowBand(dist2, size2, opacity2), cr2, cg, cb);
+}
+function applyInnerGlow(img, params) {
+  const size2 = Math.max(0, params.size ?? 12);
+  if (size2 <= 0) return;
+  const [cr2, cg, cb] = unpackColor(params.color ?? 16770688);
+  const opacity2 = Math.max(0, Math.min(1, params.glowOpacity ?? 0.75));
+  const alpha = alphaOf(img);
+  const distIn = distanceToShape(invert(alpha), img.width, img.height);
+  const band = glowBand(distIn, size2, opacity2);
+  for (let p2 = 0; p2 < band.length; p2++) band[p2] *= alpha[p2];
+  overInPlace(img, band, cr2, cg, cb);
+}
+function applyInnerShadow(img, params) {
+  const w = img.width;
+  const h2 = img.height;
+  const size2 = Math.max(0.01, params.size ?? 8);
+  const dx = Math.round(params.x ?? 4);
+  const dy = Math.round(params.y ?? 4);
+  const [cr2, cg, cb] = unpackColor(params.color ?? 0);
+  const opacity2 = Math.max(0, Math.min(1, params.shadowOpacity ?? 0.6));
+  const alpha = alphaOf(img);
+  const distIn = distanceToShape(invert(alpha), w, h2);
+  const band = new Float32Array(w * h2);
+  for (let y = 0; y < h2; y++) {
+    for (let x = 0; x < w; x++) {
+      const p2 = y * w + x;
+      if (alpha[p2] <= 0) continue;
+      const sx = Math.max(0, Math.min(w - 1, x - dx));
+      const sy = Math.max(0, Math.min(h2 - 1, y - dy));
+      const d = distIn[sy * w + sx];
+      if (d >= size2) continue;
+      const t2 = 1 - d / size2;
+      band[p2] = t2 * t2 * opacity2 * alpha[p2];
+    }
+  }
+  overInPlace(img, band, cr2, cg, cb);
+}
+function applyBevel(img, params) {
+  const w = img.width;
+  const h2 = img.height;
+  const size2 = Math.max(1, params.size ?? 6);
+  const depth = Math.max(0, Math.min(1, params.depth ?? 0.5));
+  const angle = (params.angle ?? 120) * Math.PI / 180;
+  const lx = Math.cos(angle);
+  const ly = -Math.sin(angle);
+  const alpha = alphaOf(img);
+  const distIn = distanceToShape(invert(alpha), w, h2);
+  const d = img.data;
+  for (let y = 0; y < h2; y++) {
+    for (let x = 0; x < w; x++) {
+      const p2 = y * w + x;
+      if (alpha[p2] <= 0) continue;
+      const di = distIn[p2];
+      if (di >= size2) continue;
+      const xl = Math.max(0, x - 1);
+      const xr = Math.min(w - 1, x + 1);
+      const yu = Math.max(0, y - 1);
+      const yd = Math.min(h2 - 1, y + 1);
+      const gx = (distIn[y * w + xr] - distIn[y * w + xl]) / 2;
+      const gy = (distIn[yd * w + x] - distIn[yu * w + x]) / 2;
+      const len = Math.hypot(gx, gy);
+      if (len < 1e-4) continue;
+      const shade = -(gx / len * lx + gy / len * ly) * (1 - di / size2) * depth * alpha[p2];
+      const i = p2 * 4;
+      if (shade > 0) {
+        d[i] = Math.round(d[i] + (255 - d[i]) * shade);
+        d[i + 1] = Math.round(d[i + 1] + (255 - d[i + 1]) * shade);
+        d[i + 2] = Math.round(d[i + 2] + (255 - d[i + 2]) * shade);
+      } else if (shade < 0) {
+        const s = 1 + shade;
+        d[i] = Math.round(d[i] * s);
+        d[i + 1] = Math.round(d[i + 1] * s);
+        d[i + 2] = Math.round(d[i + 2] * s);
+      }
+    }
+  }
+}
+function applyLayerStyle(img, f2) {
+  switch (f2.op) {
+    case "stroke":
+      applyStroke(img, f2.params);
+      break;
+    case "color-overlay":
+      applyColorOverlay(img, f2.params);
+      break;
+    case "outer-glow":
+      applyOuterGlow(img, f2.params);
+      break;
+    case "inner-glow":
+      applyInnerGlow(img, f2.params);
+      break;
+    case "inner-shadow":
+      applyInnerShadow(img, f2.params);
+      break;
+    case "bevel":
+      applyBevel(img, f2.params);
+      break;
+  }
+}
 const LAYER_FX_DEFS = {
   "drop-shadow": [
     { key: "x", min: -100, max: 100, default: 8, step: 1 },
@@ -149981,7 +150293,39 @@ const LAYER_FX_DEFS = {
   ],
   pixelate: [{ key: "size", min: 2, max: 64, default: 8, step: 1 }],
   noise: [{ key: "amount", min: 0, max: 1, default: 0.2, step: 0.01 }],
-  desaturate: [{ key: "amount", min: 0, max: 1, default: 1, step: 0.01 }]
+  desaturate: [{ key: "amount", min: 0, max: 1, default: 1, step: 0.01 }],
+  stroke: [
+    { key: "size", min: 1, max: 60, default: 4, step: 1 },
+    { key: "position", min: 0, max: 2, default: 0, step: 1 },
+    { key: "strokeOpacity", min: 0, max: 1, default: 1, step: 0.01 },
+    { key: "color", min: 0, max: 16777215, default: 14496546, color: true }
+  ],
+  "outer-glow": [
+    { key: "size", min: 1, max: 120, default: 12, step: 1 },
+    { key: "glowOpacity", min: 0, max: 1, default: 0.75, step: 0.01 },
+    { key: "color", min: 0, max: 16777215, default: 16770688, color: true }
+  ],
+  "inner-glow": [
+    { key: "size", min: 1, max: 120, default: 12, step: 1 },
+    { key: "glowOpacity", min: 0, max: 1, default: 0.75, step: 0.01 },
+    { key: "color", min: 0, max: 16777215, default: 16770688, color: true }
+  ],
+  "inner-shadow": [
+    { key: "x", min: -100, max: 100, default: 4, step: 1 },
+    { key: "y", min: -100, max: 100, default: 4, step: 1 },
+    { key: "size", min: 1, max: 100, default: 8, step: 1 },
+    { key: "shadowOpacity", min: 0, max: 1, default: 0.6, step: 0.01 },
+    { key: "color", min: 0, max: 16777215, default: 0, color: true }
+  ],
+  "color-overlay": [
+    { key: "overlayOpacity", min: 0, max: 1, default: 1, step: 0.01 },
+    { key: "color", min: 0, max: 16777215, default: 14496546, color: true }
+  ],
+  bevel: [
+    { key: "size", min: 1, max: 60, default: 6, step: 1 },
+    { key: "depth", min: 0, max: 1, default: 0.5, step: 0.01 },
+    { key: "angle", min: 0, max: 360, default: 120, step: 1 }
+  ]
 };
 const LAYER_FX_OPS = Object.keys(LAYER_FX_DEFS);
 function defaultFxParams(op) {
@@ -150023,6 +150367,12 @@ function fxPad(f2) {
     return Math.ceil(3 * (f2.params.stdDev ?? 0) + Math.max(Math.abs(f2.params.x ?? 0), Math.abs(f2.params.y ?? 0)));
   }
   if (f2.op === "gaussian-blur") return Math.ceil(3 * (f2.params.stdDev ?? 0));
+  if (f2.op === "stroke") {
+    const size2 = f2.params.size ?? 4;
+    const position = Math.round(f2.params.position ?? 0);
+    return Math.ceil(position === 1 ? 0 : position === 2 ? size2 / 2 : size2) + 1;
+  }
+  if (f2.op === "outer-glow") return Math.ceil(f2.params.size ?? 12) + 1;
   return 0;
 }
 function gaussianIsNoop(sigma) {
@@ -150343,6 +150693,14 @@ function applyOne(img, f2) {
       }
       return img;
     }
+    case "stroke":
+    case "outer-glow":
+    case "inner-glow":
+    case "inner-shadow":
+    case "color-overlay":
+    case "bevel":
+      applyLayerStyle(img, f2);
+      return img;
   }
 }
 function applyLayerFxChain(bitmap, fx2) {
@@ -150633,7 +150991,8 @@ const rasterKind = {
       naturalWidth: nw,
       naturalHeight: nh,
       lockAlpha: init.lockAlpha ?? false,
-      mask: init.mask
+      mask: init.mask,
+      fx: init.fx
     };
   },
   normalize(raw) {
@@ -157593,7 +157952,7 @@ function polygonMask(width, height, points) {
   }
   return out;
 }
-function normRect(a2, b) {
+function normRect$1(a2, b) {
   const x = Math.min(a2.x, b.x);
   const y = Math.min(a2.y, b.y);
   return { x, y, w: Math.abs(b.x - a2.x), h: Math.abs(b.y - a2.y) };
@@ -157628,7 +157987,7 @@ class MarqueeTool {
   }
   onButtonRelease(_e2, pt2) {
     if (!this.start) return;
-    const rect = normRect(this.start, pt2);
+    const rect = normRect$1(this.start, pt2);
     this.start = null;
     this.cur = null;
     if (rect.w < 2 || rect.h < 2) {
@@ -157646,7 +158005,7 @@ class MarqueeTool {
   }
   drawOverlay(overlay) {
     if (!this.start || !this.cur) return;
-    const rect = normRect(this.start, this.cur);
+    const rect = normRect$1(this.start, this.cur);
     if (this.shape === "rect") {
       overlay.add({ type: "rect", rect, ants: true });
       return;
@@ -158292,6 +158651,119 @@ function isPenTool(tool) {
 }
 function makePenToolDef() {
   return { id: "pen", create: (ctx) => new PenTool("pen", ctx) };
+}
+function normRect(a2, b) {
+  const x = Math.min(a2.x, b.x);
+  const y = Math.min(a2.y, b.y);
+  return { x, y, w: Math.abs(b.x - a2.x), h: Math.abs(b.y - a2.y) };
+}
+class CropTool {
+  constructor(ctx) {
+    __publicField(this, "id", "crop");
+    __publicField(this, "control");
+    __publicField(this, "start", null);
+    __publicField(this, "cur", null);
+    __publicField(this, "moveFrom", null);
+    __publicField(this, "moveBase", null);
+    __publicField(this, "pending", null);
+    this.ctx = ctx;
+    this.control = { ...defaultControl(), cursor: "crosshair", abortMask: Dirty.STRUCTURE };
+  }
+  clamp(r) {
+    const doc2 = this.ctx.document();
+    const x = Math.max(0, Math.min(doc2.width - 1, Math.round(r.x)));
+    const y = Math.max(0, Math.min(doc2.height - 1, Math.round(r.y)));
+    return {
+      x,
+      y,
+      w: Math.max(1, Math.min(doc2.width - x, Math.round(r.w + r.x) - x)),
+      h: Math.max(1, Math.min(doc2.height - y, Math.round(r.h + r.y) - y))
+    };
+  }
+  inside(r, pt2) {
+    return pt2.x >= r.x && pt2.x <= r.x + r.w && pt2.y >= r.y && pt2.y <= r.y + r.h;
+  }
+  onButtonPress(_e2, pt2) {
+    if (this.pending && this.inside(this.pending, pt2)) {
+      this.moveFrom = pt2;
+      this.moveBase = { ...this.pending };
+      return;
+    }
+    this.start = pt2;
+    this.cur = pt2;
+    this.pending = null;
+    this.ctx.requestRender();
+  }
+  onMotion(_e2, pt2) {
+    if (this.moveFrom && this.moveBase) {
+      const doc2 = this.ctx.document();
+      const dx = pt2.x - this.moveFrom.x;
+      const dy = pt2.y - this.moveFrom.y;
+      this.pending = {
+        ...this.moveBase,
+        x: Math.max(0, Math.min(doc2.width - this.moveBase.w, Math.round(this.moveBase.x + dx))),
+        y: Math.max(0, Math.min(doc2.height - this.moveBase.h, Math.round(this.moveBase.y + dy)))
+      };
+      this.ctx.requestRender();
+      return;
+    }
+    if (!this.start) return;
+    this.cur = pt2;
+    this.ctx.requestRender();
+  }
+  onButtonRelease(_e2, pt2) {
+    if (this.moveFrom) {
+      this.moveFrom = null;
+      this.moveBase = null;
+      this.ctx.requestRender();
+      return;
+    }
+    if (!this.start) return;
+    const rect = this.clamp(normRect(this.start, pt2));
+    this.start = null;
+    this.cur = null;
+    this.pending = rect.w >= 2 && rect.h >= 2 ? rect : null;
+    this.ctx.requestRender();
+  }
+  onHover() {
+  }
+  cursorFor(pt2) {
+    return this.pending && this.inside(this.pending, pt2) ? "move" : "crosshair";
+  }
+  cropRect() {
+    return this.pending;
+  }
+  clear() {
+    this.start = null;
+    this.cur = null;
+    this.pending = null;
+    this.moveFrom = null;
+    this.moveBase = null;
+    this.ctx.requestRender();
+  }
+  drawOverlay(overlay) {
+    const rect = this.pending ?? (this.start && this.cur ? this.clamp(normRect(this.start, this.cur)) : null);
+    if (!rect) return;
+    overlay.add({ type: "rect", rect, ants: true });
+    for (const t2 of [1 / 3, 2 / 3]) {
+      overlay.add({
+        type: "line",
+        a: { x: rect.x + rect.w * t2, y: rect.y },
+        b: { x: rect.x + rect.w * t2, y: rect.y + rect.h }
+      });
+      overlay.add({
+        type: "line",
+        a: { x: rect.x, y: rect.y + rect.h * t2 },
+        b: { x: rect.x + rect.w, y: rect.y + rect.h * t2 }
+      });
+    }
+  }
+}
+function isCropTool(tool) {
+  return tool instanceof CropTool;
+}
+function makeCropToolDef() {
+  return { id: "crop", create: (ctx) => new CropTool(ctx) };
 }
 function localCoverage(node, content, selCanvas) {
   const entry = content.get(node.contentId);
@@ -159242,6 +159714,12 @@ function createEditor(opts) {
     penCommit: () => isPenTool(tool) ? tool.commit() : false,
     penCancel: () => isPenTool(tool) ? tool.cancel() : false,
     penDrafting: () => isPenTool(tool) ? tool.isDrafting() : false,
+    cropRect: () => isCropTool(tool) ? tool.cropRect() : null,
+    cropClear: () => {
+      if (!isCropTool(tool)) return false;
+      tool.clear();
+      return true;
+    },
     pathToSelection(id, op) {
       var _a2;
       const node = (_a2 = findNode(doc2.root, id)) == null ? void 0 : _a2.node;
@@ -161102,6 +161580,7 @@ function registerBuiltinTools() {
   registerPixelPaintCores();
   registerTool(makeSelectToolDef());
   registerTool(makeTransformToolDef());
+  registerTool(makeCropToolDef());
   registerTool(makeMarqueeToolDef());
   registerTool(makeEllipseMarqueeToolDef());
   registerTool(makeLassoToolDef());
@@ -161452,6 +161931,12 @@ function createPanZoom(getEls) {
     panY = (availH - artH * zoomRatio) / 2;
     invalidate();
   }
+  function setArtboardSize(w, h2) {
+    if (artW === w && artH === h2) return;
+    artW = w;
+    artH = h2;
+    invalidate();
+  }
   function panBy(dx, dy) {
     panX += dx;
     panY += dy;
@@ -161485,6 +161970,7 @@ function createPanZoom(getEls) {
     zoom: () => zoomRatio,
     invalidate,
     fit,
+    setArtboardSize,
     panBy,
     handleWheel,
     screenToArtboard,
@@ -161493,6 +161979,193 @@ function createPanZoom(getEls) {
       return () => listeners.delete(fn3);
     }
   };
+}
+function packColor(c2) {
+  const col = c2 ?? {};
+  const r = Math.round(col.r ?? 0);
+  const g = Math.round(col.g ?? 0);
+  const b = Math.round(col.b ?? 0);
+  return r << 16 | g << 8 | b;
+}
+function toColor(v) {
+  return { r: v >> 16 & 255, g: v >> 8 & 255, b: v & 255 };
+}
+function px(value) {
+  return { units: "Pixels", value };
+}
+function pxValue(v, fallback) {
+  const u = v;
+  return typeof (u == null ? void 0 : u.value) === "number" && isFinite(u.value) ? u.value : fallback;
+}
+function offsetFromAngle(angleDeg, distance) {
+  const a2 = angleDeg * Math.PI / 180;
+  return { x: Math.round(-Math.cos(a2) * distance), y: Math.round(Math.sin(a2) * distance) };
+}
+function angleFromOffset(x, y) {
+  const distance = Math.round(Math.hypot(x, y));
+  let angle = Math.round(Math.atan2(y, -x) * 180 / Math.PI);
+  if (angle < 0) angle += 360;
+  return { angle, distance };
+}
+const STROKE_POSITIONS = ["outside", "inside", "center"];
+function fxToPsdEffects(fx2) {
+  if (!(fx2 == null ? void 0 : fx2.length)) return void 0;
+  const out = {};
+  let any = false;
+  for (const f2 of fx2) {
+    const p2 = f2.params;
+    const base2 = { present: true, enabled: f2.enabled };
+    switch (f2.op) {
+      case "drop-shadow": {
+        const { angle, distance } = angleFromOffset(p2.x ?? 0, p2.y ?? 0);
+        out.dropShadow = [{
+          ...base2,
+          angle,
+          distance: px(distance),
+          size: px(p2.stdDev ?? 0),
+          opacity: (p2.shadowOpacity ?? 0.6) * f2.opacity,
+          color: toColor(p2.color ?? 0)
+        }];
+        any = true;
+        break;
+      }
+      case "inner-shadow": {
+        const { angle, distance } = angleFromOffset(p2.x ?? 0, p2.y ?? 0);
+        out.innerShadow = [{
+          ...base2,
+          angle,
+          distance: px(distance),
+          size: px(p2.size ?? 8),
+          opacity: (p2.shadowOpacity ?? 0.6) * f2.opacity,
+          color: toColor(p2.color ?? 0)
+        }];
+        any = true;
+        break;
+      }
+      case "outer-glow":
+        out.outerGlow = {
+          ...base2,
+          size: px(p2.size ?? 12),
+          opacity: (p2.glowOpacity ?? 0.75) * f2.opacity,
+          color: toColor(p2.color ?? 16770688)
+        };
+        any = true;
+        break;
+      case "inner-glow":
+        out.innerGlow = {
+          ...base2,
+          size: px(p2.size ?? 12),
+          opacity: (p2.glowOpacity ?? 0.75) * f2.opacity,
+          color: toColor(p2.color ?? 16770688)
+        };
+        any = true;
+        break;
+      case "stroke":
+        out.stroke = [{
+          ...base2,
+          size: px(p2.size ?? 4),
+          position: STROKE_POSITIONS[Math.round(p2.position ?? 0)] ?? "outside",
+          fillType: "color",
+          opacity: (p2.strokeOpacity ?? 1) * f2.opacity,
+          color: toColor(p2.color ?? 0)
+        }];
+        any = true;
+        break;
+      case "color-overlay":
+        out.solidFill = [{
+          ...base2,
+          opacity: (p2.overlayOpacity ?? 1) * f2.opacity,
+          color: toColor(p2.color ?? 0)
+        }];
+        any = true;
+        break;
+      case "bevel":
+        out.bevel = {
+          ...base2,
+          size: px(p2.size ?? 6),
+          angle: p2.angle ?? 120,
+          strength: Math.round((p2.depth ?? 0.5) * 200),
+          style: "inner bevel"
+        };
+        any = true;
+        break;
+    }
+  }
+  return any ? out : void 0;
+}
+function makeFx(op, enabled, params) {
+  const f2 = createLayerFx(op);
+  f2.enabled = enabled !== false;
+  f2.params = { ...defaultFxParams(op), ...params };
+  return f2;
+}
+function psdEffectsToFx(effects) {
+  var _a2, _b2, _c, _d;
+  if (!effects || effects.disabled) return void 0;
+  const out = [];
+  const ds = (_a2 = effects.dropShadow) == null ? void 0 : _a2[0];
+  if ((ds == null ? void 0 : ds.present) !== false && ds) {
+    const { x, y } = offsetFromAngle(ds.angle ?? 120, pxValue(ds.distance, 5));
+    out.push(makeFx("drop-shadow", ds.enabled, {
+      x,
+      y,
+      stdDev: pxValue(ds.size, 5),
+      shadowOpacity: ds.opacity ?? 0.6,
+      color: packColor(ds.color)
+    }));
+  }
+  const is = (_b2 = effects.innerShadow) == null ? void 0 : _b2[0];
+  if (is) {
+    const { x, y } = offsetFromAngle(is.angle ?? 120, pxValue(is.distance, 5));
+    out.push(makeFx("inner-shadow", is.enabled, {
+      x,
+      y,
+      size: pxValue(is.size, 8),
+      shadowOpacity: is.opacity ?? 0.6,
+      color: packColor(is.color)
+    }));
+  }
+  const og = effects.outerGlow;
+  if (og) {
+    out.push(makeFx("outer-glow", og.enabled, {
+      size: pxValue(og.size, 12),
+      glowOpacity: og.opacity ?? 0.75,
+      color: packColor(og.color)
+    }));
+  }
+  const ig = effects.innerGlow;
+  if (ig) {
+    out.push(makeFx("inner-glow", ig.enabled, {
+      size: pxValue(ig.size, 12),
+      glowOpacity: ig.opacity ?? 0.75,
+      color: packColor(ig.color)
+    }));
+  }
+  const st2 = (_c = effects.stroke) == null ? void 0 : _c[0];
+  if (st2) {
+    out.push(makeFx("stroke", st2.enabled, {
+      size: pxValue(st2.size, 4),
+      position: Math.max(0, STROKE_POSITIONS.indexOf(st2.position ?? "outside")),
+      strokeOpacity: st2.opacity ?? 1,
+      color: packColor(st2.color)
+    }));
+  }
+  const sf = (_d = effects.solidFill) == null ? void 0 : _d[0];
+  if (sf) {
+    out.push(makeFx("color-overlay", sf.enabled, {
+      overlayOpacity: sf.opacity ?? 1,
+      color: packColor(sf.color)
+    }));
+  }
+  const bv = effects.bevel;
+  if (bv) {
+    out.push(makeFx("bevel", bv.enabled, {
+      size: pxValue(bv.size, 6),
+      depth: Math.max(0, Math.min(1, (bv.strength ?? 100) / 200)),
+      angle: bv.angle ?? 120
+    }));
+  }
+  return out.length ? out : void 0;
 }
 const PSD_BLEND_MODES = {
   normal: "normal",
@@ -161996,7 +162669,8 @@ async function buildLayer(node, doc2, deps, linkedFiles) {
     hidden: !node.visible,
     opacity: clamp01$1(node.opacity),
     blendMode: PSD_BLEND_MODES[node.mode.blend] ?? "normal",
-    mask: maskData(node, deps)
+    mask: maskData(node, deps),
+    effects: fxToPsdEffects(node.fx)
   };
   if (node.kind === "group") {
     const g = node;
@@ -162184,7 +162858,8 @@ function baseProps(layer) {
     name: layer.name || "Layer",
     visible: !layer.hidden,
     opacity: num$2(layer.opacity, 1),
-    mode: defaultMode(blendFromPsd(layer.blendMode))
+    mode: defaultMode(blendFromPsd(layer.blendMode)),
+    fx: psdEffectsToFx(layer.effects)
   };
 }
 function importMask(layer, target, ctx) {
@@ -163546,6 +164221,7 @@ function useLayerEditorStage(opts) {
       d.width = v.w;
       d.height = v.h;
       if (glOk.value) compositor.resize(v.w, v.h);
+      panZoom.setArtboardSize(v.w, v.h);
     };
     apply2({ w, h: h2 });
     editor.history.push(
@@ -163553,6 +164229,38 @@ function useLayerEditorStage(opts) {
     );
     editor.invalidate();
     fitView2();
+  }
+  function applyCrop() {
+    const rect = editor.cropRect();
+    if (!rect) return false;
+    const d = editor.document();
+    if (rect.x === 0 && rect.y === 0 && rect.w === d.width && rect.h === d.height) {
+      editor.cropClear();
+      return false;
+    }
+    editor.history.beginGroup("Crop");
+    editor.selectNone();
+    for (const node of [...d.root.children]) {
+      const before = { ...node.transform };
+      const after = { ...before, x: before.x - rect.x, y: before.y - rect.y };
+      node.transform = after;
+      editor.history.push(new SetTransformCommand("Crop Move", node, before, after));
+    }
+    const guidesBefore = d.guides ? d.guides.map((g) => ({ ...g })) : [];
+    if (guidesBefore.length) {
+      const shift2 = (gs) => gs.map((g) => ({ axis: g.axis, pos: g.pos - (g.axis === "x" ? rect.x : rect.y) }));
+      const after = shift2(guidesBefore);
+      editor.history.push(
+        new PropCommand("Crop Guides", Dirty.META, () => d.guides ?? [], (v) => d.guides = v, guidesBefore, after)
+      );
+      d.guides = after;
+    }
+    setArtboardSize(rect.w, rect.h);
+    editor.history.endGroup();
+    editor.cropClear();
+    editor.invalidate();
+    fitView2();
+    return true;
   }
   function nudgeActive(dx, dy) {
     const id = activeId.value;
@@ -164058,6 +164766,12 @@ function useLayerEditorStage(opts) {
     penCommit: () => editor.penCommit(),
     penCancel: () => editor.penCancel(),
     penDrafting: () => editor.penDrafting(),
+    applyCrop,
+    cancelCrop: () => editor.cropClear(),
+    cropPending: computed(() => {
+      void version2.value;
+      return editor.cropRect() != null;
+    }),
     editingTextId,
     capturing,
     capturedImageUrl,
@@ -164487,6 +165201,19 @@ function useLayerEditorHotkeys(editor, opts) {
       }
       if (e.key === "Escape" && editor.penCancel()) {
         e.preventDefault();
+        return;
+      }
+    }
+    if (editor.tool.value === "crop" && !isTextEditingTarget(e.target)) {
+      if (e.key === "Enter" && editor.cropPending.value) {
+        e.preventDefault();
+        editor.applyCrop();
+        editor.tool.value = "select";
+        return;
+      }
+      if (e.key === "Escape" && editor.cropPending.value) {
+        e.preventDefault();
+        editor.cancelCrop();
         return;
       }
     }
@@ -166480,23 +167207,26 @@ const _hoisted_24$6 = ["disabled", "onClick"];
 const _hoisted_25$6 = ["disabled"];
 const _hoisted_26$6 = ["disabled"];
 const _hoisted_27$6 = { class: "ctv:whitespace-nowrap ctv:text-[10px] ctv:text-[#9b9b9b]/70" };
-const _hoisted_28$5 = ["disabled"];
+const _hoisted_28$5 = { class: "ctv:whitespace-nowrap ctv:text-[10px] ctv:text-[#7a7a7a]" };
 const _hoisted_29$4 = ["disabled"];
-const _hoisted_30$4 = ["title"];
-const _hoisted_31$2 = ["value"];
-const _hoisted_32$2 = { class: "ctv:whitespace-nowrap ctv:text-[10px] ctv:text-[#9b9b9b]/70" };
-const _hoisted_33$1 = { class: "ctv:flex ctv:h-6 ctv:items-center ctv:gap-0.5 ctv:rounded ctv:bg-[#1e1e1e] ctv:p-0.5" };
-const _hoisted_34$1 = ["aria-pressed", "onClick"];
-const _hoisted_35$1 = ["disabled"];
-const _hoisted_36$1 = ["disabled"];
-const _hoisted_37$1 = { class: "ctv:flex ctv:h-6 ctv:items-center ctv:gap-0.5 ctv:rounded ctv:bg-[#1e1e1e] ctv:p-0.5" };
-const _hoisted_38$1 = ["disabled", "title", "onClick"];
-const _hoisted_39$1 = ["disabled", "title"];
-const _hoisted_40$1 = ["disabled", "title"];
+const _hoisted_30$4 = ["disabled"];
+const _hoisted_31$2 = ["disabled"];
+const _hoisted_32$2 = ["disabled"];
+const _hoisted_33$1 = ["title"];
+const _hoisted_34$1 = ["value"];
+const _hoisted_35$1 = { class: "ctv:whitespace-nowrap ctv:text-[10px] ctv:text-[#9b9b9b]/70" };
+const _hoisted_36$1 = { class: "ctv:flex ctv:h-6 ctv:items-center ctv:gap-0.5 ctv:rounded ctv:bg-[#1e1e1e] ctv:p-0.5" };
+const _hoisted_37$1 = ["aria-pressed", "onClick"];
+const _hoisted_38$1 = ["disabled"];
+const _hoisted_39$1 = ["disabled"];
+const _hoisted_40$1 = { class: "ctv:flex ctv:h-6 ctv:items-center ctv:gap-0.5 ctv:rounded ctv:bg-[#1e1e1e] ctv:p-0.5" };
 const _hoisted_41$1 = ["disabled", "title", "onClick"];
 const _hoisted_42$1 = ["disabled", "title"];
 const _hoisted_43$1 = ["disabled", "title"];
-const _hoisted_44$1 = ["title"];
+const _hoisted_44$1 = ["disabled", "title", "onClick"];
+const _hoisted_45$1 = ["disabled", "title"];
+const _hoisted_46$1 = ["disabled", "title"];
+const _hoisted_47$1 = ["title"];
 const dividerClass = "ctv:h-5 ctv:w-px ctv:shrink-0 ctv:bg-[#161616]";
 const fieldClass = "ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1 ctv:whitespace-nowrap";
 const colorInputClass$1 = "ctv:size-6 ctv:cursor-pointer ctv:rounded ctv:border ctv:border-[#161616] ctv:bg-transparent ctv:p-0 ctv:disabled:opacity-30";
@@ -166521,6 +167251,7 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
     const TOOL_META = {
       select: { labelKey: "pentrado.toolSelect", icon: IconMousePointer },
       transform: { labelKey: "pentrado.toolTransform", icon: IconScaling },
+      crop: { labelKey: "pentrado.toolCrop", icon: IconCrop },
       marquee: { labelKey: "pentrado.toolMarquee", icon: IconSquareDashed },
       "marquee-ellipse": { labelKey: "pentrado.toolMarqueeEllipse", icon: IconCircleDashed },
       lasso: { labelKey: "pentrado.toolLasso", icon: IconLasso },
@@ -166578,6 +167309,7 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
     const isPenTool2 = computed(() => editor.tool.value === "pen");
     const isWarpTool2 = computed(() => editor.tool.value === "warp");
     const isTransformTool2 = computed(() => editor.tool.value === "transform");
+    const isCropTool2 = computed(() => editor.tool.value === "crop");
     const isSelectionTool = computed(
       () => ["marquee", "marquee-ellipse", "lasso", "wand", "bucket"].includes(editor.tool.value)
     );
@@ -166598,7 +167330,7 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
     }
     return (_ctx, _cache2) => {
       return openBlock(), createElementBlock("div", {
-        onContextmenu: _cache2[37] || (_cache2[37] = withModifiers(() => {
+        onContextmenu: _cache2[39] || (_cache2[39] = withModifiers(() => {
         }, ["prevent"])),
         class: "ctv:flex ctv:h-9 ctv:shrink-0 ctv:items-center ctv:gap-2 ctv:overflow-x-auto ctv:rounded-md ctv:border ctv:border-[#161616] ctv:bg-[#2b2b2b] ctv:px-2 ctv:text-[11px] ctv:text-[#9b9b9b]"
       }, [
@@ -167069,31 +167801,54 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
             ]),
             createBaseVNode("span", _hoisted_27$6, toDisplayString$1(_ctx.$t("pentrado.selOpsHint")), 1)
           ], 64)) : createCommentVNode("", true)
-        ], 64)) : isTransformTool2.value ? (openBlock(), createElementBlock(Fragment$1, { key: 4 }, [
+        ], 64)) : isCropTool2.value ? (openBlock(), createElementBlock(Fragment$1, { key: 4 }, [
+          createBaseVNode("span", _hoisted_28$5, toDisplayString$1(_ctx.$t("pentrado.cropHint")), 1),
+          createBaseVNode("button", {
+            type: "button",
+            class: normalizeClass(actionBtnClass),
+            disabled: !unref(editor).cropPending.value,
+            onClick: _cache2[27] || (_cache2[27] = ($event) => {
+              unref(editor).applyCrop();
+              unref(editor).tool.value = "select";
+            })
+          }, [
+            createVNode(unref(IconCheck), { class: "ctv:size-3.5" }),
+            createTextVNode(" " + toDisplayString$1(_ctx.$t("pentrado.cropApply")), 1)
+          ], 8, _hoisted_29$4),
+          createBaseVNode("button", {
+            type: "button",
+            class: normalizeClass(actionBtnClass),
+            disabled: !unref(editor).cropPending.value,
+            onClick: _cache2[28] || (_cache2[28] = ($event) => unref(editor).cancelCrop())
+          }, [
+            createVNode(unref(IconX), { class: "ctv:size-3.5" }),
+            createTextVNode(" " + toDisplayString$1(_ctx.$t("pentrado.cropCancel")), 1)
+          ], 8, _hoisted_30$4)
+        ], 64)) : isTransformTool2.value ? (openBlock(), createElementBlock(Fragment$1, { key: 5 }, [
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(actionBtnClass),
             disabled: !unref(editor).transformDirty.value,
-            onClick: _cache2[27] || (_cache2[27] = ($event) => {
+            onClick: _cache2[29] || (_cache2[29] = ($event) => {
               unref(editor).transformApply();
               unref(editor).tool.value = "select";
             })
           }, [
             createVNode(unref(IconCheck), { class: "ctv:size-3.5" }),
             createTextVNode(" " + toDisplayString$1(_ctx.$t("pentrado.transformApply")), 1)
-          ], 8, _hoisted_28$5),
+          ], 8, _hoisted_31$2),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(actionBtnClass),
             disabled: !unref(editor).transformDirty.value,
-            onClick: _cache2[28] || (_cache2[28] = ($event) => {
+            onClick: _cache2[30] || (_cache2[30] = ($event) => {
               unref(editor).transformCancel();
               unref(editor).tool.value = "select";
             })
           }, [
             createVNode(unref(IconX), { class: "ctv:size-3.5" }),
             createTextVNode(" " + toDisplayString$1(_ctx.$t("pentrado.transformCancel")), 1)
-          ], 8, _hoisted_29$4),
+          ], 8, _hoisted_32$2),
           createBaseVNode("label", {
             class: normalizeClass(fieldClass),
             title: _ctx.$t("pentrado.snapGridHint")
@@ -167106,12 +167861,12 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
               step: "8",
               value: unref(editor).snapGridSize.value,
               class: "ctv:w-14 ctv:rounded-xs ctv:border ctv:border-[#3d3d3d] ctv:bg-[#1e1e1e] ctv:px-1 ctv:py-0.5 ctv:font-mono ctv:text-[11px] ctv:text-[#d6d6d6]",
-              onChange: _cache2[29] || (_cache2[29] = ($event) => unref(editor).setSnapGrid(Number($event.target.value) || 0))
-            }, null, 40, _hoisted_31$2)
-          ], 8, _hoisted_30$4),
-          createBaseVNode("span", _hoisted_32$2, toDisplayString$1(_ctx.$t("pentrado.transformHint")), 1)
-        ], 64)) : isWarpTool2.value ? (openBlock(), createElementBlock(Fragment$1, { key: 5 }, [
-          createBaseVNode("div", _hoisted_33$1, [
+              onChange: _cache2[31] || (_cache2[31] = ($event) => unref(editor).setSnapGrid(Number($event.target.value) || 0))
+            }, null, 40, _hoisted_34$1)
+          ], 8, _hoisted_33$1),
+          createBaseVNode("span", _hoisted_35$1, toDisplayString$1(_ctx.$t("pentrado.transformHint")), 1)
+        ], 64)) : isWarpTool2.value ? (openBlock(), createElementBlock(Fragment$1, { key: 6 }, [
+          createBaseVNode("div", _hoisted_36$1, [
             (openBlock(), createElementBlock(Fragment$1, null, renderList(WARP_GRID_SIZES, (n) => {
               return createBaseVNode("button", {
                 key: n,
@@ -167119,33 +167874,33 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
                 class: normalizeClass(segBtnClass(unref(editor).warpPoints.value === n)),
                 "aria-pressed": unref(editor).warpPoints.value === n,
                 onClick: ($event) => unref(editor).warpPoints.value = n
-              }, toDisplayString$1(n) + "×" + toDisplayString$1(n), 11, _hoisted_34$1);
+              }, toDisplayString$1(n) + "×" + toDisplayString$1(n), 11, _hoisted_37$1);
             }), 64))
           ]),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(actionBtnClass),
             disabled: !unref(editor).warpDirty.value,
-            onClick: _cache2[30] || (_cache2[30] = ($event) => unref(editor).warpApply())
+            onClick: _cache2[32] || (_cache2[32] = ($event) => unref(editor).warpApply())
           }, [
             createVNode(unref(IconCheck), { class: "ctv:size-3.5" }),
             createTextVNode(" " + toDisplayString$1(_ctx.$t("pentrado.warpApply")), 1)
-          ], 8, _hoisted_35$1),
+          ], 8, _hoisted_38$1),
           createBaseVNode("button", {
             type: "button",
             class: normalizeClass(actionBtnClass),
             disabled: !unref(editor).warpDirty.value,
-            onClick: _cache2[31] || (_cache2[31] = ($event) => unref(editor).warpCancel())
+            onClick: _cache2[33] || (_cache2[33] = ($event) => unref(editor).warpCancel())
           }, [
             createVNode(unref(IconX), { class: "ctv:size-3.5" }),
             createTextVNode(" " + toDisplayString$1(_ctx.$t("pentrado.warpCancel")), 1)
-          ], 8, _hoisted_36$1)
+          ], 8, _hoisted_39$1)
         ], 64)) : createCommentVNode("", true),
-        multiSelected.value ? (openBlock(), createElementBlock(Fragment$1, { key: 6 }, [
+        multiSelected.value ? (openBlock(), createElementBlock(Fragment$1, { key: 7 }, [
           createBaseVNode("div", {
             class: normalizeClass(dividerClass)
           }),
-          createBaseVNode("div", _hoisted_37$1, [
+          createBaseVNode("div", _hoisted_40$1, [
             (openBlock(), createElementBlock(Fragment$1, null, renderList(ARRANGE_ACTIONS, (a2) => {
               return createBaseVNode("button", {
                 key: a2.op,
@@ -167156,31 +167911,31 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
                 onClick: ($event) => unref(editor).arrangeSelected(a2.op)
               }, [
                 (openBlock(), createBlock(resolveDynamicComponent(a2.icon), { class: "ctv:size-3.5 ctv:disabled:opacity-30" }))
-              ], 10, _hoisted_38$1);
+              ], 10, _hoisted_41$1);
             }), 64))
           ])
         ], 64)) : createCommentVNode("", true),
-        _cache2[38] || (_cache2[38] = createBaseVNode("div", { class: "ctv:flex-1" }, null, -1)),
+        _cache2[40] || (_cache2[40] = createBaseVNode("div", { class: "ctv:flex-1" }, null, -1)),
         createBaseVNode("button", {
           type: "button",
           class: normalizeClass(iconBtnClass),
           disabled: !unref(editor).canUndo.value,
           title: _ctx.$t("pentrado.undo"),
-          onClick: _cache2[32] || (_cache2[32] = //@ts-ignore
+          onClick: _cache2[34] || (_cache2[34] = //@ts-ignore
           (...args) => unref(editor).undo && unref(editor).undo(...args))
         }, [
           createVNode(unref(IconUndo), { class: "ctv:size-4" })
-        ], 8, _hoisted_39$1),
+        ], 8, _hoisted_42$1),
         createBaseVNode("button", {
           type: "button",
           class: normalizeClass(iconBtnClass),
           disabled: !unref(editor).canRedo.value,
           title: _ctx.$t("pentrado.redo"),
-          onClick: _cache2[33] || (_cache2[33] = //@ts-ignore
+          onClick: _cache2[35] || (_cache2[35] = //@ts-ignore
           (...args) => unref(editor).redo && unref(editor).redo(...args))
         }, [
           createVNode(unref(IconRedo), { class: "ctv:size-4" })
-        ], 8, _hoisted_40$1),
+        ], 8, _hoisted_43$1),
         createBaseVNode("div", {
           class: normalizeClass(dividerClass)
         }),
@@ -167202,14 +167957,14 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
               class: normalizeClass(action.label ? "ctv:size-3.5" : "ctv:size-4")
             }, null, 8, ["class"])) : createCommentVNode("", true),
             createTextVNode(" " + toDisplayString$1(action.label), 1)
-          ], 10, _hoisted_41$1);
+          ], 10, _hoisted_44$1);
         }), 128)),
         createBaseVNode("button", {
           type: "button",
           class: normalizeClass(actionBtnClass),
           disabled: unref(editor).importingPsd.value,
           title: _ctx.$t("pentrado.importPsdHint"),
-          onClick: _cache2[34] || (_cache2[34] = ($event) => {
+          onClick: _cache2[36] || (_cache2[36] = ($event) => {
             var _a2;
             return (_a2 = psdFileInput.value) == null ? void 0 : _a2.click();
           })
@@ -167222,7 +167977,7 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
             class: "ctv:size-3.5"
           })),
           createTextVNode(" " + toDisplayString$1(_ctx.$t("pentrado.importPsd")), 1)
-        ], 8, _hoisted_42$1),
+        ], 8, _hoisted_45$1),
         createBaseVNode("input", {
           ref_key: "psdFileInput",
           ref: psdFileInput,
@@ -167236,7 +167991,7 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
           class: normalizeClass(actionBtnClass),
           disabled: unref(editor).exportingPsd.value,
           title: _ctx.$t("pentrado.exportPsdHint"),
-          onClick: _cache2[35] || (_cache2[35] = //@ts-ignore
+          onClick: _cache2[37] || (_cache2[37] = //@ts-ignore
           (...args) => unref(editor).exportPsd && unref(editor).exportPsd(...args))
         }, [
           unref(editor).exportingPsd.value ? (openBlock(), createBlock(unref(IconLoader), {
@@ -167247,16 +168002,16 @@ const _sfc_main$2b = /* @__PURE__ */ defineComponent({
             class: "ctv:size-3.5"
           })),
           createTextVNode(" " + toDisplayString$1(_ctx.$t("pentrado.exportPsd")), 1)
-        ], 8, _hoisted_43$1),
+        ], 8, _hoisted_46$1),
         createBaseVNode("button", {
           type: "button",
           class: normalizeClass(iconBtnClass),
           title: _ctx.$t("pentrado.fitView"),
-          onClick: _cache2[36] || (_cache2[36] = //@ts-ignore
+          onClick: _cache2[38] || (_cache2[38] = //@ts-ignore
           (...args) => unref(editor).fitView && unref(editor).fitView(...args))
         }, [
           createVNode(unref(IconScan), { class: "ctv:size-4" })
-        ], 8, _hoisted_44$1),
+        ], 8, _hoisted_47$1),
         renderSlot(_ctx.$slots, "trailing")
       ], 32);
     };
@@ -167324,6 +168079,7 @@ const _sfc_main$2a = /* @__PURE__ */ defineComponent({
     const TOOL_OPTIONS = [
       { id: "select", labelKey: "pentrado.toolSelect", icon: IconMousePointer },
       { id: "transform", labelKey: "pentrado.toolTransform", icon: IconScaling },
+      { id: "crop", labelKey: "pentrado.toolCrop", icon: IconCrop },
       { id: "marquee", labelKey: "pentrado.toolMarquee", icon: IconSquareDashed },
       { id: "marquee-ellipse", labelKey: "pentrado.toolMarqueeEllipse", icon: IconCircleDashed },
       { id: "lasso", labelKey: "pentrado.toolLasso", icon: IconLasso },
@@ -179021,7 +179777,7 @@ const _sfc_main$1K = /* @__PURE__ */ defineComponent({
     const previewSide = /* @__PURE__ */ ref("A");
     const duration2 = useNumWidget(props.node, "duration", 1);
     const softness = useNumWidget(props.node, "softness", 0.1);
-    const invert = useBoolWidget(props.node, "invert", false);
+    const invert2 = useBoolWidget(props.node, "invert", false);
     const lumaMap = useStrWidget(props.node, "luma_map", "radial");
     const lumaImageUrl = computed(() => pickSourceImageUrl(props.state.inputs, "luma_image"));
     const lumaWired = computed(() => Boolean(lumaImageUrl.value));
@@ -179061,7 +179817,7 @@ const _sfc_main$1K = /* @__PURE__ */ defineComponent({
         transition: "fade",
         duration: duration2.value,
         offset: 0,
-        lumaMode: invert.value ? 2 : 1,
+        lumaMode: invert2.value ? 2 : 1,
         lumaSoftness: softness.value
       })
     });
@@ -179252,10 +180008,10 @@ const _sfc_main$1K = /* @__PURE__ */ defineComponent({
           createBaseVNode("label", _hoisted_10$n, [
             withDirectives(createBaseVNode("input", {
               type: "checkbox",
-              "onUpdate:modelValue": _cache2[13] || (_cache2[13] = ($event) => /* @__PURE__ */ isRef(invert) ? invert.value = $event : null),
+              "onUpdate:modelValue": _cache2[13] || (_cache2[13] = ($event) => /* @__PURE__ */ isRef(invert2) ? invert2.value = $event : null),
               class: "ctv:accent-primary-background"
             }, null, 512), [
-              [vModelCheckbox, unref(invert)]
+              [vModelCheckbox, unref(invert2)]
             ]),
             createTextVNode(" " + toDisplayString$1(_ctx.$t("fx.invert")), 1)
           ])
@@ -184710,7 +185466,7 @@ const _sfc_main$1f = /* @__PURE__ */ defineComponent({
     const props = __props;
     const sourceVideoUrl = computed(() => pickSourceImageUrl(props.state.inputs, "video"));
     const feather = useNumWidget(props.node, "feather", 0);
-    const invert = useBoolWidget(props.node, "invert", false);
+    const invert2 = useBoolWidget(props.node, "invert", false);
     const videoEl = /* @__PURE__ */ ref(null);
     const overlayEl = /* @__PURE__ */ ref(null);
     const { smooth, onMeta, onDown, onMovePtr, onUp, onDbl, clearShape } = useRotoMaskEditor({ node: props.node, videoEl, overlayEl });
@@ -184785,10 +185541,10 @@ const _sfc_main$1f = /* @__PURE__ */ defineComponent({
             createBaseVNode("label", _hoisted_6$K, [
               withDirectives(createBaseVNode("input", {
                 type: "checkbox",
-                "onUpdate:modelValue": _cache2[10] || (_cache2[10] = ($event) => /* @__PURE__ */ isRef(invert) ? invert.value = $event : null),
+                "onUpdate:modelValue": _cache2[10] || (_cache2[10] = ($event) => /* @__PURE__ */ isRef(invert2) ? invert2.value = $event : null),
                 class: "ctv:accent-primary-background"
               }, null, 512), [
-                [vModelCheckbox, unref(invert)]
+                [vModelCheckbox, unref(invert2)]
               ]),
               createTextVNode(" " + toDisplayString$1(_ctx.$t("fx.invert")), 1)
             ]),
@@ -186784,7 +187540,7 @@ const _sfc_main$16 = /* @__PURE__ */ defineComponent({
     const model = useStrWidget(props.node, "model", "translation");
     const tRef = useNumWidget(props.node, "t_ref", 0);
     const maxPoints = useNumWidget(props.node, "max_points", 24);
-    const invert = useBoolWidget(props.node, "invert", false);
+    const invert2 = useBoolWidget(props.node, "invert", false);
     return (_ctx, _cache2) => {
       return openBlock(), createBlock(_sfc_main$2S, { node: __props.node }, {
         player: withCtx(() => [
@@ -186836,10 +187592,10 @@ const _sfc_main$16 = /* @__PURE__ */ defineComponent({
             createBaseVNode("label", _hoisted_2$15, [
               withDirectives(createBaseVNode("input", {
                 type: "checkbox",
-                "onUpdate:modelValue": _cache2[3] || (_cache2[3] = ($event) => /* @__PURE__ */ isRef(invert) ? invert.value = $event : null),
+                "onUpdate:modelValue": _cache2[3] || (_cache2[3] = ($event) => /* @__PURE__ */ isRef(invert2) ? invert2.value = $event : null),
                 class: "ctv:accent-primary-background"
               }, null, 512), [
-                [vModelCheckbox, unref(invert)]
+                [vModelCheckbox, unref(invert2)]
               ]),
               createTextVNode(" " + toDisplayString$1(_ctx.$t("fx.invert")), 1)
             ])
@@ -190270,7 +191026,7 @@ const _sfc_main$M = /* @__PURE__ */ defineComponent({
     const softness = useNumWidget(props.node, "softness", 0.1);
     const animate = useStrWidget(props.node, "animate", "static");
     const output = useStrWidget(props.node, "output", "stencil");
-    const invert = useBoolWidget(props.node, "invert", false);
+    const invert2 = useBoolWidget(props.node, "invert", false);
     const playerRef = /* @__PURE__ */ ref(null);
     function playhead() {
       var _a2, _b2;
@@ -190287,7 +191043,7 @@ const _sfc_main$M = /* @__PURE__ */ defineComponent({
         softness: softness.value,
         animate: animate.value,
         output: output.value,
-        invert: invert.value
+        invert: invert2.value
       }),
       getVideo: () => sourceVideoUrl.value,
       getPlayhead: playhead
@@ -190353,10 +191109,10 @@ const _sfc_main$M = /* @__PURE__ */ defineComponent({
             createBaseVNode("label", _hoisted_1$N, [
               withDirectives(createBaseVNode("input", {
                 type: "checkbox",
-                "onUpdate:modelValue": _cache2[6] || (_cache2[6] = ($event) => /* @__PURE__ */ isRef(invert) ? invert.value = $event : null),
+                "onUpdate:modelValue": _cache2[6] || (_cache2[6] = ($event) => /* @__PURE__ */ isRef(invert2) ? invert2.value = $event : null),
                 class: "ctv:accent-primary-background"
               }, null, 512), [
-                [vModelCheckbox, unref(invert)]
+                [vModelCheckbox, unref(invert2)]
               ]),
               _cache2[10] || (_cache2[10] = createTextVNode(" Invert ", -1))
             ]),
@@ -193164,7 +193920,7 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
     const gain = useNumWidget(props.node, "gain", 24);
     const offset2 = useNumWidget(props.node, "offset", 0);
     const filterMode = useStrWidget(props.node, "filter_mode", "linear");
-    const invert = useBoolWidget(props.node, "invert", false);
+    const invert2 = useBoolWidget(props.node, "invert", false);
     return (_ctx, _cache2) => {
       return openBlock(), createBlock(_sfc_main$2S, { node: __props.node }, {
         player: withCtx(() => [
@@ -193212,10 +193968,10 @@ const _sfc_main$x = /* @__PURE__ */ defineComponent({
             createBaseVNode("label", _hoisted_1$y, [
               withDirectives(createBaseVNode("input", {
                 type: "checkbox",
-                "onUpdate:modelValue": _cache2[4] || (_cache2[4] = ($event) => /* @__PURE__ */ isRef(invert) ? invert.value = $event : null),
+                "onUpdate:modelValue": _cache2[4] || (_cache2[4] = ($event) => /* @__PURE__ */ isRef(invert2) ? invert2.value = $event : null),
                 class: "ctv:accent-primary-background"
               }, null, 512), [
-                [vModelCheckbox, unref(invert)]
+                [vModelCheckbox, unref(invert2)]
               ]),
               _cache2[8] || (_cache2[8] = createTextVNode(" Invert ", -1))
             ])
@@ -193433,7 +194189,7 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
     const sourceVideoUrl = computed(() => pickSourceImageUrl(props.state.inputs, "video"));
     const interval = useNumWidget(props.node, "interval", 3);
     const strobeMode = useStrWidget(props.node, "strobe_mode", "black");
-    const invert = useBoolWidget(props.node, "invert", false);
+    const invert2 = useBoolWidget(props.node, "invert", false);
     const playerRef = /* @__PURE__ */ ref(null);
     function playhead() {
       var _a2, _b2;
@@ -193447,7 +194203,7 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
       getParams: () => ({
         interval: interval.value,
         strobe_mode: strobeMode.value,
-        invert: invert.value
+        invert: invert2.value
       }),
       getVideo: () => sourceVideoUrl.value,
       getPlayhead: playhead
@@ -193489,10 +194245,10 @@ const _sfc_main$v = /* @__PURE__ */ defineComponent({
             createBaseVNode("label", _hoisted_1$w, [
               withDirectives(createBaseVNode("input", {
                 type: "checkbox",
-                "onUpdate:modelValue": _cache2[2] || (_cache2[2] = ($event) => /* @__PURE__ */ isRef(invert) ? invert.value = $event : null),
+                "onUpdate:modelValue": _cache2[2] || (_cache2[2] = ($event) => /* @__PURE__ */ isRef(invert2) ? invert2.value = $event : null),
                 class: "ctv:accent-primary-background"
               }, null, 512), [
-                [vModelCheckbox, unref(invert)]
+                [vModelCheckbox, unref(invert2)]
               ]),
               _cache2[6] || (_cache2[6] = createTextVNode(" Invert ", -1))
             ]),
@@ -193779,7 +194535,7 @@ const _sfc_main$t = /* @__PURE__ */ defineComponent({
     const delta2 = useNumWidget(props.node, "delta_2", 0.2);
     const delta3 = useNumWidget(props.node, "delta_3", 0.2);
     const slope = useNumWidget(props.node, "slope", 0.2);
-    const invert = useBoolWidget(props.node, "invert", false);
+    const invert2 = useBoolWidget(props.node, "invert", false);
     const output = useStrWidget(props.node, "output", "matte");
     const deltaLabels = computed(() => {
       if (space.value === "abi") return ["A Range", "B Range", "I Range"];
@@ -193805,7 +194561,7 @@ const _sfc_main$t = /* @__PURE__ */ defineComponent({
         delta_2: delta2.value,
         delta_3: delta3.value,
         slope: slope.value,
-        invert: invert.value,
+        invert: invert2.value,
         output: output.value
       }),
       getVideo: () => sourceVideoUrl.value,
@@ -193896,10 +194652,10 @@ const _sfc_main$t = /* @__PURE__ */ defineComponent({
               createBaseVNode("label", _hoisted_6$h, [
                 withDirectives(createBaseVNode("input", {
                   type: "checkbox",
-                  "onUpdate:modelValue": _cache2[8] || (_cache2[8] = ($event) => /* @__PURE__ */ isRef(invert) ? invert.value = $event : null),
+                  "onUpdate:modelValue": _cache2[8] || (_cache2[8] = ($event) => /* @__PURE__ */ isRef(invert2) ? invert2.value = $event : null),
                   class: "ctv:accent-primary-background"
                 }, null, 512), [
-                  [vModelCheckbox, unref(invert)]
+                  [vModelCheckbox, unref(invert2)]
                 ]),
                 _cache2[13] || (_cache2[13] = createTextVNode(" Invert ", -1))
               ]),
@@ -193969,7 +194725,7 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
     const edgeScale = useNumWidget(props.node, "edge_scale", 1.5);
     const scatter = useNumWidget(props.node, "scatter", 1);
     const colorMix = useNumWidget(props.node, "color_mix", 0);
-    const invert = useBoolWidget(props.node, "invert", false);
+    const invert2 = useBoolWidget(props.node, "invert", false);
     const azimuth = useNumWidget(props.node, "azimuth", 135);
     const elevation = useNumWidget(props.node, "elevation", 30);
     const embossWidth = useNumWidget(props.node, "emboss_width", 10);
@@ -193995,7 +194751,7 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
         edge_scale: edgeScale.value,
         scatter: scatter.value,
         color_mix: colorMix.value,
-        invert: invert.value,
+        invert: invert2.value,
         azimuth: azimuth.value,
         elevation: elevation.value,
         emboss_width: embossWidth.value,
@@ -194093,10 +194849,10 @@ const _sfc_main$s = /* @__PURE__ */ defineComponent({
               createBaseVNode("label", _hoisted_1$t, [
                 withDirectives(createBaseVNode("input", {
                   type: "checkbox",
-                  "onUpdate:modelValue": _cache2[7] || (_cache2[7] = ($event) => /* @__PURE__ */ isRef(invert) ? invert.value = $event : null),
+                  "onUpdate:modelValue": _cache2[7] || (_cache2[7] = ($event) => /* @__PURE__ */ isRef(invert2) ? invert2.value = $event : null),
                   class: "ctv:accent-primary-background"
                 }, null, 512), [
-                  [vModelCheckbox, unref(invert)]
+                  [vModelCheckbox, unref(invert2)]
                 ]),
                 _cache2[18] || (_cache2[18] = createTextVNode(" Invert ", -1))
               ])
@@ -202803,4 +203559,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-DuPvQhQw.mjs.map
+//# sourceMappingURL=main-C8TqDnEG.mjs.map

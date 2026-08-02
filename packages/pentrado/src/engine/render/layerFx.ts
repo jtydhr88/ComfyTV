@@ -1,10 +1,12 @@
 import { generateId } from '../id'
 import { applyLayerFxChainGpu } from './fxGpu'
+import { applyLayerStyle } from './layerStyles'
 import type { Bitmap } from './place'
 
 export type LayerFxOp =
   | 'drop-shadow' | 'gaussian-blur' | 'unsharp-mask' | 'median-blur'
   | 'vignette' | 'emboss' | 'pixelate' | 'noise' | 'desaturate'
+  | 'stroke' | 'outer-glow' | 'inner-glow' | 'inner-shadow' | 'color-overlay' | 'bevel'
 
 export interface LayerFxData {
   id: string
@@ -50,6 +52,38 @@ export const LAYER_FX_DEFS: Record<LayerFxOp, LayerFxParamDef[]> = {
   pixelate: [{ key: 'size', min: 2, max: 64, default: 8, step: 1 }],
   noise: [{ key: 'amount', min: 0, max: 1, default: 0.2, step: 0.01 }],
   desaturate: [{ key: 'amount', min: 0, max: 1, default: 1, step: 0.01 }],
+  stroke: [
+    { key: 'size', min: 1, max: 60, default: 4, step: 1 },
+    { key: 'position', min: 0, max: 2, default: 0, step: 1 },
+    { key: 'strokeOpacity', min: 0, max: 1, default: 1, step: 0.01 },
+    { key: 'color', min: 0, max: 0xffffff, default: 0xdd3322, color: true },
+  ],
+  'outer-glow': [
+    { key: 'size', min: 1, max: 120, default: 12, step: 1 },
+    { key: 'glowOpacity', min: 0, max: 1, default: 0.75, step: 0.01 },
+    { key: 'color', min: 0, max: 0xffffff, default: 0xffe680, color: true },
+  ],
+  'inner-glow': [
+    { key: 'size', min: 1, max: 120, default: 12, step: 1 },
+    { key: 'glowOpacity', min: 0, max: 1, default: 0.75, step: 0.01 },
+    { key: 'color', min: 0, max: 0xffffff, default: 0xffe680, color: true },
+  ],
+  'inner-shadow': [
+    { key: 'x', min: -100, max: 100, default: 4, step: 1 },
+    { key: 'y', min: -100, max: 100, default: 4, step: 1 },
+    { key: 'size', min: 1, max: 100, default: 8, step: 1 },
+    { key: 'shadowOpacity', min: 0, max: 1, default: 0.6, step: 0.01 },
+    { key: 'color', min: 0, max: 0xffffff, default: 0, color: true },
+  ],
+  'color-overlay': [
+    { key: 'overlayOpacity', min: 0, max: 1, default: 1, step: 0.01 },
+    { key: 'color', min: 0, max: 0xffffff, default: 0xdd3322, color: true },
+  ],
+  bevel: [
+    { key: 'size', min: 1, max: 60, default: 6, step: 1 },
+    { key: 'depth', min: 0, max: 1, default: 0.5, step: 0.01 },
+    { key: 'angle', min: 0, max: 360, default: 120, step: 1 },
+  ],
 }
 
 export const LAYER_FX_OPS = Object.keys(LAYER_FX_DEFS) as LayerFxOp[]
@@ -99,6 +133,12 @@ function fxPad(f: LayerFxData): number {
     return Math.ceil(3 * (f.params.stdDev ?? 0) + Math.max(Math.abs(f.params.x ?? 0), Math.abs(f.params.y ?? 0)))
   }
   if (f.op === 'gaussian-blur') return Math.ceil(3 * (f.params.stdDev ?? 0))
+  if (f.op === 'stroke') {
+    const size = f.params.size ?? 4
+    const position = Math.round(f.params.position ?? 0)
+    return Math.ceil(position === 1 ? 0 : position === 2 ? size / 2 : size) + 1
+  }
+  if (f.op === 'outer-glow') return Math.ceil(f.params.size ?? 12) + 1
   return 0
 }
 
@@ -434,6 +474,14 @@ function applyOne(img: ImageData, f: LayerFxData): ImageData {
       }
       return img
     }
+    case 'stroke':
+    case 'outer-glow':
+    case 'inner-glow':
+    case 'inner-shadow':
+    case 'color-overlay':
+    case 'bevel':
+      applyLayerStyle(img, f)
+      return img
   }
 }
 

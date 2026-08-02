@@ -1,5 +1,7 @@
 import type { Layer, Psd } from 'ag-psd'
 
+import { psdEffectsToFx } from './psdEffects'
+
 import {
   adjustmentKind,
   defaultMode,
@@ -107,6 +109,7 @@ function baseProps(layer: Layer) {
     visible: !layer.hidden,
     opacity: num(layer.opacity, 1),
     mode: defaultMode(blendFromPsd(layer.blendMode)),
+    fx: psdEffectsToFx(layer.effects),
   }
 }
 
