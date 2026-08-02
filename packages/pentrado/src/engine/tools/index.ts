@@ -3,6 +3,7 @@ import { registerPixelPaintCores } from '../paint/pixelPaintCore'
 import { registerTool } from '../tool'
 import { makeBucketToolDef } from './bucketTool'
 import { makeGradientToolDef } from './gradientTool'
+import { makePenToolDef } from './penTool'
 import { makeLassoToolDef } from './lassoTool'
 import { makeEllipseMarqueeToolDef, makeMarqueeToolDef } from './marqueeTool'
 import { makePaintToolDef } from './paintTool'
@@ -34,6 +35,7 @@ export * from './transformMath'
 export { resolvePaintTarget, makeToLocal, rasterizeSelectionToLocal } from './paintTarget'
 export { makeGradientToolDef, DEFAULT_GRADIENT_OPTIONS, renderGradientPixels } from './gradientTool'
 export type { GradientToolOptions } from './gradientTool'
+export { makePenToolDef, isPenTool } from './penTool'
 
 let registered = false
 
@@ -52,6 +54,7 @@ export function registerBuiltinTools(): void {
   registerTool(makeShapeToolDef())
   registerTool(makeWarpToolDef())
   registerTool(makeGradientToolDef())
+  registerTool(makePenToolDef())
   registerTool(makePaintToolDef('brush', 'brush', 'content'))
   registerTool(makePaintToolDef('eraser', 'eraser', 'content'))
   registerTool(makePaintToolDef('pencil', 'pencil', 'content'))

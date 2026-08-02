@@ -264,6 +264,23 @@
       >
         <IconRepeat class="ctv:size-3.5" />
       </button>
+      <template v-if="active.kind === 'vector'">
+        <button type="button" :class="miniBtnClass" :title="$t('pentrado.pathToSelection')" @click="editor.pathToSelection(active.id)">
+          <IconBoxSelect class="ctv:size-3.5" />
+        </button>
+        <button type="button" :class="miniBtnClass" :title="$t('pentrado.strokePath')" @click="editor.strokePathBrush(active.id)">
+          <IconSpline class="ctv:size-3.5" />
+        </button>
+      </template>
+      <button
+        v-if="active.kind === 'text'"
+        type="button"
+        :class="miniBtnClass"
+        :title="$t('pentrado.textToPath')"
+        @click="editor.textToPath(active.id)"
+      >
+        <IconSpline class="ctv:size-3.5" />
+      </button>
       <template v-if="active.kind === 'raster'">
         <button type="button" :class="miniBtnClass" :title="$t('pentrado.cropToContent')" @click="editor.cropToContent(active.id)">
           <IconCrop class="ctv:size-3.5" />
@@ -733,9 +750,11 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import IconArrowDownToLine from '~icons/lucide/arrow-down-to-line'
+import IconBoxSelect from '~icons/lucide/box-select'
 import IconClipboardCopy from '~icons/lucide/clipboard-copy'
 import IconCombine from '~icons/lucide/combine'
 import IconRepeat from '~icons/lucide/repeat'
+import IconSpline from '~icons/lucide/spline'
 import IconBrush from '~icons/lucide/brush'
 import IconCheck from '~icons/lucide/check'
 import IconChevronDown from '~icons/lucide/chevron-down'

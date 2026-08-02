@@ -13,6 +13,7 @@ import { applyImageFilter, defaultFilterParams, type FilterOp } from '../filters
 import { DEFAULT_FONT_REF, getFontStore } from '../fontStore'
 import { createPanZoom } from '../panZoom'
 import { measureText, type TextStyle } from '../textRender'
+import { textToPathData } from '../textPath'
 import type { LayerRow, ToolHandler, ToolId } from '../types'
 import {
   adjustmentKind,
@@ -44,6 +45,7 @@ import {
   STROKE_ONLY_SHAPES,
   textKind,
   transformPath,
+  vectorKind,
   walk,
   type BlendFn,
   type CanvasItem,
@@ -818,6 +820,51 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
     n.id = generateId(n.kind)
     if (n.kind === 'group') for (const c of (n as GroupData).children) regenIds(c)
   }
+  function pathToSelection(id: string, op: 'replace' | 'add' | 'subtract' | 'intersect' = 'replace'): boolean {
+    return editor.pathToSelection(id, op)
+  }
+
+  function strokePathBrush(id: string): boolean {
+    syncEngineTool()
+    const active = activeId.value ? engineNode(activeId.value) : null
+    if (!active || active.kind !== 'raster') addEmptyLayer()
+    return editor.strokePathWithBrush(id)
+  }
+
+  function textToPath(id: string): boolean {
+    const n = engineNode(id)
+    if (!n || n.kind !== 'text') return false
+    const t = n as TextData
+    const font = fontStore.getFontSyncWithFallback(t.fontRef)
+    if (!font) return false
+    const style: TextStyle = {
+      id: t.id, text: t.text, fontRef: t.fontRef, fontSize: t.fontSize, color: t.color,
+      letterSpacing: t.letterSpacing, lineHeight: t.lineHeight, align: t.align,
+    }
+    const local = textToPathData(style, font)
+    if (!local.strokes.length) return false
+    const metrics = measureText(style, font)
+    const tf = t.transform
+    const sx = (tf.w || metrics.w) / metrics.w
+    const sy = (tf.h || metrics.h) / metrics.h
+    const cx = tf.x + tf.w / 2
+    const cy = tf.y + tf.h / 2
+    const cos = Math.cos(tf.rotation)
+    const sin = Math.sin(tf.rotation)
+    const docPath = transformPath(local, (p) => {
+      const lx = p.x * sx - tf.w / 2
+      const ly = p.y * sy - tf.h / 2
+      return { x: cx + lx * cos - ly * sin, y: cy + lx * sin + ly * cos }
+    })
+    const node = vectorKind.create({
+      name: `${t.name} path`,
+      path: docPath,
+      fill: { color: t.color, rule: 'nonzero' },
+    })
+    editor.addNode(node)
+    return true
+  }
+
   function duplicateOne(id: string): string | null {
     const loc = findNode(editor.document().root, id)
     if (!loc) return null
@@ -1498,6 +1545,10 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
     newFromVisible: () => editor.newFromVisible(),
     mergeVisible: () => editor.mergeVisible(),
     lastFilter, repeatLastFilter,
+    pathToSelection, strokePathBrush, textToPath,
+    penCommit: () => editor.penCommit(),
+    penCancel: () => editor.penCancel(),
+    penDrafting: () => editor.penDrafting(),
     editingTextId, capturing, capturedImageUrl,
     canUndo, canRedo,
     panZoom, setElements, fitView, requestRender, requestOverlayRender,

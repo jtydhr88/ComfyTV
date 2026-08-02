@@ -36,10 +36,13 @@ import { canRasterizeLayer, cropToContent as cropToContentOp, layerToCanvasSize 
 import { clampRectToDoc, fullSelectionCanvas, invertSelectionCanvas, lumaBBox, rectSelectionCanvas } from './selectionOps'
 import {
   borderMask, combineMasks, emptyMask, featherMask, growMask, maskBoundary, maskBounds, maskFromCanvas, maskToCanvas,
-  shrinkMask, type GrayMask, type SelectionOp,
+  polygonMask, shrinkMask, type GrayMask, type SelectionOp,
 } from './selectionMath'
 import { DEFAULT_WAND_OPTIONS, type WandToolOptions } from '../tools/wandTool'
 import { DEFAULT_GRADIENT_OPTIONS, type GradientToolOptions } from '../tools/gradientTool'
+import { isPenTool } from '../tools/penTool'
+import { resolvePaintTarget } from '../tools/paintTarget'
+import { flattenStrokeAdaptive, resamplePolyline } from '../pathEdit'
 import {
   clearSelectedPixels, extractSelectedPixels, fillSelectedPixels, strokeSelectedPixels,
   type SelectionClipboard,
@@ -117,6 +120,11 @@ export interface Editor {
   warpApply(): boolean
   warpCancel(): boolean
   warpDirty(): boolean
+  penCommit(): boolean
+  penCancel(): boolean
+  penDrafting(): boolean
+  pathToSelection(id: string, op: SelectionOp): boolean
+  strokePathWithBrush(id: string): boolean
   transformApply(): boolean
   transformCancel(): boolean
   transformDirty(): boolean
@@ -407,7 +415,7 @@ export function createEditor(opts: EditorOptions): Editor {
     snapGrid: () => snapGridSize,
     requestRender: refresh,
     options: <T,>() =>
-      (toolId === 'shape'
+      (toolId === 'shape' || toolId === 'pen'
         ? shape
         : toolId === 'warp'
           ? warp
@@ -975,6 +983,58 @@ export function createEditor(opts: EditorOptions): Editor {
     warpApply: () => (isWarpTool(tool) ? tool.apply() : false),
     warpCancel: () => (isWarpTool(tool) ? tool.cancel() : false),
     warpDirty: () => (isWarpTool(tool) ? tool.isDirty() : false),
+    penCommit: () => (isPenTool(tool) ? tool.commit() : false),
+    penCancel: () => (isPenTool(tool) ? tool.cancel() : false),
+    penDrafting: () => (isPenTool(tool) ? tool.isDrafting() : false),
+    pathToSelection(id, op) {
+      const node = findNode(doc.root, id)?.node
+      if (!node || node.kind !== 'vector') return false
+      const v = node as VectorData
+      const mask = emptyMask(doc.width, doc.height)
+      let any = false
+      for (const stroke of v.path.strokes) {
+        if (!stroke.closed) continue
+        const pts = flattenStrokeAdaptive(stroke, 0.25)
+        if (pts.length < 3) continue
+        const m = polygonMask(doc.width, doc.height, pts)
+        for (let p = 0; p < mask.data.length; p++) mask.data[p] = Math.max(mask.data[p], m.data[p])
+        any = true
+      }
+      if (!any) return false
+      return combineSelectionMask('Path to Selection', mask, op)
+    },
+    strokePathWithBrush(id) {
+      const node = findNode(doc.root, id)?.node
+      if (!node || node.kind !== 'vector') return false
+      const v = node as VectorData
+      const strokes = v.path.strokes.filter((s) => s.anchors.length >= 3)
+      if (!strokes.length) return false
+      const probe = resolvePaintTarget(doc, content, activeNodeIdOf(), 'content')
+      if (!probe) return false
+      history.beginGroup('Stroke Path')
+      let painted = false
+      for (const stroke of strokes) {
+        const flat = flattenStrokeAdaptive(stroke, 0.4)
+        if (stroke.closed && flat.length) flat.push({ ...flat[0] })
+        const pts = resamplePolyline(flat, 3)
+        if (pts.length < 2) continue
+        const target = resolvePaintTarget(doc, content, activeNodeIdOf(), 'content')
+        if (!target) break
+        const core = getPaintCore('brush').create()
+        core.start(target, { ...brush }, { x: pts[0].x, y: pts[0].y, pressure: 1, time: 0 })
+        for (let i = 1; i < pts.length; i++) {
+          core.motion({ x: pts[i].x, y: pts[i].y, pressure: 1, time: 0 })
+        }
+        const cmd = core.finish()
+        if (cmd) {
+          history.push(cmd)
+          painted = true
+        }
+      }
+      history.endGroup()
+      if (painted) refresh()
+      return painted
+    },
     transformApply: () => (isTransformTool(tool) ? tool.apply() : false),
     transformCancel: () => (isTransformTool(tool) ? tool.cancel() : false),
     transformDirty: () => (isTransformTool(tool) ? tool.isDirty() : false),

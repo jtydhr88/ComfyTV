@@ -30,6 +30,17 @@ export function useLayerEditorHotkeys(
         return
       }
     }
+    if (editor.tool.value === 'pen' && !isTextEditingTarget(e.target)) {
+      if (e.key === 'Enter' && editor.penDrafting()) {
+        e.preventDefault()
+        editor.penCommit()
+        return
+      }
+      if (e.key === 'Escape' && editor.penCancel()) {
+        e.preventDefault()
+        return
+      }
+    }
     if (editor.tool.value === 'transform' && !isTextEditingTarget(e.target)) {
       if (e.key === 'Enter') {
         e.preventDefault()

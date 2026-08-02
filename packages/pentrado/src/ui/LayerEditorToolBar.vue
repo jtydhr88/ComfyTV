@@ -98,8 +98,11 @@
       </label>
     </template>
 
-    <template v-else-if="isShapeTool">
-      <div class="ctv:flex ctv:h-6 ctv:items-center ctv:gap-0.5 ctv:rounded ctv:bg-[#1e1e1e] ctv:p-0.5">
+    <template v-else-if="isShapeTool || isPenTool">
+      <span v-if="isPenTool" class="ctv:whitespace-nowrap ctv:text-[10px] ctv:text-[#7a7a7a]">
+        {{ $t('pentrado.penHint') }}
+      </span>
+      <div v-if="isShapeTool" class="ctv:flex ctv:h-6 ctv:items-center ctv:gap-0.5 ctv:rounded ctv:bg-[#1e1e1e] ctv:p-0.5">
         <button
           v-for="option in SHAPE_OPTIONS"
           :key="option.id"
@@ -113,7 +116,7 @@
         </button>
       </div>
 
-      <div class="ctv:flex ctv:h-6 ctv:items-center ctv:gap-0.5 ctv:rounded ctv:bg-[#1e1e1e] ctv:p-0.5">
+      <div v-if="isShapeTool" class="ctv:flex ctv:h-6 ctv:items-center ctv:gap-0.5 ctv:rounded ctv:bg-[#1e1e1e] ctv:p-0.5">
         <button
           type="button"
           :class="segBtnClass(!editor.shapeCombine.value)"
@@ -457,6 +460,7 @@ import IconCircleDashed from '~icons/lucide/circle-dashed'
 import IconLasso from '~icons/lucide/lasso'
 import IconMousePointer from '~icons/lucide/mouse-pointer-2'
 import IconPaintBucket from '~icons/lucide/paint-bucket'
+import IconPenTool from '~icons/lucide/pen-tool'
 import IconWandSparkles from '~icons/lucide/wand-sparkles'
 import IconRedo from '~icons/lucide/redo-2'
 import IconScaling from '~icons/lucide/scaling'
@@ -507,6 +511,7 @@ const TOOL_META: Record<ToolId, { labelKey: string; icon: unknown }> = {
   burn: { labelKey: 'pentrado.toolBurn', icon: IconFlame },
   picker: { labelKey: 'pentrado.toolPicker', icon: IconPipette },
   gradient: { labelKey: 'pentrado.toolGradient', icon: IconBlend },
+  pen: { labelKey: 'pentrado.toolPen', icon: IconPenTool },
   text: { labelKey: 'pentrado.toolText', icon: IconType },
   shape: { labelKey: 'pentrado.toolShape', icon: IconShapes },
   warp: { labelKey: 'pentrado.toolWarp', icon: IconGrid },
@@ -552,6 +557,7 @@ const isPaintTool = computed(() =>
 const showSymmetry = computed(() => ['brush', 'eraser', 'airbrush'].includes(editor.tool.value))
 const isGradientTool = computed(() => editor.tool.value === 'gradient')
 const isShapeTool = computed(() => editor.tool.value === 'shape')
+const isPenTool = computed(() => editor.tool.value === 'pen')
 const isWarpTool = computed(() => editor.tool.value === 'warp')
 const isTransformTool = computed(() => editor.tool.value === 'transform')
 const isSelectionTool = computed(() =>

@@ -19,7 +19,7 @@ export type ToolId =
   | 'select' | 'transform'
   | 'marquee' | 'marquee-ellipse' | 'lasso' | 'wand'
   | 'brush' | 'eraser' | 'airbrush' | 'smudge' | 'clone' | 'dodge' | 'burn'
-  | 'picker' | 'gradient' | 'bucket' | 'text' | 'shape' | 'warp'
+  | 'picker' | 'gradient' | 'bucket' | 'text' | 'shape' | 'warp' | 'pen'
 
 export interface ToolHandler {
   onPointerDown: (e: PointerEvent, pt: Point) => boolean

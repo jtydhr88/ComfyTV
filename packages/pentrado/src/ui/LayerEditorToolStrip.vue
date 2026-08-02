@@ -70,6 +70,7 @@ import IconHand from '~icons/lucide/hand'
 import IconLasso from '~icons/lucide/lasso'
 import IconMousePointer from '~icons/lucide/mouse-pointer-2'
 import IconPaintBucket from '~icons/lucide/paint-bucket'
+import IconPenTool from '~icons/lucide/pen-tool'
 import IconPipette from '~icons/lucide/pipette'
 import IconScaling from '~icons/lucide/scaling'
 import IconSprayCan from '~icons/lucide/spray-can'
@@ -107,6 +108,7 @@ const TOOL_OPTIONS: Array<{ id: ToolId; labelKey: string; icon: unknown }> = [
   { id: 'gradient', labelKey: 'pentrado.toolGradient', icon: IconBlend },
   { id: 'bucket', labelKey: 'pentrado.toolBucket', icon: IconPaintBucket },
   { id: 'shape', labelKey: 'pentrado.toolShape', icon: IconShapes },
+  { id: 'pen', labelKey: 'pentrado.toolPen', icon: IconPenTool },
   { id: 'warp', labelKey: 'pentrado.toolWarp', icon: IconGrid },
   { id: 'text', labelKey: 'pentrado.toolText', icon: IconType },
 ]
