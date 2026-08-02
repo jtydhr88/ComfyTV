@@ -119,7 +119,8 @@ function ellipticalFilter(mask: GrayMask, radius: number, pick: (a: number, b: n
   const r = Math.max(1, Math.round(radius))
   const circ = new Int32Array(2 * r + 1)
   for (let i = -r; i <= r; i++) {
-    circ[i + r] = Math.round(Math.sqrt(Math.max(0, r * r - i * i)))
+    const t = Math.max(0, Math.abs(i) - 0.5)
+    circ[i + r] = Math.round(Math.sqrt(Math.max(0, r * r - t * t)))
   }
   const byHeight = new Map<number, GrayMask>()
   for (const h of circ) {
@@ -129,13 +130,13 @@ function ellipticalFilter(mask: GrayMask, radius: number, pick: (a: number, b: n
   for (let y = 0; y < mask.height; y++) {
     const row = y * mask.width
     for (let x = 0; x < mask.width; x++) {
-      let v = pad
+      let v: number | null = null
       for (let i = -r; i <= r; i++) {
         const xx = x + i
         const src = xx >= 0 && xx < mask.width ? byHeight.get(circ[i + r])!.data[row + xx] : pad
-        v = pick(v, src)
+        v = v === null ? src : pick(v, src)
       }
-      out.data[row + x] = v
+      out.data[row + x] = v ?? pad
     }
   }
   return out
@@ -180,13 +181,13 @@ export function growMask(mask: GrayMask, radius: number, bounds: Rect | null = n
 }
 
 export function shrinkMask(mask: GrayMask, radius: number, bounds: Rect | null = null): GrayMask {
-  return withBounds(mask, bounds, Math.round(radius) + 1, (m) => ellipticalFilter(m, radius, Math.min, 1))
+  return withBounds(mask, bounds, Math.round(radius) + 1, (m) => ellipticalFilter(m, radius, Math.min, 0))
 }
 
 export function borderMask(mask: GrayMask, radius: number, bounds: Rect | null = null): GrayMask {
   return withBounds(mask, bounds, Math.round(radius) + 1, (m) => {
     const grown = ellipticalFilter(m, radius, Math.max, 0)
-    const shrunk = ellipticalFilter(m, radius, Math.min, 1)
+    const shrunk = ellipticalFilter(m, radius, Math.min, 0)
     const out = emptyMask(m.width, m.height)
     for (let p = 0; p < out.data.length; p++) {
       out.data[p] = Math.max(grown.data[p] - shrunk.data[p], 0)
@@ -236,10 +237,39 @@ export function featherMask(mask: GrayMask, radius: number, bounds: Rect | null 
   return withBounds(mask, bounds, Math.ceil(radius) + 2, (m) => featherMaskFull(m, radius))
 }
 
+function smallGaussian(mask: GrayMask, sigma: number): GrayMask {
+  const r = 2
+  const kernel = new Float32Array(2 * r + 1)
+  let sum = 0
+  for (let i = -r; i <= r; i++) {
+    kernel[i + r] = Math.exp(-(i * i) / (2 * sigma * sigma))
+    sum += kernel[i + r]
+  }
+  for (let i = 0; i < kernel.length; i++) kernel[i] /= sum
+  const pass = (m: GrayMask): GrayMask => {
+    const out = emptyMask(m.width, m.height)
+    for (let y = 0; y < m.height; y++) {
+      const row = y * m.width
+      for (let x = 0; x < m.width; x++) {
+        let acc = 0
+        for (let i = -r; i <= r; i++) {
+          const xx = Math.max(0, Math.min(m.width - 1, x + i))
+          acc += m.data[row + xx] * kernel[i + r]
+        }
+        out.data[row + x] = acc
+      }
+    }
+    return out
+  }
+  return transposeMask(pass(transposeMask(pass(mask))))
+}
+
 function featherMaskFull(mask: GrayMask, radius: number): GrayMask {
   const sigma = radius / 3.5
   if (sigma <= 0) return mask
-  const sizes = boxesForGauss(sigma, 3)
+  const boxes = boxesForGauss(sigma, 3)
+  if (boxes.every((size) => Math.round((size - 1) / 2) < 1)) return smallGaussian(mask, sigma)
+  const sizes = boxes
   let cur: GrayMask = { data: Float32Array.from(mask.data), width: mask.width, height: mask.height }
   const blurAxis = (m: GrayMask): GrayMask => {
     const tmp = new Float32Array(m.data.length)
@@ -270,11 +300,16 @@ function pixelDifference(
 ): number {
   const a2 = data[idx + 3] / 255
   if (c1a > 0 && a2 === 0) return 0
-  let max = Math.abs(c1r - data[idx] / 255)
-  const dg = Math.abs(c1g - data[idx + 1] / 255)
-  const db = Math.abs(c1b - data[idx + 2] / 255)
-  if (dg > max) max = dg
-  if (db > max) max = db
+  let max: number
+  if (c1a === 0) {
+    max = Math.abs(c1a - a2)
+  } else {
+    max = Math.abs(c1r - data[idx] / 255)
+    const dg = Math.abs(c1g - data[idx + 1] / 255)
+    const db = Math.abs(c1b - data[idx + 2] / 255)
+    if (dg > max) max = dg
+    if (db > max) max = db
+  }
   if (antialias && threshold > 0) {
     const aa = 1.5 - max / threshold
     if (aa <= 0) return 0

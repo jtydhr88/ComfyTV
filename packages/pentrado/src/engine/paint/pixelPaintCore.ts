@@ -3,16 +3,20 @@ import type { Command } from '../history'
 import type { Rect, Vec2 } from '../node'
 import type { BrushParams, CoordSample, PaintCore, PaintCoreDef, PaintTarget } from '../paint'
 import { registerPaintCore } from '../paint'
-import type { DirtyRect } from './coverage'
+import { CoverageBuffer, type DirtyRect } from './coverage'
 import { flattenCatmullRom, stepDabs, type StrokePoint } from './interpolate'
 import { getStamp, quantizeSubpixel } from './stampCache'
 
 export type PixelOp = 'smudge' | 'clone' | 'dodge' | 'burn'
 
+const SMUDGE_RATE = 0.5
+
 let cloneSource: Vec2 | null = null
+let cloneDocOffset: Vec2 | null = null
 
 export function setCloneSource(pt: Vec2 | null): void {
   cloneSource = pt ? { ...pt } : null
+  cloneDocOffset = null
 }
 
 export function getCloneSource(): Vec2 | null {
@@ -21,7 +25,7 @@ export function getCloneSource(): Vec2 | null {
 
 export function dodgeBurnValue(v: number, exposure: number, burn: boolean): number {
   const e = Math.max(0, Math.min(1, exposure))
-  const g = burn ? 1 + e : 1 / (1 + e)
+  const g = burn ? 1 + e / 3 : 1 / (1 + e)
   return Math.pow(Math.max(0, Math.min(1, v)), g)
 }
 
@@ -43,6 +47,7 @@ class PixelPaintCore implements PaintCore {
   private painted = false
   private scale = 1
   private cloneOffset: Vec2 | null = null
+  private cov: CoverageBuffer | null = null
   private accum: Float32Array | null = null
   private accumSize = 0
 
@@ -75,9 +80,17 @@ class PixelPaintCore implements PaintCore {
     this.previewData = null
 
     const p = this.toStrokePoint(first)
+    this.cov = this.op === 'smudge' ? null : new CoverageBuffer(this.w, this.h)
     if (this.op === 'clone') {
-      const src = cloneSource ? this.target.toLocal(cloneSource) : null
-      this.cloneOffset = src ? { x: src.x - p.x, y: src.y - p.y } : null
+      if (!cloneDocOffset && cloneSource) {
+        cloneDocOffset = { x: cloneSource.x - first.x, y: cloneSource.y - first.y }
+      }
+      if (cloneDocOffset) {
+        const srcLocal = this.target.toLocal({ x: first.x + cloneDocOffset.x, y: first.y + cloneDocOffset.y })
+        this.cloneOffset = { x: srcLocal.x - p.x, y: srcLocal.y - p.y }
+      } else {
+        this.cloneOffset = null
+      }
     }
     this.queue = [p]
     this.drawnTo = 0
@@ -120,12 +133,17 @@ class PixelPaintCore implements PaintCore {
   }
 
   private stamp(p: StrokePoint): void {
-    const radius = (this.params.size / 2) * this.scale
-    if (radius <= 0) return
-    const strength = Math.max(0, Math.min(1, this.params.opacity))
+    const dyn = this.params.dynamics
+    let radius = (this.params.size / 2) * this.scale
+    let strength = Math.max(0, Math.min(1, this.params.opacity))
+    let hardness = this.params.hardness
+    if (dyn?.size) radius *= p.pressure
+    if (dyn?.opacity) strength *= p.pressure
+    if (dyn?.hardness) hardness *= p.pressure
+    if (radius <= 0 || strength <= 0) return
     const ix = Math.floor(p.x)
     const iy = Math.floor(p.y)
-    const stamp = getStamp(radius, this.params.hardness, false, quantizeSubpixel(p.x - ix), quantizeSubpixel(p.y - iy))
+    const stamp = getStamp(radius, hardness, false, quantizeSubpixel(p.x - ix), quantizeSubpixel(p.y - iy))
     const ox = ix - stamp.center
     const oy = iy - stamp.center
     const x0 = Math.max(0, ox)
@@ -134,76 +152,148 @@ class PixelPaintCore implements PaintCore {
     const y1 = Math.min(this.h - 1, oy + stamp.size - 1)
     if (x1 < x0 || y1 < y0) return
 
-    if (this.op === 'smudge') this.ensureAccum(stamp.size, stamp.center, ix, iy)
-
-    const sel = this.target.selection
-    for (let y = y0; y <= y1; y++) {
-      const srow = (y - oy) * stamp.size
-      for (let x = x0; x <= x1; x++) {
-        const m = stamp.data[srow + (x - ox)]
-        if (m <= 0) continue
-        const pIdx = y * this.w + x
-        const cov = m * strength * (sel ? sel[pIdx] : 1)
-        if (cov <= 0) continue
-        this.applyPixel(x, y, pIdx * 4, cov, srow + (x - ox), stamp.size)
-      }
+    if (this.op === 'smudge') {
+      this.stampSmudge(stamp.data, stamp.size, ox, oy, x0, y0, x1, y1, strength, ix, iy)
+    } else {
+      this.cov!.stampCircle(p.x, p.y, radius, hardness, strength)
+      this.recompute(x0, y0, x1, y1)
     }
     this.expandRects(x0, y0, x1, y1)
     this.painted = true
+  }
+
+  private recompute(x0: number, y0: number, x1: number, y1: number): void {
+    const sel = this.target.selection
+    const lockAlpha = this.target.lockAlpha === true
+    const burn = this.op === 'burn'
+    const off = this.cloneOffset
+    if (this.op === 'clone' && !off) return
+    for (let y = y0; y <= y1; y++) {
+      for (let x = x0; x <= x1; x++) {
+        const pIdx = y * this.w + x
+        let cov = this.cov!.valueAt(x, y)
+        if (cov <= 0) continue
+        if (sel) cov *= sel[pIdx]
+        if (cov <= 0) continue
+        const i = pIdx * 4
+        if (this.op !== 'clone') {
+          for (let c = 0; c < 3; c++) {
+            const v = this.base[i + c] / 255
+            const t = dodgeBurnValue(v, this.params.opacity, burn)
+            this.work[i + c] = Math.round((v + (t - v) * cov) * 255)
+          }
+          continue
+        }
+        const sx = Math.round(x + off!.x)
+        const sy = Math.round(y + off!.y)
+        if (sx < 0 || sy < 0 || sx >= this.w || sy >= this.h) {
+          this.work[i] = this.base[i]
+          this.work[i + 1] = this.base[i + 1]
+          this.work[i + 2] = this.base[i + 2]
+          this.work[i + 3] = this.base[i + 3]
+          continue
+        }
+        const s = (sy * this.w + sx) * 4
+        const srcA = this.base[s + 3] / 255
+        const aS = cov * srcA
+        const dstA = this.base[i + 3] / 255
+        if (lockAlpha) {
+          for (let c = 0; c < 3; c++) {
+            this.work[i + c] = Math.round(this.base[i + c] + (this.base[s + c] - this.base[i + c]) * aS)
+          }
+          this.work[i + 3] = this.base[i + 3]
+          continue
+        }
+        const outA = aS + dstA * (1 - aS)
+        if (outA <= 0) {
+          this.work[i] = this.work[i + 1] = this.work[i + 2] = this.work[i + 3] = 0
+          continue
+        }
+        for (let c = 0; c < 3; c++) {
+          this.work[i + c] = Math.round(
+            (this.base[s + c] * aS + this.base[i + c] * dstA * (1 - aS)) / outA
+          )
+        }
+        this.work[i + 3] = Math.round(outA * 255)
+      }
+    }
   }
 
   private ensureAccum(size: number, center: number, ix: number, iy: number): void {
     if (this.accum && this.accumSize === size) return
     this.accum = new Float32Array(size * size * 4)
     this.accumSize = size
+    const cx = Math.max(0, Math.min(this.w - 1, ix))
+    const cy = Math.max(0, Math.min(this.h - 1, iy))
+    const fallback = (cy * this.w + cx) * 4
     for (let sy = 0; sy < size; sy++) {
       const y = iy - center + sy
       for (let sx = 0; sx < size; sx++) {
         const x = ix - center + sx
         const a = (sy * size + sx) * 4
-        if (x < 0 || y < 0 || x >= this.w || y >= this.h) continue
-        const i = (y * this.w + x) * 4
-        this.accum[a] = this.work[i]
-        this.accum[a + 1] = this.work[i + 1]
-        this.accum[a + 2] = this.work[i + 2]
+        const inBounds = x >= 0 && y >= 0 && x < this.w && y < this.h
+        const i = inBounds ? (y * this.w + x) * 4 : fallback
+        const alpha = this.work[i + 3] / 255
+        this.accum[a] = this.work[i] * alpha
+        this.accum[a + 1] = this.work[i + 1] * alpha
+        this.accum[a + 2] = this.work[i + 2] * alpha
         this.accum[a + 3] = this.work[i + 3]
       }
     }
   }
 
-  private applyPixel(x: number, y: number, i: number, cov: number, stampIdx: number, stampSize: number): void {
+  private stampSmudge(
+    mask: Float32Array,
+    stampSize: number,
+    ox: number,
+    oy: number,
+    x0: number,
+    y0: number,
+    x1: number,
+    y1: number,
+    strength: number,
+    ix: number,
+    iy: number
+  ): void {
+    this.ensureAccum(stampSize, Math.floor(stampSize / 2), ix, iy)
+    const accum = this.accum!
     const w = this.work
     const lockAlpha = this.target.lockAlpha === true
-    if (this.op === 'dodge' || this.op === 'burn') {
-      const burn = this.op === 'burn'
-      for (let c = 0; c < 3; c++) {
-        const v = w[i + c] / 255
-        const t = dodgeBurnValue(v, this.params.opacity, burn)
-        w[i + c] = Math.round((v + (t - v) * cov) * 255)
-      }
-      return
-    }
-    if (this.op === 'clone') {
-      const off = this.cloneOffset
-      if (!off) return
-      const sx = Math.round(x + off.x)
-      const sy = Math.round(y + off.y)
-      if (sx < 0 || sy < 0 || sx >= this.w || sy >= this.h) return
-      const s = (sy * this.w + sx) * 4
-      for (let c = 0; c < 3; c++) w[i + c] = Math.round(w[i + c] + (this.base[s + c] - w[i + c]) * cov)
-      if (!lockAlpha) w[i + 3] = Math.round(w[i + 3] + (this.base[s + 3] - w[i + 3]) * cov)
-      return
-    }
-    const a = (Math.floor(stampIdx / stampSize) * this.accumSize + (stampIdx % stampSize)) * 4
-    const accum = this.accum!
-    const rate = 0.8 * this.params.opacity
-    for (let c = 0; c < 4; c++) {
-      if (c === 3 && lockAlpha) {
+    const sel = this.target.selection
+    const rate = SMUDGE_RATE
+    for (let y = y0; y <= y1; y++) {
+      const srow = (y - oy) * stampSize
+      for (let x = x0; x <= x1; x++) {
+        const m = mask[srow + (x - ox)]
+        if (m <= 0) continue
+        const pIdx = y * this.w + x
+        const cov = m * strength * (sel ? sel[pIdx] : 1)
+        if (cov <= 0) continue
+        const i = pIdx * 4
+        const a = (srow + (x - ox)) * 4
+        const ca = w[i + 3] / 255
+        const cpr = w[i] * ca
+        const cpg = w[i + 1] * ca
+        const cpb = w[i + 2] * ca
+        accum[a] = accum[a] * rate + cpr * (1 - rate)
+        accum[a + 1] = accum[a + 1] * rate + cpg * (1 - rate)
+        accum[a + 2] = accum[a + 2] * rate + cpb * (1 - rate)
         accum[a + 3] = accum[a + 3] * rate + w[i + 3] * (1 - rate)
-        continue
+        const na = lockAlpha ? w[i + 3] : w[i + 3] + (accum[a + 3] - w[i + 3]) * cov
+        const npr = cpr + (accum[a] - cpr) * cov
+        const npg = cpg + (accum[a + 1] - cpg) * cov
+        const npb = cpb + (accum[a + 2] - cpb) * cov
+        if (na <= 0) {
+          w[i] = w[i + 1] = w[i + 2] = 0
+          if (!lockAlpha) w[i + 3] = 0
+          continue
+        }
+        const inv = 255 / na
+        w[i] = Math.round(Math.max(0, Math.min(255, npr * inv)))
+        w[i + 1] = Math.round(Math.max(0, Math.min(255, npg * inv)))
+        w[i + 2] = Math.round(Math.max(0, Math.min(255, npb * inv)))
+        if (!lockAlpha) w[i + 3] = Math.round(na)
       }
-      accum[a + c] = accum[a + c] * rate + w[i + c] * (1 - rate)
-      w[i + c] = Math.round(w[i + c] + (accum[a + c] - w[i + c]) * cov)
     }
   }
 

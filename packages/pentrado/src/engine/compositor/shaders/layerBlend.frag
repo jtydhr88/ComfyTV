@@ -18,7 +18,9 @@ out vec4 fragColor;
 
 const float EPS = 1e-6;
 
-float safeDiv(float a, float b) { return abs(b) < EPS ? 0.0 : a / b; }
+float safeDiv(float a, float b) {
+  return abs(a) <= EPS ? 0.0 : clamp(a / b, -1e6, 1e6);
+}
 
 float srgbToLinear(float c) {
   return c <= 0.04045 ? c / 12.92 : pow((c + 0.055) / 1.055, 2.4);
@@ -58,8 +60,8 @@ float blendChannel(int mode, float i, float l) {
   if (mode == 15) return l > 0.5 ? max(i, 2.0*(l-0.5)) : min(i, 2.0*l);
   if (mode == 20) return i + 2.0*l - 1.0;
   if (mode == 21) return i + l < 1.0 ? 0.0 : 1.0;
-  if (mode == 22) return max(i - l, 0.0);
-  if (mode == 23) return clamp(i / max(l, EPS), 0.0, 1.0);
+  if (mode == 22) return i - l;
+  if (mode == 23) return safeDiv(i, l);
   if (mode == 24) return i - l + 0.5;
   if (mode == 25) return i + l - 0.5;
   return l;

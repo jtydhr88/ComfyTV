@@ -110,13 +110,13 @@ export class CoverageBuffer {
       const srow = (y - oy) * stamp.size
       const brow = (y - ext.y0) * this.extW
       for (let x = x0; x <= x1; x++) {
-        const p = stamp.data[srow + (x - ox)] * flow
-        if (p <= 0) continue
+        const m = stamp.data[srow + (x - ox)]
+        if (m <= 0) continue
         const i = brow + (x - ext.x0)
         if (additive) {
-          this.buf[i] = Math.min(1, this.buf[i] + p)
-        } else if (p > this.buf[i]) {
-          this.buf[i] = p
+          this.buf[i] = Math.min(1, this.buf[i] + m * flow)
+        } else if (flow > this.buf[i]) {
+          this.buf[i] += (flow - this.buf[i]) * m * flow
         }
         touched = true
       }

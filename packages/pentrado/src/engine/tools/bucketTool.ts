@@ -72,8 +72,15 @@ class BucketTool implements Tool {
       if (c <= 0) continue
       const i = p * 4
       const sa = d[i + 3] / 255
-      if (lockAlpha) c *= sa
-      if (c <= 0) continue
+      if (lockAlpha) {
+        c *= sa
+        if (c <= 0) continue
+        touched = true
+        d[i] = Math.round(fr * c + d[i] * (1 - c))
+        d[i + 1] = Math.round(fg * c + d[i + 1] * (1 - c))
+        d[i + 2] = Math.round(fb * c + d[i + 2] * (1 - c))
+        continue
+      }
       touched = true
       const outA = c + sa * (1 - c)
       if (outA <= 0) continue

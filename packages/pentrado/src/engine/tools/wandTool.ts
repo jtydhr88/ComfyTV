@@ -10,7 +10,7 @@ export interface WandToolOptions {
   contiguous: boolean
 }
 
-export const DEFAULT_WAND_OPTIONS: WandToolOptions = { threshold: 0.15, antialias: true, contiguous: true }
+export const DEFAULT_WAND_OPTIONS: WandToolOptions = { threshold: 0.06, antialias: true, contiguous: true }
 
 class WandTool implements Tool {
   readonly control: ToolControl

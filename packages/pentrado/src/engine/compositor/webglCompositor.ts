@@ -115,15 +115,16 @@ float hfun(float n, float h, float s, float l){
 vec3 preservel(vec3 c, float l){
   float mx = max(c.r, max(c.g, c.b));
   float mn = min(c.r, min(c.g, c.b));
-  float hl = l * 0.5;
   float h;
   if (c.r == c.g && c.g == c.b) h = 0.0;
   else if (mx == c.r) h = 60.0 * ((c.g - c.b) / (mx - mn));
   else if (mx == c.g) h = 60.0 * (2.0 + (c.b - c.r) / (mx - mn));
   else h = 60.0 * (4.0 + (c.r - c.g) / (mx - mn));
   if (h < 0.0) h += 360.0;
-  float s = (mx == 1.0 || mn == 0.0) ? 0.0 : (mx - mn) / (1.0 - abs(2.0 * hl - 1.0));
-  return vec3(hfun(0.0, h, s, hl), hfun(8.0, h, s, hl), hfun(4.0, h, s, hl));
+  float lOut = (mx + mn) * 0.5;
+  float denom = 1.0 - abs(2.0 * lOut - 1.0);
+  float s = denom <= 1e-6 ? 0.0 : (mx - mn) / denom;
+  return vec3(hfun(0.0, h, s, l), hfun(8.0, h, s, l), hfun(4.0, h, s, l));
 }
 
 float lutAt(float v, int ch){
@@ -137,6 +138,8 @@ void main(){
   vec3 adjusted;
   if (u_op == 0) {
     adjusted = vec3(bc(bg.r, u_p0.x, u_p0.y), bc(bg.g, u_p0.x, u_p0.y), bc(bg.b, u_p0.x, u_p0.y));
+  } else if (u_op == 5) {
+    adjusted = clamp((bg.rgb - vec3(u_p0.x)) * u_p0.y, 0.0, 1.0);
   } else {
     vec3 g = l2s(clamp(bg.rgb, 0.0, 1.0));
     vec3 o;
@@ -152,10 +155,8 @@ void main(){
       o = vec3(lev(g.r), lev(g.g), lev(g.b));
     } else if (u_op == 4) {
       o = mix(g, g * u_p0.xyz, u_p0.w);
-    } else if (u_op == 5) {
-      o = clamp((g - vec3(u_p0.x)) * u_p0.y, 0.0, 1.0);
     } else if (u_op == 6) {
-      float l = max(g.r, max(g.g, g.b)) + min(g.r, min(g.g, g.b));
+      float l = (max(g.r, max(g.g, g.b)) + min(g.r, min(g.g, g.b))) * 0.5;
       o = vec3(
         balComp(g.r, l, u_p0.x, u_p0.w, u_p1.z),
         balComp(g.g, l, u_p0.y, u_p1.x, u_p1.w),

@@ -107,6 +107,12 @@ export function gaussianIsNoop(sigma: number): boolean {
   return boxSizes(sigma).every((size) => Math.round((size - 1) / 2) < 1)
 }
 
+export function blurBoxRadii(sigma: number): number[] {
+  return boxSizes(sigma)
+    .map((size) => Math.round((size - 1) / 2))
+    .filter((r) => r >= 1)
+}
+
 function boxSizes(sigma: number): number[] {
   const wIdeal = Math.sqrt((12 * sigma * sigma) / 3 + 1)
   let wl = Math.floor(wIdeal)
@@ -275,7 +281,7 @@ function applyVignette(img: ImageData, params: Record<string, number>): void {
   const gamma = Math.max(0.01, params.gamma ?? 1)
   const cx = w / 2
   const cy = h / 2
-  const scale = 1 / Math.min(cx, cy)
+  const scale = 1 / (0.5 * Math.hypot(w, h))
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
       const dx = (x + 0.5 - cx) * scale
@@ -449,8 +455,21 @@ export function applyLayerFxChain(bitmap: Bitmap, fx: LayerFxData[]): { canvas: 
     img = applyOne(img, f)
     if (before) {
       const t = f.opacity
-      for (let i = 0; i < img.data.length; i++) {
-        img.data[i] = Math.round(before[i] + (img.data[i] - before[i]) * t)
+      const d = img.data
+      for (let p = 0; p < d.length; p += 4) {
+        const aA = before[p + 3] / 255
+        const aB = d[p + 3] / 255
+        const na = aA + (aB - aA) * t
+        if (na <= 1e-5) {
+          d[p] = d[p + 1] = d[p + 2] = 0
+          d[p + 3] = 0
+          continue
+        }
+        for (let c = 0; c < 3; c++) {
+          const pm = before[p + c] * aA + (d[p + c] * aB - before[p + c] * aA) * t
+          d[p + c] = Math.round(pm / na)
+        }
+        d[p + 3] = Math.round(na * 255)
       }
     }
   }

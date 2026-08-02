@@ -51,6 +51,15 @@ class PaintTool implements Tool {
     }
   }
 
+  private startTicking(): void {
+    this.stopTicking()
+    this.tickTimer = setInterval(() => {
+      this.core?.tick?.()
+      this.pushPreview()
+      this.ctx.requestRender()
+    }, 50)
+  }
+
   onButtonPress(e: PointerEvent, pt: Vec2): void {
     const target = resolvePaintTarget(this.ctx.document(), this.ctx.content, this.ctx.activeNodeId(), this.channel)
     if (!target) return
@@ -61,13 +70,7 @@ class PaintTool implements Tool {
     this.lastPt = pt
     this.previewKey = `${this.channel}:${target.drawable.id}`
     this.core.start(target, this.params(), sample(e, pt))
-    if (this.core.tick && this.coreId === 'airbrush') {
-      this.tickTimer = setInterval(() => {
-        this.core?.tick?.()
-        this.pushPreview()
-        this.ctx.requestRender()
-      }, 50)
-    }
+    if (this.core.tick && this.coreId === 'airbrush') this.startTicking()
     this.pushPreview()
     this.ctx.requestRender()
   }
@@ -76,6 +79,7 @@ class PaintTool implements Tool {
     this.lastPt = pt
     if (!this.core) return
     this.core.motion(sample(e, pt))
+    if (this.tickTimer != null) this.startTicking()
     this.pushPreview()
     this.ctx.requestRender()
   }

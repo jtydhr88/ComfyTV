@@ -27,10 +27,10 @@ describe('new adjustment ops', () => {
     expect(w[0]).toBeGreaterThan(w[2])
   })
 
-  it('exposure matches the FFmpeg scale semantics', () => {
+  it('exposure doubles linear light (GEGL photometric semantics)', () => {
     const p = packParams('exposure', { exposure: 1, black: 0 })
-    const out = gamma(applyAdjustment('exposure', p, px(0.25, 0.25, 0.25)))
-    expect(out[0]).toBeCloseTo(0.5, 4)
+    const out = applyAdjustment('exposure', p, px(0.25, 0.25, 0.25))
+    expect(out[0]).toBeCloseTo(srgbToLinear(0.25) * 2, 5)
   })
 
   it('color-balance shifts shadows more than highlights for a shadow-red push', () => {

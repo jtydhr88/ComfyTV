@@ -159,7 +159,7 @@ export interface Editor {
   mergeDown(id: string): boolean
   rasterizeLayer(id: string): boolean
   canRasterize(id: string): boolean
-  flattenImage(): boolean
+  flattenImage(bgColor?: string): boolean
   flipImage(axis: 'h' | 'v'): boolean
   cropToContent(id: string): boolean
   layerToCanvasSize(id: string): boolean
@@ -879,7 +879,27 @@ export function createEditor(opts: EditorOptions): Editor {
     copyVisible() {
       const canvas = visibleComposite()
       if (!canvas) return false
-      clipboard = { canvas, bounds: { x: 0, y: 0, w: doc.width, h: doc.height } }
+      const sel = selectionChannel()
+      const selCanvas = sel?.bounds ? content.get(sel.contentId)?.canvas : null
+      if (!sel?.bounds || !selCanvas) {
+        clipboard = { canvas, bounds: { x: 0, y: 0, w: doc.width, h: doc.height } }
+        return true
+      }
+      const b = sel.bounds
+      const clip = document.createElement('canvas')
+      clip.width = Math.max(1, Math.round(b.w))
+      clip.height = Math.max(1, Math.round(b.h))
+      const g = clip.getContext('2d')
+      const sg = selCanvas.getContext('2d')
+      if (!g || !sg) return false
+      g.drawImage(canvas, -Math.round(b.x), -Math.round(b.y))
+      const img = g.getImageData(0, 0, clip.width, clip.height)
+      const selImg = sg.getImageData(Math.round(b.x), Math.round(b.y), clip.width, clip.height)
+      for (let p = 0; p < img.data.length / 4; p++) {
+        img.data[p * 4 + 3] = Math.round((img.data[p * 4 + 3] * selImg.data[p * 4]) / 255)
+      }
+      g.putImageData(img, 0, 0)
+      clipboard = { canvas: clip, bounds: { x: Math.round(b.x), y: Math.round(b.y), w: clip.width, h: clip.height } }
       return true
     },
     newFromVisible() {
@@ -900,7 +920,7 @@ export function createEditor(opts: EditorOptions): Editor {
     },
     mergeVisible() {
       const children = doc.root.children
-      const visible = children.filter((n) => n.visible && n.opacity > 0)
+      const visible = children.filter((n) => n.visible)
       if (visible.length < 2) return false
       const canvas = visibleComposite()
       if (!canvas) return false
@@ -908,12 +928,12 @@ export function createEditor(opts: EditorOptions): Editor {
       const bottomIndex = children.indexOf(visible[0])
       for (let i = children.length - 1; i >= 0; i--) {
         const node = children[i]
-        if (!node.visible || node.opacity <= 0) continue
+        if (!node.visible) continue
         children.splice(i, 1)
         group.children.push(new RemoveNodeCommand(`Merge ${node.name}`, doc.root, node, i))
       }
       const merged = getNodeKind('raster').create({
-        name: 'Merged',
+        name: visible[0].name,
         contentId: content.register(canvas),
         naturalWidth: doc.width,
         naturalHeight: doc.height,
@@ -1137,7 +1157,7 @@ export function createEditor(opts: EditorOptions): Editor {
     canRasterize(id) {
       return canRasterizeLayer(doc.root, id)
     },
-    flattenImage() {
+    flattenImage(bgColor?: string) {
       if (!compositor.getCanvas()) return false
       if (floating) anchorFloatingImpl()
       if (doc.root.children.length === 0) return false
@@ -1149,7 +1169,7 @@ export function createEditor(opts: EditorOptions): Editor {
       canvas.height = doc.height
       const g = canvas.getContext('2d')
       if (!g) return false
-      g.fillStyle = '#ffffff'
+      g.fillStyle = bgColor && /^#[0-9a-f]{6}$/i.test(bgColor) ? bgColor : '#ffffff'
       g.fillRect(0, 0, doc.width, doc.height)
       const tmp = document.createElement('canvas')
       tmp.width = doc.width

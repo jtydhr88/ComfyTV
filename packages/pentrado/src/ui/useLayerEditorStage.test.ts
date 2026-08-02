@@ -294,7 +294,7 @@ describe('layer operations + undo (engine-backed)', () => {
     expect((nodes(s)[1].transform as { x: number }).x).toBe(before + 5)
   })
 
-  it('moveLayer reorders and duplicateLayer offsets + selects the copy', () => {
+  it('moveLayer reorders and duplicateLayer copies in place + selects the copy', () => {
     const { s } = setup(V1_STATE)
     s.moveLayer('r1', 1)
     expect(nodes(s).map((l) => l.id)).toEqual(['t1', 'r1'])
@@ -305,7 +305,7 @@ describe('layer operations + undo (engine-backed)', () => {
     expect(s.layers.value).toHaveLength(3)
     const copy = nodes(s)[1]
     expect(copy.id).not.toBe('r1')
-    expect(copy.transform.x).toBe(26)
+    expect(copy.transform.x).toBe(nodes(s)[0].transform.x)
     expect(s.activeId.value).toBe(copy.id)
   })
 

@@ -188,14 +188,14 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
   const shapeStarRatio = ref(0.5)
   const shapeTurns = ref(3)
   const warpPoints = ref(4)
-  const wandThreshold = ref(0.15)
+  const wandThreshold = ref(0.06)
   const wandAntialias = ref(true)
   const wandContiguous = ref(true)
   const selectionRadius = ref(10)
   const symmetryMode = ref<'none' | 'mirror-h' | 'mirror-v' | 'mirror-both' | 'mandala'>('none')
   const symmetrySectors = ref(6)
   const gradientShape = ref<'linear' | 'radial'>('linear')
-  const gradientToTransparent = ref(true)
+  const gradientToTransparent = ref(false)
   const gradientReverse = ref(false)
 
   function swapColors(): void {
@@ -824,13 +824,7 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
     const kind = getNodeKind(loc.node.kind)
     const copy = kind.normalize(kind.serialize(loc.node)) as SceneNode
     regenIds(copy)
-    if (copy.kind === 'vector') {
-      const v = copy as VectorData
-      v.path = transformPath(v.path, (p) => ({ x: p.x + 16, y: p.y + 16 }))
-      v.transform = deriveVectorTransform(v.path, v.stroke?.width ?? 0)
-    } else if (copy.kind !== 'group') {
-      copy.transform = { ...copy.transform, x: copy.transform.x + 16, y: copy.transform.y + 16 }
-    }
+    copy.name = `${loc.node.name} copy`
     editor.addNode(copy, loc.index + 1, loc.parent.id)
     return copy.id
   }
@@ -911,7 +905,7 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
     editor.mergeDown(id)
   }
   function flattenImage(): void {
-    editor.flattenImage()
+    editor.flattenImage(backgroundColor.value)
   }
   function flipImage(axis: 'h' | 'v'): void {
     editor.flipImage(axis)
@@ -1349,7 +1343,7 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
     const d = editor.document()
     editor.setBrush({
       size: brushSize.value, hardness: brushHardness.value, opacity: brushOpacity.value,
-      flow: 1, color: brushColor.value, spacing: 0.1,
+      flow: 1, color: brushColor.value, bgColor: backgroundColor.value, spacing: 0.1,
       symmetry: symmetryMode.value === 'none'
         ? undefined
         : { mode: symmetryMode.value, sectors: symmetrySectors.value, cx: d.width / 2, cy: d.height / 2 },
@@ -1427,7 +1421,6 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
     const x = Math.max(0, Math.min(width - 1, Math.floor(pt.x)))
     const y = Math.max(0, Math.min(height - 1, Math.floor(pt.y)))
     const d = g.getImageData(x, y, 1, 1).data
-    if (d[3] === 0) return false
     const hex = `#${((d[0] << 16) | (d[1] << 8) | d[2]).toString(16).padStart(6, '0')}`
     if (target === 'bg') backgroundColor.value = hex
     else brushColor.value = hex

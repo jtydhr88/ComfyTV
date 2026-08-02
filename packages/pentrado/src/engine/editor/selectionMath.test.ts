@@ -79,10 +79,10 @@ describe('morphology (GIMP grow/shrink/border, elliptical SE)', () => {
     expect(s.data[2 * 11 + 2]).toBe(0)
   })
 
-  it('shrink treats the image edge as locked (GIMP edge_lock)', () => {
+  it('shrink erodes from the image edge too (GIMP default edge_lock=false)', () => {
     const m = rectMask(8, 8, { x: 0, y: 0, w: 8, h: 4 })
     const s = shrinkMask(m, 2)
-    expect(s.data[0]).toBe(1)
+    expect(s.data[0]).toBe(0)
     expect(s.data[3 * 8 + 4]).toBe(0)
   })
 
@@ -111,11 +111,11 @@ describe('bounds-limited morphology matches the full-image result', () => {
     expect(eq(featherMask(m, 6, bounds), featherMask(m, 6))).toBe(true)
   })
 
-  it('edge-lock still holds when the bounded selection touches the image edge', () => {
+  it('bounded shrink matches when the selection touches the image edge', () => {
     const m = rectMask(32, 32, { x: 0, y: 0, w: 32, h: 12 })
     const bounds = maskBounds(m)!
     expect(eq(shrinkMask(m, 2, bounds), shrinkMask(m, 2))).toBe(true)
-    expect(shrinkMask(m, 2, bounds).data[0]).toBe(1)
+    expect(shrinkMask(m, 2, bounds).data[0]).toBe(0)
   })
 })
 

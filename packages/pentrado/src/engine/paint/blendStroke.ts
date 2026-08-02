@@ -4,6 +4,7 @@ export interface StrokeParams {
   color: [number, number, number]
   opacity: number
   lockAlpha?: boolean
+  bgColor?: [number, number, number]
 }
 
 export interface StrokeRect {
@@ -11,6 +12,24 @@ export interface StrokeRect {
   y0: number
   x1: number
   y1: number
+}
+
+function srgbByteToLinear(v: number): number {
+  const c = v / 255
+  return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4)
+}
+
+function linearToSrgbByte(v: number): number {
+  const c = Math.max(0, Math.min(1, v))
+  return 255 * (c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055)
+}
+
+export function maskGrayFromColor(color: [number, number, number]): number {
+  const y =
+    0.2126 * srgbByteToLinear(color[0]) +
+    0.7152 * srgbByteToLinear(color[1]) +
+    0.0722 * srgbByteToLinear(color[2])
+  return linearToSrgbByte(y)
 }
 
 function blendPixel(
@@ -27,9 +46,7 @@ function blendPixel(
   const ba = base[i + 3]
 
   if (channel === 'mask') {
-    const g = mode === 'brush'
-      ? 0.2126 * color[0] + 0.7152 * color[1] + 0.0722 * color[2]
-      : 255
+    const g = mode === 'brush' ? maskGrayFromColor(color) : 255
     const nv = g * a + br * (1 - a)
     out[i] = out[i + 1] = out[i + 2] = nv
     out[i + 3] = 255
@@ -37,6 +54,13 @@ function blendPixel(
   }
 
   if (mode === 'eraser') {
+    if (lockAlpha && params.bgColor) {
+      out[i] = params.bgColor[0] * a + br * (1 - a)
+      out[i + 1] = params.bgColor[1] * a + bg * (1 - a)
+      out[i + 2] = params.bgColor[2] * a + bb * (1 - a)
+      out[i + 3] = ba
+      return
+    }
     out[i] = br
     out[i + 1] = bg
     out[i + 2] = bb

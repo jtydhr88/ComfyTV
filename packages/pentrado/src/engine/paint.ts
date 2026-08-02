@@ -35,6 +35,7 @@ export interface BrushParams {
   opacity: number
   flow: number
   color: string
+  bgColor?: string
   dynamics?: Dynamics
   symmetry?: SymmetrySpec
 }

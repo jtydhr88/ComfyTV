@@ -214,19 +214,20 @@ function hfun(n: number, h: number, s: number, l: number): number {
 function preservel(c: RGB, l: number): RGB {
   const mx = Math.max(c[0], c[1], c[2])
   const mn = Math.min(c[0], c[1], c[2])
-  const hl = l * 0.5
   let h: number
   if (c[0] === c[1] && c[1] === c[2]) h = 0
   else if (mx === c[0]) h = 60 * ((c[1] - c[2]) / (mx - mn))
   else if (mx === c[1]) h = 60 * (2 + (c[2] - c[0]) / (mx - mn))
   else h = 60 * (4 + (c[0] - c[1]) / (mx - mn))
   if (h < 0) h += 360
-  const s = mx === 1 || mn === 0 ? 0 : (mx - mn) / (1 - Math.abs(2 * hl - 1))
-  return [hfun(0, h, s, hl), hfun(8, h, s, hl), hfun(4, h, s, hl)]
+  const lOut = (mx + mn) / 2
+  const denom = 1 - Math.abs(2 * lOut - 1)
+  const s = denom <= 1e-6 ? 0 : (mx - mn) / denom
+  return [hfun(0, h, s, l), hfun(8, h, s, l), hfun(4, h, s, l)]
 }
 
 function colorBalance(c: RGB, p: number[]): RGB {
-  const l = Math.max(c[0], c[1], c[2]) + Math.min(c[0], c[1], c[2])
+  const l = (Math.max(c[0], c[1], c[2]) + Math.min(c[0], c[1], c[2])) / 2
   const out: RGB = [
     balanceComponent(c[0], l, p[0], p[3], p[6]),
     balanceComponent(c[1], l, p[1], p[4], p[7]),
@@ -260,12 +261,6 @@ function applySrgbOp(op: AdjustmentOp, params: number[], c: RGB): RGB {
         c[1] + (c[1] * params[1] - c[1]) * params[3],
         c[2] + (c[2] * params[2] - c[2]) * params[3],
       ]
-    case 'exposure':
-      return [
-        clamp01((c[0] - params[0]) * params[1]),
-        clamp01((c[1] - params[0]) * params[1]),
-        clamp01((c[2] - params[0]) * params[1]),
-      ]
     case 'color-balance':
       return colorBalance(c, params)
     case 'posterize': {
@@ -290,6 +285,14 @@ export function applyAdjustment(op: AdjustmentOp, params: number[], px: RGBA): R
       brightnessContrast(px[0], params[0], params[1]),
       brightnessContrast(px[1], params[0], params[1]),
       brightnessContrast(px[2], params[0], params[1]),
+      px[3],
+    ]
+  }
+  if (op === 'exposure') {
+    return [
+      clamp01((px[0] - params[0]) * params[1]),
+      clamp01((px[1] - params[0]) * params[1]),
+      clamp01((px[2] - params[0]) * params[1]),
       px[3],
     ]
   }

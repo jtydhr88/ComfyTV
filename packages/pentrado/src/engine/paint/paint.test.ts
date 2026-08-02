@@ -3,7 +3,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { DefaultContentStore } from '../impl/contentStore'
 import { getPaintCore } from '../paint'
 import { brushProfile } from './brushProfile'
-import { compositeStroke } from './blendStroke'
+import { compositeStroke, maskGrayFromColor } from './blendStroke'
 import { CoverageBuffer } from './coverage'
 import { flattenCatmullRom, stepDabs, stepStroke, type StrokePoint } from './interpolate'
 import { registerBuiltinPaintCores } from './paintCore'
@@ -70,19 +70,30 @@ describe('stepStroke (dab spacing)', () => {
   })
 })
 
-describe('CoverageBuffer — anti-darkening (MAX accumulation)', () => {
-  it('overlapping dabs do NOT build up beyond the brush flow', () => {
+describe('CoverageBuffer — GIMP constant-mode accumulation', () => {
+  it('overlapping dabs build toward the flow but never beyond it', () => {
     const buf = new CoverageBuffer(20, 20)
     buf.stampCircle(10, 10, 4, 1, 0.5)
+    const one = buf.maxAt(10, 10)
+    expect(one).toBeCloseTo(0.25, 6)
     buf.stampCircle(10, 10, 4, 1, 0.5)
-    expect(buf.maxAt(10, 10)).toBeCloseTo(0.5, 6)
+    const two = buf.maxAt(10, 10)
+    expect(two).toBeGreaterThan(one)
+    expect(two).toBeLessThanOrEqual(0.5)
+    for (let i = 0; i < 40; i++) buf.stampCircle(10, 10, 4, 1, 0.5)
+    expect(buf.maxAt(10, 10)).toBeCloseTo(0.5, 3)
   })
 
-  it('a later higher-flow dab raises coverage to the max', () => {
+  it('a later higher-flow dab keeps building toward the new flow cap', () => {
     const buf = new CoverageBuffer(20, 20)
     buf.stampCircle(10, 10, 4, 1, 0.5)
+    const low = buf.maxAt(10, 10)
     buf.stampCircle(10, 10, 4, 1, 0.8)
-    expect(buf.maxAt(10, 10)).toBeCloseTo(0.8, 6)
+    const raised = buf.maxAt(10, 10)
+    expect(raised).toBeGreaterThan(low)
+    expect(raised).toBeLessThanOrEqual(0.8)
+    for (let i = 0; i < 60; i++) buf.stampCircle(10, 10, 4, 1, 0.8)
+    expect(buf.maxAt(10, 10)).toBeCloseTo(0.8, 3)
   })
 
   it('coverage falls off from centre to edge and tracks a dirty rect', () => {
@@ -139,7 +150,7 @@ describe('CoverageBuffer — extent allocation', () => {
     const at50 = buf.valueAt(50, 50)
     buf.stampCircle(500, 500, 4, 1, 0.8)
     expect(buf.valueAt(50, 50)).toBe(at50)
-    expect(buf.valueAt(500, 500)).toBeCloseTo(0.8, 6)
+    expect(buf.valueAt(500, 500)).toBeCloseTo(0.8 * 0.8, 6)
   })
 
   it('reads 0 outside the allocated extent', () => {
@@ -218,7 +229,7 @@ describe('pressure dynamics', () => {
 
   it('opacity dynamics scale the flow; disabled dynamics ignore pressure', () => {
     const half = strokeWith({ opacity: true }, 0.5)
-    expect(half.cov.valueAt(32, 32)).toBeCloseTo(0.5, 6)
+    expect(half.cov.valueAt(32, 32)).toBeCloseTo(0.25, 6)
     const off = strokeWith(undefined, 0.5)
     expect(off.cov.valueAt(32, 32)).toBeCloseTo(1, 6)
   })
@@ -283,7 +294,7 @@ describe('compositeStroke — apply once at stroke opacity', () => {
   })
 
   it('mask brush can paint arbitrary grays and blends by coverage', () => {
-    const luma = Math.round(0.2126 * 255)
+    const luma = Math.round(maskGrayFromColor([255, 0, 0]))
     const out = compositeStroke(Uint8ClampedArray.of(0, 0, 0, 255), cov(1), {
       mode: 'brush',
       channel: 'mask',

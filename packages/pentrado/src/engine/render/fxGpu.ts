@@ -1,4 +1,4 @@
-import { gaussianIsNoop, type LayerFxData } from './layerFx'
+import { blurBoxRadii, gaussianIsNoop, type LayerFxData } from './layerFx'
 import type { Bitmap } from './place'
 
 const VERT = `#version 300 es
@@ -22,21 +22,16 @@ precision highp float;
 precision highp int;
 uniform sampler2D u_tex;
 uniform vec2 u_dir;
-uniform float u_sigma;
 uniform int u_radius;
 in vec2 v_uv;
 out vec4 o;
 void main(){
   vec4 acc = vec4(0.0);
-  float wsum = 0.0;
   for (int i = -u_radius; i <= u_radius; i++) {
-    float fi = float(i);
-    float w = exp(-(fi * fi) / (2.0 * u_sigma * u_sigma));
     vec4 s = texture(u_tex, v_uv + u_dir * float(i));
-    acc += vec4(s.rgb * s.a, s.a) * w;
-    wsum += w;
+    acc += vec4(s.rgb * s.a, s.a);
   }
-  acc /= wsum;
+  acc /= float(2 * u_radius + 1);
   o = vec4(acc.a > 1e-5 ? acc.rgb / acc.a : vec3(0.0), acc.a);
 }`
 
@@ -85,7 +80,12 @@ uniform sampler2D u_b;
 uniform float u_t;
 in vec2 v_uv;
 out vec4 o;
-void main(){ o = mix(texture(u_a, v_uv), texture(u_b, v_uv), u_t); }`
+void main(){
+  vec4 a = texture(u_a, v_uv);
+  vec4 b = texture(u_b, v_uv);
+  vec4 m = mix(vec4(a.rgb * a.a, a.a), vec4(b.rgb * b.a, b.a), u_t);
+  o = vec4(m.a > 1e-5 ? m.rgb / m.a : vec3(0.0), m.a);
+}`
 
 const FRAG_POINT = `#version 300 es
 precision highp float;
@@ -112,7 +112,7 @@ void main(){
   if (u_op == 0) {
     vec2 px = v_uv * u_size;
     vec2 c = u_size * 0.5;
-    float scale = 1.0 / min(c.x, c.y);
+    float scale = 1.0 / (0.5 * length(u_size));
     vec2 d2 = (px - c) * scale;
     float d = length(d2);
     float v = clamp((u_p.x - d) / max(u_p.y, 0.001), 0.0, 1.0);
@@ -306,22 +306,23 @@ export function applyLayerFxChainGpu(
     let cur: WebGLTexture = fx.srcTex
 
     const runBlur = (input: WebGLTexture, sigma: number): WebGLTexture => {
-      const radius = Math.max(1, Math.min(200, Math.ceil(3 * sigma)))
+      const radii = blurBoxRadii(sigma).map((r) => Math.min(200, r))
+      if (!radii.length) return input
       const prog = fx.progs.blur
       gl.useProgram(prog)
-      const t1 = freeTarget([input, cur])
-      gl.bindFramebuffer(gl.FRAMEBUFFER, t1.fbo)
-      bindInput(prog, 'u_tex', input, 0)
-      gl.uniform2f(loc(gl, prog, 'u_dir'), 1 / w, 0)
-      gl.uniform1f(loc(gl, prog, 'u_sigma'), sigma)
-      gl.uniform1i(loc(gl, prog, 'u_radius'), radius)
-      draw()
-      const t2 = freeTarget([t1.tex, input, cur])
-      gl.bindFramebuffer(gl.FRAMEBUFFER, t2.fbo)
-      bindInput(prog, 'u_tex', t1.tex, 0)
-      gl.uniform2f(loc(gl, prog, 'u_dir'), 0, 1 / h)
-      draw()
-      return t2.tex
+      let src = input
+      for (const dir of [[1 / w, 0], [0, 1 / h]] as const) {
+        for (const radius of radii) {
+          const t = freeTarget([src, input, cur])
+          gl.bindFramebuffer(gl.FRAMEBUFFER, t.fbo)
+          bindInput(prog, 'u_tex', src, 0)
+          gl.uniform2f(loc(gl, prog, 'u_dir'), dir[0], dir[1])
+          gl.uniform1i(loc(gl, prog, 'u_radius'), radius)
+          draw()
+          src = t.tex
+        }
+      }
+      return src
     }
 
     for (const f of active) {

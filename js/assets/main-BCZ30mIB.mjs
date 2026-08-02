@@ -56196,7 +56196,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-BbK-WO9z.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-C8Yi2fzX.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -128662,7 +128662,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-D0vlUH_C.mjs");
+    const { STLLoader } = await import("./STLLoader-okACWda8.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -128670,7 +128670,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-v4fISIN7.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-D6tyuo4S.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -147410,7 +147410,7 @@ function modeUniforms(mode) {
     legacy: mode.legacy
   };
 }
-const LAYER_BLEND_FRAG = "#version 300 es\r\n\r\nprecision highp float;\r\n\r\nuniform sampler2D u_backdrop;\r\nuniform sampler2D u_layer;\r\nuniform sampler2D u_mask;\r\nuniform bool  u_hasMask;\r\nuniform bool  u_srgbLayer;\r\nuniform float u_opacity;\r\nuniform int   u_blend;\r\nuniform int   u_composite;\r\nuniform int   u_blendSpace;\r\nuniform int   u_compositeSpace;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nconst float EPS = 1e-6;\r\n\r\nfloat safeDiv(float a, float b) { return abs(b) < EPS ? 0.0 : a / b; }\r\n\r\nfloat srgbToLinear(float c) {\r\n  return c <= 0.04045 ? c / 12.92 : pow((c + 0.055) / 1.055, 2.4);\r\n}\r\nfloat linearToSrgb(float c) {\r\n  return c <= 0.0031308 ? 12.92 * c : 1.055 * pow(c, 1.0 / 2.4) - 0.055;\r\n}\r\nvec3 srgbToLinear(vec3 c) { return vec3(srgbToLinear(c.r), srgbToLinear(c.g), srgbToLinear(c.b)); }\r\nvec3 linearToSrgb(vec3 c) { return vec3(linearToSrgb(c.r), linearToSrgb(c.g), linearToSrgb(c.b)); }\r\n\r\nvec3 toSpace(vec3 c, int space)   { return space == 0 ? c : linearToSrgb(c); }\r\nvec3 fromSpace(vec3 c, int space) { return space == 0 ? c : srgbToLinear(c); }\r\n\r\nfloat luminance(vec3 c) { return dot(c, vec3(0.22248840, 0.71690369, 0.06060791)); }\r\n\r\nfloat blendChannel(int mode, float i, float l) {\r\n  if (mode == 1)  return i * l;\r\n  if (mode == 2)  return 1.0 - (1.0 - i) * (1.0 - l);\r\n  if (mode == 3)  return i < 0.5 ? 2.0*i*l : 1.0 - 2.0*(1.0-l)*(1.0-i);\r\n  if (mode == 4)  return min(i, l);\r\n  if (mode == 5)  return max(i, l);\r\n  if (mode == 6)  return safeDiv(i, 1.0 - l);\r\n  if (mode == 7)  return 1.0 - safeDiv(1.0 - i, l);\r\n  if (mode == 8)  return l > 0.5 ? min(1.0 - (1.0-i)*(1.0-(l-0.5)*2.0), 1.0)\r\n                                 : min(i*(l*2.0), 1.0);\r\n  if (mode == 9) {\r\n    float m = i * l;\r\n    float s = 1.0 - (1.0 - i) * (1.0 - l);\r\n    return (1.0 - i) * m + i * s;\r\n  }\r\n  if (mode == 10) return abs(i - l);\r\n  if (mode == 11) return 0.5 - 2.0*(i-0.5)*(l-0.5);\r\n  if (mode == 12) return i + l;\r\n  if (mode == 13) return i + l - 1.0;\r\n  if (mode == 14) return l <= 0.5 ? max(1.0 - safeDiv(1.0-i, 2.0*l), 0.0)\r\n                                  : min(safeDiv(i, 2.0*(1.0-l)), 1.0);\r\n  if (mode == 15) return l > 0.5 ? max(i, 2.0*(l-0.5)) : min(i, 2.0*l);\r\n  if (mode == 20) return i + 2.0*l - 1.0;\r\n  if (mode == 21) return i + l < 1.0 ? 0.0 : 1.0;\r\n  if (mode == 22) return max(i - l, 0.0);\r\n  if (mode == 23) return clamp(i / max(l, EPS), 0.0, 1.0);\r\n  if (mode == 24) return i - l + 0.5;\r\n  if (mode == 25) return i + l - 0.5;\r\n  return l;\r\n}\r\n\r\nvec3 blendHue(vec3 i, vec3 l) {\r\n  float sMin = min(min(l.r, l.g), l.b), sMax = max(max(l.r, l.g), l.b);\r\n  float sDelta = sMax - sMin;\r\n  if (sDelta <= EPS) return i;\r\n  float dMin = min(min(i.r, i.g), i.b), dMax = max(max(i.r, i.g), i.b);\r\n  float dDelta = dMax - dMin;\r\n  float dS = dMax != 0.0 ? dDelta / dMax : 0.0;\r\n  float ratio = (dS * dMax) / sDelta;\r\n  float offset = dMax - sMax * ratio;\r\n  return l * ratio + offset;\r\n}\r\nvec3 blendSaturation(vec3 i, vec3 l) {\r\n  float dMin = min(min(i.r, i.g), i.b), dMax = max(max(i.r, i.g), i.b);\r\n  float dDelta = dMax - dMin;\r\n  if (dDelta <= EPS) return vec3(dMax);\r\n  float sMin = min(min(l.r, l.g), l.b), sMax = max(max(l.r, l.g), l.b);\r\n  float sDelta = sMax - sMin;\r\n  float sS = sMax != 0.0 ? sDelta / sMax : 0.0;\r\n  float ratio = (sS * dMax) / dDelta;\r\n  float offset = (1.0 - ratio) * dMax;\r\n  return i * ratio + offset;\r\n}\r\nvec3 blendColor(vec3 i, vec3 l) {\r\n  float dMin = min(min(i.r, i.g), i.b), dMax = max(max(i.r, i.g), i.b);\r\n  float dL = (dMin + dMax) * 0.5;\r\n  float sMin = min(min(l.r, l.g), l.b), sMax = max(max(l.r, l.g), l.b);\r\n  float sL = (sMin + sMax) * 0.5;\r\n  if (abs(sL) <= EPS || abs(1.0 - sL) <= EPS) return vec3(dL);\r\n  bool dHigh = dL > 0.5, sHigh = sL > 0.5;\r\n  dL = min(dL, 1.0 - dL);\r\n  sL = min(sL, 1.0 - sL);\r\n  float ratio = dL / sL;\r\n  float offset = 0.0;\r\n  if (dHigh) offset += 1.0 - 2.0 * dL;\r\n  if (sHigh) offset += 2.0 * dL - ratio;\r\n  return l * ratio + offset;\r\n}\r\nvec3 blendLuminosity(vec3 i, vec3 l) {\r\n  return i * safeDiv(luminance(l), luminance(i));\r\n}\r\n\r\nvec3 blendPixel(int mode, vec3 i, vec3 l) {\r\n  if (mode == 16) return blendHue(i, l);\r\n  if (mode == 17) return blendSaturation(i, l);\r\n  if (mode == 18) return blendColor(i, l);\r\n  if (mode == 19) return blendLuminosity(i, l);\r\n  return vec3(blendChannel(mode, i.r, l.r), blendChannel(mode, i.g, l.g), blendChannel(mode, i.b, l.b));\r\n}\r\n\r\nvec4 composite(int mode, vec4 bg, vec4 layer, vec3 comp, float cov) {\r\n  float inA = bg.a;\r\n  float layerA = layer.a * cov;\r\n  if (mode == 1) {\r\n    if (inA == 0.0 || layerA == 0.0) return vec4(bg.rgb, inA);\r\n    return vec4(comp * layerA + bg.rgb * (1.0 - layerA), inA);\r\n  }\r\n  if (mode == 2) {\r\n    if (layerA == 0.0) return vec4(bg.rgb, layerA);\r\n    if (inA == 0.0)    return vec4(layer.rgb, layerA);\r\n    return vec4(comp * inA + layer.rgb * (1.0 - inA), layerA);\r\n  }\r\n  if (mode == 3) {\r\n    float newA = inA * layer.a * cov;\r\n    return newA == 0.0 ? vec4(bg.rgb, 0.0) : vec4(comp, newA);\r\n  }\r\n\r\n  float newA = layerA + (1.0 - layerA) * inA;\r\n  if (layerA == 0.0 || newA == 0.0) return vec4(bg.rgb, newA);\r\n  if (inA == 0.0)                   return vec4(layer.rgb, newA);\r\n  float ratio = layerA / newA;\r\n  vec3 outRgb = ratio * (inA * (comp - layer.rgb) + layer.rgb - bg.rgb) + bg.rgb;\r\n  return vec4(outRgb, newA);\r\n}\r\n\r\nvoid main() {\r\n  vec4 bg = texture(u_backdrop, v_texCoord);\r\n  vec4 layer = texture(u_layer, v_texCoord);\r\n  if (u_srgbLayer) layer.rgb = srgbToLinear(layer.rgb);\r\n\r\n  float cov = u_opacity;\r\n  if (u_hasMask) cov *= texture(u_mask, v_texCoord).r;\r\n\r\n  vec3 comp = fromSpace(blendPixel(u_blend, toSpace(bg.rgb, u_blendSpace), toSpace(layer.rgb, u_blendSpace)), u_blendSpace);\r\n\r\n  vec4 outc;\r\n  if (u_compositeSpace == 0) {\r\n    outc = composite(u_composite, bg, layer, comp, cov);\r\n  } else {\r\n    vec4 bgC = vec4(toSpace(bg.rgb, u_compositeSpace), bg.a);\r\n    vec4 lyC = vec4(toSpace(layer.rgb, u_compositeSpace), layer.a);\r\n    vec4 r = composite(u_composite, bgC, lyC, toSpace(comp, u_compositeSpace), cov);\r\n    outc = vec4(fromSpace(r.rgb, u_compositeSpace), r.a);\r\n  }\r\n\r\n  fragColor = outc;\r\n}\r\n";
+const LAYER_BLEND_FRAG = "#version 300 es\r\n\r\nprecision highp float;\r\n\r\nuniform sampler2D u_backdrop;\r\nuniform sampler2D u_layer;\r\nuniform sampler2D u_mask;\r\nuniform bool  u_hasMask;\r\nuniform bool  u_srgbLayer;\r\nuniform float u_opacity;\r\nuniform int   u_blend;\r\nuniform int   u_composite;\r\nuniform int   u_blendSpace;\r\nuniform int   u_compositeSpace;\r\n\r\nin vec2 v_texCoord;\r\nout vec4 fragColor;\r\n\r\nconst float EPS = 1e-6;\r\n\r\nfloat safeDiv(float a, float b) {\r\n  return abs(a) <= EPS ? 0.0 : clamp(a / b, -1e6, 1e6);\r\n}\r\n\r\nfloat srgbToLinear(float c) {\r\n  return c <= 0.04045 ? c / 12.92 : pow((c + 0.055) / 1.055, 2.4);\r\n}\r\nfloat linearToSrgb(float c) {\r\n  return c <= 0.0031308 ? 12.92 * c : 1.055 * pow(c, 1.0 / 2.4) - 0.055;\r\n}\r\nvec3 srgbToLinear(vec3 c) { return vec3(srgbToLinear(c.r), srgbToLinear(c.g), srgbToLinear(c.b)); }\r\nvec3 linearToSrgb(vec3 c) { return vec3(linearToSrgb(c.r), linearToSrgb(c.g), linearToSrgb(c.b)); }\r\n\r\nvec3 toSpace(vec3 c, int space)   { return space == 0 ? c : linearToSrgb(c); }\r\nvec3 fromSpace(vec3 c, int space) { return space == 0 ? c : srgbToLinear(c); }\r\n\r\nfloat luminance(vec3 c) { return dot(c, vec3(0.22248840, 0.71690369, 0.06060791)); }\r\n\r\nfloat blendChannel(int mode, float i, float l) {\r\n  if (mode == 1)  return i * l;\r\n  if (mode == 2)  return 1.0 - (1.0 - i) * (1.0 - l);\r\n  if (mode == 3)  return i < 0.5 ? 2.0*i*l : 1.0 - 2.0*(1.0-l)*(1.0-i);\r\n  if (mode == 4)  return min(i, l);\r\n  if (mode == 5)  return max(i, l);\r\n  if (mode == 6)  return safeDiv(i, 1.0 - l);\r\n  if (mode == 7)  return 1.0 - safeDiv(1.0 - i, l);\r\n  if (mode == 8)  return l > 0.5 ? min(1.0 - (1.0-i)*(1.0-(l-0.5)*2.0), 1.0)\r\n                                 : min(i*(l*2.0), 1.0);\r\n  if (mode == 9) {\r\n    float m = i * l;\r\n    float s = 1.0 - (1.0 - i) * (1.0 - l);\r\n    return (1.0 - i) * m + i * s;\r\n  }\r\n  if (mode == 10) return abs(i - l);\r\n  if (mode == 11) return 0.5 - 2.0*(i-0.5)*(l-0.5);\r\n  if (mode == 12) return i + l;\r\n  if (mode == 13) return i + l - 1.0;\r\n  if (mode == 14) return l <= 0.5 ? max(1.0 - safeDiv(1.0-i, 2.0*l), 0.0)\r\n                                  : min(safeDiv(i, 2.0*(1.0-l)), 1.0);\r\n  if (mode == 15) return l > 0.5 ? max(i, 2.0*(l-0.5)) : min(i, 2.0*l);\r\n  if (mode == 20) return i + 2.0*l - 1.0;\r\n  if (mode == 21) return i + l < 1.0 ? 0.0 : 1.0;\r\n  if (mode == 22) return i - l;\r\n  if (mode == 23) return safeDiv(i, l);\r\n  if (mode == 24) return i - l + 0.5;\r\n  if (mode == 25) return i + l - 0.5;\r\n  return l;\r\n}\r\n\r\nvec3 blendHue(vec3 i, vec3 l) {\r\n  float sMin = min(min(l.r, l.g), l.b), sMax = max(max(l.r, l.g), l.b);\r\n  float sDelta = sMax - sMin;\r\n  if (sDelta <= EPS) return i;\r\n  float dMin = min(min(i.r, i.g), i.b), dMax = max(max(i.r, i.g), i.b);\r\n  float dDelta = dMax - dMin;\r\n  float dS = dMax != 0.0 ? dDelta / dMax : 0.0;\r\n  float ratio = (dS * dMax) / sDelta;\r\n  float offset = dMax - sMax * ratio;\r\n  return l * ratio + offset;\r\n}\r\nvec3 blendSaturation(vec3 i, vec3 l) {\r\n  float dMin = min(min(i.r, i.g), i.b), dMax = max(max(i.r, i.g), i.b);\r\n  float dDelta = dMax - dMin;\r\n  if (dDelta <= EPS) return vec3(dMax);\r\n  float sMin = min(min(l.r, l.g), l.b), sMax = max(max(l.r, l.g), l.b);\r\n  float sDelta = sMax - sMin;\r\n  float sS = sMax != 0.0 ? sDelta / sMax : 0.0;\r\n  float ratio = (sS * dMax) / dDelta;\r\n  float offset = (1.0 - ratio) * dMax;\r\n  return i * ratio + offset;\r\n}\r\nvec3 blendColor(vec3 i, vec3 l) {\r\n  float dMin = min(min(i.r, i.g), i.b), dMax = max(max(i.r, i.g), i.b);\r\n  float dL = (dMin + dMax) * 0.5;\r\n  float sMin = min(min(l.r, l.g), l.b), sMax = max(max(l.r, l.g), l.b);\r\n  float sL = (sMin + sMax) * 0.5;\r\n  if (abs(sL) <= EPS || abs(1.0 - sL) <= EPS) return vec3(dL);\r\n  bool dHigh = dL > 0.5, sHigh = sL > 0.5;\r\n  dL = min(dL, 1.0 - dL);\r\n  sL = min(sL, 1.0 - sL);\r\n  float ratio = dL / sL;\r\n  float offset = 0.0;\r\n  if (dHigh) offset += 1.0 - 2.0 * dL;\r\n  if (sHigh) offset += 2.0 * dL - ratio;\r\n  return l * ratio + offset;\r\n}\r\nvec3 blendLuminosity(vec3 i, vec3 l) {\r\n  return i * safeDiv(luminance(l), luminance(i));\r\n}\r\n\r\nvec3 blendPixel(int mode, vec3 i, vec3 l) {\r\n  if (mode == 16) return blendHue(i, l);\r\n  if (mode == 17) return blendSaturation(i, l);\r\n  if (mode == 18) return blendColor(i, l);\r\n  if (mode == 19) return blendLuminosity(i, l);\r\n  return vec3(blendChannel(mode, i.r, l.r), blendChannel(mode, i.g, l.g), blendChannel(mode, i.b, l.b));\r\n}\r\n\r\nvec4 composite(int mode, vec4 bg, vec4 layer, vec3 comp, float cov) {\r\n  float inA = bg.a;\r\n  float layerA = layer.a * cov;\r\n  if (mode == 1) {\r\n    if (inA == 0.0 || layerA == 0.0) return vec4(bg.rgb, inA);\r\n    return vec4(comp * layerA + bg.rgb * (1.0 - layerA), inA);\r\n  }\r\n  if (mode == 2) {\r\n    if (layerA == 0.0) return vec4(bg.rgb, layerA);\r\n    if (inA == 0.0)    return vec4(layer.rgb, layerA);\r\n    return vec4(comp * inA + layer.rgb * (1.0 - inA), layerA);\r\n  }\r\n  if (mode == 3) {\r\n    float newA = inA * layer.a * cov;\r\n    return newA == 0.0 ? vec4(bg.rgb, 0.0) : vec4(comp, newA);\r\n  }\r\n\r\n  float newA = layerA + (1.0 - layerA) * inA;\r\n  if (layerA == 0.0 || newA == 0.0) return vec4(bg.rgb, newA);\r\n  if (inA == 0.0)                   return vec4(layer.rgb, newA);\r\n  float ratio = layerA / newA;\r\n  vec3 outRgb = ratio * (inA * (comp - layer.rgb) + layer.rgb - bg.rgb) + bg.rgb;\r\n  return vec4(outRgb, newA);\r\n}\r\n\r\nvoid main() {\r\n  vec4 bg = texture(u_backdrop, v_texCoord);\r\n  vec4 layer = texture(u_layer, v_texCoord);\r\n  if (u_srgbLayer) layer.rgb = srgbToLinear(layer.rgb);\r\n\r\n  float cov = u_opacity;\r\n  if (u_hasMask) cov *= texture(u_mask, v_texCoord).r;\r\n\r\n  vec3 comp = fromSpace(blendPixel(u_blend, toSpace(bg.rgb, u_blendSpace), toSpace(layer.rgb, u_blendSpace)), u_blendSpace);\r\n\r\n  vec4 outc;\r\n  if (u_compositeSpace == 0) {\r\n    outc = composite(u_composite, bg, layer, comp, cov);\r\n  } else {\r\n    vec4 bgC = vec4(toSpace(bg.rgb, u_compositeSpace), bg.a);\r\n    vec4 lyC = vec4(toSpace(layer.rgb, u_compositeSpace), layer.a);\r\n    vec4 r = composite(u_composite, bgC, lyC, toSpace(comp, u_compositeSpace), cov);\r\n    outc = vec4(fromSpace(r.rgb, u_compositeSpace), r.a);\r\n  }\r\n\r\n  fragColor = outc;\r\n}\r\n";
 const VERT$1 = `#version 300 es
 out vec2 v_texCoord;
 void main() {
@@ -147514,15 +147514,16 @@ float hfun(float n, float h, float s, float l){
 vec3 preservel(vec3 c, float l){
   float mx = max(c.r, max(c.g, c.b));
   float mn = min(c.r, min(c.g, c.b));
-  float hl = l * 0.5;
   float h;
   if (c.r == c.g && c.g == c.b) h = 0.0;
   else if (mx == c.r) h = 60.0 * ((c.g - c.b) / (mx - mn));
   else if (mx == c.g) h = 60.0 * (2.0 + (c.b - c.r) / (mx - mn));
   else h = 60.0 * (4.0 + (c.r - c.g) / (mx - mn));
   if (h < 0.0) h += 360.0;
-  float s = (mx == 1.0 || mn == 0.0) ? 0.0 : (mx - mn) / (1.0 - abs(2.0 * hl - 1.0));
-  return vec3(hfun(0.0, h, s, hl), hfun(8.0, h, s, hl), hfun(4.0, h, s, hl));
+  float lOut = (mx + mn) * 0.5;
+  float denom = 1.0 - abs(2.0 * lOut - 1.0);
+  float s = denom <= 1e-6 ? 0.0 : (mx - mn) / denom;
+  return vec3(hfun(0.0, h, s, l), hfun(8.0, h, s, l), hfun(4.0, h, s, l));
 }
 
 float lutAt(float v, int ch){
@@ -147536,6 +147537,8 @@ void main(){
   vec3 adjusted;
   if (u_op == 0) {
     adjusted = vec3(bc(bg.r, u_p0.x, u_p0.y), bc(bg.g, u_p0.x, u_p0.y), bc(bg.b, u_p0.x, u_p0.y));
+  } else if (u_op == 5) {
+    adjusted = clamp((bg.rgb - vec3(u_p0.x)) * u_p0.y, 0.0, 1.0);
   } else {
     vec3 g = l2s(clamp(bg.rgb, 0.0, 1.0));
     vec3 o;
@@ -147551,10 +147554,8 @@ void main(){
       o = vec3(lev(g.r), lev(g.g), lev(g.b));
     } else if (u_op == 4) {
       o = mix(g, g * u_p0.xyz, u_p0.w);
-    } else if (u_op == 5) {
-      o = clamp((g - vec3(u_p0.x)) * u_p0.y, 0.0, 1.0);
     } else if (u_op == 6) {
-      float l = max(g.r, max(g.g, g.b)) + min(g.r, min(g.g, g.b));
+      float l = (max(g.r, max(g.g, g.b)) + min(g.r, min(g.g, g.b))) * 0.5;
       o = vec3(
         balComp(g.r, l, u_p0.x, u_p0.w, u_p1.z),
         balComp(g.g, l, u_p0.y, u_p1.x, u_p1.w),
@@ -148479,21 +148480,16 @@ precision highp float;
 precision highp int;
 uniform sampler2D u_tex;
 uniform vec2 u_dir;
-uniform float u_sigma;
 uniform int u_radius;
 in vec2 v_uv;
 out vec4 o;
 void main(){
   vec4 acc = vec4(0.0);
-  float wsum = 0.0;
   for (int i = -u_radius; i <= u_radius; i++) {
-    float fi = float(i);
-    float w = exp(-(fi * fi) / (2.0 * u_sigma * u_sigma));
     vec4 s = texture(u_tex, v_uv + u_dir * float(i));
-    acc += vec4(s.rgb * s.a, s.a) * w;
-    wsum += w;
+    acc += vec4(s.rgb * s.a, s.a);
   }
-  acc /= wsum;
+  acc /= float(2 * u_radius + 1);
   o = vec4(acc.a > 1e-5 ? acc.rgb / acc.a : vec3(0.0), acc.a);
 }`;
 const FRAG_SHADOW_MAKE = `#version 300 es
@@ -148538,7 +148534,12 @@ uniform sampler2D u_b;
 uniform float u_t;
 in vec2 v_uv;
 out vec4 o;
-void main(){ o = mix(texture(u_a, v_uv), texture(u_b, v_uv), u_t); }`;
+void main(){
+  vec4 a = texture(u_a, v_uv);
+  vec4 b = texture(u_b, v_uv);
+  vec4 m = mix(vec4(a.rgb * a.a, a.a), vec4(b.rgb * b.a, b.a), u_t);
+  o = vec4(m.a > 1e-5 ? m.rgb / m.a : vec3(0.0), m.a);
+}`;
 const FRAG_POINT = `#version 300 es
 precision highp float;
 uniform sampler2D u_tex;
@@ -148564,7 +148565,7 @@ void main(){
   if (u_op == 0) {
     vec2 px = v_uv * u_size;
     vec2 c = u_size * 0.5;
-    float scale = 1.0 / min(c.x, c.y);
+    float scale = 1.0 / (0.5 * length(u_size));
     vec2 d2 = (px - c) * scale;
     float d = length(d2);
     float v = clamp((u_p.x - d) / max(u_p.y, 0.001), 0.0, 1.0);
@@ -148725,22 +148726,23 @@ function applyLayerFxChainGpu(bitmap, active, pad) {
     };
     let cur = fx2.srcTex;
     const runBlur = (input, sigma) => {
-      const radius = Math.max(1, Math.min(200, Math.ceil(3 * sigma)));
+      const radii = blurBoxRadii(sigma).map((r) => Math.min(200, r));
+      if (!radii.length) return input;
       const prog2 = fx2.progs.blur;
       gl.useProgram(prog2);
-      const t1 = freeTarget([input, cur]);
-      gl.bindFramebuffer(gl.FRAMEBUFFER, t1.fbo);
-      bindInput(prog2, "u_tex", input, 0);
-      gl.uniform2f(loc(gl, prog2, "u_dir"), 1 / w, 0);
-      gl.uniform1f(loc(gl, prog2, "u_sigma"), sigma);
-      gl.uniform1i(loc(gl, prog2, "u_radius"), radius);
-      draw();
-      const t2 = freeTarget([t1.tex, input, cur]);
-      gl.bindFramebuffer(gl.FRAMEBUFFER, t2.fbo);
-      bindInput(prog2, "u_tex", t1.tex, 0);
-      gl.uniform2f(loc(gl, prog2, "u_dir"), 0, 1 / h2);
-      draw();
-      return t2.tex;
+      let src = input;
+      for (const dir of [[1 / w, 0], [0, 1 / h2]]) {
+        for (const radius of radii) {
+          const t2 = freeTarget([src, input, cur]);
+          gl.bindFramebuffer(gl.FRAMEBUFFER, t2.fbo);
+          bindInput(prog2, "u_tex", src, 0);
+          gl.uniform2f(loc(gl, prog2, "u_dir"), dir[0], dir[1]);
+          gl.uniform1i(loc(gl, prog2, "u_radius"), radius);
+          draw();
+          src = t2.tex;
+        }
+      }
+      return src;
     };
     for (const f2 of active) {
       const before = cur;
@@ -148910,6 +148912,9 @@ function gaussianIsNoop(sigma) {
   if (sigma <= 0) return true;
   return boxSizes(sigma).every((size2) => Math.round((size2 - 1) / 2) < 1);
 }
+function blurBoxRadii(sigma) {
+  return boxSizes(sigma).map((size2) => Math.round((size2 - 1) / 2)).filter((r) => r >= 1);
+}
 function boxSizes(sigma) {
   const wIdeal = Math.sqrt(12 * sigma * sigma / 3 + 1);
   let wl = Math.floor(wIdeal);
@@ -149073,7 +149078,7 @@ function applyVignette(img, params) {
   const gamma = Math.max(0.01, params.gamma ?? 1);
   const cx = w / 2;
   const cy = h2 / 2;
-  const scale = 1 / Math.min(cx, cy);
+  const scale = 1 / (0.5 * Math.hypot(w, h2));
   for (let y = 0; y < h2; y++) {
     for (let x = 0; x < w; x++) {
       const dx = (x + 0.5 - cx) * scale;
@@ -149241,8 +149246,21 @@ function applyLayerFxChain(bitmap, fx2) {
     img = applyOne(img, f2);
     if (before) {
       const t2 = f2.opacity;
-      for (let i = 0; i < img.data.length; i++) {
-        img.data[i] = Math.round(before[i] + (img.data[i] - before[i]) * t2);
+      const d = img.data;
+      for (let p2 = 0; p2 < d.length; p2 += 4) {
+        const aA = before[p2 + 3] / 255;
+        const aB = d[p2 + 3] / 255;
+        const na = aA + (aB - aA) * t2;
+        if (na <= 1e-5) {
+          d[p2] = d[p2 + 1] = d[p2 + 2] = 0;
+          d[p2 + 3] = 0;
+          continue;
+        }
+        for (let c2 = 0; c2 < 3; c2++) {
+          const pm = before[p2 + c2] * aA + (d[p2 + c2] * aB - before[p2 + c2] * aA) * t2;
+          d[p2 + c2] = Math.round(pm / na);
+        }
+        d[p2 + 3] = Math.round(na * 255);
       }
     }
   }
@@ -155896,7 +155914,8 @@ function ellipticalFilter(mask, radius, pick2, pad) {
   const r = Math.max(1, Math.round(radius));
   const circ = new Int32Array(2 * r + 1);
   for (let i = -r; i <= r; i++) {
-    circ[i + r] = Math.round(Math.sqrt(Math.max(0, r * r - i * i)));
+    const t2 = Math.max(0, Math.abs(i) - 0.5);
+    circ[i + r] = Math.round(Math.sqrt(Math.max(0, r * r - t2 * t2)));
   }
   const byHeight = /* @__PURE__ */ new Map();
   for (const h2 of circ) {
@@ -155906,13 +155925,13 @@ function ellipticalFilter(mask, radius, pick2, pad) {
   for (let y = 0; y < mask.height; y++) {
     const row = y * mask.width;
     for (let x = 0; x < mask.width; x++) {
-      let v = pad;
+      let v = null;
       for (let i = -r; i <= r; i++) {
         const xx = x + i;
         const src = xx >= 0 && xx < mask.width ? byHeight.get(circ[i + r]).data[row + xx] : pad;
-        v = pick2(v, src);
+        v = v === null ? src : pick2(v, src);
       }
-      out.data[row + x] = v;
+      out.data[row + x] = v ?? pad;
     }
   }
   return out;
@@ -155947,12 +155966,12 @@ function growMask(mask, radius, bounds = null) {
   return withBounds(mask, bounds, Math.round(radius) + 1, (m) => ellipticalFilter(m, radius, Math.max, 0));
 }
 function shrinkMask(mask, radius, bounds = null) {
-  return withBounds(mask, bounds, Math.round(radius) + 1, (m) => ellipticalFilter(m, radius, Math.min, 1));
+  return withBounds(mask, bounds, Math.round(radius) + 1, (m) => ellipticalFilter(m, radius, Math.min, 0));
 }
 function borderMask(mask, radius, bounds = null) {
   return withBounds(mask, bounds, Math.round(radius) + 1, (m) => {
     const grown = ellipticalFilter(m, radius, Math.max, 0);
-    const shrunk = ellipticalFilter(m, radius, Math.min, 1);
+    const shrunk = ellipticalFilter(m, radius, Math.min, 0);
     const out = emptyMask(m.width, m.height);
     for (let p2 = 0; p2 < out.data.length; p2++) {
       out.data[p2] = Math.max(grown.data[p2] - shrunk.data[p2], 0);
@@ -155997,10 +156016,38 @@ function boxesForGauss(sigma, n) {
 function featherMask(mask, radius, bounds = null) {
   return withBounds(mask, bounds, Math.ceil(radius) + 2, (m) => featherMaskFull(m, radius));
 }
+function smallGaussian(mask, sigma) {
+  const r = 2;
+  const kernel = new Float32Array(2 * r + 1);
+  let sum = 0;
+  for (let i = -r; i <= r; i++) {
+    kernel[i + r] = Math.exp(-(i * i) / (2 * sigma * sigma));
+    sum += kernel[i + r];
+  }
+  for (let i = 0; i < kernel.length; i++) kernel[i] /= sum;
+  const pass = (m) => {
+    const out = emptyMask(m.width, m.height);
+    for (let y = 0; y < m.height; y++) {
+      const row = y * m.width;
+      for (let x = 0; x < m.width; x++) {
+        let acc = 0;
+        for (let i = -r; i <= r; i++) {
+          const xx = Math.max(0, Math.min(m.width - 1, x + i));
+          acc += m.data[row + xx] * kernel[i + r];
+        }
+        out.data[row + x] = acc;
+      }
+    }
+    return out;
+  };
+  return transposeMask(pass(transposeMask(pass(mask))));
+}
 function featherMaskFull(mask, radius) {
   const sigma = radius / 3.5;
   if (sigma <= 0) return mask;
-  const sizes = boxesForGauss(sigma, 3);
+  const boxes = boxesForGauss(sigma, 3);
+  if (boxes.every((size2) => Math.round((size2 - 1) / 2) < 1)) return smallGaussian(mask, sigma);
+  const sizes = boxes;
   let cur = { data: Float32Array.from(mask.data), width: mask.width, height: mask.height };
   const blurAxis = (m) => {
     const tmp3 = new Float32Array(m.data.length);
@@ -156020,11 +156067,16 @@ function featherMaskFull(mask, radius) {
 function pixelDifference(c1r, c1g, c1b, c1a, data, idx, antialias, threshold) {
   const a2 = data[idx + 3] / 255;
   if (c1a > 0 && a2 === 0) return 0;
-  let max2 = Math.abs(c1r - data[idx] / 255);
-  const dg = Math.abs(c1g - data[idx + 1] / 255);
-  const db = Math.abs(c1b - data[idx + 2] / 255);
-  if (dg > max2) max2 = dg;
-  if (db > max2) max2 = db;
+  let max2;
+  if (c1a === 0) {
+    max2 = Math.abs(c1a - a2);
+  } else {
+    max2 = Math.abs(c1r - data[idx] / 255);
+    const dg = Math.abs(c1g - data[idx + 1] / 255);
+    const db = Math.abs(c1b - data[idx + 2] / 255);
+    if (dg > max2) max2 = dg;
+    if (db > max2) max2 = db;
+  }
   if (antialias && threshold > 0) {
     const aa = 1.5 - max2 / threshold;
     if (aa <= 0) return 0;
@@ -156294,7 +156346,7 @@ function makeMarqueeToolDef() {
 function makeEllipseMarqueeToolDef() {
   return { id: "marquee-ellipse", create: (ctx) => new MarqueeTool("marquee-ellipse", "ellipse", ctx) };
 }
-const DEFAULT_WAND_OPTIONS = { threshold: 0.15, antialias: true, contiguous: true };
+const DEFAULT_WAND_OPTIONS = { threshold: 0.06, antialias: true, contiguous: true };
 class WandTool {
   constructor(id, ctx) {
     __publicField(this, "control");
@@ -157305,9 +157357,30 @@ function createEditor(opts) {
     },
     hasClipboard: () => clipboard !== null,
     copyVisible() {
+      var _a2;
       const canvas = visibleComposite();
       if (!canvas) return false;
-      clipboard = { canvas, bounds: { x: 0, y: 0, w: doc2.width, h: doc2.height } };
+      const sel2 = selectionChannel();
+      const selCanvas = (sel2 == null ? void 0 : sel2.bounds) ? (_a2 = content.get(sel2.contentId)) == null ? void 0 : _a2.canvas : null;
+      if (!(sel2 == null ? void 0 : sel2.bounds) || !selCanvas) {
+        clipboard = { canvas, bounds: { x: 0, y: 0, w: doc2.width, h: doc2.height } };
+        return true;
+      }
+      const b = sel2.bounds;
+      const clip = document.createElement("canvas");
+      clip.width = Math.max(1, Math.round(b.w));
+      clip.height = Math.max(1, Math.round(b.h));
+      const g = clip.getContext("2d");
+      const sg = selCanvas.getContext("2d");
+      if (!g || !sg) return false;
+      g.drawImage(canvas, -Math.round(b.x), -Math.round(b.y));
+      const img = g.getImageData(0, 0, clip.width, clip.height);
+      const selImg = sg.getImageData(Math.round(b.x), Math.round(b.y), clip.width, clip.height);
+      for (let p2 = 0; p2 < img.data.length / 4; p2++) {
+        img.data[p2 * 4 + 3] = Math.round(img.data[p2 * 4 + 3] * selImg.data[p2 * 4] / 255);
+      }
+      g.putImageData(img, 0, 0);
+      clipboard = { canvas: clip, bounds: { x: Math.round(b.x), y: Math.round(b.y), w: clip.width, h: clip.height } };
       return true;
     },
     newFromVisible() {
@@ -157328,7 +157401,7 @@ function createEditor(opts) {
     },
     mergeVisible() {
       const children = doc2.root.children;
-      const visible = children.filter((n) => n.visible && n.opacity > 0);
+      const visible = children.filter((n) => n.visible);
       if (visible.length < 2) return false;
       const canvas = visibleComposite();
       if (!canvas) return false;
@@ -157336,12 +157409,12 @@ function createEditor(opts) {
       const bottomIndex = children.indexOf(visible[0]);
       for (let i = children.length - 1; i >= 0; i--) {
         const node = children[i];
-        if (!node.visible || node.opacity <= 0) continue;
+        if (!node.visible) continue;
         children.splice(i, 1);
         group.children.push(new RemoveNodeCommand(`Merge ${node.name}`, doc2.root, node, i));
       }
       const merged = getNodeKind("raster").create({
-        name: "Merged",
+        name: visible[0].name,
         contentId: content.register(canvas),
         naturalWidth: doc2.width,
         naturalHeight: doc2.height,
@@ -157560,7 +157633,7 @@ function createEditor(opts) {
     canRasterize(id) {
       return canRasterizeLayer(doc2.root, id);
     },
-    flattenImage() {
+    flattenImage(bgColor) {
       if (!compositor.getCanvas()) return false;
       if (floating) anchorFloatingImpl();
       if (doc2.root.children.length === 0) return false;
@@ -157572,7 +157645,7 @@ function createEditor(opts) {
       canvas.height = doc2.height;
       const g = canvas.getContext("2d");
       if (!g) return false;
-      g.fillStyle = "#ffffff";
+      g.fillStyle = bgColor && /^#[0-9a-f]{6}$/i.test(bgColor) ? bgColor : "#ffffff";
       g.fillRect(0, 0, doc2.width, doc2.height);
       const tmp3 = document.createElement("canvas");
       tmp3.width = doc2.width;
@@ -157806,6 +157879,18 @@ function pendingUploads(doc2, content) {
   }
   return jobs;
 }
+function srgbByteToLinear(v) {
+  const c2 = v / 255;
+  return c2 <= 0.04045 ? c2 / 12.92 : Math.pow((c2 + 0.055) / 1.055, 2.4);
+}
+function linearToSrgbByte(v) {
+  const c2 = Math.max(0, Math.min(1, v));
+  return 255 * (c2 <= 31308e-7 ? 12.92 * c2 : 1.055 * Math.pow(c2, 1 / 2.4) - 0.055);
+}
+function maskGrayFromColor(color) {
+  const y = 0.2126 * srgbByteToLinear(color[0]) + 0.7152 * srgbByteToLinear(color[1]) + 0.0722 * srgbByteToLinear(color[2]);
+  return linearToSrgbByte(y);
+}
 function blendPixel(out, base2, i, a2, params) {
   const { mode, channel, color, lockAlpha: lockAlpha2 } = params;
   const br = base2[i];
@@ -157813,13 +157898,20 @@ function blendPixel(out, base2, i, a2, params) {
   const bb = base2[i + 2];
   const ba = base2[i + 3];
   if (channel === "mask") {
-    const g = mode === "brush" ? 0.2126 * color[0] + 0.7152 * color[1] + 0.0722 * color[2] : 255;
+    const g = mode === "brush" ? maskGrayFromColor(color) : 255;
     const nv = g * a2 + br * (1 - a2);
     out[i] = out[i + 1] = out[i + 2] = nv;
     out[i + 3] = 255;
     return;
   }
   if (mode === "eraser") {
+    if (lockAlpha2 && params.bgColor) {
+      out[i] = params.bgColor[0] * a2 + br * (1 - a2);
+      out[i + 1] = params.bgColor[1] * a2 + bg * (1 - a2);
+      out[i + 2] = params.bgColor[2] * a2 + bb * (1 - a2);
+      out[i + 3] = ba;
+      return;
+    }
     out[i] = br;
     out[i + 1] = bg;
     out[i + 2] = bb;
@@ -157991,13 +158083,13 @@ class CoverageBuffer {
       const srow = (y - oy) * stamp.size;
       const brow = (y - ext.y0) * this.extW;
       for (let x = x0; x <= x1; x++) {
-        const p2 = stamp.data[srow + (x - ox)] * flow;
-        if (p2 <= 0) continue;
+        const m = stamp.data[srow + (x - ox)];
+        if (m <= 0) continue;
         const i = brow + (x - ext.x0);
         if (additive) {
-          this.buf[i] = Math.min(1, this.buf[i] + p2);
-        } else if (p2 > this.buf[i]) {
-          this.buf[i] = p2;
+          this.buf[i] = Math.min(1, this.buf[i] + m * flow);
+        } else if (flow > this.buf[i]) {
+          this.buf[i] += (flow - this.buf[i]) * m * flow;
         }
         touched = true;
       }
@@ -158240,7 +158332,8 @@ class BasePaintCore {
       channel: this.target.channel,
       color: hexToRgb$4(this.params.color),
       opacity: this.params.opacity,
-      lockAlpha: this.target.lockAlpha === true
+      lockAlpha: this.target.lockAlpha === true,
+      bgColor: this.params.bgColor ? hexToRgb$4(this.params.bgColor) : void 0
     };
   }
   preview() {
@@ -158348,13 +158441,16 @@ function registerBuiltinPaintCores() {
   registerPaintCore(pencilCoreDef);
   registerPaintCore(airbrushCoreDef);
 }
+const SMUDGE_RATE = 0.5;
 let cloneSource = null;
+let cloneDocOffset = null;
 function setCloneSource(pt2) {
   cloneSource = pt2 ? { ...pt2 } : null;
+  cloneDocOffset = null;
 }
 function dodgeBurnValue(v, exposure, burn) {
   const e = Math.max(0, Math.min(1, exposure));
-  const g = burn ? 1 + e : 1 / (1 + e);
+  const g = burn ? 1 + e / 3 : 1 / (1 + e);
   return Math.pow(Math.max(0, Math.min(1, v)), g);
 }
 class PixelPaintCore {
@@ -158376,6 +158472,7 @@ class PixelPaintCore {
     __publicField(this, "painted", false);
     __publicField(this, "scale", 1);
     __publicField(this, "cloneOffset", null);
+    __publicField(this, "cov", null);
     __publicField(this, "accum", null);
     __publicField(this, "accumSize", 0);
     __publicField(this, "previewData", null);
@@ -158401,9 +158498,17 @@ class PixelPaintCore {
     this.previewCanvas.height = this.h;
     this.previewData = null;
     const p2 = this.toStrokePoint(first2);
+    this.cov = this.op === "smudge" ? null : new CoverageBuffer(this.w, this.h);
     if (this.op === "clone") {
-      const src = cloneSource ? this.target.toLocal(cloneSource) : null;
-      this.cloneOffset = src ? { x: src.x - p2.x, y: src.y - p2.y } : null;
+      if (!cloneDocOffset && cloneSource) {
+        cloneDocOffset = { x: cloneSource.x - first2.x, y: cloneSource.y - first2.y };
+      }
+      if (cloneDocOffset) {
+        const srcLocal = this.target.toLocal({ x: first2.x + cloneDocOffset.x, y: first2.y + cloneDocOffset.y });
+        this.cloneOffset = { x: srcLocal.x - p2.x, y: srcLocal.y - p2.y };
+      } else {
+        this.cloneOffset = null;
+      }
     }
     this.queue = [p2];
     this.drawnTo = 0;
@@ -158441,12 +158546,17 @@ class PixelPaintCore {
     }
   }
   stamp(p2) {
-    const radius = this.params.size / 2 * this.scale;
-    if (radius <= 0) return;
-    const strength = Math.max(0, Math.min(1, this.params.opacity));
+    const dyn = this.params.dynamics;
+    let radius = this.params.size / 2 * this.scale;
+    let strength = Math.max(0, Math.min(1, this.params.opacity));
+    let hardness = this.params.hardness;
+    if (dyn == null ? void 0 : dyn.size) radius *= p2.pressure;
+    if (dyn == null ? void 0 : dyn.opacity) strength *= p2.pressure;
+    if (dyn == null ? void 0 : dyn.hardness) hardness *= p2.pressure;
+    if (radius <= 0 || strength <= 0) return;
     const ix = Math.floor(p2.x);
     const iy = Math.floor(p2.y);
-    const stamp = getStamp(radius, this.params.hardness, false, quantizeSubpixel(p2.x - ix), quantizeSubpixel(p2.y - iy));
+    const stamp = getStamp(radius, hardness, false, quantizeSubpixel(p2.x - ix), quantizeSubpixel(p2.y - iy));
     const ox = ix - stamp.center;
     const oy = iy - stamp.center;
     const x0 = Math.max(0, ox);
@@ -158454,73 +158564,133 @@ class PixelPaintCore {
     const x1 = Math.min(this.w - 1, ox + stamp.size - 1);
     const y1 = Math.min(this.h - 1, oy + stamp.size - 1);
     if (x1 < x0 || y1 < y0) return;
-    if (this.op === "smudge") this.ensureAccum(stamp.size, stamp.center, ix, iy);
-    const sel2 = this.target.selection;
-    for (let y = y0; y <= y1; y++) {
-      const srow = (y - oy) * stamp.size;
-      for (let x = x0; x <= x1; x++) {
-        const m = stamp.data[srow + (x - ox)];
-        if (m <= 0) continue;
-        const pIdx = y * this.w + x;
-        const cov = m * strength * (sel2 ? sel2[pIdx] : 1);
-        if (cov <= 0) continue;
-        this.applyPixel(x, y, pIdx * 4, cov, srow + (x - ox), stamp.size);
-      }
+    if (this.op === "smudge") {
+      this.stampSmudge(stamp.data, stamp.size, ox, oy, x0, y0, x1, y1, strength, ix, iy);
+    } else {
+      this.cov.stampCircle(p2.x, p2.y, radius, hardness, strength);
+      this.recompute(x0, y0, x1, y1);
     }
     this.expandRects(x0, y0, x1, y1);
     this.painted = true;
+  }
+  recompute(x0, y0, x1, y1) {
+    const sel2 = this.target.selection;
+    const lockAlpha2 = this.target.lockAlpha === true;
+    const burn = this.op === "burn";
+    const off = this.cloneOffset;
+    if (this.op === "clone" && !off) return;
+    for (let y = y0; y <= y1; y++) {
+      for (let x = x0; x <= x1; x++) {
+        const pIdx = y * this.w + x;
+        let cov = this.cov.valueAt(x, y);
+        if (cov <= 0) continue;
+        if (sel2) cov *= sel2[pIdx];
+        if (cov <= 0) continue;
+        const i = pIdx * 4;
+        if (this.op !== "clone") {
+          for (let c2 = 0; c2 < 3; c2++) {
+            const v = this.base[i + c2] / 255;
+            const t2 = dodgeBurnValue(v, this.params.opacity, burn);
+            this.work[i + c2] = Math.round((v + (t2 - v) * cov) * 255);
+          }
+          continue;
+        }
+        const sx = Math.round(x + off.x);
+        const sy = Math.round(y + off.y);
+        if (sx < 0 || sy < 0 || sx >= this.w || sy >= this.h) {
+          this.work[i] = this.base[i];
+          this.work[i + 1] = this.base[i + 1];
+          this.work[i + 2] = this.base[i + 2];
+          this.work[i + 3] = this.base[i + 3];
+          continue;
+        }
+        const s = (sy * this.w + sx) * 4;
+        const srcA = this.base[s + 3] / 255;
+        const aS = cov * srcA;
+        const dstA = this.base[i + 3] / 255;
+        if (lockAlpha2) {
+          for (let c2 = 0; c2 < 3; c2++) {
+            this.work[i + c2] = Math.round(this.base[i + c2] + (this.base[s + c2] - this.base[i + c2]) * aS);
+          }
+          this.work[i + 3] = this.base[i + 3];
+          continue;
+        }
+        const outA = aS + dstA * (1 - aS);
+        if (outA <= 0) {
+          this.work[i] = this.work[i + 1] = this.work[i + 2] = this.work[i + 3] = 0;
+          continue;
+        }
+        for (let c2 = 0; c2 < 3; c2++) {
+          this.work[i + c2] = Math.round(
+            (this.base[s + c2] * aS + this.base[i + c2] * dstA * (1 - aS)) / outA
+          );
+        }
+        this.work[i + 3] = Math.round(outA * 255);
+      }
+    }
   }
   ensureAccum(size2, center2, ix, iy) {
     if (this.accum && this.accumSize === size2) return;
     this.accum = new Float32Array(size2 * size2 * 4);
     this.accumSize = size2;
+    const cx = Math.max(0, Math.min(this.w - 1, ix));
+    const cy = Math.max(0, Math.min(this.h - 1, iy));
+    const fallback = (cy * this.w + cx) * 4;
     for (let sy = 0; sy < size2; sy++) {
       const y = iy - center2 + sy;
       for (let sx = 0; sx < size2; sx++) {
         const x = ix - center2 + sx;
         const a2 = (sy * size2 + sx) * 4;
-        if (x < 0 || y < 0 || x >= this.w || y >= this.h) continue;
-        const i = (y * this.w + x) * 4;
-        this.accum[a2] = this.work[i];
-        this.accum[a2 + 1] = this.work[i + 1];
-        this.accum[a2 + 2] = this.work[i + 2];
+        const inBounds = x >= 0 && y >= 0 && x < this.w && y < this.h;
+        const i = inBounds ? (y * this.w + x) * 4 : fallback;
+        const alpha = this.work[i + 3] / 255;
+        this.accum[a2] = this.work[i] * alpha;
+        this.accum[a2 + 1] = this.work[i + 1] * alpha;
+        this.accum[a2 + 2] = this.work[i + 2] * alpha;
         this.accum[a2 + 3] = this.work[i + 3];
       }
     }
   }
-  applyPixel(x, y, i, cov, stampIdx, stampSize) {
+  stampSmudge(mask, stampSize, ox, oy, x0, y0, x1, y1, strength, ix, iy) {
+    this.ensureAccum(stampSize, Math.floor(stampSize / 2), ix, iy);
+    const accum = this.accum;
     const w = this.work;
     const lockAlpha2 = this.target.lockAlpha === true;
-    if (this.op === "dodge" || this.op === "burn") {
-      const burn = this.op === "burn";
-      for (let c2 = 0; c2 < 3; c2++) {
-        const v = w[i + c2] / 255;
-        const t2 = dodgeBurnValue(v, this.params.opacity, burn);
-        w[i + c2] = Math.round((v + (t2 - v) * cov) * 255);
-      }
-      return;
-    }
-    if (this.op === "clone") {
-      const off = this.cloneOffset;
-      if (!off) return;
-      const sx = Math.round(x + off.x);
-      const sy = Math.round(y + off.y);
-      if (sx < 0 || sy < 0 || sx >= this.w || sy >= this.h) return;
-      const s = (sy * this.w + sx) * 4;
-      for (let c2 = 0; c2 < 3; c2++) w[i + c2] = Math.round(w[i + c2] + (this.base[s + c2] - w[i + c2]) * cov);
-      if (!lockAlpha2) w[i + 3] = Math.round(w[i + 3] + (this.base[s + 3] - w[i + 3]) * cov);
-      return;
-    }
-    const a2 = (Math.floor(stampIdx / stampSize) * this.accumSize + stampIdx % stampSize) * 4;
-    const accum = this.accum;
-    const rate = 0.8 * this.params.opacity;
-    for (let c2 = 0; c2 < 4; c2++) {
-      if (c2 === 3 && lockAlpha2) {
+    const sel2 = this.target.selection;
+    const rate = SMUDGE_RATE;
+    for (let y = y0; y <= y1; y++) {
+      const srow = (y - oy) * stampSize;
+      for (let x = x0; x <= x1; x++) {
+        const m = mask[srow + (x - ox)];
+        if (m <= 0) continue;
+        const pIdx = y * this.w + x;
+        const cov = m * strength * (sel2 ? sel2[pIdx] : 1);
+        if (cov <= 0) continue;
+        const i = pIdx * 4;
+        const a2 = (srow + (x - ox)) * 4;
+        const ca = w[i + 3] / 255;
+        const cpr = w[i] * ca;
+        const cpg = w[i + 1] * ca;
+        const cpb = w[i + 2] * ca;
+        accum[a2] = accum[a2] * rate + cpr * (1 - rate);
+        accum[a2 + 1] = accum[a2 + 1] * rate + cpg * (1 - rate);
+        accum[a2 + 2] = accum[a2 + 2] * rate + cpb * (1 - rate);
         accum[a2 + 3] = accum[a2 + 3] * rate + w[i + 3] * (1 - rate);
-        continue;
+        const na = lockAlpha2 ? w[i + 3] : w[i + 3] + (accum[a2 + 3] - w[i + 3]) * cov;
+        const npr = cpr + (accum[a2] - cpr) * cov;
+        const npg = cpg + (accum[a2 + 1] - cpg) * cov;
+        const npb = cpb + (accum[a2 + 2] - cpb) * cov;
+        if (na <= 0) {
+          w[i] = w[i + 1] = w[i + 2] = 0;
+          if (!lockAlpha2) w[i + 3] = 0;
+          continue;
+        }
+        const inv = 255 / na;
+        w[i] = Math.round(Math.max(0, Math.min(255, npr * inv)));
+        w[i + 1] = Math.round(Math.max(0, Math.min(255, npg * inv)));
+        w[i + 2] = Math.round(Math.max(0, Math.min(255, npb * inv)));
+        if (!lockAlpha2) w[i + 3] = Math.round(na);
       }
-      accum[a2 + c2] = accum[a2 + c2] * rate + w[i + c2] * (1 - rate);
-      w[i + c2] = Math.round(w[i + c2] + (accum[a2 + c2] - w[i + c2]) * cov);
     }
   }
   expandRects(x0, y0, x1, y1) {
@@ -158673,8 +158843,15 @@ class BucketTool {
       if (c2 <= 0) continue;
       const i = p2 * 4;
       const sa = d[i + 3] / 255;
-      if (lockAlpha2) c2 *= sa;
-      if (c2 <= 0) continue;
+      if (lockAlpha2) {
+        c2 *= sa;
+        if (c2 <= 0) continue;
+        touched = true;
+        d[i] = Math.round(fr * c2 + d[i] * (1 - c2));
+        d[i + 1] = Math.round(fg2 * c2 + d[i + 1] * (1 - c2));
+        d[i + 2] = Math.round(fb * c2 + d[i + 2] * (1 - c2));
+        continue;
+      }
       touched = true;
       const outA = c2 + sa * (1 - c2);
       if (outA <= 0) continue;
@@ -158799,6 +158976,15 @@ class PaintTool {
       this.tickTimer = null;
     }
   }
+  startTicking() {
+    this.stopTicking();
+    this.tickTimer = setInterval(() => {
+      var _a2, _b2;
+      (_b2 = (_a2 = this.core) == null ? void 0 : _a2.tick) == null ? void 0 : _b2.call(_a2);
+      this.pushPreview();
+      this.ctx.requestRender();
+    }, 50);
+  }
   onButtonPress(e, pt2) {
     var _a2;
     const target = resolvePaintTarget(this.ctx.document(), this.ctx.content, this.ctx.activeNodeId(), this.channel);
@@ -158810,14 +158996,7 @@ class PaintTool {
     this.lastPt = pt2;
     this.previewKey = `${this.channel}:${target.drawable.id}`;
     this.core.start(target, this.params(), sample(e, pt2));
-    if (this.core.tick && this.coreId === "airbrush") {
-      this.tickTimer = setInterval(() => {
-        var _a3, _b2;
-        (_b2 = (_a3 = this.core) == null ? void 0 : _a3.tick) == null ? void 0 : _b2.call(_a3);
-        this.pushPreview();
-        this.ctx.requestRender();
-      }, 50);
-    }
+    if (this.core.tick && this.coreId === "airbrush") this.startTicking();
     this.pushPreview();
     this.ctx.requestRender();
   }
@@ -158825,6 +159004,7 @@ class PaintTool {
     this.lastPt = pt2;
     if (!this.core) return;
     this.core.motion(sample(e, pt2));
+    if (this.tickTimer != null) this.startTicking();
     this.pushPreview();
     this.ctx.requestRender();
   }
@@ -160442,14 +160622,14 @@ function useLayerEditorStage(opts) {
   const shapeStarRatio2 = /* @__PURE__ */ ref(0.5);
   const shapeTurns2 = /* @__PURE__ */ ref(3);
   const warpPoints = /* @__PURE__ */ ref(4);
-  const wandThreshold2 = /* @__PURE__ */ ref(0.15);
+  const wandThreshold2 = /* @__PURE__ */ ref(0.06);
   const wandAntialias2 = /* @__PURE__ */ ref(true);
   const wandContiguous2 = /* @__PURE__ */ ref(true);
   const selectionRadius = /* @__PURE__ */ ref(10);
   const symmetryMode = /* @__PURE__ */ ref("none");
   const symmetrySectors2 = /* @__PURE__ */ ref(6);
   const gradientShape = /* @__PURE__ */ ref("linear");
-  const gradientToTransparent2 = /* @__PURE__ */ ref(true);
+  const gradientToTransparent2 = /* @__PURE__ */ ref(false);
   const gradientReverse2 = /* @__PURE__ */ ref(false);
   function swapColors2() {
     const fg2 = brushColor2.value;
@@ -161080,19 +161260,12 @@ function useLayerEditorStage(opts) {
     if (n.kind === "group") for (const c2 of n.children) regenIds(c2);
   }
   function duplicateOne(id) {
-    var _a2;
     const loc2 = findNode(editor.document().root, id);
     if (!loc2) return null;
     const kind = getNodeKind(loc2.node.kind);
     const copy2 = kind.normalize(kind.serialize(loc2.node));
     regenIds(copy2);
-    if (copy2.kind === "vector") {
-      const v = copy2;
-      v.path = transformPath(v.path, (p2) => ({ x: p2.x + 16, y: p2.y + 16 }));
-      v.transform = deriveVectorTransform(v.path, ((_a2 = v.stroke) == null ? void 0 : _a2.width) ?? 0);
-    } else if (copy2.kind !== "group") {
-      copy2.transform = { ...copy2.transform, x: copy2.transform.x + 16, y: copy2.transform.y + 16 };
-    }
+    copy2.name = `${loc2.node.name} copy`;
     editor.addNode(copy2, loc2.index + 1, loc2.parent.id);
     return copy2.id;
   }
@@ -161178,7 +161351,7 @@ function useLayerEditorStage(opts) {
     editor.mergeDown(id);
   }
   function flattenImage2() {
-    editor.flattenImage();
+    editor.flattenImage(backgroundColor2.value);
   }
   function flipImage(axis) {
     editor.flipImage(axis);
@@ -161625,6 +161798,7 @@ function useLayerEditorStage(opts) {
       opacity: brushOpacity2.value,
       flow: 1,
       color: brushColor2.value,
+      bgColor: backgroundColor2.value,
       spacing: 0.1,
       symmetry: symmetryMode.value === "none" ? void 0 : { mode: symmetryMode.value, sectors: symmetrySectors2.value, cx: d.width / 2, cy: d.height / 2 }
     });
@@ -161722,7 +161896,6 @@ function useLayerEditorStage(opts) {
     const x = Math.max(0, Math.min(width - 1, Math.floor(pt2.x)));
     const y = Math.max(0, Math.min(height - 1, Math.floor(pt2.y)));
     const d = g.getImageData(x, y, 1, 1).data;
-    if (d[3] === 0) return false;
     const hex = `#${(d[0] << 16 | d[1] << 8 | d[2]).toString(16).padStart(6, "0")}`;
     if (target === "bg") backgroundColor2.value = hex;
     else brushColor2.value = hex;
@@ -200487,4 +200660,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-CianTHNu.mjs.map
+//# sourceMappingURL=main-BCZ30mIB.mjs.map

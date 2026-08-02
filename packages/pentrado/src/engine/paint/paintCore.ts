@@ -128,6 +128,7 @@ class BasePaintCore implements PaintCore {
       color: hexToRgb(this.params.color),
       opacity: this.params.opacity,
       lockAlpha: this.target.lockAlpha === true,
+      bgColor: this.params.bgColor ? hexToRgb(this.params.bgColor) : undefined,
     }
   }
 
