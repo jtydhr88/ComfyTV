@@ -27,7 +27,7 @@ export class TileAtlas {
   private generation = 0
 
   epoch = 0
-  maxAtlases = 24
+  maxAtlases = 8
 
   constructor(gl: WebGL2RenderingContext) {
     this.gl = gl

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="ctv:relative ctv:flex ctv:shrink-0 ctv:flex-col ctv:gap-1 ctv:min-w-48 ctv:max-w-[55%]"
+    class="ctv:relative ctv:flex ctv:min-h-0 ctv:shrink-0 ctv:flex-col ctv:gap-1 ctv:min-w-48 ctv:max-w-[55%]"
     :style="{ width: panelWidth + 'px' }"
     @contextmenu.prevent
   >

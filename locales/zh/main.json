@@ -1,4 +1,9 @@
 {
+  "pentradoActions": {
+    "capture": "截图输出",
+    "captureHint": "合成图层并输出到节点",
+    "saveToLibraryHint": "导出 PSD 到资产库"
+  },
   "dialog": {
     "confirm": "确定",
     "cancel": "取消",

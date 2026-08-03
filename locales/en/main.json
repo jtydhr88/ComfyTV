@@ -1,4 +1,9 @@
 {
+  "pentradoActions": {
+    "capture": "Capture",
+    "captureHint": "Composite the layers and send to the node output",
+    "saveToLibraryHint": "Export as PSD to the asset library"
+  },
   "dialog": {
     "confirm": "OK",
     "cancel": "Cancel",

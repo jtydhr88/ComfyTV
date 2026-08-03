@@ -519,7 +519,8 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
       if (stale) return
       capturedImageUrl.value = url
       opts?.onCaptured?.(url)
-    } catch {
+    } catch (e) {
+      console.error('[pentrado] capture failed:', e)
       toastError(t('pentrado.captureFailed'))
     }
   }
@@ -567,7 +568,8 @@ export function useLayerEditorStage(opts: UseLayerEditorStageOptions) {
       const json = JSON.stringify({ images })
       storage.commitBatch(json)
       opts?.onBatchCaptured?.(json)
-    } catch {
+    } catch (e) {
+      console.error('[pentrado] capture failed:', e)
       toastError(t('pentrado.captureFailed'))
     } finally {
       capturing.value = false

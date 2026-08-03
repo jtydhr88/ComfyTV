@@ -56196,7 +56196,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-BHu9ii_P.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-DOnpUyA1.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -58674,6 +58674,7 @@ const messages = {
   en: { pentrado: en$1 },
   zh: { pentrado: zh$1 }
 };
+const pentradoActions$1 = { "capture": "Capture", "captureHint": "Composite the layers and send to the node output", "saveToLibraryHint": "Export as PSD to the asset library" };
 const dialog$1 = { "confirm": "OK", "cancel": "Cancel", "close": "Close" };
 const workflow$1 = { "uploadButton": "⬆ Upload workflow", "imported": 'Imported "{label}"', "importFailed": "Workflow import failed", "notJson": "That file isn't valid JSON", "linkButton": "🔗 Link workflow" };
 const stage$1 = { "run": "Run", "rerun": "Re-run", "running": "Running…", "cancel": "Cancel", "preparingWorkflow": "Preparing workflow…", "outputDurationHint": "Generation time", "section": { "context": "Context", "pool": "Pool", "output": "Output ({type})", "actions": "Actions" }, "pool": { "clear": "Clear", "clearHint": "Empty the picker pool and reset the selection", "confirmClear": "Clear pool?", "confirm": "Yes", "cancel": "No" }, "empty": { "no_output": "no output yet", "generating": "generating…", "pending_upstream": "upstream pending", "unsupported_type": "unsupported type {type}" }, "source": { "upstream": "← upstream", "pending": "… waiting" }, "disconnect": "Disconnect", "starting": "starting…", "runByKind": { "text": "Generate Text", "image": "Generate Image", "image-batch": "Generate Images", "video": "Generate Video", "audio": "Generate Audio", "panorama": "Generate Panorama", "storyboard": "Generate Storyboard", "model": "Generate 3D Model", "material": "Generate Material" }, "action": { "viewFull": "View full size", "download": "Download", "copyText": "Copy text", "renderMarkdown": "Render as Markdown", "showRawText": "Show raw text", "addTag": "Save to library / tag", "removeFromPicker": "Remove from picker", "close": "Close", "loadAsset": "Load as asset node", "prev": "Previous", "next": "Next", "pick": "Select this track" }, "preparingWorkflowDetail": "Hang on — converting workflow to api JSON. Try Run again in a moment." };
@@ -58750,6 +58751,7 @@ const optics$1 = { "needsDepth": "Wire a depth map (image or video) first" };
 const music$1 = { "scorePlaceholder": "Paste MusicXML here (score-partwise)…", "scoreFromInput": "Score comes from the wired text input.", "scoreHint": "MusicXML from an LLM, MuseScore export, or by hand. Run validates and passes it downstream.", "needsScore": "Wire a Score stage", "needsPerformance": "Wire Score Performer (or Click Track)", "swing": "Swing", "humanize": "Humanize", "downloadMidi": "Download .mid", "soundfont": "Soundfont", "builtinSynth": "Built-in synth (no soundfont)", "instrument": "Instrument", "gain": "Gain", "sfHint": "Rendering with the SF2/SF3 engine (own port, no fluidsynth).", "builtinHint": "No soundfont selected — using the additive fallback synth. Drop an .sf2/.sf3 (e.g. FluidR3Mono_GM) into the Resources panel for real instruments.", "beatsPerBar": "Beats / bar", "bars": "Bars", "clickFromLabels": "Clicks follow the wired labels (e.g. Audio Beats & Notes).", "clickHint": "Strong beat = GM woodblock high, weak = low. Wire beat labels to click along real music.", "engraving": "engraving…", "noScoreYet": "Paste or wire MusicXML to see the engraved score", "following": "following playback", "octave": "Octave", "velocity": "Velocity", "repeats": "Repeats", "chordHint": "Bars split by |, chords per bar split evenly. Slash bass (C/E), qualities: m, 7, maj7, m7, dim, aug, sus4, 6, 9, m7b5…", "channelPrograms": "Per-channel instruments", "channelProgramsHint": "Channels map to score parts in order (part 1 = ch 0). Unlisted channels use the Instrument above; drums (ch 9) are automatic.", "draw": "Draw", "select": "Select", "snap": "Snap", "tempo": "Tempo", "timeSig": "Time Sig", "part": "Part", "addPart": "Add part", "removePart": "Remove part", "importScore": "Import wired score", "importFailed": "Import failed", "clearPart": "Clear part", "undo": "Undo", "rollHint": "Draw: press and drag out a note · drag moves · right edge resizes · double-click deletes · Del removes selection · Ctrl+wheel zooms", "skippedPercussion": "Percussion parts were skipped on import", "step": "Step", "stepHint": "Step input: A-G enters a note at the cursor (nearest octave) · 7-2 picks duration · . dot · 0/space rest · Backspace steps back · Up/Down transposes (Shift = octave) · click sets the cursor", "percussion": "Drum part (GM keys)", "quantize": "Quantize selection", "renamePart": "Rename part (double-click)", "rollHint2": "Select: drag for marquee · Ctrl+A all · Ctrl+D duplicate · velocity lane below the grid", "channel": "Channel", "addChannel": "Add channel", "removeChannel": "Remove channel", "clearChannel": "Clear channel", "importMidi": "Import wired MIDI", "notMidi": "Wired input is not a MIDI payload", "solo": "Solo (mute everything else)", "muteChannel": "Mute channel", "unmuteChannel": "Unmute channel" };
 const pictorActions$1 = { "capture": "Capture", "captureHint": "Upload composite + one image per visible layer", "saveToLibraryHint": "Save layered PSD into the asset library" };
 const en = {
+  pentradoActions: pentradoActions$1,
   dialog: dialog$1,
   workflow: workflow$1,
   stage: stage$1,
@@ -58826,6 +58828,7 @@ const en = {
   music: music$1,
   pictorActions: pictorActions$1
 };
+const pentradoActions = { "capture": "截图输出", "captureHint": "合成图层并输出到节点", "saveToLibraryHint": "导出 PSD 到资产库" };
 const dialog = { "confirm": "确定", "cancel": "取消", "close": "关闭" };
 const workflow = { "uploadButton": "⬆ 上传工作流", "imported": "已导入「{label}」", "importFailed": "工作流导入失败", "notJson": "该文件不是合法 JSON", "linkButton": "🔗 链接工作流" };
 const stage = { "run": "运行", "rerun": "重新运行", "running": "运行中…", "cancel": "取消", "preparingWorkflow": "准备工作流中…", "outputDurationHint": "生成耗时", "section": { "context": "上游输入", "pool": "图片池", "output": "输出 ({type})", "actions": "动作" }, "pool": { "clear": "清除", "clearHint": "清空图片池并重置选择", "confirmClear": "确认清空？", "confirm": "是", "cancel": "否" }, "empty": { "no_output": "暂无输出", "generating": "生成中…", "pending_upstream": "上游待运行", "unsupported_type": "不支持的类型 {type}" }, "source": { "upstream": "← 上游", "pending": "… 等待中" }, "disconnect": "断开此连接", "starting": "启动中…", "runByKind": { "text": "生成文本", "image": "生成图片", "image-batch": "生成图片", "video": "生成视频", "audio": "生成音频", "panorama": "生成全景图", "storyboard": "生成分镜", "model": "生成3D模型", "material": "生成材质" }, "action": { "viewFull": "查看大图", "download": "下载", "copyText": "复制文本", "renderMarkdown": "渲染 Markdown", "showRawText": "显示原文", "addTag": "存入资产库 / 打标签", "removeFromPicker": "从选择器移除", "close": "关闭", "loadAsset": "作为资产节点加载", "prev": "上一张", "next": "下一张", "pick": "选用这条" }, "preparingWorkflowDetail": "稍等 — 正在把工作流转换成 api JSON。稍后再点运行。" };
@@ -58902,6 +58905,7 @@ const optics = { "needsDepth": "先接入深度图(图片或视频)" };
 const music = { "scorePlaceholder": "在此粘贴 MusicXML(score-partwise)…", "scoreFromInput": "乐谱来自接入的 text 输入。", "scoreHint": "可来自 LLM、MuseScore 导出或手写。Run 校验后传给下游。", "needsScore": "请接入乐谱节点", "needsPerformance": "请接入演奏引擎(或节拍器轨)", "swing": "摇摆", "humanize": "人性化", "downloadMidi": "下载 .mid", "soundfont": "音色库", "builtinSynth": "内置合成(无音色库)", "instrument": "乐器", "gain": "增益", "sfHint": "使用自研 SF2/SF3 引擎渲染(非 fluidsynth)。", "builtinHint": "未选音色库——使用内置加法合成兜底。把 .sf2/.sf3(如 FluidR3Mono_GM)拖进资源面板即可获得真实乐器音色。", "beatsPerBar": "每小节拍数", "bars": "小节", "clickFromLabels": "打点跟随接入的 labels(如节拍分析输出)。", "clickHint": "强拍=GM 高音梆子,弱拍=低音。接节拍分析的 labels 可跟真实音乐打点。", "engraving": "刻谱中…", "noScoreYet": "粘贴或接入 MusicXML 即可看到刻谱", "following": "跟随播放中", "octave": "八度", "velocity": "力度", "repeats": "循环次数", "chordHint": "小节用 | 分隔,小节内和弦均分拍。支持转位(C/E)与 m/7/maj7/m7/dim/aug/sus4/6/9/m7b5 等。", "channelPrograms": "分轨乐器", "channelProgramsHint": "通道按声部顺序对应(第 1 声部 = ch 0);未列出的通道用上面的乐器,鼓(通道 9)自动。", "draw": "画音符", "select": "选择", "snap": "对齐", "tempo": "速度", "timeSig": "拍号", "part": "声部", "addPart": "加声部", "removePart": "删声部", "importScore": "导入上游乐谱", "importFailed": "导入失败", "clearPart": "清空声部", "undo": "撤销", "rollHint": "画音符:按下拖出时值 · 拖动移动 · 右缘拉长短 · 双击删除 · Del 删选中 · Ctrl+滚轮缩放", "skippedPercussion": "打击乐声部导入时被跳过", "step": "键入", "stepHint": "键入模式:A-G 在光标处进音(就近八度) · 7-2 选时值 · . 附点 · 0/空格 休止 · Backspace 回退 · ↑↓ 移调(Shift=八度) · 点击网格定位光标", "percussion": "鼓声部(GM 鼓组)", "quantize": "量化选中", "renamePart": "重命名声部(双击)", "rollHint2": "选择模式:拖拽框选 · Ctrl+A 全选 · Ctrl+D 复制 · 网格下方是力度条", "channel": "通道", "addChannel": "加通道", "removeChannel": "删通道", "clearChannel": "清空通道", "importMidi": "导入上游 MIDI", "notMidi": "上游输入不是 MIDI", "solo": "独奏(静音其它通道)", "muteChannel": "静音通道", "unmuteChannel": "取消静音" };
 const pictorActions = { "capture": "截取", "captureHint": "上传合成图 + 每个可见图层一张", "saveToLibraryHint": "把分层 PSD 存入资产库" };
 const zh = {
+  pentradoActions,
   dialog,
   workflow,
   stage,
@@ -128814,7 +128818,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-BNt4llLu.mjs");
+    const { STLLoader } = await import("./STLLoader-CN7M-22b.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -128822,7 +128826,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-UKBOb4t-.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-eOivrz1o.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -147849,7 +147853,7 @@ class TileAtlas {
     __publicField(this, "scratch", new Uint8Array(SLOT_SIZE * SLOT_SIZE * 4));
     __publicField(this, "generation", 0);
     __publicField(this, "epoch", 0);
-    __publicField(this, "maxAtlases", 24);
+    __publicField(this, "maxAtlases", 8);
     this.gl = gl;
   }
   beginFrame() {
@@ -149653,59 +149657,81 @@ function createSwapClient() {
   var _a2;
   if (typeof Worker === "undefined" || typeof navigator === "undefined") return null;
   if (!("storage" in navigator) || typeof ((_a2 = navigator.storage) == null ? void 0 : _a2.getDirectory) !== "function") return null;
-  let worker;
-  try {
-    worker = new Worker(new URL(
-      /* @vite-ignore */
-      "/assets/swapWorker-D4EXzaxS.js",
-      import.meta.url
-    ), { type: "module" });
-  } catch {
-    return null;
-  }
+  let worker = null;
+  let ready = null;
+  let disposed = false;
   let nextReq = 1;
   const pending = /* @__PURE__ */ new Map();
-  worker.onmessage = (e) => {
-    const { reqId, error: error2 } = e.data;
-    const p2 = pending.get(reqId);
-    if (!p2) return;
-    pending.delete(reqId);
-    if (error2) p2.reject(new Error(error2));
-    else p2.resolve(e.data);
-  };
-  worker.onerror = () => {
-    for (const p2 of pending.values()) p2.reject(new Error("swap worker error"));
-    pending.clear();
-  };
+  function ensureWorker() {
+    if (disposed) return null;
+    if (worker) return worker;
+    try {
+      worker = new Worker(new URL(
+        /* @vite-ignore */
+        "/assets/swapWorker-D4EXzaxS.js",
+        import.meta.url
+      ), { type: "module" });
+    } catch {
+      return null;
+    }
+    worker.onmessage = (e) => {
+      const { reqId, error: error2 } = e.data;
+      const p2 = pending.get(reqId);
+      if (!p2) return;
+      pending.delete(reqId);
+      if (error2) p2.reject(new Error(error2));
+      else p2.resolve(e.data);
+    };
+    worker.onerror = () => {
+      for (const p2 of pending.values()) p2.reject(new Error("swap worker error"));
+      pending.clear();
+    };
+    ready = call({ op: "init" }).then((r) => {
+      if (!r.ok) throw new Error("OPFS unavailable");
+    });
+    ready.catch(() => {
+    });
+    return worker;
+  }
   function call(msg, transfer) {
+    const w = worker;
+    if (!w) return Promise.reject(new Error("swap worker gone"));
     const reqId = nextReq++;
     return new Promise((resolve2, reject) => {
       pending.set(reqId, { resolve: resolve2, reject });
-      worker.postMessage({ ...msg, reqId }, transfer ?? []);
+      w.postMessage({ ...msg, reqId }, transfer ?? []);
     });
   }
-  const ready = call({ op: "init" }).then((r) => {
-    if (!r.ok) throw new Error("OPFS unavailable");
-  });
-  ready.catch(() => {
-  });
   return {
     async write(bytes) {
+      if (!ensureWorker()) throw new Error("swap unavailable");
       await ready;
       const copy2 = bytes.slice();
       const r = await call({ op: "write", bytes: copy2.buffer }, [copy2.buffer]);
       return r.slot;
     },
     async read(slot) {
+      if (!ensureWorker()) throw new Error("swap unavailable");
       await ready;
       const r = await call({ op: "read", slot });
       return new Uint8Array(r.bytes);
     },
     free(slot) {
-      void ready.then(() => worker.postMessage({ op: "free", slot }));
+      if (!worker) return;
+      void (ready == null ? void 0 : ready.then(() => worker == null ? void 0 : worker.postMessage({ op: "free", slot })));
     },
     dispose() {
-      void call({ op: "dispose" }).finally(() => worker.terminate());
+      disposed = true;
+      for (const p2 of pending.values()) p2.reject(new Error("swap disposed"));
+      pending.clear();
+      if (worker) {
+        try {
+          worker.postMessage({ op: "dispose", reqId: -1 });
+        } catch {
+        }
+        worker.terminate();
+        worker = null;
+      }
     }
   };
 }
@@ -163811,7 +163837,8 @@ function useLayerEditorStage(opts) {
       if (stale) return;
       capturedImageUrl.value = url;
       (_a2 = opts == null ? void 0 : opts.onCaptured) == null ? void 0 : _a2.call(opts, url);
-    } catch {
+    } catch (e) {
+      console.error("[pentrado] capture failed:", e);
       toastError2(t2("pentrado.captureFailed"));
     }
   }
@@ -163858,7 +163885,8 @@ function useLayerEditorStage(opts) {
       const json = JSON.stringify({ images });
       storage.commitBatch(json);
       (_b2 = opts == null ? void 0 : opts.onBatchCaptured) == null ? void 0 : _b2.call(opts, json);
-    } catch {
+    } catch (e) {
+      console.error("[pentrado] capture failed:", e);
       toastError2(t2("pentrado.captureFailed"));
     } finally {
       capturing.value = false;
@@ -169887,7 +169915,7 @@ const _sfc_main$25 = /* @__PURE__ */ defineComponent({
     onBeforeUnmount(() => window.removeEventListener("pointerdown", onGlobalPointerDown));
     return (_ctx, _cache2) => {
       return openBlock(), createElementBlock("div", {
-        class: "ctv:relative ctv:flex ctv:shrink-0 ctv:flex-col ctv:gap-1 ctv:min-w-48 ctv:max-w-[55%]",
+        class: "ctv:relative ctv:flex ctv:min-h-0 ctv:shrink-0 ctv:flex-col ctv:gap-1 ctv:min-w-48 ctv:max-w-[55%]",
         style: normalizeStyle({ width: panelWidth.value + "px" }),
         onContextmenu: _cache2[76] || (_cache2[76] = withModifiers(() => {
         }, ["prevent"]))
@@ -171144,15 +171172,21 @@ const pentradoHost = {
   toolbarActions: [
     {
       id: "capture",
-      label: t("pentradoActions.capture"),
-      title: t("pentradoActions.captureHint"),
+      get label() {
+        return t("pentradoActions.capture");
+      },
+      get title() {
+        return t("pentradoActions.captureHint");
+      },
       icon: markRaw(IconCamera),
       busy: (editor) => editor.capturing.value,
       run: (editor) => editor.captureBatch()
     },
     {
       id: "save-to-library",
-      title: t("pentradoActions.saveToLibraryHint"),
+      get title() {
+        return t("pentradoActions.saveToLibraryHint");
+      },
       icon: markRaw(IconLibrary),
       busy: (editor) => editor.exportingPsd.value,
       run: (editor) => editor.exportPsdToLibrary()
@@ -171250,7 +171284,7 @@ const _sfc_main$22 = /* @__PURE__ */ defineComponent({
         disabled: !fullscreen2.value
       }, [
         createBaseVNode("div", {
-          class: normalizeClass(["ctv:flex ctv:flex-col ctv:gap-1 ctv:text-xs ctv:text-base-foreground ctv:outline-none", fullscreen2.value ? "ctv:fixed ctv:inset-0 ctv:z-[1400] ctv:bg-base-background ctv:p-2" : "ctv:size-full"]),
+          class: normalizeClass(["ctv:flex ctv:flex-col ctv:gap-1 ctv:text-xs ctv:text-base-foreground ctv:outline-none", fullscreen2.value ? "comfytv-fs ctv:fixed ctv:inset-0 ctv:z-[1400] ctv:bg-base-background ctv:p-2" : "ctv:size-full ctv:min-h-0"]),
           tabindex: "0",
           onPointerdown: _cache2[0] || (_cache2[0] = withModifiers(() => {
           }, ["stop"])),
@@ -201083,6 +201117,7 @@ const RICH_STAGE_CARDS = {
   "ComfyTV.FXChainStage": _sfc_main$y
 };
 const FLEX_FILL_STAGES = /* @__PURE__ */ new Set([
+  "ComfyTV.LayerEditorStage",
   "ComfyTV.ScoreEditorStage",
   "ComfyTV.MidiEditorStage",
   "ComfyTV.ScoreStage",
@@ -203531,6 +203566,7 @@ let mountKeySeq = 0;
   hostApp.mount(host);
 })();
 const GENERIC_STAGE_MIN_HEIGHT = 380;
+const SEEDED_HEIGHT_STAGES = /* @__PURE__ */ new Set(["ComfyTV.LayerEditorStage"]);
 const TEXT_PREVIEW_WIDGET_NAME = "$$node-text-preview";
 const TEXT_PREVIEW_MAX_HEIGHT = 120;
 function capTextPreviewWidget(w) {
@@ -203570,7 +203606,17 @@ function mountStage(node, kind, variant = "generator") {
     Object.assign(container.style, {
       display: "flex",
       flexDirection: "column",
-      alignItems: "stretch"
+      alignItems: "stretch",
+      minHeight: "0",
+      overflow: "hidden"
+    });
+  }
+  if (SEEDED_HEIGHT_STAGES.has(node.comfyClass)) {
+    Object.assign(container.style, {
+      flex: "none",
+      height: `${floor2}px`,
+      resize: "vertical",
+      overflow: "hidden"
     });
   }
   node.addDOMWidget("comfytv_stage", "stage", container, {
@@ -203880,4 +203926,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-ds0Jf1mW.mjs.map
+//# sourceMappingURL=main-D_sR4-_O.mjs.map
