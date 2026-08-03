@@ -631,6 +631,93 @@ class TestApplyPrunes:
         pruned = lc._apply_prunes({}, cfg, self._ctx())
         assert pruned == set()
 
+    def _h3_workflow(self):
+        return {
+            "load2": {"class_type": "LoadImage", "inputs": {}},
+            "scale2": {"class_type": "ImageScale", "inputs": {"image": ["load2", 0]}},
+            "clip": {"class_type": "CLIPLoader", "inputs": {}},
+            "h3": {"class_type": "MiniMaxH3ReferenceToVideo", "inputs": {
+                "clip": ["clip", 0],
+                "ref_images.ref_image_0": ["clip", 0],
+                "ref_images.ref_image_1": ["scale2", 0],
+            }},
+            "save": {"class_type": "SaveVideo", "inputs": {"video": ["h3", 0]}},
+        }
+
+    def test_drop_upstream_of_gcs_exclusive_chain(self, comfy_nodes):
+        class _Save:
+            OUTPUT_NODE = True
+        comfy_nodes.NODE_CLASS_MAPPINGS["SaveVideo"] = _Save
+        wf = self._h3_workflow()
+        cfg = {"prune_when_missing": [{
+            "when": "upstream_image:value[1]",
+            "drop_upstream_of": [{"node": "h3", "input": "ref_images.ref_image_1"}],
+        }]}
+        pruned = lc._apply_prunes(wf, cfg, self._ctx())
+        assert pruned == {"load2", "scale2"}
+        assert "ref_images.ref_image_1" not in wf["h3"]["inputs"]
+        assert set(wf) == {"clip", "h3", "save"}
+
+    def test_drop_upstream_of_not_triggered_when_present(self, comfy_nodes):
+        class _Save:
+            OUTPUT_NODE = True
+        comfy_nodes.NODE_CLASS_MAPPINGS["SaveVideo"] = _Save
+        wf = self._h3_workflow()
+        cfg = {"prune_when_missing": [{
+            "when": "upstream_image:value[1]",
+            "drop_upstream_of": [{"node": "h3", "input": "ref_images.ref_image_1"}],
+        }]}
+        ctx = self._ctx(upstream={
+            "images": ["/view?filename=a.png", "/view?filename=b.png"],
+            "videos": [], "audio": [], "texts": [],
+        })
+        pruned = lc._apply_prunes(wf, cfg, ctx)
+        assert pruned == set()
+        assert set(wf) == {"load2", "scale2", "clip", "h3", "save"}
+
+    def test_drop_upstream_of_video_with_paired_audio(self, comfy_nodes):
+        class _Save:
+            OUTPUT_NODE = True
+        comfy_nodes.NODE_CLASS_MAPPINGS["SaveVideo"] = _Save
+        wf = {
+            "loadvid": {"class_type": "LoadVideo", "inputs": {}},
+            "getaud": {"class_type": "GetVideoComponents", "inputs": {"video": ["loadvid", 0]}},
+            "h3": {"class_type": "MiniMaxH3ReferenceToVideo", "inputs": {
+                "ref_videos.ref_video_0": ["getaud", 0],
+                "ref_video_audios.ref_video_audio_0": ["getaud", 1],
+            }},
+            "save": {"class_type": "SaveVideo", "inputs": {"video": ["h3", 0]}},
+        }
+        cfg = {"prune_when_missing": [{
+            "when": "upstream_video:value[0]",
+            "drop_upstream_of": [
+                {"node": "h3", "input": "ref_videos.ref_video_0"},
+                {"node": "h3", "input": "ref_video_audios.ref_video_audio_0"},
+            ],
+        }]}
+        pruned = lc._apply_prunes(wf, cfg, self._ctx())
+        assert pruned == {"loadvid", "getaud"}
+        assert wf["h3"]["inputs"] == {}
+        assert set(wf) == {"h3", "save"}
+
+    def test_gc_keeps_hinted_result_without_output_class(self, comfy_nodes):
+        wf = {
+            "deadload": {"class_type": "LoadImage", "inputs": {}},
+            "gen": {"class_type": "SomethingCustom", "inputs": {
+                "img": ["deadload", 0],
+            }},
+        }
+        cfg = {
+            "result": {"node": "gen"},
+            "prune_when_missing": [{
+                "when": "upstream_image:value[0]",
+                "drop_upstream_of": [{"node": "gen", "input": "img"}],
+            }],
+        }
+        pruned = lc._apply_prunes(wf, cfg, self._ctx())
+        assert pruned == {"deadload"}
+        assert set(wf) == {"gen"}
+
 
 # ─── _apply_overrides ────────────────────────────────────────────────────────
 

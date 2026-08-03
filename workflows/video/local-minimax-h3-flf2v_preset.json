@@ -1,0 +1,28 @@
+{
+  "_comment": "Shipped preset for MiniMax H3 first/last-frame to video+audio (fl2va). The workflow is ComfyUI's bundled video_minimax_h3_i2v template plus a second outer LoadImage #200 wired into the subgraph's last_frame input (first frame is LoadImage #114). The inner MiniMaxH3ImageToVideo node is composite id 105:104; width/height come from the stage's resolution + aspect via computed:width/height (snap 32), duration_s feeds the inner PrimitiveFloat 105:111, seed the inner RandomNoise 105:15. With one image wired the run is plain i2v (the last-frame branch is pruned); with two it interpolates between them. mention_style=minimax_tags because the keyframes enter the model's presentation as <Picture 1> / <Picture 2>, so @image_N mentions in the prompt expand to those literal tags.",
+
+  "label":       "Local MiniMax H3 FLF2V",
+  "order":       32,
+  "description": "MiniMax H3 first/last-frame to video+audio. Wire ONE image for image-to-video, or TWO (first frame, last frame) and the model fills in the motion between them. The prompt guides motion, camera and the soundtrack; refer to the frames as @image_N. Generates 5s WITH audio. Requires the MiniMax H3 model files — see workflows/video/README.md.",
+
+  "result": { "type": "ui_save_url", "node": "92" },
+  "meta":   { "mention_style": "minimax_tags" },
+
+  "sizing": { "snap": 32 },
+
+  "inputs": {
+    "114": {"image": {"from": "upstream_image:annotated[0]", "required": true, "error": "MiniMax H3 FLF2V needs at least a first-frame image — wire one into the stage's first image slot."}},
+    "200": {"image": {"from": "upstream_image:annotated[1]"}},
+    "105:104": {
+      "prompt": {"from": "main_prompt", "required": true, "error": "MiniMax H3 needs a prompt."},
+      "width":  {"from": "computed:width",  "cast": "int"},
+      "height": {"from": "computed:height", "cast": "int"}
+    },
+    "105:111": {"value": {"from": "option:duration_s", "cast": "float"}},
+    "105:15": {"noise_seed": {"from": "option:seed", "default": "random_int31", "cast": "int"}}
+  },
+
+  "prune_when_missing": [
+    {"when": "upstream_image:value[1]", "drop_upstream_of": [{"node": "105:104", "input": "last_frame"}]}
+  ]
+}

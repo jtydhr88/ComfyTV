@@ -217,7 +217,7 @@ class VideoStage(io.ComfyNode):
                                  tooltip="Whether the wrapped workflow should generate an audio track alongside video."),
                 _main_prompt_input(tooltip="Primary prompt — the user's intent for this stage. Upstream text inputs are treated as additional context."),
                 io.Autogrow.Input("texts",  template=_text_template(6)),
-                io.Autogrow.Input("images", template=_image_template(8)),
+                io.Autogrow.Input("images", template=_image_template(9)),
                 io.Autogrow.Input("videos", template=_video_template(4)),
 
                 COMFYTV_AUDIO.Input("audio", optional=True),

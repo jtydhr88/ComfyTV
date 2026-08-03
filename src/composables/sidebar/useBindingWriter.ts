@@ -89,6 +89,23 @@ export function useBindingWriter(
     })
   }
 
+  function isUpstreamBound(w: ExposedWidget): boolean {
+    return typeof w.stage_binding === 'string' && w.stage_binding.startsWith('upstream_')
+  }
+
+  async function onRequiredToggle(w: ExposedWidget, required: boolean) {
+    if (!w.stage_binding) return
+    w.required = required
+    await postBinding({
+      node_id:    w.node_id,
+      input_name: w.widget_name,
+      from:       w.stage_binding,
+      default:    w.override_value,
+      cast:       w.cast,
+      required,
+    })
+  }
+
   async function onBindingChange(w: ExposedWidget, newBinding: string) {
     if (newBinding === '__VALUE__') {
       if (w.stage_binding) {
@@ -113,6 +130,7 @@ export function useBindingWriter(
     w.stage_binding  = newBinding
     w.override_value = defaultValue
     w.cast           = cast
+    w.required       = isUpstream
 
     await postBinding({
       node_id:    w.node_id,
@@ -126,6 +144,7 @@ export function useBindingWriter(
 
   return {
     isStageBound,
+    isUpstreamBound,
     dropdownValueFor,
     coerceForWidget,
     effectiveValue,
@@ -134,5 +153,6 @@ export function useBindingWriter(
     inferCast,
     onValueChange,
     onBindingChange,
+    onRequiredToggle,
   }
 }

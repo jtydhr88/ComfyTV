@@ -10,6 +10,7 @@ export interface ExposedWidget {
   stage_binding: string | null
   override_value: string | null
   cast: string | null
+  required?: boolean
 }
 
 export interface GuiNode {
@@ -33,6 +34,7 @@ export interface ConfigPayload {
   gui_nodes?: GuiNode[]
   result_type?: string | null
   result_node?: string | null
+  meta?: Record<string, unknown>
 }
 
 export const AUTO_RESULT_NODE = '__AUTO__'
@@ -242,7 +244,7 @@ export function buildBindingOptions(
   }
   for (const ukind of caps.upstream_kinds) {
     const maxUsed = maxUsedUpstreamIndex(widgets, ukind)
-    const showUpTo = Math.min(7, maxUsed + 1)
+    const showUpTo = Math.min(8, maxUsed + 1)
     const suffix = ukind === 'text' ? 'value' : 'annotated'
     const label  = UPSTREAM_KIND_LABELS[ukind]
     for (let i = 0; i <= showUpTo; i++) {

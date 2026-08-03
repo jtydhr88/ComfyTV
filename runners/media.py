@@ -116,6 +116,8 @@ def trim_video(view_url: str, start_s: float, end_s: float) -> str:
     import av
     if end_s <= start_s:
         raise RuntimeError(f"trim: end_s ({end_s}) must be > start_s ({start_s})")
+    if start_s > 1e-3:
+        return trim_video_precise(view_url, start_s, end_s)
     src = localize(view_url)
     out = fresh_output_path('.mp4')
 

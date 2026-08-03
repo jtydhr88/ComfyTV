@@ -736,6 +736,42 @@ class TestSeedAndCRUD:
     def test_update_meta_missing_workflow(self, reset_db):
         assert wdb.update_workflow_meta(99999, description="x") is False
 
+    def test_update_workflow_meta_json_blob(self, reset_db, tmp_path, monkeypatch):
+        from pathlib import Path
+        wdir = tmp_path / "workflows"
+        self._make_workflow(wdir, "h3ref", "video", preset={})
+        monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
+        wdb.seed_workflows_from_disk(("video",))
+        cfg = wdb.get_workflow_config("video", "h3ref")
+        wid = cfg["id"]
+        assert cfg["meta"] == {}
+
+        assert wdb.update_workflow_meta(wid, meta={"mention_style": "minimax_tags"})
+        cfg2 = wdb.get_workflow_config("video", "h3ref")
+        assert cfg2["meta"] == {"mention_style": "minimax_tags"}
+
+        wdb.set_api_json("video", "h3ref", {"1": {"class_type": "SaveVideo", "inputs": {}}}, 1.0)
+        invoke = wdb.get_workflow_for_invoke("video", "h3ref")
+        assert invoke["meta"] == {"mention_style": "minimax_tags"}
+
+        preset = wdb.build_preset("video", "h3ref")
+        assert preset["meta"] == {"mention_style": "minimax_tags"}
+
+        wdb.update_workflow_meta(wid, meta={})
+        cfg3 = wdb.get_workflow_config("video", "h3ref")
+        assert cfg3["meta"] == {}
+
+    def test_seed_preset_meta(self, reset_db, tmp_path, monkeypatch):
+        from pathlib import Path
+        wdir = tmp_path / "workflows"
+        self._make_workflow(wdir, "h3ref", "video", preset={
+            "meta": {"mention_style": "minimax_tags"},
+        })
+        monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
+        wdb.seed_workflows_from_disk(("video",))
+        cfg = wdb.get_workflow_config("video", "h3ref")
+        assert cfg["meta"] == {"mention_style": "minimax_tags"}
+
     def test_list_workflow_bindings(self, reset_db, tmp_path, monkeypatch):
         from pathlib import Path
         wdir = tmp_path / "workflows"

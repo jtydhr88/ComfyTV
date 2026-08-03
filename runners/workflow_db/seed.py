@@ -275,6 +275,8 @@ def _apply_preset_to_new_row(s, row: db.Workflow, preset: dict) -> None:
         row.sizing_json = json.dumps(preset["sizing"])
     if preset.get("prune_when_missing"):
         row.prune_when_missing_json = json.dumps(preset["prune_when_missing"])
+    if preset.get("meta"):
+        row.meta_json = json.dumps(preset["meta"])
     s.flush()
 
     inputs = preset.get("inputs") or {}
@@ -378,6 +380,7 @@ def reset_workflow_to_preset(workflow_id: int) -> Optional[dict]:
         row.result_node = None
         row.sizing_json = None
         row.prune_when_missing_json = None
+        row.meta_json = None
         s.flush()
 
         _apply_preset_to_new_row(s, row, preset)

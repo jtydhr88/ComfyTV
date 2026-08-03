@@ -20,13 +20,15 @@
         @click="selectItem(i)"
       >
         <span
-          class="ctv:shrink-0 ctv:size-6 ctv:rounded-sm ctv:overflow-hidden ctv:bg-black/30 ctv:border"
+          class="ctv:shrink-0 ctv:size-6 ctv:rounded-sm ctv:overflow-hidden ctv:bg-black/30 ctv:border ctv:flex ctv:items-center ctv:justify-center"
           :style="{ borderColor: item.color }"
         >
           <img v-if="item.url" :src="item.url" class="ctv:block ctv:size-full ctv:object-cover" draggable="false" />
+          <i v-else-if="item.slotType === 'video'" class="pi pi-video ctv:text-2xs" :style="{ color: item.color }" />
+          <i v-else-if="item.slotType === 'audio'" class="pi pi-volume-up ctv:text-2xs" :style="{ color: item.color }" />
         </span>
-        <span class="ctv:font-mono ctv:shrink-0" :style="{ color: item.color }">@{{ $t('mention.imageChip', { n: item.slot }) }}</span>
-        <span class="ctv:ml-auto ctv:text-muted-foreground ctv:whitespace-nowrap">→ {{ $t('mention.imageExpand', { n: item.ordinal }) }}</span>
+        <span class="ctv:font-mono ctv:shrink-0" :style="{ color: item.color }">@{{ $t(`mention.${item.slotType}Chip`, { n: item.slot }) }}</span>
+        <span class="ctv:ml-auto ctv:text-muted-foreground ctv:whitespace-nowrap">→ {{ $t(`mention.${item.slotType}Expand`, { n: item.ordinal }) }}</span>
       </div>
       <div
         v-for="(item, j) in snippetItems"
@@ -138,7 +140,7 @@ function itemTitle(item: MentionSuggestionItem): string {
   if (item.type === 'imageSlot') {
     return t('mention.imageItemTitle', {
       n: item.slot,
-      text: t('mention.imageExpand', { n: item.ordinal }),
+      text: t(`mention.${item.slotType}Expand`, { n: item.ordinal }),
     })
   }
   return item.module.body

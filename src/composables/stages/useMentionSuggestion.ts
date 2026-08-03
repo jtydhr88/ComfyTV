@@ -4,8 +4,10 @@ import { type Component, type Ref } from 'vue'
 
 import {
   imageSendOrder,
-  imageSlotLabel,
+  mentionSendOrderOf,
+  mentionSlotLabel,
   slotColor,
+  type MentionSlotType,
 } from '@/composables/stages/imageSlotMentions'
 import { readImageRefs } from '@/composables/stages/imageRefs'
 import { modulesForSurface } from '@/composables/stages/promptModules/catalog'
@@ -18,7 +20,7 @@ import { useStageStore } from '@/stores/stageStore'
 
 export type MentionSuggestionItem =
   | { type: 'snippet'; module: PromptModule }
-  | { type: 'imageSlot'; slot: number; ordinal: number; url: string | null; color: string }
+  | { type: 'imageSlot'; slotType: MentionSlotType; slot: number; ordinal: number; url: string | null; color: string }
 
 const MAX_ENTRIES = 8
 
@@ -48,17 +50,38 @@ export function useMentionSuggestion(
           : inputs.find(inp => inp.slot === `images.image${slot}`)?.content ?? null
         return {
           type: 'imageSlot' as const,
+          slotType: 'image' as const,
           slot,
           ordinal: i + 1,
           url,
           color: slotColor(slot),
         }
       })
-      .filter((item) => {
-        if (!q) return true
-        const chip = t('mention.imageChip', { n: item.slot }).toLowerCase()
-        return imageSlotLabel(item.slot).includes(q) || chip.includes(q)
-      })
+      .filter(item => slotItemMatches(item, q))
+  }
+
+  function mediaSlotItems(slotType: 'video' | 'audio', q: string): MentionSuggestionItem[] {
+    const node = getNode()
+    if (!node) return []
+    return mentionSendOrderOf(node, slotType)
+      .map((slot, i) => ({
+        type: 'imageSlot' as const,
+        slotType,
+        slot,
+        ordinal: i + 1,
+        url: null,
+        color: slotColor(slot),
+      }))
+      .filter(item => slotItemMatches(item, q))
+  }
+
+  function slotItemMatches(
+    item: Extract<MentionSuggestionItem, { type: 'imageSlot' }>,
+    q: string,
+  ): boolean {
+    if (!q) return true
+    const chip = t(`mention.${item.slotType}Chip`, { n: item.slot }).toLowerCase()
+    return mentionSlotLabel(item.slotType, item.slot).includes(q) || chip.includes(q)
   }
 
   return {
@@ -71,6 +94,8 @@ export function useMentionSuggestion(
 
       return [
         ...imageSlotItems(q),
+        ...mediaSlotItems('video', q),
+        ...mediaSlotItems('audio', q),
         ...mods.slice(0, MAX_ENTRIES).map(module => ({ type: 'snippet' as const, module })),
       ]
     },

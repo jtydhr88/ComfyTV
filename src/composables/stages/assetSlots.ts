@@ -72,6 +72,30 @@ export function fetchImageSlotOptionsCached(
   return hit
 }
 
+const _workflowMetaCache = new Map<string, Promise<Record<string, unknown>>>()
+
+export function fetchWorkflowMetaCached(
+  kind: string,
+  label: string,
+): Promise<Record<string, unknown>> {
+  const version = useSelectionStore().bindingsVersion
+  const key = `${kind}::${label}::v${version}`
+  let hit = _workflowMetaCache.get(key)
+  if (!hit) {
+    _workflowMetaCache.clear()
+    hit = apiFetch(
+      `/comfytv/workflows/config?kind=${encodeURIComponent(kind)}&label=${encodeURIComponent(label)}`,
+      WorkflowConfigSchema,
+    ).then(config => (config.meta ?? {}) as Record<string, unknown>)
+      .catch((e) => {
+        _workflowMetaCache.delete(key)
+        throw e
+      })
+    _workflowMetaCache.set(key, hit)
+  }
+  return hit
+}
+
 
 export const AUTOGROW_IMAGE_KEY_RE = /^images\.image(\d+)$/
 

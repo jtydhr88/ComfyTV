@@ -67,6 +67,12 @@ def build_preset(kind: str, label: str) -> Optional[dict]:
                 if prune: out["prune_when_missing"] = prune
             except json.JSONDecodeError:
                 pass
+        if row.meta_json:
+            try:
+                meta = json.loads(row.meta_json)
+                if meta: out["meta"] = meta
+            except json.JSONDecodeError:
+                pass
         if bindings:
             out["inputs"] = _bindings_to_inputs_dict(list(bindings))
         return out
@@ -106,6 +112,7 @@ def get_workflow_for_invoke(kind: str, label: str) -> Optional[dict]:
             "prune_when_missing":
                 json.loads(row.prune_when_missing_json)
                 if row.prune_when_missing_json else [],
+            "meta": json.loads(row.meta_json) if row.meta_json else {},
         }
 
 
@@ -260,6 +267,7 @@ def _exposed_widgets(workflow_id: int, file_path: str,
                 "stage_binding": binding.from_ if binding else None,
                 "override_value": binding.default_value if binding else None,
                 "cast":           binding.cast_ if binding else None,
+                "required":       bool(binding.required) if binding else False,
             })
     return out
 
@@ -386,6 +394,7 @@ def get_workflow_config(kind: str, label: str) -> Optional[dict]:
             "prune_when_missing":
                 json.loads(row.prune_when_missing_json)
                 if row.prune_when_missing_json else [],
+            "meta":        json.loads(row.meta_json) if row.meta_json else {},
             "bindings": [
                 {
                     "node_id":    b.node_id,

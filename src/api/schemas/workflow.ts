@@ -104,6 +104,7 @@ export const ExposedWidgetSchema = z.object({
   stage_binding: z.string().nullable(),
   override_value: z.string().nullable(),
   cast: z.string().nullable(),
+  required: z.boolean().optional(),
 })
 export const GuiNodeSchema = z.object({
   id: z.string(),
@@ -125,6 +126,7 @@ export const WorkflowConfigSchema = z.object({
   gui_nodes: z.array(GuiNodeSchema).optional(),
   result_type: z.string().nullable().optional(),
   result_node: z.string().nullable().optional(),
+  meta: z.record(z.string(), z.unknown()).optional(),
 }).passthrough()
 export type WorkflowConfig = z.infer<typeof WorkflowConfigSchema>
 const WorkflowUsageEntrySchema = z.object({

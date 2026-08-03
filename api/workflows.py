@@ -267,6 +267,7 @@ async def workflow_update_meta(request: web.Request) -> web.Response:
     if "result_node" in body:        kwargs["result_node"]        = body["result_node"]
     if "sizing" in body:             kwargs["sizing"]             = body["sizing"]
     if "prune_when_missing" in body: kwargs["prune_when_missing"] = body["prune_when_missing"]
+    if "meta" in body:               kwargs["meta"]               = body["meta"]
 
     ok = workflow_db.update_workflow_meta(wid, **kwargs)
     if not ok:

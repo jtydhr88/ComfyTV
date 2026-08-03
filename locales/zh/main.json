@@ -363,11 +363,19 @@
       "file": "保存的文件 (图片 / 视频 / 音频)",
       "batch": "保存的图片批次"
     },
+    "bindingRequired": "必填",
+    "mentionStyle": {
+      "label": "引用",
+      "natural": "自然文本（图1）",
+      "minimaxTags": "<Picture n> 标签（MiniMax H3）",
+      "hint": "提示词里的图片提及在本工作流的模型下如何展开。"
+    },
     "section": {
       "widgets": "Widget 列表",
       "notes": "工作流笔记",
       "description": "说明",
-      "result": "结果输出"
+      "result": "结果输出",
+      "properties": "工作流属性"
     },
     "linkedSource": "链接自 ComfyUI",
     "linkedSourceHint": "该工作流位于 ComfyUI 自带库中。在那里编辑并保存，修改会自动同步。",
@@ -1350,11 +1358,15 @@
     "noEntries": "还没有条目 — 输入标签即可新建",
     "contentPlaceholder": "此 {'@'} 标记展开后的内容。(角色等其他类型请用 ComfyTV 按钮 → 条目对话框。)",
     "save": "保存 (Ctrl+Enter)",
-    "imageSlots": "已连接的图片",
+    "imageSlots": "已连接的输入",
     "imageChip": "图片#{n}",
     "imageExpand": "图{n}",
+    "videoChip": "视频#{n}",
+    "videoExpand": "视频{n}",
+    "audioChip": "音频#{n}",
+    "audioExpand": "音频{n}",
     "imageItemTitle": "槽位 #{n} —— 运行时展开为「{text}」(按实际发送顺序)",
-    "imageTooltipMissing": "槽位 #{n} 当前没有图片 —— 运行时此标记会被移除"
+    "imageTooltipMissing": "槽位 #{n} 当前为空 —— 运行时此标记会被移除"
   },
   "entries": {
     "title": "条目",

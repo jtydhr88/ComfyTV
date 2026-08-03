@@ -371,6 +371,20 @@ class TestTrimVideoPrecise:
             media.trim_video_precise(clip, 1.0, 1.0)
 
 
+class TestTrimVideoInPoint:
+    def test_nonzero_start_is_honored(self, clip):
+        from ComfyTV.runners import media
+        url = media.trim_video(clip, 0.2, 0.5)
+        info = media.get_video_info(url)
+        assert abs(info['duration'] - 0.3) <= (1.0 / 12.0) + 1e-6
+
+    def test_zero_start_keeps_copy_path(self, clip):
+        from ComfyTV.runners import media
+        url = media.trim_video(clip, 0.0, 0.5)
+        info = media.get_video_info(url)
+        assert abs(info['duration'] - 0.5) <= (2.0 / 12.0) + 1e-6
+
+
 class TestSceneSegments:
     def test_bounds_and_end(self):
         from ComfyTV.nodes.stages.video_analysis import _scene_segments

@@ -52,12 +52,16 @@ import {
 import {
   injectImageRefs,
   nodeAcceptsAutogrowImages,
+  fetchWorkflowMetaCached,
+  workflowRefOfNode,
   type ResolvedImageRef,
 } from '@/composables/stages/assetSlots'
 import { readImageRefs } from '@/composables/stages/imageRefs'
 import {
-  expandImageTokens,
-  imageSendOrder,
+  expandMentionTokens,
+  mentionOrdinalText,
+  mentionSendOrders,
+  normalizeMentionStyle,
 } from '@/composables/stages/imageSlotMentions'
 import { extractRunError } from '@/utils/runError'
 import { postPickedIndex } from '@/composables/stages/stageApi'
@@ -399,13 +403,25 @@ export function useStageNode(
         if (typeof mp === 'string' && mp.includes('@')) {
           const graphNode = a.graph?.getNodeById?.(Number(nid))
                          ?? a.graph?.getNodeById?.(String(nid))
-          const { text, missing } = expandImageTokens(
+          let mentionStyle = normalizeMentionStyle(undefined)
+          const wfRef = workflowRefOfNode(graphNode)
+          if (wfRef) {
+            try {
+              const meta = await fetchWorkflowMetaCached(wfRef.kind, wfRef.label)
+              mentionStyle = normalizeMentionStyle(meta.mention_style)
+            } catch {}
+          }
+          const { text, missing } = expandMentionTokens(
             mp,
-            imageSendOrder(graphNode),
-            n => t('mention.imageExpand', { n }),
+            mentionSendOrders(graphNode),
+            {
+              image: mentionOrdinalText(mentionStyle, n => t('mention.imageExpand', { n }), 'image'),
+              video: mentionOrdinalText(mentionStyle, n => t('mention.videoExpand', { n }), 'video'),
+              audio: mentionOrdinalText(mentionStyle, n => t('mention.audioExpand', { n }), 'audio'),
+            },
           )
-          for (const s of missing) {
-            console.warn(`[ComfyTV/stage] node #${nid}: @image_${s} references an empty slot — dropped from prompt`)
+          for (const m of missing) {
+            console.warn(`[ComfyTV/stage] node #${nid}: @${m.type}_${m.slot} references an empty slot — dropped from prompt`)
           }
           obj.main_prompt = entries.expand(pid, text)
         }

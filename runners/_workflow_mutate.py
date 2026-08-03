@@ -77,8 +77,34 @@ def _auto_detect_result(workflow: dict, ctx_kind: str | None = None) -> dict:
     )
 
 
+def _gc_unreachable(workflow: dict, config: dict) -> set[str]:
+    import nodes as comfy_nodes
+    hinted = str((config.get("result") or {}).get("node") or "")
+    stack = []
+    for nid, node in workflow.items():
+        if not isinstance(node, dict):
+            continue
+        cls = comfy_nodes.NODE_CLASS_MAPPINGS.get(node.get("class_type"))
+        if nid == hinted or (cls is not None and getattr(cls, "OUTPUT_NODE", False)):
+            stack.append(nid)
+    keep: set[str] = set()
+    while stack:
+        nid = stack.pop()
+        if nid in keep:
+            continue
+        keep.add(nid)
+        for v in (workflow.get(nid, {}).get("inputs") or {}).values():
+            if isinstance(v, list) and len(v) == 2 and str(v[0]) in workflow:
+                stack.append(str(v[0]))
+    dead = set(workflow) - keep
+    for nid in dead:
+        workflow.pop(nid, None)
+    return dead
+
+
 def _apply_prunes(workflow: dict, config: dict, ctx: RunnerContext) -> set[str]:
     pruned: set[str] = set()
+    gc_needed = False
     rules = config.get("prune_when_missing") or []
     for rule in rules:
         when = str(rule.get("when") or "")
@@ -98,11 +124,15 @@ def _apply_prunes(workflow: dict, config: dict, ctx: RunnerContext) -> set[str]:
             if nid in workflow:
                 workflow.pop(nid)
                 pruned.add(nid)
-        for target in rule.get("drop_inputs") or []:
+        for target in (rule.get("drop_inputs") or []) + (rule.get("drop_upstream_of") or []):
             node = workflow.get(target.get("node"))
             if node is None:
                 continue
             node.get("inputs", {}).pop(target.get("input"), None)
+        if rule.get("drop_upstream_of"):
+            gc_needed = True
+    if gc_needed:
+        pruned |= _gc_unreachable(workflow, config)
     return pruned
 
 

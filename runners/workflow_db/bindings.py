@@ -196,6 +196,7 @@ def update_workflow_meta(
     result_node: Any = _SENTINEL,
     sizing: Any = _SENTINEL,
     prune_when_missing: Any = _SENTINEL,
+    meta: Any = _SENTINEL,
 ) -> bool:
     db.init()
     with db.get_session() as s:
@@ -211,6 +212,8 @@ def update_workflow_meta(
             row.prune_when_missing_json = (
                 json.dumps(prune_when_missing) if prune_when_missing else None
             )
+        if meta is not _SENTINEL:
+            row.meta_json = json.dumps(meta) if meta else None
         s.commit()
     return True
 

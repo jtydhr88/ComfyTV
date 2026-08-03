@@ -68,6 +68,7 @@ class Workflow(Base):
     result_node:  Mapped[Optional[str]] = mapped_column(String, nullable=True)
     sizing_json:                 Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     prune_when_missing_json:     Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    meta_json:                   Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     created_at:   Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
     updated_at:   Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
 
@@ -353,6 +354,12 @@ def _migrate_additive_columns(engine) -> None:
                     "NOT NULL DEFAULT 0"
                 ))
             logging.info("[ComfyTV] migrated: comfytv_workflows + is_default")
+        if "meta_json" not in wf_cols:
+            with engine.begin() as conn:
+                conn.execute(text(
+                    "ALTER TABLE comfytv_workflows ADD COLUMN meta_json TEXT"
+                ))
+            logging.info("[ComfyTV] migrated: comfytv_workflows + meta_json")
     except Exception as e:
         logging.warning("[ComfyTV] additive migration failed: %s", e)
 

@@ -1,6 +1,6 @@
 import { computed, ref, watch } from 'vue'
 
-import { imageSlotLabel } from '@/composables/stages/imageSlotMentions'
+import { mentionSlotLabel } from '@/composables/stages/imageSlotMentions'
 import type { MentionSuggestionItem } from '@/composables/stages/useMentionSuggestion'
 import { useListKeyboardNav } from '@/composables/useListKeyboardNav'
 import { useEntryStore } from '@/stores/entryStore'
@@ -14,7 +14,7 @@ export interface MentionCommandAttrs {
 }
 
 export function mentionItemKey(item: MentionSuggestionItem): string {
-  return item.type === 'imageSlot' ? imageSlotLabel(item.slot) : item.module.id
+  return item.type === 'imageSlot' ? mentionSlotLabel(item.slotType, item.slot) : item.module.id
 }
 
 export interface MentionListOptions {
@@ -89,7 +89,7 @@ export function useMentionList(opts: MentionListOptions) {
       const item = ordered[index]
       if (!item) return
       if (item.type === 'imageSlot') {
-        const label = imageSlotLabel(item.slot)
+        const label = mentionSlotLabel(item.slotType, item.slot)
         opts.command({ id: label, label, mentionType: 'imageSlot' })
         return
       }

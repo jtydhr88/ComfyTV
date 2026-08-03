@@ -1,0 +1,53 @@
+{
+  "_comment": "Shipped preset for MiniMax H3 reference-to-video+audio (r2v). The workflow is ComfyUI's bundled video_minimax_h3_r2v template extended to the model's full reference capacity: 9 reference-image branches (LoadImage 137/139/201..207 -> ref_images.ref_image_0..8 on MiniMaxH3ReferenceToVideo #136) and 2 reference-video branches with paired soundtracks (LoadVideo 301/303 -> GetVideoComponents 302/304 -> ref_videos.ref_video_k + ref_video_audios.ref_video_audio_k). The stage prompt reaches #136 via PrimitiveStringMultiline #138; width/height come from the stage's resolution + aspect via computed:width/height (snap 32); duration_s feeds PrimitiveFloat #132 and ComfyMathExpression #131 snaps frames onto the 17k+5 grid. Unused reference branches are pruned at run time via drop_upstream_of, so exactly as many references are sent as are wired. mention_style=minimax_tags makes @image_N / @video_N / @audio_N in the stage prompt expand to the literal <Picture n> / <Video n> / <Audio n> tags the model was trained on.",
+
+  "label":       "Local MiniMax H3 R2V",
+  "order":       30,
+  "description": "MiniMax H3 reference-to-video+audio. Wire up to 9 reference images and up to 2 reference videos (their soundtracks ride along) into the stage; mention them in the prompt as @image_N / @video_N / @audio_N. Generates 5s of 1344x768 video WITH audio. Keep reference videos short (2-5s) — their tokens ride through every sampling step. Requires the MiniMax H3 model files — see workflows/video/README.md.",
+
+  "result": { "type": "ui_save_url", "node": "92" },
+  "meta":   { "mention_style": "minimax_tags" },
+
+  "sizing": { "snap": 32 },
+
+  "inputs": {
+    "136": {
+      "width":  {"from": "computed:width",  "cast": "int"},
+      "height": {"from": "computed:height", "cast": "int"}
+    },
+    "132": {"value": {"from": "option:duration_s", "cast": "float"}},
+    "129": {"noise_seed": {"from": "option:seed", "default": "random_int31", "cast": "int"}},
+    "138": {"value": {"from": "main_prompt", "required": true, "error": "MiniMax H3 needs a prompt."}},
+    "137": {"image": {"from": "upstream_image:annotated[0]"}},
+    "139": {"image": {"from": "upstream_image:annotated[1]"}},
+    "201": {"image": {"from": "upstream_image:annotated[2]"}},
+    "202": {"image": {"from": "upstream_image:annotated[3]"}},
+    "203": {"image": {"from": "upstream_image:annotated[4]"}},
+    "204": {"image": {"from": "upstream_image:annotated[5]"}},
+    "205": {"image": {"from": "upstream_image:annotated[6]"}},
+    "206": {"image": {"from": "upstream_image:annotated[7]"}},
+    "207": {"image": {"from": "upstream_image:annotated[8]"}},
+    "301": {"file": {"from": "upstream_video:annotated[0]"}},
+    "303": {"file": {"from": "upstream_video:annotated[1]"}}
+  },
+
+  "prune_when_missing": [
+    {"when": "upstream_image:value[0]", "drop_upstream_of": [{"node": "136", "input": "ref_images.ref_image_0"}]},
+    {"when": "upstream_image:value[1]", "drop_upstream_of": [{"node": "136", "input": "ref_images.ref_image_1"}]},
+    {"when": "upstream_image:value[2]", "drop_upstream_of": [{"node": "136", "input": "ref_images.ref_image_2"}]},
+    {"when": "upstream_image:value[3]", "drop_upstream_of": [{"node": "136", "input": "ref_images.ref_image_3"}]},
+    {"when": "upstream_image:value[4]", "drop_upstream_of": [{"node": "136", "input": "ref_images.ref_image_4"}]},
+    {"when": "upstream_image:value[5]", "drop_upstream_of": [{"node": "136", "input": "ref_images.ref_image_5"}]},
+    {"when": "upstream_image:value[6]", "drop_upstream_of": [{"node": "136", "input": "ref_images.ref_image_6"}]},
+    {"when": "upstream_image:value[7]", "drop_upstream_of": [{"node": "136", "input": "ref_images.ref_image_7"}]},
+    {"when": "upstream_image:value[8]", "drop_upstream_of": [{"node": "136", "input": "ref_images.ref_image_8"}]},
+    {"when": "upstream_video:value[0]", "drop_upstream_of": [
+      {"node": "136", "input": "ref_videos.ref_video_0"},
+      {"node": "136", "input": "ref_video_audios.ref_video_audio_0"}
+    ]},
+    {"when": "upstream_video:value[1]", "drop_upstream_of": [
+      {"node": "136", "input": "ref_videos.ref_video_1"},
+      {"node": "136", "input": "ref_video_audios.ref_video_audio_1"}
+    ]}
+  ]
+}

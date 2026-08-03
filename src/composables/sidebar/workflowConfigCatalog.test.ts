@@ -98,7 +98,7 @@ describe('buildBindingOptions', () => {
     expect(idxs).toEqual(['0', '1', '2', '3', '4'])
   })
 
-  it('caps upstream indices at 7 regardless of how high stage_binding goes', () => {
+  it('caps upstream indices at 8 regardless of how high stage_binding goes', () => {
     const widgets = [widget({ stage_binding: 'upstream_image:annotated[42]' })]
     const opts = buildBindingOptions(widgets, 'image')
     const max = Math.max(
@@ -106,7 +106,7 @@ describe('buildBindingOptions', () => {
         .map(o => Number(o.value.match(/^upstream_image:annotated\[(\d+)\]$/)?.[1]))
         .filter(n => !Number.isNaN(n)),
     )
-    expect(max).toBe(7)
+    expect(max).toBe(8)
   })
 
   it('offers the masked-image source only for mask_data-capable kinds', () => {

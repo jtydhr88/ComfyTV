@@ -10,8 +10,8 @@ import { computed, onBeforeUnmount, onMounted, ref, watch, type Component } from
 import { useI18n } from 'vue-i18n'
 
 import {
-  imageSendOrder,
-  imageSlotFromLabel,
+  mentionSendOrderOf,
+  mentionSlotFromLabel,
   slotColor,
 } from '@/composables/stages/imageSlotMentions'
 import { useMentionSuggestion } from '@/composables/stages/useMentionSuggestion'
@@ -60,14 +60,14 @@ export function entryTooltipText(
   entries: EntryLike[],
   t: (key: string, args?: Record<string, unknown>) => string,
 ): string {
-  const slot = imageSlotFromLabel(label)
-  if (slot != null) {
-    const order = imageSendOrder(node)
-    const pos = order.indexOf(slot)
-    if (pos < 0) return t('mention.imageTooltipMissing', { n: slot })
+  const parsed = mentionSlotFromLabel(label)
+  if (parsed != null) {
+    const order = mentionSendOrderOf(node, parsed.type)
+    const pos = order.indexOf(parsed.slot)
+    if (pos < 0) return t('mention.imageTooltipMissing', { n: parsed.slot })
     return t('mention.imageItemTitle', {
-      n: slot,
-      text: t('mention.imageExpand', { n: pos + 1 }),
+      n: parsed.slot,
+      text: t(`mention.${parsed.type}Expand`, { n: pos + 1 }),
     })
   }
   const matches = entries.filter(e => e.label === label)
@@ -116,16 +116,16 @@ export function useMainPromptInput(
       Mention.configure({
         renderText: ({ node }) => `@${node.attrs.label}`,
         renderHTML: ({ node }: any) => {
-          const slot = imageSlotFromLabel(String(node.attrs.label ?? ''))
-          if (slot != null) {
-            const color = slotColor(slot)
+          const parsed = mentionSlotFromLabel(String(node.attrs.label ?? ''))
+          if (parsed != null) {
+            const color = slotColor(parsed.slot)
             return ['span', {
               class: IMAGE_CHIP_CLASS,
               style: `color:${color};border-color:${color}A6;background-color:${color}2E`,
               'data-mention-id': String(node.attrs.id),
               'data-mention-label': node.attrs.label,
               'data-mention-type': 'imageSlot',
-            }, `@${t('mention.imageChip', { n: slot })}`]
+            }, `@${t(`mention.${parsed.type}Chip`, { n: parsed.slot })}`]
           }
           return ['span', {
             class: ENTRY_CHIP_CLASS,

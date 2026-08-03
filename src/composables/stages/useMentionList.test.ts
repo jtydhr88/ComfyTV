@@ -13,7 +13,10 @@ import type { MentionSuggestionItem } from '@/composables/stages/useMentionSugge
 import { mentionItemKey, useMentionList } from './useMentionList'
 
 const IMG: MentionSuggestionItem = {
-  type: 'imageSlot', slot: 2, ordinal: 1, url: null, color: '#fff',
+  type: 'imageSlot', slotType: 'image', slot: 2, ordinal: 1, url: null, color: '#fff',
+}
+const VID: MentionSuggestionItem = {
+  type: 'imageSlot', slotType: 'video', slot: 0, ordinal: 1, url: null, color: '#fff',
 }
 const SNIP: MentionSuggestionItem = {
   type: 'snippet',
@@ -45,6 +48,7 @@ beforeEach(() => {
 describe('mentionItemKey', () => {
   it('keys image slots by label and snippets by module id', () => {
     expect(mentionItemKey(IMG)).toBe('image_2')
+    expect(mentionItemKey(VID)).toBe('video_0')
     expect(mentionItemKey(SNIP)).toBe('mod-1')
   })
 })
@@ -71,6 +75,12 @@ describe('useMentionList — selection', () => {
     const { list, command } = setup()
     list.selectItem(0)
     expect(command).toHaveBeenCalledWith({ id: 'image_2', label: 'image_2', mentionType: 'imageSlot' })
+  })
+
+  it('selecting a video slot commands a video_N mention label', () => {
+    const { list, command } = setup([VID, SNIP])
+    list.selectItem(0)
+    expect(command).toHaveBeenCalledWith({ id: 'video_0', label: 'video_0', mentionType: 'imageSlot' })
   })
 
   it('selecting a snippet commands an entry mention by label', () => {

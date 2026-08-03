@@ -28,6 +28,34 @@ describe('useBindingWriter — pure helpers', () => {
     expect(isStageBound(widget({ stage_binding: 'upstream_image:annotated[0]' }))).toBe(true)
   })
 
+  it('isUpstreamBound: only true for upstream_* bindings', () => {
+    const { isUpstreamBound } = setup()
+    expect(isUpstreamBound(widget({ stage_binding: null }))).toBe(false)
+    expect(isUpstreamBound(widget({ stage_binding: 'option:seed' }))).toBe(false)
+    expect(isUpstreamBound(widget({ stage_binding: 'upstream_image:annotated[3]' }))).toBe(true)
+  })
+
+  it('onRequiredToggle re-posts the binding with the new flag, keeping from/default/cast', async () => {
+    const { postBinding, onRequiredToggle } = setup()
+    const w = widget({
+      stage_binding: 'upstream_image:annotated[2]',
+      override_value: null, cast: null, required: true,
+    })
+    await onRequiredToggle(w, false)
+    expect(w.required).toBe(false)
+    expect(postBinding).toHaveBeenCalledWith({
+      node_id: '1', input_name: 'w',
+      from: 'upstream_image:annotated[2]',
+      default: null, cast: null, required: false,
+    })
+  })
+
+  it('onRequiredToggle is a no-op without a binding', async () => {
+    const { postBinding, onRequiredToggle } = setup()
+    await onRequiredToggle(widget(), true)
+    expect(postBinding).not.toHaveBeenCalled()
+  })
+
   it('dropdownValueFor returns __VALUE__ unless a non-literal binding is set', () => {
     const { dropdownValueFor } = setup()
     expect(dropdownValueFor(widget({ stage_binding: null }))).toBe('__VALUE__')

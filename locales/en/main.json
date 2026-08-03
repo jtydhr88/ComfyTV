@@ -363,11 +363,19 @@
       "file": "Saved file (image / video / audio)",
       "batch": "Saved image batch"
     },
+    "bindingRequired": "Required",
+    "mentionStyle": {
+      "label": "Refs",
+      "natural": "Natural text (image 1)",
+      "minimaxTags": "<Picture n> tags (MiniMax H3)",
+      "hint": "How image mentions in the stage prompt are rendered for this workflow's model."
+    },
     "section": {
       "widgets": "Widgets",
       "notes": "Workflow notes",
       "description": "Description",
-      "result": "Result"
+      "result": "Result",
+      "properties": "Workflow properties"
     },
     "linkedSource": "Linked from ComfyUI",
     "linkedSourceHint": "This workflow lives in ComfyUI's own library. Edit it there and save — changes sync automatically.",
@@ -1350,11 +1358,15 @@
     "noEntries": "No entries yet — type a label to create one",
     "contentPlaceholder": "Content this {'@'}-token expands to. (For characters / other kinds, use the ComfyTV button → Entries dialog.)",
     "save": "Save (Ctrl+Enter)",
-    "imageSlots": "Connected images",
+    "imageSlots": "Connected inputs",
     "imageChip": "image #{n}",
     "imageExpand": "image {n}",
+    "videoChip": "video #{n}",
+    "videoExpand": "video {n}",
+    "audioChip": "audio #{n}",
+    "audioExpand": "audio {n}",
     "imageItemTitle": "Slot #{n} — expands at run to \"{text}\" (by actual send order)",
-    "imageTooltipMissing": "Slot #{n} has no image right now — this token is dropped at run"
+    "imageTooltipMissing": "Slot #{n} is empty right now — this token is dropped at run"
   },
   "entries": {
     "title": "Entries",

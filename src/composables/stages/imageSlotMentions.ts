@@ -1,17 +1,38 @@
 import { AUTOGROW_IMAGE_KEY_RE, wiredImageSlots } from '@/composables/stages/assetSlots'
 import { readImageRefs } from '@/composables/stages/imageRefs'
 
+export type MentionSlotType = 'image' | 'video' | 'audio'
+
 export const IMAGE_SLOT_LABEL_RE = /^image_(\d+)$/
 
 export const IMAGE_SLOT_TOKEN_RE = /@image_(\d+)(?![\p{L}\p{N}_-])/gu
+
+const SLOT_TOKEN_RES: Record<MentionSlotType, RegExp> = {
+  image: IMAGE_SLOT_TOKEN_RE,
+  video: /@video_(\d+)(?![\p{L}\p{N}_-])/gu,
+  audio: /@audio_(\d+)(?![\p{L}\p{N}_-])/gu,
+}
+
+const SLOT_LABEL_RE = /^(image|video|audio)_(\d+)$/
 
 export function imageSlotLabel(slot: number): string {
   return `image_${slot}`
 }
 
+export function mentionSlotLabel(type: MentionSlotType, slot: number): string {
+  return `${type}_${slot}`
+}
+
 export function imageSlotFromLabel(label: string): number | null {
   const m = IMAGE_SLOT_LABEL_RE.exec(label)
   return m ? Number(m[1]) : null
+}
+
+export function mentionSlotFromLabel(
+  label: string,
+): { type: MentionSlotType; slot: number } | null {
+  const m = SLOT_LABEL_RE.exec(label)
+  return m ? { type: m[1] as MentionSlotType, slot: Number(m[2]) } : null
 }
 
 export function imageInputSlotIndex(inputName: string): number | null {
@@ -40,9 +61,96 @@ export function imageSendOrder(node: unknown): number[] {
   return [...slots].sort((a, b) => a - b)
 }
 
+const AUTOGROW_VIDEO_KEY_RE = /^videos\.video(\d+)$/
+
+export function videoSendOrder(node: unknown): number[] {
+  const inputs = (node as { inputs?: Array<{ name?: unknown; link?: unknown }> } | null)?.inputs
+  if (!Array.isArray(inputs)) return []
+  const out: number[] = []
+  for (const i of inputs) {
+    if (typeof i?.name !== 'string') continue
+    const m = AUTOGROW_VIDEO_KEY_RE.exec(i.name)
+    if (m && i.link != null) out.push(Number(m[1]))
+  }
+  return out.sort((a, b) => a - b)
+}
+
+export function audioSendOrder(node: unknown): number[] {
+  const inputs = (node as { inputs?: Array<{ name?: unknown; link?: unknown }> } | null)?.inputs
+  if (!Array.isArray(inputs)) return []
+  return inputs.some(i => i?.name === 'audio' && i.link != null) ? [0] : []
+}
+
+export function mentionSendOrders(node: unknown): MentionOrders {
+  return {
+    image: imageSendOrder(node),
+    video: videoSendOrder(node),
+    audio: audioSendOrder(node),
+  }
+}
+
+export function mentionSendOrderOf(node: unknown, type: MentionSlotType): number[] {
+  if (type === 'image') return imageSendOrder(node)
+  if (type === 'video') return videoSendOrder(node)
+  return audioSendOrder(node)
+}
+
+export type MentionStyle = 'natural' | 'minimax_tags'
+
+export function normalizeMentionStyle(value: unknown): MentionStyle {
+  return value === 'minimax_tags' ? 'minimax_tags' : 'natural'
+}
+
+const MINIMAX_TAGS: Record<MentionSlotType, string> = {
+  image: 'Picture',
+  video: 'Video',
+  audio: 'Audio',
+}
+
+export function mentionOrdinalText(
+  style: MentionStyle,
+  localeText: (ordinal: number) => string,
+  type: MentionSlotType = 'image',
+): (ordinal: number) => string {
+  if (style === 'minimax_tags') return n => `<${MINIMAX_TAGS[type]} ${n}>`
+  return localeText
+}
+
+export interface MentionOrders {
+  image: number[]
+  video: number[]
+  audio: number[]
+}
+
 export interface ExpandedImageTokens {
   text: string
   missing: number[]
+}
+
+export interface ExpandedMentionTokens {
+  text: string
+  missing: Array<{ type: MentionSlotType; slot: number }>
+}
+
+export function expandMentionTokens(
+  text: string,
+  orders: MentionOrders,
+  ordinalTexts: Record<MentionSlotType, (ordinal: number) => string>,
+): ExpandedMentionTokens {
+  const missing: Array<{ type: MentionSlotType; slot: number }> = []
+  let out = text
+  for (const type of Object.keys(SLOT_TOKEN_RES) as MentionSlotType[]) {
+    out = out.replace(SLOT_TOKEN_RES[type], (_m, slotStr: string) => {
+      const slot = Number(slotStr)
+      const pos = orders[type].indexOf(slot)
+      if (pos < 0) {
+        missing.push({ type, slot })
+        return ''
+      }
+      return ordinalTexts[type](pos + 1)
+    })
+  }
+  return { text: out, missing }
 }
 
 export function expandImageTokens(

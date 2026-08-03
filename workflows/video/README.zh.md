@@ -28,6 +28,7 @@
 
 - **Local LTX 2.3 T2V / I2V / FLF2V**(`local-ltx-2.3-{t2v,i2v,flf2v}.json` + `_preset.json`) , LTX-Video 2.3 22B 文本 / 图 / 首末帧生视频(fp8 + Gemma 3 文本编码器 + 4 步 Lightning LoRA + 2× 空间上采样器)。
 - **Local LTX 2.3 IA2V**(`local-ltx-2.3-ia2v.json` + `_preset.json`) , 图 + 音频生视频,接一张源帧到 `images.image0`,音轨到 `audio`;视频时序跟随音频。共用同套 LTX 2.3 模型文件。
+- **Local MiniMax H3 T2V / FLF2V / R2V**(`local-minimax-h3-{t2v,flf2v,r2v}.json` + `_preset.json`) , MiniMax H3 音视频联合生成(出的视频自带音轨)。T2V 纯提示词;FLF2V 接一张图(即 i2v)或两张(首帧/尾帧);R2V 最多接 9 张参考图 + 2 段参考视频(原声随行),提示词里用 `@image_N` / `@video_N` / `@audio_N` 指代,会展开成模型训练用的字面 `<Picture n>` / `<Video n>` / `<Audio n>` 标签。空置的参考分支运行时自动裁剪。模型文件(全在 Hugging Face `Comfy-Org/MiniMax-H3`):`diffusion_models/` 下 `minimax_h3_fl2va_pruned_int8_convrot.safetensors`(T2V/FLF2V)+ `minimax_h3_ref2va_pruned_int8_convrot.safetensors`(R2V),`clip/` 下 `qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors`,`vae/` 下 `minimax_h3_video_vae_fp16.safetensors` + `minimax_h3_audio_vae_fp32.safetensors`。
 
 ## 需要的模型
 

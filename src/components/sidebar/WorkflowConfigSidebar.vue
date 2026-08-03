@@ -186,6 +186,17 @@
                     @update:model-value="onBindingChange(w, $event as string)"
                   />
                 </div>
+                <label v-if="isUpstreamBound(w)"
+                       class="ctv:flex ctv:items-center ctv:gap-1.5 ctv:mt-0.5 ctv:cursor-pointer
+                              ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">
+                  <input
+                    type="checkbox"
+                    :checked="w.required !== false"
+                    class="ctv:m-0 ctv:cursor-pointer"
+                    @change="onRequiredToggle(w, ($event.target as HTMLInputElement).checked)"
+                  />
+                  {{ $t('configSidebar.bindingRequired') }}
+                </label>
               </div>
             </div>
           </div>
@@ -235,6 +246,23 @@
         </div>
       </section>
 
+      <section v-if="config.has_api">
+        <h3 :class="sectionHeading">{{ $t('configSidebar.section.properties') }}</h3>
+        <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:px-1">
+          <div class="ctv:grid ctv:grid-cols-[42px_1fr] ctv:items-center ctv:gap-1.5">
+            <span class="ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground">{{ $t('configSidebar.mentionStyle.label') }}</span>
+            <ComfyTVSelect
+              :model-value="mentionStyleModel"
+              :options="mentionStyleOptions"
+              @update:model-value="onMentionStyleChange($event as string)"
+            />
+          </div>
+          <p class="ctv:m-0 ctv:text-2xs ctv:italic ctv:text-muted-foreground/60">
+            {{ $t('configSidebar.mentionStyle.hint') }}
+          </p>
+        </div>
+      </section>
+
       <section v-if="config.description">
         <h3 :class="sectionHeading">{{ $t('configSidebar.section.description') }}</h3>
         <p class="ctv:m-0 ctv:text-xs ctv:whitespace-pre-wrap ctv:text-muted-foreground">{{ config.description }}</p>
@@ -279,6 +307,7 @@ import {
   useSelectionConfigSync,
 } from '@/composables/sidebar/useConfigSidebar'
 import { useWorkflowConfig } from '@/composables/sidebar/useWorkflowConfig'
+import { normalizeMentionStyle } from '@/composables/stages/imageSlotMentions'
 import { LINK_TYPE_NATIVE } from '@/api'
 import {
   ALL_GROUPS,
@@ -347,13 +376,29 @@ function isNodeCollapsed(nodeId: string): boolean {
 
 const {
   isStageBound,
+  isUpstreamBound,
   dropdownValueFor,
   effectiveValue,
   comboOptions,
   numProp,
   onValueChange,
   onBindingChange,
+  onRequiredToggle,
 } = useBindingWriter(postBinding, deleteBinding)
+
+const mentionStyleModel = computed(() =>
+  normalizeMentionStyle(config.value?.meta?.mention_style),
+)
+const mentionStyleOptions = computed(() => [
+  { value: 'natural', label: t('configSidebar.mentionStyle.natural') },
+  { value: 'minimax_tags', label: t('configSidebar.mentionStyle.minimaxTags') },
+])
+async function onMentionStyleChange(style: string) {
+  const meta = { ...(config.value?.meta ?? {}) }
+  if (normalizeMentionStyle(style) === 'natural') delete meta.mention_style
+  else meta.mention_style = style
+  await postMeta({ meta })
+}
 
 function boundCountFor(node: NodeBlock): number {
   return boundWidgetCount(node, isStageBound)

@@ -28,6 +28,7 @@ To add your own workflow see [docs/custom-workflows.md](../../docs/custom-workfl
 
 - **Local LTX 2.3 T2V / I2V / FLF2V** (`local-ltx-2.3-{t2v,i2v,flf2v}.json` + `_preset.json`) — LTX-Video 2.3 22B text- / image- / first-last-frame-to-video (fp8 + Gemma 3 text encoder + 4-step Lightning LoRA + 2× spatial upscaler).
 - **Local LTX 2.3 IA2V** (`local-ltx-2.3-ia2v.json` + `_preset.json`) — image + audio to video. Wire a source frame to `images.image0` AND an audio track to `audio`; the video's timing follows the audio. Shares the LTX 2.3 model files.
+- **Local MiniMax H3 T2V / FLF2V / R2V** (`local-minimax-h3-{t2v,flf2v,r2v}.json` + `_preset.json`) — MiniMax H3 joint video+**audio** generation. T2V is prompt-only; FLF2V takes one image (i2v) or two (first/last frame); R2V takes up to 9 reference images and 2 reference videos (soundtracks ride along) — mention them in the prompt as `@image_N` / `@video_N` / `@audio_N`, which expand to the literal `<Picture n>` / `<Video n>` / `<Audio n>` tags the model was trained on. Unused reference branches are pruned at run time. Model files (all under `Comfy-Org/MiniMax-H3` on Hugging Face): `minimax_h3_fl2va_pruned_int8_convrot.safetensors` (T2V/FLF2V) + `minimax_h3_ref2va_pruned_int8_convrot.safetensors` (R2V) in `diffusion_models/`, `qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors` in `clip/`, `minimax_h3_video_vae_fp16.safetensors` + `minimax_h3_audio_vae_fp32.safetensors` in `vae/`.
 
 ## Models referenced
 
