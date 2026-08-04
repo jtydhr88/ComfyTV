@@ -68,7 +68,9 @@ function makePlaced(deps: RenderDeps, region: Rect, fxRef: { current: LayerFxDat
     contentStamp: string,
     bitmap: Bitmap,
     transform: Transform,
-    linear = false
+    linear = false,
+    version?: number,
+    dirtyRects?: Rect[] | null
   ): NodeTexture | null => {
     let fxTag = ''
     const fx = fxRef.current
@@ -98,6 +100,8 @@ function makePlaced(deps: RenderDeps, region: Rect, fxRef: { current: LayerFxDat
       quad: transform,
       key: stamp,
       stamp,
+      version: fxTag ? undefined : version,
+      dirtyRects: fxTag ? undefined : (dirtyRects ?? undefined),
     }
   }
 }
@@ -120,9 +124,13 @@ function renderMaskTexture(
   if (override) {
     return renderPreviewTexture(`preview:mask:${node.id}`, override, tf, region, true) ?? undefined
   }
-  const bitmap = deps.content.get(m.contentId)?.canvas
+  const entry = deps.content.get(m.contentId)
+  if (!entry) return undefined
+  const scale = Math.min(tf.w / Math.max(1, entry.width), tf.h / Math.max(1, entry.height))
+  const src = deps.content.renderSource?.(m.contentId, scale)
+  const bitmap = src?.bitmap ?? entry.canvas
   if (!bitmap) return undefined
-  return placed(`mask:${node.id}`, m.contentId, bitmap, tf, true) ?? undefined
+  return placed(`mask:${node.id}`, m.contentId, bitmap, tf, true, src?.version, src?.dirtyRects) ?? undefined
 }
 
 /**

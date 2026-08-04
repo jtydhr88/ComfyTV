@@ -22,6 +22,8 @@ export interface TileGrid {
   cols: number
   rows: number
   tiles: TileData[]
+
+  residency?: number
 }
 
 export interface TileEdit {

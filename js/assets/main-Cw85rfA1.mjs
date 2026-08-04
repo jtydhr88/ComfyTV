@@ -56198,7 +56198,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-B_MUXk-m.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-CXp35V2f.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -128983,7 +128983,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-bHtq-x5m.mjs");
+    const { STLLoader } = await import("./STLLoader-vMhX-OUE.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -128991,7 +128991,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-Dr5g9w1l.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-Bk_0PoXB.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -148556,7 +148556,7 @@ function createWebGLCompositor() {
     const grid = input.tiles.grid;
     const drawZero = input.tiles.drawZero;
     const cached2 = instanceCache.get(grid);
-    if (cached2 && cached2.epoch === atlas.epoch && cached2.drawZero === drawZero) {
+    if (cached2 && cached2.epoch === atlas.epoch && cached2.drawZero === drawZero && cached2.residency === (grid.residency ?? 0)) {
       cached2.gen = generation;
       return cached2;
     }
@@ -148603,7 +148603,7 @@ function createWebGLCompositor() {
     if (!buffer) return null;
     g.bindBuffer(g.ARRAY_BUFFER, buffer);
     g.bufferData(g.ARRAY_BUFFER, data, g.DYNAMIC_DRAW);
-    const entry = { buffer, batches, epoch: atlas.epoch, drawZero, gen: generation };
+    const entry = { buffer, batches, epoch: atlas.epoch, drawZero, gen: generation, residency: grid.residency ?? 0 };
     instanceCache.set(grid, entry);
     return entry;
   }
@@ -149417,11 +149417,22 @@ function getTool(id) {
   return def2;
 }
 const TILE_THRESHOLD_PX = 2048 * 2048;
+const MAX_MIP_LEVEL = 4;
+const MAX_INFLIGHT_READS = 64;
+const MAX_INFLIGHT_WRITES = 64;
 function singleUniform(grid) {
   const first2 = grid.tiles[0];
   if (!first2.uniform) return null;
   for (const t2 of grid.tiles) if (t2 !== first2) return null;
   return first2.uniform;
+}
+function clampedView(bytes) {
+  return new Uint8ClampedArray(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+}
+function tileRect(grid, index) {
+  const x = index % grid.cols * TILE_SIZE;
+  const y = (index / grid.cols | 0) * TILE_SIZE;
+  return { x, y, w: Math.min(TILE_SIZE, grid.width - x), h: Math.min(TILE_SIZE, grid.height - y) };
 }
 class HybridContentStore {
   constructor() {
@@ -149429,19 +149440,48 @@ class HybridContentStore {
     __publicField(this, "pool", /* @__PURE__ */ new Map());
     __publicField(this, "swap", null);
     __publicField(this, "onRestored", null);
+    __publicField(this, "schedule", null);
     __publicField(this, "tileBudget", 512 * 1024 * 1024);
-    __publicField(this, "thumbScratch", null);
+    __publicField(this, "coldMark", 0);
+    __publicField(this, "readQueue", []);
+    __publicField(this, "writeQueue", []);
+    __publicField(this, "inflightReads", 0);
+    __publicField(this, "inflightWrites", 0);
+    __publicField(this, "restoredBatch", /* @__PURE__ */ new Set());
+    __publicField(this, "flushScheduled", false);
+    __publicField(this, "scratch", null);
   }
   configureSwap(opts) {
     this.swap = opts.swap;
     this.onRestored = opts.onRestored ?? null;
+    this.schedule = opts.schedule ?? null;
     if (opts.tileBudgetBytes != null) this.tileBudget = opts.tileBudgetBytes;
+    if (!this.swap) {
+      for (const q of this.readQueue) q.t.swapPending = false;
+      for (const q of this.writeQueue) q.t.swapPending = false;
+      this.readQueue = [];
+      this.writeQueue = [];
+    }
   }
   setTileBudget(bytes) {
     this.tileBudget = bytes;
   }
   hasSwap() {
     return this.swap != null;
+  }
+  makeTiledRecord(id, grid, uploadedUrl, material = null, materialComplete = false) {
+    return {
+      kind: "tiled",
+      grid,
+      material,
+      materialComplete,
+      materialVersion: 1,
+      materialDirty: null,
+      mips: /* @__PURE__ */ new Map(),
+      thumb: null,
+      thumbComplete: false,
+      entry: this.makeTiledEntry(id, grid, uploadedUrl)
+    };
   }
   register(canvas, opts) {
     var _a2;
@@ -149471,13 +149511,7 @@ class HybridContentStore {
       return id;
     }
     const allUniform = singleUniform(grid) != null;
-    const rec = {
-      kind: "tiled",
-      grid,
-      material: allUniform ? null : canvas,
-      thumb: null,
-      entry: this.makeTiledEntry(id, grid, (opts == null ? void 0 : opts.uploadedUrl) ?? null)
-    };
+    const rec = this.makeTiledRecord(id, grid, (opts == null ? void 0 : opts.uploadedUrl) ?? null, allUniform ? null : canvas, !allUniform);
     this.records.set(id, rec);
     return id;
   }
@@ -149501,7 +149535,10 @@ class HybridContentStore {
     if (rec.material) return rec.material;
     const complete = this.ensureResident(rec.grid);
     const canvas = this.buildDense(rec.grid);
-    if (complete) rec.material = canvas;
+    rec.material = canvas;
+    rec.materialComplete = complete;
+    rec.materialVersion += 1;
+    rec.materialDirty = null;
     return canvas;
   }
   buildDense(grid) {
@@ -149528,7 +149565,7 @@ class HybridContentStore {
     const rec = this.records.get(id);
     if (!rec) return null;
     if (rec.kind === "plain") return rec.entry.canvas;
-    if (rec.material) return rec.material;
+    if (rec.material && rec.materialComplete) return rec.material;
     this.ensureResident(rec.grid);
     return this.buildDense(rec.grid);
   }
@@ -149540,24 +149577,138 @@ class HybridContentStore {
       complete = false;
       if (t2.swapId < 0 || t2.swapPending || !this.swap) continue;
       t2.swapPending = true;
-      const slot = t2.swapId;
-      this.swap.read(slot).then((bytes) => {
-        var _a2, _b2, _c;
-        t2.swapPending = false;
-        if (t2.refs <= 0 || t2.bytes) {
-          (_a2 = this.swap) == null ? void 0 : _a2.free(slot);
-          return;
-        }
-        t2.bytes = bytes;
-        t2.gen = nextGen();
-        t2.swapId = -1;
-        (_b2 = this.swap) == null ? void 0 : _b2.free(slot);
-        (_c = this.onRestored) == null ? void 0 : _c.call(this);
-      }).catch(() => {
-        t2.swapPending = false;
-      });
+      this.readQueue.push({ t: t2, slot: t2.swapId });
     }
+    this.pumpIO();
     return complete;
+  }
+  pumpIO() {
+    while (this.swap && this.inflightReads < MAX_INFLIGHT_READS && this.readQueue.length) {
+      this.startRead(this.readQueue.shift());
+    }
+    while (this.swap && this.inflightWrites < MAX_INFLIGHT_WRITES && this.writeQueue.length) {
+      this.startWrite(this.writeQueue.shift());
+    }
+  }
+  startRead(req) {
+    const { t: t2, slot } = req;
+    if (t2.refs <= 0 || t2.bytes || t2.swapId !== slot) {
+      t2.swapPending = false;
+      return;
+    }
+    this.inflightReads += 1;
+    this.swap.read(slot).then((bytes) => {
+      var _a2, _b2;
+      this.inflightReads -= 1;
+      t2.swapPending = false;
+      if (t2.refs <= 0 || t2.bytes) {
+        (_a2 = this.swap) == null ? void 0 : _a2.free(slot);
+        this.pumpIO();
+        return;
+      }
+      t2.bytes = bytes;
+      t2.gen = nextGen();
+      t2.swapId = -1;
+      (_b2 = this.swap) == null ? void 0 : _b2.free(slot);
+      this.restoredBatch.add(t2);
+      this.scheduleFlush();
+      this.pumpIO();
+    }).catch(() => {
+      this.inflightReads -= 1;
+      t2.swapPending = false;
+      this.pumpIO();
+    });
+  }
+  startWrite(req) {
+    const { t: t2, gen } = req;
+    if (t2.refs <= 0 || !t2.bytes || t2.gen !== gen) {
+      t2.swapPending = false;
+      return;
+    }
+    const bytes = t2.bytes;
+    this.inflightWrites += 1;
+    this.swap.write(bytes).then((slot) => {
+      var _a2;
+      this.inflightWrites -= 1;
+      t2.swapPending = false;
+      if (t2.refs <= 0 || t2.bytes !== bytes || t2.gen !== gen) {
+        (_a2 = this.swap) == null ? void 0 : _a2.free(slot);
+        this.pumpIO();
+        return;
+      }
+      t2.swapId = slot;
+      t2.bytes = null;
+      this.pumpIO();
+    }).catch(() => {
+      this.inflightWrites -= 1;
+      t2.swapPending = false;
+      this.pumpIO();
+    });
+  }
+  scheduleFlush() {
+    if (this.flushScheduled) return;
+    this.flushScheduled = true;
+    const run3 = () => {
+      this.flushScheduled = false;
+      this.flushRestored();
+    };
+    if (this.schedule) this.schedule(run3);
+    else if (typeof requestAnimationFrame === "function") requestAnimationFrame(run3);
+    else setTimeout(run3, 16);
+  }
+  flushRestored() {
+    var _a2;
+    const batch2 = this.restoredBatch;
+    this.restoredBatch = /* @__PURE__ */ new Set();
+    if (batch2.size === 0) return;
+    for (const rec of this.records.values()) {
+      if (rec.kind !== "tiled") continue;
+      let touched = null;
+      for (let i = 0; i < rec.grid.tiles.length; i++) {
+        if (batch2.has(rec.grid.tiles[i])) (touched ?? (touched = [])).push(i);
+      }
+      if (!touched) continue;
+      rec.grid.residency = (rec.grid.residency ?? 0) + 1;
+      const rects = touched.map((i) => tileRect(rec.grid, i));
+      if (rec.material) {
+        const g = rec.material.getContext("2d");
+        if (g) {
+          for (const i of touched) {
+            const t2 = rec.grid.tiles[i];
+            if (!t2.bytes) continue;
+            const r = tileRect(rec.grid, i);
+            g.putImageData(new ImageData(clampedView(t2.bytes), TILE_SIZE, TILE_SIZE), r.x, r.y, 0, 0, r.w, r.h);
+          }
+          rec.materialVersion += 1;
+          rec.materialDirty = rects;
+          if (!rec.materialComplete) rec.materialComplete = this.gridComplete(rec.grid);
+        } else {
+          rec.material = null;
+          rec.materialComplete = false;
+        }
+      }
+      for (const [level, mip] of rec.mips) {
+        const scale = 1 / (1 << level);
+        if (this.patchScaled(rec.grid, touched, mip.canvas, scale)) {
+          mip.version += 1;
+          mip.dirty = rects.map((r) => ({
+            x: Math.floor(r.x * scale),
+            y: Math.floor(r.y * scale),
+            w: Math.ceil(r.w * scale) + 1,
+            h: Math.ceil(r.h * scale) + 1
+          }));
+          if (!mip.complete) mip.complete = this.gridComplete(rec.grid);
+        } else {
+          rec.mips.delete(level);
+        }
+      }
+      if (rec.thumb && !rec.thumbComplete) rec.thumb = null;
+    }
+    (_a2 = this.onRestored) == null ? void 0 : _a2.call(this);
+  }
+  gridComplete(grid) {
+    for (const t2 of grid.tiles) if (!t2.bytes && !t2.uniform) return false;
+    return true;
   }
   /**
    * Memory pressure valve, called after history changes: drop dense material
@@ -149570,7 +149721,10 @@ class HybridContentStore {
   trim(pinned, keepMaterial) {
     const keep = keepMaterial ?? pinned;
     for (const [id, rec] of this.records) {
-      if (rec.kind === "tiled" && rec.material && !keep.has(id)) rec.material = null;
+      if (rec.kind === "tiled" && rec.material && !keep.has(id)) {
+        rec.material = null;
+        rec.materialComplete = false;
+      }
     }
     if (!this.swap) return;
     const pinnedTiles = /* @__PURE__ */ new Set();
@@ -149587,9 +149741,10 @@ class HybridContentStore {
         if (!t2.bytes || seen.has(t2)) continue;
         seen.add(t2);
         resident += t2.bytes.byteLength;
-        if (!pinnedTiles.has(t2) && !t2.swapPending) candidates.push(t2);
+        if (!pinnedTiles.has(t2) && !t2.swapPending && t2.gen <= this.coldMark) candidates.push(t2);
       }
     }
+    this.coldMark = nextGen();
     if (resident <= this.tileBudget) return;
     candidates.sort((a2, b) => a2.gen - b.gen);
     let excess = resident - this.tileBudget;
@@ -149600,21 +149755,9 @@ class HybridContentStore {
     }
   }
   swapOut(t2) {
-    const bytes = t2.bytes;
-    const genAt = t2.gen;
     t2.swapPending = true;
-    this.swap.write(bytes).then((slot) => {
-      var _a2;
-      t2.swapPending = false;
-      if (t2.refs <= 0 || t2.bytes !== bytes || t2.gen !== genAt) {
-        (_a2 = this.swap) == null ? void 0 : _a2.free(slot);
-        return;
-      }
-      t2.swapId = slot;
-      t2.bytes = null;
-    }).catch(() => {
-      t2.swapPending = false;
-    });
+    this.writeQueue.push({ t: t2, gen: t2.gen });
+    this.pumpIO();
   }
   derive(baseId, edits, opts) {
     const base2 = this.records.get(baseId);
@@ -149622,9 +149765,12 @@ class HybridContentStore {
     const grid = deriveGrid(base2.grid, edits, this.pool);
     const id = generateId("content");
     let material = null;
+    let materialComplete = false;
     if (base2.material) {
       material = base2.material;
+      materialComplete = base2.materialComplete;
       base2.material = null;
+      base2.materialComplete = false;
       const g = material.getContext("2d");
       if (g) {
         for (const e of edits) {
@@ -149632,15 +149778,10 @@ class HybridContentStore {
         }
       } else {
         material = null;
+        materialComplete = false;
       }
     }
-    const rec = {
-      kind: "tiled",
-      grid,
-      material,
-      thumb: null,
-      entry: this.makeTiledEntry(id, grid, (opts == null ? void 0 : opts.uploadedUrl) ?? null)
-    };
+    const rec = this.makeTiledRecord(id, grid, (opts == null ? void 0 : opts.uploadedUrl) ?? null, material, materialComplete);
     this.records.set(id, rec);
     return id;
   }
@@ -149658,13 +149799,7 @@ class HybridContentStore {
     }
     const id = generateId("content");
     const grid = uniformGrid(width, height, this.pool, rgba[0], rgba[1], rgba[2], rgba[3]);
-    this.records.set(id, {
-      kind: "tiled",
-      grid,
-      material: null,
-      thumb: null,
-      entry: this.makeTiledEntry(id, grid, null)
-    });
+    this.records.set(id, this.makeTiledRecord(id, grid, null));
     return id;
   }
   /**
@@ -149676,7 +149811,88 @@ class HybridContentStore {
     const rec = this.records.get(id);
     if (!rec || rec.kind !== "tiled") return null;
     this.ensureResident(rec.grid);
+    const gen = nextGen();
+    for (const t2 of rec.grid.tiles) t2.gen = gen;
     return rec.grid;
+  }
+  renderSource(id, scale) {
+    const rec = this.records.get(id);
+    if (!rec || rec.kind !== "tiled") return null;
+    if (!(scale > 0) || scale >= 0.5) {
+      const bitmap = this.materialize(id);
+      return { bitmap, version: rec.materialVersion, dirtyRects: rec.materialDirty };
+    }
+    const level = Math.min(MAX_MIP_LEVEL, Math.floor(Math.log2(1 / scale)));
+    const mip = this.mipEntry(rec, level);
+    if (!mip) {
+      const bitmap = this.materialize(id);
+      return { bitmap, version: rec.materialVersion, dirtyRects: rec.materialDirty };
+    }
+    return { bitmap: mip.canvas, version: mip.version, dirtyRects: mip.dirty };
+  }
+  mipEntry(rec, level) {
+    const hit = rec.mips.get(level);
+    if (hit) {
+      if (!hit.complete) this.ensureResident(rec.grid);
+      return hit;
+    }
+    const complete = this.ensureResident(rec.grid);
+    const scale = 1 / (1 << level);
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.max(1, Math.round(rec.grid.width * scale));
+    canvas.height = Math.max(1, Math.round(rec.grid.height * scale));
+    if (!this.drawGridScaled(rec.grid, canvas, scale)) return null;
+    const entry = { canvas, complete, version: 1, dirty: null };
+    rec.mips.set(level, entry);
+    return entry;
+  }
+  scratchCtx() {
+    if (!this.scratch) {
+      this.scratch = document.createElement("canvas");
+      this.scratch.width = TILE_SIZE;
+      this.scratch.height = TILE_SIZE;
+    }
+    return this.scratch.getContext("2d");
+  }
+  drawGridScaled(grid, out, scale) {
+    const g = out.getContext("2d");
+    if (!g) return false;
+    g.imageSmoothingEnabled = true;
+    g.imageSmoothingQuality = "medium";
+    const sg = this.scratchCtx();
+    for (let i = 0; i < grid.tiles.length; i++) {
+      this.drawTileScaled(grid, i, g, sg, scale);
+    }
+    return true;
+  }
+  patchScaled(grid, indexes, out, scale) {
+    const g = out.getContext("2d");
+    if (!g) return false;
+    g.imageSmoothingEnabled = true;
+    g.imageSmoothingQuality = "medium";
+    const sg = this.scratchCtx();
+    for (const i of indexes) this.drawTileScaled(grid, i, g, sg, scale);
+    return true;
+  }
+  drawTileScaled(grid, index, g, sg, scale) {
+    const tile = grid.tiles[index];
+    const r = tileRect(grid, index);
+    const dx = r.x * scale;
+    const dy = r.y * scale;
+    const dw = r.w * scale;
+    const dh = r.h * scale;
+    if (tile.uniform) {
+      const [cr2, cg, cb, ca] = tile.uniform;
+      g.clearRect(dx, dy, dw, dh);
+      if (ca === 0) return;
+      g.fillStyle = `rgba(${cr2},${cg},${cb},${ca / 255})`;
+      g.fillRect(dx, dy, dw, dh);
+      return;
+    }
+    if (!tile.bytes || !sg) return;
+    sg.putImageData(new ImageData(clampedView(tile.bytes), TILE_SIZE, TILE_SIZE), 0, 0);
+    g.clearRect(dx, dy, dw, dh);
+    g.drawImage(sg.canvas, 0, 0, r.w, r.h, dx, dy, dw, dh);
   }
   /** Alpha at a content pixel without materializing (layer picking). */
   alphaAt(id, x, y) {
@@ -149698,42 +149914,14 @@ class HybridContentStore {
     if (rec.kind === "plain") return rec.entry.canvas;
     if (rec.thumb && Math.max(rec.thumb.width, rec.thumb.height) >= Math.min(maxDim, 256)) return rec.thumb;
     const grid = rec.grid;
+    const complete = this.ensureResident(grid);
     const scale = Math.min(1, maxDim / Math.max(grid.width, grid.height));
-    const tw = Math.max(1, Math.round(grid.width * scale));
-    const th = Math.max(1, Math.round(grid.height * scale));
     const out = document.createElement("canvas");
-    out.width = tw;
-    out.height = th;
-    const g = out.getContext("2d");
-    if (!g) return null;
-    g.imageSmoothingEnabled = true;
-    g.imageSmoothingQuality = "medium";
-    if (!this.thumbScratch) this.thumbScratch = document.createElement("canvas");
-    const scratch = this.thumbScratch;
-    scratch.width = TILE_SIZE;
-    scratch.height = TILE_SIZE;
-    const sg = scratch.getContext("2d");
-    for (let i = 0; i < grid.tiles.length; i++) {
-      const tile = grid.tiles[i];
-      const x = i % grid.cols * TILE_SIZE;
-      const y = (i / grid.cols | 0) * TILE_SIZE;
-      const w = Math.min(TILE_SIZE, grid.width - x);
-      const h2 = Math.min(TILE_SIZE, grid.height - y);
-      const dx = x * scale;
-      const dy = y * scale;
-      const dw = w * scale;
-      const dh = h2 * scale;
-      if (tile.uniform) {
-        if (tile.uniform[3] === 0) continue;
-        g.fillStyle = `rgba(${tile.uniform[0]},${tile.uniform[1]},${tile.uniform[2]},${tile.uniform[3] / 255})`;
-        g.fillRect(dx, dy, dw, dh);
-        continue;
-      }
-      if (!tile.bytes || !sg) continue;
-      sg.putImageData(new ImageData(new Uint8ClampedArray(tile.bytes), TILE_SIZE, TILE_SIZE), 0, 0);
-      g.drawImage(scratch, 0, 0, w, h2, dx, dy, dw, dh);
-    }
+    out.width = Math.max(1, Math.round(grid.width * scale));
+    out.height = Math.max(1, Math.round(grid.height * scale));
+    if (!this.drawGridScaled(grid, out, scale)) return null;
     rec.thumb = out;
+    rec.thumbComplete = complete;
     return out;
   }
   /** Drop dense material caches, keeping tiles as the source of truth. */
@@ -149743,6 +149931,7 @@ class HybridContentStore {
       if (rec.kind !== "tiled" || !rec.material || keep.has(id)) continue;
       freed += rec.material.width * rec.material.height * 4;
       rec.material = null;
+      rec.materialComplete = false;
     }
     return freed;
   }
@@ -149815,7 +150004,18 @@ class HybridContentStore {
         }
       }
     }
-    return { plain, tiled, tileBytes: residentTileBytes(grids), materialBytes, poolSize: this.pool.size, swappedOut };
+    return {
+      plain,
+      tiled,
+      tileBytes: residentTileBytes(grids),
+      materialBytes,
+      poolSize: this.pool.size,
+      swappedOut,
+      queuedReads: this.readQueue.length,
+      queuedWrites: this.writeQueue.length,
+      inflightReads: this.inflightReads,
+      inflightWrites: this.inflightWrites
+    };
   }
 }
 function createSwapClient() {
@@ -151448,9 +151648,18 @@ const rasterKind = {
     }
   },
   renderNode(node, ctx) {
+    var _a2;
     const entry = ctx.content.get(node.contentId);
     if (!entry) return null;
     if (entry.isBlank) return null;
+    if (!((_a2 = node.fx) == null ? void 0 : _a2.length) && ctx.content.renderSource) {
+      const t2 = node.transform;
+      const scale = Math.min(t2.w / Math.max(1, entry.width), t2.h / Math.max(1, entry.height));
+      const src = ctx.content.renderSource(node.contentId, scale);
+      if (src) {
+        return ctx.placed(`content:${node.id}`, node.contentId, src.bitmap, node.transform, false, src.version, src.dirtyRects);
+      }
+    }
     return ctx.placed(`content:${node.id}`, node.contentId, entry.canvas, node.transform);
   },
   bbox(node) {
@@ -155318,7 +155527,7 @@ function docRectToSourceRect(r, q, srcW, srcH) {
   };
 }
 function makePlaced(deps, region, fxRef) {
-  return (cacheKey, contentStamp, bitmap, transform2, linear = false) => {
+  return (cacheKey, contentStamp, bitmap, transform2, linear = false, version2, dirtyRects) => {
     let fxTag = "";
     const fx2 = fxRef.current;
     if (fx2 && fx2.length && cacheKey.startsWith("content:")) {
@@ -155344,12 +155553,14 @@ function makePlaced(deps, region, fxRef) {
       linear,
       quad: transform2,
       key: stamp,
-      stamp
+      stamp,
+      version: fxTag ? void 0 : version2,
+      dirtyRects: fxTag ? void 0 : dirtyRects ?? void 0
     };
   };
 }
 function renderMaskTexture(node, region, deps, placed) {
-  var _a2, _b2;
+  var _a2, _b2, _c;
   const m = node.mask;
   if (!m || !m.enabled) return void 0;
   const tf = node.transform.w > 0 && node.transform.h > 0 ? node.transform : { x: 0, y: 0, w: region.w, h: region.h, rotation: 0 };
@@ -155357,9 +155568,13 @@ function renderMaskTexture(node, region, deps, placed) {
   if (override) {
     return renderPreviewTexture(`preview:mask:${node.id}`, override, tf, region, true) ?? void 0;
   }
-  const bitmap = (_b2 = deps.content.get(m.contentId)) == null ? void 0 : _b2.canvas;
+  const entry = deps.content.get(m.contentId);
+  if (!entry) return void 0;
+  const scale = Math.min(tf.w / Math.max(1, entry.width), tf.h / Math.max(1, entry.height));
+  const src = (_c = (_b2 = deps.content).renderSource) == null ? void 0 : _c.call(_b2, m.contentId, scale);
+  const bitmap = (src == null ? void 0 : src.bitmap) ?? entry.canvas;
   if (!bitmap) return void 0;
-  return placed(`mask:${node.id}`, m.contentId, bitmap, tf, true) ?? void 0;
+  return placed(`mask:${node.id}`, m.contentId, bitmap, tf, true, src == null ? void 0 : src.version, src == null ? void 0 : src.dirtyRects) ?? void 0;
 }
 function tryTileInput(node, region, deps, placed) {
   var _a2, _b2, _c, _d, _e2;
@@ -204104,4 +204319,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-D45mA29y.mjs.map
+//# sourceMappingURL=main-Cw85rfA1.mjs.map

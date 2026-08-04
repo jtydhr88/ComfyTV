@@ -117,6 +117,14 @@ export const rasterKind: NodeKind<RasterData> = {
     const entry = ctx.content.get(node.contentId)
     if (!entry) return null
     if (entry.isBlank) return null
+    if (!node.fx?.length && ctx.content.renderSource) {
+      const t = node.transform
+      const scale = Math.min(t.w / Math.max(1, entry.width), t.h / Math.max(1, entry.height))
+      const src = ctx.content.renderSource(node.contentId, scale)
+      if (src) {
+        return ctx.placed(`content:${node.id}`, node.contentId, src.bitmap, node.transform, false, src.version, src.dirtyRects)
+      }
+    }
     return ctx.placed(`content:${node.id}`, node.contentId, entry.canvas, node.transform)
   },
 

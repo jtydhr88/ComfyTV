@@ -1,3 +1,9 @@
+export interface RenderSource {
+  bitmap: HTMLCanvasElement
+  version: number
+  dirtyRects: import('./node').Rect[] | null
+}
+
 export interface ContentEntry {
   id: string
 
@@ -43,6 +49,8 @@ export interface ContentStore {
   registerUniform?(width: number, height: number, rgba: [number, number, number, number]): string
 
   tileGridOf?(id: string): import('./tile/tileBuffer').TileGrid | null
+
+  renderSource?(id: string, scale: number): RenderSource | null
 
   alphaAt?(id: string, x: number, y: number): number | null
 

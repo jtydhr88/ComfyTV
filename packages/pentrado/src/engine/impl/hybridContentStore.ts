@@ -1,5 +1,6 @@
-import type { ContentEdit, ContentEntry, ContentStore } from '../content'
+import type { ContentEdit, ContentEntry, ContentStore, RenderSource } from '../content'
 import { generateId } from '../id'
+import type { Rect } from '../node'
 import type { SwapClient } from '../tile/swapClient'
 import {
   deriveGrid,
@@ -18,9 +19,21 @@ import {
 
 export const TILE_THRESHOLD_PX = 2048 * 2048
 
+export const MAX_MIP_LEVEL = 4
+
+const MAX_INFLIGHT_READS = 64
+const MAX_INFLIGHT_WRITES = 64
+
 interface PlainRecord {
   kind: 'plain'
   entry: ContentEntry
+}
+
+interface MipEntry {
+  canvas: HTMLCanvasElement
+  complete: boolean
+  version: number
+  dirty: Rect[] | null
 }
 
 interface TiledRecord {
@@ -29,7 +42,14 @@ interface TiledRecord {
   grid: TileGrid
 
   material: HTMLCanvasElement | null
+  materialComplete: boolean
+  materialVersion: number
+  materialDirty: Rect[] | null
+
+  mips: Map<number, MipEntry>
+
   thumb: HTMLCanvasElement | null
+  thumbComplete: boolean
 }
 
 type Record_ = PlainRecord | TiledRecord
@@ -41,17 +61,50 @@ function singleUniform(grid: TileGrid): Uint8Array | null {
   return first.uniform
 }
 
+function clampedView(bytes: Uint8Array): Uint8ClampedArray<ArrayBuffer> {
+  return new Uint8ClampedArray(bytes.buffer as ArrayBuffer, bytes.byteOffset, bytes.byteLength)
+}
+
+function tileRect(grid: TileGrid, index: number): Rect {
+  const x = (index % grid.cols) * TILE_SIZE
+  const y = ((index / grid.cols) | 0) * TILE_SIZE
+  return { x, y, w: Math.min(TILE_SIZE, grid.width - x), h: Math.min(TILE_SIZE, grid.height - y) }
+}
+
 export class HybridContentStore implements ContentStore {
   private records = new Map<string, Record_>()
   private pool: UniformPool = new Map()
   private swap: SwapClient | null = null
   private onRestored: (() => void) | null = null
+  private schedule: ((fn: () => void) => void) | null = null
   private tileBudget = 512 * 1024 * 1024
 
-  configureSwap(opts: { swap: SwapClient | null; onRestored?: () => void; tileBudgetBytes?: number }): void {
+  private coldMark = 0
+
+  private readQueue: Array<{ t: TileData; slot: number }> = []
+  private writeQueue: Array<{ t: TileData; gen: number }> = []
+  private inflightReads = 0
+  private inflightWrites = 0
+
+  private restoredBatch = new Set<TileData>()
+  private flushScheduled = false
+
+  configureSwap(opts: {
+    swap: SwapClient | null
+    onRestored?: () => void
+    tileBudgetBytes?: number
+    schedule?: (fn: () => void) => void
+  }): void {
     this.swap = opts.swap
     this.onRestored = opts.onRestored ?? null
+    this.schedule = opts.schedule ?? null
     if (opts.tileBudgetBytes != null) this.tileBudget = opts.tileBudgetBytes
+    if (!this.swap) {
+      for (const q of this.readQueue) q.t.swapPending = false
+      for (const q of this.writeQueue) q.t.swapPending = false
+      this.readQueue = []
+      this.writeQueue = []
+    }
   }
 
   setTileBudget(bytes: number): void {
@@ -60,6 +113,27 @@ export class HybridContentStore implements ContentStore {
 
   hasSwap(): boolean {
     return this.swap != null
+  }
+
+  private makeTiledRecord(
+    id: string,
+    grid: TileGrid,
+    uploadedUrl: string | null,
+    material: HTMLCanvasElement | null = null,
+    materialComplete = false
+  ): TiledRecord {
+    return {
+      kind: 'tiled',
+      grid,
+      material,
+      materialComplete,
+      materialVersion: 1,
+      materialDirty: null,
+      mips: new Map(),
+      thumb: null,
+      thumbComplete: false,
+      entry: this.makeTiledEntry(id, grid, uploadedUrl),
+    }
   }
 
   register(
@@ -99,13 +173,7 @@ export class HybridContentStore implements ContentStore {
       return id
     }
     const allUniform = singleUniform(grid) != null
-    const rec: TiledRecord = {
-      kind: 'tiled',
-      grid,
-      material: allUniform ? null : canvas,
-      thumb: null,
-      entry: this.makeTiledEntry(id, grid, opts?.uploadedUrl ?? null),
-    }
+    const rec = this.makeTiledRecord(id, grid, opts?.uploadedUrl ?? null, allUniform ? null : canvas, !allUniform)
     this.records.set(id, rec)
     return id
   }
@@ -131,9 +199,10 @@ export class HybridContentStore implements ContentStore {
     if (rec.material) return rec.material
     const complete = this.ensureResident(rec.grid)
     const canvas = this.buildDense(rec.grid)
-    // Swapped-out tiles render as holes; don't cache — once the async
-    // restores land, onRestored fires and the next materialize is complete.
-    if (complete) rec.material = canvas
+    rec.material = canvas
+    rec.materialComplete = complete
+    rec.materialVersion += 1
+    rec.materialDirty = null
     return canvas
   }
 
@@ -162,7 +231,7 @@ export class HybridContentStore implements ContentStore {
     const rec = this.records.get(id)
     if (!rec) return null
     if (rec.kind === 'plain') return rec.entry.canvas
-    if (rec.material) return rec.material
+    if (rec.material && rec.materialComplete) return rec.material
     this.ensureResident(rec.grid)
     return this.buildDense(rec.grid)
   }
@@ -175,26 +244,146 @@ export class HybridContentStore implements ContentStore {
       complete = false
       if (t.swapId < 0 || t.swapPending || !this.swap) continue
       t.swapPending = true
-      const slot = t.swapId
-      this.swap
-        .read(slot)
-        .then((bytes) => {
-          t.swapPending = false
-          if (t.refs <= 0 || t.bytes) {
-            this.swap?.free(slot)
-            return
-          }
-          t.bytes = bytes
-          t.gen = nextGen()
-          t.swapId = -1
-          this.swap?.free(slot)
-          this.onRestored?.()
-        })
-        .catch(() => {
-          t.swapPending = false
-        })
+      this.readQueue.push({ t, slot: t.swapId })
     }
+    this.pumpIO()
     return complete
+  }
+
+  private pumpIO(): void {
+    while (this.swap && this.inflightReads < MAX_INFLIGHT_READS && this.readQueue.length) {
+      this.startRead(this.readQueue.shift()!)
+    }
+    while (this.swap && this.inflightWrites < MAX_INFLIGHT_WRITES && this.writeQueue.length) {
+      this.startWrite(this.writeQueue.shift()!)
+    }
+  }
+
+  private startRead(req: { t: TileData; slot: number }): void {
+    const { t, slot } = req
+    if (t.refs <= 0 || t.bytes || t.swapId !== slot) {
+      t.swapPending = false
+      return
+    }
+    this.inflightReads += 1
+    this.swap!.read(slot)
+      .then((bytes) => {
+        this.inflightReads -= 1
+        t.swapPending = false
+        if (t.refs <= 0 || t.bytes) {
+          this.swap?.free(slot)
+          this.pumpIO()
+          return
+        }
+        t.bytes = bytes
+        t.gen = nextGen()
+        t.swapId = -1
+        this.swap?.free(slot)
+        this.restoredBatch.add(t)
+        this.scheduleFlush()
+        this.pumpIO()
+      })
+      .catch(() => {
+        this.inflightReads -= 1
+        t.swapPending = false
+        this.pumpIO()
+      })
+  }
+
+  private startWrite(req: { t: TileData; gen: number }): void {
+    const { t, gen } = req
+    if (t.refs <= 0 || !t.bytes || t.gen !== gen) {
+      t.swapPending = false
+      return
+    }
+    const bytes = t.bytes
+    this.inflightWrites += 1
+    this.swap!.write(bytes)
+      .then((slot) => {
+        this.inflightWrites -= 1
+        t.swapPending = false
+        // Touched or died while the write was in flight → the disk copy is moot.
+        if (t.refs <= 0 || t.bytes !== bytes || t.gen !== gen) {
+          this.swap?.free(slot)
+          this.pumpIO()
+          return
+        }
+        t.swapId = slot
+        t.bytes = null
+        this.pumpIO()
+      })
+      .catch(() => {
+        this.inflightWrites -= 1
+        t.swapPending = false
+        this.pumpIO()
+      })
+  }
+
+  private scheduleFlush(): void {
+    if (this.flushScheduled) return
+    this.flushScheduled = true
+    const run = () => {
+      this.flushScheduled = false
+      this.flushRestored()
+    }
+    if (this.schedule) this.schedule(run)
+    else if (typeof requestAnimationFrame === 'function') requestAnimationFrame(run)
+    else setTimeout(run, 16)
+  }
+
+  private flushRestored(): void {
+    const batch = this.restoredBatch
+    this.restoredBatch = new Set()
+    if (batch.size === 0) return
+    for (const rec of this.records.values()) {
+      if (rec.kind !== 'tiled') continue
+      let touched: number[] | null = null
+      for (let i = 0; i < rec.grid.tiles.length; i++) {
+        if (batch.has(rec.grid.tiles[i])) (touched ??= []).push(i)
+      }
+      if (!touched) continue
+      rec.grid.residency = (rec.grid.residency ?? 0) + 1
+      const rects = touched.map((i) => tileRect(rec.grid, i))
+      if (rec.material) {
+        const g = rec.material.getContext('2d')
+        if (g) {
+          for (const i of touched) {
+            const t = rec.grid.tiles[i]
+            if (!t.bytes) continue
+            const r = tileRect(rec.grid, i)
+            g.putImageData(new ImageData(clampedView(t.bytes), TILE_SIZE, TILE_SIZE), r.x, r.y, 0, 0, r.w, r.h)
+          }
+          rec.materialVersion += 1
+          rec.materialDirty = rects
+          if (!rec.materialComplete) rec.materialComplete = this.gridComplete(rec.grid)
+        } else {
+          rec.material = null
+          rec.materialComplete = false
+        }
+      }
+      for (const [level, mip] of rec.mips) {
+        const scale = 1 / (1 << level)
+        if (this.patchScaled(rec.grid, touched, mip.canvas, scale)) {
+          mip.version += 1
+          mip.dirty = rects.map((r) => ({
+            x: Math.floor(r.x * scale),
+            y: Math.floor(r.y * scale),
+            w: Math.ceil(r.w * scale) + 1,
+            h: Math.ceil(r.h * scale) + 1,
+          }))
+          if (!mip.complete) mip.complete = this.gridComplete(rec.grid)
+        } else {
+          rec.mips.delete(level)
+        }
+      }
+      if (rec.thumb && !rec.thumbComplete) rec.thumb = null
+    }
+    this.onRestored?.()
+  }
+
+  private gridComplete(grid: TileGrid): boolean {
+    for (const t of grid.tiles) if (!t.bytes && !t.uniform) return false
+    return true
   }
 
   /**
@@ -208,7 +397,10 @@ export class HybridContentStore implements ContentStore {
   trim(pinned: Set<string>, keepMaterial?: Set<string>): void {
     const keep = keepMaterial ?? pinned
     for (const [id, rec] of this.records) {
-      if (rec.kind === 'tiled' && rec.material && !keep.has(id)) rec.material = null
+      if (rec.kind === 'tiled' && rec.material && !keep.has(id)) {
+        rec.material = null
+        rec.materialComplete = false
+      }
     }
     if (!this.swap) return
     const pinnedTiles = new Set<TileData>()
@@ -225,9 +417,10 @@ export class HybridContentStore implements ContentStore {
         if (!t.bytes || seen.has(t)) continue
         seen.add(t)
         resident += t.bytes.byteLength
-        if (!pinnedTiles.has(t) && !t.swapPending) candidates.push(t)
+        if (!pinnedTiles.has(t) && !t.swapPending && t.gen <= this.coldMark) candidates.push(t)
       }
     }
+    this.coldMark = nextGen()
     if (resident <= this.tileBudget) return
     candidates.sort((a, b) => a.gen - b.gen)
     let excess = resident - this.tileBudget
@@ -239,23 +432,9 @@ export class HybridContentStore implements ContentStore {
   }
 
   private swapOut(t: TileData): void {
-    const bytes = t.bytes!
-    const genAt = t.gen
     t.swapPending = true
-    this.swap!.write(bytes)
-      .then((slot) => {
-        t.swapPending = false
-        // Touched or died while the write was in flight → the disk copy is moot.
-        if (t.refs <= 0 || t.bytes !== bytes || t.gen !== genAt) {
-          this.swap?.free(slot)
-          return
-        }
-        t.swapId = slot
-        t.bytes = null
-      })
-      .catch(() => {
-        t.swapPending = false
-      })
+    this.writeQueue.push({ t, gen: t.gen })
+    this.pumpIO()
   }
 
   derive(baseId: string, edits: ContentEdit[], opts?: { uploadedUrl?: string }): string | null {
@@ -266,9 +445,12 @@ export class HybridContentStore implements ContentStore {
     // Steal the base's material and patch the edited rects — the base is
     // history now; if it's ever shown again (undo) it regathers from tiles.
     let material: HTMLCanvasElement | null = null
+    let materialComplete = false
     if (base.material) {
       material = base.material
+      materialComplete = base.materialComplete
       base.material = null
+      base.materialComplete = false
       const g = material.getContext('2d')
       if (g) {
         for (const e of edits) {
@@ -276,15 +458,10 @@ export class HybridContentStore implements ContentStore {
         }
       } else {
         material = null
+        materialComplete = false
       }
     }
-    const rec: TiledRecord = {
-      kind: 'tiled',
-      grid,
-      material,
-      thumb: null,
-      entry: this.makeTiledEntry(id, grid, opts?.uploadedUrl ?? null),
-    }
+    const rec = this.makeTiledRecord(id, grid, opts?.uploadedUrl ?? null, material, materialComplete)
     this.records.set(id, rec)
     return id
   }
@@ -303,13 +480,7 @@ export class HybridContentStore implements ContentStore {
     }
     const id = generateId('content')
     const grid = uniformGrid(width, height, this.pool, rgba[0], rgba[1], rgba[2], rgba[3])
-    this.records.set(id, {
-      kind: 'tiled',
-      grid,
-      material: null,
-      thumb: null,
-      entry: this.makeTiledEntry(id, grid, null),
-    })
+    this.records.set(id, this.makeTiledRecord(id, grid, null))
     return id
   }
 
@@ -322,7 +493,102 @@ export class HybridContentStore implements ContentStore {
     const rec = this.records.get(id)
     if (!rec || rec.kind !== 'tiled') return null
     this.ensureResident(rec.grid)
+    const gen = nextGen()
+    for (const t of rec.grid.tiles) t.gen = gen
     return rec.grid
+  }
+
+  renderSource(id: string, scale: number): RenderSource | null {
+    const rec = this.records.get(id)
+    if (!rec || rec.kind !== 'tiled') return null
+    if (!(scale > 0) || scale >= 0.5) {
+      const bitmap = this.materialize(id)
+      return { bitmap, version: rec.materialVersion, dirtyRects: rec.materialDirty }
+    }
+    const level = Math.min(MAX_MIP_LEVEL, Math.floor(Math.log2(1 / scale)))
+    const mip = this.mipEntry(rec, level)
+    if (!mip) {
+      const bitmap = this.materialize(id)
+      return { bitmap, version: rec.materialVersion, dirtyRects: rec.materialDirty }
+    }
+    return { bitmap: mip.canvas, version: mip.version, dirtyRects: mip.dirty }
+  }
+
+  private mipEntry(rec: TiledRecord, level: number): MipEntry | null {
+    const hit = rec.mips.get(level)
+    if (hit) {
+      if (!hit.complete) this.ensureResident(rec.grid)
+      return hit
+    }
+    const complete = this.ensureResident(rec.grid)
+    const scale = 1 / (1 << level)
+    const canvas = document.createElement('canvas')
+    canvas.width = Math.max(1, Math.round(rec.grid.width * scale))
+    canvas.height = Math.max(1, Math.round(rec.grid.height * scale))
+    if (!this.drawGridScaled(rec.grid, canvas, scale)) return null
+    const entry: MipEntry = { canvas, complete, version: 1, dirty: null }
+    rec.mips.set(level, entry)
+    return entry
+  }
+
+  private scratch: HTMLCanvasElement | null = null
+
+  private scratchCtx(): CanvasRenderingContext2D | null {
+    if (!this.scratch) {
+      this.scratch = document.createElement('canvas')
+      this.scratch.width = TILE_SIZE
+      this.scratch.height = TILE_SIZE
+    }
+    return this.scratch.getContext('2d')
+  }
+
+  private drawGridScaled(grid: TileGrid, out: HTMLCanvasElement, scale: number): boolean {
+    const g = out.getContext('2d')
+    if (!g) return false
+    g.imageSmoothingEnabled = true
+    g.imageSmoothingQuality = 'medium'
+    const sg = this.scratchCtx()
+    for (let i = 0; i < grid.tiles.length; i++) {
+      this.drawTileScaled(grid, i, g, sg, scale)
+    }
+    return true
+  }
+
+  private patchScaled(grid: TileGrid, indexes: number[], out: HTMLCanvasElement, scale: number): boolean {
+    const g = out.getContext('2d')
+    if (!g) return false
+    g.imageSmoothingEnabled = true
+    g.imageSmoothingQuality = 'medium'
+    const sg = this.scratchCtx()
+    for (const i of indexes) this.drawTileScaled(grid, i, g, sg, scale)
+    return true
+  }
+
+  private drawTileScaled(
+    grid: TileGrid,
+    index: number,
+    g: CanvasRenderingContext2D,
+    sg: CanvasRenderingContext2D | null,
+    scale: number
+  ): void {
+    const tile = grid.tiles[index]
+    const r = tileRect(grid, index)
+    const dx = r.x * scale
+    const dy = r.y * scale
+    const dw = r.w * scale
+    const dh = r.h * scale
+    if (tile.uniform) {
+      const [cr, cg, cb, ca] = tile.uniform
+      g.clearRect(dx, dy, dw, dh)
+      if (ca === 0) return
+      g.fillStyle = `rgba(${cr},${cg},${cb},${ca / 255})`
+      g.fillRect(dx, dy, dw, dh)
+      return
+    }
+    if (!tile.bytes || !sg) return
+    sg.putImageData(new ImageData(clampedView(tile.bytes), TILE_SIZE, TILE_SIZE), 0, 0)
+    g.clearRect(dx, dy, dw, dh)
+    g.drawImage(sg.canvas, 0, 0, r.w, r.h, dx, dy, dw, dh)
   }
 
   /** Alpha at a content pixel without materializing (layer picking). */
@@ -339,8 +605,6 @@ export class HybridContentStore implements ContentStore {
     return tile.bytes[(ly * TILE_SIZE + lx) * 4 + 3] / 255
   }
 
-  private thumbScratch: HTMLCanvasElement | null = null
-
   /** Tile-native thumbnail — never materializes the dense content. */
   thumbnailCanvas(id: string, maxDim: number): HTMLCanvasElement | null {
     const rec = this.records.get(id)
@@ -348,42 +612,14 @@ export class HybridContentStore implements ContentStore {
     if (rec.kind === 'plain') return rec.entry.canvas
     if (rec.thumb && Math.max(rec.thumb.width, rec.thumb.height) >= Math.min(maxDim, 256)) return rec.thumb
     const grid = rec.grid
+    const complete = this.ensureResident(grid)
     const scale = Math.min(1, maxDim / Math.max(grid.width, grid.height))
-    const tw = Math.max(1, Math.round(grid.width * scale))
-    const th = Math.max(1, Math.round(grid.height * scale))
     const out = document.createElement('canvas')
-    out.width = tw
-    out.height = th
-    const g = out.getContext('2d')
-    if (!g) return null
-    g.imageSmoothingEnabled = true
-    g.imageSmoothingQuality = 'medium'
-    if (!this.thumbScratch) this.thumbScratch = document.createElement('canvas')
-    const scratch = this.thumbScratch
-    scratch.width = TILE_SIZE
-    scratch.height = TILE_SIZE
-    const sg = scratch.getContext('2d')
-    for (let i = 0; i < grid.tiles.length; i++) {
-      const tile = grid.tiles[i]
-      const x = (i % grid.cols) * TILE_SIZE
-      const y = ((i / grid.cols) | 0) * TILE_SIZE
-      const w = Math.min(TILE_SIZE, grid.width - x)
-      const h = Math.min(TILE_SIZE, grid.height - y)
-      const dx = x * scale
-      const dy = y * scale
-      const dw = w * scale
-      const dh = h * scale
-      if (tile.uniform) {
-        if (tile.uniform[3] === 0) continue
-        g.fillStyle = `rgba(${tile.uniform[0]},${tile.uniform[1]},${tile.uniform[2]},${tile.uniform[3] / 255})`
-        g.fillRect(dx, dy, dw, dh)
-        continue
-      }
-      if (!tile.bytes || !sg) continue
-      sg.putImageData(new ImageData(new Uint8ClampedArray(tile.bytes), TILE_SIZE, TILE_SIZE), 0, 0)
-      g.drawImage(scratch, 0, 0, w, h, dx, dy, dw, dh)
-    }
+    out.width = Math.max(1, Math.round(grid.width * scale))
+    out.height = Math.max(1, Math.round(grid.height * scale))
+    if (!this.drawGridScaled(grid, out, scale)) return null
     rec.thumb = out
+    rec.thumbComplete = complete
     return out
   }
 
@@ -394,6 +630,7 @@ export class HybridContentStore implements ContentStore {
       if (rec.kind !== 'tiled' || !rec.material || keep.has(id)) continue
       freed += rec.material.width * rec.material.height * 4
       rec.material = null
+      rec.materialComplete = false
     }
     return freed
   }
@@ -457,6 +694,10 @@ export class HybridContentStore implements ContentStore {
     materialBytes: number
     poolSize: number
     swappedOut: number
+    queuedReads: number
+    queuedWrites: number
+    inflightReads: number
+    inflightWrites: number
   } {
     let plain = 0
     let tiled = 0
@@ -479,6 +720,17 @@ export class HybridContentStore implements ContentStore {
         }
       }
     }
-    return { plain, tiled, tileBytes: residentTileBytes(grids), materialBytes, poolSize: this.pool.size, swappedOut }
+    return {
+      plain,
+      tiled,
+      tileBytes: residentTileBytes(grids),
+      materialBytes,
+      poolSize: this.pool.size,
+      swappedOut,
+      queuedReads: this.readQueue.length,
+      queuedWrites: this.writeQueue.length,
+      inflightReads: this.inflightReads,
+      inflightWrites: this.inflightWrites,
+    }
   }
 }

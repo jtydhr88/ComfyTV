@@ -132,17 +132,18 @@ describe('HybridContentStore', () => {
     expect(store.get(id)!.uploadedUrl).toBe('http://x/y.png')
   })
 
-  it('trim swaps out unpinned tiles and restore brings them back', async () => {
+  it('trim swaps out cold unpinned tiles and restore brings them back', async () => {
     const store = new HybridContentStore()
     const swap = fakeSwap()
     let restored = 0
-    store.configureSwap({ swap, onRestored: () => restored++, tileBudgetBytes: 0 })
+    store.configureSwap({ swap, onRestored: () => restored++, tileBudgetBytes: 0, schedule: (fn) => fn() })
 
     const base = bigBlank(store)
     const pixels = new Uint8ClampedArray(32 * 32 * 4).fill(9)
     const next = store.derive(base, [{ x: 0, y: 0, w: 32, h: 32, pixels }])!
     expect(store.stats().tileBytes).toBe(256 * 256 * 4)
 
+    store.trim(new Set())
     store.trim(new Set())
     await tick()
     expect(store.stats().tileBytes).toBe(0)
@@ -155,14 +156,49 @@ describe('HybridContentStore', () => {
     expect(swap.slots.size).toBe(0)
   })
 
-  it('pinned contents are never swapped out', async () => {
+  it('the first trim never swaps freshly-touched tiles (ping-pong valve)', async () => {
     const store = new HybridContentStore()
     const swap = fakeSwap()
-    store.configureSwap({ swap, tileBudgetBytes: 0 })
+    store.configureSwap({ swap, tileBudgetBytes: 0, schedule: (fn) => fn() })
+    const base = bigBlank(store)
+    const pixels = new Uint8ClampedArray(32 * 32 * 4).fill(9)
+    store.derive(base, [{ x: 0, y: 0, w: 32, h: 32, pixels }])!
+
+    store.trim(new Set())
+    await tick()
+    expect(store.stats().tileBytes).toBe(256 * 256 * 4)
+    expect(swap.slots.size).toBe(0)
+  })
+
+  it('tiles the renderer keeps touching stay resident across trims', async () => {
+    const store = new HybridContentStore()
+    const swap = fakeSwap()
+    store.configureSwap({ swap, tileBudgetBytes: 0, schedule: (fn) => fn() })
     const base = bigBlank(store)
     const pixels = new Uint8ClampedArray(32 * 32 * 4).fill(9)
     const next = store.derive(base, [{ x: 0, y: 0, w: 32, h: 32, pixels }])!
 
+    store.trim(new Set())
+    store.tileGridOf(next)
+    store.trim(new Set())
+    await tick()
+    expect(store.stats().tileBytes).toBe(256 * 256 * 4)
+
+    store.trim(new Set())
+    await tick()
+    expect(store.stats().tileBytes).toBe(0)
+    expect(swap.slots.size).toBe(1)
+  })
+
+  it('pinned contents are never swapped out', async () => {
+    const store = new HybridContentStore()
+    const swap = fakeSwap()
+    store.configureSwap({ swap, tileBudgetBytes: 0, schedule: (fn) => fn() })
+    const base = bigBlank(store)
+    const pixels = new Uint8ClampedArray(32 * 32 * 4).fill(9)
+    const next = store.derive(base, [{ x: 0, y: 0, w: 32, h: 32, pixels }])!
+
+    store.trim(new Set([next]))
     store.trim(new Set([next]))
     await tick()
     expect(store.stats().tileBytes).toBe(256 * 256 * 4)
@@ -172,10 +208,11 @@ describe('HybridContentStore', () => {
   it('garbage-collected swapped tiles free their slots', async () => {
     const store = new HybridContentStore()
     const swap = fakeSwap()
-    store.configureSwap({ swap, tileBudgetBytes: 0 })
+    store.configureSwap({ swap, tileBudgetBytes: 0, schedule: (fn) => fn() })
     const base = bigBlank(store)
     const pixels = new Uint8ClampedArray(32 * 32 * 4).fill(9)
     const next = store.derive(base, [{ x: 0, y: 0, w: 32, h: 32, pixels }])!
+    store.trim(new Set())
     store.trim(new Set())
     await tick()
     expect(swap.slots.size).toBe(1)
@@ -183,6 +220,77 @@ describe('HybridContentStore', () => {
     store.collectGarbage(new Set([base]))
     expect(store.has(next)).toBe(false)
     expect(swap.slots.size).toBe(0)
+  })
+
+  it('swap I/O is capped in flight and drains through a queue', async () => {
+    const store = new HybridContentStore()
+    const swap = fakeSwap()
+    store.configureSwap({ swap, tileBudgetBytes: 0, schedule: (fn) => fn() })
+
+    const w = 4096
+    const h = 2048
+    const base = store.register(canvasStub(w, h), { uniform: [0, 0, 0, 0] })
+    const pixels = new Uint8ClampedArray(w * h * 4)
+    for (let ty = 0; ty < h / 256; ty++) {
+      for (let tx = 0; tx < w / 256; tx++) {
+        const off = (ty * 256 * w + tx * 256) * 4
+        pixels[off] = (tx + ty * 16) % 255 || 1
+        pixels[off + 3] = 255
+      }
+    }
+    const next = store.derive(base, [{ x: 0, y: 0, w, h, pixels }])!
+    expect(store.stats().tileBytes).toBe(128 * 256 * 256 * 4)
+
+    store.trim(new Set())
+    store.trim(new Set())
+    expect(store.stats().inflightWrites).toBe(64)
+    expect(store.stats().queuedWrites).toBe(64)
+    while (store.stats().inflightWrites + store.stats().queuedWrites > 0) await tick()
+    expect(store.stats().tileBytes).toBe(0)
+    expect(swap.slots.size).toBe(128)
+
+    void store.get(next)!.canvas
+    expect(store.stats().inflightReads).toBe(64)
+    expect(store.stats().queuedReads).toBe(64)
+    while (store.stats().inflightReads + store.stats().queuedReads > 0) await tick()
+    expect(store.stats().tileBytes).toBe(128 * 256 * 256 * 4)
+    expect(swap.slots.size).toBe(0)
+  })
+
+  it('a restore batch notifies the host once, not once per tile', async () => {
+    const store = new HybridContentStore()
+    const swap = fakeSwap()
+    let restored = 0
+    const flushes: Array<() => void> = []
+    store.configureSwap({
+      swap,
+      onRestored: () => restored++,
+      tileBudgetBytes: 0,
+      schedule: (fn) => flushes.push(fn),
+    })
+
+    const base = bigBlank(store)
+    const mk = (i: number) => {
+      const p = new Uint8ClampedArray(32 * 32 * 4).fill(9)
+      p[0] = i + 1
+      return p
+    }
+    let id = base
+    for (let i = 0; i < 3; i++) {
+      id = store.derive(id, [{ x: i * 300, y: 0, w: 32, h: 32, pixels: mk(i) }])!
+    }
+    store.trim(new Set())
+    store.trim(new Set())
+    while (store.stats().inflightWrites + store.stats().queuedWrites > 0) await tick()
+    expect(store.stats().swappedOut).toBe(3)
+
+    void store.get(id)!.canvas
+    while (store.stats().inflightReads + store.stats().queuedReads > 0) await tick()
+    expect(restored).toBe(0)
+    expect(flushes.length).toBe(1)
+    flushes[0]()
+    expect(restored).toBe(1)
+    expect(store.stats().tileBytes).toBe(3 * 256 * 256 * 4)
   })
 
   it('SetContentCommand sizeBytes still works against tiled entries', () => {

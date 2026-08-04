@@ -378,6 +378,7 @@ export function createWebGLCompositor(): Compositor {
     epoch: number
     drawZero: boolean
     gen: number
+    residency: number
   }
   const instanceCache = new Map<TileGrid, InstanceEntry>()
   const FLOATS_PER_INSTANCE = 12
@@ -450,7 +451,7 @@ export function createWebGLCompositor(): Compositor {
     const grid = input.tiles.grid
     const drawZero = input.tiles.drawZero
     const cached = instanceCache.get(grid)
-    if (cached && cached.epoch === atlas!.epoch && cached.drawZero === drawZero) {
+    if (cached && cached.epoch === atlas!.epoch && cached.drawZero === drawZero && cached.residency === (grid.residency ?? 0)) {
       cached.gen = generation
       return cached
     }
@@ -499,7 +500,7 @@ export function createWebGLCompositor(): Compositor {
     if (!buffer) return null
     g.bindBuffer(g.ARRAY_BUFFER, buffer)
     g.bufferData(g.ARRAY_BUFFER, data, g.DYNAMIC_DRAW)
-    const entry: InstanceEntry = { buffer, batches, epoch: atlas!.epoch, drawZero, gen: generation }
+    const entry: InstanceEntry = { buffer, batches, epoch: atlas!.epoch, drawZero, gen: generation, residency: grid.residency ?? 0 }
     instanceCache.set(grid, entry)
     return entry
   }
