@@ -173,6 +173,44 @@ describe('StageCard — base states', () => {
   })
 })
 
+describe('StageCard — video output collapse', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    clearStageDefaultsCache()
+    fetchStageDefaults.mockResolvedValue({ defaults: {} })
+    listStagePresets.mockResolvedValue({ presets: [] })
+  })
+
+  it('renders an expanded toggle for video stages and hides the preview when collapsed', async () => {
+    const { container } = renderCard(
+      makeState({ kind: 'video', outputType: 'COMFYTV_VIDEO', output: '/view?filename=clip.mp4' }),
+      { node: { id: 990001, widgets: [] } },
+    )
+    const toggle = container.querySelector('.output button[aria-expanded]') as HTMLButtonElement
+    expect(toggle).toBeInTheDocument()
+    expect(toggle.getAttribute('aria-expanded')).toBe('true')
+
+    const previewWrap = container.querySelectorAll('.output > div')[1] as HTMLElement
+    expect(previewWrap.style.display).not.toBe('none')
+
+    await userEvent.click(toggle)
+    expect(toggle.getAttribute('aria-expanded')).toBe('false')
+    expect(previewWrap.style.display).toBe('none')
+
+    await userEvent.click(toggle)
+    expect(toggle.getAttribute('aria-expanded')).toBe('true')
+    expect(previewWrap.style.display).not.toBe('none')
+  })
+
+  it('keeps a plain output label with no toggle for image stages', () => {
+    const { container } = renderCard(
+      makeState({ output: '/view?filename=x.png' }),
+      { node: { id: 990002, widgets: [] } },
+    )
+    expect(container.querySelector('.output button[aria-expanded]')).toBeNull()
+  })
+})
+
 describe('StageCard — preset bar', () => {
   beforeEach(() => {
     vi.clearAllMocks()

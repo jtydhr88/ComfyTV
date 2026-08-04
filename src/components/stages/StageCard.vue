@@ -161,7 +161,7 @@
     <section
       v-if="!hideOutput && !hideRunButton && state.kind !== 'audio-picker' && state.kind !== 'video-picker'"
       class="output ctv:min-h-0 ctv:flex ctv:flex-col ctv:gap-1"
-      :class="isTextOutput && textOutputCollapsed ? '' : 'ctv:flex-1'"
+      :class="outputCollapsed ? '' : 'ctv:flex-1'"
     >
       <div v-if="isTextOutput" class="ctv:flex ctv:items-center ctv:gap-1">
         <button :class="contextToggle" :aria-expanded="!textOutputCollapsed" @click="textOutputCollapsed = !textOutputCollapsed">
@@ -183,10 +183,20 @@
                   @click.stop="downloadTextOutput"><i class="pi pi-download" /></button>
         </div>
       </div>
+      <div v-else-if="isVideoOutput" class="ctv:flex ctv:items-center ctv:gap-1">
+        <button :class="contextToggle" :aria-expanded="!videoOutputCollapsed" @click="videoOutputCollapsed = !videoOutputCollapsed">
+          <i :class="['pi', videoOutputCollapsed ? 'pi-chevron-right' : 'pi-chevron-down', 'ctv:w-2.5 ctv:text-2xs ctv:text-muted-foreground']" />
+          <span :class="sectionLabel" class="ctv:mb-0">{{ $t('stage.section.output', { type: state.outputType }) }}</span>
+          <span
+            v-if="videoOutputCollapsed && durationLabel"
+            class="ctv:text-3xs ctv:text-muted-foreground ctv:font-mono ctv:normal-case ctv:tracking-normal"
+          >{{ durationLabel }}</span>
+        </button>
+      </div>
       <div v-else :class="sectionLabel">{{ $t('stage.section.output', { type: state.outputType }) }}</div>
 
       <div
-        v-show="!isTextOutput || !textOutputCollapsed"
+        v-show="!outputCollapsed"
         class="ctv:relative ctv:flex-1 ctv:min-h-0 ctv:flex ctv:flex-col"
       >
         <ValuePreview
@@ -262,7 +272,7 @@ import StagePresetBar from './StagePresetBar.vue'
 import { t } from '@/i18n'
 import ValuePreview from './ValuePreview.vue'
 import { imageInputSlotIndex, slotColor } from '@/composables/stages/imageSlotMentions'
-import { useActionsCollapsed, useContextCollapsed, useTextOutputCollapsed } from '@/composables/stages/useContextCollapsed'
+import { useActionsCollapsed, useContextCollapsed, useTextOutputCollapsed, useVideoOutputCollapsed } from '@/composables/stages/useContextCollapsed'
 import { useTextOutputActions } from '@/composables/stages/useTextOutputActions'
 import { formatSlot, progressFallbackOf, useStageCard } from '@/composables/stages/useStageCard'
 import { useStageLoaderDrop } from '@/composables/stages/useStageLoaderDrop'
@@ -313,7 +323,12 @@ const isPicker = computed(() => isPoolPickerKind(props.state.kind))
 
 const contextCollapsed = useContextCollapsed(() => (props.node as any)?.id ?? null)
 const textOutputCollapsed = useTextOutputCollapsed(() => (props.node as any)?.id ?? null)
+const videoOutputCollapsed = useVideoOutputCollapsed(() => (props.node as any)?.id ?? null)
 const isTextOutput = computed(() => props.state.outputType === 'COMFYTV_TEXT')
+const isVideoOutput = computed(() => props.state.kind === 'video')
+const outputCollapsed = computed(() =>
+  (isTextOutput.value && textOutputCollapsed.value)
+  || (isVideoOutput.value && videoOutputCollapsed.value))
 const durationLabel = computed(() => {
   const ms = props.state.durationMs
   if (ms == null || !Number.isFinite(ms) || ms <= 0 || !props.state.output) return ''

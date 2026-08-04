@@ -14,7 +14,7 @@ vi.hoisted(() => {
   }
 })
 
-import { useActionsCollapsed, useContextCollapsed } from './useContextCollapsed'
+import { useActionsCollapsed, useContextCollapsed, useVideoOutputCollapsed } from './useContextCollapsed'
 
 // The storage refs behind these composables are module-level singletons, so
 // each test uses its own unique node ids to stay independent.
@@ -85,5 +85,52 @@ describe('useActionsCollapsed', () => {
     actions.value = false
     expect(actions.value).toBe(false)
     expect(context.value).toBe(true)
+  })
+})
+
+describe('useVideoOutputCollapsed', () => {
+  it('is expanded by default for an unseen node id', () => {
+    const c = useVideoOutputCollapsed(() => uid())
+    expect(c.value).toBe(false)
+  })
+
+  it('reports expanded when the node id is null or undefined', () => {
+    expect(useVideoOutputCollapsed(() => null).value).toBe(false)
+    expect(useVideoOutputCollapsed(() => undefined).value).toBe(false)
+  })
+
+  it('ignores writes when the node id is null', () => {
+    const c = useVideoOutputCollapsed(() => null)
+    c.value = true
+    expect(c.value).toBe(false)
+  })
+
+  it('collapses on set(true) and expands again on set(false)', () => {
+    const id = uid()
+    const c = useVideoOutputCollapsed(() => id)
+    c.value = true
+    expect(c.value).toBe(true)
+    c.value = false
+    expect(c.value).toBe(false)
+  })
+
+  it('redundant writes are no-ops (no duplicates, no phantom removals)', () => {
+    const id = uid()
+    const c = useVideoOutputCollapsed(() => id)
+    c.value = false
+    expect(c.value).toBe(false)
+    c.value = true
+    c.value = true
+    expect(c.value).toBe(true)
+    c.value = false
+    expect(c.value).toBe(false)
+  })
+
+  it('shares state between two computeds pointing at the same node', () => {
+    const id = uid()
+    const a = useVideoOutputCollapsed(() => id)
+    const b = useVideoOutputCollapsed(() => id)
+    a.value = true
+    expect(b.value).toBe(true)
   })
 })

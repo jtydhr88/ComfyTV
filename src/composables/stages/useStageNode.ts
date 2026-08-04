@@ -307,6 +307,13 @@ export function useStageNode(
       spawnConsumingNode(node, 'ComfyTV.ImagePickerStage', 'batch')
     }
 
+    if (
+      node.comfyClass === 'ComfyTV.VideoStage'
+      && !outputHasLinks(node, 0)
+    ) {
+      spawnConsumingNode(node, 'ComfyTV.VideoPickerStage', 'batch')
+    }
+
     state.running = true
     try {
       const a = app as any
