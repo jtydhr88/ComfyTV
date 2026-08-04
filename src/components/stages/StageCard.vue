@@ -10,7 +10,7 @@
 
     <StagePresetBar v-if="node && !hideRun" :node="node" />
 
-    <ImageReferences v-if="!hideContext && state.variant !== 'loader'" :node="node" />
+    <ImageReferences v-if="!hideContext && (state.variant !== 'loader' || acceptsContextMedia)" :node="node" />
 
     <section
       v-if="isPicker && !hideContext && (poolCount > 0 || connectedInputs.length > 0)"
@@ -53,7 +53,7 @@
       />
     </section>
 
-    <section v-if="!hideContext && state.variant !== 'loader' && !isPicker && connectedInputs.length > 0"
+    <section v-if="!hideContext && (state.variant !== 'loader' || acceptsContextMedia) && !isPicker && connectedInputs.length > 0"
              class="ctv:flex ctv:flex-col ctv:gap-1">
       <button :class="contextToggle" :aria-expanded="!contextCollapsed" @click="contextCollapsed = !contextCollapsed">
         <i :class="['pi', contextCollapsed ? 'pi-chevron-right' : 'pi-chevron-down', 'ctv:w-2.5 ctv:text-2xs ctv:text-muted-foreground']" />
@@ -271,6 +271,7 @@ import CustomParamsSection from './CustomParamsSection.vue'
 import StagePresetBar from './StagePresetBar.vue'
 import { t } from '@/i18n'
 import ValuePreview from './ValuePreview.vue'
+import { nodeAcceptsAutogrowImages } from '@/composables/stages/assetSlots'
 import { imageInputSlotIndex, slotColor } from '@/composables/stages/imageSlotMentions'
 import { useActionsCollapsed, useContextCollapsed, useTextOutputCollapsed, useVideoOutputCollapsed } from '@/composables/stages/useContextCollapsed'
 import { useTextOutputActions } from '@/composables/stages/useTextOutputActions'
@@ -320,6 +321,8 @@ const {
 } = useStageCard(() => props.state, props.onAction)
 
 const isPicker = computed(() => isPoolPickerKind(props.state.kind))
+
+const acceptsContextMedia = computed(() => nodeAcceptsAutogrowImages(props.node))
 
 const contextCollapsed = useContextCollapsed(() => (props.node as any)?.id ?? null)
 const textOutputCollapsed = useTextOutputCollapsed(() => (props.node as any)?.id ?? null)

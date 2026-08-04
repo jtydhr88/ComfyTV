@@ -21,6 +21,7 @@ export interface MentionListOptions {
   items: () => MentionSuggestionItem[]
   query: () => string
   command: (attrs: MentionCommandAttrs) => void
+  insertExpanded?: (module: { body: string }) => void
   focusCreate?: () => void
 }
 
@@ -91,6 +92,10 @@ export function useMentionList(opts: MentionListOptions) {
       if (item.type === 'imageSlot') {
         const label = mentionSlotLabel(item.slotType, item.slot)
         opts.command({ id: label, label, mentionType: 'imageSlot' })
+        return
+      }
+      if (item.module.entryKind === 'prompt' && opts.insertExpanded) {
+        opts.insertExpanded(item.module)
         return
       }
       const label = item.module.label ?? ''

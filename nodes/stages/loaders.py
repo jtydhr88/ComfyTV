@@ -74,9 +74,16 @@ class TextLoaderStage(io.ComfyNode):
                 io.String.Input(
                     "text",
                     default="", multiline=True,
-                    tooltip="Type text here. It becomes this stage's output and is passed "
-                            "to downstream stages in real time as you edit.",
+                    socketless=True,
+                    extra_dict={"hidden": True},
+                    tooltip="Legacy plain-text value; migrated into the prompt editor on first open.",
                 ),
+                _main_prompt_input(tooltip="Compose the prompt here. Reference connected media as "
+                                           "@image_N / @video_N / @audio_N; they expand at run using "
+                                           "the workflow of the consuming stage."),
+                io.Autogrow.Input("images", template=_image_template(9)),
+                io.Autogrow.Input("videos", template=_video_template(4)),
+                COMFYTV_AUDIO.Input("audio", optional=True),
             ],
             outputs=[COMFYTV_TEXT.Output("text")],
             is_output_node=True,
@@ -84,8 +91,10 @@ class TextLoaderStage(io.ComfyNode):
         )
 
     @classmethod
-    def execute(cls, project_id="", parent_output_id=0, text=""):
-        return _stage_emit_auto(cls, project_id=project_id, payload_str=text or "",
+    def execute(cls, project_id="", parent_output_id=0, text="", main_prompt="",
+                images=None, videos=None, audio=""):
+        payload = (main_prompt or "").strip() or (text or "")
+        return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
                                 parent_output_id=parent_output_id)
 
 

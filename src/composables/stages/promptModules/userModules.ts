@@ -7,10 +7,11 @@ export function userSnippetModules(entries: Entry[]): PromptModule[] {
     id: `snippet:${e.id}`,
     source: 'user',
     kind: 'snippet',
+    entryKind: e.kind,
     label: e.label,
     body: e.content,
     apply: 'insert',
-    resolveAt: 'run',
+    resolveAt: e.kind === 'prompt' ? 'edit' : 'run',
     surfaces: ['mention'],
   }))
 }

@@ -22,8 +22,6 @@ export type MentionSuggestionItem =
   | { type: 'snippet'; module: PromptModule }
   | { type: 'imageSlot'; slotType: MentionSlotType; slot: number; ordinal: number; url: string | null; color: string }
 
-const MAX_ENTRIES = 8
-
 export function useMentionSuggestion(
   projectId: Ref<string>,
   getNode: () => LGraphNode | undefined,
@@ -96,7 +94,7 @@ export function useMentionSuggestion(
         ...imageSlotItems(q),
         ...mediaSlotItems('video', q),
         ...mediaSlotItems('audio', q),
-        ...mods.slice(0, MAX_ENTRIES).map(module => ({ type: 'snippet' as const, module })),
+        ...mods.map(module => ({ type: 'snippet' as const, module })),
       ]
     },
     render: () => {

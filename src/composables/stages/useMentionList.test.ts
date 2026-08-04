@@ -22,6 +22,10 @@ const SNIP: MentionSuggestionItem = {
   type: 'snippet',
   module: { id: 'mod-1', label: 'style', body: 'oil painting' } as any,
 }
+const PROMPT_SNIP: MentionSuggestionItem = {
+  type: 'snippet',
+  module: { id: 'snippet:9', label: 'opening', body: 'shot of @image_0', entryKind: 'prompt' } as any,
+}
 
 function key(e: Partial<KeyboardEvent>): KeyboardEvent {
   return { preventDefault: vi.fn(), ...e } as KeyboardEvent
@@ -31,14 +35,16 @@ function setup(initialItems: MentionSuggestionItem[] = [IMG, SNIP], initialQuery
   const items = ref(initialItems)
   const query = ref(initialQuery)
   const command = vi.fn()
+  const insertExpanded = vi.fn()
   const focusCreate = vi.fn()
   const list = useMentionList({
     items: () => items.value,
     query: () => query.value,
     command,
+    insertExpanded,
     focusCreate,
   })
-  return { list, items, query, command, focusCreate }
+  return { list, items, query, command, insertExpanded, focusCreate }
 }
 
 beforeEach(() => {
@@ -87,6 +93,13 @@ describe('useMentionList — selection', () => {
     const { list, command } = setup()
     list.selectItem(1)
     expect(command).toHaveBeenCalledWith({ id: 'style', label: 'style', mentionType: 'entry' })
+  })
+
+  it('selecting a prompt-kind snippet inserts expanded instead of a chip', () => {
+    const { list, command, insertExpanded } = setup([PROMPT_SNIP, SNIP])
+    list.selectItem(0)
+    expect(insertExpanded).toHaveBeenCalledWith(PROMPT_SNIP.module)
+    expect(command).not.toHaveBeenCalled()
   })
 
   it('selecting past the list opens the create form when allowed', () => {

@@ -22,13 +22,18 @@ import {
   fetchImageSlotOptionsCached,
   imageSlotsFromConfig,
   type ImageSlotOption,
+  injectAssetRefs,
   injectImageRefs,
   missingRequiredImageSlots,
+  nodeAcceptsAudioInput,
   nodeAcceptsAutogrowImages,
+  nodeAcceptsAutogrowVideos,
   refCoveredImageSlots,
   refSlotWarnings,
   type ResolvedImageRef,
   wiredImageSlots,
+  wiredVideoSlots,
+  mentionWorkflowRef,
   workflowRefOfNode,
 } from './assetSlots'
 
@@ -120,6 +125,58 @@ describe('injectImageRefs', () => {
     ])
     expect(inputs['images.image0']).toBe('/second')
     expect(warnings.some(w => /later one wins/i.test(w))).toBe(true)
+  })
+})
+
+describe('injectAssetRefs (video / audio)', () => {
+  it('routes each ref type to its own input namespace', () => {
+    const inputs: Record<string, unknown> = {}
+    injectAssetRefs(inputs, [
+      ref({ url: '/img', slot: 0 }),
+      ref({ url: '/vid', slot: 1, type: 'video' }),
+      ref({ url: '/aud', slot: 0, type: 'audio' }),
+    ])
+    expect(inputs).toEqual({
+      'images.image0': '/img',
+      'videos.video1': '/vid',
+      'audio': '/aud',
+    })
+  })
+
+  it('same slot number across types does not collide', () => {
+    const inputs: Record<string, unknown> = {}
+    const warnings = injectAssetRefs(inputs, [
+      ref({ url: '/img', slot: 0 }),
+      ref({ url: '/vid', slot: 0, type: 'video' }),
+    ])
+    expect(warnings).toEqual([])
+    expect(inputs['images.image0']).toBe('/img')
+    expect(inputs['videos.video0']).toBe('/vid')
+  })
+
+  it('audio ref overriding a wired audio input warns', () => {
+    const inputs: Record<string, unknown> = { audio: '/wired' }
+    const warnings = injectAssetRefs(inputs, [ref({ url: '/pin', slot: 0, type: 'audio' })])
+    expect(inputs['audio']).toBe('/pin')
+    expect(warnings.some(w => /override/i.test(w))).toBe(true)
+  })
+})
+
+describe('nodeAccepts helpers for video / audio', () => {
+  it('detects videos autogrow and audio inputs', () => {
+    const node = { inputs: [{ name: 'videos.video0' }, { name: 'audio' }] }
+    expect(nodeAcceptsAutogrowVideos(node)).toBe(true)
+    expect(nodeAcceptsAudioInput(node)).toBe(true)
+    expect(nodeAcceptsAutogrowVideos({ inputs: [{ name: 'audio' }] })).toBe(false)
+    expect(nodeAcceptsAudioInput({ inputs: [{ name: 'images.image0' }] })).toBe(false)
+  })
+
+  it('wiredVideoSlots returns only wired slots', () => {
+    expect(wiredVideoSlots({ inputs: [
+      { name: 'videos.video0', link: 1 },
+      { name: 'videos.video2', link: null },
+      { name: 'videos.video1', link: 3 },
+    ] })).toEqual([0, 1])
   })
 })
 
@@ -225,6 +282,30 @@ describe('workflowRefOfNode', () => {
     expect(workflowRefOfNode({ comfyClass: 'ImageStage' }))
       .toEqual({ kind: 'image', label: 'MyWorkflow' })
     expect(getStageMeta).toHaveBeenCalledWith('ImageStage')
+  })
+})
+
+describe('mentionWorkflowRef', () => {
+  it('falls back to the first downstream consumer with a workflow', () => {
+    getStageMeta.mockImplementation((cls: string) =>
+      cls === 'VideoStage' ? { workflow_kind: 'video' } : undefined)
+    getWidget.mockReturnValue({ value: 'H3 R2V' })
+    const consumer = { comfyClass: 'VideoStage' }
+    const graph = {
+      links: { 7: { target_id: 42 } },
+      getNodeById: (id: unknown) => (id === 42 ? consumer : null),
+    }
+    const builder = { comfyClass: 'TextLoaderStage', outputs: [{ links: [7] }] }
+    expect(mentionWorkflowRef(builder, graph)).toEqual({ kind: 'video', label: 'H3 R2V' })
+  })
+
+  it('prefers the node own workflow and tolerates missing graph', () => {
+    getStageMeta.mockReturnValue({ workflow_kind: 'image' })
+    getWidget.mockReturnValue({ value: 'Own' })
+    expect(mentionWorkflowRef({ comfyClass: 'ImageStage' }, undefined))
+      .toEqual({ kind: 'image', label: 'Own' })
+    getStageMeta.mockReturnValue(undefined)
+    expect(mentionWorkflowRef({ comfyClass: 'X', outputs: [{ links: [1] }] }, undefined)).toBeNull()
   })
 })
 

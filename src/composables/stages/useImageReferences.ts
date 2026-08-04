@@ -8,15 +8,20 @@ import {
   fetchImageSlotOptions,
   fetchImageSlotOptionsCached,
   type ImageSlotOption,
+  nodeAcceptsAudioInput,
   nodeAcceptsAutogrowImages,
+  nodeAcceptsAutogrowVideos,
   type RefSlotWarning,
   refSlotWarnings,
   wiredImageSlots,
+  wiredVideoSlots,
   workflowRefOfNode,
 } from '@/composables/stages/assetSlots'
 import {
+  type AssetRefType,
   type ImageRef,
   readImageRefs,
+  refType,
   writeImageRefs,
 } from '@/composables/stages/imageRefs'
 import { importAssetFiles } from '@/composables/sidebar/assetImport'
@@ -50,7 +55,17 @@ export function useImageReferences(
   const slotPicker = ref<SlotPickerState | null>(null)
   const slotWarnings = ref<string[]>([])
 
-  const accepts = computed(() => nodeAcceptsAutogrowImages(getNode()))
+  const acceptedTypes = computed<Record<AssetRefType, boolean>>(() => ({
+    image: nodeAcceptsAutogrowImages(getNode()),
+    video: nodeAcceptsAutogrowVideos(getNode()),
+    audio: nodeAcceptsAudioInput(getNode()),
+  }))
+  const accepts = computed(() =>
+    acceptedTypes.value.image || acceptedTypes.value.video || acceptedTypes.value.audio,
+  )
+  const acceptedMediaTypes = computed<string[]>(() =>
+    (['image', 'video', 'audio'] as const).filter(k => acceptedTypes.value[k]),
+  )
 
   function assetOf(ref: ImageRef): Asset | undefined {
     return assetStore.byId(ref.asset_id)
@@ -64,10 +79,12 @@ export function useImageReferences(
     return `${assetLabel(ref)} · ${t('promptAssets.slotShort', { n: ref.slot })}`
   }
 
-  function nextFreeSlot(): number {
+  function nextFreeSlot(type: AssetRefType): number {
+    if (type === 'audio') return 0
+    const wired = type === 'video' ? wiredVideoSlots(getNode()) : wiredImageSlots(getNode())
     const taken = new Set<number>([
-      ...wiredImageSlots(getNode()),
-      ...refs.value.map(r => r.slot).filter((s): s is number => s != null),
+      ...wired,
+      ...refs.value.filter(r => refType(r) === type).map(r => r.slot),
     ])
     let i = 0
     while (taken.has(i)) i++
@@ -82,8 +99,19 @@ export function useImageReferences(
   }
 
   function onAddAsset(asset: Asset) {
-    if (refs.value.some(r => r.asset_id === asset.id)) return
-    setRefs([...refs.value, { asset_id: asset.id, slot: nextFreeSlot() }])
+    const type: AssetRefType =
+      asset.media_type === 'video' ? 'video'
+      : asset.media_type === 'audio' ? 'audio'
+      : 'image'
+    if (!acceptedTypes.value[type]) return
+    if (refs.value.some(r => r.asset_id === asset.id && refType(r) === type)) return
+    const base = type === 'audio'
+      ? refs.value.filter(r => refType(r) !== 'audio')
+      : refs.value
+    const entry: ImageRef = type === 'image'
+      ? { asset_id: asset.id, slot: nextFreeSlot(type) }
+      : { asset_id: asset.id, slot: nextFreeSlot(type), type }
+    setRefs([...base, entry])
   }
 
   async function importFiles(files: File[]): Promise<void> {
@@ -107,25 +135,36 @@ export function useImageReferences(
   }
 
   function openSlotPicker(index: number, e: MouseEvent) {
+    const target = refs.value[index]
+    if (!target || refType(target) === 'audio') return
+    const type = refType(target)
     const rootRect = rootEl.value?.getBoundingClientRect()
     if (!rootRect) return
     const tile = (e.currentTarget as HTMLElement).getBoundingClientRect()
     const x = Math.max(0, Math.min(tile.left - rootRect.left, rootRect.width - 260))
     const y = tile.bottom - rootRect.top + 4
 
-    const wired = wiredImageSlots(getNode())
+    const wired = type === 'video' ? wiredVideoSlots(getNode()) : wiredImageSlots(getNode())
 
     slotPicker.value = {
       index,
-      currentSlot: refs.value[index]?.slot ?? null,
+      currentSlot: target.slot ?? null,
       x, y,
       loading: true,
       error: null,
       options: [],
       wiredSlots: wired,
       claimedSlots: refs.value
-        .filter((_, i) => i !== index)
+        .filter((r, i) => i !== index && refType(r) === type)
         .map(r => r.slot),
+    }
+
+    if (type === 'video') {
+      Object.assign(slotPicker.value, {
+        loading: false,
+        options: [0, 1, 2, 3].map(slot => ({ slot, nodeTitles: [] })),
+      })
+      return
     }
 
     const wf = workflowRefOfNode(getNode())
@@ -171,7 +210,7 @@ export function useImageReferences(
 
   async function recomputeSlotWarnings() {
     const seq = ++warningsSeq
-    const list = refs.value
+    const list = refs.value.filter(r => refType(r) === 'image')
     if (list.length === 0) {
       slotWarnings.value = []
       return
@@ -203,6 +242,7 @@ export function useImageReferences(
   return {
     refs,
     accepts,
+    acceptedMediaTypes,
     pickerOpen,
     slotPicker,
     slotWarnings,

@@ -28,11 +28,17 @@
       ><i class="pi pi-times ctv:text-2xs" /></button>
     </div>
 
-    <p class="ctv:shrink-0 ctv:m-0 ctv:py-1.5 ctv:px-2.5 ctv:text-[11px] ctv:text-muted-foreground ctv:border-b ctv:border-border-subtle">
+    <p v-if="activeKind !== 'prompt'"
+       class="ctv:shrink-0 ctv:m-0 ctv:py-1.5 ctv:px-2.5 ctv:text-[11px] ctv:text-muted-foreground ctv:border-b ctv:border-border-subtle">
       {{ $t('entries.refHelpPre') }}
       <code class="ctv:py-0 ctv:px-1 ctv:rounded-sm ctv:font-mono
                    ctv:bg-primary-background/20 ctv:border ctv:border-primary-background/45 ctv:text-primary-background">@label</code>
       {{ $t('entries.refHelpPost') }}
+    </p>
+    <p v-else
+       class="ctv:shrink-0 ctv:m-0 ctv:py-1.5 ctv:px-2.5 ctv:text-[11px] ctv:text-muted-foreground ctv:border-b ctv:border-border-subtle">
+      <i class="pi pi-file-import ctv:text-2xs ctv:mr-1 ctv:text-primary-background" />
+      {{ $t('entries.promptHelp') }}
     </p>
 
     <div v-if="ENTRY_KINDS.length > 1"
@@ -74,6 +80,10 @@
           @keydown.ctrl.enter.prevent="saveIfDirty(entry)"
           @keydown.meta.enter.prevent="saveIfDirty(entry)"
         />
+        <span v-if="entryContentError(entry.kind, drafts[entry.id].content)"
+              class="ctv:text-2xs ctv:text-destructive-background">
+          {{ entryContentError(entry.kind, drafts[entry.id].content) }}
+        </span>
         <label v-for="f in metaFields" :key="f.name" class="ctv:flex ctv:flex-col ctv:gap-0.5">
           <span class="ctv:text-2xs ctv:text-muted-foreground">{{ f.label }}</span>
           <textarea
@@ -117,6 +127,9 @@
           @keydown.ctrl.enter.prevent="saveNew"
           @keydown.meta.enter.prevent="saveNew"
         />
+        <span v-if="newContentError" class="ctv:text-2xs ctv:text-destructive-background">
+          {{ newContentError }}
+        </span>
         <label v-for="f in metaFields" :key="f.name" class="ctv:flex ctv:flex-col ctv:gap-0.5">
           <span class="ctv:text-2xs ctv:text-muted-foreground">{{ f.label }}</span>
           <textarea
@@ -154,7 +167,7 @@ import {
   KIND_LABELS,
   KIND_META_FIELDS,
 } from '@/composables/dialog/entryCatalog'
-import { useEntryEditor } from '@/composables/dialog/useEntryEditor'
+import { entryContentError, useEntryEditor } from '@/composables/dialog/useEntryEditor'
 import { useEntryTransfer } from '@/composables/sidebar/useEntryTransfer'
 import { useProjectStore } from '@/stores/projectStore'
 import { ENTRY_KINDS, type EntryKind } from '@/stores/entryStore'
@@ -174,7 +187,7 @@ const {
   drafts,
   saveIfDirty, confirmDelete,
   creating, newDraft, newLabelInput,
-  newLabelError, canSaveNew,
+  newLabelError, newContentError, canSaveNew,
   startCreate, cancelCreate, saveNew,
   kickHydrate,
 } = useEntryEditor(projectId, activeKind, metaFields)

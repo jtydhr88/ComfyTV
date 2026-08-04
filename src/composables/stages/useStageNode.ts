@@ -50,13 +50,15 @@ import {
   buildScopedPrompt,
 } from '@/utils/graphSerialize'
 import {
-  injectImageRefs,
+  injectAssetRefs,
+  nodeAcceptsAudioInput,
   nodeAcceptsAutogrowImages,
+  nodeAcceptsAutogrowVideos,
   fetchWorkflowMetaCached,
-  workflowRefOfNode,
+  mentionWorkflowRef,
   type ResolvedImageRef,
 } from '@/composables/stages/assetSlots'
-import { readImageRefs } from '@/composables/stages/imageRefs'
+import { readImageRefs, refType } from '@/composables/stages/imageRefs'
 import {
   expandMentionTokens,
   mentionOrdinalText,
@@ -156,14 +158,15 @@ export function useStageNode(
       if (kindWidget) kindWidget.callback = useChainCallback(kindWidget.callback, sync)
     } else if (kind === 'text') {
       const textWidget = node.widgets?.find((w: any) => w.name === 'text')
-      if (textWidget) {
-        const sync = () => {
-          const v = String(textWidget.value ?? '')
-          store.setOutputSlot(state, 0, v ? v : null)
-        }
-        sync()
-        textWidget.callback = useChainCallback(textWidget.callback, sync)
+      const promptWidget = node.widgets?.find((w: any) => w.name === 'main_prompt')
+      const sync = () => {
+        const v = String(promptWidget?.value ?? '').trim() || String(textWidget?.value ?? '')
+        store.setOutputSlot(state, 0, v ? v : null)
       }
+      sync()
+      if (textWidget) textWidget.callback = useChainCallback(textWidget.callback, sync)
+      if (promptWidget) promptWidget.callback = useChainCallback(promptWidget.callback, sync)
+      watch(() => state.mainPrompt, sync)
     } else {
       const widgetName = kind === 'image' ? 'image'
                        : kind === 'video' ? 'video'
@@ -323,6 +326,26 @@ export function useStageNode(
         ? await a.graphToPrompt()
         : await buildScopedPrompt(a, collectReachableNodeIds(a, node))
 
+      const entries = useEntryStore()
+      const pid = useProjectStore().currentProjectId || ''
+
+      const resolveStyle = async (graphNode: unknown) => {
+        const wfRef = mentionWorkflowRef(graphNode, a.graph)
+        if (!wfRef) return normalizeMentionStyle(undefined)
+        try {
+          const meta = await fetchWorkflowMetaCached(wfRef.kind, wfRef.label)
+          return normalizeMentionStyle(meta.mention_style)
+        } catch {
+          return normalizeMentionStyle(undefined)
+        }
+      }
+      const ordinalTexts = (style: ReturnType<typeof normalizeMentionStyle>) => ({
+        image: mentionOrdinalText(style, n => t('mention.imageExpand', { n }), 'image'),
+        video: mentionOrdinalText(style, n => t('mention.videoExpand', { n }), 'video'),
+        audio: mentionOrdinalText(style, n => t('mention.audioExpand', { n }), 'audio'),
+      })
+      const runStyle = await resolveStyle(node)
+
       const targetId = String(node.id)
       const missingUpstream: string[] = []
       const promptNodeIds = isBridgeIn ? [targetId] : Object.keys(pm?.output ?? {})
@@ -349,6 +372,17 @@ export function useStageNode(
             }
           }
           if (snapshot != null && snapshot !== '') {
+            if ((key === 'texts' || key.startsWith('texts.')) && snapshot.includes('@')) {
+              const { text, missing } = expandMentionTokens(
+                entries.expand(pid, snapshot),
+                mentionSendOrders(upstreamNode),
+                ordinalTexts(runStyle),
+              )
+              for (const m of missing) {
+                console.warn(`[ComfyTV/stage] upstream #${upstreamId}: @${m.type}_${m.slot} references an empty slot — dropped from prompt`)
+              }
+              snapshot = text
+            }
             nodeInputs[key] = snapshot
           } else if (!isBridgeIn) {
             const upstreamLabel = upstreamNode.title
@@ -373,9 +407,7 @@ export function useStageNode(
         return
       }
 
-      const entries = useEntryStore()
       const assetStore = useAssetStore()
-      const pid = useProjectStore().currentProjectId || ''
 
       const refsByNode = new Map<string, ReturnType<typeof readImageRefs>>()
       for (const nid of Object.keys(pm?.output ?? {})) {
@@ -393,16 +425,21 @@ export function useStageNode(
         if (refs?.length) {
           const graphNode = a.graph?.getNodeById?.(Number(nid))
                          ?? a.graph?.getNodeById?.(String(nid))
-          if (nodeAcceptsAutogrowImages(graphNode)) {
-            const resolved: ResolvedImageRef[] = []
-            for (const r of refs) {
-              const asset = assetStore.byId(r.asset_id)
-              if (asset) resolved.push({ id: r.asset_id, url: asset.payload_url, slot: r.slot })
-              else console.warn(`[ComfyTV/stage] node #${nid}: image ref ${r.asset_id} missing from library`)
-            }
-            for (const w of injectImageRefs(obj, resolved)) {
-              console.warn(`[ComfyTV/stage] node #${nid}: ${w}`)
-            }
+          const acceptsType = {
+            image: nodeAcceptsAutogrowImages(graphNode),
+            video: nodeAcceptsAutogrowVideos(graphNode),
+            audio: nodeAcceptsAudioInput(graphNode),
+          }
+          const resolved: ResolvedImageRef[] = []
+          for (const r of refs) {
+            const type = refType(r)
+            if (!acceptsType[type]) continue
+            const asset = assetStore.byId(r.asset_id)
+            if (asset) resolved.push({ id: r.asset_id, url: asset.payload_url, slot: r.slot, type })
+            else console.warn(`[ComfyTV/stage] node #${nid}: ${type} ref ${r.asset_id} missing from library`)
+          }
+          for (const w of injectAssetRefs(obj, resolved)) {
+            console.warn(`[ComfyTV/stage] node #${nid}: ${w}`)
           }
         }
 
@@ -410,27 +447,18 @@ export function useStageNode(
         if (typeof mp === 'string' && mp.includes('@')) {
           const graphNode = a.graph?.getNodeById?.(Number(nid))
                          ?? a.graph?.getNodeById?.(String(nid))
-          let mentionStyle = normalizeMentionStyle(undefined)
-          const wfRef = workflowRefOfNode(graphNode)
-          if (wfRef) {
-            try {
-              const meta = await fetchWorkflowMetaCached(wfRef.kind, wfRef.label)
-              mentionStyle = normalizeMentionStyle(meta.mention_style)
-            } catch {}
-          }
+          const mentionStyle = String(nid) === targetId
+            ? runStyle
+            : await resolveStyle(graphNode)
           const { text, missing } = expandMentionTokens(
-            mp,
+            entries.expand(pid, mp),
             mentionSendOrders(graphNode),
-            {
-              image: mentionOrdinalText(mentionStyle, n => t('mention.imageExpand', { n }), 'image'),
-              video: mentionOrdinalText(mentionStyle, n => t('mention.videoExpand', { n }), 'video'),
-              audio: mentionOrdinalText(mentionStyle, n => t('mention.audioExpand', { n }), 'audio'),
-            },
+            ordinalTexts(mentionStyle),
           )
           for (const m of missing) {
             console.warn(`[ComfyTV/stage] node #${nid}: @${m.type}_${m.slot} references an empty slot — dropped from prompt`)
           }
-          obj.main_prompt = entries.expand(pid, text)
+          obj.main_prompt = text
         }
       }
       const serverStore = useServerStore()

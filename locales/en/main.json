@@ -306,9 +306,9 @@
     "clear": "Clear"
   },
   "imageRefs": {
-    "title": "Image references",
-    "empty": "No reference images — click + to pin one from the library.",
-    "add": "Add reference image",
+    "title": "Asset references",
+    "empty": "No reference assets — click + to pin one from the library.",
+    "add": "Add reference asset",
     "remove": "Remove",
     "warnDuplicate": "Reference slot #{n} is pinned by multiple images — only the last one applies at run.",
     "warnOverride": "Reference slot #{n} already has an upstream connection — the pinned image overrides it at run.",
@@ -1354,6 +1354,7 @@
     "contentPlaceholder": "Content this {'@'}-token expands to. (For characters / other kinds, use the ComfyTV button → Entries dialog.)",
     "save": "Save (Ctrl+Enter)",
     "parse": "Recognize pasted references (e.g. {'@'}图片#0 / {'@'}image #0) and turn them into chips",
+    "promptBadge": "expands",
     "imageSlots": "Connected inputs",
     "imageChip": "image #{n}",
     "imageExpand": "image {n}",
@@ -1385,7 +1386,23 @@
     "emptyKind": "No {kind} yet. Click + Add below.",
     "labelPlaceholder": "label",
     "save": "Save",
-    "addKind": "+ Add {kind}"
+    "addKind": "+ Add {kind}",
+    "promptHelp": "Prompt assets are inserted EXPANDED into the prompt (text + slot chips), not as a tag. They may reference slots ({'@'}image_N / {'@'}video_N / {'@'}audio_N) but no other entries.",
+    "promptRefsError": "Prompt assets can't reference other entries — remove: {tokens}"
+  },
+  "promptSave": {
+    "open": "Save this prompt as a reusable asset (Entries → Prompts)",
+    "hint": "Slot references ({'@'}image_N …) are kept; references to other entries are not allowed.",
+    "labelPlaceholder": "asset name",
+    "save": "Save prompt",
+    "entryRefsError": "Remove entry references before saving: {tokens}"
+  },
+  "promptEntries": {
+    "open": "Browse saved entries and insert into the prompt",
+    "insert": "Insert",
+    "empty": "No entries yet — save one with the bookmark button, or manage them in the Entries sidebar tab.",
+    "searchPlaceholder": "Search label or content…",
+    "noMatch": "No entries match."
   },
   "menu": {
     "openEntryManager": "ComfyTV — open entry manager",

@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 _ENTRY_LABEL_RE = _re.compile(r"^[^\W\d][\w-]*$")
 
 
-ENTRY_KINDS: tuple[str, ...] = ("fragment",)
+ENTRY_KINDS: tuple[str, ...] = ("fragment", "prompt")
 
 
 _DEFAULT_FRAGMENTS = [

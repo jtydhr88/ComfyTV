@@ -2,11 +2,22 @@ import { computed, nextTick, reactive, ref, watch, type Ref } from 'vue'
 
 import type { Entry } from '@/api/schemas'
 import { ENTRY_KINDS, useEntryStore, type EntryKind } from '@/stores/entryStore'
+import {
+  nonSlotMentionLabels,
+  normalizeMentionText,
+} from '@/composables/stages/imageSlotMentions'
 import { isValidLabel } from '@/utils/labelRegex'
 import { askConfirm } from '@/composables/dialog/useConfirmDialog'
 import { t } from '@/i18n'
 
 import { draftFromEntry, type Draft, type MetaField } from './entryCatalog'
+
+export function entryContentError(kind: string, content: string): string {
+  if (kind !== 'prompt') return ''
+  const bad = nonSlotMentionLabels(normalizeMentionText(content))
+  if (!bad.length) return ''
+  return t('entries.promptRefsError', { tokens: bad.map(l => `@${l}`).join(' ') })
+}
 
 export function useEntryEditor(
   projectId: Ref<string>,
@@ -39,6 +50,7 @@ export function useEntryEditor(
     const d = drafts[entry.id]
     if (!d) return
     if (!isValidLabel(d.label)) return
+    if (entryContentError(entry.kind, d.content)) return
     const sameLabel = d.label === entry.label
     const sameContent = d.content === entry.content
     const sameMeta = JSON.stringify(d.metadata) === JSON.stringify(entry.metadata)
@@ -73,8 +85,12 @@ export function useEntryEditor(
     }
     return ''
   })
+  const newContentError = computed(
+    () => entryContentError(activeKind.value, newDraft.content),
+  )
   const canSaveNew = computed(
-    () => isValidLabel(newDraft.label) && !!newDraft.content.trim(),
+    () => isValidLabel(newDraft.label) && !!newDraft.content.trim()
+      && !newContentError.value,
   )
 
   function startCreate() {
@@ -113,7 +129,7 @@ export function useEntryEditor(
     drafts,
     saveIfDirty, confirmDelete,
     creating, newDraft, newLabelInput,
-    newLabelError, canSaveNew,
+    newLabelError, newContentError, canSaveNew,
     startCreate, cancelCreate, saveNew,
     kickHydrate,
   }

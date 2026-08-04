@@ -1,5 +1,5 @@
 import { AUTOGROW_IMAGE_KEY_RE, wiredImageSlots } from '@/composables/stages/assetSlots'
-import { readImageRefs } from '@/composables/stages/imageRefs'
+import { readImageRefs, refType } from '@/composables/stages/imageRefs'
 
 export type MentionSlotType = 'image' | 'video' | 'audio'
 
@@ -57,28 +57,34 @@ export function slotColor(slot: number): string {
 
 export function imageSendOrder(node: unknown): number[] {
   const slots = new Set<number>(wiredImageSlots(node))
-  for (const r of readImageRefs(node)) slots.add(r.slot)
+  for (const r of readImageRefs(node)) {
+    if (refType(r) === 'image') slots.add(r.slot)
+  }
   return [...slots].sort((a, b) => a - b)
 }
 
 const AUTOGROW_VIDEO_KEY_RE = /^videos\.video(\d+)$/
 
 export function videoSendOrder(node: unknown): number[] {
+  const slots = new Set<number>()
   const inputs = (node as { inputs?: Array<{ name?: unknown; link?: unknown }> } | null)?.inputs
-  if (!Array.isArray(inputs)) return []
-  const out: number[] = []
-  for (const i of inputs) {
-    if (typeof i?.name !== 'string') continue
-    const m = AUTOGROW_VIDEO_KEY_RE.exec(i.name)
-    if (m && i.link != null) out.push(Number(m[1]))
+  if (Array.isArray(inputs)) {
+    for (const i of inputs) {
+      if (typeof i?.name !== 'string') continue
+      const m = AUTOGROW_VIDEO_KEY_RE.exec(i.name)
+      if (m && i.link != null) slots.add(Number(m[1]))
+    }
   }
-  return out.sort((a, b) => a - b)
+  for (const r of readImageRefs(node)) {
+    if (refType(r) === 'video') slots.add(r.slot)
+  }
+  return [...slots].sort((a, b) => a - b)
 }
 
 export function audioSendOrder(node: unknown): number[] {
   const inputs = (node as { inputs?: Array<{ name?: unknown; link?: unknown }> } | null)?.inputs
-  if (!Array.isArray(inputs)) return []
-  return inputs.some(i => i?.name === 'audio' && i.link != null) ? [0] : []
+  if (Array.isArray(inputs) && inputs.some(i => i?.name === 'audio' && i.link != null)) return [0]
+  return readImageRefs(node).some(r => refType(r) === 'audio') ? [0] : []
 }
 
 export function mentionSendOrders(node: unknown): MentionOrders {
@@ -137,6 +143,21 @@ export function normalizeMentionText(text: string): string {
 
 export function hasRawMentionTokens(text: string): boolean {
   return normalizeMentionText(text) !== text
+}
+
+export const MENTION_TOKEN_RE =
+  /@(?:(image|video|audio)_(\d+)(?![0-9a-zA-Z_-])|([\p{L}_][\p{L}\p{N}_-]*))/gu
+
+export function mentionTokenLabel(m: RegExpMatchArray): string {
+  return m[1] ? `${m[1]}_${m[2]}` : m[3]!
+}
+
+export function nonSlotMentionLabels(text: string): string[] {
+  const out = new Set<string>()
+  for (const m of text.matchAll(MENTION_TOKEN_RE)) {
+    if (!m[1]) out.add(m[3]!)
+  }
+  return [...out]
 }
 
 export interface MentionOrders {

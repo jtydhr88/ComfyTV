@@ -8,6 +8,7 @@ import {
   FLEX_FILL_STAGES,
   RICH_STAGE_MIN_HEIGHTS,
   RICH_STAGE_MIN_WIDTHS,
+  STAGE_CARD_PROPS,
 } from '@/composables/stages/stageRegistry'
 import ProjectCard from '@/components/stages/ProjectCard.vue'
 import ComfyTVMountHost from '@/components/ComfyTVMountHost.vue'
@@ -117,7 +118,10 @@ function mountStage(node: ComfyNode, kind: StageKind, variant: StageVariant = 'g
   const { state, onRunRequest, onCancelRequest, onDisconnect, onAction } = useStageNode(node, kind, variant)
 
   const Card = RICH_STAGE_CARDS[node.comfyClass] ?? StageCard
-  const props: any = { state, node, onRunRequest, onCancelRequest, onDisconnect, onAction }
+  const props: any = {
+    state, node, onRunRequest, onCancelRequest, onDisconnect, onAction,
+    ...STAGE_CARD_PROPS[node.comfyClass],
+  }
 
   const mountKey = `stage-${mountKeySeq++}`
   registerMount(mountKey, container, Card, props)
@@ -327,8 +331,11 @@ const extension: ComfyExtension = {
     }
 
     if (node.comfyClass === 'ComfyTV.TextLoaderStage') {
-      useStageNode(node, 'text', 'loader')
-      return
+      const legacy = getWidget(node, 'text')
+      const mainPrompt = getWidget(node, 'main_prompt')
+      if (mainPrompt && !mainPrompt.value && typeof legacy?.value === 'string' && legacy.value) {
+        mainPrompt.value = legacy.value
+      }
     }
 
     mountStage(node, entry.kind, (entry.variant ?? 'generator') as StageVariant)

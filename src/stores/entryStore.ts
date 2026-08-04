@@ -11,7 +11,7 @@ import {
 import { app } from '@/lib/comfyApp'
 import { LABEL_RE, MENTION_RE } from '@/utils/labelRegex'
 
-export const ENTRY_KINDS = ['fragment'] as const
+export const ENTRY_KINDS = ['fragment', 'prompt'] as const
 export type EntryKind = typeof ENTRY_KINDS[number]
 
 export interface UpsertOpts {

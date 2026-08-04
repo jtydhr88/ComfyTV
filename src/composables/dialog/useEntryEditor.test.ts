@@ -10,7 +10,7 @@ vi.mock('@/composables/dialog/useConfirmDialog', () => ({
 }))
 
 import { askConfirm } from '@/composables/dialog/useConfirmDialog'
-import { useEntryEditor } from './useEntryEditor'
+import { entryContentError, useEntryEditor } from './useEntryEditor'
 import type { MetaField } from './entryCatalog'
 
 const jsonResp = (data: any, status = 200) =>
@@ -37,6 +37,13 @@ describe('useEntryEditor', () => {
     vi.clearAllMocks()
     const fetchApi = (app as any).api.fetchApi as ReturnType<typeof vi.fn>
     fetchApi.mockImplementation(async () => jsonResp({ entries: [] }))
+  })
+
+  it('entryContentError only gates prompt-kind entries with entry references', () => {
+    expect(entryContentError('fragment', 'see @style and @劳拉')).toBe('')
+    expect(entryContentError('prompt', 'shot of @image_0, motion of @video_1')).toBe('')
+    expect(entryContentError('prompt', 'shot of @image_0 in @style')).not.toBe('')
+    expect(entryContentError('prompt', '以@图片#0为主体')).toBe('')
   })
 
   it('rowsByKind groups by kind; activeRows follows activeKind', async () => {

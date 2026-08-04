@@ -476,3 +476,7 @@ export const RICH_STAGE_MIN_WIDTHS: Record<string, number> = {
   'ComfyTV.LayerEditorStage': 960,
   'ComfyTV.StoryboardEditorStage': 1080,
 }
+
+export const STAGE_CARD_PROPS: Record<string, Record<string, boolean>> = {
+  'ComfyTV.TextLoaderStage': { hideOutput: true },
+}

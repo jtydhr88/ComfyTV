@@ -38,6 +38,7 @@ export interface PromptModule {
   id: string
   source: 'builtin' | 'user'
   kind: ModuleKind
+  entryKind?: string
   labelKey?: string
   label?: string
   body: string

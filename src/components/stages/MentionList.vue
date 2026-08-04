@@ -43,7 +43,12 @@
         @mousedown.prevent
         @click="selectItem(imageItems.length + j)"
       >
-        <span class="ctv:font-mono ctv:text-base-foreground ctv:shrink-0">@{{ item.module.label }}</span>
+        <span class="ctv:font-mono ctv:text-base-foreground ctv:shrink-0">
+          <i v-if="item.module.entryKind === 'prompt'" class="pi pi-file-import ctv:text-2xs ctv:mr-1 ctv:text-primary-background" />@{{ item.module.label }}</span>
+        <span v-if="item.module.entryKind === 'prompt'"
+              class="ctv:shrink-0 ctv:py-0 ctv:px-1 ctv:rounded ctv:text-3xs ctv:bg-primary-background/15 ctv:text-primary-background">
+          {{ $t('mention.promptBadge') }}
+        </span>
         <span class="ctv:text-muted-foreground ctv:overflow-hidden ctv:text-ellipsis ctv:whitespace-nowrap">{{ item.module.body }}</span>
       </div>
       <div
@@ -99,6 +104,8 @@ import { nextTick, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import type { MentionSuggestionItem } from '@/composables/stages/useMentionSuggestion'
+import { normalizeMentionText } from '@/composables/stages/imageSlotMentions'
+import { inlineContentFromText } from '@/composables/stages/useMainPromptInput'
 import {
   mentionItemKey as itemKey,
   useMentionList,
@@ -109,6 +116,8 @@ const props = defineProps<{
   items: MentionSuggestionItem[]
   command: (attrs: MentionCommandAttrs) => void
   query: string
+  editor?: any
+  range?: { from: number; to: number }
 }>()
 
 const { t } = useI18n()
@@ -133,6 +142,13 @@ const {
   items: () => props.items,
   query: () => props.query,
   command: (attrs) => props.command(attrs),
+  insertExpanded: (module) => {
+    if (!props.editor || !props.range) return
+    props.editor.chain().focus()
+      .deleteRange(props.range)
+      .insertContent(inlineContentFromText(normalizeMentionText(module.body)))
+      .run()
+  },
   focusCreate: () => { void nextTick(() => createTa.value?.focus()) },
 })
 

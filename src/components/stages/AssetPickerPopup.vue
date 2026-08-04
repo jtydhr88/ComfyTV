@@ -23,6 +23,13 @@
                ctv:bg-secondary-background ctv:text-base-foreground
                ctv:border ctv:border-border-default ctv:focus:border-primary-background"
       />
+      <div v-if="showTypeFilter" class="ctv:w-20 ctv:shrink-0">
+        <ComfyTVSelect
+          :model-value="typeFilter"
+          :options="typeOptions"
+          @update:model-value="setTypeFilter"
+        />
+      </div>
       <div class="ctv:w-24 ctv:shrink-0">
         <ComfyTVSelect
           :model-value="filterValue"
@@ -44,7 +51,7 @@
       <input
         ref="fileInput"
         type="file"
-        accept="image/*"
+        :accept="uploadAccept"
         multiple
         class="ctv:hidden"
         @change="onPickFiles"
@@ -71,7 +78,22 @@
           :title="asset.name"
           @click="$emit('select', asset)"
         >
+          <video
+            v-if="asset.media_type === 'video'"
+            :src="asset.payload_url"
+            muted
+            playsinline
+            preload="metadata"
+            :class="['ctv:block ctv:w-full ctv:aspect-square ctv:object-cover ctv:bg-black ctv:pointer-events-none',
+                     isAdded(asset.id) ? 'ctv:opacity-55' : '']"
+          />
+          <div
+            v-else-if="asset.media_type === 'audio'"
+            :class="['ctv:flex ctv:items-center ctv:justify-center ctv:w-full ctv:aspect-square ctv:text-muted-foreground',
+                     isAdded(asset.id) ? 'ctv:opacity-55' : '']"
+          ><i class="pi pi-volume-up ctv:text-lg" /></div>
           <img
+            v-else
             :src="assetPreviewUrl(asset)"
             :alt="asset.name"
             loading="lazy"
@@ -95,7 +117,7 @@
 
 <script setup lang="ts">
 import IconUpload from '~icons/lucide/upload'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 import type { Asset } from '@/api/schemas'
 import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
@@ -106,6 +128,7 @@ import { useAssetPicker } from '@/composables/stages/useAssetPicker'
 
 const props = defineProps<{
   addedIds?: number[]
+  mediaTypes?: string[]
 }>()
 
 const emit = defineEmits<{
@@ -117,16 +140,24 @@ const searchEl = ref<HTMLInputElement | null>(null)
 const fileInput = ref<HTMLInputElement | null>(null)
 const uploading = ref(false)
 
+const uploadAccept = computed(() =>
+  (props.mediaTypes ?? ['image']).map(t => `${t}/*`).join(','),
+)
+
 const {
   query,
   filter,
   filterValue,
   categoryOptions,
   setFilter,
+  typeFilter,
+  typeOptions,
+  showTypeFilter,
+  setTypeFilter,
   filtered,
   isAdded,
   ensureHydrated,
-} = useAssetPicker(() => props.addedIds ?? [])
+} = useAssetPicker(() => props.addedIds ?? [], props.mediaTypes ?? ['image'])
 
 async function uploadFiles(files: File[]): Promise<void> {
   uploading.value = true

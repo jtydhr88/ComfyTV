@@ -26,6 +26,7 @@
     <AssetPickerPopup
       v-if="pickerOpen"
       :added-ids="refs.map(r => r.asset_id)"
+      :media-types="acceptedMediaTypes"
       @select="onAddAsset"
       @close="pickerOpen = false"
     />
@@ -33,20 +34,34 @@
     <div v-if="refs.length" class="ctv:flex ctv:flex-wrap ctv:gap-1.5">
       <div
         v-for="(ref, i) in refs"
-        :key="ref.asset_id"
+        :key="`${refType(ref)}-${ref.asset_id}`"
         class="imgref-tile ctv:relative ctv:w-[76px] ctv:h-[76px] ctv:rounded-sm ctv:overflow-hidden ctv:cursor-pointer
                ctv:bg-black/30 ctv:border"
         :style="{ borderColor: slotColor(ref.slot) }"
         :title="tileTooltip(ref)"
         @click="openSlotPicker(i, $event)"
       >
-        <img
-          v-if="assetOf(ref)"
-          :src="assetOf(ref)!.payload_url"
-          :alt="assetOf(ref)!.name"
-          class="ctv:block ctv:size-full ctv:object-cover"
-          draggable="false"
-        />
+        <template v-if="assetOf(ref)">
+          <video
+            v-if="refType(ref) === 'video'"
+            :src="assetOf(ref)!.payload_url"
+            muted
+            playsinline
+            preload="metadata"
+            class="ctv:block ctv:size-full ctv:object-cover ctv:bg-black ctv:pointer-events-none"
+          />
+          <div
+            v-else-if="refType(ref) === 'audio'"
+            class="ctv:flex ctv:items-center ctv:justify-center ctv:size-full ctv:text-muted-foreground"
+          ><i class="pi pi-volume-up ctv:text-lg" /></div>
+          <img
+            v-else
+            :src="assetOf(ref)!.payload_url"
+            :alt="assetOf(ref)!.name"
+            class="ctv:block ctv:size-full ctv:object-cover"
+            draggable="false"
+          />
+        </template>
         <div
           v-else
           class="ctv:flex ctv:items-center ctv:justify-center ctv:size-full ctv:p-1 ctv:text-center ctv:text-3xs ctv:italic ctv:text-muted-foreground/60"
@@ -58,7 +73,7 @@
                  ctv:overflow-hidden ctv:whitespace-nowrap ctv:text-ellipsis ctv:pointer-events-none
                  ctv:bg-linear-to-b ctv:from-transparent ctv:to-black/75"
           :style="{ color: slotColor(ref.slot) }"
-        >{{ `#${ref.slot}` }}</span>
+        >{{ refType(ref) === 'video' ? `V${ref.slot}` : refType(ref) === 'audio' ? 'A' : `#${ref.slot}` }}</span>
         <button
           type="button"
           :class="removeBtn"
@@ -100,6 +115,7 @@ import { onMounted, ref } from 'vue'
 
 import AssetPickerPopup from '@/components/stages/AssetPickerPopup.vue'
 import MentionSlotPopover from '@/components/stages/MentionSlotPopover.vue'
+import { refType } from '@/composables/stages/imageRefs'
 import { slotColor } from '@/composables/stages/imageSlotMentions'
 import { useImageReferences } from '@/composables/stages/useImageReferences'
 import type { LGraphNode } from '@/lib/comfyApp'
@@ -111,6 +127,7 @@ const rootEl = ref<HTMLElement | null>(null)
 const {
   refs,
   accepts,
+  acceptedMediaTypes,
   pickerOpen,
   slotPicker,
   slotWarnings,

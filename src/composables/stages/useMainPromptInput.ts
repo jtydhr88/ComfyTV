@@ -11,8 +11,10 @@ import { computed, onBeforeUnmount, onMounted, ref, watch, type Component } from
 import { useI18n } from 'vue-i18n'
 
 import {
+  MENTION_TOKEN_RE,
   mentionSendOrderOf,
   mentionSlotFromLabel,
+  mentionTokenLabel,
   normalizeMentionText,
   slotColor,
 } from '@/composables/stages/imageSlotMentions'
@@ -31,24 +33,24 @@ export const ENTRY_CHIP_CLASS = 'mention-chip '
 export const IMAGE_CHIP_CLASS = 'mention-chip '
   + 'ctv:inline-block ctv:py-0 ctv:px-1 ctv:mx-px ctv:rounded ctv:font-medium ctv:whitespace-nowrap ctv:border'
 
-export const ENTRY_TOKEN_RE =
-  /@(?:(image|video|audio)_(\d+)(?![0-9a-zA-Z_-])|([\p{L}_][\p{L}\p{N}_-]*))/gu
+export const ENTRY_TOKEN_RE = MENTION_TOKEN_RE
 
-function tokenLabel(m: RegExpMatchArray): string {
-  return m[1] ? `${m[1]}_${m[2]}` : m[3]!
-}
-
-export function textToContent(text: string): JSONContent {
+export function inlineContentFromText(text: string): JSONContent[] {
   const content: JSONContent[] = []
   let i = 0
-  for (const m of text.matchAll(ENTRY_TOKEN_RE)) {
+  for (const m of text.matchAll(MENTION_TOKEN_RE)) {
     const start = m.index!
     if (start > i) content.push({ type: 'text', text: text.slice(i, start) })
-    const label = tokenLabel(m)
+    const label = mentionTokenLabel(m)
     content.push({ type: 'mention', attrs: { id: label, label } })
     i = start + m[0].length
   }
   if (i < text.length) content.push({ type: 'text', text: text.slice(i) })
+  return content
+}
+
+export function textToContent(text: string): JSONContent {
+  const content = inlineContentFromText(text)
   return {
     type: 'doc',
     content: [{ type: 'paragraph', content: content.length ? content : undefined }],
@@ -67,7 +69,7 @@ export function chipifyFragment(fragment: Fragment): Fragment {
       for (const m of text.matchAll(ENTRY_TOKEN_RE)) {
         const start = m.index!
         if (start > last) out.push(schema.text(text.slice(last, start), node.marks))
-        const label = tokenLabel(m)
+        const label = mentionTokenLabel(m)
         out.push(mention.create({ id: label, label }))
         last = start + m[0].length
       }

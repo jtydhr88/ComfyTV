@@ -306,9 +306,9 @@
     "clear": "清空"
   },
   "imageRefs": {
-    "title": "图片引用",
-    "empty": "暂无参考图 —— 点 + 从资产库选一张。",
-    "add": "添加参考图",
+    "title": "素材引用",
+    "empty": "暂无参考素材 —— 点 + 从资产库选一个。",
+    "add": "添加参考素材",
     "remove": "移除",
     "warnDuplicate": "参考槽位 #{n} 被多张图片绑定 —— 运行时只有最后一张生效。",
     "warnOverride": "参考槽位 #{n} 已有上游连接 —— 绑定的图片会在运行时覆盖它。",
@@ -1354,6 +1354,7 @@
     "contentPlaceholder": "此 {'@'} 标记展开后的内容。(角色等其他类型请用 ComfyTV 按钮 → 条目对话框。)",
     "save": "保存 (Ctrl+Enter)",
     "parse": "识别粘贴的引用（如 {'@'}图片#0 / {'@'}image #0）并转换为标签",
+    "promptBadge": "插入即展开",
     "imageSlots": "已连接的输入",
     "imageChip": "图片#{n}",
     "imageExpand": "图{n}",
@@ -1385,7 +1386,23 @@
     "emptyKind": "还没有{kind}。点击下方 + 添加。",
     "labelPlaceholder": "标签",
     "save": "保存",
-    "addKind": "+ 添加{kind}"
+    "addKind": "+ 添加{kind}",
+    "promptHelp": "提示词资产插入时会直接展开进提示词(文本+槽位标签),不以 {'@'} 标记形式存在。内容可引用槽位({'@'}image_N / {'@'}video_N / {'@'}audio_N),不允许引用其他条目。",
+    "promptRefsError": "提示词资产不能引用其他条目——请移除:{tokens}"
+  },
+  "promptSave": {
+    "open": "把当前提示词保存为可复用资产(条目 → Prompts)",
+    "hint": "槽位引用({'@'}image_N …)会保留;不允许包含对其他条目的引用。",
+    "labelPlaceholder": "资产名称",
+    "save": "保存提示词",
+    "entryRefsError": "保存前请移除条目引用:{tokens}"
+  },
+  "promptEntries": {
+    "open": "浏览已保存的条目并插入提示词",
+    "insert": "插入",
+    "empty": "还没有条目——用书签按钮保存一个,或在侧边栏「条目」tab 里管理。",
+    "searchPlaceholder": "搜索标签或内容…",
+    "noMatch": "没有匹配的条目。"
   },
   "menu": {
     "openEntryManager": "ComfyTV — 打开条目管理",

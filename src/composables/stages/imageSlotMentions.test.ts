@@ -6,6 +6,7 @@ import {
   expandImageTokens,
   expandMentionTokens,
   hasRawMentionTokens,
+  nonSlotMentionLabels,
   imageInputSlotIndex,
   imageSendOrder,
   imageSlotFromLabel,
@@ -154,6 +155,23 @@ describe('hasRawMentionTokens', () => {
   })
 })
 
+describe('nonSlotMentionLabels', () => {
+  it('returns entry labels but not slot tokens', () => {
+    expect(nonSlotMentionLabels('a @image_0 and @style plus @video_1 and @劳拉'))
+      .toEqual(['style', '劳拉'])
+  })
+
+  it('dedupes and returns empty for slot-only or plain text', () => {
+    expect(nonSlotMentionLabels('@style twice @style')).toEqual(['style'])
+    expect(nonSlotMentionLabels('@image_0 @audio_2 中文正文')).toEqual([])
+    expect(nonSlotMentionLabels('no tokens')).toEqual([])
+  })
+
+  it('treats slot lookalikes with trailing chars as entry labels', () => {
+    expect(nonSlotMentionLabels('@image_2x')).toEqual(['image_2x'])
+  })
+})
+
 describe('mention style', () => {
   const zh = (n: number) => `图${n}`
 
@@ -199,8 +217,11 @@ describe('mention slot labels (typed)', () => {
 })
 
 describe('videoSendOrder / audioSendOrder', () => {
-  function node(names: Array<[string, boolean]>): any {
-    return { inputs: names.map(([name, wired]) => ({ name, link: wired ? 1 : null })) }
+  function node(names: Array<[string, boolean]>, refs: any[] = []): any {
+    return {
+      inputs: names.map(([name, wired]) => ({ name, link: wired ? 1 : null })),
+      properties: { [IMAGE_REFS_PROP]: refs },
+    }
   }
 
   it('collects wired videos.videoN slots ascending', () => {
@@ -214,6 +235,17 @@ describe('videoSendOrder / audioSendOrder', () => {
     expect(audioSendOrder(node([['audio', true]]))).toEqual([0])
     expect(audioSendOrder(node([['audio', false]]))).toEqual([])
     expect(audioSendOrder(null)).toEqual([])
+  })
+
+  it('pinned video/audio asset refs count into their send orders', () => {
+    const refs = [
+      { asset_id: 1, slot: 1, type: 'video' },
+      { asset_id: 2, slot: 0, type: 'audio' },
+      { asset_id: 3, slot: 5 },
+    ]
+    expect(videoSendOrder(node([['videos.video0', true]], refs))).toEqual([0, 1])
+    expect(audioSendOrder(node([['audio', false]], refs))).toEqual([0])
+    expect(imageSendOrder(node([], refs))).toEqual([5])
   })
 })
 
