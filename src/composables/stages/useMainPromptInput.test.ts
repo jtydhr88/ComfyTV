@@ -39,7 +39,9 @@ vi.mock('@/stores/assetStore', () => ({
   useAssetStore: () => ({ byId: () => undefined }),
 }))
 
-import { entryTooltipText, textToContent, useMainPromptInput } from './useMainPromptInput'
+import { Fragment, Schema } from '@tiptap/pm/model'
+
+import { chipifyFragment, entryTooltipText, textToContent, useMainPromptInput } from './useMainPromptInput'
 
 function makeFakeEditor(initialText = '') {
   const state = { text: initialText }
@@ -115,6 +117,90 @@ describe('textToContent', () => {
     expect(textToContent('just text').content![0].content)
       .toEqual([{ type: 'text', text: 'just text' }])
     expect(textToContent('').content![0].content).toBeUndefined()
+  })
+})
+
+describe('chipifyFragment', () => {
+  const schema = new Schema({
+    nodes: {
+      doc: { content: 'block+' },
+      paragraph: { group: 'block', content: 'inline*' },
+      text: { group: 'inline' },
+      mention: {
+        group: 'inline', inline: true, atom: true,
+        attrs: { id: { default: null }, label: { default: null } },
+      },
+    },
+  })
+
+  function para(text: string) {
+    return Fragment.from(schema.nodes.paragraph.create(null, schema.text(text)))
+  }
+
+  function flatten(fragment: Fragment): Array<{ type: string; text?: string; label?: string }> {
+    const out: Array<{ type: string; text?: string; label?: string }> = []
+    fragment.forEach((n) => {
+      if (n.isText) out.push({ type: 'text', text: n.text! })
+      else if (n.type.name === 'mention') out.push({ type: 'mention', label: n.attrs.label })
+      else out.push(...flatten(n.content))
+    })
+    return out
+  }
+
+  it('normalizes raw slot tokens in pasted text and chips them', () => {
+    const out = chipifyFragment(para('以@图片#0 为主体，动作学@视频 1'))
+    expect(flatten(out)).toEqual([
+      { type: 'text', text: '以' },
+      { type: 'mention', label: 'image_0' },
+      { type: 'text', text: ' 为主体，动作学' },
+      { type: 'mention', label: 'video_1' },
+    ])
+  })
+
+  it('chips slot tokens glued to CJK prose without eating the prose', () => {
+    const out = chipifyFragment(para('@图片#0入夜月色清冷，@图片#13肩扛纸箱'))
+    expect(flatten(out)).toEqual([
+      { type: 'mention', label: 'image_0' },
+      { type: 'text', text: '入夜月色清冷，' },
+      { type: 'mention', label: 'image_13' },
+      { type: 'text', text: '肩扛纸箱' },
+    ])
+  })
+
+  it('canonical tokens glued to CJK chip as slots, not as long entry labels', () => {
+    const out = chipifyFragment(para('@image_2中文正文'))
+    expect(flatten(out)).toEqual([
+      { type: 'mention', label: 'image_2' },
+      { type: 'text', text: '中文正文' },
+    ])
+  })
+
+  it('chips canonical tokens and entry labels like a load would', () => {
+    const out = chipifyFragment(para('a @image_2 b @style c'))
+    expect(flatten(out)).toEqual([
+      { type: 'text', text: 'a ' },
+      { type: 'mention', label: 'image_2' },
+      { type: 'text', text: ' b ' },
+      { type: 'mention', label: 'style' },
+      { type: 'text', text: ' c' },
+    ])
+  })
+
+  it('passes token-free text through unchanged', () => {
+    const out = chipifyFragment(para('nothing to see here'))
+    expect(flatten(out)).toEqual([{ type: 'text', text: 'nothing to see here' }])
+  })
+
+  it('leaves fragments alone when the schema has no mention node', () => {
+    const bare = new Schema({
+      nodes: {
+        doc: { content: 'block+' },
+        paragraph: { group: 'block', content: 'inline*' },
+        text: { group: 'inline' },
+      },
+    })
+    const frag = Fragment.from(bare.nodes.paragraph.create(null, bare.text('see @图片#0')))
+    expect(flatten(chipifyFragment(frag))).toEqual([{ type: 'text', text: 'see @图片#0' }])
   })
 })
 

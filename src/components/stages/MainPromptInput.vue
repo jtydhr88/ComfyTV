@@ -18,6 +18,13 @@
         :title="$t('cameraPrompt.open')"
         @click="cameraOpen = !cameraOpen"
       ><i class="pi pi-video" /></button>
+      <button
+        type="button"
+        :class="[iconBtnClass,
+          'ctv:bg-secondary-background ctv:border-border-default ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground']"
+        :title="$t('mention.parse')"
+        @click="onParseMentions"
+      ><i class="pi pi-at" /></button>
     </div>
     <PromptHelperPanel
       v-if="helperOpen"
@@ -37,6 +44,7 @@ import 'tippy.js/dist/tippy.css'
 
 import type { CameraSelection } from '@/composables/stages/cameraControlCatalog'
 import { CAMERA_BUILDER } from '@/composables/stages/promptModules/builders'
+import { normalizeMentionText } from '@/composables/stages/imageSlotMentions'
 import { useMainPromptInput } from '@/composables/stages/useMainPromptInput'
 import { usePromptModules } from '@/composables/stages/usePromptModules'
 import type { LGraphNode } from '@/lib/comfyApp'
@@ -60,6 +68,10 @@ const helper = usePromptModules(() => promptText.value, applyPromptText)
 const cameraOpen = ref(false)
 function onCameraInsert(selection: CameraSelection) {
   helper.apply(CAMERA_BUILDER, selection as Record<string, string>)
+}
+
+function onParseMentions() {
+  applyPromptText(normalizeMentionText(promptText.value))
 }
 
 const iconBtnClass = 'ctv:inline-flex ctv:items-center ctv:justify-center ctv:size-5 ctv:cursor-pointer'

@@ -1353,6 +1353,7 @@
     "noEntries": "还没有条目 — 输入标签即可新建",
     "contentPlaceholder": "此 {'@'} 标记展开后的内容。(角色等其他类型请用 ComfyTV 按钮 → 条目对话框。)",
     "save": "保存 (Ctrl+Enter)",
+    "parse": "识别粘贴的引用（如 {'@'}图片#0 / {'@'}image #0）并转换为标签",
     "imageSlots": "已连接的输入",
     "imageChip": "图片#{n}",
     "imageExpand": "图{n}",

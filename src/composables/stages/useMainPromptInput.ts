@@ -4,6 +4,7 @@ import Mention     from '@tiptap/extension-mention'
 import Paragraph   from '@tiptap/extension-paragraph'
 import Placeholder from '@tiptap/extension-placeholder'
 import Text        from '@tiptap/extension-text'
+import { Fragment, Slice, type Node as PMNode } from '@tiptap/pm/model'
 import { useEditor, type JSONContent } from '@tiptap/vue-3'
 import { delegate as tippyDelegate } from 'tippy.js'
 import { computed, onBeforeUnmount, onMounted, ref, watch, type Component } from 'vue'
@@ -12,6 +13,7 @@ import { useI18n } from 'vue-i18n'
 import {
   mentionSendOrderOf,
   mentionSlotFromLabel,
+  normalizeMentionText,
   slotColor,
 } from '@/composables/stages/imageSlotMentions'
 import { useMentionSuggestion } from '@/composables/stages/useMentionSuggestion'
@@ -29,7 +31,12 @@ export const ENTRY_CHIP_CLASS = 'mention-chip '
 export const IMAGE_CHIP_CLASS = 'mention-chip '
   + 'ctv:inline-block ctv:py-0 ctv:px-1 ctv:mx-px ctv:rounded ctv:font-medium ctv:whitespace-nowrap ctv:border'
 
-export const ENTRY_TOKEN_RE = /@([\p{L}_][\p{L}\p{N}_-]*)/gu
+export const ENTRY_TOKEN_RE =
+  /@(?:(image|video|audio)_(\d+)(?![0-9a-zA-Z_-])|([\p{L}_][\p{L}\p{N}_-]*))/gu
+
+function tokenLabel(m: RegExpMatchArray): string {
+  return m[1] ? `${m[1]}_${m[2]}` : m[3]!
+}
 
 export function textToContent(text: string): JSONContent {
   const content: JSONContent[] = []
@@ -37,7 +44,7 @@ export function textToContent(text: string): JSONContent {
   for (const m of text.matchAll(ENTRY_TOKEN_RE)) {
     const start = m.index!
     if (start > i) content.push({ type: 'text', text: text.slice(i, start) })
-    const label = m[1]
+    const label = tokenLabel(m)
     content.push({ type: 'mention', attrs: { id: label, label } })
     i = start + m[0].length
   }
@@ -46,6 +53,30 @@ export function textToContent(text: string): JSONContent {
     type: 'doc',
     content: [{ type: 'paragraph', content: content.length ? content : undefined }],
   }
+}
+
+export function chipifyFragment(fragment: Fragment): Fragment {
+  const out: PMNode[] = []
+  fragment.forEach((node) => {
+    if (node.isText && node.text) {
+      const schema = node.type.schema
+      const mention = schema.nodes.mention
+      if (!mention) { out.push(node); return }
+      const text = normalizeMentionText(node.text)
+      let last = 0
+      for (const m of text.matchAll(ENTRY_TOKEN_RE)) {
+        const start = m.index!
+        if (start > last) out.push(schema.text(text.slice(last, start), node.marks))
+        const label = tokenLabel(m)
+        out.push(mention.create({ id: label, label }))
+        last = start + m[0].length
+      }
+      if (last < text.length) out.push(schema.text(text.slice(last), node.marks))
+    } else {
+      out.push(node.copy(chipifyFragment(node.content)))
+    }
+  })
+  return Fragment.fromArray(out)
 }
 
 export interface EntryLike {
@@ -138,6 +169,8 @@ export function useMainPromptInput(
       }),
     ],
     editorProps: {
+      transformPasted: (slice: Slice) =>
+        new Slice(chipifyFragment(slice.content), slice.openStart, slice.openEnd),
       attributes: {
         class: 'comfytv-prompt-prosemirror'
              + ' ctv:min-h-11 ctv:max-h-80 ctv:overflow-y-scroll ctv:py-1.5 ctv:px-2 ctv:rounded'

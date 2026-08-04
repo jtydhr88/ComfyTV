@@ -15284,7 +15284,7 @@ const _hoisted_1$5w = {
 };
 const _hoisted_2$3m = { class: "ctv:relative ctv:aspect-square ctv:overflow-hidden ctv:rounded-lg ctv:bg-secondary-background" };
 const _hoisted_3$3f = ["src", "title"];
-const _hoisted_4$2P = ["title"];
+const _hoisted_4$2Q = ["title"];
 const _hoisted_5$2E = ["title"];
 const _hoisted_6$2r = ["src", "alt", "title"];
 const _hoisted_7$1Z = {
@@ -15362,7 +15362,7 @@ const _sfc_main$3D = /* @__PURE__ */ defineComponent({
             class: "ctv:absolute ctv:inset-0 ctv:flex ctv:items-center ctv:justify-center ctv:text-muted-foreground"
           }, [
             createVNode(unref(IconVolume2), { class: "ctv:size-8" })
-          ], 8, _hoisted_4$2P)) : __props.asset.media_type === "model" ? (openBlock(), createElementBlock("div", {
+          ], 8, _hoisted_4$2Q)) : __props.asset.media_type === "model" ? (openBlock(), createElementBlock("div", {
             key: 2,
             title: __props.tooltip,
             class: "ctv:absolute ctv:inset-0"
@@ -15476,7 +15476,7 @@ const _hoisted_1$5u = {
 };
 const _hoisted_2$3l = { class: "ctv:relative ctv:flex ctv:size-8 ctv:shrink-0 ctv:items-center ctv:justify-center ctv:overflow-hidden ctv:rounded-sm ctv:bg-secondary-background" };
 const _hoisted_3$3e = ["src", "alt"];
-const _hoisted_4$2O = { class: "ctv:flex ctv:min-w-0 ctv:flex-1 ctv:flex-col ctv:gap-1" };
+const _hoisted_4$2P = { class: "ctv:flex ctv:min-w-0 ctv:flex-1 ctv:flex-col ctv:gap-1" };
 const _hoisted_5$2D = ["title"];
 const _hoisted_6$2q = ["title"];
 const _hoisted_7$1Y = { class: "ctv-asset-actions ctv:flex ctv:shrink-0 ctv:items-center ctv:gap-1" };
@@ -15527,7 +15527,7 @@ const _sfc_main$3B = /* @__PURE__ */ defineComponent({
             class: "ctv:size-full ctv:object-cover"
           }, null, 8, _hoisted_3$3e))
         ]),
-        createBaseVNode("div", _hoisted_4$2O, [
+        createBaseVNode("div", _hoisted_4$2P, [
           createBaseVNode("span", {
             class: "ctv:block ctv:truncate ctv:text-xs ctv:leading-none ctv:text-base-foreground",
             title: __props.tooltip
@@ -56198,7 +56198,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-ClQ3v3Xk.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-BsGNBDpM.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -56484,7 +56484,7 @@ const _hoisted_1$5s = {
 };
 const _hoisted_2$3j = ["placeholder", "onKeydown"];
 const _hoisted_3$3c = { class: "ctv:flex ctv:justify-end ctv:gap-2" };
-const _hoisted_4$2N = ["disabled"];
+const _hoisted_4$2O = ["disabled"];
 const btnGhost$1 = "ctv:appearance-none ctv:border-none ctv:cursor-pointer ctv:[font-family:inherit] ctv:focus-visible:outline-none ctv:h-7 ctv:px-3 ctv:rounded-sm ctv:text-xs ctv:bg-secondary-background ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground";
 const btnPrimary$1 = "ctv:appearance-none ctv:border-none ctv:cursor-pointer ctv:[font-family:inherit] ctv:focus-visible:outline-none ctv:h-7 ctv:px-3 ctv:rounded-sm ctv:text-xs ctv:font-medium ctv:bg-primary-background ctv:text-primary-foreground ctv:hover:opacity-90 ctv:disabled:opacity-50 ctv:disabled:pointer-events-none";
 const _sfc_main$3z = /* @__PURE__ */ defineComponent({
@@ -56548,7 +56548,7 @@ const _sfc_main$3z = /* @__PURE__ */ defineComponent({
             type: "submit",
             class: normalizeClass(btnPrimary$1),
             disabled: !value.value.trim()
-          }, toDisplayString$1(__props.confirmText || _ctx.$t("dialog.confirm")), 9, _hoisted_4$2N)
+          }, toDisplayString$1(__props.confirmText || _ctx.$t("dialog.confirm")), 9, _hoisted_4$2O)
         ])
       ], 32);
     };
@@ -56936,7 +56936,7 @@ function useAssetsPanel(isActive2) {
 const _hoisted_1$5r = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:py-1.5 ctv:px-2.5 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle" };
 const _hoisted_2$3i = { class: "ctv:flex-1 ctv:font-semibold ctv:text-sm" };
 const _hoisted_3$3b = ["disabled", "title"];
-const _hoisted_4$2M = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-1.5 ctv:py-1.5 ctv:px-2.5 ctv:border-b ctv:border-border-subtle" };
+const _hoisted_4$2N = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-1.5 ctv:py-1.5 ctv:px-2.5 ctv:border-b ctv:border-border-subtle" };
 const _hoisted_5$2C = { class: "ctv:relative ctv:flex-1 ctv:min-w-0" };
 const _hoisted_6$2p = ["placeholder"];
 const _hoisted_7$1X = ["title"];
@@ -57112,7 +57112,7 @@ const _sfc_main$3y = /* @__PURE__ */ defineComponent({
             (...args) => unref(onPickFiles) && unref(onPickFiles)(...args))
           }, null, 544)
         ]),
-        createBaseVNode("div", _hoisted_4$2M, [
+        createBaseVNode("div", _hoisted_4$2N, [
           createBaseVNode("div", _hoisted_5$2C, [
             createVNode(unref(IconSearch), { class: "ctv:absolute ctv:left-2 ctv:top-1/2 ctv:-translate-y-1/2 ctv:size-3.5 ctv:text-muted-foreground ctv:pointer-events-none" }),
             withDirectives(createBaseVNode("input", {
@@ -58594,7 +58594,7 @@ const relight$1 = { "presets": "Presets", "preset": { "threePoint": "Three-point
 const lightBall$1 = { "directional": "Directional", "point": "Point", "spot": "Spot", "addLight": "Add light", "removeLight": "Remove light", "noLights": "Add a light to get started.", "color": "Color", "intensity": "Intensity", "range": "Range", "innerCone": "Inner cone", "outerCone": "Outer cone", "showGizmos": "Show gizmos", "hideGizmos": "Hide gizmos", "transformNone": "None", "transformPosition": "Light pos", "transformTarget": "Target", "outputView": "Output view", "lockCamera": "Lock camera", "unlockCamera": "Unlock camera" };
 const outpaint$1 = { "left": "Left", "top": "Top", "right": "Right", "bottom": "Bottom", "reset": "Reset", "output": "Output", "noInputImage": "Wire an image to begin" };
 const fileSlot$1 = { "releaseToUpload": "Release to upload", "clickOrDrag": "Click or drag {kind}", "remove": "Remove {kind}", "image": "image", "video": "video" };
-const mention$1 = { "newTag": "new", "create": "+ Create", "newFragment": "new fragment", "createFragment": "+ Create fragment", "invalidLabel": "Invalid label — start with a letter / underscore (Chinese is fine), then letters / digits / _ / -", "noEntries": "No entries yet — type a label to create one", "contentPlaceholder": "Content this {'@'}-token expands to. (For characters / other kinds, use the ComfyTV button → Entries dialog.)", "save": "Save (Ctrl+Enter)", "imageSlots": "Connected inputs", "imageChip": "image #{n}", "imageExpand": "image {n}", "videoChip": "video #{n}", "videoExpand": "video {n}", "audioChip": "audio #{n}", "audioExpand": "audio {n}", "imageItemTitle": 'Slot #{n} — expands at run to "{text}" (by actual send order)', "imageTooltipMissing": "Slot #{n} is empty right now — this token is dropped at run" };
+const mention$1 = { "newTag": "new", "create": "+ Create", "newFragment": "new fragment", "createFragment": "+ Create fragment", "invalidLabel": "Invalid label — start with a letter / underscore (Chinese is fine), then letters / digits / _ / -", "noEntries": "No entries yet — type a label to create one", "contentPlaceholder": "Content this {'@'}-token expands to. (For characters / other kinds, use the ComfyTV button → Entries dialog.)", "save": "Save (Ctrl+Enter)", "parse": "Recognize pasted references (e.g. {'@'}图片#0 / {'@'}image #0) and turn them into chips", "imageSlots": "Connected inputs", "imageChip": "image #{n}", "imageExpand": "image {n}", "videoChip": "video #{n}", "videoExpand": "video {n}", "audioChip": "audio #{n}", "audioExpand": "audio {n}", "imageItemTitle": 'Slot #{n} — expands at run to "{text}" (by actual send order)', "imageTooltipMissing": "Slot #{n} is empty right now — this token is dropped at run" };
 const entries$1 = { "title": "Entries", "movedNotice": 'Entry management has moved to the ComfyTV left sidebar — open the "Entries" tab there.', "movedNoticeDeprecation": "This dialog will be removed in the next release.", "import": "Import", "importTooltip": "Import entries from a JSON backup — rows identical to an existing entry are skipped, everything else is added as new", "export": "Export", "exportTooltip": "Export all entries of this project as a JSON backup", "exportEmpty": "No entries to export.", "importResult": "Imported {added} new, skipped {dup} duplicate and {invalid} invalid.", "importError": "Import failed: not a valid entries JSON file.", "refHelpPre": "Reference any entry in a stage's prompt with", "refHelpPost": "Unknown tokens stay literal.", "colLabel": "Label", "colContent": "Content", "deleteTitle": "Delete {'@'}{label}", "confirmDelete": "Delete {'@'}{label}? Existing {'@'}{label} tokens will fall back to literal text.", "labelError": "Start with a letter / underscore (Chinese is fine), then letters / digits / _ / -", "emptyKind": "No {kind} yet. Click + Add below.", "labelPlaceholder": "label", "save": "Save", "addKind": "+ Add {kind}" };
 const menu$1 = { "openEntryManager": "ComfyTV — open entry manager", "entriesTitle": "ComfyTV Entries", "entriesButtonTooltip": "ComfyTV — entries (fragments / characters / …)", "configSidebarTooltip": "ComfyTV — workflow config & asset library" };
 const valuePreview$1 = { "moreShots": "+ {n} more", "emptyTimeline": "empty timeline", "fromUpstream": "From the connected upstream batch — remove it upstream, not here" };
@@ -58746,7 +58746,7 @@ const relight = { "presets": "灯光预设", "preset": { "threePoint": "三点�
 const lightBall = { "directional": "定向光", "point": "点光源", "spot": "聚光灯", "addLight": "添加灯光", "removeLight": "删除灯光", "noLights": "点 + 添加一盏灯开始打光。", "color": "颜色", "intensity": "强度", "range": "范围", "innerCone": "内锥角", "outerCone": "外锥角", "showGizmos": "显示手柄", "hideGizmos": "隐藏手柄", "transformNone": "无", "transformPosition": "灯光位置", "transformTarget": "目标点", "outputView": "输出视角", "lockCamera": "锁定相机", "unlockCamera": "解锁相机" };
 const outpaint = { "left": "左", "top": "上", "right": "右", "bottom": "下", "reset": "重置", "output": "输出", "noInputImage": "先把一张图片连进来" };
 const fileSlot = { "releaseToUpload": "松开上传", "clickOrDrag": "点击或拖入{kind}", "remove": "移除{kind}", "image": "图片", "video": "视频" };
-const mention = { "newTag": "新建", "create": "+ 新建", "newFragment": "新建片段", "createFragment": "+ 新建片段", "invalidLabel": "标签无效 — 以字母 / 下划线开头(支持中文),后跟字母 / 数字 / _ / -", "noEntries": "还没有条目 — 输入标签即可新建", "contentPlaceholder": "此 {'@'} 标记展开后的内容。(角色等其他类型请用 ComfyTV 按钮 → 条目对话框。)", "save": "保存 (Ctrl+Enter)", "imageSlots": "已连接的输入", "imageChip": "图片#{n}", "imageExpand": "图{n}", "videoChip": "视频#{n}", "videoExpand": "视频{n}", "audioChip": "音频#{n}", "audioExpand": "音频{n}", "imageItemTitle": "槽位 #{n} —— 运行时展开为「{text}」(按实际发送顺序)", "imageTooltipMissing": "槽位 #{n} 当前为空 —— 运行时此标记会被移除" };
+const mention = { "newTag": "新建", "create": "+ 新建", "newFragment": "新建片段", "createFragment": "+ 新建片段", "invalidLabel": "标签无效 — 以字母 / 下划线开头(支持中文),后跟字母 / 数字 / _ / -", "noEntries": "还没有条目 — 输入标签即可新建", "contentPlaceholder": "此 {'@'} 标记展开后的内容。(角色等其他类型请用 ComfyTV 按钮 → 条目对话框。)", "save": "保存 (Ctrl+Enter)", "parse": "识别粘贴的引用（如 {'@'}图片#0 / {'@'}image #0）并转换为标签", "imageSlots": "已连接的输入", "imageChip": "图片#{n}", "imageExpand": "图{n}", "videoChip": "视频#{n}", "videoExpand": "视频{n}", "audioChip": "音频#{n}", "audioExpand": "音频{n}", "imageItemTitle": "槽位 #{n} —— 运行时展开为「{text}」(按实际发送顺序)", "imageTooltipMissing": "槽位 #{n} 当前为空 —— 运行时此标记会被移除" };
 const entries = { "title": "条目", "movedNotice": "条目管理已移到 ComfyTV 左侧边栏的「条目」tab。", "movedNoticeDeprecation": "此弹窗将在下个版本移除。", "import": "导入", "importTooltip": "从 JSON 备份导入词条——与现有词条完全相同的跳过,其余一律新增", "export": "导出", "exportTooltip": "把当前项目的全部词条导出为 JSON 备份", "exportEmpty": "没有可导出的词条。", "importResult": "导入 {added} 条新词条,跳过 {dup} 条重复、{invalid} 条无效。", "importError": "导入失败:不是有效的词条 JSON 文件。", "refHelpPre": "在 stage 提示词里用", "refHelpPost": "引用任意条目;未知标记保持原文。", "colLabel": "标签", "colContent": "内容", "deleteTitle": "删除 {'@'}{label}", "confirmDelete": "删除 {'@'}{label}?现有的 {'@'}{label} 标记将回退为原文。", "labelError": "以字母 / 下划线开头(支持中文),后跟字母 / 数字 / _ / -", "emptyKind": "还没有{kind}。点击下方 + 添加。", "labelPlaceholder": "标签", "save": "保存", "addKind": "+ 添加{kind}" };
 const menu = { "openEntryManager": "ComfyTV — 打开条目管理", "entriesTitle": "ComfyTV 条目", "entriesButtonTooltip": "ComfyTV — 条目(片段 / 角色 / …)", "configSidebarTooltip": "ComfyTV — 工作流配置与素材库" };
 const valuePreview = { "moreShots": "+ 还有 {n} 个", "emptyTimeline": "空时间轴", "fromUpstream": "来自上游接入的 batch —— 请在上游移除，这里删不掉" };
@@ -59201,7 +59201,7 @@ const useProjectStore = /* @__PURE__ */ defineStore("comfytv-project", () => {
 const _hoisted_1$5q = { class: "ctv:flex ctv:flex-col ctv:size-full ctv:box-border ctv:overflow-hidden ctv:text-xs ctv:text-base-foreground" };
 const _hoisted_2$3h = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-1.5 ctv:py-1.5 ctv:px-2.5 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle" };
 const _hoisted_3$3a = { class: "ctv:flex-1 ctv:font-semibold ctv:text-sm" };
-const _hoisted_4$2L = ["title"];
+const _hoisted_4$2M = ["title"];
 const _hoisted_5$2B = ["title"];
 const _hoisted_6$2o = {
   key: 0,
@@ -59320,7 +59320,7 @@ const _sfc_main$3x = /* @__PURE__ */ defineComponent({
           }, [
             _cache2[12] || (_cache2[12] = createBaseVNode("i", { class: "pi pi-upload ctv:mr-1 ctv:text-2xs" }, null, -1)),
             createTextVNode(toDisplayString$1(_ctx.$t("entries.import")), 1)
-          ], 10, _hoisted_4$2L),
+          ], 10, _hoisted_4$2M),
           createBaseVNode("button", {
             class: normalizeClass(btnClass2("mini")),
             title: _ctx.$t("entries.exportTooltip"),
@@ -60546,7 +60546,7 @@ const IconLock = markRaw({ name: "lucide-lock", render: render$22 });
 const _hoisted_1$5o = { class: "ctv:flex ctv:flex-col ctv:size-full ctv:overflow-hidden ctv:text-xs ctv:text-base-foreground" };
 const _hoisted_2$3g = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:py-1.5 ctv:px-2.5 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle" };
 const _hoisted_3$39 = { class: "ctv:flex-1 ctv:font-semibold ctv:text-sm" };
-const _hoisted_4$2K = { class: "ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-2.5 ctv:flex ctv:flex-col ctv:gap-2.5" };
+const _hoisted_4$2L = { class: "ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-2.5 ctv:flex ctv:flex-col ctv:gap-2.5" };
 const _hoisted_5$2A = {
   key: 0,
   class: "ctv:py-5 ctv:px-1.5 ctv:text-center ctv:italic ctv:text-muted-foreground/60"
@@ -60574,7 +60574,7 @@ const _sfc_main$3w = /* @__PURE__ */ defineComponent({
         createBaseVNode("div", _hoisted_2$3g, [
           createBaseVNode("span", _hoisted_3$39, toDisplayString$1(_ctx.$t("stagePresets.panel.title")), 1)
         ]),
-        createBaseVNode("div", _hoisted_4$2K, [
+        createBaseVNode("div", _hoisted_4$2L, [
           unref(groups).length === 0 ? (openBlock(), createElementBlock("div", _hoisted_5$2A, toDisplayString$1(_ctx.$t("stagePresets.panel.empty")), 1)) : createCommentVNode("", true),
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(groups), (group) => {
             return openBlock(), createElementBlock("section", {
@@ -60753,7 +60753,7 @@ const IconUpload = markRaw({ name: "lucide-upload", render: render$21 });
 const _hoisted_1$5m = { class: "ctv:flex ctv:flex-col ctv:size-full ctv:overflow-hidden ctv:text-xs ctv:text-base-foreground" };
 const _hoisted_2$3f = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:py-1.5 ctv:px-2.5 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle" };
 const _hoisted_3$38 = { class: "ctv:flex-1 ctv:font-semibold ctv:text-sm" };
-const _hoisted_4$2J = { class: "ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-2.5 ctv:flex ctv:flex-col ctv:gap-2.5" };
+const _hoisted_4$2K = { class: "ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-2.5 ctv:flex ctv:flex-col ctv:gap-2.5" };
 const _hoisted_5$2z = { class: "ctv:flex ctv:items-center ctv:gap-1" };
 const _hoisted_6$2m = ["aria-expanded", "onClick"];
 const _hoisted_7$1U = { class: "ctv:flex-1 ctv:text-left ctv:truncate" };
@@ -60796,7 +60796,7 @@ const _sfc_main$3v = /* @__PURE__ */ defineComponent({
         createBaseVNode("div", _hoisted_2$3f, [
           createBaseVNode("span", _hoisted_3$38, toDisplayString$1(_ctx.$t("resources.panel.title")), 1)
         ]),
-        createBaseVNode("div", _hoisted_4$2J, [
+        createBaseVNode("div", _hoisted_4$2K, [
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(groups), (group) => {
             return openBlock(), createElementBlock("section", {
               key: group.kind
@@ -61399,7 +61399,7 @@ const IconPower = markRaw({ name: "lucide-power", render: render$1_ });
 const _hoisted_1$5h = { class: "ctv:relative ctv:flex ctv:flex-col ctv:size-full ctv:box-border ctv:overflow-hidden ctv:text-xs ctv:text-base-foreground" };
 const _hoisted_2$3d = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:py-1.5 ctv:px-2.5 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle" };
 const _hoisted_3$37 = { class: "ctv:flex-1 ctv:font-semibold ctv:text-sm" };
-const _hoisted_4$2I = ["title"];
+const _hoisted_4$2J = ["title"];
 const _hoisted_5$2y = { class: "ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-1.5 ctv:flex ctv:flex-col ctv:gap-1" };
 const _hoisted_6$2l = {
   key: 0,
@@ -61496,7 +61496,7 @@ const _sfc_main$3t = /* @__PURE__ */ defineComponent({
             class: normalizeClass(addBtnClass),
             title: _ctx.$t("servers.addTooltip"),
             onClick: _cache2[0] || (_cache2[0] = ($event) => unref(openForm)())
-          }, " + " + toDisplayString$1(_ctx.$t("servers.add")), 9, _hoisted_4$2I)
+          }, " + " + toDisplayString$1(_ctx.$t("servers.add")), 9, _hoisted_4$2J)
         ]),
         createBaseVNode("div", _hoisted_5$2y, [
           unref(form) ? (openBlock(), createElementBlock("div", _hoisted_6$2l, [
@@ -68889,7 +68889,7 @@ const _hoisted_3$36 = {
   key: 0,
   class: "ctv:px-1 ctv:pb-2"
 };
-const _hoisted_4$2H = {
+const _hoisted_4$2I = {
   class: "ctv:max-h-60 ctv:overflow-y-auto",
   role: "presentation"
 };
@@ -68988,7 +68988,7 @@ const _sfc_main$3s = /* @__PURE__ */ defineComponent({
                       class: "ctv:flex ctv:h-7 ctv:w-full ctv:min-w-0 ctv:appearance-none ctv:rounded-lg ctv:border-none ctv:bg-secondary-background ctv:px-3 ctv:py-1 ctv:text-xs ctv:text-base-foreground ctv:placeholder:text-muted-foreground ctv:focus-visible:ring-1 ctv:focus-visible:ring-border-default ctv:focus-visible:outline-none"
                     }, null, 8, ["modelValue", "placeholder"])
                   ])) : createCommentVNode("", true),
-                  createBaseVNode("div", _hoisted_4$2H, [
+                  createBaseVNode("div", _hoisted_4$2I, [
                     (openBlock(true), createElementBlock(Fragment$1, null, renderList(filteredOptions.value, (opt) => {
                       return openBlock(), createBlock(unref(ComboboxItem_default), {
                         key: opt.value,
@@ -70699,11 +70699,11 @@ function useWorkflowConfig(t2) {
     postMeta
   };
 }
-const IMAGE_SLOT_TOKEN_RE = /@image_(\d+)(?![\p{L}\p{N}_-])/gu;
+const IMAGE_SLOT_TOKEN_RE = /@image_(\d+)(?![0-9a-zA-Z_-])/gu;
 const SLOT_TOKEN_RES = {
   image: IMAGE_SLOT_TOKEN_RE,
-  video: /@video_(\d+)(?![\p{L}\p{N}_-])/gu,
-  audio: /@audio_(\d+)(?![\p{L}\p{N}_-])/gu
+  video: /@video_(\d+)(?![0-9a-zA-Z_-])/gu,
+  audio: /@audio_(\d+)(?![0-9a-zA-Z_-])/gu
 };
 const SLOT_LABEL_RE = /^(image|video|audio)_(\d+)$/;
 function mentionSlotLabel(type, slot) {
@@ -70776,6 +70776,24 @@ function mentionOrdinalText(style2, localeText, type = "image") {
   if (style2 === "minimax_tags") return (n) => `<${MINIMAX_TAGS[type]} ${n}>`;
   return localeText;
 }
+const RAW_SLOT_TOKEN_RE = /[@＠](图片|视频|音频|image|video|audio)[\s#＃_]*([0-9０-９]+)(?![0-9０-９a-zA-Z_-])/giu;
+const RAW_TYPE_MAP = {
+  "图片": "image",
+  "image": "image",
+  "视频": "video",
+  "video": "video",
+  "音频": "audio",
+  "audio": "audio"
+};
+function toAsciiDigits(s) {
+  return s.replace(/[０-９]/g, (d) => String(d.charCodeAt(0) - 65296));
+}
+function normalizeMentionText(text) {
+  return text.replace(RAW_SLOT_TOKEN_RE, (_m2, word, digits) => {
+    const type = RAW_TYPE_MAP[word.toLowerCase()];
+    return `@${type}_${Number(toAsciiDigits(digits))}`;
+  });
+}
 function expandMentionTokens(text, orders, ordinalTexts) {
   const missing = [];
   let out = text;
@@ -70795,7 +70813,7 @@ function expandMentionTokens(text, orders, ordinalTexts) {
 const _hoisted_1$5e = { class: "ctv:flex ctv:flex-col ctv:size-full ctv:box-border ctv:overflow-auto ctv:text-xs ctv:pt-2 ctv:pb-6 ctv:px-2.5 ctv:text-base-foreground" };
 const _hoisted_2$3b = { class: "ctv:sticky ctv:-top-2 ctv:z-[1] ctv:-mx-2.5 ctv:-mt-2 ctv:mb-2 ctv:py-1.5 ctv:px-2.5 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle" };
 const _hoisted_3$35 = { class: "ctv:font-semibold ctv:text-sm" };
-const _hoisted_4$2G = {
+const _hoisted_4$2H = {
   key: 2,
   class: "ctv:my-1.5 ctv:py-1.5 ctv:px-2 ctv:text-xs ctv:rounded ctv:bg-destructive-background/15 ctv:border ctv:border-destructive-background/50 ctv:text-destructive-background"
 };
@@ -71035,7 +71053,7 @@ const _sfc_main$3o = /* @__PURE__ */ defineComponent({
         }, toDisplayString$1(_ctx.$t("configSidebar.empty")), 1)) : !unref(selected).workflowLabel ? (openBlock(), createElementBlock("div", {
           key: 1,
           class: normalizeClass(emptyClass)
-        }, toDisplayString$1(_ctx.$t("configSidebar.noWorkflowPicked")), 1)) : unref(loadError) ? (openBlock(), createElementBlock("div", _hoisted_4$2G, toDisplayString$1(unref(loadError)), 1)) : unref(config2) ? (openBlock(), createElementBlock("div", _hoisted_5$2w, [
+        }, toDisplayString$1(_ctx.$t("configSidebar.noWorkflowPicked")), 1)) : unref(loadError) ? (openBlock(), createElementBlock("div", _hoisted_4$2H, toDisplayString$1(unref(loadError)), 1)) : unref(config2) ? (openBlock(), createElementBlock("div", _hoisted_5$2w, [
           createBaseVNode("div", _hoisted_6$2j, [
             createBaseVNode("span", _hoisted_7$1S, toDisplayString$1(unref(config2).kind), 1),
             createBaseVNode("span", _hoisted_8$1w, toDisplayString$1(unref(config2).label), 1),
@@ -71448,7 +71466,7 @@ function useStageWorkflowList(kind, isActive2, onKinds) {
 const _hoisted_1$5d = { class: "ctv:flex ctv:flex-col ctv:gap-1.5" };
 const _hoisted_2$3a = { class: "ctv:flex ctv:items-center ctv:gap-1.5" };
 const _hoisted_3$34 = { class: "ctv:text-3xs ctv:font-mono ctv:py-px ctv:px-1.5 ctv:rounded-lg ctv:bg-base-foreground/5 ctv:text-muted-foreground" };
-const _hoisted_4$2F = ["title", "disabled"];
+const _hoisted_4$2G = ["title", "disabled"];
 const _hoisted_5$2v = ["title", "disabled"];
 const _hoisted_6$2i = ["disabled"];
 const _hoisted_7$1R = {
@@ -71517,7 +71535,7 @@ const _sfc_main$3n = /* @__PURE__ */ defineComponent({
             createBaseVNode("i", {
               class: normalizeClass(["pi pi-refresh", unref(loading2) ? "pi-spin" : ""])
             }, null, 2)
-          ], 8, _hoisted_4$2F),
+          ], 8, _hoisted_4$2G),
           createBaseVNode("button", {
             class: normalizeClass(importBtn),
             title: _ctx.$t("stageManager.rescanTooltip"),
@@ -71839,7 +71857,7 @@ function useStageParamForm(activeKind) {
 const _hoisted_1$5c = { class: "ctv:flex ctv:flex-col ctv:size-full ctv:overflow-hidden ctv:text-xs ctv:text-base-foreground" };
 const _hoisted_2$39 = { class: "ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:py-1.5 ctv:px-2.5 ctv:bg-interface-panel-surface ctv:border-b ctv:border-border-subtle" };
 const _hoisted_3$33 = { class: "ctv:flex-1 ctv:font-semibold ctv:text-sm" };
-const _hoisted_4$2E = { class: "ctv:w-28" };
+const _hoisted_4$2F = { class: "ctv:w-28" };
 const _hoisted_5$2u = { class: "ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:p-2.5 ctv:flex ctv:flex-col ctv:gap-2.5" };
 const _hoisted_6$2h = ["aria-expanded"];
 const _hoisted_7$1Q = { class: "ctv:flex-1 ctv:text-left" };
@@ -71905,7 +71923,7 @@ const _sfc_main$3m = /* @__PURE__ */ defineComponent({
       return openBlock(), createElementBlock("div", _hoisted_1$5c, [
         createBaseVNode("div", _hoisted_2$39, [
           createBaseVNode("span", _hoisted_3$33, toDisplayString$1(_ctx.$t("stageManager.title")), 1),
-          createBaseVNode("div", _hoisted_4$2E, [
+          createBaseVNode("div", _hoisted_4$2F, [
             createVNode(_sfc_main$3s, {
               "model-value": unref(activeKind),
               options: unref(kindOptions),
@@ -72106,7 +72124,7 @@ const _sfc_main$3m = /* @__PURE__ */ defineComponent({
 const _hoisted_1$5b = { class: "ctv:flex ctv:flex-col ctv:size-full ctv:overflow-hidden ctv:text-base-foreground" };
 const _hoisted_2$38 = ["aria-selected", "onClick"];
 const _hoisted_3$32 = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
-const _hoisted_4$2D = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
+const _hoisted_4$2E = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
 const _hoisted_5$2t = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
 const _hoisted_6$2g = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
 const _hoisted_7$1P = { class: "ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden" };
@@ -72168,7 +72186,7 @@ const _sfc_main$3l = /* @__PURE__ */ defineComponent({
         ], 512), [
           [vShow, unref(activeTab) === "workflow"]
         ]),
-        withDirectives(createBaseVNode("div", _hoisted_4$2D, [
+        withDirectives(createBaseVNode("div", _hoisted_4$2E, [
           createVNode(_sfc_main$3y, {
             active: unref(activeTab) === "assets"
           }, null, 8, ["active"])
@@ -72336,7 +72354,7 @@ function useAssetPicker(getAddedIds = () => [], mediaTypes = ["image"]) {
 const _hoisted_1$5a = { class: "ctv:flex ctv:gap-1.5 ctv:items-center" };
 const _hoisted_2$37 = ["placeholder"];
 const _hoisted_3$31 = { class: "ctv:w-24 ctv:shrink-0" };
-const _hoisted_4$2C = ["disabled", "title"];
+const _hoisted_4$2D = ["disabled", "title"];
 const _hoisted_5$2s = { class: "comfytv-asset-scroll ctv:h-[224px] ctv:shrink-0 ctv:overflow-y-scroll" };
 const _hoisted_6$2f = {
   key: 0,
@@ -72451,7 +72469,7 @@ const _sfc_main$3k = /* @__PURE__ */ defineComponent({
             })
           }, [
             createVNode(unref(IconUpload), { class: "ctv:size-3.5" })
-          ], 8, _hoisted_4$2C),
+          ], 8, _hoisted_4$2D),
           createBaseVNode("input", {
             ref_key: "fileInput",
             ref: fileInput,
@@ -72506,7 +72524,7 @@ const _hoisted_3$30 = {
   key: 1,
   class: "ctv:py-1.5 ctv:px-2 ctv:text-destructive-background"
 };
-const _hoisted_4$2B = ["onClick"];
+const _hoisted_4$2C = ["onClick"];
 const _hoisted_5$2r = { class: "ctv:shrink-0 ctv:font-mono ctv:text-muted-foreground" };
 const _hoisted_6$2e = { class: "ctv:flex-1 ctv:truncate ctv:text-left" };
 const _hoisted_7$1N = {
@@ -72564,7 +72582,7 @@ const _sfc_main$3j = /* @__PURE__ */ defineComponent({
                 key: 1,
                 class: normalizeClass(badgeClass)
               }, toDisplayString$1(_ctx.$t("promptAssets.slotClaimed")), 1)) : createCommentVNode("", true)
-            ], 10, _hoisted_4$2B);
+            ], 10, _hoisted_4$2C);
           }), 128)),
           __props.options.length === 0 ? (openBlock(), createElementBlock("div", _hoisted_7$1N, toDisplayString$1(_ctx.$t("promptAssets.slotEmpty")), 1)) : createCommentVNode("", true)
         ], 64))
@@ -72733,7 +72751,7 @@ function useImageReferences(getNode, rootEl) {
 const _hoisted_1$58 = { class: "ctv:flex ctv:items-center ctv:gap-2" };
 const _hoisted_2$35 = { class: "ctv:text-[11px] ctv:font-semibold" };
 const _hoisted_3$2$ = { class: "ctv:text-3xs ctv:text-muted-foreground ctv:font-mono" };
-const _hoisted_4$2A = ["title"];
+const _hoisted_4$2B = ["title"];
 const _hoisted_5$2q = {
   key: 1,
   class: "ctv:flex ctv:flex-wrap ctv:gap-1.5"
@@ -72819,7 +72837,7 @@ const _sfc_main$3i = /* @__PURE__ */ defineComponent({
             createBaseVNode("i", {
               class: normalizeClass(["pi", unref(pickerOpen) ? "pi-times" : "pi-plus"])
             }, null, 2)
-          ], 10, _hoisted_4$2A)
+          ], 10, _hoisted_4$2B)
         ]),
         unref(pickerOpen) ? (openBlock(), createBlock(_sfc_main$3k, {
           key: 0,
@@ -96479,14 +96497,17 @@ function useMentionSuggestion(projectId, getNode, MentionList) {
 }
 const ENTRY_CHIP_CLASS = "mention-chip ctv:inline-block ctv:py-0 ctv:px-1 ctv:mx-px ctv:rounded ctv:font-medium ctv:whitespace-nowrap ctv:bg-primary-background/20 ctv:border ctv:border-primary-background/45 ctv:text-primary-background";
 const IMAGE_CHIP_CLASS = "mention-chip ctv:inline-block ctv:py-0 ctv:px-1 ctv:mx-px ctv:rounded ctv:font-medium ctv:whitespace-nowrap ctv:border";
-const ENTRY_TOKEN_RE = /@([\p{L}_][\p{L}\p{N}_-]*)/gu;
+const ENTRY_TOKEN_RE = /@(?:(image|video|audio)_(\d+)(?![0-9a-zA-Z_-])|([\p{L}_][\p{L}\p{N}_-]*))/gu;
+function tokenLabel(m) {
+  return m[1] ? `${m[1]}_${m[2]}` : m[3];
+}
 function textToContent(text) {
   const content = [];
   let i = 0;
   for (const m of text.matchAll(ENTRY_TOKEN_RE)) {
     const start2 = m.index;
     if (start2 > i) content.push({ type: "text", text: text.slice(i, start2) });
-    const label = m[1];
+    const label = tokenLabel(m);
     content.push({ type: "mention", attrs: { id: label, label } });
     i = start2 + m[0].length;
   }
@@ -96495,6 +96516,32 @@ function textToContent(text) {
     type: "doc",
     content: [{ type: "paragraph", content: content.length ? content : void 0 }]
   };
+}
+function chipifyFragment(fragment2) {
+  const out = [];
+  fragment2.forEach((node) => {
+    if (node.isText && node.text) {
+      const schema = node.type.schema;
+      const mention2 = schema.nodes.mention;
+      if (!mention2) {
+        out.push(node);
+        return;
+      }
+      const text = normalizeMentionText(node.text);
+      let last = 0;
+      for (const m of text.matchAll(ENTRY_TOKEN_RE)) {
+        const start2 = m.index;
+        if (start2 > last) out.push(schema.text(text.slice(last, start2), node.marks));
+        const label = tokenLabel(m);
+        out.push(mention2.create({ id: label, label }));
+        last = start2 + m[0].length;
+      }
+      if (last < text.length) out.push(schema.text(text.slice(last), node.marks));
+    } else {
+      out.push(node.copy(chipifyFragment(node.content)));
+    }
+  });
+  return Fragment.fromArray(out);
 }
 function entryTooltipText(label, node, entries2, t2) {
   const parsed = mentionSlotFromLabel(label);
@@ -96569,6 +96616,7 @@ function useMainPromptInput(getNode, mentionListComponent) {
       })
     ],
     editorProps: {
+      transformPasted: (slice3) => new Slice(chipifyFragment(slice3.content), slice3.openStart, slice3.openEnd),
       attributes: {
         class: "comfytv-prompt-prosemirror ctv:min-h-11 ctv:max-h-80 ctv:overflow-y-scroll ctv:py-1.5 ctv:px-2 ctv:rounded ctv:bg-secondary-background ctv:text-base-foreground ctv:border ctv:border-border-default ctv:focus:border-primary-background ctv:text-xs ctv:leading-snug ctv:[font-family:inherit] ctv:outline-none ctv:box-border ctv:whitespace-pre-wrap ctv:break-words",
         spellcheck: "false"
@@ -96799,7 +96847,7 @@ function useCameraPrompt() {
 const _hoisted_1$57 = { class: "ctv:flex ctv:flex-col ctv:gap-2 ctv:mt-1 ctv:p-2 ctv:rounded ctv:text-xs ctv:bg-interface-menu-surface ctv:text-base-foreground ctv:border ctv:border-border-default" };
 const _hoisted_2$34 = { class: "ctv:grid ctv:grid-cols-2 ctv:gap-1.5" };
 const _hoisted_3$2_ = { class: "ctv:flex ctv:flex-col ctv:gap-0.5" };
-const _hoisted_4$2z = { class: "ctv:flex ctv:flex-col ctv:gap-0.5" };
+const _hoisted_4$2A = { class: "ctv:flex ctv:flex-col ctv:gap-0.5" };
 const _hoisted_5$2p = { class: "ctv:flex ctv:flex-col ctv:gap-0.5" };
 const _hoisted_6$2c = { class: "ctv:flex ctv:flex-col ctv:gap-0.5" };
 const _hoisted_7$1L = {
@@ -96850,7 +96898,7 @@ const _sfc_main$3h = /* @__PURE__ */ defineComponent({
               "onUpdate:modelValue": _cache2[0] || (_cache2[0] = ($event) => camera2.value = String($event))
             }, null, 8, ["model-value"])
           ]),
-          createBaseVNode("label", _hoisted_4$2z, [
+          createBaseVNode("label", _hoisted_4$2A, [
             createBaseVNode("span", {
               class: normalizeClass(labelClass$2)
             }, toDisplayString$1(_ctx.$t("cameraPrompt.lens")), 1),
@@ -97029,7 +97077,7 @@ const _hoisted_1$56 = {
 };
 const _hoisted_2$33 = ["title", "onClick"];
 const _hoisted_3$2Z = ["src"];
-const _hoisted_4$2y = { class: "ctv:ml-auto ctv:text-muted-foreground ctv:whitespace-nowrap" };
+const _hoisted_4$2z = { class: "ctv:ml-auto ctv:text-muted-foreground ctv:whitespace-nowrap" };
 const _hoisted_5$2o = ["title", "onClick"];
 const _hoisted_6$2b = { class: "ctv:font-mono ctv:text-base-foreground ctv:shrink-0" };
 const _hoisted_7$1K = { class: "ctv:text-muted-foreground ctv:overflow-hidden ctv:text-ellipsis ctv:whitespace-nowrap" };
@@ -97146,7 +97194,7 @@ const _sfc_main$3g = /* @__PURE__ */ defineComponent({
                 class: "ctv:font-mono ctv:shrink-0",
                 style: normalizeStyle({ color: item.color })
               }, "@" + toDisplayString$1(_ctx.$t(`mention.${item.slotType}Chip`, { n: item.slot })), 5),
-              createBaseVNode("span", _hoisted_4$2y, "→ " + toDisplayString$1(_ctx.$t(`mention.${item.slotType}Expand`, { n: item.ordinal })), 1)
+              createBaseVNode("span", _hoisted_4$2z, "→ " + toDisplayString$1(_ctx.$t(`mention.${item.slotType}Expand`, { n: item.ordinal })), 1)
             ], 42, _hoisted_2$33);
           }), 128)),
           (openBlock(true), createElementBlock(Fragment$1, null, renderList(unref(snippetItems), (item, j2) => {
@@ -97232,7 +97280,7 @@ const _sfc_main$3g = /* @__PURE__ */ defineComponent({
 const _hoisted_1$55 = { class: "ctv:flex ctv:flex-col ctv:gap-2 ctv:mt-1 ctv:p-2 ctv:rounded ctv:text-xs ctv:bg-interface-menu-surface ctv:text-base-foreground ctv:border ctv:border-border-default" };
 const _hoisted_2$32 = { class: "ctv:text-3xs ctv:uppercase ctv:tracking-wide ctv:text-muted-foreground" };
 const _hoisted_3$2Y = { class: "ctv:flex ctv:flex-wrap ctv:gap-1" };
-const _hoisted_4$2x = ["title", "onClick"];
+const _hoisted_4$2y = ["title", "onClick"];
 const CHIP_BASE = "ctv:inline-flex ctv:items-center ctv:cursor-pointer ctv:[font-family:inherit] ctv:rounded-full ctv:border ctv:py-0.5 ctv:px-2 ctv:text-2xs ctv:transition-colors";
 const templateClass = "ctv:inline-flex ctv:items-center ctv:cursor-pointer ctv:[font-family:inherit] ctv:rounded ctv:border ctv:py-0.5 ctv:px-2 ctv:text-2xs ctv:transition-colors ctv:bg-secondary-background ctv:border-border-default ctv:text-base-foreground ctv:hover:bg-primary-background/20 ctv:hover:border-primary-background/50 ctv:hover:text-primary-background";
 const _sfc_main$3f = /* @__PURE__ */ defineComponent({
@@ -97262,7 +97310,7 @@ const _sfc_main$3f = /* @__PURE__ */ defineComponent({
                   class: normalizeClass(m.kind === "template" ? templateClass : chipClass2(__props.isActive(m))),
                   title: m.body,
                   onClick: ($event) => _ctx.$emit("apply", m)
-                }, toDisplayString$1(m.labelKey ? _ctx.$t(m.labelKey) : m.label), 11, _hoisted_4$2x);
+                }, toDisplayString$1(m.labelKey ? _ctx.$t(m.labelKey) : m.label), 11, _hoisted_4$2y);
               }), 128))
             ])
           ]);
@@ -97274,6 +97322,7 @@ const _sfc_main$3f = /* @__PURE__ */ defineComponent({
 const _hoisted_1$54 = { class: "ctv:flex ctv:gap-1 ctv:mt-1" };
 const _hoisted_2$31 = ["title"];
 const _hoisted_3$2X = ["title"];
+const _hoisted_4$2x = ["title"];
 const iconBtnClass$1 = "ctv:inline-flex ctv:items-center ctv:justify-center ctv:size-5 ctv:cursor-pointer ctv:rounded-sm ctv:border ctv:text-2xs ctv:leading-none ctv:[font-family:inherit] ctv:transition-colors";
 const _sfc_main$3e = /* @__PURE__ */ defineComponent({
   __name: "MainPromptInput",
@@ -97292,6 +97341,9 @@ const _sfc_main$3e = /* @__PURE__ */ defineComponent({
     const cameraOpen = /* @__PURE__ */ ref(false);
     function onCameraInsert(selection) {
       helper.apply(CAMERA_BUILDER, selection);
+    }
+    function onParseMentions() {
+      applyPromptText(normalizeMentionText(promptText.value));
     }
     return (_ctx, _cache2) => {
       return unref(widget) ? (openBlock(), createElementBlock("div", {
@@ -97320,7 +97372,18 @@ const _sfc_main$3e = /* @__PURE__ */ defineComponent({
             onClick: _cache2[1] || (_cache2[1] = ($event) => cameraOpen.value = !cameraOpen.value)
           }, [..._cache2[3] || (_cache2[3] = [
             createBaseVNode("i", { class: "pi pi-video" }, null, -1)
-          ])], 10, _hoisted_3$2X)
+          ])], 10, _hoisted_3$2X),
+          createBaseVNode("button", {
+            type: "button",
+            class: normalizeClass([
+              iconBtnClass$1,
+              "ctv:bg-secondary-background ctv:border-border-default ctv:text-muted-foreground ctv:hover:bg-secondary-background-hover ctv:hover:text-base-foreground"
+            ]),
+            title: _ctx.$t("mention.parse"),
+            onClick: onParseMentions
+          }, [..._cache2[4] || (_cache2[4] = [
+            createBaseVNode("i", { class: "pi pi-at" }, null, -1)
+          ])], 10, _hoisted_4$2x)
         ]),
         helperOpen.value ? (openBlock(), createBlock(_sfc_main$3f, {
           key: 0,
@@ -97336,7 +97399,7 @@ const _sfc_main$3e = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const MainPromptInput = /* @__PURE__ */ _export_sfc(_sfc_main$3e, [["__scopeId", "data-v-d7bb6b46"]]);
+const MainPromptInput = /* @__PURE__ */ _export_sfc(_sfc_main$3e, [["__scopeId", "data-v-2e6b731e"]]);
 const _hoisted_1$53 = {
   viewBox: "0 0 24 24",
   width: "1.2em",
@@ -128895,7 +128958,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-CDDbg4dO.mjs");
+    const { STLLoader } = await import("./STLLoader-CQtse7Oy.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -128903,7 +128966,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-BlC262jo.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-lJMQrncH.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -201613,4 +201676,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-DxpPgKwP.mjs.map
+//# sourceMappingURL=main-jCGaOIgs.mjs.map

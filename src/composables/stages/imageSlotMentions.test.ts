@@ -5,6 +5,7 @@ import {
   audioSendOrder,
   expandImageTokens,
   expandMentionTokens,
+  hasRawMentionTokens,
   imageInputSlotIndex,
   imageSendOrder,
   imageSlotFromLabel,
@@ -13,6 +14,7 @@ import {
   mentionSlotFromLabel,
   mentionSlotLabel,
   normalizeMentionStyle,
+  normalizeMentionText,
   slotColor,
   videoSendOrder,
   SLOT_COLORS,
@@ -95,6 +97,60 @@ describe('expandImageTokens', () => {
     const order = Array.from({ length: 11 }, (_, i) => i)
     const r = expandImageTokens('@image_10 vs @image_1', order, n => `image ${n}`)
     expect(r.text).toBe('image 11 vs image 2')
+  })
+})
+
+describe('normalizeMentionText', () => {
+  it('converts the zh chip display format', () => {
+    expect(normalizeMentionText('以@图片#0 为主体，背景来自@图片#13'))
+      .toBe('以@image_0 为主体，背景来自@image_13')
+  })
+
+  it('converts en chip formats with space and hash', () => {
+    expect(normalizeMentionText('use @image #2 and @Image_3 and @IMAGE4'))
+      .toBe('use @image_2 and @image_3 and @image_4')
+  })
+
+  it('converts video and audio in both languages', () => {
+    expect(normalizeMentionText('动作学@视频#0，配音用@音频 1，also @video#1 @audio 0'))
+      .toBe('动作学@video_0，配音用@audio_1，also @video_1 @audio_0')
+  })
+
+  it('handles full-width at, hash and digits', () => {
+    expect(normalizeMentionText('＠图片＃３ 站在中间')).toBe('@image_3 站在中间')
+  })
+
+  it('strips leading zeros', () => {
+    expect(normalizeMentionText('@图片#007')).toBe('@image_7')
+  })
+
+  it('is idempotent on canonical tokens', () => {
+    const s = 'person from @image_0 with @video_1 and @audio_0'
+    expect(normalizeMentionText(s)).toBe(s)
+  })
+
+  it('matches tokens glued to CJK prose (real LLM output)', () => {
+    expect(normalizeMentionText('@图片#0入夜月色清冷，冷白光铺满石板庭院'))
+      .toBe('@image_0入夜月色清冷，冷白光铺满石板庭院')
+    expect(normalizeMentionText('@图片#13肩扛同款大号纸箱紧随其后'))
+      .toBe('@image_13肩扛同款大号纸箱紧随其后')
+    expect(normalizeMentionText('@图片#4说:"哟，大半夜扛啥宝贝?"'))
+      .toBe('@image_4说:"哟，大半夜扛啥宝贝?"')
+    expect(normalizeMentionText('二人视线同时锁定@图片#3与@图片#13。'))
+      .toBe('二人视线同时锁定@image_3与@image_13。')
+  })
+
+  it('leaves non-slot mentions and lookalikes alone', () => {
+    const s = '@imagery @style @图1 email@example.com @image_2x @劳拉'
+    expect(normalizeMentionText(s)).toBe(s)
+  })
+})
+
+describe('hasRawMentionTokens', () => {
+  it('detects raw forms and not canonical ones', () => {
+    expect(hasRawMentionTokens('看@图片#0')).toBe(true)
+    expect(hasRawMentionTokens('看@image_0')).toBe(false)
+    expect(hasRawMentionTokens('plain text')).toBe(false)
   })
 })
 
@@ -199,5 +255,15 @@ describe('expandMentionTokens', () => {
     )
     expect(r.text).toBe('@video_0x @videos <Picture 1> ')
     expect(r.missing).toEqual([{ type: 'audio', slot: 5 }])
+  })
+
+  it('expands tokens glued to CJK prose', () => {
+    const r = expandMentionTokens(
+      '@image_0入夜月色，@image_13肩扛纸箱，动作学@video_0结尾',
+      { image: [0, 13], video: [0], audio: [] },
+      texts,
+    )
+    expect(r.text).toBe('<Picture 1>入夜月色，<Picture 2>肩扛纸箱，动作学<Video 1>结尾')
+    expect(r.missing).toEqual([])
   })
 })

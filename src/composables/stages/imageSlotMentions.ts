@@ -5,12 +5,12 @@ export type MentionSlotType = 'image' | 'video' | 'audio'
 
 export const IMAGE_SLOT_LABEL_RE = /^image_(\d+)$/
 
-export const IMAGE_SLOT_TOKEN_RE = /@image_(\d+)(?![\p{L}\p{N}_-])/gu
+export const IMAGE_SLOT_TOKEN_RE = /@image_(\d+)(?![0-9a-zA-Z_-])/gu
 
 const SLOT_TOKEN_RES: Record<MentionSlotType, RegExp> = {
   image: IMAGE_SLOT_TOKEN_RE,
-  video: /@video_(\d+)(?![\p{L}\p{N}_-])/gu,
-  audio: /@audio_(\d+)(?![\p{L}\p{N}_-])/gu,
+  video: /@video_(\d+)(?![0-9a-zA-Z_-])/gu,
+  audio: /@audio_(\d+)(?![0-9a-zA-Z_-])/gu,
 }
 
 const SLOT_LABEL_RE = /^(image|video|audio)_(\d+)$/
@@ -114,6 +114,29 @@ export function mentionOrdinalText(
 ): (ordinal: number) => string {
   if (style === 'minimax_tags') return n => `<${MINIMAX_TAGS[type]} ${n}>`
   return localeText
+}
+
+const RAW_SLOT_TOKEN_RE = /[@＠](图片|视频|音频|image|video|audio)[\s#＃_]*([0-9０-９]+)(?![0-9０-９a-zA-Z_-])/giu
+
+const RAW_TYPE_MAP: Record<string, MentionSlotType> = {
+  '图片': 'image', 'image': 'image',
+  '视频': 'video', 'video': 'video',
+  '音频': 'audio', 'audio': 'audio',
+}
+
+function toAsciiDigits(s: string): string {
+  return s.replace(/[０-９]/g, d => String(d.charCodeAt(0) - 0xff10))
+}
+
+export function normalizeMentionText(text: string): string {
+  return text.replace(RAW_SLOT_TOKEN_RE, (_m, word: string, digits: string) => {
+    const type = RAW_TYPE_MAP[word.toLowerCase()]
+    return `@${type}_${Number(toAsciiDigits(digits))}`
+  })
+}
+
+export function hasRawMentionTokens(text: string): boolean {
+  return normalizeMentionText(text) !== text
 }
 
 export interface MentionOrders {
