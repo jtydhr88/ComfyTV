@@ -12,7 +12,6 @@ import { makeSelectToolDef } from './selectTool'
 import { makeShapeToolDef } from './shapeTool'
 import { makeTransformToolDef } from './transformTool'
 import { makeWarpToolDef } from './warpTool'
-import { makeCropToolDef } from './cropTool'
 
 export { makeSelectToolDef, nodeBounds } from './selectTool'
 export { makeTransformToolDef, isTransformTool, canTransformNode } from './transformTool'
@@ -37,7 +36,6 @@ export { resolvePaintTarget, makeToLocal, rasterizeSelectionToLocal } from './pa
 export { makeGradientToolDef, DEFAULT_GRADIENT_OPTIONS, renderGradientPixels } from './gradientTool'
 export type { GradientToolOptions } from './gradientTool'
 export { makePenToolDef, isPenTool } from './penTool'
-export { makeCropToolDef, isCropTool } from './cropTool'
 
 let registered = false
 
@@ -48,7 +46,6 @@ export function registerBuiltinTools(): void {
   registerPixelPaintCores()
   registerTool(makeSelectToolDef())
   registerTool(makeTransformToolDef())
-  registerTool(makeCropToolDef())
   registerTool(makeMarqueeToolDef())
   registerTool(makeEllipseMarqueeToolDef())
   registerTool(makeLassoToolDef())

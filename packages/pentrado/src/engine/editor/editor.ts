@@ -6,14 +6,15 @@ import type { Compositor, CompositeInput } from '../compositor'
 import type { ContentStore } from '../content'
 import { filterTopmost, findNode, type Document, type NodeLocation } from '../document'
 import { CommandGroup, Dirty, History } from '../history'
-import { HybridContentStore } from '../impl/hybridContentStore'
+import { DefaultContentStore } from '../impl/contentStore'
 import { defaultMode, resolveMode } from '../mode'
 import type { GroupData, RasterData, SceneNode, Transform, Vec2, VectorData } from '../node'
 import { getNodeKind } from '../nodeKind'
 import type { BrushParams } from '../paint'
 import { getPaintCore } from '../paint'
 import { bakeMaskInto, bakePlaced, drawPlacedInto, isIdentityPlacement, placedBounds } from '../render/bake'
-import { createMergeCache, invalidateMergeCache, renderDocumentCached, type PreviewOverride } from '../render/renderStack'
+import { placeBitmap } from '../render/place'
+import { renderDocument, type PlacedEntry, type PreviewOverride } from '../render/renderStack'
 import { getTool, type Tool, type ToolContext } from '../tool'
 import { addTransformBox } from '../tools/overlayBox'
 import { angleTo, applyMove, applyResize, applyRotate, hitHandle, insideBox, type HandleId } from '../tools/transformMath'
@@ -40,7 +41,6 @@ import {
 import { DEFAULT_WAND_OPTIONS, type WandToolOptions } from '../tools/wandTool'
 import { DEFAULT_GRADIENT_OPTIONS, type GradientToolOptions } from '../tools/gradientTool'
 import { isPenTool } from '../tools/penTool'
-import { isCropTool } from '../tools/cropTool'
 import { resolvePaintTarget } from '../tools/paintTarget'
 import { flattenStrokeAdaptive, resamplePolyline } from '../pathEdit'
 import {
@@ -123,8 +123,6 @@ export interface Editor {
   penCommit(): boolean
   penCancel(): boolean
   penDrafting(): boolean
-  cropRect(): Rect | null
-  cropClear(): boolean
   pathToSelection(id: string, op: SelectionOp): boolean
   strokePathWithBrush(id: string): boolean
   transformApply(): boolean
@@ -185,7 +183,7 @@ export interface Editor {
 
 export function createEditor(opts: EditorOptions): Editor {
   const compositor = opts.compositor
-  const content = opts.content ?? new HybridContentStore()
+  const content = opts.content ?? new DefaultContentStore()
   const history = new History()
   const notify = opts.onChange ?? (() => {})
   const overlay = new OverlayList(() => notify())
@@ -203,6 +201,7 @@ export function createEditor(opts: EditorOptions): Editor {
   let gradient: GradientToolOptions = { ...DEFAULT_GRADIENT_OPTIONS }
 
   const overrides = new Map<string, PreviewOverride>()
+  const placedCache = new Map<string, PlacedEntry>()
   let previewVersion = 0
   let pendingDamage: Rect | null = null
   let presentFull = true
@@ -249,31 +248,18 @@ export function createEditor(opts: EditorOptions): Editor {
     if (!floating) return []
     const entry = content.get(floating.contentId)
     if (!entry) return []
+    const canvas = placeBitmap(entry.canvas, floating.transform, doc.width, doc.height)
+    if (!canvas) return []
     return [
       {
-        texture: {
-          source: entry.canvas,
-          rect: { x: 0, y: 0, w: doc.width, h: doc.height },
-          linear: false,
-          quad: { ...floating.transform },
-          key: `tex:${floating.contentId}|${entry.canvas.width}x${entry.canvas.height}`,
-          stamp: `tex:${floating.contentId}|${entry.canvas.width}x${entry.canvas.height}`,
-        },
+        texture: { source: canvas, rect: { x: 0, y: 0, w: doc.width, h: doc.height }, linear: false },
         opacity: 1,
         mode: resolveMode(defaultMode('normal')),
       },
     ]
   }
-  const mergeCache = createMergeCache()
   function render(region?: Rect | null): void {
-    renderDocumentCached(
-      doc,
-      { content, compositor, devicePixelRatio: 1, overrides },
-      activeNodeIdOf(),
-      mergeCache,
-      floatingInputs(),
-      region
-    )
+    renderDocument(doc, { content, compositor, devicePixelRatio: 1, overrides, placedCache }, floatingInputs(), region)
   }
   function visibleComposite(): HTMLCanvasElement | null {
     if (!compositor.getCanvas()) return null
@@ -367,22 +353,12 @@ export function createEditor(opts: EditorOptions): Editor {
     setSelected(id ? [id] : [])
   }
   function collectGarbage(): void {
-    const pinned = new Set<string>()
-    for (const id of getNodeKind(doc.root.kind).contentIds(doc.root)) pinned.add(id)
-    for (const ch of doc.channels) pinned.add(ch.contentId)
-    if (floating) pinned.add(floating.contentId)
-    const live = new Set<string>(pinned)
+    const live = new Set<string>()
+    for (const id of getNodeKind(doc.root.kind).contentIds(doc.root)) live.add(id)
+    for (const ch of doc.channels) live.add(ch.contentId)
     for (const id of history.contentRefs()) live.add(id)
+    if (floating) live.add(floating.contentId)
     content.collectGarbage(live)
-    // Only the actively-edited layer keeps its dense material cache — the
-    // compositor renders tiled contents straight from the atlas.
-    const keepMaterial = new Set<string>()
-    const activeNode = activeNodeIdOf() ? findNode(doc.root, activeNodeIdOf()!)?.node : null
-    if (activeNode) {
-      if ('contentId' in activeNode) keepMaterial.add((activeNode as RasterData).contentId)
-      if (activeNode.mask) keepMaterial.add(activeNode.mask.contentId)
-    }
-    content.trim?.(pinned, keepMaterial)
   }
   history.onChange(collectGarbage)
 
@@ -549,7 +525,7 @@ export function createEditor(opts: EditorOptions): Editor {
       const channel: ChannelData = {
         id: generateId('sel'),
         role: 'selection',
-        contentId: content.register(canvas, { transient: true }),
+        contentId: content.register(canvas),
         enabled: true,
         bounds,
       }
@@ -813,7 +789,7 @@ export function createEditor(opts: EditorOptions): Editor {
         if (ch.url && !content.has(ch.contentId)) {
           try {
             const canvas = await loadUrl(ch.url)
-            content.register(canvas, { id: ch.contentId, uploadedUrl: ch.url, transient: true })
+            content.register(canvas, { id: ch.contentId, uploadedUrl: ch.url })
           } catch {
             void 0
           }
@@ -1010,12 +986,6 @@ export function createEditor(opts: EditorOptions): Editor {
     penCommit: () => (isPenTool(tool) ? tool.commit() : false),
     penCancel: () => (isPenTool(tool) ? tool.cancel() : false),
     penDrafting: () => (isPenTool(tool) ? tool.isDrafting() : false),
-    cropRect: () => (isCropTool(tool) ? tool.cropRect() : null),
-    cropClear: () => {
-      if (!isCropTool(tool)) return false
-      tool.clear()
-      return true
-    },
     pathToSelection(id, op) {
       const node = findNode(doc.root, id)?.node
       if (!node || node.kind !== 'vector') return false
@@ -1225,12 +1195,7 @@ export function createEditor(opts: EditorOptions): Editor {
       return dmg
     },
     buildOverlay,
-    invalidate() {
-      // Pixels can change without the scene graph changing (async font
-      // arrival, restored GL context) — merge caches can't detect that.
-      invalidateMergeCache(mergeCache, compositor)
-      refresh()
-    },
+    invalidate: refresh,
     undo() {
       history.undo()
       refresh()

@@ -27,8 +27,6 @@ class BasePaintCore implements PaintCore {
   private params!: BrushParams
   private cov!: CoverageBuffer
   private base = new Uint8ClampedArray(0)
-
-  private baseRows = new Uint8Array(0)
   private previewCanvas: HTMLCanvasElement | null = null
   private previewData: ImageData | null = null
   private w = 0
@@ -56,8 +54,10 @@ class BasePaintCore implements PaintCore {
     this.beforeUrl = target.slot.url
     this.scale = target.scale > 0 ? target.scale : 1
 
-    this.base = new Uint8ClampedArray(this.w * this.h * 4)
-    this.baseRows = new Uint8Array(this.h)
+    const ctx = target.bitmap.getContext('2d')
+    this.base = ctx
+      ? ctx.getImageData(0, 0, this.w, this.h).data.slice()
+      : new Uint8ClampedArray(this.w * this.h * 4)
 
     this.previewCanvas = document.createElement('canvas')
     this.previewCanvas.width = this.w
@@ -69,28 +69,6 @@ class BasePaintCore implements PaintCore {
       this.stamp(p)
       return { transform, queue: [p], drawnTo: 0, carry: 0 }
     })
-  }
-
-  private ensureBaseRows(y0: number, y1: number): void {
-    const lo = Math.max(0, y0)
-    const hi = Math.min(this.h - 1, y1)
-    let ctx: CanvasRenderingContext2D | null | undefined
-    let y = lo
-    while (y <= hi) {
-      if (this.baseRows[y]) {
-        y++
-        continue
-      }
-      let end = y
-      while (end <= hi && !this.baseRows[end]) end++
-      if (ctx === undefined) ctx = this.target.bitmap.getContext('2d')
-      if (ctx) {
-        const img = ctx.getImageData(0, y, this.w, end - y)
-        this.base.set(img.data, y * this.w * 4)
-      }
-      this.baseRows.fill(1, y, end)
-      y = end
-    }
   }
 
   motion(sample: CoordSample): void {
@@ -161,12 +139,12 @@ class BasePaintCore implements PaintCore {
     const rects = this.cov.takeRecentRects()
     this.lastDelta = rects
     if (!this.previewData) {
-
-      ctx.drawImage(this.target.bitmap, 0, 0)
-      this.previewData = ctx.createImageData(this.w, this.h)
+      const img = ctx.createImageData(this.w, this.h)
+      img.data.set(this.base)
+      this.previewData = img
+      ctx.putImageData(img, 0, 0)
     }
     for (const rect of rects) {
-      this.ensureBaseRows(rect.y0, rect.y1)
       compositeStrokeRect(
         this.previewData.data,
         this.base,
@@ -213,30 +191,34 @@ class BasePaintCore implements PaintCore {
     this.flushTail()
     const dirtyRects = this.cov.dirtyRects()
     if (!this.painted || !unionOfRects(dirtyRects)) return null
-
-    let scratch = this.previewData
-    if (!scratch) {
-      const ctx = this.previewCanvas?.getContext('2d')
-      scratch = ctx ? ctx.createImageData(this.w, this.h) : null
-      if (!scratch) scratch = { data: new Uint8ClampedArray(this.w * this.h * 4) } as ImageData
-    }
-    const patches = dirtyRects.map((d) => {
-      this.ensureBaseRows(d.y0, d.y1)
+    const bytes = this.base.slice()
+    for (const r of dirtyRects) {
       compositeStrokeRect(
-        scratch!.data,
+        bytes,
         this.base,
         (x, y) => this.cov.valueAt(x, y),
         this.strokeParams(),
         this.w,
-        d,
+        r,
         this.target.selection
       )
+    }
+    const final = document.createElement('canvas')
+    final.width = this.w
+    final.height = this.h
+    const ctx = final.getContext('2d')
+    if (!ctx) return null
+    const img = ctx.createImageData(this.w, this.h)
+    img.data.set(bytes)
+    ctx.putImageData(img, 0, 0)
+    const afterId = this.target.content.register(final)
+    this.target.slot.contentId = afterId
+    this.target.slot.url = undefined
+    const patches = dirtyRects.map((d) => {
       const rect = { x: d.x0, y: d.y0, w: d.x1 - d.x0 + 1, h: d.y1 - d.y0 + 1 }
-      return { rect, before: extractPatch(this.base, this.w, rect), after: extractPatch(scratch!.data, this.w, rect) }
+      return { rect, before: extractPatch(this.base, this.w, rect), after: extractPatch(bytes, this.w, rect) }
     })
-    const cmd = new SetContentRegionCommand(this.label, this.target.slot, patches, this.target.content, this.beforeUrl)
-    cmd.apply('redo')
-    return cmd
+    return new SetContentRegionCommand(this.label, this.target.slot, patches, this.target.content, this.beforeUrl)
   }
 
   cancel(): void {

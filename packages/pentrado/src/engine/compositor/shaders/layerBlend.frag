@@ -12,35 +12,9 @@ uniform int   u_blend;
 uniform int   u_composite;
 uniform int   u_blendSpace;
 uniform int   u_compositeSpace;
-uniform bool  u_clip;
-
-uniform vec2  u_docSize;
-uniform bool  u_hasQuad;
-uniform vec2  u_quadCenter;
-uniform vec2  u_quadRot;
-uniform vec2  u_quadSize;
-uniform vec2  u_srcSize;
-uniform bool  u_maskHasQuad;
-uniform vec2  u_maskQuadCenter;
-uniform vec2  u_maskQuadRot;
-uniform vec2  u_maskQuadSize;
-uniform vec2  u_maskSrcSize;
 
 in vec2 v_texCoord;
 out vec4 fragColor;
-
-/* Sample a content-sized texture placed as a doc-space quad. The last
-   component of the return carries edge coverage in [0,1] (1px AA ramp). */
-vec4 sampleQuad(sampler2D tex, vec2 center, vec2 rot, vec2 size, vec2 srcSize, out float cov) {
-  vec2 docPx = vec2(v_texCoord.x * u_docSize.x, (1.0 - v_texCoord.y) * u_docSize.y);
-  vec2 d = docPx - center;
-  vec2 r = vec2(rot.x * d.x + rot.y * d.y, -rot.y * d.x + rot.x * d.y);
-  vec2 local = r / size + 0.5;
-  vec2 px = local * srcSize;
-  vec2 c2 = clamp(min(px, srcSize - px) + 0.5, 0.0, 1.0);
-  cov = c2.x * c2.y;
-  return texture(tex, vec2(local.x, 1.0 - local.y));
-}
 
 const float EPS = 1e-6;
 
@@ -169,26 +143,11 @@ vec4 composite(int mode, vec4 bg, vec4 layer, vec3 comp, float cov) {
 
 void main() {
   vec4 bg = texture(u_backdrop, v_texCoord);
-  vec4 layer;
-  if (u_hasQuad) {
-    float edge;
-    layer = sampleQuad(u_layer, u_quadCenter, u_quadRot, u_quadSize, u_srcSize, edge);
-    layer.a *= edge;
-  } else {
-    layer = texture(u_layer, v_texCoord);
-  }
+  vec4 layer = texture(u_layer, v_texCoord);
   if (u_srgbLayer) layer.rgb = srgbToLinear(layer.rgb);
 
   float cov = u_opacity;
-  if (u_hasMask) {
-    if (u_maskHasQuad) {
-      float medge;
-      cov *= sampleQuad(u_mask, u_maskQuadCenter, u_maskQuadRot, u_maskQuadSize, u_maskSrcSize, medge).r * medge;
-    } else {
-      cov *= texture(u_mask, v_texCoord).r;
-    }
-  }
-  if (u_clip) cov *= bg.a;
+  if (u_hasMask) cov *= texture(u_mask, v_texCoord).r;
 
   vec3 comp = fromSpace(blendPixel(u_blend, toSpace(bg.rgb, u_blendSpace), toSpace(layer.rgb, u_blendSpace)), u_blendSpace);
 

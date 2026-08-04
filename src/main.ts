@@ -64,7 +64,6 @@ let mountKeySeq = 0
 })()
 
 const GENERIC_STAGE_MIN_HEIGHT = 380
-const SEEDED_HEIGHT_STAGES = new Set(['ComfyTV.LayerEditorStage'])
 const TEXT_PREVIEW_WIDGET_NAME = '$$node-text-preview'
 const TEXT_PREVIEW_MAX_HEIGHT = 120
 
@@ -104,12 +103,6 @@ function mountStage(node: ComfyNode, kind: StageKind, variant: StageVariant = 'g
   if (FLEX_FILL_STAGES.has(node.comfyClass)) {
     Object.assign(container.style, {
       display: 'flex', flexDirection: 'column', alignItems: 'stretch',
-      minHeight: '0', overflow: 'hidden',
-    })
-  }
-  if (SEEDED_HEIGHT_STAGES.has(node.comfyClass)) {
-    Object.assign(container.style, {
-      flex: 'none', height: `${floor}px`, resize: 'vertical', overflow: 'hidden',
     })
   }
 

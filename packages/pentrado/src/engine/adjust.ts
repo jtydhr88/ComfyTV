@@ -15,10 +15,6 @@ export type AdjustmentOp =
   | 'vibrance'
   | 'posterize'
   | 'threshold'
-  | 'channel-mixer'
-  | 'black-white'
-  | 'photo-filter'
-  | 'gradient-map'
 
 export const ADJUST_CODE: Record<AdjustmentOp, number> = {
   'brightness-contrast': 0,
@@ -32,14 +28,7 @@ export const ADJUST_CODE: Record<AdjustmentOp, number> = {
   threshold: 8,
   vibrance: 9,
   curves: 10,
-  'channel-mixer': 11,
-  'black-white': 12,
-  'photo-filter': 13,
-  'gradient-map': 14,
 }
-
-/** Ops that drive the shared 256-entry LUT texture (curves + gradient map). */
-export const LUT_ADJUST_OPS: AdjustmentOp[] = ['curves', 'gradient-map']
 
 export const ADJUST_OPS = Object.keys(ADJUST_CODE) as AdjustmentOp[]
 
@@ -50,16 +39,7 @@ export interface AdjustCurves {
   blue?: string
 }
 
-export interface AdjustParamDef {
-  key: string
-  min: number
-  max: number
-  default: number
-  step?: number
-  color?: boolean
-}
-
-export const ADJUST_PARAM_DEFS: Record<AdjustmentOp, AdjustParamDef[]> = {
+export const ADJUST_PARAM_DEFS: Record<AdjustmentOp, Array<{ key: string; min: number; max: number; default: number; step?: number }>> = {
   'brightness-contrast': [
     { key: 'brightness', min: -1, max: 1, default: 0 },
     { key: 'contrast', min: -1, max: 1, default: 0 },
@@ -100,33 +80,6 @@ export const ADJUST_PARAM_DEFS: Record<AdjustmentOp, AdjustParamDef[]> = {
   vibrance: [{ key: 'amount', min: -2, max: 2, default: 0 }],
   posterize: [{ key: 'levels', min: 2, max: 32, default: 4, step: 1 }],
   threshold: [{ key: 'level', min: 0, max: 1, default: 0.5 }],
-  'channel-mixer': [
-    { key: 'rr', min: -2, max: 2, default: 1 },
-    { key: 'rg', min: -2, max: 2, default: 0 },
-    { key: 'rb', min: -2, max: 2, default: 0 },
-    { key: 'gr', min: -2, max: 2, default: 0 },
-    { key: 'gg', min: -2, max: 2, default: 1 },
-    { key: 'gb', min: -2, max: 2, default: 0 },
-    { key: 'br', min: -2, max: 2, default: 0 },
-    { key: 'bg', min: -2, max: 2, default: 0 },
-    { key: 'bb', min: -2, max: 2, default: 1 },
-  ],
-  'black-white': [
-    { key: 'red', min: -2, max: 3, default: 0.3, step: 0.01 },
-    { key: 'yellow', min: -2, max: 3, default: 0, step: 0.01 },
-    { key: 'green', min: -2, max: 3, default: 0.59, step: 0.01 },
-    { key: 'cyan', min: -2, max: 3, default: 0, step: 0.01 },
-    { key: 'blue', min: -2, max: 3, default: 0.11, step: 0.01 },
-    { key: 'magenta', min: -2, max: 3, default: 0, step: 0.01 },
-  ],
-  'photo-filter': [
-    { key: 'color', min: 0, max: 0xffffff, default: 0xec8a00, color: true },
-    { key: 'density', min: 0, max: 1, default: 0.25, step: 0.01 },
-  ],
-  'gradient-map': [
-    { key: 'from', min: 0, max: 0xffffff, default: 0x000000, color: true },
-    { key: 'to', min: 0, max: 0xffffff, default: 0xffffff, color: true },
-  ],
 }
 
 export function defaultParams(op: AdjustmentOp): Record<string, number> {
@@ -162,50 +115,7 @@ export function packParams(op: AdjustmentOp, params: Record<string, number>): nu
   if (op === 'posterize') return [Math.max(2, Math.round(params.levels ?? 4)), 0, 0, 0]
   if (op === 'threshold') return [params.level ?? 0.5, 0, 0, 0]
   if (op === 'vibrance') return [params.amount ?? 0, 0, 0, 0]
-  if (op === 'channel-mixer') {
-    return [
-      params.rr ?? 1, params.rg ?? 0, params.rb ?? 0,
-      params.gr ?? 0, params.gg ?? 1, params.gb ?? 0,
-      params.br ?? 0, params.bg ?? 0, params.bb ?? 1,
-    ]
-  }
-  if (op === 'black-white') {
-    return [
-      params.red ?? 0.3, params.yellow ?? 0, params.green ?? 0.59,
-      params.cyan ?? 0, params.blue ?? 0.11, params.magenta ?? 0,
-    ]
-  }
-  if (op === 'photo-filter') {
-    const c = Math.round(params.color ?? 0xec8a00)
-    return [((c >> 16) & 255) / 255, ((c >> 8) & 255) / 255, (c & 255) / 255, params.density ?? 0.25]
-  }
   return [0, 0, 0, 0]
-}
-
-function unpackRgb(v: number): RGB {
-  const n = Math.round(v)
-  return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255]
-}
-
-/** Linear from→to gradient as a 256-entry RGBA LUT (for the shared LUT texture). */
-export function gradientMapLutData(params: Record<string, number>): Uint8Array {
-  const from = unpackRgb(params.from ?? 0x000000)
-  const to = unpackRgb(params.to ?? 0xffffff)
-  const data = new Uint8Array(256 * 4)
-  for (let i = 0; i < 256; i++) {
-    const t = i / 255
-    data[i * 4] = Math.round((from[0] + (to[0] - from[0]) * t) * 255)
-    data[i * 4 + 1] = Math.round((from[1] + (to[1] - from[1]) * t) * 255)
-    data[i * 4 + 2] = Math.round((from[2] + (to[2] - from[2]) * t) * 255)
-    data[i * 4 + 3] = 255
-  }
-  return data
-}
-
-export function lutDataFor(op: AdjustmentOp, params: Record<string, number>, curves?: AdjustCurves): Uint8Array | undefined {
-  if (op === 'curves') return curvesLutData(curves)
-  if (op === 'gradient-map') return gradientMapLutData(params)
-  return undefined
 }
 
 export function curvesLutData(curves: AdjustCurves | undefined): Uint8Array {
@@ -337,54 +247,10 @@ function vibrance(c: RGB, intensity: number): RGB {
   ]
 }
 
-function channelMixer(c: RGB, p: number[]): RGB {
-  return [
-    clamp01(c[0] * p[0] + c[1] * p[1] + c[2] * p[2]),
-    clamp01(c[0] * p[3] + c[1] * p[4] + c[2] * p[5]),
-    clamp01(c[0] * p[6] + c[1] * p[7] + c[2] * p[8]),
-  ]
-}
-
-/** 6-slider black & white: primaries R/G/B plus secondaries Y/C/M by pair-min. */
-function blackWhite(c: RGB, p: number[]): RGB {
-  const [r, g, b] = c
-  const gray = clamp01(
-    r * p[0] + (r + g) * 0.5 * p[1] + g * p[2] + (g + b) * 0.5 * p[3] + b * p[4] + (r + b) * 0.5 * p[5]
-  )
-  return [gray, gray, gray]
-}
-
-const PF_W: RGB = [0.2126, 0.7152, 0.0722]
-
-function photoFilter(c: RGB, p: number[]): RGB {
-  const density = p[3]
-  const filtered: RGB = [c[0] * p[0], c[1] * p[1], c[2] * p[2]]
-  const lo = c[0] * PF_W[0] + c[1] * PF_W[1] + c[2] * PF_W[2]
-  const ln = filtered[0] * PF_W[0] + filtered[1] * PF_W[1] + filtered[2] * PF_W[2]
-  const k = ln > 1e-4 ? lo / ln : 1
-  return [
-    clamp01(c[0] + (filtered[0] * k - c[0]) * density),
-    clamp01(c[1] + (filtered[1] * k - c[1]) * density),
-    clamp01(c[2] + (filtered[2] * k - c[2]) * density),
-  ]
-}
-
-function applySrgbOp(op: AdjustmentOp, params: number[], c: RGB, lut?: Uint8Array): RGB {
+function applySrgbOp(op: AdjustmentOp, params: number[], c: RGB): RGB {
   switch (op) {
     case 'hue-saturation':
       return hueSaturation(c, params[0], params[1], params[2])
-    case 'channel-mixer':
-      return channelMixer(c, params)
-    case 'black-white':
-      return blackWhite(c, params)
-    case 'photo-filter':
-      return photoFilter(c, params)
-    case 'gradient-map': {
-      if (!lut) return c
-      const y = c[0] * PF_W[0] + c[1] * PF_W[1] + c[2] * PF_W[2]
-      const i = Math.round(clamp01(y) * 255) * 4
-      return [lut[i] / 255, lut[i + 1] / 255, lut[i + 2] / 255]
-    }
     case 'invert':
       return [1 - c[0], 1 - c[1], 1 - c[2]]
     case 'levels':
@@ -413,7 +279,7 @@ function applySrgbOp(op: AdjustmentOp, params: number[], c: RGB, lut?: Uint8Arra
   }
 }
 
-export function applyAdjustment(op: AdjustmentOp, params: number[], px: RGBA, lut?: Uint8Array): RGBA {
+export function applyAdjustment(op: AdjustmentOp, params: number[], px: RGBA): RGBA {
   if (op === 'brightness-contrast') {
     return [
       brightnessContrast(px[0], params[0], params[1]),
@@ -435,6 +301,6 @@ export function applyAdjustment(op: AdjustmentOp, params: number[], px: RGBA, lu
     linearToSrgb(clamp01(px[1])),
     linearToSrgb(clamp01(px[2])),
   ]
-  const out = applySrgbOp(op, params, srgb, lut)
+  const out = applySrgbOp(op, params, srgb)
   return [srgbToLinear(clamp01(out[0])), srgbToLinear(clamp01(out[1])), srgbToLinear(clamp01(out[2])), px[3]]
 }

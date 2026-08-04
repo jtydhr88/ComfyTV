@@ -38,8 +38,6 @@ export interface NodeBase {
   locks: Locks
   colorTag?: string
   fx?: LayerFxData[]
-  /** Clipping mask: this layer clips to the alpha of the layer directly below. */
-  clip?: boolean
 }
 
 export type ChannelRole = 'mask' | 'selection' | 'saved'

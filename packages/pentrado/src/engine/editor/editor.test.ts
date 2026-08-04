@@ -31,9 +31,6 @@ class FakeCompositor implements Compositor {
   readback(): ImageData {
     return new ImageData(1, 1)
   }
-  presentCanvas() {
-    return null
-  }
   async toBlob(): Promise<Blob> {
     return new Blob()
   }

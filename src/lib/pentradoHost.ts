@@ -74,15 +74,15 @@ export const pentradoHost: PentradoHost = {
   toolbarActions: [
     {
       id: 'capture',
-      get label() { return t('pentradoActions.capture') },
-      get title() { return t('pentradoActions.captureHint') },
+      label: t('pentradoActions.capture'),
+      title: t('pentradoActions.captureHint'),
       icon: markRaw(IconCamera),
       busy: (editor: LayerEditorController) => editor.capturing.value,
       run: (editor: LayerEditorController) => editor.captureBatch(),
     },
     {
       id: 'save-to-library',
-      get title() { return t('pentradoActions.saveToLibraryHint') },
+      title: t('pentradoActions.saveToLibraryHint'),
       icon: markRaw(IconLibrary),
       busy: (editor: LayerEditorController) => editor.exportingPsd.value,
       run: (editor: LayerEditorController) => editor.exportPsdToLibrary(),

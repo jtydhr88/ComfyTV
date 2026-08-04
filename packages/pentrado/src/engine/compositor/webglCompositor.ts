@@ -6,87 +6,8 @@ import type {
   CompositorInit,
   FBOHandle,
   NodeTexture,
-  TileLayerInput,
 } from '../compositor'
-import { TILE_SIZE, type TileGrid } from '../tile/tileBuffer'
-import { ATLAS_SIZE, GUTTER, TileAtlas } from './tileAtlas'
 import LAYER_BLEND_FRAG from './shaders/layerBlend.frag?raw'
-
-const BLEND_COMMON = LAYER_BLEND_FRAG.slice(0, LAYER_BLEND_FRAG.indexOf('void main'))
-
-const TILE_VERT = `#version 300 es
-layout(location=0) in vec4 a_rect;
-layout(location=1) in vec4 a_slot;
-layout(location=2) in vec4 a_color;
-uniform vec2 u_docSize;
-uniform vec2 u_tQuadCenter;
-uniform vec2 u_tQuadRot;
-uniform vec2 u_tQuadSize;
-uniform vec2 u_tSrcSize;
-out vec2 v_texCoord;
-out vec2 v_content;
-flat out vec4 v_slotv;
-flat out vec4 v_colorv;
-flat out vec2 v_tileOrigin;
-void main() {
-  vec2 corner = vec2(float(gl_VertexID & 1), float((gl_VertexID >> 1) & 1));
-  vec2 c = a_rect.xy + corner * a_rect.zw;
-  v_content = c;
-  v_slotv = a_slot;
-  v_colorv = a_color;
-  v_tileOrigin = a_rect.xy;
-  vec2 scaled = (c / u_tSrcSize - 0.5) * u_tQuadSize;
-  vec2 doc = vec2(u_tQuadRot.x * scaled.x - u_tQuadRot.y * scaled.y,
-                  u_tQuadRot.y * scaled.x + u_tQuadRot.x * scaled.y) + u_tQuadCenter;
-  v_texCoord = vec2(doc.x / u_docSize.x, 1.0 - doc.y / u_docSize.y);
-  gl_Position = vec4(doc.x / u_docSize.x * 2.0 - 1.0, 1.0 - doc.y / u_docSize.y * 2.0, 0.0, 1.0);
-}`
-
-const TILE_MAIN = `
-uniform sampler2D u_atlas;
-uniform vec2 u_atlasSize;
-uniform float u_gutter;
-in vec2 v_content;
-flat in vec4 v_slotv;
-flat in vec4 v_colorv;
-flat in vec2 v_tileOrigin;
-
-void main() {
-  vec4 bg = texture(u_backdrop, v_texCoord);
-  vec4 layer;
-  if (v_slotv.x < 0.0) {
-    layer = v_colorv;
-  } else {
-    vec2 px = v_slotv.xy + vec2(u_gutter) + (v_content - v_tileOrigin);
-    layer = texture(u_atlas, px / u_atlasSize);
-  }
-  if (u_srgbLayer) layer.rgb = srgbToLinear(layer.rgb);
-  vec2 edge = clamp(min(v_content, u_srcSize - v_content) + 0.5, 0.0, 1.0);
-  layer.a *= edge.x * edge.y;
-
-  float cov = u_opacity;
-  if (u_hasMask) {
-    if (u_maskHasQuad) {
-      float medge;
-      cov *= sampleQuad(u_mask, u_maskQuadCenter, u_maskQuadRot, u_maskQuadSize, u_maskSrcSize, medge).r * medge;
-    } else {
-      cov *= texture(u_mask, v_texCoord).r;
-    }
-  }
-  if (u_clip) cov *= bg.a;
-
-  vec3 comp = fromSpace(blendPixel(u_blend, toSpace(bg.rgb, u_blendSpace), toSpace(layer.rgb, u_blendSpace)), u_blendSpace);
-  vec4 outc;
-  if (u_compositeSpace == 0) {
-    outc = composite(u_composite, bg, layer, comp, cov);
-  } else {
-    vec4 bgC = vec4(toSpace(bg.rgb, u_compositeSpace), bg.a);
-    vec4 lyC = vec4(toSpace(layer.rgb, u_compositeSpace), layer.a);
-    vec4 r = composite(u_composite, bgC, lyC, toSpace(comp, u_compositeSpace), cov);
-    outc = vec4(fromSpace(r.rgb, u_compositeSpace), r.a);
-  }
-  fragColor = outc;
-}`
 
 const VERT = `#version 300 es
 out vec2 v_texCoord;
@@ -125,25 +46,8 @@ uniform int u_op;
 uniform vec4 u_p0;
 uniform vec4 u_p1;
 uniform vec4 u_p2;
-uniform vec2 u_docSize;
-uniform bool u_maskHasQuad;
-uniform vec2 u_maskQuadCenter;
-uniform vec2 u_maskQuadRot;
-uniform vec2 u_maskQuadSize;
-uniform vec2 u_maskSrcSize;
 in vec2 v_texCoord;
 out vec4 fragColor;
-
-float maskSample(){
-  if (!u_maskHasQuad) return texture(u_mask, v_texCoord).r;
-  vec2 docPx = vec2(v_texCoord.x * u_docSize.x, (1.0 - v_texCoord.y) * u_docSize.y);
-  vec2 d = docPx - u_maskQuadCenter;
-  vec2 r = vec2(u_maskQuadRot.x * d.x + u_maskQuadRot.y * d.y, -u_maskQuadRot.y * d.x + u_maskQuadRot.x * d.y);
-  vec2 local = r / u_maskQuadSize + 0.5;
-  vec2 px = local * u_maskSrcSize;
-  vec2 c2 = clamp(min(px, u_maskSrcSize - px) + 0.5, 0.0, 1.0);
-  return texture(u_mask, vec2(local.x, 1.0 - local.y)).r * c2.x * c2.y;
-}
 
 float s2l(float c){ return c <= 0.04045 ? c / 12.92 : pow((c + 0.055) / 1.055, 2.4); }
 float l2s(float c){ c = clamp(c, 0.0, 1.0); return c <= 0.0031308 ? 12.92*c : 1.055*pow(c,1.0/2.4)-0.055; }
@@ -270,31 +174,12 @@ void main(){
       float s = u_p0.x > 0.0 ? 1.0 : -1.0;
       float k = 1.0 + u_p0.x * (1.0 + s * sat);
       o = clamp(vec3(luma) + (g - vec3(luma)) * k, 0.0, 1.0);
-    } else if (u_op == 11) {
-      o = clamp(vec3(
-        dot(g, u_p0.xyz),
-        dot(g, vec3(u_p0.w, u_p1.xy)),
-        dot(g, vec3(u_p1.zw, u_p2.x))), 0.0, 1.0);
-    } else if (u_op == 12) {
-      float gray = clamp(
-        g.r*u_p0.x + (g.r+g.g)*0.5*u_p0.y + g.g*u_p0.z + (g.g+g.b)*0.5*u_p0.w + g.b*u_p1.x + (g.r+g.b)*0.5*u_p1.y,
-        0.0, 1.0);
-      o = vec3(gray);
-    } else if (u_op == 13) {
-      vec3 filt = g * u_p0.xyz;
-      float lo = dot(g, vec3(0.2126, 0.7152, 0.0722));
-      float ln = dot(filt, vec3(0.2126, 0.7152, 0.0722));
-      filt *= ln > 1e-4 ? lo / ln : 1.0;
-      o = clamp(mix(g, filt, u_p0.w), 0.0, 1.0);
-    } else if (u_op == 14) {
-      float y = dot(g, vec3(0.2126, 0.7152, 0.0722));
-      o = vec3(lutAt(y, 0), lutAt(y, 1), lutAt(y, 2));
     } else {
       o = vec3(lutAt(g.r, 0), lutAt(g.g, 1), lutAt(g.b, 2));
     }
     adjusted = s2l(clamp(o, 0.0, 1.0));
   }
-  float t = u_opacity * (u_hasMask ? maskSample() : 1.0);
+  float t = u_opacity * (u_hasMask ? texture(u_mask, v_texCoord).r : 1.0);
   fragColor = vec4(mix(bg.rgb, adjusted, t), bg.a);
 }`
 
@@ -334,11 +219,9 @@ export function createWebGLCompositor(): Compositor {
   let canvas: OffscreenCanvas | HTMLCanvasElement | null = null
   let gl: WebGL2RenderingContext | null = null
   let blendProg: WebGLProgram | null = null
-  let tileProg: WebGLProgram | null = null
   let presentProg: WebGLProgram | null = null
   let copyProg: WebGLProgram | null = null
   let adjustProg: WebGLProgram | null = null
-  let atlas: TileAtlas | null = null
   let ping: Target | null = null
   let pong: Target | null = null
   let result: Target | null = null
@@ -355,34 +238,9 @@ export function createWebGLCompositor(): Compositor {
   let disposed = false
   let lastRecover = -Infinity
   let onRestored: (() => void) | undefined
-  interface TexEntry {
-    tex: WebGLTexture
-    gen: number
-    version?: number
-    stamp?: string
-    mipDirty: boolean
-    hasMips: boolean
-  }
   const targets = new Map<number, Target>()
-  const texCache = new Map<string, TexEntry>()
+  const texCache = new Map<string, { tex: WebGLTexture; gen: number; version?: number }>()
   let uniformCache = new WeakMap<WebGLProgram, Map<string, WebGLUniformLocation | null>>()
-
-  interface InstanceBatch {
-    atlas: number
-    offset: number
-    count: number
-  }
-  interface InstanceEntry {
-    buffer: WebGLBuffer
-    batches: InstanceBatch[]
-    epoch: number
-    drawZero: boolean
-    gen: number
-    residency: number
-  }
-  const instanceCache = new Map<TileGrid, InstanceEntry>()
-  const FLOATS_PER_INSTANCE = 12
-  let tilePasses = 0
 
   function loc(prog: WebGLProgram, name: string): WebGLUniformLocation | null {
     let m = uniformCache.get(prog)
@@ -419,222 +277,28 @@ export function createWebGLCompositor(): Compositor {
     gl!.drawArrays(gl!.TRIANGLES, 0, 3)
   }
 
-  function bindQuadUniforms(
-    prog: WebGLProgram,
-    nt: NodeTexture | undefined,
-    names: { has: string; center: string; rot: string; size: string; src: string }
-  ): void {
-    const g = gl!
-    const q = nt?.quad
-    if (!nt || !q || nt.source instanceof WebGLTexture) {
-      g.uniform1i(loc(prog, names.has), 0)
-      return
-    }
-    g.uniform1i(loc(prog, names.has), 1)
-    g.uniform2f(loc(prog, names.center), q.x + q.w / 2, q.y + q.h / 2)
-    g.uniform2f(loc(prog, names.rot), Math.cos(q.rotation), Math.sin(q.rotation))
-    g.uniform2f(loc(prog, names.size), Math.max(1e-6, q.w), Math.max(1e-6, q.h))
-    g.uniform2f(loc(prog, names.src), Math.max(1, nt.source.width), Math.max(1, nt.source.height))
-  }
-
-  const LAYER_QUAD = { has: 'u_hasQuad', center: 'u_quadCenter', rot: 'u_quadRot', size: 'u_quadSize', src: 'u_srcSize' }
-  const MASK_QUAD = {
-    has: 'u_maskHasQuad',
-    center: 'u_maskQuadCenter',
-    rot: 'u_maskQuadRot',
-    size: 'u_maskQuadSize',
-    src: 'u_maskSrcSize',
-  }
-
-  function buildInstances(input: TileLayerInput): InstanceEntry | null {
-    const g = gl!
-    const grid = input.tiles.grid
-    const drawZero = input.tiles.drawZero
-    const cached = instanceCache.get(grid)
-    if (cached && cached.epoch === atlas!.epoch && cached.drawZero === drawZero && cached.residency === (grid.residency ?? 0)) {
-      cached.gen = generation
-      return cached
-    }
-
-    const byAtlas = new Map<number, number[]>()
-    const push = (atlasIdx: number, rec: number[]) => {
-      let arr = byAtlas.get(atlasIdx)
-      if (!arr) {
-        arr = []
-        byAtlas.set(atlasIdx, arr)
-      }
-      arr.push(...rec)
-    }
-    for (let i = 0; i < grid.tiles.length; i++) {
-      const tile = grid.tiles[i]
-      const tx = i % grid.cols
-      const ty = (i / grid.cols) | 0
-      const x = tx * TILE_SIZE
-      const y = ty * TILE_SIZE
-      const w = Math.min(TILE_SIZE, grid.width - x)
-      const h = Math.min(TILE_SIZE, grid.height - y)
-      if (tile.uniform) {
-        const [r, gg, b, a] = tile.uniform
-        if (!drawZero && r === 0 && gg === 0 && b === 0 && a === 0) continue
-        push(-1, [x, y, w, h, -1, 0, 0, 0, r / 255, gg / 255, b / 255, a / 255])
-        continue
-      }
-      const slot = tile.bytes ? atlas!.acquire(grid, i) : null
-      if (!slot) {
-
-        if (drawZero) push(-1, [x, y, w, h, -1, 0, 0, 0, 0, 0, 0, 0])
-        continue
-      }
-      push(slot.atlas, [x, y, w, h, slot.x, slot.y, 0, 0, 0, 0, 0, 0])
-    }
-    const total = [...byAtlas.values()].reduce((n, a) => n + a.length, 0)
-    const data = new Float32Array(total)
-    const batches: InstanceBatch[] = []
-    let cursor = 0
-    for (const [atlasIdx, arr] of byAtlas) {
-      batches.push({ atlas: atlasIdx, offset: cursor / FLOATS_PER_INSTANCE, count: arr.length / FLOATS_PER_INSTANCE })
-      data.set(arr, cursor)
-      cursor += arr.length
-    }
-    const buffer = cached?.buffer ?? g.createBuffer()
-    if (!buffer) return null
-    g.bindBuffer(g.ARRAY_BUFFER, buffer)
-    g.bufferData(g.ARRAY_BUFFER, data, g.DYNAMIC_DRAW)
-    const entry: InstanceEntry = { buffer, batches, epoch: atlas!.epoch, drawZero, gen: generation, residency: grid.residency ?? 0 }
-    instanceCache.set(grid, entry)
-    return entry
-  }
-
-  function drawTileInput(input: TileLayerInput, read: Target, write: Target, temps: WebGLTexture[]): void {
-    const g = gl!
-    if (!tileProg || !atlas) return
-    tilePasses += 1
-
-    blit(read, write)
-    const inst = buildInstances(input)
-    g.bindFramebuffer(g.FRAMEBUFFER, write.fbo)
-    g.viewport(0, 0, write.width, write.height)
-    if (!inst || !inst.batches.length) return
-
-    g.useProgram(tileProg)
-    g.activeTexture(g.TEXTURE0)
-    g.bindTexture(g.TEXTURE_2D, read.tex)
-    g.uniform1i(loc(tileProg, 'u_backdrop'), 0)
-    g.activeTexture(g.TEXTURE2)
-    g.bindTexture(g.TEXTURE_2D, input.mask ? resolveTexture(input.mask, temps) : getFallback())
-    g.uniform1i(loc(tileProg, 'u_mask'), 2)
-    g.uniform1i(loc(tileProg, 'u_hasMask'), input.mask ? 1 : 0)
-    g.uniform2f(loc(tileProg, 'u_docSize'), width, height)
-    bindQuadUniforms(tileProg, input.mask, MASK_QUAD)
-    g.uniform1i(loc(tileProg, 'u_hasQuad'), 0)
-
-    const q = input.tiles.quad
-    g.uniform2f(loc(tileProg, 'u_tQuadCenter'), q.x + q.w / 2, q.y + q.h / 2)
-    g.uniform2f(loc(tileProg, 'u_tQuadRot'), Math.cos(q.rotation), Math.sin(q.rotation))
-    g.uniform2f(loc(tileProg, 'u_tQuadSize'), Math.max(1e-6, q.w), Math.max(1e-6, q.h))
-    const grid = input.tiles.grid
-    g.uniform2f(loc(tileProg, 'u_tSrcSize'), Math.max(1, grid.width), Math.max(1, grid.height))
-    g.uniform2f(loc(tileProg, 'u_srcSize'), Math.max(1, grid.width), Math.max(1, grid.height))
-    g.uniform2f(loc(tileProg, 'u_atlasSize'), ATLAS_SIZE, ATLAS_SIZE)
-    g.uniform1f(loc(tileProg, 'u_gutter'), GUTTER)
-    g.uniform1i(loc(tileProg, 'u_srgbLayer'), input.tiles.linear ? 0 : 1)
-    g.uniform1f(loc(tileProg, 'u_opacity'), input.opacity)
-    const u = modeUniforms(input.mode)
-    g.uniform1i(loc(tileProg, 'u_blend'), u.blend)
-    g.uniform1i(loc(tileProg, 'u_composite'), u.composite)
-    g.uniform1i(loc(tileProg, 'u_blendSpace'), u.blendSpace)
-    g.uniform1i(loc(tileProg, 'u_compositeSpace'), u.compositeSpace)
-    g.uniform1i(loc(tileProg, 'u_clip'), input.clipToBackdrop ? 1 : 0)
-    g.uniform1i(loc(tileProg, 'u_atlas'), 1)
-
-    g.bindBuffer(g.ARRAY_BUFFER, inst.buffer)
-    const stride = FLOATS_PER_INSTANCE * 4
-    for (const attr of [0, 1, 2]) {
-      g.enableVertexAttribArray(attr)
-      g.vertexAttribDivisor(attr, 1)
-    }
-    for (const b of inst.batches) {
-      const base = b.offset * stride
-      g.vertexAttribPointer(0, 4, g.FLOAT, false, stride, base)
-      g.vertexAttribPointer(1, 4, g.FLOAT, false, stride, base + 16)
-      g.vertexAttribPointer(2, 4, g.FLOAT, false, stride, base + 32)
-      g.activeTexture(g.TEXTURE1)
-      g.bindTexture(g.TEXTURE_2D, (b.atlas >= 0 ? atlas.texture(b.atlas) : null) ?? getFallback())
-      g.drawArraysInstanced(g.TRIANGLE_STRIP, 0, 4, b.count)
-    }
-    for (const attr of [0, 1, 2]) {
-      g.vertexAttribDivisor(attr, 0)
-      g.disableVertexAttribArray(attr)
-    }
-  }
-
-  function sweepInstanceCache(): void {
-    for (const [grid, entry] of instanceCache) {
-      if (entry.gen < generation - 3) {
-        gl?.deleteBuffer(entry.buffer)
-        instanceCache.delete(grid)
-      }
-    }
-  }
-
   function resolveTexture(nt: NodeTexture, temps: WebGLTexture[]): WebGLTexture {
     if (nt.source instanceof WebGLTexture) return nt.source
-    const wantMips =
-      nt.quad != null &&
-      Math.min(nt.quad.w / Math.max(1, nt.source.width), nt.quad.h / Math.max(1, nt.source.height)) < 0.75
     if (nt.key) {
       const hit = texCache.get(nt.key)
-      const entry = hit ?? null
-      if (entry) {
-        entry.gen = generation
-        const stampSame = nt.stamp === undefined || entry.stamp === nt.stamp
-        if (!stampSame) {
-          uploadInto(entry.tex, nt.source)
-          entry.stamp = nt.stamp
-          entry.version = nt.version
-          entry.mipDirty = true
-        } else if (nt.version !== undefined && entry.version !== nt.version) {
-          if (entry.version === nt.version - 1 && nt.dirtyRects && partialUploadAll(entry.tex, nt.source, nt.dirtyRects)) {
-            entry.version = nt.version
-          } else {
-            uploadInto(entry.tex, nt.source)
-            entry.version = nt.version
-          }
-          entry.mipDirty = true
+      if (hit) {
+        hit.gen = generation
+        if (nt.version === undefined || hit.version === nt.version) return hit.tex
+        if (hit.version === nt.version - 1 && nt.dirtyRects && partialUploadAll(hit.tex, nt.source, nt.dirtyRects)) {
+          hit.version = nt.version
+          return hit.tex
         }
-        finishMips(entry, wantMips)
-        return entry.tex
+        uploadInto(hit.tex, nt.source)
+        hit.version = nt.version
+        return hit.tex
       }
       const tex = uploadSource(nt.source)
-      const fresh: TexEntry = { tex, gen: generation, version: nt.version, stamp: nt.stamp, mipDirty: true, hasMips: false }
-      finishMips(fresh, wantMips)
-      texCache.set(nt.key, fresh)
+      texCache.set(nt.key, { tex, gen: generation, version: nt.version })
       return tex
     }
     const tex = uploadSource(nt.source)
-    if (wantMips) {
-      const g = gl!
-      g.bindTexture(g.TEXTURE_2D, tex)
-      g.generateMipmap(g.TEXTURE_2D)
-      g.texParameteri(g.TEXTURE_2D, g.TEXTURE_MIN_FILTER, g.LINEAR_MIPMAP_LINEAR)
-    }
     temps.push(tex)
     return tex
-  }
-
-  function finishMips(entry: TexEntry, wantMips: boolean): void {
-    const g = gl!
-    g.bindTexture(g.TEXTURE_2D, entry.tex)
-    if (wantMips && entry.mipDirty) {
-      g.generateMipmap(g.TEXTURE_2D)
-      entry.mipDirty = false
-      entry.hasMips = true
-    }
-    g.texParameteri(
-      g.TEXTURE_2D,
-      g.TEXTURE_MIN_FILTER,
-      entry.hasMips && !entry.mipDirty ? g.LINEAR_MIPMAP_LINEAR : g.LINEAR
-    )
   }
 
   function partialUploadAll(
@@ -747,14 +411,12 @@ export function createWebGLCompositor(): Compositor {
   function dropContextState(): void {
     targets.clear()
     texCache.clear()
-    instanceCache.clear()
     uniformCache = new WeakMap()
     ping = pong = result = null
     resultValid = false
     fallback = null
     lutTex = null
-    blendProg = presentProg = copyProg = adjustProg = tileProg = null
-    atlas = null
+    blendProg = presentProg = copyProg = adjustProg = null
     gl = null
     canvas = null
   }
@@ -793,12 +455,6 @@ export function createWebGLCompositor(): Compositor {
       presentProg = link(gl, vs, compile(gl, gl.FRAGMENT_SHADER, PRESENT_FRAG))
       copyProg = link(gl, vs, compile(gl, gl.FRAGMENT_SHADER, COPY_FRAG))
       adjustProg = link(gl, vs, compile(gl, gl.FRAGMENT_SHADER, ADJUST_FRAG))
-      tileProg = link(
-        gl,
-        compile(gl, gl.VERTEX_SHADER, TILE_VERT),
-        compile(gl, gl.FRAGMENT_SHADER, BLEND_COMMON + TILE_MAIN)
-      )
-      atlas = new TileAtlas(gl)
       ping = makeTarget(width, height)
       pong = makeTarget(width, height)
       return true
@@ -840,8 +496,6 @@ export function createWebGLCompositor(): Compositor {
 
     beginFrame(): void {
       generation += 1
-      atlas?.beginFrame()
-      if (generation % 16 === 0) atlas?.sweepDead()
     },
 
     resize(w: number, h: number): void {
@@ -892,14 +546,6 @@ export function createWebGLCompositor(): Compositor {
         g.bindFramebuffer(g.FRAMEBUFFER, write.fbo)
         g.viewport(0, 0, write.width, write.height)
 
-        if ('tiles' in input) {
-          drawTileInput(input, read, write, temps)
-          const t = read
-          read = write
-          write = t
-          continue
-        }
-
         if ('adjust' in input) {
           if (!adjustProg) continue
           g.useProgram(adjustProg)
@@ -910,8 +556,6 @@ export function createWebGLCompositor(): Compositor {
           g.bindTexture(g.TEXTURE_2D, input.mask ? resolveTexture(input.mask, temps) : getFallback())
           g.uniform1i(loc(adjustProg, 'u_mask'), 2)
           g.uniform1i(loc(adjustProg, 'u_hasMask'), input.mask ? 1 : 0)
-          g.uniform2f(loc(adjustProg, 'u_docSize'), width, height)
-          bindQuadUniforms(adjustProg, input.mask, MASK_QUAD)
           g.uniform1f(loc(adjustProg, 'u_opacity'), input.opacity)
           g.uniform1i(loc(adjustProg, 'u_op'), input.adjust.op)
           const p = input.adjust.params
@@ -936,10 +580,6 @@ export function createWebGLCompositor(): Compositor {
           g.uniform1i(loc(blendProg, 'u_mask'), 2)
           g.uniform1i(loc(blendProg, 'u_hasMask'), input.mask ? 1 : 0)
 
-          g.uniform2f(loc(blendProg, 'u_docSize'), width, height)
-          bindQuadUniforms(blendProg, input.texture, LAYER_QUAD)
-          bindQuadUniforms(blendProg, input.mask, MASK_QUAD)
-
           g.uniform1i(loc(blendProg, 'u_srgbLayer'), input.texture.linear ? 0 : 1)
           g.uniform1f(loc(blendProg, 'u_opacity'), input.opacity)
           const u = modeUniforms(input.mode)
@@ -947,7 +587,6 @@ export function createWebGLCompositor(): Compositor {
           g.uniform1i(loc(blendProg, 'u_composite'), u.composite)
           g.uniform1i(loc(blendProg, 'u_blendSpace'), u.blendSpace)
           g.uniform1i(loc(blendProg, 'u_compositeSpace'), u.compositeSpace)
-          g.uniform1i(loc(blendProg, 'u_clip'), input.clipToBackdrop ? 1 : 0)
         }
 
         drawFullscreen()
@@ -958,7 +597,6 @@ export function createWebGLCompositor(): Compositor {
 
       for (const tex of temps) g.deleteTexture(tex)
       sweepTexCache()
-      sweepInstanceCache()
 
       if (target) {
         const dst = targets.get(target.id)
@@ -1032,21 +670,6 @@ export function createWebGLCompositor(): Compositor {
       return new ImageData(px, width, height)
     },
 
-    presentCanvas(clip?: Rect | null): HTMLCanvasElement | OffscreenCanvas | null {
-      if (!ensureHealthy() || !gl || !ping) return null
-      let c: Rect | null = null
-      if (clip) {
-        const x = Math.max(0, Math.floor(clip.x))
-        const y = Math.max(0, Math.floor(clip.y))
-        const w = Math.min(width, Math.ceil(clip.x + clip.w)) - x
-        const h = Math.min(height, Math.ceil(clip.y + clip.h)) - y
-        if (w <= 0 || h <= 0) return canvas
-        if (w < width || h < height) c = { x, y, w, h }
-      }
-      presentToDefault(result ?? ping, c)
-      return canvas
-    },
-
     async toBlob(): Promise<Blob> {
       const data = this.readback()
       const c = document.createElement('canvas')
@@ -1062,17 +685,6 @@ export function createWebGLCompositor(): Compositor {
       return canvas
     },
 
-    debugStats() {
-      const a = atlas?.stats() ?? { atlases: 0, residentSlots: 0, vramBytes: 0 }
-      return {
-        tilePasses,
-        atlases: a.atlases,
-        atlasSlots: a.residentSlots,
-        atlasVramBytes: a.vramBytes,
-        texCacheEntries: texCache.size,
-      }
-    },
-
     dispose(): void {
       disposed = true
       if (!gl) return
@@ -1085,12 +697,6 @@ export function createWebGLCompositor(): Compositor {
       texCache.clear()
       if (fallback) gl.deleteTexture(fallback)
       if (lutTex) gl.deleteTexture(lutTex)
-      for (const entry of instanceCache.values()) gl.deleteBuffer(entry.buffer)
-      instanceCache.clear()
-      atlas?.dispose()
-      atlas = null
-      if (tileProg) gl.deleteProgram(tileProg)
-      tileProg = null
       if (blendProg) gl.deleteProgram(blendProg)
       if (presentProg) gl.deleteProgram(presentProg)
       if (copyProg) gl.deleteProgram(copyProg)

@@ -41,19 +41,6 @@ export function useLayerEditorHotkeys(
         return
       }
     }
-    if (editor.tool.value === 'crop' && !isTextEditingTarget(e.target)) {
-      if (e.key === 'Enter' && editor.cropPending.value) {
-        e.preventDefault()
-        editor.applyCrop()
-        editor.tool.value = 'select'
-        return
-      }
-      if (e.key === 'Escape' && editor.cropPending.value) {
-        e.preventDefault()
-        editor.cancelCrop()
-        return
-      }
-    }
     if (editor.tool.value === 'transform' && !isTextEditingTarget(e.target)) {
       if (e.key === 'Enter') {
         e.preventDefault()
@@ -83,11 +70,6 @@ export function useLayerEditorHotkeys(
     if (ctrl && e.code === 'KeyT') {
       e.preventDefault()
       editor.startTransform()
-      return
-    }
-    if (ctrl && e.altKey && e.code === 'KeyG' && editor.activeId.value) {
-      e.preventDefault()
-      editor.toggleClipMask(editor.activeId.value)
       return
     }
     if (ctrl && e.code === 'KeyA') {

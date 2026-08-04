@@ -34,8 +34,6 @@ export const rasterKind: NodeKind<RasterData> = {
       naturalHeight: nh,
       lockAlpha: init.lockAlpha ?? false,
       mask: init.mask,
-      fx: init.fx,
-      clip: init.clip,
     }
   },
 
@@ -71,7 +69,6 @@ export const rasterKind: NodeKind<RasterData> = {
       lockAlpha: r.lockAlpha === true,
       mask: r.mask as RasterData['mask'],
       fx: normalizeLayerFx(r.fx),
-      clip: r.clip === true ? true : undefined,
     }
   },
 
@@ -92,7 +89,6 @@ export const rasterKind: NodeKind<RasterData> = {
       lockAlpha: node.lockAlpha ?? false,
       mask: node.mask,
       fx: node.fx,
-      clip: node.clip,
     }
   },
 
@@ -116,15 +112,6 @@ export const rasterKind: NodeKind<RasterData> = {
   renderNode(node: RasterData, ctx): NodeTexture | null {
     const entry = ctx.content.get(node.contentId)
     if (!entry) return null
-    if (entry.isBlank) return null
-    if (!node.fx?.length && ctx.content.renderSource) {
-      const t = node.transform
-      const scale = Math.min(t.w / Math.max(1, entry.width), t.h / Math.max(1, entry.height))
-      const src = ctx.content.renderSource(node.contentId, scale)
-      if (src) {
-        return ctx.placed(`content:${node.id}`, node.contentId, src.bitmap, node.transform, false, src.version, src.dirtyRects)
-      }
-    }
     return ctx.placed(`content:${node.id}`, node.contentId, entry.canvas, node.transform)
   },
 
@@ -133,10 +120,8 @@ export const rasterKind: NodeKind<RasterData> = {
   },
 
   thumbnail(node: RasterData, deps): HTMLCanvasElement | null {
-    if (!deps.content.has(node.contentId)) return null
-    const small = deps.content.thumbnailCanvas?.(node.contentId, deps.size * 2)
-    if (small) return small
-    return deps.content.get(node.contentId)?.canvas ?? null
+    const entry = deps.content.get(node.contentId)
+    return entry?.canvas ?? null
   },
 
   hitTest(node: RasterData, pt: Vec2): boolean {

@@ -3,8 +3,8 @@
     <div
       class="ctv:flex ctv:flex-col ctv:gap-1 ctv:text-xs ctv:text-base-foreground ctv:outline-none"
       :class="fullscreen
-        ? 'comfytv-fs ctv:fixed ctv:inset-0 ctv:z-[1400] ctv:bg-base-background ctv:p-2'
-        : 'ctv:size-full ctv:min-h-0'"
+        ? 'ctv:fixed ctv:inset-0 ctv:z-[1400] ctv:bg-base-background ctv:p-2'
+        : 'ctv:size-full'"
       tabindex="0"
       @pointerdown.stop
       @mousedown.stop

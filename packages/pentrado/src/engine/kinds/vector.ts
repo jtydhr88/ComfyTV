@@ -198,7 +198,6 @@ export const vectorKind: NodeKind<VectorData> = {
       stroke,
       mask: r.mask as VectorData['mask'],
       fx: normalizeLayerFx(r.fx),
-      clip: r.clip === true ? true : undefined,
     }
   },
 
@@ -217,7 +216,6 @@ export const vectorKind: NodeKind<VectorData> = {
       stroke: node.stroke ? { ...node.stroke, dash: node.stroke.dash ? [...node.stroke.dash] : undefined } : undefined,
       mask: node.mask,
       fx: node.fx,
-      clip: node.clip,
     }
   },
 

@@ -1,7 +1,6 @@
 import type { Layer, LayerMaskData, LinkedFile, Psd } from 'ag-psd'
 
 import { getNodeKind, placeBitmap } from './engine'
-import { fxToPsdEffects } from './psdEffects'
 import type {
   AdjustmentData,
   Compositor,
@@ -185,8 +184,6 @@ async function buildLayer(
     opacity: clamp01(node.opacity),
     blendMode: PSD_BLEND_MODES[node.mode.blend] ?? 'normal',
     mask: maskData(node, deps),
-    effects: fxToPsdEffects(node.fx),
-    clipping: node.clip === true,
   }
   if (node.kind === 'group') {
     const g = node as GroupData

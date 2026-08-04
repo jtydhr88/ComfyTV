@@ -18,9 +18,7 @@ export interface RenderNodeCtx {
     contentStamp: string,
     bitmap: HTMLCanvasElement | ImageBitmap | OffscreenCanvas,
     transform: Transform,
-    linear?: boolean,
-    version?: number,
-    dirtyRects?: Rect[] | null
+    linear?: boolean
   ): NodeTexture | null
   region: Rect
   devicePixelRatio: number

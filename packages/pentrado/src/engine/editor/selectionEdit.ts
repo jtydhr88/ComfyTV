@@ -41,16 +41,10 @@ function cloneContent(node: RasterData, entry: { canvas: HTMLCanvasElement }): {
   return { canvas: c, g }
 }
 
-function commitContent(
-  deps: SelectionEditDeps,
-  node: RasterData,
-  label: string,
-  canvas: HTMLCanvasElement,
-  pixels?: Uint8ClampedArray
-): void {
+function commitContent(deps: SelectionEditDeps, node: RasterData, label: string, canvas: HTMLCanvasElement): void {
   const beforeId = node.contentId
   const beforeUrl = node.url
-  const afterId = deps.content.register(canvas, pixels ? { pixels } : undefined)
+  const afterId = deps.content.register(canvas)
   node.contentId = afterId
   node.url = undefined
   deps.push(new SetContentCommand(label, node, beforeId, afterId, deps.content, beforeUrl))
@@ -74,7 +68,7 @@ export function clearSelectedPixels(deps: SelectionEditDeps, node: RasterData, s
   }
   if (!touched) return false
   copy.g.putImageData(img, 0, 0)
-  commitContent(deps, node, 'Clear Selection', copy.canvas, img.data)
+  commitContent(deps, node, 'Clear Selection', copy.canvas)
   return true
 }
 
@@ -109,7 +103,7 @@ export function fillSelectedPixels(
   }
   if (!touched) return false
   copy.g.putImageData(img, 0, 0)
-  commitContent(deps, node, 'Fill Selection', copy.canvas, img.data)
+  commitContent(deps, node, 'Fill Selection', copy.canvas)
   return true
 }
 

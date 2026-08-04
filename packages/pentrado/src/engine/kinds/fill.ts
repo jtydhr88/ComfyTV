@@ -68,7 +68,6 @@ export const fillKind: NodeKind<FillData> = {
       fill: normalizeFillSpec(r.fill),
       mask: r.mask as FillData['mask'],
       fx: normalizeLayerFx(r.fx),
-      clip: r.clip === true ? true : undefined,
     }
   },
 
@@ -85,7 +84,6 @@ export const fillKind: NodeKind<FillData> = {
       fill: cloneFillSpec(node.fill),
       mask: node.mask,
       fx: node.fx,
-      clip: node.clip,
     }
   },
 

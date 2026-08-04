@@ -262,30 +262,6 @@
       </template>
     </template>
 
-    <template v-else-if="isCropTool">
-      <span class="ctv:whitespace-nowrap ctv:text-[10px] ctv:text-[#7a7a7a]">
-        {{ $t('pentrado.cropHint') }}
-      </span>
-      <button
-        type="button"
-        :class="actionBtnClass"
-        :disabled="!editor.cropPending.value"
-        @click="editor.applyCrop(); editor.tool.value = 'select'"
-      >
-        <IconCheck class="ctv:size-3.5" />
-        {{ $t('pentrado.cropApply') }}
-      </button>
-      <button
-        type="button"
-        :class="actionBtnClass"
-        :disabled="!editor.cropPending.value"
-        @click="editor.cancelCrop()"
-      >
-        <IconX class="ctv:size-3.5" />
-        {{ $t('pentrado.cropCancel') }}
-      </button>
-    </template>
-
     <template v-else-if="isTransformTool">
       <button
         type="button"
@@ -487,7 +463,6 @@ import IconPaintBucket from '~icons/lucide/paint-bucket'
 import IconPenTool from '~icons/lucide/pen-tool'
 import IconWandSparkles from '~icons/lucide/wand-sparkles'
 import IconRedo from '~icons/lucide/redo-2'
-import IconCrop from '~icons/lucide/crop'
 import IconScaling from '~icons/lucide/scaling'
 import IconScan from '~icons/lucide/scan'
 import IconShapes from '~icons/lucide/shapes'
@@ -522,7 +497,6 @@ function onPsdFilePicked(e: Event): void {
 const TOOL_META: Record<ToolId, { labelKey: string; icon: unknown }> = {
   select: { labelKey: 'pentrado.toolSelect', icon: IconMousePointer },
   transform: { labelKey: 'pentrado.toolTransform', icon: IconScaling },
-  crop: { labelKey: 'pentrado.toolCrop', icon: IconCrop },
   marquee: { labelKey: 'pentrado.toolMarquee', icon: IconSquareDashed },
   'marquee-ellipse': { labelKey: 'pentrado.toolMarqueeEllipse', icon: IconCircleDashed },
   lasso: { labelKey: 'pentrado.toolLasso', icon: IconLasso },
@@ -586,7 +560,6 @@ const isShapeTool = computed(() => editor.tool.value === 'shape')
 const isPenTool = computed(() => editor.tool.value === 'pen')
 const isWarpTool = computed(() => editor.tool.value === 'warp')
 const isTransformTool = computed(() => editor.tool.value === 'transform')
-const isCropTool = computed(() => editor.tool.value === 'crop')
 const isSelectionTool = computed(() =>
   ['marquee', 'marquee-ellipse', 'lasso', 'wand', 'bucket'].includes(editor.tool.value)
 )

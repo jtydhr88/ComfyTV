@@ -27,7 +27,6 @@ export const groupKind: NodeKind<GroupData> = {
       children: init.children ?? [],
       passThrough: init.passThrough ?? false,
       mask: init.mask,
-      clip: init.clip,
     }
   },
 
@@ -65,7 +64,6 @@ export const groupKind: NodeKind<GroupData> = {
       children,
       passThrough: bool(r.passThrough, false),
       mask: r.mask as GroupData['mask'],
-      clip: r.clip === true ? true : undefined,
     }
   },
 
@@ -81,7 +79,6 @@ export const groupKind: NodeKind<GroupData> = {
       locks: node.locks,
       passThrough: node.passThrough,
       mask: node.mask,
-      clip: node.clip,
       children: node.children.map((c) => getNodeKind(c.kind).serialize(c)),
     }
   },

@@ -8,7 +8,6 @@ export interface PanZoom {
   zoom: () => number
   invalidate: () => void
   fit: (artW: number, artH: number) => void
-  setArtboardSize: (artW: number, artH: number) => void
   panBy: (dx: number, dy: number) => void
   handleWheel: (e: WheelEvent) => void
   screenToArtboard: (clientX: number, clientY: number) => { x: number; y: number }
@@ -50,18 +49,6 @@ export function createPanZoom(getEls: () => PanZoomEls | null): PanZoom {
     invalidate()
   }
 
-  /**
-   * Sync the artboard dimensions without touching zoom/pan. screenToArtboard
-   * maps through these, so every artboard resize — including undo/redo of
-   * one — must flow through here or picking desyncs from the view.
-   */
-  function setArtboardSize(w: number, h: number): void {
-    if (artW === w && artH === h) return
-    artW = w
-    artH = h
-    invalidate()
-  }
-
   function panBy(dx: number, dy: number): void {
     panX += dx
     panY += dy
@@ -98,7 +85,6 @@ export function createPanZoom(getEls: () => PanZoomEls | null): PanZoom {
     zoom: () => zoomRatio,
     invalidate,
     fit,
-    setArtboardSize,
     panBy,
     handleWheel,
     screenToArtboard,

@@ -361,20 +361,16 @@ export function useLayerListPanel(editor: LayerEditorController) {
       return
     }
     if (node.kind !== 'raster') return
-    drawContentThumb(ctx, el, (node as RasterData).contentId)
-  }
-
-  /**
-   * Draw a content into a thumb canvas without materializing tiled contents —
-   * tiled stores serve a small cached preview instead of the dense canvas.
-   */
-  function drawContentThumb(ctx: CanvasRenderingContext2D, el: HTMLCanvasElement, contentId: string): void {
-    const entry = editor.content.get(contentId)
+    const entry = editor.content.get((node as RasterData).contentId)
     if (!entry) return
-    const small = editor.content.thumbnailCanvas?.(contentId, Math.max(el.width, el.height) * 2)
-    const src = small ?? entry.canvas
     const fit = computeFit(el.width, el.height, entry.width, entry.height)
-    ctx.drawImage(src, fit.offX, fit.offY, entry.width * fit.scale, entry.height * fit.scale)
+    ctx.drawImage(
+      entry.canvas,
+      fit.offX,
+      fit.offY,
+      entry.width * fit.scale,
+      entry.height * fit.scale,
+    )
   }
 
   function drawMaskThumb(el: HTMLCanvasElement | null, node: SceneNode): void {
@@ -383,7 +379,16 @@ export function useLayerListPanel(editor: LayerEditorController) {
     if (!ctx) return
     ctx.fillStyle = '#ffffff'
     ctx.fillRect(0, 0, el.width, el.height)
-    drawContentThumb(ctx, el, node.mask.contentId)
+    const entry = editor.content.get(node.mask.contentId)
+    if (!entry) return
+    const fit = computeFit(el.width, el.height, entry.width, entry.height)
+    ctx.drawImage(
+      entry.canvas,
+      fit.offX,
+      fit.offY,
+      entry.width * fit.scale,
+      entry.height * fit.scale,
+    )
   }
 
   return {

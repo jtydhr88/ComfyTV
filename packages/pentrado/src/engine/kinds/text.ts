@@ -127,7 +127,6 @@ export const textKind: NodeKind<TextData> = {
       align: align === 'center' || align === 'right' ? align : 'left',
       mask: r.mask as TextData['mask'],
       fx: normalizeLayerFx(r.fx),
-      clip: r.clip === true ? true : undefined,
     }
   },
 

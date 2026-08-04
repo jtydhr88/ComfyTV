@@ -77,20 +77,6 @@ export class SetContentRegionCommand implements Command {
   ) {}
 
   apply(dir: Direction): void {
-    const url = dir === 'undo' ? this.beforeUrl : undefined
-    const edits = this.patches.map((p) => ({
-      x: p.rect.x,
-      y: p.rect.y,
-      w: p.rect.w,
-      h: p.rect.h,
-      pixels: dir === 'undo' ? p.before : p.after,
-    }))
-    const derived = this.store.derive?.(this.slot.contentId, edits, url ? { uploadedUrl: url } : undefined)
-    if (derived) {
-      this.slot.contentId = derived
-      this.slot.url = url
-      return
-    }
     const entry = this.store.get(this.slot.contentId)
     if (!entry) return
     const next = document.createElement('canvas')
@@ -104,6 +90,7 @@ export class SetContentRegionCommand implements Command {
       img.data.set(dir === 'undo' ? p.before : p.after)
       g.putImageData(img, p.rect.x, p.rect.y)
     }
+    const url = dir === 'undo' ? this.beforeUrl : undefined
     this.slot.contentId = this.store.register(next, url ? { uploadedUrl: url } : undefined)
     this.slot.url = url
   }

@@ -246,23 +246,3 @@ body > .p-overlay-mask.p-blockui-mask-document.p-overlay-mask-leave:empty {
 .ctv-scroll-thin:hover::-webkit-scrollbar-thumb {
   background-color: rgba(255, 255, 255, 0.55);
 }
-
-:is(.comfytv-root, .comfytv-fs) :is([class*="overflow-y-auto"], [class*="overflow-auto"], [class*="overflow-y-scroll"]) {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.35) transparent;
-}
-:is(.comfytv-root, .comfytv-fs) :is([class*="overflow-y-auto"], [class*="overflow-auto"], [class*="overflow-y-scroll"])::-webkit-scrollbar {
-  width: 10px;
-}
-:is(.comfytv-root, .comfytv-fs) :is([class*="overflow-y-auto"], [class*="overflow-auto"], [class*="overflow-y-scroll"])::-webkit-scrollbar-track {
-  background: transparent;
-}
-:is(.comfytv-root, .comfytv-fs) :is([class*="overflow-y-auto"], [class*="overflow-auto"], [class*="overflow-y-scroll"])::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.35);
-  border-radius: 5px;
-  border: 2px solid transparent;
-  background-clip: content-box;
-}
-:is(.comfytv-root, .comfytv-fs) :is([class*="overflow-y-auto"], [class*="overflow-auto"], [class*="overflow-y-scroll"]):hover::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.55);
-}

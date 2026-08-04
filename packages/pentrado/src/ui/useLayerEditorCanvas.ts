@@ -45,9 +45,11 @@ export function adjustedBrush(
   }
 }
 
+
 export function brushCursorDiameterPx(size: number, zoom: number): number {
   return size * Math.max(0.01, zoom)
 }
+
 
 export function brushGradientCss(
   rgb: { r: number; g: number; b: number },
@@ -122,7 +124,6 @@ export function useLayerEditorCanvas(
     const handled = editor.activeToolHandler().onPointerDown(e, artboardPt(e))
     if (handled) {
       toolActive = true
-      editor.beginInteraction?.()
       try { zone.setPointerCapture(e.pointerId) } catch {}
     }
   }
@@ -185,7 +186,6 @@ export function useLayerEditorCanvas(
     } else if (toolActive) {
       editor.activeToolHandler().onPointerUp(e, artboardPt(e))
       toolActive = false
-      editor.endInteraction?.()
     }
     try { viewportEl.value?.releasePointerCapture(e.pointerId) } catch {}
   }
@@ -232,6 +232,7 @@ export function useLayerEditorCanvas(
     () => (hovering.value || adjusting.value != null) && isPaintTool.value && !spaceDown.value
       && hoverCursor.value !== 'not-allowed',
   )
+
 
   const activeHardness = computed(() => editor.brushHardness.value)
 
