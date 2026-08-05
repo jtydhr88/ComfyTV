@@ -8,3 +8,4 @@ from .resources import *  # noqa: F401,F403
 from .servers import *  # noqa: F401,F403
 from .remote_jobs import *  # noqa: F401,F403
 from .proxy import *  # noqa: F401,F403
+from .settings import *  # noqa: F401,F403

@@ -4,6 +4,9 @@ import { app } from '@/lib/comfyApp'
 
 import {
   AdoptAssetsSchema,
+  BackupResultSchema,
+  ListSettingsSchema,
+  MutateSettingsSchema,
   ApiSidecarResultSchema,
   CapabilitiesSchema,
   CapsPayloadSchema,
@@ -36,6 +39,8 @@ import {
 import type {
   AdoptAssetsResult,
   ApiSidecarResult,
+  BackupResult,
+  SettingValue,
   Capabilities,
   CapsPayload,
   RemoteCapabilityProbe,
@@ -235,6 +240,20 @@ export function renameResource(
 
 export function deleteResource(id: number): Promise<z.infer<typeof OkSchema>> {
   return apiSend(`/comfytv/resources/${id}`, 'DELETE', OkSchema)
+}
+
+export function fetchSettings(): Promise<z.infer<typeof ListSettingsSchema>> {
+  return apiFetch('/comfytv/settings', ListSettingsSchema)
+}
+
+export function saveSettings(
+  values: Record<string, SettingValue>,
+): Promise<z.infer<typeof MutateSettingsSchema>> {
+  return apiSend('/comfytv/settings', 'PUT', MutateSettingsSchema, { values })
+}
+
+export function runDbBackup(): Promise<BackupResult> {
+  return apiSend('/comfytv/settings/backup', 'POST', BackupResultSchema)
 }
 
 export function listStagePresets(kind?: string): Promise<z.infer<typeof ListStagePresetsSchema>> {

@@ -10,9 +10,12 @@ if os.environ.get("COMFYTV_TESTING") == "1":
 
     __all__ = ["comfy_entrypoint"]
 else:
+    from . import backup as _backup
     from . import db as _db
 
     CUSTOM_NODE_DIR = os.path.dirname(os.path.realpath(__file__))
+
+    _backup.run_startup_backup()
 
     _db.init()
 
@@ -25,6 +28,7 @@ else:
 
     _storage.ensure_default_project()
     _storage.seed_system_stage_params()
+    _storage.seed_settings()
 
 
     async def comfy_entrypoint():

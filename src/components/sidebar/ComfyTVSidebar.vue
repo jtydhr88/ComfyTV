@@ -39,6 +39,9 @@
     <div v-show="activeTab === 'servers'" class="ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden">
       <ServersPanel />
     </div>
+    <div v-show="activeTab === 'settings'" class="ctv:flex ctv:flex-col ctv:flex-1 ctv:min-h-0 ctv:overflow-hidden">
+      <SettingsPanel :active="activeTab === 'settings'" />
+    </div>
   </div>
 </template>
 
@@ -51,10 +54,11 @@ import EntriesPanel from '@/components/sidebar/EntriesPanel.vue'
 import PresetsPanel from '@/components/sidebar/PresetsPanel.vue'
 import ResourcesPanel from '@/components/sidebar/ResourcesPanel.vue'
 import ServersPanel from '@/components/sidebar/ServersPanel.vue'
+import SettingsPanel from '@/components/sidebar/SettingsPanel.vue'
 import WorkflowConfigSidebar from '@/components/sidebar/WorkflowConfigSidebar.vue'
 import StageParamsPanel from '@/components/sidebar/StageParamsPanel.vue'
 
-type SidebarTab = 'workflow' | 'assets' | 'entries' | 'params' | 'presets' | 'resources' | 'servers'
+type SidebarTab = 'workflow' | 'assets' | 'entries' | 'params' | 'presets' | 'resources' | 'servers' | 'settings'
 
 const TABS: Array<{ id: SidebarTab; labelKey: string }> = [
   { id: 'workflow',  labelKey: 'sidebar.tab.workflow' },
@@ -64,6 +68,7 @@ const TABS: Array<{ id: SidebarTab; labelKey: string }> = [
   { id: 'presets',   labelKey: 'sidebar.tab.presets' },
   { id: 'resources', labelKey: 'sidebar.tab.resources' },
   { id: 'servers',   labelKey: 'sidebar.tab.servers' },
+  { id: 'settings',  labelKey: 'sidebar.tab.settings' },
 ]
 
 const activeTab = useStorage<SidebarTab>('comfytv:sidebar:active-tab', 'workflow')

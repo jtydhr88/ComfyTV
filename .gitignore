@@ -16,6 +16,9 @@ temp/
 
 runners/config.json
 
+/comfytv.properties
+/db-backup/
+
 workflows_backup/
 
 .coverage

@@ -85,7 +85,37 @@
       "params": "Stage 管理",
       "presets": "预设",
       "resources": "资源",
-      "servers": "服务器"
+      "servers": "服务器",
+      "settings": "设置"
+    }
+  },
+  "settings": {
+    "title": "设置",
+    "hint": "默认值来自 ComfyTV 目录下的 comfytv.properties。此处保存的值写入数据库,并优先生效。",
+    "loading": "加载中…",
+    "save": "保存",
+    "saving": "保存中…",
+    "backup": {
+      "section": "数据库备份",
+      "now": "立即备份",
+      "running": "备份中…",
+      "ok": "备份已写入 {path}",
+      "failed": "备份失败:{error}"
+    },
+    "fields": {
+      "enable-db-backup": {
+        "label": "启动时自动备份",
+        "desc": "每次服务器启动时(在任何迁移执行之前)备份 ComfyTV 数据目录(数据库 + 工作流)。"
+      },
+      "db-backup-max-count": {
+        "label": "最大备份数量",
+        "desc": "快照数量超过该值时,自动删除最旧的备份。"
+      },
+      "db-backup-path": {
+        "label": "备份位置",
+        "desc": "留空则使用 ComfyTV 目录下的 db-backup 文件夹。快照以时间戳命名,如 20260805-093000/comfytv。",
+        "placeholder": "如 D:\\backups\\comfytv"
+      }
     }
   },
   "servers": {

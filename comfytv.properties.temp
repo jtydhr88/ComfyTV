@@ -1,0 +1,30 @@
+# ComfyTV configuration template.
+#
+# Copy this file to "comfytv.properties" (same directory) and uncomment the
+# properties you want to change. "comfytv.properties" is gitignored.
+#
+# Values here act as DEFAULTS only: on server startup, any setting missing
+# from the database is seeded from this file. After that, the database is
+# the source of truth — change settings from the ComfyTV sidebar (Settings
+# tab), which writes to the database directly. Editing this file later has
+# no effect on settings already present in the database.
+#
+# Format: key=value, one per line. Lines starting with # are comments.
+
+# --- Database backup -------------------------------------------------------
+# ComfyTV backs up its data directory (ComfyUI user dir /comfytv: data.db +
+# workflows) on every server startup, before any migration runs.
+
+# Enable/disable the automatic startup backup. boolean, default: true
+#enable-db-backup=true
+
+# How many backup snapshots to keep. When exceeded, the oldest snapshots are
+# deleted. int (>= 1), default: 10
+#db-backup-max-count=10
+
+# Where to write backups. Empty means the "db-backup" directory inside the
+# ComfyTV custom node directory (gitignored). If set to an absolute path,
+# snapshots are written there instead. Each snapshot is a timestamped folder:
+# <backup-path>/20260805-093000/comfytv/
+# string, default: (empty)
+#db-backup-path=

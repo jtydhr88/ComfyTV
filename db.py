@@ -244,6 +244,14 @@ class RemoteJob(Base):
     updated_at:       Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
 
 
+class Setting(Base):
+    __tablename__ = "comfytv_settings"
+
+    key:        Mapped[str] = mapped_column(String, primary_key=True)
+    value:      Mapped[str] = mapped_column(Text, default="")
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
+
+
 class AssetCategoryLink(Base):
     __tablename__ = "comfytv_asset_category_links"
 

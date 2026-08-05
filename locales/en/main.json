@@ -85,7 +85,37 @@
       "params": "Stages",
       "presets": "Presets",
       "resources": "Resources",
-      "servers": "Servers"
+      "servers": "Servers",
+      "settings": "Settings"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "hint": "Defaults come from comfytv.properties in the ComfyTV directory. Values saved here are stored in the database and take precedence.",
+    "loading": "Loading…",
+    "save": "Save",
+    "saving": "Saving…",
+    "backup": {
+      "section": "Database backup",
+      "now": "Back up now",
+      "running": "Backing up…",
+      "ok": "Backup written to {path}",
+      "failed": "Backup failed: {error}"
+    },
+    "fields": {
+      "enable-db-backup": {
+        "label": "Automatic backup on startup",
+        "desc": "Back up the ComfyTV data directory (database + workflows) every time the server starts, before any migration runs."
+      },
+      "db-backup-max-count": {
+        "label": "Max backups to keep",
+        "desc": "When the number of snapshots exceeds this, the oldest ones are deleted."
+      },
+      "db-backup-path": {
+        "label": "Backup location",
+        "desc": "Leave empty to use the db-backup folder inside the ComfyTV directory. Snapshots are timestamped folders like 20260805-093000/comfytv.",
+        "placeholder": "e.g. D:\\backups\\comfytv"
+      }
     }
   },
   "servers": {
