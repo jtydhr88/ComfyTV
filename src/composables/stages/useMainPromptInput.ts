@@ -17,8 +17,13 @@ import {
   mentionTokenLabel,
   normalizeMentionText,
   slotColor,
+  type MentionOrders,
 } from '@/composables/stages/imageSlotMentions'
-import { useMentionSuggestion } from '@/composables/stages/useMentionSuggestion'
+import {
+  nodeMentionSource,
+  useMentionSuggestionFromSource,
+  type MentionSource,
+} from '@/composables/stages/useMentionSuggestion'
 import type { LGraphNode } from '@/lib/comfyApp'
 import { useEntryStore } from '@/stores/entryStore'
 import { useProjectStore } from '@/stores/projectStore'
@@ -87,16 +92,15 @@ export interface EntryLike {
   content: string
 }
 
-export function entryTooltipText(
+export function entryTooltipTextFromOrders(
   label: string,
-  node: LGraphNode | undefined,
+  orders: MentionOrders,
   entries: EntryLike[],
   t: (key: string, args?: Record<string, unknown>) => string,
 ): string {
   const parsed = mentionSlotFromLabel(label)
   if (parsed != null) {
-    const order = mentionSendOrderOf(node, parsed.type)
-    const pos = order.indexOf(parsed.slot)
+    const pos = orders[parsed.type].indexOf(parsed.slot)
     if (pos < 0) return t('mention.imageTooltipMissing', { n: parsed.slot })
     return t('mention.imageItemTitle', {
       n: parsed.slot,
@@ -111,40 +115,45 @@ export function entryTooltipText(
   return matches.map(e => `[${e.kind}] ${e.content}`).join('\n──────\n')
 }
 
-export function useMainPromptInput(
-  getNode: () => LGraphNode | undefined,
-  mentionListComponent: Component,
-) {
+export function entryTooltipText(
+  label: string,
+  node: LGraphNode | undefined,
+  entries: EntryLike[],
+  t: (key: string, args?: Record<string, unknown>) => string,
+): string {
+  return entryTooltipTextFromOrders(label, {
+    image: mentionSendOrderOf(node, 'image'),
+    video: mentionSendOrderOf(node, 'video'),
+    audio: mentionSendOrderOf(node, 'audio'),
+  }, entries, t)
+}
+
+export interface PromptEditorCoreOpts {
+  initialText: string
+  placeholder: () => string
+  source: () => MentionSource
+  mentionList: Component
+  onTextChange: (text: string) => void
+}
+
+export function usePromptEditorCore(opts: PromptEditorCoreOpts) {
   const { t } = useI18n()
   const entryStore = useEntryStore()
   const projectStore = useProjectStore()
-  const stageStore = useStageStore()
   const projectId = computed(() => projectStore.currentProjectId || '')
 
-  const widget = computed(() => getWidget(getNode(), 'main_prompt'))
-  const placeholder = computed(() => {
-    const w = widget.value as { options?: { placeholder?: string }; placeholder?: string } | undefined
-    return w?.options?.placeholder ?? w?.placeholder ?? ''
-  })
-
-  const stageState = computed(() => {
-    const node = getNode()
-    return node ? stageStore.getStage(node) : undefined
-  })
-
-  const initialText = String(widget.value?.value ?? '')
-  const promptText = ref(initialText)
+  const promptText = ref(opts.initialText)
   let suppressWriteback = false
 
   const editor = useEditor({
-    content: textToContent(initialText),
+    content: textToContent(opts.initialText),
     extensions: [
       Document,
       Paragraph,
       Text,
       HardBreak,
       Placeholder.configure({
-        placeholder: placeholder.value || 'Prompt — type @ to insert a saved fragment',
+        placeholder: opts.placeholder() || 'Prompt — type @ to insert a saved fragment',
       }),
       Mention.configure({
         renderText: ({ node }) => `@${node.attrs.label}`,
@@ -167,7 +176,7 @@ export function useMainPromptInput(
             'data-mention-type': 'entry',
           }, `@${node.attrs.label}`]
         },
-        suggestion: useMentionSuggestion(projectId, getNode, mentionListComponent),
+        suggestion: useMentionSuggestionFromSource(projectId, opts.source, opts.mentionList),
       }),
     ],
     editorProps: {
@@ -189,9 +198,7 @@ export function useMainPromptInput(
       if (suppressWriteback) return
       const text = editor.getText({ blockSeparator: '\n' })
       promptText.value = text
-      if (widget.value) writeWidget(getNode(), 'main_prompt', text, { fireCallback: false })
-      const st = stageState.value
-      if (st && st.mainPrompt !== text) st.mainPrompt = text
+      opts.onTextChange(text)
     },
   })
 
@@ -208,29 +215,17 @@ export function useMainPromptInput(
 
   function applyPromptText(text: string): void {
     setContentFromText(text)
-    if (widget.value) writeWidget(getNode(), 'main_prompt', text, { fireCallback: false })
-    const st = stageState.value
-    if (st && st.mainPrompt !== text) st.mainPrompt = text
+    opts.onTextChange(text)
   }
 
-  watch(
-    () => stageState.value?.mainPrompt,
-    (next) => {
-      if (next == null) return
-      if (!editor.value) return
-      const current = editor.value.getText({ blockSeparator: '\n' })
-      if (next === current) return
-      setContentFromText(next)
-    },
-  )
+  function entryTooltip(label: string): string {
+    return entryTooltipTextFromOrders(
+      label, opts.source().orders(), entryStore.list(projectId.value), t)
+  }
 
   let chipTooltips: any = null
 
   function stopBubble(e: Event) { e.stopPropagation() }
-
-  function entryTooltip(label: string): string {
-    return entryTooltipText(label, getNode(), entryStore.list(projectId.value), t)
-  }
 
   onMounted(() => {
     void entryStore.list(projectId.value)
@@ -271,14 +266,48 @@ export function useMainPromptInput(
     editor.value?.destroy()
   })
 
-  return {
-    widget,
-    placeholder,
-    editor,
-    promptText,
-    stageState,
-    setContentFromText,
-    applyPromptText,
-    entryTooltip,
-  }
+  return { editor, promptText, setContentFromText, applyPromptText, entryTooltip }
+}
+
+export function useMainPromptInput(
+  getNode: () => LGraphNode | undefined,
+  mentionListComponent: Component,
+) {
+  const stageStore = useStageStore()
+
+  const widget = computed(() => getWidget(getNode(), 'main_prompt'))
+  const placeholder = computed(() => {
+    const w = widget.value as { options?: { placeholder?: string }; placeholder?: string } | undefined
+    return w?.options?.placeholder ?? w?.placeholder ?? ''
+  })
+
+  const stageState = computed(() => {
+    const node = getNode()
+    return node ? stageStore.getStage(node) : undefined
+  })
+
+  const core = usePromptEditorCore({
+    initialText: String(widget.value?.value ?? ''),
+    placeholder: () => placeholder.value,
+    source: () => nodeMentionSource(getNode),
+    mentionList: mentionListComponent,
+    onTextChange: (text) => {
+      if (widget.value) writeWidget(getNode(), 'main_prompt', text, { fireCallback: false })
+      const st = stageState.value
+      if (st && st.mainPrompt !== text) st.mainPrompt = text
+    },
+  })
+
+  watch(
+    () => stageState.value?.mainPrompt,
+    (next) => {
+      if (next == null) return
+      if (!core.editor.value) return
+      const current = core.editor.value.getText({ blockSeparator: '\n' })
+      if (next === current) return
+      core.setContentFromText(next)
+    },
+  )
+
+  return { widget, placeholder, stageState, ...core }
 }

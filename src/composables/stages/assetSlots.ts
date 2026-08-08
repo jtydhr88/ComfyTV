@@ -118,6 +118,7 @@ export function fetchWorkflowMetaCached(
 
 export const AUTOGROW_IMAGE_KEY_RE = /^images\.image(\d+)$/
 export const AUTOGROW_VIDEO_KEY_RE = /^videos\.video(\d+)$/
+export const AUTOGROW_AUDIO_KEY_RE = /^audio\.audio(\d+)$/
 
 export interface ResolvedImageRef {
   id: number
@@ -149,7 +150,8 @@ export function nodeAcceptsAutogrowVideos(node: unknown): boolean {
 export function nodeAcceptsAudioInput(node: unknown): boolean {
   const inputs = (node as { inputs?: Array<{ name?: unknown; type?: unknown }> } | null)?.inputs
   if (!Array.isArray(inputs)) return false
-  return inputs.some(i => i?.name === 'audio')
+  return inputs.some(i => typeof i?.name === 'string'
+    && (i.name === 'audio' || AUTOGROW_AUDIO_KEY_RE.test(i.name)))
 }
 
 export function wiredImageSlots(node: unknown): number[] {
@@ -174,6 +176,19 @@ export function wiredVideoSlots(node: unknown): number[] {
     if (m && i.link != null) out.push(Number(m[1]))
   }
   return out
+}
+
+export function wiredAudioSlots(node: unknown): number[] {
+  const inputs = (node as { inputs?: Array<{ name?: unknown; link?: unknown }> } | null)?.inputs
+  if (!Array.isArray(inputs)) return []
+  const out: number[] = []
+  for (const i of inputs) {
+    if (typeof i?.name !== 'string') continue
+    if (i.name === 'audio' && i.link != null) { out.push(0); continue }
+    const m = AUTOGROW_AUDIO_KEY_RE.exec(i.name)
+    if (m && i.link != null) out.push(Number(m[1]))
+  }
+  return [...new Set(out)].sort((a, b) => a - b)
 }
 
 export function refCoveredImageSlots(
@@ -242,7 +257,10 @@ export function injectAssetRefs(
   const wired: Record<string, Set<number>> = {
     image: wiredOf(AUTOGROW_IMAGE_KEY_RE),
     video: wiredOf(AUTOGROW_VIDEO_KEY_RE),
-    audio: new Set('audio' in inputs ? [0] : []),
+    audio: new Set([
+      ...wiredOf(AUTOGROW_AUDIO_KEY_RE),
+      ...('audio' in inputs ? [0] : []),
+    ]),
   }
 
   const warnings: string[] = []
@@ -261,9 +279,14 @@ export function injectAssetRefs(
 
   for (const ref of refs) {
     const type = ref.type ?? 'image'
-    if (type === 'video') inputs[`videos.video${ref.slot}`] = ref.url
-    else if (type === 'audio') inputs['audio'] = ref.url
-    else inputs[`images.image${ref.slot}`] = ref.url
+    if (type === 'video') {
+      inputs[`videos.video${ref.slot}`] = ref.url
+    } else if (type === 'audio') {
+      if ('audio' in inputs) inputs['audio'] = ref.url
+      else inputs[`audio.audio${ref.slot}`] = ref.url
+    } else {
+      inputs[`images.image${ref.slot}`] = ref.url
+    }
   }
   return warnings
 }

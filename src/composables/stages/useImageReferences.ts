@@ -13,6 +13,7 @@ import {
   nodeAcceptsAutogrowVideos,
   type RefSlotWarning,
   refSlotWarnings,
+  wiredAudioSlots,
   wiredImageSlots,
   wiredVideoSlots,
   workflowRefOfNode,
@@ -56,6 +57,7 @@ export interface SlotPickerState {
 export function useImageReferences(
   getNode: () => LGraphNode | undefined,
   rootEl: Ref<HTMLElement | null>,
+  opts?: { forceTypes?: AssetRefType[] },
 ) {
   const { t } = useI18n()
   const assetStore = useAssetStore()
@@ -66,11 +68,18 @@ export function useImageReferences(
   const slotPicker = ref<SlotPickerState | null>(null)
   const slotWarnings = ref<string[]>([])
 
-  const acceptedTypes = computed<Record<AssetRefType, boolean>>(() => ({
-    image: nodeAcceptsAutogrowImages(getNode()),
-    video: nodeAcceptsAutogrowVideos(getNode()),
-    audio: nodeAcceptsAudioInput(getNode()),
-  }))
+  const acceptedTypes = computed<Record<AssetRefType, boolean>>(() =>
+    opts?.forceTypes
+      ? {
+          image: opts.forceTypes.includes('image'),
+          video: opts.forceTypes.includes('video'),
+          audio: opts.forceTypes.includes('audio'),
+        }
+      : {
+          image: nodeAcceptsAutogrowImages(getNode()),
+          video: nodeAcceptsAutogrowVideos(getNode()),
+          audio: nodeAcceptsAudioInput(getNode()),
+        })
   const accepts = computed(() =>
     acceptedTypes.value.image || acceptedTypes.value.video || acceptedTypes.value.audio,
   )
@@ -128,8 +137,9 @@ export function useImageReferences(
   }
 
   function nextFreeSlot(type: AssetRefType): number {
-    if (type === 'audio') return 0
-    const wired = type === 'video' ? wiredVideoSlots(getNode()) : wiredImageSlots(getNode())
+    const wired = type === 'video' ? wiredVideoSlots(getNode())
+      : type === 'audio' ? wiredAudioSlots(getNode())
+      : wiredImageSlots(getNode())
     const taken = new Set<number>([
       ...wired,
       ...refs.value.filter(r => refType(r) === type).map(r => r.slot),
@@ -153,13 +163,10 @@ export function useImageReferences(
       : 'image'
     if (!acceptedTypes.value[type]) return
     if (refs.value.some(r => r.asset_id === asset.id && refType(r) === type)) return
-    const base = type === 'audio'
-      ? refs.value.filter(r => refType(r) !== 'audio')
-      : refs.value
     const entry: ImageRef = type === 'image'
       ? { asset_id: asset.id, slot: nextFreeSlot(type) }
       : { asset_id: asset.id, slot: nextFreeSlot(type), type }
-    setRefs([...base, entry])
+    setRefs([...refs.value, entry])
   }
 
   function onAddBatchImage(groupId: string, index: number) {
@@ -190,7 +197,7 @@ export function useImageReferences(
 
   function openSlotPicker(index: number, e: MouseEvent) {
     const target = refs.value[index]
-    if (!target || refType(target) === 'audio') return
+    if (!target) return
     const type = refType(target)
     const rootRect = rootEl.value?.getBoundingClientRect()
     if (!rootRect) return
@@ -198,7 +205,9 @@ export function useImageReferences(
     const x = Math.max(0, Math.min(tile.left - rootRect.left, rootRect.width - 260))
     const y = tile.bottom - rootRect.top + 4
 
-    const wired = type === 'video' ? wiredVideoSlots(getNode()) : wiredImageSlots(getNode())
+    const wired = type === 'video' ? wiredVideoSlots(getNode())
+      : type === 'audio' ? wiredAudioSlots(getNode())
+      : wiredImageSlots(getNode())
 
     slotPicker.value = {
       index,
@@ -213,10 +222,11 @@ export function useImageReferences(
         .map(r => r.slot),
     }
 
-    if (type === 'video') {
+    if (type === 'video' || type === 'audio') {
+      const slots = type === 'video' ? [0, 1, 2, 3] : [0, 1, 2]
       Object.assign(slotPicker.value, {
         loading: false,
-        options: [0, 1, 2, 3].map(slot => ({ slot, nodeTitles: [] })),
+        options: slots.map(slot => ({ slot, nodeTitles: [] })),
       })
       return
     }

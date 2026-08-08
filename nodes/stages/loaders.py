@@ -83,7 +83,7 @@ class TextLoaderStage(io.ComfyNode):
                                            "the workflow of the consuming stage."),
                 io.Autogrow.Input("images", template=_image_template(9)),
                 io.Autogrow.Input("videos", template=_video_template(4)),
-                COMFYTV_AUDIO.Input("audio", optional=True),
+                io.Autogrow.Input("audio",  template=_audio_template(3)),
             ],
             outputs=[COMFYTV_TEXT.Output("text")],
             is_output_node=True,
@@ -92,7 +92,7 @@ class TextLoaderStage(io.ComfyNode):
 
     @classmethod
     def execute(cls, project_id="", parent_output_id=0, text="", main_prompt="",
-                images=None, videos=None, audio=""):
+                images=None, videos=None, audio=None):
         payload = (main_prompt or "").strip() or (text or "")
         return _stage_emit_auto(cls, project_id=project_id, payload_str=payload,
                                 parent_output_id=parent_output_id)

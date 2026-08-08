@@ -61,9 +61,11 @@ import {
   type ResolvedImageRef,
 } from '@/composables/stages/assetSlots'
 import { readImageRefs, refType } from '@/composables/stages/imageRefs'
+import { expandDirectorTimeline } from '@/composables/stages/directorMentions'
 import {
   expandMentionTokens,
   mentionOrdinalText,
+  minimaxAudioOffset,
   mentionSendOrders,
   normalizeMentionStyle,
 } from '@/composables/stages/imageSlotMentions'
@@ -341,10 +343,14 @@ export function useStageNode(
           return normalizeMentionStyle(undefined)
         }
       }
-      const ordinalTexts = (style: ReturnType<typeof normalizeMentionStyle>) => ({
+      const ordinalTexts = (
+        style: ReturnType<typeof normalizeMentionStyle>,
+        orders: ReturnType<typeof mentionSendOrders>,
+      ) => ({
         image: mentionOrdinalText(style, n => t('mention.imageExpand', { n }), 'image'),
         video: mentionOrdinalText(style, n => t('mention.videoExpand', { n }), 'video'),
-        audio: mentionOrdinalText(style, n => t('mention.audioExpand', { n }), 'audio'),
+        audio: mentionOrdinalText(style, n => t('mention.audioExpand', { n }), 'audio',
+                                  style === 'minimax_tags' ? minimaxAudioOffset(orders) : 0),
       })
       const runStyle = await resolveStyle(node)
 
@@ -375,10 +381,11 @@ export function useStageNode(
           }
           if (snapshot != null && snapshot !== '') {
             if ((key === 'texts' || key.startsWith('texts.')) && snapshot.includes('@')) {
+              const upstreamOrders = mentionSendOrders(upstreamNode)
               const { text, missing } = expandMentionTokens(
                 entries.expand(pid, snapshot),
-                mentionSendOrders(upstreamNode),
-                ordinalTexts(runStyle),
+                upstreamOrders,
+                ordinalTexts(runStyle, upstreamOrders),
               )
               for (const m of missing) {
                 console.warn(`[ComfyTV/stage] upstream #${upstreamId}: @${m.type}_${m.slot} references an empty slot — dropped from prompt`)
@@ -460,15 +467,56 @@ export function useStageNode(
           const mentionStyle = String(nid) === targetId
             ? runStyle
             : await resolveStyle(graphNode)
+          const nodeOrders = mentionSendOrders(graphNode)
           const { text, missing } = expandMentionTokens(
             entries.expand(pid, mp),
-            mentionSendOrders(graphNode),
-            ordinalTexts(mentionStyle),
+            nodeOrders,
+            ordinalTexts(mentionStyle, nodeOrders),
           )
           for (const m of missing) {
             console.warn(`[ComfyTV/stage] node #${nid}: @${m.type}_${m.slot} references an empty slot — dropped from prompt`)
           }
           obj.main_prompt = text
+        }
+
+        const tl = obj.timeline_data
+        if (typeof tl === 'string'
+            && (pm?.output?.[nid] as any)?.class_type === 'ComfyTV.DirectorStage') {
+          const graphNode = a.graph?.getNodeById?.(Number(nid))
+                         ?? a.graph?.getNodeById?.(String(nid))
+          const sharedRefs = { images: [] as string[], videos: [] as string[], audio: [] as string[] }
+          const nodeRefs = readImageRefs(graphNode)
+          if (nodeRefs.length) await assetStore.hydrate()
+          const bucketOf = { image: 'images', video: 'videos', audio: 'audio' } as const
+          for (const r of [...nodeRefs].sort((x, y) => x.slot - y.slot)) {
+            let url: string | undefined
+            if (r.batch_index != null) {
+              url = r.batch_id
+                ? pinnedBatches.byId(pid, r.batch_id)?.urls[r.batch_index]
+                : undefined
+            } else if (r.asset_id != null) {
+              url = assetStore.byId(r.asset_id)?.payload_url
+            }
+            if (url) sharedRefs[bucketOf[refType(r)]].push(url)
+            else console.warn(`[ComfyTV/stage] director #${nid}: shared ref (slot ${r.slot}) could not be resolved — skipped`)
+          }
+          obj.timeline_data = await expandDirectorTimeline(tl, {
+            defaultWorkflow: String(obj.workflow ?? ''),
+            shared: sharedRefs,
+            expandEntries: (s) => entries.expand(pid, s),
+            styleFor: async (label) => {
+              try {
+                const meta = await fetchWorkflowMetaCached('video', label)
+                return normalizeMentionStyle(meta.mention_style)
+              } catch {
+                return normalizeMentionStyle(undefined)
+              }
+            },
+            naturalText: (type, n) => t(`mention.${type}Expand`, { n }),
+            onMissing: (clipId, type, slot) => {
+              console.warn(`[ComfyTV/stage] director #${nid} clip ${clipId}: @${type}_${slot} references an empty ref — dropped from prompt`)
+            },
+          })
         }
       }
       const serverStore = useServerStore()

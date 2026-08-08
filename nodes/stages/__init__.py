@@ -15,6 +15,7 @@ from .edits import (
 from .timeline import (
     DirectorTimelineStage, TimelineVideoStage,
 )
+from .director import DirectorStage
 from .video_edit import (
     VideoExtractFrameStage, VideoFramesStage,
     VideoClipStage, VideoCropStage, VideoConcatStage, VideoResizeStage, VideoUpscaleStage,
@@ -121,6 +122,7 @@ class ComfyTVExtension(ComfyExtension):
         return [
             ProjectStage,
             TextStage, ImageStage, VideoStage, AudioStage, SpeechStage,
+            DirectorStage,
             ImagePickerStage, AudioPickerStage, VideoPickerStage,
             PanoramaStage, PanoramaCurrentViewStage, PanoramaMultiViewStage,
             MultiangleStage, RelightStage, ImageVariationsStage,

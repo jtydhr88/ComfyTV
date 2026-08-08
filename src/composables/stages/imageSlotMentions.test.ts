@@ -12,6 +12,7 @@ import {
   imageSlotFromLabel,
   imageSlotLabel,
   mentionOrdinalText,
+  minimaxAudioOffset,
   mentionSlotFromLabel,
   mentionSlotLabel,
   normalizeMentionStyle,
@@ -246,6 +247,31 @@ describe('videoSendOrder / audioSendOrder', () => {
     expect(videoSendOrder(node([['videos.video0', true]], refs))).toEqual([0, 1])
     expect(audioSendOrder(node([['audio', false]], refs))).toEqual([0])
     expect(imageSendOrder(node([], refs))).toEqual([5])
+  })
+
+  it('collects wired audio.audioN autogrow slots ascending', () => {
+    expect(audioSendOrder(node([
+      ['audio.audio2', true], ['audio.audio0', true], ['audio.audio1', false],
+    ]))).toEqual([0, 2])
+  })
+
+  it('audio refs merge with autogrow wiring', () => {
+    const refs = [{ asset_id: 2, slot: 1, type: 'audio' }]
+    expect(audioSendOrder(node([['audio.audio0', true]], refs))).toEqual([0, 1])
+  })
+})
+
+describe('minimaxAudioOffset', () => {
+  it('equals the number of videos being sent', () => {
+    expect(minimaxAudioOffset({ image: [0], video: [0, 1], audio: [0] })).toBe(2)
+    expect(minimaxAudioOffset({ image: [], video: [], audio: [0] })).toBe(0)
+  })
+
+  it('mentionOrdinalText applies the offset in both styles', () => {
+    const zh = (n: number) => `音频 ${n}`
+    expect(mentionOrdinalText('minimax_tags', zh, 'audio', 2)(1)).toBe('<Audio 3>')
+    expect(mentionOrdinalText('natural', zh, 'audio', 2)(1)).toBe('音频 3')
+    expect(mentionOrdinalText('natural', zh, 'audio')(1)).toBe('音频 1')
   })
 })
 

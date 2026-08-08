@@ -7,6 +7,7 @@ import {
   mentionSendOrderOf,
   mentionSlotLabel,
   slotColor,
+  type MentionOrders,
   type MentionSlotType,
 } from '@/composables/stages/imageSlotMentions'
 import { readImageRefs } from '@/composables/stages/imageRefs'
@@ -22,57 +23,64 @@ export type MentionSuggestionItem =
   | { type: 'snippet'; module: PromptModule }
   | { type: 'imageSlot'; slotType: MentionSlotType; slot: number; ordinal: number; url: string | null; color: string }
 
-export function useMentionSuggestion(
+export interface MentionSource {
+  orders(): MentionOrders
+  previewUrl(type: MentionSlotType, slot: number): string | null
+}
+
+export function nodeMentionSource(getNode: () => LGraphNode | undefined): MentionSource {
+  const assetStore = useAssetStore()
+  const stageStore = useStageStore()
+  return {
+    orders() {
+      const node = getNode()
+      return {
+        image: imageSendOrder(node),
+        video: mentionSendOrderOf(node, 'video'),
+        audio: mentionSendOrderOf(node, 'audio'),
+      }
+    },
+    previewUrl(type, slot) {
+      if (type !== 'image') return null
+      const node = getNode()
+      if (!node) return null
+      const pinned = readImageRefs(node).filter(r => r.slot === slot).at(-1)
+      if (pinned) {
+        return pinned.asset_id != null
+          ? assetStore.byId(pinned.asset_id)?.payload_url ?? null
+          : null
+      }
+      const inputs = stageStore.getStage(node)?.inputs ?? []
+      return inputs.find(inp => inp.slot === `images.image${slot}`)?.content ?? null
+    },
+  }
+}
+
+export function useMentionSuggestionFromSource(
   projectId: Ref<string>,
-  getNode: () => LGraphNode | undefined,
+  getSource: () => MentionSource,
   MentionList: Component,
 ) {
   const entryStore = useEntryStore()
-  const assetStore = useAssetStore()
-  const stageStore = useStageStore()
 
-  function imageSlotItems(q: string): MentionSuggestionItem[] {
-    const node = getNode()
-    if (!node) return []
-    const order = imageSendOrder(node)
-    if (order.length === 0) return []
-
-    const refs = readImageRefs(node)
-    const inputs = stageStore.getStage(node)?.inputs ?? []
-
-    return order
-      .map((slot, i) => {
-        const pinned = refs.filter(r => r.slot === slot).at(-1)
-        const url = pinned
-          ? (pinned.asset_id != null
-              ? assetStore.byId(pinned.asset_id)?.payload_url ?? null
-              : null)
-          : inputs.find(inp => inp.slot === `images.image${slot}`)?.content ?? null
-        return {
+  function slotItems(q: string): MentionSuggestionItem[] {
+    const source = getSource()
+    const orders = source.orders()
+    const out: MentionSuggestionItem[] = []
+    for (const slotType of ['image', 'video', 'audio'] as const) {
+      orders[slotType].forEach((slot, i) => {
+        const item = {
           type: 'imageSlot' as const,
-          slotType: 'image' as const,
+          slotType,
           slot,
           ordinal: i + 1,
-          url,
+          url: source.previewUrl(slotType, slot),
           color: slotColor(slot),
         }
+        if (slotItemMatches(item, q)) out.push(item)
       })
-      .filter(item => slotItemMatches(item, q))
-  }
-
-  function mediaSlotItems(slotType: 'video' | 'audio', q: string): MentionSuggestionItem[] {
-    const node = getNode()
-    if (!node) return []
-    return mentionSendOrderOf(node, slotType)
-      .map((slot, i) => ({
-        type: 'imageSlot' as const,
-        slotType,
-        slot,
-        ordinal: i + 1,
-        url: null,
-        color: slotColor(slot),
-      }))
-      .filter(item => slotItemMatches(item, q))
+    }
+    return out
   }
 
   function slotItemMatches(
@@ -93,9 +101,7 @@ export function useMentionSuggestion(
       if (q) mods = mods.filter(m => (m.label ?? '').toLowerCase().includes(q))
 
       return [
-        ...imageSlotItems(q),
-        ...mediaSlotItems('video', q),
-        ...mediaSlotItems('audio', q),
+        ...slotItems(q),
         ...mods.map(module => ({ type: 'snippet' as const, module })),
       ]
     },
@@ -141,4 +147,12 @@ export function useMentionSuggestion(
       }
     },
   }
+}
+
+export function useMentionSuggestion(
+  projectId: Ref<string>,
+  getNode: () => LGraphNode | undefined,
+  MentionList: Component,
+) {
+  return useMentionSuggestionFromSource(projectId, () => nodeMentionSource(getNode), MentionList)
 }

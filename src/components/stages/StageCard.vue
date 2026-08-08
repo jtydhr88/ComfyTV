@@ -6,7 +6,7 @@
     @dragleave="onCardDragLeave"
     @drop="onCardDrop"
   >
-    <MainPromptInput :node="node" />
+    <MainPromptInput v-if="!hidePrompt" :node="node" />
 
     <StagePresetBar v-if="node && !hideRun" :node="node" />
 
@@ -316,6 +316,7 @@ const props = defineProps<{
   onAction: (actionId: string, context?: ImagePickContext) => void
   hideContext?: boolean
   hideOutput?: boolean
+  hidePrompt?: boolean
   hideActions?: boolean
   hideRun?: boolean
   hideRunButton?: boolean

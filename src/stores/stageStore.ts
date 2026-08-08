@@ -72,6 +72,7 @@ export interface StageState {
    outputId?: number | null
    durationMs?: number | null
    preparingWorkflow?: boolean
+   directorClips?: string | null
 }
 
 export const FX_PASSTHROUGH_CLASSES = new Set([
@@ -268,6 +269,10 @@ export const useStageStore = defineStore('comfytv-stage', () => {
       const idx = Number(pickedIdxRaw)
       if (Number.isFinite(idx) && idx >= 1) state.pickedIndex = idx
     }
+    const directorClips = Array.isArray(msg?.director_clips)
+      ? msg.director_clips[0]
+      : msg?.director_clips
+    if (directorClips != null) state.directorClips = String(directorClips)
     state.outputId = (outId != null && outId !== '') ? Number(outId) : null
     state.durationMs = (durationRaw != null && durationRaw !== '' && Number.isFinite(Number(durationRaw)))
       ? Number(durationRaw)

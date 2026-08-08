@@ -3,6 +3,7 @@ STAGE_META: dict[str, dict] = {
     'TextStage':                    {'kind': 'text',         'workflow_kind': 'text'},
     'ImageStage':                   {'kind': 'image-batch',  'workflow_kind': 'image'},
     'VideoStage':                   {'kind': 'video',        'workflow_kind': 'video'},
+    'DirectorStage':                {'kind': 'video',        'workflow_kind': 'video'},
     'AudioStage':                   {'kind': 'audio',        'workflow_kind': 'audio'},
     'SpeechStage':                  {'kind': 'audio',        'workflow_kind': 'speech'},
     'ImagePickerStage':             {'kind': 'image-picker'},

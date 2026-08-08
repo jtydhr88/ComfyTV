@@ -27,6 +27,7 @@ import MeshPrimitiveStageCard from '@/components/stages/MeshPrimitiveStageCard.v
 import MeshBooleanStageCard from '@/components/stages/MeshBooleanStageCard.vue'
 import GridSplitStageCard from '@/components/stages/GridSplitStageCard.vue'
 import DirectorTimelineStageCard from '@/components/stages/DirectorTimelineStageCard.vue'
+import DirectorStageCard from '@/components/stages/DirectorStageCard.vue'
 import OutpaintStageCard from '@/components/stages/OutpaintStageCard.vue'
 import StoryboardStageCard from '@/components/stages/StoryboardStageCard.vue'
 import Scene3DStageCard from '@/components/stages/Scene3DStageCard.vue'
@@ -217,6 +218,7 @@ export const RICH_STAGE_CARDS: Record<string, any> = {
   'ComfyTV.LineArtStage':             LineArtStageCard,
   'ComfyTV.GridSplitStage':           GridSplitStageCard,
   'ComfyTV.DirectorTimelineStage':    DirectorTimelineStageCard,
+  'ComfyTV.DirectorStage':            DirectorStageCard,
   'ComfyTV.OutpaintStage':            OutpaintStageCard,
   'ComfyTV.StoryboardStage':          StoryboardStageCard,
   'ComfyTV.Scene3DStage':             Scene3DStageCard,

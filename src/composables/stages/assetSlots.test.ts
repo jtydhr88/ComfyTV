@@ -31,6 +31,7 @@ import {
   refCoveredImageSlots,
   refSlotWarnings,
   type ResolvedImageRef,
+  wiredAudioSlots,
   wiredImageSlots,
   wiredVideoSlots,
   mentionWorkflowRef,
@@ -139,8 +140,26 @@ describe('injectAssetRefs (video / audio)', () => {
     expect(inputs).toEqual({
       'images.image0': '/img',
       'videos.video1': '/vid',
-      'audio': '/aud',
+      'audio.audio0': '/aud',
     })
+  })
+
+  it('multiple audio refs land in their own autogrow slots', () => {
+    const inputs: Record<string, unknown> = {}
+    const warnings = injectAssetRefs(inputs, [
+      ref({ url: '/a0', slot: 0, type: 'audio' }),
+      ref({ url: '/a2', slot: 2, type: 'audio' }),
+    ])
+    expect(warnings).toEqual([])
+    expect(inputs['audio.audio0']).toBe('/a0')
+    expect(inputs['audio.audio2']).toBe('/a2')
+  })
+
+  it('legacy single audio input still receives the ref by name', () => {
+    const inputs: Record<string, unknown> = { audio: '' }
+    injectAssetRefs(inputs, [ref({ url: '/pin', slot: 0, type: 'audio' })])
+    expect(inputs['audio']).toBe('/pin')
+    expect('audio.audio0' in inputs).toBe(false)
   })
 
   it('same slot number across types does not collide', () => {
@@ -169,6 +188,20 @@ describe('nodeAccepts helpers for video / audio', () => {
     expect(nodeAcceptsAudioInput(node)).toBe(true)
     expect(nodeAcceptsAutogrowVideos({ inputs: [{ name: 'audio' }] })).toBe(false)
     expect(nodeAcceptsAudioInput({ inputs: [{ name: 'images.image0' }] })).toBe(false)
+  })
+
+  it('detects autogrow audio inputs', () => {
+    expect(nodeAcceptsAudioInput({ inputs: [{ name: 'audio.audio0' }] })).toBe(true)
+  })
+
+  it('wiredAudioSlots merges plain and autogrow forms', () => {
+    expect(wiredAudioSlots({ inputs: [
+      { name: 'audio.audio0', link: 1 },
+      { name: 'audio.audio2', link: 2 },
+      { name: 'audio.audio1', link: null },
+    ] })).toEqual([0, 2])
+    expect(wiredAudioSlots({ inputs: [{ name: 'audio', link: 5 }] })).toEqual([0])
+    expect(wiredAudioSlots({ inputs: [{ name: 'audio', link: null }] })).toEqual([])
   })
 
   it('wiredVideoSlots returns only wired slots', () => {

@@ -53,7 +53,7 @@ def _persist(
 
 def _stage_emit_auto(cls, *, project_id, payload_str, params=None, emit_ui: bool = True,
                      parent_output_id=None, picked_payload=None, picked_index=None,
-                     extra_outputs=None, duration_ms=None):
+                     extra_outputs=None, duration_ms=None, extra_ui=None):
     meta = STAGE_META.get(_stage_name(cls))
     if meta is None:
         logging.warning(
@@ -68,7 +68,8 @@ def _stage_emit_auto(cls, *, project_id, payload_str, params=None, emit_ui: bool
                        payload_str=payload_str, params=params, emit_ui=emit_ui,
                        parent_output_id=parent_output_id,
                        picked_payload=picked_payload, picked_index=picked_index,
-                       extra_outputs=extra_outputs, duration_ms=duration_ms)
+                       extra_outputs=extra_outputs, duration_ms=duration_ms,
+                       extra_ui=extra_ui)
 
 
 def _stage_emit(
@@ -84,6 +85,7 @@ def _stage_emit(
     picked_index=None,
     extra_outputs=None,
     duration_ms=None,
+    extra_ui=None,
 ):
     if duration_ms is None:
         duration_ms = consume_invoke_duration()
@@ -118,6 +120,8 @@ def _stage_emit(
             ui_data["output_id"] = [row_id]
         if duration_ms is not None:
             ui_data["duration_ms"] = [int(duration_ms)]
+        if extra_ui:
+            ui_data.update(extra_ui)
         if has_pick:
             return io.NodeOutput(payload_str, picked_payload, *extras, ui=ui_data)
         return io.NodeOutput(payload_str, *extras, ui=ui_data)

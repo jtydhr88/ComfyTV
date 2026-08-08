@@ -81,10 +81,23 @@ export function videoSendOrder(node: unknown): number[] {
   return [...slots].sort((a, b) => a - b)
 }
 
+const AUTOGROW_AUDIO_KEY_RE = /^audio\.audio(\d+)$/
+
 export function audioSendOrder(node: unknown): number[] {
+  const slots = new Set<number>()
   const inputs = (node as { inputs?: Array<{ name?: unknown; link?: unknown }> } | null)?.inputs
-  if (Array.isArray(inputs) && inputs.some(i => i?.name === 'audio' && i.link != null)) return [0]
-  return readImageRefs(node).some(r => refType(r) === 'audio') ? [0] : []
+  if (Array.isArray(inputs)) {
+    for (const i of inputs) {
+      if (typeof i?.name !== 'string' || i.link == null) continue
+      if (i.name === 'audio') { slots.add(0); continue }
+      const m = AUTOGROW_AUDIO_KEY_RE.exec(i.name)
+      if (m) slots.add(Number(m[1]))
+    }
+  }
+  for (const r of readImageRefs(node)) {
+    if (refType(r) === 'audio') slots.add(r.slot)
+  }
+  return [...slots].sort((a, b) => a - b)
 }
 
 export function mentionSendOrders(node: unknown): MentionOrders {
@@ -117,9 +130,14 @@ export function mentionOrdinalText(
   style: MentionStyle,
   localeText: (ordinal: number) => string,
   type: MentionSlotType = 'image',
+  ordinalOffset = 0,
 ): (ordinal: number) => string {
-  if (style === 'minimax_tags') return n => `<${MINIMAX_TAGS[type]} ${n}>`
-  return localeText
+  if (style === 'minimax_tags') return n => `<${MINIMAX_TAGS[type]} ${n + ordinalOffset}>`
+  return n => localeText(n + ordinalOffset)
+}
+
+export function minimaxAudioOffset(orders: MentionOrders): number {
+  return orders.video.length
 }
 
 const RAW_SLOT_TOKEN_RE = /[@＠](图片|视频|音频|image|video|audio)[\s#＃_]*([0-9０-９]+)(?![0-9０-９a-zA-Z_-])/giu

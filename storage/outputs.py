@@ -149,6 +149,27 @@ def adopt_outputs(
         return _output_to_dict(rows[0])
 
 
+def find_output_by_param(
+    project_id: str,
+    stage_class: str,
+    param_key: str,
+    param_value: str,
+    output_type: Optional[str] = None,
+) -> Optional[dict]:
+    needle = json.dumps({param_key: param_value})[1:-1]
+    with db.get_session() as s:
+        q = select(Output).where(
+            Output.project_id == project_id,
+            Output.stage_class == stage_class,
+            Output.params_json.contains(needle),
+        )
+        if output_type:
+            q = q.where(Output.output_type == str(output_type))
+        q = q.order_by(desc(Output.id)).limit(1)
+        out = s.execute(q).scalars().first()
+        return _output_to_dict(out) if out is not None else None
+
+
 def update_output_picked_index(output_id: int, picked_index: int) -> Optional[dict]:
     with db.get_session() as s:
         out = s.get(Output, int(output_id))

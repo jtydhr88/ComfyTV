@@ -56,6 +56,7 @@ EXPECTED_NODE_IDS = [
     'ComfyTV.CropStage',
     'ComfyTV.CutoutStage',
     'ComfyTV.DespillStage',
+    'ComfyTV.DirectorStage',
     'ComfyTV.EraseStage',
     'ComfyTV.ExpressionStage',
     'ComfyTV.FXChainStage',

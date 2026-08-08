@@ -219,8 +219,7 @@ class VideoStage(io.ComfyNode):
                 io.Autogrow.Input("texts",  template=_text_template(6)),
                 io.Autogrow.Input("images", template=_image_template(9)),
                 io.Autogrow.Input("videos", template=_video_template(4)),
-
-                COMFYTV_AUDIO.Input("audio", optional=True),
+                io.Autogrow.Input("audio",  template=_audio_template(3)),
                 _custom_params_input(),
             ],
             outputs=[COMFYTV_VIDEO.Output("video")],
@@ -232,7 +231,7 @@ class VideoStage(io.ComfyNode):
     async def execute(cls, force_run_token=0, project_id="", parent_output_id=0,workflow="", resolution="",
                 aspect_ratio="", duration_s=VIDEO_DURATION_DEFAULT_S,
                 generate_audio=False, main_prompt="",
-                texts=None, images=None, videos=None, audio="", custom_params="{}"):
+                texts=None, images=None, videos=None, audio=None, custom_params="{}"):
 
         text_vals = _autogrow_values(texts)
         combined_prompt = _combine_prompt(main_prompt, text_vals)
@@ -248,7 +247,8 @@ class VideoStage(io.ComfyNode):
                 'texts':  text_vals,
                 'images': _autogrow_values(images),
                 'videos': _autogrow_values(videos),
-                'audio':  audio,
+                'audio':  _autogrow_values(audio) if not isinstance(audio, str)
+                          else audio,
             },
             options={
                 'resolution':     resolution,

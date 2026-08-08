@@ -1,9 +1,9 @@
 {
-  "_comment": "Shipped preset for MiniMax H3 reference-to-video+audio (r2v). The workflow is ComfyUI's bundled video_minimax_h3_r2v template extended to the model's full reference capacity: 9 reference-image branches (LoadImage 137/139/201..207 -> ref_images.ref_image_0..8 on MiniMaxH3ReferenceToVideo #136) and 2 reference-video branches with paired soundtracks (LoadVideo 301/303 -> GetVideoComponents 302/304 -> ref_videos.ref_video_k + ref_video_audios.ref_video_audio_k). The stage prompt reaches #136 via PrimitiveStringMultiline #138; width/height come from the stage's resolution + aspect via computed:width/height (snap 32); duration_s feeds PrimitiveFloat #132 and ComfyMathExpression #131 snaps frames onto the 17k+5 grid. Unused reference branches are pruned at run time via drop_upstream_of, so exactly as many references are sent as are wired. mention_style=minimax_tags makes @image_N / @video_N / @audio_N in the stage prompt expand to the literal <Picture n> / <Video n> / <Audio n> tags the model was trained on.",
+  "_comment": "Shipped preset for MiniMax H3 reference-to-video+audio (r2v). The workflow is ComfyUI's bundled video_minimax_h3_r2v template extended to the model's full reference capacity: 9 reference-image branches (LoadImage 137/139/201..207 -> ref_images.ref_image_0..8 on MiniMaxH3ReferenceToVideo #136), 2 reference-video branches with paired soundtracks (LoadVideo 301/303 -> GetVideoComponents 302/304 -> ref_videos.ref_video_k + ref_video_audios.ref_video_audio_k) and 3 standalone reference-audio branches (LoadAudio 401/402/403 -> ref_audios.ref_audio_0..2). The stage prompt reaches #136 via PrimitiveStringMultiline #138; width/height come from the stage's resolution + aspect via computed:width/height (snap 32); duration_s feeds PrimitiveFloat #132 and ComfyMathExpression #131 snaps frames onto the 17k+5 grid. Unused reference branches are pruned at run time via drop_upstream_of, so exactly as many references are sent as are wired. mention_style=minimax_tags makes @image_N / @video_N / @audio_N in the stage prompt expand to the literal <Picture n> / <Video n> / <Audio n> tags the model was trained on; NOTE the model numbers <Audio j> across video soundtracks first, so standalone audio ordinals start after the wired video count (the frontend expansion accounts for this).",
 
   "label":       "Local MiniMax H3 R2V",
   "order":       30,
-  "description": "MiniMax H3 reference-to-video+audio. Wire up to 9 reference images and up to 2 reference videos (their soundtracks ride along) into the stage; mention them in the prompt as @image_N / @video_N / @audio_N. Generates 5s of 1344x768 video WITH audio. Keep reference videos short (2-5s) — their tokens ride through every sampling step. Requires the MiniMax H3 model files — see workflows/video/README.md.",
+  "description": "MiniMax H3 reference-to-video+audio. Wire up to 9 reference images, up to 2 reference videos (their soundtracks ride along) and up to 3 standalone reference audios into the stage; mention them in the prompt as @image_N / @video_N / @audio_N. Generates 5s of 1344x768 video WITH audio. Keep reference videos short (2-5s) — their tokens ride through every sampling step. Requires the MiniMax H3 model files — see workflows/video/README.md.",
 
   "result": { "type": "ui_save_url", "node": "92" },
   "meta":   { "mention_style": "minimax_tags" },
@@ -28,7 +28,10 @@
     "206": {"image": {"from": "upstream_image:annotated[7]"}},
     "207": {"image": {"from": "upstream_image:annotated[8]"}},
     "301": {"file": {"from": "upstream_video:annotated[0]"}},
-    "303": {"file": {"from": "upstream_video:annotated[1]"}}
+    "303": {"file": {"from": "upstream_video:annotated[1]"}},
+    "401": {"audio": {"from": "upstream_audio:annotated[0]"}},
+    "402": {"audio": {"from": "upstream_audio:annotated[1]"}},
+    "403": {"audio": {"from": "upstream_audio:annotated[2]"}}
   },
 
   "prune_when_missing": [
@@ -48,6 +51,9 @@
     {"when": "upstream_video:value[1]", "drop_upstream_of": [
       {"node": "136", "input": "ref_videos.ref_video_1"},
       {"node": "136", "input": "ref_video_audios.ref_video_audio_1"}
-    ]}
+    ]},
+    {"when": "upstream_audio:value[0]", "drop_upstream_of": [{"node": "136", "input": "ref_audios.ref_audio_0"}]},
+    {"when": "upstream_audio:value[1]", "drop_upstream_of": [{"node": "136", "input": "ref_audios.ref_audio_1"}]},
+    {"when": "upstream_audio:value[2]", "drop_upstream_of": [{"node": "136", "input": "ref_audios.ref_audio_2"}]}
   ]
 }

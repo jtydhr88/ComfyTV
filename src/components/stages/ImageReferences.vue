@@ -132,7 +132,10 @@ import { slotColor } from '@/composables/stages/imageSlotMentions'
 import { useImageReferences } from '@/composables/stages/useImageReferences'
 import type { LGraphNode } from '@/lib/comfyApp'
 
-const props = defineProps<{ node?: LGraphNode }>()
+const props = defineProps<{
+  node?: LGraphNode
+  forceTypes?: Array<'image' | 'video' | 'audio'>
+}>()
 
 const rootEl = ref<HTMLElement | null>(null)
 
@@ -157,7 +160,8 @@ const {
   onSlotPick,
   closeSlotPicker,
   init,
-} = useImageReferences(() => props.node, rootEl)
+} = useImageReferences(() => props.node, rootEl,
+  props.forceTypes ? { forceTypes: props.forceTypes } : undefined)
 
 onMounted(init)
 
