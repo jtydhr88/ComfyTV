@@ -15,6 +15,10 @@ _UPSTREAM_PAT = re.compile(
     r'^upstream_(image|video|audio|text|model):(annotated|value|masked)(?:\[(\d+)\])?$'
 )
 
+KEEP_ORIGINAL = object()
+
+_MEDIA_KINDS = ("image", "video", "audio", "model")
+
 
 _UPSTREAM_BUCKET_BY_KIND = {
     'image': 'images', 'video': 'videos', 'audio': 'audio', 'text': 'texts',
@@ -162,6 +166,7 @@ class _Resolver:
         cast = spec.get("cast")
         default = _resolve_default(spec.get("default"))
         value: Any = None
+        media_upstream = False
 
         if src == "main_prompt":
             value = (self.ctx.main_prompt or "").strip()
@@ -178,6 +183,7 @@ class _Resolver:
             value = self._length_cached()
         elif (m := _UPSTREAM_PAT.match(src)):
             kind, suffix, idx_str = m.group(1), m.group(2), m.group(3)
+            media_upstream = kind in _MEDIA_KINDS
             idx = int(idx_str) if idx_str else 0
             upstream = self.ctx.upstream.get(_UPSTREAM_BUCKET_BY_KIND[kind]) or []
             if isinstance(upstream, str):  # audio may be a single string
@@ -209,6 +215,12 @@ class _Resolver:
                 raise RuntimeError(
                     spec.get("error") or f"{where}: required but empty"
                 )
+            if media_upstream:
+                _log.info(
+                    "[ComfyTV] %s: optional %s has nothing wired — "
+                    "keeping the workflow's own value", where, src,
+                )
+                return KEEP_ORIGINAL
             value = ""
 
         prefix = spec.get("prefix")

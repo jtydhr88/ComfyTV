@@ -223,6 +223,21 @@ def _read_preset(file_path: Path) -> dict:
     return data if isinstance(data, dict) else {}
 
 
+def _free_label(s, kind: str, wanted: str, exclude_id: Optional[int] = None) -> str:
+    base = wanted
+    n = 2
+    while True:
+        q = select(db.Workflow.id).where(
+            (db.Workflow.kind == kind) & (db.Workflow.label == wanted)
+        )
+        if exclude_id is not None:
+            q = q.where(db.Workflow.id != exclude_id)
+        if s.execute(q).first() is None:
+            return wanted
+        wanted = f"{base}-{n}"
+        n += 1
+
+
 def _claim_label_or_skip(s, row: db.Workflow, new_label: str) -> bool:
     existing = s.execute(
         select(db.Workflow).where(
@@ -317,7 +332,7 @@ def _upsert_workflow_row(s, kind: str, file_path: Path) -> tuple[db.Workflow, bo
     if row is None:
         row = db.Workflow(
             kind=kind,
-            label=_label_from_stem(file_path.stem),
+            label=_free_label(s, kind, _label_from_stem(file_path.stem)),
             file_path=str(file_path),
             order_=100,
         )
@@ -373,7 +388,7 @@ def reset_workflow_to_preset(workflow_id: int) -> Optional[dict]:
             db.WorkflowInputBinding.__table__.delete()
                 .where(db.WorkflowInputBinding.workflow_id == row.id)
         )
-        row.label = _label_from_stem(file_path.stem)
+        row.label = _free_label(s, row.kind, _label_from_stem(file_path.stem), row.id)
         row.order_ = 100
         row.description = None
         row.result_type = None
@@ -424,7 +439,7 @@ def import_workflow(kind: str, filename: str, content: str) -> dict:
     with db.get_session() as s:
         row, _ = _upsert_workflow_row(s, kind, path)
         if original_label:
-            row.label = original_label
+            row.label = _free_label(s, kind, original_label, row.id)
         label = row.label
         s.commit()
 

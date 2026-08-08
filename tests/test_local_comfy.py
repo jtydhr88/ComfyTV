@@ -719,6 +719,136 @@ class TestApplyPrunes:
         assert set(wf) == {"gen"}
 
 
+# ─── _auto_prune_unbound ─────────────────────────────────────────────────────
+
+def _stub_class(required=(), output=False):
+    req = tuple(required)
+
+    class C:
+        OUTPUT_NODE = output
+
+        @classmethod
+        def INPUT_TYPES(cls):
+            return {"required": {k: ("X",) for k in req}, "optional": {}}
+
+    return C
+
+
+class TestAutoPruneUnbound:
+    def _ctx(self, **kw):
+        defaults = dict(
+            kind="video", main_prompt="x",
+            upstream={"images": [], "videos": [], "audio": [], "texts": []},
+            options={},
+        )
+        defaults.update(kw)
+        return RunnerContext(**defaults)
+
+    def _register(self, comfy_nodes):
+        comfy_nodes.NODE_CLASS_MAPPINGS.update({
+            "LoadVideo": _stub_class(required=("file",)),
+            "GetVideoComponents": _stub_class(required=("video",)),
+            "MiniMaxH3ReferenceToVideo": _stub_class(required=("prompt",)),
+            "SaveVideo": _stub_class(required=("video",), output=True),
+            "LoadImage": _stub_class(required=("image",)),
+            "SaveImage": _stub_class(required=("images",), output=True),
+        })
+
+    def _h3_video_workflow(self):
+        return {
+            "301": {"class_type": "LoadVideo", "inputs": {"file": "sample.mp4"}},
+            "302": {"class_type": "GetVideoComponents",
+                    "inputs": {"video": ["301", 0]}},
+            "h3": {"class_type": "MiniMaxH3ReferenceToVideo", "inputs": {
+                "prompt": "x",
+                "ref_videos.ref_video_0": ["302", 0],
+                "ref_video_audios.ref_video_audio_0": ["302", 1],
+            }},
+            "save": {"class_type": "SaveVideo", "inputs": {"video": ["h3", 0]}},
+        }
+
+    def test_unwired_optional_video_drops_loader_chain(self, comfy_nodes):
+        self._register(comfy_nodes)
+        wf = self._h3_video_workflow()
+        cfg = {"inputs": {"301": {"file": {"from": "upstream_video:annotated[0]"}}}}
+        pruned = lc._auto_prune_unbound(wf, cfg, self._ctx())
+        assert pruned == {"301", "302"}
+        assert set(wf) == {"h3", "save"}
+        assert wf["h3"]["inputs"] == {"prompt": "x"}
+
+    def test_wired_upstream_left_alone(self, comfy_nodes):
+        self._register(comfy_nodes)
+        wf = self._h3_video_workflow()
+        cfg = {"inputs": {"301": {"file": {"from": "upstream_video:annotated[0]"}}}}
+        ctx = self._ctx(upstream={
+            "images": [], "videos": ["/view?filename=a.mp4"],
+            "audio": [], "texts": [],
+        })
+        pruned = lc._auto_prune_unbound(wf, cfg, ctx)
+        assert pruned == set()
+        assert set(wf) == {"301", "302", "h3", "save"}
+
+    def test_required_binding_not_pruned(self, comfy_nodes):
+        self._register(comfy_nodes)
+        wf = self._h3_video_workflow()
+        cfg = {"inputs": {"301": {"file": {
+            "from": "upstream_video:annotated[0]", "required": True,
+        }}}}
+        assert lc._auto_prune_unbound(wf, cfg, self._ctx()) == set()
+        assert "301" in wf
+
+    def test_binding_with_default_not_pruned(self, comfy_nodes):
+        self._register(comfy_nodes)
+        wf = self._h3_video_workflow()
+        cfg = {"inputs": {"301": {"file": {
+            "from": "upstream_video:annotated[0]", "default": "fallback.mp4",
+        }}}}
+        assert lc._auto_prune_unbound(wf, cfg, self._ctx()) == set()
+        assert "301" in wf
+
+    def test_text_upstream_not_pruned(self, comfy_nodes):
+        self._register(comfy_nodes)
+        wf = {"7": {"class_type": "LoadVideo", "inputs": {"file": "t"}}}
+        cfg = {"inputs": {"7": {"file": {"from": "upstream_text:value[0]"}}}}
+        assert lc._auto_prune_unbound(wf, cfg, self._ctx()) == set()
+
+    def test_cascade_reaching_output_node_aborts(self, comfy_nodes):
+        self._register(comfy_nodes)
+        wf = {
+            "load": {"class_type": "LoadImage", "inputs": {"image": "x.png"}},
+            "save": {"class_type": "SaveImage", "inputs": {"images": ["load", 0]}},
+        }
+        cfg = {"inputs": {"load": {"image": {"from": "upstream_image:annotated[0]"}}}}
+        assert lc._auto_prune_unbound(wf, cfg, self._ctx()) == set()
+        assert set(wf) == {"load", "save"}
+
+    def test_unknown_consumer_class_treated_as_required(self, comfy_nodes):
+        self._register(comfy_nodes)
+        wf = {
+            "load": {"class_type": "LoadVideo", "inputs": {"file": "x.mp4"}},
+            "mystery": {"class_type": "SomeCustomThing",
+                        "inputs": {"video": ["load", 0]}},
+            "h3": {"class_type": "MiniMaxH3ReferenceToVideo", "inputs": {
+                "prompt": "x", "ref_videos.ref_video_0": ["mystery", 0],
+            }},
+            "save": {"class_type": "SaveVideo", "inputs": {"video": ["h3", 0]}},
+        }
+        cfg = {"inputs": {"load": {"file": {"from": "upstream_video:annotated[0]"}}}}
+        pruned = lc._auto_prune_unbound(wf, cfg, self._ctx())
+        assert pruned == {"load", "mystery"}
+        assert wf["h3"]["inputs"] == {"prompt": "x"}
+
+    def test_gc_sweeps_orphaned_feeders_of_dropped_nodes(self, comfy_nodes):
+        self._register(comfy_nodes)
+        wf = self._h3_video_workflow()
+        wf["upscaler"] = {"class_type": "SomeUpscaler", "inputs": {}}
+        wf["301"]["inputs"]["model"] = ["upscaler", 0]
+        cfg = {"inputs": {"301": {"file": {"from": "upstream_video:annotated[0]"}}}}
+        pruned = lc._auto_prune_unbound(wf, cfg, self._ctx())
+        assert pruned == {"301", "302", "upscaler"}
+        assert set(wf) == {"h3", "save"}
+
+
 # ─── _apply_overrides ────────────────────────────────────────────────────────
 
 class TestApplyOverrides:
@@ -765,6 +895,44 @@ class TestApplyOverrides:
         resolver = lc._Resolver(cfg, self._ctx())
         lc._apply_overrides(wf, cfg, resolver)
         assert wf["3"]["inputs"]["x"] == "abc"
+
+    def test_unwired_optional_media_keeps_widget_value(self):
+        wf = {"301": {"class_type": "LoadVideo",
+                      "inputs": {"file": "sample.mp4"}}}
+        cfg = {"inputs": {"301": {"file": {"from": "upstream_video:annotated[0]"}}}}
+        resolver = lc._Resolver(cfg, self._ctx())
+        lc._apply_overrides(wf, cfg, resolver)
+        assert wf["301"]["inputs"]["file"] == "sample.mp4"
+
+    def test_unwired_optional_text_still_writes_empty(self):
+        wf = {"5": {"class_type": "CLIPTextEncode",
+                    "inputs": {"text": "template prompt"}}}
+        cfg = {"inputs": {"5": {"text": {"from": "upstream_text:value[0]"}}}}
+        resolver = lc._Resolver(cfg, self._ctx())
+        lc._apply_overrides(wf, cfg, resolver)
+        assert wf["5"]["inputs"]["text"] == ""
+
+    def test_unwired_required_media_still_raises(self):
+        wf = {"301": {"class_type": "LoadVideo",
+                      "inputs": {"file": "sample.mp4"}}}
+        cfg = {"inputs": {"301": {"file": {
+            "from": "upstream_video:annotated[0]", "required": True,
+        }}}}
+        resolver = lc._Resolver(cfg, self._ctx())
+        with pytest.raises(RuntimeError, match="required but empty"):
+            lc._apply_overrides(wf, cfg, resolver)
+
+    def test_wired_optional_media_overrides_widget_value(self):
+        wf = {"301": {"class_type": "LoadVideo",
+                      "inputs": {"file": "sample.mp4"}}}
+        cfg = {"inputs": {"301": {"file": {"from": "upstream_video:annotated[0]"}}}}
+        ctx = self._ctx(upstream={
+            "images": [], "videos": ["/view?filename=real.mp4"],
+            "audio": [], "texts": [],
+        })
+        resolver = lc._Resolver(cfg, ctx)
+        lc._apply_overrides(wf, cfg, resolver)
+        assert wf["301"]["inputs"]["file"] == "real.mp4 [output]"
 
 
 # ─── _view_url + _save_files_from ────────────────────────────────────────────

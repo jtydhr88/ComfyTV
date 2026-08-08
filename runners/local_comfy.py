@@ -17,6 +17,7 @@ from ._workflow_mutate import (  # noqa: F401
     _apply_overrides,
     _apply_prunes,
     _auto_detect_result,
+    _auto_prune_unbound,
     _output_node_ids,
     _split_runner_id,
 )
@@ -52,6 +53,7 @@ def prepare_workflow(runner_id: str, kinds, ctx: RunnerContext) -> tuple[dict, d
     workflow = copy.deepcopy(config["api_json"])
 
     pruned_nodes = _apply_prunes(workflow, config, ctx)
+    pruned_nodes |= _auto_prune_unbound(workflow, config, ctx)
     resolver = _Resolver(config, ctx)
     _apply_overrides(workflow, config, resolver, pruned_nodes)
 

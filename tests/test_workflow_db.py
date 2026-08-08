@@ -488,6 +488,64 @@ class TestSeedAndCRUD:
         refresh_registry()
         assert "Flux Fill Inpaint33" in RUNNER_REGISTRY.labels_for_kind("inpaint")
 
+    def test_seed_new_row_survives_stem_label_collision(
+            self, reset_db, tmp_path, monkeypatch):
+        from pathlib import Path
+        wdir = tmp_path / "workflows"
+        self._make_workflow(wdir, "first", "image", preset={"label": "second"})
+        self._make_workflow(wdir, "second", "image")
+        monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
+        wdb.seed_workflows_from_disk(("image",))
+        labels = {r["label"] for r in wdb.list_workflows() if r["kind"] == "image"}
+        assert labels == {"second", "second-2"}
+
+    def test_import_survives_label_collision(self, reset_db, tmp_path, monkeypatch):
+        from pathlib import Path
+        wdir = tmp_path / "workflows"
+        self._make_workflow(wdir, "fancy", "image", preset={"label": "Nice"})
+        monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
+        wdb.seed_workflows_from_disk(("image",))
+
+        res = wdb.import_workflow("image", "Nice.json",
+                                  json.dumps({"nodes": [{"id": 1}]}))
+        assert res["label"] == "Nice-2"
+
+    def test_reimport_same_file_keeps_own_label(self, reset_db, tmp_path, monkeypatch):
+        from pathlib import Path
+        wdir = tmp_path / "workflows"
+        wdir.mkdir(parents=True, exist_ok=True)
+        monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
+        gui = json.dumps({"nodes": [{"id": 1}]})
+        first = wdb.import_workflow("image", "mine.json", gui)
+        again = wdb.import_workflow("image", "mine.json", gui)
+        assert first["label"] == again["label"] == "mine"
+
+    def test_reset_survives_stem_label_collision(
+            self, reset_db, tmp_path, monkeypatch):
+        from pathlib import Path
+        from ComfyTV import db as cdb
+        wdir = tmp_path / "workflows"
+        self._make_workflow(wdir, "sage", "video", preset={"order": 5})
+        self._make_workflow(wdir, "other", "video")
+        monkeypatch.setattr(wdb.seed, "_WORKFLOWS_DIR", Path(wdir))
+        wdb.seed_workflows_from_disk(("video",))
+
+        from sqlalchemy import select
+        with cdb.get_session() as s:
+            sage = s.execute(select(cdb.Workflow).where(
+                cdb.Workflow.label == "sage")).scalar_one()
+            other = s.execute(select(cdb.Workflow).where(
+                cdb.Workflow.label == "other")).scalar_one()
+            sage_id = sage.id
+            sage.label = "my custom name"
+            s.flush()
+            other.label = "sage"
+            s.commit()
+
+        result = wdb.reset_workflow_to_preset(sage_id)
+        assert result is not None and result["ok"]
+        assert result["label"] == "sage-2"
+
     def test_safe_stem(self):
         assert wdb._safe_stem("My Cool Upload.json") == "My-Cool-Upload"
         assert wdb._safe_stem("../../etc/passwd") == "passwd"
