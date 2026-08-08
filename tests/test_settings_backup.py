@@ -191,6 +191,19 @@ class TestBackup:
         names = sorted(p.name for p in root.iterdir())
         assert names == ["20260805-090200", "20260805-090300"]
 
+    def test_rotation_prunes_readonly_files(self, tmp_path, node_root, monkeypatch):
+        from ComfyTV import backup
+        data = _make_data_dir(tmp_path)
+        locked = data / "workflows" / "locked.json"
+        locked.write_text("{}", encoding="utf-8")
+        locked.chmod(0o444)
+        monkeypatch.setattr(backup, "data_dir", lambda: str(data))
+        root = tmp_path / "dest"
+        cfg = {"db-backup-path": str(root), "db-backup-max-count": 1}
+        for minute in (1, 2):
+            assert backup.run_backup(cfg, now=datetime(2026, 8, 5, 9, minute, 0))["ok"] is True
+        assert sorted(p.name for p in root.iterdir()) == ["20260805-090200"]
+
     def test_missing_data_dir_fails_cleanly(self, tmp_path, node_root, monkeypatch):
         from ComfyTV import backup
         monkeypatch.setattr(backup, "data_dir", lambda: str(tmp_path / "absent"))

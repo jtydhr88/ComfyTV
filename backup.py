@@ -3,6 +3,7 @@ import os
 import re
 import shutil
 import sqlite3
+import stat
 from datetime import datetime
 from typing import Any, Optional
 
@@ -54,6 +55,16 @@ def _copy_sqlite_db(src_db: str, dst_db: str) -> None:
         src_conn.close()
 
 
+def _rmtree_force(path: str) -> None:
+    def _onexc(func, p, _exc):
+        os.chmod(p, stat.S_IWRITE)
+        func(p)
+    try:
+        shutil.rmtree(path, onexc=_onexc)
+    except TypeError:
+        shutil.rmtree(path, onerror=_onexc)
+
+
 def prune_old_snapshots(root: str, max_count: int) -> list[str]:
     if max_count < 1 or not os.path.isdir(root):
         return []
@@ -65,7 +76,7 @@ def prune_old_snapshots(root: str, max_count: int) -> list[str]:
     for name in snapshots[:-max_count]:
         target = os.path.join(root, name)
         try:
-            shutil.rmtree(target)
+            _rmtree_force(target)
             removed.append(name)
         except OSError as e:
             logger.warning("[ComfyTV/backup] failed to prune %s: %s", target, e)
@@ -104,7 +115,10 @@ def run_backup(cfg: Optional[dict[str, Any]] = None,
             _copy_sqlite_db(src_db, os.path.join(dest, "data.db"))
     except (OSError, sqlite3.Error) as e:
         logger.warning("[ComfyTV/backup] backup failed: %s", e)
-        shutil.rmtree(os.path.join(root, name), ignore_errors=True)
+        try:
+            _rmtree_force(os.path.join(root, name))
+        except OSError:
+            pass
         return {"ok": False, "error": str(e)}
 
     prune_old_snapshots(root, int(cfg.get("db-backup-max-count") or 1))
