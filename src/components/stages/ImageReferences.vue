@@ -25,23 +25,35 @@
 
     <AssetPickerPopup
       v-if="pickerOpen"
-      :added-ids="refs.map(r => r.asset_id)"
+      :added-ids="refs.map(r => r.asset_id).filter((id): id is number => id != null)"
       :media-types="acceptedMediaTypes"
+      :batch-groups="batchGroups"
+      :added-batch-keys="refs.filter(r => r.batch_index != null)
+        .map(r => `${r.batch_id}:${r.batch_index}`)"
       @select="onAddAsset"
+      @select-batch="onAddBatchImage"
+      @refresh-batch="onRefreshBatch"
+      @unpin-batch="onUnpinBatch"
       @close="pickerOpen = false"
     />
 
     <div v-if="refs.length" class="ctv:flex ctv:flex-wrap ctv:gap-1.5">
       <div
         v-for="(ref, i) in refs"
-        :key="`${refType(ref)}-${ref.asset_id}`"
+        :key="`${refType(ref)}-${refKey(ref)}`"
         class="imgref-tile ctv:relative ctv:w-[76px] ctv:h-[76px] ctv:rounded-sm ctv:overflow-hidden ctv:cursor-pointer
                ctv:bg-black/30 ctv:border"
         :style="{ borderColor: slotColor(ref.slot) }"
         :title="tileTooltip(ref)"
         @click="openSlotPicker(i, $event)"
       >
-        <template v-if="assetOf(ref)">
+        <img
+          v-if="batchUrlOf(ref)"
+          :src="batchUrlOf(ref)!"
+          class="ctv:block ctv:size-full ctv:object-cover"
+          draggable="false"
+        />
+        <template v-else-if="assetOf(ref)">
           <video
             v-if="refType(ref) === 'video'"
             :src="assetOf(ref)!.payload_url"
@@ -115,7 +127,7 @@ import { onMounted, ref } from 'vue'
 
 import AssetPickerPopup from '@/components/stages/AssetPickerPopup.vue'
 import MentionSlotPopover from '@/components/stages/MentionSlotPopover.vue'
-import { refType } from '@/composables/stages/imageRefs'
+import { refKey, refType } from '@/composables/stages/imageRefs'
 import { slotColor } from '@/composables/stages/imageSlotMentions'
 import { useImageReferences } from '@/composables/stages/useImageReferences'
 import type { LGraphNode } from '@/lib/comfyApp'
@@ -128,12 +140,17 @@ const {
   refs,
   accepts,
   acceptedMediaTypes,
+  batchGroups,
+  batchUrlOf,
+  onRefreshBatch,
+  onUnpinBatch,
   pickerOpen,
   slotPicker,
   slotWarnings,
   assetOf,
   tileTooltip,
   onAddAsset,
+  onAddBatchImage,
   fileDrop,
   removeRef,
   openSlotPicker,

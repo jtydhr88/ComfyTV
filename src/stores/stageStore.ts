@@ -320,6 +320,7 @@ export const useStageStore = defineStore('comfytv-stage', () => {
     bumpStateTick,
     notifyDownstream,
     refreshStageInputs,
+    resolveUpstreamValue,
     applyExecutedPayload,
     applyExecutionError,
     clearError,
@@ -404,6 +405,17 @@ export function removeImageFromPool(
   const filtered = images.filter(im => String(im.image_url ?? '') !== String(imageUrl))
   filtered.forEach((im, i) => { im.index = String(i + 1) })
   return JSON.stringify({ images: filtered })
+}
+
+export function batchImageUrls(batch: string | null | undefined): string[] {
+  if (!batch) return []
+  try {
+    const parsed = JSON.parse(String(batch))
+    const items = Array.isArray(parsed?.images) ? parsed.images : []
+    return items.map((im: any) => String(im?.image_url ?? '')).filter(Boolean)
+  } catch {
+    return []
+  }
 }
 
 export function computePickedFromBatch(batch: string | null | undefined, wantIdx: number): string | null {

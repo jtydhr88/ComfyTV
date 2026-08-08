@@ -17,12 +17,14 @@ import {
   toImagePoolJson,
   removeImageFromPool,
   isPoolPickerKind,
+  batchImageUrls,
   type StageKind,
   type StageVariant,
   type ImagePickContext,
 } from '@/stores/stageStore'
 import { useProjectStore } from '@/stores/projectStore'
 import { useAssetStore } from '@/stores/assetStore'
+import { usePinnedBatchStore } from '@/stores/pinnedBatchStore'
 import { useEntryStore } from '@/stores/entryStore'
 import { useExecutionStore } from '@/stores/executionStore'
 import {
@@ -408,6 +410,7 @@ export function useStageNode(
       }
 
       const assetStore = useAssetStore()
+      const pinnedBatches = usePinnedBatchStore()
 
       const refsByNode = new Map<string, ReturnType<typeof readImageRefs>>()
       for (const nid of Object.keys(pm?.output ?? {})) {
@@ -434,8 +437,15 @@ export function useStageNode(
           for (const r of refs) {
             const type = refType(r)
             if (!acceptsType[type]) continue
-            const asset = assetStore.byId(r.asset_id)
-            if (asset) resolved.push({ id: r.asset_id, url: asset.payload_url, slot: r.slot, type })
+            if (r.batch_index != null) {
+              const urls = r.batch_id ? pinnedBatches.byId(pid, r.batch_id)?.urls ?? [] : []
+              const url = urls[r.batch_index]
+              if (url) resolved.push({ id: -1, url, slot: r.slot, type: 'image' })
+              else console.warn(`[ComfyTV/stage] node #${nid}: pinned batch ref #${r.batch_index + 1} has no image (batch ${r.batch_id ?? 'unknown'})`)
+              continue
+            }
+            const asset = r.asset_id != null ? assetStore.byId(r.asset_id) : undefined
+            if (asset) resolved.push({ id: r.asset_id!, url: asset.payload_url, slot: r.slot, type })
             else console.warn(`[ComfyTV/stage] node #${nid}: ${type} ref ${r.asset_id} missing from library`)
           }
           for (const w of injectAssetRefs(obj, resolved)) {

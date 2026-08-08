@@ -5,7 +5,7 @@ import {
   refCoveredImageSlots,
   wiredImageSlots,
 } from '@/composables/stages/assetSlots'
-import { type ImageRef, readImageRefs } from '@/composables/stages/imageRefs'
+import { type ImageRef, readImageRefs, refType } from '@/composables/stages/imageRefs'
 
 export type SlotWarningStatus = 'wired_but_unused' | 'required_but_missing'
 
@@ -133,7 +133,9 @@ export async function validateNode(
     const required = requiredSlotsOf(entry, 'image')
     if (required.length) {
       const wired = wiredImageSlots(node)
-      const resolvedRefs = imageRefs.filter(r => assetExists(r.asset_id))
+      const resolvedRefs = imageRefs.filter(r =>
+        refType(r) === 'image'
+        && (r.batch_index != null || (r.asset_id != null && assetExists(r.asset_id))))
       const refCovered = refCoveredImageSlots(resolvedRefs)
       const missing = missingRequiredImageSlots(required, wired, refCovered)
       const total = required.length

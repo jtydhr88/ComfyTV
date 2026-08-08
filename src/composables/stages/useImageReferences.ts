@@ -20,15 +20,26 @@ import {
 import {
   type AssetRefType,
   type ImageRef,
+  isBatchRef,
   readImageRefs,
+  refKey,
   refType,
   writeImageRefs,
 } from '@/composables/stages/imageRefs'
 import { importAssetFiles } from '@/composables/sidebar/assetImport'
 import { toastLoaderUploadFailed, useLoaderFileDrop } from '@/composables/stages/useLoaderFileDrop'
-import type { LGraphNode } from '@/lib/comfyApp'
+import { app, type LGraphNode } from '@/lib/comfyApp'
 import { useAssetStore } from '@/stores/assetStore'
 import { useSelectionStore } from '@/stores/selectionStore'
+import { usePinnedBatchStore } from '@/stores/pinnedBatchStore'
+import { useProjectStore } from '@/stores/projectStore'
+
+export interface BatchGroup {
+  id: string
+  label: string
+  urls: string[]
+  canRefresh: boolean
+}
 
 export interface SlotPickerState {
   index: number
@@ -67,12 +78,49 @@ export function useImageReferences(
     (['image', 'video', 'audio'] as const).filter(k => acceptedTypes.value[k]),
   )
 
+  const pinnedStore = usePinnedBatchStore()
+  const projectStore = useProjectStore()
+  const projectId = computed(() => projectStore.currentProjectId || '')
+
+  const batchGroups = computed<BatchGroup[]>(() =>
+    pinnedStore.list(projectId.value).map(b => ({
+      id: b.id, label: b.label, urls: b.urls, canRefresh: !!b.source_uid,
+    })),
+  )
+
+  function batchUrlOf(ref: ImageRef): string | null {
+    if (!isBatchRef(ref) || !ref.batch_id) return null
+    const urls = pinnedStore.byId(projectId.value, ref.batch_id)?.urls ?? []
+    return urls[ref.batch_index!] ?? null
+  }
+
+  function onRefreshBatch(id: string) {
+    const ok = pinnedStore.refresh(projectId.value, id, app as any)
+    if (!ok) {
+      ;(app as any)?.extensionManager?.toast?.add?.({
+        severity: 'warn',
+        summary: t('imageRefs.refreshFailed'),
+        life: 4000,
+      })
+    }
+  }
+
+  function onUnpinBatch(id: string) {
+    pinnedStore.unpin(projectId.value, id)
+  }
+
   function assetOf(ref: ImageRef): Asset | undefined {
-    return assetStore.byId(ref.asset_id)
+    return ref.asset_id != null ? assetStore.byId(ref.asset_id) : undefined
   }
 
   function assetLabel(ref: ImageRef): string {
-    return assetChipLabel(assetOf(ref), ref.asset_id)
+    if (isBatchRef(ref)) {
+      const item = t('imageRefs.batchItem', { n: (ref.batch_index ?? 0) + 1 })
+      if (!ref.batch_id) return item
+      const group = pinnedStore.byId(projectId.value, ref.batch_id)
+      return group ? `${group.label} · ${item}` : item
+    }
+    return assetChipLabel(assetOf(ref), ref.asset_id!)
   }
 
   function tileTooltip(ref: ImageRef): string {
@@ -112,6 +160,12 @@ export function useImageReferences(
       ? { asset_id: asset.id, slot: nextFreeSlot(type) }
       : { asset_id: asset.id, slot: nextFreeSlot(type), type }
     setRefs([...base, entry])
+  }
+
+  function onAddBatchImage(groupId: string, index: number) {
+    if (!acceptedTypes.value.image) return
+    if (refs.value.some(r => r.batch_index === index && r.batch_id === groupId)) return
+    setRefs([...refs.value, { batch_index: index, batch_id: groupId, slot: nextFreeSlot('image') }])
   }
 
   async function importFiles(files: File[]): Promise<void> {
@@ -243,6 +297,10 @@ export function useImageReferences(
     refs,
     accepts,
     acceptedMediaTypes,
+    batchGroups,
+    batchUrlOf,
+    onRefreshBatch,
+    onUnpinBatch,
     pickerOpen,
     slotPicker,
     slotWarnings,
@@ -250,6 +308,7 @@ export function useImageReferences(
     assetLabel,
     tileTooltip,
     onAddAsset,
+    onAddBatchImage,
     importFiles,
     fileDrop,
     removeRef,

@@ -23,6 +23,13 @@
         <span v-if="pickerSource !== 'empty'" class="ctv-src-tag ctv:text-3xs ctv:py-px ctv:px-1.5 ctv:rounded-sm ctv:tracking-wide ctv:bg-base-foreground/5 ctv:text-muted-foreground">
           {{ sourceLabel(pickerSource) }}
         </span>
+        <button
+          v-if="poolPinnable"
+          type="button"
+          :class="tileDisconnectBtn"
+          :title="$t('imageRefs.pinBatch')"
+          @click.stop="pinBatch(poolContent)"
+        ><i class="pi pi-thumbtack" /></button>
         <template v-if="poolCount > 0">
           <button
             v-if="!confirmingClear"
@@ -193,7 +200,17 @@
           >{{ durationLabel }}</span>
         </button>
       </div>
-      <div v-else :class="sectionLabel">{{ $t('stage.section.output', { type: state.outputType }) }}</div>
+      <div v-else class="ctv:flex ctv:items-center ctv:gap-1.5">
+        <span :class="sectionLabel" class="ctv:mb-0">{{ $t('stage.section.output', { type: state.outputType }) }}</span>
+        <span class="ctv:flex-1"></span>
+        <button
+          v-if="outputBatchPinnable"
+          type="button"
+          :class="tileDisconnectBtn"
+          :title="$t('imageRefs.pinBatch')"
+          @click.stop="pinBatch(state.output)"
+        ><i class="pi pi-thumbtack" /></button>
+      </div>
 
       <div
         v-show="!outputCollapsed"
@@ -284,8 +301,11 @@ import {
   presetLabelKey,
   presetTooltipKey,
 } from '@/composables/stages/actionLabels'
-import type { LGraphNode } from '@/lib/comfyApp'
-import { isPoolPickerKind, useStageStore, type InputSource, type StageState, type ImagePickContext } from '@/stores/stageStore'
+import { app, type LGraphNode } from '@/lib/comfyApp'
+import { batchImageUrls, isPoolPickerKind, toImagePoolJson, useStageStore, type InputSource, type StageState, type ImagePickContext } from '@/stores/stageStore'
+import { usePinnedBatchStore } from '@/stores/pinnedBatchStore'
+import { useProjectStore } from '@/stores/projectStore'
+import { ensureStageUid } from '@/composables/stages/stageIdentity'
 
 const props = defineProps<{
   state: StageState
@@ -323,6 +343,34 @@ const {
 const isPicker = computed(() => isPoolPickerKind(props.state.kind))
 
 const acceptsContextMedia = computed(() => nodeAcceptsAutogrowImages(props.node))
+
+const pinnedBatchStore = usePinnedBatchStore()
+const projectStoreForPin = useProjectStore()
+
+const outputBatchPinnable = computed(() =>
+  props.state.outputType === 'COMFYTV_IMAGES'
+  && batchImageUrls(toImagePoolJson(props.state.output)).length > 0)
+
+const poolPinnable = computed(() =>
+  poolCount.value > 0 && batchImageUrls(toImagePoolJson(poolContent.value)).length > 0)
+
+function pinBatch(content: string | null | undefined) {
+  const node: any = props.node
+  const json = toImagePoolJson(content)
+  const label = String(node?.title || node?.comfyClass || 'Stage').replace(/^ComfyTV\./, '')
+  const entry = pinnedBatchStore.pin(projectStoreForPin.currentProjectId || '', {
+    label: `${label} #${node?.id ?? '?'}`,
+    sourceUid: node ? ensureStageUid(node) : null,
+    batchJson: json,
+  })
+  ;(app as any)?.extensionManager?.toast?.add?.({
+    severity: entry ? 'success' : 'warn',
+    summary: entry
+      ? t('imageRefs.pinnedToast', { n: entry.urls.length })
+      : t('imageRefs.pinEmpty'),
+    life: 3000,
+  })
+}
 
 const contextCollapsed = useContextCollapsed(() => (props.node as any)?.id ?? null)
 const textOutputCollapsed = useTextOutputCollapsed(() => (props.node as any)?.id ?? null)

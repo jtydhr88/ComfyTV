@@ -44,7 +44,9 @@ export function useMentionSuggestion(
       .map((slot, i) => {
         const pinned = refs.filter(r => r.slot === slot).at(-1)
         const url = pinned
-          ? assetStore.byId(pinned.asset_id)?.payload_url ?? null
+          ? (pinned.asset_id != null
+              ? assetStore.byId(pinned.asset_id)?.payload_url ?? null
+              : null)
           : inputs.find(inp => inp.slot === `images.image${slot}`)?.content ?? null
         return {
           type: 'imageSlot' as const,

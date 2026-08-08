@@ -22,6 +22,27 @@ vi.mock('@/composables/sidebar/assetImport', () => ({ importAssetFiles }))
 
 vi.mock('@/stores/assetStore', () => ({ useAssetStore: () => store }))
 vi.mock('@/stores/selectionStore', () => ({ useSelectionStore: () => selection }))
+vi.mock('@/stores/stageStore', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/stores/stageStore')>()
+  return {
+    ...actual,
+    useStageStore: () => ({
+      stateTick: 0,
+      resolveUpstreamValue: vi.fn(() => null),
+    }),
+  }
+})
+vi.mock('@/stores/projectStore', () => ({
+  useProjectStore: () => ({ currentProjectId: 'p1' }),
+}))
+vi.mock('@/stores/pinnedBatchStore', () => ({
+  usePinnedBatchStore: () => ({
+    list: vi.fn(() => []),
+    byId: vi.fn(() => undefined),
+    refresh: vi.fn(() => false),
+    unpin: vi.fn(),
+  }),
+}))
 vi.mock('vue-i18n', () => ({
   useI18n: () => ({ t: (k: string, p?: any) => (p ? `${k}:${JSON.stringify(p)}` : k) }),
 }))
