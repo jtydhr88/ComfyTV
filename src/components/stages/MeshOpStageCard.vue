@@ -55,10 +55,11 @@
     <div class="ctv-scroll-thin ctv:flex-1 ctv:min-h-0 ctv:overflow-y-auto ctv:flex ctv:flex-col ctv:gap-1.5" @wheel.stop>
       <div
         v-if="hasMapsPanel && mapsUrl"
-        class="ctv:relative ctv:w-full ctv:shrink-0 ctv:rounded-md ctv:overflow-hidden ctv:bg-black"
+        class="ctv-hover-host ctv:relative ctv:w-full ctv:shrink-0 ctv:rounded-md ctv:overflow-hidden ctv:bg-black"
       >
         <img :src="assetUrl(mapsUrl)" :alt="mapsPanelLabel"
              class="ctv:block ctv:w-full ctv:max-h-40 ctv:object-contain" />
+        <ViewFullButton class="ctv:top-1 ctv:right-1" :url="assetUrl(mapsUrl)" :label="mapsPanelLabel" />
         <span class="ctv:absolute ctv:top-1 ctv:left-1 ctv:px-1.5 ctv:py-0.5 ctv:rounded-sm
                      ctv:bg-black/60 ctv:text-3xs ctv:text-white/80 ctv:pointer-events-none">
           {{ mapsPanelLabel }}
@@ -157,6 +158,7 @@ import type { LGraphNode } from '@/lib/comfyApp'
 import AssetTagMenu from '@/components/stages/AssetTagMenu.vue'
 import ModelPreview from '@/components/stages/ModelPreview.vue'
 import StageCard from '@/components/stages/StageCard.vue'
+import ViewFullButton from '@/components/ViewFullButton.vue'
 import type { StageState } from '@/stores/stageStore'
 import { MESH_OPERATIONS, useMeshOp } from '@/composables/stages/useMeshOp'
 import {

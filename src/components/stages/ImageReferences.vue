@@ -41,7 +41,7 @@
       <div
         v-for="(ref, i) in refs"
         :key="`${refType(ref)}-${refKey(ref)}`"
-        class="imgref-tile ctv:relative ctv:w-[76px] ctv:h-[76px] ctv:rounded-sm ctv:overflow-hidden ctv:cursor-pointer
+        class="imgref-tile ctv-hover-host ctv:relative ctv:w-[76px] ctv:h-[76px] ctv:rounded-sm ctv:overflow-hidden ctv:cursor-pointer
                ctv:bg-black/30 ctv:border"
         :style="{ borderColor: slotColor(ref.slot) }"
         :title="tileTooltip(ref)"
@@ -92,6 +92,12 @@
           :title="$t('imageRefs.remove')"
           @click.stop="removeRef(i)"
         ><i class="pi pi-times" /></button>
+        <ViewFullButton
+          v-if="tileImageUrl(ref)"
+          class="ctv:top-0.5 ctv:left-0.5"
+          :items="imageLightboxItems"
+          :index="imageLightboxIndex(ref)"
+        />
       </div>
     </div>
     <div v-else class="ctv:text-2xs ctv:italic ctv:text-muted-foreground/60">
@@ -123,10 +129,11 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 import AssetPickerPopup from '@/components/stages/AssetPickerPopup.vue'
 import MentionSlotPopover from '@/components/stages/MentionSlotPopover.vue'
+import ViewFullButton from '@/components/ViewFullButton.vue'
 import { refKey, refType } from '@/composables/stages/imageRefs'
 import { slotColor } from '@/composables/stages/imageSlotMentions'
 import { useImageReferences } from '@/composables/stages/useImageReferences'
@@ -164,6 +171,22 @@ const {
   props.forceTypes ? { forceTypes: props.forceTypes } : undefined)
 
 onMounted(init)
+
+function tileImageUrl(r: (typeof refs.value)[number]): string | undefined {
+  const batchUrl = batchUrlOf(r)
+  if (batchUrl) return batchUrl
+  if (refType(r) !== 'image') return undefined
+  return assetOf(r)?.payload_url
+}
+
+const imageLightboxItems = computed(() => refs.value
+  .map((r) => ({ url: tileImageUrl(r), label: `#${r.slot}` }))
+  .filter((it): it is { url: string; label: string } => !!it.url))
+
+function imageLightboxIndex(r: (typeof refs.value)[number]): number {
+  const url = tileImageUrl(r)
+  return Math.max(0, imageLightboxItems.value.findIndex((it) => it.url === url))
+}
 
 const plusBtnClass = [
   'ctv:inline-flex ctv:items-center ctv:justify-center ctv:size-5 ctv:cursor-pointer ctv:[font-family:inherit]',

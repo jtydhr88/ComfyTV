@@ -2,11 +2,13 @@
   <div class="ctv:flex ctv:flex-col ctv:gap-1.5 ctv:size-full" @contextmenu.stop.prevent>
     <VideoPlayerLite v-if="!state.output" :source-video-url="sourceVideoUrl" />
 
-    <img
-      v-if="state.output"
-      :src="state.output"
-      class="ctv:w-full ctv:rounded ctv:border ctv:border-border-subtle"
-    >
+    <div v-if="state.output" class="ctv-hover-host ctv:relative">
+      <img
+        :src="state.output"
+        class="ctv:block ctv:w-full ctv:rounded ctv:border ctv:border-border-subtle"
+      >
+      <ViewFullButton class="ctv:top-1 ctv:right-1" :url="state.output" />
+    </div>
 
     <div class="ctv:flex ctv:flex-col ctv:gap-1" @pointerdown.stop @pointermove.stop @pointerup.stop>
       <FxSlider v-model="cols" label="Columns" :min="1" :max="12" :step="1" :decimals="0" :reset-to="4" />
@@ -41,6 +43,7 @@ import { computed } from 'vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
+import ViewFullButton from '@/components/ViewFullButton.vue'
 import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import { pickSourceImageUrl } from '@/composables/stages/stageInputs'

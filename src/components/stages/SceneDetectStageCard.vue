@@ -41,7 +41,10 @@
       @pointerdown.stop @pointermove.stop @pointerup.stop @wheel.stop
     >
       <div v-for="(img, i) in scenes" :key="i">
-        <img :src="img.image_url" class="ctv:w-full ctv:rounded">
+        <div class="ctv-hover-host ctv:relative">
+          <img :src="img.image_url" class="ctv:block ctv:w-full ctv:rounded">
+          <ViewFullButton class="ctv:top-0.5 ctv:right-0.5" :items="sceneLightboxItems" :index="i" />
+        </div>
         <div class="ctv:text-2xs ctv:text-center ctv:text-muted-foreground">{{ img.label }}</div>
       </div>
     </div>
@@ -91,6 +94,7 @@ import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
 import FxCardShell from '@/components/stages/FxCardShell.vue'
 import ValuePreview from '@/components/stages/ValuePreview.vue'
+import ViewFullButton from '@/components/ViewFullButton.vue'
 import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'
@@ -126,6 +130,9 @@ const scenes = computed<{ image_url: string; label?: string }[]>(() => {
     return []
   }
 })
+
+const sceneLightboxItems = computed(() =>
+  scenes.value.map((s) => ({ url: s.image_url, label: s.label })))
 
 const clipsPool = computed<string | null>(() => {
   try {

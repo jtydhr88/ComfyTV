@@ -10,7 +10,10 @@
       @pointermove.stop
       @pointerup.stop
     >
-      <img v-if="maskUrl" :src="maskUrl" class="ctv:w-full ctv:max-h-24 ctv:object-contain ctv:rounded ctv:border ctv:border-border-subtle">
+      <div v-if="maskUrl" class="ctv-hover-host ctv:relative">
+        <img :src="maskUrl" class="ctv:block ctv:w-full ctv:max-h-24 ctv:object-contain ctv:rounded ctv:border ctv:border-border-subtle">
+        <ViewFullButton class="ctv:top-1 ctv:right-1" :url="maskUrl" />
+      </div>
 
       <FxChips v-model="model" :options="MODELS" />
       <FxSlider v-model="tRef" label="Ref time (s)" :min="0" :max="tMax" :step="0.05" :reset-to="0" />
@@ -47,6 +50,7 @@ import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
 import FxCardShell from '@/components/stages/FxCardShell.vue'
+import ViewFullButton from '@/components/ViewFullButton.vue'
 import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import FxSlider from '@/components/widgets/fx/FxSlider.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'

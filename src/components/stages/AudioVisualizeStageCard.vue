@@ -65,11 +65,13 @@
       </template>
     </div>
 
-    <img
-      v-if="state.output"
-      :src="state.output"
-      class="ctv:w-full ctv:rounded ctv:border ctv:border-border-subtle"
-    >
+    <div v-if="state.output" class="ctv-hover-host ctv:relative">
+      <img
+        :src="state.output"
+        class="ctv:block ctv:w-full ctv:rounded ctv:border ctv:border-border-subtle"
+      >
+      <ViewFullButton class="ctv:top-1 ctv:right-1" :url="state.output" />
+    </div>
 
     <div class="ctv:text-2xs ctv:text-center ctv:py-0.5 ctv:tracking-wide">
       <span v-if="!sourceVideoUrl" class="ctv:text-muted-foreground">{{ $t('fx.needsAudioOrVideo') }}</span>
@@ -94,6 +96,7 @@ import { computed } from 'vue'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'
 import StageCard from '@/components/stages/StageCard.vue'
+import ViewFullButton from '@/components/ViewFullButton.vue'
 import VideoPlayerLite from '@/components/widgets/VideoPlayerLite.vue'
 import FxChips from '@/components/widgets/fx/FxChips.vue'
 import FxSlider from '@/components/widgets/fx/FxSlider.vue'

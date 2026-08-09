@@ -35,6 +35,9 @@
       <div v-if="showResult && resultUrl"
            class="ctv-hover-reveal ctv:absolute ctv:top-1 ctv:right-1 ctv:z-10 ctv:flex ctv:gap-1">
         <button type="button" :class="downloadBtnClass"
+                :title="$t('stage.action.viewFull')"
+                @click.stop="openLightbox([{ url: assetUrl(resultUrl!) }])"><i class="pi pi-window-maximize" /></button>
+        <button type="button" :class="downloadBtnClass"
                 :title="$t('stage.action.download')"
                 @click.stop="onDownloadResult"><i class="pi pi-download" /></button>
         <button type="button" :class="tagBtnClass"
@@ -121,6 +124,7 @@ import ModelPreview from '@/components/stages/ModelPreview.vue'
 import StageCard from '@/components/stages/StageCard.vue'
 import type { StageState } from '@/stores/stageStore'
 import { useLineArt } from '@/composables/stages/useLineArt'
+import { openLightbox } from '@/composables/useLightbox'
 
 const props = defineProps<{
   state: StageState

@@ -67,9 +67,15 @@
         />
 
         <div class="ctv:flex ctv:gap-1.5">
-          <div class="ctv:relative ctv:shrink-0 ctv:w-24 ctv:h-[72px] ctv:rounded ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle">
+          <div class="ctv-hover-host ctv:relative ctv:shrink-0 ctv:w-24 ctv:h-[72px] ctv:rounded ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle">
             <img v-if="shot.image_url" :src="shot.image_url" :alt="`shot ${idx + 1}`"
                  class="ctv:size-full ctv:object-cover" draggable="false" />
+            <ViewFullButton
+              v-if="shot.image_url"
+              class="ctv:top-0.5 ctv:left-0.5"
+              :url="shot.image_url"
+              :label="`shot ${idx + 1}`"
+            />
             <div v-else class="ctv:size-full ctv:flex ctv:items-center ctv:justify-center ctv:text-3xs ctv:text-white/35 ctv:text-center ctv:px-1">
               {{ $t('storyboard.noRef') }}
             </div>
@@ -167,6 +173,7 @@
 
 <script setup lang="ts">
 import StageCard from '@/components/stages/StageCard.vue'
+import ViewFullButton from '@/components/ViewFullButton.vue'
 import { useStoryboardShots, type Shot } from '@/composables/stages/useStoryboardShots'
 import type { LGraphNode } from '@/lib/comfyApp'
 import type { StageState } from '@/stores/stageStore'

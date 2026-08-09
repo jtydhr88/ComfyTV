@@ -56,11 +56,11 @@
 
       <div v-else ref="gridEl" class="ctv:grid ctv:grid-cols-[repeat(auto-fill,minmax(80px,1fr))] ctv:gap-1.5">
         <button
-          v-for="asset in visibleAssets"
+          v-for="(asset, i) in visibleAssets"
           :key="asset.id"
           type="button"
           :class="[
-            'ctv:group ctv:relative ctv:rounded-lg ctv:overflow-hidden ctv:cursor-pointer ctv:p-0 ctv:border ctv:bg-secondary-background ctv:transition-colors',
+            'ctv:group ctv-hover-host ctv:relative ctv:rounded-lg ctv:overflow-hidden ctv:cursor-pointer ctv:p-0 ctv:border ctv:bg-secondary-background ctv:transition-colors',
             asset.id === selectedId
               ? 'ctv:border-primary-background ctv:ring-2 ctv:ring-primary-background/50'
               : 'ctv:border-border-subtle ctv:hover:border-border-default',
@@ -107,6 +107,12 @@
             class="ctv:absolute ctv:top-1 ctv:right-1 ctv:flex ctv:items-center ctv:justify-center ctv:size-4 ctv:rounded-full
                    ctv:bg-primary-background ctv:text-base-foreground ctv:text-3xs ctv:font-bold ctv:shadow"
           ><i class="pi pi-check" /></span>
+          <ViewFullButton
+            v-if="mediaType === 'image'"
+            class="ctv:top-1 ctv:left-1"
+            :items="gridLightboxItems"
+            :index="i"
+          />
         </button>
       </div>
     </div>
@@ -155,6 +161,7 @@ import ModelThumb from '@/components/widgets/ModelThumb.vue'
 import ProxiedVideo from '@/components/widgets/ProxiedVideo.vue'
 import StageCard from '@/components/stages/StageCard.vue'
 import ValuePreview from '@/components/stages/ValuePreview.vue'
+import ViewFullButton from '@/components/ViewFullButton.vue'
 import { assetTooltipOf as assetTooltip, useAssetLoaderCard } from '@/composables/stages/useAssetLoaderCard'
 import { assetPreviewUrl } from '@/utils/assetMedia'
 import type { StageState } from '@/stores/stageStore'
@@ -202,6 +209,9 @@ function onNavKeydown(e: KeyboardEvent) {
     gridEl.value?.children[idx]?.scrollIntoView({ block: 'nearest', inline: 'nearest' })
   })
 }
+
+const gridLightboxItems = computed(() =>
+  visibleAssets.value.map((a) => ({ url: a.payload_url, label: a.name })))
 
 const fileInput = ref<HTMLInputElement | null>(null)
 

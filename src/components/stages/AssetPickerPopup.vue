@@ -57,7 +57,7 @@
             :key="i"
             type="button"
             :class="[
-              'ctv:relative ctv:flex ctv:flex-col ctv:p-0 ctv:cursor-pointer ctv:overflow-hidden ctv:rounded',
+              'ctv-hover-host ctv:relative ctv:flex ctv:flex-col ctv:p-0 ctv:cursor-pointer ctv:overflow-hidden ctv:rounded',
               'ctv:bg-secondary-background ctv:border ctv:[font-family:inherit]',
               isBatchAdded(group.id, i)
                 ? 'ctv:border-primary-background'
@@ -81,6 +81,11 @@
             <span class="ctv:w-full ctv:truncate ctv:py-0.5 ctv:px-1 ctv:text-left ctv:text-3xs ctv:text-muted-foreground">
               #{{ i + 1 }}
             </span>
+            <ViewFullButton
+              class="ctv:top-0.5 ctv:left-0.5"
+              :items="batchLightboxItems(group)"
+              :index="i"
+            />
           </button>
         </div>
       </div>
@@ -144,7 +149,7 @@
           :key="asset.id"
           type="button"
           :class="[
-            'ctv:relative ctv:flex ctv:flex-col ctv:p-0 ctv:cursor-pointer ctv:overflow-hidden ctv:rounded',
+            'ctv-hover-host ctv:relative ctv:flex ctv:flex-col ctv:p-0 ctv:cursor-pointer ctv:overflow-hidden ctv:rounded',
             'ctv:bg-secondary-background ctv:border ctv:[font-family:inherit]',
             isAdded(asset.id)
               ? 'ctv:border-primary-background'
@@ -184,6 +189,12 @@
           <span class="ctv:w-full ctv:truncate ctv:py-0.5 ctv:px-1 ctv:text-left ctv:text-3xs ctv:text-muted-foreground">
             {{ asset.name || '—' }}
           </span>
+          <ViewFullButton
+            v-if="asset.media_type === 'image'"
+            class="ctv:top-0.5 ctv:left-0.5"
+            :items="libraryLightboxItems"
+            :index="libraryLightboxIndex(asset)"
+          />
         </button>
       </div>
     </div>
@@ -196,6 +207,7 @@ import { computed, onMounted, ref } from 'vue'
 
 import type { Asset } from '@/api/schemas'
 import ComfyTVSelect from '@/components/widgets/ComfyTVSelect.vue'
+import ViewFullButton from '@/components/ViewFullButton.vue'
 import { importAssetFiles } from '@/composables/sidebar/assetImport'
 import { toastLoaderUploadFailed, useLoaderFileDrop } from '@/composables/stages/useLoaderFileDrop'
 import { assetPreviewUrl } from '@/utils/assetMedia'
@@ -224,6 +236,19 @@ const tab = ref<'batch' | 'library'>('batch')
 
 function isBatchAdded(groupId: string, index: number): boolean {
   return (props.addedBatchKeys ?? []).includes(`${groupId}:${index}`)
+}
+
+function batchLightboxItems(group: { label: string; urls: string[] }) {
+  return group.urls.map((url, i) => ({ url, label: `${group.label} #${i + 1}` }))
+}
+
+const libraryImageAssets = computed(() =>
+  filtered.value.filter((a) => a.media_type === 'image'))
+const libraryLightboxItems = computed(() =>
+  libraryImageAssets.value.map((a) => ({ url: a.payload_url, label: a.name })))
+
+function libraryLightboxIndex(asset: Asset): number {
+  return Math.max(0, libraryImageAssets.value.findIndex((a) => a.id === asset.id))
 }
 
 const groupBtnClass = [

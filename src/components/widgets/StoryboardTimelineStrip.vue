@@ -146,6 +146,10 @@
           class="ctv-hover-reveal ctv:absolute ctv:bottom-0.5 ctv:right-0.5 ctv:flex ctv:gap-px"
           @click.stop
         >
+          <button v-if="boardImageUrl(board)" type="button" :class="tileBtn"
+                  :title="$t('stage.action.viewFull')" @click="openBoardLightbox(idx)">
+            <i class="pi pi-window-maximize" />
+          </button>
           <button type="button" :class="tileBtn"
                   :title="$t('storyboardEditor.duplicateBoard')" @click="sb.duplicateBoard(board.uid)">
             <i class="pi pi-clone" />
@@ -180,6 +184,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
+import { openLightbox } from '@/composables/useLightbox'
 import type { StoryboardEditorController } from '@/composables/widgets/useStoryboardEditor'
 import { boardDurationMs, boardImageUrl } from '@/widgets/storyboard/boardDoc'
 
@@ -265,6 +270,14 @@ const stripBtn =
   'ctv:py-0.5 ctv:px-2 ctv:text-2xs ctv:rounded ctv:cursor-pointer ' +
   'ctv:bg-primary-background/15 ctv:border ctv:border-primary-background/40 ctv:text-primary-background ' +
   'ctv:hover:bg-primary-background/25 ctv:disabled:opacity-50'
+
+function openBoardLightbox(idx: number): void {
+  const items = props.sb.boards.value
+    .map((b, i) => ({ url: boardImageUrl(b), label: props.sb.labels.value[i] }))
+    .filter((it): it is { url: string; label: string } => !!it.url)
+  const cur = boardImageUrl(props.sb.boards.value[idx])
+  openLightbox(items, Math.max(0, items.findIndex((it) => it.url === cur)))
+}
 
 const tileBtn =
   'ctv:size-5 ctv:p-0 ctv:border-0 ctv:rounded ctv:cursor-pointer ctv:text-[9px] ' +

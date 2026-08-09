@@ -48,11 +48,12 @@
 
     <div class="ctv:flex ctv:flex-col ctv:gap-1 ctv:pt-1 ctv:border-t ctv:border-border-subtle">
       <span class="ctv:opacity-60">{{ $t('storyboardEditor.refImage') }}</span>
-      <div class="ctv:relative ctv:w-full ctv:aspect-video ctv:rounded ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle">
+      <div class="ctv-hover-host ctv:relative ctv:w-full ctv:aspect-video ctv:rounded ctv:overflow-hidden ctv:bg-black ctv:border ctv:border-border-subtle">
         <img v-if="board.refUrl" :src="board.refUrl" class="ctv:size-full ctv:object-contain" draggable="false" />
         <div v-else class="ctv:size-full ctv:flex ctv:items-center ctv:justify-center ctv:text-3xs ctv:text-white/30">
           {{ $t('storyboardEditor.noRef') }}
         </div>
+        <ViewFullButton v-if="board.refUrl" class="ctv:top-1 ctv:right-1" :url="board.refUrl" />
       </div>
       <div class="ctv:flex ctv:gap-1">
         <button type="button" :class="btn" :disabled="uploading" @click="pickFile">
@@ -77,6 +78,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 
+import ViewFullButton from '@/components/ViewFullButton.vue'
 import type { StoryboardEditorController } from '@/composables/widgets/useStoryboardEditor'
 import { suggestedDurationMs } from '@/widgets/storyboard/boardDoc'
 import { uploadBlob } from '@/utils/uploadCanvas'

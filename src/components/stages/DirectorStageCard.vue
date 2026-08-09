@@ -196,7 +196,7 @@
           <div
             v-for="entry in allRefs"
             :key="`${entry.kind}-${entry.url}`"
-            class="imgref-tile ctv:relative ctv:w-[76px] ctv:h-[76px] ctv:rounded-sm ctv:overflow-hidden ctv:cursor-pointer
+            class="imgref-tile ctv-hover-host ctv:relative ctv:w-[76px] ctv:h-[76px] ctv:rounded-sm ctv:overflow-hidden ctv:cursor-pointer
                    ctv:bg-black/30 ctv:border"
             :style="{ borderColor: slotColor(entry.m) }"
             :title="refTooltip(entry.kind, entry.m)"
@@ -234,6 +234,12 @@
               :title="$t('imageRefs.remove')"
               @click.stop="removeRef(selectedClip!.id, entry.kind, entry.url)"
             ><i class="pi pi-times" /></button>
+            <ViewFullButton
+              v-if="entry.kind !== 'videos' && entry.kind !== 'audio'"
+              class="ctv:top-0.5 ctv:left-0.5"
+              :items="refLightboxItems"
+              :index="refLightboxIndex(entry)"
+            />
           </div>
         </div>
         <div v-else class="ctv:text-2xs ctv:italic ctv:text-muted-foreground/60">
@@ -301,6 +307,7 @@ import ClipPromptEditor from '@/components/stages/ClipPromptEditor.vue'
 import ImageReferences from '@/components/stages/ImageReferences.vue'
 import MainPromptInput from '@/components/stages/MainPromptInput.vue'
 import MentionSlotPopover from '@/components/stages/MentionSlotPopover.vue'
+import ViewFullButton from '@/components/ViewFullButton.vue'
 import StageCard from '@/components/stages/StageCard.vue'
 import {
   fetchImageSlotOptionsCached,
@@ -532,6 +539,14 @@ const allRefs = computed<ClipRefEntry[]>(() => {
       m: i + sharedUrls.value[k.key].length,
     })))
 })
+
+const refLightboxItems = computed(() => allRefs.value
+  .filter(e => e.kind !== 'videos' && e.kind !== 'audio')
+  .map(e => ({ url: e.url, label: `#${e.m}` })))
+
+function refLightboxIndex(entry: ClipRefEntry): number {
+  return Math.max(0, refLightboxItems.value.findIndex(it => it.url === entry.url))
+}
 
 const pickerAddedIds = computed<number[]>(() =>
   allRefs.value
