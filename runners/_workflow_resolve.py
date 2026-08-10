@@ -6,6 +6,7 @@ import uuid
 from pathlib import Path
 from typing import Any
 
+from ._media_paths import strip_filename_annotation
 from .base import RunnerContext
 
 _log = logging.getLogger(__name__)
@@ -79,6 +80,7 @@ def _view_url_to_annotated(url: str) -> str:
     type_ = params.get("type", "output").lower()
     if not filename:
         raise RuntimeError(f"i2i source URL has no filename: {url!r}")
+    filename, type_ = strip_filename_annotation(filename, type_)
     if type_ not in ("output", "input", "temp"):
         raise RuntimeError(f"i2i source URL has unknown type={type_!r}")
     path = f"{subfolder}/{filename}" if subfolder else filename

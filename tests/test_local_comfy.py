@@ -205,6 +205,24 @@ class TestViewUrlAnnotated:
         got = lc._view_url_to_annotated("/view?filename=x.png&subfolder=")
         assert got.endswith("[output]")
 
+    def test_filename_annotation_overrides_type_param(self):
+        got = lc._view_url_to_annotated(
+            "/view?filename=z-image-turbo_00087_.png+%5Boutput%5D&type=input"
+        )
+        assert got == "z-image-turbo_00087_.png [output]"
+
+    def test_filename_annotation_with_subfolder(self):
+        got = lc._view_url_to_annotated(
+            "/view?filename=a.png+%5Btemp%5D&subfolder=runs&type=input"
+        )
+        assert got == "runs/a.png [temp]"
+
+    def test_filename_annotation_not_doubled(self):
+        got = lc._view_url_to_annotated(
+            "/view?filename=b.png+%5Binput%5D&type=input"
+        )
+        assert got == "b.png [input]"
+
     def test_rejects_non_view_url(self):
         with pytest.raises(RuntimeError, match="must be a ComfyUI"):
             lc._view_url_to_annotated("http://example.com/x.png")

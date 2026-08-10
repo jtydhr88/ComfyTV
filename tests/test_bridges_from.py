@@ -5,7 +5,21 @@ torch = pytest.importorskip("torch")
 PILImage = pytest.importorskip("PIL.Image")
 
 import folder_paths
-from ComfyTV.nodes.bridges import BridgeFromImage, BridgeFromMask, _load_image_tensor
+from ComfyTV.nodes.bridges import (
+    BridgeFromImage, BridgeFromMask, _load_image_tensor, _url_to_annotated_path,
+)
+
+
+def test_url_to_annotated_path_type_param():
+    got = _url_to_annotated_path("/view?filename=a.png&subfolder=x&type=temp")
+    assert got == "x/a.png [temp]"
+
+
+def test_url_to_annotated_path_filename_annotation_wins():
+    got = _url_to_annotated_path(
+        "/view?filename=z.png+%5Boutput%5D&type=input"
+    )
+    assert got == "z.png [output]"
 
 
 def _write_rgba(tmp_path, alpha_row):

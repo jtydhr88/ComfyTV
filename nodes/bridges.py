@@ -280,6 +280,11 @@ def _url_to_annotated_path(url: str) -> str:
     type_ = params.get("type", "output").lower()
     if not filename:
         raise RuntimeError(f"/view? URL has no filename: {url!r}")
+    for suffix in ("[output]", "[input]", "[temp]"):
+        if filename.endswith(suffix):
+            filename = filename[: -(len(suffix) + 1)]
+            type_ = suffix[1:-1]
+            break
     if type_ not in ("output", "input", "temp"):
         raise RuntimeError(f"/view? URL has unknown type={type_!r}")
     path = f"{subfolder}/{filename}" if subfolder else filename

@@ -7,6 +7,13 @@ from typing import Optional
 import folder_paths
 
 
+def strip_filename_annotation(filename: str, type_: str) -> tuple[str, str]:
+    for suffix in ('[output]', '[input]', '[temp]'):
+        if filename.endswith(suffix):
+            return filename[: -(len(suffix) + 1)], suffix[1:-1]
+    return filename, type_
+
+
 def view_url_to_path(view_url: str) -> Optional[Path]:
     if not view_url or not isinstance(view_url, str):
         return None
@@ -23,6 +30,9 @@ def view_url_to_path(view_url: str) -> Optional[Path]:
         return None
     subfolder = (q.get('subfolder') or [''])[0]
     type_ = (q.get('type') or ['output'])[0]
+    filename, type_ = strip_filename_annotation(filename, type_)
+    if not filename:
+        return None
     base = folder_paths.get_directory_by_type(type_)
     if not base:
         return None
