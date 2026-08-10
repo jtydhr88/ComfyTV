@@ -28,6 +28,12 @@ vi.mock('@jtydhr88/pentrado/textRender', () => ({
   },
 }))
 
+const uploadBlobMock = vi.hoisted(() => vi.fn())
+vi.mock('@/utils/uploadCanvas', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/utils/uploadCanvas')>()),
+  uploadBlob: uploadBlobMock,
+}))
+
 import { useStoryboardEditor, type StoryboardEditorController } from './useStoryboardEditor'
 import type { StageState } from '@/stores/stageStore'
 
@@ -445,6 +451,103 @@ describe('script + animatic export', () => {
   })
 })
 
+describe('onion skin + timing + misc ops', () => {
+  it('onion skin urls come from neighbours and hide while playing', () => {
+    vi.useFakeTimers()
+    const { sb } = setup()
+    const a = sb.boards.value[0].uid
+    sb.setBoardRefUrl(a, '/a.png')
+    const b = sb.addBoard().uid
+    sb.setBoardRefUrl(b, '/b.png')
+    const c = sb.addBoard().uid
+    sb.setBoardRefUrl(c, '/c.png')
+    sb.selectBoard(b)
+    expect(sb.onionPrevUrl.value).toBeNull()
+    expect(sb.onionNextUrl.value).toBeNull()
+    sb.onionPrev.value = true
+    sb.onionNext.value = true
+    expect(sb.onionPrevUrl.value).toBe('/a.png')
+    expect(sb.onionNextUrl.value).toBe('/c.png')
+    sb.selectBoard(a)
+    expect(sb.onionPrevUrl.value).toBeNull()
+    sb.selectBoard(c)
+    expect(sb.onionNextUrl.value).toBeNull()
+    sb.selectBoard(a)
+    sb.play()
+    expect(sb.playingBoard.value).toMatchObject({ uid: a })
+    expect(sb.onionPrevUrl.value).toBeNull()
+    expect(sb.onionNextUrl.value).toBeNull()
+    sb.stopPlayback()
+    expect(sb.playingBoard.value).toBeNull()
+  })
+
+  it('setDefaultTimingS clamps and ignores invalid values', () => {
+    const { sb, node } = setup()
+    sb.setDefaultTimingS(0)
+    sb.setDefaultTimingS(Number.NaN)
+    expect(sb.doc.value.defaultBoardTimingMs).toBe(2000)
+    sb.setDefaultTimingS(0.01)
+    expect(sb.doc.value.defaultBoardTimingMs).toBe(100)
+    sb.setDefaultTimingS(3)
+    expect(sb.doc.value.defaultBoardTimingMs).toBe(3000)
+    expect(boardStateOf(node).defaultBoardTimingMs).toBe(3000)
+  })
+
+  it('flipBoard delegates to the layer editor without disturbing boards', () => {
+    const { sb } = setup()
+    sb.editor.addTextLayerAt({ x: 5, y: 5 })
+    sb.flipBoard('h')
+    sb.flipBoard('v')
+    expect(sb.boards.value).toHaveLength(1)
+  })
+
+  it('importImageFiles uploads each image into a new board', async () => {
+    uploadBlobMock.mockImplementation(
+      async (_b: Blob, o: { filename?: string }) => `/up/${o.filename}`)
+    const { sb } = setup()
+    expect(await sb.importImageFiles(
+      [new File(['t'], 'x.txt', { type: 'text/plain' })])).toBe(0)
+    const files = [
+      new File(['a'], 'a.png', { type: 'image/png' }),
+      new File(['t'], 'notes.txt', { type: 'text/plain' }),
+      new File(['b'], 'b.jpg', { type: 'image/jpeg' }),
+    ]
+    const count = await sb.importImageFiles(files)
+    expect(count).toBe(2)
+    expect(sb.boards.value.map((x) => x.refUrl))
+      .toEqual(['/up/a.png', '/up/b.jpg'])
+    expect(sb.boards.value.map((x) => x.notes)).toEqual(['a', 'b'])
+    expect(sb.boards.value.every((x) => x.newShot)).toBe(true)
+    expect(sb.importingImages.value).toBe(false)
+  })
+
+  it('exportBoardsZip bundles reachable board images', async () => {
+    const { sb } = setup()
+    expect(await sb.exportBoardsZip()).toBeNull()
+    const a = sb.boards.value[0].uid
+    sb.setBoardRefUrl(a, '/img/a.png')
+    const b = sb.addBoard().uid
+    sb.setBoardRefUrl(b, '/img/bad.png')
+    sb.addBoard()
+    const fetchMock = vi.fn(async (url: string) =>
+      url.includes('bad')
+        ? ({ ok: false } as Response)
+        : ({
+            ok: true,
+            arrayBuffer: async () => new Uint8Array([1, 2, 3]).buffer,
+          } as unknown as Response))
+    vi.stubGlobal('fetch', fetchMock)
+    const p1 = sb.exportBoardsZip()
+    const p2 = sb.exportBoardsZip()
+    expect(await p2).toBeNull()
+    const blob = await p1
+    expect(blob).toBeInstanceOf(Blob)
+    expect(blob!.type).toBe('application/zip')
+    expect(fetchMock).toHaveBeenCalledTimes(2)
+    expect(sb.exportingZip.value).toBe(false)
+  })
+})
+
 describe('playback', () => {
   it('steps through boards honouring per-board durations, then stops', () => {
     vi.useFakeTimers()
@@ -463,6 +566,19 @@ describe('playback', () => {
     expect(sb.playing.value).toBe(true)
 
     vi.advanceTimersByTime(2000)
+    expect(sb.playing.value).toBe(false)
+  })
+
+  it('playback stops if the play index becomes invalid', () => {
+    vi.useFakeTimers()
+    const { sb } = setup()
+    const a = sb.boards.value[0].uid
+    sb.setBoardDurationS(a, 1)
+    sb.addBoard()
+    sb.selectBoard(a)
+    sb.play()
+    sb.playIndex.value = -5
+    vi.advanceTimersByTime(1000)
     expect(sb.playing.value).toBe(false)
   })
 

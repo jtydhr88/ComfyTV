@@ -111,6 +111,38 @@ function harness(url = '/a.wav', enabled = true) {
   return { wrapper, api: api!, urlRef, enabledRef, canvasRef }
 }
 
+function fakeCtx() {
+  return {
+    setTransform: vi.fn(),
+    clearRect: vi.fn(),
+    fillRect: vi.fn(),
+    fillStyle: '',
+  }
+}
+
+function makeCanvas(ctx: unknown, withParent = true) {
+  const canvas = document.createElement('canvas')
+  canvas.getContext = vi.fn(() => ctx) as never
+  if (withParent) {
+    const box = document.createElement('div')
+    box.appendChild(canvas)
+  }
+  return canvas
+}
+
+function stubResizeObserver() {
+  const instances: Array<{ cb: () => void; observe: any; disconnect: any }> = []
+  class ROStub {
+    observe = vi.fn()
+    disconnect = vi.fn()
+    constructor(cb: () => void) {
+      instances.push({ cb, observe: this.observe, disconnect: this.disconnect })
+    }
+  }
+  vi.stubGlobal('ResizeObserver', ROStub)
+  return instances
+}
+
 describe('useAudioWaveform', () => {
   it('does not fetch while disabled', async () => {
     const { fetchMock } = stubAudio()
@@ -143,5 +175,86 @@ describe('useAudioWaveform', () => {
     const { api } = harness('/a.wav', true)
     await api.reload()
     expect(api.ready.value).toBe(false)
+  })
+
+  it('draws into the canvas once samples decode', async () => {
+    stubAudio()
+    const ctx = fakeCtx()
+    const { api, canvasRef } = harness('/a.wav', true)
+    canvasRef.value = makeCanvas(ctx)
+    await api.reload()
+    expect(api.ready.value).toBe(true)
+    expect(canvasRef.value.width).toBe(1)
+    expect(ctx.setTransform).toHaveBeenCalledWith(1, 0, 0, 1, 0, 0)
+    expect(ctx.clearRect).toHaveBeenCalledWith(0, 0, 1, 1)
+    expect(ctx.fillRect).toHaveBeenCalledTimes(1)
+  })
+
+  it('survives a canvas without a 2d context', async () => {
+    stubAudio()
+    const { api, canvasRef } = harness('/a.wav', true)
+    canvasRef.value = makeCanvas(null)
+    await api.reload()
+    expect(api.ready.value).toBe(true)
+  })
+
+  it('reloads when the url changes', async () => {
+    const { fetchMock } = stubAudio()
+    const { api, urlRef } = harness('/a.wav', true)
+    urlRef.value = '/b.wav'
+    await vi.waitFor(() => expect(fetchMock).toHaveBeenCalledWith('/b.wav'))
+    await vi.waitFor(() => expect(api.ready.value).toBe(true))
+  })
+
+  it('drops the result of a superseded reload', async () => {
+    stubAudio()
+    const { api } = harness('/a.wav', true)
+    const first = api.reload()
+    const second = api.reload()
+    await Promise.all([first, second])
+    expect(api.ready.value).toBe(true)
+  })
+
+  it('observes the canvas parent and re-renders on resize', async () => {
+    stubAudio()
+    const instances = stubResizeObserver()
+    const ctx = fakeCtx()
+    const canvas = makeCanvas(ctx)
+    const { wrapper, api, canvasRef } = harness('/a.wav', true)
+    canvasRef.value = canvas
+    await wrapper.vm.$nextTick()
+    expect(instances).toHaveLength(1)
+    expect(instances[0].observe).toHaveBeenCalledWith(canvas.parentElement)
+    await api.reload()
+    const before = ctx.setTransform.mock.calls.length
+    instances[0].cb()
+    expect(ctx.setTransform.mock.calls.length).toBe(before + 1)
+  })
+
+  it('skips observing when the canvas has no parent', async () => {
+    stubAudio()
+    const instances = stubResizeObserver()
+    const { wrapper, api, canvasRef } = harness('/a.wav', true)
+    canvasRef.value = makeCanvas(fakeCtx(), false)
+    await wrapper.vm.$nextTick()
+    expect(instances).toHaveLength(0)
+    await api.reload()
+    expect(api.ready.value).toBe(true)
+  })
+
+  it('render bails without a canvas', () => {
+    stubAudio()
+    const { api } = harness('/a.wav', true)
+    expect(() => api.render()).not.toThrow()
+  })
+
+  it('disconnects the observer on unmount', async () => {
+    stubAudio()
+    const instances = stubResizeObserver()
+    const { wrapper, canvasRef } = harness('/a.wav', true)
+    canvasRef.value = makeCanvas(fakeCtx())
+    await wrapper.vm.$nextTick()
+    wrapper.unmount()
+    expect(instances[0].disconnect).toHaveBeenCalled()
   })
 })

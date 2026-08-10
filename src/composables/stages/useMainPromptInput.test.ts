@@ -39,7 +39,7 @@ vi.mock('@/stores/assetStore', () => ({
   useAssetStore: () => ({ byId: () => undefined }),
 }))
 
-import { Fragment, Schema } from '@tiptap/pm/model'
+import { Fragment, Schema, Slice } from '@tiptap/pm/model'
 
 import { chipifyFragment, entryTooltipText, textToContent, useMainPromptInput } from './useMainPromptInput'
 
@@ -319,5 +319,104 @@ describe('useMainPromptInput — editor wiring', () => {
     holder.editor.state.text = 'typed'
     holder.options.onUpdate({ editor: holder.editor })
     expect(api.promptText.value).toBe('typed')
+  })
+})
+
+describe('useMainPromptInput — tiptap integration points', () => {
+  function mentionExt(): any {
+    return holder.options.extensions.find((e: any) => e.name === 'mention')
+  }
+
+  it('renders entry mentions as plain chips', () => {
+    setup(makeNode('x'))
+    const ext = mentionExt()
+    expect(ext.options.renderText({ node: { attrs: { label: 'style' } } }))
+      .toBe('@style')
+    const out = ext.options.renderHTML({
+      node: { attrs: { id: 'style', label: 'style' } },
+    })
+    expect(out[0]).toBe('span')
+    expect(out[1]['data-mention-type']).toBe('entry')
+    expect(out[1]['data-mention-label']).toBe('style')
+    expect(out[2]).toBe('@style')
+  })
+
+  it('renders slot mentions as colored slot chips', () => {
+    setup(makeNode('x'))
+    const ext = mentionExt()
+    const out = ext.options.renderHTML({
+      node: { attrs: { id: 'image_2', label: 'image_2' } },
+    })
+    expect(out[0]).toBe('span')
+    expect(out[1]['data-mention-type']).toBe('imageSlot')
+    expect(out[1].style).toContain('color:')
+    expect(String(out[2]).startsWith('@')).toBe(true)
+  })
+
+  it('chipifies pasted slices through transformPasted', () => {
+    setup(makeNode(''))
+    const schema = new Schema({
+      nodes: {
+        doc: { content: 'block+' },
+        paragraph: { group: 'block', content: 'inline*' },
+        text: { group: 'inline' },
+        mention: {
+          group: 'inline', inline: true, atom: true,
+          attrs: { id: { default: null }, label: { default: null } },
+        },
+      },
+    })
+    const frag = Fragment.from(
+      schema.nodes.paragraph.create(null, schema.text('hi @图片#0')))
+    const out = holder.options.editorProps.transformPasted(new Slice(frag, 1, 1))
+    expect(out).toBeInstanceOf(Slice)
+    expect(out.openStart).toBe(1)
+    expect(out.openEnd).toBe(1)
+    const kinds: Array<{ type: string; label?: string; text?: string }> = []
+    out.content.forEach((n: any) => n.content.forEach((c: any) => {
+      kinds.push(c.isText
+        ? { type: 'text', text: c.text }
+        : { type: c.type.name, label: c.attrs.label })
+    }))
+    expect(kinds).toEqual([
+      { type: 'text', text: 'hi ' },
+      { type: 'mention', label: 'image_0' },
+    ])
+  })
+
+  it('entryTooltip resolves entries and slot labels via the node send order', () => {
+    const node = makeNode('x')
+    node.inputs = [{ name: 'images.image2', link: 1 }]
+    entryList.mockReturnValue([
+      { kind: 'fragment', label: 'style', content: 'oil painting' },
+    ])
+    const { api } = setup(node)
+    expect(api.entryTooltip('style')).toBe('oil painting')
+    expect(api.entryTooltip('missing')).toContain('no matching entry')
+    expect(api.entryTooltip('image_2')).toBeTruthy()
+    expect(api.entryTooltip('image_2')).not.toContain('no matching entry')
+  })
+
+  it('serves chip tooltip content and blocks clipboard bubbling', async () => {
+    entryList.mockReturnValue([
+      { kind: 'fragment', label: 'style', content: 'oil painting' },
+    ])
+    setup(makeNode('x'))
+    await nextTick()
+    await Promise.resolve()
+    const tippyOpts = tippyDelegate.mock.calls[0][1] as any
+    const chip = document.createElement('span')
+    chip.dataset.mentionLabel = 'style'
+    expect(tippyOpts.content(chip)).toBe('oil painting')
+    const bare = document.createElement('span')
+    bare.textContent = '@style'
+    expect(tippyOpts.content(bare)).toBe('oil painting')
+    const empty = document.createElement('span')
+    expect(tippyOpts.content(empty)).toContain('no matching entry')
+
+    const evt = new Event('paste')
+    const stop = vi.spyOn(evt, 'stopPropagation')
+    holder.editor.view.dom.dispatchEvent(evt)
+    expect(stop).toHaveBeenCalled()
   })
 })

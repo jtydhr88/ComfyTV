@@ -267,6 +267,78 @@ describe('usePianoRoll', () => {
     expect(api.bars.value).toBe(2)
   })
 
+  it('clearSelection empties and clearAll wipes the part undoably', () => {
+    const { api } = harness()
+    const id = api.addNote(60, 0)
+    api.selectOne(id)
+    api.clearSelection()
+    expect(api.selection.value.size).toBe(0)
+    api.clearAll()
+    expect(api.current.value.notes.length).toBe(0)
+    api.undo()
+    expect(api.current.value.notes.length).toBe(1)
+  })
+
+  it('removePart keeps at least one part and clamps the active index', () => {
+    const { api } = harness()
+    api.removePart(0)
+    expect(api.parts.length).toBe(1)
+    api.addPart()
+    api.addPart()
+    api.setActivePart(2)
+    api.removePart(2)
+    expect(api.parts.length).toBe(2)
+    expect(api.activePart.value).toBe(1)
+  })
+
+  it('dragBy moves from the drag origin with snap and stops after endDrag', () => {
+    const { api } = harness()
+    const id = api.addNote(60, 1, 1)
+    api.beginDrag()
+    api.dragBy(2, 0.5)
+    api.dragBy(3, 1)
+    const n = api.findNote(id)!
+    expect(n.midi).toBe(63)
+    expect(n.start).toBe(2)
+    api.endDrag()
+    api.dragBy(1, 0)
+    expect(api.findNote(id)!.midi).toBe(63)
+  })
+
+  it('resizeBy resizes from the drag origin', () => {
+    const { api } = harness()
+    const id = api.addNote(60, 0, 1)
+    api.beginResize(id)
+    api.resizeBy(id, 0.6)
+    expect(api.findNote(id)!.dur).toBe(1.5)
+    api.resizeBy(id, -0.9)
+    expect(api.findNote(id)!.dur).toBe(0.5)
+    api.endDrag()
+    api.resizeBy(id, 2)
+    expect(api.findNote(id)!.dur).toBe(0.5)
+  })
+
+  it('step backspace without a matching note moves the cursor back', () => {
+    const { api } = harness()
+    api.stepDur.value = 1
+    api.stepRest()
+    api.stepRest()
+    expect(api.stepCursor.value).toBe(2)
+    api.stepBackspace()
+    expect(api.stepCursor.value).toBe(1)
+    api.stepBackspace()
+    api.stepBackspace()
+    expect(api.stepCursor.value).toBe(0)
+  })
+
+  it('stepSetCursor snaps and clamps to zero', () => {
+    const { api } = harness()
+    api.stepSetCursor(1.13)
+    expect(api.stepCursor.value).toBe(1)
+    api.stepSetCursor(-3)
+    expect(api.stepCursor.value).toBe(0)
+  })
+
   it('loadEditorState replaces content and is undoable', () => {
     const { api } = harness()
     api.addNote(60, 0)

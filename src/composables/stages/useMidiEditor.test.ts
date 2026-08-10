@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { ref } from 'vue'
-import { useMidiEditor } from './useMidiEditor'
+import { MIN_DUR, NOTE_HEIGHT, useMidiEditor } from './useMidiEditor'
 
 function make(initial = '') {
   const widget = ref(initial)
@@ -110,6 +110,131 @@ describe('useMidiEditor', () => {
     expect(roll.findNote(id)!.vel).toBe(127)
     roll.setNoteVelocity(id, -3)
     expect(roll.findNote(id)!.vel).toBe(1)
+  })
+
+  it('converts between seconds/midi and pixels', () => {
+    const { roll } = make()
+    roll.pxPerSec.value = 100
+    expect(roll.secToX(2)).toBe(200)
+    expect(roll.xToSec(200)).toBe(2)
+    expect(roll.midiToY(127)).toBe(0)
+    expect(roll.yToMidi(0)).toBe(127)
+    expect(roll.yToMidi(NOTE_HEIGHT * 67 + 1)).toBe(60)
+    expect(roll.yToMidi(NOTE_HEIGHT * 500)).toBe(0)
+  })
+
+  it('hydrate drops invalid events and defaults velocity', () => {
+    const { roll } = make(JSON.stringify({
+      events: [
+        { t: -1, dur: 0.5, midi: 60 },
+        { t: 0, dur: 0, midi: 60 },
+        { t: 0, dur: 0.5, midi: 'x' },
+        { t: 0.5, dur: 0.5, midi: 61 },
+      ],
+    }))
+    expect(roll.current.value.notes.length).toBe(1)
+    expect(roll.current.value.notes[0].midi).toBe(61)
+    expect(roll.current.value.notes[0].vel).toBe(100)
+  })
+
+  it('selectOne toggles additively and clearSelection empties', () => {
+    const { roll } = make()
+    const a = roll.addNote(60, 0)
+    const b = roll.addNote(62, 1)
+    roll.selectOne(a)
+    expect([...roll.selection.value]).toEqual([a])
+    roll.selectOne(b, true)
+    expect(roll.selection.value.size).toBe(2)
+    roll.selectOne(b, true)
+    expect(roll.selection.value.has(b)).toBe(false)
+    roll.clearSelection()
+    expect(roll.selection.value.size).toBe(0)
+  })
+
+  it('clearChannel wipes the active channel and is undoable', () => {
+    const { roll } = make()
+    roll.addNote(60, 0)
+    roll.clearChannel()
+    expect(roll.current.value.notes.length).toBe(0)
+    roll.undo()
+    expect(roll.current.value.notes.length).toBe(1)
+  })
+
+  it('left-edge resize moves the start and keeps the end fixed', () => {
+    const { roll } = make()
+    const id = roll.addNote(60, 2, 2)
+    roll.beginResize(id)
+    roll.resizeLeftBy(id, -1)
+    const n = roll.findNote(id)!
+    expect(n.start).toBeCloseTo(1)
+    expect(n.dur).toBeCloseTo(3)
+    roll.resizeLeftBy(id, 10)
+    expect(n.start).toBeCloseTo(4 - MIN_DUR)
+    expect(n.dur).toBeCloseTo(MIN_DUR)
+    roll.endDrag()
+    roll.resizeLeftBy(id, -1)
+    expect(n.start).toBeCloseTo(4 - MIN_DUR)
+  })
+
+  it('left-edge resize respects the snap grid minimum', () => {
+    const { roll } = make()
+    roll.snap.value = '250ms'
+    const id = roll.addNote(60, 2, 1)
+    roll.beginResize(id)
+    roll.resizeLeftBy(id, 5)
+    const n = roll.findNote(id)!
+    expect(n.start).toBeCloseTo(2.75)
+    expect(n.dur).toBeCloseTo(0.25)
+    roll.endDrag()
+  })
+
+  it('beginVelocityEdit pushes history for undo', () => {
+    const { roll } = make()
+    const id = roll.addNote(60, 0)
+    roll.beginVelocityEdit()
+    roll.setNoteVelocity(id, 30)
+    expect(roll.findNote(id)!.vel).toBe(30)
+    roll.undo()
+    expect(roll.current.value.notes[0].vel).toBe(100)
+    roll.setNoteVelocity(999, 50)
+  })
+
+  it('addChannel is a no-op once every melodic channel is used', () => {
+    const { roll } = make()
+    for (let i = 0; i < 20; i++) roll.addChannel(false)
+    expect(roll.channels.length).toBe(15)
+    expect(roll.channels.some((c) => c.ch === 9)).toBe(false)
+  })
+
+  it('removeChannel keeps at least one channel and clamps the active index', () => {
+    const { roll } = make()
+    roll.removeChannel(0)
+    expect(roll.channels.length).toBe(1)
+    roll.addChannel(false)
+    roll.addChannel(false)
+    roll.setActiveChannel(2)
+    roll.removeChannel(2)
+    expect(roll.channels.length).toBe(2)
+    expect(roll.activeChannel.value).toBe(1)
+  })
+
+  it('setProgram clamps and ignores unknown indices', () => {
+    const { roll } = make()
+    roll.setProgram(0, 200)
+    expect(roll.channels[0].program).toBe(127)
+    roll.setProgram(0, -5)
+    expect(roll.channels[0].program).toBe(0)
+    roll.setProgram(9, 10)
+    expect(roll.channels.length).toBe(1)
+  })
+
+  it('loadEditorState replaces content and is undoable', () => {
+    const { roll } = make()
+    roll.addNote(60, 0)
+    roll.loadEditorState({ events: [{ t: 1, dur: 1, midi: 70 }] })
+    expect(roll.current.value.notes[0].midi).toBe(70)
+    roll.undo()
+    expect(roll.current.value.notes[0].midi).toBe(60)
   })
 
   it('persists to the widget after edits (debounced)', async () => {

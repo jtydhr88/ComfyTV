@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { z } from 'zod'
 
 async function loadWithFetch(fetchImpl: any) {
@@ -316,5 +316,350 @@ describe('remote job api', () => {
     const { cancelRemoteJob } = await loadWithFetch(fetchApi)
     await cancelRemoteJob('job/1')
     expect(fetchApi.mock.calls[0]![0]).toBe('/comfytv/remote_jobs/job%2F1/cancel')
+  })
+})
+
+
+describe('workflow default + score editor api', () => {
+  beforeEach(() => vi.resetModules())
+
+  it('setDefaultWorkflow posts the default flag', async () => {
+    const fetchApi = vi.fn(async (_url: string, _init?: any) =>
+      json({ ok: true, kind: 'image', label: 'L', is_default: true }))
+    const { setDefaultWorkflow } = await loadWithFetch(fetchApi)
+    const res = await setDefaultWorkflow(3, true)
+    expect(res.is_default).toBe(true)
+    const [url, init] = fetchApi.mock.calls[0]!
+    expect(url).toBe('/comfytv/workflows/3/set_default')
+    expect(JSON.parse(init.body)).toEqual({ default: true })
+  })
+
+  it('importScoreEditor posts the musicxml payload', async () => {
+    const fetchApi = vi.fn(async (_url: string, _init?: any) => json({
+      tempo: 120, beats_per_bar: 4, beat_type: 4,
+      parts: [{ name: 'Piano', notes: [{ midi: 60, start: 0, dur: 1 }] }],
+    }))
+    const { importScoreEditor } = await loadWithFetch(fetchApi)
+    const res = await importScoreEditor('<score/>')
+    expect(res.parts[0]!.notes).toHaveLength(1)
+    const [url, init] = fetchApi.mock.calls[0]!
+    expect(url).toBe('/comfytv/score_editor/import')
+    expect(JSON.parse(init.body)).toEqual({ musicxml: '<score/>' })
+  })
+
+  it('fetchStageDefaults URL-encodes the node id', async () => {
+    const fetchApi = vi.fn(async (_url: string) => json({ defaults: { steps: 20 } }))
+    const { fetchStageDefaults } = await loadWithFetch(fetchApi)
+    const res = await fetchStageDefaults('9:1')
+    expect(res.defaults.steps).toBe(20)
+    expect(fetchApi.mock.calls[0]![0]).toBe('/comfytv/stage_defaults?node_id=9%3A1')
+  })
+})
+
+
+describe('capabilities api', () => {
+  beforeEach(() => vi.resetModules())
+  afterEach(() => vi.unstubAllGlobals())
+
+  const caps = {
+    version: '1.0',
+    node_ids: ['ComfyTVImageStage'],
+    resources: { lut: [{ filename: 'a.cube' }] },
+  }
+
+  it('fetchLocalCapabilities fetches /comfytv/capabilities', async () => {
+    const fetchApi = vi.fn(async (_url: string) => json(caps))
+    const { fetchLocalCapabilities } = await loadWithFetch(fetchApi)
+    const res = await fetchLocalCapabilities()
+    expect(fetchApi.mock.calls[0]![0]).toBe('/comfytv/capabilities')
+    expect(res.node_ids).toEqual(['ComfyTVImageStage'])
+    expect(res.resource_fields).toEqual({})
+  })
+
+  it('fetchRemoteCapabilities probes the trimmed base url and succeeds', async () => {
+    const remoteFetch = vi.fn(async (_url: string) => json(caps))
+    vi.stubGlobal('fetch', remoteFetch)
+    const { fetchRemoteCapabilities } = await loadWithFetch(vi.fn())
+    const res = await fetchRemoteCapabilities('http://box:8188//')
+    expect(remoteFetch.mock.calls[0]![0]).toBe('http://box:8188/comfytv/capabilities')
+    expect(res.installed).toBe(true)
+    if (res.installed) expect(res.capabilities.version).toBe('1.0')
+  })
+
+  it('fetchRemoteCapabilities reports HTTP failures', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => new Response('nope', { status: 500 })))
+    const { fetchRemoteCapabilities } = await loadWithFetch(vi.fn())
+    const res = await fetchRemoteCapabilities('http://box:8188')
+    expect(res).toEqual({ installed: false, error: 'HTTP 500' })
+  })
+
+  it('fetchRemoteCapabilities reports unrecognized payloads', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => json({ hello: 'world' })))
+    const { fetchRemoteCapabilities } = await loadWithFetch(vi.fn())
+    const res = await fetchRemoteCapabilities('http://box:8188')
+    expect(res).toEqual({ installed: false, error: 'unrecognized capabilities payload' })
+  })
+
+  it('fetchRemoteCapabilities surfaces network errors', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => { throw new Error('ECONNREFUSED') }))
+    const { fetchRemoteCapabilities } = await loadWithFetch(vi.fn())
+    const res = await fetchRemoteCapabilities('http://box:8188')
+    expect(res).toEqual({ installed: false, error: 'ECONNREFUSED' })
+  })
+
+  it('fetchRemoteCapabilities stringifies non-Error throws', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => { throw 'boom' }))
+    const { fetchRemoteCapabilities } = await loadWithFetch(vi.fn())
+    const res = await fetchRemoteCapabilities('http://box:8188')
+    expect(res).toEqual({ installed: false, error: 'boom' })
+  })
+})
+
+
+describe('resource api', () => {
+  beforeEach(() => vi.resetModules())
+
+  const resource = {
+    id: 3, kind: 'lut', name: 'Warm', filename: 'warm.cube', subfolder: 'luts', url: '/r/warm.cube',
+  }
+
+  it('listResources passes the kind query when given', async () => {
+    const fetchApi = vi.fn(async (_url: string) => json({ resources: [resource] }))
+    const { listResources } = await loadWithFetch(fetchApi)
+    const res = await listResources('lut')
+    expect(fetchApi.mock.calls[0]![0]).toBe('/comfytv/resources?kind=lut')
+    expect(res.resources[0]!.missing).toBe(false)
+  })
+
+  it('listResources omits the query without kind', async () => {
+    const fetchApi = vi.fn(async (_url: string) => json({ resources: [] }))
+    const { listResources } = await loadWithFetch(fetchApi)
+    await listResources()
+    expect(fetchApi.mock.calls[0]![0]).toBe('/comfytv/resources')
+  })
+
+  it('uploadResource posts multipart form data', async () => {
+    const fetchApi = vi.fn(async (_url: string, _init?: any) => json({ ok: true, resource }))
+    const { uploadResource } = await loadWithFetch(fetchApi)
+    const file = new File(['x'], 'warm.cube')
+    const res = await uploadResource('lut', file)
+    expect(res.resource.id).toBe(3)
+    const [url, init] = fetchApi.mock.calls[0]!
+    expect(url).toBe('/comfytv/resources')
+    expect(init.method).toBe('POST')
+    expect(init.body).toBeInstanceOf(FormData)
+    expect(init.body.get('kind')).toBe('lut')
+    expect(init.body.get('file')).toBe(file)
+  })
+
+  it('renameResource patches the addressed resource', async () => {
+    const fetchApi = vi.fn(async (_url: string, _init?: any) =>
+      json({ ok: true, resource: { ...resource, name: 'Cool' } }))
+    const { renameResource } = await loadWithFetch(fetchApi)
+    const res = await renameResource(3, 'Cool')
+    expect(res.resource.name).toBe('Cool')
+    const [url, init] = fetchApi.mock.calls[0]!
+    expect(url).toBe('/comfytv/resources/3')
+    expect(init.method).toBe('PATCH')
+    expect(JSON.parse(init.body)).toEqual({ name: 'Cool' })
+  })
+
+  it('deleteResource sends DELETE to the addressed resource', async () => {
+    const fetchApi = vi.fn(async (_url: string, _init?: any) => json({ ok: true }))
+    const { deleteResource } = await loadWithFetch(fetchApi)
+    const res = await deleteResource(3)
+    expect(res.ok).toBe(true)
+    const [url, init] = fetchApi.mock.calls[0]!
+    expect(url).toBe('/comfytv/resources/3')
+    expect(init.method).toBe('DELETE')
+  })
+})
+
+
+describe('settings api', () => {
+  beforeEach(() => vi.resetModules())
+
+  const row = { key: 'auto_backup', type: 'boolean', value: true, default: false }
+
+  it('fetchSettings fetches /comfytv/settings', async () => {
+    const fetchApi = vi.fn(async (_url: string) => json({ settings: [row] }))
+    const { fetchSettings } = await loadWithFetch(fetchApi)
+    const res = await fetchSettings()
+    expect(fetchApi.mock.calls[0]![0]).toBe('/comfytv/settings')
+    expect(res.settings[0]!.key).toBe('auto_backup')
+  })
+
+  it('saveSettings PUTs the value map', async () => {
+    const fetchApi = vi.fn(async (_url: string, _init?: any) => json({ ok: true, settings: [row] }))
+    const { saveSettings } = await loadWithFetch(fetchApi)
+    const res = await saveSettings({ auto_backup: true })
+    expect(res.ok).toBe(true)
+    const [url, init] = fetchApi.mock.calls[0]!
+    expect(url).toBe('/comfytv/settings')
+    expect(init.method).toBe('PUT')
+    expect(JSON.parse(init.body)).toEqual({ values: { auto_backup: true } })
+  })
+
+  it('runDbBackup posts to the backup route', async () => {
+    const fetchApi = vi.fn(async (_url: string, _init?: any) =>
+      json({ ok: true, path: 'db-backup/20260809', snapshot: 'snap' }))
+    const { runDbBackup } = await loadWithFetch(fetchApi)
+    const res = await runDbBackup()
+    expect(res.path).toBe('db-backup/20260809')
+    const [url, init] = fetchApi.mock.calls[0]!
+    expect(url).toBe('/comfytv/settings/backup')
+    expect(init.method).toBe('POST')
+  })
+})
+
+
+describe('stage preset api', () => {
+  beforeEach(() => vi.resetModules())
+
+  const preset = { id: 2, kind: 'video_color', name: 'Teal' }
+
+  it('listStagePresets passes the kind query and applies defaults', async () => {
+    const fetchApi = vi.fn(async (_url: string) => json({ presets: [preset] }))
+    const { listStagePresets } = await loadWithFetch(fetchApi)
+    const res = await listStagePresets('video_color')
+    expect(fetchApi.mock.calls[0]![0]).toBe('/comfytv/presets?kind=video_color')
+    expect(res.presets[0]!.config).toEqual({})
+    expect(res.presets[0]!.builtin).toBe(false)
+  })
+
+  it('listStagePresets omits the query without kind', async () => {
+    const fetchApi = vi.fn(async (_url: string) => json({ presets: [] }))
+    const { listStagePresets } = await loadWithFetch(fetchApi)
+    await listStagePresets()
+    expect(fetchApi.mock.calls[0]![0]).toBe('/comfytv/presets')
+  })
+
+  it('saveStagePreset posts the preset payload', async () => {
+    const fetchApi = vi.fn(async (_url: string, _init?: any) => json({ ok: true, preset }))
+    const { saveStagePreset } = await loadWithFetch(fetchApi)
+    const input = { kind: 'video_color', name: 'Teal', config: { gain: 1.2 } }
+    const res = await saveStagePreset(input)
+    expect(res.preset.name).toBe('Teal')
+    const [url, init] = fetchApi.mock.calls[0]!
+    expect(url).toBe('/comfytv/presets')
+    expect(init.method).toBe('POST')
+    expect(JSON.parse(init.body)).toEqual(input)
+  })
+
+  it('updateStagePreset patches the addressed preset', async () => {
+    const fetchApi = vi.fn(async (_url: string, _init?: any) =>
+      json({ ok: true, preset: { ...preset, name: 'Orange' } }))
+    const { updateStagePreset } = await loadWithFetch(fetchApi)
+    const res = await updateStagePreset(2, { name: 'Orange' })
+    expect(res.preset.name).toBe('Orange')
+    const [url, init] = fetchApi.mock.calls[0]!
+    expect(url).toBe('/comfytv/presets/2')
+    expect(init.method).toBe('PATCH')
+    expect(JSON.parse(init.body)).toEqual({ name: 'Orange' })
+  })
+
+  it('deleteStagePreset sends DELETE to the addressed preset', async () => {
+    const fetchApi = vi.fn(async (_url: string, _init?: any) => json({ ok: true }))
+    const { deleteStagePreset } = await loadWithFetch(fetchApi)
+    const res = await deleteStagePreset(2)
+    expect(res.ok).toBe(true)
+    const [url, init] = fetchApi.mock.calls[0]!
+    expect(url).toBe('/comfytv/presets/2')
+    expect(init.method).toBe('DELETE')
+  })
+})
+
+
+describe('media + misc api', () => {
+  beforeEach(() => vi.resetModules())
+
+  it('adoptAssets posts to the adopt route', async () => {
+    const fetchApi = vi.fn(async (_url: string, _init?: any) =>
+      json({ ok: true, adopted: 2, dir: 'assets' }))
+    const { adoptAssets } = await loadWithFetch(fetchApi)
+    const res = await adoptAssets()
+    expect(res.adopted).toBe(2)
+    const [url, init] = fetchApi.mock.calls[0]!
+    expect(url).toBe('/comfytv/assets/adopt')
+    expect(init.method).toBe('POST')
+  })
+
+  it('proxyEnsure posts only the url by default', async () => {
+    const fetchApi = vi.fn(async (_url: string, _init?: any) => json({ status: 'original' }))
+    const { proxyEnsure } = await loadWithFetch(fetchApi)
+    const res = await proxyEnsure('/view?file=a.mp4')
+    expect(res.status).toBe('original')
+    const [url, init] = fetchApi.mock.calls[0]!
+    expect(url).toBe('/comfytv/proxy/ensure')
+    expect(JSON.parse(init.body)).toEqual({ url: '/view?file=a.mp4' })
+  })
+
+  it('proxyEnsure forwards create and retry flags', async () => {
+    const fetchApi = vi.fn(async (_url: string, _init?: any) =>
+      json({ status: 'ready', proxy_url: '/p.mp4', width: 640, height: 360 }))
+    const { proxyEnsure } = await loadWithFetch(fetchApi)
+    const res = await proxyEnsure('/view?file=a.mp4', { create: true, retry: true })
+    expect(res.proxy_url).toBe('/p.mp4')
+    const [, init] = fetchApi.mock.calls[0]!
+    expect(JSON.parse(init.body)).toEqual({ url: '/view?file=a.mp4', create: true, retry: true })
+  })
+
+  it('midiEnsure posts the url', async () => {
+    const fetchApi = vi.fn(async (_url: string, _init?: any) =>
+      json({ status: 'ready', url: '/m.mid' }))
+    const { midiEnsure } = await loadWithFetch(fetchApi)
+    const res = await midiEnsure('/view?file=a.mid')
+    expect(res.url).toBe('/m.mid')
+    const [url, init] = fetchApi.mock.calls[0]!
+    expect(url).toBe('/comfytv/midi/ensure')
+    expect(JSON.parse(init.body)).toEqual({ url: '/view?file=a.mid' })
+  })
+
+  it('midiEvents posts the url and returns parsed events', async () => {
+    const fetchApi = vi.fn(async (_url: string, _init?: any) => json({
+      status: 'ready',
+      events: [{ t: 0, dur: 0.5, midi: 60, vel: 100, ch: 0 }],
+      duration: 12,
+    }))
+    const { midiEvents } = await loadWithFetch(fetchApi)
+    const res = await midiEvents('/view?file=a.mid')
+    expect(res.events).toHaveLength(1)
+    const [url, init] = fetchApi.mock.calls[0]!
+    expect(url).toBe('/comfytv/midi/events')
+    expect(JSON.parse(init.body)).toEqual({ url: '/view?file=a.mid' })
+  })
+
+  it('expressionEval posts the expression payload', async () => {
+    const fetchApi = vi.fn(async (_url: string, _init?: any) =>
+      json({ samples: [[0, 1], [0.5, 0.2]] }))
+    const { expressionEval } = await loadWithFetch(fetchApi)
+    const body = { expression: 'sin(t)', duration: 2, fps: 30, seed: 7 }
+    const res = await expressionEval(body)
+    expect(res.samples).toHaveLength(2)
+    const [url, init] = fetchApi.mock.calls[0]!
+    expect(url).toBe('/comfytv/expression_eval')
+    expect(JSON.parse(init.body)).toEqual(body)
+  })
+
+  it('fxClipPreview posts params and includes window when given', async () => {
+    const fetchApi = vi.fn(async (_url: string, _init?: any) =>
+      json({ url: '/clip.mp4', t0: 1, t1: 2.2 }))
+    const { fxClipPreview } = await loadWithFetch(fetchApi)
+    const res = await fxClipPreview('12', { strength: 0.5 }, '/v.mp4', 1, 1.2)
+    expect(res.t1).toBe(2.2)
+    const [url, init] = fetchApi.mock.calls[0]!
+    expect(url).toBe('/comfytv/fx_preview')
+    expect(JSON.parse(init.body)).toEqual({
+      node_id: '12', params: { strength: 0.5 }, video: '/v.mp4', t: 1, window: 1.2,
+    })
+  })
+
+  it('fxClipPreview omits window when not given', async () => {
+    const fetchApi = vi.fn(async (_url: string, _init?: any) =>
+      json({ url: '/clip.mp4', t0: 0, t1: 1.2 }))
+    const { fxClipPreview } = await loadWithFetch(fetchApi)
+    await fxClipPreview('12', {}, '/v.mp4', 0)
+    const [, init] = fetchApi.mock.calls[0]!
+    expect(JSON.parse(init.body)).toEqual({ node_id: '12', params: {}, video: '/v.mp4', t: 0 })
   })
 })

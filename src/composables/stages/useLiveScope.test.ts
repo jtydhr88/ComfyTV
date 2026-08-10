@@ -4,7 +4,12 @@ import { mount, type VueWrapper } from '@vue/test-utils'
 import type { LGraphNode } from '@/lib/comfyApp'
 import { useLiveScope, resolveUpstreamNodeId, type UseLiveScopeOptions } from './useLiveScope'
 import { registerPreviewSource } from './previewBus'
-import type { ImageDataLike, ScopeKind } from './scopeMath'
+import { drawScope, type ImageDataLike, type ScopeKind } from './scopeMath'
+
+vi.mock('./scopeMath', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('./scopeMath')>()),
+  drawScope: vi.fn(),
+}))
 
 function makeNode(link: number | null = 5, originId: number | string = 42): LGraphNode {
   return {
@@ -63,6 +68,7 @@ describe('useLiveScope', () => {
     wrappers.forEach((w) => w.unmount())
     wrappers = []
     vi.restoreAllMocks()
+    vi.mocked(drawScope).mockClear()
   })
 
   function setup(overrides: Partial<UseLiveScopeOptions> = {}) {
@@ -180,5 +186,91 @@ describe('useLiveScope', () => {
     caf.mockClear()
     wrapper.unmount()
     expect(caf).toHaveBeenCalled()
+  })
+
+  function fakeCtx(img: ImageDataLike) {
+    return {
+      drawImage: vi.fn(),
+      getImageData: vi.fn(() => img),
+    }
+  }
+
+  it('samples through a scratch canvas and paints via drawScope by default', () => {
+    const img: ImageDataLike = { data: new Uint8ClampedArray(4), width: 1, height: 1 }
+    const ctx = fakeCtx(img)
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(ctx as never)
+    const { tick } = captureRaf()
+    const { src, target } = setup({ sample: undefined, paint: undefined })
+    src.width = 640
+    src.height = 320
+    target.width = 64
+    target.height = 32
+    tick(1000)
+    expect(ctx.drawImage).toHaveBeenCalledWith(src, 0, 0, 320, 160)
+    expect(ctx.getImageData).toHaveBeenCalledWith(0, 0, 320, 160)
+    expect(drawScope).toHaveBeenCalledWith(ctx, 'waveform', img, 64, 32)
+    tick(2000)
+    expect(drawScope).toHaveBeenCalledTimes(2)
+  })
+
+  it('does not sample an empty upstream canvas', () => {
+    const img: ImageDataLike = { data: new Uint8ClampedArray(4), width: 1, height: 1 }
+    const ctx = fakeCtx(img)
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(ctx as never)
+    const { tick } = captureRaf()
+    const { src } = setup({ sample: undefined, paint: undefined })
+    src.width = 0
+    tick(1000)
+    expect(ctx.drawImage).not.toHaveBeenCalled()
+    expect(drawScope).not.toHaveBeenCalled()
+  })
+
+  it('gives up sampling when no 2d context is available', () => {
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null)
+    const { tick } = captureRaf()
+    const { src } = setup({ sample: undefined, paint: undefined })
+    src.width = 8
+    src.height = 8
+    tick(1000)
+    expect(drawScope).not.toHaveBeenCalled()
+  })
+
+  it('swallows getImageData failures', () => {
+    const ctx = {
+      drawImage: vi.fn(),
+      getImageData: vi.fn(() => { throw new Error('tainted') }),
+    }
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(ctx as never)
+    const { tick } = captureRaf()
+    const { src } = setup({ sample: undefined, paint: undefined })
+    src.width = 8
+    src.height = 8
+    tick(1000)
+    expect(ctx.getImageData).toHaveBeenCalled()
+    expect(drawScope).not.toHaveBeenCalled()
+  })
+
+  it('skips the default paint when the target has no size', () => {
+    const img: ImageDataLike = { data: new Uint8ClampedArray(4), width: 1, height: 1 }
+    const ctx = fakeCtx(img)
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(ctx as never)
+    const { tick } = captureRaf()
+    const { src, target } = setup({ sample: () => img, paint: undefined })
+    src.width = 8
+    src.height = 8
+    target.width = 0
+    tick(1000)
+    expect(drawScope).not.toHaveBeenCalled()
+  })
+
+  it('skips the default paint without a target 2d context', () => {
+    const img: ImageDataLike = { data: new Uint8ClampedArray(4), width: 1, height: 1 }
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null)
+    const { tick } = captureRaf()
+    const { target } = setup({ sample: () => img, paint: undefined })
+    target.width = 64
+    target.height = 32
+    tick(1000)
+    expect(drawScope).not.toHaveBeenCalled()
   })
 })

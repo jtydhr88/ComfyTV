@@ -10,7 +10,7 @@ const cursorTimestamps = [0, 1, 2, 3, 4, 5, 6, 7]
 const cursorState = { idx: 0, shown: false, resets: 0 }
 const cursorEl = document.createElement('img')
 
-const cloneCalls = { count: 0 }
+const cloneCalls = { count: 0, fail: false }
 
 function makeIterator(idx: number) {
   return {
@@ -22,6 +22,7 @@ function makeIterator(idx: number) {
       return { RealValue: cursorTimestamps[this.idx] / 4 }
     },
     clone() {
+      if (cloneCalls.fail) throw new Error('no clone')
       cloneCalls.count++
       return makeIterator(this.idx)
     },
@@ -82,6 +83,7 @@ describe('useScoreEngrave', () => {
     loadMock.mockClear()
     renderMock.mockClear()
     clearMock.mockClear()
+    cloneCalls.fail = false
   })
 
   it('renders valid MusicXML through OSMD', async () => {
@@ -177,6 +179,80 @@ describe('useScoreEngrave', () => {
     expect(afterForward).toBeLessThanOrEqual(2)
     api.seekCursorToBeat(0.1)
     expect(cloneCalls.count).toBeLessThanOrEqual(afterForward + 2)
+  })
+
+  it('debounced re-render fires after xml edits', async () => {
+    const xml = ref(XML)
+    const { api } = harness(xml)
+    await api.renderNow()
+    xml.value = XML.replace('4.0', '4.1')
+    await nextTick()
+    await new Promise((r) => setTimeout(r, 30))
+    expect(loadMock).toHaveBeenCalledTimes(2)
+  })
+
+  it('re-renders when the container swaps and resizes past the threshold', async () => {
+    let roCb: ((entries: Array<{ contentRect: { width: number } }>) => void)
+      | null = null
+    const observed: HTMLElement[] = []
+    const disconnects = { count: 0 }
+    class RO {
+      constructor(cb: (entries: Array<{ contentRect: { width: number } }>) => void) {
+        roCb = cb
+      }
+      observe(el: HTMLElement) { observed.push(el) }
+      disconnect() { disconnects.count++ }
+    }
+    vi.stubGlobal('ResizeObserver', RO)
+    try {
+      const xml = ref(XML)
+      const { api, container } = harness(xml)
+      await api.renderNow()
+      const el2 = document.createElement('div')
+      container.value = el2
+      await nextTick()
+      await new Promise((r) => setTimeout(r, 20))
+      expect(observed).toContain(el2)
+      const renders = renderMock.mock.calls.length
+      roCb!([])
+      roCb!([{ contentRect: { width: 10 } }])
+      roCb!([{ contentRect: { width: 300 } }])
+      await new Promise((r) => setTimeout(r, 20))
+      expect(renderMock.mock.calls.length).toBeGreaterThan(renders)
+      container.value = null
+      await nextTick()
+      expect(disconnects.count).toBeGreaterThan(0)
+      await api.renderNow()
+    } finally {
+      vi.unstubAllGlobals()
+    }
+  })
+
+  it('seeks by timestamp comparison when the iterator cannot clone', async () => {
+    cursorState.idx = 0
+    cloneCalls.fail = true
+    const xml = ref(XML)
+    const { api } = harness(xml)
+    await api.renderNow()
+    api.seekCursorToBeat(3.2)
+    expect(cursorState.idx).toBe(4)
+    api.seekCursorToBeat(3.2)
+    expect(cursorState.idx).toBe(4)
+  })
+
+  it('warns when the cursor stalls far from the playhead', async () => {
+    cursorState.idx = 0
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    try {
+      const xml = ref(XML)
+      const { api } = harness(xml)
+      await api.renderNow()
+      for (let i = 0; i < 95; i++) api.seekCursorToBeat(20)
+      expect(warn).toHaveBeenCalledTimes(1)
+      expect(String(warn.mock.calls[0][0])).toContain('desync')
+    } finally {
+      warn.mockRestore()
+    }
   })
 
   it('auto-scrolls the cursor into view', async () => {

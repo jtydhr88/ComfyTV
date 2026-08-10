@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import {
   clipStatuses,
@@ -7,7 +7,10 @@ import {
   parseTimeline,
   serializeTimeline,
   useDirectorTimeline,
+  CLIP_MIN_W,
   DURATION_MAX_S,
+  DURATION_MIN_S,
+  PPS,
 } from './useDirectorTimeline'
 
 function fakeNode(timeline = '', workflows: string[] = ['WF A', 'WF B']): any {
@@ -25,6 +28,30 @@ function widgetValue(node: any): string {
 
 function make(node: any, state: any = {}) {
   return useDirectorTimeline(node, state, ref(null))
+}
+
+function makeRoot(): HTMLElement {
+  const el = document.createElement('div')
+  ;(el as any).setPointerCapture = vi.fn()
+  ;(el as any).releasePointerCapture = vi.fn()
+  return el
+}
+
+function pe(type: string, clientX: number): PointerEvent {
+  return new MouseEvent(type, { clientX }) as unknown as PointerEvent
+}
+
+function twoClipNode(): any {
+  return fakeNode(serializeTimeline([
+    normalizeClip({ id: 'a', duration_s: 5 }),
+    normalizeClip({ id: 'b', duration_s: 5 }),
+  ], { chain: 'off' }))
+}
+
+function makeWithRoot(node: any) {
+  const root = makeRoot()
+  const t = useDirectorTimeline(node, {} as any, ref(root))
+  return { t, root }
 }
 
 describe('normalizeClip', () => {
@@ -208,5 +235,192 @@ describe('useDirectorTimeline model ops', () => {
     const state: any = { directorClips: JSON.stringify([{ id: 'a', url: '/u', cached: true }]) }
     const t = make(node, state)
     expect(t.statuses.value.get('a')?.cached).toBe(true)
+  })
+
+  it('updateClip and refs ops ignore unknown ids', () => {
+    const node = fakeNode()
+    const t = make(node)
+    t.addClip()
+    t.updateClip('nope', { prompt: 'x' })
+    t.addRef('nope', 'images', '/a.png')
+    t.removeRef('nope', 'images', '/a.png')
+    t.moveRefTo('nope', 'images', 0, 1)
+    t.duplicateClip('nope')
+    expect(t.clips.value).toHaveLength(1)
+    expect(t.clips.value[0].prompt).toBe('')
+  })
+
+  it('moveRefTo reorders and rejects out-of-range or no-op moves', () => {
+    const node = fakeNode()
+    const t = make(node)
+    t.addClip()
+    const id = t.clips.value[0].id
+    t.addRef(id, 'images', '/a')
+    t.addRef(id, 'images', '/b')
+    t.addRef(id, 'images', '/c')
+    t.moveRefTo(id, 'images', 0, 2)
+    expect(t.clips.value[0].images).toEqual(['/b', '/c', '/a'])
+    t.moveRefTo(id, 'images', 5, 0)
+    t.moveRefTo(id, 'images', 0, 5)
+    t.moveRefTo(id, 'images', 1, 1)
+    expect(t.clips.value[0].images).toEqual(['/b', '/c', '/a'])
+  })
+
+  it('workflowOptions is empty without a workflow widget', () => {
+    const t = make({ widgets: [{ name: 'timeline_data', value: '' }] })
+    expect(t.workflowOptions.value).toEqual([])
+  })
+
+  it('selectedClip and selectedIndex track the selection', () => {
+    const t = make(twoClipNode())
+    expect(t.selectedClip.value).toBeNull()
+    expect(t.selectedIndex.value).toBe(-1)
+    t.selectedId.value = 'b'
+    expect(t.selectedClip.value?.id).toBe('b')
+    expect(t.selectedIndex.value).toBe(1)
+  })
+
+  it('onConfigure re-restores state and clears a stale selection', () => {
+    const node = twoClipNode()
+    const orig = vi.fn()
+    node.onConfigure = orig
+    const t = make(node)
+    t.selectedId.value = 'b'
+    node.widgets[0].value = serializeTimeline(
+      [normalizeClip({ id: 'a', duration_s: 5 })], { chain: 'replace' })
+    node.onConfigure({ some: 'info' })
+    expect(orig).toHaveBeenCalledWith({ some: 'info' })
+    expect(t.clips.value.map(c => c.id)).toEqual(['a'])
+    expect(t.settings.value.chain).toBe('replace')
+    expect(t.selectedId.value).toBeNull()
+  })
+})
+
+describe('useDirectorTimeline geometry', () => {
+  it('clipWidthPx floors at the minimum width', () => {
+    const t = make(fakeNode(serializeTimeline([
+      normalizeClip({ id: 'a', duration_s: 1 }),
+      normalizeClip({ id: 'b', duration_s: 10 }),
+    ], { chain: 'off' })))
+    expect(t.clipWidthPx(t.clips.value[0])).toBe(CLIP_MIN_W)
+    expect(t.clipWidthPx(t.clips.value[1])).toBe(10 * PPS)
+  })
+
+  it('clipStyle stacks clips left to right with a 4px gap', () => {
+    const t = make(twoClipNode())
+    expect(t.clipStyle(0)).toEqual({ left: '0px', width: '70px' })
+    expect(t.clipStyle(1)).toEqual({ left: '74px', width: '70px' })
+  })
+
+  it('trackWidthPx sums widths, gaps and tail padding', () => {
+    const t = make(twoClipNode())
+    expect(t.trackWidthPx.value).toBe((70 + 4) * 2 + 40)
+  })
+})
+
+describe('useDirectorTimeline clip drag', () => {
+  it('pointer down selects and arms an inactive drag', () => {
+    const { t, root } = makeWithRoot(twoClipNode())
+    t.onClipPointerDown(pe('pointerdown', 10), t.clips.value[0], 0)
+    expect(t.selectedId.value).toBe('a')
+    expect(t.drag.value).toEqual({
+      id: 'a', previewX: 0, grabDx: 10, startX: 10, active: false,
+    })
+    expect((root as any).setPointerCapture).toHaveBeenCalled()
+  })
+
+  it('moves under the threshold stay inactive and keep base style', () => {
+    const node = twoClipNode()
+    const { t, root } = makeWithRoot(node)
+    const before = widgetValue(node)
+    t.onClipPointerDown(pe('pointerdown', 10), t.clips.value[0], 0)
+    root.dispatchEvent(pe('pointermove', 13))
+    expect(t.drag.value?.active).toBe(false)
+    expect(t.clipStyle(0).left).toBe('0px')
+    root.dispatchEvent(pe('pointerup', 13))
+    expect(t.drag.value).toBeNull()
+    expect(widgetValue(node)).toBe(before)
+    expect((root as any).releasePointerCapture).toHaveBeenCalled()
+  })
+
+  it('an active drag previews position, reorders past the midpoint and commits', () => {
+    const node = twoClipNode()
+    const { t, root } = makeWithRoot(node)
+    t.onClipPointerDown(pe('pointerdown', 10), t.clips.value[0], 0)
+    root.dispatchEvent(pe('pointermove', 120))
+    expect(t.drag.value?.active).toBe(true)
+    expect(t.drag.value?.previewX).toBe(110)
+    expect(t.clips.value.map(c => c.id)).toEqual(['b', 'a'])
+    expect(t.clipStyle(1).left).toBe('110px')
+    root.dispatchEvent(pe('pointerup', 120))
+    expect(t.drag.value).toBeNull()
+    expect(parseTimeline(widgetValue(node)).clips.map(c => c.id)).toEqual(['b', 'a'])
+    root.dispatchEvent(pe('pointermove', 10))
+    expect(t.clips.value.map(c => c.id)).toEqual(['b', 'a'])
+  })
+
+  it('keeps order when the center stays before the neighbor midpoint', () => {
+    const { t, root } = makeWithRoot(twoClipNode())
+    t.onClipPointerDown(pe('pointerdown', 10), t.clips.value[0], 0)
+    root.dispatchEvent(pe('pointermove', 2))
+    expect(t.drag.value?.active).toBe(true)
+    expect(t.clips.value.map(c => c.id)).toEqual(['a', 'b'])
+  })
+
+  it('pointercancel ends the drag without committing', () => {
+    const node = twoClipNode()
+    const { t, root } = makeWithRoot(node)
+    const before = widgetValue(node)
+    t.onClipPointerDown(pe('pointerdown', 10), t.clips.value[0], 0)
+    root.dispatchEvent(pe('pointercancel', 10))
+    expect(t.drag.value).toBeNull()
+    expect(widgetValue(node)).toBe(before)
+  })
+
+  it('drag of a clip removed mid-gesture is inert', () => {
+    const { t, root } = makeWithRoot(twoClipNode())
+    t.onClipPointerDown(pe('pointerdown', 10), t.clips.value[0], 0)
+    t.clips.value = t.clips.value.filter(c => c.id !== 'a')
+    root.dispatchEvent(pe('pointermove', 120))
+    expect(t.clips.value.map(c => c.id)).toEqual(['b'])
+  })
+
+  it('pointer down without a root element does not throw', () => {
+    const t = make(twoClipNode())
+    expect(() =>
+      t.onClipPointerDown(pe('pointerdown', 10), t.clips.value[0], 0),
+    ).not.toThrow()
+    expect(t.selectedId.value).toBe('a')
+  })
+})
+
+describe('useDirectorTimeline resize drag', () => {
+  it('resizes by whole seconds at PPS pixels per second and commits', () => {
+    const node = twoClipNode()
+    const { t, root } = makeWithRoot(node)
+    t.onResizePointerDown(pe('pointerdown', 100), t.clips.value[0])
+    expect(t.selectedId.value).toBe('a')
+    root.dispatchEvent(pe('pointermove', 100 + PPS * 3))
+    expect(t.clips.value[0].duration_s).toBe(8)
+    root.dispatchEvent(pe('pointerup', 100 + PPS * 3))
+    expect(parseTimeline(widgetValue(node)).clips[0].duration_s).toBe(8)
+    root.dispatchEvent(pe('pointermove', 100 + PPS * 50))
+    expect(t.clips.value[0].duration_s).toBe(8)
+  })
+
+  it('clamps resize to the duration bounds', () => {
+    const { t, root } = makeWithRoot(twoClipNode())
+    t.onResizePointerDown(pe('pointerdown', 100), t.clips.value[0])
+    root.dispatchEvent(pe('pointermove', 100 - PPS * 50))
+    expect(t.clips.value[0].duration_s).toBe(DURATION_MIN_S)
+    root.dispatchEvent(pe('pointermove', 100 + PPS * 500))
+    expect(t.clips.value[0].duration_s).toBe(DURATION_MAX_S)
+  })
+
+  it('resize move ignores a vanished clip', () => {
+    const { t, root } = makeWithRoot(twoClipNode())
+    t.onResizePointerDown(pe('pointerdown', 100), t.clips.value[0])
+    t.clips.value = t.clips.value.filter(c => c.id !== 'a')
+    expect(() => root.dispatchEvent(pe('pointermove', 200))).not.toThrow()
   })
 })

@@ -35,13 +35,14 @@ vi.mock('@/stores/stageStore', async (importOriginal) => {
 vi.mock('@/stores/projectStore', () => ({
   useProjectStore: () => ({ currentProjectId: 'p1' }),
 }))
+const pinned = {
+  list: vi.fn((_pid: string): any[] => []),
+  byId: vi.fn((_pid: string, _id: string): any => undefined),
+  refresh: vi.fn((..._a: unknown[]) => false),
+  unpin: vi.fn(),
+}
 vi.mock('@/stores/pinnedBatchStore', () => ({
-  usePinnedBatchStore: () => ({
-    list: vi.fn(() => []),
-    byId: vi.fn(() => undefined),
-    refresh: vi.fn(() => false),
-    unpin: vi.fn(),
-  }),
+  usePinnedBatchStore: () => pinned,
 }))
 vi.mock('vue-i18n', () => ({
   useI18n: () => ({ t: (k: string, p?: any) => (p ? `${k}:${JSON.stringify(p)}` : k) }),
@@ -59,6 +60,8 @@ vi.mock('@/composables/stages/assetSlots', async (importOriginal) => {
   }
 })
 
+import { app } from '@/lib/comfyApp'
+
 import { useImageReferences as useImageReferencesImpl } from './useImageReferences'
 
 const useImageReferences = (getNode: () => any, rootEl: any) =>
@@ -73,6 +76,8 @@ function tileEvent(left: number, bottom: number): MouseEvent {
   return { currentTarget: { getBoundingClientRect: () => ({ left, bottom }) } } as any
 }
 
+const toastAdd = vi.fn()
+
 beforeEach(() => {
   vi.clearAllMocks()
   store.byId.mockImplementation((id: number) => ({ id, name: `a${id}`, payload_url: `/u${id}`, category_ids: [] }))
@@ -80,6 +85,11 @@ beforeEach(() => {
   asMock.workflowRefOfNode.mockReset().mockReturnValue(null)
   asMock.fetchImageSlotOptions.mockReset().mockResolvedValue([])
   asMock.fetchImageSlotOptionsCached.mockReset().mockResolvedValue([])
+  pinned.list.mockReset().mockReturnValue([])
+  pinned.byId.mockReset().mockReturnValue(undefined)
+  pinned.refresh.mockReset().mockReturnValue(false)
+  pinned.unpin.mockReset()
+  ;(app as any).extensionManager = { toast: { add: toastAdd } }
 })
 
 describe('useImageReferences', () => {
@@ -300,5 +310,132 @@ describe('useImageReferences', () => {
     } finally {
       vi.useRealTimers()
     }
+  })
+
+  it('forceTypes overrides node capability detection', () => {
+    const node = { inputs: [], properties: {} }
+    const ir = useImageReferencesImpl(() => node as any, rootElStub() as any, {
+      forceTypes: ['video', 'audio'],
+    })
+    expect(ir.accepts.value).toBe(true)
+    expect(ir.acceptedMediaTypes.value).toEqual(['video', 'audio'])
+  })
+
+  it('acceptedMediaTypes reflects the node autogrow groups', () => {
+    const node = { inputs: [{ name: 'images.image0' }, { name: 'audio' }], properties: {} }
+    const ir = useImageReferences(() => node, rootElStub())
+    expect(ir.acceptedMediaTypes.value).toEqual(['image', 'audio'])
+  })
+
+  it('exposes pinned batches as batch groups', () => {
+    pinned.list.mockReturnValue([
+      { id: 'b1', label: 'Batch 1', urls: ['/1'], source_uid: 'u1' },
+      { id: 'b2', label: 'Batch 2', urls: [], source_uid: null },
+    ])
+    const ir = useImageReferences(() => IMAGES_NODE, rootElStub())
+    expect(ir.batchGroups.value).toEqual([
+      { id: 'b1', label: 'Batch 1', urls: ['/1'], canRefresh: true },
+      { id: 'b2', label: 'Batch 2', urls: [], canRefresh: false },
+    ])
+    expect(pinned.list).toHaveBeenCalledWith('p1')
+  })
+
+  it('batchUrlOf resolves urls through the pinned store', () => {
+    pinned.byId.mockImplementation((_pid: string, id: string) =>
+      id === 'b1' ? { urls: ['/a', '/b'] } : undefined)
+    const ir = useImageReferences(() => IMAGES_NODE, rootElStub())
+    expect(ir.batchUrlOf({ asset_id: 1, slot: 0 })).toBeNull()
+    expect(ir.batchUrlOf({ batch_index: 0, slot: 0 })).toBeNull()
+    expect(ir.batchUrlOf({ batch_id: 'b1', batch_index: 1, slot: 0 })).toBe('/b')
+    expect(ir.batchUrlOf({ batch_id: 'b1', batch_index: 9, slot: 0 })).toBeNull()
+    expect(ir.batchUrlOf({ batch_id: 'gone', batch_index: 0, slot: 0 })).toBeNull()
+  })
+
+  it('onRefreshBatch toasts when the refresh fails', () => {
+    pinned.refresh.mockReturnValue(false)
+    const ir = useImageReferences(() => IMAGES_NODE, rootElStub())
+    ir.onRefreshBatch('b1')
+    expect(pinned.refresh).toHaveBeenCalledWith('p1', 'b1', expect.anything())
+    expect(toastAdd).toHaveBeenCalledWith(expect.objectContaining({
+      severity: 'warn',
+      summary: 'imageRefs.refreshFailed',
+    }))
+  })
+
+  it('onRefreshBatch stays quiet when the refresh succeeds', () => {
+    pinned.refresh.mockReturnValue(true)
+    const ir = useImageReferences(() => IMAGES_NODE, rootElStub())
+    ir.onRefreshBatch('b1')
+    expect(toastAdd).not.toHaveBeenCalled()
+  })
+
+  it('onUnpinBatch delegates to the pinned store', () => {
+    const ir = useImageReferences(() => IMAGES_NODE, rootElStub())
+    ir.onUnpinBatch('b2')
+    expect(pinned.unpin).toHaveBeenCalledWith('p1', 'b2')
+  })
+
+  it('labels batch refs with their group and ordinal', () => {
+    pinned.byId.mockImplementation((_pid: string, id: string) =>
+      id === 'b1' ? { label: 'Batch 1', urls: [] } : undefined)
+    const ir = useImageReferences(() => IMAGES_NODE, rootElStub())
+    expect(ir.assetLabel({ batch_index: 1, slot: 0 })).toBe('imageRefs.batchItem:{"n":2}')
+    expect(ir.assetLabel({ batch_id: 'b1', batch_index: 0, slot: 0 }))
+      .toBe('Batch 1 · imageRefs.batchItem:{"n":1}')
+    expect(ir.assetLabel({ batch_id: 'gone', batch_index: 2, slot: 0 }))
+      .toBe('imageRefs.batchItem:{"n":3}')
+  })
+
+  it('onAddBatchImage pins batch items with dedup and capability gating', () => {
+    const node = { ...IMAGES_NODE, properties: {} as any }
+    const ir = useImageReferences(() => node, rootElStub())
+    ir.onAddBatchImage('g1', 0)
+    ir.onAddBatchImage('g1', 0)
+    ir.onAddBatchImage('g1', 1)
+    expect(ir.refs.value).toEqual([
+      { batch_index: 0, batch_id: 'g1', slot: 0 },
+      { batch_index: 1, batch_id: 'g1', slot: 1 },
+    ])
+    const noImages = { inputs: [{ name: 'texts.text0' }], properties: {} as any }
+    const ir2 = useImageReferences(() => noImages, rootElStub())
+    ir2.onAddBatchImage('g1', 0)
+    expect(ir2.refs.value).toEqual([])
+  })
+
+  it('importFiles surfaces failures without touching refs', async () => {
+    importAssetFiles.mockRejectedValue(new Error('disk full'))
+    const err = vi.spyOn(console, 'error').mockImplementation(() => {})
+    try {
+      const node = { ...IMAGES_NODE, properties: {} as any }
+      const ir = useImageReferences(() => node, rootElStub())
+      await ir.importFiles([new File([''], 'a.png', { type: 'image/png' })])
+      expect(ir.refs.value).toEqual([])
+      expect(err).toHaveBeenCalled()
+      expect(toastAdd).toHaveBeenCalledWith(
+        expect.objectContaining({ severity: 'error' }))
+    } finally {
+      err.mockRestore()
+    }
+  })
+
+  it('offers fixed slot lists for video and audio refs', () => {
+    const node = {
+      inputs: [{ name: 'videos.video0' }, { name: 'audio' }],
+      properties: {
+        comfytv_image_refs: [
+          { asset_id: 1, slot: 0, type: 'video' },
+          { asset_id: 2, slot: 1, type: 'audio' },
+        ],
+      },
+    }
+    const ir = useImageReferences(() => node, rootElStub())
+    ir.openSlotPicker(0, tileEvent(10, 20))
+    expect(ir.slotPicker.value?.loading).toBe(false)
+    expect(ir.slotPicker.value?.error).toBeNull()
+    expect(ir.slotPicker.value?.options.map(o => o.slot)).toEqual([0, 1, 2, 3])
+    ir.closeSlotPicker()
+    ir.openSlotPicker(1, tileEvent(10, 20))
+    expect(ir.slotPicker.value?.options.map(o => o.slot)).toEqual([0, 1, 2])
+    expect(asMock.fetchImageSlotOptions).not.toHaveBeenCalled()
   })
 })

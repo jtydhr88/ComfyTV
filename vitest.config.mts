@@ -57,14 +57,11 @@ export default defineConfig({
         'src/lib/pentradoHost.ts',
         'src/lib/shared2d/transformMath.ts',
       ],
-      // Ratchet floor, not a target: set ~1pt under the measured coverage
-      // (73.18/66.51/77.11/75.19 as of 2026-08-09) to catch regressions
-      // without blocking merges. Raise these as tests are backfilled.
       thresholds: {
-        statements: 72,
-        branches:   65,
-        functions:  76,
-        lines:      74,
+        statements: 77,
+        branches:   70,
+        functions:  82,
+        lines:      79,
       },
     },
   },
