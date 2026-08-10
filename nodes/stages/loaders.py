@@ -32,6 +32,22 @@ def _list_3d_input_files() -> list[str]:
         return []
 
 
+def _require_asset_file(asset_url: str) -> None:
+    url = (asset_url or "").strip()
+    if not url.startswith("/view?"):
+        return
+    from ...runners.media import view_url_to_path
+    try:
+        missing = view_url_to_path(url) is None
+    except Exception:
+        return
+    if missing:
+        raise RuntimeError(
+            "asset file is missing on disk — the library entry points to a "
+            f"deleted file ({url}); re-import it or pick another asset"
+        )
+
+
 def _asset_loader_inputs() -> list:
     return [
         _project_id_input(),
@@ -147,6 +163,7 @@ class AssetImageLoaderStage(io.ComfyNode):
 
     @classmethod
     def execute(cls, project_id="", parent_output_id=0, asset_url="", asset_id=0, category="all"):
+        _require_asset_file(asset_url)
         return _stage_emit_auto(cls, project_id=project_id, payload_str=asset_url or "",
                                 parent_output_id=parent_output_id)
 
@@ -167,6 +184,7 @@ class AssetVideoLoaderStage(io.ComfyNode):
 
     @classmethod
     def execute(cls, project_id="", parent_output_id=0, asset_url="", asset_id=0, category="all"):
+        _require_asset_file(asset_url)
         return _stage_emit_auto(cls, project_id=project_id, payload_str=asset_url or "",
                                 parent_output_id=parent_output_id)
 
@@ -187,6 +205,7 @@ class AssetAudioLoaderStage(io.ComfyNode):
 
     @classmethod
     def execute(cls, project_id="", parent_output_id=0, asset_url="", asset_id=0, category="all"):
+        _require_asset_file(asset_url)
         return _stage_emit_auto(cls, project_id=project_id, payload_str=asset_url or "",
                                 parent_output_id=parent_output_id)
 
@@ -219,6 +238,7 @@ class AssetModelLoaderStage(io.ComfyNode):
     @classmethod
     def execute(cls, project_id="", parent_output_id=0, asset_url="", asset_id=0,
                 category="all", captured_image=""):
+        _require_asset_file(asset_url)
         return _stage_emit_auto(cls, project_id=project_id, payload_str=asset_url or "",
                                 parent_output_id=parent_output_id,
                                 picked_payload=captured_image or "")

@@ -52,6 +52,12 @@
       </span>
 
       <span
+        v-if="asset.file_missing"
+        class="ctv:absolute ctv:top-1.5 ctv:right-1.5 ctv:px-1 ctv:py-px ctv:rounded-sm ctv:text-3xs ctv:font-semibold ctv:tracking-wide
+               ctv:bg-destructive-background ctv:text-white ctv:pointer-events-none"
+      >{{ $t('assets.card.fileMissing') }}</span>
+
+      <span
         v-if="isProxy"
         class="ctv:absolute ctv:bottom-1.5 ctv:right-1.5 ctv:px-1 ctv:py-px ctv:rounded-sm ctv:text-3xs ctv:font-semibold ctv:tracking-wide
                ctv:bg-black/65 ctv:text-warning-background ctv:pointer-events-none"

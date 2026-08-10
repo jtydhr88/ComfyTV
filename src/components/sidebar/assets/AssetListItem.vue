@@ -38,10 +38,18 @@
     </div>
 
     <div class="ctv:flex ctv:min-w-0 ctv:flex-1 ctv:flex-col ctv:gap-1">
-      <span
-        class="ctv:block ctv:truncate ctv:text-xs ctv:leading-none ctv:text-base-foreground"
-        :title="tooltip"
-      >{{ asset.name || '—' }}</span>
+      <span class="ctv:flex ctv:min-w-0 ctv:items-center ctv:gap-1">
+        <span
+          class="ctv:block ctv:truncate ctv:text-xs ctv:leading-none ctv:text-base-foreground"
+          :title="tooltip"
+        >{{ asset.name || '—' }}</span>
+        <span
+          v-if="asset.file_missing"
+          class="ctv:shrink-0 ctv:px-1 ctv:py-px ctv:rounded-sm ctv:text-3xs ctv:font-semibold
+                 ctv:bg-destructive-background ctv:text-white"
+          :title="$t('assets.card.fileMissingHint')"
+        >{{ $t('assets.card.fileMissing') }}</span>
+      </span>
       <span
         v-if="secondary"
         class="ctv:block ctv:truncate ctv:text-xs ctv:leading-none ctv:text-muted-foreground"

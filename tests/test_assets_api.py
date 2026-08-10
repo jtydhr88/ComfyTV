@@ -113,3 +113,39 @@ class TestTagRoutes:
         c = await _mk_category(client, "c")
         r = await client.post(f"/comfytv/assets/9999/categories/{c['id']}")
         assert r.status == 404
+
+
+class TestAssetFileMissing:
+    async def test_flags_present_missing_and_remote(self, client):
+        import os
+        import folder_paths
+        input_dir = folder_paths.get_input_directory()
+        os.makedirs(input_dir, exist_ok=True)
+        with open(os.path.join(input_dir, "fm-present.png"), "wb") as fh:
+            fh.write(b"x")
+
+        present = (await (await _mk_asset(
+            client, name="p",
+            payload_url="/view?filename=fm-present.png&type=input")).json())["asset"]
+        missing = (await (await _mk_asset(
+            client, name="m",
+            payload_url="/view?filename=fm-gone.png&type=input")).json())["asset"]
+        remote = (await (await _mk_asset(
+            client, name="r",
+            payload_url="https://example.com/x.png")).json())["asset"]
+        assert present["file_missing"] is False
+        assert missing["file_missing"] is True
+        assert remote["file_missing"] is False
+
+        listed = await (await client.get("/comfytv/assets?category=all")).json()
+        flags = {a["name"]: a["file_missing"] for a in listed["assets"]}
+        assert flags == {"p": False, "m": True, "r": False}
+
+    async def test_update_keeps_flag(self, client):
+        asset = (await (await _mk_asset(
+            client, name="m2",
+            payload_url="/view?filename=fm-gone2.png&type=input")).json())["asset"]
+        r = await client.patch(f"/comfytv/assets/{asset['id']}", json={"name": "m2b"})
+        row = (await r.json())["asset"]
+        assert row["name"] == "m2b"
+        assert row["file_missing"] is True

@@ -140,10 +140,29 @@ class TestLoaderExecute:
         assert _extract_material_json("") is None
 
     def test_asset_model_loader_execute(self, reset_db):
+        import os
+        import folder_paths
         from ComfyTV.nodes.stages.loaders import AssetModelLoaderStage
+        out_dir = folder_paths.get_output_directory()
+        os.makedirs(out_dir, exist_ok=True)
+        with open(os.path.join(out_dir, "m.glb"), "wb") as fh:
+            fh.write(b"x")
         out = AssetModelLoaderStage.execute(project_id="default",
                                             asset_url="/view?filename=m.glb")
         assert out.values[0] == "/view?filename=m.glb"
+
+    def test_asset_loader_missing_file_raises(self, reset_db):
+        from ComfyTV.nodes.stages.loaders import AssetImageLoaderStage
+        with pytest.raises(RuntimeError, match="missing"):
+            AssetImageLoaderStage.execute(
+                project_id="default",
+                asset_url="/view?filename=fm-nope.png&type=input")
+
+    def test_asset_loader_non_view_url_passthrough(self, reset_db):
+        from ComfyTV.nodes.stages.loaders import AssetImageLoaderStage
+        out = AssetImageLoaderStage.execute(
+            project_id="default", asset_url="https://example.com/x.png")
+        assert out.values[0] == "https://example.com/x.png"
 
     def test_list_3d_input_files(self, monkeypatch, tmp_path):
         from ComfyTV.nodes.stages import loaders

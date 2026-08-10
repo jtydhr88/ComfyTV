@@ -257,7 +257,9 @@
       "tags": "Edit tags",
       "loadNode": "Add as node to canvas",
       "makeProxy": "Generate preview proxy",
-      "more": "More options"
+      "more": "More options",
+      "fileMissing": "File missing",
+      "fileMissingHint": "The file on disk was deleted; the library entry remains — re-import it or remove the asset"
     },
     "tagPopover": {
       "empty": "No categories yet.",
@@ -268,6 +270,7 @@
     "empty": "No matching assets in the library yet — add some in the Assets panel.",
     "pickHint": "Pick an asset from the library to use as this node's output.",
     "selected": "Selected: {name}",
+    "fileMissing": "Selected asset {name} no longer exists on disk — re-import it or pick another",
     "upload": "Upload files into the library and select the last one"
   },
   "stageParams": {

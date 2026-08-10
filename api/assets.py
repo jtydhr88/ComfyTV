@@ -86,6 +86,21 @@ async def adopt_assets(request: web.Request) -> web.Response:
     })
 
 
+def _file_missing(url) -> bool:
+    from ..runners.media import view_url_to_path
+    if not isinstance(url, str) or not url.startswith("/view?"):
+        return False
+    try:
+        return view_url_to_path(url) is None
+    except Exception:
+        return False
+
+
+def _with_file_missing(row: dict) -> dict:
+    row["file_missing"] = _file_missing(row.get("payload_url"))
+    return row
+
+
 def _int_list(value) -> tuple[bool, list[int] | None]:
     if value is None:
         return True, None
@@ -172,7 +187,7 @@ async def list_assets(request: web.Request) -> web.Response:
         except ValueError:
             return web.json_response({"error": "category must be 'all', 'none' or an id"}, status=400)
         rows = storage.list_assets(category_id=cid, limit=limit, offset=offset)
-    return web.json_response({"assets": rows})
+    return web.json_response({"assets": [_with_file_missing(r) for r in rows]})
 
 
 @routes.post("/comfytv/assets")
@@ -208,6 +223,7 @@ async def create_asset(request: web.Request) -> web.Response:
     )
     if row is None:
         return web.json_response({"error": "invalid asset (bad category or payload)"}, status=400)
+    row = _with_file_missing(row)
     broadcast_asset_event("create", {"asset": row})
     return web.json_response({"ok": True, "asset": row})
 
@@ -237,6 +253,7 @@ async def update_asset(request: web.Request) -> web.Response:
     )
     if row is None:
         return web.json_response({"error": "asset or category not found"}, status=404)
+    row = _with_file_missing(row)
     broadcast_asset_event("update", {"asset": row})
     return web.json_response({"ok": True, "asset": row})
 
@@ -251,6 +268,7 @@ async def add_asset_category(request: web.Request) -> web.Response:
     row = storage.add_asset_category(aid, cid)
     if row is None:
         return web.json_response({"error": "asset or category not found"}, status=404)
+    row = _with_file_missing(row)
     broadcast_asset_event("update", {"asset": row})
     return web.json_response({"ok": True, "asset": row})
 
@@ -265,6 +283,7 @@ async def remove_asset_category(request: web.Request) -> web.Response:
     row = storage.remove_asset_category(aid, cid)
     if row is None:
         return web.json_response({"error": "asset not found"}, status=404)
+    row = _with_file_missing(row)
     broadcast_asset_event("update", {"asset": row})
     return web.json_response({"ok": True, "asset": row})
 

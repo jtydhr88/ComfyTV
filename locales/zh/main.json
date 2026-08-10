@@ -257,7 +257,9 @@
       "tags": "编辑标签",
       "loadNode": "作为节点添加到画布",
       "makeProxy": "生成预览代理",
-      "more": "更多操作"
+      "more": "更多操作",
+      "fileMissing": "文件缺失",
+      "fileMissingHint": "本地文件已被删除，资产条目仍保留；可重新导入或从资产库移除"
     },
     "tagPopover": {
       "empty": "还没有分类。",
@@ -268,6 +270,7 @@
     "empty": "资产库中还没有匹配的素材 —— 请先在资产面板中添加。",
     "pickHint": "从资产库中选择一个素材作为该节点的输出。",
     "selected": "已选择：{name}",
+    "fileMissing": "所选资产 {name} 的本地文件已被删除，请重新导入或换一个",
     "upload": "上传文件到资产库并选中最后一个"
   },
   "stageParams": {

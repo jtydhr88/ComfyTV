@@ -100,6 +100,11 @@
             draggable="false"
           />
           <div class="ctv:truncate ctv:py-0.5 ctv:px-1 ctv:text-2xs ctv:text-left ctv:text-muted-foreground">
+            <span
+              v-if="asset.file_missing"
+              class="ctv:text-destructive-background"
+              :title="$t('assets.card.fileMissingHint')"
+            >⚠</span>
             {{ asset.name || '—' }}
           </div>
           <span
@@ -131,7 +136,13 @@
     </div>
 
     <div class="ctv:shrink-0 ctv:flex ctv:items-center ctv:gap-2 ctv:text-2xs ctv:text-muted-foreground">
-      <span v-if="selectedAsset" class="ctv:flex-1 ctv:truncate ctv:text-success-background">
+      <span
+        v-if="selectedAsset && selectedAsset.file_missing"
+        class="ctv:flex-1 ctv:truncate ctv:text-destructive-background"
+      >
+        {{ $t('assetLoader.fileMissing', { name: selectedAsset.name || '—' }) }}
+      </span>
+      <span v-else-if="selectedAsset" class="ctv:flex-1 ctv:truncate ctv:text-success-background">
         {{ $t('assetLoader.selected', { name: selectedAsset.name || '—' }) }}
       </span>
       <span v-else class="ctv:flex-1 ctv:truncate">{{ $t('assetLoader.pickHint') }}</span>
