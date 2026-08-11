@@ -127,6 +127,44 @@ async def test_server(request: web.Request) -> web.Response:
     })
 
 
+@routes.post("/comfytv/servers/probe_capabilities")
+async def probe_server_capabilities(request: web.Request) -> web.Response:
+    try:
+        body = await request.json()
+    except Exception:
+        return web.json_response({"error": "invalid JSON body"}, status=400)
+    host = str(body.get("host") or "").strip()
+    try:
+        port = int(body.get("port") or 8188)
+    except (TypeError, ValueError):
+        return web.json_response({"error": "port must be an integer"}, status=400)
+    if not host:
+        return web.json_response({"error": "host is required"}, status=400)
+
+    url = f"http://{host}:{port}/comfytv/capabilities"
+    try:
+        timeout = aiohttp.ClientTimeout(total=_TEST_TIMEOUT_S)
+        async with aiohttp.ClientSession(timeout=timeout) as session:
+            async with session.get(url) as resp:
+                if resp.status != 200:
+                    return web.json_response({
+                        "installed": False,
+                        "error": f"HTTP {resp.status}",
+                    })
+                data = await resp.json(content_type=None)
+    except (aiohttp.ClientError, asyncio.TimeoutError, ValueError) as e:
+        return web.json_response({
+            "installed": False,
+            "error": str(e) or type(e).__name__,
+        })
+    if not isinstance(data, dict) or not isinstance(data.get("node_ids"), list):
+        return web.json_response({
+            "installed": False,
+            "error": "unrecognized capabilities payload",
+        })
+    return web.json_response({"installed": True, "capabilities": data})
+
+
 async def _fetch_server_queue(session: aiohttp.ClientSession, server: dict) -> dict:
     sid = server["id"]
     url = f"http://{server['host']}:{server['port']}/queue"

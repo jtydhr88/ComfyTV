@@ -376,41 +376,51 @@ describe('capabilities api', () => {
     expect(res.resource_fields).toEqual({})
   })
 
-  it('fetchRemoteCapabilities probes the trimmed base url and succeeds', async () => {
-    const remoteFetch = vi.fn(async (_url: string) => json(caps))
-    vi.stubGlobal('fetch', remoteFetch)
-    const { fetchRemoteCapabilities } = await loadWithFetch(vi.fn())
-    const res = await fetchRemoteCapabilities('http://box:8188//')
-    expect(remoteFetch.mock.calls[0]![0]).toBe('http://box:8188/comfytv/capabilities')
+  it('fetchRemoteCapabilities probes through the local backend', async () => {
+    const fetchApi = vi.fn(async () => json({ installed: true, capabilities: caps }))
+    const { fetchRemoteCapabilities } = await loadWithFetch(fetchApi)
+    const res = await fetchRemoteCapabilities('box', 8188)
+    expect(fetchApi.mock.calls[0]![0]).toBe('/comfytv/servers/probe_capabilities')
+    expect(fetchApi.mock.calls[0]![1]).toMatchObject({
+      method: 'POST',
+      body: JSON.stringify({ host: 'box', port: 8188 }),
+    })
     expect(res.installed).toBe(true)
     if (res.installed) expect(res.capabilities.version).toBe('1.0')
   })
 
-  it('fetchRemoteCapabilities reports HTTP failures', async () => {
-    vi.stubGlobal('fetch', vi.fn(async () => new Response('nope', { status: 500 })))
-    const { fetchRemoteCapabilities } = await loadWithFetch(vi.fn())
-    const res = await fetchRemoteCapabilities('http://box:8188')
+  it('fetchRemoteCapabilities reports HTTP failures from the local backend', async () => {
+    const fetchApi = vi.fn(async () => new Response('nope', { status: 500 }))
+    const { fetchRemoteCapabilities } = await loadWithFetch(fetchApi)
+    const res = await fetchRemoteCapabilities('box', 8188)
     expect(res).toEqual({ installed: false, error: 'HTTP 500' })
   })
 
+  it('fetchRemoteCapabilities relays probe errors', async () => {
+    const fetchApi = vi.fn(async () => json({ installed: false, error: 'HTTP 404' }))
+    const { fetchRemoteCapabilities } = await loadWithFetch(fetchApi)
+    const res = await fetchRemoteCapabilities('box', 8188)
+    expect(res).toEqual({ installed: false, error: 'HTTP 404' })
+  })
+
   it('fetchRemoteCapabilities reports unrecognized payloads', async () => {
-    vi.stubGlobal('fetch', vi.fn(async () => json({ hello: 'world' })))
-    const { fetchRemoteCapabilities } = await loadWithFetch(vi.fn())
-    const res = await fetchRemoteCapabilities('http://box:8188')
+    const fetchApi = vi.fn(async () => json({ installed: true, capabilities: { hello: 'world' } }))
+    const { fetchRemoteCapabilities } = await loadWithFetch(fetchApi)
+    const res = await fetchRemoteCapabilities('box', 8188)
     expect(res).toEqual({ installed: false, error: 'unrecognized capabilities payload' })
   })
 
   it('fetchRemoteCapabilities surfaces network errors', async () => {
-    vi.stubGlobal('fetch', vi.fn(async () => { throw new Error('ECONNREFUSED') }))
-    const { fetchRemoteCapabilities } = await loadWithFetch(vi.fn())
-    const res = await fetchRemoteCapabilities('http://box:8188')
+    const fetchApi = vi.fn(async () => { throw new Error('ECONNREFUSED') })
+    const { fetchRemoteCapabilities } = await loadWithFetch(fetchApi)
+    const res = await fetchRemoteCapabilities('box', 8188)
     expect(res).toEqual({ installed: false, error: 'ECONNREFUSED' })
   })
 
   it('fetchRemoteCapabilities stringifies non-Error throws', async () => {
-    vi.stubGlobal('fetch', vi.fn(async () => { throw 'boom' }))
-    const { fetchRemoteCapabilities } = await loadWithFetch(vi.fn())
-    const res = await fetchRemoteCapabilities('http://box:8188')
+    const fetchApi = vi.fn(async () => { throw 'boom' })
+    const { fetchRemoteCapabilities } = await loadWithFetch(fetchApi)
+    const res = await fetchRemoteCapabilities('box', 8188)
     expect(res).toEqual({ installed: false, error: 'boom' })
   })
 })

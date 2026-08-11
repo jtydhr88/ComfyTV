@@ -167,7 +167,7 @@ export const useServerStore = defineStore('servers', () => {
     }
     const server = byId(id)
     if (!server) return { installed: false, error: 'unknown server' }
-    const probe = await apiFetchRemoteCapabilities(`http://${server.host}:${server.port}`)
+    const probe = await apiFetchRemoteCapabilities(server.host, server.port)
     capabilityProbes.value = { ...capabilityProbes.value, [id]: { probe, fetchedAt: Date.now() } }
     return probe
   }

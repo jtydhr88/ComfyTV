@@ -136,7 +136,7 @@ describe('serverStore', () => {
     await store.load()
 
     const probe = await store.probeCapabilities(3)
-    expect(apiMock.fetchRemoteCapabilities).toHaveBeenCalledWith('http://192.168.1.20:8188')
+    expect(apiMock.fetchRemoteCapabilities).toHaveBeenCalledWith('192.168.1.20', 8188)
     expect(probe).toEqual({ installed: true, capabilities: caps })
     expect(store.capabilityProbeFor(3)).toEqual(probe)
 

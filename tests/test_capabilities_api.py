@@ -81,6 +81,85 @@ class TestCapabilitiesEndpoint:
         assert data["resources"]["lut"] == []
 
 
+class TestProbeCapabilitiesEndpoint:
+    async def _remote(self, handler) -> TestServer:
+        app = web.Application()
+        app.router.add_get("/comfytv/capabilities", handler)
+        srv = TestServer(app)
+        await srv.start_server()
+        return srv
+
+    async def _probe(self, client, srv: TestServer) -> dict:
+        resp = await client.post(
+            "/comfytv/servers/probe_capabilities",
+            json={"host": str(srv.host), "port": srv.port},
+        )
+        assert resp.status == 200
+        return await resp.json()
+
+    async def test_relays_remote_capabilities(self, client):
+        caps = {
+            "version": "9.9.9",
+            "node_ids": ["ComfyTV.VideoColorStage"],
+            "resources": {"lut": [], "font": []},
+            "resource_fields": {},
+        }
+
+        async def handler(request):
+            return web.json_response(caps)
+
+        srv = await self._remote(handler)
+        try:
+            data = await self._probe(client, srv)
+        finally:
+            await srv.close()
+        assert data == {"installed": True, "capabilities": caps}
+
+    async def test_remote_404_means_not_installed(self, client):
+        async def handler(request):
+            return web.Response(status=404)
+
+        srv = await self._remote(handler)
+        try:
+            data = await self._probe(client, srv)
+        finally:
+            await srv.close()
+        assert data == {"installed": False, "error": "HTTP 404"}
+
+    async def test_unrecognized_payload(self, client):
+        async def handler(request):
+            return web.json_response({"hello": "world"})
+
+        srv = await self._remote(handler)
+        try:
+            data = await self._probe(client, srv)
+        finally:
+            await srv.close()
+        assert data == {"installed": False, "error": "unrecognized capabilities payload"}
+
+    async def test_unreachable_remote(self, client):
+        async def handler(request):
+            return web.json_response({})
+
+        srv = await self._remote(handler)
+        host, port = str(srv.host), srv.port
+        await srv.close()
+        resp = await client.post(
+            "/comfytv/servers/probe_capabilities",
+            json={"host": host, "port": port},
+        )
+        assert resp.status == 200
+        data = await resp.json()
+        assert data["installed"] is False
+        assert data["error"]
+
+    async def test_missing_host_rejected(self, client):
+        resp = await client.post(
+            "/comfytv/servers/probe_capabilities", json={"port": 8188},
+        )
+        assert resp.status == 400
+
+
 class TestResourceFieldsRegistry:
     async def test_widgets_exist_and_are_socketless(self, reset_db):
         from ComfyTV.api.presets import (

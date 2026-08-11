@@ -15088,22 +15088,26 @@ function testServer(input) {
 function fetchLocalCapabilities() {
   return apiFetch("/comfytv/capabilities", CapabilitiesSchema);
 }
-const REMOTE_PROBE_TIMEOUT_MS = 4e3;
-async function fetchRemoteCapabilities(baseUrl) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), REMOTE_PROBE_TIMEOUT_MS);
+async function fetchRemoteCapabilities(host, port) {
   try {
-    const resp = await fetch(`${baseUrl.replace(/\/+$/, "")}/comfytv/capabilities`, {
-      signal: controller.signal
+    const resp = await app.api.fetchApi("/comfytv/servers/probe_capabilities", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ host, port })
     });
     if (!resp.ok) return { installed: false, error: `HTTP ${resp.status}` };
-    const parsed = CapabilitiesSchema.safeParse(await resp.json());
+    const data = await resp.json();
+    if (!data || data.installed !== true) {
+      return {
+        installed: false,
+        error: typeof (data == null ? void 0 : data.error) === "string" ? data.error : "probe failed"
+      };
+    }
+    const parsed = CapabilitiesSchema.safeParse(data.capabilities);
     if (!parsed.success) return { installed: false, error: "unrecognized capabilities payload" };
     return { installed: true, capabilities: parsed.data };
   } catch (e) {
     return { installed: false, error: e instanceof Error ? e.message : String(e) };
-  } finally {
-    clearTimeout(timer);
   }
 }
 function listResources(kind) {
@@ -56243,7 +56247,7 @@ class ArrayStream {
 }
 let sparkPromise = null;
 function loadSpark() {
-  return sparkPromise ?? (sparkPromise = import("./spark.module-BdxjPUIP.mjs"));
+  return sparkPromise ?? (sparkPromise = import("./spark.module-VSo3UfQZ.mjs"));
 }
 const MESH_MODEL_EXTENSIONS = [".glb", ".gltf", ".fbx", ".obj", ".stl", ".dae"];
 const SPLAT_MODEL_EXTENSIONS = [".spz", ".splat", ".ksplat"];
@@ -61635,7 +61639,7 @@ const useServerStore = /* @__PURE__ */ defineStore("servers", () => {
     }
     const server = byId(id);
     if (!server) return { installed: false, error: "unknown server" };
-    const probe = await fetchRemoteCapabilities(`http://${server.host}:${server.port}`);
+    const probe = await fetchRemoteCapabilities(server.host, server.port);
     capabilityProbes.value = { ...capabilityProbes.value, [id]: { probe, fetchedAt: Date.now() } };
     return probe;
   }
@@ -61796,7 +61800,7 @@ function useServersPanel() {
       const host = form.value.host.trim();
       const port = Number(form.value.port);
       formTest.value = await store2.testConnection(host, port);
-      formCaps.value = await fetchRemoteCapabilities(`http://${host}:${port}`);
+      formCaps.value = await fetchRemoteCapabilities(host, port);
     } finally {
       testing.value = false;
     }
@@ -130365,7 +130369,7 @@ async function parseToObject(file) {
     return new OBJLoader2().parse(await file.text());
   }
   if (lower.endsWith(".stl")) {
-    const { STLLoader } = await import("./STLLoader-BUSTlZgr.mjs");
+    const { STLLoader } = await import("./STLLoader-kJnZJXdb.mjs");
     const geometry = new STLLoader().parse(await file.arrayBuffer());
     const material = new MeshStandardMaterial({ color: 13421772 });
     const group = new Group();
@@ -130373,7 +130377,7 @@ async function parseToObject(file) {
     return group;
   }
   if (lower.endsWith(".dae")) {
-    const { ColladaLoader } = await import("./ColladaLoader-B1tERznf.mjs");
+    const { ColladaLoader } = await import("./ColladaLoader-Cqjc554e.mjs");
     const collada = new ColladaLoader().parse(await file.text(), "");
     if (!(collada == null ? void 0 : collada.scene)) throw new Error(`failed to parse ${file.name}`);
     return collada.scene;
@@ -204447,4 +204451,4 @@ export {
   LinearFilter as y,
   LinearMipMapLinearFilter as z
 };
-//# sourceMappingURL=main-7IVVo77L.mjs.map
+//# sourceMappingURL=main-yyMcLu8n.mjs.map

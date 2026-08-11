@@ -222,7 +222,7 @@ describe('useServersPanel', () => {
     p.form.value!.host = ' 10.0.0.2 '
     fetchRemoteCapabilities.mockResolvedValueOnce(probeInstalled())
     await p.onTestForm()
-    expect(fetchRemoteCapabilities).toHaveBeenCalledWith('http://10.0.0.2:8188')
+    expect(fetchRemoteCapabilities).toHaveBeenCalledWith('10.0.0.2', 8188)
     expect(p.formCaps.value).toEqual(probeInstalled())
     expect(p.formCapsInfo.value).toEqual({
       kind: 'comfytv',

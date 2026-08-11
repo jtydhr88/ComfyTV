@@ -69,7 +69,7 @@ export function useServersPanel() {
       const host = form.value.host.trim()
       const port = Number(form.value.port)
       formTest.value = await store.testConnection(host, port)
-      formCaps.value = await fetchRemoteCapabilities(`http://${host}:${port}`)
+      formCaps.value = await fetchRemoteCapabilities(host, port)
     } finally {
       testing.value = false
     }

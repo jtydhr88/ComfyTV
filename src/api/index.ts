@@ -198,23 +198,29 @@ export function fetchLocalCapabilities(): Promise<Capabilities> {
   return apiFetch('/comfytv/capabilities', CapabilitiesSchema)
 }
 
-export const REMOTE_PROBE_TIMEOUT_MS = 4000
-
-export async function fetchRemoteCapabilities(baseUrl: string): Promise<RemoteCapabilityProbe> {
-  const controller = new AbortController()
-  const timer = setTimeout(() => controller.abort(), REMOTE_PROBE_TIMEOUT_MS)
+export async function fetchRemoteCapabilities(
+  host: string,
+  port: number,
+): Promise<RemoteCapabilityProbe> {
   try {
-    const resp = await fetch(`${baseUrl.replace(/\/+$/, '')}/comfytv/capabilities`, {
-      signal: controller.signal,
+    const resp: Response = await app.api.fetchApi('/comfytv/servers/probe_capabilities', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ host, port }),
     })
     if (!resp.ok) return { installed: false, error: `HTTP ${resp.status}` }
-    const parsed = CapabilitiesSchema.safeParse(await resp.json())
+    const data = await resp.json()
+    if (!data || data.installed !== true) {
+      return {
+        installed: false,
+        error: typeof data?.error === 'string' ? data.error : 'probe failed',
+      }
+    }
+    const parsed = CapabilitiesSchema.safeParse(data.capabilities)
     if (!parsed.success) return { installed: false, error: 'unrecognized capabilities payload' }
     return { installed: true, capabilities: parsed.data }
   } catch (e) {
     return { installed: false, error: e instanceof Error ? e.message : String(e) }
-  } finally {
-    clearTimeout(timer)
   }
 }
 

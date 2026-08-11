@@ -1,9 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-
-import {
-  REMOTE_PROBE_TIMEOUT_MS,
-  fetchRemoteCapabilities,
-} from './index'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const CAPS = {
   version: '1.8.0',
@@ -12,7 +7,13 @@ const CAPS = {
   resource_fields: { 'ComfyTV.VideoLUTStage': { lut_file: 'lut' } },
 }
 
-const fetchMock = vi.fn()
+async function loadWithFetch(fetchImpl: any) {
+  vi.resetModules()
+  vi.doMock('@/lib/comfyApp', () => ({
+    app: { api: { fetchApi: fetchImpl } },
+  }))
+  return await import('./index')
+}
 
 function json(data: unknown, status = 200): Response {
   return new Response(JSON.stringify(data), {
@@ -22,19 +23,14 @@ function json(data: unknown, status = 200): Response {
 }
 
 beforeEach(() => {
-  fetchMock.mockReset()
-  vi.stubGlobal('fetch', fetchMock)
-})
-
-afterEach(() => {
-  vi.unstubAllGlobals()
-  vi.useRealTimers()
+  vi.resetModules()
 })
 
 describe('fetchRemoteCapabilities', () => {
-  it('parses a valid payload as installed', async () => {
-    fetchMock.mockResolvedValue(json(CAPS))
-    const probe = await fetchRemoteCapabilities('http://10.0.0.2:8188')
+  it('parses a valid relayed payload as installed', async () => {
+    const fetchApi = vi.fn(async () => json({ installed: true, capabilities: CAPS }))
+    const { fetchRemoteCapabilities } = await loadWithFetch(fetchApi)
+    const probe = await fetchRemoteCapabilities('10.0.0.2', 8188)
     expect(probe.installed).toBe(true)
     if (probe.installed) {
       expect(probe.capabilities.version).toBe('1.8.0')
@@ -43,49 +39,58 @@ describe('fetchRemoteCapabilities', () => {
     }
   })
 
-  it('hits the capabilities path and trims trailing slashes', async () => {
-    fetchMock.mockResolvedValue(json(CAPS))
-    await fetchRemoteCapabilities('http://10.0.0.2:8188/')
-    expect(fetchMock).toHaveBeenCalledWith(
-      'http://10.0.0.2:8188/comfytv/capabilities',
-      expect.objectContaining({ signal: expect.any(AbortSignal) }),
+  it('posts host and port to the local proxy endpoint', async () => {
+    const fetchApi = vi.fn(async () => json({ installed: true, capabilities: CAPS }))
+    const { fetchRemoteCapabilities } = await loadWithFetch(fetchApi)
+    await fetchRemoteCapabilities('10.0.0.2', 8188)
+    expect(fetchApi).toHaveBeenCalledWith(
+      '/comfytv/servers/probe_capabilities',
+      expect.objectContaining({
+        method: 'POST',
+        body: JSON.stringify({ host: '10.0.0.2', port: 8188 }),
+      }),
     )
   })
 
-  it('maps 404 to installed:false', async () => {
-    fetchMock.mockResolvedValue(new Response('nope', { status: 404 }))
-    const probe = await fetchRemoteCapabilities('http://10.0.0.2:8188')
+  it('relays installed:false probes from the backend', async () => {
+    const fetchApi = vi.fn(async () => json({ installed: false, error: 'HTTP 404' }))
+    const { fetchRemoteCapabilities } = await loadWithFetch(fetchApi)
+    const probe = await fetchRemoteCapabilities('10.0.0.2', 8188)
     expect(probe).toEqual({ installed: false, error: 'HTTP 404' })
   })
 
-  it('maps network/CORS failure to installed:false', async () => {
-    fetchMock.mockRejectedValue(new TypeError('Failed to fetch'))
-    const probe = await fetchRemoteCapabilities('http://10.0.0.2:8188')
+  it('maps local endpoint failure to installed:false', async () => {
+    const fetchApi = vi.fn(async () => new Response('nope', { status: 500 }))
+    const { fetchRemoteCapabilities } = await loadWithFetch(fetchApi)
+    const probe = await fetchRemoteCapabilities('10.0.0.2', 8188)
+    expect(probe).toEqual({ installed: false, error: 'HTTP 500' })
+  })
+
+  it('maps network failure to installed:false', async () => {
+    const fetchApi = vi.fn(async () => { throw new TypeError('Failed to fetch') })
+    const { fetchRemoteCapabilities } = await loadWithFetch(fetchApi)
+    const probe = await fetchRemoteCapabilities('10.0.0.2', 8188)
     expect(probe).toEqual({ installed: false, error: 'Failed to fetch' })
   })
 
-  it('maps an unrecognized payload to installed:false', async () => {
-    fetchMock.mockResolvedValue(json({ hello: 'world' }))
-    const probe = await fetchRemoteCapabilities('http://10.0.0.2:8188')
+  it('maps an unrecognized capabilities payload to installed:false', async () => {
+    const fetchApi = vi.fn(async () => json({ installed: true, capabilities: { hello: 'world' } }))
+    const { fetchRemoteCapabilities } = await loadWithFetch(fetchApi)
+    const probe = await fetchRemoteCapabilities('10.0.0.2', 8188)
     expect(probe).toEqual({ installed: false, error: 'unrecognized capabilities payload' })
   })
 
-  it('maps non-JSON body to installed:false', async () => {
-    fetchMock.mockResolvedValue(new Response('<html>', { status: 200 }))
-    const probe = await fetchRemoteCapabilities('http://10.0.0.2:8188')
-    expect(probe.installed).toBe(false)
+  it('maps a probe body without installed flag to installed:false', async () => {
+    const fetchApi = vi.fn(async () => json({ hello: 'world' }))
+    const { fetchRemoteCapabilities } = await loadWithFetch(fetchApi)
+    const probe = await fetchRemoteCapabilities('10.0.0.2', 8188)
+    expect(probe).toEqual({ installed: false, error: 'probe failed' })
   })
 
-  it('aborts after the probe timeout', async () => {
-    vi.useFakeTimers()
-    fetchMock.mockImplementation((_url: string, init: RequestInit) =>
-      new Promise((_resolve, reject) => {
-        init.signal?.addEventListener('abort', () =>
-          reject(new DOMException('Aborted', 'AbortError')))
-      }))
-    const pending = fetchRemoteCapabilities('http://10.0.0.2:8188')
-    await vi.advanceTimersByTimeAsync(REMOTE_PROBE_TIMEOUT_MS + 1)
-    const probe = await pending
+  it('maps non-JSON body to installed:false', async () => {
+    const fetchApi = vi.fn(async () => new Response('<html>', { status: 200 }))
+    const { fetchRemoteCapabilities } = await loadWithFetch(fetchApi)
+    const probe = await fetchRemoteCapabilities('10.0.0.2', 8188)
     expect(probe.installed).toBe(false)
   })
 })
