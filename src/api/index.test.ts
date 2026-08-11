@@ -110,6 +110,31 @@ describe('workflow link api', () => {
     expect(fetchApi.mock.calls[0]![0]).toBe('/comfytv/workflows/native')
   })
 
+  it('listServerNativeWorkflows hits the server proxy route with the kind', async () => {
+    const fetchApi = vi.fn(async (_url: string, _init?: any) => json({
+      workflows: [{
+        path: 'a.json', name: 'a', mtime: 1, size: 2,
+        is_linked: false, linked_id: null, pulled: true, pulled_label: 'A',
+      }],
+    }))
+    const { listServerNativeWorkflows } = await loadWithFetch(fetchApi)
+    const res = await listServerNativeWorkflows(3, 'image')
+    expect(res).toHaveLength(1)
+    expect(res[0]!.pulled).toBe(true)
+    expect(fetchApi.mock.calls[0]![0]).toBe('/comfytv/servers/3/native_workflows?kind=image')
+  })
+
+  it('pullServerWorkflow posts kind/path to the pull route', async () => {
+    const fetchApi = vi.fn(async (_url: string, _init?: any) =>
+      json({ ok: true, kind: 'image', label: 'A', file_path: 'x' }))
+    const { pullServerWorkflow } = await loadWithFetch(fetchApi)
+    const res = await pullServerWorkflow(3, 'image', 'sub/a.json')
+    expect(res.label).toBe('A')
+    const [url, init] = fetchApi.mock.calls[0]!
+    expect(url).toBe('/comfytv/servers/3/pull_workflow')
+    expect(JSON.parse(init.body)).toEqual({ kind: 'image', path: 'sub/a.json' })
+  })
+
   it('linkWorkflow posts kind/path/label', async () => {
     const fetchApi = vi.fn(async (_url: string, _init?: any) => json({ ok: true, kind: 'image', label: 'A', id: 5 }))
     const { linkWorkflow } = await loadWithFetch(fetchApi)
@@ -377,7 +402,8 @@ describe('capabilities api', () => {
   })
 
   it('fetchRemoteCapabilities probes through the local backend', async () => {
-    const fetchApi = vi.fn(async () => json({ installed: true, capabilities: caps }))
+    const fetchApi = vi.fn(async (_url: string, _init?: any) =>
+      json({ installed: true, capabilities: caps }))
     const { fetchRemoteCapabilities } = await loadWithFetch(fetchApi)
     const res = await fetchRemoteCapabilities('box', 8188)
     expect(fetchApi.mock.calls[0]![0]).toBe('/comfytv/servers/probe_capabilities')

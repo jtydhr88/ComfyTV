@@ -1,4 +1,4 @@
-from . import seed, config, bindings, link  # noqa: F401 — for test monkeypatching
+from . import seed, config, bindings, link, pull  # noqa: F401 — for test monkeypatching
 from .seed import (
     seed_workflows_from_disk,
     reset_workflow_to_preset,
@@ -10,6 +10,10 @@ from .link import (
     link_workflow,
     unlink_workflow,
     list_native_workflows,
+)
+from .pull import (
+    import_pulled_workflow,
+    pulled_workflows,
 )
 from .config import (
     build_preset,
@@ -40,6 +44,8 @@ __all__ = [
     "link_workflow",
     "unlink_workflow",
     "list_native_workflows",
+    "import_pulled_workflow",
+    "pulled_workflows",
     "build_preset",
     "get_workflow_for_invoke",
     "get_workflow_config",

@@ -1518,7 +1518,16 @@
     "unlink": "Unlink",
     "unlinking": "Unlinking…",
     "unlinkedToast": "Unlinked \"{label}\"",
-    "unlinkFailed": "Unlink failed"
+    "unlinkFailed": "Unlink failed",
+    "sourceLabel": "Source",
+    "sourceLocal": "This machine",
+    "introRemote": "Browse the remote machine's ComfyUI workflow library. Pull copies the original graph-format workflow into ComfyTV's local library — configure its bindings here, then run it on any server.",
+    "pull": "Pull",
+    "pulling": "Pulling…",
+    "repull": "Pull again",
+    "pulledBadge": "Pulled",
+    "pulledToast": "Pulled \"{label}\"",
+    "pullFailed": "Pull failed"
   },
   "openInComfy": {
     "open": "Open in ComfyUI",

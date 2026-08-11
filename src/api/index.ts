@@ -17,6 +17,7 @@ import {
   ListNativeWorkflowsSchema,
   ListRemoteJobsSchema,
   ListResourcesSchema,
+  ListRemoteNativeWorkflowsSchema,
   ListServerStatusSchema,
   ListServersSchema,
   ListStagePresetsSchema,
@@ -28,6 +29,7 @@ import {
   MidiEventsSchema,
   OkSchema,
   ProxyEnsureSchema,
+  PullWorkflowResultSchema,
   ScoreEditorImportSchema,
   RemoteRunResultSchema,
   RescanResultSchema,
@@ -52,6 +54,8 @@ import type {
   MidiEventsResult,
   NativeWorkflow,
   ProxyEnsureResult,
+  PullWorkflowResult,
+  RemoteNativeWorkflow,
   RescanResult,
   ScoreEditorImport,
   SetDefaultWorkflowResult,
@@ -142,6 +146,26 @@ export async function listNativeWorkflows(kind?: string): Promise<NativeWorkflow
   const q = kind ? `?kind=${encodeURIComponent(kind)}` : ''
   const res = await apiFetch(`/comfytv/workflows/native${q}`, ListNativeWorkflowsSchema)
   return res.workflows
+}
+
+export async function listServerNativeWorkflows(
+  serverId: number, kind: string,
+): Promise<RemoteNativeWorkflow[]> {
+  const q = `?kind=${encodeURIComponent(kind)}`
+  const res = await apiFetch(
+    `/comfytv/servers/${serverId}/native_workflows${q}`,
+    ListRemoteNativeWorkflowsSchema,
+  )
+  return res.workflows
+}
+
+export function pullServerWorkflow(
+  serverId: number, kind: string, path: string,
+): Promise<PullWorkflowResult> {
+  return apiSend(
+    `/comfytv/servers/${serverId}/pull_workflow`, 'POST',
+    PullWorkflowResultSchema, { kind, path },
+  )
 }
 
 export function linkWorkflow(

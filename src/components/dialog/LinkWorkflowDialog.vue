@@ -1,8 +1,27 @@
 <template>
   <div class="ctv:flex ctv:flex-col ctv:gap-3 ctv:min-h-[320px]">
     <p class="ctv:m-0 ctv:text-xs ctv:leading-relaxed ctv:text-muted-foreground">
-      {{ $t('workflowLink.intro') }}
+      {{ isRemote ? $t('workflowLink.introRemote') : $t('workflowLink.intro') }}
     </p>
+
+    <label v-if="sources.length > 1" class="ctv:flex ctv:items-center ctv:gap-2 ctv:text-xs ctv:text-muted-foreground">
+      {{ $t('workflowLink.sourceLabel') }}
+      <select
+        class="ctv:flex-1 ctv:h-8 ctv:px-2 ctv:rounded-sm ctv:text-xs
+               ctv:bg-secondary-background ctv:text-base-foreground
+               ctv:border ctv:border-border-default ctv:focus-visible:outline-none"
+        :value="typeof source === 'number' ? String(source) : source"
+        @change="onSourceChange($event)"
+      >
+        <option
+          v-for="s in sources"
+          :key="String(s.value)"
+          :value="typeof s.value === 'number' ? String(s.value) : s.value"
+        >
+          {{ s.label }}
+        </option>
+      </select>
+    </label>
 
     <input
       v-model="filter"
@@ -64,12 +83,24 @@
               {{ row.node.wf.name }}
             </span>
             <span
-              v-if="row.node.wf.is_linked"
+              v-if="isRemote ? row.node.wf.pulled : row.node.wf.is_linked"
               class="ctv:text-[10px] ctv:px-1.5 ctv:py-0.5 ctv:rounded ctv:bg-primary-background/20 ctv:text-primary-foreground"
             >
-              {{ $t('workflowLink.linkedBadge') }}
+              {{ isRemote ? $t('workflowLink.pulledBadge') : $t('workflowLink.linkedBadge') }}
             </span>
-            <span class="ctv:flex ctv:gap-1">
+            <span v-if="isRemote" class="ctv:flex ctv:gap-1">
+              <button
+                type="button"
+                :class="row.node.wf.pulled ? btnGhost : btnPrimary"
+                :disabled="busyPath === row.node.wf.path"
+                @click="onPull(row.node.wf)"
+              >
+                {{ busyPath === row.node.wf.path
+                  ? $t('workflowLink.pulling')
+                  : (row.node.wf.pulled ? $t('workflowLink.repull') : $t('workflowLink.pull')) }}
+              </button>
+            </span>
+            <span v-else class="ctv:flex ctv:gap-1">
               <button
                 type="button"
                 :class="btnGhost"
@@ -133,14 +164,24 @@ const {
   filter,
   busyPath,
   rows,
+  source,
+  sources,
+  isRemote,
+  setSource,
   isExpanded,
   toggleFolder,
   load,
   onLink,
+  onPull,
   onUnlink,
 } = useWorkflowTree(props)
 
 onMounted(load)
+
+function onSourceChange(e: Event) {
+  const raw = (e.target as HTMLSelectElement).value
+  setSource(raw === 'local' ? 'local' : Number(raw))
+}
 
 async function onOpenNative(wf: { path: string }) {
   if (await tryOpenNativeWorkflowInComfy(wf.path)) props.onClose()

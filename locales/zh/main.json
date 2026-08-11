@@ -1518,7 +1518,16 @@
     "unlink": "解除",
     "unlinking": "解除中…",
     "unlinkedToast": "已解除「{label}」",
-    "unlinkFailed": "解除链接失败"
+    "unlinkFailed": "解除链接失败",
+    "sourceLabel": "来源",
+    "sourceLocal": "本机",
+    "introRemote": "浏览远端机器的 ComfyUI 工作流库。拉取会把原始 graph 格式的工作流复制进本地 ComfyTV 工作流库——在这里配置好绑定后，就可以在任意服务器上运行。",
+    "pull": "拉取",
+    "pulling": "拉取中…",
+    "repull": "重新拉取",
+    "pulledBadge": "已拉取",
+    "pulledToast": "已拉取「{label}」",
+    "pullFailed": "拉取失败"
   },
   "openInComfy": {
     "open": "在 ComfyUI 中打开",

@@ -3,13 +3,18 @@ import inspect
 import json
 import logging
 import uuid
+from pathlib import PurePosixPath
+from typing import Optional
+from urllib.parse import quote
 
 import aiohttp
+import yarl
 from aiohttp import web
 
 from server import PromptServer
 
 from .. import storage
+from ..runners import WORKFLOW_KINDS, refresh_registry, workflow_db
 from ..runners.remote_comfy import CURRENT_JOB, JobCancelled, RemoteJobHandle
 from ._common import routes
 
@@ -163,6 +168,104 @@ async def probe_server_capabilities(request: web.Request) -> web.Response:
             "error": "unrecognized capabilities payload",
         })
     return web.json_response({"installed": True, "capabilities": data})
+
+
+_PULL_TIMEOUT_S = 15
+
+
+def _server_or_response(request: web.Request) -> tuple[Optional[dict], Optional[web.Response]]:
+    try:
+        sid = int(request.match_info["sid"])
+    except (KeyError, ValueError):
+        return None, web.json_response({"error": "invalid server id"}, status=400)
+    server = storage.get_server(sid)
+    if server is None:
+        return None, web.json_response({"error": "server not found"}, status=404)
+    return server, None
+
+
+@routes.get("/comfytv/servers/{sid}/native_workflows")
+async def server_native_workflows(request: web.Request) -> web.Response:
+    server, err = _server_or_response(request)
+    if err is not None:
+        return err
+    kind = request.query.get("kind") or ""
+
+    url = f"http://{server['host']}:{server['port']}/comfytv/workflows/native"
+    try:
+        timeout = aiohttp.ClientTimeout(total=_TEST_TIMEOUT_S)
+        async with aiohttp.ClientSession(timeout=timeout) as session:
+            async with session.get(url) as resp:
+                if resp.status != 200:
+                    return web.json_response(
+                        {"error": f"HTTP {resp.status} from remote"}, status=502)
+                data = await resp.json(content_type=None)
+    except (aiohttp.ClientError, asyncio.TimeoutError, ValueError) as e:
+        return web.json_response(
+            {"error": str(e) or type(e).__name__}, status=502)
+
+    items = data.get("workflows") if isinstance(data, dict) else None
+    if not isinstance(items, list):
+        return web.json_response(
+            {"error": "unrecognized response from remote"}, status=502)
+
+    pulled = workflow_db.pulled_workflows(kind, server["id"]) if kind else {}
+    out = []
+    for it in items:
+        if not isinstance(it, dict):
+            continue
+        label = pulled.get(it.get("path"))
+        out.append({**it, "pulled": label is not None, "pulled_label": label})
+    return web.json_response({"workflows": out})
+
+
+@routes.post("/comfytv/servers/{sid}/pull_workflow")
+async def server_pull_workflow(request: web.Request) -> web.Response:
+    server, err = _server_or_response(request)
+    if err is not None:
+        return err
+    try:
+        body = await request.json()
+    except Exception:
+        return web.json_response({"error": "invalid JSON body"}, status=400)
+    kind = str(body.get("kind") or "")
+    path = str(body.get("path") or "")
+    if kind not in WORKFLOW_KINDS:
+        return web.json_response({"error": f"unknown workflow kind {kind!r}"}, status=400)
+    if not path or path.startswith("/") or ".." in PurePosixPath(path).parts:
+        return web.json_response({"error": "invalid workflow path"}, status=400)
+
+    encoded = quote(f"workflows/{path}", safe="")
+    url = yarl.URL(
+        f"http://{server['host']}:{server['port']}/userdata/{encoded}",
+        encoded=True,
+    )
+    try:
+        timeout = aiohttp.ClientTimeout(total=_PULL_TIMEOUT_S)
+        async with aiohttp.ClientSession(timeout=timeout) as session:
+            async with session.get(url) as resp:
+                if resp.status != 200:
+                    return web.json_response(
+                        {"error": f"HTTP {resp.status} from remote"}, status=502)
+                content = await resp.text()
+    except (aiohttp.ClientError, asyncio.TimeoutError) as e:
+        return web.json_response(
+            {"error": str(e) or type(e).__name__}, status=502)
+
+    source = {"server_id": server["id"], "path": path}
+    try:
+        result = workflow_db.import_pulled_workflow(
+            kind, source, PurePosixPath(path).name, content)
+    except ValueError as e:
+        return web.json_response({"error": str(e)}, status=400)
+    except OSError as e:
+        return web.json_response(
+            {"error": f"could not write workflow file: {e}"}, status=500)
+
+    refresh_registry()
+    _log.info("[ComfyTV/servers] pulled workflow %s/%s from %s",
+              kind, result["label"], server["label"])
+    return web.json_response(result)
 
 
 async def _fetch_server_queue(session: aiohttp.ClientSession, server: dict) -> dict:

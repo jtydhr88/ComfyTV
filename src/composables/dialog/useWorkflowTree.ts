@@ -1,15 +1,24 @@
 import { computed, ref } from 'vue'
 
-import { linkWorkflow, listNativeWorkflows, unlinkWorkflow } from '@/api'
-import type { NativeWorkflow } from '@/api'
+import {
+  linkWorkflow,
+  listNativeWorkflows,
+  listServerNativeWorkflows,
+  pullServerWorkflow,
+  unlinkWorkflow,
+} from '@/api'
+import type { NativeWorkflow, RemoteNativeWorkflow } from '@/api'
 import { removeOptionEverywhere } from '@/composables/stages/workflowCombo'
 import { app } from '@/lib/comfyApp'
 import { i18n } from '@/i18n'
+import { useServerStore } from '@/stores/serverStore'
+
+export type WorkflowSource = 'local' | number
 
 export interface WorkflowLeafNode {
   type: 'leaf'
   key: string
-  wf: NativeWorkflow
+  wf: RemoteNativeWorkflow
 }
 
 export interface WorkflowFolderNode {
@@ -104,12 +113,28 @@ function toast(severity: string, summary: string, detail = '') {
 
 export function useWorkflowTree(opts: UseWorkflowTreeOptions) {
   const t = i18n.global.t
-  const items = ref<NativeWorkflow[]>([])
+  const serverStore = useServerStore()
+  const items = ref<RemoteNativeWorkflow[]>([])
   const loading = ref(true)
   const error = ref<string | null>(null)
   const filter = ref('')
   const busyPath = ref<string | null>(null)
   const expandedKeys = ref(new Set<string>())
+
+  const source = ref<WorkflowSource>('local')
+  const isRemote = computed(() => source.value !== 'local')
+  const sources = computed(() => [
+    { value: 'local' as WorkflowSource, label: t('workflowLink.sourceLocal') },
+    ...serverStore.enabledServers.map(s => ({ value: s.id as WorkflowSource, label: s.label })),
+  ])
+
+  void serverStore.load()
+
+  function setSource(value: WorkflowSource) {
+    if (source.value === value) return
+    source.value = value
+    void load()
+  }
 
   const filtered = computed(() => filterWorkflows(items.value, filter.value))
   const tree = computed(() => buildWorkflowTree(filtered.value))
@@ -143,14 +168,21 @@ export function useWorkflowTree(opts: UseWorkflowTreeOptions) {
   }
 
   async function load() {
+    const requested = source.value
     loading.value = true
     error.value = null
     try {
-      items.value = await listNativeWorkflows(opts.kind)
+      const list = requested === 'local'
+        ? await listNativeWorkflows(opts.kind)
+        : await listServerNativeWorkflows(requested, opts.kind)
+      if (source.value === requested) items.value = list
     } catch (e: any) {
-      error.value = t('workflowLink.loadFailed', { detail: String(e?.message || e) })
+      if (source.value === requested) {
+        error.value = t('workflowLink.loadFailed', { detail: String(e?.message || e) })
+        items.value = []
+      }
     } finally {
-      loading.value = false
+      if (source.value === requested) loading.value = false
     }
   }
 
@@ -165,6 +197,23 @@ export function useWorkflowTree(opts: UseWorkflowTreeOptions) {
       if (it) { it.is_linked = true; it.linked_id = res.id }
     } catch (e: any) {
       toast('error', t('workflowLink.linkFailed'), String(e?.message || e))
+    } finally {
+      busyPath.value = null
+    }
+  }
+
+  async function onPull(wf: RemoteNativeWorkflow) {
+    const requested = source.value
+    if (busyPath.value || requested === 'local') return
+    busyPath.value = wf.path
+    try {
+      const res = await pullServerWorkflow(requested, opts.kind, wf.path)
+      toast('success', t('workflowLink.pulledToast', { label: res.label }))
+      opts.onLinked({ label: res.label })
+      const it = items.value.find((x) => x.path === wf.path)
+      if (it) { it.pulled = true; it.pulled_label = res.label }
+    } catch (e: any) {
+      toast('error', t('workflowLink.pullFailed'), String(e?.message || e))
     } finally {
       busyPath.value = null
     }
@@ -194,10 +243,15 @@ export function useWorkflowTree(opts: UseWorkflowTreeOptions) {
     busyPath,
     expandedKeys,
     rows,
+    source,
+    sources,
+    isRemote,
+    setSource,
     isExpanded,
     toggleFolder,
     load,
     onLink,
+    onPull,
     onUnlink,
   }
 }

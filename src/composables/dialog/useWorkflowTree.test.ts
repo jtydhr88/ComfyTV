@@ -3,12 +3,24 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { app } from '@/lib/comfyApp'
 
 const listNativeWorkflows = vi.fn()
+const listServerNativeWorkflows = vi.fn()
+const pullServerWorkflow = vi.fn()
 const linkWorkflow = vi.fn()
 const unlinkWorkflow = vi.fn()
 vi.mock('@/api', () => ({
   listNativeWorkflows: (...a: any[]) => listNativeWorkflows(...a),
+  listServerNativeWorkflows: (...a: any[]) => listServerNativeWorkflows(...a),
+  pullServerWorkflow: (...a: any[]) => pullServerWorkflow(...a),
   linkWorkflow: (...a: any[]) => linkWorkflow(...a),
   unlinkWorkflow: (...a: any[]) => unlinkWorkflow(...a),
+}))
+
+const serverStoreMock = {
+  enabledServers: [] as Array<{ id: number; label: string }>,
+  load: vi.fn(),
+}
+vi.mock('@/stores/serverStore', () => ({
+  useServerStore: () => serverStoreMock,
 }))
 
 const removeOptionEverywhere = vi.fn()
@@ -44,6 +56,7 @@ const toastAdd = vi.fn()
 
 beforeEach(() => {
   vi.clearAllMocks()
+  serverStoreMock.enabledServers = []
   ;(app as any).extensionManager = { toast: { add: toastAdd } }
 })
 
@@ -202,5 +215,98 @@ describe('useWorkflowTree', () => {
     await tree.load()
     await tree.onUnlink(tree.items.value[0])
     expect(unlinkWorkflow).not.toHaveBeenCalled()
+  })
+})
+
+describe('useWorkflowTree remote sources', () => {
+  const onLinked = vi.fn()
+
+  function make() {
+    return useWorkflowTree({ kind: 'image', onLinked })
+  }
+
+  it('sources lists local plus enabled servers', () => {
+    serverStoreMock.enabledServers = [{ id: 3, label: 'rig' }]
+    const tree = make()
+    expect(tree.sources.value).toEqual([
+      { value: 'local', label: 'workflowLink.sourceLocal' },
+      { value: 3, label: 'rig' },
+    ])
+    expect(tree.isRemote.value).toBe(false)
+  })
+
+  it('setSource switches to the remote listing for the kind', async () => {
+    serverStoreMock.enabledServers = [{ id: 3, label: 'rig' }]
+    listServerNativeWorkflows.mockResolvedValueOnce([wf('r.json', { pulled: false })])
+    const tree = make()
+    tree.setSource(3)
+    await vi.waitFor(() => expect(tree.loading.value).toBe(false))
+    expect(listServerNativeWorkflows).toHaveBeenCalledWith(3, 'image')
+    expect(tree.isRemote.value).toBe(true)
+    expect(tree.items.value).toHaveLength(1)
+  })
+
+  it('setSource back to local reloads the local listing', async () => {
+    serverStoreMock.enabledServers = [{ id: 3, label: 'rig' }]
+    listServerNativeWorkflows.mockResolvedValueOnce([wf('r.json')])
+    listNativeWorkflows.mockResolvedValueOnce([wf('a.json'), wf('b.json')])
+    const tree = make()
+    tree.setSource(3)
+    await vi.waitFor(() => expect(tree.loading.value).toBe(false))
+    tree.setSource('local')
+    await vi.waitFor(() => expect(tree.loading.value).toBe(false))
+    expect(listNativeWorkflows).toHaveBeenCalledWith('image')
+    expect(tree.items.value).toHaveLength(2)
+    expect(tree.isRemote.value).toBe(false)
+  })
+
+  it('onPull calls the api, notifies, and marks the item pulled', async () => {
+    serverStoreMock.enabledServers = [{ id: 3, label: 'rig' }]
+    listServerNativeWorkflows.mockResolvedValueOnce([wf('sub/r.json', { pulled: false })])
+    pullServerWorkflow.mockResolvedValueOnce({ ok: true, kind: 'image', label: 'R' })
+    const tree = make()
+    tree.setSource(3)
+    await vi.waitFor(() => expect(tree.loading.value).toBe(false))
+    await tree.onPull(tree.items.value[0])
+    expect(pullServerWorkflow).toHaveBeenCalledWith(3, 'image', 'sub/r.json')
+    expect(onLinked).toHaveBeenCalledWith({ label: 'R' })
+    expect(tree.items.value[0].pulled).toBe(true)
+    expect(tree.items.value[0].pulled_label).toBe('R')
+    expect(tree.busyPath.value).toBeNull()
+    expect(toastAdd).toHaveBeenCalledWith(expect.objectContaining({ severity: 'success' }))
+  })
+
+  it('onPull failure toasts an error and clears busy state', async () => {
+    serverStoreMock.enabledServers = [{ id: 3, label: 'rig' }]
+    listServerNativeWorkflows.mockResolvedValueOnce([wf('r.json', { pulled: false })])
+    pullServerWorkflow.mockRejectedValueOnce(new Error('nope'))
+    const tree = make()
+    tree.setSource(3)
+    await vi.waitFor(() => expect(tree.loading.value).toBe(false))
+    await tree.onPull(tree.items.value[0])
+    expect(tree.items.value[0].pulled).toBe(false)
+    expect(tree.busyPath.value).toBeNull()
+    expect(toastAdd).toHaveBeenCalledWith(expect.objectContaining({ severity: 'error' }))
+  })
+
+  it('onPull is a no-op on the local source', async () => {
+    listNativeWorkflows.mockResolvedValueOnce([wf('a.json')])
+    const tree = make()
+    await tree.load()
+    await tree.onPull(tree.items.value[0])
+    expect(pullServerWorkflow).not.toHaveBeenCalled()
+  })
+
+  it('remote load failure surfaces a translated error and clears items', async () => {
+    serverStoreMock.enabledServers = [{ id: 3, label: 'rig' }]
+    listNativeWorkflows.mockResolvedValueOnce([wf('a.json')])
+    listServerNativeWorkflows.mockRejectedValueOnce(new Error('HTTP 502'))
+    const tree = make()
+    await tree.load()
+    tree.setSource(3)
+    await vi.waitFor(() => expect(tree.loading.value).toBe(false))
+    expect(tree.error.value).toContain('workflowLink.loadFailed')
+    expect(tree.error.value).toContain('HTTP 502')
+    expect(tree.items.value).toEqual([])
   })
 })

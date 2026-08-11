@@ -28,6 +28,21 @@ export type NativeWorkflow = z.infer<typeof NativeWorkflowSchema>
 export const ListNativeWorkflowsSchema = z.object({
   workflows: z.array(NativeWorkflowSchema),
 })
+export const RemoteNativeWorkflowSchema = NativeWorkflowSchema.extend({
+  pulled: z.boolean().optional(),
+  pulled_label: z.string().nullable().optional(),
+})
+export type RemoteNativeWorkflow = z.infer<typeof RemoteNativeWorkflowSchema>
+export const ListRemoteNativeWorkflowsSchema = z.object({
+  workflows: z.array(RemoteNativeWorkflowSchema),
+})
+export const PullWorkflowResultSchema = z.object({
+  ok: z.boolean(),
+  kind: z.string(),
+  label: z.string(),
+  file_path: z.string().optional(),
+})
+export type PullWorkflowResult = z.infer<typeof PullWorkflowResultSchema>
 export const LinkWorkflowResultSchema = z.object({
   ok: z.boolean(),
   kind: z.string(),
